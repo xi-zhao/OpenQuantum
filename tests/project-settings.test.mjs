@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdtemp, mkdir, readFile, rm, symlink, writeFile } from "node:fs/promises";
+import { mkdtemp, mkdir, readFile, readdir, rm, symlink, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
@@ -7,8 +7,12 @@ import test from "node:test";
 import { parseDocument } from "yaml";
 
 import {
+  createMcpSettings,
+  createSkillSettings,
   ProjectSettingsConflictError,
   readProjectSettings,
+  removeMcpSettings,
+  removeSkillSettings,
   updateMcpSettings,
   updateSkillSettings,
 } from "../src/settings/server/project-settings.mjs";
@@ -48,6 +52,7 @@ test("project settings exposes safe Skill and MCP projections", async (t) => {
       maturity: "stable",
       modelInvocable: true,
       userInvocable: true,
+      managed: false,
       revision: snapshot.skills[0].revision,
     },
   ]);
@@ -61,6 +66,7 @@ test("project settings exposes safe Skill and MCP projections", async (t) => {
       packageName: null,
       packageVersion: null,
       credentialRef: null,
+      managed: false,
       transport: "stdio",
       target: "./.agents/skills/demo-skill/mcp/server.mjs",
       enabled: true,
@@ -104,6 +110,61 @@ test("Skill invocation settings use revision CAS and official frontmatter", asyn
       userInvocable: true,
     }),
     ProjectSettingsConflictError,
+  );
+});
+
+test("custom Skill lifecycle stays Harness-native and removal is recoverable", async (t) => {
+  const root = await fixture(t);
+  const created = await createSkillSettings(root, {
+    name: "custom-quantum-flow",
+    displayName: "Custom Quantum Flow",
+    description: "Use this Skill for a project-specific workflow: never for cloud execution.",
+    instructions: "# Workflow\n\n1. Validate the input.\n2. Reuse an existing MCP tool.",
+    modelInvocable: false,
+    userInvocable: true,
+  });
+  const skill = created.skills.find((candidate) => candidate.name === "custom-quantum-flow");
+  assert.equal(skill.managed, true);
+  assert.equal(skill.displayName, "Custom Quantum Flow");
+  assert.equal(skill.modelInvocable, false);
+  assert.equal(skill.userInvocable, true);
+  const raw = await readFile(
+    path.join(root, ".agents/skills/custom-quantum-flow/SKILL.md"),
+    "utf8",
+  );
+  assert.match(raw, /disable-model-invocation: true/);
+  assert.match(raw, /never for cloud execution/);
+  await assert.rejects(
+    createSkillSettings(root, {
+      name: "custom-quantum-flow",
+      displayName: "Duplicate",
+      description: "Must not replace the existing Skill.",
+      instructions: "# Duplicate",
+      modelInvocable: false,
+      userInvocable: true,
+    }),
+    /同名 Skill 已存在/,
+  );
+  assert.equal(
+    await readFile(
+      path.join(root, ".agents/skills/custom-quantum-flow/SKILL.md"),
+      "utf8",
+    ),
+    raw,
+  );
+
+  const removed = await removeSkillSettings(root, {
+    name: skill.name,
+    revision: skill.revision,
+  });
+  assert.equal(removed.skills.some((candidate) => candidate.name === skill.name), false);
+  const trash = await readdir(path.join(root, ".openquantum/trash/skills"));
+  assert.equal(trash.some((entry) => entry.startsWith(`${skill.name}-`)), true);
+
+  const builtin = created.skills.find((candidate) => candidate.name === "demo-skill");
+  await assert.rejects(
+    removeSkillSettings(root, { name: builtin.name, revision: builtin.revision }),
+    /不能从设置中心移除/,
   );
 });
 
@@ -176,6 +237,77 @@ test("credentialed MCP entries use the same bounded settings Interface", async (
   assert.equal(value[1].config.serverName, "qiskit_ibm_runtime");
   assert.equal(value[1].config.credentialEnv.QISKIT_IBM_TOKEN, "QISKIT_IBM_TOKEN");
   assert.equal(value[1].config.toolCallTimeoutMs, 180000);
+});
+
+test("custom stdio MCP is created disabled with a dynamic credential and can be removed", async (t) => {
+  const root = await fixture(t);
+  const before = await readProjectSettings(root);
+  const created = await createMcpSettings(root, {
+    revision: before.mcpRevision,
+    serverName: "community_quantum",
+    transport: "stdio",
+    command: "uvx",
+    args: ["--from", "community-quantum-mcp==1.2.3", "community-quantum-mcp"],
+    credentialRef: "COMMUNITY_QUANTUM_TOKEN",
+  });
+  const server = created.mcpServers.find(
+    (candidate) => candidate.serverName === "community_quantum",
+  );
+  assert.equal(server.enabled, false);
+  assert.equal(server.managed, true);
+  assert.equal(server.failOnStartupError, false);
+  assert.equal(server.credentialRef, "COMMUNITY_QUANTUM_TOKEN");
+  assert.deepEqual(created.mcpCredentials.find(
+    (credential) => credential.ref === "COMMUNITY_QUANTUM_TOKEN",
+  ), {
+    ref: "COMMUNITY_QUANTUM_TOKEN",
+    displayName: "COMMUNITY_QUANTUM_TOKEN",
+    description: "供自定义 MCP 使用的 Harness 安全凭据。",
+    documentationUrl: null,
+    serverNames: ["community_quantum"],
+  });
+  const raw = await readFile(
+    path.join(root, "runtime/openquantum/agent-presets/openquantum/agent.cordis.yml"),
+    "utf8",
+  );
+  assert.match(raw, /id: mcp-user-community_quantum/);
+  assert.match(raw, /name: \.\/credentialed-mcp-client\.mjs/);
+  assert.match(raw, /cwd: !!js process\.cwd\(\)/);
+  assert.equal(raw.includes("COMMUNITY_QUANTUM_TOKEN: secret"), false);
+
+  const removed = await removeMcpSettings(root, {
+    serverName: server.serverName,
+    revision: created.mcpRevision,
+  });
+  assert.equal(
+    removed.mcpServers.some((candidate) => candidate.serverName === server.serverName),
+    false,
+  );
+});
+
+test("custom HTTP MCP accepts only public HTTP(S) endpoints", async (t) => {
+  const root = await fixture(t);
+  const before = await readProjectSettings(root);
+  const created = await createMcpSettings(root, {
+    revision: before.mcpRevision,
+    serverName: "public_remote",
+    transport: "streamable-http",
+    url: "https://example.com/mcp",
+  });
+  const server = created.mcpServers.find((candidate) => candidate.serverName === "public_remote");
+  assert.equal(server.transport, "streamable-http");
+  assert.equal(server.target, "https://example.com/mcp");
+  assert.equal(server.managed, true);
+
+  await assert.rejects(
+    createMcpSettings(root, {
+      revision: created.mcpRevision,
+      serverName: "private_remote",
+      transport: "streamable-http",
+      url: "https://token@example.com/mcp",
+    }),
+    /无内嵌凭据/,
+  );
 });
 
 test("repository preset pins official Qiskit services with safe defaults", async () => {

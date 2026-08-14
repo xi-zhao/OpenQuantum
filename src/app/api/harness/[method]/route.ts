@@ -5,6 +5,7 @@ import {
   harnessUnavailableResponse,
   parseHarnessRequest,
 } from "../../../../harness/server/browser-boundary.mjs";
+import { readProjectSettings } from "../../../../settings/server/project-settings.mjs";
 
 const ALLOWED_POST_METHODS = new Set([
   "session.list",
@@ -23,7 +24,7 @@ const ALLOWED_POST_METHODS = new Set([
   "llm.models",
 ]);
 const MODEL_SETTING_FIELDS = new Set(["displayName", "baseURL", "api", "models"]);
-const SETTINGS_CREDENTIAL_REFS = new Set([
+const BUILTIN_CREDENTIAL_REFS = new Set([
   "OPENQUANTUM_PUBLIC_API_KEY",
   "OPENQUANTUM_PRIVATE_API_KEY",
   "QISKIT_IBM_TOKEN",
@@ -33,7 +34,44 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === "object" && !Array.isArray(value);
 }
 
-function isAllowedModelSettingsPayload(method: string, payload: unknown): boolean {
+async function allowedCredentialRefs(): Promise<Set<string>> {
+  const refs = new Set(BUILTIN_CREDENTIAL_REFS);
+  try {
+    const settings = await readProjectSettings(process.cwd());
+    for (const credential of settings.mcpCredentials) refs.add(credential.ref);
+  } catch {
+    // A broken project config must not widen the credential seam. Built-in
+    // model references remain usable so the user can still repair the setup.
+  }
+  return refs;
+}
+
+export function isAllowedCredentialPayload(
+  method: string,
+  payload: unknown,
+  credentialRefs: ReadonlySet<string>,
+): boolean {
+  if (method === "credentials.describe") {
+    return (
+      isRecord(payload) &&
+      Array.isArray(payload.refs) &&
+      payload.refs.length > 0 &&
+      payload.refs.every(
+        (ref) => typeof ref === "string" && credentialRefs.has(ref),
+      )
+    );
+  }
+  if (method === "credentials.set" || method === "credentials.unset") {
+    return (
+      isRecord(payload) &&
+      typeof payload.ref === "string" &&
+      credentialRefs.has(payload.ref)
+    );
+  }
+  return true;
+}
+
+async function isAllowedSettingsPayload(method: string, payload: unknown): Promise<boolean> {
   if (method === "settings.mutate") {
     if (!isRecord(payload) || payload.ns !== "llm-pi-ai" || !Array.isArray(payload.ops)) {
       return false;
@@ -55,22 +93,13 @@ function isAllowedModelSettingsPayload(method: string, payload: unknown): boolea
   }
 
   if (method === "credentials.describe") {
-    return (
-      isRecord(payload) &&
-      Array.isArray(payload.refs) &&
-      payload.refs.length > 0 &&
-      payload.refs.every(
-        (ref) => typeof ref === "string" && SETTINGS_CREDENTIAL_REFS.has(ref),
-      )
-    );
+    const credentialRefs = await allowedCredentialRefs();
+    return isAllowedCredentialPayload(method, payload, credentialRefs);
   }
 
   if (method === "credentials.set" || method === "credentials.unset") {
-    return (
-      isRecord(payload) &&
-      typeof payload.ref === "string" &&
-      SETTINGS_CREDENTIAL_REFS.has(payload.ref)
-    );
+    const credentialRefs = await allowedCredentialRefs();
+    return isAllowedCredentialPayload(method, payload, credentialRefs);
   }
 
   return true;
@@ -139,7 +168,7 @@ export async function POST(
     return Response.json({ error: "Invalid Harness RPC envelope" }, { status: 400 });
   }
 
-  if (!isAllowedModelSettingsPayload(method, parsed.data.payload)) {
+  if (!(await isAllowedSettingsPayload(method, parsed.data.payload))) {
     return Response.json(
       { error: "Harness settings operation is outside the OpenQuantum settings seam" },
       { status: 403 },

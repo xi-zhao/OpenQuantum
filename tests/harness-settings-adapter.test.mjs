@@ -270,4 +270,34 @@ test("settings adapter keeps IBM MCP credentials redacted and gates cloud enable
     /先停用 IBM Quantum Runtime/,
   );
   assert.equal(credentialCalls.some(([kind]) => kind === "unset"), false);
+
+  await adapter.execute({
+    type: "mcp.update",
+    serverName: "qiskit_ibm_runtime",
+    revision: project.mcpRevision,
+    enabled: false,
+    toolCallTimeoutMs: 300000,
+    reconnect: project.mcpServers[0].reconnect,
+  });
+  await adapter.execute({
+    type: "mcp.credential.update",
+    ref: "QISKIT_IBM_TOKEN",
+    remove: true,
+  });
+  await adapter.execute({
+    type: "mcp.remove",
+    serverName: "qiskit_ibm_runtime",
+    revision: project.mcpRevision,
+  });
+  assert.ok(projectCalls.some((call) => call.action === "mcp.remove"));
+
+  await adapter.execute({
+    type: "mcp.create",
+    revision: project.mcpRevision,
+    serverName: "community_quantum",
+    transport: "stdio",
+    command: "uvx",
+    args: ["community-quantum-mcp"],
+  });
+  assert.ok(projectCalls.some((call) => call.action === "mcp.create"));
 });

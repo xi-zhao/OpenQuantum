@@ -24,6 +24,8 @@ export interface SkillSettings {
   readonly maturity: string | null;
   readonly modelInvocable: boolean;
   readonly userInvocable: boolean;
+  /** True only for project Skills created through the Settings Interface. */
+  readonly managed: boolean;
   readonly revision: string;
 }
 
@@ -36,6 +38,8 @@ export interface McpServerSettings {
   readonly packageName: string | null;
   readonly packageVersion: string | null;
   readonly credentialRef: string | null;
+  /** True only for project MCP entries created through the Settings Interface. */
+  readonly managed: boolean;
   readonly transport: "stdio" | "streamable-http";
   readonly target: string;
   readonly enabled: boolean;
@@ -53,7 +57,7 @@ export interface McpCredentialSettings {
   readonly ref: string;
   readonly displayName: string;
   readonly description: string;
-  readonly documentationUrl: string;
+  readonly documentationUrl: string | null;
   readonly serverNames: readonly string[];
   readonly configured: boolean;
   readonly writable: boolean;
@@ -93,6 +97,20 @@ export type SettingsCommand =
       readonly userInvocable: boolean;
     }
   | {
+      readonly type: "skill.create";
+      readonly name: string;
+      readonly displayName: string;
+      readonly description: string;
+      readonly instructions: string;
+      readonly modelInvocable: boolean;
+      readonly userInvocable: boolean;
+    }
+  | {
+      readonly type: "skill.remove";
+      readonly name: string;
+      readonly revision: string;
+    }
+  | {
       readonly type: "mcp.update";
       readonly serverName: string;
       readonly revision: string;
@@ -104,6 +122,21 @@ export type SettingsCommand =
         readonly maxDelayMs: number;
         readonly maxAttempts: number;
       };
+    }
+  | {
+      readonly type: "mcp.create";
+      readonly revision: string;
+      readonly serverName: string;
+      readonly transport: "stdio" | "streamable-http";
+      readonly command?: string;
+      readonly args?: readonly string[];
+      readonly url?: string;
+      readonly credentialRef?: string;
+    }
+  | {
+      readonly type: "mcp.remove";
+      readonly revision: string;
+      readonly serverName: string;
     }
   | {
       readonly type: "mcp.credential.update";

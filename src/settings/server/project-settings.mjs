@@ -8,6 +8,7 @@ import {
   readFile,
   realpath,
   rename,
+  rmdir,
   unlink,
 } from "node:fs/promises";
 import path from "node:path";
@@ -16,8 +17,15 @@ import { parse, parseDocument } from "yaml";
 
 const SKILL_NAME = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const SERVER_NAME = /^[A-Za-z0-9_-]{1,32}$/;
+const CREDENTIAL_REF = /^[A-Za-z_][A-Za-z0-9_]*$/;
 const SHA256 = /^[a-f0-9]{64}$/;
 const AGENT_CONFIG = "runtime/openquantum/agent-presets/openquantum/agent.cordis.yml";
+const CUSTOM_MCP_ID_PREFIX = "mcp-user-";
+const MANAGED_SKILL_MARKER = ".openquantum-settings.json";
+const MAX_SKILL_DESCRIPTION_BYTES = 2048;
+const MAX_SKILL_INSTRUCTIONS_BYTES = 64 * 1024;
+const MAX_MCP_ARGUMENTS = 32;
+const MAX_MCP_ARGUMENT_BYTES = 1024;
 const MCP_PLUGIN_NAMES = new Set([
   "@deepseek-ai/dsh-mcp-client",
   "./credentialed-mcp-client.mjs",
@@ -120,6 +128,36 @@ function assertRevision(value) {
   }
 }
 
+function requiredText(value, field, maximumBytes) {
+  if (typeof value !== "string") {
+    throw new TypeError(`${field} 必须是字符串`);
+  }
+  const trimmed = value.trim();
+  if (trimmed.length === 0 || Buffer.byteLength(trimmed, "utf8") > maximumBytes) {
+    throw new TypeError(`${field} 必须是非空文本且不超过 ${maximumBytes} 字节`);
+  }
+  if (trimmed.includes("\0")) {
+    throw new TypeError(`${field} 不能包含 NUL 字符`);
+  }
+  return trimmed;
+}
+
+function optionalCredentialRef(value) {
+  if (value === undefined || value === null || value === "") return null;
+  if (typeof value !== "string" || !CREDENTIAL_REF.test(value)) {
+    throw new TypeError("credentialRef 必须是 POSIX 环境变量名");
+  }
+  return value;
+}
+
+function customMcpId(serverName) {
+  return `${CUSTOM_MCP_ID_PREFIX}${serverName}`;
+}
+
+function isManagedMcpEntry(entry, serverName) {
+  return isRecord(entry) && entry.id === customMcpId(serverName);
+}
+
 function frontmatter(raw) {
   const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n/);
   if (!match) {
@@ -146,6 +184,23 @@ async function regularFile(filePath) {
 
 async function containedRoot(projectRoot) {
   return realpath(projectRoot);
+}
+
+async function containedDirectory(projectRoot, relativePath, { create = false } = {}) {
+  const root = await containedRoot(projectRoot);
+  const candidate = path.resolve(root, relativePath);
+  if (create) {
+    await mkdir(candidate, { recursive: true, mode: 0o700 });
+  }
+  const info = await lstat(candidate);
+  if (!info.isDirectory() || info.isSymbolicLink()) {
+    throw new TypeError("配置目录必须是普通目录");
+  }
+  const resolved = await realpath(candidate);
+  if (resolved !== root && !resolved.startsWith(`${root}${path.sep}`)) {
+    throw new TypeError("配置目录越出项目目录");
+  }
+  return resolved;
 }
 
 async function containedFile(projectRoot, relativePath) {
@@ -179,6 +234,32 @@ async function atomicWrite(filePath, text, mode) {
   } finally {
     await handle?.close().catch(() => undefined);
     await unlink(temporary).catch(() => undefined);
+  }
+}
+
+async function readManagedSkillMarker(projectRoot, directoryName) {
+  const markerPath = path.join(
+    ".agents/skills",
+    directoryName,
+    MANAGED_SKILL_MARKER,
+  );
+  try {
+    const filePath = await containedFile(projectRoot, markerPath);
+    const value = JSON.parse(await readFile(filePath, "utf8"));
+    if (
+      !isRecord(value) ||
+      value.schemaVersion !== "1.0" ||
+      value.kind !== "openquantum-custom-skill" ||
+      typeof value.displayName !== "string"
+    ) {
+      throw new TypeError("自定义 Skill 标记无效");
+    }
+    return value;
+  } catch (error) {
+    if (error && typeof error === "object" && error.code === "ENOENT") {
+      return null;
+    }
+    throw error;
   }
 }
 
@@ -216,6 +297,11 @@ async function readMcp(projectRoot) {
       const transport =
         config.transport === "streamable-http" ? "streamable-http" : "stdio";
       const serverName = String(config.serverName ?? "");
+      const credentialEnv = isRecord(config.credentialEnv)
+        ? Object.values(config.credentialEnv).filter(
+            (value) => typeof value === "string" && CREDENTIAL_REF.test(value),
+          )
+        : [];
       const catalog = MCP_CATALOG[serverName] ?? {
         displayName: serverName,
         description: "项目 Agent preset 声明的 Harness 原生 MCP 服务。",
@@ -223,7 +309,7 @@ async function readMcp(projectRoot) {
         sourceUrl: null,
         packageName: null,
         packageVersion: null,
-        credentialRef: null,
+        credentialRef: credentialEnv[0] ?? null,
       };
       return {
         serverName,
@@ -234,6 +320,7 @@ async function readMcp(projectRoot) {
         packageName: catalog.packageName,
         packageVersion: catalog.packageVersion,
         credentialRef: catalog.credentialRef,
+        managed: isManagedMcpEntry(entry, serverName),
         transport,
         target: displayTarget(config),
         enabled: entry.disabled !== true,
@@ -252,7 +339,11 @@ async function readMcp(projectRoot) {
   );
   const mcpCredentials = [...credentialRefs].map((ref) => ({
     ref,
-    ...MCP_CREDENTIAL_CATALOG[ref],
+    ...(MCP_CREDENTIAL_CATALOG[ref] ?? {
+      displayName: ref,
+      description: "供自定义 MCP 使用的 Harness 安全凭据。",
+      documentationUrl: null,
+    }),
     serverNames: mcpServers
       .filter((server) => server.credentialRef === ref)
       .map((server) => server.serverName),
@@ -295,6 +386,7 @@ async function readSkill(projectRoot, directoryName) {
       throw error;
     }
   }
+  const managedMarker = await readManagedSkillMarker(projectRoot, directoryName);
   return {
     filePath,
     raw,
@@ -303,7 +395,9 @@ async function readSkill(projectRoot, directoryName) {
     view: {
       name: directoryName,
       displayName:
-        isRecord(capability) && typeof capability.displayName === "string"
+        managedMarker
+          ? managedMarker.displayName
+          : isRecord(capability) && typeof capability.displayName === "string"
           ? capability.displayName
           : directoryName,
       description: String(parsed.value.description ?? ""),
@@ -319,6 +413,7 @@ async function readSkill(projectRoot, directoryName) {
           : null,
       modelInvocable: parsed.value["disable-model-invocation"] !== true,
       userInvocable: parsed.value["user-invocable"] !== false,
+      managed: managedMarker !== null,
       revision: digest(raw),
     },
   };
@@ -381,6 +476,101 @@ export async function updateSkillSettings(projectRoot, input) {
   return readProjectSettings(projectRoot);
 }
 
+export async function createSkillSettings(projectRoot, input) {
+  if (!isRecord(input) || typeof input.name !== "string" || !SKILL_NAME.test(input.name)) {
+    throw new TypeError("Skill 名称无效");
+  }
+  const displayName = requiredText(input.displayName, "displayName", 128);
+  const description = requiredText(
+    input.description,
+    "description",
+    MAX_SKILL_DESCRIPTION_BYTES,
+  );
+  const instructions = requiredText(
+    input.instructions,
+    "instructions",
+    MAX_SKILL_INSTRUCTIONS_BYTES,
+  );
+  assertBoolean(input.modelInvocable, "modelInvocable");
+  assertBoolean(input.userInvocable, "userInvocable");
+
+  const skillsRoot = await containedDirectory(projectRoot, ".agents/skills", {
+    create: true,
+  });
+  const target = path.join(skillsRoot, input.name);
+  const frontmatterValue = {
+    name: input.name,
+    description,
+    ...(input.modelInvocable ? {} : { "disable-model-invocation": true }),
+    ...(input.userInvocable ? {} : { "user-invocable": false }),
+  };
+  const header = parseDocument("");
+  header.contents = header.createNode(frontmatterValue);
+  let createdDirectory = false;
+
+  try {
+    await mkdir(target, { mode: 0o700 });
+    createdDirectory = true;
+    await atomicWrite(
+      path.join(target, MANAGED_SKILL_MARKER),
+      `${JSON.stringify(
+        {
+          schemaVersion: "1.0",
+          kind: "openquantum-custom-skill",
+          displayName,
+        },
+        null,
+        2,
+      )}\n`,
+      0o644,
+    );
+    await atomicWrite(
+      path.join(target, "SKILL.md"),
+      `---\n${header.toString().trimEnd()}\n---\n\n${instructions}\n`,
+      0o644,
+    );
+  } catch (error) {
+    if (createdDirectory) {
+      await unlink(path.join(target, "SKILL.md")).catch(() => undefined);
+      await unlink(path.join(target, MANAGED_SKILL_MARKER)).catch(() => undefined);
+      await rmdir(target).catch(() => undefined);
+    }
+    if (error && typeof error === "object" && error.code === "EEXIST") {
+      throw new TypeError("同名 Skill 已存在");
+    }
+    throw error;
+  }
+  return readProjectSettings(projectRoot);
+}
+
+export async function removeSkillSettings(projectRoot, input) {
+  if (!isRecord(input) || typeof input.name !== "string" || !SKILL_NAME.test(input.name)) {
+    throw new TypeError("Skill 名称无效");
+  }
+  assertRevision(input.revision);
+  const skill = await readSkill(projectRoot, input.name);
+  if (!skill.view.managed) {
+    throw new TypeError("内置或外部安装的 Skill 不能从设置中心移除");
+  }
+  if (digest(skill.raw) !== input.revision) {
+    throw new ProjectSettingsConflictError();
+  }
+  const skillDirectory = await containedDirectory(
+    projectRoot,
+    path.join(".agents/skills", input.name),
+  );
+  const trash = await containedDirectory(
+    projectRoot,
+    ".openquantum/trash/skills",
+    { create: true },
+  );
+  await rename(
+    skillDirectory,
+    path.join(trash, `${input.name}-${Date.now()}-${randomUUID()}`),
+  );
+  return readProjectSettings(projectRoot);
+}
+
 export async function updateMcpSettings(projectRoot, input) {
   if (!isRecord(input) || typeof input.serverName !== "string" || !SERVER_NAME.test(input.serverName)) {
     throw new TypeError("MCP serverName 无效");
@@ -438,6 +628,146 @@ export async function updateMcpSettings(projectRoot, input) {
       input.reconnect[field],
     );
   }
+  const mode = (await regularFile(mcp.filePath)).mode & 0o777;
+  await atomicWrite(mcp.filePath, mcp.document.toString(), mode);
+  return readProjectSettings(projectRoot);
+}
+
+export async function createMcpSettings(projectRoot, input) {
+  if (!isRecord(input) || typeof input.serverName !== "string" || !SERVER_NAME.test(input.serverName)) {
+    throw new TypeError("MCP serverName 无效");
+  }
+  assertRevision(input.revision);
+  const transport = input.transport;
+  if (transport !== "stdio" && transport !== "streamable-http") {
+    throw new TypeError("MCP transport 无效");
+  }
+  const credentialRef = optionalCredentialRef(input.credentialRef);
+  if (transport === "streamable-http" && credentialRef) {
+    throw new TypeError("当前自定义 HTTP MCP 只支持无凭据端点");
+  }
+
+  const mcp = await readMcp(projectRoot);
+  if (mcp.revision !== input.revision) {
+    throw new ProjectSettingsConflictError();
+  }
+  if (mcp.mcpServers.some((server) => server.serverName === input.serverName)) {
+    throw new TypeError("同名 MCP 服务已存在");
+  }
+
+  const reconnect = {
+    enabled: true,
+    initialDelayMs: 1000,
+    maxDelayMs: 30000,
+    maxAttempts: 10,
+  };
+  let config;
+  if (transport === "stdio") {
+    const command = requiredText(input.command, "command", 256);
+    if (command.includes("\n") || command.includes("\r")) {
+      throw new TypeError("command 不能包含换行");
+    }
+    if (!Array.isArray(input.args) || input.args.length > MAX_MCP_ARGUMENTS) {
+      throw new TypeError(`args 最多包含 ${MAX_MCP_ARGUMENTS} 项`);
+    }
+    const args = input.args.map((argument, index) => {
+      if (
+        typeof argument !== "string" ||
+        argument.includes("\0") ||
+        argument.includes("\n") ||
+        argument.includes("\r") ||
+        Buffer.byteLength(argument, "utf8") > MAX_MCP_ARGUMENT_BYTES
+      ) {
+        throw new TypeError(`args[${index}] 无效`);
+      }
+      return argument;
+    });
+    config = {
+      serverName: input.serverName,
+      transport,
+      command,
+      args,
+      env: {},
+      cwd: "process.cwd()",
+      ...(credentialRef
+        ? { credentialEnv: { [credentialRef]: credentialRef } }
+        : {}),
+      toolCallTimeoutMs: 60000,
+      failOnStartupError: false,
+      reconnect,
+    };
+  } else {
+    const urlText = requiredText(input.url, "url", 2048);
+    let parsedUrl;
+    try {
+      parsedUrl = new URL(urlText);
+    } catch {
+      throw new TypeError("MCP URL 无效");
+    }
+    if (
+      !["http:", "https:"].includes(parsedUrl.protocol) ||
+      parsedUrl.username ||
+      parsedUrl.password
+    ) {
+      throw new TypeError("MCP URL 必须是无内嵌凭据的 HTTP(S) 地址");
+    }
+    config = {
+      serverName: input.serverName,
+      transport,
+      url: parsedUrl.toString(),
+      headers: {},
+      toolCallTimeoutMs: 60000,
+      failOnStartupError: false,
+      reconnect,
+    };
+  }
+
+  const pluginName = credentialRef
+    ? "./credentialed-mcp-client.mjs"
+    : "@deepseek-ai/dsh-mcp-client";
+  mcp.document.add(
+    mcp.document.createNode({
+      id: customMcpId(input.serverName),
+      name: pluginName,
+      disabled: true,
+      config,
+    }),
+  );
+  if (transport === "stdio") {
+    const index = mcp.document.contents.items.length - 1;
+    const cwdNode = mcp.document.getIn([index, "config", "cwd"], true);
+    cwdNode.tag = "tag:yaml.org,2002:js";
+  }
+  const mode = (await regularFile(mcp.filePath)).mode & 0o777;
+  await atomicWrite(mcp.filePath, mcp.document.toString(), mode);
+  return readProjectSettings(projectRoot);
+}
+
+export async function removeMcpSettings(projectRoot, input) {
+  if (!isRecord(input) || typeof input.serverName !== "string" || !SERVER_NAME.test(input.serverName)) {
+    throw new TypeError("MCP serverName 无效");
+  }
+  assertRevision(input.revision);
+  const mcp = await readMcp(projectRoot);
+  if (mcp.revision !== input.revision) {
+    throw new ProjectSettingsConflictError();
+  }
+  const entries = mcp.document.contents?.items;
+  if (!Array.isArray(entries)) {
+    throw new TypeError("Agent Cordis 配置必须是列表");
+  }
+  const index = mcp.document.toJS().findIndex(
+    (entry) =>
+      isManagedMcpEntry(entry, input.serverName) &&
+      entry.config?.serverName === input.serverName,
+  );
+  if (index < 0) {
+    throw new TypeError("内置或外部声明的 MCP 不能从设置中心移除");
+  }
+  if (mcp.document.getIn([index, "disabled"]) !== true) {
+    throw new TypeError("请先停用 MCP 服务，再将其移除");
+  }
+  mcp.document.deleteIn([index]);
   const mode = (await regularFile(mcp.filePath)).mode & 0o777;
   await atomicWrite(mcp.filePath, mcp.document.toString(), mode);
   return readProjectSettings(projectRoot);

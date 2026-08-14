@@ -9,6 +9,37 @@ async function closeServer(server) {
   });
 }
 
+test("credential seam accepts only built-in or project-declared references", async () => {
+  const { isAllowedCredentialPayload } = await import(
+    "../src/app/api/harness/[method]/route.ts"
+  );
+  const allowed = new Set(["OPENQUANTUM_PUBLIC_API_KEY", "COMMUNITY_QUANTUM_TOKEN"]);
+  assert.equal(
+    isAllowedCredentialPayload(
+      "credentials.set",
+      { ref: "COMMUNITY_QUANTUM_TOKEN", value: "redacted" },
+      allowed,
+    ),
+    true,
+  );
+  assert.equal(
+    isAllowedCredentialPayload(
+      "credentials.set",
+      { ref: "UNRELATED_SECRET", value: "redacted" },
+      allowed,
+    ),
+    false,
+  );
+  assert.equal(
+    isAllowedCredentialPayload(
+      "credentials.describe",
+      { refs: ["OPENQUANTUM_PUBLIC_API_KEY", "COMMUNITY_QUANTUM_TOKEN"] },
+      allowed,
+    ),
+    true,
+  );
+});
+
 test("Harness BFF enforces the browser boundary and owns deployment cwd", async (t) => {
   const upstreamRequests = [];
   const upstream = createServer(async (request, response) => {

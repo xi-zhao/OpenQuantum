@@ -72,7 +72,7 @@ export function SettingsDialog({ open, port, onClose }: SettingsDialogProps) {
     try {
       setSnapshot(await port.execute(command));
       setNotice(
-        command.type === "mcp.update" || command.type === "mcp.credential.update"
+        command.type.startsWith("mcp.")
           ? "MCP 配置已保存；重启 Harness 后生效。"
           : "设置已保存。",
       );

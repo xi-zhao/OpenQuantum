@@ -136,6 +136,22 @@ OpenQuantum 直接通过 DeepSeek Harness 原生 MCP Client 使用
 `quantum-ground-state` 不被官方 MCP 替代：它仍是 OpenQuantum 的窄作用域参考 Skill，负责可复现求解、
 独立 Validator 和科学验收；官方 Qiskit MCP 提供通用电路、文档及可选云后端能力。
 
+### 添加项目扩展
+
+设置中心也提供一个小而稳定的项目扩展 Interface：
+
+- MCP 可以新增本地 `stdio` 进程或无鉴权的 Streamable HTTP 端点；新条目一律先以关闭状态写入
+  `agent.cordis.yml`，审阅后再启用；
+- `stdio` MCP 可以声明一个 POSIX 名称的 Harness credential reference，值通过设置中心保存，绝不写进
+  Agent preset；
+- Skill 可以从名称、能力描述和 Markdown 指令生成标准 `.agents/skills/<name>/SKILL.md`，随后仍由
+  DeepSeek Harness 原生文件系统 Provider 发现；
+- 只有设置中心创建的项目扩展可以在 UI 中移除。内置、科学验收或手工安装的扩展受到保护；自定义 Skill
+  会移入 `.openquantum/trash/skills`，方便恢复。
+
+这是项目级配置，不是远程插件市场。复杂 Skill、多个凭据或带鉴权 HTTP MCP 仍应通过仓库文件审阅后接入。
+任何自定义 `stdio` command 都会在 Harness 权限下执行，因此只应使用明确可信且最好固定版本的来源。
+
 ## 验证
 
 ```bash

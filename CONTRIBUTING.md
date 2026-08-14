@@ -106,6 +106,10 @@ Agent/Session/Tool call 取得执行身份，通过 `ctx.fs` 在 Session workspa
 它只负责 credential reference → 子进程环境变量的启动期映射；连接、Tool 注册、超时和重连仍由
 `@deepseek-ai/dsh-mcp-client` 负责。不要在 Adapter 中添加第二套 MCP 生命周期。
 
+设置中心创建的自定义 MCP 必须默认关闭、使用独立 `serverName`，参数以数组直接交给进程，禁止拼成 Shell
+命令。自定义 Skill 只生成标准 `SKILL.md`；需要脚本、schema、Validator 或 eval 的复杂 Skill，应直接在
+`.agents/skills/<name>` 中开发并提交完整测试。不要让 UI 成为绕过代码审查的远程安装器。
+
 ### 让科学结果在 UI 中可回放
 
 Harness 的 MCP bridge 负责进程、重连、Tool registry 和调用；不要在 Skill 中复制这些职责。MCP

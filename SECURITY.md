@@ -51,3 +51,7 @@ OpenQuantum 第一版不提供远程插件市场或自动安装。仓库内 stdi
 IBM Runtime 与 Transpiler 默认关闭。只有用户在设置中心保存 `QISKIT_IBM_TOKEN` 并显式启用后，可信的
 credential Adapter 才会在 Harness 启动时把 Token 注入对应 stdio 子进程。Token 不得进入项目配置、Session、
 Artifact、日志或截图；云任务可能消耗配额或产生费用，启用服务不等于授权 Agent 任意提交高成本任务。
+
+设置中心允许项目所有者新增自定义 MCP，但不会自动下载或信任远程配置：新服务默认关闭，HTTP URL 禁止
+内嵌用户名/密码，凭据只接受 Harness reference。启用自定义 `stdio` MCP 等同于授权其程序以 Harness
+进程的本地权限运行；OpenQuantum 当前不提供独立容器隔离，因此不要运行来源不明的 command、包或脚本。

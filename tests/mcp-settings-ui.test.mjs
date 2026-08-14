@@ -40,6 +40,7 @@ test("MCP settings presents official Qiskit defaults and redacted IBM credential
           packageName: "qiskit-mcp-server",
           packageVersion: "0.3.1",
           credentialRef: null,
+          managed: false,
           transport: "stdio",
           target: "uvx --from qiskit-mcp-server==0.3.1 qiskit-mcp-server",
           enabled: true,
@@ -56,6 +57,7 @@ test("MCP settings presents official Qiskit defaults and redacted IBM credential
           packageName: "qiskit-ibm-runtime-mcp-server",
           packageVersion: "0.6.1",
           credentialRef: "QISKIT_IBM_TOKEN",
+          managed: false,
           transport: "stdio",
           target: "uvx qiskit-ibm-runtime-mcp-server",
           enabled: false,
@@ -94,6 +96,7 @@ test("MCP settings blocks shared token removal while a cloud consumer is enabled
     packageName: "qiskit-ibm-runtime-mcp-server",
     packageVersion: "0.6.1",
     credentialRef: credential.ref,
+    managed: false,
     transport: "stdio",
     target: "uvx qiskit-ibm-runtime-mcp-server",
     enabled: true,
@@ -113,4 +116,38 @@ test("MCP settings blocks shared token removal while a cloud consumer is enabled
 
   assert.match(markup, /请先停用 IBM Quantum Runtime，再移除共享 Token/);
   assert.match(markup, /移除已保存的 Token/);
+});
+
+test("MCP settings exposes add and guarded remove controls for project entries", () => {
+  const markup = renderToStaticMarkup(
+    createElement(McpSettingsSection, {
+      revision: "c".repeat(64),
+      savingKey: null,
+      onSave: () => {},
+      credentials: [],
+      servers: [
+        {
+          serverName: "community_quantum",
+          displayName: "community_quantum",
+          description: "Project MCP",
+          provider: "Project",
+          sourceUrl: null,
+          packageName: null,
+          packageVersion: null,
+          credentialRef: null,
+          managed: true,
+          transport: "stdio",
+          target: "uvx community-mcp",
+          enabled: false,
+          toolCallTimeoutMs: 60000,
+          failOnStartupError: false,
+          reconnect,
+        },
+      ],
+    }),
+  );
+
+  assert.match(markup, /添加 MCP 服务/);
+  assert.match(markup, /PROJECT/);
+  assert.match(markup, />移除</);
 });

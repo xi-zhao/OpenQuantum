@@ -141,6 +141,8 @@ export class HarnessSettingsAdapter implements OpenQuantumSettingsPort {
         await this.updateModel(command, signal);
         break;
       case "skill.update":
+      case "skill.create":
+      case "skill.remove":
         await projectRequest({ action: command.type, ...command }, signal);
         break;
       case "mcp.update":
@@ -148,6 +150,12 @@ export class HarnessSettingsAdapter implements OpenQuantumSettingsPort {
         break;
       case "mcp.credential.update":
         await this.updateMcpCredential(command, signal);
+        break;
+      case "mcp.create":
+        await projectRequest({ action: command.type, ...command }, signal);
+        break;
+      case "mcp.remove":
+        await this.removeMcp(command, signal);
         break;
     }
     return this.snapshot(signal);
@@ -181,6 +189,9 @@ export class HarnessSettingsAdapter implements OpenQuantumSettingsPort {
       throw new Error("MCP 服务已不存在，请刷新设置后重试");
     }
     if (command.enabled && server.credentialRef) {
+      const credential = project.mcpCredentials.find(
+        (candidate) => candidate.ref === server.credentialRef,
+      );
       const described = unwrap(
         await this.client.credentials.describe(
           { refs: [server.credentialRef] },
@@ -188,7 +199,9 @@ export class HarnessSettingsAdapter implements OpenQuantumSettingsPort {
         ),
       );
       if (!described.credentials[server.credentialRef]?.configured) {
-        throw new Error("请先保存 IBM Quantum API Token，再启用该云服务");
+        throw new Error(
+          `请先保存 ${credential?.displayName ?? server.credentialRef}，再启用该服务`,
+        );
       }
     }
     await projectRequest({ action: command.type, ...command }, signal);
@@ -216,9 +229,34 @@ export class HarnessSettingsAdapter implements OpenQuantumSettingsPort {
     }
     const value = command.value?.trim();
     if (!value) {
-      throw new Error("请输入 IBM Quantum API Token");
+      throw new Error("请输入凭据值");
     }
     unwrap(await this.client.credentials.set({ ref: command.ref, value }, signal));
+  }
+
+  private async removeMcp(
+    command: Extract<SettingsCommand, { type: "mcp.remove" }>,
+    signal?: AbortSignal,
+  ): Promise<void> {
+    const project = await this.loadProject(signal);
+    const server = project.mcpServers.find(
+      (candidate) => candidate.serverName === command.serverName,
+    );
+    if (!server) {
+      throw new Error("MCP 服务已不存在，请刷新设置后重试");
+    }
+    if (server.enabled) {
+      throw new Error("请先停用 MCP 服务，再将其移除");
+    }
+    if (server.credentialRef) {
+      const credential = project.mcpCredentials.find(
+        (candidate) => candidate.ref === server.credentialRef,
+      );
+      if (credential?.configured) {
+        throw new Error(`请先移除 ${credential.displayName}，再移除 MCP 服务`);
+      }
+    }
+    await projectRequest({ action: command.type, ...command }, signal);
   }
 
   private async loadModels(signal?: AbortSignal) {

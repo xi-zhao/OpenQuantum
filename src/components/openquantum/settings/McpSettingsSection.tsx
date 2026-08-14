@@ -16,10 +16,14 @@ interface McpEditorProps {
   credential?: McpCredentialSettings;
   revision: string;
   saving: boolean;
+  removeArmed: boolean;
   onSave: (command: SettingsCommand) => void;
+  onArmRemove: () => void;
+  onCancelRemove: () => void;
+  onRemove: () => void;
 }
 
-function McpEditor({ server, credential, revision, saving, onSave }: McpEditorProps) {
+function McpEditor({ server, credential, revision, saving, removeArmed, onSave, onArmRemove, onCancelRemove, onRemove }: McpEditorProps) {
   const [enabled, setEnabled] = useState(server.enabled);
   const [timeout, setTimeoutValue] = useState(server.toolCallTimeoutMs);
   const [reconnectEnabled, setReconnectEnabled] = useState(server.reconnect.enabled);
@@ -41,6 +45,9 @@ function McpEditor({ server, credential, revision, saving, onSave }: McpEditorPr
               <span className="rounded-full bg-[#edf4f6] px-2 py-0.5 font-mono text-[9px] font-semibold text-[#526673]">
                 v{server.packageVersion}
               </span>
+            ) : null}
+            {server.managed ? (
+              <span className="rounded-full bg-[#e7f7f4] px-2 py-0.5 font-mono text-[9px] font-semibold text-[#0b776e]">PROJECT</span>
             ) : null}
           </div>
           <p className="mt-1 font-mono text-[10px] text-[#728793]">{server.serverName} · {server.provider}</p>
@@ -97,26 +104,50 @@ function McpEditor({ server, credential, revision, saving, onSave }: McpEditorPr
         </label>
       </div>
 
-      <div className="mt-5 flex items-center justify-between gap-4 border-t border-[#e5ecef] pt-4">
+      <div className="mt-5 flex flex-wrap items-center justify-between gap-4 border-t border-[#e5ecef] pt-4">
         <p className="text-xs leading-5 text-[#728793]">
           写入 Harness Agent preset；为保护正在运行的会话，重启 Harness 后生效。
         </p>
-        <button
-          type="button"
-          disabled={saving || maxDelay < initialDelay}
-          onClick={() => onSave({
-            type: "mcp.update",
-            serverName: server.serverName,
-            revision,
-            enabled,
-            toolCallTimeoutMs: timeout,
-            reconnect: { enabled: reconnectEnabled, initialDelayMs: initialDelay, maxDelayMs: maxDelay, maxAttempts },
-          })}
-          className="shrink-0 rounded-lg bg-[#0f9f91] px-4 py-2 text-sm font-semibold text-white hover:bg-[#0b887d] disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          {saving ? "保存中…" : "保存 MCP"}
-        </button>
+        <div className="flex flex-wrap items-center justify-end gap-3">
+          {server.managed ? (
+            removeArmed ? (
+              <>
+                <button type="button" onClick={onCancelRemove} className="text-xs font-medium text-[#617682]">取消</button>
+                <button
+                  type="button"
+                  disabled={saving || server.enabled || credential?.configured === true}
+                  onClick={onRemove}
+                  className="rounded-lg border border-[#e2aeb3] px-3 py-2 text-xs font-semibold text-[#9f2633] hover:bg-[#fff5f5] disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  确认移除
+                </button>
+              </>
+            ) : (
+              <button type="button" onClick={onArmRemove} className="text-xs font-medium text-[#9f2633] hover:underline">移除</button>
+            )
+          ) : null}
+          <button
+            type="button"
+            disabled={saving || maxDelay < initialDelay}
+            onClick={() => onSave({
+              type: "mcp.update",
+              serverName: server.serverName,
+              revision,
+              enabled,
+              toolCallTimeoutMs: timeout,
+              reconnect: { enabled: reconnectEnabled, initialDelayMs: initialDelay, maxDelayMs: maxDelay, maxAttempts },
+            })}
+            className="shrink-0 rounded-lg bg-[#0f9f91] px-4 py-2 text-sm font-semibold text-white hover:bg-[#0b887d] disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {saving ? "保存中…" : "保存 MCP"}
+          </button>
+        </div>
       </div>
+      {server.managed && removeArmed && (server.enabled || credential?.configured) ? (
+        <p className="mt-2 text-right text-xs text-[#8b5b08]">
+          {server.enabled ? "请先停用服务。" : `请先移除 ${credential?.displayName}。`}
+        </p>
+      ) : null}
     </article>
   );
 }
@@ -161,7 +192,7 @@ function McpCredentialEditor({ credential, enabledConsumers, saving, onSave }: M
           disabled={!credential.writable || remove}
           value={value}
           onChange={(event) => setValue(event.target.value)}
-          placeholder={credential.configured ? "已配置——输入新值可替换" : "输入 IBM Quantum API Token"}
+          placeholder={credential.configured ? "已配置——输入新值可替换" : `输入 ${credential.displayName}`}
         />
       </label>
       {credential.configured ? (
@@ -186,8 +217,10 @@ function McpCredentialEditor({ credential, enabledConsumers, saving, onSave }: M
       ) : null}
       <div className="mt-5 flex items-center justify-between gap-4 border-t border-[#cfe7e3] pt-4">
         <p className="text-xs leading-5 text-[#617682]">
-          <a className="font-medium text-[#0b887d] underline-offset-2 hover:underline" href={credential.documentationUrl} target="_blank" rel="noreferrer">获取 IBM Quantum Token</a>
-          <span> · 值不会返回浏览器或写入 Git。</span>
+          {credential.documentationUrl ? (
+            <><a className="font-medium text-[#0b887d] underline-offset-2 hover:underline" href={credential.documentationUrl} target="_blank" rel="noreferrer">查看凭据说明</a><span> · </span></>
+          ) : null}
+          <span>值不会返回浏览器或写入 Git。</span>
         </p>
         <button
           type="button"
@@ -206,14 +239,111 @@ function McpCredentialEditor({ credential, enabledConsumers, saving, onSave }: M
   );
 }
 
+function CreateMcpForm({ revision, saving, onSave }: {
+  revision: string;
+  saving: boolean;
+  onSave: (command: SettingsCommand) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const [serverName, setServerName] = useState("");
+  const [transport, setTransport] = useState<"stdio" | "streamable-http">("stdio");
+  const [command, setCommand] = useState("uvx");
+  const [args, setArgs] = useState("");
+  const [url, setUrl] = useState("");
+  const [credentialRef, setCredentialRef] = useState("");
+  const serverNameValid = /^[A-Za-z0-9_-]{1,32}$/.test(serverName);
+  const valid = serverNameValid && (transport === "stdio" ? command.trim().length > 0 : /^https?:\/\//.test(url));
+
+  if (!open) {
+    return (
+      <button type="button" onClick={() => setOpen(true)} className="mt-5 rounded-lg bg-[#0f9f91] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#0b887d]">
+        添加 MCP 服务
+      </button>
+    );
+  }
+
+  return (
+    <article className="mt-5 rounded-2xl border border-[#b8dcd7] bg-[#f1fbf9] p-5">
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h3 className="font-semibold text-[#162936]">连接 Harness 原生 MCP</h3>
+          <p className="mt-1 text-xs leading-5 text-[#617682]">
+            新服务先以关闭状态写入项目 preset。启用 stdio 服务会执行所填程序，请只使用可信来源。
+          </p>
+        </div>
+        <button type="button" onClick={() => setOpen(false)} className="text-xs font-medium text-[#617682] hover:text-[#162936]">收起</button>
+      </div>
+      <div className="mt-4 grid gap-4 sm:grid-cols-2">
+        <label className="text-xs font-medium text-[#526673]">
+          Server Name
+          <input className={numberClass} value={serverName} onChange={(event) => setServerName(event.target.value)} placeholder="my_quantum_tools" />
+          <span className="mt-1 block text-[10px] text-[#728793]">用于 mcp__server__tool 命名，最多 32 个字符。</span>
+        </label>
+        <label className="text-xs font-medium text-[#526673]">
+          Transport
+          <select className={numberClass} value={transport} onChange={(event) => setTransport(event.target.value as "stdio" | "streamable-http")}>
+            <option value="stdio">stdio（本地进程）</option>
+            <option value="streamable-http">Streamable HTTP（公开端点）</option>
+          </select>
+        </label>
+      </div>
+      {transport === "stdio" ? (
+        <>
+          <div className="mt-4 grid gap-4 sm:grid-cols-2">
+            <label className="text-xs font-medium text-[#526673]">
+              可执行程序
+              <input className={numberClass} value={command} onChange={(event) => setCommand(event.target.value)} placeholder="uvx" />
+            </label>
+            <label className="text-xs font-medium text-[#526673]">
+              可选凭据引用
+              <input className={numberClass} value={credentialRef} onChange={(event) => setCredentialRef(event.target.value)} placeholder="例如 GITHUB_TOKEN" />
+              <span className="mt-1 block text-[10px] text-[#728793]">同时作为传给子进程的环境变量名；留空表示无凭据。</span>
+            </label>
+          </div>
+          <label className="mt-4 block text-xs font-medium text-[#526673]">
+            参数（每行一项，不经过 Shell）
+            <textarea className={`${numberClass} min-h-28 resize-y font-mono text-xs`} value={args} onChange={(event) => setArgs(event.target.value)} placeholder={"--from\nmy-mcp-server==1.0.0\nmy-mcp-server"} />
+          </label>
+        </>
+      ) : (
+        <label className="mt-4 block text-xs font-medium text-[#526673]">
+          MCP URL
+          <input className={numberClass} value={url} onChange={(event) => setUrl(event.target.value)} placeholder="https://example.com/mcp" />
+          <span className="mt-1 block text-[10px] text-[#728793]">当前只接受无内嵌凭据的 HTTP(S) 端点。</span>
+        </label>
+      )}
+      <div className="mt-5 flex justify-end border-t border-[#cfe7e3] pt-4">
+        <button
+          type="button"
+          disabled={saving || !valid}
+          onClick={() => onSave({
+            type: "mcp.create",
+            revision,
+            serverName,
+            transport,
+            ...(transport === "stdio"
+              ? { command, args: args.split(/\r?\n/).filter((argument) => argument.length > 0), ...(credentialRef.trim() ? { credentialRef: credentialRef.trim() } : {}) }
+              : { url }),
+          })}
+          className="rounded-lg bg-[#0f9f91] px-4 py-2 text-sm font-semibold text-white hover:bg-[#0b887d] disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          {saving ? "添加中…" : "添加为关闭状态"}
+        </button>
+      </div>
+    </article>
+  );
+}
+
 export function McpSettingsSection({ servers, credentials, revision, savingKey, onSave }: McpSettingsSectionProps) {
   const credentialByRef = new Map(credentials.map((credential) => [credential.ref, credential]));
+  const [removeName, setRemoveName] = useState<string | null>(null);
   return (
     <div>
       <h2 className="text-xl font-semibold tracking-[-0.025em] text-[#162936]">MCP 服务</h2>
       <p className="mt-2 text-sm leading-6 text-[#617682]">
         这里管理 DeepSeek Harness 原生 MCP Client 的连接策略。OpenQuantum 不另建 MCP Runtime。
       </p>
+      <CreateMcpForm revision={revision} saving={savingKey === "mcp:create"} onSave={(command) => onSave(command, "mcp:create")} />
       {credentials.length > 0 ? (
         <div className="mt-6 space-y-4">
           {credentials.map((credential) => (
@@ -237,7 +367,11 @@ export function McpSettingsSection({ servers, credentials, revision, savingKey, 
             credential={server.credentialRef ? credentialByRef.get(server.credentialRef) : undefined}
             revision={revision}
             saving={savingKey === `mcp:${server.serverName}`}
+            removeArmed={removeName === server.serverName}
             onSave={(command) => onSave(command, `mcp:${server.serverName}`)}
+            onArmRemove={() => setRemoveName(server.serverName)}
+            onCancelRemove={() => setRemoveName(null)}
+            onRemove={() => onSave({ type: "mcp.remove", serverName: server.serverName, revision }, `mcp:${server.serverName}`)}
           />
         ))}
       </div>
