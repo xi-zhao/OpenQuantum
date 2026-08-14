@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openquantum.local/schemas/quantum-ground-state/resource-estimate-v1.json",
+  "title": "Quantum Ground State Resource Estimate v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "artifactType",
+    "hamiltonianDigest",
+    "logicalQubits",
+    "sectorDimension",
+    "statevectorDimension",
+    "pauliTermCount",
+    "ansatzParameterCount",
+    "expectationEvaluations",
+    "pauliTermEvaluations",
+    "shots",
+    "maxEvaluations"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "1.0" },
+    "artifactType": { "const": "resource-estimate" },
+    "hamiltonianDigest": { "$ref": "#/$defs/sha256" },
+    "logicalQubits": { "const": 2 },
+    "sectorDimension": { "const": 2 },
+    "statevectorDimension": { "const": 4 },
+    "pauliTermCount": { "type": "integer", "minimum": 1, "maximum": 32 },
+    "ansatzParameterCount": { "const": 1 },
+    "expectationEvaluations": { "type": "integer", "minimum": 1, "maximum": 256 },
+    "pauliTermEvaluations": { "type": "integer", "minimum": 1, "maximum": 8192 },
+    "shots": { "const": 0 },
+    "maxEvaluations": { "type": "integer", "minimum": 8, "maximum": 256 }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+  }
+}

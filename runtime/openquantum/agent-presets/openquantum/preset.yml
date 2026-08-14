@@ -1,0 +1,3 @@
+name: OpenQuantum
+description: 仅装载 OpenQuantum 项目 Skill 和 MCP 的科研 Agent，不混入个人全局 Skill。
+order: 0

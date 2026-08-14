@@ -1,0 +1,10 @@
+{
+  "base": "requests/protocol-fixture.json",
+  "transform": {
+    "kind": "add-coefficient",
+    "pauli": "II",
+    "value": 0.25,
+    "expectedEnergyShiftHartree": 0.25,
+    "expectedMinimizerInvariant": true
+  }
+}

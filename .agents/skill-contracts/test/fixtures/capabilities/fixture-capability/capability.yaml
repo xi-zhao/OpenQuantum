@@ -1,0 +1,101 @@
+schemaVersion: "1.0"
+id: fixture-capability
+version: 1.2.3
+displayName: Fixture capability
+description: A complete, deterministic capability tree used by contract tests.
+maturity:
+  status: draft
+  evidence: []
+skill:
+  name: fixture-capability
+  entrypoint: SKILL.md
+scope:
+  supportedClaims:
+    - Produce a fixture energy document
+  outOfScope:
+    - Real scientific claims
+  examples:
+    - title: Compute fixture energy
+      prompt: Compute the fixture energy for H2.
+input:
+  id: research-request
+  schema: inputs/request.schema.json
+  maxBytes: 1024
+  mediaTypes:
+    - application/json
+artifacts:
+  - id: energy-result
+    schema: artifacts/energy-result.schema.json
+    required: true
+    mediaType: application/json
+  - id: convergence-trace
+    schema: artifacts/convergence-trace.schema.json
+    required: false
+    mediaType: application/json
+validators:
+  - id: deterministic-validator
+    version: 2.0.0
+    command:
+      executable: node
+      script: validators/validate.mjs
+      args: []
+      shell: false
+acceptanceProfiles:
+  - id: scientific-v1
+    version: 1.0.0
+    validator: deterministic-validator
+    checks:
+      - id: energy-accuracy
+        category: scientific
+        required: true
+      - id: metadata-completeness
+        category: reproducibility
+        required: false
+modelRequirements:
+  textGeneration: true
+  toolCalling: true
+  structuredOutput: true
+  minContextTokens: 4096
+  multimodal: false
+permissions:
+  network:
+    mode: none
+    destinations: []
+  filesystem:
+    read:
+      - workspace
+    write:
+      - workspace/results
+  subprocess:
+    allowed: true
+    commands:
+      - node
+  cloudCompute:
+    allowed: false
+    providers: []
+  limits:
+    wallTimeSeconds: 30
+    memoryMiB: 256
+    maxArtifacts: 4
+    maxCostUsd: 0
+  data:
+    classification: public
+    retentionDays: 7
+    externalTransfer: forbidden
+    licenses:
+      - CC0-1.0
+evals:
+  runner:
+    executable: node
+    script: evals/run.mjs
+    args: []
+    shell: false
+  cases: evals/cases.json
+compatibility:
+  contract: "1.0"
+  harness: ">=0.1.0-rc.6 <0.2.0"
+dependencies:
+  - id: fixture-solver
+    kind: scientific-backend
+    version: 1.0.0
+    digest: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa

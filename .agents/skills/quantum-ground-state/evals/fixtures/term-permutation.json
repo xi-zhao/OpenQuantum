@@ -1,0 +1,9 @@
+{
+  "base": "requests/protocol-fixture.json",
+  "transform": {
+    "kind": "reverse-pauli-terms",
+    "expectedHamiltonianDigestInvariant": true,
+    "expectedEnergyInvariant": true,
+    "expectedMinimizerInvariant": true
+  }
+}

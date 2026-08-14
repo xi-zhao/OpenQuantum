@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openquantum.local/test/energy-result.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["energy", "unit"],
+  "properties": {
+    "energy": { "type": "number" },
+    "unit": { "const": "hartree" }
+  }
+}

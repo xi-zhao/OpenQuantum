@@ -1,0 +1,85 @@
+{
+  "acceptanceProfile": {
+    "schemaVersion": "1.0",
+    "id": "scientific-v1",
+    "version": "1.0.0",
+    "scope": {
+      "supportedClaims": ["Produce fixture energy"],
+      "outOfScope": ["Real scientific claims"]
+    },
+    "checks": [
+      {
+        "id": "energy-accuracy",
+        "category": "scientific",
+        "required": true,
+        "criterion": "Energy agrees with the fixture reference",
+        "threshold": 0.001,
+        "unit": "hartree"
+      }
+    ],
+    "path": "/fixture/acceptance-profile.json",
+    "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+  },
+  "reproductionProfile": {
+    "schemaVersion": "1.0",
+    "id": "reproduction-v1",
+    "version": "1.0.0",
+    "scope": {
+      "supportedClaims": ["Reproduce fixture energy"],
+      "outOfScope": ["Hardware reproducibility"]
+    },
+    "checks": [
+      {
+        "id": "independent-run",
+        "category": "independence",
+        "required": true,
+        "criterion": "The reproduction uses a distinct execution"
+      },
+      {
+        "id": "energy-agreement",
+        "category": "scientific",
+        "required": true,
+        "criterion": "The energies agree within tolerance",
+        "threshold": 0.001,
+        "unit": "hartree"
+      },
+      {
+        "id": "metadata-match",
+        "category": "metadata",
+        "required": false,
+        "criterion": "Optional metadata agrees"
+      }
+    ],
+    "independenceCheck": "independent-run",
+    "path": "/fixture/reproduction-profile.json",
+    "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+  },
+  "evaluationSuite": {
+    "schemaVersion": "1.0",
+    "id": "fixture-suite",
+    "version": "1.0.0",
+    "metric": {
+      "id": "weighted-pass-rate",
+      "unit": "percent",
+      "direction": "higher_is_better",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "cases": [
+      {
+        "id": "scientific-gate",
+        "weight": 3,
+        "hardGate": true,
+        "expectedOutcome": { "accepted": true }
+      },
+      {
+        "id": "optional-quality",
+        "weight": 2,
+        "hardGate": false,
+        "expectedOutcome": "complete"
+      }
+    ],
+    "path": "/fixture/evaluation-suite.json",
+    "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+  }
+}

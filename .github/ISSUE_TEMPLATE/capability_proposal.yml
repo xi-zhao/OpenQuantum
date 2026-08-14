@@ -1,0 +1,75 @@
+name: Quantum Extension Proposal
+description: Propose a quantum Skill, MCP, or trusted dsh-plugin
+title: "[Quantum Extension]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Propose the scientific scope and evidence before implementation. Prefer a Harness-native Skill or MCP; use a dsh-plugin only when the native seams are insufficient.
+
+  - type: input
+    id: maintainer
+    attributes:
+      label: Maintainer
+      description: Organization or individual that will maintain this extension in its Fork or upstream contribution.
+      placeholder: Example Quantum Ltd.
+    validations:
+      required: true
+
+  - type: input
+    id: extension-id
+    attributes:
+      label: Skill or MCP ID
+      description: Stable lower-kebab identifier used by the Harness-native extension.
+      placeholder: ground-state-vqe
+    validations:
+      required: true
+
+  - type: textarea
+    id: product-problem
+    attributes:
+      label: Product and scientific problem
+      description: Who uses it, what decision it supports, and why a generic chat answer is insufficient.
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Supported claims and out-of-scope claims
+      description: State the narrow scientific claims this extension can validate and what it must refuse.
+    validations:
+      required: true
+
+  - type: textarea
+    id: artifacts
+    attributes:
+      label: Inputs, artifacts, validators and acceptance evidence
+      description: List the versioned facts and independent checks required for a trustworthy result.
+    validations:
+      required: true
+
+  - type: textarea
+    id: runtime
+    attributes:
+      label: Runtime and permissions
+      description: Languages, locked dependencies, Tool/MCP seams, filesystem/network/subprocess/cloud permissions and resource limits.
+    validations:
+      required: true
+
+  - type: textarea
+    id: licensing
+    attributes:
+      label: Data, model and software licensing
+      description: Identify licenses, redistribution constraints, proprietary inputs and external service terms.
+    validations:
+      required: true
+
+  - type: textarea
+    id: evaluation
+    attributes:
+      label: Evaluation and independent review plan
+      description: Golden cases, negative cases, hidden/blind tests, reproduction and the independent scientific reviewer.
+    validations:
+      required: true

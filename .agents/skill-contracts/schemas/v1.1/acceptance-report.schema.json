@@ -1,0 +1,149 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openquantum.local/contracts/v1.1/acceptance-report.schema.json",
+  "title": "OpenQuantum Acceptance Report v1.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "reportId",
+    "capability",
+    "generatedAt",
+    "resultPackage",
+    "validator",
+    "profile",
+    "scopeMatch",
+    "status",
+    "checks",
+    "limitations",
+    "statement"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "1.1" },
+    "reportId": { "$ref": "#/$defs/id" },
+    "capability": { "$ref": "#/$defs/versionedRef" },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "resultPackage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["packageId", "sha256"],
+      "properties": {
+        "packageId": { "$ref": "#/$defs/id" },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "validator": { "$ref": "#/$defs/versionedRef" },
+    "profile": { "$ref": "#/$defs/versionedShaRef" },
+    "scopeMatch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "statement", "evidenceRefs"],
+      "properties": {
+        "status": { "enum": ["in_scope", "out_of_scope", "indeterminate"] },
+        "statement": { "type": "string", "minLength": 1 },
+        "evidenceRefs": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/evidenceRef" }
+        }
+      }
+    },
+    "status": { "enum": ["passed", "conditional", "failed"] },
+    "checks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "category",
+          "required",
+          "status",
+          "criterion",
+          "evidenceRefs"
+        ],
+        "dependentRequired": { "threshold": ["unit"] },
+        "properties": {
+          "id": { "$ref": "#/$defs/id" },
+          "category": { "$ref": "#/$defs/id" },
+          "required": { "type": "boolean" },
+          "status": { "enum": ["pass", "warn", "fail", "not_checked"] },
+          "criterion": { "type": "string", "minLength": 1 },
+          "observed": {},
+          "threshold": {},
+          "unit": { "type": "string", "minLength": 1 },
+          "evidenceRefs": {
+            "type": "array",
+            "items": { "$ref": "#/$defs/evidenceRef" }
+          },
+          "nextAction": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "statement": { "type": "string", "minLength": 1 }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9]+(?:[._:-][A-Za-z0-9]+)*$",
+      "maxLength": 160
+    },
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "versionedRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "version": { "type": "string", "minLength": 1 }
+      }
+    },
+    "versionedShaRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version", "sha256"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "version": { "type": "string", "minLength": 1 },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "evidenceRef": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "id"],
+          "properties": {
+            "kind": { "const": "input" },
+            "id": { "$ref": "#/$defs/id" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "id"],
+          "properties": {
+            "kind": { "const": "artifact" },
+            "id": { "$ref": "#/$defs/id" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "id", "sequence"],
+          "properties": {
+            "kind": { "const": "session-event" },
+            "id": { "type": "string", "minLength": 1 },
+            "sequence": { "type": "integer", "minimum": 0 }
+          }
+        }
+      ]
+    }
+  }
+}

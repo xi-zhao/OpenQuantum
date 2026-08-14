@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openquantum.local/schemas/platform-diagnostics-report.json",
+  "title": "OpenQuantum Platform Diagnostics Report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "capability",
+    "generatedAt",
+    "status",
+    "checks",
+    "summary"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "1.0" },
+    "capability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version"],
+      "properties": {
+        "id": { "const": "platform-diagnostics" },
+        "version": { "type": "string", "minLength": 1 }
+      }
+    },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "sessionId": { "type": "string", "minLength": 1 },
+    "status": { "enum": ["ready", "degraded", "blocked"] },
+    "checks": {
+      "type": "array",
+      "minItems": 7,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "layer", "required", "status", "evidence"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "layer": { "enum": ["ui", "harness", "skill", "model"] },
+          "required": { "type": "boolean" },
+          "status": { "enum": ["pass", "warn", "fail", "not_checked"] },
+          "evidence": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string", "minLength": 1 }
+          },
+          "nextAction": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["statement", "counts"],
+      "properties": {
+        "statement": { "type": "string", "minLength": 1 },
+        "counts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["pass", "warn", "fail", "notChecked"],
+          "properties": {
+            "pass": { "type": "integer", "minimum": 0 },
+            "warn": { "type": "integer", "minimum": 0 },
+            "fail": { "type": "integer", "minimum": 0 },
+            "notChecked": { "type": "integer", "minimum": 0 }
+          }
+        }
+      }
+    }
+  }
+}

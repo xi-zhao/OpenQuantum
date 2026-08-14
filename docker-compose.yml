@@ -1,0 +1,53 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runner
+    image: openquantum:latest
+    container_name: openquantum
+    restart: unless-stopped
+    ports:
+      - "${PORT:-3000}:3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_TELEMETRY_DISABLED=1
+    env_file:
+      - path: .env.local
+        required: false
+      - path: .env
+        required: false
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3000/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    image: openquantum:dev
+    container_name: openquantum-dev
+    restart: unless-stopped
+    ports:
+      - "${DEV_PORT:-3001}:3000"
+    environment:
+      - NODE_ENV=development
+      - NEXT_TELEMETRY_DISABLED=1
+    env_file:
+      - path: .env.local
+        required: false
+      - path: .env
+        required: false
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3000/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s

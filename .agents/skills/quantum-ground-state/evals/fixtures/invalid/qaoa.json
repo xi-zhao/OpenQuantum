@@ -1,0 +1,5 @@
+{
+  "base": "../requests/protocol-fixture.json",
+  "mutation": { "path": "method.algorithm", "value": "qaoa" },
+  "expectedCode": "INVALID_REQUEST"
+}

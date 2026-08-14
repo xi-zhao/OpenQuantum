@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openquantum.local/schemas/quantum-ground-state/convergence-trace-v1.json",
+  "title": "Quantum Ground State Convergence Trace v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "artifactType",
+    "hamiltonianDigest",
+    "optimizer",
+    "entries",
+    "coarsePointsEvaluated",
+    "refinementEvaluations",
+    "finalBracketWidthRadians",
+    "bestThetaRadians",
+    "bestEnergyHartree"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "1.0" },
+    "artifactType": { "const": "convergence-trace" },
+    "hamiltonianDigest": { "$ref": "#/$defs/sha256" },
+    "optimizer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version",
+        "coarsePointsRequested",
+        "angleToleranceRadians",
+        "maxEvaluations"
+      ],
+      "properties": {
+        "id": { "const": "coarse-grid-golden-refine" },
+        "version": { "const": "1.0.0" },
+        "coarsePointsRequested": { "const": 65 },
+        "angleToleranceRadians": { "type": "number", "exclusiveMinimum": 0 },
+        "maxEvaluations": { "type": "integer", "minimum": 8, "maximum": 256 }
+      }
+    },
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 256,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "evaluation",
+          "phase",
+          "thetaRadians",
+          "energyHartree",
+          "bestEnergyHartree"
+        ],
+        "properties": {
+          "evaluation": { "type": "integer", "minimum": 1, "maximum": 256 },
+          "phase": { "enum": ["coarse", "refine", "final"] },
+          "thetaRadians": {
+            "type": "number",
+            "minimum": -3.141592653589793,
+            "maximum": 3.141592653589793
+          },
+          "energyHartree": { "type": "number" },
+          "bestEnergyHartree": { "type": "number" }
+        }
+      }
+    },
+    "coarsePointsEvaluated": { "type": "integer", "minimum": 1, "maximum": 65 },
+    "refinementEvaluations": { "type": "integer", "minimum": 0, "maximum": 191 },
+    "finalBracketWidthRadians": {
+      "anyOf": [
+        { "type": "number", "minimum": 0 },
+        { "type": "null" }
+      ]
+    },
+    "bestThetaRadians": {
+      "type": "number",
+      "minimum": -3.141592653589793,
+      "maximum": 3.141592653589793
+    },
+    "bestEnergyHartree": { "type": "number" }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+  }
+}

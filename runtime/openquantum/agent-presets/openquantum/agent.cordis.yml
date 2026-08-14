@@ -1,0 +1,111 @@
+# OpenQuantum agent-plane composition. Domain behavior lives in project
+# Skills/MCP; this preset only gives them a safe execution surface.
+
+- id: persona
+  name: '@deepseek-ai/dsh-persona'
+  config:
+    text: >-
+      You are OpenQuantum, a scientific research agent powered by {{model}}.
+      Your working directory is {{cwd}}. Load the relevant project Skill before
+      performing domain work, preserve scientific uncertainty, and never claim
+      scientific validation unless the relevant Skill Validator has passed.
+
+- id: agent-instructions
+  name: '@deepseek-ai/dsh-agent-instructions'
+  config:
+    maxBytes: 65536
+
+- id: tool-bash
+  name: '@deepseek-ai/dsh-tool-bash'
+  disabled: !!js process.platform === 'win32'
+
+- id: tool-pwsh
+  name: '@deepseek-ai/dsh-tool-pwsh'
+  disabled: !!js process.platform !== 'win32'
+
+- id: tool-fs
+  name: '@deepseek-ai/dsh-tool-fs'
+
+- id: tool-fs-search
+  name: '@deepseek-ai/dsh-tool-fs-search'
+  config:
+    sampleOverCapGlobResults: false
+
+- id: tool-jobs
+  name: '@deepseek-ai/dsh-tool-jobs'
+
+- id: skill-filesystem
+  name: '@deepseek-ai/dsh-skill-filesystem'
+  config:
+    providerName: openquantum-capabilities
+    includeDefaultRoots: false
+    customSkillDirs:
+      - !!js process.cwd() + '/.agents/skills'
+
+# Agent Presets mounts this composition once per process and every joined
+# Session inherits the same MCP client. Restart Harness after editing this
+# composition: retained hot-reload generations must not own the same
+# serverName concurrently.
+- id: mcp-openquantum-quantum
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: openquantum_quantum
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/quantum-ground-state/mcp/server.mjs'
+    env: {}
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 60000
+    failOnStartupError: true
+    reconnect:
+      enabled: true
+      initialDelayMs: 500
+      maxDelayMs: 30000
+      maxAttempts: 10
+
+# Preserve one bounded scientific presentation in Harness-native tool/result
+# content. The plugin owns no runtime or storage; it only adapts MCP
+# structuredContent at the official tools/post-execute seam.
+- id: scientific-result-projection
+  name: ./scientific-result-projection.mjs
+
+- id: tool-skill
+  name: '@deepseek-ai/dsh-tool-skill'
+
+- id: tool-goal
+  name: '@deepseek-ai/dsh-tool-goal'
+
+- id: compaction
+  name: cordis:group
+  group: true
+  isolate:
+    compaction: true
+    toolResultPruner: true
+  config:
+    - id: compaction-basic
+      name: '@deepseek-ai/dsh-compaction-basic'
+
+    - id: command-compact
+      name: '@deepseek-ai/dsh-command-compact'
+
+    - id: tool-result-pruner
+      name: '@deepseek-ai/dsh-compaction-tool-result-pruner'
+      config:
+        thresholdChars: 8192
+        headChars: 4096
+        tailChars: 1024
+
+- id: tool-ask-user
+  name: '@deepseek-ai/dsh-tool-ask-user'
+
+- id: tool-todo
+  name: '@deepseek-ai/dsh-tool-todo'
+  config:
+    allowParallelInProgress: true
+
+- id: tool-web
+  name: '@deepseek-ai/dsh-tool-web'
+  config:
+    fetch: false
+    searchTimeoutMs: 60000

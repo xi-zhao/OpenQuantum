@@ -1,0 +1,26 @@
+{
+  "schemaVersion": "1.0",
+  "validator": {
+    "id": "ground-state-validator",
+    "version": "1.0.0"
+  },
+  "generatedAt": "2026-08-14T00:00:00.000Z",
+  "testCommand": "node --test test/*.test.mjs",
+  "tests": 35,
+  "passed": 35,
+  "failed": 0,
+  "coverage": [
+    "analytic and protocol fixtures",
+    "periodic optimizer seam and budget termination",
+    "random supported Hamiltonians across coefficient scales",
+    "strict input, artifact, and Validator bundle schemas",
+    "Validator command-line positive and fail-closed paths",
+    "atomic solve-and-validate MCP workflow with provenance left not_checked",
+    "profile-injected validator thresholds",
+    "ansatz, trace, matrix, digest, provenance, and non-finite tamper detection"
+  ],
+  "limitations": [
+    "This is deterministic package-owned validation evidence, not an independent third-party reproduction.",
+    "The capability maturity remains draft until independent review and reproduction evidence exist."
+  ]
+}

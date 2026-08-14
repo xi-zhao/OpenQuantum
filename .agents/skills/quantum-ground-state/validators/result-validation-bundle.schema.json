@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openquantum.org/capabilities/quantum-ground-state/result-validation-bundle-v1.json",
+  "title": "Quantum Ground State Materialized Validation Bundle v1",
+  "description": "Materialized inputs for the Skill Validator: a Result Package, profile, request, and six fact artifacts.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "resultPackage", "profile", "request", "facts"],
+  "properties": {
+    "schemaVersion": { "const": "1.0" },
+    "resultPackage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "value"],
+      "properties": {
+        "kind": { "const": "openquantum-result-package-v1.1" },
+        "value": {
+          "type": "object",
+          "required": [
+            "schemaVersion",
+            "packageId",
+            "capability",
+            "executionRef",
+            "acceptanceProfile",
+            "inputs",
+            "artifacts",
+            "provenance"
+          ],
+          "properties": {
+            "schemaVersion": { "const": "1.1" },
+            "packageId": { "type": "string", "minLength": 1 },
+            "capability": { "type": "object" },
+            "executionRef": { "type": "object" },
+            "acceptanceProfile": { "type": "object" },
+            "inputs": { "type": "array", "minItems": 1 },
+            "artifacts": { "type": "array", "minItems": 6 },
+            "provenance": { "type": "object" }
+          }
+        }
+      }
+    },
+    "profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schemaVersion", "id", "version", "scope", "checks"],
+      "properties": {
+        "schemaVersion": { "const": "1.0" },
+        "id": { "const": "supplied-pauli-statevector" },
+        "version": { "const": "1.0.0" },
+        "scope": { "type": "object" },
+        "checks": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "category", "required", "criterion"],
+            "properties": {
+              "id": { "type": "string", "minLength": 1 },
+              "category": { "type": "string", "minLength": 1 },
+              "required": { "type": "boolean" },
+              "criterion": { "type": "string", "minLength": 1 },
+              "threshold": {},
+              "unit": { "type": "string", "minLength": 1 }
+            }
+          }
+        }
+      }
+    },
+    "request": {
+      "type": "object",
+      "description": "A value already validated against inputs/request.schema.json."
+    },
+    "facts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "problemSpec",
+        "hamiltonianManifest",
+        "exactReference",
+        "groundStateResult",
+        "convergenceTrace",
+        "resourceEstimate"
+      ],
+      "properties": {
+        "problemSpec": { "type": "object" },
+        "hamiltonianManifest": { "type": "object" },
+        "exactReference": { "type": "object" },
+        "groundStateResult": { "type": "object" },
+        "convergenceTrace": { "type": "object" },
+        "resourceEstimate": { "type": "object" }
+      }
+    }
+  }
+}

@@ -1,0 +1,166 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openquantum.local/contracts/v1.1/reproduction-report.schema.json",
+  "title": "OpenQuantum Reproduction Report v1.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "reportId",
+    "capability",
+    "generatedAt",
+    "sourceResultPackage",
+    "reproducedResultPackage",
+    "profile",
+    "status",
+    "scope",
+    "checks",
+    "limitations",
+    "statement"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "1.1" },
+    "reportId": { "$ref": "#/$defs/id" },
+    "capability": { "$ref": "#/$defs/versionedRef" },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "sourceResultPackage": { "$ref": "#/$defs/packageRef" },
+    "reproducedResultPackage": { "$ref": "#/$defs/packageRef" },
+    "profile": { "$ref": "#/$defs/versionedShaRef" },
+    "status": { "enum": ["reproduced", "not_reproduced"] },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "evidenceRefs", "statement"],
+      "properties": {
+        "status": { "enum": ["in_scope", "out_of_scope", "indeterminate"] },
+        "evidenceRefs": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/evidenceRef" }
+        },
+        "statement": { "type": "string", "minLength": 1 }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": { "enum": ["in_scope", "out_of_scope"] }
+            }
+          },
+          "then": {
+            "properties": {
+              "evidenceRefs": { "type": "array", "minItems": 1 }
+            }
+          }
+        }
+      ]
+    },
+    "checks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "category",
+          "required",
+          "status",
+          "criterion",
+          "evidenceRefs"
+        ],
+        "properties": {
+          "id": { "$ref": "#/$defs/id" },
+          "category": { "$ref": "#/$defs/id" },
+          "required": { "type": "boolean" },
+          "status": { "enum": ["pass", "fail", "not_checked"] },
+          "criterion": { "type": "string", "minLength": 1 },
+          "observed": {},
+          "threshold": {},
+          "unit": { "type": "string", "minLength": 1 },
+          "evidenceRefs": {
+            "type": "array",
+            "items": { "$ref": "#/$defs/evidenceRef" }
+          },
+          "nextAction": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "statement": { "type": "string", "minLength": 1 }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9]+(?:[._:-][A-Za-z0-9]+)*$",
+      "maxLength": 160
+    },
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "versionedRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "version": { "type": "string", "minLength": 1 }
+      }
+    },
+    "versionedShaRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version", "sha256"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "version": { "type": "string", "minLength": 1 },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "packageRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["packageId", "sha256"],
+      "properties": {
+        "packageId": { "$ref": "#/$defs/id" },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "evidenceRef": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["packageId", "kind", "id"],
+          "properties": {
+            "packageId": { "$ref": "#/$defs/id" },
+            "kind": { "const": "input" },
+            "id": { "$ref": "#/$defs/id" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["packageId", "kind", "id"],
+          "properties": {
+            "packageId": { "$ref": "#/$defs/id" },
+            "kind": { "const": "artifact" },
+            "id": { "$ref": "#/$defs/id" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["packageId", "kind", "id", "sequence"],
+          "properties": {
+            "packageId": { "$ref": "#/$defs/id" },
+            "kind": { "const": "session-event" },
+            "id": { "type": "string", "minLength": 1 },
+            "sequence": { "type": "integer", "minimum": 0 }
+          }
+        }
+      ]
+    }
+  }
+}

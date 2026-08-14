@@ -1,0 +1,5 @@
+{
+  "base": "../requests/protocol-fixture.json",
+  "mutation": { "path": "hamiltonian.terms.4.pauli", "value": "YY" },
+  "expectedCode": "UNSUPPORTED_PAULI"
+}

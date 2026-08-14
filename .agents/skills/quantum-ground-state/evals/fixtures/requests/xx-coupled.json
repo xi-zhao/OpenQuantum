@@ -1,0 +1,33 @@
+{
+  "schemaVersion": "1.0",
+  "requestId": "qgs-xx-001",
+  "claim": "sector-ground-energy-of-supplied-hamiltonian",
+  "system": {
+    "kind": "qubit-model",
+    "label": "XX coupled analytic benchmark",
+    "source": { "kind": "supplied-pauli-sum" }
+  },
+  "hamiltonian": {
+    "format": "openquantum-pauli-sum-v1",
+    "qubitCount": 2,
+    "qubitOrder": "left-to-right-msb",
+    "basisOrder": "00-01-10-11",
+    "coefficientUnit": "hartree",
+    "sector": { "kind": "fixed-hamming-weight", "value": 1 },
+    "terms": [{ "pauli": "XX", "coefficient": 1 }]
+  },
+  "method": {
+    "algorithm": "vqe",
+    "simulator": "statevector",
+    "ansatz": { "id": "two-qubit-single-excitation-givens", "version": "1.0.0" },
+    "optimizer": {
+      "id": "coarse-grid-golden-refine",
+      "version": "1.0.0",
+      "coarsePoints": 65,
+      "angleToleranceRadians": 1e-10,
+      "maxEvaluations": 256
+    },
+    "randomness": "none"
+  },
+  "acceptanceProfile": { "id": "supplied-pauli-statevector", "version": "1.0.0" }
+}

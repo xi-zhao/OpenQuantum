@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openquantum.local/schemas/quantum-ground-state/exact-reference-v1.json",
+  "title": "Quantum Ground State Exact Reference v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "artifactType",
+    "hamiltonianDigest",
+    "method",
+    "energyUnit",
+    "sectorMatrix",
+    "eigenvaluesHartree",
+    "groundEnergyHartree",
+    "groundStateSectorAmplitudes",
+    "eigenResidualHartree",
+    "spectralGapHartree"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "1.0" },
+    "artifactType": { "const": "exact-reference" },
+    "hamiltonianDigest": { "$ref": "#/$defs/sha256" },
+    "method": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version"],
+      "properties": {
+        "id": { "const": "closed-form-real-symmetric-2x2" },
+        "version": { "const": "1.0.0" }
+      }
+    },
+    "energyUnit": { "const": "hartree" },
+    "sectorMatrix": { "$ref": "#/$defs/matrix2" },
+    "eigenvaluesHartree": { "$ref": "#/$defs/vector2" },
+    "groundEnergyHartree": { "type": "number" },
+    "groundStateSectorAmplitudes": { "$ref": "#/$defs/vector2" },
+    "eigenResidualHartree": { "type": "number", "minimum": 0 },
+    "spectralGapHartree": { "type": "number", "minimum": 0 }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "vector2": {
+      "type": "array",
+      "items": { "type": "number" },
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "matrix2": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/vector2" },
+      "minItems": 2,
+      "maxItems": 2
+    }
+  }
+}

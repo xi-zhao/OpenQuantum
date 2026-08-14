@@ -1,0 +1,4 @@
+interface:
+  display_name: "量子基态"
+  short_description: "求解并验收给定二量子位 Hamiltonian 的扇区基态"
+  default_prompt: "使用 $quantum-ground-state 的 solve_and_validate_ground_state 对给定二量子位 Pauli Hamiltonian 完成 VQE 求解和计算级独立检查；清楚说明来源链尚未检查，不能把工具完成写成最终科学验收通过。"

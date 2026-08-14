@@ -1,0 +1,144 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openquantum.local/contracts/v1/result-package.schema.json",
+  "title": "OpenQuantum Result Package v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "packageId",
+    "capability",
+    "createdAt",
+    "executionRef",
+    "acceptanceProfile",
+    "inputs",
+    "artifacts",
+    "provenance"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "1.0" },
+    "packageId": { "$ref": "#/$defs/id" },
+    "capability": { "$ref": "#/$defs/versionedRef" },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "executionRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sessionId", "eventRange"],
+      "properties": {
+        "sessionId": { "type": "string", "minLength": 1 },
+        "goalId": { "type": "string", "minLength": 1 },
+        "jobIds": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "eventRange": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["from", "to"],
+          "properties": {
+            "from": { "type": "integer", "minimum": 0 },
+            "to": { "type": "integer", "minimum": 0 }
+          }
+        }
+      }
+    },
+    "acceptanceProfile": { "$ref": "#/$defs/versionedRef" },
+    "inputs": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/fileRef" }
+    },
+    "artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/fileRef" }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tools", "environment"],
+      "properties": {
+        "tools": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/versionedDigest" }
+        },
+        "environment": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/versionedDigest" }
+        },
+        "models": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["provider", "model"],
+            "properties": {
+              "provider": { "type": "string", "minLength": 1 },
+              "model": { "type": "string", "minLength": 1 }
+            }
+          }
+        },
+        "randomSeeds": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "value"],
+            "properties": {
+              "name": { "$ref": "#/$defs/id" },
+              "value": {
+                "anyOf": [
+                  { "type": "integer" },
+                  { "type": "string", "minLength": 1 }
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9]+(?:[._:-][A-Za-z0-9]+)*$",
+      "maxLength": 160
+    },
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "versionedRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "version": { "type": "string", "minLength": 1 }
+      }
+    },
+    "fileRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "path", "mediaType", "bytes", "sha256"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "type": { "$ref": "#/$defs/id" },
+        "path": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "mediaType": { "type": "string", "minLength": 1 },
+        "bytes": { "type": "integer", "minimum": 0 },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "versionedDigest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version", "digest"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "version": { "type": "string", "minLength": 1 },
+        "digest": { "$ref": "#/$defs/sha256" }
+      }
+    }
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "schemaVersion": "1.0",
+  "evaluationSuite": {
+    "id": "quantum-ground-state-reference",
+    "version": "1.0.0"
+  },
+  "generatedAt": "2026-08-14T00:00:00.000Z",
+  "cases": [
+    {
+      "id": "protocol-fixture-accepted",
+      "passed": true,
+      "observed": {
+        "converged": true,
+        "energyHartree": -1.8572750302023806
+      }
+    },
+    {
+      "id": "analytic-diagonal-accepted",
+      "passed": true,
+      "observed": {
+        "energyHartree": -1
+      }
+    },
+    {
+      "id": "analytic-xx-accepted",
+      "passed": true,
+      "observed": {
+        "energyHartree": -1.0000000000000002
+      }
+    },
+    {
+      "id": "low-budget-rejected",
+      "passed": true,
+      "observed": {
+        "converged": false,
+        "acceptanceConvergence": "fail"
+      }
+    },
+    {
+      "id": "out-of-scope-rejected",
+      "passed": true,
+      "observed": {
+        "qaoa": true,
+        "wrongUnit": true,
+        "yPauli": true,
+        "sectorLeakage": true
+      }
+    },
+    {
+      "id": "metamorphic-invariants",
+      "passed": true,
+      "observed": {
+        "energyShiftHartree": 0.25,
+        "digestInvariant": true,
+        "energyInvariant": true
+      }
+    },
+    {
+      "id": "tamper-resistance",
+      "passed": true,
+      "observed": {
+        "state": true,
+        "trace": true,
+        "matrix": true,
+        "digest": true,
+        "nonFinite": true
+      }
+    }
+  ],
+  "scorePercent": 100,
+  "hardGatePassed": true
+}

@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openquantum.local/schemas/quantum-ground-state/ground-state-result-v1.json",
+  "title": "Quantum Ground State VQE Result v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "artifactType",
+    "hamiltonianDigest",
+    "algorithm",
+    "energyUnit",
+    "energyHartree",
+    "optimalThetaRadians",
+    "statevectorReal",
+    "stateNorm",
+    "variationalGapHartree",
+    "converged",
+    "terminationReason",
+    "evaluationCount"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "1.0" },
+    "artifactType": { "const": "ground-state-result" },
+    "hamiltonianDigest": { "$ref": "#/$defs/sha256" },
+    "algorithm": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "simulator", "ansatz", "optimizer"],
+      "properties": {
+        "id": { "const": "vqe" },
+        "simulator": { "const": "statevector" },
+        "ansatz": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "version"],
+          "properties": {
+            "id": { "const": "two-qubit-single-excitation-givens" },
+            "version": { "const": "1.0.0" }
+          }
+        },
+        "optimizer": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "version"],
+          "properties": {
+            "id": { "const": "coarse-grid-golden-refine" },
+            "version": { "const": "1.0.0" }
+          }
+        }
+      }
+    },
+    "energyUnit": { "const": "hartree" },
+    "energyHartree": { "type": "number" },
+    "optimalThetaRadians": {
+      "type": "number",
+      "minimum": -3.141592653589793,
+      "maximum": 3.141592653589793
+    },
+    "statevectorReal": {
+      "type": "array",
+      "items": { "type": "number" },
+      "minItems": 4,
+      "maxItems": 4
+    },
+    "stateNorm": { "type": "number", "minimum": 0 },
+    "variationalGapHartree": { "type": "number" },
+    "converged": { "type": "boolean" },
+    "terminationReason": { "enum": ["angle-tolerance", "evaluation-budget"] },
+    "evaluationCount": { "type": "integer", "minimum": 1, "maximum": 256 }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+  }
+}

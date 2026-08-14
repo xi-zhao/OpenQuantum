@@ -1,0 +1,357 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openquantum.local/contracts/v1.1/capability-manifest.schema.json",
+  "title": "OpenQuantum Capability Manifest v1.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "id",
+    "version",
+    "displayName",
+    "description",
+    "maturity",
+    "skill",
+    "scope",
+    "input",
+    "artifacts",
+    "validators",
+    "acceptanceProfiles",
+    "reproductionProfiles",
+    "modelRequirements",
+    "permissions",
+    "evals",
+    "compatibility"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "1.1" },
+    "id": { "$ref": "#/$defs/id" },
+    "version": { "$ref": "#/$defs/version" },
+    "displayName": { "type": "string", "minLength": 1, "maxLength": 120 },
+    "description": { "type": "string", "minLength": 1, "maxLength": 1000 },
+    "maturity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "evidence"],
+      "properties": {
+        "status": {
+          "enum": ["draft", "validated", "released", "suspended", "deprecated"]
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "kind", "path", "sha256"],
+            "properties": {
+              "id": { "$ref": "#/$defs/id" },
+              "kind": {
+                "enum": [
+                  "eval-report",
+                  "validator-report",
+                  "scientific-review",
+                  "release-record"
+                ]
+              },
+              "path": { "$ref": "#/$defs/relativePath" },
+              "sha256": { "$ref": "#/$defs/sha256" }
+            }
+          }
+        }
+      }
+    },
+    "skill": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "entrypoint"],
+      "properties": {
+        "name": { "$ref": "#/$defs/id" },
+        "entrypoint": { "$ref": "#/$defs/relativePath" }
+      }
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["supportedClaims", "outOfScope", "examples"],
+      "properties": {
+        "supportedClaims": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "outOfScope": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "examples": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["title", "prompt"],
+            "properties": {
+              "title": { "type": "string", "minLength": 1 },
+              "prompt": { "type": "string", "minLength": 1 }
+            }
+          }
+        }
+      }
+    },
+    "input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "schema"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "schema": { "$ref": "#/$defs/relativePath" },
+        "maxBytes": { "type": "integer", "minimum": 1 },
+        "mediaTypes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "schema", "required", "mediaType"],
+        "properties": {
+          "id": { "$ref": "#/$defs/id" },
+          "schema": { "$ref": "#/$defs/relativePath" },
+          "required": { "type": "boolean" },
+          "mediaType": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "validators": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "version", "command"],
+        "properties": {
+          "id": { "$ref": "#/$defs/id" },
+          "version": { "$ref": "#/$defs/version" },
+          "command": { "$ref": "#/$defs/nodeCommand" }
+        }
+      }
+    },
+    "acceptanceProfiles": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/profileRef" }
+    },
+    "reproductionProfiles": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/profileRef" }
+    },
+    "modelRequirements": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["textGeneration", "toolCalling", "structuredOutput"],
+      "properties": {
+        "textGeneration": { "type": "boolean" },
+        "toolCalling": { "type": "boolean" },
+        "structuredOutput": { "type": "boolean" },
+        "minContextTokens": { "type": "integer", "minimum": 1 },
+        "multimodal": { "type": "boolean" }
+      }
+    },
+    "permissions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "network",
+        "filesystem",
+        "subprocess",
+        "cloudCompute",
+        "limits",
+        "data"
+      ],
+      "properties": {
+        "network": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mode", "destinations"],
+          "properties": {
+            "mode": { "enum": ["none", "allowlist"] },
+            "destinations": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string", "minLength": 1 }
+            }
+          }
+        },
+        "filesystem": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["read", "write"],
+          "properties": {
+            "read": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string", "minLength": 1 }
+            },
+            "write": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string", "minLength": 1 }
+            }
+          }
+        },
+        "subprocess": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["allowed"],
+          "properties": {
+            "allowed": { "type": "boolean" },
+            "commands": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string", "minLength": 1 }
+            }
+          }
+        },
+        "cloudCompute": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["allowed", "providers"],
+          "properties": {
+            "allowed": { "type": "boolean" },
+            "providers": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string", "minLength": 1 }
+            }
+          }
+        },
+        "limits": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["wallTimeSeconds", "memoryMiB", "maxArtifacts", "maxCostUsd"],
+          "properties": {
+            "wallTimeSeconds": { "type": "integer", "minimum": 1 },
+            "memoryMiB": { "type": "integer", "minimum": 1 },
+            "maxArtifacts": { "type": "integer", "minimum": 1 },
+            "maxCostUsd": { "type": "number", "minimum": 0 }
+          }
+        },
+        "data": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["classification", "retentionDays", "externalTransfer", "licenses"],
+          "properties": {
+            "classification": {
+              "enum": ["public", "internal", "confidential", "restricted"]
+            },
+            "retentionDays": { "type": "integer", "minimum": 0 },
+            "externalTransfer": { "enum": ["forbidden", "allowlisted", "allowed"] },
+            "licenses": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": { "type": "string", "minLength": 1 }
+            }
+          }
+        }
+      }
+    },
+    "evals": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["runner", "suite"],
+      "properties": {
+        "runner": { "$ref": "#/$defs/nodeCommand" },
+        "suite": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "version", "path", "sha256"],
+          "properties": {
+            "id": { "$ref": "#/$defs/id" },
+            "version": { "$ref": "#/$defs/version" },
+            "path": { "$ref": "#/$defs/relativePath" },
+            "sha256": { "$ref": "#/$defs/sha256" }
+          }
+        }
+      }
+    },
+    "compatibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contract", "harness"],
+      "properties": {
+        "contract": { "const": "1.1" },
+        "harness": { "type": "string", "minLength": 1 }
+      }
+    },
+    "dependencies": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/dependency" }
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:[.-][a-z0-9]+)*$",
+      "maxLength": 120
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+    },
+    "relativePath": { "type": "string", "minLength": 1, "maxLength": 500 },
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "nodeCommand": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["executable", "script", "args", "shell"],
+      "properties": {
+        "executable": { "const": "node" },
+        "script": { "$ref": "#/$defs/relativePath" },
+        "args": { "type": "array", "items": { "type": "string" } },
+        "shell": { "const": false }
+      }
+    },
+    "profileRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version", "validator", "definition"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "version": { "$ref": "#/$defs/version" },
+        "validator": { "$ref": "#/$defs/id" },
+        "definition": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["path", "sha256"],
+          "properties": {
+            "path": { "$ref": "#/$defs/relativePath" },
+            "sha256": { "$ref": "#/$defs/sha256" }
+          }
+        }
+      }
+    },
+    "dependency": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "version", "digest"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "kind": { "enum": ["tool", "mcp", "scientific-backend"] },
+        "version": { "type": "string", "minLength": 1 },
+        "digest": { "$ref": "#/$defs/sha256" }
+      }
+    }
+  }
+}

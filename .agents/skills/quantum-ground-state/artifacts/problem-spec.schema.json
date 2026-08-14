@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openquantum.local/schemas/quantum-ground-state/problem-spec-v1.json",
+  "title": "Quantum Ground State Problem Spec v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "artifactType",
+    "requestId",
+    "requestDigest",
+    "claim",
+    "system",
+    "hamiltonianDigest",
+    "method",
+    "acceptanceProfile",
+    "limitations"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "1.0" },
+    "artifactType": { "const": "problem-spec" },
+    "requestId": { "$ref": "#/$defs/id" },
+    "requestDigest": { "$ref": "#/$defs/sha256" },
+    "claim": { "const": "sector-ground-energy-of-supplied-hamiltonian" },
+    "system": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "label", "source"],
+      "properties": {
+        "kind": { "const": "qubit-model" },
+        "label": { "type": "string", "minLength": 1, "maxLength": 240 },
+        "source": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind"],
+          "properties": { "kind": { "const": "supplied-pauli-sum" } }
+        }
+      }
+    },
+    "hamiltonianDigest": { "$ref": "#/$defs/sha256" },
+    "method": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["algorithm", "simulator", "ansatz", "optimizer", "randomness"],
+      "properties": {
+        "algorithm": { "const": "vqe" },
+        "simulator": { "const": "statevector" },
+        "ansatz": { "$ref": "#/$defs/versionedId" },
+        "optimizer": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "version",
+            "coarsePoints",
+            "angleToleranceRadians",
+            "maxEvaluations"
+          ],
+          "properties": {
+            "id": { "const": "coarse-grid-golden-refine" },
+            "version": { "const": "1.0.0" },
+            "coarsePoints": { "const": 65 },
+            "angleToleranceRadians": { "type": "number", "exclusiveMinimum": 0 },
+            "maxEvaluations": { "type": "integer", "minimum": 8, "maximum": 256 }
+          }
+        },
+        "randomness": { "const": "none" }
+      }
+    },
+    "acceptanceProfile": { "$ref": "#/$defs/versionedId" },
+    "limitations": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9]+(?:[._:-][A-Za-z0-9]+)*$",
+      "maxLength": 160
+    },
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "versionedId": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "1.0",
+  "id": "independent-statevector",
+  "version": "1.0.0",
+  "scope": {
+    "supportedClaims": [
+      "Two distinct executions of the same supplied two-qubit Hamiltonian agree on its fixed-hamming-weight=1 sector ground state"
+    ],
+    "outOfScope": [
+      "Independent derivation of the supplied Hamiltonian from molecular or material inputs",
+      "Cross-hardware, noisy, finite-shot, or physical-QPU reproducibility"
+    ]
+  },
+  "checks": [
+    {
+      "id": "execution.independent",
+      "category": "independence",
+      "required": true,
+      "criterion": "The two Result Packages have distinct package digests and Session event traces."
+    },
+    {
+      "id": "request.identical",
+      "category": "reproducibility",
+      "required": true,
+      "criterion": "Both executions use byte-identical canonical request and Hamiltonian digests."
+    },
+    {
+      "id": "energy.agreement",
+      "category": "scientific",
+      "required": true,
+      "criterion": "The two finite statevector VQE energies agree within the declared absolute tolerance.",
+      "threshold": 1e-12,
+      "unit": "hartree"
+    },
+    {
+      "id": "state.fidelity",
+      "category": "scientific",
+      "required": true,
+      "criterion": "The two normalized statevectors agree up to global phase at the declared one-minus-fidelity tolerance.",
+      "threshold": 1e-12,
+      "unit": "dimensionless"
+    }
+  ],
+  "independenceCheck": "execution.independent"
+}

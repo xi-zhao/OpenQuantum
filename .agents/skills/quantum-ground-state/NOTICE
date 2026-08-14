@@ -1,0 +1,14 @@
+Quantum Ground State Reference Capability
+Copyright (c) 2026 OpenQuantum contributors
+
+The MIT license covers this package's original OpenQuantum reference
+implementation code, schemas, and documentation.
+
+The coefficients in evals/fixtures/requests/protocol-fixture.json are bundled
+only as a protocol interoperability test vector. This package asserts no
+scientific origin for them and does not claim that they were derived from, or
+validate them as representing, any molecule, material, basis set, or published
+scientific dataset.
+
+No third-party model weights, molecular geometries, brand assets, or cloud
+service credentials are included.

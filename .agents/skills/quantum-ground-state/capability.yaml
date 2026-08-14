@@ -1,0 +1,148 @@
+schemaVersion: "1.1"
+id: quantum-ground-state
+version: 0.2.0
+displayName: Quantum Ground State Reference
+description: >-
+  Deterministically solves and scientifically validates a supplied two-qubit real Pauli
+  Hamiltonian in the fixed hamming-weight=1 sector using noiseless statevector VQE.
+
+maturity:
+  status: draft
+  evidence:
+    - id: reference-eval-v1
+      kind: eval-report
+      path: evidence/eval-report-v1.json
+      sha256: dabfafb518cf590326f5a52b6c8280a31134756bf30344a958268197c43d3863
+    - id: deterministic-validator-v1
+      kind: validator-report
+      path: evidence/validator-report-v1.json
+      sha256: 923c971fd044bc10aeec388c081d36851a183fa0934cb050025780a06a18afa3
+
+skill:
+  name: quantum-ground-state
+  entrypoint: SKILL.md
+
+scope:
+  supportedClaims:
+    - Ground-state energy in the fixed hamming-weight=1 sector of a supplied two-qubit real Pauli Hamiltonian
+    - Noiseless statevector VQE result checked against an independently recomputed real symmetric 2x2 reference
+  outOfScope:
+    - Deriving or validating Hamiltonians from molecular geometry or material structure
+    - QAOA, excited states, noisy simulation, finite shots, and physical quantum hardware
+    - Pauli Y, complex coefficients, more than two qubits, or other particle sectors
+  examples:
+    - title: Solve a supplied two-qubit sector Hamiltonian
+      prompt: Use the supplied real Pauli terms to compute and validate the fixed-weight-one sector ground state.
+
+input:
+  id: ground-state-request
+  schema: inputs/request.schema.json
+  maxBytes: 65536
+  mediaTypes:
+    - application/json
+
+artifacts:
+  - id: problem-spec
+    schema: artifacts/problem-spec.schema.json
+    required: true
+    mediaType: application/json
+  - id: hamiltonian-manifest
+    schema: artifacts/hamiltonian-manifest.schema.json
+    required: true
+    mediaType: application/json
+  - id: exact-reference
+    schema: artifacts/exact-reference.schema.json
+    required: true
+    mediaType: application/json
+  - id: ground-state-result
+    schema: artifacts/ground-state-result.schema.json
+    required: true
+    mediaType: application/json
+  - id: convergence-trace
+    schema: artifacts/convergence-trace.schema.json
+    required: true
+    mediaType: application/json
+  - id: resource-estimate
+    schema: artifacts/resource-estimate.schema.json
+    required: true
+    mediaType: application/json
+
+validators:
+  - id: ground-state-validator
+    version: 1.0.0
+    command:
+      executable: node
+      script: validators/validate-result.mjs
+      args: []
+      shell: false
+
+acceptanceProfiles:
+  - id: supplied-pauli-statevector
+    version: 1.0.0
+    validator: ground-state-validator
+    definition:
+      path: acceptance-profiles/supplied-pauli-statevector-v1.json
+      sha256: 3da476e36d255d0dac46252222a0df3132c9b4038af805ad049f523a562c613a
+
+reproductionProfiles:
+  - id: independent-statevector
+    version: 1.0.0
+    validator: ground-state-validator
+    definition:
+      path: reproduction-profiles/independent-statevector-v1.json
+      sha256: 0629cdc6b676f0d5a7f9edbc90cad2cf82825672a9744363da59d42feeda326e
+
+modelRequirements:
+  textGeneration: true
+  toolCalling: true
+  structuredOutput: true
+  minContextTokens: 8192
+  multimodal: false
+
+permissions:
+  network:
+    mode: none
+    destinations: []
+  filesystem:
+    read:
+      - package
+      - workspace/input
+      - workspace/results
+    write:
+      - workspace/results
+  subprocess:
+    allowed: true
+    commands:
+      - node
+  cloudCompute:
+    allowed: false
+    providers: []
+  limits:
+    wallTimeSeconds: 60
+    memoryMiB: 256
+    maxArtifacts: 6
+    maxCostUsd: 0
+  data:
+    classification: public
+    retentionDays: 0
+    externalTransfer: forbidden
+    licenses:
+      - MIT
+
+evals:
+  runner:
+    executable: node
+    script: evals/run-evals.mjs
+    args: []
+    shell: false
+  suite:
+    id: quantum-ground-state-reference
+    version: 1.0.0
+    path: evals/suite.json
+    sha256: 72682360e6d8cb59fcea6817b1467d7481f3cc93ea4e387d6eeec6c55b6979f7
+
+compatibility:
+  contract: "1.1"
+  harness: ">=0.1.0-rc.6 <0.2.0"
+
+dependencies: []

@@ -1,0 +1,13 @@
+{
+  "base": "requests/protocol-fixture.json",
+  "mutation": {
+    "path": "method.optimizer.maxEvaluations",
+    "value": 32
+  },
+  "expectedFacts": {
+    "converged": false,
+    "terminationReason": "evaluation-budget",
+    "evaluationCount": 32
+  },
+  "expectedScientificAcceptance": "failed"
+}

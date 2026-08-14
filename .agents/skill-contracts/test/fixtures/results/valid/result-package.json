@@ -1,0 +1,70 @@
+{
+  "schemaVersion": "1.0",
+  "packageId": "pkg-001",
+  "capability": {
+    "id": "fixture-capability",
+    "version": "1.2.3"
+  },
+  "createdAt": "2026-08-14T01:00:00.000Z",
+  "executionRef": {
+    "sessionId": "session-001",
+    "goalId": "goal-001",
+    "jobIds": ["job-001"],
+    "eventRange": {
+      "from": 100,
+      "to": 110
+    }
+  },
+  "acceptanceProfile": {
+    "id": "scientific-v1",
+    "version": "1.0.0"
+  },
+  "inputs": [
+    {
+      "id": "request-001",
+      "type": "research-request",
+      "path": "inputs/request.json",
+      "mediaType": "application/json",
+      "bytes": 18,
+      "sha256": "33f9980907551462abd74c7394de3cf33770b078604e60be169146b06592c720"
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "energy-001",
+      "type": "energy-result",
+      "path": "artifacts/energy.json",
+      "mediaType": "application/json",
+      "bytes": 35,
+      "sha256": "29b3729820f9e53e7fea90adc8c16fd42553e16c8b09e1d687a7a6d424887d08"
+    }
+  ],
+  "provenance": {
+    "tools": [
+      {
+        "id": "fixture-solver",
+        "version": "1.0.0",
+        "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    ],
+    "environment": [
+      {
+        "id": "node",
+        "version": "24.14.1",
+        "digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      }
+    ],
+    "models": [
+      {
+        "provider": "fixture",
+        "model": "fixture-model"
+      }
+    ],
+    "randomSeeds": [
+      {
+        "name": "optimizer",
+        "value": 42
+      }
+    ]
+  }
+}

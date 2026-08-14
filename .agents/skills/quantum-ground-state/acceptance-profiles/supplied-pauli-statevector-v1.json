@@ -1,0 +1,138 @@
+{
+  "schemaVersion": "1.0",
+  "id": "supplied-pauli-statevector",
+  "version": "1.0.0",
+  "scope": {
+    "supportedClaims": [
+      "Ground-state energy within the fixed-hamming-weight=1 sector of a supplied two-qubit real Pauli Hamiltonian",
+      "Noiseless statevector VQE result using the versioned single-excitation ansatz and deterministic optimizer"
+    ],
+    "outOfScope": [
+      "Deriving or validating a Hamiltonian from molecular geometry",
+      "QAOA, excited states, noisy simulation, finite shots, and physical quantum hardware",
+      "Hamiltonians containing Y operators, complex coefficients, more than two qubits, or a different particle sector"
+    ]
+  },
+  "checks": [
+    {
+      "id": "request.scope",
+      "category": "scope",
+      "required": true,
+      "criterion": "The request exactly matches the supplied two-qubit statevector VQE scope."
+    },
+    {
+      "id": "hamiltonian.canonical",
+      "category": "scientific",
+      "required": true,
+      "criterion": "The canonical Pauli terms and digest are reproducible from the input."
+    },
+    {
+      "id": "hamiltonian.hermitian",
+      "category": "scientific",
+      "required": true,
+      "criterion": "The maximum Hermiticity residual divided by S_H=max(1,sum(abs(Pauli coefficients))) is within numerical precision.",
+      "threshold": 1e-12,
+      "unit": "dimensionless"
+    },
+    {
+      "id": "sector.invariant",
+      "category": "scientific",
+      "required": true,
+      "criterion": "The maximum cross-sector matrix element divided by S_H is within numerical precision.",
+      "threshold": 1e-12,
+      "unit": "dimensionless"
+    },
+    {
+      "id": "reference.recomputed",
+      "category": "scientific",
+      "required": true,
+      "criterion": "An independent closed-form diagonalization reproduces the reference energy with absolute difference normalized by max(S_H,abs(recomputed),abs(reported)).",
+      "threshold": 1e-12,
+      "unit": "dimensionless"
+    },
+    {
+      "id": "reference.eigen-residual",
+      "category": "scientific",
+      "required": true,
+      "criterion": "The exact-reference eigenpair residual norm divided by S_H is within numerical tolerance.",
+      "threshold": 1e-10,
+      "unit": "dimensionless"
+    },
+    {
+      "id": "result.finite-hartree",
+      "category": "scientific",
+      "required": true,
+      "criterion": "The reported VQE energy is finite and explicitly expressed in Hartree."
+    },
+    {
+      "id": "result.state-normalized",
+      "category": "scientific",
+      "required": true,
+      "criterion": "The VQE statevector norm differs from one by no more than the threshold.",
+      "threshold": 1e-12,
+      "unit": "dimensionless"
+    },
+    {
+      "id": "result.ansatz-replayed",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Rebuilding the versioned ansatz from optimalThetaRadians reproduces the reported state. The checked metric is the maximum of outside-sector probability, one-minus phase-insensitive fidelity, and phase-aligned maximum amplitude residual.",
+      "threshold": 1e-12,
+      "unit": "dimensionless"
+    },
+    {
+      "id": "result.expectation-replayed",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Replaying the Pauli expectation from the statevector reproduces the reported energy with absolute difference normalized by max(S_H,abs(replayed),abs(reported)).",
+      "threshold": 1e-10,
+      "unit": "dimensionless"
+    },
+    {
+      "id": "vqe.variational-bound",
+      "category": "scientific",
+      "required": true,
+      "criterion": "The negative part of the variational gap divided by max(S_H,abs(VQE),abs(exact)) is no greater than numerical slack.",
+      "threshold": 1e-10,
+      "unit": "dimensionless"
+    },
+    {
+      "id": "vqe.energy-accuracy",
+      "category": "scientific",
+      "required": true,
+      "criterion": "The VQE energy differs from the exact sector reference by at most 1.6 mHa for this profile.",
+      "threshold": 0.0016,
+      "unit": "hartree"
+    },
+    {
+      "id": "vqe.converged",
+      "category": "numerical",
+      "required": true,
+      "criterion": "The deterministic optimizer reaches a final angular bracket width no greater than the threshold before exhausting the evaluation budget.",
+      "threshold": 1e-8,
+      "unit": "radian"
+    },
+    {
+      "id": "optimizer.trace-replayed",
+      "category": "numerical",
+      "required": true,
+      "criterion": "The trace has contiguous evaluation numbers, 64 unique periodic coarse nodes, replayable normalized energies, a correct monotone running best, result-to-trace consistency, truthful bracket/budget termination, and a deterministic independent rerun with the same canonical best. The metric is the maximum normalized energy replay residual; every structural invariant must also hold.",
+      "threshold": 1e-10,
+      "unit": "dimensionless"
+    },
+    {
+      "id": "resources.within-budget",
+      "category": "resource",
+      "required": true,
+      "criterion": "The number of statevector expectation evaluations does not exceed the profile budget.",
+      "threshold": 256,
+      "unit": "evaluations"
+    },
+    {
+      "id": "provenance.complete",
+      "category": "reproducibility",
+      "required": true,
+      "criterion": "Input, Hamiltonian, tool, environment, and artifact digests are present and mutually consistent."
+    }
+  ]
+}

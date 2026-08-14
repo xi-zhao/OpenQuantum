@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "1.0",
+  "reportId": "report-001",
+  "capability": {
+    "id": "fixture-capability",
+    "version": "1.2.3"
+  },
+  "generatedAt": "2026-08-14T01:05:00.000Z",
+  "resultPackage": {
+    "packageId": "pkg-001",
+    "sha256": "88a319cd0f33096ad31941c12f174630f7be26d94e718695d8f9822402350716"
+  },
+  "validator": {
+    "id": "deterministic-validator",
+    "version": "2.0.0"
+  },
+  "profile": {
+    "id": "scientific-v1",
+    "version": "1.0.0"
+  },
+  "status": "passed",
+  "checks": [
+    {
+      "id": "energy-accuracy",
+      "status": "pass",
+      "criterion": "Energy is within the fixture tolerance.",
+      "observed": -1.137,
+      "threshold": 0.01,
+      "unit": "hartree",
+      "evidenceRefs": [
+        { "kind": "artifact", "id": "energy-001" },
+        { "kind": "session-event", "id": "session-001", "sequence": 105 }
+      ],
+      "category": "scientific",
+      "required": true
+    },
+    {
+      "id": "metadata-completeness",
+      "status": "pass",
+      "criterion": "The input snapshot is present.",
+      "observed": true,
+      "evidenceRefs": [
+        { "kind": "input", "id": "request-001" }
+      ],
+      "category": "reproducibility",
+      "required": false
+    }
+  ],
+  "limitations": ["This is a synthetic contract fixture."],
+  "statement": "The required energy check passed."
+}

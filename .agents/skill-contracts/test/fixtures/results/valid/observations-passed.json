@@ -1,0 +1,29 @@
+{
+  "reportId": "report-001",
+  "generatedAt": "2026-08-14T01:05:00.000Z",
+  "statement": "The required energy check passed.",
+  "limitations": ["This is a synthetic contract fixture."],
+  "checks": [
+    {
+      "id": "energy-accuracy",
+      "status": "pass",
+      "criterion": "Energy is within the fixture tolerance.",
+      "observed": -1.137,
+      "threshold": 0.01,
+      "unit": "hartree",
+      "evidenceRefs": [
+        { "kind": "artifact", "id": "energy-001" },
+        { "kind": "session-event", "id": "session-001", "sequence": 105 }
+      ]
+    },
+    {
+      "id": "metadata-completeness",
+      "status": "pass",
+      "criterion": "The input snapshot is present.",
+      "observed": true,
+      "evidenceRefs": [
+        { "kind": "input", "id": "request-001" }
+      ]
+    }
+  ]
+}

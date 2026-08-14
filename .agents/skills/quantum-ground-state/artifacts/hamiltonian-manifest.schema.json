@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openquantum.local/schemas/quantum-ground-state/hamiltonian-manifest-v1.json",
+  "title": "Quantum Ground State Hamiltonian Manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "artifactType",
+    "hamiltonianDigest",
+    "format",
+    "qubitCount",
+    "qubitOrder",
+    "basisOrder",
+    "coefficientUnit",
+    "terms",
+    "matrix",
+    "sector",
+    "hermiticityResidualHartree",
+    "sectorLeakageHartree"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "1.0" },
+    "artifactType": { "const": "hamiltonian-manifest" },
+    "hamiltonianDigest": { "$ref": "#/$defs/sha256" },
+    "format": { "const": "openquantum-pauli-sum-v1" },
+    "qubitCount": { "const": 2 },
+    "qubitOrder": { "const": "left-to-right-msb" },
+    "basisOrder": {
+      "type": "array",
+      "prefixItems": [
+        { "const": "00" },
+        { "const": "01" },
+        { "const": "10" },
+        { "const": "11" }
+      ],
+      "items": false,
+      "minItems": 4,
+      "maxItems": 4
+    },
+    "coefficientUnit": { "const": "hartree" },
+    "terms": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "items": { "$ref": "#/$defs/term" }
+    },
+    "matrix": { "$ref": "#/$defs/matrix4" },
+    "sector": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "value", "basisStates", "basisIndices", "matrix"],
+      "properties": {
+        "kind": { "const": "fixed-hamming-weight" },
+        "value": { "const": 1 },
+        "basisStates": {
+          "type": "array",
+          "prefixItems": [{ "const": "01" }, { "const": "10" }],
+          "items": false,
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "basisIndices": {
+          "type": "array",
+          "prefixItems": [{ "const": 1 }, { "const": 2 }],
+          "items": false,
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "matrix": { "$ref": "#/$defs/matrix2" }
+      }
+    },
+    "hermiticityResidualHartree": { "type": "number", "minimum": 0 },
+    "sectorLeakageHartree": { "type": "number", "minimum": 0 }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "term": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pauli", "coefficient"],
+      "properties": {
+        "pauli": { "type": "string", "pattern": "^[IXZ]{2}$" },
+        "coefficient": { "type": "number" }
+      }
+    },
+    "row2": {
+      "type": "array",
+      "items": { "type": "number" },
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "row4": {
+      "type": "array",
+      "items": { "type": "number" },
+      "minItems": 4,
+      "maxItems": 4
+    },
+    "matrix2": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/row2" },
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "matrix4": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/row4" },
+      "minItems": 4,
+      "maxItems": 4
+    }
+  }
+}

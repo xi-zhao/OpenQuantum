@@ -1,0 +1,8 @@
+{
+  "base": "../requests/protocol-fixture.json",
+  "mutation": {
+    "path": "hamiltonian.terms",
+    "append": { "pauli": "XI", "coefficient": 0.1 }
+  },
+  "expectedCode": "SECTOR_LEAKAGE"
+}

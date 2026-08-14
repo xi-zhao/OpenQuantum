@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openquantum.local/contracts/v1.1/evaluation-suite.schema.json",
+  "title": "OpenQuantum Evaluation Suite v1.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "id", "version", "metric", "cases"],
+  "properties": {
+    "schemaVersion": { "const": "1.0" },
+    "id": { "$ref": "#/$defs/id" },
+    "version": { "$ref": "#/$defs/version" },
+    "metric": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "unit", "direction", "minimum", "maximum"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "unit": { "type": "string", "minLength": 1 },
+        "direction": { "enum": ["higher_is_better", "lower_is_better"] },
+        "minimum": { "type": "number" },
+        "maximum": { "type": "number" }
+      }
+    },
+    "cases": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "weight", "hardGate", "expectedOutcome"],
+        "properties": {
+          "id": { "$ref": "#/$defs/id" },
+          "weight": { "type": "number", "minimum": 0 },
+          "hardGate": { "type": "boolean" },
+          "expectedOutcome": { "not": { "type": "null" } }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:[.-][a-z0-9]+)*$",
+      "maxLength": 120
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+    }
+  }
+}

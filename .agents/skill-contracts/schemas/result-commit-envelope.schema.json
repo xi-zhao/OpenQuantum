@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openquantum.local/contracts/v1/result-commit-envelope.schema.json",
+  "title": "OpenQuantum Result Commit Envelope v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "kind",
+    "schemaVersion",
+    "createdAt",
+    "capability",
+    "resultPackage",
+    "artifacts"
+  ],
+  "properties": {
+    "kind": { "const": "openquantum.result-commit" },
+    "schemaVersion": { "const": "1.0" },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "capability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version", "manifestSha256"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "version": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "manifestSha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "resultPackage": { "$ref": "#/$defs/resultPackageRef" },
+    "acceptanceReport": { "$ref": "#/$defs/acceptanceReportRef" },
+    "scoreReport": { "$ref": "#/$defs/scoreReportRef" },
+    "reproductionReport": { "$ref": "#/$defs/reproductionReportRef" },
+    "artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "items": { "$ref": "#/$defs/artifactRef" }
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9]+(?:[._:-][A-Za-z0-9]+)*$",
+      "maxLength": 160
+    },
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "relativePath": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500,
+      "pattern": "^(?!/)(?![A-Za-z]:)(?![A-Za-z][A-Za-z0-9+.-]*:)(?!.*(?:^|/)\\.\\.?(/|$))[^\\\\]+$"
+    },
+    "resultPackageRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["packageId", "path", "bytes", "sha256"],
+      "properties": {
+        "packageId": { "$ref": "#/$defs/id" },
+        "path": { "$ref": "#/$defs/relativePath" },
+        "bytes": { "type": "integer", "minimum": 0 },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "acceptanceReportRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reportId", "status", "path", "bytes", "sha256"],
+      "properties": {
+        "reportId": { "$ref": "#/$defs/id" },
+        "status": { "enum": ["passed", "conditional", "failed"] },
+        "path": { "$ref": "#/$defs/relativePath" },
+        "bytes": { "type": "integer", "minimum": 0 },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "scoreReportRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reportId", "status", "path", "bytes", "sha256"],
+      "properties": {
+        "reportId": { "$ref": "#/$defs/id" },
+        "status": { "enum": ["invalid", "valid"] },
+        "path": { "$ref": "#/$defs/relativePath" },
+        "bytes": { "type": "integer", "minimum": 0 },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "reproductionReportRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reportId", "status", "path", "bytes", "sha256"],
+      "properties": {
+        "reportId": { "$ref": "#/$defs/id" },
+        "status": { "enum": ["reproduced", "not_reproduced"] },
+        "path": { "$ref": "#/$defs/relativePath" },
+        "bytes": { "type": "integer", "minimum": 0 },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "artifactRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "path", "mediaType", "bytes", "sha256"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "type": { "$ref": "#/$defs/id" },
+        "path": { "$ref": "#/$defs/relativePath" },
+        "mediaType": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "bytes": { "type": "integer", "minimum": 0 },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    }
+  }
+}

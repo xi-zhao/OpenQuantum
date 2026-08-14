@@ -1,0 +1,77 @@
+{
+  "schemaVersion": "1.0",
+  "capability": {
+    "id": "platform-diagnostics",
+    "version": "1.0.0"
+  },
+  "generatedAt": "2026-08-14T00:00:00.000Z",
+  "status": "degraded",
+  "checks": [
+    {
+      "id": "ui.transport",
+      "layer": "ui",
+      "required": true,
+      "status": "pass",
+      "evidence": ["UI commands traverse the Harness transport adapter."]
+    },
+    {
+      "id": "harness.config",
+      "layer": "harness",
+      "required": true,
+      "status": "pass",
+      "evidence": ["Harness composition expanded without errors."]
+    },
+    {
+      "id": "harness.host",
+      "layer": "harness",
+      "required": true,
+      "status": "pass",
+      "evidence": ["Host returned a successful session.list response."]
+    },
+    {
+      "id": "skill.discovery",
+      "layer": "skill",
+      "required": true,
+      "status": "pass",
+      "evidence": ["Harness skill.list returned platform-diagnostics."]
+    },
+    {
+      "id": "model.catalog",
+      "layer": "model",
+      "required": true,
+      "status": "pass",
+      "evidence": ["Configured OpenQuantum models appeared in llm.models."]
+    },
+    {
+      "id": "model.text-generation",
+      "layer": "model",
+      "required": true,
+      "status": "pass",
+      "evidence": ["The selected model returned non-empty assistant text."]
+    },
+    {
+      "id": "model.tool-calling",
+      "layer": "model",
+      "required": true,
+      "status": "pass",
+      "evidence": ["The selected model returned a structured tool call."]
+    },
+    {
+      "id": "model.private-route",
+      "layer": "model",
+      "required": false,
+      "status": "fail",
+      "evidence": ["The optional private gateway returned no HTTP response."],
+      "nextAction": "Verify private network routing and the gateway base path."
+    }
+  ],
+  "summary": {
+    "statement": "Required checks pass, but the optional private route is unavailable.",
+    "counts": {
+      "pass": 7,
+      "warn": 0,
+      "fail": 1,
+      "notChecked": 0
+    }
+  }
+}

@@ -1,0 +1,26 @@
+[
+  {
+    "name": "all required checks pass",
+    "fixture": "fixtures/ready-report.json",
+    "expectedValid": true,
+    "expectedStatus": "ready"
+  },
+  {
+    "name": "required UI transport fails",
+    "fixture": "fixtures/blocked-report.json",
+    "expectedValid": true,
+    "expectedStatus": "blocked"
+  },
+  {
+    "name": "optional private provider fails",
+    "fixture": "fixtures/degraded-report.json",
+    "expectedValid": true,
+    "expectedStatus": "degraded"
+  },
+  {
+    "name": "model claims ready despite a failed check",
+    "fixture": "fixtures/invalid-self-score.json",
+    "expectedValid": false,
+    "expectedStatus": "ready"
+  }
+]

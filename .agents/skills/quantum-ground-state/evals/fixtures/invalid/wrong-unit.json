@@ -1,0 +1,5 @@
+{
+  "base": "../requests/protocol-fixture.json",
+  "mutation": { "path": "hamiltonian.coefficientUnit", "value": "electronvolt" },
+  "expectedCode": "INVALID_REQUEST"
+}

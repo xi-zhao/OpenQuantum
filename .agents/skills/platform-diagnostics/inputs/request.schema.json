@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openquantum.local/schemas/platform-diagnostics-request.json",
+  "title": "OpenQuantum Platform Diagnostics Request",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "includeOptionalRoutes": { "type": "boolean", "default": true },
+    "requestedChecks": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    }
+  }
+}

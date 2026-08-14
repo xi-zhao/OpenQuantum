@@ -1,0 +1,76 @@
+{
+  "schemaVersion": "1.0",
+  "id": "quantum-ground-state-reference",
+  "version": "1.0.0",
+  "metric": {
+    "id": "case-pass-rate",
+    "unit": "percent",
+    "direction": "higher_is_better",
+    "minimum": 0,
+    "maximum": 100
+  },
+  "cases": [
+    {
+      "id": "protocol-fixture-accepted",
+      "weight": 2,
+      "hardGate": true,
+      "expectedOutcome": {
+        "solver": "finite-converged-facts",
+        "acceptance": "all-required-checks-pass"
+      }
+    },
+    {
+      "id": "analytic-diagonal-accepted",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": { "energyHartree": -1, "acceptance": "passed" }
+    },
+    {
+      "id": "analytic-xx-accepted",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": { "energyHartree": -1, "acceptance": "passed" }
+    },
+    {
+      "id": "low-budget-rejected",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "solver": "finite-nonconverged-facts",
+        "acceptance": "failed"
+      }
+    },
+    {
+      "id": "out-of-scope-rejected",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "qaoa": "INVALID_REQUEST",
+        "wrongUnit": "INVALID_REQUEST",
+        "yPauli": "UNSUPPORTED_PAULI",
+        "sectorLeakage": "SECTOR_LEAKAGE"
+      }
+    },
+    {
+      "id": "metamorphic-invariants",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "identityShift": "energy-shift-only",
+        "termPermutation": "digest-and-result-invariant"
+      }
+    },
+    {
+      "id": "tamper-resistance",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "state": "detected",
+        "trace": "detected",
+        "matrix": "detected",
+        "digest": "detected",
+        "nonFinite": "detected"
+      }
+    }
+  ]
+}

@@ -1,0 +1,121 @@
+schemaVersion: "1.0"
+id: platform-diagnostics
+version: 1.0.0
+displayName: OpenQuantum 平台诊断
+description: 验证 UI、Harness、Skill、Model 四层的发现、执行与验收链路。
+
+maturity:
+  status: draft
+  evidence: []
+
+skill:
+  name: platform-diagnostics
+  entrypoint: SKILL.md
+
+scope:
+  supportedClaims:
+    - OpenQuantum 四层架构的发现、配置、运行和模型调用链路可被诊断
+    - 诊断结论可由确定性检查和证据复核
+  outOfScope:
+    - 量子算法或性质预测结果的科学正确性
+    - 生产环境安全合规认证
+  examples:
+    - title: 检查平台是否可用
+      prompt: 检查 OpenQuantum UI、Harness、Skill 和 Model 是否真实连通。
+
+input:
+  id: diagnostic-request
+  schema: inputs/request.schema.json
+  maxBytes: 65536
+  mediaTypes:
+    - application/json
+
+artifacts:
+  - id: diagnostic-report
+    schema: artifacts/diagnostic-report.schema.json
+    required: true
+    mediaType: application/json
+
+validators:
+  - id: diagnostic-report-validator
+    version: 1.0.0
+    command:
+      executable: node
+      script: validators/validate-report.mjs
+      args: []
+      shell: false
+
+acceptanceProfiles:
+  - id: platform-readiness
+    version: 1.0.0
+    validator: diagnostic-report-validator
+    checks:
+      - id: ui.transport
+        category: ui
+        required: true
+      - id: harness.config
+        category: harness
+        required: true
+      - id: harness.host
+        category: harness
+        required: true
+      - id: skill.discovery
+        category: skill
+        required: true
+      - id: model.catalog
+        category: model
+        required: true
+      - id: model.text-generation
+        category: model
+        required: true
+      - id: model.tool-calling
+        category: model
+        required: true
+
+modelRequirements:
+  textGeneration: true
+  toolCalling: true
+  structuredOutput: true
+  multimodal: false
+
+permissions:
+  network:
+    mode: allowlist
+    destinations:
+      - model-catalog
+      - test-completion
+  filesystem:
+    read:
+      - workspace
+    write: []
+  subprocess:
+    allowed: true
+    commands:
+      - node
+      - npm
+  cloudCompute:
+    allowed: false
+    providers: []
+  limits:
+    wallTimeSeconds: 300
+    memoryMiB: 1024
+    maxArtifacts: 4
+    maxCostUsd: 1
+  data:
+    classification: internal
+    retentionDays: 30
+    externalTransfer: allowlisted
+    licenses:
+      - project-internal
+
+evals:
+  runner:
+    executable: node
+    script: evals/run-evals.mjs
+    args: []
+    shell: false
+  cases: evals/cases.json
+
+compatibility:
+  contract: "1.0"
+  harness: 0.1.0-rc.6
