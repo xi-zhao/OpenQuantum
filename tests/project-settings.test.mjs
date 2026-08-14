@@ -54,6 +54,13 @@ test("project settings exposes safe Skill and MCP projections", async (t) => {
   assert.deepEqual(snapshot.mcpServers, [
     {
       serverName: "demo_quantum",
+      displayName: "demo_quantum",
+      description: "项目 Agent preset 声明的 Harness 原生 MCP 服务。",
+      provider: "Project",
+      sourceUrl: null,
+      packageName: null,
+      packageVersion: null,
+      credentialRef: null,
       transport: "stdio",
       target: "./.agents/skills/demo-skill/mcp/server.mjs",
       enabled: true,
@@ -67,6 +74,7 @@ test("project settings exposes safe Skill and MCP projections", async (t) => {
       },
     },
   ]);
+  assert.deepEqual(snapshot.mcpCredentials, []);
   assert.match(snapshot.mcpRevision, /^[a-f0-9]{64}$/);
 });
 
@@ -127,6 +135,76 @@ test("MCP settings update only bounded Harness connection policy", async (t) => 
   assert.equal(value[0].config.serverName, "demo_quantum");
   assert.equal(value[0].config.toolCallTimeoutMs, 90000);
   assert.equal(value[0].config.reconnect.enabled, false);
+});
+
+test("credentialed MCP entries use the same bounded settings Interface", async (t) => {
+  const root = await fixture(t);
+  const configPath = path.join(
+    root,
+    "runtime/openquantum/agent-presets/openquantum/agent.cordis.yml",
+  );
+  const original = await readFile(configPath, "utf8");
+  await writeFile(
+    configPath,
+    `${original}\n- id: qiskit-runtime\n  name: ./credentialed-mcp-client.mjs\n  disabled: true\n  config:\n    serverName: qiskit_ibm_runtime\n    transport: stdio\n    command: uvx\n    args:\n      - --from\n      - qiskit-ibm-runtime-mcp-server==0.6.1\n      - qiskit-ibm-runtime-mcp-server\n    env: {}\n    credentialEnv:\n      QISKIT_IBM_TOKEN: QISKIT_IBM_TOKEN\n    toolCallTimeoutMs: 300000\n    failOnStartupError: true\n    reconnect:\n      enabled: true\n      initialDelayMs: 1000\n      maxDelayMs: 60000\n      maxAttempts: 10\n`,
+  );
+  const before = await readProjectSettings(root);
+  assert.deepEqual(before.mcpCredentials, [
+    {
+      ref: "QISKIT_IBM_TOKEN",
+      displayName: "IBM Quantum API Token",
+      description: "供 IBM Runtime 与 IBM Transpiler 共用；密钥只保存在 Harness 凭据库。",
+      documentationUrl: "https://quantum.ibm.com/account",
+      serverNames: ["qiskit_ibm_runtime"],
+    },
+  ]);
+
+  await updateMcpSettings(root, {
+    serverName: "qiskit_ibm_runtime",
+    revision: before.mcpRevision,
+    enabled: true,
+    toolCallTimeoutMs: 180000,
+    reconnect: {
+      enabled: true,
+      initialDelayMs: 1500,
+      maxDelayMs: 45000,
+      maxAttempts: 8,
+    },
+  });
+  const value = parseDocument(await readFile(configPath, "utf8")).toJS();
+  assert.equal(value[1].disabled, undefined);
+  assert.equal(value[1].config.serverName, "qiskit_ibm_runtime");
+  assert.equal(value[1].config.credentialEnv.QISKIT_IBM_TOKEN, "QISKIT_IBM_TOKEN");
+  assert.equal(value[1].config.toolCallTimeoutMs, 180000);
+});
+
+test("repository preset pins official Qiskit services with safe defaults", async () => {
+  const snapshot = await readProjectSettings(process.cwd());
+  const byName = new Map(snapshot.mcpServers.map((server) => [server.serverName, server]));
+
+  assert.equal(byName.get("qiskit")?.enabled, true);
+  assert.equal(byName.get("qiskit")?.packageVersion, "0.3.1");
+  assert.equal(byName.get("qiskit_docs")?.enabled, true);
+  assert.equal(byName.get("qiskit_docs")?.packageVersion, "0.3.0");
+  assert.equal(byName.get("qiskit_ibm_runtime")?.enabled, false);
+  assert.equal(byName.get("qiskit_ibm_transpiler")?.enabled, false);
+  assert.equal(byName.get("qiskit_gym")?.enabled, false);
+  assert.equal(byName.get("openquantum_quantum")?.enabled, true);
+  assert.deepEqual(snapshot.mcpCredentials[0].serverNames, [
+    "qiskit_ibm_runtime",
+    "qiskit_ibm_transpiler",
+  ]);
+
+  const raw = await readFile(
+    path.join(
+      process.cwd(),
+      "runtime/openquantum/agent-presets/openquantum/agent.cordis.yml",
+    ),
+    "utf8",
+  );
+  assert.equal(raw.includes("your_ibm_quantum_token"), false);
+  assert.match(raw, /qiskit-mcp-server==0\.3\.1/);
+  assert.match(raw, /qiskit-docs-mcp-server==0\.3\.0/);
 });
 
 test("project settings rejects a symlinked Skill file", async (t) => {

@@ -29,6 +29,13 @@ export interface SkillSettings {
 
 export interface McpServerSettings {
   readonly serverName: string;
+  readonly displayName: string;
+  readonly description: string;
+  readonly provider: string;
+  readonly sourceUrl: string | null;
+  readonly packageName: string | null;
+  readonly packageVersion: string | null;
+  readonly credentialRef: string | null;
   readonly transport: "stdio" | "streamable-http";
   readonly target: string;
   readonly enabled: boolean;
@@ -42,6 +49,16 @@ export interface McpServerSettings {
   };
 }
 
+export interface McpCredentialSettings {
+  readonly ref: string;
+  readonly displayName: string;
+  readonly description: string;
+  readonly documentationUrl: string;
+  readonly serverNames: readonly string[];
+  readonly configured: boolean;
+  readonly writable: boolean;
+}
+
 export interface SettingsSnapshot {
   readonly models: {
     readonly status: "ready" | "unavailable";
@@ -51,6 +68,7 @@ export interface SettingsSnapshot {
   readonly project: {
     readonly skills: readonly SkillSettings[];
     readonly mcpServers: readonly McpServerSettings[];
+    readonly mcpCredentials: readonly McpCredentialSettings[];
     readonly mcpRevision: string;
   };
 }
@@ -86,6 +104,12 @@ export type SettingsCommand =
         readonly maxDelayMs: number;
         readonly maxAttempts: number;
       };
+    }
+  | {
+      readonly type: "mcp.credential.update";
+      readonly ref: string;
+      readonly value?: string;
+      readonly remove?: boolean;
     };
 
 /** 设置中心的唯一 Interface；调用方只需读取快照或提交一个业务命令。 */

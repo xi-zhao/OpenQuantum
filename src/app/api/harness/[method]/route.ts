@@ -23,9 +23,10 @@ const ALLOWED_POST_METHODS = new Set([
   "llm.models",
 ]);
 const MODEL_SETTING_FIELDS = new Set(["displayName", "baseURL", "api", "models"]);
-const MODEL_CREDENTIAL_REFS = new Set([
+const SETTINGS_CREDENTIAL_REFS = new Set([
   "OPENQUANTUM_PUBLIC_API_KEY",
   "OPENQUANTUM_PRIVATE_API_KEY",
+  "QISKIT_IBM_TOKEN",
 ]);
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -59,7 +60,7 @@ function isAllowedModelSettingsPayload(method: string, payload: unknown): boolea
       Array.isArray(payload.refs) &&
       payload.refs.length > 0 &&
       payload.refs.every(
-        (ref) => typeof ref === "string" && MODEL_CREDENTIAL_REFS.has(ref),
+        (ref) => typeof ref === "string" && SETTINGS_CREDENTIAL_REFS.has(ref),
       )
     );
   }
@@ -68,7 +69,7 @@ function isAllowedModelSettingsPayload(method: string, payload: unknown): boolea
     return (
       isRecord(payload) &&
       typeof payload.ref === "string" &&
-      MODEL_CREDENTIAL_REFS.has(payload.ref)
+      SETTINGS_CREDENTIAL_REFS.has(payload.ref)
     );
   }
 
@@ -140,7 +141,7 @@ export async function POST(
 
   if (!isAllowedModelSettingsPayload(method, parsed.data.payload)) {
     return Response.json(
-      { error: "Harness settings operation is outside the OpenQuantum model seam" },
+      { error: "Harness settings operation is outside the OpenQuantum settings seam" },
       { status: 403 },
     );
   }

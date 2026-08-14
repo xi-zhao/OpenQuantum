@@ -41,3 +41,13 @@ OpenQuantum 第一版不提供远程插件市场或自动安装。仓库内 stdi
 科学 Validator。不要把任意用户提供的 MCP command、Cordis patch 或插件包直接装入正在运行的 Harness。
 
 维护者会尽快确认报告、评估影响并协调修复与披露时间。我们不会要求研究者公开未修复漏洞来证明有效性。
+
+## 官方 Qiskit MCP
+
+默认 Qiskit Circuits 与 Docs 服务通过 `uvx` 从 PyPI 获取经过版本固定的上游包。它们仍属于第三方供应链，
+升级时必须审查 Qiskit 官方源码、Tool schema、依赖和网络行为，并运行显式 MCP 探针。默认离线 CI 可设置
+`OPENQUANTUM_DISABLE_QISKIT_MCP=1`，但产品 preset 的正常默认值保持开启。
+
+IBM Runtime 与 Transpiler 默认关闭。只有用户在设置中心保存 `QISKIT_IBM_TOKEN` 并显式启用后，可信的
+credential Adapter 才会在 Harness 启动时把 Token 注入对应 stdio 子进程。Token 不得进入项目配置、Session、
+Artifact、日志或截图；云任务可能消耗配额或产生费用，启用服务不等于授权 Agent 任意提交高成本任务。

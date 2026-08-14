@@ -218,6 +218,7 @@ export async function runQuantumHarnessE2E({
       env: {
         ...process.env,
         DSH_HOME: harnessHome,
+        OPENQUANTUM_DISABLE_QISKIT_MCP: "1",
         DSH_TELEMETRY_DISABLED: "1",
         DSH_TELEMETRY_MODE: "DISABLED",
       },

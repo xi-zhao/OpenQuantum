@@ -72,7 +72,7 @@ export function SettingsDialog({ open, port, onClose }: SettingsDialogProps) {
     try {
       setSnapshot(await port.execute(command));
       setNotice(
-        command.type === "mcp.update"
+        command.type === "mcp.update" || command.type === "mcp.credential.update"
           ? "MCP 配置已保存；重启 Harness 后生效。"
           : "设置已保存。",
       );
@@ -122,7 +122,7 @@ export function SettingsDialog({ open, port, onClose }: SettingsDialogProps) {
             {notice ? <div className="mb-5 rounded-xl border border-[#afe1d9] bg-[#edfaf7] px-4 py-3 text-sm text-[#0b776e]">{notice}</div> : null}
             {loading && !snapshot ? <div className="flex min-h-72 items-center justify-center text-sm text-[#728793]">正在读取 Harness 设置…</div> : null}
             {snapshot && section === "models" ? <ModelSettingsSection {...snapshot.models} savingKey={savingKey} onSave={(command, key) => void execute(command, key)} /> : null}
-            {snapshot && section === "mcp" ? <McpSettingsSection servers={snapshot.project.mcpServers} revision={snapshot.project.mcpRevision} savingKey={savingKey} onSave={(command, key) => void execute(command, key)} /> : null}
+            {snapshot && section === "mcp" ? <McpSettingsSection servers={snapshot.project.mcpServers} credentials={snapshot.project.mcpCredentials} revision={snapshot.project.mcpRevision} savingKey={savingKey} onSave={(command, key) => void execute(command, key)} /> : null}
             {snapshot && section === "skills" ? <SkillSettingsSection skills={snapshot.project.skills} savingKey={savingKey} onSave={(command, key) => void execute(command, key)} /> : null}
           </div>
         </div>

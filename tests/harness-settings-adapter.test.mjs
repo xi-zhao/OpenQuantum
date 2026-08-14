@@ -15,6 +15,7 @@ function projectSnapshot() {
   return {
     skills: [],
     mcpServers: [],
+    mcpCredentials: [],
     mcpRevision: "a".repeat(64),
   };
 }
@@ -127,4 +128,146 @@ test("settings adapter reads redacted Harness model settings", async (t) => {
     calls.find(([name]) => name === "credentials.set")[1],
     { ref: "QUANTUM_API_KEY", value: "test-key-value" },
   );
+});
+
+test("settings adapter keeps IBM MCP credentials redacted and gates cloud enablement", async (t) => {
+  const originalFetch = globalThis.fetch;
+  t.after(() => {
+    globalThis.fetch = originalFetch;
+  });
+  const projectCalls = [];
+  let serverEnabled = false;
+  const project = {
+    skills: [],
+    mcpServers: [
+      {
+        serverName: "qiskit_ibm_runtime",
+        displayName: "IBM Quantum Runtime",
+        description: "Cloud runtime",
+        provider: "Qiskit / IBM Quantum",
+        sourceUrl: "https://github.com/Qiskit/mcp-servers",
+        packageName: "qiskit-ibm-runtime-mcp-server",
+        packageVersion: "0.6.1",
+        credentialRef: "QISKIT_IBM_TOKEN",
+        transport: "stdio",
+        target: "uvx qiskit-ibm-runtime-mcp-server",
+        enabled: false,
+        toolCallTimeoutMs: 300000,
+        failOnStartupError: true,
+        reconnect: {
+          enabled: true,
+          initialDelayMs: 1000,
+          maxDelayMs: 60000,
+          maxAttempts: 10,
+        },
+      },
+    ],
+    mcpCredentials: [
+      {
+        ref: "QISKIT_IBM_TOKEN",
+        displayName: "IBM Quantum API Token",
+        description: "Shared cloud token",
+        documentationUrl: "https://quantum.ibm.com/account",
+        serverNames: ["qiskit_ibm_runtime"],
+      },
+    ],
+    mcpRevision: "b".repeat(64),
+  };
+  globalThis.fetch = async (_url, init) => {
+    const payload = JSON.parse(init.body);
+    projectCalls.push(payload);
+    if (payload.action === "mcp.update") serverEnabled = payload.enabled;
+    return Response.json({
+      ...project,
+      mcpServers: project.mcpServers.map((server) => ({
+        ...server,
+        enabled: serverEnabled,
+      })),
+    });
+  };
+
+  let configured = false;
+  const credentialCalls = [];
+  const client = {
+    settings: {
+      describe: async () =>
+        ok({ writable: true, hasDocument: true, namespaces: [] }),
+      mutate: async () => ok({}),
+    },
+    credentials: {
+      describe: async ({ refs }) => {
+        credentialCalls.push(["describe", refs]);
+        return ok({
+          credentials: Object.fromEntries(
+            refs.map((ref) => [ref, { configured, writable: true }]),
+          ),
+        });
+      },
+      set: async ({ ref, value }) => {
+        credentialCalls.push(["set", { ref, value }]);
+        configured = true;
+        return ok({});
+      },
+      unset: async ({ ref }) => {
+        credentialCalls.push(["unset", { ref }]);
+        configured = false;
+        return ok({});
+      },
+    },
+    llm: { providers: async () => ok({ providers: [] }) },
+  };
+  const adapter = new HarnessSettingsAdapter(client);
+
+  const initial = await adapter.snapshot();
+  assert.equal(initial.project.mcpCredentials[0].configured, false);
+  assert.equal(JSON.stringify(initial).includes("ibm-secret"), false);
+  await assert.rejects(
+    adapter.execute({
+      type: "mcp.update",
+      serverName: "qiskit_ibm_runtime",
+      revision: project.mcpRevision,
+      enabled: true,
+      toolCallTimeoutMs: 300000,
+      reconnect: project.mcpServers[0].reconnect,
+    }),
+    /先保存 IBM Quantum API Token/,
+  );
+
+  const configuredSnapshot = await adapter.execute({
+    type: "mcp.credential.update",
+    ref: "QISKIT_IBM_TOKEN",
+    value: "ibm-secret-value",
+  });
+  assert.equal(configuredSnapshot.project.mcpCredentials[0].configured, true);
+  assert.deepEqual(credentialCalls.find(([kind]) => kind === "set")[1], {
+    ref: "QISKIT_IBM_TOKEN",
+    value: "ibm-secret-value",
+  });
+  assert.equal(
+    projectCalls.some((call) => JSON.stringify(call).includes("ibm-secret-value")),
+    false,
+  );
+
+  await adapter.execute({
+    type: "mcp.update",
+    serverName: "qiskit_ibm_runtime",
+    revision: project.mcpRevision,
+    enabled: true,
+    toolCallTimeoutMs: 300000,
+    reconnect: project.mcpServers[0].reconnect,
+  });
+  assert.ok(
+    projectCalls.some(
+      (call) => call.action === "mcp.update" && call.enabled === true,
+    ),
+  );
+  await assert.rejects(
+    adapter.execute({
+      type: "mcp.credential.update",
+      ref: "QISKIT_IBM_TOKEN",
+      remove: true,
+    }),
+    /先停用 IBM Quantum Runtime/,
+  );
+  assert.equal(credentialCalls.some(([kind]) => kind === "unset"), false);
 });

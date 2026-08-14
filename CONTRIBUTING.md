@@ -18,13 +18,14 @@ OpenQuantum 只保留无法上游化且确实必要的薄适配。
 
 ## 开发环境
 
-要求 Node.js 24+。Fork 仓库并从 `main` 创建短生命周期分支：
+要求 Node.js 24+，并安装 Qiskit MCP 使用的 `uv` / `uvx`。Fork 仓库并从 `main` 创建短生命周期分支：
 
 ```bash
 git clone <your-openquantum-fork>
 cd openQuantum
 npm ci
 cp .env.example .env
+npm run mcp:qiskit:probe
 npm run demo:quantum-ground-state
 npm run check
 ```
@@ -89,6 +90,21 @@ OpenQuantum 参考实现随后在受信任的 Harness `tools/post-execute` Adapt
 Agent/Session/Tool call 取得执行身份，通过 `ctx.fs` 在 Session workspace 的 `results/openquantum/` 下原子
 写入 input、Artifact 与合同文件，再调用同一个独立 Validator 和中央 Acceptance builder。MCP 本身仍不写
 文件、不管理 Session，也不能自报最终验收。
+
+### 复用外部 MCP
+
+优先直接采用上游维护的 MCP，而不是把第三方 Tool 复制进仓库。Qiskit 官方服务是参考做法：
+
+- 在 `agent.cordis.yml` 中为每个 server 使用独立、稳定的 `serverName`；
+- `uvx --from package==version command` 固定上游顶层包版本；
+- 无凭据的核心服务可以默认开启，涉及网络、费用或真实硬件的服务默认关闭；
+- 凭据只使用 Harness credential reference，禁止写入 Cordis YAML、Skill、Tool 参数、日志或 Artifact；
+- 默认测试验证静态配置和薄 Adapter，真实上游探针作为显式命令，避免离线 CI 隐式下载依赖；
+- 上游版本升级必须重新运行工具清单探针，并审查 Tool schema、网络面和许可证变化。
+
+如果 stdio MCP 需要把 Harness 凭据传给子进程，复用 preset 内的 `credentialed-mcp-client.mjs` 薄 Adapter。
+它只负责 credential reference → 子进程环境变量的启动期映射；连接、Tool 注册、超时和重连仍由
+`@deepseek-ai/dsh-mcp-client` 负责。不要在 Adapter 中添加第二套 MCP 生命周期。
 
 ### 让科学结果在 UI 中可回放
 

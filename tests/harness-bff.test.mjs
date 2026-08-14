@@ -150,6 +150,25 @@ test("Harness BFF enforces the browser boundary and owns deployment cwd", async 
   );
   assert.equal(privilegeEscalation.status, 403);
 
+  const qiskitCredential = await invoke(
+    {
+      "content-type": "application/json",
+      host: "127.0.0.1:3000",
+      origin: publicOrigin,
+      "sec-fetch-site": "same-origin",
+    },
+    "credentials.set",
+    {
+      type: "client-request",
+      rpcId: crypto.randomUUID(),
+      method: "credentials.set",
+      payload: { ref: "QISKIT_IBM_TOKEN", value: "ibm-test-token" },
+    },
+  );
+  assert.equal(qiskitCredential.status, 200);
+  assert.equal(upstreamRequests[2].url, "/api/credentials.set");
+  assert.equal(upstreamRequests[2].envelope.payload.ref, "QISKIT_IBM_TOKEN");
+
   const arbitraryCredential = await invoke(
     {
       "content-type": "application/json",
@@ -166,7 +185,7 @@ test("Harness BFF enforces the browser boundary and owns deployment cwd", async 
     },
   );
   assert.equal(arbitraryCredential.status, 403);
-  assert.equal(upstreamRequests.length, 2);
+  assert.equal(upstreamRequests.length, 3);
 });
 
 test("Harness BFF marks an upstream connection loss as an unknown mutation outcome", async (t) => {

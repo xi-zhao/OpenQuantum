@@ -18,6 +18,74 @@ const SKILL_NAME = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const SERVER_NAME = /^[A-Za-z0-9_-]{1,32}$/;
 const SHA256 = /^[a-f0-9]{64}$/;
 const AGENT_CONFIG = "runtime/openquantum/agent-presets/openquantum/agent.cordis.yml";
+const MCP_PLUGIN_NAMES = new Set([
+  "@deepseek-ai/dsh-mcp-client",
+  "./credentialed-mcp-client.mjs",
+]);
+const QISKIT_MCP_SOURCE = "https://github.com/Qiskit/mcp-servers";
+const MCP_CATALOG = Object.freeze({
+  openquantum_quantum: Object.freeze({
+    displayName: "OpenQuantum 基态求解",
+    description: "双量子位固定粒子数扇区的确定性 VQE 求解与独立科学验收。",
+    provider: "OpenQuantum",
+    sourceUrl: null,
+    packageName: null,
+    packageVersion: "0.2.0",
+    credentialRef: null,
+  }),
+  qiskit: Object.freeze({
+    displayName: "Qiskit Circuits",
+    description: "Qiskit 官方电路创建、分析、转译以及 QASM/QPY 序列化工具。",
+    provider: "Qiskit",
+    sourceUrl: QISKIT_MCP_SOURCE,
+    packageName: "qiskit-mcp-server",
+    packageVersion: "0.3.1",
+    credentialRef: null,
+  }),
+  qiskit_docs: Object.freeze({
+    displayName: "Qiskit Docs",
+    description: "Qiskit 官方文档搜索、页面读取与 IBM Quantum 错误码查询。",
+    provider: "Qiskit",
+    sourceUrl: QISKIT_MCP_SOURCE,
+    packageName: "qiskit-docs-mcp-server",
+    packageVersion: "0.3.0",
+    credentialRef: null,
+  }),
+  qiskit_ibm_runtime: Object.freeze({
+    displayName: "IBM Quantum Runtime",
+    description: "通过 Qiskit IBM Runtime 查询后端并向 IBM Quantum 提交量子任务。",
+    provider: "Qiskit / IBM Quantum",
+    sourceUrl: QISKIT_MCP_SOURCE,
+    packageName: "qiskit-ibm-runtime-mcp-server",
+    packageVersion: "0.6.1",
+    credentialRef: "QISKIT_IBM_TOKEN",
+  }),
+  qiskit_ibm_transpiler: Object.freeze({
+    displayName: "IBM Quantum Transpiler",
+    description: "使用 IBM Quantum AI Transpiler 完成电路路由与综合优化。",
+    provider: "Qiskit / IBM Quantum",
+    sourceUrl: QISKIT_MCP_SOURCE,
+    packageName: "qiskit-ibm-transpiler-mcp-server",
+    packageVersion: "0.4.1",
+    credentialRef: "QISKIT_IBM_TOKEN",
+  }),
+  qiskit_gym: Object.freeze({
+    displayName: "Qiskit Gym",
+    description: "社区维护的强化学习量子电路综合工具；默认关闭。",
+    provider: "Qiskit Community",
+    sourceUrl: QISKIT_MCP_SOURCE,
+    packageName: "qiskit-gym-mcp-server",
+    packageVersion: "0.4.1",
+    credentialRef: null,
+  }),
+});
+const MCP_CREDENTIAL_CATALOG = Object.freeze({
+  QISKIT_IBM_TOKEN: Object.freeze({
+    displayName: "IBM Quantum API Token",
+    description: "供 IBM Runtime 与 IBM Transpiler 共用；密钥只保存在 Harness 凭据库。",
+    documentationUrl: "https://quantum.ibm.com/account",
+  }),
+});
 
 export class ProjectSettingsConflictError extends Error {
   constructor() {
@@ -118,6 +186,9 @@ function displayTarget(config) {
   if (config.transport === "streamable-http") {
     return typeof config.url === "string" ? config.url : "未配置 URL";
   }
+  if (config.command === "uvx" && Array.isArray(config.args)) {
+    return ["uvx", ...config.args].join(" ");
+  }
   const firstArg = Array.isArray(config.args) ? config.args[0] : undefined;
   if (typeof firstArg === "string") {
     const match = firstArg.match(/process\.cwd\(\) \+ ['"]\/(.+)['"]/);
@@ -138,14 +209,31 @@ async function readMcp(projectRoot) {
     throw new TypeError("Agent Cordis 配置必须是列表");
   }
   const mcpServers = entries
-    .filter((entry) => isRecord(entry) && entry.name === "@deepseek-ai/dsh-mcp-client")
+    .filter((entry) => isRecord(entry) && MCP_PLUGIN_NAMES.has(entry.name))
     .map((entry) => {
       const config = isRecord(entry.config) ? entry.config : {};
       const reconnect = isRecord(config.reconnect) ? config.reconnect : {};
       const transport =
         config.transport === "streamable-http" ? "streamable-http" : "stdio";
+      const serverName = String(config.serverName ?? "");
+      const catalog = MCP_CATALOG[serverName] ?? {
+        displayName: serverName,
+        description: "项目 Agent preset 声明的 Harness 原生 MCP 服务。",
+        provider: "Project",
+        sourceUrl: null,
+        packageName: null,
+        packageVersion: null,
+        credentialRef: null,
+      };
       return {
-        serverName: String(config.serverName ?? ""),
+        serverName,
+        displayName: catalog.displayName,
+        description: catalog.description,
+        provider: catalog.provider,
+        sourceUrl: catalog.sourceUrl,
+        packageName: catalog.packageName,
+        packageVersion: catalog.packageVersion,
+        credentialRef: catalog.credentialRef,
         transport,
         target: displayTarget(config),
         enabled: entry.disabled !== true,
@@ -159,7 +247,24 @@ async function readMcp(projectRoot) {
         },
       };
     });
-  return { filePath, raw, document, mcpServers, revision: digest(raw) };
+  const credentialRefs = new Set(
+    mcpServers.map((server) => server.credentialRef).filter(Boolean),
+  );
+  const mcpCredentials = [...credentialRefs].map((ref) => ({
+    ref,
+    ...MCP_CREDENTIAL_CATALOG[ref],
+    serverNames: mcpServers
+      .filter((server) => server.credentialRef === ref)
+      .map((server) => server.serverName),
+  }));
+  return {
+    filePath,
+    raw,
+    document,
+    mcpServers,
+    mcpCredentials,
+    revision: digest(raw),
+  };
 }
 
 async function readSkill(projectRoot, directoryName) {
@@ -241,6 +346,7 @@ export async function readProjectSettings(projectRoot) {
   return {
     skills,
     mcpServers: mcp.mcpServers,
+    mcpCredentials: mcp.mcpCredentials,
     mcpRevision: mcp.revision,
   };
 }
@@ -302,8 +408,10 @@ export async function updateMcpSettings(projectRoot, input) {
     throw new TypeError("Agent Cordis 配置必须是列表");
   }
   const index = entries.findIndex((_, candidateIndex) => {
+    const pluginName = mcp.document.getIn([candidateIndex, "name"]);
     return (
-      mcp.document.getIn([candidateIndex, "name"]) === "@deepseek-ai/dsh-mcp-client" &&
+      typeof pluginName === "string" &&
+      MCP_PLUGIN_NAMES.has(pluginName) &&
       mcp.document.getIn([candidateIndex, "config", "serverName"]) === input.serverName
     );
   });

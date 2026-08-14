@@ -8,6 +8,7 @@ import type {
 import { OpenQuantumWebApiClient } from "@/harness/web-api-client";
 
 import type {
+  McpCredentialSettings,
   McpServerSettings,
   ModelProtocol,
   OpenQuantumSettingsPort,
@@ -25,6 +26,10 @@ interface SettingsHarnessClient {
 interface ProjectSettingsSnapshot {
   readonly skills: readonly SkillSettings[];
   readonly mcpServers: readonly McpServerSettings[];
+  readonly mcpCredentials: readonly Omit<
+    McpCredentialSettings,
+    "configured" | "writable"
+  >[];
   readonly mcpRevision: string;
 }
 
@@ -117,7 +122,7 @@ export class HarnessSettingsAdapter implements OpenQuantumSettingsPort {
 
   async snapshot(signal?: AbortSignal): Promise<SettingsSnapshot> {
     const [project, models] = await Promise.all([
-      projectRequest({ action: "snapshot" }, signal),
+      this.loadProject(signal),
       this.loadModels(signal).catch((error) => ({
         status: "unavailable" as const,
         message: failureMessage(error),
@@ -139,10 +144,81 @@ export class HarnessSettingsAdapter implements OpenQuantumSettingsPort {
         await projectRequest({ action: command.type, ...command }, signal);
         break;
       case "mcp.update":
-        await projectRequest({ action: command.type, ...command }, signal);
+        await this.updateMcp(command, signal);
+        break;
+      case "mcp.credential.update":
+        await this.updateMcpCredential(command, signal);
         break;
     }
     return this.snapshot(signal);
+  }
+
+  private async loadProject(signal?: AbortSignal) {
+    const project = await projectRequest({ action: "snapshot" }, signal);
+    const refs = project.mcpCredentials.map((credential) => credential.ref);
+    const described = refs.length
+      ? unwrap(await this.client.credentials.describe({ refs }, signal))
+      : { credentials: {} as Record<string, CredentialView> };
+    return {
+      ...project,
+      mcpCredentials: project.mcpCredentials.map((credential) => ({
+        ...credential,
+        configured: described.credentials[credential.ref]?.configured ?? false,
+        writable: described.credentials[credential.ref]?.writable ?? false,
+      })),
+    };
+  }
+
+  private async updateMcp(
+    command: Extract<SettingsCommand, { type: "mcp.update" }>,
+    signal?: AbortSignal,
+  ): Promise<void> {
+    const project = await projectRequest({ action: "snapshot" }, signal);
+    const server = project.mcpServers.find(
+      (candidate) => candidate.serverName === command.serverName,
+    );
+    if (!server) {
+      throw new Error("MCP 服务已不存在，请刷新设置后重试");
+    }
+    if (command.enabled && server.credentialRef) {
+      const described = unwrap(
+        await this.client.credentials.describe(
+          { refs: [server.credentialRef] },
+          signal,
+        ),
+      );
+      if (!described.credentials[server.credentialRef]?.configured) {
+        throw new Error("请先保存 IBM Quantum API Token，再启用该云服务");
+      }
+    }
+    await projectRequest({ action: command.type, ...command }, signal);
+  }
+
+  private async updateMcpCredential(
+    command: Extract<SettingsCommand, { type: "mcp.credential.update" }>,
+    signal?: AbortSignal,
+  ): Promise<void> {
+    const project = await projectRequest({ action: "snapshot" }, signal);
+    if (!project.mcpCredentials.some((credential) => credential.ref === command.ref)) {
+      throw new Error("MCP 凭据已不存在，请刷新设置后重试");
+    }
+    if (command.remove) {
+      const enabledConsumers = project.mcpServers.filter(
+        (server) => server.enabled && server.credentialRef === command.ref,
+      );
+      if (enabledConsumers.length > 0) {
+        throw new Error(
+          `请先停用 ${enabledConsumers.map((server) => server.displayName).join("、")}，再移除 Token`,
+        );
+      }
+      unwrap(await this.client.credentials.unset({ ref: command.ref }, signal));
+      return;
+    }
+    const value = command.value?.trim();
+    if (!value) {
+      throw new Error("请输入 IBM Quantum API Token");
+    }
+    unwrap(await this.client.credentials.set({ ref: command.ref, value }, signal));
   }
 
   private async loadModels(signal?: AbortSignal) {

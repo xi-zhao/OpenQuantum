@@ -64,6 +64,124 @@
       maxDelayMs: 30000
       maxAttempts: 10
 
+# Official Qiskit MCP servers. Package versions are pinned so every Fork gets
+# the same tool schemas. Set OPENQUANTUM_DISABLE_QISKIT_MCP=1 for offline CI;
+# normal installations enable the two credential-free core services.
+- id: mcp-qiskit
+  name: '@deepseek-ai/dsh-mcp-client'
+  disabled: !!js process.env.OPENQUANTUM_DISABLE_QISKIT_MCP === '1'
+  config:
+    serverName: qiskit
+    transport: stdio
+    command: uvx
+    args:
+      - --from
+      - qiskit-mcp-server==0.3.1
+      - qiskit-mcp-server
+    env: {}
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 120000
+    failOnStartupError: true
+    reconnect:
+      enabled: true
+      initialDelayMs: 1000
+      maxDelayMs: 30000
+      maxAttempts: 10
+
+- id: mcp-qiskit-docs
+  name: '@deepseek-ai/dsh-mcp-client'
+  disabled: !!js process.env.OPENQUANTUM_DISABLE_QISKIT_MCP === '1'
+  config:
+    serverName: qiskit_docs
+    transport: stdio
+    command: uvx
+    args:
+      - --from
+      - qiskit-docs-mcp-server==0.3.0
+      - --with
+      - socksio==1.0.0
+      - qiskit-docs-mcp-server
+    env: {}
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 120000
+    failOnStartupError: true
+    reconnect:
+      enabled: true
+      initialDelayMs: 1000
+      maxDelayMs: 30000
+      maxAttempts: 10
+
+# Cloud services stay opt-in. Their shared IBM token is resolved from the
+# Harness credential store by a thin trusted adapter, never from UI state or
+# Cordis YAML. Enabling either service requires a Harness restart.
+- id: mcp-qiskit-ibm-runtime
+  name: ./credentialed-mcp-client.mjs
+  disabled: true
+  config:
+    serverName: qiskit_ibm_runtime
+    transport: stdio
+    command: uvx
+    args:
+      - --from
+      - qiskit-ibm-runtime-mcp-server==0.6.1
+      - qiskit-ibm-runtime-mcp-server
+    env: {}
+    credentialEnv:
+      QISKIT_IBM_TOKEN: QISKIT_IBM_TOKEN
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 300000
+    failOnStartupError: true
+    reconnect:
+      enabled: true
+      initialDelayMs: 1000
+      maxDelayMs: 60000
+      maxAttempts: 10
+
+- id: mcp-qiskit-ibm-transpiler
+  name: ./credentialed-mcp-client.mjs
+  disabled: true
+  config:
+    serverName: qiskit_ibm_transpiler
+    transport: stdio
+    command: uvx
+    args:
+      - --from
+      - qiskit-ibm-transpiler-mcp-server==0.4.1
+      - qiskit-ibm-transpiler-mcp-server
+    env: {}
+    credentialEnv:
+      QISKIT_IBM_TOKEN: QISKIT_IBM_TOKEN
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 300000
+    failOnStartupError: true
+    reconnect:
+      enabled: true
+      initialDelayMs: 1000
+      maxDelayMs: 60000
+      maxAttempts: 10
+
+# Community server: intentionally disabled until a project explicitly opts in.
+- id: mcp-qiskit-gym
+  name: '@deepseek-ai/dsh-mcp-client'
+  disabled: true
+  config:
+    serverName: qiskit_gym
+    transport: stdio
+    command: uvx
+    args:
+      - --from
+      - qiskit-gym-mcp-server==0.4.1
+      - qiskit-gym-mcp-server
+    env: {}
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 300000
+    failOnStartupError: true
+    reconnect:
+      enabled: true
+      initialDelayMs: 1000
+      maxDelayMs: 60000
+      maxAttempts: 10
+
 # Preserve one bounded scientific presentation in Harness-native tool/result
 # content. The plugin owns no runtime or storage; it only adapts MCP
 # structuredContent at the official tools/post-execute seam.

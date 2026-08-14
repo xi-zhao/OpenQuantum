@@ -80,6 +80,8 @@ OpenQuantum 的原则是：
 - 同源白名单代理，浏览器不能读取模型凭证或调用任意 Host 管理方法；
 - `platform-diagnostics` 诊断 Skill；
 - `quantum-ground-state` 参考 Skill 与 Harness 原生 stdio MCP。
+- 默认启用 Qiskit 官方 `qiskit-mcp-server` 与 `qiskit-docs-mcp-server`；
+- 可在设置中心启用 IBM Quantum Runtime / Transpiler，并通过 Harness 凭据库保存 Token；
 - 隔离启动真实 Harness、验证 Skill 发现和 MCP Tool 进入 `request/header` 的 CI 测试；
 - 从 Harness 原生 `tool/call` / `tool/result` 重建的科学记录卡片，运行状态与科学状态分开展示。
 - 普通量子请求可用一个原子 MCP Tool 完成求解和计算级独立检查，不要求 Model 手工搬运 Artifact bundle。
@@ -89,11 +91,14 @@ OpenQuantum 的原则是：
 
 ## 本地启动
 
-要求 Node.js 24+。
+要求 Node.js 24+，以及 Qiskit 官方 MCP 推荐的
+[`uv` / `uvx`](https://docs.astral.sh/uv/getting-started/installation/)；Python 由 `uvx` 管理，官方 MCP
+包版本固定在 Agent preset 中。
 
 ```bash
 npm install
 cp .env.example .env
+npm run mcp:qiskit:probe
 npm run demo:quantum-ground-state
 npm run dev:stack
 ```
@@ -110,10 +115,33 @@ Harness Adapter 物化并重新验收。
 
 真实密钥只放在被 Git 忽略的 `.env` 或 Harness credential store 中。仓库配置只能引用环境变量名。
 
+### Qiskit 官方 MCP
+
+OpenQuantum 直接通过 DeepSeek Harness 原生 MCP Client 使用
+[`Qiskit/mcp-servers`](https://github.com/Qiskit/mcp-servers)，不复制它的 Runtime 或 Tool 实现：
+
+| 服务 | 默认状态 | 当前固定版本 | 凭据 |
+|---|---|---:|---|
+| Qiskit Circuits | 开启 | `qiskit-mcp-server==0.3.1` | 无 |
+| Qiskit Docs | 开启 | `qiskit-docs-mcp-server==0.3.0`（含代理兼容 `socksio==1.0.0`） | 无 |
+| IBM Quantum Runtime | 关闭 | `qiskit-ibm-runtime-mcp-server==0.6.1` | `QISKIT_IBM_TOKEN` |
+| IBM Quantum Transpiler | 关闭 | `qiskit-ibm-transpiler-mcp-server==0.4.1` | `QISKIT_IBM_TOKEN` |
+| Qiskit Gym | 关闭 | `qiskit-gym-mcp-server==0.4.1` | 无 |
+
+打开 UI 的“设置中心 → MCP 服务”可以修改启停、超时和重连策略。IBM 两个云服务共用一个 Token；Token
+通过 Harness `credentials.set` 写入本地凭据库，设置快照只返回“是否已配置”，不会返回明文。修改 MCP
+配置或 Token 后需重启 Harness。IBM 云服务可能访问外部网络、提交有配额或成本的任务，因此保持显式选择，
+不会随项目默认启动。
+
+`quantum-ground-state` 不被官方 MCP 替代：它仍是 OpenQuantum 的窄作用域参考 Skill，负责可复现求解、
+独立 Validator 和科学验收；官方 Qiskit MCP 提供通用电路、文档及可选云后端能力。
+
 ## 验证
 
 ```bash
 npm run harness:config
+npm run mcp:qiskit:probe
+npm run e2e:qiskit-harness
 npm run demo:quantum-ground-state
 npm run capability:quantum-ground-state:test
 npm run models:probe -- --provider openquantum-public
@@ -125,6 +153,11 @@ npm run check
 `models:probe` 会产生少量真实模型调用。`e2e:quantum-harness` 使用隔离的临时 Harness Home 和
 workspace，让真实模型完成一次 QGS MCP Tool Calling，并复核 Session 事件、六类 Artifact、Result Package、
 Acceptance Report 与 Result Commit；结束后自动清理。普通本地开发不需要每次运行这两个在线探针。
+
+`mcp:qiskit:probe` 会让 `uvx` 安装/复用缓存中的固定版本并直接核对官方 Tool 清单；
+`e2e:qiskit-harness` 再启动隔离 Harness，确认这些 Tool 真正进入 Agent 的 `request/header`；测试还会向
+临时 Harness 凭据库写入不可用的占位 Token，仅验证 IBM Runtime Tool 注册和凭据注入。两者可能访问
+PyPI，但不会调用 IBM Quantum Tool、硬件或提交任务，因此不放进默认离线 CI。
 
 当前无需云模型即可验证 QGS 数值程序、Validator、MCP 协议和 Harness 原生注册。完整的真实模型
 Tool Calling 仍要求先配置 `OPENQUANTUM_PUBLIC_API_KEY` 或 `OPENQUANTUM_PRIVATE_API_KEY`；没有凭据时，

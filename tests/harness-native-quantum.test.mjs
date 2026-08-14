@@ -1,12 +1,21 @@
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
 import { once } from "node:events";
-import { cp, mkdir, mkdtemp, rm } from "node:fs/promises";
+import {
+  cp,
+  mkdir,
+  mkdtemp,
+  readFile,
+  rm,
+  symlink,
+  writeFile,
+} from "node:fs/promises";
 import { createServer } from "node:http";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
+import { parseDocument } from "yaml";
 
 const projectRoot = fileURLToPath(new URL("..", import.meta.url));
 const harnessBin = path.join(
@@ -35,6 +44,29 @@ const SOLVE_TOOL = "mcp__openquantum_quantum__solve_ground_state";
 const VALIDATE_TOOL = "mcp__openquantum_quantum__validate_ground_state";
 const SOLVE_AND_VALIDATE_TOOL =
   "mcp__openquantum_quantum__solve_and_validate_ground_state";
+const INCLUDE_QISKIT_MCP = process.env.OPENQUANTUM_TEST_QISKIT_MCP === "1";
+const INCLUDE_IBM_RUNTIME_MCP =
+  process.env.OPENQUANTUM_TEST_IBM_RUNTIME_MCP === "1";
+const QISKIT_CIRCUIT_TOOL = "mcp__qiskit__transpile_circuit_tool";
+const QISKIT_DOCS_TOOL = "mcp__qiskit_docs__search_docs_tool";
+
+async function enableTemporaryMcp(presetRoot, serverName) {
+  const filename = path.join(presetRoot, "agent.cordis.yml");
+  const document = parseDocument(await readFile(filename, "utf8"), {
+    strict: true,
+    uniqueKeys: true,
+  });
+  if (document.errors.length > 0) throw document.errors[0];
+  const entries = document.contents?.items;
+  assert(Array.isArray(entries));
+  const index = entries.findIndex(
+    (_, candidate) =>
+      document.getIn([candidate, "config", "serverName"]) === serverName,
+  );
+  assert.notEqual(index, -1, `missing MCP server ${serverName}`);
+  document.deleteIn([index, "disabled"]);
+  await writeFile(filename, document.toString(), "utf8");
+}
 
 function delay(milliseconds) {
   return new Promise((resolve) => setTimeout(resolve, milliseconds));
@@ -93,7 +125,7 @@ async function waitForValue(probe, { timeoutMs, description, diagnostics }) {
 
 test(
   "Harness preset shares the quantum Skill and native MCP tools across two Sessions",
-  { timeout: 45_000 },
+  { timeout: INCLUDE_IBM_RUNTIME_MCP ? 180_000 : 45_000 },
   async (t) => {
     const sandboxRoot = await mkdtemp(
       path.join(tmpdir(), "openquantum-harness-native-"),
@@ -106,6 +138,19 @@ test(
     );
     await mkdir(path.dirname(presetTarget), { recursive: true });
     await cp(presetSource, presetTarget, { recursive: true, force: true });
+    if (INCLUDE_IBM_RUNTIME_MCP) {
+      await symlink(
+        path.join(projectRoot, "node_modules"),
+        path.join(sandboxRoot, "node_modules"),
+        "dir",
+      );
+      await enableTemporaryMcp(presetTarget, "qiskit_ibm_runtime");
+      await writeFile(
+        path.join(harnessHome, ".credentials.yaml"),
+        'QISKIT_IBM_TOKEN: "openquantum-registration-probe"\n',
+        { mode: 0o600 },
+      );
+    }
 
     const port = await reservePort();
     const baseUrl = `http://127.0.0.1:${port}`;
@@ -129,6 +174,7 @@ test(
           DSH_HOME: harnessHome,
           DSH_TELEMETRY_DISABLED: "1",
           DSH_TELEMETRY_MODE: "DISABLED",
+          OPENQUANTUM_DISABLE_QISKIT_MCP: INCLUDE_QISKIT_MCP ? "0" : "1",
           OPENQUANTUM_PUBLIC_API_KEY: "local-readiness-placeholder",
           OPENQUANTUM_PUBLIC_BASE_URL: "http://127.0.0.1:1/v1",
         },
@@ -158,7 +204,7 @@ test(
           method,
           payload,
         }),
-        signal: AbortSignal.timeout(5_000),
+        signal: AbortSignal.timeout(INCLUDE_IBM_RUNTIME_MCP ? 90_000 : 5_000),
       });
       assert.equal(response.status, 200);
       const envelope = await response.json();
@@ -245,6 +291,16 @@ test(
       assert.match(atomicTool.description, /Preferred tool for ordinary requests/);
       assert.deepEqual(atomicTool.parameters.required, ["request"]);
       assert.equal(atomicTool.parameters.additionalProperties, false);
+      if (INCLUDE_QISKIT_MCP) {
+        assert(toolNames.includes(QISKIT_CIRCUIT_TOOL), diagnostics());
+        assert(toolNames.includes(QISKIT_DOCS_TOOL), diagnostics());
+      }
+      if (INCLUDE_IBM_RUNTIME_MCP) {
+        assert(
+          toolNames.some((name) => name.startsWith("mcp__qiskit_ibm_runtime__")),
+          diagnostics(),
+        );
+      }
     }
 
     for (const sessionId of sessionIds) {
