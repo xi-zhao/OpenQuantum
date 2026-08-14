@@ -9,6 +9,14 @@ import { PromptComposer } from "../src/components/openquantum/PromptComposer";
 import { Sidebar } from "../src/components/openquantum/Sidebar";
 
 const noop = () => {};
+const unusedSettingsPort = {
+  snapshot: async () => {
+    throw new Error("closed settings dialog must not read settings");
+  },
+  execute: async () => {
+    throw new Error("closed settings dialog must not write settings");
+  },
+};
 
 function disabledAttributeCount(markup) {
   return markup.match(/ disabled=""/g)?.length ?? 0;
@@ -26,7 +34,10 @@ test("bootstrap render keeps runtime actions disabled until a snapshot is ready"
   };
 
   const markup = renderToStaticMarkup(
-    createElement(OpenQuantumApp, { port: unusedPort }),
+    createElement(OpenQuantumApp, {
+      port: unusedPort,
+      settingsPort: unusedSettingsPort,
+    }),
   );
 
   assert.match(markup, />正在连接</);
@@ -54,6 +65,7 @@ test("sidebar disables creation and session selection only while runtime is unav
     onClose: noop,
     onCreateConversation: noop,
     onSelectSession: noop,
+    onOpenSettings: noop,
   };
 
   const unavailableMarkup = renderToStaticMarkup(

@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 
 import { DeepSeekHarnessAdapter } from "@/harness/deepseek-adapter";
+import { HarnessSettingsAdapter } from "@/settings/harness-settings-adapter";
 
 import { OpenQuantumApp } from "./OpenQuantumApp";
 
@@ -12,6 +13,7 @@ export function OpenQuantumClientRoot() {
     () => new DeepSeekHarnessAdapter({ initialSessionId: null }),
     [],
   );
+  const settingsPort = useMemo(() => new HarnessSettingsAdapter(), []);
 
-  return <OpenQuantumApp port={port} />;
+  return <OpenQuantumApp port={port} settingsPort={settingsPort} />;
 }

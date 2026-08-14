@@ -100,6 +100,73 @@ test("Harness BFF enforces the browser boundary and owns deployment cwd", async 
     Object.hasOwn(upstreamRequests[0].envelope.payload, "workspaceId"),
     false,
   );
+
+  const settingsEnvelope = {
+    type: "client-request",
+    rpcId: crypto.randomUUID(),
+    method: "settings.mutate",
+    payload: {
+      ns: "llm-pi-ai",
+      expectedRevision: 2,
+      ops: [
+        {
+          op: "set",
+          path: ["providers", "quantum", "baseURL"],
+          value: "https://models.example/v1",
+        },
+      ],
+    },
+  };
+  const settingsResponse = await invoke(
+    {
+      "content-type": "application/json",
+      host: "127.0.0.1:3000",
+      origin: publicOrigin,
+      "sec-fetch-site": "same-origin",
+    },
+    "settings.mutate",
+    settingsEnvelope,
+  );
+  assert.equal(settingsResponse.status, 200);
+  assert.equal(upstreamRequests[1].url, "/api/settings.mutate");
+  assert.deepEqual(upstreamRequests[1].envelope.payload, settingsEnvelope.payload);
+
+  const privilegeEscalation = await invoke(
+    {
+      "content-type": "application/json",
+      host: "127.0.0.1:3000",
+      origin: publicOrigin,
+      "sec-fetch-site": "same-origin",
+    },
+    "settings.mutate",
+    {
+      ...settingsEnvelope,
+      rpcId: crypto.randomUUID(),
+      payload: {
+        ns: "permission",
+        ops: [{ op: "set", path: ["defaultPreset"], value: "danger-full-access" }],
+      },
+    },
+  );
+  assert.equal(privilegeEscalation.status, 403);
+
+  const arbitraryCredential = await invoke(
+    {
+      "content-type": "application/json",
+      host: "127.0.0.1:3000",
+      origin: publicOrigin,
+      "sec-fetch-site": "same-origin",
+    },
+    "credentials.set",
+    {
+      type: "client-request",
+      rpcId: crypto.randomUUID(),
+      method: "credentials.set",
+      payload: { ref: "UNRELATED_SECRET", value: "must-not-forward" },
+    },
+  );
+  assert.equal(arbitraryCredential.status, 403);
+  assert.equal(upstreamRequests.length, 2);
 });
 
 test("Harness BFF marks an upstream connection loss as an unknown mutation outcome", async (t) => {

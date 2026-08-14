@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import type { HarnessUiPort } from "@/harness/interface";
+import type { OpenQuantumSettingsPort } from "@/settings/interface";
 
 import { ConversationPanel } from "./ConversationPanel";
 import { HeroHeader } from "./HeroHeader";
@@ -13,14 +14,17 @@ import { ScientificActivityPanel } from "./ScientificActivityPanel";
 import { Sidebar } from "./Sidebar";
 import { TopBar } from "./TopBar";
 import { useAgentWorkspace } from "./use-agent-workspace";
+import { SettingsDialog } from "./settings/SettingsDialog";
 
 export interface OpenQuantumAppProps {
   port: HarnessUiPort;
+  settingsPort: OpenQuantumSettingsPort;
 }
 
-export function OpenQuantumApp({ port }: OpenQuantumAppProps) {
+export function OpenQuantumApp({ port, settingsPort }: OpenQuantumAppProps) {
   const [prompt, setPrompt] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const agent = useAgentWorkspace(port);
   const runtimeControlsDisabled = !agent.runtimeIsReady;
   const showConversation =
@@ -58,6 +62,10 @@ export function OpenQuantumApp({ port }: OpenQuantumAppProps) {
             setSidebarOpen(false);
           }}
           onSelectSession={(sessionId) => void agent.selectSession(sessionId)}
+          onOpenSettings={() => {
+            setSettingsOpen(true);
+            setSidebarOpen(false);
+          }}
         />
 
         <main className="relative flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
@@ -176,6 +184,11 @@ export function OpenQuantumApp({ port }: OpenQuantumAppProps) {
           </div>
         </main>
       </div>
+      <SettingsDialog
+        open={settingsOpen}
+        port={settingsPort}
+        onClose={() => setSettingsOpen(false)}
+      />
     </div>
   );
 }

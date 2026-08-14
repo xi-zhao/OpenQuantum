@@ -14,8 +14,66 @@ const ALLOWED_POST_METHODS = new Set([
   "session.cancel",
   "session.models",
   "skill.list",
+  "settings.describe",
+  "settings.mutate",
+  "credentials.describe",
+  "credentials.set",
+  "credentials.unset",
+  "llm.providers",
   "llm.models",
 ]);
+const MODEL_SETTING_FIELDS = new Set(["displayName", "baseURL", "api", "models"]);
+const MODEL_CREDENTIAL_REFS = new Set([
+  "OPENQUANTUM_PUBLIC_API_KEY",
+  "OPENQUANTUM_PRIVATE_API_KEY",
+]);
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === "object" && !Array.isArray(value);
+}
+
+function isAllowedModelSettingsPayload(method: string, payload: unknown): boolean {
+  if (method === "settings.mutate") {
+    if (!isRecord(payload) || payload.ns !== "llm-pi-ai" || !Array.isArray(payload.ops)) {
+      return false;
+    }
+    return payload.ops.length > 0 && payload.ops.every((operation) => {
+      if (!isRecord(operation) || operation.op !== "set" || !Array.isArray(operation.path)) {
+        return false;
+      }
+      const [root, provider, field] = operation.path;
+      return (
+        operation.path.length === 3 &&
+        root === "providers" &&
+        typeof provider === "string" &&
+        /^[a-z0-9][a-z0-9-]{0,63}$/.test(provider) &&
+        typeof field === "string" &&
+        MODEL_SETTING_FIELDS.has(field)
+      );
+    });
+  }
+
+  if (method === "credentials.describe") {
+    return (
+      isRecord(payload) &&
+      Array.isArray(payload.refs) &&
+      payload.refs.length > 0 &&
+      payload.refs.every(
+        (ref) => typeof ref === "string" && MODEL_CREDENTIAL_REFS.has(ref),
+      )
+    );
+  }
+
+  if (method === "credentials.set" || method === "credentials.unset") {
+    return (
+      isRecord(payload) &&
+      typeof payload.ref === "string" &&
+      MODEL_CREDENTIAL_REFS.has(payload.ref)
+    );
+  }
+
+  return true;
+}
 
 function upstreamUrl(method: string): string {
   return `${harnessBaseUrl()}/api/${method}`;
@@ -78,6 +136,13 @@ export async function POST(
 
   if (!parsed.success || parsed.data.method !== method) {
     return Response.json({ error: "Invalid Harness RPC envelope" }, { status: 400 });
+  }
+
+  if (!isAllowedModelSettingsPayload(method, parsed.data.payload)) {
+    return Response.json(
+      { error: "Harness settings operation is outside the OpenQuantum model seam" },
+      { status: 403 },
+    );
   }
 
   const envelope =

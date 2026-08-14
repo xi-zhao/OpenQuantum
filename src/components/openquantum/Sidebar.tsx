@@ -12,6 +12,7 @@ import {
   ChevronDownIcon,
   PlusIcon,
   SearchIcon,
+  SettingsIcon,
 } from "./icons";
 
 const navigationItems = [
@@ -29,6 +30,7 @@ export interface SidebarProps {
   onClose: () => void;
   onCreateConversation: () => void;
   onSelectSession: (sessionId: HarnessUiSessionId) => void;
+  onOpenSettings: () => void;
 }
 
 function sessionTime(updatedAt: number): string {
@@ -47,6 +49,7 @@ export function Sidebar({
   onClose,
   onCreateConversation,
   onSelectSession,
+  onOpenSettings,
 }: SidebarProps) {
   const [query, setQuery] = useState("");
   const visibleSessions = useMemo(() => {
@@ -218,8 +221,18 @@ export function Sidebar({
           ) : null}
         </div>
 
-        <div className="border-t border-[#173042] p-4 font-mono text-[9px] tracking-[0.14em] text-[#57737e]">
-          OPEN SCIENCE · LOCAL FIRST
+        <div className="border-t border-[#173042] p-3">
+          <button
+            type="button"
+            onClick={onOpenSettings}
+            className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-medium text-[#b9cbd1] transition-colors hover:bg-[#0d2230] hover:text-white"
+          >
+            <SettingsIcon />
+            设置
+          </button>
+          <div className="mt-2 px-3 font-mono text-[9px] tracking-[0.14em] text-[#57737e]">
+            OPEN SCIENCE · LOCAL FIRST
+          </div>
         </div>
       </aside>
     </>
