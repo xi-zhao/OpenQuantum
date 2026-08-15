@@ -102,7 +102,7 @@ OpenQuantum 直接采用 Harness 原生扩展方式，社区开发的组件不�
 需要 Node.js 24，以及用于启动 Qiskit 工具的 [uv / uvx](https://docs.astral.sh/uv/getting-started/installation/)。
 
 ```bash
-git clone <your-openquantum-repository-url>
+git clone https://github.com/xi-zhao/openQuantum.git
 cd openQuantum
 npm ci
 cp .env.example .env
