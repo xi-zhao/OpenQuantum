@@ -1,7 +1,10 @@
-# OpenQuantum Skill Contracts v1.1
+# OpenQuantum 科学结果合同（Skill Contracts v1.1）
 
 这是 Skill 层内部的共享合同模块，不是第五层业务系统。它只统一所有科研 Skill 都必须遵守的
 结构、来源链和聚合不变量；算法、科学阈值、领域检查和解释仍保留在对应 Skill 中。
+
+本模块中的 `Capability` 表示“一项带版本的科学主张与证据范围”，不表示可安装软件包、插件市场、
+发布治理或独立 Runtime。Skill 仍由 Harness 原生 `SKILL.md` 发现，MCP 仍由 Agent preset 独立注册。
 
 ## 核心对象与四个独立状态
 

@@ -3,6 +3,9 @@
 OpenQuantum 是 DeepSeek Harness 的开源量子科研发行版。最常见的二次开发方式是 Fork 仓库，
 直接增加 Harness 原生 Skill、MCP 或经过审查的 `dsh-plugin`，而不是接入 OpenQuantum 私有市场或包协议。
 
+第一次参与项目前，先阅读[仓库地图](docs/REPOSITORY_GUIDE.md)。它说明每个目录的职责、配置权威和
+Skill / MCP / Validator 的真实组合关系；完整文档入口见 [docs/README.md](docs/README.md)。
+
 ## 先判断变更放在哪里
 
 - **UI**：通用科研交互、事件和 Artifact 展示；不要加入公司或算法专用执行逻辑。

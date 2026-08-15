@@ -165,6 +165,9 @@ cp .env.example .env
 docker compose up --build
 ```
 
+需要区分零密钥验证、本地 Web 工作台和 Docker 部署时，阅读[部署与启动](docs/DEPLOYMENT.md)；遇到模型、
+MCP、凭据或 Harness 问题时，按[故障排查](docs/TROUBLESHOOTING.md)逐层定位。
+
 ## 开放给二次开发
 
 OpenQuantum 沿用 Harness 原生扩展方式，不把社区组件锁进私有格式。
@@ -179,7 +182,9 @@ OpenQuantum 沿用 Harness 原生扩展方式，不把社区组件锁进私有�
 
 三者可以组合成一项完整能力，但始终是彼此独立的开放组件。接入一个新后端，通常从标准 MCP 开始，再用 Skill 说明适用场景。涉及科学结论时，再加入 Validator 和测试。
 
-开发说明见 [CONTRIBUTING.md](CONTRIBUTING.md)，架构边界见 [ARCHITECTURE_AUDIT.md](docs/architecture/ARCHITECTURE_AUDIT.md)，生态规划见 [QUANTUM_CAPABILITY_CATALOG.md](docs/ecosystem/QUANTUM_CAPABILITY_CATALOG.md)。
+开发说明见 [CONTRIBUTING.md](CONTRIBUTING.md)，目录和配置权威见[仓库地图](docs/REPOSITORY_GUIDE.md)，架构边界见
+[ARCHITECTURE_AUDIT.md](docs/architecture/ARCHITECTURE_AUDIT.md)，生态规划见
+[QUANTUM_CAPABILITY_CATALOG.md](docs/ecosystem/QUANTUM_CAPABILITY_CATALOG.md)。
 
 <details>
 <summary><strong>开发与验证命令</strong></summary>
@@ -203,6 +208,8 @@ scripts/                 启动、诊断和端到端测试
 tests/                   平台集成测试
 docs/                    架构、路线与生态文档
 ```
+
+更完整的文档入口见 [docs/README.md](docs/README.md)。
 
 </details>
 
