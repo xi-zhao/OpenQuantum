@@ -2,8 +2,6 @@ import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
 import { once } from "node:events";
 import {
-  cp,
-  mkdir,
   mkdtemp,
   readFile,
   rm,
@@ -16,6 +14,8 @@ import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
 import { parseDocument } from "yaml";
+
+import { prepareOpenQuantumHarnessHome } from "../scripts/lib/prepare-harness-home.mjs";
 
 const projectRoot = fileURLToPath(new URL("..", import.meta.url));
 const harnessBin = path.join(
@@ -32,14 +32,6 @@ const patchFile = path.join(
   "openquantum",
   "cordis.patch.yml",
 );
-const presetSource = path.join(
-  projectRoot,
-  "runtime",
-  "openquantum",
-  "agent-presets",
-  "openquantum",
-);
-
 const SOLVE_TOOL = "mcp__openquantum_quantum__solve_ground_state";
 const VALIDATE_TOOL = "mcp__openquantum_quantum__validate_ground_state";
 const SOLVE_AND_VALIDATE_TOOL =
@@ -136,13 +128,10 @@ test(
       path.join(tmpdir(), "openquantum-harness-native-"),
     );
     const harnessHome = path.join(sandboxRoot, "dsh");
-    const presetTarget = path.join(
+    const { presetTarget } = await prepareOpenQuantumHarnessHome({
       harnessHome,
-      ".agent-presets",
-      "openquantum",
-    );
-    await mkdir(path.dirname(presetTarget), { recursive: true });
-    await cp(presetSource, presetTarget, { recursive: true, force: true });
+      projectRoot,
+    });
     if (INCLUDE_IBM_RUNTIME_MCP) {
       await symlink(
         path.join(projectRoot, "node_modules"),

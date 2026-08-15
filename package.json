@@ -16,8 +16,9 @@
     "node": ">=24"
   },
   "scripts": {
-    "dev": "next dev",
+    "dev": "node scripts/run-harness.mjs --port 3000 --trusted-host localhost:3000",
     "dev:stack": "node scripts/run-dev-stack.mjs",
+    "dev:legacy-ui": "next dev --port 3001 --hostname 127.0.0.1",
     "gateway:dev": "node scripts/run-gateway.mjs",
     "harness:dev": "node scripts/run-harness.mjs",
     "harness:config": "node scripts/run-harness.mjs --dump-config",
@@ -28,6 +29,7 @@
     "e2e:quantum-harness": "node scripts/probe-quantum-harness-e2e.mjs",
     "demo:quantum-ground-state": "node scripts/run-quantum-ground-state-demo.mjs",
     "test:gateway": "node --test tests/openquantum-gateway.test.mjs",
+    "test:harness-web-branding": "node --test tests/harness-web-branding.test.mjs",
     "test:harness-bff": "tsx --test tests/harness-bff.test.mjs",
     "test:harness-contract": "tsx --test tests/harness-ui-port.test.mjs",
     "test:harness-events": "tsx --test tests/harness-events.test.mjs",
@@ -37,7 +39,8 @@
     "test:p1": "tsx --test tests/*.test.mjs && npm run test:contracts && npm run capability:diagnostics:test && npm run capability:quantum-ground-state:test",
     "capability:diagnostics:test": "node .agents/skills/platform-diagnostics/evals/run-evals.mjs",
     "build": "next build",
-    "start": "next start",
+    "start": "node scripts/run-harness.mjs --port 3000 --trusted-host localhost:3000",
+    "start:legacy-ui": "next start --port 3001 --hostname 127.0.0.1",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "check": "npm run lint && npm run typecheck && npm run test:p1 && npm run build"

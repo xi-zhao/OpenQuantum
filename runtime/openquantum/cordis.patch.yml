@@ -20,6 +20,14 @@
 - id: skill-filesystem
   disabled: true
 
+# Keep the official DeepSeek Harness Web shell and replace only product
+# identity through its supported index-transform seam. OpenQuantum does not
+# carry a fork of the Harness React frontend.
+- insert:
+    - id: openquantum-web-branding
+      name: '@openquantum/harness-web-branding'
+      inject: [webServer]
+
 - id: llm-pi-ai
   config:
     providers:

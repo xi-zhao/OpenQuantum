@@ -1,7 +1,8 @@
 import { spawn } from "node:child_process";
-import { cpSync, mkdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
+
+import { prepareOpenQuantumHarnessHome } from "./lib/prepare-harness-home.mjs";
 
 const projectRoot = fileURLToPath(new URL("..", import.meta.url));
 const harnessBin = path.join(
@@ -19,21 +20,7 @@ const patchFile = path.join(
   "cordis.patch.yml",
 );
 const harnessHome = path.join(projectRoot, ".openquantum", "dsh");
-const presetSource = path.join(
-  projectRoot,
-  "runtime",
-  "openquantum",
-  "agent-presets",
-  "openquantum",
-);
-const presetTarget = path.join(
-  harnessHome,
-  ".agent-presets",
-  "openquantum",
-);
-
-mkdirSync(path.dirname(presetTarget), { recursive: true });
-cpSync(presetSource, presetTarget, { recursive: true, force: true });
+await prepareOpenQuantumHarnessHome({ harnessHome, projectRoot });
 
 const child = spawn(
   process.execPath,

@@ -14,6 +14,7 @@ OpenQuantum 的重要变更记录在此。格式遵循 [Keep a Changelog](https:
 
 - 开源贡献、安全披露、Issue 和 CI 流程从原网站克隆模板迁移为 OpenQuantum 项目流程。
 - 产品架构收缩为 DeepSeek Harness 量子科研发行版，不再建设独立 Runtime、插件市场或安装协议。
+- 默认 Web 界面切换为 DeepSeek Harness 原生 Web UI；OpenQuantum 只通过官方扩展点注入品牌与量子能力。
 
 ## [0.4.0] - 2026-08-14
 

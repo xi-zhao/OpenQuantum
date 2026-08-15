@@ -3,7 +3,7 @@ import crypto from "node:crypto";
 import { spawn } from "node:child_process";
 import { once } from "node:events";
 import fs from "node:fs";
-import { cp, mkdir, mkdtemp, readFile, rm } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm } from "node:fs/promises";
 import { createServer } from "node:http";
 import os from "node:os";
 import path from "node:path";
@@ -19,6 +19,7 @@ import {
   parseScientificToolResult,
   SOLVE_AND_VALIDATE_TOOL,
 } from "../runtime/openquantum/agent-presets/openquantum/scientific-result-protocol.mjs";
+import { prepareOpenQuantumHarnessHome } from "./lib/prepare-harness-home.mjs";
 
 const projectRoot = fileURLToPath(new URL("..", import.meta.url));
 const envFile = path.join(projectRoot, ".env");
@@ -27,10 +28,6 @@ const harnessBin = path.join(
   "node_modules/@deepseek-ai/dsh/lib/bin.js",
 );
 const patchFile = path.join(projectRoot, "runtime/openquantum/cordis.patch.yml");
-const presetSource = path.join(
-  projectRoot,
-  "runtime/openquantum/agent-presets/openquantum",
-);
 const skillRoot = path.join(
   projectRoot,
   ".agents/skills/quantum-ground-state",
@@ -195,13 +192,8 @@ export async function runQuantumHarnessE2E({
   );
   const harnessHome = path.join(sandboxRoot, "dsh");
   const workspaceRoot = path.join(sandboxRoot, "workspace");
-  const presetTarget = path.join(
-    harnessHome,
-    ".agent-presets/openquantum",
-  );
-  await mkdir(path.dirname(presetTarget), { recursive: true });
   await mkdir(workspaceRoot, { recursive: true });
-  await cp(presetSource, presetTarget, { recursive: true, force: true });
+  await prepareOpenQuantumHarnessHome({ harnessHome, projectRoot });
 
   const port = await reservePort();
   const baseUrlLocal = `http://127.0.0.1:${port}`;

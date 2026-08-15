@@ -67,7 +67,11 @@ DeepSeek Harness 仍处于 Developer Preview，因此上游接口可能发生破
 UI 拥有布局、输入和只读投影。它可以发出新建、发送、取消、审批等用户意图，但不直接调用 Model、
 MCP 或 Skill 文件系统，不保存第二份 Session 历史，也不推导科学通过状态。
 
-当前 Next.js UI 通过 `HarnessUiPort` 访问生产 Adapter：
+默认产品界面直接使用 DeepSeek Harness 原生 Web UI，通过它的 Client Plugin、Slot、Settings 和
+`tapIndex` 扩展点组合 OpenQuantum 品牌与量子科研展示。这样 Session、审批、模型、设置和插件界面
+继续由 Harness 自己维护，不在 OpenQuantum 中复制一套平行状态机。
+
+仓库暂留的 Next.js UI 与 `HarnessUiPort` 是迁移期兼容面：
 
 ```ts
 interface HarnessUiPort {
@@ -77,8 +81,8 @@ interface HarnessUiPort {
 }
 ```
 
-这个 Adapter 只负责同源安全边界、协议翻译、事件折叠、重连和历史重基线。新增 Goal、Job、Skill、Model
-或量子算法行为时，应优先使用 Harness 原生 UI/扩展点或向上游贡献，而不是继续把 Runtime 状态复制进 Adapter。
+这个 Adapter 不再是默认启动链。新增 Goal、Job、Skill、Model 或量子算法行为时，必须优先使用 Harness
+原生 UI/扩展点或向上游贡献，而不是继续把 Runtime 状态复制进 Adapter；只有尚未迁完的兼容功能才使用它。
 
 ### 4.2 Harness
 
@@ -219,13 +223,12 @@ materialized-validation Tool 继续作为高级接口。
 
 ```text
 Browser
-  └── OpenQuantum UI
-        └── thin same-origin gateway / HarnessTransportAdapter
-              └── DeepSeek Harness Web Host (127.0.0.1)
-                    ├── OpenQuantum preset
-                    ├── native project Skills
-                    ├── native MCP client → local scientific MCP
-                    └── model provider routes
+  └── DeepSeek Harness native Web UI + OpenQuantum branding/plugins
+        └── DeepSeek Harness Web Host (127.0.0.1)
+              ├── OpenQuantum preset
+              ├── native project Skills
+              ├── native MCP client → local scientific MCP
+              └── model provider routes
 ```
 
 禁止依赖：UI → Model、UI → MCP、UI → Skill 文件系统、Skill → UI、Skill → Provider 凭证、

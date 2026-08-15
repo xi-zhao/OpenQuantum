@@ -11,7 +11,7 @@ OpenQuantum 是一个基于 [DeepSeek Harness](https://github.com/deepseek-ai/de
 
 系统保持四层：
 
-1. **UI**：展示会话、工具调用、科研产物和验收结果，只通过薄 transport adapter 与 Harness 通信。
+1. **UI**：默认直接使用 DeepSeek Harness 原生 Web UI；OpenQuantum 只注入品牌和量子科研展示扩展。
 2. **Harness**：直接复用 DeepSeek Harness 的 Session、Agent、Tool、Skill、MCP、Plugin、审批、权限、
    沙箱、模型路由、事件日志和持久化。
 3. **量子扩展内容**：Harness Skill 保存领域工作流和 Prompt；独立 MCP/Tool 负责执行；OpenQuantum
@@ -34,8 +34,8 @@ OpenQuantum 的原则是：
 - 通过 Harness 原生 MCP client 接入的科学计算工具；
 - 在原生配置不足时才使用的、经过审查的 `dsh-plugin`；
 - 可为维护 locality 与 Skill 共置、但由 Tool/插件独立调用的科学 Validator 和 eval；
-- 展示科研产物与“执行状态 / 科学验收状态”的必要 UI；
-- 隔离 Harness 预览版接口变化的薄 `HarnessTransportAdapter`。
+- 通过 Harness 原生 Client Plugin / Slot 展示科研产物与“执行状态 / 科学验收状态”的必要 UI；
+- 只在 Harness 尚未提供所需扩展点时保留薄兼容 Adapter，不维护第二套 Agent Web Runtime。
 
 第一版明确不做：独立 Runtime、私有 `.oqcap` 包格式、插件市场、安装锁、签名与发布治理、
 多租户 SaaS 控制面，以及一套平行于 Harness 的权限或持久化系统。
@@ -114,8 +114,11 @@ npm run dev:stack
 这是刻意保留的“纯 MCP”层测试；进入真实 Harness Session 后，同一原子 Tool 的结构化结果会由
 Harness Adapter 物化并重新验收。
 
-- OpenQuantum UI：<http://127.0.0.1:3000>
-- Harness Web Host：<http://127.0.0.1:3080>
+- OpenQuantum（DeepSeek Harness 原生 Web UI）：<http://127.0.0.1:3000>
+
+默认启动链只运行一个 Harness Web Host。OpenQuantum 通过 Harness 官方 `tapIndex` 扩展点替换浏览器标题、
+图标和侧栏字标，不复制或修改 `node_modules` 中的前端源码。仓库中的旧 Next.js UI 仅暂留作迁移期兼容面，
+可用 `npm run dev:legacy-ui` 单独启动；新功能不再优先添加到这套平行 UI。
 
 真实密钥只放在被 Git 忽略的 `.env` 或 Harness credential store 中。仓库配置只能引用环境变量名。
 

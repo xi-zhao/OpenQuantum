@@ -5,34 +5,15 @@ import path from "node:path";
 const projectRoot = fileURLToPath(new URL("..", import.meta.url));
 const services = [
   {
-    name: "ui",
-    command: process.execPath,
-    args: [
-      path.join(projectRoot, "node_modules", "next", "dist", "bin", "next"),
-      "dev",
-      "--port",
-      "3001",
-      "--hostname",
-      "127.0.0.1",
-    ],
-  },
-  {
     name: "harness",
     command: process.execPath,
     args: [
       path.join(projectRoot, "scripts", "run-harness.mjs"),
       "--port",
-      "3080",
-      "--trusted-host",
-      "127.0.0.1:3000",
+      "3000",
       "--trusted-host",
       "localhost:3000",
     ],
-  },
-  {
-    name: "gateway",
-    command: process.execPath,
-    args: [path.join(projectRoot, "scripts", "run-gateway.mjs")],
   },
 ];
 const children = services.map((service) => ({
