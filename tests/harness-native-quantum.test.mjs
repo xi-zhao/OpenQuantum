@@ -49,6 +49,11 @@ const INCLUDE_IBM_RUNTIME_MCP =
   process.env.OPENQUANTUM_TEST_IBM_RUNTIME_MCP === "1";
 const QISKIT_CIRCUIT_TOOL = "mcp__qiskit__transpile_circuit_tool";
 const QISKIT_DOCS_TOOL = "mcp__qiskit_docs__search_docs_tool";
+const EXPECTED_QUANTUM_SKILLS = Object.freeze([
+  "quantum-ground-state",
+  "qiskit-circuit-workbench",
+  "quantum-sdk-advisor",
+]);
 
 async function enableTemporaryMcp(presetRoot, serverName) {
   const filename = path.join(presetRoot, "agent.cordis.yml");
@@ -243,11 +248,13 @@ test(
 
       const skillList = await rpc("skill.list", { sessionId });
       assert.equal(skillList.ok, true, diagnostics());
-      const quantumSkill = skillList.value.skills.find(
-        (skill) => skill.name === "quantum-ground-state",
-      );
-      assert(quantumSkill, diagnostics());
-      assert.equal(quantumSkill.modelInvocable, true);
+      for (const skillName of EXPECTED_QUANTUM_SKILLS) {
+        const quantumSkill = skillList.value.skills.find(
+          (skill) => skill.name === skillName,
+        );
+        assert(quantumSkill, `${diagnostics()}\nmissing Skill: ${skillName}`);
+        assert.equal(quantumSkill.modelInvocable, true);
+      }
 
       const prompted = await rpc("session.prompt", {
         sessionId,

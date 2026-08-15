@@ -40,6 +40,11 @@ const fixtureFile = path.join(
   "evals/fixtures/requests/protocol-fixture.json",
 );
 const COMPLETION_MARKER = "OPENQUANTUM_QGS_E2E_OK";
+const EXPECTED_QUANTUM_SKILLS = Object.freeze([
+  "quantum-ground-state",
+  "qiskit-circuit-workbench",
+  "quantum-sdk-advisor",
+]);
 
 const PROVIDERS = Object.freeze({
   "openquantum-public": Object.freeze({
@@ -286,13 +291,17 @@ export async function runQuantumHarnessE2E({
     }
 
     const skillList = await rpc("skill.list", { sessionId });
-    if (
-      !skillList.ok ||
-      !skillList.value.skills.some(
-        (skill) => skill.name === "quantum-ground-state" && skill.modelInvocable,
-      )
-    ) {
-      throw new Error("Harness did not discover the model-invocable quantum Skill");
+    if (!skillList.ok) {
+      throw new Error("Harness did not return the quantum Skill registry");
+    }
+    for (const skillName of EXPECTED_QUANTUM_SKILLS) {
+      if (
+        !skillList.value.skills.some(
+          (skill) => skill.name === skillName && skill.modelInvocable,
+        )
+      ) {
+        throw new Error(`Harness did not discover model-invocable Skill ${skillName}`);
+      }
     }
 
     const request = JSON.parse(await readFile(fixtureFile, "utf8"));

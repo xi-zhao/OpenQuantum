@@ -1,0 +1,4 @@
+interface:
+  display_name: "Qiskit 电路工作台"
+  short_description: "用 Qiskit MCP 检查、转换和优化量子电路"
+  default_prompt: "使用 $qiskit-circuit-workbench 检查这段 OpenQASM 3 电路，并给出优化前后的可复核指标。"

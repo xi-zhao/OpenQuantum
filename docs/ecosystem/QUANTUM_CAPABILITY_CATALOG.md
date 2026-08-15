@@ -1,0 +1,84 @@
+# OpenQuantum 量子能力候选清单
+
+- 更新日期：2026-08-15
+- 目标：为 OpenQuantum 选择可维护的 Harness 原生 Skill、MCP 与 Validator
+- 原则：不建设独立 Runtime 或插件市场；仓库内精选、审阅、测试，再通过 Git 发布
+
+## 1. 准入模型
+
+一个候选能力不是“找到一个仓库就安装”，而是下面三个对象的组合：
+
+1. **Skill**：限定问题、工作流、工具选择和解释边界；
+2. **MCP / Tool**：产生可观察的执行事实；
+3. **Validator / eval**：对需要强制的科学主张做独立检查。
+
+每个候选进入四种状态之一：
+
+| 状态 | 含义 |
+| --- | --- |
+| 已集成 | 已进入 Harness preset 或 `.agents/skills`，并有最小验证 |
+| 可适配 | 上游清楚、许可证可处理、产品作用域明确，值得做下一条纵切 |
+| 观察 | 有价值但依赖重、云副作用强或科学边界尚未收口 |
+| 暂不纳入 | 来源、许可证、维护或可验证性不足 |
+
+## 2. 第一批已集成
+
+| 能力 | 形式 | 默认状态 | 说明 |
+| --- | --- | --- | --- |
+| `quantum-ground-state` | Skill + 本地 MCP + Validator | 开启 | 窄作用域二量子位 VQE 参考能力 |
+| Qiskit Circuits | 官方 MCP | 开启 | QASM/QPY、转译、分析和优化比较 |
+| Qiskit Docs | 官方 MCP | 开启 | 文档搜索、页面读取和错误码查询 |
+| `qiskit-circuit-workbench` | Skill | 开启 | 把两项 Qiskit MCP 组织成可审查电路工作流 |
+| `quantum-sdk-advisor` | Skill | 开启 | 按问题、执行目标、许可证和验证要求选择软件栈 |
+| IBM Runtime / Transpiler | 官方 MCP | 关闭 | 需要 Token，可能产生云端任务和费用 |
+| Quantum Hardware MCP | 社区 MCP | 关闭 | 多云硬件查询与任务控制，需人工审阅后启用 |
+
+Qiskit MCP 来自官方 Apache-2.0 项目
+[Qiskit/mcp-servers](https://github.com/Qiskit/mcp-servers)。第一批新增 Skill 只编排现有 Harness Tool，
+不复制 Qiskit Runtime。
+
+## 3. 下一批优先候选
+
+| 优先级 | 候选纵切 | 上游 | 计划的 Skill / MCP / Validator |
+| ---: | --- | --- | --- |
+| 1 | 分子几何到 qubit Hamiltonian | [PySCF](https://github.com/pyscf/pyscf) + [Qiskit Nature](https://github.com/qiskit-community/qiskit-nature) | `quantum-chemistry-hamiltonian` + 本地 MCP + 积分/映射重放 Validator |
+| 2 | QEC 稳定子模拟与解码 | [Stim](https://github.com/quantumlib/Stim) + [PyMatching](https://github.com/oscarhiggott/PyMatching) | `quantum-error-correction` + 本地 MCP + 逻辑错误率统计 Validator |
+| 3 | 可微分量子机器学习 | [PennyLane](https://github.com/PennyLaneAI/pennylane) | `pennylane-hybrid-workflow` + 固定数据/梯度 Artifact + eval |
+| 4 | NISQ 噪声与 Google 风格电路 | [Cirq](https://github.com/quantumlib/Cirq) | `cirq-noise-workbench` + 本地模拟 MCP + channel/trace 检查 |
+| 5 | 容错资源估算 | [Microsoft QDK](https://github.com/microsoft/qdk) | `qsharp-resource-estimation` + Q# Tool + 假设完整性 Validator |
+
+这五项都优先做本地、确定性纵切。任何云 QPU 接入都晚于本地事实与失败路径验证。
+
+## 4. 有价值但先观察
+
+| 候选 | 原因 | 当前决定 |
+| --- | --- | --- |
+| [Amazon Braket Algorithm Library](https://github.com/amazon-braket/amazon-braket-algorithm-library) | 多硬件入口和官方样例有价值，但容易触发云费用 | 只作为算法参考；后续 MCP 默认关闭 |
+| [CUDA-Q](https://github.com/NVIDIA/cuda-quantum) | GPU/HPC 能力强，但依赖和部署面较重 | 等真实 HPC 用户需求 |
+| [Mitiq](https://github.com/unitaryfoundation/mitiq) | 误差缓解能力清楚，但 GPL-3.0 需要兼容性判断 | 先设计独立进程边界和验收案例 |
+| [OpenQuantumComputing/QAOA](https://github.com/OpenQuantumComputing/QAOA) | 对 QAOA 研究有参考价值，但 GPL-3.0 且不是 MCP/Skill | 只参考测试方法，不直接复制 |
+| [K-Dense Scientific Agent Skills](https://github.com/K-Dense-AI/scientific-agent-skills) | 有 Qiskit/Cirq/PennyLane Skill，MIT 且维护活跃 | 作为内容来源；按 OpenQuantum 边界重新编写，不整包导入 |
+
+## 5. 拒绝条件
+
+出现任一条件就不进入默认发行版：
+
+- 没有明确许可证或维护来源；
+- Skill 只靠 Prompt 宣称数值正确，却没有可复核事实；
+- MCP 默认拥有真实硬件提交、取消、付费或数据外发能力；
+- 要求把 API Key 写入 Skill、preset、日志或 Artifact；
+- 名称叫“quantum”但实际属于密码学、区块链或普通 SaaS，和量子计算工作流无关；
+- 为接入一个能力要求复制 DeepSeek Harness 的 Session、Tool、权限或 Runtime。
+
+## 6. 贡献方式
+
+外部团队可以直接提交普通 Git PR：
+
+1. 在 `.agents/skills/<name>/` 增加标准 `SKILL.md`；
+2. 必要时把确定性计算封装成 stdio / Streamable HTTP MCP；
+3. 在同一个 Skill 中提供 schema、Validator 和固定正负 eval；
+4. 在 `runtime/openquantum/` 组合 Harness 原生 MCP client；
+5. 说明许可证、凭据、网络、成本和失败边界；
+6. 通过 Skill 校验、单元测试和真实 Harness `skill.list` / Tool 注册检查。
+
+这个清单是项目内的人工精选队列，不是自动安装市场，也不引入 OpenQuantum 私有包协议。

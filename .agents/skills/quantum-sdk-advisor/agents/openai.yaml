@@ -1,0 +1,4 @@
+interface:
+  display_name: "量子 SDK 选型"
+  short_description: "按任务类型、硬件目标与科学验证要求选择量子计算软件栈"
+  default_prompt: "使用 $quantum-sdk-advisor 为这个量子计算任务选择合适的 SDK、执行方式和验证路径。"

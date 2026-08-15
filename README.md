@@ -23,7 +23,8 @@ OpenQuantum 的原则是：
 
 详细边界见
 [`docs/architecture/ARCHITECTURE_AUDIT.md`](docs/architecture/ARCHITECTURE_AUDIT.md)，MVP 路线见
-[`docs/roadmap/DEVELOPMENT_PLAN.md`](docs/roadmap/DEVELOPMENT_PLAN.md)。
+[`docs/roadmap/DEVELOPMENT_PLAN.md`](docs/roadmap/DEVELOPMENT_PLAN.md)。量子 Skill / MCP 的精选队列见
+[`docs/ecosystem/QUANTUM_CAPABILITY_CATALOG.md`](docs/ecosystem/QUANTUM_CAPABILITY_CATALOG.md)。
 
 ## OpenQuantum 只增加什么
 
@@ -79,7 +80,8 @@ OpenQuantum 的原则是：
 - `events.mux` / `events.host` WebSocket 事件、重连和 history 重基线；
 - 同源白名单代理，浏览器不能读取模型凭证或调用任意 Host 管理方法；
 - `platform-diagnostics` 诊断 Skill；
-- `quantum-ground-state` 参考 Skill 与 Harness 原生 stdio MCP。
+- `quantum-ground-state` 参考 Skill 与 Harness 原生 stdio MCP；
+- `qiskit-circuit-workbench` 电路审查 Skill 与 `quantum-sdk-advisor` 量子软件栈选型 Skill；
 - 默认启用 Qiskit 官方 `qiskit-mcp-server` 与 `qiskit-docs-mcp-server`；
 - 可在设置中心启用 IBM Quantum Runtime / Transpiler，并通过 Harness 凭据库保存 Token；
 - 可选接入固定源码版本的社区 Quantum Hardware MCP，复用 Harness 的 MCP 生命周期和安全凭据；
