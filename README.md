@@ -32,20 +32,39 @@ OpenQuantum 基于 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-ha
 量子计算的工具不少，但它们往往散落在不同的 SDK、云平台、文档网站和开发环境里。OpenQuantum 把第一批
 常用工具和工作流放进了同一个入口。
 
-| 使用场景 | 已集成组件 | 可以完成的事情 | 默认状态 |
-| --- | --- | --- | --- |
-| 量子电路开发 | Qiskit Circuits MCP + `qiskit-circuit-workbench` Skill | 读取与转换 OpenQASM 3 / QPY，分析量子位、门数和电路深度，比较转译与优化结果 | 开启，无需凭据 |
-| 文档查询与排错 | Qiskit Docs MCP | 查询 Qiskit API、迁移说明、错误码和官方文档页面 | 开启，无需凭据 |
-| 国内量子后端发现 | FieldQKit MCP + `fieldqkit-hardware` Skill | 发现夸父、天衍、国盾、腾讯、本源、FieldQuantum、逻辑比特等后端，按量子位数量筛选，并查看拓扑与校准摘要 | 开启，只读；云后端按需配置凭据 |
-| IBM Quantum 云能力 | IBM Runtime MCP + IBM Transpiler MCP | 连接 IBM Runtime，并使用云端转译服务 | 已接入，默认关闭，需要 IBM Token |
-| 多云硬件控制 | Quantum Hardware MCP | 查询 IBM Quantum 与 IonQ 设备，并提供真实任务提交、取消和成本估算工具 | 已接入，默认关闭，需要人工审阅与凭据 |
-| 强化学习实验 | Qiskit Gym MCP | 使用强化学习方法探索量子电路综合与优化 | 已接入，默认关闭 |
-| 基态算法 | `quantum-ground-state` Skill + 本地 MCP + Validator | 对限定范围内的二量子位 Hamiltonian 运行 VQE，与独立精确解比较，并逐项检查科学结果 | 开启，本地运行 |
-| 技术选型 | `quantum-sdk-advisor` Skill | 根据问题、硬件目标、许可证和验证要求，在 Qiskit、Cirq、PennyLane、Q#、Braket、CUDA-Q 等软件栈之间做选择 | 开启 |
+| 使用场景 | 已集成组件 | 来源与 OpenQuantum 所做工作 | 可以完成的事情 | 默认状态 |
+| --- | --- | --- | --- | --- |
+| 量子电路开发 | Qiskit Circuits MCP + `qiskit-circuit-workbench` Skill | 直接使用 [Qiskit 官方 MCP](https://github.com/Qiskit/mcp-servers)；OpenQuantum 增加电路审查工作流 | 读取与转换 OpenQASM 3 / QPY，分析量子位、门数和电路深度，比较转译与优化结果 | 开启，无需凭据 |
+| 文档查询与排错 | Qiskit Docs MCP | 直接使用 [Qiskit 官方 MCP](https://github.com/Qiskit/mcp-servers)，由 Harness 管理启动与调用 | 查询 Qiskit API、迁移说明、错误码和官方文档页面 | 开启，无需凭据 |
+| 国内量子后端发现 | FieldQKit MCP + `fieldqkit-hardware` Skill | 使用 [FieldQuantum/fieldqkit](https://github.com/FieldQuantum/fieldqkit)；OpenQuantum 增加只读 MCP 桥接、凭据隔离和硬件发现工作流 | 发现夸父、天衍、国盾、腾讯、本源、FieldQuantum、逻辑比特等后端，按量子位数量筛选，并查看拓扑与校准摘要 | 开启，只读；云后端按需配置凭据 |
+| IBM Quantum 云能力 | IBM Runtime MCP + IBM Transpiler MCP | 直接使用 [Qiskit 官方 MCP](https://github.com/Qiskit/mcp-servers)；OpenQuantum 增加设置入口、安全凭据引用和默认关闭策略 | 连接 IBM Runtime，并使用云端转译服务 | 已接入，默认关闭，需要 IBM Token |
+| 多云硬件控制 | Quantum Hardware MCP | 使用社区项目 [Lokesh-2025/quantum-hardware-mcp](https://github.com/Lokesh-2025/quantum-hardware-mcp) 的固定源码版本；OpenQuantum 增加安装校验、凭据注入和安全开关 | 查询 IBM Quantum 与 IonQ 设备，并提供真实任务提交、取消和成本估算工具 | 已接入，默认关闭，需要人工审阅与凭据 |
+| 强化学习实验 | Qiskit Gym MCP | 直接使用 [Qiskit MCP 社区组件](https://github.com/Qiskit/mcp-servers)，OpenQuantum 只负责 Harness 注册与启停 | 使用强化学习方法探索量子电路综合与优化 | 已接入，默认关闭 |
+| 基态算法 | `quantum-ground-state` Skill + 本地 MCP + Validator | OpenQuantum 自研参考能力，算法、执行工具、科学检查和测试都在本仓库维护 | 对限定范围内的二量子位 Hamiltonian 运行 VQE，与独立精确解比较，并逐项检查科学结果 | 开启，本地运行 |
+| 技术选型 | `quantum-sdk-advisor` Skill | OpenQuantum 自研 Skill，依据各量子软件项目的公开能力与许可证维护 | 根据问题、硬件目标、许可证和验证要求，在 Qiskit、Cirq、PennyLane、Q#、Braket、CUDA-Q 等软件栈之间做选择 | 开启 |
 
-综合这些连接器，OpenQuantum 已经可以覆盖 IBM Quantum、IonQ，以及国内多家量子云的发现或接入场景。
-这里的“覆盖”不等于平台会默认替用户提交任务。FieldQKit 当前只开放配置检查和后端发现；IBM 云服务与
-Quantum Hardware MCP 需要用户主动开启；可能产生费用、数据外发或真实硬件副作用的工具保持关闭。
+这里的“直接使用”表示 OpenQuantum 不复制或修改上游 MCP 的实现，而是固定版本后交给 DeepSeek Harness
+管理生命周期。需要补足产品边界时，OpenQuantum 只增加设置、凭据、Skill 工作流或窄接口桥接；自研能力
+则连同 Validator 和测试一起在仓库中维护。
+
+### 已覆盖的量子后端
+
+| 平台或后端 | 接入方式 | 当前能力 | 启用条件 |
+| --- | --- | --- | --- |
+| 本地模拟器 | FieldQKit MCP | 查看本地模拟器元数据 | 默认可用，无需凭据 |
+| IBM Quantum | Qiskit IBM Runtime MCP、IBM Transpiler MCP、Quantum Hardware MCP | 使用 Runtime 与云端转译服务；查询硬件；可选提供任务提交、取消和成本估算 | 默认关闭；在设置中心配置 `QISKIT_IBM_TOKEN` 后按需开启 |
+| IonQ | Quantum Hardware MCP | 查询设备；可选提供真实任务提交、取消和成本估算 | 默认关闭；配置 `IONQ_API_KEY` 并审阅费用与权限后开启 |
+| 夸父量子云 | FieldQKit MCP | 检查配置、发现后端、按量子位数筛选、查看拓扑和校准摘要 | 只读；使用 `QUAFU_API_TOKEN` |
+| 天衍量子云 | FieldQKit MCP | 检查配置、发现后端、按量子位数筛选、查看拓扑和校准摘要 | 只读；使用 `TIANYAN_API_TOKEN` |
+| 国盾量子云 | FieldQKit MCP | 检查配置、发现后端、按量子位数筛选、查看拓扑和校准摘要 | 只读；使用 `GUODUN_API_TOKEN` |
+| 腾讯量子云 | FieldQKit MCP | 检查配置、发现后端、按量子位数筛选、查看拓扑和校准摘要 | 只读；使用 `TENCENT_API_TOKEN` |
+| 本源量子云 | FieldQKit MCP | 检查配置、发现后端、按量子位数筛选、查看拓扑和校准摘要 | 只读；使用 `ORIGIN_API_TOKEN` |
+| FieldQuantum 云端模拟器 | FieldQKit MCP | 检查配置并发现可用云端模拟后端 | 只读；使用 `FIELDQUANTUM_API_TOKEN` |
+| 逻辑比特量子云 | FieldQKit MCP | 检查配置、发现后端、按量子位数筛选、查看拓扑和校准摘要 | 只读；使用 `LOGICALQUBIT_API_TOKEN` |
+
+这些平台的接入深度并不完全相同。FieldQKit 当前只开放凭据状态检查和后端发现，不会提交、取消或删除真实
+量子任务。IBM 云服务与 Quantum Hardware MCP 需要用户主动开启；可能产生费用、数据外发或真实硬件
+副作用的工具保持关闭。
 
 算法能力也不只是一个工具按钮。Skill 会告诉 Agent 在什么问题上使用什么方法，MCP 负责执行确定性计算，
 需要科学结论时再由 Validator 独立检查。现在可以直接使用电路审查、量子基态求解、硬件发现和软件栈选型
