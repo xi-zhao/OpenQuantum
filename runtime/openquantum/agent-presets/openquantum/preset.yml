@@ -1,3 +1,3 @@
-name: OpenQuantum
-description: 仅装载 OpenQuantum 项目 Skill 和 MCP 的科研 Agent，不混入个人全局 Skill。
+name: OpenQuantum（默认）
+description: 默认推荐的量子科研模式，使用 Harness 原生 Agent 循环，只加载 OpenQuantum 项目的量子 Skill、MCP 与科学验收能力；其他模式分别面向通用编码、PTC 程序化工具编排、极简编码和 preset 创作。
 order: 0

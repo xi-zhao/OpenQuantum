@@ -219,15 +219,30 @@ test(
       },
     );
 
+    const presetRoster = await rpc("agentPreset.list");
+    assert.equal(presetRoster.ok, true, diagnostics());
+    const openQuantumPreset = presetRoster.value.presets.find(
+      (preset) => preset.id === "openquantum",
+    );
+    assert(openQuantumPreset, `${diagnostics()}\nmissing OpenQuantum preset`);
+    assert.equal(openQuantumPreset.isDefault, true);
+    assert.equal(openQuantumPreset.name, "OpenQuantum（默认）");
+    assert.match(openQuantumPreset.description, /量子科研模式/);
+    assert.match(openQuantumPreset.description, /通用编码/);
+    assert.match(openQuantumPreset.description, /PTC/);
+    assert.match(openQuantumPreset.description, /极简编码/);
+    assert.match(openQuantumPreset.description, /preset 创作/);
+
     const sessionIds = [];
     for (let index = 0; index < 2; index += 1) {
       const sessionId = `session-openquantum-ci-${crypto.randomUUID()}`;
       sessionIds.push(sessionId);
-      const created = await rpc("session.create", {
+      const createPayload = {
         sessionId,
         cwd: projectRoot,
-        agentPreset: "openquantum",
-      });
+        ...(index === 0 ? {} : { agentPreset: "openquantum" }),
+      };
+      const created = await rpc("session.create", createPayload);
       assert.equal(
         created.ok,
         true,
