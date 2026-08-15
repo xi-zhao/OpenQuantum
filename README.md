@@ -1,221 +1,286 @@
-# OpenQuantum
+<p align="center">
+  <img src="./public/openquantum/mark.svg" width="72" alt="OpenQuantum logo" />
+</p>
 
-OpenQuantum 是一个基于 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 的开源量子科研发行版。
-它不重新实现 Agent Runtime，也不建设独立插件市场；它在 Harness 已有能力之上，提供量子科研 preset、
-初级 Skill、MCP、科学 Validator 和必要的 Harness 原生 UI 扩展。
+<h1 align="center">OpenQuantum</h1>
 
-目标是让量子公司和科研团队可以直接 Fork 仓库，沿用 Harness 原生方式增加自己的 Skill、MCP 或
-`dsh-plugin`，而不必先学习一套 OpenQuantum 私有扩展协议。
+<p align="center">
+  <strong>让量子工具更好用，也更开放。</strong>
+</p>
 
-## 架构原则
+<p align="center">
+  一个开源的量子工具与智能助手平台，给用户直接用，也给企业和研究机构拿去二次开发。
+</p>
 
-系统保持四层：
+这几天，我们做了一个挺狠的决定。
 
-1. **UI**：默认直接使用 DeepSeek Harness 原生 Web UI；OpenQuantum 只注入品牌和量子科研展示扩展。
-2. **Harness**：直接复用 DeepSeek Harness 的 Session、Agent、Tool、Skill、MCP、Plugin、审批、权限、
-   沙箱、模型路由、事件日志和持久化。
-3. **量子扩展内容**：Harness Skill 保存领域工作流和 Prompt；独立 MCP/Tool 负责执行；OpenQuantum
-   Validator/eval 负责可强制的科学规则。三者由 Agent preset 组合，不存在 Skill 自动绑定 MCP 的机制。
-4. **Model**：通过 Harness Provider route 接入云厂商模型；OpenQuantum 不另建模型调用 Runtime。
+把 OpenQuantum 里自己写的那套 Web UI、浏览器网关和 Agent 适配层，整个删掉了。前前后后，接近 3 万行
+代码。
 
-OpenQuantum 的原则是：
+不是因为它完全不能用。
 
-> Harness 已经提供的通用机制不重做；量子差异优先写成原生 Skill、MCP 或可信插件。
+而是做着做着，我们越来越确定一件事。OpenQuantum 真正应该做的，不是再造一套 Agent 系统，也不是把
+一堆量子功能包在一个只有我们自己能维护的壳里。
 
-详细边界见
-[`docs/architecture/ARCHITECTURE_AUDIT.md`](docs/architecture/ARCHITECTURE_AUDIT.md)，MVP 路线见
-[`docs/roadmap/DEVELOPMENT_PLAN.md`](docs/roadmap/DEVELOPMENT_PLAN.md)。量子 Skill / MCP 的精选队列见
-[`docs/ecosystem/QUANTUM_CAPABILITY_CATALOG.md`](docs/ecosystem/QUANTUM_CAPABILITY_CATALOG.md)。
+我们想做的，是一个开源、开放、能把各种量子工具接进来的平台。
 
-## OpenQuantum 只增加什么
+普通用户打开就能用。研究人员可以看清任务是怎么完成的。量子公司和高校实验室拿到代码以后，可以很方便
+地接上自己的算法、设备、数据和模型，然后做成真正属于自己的东西。
 
-- 一个面向量子科研的 Harness preset；
-- 第一批作用域清楚、可测试的量子 Skill；
-- 通过 Harness 原生 MCP client 接入的科学计算工具；
-- 在原生配置不足时才使用的、经过审查的 `dsh-plugin`；
-- 可为维护 locality 与 Skill 共置、但由 Tool/插件独立调用的科学 Validator 和 eval；
-- 通过 Harness 原生 Client Plugin / Slot 展示科研产物与“执行状态 / 科学验收状态”的必要 UI；
-- 只通过 Harness 的扩展点增加产品差异，不维护第二套 Agent Web Runtime。
+所以，我们回到了 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness)。
 
-第一版明确不做：独立 Runtime、私有 `.oqcap` 包格式、插件市场、安装锁、签名与发布治理、
-多租户 SaaS 控制面，以及一套平行于 Harness 的权限或持久化系统。
+Harness 已经把会话、工具调用、权限、模型、任务记录和 Web 界面这些麻烦事做了。更打动我们的是它的轨迹
+视图。一次 Agent 任务用了什么工具，在哪一步调用，哪里失败，结果怎么回来，开发者都能看见。
 
-## MVP
+这种感觉太重要了。
 
-第一版只打通一个可信纵切：
+因为开发 Agent 最难受的，从来不是它不会回答，而是它答错了，你还不知道它到底在哪一步开始跑偏。
 
-```text
-用户问题
-→ Harness Session / Agent
-→ quantum-ground-state Skill
-→ 原生 stdio MCP solve_and_validate_ground_state
-→ 六类结构化事实 + 计算级 Validator observations
-→ Harness ctx.fs 原子物化 Result Package
-→ 独立 Validator 重读真实字节 + 中央规则派生最终科学验收
-→ UI 分别展示执行结果和科学验收结果
-```
+OpenQuantum 就从这里出发。
 
-`quantum-ground-state` 的首个范围是：用户提供二量子位实 Pauli Hamiltonian，在固定
-`hamming-weight=1` 扇区内完成无噪 statevector VQE，并用独立精确解进行验收。它不宣称覆盖
-分子几何到 Hamiltonian、噪声、真实量子硬件或多量子位通用求解。
+## 一个入口，连接更多量子能力
 
-## 二次开发
+量子计算的工具不少，但它们往往散落在不同的 SDK、云平台、文档网站和开发环境里。
 
-量子公司推荐采用以下方式扩展：
+你想分析一个 Qiskit 电路，得找一套工具。想查 IBM Quantum 文档，换一个地方。想看看国内有哪些量子云
+后端，又是另一套账号和接口。真的做研究时，还要自己判断模型给出的结论到底靠不靠谱。
 
-1. Fork OpenQuantum；
-2. 在 `.agents/skills/<skill-name>/` 增加 Harness 原生 `SKILL.md` 和该 Skill 所需的科学资源；
-3. 将确定性计算封装成 Harness 支持的 stdio 或 Streamable HTTP MCP；
-4. 只有需要新增 Harness 宿主行为时才增加受审查的 `dsh-plugin`；
-5. 在 `runtime/openquantum/` 的 preset / Cordis 配置中组合这些能力；
-6. 用固定正例、负例和 Harness 端到端测试证明作用域与失败行为。
+这些东西单独看都合理，放到一起就挺折腾。
 
-开发规范见 [`CONTRIBUTING.md`](CONTRIBUTING.md)。
+OpenQuantum 想做的事情，就是把这些能力放进同一个工作环境。用户用自然语言描述问题，Agent 负责理解
+任务并选择工具，DeepSeek Harness 记录完整过程，量子程序负责计算，科学检查负责告诉我们结果能不能信。
 
-## 当前底座
+目前，Qiskit 电路分析、转换与优化，Qiskit 官方文档查询，IBM Quantum Runtime 与 Transpiler 的可选
+连接，FieldQKit 多量子云后端发现，以及社区 Quantum Hardware MCP，都已经接进来了。
 
-- 固定 DeepSeek Harness `0.1.0-rc.6`；
-- OpenAI-compatible 模型路由，可接入 Kimi / GLM 等云厂商模型；
-- OpenQuantum 项目级 Agent preset；
-- 真实 Session 创建、历史、消息、取消、审批与问题响应；
-- `events.mux` / `events.host` WebSocket 事件、重连和 history 重基线；
-- Harness 原生 Web Host、RPC 权限边界与凭据库，浏览器不会获得模型密钥；
-- `platform-diagnostics` 诊断 Skill；
-- `quantum-ground-state` 参考 Skill 与 Harness 原生 stdio MCP；
-- `qiskit-circuit-workbench` 电路审查 Skill 与 `quantum-sdk-advisor` 量子软件栈选型 Skill；
-- 默认启用 Qiskit 官方 `qiskit-mcp-server` 与 `qiskit-docs-mcp-server`；
-- 可在设置中心启用 IBM Quantum Runtime / Transpiler，并通过 Harness 凭据库保存 Token；
-- 可选接入固定源码版本的社区 Quantum Hardware MCP，复用 Harness 的 MCP 生命周期和安全凭据；
-- 隔离启动真实 Harness、验证 Skill 发现和 MCP Tool 进入 `request/header` 的 CI 测试；
-- 从 Harness 原生 `tool/call` / `tool/result` 重建的科学记录卡片，运行状态与科学状态分开展示。
-- 普通量子请求可用一个原子 MCP Tool 完成求解和计算级独立检查，不要求 Model 手工搬运 Artifact bundle。
-- 受信任的 Harness `tools/post-execute` Adapter 复用 `ctx.fs`，在 `results/openquantum/` 中原子写入
-  input、六类 Artifact、Result Package 和 Acceptance Report；它不执行量子算法，也不管理 Session。
-- UI 只在中央 Acceptance builder 对已物化字节完成推导后显示“验收：通过 / 有条件 / 未通过”。
+仓库里还有量子软件栈选型助手，和一个经过严格科学验收的量子基态求解示例。
 
-## 本地启动
+其中不需要凭据、不会产生真实云费用的能力可以默认使用。涉及 IBM Quantum、真实硬件、外部网络和费用的
+能力，默认关闭，由用户自己保存凭据并主动开启。
 
-要求 Node.js 24+，以及 Qiskit 官方 MCP 推荐的
-[`uv` / `uvx`](https://docs.astral.sh/uv/getting-started/installation/)；Python 由 `uvx` 管理，官方 MCP
-包版本固定在 Agent preset 中。
+不是所有东西都应该默认帮用户做决定。
+
+尤其是可能花钱的东西。
+
+## 好用，不应该以封闭为代价
+
+很多平台也能把工具接进来，但接着接着，所有东西都会变成平台自己的格式。
+
+开发者要先学一套私有插件系统。工具作者要按平台的方式重新包装。哪天平台不维护了，之前做的东西也很难
+带走。
+
+我们不太想走这条路。
+
+OpenQuantum 使用 DeepSeek Harness 原生 Skill 和公开的 MCP 协议。量子公司可以独立开发自己的组件，
+也可以直接把已有服务接进来。你不需要先发布到 OpenQuantum 的私有市场，也不需要申请一个只有我们承认的
+组件身份。
+
+代码采用 MIT License。
+
+你可以 Fork，可以修改，可以商用，也可以把它变成一个面向化学、制药、金融、量子硬件或教育的专用版本。
+
+开源这件事，在这里不是页面底部的一行字。
+
+它是整个项目的设计前提。
+
+## 普通用户看到的是一个助手
+
+打开 OpenQuantum，你看到的仍然是一个熟悉的对话界面。
+
+可以新建任务，可以选择模型，可以调整权限，可以查看历史，也可以在设置中心管理量子组件和安全凭据。
+默认模式就是 `OpenQuantum`，不用先从一堆开发概念里猜应该选哪个。
+
+真正的区别藏在任务背后。
+
+当用户提出一个量子问题时，系统不是只让模型凭印象回答。它可以加载合适的领域方法，调用 Qiskit、
+FieldQKit 或专用量子程序，并把工具过程和结果一起保留下来。
+
+对于普通用户，这是一种更省事的使用方式。
+
+对于专业用户，这些过程又没有被藏起来。
+
+## 开发者看到的是一条轨迹
+
+DeepSeek Harness 的 Trajectory 视图会展示一次任务里的模型请求、步骤、工具调用、嵌套调用和结果。
+
+它不是模型的隐藏思维链，而是一条可以观察、调试和复盘的执行轨迹。
+
+开发者可以很直观地看到 Agent 有没有加载正确的量子 Skill，实际调用了哪个 MCP 工具，输入输出有没有
+符合约定，失败发生在模型、工具、权限还是外部服务。
+
+更重要的是，最终答案到底有没有真实工具结果支撑，也能顺着轨迹查回去。
+
+我一直觉得，Agent 要真正进入科研和企业，光是看起来聪明还不够。
+
+它得让人知道自己做了什么。
+
+## 科学结果，不能只听模型自己说
+
+OpenQuantum 现在有一个参考能力，叫 `quantum-ground-state`。
+
+它会对用户提供的一个小型量子 Hamiltonian 运行 VQE，再用独立计算重新检查结果。这个能力的范围被限制得
+很窄，只回答给定问题的基态能量，不会顺手把自己包装成完整分子模拟、真实硬件实验或者通用量子优势。
+
+这个范围看起来不大，但我们是故意的。
+
+科研工具最怕的不是暂时做得少，而是做了一点点，就开始声称自己什么都能做。
+
+在 OpenQuantum 里，任务运行结束和科学验收通过是两回事。模型说完成了，工具返回了，页面也正常显示了，
+这些都不能自动变成科学可信。
+
+只有独立检查满足明确规则，系统才会显示验收通过。证据不够，就诚实显示没有检查。
+
+这可能没有一句全都成功那么讨喜。
+
+但做科研，真诚比讨喜重要。
+
+## 谁可以拿它来做什么
+
+如果你是普通用户，可以把 OpenQuantum 当作一个能调用量子工具的智能助手。
+
+如果你是研究人员，可以用它组织量子任务、查看工具过程，并逐步加入自己的科研工作流。
+
+如果你是量子公司，可以接入内部云平台、设备、算法和知识库，做成自己的产品或内部系统。
+
+如果你是工具作者，可以把能力做成 MCP，让 Agent 和其他支持同一协议的平台一起使用。
+
+如果你在开发 Agent，可以直接利用 DeepSeek Harness 的轨迹、会话、权限、审批和持久化，不需要从头写
+Runtime。
+
+每一种人看到的 OpenQuantum 都不太一样。
+
+但底下是同一套开放组件。
+
+## 先跑起来看看
+
+需要 Node.js 24，以及用于启动 Qiskit 工具的
+[uv / uvx](https://docs.astral.sh/uv/getting-started/installation/)。
 
 ```bash
-npm install
+# 克隆 OpenQuantum 或你自己的 Fork 后
+cd openQuantum
+npm ci
 cp .env.example .env
-npm run mcp:qiskit:probe
-npm run demo:quantum-ground-state
 npm run dev
 ```
 
-`demo:quantum-ground-state` 使用官方 MCP Client 启动本地 stdio server，并调用
-`solve_and_validate_ground_state` 黄金案例；它不需要模型密钥。输出中的
-`observations_available` 表示计算级逐项检查已生成，`provenance=not_checked` 和
-`acceptance=not_derived` 表示尚未经过 Harness Result Package 物化，不能冒充最终科学验收。
-这是刻意保留的“纯 MCP”层测试；进入真实 Harness Session 后，同一原子 Tool 的结构化结果会由
-Harness Adapter 物化并重新验收。
+然后打开 <http://127.0.0.1:3000>。
 
-- OpenQuantum（DeepSeek Harness 原生 Web UI）：<http://127.0.0.1:3000>
+模型地址和密钥可以在设置中心配置，也可以写在本地 `.env`。真实密钥只保存在本地环境或 DeepSeek Harness
+凭据库中，不会回显，也不会写进项目配置。
 
-默认启动链只运行一个 Harness Web Host。OpenQuantum 通过 Harness 官方 `tapIndex`、Client Plugin 和
-Settings 扩展点增加浏览器标题、品牌、量子组件设置与科研结果展示，不复制或修改 `node_modules` 中的
-前端源码，也不维护平行 Web UI。
-
-真实密钥只放在被 Git 忽略的 `.env` 或 Harness credential store 中。仓库配置只能引用环境变量名。
-
-### Qiskit 官方 MCP
-
-OpenQuantum 直接通过 DeepSeek Harness 原生 MCP Client 使用
-[`Qiskit/mcp-servers`](https://github.com/Qiskit/mcp-servers)，不复制它的 Runtime 或 Tool 实现：
-
-| 服务 | 默认状态 | 当前固定版本 | 凭据 |
-|---|---|---:|---|
-| Qiskit Circuits | 开启 | `qiskit-mcp-server==0.3.1` | 无 |
-| Qiskit Docs | 开启 | `qiskit-docs-mcp-server==0.3.0`（含代理兼容 `socksio==1.0.0`） | 无 |
-| IBM Quantum Runtime | 关闭 | `qiskit-ibm-runtime-mcp-server==0.6.1` | `QISKIT_IBM_TOKEN` |
-| IBM Quantum Transpiler | 关闭 | `qiskit-ibm-transpiler-mcp-server==0.4.1` | `QISKIT_IBM_TOKEN` |
-| Qiskit Gym | 关闭 | `qiskit-gym-mcp-server==0.4.1` | 无 |
-
-打开 UI 的“设置中心 → MCP 服务”可以修改启停、超时和重连策略。IBM 两个云服务共用一个 Token；Token
-通过 Harness `credentials.set` 写入本地凭据库，设置快照只返回“是否已配置”，不会返回明文。修改 MCP
-配置或 Token 后需重启 Harness。IBM 云服务可能访问外部网络、提交有配额或成本的任务，因此保持显式选择，
-不会随项目默认启动。
-
-`quantum-ground-state` 不被官方 MCP 替代：它的 Skill 负责窄作用域工作流，独立本地 MCP 负责求解，
-Validator 与中央规则负责科学验收；这些模块由 OpenQuantum Agent preset 组合。官方 Qiskit MCP 则独立
-提供通用电路、文档及可选云后端能力。
-
-### 社区 Quantum Hardware MCP
-
-OpenQuantum 也预置了社区项目
-[`Lokesh-2025/quantum-hardware-mcp`](https://github.com/Lokesh-2025/quantum-hardware-mcp)，用于查询 IBM / IonQ
-硬件，并暴露任务提交、取消和成本估算等工具。它不是 OpenQuantum 自建 Runtime：DeepSeek Harness 仍通过
-原生 MCP Client 管理 stdio 进程、Tool registry、超时与重连。
-
-这个连接器默认关闭。上游目前没有稳定 Release，因此安装器只检出项目审阅过的 commit
-`13fbe9f13fd68c409086491b9598ce2d25f5210a`，不会在运行时跟随 `master`：
+还没有模型密钥，也没关系。可以先跑本地量子示例
 
 ```bash
-npm run mcp:quantum-hardware:setup
-```
-
-安装完成后，在“设置中心 → MCP 服务”中：
-
-1. 保存必需的 `QISKIT_IBM_TOKEN`；
-2. 如需 IonQ，再保存可选的 `IONQ_API_KEY`；
-3. 审阅源码、云厂商费用和数据外发风险后，再显式启用 `Quantum Hardware MCP`；
-4. 重启 Harness 使配置生效。
-
-源码保存在被 Git 忽略的 `.openquantum/external/quantum-hardware-mcp/`。首次启动由 `uv` 根据固定源码中的
-`requirements.txt` 建立隔离环境，可能需要访问 Python 包仓库。启用该 MCP 会让 Agent 看见真实任务提交和
-取消工具；当前 Harness MCP Client 没有对单个上游 Tool 做通用白名单或逐次成本审批，因此启用本身应视为
-对该受审连接器能力的授权。不要在生产账户上使用无配额限制的凭据。
-
-### 添加项目扩展
-
-设置中心也提供一个小而稳定的项目扩展 Interface：
-
-- MCP 可以新增本地 `stdio` 进程或无鉴权的 Streamable HTTP 端点；新条目一律先以关闭状态写入
-  `agent.cordis.yml`，审阅后再启用；
-- 内置 `stdio` MCP 可以声明必需及可选的多个 Harness credential reference；设置中心只展示配置状态，
-  值不会写入 Agent preset。自定义 MCP 的首版表单仍提供一个凭据引用；
-- Skill 通过 Git、解压或手工复制标准 `.agents/skills/<name>/` 目录接入，再由设置中心重新扫描并管理
-  调用策略；设置表单不把 Markdown 文本伪装成完整 Skill；
-- 只有设置中心登记的自定义 MCP 可以在 UI 中移除；仓库内 Skill 和科学扩展继续走普通代码审查。
-
-这是项目级配置，不是远程插件市场。复杂 Skill、多个凭据或带鉴权 HTTP MCP 仍应通过仓库文件审阅后接入。
-任何自定义 `stdio` command 都会在 Harness 权限下执行，因此只应使用明确可信且最好固定版本的来源。
-
-## 验证
-
-```bash
-npm run harness:config
-npm run mcp:qiskit:probe
-npm run e2e:qiskit-harness
 npm run demo:quantum-ground-state
-npm run capability:quantum-ground-state:test
-npm run models:probe -- --provider openquantum-public
-npm run e2e:quantum-harness -- --provider openquantum-public
-npm run capability:diagnostics:test
-npm run check
 ```
 
-`models:probe` 会产生少量真实模型调用。`e2e:quantum-harness` 使用隔离的临时 Harness Home 和
-workspace，让真实模型完成一次 QGS MCP Tool Calling，并复核 Session 事件、六类 Artifact、Result Package、
-Acceptance Report 与 Result Commit；结束后自动清理。普通本地开发不需要每次运行这两个在线探针。
+想检查 Qiskit MCP 是否正常，可以运行
 
-`mcp:qiskit:probe` 会让 `uvx` 安装/复用缓存中的固定版本并直接核对官方 Tool 清单；
-`e2e:qiskit-harness` 再启动隔离 Harness，确认这些 Tool 真正进入 Agent 的 `request/header`；测试还会向
-临时 Harness 凭据库写入不可用的占位 Token，仅验证 IBM Runtime Tool 注册和凭据注入。两者可能访问
-PyPI，但不会调用 IBM Quantum Tool、硬件或提交任务，因此不放进默认离线 CI。
+```bash
+npm run mcp:qiskit:probe
+```
 
-当前无需云模型即可验证 QGS 数值程序、Validator、MCP 协议和 Harness 原生注册。完整的真实模型
-Tool Calling 仍要求先配置 `OPENQUANTUM_PUBLIC_API_KEY` 或 `OPENQUANTUM_PRIVATE_API_KEY`；没有凭据时，
-诊断会诚实记录为 `not_checked`，不会用 Mock 或直接 MCP 调用替代。
+Docker 方式也可以直接启动
 
-## 安全与科学不变量
+```bash
+cp .env.example .env
+docker compose up --build
+```
 
-- UI 不直接调用 Model、MCP 或 Skill 文件系统；
-- API Key 不进入客户端 bundle、Artifact、日志或 Git；
-- Session event log 是执行事实的来源；
-- Harness 执行完成不等于科学验收通过；
-- 只有真实 Result Package 字节通过 OpenQuantum Validator，且中央 Profile 规则派生为 `passed` 后，UI 才能显示“验收：通过”。
+## 想拿去二次开发
+
+OpenQuantum 里有三个最常用的开放组件。
+
+`Skill` 负责告诉 Agent 什么时候做、按什么方法做、有哪些边界。它更像一份给 Agent 的领域工作手册。
+
+`MCP` 负责真正连接工具。计算、数据库、量子云、实验设备和外部服务，都可以从这里接进来。
+
+`Validator` 负责检查结果。单位、阈值、作用域、来源和科学一致性，不应该只靠 Prompt 提醒，而应该由程序
+强制验证。
+
+三者可以一起完成一项能力，但它们不是一个东西，也不会被偷偷绑死在一起。
+
+想增加自己的能力，通常就是这条路
+
+```text
+增加一个标准 SKILL.md
+→ 接入或开发一个 MCP
+→ 有科学结论时增加 Validator 和测试
+→ 在 OpenQuantum preset 中组合
+→ 通过 Harness 轨迹和端到端测试检查
+```
+
+更完整的开发说明放在 [CONTRIBUTING.md](CONTRIBUTING.md)，架构边界放在
+[ARCHITECTURE_AUDIT.md](docs/architecture/ARCHITECTURE_AUDIT.md)，接下来准备接入的量子项目放在
+[QUANTUM_CAPABILITY_CATALOG.md](docs/ecosystem/QUANTUM_CAPABILITY_CATALOG.md)。
+
+<details>
+<summary><strong>展开开发者命令与项目目录</strong></summary>
+
+```bash
+# 检查 Harness 组合配置
+npm run harness:config
+
+# 检查 Qiskit MCP
+npm run mcp:qiskit:probe
+
+# 运行量子基态示例
+npm run demo:quantum-ground-state
+
+# 运行完整离线质量检查
+npm run check
+
+# 配置模型后运行真实 Agent 端到端测试
+npm run e2e:quantum-harness -- --provider openquantum-public
+```
+
+```text
+.agents/skills/          量子 Skill 与科学资源
+runtime/openquantum/      OpenQuantum 模式、MCP 和 Harness 界面扩展
+src/settings/server/      设置中心的服务端配置边界
+scripts/                  启动、诊断和端到端测试
+tests/                    平台集成测试
+docs/                     架构、路线与生态文档
+```
+
+</details>
+
+## 现在做到哪了
+
+OpenQuantum 已经有一条能完整跑通的产品链。
+
+有 DeepSeek Harness 原生 Web 界面，有任务轨迹，有第一批量子 Skill 和 MCP，有模型与安全凭据设置，也有
+量子基态结果的独立科学验收。仓库还提供自动测试，检查这些东西是不是真的连在一起，而不是只写在页面上。
+
+但说实话，我们还差得远。
+
+DeepSeek Harness 当前还是 Developer Preview。量子工具的数量也只是刚刚起步。不同机构对硬件、数据、
+权限和科研验证的要求，后面一定会冒出很多现在想不到的问题。
+
+这反而是开源最有价值的地方。
+
+不是由一个团队关起门来猜大家需要什么，而是让真正做量子算法、量子硬件、科研软件和行业应用的人，一起
+把这个平台往前推。
+
+如果你手里有一个量子工具，想让更多人用起来。
+
+如果你的团队正在开发量子 Agent，不想从零再造一套系统。
+
+如果你只是好奇，量子工具和 Agent 放在一起到底能做出什么。
+
+都欢迎来试试。
+
+OpenQuantum 想做的，就是把这个入口打开。
+
+## 社区与安全
+
+贡献代码和量子能力前，请阅读 [CONTRIBUTING.md](CONTRIBUTING.md) 和
+[CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)。
+
+真实硬件、外部网络和可能产生费用的能力默认关闭。第三方本地 MCP 启用前，需要审查来源、权限和数据
+去向。安全问题请按照 [SECURITY.md](SECURITY.md) 私密报告，不要在公开 Issue 中粘贴密钥或未脱敏数据。
+
+## License
+
+[MIT License](LICENSE) © 2026 Xi Zhao
