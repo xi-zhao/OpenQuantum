@@ -193,9 +193,6 @@ test("client plugin contributes the native settings section and uses Harness cre
   assert.match(client, /api\.credentials\.unset/);
   assert.match(client, /已有值不会回显/);
   assert.match(client, /requiredByEnabled/);
-  assert.match(client, /Skill 与 MCP 是 DeepSeek Harness 中两个独立的扩展类型/);
-  assert.match(client, /互不包含/);
-  assert.match(client, /一个 Skill 可以使用多个 MCP/);
   assert.match(client, /由 Harness MCP Client 独立注册和启停/);
   assert.match(client, /可以调用已注册 Tool，但不会启动 MCP/);
   assert.match(client, /添加现有 Skill/);
@@ -204,5 +201,8 @@ test("client plugin contributes the native settings section and uses Harness cre
   assert.doesNotMatch(client, /skill\.create|Skill 指令（Markdown）/);
   assert.match(client, /注册已有 MCP Server/);
   assert.match(client, /不会下载、安装或创建 MCP Server/);
+  assert.match(client, /\.oq-cap-credential\{display:flex;flex-direction:column;gap:12px\}/);
+  assert.doesNotMatch(client, /\.oq-cap-credential\{[^}]*grid-template-columns/);
+  assert.doesNotMatch(client, /HARNESS EXTENSIONS|className: "oq-cap-hero"/);
   assert.doesNotMatch(client, /localStorage|sessionStorage/);
 });
