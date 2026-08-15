@@ -1,0 +1,11 @@
+interface:
+  display_name: "FieldQKit 量子硬件"
+  short_description: "统一发现国内量子云后端并安全检查各平台访问凭证"
+  default_prompt: "使用 $fieldqkit-hardware 检查已配置的量子云凭证并发现适合当前线路的后端；在用户明确批准前不要提交真实硬件任务。"
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "fieldqkit"
+      description: "FieldQKit 国内量子云后端发现工具"
+policy:
+  allow_implicit_invocation: true

@@ -27,6 +27,9 @@
     - id: openquantum-web-branding
       name: '@openquantum/harness-web-branding'
       inject: [webServer]
+    - id: openquantum-web-capabilities
+      name: '@openquantum/harness-web-capabilities'
+      inject: [webServer, credentials]
 
 - id: llm-pi-ai
   config:

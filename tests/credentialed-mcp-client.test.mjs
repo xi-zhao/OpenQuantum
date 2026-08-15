@@ -77,3 +77,25 @@ test("credentialed MCP injects configured optional provider credentials without 
   });
   assert.equal(Object.hasOwn(resolved, "optionalCredentialEnv"), false);
 });
+
+test("credentialed MCP supports an optional-only provider catalog", async () => {
+  const requested = [];
+  const resolved = await resolveCredentialedMcpConfig(
+    {
+      serverName: "fieldqkit",
+      env: {},
+      optionalCredentialEnv: {
+        QUAFU_API_TOKEN: "QUAFU_API_TOKEN",
+        TIANYAN_API_TOKEN: "TIANYAN_API_TOKEN",
+      },
+    },
+    async (ref) => {
+      requested.push(ref);
+      return undefined;
+    },
+  );
+
+  assert.deepEqual(requested, ["QUAFU_API_TOKEN", "TIANYAN_API_TOKEN"]);
+  assert.deepEqual(resolved.env, {});
+  assert.equal(Object.hasOwn(resolved, "optionalCredentialEnv"), false);
+});

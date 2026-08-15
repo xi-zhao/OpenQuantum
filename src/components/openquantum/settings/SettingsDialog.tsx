@@ -8,14 +8,16 @@ import type {
   SettingsSnapshot,
 } from "@/settings/interface";
 
-import { AtomIcon, CloseIcon, CpuIcon, PlugIcon } from "../icons";
+import { AtomIcon, CloseIcon, CpuIcon, FlaskIcon, PlugIcon } from "../icons";
+import { CapabilitySettingsSection } from "./CapabilitySettingsSection";
 import { McpSettingsSection } from "./McpSettingsSection";
 import { ModelSettingsSection } from "./ModelSettingsSection";
 import { SkillSettingsSection } from "./SkillSettingsSection";
 
-type Section = "models" | "mcp" | "skills";
+type Section = "capabilities" | "models" | "mcp" | "skills";
 
 const sections = [
+  { id: "capabilities" as const, label: "能力中心", description: "MCP 与 Skill 全景", icon: FlaskIcon },
   { id: "models" as const, label: "模型连接", description: "URL、协议与 API Key", icon: CpuIcon },
   { id: "mcp" as const, label: "MCP 服务", description: "Harness 原生工具连接", icon: PlugIcon },
   { id: "skills" as const, label: "Skill 配置", description: "发现与调用策略", icon: AtomIcon },
@@ -28,7 +30,7 @@ export interface SettingsDialogProps {
 }
 
 export function SettingsDialog({ open, port, onClose }: SettingsDialogProps) {
-  const [section, setSection] = useState<Section>("models");
+  const [section, setSection] = useState<Section>("capabilities");
   const [snapshot, setSnapshot] = useState<SettingsSnapshot | null>(null);
   const [loading, setLoading] = useState(false);
   const [savingKey, setSavingKey] = useState<string | null>(null);
@@ -95,7 +97,7 @@ export function SettingsDialog({ open, port, onClose }: SettingsDialogProps) {
             </div>
             <button type="button" aria-label="关闭" onClick={onClose} className="rounded-lg p-2 text-[#9bb3bc] hover:bg-white/10 hover:text-white md:hidden"><CloseIcon /></button>
           </div>
-          <nav aria-label="设置分类" className="mt-3 grid grid-cols-3 gap-1 md:mt-7 md:block md:space-y-2">
+          <nav aria-label="设置分类" className="mt-3 grid grid-cols-4 gap-1 md:mt-7 md:block md:space-y-2">
             {sections.map((item) => {
               const Icon = item.icon;
               const active = item.id === section;
@@ -121,6 +123,15 @@ export function SettingsDialog({ open, port, onClose }: SettingsDialogProps) {
             {error ? <div className="mb-5 flex items-start justify-between gap-4 rounded-xl border border-[#efc2c6] bg-[#fff5f5] px-4 py-3 text-sm text-[#9f2633]"><span>{error}</span><button type="button" className="font-medium underline" onClick={() => setError(null)}>关闭</button></div> : null}
             {notice ? <div className="mb-5 rounded-xl border border-[#afe1d9] bg-[#edfaf7] px-4 py-3 text-sm text-[#0b776e]">{notice}</div> : null}
             {loading && !snapshot ? <div className="flex min-h-72 items-center justify-center text-sm text-[#728793]">正在读取 Harness 设置…</div> : null}
+            {snapshot && section === "capabilities" ? (
+              <CapabilitySettingsSection
+                skills={snapshot.project.skills}
+                servers={snapshot.project.mcpServers}
+                credentials={snapshot.project.mcpCredentials}
+                onOpenMcp={() => setSection("mcp")}
+                onOpenSkills={() => setSection("skills")}
+              />
+            ) : null}
             {snapshot && section === "models" ? <ModelSettingsSection {...snapshot.models} savingKey={savingKey} onSave={(command, key) => void execute(command, key)} /> : null}
             {snapshot && section === "mcp" ? <McpSettingsSection servers={snapshot.project.mcpServers} credentials={snapshot.project.mcpCredentials} revision={snapshot.project.mcpRevision} savingKey={savingKey} onSave={(command, key) => void execute(command, key)} /> : null}
             {snapshot && section === "skills" ? <SkillSettingsSection skills={snapshot.project.skills} savingKey={savingKey} onSave={(command, key) => void execute(command, key)} /> : null}

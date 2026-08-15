@@ -64,6 +64,36 @@
       maxDelayMs: 30000
       maxAttempts: 10
 
+# FieldQKit is a Python SDK rather than a native MCP server. This thin trusted
+# bridge exposes only credential status and read-only backend discovery. The
+# pinned package is materialized lazily by uv on the first discovery request;
+# no QPU job submission tool is registered in this milestone.
+- id: mcp-fieldqkit
+  name: ./credentialed-mcp-client.mjs
+  config:
+    serverName: fieldqkit
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/fieldqkit-hardware/mcp/server.mjs'
+    env: {}
+    optionalCredentialEnv:
+      QUAFU_API_TOKEN: QUAFU_API_TOKEN
+      TIANYAN_API_TOKEN: TIANYAN_API_TOKEN
+      GUODUN_API_TOKEN: GUODUN_API_TOKEN
+      TENCENT_API_TOKEN: TENCENT_API_TOKEN
+      ORIGIN_API_TOKEN: ORIGIN_API_TOKEN
+      FIELDQUANTUM_API_TOKEN: FIELDQUANTUM_API_TOKEN
+      LOGICALQUBIT_API_TOKEN: LOGICALQUBIT_API_TOKEN
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 180000
+    failOnStartupError: true
+    reconnect:
+      enabled: true
+      initialDelayMs: 1000
+      maxDelayMs: 30000
+      maxAttempts: 10
+
 # Official Qiskit MCP servers. Package versions are pinned so every Fork gets
 # the same tool schemas. Set OPENQUANTUM_DISABLE_QISKIT_MCP=1 for offline CI;
 # normal installations enable the two credential-free core services.

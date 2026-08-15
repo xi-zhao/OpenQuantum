@@ -43,6 +43,16 @@ const MCP_CATALOG = Object.freeze({
     packageVersion: "0.2.0",
     setup: null,
   }),
+  fieldqkit: Object.freeze({
+    displayName: "FieldQKit 量子硬件",
+    description:
+      "统一发现夸父、天衍、国盾、腾讯、本源、FieldQuantum 与逻辑比特后端；当前只开放只读配置检查和硬件发现。",
+    provider: "FieldQuantum / OpenQuantum",
+    sourceUrl: "https://github.com/FieldQuantum/fieldqkit",
+    packageName: "fieldqkit",
+    packageVersion: "0.1.2@3ef2493",
+    setup: null,
+  }),
   qiskit: Object.freeze({
     displayName: "Qiskit Circuits",
     description: "Qiskit 官方电路创建、分析、转译以及 QASM/QPY 序列化工具。",
@@ -120,6 +130,41 @@ const MCP_CREDENTIAL_CATALOG = Object.freeze({
     displayName: "IonQ API Key",
     description: "可选；允许 Quantum Hardware MCP 查询 IonQ 并提交模拟器或真实硬件任务。",
     documentationUrl: "https://cloud.ionq.com/",
+  }),
+  QUAFU_API_TOKEN: Object.freeze({
+    displayName: "夸父量子云 Token",
+    description: "供 FieldQKit 只读发现夸父量子云硬件；后续真实任务仍需单独审批。",
+    documentationUrl: "https://quafu-sqc.baqis.ac.cn/",
+  }),
+  TIANYAN_API_TOKEN: Object.freeze({
+    displayName: "天衍量子云 Token",
+    description: "供 FieldQKit 只读发现天衍量子云硬件；后续真实任务仍需单独审批。",
+    documentationUrl: "https://qc.zdxlz.com/",
+  }),
+  GUODUN_API_TOKEN: Object.freeze({
+    displayName: "国盾量子云 Token",
+    description: "供 FieldQKit 只读发现国盾量子云硬件；后续真实任务仍需单独审批。",
+    documentationUrl: "https://quantumctek-cloud.com/",
+  }),
+  TENCENT_API_TOKEN: Object.freeze({
+    displayName: "腾讯量子云 Token",
+    description: "供 FieldQKit 只读发现腾讯量子云硬件；后续真实任务仍需单独审批。",
+    documentationUrl: "https://quantum.tencent.com/cloud/",
+  }),
+  ORIGIN_API_TOKEN: Object.freeze({
+    displayName: "本源量子云 Token",
+    description: "供 FieldQKit 只读发现本源量子云硬件；部分操作还需要 pyqpanda3。",
+    documentationUrl: "https://qcloud.originqc.com.cn/",
+  }),
+  FIELDQUANTUM_API_TOKEN: Object.freeze({
+    displayName: "FieldQuantum API Token",
+    description: "供 FieldQKit 访问 FieldQuantum 云端模拟器。",
+    documentationUrl: "https://fieldquantum.tech/",
+  }),
+  LOGICALQUBIT_API_TOKEN: Object.freeze({
+    displayName: "逻辑比特量子云 Token",
+    description: "供 FieldQKit 只读发现逻辑比特量子云硬件；后续真实任务仍需单独审批。",
+    documentationUrl: "https://cloud.logicalqubit.com/",
   }),
 });
 
@@ -324,6 +369,27 @@ async function readManagedSkillMarker(projectRoot, directoryName) {
   }
 }
 
+async function readSkillUiMetadata(projectRoot, directoryName) {
+  try {
+    const filePath = await containedFile(
+      projectRoot,
+      path.join(".agents/skills", directoryName, "agents/openai.yaml"),
+    );
+    const value = parse(await readFile(filePath, "utf8"), {
+      strict: true,
+      uniqueKeys: true,
+    });
+    return isRecord(value) && isRecord(value.interface)
+      ? value.interface
+      : {};
+  } catch (error) {
+    if (error && typeof error === "object" && error.code === "ENOENT") {
+      return {};
+    }
+    return {};
+  }
+}
+
 function displayTarget(config) {
   if (config.transport === "streamable-http") {
     return typeof config.url === "string" ? config.url : "未配置 URL";
@@ -480,6 +546,7 @@ async function readSkill(projectRoot, directoryName) {
     }
   }
   const managedMarker = await readManagedSkillMarker(projectRoot, directoryName);
+  const uiMetadata = await readSkillUiMetadata(projectRoot, directoryName);
   return {
     filePath,
     raw,
@@ -490,6 +557,8 @@ async function readSkill(projectRoot, directoryName) {
       displayName:
         managedMarker
           ? managedMarker.displayName
+          : typeof uiMetadata.display_name === "string"
+          ? uiMetadata.display_name
           : isRecord(capability) && typeof capability.displayName === "string"
           ? capability.displayName
           : directoryName,

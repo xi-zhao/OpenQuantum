@@ -386,11 +386,33 @@ test("repository preset pins official Qiskit services with safe defaults", async
     "IONQ_API_KEY",
   ]);
   assert.equal(byName.get("openquantum_quantum")?.enabled, true);
-  assert.deepEqual(snapshot.mcpCredentials[0].serverNames, [
+  assert.equal(byName.get("fieldqkit")?.enabled, true);
+  assert.equal(byName.get("fieldqkit")?.packageVersion, "0.1.2@3ef2493");
+  assert.deepEqual(byName.get("fieldqkit")?.requiredCredentialRefs, []);
+  assert.deepEqual(byName.get("fieldqkit")?.credentialRefs, [
+    "QUAFU_API_TOKEN",
+    "TIANYAN_API_TOKEN",
+    "GUODUN_API_TOKEN",
+    "TENCENT_API_TOKEN",
+    "ORIGIN_API_TOKEN",
+    "FIELDQUANTUM_API_TOKEN",
+    "LOGICALQUBIT_API_TOKEN",
+  ]);
+  assert.deepEqual(snapshot.mcpCredentials.find(
+    (credential) => credential.ref === "QISKIT_IBM_TOKEN",
+  )?.serverNames, [
     "qiskit_ibm_runtime",
     "qiskit_ibm_transpiler",
     "quantum_hardware",
   ]);
+  assert.deepEqual(snapshot.mcpCredentials.find(
+    (credential) => credential.ref === "QUAFU_API_TOKEN",
+  )?.serverNames, ["fieldqkit"]);
+  assert.equal(
+    snapshot.skills.find((skill) => skill.name === "fieldqkit-hardware")
+      ?.displayName,
+    "FieldQKit 量子硬件",
+  );
 
   const raw = await readFile(
     path.join(
@@ -402,6 +424,7 @@ test("repository preset pins official Qiskit services with safe defaults", async
   assert.equal(raw.includes("your_ibm_quantum_token"), false);
   assert.match(raw, /qiskit-mcp-server==0\.3\.1/);
   assert.match(raw, /qiskit-docs-mcp-server==0\.3\.0/);
+  assert.match(raw, /fieldqkit-hardware\/mcp\/server\.mjs/);
 });
 
 test("project settings rejects a symlinked Skill file", async (t) => {

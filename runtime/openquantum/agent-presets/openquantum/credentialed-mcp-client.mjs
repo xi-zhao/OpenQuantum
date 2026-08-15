@@ -30,7 +30,7 @@ function record(value, field) {
  */
 export async function resolveCredentialedMcpConfig(config, resolveCredential) {
   const source = record(config, "credentialed MCP config");
-  const credentialEnv = record(source.credentialEnv, "credentialEnv");
+  const credentialEnv = record(source.credentialEnv ?? {}, "credentialEnv");
   const optionalCredentialEnv = record(
     source.optionalCredentialEnv ?? {},
     "optionalCredentialEnv",
@@ -38,11 +38,11 @@ export async function resolveCredentialedMcpConfig(config, resolveCredential) {
   const requiredEntries = Object.entries(credentialEnv);
   const optionalEntries = Object.entries(optionalCredentialEnv);
   if (
-    requiredEntries.length === 0 ||
+    requiredEntries.length + optionalEntries.length === 0 ||
     requiredEntries.length + optionalEntries.length > MAX_CREDENTIALS
   ) {
     throw new TypeError(
-      `credentialEnv must contain at least one required entry and at most ${MAX_CREDENTIALS} total entries`,
+      `credentialEnv and optionalCredentialEnv must contain between one and ${MAX_CREDENTIALS} total entries`,
     );
   }
 
