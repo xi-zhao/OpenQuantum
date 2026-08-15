@@ -30,8 +30,8 @@ const OPENQUANTUM_MANIFEST = JSON.stringify(
 );
 
 const OPENQUANTUM_COPY = Object.freeze({
-  "探索未至之境": "开放量子世界",
-  "Into the Unknown": "Open the quantum world",
+  "探索未至之境": "探索开放量子世界",
+  "Into the Unknown": "Explore the open quantum world",
 });
 
 const OPENQUANTUM_COPY_SCRIPT = `(() => {
