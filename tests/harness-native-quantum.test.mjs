@@ -301,6 +301,9 @@ test(
       if (INCLUDE_QISKIT_MCP) {
         assert(toolNames.includes(QISKIT_CIRCUIT_TOOL), diagnostics());
         assert(toolNames.includes(QISKIT_DOCS_TOOL), diagnostics());
+      } else {
+        assert.equal(toolNames.includes(QISKIT_CIRCUIT_TOOL), false, diagnostics());
+        assert.equal(toolNames.includes(QISKIT_DOCS_TOOL), false, diagnostics());
       }
       if (INCLUDE_IBM_RUNTIME_MCP) {
         assert(

@@ -15,7 +15,8 @@ description: 为量子计算项目按问题类型、硬件目标、数值方法�
 1. 明确问题类型：电路工程、变分算法、量子化学、纠错、噪声缓解、资源估算、云硬件或 GPU/HPC。
 2. 明确执行目标：本地 statevector、shots/noise、真实 QPU、容错资源估算或只生成可审查代码。
 3. 明确约束：量子位规模、经典算力、Python/C++/.NET、云账户、预算、许可证和复现要求。
-4. 为候选栈写出三部分：领域 Skill、MCP/Tool、Validator/eval。缺任何一层都要明确标成待补。
+4. 判断需要哪些独立模块：领域 Skill、MCP/Tool、Validator/eval。纯知识工作流不强制需要 MCP；没有
+   科学主张的工程操作也不强制需要 Validator。
 5. 优先复用 OpenQuantum 已有能力：
    - 通用电路与 Qiskit 文档：默认 Qiskit MCP；
    - 窄作用域二量子位基态：`quantum-ground-state`；
@@ -25,7 +26,8 @@ description: 为量子计算项目按问题类型、硬件目标、数值方法�
 
 ## 不变量
 
-- Skill 描述工作流，MCP/Tool 产生执行事实，Validator 才能产生可强制的科学判断。
+- Skill 描述工作流，MCP/Tool 产生执行事实，Validator 产生可强制的科学判断；它们由 Agent preset
+  组合，但 Harness 不会自动建立 Skill→MCP 或 Skill→Validator 绑定。
 - “库支持某算法”不等于 OpenQuantum 已集成该能力，也不等于结果已验收。
 - 不自动安装未知来源的 Skill/MCP；先核对许可证、版本、维护状态、网络与副作用。
 - GPL 项目可以作为研究参考或独立进程候选，但在纳入发行版前必须单独做兼容性判断。

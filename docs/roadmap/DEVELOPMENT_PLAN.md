@@ -3,7 +3,7 @@
 - 状态：执行基线 2.1（M3 进行中）
 - 日期：2026-08-14
 - 产品定位：DeepSeek Harness 的开源量子科研发行版
-- 架构约束：UI / Harness / Skill / Model 四层，不增加平行 Runtime
+- 架构约束：UI / Harness / 量子扩展内容 / Model 四层，不增加平行 Runtime
 
 ## 1. MVP 目标
 
@@ -33,9 +33,9 @@ OpenQuantum 不创建与 Harness 重复的业务对象：
 | 审批、权限与沙箱 | Harness 原生策略与执行机制 |
 | 模型调用 | Harness Provider route / Model Adapter |
 | 持久化、回放和分叉 | Harness Session event log |
-| 量子工作流与科学规则 | OpenQuantum Skill |
+| 量子工作流与解释边界 | Harness Skill |
 | 确定性科学计算 | OpenQuantum MCP / Tool |
-| 科学验收 | 与 Skill 一起维护的 Validator |
+| 科学验收 | 独立 OpenQuantum Validator；可与 Skill 共置，由 Tool/插件调用 |
 | 可回放科学展示 | Harness `tool/result` + OpenQuantum 薄投影 Adapter |
 
 OpenQuantum 自己只维护量子 preset、Skill、MCP、可信插件、科学 Validator、必要 UI 和薄 transport adapter。
@@ -50,7 +50,7 @@ OpenQuantum 自己只维护量子 preset、Skill、MCP、可信插件、科学 V
 
 1. `quantum-ground-state` 原生 Skill；
 2. 一个本地 stdio MCP，向 Harness 暴露最小基态计算 Tool；
-3. Skill 内独立 Validator、结构化 Artifact 和固定正负案例；
+3. 与 Skill 共置但独立调用的 Validator、结构化 Artifact 和固定正负案例；
 4. 从 UI 输入到 Harness Session、Agent、MCP、Artifact、Validator、UI 展示的真实 E2E；
 5. 面向量子公司的 Fork、Skill、MCP 和 preset 开发指南；
 6. 模型 Provider 模板、凭证隔离和最小健康探测。
@@ -83,11 +83,13 @@ DeepSeek Harness 已有配置；量子公司通过 Fork 管理自己的发行版
 - OpenQuantum 只通过 preset、Cordis 配置和受支持扩展点进行组合；
 - 不修改 `node_modules` 中的 Harness 实现；优先向上游贡献通用修复。
 
-### Skill
+### 量子扩展内容
 
-- 保存量子问题的作用域、工作流、Prompt、输入输出约定、Validator 和 eval；
-- 强制规则由 Tool、MCP、schema 或 Validator 实现，不能只写在 Prompt；
-- 每个 Skill 自包含自己的科学差异，避免在 Harness 核心增加算法分支。
+- Harness Skill 只保存量子问题的作用域、工作流、Prompt 和工具使用说明；
+- MCP/Tool 独立注册并提供确定性执行能力；
+- OpenQuantum Validator/eval 独立实现可强制的科学规则，由 Tool、插件或 CI 显式调用；
+- 三者由 Agent preset / Cordis 配置组合。源码可以共置以方便维护，但不存在自动的
+  Skill→MCP 或 Skill→Validator 绑定。
 
 ### Model
 
@@ -103,7 +105,7 @@ flowchart LR
   B --> C["Agent 加载 quantum-ground-state Skill"]
   C --> D["Harness 调用本地 stdio MCP"]
   D --> E["MCP 返回结构化计算 Artifact"]
-  E --> F["Skill Validator 独立检查"]
+  E --> F["OpenQuantum Validator 独立检查"]
   F --> G["Harness 记录事件与结果"]
   G --> H["UI 分开展示执行状态与科学状态"]
 ```
@@ -168,7 +170,8 @@ flowchart LR
 - 发布 Fork、Skill、MCP、preset 和 `dsh-plugin` 开发说明；
 - CI 运行 Skill、MCP、Harness 集成、UI E2E、lint、typecheck 和 build。
 
-退出条件：一个新开发者只读仓库文档即可在本机启动、运行黄金案例，并知道如何增加第二个 Skill/MCP。
+退出条件：一个新开发者只读仓库文档即可在本机启动、运行黄金案例，并知道如何按需增加独立的
+Skill、MCP 或 Validator，再由 preset 组合。
 
 ### 当前进度（2026-08-14）
 
@@ -188,7 +191,7 @@ Package、Acceptance Report 和 Result Commit 均通过复核。没有 Provider 
 
 | 检查 | 证明什么 |
 | --- | --- |
-| Skill unit / negative | 科学作用域、数值规则和失败路径正确 |
+| Skill discovery / instruction | frontmatter、触发范围、工作流和工具使用说明正确 |
 | Validator mutation | 缺字段、改单位、改数值或伪状态会被拒绝 |
 | MCP integration | Tool schema、stdio 生命周期、错误和超时正确 |
 | Harness integration | Skill 发现、MCP 调用、事件和权限使用原生机制 |
@@ -213,8 +216,9 @@ MVP 完成必须同时满足：
 
 ```text
 Fork OpenQuantum
-→ 增加原生 SKILL.md 与 Validator
-→ 增加或配置 MCP
+→ 按需增加原生 SKILL.md
+→ 按需增加或配置 MCP
+→ 有科学主张时增加独立 Validator / eval
 → 组合 Harness preset / dsh-plugin
 → 运行本地测试与 Harness E2E
 → 通过普通 Git PR 或维护自己的发行版发布

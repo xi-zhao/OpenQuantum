@@ -25,8 +25,9 @@ OpenQuantum 只增加量子 preset、初级 Skill、MCP、可信插件、科学 
 `HarnessTransportAdapter`。Session、Agent loop、Tool/Skill/MCP registry、权限、沙箱、模型、事件和持久化
 全部以 Harness 为权威实现。
 
-科学 Validator 仍然属于对应 Skill 的领域实现。它将 Harness 的“执行完成”与“科学验收通过”分开，
-但不形成新的 Runtime、安装系统或发布状态机。
+科学 Validator 是独立于 Harness Skill Registry 的领域实现，可以与 Skill 源码共置以提高 locality，
+但必须由 MCP/Tool 或可信插件显式调用。它将 Harness 的“执行完成”与“科学验收通过”分开，不形成新的
+Runtime、安装系统、发布状态机或 Skill→Validator 绑定协议。
 
 第一版明确不实现：
 

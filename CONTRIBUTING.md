@@ -6,8 +6,10 @@ OpenQuantum 是 DeepSeek Harness 的开源量子科研发行版。最常见的�
 ## 先判断变更放在哪里
 
 - **UI**：通用科研交互、事件和 Artifact 展示；不要加入公司或算法专用执行逻辑。
-- **Harness 配置**：Agent preset、Skill/MCP 组合、权限和模型 route；优先复用 Harness 原生能力。
-- **Skill**：量子工作流、Prompt、适用范围、科研产物、Validator、eval 和风险规则。
+- **Harness 配置**：Agent preset 负责组合彼此独立的 Skill、MCP/Tool、权限和模型 route；优先复用
+  Harness 原生能力。
+- **Skill**：量子工作流、Prompt、适用范围和工具使用说明；不拥有或自动启动 MCP。
+- **Validator/eval**：OpenQuantum 的确定性科学规则；由 Tool/插件显式调用，不是 Harness Skill 子模块。
 - **MCP**：确定性计算、科学数据库或外部后端的工具接口。
 - **dsh-plugin**：只有原生 Skill、MCP 和配置无法表达的宿主行为；必须作为可信代码审查。
 - **Model**：通过 Harness Provider route 配置厂商模型、协议和凭证引用。
@@ -47,11 +49,14 @@ Session/workspace，不进入默认离线 CI，也不能用 Mock 结果替代。
 .agents/skills/<skill-name>/
 ├── SKILL.md
 ├── references/       # 领域规范与来源
-├── scripts/          # 可选：Skill 内部辅助程序
+├── scripts/          # 可选：与工作流共置的仓库辅助程序
 ├── schemas/          # 可选：输入与 Artifact schema
-├── validators/       # 确定性科学检查
+├── validators/       # 可选：独立的确定性科学检查
 └── test/             # 正例、负例和边界测试
 ```
+
+其中只有 `SKILL.md` 会被 Harness Skill provider 当作 Skill 加载。其余目录只是为了让同一科研纵切的
+源码便于审查而共置；Harness 不会因此自动启动程序、注册 MCP 或执行 Validator。
 
 保持作用域小而明确。`SKILL.md` 可以指导 Agent，但以下规则不能只写在 Prompt 中：
 
@@ -118,8 +123,9 @@ Agent/Session/Tool call 取得执行身份，通过 `ctx.fs` 在 Session workspa
 不要把“固定 commit”误解为沙箱：本地社区 MCP 仍是宿主进程，默认关闭与代码审查是当前边界。
 
 设置中心创建的自定义 MCP 必须默认关闭、使用独立 `serverName`，参数以数组直接交给进程，禁止拼成 Shell
-命令。自定义 Skill 只生成标准 `SKILL.md`；需要脚本、schema、Validator 或 eval 的复杂 Skill，应直接在
-`.agents/skills/<name>` 中开发并提交完整测试。不要让 UI 成为绕过代码审查的远程安装器。
+命令。自定义 Skill 只生成标准 `SKILL.md`；复杂科研扩展可以把脚本、schema、Validator 或 eval 与 Skill
+共置在 `.agents/skills/<name>` 以便审查，但 MCP 仍需在 preset 中独立注册，Validator 仍需由 Tool/插件
+显式调用。不要让 UI 成为绕过代码审查的远程安装器。
 
 ### 让科学结果在 UI 中可回放
 
@@ -155,7 +161,8 @@ Harness 的 MCP bridge 负责进程、重连、Tool registry 和调用；不要�
 ## 科学验证
 
 执行状态与科学状态必须分开：Harness `idle` 或模型给出答案，不表示科学验收通过。科学结论必须来自
-与 Skill 一起维护的确定性 Validator，并有固定正例、负例、篡改例和作用域外案例。
+独立的确定性 Validator；它可以与 Skill 一起维护，但不会由 Skill Registry 自动执行，并且必须有固定
+正例、负例、篡改例和作用域外案例。
 
 Skill 实现者不能单独放宽自己的科学门槛。涉及阈值、作用域或验收结论的改动，应由独立领域审阅者复核。
 

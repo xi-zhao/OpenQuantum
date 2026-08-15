@@ -6,11 +6,15 @@
 
 ## 1. 准入模型
 
-一个候选能力不是“找到一个仓库就安装”，而是下面三个对象的组合：
+一个候选能力不是“找到一个仓库就安装”，而是先判断需要下面哪些独立模块：
 
 1. **Skill**：限定问题、工作流、工具选择和解释边界；
-2. **MCP / Tool**：产生可观察的执行事实；
-3. **Validator / eval**：对需要强制的科学主张做独立检查。
+2. **MCP / Tool**：需要确定性执行或外部系统时，产生可观察事实；
+3. **Validator / eval**：存在科学主张时，对该主张做独立检查。
+
+DeepSeek Harness 不会把这三者绑定成一个对象。Skill 进入 `ctx.skills`，MCP Tool 进入 `ctx.tools`，
+Validator 是 OpenQuantum 的确定性实现；Agent preset / Cordis 才是它们的组合 seam。为维护 locality，
+源码可以共置在一个目录，但每个运行模块仍需独立注册或调用。
 
 每个候选进入四种状态之一：
 
@@ -25,7 +29,7 @@
 
 | 能力 | 形式 | 默认状态 | 说明 |
 | --- | --- | --- | --- |
-| `quantum-ground-state` | Skill + 本地 MCP + Validator | 开启 | 窄作用域二量子位 VQE 参考能力 |
+| `quantum-ground-state` | 独立 Skill / 本地 MCP / Validator | 开启 | 由 preset 组合的窄作用域二量子位 VQE 参考能力 |
 | Qiskit Circuits | 官方 MCP | 开启 | QASM/QPY、转译、分析和优化比较 |
 | Qiskit Docs | 官方 MCP | 开启 | 文档搜索、页面读取和错误码查询 |
 | `qiskit-circuit-workbench` | Skill | 开启 | 把两项 Qiskit MCP 组织成可审查电路工作流 |
@@ -76,8 +80,9 @@ Qiskit MCP 来自官方 Apache-2.0 项目
 
 1. 在 `.agents/skills/<name>/` 增加标准 `SKILL.md`；
 2. 必要时把确定性计算封装成 stdio / Streamable HTTP MCP；
-3. 在同一个 Skill 中提供 schema、Validator 和固定正负 eval；
-4. 在 `runtime/openquantum/` 组合 Harness 原生 MCP client；
+3. 有科学主张时提供 schema、Validator 和固定正负 eval；这些文件可以与 Skill 共置，但不会被 Harness
+   Skill Registry 自动执行；
+4. 在 `runtime/openquantum/` 的 preset / Cordis 配置中独立注册并组合 MCP client；
 5. 说明许可证、凭据、网络、成本和失败边界；
 6. 通过 Skill 校验、单元测试和真实 Harness `skill.list` / Tool 注册检查。
 

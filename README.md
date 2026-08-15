@@ -14,7 +14,8 @@ OpenQuantum 是一个基于 [DeepSeek Harness](https://github.com/deepseek-ai/de
 1. **UI**：展示会话、工具调用、科研产物和验收结果，只通过薄 transport adapter 与 Harness 通信。
 2. **Harness**：直接复用 DeepSeek Harness 的 Session、Agent、Tool、Skill、MCP、Plugin、审批、权限、
    沙箱、模型路由、事件日志和持久化。
-3. **Skill**：保存量子领域工作流、Prompt、Tool/MCP 使用方法、科研产物约定、Validator 和 eval。
+3. **量子扩展内容**：Harness Skill 保存领域工作流和 Prompt；独立 MCP/Tool 负责执行；OpenQuantum
+   Validator/eval 负责可强制的科学规则。三者由 Agent preset 组合，不存在 Skill 自动绑定 MCP 的机制。
 4. **Model**：通过 Harness Provider route 接入云厂商模型；OpenQuantum 不另建模型调用 Runtime。
 
 OpenQuantum 的原则是：
@@ -32,7 +33,7 @@ OpenQuantum 的原则是：
 - 第一批作用域清楚、可测试的量子 Skill；
 - 通过 Harness 原生 MCP client 接入的科学计算工具；
 - 在原生配置不足时才使用的、经过审查的 `dsh-plugin`；
-- 与 Skill 同目录维护的确定性科学 Validator 和 eval；
+- 可为维护 locality 与 Skill 共置、但由 Tool/插件独立调用的科学 Validator 和 eval；
 - 展示科研产物与“执行状态 / 科学验收状态”的必要 UI；
 - 隔离 Harness 预览版接口变化的薄 `HarnessTransportAdapter`。
 
@@ -136,8 +137,9 @@ OpenQuantum 直接通过 DeepSeek Harness 原生 MCP Client 使用
 配置或 Token 后需重启 Harness。IBM 云服务可能访问外部网络、提交有配额或成本的任务，因此保持显式选择，
 不会随项目默认启动。
 
-`quantum-ground-state` 不被官方 MCP 替代：它仍是 OpenQuantum 的窄作用域参考 Skill，负责可复现求解、
-独立 Validator 和科学验收；官方 Qiskit MCP 提供通用电路、文档及可选云后端能力。
+`quantum-ground-state` 不被官方 MCP 替代：它的 Skill 负责窄作用域工作流，独立本地 MCP 负责求解，
+Validator 与中央规则负责科学验收；这些模块由 OpenQuantum Agent preset 组合。官方 Qiskit MCP 则独立
+提供通用电路、文档及可选云后端能力。
 
 ### 社区 Quantum Hardware MCP
 
@@ -214,4 +216,4 @@ Tool Calling 仍要求先配置 `OPENQUANTUM_PUBLIC_API_KEY` 或 `OPENQUANTUM_PR
 - API Key 不进入客户端 bundle、Artifact、日志或 Git；
 - Session event log 是执行事实的来源；
 - Harness 执行完成不等于科学验收通过；
-- 只有真实 Result Package 字节通过 Skill Validator，且中央 Profile 规则派生为 `passed` 后，UI 才能显示“验收：通过”。
+- 只有真实 Result Package 字节通过 OpenQuantum Validator，且中央 Profile 规则派生为 `passed` 后，UI 才能显示“验收：通过”。

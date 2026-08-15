@@ -12,7 +12,7 @@ OpenQuantum 是 DeepSeek Harness 的开源量子科研发行版，不是新的 A
 
 1. **UI**：展示 Harness 会话、交互、工具调用和科研结果；
 2. **Harness**：提供 Session、Agent、Turn、Goal、Job、Tool、Skill、MCP、Plugin、权限、沙箱、模型和持久化；
-3. **Skill**：保存量子问题的作用域、工作流、科学产物、Validator 和 eval；
+3. **量子扩展内容**：独立的 Harness Skill、MCP/Tool 与 OpenQuantum Validator/eval，由 preset 组合；
 4. **Model**：通过 Harness Provider route 提供推理和 Tool Calling。
 
 核心原则是：
@@ -53,9 +53,9 @@ DeepSeek Harness 仍处于 Developer Preview，因此上游接口可能发生破
 | 审批、权限和沙箱 | Harness policy / approval / sandbox | 否 |
 | 模型调用 | Harness Provider route / Model Adapter | 否 |
 | 持久化、回放与恢复 | Harness Session event log | 否 |
-| 量子工作流与科学规则 | OpenQuantum Skill | 是，作为领域内容 |
+| 量子工作流与解释边界 | Harness Skill | 是，作为模型指令内容 |
 | 确定性科学计算 | OpenQuantum MCP / Tool | 是，作为工具实现 |
-| 科学验收 | Skill Validator | 是，作为领域规则 |
+| 科学验收 | OpenQuantum Validator + Profile | 是，通过 Tool/可信插件独立调用 |
 
 `Experiment`、`Artifact`、`Provenance` 和 `Scientific Acceptance` 是对 Harness 执行事实的科研解释，
 不是新的 Runtime 状态机。
@@ -94,13 +94,27 @@ Harness 是通用执行权威，拥有：
 OpenQuantum 只通过 `runtime/openquantum/` 中的 patch/preset 组合这些能力，不修改 `node_modules`，也不把
 Harness 通用职责搬进应用代码。
 
-### 4.3 Skill
+### 4.3 量子扩展内容
+
+DeepSeek Harness 在这里提供三个彼此独立的 seam：
+
+| 模块 | Harness Interface | 职责 | 不负责 |
+| --- | --- | --- | --- |
+| Skill | `ctx.skills` / `skill` Tool | 发现并加载名称、描述、Markdown 指令和资源基址 | 启动 MCP、注册 Tool、执行 Validator |
+| MCP Client | `ctx.tools` | 连接外部 MCP Server，把 Tool 独立注册为 `mcp__<server>__<tool>` | 加载 Skill、理解领域工作流 |
+| Agent preset / Cordis | 组合配置 | 在同一 Agent scope 中挂载 Skill provider、MCP、权限和模型 | 创造新的 Skill→MCP 绑定协议 |
+
+Validator/eval 不是 Harness Skill Registry 的子模块，而是 OpenQuantum 的确定性科学实现。它们必须由
+MCP Tool、普通 Tool、CI 或可信 `dsh-plugin` 显式调用。模型加载 Skill 不会自动执行 Validator。
+
+#### Harness Skill
 
 Harness 原生入口是 `.agents/skills/<skill-name>/SKILL.md`。同目录可以包含：
 
 ```text
 .agents/skills/<skill-name>/
 ├── SKILL.md                 # Harness 原生入口和工作流
+├── agents/openai.yaml       # 可选的跨 Agent UI 元数据；Harness filesystem provider 不读取
 ├── references/             # 领域约定和作用域
 ├── inputs/                 # 输入 schema
 ├── scripts/                # 确定性本地实现
@@ -111,10 +125,16 @@ Harness 原生入口是 `.agents/skills/<skill-name>/SKILL.md`。同目录可以
 ```
 
 `capability.yaml`、Acceptance Profile、Result/Report schema 是 OpenQuantum 的科研合同约定，用来组织并测试
-科学证据。它们不是插件安装协议，也不会取代 Harness 的 Skill registry、MCP client、权限或持久化。
+科学证据。它们不是 Harness Skill 字段、插件安装协议或 Skill→MCP 绑定，也不会取代 Harness 的 Skill
+registry、MCP client、权限或持久化。
 
 `SKILL.md` 是模型指令，不能独自强制安全或科学正确性。必须强制的规则放在 Tool/MCP 输入校验、确定性
 Validator 或可信 `dsh-plugin` 中，并由 Harness 调用。
+
+把 MCP、Validator、schema 或 eval 源码放在同一 `.agents/skills/<name>/` 目录只是一项 locality 约定：
+相关科学知识可以一起审查和版本化。MCP 仍需在 preset 中独立注册，Validator 仍需由 Tool/插件显式调用。
+同理，`agents/openai.yaml` 可以服务其他 Agent/Codex 客户端，但不能作为 DeepSeek Harness 的 Skill 配置或
+依赖声明；Harness filesystem provider 的权威入口仍是 `SKILL.md` frontmatter 与正文。
 
 ### 4.4 Model
 
@@ -126,10 +146,11 @@ credential store。
 
 按从轻到重的顺序选择扩展点：
 
-1. **Skill**：领域知识、步骤、边界和工具使用说明；
-2. **MCP**：确定性计算、科学后端、数据库或外部服务；
-3. **preset / Cordis 配置**：组合 Agent、Skill、MCP、权限和模型 route；
-4. **`dsh-plugin`**：只有原生配置不能表达宿主行为时才使用。
+1. **Skill**：仅在需要领域知识、步骤、边界和工具使用说明时增加；
+2. **MCP**：仅在需要确定性计算、科学后端、数据库或外部服务时增加；
+3. **Validator/eval**：仅在存在可验证科学主张时增加，由 Tool/插件显式调用；
+4. **preset / Cordis 配置**：组合 Agent、Skill、MCP、权限和模型 route；
+5. **`dsh-plugin`**：只有原生配置不能表达宿主行为时才使用。
 
 `dsh-plugin` 与仓库内 stdio MCP 都是可信宿主代码，必须在 Fork 中显式审查和锁定依赖。第一版不从远程
 自动安装用户提供的命令、Cordis patch 或插件。
@@ -177,8 +198,8 @@ materialized-validation Tool 继续作为高级接口。
 | 维度 | 示例状态 | 权威来源 |
 | --- | --- | --- |
 | 执行 | pending / running / idle / failed / cancelled | Harness events |
-| 科学验收 | not_evaluated / passed / conditional / failed | Skill Validator + Profile |
-| 评分 | unscored / invalid / valid | Skill eval runner |
+| 科学验收 | not_evaluated / passed / conditional / failed | OpenQuantum Validator + Profile |
+| 评分 | unscored / invalid / valid | OpenQuantum eval runner |
 | 复现 | not_attempted / reproduced / not_reproduced | 独立复现证据 |
 
 必须始终满足：
@@ -188,8 +209,8 @@ materialized-validation Tool 继续作为高级接口。
 3. Runtime 完成不等于科学验收通过；
 4. 模型只能解释 Validator 结果，不能改写它；
 5. 有副作用或付费操作仍通过 Harness Tool、权限和审批；
-6. Skill/MCP 失败必须形成可观察失败，不能降级为模型猜测；
-7. 新增量子场景优先新增 Skill/MCP，不修改 Harness 核心；
+6. Skill 加载或 MCP 调用失败必须形成可观察失败，不能降级为模型猜测；
+7. 新增量子场景按需增加独立 Skill、MCP/Tool 和 Validator，并由 preset 组合，不修改 Harness 核心；
 8. 更换模型 Provider 不修改量子科学规则。
 
 ## 8. 部署与依赖方向
@@ -232,7 +253,7 @@ MVP 完成需要证明：
 - UI 输入最终进入真实 Harness Session，而不是 Mock Runtime；
 - Runtime 与 Scientific 状态分开展示；
 - 关闭并重启 Harness 后，Session 可由原生事件日志恢复；
-- 一个新开发者能按文档增加第二个 Skill/MCP，而无需修改 Harness 核心。
+- 一个新开发者能按文档增加独立的 Skill、MCP 或 Validator，并由 preset 组合，而无需修改 Harness 核心。
 
 完整实施顺序见 [`../roadmap/DEVELOPMENT_PLAN.md`](../roadmap/DEVELOPMENT_PLAN.md)。
 
