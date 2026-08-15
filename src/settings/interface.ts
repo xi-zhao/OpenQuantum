@@ -105,15 +105,6 @@ export type SettingsCommand =
       readonly userInvocable: boolean;
     }
   | {
-      readonly type: "skill.create";
-      readonly name: string;
-      readonly displayName: string;
-      readonly description: string;
-      readonly instructions: string;
-      readonly modelInvocable: boolean;
-      readonly userInvocable: boolean;
-    }
-  | {
       readonly type: "skill.remove";
       readonly name: string;
       readonly revision: string;
@@ -132,7 +123,7 @@ export type SettingsCommand =
       };
     }
   | {
-      readonly type: "mcp.create";
+      readonly type: "mcp.register";
       readonly revision: string;
       readonly serverName: string;
       readonly transport: "stdio" | "streamable-http";

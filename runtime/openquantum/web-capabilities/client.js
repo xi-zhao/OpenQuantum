@@ -20,6 +20,7 @@ globalThis.__ModuleLoader__.load({
       .oq-cap-credential{display:grid;grid-template-columns:minmax(0,1fr) minmax(180px,.7fr);gap:12px;align-items:end}.oq-cap-field{display:flex;flex-direction:column;gap:5px}.oq-cap-field label,.oq-cap-field>span{color:var(--dsw-alias-label-secondary);font-size:11px}.oq-cap-input,.oq-cap-select,.oq-cap-textarea{box-sizing:border-box;width:100%;border:1px solid var(--dsw-alias-border-l2);border-radius:8px;background:var(--dsw-alias-bg-layer-1);color:var(--dsw-alias-label-primary);font:inherit;font-size:12px;padding:8px 10px;outline:none}.oq-cap-input:focus,.oq-cap-select:focus,.oq-cap-textarea:focus{border-color:var(--dsw-alias-state-business-primary)}.oq-cap-textarea{min-height:78px;resize:vertical}.oq-cap-secret-help{color:var(--dsw-alias-label-tertiary);font-size:10px;line-height:16px;margin:5px 0 0}
       .oq-cap-notice,.oq-cap-error,.oq-cap-loading{border-radius:9px;font-size:12px;line-height:19px;margin:12px 0;padding:9px 11px}.oq-cap-notice{background:color-mix(in srgb,var(--dsw-alias-state-success-primary) 10%,transparent);color:var(--dsw-alias-state-success-primary)}.oq-cap-error{background:color-mix(in srgb,var(--dsw-alias-state-error-primary) 10%,transparent);color:var(--dsw-alias-state-error-primary)}.oq-cap-loading{color:var(--dsw-alias-label-tertiary);padding-left:0}
       .oq-cap-empty{color:var(--dsw-alias-label-tertiary);font-size:12px}.oq-cap-group{border-top:1px solid var(--dsw-alias-border-l2);margin-top:18px;padding-top:15px}.oq-cap-group summary{cursor:pointer;font-size:13px;font-weight:600}.oq-cap-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}.oq-cap-span{grid-column:1/-1}
+      .oq-cap-discovery{background:var(--dsw-alias-bg-module-platform);border-radius:10px;margin-top:12px;padding:12px}.oq-cap-discovery p{color:var(--dsw-alias-label-secondary);font-size:11px;line-height:18px;margin:0}.oq-cap-path{background:var(--dsw-alias-bg-layer-1);border:1px solid var(--dsw-alias-border-l2);border-radius:7px;color:var(--dsw-alias-label-primary);display:block;font-family:var(--ds-font-family-code);font-size:11px;margin:9px 0;padding:8px 10px;word-break:break-all}
       @media(max-width:700px){.oq-cap-grid,.oq-cap-metrics,.oq-cap-form,.oq-cap-relationship{grid-template-columns:1fr}.oq-cap-credential{grid-template-columns:1fr}.oq-cap-relation{justify-content:flex-start}.oq-cap-span{grid-column:auto}}
     `;
     const styleId = "openquantum-capability-settings";
@@ -131,7 +132,6 @@ globalThis.__ModuleLoader__.load({
       const [busy, setBusy] = React.useState(null);
       const [error, setError] = React.useState(null);
       const [notice, setNotice] = React.useState(null);
-      const [skillDraft, setSkillDraft] = React.useState({ name: "", displayName: "", description: "", instructions: "" });
       const [mcpDraft, setMcpDraft] = React.useState({ serverName: "", transport: "stdio", target: "", args: "", credentialRef: "" });
 
       const loadCredentials = React.useCallback(async (nextSnapshot) => {
@@ -235,15 +235,10 @@ globalThis.__ModuleLoader__.load({
         onNotice: setNotice,
       }));
 
-      const createSkill = async (event) => {
-        event.preventDefault();
-        await runProject("skill:create", { action: "skill.create", ...skillDraft, modelInvocable: true, userInvocable: true }, "自定义 Skill 已创建，新会话可用。 ");
-        setSkillDraft({ name: "", displayName: "", description: "", instructions: "" });
-      };
       const createMcp = async (event) => {
         event.preventDefault();
         const stdio = mcpDraft.transport === "stdio";
-        await runProject("mcp:create", { action: "mcp.create", revision: snapshot.mcpRevision, serverName: mcpDraft.serverName, transport: mcpDraft.transport, ...(stdio ? { command: mcpDraft.target, args: mcpDraft.args.split("\n").map((item) => item.trim()).filter(Boolean), ...(mcpDraft.credentialRef.trim() ? { credentialRef: mcpDraft.credentialRef.trim() } : {}) } : { url: mcpDraft.target }) }, "自定义 MCP 已创建并保持关闭；检查配置后再启用。 ");
+        await runProject("mcp:register", { action: "mcp.register", revision: snapshot.mcpRevision, serverName: mcpDraft.serverName, transport: mcpDraft.transport, ...(stdio ? { command: mcpDraft.target, args: mcpDraft.args.split("\n").map((item) => item.trim()).filter(Boolean), ...(mcpDraft.credentialRef.trim() ? { credentialRef: mcpDraft.credentialRef.trim() } : {}) } : { url: mcpDraft.target }) }, "MCP Server 注册已保存并保持关闭；确认来源与配置后再启用。 ");
         setMcpDraft({ serverName: "", transport: "stdio", target: "", args: "", credentialRef: "" });
       };
 
@@ -282,26 +277,30 @@ globalThis.__ModuleLoader__.load({
         h("div", { className: "oq-cap-tab-intro" }, h("strong", null, tabIntro[0]), h("span", null, tabIntro[1])),
         activeCards.length ? h("div", { className: "oq-cap-grid" }, activeCards) : h("p", { className: "oq-cap-empty" }, "暂无能力配置。"),
         tab === "mcp" ? h("details", { className: "oq-cap-group" },
-          h("summary", null, "添加独立 MCP 组件"),
+          h("summary", null, "注册已有 MCP Server"),
+          h("div", { className: "oq-cap-discovery" },
+            h("p", null, "这里只向 Harness preset 写入一条 MCP 连接配置，不会下载、安装或创建 MCP Server。stdio 命令必须已在本机可用；HTTP 端点必须已经部署并经过审查。"),
+          ),
           h("form", { className: "oq-cap-form", onSubmit: createMcp },
-            h("div", { className: "oq-cap-field" }, h("label", null, "Server name"), h("input", { className: "oq-cap-input", required: true, pattern: "[A-Za-z0-9_-]{1,32}", value: mcpDraft.serverName, onChange: (event) => setMcpDraft({ ...mcpDraft, serverName: event.currentTarget.value }) })),
+            h("div", { className: "oq-cap-field" }, h("label", null, "Server ID"), h("input", { className: "oq-cap-input", required: true, pattern: "[A-Za-z0-9_-]{1,32}", value: mcpDraft.serverName, onChange: (event) => setMcpDraft({ ...mcpDraft, serverName: event.currentTarget.value }) })),
             h("div", { className: "oq-cap-field" }, h("label", null, "传输"), h("select", { className: "oq-cap-select", value: mcpDraft.transport, onChange: (event) => setMcpDraft({ ...mcpDraft, transport: event.currentTarget.value }) }, h("option", { value: "stdio" }, "stdio"), h("option", { value: "streamable-http" }, "streamable-http"))),
-            h("div", { className: "oq-cap-field oq-cap-span" }, h("label", null, mcpDraft.transport === "stdio" ? "命令" : "URL"), h("input", { className: "oq-cap-input", required: true, value: mcpDraft.target, placeholder: mcpDraft.transport === "stdio" ? "uvx" : "https://mcp.example.com/", onChange: (event) => setMcpDraft({ ...mcpDraft, target: event.currentTarget.value }) })),
+            h("div", { className: "oq-cap-field oq-cap-span" }, h("label", null, mcpDraft.transport === "stdio" ? "已有 MCP 程序命令" : "已部署 MCP URL"), h("input", { className: "oq-cap-input", required: true, value: mcpDraft.target, placeholder: mcpDraft.transport === "stdio" ? "uvx" : "https://mcp.example.com/", onChange: (event) => setMcpDraft({ ...mcpDraft, target: event.currentTarget.value }) })),
             mcpDraft.transport === "stdio" ? h(React.Fragment, null,
               h("div", { className: "oq-cap-field" }, h("label", null, "参数（每行一项）"), h("textarea", { className: "oq-cap-textarea", value: mcpDraft.args, onChange: (event) => setMcpDraft({ ...mcpDraft, args: event.currentTarget.value }) })),
               h("div", { className: "oq-cap-field" }, h("label", null, "凭据引用（可选）"), h("input", { className: "oq-cap-input", pattern: "[A-Za-z_][A-Za-z0-9_]*", value: mcpDraft.credentialRef, placeholder: "EXAMPLE_API_KEY", onChange: (event) => setMcpDraft({ ...mcpDraft, credentialRef: event.currentTarget.value }) })),
             ) : null,
-            h("div", { className: "oq-cap-span" }, h("button", { type: "submit", className: "oq-cap-button", "data-primary": "true", disabled }, "创建为关闭状态")),
+            h("div", { className: "oq-cap-span" }, h("button", { type: "submit", className: "oq-cap-button", "data-primary": "true", disabled }, "注册为关闭状态")),
           ),
         ) : null,
         tab === "skills" ? h("details", { className: "oq-cap-group" },
-          h("summary", null, "添加独立 Skill 组件"),
-          h("form", { className: "oq-cap-form", onSubmit: createSkill },
-            h("div", { className: "oq-cap-field" }, h("label", null, "Skill name"), h("input", { className: "oq-cap-input", required: true, pattern: "[a-z0-9]+(?:-[a-z0-9]+)*", value: skillDraft.name, onChange: (event) => setSkillDraft({ ...skillDraft, name: event.currentTarget.value }) })),
-            h("div", { className: "oq-cap-field" }, h("label", null, "显示名称"), h("input", { className: "oq-cap-input", required: true, value: skillDraft.displayName, onChange: (event) => setSkillDraft({ ...skillDraft, displayName: event.currentTarget.value }) })),
-            h("div", { className: "oq-cap-field oq-cap-span" }, h("label", null, "能力说明"), h("input", { className: "oq-cap-input", required: true, value: skillDraft.description, onChange: (event) => setSkillDraft({ ...skillDraft, description: event.currentTarget.value }) })),
-            h("div", { className: "oq-cap-field oq-cap-span" }, h("label", null, "工作流指令"), h("textarea", { className: "oq-cap-textarea", required: true, value: skillDraft.instructions, onChange: (event) => setSkillDraft({ ...skillDraft, instructions: event.currentTarget.value }) })),
-            h("div", { className: "oq-cap-span" }, h("button", { type: "submit", className: "oq-cap-button", "data-primary": "true", disabled }, "创建 Skill")),
+          h("summary", null, "添加现有 Skill"),
+          h("div", { className: "oq-cap-discovery" },
+            h("p", null, "Skill 由 Harness 文件系统 Provider 从项目目录发现。简单 Skill 只需要一个带 frontmatter 的 SKILL.md；复杂 Skill 可以在同一目录附带 references、scripts 或其他资源。"),
+            h("code", { className: "oq-cap-path" }, ".agents/skills/<skill-name>/SKILL.md"),
+            h("p", null, "通过 Git、解压或手动复制把完整 Skill 目录加入项目，然后重新扫描。设置中心只管理发现后的调用策略，不在表单里创作 Skill。"),
+            h("div", { className: "oq-cap-actions" },
+              h("button", { type: "button", className: "oq-cap-button", disabled: busy !== null, onClick: reload }, "重新扫描 Skill 目录"),
+            ),
           ),
         ) : null,
       );

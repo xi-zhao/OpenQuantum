@@ -93,14 +93,12 @@ export async function dispatchCapabilityCommand(projectRoot, command) {
       return settings.readProjectSettings(projectRoot);
     case "skill.update":
       return settings.updateSkillSettings(projectRoot, command);
-    case "skill.create":
-      return settings.createSkillSettings(projectRoot, command);
     case "skill.remove":
       return settings.removeSkillSettings(projectRoot, command);
     case "mcp.update":
       return settings.updateMcpSettings(projectRoot, command);
-    case "mcp.create":
-      return settings.createMcpSettings(projectRoot, command);
+    case "mcp.register":
+      return settings.registerMcpSettings(projectRoot, command);
     case "mcp.remove":
       return settings.removeMcpSettings(projectRoot, command);
     default:

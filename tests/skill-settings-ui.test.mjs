@@ -6,7 +6,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 
 import { SkillSettingsSection } from "../src/components/openquantum/settings/SkillSettingsSection";
 
-test("Skill settings exposes scaffold creation and only removes managed project Skills", () => {
+test("Skill settings discovers standard Skill directories instead of authoring instructions", () => {
   const markup = renderToStaticMarkup(
     createElement(SkillSettingsSection, {
       savingKey: null,
@@ -38,7 +38,10 @@ test("Skill settings exposes scaffold creation and only removes managed project 
     }),
   );
 
-  assert.match(markup, /添加自定义 Skill/);
+  assert.match(markup, /添加现有 Skill/);
+  assert.match(markup, /\.agents\/skills\/&lt;skill-name&gt;\/SKILL\.md/);
+  assert.match(markup, /不在表单中创作或安装 Skill/);
+  assert.doesNotMatch(markup, /Skill 指令（Markdown）|创建 Skill/);
   assert.match(markup, /Quantum Ground State/);
   assert.match(markup, /Project Flow/);
   assert.match(markup, /移除自定义 Skill/);

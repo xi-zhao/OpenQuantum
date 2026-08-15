@@ -295,14 +295,14 @@ test("settings adapter keeps IBM MCP credentials redacted and gates cloud enable
   assert.ok(projectCalls.some((call) => call.action === "mcp.remove"));
 
   await adapter.execute({
-    type: "mcp.create",
+    type: "mcp.register",
     revision: project.mcpRevision,
     serverName: "community_quantum",
     transport: "stdio",
     command: "uvx",
     args: ["community-quantum-mcp"],
   });
-  assert.ok(projectCalls.some((call) => call.action === "mcp.create"));
+  assert.ok(projectCalls.some((call) => call.action === "mcp.register"));
 });
 
 test("settings adapter blocks hardware MCP enablement until pinned source is ready", async (t) => {

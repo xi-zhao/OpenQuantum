@@ -7,8 +7,7 @@ import test from "node:test";
 import { parseDocument } from "yaml";
 
 import {
-  createMcpSettings,
-  createSkillSettings,
+  registerMcpSettings,
   ProjectSettingsConflictError,
   readProjectSettings,
   removeMcpSettings,
@@ -116,16 +115,18 @@ test("Skill invocation settings use revision CAS and official frontmatter", asyn
   );
 });
 
-test("custom Skill lifecycle stays Harness-native and removal is recoverable", async (t) => {
+test("legacy managed Skill removal stays recoverable without exposing a Skill authoring command", async (t) => {
   const root = await fixture(t);
-  const created = await createSkillSettings(root, {
-    name: "custom-quantum-flow",
-    displayName: "Custom Quantum Flow",
-    description: "Use this Skill for a project-specific workflow: never for cloud execution.",
-    instructions: "# Workflow\n\n1. Validate the input.\n2. Reuse an existing MCP tool.",
-    modelInvocable: false,
-    userInvocable: true,
-  });
+  await mkdir(path.join(root, ".agents/skills/custom-quantum-flow"), { recursive: true });
+  await writeFile(
+    path.join(root, ".agents/skills/custom-quantum-flow/.openquantum-settings.json"),
+    `${JSON.stringify({ schemaVersion: "1.0", kind: "openquantum-custom-skill", displayName: "Custom Quantum Flow" })}\n`,
+  );
+  await writeFile(
+    path.join(root, ".agents/skills/custom-quantum-flow/SKILL.md"),
+    "---\nname: custom-quantum-flow\ndescription: Use this Skill for a project-specific workflow; never for cloud execution.\ndisable-model-invocation: true\n---\n\n# Workflow\n",
+  );
+  const created = await readProjectSettings(root);
   const skill = created.skills.find((candidate) => candidate.name === "custom-quantum-flow");
   assert.equal(skill.managed, true);
   assert.equal(skill.displayName, "Custom Quantum Flow");
@@ -137,25 +138,6 @@ test("custom Skill lifecycle stays Harness-native and removal is recoverable", a
   );
   assert.match(raw, /disable-model-invocation: true/);
   assert.match(raw, /never for cloud execution/);
-  await assert.rejects(
-    createSkillSettings(root, {
-      name: "custom-quantum-flow",
-      displayName: "Duplicate",
-      description: "Must not replace the existing Skill.",
-      instructions: "# Duplicate",
-      modelInvocable: false,
-      userInvocable: true,
-    }),
-    /同名 Skill 已存在/,
-  );
-  assert.equal(
-    await readFile(
-      path.join(root, ".agents/skills/custom-quantum-flow/SKILL.md"),
-      "utf8",
-    ),
-    raw,
-  );
-
   const removed = await removeSkillSettings(root, {
     name: skill.name,
     revision: skill.revision,
@@ -288,10 +270,10 @@ test("hardware MCP setup state is bound to the reviewed local source", async (t)
   );
 });
 
-test("custom stdio MCP is created disabled with a dynamic credential and can be removed", async (t) => {
+test("custom stdio MCP is registered disabled with a dynamic credential and can be removed", async (t) => {
   const root = await fixture(t);
   const before = await readProjectSettings(root);
-  const created = await createMcpSettings(root, {
+  const created = await registerMcpSettings(root, {
     revision: before.mcpRevision,
     serverName: "community_quantum",
     transport: "stdio",
@@ -339,7 +321,7 @@ test("custom stdio MCP is created disabled with a dynamic credential and can be 
 test("custom HTTP MCP accepts only public HTTP(S) endpoints", async (t) => {
   const root = await fixture(t);
   const before = await readProjectSettings(root);
-  const created = await createMcpSettings(root, {
+  const created = await registerMcpSettings(root, {
     revision: before.mcpRevision,
     serverName: "public_remote",
     transport: "streamable-http",
@@ -351,7 +333,7 @@ test("custom HTTP MCP accepts only public HTTP(S) endpoints", async (t) => {
   assert.equal(server.managed, true);
 
   await assert.rejects(
-    createMcpSettings(root, {
+    registerMcpSettings(root, {
       revision: created.mcpRevision,
       serverName: "private_remote",
       transport: "streamable-http",

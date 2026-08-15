@@ -2,8 +2,7 @@ import {
   parseHarnessRequest,
 } from "../../../../harness/server/browser-boundary.mjs";
 import {
-  createMcpSettings,
-  createSkillSettings,
+  registerMcpSettings,
   ProjectSettingsConflictError,
   readProjectSettings,
   removeMcpSettings,
@@ -37,14 +36,12 @@ export async function POST(request: Request) {
         return json(await readProjectSettings(process.cwd()));
       case "skill.update":
         return json(await updateSkillSettings(process.cwd(), command));
-      case "skill.create":
-        return json(await createSkillSettings(process.cwd(), command));
       case "skill.remove":
         return json(await removeSkillSettings(process.cwd(), command));
       case "mcp.update":
         return json(await updateMcpSettings(process.cwd(), command));
-      case "mcp.create":
-        return json(await createMcpSettings(process.cwd(), command));
+      case "mcp.register":
+        return json(await registerMcpSettings(process.cwd(), command));
       case "mcp.remove":
         return json(await removeMcpSettings(process.cwd(), command));
       default:

@@ -124,7 +124,7 @@ test("MCP settings blocks shared token removal while a cloud consumer is enabled
   assert.match(markup, /移除已保存的 Token/);
 });
 
-test("MCP settings exposes add and guarded remove controls for project entries", () => {
+test("MCP settings exposes registration and guarded removal for project entries", () => {
   const markup = renderToStaticMarkup(
     createElement(McpSettingsSection, {
       revision: "c".repeat(64),
@@ -155,7 +155,8 @@ test("MCP settings exposes add and guarded remove controls for project entries",
     }),
   );
 
-  assert.match(markup, /添加 MCP 服务/);
+  assert.match(markup, /注册已有 MCP Server/);
+  assert.match(markup, /不下载、安装或创建 MCP Server/);
   assert.match(markup, /PROJECT/);
   assert.match(markup, />移除</);
 });

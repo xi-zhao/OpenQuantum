@@ -198,5 +198,11 @@ test("client plugin contributes the native settings section and uses Harness cre
   assert.match(client, /一个 Skill 可以使用多个 MCP/);
   assert.match(client, /由 Harness MCP Client 独立注册和启停/);
   assert.match(client, /可以调用已注册 Tool，但不会启动 MCP/);
+  assert.match(client, /添加现有 Skill/);
+  assert.match(client, /\.agents\/skills\/<skill-name>\/SKILL\.md/);
+  assert.match(client, /设置中心只管理发现后的调用策略，不在表单里创作 Skill/);
+  assert.doesNotMatch(client, /skill\.create|Skill 指令（Markdown）/);
+  assert.match(client, /注册已有 MCP Server/);
+  assert.match(client, /不会下载、安装或创建 MCP Server/);
   assert.doesNotMatch(client, /localStorage|sessionStorage/);
 });

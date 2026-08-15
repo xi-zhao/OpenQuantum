@@ -260,7 +260,7 @@ function McpCredentialEditor({ credential, enabledConsumers, saving, onSave }: M
   );
 }
 
-function CreateMcpForm({ revision, saving, onSave }: {
+function RegisterMcpForm({ revision, saving, onSave }: {
   revision: string;
   saving: boolean;
   onSave: (command: SettingsCommand) => void;
@@ -278,7 +278,7 @@ function CreateMcpForm({ revision, saving, onSave }: {
   if (!open) {
     return (
       <button type="button" onClick={() => setOpen(true)} className="mt-5 rounded-lg bg-[#0f9f91] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#0b887d]">
-        添加 MCP 服务
+        注册已有 MCP Server
       </button>
     );
   }
@@ -287,16 +287,16 @@ function CreateMcpForm({ revision, saving, onSave }: {
     <article className="mt-5 rounded-2xl border border-[#b8dcd7] bg-[#f1fbf9] p-5">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h3 className="font-semibold text-[#162936]">连接 Harness 原生 MCP</h3>
+          <h3 className="font-semibold text-[#162936]">注册 Harness 原生 MCP Server</h3>
           <p className="mt-1 text-xs leading-5 text-[#617682]">
-            新服务先以关闭状态写入项目 preset。启用 stdio 服务会执行所填程序，请只使用可信来源。
+            这里只写入 MCP 连接配置，不会下载、安装或创建 Server。stdio 程序必须已在本机可用，HTTP 端点必须已经部署并经过审查。
           </p>
         </div>
         <button type="button" onClick={() => setOpen(false)} className="text-xs font-medium text-[#617682] hover:text-[#162936]">收起</button>
       </div>
       <div className="mt-4 grid gap-4 sm:grid-cols-2">
         <label className="text-xs font-medium text-[#526673]">
-          Server Name
+          Server ID
           <input className={numberClass} value={serverName} onChange={(event) => setServerName(event.target.value)} placeholder="my_quantum_tools" />
           <span className="mt-1 block text-[10px] text-[#728793]">用于 mcp__server__tool 命名，最多 32 个字符。</span>
         </label>
@@ -312,7 +312,7 @@ function CreateMcpForm({ revision, saving, onSave }: {
         <>
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
             <label className="text-xs font-medium text-[#526673]">
-              可执行程序
+              已有 MCP 程序命令
               <input className={numberClass} value={command} onChange={(event) => setCommand(event.target.value)} placeholder="uvx" />
             </label>
             <label className="text-xs font-medium text-[#526673]">
@@ -338,7 +338,7 @@ function CreateMcpForm({ revision, saving, onSave }: {
           type="button"
           disabled={saving || !valid}
           onClick={() => onSave({
-            type: "mcp.create",
+            type: "mcp.register",
             revision,
             serverName,
             transport,
@@ -348,7 +348,7 @@ function CreateMcpForm({ revision, saving, onSave }: {
           })}
           className="rounded-lg bg-[#0f9f91] px-4 py-2 text-sm font-semibold text-white hover:bg-[#0b887d] disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {saving ? "添加中…" : "添加为关闭状态"}
+          {saving ? "注册中…" : "注册为关闭状态"}
         </button>
       </div>
     </article>
@@ -362,9 +362,9 @@ export function McpSettingsSection({ servers, credentials, revision, savingKey, 
     <div>
       <h2 className="text-xl font-semibold tracking-[-0.025em] text-[#162936]">MCP 服务</h2>
       <p className="mt-2 text-sm leading-6 text-[#617682]">
-        这里管理 DeepSeek Harness 原生 MCP Client 的连接策略。OpenQuantum 不另建 MCP Runtime。
+        这里只注册和管理 DeepSeek Harness 原生 MCP Client 的连接配置；OpenQuantum 不下载、安装或创建 MCP Server，也不另建 MCP Runtime。
       </p>
-      <CreateMcpForm revision={revision} saving={savingKey === "mcp:create"} onSave={(command) => onSave(command, "mcp:create")} />
+      <RegisterMcpForm revision={revision} saving={savingKey === "mcp:register"} onSave={(command) => onSave(command, "mcp:register")} />
       {credentials.length > 0 ? (
         <div className="mt-6 space-y-4">
           {credentials.map((credential) => (

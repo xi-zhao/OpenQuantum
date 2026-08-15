@@ -141,7 +141,6 @@ export class HarnessSettingsAdapter implements OpenQuantumSettingsPort {
         await this.updateModel(command, signal);
         break;
       case "skill.update":
-      case "skill.create":
       case "skill.remove":
         await projectRequest({ action: command.type, ...command }, signal);
         break;
@@ -151,7 +150,7 @@ export class HarnessSettingsAdapter implements OpenQuantumSettingsPort {
       case "mcp.credential.update":
         await this.updateMcpCredential(command, signal);
         break;
-      case "mcp.create":
+      case "mcp.register":
         await projectRequest({ action: command.type, ...command }, signal);
         break;
       case "mcp.remove":

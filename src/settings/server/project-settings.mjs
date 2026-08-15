@@ -8,7 +8,6 @@ import {
   readFile,
   realpath,
   rename,
-  rmdir,
   unlink,
 } from "node:fs/promises";
 import path from "node:path";
@@ -24,8 +23,6 @@ const SHA256 = /^[a-f0-9]{64}$/;
 const AGENT_CONFIG = "runtime/openquantum/agent-presets/openquantum/agent.cordis.yml";
 const CUSTOM_MCP_ID_PREFIX = "mcp-user-";
 const MANAGED_SKILL_MARKER = ".openquantum-settings.json";
-const MAX_SKILL_DESCRIPTION_BYTES = 2048;
-const MAX_SKILL_INSTRUCTIONS_BYTES = 64 * 1024;
 const MAX_MCP_ARGUMENTS = 32;
 const MAX_MCP_ARGUMENT_BYTES = 1024;
 const MCP_PLUGIN_NAMES = new Set([
@@ -638,73 +635,6 @@ export async function updateSkillSettings(projectRoot, input) {
   return readProjectSettings(projectRoot);
 }
 
-export async function createSkillSettings(projectRoot, input) {
-  if (!isRecord(input) || typeof input.name !== "string" || !SKILL_NAME.test(input.name)) {
-    throw new TypeError("Skill 名称无效");
-  }
-  const displayName = requiredText(input.displayName, "displayName", 128);
-  const description = requiredText(
-    input.description,
-    "description",
-    MAX_SKILL_DESCRIPTION_BYTES,
-  );
-  const instructions = requiredText(
-    input.instructions,
-    "instructions",
-    MAX_SKILL_INSTRUCTIONS_BYTES,
-  );
-  assertBoolean(input.modelInvocable, "modelInvocable");
-  assertBoolean(input.userInvocable, "userInvocable");
-
-  const skillsRoot = await containedDirectory(projectRoot, ".agents/skills", {
-    create: true,
-  });
-  const target = path.join(skillsRoot, input.name);
-  const frontmatterValue = {
-    name: input.name,
-    description,
-    ...(input.modelInvocable ? {} : { "disable-model-invocation": true }),
-    ...(input.userInvocable ? {} : { "user-invocable": false }),
-  };
-  const header = parseDocument("");
-  header.contents = header.createNode(frontmatterValue);
-  let createdDirectory = false;
-
-  try {
-    await mkdir(target, { mode: 0o700 });
-    createdDirectory = true;
-    await atomicWrite(
-      path.join(target, MANAGED_SKILL_MARKER),
-      `${JSON.stringify(
-        {
-          schemaVersion: "1.0",
-          kind: "openquantum-custom-skill",
-          displayName,
-        },
-        null,
-        2,
-      )}\n`,
-      0o644,
-    );
-    await atomicWrite(
-      path.join(target, "SKILL.md"),
-      `---\n${header.toString().trimEnd()}\n---\n\n${instructions}\n`,
-      0o644,
-    );
-  } catch (error) {
-    if (createdDirectory) {
-      await unlink(path.join(target, "SKILL.md")).catch(() => undefined);
-      await unlink(path.join(target, MANAGED_SKILL_MARKER)).catch(() => undefined);
-      await rmdir(target).catch(() => undefined);
-    }
-    if (error && typeof error === "object" && error.code === "EEXIST") {
-      throw new TypeError("同名 Skill 已存在");
-    }
-    throw error;
-  }
-  return readProjectSettings(projectRoot);
-}
-
 export async function removeSkillSettings(projectRoot, input) {
   if (!isRecord(input) || typeof input.name !== "string" || !SKILL_NAME.test(input.name)) {
     throw new TypeError("Skill 名称无效");
@@ -795,7 +725,7 @@ export async function updateMcpSettings(projectRoot, input) {
   return readProjectSettings(projectRoot);
 }
 
-export async function createMcpSettings(projectRoot, input) {
+export async function registerMcpSettings(projectRoot, input) {
   if (!isRecord(input) || typeof input.serverName !== "string" || !SERVER_NAME.test(input.serverName)) {
     throw new TypeError("MCP serverName 无效");
   }
