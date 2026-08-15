@@ -29,6 +29,40 @@ const OPENQUANTUM_MANIFEST = JSON.stringify(
   2,
 );
 
+const OPENQUANTUM_COPY = Object.freeze({
+  "探索未至之境": "探索开发的量子世界",
+  "Into the Unknown": "Explore and build the quantum world",
+});
+
+const OPENQUANTUM_COPY_SCRIPT = `(() => {
+  const replacements = ${JSON.stringify(OPENQUANTUM_COPY)};
+
+  function replaceText(node) {
+    if (node.nodeType === Node.TEXT_NODE) {
+      const replacement = replacements[node.nodeValue];
+      if (replacement !== undefined) node.nodeValue = replacement;
+      return;
+    }
+
+    for (const child of node.childNodes) replaceText(child);
+  }
+
+  replaceText(document.documentElement);
+  new MutationObserver((records) => {
+    for (const record of records) {
+      if (record.type === "characterData") {
+        replaceText(record.target);
+        continue;
+      }
+      for (const node of record.addedNodes) replaceText(node);
+    }
+  }).observe(document.documentElement, {
+    characterData: true,
+    childList: true,
+    subtree: true,
+  });
+})();`;
+
 const BRAND_STYLES = `
 <style ${BRAND_MARKER}>
   /* Keep the native Harness layout; replace only its product wordmarks. */
@@ -90,7 +124,10 @@ export function brandHarnessIndex(html) {
   const titled = /<title>[^<]*<\/title>/.test(html)
     ? html.replace(/<title>[^<]*<\/title>/, "<title>OpenQuantum</title>")
     : html.replace("</head>", "<title>OpenQuantum</title></head>");
-  return titled.replace("</head>", `${BRAND_STYLES}\n</head>`);
+  return titled.replace(
+    "</head>",
+    `${BRAND_STYLES}\n<script defer src="/openquantum-branding.js" ${BRAND_MARKER}></script>\n</head>`,
+  );
 }
 
 export const name = "openquantum-web-branding";
@@ -138,5 +175,17 @@ export function apply(ctx) {
         ),
       }),
     "openquantum: web manifest",
+  );
+  ctx.effect(
+    () =>
+      ctx.webServer.register({
+        kind: "exact",
+        path: "/openquantum-branding.js",
+        handler: staticAssetHandler(
+          "text/javascript; charset=utf-8",
+          OPENQUANTUM_COPY_SCRIPT,
+        ),
+      }),
+    "openquantum: product copy",
   );
 }

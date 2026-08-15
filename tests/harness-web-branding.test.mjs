@@ -22,6 +22,7 @@ test("brands the official Harness index without replacing its application shell"
   assert.match(branded, /data-openquantum-branding/);
   assert.match(branded, /content: "OpenQuantum"/);
   assert.match(branded, /content: "OQ"/);
+  assert.match(branded, /src="\/openquantum-branding\.js"/);
   assert.match(branded, /<div id="root"><\/div>/);
   assert.match(branded, /href="\/favicon\.svg"/);
   assert.equal(brandHarnessIndex(branded), branded);
@@ -55,13 +56,34 @@ test("registers branding through the Harness webServer index tap", () => {
     "openquantum: native Harness Web branding",
     "openquantum: favicon",
     "openquantum: web manifest",
+    "openquantum: product copy",
   ]);
   assert.equal(typeof transform, "function");
   assert.match(transform(HARNESS_INDEX), /<title>OpenQuantum<\/title>/);
   assert.deepEqual(
     routes.map((route) => route.path),
-    ["/favicon.svg", "/manifest.webmanifest"],
+    ["/favicon.svg", "/manifest.webmanifest", "/openquantum-branding.js"],
   );
+
+  const copyRoute = routes.find(
+    (route) => route.path === "/openquantum-branding.js",
+  );
+  assert(copyRoute);
+  let body = "";
+  copyRoute.handler(
+    { method: "GET" },
+    {
+      writeHead(status, headers) {
+        assert.equal(status, 200);
+        assert.equal(headers["content-type"], "text/javascript; charset=utf-8");
+      },
+      end(value = "") {
+        body = value;
+      },
+    },
+  );
+  assert.match(body, /探索开发的量子世界/);
+  assert.match(body, /Explore and build the quantum world/);
 });
 
 test("fails loudly if a future Harness shell no longer has an HTML head", () => {
