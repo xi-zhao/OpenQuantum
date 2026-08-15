@@ -13,7 +13,7 @@ const numberClass =
 
 interface McpEditorProps {
   server: McpServerSettings;
-  credential?: McpCredentialSettings;
+  credentials: readonly McpCredentialSettings[];
   revision: string;
   saving: boolean;
   removeArmed: boolean;
@@ -23,14 +23,20 @@ interface McpEditorProps {
   onRemove: () => void;
 }
 
-function McpEditor({ server, credential, revision, saving, removeArmed, onSave, onArmRemove, onCancelRemove, onRemove }: McpEditorProps) {
+function McpEditor({ server, credentials, revision, saving, removeArmed, onSave, onArmRemove, onCancelRemove, onRemove }: McpEditorProps) {
   const [enabled, setEnabled] = useState(server.enabled);
   const [timeout, setTimeoutValue] = useState(server.toolCallTimeoutMs);
   const [reconnectEnabled, setReconnectEnabled] = useState(server.reconnect.enabled);
   const [initialDelay, setInitialDelay] = useState(server.reconnect.initialDelayMs);
   const [maxDelay, setMaxDelay] = useState(server.reconnect.maxDelayMs);
   const [maxAttempts, setMaxAttempts] = useState(server.reconnect.maxAttempts);
-  const credentialMissing = credential !== undefined && !credential.configured;
+  const missingRequiredCredentials = credentials.filter(
+    (credential) =>
+      server.requiredCredentialRefs.includes(credential.ref) &&
+      !credential.configured,
+  );
+  const enableBlocked =
+    server.setup?.status === "required" || missingRequiredCredentials.length > 0;
 
   return (
     <article className="rounded-2xl border border-[#dce5ea] bg-white p-5 shadow-[0_12px_36px_rgba(7,19,31,.05)]">
@@ -56,7 +62,7 @@ function McpEditor({ server, credential, revision, saving, removeArmed, onSave, 
           <input
             type="checkbox"
             checked={enabled}
-            disabled={!enabled && credentialMissing}
+            disabled={!enabled && enableBlocked}
             onChange={(event) => setEnabled(event.target.checked)}
             className="h-4 w-4 accent-[#0f9f91] disabled:cursor-not-allowed"
           />
@@ -73,11 +79,24 @@ function McpEditor({ server, credential, revision, saving, removeArmed, onSave, 
           </a>
         ) : null}
       </div>
-      {credential ? (
-        <div className={`mt-3 rounded-lg border px-3 py-2 text-xs ${credential.configured ? "border-[#afe1d9] bg-[#edfaf7] text-[#0b776e]" : "border-[#efd39c] bg-[#fff8e9] text-[#8b5b08]"}`}>
-          {credential.configured
-            ? `${credential.displayName} 已配置`
-            : `启用前请先配置 ${credential.displayName}`}
+      {server.setup ? (
+        <div className={`mt-3 rounded-lg border px-3 py-2 text-xs ${server.setup.status === "ready" ? "border-[#afe1d9] bg-[#edfaf7] text-[#0b776e]" : "border-[#efd39c] bg-[#fff8e9] text-[#8b5b08]"}`}>
+          <p>{server.setup.message}</p>
+          {server.setup.command ? (
+            <code className="mt-2 block select-all font-mono text-[11px]">{server.setup.command}</code>
+          ) : null}
+        </div>
+      ) : null}
+      {credentials.length > 0 ? (
+        <div className="mt-3 grid gap-2 sm:grid-cols-2">
+          {credentials.map((credential) => {
+            const required = server.requiredCredentialRefs.includes(credential.ref);
+            return (
+              <div key={credential.ref} className={`rounded-lg border px-3 py-2 text-xs ${credential.configured ? "border-[#afe1d9] bg-[#edfaf7] text-[#0b776e]" : required ? "border-[#efd39c] bg-[#fff8e9] text-[#8b5b08]" : "border-[#dce5ea] bg-[#f7fafb] text-[#617682]"}`}>
+                {credential.displayName} · {required ? "必需" : "可选"} · {credential.configured ? "已配置" : "未配置"}
+              </div>
+            );
+          })}
         </div>
       ) : null}
 
@@ -115,7 +134,7 @@ function McpEditor({ server, credential, revision, saving, removeArmed, onSave, 
                 <button type="button" onClick={onCancelRemove} className="text-xs font-medium text-[#617682]">取消</button>
                 <button
                   type="button"
-                  disabled={saving || server.enabled || credential?.configured === true}
+                  disabled={saving || server.enabled || credentials.some((credential) => credential.configured)}
                   onClick={onRemove}
                   className="rounded-lg border border-[#e2aeb3] px-3 py-2 text-xs font-semibold text-[#9f2633] hover:bg-[#fff5f5] disabled:cursor-not-allowed disabled:opacity-50"
                 >
@@ -143,9 +162,11 @@ function McpEditor({ server, credential, revision, saving, removeArmed, onSave, 
           </button>
         </div>
       </div>
-      {server.managed && removeArmed && (server.enabled || credential?.configured) ? (
+      {server.managed && removeArmed && (server.enabled || credentials.some((credential) => credential.configured)) ? (
         <p className="mt-2 text-right text-xs text-[#8b5b08]">
-          {server.enabled ? "请先停用服务。" : `请先移除 ${credential?.displayName}。`}
+          {server.enabled
+            ? "请先停用服务。"
+            : `请先移除 ${credentials.filter((credential) => credential.configured).map((credential) => credential.displayName).join("、")}。`}
         </p>
       ) : null}
     </article>
@@ -351,7 +372,7 @@ export function McpSettingsSection({ servers, credentials, revision, savingKey, 
               key={`${credential.ref}:${credential.configured}`}
               credential={credential}
               enabledConsumers={servers
-                .filter((server) => server.enabled && server.credentialRef === credential.ref)
+                .filter((server) => server.enabled && server.credentialRefs.includes(credential.ref))
                 .map((server) => server.displayName)}
               saving={savingKey === `mcp-credential:${credential.ref}`}
               onSave={(command) => onSave(command, `mcp-credential:${credential.ref}`)}
@@ -364,7 +385,9 @@ export function McpSettingsSection({ servers, credentials, revision, savingKey, 
           <McpEditor
             key={`${server.serverName}:${revision}`}
             server={server}
-            credential={server.credentialRef ? credentialByRef.get(server.credentialRef) : undefined}
+            credentials={server.credentialRefs
+              .map((ref) => credentialByRef.get(ref))
+              .filter((credential): credential is McpCredentialSettings => credential !== undefined)}
             revision={revision}
             saving={savingKey === `mcp:${server.serverName}`}
             removeArmed={removeName === server.serverName}

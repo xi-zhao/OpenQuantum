@@ -148,7 +148,10 @@ test("settings adapter keeps IBM MCP credentials redacted and gates cloud enable
         sourceUrl: "https://github.com/Qiskit/mcp-servers",
         packageName: "qiskit-ibm-runtime-mcp-server",
         packageVersion: "0.6.1",
-        credentialRef: "QISKIT_IBM_TOKEN",
+        credentialRefs: ["QISKIT_IBM_TOKEN"],
+        requiredCredentialRefs: ["QISKIT_IBM_TOKEN"],
+        setup: null,
+        managed: true,
         transport: "stdio",
         target: "uvx qiskit-ibm-runtime-mcp-server",
         enabled: false,
@@ -300,4 +303,61 @@ test("settings adapter keeps IBM MCP credentials redacted and gates cloud enable
     args: ["community-quantum-mcp"],
   });
   assert.ok(projectCalls.some((call) => call.action === "mcp.create"));
+});
+
+test("settings adapter blocks hardware MCP enablement until pinned source is ready", async (t) => {
+  const originalFetch = globalThis.fetch;
+  t.after(() => {
+    globalThis.fetch = originalFetch;
+  });
+  const reconnect = {
+    enabled: true,
+    initialDelayMs: 2000,
+    maxDelayMs: 60000,
+    maxAttempts: 5,
+  };
+  globalThis.fetch = async () =>
+    Response.json({
+      skills: [],
+      mcpServers: [
+        {
+          serverName: "quantum_hardware",
+          displayName: "Quantum Hardware MCP",
+          description: "Real QPU control",
+          provider: "Community",
+          sourceUrl: "https://github.com/Lokesh-2025/quantum-hardware-mcp",
+          packageName: "quantum-hardware-mcp",
+          packageVersion: "13fbe9f13fd6",
+          credentialRefs: ["QISKIT_IBM_TOKEN"],
+          requiredCredentialRefs: ["QISKIT_IBM_TOKEN"],
+          setup: {
+            status: "required",
+            message: "尚未安装本地源码；安装完成前不能启用此 MCP。",
+            command: "npm run mcp:quantum-hardware:setup",
+          },
+          managed: false,
+          transport: "stdio",
+          target: "./.openquantum/external/quantum-hardware-mcp/server.py",
+          enabled: false,
+          toolCallTimeoutMs: 600000,
+          failOnStartupError: true,
+          reconnect,
+        },
+      ],
+      mcpCredentials: [],
+      mcpRevision: "e".repeat(64),
+    });
+  const adapter = new HarnessSettingsAdapter({});
+
+  await assert.rejects(
+    adapter.execute({
+      type: "mcp.update",
+      serverName: "quantum_hardware",
+      revision: "e".repeat(64),
+      enabled: true,
+      toolCallTimeoutMs: 600000,
+      reconnect,
+    }),
+    /尚未安装本地源码/,
+  );
 });

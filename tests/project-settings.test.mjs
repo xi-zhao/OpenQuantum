@@ -16,6 +16,7 @@ import {
   updateMcpSettings,
   updateSkillSettings,
 } from "../src/settings/server/project-settings.mjs";
+import { quantumHardwareMcpIntegration } from "../src/settings/server/quantum-hardware-mcp.mjs";
 
 async function fixture(t) {
   const root = await mkdtemp(path.join(os.tmpdir(), "openquantum-settings-"));
@@ -65,7 +66,9 @@ test("project settings exposes safe Skill and MCP projections", async (t) => {
       sourceUrl: null,
       packageName: null,
       packageVersion: null,
-      credentialRef: null,
+      credentialRefs: [],
+      requiredCredentialRefs: [],
+      setup: null,
       managed: false,
       transport: "stdio",
       target: "./.agents/skills/demo-skill/mcp/server.mjs",
@@ -214,7 +217,8 @@ test("credentialed MCP entries use the same bounded settings Interface", async (
     {
       ref: "QISKIT_IBM_TOKEN",
       displayName: "IBM Quantum API Token",
-      description: "供 IBM Runtime 与 IBM Transpiler 共用；密钥只保存在 Harness 凭据库。",
+      description:
+        "供 IBM Runtime、IBM Transpiler 与可选硬件 MCP 共用；密钥只保存在 Harness 凭据库。",
       documentationUrl: "https://quantum.ibm.com/account",
       serverNames: ["qiskit_ibm_runtime"],
     },
@@ -239,6 +243,51 @@ test("credentialed MCP entries use the same bounded settings Interface", async (
   assert.equal(value[1].config.toolCallTimeoutMs, 180000);
 });
 
+test("hardware MCP setup state is bound to the reviewed local source", async (t) => {
+  const root = await fixture(t);
+  const configPath = path.join(
+    root,
+    "runtime/openquantum/agent-presets/openquantum/agent.cordis.yml",
+  );
+  const original = await readFile(configPath, "utf8");
+  await writeFile(
+    configPath,
+    `${original}\n- id: quantum-hardware\n  name: ./credentialed-mcp-client.mjs\n  disabled: true\n  config:\n    serverName: quantum_hardware\n    transport: stdio\n    command: uv\n    args:\n      - run\n      - --with-requirements\n      - !!js process.cwd() + '/.openquantum/external/quantum-hardware-mcp/requirements.txt'\n      - python\n      - !!js process.cwd() + '/.openquantum/external/quantum-hardware-mcp/server.py'\n    credentialEnv:\n      IBM_QUANTUM_TOKEN: QISKIT_IBM_TOKEN\n`,
+  );
+
+  const missing = await readProjectSettings(root);
+  const missingServer = missing.mcpServers.find(
+    (server) => server.serverName === "quantum_hardware",
+  );
+  assert.equal(missingServer?.setup?.status, "required");
+  assert.equal(
+    missingServer?.target,
+    "./.openquantum/external/quantum-hardware-mcp/server.py",
+  );
+
+  const sourceRoot = path.join(root, quantumHardwareMcpIntegration.relativeRoot);
+  await mkdir(sourceRoot, { recursive: true });
+  for (const fileName of quantumHardwareMcpIntegration.requiredFiles) {
+    await writeFile(path.join(sourceRoot, fileName), `${fileName}\n`);
+  }
+  await writeFile(
+    path.join(sourceRoot, ".openquantum-source.json"),
+    `${JSON.stringify({
+      schemaVersion: "1.0",
+      source: quantumHardwareMcpIntegration.sourceUrl,
+      revision: quantumHardwareMcpIntegration.revision,
+    })}\n`,
+  );
+
+  const ready = await readProjectSettings(root);
+  assert.equal(
+    ready.mcpServers.find(
+      (server) => server.serverName === "quantum_hardware",
+    )?.setup?.status,
+    "ready",
+  );
+});
+
 test("custom stdio MCP is created disabled with a dynamic credential and can be removed", async (t) => {
   const root = await fixture(t);
   const before = await readProjectSettings(root);
@@ -256,7 +305,9 @@ test("custom stdio MCP is created disabled with a dynamic credential and can be 
   assert.equal(server.enabled, false);
   assert.equal(server.managed, true);
   assert.equal(server.failOnStartupError, false);
-  assert.equal(server.credentialRef, "COMMUNITY_QUANTUM_TOKEN");
+  assert.deepEqual(server.credentialRefs, ["COMMUNITY_QUANTUM_TOKEN"]);
+  assert.deepEqual(server.requiredCredentialRefs, ["COMMUNITY_QUANTUM_TOKEN"]);
+  assert.equal(server.setup, null);
   assert.deepEqual(created.mcpCredentials.find(
     (credential) => credential.ref === "COMMUNITY_QUANTUM_TOKEN",
   ), {
@@ -321,10 +372,24 @@ test("repository preset pins official Qiskit services with safe defaults", async
   assert.equal(byName.get("qiskit_ibm_runtime")?.enabled, false);
   assert.equal(byName.get("qiskit_ibm_transpiler")?.enabled, false);
   assert.equal(byName.get("qiskit_gym")?.enabled, false);
+  assert.equal(byName.get("quantum_hardware")?.enabled, false);
+  assert.ok(
+    ["ready", "required"].includes(
+      byName.get("quantum_hardware")?.setup?.status,
+    ),
+  );
+  assert.deepEqual(byName.get("quantum_hardware")?.requiredCredentialRefs, [
+    "QISKIT_IBM_TOKEN",
+  ]);
+  assert.deepEqual(byName.get("quantum_hardware")?.credentialRefs, [
+    "QISKIT_IBM_TOKEN",
+    "IONQ_API_KEY",
+  ]);
   assert.equal(byName.get("openquantum_quantum")?.enabled, true);
   assert.deepEqual(snapshot.mcpCredentials[0].serverNames, [
     "qiskit_ibm_runtime",
     "qiskit_ibm_transpiler",
+    "quantum_hardware",
   ]);
 
   const raw = await readFile(

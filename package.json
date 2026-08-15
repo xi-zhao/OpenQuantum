@@ -23,6 +23,7 @@
     "harness:config": "node scripts/run-harness.mjs --dump-config",
     "models:probe": "node scripts/probe-models.mjs",
     "mcp:qiskit:probe": "node scripts/probe-qiskit-mcp.mjs",
+    "mcp:quantum-hardware:setup": "node scripts/setup-quantum-hardware-mcp.mjs",
     "e2e:qiskit-harness": "node scripts/probe-qiskit-harness.mjs",
     "e2e:quantum-harness": "node scripts/probe-quantum-harness-e2e.mjs",
     "demo:quantum-ground-state": "node scripts/run-quantum-ground-state-demo.mjs",

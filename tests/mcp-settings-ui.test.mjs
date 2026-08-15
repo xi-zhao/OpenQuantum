@@ -39,7 +39,9 @@ test("MCP settings presents official Qiskit defaults and redacted IBM credential
           sourceUrl: "https://github.com/Qiskit/mcp-servers",
           packageName: "qiskit-mcp-server",
           packageVersion: "0.3.1",
-          credentialRef: null,
+          credentialRefs: [],
+          requiredCredentialRefs: [],
+          setup: null,
           managed: false,
           transport: "stdio",
           target: "uvx --from qiskit-mcp-server==0.3.1 qiskit-mcp-server",
@@ -56,7 +58,9 @@ test("MCP settings presents official Qiskit defaults and redacted IBM credential
           sourceUrl: "https://github.com/Qiskit/mcp-servers",
           packageName: "qiskit-ibm-runtime-mcp-server",
           packageVersion: "0.6.1",
-          credentialRef: "QISKIT_IBM_TOKEN",
+          credentialRefs: ["QISKIT_IBM_TOKEN"],
+          requiredCredentialRefs: ["QISKIT_IBM_TOKEN"],
+          setup: null,
           managed: false,
           transport: "stdio",
           target: "uvx qiskit-ibm-runtime-mcp-server",
@@ -72,7 +76,7 @@ test("MCP settings presents official Qiskit defaults and redacted IBM credential
   assert.match(markup, /Qiskit Circuits/);
   assert.match(markup, /IBM Quantum Runtime/);
   assert.match(markup, /Token 未配置/);
-  assert.match(markup, /启用前请先配置 IBM Quantum API Token/);
+  assert.match(markup, /IBM Quantum API Token · 必需 · 未配置/);
   assert.match(markup, /type="password"/);
   assert.equal(markup.includes("secret"), false);
 });
@@ -95,7 +99,9 @@ test("MCP settings blocks shared token removal while a cloud consumer is enabled
     sourceUrl: "https://github.com/Qiskit/mcp-servers",
     packageName: "qiskit-ibm-runtime-mcp-server",
     packageVersion: "0.6.1",
-    credentialRef: credential.ref,
+    credentialRefs: [credential.ref],
+    requiredCredentialRefs: [credential.ref],
+    setup: null,
     managed: false,
     transport: "stdio",
     target: "uvx qiskit-ibm-runtime-mcp-server",
@@ -134,7 +140,9 @@ test("MCP settings exposes add and guarded remove controls for project entries",
           sourceUrl: null,
           packageName: null,
           packageVersion: null,
-          credentialRef: null,
+          credentialRefs: [],
+          requiredCredentialRefs: [],
+          setup: null,
           managed: true,
           transport: "stdio",
           target: "uvx community-mcp",
@@ -150,4 +158,65 @@ test("MCP settings exposes add and guarded remove controls for project entries",
   assert.match(markup, /添加 MCP 服务/);
   assert.match(markup, /PROJECT/);
   assert.match(markup, />移除</);
+});
+
+test("MCP settings presents hardware setup, required IBM, and optional IonQ credentials", () => {
+  const credentials = [
+    {
+      ref: "QISKIT_IBM_TOKEN",
+      displayName: "IBM Quantum API Token",
+      description: "IBM",
+      documentationUrl: "https://quantum.ibm.com/account",
+      serverNames: ["quantum_hardware"],
+      configured: false,
+      writable: true,
+    },
+    {
+      ref: "IONQ_API_KEY",
+      displayName: "IonQ API Key",
+      description: "IonQ",
+      documentationUrl: "https://cloud.ionq.com/",
+      serverNames: ["quantum_hardware"],
+      configured: false,
+      writable: true,
+    },
+  ];
+  const markup = renderToStaticMarkup(
+    createElement(McpSettingsSection, {
+      revision: "d".repeat(64),
+      savingKey: null,
+      onSave: () => {},
+      credentials,
+      servers: [
+        {
+          serverName: "quantum_hardware",
+          displayName: "Quantum Hardware MCP",
+          description: "Real QPU control",
+          provider: "Community",
+          sourceUrl: "https://github.com/Lokesh-2025/quantum-hardware-mcp",
+          packageName: "quantum-hardware-mcp",
+          packageVersion: "13fbe9f13fd6",
+          credentialRefs: credentials.map((credential) => credential.ref),
+          requiredCredentialRefs: ["QISKIT_IBM_TOKEN"],
+          setup: {
+            status: "required",
+            message: "尚未安装本地源码；安装完成前不能启用此 MCP。",
+            command: "npm run mcp:quantum-hardware:setup",
+          },
+          managed: false,
+          transport: "stdio",
+          target: "./.openquantum/external/quantum-hardware-mcp/server.py",
+          enabled: false,
+          toolCallTimeoutMs: 600000,
+          failOnStartupError: true,
+          reconnect,
+        },
+      ],
+    }),
+  );
+
+  assert.match(markup, /Quantum Hardware MCP/);
+  assert.match(markup, /npm run mcp:quantum-hardware:setup/);
+  assert.match(markup, /IBM Quantum API Token · 必需 · 未配置/);
+  assert.match(markup, /IonQ API Key · 可选 · 未配置/);
 });

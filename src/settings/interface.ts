@@ -37,7 +37,15 @@ export interface McpServerSettings {
   readonly sourceUrl: string | null;
   readonly packageName: string | null;
   readonly packageVersion: string | null;
-  readonly credentialRef: string | null;
+  /** All Harness credential references that may be injected into this MCP. */
+  readonly credentialRefs: readonly string[];
+  /** Credentials that must exist before the MCP may be enabled. */
+  readonly requiredCredentialRefs: readonly string[];
+  readonly setup: {
+    readonly status: "ready" | "required";
+    readonly message: string;
+    readonly command: string | null;
+  } | null;
   /** True only for project MCP entries created through the Settings Interface. */
   readonly managed: boolean;
   readonly transport: "stdio" | "streamable-http";

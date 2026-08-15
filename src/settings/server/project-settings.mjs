@@ -15,6 +15,8 @@ import path from "node:path";
 
 import { parse, parseDocument } from "yaml";
 
+import { quantumHardwareMcpIntegration } from "./quantum-hardware-mcp.mjs";
+
 const SKILL_NAME = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const SERVER_NAME = /^[A-Za-z0-9_-]{1,32}$/;
 const CREDENTIAL_REF = /^[A-Za-z_][A-Za-z0-9_]*$/;
@@ -39,7 +41,7 @@ const MCP_CATALOG = Object.freeze({
     sourceUrl: null,
     packageName: null,
     packageVersion: "0.2.0",
-    credentialRef: null,
+    setup: null,
   }),
   qiskit: Object.freeze({
     displayName: "Qiskit Circuits",
@@ -48,7 +50,7 @@ const MCP_CATALOG = Object.freeze({
     sourceUrl: QISKIT_MCP_SOURCE,
     packageName: "qiskit-mcp-server",
     packageVersion: "0.3.1",
-    credentialRef: null,
+    setup: null,
   }),
   qiskit_docs: Object.freeze({
     displayName: "Qiskit Docs",
@@ -57,7 +59,7 @@ const MCP_CATALOG = Object.freeze({
     sourceUrl: QISKIT_MCP_SOURCE,
     packageName: "qiskit-docs-mcp-server",
     packageVersion: "0.3.0",
-    credentialRef: null,
+    setup: null,
   }),
   qiskit_ibm_runtime: Object.freeze({
     displayName: "IBM Quantum Runtime",
@@ -66,7 +68,7 @@ const MCP_CATALOG = Object.freeze({
     sourceUrl: QISKIT_MCP_SOURCE,
     packageName: "qiskit-ibm-runtime-mcp-server",
     packageVersion: "0.6.1",
-    credentialRef: "QISKIT_IBM_TOKEN",
+    setup: null,
   }),
   qiskit_ibm_transpiler: Object.freeze({
     displayName: "IBM Quantum Transpiler",
@@ -75,7 +77,7 @@ const MCP_CATALOG = Object.freeze({
     sourceUrl: QISKIT_MCP_SOURCE,
     packageName: "qiskit-ibm-transpiler-mcp-server",
     packageVersion: "0.4.1",
-    credentialRef: "QISKIT_IBM_TOKEN",
+    setup: null,
   }),
   qiskit_gym: Object.freeze({
     displayName: "Qiskit Gym",
@@ -84,14 +86,40 @@ const MCP_CATALOG = Object.freeze({
     sourceUrl: QISKIT_MCP_SOURCE,
     packageName: "qiskit-gym-mcp-server",
     packageVersion: "0.4.1",
-    credentialRef: null,
+    setup: null,
+  }),
+  quantum_hardware: Object.freeze({
+    displayName: "Quantum Hardware MCP",
+    description:
+      "社区硬件控制面：查询 IBM 与 IonQ 设备，并可提交真实 QPU 任务；启用前必须审阅成本和副作用。",
+    provider: "Lokesh-2025 / Community",
+    sourceUrl: quantumHardwareMcpIntegration.sourceUrl,
+    packageName: "quantum-hardware-mcp",
+    packageVersion: quantumHardwareMcpIntegration.revision.slice(0, 12),
+    setup: Object.freeze({
+      entry: quantumHardwareMcpIntegration.entry,
+      requiredFiles: quantumHardwareMcpIntegration.requiredFiles.map(
+        (fileName) =>
+          path.join(quantumHardwareMcpIntegration.relativeRoot, fileName),
+      ),
+      marker: quantumHardwareMcpIntegration.marker,
+      source: quantumHardwareMcpIntegration.sourceUrl,
+      revision: quantumHardwareMcpIntegration.revision,
+      command: quantumHardwareMcpIntegration.setupCommand,
+    }),
   }),
 });
 const MCP_CREDENTIAL_CATALOG = Object.freeze({
   QISKIT_IBM_TOKEN: Object.freeze({
     displayName: "IBM Quantum API Token",
-    description: "供 IBM Runtime 与 IBM Transpiler 共用；密钥只保存在 Harness 凭据库。",
+    description:
+      "供 IBM Runtime、IBM Transpiler 与可选硬件 MCP 共用；密钥只保存在 Harness 凭据库。",
     documentationUrl: "https://quantum.ibm.com/account",
+  }),
+  IONQ_API_KEY: Object.freeze({
+    displayName: "IonQ API Key",
+    description: "可选；允许 Quantum Hardware MCP 查询 IonQ 并提交模拟器或真实硬件任务。",
+    documentationUrl: "https://cloud.ionq.com/",
   }),
 });
 
@@ -215,6 +243,39 @@ async function containedFile(projectRoot, relativePath) {
   return resolved;
 }
 
+async function mcpSetupView(projectRoot, setup) {
+  if (!setup) return null;
+  try {
+    for (const requiredFile of setup.requiredFiles ?? [setup.entry]) {
+      await containedFile(projectRoot, requiredFile);
+    }
+    const markerPath = await containedFile(projectRoot, setup.marker);
+    const marker = JSON.parse(await readFile(markerPath, "utf8"));
+    if (
+      !isRecord(marker) ||
+      marker.schemaVersion !== "1.0" ||
+      marker.source !== setup.source ||
+      marker.revision !== setup.revision
+    ) {
+      throw new TypeError("本地 MCP 源码标记与项目固定版本不一致");
+    }
+    return {
+      status: "ready",
+      message: "本地固定版本源码已就绪。首次启动会由 uv 创建隔离环境并安装上游依赖。",
+      command: null,
+    };
+  } catch (error) {
+    const missing = error && typeof error === "object" && error.code === "ENOENT";
+    return {
+      status: "required",
+      message: missing
+        ? "尚未安装本地源码；安装完成前不能启用此 MCP。"
+        : "本地源码不完整或版本标记不匹配；为避免执行未审阅代码，此 MCP 已阻止启用。",
+      command: setup.command,
+    };
+  }
+}
+
 async function atomicWrite(filePath, text, mode) {
   const directory = path.dirname(filePath);
   await mkdir(directory, { recursive: true });
@@ -270,6 +331,19 @@ function displayTarget(config) {
   if (config.command === "uvx" && Array.isArray(config.args)) {
     return ["uvx", ...config.args].join(" ");
   }
+  const projectArg = Array.isArray(config.args)
+    ? [...config.args]
+        .reverse()
+        .find(
+          (argument) =>
+            typeof argument === "string" &&
+            /process\.cwd\(\) \+ ['"]\/(.+)['"]/.test(argument),
+        )
+    : undefined;
+  if (typeof projectArg === "string") {
+    const match = projectArg.match(/process\.cwd\(\) \+ ['"]\/(.+)['"]/);
+    return match ? `./${match[1]}` : projectArg;
+  }
   const firstArg = Array.isArray(config.args) ? config.args[0] : undefined;
   if (typeof firstArg === "string") {
     const match = firstArg.match(/process\.cwd\(\) \+ ['"]\/(.+)['"]/);
@@ -289,53 +363,72 @@ async function readMcp(projectRoot) {
   if (!Array.isArray(entries)) {
     throw new TypeError("Agent Cordis 配置必须是列表");
   }
-  const mcpServers = entries
-    .filter((entry) => isRecord(entry) && MCP_PLUGIN_NAMES.has(entry.name))
-    .map((entry) => {
-      const config = isRecord(entry.config) ? entry.config : {};
-      const reconnect = isRecord(config.reconnect) ? config.reconnect : {};
-      const transport =
-        config.transport === "streamable-http" ? "streamable-http" : "stdio";
-      const serverName = String(config.serverName ?? "");
-      const credentialEnv = isRecord(config.credentialEnv)
-        ? Object.values(config.credentialEnv).filter(
-            (value) => typeof value === "string" && CREDENTIAL_REF.test(value),
-          )
-        : [];
-      const catalog = MCP_CATALOG[serverName] ?? {
-        displayName: serverName,
-        description: "项目 Agent preset 声明的 Harness 原生 MCP 服务。",
-        provider: "Project",
-        sourceUrl: null,
-        packageName: null,
-        packageVersion: null,
-        credentialRef: credentialEnv[0] ?? null,
-      };
-      return {
-        serverName,
-        displayName: catalog.displayName,
-        description: catalog.description,
-        provider: catalog.provider,
-        sourceUrl: catalog.sourceUrl,
-        packageName: catalog.packageName,
-        packageVersion: catalog.packageVersion,
-        credentialRef: catalog.credentialRef,
-        managed: isManagedMcpEntry(entry, serverName),
-        transport,
-        target: displayTarget(config),
-        enabled: entry.disabled !== true,
-        toolCallTimeoutMs: Number(config.toolCallTimeoutMs ?? 60000),
-        failOnStartupError: config.failOnStartupError === true,
-        reconnect: {
-          enabled: reconnect.enabled !== false,
-          initialDelayMs: Number(reconnect.initialDelayMs ?? 500),
-          maxDelayMs: Number(reconnect.maxDelayMs ?? 30000),
-          maxAttempts: Number(reconnect.maxAttempts ?? 10),
-        },
-      };
-    });
+  const mcpServers = await Promise.all(
+    entries
+      .filter((entry) => isRecord(entry) && MCP_PLUGIN_NAMES.has(entry.name))
+      .map(async (entry) => {
+        const config = isRecord(entry.config) ? entry.config : {};
+        const reconnect = isRecord(config.reconnect) ? config.reconnect : {};
+        const transport =
+          config.transport === "streamable-http"
+            ? "streamable-http"
+            : "stdio";
+        const serverName = String(config.serverName ?? "");
+        const requiredCredentialRefs = isRecord(config.credentialEnv)
+          ? Object.values(config.credentialEnv).filter(
+              (value) =>
+                typeof value === "string" && CREDENTIAL_REF.test(value),
+            )
+          : [];
+        const optionalCredentialRefs = isRecord(config.optionalCredentialEnv)
+          ? Object.values(config.optionalCredentialEnv).filter(
+              (value) =>
+                typeof value === "string" && CREDENTIAL_REF.test(value),
+            )
+          : [];
+        const credentialRefs = [
+          ...new Set([
+            ...requiredCredentialRefs,
+            ...optionalCredentialRefs,
+          ]),
+        ];
+        const catalog = MCP_CATALOG[serverName] ?? {
+          displayName: serverName,
+          description: "项目 Agent preset 声明的 Harness 原生 MCP 服务。",
+          provider: "Project",
+          sourceUrl: null,
+          packageName: null,
+          packageVersion: null,
+          setup: null,
+        };
+        return {
+          serverName,
+          displayName: catalog.displayName,
+          description: catalog.description,
+          provider: catalog.provider,
+          sourceUrl: catalog.sourceUrl,
+          packageName: catalog.packageName,
+          packageVersion: catalog.packageVersion,
+          credentialRefs,
+          requiredCredentialRefs: [...new Set(requiredCredentialRefs)],
+          setup: await mcpSetupView(projectRoot, catalog.setup),
+          managed: isManagedMcpEntry(entry, serverName),
+          transport,
+          target: displayTarget(config),
+          enabled: entry.disabled !== true,
+          toolCallTimeoutMs: Number(config.toolCallTimeoutMs ?? 60000),
+          failOnStartupError: config.failOnStartupError === true,
+          reconnect: {
+            enabled: reconnect.enabled !== false,
+            initialDelayMs: Number(reconnect.initialDelayMs ?? 500),
+            maxDelayMs: Number(reconnect.maxDelayMs ?? 30000),
+            maxAttempts: Number(reconnect.maxAttempts ?? 10),
+          },
+        };
+      }),
+  );
   const credentialRefs = new Set(
-    mcpServers.map((server) => server.credentialRef).filter(Boolean),
+    mcpServers.flatMap((server) => server.credentialRefs),
   );
   const mcpCredentials = [...credentialRefs].map((ref) => ({
     ref,
@@ -345,7 +438,7 @@ async function readMcp(projectRoot) {
       documentationUrl: null,
     }),
     serverNames: mcpServers
-      .filter((server) => server.credentialRef === ref)
+      .filter((server) => server.credentialRefs.includes(ref))
       .map((server) => server.serverName),
   }));
   return {

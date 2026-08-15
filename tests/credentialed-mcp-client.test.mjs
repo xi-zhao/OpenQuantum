@@ -44,3 +44,36 @@ test("credentialed MCP config fails closed for missing or malformed references",
     /POSIX identifiers/,
   );
 });
+
+test("credentialed MCP injects configured optional provider credentials without requiring them", async () => {
+  const requested = [];
+  const resolved = await resolveCredentialedMcpConfig(
+    {
+      serverName: "quantum_hardware",
+      env: { IBM_SHOW_ACCOUNT_INFO: "false" },
+      credentialEnv: { IBM_QUANTUM_TOKEN: "QISKIT_IBM_TOKEN" },
+      optionalCredentialEnv: {
+        IONQ_API_KEY: "IONQ_API_KEY",
+        AWS_ACCESS_KEY_ID: "AWS_ACCESS_KEY_ID",
+      },
+    },
+    async (ref) => {
+      requested.push(ref);
+      if (ref === "QISKIT_IBM_TOKEN") return { value: "ibm-secret" };
+      if (ref === "IONQ_API_KEY") return { value: "ionq-secret" };
+      return undefined;
+    },
+  );
+
+  assert.deepEqual(requested, [
+    "QISKIT_IBM_TOKEN",
+    "IONQ_API_KEY",
+    "AWS_ACCESS_KEY_ID",
+  ]);
+  assert.deepEqual(resolved.env, {
+    IBM_SHOW_ACCOUNT_INFO: "false",
+    IBM_QUANTUM_TOKEN: "ibm-secret",
+    IONQ_API_KEY: "ionq-secret",
+  });
+  assert.equal(Object.hasOwn(resolved, "optionalCredentialEnv"), false);
+});

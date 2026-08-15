@@ -82,6 +82,7 @@ OpenQuantum 的原则是：
 - `quantum-ground-state` 参考 Skill 与 Harness 原生 stdio MCP。
 - 默认启用 Qiskit 官方 `qiskit-mcp-server` 与 `qiskit-docs-mcp-server`；
 - 可在设置中心启用 IBM Quantum Runtime / Transpiler，并通过 Harness 凭据库保存 Token；
+- 可选接入固定源码版本的社区 Quantum Hardware MCP，复用 Harness 的 MCP 生命周期和安全凭据；
 - 隔离启动真实 Harness、验证 Skill 发现和 MCP Tool 进入 `request/header` 的 CI 测试；
 - 从 Harness 原生 `tool/call` / `tool/result` 重建的科学记录卡片，运行状态与科学状态分开展示。
 - 普通量子请求可用一个原子 MCP Tool 完成求解和计算级独立检查，不要求 Model 手工搬运 Artifact bundle。
@@ -136,14 +137,40 @@ OpenQuantum 直接通过 DeepSeek Harness 原生 MCP Client 使用
 `quantum-ground-state` 不被官方 MCP 替代：它仍是 OpenQuantum 的窄作用域参考 Skill，负责可复现求解、
 独立 Validator 和科学验收；官方 Qiskit MCP 提供通用电路、文档及可选云后端能力。
 
+### 社区 Quantum Hardware MCP
+
+OpenQuantum 也预置了社区项目
+[`Lokesh-2025/quantum-hardware-mcp`](https://github.com/Lokesh-2025/quantum-hardware-mcp)，用于查询 IBM / IonQ
+硬件，并暴露任务提交、取消和成本估算等工具。它不是 OpenQuantum 自建 Runtime：DeepSeek Harness 仍通过
+原生 MCP Client 管理 stdio 进程、Tool registry、超时与重连。
+
+这个连接器默认关闭。上游目前没有稳定 Release，因此安装器只检出项目审阅过的 commit
+`13fbe9f13fd68c409086491b9598ce2d25f5210a`，不会在运行时跟随 `master`：
+
+```bash
+npm run mcp:quantum-hardware:setup
+```
+
+安装完成后，在“设置中心 → MCP 服务”中：
+
+1. 保存必需的 `QISKIT_IBM_TOKEN`；
+2. 如需 IonQ，再保存可选的 `IONQ_API_KEY`；
+3. 审阅源码、云厂商费用和数据外发风险后，再显式启用 `Quantum Hardware MCP`；
+4. 重启 Harness 使配置生效。
+
+源码保存在被 Git 忽略的 `.openquantum/external/quantum-hardware-mcp/`。首次启动由 `uv` 根据固定源码中的
+`requirements.txt` 建立隔离环境，可能需要访问 Python 包仓库。启用该 MCP 会让 Agent 看见真实任务提交和
+取消工具；当前 Harness MCP Client 没有对单个上游 Tool 做通用白名单或逐次成本审批，因此启用本身应视为
+对该受审连接器能力的授权。不要在生产账户上使用无配额限制的凭据。
+
 ### 添加项目扩展
 
 设置中心也提供一个小而稳定的项目扩展 Interface：
 
 - MCP 可以新增本地 `stdio` 进程或无鉴权的 Streamable HTTP 端点；新条目一律先以关闭状态写入
   `agent.cordis.yml`，审阅后再启用；
-- `stdio` MCP 可以声明一个 POSIX 名称的 Harness credential reference，值通过设置中心保存，绝不写进
-  Agent preset；
+- 内置 `stdio` MCP 可以声明必需及可选的多个 Harness credential reference；设置中心只展示配置状态，
+  值不会写入 Agent preset。自定义 MCP 的首版表单仍提供一个凭据引用；
 - Skill 可以从名称、能力描述和 Markdown 指令生成标准 `.agents/skills/<name>/SKILL.md`，随后仍由
   DeepSeek Harness 原生文件系统 Provider 发现；
 - 只有设置中心创建的项目扩展可以在 UI 中移除。内置、科学验收或手工安装的扩展受到保护；自定义 Skill

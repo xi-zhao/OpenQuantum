@@ -31,29 +31,51 @@ function record(value, field) {
 export async function resolveCredentialedMcpConfig(config, resolveCredential) {
   const source = record(config, "credentialed MCP config");
   const credentialEnv = record(source.credentialEnv, "credentialEnv");
-  const entries = Object.entries(credentialEnv);
-  if (entries.length === 0 || entries.length > MAX_CREDENTIALS) {
-    throw new TypeError(`credentialEnv must contain 1-${MAX_CREDENTIALS} entries`);
+  const optionalCredentialEnv = record(
+    source.optionalCredentialEnv ?? {},
+    "optionalCredentialEnv",
+  );
+  const requiredEntries = Object.entries(credentialEnv);
+  const optionalEntries = Object.entries(optionalCredentialEnv);
+  if (
+    requiredEntries.length === 0 ||
+    requiredEntries.length + optionalEntries.length > MAX_CREDENTIALS
+  ) {
+    throw new TypeError(
+      `credentialEnv must contain at least one required entry and at most ${MAX_CREDENTIALS} total entries`,
+    );
   }
 
   const env = { ...record(source.env ?? {}, "env") };
-  for (const [environmentName, referenceValue] of entries) {
+  const seenEnvironmentNames = new Set();
+  const inject = async (environmentName, referenceValue, required) => {
     if (
       !ENVIRONMENT_NAME.test(environmentName) ||
       typeof referenceValue !== "string" ||
-      !ENVIRONMENT_NAME.test(referenceValue)
+      !ENVIRONMENT_NAME.test(referenceValue) ||
+      seenEnvironmentNames.has(environmentName)
     ) {
-      throw new TypeError("credentialEnv names and references must be POSIX identifiers");
+      throw new TypeError(
+        "credentialEnv names and references must be unique POSIX identifiers",
+      );
     }
+    seenEnvironmentNames.add(environmentName);
     const resolved = await resolveCredential(referenceValue);
-    if (!resolved?.value) {
+    if (required && !resolved?.value) {
       throw new Error(`MCP credential ${referenceValue} is not configured`);
     }
-    env[environmentName] = resolved.value;
+    if (resolved?.value) env[environmentName] = resolved.value;
+  };
+  for (const [environmentName, referenceValue] of requiredEntries) {
+    await inject(environmentName, referenceValue, true);
+  }
+  for (const [environmentName, referenceValue] of optionalEntries) {
+    await inject(environmentName, referenceValue, false);
   }
 
   const mcpConfig = { ...source };
   delete mcpConfig.credentialEnv;
+  delete mcpConfig.optionalCredentialEnv;
   return { ...mcpConfig, env };
 }
 

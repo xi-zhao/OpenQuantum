@@ -188,19 +188,27 @@ export class HarnessSettingsAdapter implements OpenQuantumSettingsPort {
     if (!server) {
       throw new Error("MCP 服务已不存在，请刷新设置后重试");
     }
-    if (command.enabled && server.credentialRef) {
-      const credential = project.mcpCredentials.find(
-        (candidate) => candidate.ref === server.credentialRef,
-      );
+    if (command.enabled && server.setup?.status === "required") {
+      throw new Error(server.setup.message);
+    }
+    if (command.enabled && server.requiredCredentialRefs.length > 0) {
       const described = unwrap(
         await this.client.credentials.describe(
-          { refs: [server.credentialRef] },
+          { refs: [...server.requiredCredentialRefs] },
           signal,
         ),
       );
-      if (!described.credentials[server.credentialRef]?.configured) {
+      const missing = server.requiredCredentialRefs.filter(
+        (ref) => !described.credentials[ref]?.configured,
+      );
+      if (missing.length > 0) {
+        const displayNames = missing.map(
+          (ref) =>
+            project.mcpCredentials.find((candidate) => candidate.ref === ref)
+              ?.displayName ?? ref,
+        );
         throw new Error(
-          `请先保存 ${credential?.displayName ?? server.credentialRef}，再启用该服务`,
+          `请先保存 ${displayNames.join("、")}，再启用该服务`,
         );
       }
     }
@@ -217,7 +225,7 @@ export class HarnessSettingsAdapter implements OpenQuantumSettingsPort {
     }
     if (command.remove) {
       const enabledConsumers = project.mcpServers.filter(
-        (server) => server.enabled && server.credentialRef === command.ref,
+        (server) => server.enabled && server.credentialRefs.includes(command.ref),
       );
       if (enabledConsumers.length > 0) {
         throw new Error(
@@ -248,13 +256,14 @@ export class HarnessSettingsAdapter implements OpenQuantumSettingsPort {
     if (server.enabled) {
       throw new Error("请先停用 MCP 服务，再将其移除");
     }
-    if (server.credentialRef) {
-      const credential = project.mcpCredentials.find(
-        (candidate) => candidate.ref === server.credentialRef,
+    const configuredCredentials = project.mcpCredentials.filter(
+      (credential) =>
+        server.credentialRefs.includes(credential.ref) && credential.configured,
+    );
+    if (configuredCredentials.length > 0) {
+      throw new Error(
+        `请先移除 ${configuredCredentials.map((credential) => credential.displayName).join("、")}，再移除 MCP 服务`,
       );
-      if (credential?.configured) {
-        throw new Error(`请先移除 ${credential.displayName}，再移除 MCP 服务`);
-      }
     }
     await projectRequest({ action: command.type, ...command }, signal);
   }

@@ -35,6 +35,7 @@ OpenQuantum 不建设私有插件市场、包管理器、安装锁、Catalog、�
 - `platform-diagnostics` 诊断 Skill；
 - `quantum-ground-state` 量子基态 Skill；
 - 通过 Harness 原生 MCP client 注册的本地量子求解与验证工具。
+- 默认关闭、固定源码 commit 且由设置中心做凭据/安装门控的社区量子硬件 MCP。
 
 DeepSeek Harness 仍处于 Developer Preview，因此上游接口可能发生破坏性变化。OpenQuantum 通过固定版本、
 真实端到端测试和少量 Adapter 隔离这种变化；不应因此复制 Harness 的状态机。
@@ -243,6 +244,7 @@ MVP 完成需要证明：
 | LLM 产生科学幻觉 | MCP 产数值、Validator 产 observations、模型只解释 |
 | Skill 作用域过度承诺 | supported/out-of-scope、schema、正负例和篡改测试 |
 | MCP/Plugin 获得宿主权限 | 仓库内可信代码、依赖锁定、显式配置、代码审查 |
+| 社区硬件 MCP 提交真实云任务 | 默认关闭、固定源码 SHA、显式安装与启用、Harness 凭据引用、最小权限云账户 |
 | 凭证或科研数据泄露 | 服务端环境引用、同源白名单、Artifact 秘密扫描 |
 | UI Adapter 演化成第二套 Runtime | 冻结业务范围，优先使用 Harness 原生 UI/扩展点 |
 | MVP 被场景扩张拖散 | QGS E2E 完成前不增加第二条量子纵切 |

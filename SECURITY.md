@@ -52,6 +52,18 @@ IBM Runtime 与 Transpiler 默认关闭。只有用户在设置中心保存 `QIS
 credential Adapter 才会在 Harness 启动时把 Token 注入对应 stdio 子进程。Token 不得进入项目配置、Session、
 Artifact、日志或截图；云任务可能消耗配额或产生费用，启用服务不等于授权 Agent 任意提交高成本任务。
 
+## 社区 Quantum Hardware MCP
+
+`Lokesh-2025/quantum-hardware-mcp` 是可选社区连接器，不属于 OpenQuantum 或 Qiskit 官方组件。它默认关闭，
+且必须先通过显式命令把固定 commit 安装到被 Git 忽略的 `.openquantum/external/` 后，设置中心才允许启用。
+安装器验证源码 URL、完整 commit SHA、入口文件和本地来源标记；它不会静默覆盖已有目录，也不会跟随远程
+分支更新。
+
+该 MCP 作为本地 stdio 进程运行，拥有当前 Harness 进程可见的主机权限，并可访问外部云服务、提交或取消
+真实任务、消耗配额或产生费用。Harness 会安全注入必需的 IBM 凭据及可选 IonQ 凭据，但当前没有对
+第三方 MCP 的每个 Tool 提供通用参数级权限隔离。启用前必须审查固定源码、Python 依赖、Tool schema、
+账户配额和云端权限；生产环境应使用最小权限、预算受限且可撤销的凭据。
+
 设置中心允许项目所有者新增自定义 MCP，但不会自动下载或信任远程配置：新服务默认关闭，HTTP URL 禁止
 内嵌用户名/密码，凭据只接受 Harness reference。启用自定义 `stdio` MCP 等同于授权其程序以 Harness
 进程的本地权限运行；OpenQuantum 当前不提供独立容器隔离，因此不要运行来源不明的 command、包或脚本。

@@ -106,6 +106,17 @@ Agent/Session/Tool call 取得执行身份，通过 `ctx.fs` 在 Session workspa
 它只负责 credential reference → 子进程环境变量的启动期映射；连接、Tool 注册、超时和重连仍由
 `@deepseek-ai/dsh-mcp-client` 负责。不要在 Adapter 中添加第二套 MCP 生命周期。
 
+`quantum-hardware-mcp` 展示了没有稳定 Release 时的保守接入方式：来源 URL、完整 commit SHA、安装位置和
+来源标记集中在 `src/settings/server/quantum-hardware-mcp.mjs`；安装器只物化该固定源码，preset 仍默认关闭。
+升级它时必须同时完成：
+
+1. 审阅旧 SHA 到新 SHA 的源码、依赖、许可证、Tool schema、云端副作用和凭据变化；
+2. 只更新这一份集成描述，不在 UI、脚本和 preset 中散落第二份版本常量；
+3. 运行安装器幂等/篡改测试、设置门控测试、`harness:config` 和显式 MCP Tool 清单探针；
+4. 在 Release Notes 中写清真实硬件、费用、网络和数据外发面的变化。
+
+不要把“固定 commit”误解为沙箱：本地社区 MCP 仍是宿主进程，默认关闭与代码审查是当前边界。
+
 设置中心创建的自定义 MCP 必须默认关闭、使用独立 `serverName`，参数以数组直接交给进程，禁止拼成 Shell
 命令。自定义 Skill 只生成标准 `SKILL.md`；需要脚本、schema、Validator 或 eval 的复杂 Skill，应直接在
 `.agents/skills/<name>` 中开发并提交完整测试。不要让 UI 成为绕过代码审查的远程安装器。
