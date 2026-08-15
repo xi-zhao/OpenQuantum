@@ -27,29 +27,32 @@ OpenQuantum 基于 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-ha
 
 好用、看得清、还能自由扩展，这就是 OpenQuantum 想提供的体验。
 
-## 一个入口，连接更多量子能力
+## 现在已经能做什么
 
-量子计算的工具不少，但它们往往散落在不同的 SDK、云平台、文档网站和开发环境里。
+量子计算的工具不少，但它们往往散落在不同的 SDK、云平台、文档网站和开发环境里。OpenQuantum 把第一批
+常用工具和工作流放进了同一个入口。
 
-你想分析一个 Qiskit 电路，得找一套工具。想查 IBM Quantum 文档，换一个地方。想看看国内有哪些量子云
-后端，又是另一套账号和接口。真的做研究时，还要自己判断模型给出的结论到底靠不靠谱。
+| 使用场景 | 已集成组件 | 可以完成的事情 | 默认状态 |
+| --- | --- | --- | --- |
+| 量子电路开发 | Qiskit Circuits MCP + `qiskit-circuit-workbench` Skill | 读取与转换 OpenQASM 3 / QPY，分析量子位、门数和电路深度，比较转译与优化结果 | 开启，无需凭据 |
+| 文档查询与排错 | Qiskit Docs MCP | 查询 Qiskit API、迁移说明、错误码和官方文档页面 | 开启，无需凭据 |
+| 国内量子后端发现 | FieldQKit MCP + `fieldqkit-hardware` Skill | 发现夸父、天衍、国盾、腾讯、本源、FieldQuantum、逻辑比特等后端，按量子位数量筛选，并查看拓扑与校准摘要 | 开启，只读；云后端按需配置凭据 |
+| IBM Quantum 云能力 | IBM Runtime MCP + IBM Transpiler MCP | 连接 IBM Runtime，并使用云端转译服务 | 已接入，默认关闭，需要 IBM Token |
+| 多云硬件控制 | Quantum Hardware MCP | 查询 IBM Quantum 与 IonQ 设备，并提供真实任务提交、取消和成本估算工具 | 已接入，默认关闭，需要人工审阅与凭据 |
+| 强化学习实验 | Qiskit Gym MCP | 使用强化学习方法探索量子电路综合与优化 | 已接入，默认关闭 |
+| 基态算法 | `quantum-ground-state` Skill + 本地 MCP + Validator | 对限定范围内的二量子位 Hamiltonian 运行 VQE，与独立精确解比较，并逐项检查科学结果 | 开启，本地运行 |
+| 技术选型 | `quantum-sdk-advisor` Skill | 根据问题、硬件目标、许可证和验证要求，在 Qiskit、Cirq、PennyLane、Q#、Braket、CUDA-Q 等软件栈之间做选择 | 开启 |
 
-这些东西单独看都合理，放到一起就挺折腾。
+综合这些连接器，OpenQuantum 已经可以覆盖 IBM Quantum、IonQ，以及国内多家量子云的发现或接入场景。
+这里的“覆盖”不等于平台会默认替用户提交任务。FieldQKit 当前只开放配置检查和后端发现；IBM 云服务与
+Quantum Hardware MCP 需要用户主动开启；可能产生费用、数据外发或真实硬件副作用的工具保持关闭。
 
-OpenQuantum 想做的事情，就是把这些能力放进同一个工作环境。用户用自然语言描述问题，Agent 负责理解
-任务并选择工具，DeepSeek Harness 记录完整过程，量子程序负责计算，科学检查负责告诉我们结果能不能信。
+算法能力也不只是一个工具按钮。Skill 会告诉 Agent 在什么问题上使用什么方法，MCP 负责执行确定性计算，
+需要科学结论时再由 Validator 独立检查。现在可以直接使用电路审查、量子基态求解、硬件发现和软件栈选型
+工作流，后续算法可以沿用同样的方式继续加入。
 
-目前，Qiskit 电路分析、转换与优化，Qiskit 官方文档查询，IBM Quantum Runtime 与 Transpiler 的可选
-连接，FieldQKit 多量子云后端发现，以及社区 Quantum Hardware MCP，都已经接进来了。
-
-仓库里还有量子软件栈选型助手，和一个经过严格科学验收的量子基态求解示例。
-
-其中不需要凭据、不会产生真实云费用的能力可以默认使用。涉及 IBM Quantum、真实硬件、外部网络和费用的
-能力，默认关闭，由用户自己保存凭据并主动开启。
-
-不是所有东西都应该默认帮用户做决定。
-
-尤其是可能花钱的东西。
+新的量子后端不需要改写 OpenQuantum Runtime。只要提供标准 stdio 或 Streamable HTTP MCP，就可以通过
+DeepSeek Harness 接入工具；再配上一份标准 Skill，Agent 就能理解它适合解决什么问题、有哪些使用边界。
 
 ## 好用，不应该以封闭为代价
 
