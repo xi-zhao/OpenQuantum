@@ -193,5 +193,10 @@ test("client plugin contributes the native settings section and uses Harness cre
   assert.match(client, /api\.credentials\.unset/);
   assert.match(client, /已有值不会回显/);
   assert.match(client, /requiredByEnabled/);
+  assert.match(client, /Skill 与 MCP 是 DeepSeek Harness 中两个独立的扩展类型/);
+  assert.match(client, /互不包含/);
+  assert.match(client, /一个 Skill 可以使用多个 MCP/);
+  assert.match(client, /由 Harness MCP Client 独立注册和启停/);
+  assert.match(client, /可以调用已注册 Tool，但不会启动 MCP/);
   assert.doesNotMatch(client, /localStorage|sessionStorage/);
 });

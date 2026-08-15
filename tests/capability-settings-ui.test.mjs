@@ -64,9 +64,12 @@ test("capability center presents MCP, Skills and credential readiness together",
     }),
   );
 
-  assert.match(markup, /能力中心/);
-  assert.match(markup, /MCP 工具服务/);
-  assert.match(markup, /Skills 工作流/);
+  assert.match(markup, /扩展组件/);
+  assert.match(markup, /MCP 组件/);
+  assert.match(markup, /Skill 组件/);
+  assert.match(markup, /互不包含/);
+  assert.match(markup, /一个 Skill 可以使用多个 MCP/);
+  assert.match(markup, /不会启动 MCP/);
   assert.match(markup, /FieldQKit 量子硬件/);
   assert.match(markup, /管理 MCP 与凭据/);
   assert.match(markup, /安全凭据 0\/1/);

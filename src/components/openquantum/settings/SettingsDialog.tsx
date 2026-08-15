@@ -17,7 +17,7 @@ import { SkillSettingsSection } from "./SkillSettingsSection";
 type Section = "capabilities" | "models" | "mcp" | "skills";
 
 const sections = [
-  { id: "capabilities" as const, label: "能力中心", description: "MCP 与 Skill 全景", icon: FlaskIcon },
+  { id: "capabilities" as const, label: "扩展组件", description: "独立 Skill 与 MCP", icon: FlaskIcon },
   { id: "models" as const, label: "模型连接", description: "URL、协议与 API Key", icon: CpuIcon },
   { id: "mcp" as const, label: "MCP 服务", description: "Harness 原生工具连接", icon: PlugIcon },
   { id: "skills" as const, label: "Skill 配置", description: "发现与调用策略", icon: AtomIcon },
