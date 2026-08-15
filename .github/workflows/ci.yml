@@ -31,3 +31,47 @@ jobs:
 
       - name: Run quality gate
         run: npm run check
+
+  container-smoke:
+    needs: quality
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Build and boot the production image
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker build --tag openquantum-ci .
+          docker run --detach --rm \
+            --name openquantum-ci \
+            --publish 3000:3000 \
+            openquantum-ci
+          cleanup() {
+            docker logs openquantum-ci || true
+            docker stop openquantum-ci || true
+          }
+          trap cleanup EXIT
+
+          for attempt in $(seq 1 90); do
+            if curl --fail --silent http://127.0.0.1:3000/ >/tmp/openquantum-index.html; then
+              break
+            fi
+            if [ "$attempt" -eq 90 ]; then
+              echo "OpenQuantum container did not become ready" >&2
+              exit 1
+            fi
+            sleep 2
+          done
+
+          grep --quiet '<title>OpenQuantum</title>' /tmp/openquantum-index.html
+          curl --fail --silent \
+            --header 'content-type: application/json' \
+            --request POST \
+            --data '{"type":"client-request","rpcId":"ci-host-describe","method":"host.describe","payload":{}}' \
+            --output /tmp/openquantum-host-describe.json \
+            http://127.0.0.1:3000/api/host.describe
+          grep --quiet '"ok":true' /tmp/openquantum-host-describe.json

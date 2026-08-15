@@ -3,6 +3,18 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "exports": "./index.mjs",
+  "exports": {
+    ".": "./index.mjs",
+    "./client": "./client.js",
+    "./package.json": "./package.json"
+  },
+  "dsh": {
+    "client": {
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-settings"
+      ],
+      "platform": "web"
+    }
+  },
   "license": "MIT"
 }

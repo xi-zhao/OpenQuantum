@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 import {
@@ -84,8 +85,34 @@ test("registers branding through the Harness webServer index tap", () => {
   );
   assert.match(body, /探索开放量子世界/);
   assert.match(body, /Explore the open quantum world/);
+  assert.match(body, /配置提供方的 API 地址和凭据/);
+  assert.match(body, /Configure each provider endpoint and credential/);
+  assert.match(body, /连接与模型设置/);
+  assert.match(body, /details\.open = true/);
   assert.match(body, /heroPreviewLabels/);
   assert.match(body, /parent\.remove\(\)/);
+});
+
+test("replaces the upstream developer notice through the native onboarding slot", async () => {
+  const [manifestText, client] = await Promise.all([
+    readFile(
+      new URL("../runtime/openquantum/web-branding/package.json", import.meta.url),
+      "utf8",
+    ),
+    readFile(
+      new URL("../runtime/openquantum/web-branding/client.js", import.meta.url),
+      "utf8",
+    ),
+  ]);
+  const manifest = JSON.parse(manifestText);
+
+  assert.equal(manifest.exports["./client"], "./client.js");
+  assert.equal(manifest.dsh.client.platform, "web");
+  assert.match(client, /settings\.onboarding/);
+  assert.match(client, /id: "welcome-notice"/);
+  assert.match(client, /priority: -1000/);
+  assert.match(client, /return null/);
+  assert.doesNotMatch(client, /localStorage|sessionStorage/);
 });
 
 test("fails loudly if a future Harness shell no longer has an HTML head", () => {

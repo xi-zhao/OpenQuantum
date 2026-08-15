@@ -32,12 +32,27 @@ const OPENQUANTUM_MANIFEST = JSON.stringify(
 const OPENQUANTUM_COPY = Object.freeze({
   "探索未至之境": "探索开放量子世界",
   "Into the Unknown": "Explore the open quantum world",
+  "填入各提供方的 API 密钥即可使用其模型。":
+    "配置提供方的 API 地址和凭据，即可使用对应模型。",
+  "Enter your API keys to use models from the following providers.":
+    "Configure each provider endpoint and credential to use its models.",
+  "自定义设置": "连接与模型设置",
+  "Customized settings": "Connection and model settings",
 });
 
 const OPENQUANTUM_COPY_SCRIPT = `(() => {
   const replacements = ${JSON.stringify(OPENQUANTUM_COPY)};
   const heroPreviewLabels = new Set(["预览版", "Preview"]);
-  const heroHeadlines = new Set(Object.values(replacements));
+  const heroHeadlines = new Set([
+    "探索开放量子世界",
+    "Explore the open quantum world",
+  ]);
+  const connectionSettingLabels = new Set([
+    "自定义设置",
+    "Customized settings",
+    "连接与模型设置",
+    "Connection and model settings",
+  ]);
 
   function replaceText(node) {
     if (node.nodeType === Node.TEXT_NODE) {
@@ -60,14 +75,38 @@ const OPENQUANTUM_COPY_SCRIPT = `(() => {
     for (const child of node.childNodes) replaceText(child);
   }
 
-  replaceText(document.documentElement);
+  function revealProviderConnectionSettings(node) {
+    const element = node.nodeType === Node.ELEMENT_NODE
+      ? node
+      : node.parentElement;
+    if (element === null) return;
+
+    const candidates = [];
+    if (element.matches?.("details")) candidates.push(element);
+    for (const details of element.querySelectorAll?.("details") ?? []) {
+      candidates.push(details);
+    }
+    for (const details of candidates) {
+      const summary = details.querySelector(":scope > summary");
+      if (connectionSettingLabels.has(summary?.textContent?.trim())) {
+        details.open = true;
+      }
+    }
+  }
+
+  function enhance(node) {
+    replaceText(node);
+    revealProviderConnectionSettings(node);
+  }
+
+  enhance(document.documentElement);
   new MutationObserver((records) => {
     for (const record of records) {
       if (record.type === "characterData") {
-        replaceText(record.target);
+        enhance(record.target);
         continue;
       }
-      for (const node of record.addedNodes) replaceText(node);
+      for (const node of record.addedNodes) enhance(node);
     }
   }).observe(document.documentElement, {
     characterData: true,
