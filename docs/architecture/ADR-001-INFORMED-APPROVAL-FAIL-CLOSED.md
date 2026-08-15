@@ -1,6 +1,6 @@
 # ADR-001：知情审批默认拒绝
 
-状态：已接受
+状态：已由 Harness 原生审批机制取代
 日期：2026-08-14
 关联工作：P1-06、HAR-006A
 
@@ -12,7 +12,8 @@ Harness 会在 Tool 执行前产生审批请求。UI 如果只展示 Tool 名称
 
 ## 决策
 
-在 Harness 层内部实现一个 `ApprovalDisclosure` 深模块。该模块从 Session history 的执行事实中生成不可变的安全展示，并决定交互是 `allow-once-or-deny` 还是 `deny-only`。UI 只渲染这个结论并提交用户意图，不自行关联或解释审批事实。
+审批状态、关联与执行门禁全部复用 DeepSeek Harness 原生实现。OpenQuantum 不再维护独立
+`ApprovalDisclosure`、交互映射或浏览器 Session adapter；原生 Web UI 只展示 Harness 已提供的审批事实并提交用户意图。
 
 只有同时满足以下条件时，`allow once` 才可用：
 
@@ -33,7 +34,7 @@ Harness 会在 Tool 执行前产生审批请求。UI 如果只展示 Tool 名称
 - Skill 可以声明某类领域操作需要审批及其风险类别，但不能自行放行；审批状态机、关联、执行门禁和审计属于 Harness。
 - UI 负责展示和收集选择，不拥有授权规则，不接触 raw arguments/IDs，也不能把普通问题回答转换成审批。
 - Model 不能生成或覆盖授权事实；其说明最多作为未经信任的输入，经 allowlist presenter 处理后才能展示。
-- Transport adapter 只翻译 `ApprovalDisclosure` 投影和响应命令，不保存第二份审批状态。
+- OpenQuantum Client Plugin 不改写审批协议，也不保存第二份审批状态。
 - 本决策不定义组织级长期授权、角色权限或科研结果是否可信；这些需要独立证据和决策。
 
 ## 退出测试
@@ -46,7 +47,7 @@ Harness 会在 Tool 执行前产生审批请求。UI 如果只展示 Tool 名称
 4. disclosure version 或关联指纹过期时，批准请求被拒绝，且 Tool 不执行。
 5. 重复响应、断线重放和旧审批结果不能解决或删除新的待审批请求。
 6. history 重基线和进程重启后，同一事实生成相同的审批模式；无法恢复完整证据时降级为 `deny-only`。
-7. In-memory 与 DeepSeek Adapter 通过同一审批合同测试；浏览器 E2E 证明 UI 不能伪造 `allow once` 所需信息。
+7. Harness 原生浏览器 E2E 证明 UI 不能伪造 `allow once` 所需信息。
 
 ## 后果
 

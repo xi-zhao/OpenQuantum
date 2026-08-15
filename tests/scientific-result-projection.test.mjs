@@ -1,9 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { createElement } from "react";
-import { renderToStaticMarkup } from "react-dom/server";
-
 import {
   apply,
   encodeScientificToolResult,
@@ -14,9 +11,6 @@ import {
   SOLVE_TOOL,
   VALIDATE_TOOL,
 } from "../runtime/openquantum/agent-presets/openquantum/scientific-result-projection.mjs";
-import { ScientificActivityPanel } from "../src/components/openquantum/ScientificActivityPanel";
-import { DeepSeekHarnessAdapterCore } from "../src/harness/deepseek-adapter-core";
-import { DeepSeekHarnessTransport } from "../src/harness/transport";
 
 function solveCanonicalValue() {
   return {
@@ -68,10 +62,6 @@ function solveAndValidateCanonicalValue() {
       },
     },
   };
-}
-
-function resultEnvelope(value) {
-  return { result: { ok: true, value } };
 }
 
 function materializedProjection() {
@@ -127,40 +117,6 @@ function materializedProjection() {
     resultCommit,
     resultPackagePath: resultCommit.resultPackage.path,
   });
-}
-
-function toolCall(seq, callId, name) {
-  return {
-    type: "tool/call",
-    seq,
-    time: seq,
-    data: { turn: 1, step: 1, callId, name, arguments: "{}" },
-  };
-}
-
-function toolResult(seq, callId, text, isError = false) {
-  return {
-    type: "tool/result",
-    seq,
-    time: seq,
-    data: {
-      turn: 1,
-      step: 1,
-      message: {
-        id: `result-${callId}`,
-        role: "user",
-        source: { kind: "tool", callId },
-        content: [
-          {
-            type: "tool-result",
-            toolCallId: callId,
-            content: [{ type: "text", text }],
-            isError,
-          },
-        ],
-      },
-    },
-  };
 }
 
 test("post-execute adapter persists a bounded scientific projection in tool/result content", async () => {
@@ -242,161 +198,6 @@ test("atomic workflow projection keeps observations separate from Acceptance", (
       未检查: "1",
     },
   );
-});
-
-test("Harness history folds scientific tool runtime and review status separately", async () => {
-  const solveProjection = projectScientificToolResult(
-    SOLVE_TOOL,
-    solveCanonicalValue(),
-  );
-  const solveText = `Solve complete.\n${encodeScientificToolResult(
-    solveProjection,
-  )}`;
-  const historyEvents = [
-    toolCall(1, "qgs-solve:0", SOLVE_TOOL),
-    toolResult(2, "qgs-solve:0", solveText),
-    toolCall(3, "qgs-validate:0", VALIDATE_TOOL),
-    toolCall(4, "qgs-atomic:0", SOLVE_AND_VALIDATE_TOOL),
-    toolResult(
-      5,
-      "qgs-atomic:0",
-      `Atomic complete.\n${encodeScientificToolResult(
-        projectScientificToolResult(
-          SOLVE_AND_VALIDATE_TOOL,
-          solveAndValidateCanonicalValue(),
-        ),
-      )}`,
-    ),
-    toolCall(6, "qgs-materialized:0", SOLVE_AND_VALIDATE_TOOL),
-    toolResult(
-      7,
-      "qgs-materialized:0",
-      `Materialized complete.\n${encodeScientificToolResult(
-        materializedProjection(),
-      )}`,
-    ),
-  ];
-  const client = {
-    sessions: {
-      history: async () =>
-        resultEnvelope({
-          events: historyEvents.map((event) => ({ event })),
-          hasMore: false,
-        }),
-    },
-  };
-  const transport = new DeepSeekHarnessTransport(client);
-  const conversation = await transport.getSnapshot("session-science");
-
-  assert.equal(conversation.scientificActivities.length, 4);
-  assert.deepEqual(
-    conversation.scientificActivities.map((activity) => ({
-      operation: activity.operation,
-      runtimeStatus: activity.runtimeStatus,
-      scientificStatus: activity.scientificStatus,
-    })),
-    [
-      {
-        operation: "solve",
-        runtimeStatus: "completed",
-        scientificStatus: "not_evaluated",
-      },
-      {
-        operation: "validate",
-        runtimeStatus: "running",
-        scientificStatus: "not_available",
-      },
-      {
-        operation: "solve-and-validate",
-        runtimeStatus: "completed",
-        scientificStatus: "observations_available",
-      },
-      {
-        operation: "solve-and-validate",
-        runtimeStatus: "completed",
-        scientificStatus: "acceptance_available",
-      },
-    ],
-  );
-
-  const core = new DeepSeekHarnessAdapterCore({
-    initialSessionId: "session-science",
-    transport: {
-      listSessions: async () => [
-        {
-          id: "session-science",
-          title: "科学记录",
-          updatedAt: 1,
-          running: false,
-          blank: false,
-        },
-      ],
-      getSnapshot: async () => conversation,
-      createSession: async () => "unused",
-      startPrompt: () => {
-        throw new Error("unused");
-      },
-      cancel: async () => {},
-      respondToInteraction: async () => {},
-      async *events() {},
-    },
-  });
-  const snapshot = await core.snapshot();
-  assert.equal(snapshot.activeSession.scientificActivities.length, 4);
-  assert(Object.isFrozen(snapshot.activeSession.scientificActivities));
-  assert(Object.isFrozen(snapshot.activeSession.scientificActivities[0].details));
-});
-
-test("scientific activity UI never equates runtime completion with acceptance", () => {
-  const validationProjection = projectScientificToolResult(
-    VALIDATE_TOOL,
-    validationCanonicalValue(),
-  );
-  const markup = renderToStaticMarkup(
-    createElement(ScientificActivityPanel, {
-      activities: [
-        {
-          id: "materialized-call",
-          toolName: SOLVE_AND_VALIDATE_TOOL,
-          ...materializedProjection(),
-          runtimeStatus: "completed",
-          sequence: 8,
-        },
-        {
-          id: "atomic-call",
-          toolName: SOLVE_AND_VALIDATE_TOOL,
-          ...projectScientificToolResult(
-            SOLVE_AND_VALIDATE_TOOL,
-            solveAndValidateCanonicalValue(),
-          ),
-          runtimeStatus: "completed",
-          sequence: 6,
-        },
-        {
-          id: "solve-call",
-          toolName: SOLVE_TOOL,
-          ...projectScientificToolResult(SOLVE_TOOL, solveCanonicalValue()),
-          runtimeStatus: "completed",
-          sequence: 2,
-        },
-        {
-          id: "validation-call",
-          toolName: VALIDATE_TOOL,
-          ...validationProjection,
-          runtimeStatus: "completed",
-          sequence: 4,
-        },
-      ],
-    }),
-  );
-
-  assert.match(markup, /运行：已完成/);
-  assert.match(markup, /科学：尚未验收/);
-  assert.match(markup, /科学：已有逐项观察/);
-  assert.match(markup, /科学：已有整体验收/);
-  assert.match(markup, /验收：通过/);
-  assert.match(markup, /通过/);
-  assert.equal((markup.match(/验收：通过/g) ?? []).length, 1);
 });
 
 test("scientific result replay rejects non-canonical commit paths and extra fields", () => {

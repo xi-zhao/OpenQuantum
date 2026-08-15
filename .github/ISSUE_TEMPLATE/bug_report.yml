@@ -1,61 +1,54 @@
-name: Bug Report
-description: Report a bug or unexpected behavior
-title: "[Bug]: "
+name: OpenQuantum Bug
+description: 报告 Harness、量子 Skill、MCP、设置或科学验收中的问题
+title: "[Bug] "
 labels: ["bug"]
 body:
   - type: markdown
     attributes:
       value: |
-        Thanks for taking the time to report a bug! Please fill out the form below so we can reproduce and fix it.
+        感谢帮助改进 OpenQuantum。请不要粘贴 API Key、Token、私有数据或未脱敏日志。
 
   - type: textarea
     id: description
     attributes:
-      label: Description
-      description: A clear description of what the bug is.
-      placeholder: What happened?
+      label: 问题描述
+      description: 说明你看到的行为，以及它发生在 Harness、Skill、MCP、设置还是科学验收层。
+      placeholder: 发生了什么？
     validations:
       required: true
 
   - type: textarea
     id: reproduction
     attributes:
-      label: Steps to Reproduce
-      description: Step-by-step instructions to reproduce the behavior.
+      label: 复现步骤
+      description: 给出最小、可重复的操作步骤。
       placeholder: |
-        1. Run `npm run dev:stack`
-        2. Create or open a session
-        3. Perform the smallest action that exposes the problem
+        1. 运行 `npm run dev`
+        2. 创建或打开一个 Harness Session
+        3. 执行触发问题的最小操作
     validations:
       required: true
 
   - type: textarea
     id: expected
     attributes:
-      label: Expected Behavior
-      description: What did you expect to happen?
+      label: 期望行为
+      description: 你认为系统应该怎样工作？
     validations:
       required: true
 
   - type: textarea
     id: actual
     attributes:
-      label: Actual Behavior
-      description: What actually happened? Include error messages or screenshots if possible.
+      label: 实际行为
+      description: 实际发生了什么？可附脱敏后的错误、Session 事件或截图。
     validations:
       required: true
-
-  - type: input
-    id: capability-release
-    attributes:
-      label: Capability release
-      description: Publisher, capability, version and package digest when applicable.
-      placeholder: io.github.example/ground-state@1.0.0 (sha256:...)
 
   - type: dropdown
     id: os
     attributes:
-      label: Operating System
+      label: 操作系统
       options:
         - macOS
         - Windows
@@ -66,8 +59,8 @@ body:
   - type: input
     id: node-version
     attributes:
-      label: Node.js Version
-      description: Run `node -v` to find this.
+      label: Node.js 版本
+      description: 运行 `node -v` 查看。
       placeholder: v24.x.x
     validations:
       required: true
@@ -75,12 +68,12 @@ body:
   - type: input
     id: harness-version
     attributes:
-      label: Harness / OpenQuantum version
-      description: Include commit hash and DeepSeek Harness version when known.
+      label: Harness / OpenQuantum 版本
+      description: 请提供 OpenQuantum commit；如已知，也提供 DeepSeek Harness 版本。
       placeholder: OpenQuantum commit / dsh 0.1.0-rc.6
 
   - type: textarea
     id: additional
     attributes:
-      label: Additional Context
-      description: Any other context, logs, or screenshots.
+      label: 补充信息
+      description: 其他经过脱敏的上下文、日志或截图。

@@ -36,9 +36,10 @@ OpenQuantum 不创建与 Harness 重复的业务对象：
 | 量子工作流与解释边界 | Harness Skill |
 | 确定性科学计算 | OpenQuantum MCP / Tool |
 | 科学验收 | 独立 OpenQuantum Validator；可与 Skill 共置，由 Tool/插件调用 |
-| 可回放科学展示 | Harness `tool/result` + OpenQuantum 薄投影 Adapter |
+| 可回放科学展示 | Harness `tool/result` + OpenQuantum 原生 Client Plugin 投影 |
 
-OpenQuantum 自己只维护量子 preset、Skill、MCP、可信插件、科学 Validator、必要 UI 和薄 transport adapter。
+OpenQuantum 自己只维护量子 preset、Skill、MCP、可信插件、科学 Validator，以及通过 Harness 原生扩展点
+注入的必要 UI。
 
 结构化 MCP 返回值仍由 Harness Tool pipeline 执行。对于需要刷新后继续显示的少量科学摘要，仓库内可信
 插件只在官方 `tools/post-execute` 接缝生成有界展示投影，并随原生 `tool/result` 进入 Session log；它不创建
@@ -74,7 +75,7 @@ DeepSeek Harness 已有配置；量子公司通过 Fork 管理自己的发行版
 
 - 展示 Session、消息、Tool 调用、Artifact、执行状态和科学验收状态；
 - 发出创建、发送、取消、审批等用户意图；
-- 只经过 `HarnessTransportAdapter` 访问 Harness；
+- 只使用 Harness Web UI 已有的 Session 与 Tool 数据流；
 - 不运行量子算法，不推导科学结论，不保存第二份 Session 状态。
 
 ### Harness
@@ -129,7 +130,7 @@ flowchart LR
 
 - 固定已验证的 DeepSeek Harness 版本；
 - 对 Session、Agent、Skill、MCP、Plugin、权限、沙箱、Model 和持久化做真实调用审计；
-- 记录 OpenQuantum preset 与薄 transport adapter 的唯一必要改造；
+- 记录 OpenQuantum preset 与 Harness 原生 Web 扩展的唯一必要改造；
 - 删除路线图中自建包市场、安装治理和 Capability Runtime 的任务。
 
 退出条件：架构文档和实际配置一致，所有通用运行职责都有 Harness 权威实现或明确上游缺口。
@@ -168,7 +169,7 @@ flowchart LR
 - Runtime / Scientific 两组状态分别展示；
 - 真实模型完成至少一次 Tool Calling E2E；
 - 发布 Fork、Skill、MCP、preset 和 `dsh-plugin` 开发说明；
-- CI 运行 Skill、MCP、Harness 集成、UI E2E、lint、typecheck 和 build。
+- CI 运行 Skill、MCP、Harness 集成、原生 UI 扩展、lint 和配置展开检查。
 
 退出条件：一个新开发者只读仓库文档即可在本机启动、运行黄金案例，并知道如何按需增加独立的
 Skill、MCP 或 Validator，再由 preset 组合。
@@ -177,7 +178,7 @@ Skill、MCP 或 Validator，再由 preset 组合。
 
 | 里程碑 | 状态 | 已有证据 | 尚缺 |
 | --- | --- | --- | --- |
-| M0 | 完成 | Harness-first 架构、preset、薄 UI Port 与诊断合同已落地 | 持续跟踪 rc 版本变化 |
+| M0 | 完成 | Harness-first 架构、preset、原生 Web 扩展与诊断合同已落地 | 持续跟踪 rc 版本变化 |
 | M1 | 完成 | QGS solver、独立 exact reference、Validator、Artifact schema 与 35 项 QGS/MCP 测试 | 无 |
 | M2 | 完成 | 官方 stdio MCP、原子 workflow + 两项高级 Tool、Harness 原生注册测试，以及真实 provider 的 `tool/call`→`tool/result` 事件链 | 无 |
 | M3 | 核心链完成 | 真实模型经 Harness 调用 QGS MCP，完成 `ctx.fs` Result Package 物化、完整 Validator→中央 Acceptance、Result Commit 与 UI 回放；真实浏览器已人工验收最终卡片，另有零密钥黄金案例、双 Session MCP 回归和隔离 Harness CI | 把已验证的浏览器输入→最终验收卡片流程自动化到 CI |
@@ -199,7 +200,7 @@ Package、Acceptance Report 和 Result Commit 均通过复核。没有 Provider 
 | Model probe | 配置的云模型可生成文本并调用 Tool |
 | `e2e:quantum-harness` | 真实模型经 AgentLoop 调用 QGS MCP，并提交可复核科学验收 |
 | Secret scan | 密钥不进入仓库、日志和 Artifact |
-| `npm run check` | lint、类型、测试和生产构建通过 |
+| `npm run check` | lint、测试和 Harness 组合配置检查通过 |
 
 MVP 完成必须同时满足：
 
@@ -232,7 +233,7 @@ Harness 特权。只有当多个真实贡献者明确需要跨 Fork 分发、安
 
 | 风险 | MVP 控制 |
 | --- | --- |
-| Harness 预览版破坏性变化 | 固定版本、薄 adapter、真实 E2E、优先上游修复 |
+| Harness 预览版破坏性变化 | 固定版本、少量原生扩展、真实 E2E、优先上游修复 |
 | 为平台感重复造 Runtime | 每项通用机制先核对 Harness；OpenQuantum 只做量子差异 |
 | LLM 产生科学幻觉 | MCP 产数值、Validator 推状态、模型只解释 |
 | Skill 作用域过度承诺 | 明确 supported / out-of-scope，增加边界负例 |

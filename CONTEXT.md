@@ -14,10 +14,10 @@ Session、Agent loop、Turn、Step、Goal、Job、Tool、Skill、MCP、Plugin、
 事件和持久化的权威实现。OpenQuantum 不复制这些对象。
 _Avoid_: OpenQuantum Runtime、第二套会话系统
 
-**Harness Transport Adapter（Harness 传输适配器）**：
-UI 与 Harness Web Host 之间很薄的协议适配，负责白名单、类型翻译、事件重连和错误归一化；
-不保存业务状态，不调度工具，也不构成第五层。
-_Avoid_: 业务后端、工作流引擎
+**Harness Native UI Extension（Harness 原生 UI 扩展）**：
+通过 Harness Client Plugin、Slot、Settings 和 Web Host 扩展点增加 OpenQuantum 品牌与科研展示；
+不复制 Session 投影、事件重连、模型调用或 Tool 生命周期。
+_Avoid_: 平行 Web UI、第二套浏览器状态机
 
 ## Research execution
 

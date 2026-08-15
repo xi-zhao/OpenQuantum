@@ -1,9 +1,9 @@
-# Auto-detect text files and normalise line endings to LF in the repo
+# Keep repository text deterministic across research environments.
 * text=auto
 
-# Shell scripts must always use LF, even on Windows
+# Harness and validation scripts run in POSIX environments.
 *.sh text eol=lf
 
-# Batch files must always use CRLF
+# Windows launchers retain their native line endings.
 *.bat text eol=crlf
 *.cmd text eol=crlf

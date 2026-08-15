@@ -2,7 +2,7 @@
 
 OpenQuantum 是一个基于 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 的开源量子科研发行版。
 它不重新实现 Agent Runtime，也不建设独立插件市场；它在 Harness 已有能力之上，提供量子科研 preset、
-初级 Skill、MCP、科学 Validator、必要 UI 和一层很薄的传输适配。
+初级 Skill、MCP、科学 Validator 和必要的 Harness 原生 UI 扩展。
 
 目标是让量子公司和科研团队可以直接 Fork 仓库，沿用 Harness 原生方式增加自己的 Skill、MCP 或
 `dsh-plugin`，而不必先学习一套 OpenQuantum 私有扩展协议。
@@ -35,7 +35,7 @@ OpenQuantum 的原则是：
 - 在原生配置不足时才使用的、经过审查的 `dsh-plugin`；
 - 可为维护 locality 与 Skill 共置、但由 Tool/插件独立调用的科学 Validator 和 eval；
 - 通过 Harness 原生 Client Plugin / Slot 展示科研产物与“执行状态 / 科学验收状态”的必要 UI；
-- 只在 Harness 尚未提供所需扩展点时保留薄兼容 Adapter，不维护第二套 Agent Web Runtime。
+- 只通过 Harness 的扩展点增加产品差异，不维护第二套 Agent Web Runtime。
 
 第一版明确不做：独立 Runtime、私有 `.oqcap` 包格式、插件市场、安装锁、签名与发布治理、
 多租户 SaaS 控制面，以及一套平行于 Harness 的权限或持久化系统。
@@ -79,7 +79,7 @@ OpenQuantum 的原则是：
 - OpenQuantum 项目级 Agent preset；
 - 真实 Session 创建、历史、消息、取消、审批与问题响应；
 - `events.mux` / `events.host` WebSocket 事件、重连和 history 重基线；
-- 同源白名单代理，浏览器不能读取模型凭证或调用任意 Host 管理方法；
+- Harness 原生 Web Host、RPC 权限边界与凭据库，浏览器不会获得模型密钥；
 - `platform-diagnostics` 诊断 Skill；
 - `quantum-ground-state` 参考 Skill 与 Harness 原生 stdio MCP；
 - `qiskit-circuit-workbench` 电路审查 Skill 与 `quantum-sdk-advisor` 量子软件栈选型 Skill；
@@ -104,7 +104,7 @@ npm install
 cp .env.example .env
 npm run mcp:qiskit:probe
 npm run demo:quantum-ground-state
-npm run dev:stack
+npm run dev
 ```
 
 `demo:quantum-ground-state` 使用官方 MCP Client 启动本地 stdio server，并调用
@@ -116,9 +116,9 @@ Harness Adapter 物化并重新验收。
 
 - OpenQuantum（DeepSeek Harness 原生 Web UI）：<http://127.0.0.1:3000>
 
-默认启动链只运行一个 Harness Web Host。OpenQuantum 通过 Harness 官方 `tapIndex` 扩展点替换浏览器标题、
-图标和侧栏字标，不复制或修改 `node_modules` 中的前端源码。仓库中的旧 Next.js UI 仅暂留作迁移期兼容面，
-可用 `npm run dev:legacy-ui` 单独启动；新功能不再优先添加到这套平行 UI。
+默认启动链只运行一个 Harness Web Host。OpenQuantum 通过 Harness 官方 `tapIndex`、Client Plugin 和
+Settings 扩展点增加浏览器标题、品牌、量子组件设置与科研结果展示，不复制或修改 `node_modules` 中的
+前端源码，也不维护平行 Web UI。
 
 真实密钥只放在被 Git 忽略的 `.env` 或 Harness credential store 中。仓库配置只能引用环境变量名。
 
@@ -178,10 +178,9 @@ npm run mcp:quantum-hardware:setup
   `agent.cordis.yml`，审阅后再启用；
 - 内置 `stdio` MCP 可以声明必需及可选的多个 Harness credential reference；设置中心只展示配置状态，
   值不会写入 Agent preset。自定义 MCP 的首版表单仍提供一个凭据引用；
-- Skill 可以从名称、能力描述和 Markdown 指令生成标准 `.agents/skills/<name>/SKILL.md`，随后仍由
-  DeepSeek Harness 原生文件系统 Provider 发现；
-- 只有设置中心创建的项目扩展可以在 UI 中移除。内置、科学验收或手工安装的扩展受到保护；自定义 Skill
-  会移入 `.openquantum/trash/skills`，方便恢复。
+- Skill 通过 Git、解压或手工复制标准 `.agents/skills/<name>/` 目录接入，再由设置中心重新扫描并管理
+  调用策略；设置表单不把 Markdown 文本伪装成完整 Skill；
+- 只有设置中心登记的自定义 MCP 可以在 UI 中移除；仓库内 Skill 和科学扩展继续走普通代码审查。
 
 这是项目级配置，不是远程插件市场。复杂 Skill、多个凭据或带鉴权 HTTP MCP 仍应通过仓库文件审阅后接入。
 任何自定义 `stdio` command 都会在 Harness 权限下执行，因此只应使用明确可信且最好固定版本的来源。

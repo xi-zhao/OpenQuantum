@@ -30,7 +30,7 @@ OpenQuantum 不建设私有插件市场、包管理器、安装锁、Catalog、�
 - 项目级 OpenQuantum Agent preset 和模型 Provider route；
 - Harness 原生 Session 创建、历史、Prompt、取消、审批和问题响应；
 - `events.mux` / `events.host` 双流、重连和 history 重基线；
-- 一个隔离预览版协议变化的薄 UI Adapter；
+- 通过 Harness 官方扩展点注册的 OpenQuantum 品牌、设置和科研展示；
 - 项目 Skill 根 `.agents/skills`；
 - `platform-diagnostics` 诊断 Skill；
 - `quantum-ground-state` 量子基态 Skill；
@@ -71,18 +71,9 @@ MCP 或 Skill 文件系统，不保存第二份 Session 历史，也不推导科
 `tapIndex` 扩展点组合 OpenQuantum 品牌与量子科研展示。这样 Session、审批、模型、设置和插件界面
 继续由 Harness 自己维护，不在 OpenQuantum 中复制一套平行状态机。
 
-仓库暂留的 Next.js UI 与 `HarnessUiPort` 是迁移期兼容面：
-
-```ts
-interface HarnessUiPort {
-  snapshot(): Promise<WorkspaceSnapshot>
-  command(command: UiCommand): Promise<CommandReceipt>
-  events(afterRevision: number | null, signal: AbortSignal): AsyncIterable<UiEvent>
-}
-```
-
-这个 Adapter 不再是默认启动链。新增 Goal、Job、Skill、Model 或量子算法行为时，必须优先使用 Harness
-原生 UI/扩展点或向上游贡献，而不是继续把 Runtime 状态复制进 Adapter；只有尚未迁完的兼容功能才使用它。
+OpenQuantum 不保留独立的浏览器应用、Session 投影或事件 Transport Adapter。品牌通过 `tapIndex` 注入，
+量子设置与科研展示通过 Harness Client Plugin、Slot 和 Settings 扩展。新增 Goal、Job、Skill、Model 或
+量子算法行为时，必须继续使用 Harness 原生 UI/扩展点或向上游贡献，不能重新复制 Runtime 状态。
 
 ### 4.2 Harness
 
@@ -264,11 +255,11 @@ MVP 完成需要证明：
 
 | 风险 | 当前控制 |
 | --- | --- |
-| Harness Developer Preview 发生破坏性变化 | 固定版本、薄 Adapter、真实 E2E、优先上游修复 |
+| Harness Developer Preview 发生破坏性变化 | 固定版本、少量原生扩展、真实 E2E、优先上游修复 |
 | LLM 产生科学幻觉 | MCP 产数值、Validator 产 observations、模型只解释 |
 | Skill 作用域过度承诺 | supported/out-of-scope、schema、正负例和篡改测试 |
 | MCP/Plugin 获得宿主权限 | 仓库内可信代码、依赖锁定、显式配置、代码审查 |
 | 社区硬件 MCP 提交真实云任务 | 默认关闭、固定源码 SHA、显式安装与启用、Harness 凭据引用、最小权限云账户 |
 | 凭证或科研数据泄露 | 服务端环境引用、同源白名单、Artifact 秘密扫描 |
-| UI Adapter 演化成第二套 Runtime | 冻结业务范围，优先使用 Harness 原生 UI/扩展点 |
+| Client Plugin 演化成第二套 Runtime | 冻结业务范围，只做展示与配置扩展，通用能力回到 Harness 上游 |
 | MVP 被场景扩张拖散 | QGS E2E 完成前不增加第二条量子纵切 |

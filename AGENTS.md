@@ -1,13 +1,3 @@
-<!-- BEGIN:nextjs-agent-rules -->
-
-# This is NOT the Next.js you know
-
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
-
-This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
-
-<!-- END:nextjs-agent-rules -->
-
 # OpenQuantum
 
 OpenQuantum 是一个科研 Agent 操作平台。DeepSeek Harness 负责通用 Agent Runtime，量子计算、
@@ -18,7 +8,7 @@ OpenQuantum Validator/eval 提供。
 
 ## 四层边界
 
-1. UI：展示、输入和交互，只通过 Harness transport adapter 发命令、收事件。
+1. UI：直接使用 Harness 原生 Web UI；OpenQuantum 只通过 Harness Client Plugin 和 Slot 增加品牌、设置与科研展示。
 2. Harness：Session、Turn、Step、Goal、Job、事件日志、工具调度、审批、沙箱和持久化。
 3. 量子扩展内容：Harness Skill 保存领域工作流和 Prompt；MCP/Tool 提供执行能力；Validator/eval
    保存可强制的科学规则。三者是独立模块，由 preset / Cordis 组合。
@@ -40,26 +30,25 @@ OpenQuantum Validator/eval 提供。
 
 ## 代码位置
 
-- `src/app`、`src/components/openquantum`：UI。
-- `src/harness`：UI 与 Harness 之间唯一的 transport adapter seam。
-- `runtime/openquantum`：Harness profile、preset 和模型 route 配置。
+- `runtime/openquantum`：Harness patch、preset、模型 route、品牌和原生 Client Plugin。
+- `src/settings/server`：项目 Skill、MCP 与凭据引用的受控设置实现。
 - `.agents/skills`：Harness 原生 Skill 指令，以及为维护 locality 可选共置的领域资源；MCP 仍需在
   preset 中独立注册。
 - `docs/architecture`：架构决策和边界。
 
 ## 常用命令
 
-- `npm run dev`：启动 Next.js UI。
-- `npm run harness:dev`：启动 OpenQuantum Harness Web Host。
+- `npm run dev`：启动 OpenQuantum Harness Web Host 和原生 Web UI。
+- `npm run harness:dev`：以自定义参数启动同一个 Harness Host。
 - `npm run harness:config`：展开并检查 Harness 组合配置。
 - `npm run models:probe -- --provider openquantum-public`：验证模型目录、文本生成和工具调用。
 - `npm run capability:diagnostics:test`：验证平台诊断能力包和评分规则。
-- `npm run check`：运行 lint、类型检查和生产构建。
+- `npm run check`：运行 lint、平台/科学测试并验证 Harness 组合配置。
 
 ## 实现规则
 
-- TypeScript strict，避免 `any`；命名清晰，2 空格缩进。
-- 领域指令放 Skill；可强制规则放 MCP/Tool、Validator 或可信插件，不散落在 React 组件、API route
-  或 Provider 配置里。
+- 使用清晰的原生 ESM、明确数据结构和 2 空格缩进。
+- 领域指令放 Skill；可强制规则放 MCP/Tool、Validator 或可信插件，不散落在 Client Plugin 或
+  Provider 配置里。
 - 先定义核心对象、状态、事件和不变量，再选择文件与框架实现。
 - 每次变更运行最相关的检查，并明确报告未通过或未验证的部分。

@@ -143,7 +143,7 @@ Harness 的 MCP bridge 负责进程、重连、Tool registry 和调用；不要�
 
 1. 在该深模块的 Tool descriptor / projector registry 增加一种明确映射；
 2. 只投影 UI 真正需要的有限字段和受校验 Result Commit，不把 Artifact 正文或凭证塞进 Session event；
-3. 在 `HarnessUiPort` 中保持 Runtime 状态和 Scientific 状态为两个字段；
+3. 在 Harness 原生 `tool/result` 展示投影中保持 Runtime 状态和 Scientific 状态为两个字段；
 4. 增加 `tool/call`、成功 `tool/result`、失败结果、恶意 envelope 与刷新回放测试；
 5. 不新增 OpenQuantum 私有 Session event、第二份会话数据库或 Tool Runtime。
 
@@ -168,7 +168,7 @@ Skill 实现者不能单独放宽自己的科学门槛。涉及阈值、作用�
 
 ## 平台贡献
 
-修改 UI、transport adapter 或 Harness 配置前，请说明：
+修改 Harness Client Plugin、Web Host 扩展或 Harness 配置前，请说明：
 
 1. 解决的产品问题；
 2. 受影响的 Harness 原生对象和事件；
@@ -180,10 +180,9 @@ Skill 实现者不能单独放宽自己的科学门槛。涉及阈值、作用�
 
 ```bash
 npm run lint
-npm run typecheck
 npm run demo:quantum-ground-state
 npm run test:p1
-npm run build
+npm run harness:config
 npm run check
 ```
 

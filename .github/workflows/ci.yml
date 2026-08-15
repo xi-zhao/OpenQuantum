@@ -29,15 +29,5 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Verify generated agent rules
-        shell: bash
-        run: |
-          bash scripts/sync-agent-rules.sh
-          git diff --exit-code -- \
-            .amazonq/rules/project.md \
-            .clinerules \
-            .continue/rules/project.md \
-            .github/copilot-instructions.md
-
       - name: Run quality gate
         run: npm run check

@@ -24,7 +24,7 @@ OpenQuantum 目前处于预发布开发阶段。安全修复应用于 `main` 的
 
 我们关注但不限于：
 
-- Harness 同源网关、Session/interaction、权限和沙箱绕过；
+- Harness Web Host、Session/interaction、权限和沙箱绕过；
 - Skill、MCP 或 `dsh-plugin` 的依赖与供应链污染；
 - Tool/MCP 未经声明的网络、文件、子进程或云资源访问；
 - API Key、科研输入、Artifact 或来源链泄露；
