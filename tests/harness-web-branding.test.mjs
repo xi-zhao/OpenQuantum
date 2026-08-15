@@ -84,6 +84,8 @@ test("registers branding through the Harness webServer index tap", () => {
   );
   assert.match(body, /开放量子世界/);
   assert.match(body, /Open the quantum world/);
+  assert.match(body, /heroPreviewLabels/);
+  assert.match(body, /parent\.remove\(\)/);
 });
 
 test("fails loudly if a future Harness shell no longer has an HTML head", () => {

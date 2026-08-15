@@ -36,9 +36,22 @@ const OPENQUANTUM_COPY = Object.freeze({
 
 const OPENQUANTUM_COPY_SCRIPT = `(() => {
   const replacements = ${JSON.stringify(OPENQUANTUM_COPY)};
+  const heroPreviewLabels = new Set(["预览版", "Preview"]);
+  const heroHeadlines = new Set(Object.values(replacements));
 
   function replaceText(node) {
     if (node.nodeType === Node.TEXT_NODE) {
+      const parent = node.parentElement;
+      const headline = parent?.previousElementSibling?.textContent?.trim();
+      if (
+        parent !== null &&
+        heroPreviewLabels.has(node.nodeValue) &&
+        heroHeadlines.has(headline)
+      ) {
+        parent.remove();
+        return;
+      }
+
       const replacement = replacements[node.nodeValue];
       if (replacement !== undefined) node.nodeValue = replacement;
       return;
