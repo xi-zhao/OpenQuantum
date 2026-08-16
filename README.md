@@ -21,26 +21,28 @@
 
 <p align="center">
   <a href="#快速开始">快速开始</a> ·
-  <a href="#已经接入的量子能力">量子能力</a> ·
-  <a href="#开放给二次开发">扩展开发</a> ·
+  <a href="#已集成的量子工具与能力">量子能力</a> ·
+  <a href="#把你的量子能力接进来">扩展开发</a> ·
   <a href="./CONTRIBUTING.md">参与贡献</a>
 </p>
 
-OpenQuantum 把量子电路、算法、云后端和科研 Agent 放进同一个可视化工作台。你可以用自然语言调用已经接入的工具，也可以通过标准 Skill 和 MCP 接入自己的设备、算法、数据与模型。
+OpenQuantum 是一个开源的量子 Agent 工作台。它把量子电路、算法、云后端和科研工作流带到同一个可视化界面里，让更多人可以从一句自然语言开始，使用量子工具，也看得懂任务是怎样完成的。
 
-它适合直接使用，也适合研究机构和量子公司继续开发。底层复用 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 的会话、工具调度、权限、持久化与执行轨迹，OpenQuantum 专注于量子能力和产品体验。
+你可以直接使用已经集成的 Qiskit、FieldQKit 和量子算法能力，也可以把自己的设备、数据、方法和模型做成 Skill 或 MCP，交给同一个 Agent 调用。研究机构可以用它组织科研工作流，量子公司也可以在这套基础上继续开发自己的产品。
+
+OpenQuantum 基于 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 构建。Harness 提供会话、工具调度、权限、持久化和执行轨迹，OpenQuantum 在上面组织量子工具、算法 Skill、科学验收和更适合量子工作的产品界面。
 
 <table>
   <tr>
-    <td width="33%"><strong>对使用者</strong><br />在一个界面里分析电路、查询后端、运行算法，不必先拼装一套工具链。</td>
-    <td width="33%"><strong>对团队</strong><br />统一管理模型、MCP、Skill 和量子云凭据，保留每一次任务的执行记录。</td>
-    <td width="33%"><strong>对开发者</strong><br />沿用开放协议增加新后端和新方法，不需要学习 OpenQuantum 私有插件格式。</td>
+    <td width="33%"><strong>直接使用</strong><br />在一个界面里分析电路、查询后端、运行算法，并查看完整的任务过程。</td>
+    <td width="33%"><strong>团队协作</strong><br />统一管理模型、MCP、Skill 和量子云凭据，让每一次任务都有迹可循。</td>
+    <td width="33%"><strong>继续开发</strong><br />沿用 Skill、MCP 等开放方式，接入新的量子后端、算法和科研工作流。</td>
   </tr>
 </table>
 
-## 一次真实的量子任务
+## 从一个真实任务开始
 
-下面不是设计稿。OpenQuantum 实际运行了一次二量子位基态任务，由 VQE 求解，再用独立计算检查结果。
+下面是一段 OpenQuantum 的实际运行记录。Agent 完成了一次二量子位基态任务，先用 VQE 求解，再用独立计算检查结果。任务结果、工具调用和科学验收都保留在同一条轨迹里。
 
 <table>
   <tr>
@@ -57,9 +59,9 @@ OpenQuantum 把量子电路、算法、云后端和科研 Agent 放进同一个�
 
 <p align="center"><sub>真实运行画面　从任务结果到独立科学检查</sub></p>
 
-## 已经接入的量子能力
+## 已集成的量子工具与能力
 
-OpenQuantum 尽量直接使用社区已有成果。上游工具可以原样运行时，只固定版本并交给 Harness 管理。只有缺少产品入口、安全边界或领域工作流时，才增加薄桥接、Skill 或 Validator。
+这里既有 Qiskit 提供的官方 MCP，也有 FieldQKit、Quantum Hardware MCP 等社区项目，还有 OpenQuantum 自己维护的算法 Skill 和科学 Validator。每一项都写明了来源、集成方式和默认状态，方便使用，也方便后续维护和扩展。
 
 | 组件 | 来源与集成方式 | 可以完成的事情 | 默认状态 |
 | --- | --- | --- | --- |
@@ -73,7 +75,7 @@ OpenQuantum 尽量直接使用社区已有成果。上游工具可以原样运�
 | 量子基态求解 | OpenQuantum 自研 · Skill + MCP + Validator | 求解限定的二量子位 Hamiltonian，并与独立精确解比较 | 开启，本地运行 |
 | 量子 SDK 选型 | OpenQuantum 自研 · Skill | 比较 Qiskit、Cirq、PennyLane、Q#、Braket、CUDA-Q 等工具 | 开启 |
 
-第三方组件仍归原作者所有，并继续使用各自的许可证。OpenQuantum 的修改范围、固定版本与许可证边界记录在 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
+第三方组件保留原项目的版权与许可证。对应的版本、来源和 OpenQuantum 集成内容记录在 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
 
 <table>
   <tr>
@@ -90,25 +92,15 @@ OpenQuantum 尽量直接使用社区已有成果。上游工具可以原样运�
   </tr>
 </table>
 
-## 后端覆盖
+## 可以连接哪些量子后端
 
-OpenQuantum 已经为本地模拟、IBM Quantum、IonQ 和多家国内量子云提供发现或接入入口。不同后端的能力边界会明确显示，不把只能查询写成可以运行真实任务。
-
-| 后端范围 | 已有能力 | 使用条件 |
-| --- | --- | --- |
-| 本地 | 模拟器信息、量子基态参考能力 | 无需凭据 |
-| IBM Quantum | Runtime、AI Transpiler、硬件查询，可选真实任务提交与取消 | `QISKIT_IBM_TOKEN`，相关 MCP 默认关闭 |
-| IonQ | 硬件查询，可选真实任务提交、取消与成本估算 | `IONQ_API_KEY`，相关 MCP 默认关闭 |
-| 国内量子云 | 夸父、天衍、国盾、腾讯、本源、FieldQuantum、逻辑比特 | 对应云凭据，当前为只读发现 |
-
-<details>
-<summary><strong>查看全部后端与凭据</strong></summary>
+OpenQuantum 已经为本地模拟、IBM Quantum、IonQ 和多家国内量子云准备了入口。每个平台当前可以做什么、需要什么凭据，都可以在这里直接看到。
 
 | 后端 | 当前能力 | 凭据或使用条件 |
 | --- | --- | --- |
 | 本地模拟器 | 查看模拟器元数据，运行本地量子基态参考能力 | 无需凭据 |
-| IBM Quantum | Runtime、AI Transpiler、硬件查询，可选真实任务提交与取消 | `QISKIT_IBM_TOKEN` |
-| IonQ | 硬件查询，可选真实任务提交、取消与成本估算 | `IONQ_API_KEY` |
+| IBM Quantum | Runtime、AI Transpiler、硬件查询，可选真实任务提交与取消 | `QISKIT_IBM_TOKEN`，任务类 MCP 按需开启 |
+| IonQ | 硬件查询，可选真实任务提交、取消与成本估算 | `IONQ_API_KEY`，任务类 MCP 按需开启 |
 | 夸父量子云 | 凭据检查、后端发现、量子位筛选、拓扑与校准摘要 | `QUAFU_API_TOKEN`，只读 |
 | 天衍量子云 | 凭据检查、后端发现、量子位筛选、拓扑与校准摘要 | `TIANYAN_API_TOKEN`，只读 |
 | 国盾量子云 | 凭据检查、后端发现、量子位筛选、拓扑与校准摘要 | `GUODUN_API_TOKEN`，只读 |
@@ -117,23 +109,19 @@ OpenQuantum 已经为本地模拟、IBM Quantum、IonQ 和多家国内量子云�
 | FieldQuantum | 云端模拟后端发现 | `FIELDQUANTUM_API_TOKEN`，只读 |
 | 逻辑比特量子云 | 凭据检查、后端发现、量子位筛选、拓扑与校准摘要 | `LOGICALQUBIT_API_TOKEN`，只读 |
 
-</details>
+硬件任务和付费服务按需开启。后端发现类能力保持只读，适合先了解设备、拓扑和校准信息，再决定是否进入真实任务流程。
 
-可能产生费用、数据外发或硬件副作用的 MCP 都保持默认关闭。用户需要先配置凭据，再主动开启。FieldQKit 当前只做只读发现，不会提交、取消或删除真实任务。
+## 每一步，都看得见
 
-## 为什么保留执行轨迹
+做量子任务时，一个结果往往不够。OpenQuantum 会把用户请求、Skill 加载、工具调用、权限状态和返回结果连成一条清晰的执行轨迹。
 
-量子 Agent 不应该只给出一句结果。DeepSeek Harness 会保留用户请求、Skill 加载、工具调用、权限状态和返回结果。开发者可以判断 Agent 有没有选对方法，实际调用了哪个 MCP，失败发生在模型、工具、权限还是外部服务。
+使用者可以知道 Agent 调用了什么，开发者也可以沿着这条轨迹定位模型、工具、权限和外部服务中的问题。对科研工作来说，这份过程记录和最终数字一样重要。
 
-这里展示的是可检查的执行事实，不是模型的隐藏思维过程。
+## 运行完成之后，还有科学验收
 
-## 科学结论单独验收
+OpenQuantum 把任务运行和科学验收分开显示。`quantum-ground-state` 是一个小而完整的参考能力，它在固定扇区内运行二量子位无噪声 statevector VQE，再用独立程序检查能量、态矢、收敛轨迹和数值残差。
 
-任务完成和科学可信是两个状态。
-
-`quantum-ground-state` 是 OpenQuantum 的参考能力。它只处理明确限定的二量子位实 Pauli Hamiltonian，在固定扇区内运行无噪声 statevector VQE，再用独立程序检查能量、态矢、收敛轨迹和数值残差。证据满足规则时，页面才会显示验收通过。
-
-这个能力故意保持很窄。它不会把小型参考算法包装成完整分子模拟、真实硬件实验或量子优势结论。
+当前的科学边界是明确限定的二量子位实 Pauli Hamiltonian。这个例子展示了一项量子能力怎样从计算、证据一路走到可复核的结论，也为社区开发更丰富的算法 Skill 和 Validator 提供了可以直接参考的起点。
 
 ## 快速开始
 
@@ -149,9 +137,9 @@ npm run dev
 
 浏览器打开 <http://127.0.0.1:3000>。
 
-模型地址、模型密钥、MCP、Skill 和量子云凭据都可以从设置中心管理。真实密钥保存在本地环境或 DeepSeek Harness 凭据库中，不会回显，也不会写入项目配置。
+模型地址、模型密钥、MCP、Skill 和量子云凭据都可以从设置中心管理。密钥保存在本地环境或 DeepSeek Harness 凭据库中，项目配置只保留凭据引用。
 
-没有模型密钥时，可以先运行本地示例。
+还没有配置模型时，也可以先运行本地量子示例。
 
 ```bash
 npm run demo:quantum-ground-state
@@ -165,22 +153,21 @@ cp .env.example .env
 docker compose up --build
 ```
 
-需要区分零密钥验证、本地 Web 工作台和 Docker 部署时，阅读[部署与启动](docs/DEPLOYMENT.md)；遇到模型、
-MCP、凭据或 Harness 问题时，按[故障排查](docs/TROUBLESHOOTING.md)逐层定位。
+更完整的启动方式见[部署与启动](docs/DEPLOYMENT.md)。模型、MCP、凭据或 Harness 遇到问题时，可以从[故障排查](docs/TROUBLESHOOTING.md)快速找到对应入口。
 
-## 开放给二次开发
+## 把你的量子能力接进来
 
-OpenQuantum 沿用 Harness 原生扩展方式，不把社区组件锁进私有格式。
+OpenQuantum 沿用 DeepSeek Harness 的原生扩展方式。Skill、MCP 和 Validator 各自解决一类清楚的问题，也可以组合成一项完整的量子能力。
 
 <table>
   <tr>
-    <td width="33%"><strong>Skill</strong><br />告诉 Agent 什么时候使用一种方法，以及方法的适用边界。通常从一份标准 <code>SKILL.md</code> 开始。</td>
-    <td width="33%"><strong>MCP</strong><br />提供确定性的工具、数据源、量子云或设备连接。可以是 stdio 或 Streamable HTTP 服务。</td>
-    <td width="33%"><strong>Validator</strong><br />独立检查单位、阈值、来源和科学一致性。Agent 不能自行宣布验收通过。</td>
+    <td width="33%"><strong>Skill</strong><br />告诉 Agent 什么时候使用一种方法，以及这项方法适合解决什么问题。通常从一份标准 <code>SKILL.md</code> 开始。</td>
+    <td width="33%"><strong>MCP</strong><br />把工具、数据源、量子云和设备连接交给 Agent 调用，可以使用 stdio 或 Streamable HTTP。</td>
+    <td width="33%"><strong>Validator</strong><br />独立检查单位、阈值、来源和科学一致性，为科研结果提供可复核的验收结论。</td>
   </tr>
 </table>
 
-三者可以组合成一项完整能力，但始终是彼此独立的开放组件。接入一个新后端，通常从标准 MCP 开始，再用 Skill 说明适用场景。涉及科学结论时，再加入 Validator 和测试。
+接入一个新后端，通常从 MCP 开始，再用 Skill 说明适用场景。涉及科学结论时，可以继续加入 Validator 和测试。每一层都有现成示例，开发者可以只做自己需要的部分，也可以完成一条从工具到科研验收的完整链路。
 
 开发说明见 [CONTRIBUTING.md](CONTRIBUTING.md)，目录和配置权威见[仓库地图](docs/REPOSITORY_GUIDE.md)，架构边界见
 [ARCHITECTURE_AUDIT.md](docs/architecture/ARCHITECTURE_AUDIT.md)，生态规划见
@@ -213,16 +200,16 @@ docs/                    架构、路线与生态文档
 
 </details>
 
-## 当前状态
+## 一起建设 OpenQuantum
 
-OpenQuantum 已经跑通 Web 工作台、Harness 执行轨迹、量子 Skill 与 MCP、模型与凭据设置，以及量子基态的独立科学验收。
+当前版本已经包含 Web 工作台、Harness 执行轨迹、量子 Skill 与 MCP、模型与凭据设置，以及量子基态的独立科学验收。真实硬件和付费服务由使用者按需配置与开启。
 
-项目仍在早期阶段，DeepSeek Harness 也处于 Developer Preview。真实硬件、外部网络和可能产生费用的能力默认关闭。安全问题请按照 [SECURITY.md](SECURITY.md) 私密报告，不要在公开 Issue 中粘贴密钥或未脱敏数据。
+我们希望 OpenQuantum 成为一块开放的底板。量子公司可以在这里接入设备和服务，高校实验室可以沉淀自己的科研流程，算法团队和工具作者也可以把新的方法交给更多人使用。
 
-欢迎量子公司、高校实验室、算法团队和工具作者一起接入新的量子后端、算法与工作流。
+如果你想贡献代码、Skill、MCP、Validator、文档或案例，欢迎阅读 [CONTRIBUTING.md](CONTRIBUTING.md)。安全问题可以按照 [SECURITY.md](SECURITY.md) 提供的方式私密报告。
 
 ## License
 
 OpenQuantum 自有代码采用 [MIT License](LICENSE)，版权所有 © 2026 Xi Zhao。
 
-DeepSeek Harness、Qiskit MCP Servers、FieldQKit、Quantum Hardware MCP 和其他第三方组件继续遵循各自的许可证。完整来源与许可证边界见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
+DeepSeek Harness、Qiskit MCP Servers、FieldQKit、Quantum Hardware MCP 和其他第三方组件沿用各自的许可证，详细来源见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
