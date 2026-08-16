@@ -1,24 +1,38 @@
-const BRAND_MARKER = "data-openquantum-branding";
+import { readFileSync } from "node:fs";
+import path from "node:path";
 
-const OPENQUANTUM_FAVICON = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="16" fill="#14161f"/>
-  <circle cx="32" cy="32" r="6" fill="#7c6cff"/>
-  <ellipse cx="32" cy="32" rx="23" ry="9" fill="none" stroke="#a99cff" stroke-width="3"/>
-  <ellipse cx="32" cy="32" rx="23" ry="9" fill="none" stroke="#a99cff" stroke-width="3" transform="rotate(60 32 32)"/>
-  <ellipse cx="32" cy="32" rx="23" ry="9" fill="none" stroke="#a99cff" stroke-width="3" transform="rotate(120 32 32)"/>
-</svg>`;
+import { OPENQUANTUM_BRAND } from "./identity.mjs";
+
+const BRAND_MARKER = "data-openquantum-branding";
+const BRAND_ASSET_ROOT = path.resolve(process.cwd(), "public", "openquantum");
+const OPENQUANTUM_MARK = readFileSync(
+  path.join(BRAND_ASSET_ROOT, "mark.svg"),
+  "utf8",
+);
+const OPENQUANTUM_ICON_192 = readFileSync(
+  path.join(BRAND_ASSET_ROOT, "icon-192.png"),
+);
 
 const OPENQUANTUM_MANIFEST = JSON.stringify(
   {
     id: "/",
-    name: "OpenQuantum",
-    short_name: "OpenQuantum",
+    name: OPENQUANTUM_BRAND.name,
+    short_name: OPENQUANTUM_BRAND.name,
+    description: OPENQUANTUM_BRAND.tagline.zh,
     start_url: "/",
     scope: "/",
-    display: "fullscreen",
+    display: "standalone",
+    background_color: OPENQUANTUM_BRAND.colors.background,
+    theme_color: OPENQUANTUM_BRAND.colors.ink,
     icons: [
       {
-        src: "/favicon.svg",
+        src: OPENQUANTUM_BRAND.mark.icon192Path,
+        sizes: "192x192",
+        type: "image/png",
+        purpose: "any",
+      },
+      {
+        src: OPENQUANTUM_BRAND.mark.svgPath,
         sizes: "any",
         type: "image/svg+xml",
         purpose: "any",
@@ -30,8 +44,8 @@ const OPENQUANTUM_MANIFEST = JSON.stringify(
 );
 
 const OPENQUANTUM_COPY = Object.freeze({
-  "探索未至之境": "探索开放量子世界",
-  "Into the Unknown": "Explore the open quantum world",
+  "探索未至之境": OPENQUANTUM_BRAND.tagline.zh,
+  "Into the Unknown": OPENQUANTUM_BRAND.tagline.en,
   "填入各提供方的 API 密钥即可使用其模型。":
     "配置提供方的 API 地址和凭据，即可使用对应模型。",
   "Enter your API keys to use models from the following providers.":
@@ -44,8 +58,8 @@ const OPENQUANTUM_COPY_SCRIPT = `(() => {
   const replacements = ${JSON.stringify(OPENQUANTUM_COPY)};
   const heroPreviewLabels = new Set(["预览版", "Preview"]);
   const heroHeadlines = new Set([
-    "探索开放量子世界",
-    "Explore the open quantum world",
+    ${JSON.stringify(OPENQUANTUM_BRAND.tagline.zh)},
+    ${JSON.stringify(OPENQUANTUM_BRAND.tagline.en)},
   ]);
   const connectionSettingLabels = new Set([
     "自定义设置",
@@ -115,6 +129,14 @@ const OPENQUANTUM_COPY_SCRIPT = `(() => {
   });
 })();`;
 
+const BRAND_METADATA = `
+<meta name="application-name" content="${OPENQUANTUM_BRAND.name}" ${BRAND_MARKER} />
+<meta name="apple-mobile-web-app-title" content="${OPENQUANTUM_BRAND.name}" ${BRAND_MARKER} />
+<meta name="theme-color" content="${OPENQUANTUM_BRAND.colors.ink}" ${BRAND_MARKER} />
+<link rel="icon" type="image/svg+xml" href="${OPENQUANTUM_BRAND.mark.faviconPath}" ${BRAND_MARKER} />
+<link rel="apple-touch-icon" sizes="192x192" href="${OPENQUANTUM_BRAND.mark.icon192Path}" ${BRAND_MARKER} />
+<link rel="manifest" href="/manifest.webmanifest" ${BRAND_MARKER} />`;
+
 const BRAND_STYLES = `
 <style ${BRAND_MARKER}>
   /* Keep the native Harness layout; replace only its product wordmarks. */
@@ -123,7 +145,15 @@ const BRAND_STYLES = `
   }
 
   button:has(> svg[viewBox="0 0 182 24"])::before {
-    content: "OpenQuantum";
+    content: "${OPENQUANTUM_BRAND.name}";
+    display: inline-flex;
+    min-height: 24px;
+    align-items: center;
+    padding-left: 32px;
+    background-image: url("${OPENQUANTUM_BRAND.mark.svgPath}");
+    background-position: left center;
+    background-repeat: no-repeat;
+    background-size: 24px 24px;
     color: inherit;
     font-size: 20px;
     font-weight: 650;
@@ -137,17 +167,14 @@ const BRAND_STYLES = `
   }
 
   :is(button, span):has(> svg[viewBox="0 0 23.16 17.04"])::before {
-    content: "OQ";
-    display: inline-grid;
+    content: "";
+    display: inline-block;
     width: 24px;
     height: 24px;
-    place-items: center;
-    border-radius: 8px;
-    background: var(--dsw-alias-brand-primary, #6f5cff);
-    color: white;
-    font-size: 10px;
-    font-weight: 750;
-    letter-spacing: -0.04em;
+    background-image: url("${OPENQUANTUM_BRAND.mark.svgPath}");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
   }
 
   /* The upstream empty-state illustration is decorative brand art. */
@@ -174,11 +201,17 @@ export function brandHarnessIndex(html) {
   }
 
   const titled = /<title>[^<]*<\/title>/.test(html)
-    ? html.replace(/<title>[^<]*<\/title>/, "<title>OpenQuantum</title>")
-    : html.replace("</head>", "<title>OpenQuantum</title></head>");
+    ? html.replace(
+        /<title>[^<]*<\/title>/,
+        `<title>${OPENQUANTUM_BRAND.name}</title>`,
+      )
+    : html.replace(
+        "</head>",
+        `<title>${OPENQUANTUM_BRAND.name}</title></head>`,
+      );
   return titled.replace(
     "</head>",
-    `${BRAND_STYLES}\n<script defer src="/openquantum-branding.js" ${BRAND_MARKER}></script>\n</head>`,
+    `${BRAND_METADATA}\n${BRAND_STYLES}\n<script defer src="/openquantum-branding.js" ${BRAND_MARKER}></script>\n</head>`,
   );
 }
 
@@ -212,9 +245,33 @@ export function apply(ctx) {
       ctx.webServer.register({
         kind: "exact",
         path: "/favicon.svg",
-        handler: staticAssetHandler("image/svg+xml; charset=utf-8", OPENQUANTUM_FAVICON),
+        handler: staticAssetHandler(
+          "image/svg+xml; charset=utf-8",
+          OPENQUANTUM_MARK,
+        ),
       }),
     "openquantum: favicon",
+  );
+  ctx.effect(
+    () =>
+      ctx.webServer.register({
+        kind: "exact",
+        path: OPENQUANTUM_BRAND.mark.svgPath,
+        handler: staticAssetHandler(
+          "image/svg+xml; charset=utf-8",
+          OPENQUANTUM_MARK,
+        ),
+      }),
+    "openquantum: brand mark",
+  );
+  ctx.effect(
+    () =>
+      ctx.webServer.register({
+        kind: "exact",
+        path: OPENQUANTUM_BRAND.mark.icon192Path,
+        handler: staticAssetHandler("image/png", OPENQUANTUM_ICON_192),
+      }),
+    "openquantum: app icon",
   );
   ctx.effect(
     () =>

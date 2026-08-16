@@ -23,6 +23,9 @@
 - 修改 MCP composition 后完整重启 Harness，避免旧 generation 占用相同 `serverName`；
 - API Key 只以凭据引用出现，不能写入本目录。
 
+`web-branding/identity.mjs` 定义用户可见的品牌名、标语、颜色和资产 URL；
+`public/openquantum/mark.svg` 是主标源文件。侧栏、首页、favicon 和 Web App manifest 必须使用同一主标。
+
 验证组合：
 
 ```bash

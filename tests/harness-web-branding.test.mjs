@@ -6,6 +6,7 @@ import {
   apply,
   brandHarnessIndex,
 } from "../runtime/openquantum/web-branding/index.mjs";
+import { OPENQUANTUM_BRAND } from "../runtime/openquantum/web-branding/identity.mjs";
 
 const HARNESS_INDEX = `<!doctype html>
 <html>
@@ -22,14 +23,19 @@ test("brands the official Harness index without replacing its application shell"
   assert.match(branded, /<title>OpenQuantum<\/title>/);
   assert.match(branded, /data-openquantum-branding/);
   assert.match(branded, /content: "OpenQuantum"/);
-  assert.match(branded, /content: "OQ"/);
+  assert.match(branded, /background-image: url\("\/openquantum\/mark\.svg"\)/);
+  assert.doesNotMatch(branded, /content: "OQ"/);
+  assert.match(branded, /name="application-name" content="OpenQuantum"/);
+  assert.match(branded, /name="theme-color" content="#07131f"/);
+  assert.match(branded, /rel="manifest" href="\/manifest\.webmanifest"/);
+  assert.match(branded, /rel="apple-touch-icon" sizes="192x192"/);
   assert.match(branded, /src="\/openquantum-branding\.js"/);
   assert.match(branded, /<div id="root"><\/div>/);
   assert.match(branded, /href="\/favicon\.svg"/);
   assert.equal(brandHarnessIndex(branded), branded);
 });
 
-test("registers branding through the Harness webServer index tap", () => {
+test("registers one canonical brand across the Harness Web surfaces", async () => {
   let transform;
   const routes = [];
   const effectLabels = [];
@@ -56,6 +62,8 @@ test("registers branding through the Harness webServer index tap", () => {
   assert.deepEqual(effectLabels, [
     "openquantum: native Harness Web branding",
     "openquantum: favicon",
+    "openquantum: brand mark",
+    "openquantum: app icon",
     "openquantum: web manifest",
     "openquantum: product copy",
   ]);
@@ -63,7 +71,61 @@ test("registers branding through the Harness webServer index tap", () => {
   assert.match(transform(HARNESS_INDEX), /<title>OpenQuantum<\/title>/);
   assert.deepEqual(
     routes.map((route) => route.path),
-    ["/favicon.svg", "/manifest.webmanifest", "/openquantum-branding.js"],
+    [
+      "/favicon.svg",
+      "/openquantum/mark.svg",
+      "/openquantum/icon-192.png",
+      "/manifest.webmanifest",
+      "/openquantum-branding.js",
+    ],
+  );
+
+  const responses = new Map();
+  for (const route of routes) {
+    let status;
+    let headers;
+    let body;
+    route.handler(
+      { method: "GET" },
+      {
+        writeHead(nextStatus, nextHeaders) {
+          status = nextStatus;
+          headers = nextHeaders;
+        },
+        end(value = "") {
+          body = value;
+        },
+      },
+    );
+    responses.set(route.path, { body, headers, status });
+  }
+
+  const sourceMark = await readFile(
+    new URL("../public/openquantum/mark.svg", import.meta.url),
+    "utf8",
+  );
+  assert.equal(responses.get("/favicon.svg").body, sourceMark);
+  assert.equal(responses.get("/openquantum/mark.svg").body, sourceMark);
+  assert.equal(
+    responses.get("/openquantum/icon-192.png").headers["content-type"],
+    "image/png",
+  );
+  const icon = responses.get("/openquantum/icon-192.png").body;
+  assert(Buffer.isBuffer(icon));
+  assert.equal(icon.readUInt32BE(16), 192);
+  assert.equal(icon.readUInt32BE(20), 192);
+
+  const manifest = JSON.parse(responses.get("/manifest.webmanifest").body);
+  assert.equal(manifest.name, OPENQUANTUM_BRAND.name);
+  assert.equal(manifest.short_name, OPENQUANTUM_BRAND.name);
+  assert.equal(manifest.description, OPENQUANTUM_BRAND.tagline.zh);
+  assert.equal(manifest.theme_color, OPENQUANTUM_BRAND.colors.ink);
+  assert.deepEqual(
+    manifest.icons.map((iconEntry) => iconEntry.src),
+    [
+      OPENQUANTUM_BRAND.mark.icon192Path,
+      OPENQUANTUM_BRAND.mark.svgPath,
+    ],
   );
 
   const copyRoute = routes.find(
@@ -91,6 +153,31 @@ test("registers branding through the Harness webServer index tap", () => {
   assert.match(body, /details\.open = true/);
   assert.match(body, /heroPreviewLabels/);
   assert.match(body, /parent\.remove\(\)/);
+});
+
+test("keeps the repository brand name, tagline and mark aligned", async () => {
+  const [readme, preset, mark] = await Promise.all([
+    readFile(new URL("../README.md", import.meta.url), "utf8"),
+    readFile(
+      new URL(
+        "../runtime/openquantum/agent-presets/openquantum/preset.yml",
+        import.meta.url,
+      ),
+      "utf8",
+    ),
+    readFile(
+      new URL("../public/openquantum/mark.svg", import.meta.url),
+      "utf8",
+    ),
+  ]);
+
+  assert.match(readme, /<h1 align="center">OpenQuantum<\/h1>/);
+  assert.match(readme, /<strong>探索开放量子世界<\/strong>/);
+  assert.match(readme, /public\/openquantum\/mark\.svg/);
+  assert.match(preset, /^name: OpenQuantum（默认）$/m);
+  assert.match(mark, /<title id="title">OpenQuantum<\/title>/);
+  assert.equal(OPENQUANTUM_BRAND.name, "OpenQuantum");
+  assert.equal(OPENQUANTUM_BRAND.tagline.zh, "探索开放量子世界");
 });
 
 test("replaces the upstream developer notice through the native onboarding slot", async () => {
