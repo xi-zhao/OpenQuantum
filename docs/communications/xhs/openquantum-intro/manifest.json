@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "platform": "Xiaohongshu",
+  "canvas": {
+    "width": 1080,
+    "height": 1440,
+    "aspectRatio": "3:4"
+  },
+  "exports": [
+    {
+      "file": "docs/communications/xhs/openquantum-intro/exports/openquantum-xhs-01-cover.png",
+      "width": 1080,
+      "height": 1440,
+      "bytes": 736880,
+      "sha256": "6b07655242802fe0e3f86879c22be156afb7d4bed5a88aa22c680301e00ab76f"
+    },
+    {
+      "file": "docs/communications/xhs/openquantum-intro/exports/openquantum-xhs-02-capabilities.png",
+      "width": 1080,
+      "height": 1440,
+      "bytes": 619010,
+      "sha256": "14e46688ca858299cec2c36cf32033417cc77ed1ed1afb0fd20c99f6b3183d33"
+    },
+    {
+      "file": "docs/communications/xhs/openquantum-intro/exports/openquantum-xhs-03-trust.png",
+      "width": 1080,
+      "height": 1440,
+      "bytes": 549676,
+      "sha256": "24efa4aa4d036a9958b6f36d01b9286d54b593d762cde39acc8de673ca486463"
+    }
+  ],
+  "sourceScreenshots": [
+    {
+      "file": "docs/images/openquantum-quantum-settings.jpg",
+      "sha256": "11aed517808f40640cd6ee21d87bd8f5509b3ad464b9494439c1e5b29ae892fd"
+    },
+    {
+      "file": "docs/images/openquantum-quantum-result.jpg",
+      "sha256": "e49d72aa1b93a663fad3ce078c995bf7183ad15ab798a4200ebefb4e85dce807"
+    }
+  ],
+  "brandSource": "public/openquantum/icon-512.png",
+  "generatedBackgrounds": [
+    {
+      "file": "docs/communications/xhs/openquantum-intro/raw/page-01-hero.png",
+      "sha256": "72d95e52540474dbef22456870aead8faf6899de2110748befa1c59217a4b02c"
+    },
+    {
+      "file": "docs/communications/xhs/openquantum-intro/raw/page-02-capabilities.png",
+      "sha256": "e0d7e897db1348ac963d7deeef7b8dc2031ccd467751247a4aade6e20a0e48f6"
+    },
+    {
+      "file": "docs/communications/xhs/openquantum-intro/raw/page-03-trust.png",
+      "sha256": "04e28e3c504493687c4c372a4ea0d2703f182ac95db06238330c8b68f45c482c"
+    }
+  ],
+  "provenance": "docs/communications/xhs/openquantum-intro/PROVENANCE.md"
+}
