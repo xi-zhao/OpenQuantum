@@ -1,0 +1,11 @@
+interface:
+  display_name: "TyxonQ 本地仿真"
+  short_description: "用 TyxonQ MCP 运行小规模电路和噪声仿真"
+  default_prompt: "使用 $tyxonq-workbench 运行这个小规模量子电路，并清楚区分 TyxonQ 工具结果与尚未完成的科学验收。"
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "tyxonq_local"
+      description: "TyxonQ 本地电路与噪声仿真工具"
+policy:
+  allow_implicit_invocation: true

@@ -94,6 +94,30 @@
       maxDelayMs: 30000
       maxAttempts: 10
 
+# TyxonQ is a Python SDK rather than a stable upstream MCP server. This local
+# bridge exposes only bounded circuit and noise simulation. It is disabled by
+# default because the pinned scientific Python environment is large and is
+# materialized lazily by uv on the first tool call. No cloud token or hardware
+# submission Tool is registered.
+- id: mcp-tyxonq-local
+  name: '@deepseek-ai/dsh-mcp-client'
+  disabled: true
+  config:
+    serverName: tyxonq_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/tyxonq-workbench/mcp/server.mjs'
+    env: {}
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 180000
+    failOnStartupError: true
+    reconnect:
+      enabled: true
+      initialDelayMs: 1000
+      maxDelayMs: 30000
+      maxAttempts: 10
+
 # Official Qiskit MCP servers. Package versions are pinned so every Fork gets
 # the same tool schemas. Set OPENQUANTUM_DISABLE_QISKIT_MCP=1 for offline CI;
 # normal installations enable the two credential-free core services.

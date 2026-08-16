@@ -9,6 +9,7 @@ OpenQuantum 自有代码采用仓库根目录中的 [MIT License](LICENSE)。这
 | DeepSeek Harness | MIT | 作为 Agent Runtime 和 Web UI 基础，`dsh` 与 `dsh-mcp-client` 固定为 `0.1.0-rc.6`；OpenQuantum 使用 Cordis patch、preset 与公开接口扩展，不修改 `node_modules` | [deepseek-ai/deepseek-harness](https://github.com/deepseek-ai/deepseek-harness) |
 | Qiskit MCP Servers | Apache-2.0 | 通过 `uvx` 使用 Circuits `0.3.1`、Docs `0.3.0`、IBM Runtime `0.6.1`、IBM Transpiler `0.4.1` 与 Gym `0.4.1`；上游实现没有复制进本仓库 | [Qiskit/mcp-servers](https://github.com/Qiskit/mcp-servers) |
 | FieldQKit | Apache-2.0 | 使用 `0.1.2` 的固定上游提交 `3ef2493d3f840b6a924af66a0c3f1b79cfce3fa0`；OpenQuantum 维护独立的只读 MCP 桥接与 Skill，上游源码没有复制进本仓库 | [FieldQuantum/fieldqkit](https://github.com/FieldQuantum/fieldqkit) |
+| TyxonQ | Apache-2.0 | 通过 `uv` 按需使用 PyPI `tyxonq==1.2.0`；OpenQuantum 维护独立的有界本地仿真 MCP 与 Skill，不复制上游源码，也不开放上游云端任务接口 | [QureGenAI-Biotech/TyxonQ](https://github.com/QureGenAI-Biotech/TyxonQ) |
 | Quantum Hardware MCP | MIT | 安装命令把固定提交 `13fbe9f13fd68c409086491b9598ce2d25f5210a` 检出到被 Git 忽略的 `.openquantum` 目录；OpenQuantum 不在本仓库重新分发上游源码 | [Lokesh-2025/quantum-hardware-mcp](https://github.com/Lokesh-2025/quantum-hardware-mcp) |
 | Model Context Protocol TypeScript SDK | MIT | 作为本地 MCP 服务和测试的直接 npm 依赖，固定为 `1.30.0` | [modelcontextprotocol/typescript-sdk](https://github.com/modelcontextprotocol/typescript-sdk) |
 

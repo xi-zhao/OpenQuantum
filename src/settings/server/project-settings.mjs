@@ -50,6 +50,16 @@ const MCP_CATALOG = Object.freeze({
     packageVersion: "0.1.2@3ef2493",
     setup: null,
   }),
+  tyxonq_local: Object.freeze({
+    displayName: "TyxonQ Local",
+    description:
+      "本地小规模电路与噪声仿真；首次调用会由 uv 准备固定的 TyxonQ Python 环境，不连接云端或真实量子硬件。",
+    provider: "TyxonQ / OpenQuantum",
+    sourceUrl: "https://github.com/QureGenAI-Biotech/TyxonQ",
+    packageName: "tyxonq",
+    packageVersion: "1.2.0",
+    setup: null,
+  }),
   qiskit: Object.freeze({
     displayName: "Qiskit Circuits",
     description: "Qiskit 官方电路创建、分析、转译以及 QASM/QPY 序列化工具。",

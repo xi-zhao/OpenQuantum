@@ -343,7 +343,7 @@ test("custom HTTP MCP accepts only public HTTP(S) endpoints", async (t) => {
   );
 });
 
-test("repository preset pins official Qiskit services with safe defaults", async () => {
+test("repository preset exposes reviewed quantum MCPs with safe defaults", async () => {
   const snapshot = await readProjectSettings(process.cwd());
   const byName = new Map(snapshot.mcpServers.map((server) => [server.serverName, server]));
 
@@ -380,6 +380,11 @@ test("repository preset pins official Qiskit services with safe defaults", async
     "FIELDQUANTUM_API_TOKEN",
     "LOGICALQUBIT_API_TOKEN",
   ]);
+  assert.equal(byName.get("tyxonq_local")?.enabled, false);
+  assert.equal(byName.get("tyxonq_local")?.displayName, "TyxonQ Local");
+  assert.equal(byName.get("tyxonq_local")?.packageVersion, "1.2.0");
+  assert.equal(byName.get("tyxonq_local")?.provider, "TyxonQ / OpenQuantum");
+  assert.deepEqual(byName.get("tyxonq_local")?.credentialRefs, []);
   assert.deepEqual(snapshot.mcpCredentials.find(
     (credential) => credential.ref === "QISKIT_IBM_TOKEN",
   )?.serverNames, [
@@ -395,6 +400,11 @@ test("repository preset pins official Qiskit services with safe defaults", async
       ?.displayName,
     "FieldQKit 量子硬件",
   );
+  assert.equal(
+    snapshot.skills.find((skill) => skill.name === "tyxonq-workbench")
+      ?.displayName,
+    "TyxonQ 本地仿真",
+  );
 
   const raw = await readFile(
     path.join(
@@ -407,6 +417,7 @@ test("repository preset pins official Qiskit services with safe defaults", async
   assert.match(raw, /qiskit-mcp-server==0\.3\.1/);
   assert.match(raw, /qiskit-docs-mcp-server==0\.3\.0/);
   assert.match(raw, /fieldqkit-hardware\/mcp\/server\.mjs/);
+  assert.match(raw, /tyxonq-workbench\/mcp\/server\.mjs/);
 });
 
 test("project settings rejects a symlinked Skill file", async (t) => {

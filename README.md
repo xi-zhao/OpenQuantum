@@ -69,6 +69,7 @@ OpenQuantum 的第一版，是在 DeepSeek Harness 发布后的三天里做出�
 | Qiskit Circuits | [Qiskit 官方 MCP](https://github.com/Qiskit/mcp-servers) · 原版接入 + OpenQuantum Skill | 创建、读取、转换和分析 OpenQASM 3 / QPY 电路，比较转译结果 | 开启，无需凭据 |
 | Qiskit Docs | [Qiskit 官方 MCP](https://github.com/Qiskit/mcp-servers) · 原版接入 | 查询 Qiskit API、迁移说明、错误码和 IBM Quantum 文档 | 开启，无需凭据 |
 | FieldQKit | [FieldQuantum](https://github.com/FieldQuantum/fieldqkit) · 固定上游提交 + 只读桥接 | 发现国内量子云后端，按量子位筛选，查看拓扑和校准摘要 | 开启，只读 |
+| TyxonQ Local | [TyxonQ](https://github.com/QureGenAI-Biotech/TyxonQ) · 固定 PyPI 版本 + 本地 MCP + OpenQuantum Skill | 运行小规模 statevector 电路、有限 shots 与 density-matrix 噪声仿真 | 接入，关闭 |
 | IBM Runtime | [Qiskit 官方 MCP](https://github.com/Qiskit/mcp-servers) · 原版接入 + 凭据设置 | 查询 IBM 后端，向 IBM Quantum 提交任务 | 接入，关闭 |
 | IBM Transpiler | [Qiskit 官方 MCP](https://github.com/Qiskit/mcp-servers) · 原版接入 + 凭据设置 | 使用 IBM Quantum AI Transpiler 路由和优化电路 | 接入，关闭 |
 | Quantum Hardware MCP | [社区项目](https://github.com/Lokesh-2025/quantum-hardware-mcp) · 固定审阅提交 + 安全开关 | 查询 IBM Quantum 与 IonQ 设备，可选提交、取消任务和估算成本 | 接入，关闭 |

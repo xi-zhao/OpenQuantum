@@ -18,6 +18,7 @@
 | `quantum-ground-state` | 窄作用域二量子位基态工作流 | 本地 MCP、独立 Validator、科学结果合同 |
 | `qiskit-circuit-workbench` | QASM/QPY 电路分析和转译工作流 | Qiskit Circuits 与 Qiskit Docs MCP |
 | `fieldqkit-hardware` | 国内量子云后端发现和凭据缺口解释 | 独立注册的 FieldQKit MCP，默认只读 |
+| `tyxonq-workbench` | TyxonQ 小规模电路与噪声仿真工作流 | 独立注册的 TyxonQ Local MCP，默认关闭 |
 | `quantum-sdk-advisor` | 量子软件栈选型 | 无强制 MCP |
 | `platform-diagnostics` | UI、Harness、Skill 和 Model 四层诊断 | 诊断 eval 与 Validator |
 
