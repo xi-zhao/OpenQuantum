@@ -87,7 +87,9 @@ Avoid: people, hands, faces, robots, padlocks, shields, cybersecurity clichés, 
 ## 重新导出
 
 ```bash
-python3 scripts/render-openquantum-xhs.py
+python3 scripts/render-openquantum-xhs.py --variant v1
 ```
 
 脚本需要 Pillow 与系统内置中文字体；不会修改生成背景或项目截图。
+
+本版保留为第一版视觉档案。当前建议发布的内容增强版见 `PROVENANCE-v2.md`。

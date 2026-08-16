@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "revision": 2,
+  "platform": "Xiaohongshu",
+  "canvas": {
+    "width": 1080,
+    "height": 1440,
+    "aspectRatio": "3:4"
+  },
+  "contentFlow": [
+    "product-overview",
+    "architecture-and-capabilities",
+    "real-run-and-acceptance"
+  ],
+  "exports": [
+    {
+      "file": "docs/communications/xhs/openquantum-intro/exports/openquantum-xhs-01-overview-v2.png",
+      "width": 1080,
+      "height": 1440,
+      "bytes": 152649,
+      "sha256": "261df8a154a9b9f628487d311c34a7b7d025565183d6d6a642e0f8904ffc9b55"
+    },
+    {
+      "file": "docs/communications/xhs/openquantum-intro/exports/openquantum-xhs-02-architecture-v2.png",
+      "width": 1080,
+      "height": 1440,
+      "bytes": 203588,
+      "sha256": "a7f862c43a1e78c9bbd32c6dcc637c51138b3e074fed47f05b69791379ad5c07"
+    },
+    {
+      "file": "docs/communications/xhs/openquantum-intro/exports/openquantum-xhs-03-experience-v2.png",
+      "width": 1080,
+      "height": 1440,
+      "bytes": 199349,
+      "sha256": "e84c0207f4c2e45b2e29c5f8fcc8ce2613acfa340285450dc974113f09481247"
+    }
+  ],
+  "supersedes": [
+    "docs/communications/xhs/openquantum-intro/exports/openquantum-xhs-01-cover.png",
+    "docs/communications/xhs/openquantum-intro/exports/openquantum-xhs-02-capabilities.png",
+    "docs/communications/xhs/openquantum-intro/exports/openquantum-xhs-03-trust.png"
+  ],
+  "sourceScreenshots": [
+    {
+      "file": "docs/images/openquantum-quantum-result.jpg",
+      "sha256": "e49d72aa1b93a663fad3ce078c995bf7183ad15ab798a4200ebefb4e85dce807"
+    }
+  ],
+  "sourceDocuments": [
+    "README.md",
+    "docs/architecture/ARCHITECTURE_AUDIT.md",
+    "docs/communications/openquantum-wechat-launch.md"
+  ],
+  "brandSource": "public/openquantum/icon-512.png",
+  "rendering": "deterministic-pillow-infographic",
+  "provenance": "docs/communications/xhs/openquantum-intro/PROVENANCE-v2.md"
+}
