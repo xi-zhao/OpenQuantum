@@ -1,4 +1,8 @@
+<!-- WeChat cover openquantum-wechat-cover.png -->
+
 # 我做了一个开源量子 Agent 工作台，叫 OpenQuantum
+
+预计阅读 6 分钟
 
 > 把量子电路、算法、云后端和科研工作流放进同一个界面，让工具真正成为 Agent 可以调用、过程可以检查、结果可以复核的开放能力。
 

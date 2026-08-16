@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 383" role="img" aria-labelledby="title description">
+  <title id="title">OpenQuantum 公众号封面</title>
+  <desc id="description">以 OpenQuantum 图标为唯一主视觉的公众号封面</desc>
+  <defs>
+    <linearGradient id="cover" x1="0" y1="0" x2="900" y2="383" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#eff6ff"/>
+      <stop offset="1" stop-color="#f5f3ff"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="900" y2="0" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#2563eb"/>
+      <stop offset="0.5" stop-color="#7c3aed"/>
+      <stop offset="1" stop-color="#059669"/>
+    </linearGradient>
+    <linearGradient id="orbit" x1="12" y1="10" x2="52" y2="54" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#5ee4d2"/>
+      <stop offset="1" stop-color="#0f9f91"/>
+    </linearGradient>
+    <filter id="shadow" x="-40%" y="-40%" width="180%" height="180%">
+      <feDropShadow dx="0" dy="12" stdDeviation="12" flood-color="#0f172a" flood-opacity="0.18"/>
+    </filter>
+  </defs>
+  <rect width="900" height="383" fill="url(#cover)"/>
+  <rect width="900" height="7" fill="url(#accent)"/>
+  <g transform="translate(346 87) scale(3.25)" filter="url(#shadow)">
+    <rect width="64" height="64" rx="18" fill="#07131f"/>
+    <circle cx="29" cy="29" r="16" fill="none" stroke="url(#orbit)" stroke-width="6"/>
+    <path d="M40.5 40.5 52 52" fill="none" stroke="#5ee4d2" stroke-width="6" stroke-linecap="round"/>
+    <circle cx="21" cy="16" r="3.5" fill="#f7fafb"/>
+  </g>
+</svg>
