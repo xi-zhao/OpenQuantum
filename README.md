@@ -21,6 +21,7 @@
   <a href="#快速开始">快速开始</a> ·
   <a href="#已集成的量子工具与能力">量子能力</a> ·
   <a href="#把你的量子能力接进来">扩展开发</a> ·
+  <a href="./docs/communications/openquantum-wechat-launch.md">项目故事</a> ·
   <a href="./CONTRIBUTING.md">参与贡献</a>
 </p>
 
@@ -29,6 +30,8 @@ OpenQuantum 是一个开源的量子 Agent 工作台。它把量子电路、算�
 你可以直接使用已经集成的 Qiskit、FieldQKit 和量子算法能力，也可以把自己的设备、数据、方法和模型做成 Skill 或 MCP，交给同一个 Agent 调用。研究机构可以用它组织科研工作流，量子公司也可以在这套基础上继续开发自己的产品。
 
 OpenQuantum 基于 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 构建。Harness 提供会话、工具调度、权限、持久化和执行轨迹，OpenQuantum 在上面组织量子工具、算法 Skill、科学验收和更适合量子工作的产品界面。
+
+OpenQuantum 的第一版，是在 DeepSeek Harness 发布后的三天里做出来的。它从一个很直接的想法开始，把散落在不同仓库、云平台和文档里的量子工具放进同一个工作台，让用户可以直接使用，也让研究机构和量子公司可以继续接入自己的能力。
 
 <table>
   <tr>
