@@ -9,8 +9,23 @@ const OPENQUANTUM_MARK = readFileSync(
   path.join(BRAND_ASSET_ROOT, "mark.svg"),
   "utf8",
 );
+const OPENQUANTUM_MARK_INVERSE = readFileSync(
+  path.join(BRAND_ASSET_ROOT, "mark-inverse.svg"),
+  "utf8",
+);
+const OPENQUANTUM_LOCKUP = readFileSync(
+  path.join(BRAND_ASSET_ROOT, "lockup.svg"),
+  "utf8",
+);
+const OPENQUANTUM_LOCKUP_INVERSE = readFileSync(
+  path.join(BRAND_ASSET_ROOT, "lockup-inverse.svg"),
+  "utf8",
+);
 const OPENQUANTUM_ICON_192 = readFileSync(
   path.join(BRAND_ASSET_ROOT, "icon-192.png"),
+);
+const OPENQUANTUM_ICON_512 = readFileSync(
+  path.join(BRAND_ASSET_ROOT, "icon-512.png"),
 );
 
 const OPENQUANTUM_MANIFEST = JSON.stringify(
@@ -28,6 +43,12 @@ const OPENQUANTUM_MANIFEST = JSON.stringify(
       {
         src: OPENQUANTUM_BRAND.mark.icon192Path,
         sizes: "192x192",
+        type: "image/png",
+        purpose: "any",
+      },
+      {
+        src: OPENQUANTUM_BRAND.mark.icon512Path,
+        sizes: "512x512",
         type: "image/png",
         purpose: "any",
       },
@@ -268,10 +289,55 @@ export function apply(ctx) {
     () =>
       ctx.webServer.register({
         kind: "exact",
+        path: OPENQUANTUM_BRAND.mark.inverseSvgPath,
+        handler: staticAssetHandler(
+          "image/svg+xml; charset=utf-8",
+          OPENQUANTUM_MARK_INVERSE,
+        ),
+      }),
+    "openquantum: inverse brand mark",
+  );
+  ctx.effect(
+    () =>
+      ctx.webServer.register({
+        kind: "exact",
+        path: OPENQUANTUM_BRAND.mark.lockupPath,
+        handler: staticAssetHandler(
+          "image/svg+xml; charset=utf-8",
+          OPENQUANTUM_LOCKUP,
+        ),
+      }),
+    "openquantum: brand lockup",
+  );
+  ctx.effect(
+    () =>
+      ctx.webServer.register({
+        kind: "exact",
+        path: OPENQUANTUM_BRAND.mark.inverseLockupPath,
+        handler: staticAssetHandler(
+          "image/svg+xml; charset=utf-8",
+          OPENQUANTUM_LOCKUP_INVERSE,
+        ),
+      }),
+    "openquantum: inverse brand lockup",
+  );
+  ctx.effect(
+    () =>
+      ctx.webServer.register({
+        kind: "exact",
         path: OPENQUANTUM_BRAND.mark.icon192Path,
         handler: staticAssetHandler("image/png", OPENQUANTUM_ICON_192),
       }),
     "openquantum: app icon",
+  );
+  ctx.effect(
+    () =>
+      ctx.webServer.register({
+        kind: "exact",
+        path: OPENQUANTUM_BRAND.mark.icon512Path,
+        handler: staticAssetHandler("image/png", OPENQUANTUM_ICON_512),
+      }),
+    "openquantum: large app icon",
   );
   ctx.effect(
     () =>

@@ -26,7 +26,7 @@ test("brands the official Harness index without replacing its application shell"
   assert.match(branded, /background-image: url\("\/openquantum\/mark\.svg"\)/);
   assert.doesNotMatch(branded, /content: "OQ"/);
   assert.match(branded, /name="application-name" content="OpenQuantum"/);
-  assert.match(branded, /name="theme-color" content="#07131f"/);
+  assert.match(branded, /name="theme-color" content="#061f38"/);
   assert.match(branded, /rel="manifest" href="\/manifest\.webmanifest"/);
   assert.match(branded, /rel="apple-touch-icon" sizes="192x192"/);
   assert.match(branded, /src="\/openquantum-branding\.js"/);
@@ -63,7 +63,11 @@ test("registers one canonical brand across the Harness Web surfaces", async () =
     "openquantum: native Harness Web branding",
     "openquantum: favicon",
     "openquantum: brand mark",
+    "openquantum: inverse brand mark",
+    "openquantum: brand lockup",
+    "openquantum: inverse brand lockup",
     "openquantum: app icon",
+    "openquantum: large app icon",
     "openquantum: web manifest",
     "openquantum: product copy",
   ]);
@@ -74,7 +78,11 @@ test("registers one canonical brand across the Harness Web surfaces", async () =
     [
       "/favicon.svg",
       "/openquantum/mark.svg",
+      "/openquantum/mark-inverse.svg",
+      "/openquantum/lockup.svg",
+      "/openquantum/lockup-inverse.svg",
       "/openquantum/icon-192.png",
+      "/openquantum/icon-512.png",
       "/manifest.webmanifest",
       "/openquantum-branding.js",
     ],
@@ -114,6 +122,10 @@ test("registers one canonical brand across the Harness Web surfaces", async () =
   assert(Buffer.isBuffer(icon));
   assert.equal(icon.readUInt32BE(16), 192);
   assert.equal(icon.readUInt32BE(20), 192);
+  const largeIcon = responses.get("/openquantum/icon-512.png").body;
+  assert(Buffer.isBuffer(largeIcon));
+  assert.equal(largeIcon.readUInt32BE(16), 512);
+  assert.equal(largeIcon.readUInt32BE(20), 512);
 
   const manifest = JSON.parse(responses.get("/manifest.webmanifest").body);
   assert.equal(manifest.name, OPENQUANTUM_BRAND.name);
@@ -124,6 +136,7 @@ test("registers one canonical brand across the Harness Web surfaces", async () =
     manifest.icons.map((iconEntry) => iconEntry.src),
     [
       OPENQUANTUM_BRAND.mark.icon192Path,
+      OPENQUANTUM_BRAND.mark.icon512Path,
       OPENQUANTUM_BRAND.mark.svgPath,
     ],
   );
@@ -171,11 +184,15 @@ test("keeps the repository brand name, tagline and mark aligned", async () => {
     ),
   ]);
 
-  assert.match(readme, /<h1 align="center">OpenQuantum<\/h1>/);
+  assert.match(
+    readme,
+    /<h1 align="center">\s*<img src="\.\/public\/openquantum\/lockup\.svg"[^>]*alt="OpenQuantum"[^>]*\/>\s*<\/h1>/,
+  );
   assert.match(readme, /<strong>探索开放量子世界<\/strong>/);
-  assert.match(readme, /public\/openquantum\/mark\.svg/);
+  assert.match(readme, /public\/openquantum\/lockup\.svg/);
   assert.match(preset, /^name: OpenQuantum（默认）$/m);
   assert.match(mark, /<title id="title">OpenQuantum<\/title>/);
+  assert.match(mark, /OpenQuantum OQ 标记/);
   assert.equal(OPENQUANTUM_BRAND.name, "OpenQuantum");
   assert.equal(OPENQUANTUM_BRAND.tagline.zh, "探索开放量子世界");
 });

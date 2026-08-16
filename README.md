@@ -1,8 +1,6 @@
-<p align="center">
-  <img src="./public/openquantum/mark.svg" width="88" alt="OpenQuantum logo" />
-</p>
-
-<h1 align="center">OpenQuantum</h1>
+<h1 align="center">
+  <img src="./public/openquantum/lockup.svg" width="430" alt="OpenQuantum" />
+</h1>
 
 <p align="center">
   <strong>探索开放量子世界</strong>

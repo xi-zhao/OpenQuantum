@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 192" role="img" aria-labelledby="title description">
+  <title id="title">OpenQuantum inverse logo</title>
+  <desc id="description">适用于深色背景的 OpenQuantum 横版主标</desc>
+  <defs>
+    <linearGradient id="oq-lockup-inverse-cyan" x1="36" y1="142" x2="166" y2="48" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#26c9dc"/>
+      <stop offset="1" stop-color="#2de3ef"/>
+    </linearGradient>
+    <linearGradient id="oq-lockup-inverse-violet" x1="123" y1="103" x2="148" y2="130" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#9a8aff"/>
+      <stop offset="1" stop-color="#7657ff"/>
+    </linearGradient>
+  </defs>
+  <g aria-hidden="true">
+    <circle cx="88" cy="86" r="55" fill="none" stroke="#f7fbff" stroke-width="22"/>
+    <path d="M39 139C25 127 29 106 49 84C72 59 107 41 139 42C160 43 169 56 163 72C156 93 127 116 96 132C69 146 48 148 39 139Z" fill="none" stroke="url(#oq-lockup-inverse-cyan)" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+    <path d="M137 116L166 151" fill="none" stroke="url(#oq-lockup-inverse-cyan)" stroke-linecap="round" stroke-width="16"/>
+    <circle cx="136" cy="115" r="13" fill="url(#oq-lockup-inverse-violet)"/>
+  </g>
+  <text x="202" y="113" fill="#f7fbff" font-family="Inter, Helvetica Neue, Arial, sans-serif" font-size="74" font-weight="720" letter-spacing="-3.6">Open</text>
+  <text x="384" y="113" fill="#28d9e8" font-family="Inter, Helvetica Neue, Arial, sans-serif" font-size="74" font-weight="720" letter-spacing="-3.6">Quantum</text>
+</svg>
