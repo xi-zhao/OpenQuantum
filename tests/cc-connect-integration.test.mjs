@@ -15,6 +15,7 @@ import {
 } from "@agentclientprotocol/sdk";
 
 import {
+  buildCcConnectPlatformSetupArgs,
   ensureCcConnectConfig,
   probeCcConnectManagement,
   readCcConnectStatus,
@@ -47,6 +48,29 @@ async function materializeRuntime(root) {
     writeFile(paths.acpConfigPath, "config"),
   ]);
 }
+
+test("CC Connect quick setup passes config through each platform subcommand", () => {
+  const args = buildCcConnectPlatformSetupArgs(
+    projectRoot,
+    "weixin",
+    ["-timeout", "480"],
+  );
+  const paths = resolveCcConnectPaths(projectRoot);
+  assert.deepEqual(args, [
+    "weixin",
+    "setup",
+    "-config",
+    paths.configPath,
+    "-project",
+    "openquantum",
+    "-timeout",
+    "480",
+  ]);
+  assert.throws(
+    () => buildCcConnectPlatformSetupArgs(projectRoot, "unsupported"),
+    /不支持的 CC Connect 快速配置/,
+  );
+});
 
 test("CC Connect config is local, deterministic in shape, and never overwritten", async () => {
   const root = await mkdtemp(path.join(tmpdir(), "openquantum-cc-connect-"));
@@ -154,6 +178,9 @@ test("OpenQuantum ACP entrypoint completes a real no-key Harness handshake", { t
     const session = await connection.newSession({ cwd: projectRoot, mcpServers: [] });
     assert.equal(typeof session.sessionId, "string");
     assert.ok(session.sessionId.length > 0);
+    await new Promise((resolve) => setTimeout(resolve, 750));
+    assert.equal(child.exitCode, null, `ACP exited after its initial handshake\n${stderr}`);
+    assert.doesNotMatch(stderr, /entries did not activate/);
   } catch (error) {
     assert.fail(`${error instanceof Error ? error.stack : error}\nACP stderr:\n${stderr}`);
   } finally {

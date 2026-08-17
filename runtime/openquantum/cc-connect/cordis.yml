@@ -66,7 +66,9 @@
 - id: approval
   name: '@deepseek-ai/dsh-user-approval'
   config:
-    policy: !!js process.env.DSH_PERMISSION_MODE === 'danger-full-access' ? 'never' : 'ask'
+    policy: !!js >-
+      (process.env.DSH_PERMISSION_MODE ?? 'workspace-write') ===
+      'danger-full-access' ? 'never' : 'ask'
 
 - id: fs-sandbox
   name: '@deepseek-ai/dsh-fs-sandbox'
@@ -102,8 +104,9 @@
 
 # Reuse the exact MCP rows managed by the OpenQuantum settings page. The ACP
 # app already owns the generic Agent/Skill/tool stack, so those duplicate rows
-# are disabled while MCP clients, scientific result projection, compaction and
-# the bounded todo tool stay shared with the Web preset.
+# are disabled while MCP clients, scientific result projection and the bounded
+# todo tool stay shared with the Web preset. Web compaction depends on services
+# that the automation-only ACP app does not expose, so it is disabled here.
 - id: openquantum-agent-extensions
   name: '@deepseek-ai/cordis-plugin-include'
   config:
@@ -130,4 +133,6 @@
       - id: tool-ask-user
         disabled: true
       - id: tool-web
+        disabled: true
+      - id: compaction
         disabled: true
