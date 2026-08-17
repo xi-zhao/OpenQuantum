@@ -41,6 +41,15 @@ h1 {
   text-align: center;
 }
 
+h2 {
+  margin: 22px 0 10px;
+  padding-left: 10px;
+  border-left: 4px solid #2563eb;
+  color: #111827;
+  font-size: 18px;
+  line-height: 1.4;
+}
+
 .reading-time,
 h1 + p {
   width: max-content;
@@ -93,6 +102,54 @@ p {
   text-indent: 2em;
 }
 
+ul {
+  margin: 8px 0 14px;
+  padding-left: 1.6em;
+}
+
+li {
+  margin-bottom: 7px;
+  color: #1f2937;
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+table {
+  width: 100%;
+  margin: 12px 0 16px;
+  overflow: hidden;
+  border: 1px solid #dbeafe;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 8px;
+  background: #ffffff;
+  font-size: 13px;
+}
+
+th,
+td {
+  padding: 9px 8px;
+  border-right: 1px solid #dbeafe;
+  border-bottom: 1px solid #dbeafe;
+  text-align: center;
+  vertical-align: middle;
+}
+
+th {
+  background: #eff6ff;
+  color: #1e3a8a;
+  font-weight: 700;
+}
+
+tr:last-child td {
+  border-bottom: 0;
+}
+
+th:last-child,
+td:last-child {
+  border-right: 0;
+}
+
 code {
   padding: 0.12em 0.35em;
   border-radius: 4px;
@@ -119,7 +176,7 @@ p > img {
 
 figure img.wechat-chat-shot,
 p > img.wechat-chat-shot {
-  width: min(100%, 359px);
+  width: min(100%, 480px);
   margin-right: auto;
   margin-left: auto;
 }

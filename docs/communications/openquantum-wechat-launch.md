@@ -1,72 +1,71 @@
 <!-- WeChat cover openquantum-wechat-cover.png -->
 
-# 重磅更新｜我把量子计算接进了微信
+# OpenQuantum 重磅更新｜微信通道正式接入
 
 预计阅读 3 分钟
 
-> 在微信里发一句话，就能让 OpenQuantum 分析量子电路、运行算法、查询云端后端，再把结果和完整过程交回来。
+> 从网页到微信，用一句话连接量子电路、算法 Skill、MCP 工具和云端后端。
 
-今天 18:38，我在微信里发了两个字。
+## 本次更新
 
-你好。
+OpenQuantum 现在可以通过微信接收量子任务。
 
-几秒钟后，手机里弹出了这样一段回复。
+用户在手机上提出问题，OpenQuantum 调用对应的 Skill、MCP 和量子工具完成任务，再把结果发回聊天窗口。网页端仍然保留完整的 Harness 执行轨迹。
+
+下面是本次更新的真实运行截图。
 
 ![OpenQuantum 在微信中的真实回复](../images/openquantum-wechat-chat.jpg){.wechat-chat-shot}
 
-*这是今天真实跑出来的微信对话，不是效果图。*
+*OpenQuantum 微信通道真实运行截图。*
 
-它没有只回我一句你好。
+## 现在可以做什么
 
-它告诉我，自己可以检查和转换量子电路，可以求解并验收二量子位 VQE 基态，可以查询量子云后端，可以做量子 SDK 技术选型，也可以运行 TyxonQ 本地噪声电路，甚至还能检查 OpenQuantum 整个平台是不是正常连通。
+- **量子电路分析与转换**，检查 OpenQASM 3、QPY、电路深度和 Qiskit 转译结果
+- **VQE 基态求解与验收**，独立检查能量、态矢、收敛轨迹和数值残差
+- **量子云后端查询与选择**，通过 FieldQKit 发现 IBM Quantum、IonQ 及多家国内量子云后端
+- **量子 SDK 技术选型**，比较 Qiskit、Cirq、PennyLane、Q#、Braket 和 CUDA-Q 等工具
+- **TyxonQ 本地电路验证**，运行受控的 statevector、shots 和噪声模型测试
+- **平台连通性诊断**，检查 UI、Harness、Skill、MCP 和模型是否真实连通
 
-我当时盯着手机看了几秒。
+不需要凭据的电路分析、文档查询和本地算法，安装后即可使用。真实硬件和付费云服务默认关闭，只有用户配置自己的凭据并主动开启后才会连接。
 
-怎么说呢，这种感觉还挺奇妙的。
+## 消息如何进入 OpenQuantum
 
-量子计算以前给人的感觉，总是离普通人很远。先装 SDK，再配环境，然后翻文档、写代码、申请云端账号。每一步都不算离谱，但堆在一起，就足够把很多好奇的人挡在门外。
+OpenQuantum 没有重新开发一套消息 Runtime。本次更新复用 [CC Connect](https://github.com/chenhg5/cc-connect) 作为消息桥，通过标准 ACP 接入 DeepSeek Harness。
 
-我非常理解这种感觉。
+| 消息入口 | 连接层 | Agent Runtime | 量子能力 |
+| --- | --- | --- | --- |
+| 微信、飞书及其他聊天平台 | CC Connect | DeepSeek Harness | Skill、MCP、Validator |
 
-可如果我们只是想检查一段电路，问问哪台量子计算机满足要求，或者跑一个有边界的算法任务，入口真的一定要这么重吗？
+CC Connect 的定位很清楚，它把运行在本机的 Agent 连接到日常使用的即时通讯工具。个人微信使用 [ilink HTTP 长轮询](https://github.com/chenhg5/cc-connect/blob/main/docs/weixin.md)，不需要公网 IP。首次扫码登录后，启动服务并发送一条消息即可完成上下文关联。
 
-所以这次，我把 OpenQuantum 接进了微信。
-
-手机负责提问。OpenQuantum 负责找到合适的 Skill 和 MCP。DeepSeek Harness 负责把任务、权限、工具调用和执行记录可靠地串起来。
-
-背后还是同一个 OpenQuantum。
+OpenQuantum 当前提供个人微信和飞书的快捷配置入口。钉钉、企业微信、Slack、Telegram、Discord、QQ 等平台由 CC Connect 支持，可以继续通过它的本地管理界面配置。
 
 ![OpenQuantum 首页](../images/openquantum-home.jpg)
 
-*在网页里，可以从一句自然语言开始一项量子任务。*
+*同一套 OpenQuantum 能力也可以在网页端使用。*
 
-DeepSeek Harness 发布以后，我用三天做出了 OpenQuantum 的第一版。想法其实很直接，把散落在不同仓库、量子云和文档里的工具，放到一个开放的工作台里。
-
-现在，这个工作台里已经接入 Qiskit Circuits、Qiskit Docs、FieldQKit、TyxonQ 和 OpenQuantum 自己维护的量子基态能力。IBM Runtime、IBM Transpiler、IonQ 以及多家国内量子云也预留了配置入口。
-
-不需要凭据的电路分析、文档查询和本地算法，装好就能用。
-
-真实硬件和付费云服务默认关闭。只有用户填入自己的凭据并主动开启，OpenQuantum 才会连接对应服务。
-
-方便归方便，真实设备、费用和科研结论的边界不能糊。
-
-微信里看到的是答案，网页里保留的是完整过程。
+微信里看到的是结果，网页里保留的是过程。
 
 ![OpenQuantum 中的 Harness 执行轨迹](../images/openquantum-trajectory.jpg)
 
-*每次 Skill 加载、工具调用和执行结果，都留在同一条 Harness 轨迹里。*
+*Skill 加载、工具调用、返回结果和运行状态都保留在 Harness 轨迹中。*
 
-我还给算法能力留了一道独立检查。
+## 科学验收仍然独立
 
-就拿量子基态任务来说，工具会运行二量子位 VQE，另一套程序再检查能量、态矢、收敛轨迹和数值残差。一次真实运行里，VQE 与独立精确参考都得到 -1.85727503 Ha，能量差约为 4.44 × 10^-16 Ha，所有科学检查通过。
+对于科研算法，任务运行完成和科学验收通过是两个状态。
+
+以 OpenQuantum 自带的量子基态能力为例，一次真实运行中，VQE 与独立精确参考都得到 -1.85727503 Ha，能量差约为 4.44 × 10^-16 Ha，所有科学检查通过。
 
 ![OpenQuantum 量子基态任务的科学验收结果](../images/openquantum-quantum-result.jpg)
 
-*工具跑完不等于科学结论成立，结果还要经过独立验收。*
+*量子基态结果经过独立 Validator 验收。*
 
-如果你也想试，配置没有想象中复杂。
+## 三步完成配置
 
-先准备 Node.js 24 和 uv，然后把项目拉到本地。
+**第一步，安装 OpenQuantum**
+
+准备 Node.js 24 和 uv，然后拉取项目并安装依赖。
 
 ```bash
 git clone https://github.com/xi-zhao/openQuantum.git
@@ -75,22 +74,19 @@ npm ci
 cp .env.example .env
 ```
 
-在 `.env` 里填入自己的 OpenAI 兼容模型地址和 API Key。
+**第二步，配置模型并启动网页端**
+
+在 `.env` 中填写自己的 OpenAI 兼容模型地址和 API Key。
 
 ```bash
 OPENQUANTUM_PUBLIC_BASE_URL=https://your-model-endpoint.example/v1
 OPENQUANTUM_PUBLIC_API_KEY=your-api-key
-```
-
-运行下面这条命令，网页端就会启动。
-
-```bash
 npm run dev
 ```
 
-浏览器打开 `http://127.0.0.1:3000`，可以先体验 Qiskit 电路能力、Qiskit 文档查询和本地量子基态任务。这几项不需要量子云密钥。
+浏览器访问 `http://127.0.0.1:3000`，即可先体验无需量子云凭据的本地能力。
 
-如果想把个人微信也接进来，再运行三条命令。
+**第三步，连接个人微信**
 
 ```bash
 npm run cc-connect:setup
@@ -98,18 +94,22 @@ npm run cc-connect:weixin
 npm run cc-connect:start
 ```
 
-微信扫描终端里的二维码，发出第一条消息，就能完成连接。飞书、钉钉、企业微信、Slack、Telegram、Discord 和 QQ 也可以通过 CC Connect 接入。
+用微信扫描终端生成的二维码，确认登录后发送第一条消息，即可完成连接。
 
-说真的，OpenQuantum 现在还很年轻，我也还在不断补它。
+消息平台 Token 保存在本地忽略目录，不会写入项目仓库。需要重新绑定微信时，可以按照 CC Connect 官方流程执行 `weixin new` 再次扫码。
 
-但今天手机里弹出那段回复的时候，我突然觉得，量子计算的入口确实可以再往前走一步。
+## 开源与扩展
 
-不必先面对一堆环境和代码。
+OpenQuantum 是一个开源、开放的量子 Agent 工作台。
 
-先从一句你好开始。
+量子公司可以接入自己的设备和服务，高校与研究机构可以沉淀科研流程，算法与工具开发者也可以继续添加新的 Skill、MCP 和 Validator。
 
-量子计算，就在指尖。
-
-OpenQuantum 已经开源。
+项目地址
 
 [https://github.com/xi-zhao/openQuantum](https://github.com/xi-zhao/openQuantum)
+
+CC Connect 项目与微信接入说明
+
+[https://github.com/chenhg5/cc-connect](https://github.com/chenhg5/cc-connect)
+
+[https://github.com/chenhg5/cc-connect/blob/main/docs/weixin.md](https://github.com/chenhg5/cc-connect/blob/main/docs/weixin.md)
