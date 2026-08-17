@@ -117,6 +117,13 @@ p > img {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
+figure img.wechat-chat-shot,
+p > img.wechat-chat-shot {
+  width: min(100%, 359px);
+  margin-right: auto;
+  margin-left: auto;
+}
+
 p:has(> em:only-child),
 figcaption {
   margin: 6px 0 12px;
