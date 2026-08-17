@@ -93,26 +93,69 @@
 </head>
 <body>
 <!-- WeChat cover openquantum-wechat-cover.png -->
-<h1 id="openquantum-重磅更新微信通道正式接入">OpenQuantum
-重磅更新｜微信通道正式接入</h1>
+<h1
+id="openquantum-重磅更新量子-ai-正式接入多种即时通讯平台">OpenQuantum
+重磅更新｜量子 AI 正式接入多种即时通讯平台</h1>
 <p>预计阅读 3 分钟</p>
 <blockquote>
-<p>从网页到微信，用一句话连接量子电路、算法 Skill、MCP
-工具和云端后端。</p>
+<p>把量子计算带进每个人每天使用的聊天窗口。</p>
 </blockquote>
-<h2 id="本次更新">本次更新</h2>
-<p>OpenQuantum 现在可以通过微信接收量子任务。</p>
-<p>用户在手机上提出问题，OpenQuantum 调用对应的 Skill、MCP
-和量子工具完成任务，再把结果发回聊天窗口。网页端仍然保留完整的 Harness
-执行轨迹。</p>
-<p>下面是本次更新的真实运行截图。</p>
+<h2 id="一次重要的平台升级">一次重要的平台升级</h2>
+<p>OpenQuantum
+现在不只可以在网页里使用，也可以接入微信、飞书等即时通讯平台。</p>
+<p>用户直接在熟悉的聊天窗口里提出问题，OpenQuantum 会调用对应的
+Skill、MCP 和量子工具完成任务，再把结果送回原来的对话。</p>
+<p>这次更新给 OpenQuantum 增加了一层通用的 IM
+接入能力。量子计算不再只停留在开发环境里，普通用户、科研团队和企业成员都可以从自己日常使用的消息入口调用同一套量子
+AI 能力。</p>
+<p>网页端继续保留完整的 Harness
+执行轨迹，聊天端负责提供更直接的使用入口。下面是个人微信接入后的真实运行截图。</p>
 <figure>
 <img src="../images/openquantum-wechat-chat.jpg"
 class="wechat-chat-shot" alt="OpenQuantum 在微信中的真实回复" />
 <figcaption aria-hidden="true">OpenQuantum
 在微信中的真实回复</figcaption>
 </figure>
-<p><em>OpenQuantum 微信通道真实运行截图。</em></p>
+<p><em>OpenQuantum 通过个人微信调用量子能力的真实运行截图。</em></p>
+<h2 id="已经支持哪些消息入口">已经支持哪些消息入口</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>接入方式</th>
+<th>当前状态</th>
+<th>适合场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>个人微信</td>
+<td>已提供快捷配置，真实跑通</td>
+<td>个人使用、移动端快速调用</td>
+</tr>
+<tr>
+<td>飞书</td>
+<td>已提供快捷配置</td>
+<td>科研团队、企业协作</td>
+</tr>
+<tr>
+<td>钉钉、企业微信、Slack、Telegram、Discord、QQ 等</td>
+<td>可通过 CC Connect 继续配置</td>
+<td>机构现有工作流与社区扩展</td>
+</tr>
+<tr>
+<td>OpenQuantum Web UI</td>
+<td>原生保留</td>
+<td>查看完整执行轨迹、工具调用和科研结果</td>
+</tr>
+</tbody>
+</table>
+<p>这套设计保留了开放性。新增一个消息平台时，不需要重做量子算法，也不需要复制一套
+Agent Runtime，只需要把新的消息入口连接到现有 OpenQuantum Agent。</p>
 <h2 id="现在可以做什么">现在可以做什么</h2>
 <ul>
 <li><strong>量子电路分析与转换</strong>，检查 OpenQASM
@@ -129,7 +172,7 @@ Qiskit、Cirq、PennyLane、Q#、Braket 和 CUDA-Q 等工具</li>
 和模型是否真实连通</li>
 </ul>
 <p>不需要凭据的电路分析、文档查询和本地算法，安装后即可使用。真实硬件和付费云服务默认关闭，只有用户配置自己的凭据并主动开启后才会连接。</p>
-<h2 id="消息如何进入-openquantum">消息如何进入 OpenQuantum</h2>
+<h2 id="一条消息如何进入-openquantum">一条消息如何进入 OpenQuantum</h2>
 <p>OpenQuantum 没有重新开发一套消息 Runtime。本次更新复用 <a
 href="https://github.com/chenhg5/cc-connect">CC Connect</a>
 作为消息桥，通过标准 ACP 接入 DeepSeek Harness。</p>
@@ -164,12 +207,14 @@ HTTP 长轮询</a>，不需要公网
 IP。首次扫码登录后，启动服务并发送一条消息即可完成上下文关联。</p>
 <p>OpenQuantum
 当前提供个人微信和飞书的快捷配置入口。钉钉、企业微信、Slack、Telegram、Discord、QQ
-等平台由 CC Connect 支持，可以继续通过它的本地管理界面配置。</p>
+等平台由 CC Connect
+支持，可以继续通过它的本地管理界面配置。后续社区也可以沿着同一接口增加新的
+IM 连接方式。</p>
 <figure>
 <img src="../images/openquantum-home.jpg" alt="OpenQuantum 首页" />
 <figcaption aria-hidden="true">OpenQuantum 首页</figcaption>
 </figure>
-<p><em>同一套 OpenQuantum 能力也可以在网页端使用。</em></p>
+<p><em>同一套 OpenQuantum 能力同时服务网页端与消息端。</em></p>
 <p>微信里看到的是结果，网页里保留的是过程。</p>
 <figure>
 <img src="../images/openquantum-trajectory.jpg"

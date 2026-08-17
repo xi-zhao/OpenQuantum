@@ -1,22 +1,35 @@
 <!-- WeChat cover openquantum-wechat-cover.png -->
 
-# OpenQuantum 重磅更新｜微信通道正式接入
+# OpenQuantum 重磅更新｜量子 AI 正式接入多种即时通讯平台
 
 预计阅读 3 分钟
 
-> 从网页到微信，用一句话连接量子电路、算法 Skill、MCP 工具和云端后端。
+> 把量子计算带进每个人每天使用的聊天窗口。
 
-## 本次更新
+## 一次重要的平台升级
 
-OpenQuantum 现在可以通过微信接收量子任务。
+OpenQuantum 现在不只可以在网页里使用，也可以接入微信、飞书等即时通讯平台。
 
-用户在手机上提出问题，OpenQuantum 调用对应的 Skill、MCP 和量子工具完成任务，再把结果发回聊天窗口。网页端仍然保留完整的 Harness 执行轨迹。
+用户直接在熟悉的聊天窗口里提出问题，OpenQuantum 会调用对应的 Skill、MCP 和量子工具完成任务，再把结果送回原来的对话。
 
-下面是本次更新的真实运行截图。
+这次更新给 OpenQuantum 增加了一层通用的 IM 接入能力。量子计算不再只停留在开发环境里，普通用户、科研团队和企业成员都可以从自己日常使用的消息入口调用同一套量子 AI 能力。
+
+网页端继续保留完整的 Harness 执行轨迹，聊天端负责提供更直接的使用入口。下面是个人微信接入后的真实运行截图。
 
 ![OpenQuantum 在微信中的真实回复](../images/openquantum-wechat-chat.jpg){.wechat-chat-shot}
 
-*OpenQuantum 微信通道真实运行截图。*
+*OpenQuantum 通过个人微信调用量子能力的真实运行截图。*
+
+## 已经支持哪些消息入口
+
+| 接入方式 | 当前状态 | 适合场景 |
+| --- | --- | --- |
+| 个人微信 | 已提供快捷配置，真实跑通 | 个人使用、移动端快速调用 |
+| 飞书 | 已提供快捷配置 | 科研团队、企业协作 |
+| 钉钉、企业微信、Slack、Telegram、Discord、QQ 等 | 可通过 CC Connect 继续配置 | 机构现有工作流与社区扩展 |
+| OpenQuantum Web UI | 原生保留 | 查看完整执行轨迹、工具调用和科研结果 |
+
+这套设计保留了开放性。新增一个消息平台时，不需要重做量子算法，也不需要复制一套 Agent Runtime，只需要把新的消息入口连接到现有 OpenQuantum Agent。
 
 ## 现在可以做什么
 
@@ -29,7 +42,7 @@ OpenQuantum 现在可以通过微信接收量子任务。
 
 不需要凭据的电路分析、文档查询和本地算法，安装后即可使用。真实硬件和付费云服务默认关闭，只有用户配置自己的凭据并主动开启后才会连接。
 
-## 消息如何进入 OpenQuantum
+## 一条消息如何进入 OpenQuantum
 
 OpenQuantum 没有重新开发一套消息 Runtime。本次更新复用 [CC Connect](https://github.com/chenhg5/cc-connect) 作为消息桥，通过标准 ACP 接入 DeepSeek Harness。
 
@@ -39,11 +52,11 @@ OpenQuantum 没有重新开发一套消息 Runtime。本次更新复用 [CC Conn
 
 CC Connect 的定位很清楚，它把运行在本机的 Agent 连接到日常使用的即时通讯工具。个人微信使用 [ilink HTTP 长轮询](https://github.com/chenhg5/cc-connect/blob/main/docs/weixin.md)，不需要公网 IP。首次扫码登录后，启动服务并发送一条消息即可完成上下文关联。
 
-OpenQuantum 当前提供个人微信和飞书的快捷配置入口。钉钉、企业微信、Slack、Telegram、Discord、QQ 等平台由 CC Connect 支持，可以继续通过它的本地管理界面配置。
+OpenQuantum 当前提供个人微信和飞书的快捷配置入口。钉钉、企业微信、Slack、Telegram、Discord、QQ 等平台由 CC Connect 支持，可以继续通过它的本地管理界面配置。后续社区也可以沿着同一接口增加新的 IM 连接方式。
 
 ![OpenQuantum 首页](../images/openquantum-home.jpg)
 
-*同一套 OpenQuantum 能力也可以在网页端使用。*
+*同一套 OpenQuantum 能力同时服务网页端与消息端。*
 
 微信里看到的是结果，网页里保留的是过程。
 
