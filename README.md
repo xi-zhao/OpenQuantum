@@ -148,6 +148,21 @@ npm run demo:quantum-ground-state
 npm run mcp:qiskit:probe
 ```
 
+### 从飞书、Slack 或其他消息平台使用
+
+OpenQuantum 也集成了 [CC Connect](https://github.com/chenhg5/cc-connect)。它通过标准 ACP 连接 DeepSeek Harness，把同一套 OpenQuantum Skill、MCP 和科学验收能力带到飞书、钉钉、企业微信、Slack、Telegram、Discord、QQ 和微信等消息平台。
+
+```bash
+npm run cc-connect:setup
+npm run cc-connect:feishu
+npm run cc-connect:start
+
+# 在另一个终端打开本地管理后台，继续管理消息平台及其凭据
+npm run cc-connect:web
+```
+
+飞书也可以替换为 CC Connect 支持的其他平台；第一项平台需要先按上游方式完成配置，服务才会启动。消息平台的 Token 只保存在被 Git 忽略的 CC Connect 本地配置中。详细说明见[消息渠道接入](docs/integrations/CC_CONNECT.md)。
+
 也可以使用 Docker。
 
 ```bash

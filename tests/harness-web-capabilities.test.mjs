@@ -7,6 +7,7 @@ import {
   assertMcpEnableAllowed,
   capabilityRequestBoundary,
   createCapabilitySettingsHandler,
+  dispatchMessageChannelCommand,
 } from "../runtime/openquantum/web-capabilities/index.mjs";
 
 const SAME_ORIGIN_HEADERS = {
@@ -41,7 +42,7 @@ function response() {
   };
 }
 
-test("registers one Harness-native capability settings route", () => {
+test("registers Harness-native capability and message-channel settings routes", () => {
   const routes = [];
   const labels = [];
   const dispose = () => {};
@@ -63,10 +64,28 @@ test("registers one Harness-native capability settings route", () => {
     },
   });
 
-  assert.deepEqual(labels, ["openquantum: capability settings API"]);
+  assert.deepEqual(labels, [
+    "openquantum: capability settings API",
+    "openquantum: message channel settings API",
+  ]);
   assert.deepEqual(routes.map((route) => route.path), [
     "/openquantum/api/capabilities",
+    "/openquantum/api/channels",
   ]);
+});
+
+test("message-channel dispatcher exposes a bounded CC Connect Interface", async () => {
+  const snapshot = await dispatchMessageChannelCommand(process.cwd(), {
+    action: "snapshot",
+  });
+  assert.equal(snapshot.id, "cc-connect");
+  assert.equal(snapshot.version, "1.5.0");
+  assert.deepEqual(Object.keys(snapshot.commands), ["setup", "start", "web", "status"]);
+  assert.equal(JSON.stringify(snapshot).includes("token"), false);
+  await assert.rejects(
+    dispatchMessageChannelCommand(process.cwd(), { action: "service.start" }),
+    /未知消息渠道命令/,
+  );
 });
 
 test("server guard blocks enabling MCPs before required setup is complete", async () => {
@@ -189,6 +208,12 @@ test("client plugin contributes the native settings section and uses Harness cre
   assert.equal(pkg.dsh.client.platform, "web");
   assert.match(client, /settings\.section/);
   assert.match(client, /openquantum-capabilities/);
+  assert.match(client, /openquantum-channels/);
+  assert.match(client, /\/openquantum\/api\/channels/);
+  assert.match(client, /消息平台/);
+  assert.match(client, /CC Connect/);
+  assert.match(client, /DeepSeek Harness/);
+  assert.match(client, /channel\.commands\.start/);
   assert.match(client, /api\.credentials\.set/);
   assert.match(client, /api\.credentials\.unset/);
   assert.match(client, /已有值不会回显/);

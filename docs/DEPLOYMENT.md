@@ -61,6 +61,24 @@ Compose 使用两个命名卷：
 
 重建容器不会自动删除卷。备份、迁移或删除卷前，应先停止服务并确认其中是否包含仍需保留的会话、凭据和结果。
 
+## 可选：接入消息平台
+
+本地安装可以通过 CC Connect 把 OpenQuantum 接入飞书、钉钉、企业微信、Slack、Telegram、Discord、QQ 和微信等平台。CC Connect 只负责消息收发；Agent、Session、权限、Skill、MCP 和科学 Validator 仍由 DeepSeek Harness / OpenQuantum 负责。
+
+```bash
+npm run cc-connect:setup
+npm run cc-connect:feishu
+npm run cc-connect:start
+```
+
+保持消息服务运行，然后在另一个终端打开本地管理后台：
+
+```bash
+npm run cc-connect:web
+```
+
+第一项消息平台必须在启动前配置；上面的飞书命令使用 CC Connect 官方二维码/凭据流程，微信可改用 `npm run cc-connect:weixin`。服务启动后，可以在管理后台继续管理平台和 Bot 凭据。OpenQuantum 设置中心的“消息渠道”页面可以查看初始化、运行和已配置平台状态。当前集成面向本地部署；Docker Compose 尚未把 CC Connect 作为常驻服务编排。完整边界和故障判断见[消息渠道接入](integrations/CC_CONNECT.md)。
+
 ## 可选量子云能力
 
 无凭据、无硬件副作用的 Qiskit Circuits、Qiskit Docs 和本地量子能力可以默认启用。IBM Runtime、IBM

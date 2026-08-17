@@ -7,6 +7,8 @@ OpenQuantum 自有代码采用仓库根目录中的 [MIT License](LICENSE)。这
 | 组件 | 许可证 | OpenQuantum 中的使用方式 | 上游来源 |
 | --- | --- | --- | --- |
 | DeepSeek Harness | MIT | 作为 Agent Runtime 和 Web UI 基础，`dsh` 与 `dsh-mcp-client` 固定为 `0.1.0-rc.6`；OpenQuantum 使用 Cordis patch、preset 与公开接口扩展，不修改 `node_modules` | [deepseek-ai/deepseek-harness](https://github.com/deepseek-ai/deepseek-harness) |
+| CC Connect | MIT | 固定 npm `1.5.0`，作为可选的消息平台桥；通过 ACP 启动 Harness Agent，不复制上游源码，也不把平台凭据写入仓库 | [chenhg5/cc-connect](https://github.com/chenhg5/cc-connect) |
+| Agent Client Protocol TypeScript SDK | Apache-2.0 | 固定为 `0.25.1`，仅用于验证 OpenQuantum ACP 入口与 Harness 的真实 stdio 握手 | [agentclientprotocol/typescript-sdk](https://github.com/agentclientprotocol/typescript-sdk) |
 | Qiskit MCP Servers | Apache-2.0 | 通过 `uvx` 使用 Circuits `0.3.1`、Docs `0.3.0`、IBM Runtime `0.6.1`、IBM Transpiler `0.4.1` 与 Gym `0.4.1`；上游实现没有复制进本仓库 | [Qiskit/mcp-servers](https://github.com/Qiskit/mcp-servers) |
 | FieldQKit | Apache-2.0 | 使用 `0.1.2` 的固定上游提交 `3ef2493d3f840b6a924af66a0c3f1b79cfce3fa0`；OpenQuantum 维护独立的只读 MCP 桥接与 Skill，上游源码没有复制进本仓库 | [FieldQuantum/fieldqkit](https://github.com/FieldQuantum/fieldqkit) |
 | TyxonQ | Apache-2.0 | 通过 `uv` 按需使用 PyPI `tyxonq==1.2.0`；OpenQuantum 维护独立的有界本地仿真 MCP 与 Skill，不复制上游源码，也不开放上游云端任务接口 | [QureGenAI-Biotech/TyxonQ](https://github.com/QureGenAI-Biotech/TyxonQ) |

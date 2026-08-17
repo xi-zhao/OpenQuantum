@@ -17,6 +17,7 @@ globalThis.__ModuleLoader__.load({
       .oq-cap-notice,.oq-cap-error,.oq-cap-loading{border-radius:9px;font-size:12px;line-height:19px;margin:12px 0;padding:9px 11px}.oq-cap-notice{background:color-mix(in srgb,var(--dsw-alias-state-success-primary) 10%,transparent);color:var(--dsw-alias-state-success-primary)}.oq-cap-error{background:color-mix(in srgb,var(--dsw-alias-state-error-primary) 10%,transparent);color:var(--dsw-alias-state-error-primary)}.oq-cap-loading{color:var(--dsw-alias-label-tertiary);padding-left:0}
       .oq-cap-empty{color:var(--dsw-alias-label-tertiary);font-size:12px}.oq-cap-group{border-top:1px solid var(--dsw-alias-border-l2);margin-top:18px;padding-top:15px}.oq-cap-group summary{cursor:pointer;font-size:13px;font-weight:600}.oq-cap-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}.oq-cap-span{grid-column:1/-1}
       .oq-cap-discovery{background:var(--dsw-alias-bg-module-platform);border-radius:10px;margin-top:12px;padding:12px}.oq-cap-discovery p{color:var(--dsw-alias-label-secondary);font-size:11px;line-height:18px;margin:0}.oq-cap-path{background:var(--dsw-alias-bg-layer-1);border:1px solid var(--dsw-alias-border-l2);border-radius:7px;color:var(--dsw-alias-label-primary);display:block;font-family:var(--ds-font-family-code);font-size:11px;margin:9px 0;padding:8px 10px;word-break:break-all}
+      .oq-channel-flow{align-items:center;display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}.oq-channel-node{background:var(--dsw-alias-bg-module-platform);border-radius:8px;color:var(--dsw-alias-label-secondary);font-size:11px;padding:7px 9px}.oq-channel-arrow{color:var(--dsw-alias-label-tertiary);font-size:11px}.oq-channel-commands{display:grid;gap:7px;margin-top:12px}.oq-channel-command{background:var(--dsw-alias-bg-module-platform);border-radius:8px;display:flex;flex-direction:column;gap:3px;padding:8px 10px}.oq-channel-command span{color:var(--dsw-alias-label-tertiary);font-size:10px}.oq-channel-command code{color:var(--dsw-alias-label-primary);font-family:var(--ds-font-family-code);font-size:11px;word-break:break-all}
       @media(max-width:700px){.oq-cap-grid,.oq-cap-form{grid-template-columns:1fr}.oq-cap-span{grid-column:auto}}
     `;
     const styleId = "openquantum-capability-settings";
@@ -31,9 +32,11 @@ globalThis.__ModuleLoader__.load({
     const copy = {
       zh: {
         nav: "量子组件",
+        channelsNav: "消息渠道",
       },
       en: {
         nav: "Quantum components",
+        channelsNav: "Messaging channels",
       },
     };
 
@@ -52,6 +55,17 @@ globalThis.__ModuleLoader__.load({
       });
       const value = await response.json();
       if (!response.ok) throw new Error(value.error ?? "能力设置请求失败");
+      return value;
+    }
+
+    async function channelRequest(command) {
+      const response = await fetch("/openquantum/api/channels", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(command),
+      });
+      const value = await response.json();
+      if (!response.ok) throw new Error(value.error ?? "消息渠道请求失败");
       return value;
     }
 
@@ -277,6 +291,83 @@ globalThis.__ModuleLoader__.load({
       );
     }
 
+    function MessageChannelSettingsSection({ loopback }) {
+      const [channel, setChannel] = React.useState(null);
+      const [busy, setBusy] = React.useState(false);
+      const [error, setError] = React.useState(null);
+
+      const reload = React.useCallback(async () => {
+        setError(null);
+        try {
+          setChannel(await channelRequest({ action: "snapshot" }));
+        } catch (caught) {
+          setError(caught instanceof Error ? caught.message : "消息渠道状态读取失败");
+        }
+      }, []);
+
+      React.useEffect(() => { void reload(); }, [reload]);
+
+      const setup = async () => {
+        setBusy(true);
+        setError(null);
+        try {
+          setChannel(await channelRequest({ action: "setup" }));
+        } catch (caught) {
+          setError(caught instanceof Error ? caught.message : "消息渠道初始化失败");
+        } finally {
+          setBusy(false);
+        }
+      };
+
+      if (!channel) return h("div", { className: "oq-cap-root" }, error ? h("p", { className: "oq-cap-error", role: "alert" }, error) : h("p", { className: "oq-cap-loading" }, "正在读取消息渠道状态…"));
+      const stateLabel = channel.state === "running"
+        ? "运行中"
+        : channel.state === "configured"
+        ? "待启动"
+        : channel.state === "needs-platform"
+        ? "待添加平台"
+        : channel.state === "not-installed"
+        ? "依赖未安装"
+        : "未初始化";
+      const stateTone = channel.state === "running" ? "ready" : "attention";
+      const platforms = channel.platformTypes.length > 0
+        ? `已配置：${channel.platformTypes.join("、")}`
+        : "尚未添加消息平台，可在 CC Connect 管理后台配置。";
+      return h("div", { className: "oq-cap-root" },
+        !loopback ? h("p", { className: "oq-cap-error", role: "alert" }, "远程浏览器只读；消息渠道只能在 Harness 本机配置。") : null,
+        error ? h("p", { className: "oq-cap-error", role: "alert" }, error) : null,
+        h("article", { className: "oq-cap-card" },
+          h("div", { className: "oq-cap-card-head" },
+            h("div", { className: "oq-cap-title" }, h("h3", null, "CC Connect"), h("code", { className: "oq-cap-code" }, `ACP 消息桥 · ${channel.version}`)),
+            h("span", { className: "oq-cap-badge", "data-tone": stateTone }, stateLabel),
+          ),
+          h("p", { className: "oq-cap-desc" }, "把 OpenQuantum 接入飞书、钉钉、企业微信、Slack、Telegram、Discord、QQ 和微信等消息平台。"),
+          h("div", { className: "oq-channel-flow", "aria-label": "消息渠道调用链" },
+            h("span", { className: "oq-channel-node" }, "消息平台"),
+            h("span", { className: "oq-channel-arrow" }, "→"),
+            h("span", { className: "oq-channel-node" }, "CC Connect"),
+            h("span", { className: "oq-channel-arrow" }, "→ ACP →"),
+            h("span", { className: "oq-channel-node" }, "DeepSeek Harness"),
+            h("span", { className: "oq-channel-arrow" }, "→"),
+            h("span", { className: "oq-channel-node" }, "Skill / MCP / Validator"),
+          ),
+          h("p", { className: "oq-cap-meta" }, platforms),
+          h("p", { className: "oq-cap-meta" }, `本地配置：${channel.configPath}。平台 Token 由 CC Connect 保存，不进入源码、Harness Session 或 Git。`),
+          h("div", { className: "oq-channel-commands" },
+            channel.platformTypes.length === 0 ? h("div", { className: "oq-channel-command" }, h("span", null, "快速添加第一个飞书渠道"), h("code", null, "npm run cc-connect:feishu")) : null,
+            h("div", { className: "oq-channel-command" }, h("span", null, "启动消息服务"), h("code", null, channel.commands.start)),
+            h("div", { className: "oq-channel-command" }, h("span", null, "打开带登录凭据的本地管理后台"), h("code", null, channel.commands.web)),
+          ),
+          h("div", { className: "oq-cap-actions" },
+            !channel.configured ? h("button", { type: "button", className: "oq-cap-button", "data-primary": "true", disabled: busy || !loopback || !channel.installed, onClick: setup }, busy ? "正在初始化…" : "初始化本地配置") : null,
+            channel.running ? h("a", { className: "oq-cap-link", href: channel.managementUrl, target: "_blank", rel: "noreferrer" }, "打开管理后台") : null,
+            h("a", { className: "oq-cap-link", href: channel.sourceUrl, target: "_blank", rel: "noreferrer" }, "查看 CC Connect 源码"),
+            h("button", { type: "button", className: "oq-cap-button", disabled: busy, onClick: reload }, "刷新状态"),
+          ),
+        ),
+      );
+    }
+
     const NS = "settings.openquantumCapabilities";
     const inject = ["slots", "locale", "connection"];
     function apply(ctx) {
@@ -291,6 +382,14 @@ globalThis.__ModuleLoader__.load({
         locale: NS,
         inject: () => ({ api: connection.api, loopback: connection.isLoopback }),
       }, CapabilitySettingsSection));
+      ctx.slots.inject("settings.section", () => ctx.slots.register({
+        name: "settings.section",
+        id: "openquantum-channels",
+        order: 13,
+        label: () => t("channelsNav"),
+        locale: NS,
+        inject: () => ({ loopback: connection.isLoopback }),
+      }, MessageChannelSettingsSection));
     }
 
     pluginModule.exports.apply = apply;

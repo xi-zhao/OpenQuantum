@@ -22,6 +22,13 @@
     "models:probe": "node scripts/probe-models.mjs",
     "mcp:qiskit:probe": "node scripts/probe-qiskit-mcp.mjs",
     "mcp:quantum-hardware:setup": "node scripts/setup-quantum-hardware-mcp.mjs",
+    "cc-connect:setup": "node scripts/setup-cc-connect.mjs",
+    "cc-connect:feishu": "node scripts/setup-cc-connect-platform.mjs feishu",
+    "cc-connect:weixin": "node scripts/setup-cc-connect-platform.mjs weixin",
+    "cc-connect:yuanbao": "node scripts/setup-cc-connect-platform.mjs yuanbao",
+    "cc-connect:start": "node scripts/run-cc-connect.mjs start",
+    "cc-connect:web": "node scripts/run-cc-connect.mjs web",
+    "cc-connect:status": "node scripts/status-cc-connect.mjs",
     "e2e:qiskit-harness": "node scripts/probe-qiskit-harness.mjs",
     "e2e:quantum-harness": "node scripts/probe-quantum-harness-e2e.mjs",
     "demo:quantum-ground-state": "node scripts/run-quantum-ground-state-demo.mjs",
@@ -38,14 +45,17 @@
   },
   "dependencies": {
     "@deepseek-ai/dsh": "0.1.0-rc.6",
+    "@deepseek-ai/dsh-acp-demo": "0.1.0-rc.6",
     "@deepseek-ai/dsh-credentials": "0.1.0-rc.6",
     "@deepseek-ai/dsh-host-apiproxy": "0.1.0-rc.6",
     "@deepseek-ai/dsh-mcp-client": "0.1.0-rc.6",
     "@modelcontextprotocol/sdk": "1.30.0",
     "ajv": "8.18.0",
+    "cc-connect": "1.5.0",
     "yaml": "2.9.0"
   },
   "devDependencies": {
+    "@agentclientprotocol/sdk": "0.25.1",
     "@eslint/js": "9.39.4",
     "eslint": "^9",
     "globals": "14.0.0"

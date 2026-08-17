@@ -6,6 +6,7 @@
 
 - [部署与启动](DEPLOYMENT.md)：本地、Docker、模型配置和启动后的检查方法。
 - [常见问题与故障排查](TROUBLESHOOTING.md)：按 UI、模型、MCP、凭据和 Docker 分层定位问题。
+- [消息渠道接入](integrations/CC_CONNECT.md)：通过 CC Connect 和 ACP 把 OpenQuantum 接入飞书、Slack、钉钉等平台。
 - [项目首页](../README.md)：产品能力、已集成工具和快速开始。
 
 ## 二次开发

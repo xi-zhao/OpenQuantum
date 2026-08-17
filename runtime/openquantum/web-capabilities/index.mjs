@@ -4,6 +4,7 @@ import { pathToFileURL } from "node:url";
 const MAX_REQUEST_BYTES = 64 * 1024;
 const LOOPBACK_HOST = /^(?:localhost|127(?:\.\d{1,3}){3}|\[::1\])(?::\d{1,5})?$/i;
 const SETTINGS_MODULE = "src/settings/server/project-settings.mjs";
+const CHANNELS_MODULE = "src/channels/cc-connect.mjs";
 
 export const name = "openquantum-web-capabilities";
 export const inject = ["webServer", "credentials"];
@@ -83,6 +84,12 @@ async function settingsModule(projectRoot) {
   );
 }
 
+async function channelsModule(projectRoot) {
+  return import(
+    pathToFileURL(path.join(projectRoot, CHANNELS_MODULE)).href
+  );
+}
+
 export async function dispatchCapabilityCommand(projectRoot, command) {
   if (command === null || typeof command !== "object" || Array.isArray(command)) {
     throw new TypeError("设置请求必须是对象");
@@ -103,6 +110,21 @@ export async function dispatchCapabilityCommand(projectRoot, command) {
       return settings.removeMcpSettings(projectRoot, command);
     default:
       throw new TypeError("未知设置命令");
+  }
+}
+
+export async function dispatchMessageChannelCommand(projectRoot, command) {
+  if (command === null || typeof command !== "object" || Array.isArray(command)) {
+    throw new TypeError("设置请求必须是对象");
+  }
+  const channels = await channelsModule(projectRoot);
+  switch (command.action) {
+    case "snapshot":
+      return channels.readCcConnectStatus(projectRoot);
+    case "setup":
+      return channels.ensureCcConnectConfig(projectRoot);
+    default:
+      throw new TypeError("未知消息渠道命令");
   }
 }
 
@@ -172,17 +194,22 @@ export function createCapabilitySettingsHandler({
 }
 
 export function apply(ctx) {
-  const handler = createCapabilitySettingsHandler({
+  const capabilityHandler = createCapabilitySettingsHandler({
     validate: (projectRoot, command) =>
       assertMcpEnableAllowed(projectRoot, command, ctx.credentials),
   });
-  ctx.effect(
-    () =>
-      ctx.webServer.register({
+  const channelHandler = createCapabilitySettingsHandler({
+    dispatch: dispatchMessageChannelCommand,
+  });
+  const routes = [
+    ["/openquantum/api/capabilities", capabilityHandler, "openquantum: capability settings API"],
+    ["/openquantum/api/channels", channelHandler, "openquantum: message channel settings API"],
+  ];
+  for (const [routePath, handler, label] of routes) {
+    ctx.effect(() => ctx.webServer.register({
         kind: "exact",
-        path: "/openquantum/api/capabilities",
+        path: routePath,
         handler,
-      }),
-    "openquantum: capability settings API",
-  );
+      }), label);
+  }
 }

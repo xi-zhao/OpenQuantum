@@ -1,0 +1,133 @@
+# OpenQuantum automation endpoint for CC Connect.
+#
+# CC Connect owns messaging-platform delivery. DeepSeek Harness remains the
+# only Agent runtime and exposes this automation-only ACP server over stdio.
+# Stdout is reserved for newline-delimited ACP JSON-RPC, so this composition
+# must not mount a stdout logger or Web host.
+
+- id: credentials
+  name: '@deepseek-ai/dsh-credentials-local'
+  config:
+    dshHome: !!js process.env.DSH_HOME || process.cwd() + '/.openquantum/dsh'
+
+- id: llm-pi-ai
+  name: '@deepseek-ai/dsh-llm-pi-ai'
+  config:
+    providers:
+      openquantum-public:
+        displayName: OpenQuantum Public Gateway
+        apiKeyEnv: OPENQUANTUM_PUBLIC_API_KEY
+        api: openai-completions
+        baseURL: !!js process.env.OPENQUANTUM_PUBLIC_BASE_URL || 'https://api.example.invalid/v1'
+        defaultContextWindow: 131072
+        defaultMaxTokens: 8192
+        defaultInput:
+          - text
+        streamIdleTimeoutMs: 300000
+        models:
+          - id: kimi-k2.7-code
+            name: Kimi K2.7 Code
+          - id: glm5.2
+            name: GLM 5.2
+      openquantum-private:
+        displayName: OpenQuantum Private Gateway
+        apiKeyEnv: OPENQUANTUM_PRIVATE_API_KEY
+        api: openai-completions
+        baseURL: !!js process.env.OPENQUANTUM_PRIVATE_BASE_URL || 'https://private-api.example.invalid/v1'
+        defaultContextWindow: 131072
+        defaultMaxTokens: 8192
+        defaultInput:
+          - text
+        streamIdleTimeoutMs: 300000
+        models:
+          - id: kimi2.7
+            name: Kimi 2.7
+
+# ACP sessions use the same workspace-write policy as the OpenQuantum Web
+# preset. Wider file access remains a one-shot permission request that CC
+# Connect can relay to the user.
+- id: sandbox
+  name: '@deepseek-ai/dsh-sandbox-local'
+
+- id: sandbox-policy
+  name: '@deepseek-ai/dsh-sandbox-policy'
+  config:
+    mode: !!js process.env.DSH_PERMISSION_MODE || 'workspace-write'
+    workspaceRoot: !!js process.cwd()
+
+- id: subprocess
+  name: '@deepseek-ai/dsh-subprocess-local'
+
+- id: bash
+  name: '@deepseek-ai/dsh-bash-sandbox'
+  config:
+    timeoutMs: 60000
+
+- id: approval
+  name: '@deepseek-ai/dsh-user-approval'
+  config:
+    policy: !!js process.env.DSH_PERMISSION_MODE === 'danger-full-access' ? 'never' : 'ask'
+
+- id: fs-sandbox
+  name: '@deepseek-ai/dsh-fs-sandbox'
+  config:
+    cwd: !!js process.cwd()
+
+- id: fs-observation-policy
+  name: '@deepseek-ai/dsh-fs-observation-policy'
+
+# The official Harness ACP app owns AgentLoop, Session, Skill discovery,
+# persistence, tool registry and the ACP transport. It creates one fresh
+# Harness session for each CC Connect conversation.
+- id: acp-agent
+  name: '@deepseek-ai/dsh-acp-demo'
+  config:
+    provider: openquantum-public
+    model: kimi-k2.7-code
+    dshHome: !!js process.env.DSH_HOME || process.cwd() + '/.openquantum/dsh'
+    persistenceRoot: !!js process.env.OPENQUANTUM_CC_CONNECT_SESSIONS_ROOT || process.cwd() + '/.openquantum/cc-connect/sessions'
+    workspaceContext:
+      maxBytes: 65536
+    skills:
+      filesystem:
+        providerName: openquantum-capabilities
+        includeDefaultRoots: false
+        customSkillDirs:
+          - !!js process.cwd() + '/.agents/skills'
+    persona: >-
+      You are OpenQuantum, a scientific research agent powered by {{model}}.
+      Your working directory is {{cwd}}. Load the relevant project Skill before
+      performing domain work, preserve scientific uncertainty, and never claim
+      scientific validation unless the relevant Skill Validator has passed.
+
+# Reuse the exact MCP rows managed by the OpenQuantum settings page. The ACP
+# app already owns the generic Agent/Skill/tool stack, so those duplicate rows
+# are disabled while MCP clients, scientific result projection, compaction and
+# the bounded todo tool stay shared with the Web preset.
+- id: openquantum-agent-extensions
+  name: '@deepseek-ai/cordis-plugin-include'
+  config:
+    path: ../agent-presets/openquantum/agent.cordis.yml
+    patches:
+      - id: persona
+        disabled: true
+      - id: agent-instructions
+        disabled: true
+      - id: tool-bash
+        disabled: true
+      - id: tool-pwsh
+        disabled: true
+      - id: tool-fs
+        disabled: true
+      - id: tool-jobs
+        disabled: true
+      - id: skill-filesystem
+        disabled: true
+      - id: tool-skill
+        disabled: true
+      - id: tool-goal
+        disabled: true
+      - id: tool-ask-user
+        disabled: true
+      - id: tool-web
+        disabled: true
