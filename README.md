@@ -3,11 +3,12 @@
 </h1>
 
 <p align="center">
-  <strong>探索开放量子世界</strong>
+  <strong>量子计算，就在指尖</strong><br />
+  <sub>Quantum computing, right at your fingertips.</sub>
 </p>
 
 <p align="center">
-  开源、好用、可以继续开发的量子 Agent 工作台
+  从网页到微信，用一句话连接量子算法、工具与云端后端
 </p>
 
 <p align="center">
@@ -25,9 +26,11 @@
   <a href="./CONTRIBUTING.md">参与贡献</a>
 </p>
 
-OpenQuantum 是一个开源的量子 Agent 工作台。它把量子电路、算法、云后端和科研工作流带到同一个可视化界面里，让更多人可以从一句自然语言开始，使用量子工具，也看得懂任务是怎样完成的。
+打开网页，或者把 OpenQuantum 接入微信、飞书，你就可以用一句话开始一项量子任务。让 Agent 分析量子电路、查询量子云后端、运行算法，再把结果和完整过程交还给你。
 
-你可以直接使用已经集成的 Qiskit、FieldQKit 和量子算法能力，也可以把自己的设备、数据、方法和模型做成 Skill 或 MCP，交给同一个 Agent 调用。研究机构可以用它组织科研工作流，量子公司也可以在这套基础上继续开发自己的产品。
+这就是 OpenQuantum，一个开源的量子 Agent 工作台。它把原本散落在代码、文档、云平台和设备接口里的量子能力，放进同一个看得见、用得上的入口。
+
+你可以直接使用已经集成的 Qiskit、FieldQKit 和量子算法能力，也可以把自己的设备、数据、方法和模型做成 Skill 或 MCP，交给同一个 Agent 调用。普通用户可以从自然语言开始，研究机构可以组织科研工作流，量子公司也可以在这套基础上继续开发自己的产品。
 
 OpenQuantum 基于 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 构建。Harness 提供会话、工具调度、权限、持久化和执行轨迹，OpenQuantum 在上面组织量子工具、算法 Skill、科学验收和更适合量子工作的产品界面。
 
@@ -35,11 +38,28 @@ OpenQuantum 的第一版，是在 DeepSeek Harness 发布后的三天里做出�
 
 <table>
   <tr>
-    <td width="33%"><strong>直接使用</strong><br />在一个界面里分析电路、查询后端、运行算法，并查看完整的任务过程。</td>
-    <td width="33%"><strong>团队协作</strong><br />统一管理模型、MCP、Skill 和量子云凭据，让每一次任务都有迹可循。</td>
-    <td width="33%"><strong>继续开发</strong><br />沿用 Skill、MCP 等开放方式，接入新的量子后端、算法和科研工作流。</td>
+    <td width="33%"><strong>一句话开始</strong><br />从网页、微信或飞书发出请求，分析电路、查询后端、运行算法。</td>
+    <td width="33%"><strong>每一步看得见</strong><br />工具调用、权限状态、计算结果和科学检查都保留在任务轨迹里。</td>
+    <td width="33%"><strong>能力可以生长</strong><br />沿用 Skill、MCP 等开放方式，继续接入设备、算法和科研工作流。</td>
   </tr>
 </table>
+
+## 让微信成为量子计算的入口
+
+量子计算过去常常从安装 SDK、配置环境和翻文档开始。OpenQuantum 希望把入口往前推一步。配置好消息渠道后，你可以直接在微信或飞书里发出一条消息，让同一个 OpenQuantum Agent 去调用量子工具。
+
+```text
+你在微信里提出问题
+  → OpenQuantum 判断应该使用哪个 Skill
+  → DeepSeek Harness 调用 Qiskit、量子算法或云端 MCP
+  → 结果回到对话，完整执行轨迹留在工作台
+```
+
+你可以让它检查一段 OpenQASM 电路，比较不同转译方案，查询 IBM Quantum、IonQ 或国内量子云后端，也可以运行 OpenQuantum 已验收的量子基态算法。需要真实硬件或付费服务时，再由使用者配置对应凭据并明确开启。
+
+手机负责提出问题，OpenQuantum 负责连接工具，DeepSeek Harness 负责把整个过程可靠地跑起来。
+
+量子计算，就在指尖。
 
 ## 从一个真实任务开始
 
@@ -148,9 +168,9 @@ npm run demo:quantum-ground-state
 npm run mcp:qiskit:probe
 ```
 
-### 从飞书、Slack 或其他消息平台使用
+### 把量子计算带进微信、飞书和更多消息平台
 
-OpenQuantum 也集成了 [CC Connect](https://github.com/chenhg5/cc-connect)。它通过标准 ACP 连接 DeepSeek Harness，把同一套 OpenQuantum Skill、MCP 和科学验收能力带到飞书、钉钉、企业微信、Slack、Telegram、Discord、QQ 和微信等消息平台。
+OpenQuantum 集成了 [CC Connect](https://github.com/chenhg5/cc-connect)。它通过标准 ACP 连接 DeepSeek Harness，让手机里的对话直接通向 OpenQuantum 已有的 Skill、MCP 和科学验收能力。
 
 ```bash
 npm run cc-connect:setup
@@ -161,7 +181,7 @@ npm run cc-connect:start
 npm run cc-connect:web
 ```
 
-飞书也可以替换为 CC Connect 支持的其他平台；第一项平台需要先按上游方式完成配置，服务才会启动。消息平台的 Token 只保存在被 Git 忽略的 CC Connect 本地配置中。详细说明见[消息渠道接入](docs/integrations/CC_CONNECT.md)。
+飞书也可以替换为微信、钉钉、企业微信、Slack、Telegram、Discord、QQ 等 CC Connect 支持的平台。第一项平台需要先按上游方式完成配置，服务才会启动。消息平台的 Token 只保存在被 Git 忽略的 CC Connect 本地配置中。详细说明见[消息渠道接入](docs/integrations/CC_CONNECT.md)。
 
 也可以使用 Docker。
 

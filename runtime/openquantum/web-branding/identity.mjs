@@ -1,8 +1,8 @@
 export const OPENQUANTUM_BRAND = Object.freeze({
   name: "OpenQuantum",
   tagline: Object.freeze({
-    en: "Explore the open quantum world",
-    zh: "探索开放量子世界",
+    en: "Quantum computing, right at your fingertips",
+    zh: "量子计算，就在指尖",
   }),
   mark: Object.freeze({
     faviconPath: "/favicon.svg",

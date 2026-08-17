@@ -236,7 +236,7 @@ OpenQuantum 现在采用 MIT License。
 
 这就是 OpenQuantum 想做的事。
 
-探索开放量子世界。
+量子计算，就在指尖。
 
 项目已经开源在 GitHub。
 

@@ -158,8 +158,8 @@ test("registers one canonical brand across the Harness Web surfaces", async () =
       },
     },
   );
-  assert.match(body, /探索开放量子世界/);
-  assert.match(body, /Explore the open quantum world/);
+  assert.match(body, /量子计算，就在指尖/);
+  assert.match(body, /Quantum computing, right at your fingertips/);
   assert.match(body, /配置提供方的 API 地址和凭据/);
   assert.match(body, /Configure each provider endpoint and credential/);
   assert.match(body, /连接与模型设置/);
@@ -188,13 +188,13 @@ test("keeps the repository brand name, tagline and mark aligned", async () => {
     readme,
     /<h1 align="center">\s*<img src="\.\/public\/openquantum\/lockup\.svg"[^>]*alt="OpenQuantum"[^>]*\/>\s*<\/h1>/,
   );
-  assert.match(readme, /<strong>探索开放量子世界<\/strong>/);
+  assert.match(readme, /<strong>量子计算，就在指尖<\/strong>/);
   assert.match(readme, /public\/openquantum\/lockup\.svg/);
   assert.match(preset, /^name: OpenQuantum（默认）$/m);
   assert.match(mark, /<title id="title">OpenQuantum<\/title>/);
   assert.match(mark, /OpenQuantum OQ 标记/);
   assert.equal(OPENQUANTUM_BRAND.name, "OpenQuantum");
-  assert.equal(OPENQUANTUM_BRAND.tagline.zh, "探索开放量子世界");
+  assert.equal(OPENQUANTUM_BRAND.tagline.zh, "量子计算，就在指尖");
 });
 
 test("replaces the upstream developer notice through the native onboarding slot", async () => {
