@@ -38,6 +38,7 @@ Validator 是 OpenQuantum 的确定性实现；Agent preset / Cordis 才是它�
 | IBM Runtime / Transpiler | 官方 MCP | 关闭 | 需要 Token，可能产生云端任务和费用 |
 | Quantum Hardware MCP | 社区 MCP | 关闭 | 多云硬件查询与任务控制，需人工审阅后启用 |
 | QPanda3 Runtime MCP | 本源官方 MCP（固定提交 + 凭据网关） | 关闭 | 本源量子官方运行时，接入悟空 QPU 真机执行；`sample`/`estimate`/`batch` 为真机写操作，需 `npm run mcp:qpanda-runtime:setup` 检出固定提交、配置 `QPANDA3_API_KEY` 后手动开启 |
+| QPanda3 编程 Skill | 本源官方 Skill（固定提交检出） | 需 setup | 原版接入 pyqpanda3 官方 Skill，提供电路构建、QAOA/Grover/VQE/QSVM 算法模板、pyqpanda→pyqpanda3 迁移与 QCloud 指导；`npm run skill:qpanda:setup` 检出到被忽略的 `.agents/skills/pyqpanda3` 原样挂载，云执行仍受默认关闭的 QPanda3 Runtime MCP 约束 |
 
 Qiskit MCP 来自官方 Apache-2.0 项目
 [Qiskit/mcp-servers](https://github.com/Qiskit/mcp-servers)。第一批新增 Skill 只编排现有 Harness Tool，
@@ -57,12 +58,12 @@ Qiskit MCP 来自官方 Apache-2.0 项目
 
 ### 本源量子（OriginQ）生态
 
-[OriginQ / 本源量子](https://github.com/OriginQ) 是国产 QPanda / pyQPanda / ChemiQ / VQNet 生态的上游。它补齐当前一个空缺：FieldQKit 只做国内云的**只读发现**，而本源官方已有仓库能走到**悟空真机执行**。下面三项已是 MCP / Skill 形态，均为 Apache-2.0。原则是**只做集成**：一律按原版接入（pin 固定提交 + 凭据 / 开关，默认关闭），不 fork、不改写上游代码。第一项已完成接入。
+[OriginQ / 本源量子](https://github.com/OriginQ) 是国产 QPanda / pyQPanda / ChemiQ / VQNet 生态的上游。它补齐当前一个空缺：FieldQKit 只做国内云的**只读发现**，而本源官方已有仓库能走到**悟空真机执行**。下面三项已是 MCP / Skill 形态，均为 Apache-2.0。原则是**只做集成**：一律按原版接入（pin 固定提交 + 凭据 / 开关，默认关闭），不 fork、不改写上游代码。前两项（QPanda3 Runtime MCP 与 pyqpanda3 Skill）已完成接入。
 
 | 候选 | 上游 | 接入形式 | 默认状态 |
 | --- | --- | --- | --- |
 | QPanda3 Runtime MCP | [OriginQ/qpanda3-runtime-mcp-server](https://github.com/OriginQ/qpanda3-runtime-mcp-server) | 原版接入 + 凭据设置，约 22 个工具（设备 / 采样 / 期望值 / 批量 / 任务管理 / 程序集绑定） | **已集成，关闭**（见 §2） |
-| QPanda 电路 Skill | [OriginQ/pyqpanda3-skill](https://github.com/OriginQ/pyqpanda3-skill) | 原版接入官方 Skill（pin 固定提交）直接挂载，不改写上游内容；实际云执行仍受默认关闭的 QPanda3 Runtime MCP 约束 | 可适配 |
+| QPanda 电路 Skill | [OriginQ/pyqpanda3-skill](https://github.com/OriginQ/pyqpanda3-skill) | 原版接入官方 Skill（pin 固定提交）直接挂载，不改写上游内容；实际云执行仍受默认关闭的 QPanda3 Runtime MCP 约束 | **已集成，需 setup**（见 §2） |
 | QPanda 算法库 | [OriginQ/pyqpanda-algorithm](https://github.com/OriginQ/pyqpanda-algorithm) | 原版接入固定版本，经薄桥 / MCP 暴露上游算法，不改写上游代码；云与本地由凭据 / 开关决定（QUBO / QAOA / Grover / QSVM / QPCA 等） | 可适配 |
 
 三项共同的边界与取舍：

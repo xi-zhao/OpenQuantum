@@ -6,6 +6,9 @@ node_modules/
 .openquantum/
 results/
 
+# Opt-in upstream skill checkouts (mounted as-is via setup, not redistributed)
+/.agents/skills/pyqpanda3/
+
 # Local credentials
 .env
 .env.*

@@ -94,6 +94,7 @@ OpenQuantum 的第一版，是在 DeepSeek Harness 发布后的三天里做出�
 | IBM Transpiler | [Qiskit 官方 MCP](https://github.com/Qiskit/mcp-servers) · 原版接入 + 凭据设置 | 使用 IBM Quantum AI Transpiler 路由和优化电路 | 接入，关闭 |
 | Quantum Hardware MCP | [社区项目](https://github.com/Lokesh-2025/quantum-hardware-mcp) · 固定审阅提交 + 安全开关 | 查询 IBM Quantum 与 IonQ 设备，可选提交、取消任务和估算成本 | 接入，关闭 |
 | QPanda3 Runtime | [OriginQ 官方 MCP](https://github.com/OriginQ/qpanda3-runtime-mcp-server) · 固定审阅提交 + 凭据设置 | 查询本源悟空 QPU 设备，向本源量子云提交采样、期望值与批量任务并管理任务 | 接入，关闭 |
+| QPanda3 编程 Skill | [OriginQ 官方 Skill](https://github.com/OriginQ/pyqpanda3-skill) · 固定提交检出到 .agents/skills | pyqpanda3 电路构建、QAOA/Grover/VQE/QSVM 算法模板、pyqpanda→pyqpanda3 迁移与 QCloud 使用指导 | 接入，需运行 setup |
 | Qiskit Gym | [Qiskit 官方 MCP](https://github.com/Qiskit/mcp-servers) · 原版接入 | 探索强化学习量子电路综合与优化 | 接入，关闭 |
 | 量子基态求解 | OpenQuantum 自研 · Skill + MCP + Validator | 求解限定的二量子位 Hamiltonian，并与独立精确解比较 | 开启，本地运行 |
 | 量子 SDK 选型 | OpenQuantum 自研 · Skill | 比较 Qiskit、Cirq、PennyLane、Q#、Braket、CUDA-Q 等工具 | 开启 |

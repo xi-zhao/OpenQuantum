@@ -445,3 +445,38 @@ test("project settings rejects a symlinked Skill file", async (t) => {
   );
   await assert.rejects(readProjectSettings(root), /普通文件/);
 });
+
+test("mounted upstream pyqpanda3 skill loads under its upstream name", async (t) => {
+  const root = await fixture(t);
+  await mkdir(path.join(root, ".agents/skills/pyqpanda3"), { recursive: true });
+  // Mirror the shape of the pinned OriginQ SKILL.md frontmatter: a quoted long
+  // description with CJK and parentheses, an extra `license` field, and a
+  // trailing comment line. This guards our strict YAML loader against the exact
+  // upstream file that the setup command checks out as-is.
+  await writeFile(
+    path.join(root, ".agents/skills/pyqpanda3/SKILL.md"),
+    [
+      "---",
+      "name: pyqpanda3",
+      'description: "Use when user asks about pyqpanda3 programming, 量子计算编程, QAOA, VQE, QSVM, or 本源量子云 (QCloud). Triggers on: 量子编程, pyqpanda3."',
+      "license: Apache License 2.0",
+      "# keywords: quantum, pyqpanda3, qaoa, vqe",
+      "---",
+      "",
+      "# pyqpanda3 skill body",
+      "",
+    ].join("\n"),
+  );
+  // The checkout also drops a source marker file into the skill directory; it
+  // must not be mistaken for a skill and must not break the projection.
+  await writeFile(
+    path.join(root, ".agents/skills/pyqpanda3/.openquantum-source.json"),
+    `${JSON.stringify({ schemaVersion: "1.0", source: "s", revision: "r" })}\n`,
+  );
+
+  const snapshot = await readProjectSettings(root);
+  const skill = snapshot.skills.find((candidate) => candidate.name === "pyqpanda3");
+  assert.ok(skill, "pyqpanda3 skill should be projected");
+  assert.equal(skill.managed, false);
+  assert.match(skill.description, /pyqpanda3 programming/);
+});
