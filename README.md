@@ -133,6 +133,8 @@ OpenQuantum 已经为本地模拟、IBM Quantum、IonQ 和多家国内量子云�
 
 硬件任务和付费服务按需开启。后端发现类能力保持只读，适合先了解设备、拓扑和校准信息，再决定是否进入真实任务流程。
 
+国产量子云正在从“只读发现”走向“真机执行”：本源量子（OriginQ）官方的 [QPanda3 Runtime MCP](https://github.com/OriginQ/qpanda3-runtime-mcp-server) 已列入下一批接入候选，默认关闭，由使用者配置凭据后再连接悟空真机。完整的本源生态候选与取舍见 [量子能力清单](docs/ecosystem/QUANTUM_CAPABILITY_CATALOG.md)。
+
 ## 每一步，都看得见
 
 做量子任务时，一个结果往往不够。OpenQuantum 会把用户请求、Skill 加载、工具调用、权限状态和返回结果连成一条清晰的执行轨迹。
