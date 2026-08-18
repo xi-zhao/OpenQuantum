@@ -30,7 +30,7 @@
 
 这就是 OpenQuantum，一个开源的量子 Agent 工作台。它把原本散落在代码、文档、云平台和设备接口里的量子能力，放进同一个看得见、用得上的入口。
 
-你可以直接使用已经集成的 Qiskit、FieldQKit 和量子算法能力，也可以把自己的设备、数据、方法和模型做成 Skill 或 MCP，交给同一个 Agent 调用。普通用户可以从自然语言开始，研究机构可以组织科研工作流，量子公司也可以在这套基础上继续开发自己的产品。
+你可以直接使用已经集成的 Qiskit、FieldQKit、本源量子（OriginQ / QPanda）和量子算法能力，也可以把自己的设备、数据、方法和模型做成 Skill 或 MCP，交给同一个 Agent 调用。普通用户可以从自然语言开始，研究机构可以组织科研工作流，量子公司也可以在这套基础上继续开发自己的产品。
 
 OpenQuantum 基于 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 构建。Harness 提供会话、工具调度、权限、持久化和执行轨迹，OpenQuantum 在上面组织量子工具、算法 Skill、科学验收和更适合量子工作的产品界面。
 
@@ -82,7 +82,7 @@ OpenQuantum 的第一版，是在 DeepSeek Harness 发布后的三天里做出�
 
 ## 已集成的量子工具与能力
 
-这里既有 Qiskit 提供的官方 MCP，也有 FieldQKit、Quantum Hardware MCP 等社区项目，还有 OpenQuantum 自己维护的算法 Skill 和科学 Validator。每一项都写明了来源、集成方式和默认状态，方便使用，也方便后续维护和扩展。
+这里既有 Qiskit 提供的官方 MCP，也有 FieldQKit、Quantum Hardware MCP 等社区项目，还有本源量子（OriginQ / QPanda）的官方运行时 MCP、编程 Skill 与本地 QUBO 算法桥，以及 OpenQuantum 自己维护的算法 Skill 和科学 Validator。每一项都写明了来源、集成方式和默认状态，方便使用，也方便后续维护和扩展。
 
 | 组件 | 来源与集成方式 | 可以完成的事情 | 默认状态 |
 | --- | --- | --- | --- |
