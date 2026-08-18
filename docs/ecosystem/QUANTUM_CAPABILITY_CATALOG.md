@@ -64,13 +64,14 @@ Qiskit MCP 来自官方 Apache-2.0 项目
 | --- | --- | --- | --- |
 | QPanda3 Runtime MCP | [OriginQ/qpanda3-runtime-mcp-server](https://github.com/OriginQ/qpanda3-runtime-mcp-server) | 原版接入 + 凭据设置，约 22 个工具（设备 / 采样 / 期望值 / 批量 / 任务管理 / 程序集绑定） | **已集成，关闭**（见 §2） |
 | QPanda 电路 Skill | [OriginQ/pyqpanda3-skill](https://github.com/OriginQ/pyqpanda3-skill) | 原版接入官方 Skill（pin 固定提交）直接挂载，不改写上游内容；实际云执行仍受默认关闭的 QPanda3 Runtime MCP 约束 | **已集成，需 setup**（见 §2） |
-| QPanda 算法库 | [OriginQ/pyqpanda-algorithm](https://github.com/OriginQ/pyqpanda-algorithm) | 原版接入固定版本，经薄桥 / MCP 暴露上游算法，不改写上游代码；云与本地由凭据 / 开关决定（QUBO / QAOA / Grover / QSVM / QPCA 等） | 可适配 |
+| QPanda 算法库 | [OriginQ/pyqpanda-algorithm](https://github.com/OriginQ/pyqpanda-algorithm) | 只能自建执行桥暴露上游算法（QUBO / QAOA / Grover / QSVM / QPCA 等），不改写上游代码 | **暂缓，见下** |
 
 三项共同的边界与取舍：
 
 - **凭据与云费用**：`qpanda3-runtime-mcp-server` 默认连 `qpanda3-runtime.qpanda.cn` 真机，需要 `QPANDA3_API_KEY`，会提交真实任务并产生费用。它属于“写 / 执行”风险类，和只读的 FieldQKit 不同，必须默认关闭、凭据由使用者自配，并遵守“API Key 不进 Skill / preset / 日志”的硬规则。
 - **原生编译依赖**：pyqpanda3 是原生 C++ 扩展（Python 3.11–3.13，Windows 需 VC++ Redistributable、Linux 需 GCC 7.5+），安装面比现有纯 Python MCP 重。参照 TyxonQ 的做法固定 PyPI 版本、走独立进程或沙箱。
 - **定位而非重复**：QPanda 的 VQE / QAOA / Grover 与现有 Qiskit 能力和自研 `quantum-ground-state` 功能重叠。接入理由应明确定位为“**国产悟空真机接入 + 算法库广度（金融 / ML / 优化）**”，而不是再引入一套电路 SDK。
+- **QPanda 算法库暂缓（调查结论）**：与前两项不同，上游没有可直接挂载的 MCP / Skill，唯一形态是我们自建执行桥去调用它。而 PyPI `pyqpanda_alg==2.0.0` 是按 cp311/312/313 编译的 wheel（`QUBO` 等模块为 `.so`），真实 API 无法在不运行原生 `pyqpanda3` 的前提下核实；GitHub 源码分支又与其自带示例明显漂移（示例用旧 `pyqpanda` 与 `QFinance` 导入路径）。在具备 Python 3.11–3.13 + 原生 `pyqpanda3` 的环境完成端到端核实前，**不落地执行桥**，避免上线"测试看似通过、真跑却可能失效"的未验证代码。QUBO 是最干净的首选切口（`QUBO_QAOA().run()` 量子 + `qubobytraversal()` 经典参考，天然的"计算 + 独立校验"形态），核实后再按 `tyxonq-workbench` 模式做窄桥。
 - **不纳入**：本源组织下的语言工具链（QRunes、qurator-vscode）与教学内容（Quantum_book、各类 textbook / doc）不作为 Agent 能力纳入；教学内容的许可证可能与代码不同，不整包导入。
 
 ## 4. 有价值但先观察
