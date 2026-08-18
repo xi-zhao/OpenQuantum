@@ -57,13 +57,13 @@ Qiskit MCP 来自官方 Apache-2.0 项目
 
 ### 本源量子（OriginQ）生态
 
-[OriginQ / 本源量子](https://github.com/OriginQ) 是国产 QPanda / pyQPanda / ChemiQ / VQNet 生态的上游。它补齐当前一个空缺：FieldQKit 只做国内云的**只读发现**，而本源官方已有仓库能走到**悟空真机执行**。下面三项已是 MCP / Skill 形态，接入改造量小，均为 Apache-2.0。第一项已按本节计划完成接入。
+[OriginQ / 本源量子](https://github.com/OriginQ) 是国产 QPanda / pyQPanda / ChemiQ / VQNet 生态的上游。它补齐当前一个空缺：FieldQKit 只做国内云的**只读发现**，而本源官方已有仓库能走到**悟空真机执行**。下面三项已是 MCP / Skill 形态，均为 Apache-2.0。原则是**只做集成**：一律按原版接入（pin 固定提交 + 凭据 / 开关，默认关闭），不 fork、不改写上游代码。第一项已完成接入。
 
-| 候选 | 上游 | 计划形式 | 默认状态 |
+| 候选 | 上游 | 接入形式 | 默认状态 |
 | --- | --- | --- | --- |
 | QPanda3 Runtime MCP | [OriginQ/qpanda3-runtime-mcp-server](https://github.com/OriginQ/qpanda3-runtime-mcp-server) | 原版接入 + 凭据设置，约 22 个工具（设备 / 采样 / 期望值 / 批量 / 任务管理 / 程序集绑定） | **已集成，关闭**（见 §2） |
-| QPanda 电路 Skill | [OriginQ/pyqpanda3-skill](https://github.com/OriginQ/pyqpanda3-skill) | 作为内容来源，按边界重写为窄作用域 `qpanda-circuit-workbench`，本地电路构造与云提交分离 | 可适配 |
-| QPanda 算法库 | [OriginQ/pyqpanda-algorithm](https://github.com/OriginQ/pyqpanda-algorithm) | Skill + 本地 MCP，仅开 CPU 模拟器（QUBO / QAOA / Grover / QSVM / QPCA 等） | 可适配，本地 |
+| QPanda 电路 Skill | [OriginQ/pyqpanda3-skill](https://github.com/OriginQ/pyqpanda3-skill) | 原版接入官方 Skill（pin 固定提交）直接挂载，不改写上游内容；实际云执行仍受默认关闭的 QPanda3 Runtime MCP 约束 | 可适配 |
+| QPanda 算法库 | [OriginQ/pyqpanda-algorithm](https://github.com/OriginQ/pyqpanda-algorithm) | 原版接入固定版本，经薄桥 / MCP 暴露上游算法，不改写上游代码；云与本地由凭据 / 开关决定（QUBO / QAOA / Grover / QSVM / QPCA 等） | 可适配 |
 
 三项共同的边界与取舍：
 
