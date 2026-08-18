@@ -54,6 +54,23 @@ Qiskit MCP 来自官方 Apache-2.0 项目
 
 这五项都优先做本地、确定性纵切。任何云 QPU 接入都晚于本地事实与失败路径验证。
 
+### 本源量子（OriginQ）生态
+
+[OriginQ / 本源量子](https://github.com/OriginQ) 是国产 QPanda / pyQPanda / ChemiQ / VQNet 生态的上游。它补齐当前一个空缺：FieldQKit 只做国内云的**只读发现**，而本源官方已有仓库能走到**悟空真机执行**。下面三项已是 MCP / Skill 形态，接入改造量小，均为 Apache-2.0。
+
+| 候选 | 上游 | 计划形式 | 默认状态 |
+| --- | --- | --- | --- |
+| QPanda3 Runtime MCP | [OriginQ/qpanda3-runtime-mcp-server](https://github.com/OriginQ/qpanda3-runtime-mcp-server) | 原版接入 + 凭据设置，约 15 个工具（设备 / 采样 / 期望值 / 批量 / 任务管理） | 接入，关闭 |
+| QPanda 电路 Skill | [OriginQ/pyqpanda3-skill](https://github.com/OriginQ/pyqpanda3-skill) | 作为内容来源，按边界重写为窄作用域 `qpanda-circuit-workbench`，本地电路构造与云提交分离 | 可适配 |
+| QPanda 算法库 | [OriginQ/pyqpanda-algorithm](https://github.com/OriginQ/pyqpanda-algorithm) | Skill + 本地 MCP，仅开 CPU 模拟器（QUBO / QAOA / Grover / QSVM / QPCA 等） | 可适配，本地 |
+
+三项共同的边界与取舍：
+
+- **凭据与云费用**：`qpanda3-runtime-mcp-server` 默认连 `qpanda3-runtime.qpanda.cn` 真机，需要 `QPANDA3_API_KEY`，会提交真实任务并产生费用。它属于“写 / 执行”风险类，和只读的 FieldQKit 不同，必须默认关闭、凭据由使用者自配，并遵守“API Key 不进 Skill / preset / 日志”的硬规则。
+- **原生编译依赖**：pyqpanda3 是原生 C++ 扩展（Python 3.11–3.13，Windows 需 VC++ Redistributable、Linux 需 GCC 7.5+），安装面比现有纯 Python MCP 重。参照 TyxonQ 的做法固定 PyPI 版本、走独立进程或沙箱。
+- **定位而非重复**：QPanda 的 VQE / QAOA / Grover 与现有 Qiskit 能力和自研 `quantum-ground-state` 功能重叠。接入理由应明确定位为“**国产悟空真机接入 + 算法库广度（金融 / ML / 优化）**”，而不是再引入一套电路 SDK。
+- **不纳入**：本源组织下的语言工具链（QRunes、qurator-vscode）与教学内容（Quantum_book、各类 textbook / doc）不作为 Agent 能力纳入；教学内容的许可证可能与代码不同，不整包导入。
+
 ## 4. 有价值但先观察
 
 | 候选 | 原因 | 当前决定 |
@@ -63,6 +80,9 @@ Qiskit MCP 来自官方 Apache-2.0 项目
 | [Mitiq](https://github.com/unitaryfoundation/mitiq) | 误差缓解能力清楚，但 GPL-3.0 需要兼容性判断 | 先设计独立进程边界和验收案例 |
 | [OpenQuantumComputing/QAOA](https://github.com/OpenQuantumComputing/QAOA) | 对 QAOA 研究有参考价值，但 GPL-3.0 且不是 MCP/Skill | 只参考测试方法，不直接复制 |
 | [K-Dense Scientific Agent Skills](https://github.com/K-Dense-AI/scientific-agent-skills) | 有 Qiskit/Cirq/PennyLane Skill，MIT 且维护活跃 | 作为内容来源；按 OpenQuantum 边界重新编写，不整包导入 |
+| [OriginQ/pyChemiQ](https://github.com/OriginQ/pyChemiQ) | 国产量子化学包，可对应候选 #1 的分子几何→qubit Hamiltonian 纵切 | 作为 PySCF + Qiskit Nature 之外的国产对照；先核实许可证与依赖重量 |
+| VQNet 2.0（[教程](https://github.com/OriginQ/VQNET2.0-tutorial)） | 国产量子机器学习框架，可对应候选 #3 的可微分 QML 纵切 | 作为 PennyLane 的国产替代先观察；核心多为 pip 分发，先核实许可证 |
+| QPanda-2 / QPanda3 C++ 核心、[intel-qs](https://github.com/OriginQ/intel-qs) | pyqpanda3 的底层引擎与高性能模拟器 | 构建面重、intel-qs 来源需核实；作为底层依赖间接使用，不作直接集成对象 |
 
 ## 5. 拒绝条件
 
