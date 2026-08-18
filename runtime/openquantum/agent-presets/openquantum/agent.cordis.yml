@@ -118,6 +118,30 @@
       maxDelayMs: 30000
       maxAttempts: 10
 
+# Local pyqpanda_alg QUBO bridge. Like TyxonQ it is disabled by default: the
+# pinned scientific Python environment (pyqpanda3 is a native wheel) is
+# materialized lazily by uv on the first tool call. It only solves bounded QUBO
+# problems on the CPU simulator and registers no Origin Quantum cloud token or
+# hardware submission Tool.
+- id: mcp-qpanda-qubo
+  name: '@deepseek-ai/dsh-mcp-client'
+  disabled: true
+  config:
+    serverName: qpanda_qubo
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/qpanda-qubo/mcp/server.mjs'
+    env: {}
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 300000
+    failOnStartupError: true
+    reconnect:
+      enabled: true
+      initialDelayMs: 1000
+      maxDelayMs: 30000
+      maxAttempts: 10
+
 # Official Qiskit MCP servers. Package versions are pinned so every Fork gets
 # the same tool schemas. Set OPENQUANTUM_DISABLE_QISKIT_MCP=1 for offline CI;
 # normal installations enable the two credential-free core services.

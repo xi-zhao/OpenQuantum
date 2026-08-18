@@ -398,6 +398,10 @@ test("repository preset exposes reviewed quantum MCPs with safe defaults", async
   assert.equal(byName.get("tyxonq_local")?.packageVersion, "1.2.0");
   assert.equal(byName.get("tyxonq_local")?.provider, "TyxonQ / OpenQuantum");
   assert.deepEqual(byName.get("tyxonq_local")?.credentialRefs, []);
+  assert.equal(byName.get("qpanda_qubo")?.enabled, false);
+  assert.equal(byName.get("qpanda_qubo")?.displayName, "QPanda QUBO 本地求解");
+  assert.equal(byName.get("qpanda_qubo")?.packageVersion, "2.0.0");
+  assert.deepEqual(byName.get("qpanda_qubo")?.credentialRefs, []);
   assert.deepEqual(snapshot.mcpCredentials.find(
     (credential) => credential.ref === "QISKIT_IBM_TOKEN",
   )?.serverNames, [

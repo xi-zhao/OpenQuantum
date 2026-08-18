@@ -2,6 +2,10 @@
 node_modules/
 *.log
 
+# Python bridge build artifacts
+__pycache__/
+*.pyc
+
 # Local OpenQuantum runtime state and scientific outputs
 .openquantum/
 results/
