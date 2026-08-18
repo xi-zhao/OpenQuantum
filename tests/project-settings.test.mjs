@@ -360,6 +360,19 @@ test("repository preset exposes reviewed quantum MCPs with safe defaults", async
       byName.get("quantum_hardware")?.setup?.status,
     ),
   );
+  assert.equal(byName.get("qpanda_runtime")?.enabled, false);
+  assert.equal(byName.get("qpanda_runtime")?.provider, "OriginQ / 本源量子");
+  assert.deepEqual(byName.get("qpanda_runtime")?.requiredCredentialRefs, [
+    "QPANDA3_API_KEY",
+  ]);
+  assert.deepEqual(byName.get("qpanda_runtime")?.credentialRefs, [
+    "QPANDA3_API_KEY",
+  ]);
+  assert.ok(
+    ["ready", "required"].includes(
+      byName.get("qpanda_runtime")?.setup?.status,
+    ),
+  );
   assert.deepEqual(byName.get("quantum_hardware")?.requiredCredentialRefs, [
     "QISKIT_IBM_TOKEN",
   ]);
@@ -395,6 +408,9 @@ test("repository preset exposes reviewed quantum MCPs with safe defaults", async
   assert.deepEqual(snapshot.mcpCredentials.find(
     (credential) => credential.ref === "QUAFU_API_TOKEN",
   )?.serverNames, ["fieldqkit"]);
+  assert.deepEqual(snapshot.mcpCredentials.find(
+    (credential) => credential.ref === "QPANDA3_API_KEY",
+  )?.serverNames, ["qpanda_runtime"]);
   assert.equal(
     snapshot.skills.find((skill) => skill.name === "fieldqkit-hardware")
       ?.displayName,

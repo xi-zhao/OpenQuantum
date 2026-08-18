@@ -13,6 +13,7 @@ OpenQuantum 自有代码采用仓库根目录中的 [MIT License](LICENSE)。这
 | FieldQKit | Apache-2.0 | 使用 `0.1.2` 的固定上游提交 `3ef2493d3f840b6a924af66a0c3f1b79cfce3fa0`；OpenQuantum 维护独立的只读 MCP 桥接与 Skill，上游源码没有复制进本仓库 | [FieldQuantum/fieldqkit](https://github.com/FieldQuantum/fieldqkit) |
 | TyxonQ | Apache-2.0 | 通过 `uv` 按需使用 PyPI `tyxonq==1.2.0`；OpenQuantum 维护独立的有界本地仿真 MCP 与 Skill，不复制上游源码，也不开放上游云端任务接口 | [QureGenAI-Biotech/TyxonQ](https://github.com/QureGenAI-Biotech/TyxonQ) |
 | Quantum Hardware MCP | MIT | 安装命令把固定提交 `13fbe9f13fd68c409086491b9598ce2d25f5210a` 检出到被 Git 忽略的 `.openquantum` 目录；OpenQuantum 不在本仓库重新分发上游源码 | [Lokesh-2025/quantum-hardware-mcp](https://github.com/Lokesh-2025/quantum-hardware-mcp) |
+| QPanda3 Runtime MCP | Apache-2.0 | 安装命令把固定提交 `4a06035afa415ed8dc9d571869cb5ca60ed1bcb1` 检出到被 Git 忽略的 `.openquantum` 目录，由 `uv` 按 `pyproject.toml` 构建隔离环境（会引入 `pyqpanda3` 原生 wheel）；默认关闭，仅在配置 `QPANDA3_API_KEY` 后手动开启，OpenQuantum 不在本仓库重新分发上游源码 | [OriginQ/qpanda3-runtime-mcp-server](https://github.com/OriginQ/qpanda3-runtime-mcp-server) |
 | Model Context Protocol TypeScript SDK | MIT | 作为本地 MCP 服务和测试的直接 npm 依赖，固定为 `1.30.0` | [modelcontextprotocol/typescript-sdk](https://github.com/modelcontextprotocol/typescript-sdk) |
 
 仓库中的 OpenQuantum 自研桥接、配置、Skill 和 Validator 受根目录 MIT License 约束。它们调用或编排某个上游项目，并不改变上游项目的许可证。

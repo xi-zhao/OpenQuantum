@@ -14,6 +14,7 @@ import path from "node:path";
 
 import { parse, parseDocument } from "yaml";
 
+import { qpandaRuntimeMcpIntegration } from "./qpanda-runtime-mcp.mjs";
 import { quantumHardwareMcpIntegration } from "./quantum-hardware-mcp.mjs";
 
 const SKILL_NAME = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -125,8 +126,33 @@ const MCP_CATALOG = Object.freeze({
       command: quantumHardwareMcpIntegration.setupCommand,
     }),
   }),
+  qpanda_runtime: Object.freeze({
+    displayName: "QPanda3 Runtime",
+    description:
+      "本源量子官方运行时：查询悟空 QPU 设备，并可提交采样、期望值与批量任务到本源量子云；sample/estimate 等为真机写操作，启用前必须审阅成本与副作用。",
+    provider: "OriginQ / 本源量子",
+    sourceUrl: qpandaRuntimeMcpIntegration.sourceUrl,
+    packageName: "qpanda3-runtime-mcp-server",
+    packageVersion: qpandaRuntimeMcpIntegration.revision.slice(0, 12),
+    setup: Object.freeze({
+      entry: qpandaRuntimeMcpIntegration.entry,
+      requiredFiles: qpandaRuntimeMcpIntegration.requiredFiles.map((fileName) =>
+        path.join(qpandaRuntimeMcpIntegration.relativeRoot, fileName),
+      ),
+      marker: qpandaRuntimeMcpIntegration.marker,
+      source: qpandaRuntimeMcpIntegration.sourceUrl,
+      revision: qpandaRuntimeMcpIntegration.revision,
+      command: qpandaRuntimeMcpIntegration.setupCommand,
+    }),
+  }),
 });
 const MCP_CREDENTIAL_CATALOG = Object.freeze({
+  QPANDA3_API_KEY: Object.freeze({
+    displayName: "本源量子 API Key",
+    description:
+      "供 QPanda3 Runtime MCP 连接本源量子云并向悟空 QPU 提交真机任务；与 FieldQKit 只读发现用的 ORIGIN_API_TOKEN 相互独立，密钥只保存在 Harness 凭据库。",
+    documentationUrl: "https://qcloud.originqc.com.cn/",
+  }),
   QISKIT_IBM_TOKEN: Object.freeze({
     displayName: "IBM Quantum API Token",
     description:

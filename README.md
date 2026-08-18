@@ -93,6 +93,7 @@ OpenQuantum 的第一版，是在 DeepSeek Harness 发布后的三天里做出�
 | IBM Runtime | [Qiskit 官方 MCP](https://github.com/Qiskit/mcp-servers) · 原版接入 + 凭据设置 | 查询 IBM 后端，向 IBM Quantum 提交任务 | 接入，关闭 |
 | IBM Transpiler | [Qiskit 官方 MCP](https://github.com/Qiskit/mcp-servers) · 原版接入 + 凭据设置 | 使用 IBM Quantum AI Transpiler 路由和优化电路 | 接入，关闭 |
 | Quantum Hardware MCP | [社区项目](https://github.com/Lokesh-2025/quantum-hardware-mcp) · 固定审阅提交 + 安全开关 | 查询 IBM Quantum 与 IonQ 设备，可选提交、取消任务和估算成本 | 接入，关闭 |
+| QPanda3 Runtime | [OriginQ 官方 MCP](https://github.com/OriginQ/qpanda3-runtime-mcp-server) · 固定审阅提交 + 凭据设置 | 查询本源悟空 QPU 设备，向本源量子云提交采样、期望值与批量任务并管理任务 | 接入，关闭 |
 | Qiskit Gym | [Qiskit 官方 MCP](https://github.com/Qiskit/mcp-servers) · 原版接入 | 探索强化学习量子电路综合与优化 | 接入，关闭 |
 | 量子基态求解 | OpenQuantum 自研 · Skill + MCP + Validator | 求解限定的二量子位 Hamiltonian，并与独立精确解比较 | 开启，本地运行 |
 | 量子 SDK 选型 | OpenQuantum 自研 · Skill | 比较 Qiskit、Cirq、PennyLane、Q#、Braket、CUDA-Q 等工具 | 开启 |
@@ -127,13 +128,13 @@ OpenQuantum 已经为本地模拟、IBM Quantum、IonQ 和多家国内量子云�
 | 天衍量子云 | 凭据检查、后端发现、量子位筛选、拓扑与校准摘要 | `TIANYAN_API_TOKEN`，只读 |
 | 国盾量子云 | 凭据检查、后端发现、量子位筛选、拓扑与校准摘要 | `GUODUN_API_TOKEN`，只读 |
 | 腾讯量子云 | 凭据检查、后端发现、量子位筛选、拓扑与校准摘要 | `TENCENT_API_TOKEN`，只读 |
-| 本源量子云 | 凭据检查、后端发现、量子位筛选、拓扑与校准摘要 | `ORIGIN_API_TOKEN`，只读 |
+| 本源量子云 | 只读后端发现（FieldQKit）；另经 QPanda3 Runtime MCP 查询悟空 QPU，并可选提交采样、期望值与批量任务 | `ORIGIN_API_TOKEN` 只读发现；`QPANDA3_API_KEY` 可选开启真机任务 |
 | FieldQuantum | 云端模拟后端发现 | `FIELDQUANTUM_API_TOKEN`，只读 |
 | 逻辑比特量子云 | 凭据检查、后端发现、量子位筛选、拓扑与校准摘要 | `LOGICALQUBIT_API_TOKEN`，只读 |
 
 硬件任务和付费服务按需开启。后端发现类能力保持只读，适合先了解设备、拓扑和校准信息，再决定是否进入真实任务流程。
 
-国产量子云正在从“只读发现”走向“真机执行”：本源量子（OriginQ）官方的 [QPanda3 Runtime MCP](https://github.com/OriginQ/qpanda3-runtime-mcp-server) 已列入下一批接入候选，默认关闭，由使用者配置凭据后再连接悟空真机。完整的本源生态候选与取舍见 [量子能力清单](docs/ecosystem/QUANTUM_CAPABILITY_CATALOG.md)。
+国产量子云正在从“只读发现”走向“真机执行”：本源量子（OriginQ）官方的 [QPanda3 Runtime MCP](https://github.com/OriginQ/qpanda3-runtime-mcp-server) 已经接入，默认关闭。运行 `npm run mcp:qpanda-runtime:setup` 检出固定审阅提交，在设置中心配置 `QPANDA3_API_KEY` 并手动开启后，即可连接悟空真机。完整的本源生态候选与取舍见 [量子能力清单](docs/ecosystem/QUANTUM_CAPABILITY_CATALOG.md)。
 
 ## 每一步，都看得见
 

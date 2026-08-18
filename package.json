@@ -22,6 +22,7 @@
     "models:probe": "node scripts/probe-models.mjs",
     "mcp:qiskit:probe": "node scripts/probe-qiskit-mcp.mjs",
     "mcp:quantum-hardware:setup": "node scripts/setup-quantum-hardware-mcp.mjs",
+    "mcp:qpanda-runtime:setup": "node scripts/setup-qpanda-runtime-mcp.mjs",
     "cc-connect:setup": "node scripts/setup-cc-connect.mjs",
     "cc-connect:feishu": "node scripts/setup-cc-connect-platform.mjs feishu",
     "cc-connect:weixin": "node scripts/setup-cc-connect-platform.mjs weixin",

@@ -269,6 +269,39 @@
       maxDelayMs: 60000
       maxAttempts: 5
 
+# Origin Quantum (OriginQ) official runtime MCP. Like the community hardware
+# control plane it stays disabled by default: sample/estimate/batch tools submit
+# real jobs to the Origin Quantum cloud (Wukong QPU) and consume credits. The
+# setup command checks out one reviewed commit into the ignored .openquantum
+# tree; uv builds the pinned pyproject environment (pyqpanda3 is a native wheel)
+# on the first tool call. The QPANDA3_API_KEY credential is resolved from the
+# Harness store by the trusted adapter, never from UI state or Cordis YAML.
+- id: mcp-qpanda-runtime
+  name: ./credentialed-mcp-client.mjs
+  disabled: true
+  config:
+    serverName: qpanda_runtime
+    transport: stdio
+    command: uv
+    args:
+      - run
+      - --project
+      - !!js process.cwd() + '/.openquantum/external/qpanda3-runtime-mcp'
+      - python
+      - -m
+      - qpanda3_runtime_mcp_server
+    env: {}
+    credentialEnv:
+      QPANDA3_API_KEY: QPANDA3_API_KEY
+    cwd: !!js process.cwd() + '/.openquantum/external/qpanda3-runtime-mcp'
+    toolCallTimeoutMs: 600000
+    failOnStartupError: true
+    reconnect:
+      enabled: true
+      initialDelayMs: 2000
+      maxDelayMs: 60000
+      maxAttempts: 5
+
 # Preserve one bounded scientific presentation in Harness-native tool/result
 # content. The plugin owns no runtime or storage; it only adapts MCP
 # structuredContent at the official tools/post-execute seam.

@@ -37,6 +37,7 @@ Validator 是 OpenQuantum 的确定性实现；Agent preset / Cordis 才是它�
 | `quantum-sdk-advisor` | Skill | 开启 | 按问题、执行目标、许可证和验证要求选择软件栈 |
 | IBM Runtime / Transpiler | 官方 MCP | 关闭 | 需要 Token，可能产生云端任务和费用 |
 | Quantum Hardware MCP | 社区 MCP | 关闭 | 多云硬件查询与任务控制，需人工审阅后启用 |
+| QPanda3 Runtime MCP | 本源官方 MCP（固定提交 + 凭据网关） | 关闭 | 本源量子官方运行时，接入悟空 QPU 真机执行；`sample`/`estimate`/`batch` 为真机写操作，需 `npm run mcp:qpanda-runtime:setup` 检出固定提交、配置 `QPANDA3_API_KEY` 后手动开启 |
 
 Qiskit MCP 来自官方 Apache-2.0 项目
 [Qiskit/mcp-servers](https://github.com/Qiskit/mcp-servers)。第一批新增 Skill 只编排现有 Harness Tool，
@@ -56,11 +57,11 @@ Qiskit MCP 来自官方 Apache-2.0 项目
 
 ### 本源量子（OriginQ）生态
 
-[OriginQ / 本源量子](https://github.com/OriginQ) 是国产 QPanda / pyQPanda / ChemiQ / VQNet 生态的上游。它补齐当前一个空缺：FieldQKit 只做国内云的**只读发现**，而本源官方已有仓库能走到**悟空真机执行**。下面三项已是 MCP / Skill 形态，接入改造量小，均为 Apache-2.0。
+[OriginQ / 本源量子](https://github.com/OriginQ) 是国产 QPanda / pyQPanda / ChemiQ / VQNet 生态的上游。它补齐当前一个空缺：FieldQKit 只做国内云的**只读发现**，而本源官方已有仓库能走到**悟空真机执行**。下面三项已是 MCP / Skill 形态，接入改造量小，均为 Apache-2.0。第一项已按本节计划完成接入。
 
 | 候选 | 上游 | 计划形式 | 默认状态 |
 | --- | --- | --- | --- |
-| QPanda3 Runtime MCP | [OriginQ/qpanda3-runtime-mcp-server](https://github.com/OriginQ/qpanda3-runtime-mcp-server) | 原版接入 + 凭据设置，约 15 个工具（设备 / 采样 / 期望值 / 批量 / 任务管理） | 接入，关闭 |
+| QPanda3 Runtime MCP | [OriginQ/qpanda3-runtime-mcp-server](https://github.com/OriginQ/qpanda3-runtime-mcp-server) | 原版接入 + 凭据设置，约 22 个工具（设备 / 采样 / 期望值 / 批量 / 任务管理 / 程序集绑定） | **已集成，关闭**（见 §2） |
 | QPanda 电路 Skill | [OriginQ/pyqpanda3-skill](https://github.com/OriginQ/pyqpanda3-skill) | 作为内容来源，按边界重写为窄作用域 `qpanda-circuit-workbench`，本地电路构造与云提交分离 | 可适配 |
 | QPanda 算法库 | [OriginQ/pyqpanda-algorithm](https://github.com/OriginQ/pyqpanda-algorithm) | Skill + 本地 MCP，仅开 CPU 模拟器（QUBO / QAOA / Grover / QSVM / QPCA 等） | 可适配，本地 |
 
