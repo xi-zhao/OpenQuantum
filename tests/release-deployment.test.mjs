@@ -14,7 +14,13 @@ test("CI builds and boots the production container before release", async () => 
   assert.match(workflow, /docker run --detach/);
   assert.match(workflow, /http:\/\/127\.0\.0\.1:3000\/api\/host\.describe/);
   assert.match(workflow, /docker stop openquantum-ci/);
+  assert.match(dockerfile, /AS production-dependencies/);
+  assert.match(dockerfile, /g\+\+ make python3/);
   assert.match(dockerfile, /npm ci --omit=dev/);
+  assert.match(
+    dockerfile,
+    /COPY --from=production-dependencies .*\/workspace\/node_modules/,
+  );
   assert.equal(manifest.dependencies["dsh-plugin-desktop"], undefined);
   assert.equal(manifest.dependencies.electron, undefined);
 });
