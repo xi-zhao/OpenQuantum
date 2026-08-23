@@ -73,13 +73,13 @@ jobs:
         run: |
           set -euo pipefail
           docker build --tag openquantum-ci .
-          docker run --detach --rm \
+          docker run --detach \
             --name openquantum-ci \
             --publish 3000:3000 \
             openquantum-ci
           cleanup() {
             docker logs openquantum-ci || true
-            docker stop openquantum-ci || true
+            docker rm --force openquantum-ci || true
           }
           trap cleanup EXIT
 

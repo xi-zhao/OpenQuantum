@@ -12,8 +12,10 @@ test("CI builds and boots the production container before release", async () => 
   assert.match(workflow, /^ {2}container-smoke:/m);
   assert.match(workflow, /docker build --tag openquantum-ci/);
   assert.match(workflow, /docker run --detach/);
+  assert.doesNotMatch(workflow, /docker run --detach --rm/);
   assert.match(workflow, /http:\/\/127\.0\.0\.1:3000\/api\/host\.describe/);
-  assert.match(workflow, /docker stop openquantum-ci/);
+  assert.match(workflow, /docker logs openquantum-ci/);
+  assert.match(workflow, /docker rm --force openquantum-ci/);
   assert.match(dockerfile, /AS production-dependencies/);
   assert.match(dockerfile, /g\+\+ make python3/);
   assert.match(dockerfile, /npm ci --omit=dev/);
