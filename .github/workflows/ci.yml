@@ -75,7 +75,7 @@ jobs:
           docker build --tag openquantum-ci .
           docker run --detach \
             --name openquantum-ci \
-            --publish 3000:3000 \
+            --network host \
             openquantum-ci
           cleanup() {
             docker logs openquantum-ci || true

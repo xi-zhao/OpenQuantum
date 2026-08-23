@@ -220,7 +220,7 @@ npm run cc-connect:web
 
 飞书也可以替换为微信、钉钉、企业微信、Slack、Telegram、Discord、QQ 等 CC Connect 支持的平台。第一项平台需要先按上游方式完成配置，服务才会启动。消息平台的 Token 只保存在被 Git 忽略的 CC Connect 本地配置中。详细说明见[消息渠道接入](docs/integrations/CC_CONNECT.md)。
 
-也可以使用 Docker。
+Linux 用户也可以让容器通过 host network 在本机回环地址运行。Harness 不允许监听 `0.0.0.0`，因此这不是远程服务器暴露方式。
 
 ```bash
 cp .env.example .env

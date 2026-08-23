@@ -5,8 +5,7 @@ services:
       dockerfile: Dockerfile
     image: openquantum:0.4.0
     restart: unless-stopped
-    ports:
-      - "${PORT:-3000}:3000"
+    network_mode: host
     env_file:
       - path: .env
         required: false

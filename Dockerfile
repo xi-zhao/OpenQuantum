@@ -41,4 +41,4 @@ EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
   CMD curl --fail --silent http://127.0.0.1:3000/ >/dev/null || exit 1
 
-CMD ["npm", "start", "--", "--host", "0.0.0.0"]
+CMD ["npm", "start"]

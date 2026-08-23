@@ -11,7 +11,7 @@ OpenQuantum patch。浏览器和 Desktop 是两个启动表面，不是两套 Ag
 | 第一次体验量子能力 | 零密钥本地示例 | Git、Node.js 24、uv / uvx |
 | 使用完整 Web 工作台 | 本地开发启动 | Git、Node.js 24、uv / uvx、至少一个模型 Provider |
 | 使用原生桌面窗口 | OpenQuantum Desktop 源码启动 | macOS / Windows、Git、Node.js 24、uv / uvx、至少一个模型 Provider |
-| 独立环境或服务器试用 | Docker Compose | Docker、至少一个模型 Provider |
+| Linux 本机隔离试用 | Docker Compose + host network | Linux、Docker、至少一个模型 Provider |
 
 ## 方式一：零密钥验证
 
@@ -83,16 +83,16 @@ npm run desktop:verify-install
 
 ## 方式四：Docker Compose
 
+这个方式仅支持 Linux 主机上的本机隔离运行。DeepSeek Harness 有意拒绝监听 `0.0.0.0`，避免把具备代码
+执行能力的 Host 暴露到网络；Compose 因此使用 host network，同时 Harness 仍只监听 `127.0.0.1`。
+
 ```bash
 cp .env.example .env
 docker compose up --build
 ```
 
-默认访问 <http://127.0.0.1:3000>。修改端口：
-
-```bash
-PORT=3080 docker compose up --build
-```
+访问 <http://127.0.0.1:3000>。当前不支持通过 Docker 端口映射对外提供服务，也不支持用 `PORT` 修改这个
+入口。macOS 和 Windows 用户请使用前面的桌面客户端或本地 Web 启动方式。
 
 Compose 使用两个命名卷：
 
