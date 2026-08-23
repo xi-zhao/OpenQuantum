@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src="./packages/openquantum-web-branding/assets/lockup.svg" width="430" alt="OpenQuantum" />
+  <img src="./public/openquantum/lockup.svg" width="430" alt="OpenQuantum" />
 </h1>
 
 <p align="center">
