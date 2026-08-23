@@ -852,7 +852,7 @@ def render_v1(mark: Image.Image) -> None:
                 "sha256": sha256(ROOT / "docs" / "images" / "openquantum-quantum-result.jpg"),
             },
         ],
-        "brandSource": "public/openquantum/icon-512.png",
+        "brandSource": "packages/openquantum-web-branding/assets/icon-512.png",
         "generatedBackgrounds": [
             {
                 "file": "docs/communications/xhs/openquantum-intro/raw/page-01-hero.png",
@@ -903,7 +903,7 @@ def render_v2(mark: Image.Image) -> None:
             "docs/architecture/ARCHITECTURE_AUDIT.md",
             "docs/communications/openquantum-wechat-launch.md",
         ],
-        "brandSource": "public/openquantum/icon-512.png",
+        "brandSource": "packages/openquantum-web-branding/assets/icon-512.png",
         "rendering": "deterministic-pillow-infographic",
         "provenance": "docs/communications/xhs/openquantum-intro/PROVENANCE-v2.md",
     }

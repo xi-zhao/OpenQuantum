@@ -5,8 +5,8 @@ import test from "node:test";
 import {
   apply,
   brandHarnessIndex,
-} from "../runtime/openquantum/web-branding/index.mjs";
-import { OPENQUANTUM_BRAND } from "../runtime/openquantum/web-branding/identity.mjs";
+} from "../packages/openquantum-web-branding/index.mjs";
+import { OPENQUANTUM_BRAND } from "../packages/openquantum-web-branding/identity.mjs";
 
 const HARNESS_INDEX = `<!doctype html>
 <html>
@@ -109,7 +109,10 @@ test("registers one canonical brand across the Harness Web surfaces", async () =
   }
 
   const sourceMark = await readFile(
-    new URL("../public/openquantum/mark.svg", import.meta.url),
+    new URL(
+      "../packages/openquantum-web-branding/assets/mark.svg",
+      import.meta.url,
+    ),
     "utf8",
   );
   assert.equal(responses.get("/favicon.svg").body, sourceMark);
@@ -179,17 +182,23 @@ test("keeps the repository brand name, tagline and mark aligned", async () => {
       "utf8",
     ),
     readFile(
-      new URL("../public/openquantum/mark.svg", import.meta.url),
+      new URL(
+        "../packages/openquantum-web-branding/assets/mark.svg",
+        import.meta.url,
+      ),
       "utf8",
     ),
   ]);
 
   assert.match(
     readme,
-    /<h1 align="center">\s*<img src="\.\/public\/openquantum\/lockup\.svg"[^>]*alt="OpenQuantum"[^>]*\/>\s*<\/h1>/,
+    /<h1 align="center">\s*<img src="\.\/packages\/openquantum-web-branding\/assets\/lockup\.svg"[^>]*alt="OpenQuantum"[^>]*\/>\s*<\/h1>/,
   );
   assert.match(readme, /<strong>量子计算，就在指尖<\/strong>/);
-  assert.match(readme, /public\/openquantum\/lockup\.svg/);
+  assert.match(
+    readme,
+    /packages\/openquantum-web-branding\/assets\/lockup\.svg/,
+  );
   assert.match(preset, /^name: OpenQuantum（默认）$/m);
   assert.match(mark, /<title id="title">OpenQuantum<\/title>/);
   assert.match(mark, /OpenQuantum OQ 标记/);
@@ -198,20 +207,31 @@ test("keeps the repository brand name, tagline and mark aligned", async () => {
 });
 
 test("replaces the upstream developer notice through the native onboarding slot", async () => {
-  const [manifestText, client] = await Promise.all([
+  const [manifestText, bundlePatch, client] = await Promise.all([
     readFile(
-      new URL("../runtime/openquantum/web-branding/package.json", import.meta.url),
+      new URL("../packages/openquantum-web-branding/package.json", import.meta.url),
       "utf8",
     ),
     readFile(
-      new URL("../runtime/openquantum/web-branding/client.js", import.meta.url),
+      new URL(
+        "../packages/openquantum-web-branding/cordis.patch.yml",
+        import.meta.url,
+      ),
+      "utf8",
+    ),
+    readFile(
+      new URL("../packages/openquantum-web-branding/client.js", import.meta.url),
       "utf8",
     ),
   ]);
   const manifest = JSON.parse(manifestText);
 
   assert.equal(manifest.exports["./client"], "./client.js");
+  assert.equal(manifest.dsh.bundle.patch, "./cordis.patch.yml");
   assert.equal(manifest.dsh.client.platform, "web");
+  assert.equal(manifest.private, undefined);
+  assert.equal(manifest.dependencies, undefined);
+  assert.match(bundlePatch, /name: '@openquantum\/harness-web-branding'/);
   assert.match(client, /settings\.onboarding/);
   assert.match(client, /id: "welcome-notice"/);
   assert.match(client, /priority: -1000/);

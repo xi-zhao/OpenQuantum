@@ -15,7 +15,7 @@
 - Skill、MCP/Tool、Validator、Harness 的边界：`docs/architecture/ARCHITECTURE_AUDIT.md`；
 - 面向公开传播的产品表达：`docs/communications/openquantum-wechat-launch.md`；
 - 基态任务数值与真实界面：`docs/images/openquantum-quantum-result.jpg`；
-- 品牌标识：`public/openquantum/icon-512.png`。
+- 品牌标识：`packages/openquantum-web-branding/assets/icon-512.png`。
 
 第二页明确区分“开启”“只读”“已接入但关闭”，避免把配置入口误写成当前可用能力。第三页同时呈现
 运行完成和科学验收：MCP/Tool 产生结构化事实，Validator 重读证据并派生 Acceptance，模型不能自行改写结论。

@@ -51,7 +51,7 @@
     "docs/architecture/ARCHITECTURE_AUDIT.md",
     "docs/communications/openquantum-wechat-launch.md"
   ],
-  "brandSource": "public/openquantum/icon-512.png",
+  "brandSource": "packages/openquantum-web-branding/assets/icon-512.png",
   "rendering": "deterministic-pillow-infographic",
   "provenance": "docs/communications/xhs/openquantum-intro/PROVENANCE-v2.md"
 }
