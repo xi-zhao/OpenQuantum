@@ -26,12 +26,6 @@ const harnessBin = path.join(
   "lib",
   "bin.js",
 );
-const patchFile = path.join(
-  projectRoot,
-  "runtime",
-  "openquantum",
-  "cordis.patch.yml",
-);
 const SOLVE_TOOL = "mcp__openquantum_quantum__solve_ground_state";
 const VALIDATE_TOOL = "mcp__openquantum_quantum__validate_ground_state";
 const SOLVE_AND_VALIDATE_TOOL =
@@ -154,8 +148,6 @@ test(
       [
         harnessBin,
         "web",
-        "--patch",
-        patchFile,
         "--host",
         "127.0.0.1",
         "--port",

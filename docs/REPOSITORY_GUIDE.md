@@ -6,9 +6,9 @@ OpenQuantum 是 DeepSeek Harness 的量子科研发行版。仓库只增加量�
 ## 一眼看懂运行关系
 
 ```text
-浏览器
+浏览器 / DSH Desktop
   -> DeepSeek Harness 原生 Web UI
-     -> runtime/openquantum/cordis.patch.yml
+     -> DSH Home 中由 runtime/openquantum/cordis.patch.yml 生成的统一 patch
         -> OpenQuantum Agent preset
            -> .agents/skills/*/SKILL.md        领域工作流
            -> Harness MCP client              确定性工具与外部后端
@@ -45,7 +45,7 @@ locality，不是运行时包含关系。
 
 | 事实 | 权威位置 | 修改方式 |
 | --- | --- | --- |
-| Web Host、Provider route、品牌和设置插件 | `runtime/openquantum/cordis.patch.yml` | 审阅 patch 后运行 `npm run harness:config` |
+| Web / Desktop Host 的 Provider route、品牌和设置插件 | `runtime/openquantum/cordis.patch.yml` | 审阅 patch 后运行 `npm run harness:config` 与 `npm run desktop:check` |
 | OpenQuantum Agent 的 Tool、MCP、Skill 和权限组合 | `runtime/openquantum/agent-presets/openquantum/agent.cordis.yml` | 设置中心或受审查的配置修改；修改后重启 Harness |
 | MCP/Skill 设置写入规则 | `src/settings/server/project-settings.mjs` | 通过其导出的设置 Interface，不在 UI 重写规则 |
 | 固定社区 MCP 的来源与提交 | `src/settings/server/quantum-hardware-mcp.mjs` | 升级时同时审阅源码、许可证、Tool schema 和副作用 |

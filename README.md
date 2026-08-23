@@ -166,6 +166,16 @@ npm run dev
 
 模型地址、模型密钥、MCP、Skill 和量子云凭据都可以从设置中心管理。密钥保存在本地环境或 DeepSeek Harness 凭据库中，项目配置只保留凭据引用。
 
+### 也可以直接打开桌面版
+
+OpenQuantum 已接入社区开源的 [DSH Desktop](https://github.com/anywhere-labs/deepseek-harness-desktop)。它把同一个 DeepSeek Harness Host 和原生 Web UI 放进 macOS / Windows 桌面窗口，并增加系统托盘、原生终端和桌面通知；Session、Agent preset、Skill、MCP、Validator 与模型路由仍由 OpenQuantum 的 Harness 组合负责。
+
+```bash
+npm run desktop
+```
+
+Web 与 Desktop 共用 `.openquantum/dsh` 中的本地状态。请先停止 `npm run dev` 再启动桌面版，避免两个 Host 同时写入同一份 Session 状态。当前固定 DSH Desktop `2.0.0`，因为它与 OpenQuantum 使用相同的 Harness `0.1.0-rc.6`；桌面上游 `2.0.2` 已迁移到有破坏性变更的 Harness `0.1.1-rc.2`，需要在单独的兼容性升级中接入。
+
 还没有配置模型时，也可以先运行本地量子示例。
 
 ```bash

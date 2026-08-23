@@ -5,11 +5,10 @@ import path from "node:path";
 import { prepareOpenQuantumHarnessHome } from "./lib/prepare-harness-home.mjs";
 
 const projectRoot = fileURLToPath(new URL("..", import.meta.url));
-const harnessBin = path.join(
+const desktopBin = path.join(
   projectRoot,
   "node_modules",
-  "@deepseek-ai",
-  "dsh",
+  "dsh-plugin-desktop",
   "lib",
   "bin.js",
 );
@@ -18,7 +17,7 @@ await prepareOpenQuantumHarnessHome({ harnessHome, projectRoot });
 
 const child = spawn(
   process.execPath,
-  [harnessBin, "web", ...process.argv.slice(2)],
+  [desktopBin, ...process.argv.slice(2)],
   {
     cwd: projectRoot,
     env: {
@@ -35,7 +34,7 @@ for (const signal of ["SIGINT", "SIGTERM"]) {
 }
 
 child.once("error", (error) => {
-  console.error(`Failed to start DeepSeek Harness: ${error.message}`);
+  console.error(`Failed to start OpenQuantum Desktop: ${error.message}`);
   process.exitCode = 1;
 });
 

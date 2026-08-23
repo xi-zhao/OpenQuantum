@@ -21,6 +21,7 @@
 - [领域语言](../CONTEXT.md)：项目中的核心术语及应避免的重复概念。
 - [ADR-001：知情审批与失败关闭](architecture/ADR-001-INFORMED-APPROVAL-FAIL-CLOSED.md)。
 - [ADR-002：Harness 原生扩展优先](architecture/ADR-002-HARNESS-NATIVE-EXTENSIONS-FIRST.md)。
+- [ADR-003：Desktop 作为 Harness Host Adapter](architecture/ADR-003-DESKTOP-AS-HARNESS-HOST-ADAPTER.md)。
 - [开发计划](roadmap/DEVELOPMENT_PLAN.md)：当前里程碑、验证标准和后续工作。
 
 ## 阅读原则

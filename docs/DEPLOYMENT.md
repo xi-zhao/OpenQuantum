@@ -1,7 +1,8 @@
 # 部署与启动
 
 OpenQuantum 第一阶段以本地工作台和单机 Docker 部署为主。它不是多租户 SaaS，也没有单独的
-OpenQuantum Runtime；启动命令运行的是固定版本的 DeepSeek Harness Web Host，并加载 OpenQuantum patch。
+OpenQuantum Runtime；启动命令运行的是固定版本的 DeepSeek Harness Host，并从同一个 DSH Home 加载
+OpenQuantum patch。浏览器和 Desktop 是两个启动表面，不是两套 Agent Runtime。
 
 ## 选择一种启动方式
 
@@ -9,6 +10,7 @@ OpenQuantum Runtime；启动命令运行的是固定版本的 DeepSeek Harness W
 | --- | --- | --- |
 | 第一次体验量子能力 | 零密钥本地示例 | Node.js 24、uv / uvx |
 | 使用完整 Web 工作台 | 本地开发启动 | Node.js 24、uv / uvx、至少一个模型 Provider |
+| 使用原生桌面窗口 | DSH Desktop | macOS / Windows、Node.js 24、uv / uvx、至少一个模型 Provider |
 | 独立环境或服务器试用 | Docker Compose | Docker、至少一个模型 Provider |
 
 ## 方式一：零密钥验证
@@ -41,7 +43,31 @@ npm run dev
 
 `.env` 也可以提供部署环境中的模型配置。真实值不会写入 Git；设置中心已经保存的密钥不会回显。
 
-## 方式三：Docker Compose
+## 方式三：原生桌面工作台
+
+```bash
+cp .env.example .env
+npm run desktop
+```
+
+桌面启动器使用社区项目 [DSH Desktop](https://github.com/anywhere-labs/deepseek-harness-desktop) 的 Electron
+壳承载同一个 Harness Web UI。OpenQuantum 的 Home patch 仍然组合 Provider route、默认 Agent preset、品牌、
+设置、Skill、MCP 与 Validator；Desktop 只增加窗口、托盘、终端和原生通知。
+
+Web 和 Desktop 共用 `.openquantum/dsh`。两种启动方式用于访问同一份本地配置和 Session 状态，不应同时
+运行；从 Web 切换到 Desktop 前先停止 `npm run dev`。当前固定 `dsh-plugin-desktop@2.0.0`，它与项目固定的
+Harness `0.1.0-rc.6` 完全对齐。上游 Desktop `2.0.2` 使用存在破坏性变化的 Harness `0.1.1-rc.2`，不能在
+没有完整平台检查和真实 E2E 的情况下直接替换。
+
+无图形界面的 CI 可以运行：
+
+```bash
+npm run desktop:check
+```
+
+这个检查验证版本锁和最终 Cordis 组合，不会打开 Electron 窗口。
+
+## 方式四：Docker Compose
 
 ```bash
 cp .env.example .env
@@ -112,6 +138,7 @@ npm run e2e:quantum-harness -- --provider openquantum-public
 ## 当前部署边界
 
 - 适合本地研发、团队内试用和单机容器部署；
+- Desktop 是本地单用户宿主，不是远程访问或多租户隔离层；
 - 未提供多租户、组织权限、计费、托管数据库或高可用编排；
 - 本地 MCP 和受信任插件以宿主权限运行，启用社区代码前必须审阅来源；
 - DeepSeek Harness 仍处于 Developer Preview，升级版本前必须重新运行完整检查和真实 E2E。

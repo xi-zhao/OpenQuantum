@@ -27,7 +27,6 @@ const harnessBin = path.join(
   projectRoot,
   "node_modules/@deepseek-ai/dsh/lib/bin.js",
 );
-const patchFile = path.join(projectRoot, "runtime/openquantum/cordis.patch.yml");
 const skillRoot = path.join(
   projectRoot,
   ".agents/skills/quantum-ground-state",
@@ -203,8 +202,6 @@ export async function runQuantumHarnessE2E({
     [
       harnessBin,
       "web",
-      "--patch",
-      patchFile,
       "--host",
       "127.0.0.1",
       "--port",

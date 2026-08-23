@@ -17,6 +17,8 @@
   },
   "scripts": {
     "dev": "node scripts/run-harness.mjs --port 3000 --trusted-host localhost:3000",
+    "desktop": "node scripts/run-desktop.mjs",
+    "desktop:check": "node --test tests/desktop-integration.test.mjs",
     "harness:dev": "node scripts/run-harness.mjs",
     "harness:config": "node scripts/run-harness.mjs --dump-config",
     "models:probe": "node scripts/probe-models.mjs",
@@ -55,6 +57,8 @@
     "@modelcontextprotocol/sdk": "1.30.0",
     "ajv": "8.18.0",
     "cc-connect": "1.5.0",
+    "dsh-plugin-desktop": "2.0.0",
+    "electron": "43.4.0",
     "yaml": "2.9.0"
   },
   "devDependencies": {
@@ -62,5 +66,8 @@
     "@eslint/js": "9.39.4",
     "eslint": "^9",
     "globals": "14.0.0"
+  },
+  "overrides": {
+    "pnpm": "11.8.0"
   }
 }

@@ -27,6 +27,7 @@ OpenQuantum 不建设私有插件市场、包管理器、安装锁、Catalog、�
 仓库已经具备：
 
 - 固定版本的 DeepSeek Harness Web Host；
+- 与同一 Harness Home 组合的可选 DSH Desktop 原生宿主；
 - 项目级 OpenQuantum Agent preset 和模型 Provider route；
 - Harness 原生 Session 创建、历史、Prompt、取消、审批和问题响应；
 - `events.mux` / `events.host` 双流、重连和 history 重基线；
@@ -70,6 +71,10 @@ MCP 或 Skill 文件系统，不保存第二份 Session 历史，也不推导科
 默认产品界面直接使用 DeepSeek Harness 原生 Web UI，通过它的 Client Plugin、Slot、Settings 和
 `tapIndex` 扩展点组合 OpenQuantum 品牌与量子科研展示。这样 Session、审批、模型、设置和插件界面
 继续由 Harness 自己维护，不在 OpenQuantum 中复制一套平行状态机。
+
+可选 Desktop 入口使用 DSH Desktop 的 Electron Host adapter 承载这套原生 Web UI。它只增加窗口、托盘、
+终端和原生通知；loopback HTTP/WebSocket、Session event log、Agent loop、插件组合与科研状态仍由同一个
+Harness Host 管理。OpenQuantum 不读取 Electron 私有接口，也不建立 Desktop 专用 Session 投影。
 
 OpenQuantum 不保留独立的浏览器应用、Session 投影或事件 Transport Adapter。品牌通过 `tapIndex` 注入，
 量子设置与科研展示通过 Harness Client Plugin、Slot 和 Settings 扩展。新增 Goal、Job、Skill、Model 或
@@ -210,17 +215,22 @@ materialized-validation Tool 继续作为高级接口。
 
 ## 8. 部署与依赖方向
 
-第一阶段是本地 sidecar：
+第一阶段是共享 Harness Home 的本地 Host：
 
 ```text
-Browser
-  └── DeepSeek Harness native Web UI + OpenQuantum branding/plugins
-        └── DeepSeek Harness Web Host (127.0.0.1)
-              ├── OpenQuantum preset
-              ├── native project Skills
-              ├── native MCP client → local scientific MCP
-              └── model provider routes
+Browser ───────────────────────────────┐
+DSH Desktop (optional Electron shell) ─┤
+                                      └── DeepSeek Harness native Web UI + OpenQuantum branding/plugins
+                                            └── DeepSeek Harness Host (loopback)
+                                                  ├── OpenQuantum preset
+                                                  ├── native project Skills
+                                                  ├── native MCP client → local scientific MCP
+                                                  └── model provider routes
 ```
+
+Web 与 Desktop 是同一产品组合的两个 Host adapter，读取同一个 `.openquantum/dsh`。本地单用户模式不同时
+启动两个 Host 写入同一 Session 状态。Desktop 版本必须与固定的 Harness family 对齐，并通过 headless
+组合检查后才能升级。
 
 禁止依赖：UI → Model、UI → MCP、UI → Skill 文件系统、Skill → UI、Skill → Provider 凭证、
 Model → Skill，以及任何层绕过 Harness 伪造 Session 执行事件。
@@ -231,6 +241,7 @@ workspace、网络、进程和凭证隔离；本地开发配置不能被误称�
 ## 9. 版本与贡献策略
 
 - DeepSeek Harness 与 MCP SDK 使用锁定版本；
+- DSH Desktop 与 Harness family 成对锁定，桌面上游升级不得绕过 Harness 兼容性检查；
 - OpenQuantum 通过普通 Git commit、tag 和 lockfile 发布；
 - 量子公司通过 Fork 增加自己的 Skill、MCP、preset 或可信插件；
 - 通用 Runtime 修复优先贡献给 DeepSeek Harness 上游；
@@ -256,6 +267,7 @@ MVP 完成需要证明：
 | 风险 | 当前控制 |
 | --- | --- |
 | Harness Developer Preview 发生破坏性变化 | 固定版本、少量原生扩展、真实 E2E、优先上游修复 |
+| Desktop 与 Harness 版本错配 | 成对固定版本、Home patch 组合测试、升级时重跑完整平台检查 |
 | LLM 产生科学幻觉 | MCP 产数值、Validator 产 observations、模型只解释 |
 | Skill 作用域过度承诺 | supported/out-of-scope、schema、正负例和篡改测试 |
 | MCP/Plugin 获得宿主权限 | 仓库内可信代码、依赖锁定、显式配置、代码审查 |
