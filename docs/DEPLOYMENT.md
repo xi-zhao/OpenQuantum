@@ -8,9 +8,9 @@ OpenQuantum patch。浏览器和 Desktop 是两个启动表面，不是两套 Ag
 
 | 场景 | 建议方式 | 需要什么 |
 | --- | --- | --- |
-| 第一次体验量子能力 | 零密钥本地示例 | Node.js 24、uv / uvx |
-| 使用完整 Web 工作台 | 本地开发启动 | Node.js 24、uv / uvx、至少一个模型 Provider |
-| 使用原生桌面窗口 | DSH Desktop | macOS / Windows、Node.js 24、uv / uvx、至少一个模型 Provider |
+| 第一次体验量子能力 | 零密钥本地示例 | Git、Node.js 24、uv / uvx |
+| 使用完整 Web 工作台 | 本地开发启动 | Git、Node.js 24、uv / uvx、至少一个模型 Provider |
+| 使用原生桌面窗口 | OpenQuantum Desktop 源码启动 | macOS / Windows、Git、Node.js 24、uv / uvx、至少一个模型 Provider |
 | 独立环境或服务器试用 | Docker Compose | Docker、至少一个模型 Provider |
 
 ## 方式一：零密钥验证
@@ -30,7 +30,6 @@ npm run mcp:qiskit:probe
 ## 方式二：本地 Web 工作台
 
 ```bash
-cp .env.example .env
 npm run dev
 ```
 
@@ -41,14 +40,25 @@ npm run dev
 3. 在“设置 → 量子组件”查看 Skill、MCP 和凭据状态；
 4. 创建新会话并发送一个不涉及真实硬件的测试请求。
 
-`.env` 也可以提供部署环境中的模型配置。真实值不会写入 Git；设置中心已经保存的密钥不会回显。
+`.env` 也可以提供部署环境中的模型配置，但不是启动前提：macOS 终端使用 `cp .env.example .env`，
+Windows PowerShell 使用 `Copy-Item .env.example .env`，再填写需要的值。启动器会读取这个文件，且 shell
+中显式设置的环境变量优先。真实值不会写入 Git；设置中心已经保存的密钥不会回显。
 
 ## 方式三：原生桌面工作台
 
+当前 OpenQuantum Desktop 只提供源码启动方式，完整安装命令如下：
+
 ```bash
-cp .env.example .env
+git clone https://github.com/xi-zhao/openQuantum.git
+cd openQuantum
+npm ci
+npm run desktop:verify-install
 npm run desktop
 ```
+
+`desktop:verify-install` 是无图形界面的安装检查：它验证 Desktop 与 Harness 版本、OpenQuantum 最终组合和
+桌面启动器。首次真正启动可能继续准备 Desktop profile 和下载 Electron 运行文件，等待原生窗口出现即可。
+模型优先在“设置 → 模型”中配置；只有选择环境文件时，才需要按方式二中的系统对应命令创建 `.env`。
 
 桌面启动器使用社区项目 [DSH Desktop](https://github.com/anywhere-labs/deepseek-harness-desktop) 的 Electron
 壳承载同一个 Harness Web UI。OpenQuantum 的 Home patch 仍然组合 Provider route、默认 Agent preset、品牌、
@@ -59,13 +69,17 @@ Web 和 Desktop 共用 `.openquantum/dsh`。两种启动方式用于访问同一
 Harness `0.1.0-rc.6` 完全对齐。上游 Desktop `2.0.2` 使用存在破坏性变化的 Harness `0.1.1-rc.2`，不能在
 没有完整平台检查和真实 E2E 的情况下直接替换。
 
+不要全局安装或直接 `npx dsh-plugin-desktop`：那条上游命令使用默认 DSH Home，不会自动组合 OpenQuantum
+preset、Skill、MCP 与 Validator。OpenQuantum 品牌 `.dmg` / `.exe` 安装包尚未发布。
+
 无图形界面的 CI 可以运行：
 
 ```bash
-npm run desktop:check
+npm run desktop:verify-install
 ```
 
-这个检查验证版本锁和最终 Cordis 组合，不会打开 Electron 窗口。
+这个检查会在 macOS 和 Windows CI 中从 `npm ci` 开始执行，验证版本锁、最终 Cordis 组合和启动器版本，
+不会打开 Electron 窗口。
 
 ## 方式四：Docker Compose
 

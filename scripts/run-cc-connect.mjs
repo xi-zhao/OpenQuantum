@@ -6,8 +6,10 @@ import {
   readCcConnectStatus,
   resolveCcConnectPaths,
 } from "../src/channels/cc-connect.mjs";
+import { loadProjectEnv } from "./lib/load-project-env.mjs";
 
 const projectRoot = fileURLToPath(new URL("..", import.meta.url));
+loadProjectEnv(projectRoot);
 const mode = process.argv[2] ?? "start";
 const extraArgs = process.argv.slice(3);
 if (!new Set(["start", "web"]).has(mode)) {

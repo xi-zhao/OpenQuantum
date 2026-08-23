@@ -51,13 +51,25 @@ OpenQuantum 现在提供 macOS 和 Windows 桌面客户端。它把完整的量�
 
 桌面客户端基于社区开源的 [DSH Desktop](https://github.com/anywhere-labs/deepseek-harness-desktop) 适配。OpenQuantum 只接入桌面宿主，不复制 Harness Runtime，也不维护另一套会话和科研状态。
 
-完成依赖安装后即可启动：
+### 从源码安装
+
+当前发布方式是从 OpenQuantum 仓库启动客户端，不是下载 `.dmg` 或 `.exe` 安装包。请先安装 [Git](https://git-scm.com/downloads) 和 Node.js 24，然后执行：
 
 ```bash
+git clone https://github.com/xi-zhao/openQuantum.git
+cd openQuantum
+npm ci
+npm run desktop:verify-install
 npm run desktop
 ```
 
-当前仓库提供源码启动入口，OpenQuantum 品牌安装包仍属于后续发布工作。Web 与 Desktop 共用 `.openquantum/dsh` 中的本地状态，请先停止 `npm run dev` 再切换到桌面客户端。
+首次启动会准备 Desktop profile，并可能继续下载 Electron 运行文件；终端出现这类提示时保持窗口开启即可。客户端打开后，在“设置 → 模型”中配置 Provider。要使用内置 Qiskit 等量子工具，还需要安装 [uv / uvx](https://docs.astral.sh/uv/getting-started/installation/)。
+
+如果希望通过本地 `.env` 提供模型配置，macOS 终端运行 `cp .env.example .env`，Windows PowerShell 运行 `Copy-Item .env.example .env`，再填写所需值；直接使用设置中心时不需要创建 `.env`。
+
+不要使用 `npm install -g dsh-plugin-desktop` 或 `npx dsh-plugin-desktop` 代替上面的命令：那会启动上游默认客户端，不会加载 OpenQuantum preset、Skill、MCP 和科学验收组合。OpenQuantum 品牌安装包仍属于后续发布工作。
+
+Web 与 Desktop 共用 `.openquantum/dsh` 中的本地状态，请先停止 `npm run dev` 再切换到桌面客户端。
 
 ## 让微信成为量子计算的入口
 
@@ -167,13 +179,12 @@ OpenQuantum 把任务运行和科学验收分开显示。`quantum-ground-state` 
 
 ## 快速开始
 
-准备 Node.js 24，以及用于启动 Qiskit 工具的 [uv / uvx](https://docs.astral.sh/uv/getting-started/installation/)。
+准备 Git、Node.js 24，以及用于启动 Qiskit 工具的 [uv / uvx](https://docs.astral.sh/uv/getting-started/installation/)。
 
 ```bash
 git clone https://github.com/xi-zhao/openQuantum.git
 cd openQuantum
 npm ci
-cp .env.example .env
 npm run dev
 ```
 
@@ -181,13 +192,11 @@ npm run dev
 
 模型地址、模型密钥、MCP、Skill 和量子云凭据都可以从设置中心管理。密钥保存在本地环境或 DeepSeek Harness 凭据库中，项目配置只保留凭据引用。
 
+如果不用设置中心，而是通过本地环境文件配置模型，macOS 终端运行 `cp .env.example .env`，Windows PowerShell 运行 `Copy-Item .env.example .env`，再填写需要的值。
+
 ### 也可以直接打开桌面客户端
 
-```bash
-npm run desktop
-```
-
-客户端能力、状态共享边界与当前发布方式见[桌面客户端](#桌面客户端)和[部署与启动](docs/DEPLOYMENT.md)。
+请按[桌面客户端](#桌面客户端)中的完整源码安装流程执行。客户端能力、状态共享边界与故障检查见[部署与启动](docs/DEPLOYMENT.md)。
 
 还没有配置模型时，也可以先运行本地量子示例。
 

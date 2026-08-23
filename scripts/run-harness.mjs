@@ -3,6 +3,7 @@ import { fileURLToPath } from "node:url";
 import path from "node:path";
 
 import { prepareOpenQuantumHarnessHome } from "./lib/prepare-harness-home.mjs";
+import { loadProjectEnv } from "./lib/load-project-env.mjs";
 
 const projectRoot = fileURLToPath(new URL("..", import.meta.url));
 const harnessBin = path.join(
@@ -14,6 +15,7 @@ const harnessBin = path.join(
   "bin.js",
 );
 const harnessHome = path.join(projectRoot, ".openquantum", "dsh");
+loadProjectEnv(projectRoot);
 await prepareOpenQuantumHarnessHome({ harnessHome, projectRoot });
 
 const child = spawn(

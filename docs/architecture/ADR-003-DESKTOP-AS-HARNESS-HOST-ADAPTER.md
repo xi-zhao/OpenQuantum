@@ -37,6 +37,8 @@ OpenQuantum Harness Home
 6. 不依赖 `desktopRuntime`、Electron Window 或其他 DSH Desktop 私有 Interface。
 7. Desktop 的传递依赖 `pnpm` 覆盖为 `11.8.0`，避开高危路径穿越公告
    [GHSA-qrv3-253h-g69c](https://github.com/advisories/GHSA-qrv3-253h-g69c)。
+8. OpenQuantum 当前只支持仓库内源码启动。上游的全局安装和 `npx` 入口使用默认 DSH Home，不能作为
+   OpenQuantum preset、Skill、MCP 与 Validator 组合的安装入口。
 
 ## 结果
 
@@ -55,8 +57,12 @@ OpenQuantum Harness Home
 
 ## 验证
 
-`npm run desktop:check` 在不启动图形界面的情况下验证：
+`npm run desktop:verify-install` 在不启动图形界面的情况下验证：
 
 - Desktop 与 Harness 的固定版本一致；
 - Desktop shell 与 OpenQuantum Home patch 出现在同一最终 Cordis 组合；
-- 默认 OpenQuantum preset、Provider route、品牌与设置插件仍然生效。
+- 默认 OpenQuantum preset、Provider route、品牌与设置插件仍然生效；
+- 桌面启动器能够解析并报告预期版本。
+
+CI 在 macOS 与 Windows 上分别从 `npm ci` 开始运行这项检查；macOS 另外保留真实 Electron 窗口与 loopback
+页面冒烟验证记录。Windows 生成的 preset 依赖链接使用 directory junction，避免要求管理员级符号链接权限。

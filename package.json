@@ -19,6 +19,7 @@
     "dev": "node scripts/run-harness.mjs --port 3000 --trusted-host localhost:3000",
     "desktop": "node scripts/run-desktop.mjs",
     "desktop:check": "node --test tests/desktop-integration.test.mjs",
+    "desktop:verify-install": "npm run desktop:check && npm run desktop -- --version",
     "harness:dev": "node scripts/run-harness.mjs",
     "harness:config": "node scripts/run-harness.mjs --dump-config",
     "models:probe": "node scripts/probe-models.mjs",

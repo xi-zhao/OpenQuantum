@@ -80,7 +80,7 @@ export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot }
   await symlink(
     path.join(projectRoot, "node_modules"),
     presetNodeModulesTarget,
-    "dir",
+    process.platform === "win32" ? "junction" : "dir",
   );
 
   return {
