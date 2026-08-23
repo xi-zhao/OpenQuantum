@@ -1,7 +1,7 @@
 # ADR-003：Desktop 作为 Harness Host Adapter
 
-状态：已接受  
-日期：2026-08-23  
+状态：已接受
+日期：2026-08-23
 关联工作：OpenQuantum Desktop
 
 ## 背景
