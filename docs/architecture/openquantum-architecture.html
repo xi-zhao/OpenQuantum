@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OpenQuantum Harness-first 架构</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    :root {
+      --paper: #f7fbff;
+      --paper-2: #eff8ff;
+      --ink: #061f38;
+      --muted: #4d647a;
+      --soft: #708399;
+      --rule: rgba(6, 31, 56, 0.12);
+      --accent: #6747f4;
+      --accent-tint: rgba(103, 71, 244, 0.08);
+      --link: #0b7189;
+      --font-sans: 'Inter', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+      --font-serif: 'Instrument Serif', 'Songti SC', serif;
+      --font-mono: 'Geist Mono', 'SFMono-Regular', Consolas, monospace;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: 48px 32px;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--font-sans);
+    }
+
+    main {
+      width: min(100%, 1360px);
+      margin: 0 auto;
+    }
+
+    .eyebrow {
+      margin: 0 0 8px;
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 8px;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-serif);
+      font-size: 32px;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.12;
+    }
+
+    .subtitle {
+      max-width: 880px;
+      margin: 12px 0 32px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.75;
+    }
+
+    figure {
+      margin: 0;
+      overflow-x: auto;
+    }
+
+    svg {
+      display: block;
+      width: 100%;
+      min-width: 960px;
+      height: auto;
+    }
+
+    figcaption {
+      margin-top: 16px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.75;
+    }
+
+    .notes {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 24px;
+      margin-top: 32px;
+    }
+
+    .note {
+      padding: 20px;
+      background: #ffffff;
+      border: 1px solid var(--rule);
+      border-radius: 8px;
+    }
+
+    .note h2 {
+      margin: 0 0 8px;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .note p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.75;
+    }
+
+    footer {
+      margin-top: 32px;
+      padding-top: 16px;
+      border-top: 1px solid var(--rule);
+      color: var(--soft);
+      font-family: var(--font-mono);
+      font-size: 8px;
+      letter-spacing: 0.08em;
+    }
+
+    @media (max-width: 760px) {
+      body { padding: 32px 20px; }
+      .notes { grid-template-columns: 1fr; }
+    }
+
+    @media print {
+      body { padding: 24px; }
+      figure { overflow: visible; }
+      svg { min-width: 0; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <p class="eyebrow">Architecture · Secure paved road · doc-wide</p>
+    <h1>OpenQuantum Harness-first 架构</h1>
+    <p class="subtitle">OpenQuantum 是 DeepSeek Harness 的量子科研发行版，而不是第二套 Agent Runtime。所有用户意图、工具调用、模型推理、权限审批和持久化都经过 Harness；量子能力由相互独立的 Skill、MCP/Tool 与 Validator/eval 组合。</p>
+
+    <figure>
+      <svg viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="openquantum-architecture-title openquantum-architecture-desc">
+        <title id="openquantum-architecture-title">OpenQuantum Harness-first 架构</title>
+        <desc id="openquantum-architecture-desc">架构图展示科研用户经 Harness 原生界面进入唯一运行时，由 Harness 调用独立的 Skill、MCP、Validator 和模型，并把执行事实写入 Session 事件日志；UI 直连执行能力和模型伪造事件的旁路均被阻断。</desc>
+        <defs>
+          <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#4d647a"/>
+          </marker>
+          <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#6747f4"/>
+          </marker>
+          <marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#0b7189"/>
+          </marker>
+        </defs>
+
+        <rect width="1280" height="720" fill="#f7fbff"/>
+
+        <!-- Trust zones -->
+        <rect x="40" y="48" width="280" height="552" rx="8" fill="rgba(6,31,56,0.02)" stroke="rgba(6,31,56,0.10)" stroke-width="0.8"/>
+        <rect x="48" y="52" width="136" height="16" rx="4" fill="#f7fbff"/>
+        <text x="116" y="64" fill="#708399" font-family="'Geist Mono', monospace" font-size="8" text-anchor="middle" letter-spacing="0.12em">USER EXPERIENCE</text>
+
+        <rect x="344" y="48" width="392" height="552" rx="8" fill="rgba(6,31,56,0.02)" stroke="rgba(6,31,56,0.10)" stroke-width="0.8"/>
+        <rect x="352" y="52" width="168" height="16" rx="4" fill="#f7fbff"/>
+        <text x="436" y="64" fill="#708399" font-family="'Geist Mono', monospace" font-size="8" text-anchor="middle" letter-spacing="0.12em">HARNESS AUTHORITY</text>
+
+        <rect x="760" y="48" width="480" height="552" rx="8" fill="rgba(103,71,244,0.025)" stroke="rgba(103,71,244,0.24)" stroke-width="0.8" stroke-dasharray="4,4"/>
+        <rect x="768" y="52" width="248" height="16" rx="4" fill="#f7fbff"/>
+        <text x="892" y="64" fill="#6747f4" font-family="'Geist Mono', monospace" font-size="8" text-anchor="middle" letter-spacing="0.12em">ISOLATED SCIENTIFIC EXECUTION</text>
+
+        <!-- Approved paths: connectors and labels are painted before nodes. -->
+        <line x1="180" y1="176" x2="180" y2="292" stroke="#4d647a" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <rect x="188" y="220" width="52" height="12" rx="4" fill="#f7fbff"/>
+        <text x="214" y="228" fill="#708399" font-family="'Geist Mono', monospace" font-size="8" text-anchor="middle" letter-spacing="0.06em">INPUT</text>
+
+        <line x1="280" y1="332" x2="400" y2="332" stroke="#6747f4" stroke-width="1.2" marker-end="url(#arrow-accent)"/>
+        <rect x="312" y="312" width="56" height="12" rx="4" fill="#f7fbff"/>
+        <text x="340" y="320" fill="#6747f4" font-family="'Geist Mono', monospace" font-size="8" text-anchor="middle" letter-spacing="0.06em">ALLOWED</text>
+
+        <path d="M 600,280 V 88 Q 600,80 608,80 H 1112 Q 1120,80 1120,88 V 100" fill="none" stroke="#0b7189" stroke-width="1.2" marker-end="url(#arrow-link)"/>
+
+        <path d="M 480,280 V 252 Q 480,244 488,244 H 592 a 8,8 0 0,1 16,0 H 872 Q 880,244 880,236 V 172" fill="none" stroke="#4d647a" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+        <rect x="648" y="224" width="64" height="12" rx="4" fill="#f7fbff"/>
+        <text x="680" y="232" fill="#708399" font-family="'Geist Mono', monospace" font-size="8" text-anchor="middle" letter-spacing="0.06em">LOADS</text>
+
+        <line x1="680" y1="332" x2="800" y2="332" stroke="#4d647a" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <rect x="712" y="312" width="56" height="12" rx="4" fill="#f7fbff"/>
+        <text x="740" y="320" fill="#708399" font-family="'Geist Mono', monospace" font-size="8" text-anchor="middle" letter-spacing="0.06em">CALLS</text>
+
+        <line x1="960" y1="332" x2="1040" y2="332" stroke="#6747f4" stroke-width="1.2" marker-end="url(#arrow-accent)"/>
+        <rect x="976" y="312" width="48" height="12" rx="4" fill="#f7fbff"/>
+        <text x="1000" y="320" fill="#6747f4" font-family="'Geist Mono', monospace" font-size="8" text-anchor="middle" letter-spacing="0.06em">FACTS</text>
+
+        <path d="M 1080,368 V 408 Q 1080,416 1072,416 H 708 Q 700,416 700,424 V 484 Q 700,492 692,492 H 680" fill="none" stroke="#6747f4" stroke-width="1.2" marker-end="url(#arrow-accent)"/>
+        <rect x="840" y="396" width="80" height="12" rx="4" fill="#f7fbff"/>
+        <text x="880" y="404" fill="#6747f4" font-family="'Geist Mono', monospace" font-size="8" text-anchor="middle" letter-spacing="0.06em">RESULT COMMIT</text>
+
+        <line x1="480" y1="384" x2="480" y2="468" stroke="#4d647a" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <rect x="488" y="416" width="72" height="12" rx="4" fill="#f7fbff"/>
+        <text x="524" y="424" fill="#708399" font-family="'Geist Mono', monospace" font-size="8" text-anchor="middle" letter-spacing="0.06em">EVENTS</text>
+
+        <!-- Blocked bypasses: both stop before the protected boundary. -->
+        <line x1="280" y1="356" x2="324" y2="356" stroke="#708399" stroke-width="1" stroke-dasharray="4,3"/>
+        <path d="M 324,348 L 336,364 M 336,348 L 324,364" fill="none" stroke="#708399" stroke-width="1.2"/>
+        <rect x="284" y="336" width="48" height="12" rx="4" fill="#f7fbff"/>
+        <text x="308" y="344" fill="#708399" font-family="'Geist Mono', monospace" font-size="8" text-anchor="middle" letter-spacing="0.06em">NO BYPASS</text>
+
+        <path d="M 1200,148 H 1212 Q 1220,148 1220,156 V 560 Q 1220,568 1212,568 H 772" fill="none" stroke="#708399" stroke-width="1" stroke-dasharray="4,3"/>
+        <path d="M 772,560 L 760,576 M 760,560 L 772,576" fill="none" stroke="#708399" stroke-width="1.2"/>
+        <rect x="872" y="548" width="128" height="12" rx="4" fill="#f7fbff"/>
+        <text x="936" y="556" fill="#708399" font-family="'Geist Mono', monospace" font-size="8" text-anchor="middle" letter-spacing="0.06em">NO EVENT WRITE</text>
+
+        <!-- Nodes -->
+        <rect x="80" y="112" width="200" height="64" rx="8" fill="#f7fbff"/>
+        <rect x="80" y="112" width="200" height="64" rx="8" fill="rgba(77,100,122,0.10)" stroke="#708399" stroke-width="1"/>
+        <rect x="92" y="120" width="44" height="12" rx="4" fill="transparent" stroke="rgba(112,131,153,0.44)" stroke-width="0.8"/>
+        <text x="114" y="128" fill="#4d647a" font-family="'Geist Mono', monospace" font-size="8" text-anchor="middle">ACTOR</text>
+        <text x="180" y="148" fill="#061f38" font-family="'Inter','PingFang SC','Hiragino Sans GB',sans-serif" font-size="12" font-weight="600" text-anchor="middle">科研用户</text>
+        <text x="180" y="164" fill="#708399" font-family="'Geist Mono',monospace" font-size="8" text-anchor="middle">authenticated identity</text>
+
+        <rect x="80" y="292" width="200" height="80" rx="8" fill="#f7fbff"/>
+        <rect x="80" y="292" width="200" height="80" rx="8" fill="#ffffff" stroke="#061f38" stroke-width="1"/>
+        <rect x="92" y="300" width="36" height="12" rx="4" fill="transparent" stroke="rgba(6,31,56,0.36)" stroke-width="0.8"/>
+        <text x="110" y="308" fill="#4d647a" font-family="'Geist Mono', monospace" font-size="8" text-anchor="middle">UI</text>
+        <text x="180" y="332" fill="#061f38" font-family="'Inter','PingFang SC','Hiragino Sans GB',sans-serif" font-size="12" font-weight="600" text-anchor="middle">Harness 原生 Web UI</text>
+        <text x="180" y="348" fill="#708399" font-family="'Geist Mono',monospace" font-size="8" text-anchor="middle">Client Plugin · Slot · Settings</text>
+
+        <rect x="400" y="280" width="280" height="104" rx="8" fill="#f7fbff"/>
+        <rect x="400" y="280" width="280" height="104" rx="8" fill="rgba(103,71,244,0.08)" stroke="#6747f4" stroke-width="1.2"/>
+        <rect x="412" y="288" width="60" height="12" rx="4" fill="transparent" stroke="rgba(103,71,244,0.48)" stroke-width="0.8"/>
+        <text x="442" y="296" fill="#6747f4" font-family="'Geist Mono', monospace" font-size="8" text-anchor="middle">RUNTIME</text>
+        <text x="540" y="320" fill="#061f38" font-family="'Inter','PingFang SC','Hiragino Sans GB',sans-serif" font-size="12" font-weight="700" text-anchor="middle">DeepSeek Harness Runtime</text>
+        <text x="540" y="340" fill="#4d647a" font-family="'Geist Mono',monospace" font-size="8" text-anchor="middle">Session · Turn · Step · Goal · Job</text>
+        <rect x="456" y="352" width="168" height="20" rx="4" fill="rgba(103,71,244,0.08)" stroke="rgba(103,71,244,0.32)" stroke-width="0.8"/>
+        <text x="540" y="364" fill="#6747f4" font-family="'Geist Mono',monospace" font-size="8" text-anchor="middle" letter-spacing="0.04em">POLICY · APPROVAL · SANDBOX</text>
+
+        <rect x="400" y="468" width="280" height="80" rx="8" fill="#f7fbff"/>
+        <rect x="400" y="468" width="280" height="80" rx="8" fill="rgba(6,31,56,0.05)" stroke="#4d647a" stroke-width="1"/>
+        <rect x="412" y="476" width="48" height="12" rx="4" fill="transparent" stroke="rgba(77,100,122,0.48)" stroke-width="0.8"/>
+        <text x="436" y="484" fill="#4d647a" font-family="'Geist Mono', monospace" font-size="8" text-anchor="middle">AUDIT</text>
+        <text x="540" y="508" fill="#061f38" font-family="'Inter','PingFang SC','Hiragino Sans GB',sans-serif" font-size="12" font-weight="600" text-anchor="middle">Session Event Log</text>
+        <text x="540" y="524" fill="#708399" font-family="'Geist Mono',monospace" font-size="8" text-anchor="middle">append-only · execution facts</text>
+
+        <rect x="800" y="100" width="160" height="72" rx="8" fill="#f7fbff"/>
+        <rect x="800" y="100" width="160" height="72" rx="8" fill="#ffffff" stroke="#061f38" stroke-width="1"/>
+        <rect x="812" y="108" width="44" height="12" rx="4" fill="transparent" stroke="rgba(6,31,56,0.36)" stroke-width="0.8"/>
+        <text x="834" y="116" fill="#4d647a" font-family="'Geist Mono', monospace" font-size="8" text-anchor="middle">SKILL</text>
+        <text x="880" y="140" fill="#061f38" font-family="'Inter','PingFang SC','Hiragino Sans GB',sans-serif" font-size="12" font-weight="600" text-anchor="middle">Harness Skill</text>
+        <text x="880" y="156" fill="#708399" font-family="'Geist Mono',monospace" font-size="8" text-anchor="middle">workflow · boundaries</text>
+
+        <rect x="1040" y="100" width="160" height="72" rx="8" fill="#f7fbff"/>
+        <rect x="1040" y="100" width="160" height="72" rx="8" fill="rgba(6,31,56,0.03)" stroke="rgba(6,31,56,0.30)" stroke-width="1"/>
+        <rect x="1052" y="108" width="44" height="12" rx="4" fill="transparent" stroke="rgba(6,31,56,0.24)" stroke-width="0.8"/>
+        <text x="1074" y="116" fill="#4d647a" font-family="'Geist Mono', monospace" font-size="8" text-anchor="middle">MODEL</text>
+        <text x="1120" y="140" fill="#061f38" font-family="'Inter','PingFang SC','Hiragino Sans GB',sans-serif" font-size="12" font-weight="600" text-anchor="middle">Model Provider</text>
+        <text x="1120" y="156" fill="#708399" font-family="'Geist Mono',monospace" font-size="8" text-anchor="middle">inference · tool calling</text>
+
+        <rect x="800" y="296" width="160" height="72" rx="8" fill="#f7fbff"/>
+        <rect x="800" y="296" width="160" height="72" rx="8" fill="#ffffff" stroke="#061f38" stroke-width="1"/>
+        <rect x="812" y="304" width="36" height="12" rx="4" fill="transparent" stroke="rgba(6,31,56,0.36)" stroke-width="0.8"/>
+        <text x="830" y="312" fill="#4d647a" font-family="'Geist Mono', monospace" font-size="8" text-anchor="middle">TOOL</text>
+        <text x="880" y="336" fill="#061f38" font-family="'Inter','PingFang SC','Hiragino Sans GB',sans-serif" font-size="12" font-weight="600" text-anchor="middle">MCP / Tool</text>
+        <text x="880" y="352" fill="#708399" font-family="'Geist Mono',monospace" font-size="8" text-anchor="middle">deterministic execution</text>
+
+        <rect x="1040" y="296" width="160" height="72" rx="8" fill="#f7fbff"/>
+        <rect x="1040" y="296" width="160" height="72" rx="8" fill="rgba(103,71,244,0.08)" stroke="#6747f4" stroke-width="1.2"/>
+        <rect x="1052" y="304" width="68" height="12" rx="4" fill="transparent" stroke="rgba(103,71,244,0.48)" stroke-width="0.8"/>
+        <text x="1086" y="312" fill="#6747f4" font-family="'Geist Mono', monospace" font-size="8" text-anchor="middle">VALIDATOR</text>
+        <text x="1120" y="336" fill="#061f38" font-family="'Inter','PingFang SC','Hiragino Sans GB',sans-serif" font-size="12" font-weight="700" text-anchor="middle">Validator / eval</text>
+        <text x="1120" y="352" fill="#6747f4" font-family="'Geist Mono',monospace" font-size="8" text-anchor="middle">scientific acceptance</text>
+
+        <!-- Editorial invariant -->
+        <text x="640" y="624" fill="#061f38" font-family="'Instrument Serif','Songti SC',serif" font-size="16" font-style="italic" text-anchor="middle">运行完成 ≠ 科学验收通过；验收只能由 Validator + Profile 派生。</text>
+
+        <!-- Legend strip -->
+        <line x1="40" y1="644" x2="1240" y2="644" stroke="rgba(6,31,56,0.12)" stroke-width="0.8"/>
+        <text x="40" y="672" fill="#4d647a" font-family="'Geist Mono',monospace" font-size="8" letter-spacing="0.14em">LEGEND</text>
+
+        <line x1="152" y1="668" x2="204" y2="668" stroke="#4d647a" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <text x="220" y="672" fill="#4d647a" font-family="'Inter','PingFang SC',sans-serif" font-size="12">允许路径</text>
+
+        <line x1="384" y1="668" x2="432" y2="668" stroke="#708399" stroke-width="1" stroke-dasharray="4,3"/>
+        <path d="M 432,660 L 444,676 M 444,660 L 432,676" fill="none" stroke="#708399" stroke-width="1.2"/>
+        <text x="460" y="672" fill="#4d647a" font-family="'Inter','PingFang SC',sans-serif" font-size="12">被阻断旁路</text>
+
+        <rect x="680" y="660" width="20" height="16" rx="4" fill="rgba(103,71,244,0.08)" stroke="#6747f4" stroke-width="1.2"/>
+        <text x="716" y="672" fill="#4d647a" font-family="'Inter','PingFang SC',sans-serif" font-size="12">权威决策点</text>
+
+        <rect x="920" y="660" width="20" height="16" rx="4" fill="rgba(6,31,56,0.05)" stroke="#4d647a" stroke-width="1"/>
+        <text x="956" y="672" fill="#4d647a" font-family="'Inter','PingFang SC',sans-serif" font-size="12">持久化事实</text>
+      </svg>
+
+      <figcaption>主路径是“科研用户 → 原生 UI → Harness → 领域能力 → Validator → Session Event Log”。Skill 只提供工作流和边界；MCP/Tool 负责确定性执行；Validator/eval 独立判定科学主张；Model 只负责推理和解释。</figcaption>
+    </figure>
+
+    <section class="notes" aria-label="架构说明">
+      <article class="note">
+        <h2>一个运行时，一个执行事实源</h2>
+        <p>Session、Turn、Step、Goal、Job、权限、审批、沙箱、工具调度与恢复全部属于 Harness。OpenQuantum 不建立平行状态机，Session Event Log 是执行事实的唯一来源。</p>
+      </article>
+      <article class="note">
+        <h2>运行状态与科学状态正交</h2>
+        <p>工具成功或 Harness idle 只说明执行结束；科学验收必须由版本化 Validator + Profile 根据真实产物独立派生。</p>
+      </article>
+    </section>
+
+    <footer>OPENQUANTUM · ARCHITECTURE BASELINE · 2026-08-23 · SOURCE: ARCHITECTURE_AUDIT.MD</footer>
+  </main>
+</body>
+</html>
