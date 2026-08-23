@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src="./public/openquantum/lockup.svg" width="430" alt="OpenQuantum" />
+  <img src="./packages/openquantum-web-branding/assets/lockup.svg" width="430" alt="OpenQuantum" />
 </h1>
 
 <p align="center">
@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-  从网页到微信，用一句话连接量子算法、工具与云端后端
+  从桌面客户端、网页到微信，用一句话连接量子算法、工具与云端后端
 </p>
 
 <p align="center">
@@ -19,6 +19,7 @@
 </p>
 
 <p align="center">
+  <a href="#桌面客户端">桌面客户端</a> ·
   <a href="#快速开始">快速开始</a> ·
   <a href="#已集成的量子工具与能力">量子能力</a> ·
   <a href="#把你的量子能力接进来">扩展开发</a> ·
@@ -26,7 +27,7 @@
   <a href="./CONTRIBUTING.md">参与贡献</a>
 </p>
 
-打开网页，或者把 OpenQuantum 接入微信、飞书，你就可以用一句话开始一项量子任务。让 Agent 分析量子电路、查询量子云后端、运行算法，再把结果和完整过程交还给你。
+打开桌面客户端或网页，或者把 OpenQuantum 接入微信、飞书，你就可以用一句话开始一项量子任务。让 Agent 分析量子电路、查询量子云后端、运行算法，再把结果和完整过程交还给你。
 
 这就是 OpenQuantum，一个开源的量子 Agent 工作台。它把原本散落在代码、文档、云平台和设备接口里的量子能力，放进同一个看得见、用得上的入口。
 
@@ -38,11 +39,25 @@ OpenQuantum 的第一版，是在 DeepSeek Harness 发布后的三天里做出�
 
 <table>
   <tr>
-    <td width="33%"><strong>一句话开始</strong><br />从网页、微信或飞书发出请求，分析电路、查询后端、运行算法。</td>
+    <td width="33%"><strong>一句话开始</strong><br />从桌面客户端、网页、微信或飞书发出请求，分析电路、查询后端、运行算法。</td>
     <td width="33%"><strong>每一步看得见</strong><br />工具调用、权限状态、计算结果和科学检查都保留在任务轨迹里。</td>
     <td width="33%"><strong>能力可以生长</strong><br />沿用 Skill、MCP 等开放方式，继续接入设备、算法和科研工作流。</td>
   </tr>
 </table>
+
+## 桌面客户端
+
+OpenQuantum 现在提供 macOS 和 Windows 桌面客户端。它把完整的量子 Agent 工作台放进原生桌面窗口，并提供系统托盘、原生终端和桌面通知；你在客户端里使用的仍然是同一套 OpenQuantum Session、量子 Skill、MCP、模型设置和科学验收。
+
+桌面客户端基于社区开源的 [DSH Desktop](https://github.com/anywhere-labs/deepseek-harness-desktop) 适配。OpenQuantum 只接入桌面宿主，不复制 Harness Runtime，也不维护另一套会话和科研状态。
+
+完成依赖安装后即可启动：
+
+```bash
+npm run desktop
+```
+
+当前仓库提供源码启动入口，OpenQuantum 品牌安装包仍属于后续发布工作。Web 与 Desktop 共用 `.openquantum/dsh` 中的本地状态，请先停止 `npm run dev` 再切换到桌面客户端。
 
 ## 让微信成为量子计算的入口
 
@@ -166,15 +181,13 @@ npm run dev
 
 模型地址、模型密钥、MCP、Skill 和量子云凭据都可以从设置中心管理。密钥保存在本地环境或 DeepSeek Harness 凭据库中，项目配置只保留凭据引用。
 
-### 也可以直接打开桌面版
-
-OpenQuantum 已接入社区开源的 [DSH Desktop](https://github.com/anywhere-labs/deepseek-harness-desktop)。它把同一个 DeepSeek Harness Host 和原生 Web UI 放进 macOS / Windows 桌面窗口，并增加系统托盘、原生终端和桌面通知；Session、Agent preset、Skill、MCP、Validator 与模型路由仍由 OpenQuantum 的 Harness 组合负责。
+### 也可以直接打开桌面客户端
 
 ```bash
 npm run desktop
 ```
 
-Web 与 Desktop 共用 `.openquantum/dsh` 中的本地状态。请先停止 `npm run dev` 再启动桌面版，避免两个 Host 同时写入同一份 Session 状态。当前固定 DSH Desktop `2.0.0`，因为它与 OpenQuantum 使用相同的 Harness `0.1.0-rc.6`；桌面上游 `2.0.2` 已迁移到有破坏性变更的 Harness `0.1.1-rc.2`，需要在单独的兼容性升级中接入。
+客户端能力、状态共享边界与当前发布方式见[桌面客户端](#桌面客户端)和[部署与启动](docs/DEPLOYMENT.md)。
 
 还没有配置模型时，也可以先运行本地量子示例。
 
@@ -254,7 +267,7 @@ docs/                    架构、路线与生态文档
 
 ## 一起建设 OpenQuantum
 
-当前版本已经包含 Web 工作台、Harness 执行轨迹、量子 Skill 与 MCP、模型与凭据设置，以及量子基态的独立科学验收。真实硬件和付费服务由使用者按需配置与开启。
+当前版本已经包含桌面客户端、Web 工作台、微信/飞书等消息入口、Harness 执行轨迹、量子 Skill 与 MCP、模型与凭据设置，以及量子基态的独立科学验收。真实硬件和付费服务由使用者按需配置与开启。
 
 我们希望 OpenQuantum 成为一块开放的底板。量子公司可以在这里接入设备和服务，高校实验室可以沉淀自己的科研流程，算法团队和工具作者也可以把新的方法交给更多人使用。
 
