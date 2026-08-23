@@ -39,7 +39,7 @@
       "sha256": "e49d72aa1b93a663fad3ce078c995bf7183ad15ab798a4200ebefb4e85dce807"
     }
   ],
-  "brandSource": "public/openquantum/icon-512.png",
+  "brandSource": "packages/openquantum-web-branding/assets/icon-512.png",
   "generatedBackgrounds": [
     {
       "file": "docs/communications/xhs/openquantum-intro/raw/page-01-hero.png",

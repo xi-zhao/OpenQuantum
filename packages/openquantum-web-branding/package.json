@@ -1,0 +1,46 @@
+{
+  "name": "@openquantum/harness-web-branding",
+  "version": "0.1.0",
+  "description": "OpenQuantum branding and PWA metadata for the native DeepSeek Harness web UI",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "files": [
+    "assets",
+    "client.js",
+    "cordis.patch.yml",
+    "identity.mjs",
+    "index.mjs",
+    "README.md"
+  ],
+  "exports": {
+    ".": "./index.mjs",
+    "./client": "./client.js",
+    "./package.json": "./package.json"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-settings"
+      ],
+      "platform": "web"
+    }
+  },
+  "keywords": [
+    "deepseek-harness",
+    "dsh-plugin",
+    "openquantum",
+    "quantum-computing",
+    "web-ui"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xi-zhao/OpenQuantum.git",
+    "directory": "packages/openquantum-web-branding"
+  }
+}

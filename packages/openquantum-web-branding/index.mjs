@@ -1,10 +1,11 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 import { OPENQUANTUM_BRAND } from "./identity.mjs";
 
 const BRAND_MARKER = "data-openquantum-branding";
-const BRAND_ASSET_ROOT = path.resolve(process.cwd(), "public", "openquantum");
+const BRAND_ASSET_ROOT = fileURLToPath(new URL("assets/", import.meta.url));
 const OPENQUANTUM_MARK = readFileSync(
   path.join(BRAND_ASSET_ROOT, "mark.svg"),
   "utf8",
@@ -27,7 +28,6 @@ const OPENQUANTUM_ICON_192 = readFileSync(
 const OPENQUANTUM_ICON_512 = readFileSync(
   path.join(BRAND_ASSET_ROOT, "icon-512.png"),
 );
-
 const OPENQUANTUM_MANIFEST = JSON.stringify(
   {
     id: "/",

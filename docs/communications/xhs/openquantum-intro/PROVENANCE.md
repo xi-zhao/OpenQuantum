@@ -14,7 +14,7 @@
 - 产品定位、能力与边界：仓库 `README.md` 与 `docs/architecture/ARCHITECTURE_AUDIT.md`；
 - 设置界面：`docs/images/openquantum-quantum-settings.jpg`；
 - 科学验收结果：`docs/images/openquantum-quantum-result.jpg`；
-- 品牌标识：`public/openquantum/icon-512.png`；
+- 品牌标识：`packages/openquantum-web-branding/assets/icon-512.png`；
 - 版式参考：[RedInk](https://github.com/HisMax/RedInk) 的竖版连续图、强标题和统一视觉节奏。
 
 没有复制 RedInk 的示例图片、源代码或品牌资产。

@@ -24,9 +24,8 @@ export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot }
   );
   const brandingSource = path.join(
     projectRoot,
-    "runtime",
-    "openquantum",
-    "web-branding",
+    "packages",
+    "openquantum-web-branding",
   );
   const brandingTarget = path.join(
     harnessHome,
