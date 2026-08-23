@@ -58,13 +58,13 @@
     "@modelcontextprotocol/sdk": "1.30.0",
     "ajv": "8.18.0",
     "cc-connect": "1.5.0",
-    "dsh-plugin-desktop": "2.0.0",
-    "electron": "43.4.0",
     "yaml": "2.9.0"
   },
   "devDependencies": {
     "@agentclientprotocol/sdk": "0.25.1",
     "@eslint/js": "9.39.4",
+    "dsh-plugin-desktop": "2.0.0",
+    "electron": "43.4.0",
     "eslint": "^9",
     "globals": "14.0.0"
   },

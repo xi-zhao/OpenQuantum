@@ -27,7 +27,9 @@ test("pins a Desktop release built for the same Harness family", async () => {
   ]);
 
   assert.equal(openQuantumManifest.dependencies["@deepseek-ai/dsh"], "0.1.0-rc.6");
-  assert.equal(openQuantumManifest.dependencies["dsh-plugin-desktop"], "2.0.0");
+  assert.equal(openQuantumManifest.dependencies["dsh-plugin-desktop"], undefined);
+  assert.equal(openQuantumManifest.devDependencies["dsh-plugin-desktop"], "2.0.0");
+  assert.equal(openQuantumManifest.devDependencies.electron, "43.4.0");
   assert.equal(desktopManifest.version, "2.0.0");
   assert.equal(desktopManifest.dependencies["@deepseek-ai/dsh"], "0.1.0-rc.6");
   assert.equal(openQuantumManifest.overrides.pnpm, "11.8.0");

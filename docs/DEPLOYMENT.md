@@ -51,7 +51,7 @@ Windows PowerShell 使用 `Copy-Item .env.example .env`，再填写需要的值�
 ```bash
 git clone https://github.com/xi-zhao/openQuantum.git
 cd openQuantum
-npm ci
+npm ci --include=dev
 npm run desktop:verify-install
 npm run desktop
 ```

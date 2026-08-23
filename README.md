@@ -58,7 +58,7 @@ OpenQuantum 现在提供 macOS 和 Windows 桌面客户端。它把完整的量�
 ```bash
 git clone https://github.com/xi-zhao/openQuantum.git
 cd openQuantum
-npm ci
+npm ci --include=dev
 npm run desktop:verify-install
 npm run desktop
 ```
