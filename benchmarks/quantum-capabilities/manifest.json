@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "1.0",
+  "id": "openquantum-mqtbench-corpus",
+  "version": "1.0.0",
+  "generator": {
+    "package": "mqt.bench",
+    "packageVersion": "2.2.3",
+    "pythonVersion": "3.12",
+    "level": "ALG",
+    "randomParameters": false,
+    "serialization": "OpenQASM 2"
+  },
+  "denominator": {
+    "caseCount": 3,
+    "caseIds": ["ghz-3", "qft-3", "bv-4"]
+  },
+  "cases": [
+    {
+      "id": "ghz-3",
+      "benchmark": "ghz",
+      "circuitSize": 3,
+      "fixture": "fixtures/ghz-3.qasm",
+      "sha256": "d18f465216bce7e46b26d3815472ea7e1bb8f9f2c323e060f25ae47c65a99193",
+      "expected": { "qubits": 3, "depth": 4, "gates": 6 }
+    },
+    {
+      "id": "qft-3",
+      "benchmark": "qft",
+      "circuitSize": 3,
+      "fixture": "fixtures/qft-3.qasm",
+      "sha256": "2635ac01aaef353dccc1138ff598e4a561b680ad5709678a942f65e1b99cd295",
+      "expected": { "qubits": 3, "depth": 2, "gates": 4 }
+    },
+    {
+      "id": "bv-4",
+      "benchmark": "bv",
+      "circuitSize": 4,
+      "fixture": "fixtures/bv-4.qasm",
+      "sha256": "5969f3a6751ff56e0ee6530c73759971ed0bf3e058ee15c6584ab161c9701555",
+      "expected": { "qubits": 4, "depth": 4, "gates": 11 }
+    }
+  ]
+}
