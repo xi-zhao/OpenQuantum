@@ -71,6 +71,16 @@ const MCP_CATALOG = Object.freeze({
     packageVersion: "3.7.0",
     setup: null,
   }),
+  qec_local: Object.freeze({
+    displayName: "QEC Memory 实验",
+    description:
+      "使用固定 Stim 与 PyMatching 在本地运行有界、带 seed 的旋转表面码 X/Z memory 实验，报告有限 shots 的逻辑错误率与不确定度；不连接云端或真实硬件，也不据单点结果宣称阈值。",
+    provider: "Stim / PyMatching / OpenQuantum",
+    sourceUrl: "https://github.com/quantumlib/Stim",
+    packageName: "stim + pymatching",
+    packageVersion: "1.16.0 + 2.4.0",
+    setup: null,
+  }),
   tyxonq_local: Object.freeze({
     displayName: "TyxonQ Local",
     description:

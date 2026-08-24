@@ -136,6 +136,28 @@
       maxDelayMs: 30000
       maxAttempts: 10
 
+# Pinned Stim and PyMatching rotated-surface-code memory experiments. Inputs are
+# explicitly bounded and seeded; results are finite-shot observations with
+# uncertainty, not threshold or hardware claims. No cloud credentials or QPU
+# submission Tool is registered.
+- id: mcp-qec-memory-experiment
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: qec_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/qec-memory-experiment/mcp/server.mjs'
+    env: {}
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 60000
+    failOnStartupError: true
+    reconnect:
+      enabled: true
+      initialDelayMs: 1000
+      maxDelayMs: 30000
+      maxAttempts: 10
+
 # TyxonQ is a Python SDK rather than a stable upstream MCP server. This local
 # bridge exposes only bounded circuit and noise simulation. It is disabled by
 # default because the pinned scientific Python environment is large and is

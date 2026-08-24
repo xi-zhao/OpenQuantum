@@ -1,0 +1,11 @@
+interface:
+  display_name: "QEC Memory 实验"
+  short_description: "用 Stim + PyMatching 运行 surface-code memory 解码实验"
+  default_prompt: "使用 $qec-memory-experiment 运行有界 rotated surface-code memory 实验；报告固定配置、逻辑错误计数与 Wilson 区间，检查零噪声和计数 observations，不从单点结果推断 threshold 或硬件性能。"
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "qec_local"
+      description: "固定版本 Stim + PyMatching 本地 QEC 仿真与 MWPM 解码"
+policy:
+  allow_implicit_invocation: true

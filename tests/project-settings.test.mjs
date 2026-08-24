@@ -403,6 +403,14 @@ test("repository preset exposes reviewed quantum MCPs with safe defaults", async
   assert.equal(byName.get("qcec_local")?.packageVersion, "3.7.0");
   assert.equal(byName.get("qcec_local")?.provider, "MQT / OpenQuantum");
   assert.deepEqual(byName.get("qcec_local")?.credentialRefs, []);
+  assert.equal(byName.get("qec_local")?.enabled, true);
+  assert.equal(byName.get("qec_local")?.displayName, "QEC Memory 实验");
+  assert.equal(byName.get("qec_local")?.packageVersion, "1.16.0 + 2.4.0");
+  assert.equal(
+    byName.get("qec_local")?.provider,
+    "Stim / PyMatching / OpenQuantum",
+  );
+  assert.deepEqual(byName.get("qec_local")?.credentialRefs, []);
   assert.equal(byName.get("tyxonq_local")?.enabled, false);
   assert.equal(byName.get("tyxonq_local")?.displayName, "TyxonQ Local");
   assert.equal(byName.get("tyxonq_local")?.packageVersion, "1.2.0");
@@ -445,6 +453,7 @@ test("repository preset exposes reviewed quantum MCPs with safe defaults", async
   );
   assert.equal(raw.includes("your_ibm_quantum_token"), false);
   assert.match(raw, /qiskit-mcp-server==0\.3\.1/);
+  assert.match(raw, /qec-memory-experiment\/mcp\/server\.mjs/);
   assert.match(raw, /qiskit-docs-mcp-server==0\.3\.0/);
   assert.match(raw, /fieldqkit-hardware\/mcp\/server\.mjs/);
   assert.match(raw, /quantum-information-audit\/mcp\/server\.mjs/);
