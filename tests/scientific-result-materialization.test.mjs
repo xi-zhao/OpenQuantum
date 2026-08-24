@@ -12,7 +12,7 @@ import {
   trustedAcceptanceProfile,
 } from "../.agents/skills/quantum-ground-state/mcp/contracts.mjs";
 import { validateGroundStateComputation } from "../.agents/skills/quantum-ground-state/validators/validate-result.mjs";
-import { materializeGroundStateResult } from "../runtime/openquantum/agent-presets/openquantum/scientific-result-materializer.mjs";
+import { scientificResultAdapter } from "../runtime/openquantum/agent-presets/openquantum/scientific-result-adapters.mjs";
 import {
   apply,
   parseScientificToolResult,
@@ -54,6 +54,14 @@ function assertRegularJson(workspaceRoot, relativePath) {
   const absolutePath = path.join(workspaceRoot, relativePath);
   assert.equal(fs.statSync(absolutePath).isFile(), true);
   return JSON.parse(fs.readFileSync(absolutePath, "utf8"));
+}
+
+function materializeGroundStateResult({ request, facts, ...context }) {
+  return scientificResultAdapter(SOLVE_AND_VALIDATE_TOOL).materialize({
+    ...context,
+    arguments: { request },
+    canonicalValue: { structuredContent: { facts } },
+  });
 }
 
 test("Harness post-execute materializes facts and projects central Acceptance", async (t) => {

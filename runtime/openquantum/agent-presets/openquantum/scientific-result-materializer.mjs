@@ -7,55 +7,28 @@ import { pathToFileURL } from "node:url";
 // scientific modules therefore resolve from Harness's configured process cwd,
 // never from this copied preset file's physical location.
 const repositoryRoot = process.cwd();
-const skillRoot = path.join(
-  repositoryRoot,
-  ".agents/skills/quantum-ground-state",
-);
-const RESULT_ROOT = "results/openquantum/quantum-ground-state";
-const PROFILE_ID = "supplied-pauli-statevector";
-const VALIDATOR_ID = "ground-state-validator";
-const FACT_FILES = Object.freeze({
-  problemSpec: "problem-spec.json",
-  hamiltonianManifest: "hamiltonian-manifest.json",
-  exactReference: "exact-reference.json",
-  groundStateResult: "ground-state-result.json",
-  convergenceTrace: "convergence-trace.json",
-  resourceEstimate: "resource-estimate.json",
-});
-
-let capabilityPromise;
-let runtimePromise;
+const capabilityPromises = new Map();
+let contractsPromise;
 
 function moduleUrl(relativePath) {
   return pathToFileURL(path.join(repositoryRoot, relativePath)).href;
 }
 
-function runtime() {
-  runtimePromise ??= Promise.all([
-    import(moduleUrl(".agents/skill-contracts/index.mjs")),
-    import(
-      moduleUrl(
-        ".agents/skills/quantum-ground-state/mcp/contracts.mjs",
-      )
-    ),
-    import(
-      moduleUrl(
-        ".agents/skills/quantum-ground-state/validators/validate-result.mjs",
-      )
-    ),
-  ]).then(([contracts, mcpContracts, validator]) => ({
-    ...contracts,
-    ...mcpContracts,
-    ...validator,
-  }));
-  return runtimePromise;
+function contracts() {
+  contractsPromise ??= import(moduleUrl(".agents/skill-contracts/index.mjs"));
+  return contractsPromise;
 }
 
-function capability() {
-  capabilityPromise ??= runtime().then(({ loadCapability }) =>
-    loadCapability(skillRoot),
-  );
-  return capabilityPromise;
+function capability(skillPath) {
+  if (!capabilityPromises.has(skillPath)) {
+    capabilityPromises.set(
+      skillPath,
+      contracts().then(({ loadCapability }) =>
+        loadCapability(path.join(repositoryRoot, skillPath)),
+      ),
+    );
+  }
+  return capabilityPromises.get(skillPath);
 }
 
 function canonicalJson(value) {
@@ -105,7 +78,9 @@ async function resolveContainedTarget({
     signal,
   });
   if (!fileSystem.contains(workspaceTarget, target)) {
-    throw new Error(`scientific artifact path escapes the Harness workspace: ${relativePath}`);
+    throw new Error(
+      `scientific artifact path escapes the Harness workspace: ${relativePath}`,
+    );
   }
   return target;
 }
@@ -140,24 +115,16 @@ async function writeNewText({
   return target;
 }
 
-function resultDirectory(sessionId, callId) {
+function resultDirectory(resultRoot, sessionId, callId) {
   const sessionDigest = identityDigest({ kind: "session", id: sessionId });
   const callDigest = identityDigest({ kind: "tool-call", id: callId });
   return {
-    relativePath: `${RESULT_ROOT}/${sessionDigest}/${callDigest}`,
+    relativePath: `${resultRoot}/${sessionDigest}/${callDigest}`,
     callDigest,
   };
 }
 
-function provenance(loadedCapability) {
-  const validator = loadedCapability.manifest.validators.find(
-    (candidate) => candidate.id === VALIDATOR_ID,
-  );
-  if (!validator) {
-    throw new Error(`Capability does not declare Validator ${VALIDATOR_ID}`);
-  }
-  const mcpServerPath = path.join(skillRoot, "mcp/server.mjs");
-  const validatorPath = path.join(skillRoot, validator.command.script);
+function provenance(definition, loadedCapability) {
   const environment = Object.freeze({
     runtime: "node",
     version: process.version,
@@ -165,18 +132,14 @@ function provenance(loadedCapability) {
     architecture: process.arch,
   });
   return {
-    tools: [
-      {
-        id: "quantum-ground-state-mcp",
-        version: loadedCapability.manifest.version,
-        digest: digestFile(mcpServerPath),
-      },
-      {
-        id: validator.id,
-        version: validator.version,
-        digest: digestFile(validatorPath),
-      },
-    ],
+    tools: definition.provenanceTools.map((tool) => ({
+      id: tool.id,
+      version:
+        typeof tool.version === "function"
+          ? tool.version(loadedCapability)
+          : tool.version,
+      digest: digestFile(path.join(repositoryRoot, tool.path)),
+    })),
     environment: [
       {
         id: "node-runtime",
@@ -190,198 +153,262 @@ function provenance(loadedCapability) {
   };
 }
 
-/**
- * Materialize one completed Harness-owned quantum tool call into the session
- * workspace, rerun the independent Validator against those exact bytes, and
- * derive Acceptance through the central contract builder.
- */
-export async function materializeGroundStateResult({
-  fileSystem,
-  workspaceRoot,
-  sessionId,
-  callId,
-  eventRange,
-  request,
-  facts,
-  signal,
-  now = () => new Date().toISOString(),
-}) {
-  if (!fileSystem || typeof fileSystem.resolve !== "function") {
-    throw new Error("Harness ctx.fs is required for scientific materialization");
-  }
-  if (typeof workspaceRoot !== "string" || !path.isAbsolute(workspaceRoot)) {
-    throw new Error("Harness session workspace must be an absolute path");
-  }
-  if (typeof sessionId !== "string" || sessionId.length === 0) {
-    throw new Error("Harness session id is required for scientific provenance");
-  }
-  if (typeof callId !== "string" || callId.length === 0) {
-    throw new Error("Harness tool call id is required for scientific provenance");
+function assertMaterializerDefinition(definition) {
+  for (const field of [
+    "capabilityId",
+    "skillPath",
+    "resultRoot",
+    "packagePrefix",
+    "inputId",
+    "profileId",
+    "validatorId",
+  ]) {
+    if (typeof definition?.[field] !== "string" || definition[field].length === 0) {
+      throw new Error(`scientific materializer definition.${field} is required`);
+    }
   }
   if (
-    !Number.isSafeInteger(eventRange?.from) ||
-    !Number.isSafeInteger(eventRange?.to) ||
-    eventRange.from < 0 ||
-    eventRange.from > eventRange.to
+    !Array.isArray(definition.provenanceTools) ||
+    definition.provenanceTools.length === 0 ||
+    typeof definition.prepare !== "function"
   ) {
-    throw new Error("Harness execution event range is invalid");
+    throw new Error(
+      "scientific materializer requires provenanceTools and a prepare function",
+    );
   }
+}
 
-  const {
-    buildAcceptanceReport,
-    buildResultCommit,
-    loadAcceptanceReport,
-    loadResultPackage,
-    requireSolveAndValidateRequest,
-    validateFacts,
-    validateValidationBundle,
-  } = await runtime();
-  const canonicalRequest = requireSolveAndValidateRequest({ request });
-  const canonicalFacts = validateFacts(facts);
-  const loadedCapability = await capability();
-  const profileReference = loadedCapability.manifest.acceptanceProfiles.find(
-    (candidate) => candidate.id === PROFILE_ID,
-  );
-  const profile = loadedCapability.acceptanceProfileDefinitions.get(PROFILE_ID);
-  if (!profileReference || !profile) {
-    throw new Error(`Capability does not contain Acceptance Profile ${PROFILE_ID}`);
-  }
+function readPersistedJson(fileSystem, target) {
+  return JSON.parse(fs.readFileSync(fileSystem.processPath(target), "utf8"));
+}
 
-  const workspaceTarget = await fileSystem.resolve(".", {
-    cwd: workspaceRoot,
-    signal,
-  });
-  const workspaceProcessPath = fileSystem.processPath(workspaceTarget);
-  const directory = resultDirectory(sessionId, callId);
-  const inputContent = canonicalJson(canonicalRequest);
-  const inputReference = fileReference({
-    id: "ground-state-request",
-    type: loadedCapability.manifest.input.id,
-    relativePath: "input/request.json",
-    content: inputContent,
-  });
-  const artifactEntries = Object.entries(FACT_FILES).map(([key, fileName]) => {
-    const content = canonicalJson(canonicalFacts[key]);
-    const type = canonicalFacts[key].artifactType;
-    return {
-      key,
-      content,
-      reference: fileReference({
-        id: type,
-        type,
-        relativePath: `artifacts/${fileName}`,
-        content,
-      }),
-    };
-  });
+/**
+ * Define one capability Adapter behind the common Harness materialization
+ * Interface. The returned function writes new workspace bytes, loads those
+ * exact bytes through the central contracts, reruns the capability Validator,
+ * and returns a bounded Result Commit.
+ */
+export function defineScientificResultMaterializer(definition) {
+  assertMaterializerDefinition(definition);
 
-  const createdAt = safeTimestamp(now);
-  const resultPackageValue = {
-    schemaVersion: "1.1",
-    packageId: `qgs-${directory.callDigest}`,
-    capability: {
-      id: loadedCapability.manifest.id,
-      version: loadedCapability.manifest.version,
-    },
-    createdAt,
-    executionRef: {
-      sessionId,
-      eventRange: { from: eventRange.from, to: eventRange.to },
-    },
-    acceptanceProfile: {
-      id: profileReference.id,
-      version: profileReference.version,
-      sha256: profileReference.definition.sha256,
-    },
-    inputs: [inputReference],
-    artifacts: artifactEntries.map((entry) => entry.reference),
-    provenance: provenance(loadedCapability),
-  };
-
-  await writeNewText({
+  return async function materializeScientificResult({
     fileSystem,
-    workspaceTarget,
     workspaceRoot,
     sessionId,
-    relativePath: `${directory.relativePath}/${inputReference.path}`,
-    content: inputContent,
+    callId,
+    eventRange,
+    request,
+    structuredContent,
     signal,
-  });
-  for (const entry of artifactEntries) {
-    await writeNewText({
+    now = () => new Date().toISOString(),
+  }) {
+    if (!fileSystem || typeof fileSystem.resolve !== "function") {
+      throw new Error("Harness ctx.fs is required for scientific materialization");
+    }
+    if (typeof workspaceRoot !== "string" || !path.isAbsolute(workspaceRoot)) {
+      throw new Error("Harness session workspace must be an absolute path");
+    }
+    if (typeof sessionId !== "string" || sessionId.length === 0) {
+      throw new Error("Harness session id is required for scientific provenance");
+    }
+    if (typeof callId !== "string" || callId.length === 0) {
+      throw new Error("Harness tool call id is required for scientific provenance");
+    }
+    if (
+      !Number.isSafeInteger(eventRange?.from) ||
+      !Number.isSafeInteger(eventRange?.to) ||
+      eventRange.from < 0 ||
+      eventRange.from > eventRange.to
+    ) {
+      throw new Error("Harness execution event range is invalid");
+    }
+
+    const {
+      buildAcceptanceReport,
+      buildResultCommit,
+      loadAcceptanceReport,
+      loadResultPackage,
+    } = await contracts();
+    const loadedCapability = await capability(definition.skillPath);
+    if (loadedCapability.manifest.id !== definition.capabilityId) {
+      throw new Error(
+        `Scientific Adapter ${definition.capabilityId} loaded mismatched Capability ${loadedCapability.manifest.id}`,
+      );
+    }
+    const profileReference = loadedCapability.manifest.acceptanceProfiles.find(
+      (candidate) => candidate.id === definition.profileId,
+    );
+    const profile = loadedCapability.acceptanceProfileDefinitions.get(
+      definition.profileId,
+    );
+    if (!profileReference || !profile) {
+      throw new Error(
+        `Capability does not contain Acceptance Profile ${definition.profileId}`,
+      );
+    }
+
+    const prepared = await definition.prepare({
+      request,
+      structuredContent,
+      capability: loadedCapability,
+      profile,
+    });
+    if (
+      !prepared ||
+      !Array.isArray(prepared.artifacts) ||
+      prepared.artifacts.length === 0 ||
+      typeof prepared.validate !== "function"
+    ) {
+      throw new Error(
+        `Scientific Adapter ${definition.capabilityId} returned an invalid materialization plan`,
+      );
+    }
+
+    const workspaceTarget = await fileSystem.resolve(".", {
+      cwd: workspaceRoot,
+      signal,
+    });
+    const workspaceProcessPath = fileSystem.processPath(workspaceTarget);
+    const directory = resultDirectory(
+      definition.resultRoot,
+      sessionId,
+      callId,
+    );
+    const inputContent = canonicalJson(prepared.request);
+    const inputReference = fileReference({
+      id: definition.inputId,
+      type: loadedCapability.manifest.input.id,
+      relativePath: "input/request.json",
+      content: inputContent,
+    });
+    const artifactEntries = prepared.artifacts.map((artifact) => {
+      const content = canonicalJson(artifact.value);
+      return {
+        ...artifact,
+        content,
+        reference: fileReference({
+          id: artifact.id,
+          type: artifact.type,
+          relativePath: `artifacts/${artifact.fileName}`,
+          content,
+        }),
+      };
+    });
+
+    const createdAt = safeTimestamp(now);
+    const resultPackageValue = {
+      schemaVersion: "1.1",
+      packageId: `${definition.packagePrefix}-${directory.callDigest}`,
+      capability: {
+        id: loadedCapability.manifest.id,
+        version: loadedCapability.manifest.version,
+      },
+      createdAt,
+      executionRef: {
+        sessionId,
+        eventRange: { from: eventRange.from, to: eventRange.to },
+      },
+      acceptanceProfile: {
+        id: profileReference.id,
+        version: profileReference.version,
+        sha256: profileReference.definition.sha256,
+      },
+      inputs: [inputReference],
+      artifacts: artifactEntries.map((entry) => entry.reference),
+      provenance: provenance(definition, loadedCapability),
+    };
+
+    const inputTarget = await writeNewText({
       fileSystem,
       workspaceTarget,
       workspaceRoot,
       sessionId,
-      relativePath: `${directory.relativePath}/${entry.reference.path}`,
-      content: entry.content,
+      relativePath: `${directory.relativePath}/${inputReference.path}`,
+      content: inputContent,
       signal,
     });
-  }
+    const artifactTargets = new Map();
+    for (const entry of artifactEntries) {
+      const target = await writeNewText({
+        fileSystem,
+        workspaceTarget,
+        workspaceRoot,
+        sessionId,
+        relativePath: `${directory.relativePath}/${entry.reference.path}`,
+        content: entry.content,
+        signal,
+      });
+      artifactTargets.set(entry.key, target);
+    }
 
-  const resultPackageRelativePath = `${directory.relativePath}/result-package.json`;
-  const resultPackageTarget = await writeNewText({
-    fileSystem,
-    workspaceTarget,
-    workspaceRoot,
-    sessionId,
-    relativePath: resultPackageRelativePath,
-    content: canonicalJson(resultPackageValue),
-    signal,
-  });
-  const resultPackage = loadResultPackage(
-    fileSystem.processPath(resultPackageTarget),
-    loadedCapability,
-  );
-  const validation = validateValidationBundle({
-    schemaVersion: "1.0",
-    resultPackage: {
-      kind: resultPackage.kind,
-      value: resultPackage.value,
-    },
-    profile,
-    request: canonicalRequest,
-    facts: canonicalFacts,
-  });
-  const acceptanceValue = buildAcceptanceReport({
-    capability: loadedCapability,
-    resultPackage,
-    validatorId: VALIDATOR_ID,
-    profileId: PROFILE_ID,
-    reportId: `qgs-acceptance-${directory.callDigest}`,
-    generatedAt: safeTimestamp(now),
-    scopeMatch: validation.scopeMatch,
-    observations: validation.observations,
-    limitations: validation.limitations,
-    statement: validation.statement,
-  });
-  const acceptanceRelativePath = `${directory.relativePath}/acceptance-report.json`;
-  const acceptanceTarget = await writeNewText({
-    fileSystem,
-    workspaceTarget,
-    workspaceRoot,
-    sessionId,
-    relativePath: acceptanceRelativePath,
-    content: canonicalJson(acceptanceValue),
-    signal,
-  });
-  const acceptanceReport = loadAcceptanceReport(
-    fileSystem.processPath(acceptanceTarget),
-    loadedCapability,
-    resultPackage,
-  );
-  const resultCommit = buildResultCommit({
-    capability: loadedCapability,
-    resultPackage,
-    acceptanceReport,
-    artifactRoot: workspaceProcessPath,
-  });
+    const resultPackageRelativePath =
+      `${directory.relativePath}/result-package.json`;
+    const resultPackageTarget = await writeNewText({
+      fileSystem,
+      workspaceTarget,
+      workspaceRoot,
+      sessionId,
+      relativePath: resultPackageRelativePath,
+      content: canonicalJson(resultPackageValue),
+      signal,
+    });
+    const resultPackage = loadResultPackage(
+      fileSystem.processPath(resultPackageTarget),
+      loadedCapability,
+    );
+    const persistedArtifacts = Object.fromEntries(
+      artifactEntries.map((entry) => [
+        entry.key,
+        readPersistedJson(fileSystem, artifactTargets.get(entry.key)),
+      ]),
+    );
+    const validation = await prepared.validate({
+      resultPackage,
+      profile,
+      request: readPersistedJson(fileSystem, inputTarget),
+      artifacts: persistedArtifacts,
+    });
+    const acceptanceValue = buildAcceptanceReport({
+      capability: loadedCapability,
+      resultPackage,
+      validatorId: definition.validatorId,
+      profileId: definition.profileId,
+      reportId: `${definition.packagePrefix}-acceptance-${directory.callDigest}`,
+      generatedAt: safeTimestamp(now),
+      scopeMatch: validation.scopeMatch,
+      observations: validation.observations,
+      limitations: validation.limitations,
+      statement: validation.statement,
+    });
+    const acceptanceRelativePath =
+      `${directory.relativePath}/acceptance-report.json`;
+    const acceptanceTarget = await writeNewText({
+      fileSystem,
+      workspaceTarget,
+      workspaceRoot,
+      sessionId,
+      relativePath: acceptanceRelativePath,
+      content: canonicalJson(acceptanceValue),
+      signal,
+    });
+    const acceptanceReport = loadAcceptanceReport(
+      fileSystem.processPath(acceptanceTarget),
+      loadedCapability,
+      resultPackage,
+    );
+    const resultCommit = buildResultCommit({
+      capability: loadedCapability,
+      resultPackage,
+      acceptanceReport,
+      artifactRoot: workspaceProcessPath,
+    });
 
-  return Object.freeze({
-    validation,
-    acceptanceStatus: acceptanceReport.value.status,
-    resultCommit,
-    resultPackagePath: resultPackageRelativePath,
-    acceptanceReportPath: acceptanceRelativePath,
-  });
+    return Object.freeze({
+      validation,
+      acceptanceStatus: acceptanceReport.value.status,
+      resultCommit,
+      resultPackagePath: resultPackageRelativePath,
+      acceptanceReportPath: acceptanceRelativePath,
+    });
+  };
 }

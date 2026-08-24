@@ -79,7 +79,7 @@ packages:
       manifest: capability.yaml
 
   - id: quantum-information-audit
-    level: L2
+    level: L3
     execution:
       servers:
         - name: toqito_audit
@@ -90,6 +90,11 @@ packages:
         - .agents/skills/quantum-information-audit/evals/run-evals.mjs
     audit:
       manifest: capability.yaml
+    materialization:
+      adapter: runtime/openquantum/agent-presets/openquantum/scientific-result-projection.mjs
+      checks:
+        - tests/quantum-information-materialization.test.mjs
+        - tests/scientific-result-projection.test.mjs
 
   - id: quantum-ground-state
     level: L3

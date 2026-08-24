@@ -10,7 +10,9 @@
 | `agent-presets/openquantum/preset.yml` | OpenQuantum Agent preset 元数据 |
 | `agent-presets/openquantum/agent.cordis.yml` | Agent scope 内的 Tool、Skill provider、MCP、权限与结果投影组合 |
 | `agent-presets/openquantum/credentialed-mcp-client.mjs` | Harness credential reference 到 MCP 子进程环境变量的薄 Adapter |
-| `agent-presets/openquantum/scientific-result-*.mjs` | 当前专用于 QGS 的 Harness Tool 结果物化、重读验收和有界投影 Adapter |
+| `agent-presets/openquantum/scientific-result-materializer.mjs` | QGS/QI 共用的 workspace 物化、真实字节重读、中央 Acceptance 与 Result Commit Module |
+| `agent-presets/openquantum/scientific-result-adapters.mjs` | Tool 到领域投影、Materializer 和 Artifact 合同的双 L3 Adapter Registry |
+| `agent-presets/openquantum/scientific-result-protocol.mjs` | 有界、可回放的 `tool/result` 科研投影协议 |
 | `../../packages/openquantum-web-branding/` | 可独立安装的 Harness Web 品牌插件 |
 | `web-capabilities/` | 通过 Harness Settings seam 展示和修改量子 Skill、MCP 与凭据引用 |
 
@@ -24,8 +26,9 @@
 - 修改 MCP composition 后完整重启 Harness，避免旧 generation 占用相同 `serverName`；
 - API Key 只以凭据引用出现，不能写入本目录。
 
-`scientific-result-*.mjs` 目前不是通用 Capability Runtime。只有 QGS 达到完整 Result Package -> Acceptance ->
-Result Commit 物化；等第二个 L3 能力真实接入后，再从两个实现提取 capability adapter Interface。
+`scientific-result-*.mjs` 不是通用 Capability Runtime。它只在 Harness 官方 `tools/post-execute` seam 对已登记的
+QGS 与 QI Adapter 执行 Result Package -> Acceptance -> Result Commit 物化；新增能力必须显式实现并测试 Adapter，
+不会因存在 `SKILL.md` 或 `capability.yaml` 就被自动执行。
 
 `packages/openquantum-web-branding/identity.mjs` 定义用户可见的品牌名、标语、颜色和资产 URL；
 `packages/openquantum-web-branding/assets/mark.svg` 是主标源文件。侧栏、首页、favicon 和 Web App manifest 必须使用同一主标。

@@ -34,7 +34,7 @@ Validator 是 OpenQuantum 的确定性实现；Agent preset / Cordis 才是它�
 | Qiskit Docs | 官方 MCP | 开启 | 文档搜索、页面读取和错误码查询 |
 | `qiskit-circuit-workbench` | Skill | 开启 | 把两项 Qiskit MCP 组织成可审查电路工作流 |
 | `tyxonq-workbench` | Skill / 本地 MCP | 关闭 | 固定 TyxonQ 1.2.0，只开放有界电路与噪声仿真，不开放云端任务 |
-| `quantum-information-audit` | Skill / toqito 本地 MCP / 独立 Validator | 开启 | 固定 toqito 1.3.1，审计有界密度矩阵的纯度、部分转置谱和 negativity；来源链未物化时只返回 observations |
+| `quantum-information-audit` | Skill / toqito 本地 MCP / 独立 Validator / Harness Result Adapter | 开启 | 固定 toqito 1.3.1；MCP 只返回 observations，Harness 物化并重读真实字节后由中央 Profile 派生 Acceptance |
 | `quantum-circuit-verification` | Skill / MQT QCEC 本地 MCP | 开启 | 固定 MQT QCEC 3.7.0，只比较有界、无测量 OpenQASM 2 unitary 电路，区分确定与概率性结论 |
 | `qec-memory-experiment` | Skill / Stim + PyMatching 本地 MCP | 开启 | 固定 Stim 1.16.0 与 PyMatching 2.4.0，运行有界、带 seed 的 rotated surface-code memory 采样和 MWPM 解码；单点结果不作 threshold 主张 |
 | 固定量子能力 benchmark | MQT Bench fixture / manifest / 离线校验 | CI 开启 | 固定 `ghz-3`、`qft-3`、`bv-4` 三案例分母，不注册为 Agent Tool，不把未交付记为语义失败 |

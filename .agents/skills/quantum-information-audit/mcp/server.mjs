@@ -236,7 +236,7 @@ function errorResult(error) {
 }
 
 const server = new Server(
-  { name: "openquantum-quantum-information-audit", version: "0.1.0" },
+  { name: "openquantum-quantum-information-audit", version: "0.2.0" },
   {
     capabilities: { tools: {} },
     instructions:

@@ -23,13 +23,16 @@ description: 使用固定版本 toqito 对用户提供的有界多体密度矩�
    - toqito 事实；
    - 独立 Validator observations；
    - 失败、不检查项和适用范围。
-6. 不把 negativity 写成普适的纠缠分类结论；它只对应本次指定的二分和部分转置判据。
+6. 在 OpenQuantum Harness preset 中，确认 `tool/result` 是否包含 `acceptance_available` 与 Result Commit；只有
+   Adapter 已物化并重读 Result Package 时，才能按中央 Acceptance 状态报告最终验收。
+7. 不把 negativity 写成普适的纠缠分类结论；它只对应本次指定的二分和部分转置判据。
 
 ## 必须保持的规则
 
 - 不提交云任务或真实量子硬件任务。
 - 不接受调用方自定义容差；容差由版本化 Acceptance Profile 固定。
 - `provenance.complete=not_checked` 时不得宣称科学验收通过。
+- 不凭 MCP 文本自行推断 `passed`；最终状态必须来自 Harness 物化后的 Acceptance Report。
 - 工具失败、科学 observation 失败、来源链未检查是三种不同状态。
 - 不从分子结构、实验层析数据或任意量子信道自动推导密度矩阵。
 

@@ -7,12 +7,11 @@
  * This plugin only joins those existing seams for one completed root call.
  */
 
-import { materializeGroundStateResult } from "./scientific-result-materializer.mjs";
+import { scientificResultAdapter } from "./scientific-result-adapters.mjs";
 import {
   encodeScientificToolResult,
   projectMaterializedScientificResult,
   projectScientificToolResult,
-  SOLVE_AND_VALIDATE_TOOL,
 } from "./scientific-result-protocol.mjs";
 
 export * from "./scientific-result-protocol.mjs";
@@ -37,13 +36,16 @@ function matchingCallEvent(session, exec) {
 }
 
 async function materialize(ctx, exec, canonicalValue) {
-  if (exec.name !== SOLVE_AND_VALIDATE_TOOL || !exec.agent) return undefined;
+  const adapter = scientificResultAdapter(exec.name);
+  if (typeof adapter?.materialize !== "function" || !exec.agent) {
+    return undefined;
+  }
   const { session } = exec.agent;
   const workspaceRoot = session.header.cwd;
   const callEvent = matchingCallEvent(session, exec);
   if (typeof workspaceRoot !== "string" || !callEvent) return undefined;
 
-  return materializeGroundStateResult({
+  return adapter.materialize({
     fileSystem: ctx.fs,
     workspaceRoot,
     sessionId: session.id,
@@ -54,8 +56,8 @@ async function materialize(ctx, exec, canonicalValue) {
       // after this final post-execute promise settles.
       to: session.seq,
     },
-    request: exec.arguments?.request,
-    facts: canonicalValue.structuredContent?.facts,
+    arguments: exec.arguments,
+    canonicalValue,
     signal: exec.signal,
   });
 }
@@ -81,7 +83,11 @@ export function apply(ctx) {
         const materialized = await materialize(ctx, exec, result.value);
         if (materialized) {
           presentation =
-            projectMaterializedScientificResult(result.value, materialized) ??
+            projectMaterializedScientificResult(
+              exec.name,
+              result.value,
+              materialized,
+            ) ??
             computational;
         }
       } catch (error) {

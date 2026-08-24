@@ -51,8 +51,8 @@ test("repository capability packages conform to their declared L0-L3 evidence", 
   assert.deepEqual(report.summary.levelCounts, {
     L0: 1,
     L1: 6,
-    L2: 2,
-    L3: 1,
+    L2: 1,
+    L3: 2,
   });
   assert.equal(report.packages.length, 10);
   assert(

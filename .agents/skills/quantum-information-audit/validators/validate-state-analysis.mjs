@@ -3,6 +3,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { isDeepStrictEqual } from "node:util";
 
 import {
   REPLAY_TOLERANCE,
@@ -173,6 +174,126 @@ export function validateStateAnalysis({ request: requestValue, analysis }) {
     profile: { id: "density-matrix-audit", version: "1.0.0" },
     scopeMatch: { status: "in_scope" },
     observations,
+  };
+}
+
+function materializedEvidence(resultPackage) {
+  const value = resultPackage?.value;
+  const input = value?.inputs?.[0];
+  const artifacts = new Map(
+    (value?.artifacts ?? []).map((artifact) => [artifact.type, artifact]),
+  );
+  const inputRefs = input ? [{ kind: "input", id: input.id }] : [];
+  const artifactRefs = (...types) =>
+    types
+      .map((type) => artifacts.get(type))
+      .filter(Boolean)
+      .map((artifact) => ({ kind: "artifact", id: artifact.id }));
+  return { input, artifacts, inputRefs, artifactRefs };
+}
+
+/**
+ * Rerun the density-matrix Validator after Harness has materialized and loaded
+ * the exact Result Package bytes. This is the only QI path allowed to turn
+ * provenance.complete into a checked observation for central Acceptance.
+ */
+export function validateMaterializedStateAnalysis({
+  request,
+  analysis,
+  computationalValidation,
+  resultPackage,
+  profile,
+}) {
+  const computational = validateStateAnalysis({ request, analysis });
+  const evidence = materializedEvidence(resultPackage);
+  const expectedIds = computational.observations.map((item) => item.id);
+  const profileIds = profile?.checks?.map((item) => item.id);
+  if (!isDeepStrictEqual(profileIds, expectedIds)) {
+    throw new Error(
+      "Density-matrix Validator and Acceptance Profile check ids differ",
+    );
+  }
+
+  const analysisRefs = evidence.artifactRefs("state-analysis");
+  const allArtifactRefs = evidence.artifactRefs(
+    "state-analysis",
+    "validation-bundle",
+  );
+  const provenanceChecks = {
+    loadedResultPackage:
+      resultPackage?.kind === "openquantum-result-package-v1.1",
+    capabilityMatches:
+      resultPackage?.value?.capability?.id === "quantum-information-audit",
+    oneInput:
+      resultPackage?.value?.inputs?.length === 1 && Boolean(evidence.input),
+    requiredArtifacts:
+      resultPackage?.value?.artifacts?.length === 2 &&
+      evidence.artifacts.has("state-analysis") &&
+      evidence.artifacts.has("validation-bundle"),
+    packageVersionMatches: analysis?.packageVersion === "1.3.1",
+    validationBundleMatches: isDeepStrictEqual(
+      computationalValidation,
+      computational,
+    ),
+    executionBound:
+      typeof resultPackage?.value?.executionRef?.sessionId === "string" &&
+      resultPackage.value.executionRef.sessionId.length > 0,
+  };
+  const provenanceComplete = Object.values(provenanceChecks).every(Boolean);
+
+  const observations = computational.observations.map((item) => {
+    if (item.id === "provenance.complete") {
+      return {
+        id: item.id,
+        status: provenanceComplete ? "pass" : "fail",
+        observed: provenanceChecks,
+        evidenceRefs: [...evidence.inputRefs, ...allArtifactRefs],
+        ...(!provenanceComplete
+          ? {
+              nextAction:
+                "Regenerate the Harness Result Package with one input, both declared artifacts and a valid Session event range.",
+            }
+          : {}),
+      };
+    }
+    const evidenceRefs =
+      item.id === "request.scope"
+        ? evidence.inputRefs
+        : item.id === "state.digest"
+          ? [...evidence.inputRefs, ...analysisRefs]
+          : analysisRefs;
+    return {
+      id: item.id,
+      status: item.status,
+      observed: {
+        ...(item.metric !== undefined ? { metric: item.metric } : {}),
+        detail: item.detail,
+      },
+      evidenceRefs,
+      ...(item.status !== "pass"
+        ? {
+            nextAction:
+              `Inspect the materialized request and state-analysis artifact, then rerun ${item.id}.`,
+          }
+        : {}),
+    };
+  });
+
+  return {
+    scopeMatch: {
+      status: computational.scopeMatch.status,
+      statement:
+        "The supplied matrix matches the bounded multipartite density-matrix audit scope.",
+      evidenceRefs: evidence.inputRefs,
+    },
+    observations,
+    limitations: [
+      "This is a bounded local numerical audit of a supplied density matrix, not state tomography or experimental validation.",
+      "Partial-transpose negativity supports only the selected bipartition and is not a universal entanglement classification.",
+      "No cloud service or physical quantum hardware was used.",
+    ],
+    statement:
+      "Pinned toqito facts were materialized by Harness and independently replayed against the persisted request and artifacts.",
   };
 }
 

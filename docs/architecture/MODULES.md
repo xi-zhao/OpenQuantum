@@ -44,16 +44,17 @@ OpenQuantum 不创建第二套 Session、Agent loop、Tool registry 或事件日
 | Capability Package | 原生 `SKILL.md`；独立 MCP Tool；可选 Validator/Profile | 一个有界领域问题的工作流、确定性执行和科学规则 | Harness 生命周期、全局设置、Provider 鉴权 | package 内 unit/MCP/eval 测试 |
 | Capability Conformance | `auditCapabilityPackages({ projectRoot })` | 对照 Git 跟踪的 Skill 检查 policy、MCP 注册、科学合同、依赖锁和 L3 物化证据 | 执行量子算法、替代科学 Validator、自动注册 MCP | `npm run capability:conformance` 与失败关闭测试 |
 | Scientific Contracts | `.agents/skill-contracts/index.mjs` | Result、Acceptance、Score、Reproduction 的共享 schema 与构建规则 | 具体量子算法、Session 持久化、UI | contract/profile/report 测试 |
-| QGS Materialization Adapter | `tools/post-execute` 内的 QGS 结果投影 | 把 QGS 结构化结果写入 Harness workspace，重读并生成 Acceptance/Commit | 通用 Capability Runtime、任意 Tool 物化 | scientific-result materialization/projection 测试 |
+| Scientific Result Materialization | `defineScientificResultMaterializer(definition)` | 统一完成 workspace 路径约束、原子写入、真实字节重读、中央 Acceptance 与 Result Commit | 领域数值计算、领域 observation、Harness 生命周期 | QGS/QI materialization 测试 |
+| Scientific Result Adapter Registry | `scientificResultAdapter(toolName)` | 将受支持 Tool 映射到领域投影、Materializer 与声明的 Artifact 类型 | 自动发现任意 Skill、执行 MCP、创造平行 Runtime | projection 与双 L3 回放测试 |
 | Model Routes | Harness `llm.models` / Provider adapter | 模型目录、协议适配、超时和凭据引用 | 量子数值计算、科学结论 | model probe、真实 Tool Calling E2E |
 | Evidence & Diagnostics | 版本化 eval、诊断 JSON、独立 Validator | 证明当前能力和连接状态 | 用历史 PASS 代替当前在线检查 | package eval、platform diagnostics validator |
 
 `Project Settings Interface` 与 `Integration Catalog` 已刻意拆开。新增一个 MCP 的名称、版本和文档不应触碰
 文件锁、路径安全和 CAS 规则；调整设置事务也不应修改所有集成条目。
 
-当前 `scientific-result-protocol.mjs`、`scientific-result-materializer.mjs` 和
-`scientific-result-projection.mjs` 的名字看起来偏通用，但实现只服务 QGS。它们在出现第二个需要完整 Harness
-物化的能力前，按“QGS Materialization Adapter”管理，不提前创造通用插件框架。
+QGS 与 `quantum-information-audit` 已形成两个真实 Adapter。Registry 只登记明确支持的 Tool；通用物化 Module
+隐藏 workspace 写入、字节重读和中央合同编排，领域 Adapter 继续拥有输入规范化、Artifact 形态与 Validator。
+这不是根据 Skill 自动执行任意代码的 Capability Runtime。
 
 ## 4. 依赖方向
 
@@ -132,8 +133,8 @@ Harness Settings UI
 | `qiskit-circuit-workbench` | L1 | 使用独立注册的 Qiskit MCP |
 | `fieldqkit-hardware`、`qpanda-qubo`、`quantum-circuit-verification`、`qec-memory-experiment`、`tyxonq-workbench` | L1 | 有界本地/只读执行与合同测试；不宣称最终科学验收 |
 | `platform-diagnostics` | L2 | 报告 schema、固定检查和独立 Validator |
-| `quantum-information-audit` | L2 | 独立重算、Profile 和 eval 已有，但尚未进入通用 Harness 物化链 |
-| `quantum-ground-state` | L3 | 当前唯一完整 Result Package -> Acceptance -> Result Commit 参考纵切 |
+| `quantum-information-audit` | L3 | 独立重算、Profile/eval，并经 Harness 物化、真实字节重读、验收和回放 |
+| `quantum-ground-state` | L3 | 完整 Result Package -> Acceptance -> Result Commit 参考纵切 |
 
 ## 6. 常见需求的落点
 
@@ -160,15 +161,15 @@ Harness Settings UI
 3. 上游 Harness 变更需要用小 Adapter 隔离；
 4. 同类测试已重复且重复来自同一领域模型。
 
-当前明确延后的是“通用科研结果物化框架”。等第二个 L3 能力（优先候选是
-`quantum-information-audit`）真正接入时，再从 QGS 与该能力的共同需求中提取：
+第二个 L3 能力已经证明以下共同需求，并已据此提取：
 
 - Tool 识别与 capability adapter registry；
-- Artifact manifest / bounded projection Interface；
-- Profile 和 Validator 调用合同；
+- Artifact 类型与 bounded projection Interface；
+- workspace 物化、真实字节重读、Profile 和 Validator 调用合同；
 - 失败时保持原生 Tool 结果但禁止伪造 Acceptance 的规则。
 
-在此之前只修正命名和文档认知，不把单一实现包装成假通用平台。
+继续延后的是自动发现任意 Skill、任意 Artifact 编排和通用 Capability Runtime；只有第三个真实变化点出现时，
+才继续扩大 Adapter Interface。
 
 ## 8. 持续开发检查表
 

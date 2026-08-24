@@ -177,14 +177,14 @@ flowchart LR
 退出条件：一个新开发者只读仓库文档即可在本机启动、运行黄金案例，并知道如何按需增加独立的
 Skill、MCP 或 Validator，再由 preset 组合。
 
-### 当前进度（2026-08-14）
+### 当前进度（2026-08-24）
 
 | 里程碑 | 状态 | 已有证据 | 尚缺 |
 | --- | --- | --- | --- |
 | M0 | 完成 | Harness-first 架构、preset、原生 Web 扩展与诊断合同已落地 | 持续跟踪 rc 版本变化 |
 | M1 | 完成 | QGS solver、独立 exact reference、Validator、Artifact schema 与 35 项 QGS/MCP 测试 | 无 |
 | M2 | 完成 | 官方 stdio MCP、原子 workflow + 两项高级 Tool、Harness 原生注册测试，以及真实 provider 的 `tool/call`→`tool/result` 事件链 | 无 |
-| M3 | 核心链完成 | 真实模型经 Harness 调用 QGS MCP，完成 `ctx.fs` Result Package 物化、完整 Validator→中央 Acceptance、Result Commit 与 UI 回放；真实浏览器已人工验收最终卡片，另有零密钥黄金案例、双 Session MCP 回归和隔离 Harness CI | 把已验证的浏览器输入→最终验收卡片流程自动化到 CI |
+| M3 | 核心链完成 | QGS 与 QI 两条 L3 Adapter 已完成 `ctx.fs` Result Package 物化、真实字节重读、完整 Validator→中央 Acceptance、Result Commit 与 UI 回放；QGS 真实浏览器卡片已人工验收，另有零密钥黄金案例、双 Session MCP 回归和隔离 Harness CI | 把已验证的浏览器输入→最终验收卡片流程自动化到 CI，并补 QI 在线模型回放证据 |
 
 在配置 `openquantum-public` 凭据的环境中，四层诊断 7/7 为 `ready`：真实 `kimi-k2.7-code` 在 Harness
 Session 中调用 `mcp__openquantum_quantum__solve_and_validate_ground_state`，随后六类 Artifact、Result

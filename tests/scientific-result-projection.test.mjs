@@ -104,19 +104,23 @@ function materializedProjection() {
       sha256,
     })),
   };
-  return projectMaterializedScientificResult(solveAndValidateCanonicalValue(), {
-    validation: {
-      ...validationCanonicalValue().structuredContent,
-      observations: [
-        { id: "energy", status: "pass" },
-        { id: "trace", status: "pass" },
-        { id: "provenance.complete", status: "pass" },
-      ],
+  return projectMaterializedScientificResult(
+    SOLVE_AND_VALIDATE_TOOL,
+    solveAndValidateCanonicalValue(),
+    {
+      validation: {
+        ...validationCanonicalValue().structuredContent,
+        observations: [
+          { id: "energy", status: "pass" },
+          { id: "trace", status: "pass" },
+          { id: "provenance.complete", status: "pass" },
+        ],
+      },
+      acceptanceStatus: "passed",
+      resultCommit,
+      resultPackagePath: resultCommit.resultPackage.path,
     },
-    acceptanceStatus: "passed",
-    resultCommit,
-    resultPackagePath: resultCommit.resultPackage.path,
-  });
+  );
 }
 
 test("post-execute adapter persists a bounded scientific projection in tool/result content", async () => {

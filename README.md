@@ -114,14 +114,14 @@ Web 与 Desktop 共用 `.openquantum/dsh` 中的本地状态，请先停止 `npm
 
 | 新能力 | 集成形式 | 用户现在可以做什么 | 接入验收证据 |
 | --- | --- | --- | --- |
-| 量子信息审计 | 固定 `toqito==1.3.1` + 本地 MCP + 独立 JavaScript Validator | 检查密度矩阵合法性、纯度、部分转置谱和 negativity | Bell 态纯度 1、部分转置最小本征值 -0.5、negativity 0.5 |
+| 量子信息审计 | 固定 `toqito==1.3.1` + 本地 MCP + 独立 JavaScript Validator + Harness Result Adapter | 检查密度矩阵合法性、纯度、部分转置谱和 negativity，并物化可回放的验收报告 | Bell 态纯度 1、部分转置最小本征值 -0.5、negativity 0.5，中央 Acceptance 为 `passed`；篡改事实为 `failed` |
 | 固定量子能力 benchmark | 固定 `mqt.bench==2.2.3` + 锁定 QASM fixture、指标和 SHA-256 | 用同一分母回归检查电路工具和后续 Agent 能力，不随运行静默换题 | GHZ-3、QFT-3、BV-4 三个案例全部与锁定 manifest 匹配 |
 | 受约束 QUBO 建模 | 命名二值模型编译器 + 独立穷举复核 + `pyqpanda_alg` 本地求解 | 把目标函数和线性等式约束编译成 QUBO，检查 penalty 是否足够，再比较经典最优与 QAOA | 参考模型得到赋值 `[0, 1]`、最优值 -2.0，和独立枚举一致 |
 | 量子电路等价性验证 | 固定 `mqt.qcec==3.7.0` + 有界 OpenQASM 2 本地 MCP | 判断转译或重写前后的无测量 unitary 电路是严格等价、相位等价、不等价还是没有确定信息 | 等价与不等价参考电路均得到预期结论 |
 | QEC memory 实验 | 固定 `stim==1.16.0` + `pymatching==2.4.0` + 带 seed 的本地实验 | 运行 rotated surface-code X/Z memory 采样与 MWPM 解码，报告逻辑错误数、标准误和 Wilson 区间 | `p=0` 时 0/100；`p=0.01`、seed 123 时 59/1000，95% 区间约 4.60%–7.54% |
 
 这些结果证明的是固定输入下的本地执行与计算级 observations，不自动证明量子优势、QEC threshold 或真实硬件性能。
-新增能力在 Result Package 和 Session Event Log 来源链没有物化时会明确保留 `provenance.not_checked`，不会把工具成功写成最终科学验收通过。
+新增能力在 Result Package 和 Session Event Log 来源链没有物化时会明确保留 `provenance.not_checked`，不会把工具成功写成最终科学验收通过。目前量子基态与量子信息审计是两条完整 L3 纵切。
 
 ## 已集成的量子工具与能力
 
@@ -132,7 +132,7 @@ Web 与 Desktop 共用 `.openquantum/dsh` 中的本地状态，请先停止 `npm
 | Qiskit Circuits | [Qiskit 官方 MCP](https://github.com/Qiskit/mcp-servers) · 原版接入 + OpenQuantum Skill | 创建、读取、转换和分析 OpenQASM 3 / QPY 电路，比较转译结果 | 开启，无需凭据 |
 | Qiskit Docs | [Qiskit 官方 MCP](https://github.com/Qiskit/mcp-servers) · 原版接入 | 查询 Qiskit API、迁移说明、错误码和 IBM Quantum 文档 | 开启，无需凭据 |
 | 量子电路等价性验证 | [MQT QCEC](https://github.com/munich-quantum-toolkit/qcec) · 固定版本 + 本地 MCP + OpenQuantum Skill | 检查两份有界、无测量 OpenQASM 2 电路是否严格等价、相位等价或不等价 | 开启，本地运行 |
-| 量子信息审计 | [toqito](https://github.com/vprusso/toqito) · 固定版本 + 本地 MCP + 独立 Validator | 审计有界密度矩阵的迹、Hermiticity、正半定性、纯度、部分转置谱和 negativity | 开启，本地运行 |
+| 量子信息审计 | [toqito](https://github.com/vprusso/toqito) · 固定版本 + 本地 MCP + 独立 Validator + Harness Result Adapter | 审计有界密度矩阵的迹、Hermiticity、正半定性、纯度、部分转置谱和 negativity，并生成 Result Package、Acceptance Report 与回放投影 | 开启，本地运行 |
 | QEC Memory 实验 | [Stim](https://github.com/quantumlib/Stim) + [PyMatching](https://github.com/oscarhiggott/PyMatching) · 固定版本 + 本地 MCP + OpenQuantum Skill | 运行有界 rotated surface-code X/Z memory 实验、MWPM 解码和有限 shots 逻辑错误率统计 | 开启，本地运行 |
 | FieldQKit | [FieldQuantum](https://github.com/FieldQuantum/fieldqkit) · 固定上游提交 + 只读桥接 | 发现国内量子云后端，按量子位筛选，查看拓扑和校准摘要 | 开启，只读 |
 | TyxonQ Local | [TyxonQ](https://github.com/QureGenAI-Biotech/TyxonQ) · 固定 PyPI 版本 + 本地 MCP + OpenQuantum Skill | 运行小规模 statevector 电路、有限 shots 与 density-matrix 噪声仿真 | 接入，关闭 |

@@ -141,21 +141,22 @@ Harness 的 MCP bridge 负责进程、重连、Tool registry 和调用；不要�
 `structuredContent` 是执行期结构化值。若某些摘要必须在刷新或 Session resume 后继续展示，应通过仓库内
 可信的 `tools/post-execute` Adapter 生成一个有界展示投影，使它随 Harness 原生 `tool/result` 持久化。
 
-当前 QGS 参考实现拆成三个专用深模块：
+当前 QGS 与 QI 两条 L3 纵切拆成四个深模块：
 
 - `scientific-result-protocol.mjs`：可在 Host/UI 两侧重放的有界协议；
-- `scientific-result-materializer.mjs`：Harness workspace 物化、Validator 与中央 Acceptance 编排；
-- `scientific-result-projection.mjs`：只连接 `tools/post-execute`、`ctx.fs` 和上述两个模块。
+- `scientific-result-materializer.mjs`：Harness workspace 路径约束、物化、真实字节重读与中央合同编排；
+- `scientific-result-adapters.mjs`：显式登记 Tool、领域投影、Artifact 类型和 capability Validator；
+- `scientific-result-projection.mjs`：只连接 `tools/post-execute`、`ctx.fs` 与 Adapter registry。
 
-只有当第二个能力也需要完整 Result Package -> Acceptance -> Result Commit 物化时，才从两条真实纵切中提取
-capability adapter Interface。在此之前不要把 QGS 专用代码包装成通用 Runtime。接入第二个 L3 能力时：
+第二个真实能力已经证明并形成 capability adapter Interface。继续接入 L3 能力时：
 
-1. 先实现该能力自己的 Artifact、Validator、Profile 和物化测试，再从两个实现提取 Tool descriptor /
-   adapter registry；
+1. 先实现该能力自己的 Artifact、Validator、Profile 和物化测试，再显式登记 Tool descriptor / Adapter；
 2. 只投影 UI 真正需要的有限字段和受校验 Result Commit，不把 Artifact 正文或凭证塞进 Session event；
 3. 在 Harness 原生 `tool/result` 展示投影中保持 Runtime 状态和 Scientific 状态为两个字段；
 4. 增加 `tool/call`、成功 `tool/result`、失败结果、恶意 envelope 与刷新回放测试；
 5. 不新增 OpenQuantum 私有 Session event、第二份会话数据库或 Tool Runtime。
+
+不要把 registry 改成扫描所有 Skill 后自动执行；第三个真实变化点出现前，也不要扩大 Materializer Interface。
 
 ## 增加 dsh-plugin
 
