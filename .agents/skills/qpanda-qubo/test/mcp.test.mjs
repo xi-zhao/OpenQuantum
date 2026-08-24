@@ -8,8 +8,11 @@ import { fileURLToPath } from "node:url";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 
+import { compileBinaryLinearModel } from "../modeling/binary-linear-model.mjs";
+
 const skillRoot = fileURLToPath(new URL("..", import.meta.url));
 const serverPath = path.join(skillRoot, "mcp", "server.mjs");
+const bridgePath = path.join(skillRoot, "mcp", "bridge.py");
 let client;
 let transport;
 let temporary;
@@ -31,7 +34,20 @@ if (envelope.action === "runtime") {
 } else {
   const request = envelope.request;
   const qaoa = request.method === "qaoa";
-  process.stdout.write(JSON.stringify({schemaVersion:"1.0",packageVersion:"2.0.0",problem:{size:request.quadratic.length,keyQubits:request.quadratic.length,resultQubits:4,sha256:"b".repeat(64)},classical:{method:"qubobytraversal",optimalAssignments:[[0,1,0]],minimumValue:-1},quantum:qaoa?{layer:request.layer,optimizer:"SLSQP",distribution:{"010":0.9,"110":0.1},topBitstring:"010"}:null,checks:{objectiveConsistencyError:0},scientificValidation:"not_evaluated",limitations:["local","not independently validated"]}));
+  const size = request.quadratic.length;
+  let minimumValue = Number.POSITIVE_INFINITY;
+  let optimalAssignments = [];
+  for (let mask = 0; mask < 2 ** size; mask += 1) {
+    const bits = Array.from({length:size},(_,index)=>(mask >> (size-index-1)) & 1);
+    let value = request.constant ?? 0;
+    for (let i=0;i<size;i+=1) {
+      value += (request.linear?.[i] ?? 0) * bits[i];
+      for (let j=0;j<size;j+=1) value += request.quadratic[i][j] * bits[i] * bits[j];
+    }
+    if (value < minimumValue - 1e-9) { minimumValue = value; optimalAssignments = [bits]; }
+    else if (Math.abs(value-minimumValue) <= 1e-9) optimalAssignments.push(bits);
+  }
+  process.stdout.write(JSON.stringify({schemaVersion:"1.0",packageVersion:"2.0.0",problem:{size,keyQubits:size,resultQubits:4,sha256:"b".repeat(64)},classical:{method:"qubobytraversal",optimalAssignments,minimumValue},quantum:qaoa?{layer:request.layer,optimizer:"SLSQP",distribution:{"010":0.9,"110":0.1},topBitstring:"010"}:null,checks:{objectiveConsistencyError:0},scientificValidation:"not_evaluated",limitations:["local","not independently validated"]}));
 }
 `,
   );
@@ -61,7 +77,11 @@ test("QPanda QUBO MCP exposes only bounded local read-only tools", async () => {
   const tools = (await client.listTools()).tools;
   assert.deepEqual(
     tools.map((tool) => tool.name),
-    ["inspect_qpanda_qubo_runtime", "solve_qpanda_qubo"],
+    [
+      "inspect_qpanda_qubo_runtime",
+      "solve_qpanda_qubo",
+      "model_and_solve_qpanda_qubo",
+    ],
   );
   assert.ok(tools.every((tool) => tool.annotations.readOnlyHint));
   assert.ok(tools.every((tool) => !tool.annotations.destructiveHint));
@@ -121,6 +141,136 @@ test("qaoa solve adds a bounded local variational distribution", async () => {
   assert.equal(result.structuredContent.checks.objectiveConsistencyError, 0);
 });
 
+test("named equality model compiles to QUBO and is exhaustively replayed", async () => {
+  const result = await client.callTool({
+    name: "model_and_solve_qpanda_qubo",
+    arguments: {
+      model: {
+        variables: ["x", "y"],
+        objective: {
+          sense: "minimize",
+          linear: [
+            { variable: "x", coefficient: 1 },
+            { variable: "y", coefficient: -2 },
+          ],
+        },
+        constraints: [
+          {
+            id: "choose_one",
+            terms: [
+              { variable: "x", coefficient: 1 },
+              { variable: "y", coefficient: 1 },
+            ],
+            relation: "eq",
+            rhs: 1,
+            penalty: 4,
+          },
+        ],
+      },
+      method: "traversal",
+    },
+  });
+  assert.equal(result.isError, undefined);
+  assert.deepEqual(result.structuredContent.modeling.qubo.linear, [-3, -6]);
+  assert.equal(result.structuredContent.modeling.qubo.quadratic[0][1], 8);
+  assert.equal(result.structuredContent.modeling.reference.feasibleOptimum.objectiveValue, -2);
+  assert.deepEqual(
+    result.structuredContent.modeling.reference.feasibleOptimum.assignments[0].values,
+    { x: 0, y: 1 },
+  );
+  assert.equal(result.structuredContent.solver.classical.minimumValue, -2);
+  assert.equal(
+    result.structuredContent.validation.observations.find(
+      (item) => item.id === "penalty.sufficient",
+    ).status,
+    "pass",
+  );
+  assert.equal(result.structuredContent.scientificValidation, "observations_available");
+});
+
+test("weak penalties stay visible instead of silently claiming a constrained optimum", async () => {
+  const result = await client.callTool({
+    name: "model_and_solve_qpanda_qubo",
+    arguments: {
+      model: {
+        variables: ["x", "y"],
+        objective: {
+          sense: "minimize",
+          linear: [
+            { variable: "x", coefficient: -10 },
+            { variable: "y", coefficient: -10 },
+          ],
+        },
+        constraints: [
+          {
+            id: "choose_one",
+            terms: [
+              { variable: "x", coefficient: 1 },
+              { variable: "y", coefficient: 1 },
+            ],
+            relation: "eq",
+            rhs: 1,
+            penalty: 1,
+          },
+        ],
+      },
+      method: "traversal",
+    },
+  });
+  assert.equal(result.isError, undefined);
+  assert.equal(
+    result.structuredContent.validation.observations.find(
+      (item) => item.id === "penalty.sufficient",
+    ).status,
+    "fail",
+  );
+});
+
+test("model compiler handles maximization and rejects unsupported constraints", () => {
+  const compiled = compileBinaryLinearModel({
+    variables: ["a", "b"],
+    objective: {
+      sense: "maximize",
+      linear: [
+        { variable: "a", coefficient: 1 },
+        { variable: "b", coefficient: 2 },
+      ],
+    },
+    constraints: [
+      {
+        id: "choose_one",
+        terms: [
+          { variable: "a", coefficient: 1 },
+          { variable: "b", coefficient: 1 },
+        ],
+        relation: "eq",
+        rhs: 1,
+        penalty: 4,
+      },
+    ],
+  });
+  assert.equal(compiled.reference.feasibleOptimum.objectiveValue, 2);
+  assert.deepEqual(compiled.reference.feasibleOptimum.assignments[0].values, { a: 0, b: 1 });
+  assert.equal(compiled.reference.penaltySufficient, true);
+  assert.throws(
+    () =>
+      compileBinaryLinearModel({
+        variables: ["x"],
+        objective: { sense: "minimize" },
+        constraints: [
+          {
+            id: "unsupported",
+            terms: [{ variable: "x", coefficient: 1 }],
+            relation: "le",
+            rhs: 1,
+            penalty: 1,
+          },
+        ],
+      }),
+    /relation must be eq/,
+  );
+});
+
 test("invalid problems fail before Python execution", async () => {
   for (const argumentsValue of [
     // non-square matrix
@@ -153,4 +303,8 @@ test("bridge environment is allowlisted and cloud credentials are absent", async
   assert.match(source, /BRIDGE_ENVIRONMENT_NAMES/);
   assert.match(source, /UV_PROJECT_ENVIRONMENT/);
   assert.doesNotMatch(source, /QPANDA3_API_KEY|ORIGIN_API_TOKEN|QCOS|QISKIT_IBM_TOKEN/);
+  const bridgeSource = await readFile(bridgePath, "utf8");
+  assert.match(bridgeSource, /def qubo_api/);
+  assert.match(bridgeSource, /pyqpanda_alg\.QUBO\.QUBO/);
+  assert.doesNotMatch(bridgeSource, /from pyqpanda_alg\.QUBO import/);
 });

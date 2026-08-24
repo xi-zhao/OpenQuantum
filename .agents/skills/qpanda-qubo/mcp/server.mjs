@@ -11,6 +11,8 @@ import {
   ListToolsRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
 
+import { compileBinaryLinearModel } from "../modeling/binary-linear-model.mjs";
+
 const skillRoot = fileURLToPath(new URL("..", import.meta.url));
 const projectRoot = path.resolve(skillRoot, "../../..");
 const bridgePath = path.join(skillRoot, "mcp", "bridge.py");
@@ -47,6 +49,29 @@ const readOnlyAnnotations = Object.freeze({
   destructiveHint: false,
   idempotentHint: true,
   openWorldHint: true,
+});
+const variableNameSchema = Object.freeze({
+  type: "string",
+  pattern: "^[A-Za-z][A-Za-z0-9_]{0,31}$",
+});
+const linearTermSchema = Object.freeze({
+  type: "object",
+  properties: {
+    variable: variableNameSchema,
+    coefficient: { type: "number", minimum: -MAX_ABS_COEFF, maximum: MAX_ABS_COEFF },
+  },
+  required: ["variable", "coefficient"],
+  additionalProperties: false,
+});
+const quadraticTermSchema = Object.freeze({
+  type: "object",
+  properties: {
+    left: variableNameSchema,
+    right: variableNameSchema,
+    coefficient: { type: "number", minimum: -MAX_ABS_COEFF, maximum: MAX_ABS_COEFF },
+  },
+  required: ["left", "right", "coefficient"],
+  additionalProperties: false,
 });
 
 const TOOLS = Object.freeze([
@@ -141,6 +166,106 @@ const TOOLS = Object.freeze([
     },
     annotations: readOnlyAnnotations,
   },
+  {
+    name: "model_and_solve_qpanda_qubo",
+    title: "Compile and solve a bounded binary linear model",
+    description:
+      "Compile a named binary objective plus bounded linear equality constraints into QUBO using explicit penalty weights, exhaustively replay the compilation over every assignment, and solve the compiled QUBO with pyqpanda_alg. Inequalities and automatic penalty selection are intentionally out of scope.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        model: {
+          type: "object",
+          properties: {
+            variables: {
+              type: "array",
+              minItems: 1,
+              maxItems: MAX_VARS,
+              uniqueItems: true,
+              items: variableNameSchema,
+            },
+            objective: {
+              type: "object",
+              properties: {
+                sense: { type: "string", enum: ["minimize", "maximize"] },
+                linear: { type: "array", maxItems: MAX_VARS, items: linearTermSchema },
+                quadratic: {
+                  type: "array",
+                  maxItems: MAX_VARS * MAX_VARS,
+                  items: quadraticTermSchema,
+                },
+                constant: {
+                  type: "number",
+                  minimum: -MAX_ABS_COEFF,
+                  maximum: MAX_ABS_COEFF,
+                },
+              },
+              required: ["sense"],
+              additionalProperties: false,
+            },
+            constraints: {
+              type: "array",
+              maxItems: 4,
+              items: {
+                type: "object",
+                properties: {
+                  id: variableNameSchema,
+                  terms: {
+                    type: "array",
+                    minItems: 1,
+                    maxItems: MAX_VARS,
+                    items: linearTermSchema,
+                  },
+                  relation: { type: "string", const: "eq" },
+                  rhs: {
+                    type: "number",
+                    minimum: -MAX_ABS_COEFF,
+                    maximum: MAX_ABS_COEFF,
+                  },
+                  penalty: {
+                    type: "number",
+                    exclusiveMinimum: 0,
+                    maximum: MAX_ABS_COEFF,
+                  },
+                },
+                required: ["id", "terms", "relation", "rhs", "penalty"],
+                additionalProperties: false,
+              },
+            },
+          },
+          required: ["variables", "objective"],
+          additionalProperties: false,
+        },
+        method: { type: "string", enum: ["traversal", "qaoa"] },
+        layer: { type: "integer", minimum: 1, maximum: MAX_LAYER },
+      },
+      required: ["model", "method"],
+      additionalProperties: false,
+    },
+    outputSchema: {
+      type: "object",
+      properties: {
+        schemaVersion: { type: "string", const: "1.0" },
+        packageVersion: { type: "string" },
+        modeling: { type: "object" },
+        solver: { type: "object" },
+        validation: { type: "object" },
+        scientificValidation: { type: "string", const: "observations_available" },
+        limitations: { type: "array", items: { type: "string" } },
+      },
+      required: [
+        "schemaVersion",
+        "packageVersion",
+        "modeling",
+        "solver",
+        "validation",
+        "scientificValidation",
+        "limitations",
+      ],
+      additionalProperties: false,
+    },
+    annotations: readOnlyAnnotations,
+  },
 ]);
 
 function isRecord(value) {
@@ -203,6 +328,25 @@ function normalizeSolveRequest(value) {
   if (constant !== undefined) request.constant = constant;
   if (layer !== undefined) request.layer = layer;
   return request;
+}
+
+function normalizeModelSolveRequest(value) {
+  if (
+    !isRecord(value) ||
+    Object.keys(value).some((key) => !["model", "method", "layer"].includes(key)) ||
+    !isRecord(value.model) ||
+    !["traversal", "qaoa"].includes(value.method)
+  ) {
+    throw new TypeError("QUBO modeling request is invalid");
+  }
+  if (value.method === "qaoa") {
+    if (!Number.isInteger(value.layer) || value.layer < 1 || value.layer > MAX_LAYER) {
+      throw new TypeError(`layer must be an integer between 1 and ${MAX_LAYER} for qaoa`);
+    }
+  } else if (value.layer !== undefined) {
+    throw new TypeError("layer only applies to method=qaoa");
+  }
+  return { model: value.model, method: value.method, layer: value.layer };
 }
 
 function bridgeEnvironment() {
@@ -327,11 +471,11 @@ function errorResult(error) {
 }
 
 const server = new Server(
-  { name: "openquantum-qpanda-qubo", version: "0.1.0" },
+  { name: "openquantum-qpanda-qubo", version: "0.2.0" },
   {
     capabilities: { tools: {} },
     instructions:
-      "Bounded local pyqpanda_alg QUBO solving. Never use the Origin Quantum cloud, tokens or quantum hardware, and never claim that engineering checks are independent scientific validation.",
+      "Bounded binary equality-model compilation and local pyqpanda_alg QUBO solving. Never use the Origin Quantum cloud, tokens or quantum hardware, and never turn enumeration observations into final scientific acceptance.",
   },
 );
 
@@ -351,6 +495,68 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       const optimum = result.classical.minimumValue;
       return textResult(
         `pyqpanda_alg ${result.packageVersion} solved a ${result.problem.size}-variable QUBO. Classical minimum ${optimum}. Scientific validation remains not_evaluated.`,
+        result,
+      );
+    }
+    if (request.params.name === "model_and_solve_qpanda_qubo") {
+      const modeledRequest = normalizeModelSolveRequest(request.params.arguments);
+      const modeling = compileBinaryLinearModel(modeledRequest.model);
+      const solveRequest = {
+        quadratic: modeling.qubo.quadratic,
+        linear: modeling.qubo.linear,
+        constant: modeling.qubo.constant,
+        method: modeledRequest.method,
+      };
+      if (modeledRequest.layer !== undefined) solveRequest.layer = modeledRequest.layer;
+      const solver = await runBridge({ action: "solve", request: solveRequest });
+      const solverMinimumError = Math.abs(
+        solver.classical.minimumValue - modeling.reference.compiledMinimum,
+      );
+      const validation = {
+        schemaVersion: "1.0",
+        observations: [
+          {
+            id: "compilation.exhaustive-replay",
+            status: modeling.reference.compilationMaxError <= 1e-9 ? "pass" : "fail",
+            metric: modeling.reference.compilationMaxError,
+            threshold: 1e-9,
+          },
+          {
+            id: "solver.classical-reference",
+            status: solverMinimumError <= 1e-9 ? "pass" : "fail",
+            metric: solverMinimumError,
+            threshold: 1e-9,
+          },
+          {
+            id: "constraints.feasible",
+            status: modeling.reference.feasibleOptimum === null ? "fail" : "pass",
+            feasibleAssignments: modeling.reference.feasibleAssignmentCount,
+          },
+          {
+            id: "penalty.sufficient",
+            status: modeling.reference.penaltySufficient ? "pass" : "fail",
+          },
+          {
+            id: "provenance.complete",
+            status: "not_checked",
+          },
+        ],
+      };
+      const result = {
+        schemaVersion: "1.0",
+        packageVersion: solver.packageVersion,
+        modeling,
+        solver,
+        validation,
+        scientificValidation: "observations_available",
+        limitations: [
+          "Only named binary variables and linear equality constraints are compiled; inequalities require explicit slack-variable modeling.",
+          "Penalty weights are caller-supplied and must be judged through the penalty.sufficient observation.",
+          "QAOA remains a local variational estimate; final scientific acceptance and provenance are not materialized here.",
+        ],
+      };
+      return textResult(
+        `Compiled ${modeling.model.variables.length} named binary variables into QUBO and solved it with pyqpanda_alg ${solver.packageVersion}. Scientific validation is observations_available; inspect feasibility and penalty observations.`,
         result,
       );
     }

@@ -9,16 +9,44 @@ reimplement any quantum or optimization logic.
 from __future__ import annotations
 
 import hashlib
+import importlib
 import json
 import math
 import platform
 import sys
+import types
+from importlib.metadata import distribution
 from typing import Any
 
 PACKAGE_VERSION = "2.0.0"
 MAX_VARS = 5
 MAX_LAYER = 6
 MAX_ABS_COEFF = 1e6
+
+
+def qubo_api() -> tuple[Any, Any, Any]:
+    """Load only the upstream QUBO extension, without unrelated algorithms.
+
+    ``pyqpanda_alg.__init__`` eagerly imports VQE, HHL and every other native
+    module. Some upstream macOS wheels therefore fail QUBO startup when an
+    unrelated module links an older Homebrew dylib. The QUBO extension itself
+    has no such dependency, so this bounded bridge creates package namespaces
+    and imports that reviewed extension directly.
+    """
+
+    package_root = distribution("pyqpanda_alg").locate_file("pyqpanda_alg")
+    if "pyqpanda_alg" not in sys.modules:
+        package = types.ModuleType("pyqpanda_alg")
+        package.__path__ = [str(package_root)]
+        package.__package__ = "pyqpanda_alg"
+        sys.modules["pyqpanda_alg"] = package
+    if "pyqpanda_alg.QUBO" not in sys.modules:
+        qubo_package = types.ModuleType("pyqpanda_alg.QUBO")
+        qubo_package.__path__ = [str(package_root / "QUBO")]
+        qubo_package.__package__ = "pyqpanda_alg.QUBO"
+        sys.modules["pyqpanda_alg.QUBO"] = qubo_package
+    module = importlib.import_module("pyqpanda_alg.QUBO.QUBO")
+    return module.QUBO_QAOA, module.QUBO_GAS_origin, module.QuadraticBinary
 
 
 def is_record(value: Any) -> bool:
@@ -94,7 +122,7 @@ def jsonable(value: Any) -> Any:
 
 
 def solve_payload(request: dict[str, Any]) -> dict[str, Any]:
-    from pyqpanda_alg.QUBO import QUBO_QAOA, QuadraticBinary
+    QUBO_QAOA, _, QuadraticBinary = qubo_api()
 
     problem = {
         "quadratic": request["quadratic"],
@@ -174,7 +202,7 @@ def package_version() -> str:
 
 
 def runtime_payload() -> dict[str, Any]:
-    from pyqpanda_alg.QUBO import QUBO_QAOA, QUBO_GAS_origin, QuadraticBinary  # noqa: F401
+    QUBO_QAOA, QUBO_GAS_origin, QuadraticBinary = qubo_api()  # noqa: F841
 
     return {
         "schemaVersion": "1.0",

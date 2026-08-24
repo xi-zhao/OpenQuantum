@@ -72,9 +72,9 @@ const MCP_CATALOG = Object.freeze({
     setup: null,
   }),
   qpanda_qubo: Object.freeze({
-    displayName: "QPanda QUBO 本地求解",
+    displayName: "QPanda QUBO 建模与求解",
     description:
-      "调用本源 pyqpanda_alg 在本地 CPU 模拟器求解小规模 QUBO：始终返回经典暴力遍历最优解，可选运行本地 QAOA；不连接本源量子云或真实硬件。",
+      "把命名二值目标和线性等式约束编译为 QUBO，以全量枚举复核编译和 penalty，再调用本源 pyqpanda_alg 本地求解；不连接本源量子云或真实硬件。",
     provider: "OriginQ / OpenQuantum",
     sourceUrl: "https://github.com/OriginQ/pyqpanda-algorithm",
     packageName: "pyqpanda_alg",

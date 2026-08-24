@@ -1,11 +1,11 @@
 interface:
-  display_name: "QPanda QUBO 本地求解"
-  short_description: "用 pyqpanda_alg 本地求解小规模 QUBO，并给出经典参考"
-  default_prompt: "使用 $qpanda-qubo 求解这个小规模 QUBO 问题，先给经典最优解，再按需运行 QAOA，并清楚区分工具结果与尚未完成的科学验收。"
+  display_name: "QPanda QUBO 建模与求解"
+  short_description: "把二值等式模型编译成 QUBO，并用 pyqpanda_alg 本地求解"
+  default_prompt: "使用 $qpanda-qubo 建模或求解这个小规模二值优化问题；业务目标优先用命名变量和等式约束编译，检查可行性、penalty 充分性与经典枚举参考，再按需运行 QAOA，并清楚区分 observations 与最终科学验收。"
 dependencies:
   tools:
     - type: "mcp"
       value: "qpanda_qubo"
-      description: "pyqpanda_alg 本地 QUBO 求解工具（经典遍历 + QAOA）"
+      description: "二值等式模型编译与 pyqpanda_alg 本地 QUBO 求解工具（经典遍历 + QAOA）"
 policy:
   allow_implicit_invocation: true
