@@ -1,0 +1,11 @@
+interface:
+  display_name: "量子电路等价性验证"
+  short_description: "用 MQT QCEC 检查两份 unitary OpenQASM 2 电路"
+  default_prompt: "使用 $quantum-circuit-verification 比较这两份有界 unitary OpenQASM 2 电路；原样报告严格等价、相位等价、不等价或不确定 criterion，并区分 QCEC observations 与尚未检查的来源链。"
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "qcec_local"
+      description: "固定版本 MQT QCEC 本地电路等价性验证"
+policy:
+  allow_implicit_invocation: true

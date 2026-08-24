@@ -61,6 +61,16 @@ const MCP_CATALOG = Object.freeze({
     packageVersion: "1.3.1",
     setup: null,
   }),
+  qcec_local: Object.freeze({
+    displayName: "量子电路等价性验证",
+    description:
+      "使用固定 MQT QCEC 在本地判断两份有界 unitary OpenQASM 2 电路的严格等价、相位等价、不等价或不确定状态；不连接云端或真实硬件。",
+    provider: "MQT / OpenQuantum",
+    sourceUrl: "https://github.com/munich-quantum-toolkit/qcec",
+    packageName: "mqt.qcec",
+    packageVersion: "3.7.0",
+    setup: null,
+  }),
   tyxonq_local: Object.freeze({
     displayName: "TyxonQ Local",
     description:

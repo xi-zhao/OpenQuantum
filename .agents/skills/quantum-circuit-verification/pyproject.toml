@@ -1,0 +1,8 @@
+[project]
+name = "openquantum-quantum-circuit-verification"
+version = "0.1.0"
+requires-python = ">=3.12,<4"
+dependencies = ["mqt.qcec==3.7.0"]
+
+[tool.uv]
+package = false
