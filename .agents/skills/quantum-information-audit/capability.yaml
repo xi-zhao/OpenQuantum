@@ -1,0 +1,128 @@
+schemaVersion: "1.1"
+id: quantum-information-audit
+version: 0.1.0
+displayName: Quantum Information Audit
+description: >-
+  Produces bounded local density-matrix and partial-transpose facts with pinned toqito,
+  then independently replays the key numerical invariants in an OpenQuantum Validator.
+
+maturity:
+  status: draft
+  evidence: []
+
+skill:
+  name: quantum-information-audit
+  entrypoint: SKILL.md
+
+scope:
+  supportedClaims:
+    - Physical density-matrix criteria for a supplied bounded multipartite matrix
+    - Purity, selected partial-transpose spectrum and negativity replayed independently
+  outOfScope:
+    - State tomography, quantum channels, experimental uncertainty, cloud execution and physical hardware
+    - Universal entanglement classification or claims beyond the selected bipartition
+  examples:
+    - title: Audit a supplied Bell-state density matrix
+      prompt: Compute the density-matrix facts and independently replay the partial-transpose negativity.
+
+input:
+  id: density-matrix-audit-request
+  schema: inputs/request.schema.json
+  maxBytes: 524288
+  mediaTypes:
+    - application/json
+
+artifacts:
+  - id: state-analysis
+    schema: artifacts/state-analysis.schema.json
+    required: true
+    mediaType: application/json
+  - id: validation-bundle
+    schema: artifacts/validation-bundle.schema.json
+    required: true
+    mediaType: application/json
+
+validators:
+  - id: density-matrix-validator
+    version: 1.0.0
+    command:
+      executable: node
+      script: validators/validate-state-analysis.mjs
+      args: []
+      shell: false
+
+acceptanceProfiles:
+  - id: density-matrix-audit
+    version: 1.0.0
+    validator: density-matrix-validator
+    definition:
+      path: acceptance-profiles/density-matrix-audit-v1.json
+      sha256: 61d903dd4ada16c9c409e8b5e90020ad033209ff79e4d9375a42d4dd1992204a
+
+reproductionProfiles:
+  - id: local-toqito-js-replay
+    version: 1.0.0
+    validator: density-matrix-validator
+    definition:
+      path: reproduction-profiles/local-toqito-js-replay-v1.json
+      sha256: 4ba3008dd44fda7453b69eaaae8955ef69ee7185260f4a359e07836eee38f8ee
+
+modelRequirements:
+  textGeneration: true
+  toolCalling: true
+  structuredOutput: true
+  minContextTokens: 8192
+  multimodal: false
+
+permissions:
+  network:
+    mode: allowlist
+    destinations:
+      - pypi.org
+      - files.pythonhosted.org
+  filesystem:
+    read:
+      - package
+      - workspace/input
+      - workspace/results
+    write:
+      - .openquantum/python-envs/quantum-information-audit
+      - workspace/results
+  subprocess:
+    allowed: true
+    commands:
+      - node
+      - uv
+      - python
+  cloudCompute:
+    allowed: false
+    providers: []
+  limits:
+    wallTimeSeconds: 180
+    memoryMiB: 1024
+    maxArtifacts: 2
+    maxCostUsd: 0
+  data:
+    classification: public
+    retentionDays: 0
+    externalTransfer: forbidden
+    licenses:
+      - MIT
+
+evals:
+  runner:
+    executable: node
+    script: evals/run-evals.mjs
+    args: []
+    shell: false
+  suite:
+    id: quantum-information-audit-reference
+    version: 1.0.0
+    path: evals/suite.json
+    sha256: 425347ee18b38389764fd25f708d8ce6ce342e545c02b6bdea2a5a29d590b09e
+
+compatibility:
+  contract: "1.1"
+  harness: ">=0.1.0-rc.6 <0.2.0"
+
+dependencies: []

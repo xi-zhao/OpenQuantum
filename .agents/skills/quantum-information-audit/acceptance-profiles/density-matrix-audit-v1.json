@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "1.0",
+  "id": "density-matrix-audit",
+  "version": "1.0.0",
+  "scope": {
+    "supportedClaims": [
+      "Physical density-matrix criteria for a supplied bounded multipartite matrix",
+      "Purity, selected partial-transpose spectrum and negativity replayed independently"
+    ],
+    "outOfScope": [
+      "State tomography, quantum channels, experimental uncertainty, cloud execution and physical hardware",
+      "Universal entanglement classification or claims beyond the selected bipartition"
+    ]
+  },
+  "checks": [
+    { "id": "request.scope", "category": "scope", "required": true, "criterion": "The request matches the bounded multipartite density-matrix scope." },
+    { "id": "state.digest", "category": "reproducibility", "required": true, "criterion": "The canonical request digest is independently replayed." },
+    { "id": "state.hermitian", "category": "scientific", "required": true, "criterion": "The maximum Hermiticity residual is within the fixed structural tolerance.", "threshold": 1e-10, "unit": "dimensionless" },
+    { "id": "state.trace-one", "category": "scientific", "required": true, "criterion": "The complex trace differs from one by no more than the structural tolerance.", "threshold": 1e-10, "unit": "dimensionless" },
+    { "id": "state.positive-semidefinite", "category": "scientific", "required": true, "criterion": "The negative part of the Hermitian-part minimum eigenvalue is within tolerance.", "threshold": 1e-10, "unit": "dimensionless" },
+    { "id": "state.toqito-density", "category": "scientific", "required": true, "criterion": "toqito is_density agrees with independently replayed criteria." },
+    { "id": "state.purity-replayed", "category": "scientific", "required": true, "criterion": "Independent trace and purity replay agrees with tool facts.", "threshold": 1e-9, "unit": "dimensionless" },
+    { "id": "partial-transpose.replayed", "category": "scientific", "required": true, "criterion": "Independent partial-transpose trace and spectrum agree with tool facts.", "threshold": 1e-9, "unit": "dimensionless" },
+    { "id": "negativity.replayed", "category": "scientific", "required": true, "criterion": "Negativity reconstructed from the replayed spectrum agrees with tool facts.", "threshold": 1e-9, "unit": "dimensionless" },
+    { "id": "provenance.complete", "category": "reproducibility", "required": true, "criterion": "Result Package, Session Event Log range, tool, environment and artifact digests are present and consistent." }
+  ]
+}

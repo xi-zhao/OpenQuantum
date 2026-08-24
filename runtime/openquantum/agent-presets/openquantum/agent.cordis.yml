@@ -94,6 +94,27 @@
       maxDelayMs: 30000
       maxAttempts: 10
 
+# Pinned toqito density-matrix facts plus an independent JavaScript Validator.
+# The MCP process starts cheaply and uv materializes the Python environment only
+# on first use. It exposes no cloud credentials, remote service or hardware job.
+- id: mcp-quantum-information-audit
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: toqito_audit
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/quantum-information-audit/mcp/server.mjs'
+    env: {}
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 180000
+    failOnStartupError: true
+    reconnect:
+      enabled: true
+      initialDelayMs: 1000
+      maxDelayMs: 30000
+      maxAttempts: 10
+
 # TyxonQ is a Python SDK rather than a stable upstream MCP server. This local
 # bridge exposes only bounded circuit and noise simulation. It is disabled by
 # default because the pinned scientific Python environment is large and is

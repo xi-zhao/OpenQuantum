@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "1.0",
+  "id": "quantum-information-audit-reference",
+  "version": "1.0.0",
+  "metric": {
+    "id": "case-pass-rate",
+    "unit": "percent",
+    "direction": "higher_is_better",
+    "minimum": 0,
+    "maximum": 100
+  },
+  "cases": [
+    { "id": "bell-state-replayed", "weight": 2, "hardGate": true },
+    { "id": "maximally-mixed-replayed", "weight": 1, "hardGate": true },
+    { "id": "non-density-detected", "weight": 1, "hardGate": true },
+    { "id": "tampered-analysis-detected", "weight": 1, "hardGate": true },
+    { "id": "out-of-scope-rejected", "weight": 1, "hardGate": true }
+  ]
+}

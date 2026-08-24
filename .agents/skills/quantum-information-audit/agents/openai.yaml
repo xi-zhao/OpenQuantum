@@ -1,0 +1,4 @@
+interface:
+  display_name: "量子信息审计"
+  short_description: "审计密度矩阵、部分转置与 negativity"
+  default_prompt: "使用 $quantum-information-audit 的 audit_density_matrix 对给定密度矩阵生成 toqito 数值事实和 OpenQuantum 独立复核 observations；明确区分计算完成、科学观察与尚未检查的来源链，不宣称最终科学验收通过。"

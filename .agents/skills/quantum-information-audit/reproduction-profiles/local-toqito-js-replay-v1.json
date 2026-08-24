@@ -1,0 +1,17 @@
+{
+  "schemaVersion": "1.0",
+  "id": "local-toqito-js-replay",
+  "version": "1.0.0",
+  "execution": {
+    "factProducer": "toqito==1.3.1",
+    "validator": "independent-js-state-math",
+    "cloudExecution": false,
+    "maximumMatrixDimension": 16
+  },
+  "requiredEvidence": [
+    "canonical input digest",
+    "toqito state-analysis artifact",
+    "independent validation observations",
+    "Session Event Log range and environment digests for final acceptance"
+  ]
+}

@@ -393,6 +393,11 @@ test("repository preset exposes reviewed quantum MCPs with safe defaults", async
     "FIELDQUANTUM_API_TOKEN",
     "LOGICALQUBIT_API_TOKEN",
   ]);
+  assert.equal(byName.get("toqito_audit")?.enabled, true);
+  assert.equal(byName.get("toqito_audit")?.displayName, "量子信息审计");
+  assert.equal(byName.get("toqito_audit")?.packageVersion, "1.3.1");
+  assert.equal(byName.get("toqito_audit")?.provider, "toqito / OpenQuantum");
+  assert.deepEqual(byName.get("toqito_audit")?.credentialRefs, []);
   assert.equal(byName.get("tyxonq_local")?.enabled, false);
   assert.equal(byName.get("tyxonq_local")?.displayName, "TyxonQ Local");
   assert.equal(byName.get("tyxonq_local")?.packageVersion, "1.2.0");
@@ -437,6 +442,7 @@ test("repository preset exposes reviewed quantum MCPs with safe defaults", async
   assert.match(raw, /qiskit-mcp-server==0\.3\.1/);
   assert.match(raw, /qiskit-docs-mcp-server==0\.3\.0/);
   assert.match(raw, /fieldqkit-hardware\/mcp\/server\.mjs/);
+  assert.match(raw, /quantum-information-audit\/mcp\/server\.mjs/);
   assert.match(raw, /tyxonq-workbench\/mcp\/server\.mjs/);
 });
 

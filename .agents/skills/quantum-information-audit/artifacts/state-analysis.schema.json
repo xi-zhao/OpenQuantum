@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openquantum.local/capabilities/quantum-information-audit/state-analysis.schema.json",
+  "title": "toqito state analysis facts",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "packageVersion", "requestDigest", "state", "partialTranspose"],
+  "properties": {
+    "schemaVersion": { "const": "1.0" },
+    "packageVersion": { "type": "string" },
+    "requestDigest": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dimension", "trace", "hermiticityResidual", "hermitianPartMinimumEigenvalue", "purity", "numericalRank", "toqitoDensity"],
+      "properties": {
+        "dimension": { "type": "integer", "minimum": 4, "maximum": 16 },
+        "trace": { "$ref": "#/$defs/complex" },
+        "hermiticityResidual": { "type": "number", "minimum": 0 },
+        "hermitianPartMinimumEigenvalue": { "type": "number" },
+        "purity": { "$ref": "#/$defs/complex" },
+        "numericalRank": { "type": "integer", "minimum": 0, "maximum": 16 },
+        "toqitoDensity": { "type": "boolean" }
+      }
+    },
+    "partialTranspose": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["subsystems", "trace", "hermiticityResidual", "eigenvalues", "minimumEigenvalue", "negativity"],
+      "properties": {
+        "subsystems": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "integer", "minimum": 0 } },
+        "trace": { "$ref": "#/$defs/complex" },
+        "hermiticityResidual": { "type": "number", "minimum": 0 },
+        "eigenvalues": { "type": "array", "minItems": 4, "maxItems": 16, "items": { "type": "number" } },
+        "minimumEigenvalue": { "type": "number" },
+        "negativity": { "type": "number", "minimum": 0 }
+      }
+    }
+  },
+  "$defs": {
+    "complex": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["real", "imag"],
+      "properties": { "real": { "type": "number" }, "imag": { "type": "number" } }
+    }
+  }
+}

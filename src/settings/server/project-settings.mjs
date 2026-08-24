@@ -51,6 +51,16 @@ const MCP_CATALOG = Object.freeze({
     packageVersion: "0.1.2@3ef2493",
     setup: null,
   }),
+  toqito_audit: Object.freeze({
+    displayName: "量子信息审计",
+    description:
+      "使用固定 toqito 本地计算密度矩阵、部分转置与 negativity 事实，并由 OpenQuantum 独立 Validator 重算关键不变量；不连接云端或真实硬件。",
+    provider: "toqito / OpenQuantum",
+    sourceUrl: "https://github.com/vprusso/toqito",
+    packageName: "toqito",
+    packageVersion: "1.3.1",
+    setup: null,
+  }),
   tyxonq_local: Object.freeze({
     displayName: "TyxonQ Local",
     description:

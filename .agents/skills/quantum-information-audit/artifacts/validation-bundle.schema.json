@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openquantum.local/capabilities/quantum-information-audit/validation-bundle.schema.json",
+  "title": "Independent density-matrix validation observations",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "profile", "scopeMatch", "observations"],
+  "properties": {
+    "schemaVersion": { "const": "1.0" },
+    "profile": { "type": "object" },
+    "scopeMatch": { "type": "object" },
+    "observations": {
+      "type": "array",
+      "minItems": 10,
+      "items": {
+        "type": "object",
+        "required": ["id", "status", "detail"],
+        "properties": {
+          "id": { "type": "string" },
+          "status": { "enum": ["pass", "fail", "not_checked"] },
+          "metric": { "type": "number" },
+          "threshold": { "type": "number" },
+          "detail": { "type": "string" }
+        }
+      }
+    }
+  }
+}
