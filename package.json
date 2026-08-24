@@ -39,6 +39,7 @@
     "demo:quantum-ground-state": "node scripts/run-quantum-ground-state-demo.mjs",
     "test:harness-web-branding": "node --test tests/harness-web-branding.test.mjs",
     "test:contracts": "node --test .agents/skill-contracts/test/*.test.mjs",
+    "capability:conformance": "node scripts/audit-capability-packages.mjs",
     "capability:quantum-ground-state:test": "node --test .agents/skills/quantum-ground-state/test/*.test.mjs",
     "capability:fieldqkit-hardware:test": "node --test .agents/skills/fieldqkit-hardware/test/*.test.mjs",
     "capability:tyxonq-workbench:test": "node --test .agents/skills/tyxonq-workbench/test/*.test.mjs",
@@ -51,7 +52,7 @@
     "capability:diagnostics:test": "node .agents/skills/platform-diagnostics/evals/run-evals.mjs",
     "start": "node scripts/run-harness.mjs --port 3000 --trusted-host localhost:3000",
     "lint": "eslint .",
-    "check": "npm run lint && npm run test:p1 && npm run harness:config"
+    "check": "npm run lint && npm run capability:conformance && npm run test:p1 && npm run harness:config"
   },
   "dependencies": {
     "@deepseek-ai/dsh": "0.1.0-rc.6",

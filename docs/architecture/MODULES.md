@@ -24,6 +24,7 @@ OpenQuantum 不创建第二套 Session、Agent loop、Tool registry 或事件日
 | Harness Session | Turn、Step、Tool 事件、审批、取消、恢复 | DeepSeek Harness | Session event log 是执行事实唯一来源 |
 | Agent Composition | Skill、MCP、权限、模型 route 的组合 | `runtime/openquantum/agent-presets/` | 只组合，不实现领域算法 |
 | Capability Package | 作用域、工作流、执行器、schema、Validator、eval | `.agents/skills/<capability-id>/` | 共置是源码 locality，不是自动运行时绑定 |
+| Capability Package Policy | 发行版能力清单、L0–L3、执行与测试证据引用 | `.agents/capability-packages.yml` | 只做开发期 conformance，不参与 Harness 运行时绑定 |
 | Scientific Result Package | 输入、Artifact、合同版本和摘要 | `.agents/skill-contracts/` | 必须引用真实物化字节，不能只信模型或 Tool 自报 |
 | Acceptance Report | Profile、逐项 observation、最终科学状态 | `.agents/skill-contracts/` + capability profile/Validator | 执行成功不等于科学验收通过 |
 | Settings Projection | 当前 Skill/MCP、启停、凭据引用、revision | `src/settings/server/project-settings.mjs` | UI 只提交意图；服务端校验并原子写入 |
@@ -41,6 +42,7 @@ OpenQuantum 不创建第二套 Session、Agent loop、Tool registry 或事件日
 | Project Settings Interface | `readProjectSettings` 与受控 update/register/remove 命令 | 校验意图、revision CAS、路径约束、原子文件写入 | MCP 产品目录、真实凭据、执行 MCP | project-settings 与 web-capabilities 测试 |
 | Integration Catalog | `mcpCatalogEntry`、`mcpCredentialCatalogEntry` | MCP/凭据的产品元数据与固定来源 | 配置事务、启停状态、密钥值 | 通过 Settings 投影和 setup 测试 |
 | Capability Package | 原生 `SKILL.md`；独立 MCP Tool；可选 Validator/Profile | 一个有界领域问题的工作流、确定性执行和科学规则 | Harness 生命周期、全局设置、Provider 鉴权 | package 内 unit/MCP/eval 测试 |
+| Capability Conformance | `auditCapabilityPackages({ projectRoot })` | 对照 Git 跟踪的 Skill 检查 policy、MCP 注册、科学合同、依赖锁和 L3 物化证据 | 执行量子算法、替代科学 Validator、自动注册 MCP | `npm run capability:conformance` 与失败关闭测试 |
 | Scientific Contracts | `.agents/skill-contracts/index.mjs` | Result、Acceptance、Score、Reproduction 的共享 schema 与构建规则 | 具体量子算法、Session 持久化、UI | contract/profile/report 测试 |
 | QGS Materialization Adapter | `tools/post-execute` 内的 QGS 结果投影 | 把 QGS 结构化结果写入 Harness workspace，重读并生成 Acceptance/Commit | 通用 Capability Runtime、任意 Tool 物化 | scientific-result materialization/projection 测试 |
 | Model Routes | Harness `llm.models` / Provider adapter | 模型目录、协议适配、超时和凭据引用 | 量子数值计算、科学结论 | model probe、真实 Tool Calling E2E |
@@ -118,6 +120,10 @@ Harness Settings UI
 
 这个等级只用于规划开发和 README 用词，不进入 Harness Session 状态机，也不能由模型自行提升。
 
+发行版能力的等级和证据引用只在 `.agents/capability-packages.yml` 声明。只读检查通过 Git 跟踪的
+`SKILL.md` 确认清单覆盖，通过真实 Cordis preset 确认 MCP 注册；L2/L3 继续调用共享合同的
+`loadCapability`，不复制科学 schema。用户本地创建或 Git 忽略的外部 Skill 不会被误当成发行版能力。
+
 当前参考：
 
 | 能力 | 当前等级 | 说明 |
@@ -141,6 +147,9 @@ Harness Settings UI
 | 新增设置字段 | Project Settings Interface | revision/校验测试和 Web Plugin 调用；不在 UI 复制规则 |
 | 升级 Harness | lockfile + composition adapter | config、Host、Skill、MCP、UI、Desktop、真实模型分层验证 |
 | 增加品牌或只读卡片 | Native Web Extension | 不引入业务状态或直接执行路径 |
+
+新增或提升发行版 Capability 时还必须更新 `.agents/capability-packages.yml`；声明的等级高于实际证据、
+仓库新增已跟踪 Skill 却未登记、MCP 未注册、Python 未锁依赖或 v1.1 digest 漂移都会让检查失败。
 
 ## 7. 何时才新增抽象
 

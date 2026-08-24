@@ -50,6 +50,7 @@ locality，不是运行时包含关系。
 | --- | --- | --- |
 | Web / Desktop Host 的 Provider route、品牌和设置插件 | `runtime/openquantum/cordis.patch.yml` | 审阅 patch 后运行 `npm run harness:config` 与 `npm run desktop:check` |
 | OpenQuantum Agent 的 Tool、MCP、Skill 和权限组合 | `runtime/openquantum/agent-presets/openquantum/agent.cordis.yml` | 设置中心或受审查的配置修改；修改后重启 Harness |
+| 发行版 Capability 的 L0–L3 与证据引用 | `.agents/capability-packages.yml` | 新增/提升能力时更新，并运行 `npm run capability:conformance` |
 | MCP/Skill 设置写入规则 | `src/settings/server/project-settings.mjs` | 通过其导出的设置 Interface，不在 UI 重写规则 |
 | MCP 和凭据的展示元数据 | `src/settings/server/project-settings-catalog.mjs` | 新增/升级集成时更新；不在设置事务或 UI 中复制 |
 | 固定社区 MCP 的来源与提交 | `src/settings/server/quantum-hardware-mcp.mjs` | 升级时同时审阅源码、许可证、Tool schema 和副作用 |

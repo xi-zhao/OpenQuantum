@@ -1,0 +1,110 @@
+schemaVersion: "1.0"
+
+packages:
+  - id: quantum-sdk-advisor
+    level: L0
+
+  - id: qiskit-circuit-workbench
+    level: L1
+    execution:
+      servers:
+        - name: qiskit
+          source: external
+        - name: qiskit_docs
+          source: external
+      runners: []
+      checks:
+        - tests/project-settings.test.mjs
+        - tests/harness-native-quantum.test.mjs
+
+  - id: fieldqkit-hardware
+    level: L1
+    execution:
+      servers:
+        - name: fieldqkit
+          source: package
+      runners: []
+      checks:
+        - .agents/skills/fieldqkit-hardware/test/mcp.test.mjs
+
+  - id: qpanda-qubo
+    level: L1
+    execution:
+      servers:
+        - name: qpanda_qubo
+          source: package
+      runners: []
+      checks:
+        - .agents/skills/qpanda-qubo/test/mcp.test.mjs
+
+  - id: quantum-circuit-verification
+    level: L1
+    execution:
+      servers:
+        - name: qcec_local
+          source: package
+      runners: []
+      checks:
+        - .agents/skills/quantum-circuit-verification/test/mcp.test.mjs
+
+  - id: qec-memory-experiment
+    level: L1
+    execution:
+      servers:
+        - name: qec_local
+          source: package
+      runners: []
+      checks:
+        - .agents/skills/qec-memory-experiment/test/mcp.test.mjs
+
+  - id: tyxonq-workbench
+    level: L1
+    execution:
+      servers:
+        - name: tyxonq_local
+          source: package
+      runners: []
+      checks:
+        - .agents/skills/tyxonq-workbench/test/mcp.test.mjs
+
+  - id: platform-diagnostics
+    level: L2
+    execution:
+      servers: []
+      runners:
+        - .agents/skills/platform-diagnostics/evals/run-evals.mjs
+      checks:
+        - .agents/skills/platform-diagnostics/evals/run-evals.mjs
+    audit:
+      manifest: capability.yaml
+
+  - id: quantum-information-audit
+    level: L2
+    execution:
+      servers:
+        - name: toqito_audit
+          source: package
+      runners: []
+      checks:
+        - .agents/skills/quantum-information-audit/test/mcp.test.mjs
+        - .agents/skills/quantum-information-audit/evals/run-evals.mjs
+    audit:
+      manifest: capability.yaml
+
+  - id: quantum-ground-state
+    level: L3
+    execution:
+      servers:
+        - name: openquantum_quantum
+          source: package
+      runners: []
+      checks:
+        - .agents/skills/quantum-ground-state/test/mcp.test.mjs
+        - .agents/skills/quantum-ground-state/evals/run-evals.mjs
+    audit:
+      manifest: capability.yaml
+    materialization:
+      adapter: runtime/openquantum/agent-presets/openquantum/scientific-result-projection.mjs
+      checks:
+        - tests/scientific-result-materialization.test.mjs
+        - tests/scientific-result-projection.test.mjs

@@ -35,7 +35,7 @@ OpenQuantum 不建设私有插件市场、包管理器、安装锁、可安装�
 | Skill、MCP、Validator 独立组合 | 通过 | preset 独立注册 MCP；各 capability 包有独立 Tool/eval 测试 |
 | 执行事实与科学验收分离 | 通过 | Harness event log 与 Result/Acceptance/Score/Reproduction 合同正交 |
 | 设置模块职责 | 已改善 | 静态 Integration Catalog 已从 CAS、路径安全和原子写入状态机中拆出 |
-| Capability Package 一致性 | 需持续治理 | 已定义 L0–L3 开发成熟度和标准包结构；下一步增加自动 conformance 检查 |
+| Capability Package 一致性 | 通过（持续执行） | L0–L3 policy 已绑定 Git 跟踪的 Skill、MCP 注册、科学合同、依赖锁和物化证据 |
 | 科研结果物化 | 有意保持专用 | 当前只有 QGS 达到 L3；第二个 L3 能力出现后再抽取 adapter registry |
 | 在线模型可用性 | 本环境未检查 | 无 Provider 凭据，文本生成和 Tool Calling 严格记为 `not_checked` |
 
@@ -301,9 +301,9 @@ workspace、网络、进程和凭证隔离；本地开发配置不能被误称�
 
 ## 12. 后续开发顺序
 
-1. **能力包 conformance**：增加只读检查，验证 `SKILL.md`、preset MCP 注册、`capability.yaml`、依赖锁和
-   L0–L3 声明与实际文件一致，避免 README 和运行配置漂移。
-2. **第二条 L3 纵切**：优先让 `quantum-information-audit` 进入 Harness 物化与回放，再从它和 QGS 的共同
+1. **能力包 conformance（已完成）**：`npm run capability:conformance` 只读验证 Git 跟踪的 `SKILL.md`、
+   preset MCP 注册、`capability.yaml`、依赖锁、测试证据和 L3 物化 Adapter；`npm run check` 强制执行。
+2. **第二条 L3 纵切（下一步）**：优先让 `quantum-information-audit` 进入 Harness 物化与回放，再从它和 QGS 的共同
    需求中提取 capability adapter registry；这时才解决 `scientific-result-*` 的通用命名债务。
 3. **Harness 成对升级**：审阅 DeepSeek Harness 新版本 release/API 变化，保持 Web、Desktop、preset 和
    Tool seam 同一版本族；通过 config、Host、Skill、MCP、UI 和 Session 恢复测试后再升级锁文件。
@@ -312,4 +312,4 @@ workspace、网络、进程和凭证隔离；本地开发配置不能被误称�
 5. **硬件写操作治理**：FieldQKit 继续只读发现；任何真实 QPU 提交能力必须默认关闭、展示成本与副作用，
    并经过 Harness approval、凭据隔离和单独的集成测试。
 
-这五项按“先约束结构，再增加第二个可泛化实例，最后升级基础设施和扩大副作用面”的顺序推进。
+后续按“先增加第二个可泛化实例，再升级基础设施和扩大副作用面”的顺序推进。

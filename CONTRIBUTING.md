@@ -72,6 +72,10 @@ Session/workspace，不进入默认离线 CI，也不能用 Mock 结果替代。
 
 这些规则应由 Tool、MCP、Validator、schema 或 Harness 权限配置强制执行。
 
+仓库发行版自带的 Skill 还必须登记在 `.agents/capability-packages.yml`。L0–L3 是开发证据等级，不是
+Harness 运行状态：L1 绑定已注册执行器和检查，L2 额外通过共享 `loadCapability` 验证科学合同，L3 还必须
+声明真实 Harness 物化 Adapter 和回放测试。用户本地 Skill 与 Git 忽略的上游挂载不进入这个发行版清单。
+
 ## 增加 MCP
 
 优先使用 Harness 原生 MCP client 支持的 stdio 或 Streamable HTTP 协议：
@@ -186,6 +190,7 @@ Skill 实现者不能单独放宽自己的科学门槛。涉及阈值、作用�
 
 ```bash
 npm run lint
+npm run capability:conformance
 npm run demo:quantum-ground-state
 npm run test:p1
 npm run harness:config
