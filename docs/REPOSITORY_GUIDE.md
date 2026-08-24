@@ -3,6 +3,9 @@
 OpenQuantum 是 DeepSeek Harness 的量子科研发行版。仓库只增加量子内容、组合配置和必要的产品扩展，
 不维护第二套 Agent Runtime。
 
+目录只回答“代码在哪里”；核心对象、对外 Interface 和允许的依赖方向以
+[模块地图](architecture/MODULES.md)为准。
+
 ## 一眼看懂运行关系
 
 ```text
@@ -32,7 +35,7 @@ locality，不是运行时包含关系。
 | `.agents/skills/` | Harness Skill 入口和与科研纵切共置的领域资源 | 不自动注册 MCP，不自动运行 Validator |
 | `.agents/skill-contracts/` | 科学结果、验收、评分和复现的共享合同 | 不是插件市场、安装系统或 Agent Runtime |
 | `runtime/openquantum/` | Harness patch、OpenQuantum preset、MCP 注册和原生 Web 扩展 | 不复制 Session、Tool registry 或模型调用 |
-| `src/settings/server/` | 设置中心对项目 Skill、MCP 和凭据引用的受控读写 | 不保存真实凭据，不执行 MCP |
+| `src/settings/server/` | 设置中心的受控读写 Interface，以及与状态机分离的 Integration Catalog | 不保存真实凭据，不执行 MCP |
 | `scripts/` | 启动、诊断、安装固定社区依赖和显式 E2E | 不是生产 Runtime |
 | `tests/` | 平台级集成、配置和 UI 扩展测试 | 不代替真实 provider / 硬件验证 |
 | `docs/` | 使用、架构、路线和生态说明 | 路线图不等于当前功能事实 |
@@ -48,6 +51,7 @@ locality，不是运行时包含关系。
 | Web / Desktop Host 的 Provider route、品牌和设置插件 | `runtime/openquantum/cordis.patch.yml` | 审阅 patch 后运行 `npm run harness:config` 与 `npm run desktop:check` |
 | OpenQuantum Agent 的 Tool、MCP、Skill 和权限组合 | `runtime/openquantum/agent-presets/openquantum/agent.cordis.yml` | 设置中心或受审查的配置修改；修改后重启 Harness |
 | MCP/Skill 设置写入规则 | `src/settings/server/project-settings.mjs` | 通过其导出的设置 Interface，不在 UI 重写规则 |
+| MCP 和凭据的展示元数据 | `src/settings/server/project-settings-catalog.mjs` | 新增/升级集成时更新；不在设置事务或 UI 中复制 |
 | 固定社区 MCP 的来源与提交 | `src/settings/server/quantum-hardware-mcp.mjs` | 升级时同时审阅源码、许可证、Tool schema 和副作用 |
 | Skill 指令 | `.agents/skills/<name>/SKILL.md` | 使用 Harness 原生 Skill 格式 |
 | 科学阈值和验收规则 | 对应 profile、Validator 和 `.agents/skill-contracts/` | 修改规则必须增加测试和版本化证据 |

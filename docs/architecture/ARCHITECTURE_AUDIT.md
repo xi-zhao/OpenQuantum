@@ -1,7 +1,7 @@
 # OpenQuantum 架构审计与 Harness-first 目标设计
 
 - 状态：当前架构基线
-- 日期：2026-08-14
+- 日期：2026-08-24
 - 上游：DeepSeek Harness `0.1.0-rc.6`
 
 ## 1. 结论
@@ -19,8 +19,29 @@ OpenQuantum 是 DeepSeek Harness 的开源量子科研发行版，不是新的 A
 
 > Harness 已经提供的通用机制不重做；量子差异优先实现为原生 Skill、MCP 或经过审查的 `dsh-plugin`。
 
-OpenQuantum 不建设私有插件市场、包管理器、安装锁、Catalog、第二套权限系统或平行事件日志。
+OpenQuantum 不建设私有插件市场、包管理器、安装锁、可安装扩展 Catalog、第二套权限系统或平行事件日志。
 量子公司通过 Fork、普通 Git/npm/pip 依赖和 Harness 原生扩展点维护自己的发行版。
+
+### 1.1 本轮审计结论
+
+本轮按业务对象、依赖方向、配置权威、真实 Harness 组合和测试 surface 审计，而不是按目录数量判断架构。
+结论是：**四层边界成立，可以继续在现有架构上开发；当前主要问题是能力包成熟度和少数模块命名尚未
+被正式管理，而不是缺少新的 Runtime。**
+
+| 审计项 | 结论 | 证据或处理 |
+| --- | --- | --- |
+| Harness 是唯一通用 Runtime | 通过 | 真实临时 Host 完成 `host.describe`、双 Session、Skill/MCP/模型目录检查 |
+| UI 不直连 Model/MCP/Skill 文件系统 | 通过 | 原生 Web UI + Client Plugin；设置写入只进入服务端 Interface |
+| Skill、MCP、Validator 独立组合 | 通过 | preset 独立注册 MCP；各 capability 包有独立 Tool/eval 测试 |
+| 执行事实与科学验收分离 | 通过 | Harness event log 与 Result/Acceptance/Score/Reproduction 合同正交 |
+| 设置模块职责 | 已改善 | 静态 Integration Catalog 已从 CAS、路径安全和原子写入状态机中拆出 |
+| Capability Package 一致性 | 需持续治理 | 已定义 L0–L3 开发成熟度和标准包结构；下一步增加自动 conformance 检查 |
+| 科研结果物化 | 有意保持专用 | 当前只有 QGS 达到 L3；第二个 L3 能力出现后再抽取 adapter registry |
+| 在线模型可用性 | 本环境未检查 | 无 Provider 凭据，文本生成和 Tool Calling 严格记为 `not_checked` |
+
+长期模块边界、依赖方向和新增能力落点见 [模块地图](MODULES.md)。本次平台连接证据见
+[`evidence/platform-diagnostics-2026-08-24.json`](evidence/platform-diagnostics-2026-08-24.json)；其
+`degraded` 表示当前无凭据环境没有运行在线模型检查，不表示静态架构失败。
 
 ## 2. 当前事实
 
@@ -35,7 +56,9 @@ OpenQuantum 不建设私有插件市场、包管理器、安装锁、Catalog、�
 - 项目 Skill 根 `.agents/skills`；
 - `platform-diagnostics` 诊断 Skill；
 - `quantum-ground-state` 量子基态 Skill；
-- 通过 Harness 原生 MCP client 注册的本地量子求解与验证工具。
+- `quantum-information-audit` 独立量子信息 Validator/eval；
+- Qiskit、FieldQKit、QPanda QUBO、MQT QCEC、Stim/PyMatching 与 TyxonQ 等有界 Skill/MCP 能力；
+- 通过 Harness 原生 MCP client 独立注册的本地量子求解、验证和后端发现工具；
 - 默认关闭、固定源码 commit 且由设置中心做凭据/安装门控的社区量子硬件 MCP。
 
 DeepSeek Harness 仍处于 Developer Preview，因此上游接口可能发生破坏性变化。OpenQuantum 通过固定版本、
@@ -248,9 +271,9 @@ workspace、网络、进程和凭证隔离；本地开发配置不能被误称�
 - 科学差异和企业后端留在对应 Fork/Skill/MCP；
 - 没有多个真实贡献者提出跨 Fork 分发需求前，不设计私有市场或安装系统。
 
-## 10. MVP 架构验收
+## 10. 当前架构验收基线
 
-MVP 完成需要证明：
+每次架构级变更需要持续证明：
 
 - Harness 原生 Skill registry 能发现并加载 `quantum-ground-state`；
 - Harness 原生 MCP client 能列出并调用求解与验证 Tool；
@@ -274,4 +297,19 @@ MVP 完成需要证明：
 | 社区硬件 MCP 提交真实云任务 | 默认关闭、固定源码 SHA、显式安装与启用、Harness 凭据引用、最小权限云账户 |
 | 凭证或科研数据泄露 | 服务端环境引用、同源白名单、Artifact 秘密扫描 |
 | Client Plugin 演化成第二套 Runtime | 冻结业务范围，只做展示与配置扩展，通用能力回到 Harness 上游 |
-| MVP 被场景扩张拖散 | QGS E2E 完成前不增加第二条量子纵切 |
+| 能力数量增长导致包结构和声明失真 | 使用 L0–L3 开发成熟度、标准 package 形态和 capability conformance 检查 |
+
+## 12. 后续开发顺序
+
+1. **能力包 conformance**：增加只读检查，验证 `SKILL.md`、preset MCP 注册、`capability.yaml`、依赖锁和
+   L0–L3 声明与实际文件一致，避免 README 和运行配置漂移。
+2. **第二条 L3 纵切**：优先让 `quantum-information-audit` 进入 Harness 物化与回放，再从它和 QGS 的共同
+   需求中提取 capability adapter registry；这时才解决 `scientific-result-*` 的通用命名债务。
+3. **Harness 成对升级**：审阅 DeepSeek Harness 新版本 release/API 变化，保持 Web、Desktop、preset 和
+   Tool seam 同一版本族；通过 config、Host、Skill、MCP、UI 和 Session 恢复测试后再升级锁文件。
+4. **在线证据门**：在有受控 Provider 凭据的 CI/发布环境运行文本生成、Tool Calling 和 QGS E2E；无凭据环境
+   继续明确输出 `not_checked`，不阻塞纯离线单元测试，也不伪造 ready。
+5. **硬件写操作治理**：FieldQKit 继续只读发现；任何真实 QPU 提交能力必须默认关闭、展示成本与副作用，
+   并经过 Harness approval、凭据隔离和单独的集成测试。
+
+这五项按“先约束结构，再增加第二个可泛化实例，最后升级基础设施和扩大副作用面”的顺序推进。

@@ -1,9 +1,12 @@
-# OpenQuantum Harness-first MVP 开发计划
+# OpenQuantum Harness-first MVP 历史开发计划
 
-- 状态：执行基线 2.1（M3 进行中）
-- 日期：2026-08-14
+- 状态：MVP 核心链已完成；本文保留首条纵切的历史决策，不再作为当前任务清单
+- 日期：2026-08-24
 - 产品定位：DeepSeek Harness 的开源量子科研发行版
 - 架构约束：UI / Harness / 量子扩展内容 / Model 四层，不增加平行 Runtime
+
+当前模块边界、能力包 L0–L3 演进方式和下一步优先级，以
+[模块地图](../architecture/MODULES.md)和[当前架构审计](../architecture/ARCHITECTURE_AUDIT.md)为准。
 
 ## 1. MVP 目标
 

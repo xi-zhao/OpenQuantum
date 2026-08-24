@@ -36,6 +36,7 @@ const INCLUDE_IBM_RUNTIME_MCP =
 const QISKIT_CIRCUIT_TOOL = "mcp__qiskit__transpile_circuit_tool";
 const QISKIT_DOCS_TOOL = "mcp__qiskit_docs__search_docs_tool";
 const EXPECTED_QUANTUM_SKILLS = Object.freeze([
+  "platform-diagnostics",
   "quantum-ground-state",
   "qiskit-circuit-workbench",
   "quantum-sdk-advisor",
@@ -209,6 +210,17 @@ test(
         description: "Harness startup",
         diagnostics,
       },
+    );
+
+    const modelCatalog = await rpc("llm.models");
+    assert.equal(modelCatalog.ok, true, diagnostics());
+    const publicModels = modelCatalog.value.groups.find(
+      (group) => group.id === "openquantum-public",
+    );
+    assert(publicModels, `${diagnostics()}\nmissing OpenQuantum public model route`);
+    assert.deepEqual(
+      publicModels.models.map((model) => model.id),
+      ["kimi-k2.7-code", "glm5.2"],
     );
 
     const presetRoster = await rpc("agentPreset.list");

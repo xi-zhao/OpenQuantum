@@ -263,7 +263,8 @@ OpenQuantum 沿用 DeepSeek Harness 的原生扩展方式。Skill、MCP 和 Vali
 
 接入一个新后端，通常从 MCP 开始，再用 Skill 说明适用场景。涉及科学结论时，可以继续加入 Validator 和测试。每一层都有现成示例，开发者可以只做自己需要的部分，也可以完成一条从工具到科研验收的完整链路。
 
-开发说明见 [CONTRIBUTING.md](CONTRIBUTING.md)，目录和配置权威见[仓库地图](docs/REPOSITORY_GUIDE.md)，架构边界见
+开发说明见 [CONTRIBUTING.md](CONTRIBUTING.md)，核心对象与模块边界见[模块地图](docs/architecture/MODULES.md)，
+目录和配置权威见[仓库地图](docs/REPOSITORY_GUIDE.md)，当前审计见
 [ARCHITECTURE_AUDIT.md](docs/architecture/ARCHITECTURE_AUDIT.md)，生态规划见
 [QUANTUM_CAPABILITY_CATALOG.md](docs/ecosystem/QUANTUM_CAPABILITY_CATALOG.md)。
 

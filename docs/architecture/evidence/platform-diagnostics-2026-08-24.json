@@ -1,0 +1,95 @@
+{
+  "schemaVersion": "1.0",
+  "capability": {
+    "id": "platform-diagnostics",
+    "version": "1.0.0"
+  },
+  "generatedAt": "2026-08-24T11:49:32.000Z",
+  "status": "degraded",
+  "checks": [
+    {
+      "id": "ui.transport",
+      "layer": "ui",
+      "required": true,
+      "status": "pass",
+      "evidence": [
+        "tests/harness-native-quantum.test.mjs sent client-request session.prompt calls through the real Harness HTTP transport and observed request/header events in two Sessions."
+      ]
+    },
+    {
+      "id": "harness.config",
+      "layer": "harness",
+      "required": true,
+      "status": "pass",
+      "evidence": [
+        "npm run harness:config expanded the pinned Harness composition with the OpenQuantum preset, provider routes, branding plugin and capability settings plugin."
+      ]
+    },
+    {
+      "id": "harness.host",
+      "layer": "harness",
+      "required": true,
+      "status": "pass",
+      "evidence": [
+        "tests/harness-native-quantum.test.mjs booted an isolated real Harness Host, completed host.describe and created two Sessions."
+      ]
+    },
+    {
+      "id": "skill.discovery",
+      "layer": "skill",
+      "required": true,
+      "status": "pass",
+      "evidence": [
+        "The isolated Harness Host returned platform-diagnostics from skill.list in both Sessions."
+      ]
+    },
+    {
+      "id": "model.catalog",
+      "layer": "model",
+      "required": true,
+      "status": "pass",
+      "evidence": [
+        "The isolated Harness Host returned the openquantum-public route with kimi-k2.7-code and glm5.2 from llm.models."
+      ]
+    },
+    {
+      "id": "model.text-generation",
+      "layer": "model",
+      "required": true,
+      "status": "not_checked",
+      "evidence": [
+        "OPENQUANTUM_PUBLIC_API_KEY and OPENQUANTUM_PUBLIC_BASE_URL were not configured in the audit environment."
+      ],
+      "nextAction": "Configure the public provider credentials and run npm run models:probe -- --provider openquantum-public."
+    },
+    {
+      "id": "model.tool-calling",
+      "layer": "model",
+      "required": true,
+      "status": "not_checked",
+      "evidence": [
+        "No provider credential was available, so a real model Tool Calling response was not attempted."
+      ],
+      "nextAction": "Configure the public provider credentials and run the model probe plus the real quantum Harness E2E."
+    },
+    {
+      "id": "model.private-route",
+      "layer": "model",
+      "required": false,
+      "status": "not_checked",
+      "evidence": [
+        "The optional OpenQuantum private provider route was declared but its base URL and credential were not configured."
+      ],
+      "nextAction": "Only configure and probe the private route in an environment that requires it."
+    }
+  ],
+  "summary": {
+    "statement": "The repository composition, real Harness Host, project Skill discovery and model catalog are connected; live model generation and Tool Calling remain unverified in this credential-free audit environment.",
+    "counts": {
+      "pass": 5,
+      "warn": 0,
+      "fail": 0,
+      "notChecked": 3
+    }
+  }
+}
