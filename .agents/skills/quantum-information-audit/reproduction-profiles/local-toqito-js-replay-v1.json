@@ -2,16 +2,52 @@
   "schemaVersion": "1.0",
   "id": "local-toqito-js-replay",
   "version": "1.0.0",
-  "execution": {
-    "factProducer": "toqito==1.3.1",
-    "validator": "independent-js-state-math",
-    "cloudExecution": false,
-    "maximumMatrixDimension": 16
+  "scope": {
+    "supportedClaims": [
+      "Two distinct local executions of the same bounded density-matrix request agree on purity, selected partial-transpose spectrum and negativity"
+    ],
+    "outOfScope": [
+      "Independent state tomography, experimental uncertainty, quantum channels or physical-hardware reproducibility",
+      "Entanglement claims beyond the selected bipartition and supplied density matrix"
+    ]
   },
-  "requiredEvidence": [
-    "canonical input digest",
-    "toqito state-analysis artifact",
-    "independent validation observations",
-    "Session Event Log range and environment digests for final acceptance"
-  ]
+  "checks": [
+    {
+      "id": "execution.independent",
+      "category": "independence",
+      "required": true,
+      "criterion": "The two Result Packages have distinct package digests and Session event traces."
+    },
+    {
+      "id": "request.identical",
+      "category": "reproducibility",
+      "required": true,
+      "criterion": "Both executions use byte-identical canonical request digests, subsystem dimensions and selected transpose subsystems."
+    },
+    {
+      "id": "state.purity-agreement",
+      "category": "scientific",
+      "required": true,
+      "criterion": "The independently validated purity values agree within the declared absolute tolerance.",
+      "threshold": 1e-9,
+      "unit": "dimensionless"
+    },
+    {
+      "id": "partial-transpose.spectrum-agreement",
+      "category": "scientific",
+      "required": true,
+      "criterion": "The sorted selected partial-transpose spectra agree element-wise within the declared absolute tolerance.",
+      "threshold": 1e-9,
+      "unit": "dimensionless"
+    },
+    {
+      "id": "negativity.agreement",
+      "category": "scientific",
+      "required": true,
+      "criterion": "The independently validated negativity values agree within the declared absolute tolerance.",
+      "threshold": 1e-9,
+      "unit": "dimensionless"
+    }
+  ],
+  "independenceCheck": "execution.independent"
 }

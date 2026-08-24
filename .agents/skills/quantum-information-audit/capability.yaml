@@ -65,7 +65,7 @@ reproductionProfiles:
     validator: density-matrix-validator
     definition:
       path: reproduction-profiles/local-toqito-js-replay-v1.json
-      sha256: 4ba3008dd44fda7453b69eaaae8955ef69ee7185260f4a359e07836eee38f8ee
+      sha256: 661a06f412fa359e4eea130d26a9f6552b3955a458547e59505fe40f72f0cd3a
 
 modelRequirements:
   textGeneration: true
@@ -119,7 +119,7 @@ evals:
     id: quantum-information-audit-reference
     version: 1.0.0
     path: evals/suite.json
-    sha256: 425347ee18b38389764fd25f708d8ce6ce342e545c02b6bdea2a5a29d590b09e
+    sha256: 3d085f71a302860ffc41ae4a5f64feb580aff29597ee91ab58441d67e6eaf9c1
 
 compatibility:
   contract: "1.1"

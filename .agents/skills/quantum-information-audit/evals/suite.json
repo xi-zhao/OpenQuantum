@@ -10,10 +10,46 @@
     "maximum": 100
   },
   "cases": [
-    { "id": "bell-state-replayed", "weight": 2, "hardGate": true },
-    { "id": "maximally-mixed-replayed", "weight": 1, "hardGate": true },
-    { "id": "non-density-detected", "weight": 1, "hardGate": true },
-    { "id": "tampered-analysis-detected", "weight": 1, "hardGate": true },
-    { "id": "out-of-scope-rejected", "weight": 1, "hardGate": true }
+    {
+      "id": "bell-state-replayed",
+      "weight": 2,
+      "hardGate": true,
+      "expectedOutcome": {
+        "negativity": 0.5,
+        "provenance": "not_checked"
+      }
+    },
+    {
+      "id": "maximally-mixed-replayed",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": { "purity": 0.25, "negativity": 0 }
+    },
+    {
+      "id": "non-density-detected",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "trace": "fail",
+        "upstreamAgreement": "pass"
+      }
+    },
+    {
+      "id": "tampered-analysis-detected",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "hermiticityReplay": "fail",
+        "eigenvalueReplay": "fail",
+        "rankReplay": "fail",
+        "negativityReplay": "fail"
+      }
+    },
+    {
+      "id": "out-of-scope-rejected",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": { "rejected": true }
+    }
   ]
 }

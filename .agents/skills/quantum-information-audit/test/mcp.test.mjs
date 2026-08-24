@@ -124,6 +124,7 @@ test("reference eval suite detects invalid and tampered facts", () => {
   const report = runEvaluationSuite();
   assert.equal(report.hardGatePassed, true);
   assert.equal(report.scorePercent, 100);
+  assert.ok(report.cases.every((item) => item.expectedMatched));
 });
 
 test("bridge environment is allowlisted and contains no cloud credentials", async () => {

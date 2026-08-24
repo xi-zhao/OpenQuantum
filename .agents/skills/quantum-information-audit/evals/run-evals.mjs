@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { isDeepStrictEqual } from "node:util";
 
 import { computeReferenceAnalysis } from "../validators/state-math.mjs";
 import { validateStateAnalysis } from "../validators/validate-state-analysis.mjs";
@@ -148,10 +149,20 @@ function evaluateCase(id) {
 
 export function runEvaluationSuite() {
   const suite = readJson("evals/suite.json");
-  const cases = suite.cases.map((definition) => ({
-    id: definition.id,
-    ...evaluateCase(definition.id),
-  }));
+  const cases = suite.cases.map((definition) => {
+    const evaluation = evaluateCase(definition.id);
+    const expectedMatched = isDeepStrictEqual(
+      evaluation.observed,
+      definition.expectedOutcome,
+    );
+    return {
+      id: definition.id,
+      ...evaluation,
+      passed: evaluation.passed && expectedMatched,
+      expectedOutcome: definition.expectedOutcome,
+      expectedMatched,
+    };
+  });
   const passedWeight = suite.cases.reduce(
     (total, definition) =>
       total + (cases.find((item) => item.id === definition.id)?.passed ? definition.weight : 0),
