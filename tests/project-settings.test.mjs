@@ -6,16 +6,14 @@ import test from "node:test";
 
 import { parseDocument } from "yaml";
 
-import {
-  registerMcpSettings,
+import * as projectSettings from "../src/settings/server/project-settings.mjs";
+import { quantumHardwareMcpIntegration } from "../src/settings/server/quantum-hardware-mcp.mjs";
+
+const {
+  executeProjectSettingsCommand,
   ProjectSettingsConflictError,
   readProjectSettings,
-  removeMcpSettings,
-  removeSkillSettings,
-  updateMcpSettings,
-  updateSkillSettings,
-} from "../src/settings/server/project-settings.mjs";
-import { quantumHardwareMcpIntegration } from "../src/settings/server/quantum-hardware-mcp.mjs";
+} = projectSettings;
 
 async function fixture(t) {
   const root = await mkdtemp(path.join(os.tmpdir(), "openquantum-settings-"));
@@ -38,6 +36,14 @@ async function fixture(t) {
   );
   return root;
 }
+
+test("project settings exposes one read projection and one command Interface", () => {
+  assert.deepEqual(Object.keys(projectSettings).sort(), [
+    "ProjectSettingsConflictError",
+    "executeProjectSettingsCommand",
+    "readProjectSettings",
+  ]);
+});
 
 test("project settings exposes safe Skill and MCP projections", async (t) => {
   const root = await fixture(t);
@@ -89,7 +95,8 @@ test("project settings exposes safe Skill and MCP projections", async (t) => {
 test("Skill invocation settings use revision CAS and official frontmatter", async (t) => {
   const root = await fixture(t);
   const before = await readProjectSettings(root);
-  const updated = await updateSkillSettings(root, {
+  const updated = await executeProjectSettingsCommand(root, {
+    action: "skill.update",
     name: "demo-skill",
     revision: before.skills[0].revision,
     modelInvocable: false,
@@ -105,7 +112,8 @@ test("Skill invocation settings use revision CAS and official frontmatter", asyn
   assert.match(raw, /disable-model-invocation: true/);
   assert.match(raw, /user-invocable: false/);
   await assert.rejects(
-    updateSkillSettings(root, {
+    executeProjectSettingsCommand(root, {
+      action: "skill.update",
       name: "demo-skill",
       revision: before.skills[0].revision,
       modelInvocable: true,
@@ -138,7 +146,8 @@ test("legacy managed Skill removal stays recoverable without exposing a Skill au
   );
   assert.match(raw, /disable-model-invocation: true/);
   assert.match(raw, /never for cloud execution/);
-  const removed = await removeSkillSettings(root, {
+  const removed = await executeProjectSettingsCommand(root, {
+    action: "skill.remove",
     name: skill.name,
     revision: skill.revision,
   });
@@ -148,7 +157,11 @@ test("legacy managed Skill removal stays recoverable without exposing a Skill au
 
   const builtin = created.skills.find((candidate) => candidate.name === "demo-skill");
   await assert.rejects(
-    removeSkillSettings(root, { name: builtin.name, revision: builtin.revision }),
+    executeProjectSettingsCommand(root, {
+      action: "skill.remove",
+      name: builtin.name,
+      revision: builtin.revision,
+    }),
     /不能从设置中心移除/,
   );
 });
@@ -156,7 +169,8 @@ test("legacy managed Skill removal stays recoverable without exposing a Skill au
 test("MCP settings update only bounded Harness connection policy", async (t) => {
   const root = await fixture(t);
   const before = await readProjectSettings(root);
-  const updated = await updateMcpSettings(root, {
+  const updated = await executeProjectSettingsCommand(root, {
+    action: "mcp.update",
     serverName: "demo_quantum",
     revision: before.mcpRevision,
     enabled: false,
@@ -206,18 +220,56 @@ test("credentialed MCP entries use the same bounded settings Interface", async (
     },
   ]);
 
-  await updateMcpSettings(root, {
-    serverName: "qiskit_ibm_runtime",
-    revision: before.mcpRevision,
-    enabled: true,
-    toolCallTimeoutMs: 180000,
-    reconnect: {
+  await assert.rejects(
+    executeProjectSettingsCommand(
+      root,
+      {
+        action: "mcp.update",
+        serverName: "qiskit_ibm_runtime",
+        revision: before.mcpRevision,
+        enabled: true,
+        toolCallTimeoutMs: 180000,
+        reconnect: {
+          enabled: true,
+          initialDelayMs: 1500,
+          maxDelayMs: 45000,
+          maxAttempts: 8,
+        },
+      },
+      {
+        credentials: {
+          async describe() {
+            return { configured: false, writable: true };
+          },
+        },
+      },
+    ),
+    /请先配置必需凭据：QISKIT_IBM_TOKEN/,
+  );
+  await executeProjectSettingsCommand(
+    root,
+    {
+      action: "mcp.update",
+      serverName: "qiskit_ibm_runtime",
+      revision: before.mcpRevision,
       enabled: true,
-      initialDelayMs: 1500,
-      maxDelayMs: 45000,
-      maxAttempts: 8,
+      toolCallTimeoutMs: 180000,
+      reconnect: {
+        enabled: true,
+        initialDelayMs: 1500,
+        maxDelayMs: 45000,
+        maxAttempts: 8,
+      },
     },
-  });
+    {
+      credentials: {
+        async describe(ref) {
+          assert.equal(ref, "QISKIT_IBM_TOKEN");
+          return { configured: true, writable: true };
+        },
+      },
+    },
+  );
   const value = parseDocument(await readFile(configPath, "utf8")).toJS();
   assert.equal(value[1].disabled, undefined);
   assert.equal(value[1].config.serverName, "qiskit_ibm_runtime");
@@ -246,6 +298,27 @@ test("hardware MCP setup state is bound to the reviewed local source", async (t)
     missingServer?.target,
     "./.openquantum/external/quantum-hardware-mcp/server.py",
   );
+  await assert.rejects(
+    executeProjectSettingsCommand(
+      root,
+      {
+        action: "mcp.update",
+        serverName: "quantum_hardware",
+        revision: missing.mcpRevision,
+        enabled: true,
+        toolCallTimeoutMs: missingServer.toolCallTimeoutMs,
+        reconnect: missingServer.reconnect,
+      },
+      {
+        credentials: {
+          async describe() {
+            return { configured: true, writable: true };
+          },
+        },
+      },
+    ),
+    /固定版本源码尚未就绪/,
+  );
 
   const sourceRoot = path.join(root, quantumHardwareMcpIntegration.relativeRoot);
   await mkdir(sourceRoot, { recursive: true });
@@ -273,7 +346,8 @@ test("hardware MCP setup state is bound to the reviewed local source", async (t)
 test("custom stdio MCP is registered disabled with a dynamic credential and can be removed", async (t) => {
   const root = await fixture(t);
   const before = await readProjectSettings(root);
-  const created = await registerMcpSettings(root, {
+  const created = await executeProjectSettingsCommand(root, {
+    action: "mcp.register",
     revision: before.mcpRevision,
     serverName: "community_quantum",
     transport: "stdio",
@@ -308,7 +382,8 @@ test("custom stdio MCP is registered disabled with a dynamic credential and can 
   assert.match(raw, /cwd: !!js process\.cwd\(\)/);
   assert.equal(raw.includes("COMMUNITY_QUANTUM_TOKEN: secret"), false);
 
-  const removed = await removeMcpSettings(root, {
+  const removed = await executeProjectSettingsCommand(root, {
+    action: "mcp.remove",
     serverName: server.serverName,
     revision: created.mcpRevision,
   });
@@ -318,10 +393,11 @@ test("custom stdio MCP is registered disabled with a dynamic credential and can 
   );
 });
 
-test("custom HTTP MCP accepts only public HTTP(S) endpoints", async (t) => {
+test("custom HTTP MCP accepts HTTP(S) endpoints without embedded credentials", async (t) => {
   const root = await fixture(t);
   const before = await readProjectSettings(root);
-  const created = await registerMcpSettings(root, {
+  const created = await executeProjectSettingsCommand(root, {
+    action: "mcp.register",
     revision: before.mcpRevision,
     serverName: "public_remote",
     transport: "streamable-http",
@@ -333,7 +409,8 @@ test("custom HTTP MCP accepts only public HTTP(S) endpoints", async (t) => {
   assert.equal(server.managed, true);
 
   await assert.rejects(
-    registerMcpSettings(root, {
+    executeProjectSettingsCommand(root, {
+      action: "mcp.register",
       revision: created.mcpRevision,
       serverName: "private_remote",
       transport: "streamable-http",

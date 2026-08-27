@@ -74,7 +74,7 @@ globalThis.__ModuleLoader__.load({
       if (server.requiredCredentialRefs.some((ref) => !credentials[ref]?.configured)) {
         return ["需要凭据", "attention"];
       }
-      return server.enabled ? ["已启用", "ready"] : ["已关闭", "off"];
+      return server.enabled ? ["连接配置启用", "ready"] : ["连接配置关闭", "off"];
     }
 
     function CredentialCard({ credential, info, requiredByEnabled, api, busy, onBusy, onRefresh, onError, onNotice }) {
@@ -122,7 +122,7 @@ globalThis.__ModuleLoader__.load({
           h("label", { htmlFor: `credential-${credential.ref}` }, "输入新值"),
           h("input", { id: `credential-${credential.ref}`, className: "oq-cap-input", type: "password", autoComplete: "new-password", value, disabled: locked, placeholder: info?.configured ? "输入新值以替换" : "粘贴 API Key / Token", onChange: (event) => setValue(event.currentTarget.value) }),
           h("p", { className: "oq-cap-secret-help" }, "密钥由 Harness 凭据库保存；已有值不会回显、不会写入项目配置。"),
-          requiredByEnabled ? h("p", { className: "oq-cap-secret-help" }, "此凭据正被已启用的 MCP 必需使用；请先关闭对应 MCP 再移除。") : null,
+          requiredByEnabled ? h("p", { className: "oq-cap-secret-help" }, "此凭据正被配置为启用的 MCP Server 必需使用；请先关闭对应连接配置再移除。") : null,
           h("div", { className: "oq-cap-actions" },
             h("button", { type: "button", className: "oq-cap-button", "data-primary": "true", disabled: locked || value.trim() === "", onClick: save }, "保存"),
             info?.configured ? h("button", { type: "button", className: "oq-cap-button", "data-danger": "true", disabled: locked || requiredByEnabled, onClick: remove }, "移除") : null,
@@ -195,18 +195,19 @@ globalThis.__ModuleLoader__.load({
         );
         return h("article", { className: "oq-cap-card", key: server.serverName },
           h("div", { className: "oq-cap-card-head" },
-            h("div", { className: "oq-cap-title" }, h("h3", null, server.displayName), h("code", { className: "oq-cap-code" }, `MCP · ${server.serverName} · ${server.provider}`)),
+            h("div", { className: "oq-cap-title" }, h("h3", null, server.displayName), h("code", { className: "oq-cap-code" }, `MCP Server · ${server.serverName} · ${server.provider}`)),
             h("span", { className: "oq-cap-badge", "data-tone": tone }, label),
           ),
           h("p", { className: "oq-cap-desc" }, server.description),
-          h("p", { className: "oq-cap-meta" }, `独立 MCP 组件 · ${server.transport} · ${server.target}${server.packageVersion ? ` · ${server.packageVersion}` : ""}`),
+          h("p", { className: "oq-cap-meta" }, `独立 MCP Server 连接 · ${server.transport} · ${server.target}${server.packageVersion ? ` · ${server.packageVersion}` : ""}`),
+          h("p", { className: "oq-cap-meta" }, "这里显示的是持久化连接配置，不代表 Server 已运行或 Tool 已进入 Registry；配置变更需重启后生效。"),
           h("div", { className: "oq-cap-actions" },
             h("label", { className: "oq-cap-switch" },
-              h("input", { type: "checkbox", checked: server.enabled, disabled: disabled || enableBlocked, title: enableBlocked ? label : undefined, onChange: (event) => runProject(`mcp:${server.serverName}`, { action: "mcp.update", serverName: server.serverName, revision: snapshot.mcpRevision, enabled: event.currentTarget.checked, toolCallTimeoutMs: server.toolCallTimeoutMs, reconnect: server.reconnect }, "MCP 配置已保存；重启 OpenQuantum 后使用新配置。") }),
-              server.enabled ? "已启用" : "已关闭",
+              h("input", { type: "checkbox", checked: server.enabled, disabled: disabled || enableBlocked, title: enableBlocked ? label : undefined, onChange: (event) => runProject(`mcp:${server.serverName}`, { action: "mcp.update", serverName: server.serverName, revision: snapshot.mcpRevision, enabled: event.currentTarget.checked, toolCallTimeoutMs: server.toolCallTimeoutMs, reconnect: server.reconnect }, "MCP Server 连接配置已保存；重启 OpenQuantum 后使用新配置。") }),
+              server.enabled ? "配置启用" : "配置关闭",
             ),
             server.sourceUrl ? h("a", { className: "oq-cap-link", href: server.sourceUrl, target: "_blank", rel: "noreferrer" }, "源码") : null,
-            server.managed ? h("button", { type: "button", className: "oq-cap-button", "data-danger": "true", disabled: disabled || server.enabled, onClick: () => runProject(`mcp:${server.serverName}`, { action: "mcp.remove", serverName: server.serverName, revision: snapshot.mcpRevision }, "自定义 MCP 已移入安全回收流程。") }, "移除") : null,
+            server.managed ? h("button", { type: "button", className: "oq-cap-button", "data-danger": "true", disabled: disabled || server.enabled, onClick: () => runProject(`mcp:${server.serverName}`, { action: "mcp.remove", serverName: server.serverName, revision: snapshot.mcpRevision }, "自定义 MCP Server 连接已移入安全回收流程。") }, "移除") : null,
           ),
         );
       });
@@ -214,12 +215,12 @@ globalThis.__ModuleLoader__.load({
       const skillCards = snapshot.skills.map((skill) => h("article", { className: "oq-cap-card", key: skill.name },
         h("div", { className: "oq-cap-card-head" },
           h("div", { className: "oq-cap-title" }, h("h3", null, skill.displayName), h("code", { className: "oq-cap-code" }, `Skill · /${skill.name}`)),
-          h("span", { className: "oq-cap-badge", "data-tone": skill.modelInvocable ? "ready" : "off" }, skill.modelInvocable ? "Agent 可用" : "仅显式调用"),
+          h("span", { className: "oq-cap-badge", "data-tone": skill.modelInvocable ? "ready" : "off" }, skill.modelInvocable ? "允许 Agent 自动加载" : "仅显式加载"),
         ),
         h("p", { className: "oq-cap-desc" }, skill.description),
-        h("p", { className: "oq-cap-meta" }, `独立 Skill 组件 · ${[skill.version, skill.maturity].filter(Boolean).join(" · ") || "项目工作流"}`),
+        h("p", { className: "oq-cap-meta" }, `独立 Skill 指令 · ${[skill.version, skill.maturity].filter(Boolean).join(" · ") || "项目工作流"}`),
         h("div", { className: "oq-cap-actions" },
-          h("label", { className: "oq-cap-switch" }, h("input", { type: "checkbox", checked: skill.modelInvocable, disabled, onChange: (event) => runProject(`skill:${skill.name}`, { action: "skill.update", name: skill.name, revision: skill.revision, modelInvocable: event.currentTarget.checked, userInvocable: skill.userInvocable }, "Skill 调用策略已保存，新会话生效。") }), "允许 Agent 自动调用"),
+          h("label", { className: "oq-cap-switch" }, h("input", { type: "checkbox", checked: skill.modelInvocable, disabled, onChange: (event) => runProject(`skill:${skill.name}`, { action: "skill.update", name: skill.name, revision: skill.revision, modelInvocable: event.currentTarget.checked, userInvocable: skill.userInvocable }, "Skill 加载策略已保存，新会话生效。") }), "允许 Agent 自动加载"),
           skill.managed ? h("button", { type: "button", className: "oq-cap-button", "data-danger": "true", disabled, onClick: () => runProject(`skill:${skill.name}`, { action: "skill.remove", name: skill.name, revision: skill.revision }, "自定义 Skill 已移入项目回收目录。") }, "移除") : null,
         ),
       ));
@@ -248,23 +249,23 @@ globalThis.__ModuleLoader__.load({
 
       const activeCards = tab === "mcp" ? mcpCards : tab === "skills" ? skillCards : credentialCards;
       const tabIntro = tab === "mcp"
-        ? ["MCP 组件", "由 Harness MCP Client 独立注册和启停；提供 Tool、数据源或外部量子后端，不加载 Skill。"]
+        ? ["MCP Server 连接", "Harness MCP Client 独立连接和启停 Server，并把 MCP-exposed Tool 注册进 Tool Registry；它不加载 Skill。"]
         : tab === "skills"
-        ? ["Skill 组件", "由 Harness Skill Registry 独立发现；提供知识和工作流，可以调用已注册 Tool，但不会启动 MCP。"]
-        : ["安全凭据", "凭据按引用提供给 MCP；Skill 无权读取密钥，页面也不会回显已有值。"];
+        ? ["Skill 指令", "由 Harness Skill Registry 独立发现；向 Agent 提供知识和工作流，但不执行 Tool、启动 MCP Server 或读取凭据。"]
+        : ["安全凭据", "凭据按引用提供给受控 Tool Provider；Skill 无权读取密钥，页面也不会回显已有值。"];
       return h("div", { className: "oq-cap-root" },
         !loopback ? h("p", { className: "oq-cap-error", role: "alert" }, "远程浏览器只读；请在 Harness 本机打开设置后写入凭据或配置。") : null,
         error ? h("p", { className: "oq-cap-error", role: "alert" }, error) : null,
         notice ? h("p", { className: "oq-cap-notice", role: "status" }, notice) : null,
         h("div", { className: "oq-cap-tabs", role: "tablist", "aria-label": "能力分类" },
-          [["mcp", "MCP 组件"], ["skills", "Skill 组件"], ["credentials", "安全凭据"]].map(([id, label]) => h("button", { key: id, type: "button", role: "tab", className: "oq-cap-tab", "aria-selected": tab === id, onClick: () => setTab(id) }, label)),
+          [["mcp", "MCP Server 连接"], ["skills", "Skill 指令"], ["credentials", "安全凭据"]].map(([id, label]) => h("button", { key: id, type: "button", role: "tab", className: "oq-cap-tab", "aria-selected": tab === id, onClick: () => setTab(id) }, label)),
         ),
         h("div", { className: "oq-cap-tab-intro" }, h("strong", null, tabIntro[0]), h("span", null, tabIntro[1])),
         activeCards.length ? h("div", { className: "oq-cap-grid" }, activeCards) : h("p", { className: "oq-cap-empty" }, "暂无能力配置。"),
         tab === "mcp" ? h("details", { className: "oq-cap-group" },
           h("summary", null, "注册已有 MCP Server"),
           h("div", { className: "oq-cap-discovery" },
-            h("p", null, "这里只向 Harness preset 写入一条 MCP 连接配置，不会下载、安装或创建 MCP Server。stdio 命令必须已在本机可用；HTTP 端点必须已经部署并经过审查。"),
+            h("p", null, "这里只向 Agent Preset 写入一条 Harness MCP Client 连接配置，不会下载、安装或创建 MCP Server。stdio 命令必须已在本机可用；HTTP 端点必须已经部署并经过审查。"),
           ),
           h("form", { className: "oq-cap-form", onSubmit: createMcp },
             h("div", { className: "oq-cap-field" }, h("label", null, "Server ID"), h("input", { className: "oq-cap-input", required: true, pattern: "[A-Za-z0-9_-]{1,32}", value: mcpDraft.serverName, onChange: (event) => setMcpDraft({ ...mcpDraft, serverName: event.currentTarget.value }) })),
@@ -282,7 +283,7 @@ globalThis.__ModuleLoader__.load({
           h("div", { className: "oq-cap-discovery" },
             h("p", null, "Skill 由 Harness 文件系统 Provider 从项目目录发现。简单 Skill 只需要一个带 frontmatter 的 SKILL.md；复杂 Skill 可以在同一目录附带 references、scripts 或其他资源。"),
             h("code", { className: "oq-cap-path" }, ".agents/skills/<skill-name>/SKILL.md"),
-            h("p", null, "通过 Git、解压或手动复制把完整 Skill 目录加入项目，然后重新扫描。设置中心只管理发现后的调用策略，不在表单里创作 Skill。"),
+            h("p", null, "通过 Git、解压或手动复制把完整 Skill 目录加入项目，然后重新扫描。设置中心只管理发现后的加载策略，不在表单里创作 Skill。"),
             h("div", { className: "oq-cap-actions" },
               h("button", { type: "button", className: "oq-cap-button", disabled: busy !== null, onClick: reload }, "重新扫描 Skill 目录"),
             ),
@@ -349,7 +350,7 @@ globalThis.__ModuleLoader__.load({
             h("span", { className: "oq-channel-arrow" }, "→ ACP →"),
             h("span", { className: "oq-channel-node" }, "DeepSeek Harness"),
             h("span", { className: "oq-channel-arrow" }, "→"),
-            h("span", { className: "oq-channel-node" }, "Skill / MCP / Validator"),
+            h("span", { className: "oq-channel-node" }, "Skill + Tool Provider + 可选 Validator"),
           ),
           h("p", { className: "oq-cap-meta" }, platforms),
           h("p", { className: "oq-cap-meta" }, `本地配置：${channel.configPath}。平台 Token 由 CC Connect 保存，不进入源码、Harness Session 或 Git。`),

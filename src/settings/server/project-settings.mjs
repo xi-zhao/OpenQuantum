@@ -460,7 +460,7 @@ export async function readProjectSettings(projectRoot) {
   };
 }
 
-export async function updateSkillSettings(projectRoot, input) {
+async function updateSkillSettings(projectRoot, input) {
   if (!isRecord(input) || typeof input.name !== "string" || !SKILL_NAME.test(input.name)) {
     throw new TypeError("Skill 名称无效");
   }
@@ -490,7 +490,7 @@ export async function updateSkillSettings(projectRoot, input) {
   return readProjectSettings(projectRoot);
 }
 
-export async function removeSkillSettings(projectRoot, input) {
+async function removeSkillSettings(projectRoot, input) {
   if (!isRecord(input) || typeof input.name !== "string" || !SKILL_NAME.test(input.name)) {
     throw new TypeError("Skill 名称无效");
   }
@@ -518,7 +518,7 @@ export async function removeSkillSettings(projectRoot, input) {
   return readProjectSettings(projectRoot);
 }
 
-export async function updateMcpSettings(projectRoot, input) {
+async function updateMcpSettings(projectRoot, input) {
   if (!isRecord(input) || typeof input.serverName !== "string" || !SERVER_NAME.test(input.serverName)) {
     throw new TypeError("MCP serverName 无效");
   }
@@ -580,7 +580,7 @@ export async function updateMcpSettings(projectRoot, input) {
   return readProjectSettings(projectRoot);
 }
 
-export async function registerMcpSettings(projectRoot, input) {
+async function registerMcpSettings(projectRoot, input) {
   if (!isRecord(input) || typeof input.serverName !== "string" || !SERVER_NAME.test(input.serverName)) {
     throw new TypeError("MCP serverName 无效");
   }
@@ -690,7 +690,7 @@ export async function registerMcpSettings(projectRoot, input) {
   return readProjectSettings(projectRoot);
 }
 
-export async function removeMcpSettings(projectRoot, input) {
+async function removeMcpSettings(projectRoot, input) {
   if (!isRecord(input) || typeof input.serverName !== "string" || !SERVER_NAME.test(input.serverName)) {
     throw new TypeError("MCP serverName 无效");
   }
@@ -718,4 +718,64 @@ export async function removeMcpSettings(projectRoot, input) {
   const mode = (await regularFile(mcp.filePath)).mode & 0o777;
   await atomicWrite(mcp.filePath, mcp.document.toString(), mode);
   return readProjectSettings(projectRoot);
+}
+
+async function assertMcpEnableAllowed(projectRoot, command, credentials) {
+  if (command.action !== "mcp.update" || command.enabled !== true) return;
+
+  const snapshot = await readProjectSettings(projectRoot);
+  const server = snapshot.mcpServers.find(
+    (candidate) => candidate.serverName === command.serverName,
+  );
+  if (!server) {
+    throw new TypeError("MCP 服务已不存在，请刷新后重试");
+  }
+  if (server.setup?.status === "required") {
+    throw new TypeError("此 MCP 的固定版本源码尚未就绪，不能启用");
+  }
+  if (server.requiredCredentialRefs.length === 0) return;
+  if (!credentials || typeof credentials.describe !== "function") {
+    throw new TypeError("Harness 凭据服务不可用，不能启用此 MCP");
+  }
+
+  const descriptions = await Promise.all(
+    server.requiredCredentialRefs.map(async (ref) => [
+      ref,
+      await credentials.describe(ref),
+    ]),
+  );
+  const missing = descriptions
+    .filter(([, info]) => info?.configured !== true)
+    .map(([ref]) => ref);
+  if (missing.length > 0) {
+    throw new TypeError(`请先配置必需凭据：${missing.join("、")}`);
+  }
+}
+
+export async function executeProjectSettingsCommand(
+  projectRoot,
+  command,
+  { credentials } = {},
+) {
+  if (!isRecord(command)) {
+    throw new TypeError("设置请求必须是对象");
+  }
+
+  switch (command.action) {
+    case "snapshot":
+      return readProjectSettings(projectRoot);
+    case "skill.update":
+      return updateSkillSettings(projectRoot, command);
+    case "skill.remove":
+      return removeSkillSettings(projectRoot, command);
+    case "mcp.update":
+      await assertMcpEnableAllowed(projectRoot, command, credentials);
+      return updateMcpSettings(projectRoot, command);
+    case "mcp.register":
+      return registerMcpSettings(projectRoot, command);
+    case "mcp.remove":
+      return removeMcpSettings(projectRoot, command);
+    default:
+      throw new TypeError("未知设置命令");
+  }
 }

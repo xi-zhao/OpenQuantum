@@ -4,7 +4,6 @@ import test from "node:test";
 
 import {
   apply,
-  assertMcpEnableAllowed,
   capabilityRequestBoundary,
   createCapabilitySettingsHandler,
   dispatchMessageChannelCommand,
@@ -42,13 +41,15 @@ function response() {
   };
 }
 
-test("registers Harness-native capability and message-channel settings routes", () => {
+test("registers Harness-native routes and wires credentials into capability commands", async () => {
   const routes = [];
   const labels = [];
+  const described = [];
   const dispose = () => {};
   apply({
     credentials: {
-      async describe() {
+      async describe(ref) {
+        described.push(ref);
         return { configured: false, writable: true };
       },
     },
@@ -72,6 +73,37 @@ test("registers Harness-native capability and message-channel settings routes", 
     "/openquantum/api/capabilities",
     "/openquantum/api/channels",
   ]);
+
+  const capabilityRoute = routes.find(
+    (route) => route.path === "/openquantum/api/capabilities",
+  );
+  const snapshotResponse = response();
+  await capabilityRoute.handler(request({ action: "snapshot" }), snapshotResponse);
+  assert.equal(snapshotResponse.result.status, 200);
+  const snapshot = JSON.parse(snapshotResponse.result.body);
+  const server = snapshot.mcpServers.find(
+    (candidate) => candidate.serverName === "qiskit_ibm_runtime",
+  );
+  assert.ok(server);
+
+  const blockedResponse = response();
+  await capabilityRoute.handler(
+    request({
+      action: "mcp.update",
+      serverName: server.serverName,
+      revision: snapshot.mcpRevision,
+      enabled: true,
+      toolCallTimeoutMs: server.toolCallTimeoutMs,
+      reconnect: server.reconnect,
+    }),
+    blockedResponse,
+  );
+  assert.equal(blockedResponse.result.status, 400);
+  assert.match(
+    JSON.parse(blockedResponse.result.body).error,
+    /请先配置必需凭据：QISKIT_IBM_TOKEN/,
+  );
+  assert.deepEqual(described, ["QISKIT_IBM_TOKEN"]);
 });
 
 test("message-channel dispatcher exposes a bounded CC Connect Interface", async () => {
@@ -85,47 +117,6 @@ test("message-channel dispatcher exposes a bounded CC Connect Interface", async 
   await assert.rejects(
     dispatchMessageChannelCommand(process.cwd(), { action: "service.start" }),
     /未知消息渠道命令/,
-  );
-});
-
-test("server guard blocks enabling MCPs before required setup is complete", async () => {
-  const readSettings = async () => ({
-    mcpServers: [
-      {
-        serverName: "qiskit_ibm_runtime",
-        setup: null,
-        requiredCredentialRefs: ["QISKIT_IBM_TOKEN"],
-      },
-      {
-        serverName: "fieldqkit",
-        setup: null,
-        requiredCredentialRefs: [],
-      },
-    ],
-  });
-  const credentials = {
-    async describe(ref) {
-      assert.equal(ref, "QISKIT_IBM_TOKEN");
-      return { configured: false, writable: true };
-    },
-  };
-
-  await assert.rejects(
-    assertMcpEnableAllowed(
-      "/safe/project",
-      { action: "mcp.update", serverName: "qiskit_ibm_runtime", enabled: true },
-      credentials,
-      readSettings,
-    ),
-    /请先配置必需凭据：QISKIT_IBM_TOKEN/,
-  );
-  await assert.doesNotReject(
-    assertMcpEnableAllowed(
-      "/safe/project",
-      { action: "mcp.update", serverName: "fieldqkit", enabled: true },
-      credentials,
-      readSettings,
-    ),
   );
 });
 
@@ -218,11 +209,16 @@ test("client plugin contributes the native settings section and uses Harness cre
   assert.match(client, /api\.credentials\.unset/);
   assert.match(client, /已有值不会回显/);
   assert.match(client, /requiredByEnabled/);
-  assert.match(client, /由 Harness MCP Client 独立注册和启停/);
-  assert.match(client, /可以调用已注册 Tool，但不会启动 MCP/);
+  assert.match(client, /Harness MCP Client 独立连接和启停 Server/);
+  assert.match(client, /不执行 Tool、启动 MCP Server 或读取凭据/);
+  assert.match(client, /不代表 Server 已运行或 Tool 已进入 Registry/);
+  assert.match(client, /连接配置启用/);
+  assert.match(client, /配置变更需重启后生效/);
   assert.match(client, /添加现有 Skill/);
   assert.match(client, /\.agents\/skills\/<skill-name>\/SKILL\.md/);
-  assert.match(client, /设置中心只管理发现后的调用策略，不在表单里创作 Skill/);
+  assert.match(client, /设置中心只管理发现后的加载策略，不在表单里创作 Skill/);
+  assert.match(client, /允许 Agent 自动加载/);
+  assert.doesNotMatch(client, /Agent 可用/);
   assert.doesNotMatch(client, /skill\.create|Skill 指令（Markdown）/);
   assert.match(client, /注册已有 MCP Server/);
   assert.match(client, /不会下载、安装或创建 MCP Server/);

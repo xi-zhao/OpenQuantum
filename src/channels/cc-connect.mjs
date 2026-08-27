@@ -227,3 +227,17 @@ export async function ensureCcConnectConfig(projectRoot, options = {}) {
   }
   return Object.freeze({ created: true, ...(await readCcConnectStatus(projectRoot, options)) });
 }
+
+export async function executeMessageChannelCommand(projectRoot, command) {
+  if (command === null || typeof command !== "object" || Array.isArray(command)) {
+    throw new TypeError("设置请求必须是对象");
+  }
+  switch (command.action) {
+    case "snapshot":
+      return readCcConnectStatus(projectRoot);
+    case "setup":
+      return ensureCcConnectConfig(projectRoot);
+    default:
+      throw new TypeError("未知消息渠道命令");
+  }
+}

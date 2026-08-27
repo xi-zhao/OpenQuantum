@@ -90,79 +90,25 @@ async function channelsModule(projectRoot) {
   );
 }
 
-export async function dispatchCapabilityCommand(projectRoot, command) {
-  if (command === null || typeof command !== "object" || Array.isArray(command)) {
-    throw new TypeError("设置请求必须是对象");
-  }
+export async function dispatchCapabilityCommand(
+  projectRoot,
+  command,
+  { credentials } = {},
+) {
   const settings = await settingsModule(projectRoot);
-  switch (command.action) {
-    case "snapshot":
-      return settings.readProjectSettings(projectRoot);
-    case "skill.update":
-      return settings.updateSkillSettings(projectRoot, command);
-    case "skill.remove":
-      return settings.removeSkillSettings(projectRoot, command);
-    case "mcp.update":
-      return settings.updateMcpSettings(projectRoot, command);
-    case "mcp.register":
-      return settings.registerMcpSettings(projectRoot, command);
-    case "mcp.remove":
-      return settings.removeMcpSettings(projectRoot, command);
-    default:
-      throw new TypeError("未知设置命令");
-  }
+  return settings.executeProjectSettingsCommand(projectRoot, command, {
+    credentials,
+  });
 }
 
 export async function dispatchMessageChannelCommand(projectRoot, command) {
-  if (command === null || typeof command !== "object" || Array.isArray(command)) {
-    throw new TypeError("设置请求必须是对象");
-  }
   const channels = await channelsModule(projectRoot);
-  switch (command.action) {
-    case "snapshot":
-      return channels.readCcConnectStatus(projectRoot);
-    case "setup":
-      return channels.ensureCcConnectConfig(projectRoot);
-    default:
-      throw new TypeError("未知消息渠道命令");
-  }
-}
-
-export async function assertMcpEnableAllowed(
-  projectRoot,
-  command,
-  credentials,
-  readSettings = dispatchCapabilityCommand,
-) {
-  if (command?.action !== "mcp.update" || command.enabled !== true) return;
-  const snapshot = await readSettings(projectRoot, { action: "snapshot" });
-  const server = snapshot.mcpServers.find(
-    (candidate) => candidate.serverName === command.serverName,
-  );
-  if (!server) {
-    throw new TypeError("MCP 服务已不存在，请刷新后重试");
-  }
-  if (server.setup?.status === "required") {
-    throw new TypeError("此 MCP 的固定版本源码尚未就绪，不能启用");
-  }
-  const descriptions = await Promise.all(
-    server.requiredCredentialRefs.map(async (ref) => [
-      ref,
-      await credentials.describe(ref),
-    ]),
-  );
-  const missing = descriptions
-    .filter(([, info]) => info?.configured !== true)
-    .map(([ref]) => ref);
-  if (missing.length > 0) {
-    throw new TypeError(`请先配置必需凭据：${missing.join("、")}`);
-  }
+  return channels.executeMessageChannelCommand(projectRoot, command);
 }
 
 export function createCapabilitySettingsHandler({
   projectRoot = process.cwd(),
   dispatch = dispatchCapabilityCommand,
-  validate = async () => undefined,
 } = {}) {
   return async (request, response) => {
     const boundary = capabilityRequestBoundary(request);
@@ -172,7 +118,6 @@ export function createCapabilitySettingsHandler({
     }
     try {
       const command = await readJson(request);
-      await validate(projectRoot, command);
       json(response, 200, await dispatch(projectRoot, command));
     } catch (error) {
       if (error?.code === "REQUEST_TOO_LARGE") {
@@ -195,8 +140,10 @@ export function createCapabilitySettingsHandler({
 
 export function apply(ctx) {
   const capabilityHandler = createCapabilitySettingsHandler({
-    validate: (projectRoot, command) =>
-      assertMcpEnableAllowed(projectRoot, command, ctx.credentials),
+    dispatch: (projectRoot, command) =>
+      dispatchCapabilityCommand(projectRoot, command, {
+        credentials: ctx.credentials,
+      }),
   });
   const channelHandler = createCapabilitySettingsHandler({
     dispatch: dispatchMessageChannelCommand,
