@@ -331,7 +331,59 @@ packages:
   assert.equal(report.status, "fail");
   assert(
     report.issues.includes(
-      "demo-capability: MCP server demo_server entrypoint must be a canonical path inside .agents/skills/demo-capability/",
+      "demo-capability: MCP server demo_server entrypoint must be a safe canonical POSIX path inside .agents/skills/demo-capability/",
+    ),
+  );
+});
+
+test("package MCP entrypoints reject Cordis expression injection characters", async (t) => {
+  const injectedEntrypoint =
+    ".agents/skills/demo-capability/mcp/' + process.exit(1) + '/server.mjs";
+  const root = await temporaryProject(
+    t,
+    `schemaVersion: "1.1"
+packages:
+  - id: demo-capability
+    level: L1
+    execution:
+      mcpServers:
+        - name: demo_server
+          source: package
+          entrypoint: "${injectedEntrypoint.replaceAll('"', '\\"')}"
+          activation: always
+          contractCheck: tests/demo.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: inspect_demo
+              effect: read-only
+      nativeTools: []
+      checks:
+        - tests/demo.test.mjs
+`,
+  );
+  await addTrackedSkill(root, "demo-capability");
+  await write(root, injectedEntrypoint, "export const server = true;\n");
+  await write(root, "tests/demo.test.mjs", "export const checked = true;\n");
+  await write(
+    root,
+    "runtime/openquantum/agent-presets/openquantum/agent.cordis.yml",
+    `- id: mcp-demo
+  name: "@deepseek-ai/dsh-mcp-client"
+  config:
+    serverName: demo_server
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/${injectedEntrypoint}'
+    cwd: !!js process.cwd()
+`,
+  );
+
+  const report = await auditCapabilityPackages({ projectRoot: root });
+
+  assert.equal(report.status, "fail");
+  assert(
+    report.issues.includes(
+      "demo-capability: MCP server demo_server entrypoint must be a safe canonical POSIX path inside .agents/skills/demo-capability/",
     ),
   );
 });

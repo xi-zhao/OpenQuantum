@@ -14,6 +14,7 @@ const PRESET_PATH =
 const LEVELS = Object.freeze(["L0", "L1", "L2", "L3"]);
 const ID = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const TOOL_NAME = /^[A-Za-z0-9][A-Za-z0-9_.-]{0,127}$/;
+const SAFE_PATH_SEGMENT = /^[A-Za-z0-9._-]+$/;
 const TOOL_EFFECTS = new Set([
   "read-only",
   "workspace-write",
@@ -123,13 +124,20 @@ function inspectPackageEntrypoint(
     issues.push(`${label} must be a non-empty project-relative path`);
     return undefined;
   }
-  const segments = relativePath.split(/[\\/]/);
+  const segments = relativePath.split("/");
   if (
+    relativePath.includes("\\") ||
     !relativePath.startsWith(expectedPrefix) ||
-    segments.some((segment) => segment === "" || segment === "." || segment === "..")
+    segments.some(
+      (segment) =>
+        segment === "" ||
+        segment === "." ||
+        segment === ".." ||
+        !SAFE_PATH_SEGMENT.test(segment),
+    )
   ) {
     issues.push(
-      `${label} must be a canonical path inside ${expectedPrefix}`,
+      `${label} must be a safe canonical POSIX path inside ${expectedPrefix}`,
     );
     return undefined;
   }
