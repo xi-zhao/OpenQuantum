@@ -14,7 +14,7 @@ if (process.argv.includes("--json")) {
     .map(([level, count]) => `${level}=${count}`)
     .join(" ");
   process.stdout.write(
-    `${report.status.toUpperCase()} capability package conformance: ` +
+    `${report.status.toUpperCase()} capability package conformance [${report.scope}]: ` +
       `${report.summary.packageCount} packages (${counts})\n`,
   );
   for (const entry of report.packages) {

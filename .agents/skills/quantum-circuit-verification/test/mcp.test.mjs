@@ -8,8 +8,16 @@ import { fileURLToPath } from "node:url";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 
+import { readDeclaredMcpToolContract } from "../../../../scripts/lib/capability-tool-contract.mjs";
+
 const skillRoot = fileURLToPath(new URL("..", import.meta.url));
+const projectRoot = path.resolve(skillRoot, "../../..");
 const serverPath = path.join(skillRoot, "mcp", "server.mjs");
+const declaredToolContract = readDeclaredMcpToolContract({
+  projectRoot,
+  capabilityId: "quantum-circuit-verification",
+  serverName: "qcec_local",
+});
 let client;
 let transport;
 let temporary;
@@ -48,7 +56,7 @@ if(envelope.action==="runtime") {
   transport = new StdioClientTransport({
     command: process.execPath,
     args: [serverPath],
-    cwd: path.resolve(skillRoot, "../../.."),
+    cwd: projectRoot,
     env: {
       ...process.env,
       PATH: `${temporary}${path.delimiter}${process.env.PATH ?? ""}`,
@@ -70,7 +78,13 @@ test("QCEC MCP exposes two bounded read-only tools", async () => {
   const tools = (await client.listTools()).tools;
   assert.deepEqual(
     tools.map((tool) => tool.name),
-    ["inspect_qcec_runtime", "verify_circuit_equivalence"],
+    declaredToolContract.map((tool) => tool.name),
+  );
+  assert.ok(declaredToolContract.every((tool) => tool.effect === "read-only"));
+  assert.ok(
+    declaredToolContract.every(
+      (tool) => tool.effectEvidence === "mcp-annotations",
+    ),
   );
   assert.ok(tools.every((tool) => tool.annotations.readOnlyHint));
   assert.ok(tools.every((tool) => !tool.annotations.destructiveHint));

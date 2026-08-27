@@ -7,9 +7,16 @@ import { fileURLToPath } from "node:url";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 
+import { readDeclaredMcpToolContract } from "../../../../scripts/lib/capability-tool-contract.mjs";
+
 const skillRoot = fileURLToPath(new URL("..", import.meta.url));
 const projectRoot = path.resolve(skillRoot, "../../..");
 const serverPath = path.join(skillRoot, "mcp/server.mjs");
+const declaredToolContract = readDeclaredMcpToolContract({
+  projectRoot,
+  capabilityId: "quantum-ground-state",
+  serverName: "openquantum_quantum",
+});
 
 function readJson(relativePath) {
   return JSON.parse(fs.readFileSync(path.join(skillRoot, relativePath), "utf8"));
@@ -127,11 +134,13 @@ after(async () => {
 test("stdio MCP lists the atomic workflow and advanced tools with strict Harness-compatible schemas", () => {
   assert.deepEqual(
     tools.map((tool) => tool.name),
-    [
-      "solve_and_validate_ground_state",
-      "solve_ground_state",
-      "validate_ground_state",
-    ],
+    declaredToolContract.map((tool) => tool.name),
+  );
+  assert.ok(declaredToolContract.every((tool) => tool.effect === "read-only"));
+  assert.ok(
+    declaredToolContract.every(
+      (tool) => tool.effectEvidence === "mcp-annotations",
+    ),
   );
   for (const tool of tools) {
     assert.equal(tool.inputSchema.type, "object");

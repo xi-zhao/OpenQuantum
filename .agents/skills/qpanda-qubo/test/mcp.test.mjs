@@ -8,11 +8,18 @@ import { fileURLToPath } from "node:url";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 
+import { readDeclaredMcpToolContract } from "../../../../scripts/lib/capability-tool-contract.mjs";
 import { compileBinaryLinearModel } from "../modeling/binary-linear-model.mjs";
 
 const skillRoot = fileURLToPath(new URL("..", import.meta.url));
+const projectRoot = path.resolve(skillRoot, "../../..");
 const serverPath = path.join(skillRoot, "mcp", "server.mjs");
 const bridgePath = path.join(skillRoot, "mcp", "bridge.py");
+const declaredToolContract = readDeclaredMcpToolContract({
+  projectRoot,
+  capabilityId: "qpanda-qubo",
+  serverName: "qpanda_qubo",
+});
 let client;
 let transport;
 let temporary;
@@ -55,7 +62,7 @@ if (envelope.action === "runtime") {
   transport = new StdioClientTransport({
     command: process.execPath,
     args: [serverPath],
-    cwd: path.resolve(skillRoot, "../../.."),
+    cwd: projectRoot,
     env: {
       ...process.env,
       PATH: `${temporary}${path.delimiter}${process.env.PATH ?? ""}`,
@@ -77,11 +84,13 @@ test("QPanda QUBO MCP exposes only bounded local read-only tools", async () => {
   const tools = (await client.listTools()).tools;
   assert.deepEqual(
     tools.map((tool) => tool.name),
-    [
-      "inspect_qpanda_qubo_runtime",
-      "solve_qpanda_qubo",
-      "model_and_solve_qpanda_qubo",
-    ],
+    declaredToolContract.map((tool) => tool.name),
+  );
+  assert.ok(declaredToolContract.every((tool) => tool.effect === "read-only"));
+  assert.ok(
+    declaredToolContract.every(
+      (tool) => tool.effectEvidence === "mcp-annotations",
+    ),
   );
   assert.ok(tools.every((tool) => tool.annotations.readOnlyHint));
   assert.ok(tools.every((tool) => !tool.annotations.destructiveHint));

@@ -8,27 +8,25 @@ import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 import { parseDocument } from "yaml";
 
+import { readDeclaredMcpToolContract } from "./lib/capability-tool-contract.mjs";
+
 const projectRoot = fileURLToPath(new URL("..", import.meta.url));
 const presetPath = path.join(
   projectRoot,
   "runtime/openquantum/agent-presets/openquantum/agent.cordis.yml",
 );
-const EXPECTED_TOOLS = Object.freeze({
-  qiskit: Object.freeze([
-    "transpile_circuit_tool",
-    "analyze_circuit_tool",
-    "compare_optimization_levels_tool",
-    "load_circuit_from_qasm_tool",
-    "export_circuit_to_qasm_tool",
-    "convert_qpy_to_qasm3_tool",
-    "convert_qasm3_to_qpy_tool",
-  ]),
-  qiskit_docs: Object.freeze([
-    "search_docs_tool",
-    "get_page_tool",
-    "lookup_error_code_tool",
-  ]),
-});
+const TOOL_CONTRACTS = Object.freeze(
+  Object.fromEntries(
+    ["qiskit", "qiskit_docs"].map((serverName) => [
+      serverName,
+      readDeclaredMcpToolContract({
+        projectRoot,
+        capabilityId: "qiskit-circuit-workbench",
+        serverName,
+      }),
+    ]),
+  ),
+);
 
 function serverConfigs() {
   const document = parseDocument(fs.readFileSync(presetPath, "utf8"), {
@@ -41,9 +39,41 @@ function serverConfigs() {
   return new Map(
     entries
       .map((entry) => entry?.config)
-      .filter((config) => EXPECTED_TOOLS[config?.serverName])
+      .filter((config) => TOOL_CONTRACTS[config?.serverName])
       .map((config) => [config.serverName, config]),
   );
+}
+
+function verifyEffect(serverName, contract, actual) {
+  if (contract.effect !== "read-only") {
+    throw new Error(
+      `${serverName}.${contract.name} uses unsupported probe effect ${contract.effect}`,
+    );
+  }
+  if (contract.effectEvidence === "mcp-annotations") {
+    if (
+      actual.annotations?.readOnlyHint !== true ||
+      actual.annotations?.destructiveHint === true
+    ) {
+      throw new Error(
+        `${serverName}.${contract.name} does not prove read-only annotations: ${JSON.stringify(actual.annotations ?? null)}`,
+      );
+    }
+    return;
+  }
+  if (contract.effectEvidence !== "reviewed-source") {
+    throw new Error(
+      `${serverName}.${contract.name} uses unsupported effect evidence ${contract.effectEvidence}`,
+    );
+  }
+  if (
+    actual.annotations?.readOnlyHint === false ||
+    actual.annotations?.destructiveHint === true
+  ) {
+    throw new Error(
+      `${serverName}.${contract.name} annotations contradict its reviewed-source read-only contract: ${JSON.stringify(actual.annotations)}`,
+    );
+  }
 }
 
 async function inspectServer(serverName, config) {
@@ -69,15 +99,34 @@ async function inspectServer(serverName, config) {
     });
     const tools = (await client.listTools(undefined, { timeout: 30_000 })).tools;
     const names = tools.map((tool) => tool.name);
-    const missing = EXPECTED_TOOLS[serverName].filter((name) => !names.includes(name));
-    if (missing.length > 0) {
-      throw new Error(`${serverName} is missing tools: ${missing.join(", ")}`);
+    const expectedNames = TOOL_CONTRACTS[serverName].map((tool) => tool.name);
+    const missing = expectedNames.filter((name) => !names.includes(name));
+    const unexpected = names.filter(
+      (name) => !expectedNames.includes(name),
+    );
+    if (missing.length > 0 || unexpected.length > 0) {
+      throw new Error(
+        `${serverName} Tool contract mismatch; missing: ${missing.join(", ") || "none"}; unexpected: ${unexpected.join(", ") || "none"}`,
+      );
+    }
+    for (const contract of TOOL_CONTRACTS[serverName]) {
+      verifyEffect(
+        serverName,
+        contract,
+        tools.find((tool) => tool.name === contract.name),
+      );
     }
     return {
       serverName,
       command: [config.command, ...config.args].join(" "),
       status: "ready",
-      tools: names,
+      tools: TOOL_CONTRACTS[serverName].map((contract) => ({
+        name: contract.name,
+        effect: contract.effect,
+        effectEvidence: contract.effectEvidence,
+        effectEvidenceRef: contract.effectEvidenceRef,
+        annotations: tools.find((tool) => tool.name === contract.name).annotations,
+      })),
     };
   } catch (error) {
     const detail = stderr.trim() ? `\nServer stderr:\n${stderr.trim()}` : "";
@@ -92,7 +141,7 @@ async function inspectServer(serverName, config) {
 async function main() {
   const configs = serverConfigs();
   const results = [];
-  for (const serverName of Object.keys(EXPECTED_TOOLS)) {
+  for (const serverName of Object.keys(TOOL_CONTRACTS)) {
     const config = configs.get(serverName);
     if (!config) throw new Error(`Preset is missing ${serverName}`);
     results.push(await inspectServer(serverName, config));

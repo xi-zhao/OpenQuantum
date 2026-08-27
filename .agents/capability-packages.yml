@@ -1,4 +1,4 @@
-schemaVersion: "1.0"
+schemaVersion: "1.1"
 
 packages:
   - id: quantum-sdk-advisor
@@ -7,12 +7,42 @@ packages:
   - id: qiskit-circuit-workbench
     level: L1
     execution:
-      servers:
+      mcpServers:
         - name: qiskit
           source: external
+          activation: conditional
+          contractCheck: scripts/probe-qiskit-mcp.mjs
+          effectEvidence: reviewed-source
+          effectEvidenceRef: docs/integrations/QISKIT_MCP_EFFECT_REVIEW.md
+          tools:
+            - name: load_circuit_from_qasm_tool
+              effect: read-only
+            - name: analyze_circuit_tool
+              effect: read-only
+            - name: compare_optimization_levels_tool
+              effect: read-only
+            - name: transpile_circuit_tool
+              effect: read-only
+            - name: convert_qpy_to_qasm3_tool
+              effect: read-only
+            - name: convert_qasm3_to_qpy_tool
+              effect: read-only
+            - name: export_circuit_to_qasm_tool
+              effect: read-only
         - name: qiskit_docs
           source: external
-      runners: []
+          activation: conditional
+          contractCheck: scripts/probe-qiskit-mcp.mjs
+          effectEvidence: reviewed-source
+          effectEvidenceRef: docs/integrations/QISKIT_MCP_EFFECT_REVIEW.md
+          tools:
+            - name: search_docs_tool
+              effect: read-only
+            - name: get_page_tool
+              effect: read-only
+            - name: lookup_error_code_tool
+              effect: read-only
+      nativeTools: []
       checks:
         - tests/project-settings.test.mjs
         - tests/harness-native-quantum.test.mjs
@@ -20,59 +50,117 @@ packages:
   - id: fieldqkit-hardware
     level: L1
     execution:
-      servers:
+      mcpServers:
         - name: fieldqkit
           source: package
-      runners: []
+          entrypoint: .agents/skills/fieldqkit-hardware/mcp/server.mjs
+          activation: always
+          contractCheck: .agents/skills/fieldqkit-hardware/test/mcp.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: inspect_fieldqkit_setup
+              effect: read-only
+            - name: discover_fieldqkit_backends
+              effect: read-only
+      nativeTools: []
       checks:
         - .agents/skills/fieldqkit-hardware/test/mcp.test.mjs
 
   - id: qpanda-qubo
     level: L1
     execution:
-      servers:
+      mcpServers:
         - name: qpanda_qubo
           source: package
-      runners: []
+          entrypoint: .agents/skills/qpanda-qubo/mcp/server.mjs
+          activation: always
+          contractCheck: .agents/skills/qpanda-qubo/test/mcp.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: inspect_qpanda_qubo_runtime
+              effect: read-only
+            - name: solve_qpanda_qubo
+              effect: read-only
+            - name: model_and_solve_qpanda_qubo
+              effect: read-only
+      nativeTools: []
       checks:
         - .agents/skills/qpanda-qubo/test/mcp.test.mjs
 
   - id: quantum-circuit-verification
     level: L1
     execution:
-      servers:
+      mcpServers:
         - name: qcec_local
           source: package
-      runners: []
+          entrypoint: .agents/skills/quantum-circuit-verification/mcp/server.mjs
+          activation: always
+          contractCheck: .agents/skills/quantum-circuit-verification/test/mcp.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: inspect_qcec_runtime
+              effect: read-only
+            - name: verify_circuit_equivalence
+              effect: read-only
+      nativeTools: []
       checks:
         - .agents/skills/quantum-circuit-verification/test/mcp.test.mjs
 
   - id: qec-memory-experiment
     level: L1
     execution:
-      servers:
+      mcpServers:
         - name: qec_local
           source: package
-      runners: []
+          entrypoint: .agents/skills/qec-memory-experiment/mcp/server.mjs
+          activation: always
+          contractCheck: .agents/skills/qec-memory-experiment/test/mcp.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: inspect_qec_runtime
+              effect: read-only
+            - name: run_qec_memory_experiment
+              effect: read-only
+      nativeTools: []
       checks:
         - .agents/skills/qec-memory-experiment/test/mcp.test.mjs
 
   - id: tyxonq-workbench
     level: L1
     execution:
-      servers:
+      mcpServers:
         - name: tyxonq_local
           source: package
-      runners: []
+          entrypoint: .agents/skills/tyxonq-workbench/mcp/server.mjs
+          activation: opt-in
+          contractCheck: .agents/skills/tyxonq-workbench/test/mcp.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: inspect_tyxonq_runtime
+              effect: read-only
+            - name: simulate_tyxonq_circuit
+              effect: read-only
+      nativeTools: []
       checks:
         - .agents/skills/tyxonq-workbench/test/mcp.test.mjs
 
   - id: platform-diagnostics
     level: L2
     execution:
-      servers: []
-      runners:
-        - .agents/skills/platform-diagnostics/evals/run-evals.mjs
+      mcpServers: []
+      nativeTools:
+        - name: bash
+          providerPlugin: "@deepseek-ai/dsh-tool-bash"
+          activation: conditional
+          contractCheck: tests/harness-native-quantum.test.mjs
+          effect: external-write
+          effectEvidence: conservative-provider
+        - name: pwsh
+          providerPlugin: "@deepseek-ai/dsh-tool-pwsh"
+          activation: conditional
+          contractCheck: tests/harness-native-quantum.test.mjs
+          effect: external-write
+          effectEvidence: conservative-provider
       checks:
         - .agents/skills/platform-diagnostics/evals/run-evals.mjs
     audit:
@@ -81,10 +169,19 @@ packages:
   - id: quantum-information-audit
     level: L3
     execution:
-      servers:
+      mcpServers:
         - name: toqito_audit
           source: package
-      runners: []
+          entrypoint: .agents/skills/quantum-information-audit/mcp/server.mjs
+          activation: always
+          contractCheck: .agents/skills/quantum-information-audit/test/mcp.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: inspect_toqito_runtime
+              effect: read-only
+            - name: audit_density_matrix
+              effect: read-only
+      nativeTools: []
       checks:
         - .agents/skills/quantum-information-audit/test/mcp.test.mjs
         - .agents/skills/quantum-information-audit/evals/run-evals.mjs
@@ -99,10 +196,21 @@ packages:
   - id: quantum-ground-state
     level: L3
     execution:
-      servers:
+      mcpServers:
         - name: openquantum_quantum
           source: package
-      runners: []
+          entrypoint: .agents/skills/quantum-ground-state/mcp/server.mjs
+          activation: always
+          contractCheck: .agents/skills/quantum-ground-state/test/mcp.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: solve_and_validate_ground_state
+              effect: read-only
+            - name: solve_ground_state
+              effect: read-only
+            - name: validate_ground_state
+              effect: read-only
+      nativeTools: []
       checks:
         - .agents/skills/quantum-ground-state/test/mcp.test.mjs
         - .agents/skills/quantum-ground-state/evals/run-evals.mjs

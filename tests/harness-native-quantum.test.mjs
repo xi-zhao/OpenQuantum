@@ -15,6 +15,7 @@ import test from "node:test";
 import { fileURLToPath } from "node:url";
 import { parseDocument } from "yaml";
 
+import { readDeclaredNativeToolContracts } from "../scripts/lib/capability-tool-contract.mjs";
 import { prepareOpenQuantumHarnessHome } from "../scripts/lib/prepare-harness-home.mjs";
 
 const projectRoot = fileURLToPath(new URL("..", import.meta.url));
@@ -35,6 +36,14 @@ const INCLUDE_IBM_RUNTIME_MCP =
   process.env.OPENQUANTUM_TEST_IBM_RUNTIME_MCP === "1";
 const QISKIT_CIRCUIT_TOOL = "mcp__qiskit__transpile_circuit_tool";
 const QISKIT_DOCS_TOOL = "mcp__qiskit_docs__search_docs_tool";
+const PLATFORM_SHELL_PROVIDER =
+  process.platform === "win32"
+    ? "@deepseek-ai/dsh-tool-pwsh"
+    : "@deepseek-ai/dsh-tool-bash";
+const SHELL_TOOL_CONTRACTS = readDeclaredNativeToolContracts({
+  projectRoot,
+  capabilityId: "platform-diagnostics",
+});
 const EXPECTED_QUANTUM_SKILLS = Object.freeze([
   "platform-diagnostics",
   "quantum-ground-state",
@@ -116,7 +125,7 @@ async function waitForValue(probe, { timeoutMs, description, diagnostics }) {
 }
 
 test(
-  "Harness preset shares the quantum Skill and native MCP tools across two Sessions",
+  "Harness preset shares quantum Skills and registered Tools across two Sessions",
   { timeout: INCLUDE_IBM_RUNTIME_MCP ? 180_000 : 45_000 },
   async (t) => {
     const sandboxRoot = await mkdtemp(
@@ -297,6 +306,18 @@ test(
       );
 
       const toolNames = header.data.header.tools.map((tool) => tool.name);
+      const platformShell = SHELL_TOOL_CONTRACTS.find(
+        (contract) => contract.providerPlugin === PLATFORM_SHELL_PROVIDER,
+      );
+      assert(platformShell, "policy must declare the platform shell Provider");
+      assert.equal(platformShell.activation, "conditional");
+      assert.equal(platformShell.effect, "external-write");
+      assert.equal(platformShell.effectEvidence, "conservative-provider");
+      assert(toolNames.includes(platformShell.name), diagnostics());
+      for (const contract of SHELL_TOOL_CONTRACTS) {
+        if (contract === platformShell) continue;
+        assert.equal(toolNames.includes(contract.name), false, diagnostics());
+      }
       assert(toolNames.includes(SOLVE_AND_VALIDATE_TOOL), diagnostics());
       assert(toolNames.includes(SOLVE_TOOL), diagnostics());
       assert(toolNames.includes(VALIDATE_TOOL), diagnostics());

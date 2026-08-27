@@ -7,8 +7,16 @@ import { fileURLToPath } from "node:url";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 
+import { readDeclaredMcpToolContract } from "../../../../scripts/lib/capability-tool-contract.mjs";
+
 const skillRoot = fileURLToPath(new URL("..", import.meta.url));
+const projectRoot = path.resolve(skillRoot, "../../..");
 const serverPath = path.join(skillRoot, "mcp", "server.mjs");
+const declaredToolContract = readDeclaredMcpToolContract({
+  projectRoot,
+  capabilityId: "fieldqkit-hardware",
+  serverName: "fieldqkit",
+});
 let client;
 let transport;
 
@@ -16,7 +24,7 @@ before(async () => {
   transport = new StdioClientTransport({
     command: process.execPath,
     args: [serverPath],
-    cwd: path.resolve(skillRoot, "../../.."),
+    cwd: projectRoot,
     env: {
       ...process.env,
       QUAFU_API_TOKEN: "test-value-that-must-never-be-returned",
@@ -37,7 +45,13 @@ test("FieldQKit MCP exposes only read-only setup and discovery tools", async () 
   const tools = (await client.listTools()).tools;
   assert.deepEqual(
     tools.map((tool) => tool.name),
-    ["inspect_fieldqkit_setup", "discover_fieldqkit_backends"],
+    declaredToolContract.map((tool) => tool.name),
+  );
+  assert.ok(declaredToolContract.every((tool) => tool.effect === "read-only"));
+  assert.ok(
+    declaredToolContract.every(
+      (tool) => tool.effectEvidence === "mcp-annotations",
+    ),
   );
   assert.ok(tools.every((tool) => tool.annotations.readOnlyHint));
   assert.ok(tools.every((tool) => !tool.annotations.destructiveHint));
