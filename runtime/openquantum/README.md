@@ -8,18 +8,18 @@
 | --- | --- |
 | `cordis.patch.yml` | Harness Home patch：为 Web、Desktop 等 Host 统一组合 Provider route、OpenQuantum preset、品牌与设置插件 |
 | `agent-presets/openquantum/preset.yml` | OpenQuantum Agent preset 元数据 |
-| `agent-presets/openquantum/agent.cordis.yml` | Agent scope 内的 Tool、Skill provider、MCP、权限与结果投影组合 |
+| `agent-presets/openquantum/agent.cordis.yml` | Agent scope 内的 Skill Provider、原生 Tool Plugin、Harness MCP Client、权限与结果投影组合 |
 | `agent-presets/openquantum/credentialed-mcp-client.mjs` | Harness credential reference 到 MCP 子进程环境变量的薄 Adapter |
 | `agent-presets/openquantum/scientific-result-materializer.mjs` | QGS/QI 共用的 workspace 物化、真实字节重读、中央 Acceptance 与 Result Commit Module |
 | `agent-presets/openquantum/scientific-result-adapters.mjs` | Tool 到领域投影、Materializer 和 Artifact 合同的双 L3 Adapter Registry |
 | `agent-presets/openquantum/scientific-result-protocol.mjs` | 有界、可回放的 `tool/result` 科研投影协议 |
 | `../../packages/openquantum-web-branding/` | 可独立安装的 Harness Web 品牌插件 |
-| `web-capabilities/` | 通过 Harness Settings seam 展示和修改量子 Skill、MCP 与凭据引用 |
+| `web-capabilities/` | 通过 Harness Settings seam 展示和修改量子 Skill、MCP Server 连接与凭据引用 |
 
 ## 不变量
 
 - 不修改 `node_modules` 中的 Harness；
-- 不复制 Session、Agent loop、Tool registry、MCP client、凭据库或事件日志；
+- 不复制 Session、Agent loop、Tool Registry、Harness MCP Client、凭据库或事件日志；
 - Web 与 Desktop 从同一个 DSH Home 加载这份 patch，不维护两套产品组合；
 - `agent.cordis.yml` 是 OpenQuantum Agent 组合的运行权威；
 - 设置中心通过 `src/settings/server/` 的受控 Interface 修改配置，不维护第二份状态；

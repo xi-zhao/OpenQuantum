@@ -11,10 +11,12 @@
 
 ## 二次开发
 
-- [参与贡献](../CONTRIBUTING.md)：新增 Skill、MCP、Validator 或 Harness 扩展的规则。
+- [参与贡献](../CONTRIBUTING.md)：新增 Skill、Tool Provider、Validator 或 Harness 扩展的规则。
+- [扩展对象模型](architecture/EXTENSION_MODEL.md)：严格区分 Skill、Tool、MCP Server、Harness MCP Client、External API、Validator、Composition、Host Plugin 与 Client Plugin。
 - [仓库地图](REPOSITORY_GUIDE.md)：目录职责、配置权威和实际编排关系。
 - [模块地图](architecture/MODULES.md)：核心对象、模块 Interface、依赖方向和能力包 L0–L3 演进契约。
 - [量子能力候选清单](ecosystem/QUANTUM_CAPABILITY_CATALOG.md)：当前集成和后续候选。
+- [Qiskit MCP Tool 副作用审查](integrations/QISKIT_MCP_EFFECT_REVIEW.md)：固定上游版本的逐 Tool effect 证据与升级门禁。
 
 ## 架构与维护
 
@@ -23,7 +25,7 @@
 - [ADR-001：知情审批与失败关闭](architecture/ADR-001-INFORMED-APPROVAL-FAIL-CLOSED.md)。
 - [ADR-002：Harness 原生扩展优先](architecture/ADR-002-HARNESS-NATIVE-EXTENSIONS-FIRST.md)。
 - [ADR-003：Desktop 作为 Harness Host Adapter](architecture/ADR-003-DESKTOP-AS-HARNESS-HOST-ADAPTER.md)。
-- [开发计划](roadmap/DEVELOPMENT_PLAN.md)：当前里程碑、验证标准和后续工作。
+- [MVP 历史开发计划](roadmap/DEVELOPMENT_PLAN.md)：保留首条纵切的历史决策；当前边界与优先级以架构审计为准。
 
 ## 阅读原则
 

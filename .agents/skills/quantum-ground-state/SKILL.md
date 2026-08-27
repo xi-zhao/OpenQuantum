@@ -19,10 +19,13 @@ description: 求解并科学验收用户提供的二量子位实 Pauli Hamiltoni
 
 1. 按 [inputs/request.schema.json](inputs/request.schema.json) 检查结构，并由 solver 再做语义 preflight。
 2. 明确拒绝 QAOA、Pauli `Y`、复系数、错误单位、其他粒子扇区、更多量子位、shots 和噪声。
-3. 普通用户请求优先调用 MCP `solve_and_validate_ground_state`；它在一次确定性调用内生成六类事实并运行独立 Validator。
+3. 普通用户请求优先调用 MCP-exposed Tool `solve_and_validate_ground_state`；它在一次确定性调用内生成六类事实并运行独立 Validator。
 4. 只需要事实时调用 `solve_ground_state`；只对已物化 Result Package 重验时调用 `validate_ground_state`。
-5. 组合 MCP Tool 自己的 `provenance.complete` 必须保持 `not_checked`；不得伪造 Session、路径或摘要让它通过。
-6. 在 OpenQuantum Harness preset 中，由受信任 Adapter 使用真实 Session/Tool 身份和 `ctx.fs` 物化 Result Package，完整 Validator 重读这些字节后，再由中央 builder 注入 Acceptance Profile 阈值并推导科学结论。
+5. 组合 MCP-exposed Tool 自己的 `provenance.complete` 必须保持 `not_checked`；不得伪造 Session、路径或摘要让它通过。
+6. OpenQuantum 的可信 Host Plugin 从真实 Session/Tool 身份进入内部 Scientific Result Adapter；
+   Materializer 使用 `ctx.fs` 物化、重读和校验 Result Package，Validator 只对重读后的结构化
+   证据产生 observations，central Acceptance Builder 再汇聚 Acceptance Profile、observations 和
+   provenance 推导科学结论。
 7. 需要评分或复现时，分别生成 Score Report 或 Reproduction Report；不得从运行完成推导它们。
 
 本地事实求解命令：
@@ -62,4 +65,5 @@ Hermiticity、扇区不变性、精确参考重算、归一化、期望值回放
 ## 解释要求
 
 对用户解释时明确区分：这是“给定 Hamiltonian 的扇区基态”，不是完整的分子 Hamiltonian/FCI 工作流。
-Model 可以解释 Result/Report，但不能修改 Validator 推导的结论。
+Model 可以解释 Result/Report，但不能修改中央 Acceptance Builder 基于 Validator observations、Profile 和
+来源链推导的结论。

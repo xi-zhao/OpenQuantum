@@ -1,10 +1,12 @@
 /**
- * Harness-native adapter for scientific MCP results.
+ * Harness-native Host Plugin for scientific Tool results.
  *
- * The MCP server owns deterministic computation, Harness owns execution and
- * Session identity, ctx.fs owns atomic workspace writes, the Skill Validator
- * owns scientific checks, and the central contract builder owns Acceptance.
- * This plugin only joins those existing seams for one completed root call.
+ * The MCP Server owns deterministic computation, Harness owns execution and
+ * Session identity, ctx.fs owns atomic workspace writes, the Scientific
+ * Validator owns observations, the Profile owns rules, and only the central
+ * Acceptance Builder derives Acceptance. This trusted Host Plugin owns the
+ * lifecycle hook and delegates capability mapping to the internal Scientific
+ * Result Adapter Registry.
  */
 
 import { scientificResultAdapter } from "./scientific-result-adapters.mjs";

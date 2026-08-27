@@ -40,7 +40,8 @@ Validator 再去检查结果是否真的满足科学规则。
 
 一组是量子电路和文档，包括 OpenQASM 3、QPY、电路深度、Qiskit 转译和 Qiskit 官方文档查询。
 
-一组是本地算法和科学检查，包括二量子位 VQE 基态求解、TyxonQ statevector 与噪声电路验证，以及独立 Validator 验收。
+一组是本地算法和科学检查，包括二量子位 VQE 基态求解、TyxonQ statevector 与噪声电路验证，以及由独立
+Validator observations、Acceptance Profile 和 central Acceptance Builder 支撑的科学验收。
 
 还有一组是量子云与开发工具，包括 IBM Quantum、IonQ 和多家国内量子云后端的发现与选择，以及 Qiskit、Cirq、PennyLane、Q#、Braket、CUDA-Q 等 SDK 的技术选型。
 
@@ -54,19 +55,19 @@ Validator 再去检查结果是否真的满足科学规则。
 
 ![OpenQuantum 中的 Harness 执行轨迹](../images/openquantum-trajectory.jpg)
 
-*Skill 加载、MCP 调用、工具结果和运行状态，都会保留在 DSH 的执行轨迹里。*
+*Skill 加载、MCP-exposed Tool 调用、工具结果和运行状态，都会保留在 DSH 的执行轨迹里。*
 
 以 OpenQuantum 自带的量子基态能力为例，一次真实运行中，VQE 和独立精确参考都得到 -1.85727503 Ha，能量差约为 4.44 × 10^-16 Ha，所有科学检查通过。
 
 ![OpenQuantum 量子基态任务的科学验收结果](../images/openquantum-quantum-result.jpg)
 
-*工具运行完成只是第一步，科学结论还要经过独立 Validator。*
+*工具运行完成只是第一步；Validator 产生 observations，Acceptance Profile 定义规则，central Acceptance Builder 再推导科学结论。*
 
 这次个人微信接入，复用了 [CC Connect](https://github.com/chenhg5/cc-connect) 作为消息桥，再通过标准 ACP 连接到 DSH。OpenQuantum 没有重新做一套聊天 Runtime，也没有复制 DSH 的会话和工具系统。
 
 整个路径其实很清楚。
 
-> 个人微信 → CC Connect → DeepSeek Harness → OpenQuantum Skill 与 MCP → 量子结果返回微信
+> 个人微信 → CC Connect → DeepSeek Harness → OpenQuantum Skill 与 Tool → 量子结果返回微信
 
 OpenQuantum 目前提供个人微信和飞书的快捷配置。钉钉、企业微信、Slack、Telegram、Discord、QQ 等消息平台，也可以继续通过 CC Connect 的本地管理界面接入。
 

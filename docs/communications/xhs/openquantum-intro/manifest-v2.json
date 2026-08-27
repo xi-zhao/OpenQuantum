@@ -17,22 +17,22 @@
       "file": "docs/communications/xhs/openquantum-intro/exports/openquantum-xhs-01-overview-v2.png",
       "width": 1080,
       "height": 1440,
-      "bytes": 152649,
-      "sha256": "261df8a154a9b9f628487d311c34a7b7d025565183d6d6a642e0f8904ffc9b55"
+      "bytes": 148868,
+      "sha256": "70dfa67a9f96239d3006e1b3ef5fc880b432dda700abb30a0e2fb17c6146f4a9"
     },
     {
       "file": "docs/communications/xhs/openquantum-intro/exports/openquantum-xhs-02-architecture-v2.png",
       "width": 1080,
       "height": 1440,
-      "bytes": 203588,
-      "sha256": "a7f862c43a1e78c9bbd32c6dcc637c51138b3e074fed47f05b69791379ad5c07"
+      "bytes": 197802,
+      "sha256": "60bad329b2384ad9287b94589dbd6b0744f03ed31b66ca8317c49adc056a86b7"
     },
     {
       "file": "docs/communications/xhs/openquantum-intro/exports/openquantum-xhs-03-experience-v2.png",
       "width": 1080,
       "height": 1440,
-      "bytes": 199349,
-      "sha256": "e84c0207f4c2e45b2e29c5f8fcc8ce2613acfa340285450dc974113f09481247"
+      "bytes": 200484,
+      "sha256": "b644ed5f09a03ffff5740731403f0579dd00de5f1c0a65a4e12aeafd237885f2"
     }
   ],
   "supersedes": [

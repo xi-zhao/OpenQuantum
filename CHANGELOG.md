@@ -7,8 +7,9 @@ OpenQuantum 的重要变更记录在此。格式遵循 [Keep a Changelog](https:
 
 ### Added
 
-- 面向量子公司和科研团队的 Harness 原生 Skill / MCP / Fork 二次开发路径。
+- 面向量子公司和科研团队的 Harness 原生 Skill / Tool Provider / Fork 二次开发路径。
 - `quantum-ground-state` 原生 Skill、确定性 Validator 与 stdio MCP 科学计算纵切。
+- Skill、Tool、MCP Server、External API、Validator 与 Composition 的权威扩展对象模型。
 
 ### Changed
 
@@ -16,6 +17,10 @@ OpenQuantum 的重要变更记录在此。格式遵循 [Keep a Changelog](https:
 - 产品架构收缩为 DeepSeek Harness 量子科研发行版，不再建设独立 Runtime、插件市场或安装协议。
 - 默认 Web 界面切换为 DeepSeek Harness 原生 Web UI；OpenQuantum 只通过官方扩展点注入品牌与量子能力。
 - 删除旧网站模板、平行 Next.js UI、浏览器 BFF 和 Session adapter，只保留 Harness 原生 Web 产品链。
+- Capability policy 与 conformance report 升级到 `1.1`：`mcpServers` 显式列出 MCP-exposed Tool、
+  `nativeTools` 显式列出原生 Tool Plugin，两者都必须声明 activation、合同检查入口和最大副作用；本地
+  MCP Server 合同测试直接读取 policy，报告作用域明确为 `static-declaration`；旧 `servers` / `runners`
+  形状不再接受，runner 不能独立充当 Agent 执行入口。
 
 ## [0.4.0] - 2026-08-14
 
@@ -29,7 +34,7 @@ OpenQuantum 的重要变更记录在此。格式遵循 [Keep a Changelog](https:
 ### Changed
 
 - 产品从网站克隆模板重构为 OpenQuantum 开源科研 Agent 平台。
-- 科学状态改由版本化 Validator/Profile 推导，不再由模型或 UI 自报。
+- 科学状态改由 central Acceptance Builder 基于版本化 Acceptance Profile、Validator observations 与 provenance 推导，不再由模型或 UI 自报。
 
 ### Security
 

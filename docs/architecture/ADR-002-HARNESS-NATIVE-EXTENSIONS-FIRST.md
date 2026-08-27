@@ -7,7 +7,8 @@
 ## 背景
 
 OpenQuantum 的目标是成为一个便于量子公司 Fork 和二次开发的开源工具，而不是经营一个插件市场。
-DeepSeek Harness 已经提供 Agent Runtime、Skill、Tool、MCP、Plugin、权限、沙箱、模型路由和持久化。
+DeepSeek Harness 已经提供 Agent Runtime、Skill Registry、Tool Registry、Harness MCP Client、Host Plugin、
+Client Plugin、权限、沙箱、模型路由和持久化。
 如果 OpenQuantum 再定义私有包格式、安装锁、Catalog 和发布治理，会让贡献者同时学习两套系统，
 并让项目承担与量子科研无关的 Runtime 维护成本。
 
@@ -16,17 +17,20 @@ DeepSeek Harness 已经提供 Agent Runtime、Skill、Tool、MCP、Plugin、权�
 OpenQuantum 定位为 **DeepSeek Harness 的量子科研发行版**，第三方扩展直接采用 Harness 原生机制：
 
 - 领域工作流使用原生 `SKILL.md`；
-- 确定性计算和外部后端使用 Harness 支持的 stdio / Streamable HTTP MCP；
-- Agent、Skill、MCP、权限和模型通过 preset / Cordis 配置组合；
-- 只有原生机制无法表达的宿主行为才使用经过审查的 `dsh-plugin`；
+- Agent 可调用动作先定义为 Tool；由原生 Tool Plugin 注册，或由 stdio / Streamable HTTP MCP Server
+  暴露后经 Harness MCP Client 注册；
+- Agent Preset 组合 persona、Skill Provider、Tool Provider、Agent 策略和必要的 agent-scoped Host Plugin；
+  Model Provider Route、默认 Agent Preset、deployment-scoped Host Plugin 与 Client Plugin 由 Deployment/Home Patch 组合；
+- 只有原生机制无法表达的宿主行为才使用经过审查的 Host Plugin；
 - 量子公司通过 Fork、普通 Git 分支与 PR，或维护自己的发行版完成交付。
 
-OpenQuantum 只增加量子 preset、初级 Skill、MCP、可信插件、科学 Validator、必要科研 UI 和薄
-`HarnessTransportAdapter`。Session、Agent loop、Tool/Skill/MCP registry、权限、沙箱、模型、事件和持久化
-全部以 Harness 为权威实现。
+OpenQuantum 只增加量子 Agent Preset、Skill、Tool Provider、必要的 MCP Server、可信 Host Plugin 与 Client Plugin、Scientific
+Validator、必要科研 UI 和有界 Scientific Result Adapter。Session、Agent loop、Tool Registry、Skill Registry、Harness MCP Client、权限、
+沙箱、模型、事件和持久化全部以 Harness 为权威实现。
 
-科学 Validator 是独立于 Harness Skill Registry 的领域实现，可以与 Skill 源码共置以提高 locality，
-但必须由 MCP/Tool 或可信插件显式调用。它将 Harness 的“执行完成”与“科学验收通过”分开，不形成新的
+Scientific Validator 是独立于 Harness Skill Registry 的领域实现，可以与 Skill 源码共置以提高 locality，
+但必须由 Tool、Materializer 或 CI 显式调用。它产生 observations，Acceptance Profile 定义规则，central Acceptance Builder 将 Harness 的
+“执行完成”与“科学验收通过”分开，不形成新的
 Runtime、安装系统、发布状态机或 Skill→Validator 绑定协议。
 
 第一版明确不实现：

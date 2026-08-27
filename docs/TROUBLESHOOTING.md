@@ -1,7 +1,7 @@
 # 常见问题与故障排查
 
-OpenQuantum 复用 DeepSeek Harness。出现问题时，先判断故障属于 UI、Harness、Skill、MCP、Validator、Model
-还是外部量子服务，不要把所有失败都归因于模型。
+OpenQuantum 复用 DeepSeek Harness。出现问题时，先判断故障属于 UI、Harness、Skill、Tool Provider、
+MCP Server、Harness MCP Client、Validator、Model Provider 还是外部量子服务，不要把所有失败都归因于模型。
 
 ## 先运行最小诊断
 
@@ -47,19 +47,19 @@ docker compose logs openquantum
 4. 运行相关 Skill 测试或 Harness `skill.list` 探针；
 5. 修改后重启 OpenQuantum。
 
-同目录中的 `mcp/`、`validators/` 或 `scripts/` 不会因为和 Skill 共置而自动注册或执行。
+同目录中的 `mcp/`、`validators/` 或 `scripts/` 不会因为和 Skill 共置而自动连接 MCP Server、注册 Tool 或执行 Validator。
 
-## MCP 看得到但没有启用
+## MCP Server 已声明但 Harness MCP Client 没有启用
 
-- 涉及凭据、网络、费用或真实硬件的 MCP 默认关闭；
+- 涉及凭据、网络、费用或真实硬件的 MCP Server 连接默认关闭；
 - 先在设置中心配置所需凭据，再主动启用；
 - 设置保存后需要重启 Harness；
-- 自定义 MCP 创建后保持关闭，确认命令、参数、来源和许可证后再启用。
+- 自定义 MCP Server 连接创建后保持关闭，确认命令、参数、来源和许可证后再启用。
 
 如果服务由 `uvx` 启动，首次运行可能需要下载固定依赖；离线环境可以显式禁用对应 MCP，避免把网络下载
 问题误判成 Agent 故障。
 
-## MCP 启动失败或重复注册
+## MCP Server 启动失败或 MCP-exposed Tool 重复注册
 
 `agent.cordis.yml` 修改后，旧开发进程可能仍持有相同 `serverName`。停止旧 OpenQuantum 进程并完整重启，
 不要同时运行两个使用同一 Harness 状态目录的开发实例。
@@ -82,16 +82,17 @@ npm run mcp:qiskit:probe
 
 ## 任务完成，但没有科学验收通过
 
-这是允许出现的状态。Harness 的 Turn / Tool 完成只表示执行结束；科学验收必须由对应 Validator 和版本化
-Profile 单独推导。
+这是允许出现的状态。Harness 的 Turn / Tool 完成只表示执行结束；Scientific Validator 只产生 observations，
+科学验收必须由 central Acceptance Builder 按版本化 Acceptance Profile 和来源链要求推导。
 
 按顺序检查：
 
-1. MCP 是否返回了结构化事实；
+1. MCP-exposed Tool 是否返回了结构化事实；
 2. Harness 是否物化了 Result Package；
 3. Validator 是否运行；
 4. required observation 是否全部通过；
-5. 输入是否超出 Skill 声明的科学作用域。
+5. Acceptance Builder 是否成功加载版本化 Profile 与完整来源链；
+6. 输入是否超出 Skill 声明的科学作用域。
 
 不要通过修改 UI 文案或 Prompt 把未验收结果显示为通过。
 
@@ -116,6 +117,6 @@ git diff --check
 - 使用本地还是 Docker；
 - 失败命令和脱敏后的错误；
 - `npm run harness:config` 是否通过；
-- 故障属于 Skill、MCP、Model 还是外部后端的初步判断。
+- 故障属于 Skill、Tool Provider、MCP Server、Harness MCP Client、Model Provider 还是外部后端的初步判断。
 
 不要提供 `.env`、API Key、Harness 凭据文件、私有 Endpoint、未脱敏 Session 或付费任务标识。

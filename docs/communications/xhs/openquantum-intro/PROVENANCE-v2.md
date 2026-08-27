@@ -3,7 +3,7 @@
 ## 发布顺序
 
 1. `exports/openquantum-xhs-01-overview-v2.png`：OpenQuantum 是什么，以及它给用户带来的四项核心价值；
-2. `exports/openquantum-xhs-02-architecture-v2.png`：Skill、MCP/Tool、Validator 与 DeepSeek Harness 的真实关系，以及当前能力状态；
+2. `exports/openquantum-xhs-02-architecture-v2.png`：Skill、Tool、MCP Server、Validator 与 DeepSeek Harness 的真实关系，以及当前能力状态；
 3. `exports/openquantum-xhs-03-experience-v2.png`：二量子位基态任务的执行轨迹、真实数值结果与独立科学验收。
 
 三张图片均为 1080 × 1440 px、3:4 竖版。第二版把每一页组织成一个完整答案，优先保证
@@ -12,13 +12,13 @@
 ## 内容依据
 
 - 产品定位与当前接入能力：仓库 `README.md`；
-- Skill、MCP/Tool、Validator、Harness 的边界：`docs/architecture/ARCHITECTURE_AUDIT.md`；
+- Skill、Tool、MCP Server、Validator、Harness 的边界：`docs/architecture/EXTENSION_MODEL.md`；
 - 面向公开传播的产品表达：`docs/communications/openquantum-wechat-launch.md`；
 - 基态任务数值与真实界面：`docs/images/openquantum-quantum-result.jpg`；
 - 品牌标识：`packages/openquantum-web-branding/assets/icon-512.png`。
 
 第二页明确区分“开启”“只读”“已接入但关闭”，避免把配置入口误写成当前可用能力。第三页同时呈现
-运行完成和科学验收：MCP/Tool 产生结构化事实，Validator 重读证据并派生 Acceptance，模型不能自行改写结论。
+运行完成和科学验收：Tool 产生结构化事实，Materializer 物化并重读真实字节，Validator 接收结构化证据并产生 observations，Acceptance Profile 定义规则，central Acceptance Builder 派生 Acceptance，模型不能自行改写结论。
 
 ## 可核验信息
 

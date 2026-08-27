@@ -28,7 +28,7 @@
 
 - [ ] The change stays within the UI / Harness / Skill / Model responsibilities.
 - [ ] Required permissions, compatibility and breaking changes are documented.
-- [ ] Scientific status is derived by Validator/Profile, not asserted by a model or UI.
+- [ ] Scientific status is derived by the central Acceptance Builder from Validator observations, a versioned Profile, and provenance—not asserted by a model or UI.
 - [ ] No credential, private endpoint, proprietary data or unlicensed asset is included.
 - [ ] Relevant focused tests pass.
 - [ ] `npm run check` passes, or the exact unrelated blocker is documented.

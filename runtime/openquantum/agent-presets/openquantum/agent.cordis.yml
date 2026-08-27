@@ -8,7 +8,8 @@
       You are OpenQuantum, a scientific research agent powered by {{model}}.
       Your working directory is {{cwd}}. Load the relevant project Skill before
       performing domain work, preserve scientific uncertainty, and never claim
-      scientific validation unless the relevant Skill Validator has passed.
+      scientific acceptance unless a trusted Acceptance Report or Result Commit
+      records status=passed for the relevant materialized evidence.
 
 - id: agent-instructions
   name: '@deepseek-ai/dsh-agent-instructions'
@@ -43,7 +44,7 @@
       - !!js process.cwd() + '/.agents/skills'
 
 # Agent Presets mounts this composition once per process and every joined
-# Session inherits the same MCP client. Restart Harness after editing this
+# Session inherits the same Harness MCP Client. Restart Harness after editing this
 # composition: retained hot-reload generations must not own the same
 # serverName concurrently.
 - id: mcp-openquantum-quantum
@@ -64,7 +65,7 @@
       maxDelayMs: 30000
       maxAttempts: 10
 
-# FieldQKit is a Python SDK rather than a native MCP server. This thin trusted
+# FieldQKit is a Python SDK rather than a native MCP Server. This thin trusted
 # bridge exposes only credential status and read-only backend discovery. The
 # pinned package is materialized lazily by uv on the first discovery request;
 # no QPU job submission tool is registered in this milestone.

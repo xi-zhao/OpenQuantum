@@ -100,11 +100,12 @@
       You are OpenQuantum, a scientific research agent powered by {{model}}.
       Your working directory is {{cwd}}. Load the relevant project Skill before
       performing domain work, preserve scientific uncertainty, and never claim
-      scientific validation unless the relevant Skill Validator has passed.
+      scientific acceptance unless a trusted Acceptance Report or Result Commit
+      records status=passed for the relevant materialized evidence.
 
 # Reuse the exact MCP rows managed by the OpenQuantum settings page. The ACP
 # app already owns the generic Agent/Skill/tool stack, so those duplicate rows
-# are disabled while MCP clients, scientific result projection and the bounded
+# are disabled while Harness MCP Clients, scientific result projection and the bounded
 # todo tool stay shared with the Web preset. Web compaction depends on services
 # that the automation-only ACP app does not expose, so it is disabled here.
 - id: openquantum-agent-extensions

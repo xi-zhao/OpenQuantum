@@ -7,10 +7,11 @@
   → CC Connect（消息收发、平台 Bot 配置）
   → ACP stdio
   → DeepSeek Harness（Session、Agent、权限、工具与执行记录）
-  → OpenQuantum Skill / MCP / Validator
+  → OpenQuantum Skill + Tool Provider + optional Validator
 ```
 
-这条边界意味着：从消息平台发来的请求与 Web 工作台使用同一套量子能力配置。设置中心启用或关闭的 MCP 仍由 Harness preset 管理；CC Connect 不直接加载 Skill，也不直接执行 MCP。
+这条边界意味着：从消息平台发来的请求与 Web 工作台使用同一套量子能力配置。设置中心启用或关闭的是
+Harness MCP Client 连接；它仍由 Agent Preset 管理。CC Connect 不直接加载 Skill，也不直接调用 MCP-exposed Tool。
 
 ## 第一次使用
 
@@ -24,7 +25,7 @@ npm run cc-connect:setup
 
 - 注册一个名为 `openquantum` 的 ACP Agent；
 - 指向 DeepSeek Harness 官方 `dsh-acp-demo` 入口；
-- 使用 OpenQuantum 的项目根、Skill 目录、MCP preset 和模型路由；
+- 使用 OpenQuantum 的项目根、Skill 目录、Agent Preset 中的 Harness MCP Client 配置和模型路由；
 - 生成只属于本机的 CC Connect 管理凭据；
 - 已有配置存在时保持原样，不覆盖平台或密钥。
 
@@ -74,7 +75,7 @@ OpenQuantum 的“设置 → 消息渠道”只展示这条连接的产品状态
 - `cc-connect` 固定为 `1.5.0`，DeepSeek Harness ACP 入口固定为 `0.1.0-rc.6`；升级时要重新运行 ACP 握手测试。
 - ACP 入口创建独立 Harness Session，执行事实写入 `.openquantum/cc-connect/sessions`，不与 Web Host 的 JSONL writer 混用。
 - CC Connect 可以转发文本、权限选择和已提交的 Agent 回复；更完整的工具轨迹仍以 Harness Session 记录为准。
-- 真实量子硬件、付费云任务和需要凭据的 MCP 继续遵循设置中心的默认关闭与显式启用规则。
+- 真实量子硬件、付费云任务和需要凭据的 MCP Server 连接继续遵循设置中心的默认关闭与显式启用规则。
 - 当前提供本地进程启动方式，没有把 CC Connect 加入 Docker Compose 或系统守护进程；长期运行可继续使用 CC Connect 自带的 `daemon` 命令，但应由部署者独立管理。
 
 ## 排查顺序

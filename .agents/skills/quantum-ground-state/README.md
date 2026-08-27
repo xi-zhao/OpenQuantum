@@ -33,7 +33,7 @@ The atomic MCP workflow deliberately emits `provenance.complete=not_checked`: it
 execution-local structured content. In the OpenQuantum Harness preset, a trusted `tools/post-execute`
 Adapter obtains the real Session/Tool identity, atomically writes the input and six artifacts through
 Harness `ctx.fs`, validates the resulting Result Package, reruns this full Validator against those
-bytes, and only then invokes the central Acceptance builder. The MCP itself never invents Session ids,
+bytes, and only then invokes the central Acceptance Builder. The MCP Server itself never invents Session ids,
 file paths, digests, or acceptance.
 
 ### Validator host protocol

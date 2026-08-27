@@ -31,14 +31,14 @@ OpenQuantum Harness Home
 
 1. `runtime/openquantum/cordis.patch.yml` 在启动前物化为 DSH Home 级 patch，所有 Host 使用同一产品组合；
 2. Desktop 只负责窗口、托盘、终端、通知和 Host 生命周期，不拥有量子业务规则；
-3. Session、Agent preset、Skill、MCP、Validator、Provider 与凭据仍以 Harness / OpenQuantum 现有模块为权威；
+3. Session、Agent Preset、Skill、Tool Provider、MCP Server、Harness MCP Client、Validator、Model Provider 与凭据仍以 Harness/OpenQuantum 现有模块为权威；
 4. Web 与 Desktop 共用 `.openquantum/dsh`，本地单用户模式不同时运行两个 Host；
 5. Desktop 与 Harness family 成对固定。当前使用 `dsh-plugin-desktop@2.0.0` 和 Harness `0.1.0-rc.6`；
 6. 不依赖 `desktopRuntime`、Electron Window 或其他 DSH Desktop 私有 Interface。
 7. Desktop 的传递依赖 `pnpm` 覆盖为 `11.8.0`，避开高危路径穿越公告
    [GHSA-qrv3-253h-g69c](https://github.com/advisories/GHSA-qrv3-253h-g69c)。
 8. OpenQuantum 当前只支持仓库内源码启动。上游的全局安装和 `npx` 入口使用默认 DSH Home，不能作为
-   OpenQuantum preset、Skill、MCP 与 Validator 组合的安装入口。
+   OpenQuantum Agent Preset、Skill、Tool Provider 与 Validator 组合的安装入口。
 
 ## 结果
 
@@ -46,7 +46,7 @@ OpenQuantum Harness Home
 
 - 用户获得原生桌面入口，同时保留完全相同的量子能力和执行证据；
 - OpenQuantum 只维护一个 Home patch，Web 与 Desktop 不会发生产品配置漂移；
-- Desktop 未来可以替换或升级，而不触碰量子 Skill、MCP 和 Validator。
+- Desktop 未来可以替换或升级，而不触碰量子 Skill、Tool Provider、MCP Server 或 Validator。
 
 代价与风险：
 

@@ -1,7 +1,7 @@
 # OpenQuantum 量子能力候选清单
 
-- 更新日期：2026-08-24
-- 目标：为 OpenQuantum 选择可维护的 Harness 原生 Skill、MCP 与 Validator
+- 更新日期：2026-08-28
+- 目标：为 OpenQuantum 选择可维护的 Harness 原生 Skill、Tool Provider 与 Validator
 - 原则：不建设独立 Runtime 或插件市场；仓库内精选、审阅、测试，再通过 Git 发布
 
 ## 1. 准入模型
@@ -9,12 +9,17 @@
 一个候选能力不是“找到一个仓库就安装”，而是先判断需要下面哪些独立模块：
 
 1. **Skill**：限定问题、工作流、工具选择和解释边界；
-2. **MCP / Tool**：需要确定性执行或外部系统时，产生可观察事实；
-3. **Validator / eval**：存在科学主张时，对该主张做独立检查。
+2. **Tool**：Agent 可调用的原子动作；需要独立进程或远程服务时由 MCP Server 暴露；
+3. **Scientific Validator**：存在科学主张时，独立重算并产生 observations；
+4. **Acceptance Profile**：以版本化规则数据定义必选检查、阈值和来源链要求；
+5. **central Acceptance Builder**：汇聚 Profile、observations 和 provenance，唯一地推导最终 Acceptance；
+6. **Eval / Benchmark**：开发和发布期的固定回归证据，不进入用户运行链。
 
-DeepSeek Harness 不会把这三者绑定成一个对象。Skill 进入 `ctx.skills`，MCP Tool 进入 `ctx.tools`，
-Validator 是 OpenQuantum 的确定性实现；Agent preset / Cordis 才是它们的组合 seam。为维护 locality，
-源码可以共置在一个目录，但每个运行模块仍需独立注册或调用。
+DeepSeek Harness 不会把这些对象绑定成一个对象。Skill 进入 `ctx.skills`，原生或 MCP-exposed Tool 进入
+`ctx.tools`；Agent Preset/Cordis 组合 Skill Provider、Tool Provider，以及确有 hook 需要的 agent-scoped Host Plugin。Validator 是 OpenQuantum 的
+确定性实现，必须由 Tool、Materializer 或 CI 显式调用。可信 Host Plugin 只拥有生命周期 hook，内部
+Scientific Result Adapter 只做 capability 映射。为维护 locality，源码可以共置在
+一个目录，但共置不会产生运行时绑定。
 
 每个候选进入四种状态之一：
 
@@ -29,40 +34,41 @@ Validator 是 OpenQuantum 的确定性实现；Agent preset / Cordis 才是它�
 
 | 能力 | 形式 | 默认状态 | 说明 |
 | --- | --- | --- | --- |
-| `quantum-ground-state` | 独立 Skill / 本地 MCP / Validator | 开启 | 由 preset 组合的窄作用域二量子位 VQE 参考能力 |
-| Qiskit Circuits | 官方 MCP | 开启 | QASM/QPY、转译、分析和优化比较 |
-| Qiskit Docs | 官方 MCP | 开启 | 文档搜索、页面读取和错误码查询 |
-| `qiskit-circuit-workbench` | Skill | 开启 | 把两项 Qiskit MCP 组织成可审查电路工作流 |
-| `tyxonq-workbench` | Skill / 本地 MCP | 关闭 | 固定 TyxonQ 1.2.0，只开放有界电路与噪声仿真，不开放云端任务 |
-| `quantum-information-audit` | Skill / toqito 本地 MCP / 独立 Validator / Harness Result Adapter | 开启 | 固定 toqito 1.3.1；MCP 只返回 observations，Harness 物化并重读真实字节后由中央 Profile 派生 Acceptance |
-| `quantum-circuit-verification` | Skill / MQT QCEC 本地 MCP | 开启 | 固定 MQT QCEC 3.7.0，只比较有界、无测量 OpenQASM 2 unitary 电路，区分确定与概率性结论 |
-| `qec-memory-experiment` | Skill / Stim + PyMatching 本地 MCP | 开启 | 固定 Stim 1.16.0 与 PyMatching 2.4.0，运行有界、带 seed 的 rotated surface-code memory 采样和 MWPM 解码；单点结果不作 threshold 主张 |
-| 固定量子能力 benchmark | MQT Bench fixture / manifest / 离线校验 | CI 开启 | 固定 `ghz-3`、`qft-3`、`bv-4` 三案例分母，不注册为 Agent Tool，不把未交付记为语义失败 |
+| `quantum-ground-state` | Skill + 本地 MCP Server + Harness MCP Client + MCP-exposed Tool + Validator | 开启 | Agent Preset 组合 Skill Provider 与 Harness MCP Client；Host Plugin 经内部 Adapter 和 Materializer 交给 Validator，central Acceptance Builder 消费 Acceptance Profile、observations 与 provenance |
+| Qiskit Circuits | 官方 MCP Server + Harness MCP Client + MCP-exposed Tool | 条件开启 | QASM/QPY、转译、分析和优化比较；可由环境变量关闭 |
+| Qiskit Docs | 官方 MCP Server + Harness MCP Client + MCP-exposed Tool | 条件开启 | 文档搜索、页面读取和错误码查询；可由环境变量关闭 |
+| `qiskit-circuit-workbench` | Skill | 开启 | 把两组 Qiskit MCP-exposed Tool 组织成可审查电路工作流 |
+| `tyxonq-workbench` | Skill + 本地 MCP Server + Harness MCP Client + MCP-exposed Tool | opt-in | 固定 TyxonQ 1.2.0，只开放有界电路与噪声仿真，不开放云端任务 |
+| `quantum-information-audit` | Skill + toqito 本地 MCP Server + Harness MCP Client + MCP-exposed Tool + Validator | 开启 | 固定 toqito 1.3.1；Tool 返回 facts/observations，Materializer 物化并重读真实字节后，Acceptance Profile 定义规则，central Acceptance Builder 派生 Acceptance |
+| `quantum-circuit-verification` | Skill + MQT QCEC 本地 MCP Server + Harness MCP Client + MCP-exposed Tool | 开启 | 固定 MQT QCEC 3.7.0，只比较有界、无测量 OpenQASM 2 unitary 电路，区分确定与概率性结论 |
+| `qec-memory-experiment` | Skill + Stim/PyMatching 本地 MCP Server + Harness MCP Client + MCP-exposed Tool | 开启 | 固定 Stim 1.16.0 与 PyMatching 2.4.0，运行有界、带 seed 的 rotated surface-code memory 采样和 MWPM 解码；单点结果不作 threshold 主张 |
+| 固定量子能力 benchmark | MQT Bench fixture + manifest + 离线校验 | CI 开启 | 固定 `ghz-3`、`qft-3`、`bv-4` 三案例分母，不注册为 Agent Tool，不把未交付记为语义失败 |
 | `quantum-sdk-advisor` | Skill | 开启 | 按问题、执行目标、许可证和验证要求选择软件栈 |
-| IBM Runtime / Transpiler | 官方 MCP | 关闭 | 需要 Token，可能产生云端任务和费用 |
-| Quantum Hardware MCP | 社区 MCP | 关闭 | 多云硬件查询与任务控制，需人工审阅后启用 |
-| QPanda3 Runtime MCP | 本源官方 MCP（固定提交 + 凭据网关） | 关闭 | 本源量子官方运行时，接入悟空 QPU 真机执行；`sample`/`estimate`/`batch` 为真机写操作，需 `npm run mcp:qpanda-runtime:setup` 检出固定提交、配置 `QPANDA3_API_KEY` 后手动开启 |
+| IBM Runtime / Transpiler | 官方 MCP Server + Harness MCP Client + MCP-exposed Tool | 关闭 | 需要 Token，可能产生云端任务和费用 |
+| Quantum Hardware | 社区 MCP Server + Harness MCP Client + MCP-exposed Tool | 关闭 | 多云硬件查询与任务控制，需人工审阅后启用 |
+| QPanda3 Runtime | 本源官方 MCP Server + Harness MCP Client + MCP-exposed Tool（固定提交 + 凭据网关） | 关闭 | 本源量子官方运行时，接入悟空 QPU 真机执行；`sample`/`estimate`/`batch` 为真机写操作，需 `npm run mcp:qpanda-runtime:setup` 检出固定提交、配置 `QPANDA3_API_KEY` 后手动开启 |
 | QPanda3 编程 Skill | 本源官方 Skill（固定提交检出） | 需 setup | 原版接入 pyqpanda3 官方 Skill，提供电路构建、QAOA/Grover/VQE/QSVM 算法模板、pyqpanda→pyqpanda3 迁移与 QCloud 指导；`npm run skill:qpanda:setup` 检出到被忽略的 `.agents/skills/pyqpanda3` 原样挂载，云执行仍受默认关闭的 QPanda3 Runtime MCP 约束 |
-| QPanda QUBO 本地桥 | pyqpanda_alg 薄桥 MCP + Skill（固定 `2.0.0`） | 开启 | 把命名二值目标和线性等式约束编译成 QUBO，以全量枚举复核可行最优、编译能量和 penalty，再调用上游经典求解或可选 QAOA；仅本地、无凭据 |
+| QPanda QUBO 本地桥 | Skill + pyqpanda_alg 薄桥 MCP Server + Harness MCP Client + MCP-exposed Tool（固定 `2.0.0`） | 开启 | 把命名二值目标和线性等式约束编译成 QUBO，以全量枚举复核可行最优、编译能量和 penalty，再调用上游经典求解或可选 QAOA；仅本地、无凭据 |
 
-Qiskit MCP 来自官方 Apache-2.0 项目
-[Qiskit/mcp-servers](https://github.com/Qiskit/mcp-servers)。新增能力继续通过独立 Skill、MCP 和
-Validator / eval 组合，不复制 Qiskit Runtime 或 DeepSeek Harness Runtime。
+Qiskit MCP Server 来自官方 Apache-2.0 项目
+[Qiskit/mcp-servers](https://github.com/Qiskit/mcp-servers)。新增能力先定义独立 Skill 与 Tool；只有需要
+进程、语言或远程边界时才增加 MCP Server 和 Harness MCP Client，有科学主张时再组合 Validator 与 eval，
+不复制 Qiskit Runtime 或 DeepSeek Harness Runtime。
 
 ## 3. 下一批优先候选
 
-| 优先级 | 候选纵切 | 上游 | 计划的 Skill / MCP / Validator |
+| 优先级 | 候选纵切 | 上游 | 计划的独立模块 |
 | ---: | --- | --- | --- |
-| 1 | 分子几何到 qubit Hamiltonian | [PySCF](https://github.com/pyscf/pyscf) + [Qiskit Nature](https://github.com/qiskit-community/qiskit-nature) | `quantum-chemistry-hamiltonian` + 本地 MCP + 积分/映射重放 Validator |
+| 1 | 分子几何到 qubit Hamiltonian | [PySCF](https://github.com/pyscf/pyscf) + [Qiskit Nature](https://github.com/qiskit-community/qiskit-nature) | `quantum-chemistry-hamiltonian` Skill + 本地 Tool（必要时由 MCP Server 暴露）+ 积分/映射重放 Validator |
 | 2 | 可微分量子机器学习 | [PennyLane](https://github.com/PennyLaneAI/pennylane) | `pennylane-hybrid-workflow` + 固定数据/梯度 Artifact + eval |
-| 3 | NISQ 噪声与 Google 风格电路 | [Cirq](https://github.com/quantumlib/Cirq) | `cirq-noise-workbench` + 本地模拟 MCP + channel/trace 检查 |
+| 3 | NISQ 噪声与 Google 风格电路 | [Cirq](https://github.com/quantumlib/Cirq) | `cirq-noise-workbench` Skill + 本地模拟 Tool（必要时由 MCP Server 暴露）+ channel/trace 检查 |
 | 4 | 容错资源估算 | [Microsoft QDK](https://github.com/microsoft/qdk) | `qsharp-resource-estimation` + Q# Tool + 假设完整性 Validator |
 
 这四项都优先做本地、确定性纵切。任何云 QPU 接入都晚于本地事实与失败路径验证。QEC 稳定子模拟与解码已经以 `qec-memory-experiment` 这一窄纵切进入已集成能力。
 
 ### 本源量子（OriginQ）生态
 
-[OriginQ / 本源量子](https://github.com/OriginQ) 是国产 QPanda / pyQPanda / ChemiQ / VQNet 生态的上游。它补齐当前一个空缺：FieldQKit 只做国内云的**只读发现**，而本源官方已有仓库能走到**悟空真机执行**。下面三项已是 MCP / Skill 形态，均为 Apache-2.0。原则是**只做集成**：固定上游提交或版本，不 fork、不改写上游代码；云端执行能力保持凭据门控和默认关闭，无凭据的本地 QUBO 能力在通过边界验证后开启。三项均已完成接入（QPanda3 Runtime MCP、pyqpanda3 Skill、QUBO 本地桥）。
+[OriginQ / 本源量子](https://github.com/OriginQ) 是国产 QPanda / pyQPanda / ChemiQ / VQNet 生态的上游。它补齐当前一个空缺：FieldQKit 只做国内云的**只读发现**，而本源官方已有仓库能走到**悟空真机执行**。下面三项分别提供 MCP Server 或 Skill，均为 Apache-2.0。原则是**只做集成**：固定上游提交或版本，不 fork、不改写上游代码；云端 Tool 保持凭据门控和默认关闭，无凭据的本地 QUBO Tool 在通过边界验证后开启。三项均已完成接入（QPanda3 Runtime MCP Server、pyqpanda3 Skill、QUBO 本地桥）。
 
 | 候选 | 上游 | 接入形式 | 默认状态 |
 | --- | --- | --- | --- |
@@ -75,7 +81,7 @@ Validator / eval 组合，不复制 Qiskit Runtime 或 DeepSeek Harness Runtime�
 - **凭据与云费用**：`qpanda3-runtime-mcp-server` 默认连 `qpanda3-runtime.qpanda.cn` 真机，需要 `QPANDA3_API_KEY`，会提交真实任务并产生费用。它属于“写 / 执行”风险类，和只读的 FieldQKit 不同，必须默认关闭、凭据由使用者自配，并遵守“API Key 不进 Skill / preset / 日志”的硬规则。
 - **原生编译依赖**：pyqpanda3 是原生 C++ 扩展（Python 3.11–3.13，Windows 需 VC++ Redistributable、Linux 需 GCC 7.5+），安装面比现有纯 Python MCP 重。参照 TyxonQ 的做法固定 PyPI 版本、走独立进程或沙箱。
 - **定位而非重复**：QPanda 的 VQE / QAOA / Grover 与现有 Qiskit 能力和自研 `quantum-ground-state` 功能重叠。接入理由应明确定位为“**国产悟空真机接入 + 算法库广度（金融 / ML / 优化）**”，而不是再引入一套电路 SDK。
-- **QPanda 算法库的桥怎么做对的**：上游没有可直接挂载的 MCP / Skill，因此 OpenQuantum 只为 QUBO 建立有界薄桥。命名变量、目标和等式约束先由仓库内编译器转换成数值 QUBO，再用全量枚举复核每个赋值的目标、约束 residual、编译能量和 penalty；最后才调用固定 `pyqpanda_alg==2.0.0` 的 `QuadraticBinary` / `QUBO_QAOA`。由于上游包顶层会连带导入与 QUBO 无关的 VQE 原生依赖，bridge 只加载官方 QUBO 子模块；经典 traversal 的真实运行已与独立枚举匹配。首个切口只做 QUBO，其余算法后续按需扩展。
+- **QPanda 算法库的桥怎么做对的**：上游没有可直接挂载的 MCP Server 或 Skill，因此 OpenQuantum 只为 QUBO 建立有界 Tool 和薄桥。命名变量、目标和等式约束先由仓库内编译器转换成数值 QUBO，再用全量枚举复核每个赋值的目标、约束 residual、编译能量和 penalty；最后才调用固定 `pyqpanda_alg==2.0.0` 的 `QuadraticBinary` / `QUBO_QAOA`。由于上游包顶层会连带导入与 QUBO 无关的 VQE 原生依赖，bridge 只加载官方 QUBO 子模块；经典 traversal 的真实运行已与独立枚举匹配。首个切口只做 QUBO，其余算法后续按需扩展。
 - **不纳入**：本源组织下的语言工具链（QRunes、qurator-vscode）与教学内容（Quantum_book、各类 textbook / doc）不作为 Agent 能力纳入；教学内容的许可证可能与代码不同，不整包导入。
 
 ## 4. 有价值但先观察
@@ -107,10 +113,10 @@ Validator / eval 组合，不复制 Qiskit Runtime 或 DeepSeek Harness Runtime�
 外部团队可以直接提交普通 Git PR：
 
 1. 在 `.agents/skills/<name>/` 增加标准 `SKILL.md`；
-2. 必要时把确定性计算封装成 stdio / Streamable HTTP MCP；
+2. 先定义 Agent-facing Tool；只有需要进程、语言或远程边界时，才由 stdio / Streamable HTTP MCP Server 暴露；
 3. 有科学主张时提供 schema、Validator 和固定正负 eval；这些文件可以与 Skill 共置，但不会被 Harness
    Skill Registry 自动执行；
-4. 在 `runtime/openquantum/` 的 preset / Cordis 配置中独立注册并组合 MCP client；
+4. 在 `runtime/openquantum/` 的 Agent Preset/Cordis 配置中独立声明并组合 Harness MCP Client；
 5. 说明许可证、凭据、网络、成本和失败边界；
 6. 通过 Skill 校验、单元测试和真实 Harness `skill.list` / Tool 注册检查。
 

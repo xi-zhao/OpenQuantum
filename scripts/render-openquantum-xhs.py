@@ -566,8 +566,8 @@ def render_overview_v2(mark: Image.Image) -> Image.Image:
     features = [
         ("chat", "#7B4DF3", "对话式量子助手", "用自然语言发起任务，Agent 选择并调用量子工具"),
         ("tools", "#22A77C", "量子能力集中接入", "Qiskit、文档、后端发现与算法能力在同一界面"),
-        ("trace", "#377EEA", "完整执行轨迹", "Skill、MCP、工具结果和权限状态都可追溯"),
-        ("check", "#F2A33A", "独立科学验收", "Validator 按确定规则检查结果，不由模型自证"),
+        ("trace", "#377EEA", "完整执行轨迹", "Skill、Tool 调用、结果和权限状态都可追溯"),
+        ("check", "#F2A33A", "独立科学检查", "Validator 产 observations，Builder 推导验收"),
     ]
     row_top = 522
     for index, (kind, accent, title, body) in enumerate(features):
@@ -625,7 +625,7 @@ def render_architecture_v2(mark: Image.Image) -> Image.Image:
     draw = ImageDraw.Draw(canvas)
     preset_box = (330, 234, 750, 286)
     draw.rounded_rectangle(preset_box, radius=26, fill="#EFF1FF", outline="#B8B7F4", width=2)
-    draw.text((540, 260), "OpenQuantum Agent preset 统一组合", font=font(22, weight="semibold"), fill="#34349A", anchor="mm")
+    draw.text((540, 260), "OpenQuantum Capability 分工协作", font=font(22, weight="semibold"), fill="#34349A", anchor="mm")
 
     card_specs = [
         (
@@ -635,16 +635,16 @@ def render_architecture_v2(mark: Image.Image) -> Image.Image:
             "SKILL",
             "方法与边界",
             "领域知识与步骤\n告诉 Agent 怎么做",
-            "说明方法，不启动工具",
+            "只提供指令，不执行 Tool",
         ),
         (
             (390, 318, 690, 602),
             "server",
             "#15966E",
-            "MCP / TOOL",
-            "确定性执行",
-            "连接工具与数据\n完成可执行任务",
-            "产生事实，不自证通过",
+            "TOOL",
+            "唯一执行原语",
+            "原生 Tool Plugin 注册\n或 MCP Server 暴露",
+            "执行动作，返回事实",
         ),
         (
             (718, 318, 1018, 602),
@@ -652,8 +652,8 @@ def render_architecture_v2(mark: Image.Image) -> Image.Image:
             "#7C43D9",
             "VALIDATOR",
             "独立科学检查",
-            "按 Profile 检查证据\n模型不能改写结论",
-            "检查证据，派生验收",
+            "产生 observations\nBuilder 推导验收",
+            "检查证据，不自报通过",
         ),
     ]
     for box, icon, accent, english, chinese, body, footer in card_specs:
@@ -680,7 +680,7 @@ def render_architecture_v2(mark: Image.Image) -> Image.Image:
     draw.text((540, 757), "会话 · 工具调度 · 权限审批 · 事件持久化", font=font(20), fill=MUTED, anchor="mm")
     for x in (212, 540, 868):
         draw.line((x, 602, x, 626, 540, 626, 540, 650), fill="#8D93C6", width=3)
-    draw.text((540, 811), "三块能力独立注册，由 Agent 显式调用；运行事实统一进入 Harness 轨迹", font=font(20), fill=MUTED, anchor="mm")
+    draw.text((540, 811), "Skill 提供方法，Agent 只调用 Tool；Validator 检查证据，Builder 推导验收", font=font(20), fill=MUTED, anchor="mm")
 
     draw.text((48, 867), "已接入的量子能力", font=font(32, weight="semibold"), fill="#17235C")
     capabilities = [
@@ -707,7 +707,7 @@ def render_architecture_v2(mark: Image.Image) -> Image.Image:
     bottom = (38, 1278, 1042, 1368)
     draw_panel(canvas, bottom, fill="#F7F3FF", outline="#D6C7FF", radius=24, shadow_alpha=5)
     draw = ImageDraw.Draw(canvas)
-    draw.text((540, 1322), "加一份 Skill · 接一个 MCP · 科学结论再加 Validator", font=font(25, weight="semibold"), fill="#4B3BB2", anchor="mm")
+    draw.text((540, 1322), "加一份 Skill · 接一个 Tool · 科学主张再加 Validator", font=font(25, weight="semibold"), fill="#4B3BB2", anchor="mm")
     draw.text((540, 1352), "开放协议，灵活扩展，共建量子能力生态", font=font(20), fill="#655A91", anchor="mm")
     draw_page_label(draw, 2)
     return canvas
@@ -732,8 +732,8 @@ def render_experience_v2(mark: Image.Image) -> Image.Image:
     track = [
         ("用户输入", "提供二量子位 Hamiltonian"),
         ("Agent 加载 Skill", "判断方法、参数与适用边界"),
-        ("调用 MCP / Tool", "运行 VQE，返回结构化事实"),
-        ("Validator 重读证据", "独立复核数值与结果文件"),
+        ("调用 MCP-exposed Tool", "运行 VQE，返回结构化事实"),
+        ("Materializer 重读", "Validator 独立复核结构化证据"),
         ("Acceptance 派生", "16 项检查通过，写回会话轨迹"),
     ]
     line_x = 94
@@ -924,7 +924,9 @@ def main() -> None:
 
     require_file(PINGFANG)
     require_file(ARIAL_BOLD)
-    mark = Image.open(require_file(ROOT / "public" / "openquantum" / "icon-512.png")).convert("RGBA")
+    mark = Image.open(
+        require_file(ROOT / "packages" / "openquantum-web-branding" / "assets" / "icon-512.png")
+    ).convert("RGBA")
     if args.variant in {"v1", "all"}:
         render_v1(mark)
     if args.variant in {"v2", "all"}:

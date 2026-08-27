@@ -12,11 +12,12 @@
 
 第一版只证明一件事：
 
-> 开发者 Fork OpenQuantum 后，可以沿用 DeepSeek Harness 原生机制增加一个量子 Skill 和一个 MCP，
+> 开发者 Fork OpenQuantum 后，可以沿用 DeepSeek Harness 原生机制增加一个量子 Skill 和一个由 MCP Server 暴露的 Tool，
 > 并在真实 Session 中得到可观察、可验证的科研结果。
 
 首个端到端案例是 `quantum-ground-state`：用户提供二量子位实 Pauli Hamiltonian，在固定
-`hamming-weight=1` 扇区内运行无噪 statevector VQE，并由独立精确解和确定性 Validator 验收。
+`hamming-weight=1` 扇区内运行无噪 statevector VQE；Validator 用独立精确解产生 observations，版本化
+Acceptance Profile 定义规则，central Acceptance Builder 再推导 Acceptance。
 
 OpenQuantum 的首版价值不是“能力最多”，而是给量子公司一个结构清楚、能运行、能改、能验证的
 Harness 发行版起点。
@@ -32,16 +33,19 @@ OpenQuantum 不创建与 Harness 重复的业务对象：
 | 长期目标与后台任务 | Harness `Goal` + `Job` |
 | Agent 执行循环 | Harness Agent Runtime |
 | Skill 发现与加载 | Harness Skill registry |
-| Tool、MCP 和 Plugin | Harness 原生 registry / client / Cordis 机制 |
+| Agent-facing Tool | Harness Tool Registry |
+| MCP Server 连接与 Tool 注册 | Harness MCP Client |
+| Host Plugin 与 Client Plugin 生命周期 | Harness Cordis / Client Plugin 系统 |
 | 审批、权限与沙箱 | Harness 原生策略与执行机制 |
 | 模型调用 | Harness Provider route / Model Adapter |
 | 持久化、回放和分叉 | Harness Session event log |
 | 量子工作流与解释边界 | Harness Skill |
-| 确定性科学计算 | OpenQuantum MCP / Tool |
-| 科学验收 | 独立 OpenQuantum Validator；可与 Skill 共置，由 Tool/插件调用 |
+| 确定性科学计算 | OpenQuantum Tool（原生或由 MCP 暴露） |
+| 科学验收 | Scientific Validator observations + Acceptance Profile + central Acceptance Builder |
 | 可回放科学展示 | Harness `tool/result` + OpenQuantum 原生 Client Plugin 投影 |
 
-OpenQuantum 自己只维护量子 preset、Skill、MCP、可信插件、科学 Validator，以及通过 Harness 原生扩展点
+OpenQuantum 自己只维护量子 Agent Preset、Skill、Tool implementation、必要的 MCP Server、可信 Host Plugin、
+科学 Validator，以及通过 Harness 原生扩展点
 注入的必要 UI。
 
 结构化 MCP 返回值仍由 Harness Tool pipeline 执行。对于需要刷新后继续显示的少量科学摘要，仓库内可信
@@ -83,17 +87,18 @@ DeepSeek Harness 已有配置；量子公司通过 Fork 管理自己的发行版
 
 ### Harness
 
-- 完整复用 Session、Agent、Tool、Skill、MCP、Plugin、事件、审批、权限、沙箱、模型和持久化；
+- 完整复用 Session、Agent、Tool Registry、Skill Registry、Harness MCP Client、Host Plugin、Client Plugin、事件、审批、权限、沙箱、模型和持久化；
 - OpenQuantum 只通过 preset、Cordis 配置和受支持扩展点进行组合；
 - 不修改 `node_modules` 中的 Harness 实现；优先向上游贡献通用修复。
 
 ### 量子扩展内容
 
 - Harness Skill 只保存量子问题的作用域、工作流、Prompt 和工具使用说明；
-- MCP/Tool 独立注册并提供确定性执行能力；
-- OpenQuantum Validator/eval 独立实现可强制的科学规则，由 Tool、插件或 CI 显式调用；
-- 三者由 Agent preset / Cordis 配置组合。源码可以共置以方便维护，但不存在自动的
-  Skill→MCP 或 Skill→Validator 绑定。
+- Tool 由原生 Tool Plugin 注册，或由 MCP Server 暴露后经 Harness MCP Client 注册，并提供确定性执行能力；
+- OpenQuantum Scientific Validator 独立实现可强制的科学 observations，由 Tool、Materializer 或 CI 显式调用；
+- Eval/benchmark 只属于开发证据，不进入用户运行链；
+- Agent Preset/Cordis 组合 Skill Provider、Tool Provider，以及确有 hook 需要的 agent-scoped Host Plugin；Validator 由 Tool 或可信 Host Plugin 显式
+  调用。源码可以共置以方便维护，但不存在自动的 Skill→MCP 或 Skill→Validator 绑定。
 
 ### Model
 
@@ -107,8 +112,8 @@ DeepSeek Harness 已有配置；量子公司通过 Fork 管理自己的发行版
 flowchart LR
   A["用户输入 Hamiltonian"] --> B["Harness 创建 Session / Turn"]
   B --> C["Agent 加载 quantum-ground-state Skill"]
-  C --> D["Harness 调用本地 stdio MCP"]
-  D --> E["MCP 返回结构化计算 Artifact"]
+  C --> D["Harness 调用 MCP-exposed Tool"]
+  D --> E["Tool 返回结构化计算 Artifact"]
   E --> F["OpenQuantum Validator 独立检查"]
   F --> G["Harness 记录事件与结果"]
   G --> H["UI 分开展示执行状态与科学状态"]
@@ -117,9 +122,9 @@ flowchart LR
 两种状态必须正交：
 
 - **Runtime 完成**：Harness Turn / Goal / Job 已结束；
-- **科学验收**：Validator 给出 `passed / conditional / failed`。
+- **科学验收**：Validator 产生 observations，版本化 Acceptance Profile 定义规则，只有 central Acceptance Builder 推导 `passed / conditional / failed`。
 
-`idle`、模型回答或 MCP 成功返回都不能自动显示为“科学验收通过”。评分和复现若出现，也保持独立：
+`idle`、模型回答或 MCP-exposed Tool 成功返回都不能自动显示为“科学验收通过”。评分和复现若出现，也保持独立：
 
 - 复现成功但科学检查失败：`reproduced + scientific failed`；
 - 没有有效评分证据：`unscored`；
@@ -132,7 +137,7 @@ flowchart LR
 目标：确认哪些能力直接复用，避免误建 Runtime。
 
 - 固定已验证的 DeepSeek Harness 版本；
-- 对 Session、Agent、Skill、MCP、Plugin、权限、沙箱、Model 和持久化做真实调用审计；
+- 对 Session、Agent、Skill Registry、Tool Registry、Harness MCP Client、Host Plugin、Client Plugin、权限、沙箱、Model Provider 和持久化做真实调用审计；
 - 记录 OpenQuantum preset 与 Harness 原生 Web 扩展的唯一必要改造；
 - 删除路线图中自建包市场、安装治理和 Capability Runtime 的任务。
 
@@ -153,7 +158,7 @@ flowchart LR
 
 ### M2：一个原生 MCP
 
-目标：证明科学计算通过 Harness 原生 MCP client 接入，不需要 OpenQuantum Tool Runtime。
+目标：证明科学计算由 MCP Server 暴露 Tool、再经 Harness MCP Client 注册，不需要 OpenQuantum Tool Runtime。
 
 - 将最小基态计算 Tool 暴露为本地 stdio MCP；
 - 定义清晰的输入、输出、错误和超时；
@@ -161,7 +166,7 @@ flowchart LR
 - 验证 MCP 不接触模型密钥，不自行管理 Session；
 - 增加 Tool 集成测试和 Harness 调用测试。
 
-退出条件：Harness 能列出并调用 MCP Tool；非法输入、进程失败和超时均形成可观察的失败事件。
+退出条件：Harness 能列出并调用 MCP-exposed Tool；非法输入、进程失败和超时均形成可观察的失败事件。
 
 ### M3：Harness E2E 与开发指南
 
@@ -171,11 +176,12 @@ flowchart LR
 - Artifact 与 Validator 结果可读；
 - Runtime / Scientific 两组状态分别展示；
 - 真实模型完成至少一次 Tool Calling E2E；
-- 发布 Fork、Skill、MCP、preset 和 `dsh-plugin` 开发说明；
-- CI 运行 Skill、MCP、Harness 集成、原生 UI 扩展、lint 和配置展开检查。
+- 发布 Fork、Skill、Tool、MCP Server、Agent Preset 和 `dsh-plugin` 开发说明；
+- CI 运行 Skill、MCP Server Tool contract、Harness 集成、原生 UI 扩展、lint 和配置展开检查。
 
 退出条件：一个新开发者只读仓库文档即可在本机启动、运行黄金案例，并知道如何按需增加独立的
-Skill、MCP 或 Validator，再由 preset 组合。
+Skill、Tool Provider 或 Validator；Agent Preset 组合 Skill Provider、Tool Provider 与必要的 agent-scoped Host Plugin，Validator 由 Tool、
+Materializer 或 CI 显式调用。
 
 ### 当前进度（2026-08-24）
 
@@ -208,10 +214,10 @@ Package、Acceptance Report 和 Result Commit 均通过复核。没有 Provider 
 MVP 完成必须同时满足：
 
 - 没有用 Mock 冒充黄金 E2E；
-- UI 没有直接调用 MCP 或模型；
+- UI 没有直接调用 MCP Server 或 Model Provider；
 - 没有修改 `node_modules` 中的 Harness；
 - 没有新增 OpenQuantum 私有 Runtime 或安装协议；
-- 科学通过状态只能由 Validator 推导；
+- 科学通过状态只能由 central Acceptance Builder 基于 Profile、Validator observations 和 provenance 推导；
 - 本地启动、失败排查和二次开发都有文档。
 
 ## 8. 二次开发路径
@@ -238,7 +244,7 @@ Harness 特权。只有当多个真实贡献者明确需要跨 Fork 分发、安
 | --- | --- |
 | Harness 预览版破坏性变化 | 固定版本、少量原生扩展、真实 E2E、优先上游修复 |
 | 为平台感重复造 Runtime | 每项通用机制先核对 Harness；OpenQuantum 只做量子差异 |
-| LLM 产生科学幻觉 | MCP 产数值、Validator 推状态、模型只解释 |
+| LLM 产生科学幻觉 | MCP-exposed Tool 产数值、Validator 产 observations、Acceptance Profile 提供规则、central Acceptance Builder 推状态、模型只解释 |
 | Skill 作用域过度承诺 | 明确 supported / out-of-scope，增加边界负例 |
 | MCP 获得过多权限 | 本地最小权限、显式配置、失败时 fail closed |
 | dsh-plugin 污染宿主 | 首版只接受仓库内可信插件并逐项审查 |

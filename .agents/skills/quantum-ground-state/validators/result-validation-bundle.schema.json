@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openquantum.org/capabilities/quantum-ground-state/result-validation-bundle-v1.json",
   "title": "Quantum Ground State Materialized Validation Bundle v1",
-  "description": "Materialized inputs for the Skill Validator: a Result Package, profile, request, and six fact artifacts.",
+  "description": "Materialized inputs for the Scientific Validator: a Result Package, profile, request, and six fact artifacts.",
   "type": "object",
   "additionalProperties": false,
   "required": ["schemaVersion", "resultPackage", "profile", "request", "facts"],

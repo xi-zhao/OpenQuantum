@@ -6,11 +6,12 @@ Harness 已有 Runtime 对象重新命名或复制。
 ## Platform
 
 **OpenQuantum Distribution（OpenQuantum 发行版）**：
-DeepSeek Harness、量子 preset、量子 Skill、科学 MCP、Validator 和必要科研 UI 的可运行组合。
+DeepSeek Harness、Agent Preset、量子 Skill、Tool Provider、可选 Scientific Validator 与必要科研 UI 的可运行组合。
 _Avoid_: 新 Agent Runtime、插件市场、Capability 操作系统
 
 **Harness Runtime（Harness 运行时）**：
-Session、Agent loop、Turn、Step、Goal、Job、Tool、Skill、MCP、Plugin、审批、权限、沙箱、模型路由、
+Session、Agent loop、Turn、Step、Goal、Job、Tool Registry、Skill Registry、Harness MCP Client、Host Plugin、Client Plugin、
+审批、权限、沙箱、模型路由、
 事件和持久化的权威实现。OpenQuantum 不复制这些对象。
 _Avoid_: OpenQuantum Runtime、第二套会话系统
 
@@ -35,7 +36,8 @@ _Avoid_: Prompt、消息、平台自定义任务状态机
 _Avoid_: 随手运行、模型回答
 
 **Artifact（科研产物）**：
-Skill 或 MCP 产生的可引用结构化结果，例如数据、图表、参数、代码或报告。
+Tool 产生 facts，Scientific Result Materializer 产生可重读文件，Validator 产生 observations，
+central Acceptance Builder 产生 Acceptance Report；这些都可以是有类型、可引用的科研产物。
 _Avoid_: 最终聊天文本、无法追溯的附件
 
 **Provenance（来源链）**：
@@ -44,32 +46,100 @@ _Avoid_: 模型解释、日志摘要
 
 ## Native extensions
 
+**Capability（产品能力）**：
+用户可理解的一项有界科研能力，由独立的 Skill、Tool Provider、Validator 和证据按需组合；它不是 Harness
+运行时对象，也不会自动绑定内部模块。
+_Avoid_: Runtime、自动安装包、Tool 别名
+
 **Native Skill（原生 Skill）**：
 Harness 能直接发现和加载的 `SKILL.md` 及同目录科研资源。它描述问题范围、工作方法、工具使用、
-产物约定和验证流程，但 Prompt 本身不能强制安全或科学规则。
+产物约定和验证流程，但不执行代码、启动 MCP Server 或产生科学事实。
 _Avoid_: OpenQuantum 私有插件包、页面模式
 
-**Scientific MCP（科学 MCP）**：
-通过 Harness 原生 MCP client 接入的确定性或外部科学工具，使用 stdio 或 Streamable HTTP 协议。
-它负责实际计算、数据查询或后端连接，不负责 Session 生命周期。
-_Avoid_: Agent Model、UI 直连脚本
+**Model-facing Tool（模型可调用 Tool）**：
+Agent 能调用的原子动作，拥有稳定名称、输入输出 schema、错误语义和副作用分类；它可以由 Harness 原生
+Tool Plugin 注册，或由 MCP Server 暴露后经 Harness MCP Client 注册。
+_Avoid_: MCP、API、Skill
 
-**Trusted dsh-plugin（可信 dsh-plugin）**：
-只有原生 Skill/MCP/配置无法表达时才使用的 Harness 宿主扩展。插件拥有宿主代码权限，因此必须在
+**Tool Provider（Tool 提供方）**：
+把一个或多个 Tool 注册进 Harness Tool Registry 的模块，例如原生 Tool Plugin 或 Harness MCP Client。
+_Avoid_: Tool 本身、Capability
+
+**MCP Server（MCP 服务）**：
+通过 MCP 协议向 Harness MCP Client 暴露确定性计算、数据查询或外部后端 Tool 的进程或远程服务。
+_Avoid_: Tool、Agent Model、Session Runtime
+
+**Harness MCP Client（Harness MCP 客户端）**：
+连接 MCP Server，将 MCP-exposed Tool 注册进 Harness Tool Registry，并管理连接、超时和重连。
+_Avoid_: MCP Server、Tool implementation、Skill workflow
+
+**Harness RPC（Harness RPC）**：
+Client Plugin 调用 Harness 标准 Session、设置和 Tool 生命周期能力的传输合同。
+_Avoid_: 量子领域规则、External API、Application Interface
+
+**Bounded Host Route（有界宿主路由）**：
+OpenQuantum 特有的窄 HTTP 边界，只校验来源、方法与请求体并格式化响应，然后委托 Application Interface。
+_Avoid_: 复制业务规则、直接修改 Cordis、直接执行 Tool
+
+**Application Interface（应用 Interface）**：
+由 Web、Desktop 或消息入口共同调用的用例边界，统一拥有命令校验、状态转换、并发和安全规则。
+_Avoid_: HTTP 解析、UI 渲染、真实凭据值
+
+**External API（外部 API）**：
+厂商或远程系统的网络请求合同；不能由 UI 或 Skill 直接调用。
+_Avoid_: Module Interface、Tool、MCP Server
+
+**External API Adapter（外部 API 适配器）**：
+Tool implementation 内部满足 External API 合同的模块，负责凭据引用、超时、脱敏、幂等与错误映射。
+_Avoid_: Tool Provider、Agent-facing API、UI data source
+
+**Model Provider Route（模型 Provider Route）**：
+把模型标识、协议、Endpoint 和凭据引用映射到 Harness 模型调用的 Deployment 配置。
+_Avoid_: Skill、Tool、Agent Preset
+
+**Host Plugin（宿主插件）**：
+只有原生 Skill、Tool Provider 和配置无法表达宿主生命周期行为时才使用的 Harness 扩展。
+插件拥有 hook 和宿主代码权限，因此必须在
 Fork 中显式审查和测试，不能把未经信任的远程代码自动装入 Runtime。
+只服务某个 Agent composition 的 hook 归入 Agent scope；宿主 route 或全局生命周期扩展归入 Deployment scope。
 _Avoid_: 默认扩展方式、任意第三方脚本
 
-**Quantum Preset（量子 preset）**：
-通过 Harness 原生配置组合 Agent、模型 route、Skill、MCP 和权限策略的发行版入口。
+**Client Plugin（客户端插件）**：
+通过 Harness 原生 UI Slot、Settings 和只读投影收集意图与展示结果。
+_Avoid_: 直接调用 Model Provider、MCP Server、External API 或 Validator
+
+**Host Adapter（宿主入口适配器）**：
+Browser、Desktop 或消息渠道这类进入同一 Harness Host 的产品入口。
+_Avoid_: Host Plugin、第二个 Harness Host、Session store
+
+**Agent Preset（Agent 预设）**：
+在 Agent scope 中组合 persona、Skill Provider、原生 Tool Plugin、Harness MCP Client、策略，以及确有需要的
+agent-scoped Host Plugin 的配置入口。
 _Avoid_: UI 硬编码模式、另一个编排层
 
-**Scientific Validator（科学 Validator）**：
-与对应 Skill 一起维护、从结构化产物推导科学检查事实的确定性程序。模型可以解释其结果，不能改写结论。
-_Avoid_: LLM 自评、通用总分
+**Deployment Composition（部署组合）**：
+在 Host scope 中组合 Model Provider Route、默认模型、默认 Agent Preset、deployment-scoped Host Plugin 和 Client Plugin。
+_Avoid_: Agent Preset、领域算法、第二套 Runtime
 
-**Evaluation Case（评测案例）**：
-带有固定输入、预期证据和判定依据的回归样本，用于证明 Skill 在声明范围内的行为。
+**Scientific Validator（科学 Validator）**：
+从结构化输入与证据独立重算科学 observations 的确定性程序；它不直接推导最终 Acceptance。
+_Avoid_: LLM 自评、Acceptance Builder、通用总分
+
+**Scientific Result Materializer（科研结果物化器）**：
+在 Harness workspace 内约束路径、原子写入、重读和校验真实字节，再把结构化证据交给 Validator。
+_Avoid_: Validator、Tool Provider、Session persistence
+
+**Scientific Result Adapter（科研结果适配器，内部）**：
+可信 Host Plugin 内部将某个 Tool 映射到输入规范化、Artifact 类型、Materializer 和 Validator 的对象。
+_Avoid_: 独立安装包、Host hook owner、Tool Provider
+
+**Eval（评测）**：
+使用固定输入、预期证据和判定依据检测 Skill、Tool 或 Validator 回归的开发/发布流程。
 _Avoid_: Demo、营销示例
+
+**Benchmark（基准测试）**：
+在锁定语料、分母、指标和环境下产生可比较的性能或质量证据。
+_Avoid_: 单次 Scientific Acceptance、运行时 Validator
 
 ## Trust and acceptance
 
@@ -78,8 +148,17 @@ Harness Turn、Goal 或 Job 已经停止且没有待处理步骤；它不表示�
 _Avoid_: 验收通过、科研成功
 
 **Scientific Acceptance（科学验收）**：
-科研产物在声明适用范围内通过全部强制科学检查的结论，只能由 Skill Validator 推导。
+科研产物在声明适用范围内满足版本化 Profile、Validator observations 和来源链要求的结论，只能由
+central Acceptance Builder 推导。
 _Avoid_: Runtime Completion、模型确信、Benchmark 均分
+
+**Acceptance Profile（验收 Profile）**：
+规定适用范围、必选 observations、阈值和来源链要求的版本化科学合同。
+_Avoid_: Validator、Prompt、Benchmark
+
+**central Acceptance Builder（中央验收构建器）**：
+汇聚 Acceptance Profile、Validator observations 和 provenance，唯一地推导最终 Acceptance 状态的共享模块。
+_Avoid_: capability 私有 Builder、Validator、模型自评
 
 **Acceptance Report（验收报告）**：
 记录被验收产物、检查项、证据、限制和结论的结构化产物。
@@ -100,14 +179,14 @@ _Avoid_: 再运行一次、答案相似
 | 维度 | 示例状态 | 权威来源 |
 | --- | --- | --- |
 | 执行 | pending / running / idle / failed / cancelled | Harness events |
-| 评分 | unscored / invalid / valid | Skill eval runner |
+| 评分 | unscored / invalid / valid | 版本化评分规则与 eval evidence |
 | 复现 | not_attempted / reproduced / not_reproduced | 复现证据 |
-| 科学验收 | not_evaluated / passed / conditional / failed | Skill Validator |
+| 科学验收 | not_evaluated / passed / conditional / failed | Acceptance Profile + central Acceptance Builder |
 
 因此：
 
 - “11 篇做过复现，但科学特征未通过验收”应表示为 `reproduced + scientific failed`；
 - “6 篇尚未形成有效评分”应表示为 `unscored`；
-- Harness 已 idle 但没有 Validator 报告，应表示为 `idle + not_evaluated`。
+- Harness 已 idle 但没有 Validator observations 或 Acceptance Report，应表示为 `idle + not_evaluated`。
 
 这些状态用于科研呈现和验证，不要求 OpenQuantum 新建一套平行于 Harness 的持久化或发布系统。
