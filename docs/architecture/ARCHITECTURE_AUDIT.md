@@ -1,7 +1,7 @@
 # OpenQuantum 架构审计与 Harness-first 目标设计
 
 - 状态：当前架构基线
-- 日期：2026-08-28
+- 日期：2026-08-29
 - 上游：DeepSeek Harness `0.1.0-rc.6`
 
 ## 1. 结论
@@ -20,6 +20,10 @@ OpenQuantum 是 DeepSeek Harness 的开源量子科研发行版，不是新的 A
 核心原则是：
 
 > Harness 已经提供的通用机制不重做；量子差异优先实现为原生 Skill、Tool Provider 或经过审查的 Host Plugin。
+
+这与 DeepSeek Harness 的“一切皆 Plugin”完全一致：Cordis Plugin 是所有可组合模块进入 Runtime 的统一装配和
+生命周期机制；Skill、Tool、MCP Server、Validator 等名称描述的是模块职责。Plugin 回答“怎样接入和存活”，
+职责对象回答“负责什么以及必须满足什么 Interface”，两者不可互相替代。
 
 OpenQuantum 不建设私有插件市场、包管理器、安装锁、可安装扩展 Catalog、第二套权限系统或平行事件日志。
 量子公司通过 Fork、普通 Git/npm/pip 依赖和 Harness 原生扩展点维护自己的发行版。
@@ -79,7 +83,7 @@ DeepSeek Harness 仍处于 Developer Preview，因此上游接口可能发生破
 | Skill 发现与加载 | Harness Skill registry | 否 |
 | Agent-facing Tool | Harness Tool Registry | 否 |
 | MCP Server 连接与 Tool 注册 | Harness MCP Client | 否 |
-| Host Plugin 与 Client Plugin 生命周期 | Harness Cordis / Client Plugin 系统 | 否 |
+| Cordis Plugin 组合与生命周期 | Harness Cordis Plugin 系统 | 否；Host、Client、Skill Provider、Tool Provider、MCP Client 和 Model Adapter 是不同职责角色 |
 | 审批、权限和沙箱 | Harness policy / approval / sandbox | 否 |
 | 模型调用 | Harness Provider route / Model Adapter | 否 |
 | 持久化、回放与恢复 | Harness Session event log | 否 |
@@ -123,9 +127,15 @@ Harness 是通用执行权威，拥有：
 OpenQuantum 只通过 `runtime/openquantum/` 中的 patch/preset 组合这些能力，不修改 `node_modules`，也不把
 Harness 通用职责搬进应用代码。
 
+这里的组合单元统一是 Cordis Plugin row。Skill Provider Plugin、Tool Provider Plugin、Harness MCP Client
+Plugin、Model Adapter Plugin、Host Plugin 和 Client Plugin 共享同一装配机制，但它们注册的 Interface、
+权限和产品职责不同。不能因为技术上都是 Plugin，就把它们合并成一个无边界的 OpenQuantum Plugin。
+
 ### 4.3 量子扩展内容
 
 DeepSeek Harness 在这里提供彼此独立的 seam：
+
+下表按职责区分模块；这些职责需要进入 Harness 时，仍由对应 Cordis Plugin row 装配。
 
 | 模块 | Harness Interface | 职责 | 不负责 |
 | --- | --- | --- | --- |
@@ -181,6 +191,9 @@ Model 层只拥有 Provider、模型、Endpoint、凭证引用和推理能力差
 credential store。
 
 ## 5. 原生扩展选择
+
+以下顺序选择的是职责对象和 Interface，不是在 Plugin 与非 Plugin 之间二选一。凡是需要进入 Harness Runtime
+的能力，最终仍由职责明确的 Cordis Plugin row 装配。
 
 按从轻到重的顺序选择扩展点：
 

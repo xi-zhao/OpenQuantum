@@ -6,6 +6,10 @@ Tool 可以由原生 Tool Plugin 注册，或由 MCP Server 暴露后经 Harness
 OpenQuantum Scientific Validator。只有 Tool hook 等 Agent 生命周期行为才在同一 Preset 组合受信任的
 agent-scoped Host Plugin。
 
+DeepSeek Harness 的“一切皆 Plugin”是运行时装配原则：可组合模块统一通过 Cordis Plugin row 注入、注册
+Interface 并随 scope 回收。Skill、Tool、MCP Server、Validator 等是职责对象；它们说明模块负责什么，
+不与 Cordis Plugin 这一装配机制竞争。
+
 开始架构或实现工作前，先阅读 `docs/architecture/ARCHITECTURE_AUDIT.md`。
 
 ## 四层边界
@@ -23,6 +27,8 @@ agent-scoped Host Plugin。
 
 ## 扩展对象不可混用
 
+- **Cordis Plugin**：DSH 的统一装配与生命周期单元；按具体职责承载 Skill Provider、Tool Provider、
+  Harness MCP Client、Model Adapter、Host 或 Client 扩展，不能成为无边界的业务容器。
 - **Skill**：告诉 Agent 何时、为何和怎样做；不执行代码、不启动 MCP Server、不持有凭据。
 - **Tool**：Agent 可调用的原子动作；必须声明有界 schema、错误语义和副作用。
 - **Tool Provider**：在 Harness 侧把 Tool 注册进 Registry；典型实现是原生 Tool Plugin 或 Harness MCP Client。
@@ -37,8 +43,9 @@ agent-scoped Host Plugin。
 - **Agent Preset**：组合 Skill Provider、Tool Provider、Agent 策略，以及确有需要的 agent-scoped Host Plugin；不保存模型 Provider Route。
 - **Deployment/Home Patch**：组合 Provider Route、默认模型、默认 Agent Preset、deployment-scoped Host Plugin 与 Client Plugin。
 
-禁止使用 `MCP/Tool`、`Validator/eval`、`Skill Validator` 或裸写的 `API`、`Plugin`。完整定义和选择规则见
-`docs/architecture/EXTENSION_MODEL.md`。
+禁止使用 `MCP/Tool`、`Validator/eval`、`Skill Validator` 或裸写的 `API`。讨论运行时装配时写
+`Cordis Plugin`；讨论具体职责时写明 Skill/Tool Provider、Harness MCP Client、Model Adapter、Host 或
+Client Plugin 角色和 scope。完整定义和选择规则见 `docs/architecture/EXTENSION_MODEL.md`。
 
 ## 不变量
 

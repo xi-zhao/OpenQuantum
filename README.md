@@ -251,10 +251,12 @@ docker compose up --build
 
 ## 把你的量子能力接进来
 
-OpenQuantum 沿用 DeepSeek Harness 的原生扩展方式，但这些对象不是同义词：
+OpenQuantum 沿用 DeepSeek Harness 的“一切皆 Plugin”装配方式：可组合能力统一通过 Cordis Plugin 进入
+Runtime、获得依赖并随 scope 回收；但 Plugin 只是运行时容器，下面这些产品职责不是同义词：
 
 | 对象 | 它解决什么问题 |
 | --- | --- |
+| Cordis Plugin | DSH 的统一装配与生命周期单元；按职责可承载 Skill Provider、Tool Provider、MCP Client、Model Adapter、Host 或 Client 扩展 |
 | Skill | 告诉 Agent 什么时候、为什么、按什么步骤做；它不执行代码 |
 | Tool | Agent 唯一直接调用的原子动作，拥有输入输出 schema、错误语义和副作用 |
 | Tool Provider | 在 Harness 侧把 Tool 注册进 Registry；典型实现是原生 Tool Plugin 或 Harness MCP Client |
@@ -272,6 +274,9 @@ OpenQuantum 沿用 DeepSeek Harness 的原生扩展方式，但这些对象不�
 | Agent Preset | 组合 Skill Provider、Tool Provider、Agent 策略与必要的 agent-scoped Host Plugin；模型通过 Deployment Provider Route 接入 |
 | Host Plugin | 以可信代码扩展 Harness hook 或 Host route；按 hook 所有者归入 Agent 或 Deployment scope |
 | Client Plugin | 通过 Harness UI Slot、Settings 和只读投影收集意图与展示结果，不直接执行 Tool |
+
+因此，“一切皆 Plugin”回答能力怎样进入 DSH；Skill、Tool、MCP Server、Validator 等名称回答能力负责什么。
+Scientific Validator 或领域算法可以是 Plugin 内部的普通模块，不需要为了形式统一而各自成为 Plugin。
 
 接入新后端时，先定义 Agent 真正需要的最小 Tool surface，再决定由原生 Tool Plugin 注册，还是由 MCP Server 暴露并经 Harness MCP Client 注册；然后用 Skill 说明适用场景。涉及科学主张时，再增加 Validator、Acceptance Profile、Materializer 和测试，由 central Acceptance Builder 唯一推导最终状态。开发者可以只实现需要的部分，也可以完成从 Tool 到科研验收的完整链路。
 

@@ -1,7 +1,7 @@
 # OpenQuantum 模块地图与演进契约
 
 - 状态：当前模块边界
-- 日期：2026-08-28
+- 日期：2026-08-29
 - 适用范围：新增能力、接入 SDK 或 MCP Server、修改设置、升级 Harness、增加科研验收
 
 ## 1. 这张地图解决什么问题
@@ -20,6 +20,9 @@ Skill、Tool Provider，以及确有 Harness hook 需求的 agent-scoped Host Pl
 把证据交给 Materializer 后调用 Validator。Harness MCP Client
 是一种 Tool Provider，MCP Server 负责通过协议暴露 Tool。eval/benchmark 只属于开发证据。只有宿主层行为
 无法用原生配置表达时，才增加小型 Host Plugin。
+
+以上对象按职责划分；它们进入 DSH Runtime 时统一由 Cordis Plugin row 装配。Cordis Plugin 是依赖注入、
+Interface 注册和生命周期机制，Skill、Tool、Validator 等是职责模型。技术容器统一不等于业务职责可以混合。
 
 ## 2. 核心对象
 
