@@ -1,0 +1,39 @@
+# OpenQuantum-owned static model route catalog.
+#
+# Web/Desktop Home composition and CC Connect ACP composition include this
+# fragment. Runtime endpoint/model overrides come from the shared
+# $DSH_HOME/settings.yaml settings document. Secrets remain environment or
+# credential references and are resolved per request.
+
+- id: openquantum-llm-pi-ai
+  name: '@deepseek-ai/dsh-llm-pi-ai'
+  config:
+    providers:
+      openquantum-public:
+        displayName: OpenQuantum Public Gateway
+        apiKeyEnv: OPENQUANTUM_PUBLIC_API_KEY
+        api: openai-completions
+        baseURL: !!js process.env.OPENQUANTUM_PUBLIC_BASE_URL || 'https://api.example.invalid/v1'
+        defaultContextWindow: 131072
+        defaultMaxTokens: 8192
+        defaultInput:
+          - text
+        streamIdleTimeoutMs: 300000
+        models:
+          - id: kimi-k2.7-code
+            name: Kimi K2.7 Code
+          - id: glm5.2
+            name: GLM 5.2
+      openquantum-private:
+        displayName: OpenQuantum Private Gateway
+        apiKeyEnv: OPENQUANTUM_PRIVATE_API_KEY
+        api: openai-completions
+        baseURL: !!js process.env.OPENQUANTUM_PRIVATE_BASE_URL || 'https://private-api.example.invalid/v1'
+        defaultContextWindow: 131072
+        defaultMaxTokens: 8192
+        defaultInput:
+          - text
+        streamIdleTimeoutMs: 300000
+        models:
+          - id: kimi2.7
+            name: Kimi 2.7

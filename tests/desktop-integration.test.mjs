@@ -5,7 +5,10 @@ import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
 
-import { composeEntries } from "@deepseek-ai/dsh-app-boot";
+import {
+  composeEntries,
+  loadOverlayPatches,
+} from "@deepseek-ai/dsh-app-boot";
 import { prepareDesktopProfile } from "dsh-plugin-desktop/profile";
 
 import { prepareOpenQuantumHarnessHome } from "../scripts/lib/prepare-harness-home.mjs";
@@ -43,7 +46,7 @@ test("composes the Desktop shell around the OpenQuantum Harness home", async (t)
   const harnessHome = path.join(sandboxRoot, "dsh");
   t.after(() => rm(sandboxRoot, { recursive: true, force: true }));
 
-  const { patchTarget } = await prepareOpenQuantumHarnessHome({
+  const { modelRoutesTarget, patchTarget } = await prepareOpenQuantumHarnessHome({
     harnessHome,
     projectRoot,
   });
@@ -69,8 +72,31 @@ test("composes the Desktop shell around the OpenQuantum Harness home", async (t)
   );
   assert.equal(rows.get("agent-presets")?.config?.default, "openquantum");
   assert.equal(rows.get("llm-deepseek")?.disabled, true);
+  assert.equal(rows.get("llm-pi-ai")?.disabled, true);
   assert.equal(
-    rows.get("llm-pi-ai")?.config?.providers?.["openquantum-public"]
+    rows.get("openquantum-model-routes")?.name,
+    "@deepseek-ai/cordis-plugin-include",
+  );
+  assert.equal(
+    path.resolve(
+      path.dirname(prepared.rootConfig),
+      rows.get("openquantum-model-routes")?.config?.path,
+    ),
+    modelRoutesTarget,
+  );
+
+  const modelRouteRows = loadOverlayPatches(
+    "openquantum-desktop-integration",
+    modelRoutesTarget,
+  );
+  assert.equal(modelRouteRows.length, 1);
+  assert.equal(modelRouteRows[0]?.id, "openquantum-llm-pi-ai");
+  assert.equal(
+    modelRouteRows[0]?.name,
+    "@deepseek-ai/dsh-llm-pi-ai",
+  );
+  assert.equal(
+    modelRouteRows[0]?.config?.providers?.["openquantum-public"]
       ?.displayName,
     "OpenQuantum Public Gateway",
   );

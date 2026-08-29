@@ -15,6 +15,12 @@
 - id: llm-deepseek
   disabled: true
 
+# The base profile mounts a dormant pi-ai adapter. OpenQuantum replaces it
+# with one shared static catalog so Web, Desktop and automation Hosts cannot
+# activate two adapters for the same provider route.
+- id: llm-pi-ai
+  disabled: true
+
 # Presets own their Skill sources. Disabling the host provider prevents personal
 # ~/.dsh and ~/.agents skills from leaking into product sessions.
 - id: skill-filesystem
@@ -31,34 +37,11 @@
       name: '@openquantum/harness-web-capabilities'
       inject: [webServer, credentials]
 
-- id: llm-pi-ai
-  config:
-    providers:
-      openquantum-public:
-        displayName: OpenQuantum Public Gateway
-        apiKeyEnv: OPENQUANTUM_PUBLIC_API_KEY
-        api: openai-completions
-        baseURL: !!js process.env.OPENQUANTUM_PUBLIC_BASE_URL || 'https://api.example.invalid/v1'
-        defaultContextWindow: 131072
-        defaultMaxTokens: 8192
-        defaultInput:
-          - text
-        streamIdleTimeoutMs: 300000
-        models:
-          - id: kimi-k2.7-code
-            name: Kimi K2.7 Code
-          - id: glm5.2
-            name: GLM 5.2
-      openquantum-private:
-        displayName: OpenQuantum Private Gateway
-        apiKeyEnv: OPENQUANTUM_PRIVATE_API_KEY
-        api: openai-completions
-        baseURL: !!js process.env.OPENQUANTUM_PRIVATE_BASE_URL || 'https://private-api.example.invalid/v1'
-        defaultContextWindow: 131072
-        defaultMaxTokens: 8192
-        defaultInput:
-          - text
-        streamIdleTimeoutMs: 300000
-        models:
-          - id: kimi2.7
-            name: Kimi 2.7
+# Profile roots live at $DSH_HOME/profiles/<profile>/cordis.yml; the fragment
+# is materialized beside them so its plugins resolve through the profile's
+# shared dependency root.
+- insert:
+    - id: openquantum-model-routes
+      name: '@deepseek-ai/cordis-plugin-include'
+      config:
+        path: ../model-routes.cordis.yml

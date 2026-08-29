@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
-import { chmod, mkdir, mkdtemp, readFile, stat, writeFile } from "node:fs/promises";
+import { chmod, mkdir, mkdtemp, readFile, rm, stat, writeFile } from "node:fs/promises";
+import { createServer } from "node:http";
 import { tmpdir } from "node:os";
 import net from "node:net";
 import path from "node:path";
@@ -13,6 +14,7 @@ import {
   PROTOCOL_VERSION,
   ndJsonStream,
 } from "@agentclientprotocol/sdk";
+import { loadOverlayPatches } from "@deepseek-ai/dsh-app-boot";
 
 import {
   buildCcConnectPlatformSetupArgs,
@@ -34,6 +36,88 @@ async function availablePort() {
   const address = server.address();
   await new Promise((resolve) => server.close(resolve));
   return address.port;
+}
+
+async function startOpenAiCompletionServer() {
+  let resolveRequest;
+  let rejectRequest;
+  const request = new Promise((resolve, reject) => {
+    resolveRequest = resolve;
+    rejectRequest = reject;
+  });
+  const server = createServer((incoming, response) => {
+    let body = "";
+    incoming.setEncoding("utf8");
+    incoming.on("data", (chunk) => {
+      body += chunk;
+    });
+    incoming.on("error", rejectRequest);
+    incoming.on("end", () => {
+      try {
+        const parsed = JSON.parse(body);
+        resolveRequest({
+          authorization: incoming.headers.authorization,
+          body: parsed,
+          method: incoming.method,
+          url: incoming.url,
+        });
+        const id = "chatcmpl-openquantum-settings-test";
+        const common = {
+          id,
+          object: "chat.completion.chunk",
+          created: 0,
+          model: parsed.model,
+        };
+        response.writeHead(200, {
+          "content-type": "text/event-stream",
+          "cache-control": "no-cache",
+        });
+        response.write(`data: ${JSON.stringify({
+          ...common,
+          choices: [{
+            index: 0,
+            delta: { role: "assistant", content: "settings override reached" },
+            finish_reason: null,
+          }],
+        })}\n\n`);
+        response.write(`data: ${JSON.stringify({
+          ...common,
+          choices: [{ index: 0, delta: {}, finish_reason: "stop" }],
+          usage: {
+            prompt_tokens: 1,
+            completion_tokens: 1,
+            total_tokens: 2,
+          },
+        })}\n\n`);
+        response.end("data: [DONE]\n\n");
+      } catch (error) {
+        rejectRequest(error);
+        response.writeHead(400, { "content-type": "application/json" });
+        response.end(JSON.stringify({ error: { message: "invalid test request" } }));
+      }
+    });
+  });
+  await new Promise((resolve, reject) => {
+    server.once("error", reject);
+    server.listen(0, "127.0.0.1", resolve);
+  });
+  const address = server.address();
+  assert.notEqual(address, null);
+  assert.equal(typeof address, "object");
+  return {
+    baseURL: `http://127.0.0.1:${address.port}/v1`,
+    request,
+    async close() {
+      await new Promise((resolve, reject) => {
+        server.close((error) => error ? reject(error) : resolve());
+        server.closeAllConnections?.();
+      });
+    },
+  };
+}
+
+function insertedRows(patches) {
+  return patches.flatMap((patch) => Array.isArray(patch.insert) ? patch.insert : []);
 }
 
 async function materializeRuntime(root) {
@@ -142,19 +226,117 @@ test("CC Connect management probe authenticates the exact local service", async 
   assert.equal(request[1].headers.authorization, "Bearer local-management-token");
 });
 
-test("OpenQuantum ACP entrypoint completes a real no-key Harness handshake", { timeout: 60_000 }, async () => {
+test("CC Connect ACP shares model composition and deployment defaults", () => {
+  const acpConfigPath = path.join(
+    projectRoot,
+    "runtime",
+    "openquantum",
+    "cc-connect",
+    "cordis.yml",
+  );
+  const deploymentPatchPath = path.join(
+    projectRoot,
+    "runtime",
+    "openquantum",
+    "cordis.patch.yml",
+  );
+  const modelRoutesPath = path.join(
+    projectRoot,
+    "runtime",
+    "openquantum",
+    "model-routes.cordis.yml",
+  );
+  const acpRows = loadOverlayPatches("openquantum-cc-connect-test", acpConfigPath);
+  const deploymentPatches = loadOverlayPatches(
+    "openquantum-cc-connect-test",
+    deploymentPatchPath,
+  );
+  const modelRouteRows = loadOverlayPatches(
+    "openquantum-cc-connect-test",
+    modelRoutesPath,
+  );
+  const acpById = new Map(acpRows.map((row) => [row.id, row]));
+  const deploymentById = new Map(
+    deploymentPatches.filter((patch) => patch.id).map((patch) => [patch.id, patch]),
+  );
+  const deploymentInserted = new Map(
+    insertedRows(deploymentPatches).map((row) => [row.id, row]),
+  );
+  const acpAgent = acpById.get("acp-agent");
+  const deploymentDefault = deploymentById.get("agent-default-model")?.config;
+
+  assert.deepEqual(deploymentDefault, {
+    provider: "openquantum-public",
+    model: "kimi-k2.7-code",
+  });
+  assert.deepEqual(
+    { provider: acpAgent?.config?.provider, model: acpAgent?.config?.model },
+    deploymentDefault,
+  );
+  assert.equal(typeof acpAgent?.config?.persona, "string");
+  assert.match(acpAgent.config.persona, /trusted Acceptance Report or Result Commit/);
+
+  assert.equal(acpById.get("settings")?.name, "@deepseek-ai/dsh-settings-file");
+  assert.deepEqual(
+    acpById.get("settings")?.config?.dshHome,
+    acpAgent?.config?.dshHome,
+  );
+  assert.deepEqual(
+    acpById.get("credentials")?.config?.dshHome,
+    acpAgent?.config?.dshHome,
+  );
+  assert.equal(
+    acpById.get("openquantum-model-routes")?.name,
+    "@deepseek-ai/cordis-plugin-include",
+  );
+  assert.equal(
+    path.resolve(
+      path.dirname(acpConfigPath),
+      acpById.get("openquantum-model-routes")?.config?.path,
+    ),
+    modelRoutesPath,
+  );
+  assert.equal(
+    acpRows.some((row) => row.name === "@deepseek-ai/dsh-llm-pi-ai"),
+    false,
+  );
+
+  assert.equal(deploymentById.get("llm-pi-ai")?.disabled, true);
+  assert.equal(
+    deploymentInserted.get("openquantum-model-routes")?.name,
+    "@deepseek-ai/cordis-plugin-include",
+  );
+  assert.equal(modelRouteRows.length, 1);
+  assert.equal(modelRouteRows[0]?.id, "openquantum-llm-pi-ai");
+  assert.equal(modelRouteRows[0]?.name, "@deepseek-ai/dsh-llm-pi-ai");
+  assert.equal(
+    modelRouteRows[0]?.config?.providers?.["openquantum-public"]?.models?.[0]?.id,
+    deploymentDefault.model,
+  );
+});
+
+test("OpenQuantum ACP uses the shared settings.yaml model route override", { timeout: 60_000 }, async () => {
   const stateRoot = await mkdtemp(path.join(tmpdir(), "openquantum-acp-"));
+  const dshHome = path.join(stateRoot, "dsh");
+  const modelServer = await startOpenAiCompletionServer();
+  await mkdir(dshHome, { recursive: true });
+  await writeFile(
+    path.join(dshHome, "settings.yaml"),
+    `llm-pi-ai:\n  providers:\n    openquantum-public:\n      baseURL: ${modelServer.baseURL}\n`,
+    { mode: 0o600 },
+  );
   const paths = resolveCcConnectPaths(projectRoot);
   const child = spawn(paths.acpBin, ["--config", paths.acpConfigPath], {
     cwd: projectRoot,
     env: {
       ...process.env,
-      DSH_HOME: path.join(stateRoot, "dsh"),
+      DSH_HOME: dshHome,
       DSH_PERMISSION_MODE: "workspace-write",
       DSH_TELEMETRY_DISABLED: "1",
       OPENQUANTUM_CC_CONNECT_SESSIONS_ROOT: path.join(stateRoot, "sessions"),
       OPENQUANTUM_DISABLE_QISKIT_MCP: "1",
-      OPENQUANTUM_PUBLIC_API_KEY: process.env.OPENQUANTUM_PUBLIC_API_KEY ?? "test-only-dummy-key",
+      OPENQUANTUM_PUBLIC_API_KEY: "test-only-dummy-key",
+      OPENQUANTUM_PUBLIC_BASE_URL: "http://127.0.0.1:1/v1",
     },
     stdio: ["pipe", "pipe", "pipe"],
   });
@@ -178,8 +360,17 @@ test("OpenQuantum ACP entrypoint completes a real no-key Harness handshake", { t
     const session = await connection.newSession({ cwd: projectRoot, mcpServers: [] });
     assert.equal(typeof session.sessionId, "string");
     assert.ok(session.sessionId.length > 0);
-    await new Promise((resolve) => setTimeout(resolve, 750));
-    assert.equal(child.exitCode, null, `ACP exited after its initial handshake\n${stderr}`);
+    const prompt = await connection.prompt({
+      sessionId: session.sessionId,
+      prompt: [{ type: "text", text: "Reply with one short confirmation." }],
+    });
+    assert.equal(prompt.stopReason, "end_turn");
+    const modelRequest = await modelServer.request;
+    assert.equal(modelRequest.method, "POST");
+    assert.equal(modelRequest.url, "/v1/chat/completions");
+    assert.equal(modelRequest.body.model, "kimi-k2.7-code");
+    assert.equal(modelRequest.authorization, "Bearer test-only-dummy-key");
+    assert.equal(child.exitCode, null, `ACP exited after its model turn\n${stderr}`);
     assert.doesNotMatch(stderr, /entries did not activate/);
   } catch (error) {
     assert.fail(`${error instanceof Error ? error.stack : error}\nACP stderr:\n${stderr}`);
@@ -189,6 +380,8 @@ test("OpenQuantum ACP entrypoint completes a real no-key Harness handshake", { t
     if (child.exitCode === null) {
       await new Promise((resolve) => child.once("exit", resolve));
     }
+    await modelServer.close();
+    await rm(stateRoot, { recursive: true, force: true });
   }
 });
 

@@ -6,7 +6,9 @@
 
 | 路径 | 职责 |
 | --- | --- |
-| `cordis.patch.yml` | Harness Home patch：为 Web、Desktop 等 Host 统一组合 Provider route、OpenQuantum preset、品牌与设置插件 |
+| `cordis.patch.yml` | Harness Home patch：为 Web、Desktop 等 Host 统一组合模型 route fragment、OpenQuantum preset、品牌与设置插件，并停用基础 profile 的重复 `llm-pi-ai` 实例 |
+| `model-routes.cordis.yml` | Web、Desktop 与 CC Connect ACP 共用的静态 `dsh-llm-pi-ai` Provider catalog；运行时覆盖仍由同一 DSH Home 的 `settings.yaml` 提供 |
+| `cc-connect/cordis.yml` | CC Connect 的 automation-only ACP 进程组合；显式固定默认 Provider、Model 与 persona，并连接共享模型 route、设置和 Agent 扩展 |
 | `agent-presets/openquantum/preset.yml` | OpenQuantum Agent preset 元数据 |
 | `agent-presets/openquantum/agent.cordis.yml` | Agent scope 内的 Skill Provider、原生 Tool Plugin、Harness MCP Client、权限与结果投影组合 |
 | `agent-presets/openquantum/credentialed-mcp-client.mjs` | Harness credential reference 到 MCP 子进程环境变量的薄 Adapter |
@@ -21,6 +23,8 @@
 - 不修改 `node_modules` 中的 Harness；
 - 不复制 Session、Agent loop、Tool Registry、Harness MCP Client、凭据库或事件日志；
 - Web 与 Desktop 从同一个 DSH Home 加载这份 patch，不维护两套产品组合；
+- Web、Desktop 与 CC Connect ACP 只维护一份静态模型 route catalog；ACP 与交互式 Host 读取同一 DSH Home 的 `settings.yaml`；
+- 基础 profile 的 dormant `llm-pi-ai` 在 Home patch 中停用，避免与共享 fragment 重复激活；
 - `agent.cordis.yml` 是 OpenQuantum Agent 组合的运行权威；
 - 设置中心通过 `src/settings/server/` 的受控 Interface 修改配置，不维护第二份状态；
 - 修改 MCP composition 后完整重启 Harness，避免旧 generation 占用相同 `serverName`；

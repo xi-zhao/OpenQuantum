@@ -5,10 +5,10 @@ import path from "node:path";
  * Materialize the OpenQuantum-owned parts of a Harness home.
  *
  * DeepSeek Harness owns the profile and runtime. OpenQuantum contributes one
- * deployment patch, one Agent preset and two Host Web extensions. Keeping this
- * setup in one place makes the Web launcher, Desktop adapter, isolated tests
- * and real-provider probes boot the same composition even when each uses a
- * different DSH_HOME.
+ * deployment patch, one shared model-route fragment, one Agent preset and two
+ * Host Web extensions. Keeping this setup in one place makes the Web launcher,
+ * Desktop adapter, isolated tests and real-provider probes boot the same
+ * composition even when each uses a different DSH_HOME.
  */
 export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot }) {
   const patchSource = path.join(
@@ -18,6 +18,17 @@ export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot }
     "cordis.patch.yml",
   );
   const patchTarget = path.join(harnessHome, "cordis.patch.yml");
+  const modelRoutesSource = path.join(
+    projectRoot,
+    "runtime",
+    "openquantum",
+    "model-routes.cordis.yml",
+  );
+  const modelRoutesTarget = path.join(
+    harnessHome,
+    "profiles",
+    "model-routes.cordis.yml",
+  );
   const presetSource = path.join(
     projectRoot,
     "runtime",
@@ -58,12 +69,14 @@ export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot }
 
   await Promise.all([
     mkdir(path.dirname(patchTarget), { recursive: true }),
+    mkdir(path.dirname(modelRoutesTarget), { recursive: true }),
     mkdir(path.dirname(presetTarget), { recursive: true }),
     mkdir(path.dirname(brandingTarget), { recursive: true }),
     mkdir(path.dirname(capabilitiesTarget), { recursive: true }),
   ]);
   await Promise.all([
     cp(patchSource, patchTarget, { force: true }),
+    cp(modelRoutesSource, modelRoutesTarget, { force: true }),
     cp(presetSource, presetTarget, { recursive: true, force: true }),
     cp(brandingSource, brandingTarget, { recursive: true, force: true }),
     cp(capabilitiesSource, capabilitiesTarget, {
@@ -86,6 +99,7 @@ export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot }
   return {
     brandingTarget,
     capabilitiesTarget,
+    modelRoutesTarget,
     patchTarget,
     presetNodeModulesTarget,
     presetTarget,

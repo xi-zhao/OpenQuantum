@@ -1,5 +1,7 @@
 # OpenQuantum 仓库地图
 
+先读[文档与架构入口](README.md)获得五分钟总览；本页只回答代码位置、配置权威和实际编排关系。
+
 OpenQuantum 是 DeepSeek Harness 的量子科研发行版。仓库只增加量子内容、组合配置和必要的产品扩展，
 不维护第二套 Agent Runtime。
 
@@ -12,9 +14,10 @@ OpenQuantum 是 DeepSeek Harness 的量子科研发行版。仓库只增加量�
 ```text
 浏览器 / DSH Desktop
   -> DeepSeek Harness 原生 Web UI
-     -> DSH Home 中由 runtime/openquantum/cordis.patch.yml 生成的统一 patch
+     -> DSH Home 中由 runtime/openquantum/cordis.patch.yml 生成的统一 Deployment patch
         -> Deployment/Home Patch
-           -> Harness Model Provider route    模型与凭据引用
+           -> model-routes.cordis.yml          静态 Provider catalog
+           -> settings.yaml                    用户 Route 覆盖（Git 忽略）
            -> OpenQuantum Agent Preset
               -> .agents/skills/*/SKILL.md     领域工作流，不执行代码
               -> Harness-native Tool           原生动作
@@ -64,7 +67,9 @@ locality，不是运行时包含关系。
 
 | 事实 | 权威位置 | 修改方式 |
 | --- | --- | --- |
-| Web / Desktop Host 的 Provider route、品牌和设置插件 | `runtime/openquantum/cordis.patch.yml` | 审阅 patch 后运行 `npm run harness:config` 与 `npm run desktop:check` |
+| Web / Desktop / ACP 共用的静态模型 Provider catalog | `runtime/openquantum/model-routes.cordis.yml` | 修改后运行组合测试、`npm run harness:config` 与 model probe |
+| 用户保存的模型 Route 覆盖 | Git 忽略的 `$DSH_HOME/settings.yaml` | 通过 Harness 模型设置修改；Web/Desktop/ACP 共读，不进入 Git |
+| Web / Desktop 的默认模型、默认 Preset、品牌和设置插件 | `runtime/openquantum/cordis.patch.yml` | 审阅 patch 后运行 `npm run harness:config` 与 `npm run desktop:check` |
 | OpenQuantum Agent 的 Skill Provider、Tool Provider 和权限组合 | `runtime/openquantum/agent-presets/openquantum/agent.cordis.yml` | 设置中心或受审查的配置修改；修改后重启 Harness |
 | 发行版 Capability 的 L0–L3 与证据引用 | `.agents/capability-packages.yml` | 新增/提升能力时更新，并运行 `npm run capability:conformance` |
 | MCP Server 连接与 Skill 加载策略的写入规则 | `src/settings/server/project-settings.mjs` | 通过 `executeProjectSettingsCommand`，不在 HTTP route 或 UI 重写规则 |

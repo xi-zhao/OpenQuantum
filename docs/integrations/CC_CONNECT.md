@@ -12,6 +12,9 @@
 
 这条边界意味着：从消息平台发来的请求与 Web 工作台使用同一套量子能力配置。设置中心启用或关闭的是
 Harness MCP Client 连接；它仍由 Agent Preset 管理。CC Connect 不直接加载 Skill，也不直接调用 MCP-exposed Tool。
+Web、Desktop 和 ACP 还共用 `model-routes.cordis.yml` 的静态 Provider catalog，以及同一个 DSH Home 中
+Git 忽略的 `settings.yaml` 用户覆盖。因此在“设置 → 模型”保存的 Endpoint 等 Route 配置会进入消息入口；
+真实 API Key 仍只来自环境变量或 Harness credential store，不进入这些文件或 Git。
 
 ## 第一次使用
 
@@ -25,7 +28,8 @@ npm run cc-connect:setup
 
 - 注册一个名为 `openquantum` 的 ACP Agent；
 - 指向 DeepSeek Harness 官方 `dsh-acp-demo` 入口；
-- 使用 OpenQuantum 的项目根、Skill 目录、Agent Preset 中的 Harness MCP Client 配置和模型路由；
+- 使用 OpenQuantum 的项目根、Skill 目录、Agent Preset 中的 Harness MCP Client 配置、共享静态模型 Route
+  和同一 DSH Home 的用户设置；
 - 生成只属于本机的 CC Connect 管理凭据；
 - 已有配置存在时保持原样，不覆盖平台或密钥。
 
@@ -84,6 +88,6 @@ OpenQuantum 的“设置 → 消息渠道”只展示这条连接的产品状态
 2. 在设置中心确认消息渠道状态；
 3. 确认 `npm run cc-connect:start` 的终端没有退出；
 4. 运行 `npm run harness:config` 检查共享 MCP preset；
-5. 若消息能到达但 Agent 失败，再检查模型 Provider、Skill、MCP 或权限，而不是修改 CC Connect。
+5. 若消息能到达但 Agent 失败，再检查模型 Provider、Skill、MCP Server/Harness MCP Client 或权限，而不是修改 CC Connect。
 
 CC Connect 本身使用 MIT License；DeepSeek Harness、ACP SDK 和量子组件继续使用各自的上游许可证，详见 [THIRD_PARTY_NOTICES.md](../../THIRD_PARTY_NOTICES.md)。
