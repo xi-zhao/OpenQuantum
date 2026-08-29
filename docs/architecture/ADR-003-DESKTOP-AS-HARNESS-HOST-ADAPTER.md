@@ -10,8 +10,9 @@ OpenQuantum 已经通过 DeepSeek Harness 原生 Web UI 提供量子 Agent 工�
 桌面入口，包括原生窗口、托盘、终端和通知，但这些能力不应产生第二套 Session、Agent loop、Tool registry
 或科研状态。
 
-[DSH Desktop](https://github.com/anywhere-labs/deepseek-harness-desktop) 已把 Electron 实现为 Harness Cordis
-插件，并继续使用 loopback HTTP/WebSocket 承载官方 Web UI。它提供了适合复用的 Host seam。
+[DSH Desktop](https://github.com/anywhere-labs/deepseek-harness-desktop) 的产品角色是 Host Adapter；其实现可以
+由上游 Cordis Plugin 组合，并继续使用 loopback HTTP/WebSocket 承载官方 Web UI。它提供了适合复用的
+宿主入口 seam，但不是 OpenQuantum 领域 Host Plugin。
 
 ## 决策
 
@@ -19,7 +20,9 @@ OpenQuantum 把 Web 与 Desktop 建模为同一个 Harness 产品组合的两个
 
 ```text
 OpenQuantum Harness Home
-  ├── cordis.patch.yml        Provider、品牌、设置与默认 preset
+  ├── cordis.patch.yml        默认模型/preset、品牌与设置扩展
+  ├── profiles/model-routes.cordis.yml  静态 Provider catalog
+  ├── settings.yaml           用户 Route 覆盖（Git 忽略）
   ├── .agent-presets/         OpenQuantum Agent 组合
   └── Session / credentials   Harness 权威状态
            ▲
@@ -29,15 +32,15 @@ OpenQuantum Harness Home
 
 具体规则：
 
-1. `runtime/openquantum/cordis.patch.yml` 在启动前物化为 DSH Home 级 patch，所有 Host 使用同一产品组合；
-2. Desktop 只负责窗口、托盘、终端、通知和 Host 生命周期，不拥有量子业务规则；
+1. `runtime/openquantum/cordis.patch.yml` 与共享模型 Route fragment 在启动前物化进 DSH Home，Web 与 Desktop
+   Host 使用同一产品组合和用户模型设置；
+2. Desktop 只负责桌面进程、窗口、托盘、终端和通知生命周期，不拥有 Session/Agent 生命周期或量子业务规则；
 3. Session、Agent Preset、Skill、Tool Provider、MCP Server、Harness MCP Client、Validator、Model Provider 与凭据仍以 Harness/OpenQuantum 现有模块为权威；
 4. Web 与 Desktop 共用 `.openquantum/dsh`，本地单用户模式不同时运行两个 Host；
-5. Desktop 与 Harness family 成对固定。当前使用 `dsh-plugin-desktop@2.0.0` 和 Harness `0.1.0-rc.6`；
-6. 不依赖 `desktopRuntime`、Electron Window 或其他 DSH Desktop 私有 Interface。
-7. Desktop 的传递依赖 `pnpm` 覆盖为 `11.8.0`，避开高危路径穿越公告
-   [GHSA-qrv3-253h-g69c](https://github.com/advisories/GHSA-qrv3-253h-g69c)。
-8. OpenQuantum 当前只支持仓库内源码启动。上游的全局安装和 `npx` 入口使用默认 DSH Home，不能作为
+5. Desktop 与 Harness family 成对固定；当前版本与安全覆盖以 `package.json`、lockfile 和 Desktop 集成测试为权威，
+   不在 ADR 中维护第二份版本常量；
+6. 不依赖 `desktopRuntime`、Electron Window 或其他 DSH Desktop 私有 Interface；
+7. OpenQuantum 当前只支持仓库内源码启动。上游的全局安装和 `npx` 入口使用默认 DSH Home，不能作为
    OpenQuantum Agent Preset、Skill、Tool Provider 与 Validator 组合的安装入口。
 
 ## 结果
@@ -52,8 +55,8 @@ OpenQuantum Harness Home
 
 - 安装会增加 Electron 及其桌面依赖；
 - 同一 DSH Home 不能由两个本地 Host 并发写入；
-- DSH Desktop `2.0.2` 已迁移到存在破坏性变化的 Harness `0.1.1-rc.2`，必须作为独立 Harness 升级处理，
-  不能只替换 Desktop 版本。
+- Desktop 上游可能先于当前发行版切换 Harness family；任何升级都必须作为 Harness/Desktop 成对升级处理，
+  不能只替换 Desktop 包版本。
 
 ## 验证
 

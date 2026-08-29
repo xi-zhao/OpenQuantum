@@ -23,6 +23,7 @@
   <a href="#快速开始">快速开始</a> ·
   <a href="#已集成的量子工具与能力">量子能力</a> ·
   <a href="#把你的量子能力接进来">扩展开发</a> ·
+  <a href="./docs/README.md#架构总览">架构</a> ·
   <a href="./docs/communications/openquantum-wechat-launch.md">项目故事</a> ·
   <a href="./CONTRIBUTING.md">参与贡献</a>
 </p>
@@ -33,7 +34,7 @@
 
 你可以直接使用已经集成的 Qiskit、FieldQKit、本源量子（OriginQ / QPanda）和量子算法能力。自己的方法和工作流可以做成 Skill，设备与数据源可以由 MCP Server 暴露为 Tool，再经 Harness MCP Client 注册，模型则通过 Provider Route 接入。普通用户可以从自然语言开始，研究机构可以组织科研工作流，量子公司也可以在这套基础上继续开发自己的产品。
 
-OpenQuantum 基于 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 构建。Harness 提供会话、工具调度、权限、持久化和执行轨迹，OpenQuantum 在上面组织量子工具、算法 Skill、科学验收和更适合量子工作的产品界面。
+OpenQuantum 基于 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 构建。Harness 提供会话、工具调度、权限、持久化和执行轨迹，OpenQuantum 在上面组织量子工具、算法 Skill、科学验收和更适合量子工作的产品界面。五分钟版本见[架构总览](docs/README.md#架构总览)。
 
 OpenQuantum 的第一版，是在 DeepSeek Harness 发布后的三天里做出来的。它从一个很直接的想法开始，把散落在不同仓库、云平台和文档里的量子工具放进同一个工作台，让用户可以直接使用，也让研究机构和量子公司可以继续接入自己的能力。
 
@@ -252,39 +253,25 @@ docker compose up --build
 ## 把你的量子能力接进来
 
 OpenQuantum 沿用 DeepSeek Harness 的“一切皆 Plugin”装配方式：可组合能力统一通过 Cordis Plugin 进入
-Runtime、获得依赖并随 scope 回收；但 Plugin 只是运行时容器，下面这些产品职责不是同义词：
+Runtime、获得依赖并随 scope 回收；但 Plugin 只是装配机制，产品职责按下面六组理解：
 
-| 对象 | 它解决什么问题 |
-| --- | --- |
-| Cordis Plugin | DSH 的统一装配与生命周期单元；按职责可承载 Skill Provider、Tool Provider、MCP Client、Model Adapter、Host 或 Client 扩展 |
-| Skill | 告诉 Agent 什么时候、为什么、按什么步骤做；它不执行代码 |
-| Tool | Agent 唯一直接调用的原子动作，拥有输入输出 schema、错误语义和副作用 |
-| Tool Provider | 在 Harness 侧把 Tool 注册进 Registry；典型实现是原生 Tool Plugin 或 Harness MCP Client |
-| MCP Server | 通过协议暴露进程外或远程 Tool；不负责 Harness 注册、Session 或 Agent 工作流 |
-| Harness MCP Client | 连接 MCP Server，并把 MCP-exposed Tool 注册进 Harness Tool Registry |
-| Application Interface | 统一承载一个用例的命令、状态转换和安全规则；HTTP route/UI 只负责传输与展示 |
-| External API | Tool implementation 使用的下游网络合同；UI 与 Skill 不直接调用 |
-| External API Adapter | Tool implementation 内部处理凭据引用、超时、脱敏、幂等和错误映射 |
-| Scientific Validator | 对结构化证据独立重算，只产生科学 observations |
-| Scientific Result Materializer | 原子物化、重读并校验真实证据字节，再把结构化证据交给 Validator |
-| Scientific Result Adapter（内部） | 在可信 Host Plugin 内把指定 Tool 映射到 Materializer、Validator 与 Artifact 类型 |
-| Acceptance Profile | 以版本化数据定义作用域、必选 observations、阈值和 provenance 要求 |
-| central Acceptance Builder | 汇聚 Profile、observations 和 provenance，唯一地推导最终 Acceptance |
-| Eval / Benchmark | 开发和发布期的回归或对比证据，不进入用户请求的运行链 |
-| Agent Preset | 组合 Skill Provider、Tool Provider、Agent 策略与必要的 agent-scoped Host Plugin；模型通过 Deployment Provider Route 接入 |
-| Host Plugin | 以可信代码扩展 Harness hook 或 Host route；按 hook 所有者归入 Agent 或 Deployment scope |
-| Client Plugin | 通过 Harness UI Slot、Settings 和只读投影收集意图与展示结果，不直接执行 Tool |
+| 层级 | 核心对象 | 它解决什么问题 |
+| --- | --- | --- |
+| 产品 | Capability、Application Interface | 用户获得什么能力；同一用例的规则由谁统一拥有 |
+| 装配 | Cordis Plugin、Agent Preset、Deployment Composition | 模块怎样进入 Runtime，以及 Agent/Host 分别组合什么 |
+| Agent Interface | Skill、Tool | Agent 怎样理解任务；唯一可以直接调用什么动作 |
+| 集成 | Tool Provider、Harness MCP Client、MCP Server、External API Adapter | Tool 怎样注册，以及进程外、远程或厂商能力怎样接入 |
+| 科学证据 | Materializer、Validator、Acceptance Profile、central Acceptance Builder | 怎样从真实证据形成 observations，并唯一推导 Acceptance |
+| 开发证据 | Eval、Benchmark、Capability conformance | 怎样在开发和发布期发现回归；不进入用户请求链 |
 
 因此，“一切皆 Plugin”回答能力怎样进入 DSH；Skill、Tool、MCP Server、Validator 等名称回答能力负责什么。
 Scientific Validator 或领域算法可以是 Plugin 内部的普通模块，不需要为了形式统一而各自成为 Plugin。
 
 接入新后端时，先定义 Agent 真正需要的最小 Tool surface，再决定由原生 Tool Plugin 注册，还是由 MCP Server 暴露并经 Harness MCP Client 注册；然后用 Skill 说明适用场景。涉及科学主张时，再增加 Validator、Acceptance Profile、Materializer 和测试，由 central Acceptance Builder 唯一推导最终状态。开发者可以只实现需要的部分，也可以完成从 Tool 到科研验收的完整链路。
 
-开发说明见 [CONTRIBUTING.md](CONTRIBUTING.md)，Skill、Tool、MCP Server、Harness MCP Client、External API 等对象的严格定义见
-[扩展对象模型](docs/architecture/EXTENSION_MODEL.md)，核心对象与模块边界见[模块地图](docs/architecture/MODULES.md)，
-目录和配置权威见[仓库地图](docs/REPOSITORY_GUIDE.md)，当前审计见
-[ARCHITECTURE_AUDIT.md](docs/architecture/ARCHITECTURE_AUDIT.md)，生态规划见
-[QUANTUM_CAPABILITY_CATALOG.md](docs/ecosystem/QUANTUM_CAPABILITY_CATALOG.md)。
+先读[文档与架构入口](docs/README.md)，再按任务进入[贡献指南](CONTRIBUTING.md)、
+[扩展对象模型](docs/architecture/EXTENSION_MODEL.md)、[模块地图](docs/architecture/MODULES.md)或
+[架构审计](docs/architecture/ARCHITECTURE_AUDIT.md)。
 
 <details>
 <summary><strong>开发与验证命令</strong></summary>

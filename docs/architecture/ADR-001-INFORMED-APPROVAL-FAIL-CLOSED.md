@@ -4,13 +4,16 @@
 日期：2026-08-14
 关联工作：P1-06、HAR-006A
 
+> **历史记录**：本 ADR 保留当时的安全推理，不是当前实现合同。OpenQuantum 现在完整复用 Harness 原生
+> 审批状态机、协议与 UI；不得依据下文重新实现独立的 ApprovalDisclosure、关联器或浏览器状态。
+
 ## 背景
 
 Harness 会在 Tool 执行前产生审批请求。UI 如果只展示 Tool 名称或一段模型生成的理由，用户无法确认自己批准的具体操作；UI 如果直接接收原始 Tool 参数和 Harness wire ID，又会扩大敏感信息暴露面，并把 Harness 内部协议泄漏成前端合同。
 
 审批既是安全边界，也是通用 Runtime 机制。它不属于量子科研 Skill，也不需要新增第五层。
 
-## 决策
+## 当时决策
 
 审批状态、关联与执行门禁全部复用 DeepSeek Harness 原生实现。OpenQuantum 不再维护独立
 `ApprovalDisclosure`、交互映射或浏览器 Session adapter；原生 Web UI 只展示 Harness 已提供的审批事实并提交用户意图。
@@ -37,7 +40,7 @@ Harness 会在 Tool 执行前产生审批请求。UI 如果只展示 Tool 名称
 - OpenQuantum Client Plugin 不改写审批协议，也不保存第二份审批状态。
 - 本决策不定义组织级长期授权、角色权限或科研结果是否可信；这些需要独立证据和决策。
 
-## 退出测试
+## 历史退出测试
 
 以下测试全部通过后，P1 的知情审批路径才算完成：
 

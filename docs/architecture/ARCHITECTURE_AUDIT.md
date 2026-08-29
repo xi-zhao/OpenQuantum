@@ -1,14 +1,18 @@
-# OpenQuantum 架构审计与 Harness-first 目标设计
+# OpenQuantum 架构审计与证据基线
 
-- 状态：当前架构基线
+- 状态：日期化审计证据；不是长期架构定义入口
 - 日期：2026-08-29
 - 上游：DeepSeek Harness `0.1.0-rc.6`
+
+稳定的架构总览与文档权威见[文档与架构入口](../README.md)；扩展职责见
+[扩展对象模型](EXTENSION_MODEL.md)，模块依赖见[模块地图](MODULES.md)。本文件只记录本次审计时点的
+结论、证据、风险和后续动作，不与这些长期契约竞争。
 
 ## 1. 结论
 
 OpenQuantum 是 DeepSeek Harness 的开源量子科研发行版，不是新的 Agent Runtime。
 
-产品保持四层：
+产品按四个职责面归属规则；它们不是一条线性调用链：
 
 1. **UI**：展示 Harness 会话、交互、工具调用和科研结果；
 2. **Harness**：提供 Session、Agent、Turn、Goal、Job、Tool Registry、Skill Registry、Harness MCP Client、
@@ -31,7 +35,7 @@ OpenQuantum 不建设私有插件市场、包管理器、安装锁、可安装�
 ### 1.1 本轮审计结论
 
 本轮按业务对象、依赖方向、配置权威、真实 Harness 组合和测试 surface 审计，而不是按目录数量判断架构。
-结论是：**四层边界成立，可以继续在现有架构上开发；本轮已用扩展对象模型和 capability policy 1.1
+结论是：**四个职责面的边界成立，可以继续在现有架构上开发；本轮已用扩展对象模型和 capability policy 1.1
 正式管理术语与执行入口，下一阶段重点是继续提升能力包成熟度，而不是增加新的 Runtime。**
 
 | 审计项 | 结论 | 证据或处理 |
@@ -48,8 +52,8 @@ OpenQuantum 不建设私有插件市场、包管理器、安装锁、可安装�
 Skill、Tool、MCP Server、Harness MCP Client、External API 等对象的严格定义见[扩展对象模型](EXTENSION_MODEL.md)，长期模块边界、
 依赖方向和新增能力落点见[模块地图](MODULES.md)。仓库内
 [`evidence/platform-diagnostics-2026-08-24.json`](evidence/platform-diagnostics-2026-08-24.json) 是
-2026-08-24 的历史基线；其 `degraded` 只说明当时无凭据环境没有运行在线模型检查，不能证明 2026-08-28
-的在线就绪状态，也不表示静态架构失败。
+2026-08-24 的历史基线；其 `degraded` 只说明当时无凭据环境没有运行在线模型检查，不能证明当前
+在线就绪状态，也不表示静态架构失败。
 
 ## 2. 当前事实
 
@@ -94,7 +98,7 @@ DeepSeek Harness 仍处于 Developer Preview，因此上游接口可能发生破
 `Experiment`、`Artifact`、`Provenance` 和 `Scientific Acceptance` 是对 Harness 执行事实的科研解释，
 不是新的 Runtime 状态机。
 
-## 4. 四层职责
+## 4. 四个职责面
 
 ### 4.1 UI
 
@@ -105,9 +109,11 @@ MCP Server 或 Skill 文件系统，不保存第二份 Session 历史，也不�
 `tapIndex` 扩展点组合 OpenQuantum 品牌与量子科研展示。这样 Session、审批、模型、设置和插件界面
 继续由 Harness 自己维护，不在 OpenQuantum 中复制一套平行状态机。
 
-可选 Desktop 入口使用 DSH Desktop 的 Electron Host adapter 承载这套原生 Web UI。它只增加窗口、托盘、
-终端和原生通知；loopback HTTP/WebSocket、Session event log、Agent loop、插件组合与科研状态仍由同一个
-Harness Host 管理。OpenQuantum 不读取 Electron 私有接口，也不建立 Desktop 专用 Session 投影。
+可选 Desktop 入口以 DSH Desktop 作为产品层的 Host Adapter，承载同一套原生 Web UI。其实现可以由上游
+Cordis Plugin 组合，但产品职责只覆盖桌面进程、窗口、托盘、终端和原生通知生命周期；它不拥有
+Session/Agent 生命周期，也不是 OpenQuantum 的领域 Host Plugin。loopback HTTP/WebSocket、Session event log、
+Agent loop、插件组合与科研状态仍由同一个 Harness Host 管理。OpenQuantum 不读取 Electron 私有接口，也不建立
+Desktop 专用 Session 投影。
 
 OpenQuantum 不保留独立的浏览器应用、Session 投影或事件 Transport Adapter。品牌通过 `tapIndex` 注入，
 量子设置与科研展示通过 Harness Client Plugin、Slot 和 Settings 扩展。新增 Goal、Job、Skill、Model 或
@@ -192,10 +198,10 @@ credential store。
 
 ## 5. 原生扩展选择
 
-以下顺序选择的是职责对象和 Interface，不是在 Plugin 与非 Plugin 之间二选一。凡是需要进入 Harness Runtime
-的能力，最终仍由职责明确的 Cordis Plugin row 装配。
+以下列表用于判断一项 Capability 真正需要哪些职责对象和 Interface，不是在 Plugin 与非 Plugin 之间二选一。
+凡是需要进入 Harness Runtime 的能力，最终仍由职责明确的 Cordis Plugin row 装配。
 
-按从轻到重的顺序选择扩展点：
+从最小产品需求开始，只增加真实需要的对象；这不是每项能力都必须走完的固定流水线：
 
 1. **Skill**：仅在需要领域知识、步骤、边界和工具使用说明时增加；
 2. **Tool**：需要 Agent 执行动作时，先定义最小 schema、错误语义和副作用；
@@ -220,15 +226,19 @@ flowchart LR
   B --> C["加载 quantum-ground-state Skill"]
   C --> D["调用 MCP-exposed Tool solve_and_validate_ground_state"]
   D --> E["六类结构化事实"]
-  D --> F["计算级独立 Validator"]
+  D --> F["Tool 内计算级 Validator（执行期）"]
   F --> G["执行期 observations；provenance not_checked"]
   G --> H["可信 Host Plugin 调用内部 Scientific Result Adapter"]
   H --> I["Materializer 使用 ctx.fs 物化、重读和校验 Result Package"]
-  I --> J["Validator 接收重读后的结构化证据并产生 observations"]
+  I --> J["物化证据 Validator（来源链复核）产生 observations"]
   J --> L["Profile + observations + provenance 汇入 central Acceptance Builder"]
   L --> M["Builder 派生 Acceptance"]
   M --> K["tool/result 持久化 Result Commit；UI 回放"]
 ```
+
+图中的两次 Validator 调用处于不同证据阶段：Tool 内调用只能形成计算级 observations，并明确保留
+`provenance.not_checked`；物化后再次基于重读字节复核，所得 observations 才能与 Profile、provenance 一起
+交给 central Acceptance Builder。二者都不能自行宣布最终 Acceptance。
 
 MCP Server 使用官方 Model Context Protocol SDK 暴露 Tool；Harness MCP Client
 `@deepseek-ai/dsh-mcp-client` 管理 stdio 进程、Tool Registry 注册、超时和重连。MCP Server
@@ -321,10 +331,11 @@ workspace、网络、进程和凭证隔离；本地开发配置不能被误称�
 - UI 输入最终进入真实 Harness Session，而不是 Mock Runtime；
 - Runtime 与 Scientific 状态分开展示；
 - 关闭并重启 Harness 后，Session 可由原生事件日志恢复；
-- 一个新开发者能按文档增加独立的 Skill、Tool Provider 或 Validator；Agent Preset 组合 Skill/Tool Provider
-  与必要的 agent-scoped Host Plugin，Tool、Materializer 或 CI 显式调用 Validator，而无需修改 Harness 核心。
+- 一个新开发者能按文档增加独立的 Skill、Tool Provider 或 Validator；Agent Preset 组合 Skill Provider、
+  Tool Provider 与必要的 agent-scoped Host Plugin，Tool、Materializer 或 CI 显式调用 Validator，而无需修改
+  Harness 核心。
 
-完整实施顺序见 [`../roadmap/DEVELOPMENT_PLAN.md`](../roadmap/DEVELOPMENT_PLAN.md)。
+首条 MVP 的历史实施顺序见 [`../roadmap/DEVELOPMENT_PLAN.md`](../roadmap/DEVELOPMENT_PLAN.md)。
 
 ## 11. 主要风险
 

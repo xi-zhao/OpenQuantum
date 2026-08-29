@@ -4,6 +4,8 @@
 - 日期：2026-08-29
 - 适用范围：新增 Skill、Tool、MCP Server、Harness MCP Client、External API、Validator、Composition、Host Plugin 或 Client Plugin
 
+第一次阅读请先看[文档与架构入口](../README.md#架构总览)；本文件只负责严格术语、选择规则和禁止依赖。
+
 ## 1. 核心结论
 
 OpenQuantum 的扩展对象不是一条 `Skill -> MCP -> Validator` 的固定流水线。正确模型是：
@@ -44,32 +46,61 @@ DeepSeek Harness Runtime
 
 ## 2. 权威术语
 
+这些对象属于不同抽象层级，不能放进同一个“插件类型”列表比较。
+
+### 2.1 产品与用例
+
 | 对象 | 回答的问题 | 负责 | 明确不负责 |
 | --- | --- | --- | --- |
-| Cordis Plugin | 一个模块怎样进入 DSH Runtime 并获得生命周期？ | 依赖注入、Interface 注册、scope 组合和统一回收；按实际职责表现为 Skill Provider、Tool Provider、MCP Client、Model Adapter、Host 或 Client Plugin | 代替 Skill、Tool、Validator 等职责对象，或成为无边界的业务容器 |
 | Capability | 用户获得哪一项有界能力？ | 把相关 Skill、Tool Provider、Validator 和证据作为一个产品纵切组织起来 | 充当 Harness Runtime 对象或自动绑定内部模块 |
+| Application Interface | 同一个用例怎样被 Web、Desktop 或消息入口复用？ | 统一拥有命令校验、状态转换、并发和安全规则 | 解析 HTTP、渲染 UI 或保存真实凭据值 |
+| Harness RPC | Client Plugin 怎样调用 Harness 已有能力？ | 传输标准用户意图、认证上下文和结构化响应 | 承载量子领域规则或绕过 Harness 状态机 |
+| Bounded Host Route | Client Plugin 怎样调用 OpenQuantum 特有的窄能力？ | 校验来源、方法和请求体，格式化响应，再委托 Application Interface | 复制业务规则、直接改 Cordis 或执行 Tool |
+
+### 2.2 Runtime 装配
+
+| 对象 | 回答的问题 | 负责 | 明确不负责 |
+| --- | --- | --- | --- |
+| Cordis Plugin | 一个模块怎样进入 DSH Runtime 并获得生命周期？ | 依赖注入、Interface 注册、scope 组合和统一回收；按实际职责表现为 Skill Provider、Tool Provider、Harness MCP Client、Model Adapter、Host 或 Client Plugin | 代替 Skill、Tool、Validator 等职责对象，或成为无边界的业务容器 |
+| Agent Preset | 一个 Agent 会看到哪些能力？ | 在 Agent scope 组合 Skill Provider、原生 Tool Plugin、Harness MCP Client、策略，以及确有需要的 agent-scoped Host Plugin | 配置 Provider Route、实现算法或科学阈值 |
+| Deployment/Home Patch | 一个 OpenQuantum Host 怎样启动？ | 配置 Provider Route、默认模型/Preset、品牌、deployment-scoped Host Plugin 和 Client Plugin | 实现量子领域工作流 |
+| Host Plugin | Cordis Plugin 何时承担宿主扩展职责？ | 以可信代码接入 Tool hook、物化、策略或 Host route；按 hook 所有者归入 Agent 或 Deployment scope | 代表全部 Cordis Plugin，或创建第二套 Session、Tool Registry 或通用 Runtime |
+| Client Plugin | Cordis Plugin 何时承担浏览器扩展职责？ | Harness 原生 UI Slot、Settings 和只读投影 | 代表全部 Cordis Plugin，或直接调用模型、MCP Server、External API 或 Validator |
+| Host Adapter | 用户从哪种产品入口进入同一 Harness 产品组合？ | 以 Browser、Desktop 或消息渠道承载标准 Host 与传输边界；实现可以复用上游 Cordis Plugin，并可启动独立 Host 进程/Session | 拥有 Agent Runtime 规则或成为 OpenQuantum 领域 Host Plugin |
+
+### 2.3 Agent Interface
+
+| 对象 | 回答的问题 | 负责 | 明确不负责 |
+| --- | --- | --- | --- |
 | Skill | Agent 应该何时、为什么、按什么步骤做？ | 领域知识、工作流、适用范围、Tool 选择和解释边界 | 执行代码、启动 MCP Server、持有凭据、产生科学事实 |
 | Tool | Agent 这一步可以调用什么动作？ | 稳定名称、输入输出 schema、错误语义、副作用和一次原子执行 | 管理 Session、决定 UI 状态、伪造最终 Acceptance |
+
+### 2.4 Tool 集成
+
+| 对象 | 回答的问题 | 负责 | 明确不负责 |
+| --- | --- | --- | --- |
 | Tool Provider | Tool 从哪里注册进 Harness？ | 作为 Cordis Plugin 角色向 Harness Tool Registry 提供一个或多个 Tool | 替代 Tool 的调用合同 |
 | MCP Server | 进程外或远程能力怎样提供 Tool？ | 通过 MCP 协议暴露 Tool、Resource 或 Prompt | 充当 Agent 工作流、管理 Harness Session |
 | Harness MCP Client | MCP-exposed Tool 怎样进入 Harness？ | 作为 Cordis Plugin 角色连接 MCP Server，并把其 Tool 注册进 Harness Tool Registry | 理解领域工作流、替 MCP Server 执行业务算法 |
-| Harness RPC | Client Plugin 怎样调用 Harness 已有能力？ | 传输标准用户意图、认证上下文和结构化响应 | 承载量子领域规则或绕过 Harness 状态机 |
-| Bounded Host Route | Client Plugin 怎样调用 OpenQuantum 特有的窄能力？ | 校验来源、方法和请求体，格式化响应，再委托 Application Interface | 复制业务规则、直接改 Cordis 或执行 Tool |
-| Application Interface | 同一个用例怎样被 Web、Desktop 或消息入口复用？ | 统一拥有命令校验、状态转换、并发和安全规则 | 解析 HTTP、渲染 UI 或保存真实凭据值 |
 | External API | 下游厂商或远程系统提供什么网络合同？ | 定义 HTTP/RPC 请求、鉴权和响应语义 | 直接暴露给 UI 或 Skill、充当 Agent 执行原语 |
 | External API Adapter | Tool implementation 怎样调用 External API？ | 在 Tool 内实现鉴权引用、超时、脱敏、幂等和错误映射 | 注册 Tool、绕过 Harness 权限或成为独立 Agent 接口 |
+
+### 2.5 科学证据
+
+| 对象 | 回答的问题 | 负责 | 明确不负责 |
+| --- | --- | --- | --- |
 | Scientific Validator | 证据支持哪些科学检查事实？ | 确定性地重算并产生逐项 observations | 调用模型、管理 Session、直接宣布最终 Acceptance |
 | Scientific Result Materializer | 如何得到可重读的真实证据字节？ | 约束 workspace 路径、原子写入、重读与 digest 校验，再传递结构化证据 | 实现量子算法、生成 observations 或拥有 Harness 生命周期 |
 | Scientific Result Adapter（内部） | 某个 Tool 结果如何接入通用物化流程？ | 在可信 Host Plugin 内映射 Tool、输入、Artifact 类型、Materializer 和 Validator | 独立安装、注册 Tool、拥有 hook 或创建 Runtime |
 | Acceptance Profile | 哪些 observations 足以支持某项主张？ | 以版本化数据定义作用域、必选检查、阈值和来源链要求 | 执行代码、重算 observations 或自己得出状态 |
 | central Acceptance Builder | 如何得到最终 Acceptance？ | 作为中央共享模块，汇聚 Profile、observations 和 provenance 并唯一地推导状态 | 定义 capability 私有阈值、执行量子算法或替代 Validator |
+
+### 2.6 开发与发布证据
+
+| 对象 | 回答的问题 | 负责 | 明确不负责 |
+| --- | --- | --- | --- |
 | Eval | Skill/Tool/Validator 版本是否在固定案例上回归？ | 在开发、CI 和发布期运行可判定案例 | 进入用户请求的生产运行链 |
 | Benchmark | 固定语料上的性能或质量如何对比？ | 使用锁定分母、指标和环境生成可比较证据 | 替代单次科学 Acceptance 或运行时 Validator |
-| Agent Preset | 一个 Agent 会看到哪些能力？ | 在 Agent scope 组合 Skill Provider、原生 Tool Plugin、Harness MCP Client、策略，以及确有需要的 agent-scoped Host Plugin | 配置 Provider Route、实现算法或科学阈值 |
-| Deployment/Home Patch | 一个 OpenQuantum Host 怎样启动？ | 配置 Provider Route、默认模型/Preset、品牌、deployment-scoped Host Plugin 和 Client Plugin | 实现量子领域工作流 |
-| Host Plugin | Cordis Plugin 何时承担宿主扩展职责？ | 以可信代码接入 Tool hook、物化、策略或 Host route；按 hook 所有者归入 Agent 或 Deployment scope | 代表全部 Cordis Plugin，或创建第二套 Session、Tool Registry 或通用 Runtime |
-| Client Plugin | Cordis Plugin 何时承担浏览器扩展职责？ | Harness 原生 UI Slot、Settings 和只读投影 | 代表全部 Cordis Plugin，或直接调用模型、MCP Server、外部 API 或 Validator |
-| Host Adapter | 用户从哪种产品入口进入同一 Harness Host？ | 以 Browser、Desktop 或消息渠道承载标准 Host 与传输边界 | 装载新的 Harness 生命周期代码（这是 Host Plugin 的职责） |
 
 项目中禁止裸写“API”。必须写成 `Harness RPC`、`External API` 或 `Model Provider API`。讨论 DSH 的统一装配机制时
 应写 `Cordis Plugin`；讨论具体职责时应写 `Skill Provider Plugin`、`Tool Provider Plugin`、
@@ -91,7 +122,7 @@ DeepSeek Harness Runtime
 Harness Agent
   -> Tool Registry
      -> Harness-native Tool
-     -> OpenQuantum Host Plugin 提供的 Tool
+     -> OpenQuantum 原生 Tool Provider Plugin 提供的 Tool
      -> MCP-exposed Tool
         <- Harness MCP Client
            <-> MCP Server
@@ -147,7 +178,7 @@ capability conformance ┘
 
 Eval 和 Benchmark 不属于用户运行链，也不能在生产时静默替代真实 Tool 或 Validator。
 
-## 5. Composition 的两个层级
+## 5. Composition 的两个 scope
 
 Deployment/Home Patch 与 Agent Preset 最终都通过 Cordis Plugin rows 组合能力；下图按职责展示这些 rows，
 而不是建立一套绕过 Plugin 的装配系统。

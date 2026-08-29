@@ -3,40 +3,37 @@
 OpenQuantum 是 DeepSeek Harness 的开源量子科研发行版。最常见的二次开发方式是 Fork 仓库，
 直接增加 Harness 原生 Skill、Tool Provider 或经过审查的 Host Plugin，而不是接入 OpenQuantum 私有市场或包协议。
 
-第一次参与项目前，先阅读[扩展对象模型](docs/architecture/EXTENSION_MODEL.md)、
-[模块地图](docs/architecture/MODULES.md)和[仓库地图](docs/REPOSITORY_GUIDE.md)。前者严格区分 Skill、Tool、
-MCP Server、Harness MCP Client、External API、Validator 与 Composition，后两者说明模块 Interface、依赖方向、目录和配置权威；完整文档入口见
-[docs/README.md](docs/README.md)。
+第一次参与项目前，先读[文档与架构入口](docs/README.md)。它用五分钟说明核心模型、运行链和权威文件；
+只有需要设计新 Interface 或改变依赖方向时，再进入[扩展对象模型](docs/architecture/EXTENSION_MODEL.md)和
+[模块地图](docs/architecture/MODULES.md)。
 
-## 先判断变更放在哪里
+## 先按产品问题分类
 
-- **UI**：通用科研交互、事件和 Artifact 展示；不要加入公司或算法专用执行逻辑。
-- **Deployment/Home Patch**：Provider Route、默认模型、默认 Agent Preset、品牌、deployment-scoped Host Plugin 和 Client Plugin。
-- **Agent Preset**：组合彼此独立的 Skill Provider、原生 Tool Plugin、Harness MCP Client、Agent 策略，以及确有需要的 agent-scoped Host Plugin。
-- **Skill**：量子工作流、Prompt、适用范围和工具使用说明；不拥有或自动启动 MCP Server。
-- **Tool**：Agent 可调用的原子动作；拥有 schema、错误语义和副作用分类。
-- **Tool Provider**：在 Harness 侧把 Tool 注册进 Registry；原生 Tool Plugin 与 Harness MCP Client 都属于此类。
-- **MCP Server**：通过 stdio 或 Streamable HTTP 暴露 Tool；不是 Tool 的同义词。
-- **Harness MCP Client**：连接 MCP Server，并把 MCP-exposed Tool 注册进 Harness Tool Registry。
-- **Application Interface**：统一拥有用例命令、状态转换和安全规则；Bounded Host Route 只做传输边界并委托它。
-- **External API**：Tool implementation 使用的下游网络合同；UI 和 Skill 不直连。
-- **Scientific Validator**：确定性重算 observations；由 Tool、Materializer 或 CI 显式调用，不是 Skill 子模块。
-- **Scientific Result Materializer**：原子物化、重读和校验真实字节，再把结构化证据交给 Validator。
-- **Scientific Result Adapter**：可信 Host Plugin 内部的 capability 映射；不拥有 hook、不可独立安装、不是 Tool Provider。
-- **Acceptance Profile**：版本化规则数据，定义作用域、必选 observations、阈值和 provenance 要求。
-- **central Acceptance Builder**：汇聚 Profile、observations 和 provenance，唯一地推导最终 Acceptance。
-- **Eval / Benchmark**：开发和发布期证据，不进入用户请求的运行链。
-- **Host Plugin**：只有原生 Skill、Tool Provider 和配置无法表达的宿主行为；它拥有 Harness hook，必须作为可信代码审查，并按 hook 所有者归入 Agent 或 Deployment scope。
-- **Host Adapter**：Browser、Desktop 或消息渠道这类产品入口；不装载宿主生命周期代码。
-- **Model**：通过 Harness Provider route 配置厂商模型、协议和凭证引用。
+| 变更类型 | 首选对象 | 规则 |
+| --- | --- | --- |
+| 用户获得一项新的有界能力 | Capability | 只组合真实需要的对象，不创建 Capability Runtime |
+| Agent 需要知识、步骤或工具选择 | Skill | 只写工作方法，不执行代码或启动 MCP Server |
+| Agent 需要执行动作 | Tool + Tool Provider | Tool 拥有 schema、错误和副作用；Provider 只负责注册 |
+| Tool 需要进程外、跨语言或远程实现 | MCP Server + Harness MCP Client | Agent 调用注册后的 Tool，不“调用 MCP” |
+| Tool 需要厂商 SDK、量子云或数据库 | External API Adapter | 放在 Tool implementation 后，UI/Skill 不直连 |
+| 科学主张需要独立检查 | schema + Validator + eval evidence；最终验收再加 Profile、Materializer/Builder | Validator 产 observations，Profile 定规则，Builder 唯一推 Acceptance |
+| Web/Desktop/消息入口复用同一用例 | Application Interface | UI/route 只处理传输与展示 |
+| 需要宿主 hook 或生命周期行为 | Host Plugin | 只有原生配置不能表达时才增加，并明确 Agent/Deployment scope |
+| 增加模型 | Model Provider Route | 属于 Deployment，不属于 Skill 或 Agent Preset |
+| 开发和发布回归 | Eval / Benchmark | 不进入用户请求链 |
 
-常见接入只有三条最小路径，不要一开始把所有对象都堆进同一个能力：
+常见接入有四条最小路径，不要一开始把所有对象都堆进同一个能力：
 
 | 产品需求 | 最小组合 | 黄金样板 | 最小验证 |
 | --- | --- | --- | --- |
-| 只增加知识、选择方法或工作步骤 | Skill | [`quantum-sdk-advisor`](.agents/skills/quantum-sdk-advisor/SKILL.md) | `npm run check` 中的 Skill discovery 与文档审查 |
-| 让 Agent 执行一个动作 | Skill（按需）+ Tool + Tool Provider | [`qpanda-qubo`](.agents/skills/qpanda-qubo/) | `npm run capability:qpanda-qubo:test`，再确认 Harness Tool Registry |
-| 对科学主张给出可回放验收 | Skill（按需）+ Tool + Tool Provider + Validator + Materializer + Acceptance Profile + central Acceptance Builder 接入；只有通过 `post-execute` 自动物化时才增加 agent-scoped Host Plugin/内部 Adapter | [`quantum-ground-state`](.agents/skills/quantum-ground-state/) | `npm run capability:quantum-ground-state:test`，再运行 Result Commit/Session 回放测试 |
+| 只增加知识、选择方法或工作步骤 | Skill | [`quantum-sdk-advisor`](.agents/skills/quantum-sdk-advisor/SKILL.md) | `npm run capability:conformance` + 真实 `skill.list` 测试 |
+| 让 Agent 执行一个动作 | Skill（当前发行版 policy 要求）+ Tool + Tool Provider | [`qpanda-qubo`](.agents/skills/qpanda-qubo/) | capability test + `npm run capability:contracts:test` + Harness Registry 测试 |
+| 让执行结果形成可审计 observations | L1 + schema + Validator + eval evidence | [`platform-diagnostics`](.agents/skills/platform-diagnostics/) | capability/eval + Validator 失败路径测试 |
+| 对科学主张给出可回放验收 | L2 + Acceptance Profile + Result Package + Materializer/重读 + central Acceptance Builder 接入；只有通过 `post-execute` 自动物化时才增加 agent-scoped Host Plugin/内部 Adapter | [`quantum-ground-state`](.agents/skills/quantum-ground-state/) | contract + materialization + Result Commit/Session replay 测试 |
+
+概念上 Tool 不依赖 Skill；当前发行版 policy 以 Skill 目录组织 Capability Package，因此每个登记的 L0–L3
+能力都需要同名 `SKILL.md`。新增文件在运行 `npm run capability:conformance` 前必须先暂存，因为 conformance
+只审计 Git 跟踪的发行版内容。
 
 不要在 OpenQuantum 中重新实现 Session、Agent loop、Tool Registry、Skill Registry、Harness MCP Client、Host Plugin 或 Client Plugin 系统、
 审批、权限、沙箱、模型路由或持久化。若 Harness 缺少通用能力，优先向 DeepSeek Harness 上游贡献；
@@ -74,7 +71,8 @@ Session/workspace，不进入默认离线 CI，也不能用 Mock 结果替代。
 ├── SKILL.md
 ├── references/       # 领域规范与来源
 ├── scripts/          # 可选：与工作流共置的仓库辅助程序
-├── schemas/          # 可选：输入与 Artifact schema
+├── inputs/           # 可选：输入 schema
+├── artifacts/        # 可选：Artifact schema
 ├── validators/       # 可选：独立的确定性科学检查
 └── test/             # 正例、负例和边界测试
 ```

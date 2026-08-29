@@ -10,10 +10,24 @@ DeepSeek Harness、Agent Preset、量子 Skill、Tool Provider、可选 Scientif
 _Avoid_: 新 Agent Runtime、插件市场、Capability 操作系统
 
 **Harness Runtime（Harness 运行时）**：
-Session、Agent loop、Turn、Step、Goal、Job、Tool Registry、Skill Registry、Harness MCP Client、Host Plugin、Client Plugin、
-审批、权限、沙箱、模型路由、
+Session、Agent loop、Turn、Step、Goal、Job、Registry、审批、权限、沙箱、模型调用、Cordis Plugin 组合、
 事件和持久化的权威实现。OpenQuantum 不复制这些对象。
 _Avoid_: OpenQuantum Runtime、第二套会话系统
+
+**Responsibility Plane（职责面）**：
+UI、Harness、量子扩展和 Model 四种规则归属视角；它们不是四级调用顺序，实际依赖通过 Harness Interface
+和 Cordis Plugin composition 连接。
+_Avoid_: 四阶段流水线、UI → Harness → 量子 → Model 固定调用链
+
+**Cordis Plugin（Cordis 插件）**：
+可组合模块进入 DSH Runtime、注册 Interface、获得依赖并随 scope 回收的统一装配与生命周期单元。
+它描述模块怎样接入，不代替 Skill、Tool、Validator 等职责对象。
+_Avoid_: 无边界业务容器、所有职责都叫 Plugin
+
+**Runtime Readiness（运行就绪）**：
+当前 Harness Host 中目标 Plugin 已激活、所需 Registry/连接与外部依赖可达的运行证据。
+配置启用或静态 conformance 不能单独证明 Runtime Readiness。
+_Avoid_: configured = ready、YAML 存在即 Agent 可用
 
 **Harness Native UI Extension（Harness 原生 UI 扩展）**：
 通过 Harness Client Plugin、Slot、Settings 和 Web Host 扩展点增加 OpenQuantum 品牌与科研展示；
@@ -50,6 +64,11 @@ _Avoid_: 模型解释、日志摘要
 用户可理解的一项有界科研能力，由独立的 Skill、Tool Provider、Validator 和证据按需组合；它不是 Harness
 运行时对象，也不会自动绑定内部模块。
 _Avoid_: Runtime、自动安装包、Tool 别名
+
+**Capability Maturity（能力成熟度）**：
+发行版 Capability Package 在 L0–L3 中具备的开发、合同和物化证据等级。
+它不表示当前 Plugin 已激活、外部依赖可达或某次科学验收通过。
+_Avoid_: Runtime 状态、在线 ready、能力质量总分
 
 **Native Skill（原生 Skill）**：
 Harness 能直接发现和加载的 `SKILL.md` 及同目录科研资源。它描述问题范围、工作方法、工具使用、
@@ -98,19 +117,20 @@ _Avoid_: Tool Provider、Agent-facing API、UI data source
 _Avoid_: Skill、Tool、Agent Preset
 
 **Host Plugin（宿主插件）**：
-只有原生 Skill、Tool Provider 和配置无法表达宿主生命周期行为时才使用的 Harness 扩展。
-插件拥有 hook 和宿主代码权限，因此必须在
+承担 Harness 宿主 hook、策略或 Bounded Host Route 职责的 Cordis Plugin 角色；只有原生 Skill、Tool Provider
+和配置无法表达宿主行为时才增加。它拥有宿主代码权限，因此必须在
 Fork 中显式审查和测试，不能把未经信任的远程代码自动装入 Runtime。
 只服务某个 Agent composition 的 hook 归入 Agent scope；宿主 route 或全局生命周期扩展归入 Deployment scope。
-_Avoid_: 默认扩展方式、任意第三方脚本
+_Avoid_: 全部 Cordis Plugin 的统称、默认扩展方式、任意第三方脚本
 
 **Client Plugin（客户端插件）**：
-通过 Harness 原生 UI Slot、Settings 和只读投影收集意图与展示结果。
-_Avoid_: 直接调用 Model Provider、MCP Server、External API 或 Validator
+承担浏览器 UI 扩展职责的 Cordis Plugin 角色，通过 Harness 原生 Slot、Settings 和只读投影收集意图与展示结果。
+_Avoid_: 全部 Cordis Plugin 的统称、直接调用 Model Provider、MCP Server、External API 或 Validator
 
 **Host Adapter（宿主入口适配器）**：
-Browser、Desktop 或消息渠道这类进入同一 Harness Host 的产品入口。
-_Avoid_: Host Plugin、第二个 Harness Host、Session store
+Browser、Desktop 或消息渠道这类进入同一 Harness 产品组合的入口。不同入口可以启动独立 Host 进程或 Session，
+但不另建 Agent Runtime、业务规则或状态模型。
+_Avoid_: Host Plugin、第二套 Agent Runtime、Session store
 
 **Agent Preset（Agent 预设）**：
 在 Agent scope 中组合 persona、Skill Provider、原生 Tool Plugin、Harness MCP Client、策略，以及确有需要的
@@ -181,7 +201,7 @@ _Avoid_: 再运行一次、答案相似
 | 执行 | pending / running / idle / failed / cancelled | Harness events |
 | 评分 | unscored / invalid / valid | 版本化评分规则与 eval evidence |
 | 复现 | not_attempted / reproduced / not_reproduced | 复现证据 |
-| 科学验收 | not_evaluated / passed / conditional / failed | Acceptance Profile + central Acceptance Builder |
+| 科学验收 | not_evaluated / passed / conditional / failed | central Acceptance Builder（输入为 Profile、Validator observations 与 provenance） |
 
 因此：
 

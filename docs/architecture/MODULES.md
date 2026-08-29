@@ -4,6 +4,9 @@
 - 日期：2026-08-29
 - 适用范围：新增能力、接入 SDK 或 MCP Server、修改设置、升级 Harness、增加科研验收
 
+先读[文档与架构入口](../README.md)获得五分钟总览；本文件只负责长期模块 Interface、允许的依赖方向和
+新增能力落点。
+
 ## 1. 这张地图解决什么问题
 
 OpenQuantum 会持续增加量子算法、SDK、云后端和科研 Validator。真正需要控制的不是目录数量，而是每项变化
@@ -29,7 +32,7 @@ Interface 注册和生命周期机制，Skill、Tool、Validator 等是职责模
 | 核心对象 | 状态或内容 | 权威模块 | 关键不变量 |
 | --- | --- | --- | --- |
 | Harness Session | Turn、Step、Tool 事件、审批、取消、恢复 | DeepSeek Harness | Session event log 是执行事实唯一来源 |
-| Deployment Composition | Provider Route、默认模型/Preset、deployment-scoped Host Plugin 与 Client Plugin | `runtime/openquantum/cordis.patch.yml` | 只组合 Host，不实现领域算法 |
+| Deployment Composition | 共享模型 Route fragment、默认模型/Preset、deployment-scoped Host Plugin 与 Client Plugin | `runtime/openquantum/cordis.patch.yml` | 只组合 Host，不实现领域算法 |
 | Agent Preset | persona、Skill Provider、原生 Tool Plugin、Harness MCP Client、策略与必要的 agent-scoped Host Plugin | `runtime/openquantum/agent-presets/` | 不拥有 Provider Route，不实现领域算法 |
 | Model-facing Tool | 名称、schema、错误语义、副作用与执行结果 | Harness Tool Registry | Agent 唯一调用的动作；不管理 Session 或最终 Acceptance |
 | Capability Package | 作用域、工作流、执行器、schema、Validator、eval | `.agents/skills/<capability-id>/` | 共置是源码 locality，不是自动运行时绑定 |
@@ -38,7 +41,8 @@ Interface 注册和生命周期机制，Skill、Tool、Validator 等是职责模
 | Acceptance Report | Profile、逐项 observation、来源链和最终科学状态 | `.agents/skill-contracts/` + capability Profile + central Acceptance Builder | 执行成功不等于科学验收通过 |
 | Settings Projection | 当前 Skill、MCP Server 连接、启停、凭据引用、revision | `src/settings/server/project-settings.mjs` | UI 只提交意图；服务端校验并原子写入 |
 | Integration Catalog Entry | 名称、来源、固定版本、安装要求、凭据说明 | `src/settings/server/project-settings-catalog.mjs` | 只描述产品目录，不保存运行状态或密钥 |
-| Model Route | Provider、模型能力、Endpoint、凭据名 | `runtime/openquantum/cordis.patch.yml` | 只引用环境变量名，不承载科学规则 |
+| Static Model Route Catalog | Provider、模型能力、默认 Endpoint 与凭据名 | `runtime/openquantum/model-routes.cordis.yml` | Web/Desktop/ACP 共享一份静态基线；只引用环境变量名，不承载科学规则 |
+| User Model Route Override | 用户在模型设置中保存的非秘密 Route 覆盖 | Git 忽略的 `$DSH_HOME/settings.yaml` | 由 Web/Desktop/ACP 共读；不进入源码或提交 |
 | Eval / Benchmark Evidence | 固定案例、评分、复现和诊断报告 | capability `evals/`、`evidence/`、共享合同 | 测试证据与在线可用性证据必须区分 |
 
 ## 3. 一级模块边界

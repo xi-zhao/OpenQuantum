@@ -10,11 +10,16 @@ DeepSeek Harness 的“一切皆 Plugin”是运行时装配原则：可组合�
 Interface 并随 scope 回收。Skill、Tool、MCP Server、Validator 等是职责对象；它们说明模块负责什么，
 不与 Cordis Plugin 这一装配机制竞争。
 
-开始架构或实现工作前，先阅读 `docs/architecture/ARCHITECTURE_AUDIT.md`。
+开始架构或实现工作前，先阅读 `docs/README.md` 的架构总览和权威导航；涉及架构基线、发布验收或当前风险时，
+再阅读 `docs/architecture/ARCHITECTURE_AUDIT.md`。
 
-## 四层边界
+## 四个职责面
 
-1. UI：直接使用 Harness 原生 Web UI；OpenQuantum 只通过 Harness Client Plugin 和 Slot 增加品牌、设置与科研展示。
+下面四项用于判断规则归属，不表示一条 `UI → Harness → 量子扩展 → Model` 的线性调用链：
+
+1. UI：直接使用 Harness 原生 Web UI；浏览器展示通过 Harness Client Plugin、Slot 和 Harness RPC 扩展，
+   品牌壳由 deployment-scoped Host Plugin 使用 `tapIndex` 注入，OpenQuantum 特有设置经 Bounded Host Route
+   委托 Application Interface。
 2. Harness：Session、Turn、Step、Goal、Job、事件日志、工具调度、审批、沙箱和持久化。
 3. 量子扩展内容：Harness Skill 保存领域工作流和 Prompt；Tool 是 Agent 唯一调用的执行原语；Harness MCP
    Client 是 Tool Provider，MCP Server 通过协议暴露 Tool；Scientific Validator 产生科学 observations，

@@ -3,7 +3,7 @@
 - 状态：MVP 核心链已完成；本文保留首条纵切的历史决策，不再作为当前任务清单
 - 日期：2026-08-24
 - 产品定位：DeepSeek Harness 的开源量子科研发行版
-- 架构约束：UI / Harness / 量子扩展内容 / Model 四层，不增加平行 Runtime
+- 架构约束：UI / Harness / 量子扩展内容 / Model 四个职责面，不增加平行 Runtime
 
 当前模块边界、能力包 L0–L3 演进方式和下一步优先级，以
 [模块地图](../architecture/MODULES.md)和[当前架构审计](../architecture/ARCHITECTURE_AUDIT.md)为准。
@@ -76,7 +76,7 @@ OpenQuantum 自己只维护量子 Agent Preset、Skill、Tool implementation、�
 这些非目标不是永远禁止，而是在真实需求出现前不提前建设。版本管理先使用 Git、npm/pip 锁文件和
 DeepSeek Harness 已有配置；量子公司通过 Fork 管理自己的发行版。
 
-## 4. 四层分工
+## 4. 四个职责面
 
 ### UI
 
