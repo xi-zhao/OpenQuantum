@@ -6,6 +6,7 @@ import {
   apply,
   capabilityRequestBoundary,
   createCapabilitySettingsHandler,
+  createRuntimeReadinessHandler,
   dispatchMessageChannelCommand,
 } from "../runtime/openquantum/web-capabilities/index.mjs";
 
@@ -46,11 +47,28 @@ test("registers Harness-native routes and wires credentials into capability comm
   const labels = [];
   const described = [];
   const dispose = () => {};
+  const root = {};
   apply({
+    root,
     credentials: {
       async describe(ref) {
         described.push(ref);
         return { configured: false, writable: true };
+      },
+    },
+    llm: {
+      listProviders() {
+        return [{ id: "openquantum-public", name: "OpenQuantum Public" }];
+      },
+    },
+    skills: {
+      snapshot() {
+        throw new Error("no preset scope should be observed in this test");
+      },
+    },
+    tools: {
+      schemas() {
+        throw new Error("no preset scope should be observed in this test");
       },
     },
     webServer: {
@@ -68,10 +86,12 @@ test("registers Harness-native routes and wires credentials into capability comm
   assert.deepEqual(labels, [
     "openquantum: capability settings API",
     "openquantum: message channel settings API",
+    "openquantum: runtime readiness API",
   ]);
   assert.deepEqual(routes.map((route) => route.path), [
     "/openquantum/api/capabilities",
     "/openquantum/api/channels",
+    "/openquantum/api/runtime-readiness",
   ]);
 
   const capabilityRoute = routes.find(
@@ -104,6 +124,34 @@ test("registers Harness-native routes and wires credentials into capability comm
     /请先配置必需凭据：QISKIT_IBM_TOKEN/,
   );
   assert.deepEqual(described, ["QISKIT_IBM_TOKEN"]);
+
+  const readinessRoute = routes.find(
+    (route) => route.path === "/openquantum/api/runtime-readiness",
+  );
+  const readinessResponse = response();
+  await readinessRoute.handler(
+    request({ action: "snapshot" }),
+    readinessResponse,
+  );
+  assert.equal(readinessResponse.result.status, 200);
+  const readiness = JSON.parse(readinessResponse.result.body);
+  assert.equal(readiness.mode, "passive");
+  assert.equal(readiness.status, "not_observed");
+  assert.equal(readiness.preset.state, "not_observed");
+  assert.deepEqual(readiness.checks[0].items, [
+    { id: "openquantum-public", label: "OpenQuantum Public" },
+  ]);
+
+  const invalidReadinessResponse = response();
+  await readinessRoute.handler(
+    request({ action: "probe", endpoint: "https://example.invalid" }),
+    invalidReadinessResponse,
+  );
+  assert.equal(invalidReadinessResponse.result.status, 400);
+  assert.match(
+    JSON.parse(invalidReadinessResponse.result.body).error,
+    /未知运行状态命令/,
+  );
 });
 
 test("message-channel dispatcher exposes a bounded CC Connect Interface", async () => {
@@ -175,6 +223,33 @@ test("capability handler returns only its injected project projection", async ()
   });
 });
 
+test("runtime readiness handler delegates only the bounded snapshot command", async () => {
+  const observed = [];
+  const handler = createRuntimeReadinessHandler({
+    projectRoot: "/safe/project",
+    async dispatch(root, command) {
+      observed.push({ root, command });
+      return {
+        schemaVersion: "1.0",
+        mode: "passive",
+        status: "not_observed",
+      };
+    },
+  });
+  const target = response();
+  await handler(request({ action: "snapshot" }), target);
+
+  assert.equal(target.result.status, 200);
+  assert.deepEqual(observed, [
+    { root: "/safe/project", command: { action: "snapshot" } },
+  ]);
+  assert.deepEqual(JSON.parse(target.result.body), {
+    schemaVersion: "1.0",
+    mode: "passive",
+    status: "not_observed",
+  });
+});
+
 test("client plugin contributes the native settings section and uses Harness credentials", async () => {
   const [manifest, client] = await Promise.all([
     readFile(
@@ -200,6 +275,16 @@ test("client plugin contributes the native settings section and uses Harness cre
   assert.match(client, /settings\.section/);
   assert.match(client, /openquantum-capabilities/);
   assert.match(client, /openquantum-channels/);
+  assert.match(client, /\/openquantum\/api\/runtime-readiness/);
+  assert.match(client, /\["runtime", "运行状态"\]/);
+  assert.match(client, /React\.useState\("runtime"\)/);
+  assert.match(client, /当前运行状态/);
+  assert.doesNotMatch(client, /if \(!snapshot\) return/);
+  assert.match(client, /if \(tab === "runtime" \|\| snapshot !== null\) return undefined/);
+  assert.doesNotMatch(client, /状态依据：\$\{check\.reasonCodes/);
+  assert.match(client, /不会启动 MCP Server、执行 Tool、调用模型、访问量子云或读取凭据/);
+  assert.match(client, /Tool 已注册不等于 MCP Server 此刻在线/);
+  assert.match(client, /均为 not_checked/);
   assert.match(client, /\/openquantum\/api\/channels/);
   assert.match(client, /消息平台/);
   assert.match(client, /CC Connect/);

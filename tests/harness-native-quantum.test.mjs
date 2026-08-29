@@ -208,6 +208,23 @@ test(
       return envelope.result;
     }
 
+    async function runtimeReadiness() {
+      const response = await fetch(
+        `${baseUrl}/openquantum/api/runtime-readiness`,
+        {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+            origin: baseUrl,
+          },
+          body: JSON.stringify({ action: "snapshot" }),
+          signal: AbortSignal.timeout(5_000),
+        },
+      );
+      assert.equal(response.status, 200, diagnostics());
+      return response.json();
+    }
+
     const diagnostics = () => `Harness output:\n${logs}`;
     await waitForValue(
       async () => {
@@ -271,6 +288,46 @@ test(
         );
         assert(quantumSkill, `${diagnostics()}\nmissing Skill: ${skillName}`);
         assert.equal(quantumSkill.modelInvocable, true);
+      }
+
+      if (index === 0) {
+        const readiness = await runtimeReadiness();
+        assert.equal(readiness.mode, "passive");
+        assert.equal(readiness.status, "observed", diagnostics());
+        assert.equal(readiness.preset.id, "openquantum");
+        assert.equal(readiness.preset.state, "observed");
+        const modelCheck = readiness.checks.find(
+          (check) => check.id === "model-routes",
+        );
+        assert(
+          modelCheck.items.some((item) => item.id === "openquantum-public"),
+          diagnostics(),
+        );
+        const skillCheck = readiness.checks.find(
+          (check) => check.id === "skill-registry",
+        );
+        for (const skillName of EXPECTED_QUANTUM_SKILLS) {
+          assert(
+            skillCheck.items.some((item) => item.id === skillName),
+            `${diagnostics()}\nmissing readiness Skill: ${skillName}`,
+          );
+        }
+        const toolCheck = readiness.checks.find(
+          (check) => check.id === "tool-registry",
+        );
+        assert(
+          toolCheck.items.some((item) => item.id === SOLVE_TOOL),
+          diagnostics(),
+        );
+        assert.deepEqual(readiness.limitations, [
+          "MODEL_ENDPOINT_REACHABILITY_NOT_CHECKED",
+          "MCP_CONNECTION_STATE_NOT_CHECKED",
+          "DOWNSTREAM_SERVICE_REACHABILITY_NOT_CHECKED",
+        ]);
+        assert.equal(
+          JSON.stringify(readiness).includes("local-readiness-placeholder"),
+          false,
+        );
       }
 
       const prompted = await rpc("session.prompt", {

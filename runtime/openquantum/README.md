@@ -16,7 +16,7 @@
 | `agent-presets/openquantum/scientific-result-adapters.mjs` | Tool 到领域投影、Materializer 和 Artifact 合同的双 L3 Adapter Registry |
 | `agent-presets/openquantum/scientific-result-protocol.mjs` | 有界、可回放的 `tool/result` 科研投影协议 |
 | `../../packages/openquantum-web-branding/` | 可独立安装的 Harness Web 品牌插件 |
-| `web-capabilities/` | 通过 Harness Settings seam 展示和修改量子 Skill、MCP Server 连接与凭据引用 |
+| `web-capabilities/` | 通过 Harness Settings seam 展示和修改量子 Skill、MCP Server 连接与凭据引用，并通过独立只读 route 展示 Runtime Readiness Snapshot |
 
 ## 不变量
 
@@ -27,6 +27,7 @@
 - 基础 profile 的 dormant `llm-pi-ai` 在 Home patch 中停用，避免与共享 fragment 重复激活；
 - `agent.cordis.yml` 是 OpenQuantum Agent 组合的运行权威；
 - 设置中心通过 `src/settings/server/` 的受控 Interface 修改配置，不维护第二份状态；
+- 运行状态通过 `src/readiness/server/` 读取已存在的 Preset mount 和 Harness Registry，不从配置反推 ready；
 - 修改 MCP composition 后完整重启 Harness，避免旧 generation 占用相同 `serverName`；
 - API Key 只以凭据引用出现，不能写入本目录。
 

@@ -41,6 +41,7 @@ Interface 注册和生命周期机制，Skill、Tool、Validator 等是职责模
 | Acceptance Report | Profile、逐项 observation、来源链和最终科学状态 | `.agents/skill-contracts/` + capability Profile + central Acceptance Builder | 执行成功不等于科学验收通过 |
 | Settings Projection | 当前 Skill、MCP Server 连接、启停、凭据引用、revision | `src/settings/server/project-settings.mjs` | UI 只提交意图；服务端校验并原子写入 |
 | Integration Catalog Entry | 名称、来源、固定版本、安装要求、凭据说明 | `src/settings/server/project-settings-catalog.mjs` | 只描述产品目录，不保存运行状态或密钥 |
+| Runtime Readiness Snapshot | 当前 Host 的 Model Route 与已挂载 Agent scope 的 Skill / Tool Registry 证据 | `src/readiness/server/runtime-readiness.mjs` | 被动观察不启动 Preset、MCP Server、Tool 或模型；未探测的外部可达性保持 `not_checked` |
 | Static Model Route Catalog | Provider、模型能力、默认 Endpoint 与凭据名 | `runtime/openquantum/model-routes.cordis.yml` | Web/Desktop/ACP 共享一份静态基线；只引用环境变量名，不承载科学规则 |
 | User Model Route Override | 用户在模型设置中保存的非秘密 Route 覆盖 | Git 忽略的 `$DSH_HOME/settings.yaml` | 由 Web/Desktop/ACP 共读；不进入源码或提交 |
 | Eval / Benchmark Evidence | 固定案例、评分、复现和诊断报告 | capability `evals/`、`evidence/`、共享合同 | 测试证据与在线可用性证据必须区分 |
@@ -53,6 +54,7 @@ Interface 注册和生命周期机制，Skill、Tool、Validator 等是职责模
 | Harness Composition | `cordis.patch.yml`、`preset.yml`、`agent.cordis.yml` | 分别组合 Deployment 与 Agent scope 的 Provider、Skill、Tool Provider、可信 Host Plugin 和策略 | 领域算法、设置数据库、私有 Runtime | `npm run harness:config`、真实 Host 测试 |
 | Native Web Extensions | Harness Client Plugin、Slot、Settings route | 品牌、设置表单、科研结果只读展示 | 直接调用 Model Provider、MCP Server、External API 或 Validator；保存第二份 Session | Web branding/capabilities 测试 |
 | Project Settings Interface | `readProjectSettings`、`executeProjectSettingsCommand` | 校验命令、MCP setup/凭据门控、revision CAS、路径约束、原子文件写入 | HTTP 边界、MCP 产品目录、真实凭据值、调用 MCP-exposed Tool | project-settings 与 web-capabilities 测试 |
+| Runtime Readiness Interface | `readRuntimeReadiness()` | 汇聚已有 Preset mount 和 Model / Skill / Tool Registry 的只读 observations，统一超时、状态与最小投影 | 配置写入、主动挂载、MCP 连接或 External API 探测、执行 Tool、调用模型 | readiness unit、Web route、真实 Harness Registry 测试 |
 | Integration Catalog | `mcpCatalogEntry`、`mcpCredentialCatalogEntry` | MCP Server 连接与凭据的产品元数据、固定来源 | 配置事务、启停状态、密钥值 | 通过 Settings 投影和 setup 测试 |
 | Capability Package | 原生 `SKILL.md`；独立 Tool Provider；可选 Validator 与 Acceptance Profile | 一个有界领域问题的工作流、确定性执行和科学规则 | 自动绑定内部模块、Harness 生命周期、Provider 鉴权 | package 内 unit、MCP contract 与 eval 测试 |
 | Capability Conformance | `auditCapabilityPackages({ projectRoot })` | 以 `scope=static-declaration` 验证 Git 跟踪的 Skill、Tool contract、Agent Preset Provider/activation 声明、合同检查入口、科学合同、依赖锁和 L3 物化证据文件 | 执行 check、证明 Provider 当前已启用或 ready、动态查询 MCP Tool 清单、替代 Validator | `npm run capability:conformance` 与失败关闭测试 |
@@ -97,9 +99,8 @@ Deployment/Home Patch
 
 Harness Settings UI
   -> Native Web Extension route
-     -> Project Settings Interface
-        -> Integration Catalog (read-only metadata)
-        -> authoritative Skill / Cordis configuration files
+     -> Project Settings Interface -> Integration Catalog + authoritative config
+     -> Runtime Readiness Interface -> existing preset mount + Harness registries
 ```
 
 禁止的反向边包括：

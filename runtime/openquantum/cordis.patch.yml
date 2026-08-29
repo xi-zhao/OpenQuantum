@@ -35,7 +35,7 @@
       inject: [webServer]
     - id: openquantum-web-capabilities
       name: '@openquantum/harness-web-capabilities'
-      inject: [webServer, credentials]
+      inject: [webServer, credentials, skills, tools, llm]
 
 # Profile roots live at $DSH_HOME/profiles/<profile>/cordis.yml; the fragment
 # is materialized beside them so its plugins resolve through the profile's

@@ -211,7 +211,7 @@ npm run dev
 
 浏览器打开 <http://127.0.0.1:3000>。
 
-模型地址、模型密钥、MCP Server 连接、Skill 和量子云凭据都可以从设置中心管理。密钥保存在本地环境或 DeepSeek Harness 凭据库中，项目配置只保留凭据引用。
+模型地址、模型密钥、MCP Server 连接、Skill 和量子云凭据都可以从设置中心管理。量子组件默认先展示当前 Model、Skill、Tool Registry 的只读运行证据，再把 MCP Server 连接、Skill 加载策略和安全凭据分栏配置；“配置已启用”不会被当成“当前已就绪”。密钥保存在本地环境或 DeepSeek Harness 凭据库中，项目配置只保留凭据引用。
 
 如果不用设置中心，而是通过本地环境文件配置模型，macOS 终端运行 `cp .env.example .env`，Windows PowerShell 运行 `Copy-Item .env.example .env`，再填写需要的值。
 
@@ -291,6 +291,7 @@ npm run e2e:quantum-harness -- --provider openquantum-public
 .agents/skills/          量子 Skill 与科学资源
 runtime/openquantum/     Agent Preset、Harness MCP Client 声明和 Harness 界面扩展
 src/settings/server/     设置中心的服务端配置边界
+src/readiness/server/    当前 Harness Registry 的只读运行状态边界
 scripts/                 启动、诊断和端到端测试
 tests/                   平台集成测试
 docs/                    架构、路线与生态文档

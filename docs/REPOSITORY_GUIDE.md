@@ -55,6 +55,7 @@ locality，不是运行时包含关系。
 | `.agents/skill-contracts/` | 科学结果、验收、评分和复现的共享合同 | 不是插件市场、安装系统或 Agent Runtime |
 | `runtime/openquantum/` | Harness patch、OpenQuantum preset、Harness MCP Client 与原生 Tool Plugin 声明、原生 Web 扩展 | 不复制 Session、Tool registry 或模型调用 |
 | `src/settings/server/` | 设置中心的受控读写 Interface，以及与状态机分离的 Integration Catalog | 不保存真实凭据，不调用 MCP-exposed Tool |
+| `src/readiness/server/` | 当前 Host / Agent scope 的被动 Runtime Registry 观测 Interface | 不写配置，不主动挂载 Preset，不探测外部服务或执行 Tool |
 | `scripts/` | 启动、诊断、安装固定社区依赖和显式 E2E | 不是生产 Runtime |
 | `tests/` | 平台级集成、配置和 UI 扩展测试 | 不代替真实 provider / 硬件验证 |
 | `docs/` | 使用、架构、路线和生态说明 | 路线图不等于当前功能事实 |
@@ -74,12 +75,14 @@ locality，不是运行时包含关系。
 | 发行版 Capability 的 L0–L3 与证据引用 | `.agents/capability-packages.yml` | 新增/提升能力时更新，并运行 `npm run capability:conformance` |
 | MCP Server 连接与 Skill 加载策略的写入规则 | `src/settings/server/project-settings.mjs` | 通过 `executeProjectSettingsCommand`，不在 HTTP route 或 UI 重写规则 |
 | MCP Server 连接和凭据的展示元数据 | `src/settings/server/project-settings-catalog.mjs` | 新增/升级集成时更新；不在设置事务或 UI 中复制 |
+| 当前 Model / Skill / Tool Registry 观测 | `src/readiness/server/runtime-readiness.mjs` | 只通过 Harness Observer Adapter 读取；不从配置推断 ready |
 | 固定社区 MCP Server 的来源与提交 | `src/settings/server/quantum-hardware-mcp.mjs` | 升级时同时审阅源码、许可证、Tool schema 和副作用 |
 | Skill 指令 | `.agents/skills/<name>/SKILL.md` | 使用 Harness 原生 Skill 格式 |
 | 科学阈值和验收规则 | 对应 profile、Validator 和 `.agents/skill-contracts/` | 修改规则必须增加测试和版本化证据 |
 | 模型或云端密钥 | `.env` 或 Harness credential store | 只保存值；项目配置仅引用凭据名 |
 
-设置中心显示的 MCP Server 连接与 Skill 加载策略来自这些权威文件。UI 不是第二份配置数据库。
+设置中心显示的 MCP Server 连接与 Skill 加载策略来自这些权威文件；“运行状态”页签则读取独立的 Runtime
+Readiness Snapshot。UI 不是第二份配置数据库，也不会把配置启用直接翻译成运行就绪。
 
 ## 常见改动应该去哪里
 

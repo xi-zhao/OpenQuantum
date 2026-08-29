@@ -75,7 +75,7 @@ Eval 和 Benchmark 属于开发、CI 和发布证据，不进入用户运行链�
 | 事实 | 回答的问题 | 权威来源 | 不能证明 |
 | --- | --- | --- | --- |
 | 配置策略 | 某个 Skill 或 MCP Server 连接是否被配置为加载？ | Agent Preset、Project Settings Interface | Plugin 已激活、Tool 已注册 |
-| Runtime readiness | 当前 Host 中 Plugin、Registry 和外部依赖是否真的可达？ | Host/Registry probe、真实 Tool list | 某次任务会成功 |
+| Runtime readiness | 当前 Host / Agent scope 中哪些 Registry 事实已被观测，哪些外部可达性已检查？ | Runtime Readiness Snapshot；必要时再增加显式外部 probe | 某次任务会成功；未检查的连接不能写成 ready |
 | 执行状态 | Turn、Goal 或 Job 运行到哪里？ | Harness Session event log | 科学上正确 |
 | 科学验收 | 物化证据是否满足版本化规则？ | central Acceptance Builder 生成的 Acceptance Report | Benchmark 表现或独立复现 |
 | Capability maturity | 发行版具备 L0–L3 中哪一级开发证据？ | `.agents/capability-packages.yml` + conformance/eval | 当前在线 ready |
@@ -122,6 +122,7 @@ Eval 和 Benchmark 属于开发、CI 和发布证据，不进入用户运行链�
 | Skill 指令与领域资源 | `.agents/skills/<id>/` | Skill discovery、capability test |
 | 设置命令和状态转换 | `src/settings/server/project-settings.mjs` | project settings tests |
 | 设置页产品目录 | `src/settings/server/project-settings-catalog.mjs` | settings/Web tests |
+| 当前 Model / Skill / Tool Registry 观测 | `src/readiness/server/runtime-readiness.mjs` | readiness/Web/真实 Harness 测试 |
 | 科学合同与最终状态构建 | `.agents/skill-contracts/` + capability Profile/Validator | `npm run test:contracts` + materialization tests |
 | 模型与云凭据值 | Git 忽略的 `.env` 或 Harness credential store | 显式 probe；不得进入 Git |
 

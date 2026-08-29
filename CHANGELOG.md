@@ -10,6 +10,8 @@ OpenQuantum 的重要变更记录在此。格式遵循 [Keep a Changelog](https:
 - 面向量子公司和科研团队的 Harness 原生 Skill / Tool Provider / Fork 二次开发路径。
 - `quantum-ground-state` 原生 Skill、确定性 Validator 与 stdio MCP 科学计算纵切。
 - Skill、Tool、MCP Server、External API、Validator 与 Composition 的权威扩展对象模型。
+- 设置中心 Runtime Readiness 首页：被动展示当前 Model Route、Skill Registry 与 Tool Registry 证据，
+  并把未检查的 MCP 连接、模型 Endpoint 和下游服务可达性明确保留为 `not_checked`。
 
 ### Changed
 

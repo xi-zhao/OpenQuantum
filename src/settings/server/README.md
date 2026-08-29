@@ -3,6 +3,9 @@
 这个目录是设置中心修改项目级 Skill、MCP Server 连接和凭据引用时唯一的服务端写入 seam。浏览器插件只提交用户意图，
 具体校验、并发控制和文件写入由这里完成。
 
+设置页的“运行状态”不属于这个写模型。它由 `src/readiness/server/` 的独立只读 Interface 从当前 Harness
+Registry 生成，避免把“配置已启用”误写成“当前运行就绪”。
+
 ## 模块
 
 - `project-settings.mjs`：通过 `executeProjectSettingsCommand` 处理 Skill 加载策略/删除、MCP Server 连接启用/注册/删除；统一

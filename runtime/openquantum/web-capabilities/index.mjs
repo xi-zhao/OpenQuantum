@@ -1,13 +1,17 @@
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 
+import {
+  dispatchRuntimeReadinessCommand,
+} from "./runtime-readiness.mjs";
+
 const MAX_REQUEST_BYTES = 64 * 1024;
 const LOOPBACK_HOST = /^(?:localhost|127(?:\.\d{1,3}){3}|\[::1\])(?::\d{1,5})?$/i;
 const SETTINGS_MODULE = "src/settings/server/project-settings.mjs";
 const CHANNELS_MODULE = "src/channels/cc-connect.mjs";
 
 export const name = "openquantum-web-capabilities";
-export const inject = ["webServer", "credentials"];
+export const inject = ["webServer", "credentials", "skills", "tools", "llm"];
 
 function json(response, status, value) {
   const body = `${JSON.stringify(value)}\n`;
@@ -19,16 +23,19 @@ function json(response, status, value) {
   response.end(body);
 }
 
-export function capabilityRequestBoundary(request) {
+export function capabilityRequestBoundary(
+  request,
+  { surface = "Capability settings" } = {},
+) {
   if (request.method !== "POST") {
-    return { status: 405, error: "Capability settings require POST" };
+    return { status: 405, error: `${surface} require POST` };
   }
   const mediaType = String(request.headers["content-type"] ?? "")
     .toLowerCase()
     .split(";", 1)[0]
     .trim();
   if (mediaType !== "application/json") {
-    return { status: 415, error: "Capability settings require application/json" };
+    return { status: 415, error: `${surface} require application/json` };
   }
   const host = request.headers.host;
   const originValue = request.headers.origin;
@@ -38,11 +45,14 @@ export function capabilityRequestBoundary(request) {
     typeof originValue !== "string" ||
     (fetchSite !== undefined && fetchSite !== "same-origin")
   ) {
-    return { status: 403, error: "Capability settings require a same-origin browser request" };
+    return {
+      status: 403,
+      error: `${surface} require a same-origin browser request`,
+    };
   }
   const trustedPublicHost = process.env.OPENQUANTUM_TRUSTED_HOST?.toLowerCase();
   if (!LOOPBACK_HOST.test(host) && host.toLowerCase() !== trustedPublicHost) {
-    return { status: 403, error: "Capability settings host is not trusted" };
+    return { status: 403, error: `${surface} host is not trusted` };
   }
   try {
     const origin = new URL(originValue);
@@ -53,11 +63,11 @@ export function capabilityRequestBoundary(request) {
       throw new Error("origin mismatch");
     }
   } catch {
-    return { status: 403, error: "Capability settings origin is not trusted" };
+    return { status: 403, error: `${surface} origin is not trusted` };
   }
   const declaredLength = Number(request.headers["content-length"]);
   if (Number.isFinite(declaredLength) && declaredLength > MAX_REQUEST_BYTES) {
-    return { status: 413, error: "Capability settings request is too large" };
+    return { status: 413, error: `${surface} request is too large` };
   }
   return null;
 }
@@ -109,9 +119,11 @@ export async function dispatchMessageChannelCommand(projectRoot, command) {
 export function createCapabilitySettingsHandler({
   projectRoot = process.cwd(),
   dispatch = dispatchCapabilityCommand,
+  surface = "Capability settings",
+  failureMessage = "能力设置暂时不可用",
 } = {}) {
   return async (request, response) => {
-    const boundary = capabilityRequestBoundary(request);
+    const boundary = capabilityRequestBoundary(request, { surface });
     if (boundary !== null) {
       json(response, boundary.status, { error: boundary.error });
       return;
@@ -132,10 +144,25 @@ export function createCapabilitySettingsHandler({
         json(response, 400, { error: error.message });
         return;
       }
-      console.error("OpenQuantum capability settings failed", error);
-      json(response, 500, { error: "能力设置暂时不可用" });
+      console.error(`OpenQuantum ${surface.toLowerCase()} failed`, error);
+      json(response, 500, { error: failureMessage });
     }
   };
+}
+
+export function createRuntimeReadinessHandler({
+  projectRoot = process.cwd(),
+  dispatch,
+} = {}) {
+  if (typeof dispatch !== "function") {
+    throw new TypeError("Runtime readiness handler requires dispatch()");
+  }
+  return createCapabilitySettingsHandler({
+    projectRoot,
+    dispatch,
+    surface: "Runtime readiness",
+    failureMessage: "运行状态暂时不可用",
+  });
 }
 
 export function apply(ctx) {
@@ -147,10 +174,17 @@ export function apply(ctx) {
   });
   const channelHandler = createCapabilitySettingsHandler({
     dispatch: dispatchMessageChannelCommand,
+    surface: "Message channel settings",
+    failureMessage: "消息渠道设置暂时不可用",
+  });
+  const runtimeReadinessHandler = createRuntimeReadinessHandler({
+    dispatch: (projectRoot, command) =>
+      dispatchRuntimeReadinessCommand(projectRoot, command, { ctx }),
   });
   const routes = [
     ["/openquantum/api/capabilities", capabilityHandler, "openquantum: capability settings API"],
     ["/openquantum/api/channels", channelHandler, "openquantum: message channel settings API"],
+    ["/openquantum/api/runtime-readiness", runtimeReadinessHandler, "openquantum: runtime readiness API"],
   ];
   for (const [routePath, handler, label] of routes) {
     ctx.effect(() => ctx.webServer.register({
