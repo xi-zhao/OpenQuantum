@@ -44,6 +44,44 @@ async function addTrackedSkill(root, id) {
   );
 }
 
+function packageEntrypointPolicy(entrypoint) {
+  return `schemaVersion: "1.1"
+packages:
+  - id: demo-capability
+    level: L1
+    execution:
+      mcpServers:
+        - name: demo_server
+          source: package
+          entrypoint: ${JSON.stringify(entrypoint)}
+          activation: always
+          contractCheck: tests/demo.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: inspect_demo
+              effect: read-only
+      nativeTools: []
+      checks:
+        - tests/demo.test.mjs
+`;
+}
+
+async function writePackageMcpPreset(root, entrypoint) {
+  await write(
+    root,
+    "runtime/openquantum/agent-presets/openquantum/agent.cordis.yml",
+    `- id: mcp-demo
+  name: "@deepseek-ai/dsh-mcp-client"
+  config:
+    serverName: demo_server
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/${entrypoint}'
+    cwd: !!js process.cwd()
+`,
+  );
+}
+
 test("repository capability packages conform to their declared L0-L3 evidence", async () => {
   const report = await auditCapabilityPackages({ projectRoot });
 
@@ -386,6 +424,91 @@ packages:
       "demo-capability: MCP server demo_server entrypoint must be a safe canonical POSIX path inside .agents/skills/demo-capability/",
     ),
   );
+});
+
+test("package MCP entrypoints accept canonical repository-local POSIX paths", async (t) => {
+  const entrypoint =
+    ".agents/skills/demo-capability/mcp-v2/server_test.v1.mjs";
+  const root = await temporaryProject(t, packageEntrypointPolicy(entrypoint));
+  await addTrackedSkill(root, "demo-capability");
+  await write(root, entrypoint, "export const server = true;\n");
+  await write(root, "tests/demo.test.mjs", "export const checked = true;\n");
+  await writePackageMcpPreset(root, entrypoint);
+
+  const report = await auditCapabilityPackages({ projectRoot: root });
+
+  assert.equal(report.status, "pass", report.issues.join("\n"));
+});
+
+test("package MCP entrypoints reject unsafe or non-canonical path forms", async (t) => {
+  const prefix = ".agents/skills/demo-capability/";
+  const cases = [
+    {
+      name: "single quote expression escape",
+      entrypoint: `${prefix}mcp/' + process.exit(1) + '/server.mjs`,
+    },
+    {
+      name: "double quote",
+      entrypoint: `${prefix}mcp/server".mjs`,
+    },
+    {
+      name: "backslash separator",
+      entrypoint: String.raw`${prefix}mcp\server.mjs`,
+    },
+    {
+      name: "control character",
+      entrypoint: `${prefix}mcp/server\t.mjs`,
+    },
+    {
+      name: "absolute path",
+      entrypoint: "/.agents/skills/demo-capability/mcp/server.mjs",
+    },
+    {
+      name: "current-directory segment",
+      entrypoint: `${prefix}mcp/./server.mjs`,
+    },
+    {
+      name: "parent-directory segment",
+      entrypoint: `${prefix}mcp/../server.mjs`,
+    },
+    {
+      name: "empty segment",
+      entrypoint: `${prefix}mcp//server.mjs`,
+    },
+    {
+      name: "trailing separator",
+      entrypoint: `${prefix}mcp/server.mjs/`,
+    },
+  ];
+  const safeEntrypoint = `${prefix}mcp/server.mjs`;
+  const expectedIssue =
+    `demo-capability: MCP server demo_server entrypoint must be a safe ` +
+    `canonical POSIX path inside ${prefix}`;
+
+  for (const scenario of cases) {
+    await t.test(scenario.name, async (caseTest) => {
+      const root = await temporaryProject(
+        caseTest,
+        packageEntrypointPolicy(scenario.entrypoint),
+      );
+      await addTrackedSkill(root, "demo-capability");
+      await write(root, safeEntrypoint, "export const server = true;\n");
+      await write(
+        root,
+        "tests/demo.test.mjs",
+        "export const checked = true;\n",
+      );
+      await writePackageMcpPreset(root, safeEntrypoint);
+
+      const report = await auditCapabilityPackages({ projectRoot: root });
+
+      assert.equal(report.status, "fail");
+      assert(
+        report.issues.includes(expectedIssue),
+        `${scenario.name}: ${report.issues.join("\n")}`,
+      );
+    });
+  }
 });
 
 test("package MCP launch arguments reject hidden non-string extras", async (t) => {

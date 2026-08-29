@@ -51,6 +51,18 @@ function exactKeys(value, allowed, label, issues) {
   return true;
 }
 
+function hasUnsafeExpressionCharacter(value) {
+  return [...value].some((character) => {
+    const codePoint = character.codePointAt(0);
+    return (
+      character === "'" ||
+      character === '"' ||
+      codePoint <= 0x1f ||
+      codePoint === 0x7f
+    );
+  });
+}
+
 function readYaml(filePath, label, issues) {
   let source;
   try {
@@ -120,13 +132,16 @@ function inspectPackageEntrypoint(
   issues,
 ) {
   const expectedPrefix = `.agents/skills/${capabilityId}/`;
-  if (typeof relativePath !== "string") {
+  if (typeof relativePath !== "string" || relativePath.length === 0) {
     issues.push(`${label} must be a non-empty project-relative path`);
     return undefined;
   }
   const segments = relativePath.split("/");
   if (
+    path.posix.isAbsolute(relativePath) ||
     relativePath.includes("\\") ||
+    hasUnsafeExpressionCharacter(relativePath) ||
+    path.posix.normalize(relativePath) !== relativePath ||
     !relativePath.startsWith(expectedPrefix) ||
     segments.some(
       (segment) =>
@@ -141,7 +156,9 @@ function inspectPackageEntrypoint(
     );
     return undefined;
   }
-  return inspectFile(projectRoot, relativePath, label, issues);
+  return inspectFile(projectRoot, relativePath, label, issues) === undefined
+    ? undefined
+    : relativePath;
 }
 
 function readSkillName(skillPath, label, issues) {
@@ -374,9 +391,9 @@ function validateExecution(definition, projectRoot, surface, issues) {
     if (!new Set(["package", "external"]).has(serverDefinition.source)) {
       issues.push(`${serverLabel}.source must be package or external`);
     }
-    let declaredPackageEntrypoint;
+    let validatedPackageEntrypoint;
     if (serverDefinition.source === "package") {
-      declaredPackageEntrypoint = inspectPackageEntrypoint(
+      validatedPackageEntrypoint = inspectPackageEntrypoint(
         projectRoot,
         definition.id,
         serverDefinition.entrypoint,
@@ -496,11 +513,11 @@ function validateExecution(definition, projectRoot, surface, issues) {
     );
     if (serverDefinition.source === "package") {
       const expectedArgument =
-        typeof serverDefinition.entrypoint === "string"
-          ? `process.cwd() + '/${serverDefinition.entrypoint}'`
+        validatedPackageEntrypoint !== undefined
+          ? `process.cwd() + '/${validatedPackageEntrypoint}'`
           : undefined;
       const canonicalPackageEntrypoint =
-        declaredPackageEntrypoint !== undefined &&
+        validatedPackageEntrypoint !== undefined &&
         actual.command === "process.execPath" &&
         actual.cwd === "process.cwd()" &&
         actual.args.length === 1 &&
