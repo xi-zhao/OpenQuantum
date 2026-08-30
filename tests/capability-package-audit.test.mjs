@@ -90,11 +90,11 @@ test("repository capability packages conform to their declared L0-L3 evidence", 
   assert.equal(report.status, "pass", report.issues.join("\n"));
   assert.deepEqual(report.summary.levelCounts, {
     L0: 1,
-    L1: 6,
+    L1: 7,
     L2: 1,
     L3: 2,
   });
-  assert.equal(report.packages.length, 10);
+  assert.equal(report.packages.length, 11);
   assert(
     report.packages.every((entry) => entry.status === "pass"),
     report.issues.join("\n"),
@@ -149,6 +149,15 @@ test("repository capability packages conform to their declared L0-L3 evidence", 
     report.packages.find((entry) => entry.id === "quantum-ground-state")
       ?.execution.mcpServers[0].entrypoint,
     ".agents/skills/quantum-ground-state/mcp/server.mjs",
+  );
+  assert.deepEqual(
+    report.packages.find((entry) => entry.id === "qmclaw-workbench")
+      ?.execution.mcpServers[0].tools,
+    [
+      { name: "inspect_qmclaw_runtime", effect: "read-only" },
+      { name: "list_qmclaw_experiments", effect: "read-only" },
+      { name: "simulate_qmclaw_experiment", effect: "read-only" },
+    ],
   );
   assert.equal(
     report.packages.find((entry) => entry.id === "qiskit-circuit-workbench")

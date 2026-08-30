@@ -44,6 +44,7 @@
     "capability:quantum-ground-state:test": "node --test .agents/skills/quantum-ground-state/test/*.test.mjs",
     "capability:fieldqkit-hardware:test": "node --test .agents/skills/fieldqkit-hardware/test/*.test.mjs",
     "capability:tyxonq-workbench:test": "node --test .agents/skills/tyxonq-workbench/test/*.test.mjs",
+    "capability:qmclaw-workbench:test": "node --test .agents/skills/qmclaw-workbench/test/*.test.mjs",
     "capability:qpanda-qubo:test": "node --test .agents/skills/qpanda-qubo/test/*.test.mjs",
     "capability:quantum-information-audit:test": "node --test .agents/skills/quantum-information-audit/test/*.test.mjs",
     "capability:quantum-circuit-verification:test": "node --test .agents/skills/quantum-circuit-verification/test/*.test.mjs",

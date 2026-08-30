@@ -70,6 +70,7 @@ Skill、Tool、MCP Server、Harness MCP Client、External API 等对象的严格
 - `quantum-ground-state` 量子基态 Skill；
 - `quantum-information-audit` 独立量子信息 Validator 与 eval evidence；
 - Qiskit、FieldQKit、QPanda QUBO、MQT QCEC、Stim/PyMatching 与 TyxonQ 等有界 Skill 和 MCP Server-backed Tool 能力；
+- QMClaw 超导量子比特调校 Skill，以及覆盖 13 类实验、固定为合成数据的本地 MCP Server-backed Tool 能力；
 - 通过 Harness MCP Client 独立注册的本地量子求解、验证和后端发现 Tool；
 - 默认关闭、固定源码 commit 且由设置中心做凭据/安装门控的社区量子硬件 MCP Server。
 

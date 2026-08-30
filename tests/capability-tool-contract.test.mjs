@@ -94,6 +94,7 @@ test("default contract checks are derived from package MCP and native Tool polic
   assert.deepEqual(readDefaultCapabilityContractChecks({ projectRoot }), [
     ".agents/skills/fieldqkit-hardware/test/mcp.test.mjs",
     ".agents/skills/qec-memory-experiment/test/mcp.test.mjs",
+    ".agents/skills/qmclaw-workbench/test/mcp.test.mjs",
     ".agents/skills/qpanda-qubo/test/mcp.test.mjs",
     ".agents/skills/quantum-circuit-verification/test/mcp.test.mjs",
     ".agents/skills/quantum-ground-state/test/mcp.test.mjs",

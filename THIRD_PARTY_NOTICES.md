@@ -13,6 +13,7 @@ OpenQuantum 自有代码采用仓库根目录中的 [MIT License](LICENSE)。这
 | Qiskit MCP Servers | Apache-2.0 | 通过 `uvx` 使用 Circuits `0.3.1`、Docs `0.3.0`、IBM Runtime `0.6.1`、IBM Transpiler `0.4.1` 与 Gym `0.4.1`；上游实现没有复制进本仓库 | [Qiskit/mcp-servers](https://github.com/Qiskit/mcp-servers) |
 | FieldQKit | Apache-2.0 | 使用 `0.1.2` 的固定上游提交 `3ef2493d3f840b6a924af66a0c3f1b79cfce3fa0`；OpenQuantum 维护独立的只读 MCP 桥接与 Skill，上游源码没有复制进本仓库 | [FieldQuantum/fieldqkit](https://github.com/FieldQuantum/fieldqkit) |
 | TyxonQ | Apache-2.0 | 通过 `uv` 按需使用 PyPI `tyxonq==1.2.0`；OpenQuantum 维护独立的有界本地仿真 MCP 与 Skill，不复制上游源码，也不开放上游云端任务接口 | [QureGenAI-Biotech/TyxonQ](https://github.com/QureGenAI-Biotech/TyxonQ) |
+| QMClaw | MIT | 审阅并固定上游提交 `18d7fa1594949a1203fca4866e651641bbde021f` 的实验目录与调校工作流；OpenQuantum 维护独立的 13 类有界本地模拟 MCP Server 与 Skill，不复制或运行上游 Agentic Workflow、LabRAD/lqms、job runner 或 `mcp_tools_new.py` | [QMC-AI/QMClaw](https://github.com/QMC-AI/QMClaw) |
 | toqito | MIT | 通过 `uv` 按需使用 PyPI `toqito==1.3.1` 产生有界密度矩阵数值事实；OpenQuantum 维护独立 JavaScript Validator 重算关键不变量，不复制上游源码 | [vprusso/toqito](https://github.com/vprusso/toqito) |
 | MQT Bench | MIT | 通过 `uv` 使用 PyPI `mqt.bench==2.2.3` 生成固定的 GHZ-3、QFT-3 与 BV-4 OpenQASM 2 fixture；OpenQuantum 锁定案例、指标和 SHA-256 作为离线回归分母 | [munich-quantum-toolkit/bench](https://github.com/munich-quantum-toolkit/bench) |
 | MQT QCEC | MIT | 通过 `uv` 按需使用 PyPI `mqt.qcec==3.7.0`；OpenQuantum 维护只接受有界、无测量 OpenQASM 2 文本的本地等价性 MCP，不复制上游源码 | [munich-quantum-toolkit/qcec](https://github.com/munich-quantum-toolkit/qcec) |

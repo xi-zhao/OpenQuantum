@@ -23,6 +23,7 @@
 | `quantum-circuit-verification` | 有界 OpenQASM 2 电路等价性验证 | MQT QCEC 本地 MCP Server + Harness MCP Client |
 | `qec-memory-experiment` | 有界 surface-code memory 采样与 MWPM 解码 | Stim/PyMatching 本地 MCP Server + Harness MCP Client |
 | `tyxonq-workbench` | TyxonQ 小规模电路与噪声仿真工作流 | TyxonQ 本地 MCP Server + Harness MCP Client；默认关闭 |
+| `qmclaw-workbench` | QMClaw 超导量子比特测控与单比特调校工作流 | QMClaw Local MCP Server + Harness MCP Client；13 类有界本地模拟 |
 | `quantum-information-audit` | 有界密度矩阵和 negativity 审计 | toqito MCP-exposed Tool + Validator + L3 物化/验收链 |
 | `quantum-ground-state` | 窄作用域二量子位基态工作流 | 本地 MCP-exposed Tool + Validator + L3 物化/验收链 |
 

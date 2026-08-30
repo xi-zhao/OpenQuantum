@@ -183,6 +183,28 @@
       maxDelayMs: 30000
       maxAttempts: 10
 
+# QMClaw experiment catalog and tune-up workflow are exposed through a bounded
+# OpenQuantum simulator rather than the upstream Agentic Workflow runtime. All
+# 13 experiment families use explicit SI units and synthetic, seeded data; no
+# LabRAD/lqms process, credential, parameter write or real instrument is opened.
+- id: mcp-qmclaw-local
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: qmclaw_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/qmclaw-workbench/mcp/server.mjs'
+    env: {}
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 30000
+    failOnStartupError: true
+    reconnect:
+      enabled: true
+      initialDelayMs: 500
+      maxDelayMs: 30000
+      maxAttempts: 10
+
 # Local pyqpanda_alg QUBO modeling and solving bridge. The MCP process starts
 # cheaply; its pinned scientific Python environment (pyqpanda3 is a native
 # wheel) is materialized lazily by uv on the first tool call. It only compiles

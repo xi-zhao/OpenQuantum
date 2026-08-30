@@ -64,6 +64,16 @@ const MCP_CATALOG = Object.freeze({
     packageVersion: "1.2.0",
     setup: null,
   }),
+  qmclaw_local: Object.freeze({
+    displayName: "QMClaw 超导测控",
+    description:
+      "本地模拟 S21、能谱、Rabi、Ramsey、T1、SingleShot、DRAG、RB 等 13 类超导量子比特实验；使用合成数据，不连接 LabRAD、真实仪器或量子云。",
+    provider: "QMClaw / OpenQuantum",
+    sourceUrl: "https://github.com/QMC-AI/QMClaw",
+    packageName: "qmclaw-workbench",
+    packageVersion: "0.1.0@18d7fa1",
+    setup: null,
+  }),
   qpanda_qubo: Object.freeze({
     displayName: "QPanda QUBO 建模与求解",
     description:

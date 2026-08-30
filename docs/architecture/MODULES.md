@@ -163,7 +163,7 @@ Server 显式列出 package entrypoint、MCP-exposed Tool、启用方式、合�
 | --- | --- | --- |
 | `quantum-sdk-advisor` | L0 | 选型工作流，不执行付费或真实硬件操作 |
 | `qiskit-circuit-workbench` | L1 | 使用独立声明的 Qiskit Harness MCP Client 和显式 Tool contract |
-| `fieldqkit-hardware`、`qpanda-qubo`、`quantum-circuit-verification`、`qec-memory-experiment`、`tyxonq-workbench` | L1 | 有界本地/只读执行与合同测试；`tyxonq-workbench` 为 opt-in；不宣称最终科学验收 |
+| `fieldqkit-hardware`、`qpanda-qubo`、`quantum-circuit-verification`、`qec-memory-experiment`、`tyxonq-workbench`、`qmclaw-workbench` | L1 | 有界本地/只读执行与合同测试；`tyxonq-workbench` 为 opt-in，`qmclaw-workbench` 只产生合成实验数据；不宣称最终科学验收 |
 | `platform-diagnostics` | L2 | 报告 schema、固定检查和独立 Validator |
 | `quantum-information-audit` | L3 | 独立重算、Profile/eval，并经 Harness 物化、真实字节重读、验收和回放 |
 | `quantum-ground-state` | L3 | 完整 Result Package -> Acceptance -> Result Commit 参考纵切 |

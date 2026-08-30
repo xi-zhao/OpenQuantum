@@ -1,0 +1,11 @@
+interface:
+  display_name: "QMClaw 超导测控"
+  short_description: "模拟 13 类超导量子比特测控与调校实验"
+  default_prompt: "使用 $qmclaw-workbench 规划并模拟这个超导量子比特调校任务，同时明确区分合成数据与真实硬件测量。"
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "qmclaw_local"
+      description: "QMClaw 13 类有界本地测控模拟工具"
+policy:
+  allow_implicit_invocation: true

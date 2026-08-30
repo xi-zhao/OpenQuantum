@@ -1,0 +1,14 @@
+QMClaw integration notice
+
+This OpenQuantum capability was informed by the experiment catalog and
+measurement-and-control workflow published by QMC-AI/QMClaw at commit:
+
+  18d7fa1594949a1203fca4866e651641bbde021f
+  https://github.com/QMC-AI/QMClaw
+
+The reviewed upstream repository is licensed under the MIT License. Copyright
+remains with the QMClaw contributors.
+
+OpenQuantum does not vendor or execute QMClaw's Agentic Workflow, job runner,
+LabRAD/lqms integration, or mcp_tools_new.py. The bounded local simulator and
+MCP Server in this directory are an independent OpenQuantum implementation.

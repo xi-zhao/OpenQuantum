@@ -1,6 +1,6 @@
 # OpenQuantum 量子能力候选清单
 
-- 更新日期：2026-08-28
+- 更新日期：2026-08-30
 - 目标：为 OpenQuantum 选择可维护的 Harness 原生 Skill、Tool Provider 与 Validator
 - 原则：不建设独立 Runtime 或插件市场；仓库内精选、审阅、测试，再通过 Git 发布
 
@@ -39,6 +39,7 @@ Scientific Result Adapter 只做 capability 映射。为维护 locality，源码
 | Qiskit Docs | 官方 MCP Server + Harness MCP Client + MCP-exposed Tool | 条件开启 | 文档搜索、页面读取和错误码查询；可由环境变量关闭 |
 | `qiskit-circuit-workbench` | Skill | 开启 | 把两组 Qiskit MCP-exposed Tool 组织成可审查电路工作流 |
 | `tyxonq-workbench` | Skill + 本地 MCP Server + Harness MCP Client + MCP-exposed Tool | opt-in | 固定 TyxonQ 1.2.0，只开放有界电路与噪声仿真，不开放云端任务 |
+| `qmclaw-workbench` | Skill + 本地 MCP Server + Harness MCP Client + MCP-exposed Tool | 开启 | 固定审阅 QMClaw commit `18d7fa1`；覆盖 13 类有界、带 seed 的超导测控模拟，明确标记 synthetic，不开放 LabRAD、参数写回或真实仪器 |
 | `quantum-information-audit` | Skill + toqito 本地 MCP Server + Harness MCP Client + MCP-exposed Tool + Validator | 开启 | 固定 toqito 1.3.1；Tool 返回 facts/observations，Materializer 物化并重读真实字节后，Acceptance Profile 定义规则，central Acceptance Builder 派生 Acceptance |
 | `quantum-circuit-verification` | Skill + MQT QCEC 本地 MCP Server + Harness MCP Client + MCP-exposed Tool | 开启 | 固定 MQT QCEC 3.7.0，只比较有界、无测量 OpenQASM 2 unitary 电路，区分确定与概率性结论 |
 | `qec-memory-experiment` | Skill + Stim/PyMatching 本地 MCP Server + Harness MCP Client + MCP-exposed Tool | 开启 | 固定 Stim 1.16.0 与 PyMatching 2.4.0，运行有界、带 seed 的 rotated surface-code memory 采样和 MWPM 解码；单点结果不作 threshold 主张 |

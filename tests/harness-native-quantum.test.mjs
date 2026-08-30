@@ -36,6 +36,8 @@ const INCLUDE_IBM_RUNTIME_MCP =
   process.env.OPENQUANTUM_TEST_IBM_RUNTIME_MCP === "1";
 const QISKIT_CIRCUIT_TOOL = "mcp__qiskit__transpile_circuit_tool";
 const QISKIT_DOCS_TOOL = "mcp__qiskit_docs__search_docs_tool";
+const QMCLAW_SIMULATE_TOOL =
+  "mcp__qmclaw_local__simulate_qmclaw_experiment";
 const PLATFORM_SHELL_PROVIDER =
   process.platform === "win32"
     ? "@deepseek-ai/dsh-tool-pwsh"
@@ -48,6 +50,7 @@ const EXPECTED_QUANTUM_SKILLS = Object.freeze([
   "platform-diagnostics",
   "quantum-ground-state",
   "qiskit-circuit-workbench",
+  "qmclaw-workbench",
   "quantum-sdk-advisor",
 ]);
 
@@ -319,6 +322,10 @@ test(
           toolCheck.items.some((item) => item.id === SOLVE_TOOL),
           diagnostics(),
         );
+        assert(
+          toolCheck.items.some((item) => item.id === QMCLAW_SIMULATE_TOOL),
+          diagnostics(),
+        );
         assert.deepEqual(readiness.limitations, [
           "MODEL_ENDPOINT_REACHABILITY_NOT_CHECKED",
           "MCP_CONNECTION_STATE_NOT_CHECKED",
@@ -378,6 +385,7 @@ test(
       assert(toolNames.includes(SOLVE_AND_VALIDATE_TOOL), diagnostics());
       assert(toolNames.includes(SOLVE_TOOL), diagnostics());
       assert(toolNames.includes(VALIDATE_TOOL), diagnostics());
+      assert(toolNames.includes(QMCLAW_SIMULATE_TOOL), diagnostics());
       const atomicTool = header.data.header.tools.find(
         (tool) => tool.name === SOLVE_AND_VALIDATE_TOOL,
       );

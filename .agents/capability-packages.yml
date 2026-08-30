@@ -144,6 +144,27 @@ packages:
       checks:
         - .agents/skills/tyxonq-workbench/test/mcp.test.mjs
 
+  - id: qmclaw-workbench
+    level: L1
+    execution:
+      mcpServers:
+        - name: qmclaw_local
+          source: package
+          entrypoint: .agents/skills/qmclaw-workbench/mcp/server.mjs
+          activation: always
+          contractCheck: .agents/skills/qmclaw-workbench/test/mcp.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: inspect_qmclaw_runtime
+              effect: read-only
+            - name: list_qmclaw_experiments
+              effect: read-only
+            - name: simulate_qmclaw_experiment
+              effect: read-only
+      nativeTools: []
+      checks:
+        - .agents/skills/qmclaw-workbench/test/mcp.test.mjs
+
   - id: platform-diagnostics
     level: L2
     execution:

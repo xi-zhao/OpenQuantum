@@ -32,7 +32,7 @@
 
 这就是 OpenQuantum，一个开源的量子 Agent 工作台。它把原本散落在代码、文档、云平台和设备接口里的量子能力，放进同一个看得见、用得上的入口。
 
-你可以直接使用已经集成的 Qiskit、FieldQKit、本源量子（OriginQ / QPanda）和量子算法能力。自己的方法和工作流可以做成 Skill，设备与数据源可以由 MCP Server 暴露为 Tool，再经 Harness MCP Client 注册，模型则通过 Provider Route 接入。普通用户可以从自然语言开始，研究机构可以组织科研工作流，量子公司也可以在这套基础上继续开发自己的产品。
+你可以直接使用已经集成的 Qiskit、FieldQKit、本源量子（OriginQ / QPanda）、QMClaw 超导测控和量子算法能力。自己的方法和工作流可以做成 Skill，设备与数据源可以由 MCP Server 暴露为 Tool，再经 Harness MCP Client 注册，模型则通过 Provider Route 接入。普通用户可以从自然语言开始，研究机构可以组织科研工作流，量子公司也可以在这套基础上继续开发自己的产品。
 
 OpenQuantum 基于 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 构建。Harness 提供会话、工具调度、权限、持久化和执行轨迹，OpenQuantum 在上面组织量子工具、算法 Skill、科学验收和更适合量子工作的产品界面。五分钟版本见[架构总览](docs/README.md#架构总览)。
 
@@ -110,7 +110,7 @@ Web 与 Desktop 共用 `.openquantum/dsh` 中的本地状态，请先停止 `npm
 
 ## 近期能力升级：从能调用到能复核
 
-这一轮不是简单增加几个量子 SDK，而是补齐了四条可运行、可检查、可失败的能力纵切，并建立一套固定 benchmark。
+这一轮不是简单增加几个量子 SDK，而是补齐了五条可运行、可检查、可失败的能力纵切，并建立一套固定 benchmark。
 运行时由 Agent Preset 并列组合 Skill 与 Tool Provider：Skill 说明问题和边界，Agent 调用 Tool；Tool 由原生 Tool Plugin 注册，或由 MCP Server 暴露后经 Harness MCP Client 注册。需要科学验收时，Validator 产生 observations，Acceptance Profile 定义规则，central Acceptance Builder 汇聚 Profile、observations 和 provenance 推导 Acceptance。eval 和 benchmark 只属于开发与发布证据，不进入用户运行链。
 
 | 新能力 | 集成形式 | 用户现在可以做什么 | 接入验收证据 |
@@ -120,6 +120,7 @@ Web 与 Desktop 共用 `.openquantum/dsh` 中的本地状态，请先停止 `npm
 | 受约束 QUBO 建模 | 命名二值模型编译器 + 独立穷举复核 + `pyqpanda_alg` 本地求解 | 把目标函数和线性等式约束编译成 QUBO，检查 penalty 是否足够，再比较经典最优与 QAOA | 参考模型得到赋值 `[0, 1]`、最优值 -2.0，和独立枚举一致 |
 | 量子电路等价性验证 | 固定 `mqt.qcec==3.7.0` + 有界 OpenQASM 2 本地 MCP Server + Harness MCP Client | 判断转译或重写前后的无测量 unitary 电路是严格等价、相位等价、不等价还是没有确定信息 | 等价与不等价参考电路均得到预期结论 |
 | QEC memory 实验 | 固定 `stim==1.16.0` + `pymatching==2.4.0` + 带 seed 的本地实验 | 运行 rotated surface-code X/Z memory 采样与 MWPM 解码，报告逻辑错误数、标准误和 Wilson 区间 | `p=0` 时 0/100；`p=0.01`、seed 123 时 59/1000，95% 区间约 4.60%–7.54% |
+| QMClaw 超导测控 | QMClaw 工作流 Skill + 13 类实验的有界本地 MCP Server + Harness MCP Client | 规划并模拟 S21、能谱、Rabi、Ramsey、T1、SingleShot、DRAG、RB 等调校实验 | Tool surface、13 类实验合同、SI 单位、seed 可复现性和资源边界均由离线测试锁定；结果始终标记为 simulation / not_evaluated |
 
 这些结果证明的是固定输入下的本地执行与计算级 observations，不自动证明量子优势、QEC threshold 或真实硬件性能。
 新增能力在 Result Package 和 Session Event Log 来源链没有物化时会明确保留 `provenance.not_checked`，不会把工具成功写成最终科学验收通过。目前量子基态与量子信息审计是两条完整 L3 纵切。
@@ -137,6 +138,7 @@ Web 与 Desktop 共用 `.openquantum/dsh` 中的本地状态，请先停止 `npm
 | QEC Memory 实验 | [Stim](https://github.com/quantumlib/Stim) + [PyMatching](https://github.com/oscarhiggott/PyMatching) · 固定版本 + 本地 MCP Server + Harness MCP Client + OpenQuantum Skill | 运行有界 rotated surface-code X/Z memory 实验、MWPM 解码和有限 shots 逻辑错误率统计 | 连接配置开启，本地运行 |
 | FieldQKit | [FieldQuantum](https://github.com/FieldQuantum/fieldqkit) · 固定上游提交 + 只读桥接 | 发现国内量子云后端，按量子位筛选，查看拓扑和校准摘要 | 连接配置开启，只读发现 |
 | TyxonQ Local | [TyxonQ](https://github.com/QureGenAI-Biotech/TyxonQ) · 固定 PyPI 版本 + 本地 MCP Server + Harness MCP Client + OpenQuantum Skill | 运行小规模 statevector 电路、有限 shots 与 density-matrix 噪声仿真 | 连接配置关闭，本地能力已接入 |
+| QMClaw 超导测控 | [QMC-AI/QMClaw](https://github.com/QMC-AI/QMClaw) · 固定审阅提交 + OpenQuantum Skill + 本地 MCP Server + Harness MCP Client | 运行 13 类有界、带 seed 的超导量子比特实验模拟，组织单比特调校流程 | 连接配置开启，仅合成数据；LabRAD、参数写回和真实仪器关闭 |
 | IBM Runtime | [Qiskit 官方 MCP Server](https://github.com/Qiskit/mcp-servers) · Harness MCP Client + 凭据设置 | 查询 IBM 后端，向 IBM Quantum 提交任务 | 连接配置关闭，远程执行 |
 | IBM Transpiler | [Qiskit 官方 MCP Server](https://github.com/Qiskit/mcp-servers) · Harness MCP Client + 凭据设置 | 使用 IBM Quantum AI Transpiler 路由和优化电路 | 连接配置关闭，远程执行 |
 | Quantum Hardware MCP | [社区项目](https://github.com/Lokesh-2025/quantum-hardware-mcp) · 固定审阅提交 + 安全开关 | 查询 IBM Quantum 与 IonQ 设备，可选提交、取消任务和估算成本 | 连接配置关闭，远程执行 |
@@ -303,7 +305,7 @@ docs/                    架构、路线与生态文档
 
 ## 一起建设 OpenQuantum
 
-当前版本已经包含桌面客户端、Web 工作台、微信/飞书等消息入口、Harness 执行轨迹、量子 Skill、Tool Provider、模型与凭据设置，以及基态求解、量子信息审计、受约束 QUBO、电路等价性验证、QEC memory 实验和固定 benchmark。真实硬件和付费服务由使用者按需配置与开启。
+当前版本已经包含桌面客户端、Web 工作台、微信/飞书等消息入口、Harness 执行轨迹、量子 Skill、Tool Provider、模型与凭据设置，以及基态求解、量子信息审计、受约束 QUBO、电路等价性验证、QEC memory 实验、QMClaw 超导测控模拟和固定 benchmark。真实硬件和付费服务由使用者按需配置与开启。
 
 我们希望 OpenQuantum 成为一块开放的底板。量子公司可以在这里接入设备和服务，高校实验室可以沉淀自己的科研流程，算法团队和工具作者也可以把新的方法交给更多人使用。
 
