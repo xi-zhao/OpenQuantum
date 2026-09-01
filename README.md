@@ -118,7 +118,7 @@ Web 与 Desktop 共用 `.openquantum/dsh` 中的本地状态，请先停止 `npm
 | 量子信息审计 | 固定 `toqito==1.3.1` + 本地 MCP Server + Harness MCP Client + Validator + Materializer + agent-scoped Host Plugin + 内部 Scientific Result Adapter + Acceptance Profile + central Acceptance Builder | 检查密度矩阵合法性、纯度、部分转置谱和 negativity，并物化可回放的验收报告 | Bell 态纯度 1、部分转置最小本征值 -0.5、negativity 0.5，central Acceptance 为 `passed`；篡改事实为 `failed` |
 | 固定量子能力 benchmark | 固定 `mqt.bench==2.2.3` + 锁定 QASM fixture、指标和 SHA-256 | 用同一分母回归检查电路工具和后续 Agent 能力，不随运行静默换题 | GHZ-3、QFT-3、BV-4 三个案例全部与锁定 manifest 匹配 |
 | 受约束 QUBO 建模 | 命名二值模型编译器 + 独立穷举复核 + `pyqpanda_alg` 本地求解 | 把目标函数和线性等式约束编译成 QUBO，检查 penalty 是否足够，再比较经典最优与 QAOA | 参考模型得到赋值 `[0, 1]`、最优值 -2.0，和独立枚举一致 |
-| 量子电路等价性验证 | 固定 `mqt.qcec==3.7.0` + 有界 OpenQASM 2 本地 MCP Server + Harness MCP Client | 判断转译或重写前后的无测量 unitary 电路是严格等价、相位等价、不等价还是没有确定信息 | 等价与不等价参考电路均得到预期结论 |
+| 量子电路等价性验证 | 固定 `mqt.qcec==3.9.0` + 有界 OpenQASM 2 本地 MCP Server + Harness MCP Client | 判断转译或重写前后的无测量 unitary 电路是严格等价、相位等价、不等价还是没有确定信息 | 等价与不等价参考电路均得到预期结论 |
 | QEC memory 实验 | 固定 `stim==1.16.0` + `pymatching==2.4.0` + 带 seed 的本地实验 | 运行 rotated surface-code X/Z memory 采样与 MWPM 解码，报告逻辑错误数、标准误和 Wilson 区间 | `p=0` 时 0/100；`p=0.01`、seed 123 时 59/1000，95% 区间约 4.60%–7.54% |
 | QMClaw 超导测控 | QMClaw 工作流 Skill + 13 类实验的有界本地 MCP Server + Harness MCP Client | 规划并模拟 S21、能谱、Rabi、Ramsey、T1、SingleShot、DRAG、RB 等调校实验 | Tool surface、13 类实验合同、SI 单位、seed 可复现性和资源边界均由离线测试锁定；结果始终标记为 simulation / not_evaluated |
 

@@ -41,7 +41,7 @@ const MCP_CATALOG = Object.freeze({
     provider: "MQT / OpenQuantum",
     sourceUrl: "https://github.com/munich-quantum-toolkit/qcec",
     packageName: "mqt.qcec",
-    packageVersion: "3.7.0",
+    packageVersion: "3.9.0",
     setup: null,
   }),
   qec_local: Object.freeze({

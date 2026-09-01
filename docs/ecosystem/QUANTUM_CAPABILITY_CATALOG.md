@@ -41,7 +41,7 @@ Scientific Result Adapter 只做 capability 映射。为维护 locality，源码
 | `tyxonq-workbench` | Skill + 本地 MCP Server + Harness MCP Client + MCP-exposed Tool | opt-in | 固定 TyxonQ 1.2.0，只开放有界电路与噪声仿真，不开放云端任务 |
 | `qmclaw-workbench` | Skill + 本地 MCP Server + Harness MCP Client + MCP-exposed Tool | 开启 | 固定审阅 QMClaw commit `18d7fa1`；覆盖 13 类有界、带 seed 的超导测控模拟，明确标记 synthetic，不开放 LabRAD、参数写回或真实仪器 |
 | `quantum-information-audit` | Skill + toqito 本地 MCP Server + Harness MCP Client + MCP-exposed Tool + Validator | 开启 | 固定 toqito 1.3.1；Tool 返回 facts/observations，Materializer 物化并重读真实字节后，Acceptance Profile 定义规则，central Acceptance Builder 派生 Acceptance |
-| `quantum-circuit-verification` | Skill + MQT QCEC 本地 MCP Server + Harness MCP Client + MCP-exposed Tool | 开启 | 固定 MQT QCEC 3.7.0，只比较有界、无测量 OpenQASM 2 unitary 电路，区分确定与概率性结论 |
+| `quantum-circuit-verification` | Skill + MQT QCEC 本地 MCP Server + Harness MCP Client + MCP-exposed Tool | 开启 | 固定 MQT QCEC 3.9.0，只比较有界、无测量 OpenQASM 2 unitary 电路，区分确定与概率性结论 |
 | `qec-memory-experiment` | Skill + Stim/PyMatching 本地 MCP Server + Harness MCP Client + MCP-exposed Tool | 开启 | 固定 Stim 1.16.0 与 PyMatching 2.4.0，运行有界、带 seed 的 rotated surface-code memory 采样和 MWPM 解码；单点结果不作 threshold 主张 |
 | 固定量子能力 benchmark | MQT Bench fixture + manifest + 离线校验 | CI 开启 | 固定 `ghz-3`、`qft-3`、`bv-4` 三案例分母，不注册为 Agent Tool，不把未交付记为语义失败 |
 | `quantum-sdk-advisor` | Skill | 开启 | 按问题、执行目标、许可证和验证要求选择软件栈 |

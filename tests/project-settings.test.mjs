@@ -477,7 +477,7 @@ test("repository preset exposes reviewed quantum MCPs with safe defaults", async
   assert.deepEqual(byName.get("toqito_audit")?.credentialRefs, []);
   assert.equal(byName.get("qcec_local")?.enabled, true);
   assert.equal(byName.get("qcec_local")?.displayName, "量子电路等价性验证");
-  assert.equal(byName.get("qcec_local")?.packageVersion, "3.7.0");
+  assert.equal(byName.get("qcec_local")?.packageVersion, "3.9.0");
   assert.equal(byName.get("qcec_local")?.provider, "MQT / OpenQuantum");
   assert.deepEqual(byName.get("qcec_local")?.credentialRefs, []);
   assert.equal(byName.get("qec_local")?.enabled, true);

@@ -69,7 +69,7 @@
     "yaml": "2.9.0"
   },
   "devDependencies": {
-    "@agentclientprotocol/sdk": "0.25.1",
+    "@agentclientprotocol/sdk": "1.4.0",
     "@eslint/js": "9.39.4",
     "dsh-plugin-desktop": "2.0.0",
     "electron": "43.4.0",

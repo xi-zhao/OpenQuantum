@@ -1,8 +1,8 @@
 # OpenQuantum 架构审计与证据基线
 
 - 状态：日期化审计证据；不是长期架构定义入口
-- 日期：2026-08-29
-- 上游：DeepSeek Harness `0.1.0-rc.6`
+- 日期：2026-09-01
+- 上游：DeepSeek Harness `0.1.0-rc.6`（已审阅 `0.1.1-rc.2`，等待匹配的可安装 Desktop Host Adapter 包）
 
 稳定的架构总览与文档权威见[文档与架构入口](../README.md)；扩展职责见
 [扩展对象模型](EXTENSION_MODEL.md)，模块依赖见[模块地图](MODULES.md)。本文件只记录本次审计时点的
@@ -342,12 +342,12 @@ workspace、网络、进程和凭证隔离；本地开发配置不能被误称�
 
 | 风险 | 当前控制 |
 | --- | --- |
-| Harness Developer Preview 发生破坏性变化 | 固定版本、少量原生扩展、真实 E2E、优先上游修复 |
-| Desktop 与 Harness 版本错配 | 成对固定版本、Home patch 组合测试、升级时重跑完整平台检查 |
+| Harness Developer Preview 发生破坏性变化 | 固定版本、少量原生扩展、真实 E2E、优先上游修复；`0.1.1-rc.2` 已进入升级候选但不绕过安装合同 |
+| Desktop 与 Harness 版本错配 | 成对固定版本、Home patch 组合测试、升级时重跑完整平台检查；GitHub Desktop `2.0.2+` 已适配新 Harness，但对应 `dsh-plugin-desktop` npm 包尚未发布，因此当前保持 `rc.6`/`2.0.0` 同族而不制造双 Runtime |
 | LLM 产生科学幻觉 | MCP-exposed Tool 产数值、Validator 产 observations、Profile 提供规则、central Acceptance Builder 推状态、模型只解释 |
 | Skill 作用域过度承诺 | supported/out-of-scope、schema、正负例和篡改测试 |
 | MCP Server/Host Plugin 获得宿主权限 | 仓库内可信代码、依赖锁定、显式配置、代码审查 |
-| 社区硬件 MCP Server 提交真实云任务 | 默认关闭、固定源码 SHA、显式安装与启用、Harness 凭据引用、最小权限云账户 |
+| 社区硬件 MCP Server 提交真实云任务 | 默认关闭、固定到已审阅的 `83d1b92`、显式安装与启用、Harness 凭据引用、最小权限云账户；候选点的连接拓扑、设备状态、漂移门禁与 stabilizer 离线回归已验证，未追随后续共享数据库/qforge 扩张 |
 | 凭证或科研数据泄露 | 服务端环境引用、同源白名单、Artifact 秘密扫描 |
 | Client Plugin 演化成第二套 Runtime | 冻结业务范围，只做展示与配置扩展，通用能力回到 Harness 上游 |
 | 能力数量增长导致包结构和声明失真 | 使用 L0–L3 开发成熟度、标准 package 形态和 capability conformance 检查 |
@@ -360,8 +360,10 @@ workspace、网络、进程和凭证隔离；本地开发配置不能被误称�
    `npm run check` 另行执行本地合同测试。
 2. **第二条 L3 纵切（已完成）**：`quantum-information-audit` 已进入 Harness workspace 物化、真实字节重读、
    中央 Acceptance 与 `tool/result` 回放；QGS 与 QI 通过 Scientific Result Adapter Registry 组合。
-3. **Harness 成对升级（下一步）**：审阅 DeepSeek Harness 新版本 release/Interface 变化，保持 Web、Desktop、preset 和
-   Tool seam 同一版本族；通过 config、Host、Skill、Harness MCP Client、MCP Server、UI 和 Session 恢复测试后再升级锁文件。
+3. **Harness 成对升级（受上游发布阻塞）**：`0.1.1-rc.2` 及 Desktop `2.0.2` 源码/安装包已经审阅，但 npm 只提供
+   `dsh-plugin-desktop@2.0.0`，其内部固定 `0.1.0-rc.6`。等待或推动上游发布匹配的可安装 Host Adapter 包后，保持
+   Web、Desktop、preset 和 Tool seam 同一版本族，并通过 config、Host、Skill、Harness MCP Client、MCP Server、UI
+   和 Session 恢复测试再升级锁文件；禁止使用 `--force`、依赖 override 或双版本 Runtime 绕过该合同。
 4. **在线证据门**：在有受控 Provider 凭据的 CI/发布环境运行文本生成、Tool Calling 和 QGS/QI E2E；无凭据环境
    继续明确输出 `not_checked`，不阻塞纯离线单元测试，也不伪造 ready。
 5. **硬件写操作治理**：FieldQKit 继续只读发现；任何真实 QPU 提交能力必须默认关闭、展示成本与副作用，

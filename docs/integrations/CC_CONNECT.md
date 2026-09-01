@@ -76,7 +76,7 @@ OpenQuantum 的“设置 → 消息渠道”只展示这条连接的产品状态
 
 ## 能力与限制
 
-- `cc-connect` 固定为 `1.5.0`，DeepSeek Harness ACP 入口固定为 `0.1.0-rc.6`；升级时要重新运行 ACP 握手测试。
+- `cc-connect` 固定为 `1.5.0`，DeepSeek Harness ACP 入口固定为 `0.1.0-rc.6`；开发期使用固定的 ACP TypeScript SDK `1.4.0` 复核真实 stdio 握手，任一方升级时都要重跑该测试。
 - ACP 入口创建独立 Harness Session，执行事实写入 `.openquantum/cc-connect/sessions`，不与 Web Host 的 JSONL writer 混用。
 - CC Connect 可以转发文本、权限选择和已提交的 Agent 回复；更完整的工具轨迹仍以 Harness Session 记录为准。
 - 真实量子硬件、付费云任务和需要凭据的 MCP Server 连接继续遵循设置中心的默认关闭与显式启用规则。

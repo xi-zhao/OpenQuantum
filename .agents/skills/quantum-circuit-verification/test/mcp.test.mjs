@@ -44,11 +44,11 @@ const chunks=[];
 for await (const chunk of process.stdin) chunks.push(chunk);
 const envelope=JSON.parse(Buffer.concat(chunks).toString("utf8"));
 if(envelope.action==="runtime") {
-  process.stdout.write(JSON.stringify({schemaVersion:"1.0",packageVersion:"3.7.0",pythonVersion:"3.12.0",maxQasmBytesPerCircuit:65536,timeoutSeconds:10,cloudExecutionEnabled:false}));
+  process.stdout.write(JSON.stringify({schemaVersion:"1.0",packageVersion:"3.9.0",pythonVersion:"3.12.0",maxQasmBytesPerCircuit:65536,timeoutSeconds:10,cloudExecutionEnabled:false}));
 } else {
   const sha=(value)=>createHash("sha256").update(value).digest("hex");
   const equivalence=envelope.circuitA===envelope.circuitB?"equivalent":"not_equivalent";
-  process.stdout.write(JSON.stringify({schemaVersion:"1.0",packageVersion:"3.7.0",inputDigests:{circuitA:sha(envelope.circuitA),circuitB:sha(envelope.circuitB)},equivalence,statistics:{preprocessingSeconds:0.001,checkSeconds:0.002,performedSimulations:equivalence==="equivalent"?0:1,performedInstantiations:0,checkers:[{checker:"fake-boundary",equivalence,runtimeSeconds:0.002}]},timeoutSeconds:10}));
+  process.stdout.write(JSON.stringify({schemaVersion:"1.0",packageVersion:"3.9.0",inputDigests:{circuitA:sha(envelope.circuitA),circuitB:sha(envelope.circuitB)},equivalence,statistics:{preprocessingSeconds:0.001,checkSeconds:0.002,performedSimulations:equivalence==="equivalent"?0:1,performedInstantiations:0,checkers:[{checker:"fake-boundary",equivalence,runtimeSeconds:0.002}]},timeoutSeconds:10}));
 }
 `,
   );
@@ -93,7 +93,7 @@ test("QCEC MCP exposes two bounded read-only tools", async () => {
 test("runtime inspection reports the pinned local-only boundary", async () => {
   const result = await client.callTool({ name: "inspect_qcec_runtime", arguments: {} });
   assert.equal(result.isError, undefined);
-  assert.equal(result.structuredContent.packageVersion, "3.7.0");
+  assert.equal(result.structuredContent.packageVersion, "3.9.0");
   assert.equal(result.structuredContent.timeoutSeconds, 10);
   assert.equal(result.structuredContent.cloudExecutionEnabled, false);
 });
