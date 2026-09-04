@@ -4,6 +4,354 @@ packages:
   - id: quantum-sdk-advisor
     level: L0
 
+  - id: qiskit-ibm-runtime
+    level: L1
+    execution:
+      mcpServers:
+        - name: qiskit_ibm_runtime
+          source: external
+          activation: opt-in
+          contractCheck: scripts/check-reviewed-mcp-source.mjs
+          effectEvidence: reviewed-source
+          effectEvidenceRef: docs/integrations/OPT_IN_MCP_EFFECT_REVIEW.md
+          tools:
+            - name: setup_ibm_quantum_account_tool
+              effect: external-write
+            - name: list_backends_tool
+              effect: read-only
+            - name: least_busy_backend_tool
+              effect: read-only
+            - name: get_backend_properties_tool
+              effect: read-only
+            - name: get_backend_calibration_tool
+              effect: read-only
+            - name: get_coupling_map_tool
+              effect: read-only
+            - name: find_optimal_qubit_chains_tool
+              effect: read-only
+            - name: find_optimal_qv_qubits_tool
+              effect: read-only
+            - name: list_my_jobs_tool
+              effect: read-only
+            - name: get_job_status_tool
+              effect: read-only
+            - name: get_job_results_tool
+              effect: read-only
+            - name: cancel_job_tool
+              effect: external-write
+            - name: run_estimator_tool
+              effect: external-write
+            - name: delete_saved_account_tool
+              effect: external-write
+            - name: list_saved_accounts_tool
+              effect: read-only
+            - name: active_account_info_tool
+              effect: read-only
+            - name: active_instance_info_tool
+              effect: read-only
+            - name: available_instances_tool
+              effect: read-only
+            - name: usage_info_tool
+              effect: read-only
+            - name: run_sampler_tool
+              effect: external-write
+      nativeTools: []
+      checks:
+        - tests/external-mcp-contracts.test.mjs
+
+  - id: qiskit-ibm-transpiler
+    level: L1
+    execution:
+      mcpServers:
+        - name: qiskit_ibm_transpiler
+          source: external
+          activation: opt-in
+          contractCheck: scripts/check-reviewed-mcp-source.mjs
+          effectEvidence: reviewed-source
+          effectEvidenceRef: docs/integrations/OPT_IN_MCP_EFFECT_REVIEW.md
+          tools:
+            - name: setup_ibm_quantum_account_tool
+              effect: external-write
+            - name: ai_routing_tool
+              effect: external-write
+            - name: ai_linear_function_synthesis_tool
+              effect: external-write
+            - name: ai_clifford_synthesis_tool
+              effect: external-write
+            - name: ai_permutation_synthesis_tool
+              effect: external-write
+            - name: ai_pauli_network_synthesis_tool
+              effect: external-write
+            - name: hybrid_ai_transpile_tool
+              effect: external-write
+      nativeTools: []
+      checks:
+        - tests/external-mcp-contracts.test.mjs
+
+  - id: qiskit-gym
+    level: L1
+    execution:
+      mcpServers:
+        - name: qiskit_gym
+          source: external
+          activation: opt-in
+          contractCheck: scripts/check-reviewed-mcp-source.mjs
+          effectEvidence: reviewed-source
+          effectEvidenceRef: docs/integrations/OPT_IN_MCP_EFFECT_REVIEW.md
+          tools:
+            - name: create_permutation_env_tool
+              effect: external-write
+            - name: create_linear_function_env_tool
+              effect: external-write
+            - name: create_clifford_env_tool
+              effect: external-write
+            - name: list_environments_tool
+              effect: read-only
+            - name: get_environment_info_tool
+              effect: read-only
+            - name: delete_environment_tool
+              effect: external-write
+            - name: start_training_tool
+              effect: external-write
+            - name: batch_train_environments_tool
+              effect: external-write
+            - name: get_training_status_tool
+              effect: read-only
+            - name: get_training_metrics_tool
+              effect: read-only
+            - name: wait_for_training_tool
+              effect: read-only
+            - name: stop_training_tool
+              effect: external-write
+            - name: list_training_sessions_tool
+              effect: read-only
+            - name: list_tensorboard_experiments_tool
+              effect: external-write
+            - name: get_tensorboard_metrics_tool
+              effect: external-write
+            - name: start_tensorboard_tool
+              effect: external-write
+            - name: stop_tensorboard_tool
+              effect: external-write
+            - name: get_tensorboard_status_tool
+              effect: read-only
+            - name: synthesize_permutation_tool
+              effect: external-write
+            - name: synthesize_linear_function_tool
+              effect: external-write
+            - name: synthesize_clifford_tool
+              effect: external-write
+            - name: save_model_tool
+              effect: external-write
+            - name: load_model_tool
+              effect: external-write
+            - name: list_saved_models_tool
+              effect: external-write
+            - name: list_loaded_models_tool
+              effect: read-only
+            - name: delete_model_tool
+              effect: external-write
+            - name: get_model_info_tool
+              effect: external-write
+            - name: create_coupling_map_tool
+              effect: read-only
+            - name: extract_subtopologies_tool
+              effect: read-only
+            - name: list_subtopology_shapes_tool
+              effect: read-only
+            - name: get_fake_backend_coupling_map_tool
+              effect: read-only
+            - name: list_available_fake_backends_tool
+              effect: read-only
+            - name: generate_random_permutation_tool
+              effect: read-only
+            - name: generate_random_linear_function_tool
+              effect: read-only
+            - name: generate_random_clifford_tool
+              effect: read-only
+            - name: convert_qpy_to_qasm3_tool
+              effect: read-only
+            - name: convert_qasm3_to_qpy_tool
+              effect: read-only
+      nativeTools: []
+      checks:
+        - tests/external-mcp-contracts.test.mjs
+
+  - id: qpanda-runtime
+    level: L1
+    execution:
+      mcpServers:
+        - name: qpanda_runtime
+          source: external
+          activation: opt-in
+          contractCheck: scripts/check-reviewed-mcp-source.mjs
+          effectEvidence: reviewed-source
+          effectEvidenceRef: docs/integrations/OPT_IN_MCP_EFFECT_REVIEW.md
+          tools:
+            - name: setup_origin_quantum_account_tool
+              effect: external-write
+            - name: list_saved_accounts_tool
+              effect: read-only
+            - name: active_account_info_tool
+              effect: read-only
+            - name: list_qpu_devices_tool
+              effect: external-write
+            - name: get_qpu_properties_tool
+              effect: external-write
+            - name: sample_tool
+              effect: external-write
+            - name: estimate_tool
+              effect: external-write
+            - name: get_task_status_tool
+              effect: external-write
+            - name: get_task_results_tool
+              effect: external-write
+            - name: cancel_task_tool
+              effect: external-write
+            - name: list_my_tasks_tool
+              effect: read-only
+            - name: create_circuit_observable_binding_tool
+              effect: external-write
+            - name: add_product_rule_tool
+              effect: external-write
+            - name: add_zip_rule_tool
+              effect: external-write
+            - name: estimate_with_binding_tool
+              effect: external-write
+            - name: list_bindings_tool
+              effect: read-only
+            - name: delete_binding_tool
+              effect: external-write
+            - name: batch_sample_tool
+              effect: external-write
+            - name: batch_estimate_tool
+              effect: external-write
+      nativeTools: []
+      checks:
+        - tests/external-mcp-contracts.test.mjs
+
+  - id: quantum-hardware
+    level: L1
+    execution:
+      mcpServers:
+        - name: quantum_hardware
+          source: external
+          activation: opt-in
+          contractCheck: scripts/check-reviewed-mcp-source.mjs
+          effectEvidence: reviewed-source
+          effectEvidenceRef: docs/integrations/OPT_IN_MCP_EFFECT_REVIEW.md
+          tools:
+            - name: list_devices
+              effect: workspace-write
+            - name: get_device_details
+              effect: workspace-write
+            - name: best_qubits
+              effect: read-only
+            - name: compare_devices
+              effect: workspace-write
+            - name: queue_status
+              effect: workspace-write
+            - name: device_history
+              effect: workspace-write
+            - name: device_profile
+              effect: workspace-write
+            - name: device_on_date
+              effect: workspace-write
+            - name: submit_job
+              effect: external-write
+            - name: job_status
+              effect: read-only
+            - name: job_results
+              effect: workspace-write
+            - name: cancel_job
+              effect: external-write
+            - name: list_jobs
+              effect: read-only
+            - name: run_grover
+              effect: external-write
+            - name: run_vqe
+              effect: external-write
+            - name: estimate_expectation
+              effect: external-write
+            - name: circuit_report
+              effect: read-only
+            - name: debug_circuit
+              effect: read-only
+            - name: ionq_devices
+              effect: read-only
+            - name: ionq_submit_job
+              effect: external-write
+            - name: ionq_job_status
+              effect: read-only
+            - name: ionq_job_results
+              effect: read-only
+            - name: estimate_ionq_gates
+              effect: read-only
+            - name: estimate_ionq_cost
+              effect: read-only
+            - name: get_alerts
+              effect: workspace-write
+            - name: check_chip_identity
+              effect: workspace-write
+            - name: start_repro_experiment
+              effect: external-write
+            - name: repro_score
+              effect: workspace-write
+            - name: job_analytics
+              effect: workspace-write
+            - name: estimate_runtime
+              effect: read-only
+            - name: route_job
+              effect: read-only
+            - name: check_routing_overhead
+              effect: read-only
+            - name: encode_search_problem
+              effect: read-only
+            - name: estimate_hardware_gates
+              effect: read-only
+            - name: get_amplification
+              effect: read-only
+            - name: discover_collision_candidates
+              effect: read-only
+            - name: encode_collision_problem
+              effect: read-only
+            - name: run_search_experiment
+              effect: external-write
+            - name: encode_4way_collision
+              effect: external-write
+            - name: equality_oracle_search
+              effect: external-write
+            - name: find_collision_candidates
+              effect: read-only
+            - name: sieve_singmaster_space
+              effect: read-only
+            - name: run_parallel_collision_search
+              effect: external-write
+            - name: certify_ising_gate_optimality
+              effect: read-only
+            - name: verify_stabilizer_circuit
+              effect: read-only
+            - name: verify_stabilizer_hardware_result
+              effect: read-only
+            - name: analyze_molecule
+              effect: external-write
+            - name: plan_quantum_chemistry_run
+              effect: external-write
+            - name: recommend_error_mitigation
+              effect: read-only
+            - name: estimate_circuit_error_ceiling
+              effect: external-write
+            - name: build_forged_circuits
+              effect: external-write
+            - name: run_forged_energy
+              effect: external-write
+            - name: collect_forged_energy
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/external-mcp-contracts.test.mjs
+
+
   - id: qiskit-circuit-workbench
     level: L1
     execution:

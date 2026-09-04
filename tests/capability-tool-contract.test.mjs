@@ -101,7 +101,7 @@ test("in-process quantum capabilities use the shared native Tool Provider", () =
         providerPlugin: "./native-quantum-tools.mjs",
         activation: "always",
         contractCheck: "tests/native-quantum-tools.test.mjs",
-        effect: "read-only",
+        effect: "workspace-write",
         effectEvidence: "conservative-provider",
       },
     ],
