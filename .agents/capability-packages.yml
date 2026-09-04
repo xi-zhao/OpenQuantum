@@ -223,7 +223,8 @@ packages:
           providerPlugin: ./native-quantum-tools.mjs
           activation: always
           contractCheck: tests/native-quantum-tools.test.mjs
-          effect: read-only
+          # Includes the trusted post-execute Host Plugin saving scientific evidence.
+          effect: workspace-write
           effectEvidence: conservative-provider
       checks:
         - tests/native-quantum-tools.test.mjs
