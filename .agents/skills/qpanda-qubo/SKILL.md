@@ -22,7 +22,7 @@ sympy 表达式字符串、文件路径或数据集加载。
 
 ## 工作流
 
-1. 先调用 `inspect_qpanda_qubo_runtime`，确认 `pyqpanda_alg` 版本和本地能力可用。
+1. 按用户输入选择下述主动作；主动作会加载固定环境并随结果返回 `packageVersion`，不需要额外的运行时检查调用。
 2. 若 Tool 不存在，告诉用户在“设置中心 → 量子组件 → MCP Server 连接”把 **QPanda QUBO** 配置为启用，重启
    OpenQuantum 后再试；不要改用 Bash 绕过设置。
 3. 用户给的是业务目标和等式约束时，优先调用 `model_and_solve_qpanda_qubo`。检查

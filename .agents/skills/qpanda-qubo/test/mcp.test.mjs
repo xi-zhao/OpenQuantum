@@ -36,9 +36,7 @@ before(async () => {
 const chunks = [];
 for await (const chunk of process.stdin) chunks.push(chunk);
 const envelope = JSON.parse(Buffer.concat(chunks).toString("utf8"));
-if (envelope.action === "runtime") {
-  process.stdout.write(JSON.stringify({schemaVersion:"1.0",packageVersion:"2.0.0",pythonVersion:"3.12.0",maxVars:5,maxLayer:6,methods:["traversal","qaoa"],cloudExecutionEnabled:false}));
-} else {
+if (envelope.action !== "solve") throw new Error("Unexpected bridge action");
   const request = envelope.request;
   const qaoa = request.method === "qaoa";
   const size = request.quadratic.length;
@@ -55,7 +53,6 @@ if (envelope.action === "runtime") {
     else if (Math.abs(value-minimumValue) <= 1e-9) optimalAssignments.push(bits);
   }
   process.stdout.write(JSON.stringify({schemaVersion:"1.0",packageVersion:"2.0.0",problem:{size,keyQubits:size,resultQubits:4,sha256:"b".repeat(64)},classical:{method:"qubobytraversal",optimalAssignments,minimumValue},quantum:qaoa?{layer:request.layer,optimizer:"SLSQP",distribution:{"010":0.9,"110":0.1},topBitstring:"010"}:null,checks:{objectiveConsistencyError:0},scientificValidation:"not_evaluated",limitations:["local","not independently validated"]}));
-}
 `,
   );
   await chmod(uvPath, 0o755);
@@ -101,15 +98,12 @@ test("QPanda QUBO MCP declares bounded non-destructive lazy-environment tools", 
   );
 });
 
-test("runtime inspection proves cloud execution stays disabled", async () => {
-  const result = await client.callTool({
-    name: "inspect_qpanda_qubo_runtime",
-    arguments: {},
-  });
-  assert.equal(result.isError, undefined);
-  assert.equal(result.structuredContent.packageVersion, "2.0.0");
-  assert.equal(result.structuredContent.cloudExecutionEnabled, false);
-  assert.equal(result.structuredContent.maxVars, 5);
+test("retired runtime inspection is absent and fails closed", async () => {
+  const tools = (await client.listTools()).tools;
+  assert.equal(tools.some((tool) => tool.name === "inspect_qpanda_qubo_runtime"), false);
+  const result = await client.callTool({ name: "inspect_qpanda_qubo_runtime", arguments: {} });
+  assert.equal(result.isError, true);
+  assert.match(result.content[0].text, /Unknown tool/);
 });
 
 test("traversal solve returns a deterministic classical reference", async () => {
@@ -127,6 +121,7 @@ test("traversal solve returns a deterministic classical reference", async () => 
   });
   assert.equal(result.isError, undefined);
   assert.equal(result.structuredContent.quantum, null);
+  assert.equal(result.structuredContent.packageVersion, "2.0.0");
   assert.equal(result.structuredContent.classical.minimumValue, -1);
   assert.deepEqual(result.structuredContent.classical.optimalAssignments, [[0, 1, 0]]);
   assert.equal(result.structuredContent.scientificValidation, "not_evaluated");

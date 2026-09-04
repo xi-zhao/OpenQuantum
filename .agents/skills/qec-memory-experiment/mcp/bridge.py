@@ -5,7 +5,6 @@ from __future__ import annotations
 import hashlib
 import json
 import math
-import platform
 import sys
 import time
 from typing import Any
@@ -131,25 +130,6 @@ def experiment_payload(request: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def runtime_payload() -> dict[str, Any]:
-    import pymatching
-    import stim
-
-    return {
-        "schemaVersion": "1.0",
-        "packages": {"stim": stim.__version__, "pymatching": pymatching.__version__},
-        "pythonVersion": platform.python_version(),
-        "profiles": ["rotated_memory_x", "rotated_memory_z"],
-        "limits": {
-            "maxDistance": MAX_DISTANCE,
-            "maxRounds": MAX_ROUNDS,
-            "maxShots": MAX_SHOTS,
-            "maxPhysicalErrorRate": MAX_ERROR_RATE,
-        },
-        "cloudExecutionEnabled": False,
-    }
-
-
 def main() -> None:
     raw = sys.stdin.buffer.read(128 * 1024 + 1)
     if len(raw) > 128 * 1024:
@@ -158,9 +138,7 @@ def main() -> None:
     if not isinstance(envelope, dict) or set(envelope) - {"action", "request"}:
         raise ValueError("bridge envelope is invalid")
     action = envelope.get("action")
-    if action == "runtime":
-        output = runtime_payload()
-    elif action == "experiment":
+    if action == "experiment":
         output = experiment_payload(normalize_request(envelope.get("request")))
     else:
         raise ValueError("bridge action is invalid")

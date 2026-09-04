@@ -77,8 +77,6 @@ packages:
           contractCheck: .agents/skills/qpanda-qubo/test/mcp.test.mjs
           effectEvidence: mcp-annotations
           tools:
-            - name: inspect_qpanda_qubo_runtime
-              effect: workspace-write
             - name: solve_qpanda_qubo
               effect: workspace-write
             - name: model_and_solve_qpanda_qubo
@@ -98,8 +96,6 @@ packages:
           contractCheck: .agents/skills/quantum-circuit-verification/test/mcp.test.mjs
           effectEvidence: mcp-annotations
           tools:
-            - name: inspect_qcec_runtime
-              effect: workspace-write
             - name: verify_circuit_equivalence
               effect: workspace-write
       nativeTools: []
@@ -117,8 +113,6 @@ packages:
           contractCheck: .agents/skills/qec-memory-experiment/test/mcp.test.mjs
           effectEvidence: mcp-annotations
           tools:
-            - name: inspect_qec_runtime
-              effect: workspace-write
             - name: run_qec_memory_experiment
               effect: workspace-write
       nativeTools: []
@@ -136,8 +130,6 @@ packages:
           contractCheck: .agents/skills/tyxonq-workbench/test/mcp.test.mjs
           effectEvidence: mcp-annotations
           tools:
-            - name: inspect_tyxonq_runtime
-              effect: workspace-write
             - name: simulate_tyxonq_circuit
               effect: workspace-write
       nativeTools: []
@@ -198,8 +190,6 @@ packages:
           contractCheck: .agents/skills/quantum-information-audit/test/mcp.test.mjs
           effectEvidence: mcp-annotations
           tools:
-            - name: inspect_toqito_runtime
-              effect: workspace-write
             - name: audit_density_matrix
               effect: workspace-write
       nativeTools: []

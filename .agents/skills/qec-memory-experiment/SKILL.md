@@ -22,12 +22,11 @@ description: 使用 OpenQuantum 的固定版本 Stim 与 PyMatching 运行有界
 
 ## 工作流
 
-1. 先调用 `inspect_qec_runtime`，记录 Stim、PyMatching 版本和资源上限。
-2. 选择 basis、distance、rounds、shots、physicalErrorRate 和显式 seed。
-3. 调用 `run_qec_memory_experiment`。
-4. 报告：电路/DEM 摘要与 SHA-256、逻辑错误数、逻辑错误率、标准误和 Wilson 95% 区间。
-5. 检查 observations：实验摘要、seed、计数恒等式、错误率重算、区间边界、零噪声不变量、来源链。
-6. 比较多组实验时，每组都保留固定 shots 与 seed 策略；不要选择性丢弃失败点。
+1. 选择 basis、distance、rounds、shots、physicalErrorRate 和显式 seed。
+2. 调用 `run_qec_memory_experiment`。主动作加载固定环境并返回 `packages`；首次调用可能下载依赖并写入工作区环境，无需单独检查运行时。
+3. 报告实际包版本、电路/DEM 摘要与 SHA-256、逻辑错误数、逻辑错误率、标准误和 Wilson 95% 区间。
+4. 检查 observations：实验摘要、seed、计数恒等式、错误率重算、区间边界、零噪声不变量、来源链。
+5. 比较多组实验时，每组都保留固定 shots 与 seed 策略；不要选择性丢弃失败点。环境不可用时报告工具错误，不编造结果。
 
 ## 解释规则
 

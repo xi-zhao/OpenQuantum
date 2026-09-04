@@ -94,44 +94,6 @@ const noiseSchema = Object.freeze({
 
 const TOOLS = Object.freeze([
   {
-    name: "inspect_tyxonq_runtime",
-    title: "Inspect TyxonQ local runtime",
-    description:
-      "Import the pinned local TyxonQ SDK and report its version, bounded circuit capabilities and the fact that cloud execution is disabled. The first call may download the pinned package through uv.",
-    inputSchema: {
-      type: "object",
-      properties: {},
-      additionalProperties: false,
-    },
-    outputSchema: {
-      type: "object",
-      properties: {
-        schemaVersion: { type: "string", const: "1.0" },
-        tyxonqVersion: { type: "string" },
-        pythonVersion: { type: "string" },
-        maxQubits: { type: "integer" },
-        maxOperations: { type: "integer" },
-        maxShots: { type: "integer" },
-        gates: { type: "array", items: { type: "string" } },
-        noiseModels: { type: "array", items: { type: "string" } },
-        cloudExecutionEnabled: { type: "boolean", const: false },
-      },
-      required: [
-        "schemaVersion",
-        "tyxonqVersion",
-        "pythonVersion",
-        "maxQubits",
-        "maxOperations",
-        "maxShots",
-        "gates",
-        "noiseModels",
-        "cloudExecutionEnabled",
-      ],
-      additionalProperties: false,
-    },
-    annotations: lazyEnvironmentAnnotations,
-  },
-  {
     name: "simulate_tyxonq_circuit",
     title: "Simulate a bounded circuit with TyxonQ",
     description:
@@ -449,13 +411,6 @@ const server = new Server(
 server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools: [...TOOLS] }));
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
   try {
-    if (request.params.name === "inspect_tyxonq_runtime") {
-      const result = await runBridge({ action: "runtime" });
-      return textResult(
-        `TyxonQ ${result.tyxonqVersion} local runtime is available. Cloud execution is disabled.`,
-        result,
-      );
-    }
     if (request.params.name === "simulate_tyxonq_circuit") {
       const simulation = normalizeSimulationRequest(request.params.arguments);
       const result = await runBridge({ action: "simulate", request: simulation });

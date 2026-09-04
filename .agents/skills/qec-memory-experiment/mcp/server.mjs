@@ -54,34 +54,6 @@ const lazyEnvironmentAnnotations = Object.freeze({
 
 const TOOLS = Object.freeze([
   {
-    name: "inspect_qec_runtime",
-    title: "Inspect pinned Stim and PyMatching runtime",
-    description:
-      "Import pinned Stim and PyMatching and report the bounded rotated-surface-code memory experiment profiles. The first call may build the Python environment through uv; no cloud or hardware execution is available.",
-    inputSchema: { type: "object", properties: {}, additionalProperties: false },
-    outputSchema: {
-      type: "object",
-      properties: {
-        schemaVersion: { type: "string", const: "1.0" },
-        packages: { type: "object" },
-        pythonVersion: { type: "string" },
-        profiles: { type: "array", items: { type: "string" } },
-        limits: { type: "object" },
-        cloudExecutionEnabled: { type: "boolean", const: false },
-      },
-      required: [
-        "schemaVersion",
-        "packages",
-        "pythonVersion",
-        "profiles",
-        "limits",
-        "cloudExecutionEnabled",
-      ],
-      additionalProperties: false,
-    },
-    annotations: lazyEnvironmentAnnotations,
-  },
-  {
     name: "run_qec_memory_experiment",
     title: "Run a bounded rotated-surface-code memory experiment",
     description:
@@ -361,13 +333,6 @@ const server = new Server(
 server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools: [...TOOLS] }));
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
   try {
-    if (request.params.name === "inspect_qec_runtime") {
-      const result = await runBridge({ action: "runtime" });
-      return textResult(
-        `Stim ${result.packages.stim} and PyMatching ${result.packages.pymatching} local QEC runtime is available. Cloud execution is disabled.`,
-        result,
-      );
-    }
     if (request.params.name === "run_qec_memory_experiment") {
       const experiment = normalizeExperimentRequest(request.params.arguments);
       const facts = await runBridge({ action: "experiment", request: experiment });

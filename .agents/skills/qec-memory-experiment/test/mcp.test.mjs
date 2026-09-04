@@ -42,9 +42,7 @@ const chunks=[];
 for await (const chunk of process.stdin) chunks.push(chunk);
 const envelope=JSON.parse(Buffer.concat(chunks).toString("utf8"));
 const canonical=(value)=>Array.isArray(value)?"["+value.map(canonical).join(",")+"]":value&&typeof value==="object"?"{"+Object.keys(value).sort().map(key=>JSON.stringify(key)+":"+canonical(value[key])).join(",")+"}":JSON.stringify(value);
-if(envelope.action==="runtime") {
-  process.stdout.write(JSON.stringify({schemaVersion:"1.0",packages:{stim:"1.16.0",pymatching:"2.4.0"},pythonVersion:"3.12.0",profiles:["rotated_memory_x","rotated_memory_z"],limits:{maxDistance:7,maxRounds:20,maxShots:50000,maxPhysicalErrorRate:0.05},cloudExecutionEnabled:false}));
-} else {
+if (envelope.action !== "experiment") throw new Error("Unexpected bridge action");
   const request=envelope.request;
   const errors=request.physicalErrorRate===0?0:7;
   const rate=errors/request.shots;
@@ -53,7 +51,6 @@ if(envelope.action==="runtime") {
   const center=(rate+z*z/(2*request.shots))/denominator;
   const half=z*Math.sqrt(rate*(1-rate)/request.shots+z*z/(4*request.shots*request.shots))/denominator;
   process.stdout.write(JSON.stringify({schemaVersion:"1.0",packages:{stim:"1.16.0",pymatching:"2.4.0"},experiment:request,experimentDigest:createHash("sha256").update(canonical(request)).digest("hex"),codeTask:"surface_code:rotated_memory_"+request.basis,circuit:{qubits:26,detectors:24,observables:1,sha256:"a".repeat(64)},detectorModel:{detectors:24,observables:1,sha256:"b".repeat(64)},result:{shots:request.shots,logicalErrors:errors,successfulShots:request.shots-errors,logicalErrorRate:rate,standardError:Math.sqrt(rate*(1-rate)/request.shots),wilson95:{low:Math.max(0,center-half),high:Math.min(1,center+half)}},runtimeSeconds:0.01}));
-}
 `,
   );
   await chmod(uvPath, 0o755);
@@ -78,7 +75,7 @@ after(async () => {
   await rm(temporary, { recursive: true, force: true });
 });
 
-test("QEC MCP declares two bounded non-destructive lazy-environment tools", async () => {
+test("QEC MCP exposes only its bounded experiment action", async () => {
   const tools = (await client.listTools()).tools;
   assert.deepEqual(
     tools.map((tool) => tool.name),
@@ -95,14 +92,12 @@ test("QEC MCP declares two bounded non-destructive lazy-environment tools", asyn
   assert.ok(tools.every((tool) => !tool.annotations.destructiveHint));
 });
 
-test("runtime inspection reports pinned Stim and PyMatching", async () => {
+test("retired runtime inspection is absent and fails closed", async () => {
+  const tools = (await client.listTools()).tools;
+  assert.equal(tools.some((tool) => tool.name === "inspect_qec_runtime"), false);
   const result = await client.callTool({ name: "inspect_qec_runtime", arguments: {} });
-  assert.equal(result.isError, undefined);
-  assert.deepEqual(result.structuredContent.packages, {
-    stim: "1.16.0",
-    pymatching: "2.4.0",
-  });
-  assert.equal(result.structuredContent.cloudExecutionEnabled, false);
+  assert.equal(result.isError, true);
+  assert.match(result.content[0].text, /Unknown tool/);
 });
 
 test("zero-noise experiment satisfies the logical-error invariant", async () => {
@@ -111,6 +106,7 @@ test("zero-noise experiment satisfies the logical-error invariant", async () => 
     arguments: zeroNoise,
   });
   assert.equal(result.isError, undefined);
+  assert.deepEqual(result.structuredContent.packages, { stim: "1.16.0", pymatching: "2.4.0" });
   assert.equal(result.structuredContent.facts.result.logicalErrors, 0);
   assert.equal(result.structuredContent.facts.result.logicalErrorRate, 0);
   assert.ok(result.structuredContent.facts.result.wilson95.high > 0);

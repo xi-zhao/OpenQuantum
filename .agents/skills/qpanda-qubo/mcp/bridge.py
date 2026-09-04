@@ -12,7 +12,6 @@ import hashlib
 import importlib
 import json
 import math
-import platform
 import sys
 import types
 from importlib.metadata import distribution
@@ -201,20 +200,6 @@ def package_version() -> str:
         return str(getattr(pyqpanda_alg, "__version__", PACKAGE_VERSION))
 
 
-def runtime_payload() -> dict[str, Any]:
-    QUBO_QAOA, QUBO_GAS_origin, QuadraticBinary = qubo_api()  # noqa: F841
-
-    return {
-        "schemaVersion": "1.0",
-        "packageVersion": package_version(),
-        "pythonVersion": platform.python_version(),
-        "maxVars": MAX_VARS,
-        "maxLayer": MAX_LAYER,
-        "methods": ["traversal", "qaoa"],
-        "cloudExecutionEnabled": False,
-    }
-
-
 def main() -> None:
     raw = sys.stdin.buffer.read(256 * 1024 + 1)
     if len(raw) > 256 * 1024:
@@ -223,9 +208,7 @@ def main() -> None:
     if not is_record(value) or set(value) - {"action", "request"}:
         raise ValueError("bridge envelope is invalid")
     action = value.get("action")
-    if action == "runtime":
-        output = runtime_payload()
-    elif action == "solve":
+    if action == "solve":
         output = solve_payload(validate_problem(value.get("request")))
     else:
         raise ValueError("bridge action is invalid")

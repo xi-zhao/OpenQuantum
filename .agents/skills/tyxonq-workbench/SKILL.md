@@ -21,7 +21,7 @@ description: 使用 OpenQuantum 通过 Harness MCP Client 注册的 TyxonQ Tool 
 
 ## 工作流
 
-1. 先调用 `inspect_tyxonq_runtime`，确认固定的 TyxonQ 版本和本地能力已经可用。
+1. 使用 `simulate_tyxonq_circuit` 完成仿真；主动作会加载固定环境并随结果返回 `tyxonqVersion`，不需要额外的运行时检查调用。
 2. 若 Tool 不存在，告诉用户在“设置中心 → 量子组件 → MCP Server 连接”把 **TyxonQ Local** 配置为启用，重启
    OpenQuantum 后再试；不要改用 Bash 绕过设置。
 3. 把用户意图整理成明确的 `numQubits` 与 `operations`。只使用 Tool schema 支持的门，旋转角单位为弧度。

@@ -45,11 +45,8 @@ before(async () => {
 const chunks = [];
 for await (const chunk of process.stdin) chunks.push(chunk);
 const envelope = JSON.parse(Buffer.concat(chunks).toString("utf8"));
-if (envelope.action === "runtime") {
-  process.stdout.write(JSON.stringify({schemaVersion:"1.0",packageVersion:"1.3.1",pythonVersion:"3.12.0",maxDimension:16,operations:["is_density","partial_transpose","negativity_reconstruction"],cloudExecutionEnabled:false}));
-} else {
+if (envelope.action !== "audit") throw new Error("Unexpected bridge action");
   process.stdout.write(JSON.stringify({schemaVersion:"1.0",packageVersion:"1.3.1",requestDigest:"5cb4cce15ac7bc324fdaf943ac669e6510c8c6614390d106519837cf0793f6ba",state:{dimension:4,trace:{real:1,imag:0},hermiticityResidual:0,hermitianPartMinimumEigenvalue:0,purity:{real:1,imag:0},numericalRank:1,toqitoDensity:true},partialTranspose:{subsystems:[0],trace:{real:1,imag:0},hermiticityResidual:0,eigenvalues:[-0.5,0.5,0.5,0.5],minimumEigenvalue:-0.5,negativity:0.5}}));
-}
 `,
   );
   await chmod(uvPath, 0o755);
@@ -74,7 +71,7 @@ after(async () => {
   await rm(temporary, { recursive: true, force: true });
 });
 
-test("toqito MCP declares two bounded non-destructive lazy-environment tools", async () => {
+test("toqito MCP exposes only its bounded density-matrix audit action", async () => {
   const tools = (await client.listTools()).tools;
   assert.deepEqual(
     tools.map((tool) => tool.name),
@@ -91,12 +88,12 @@ test("toqito MCP declares two bounded non-destructive lazy-environment tools", a
   assert.ok(tools.every((tool) => !tool.annotations.destructiveHint));
 });
 
-test("runtime inspection proves cloud execution stays disabled", async () => {
+test("retired runtime inspection is absent and fails closed", async () => {
+  const tools = (await client.listTools()).tools;
+  assert.equal(tools.some((tool) => tool.name === "inspect_toqito_runtime"), false);
   const result = await client.callTool({ name: "inspect_toqito_runtime", arguments: {} });
-  assert.equal(result.isError, undefined);
-  assert.equal(result.structuredContent.packageVersion, "1.3.1");
-  assert.equal(result.structuredContent.cloudExecutionEnabled, false);
-  assert.equal(result.structuredContent.maxDimension, 16);
+  assert.equal(result.isError, true);
+  assert.match(result.content[0].text, /Unknown tool/);
 });
 
 test("Bell-state facts are independently replayed without final acceptance", async () => {
@@ -106,6 +103,7 @@ test("Bell-state facts are independently replayed without final acceptance", asy
   });
   assert.equal(result.isError, undefined);
   assert.equal(result.structuredContent.analysis.partialTranspose.negativity, 0.5);
+  assert.equal(result.structuredContent.packageVersion, "1.3.1");
   assert.equal(result.structuredContent.scientificValidation, "observations_available");
   assert.equal(
     result.structuredContent.validation.observations.find(

@@ -31,13 +31,10 @@ before(async () => {
 const chunks = [];
 for await (const chunk of process.stdin) chunks.push(chunk);
 const envelope = JSON.parse(Buffer.concat(chunks).toString("utf8"));
-if (envelope.action === "runtime") {
-  process.stdout.write(JSON.stringify({schemaVersion:"1.0",tyxonqVersion:"1.2.0",pythonVersion:"3.12.0",maxQubits:8,maxOperations:64,maxShots:8192,gates:["cx","cz","h","rx","ry","rz","s","sdg","x"],noiseModels:["amplitude_damping","depolarizing","pauli","phase_damping"],cloudExecutionEnabled:false}));
-} else {
+if (envelope.action !== "simulate") throw new Error("Unexpected bridge action");
   const request = envelope.request;
   const exact = request.mode === "exact";
   process.stdout.write(JSON.stringify({schemaVersion:"1.0",tyxonqVersion:"1.2.0",circuit:{numQubits:request.numQubits,operationCount:request.operations.length,sha256:"a".repeat(64)},execution:{mode:request.mode,simulator:request.noise ? "density_matrix" : "statevector",shots:request.shots,noise:request.noise},result:{counts:exact?{}:{"00":5,"11":5},probabilities:{"00":0.5,"11":0.5},statevector:exact?[{real:0.7071067811865475,imag:0},{real:0,imag:0},{real:0,imag:0},{real:0.7071067811865475,imag:0}]:[]},checks:{normalizationSum:1,normalizationError:0,countsMatchShots:exact?null:true},scientificValidation:"not_evaluated",limitations:["local","not independently validated"]}));
-}
 `,
   );
   await chmod(uvPath, 0o755);
@@ -84,15 +81,12 @@ test("TyxonQ MCP declares bounded non-destructive lazy-environment tools", async
   );
 });
 
-test("runtime inspection proves cloud execution stays disabled", async () => {
-  const result = await client.callTool({
-    name: "inspect_tyxonq_runtime",
-    arguments: {},
-  });
-  assert.equal(result.isError, undefined);
-  assert.equal(result.structuredContent.tyxonqVersion, "1.2.0");
-  assert.equal(result.structuredContent.cloudExecutionEnabled, false);
-  assert.equal(result.structuredContent.maxQubits, 8);
+test("retired runtime inspection is absent and fails closed", async () => {
+  const tools = (await client.listTools()).tools;
+  assert.equal(tools.some((tool) => tool.name === "inspect_tyxonq_runtime"), false);
+  const result = await client.callTool({ name: "inspect_tyxonq_runtime", arguments: {} });
+  assert.equal(result.isError, true);
+  assert.match(result.content[0].text, /Unknown tool/);
 });
 
 test("exact simulation preserves structured scientific boundary", async () => {
@@ -109,6 +103,7 @@ test("exact simulation preserves structured scientific boundary", async () => {
   });
   assert.equal(result.isError, undefined);
   assert.equal(result.structuredContent.execution.shots, 0);
+  assert.equal(result.structuredContent.tyxonqVersion, "1.2.0");
   assert.equal(result.structuredContent.result.statevector.length, 4);
   assert.equal(result.structuredContent.scientificValidation, "not_evaluated");
   assert.match(result.content[0].text, /not_evaluated/);
