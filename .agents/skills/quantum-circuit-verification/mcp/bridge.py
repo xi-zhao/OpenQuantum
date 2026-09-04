@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import hashlib
 import json
-import platform
 import sys
 import tempfile
 from importlib.metadata import version
@@ -62,19 +61,6 @@ def verify_payload(circuit_a: str, circuit_b: str) -> dict[str, Any]:
     }
 
 
-def runtime_payload() -> dict[str, Any]:
-    from mqt.qcec import verify  # noqa: F401
-
-    return {
-        "schemaVersion": "1.0",
-        "packageVersion": version("mqt.qcec"),
-        "pythonVersion": platform.python_version(),
-        "maxQasmBytesPerCircuit": MAX_QASM_BYTES,
-        "timeoutSeconds": TIMEOUT_SECONDS,
-        "cloudExecutionEnabled": False,
-    }
-
-
 def main() -> None:
     raw = sys.stdin.buffer.read(256 * 1024 + 1)
     if len(raw) > 256 * 1024:
@@ -83,9 +69,7 @@ def main() -> None:
     if not isinstance(envelope, dict) or set(envelope) - {"action", "circuitA", "circuitB"}:
         raise ValueError("bridge envelope is invalid")
     action = envelope.get("action")
-    if action == "runtime":
-        output = runtime_payload()
-    elif action == "verify":
+    if action == "verify":
         output = verify_payload(
             qasm_value(envelope.get("circuitA"), "circuitA"),
             qasm_value(envelope.get("circuitB"), "circuitB"),

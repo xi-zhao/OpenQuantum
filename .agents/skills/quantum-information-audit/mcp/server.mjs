@@ -51,34 +51,6 @@ const lazyEnvironmentAnnotations = Object.freeze({
 
 const TOOLS = Object.freeze([
   {
-    name: "inspect_toqito_runtime",
-    title: "Inspect pinned toqito local runtime",
-    description:
-      "Import pinned toqito and report the bounded local density-matrix operations. The first call may build the pinned Python environment through uv; no cloud or hardware execution is available.",
-    inputSchema: { type: "object", properties: {}, additionalProperties: false },
-    outputSchema: {
-      type: "object",
-      properties: {
-        schemaVersion: { type: "string", const: "1.0" },
-        packageVersion: { type: "string" },
-        pythonVersion: { type: "string" },
-        maxDimension: { type: "integer" },
-        operations: { type: "array", items: { type: "string" } },
-        cloudExecutionEnabled: { type: "boolean", const: false },
-      },
-      required: [
-        "schemaVersion",
-        "packageVersion",
-        "pythonVersion",
-        "maxDimension",
-        "operations",
-        "cloudExecutionEnabled",
-      ],
-      additionalProperties: false,
-    },
-    annotations: lazyEnvironmentAnnotations,
-  },
-  {
     name: "audit_density_matrix",
     title: "Audit a bounded multipartite density matrix",
     description:
@@ -247,13 +219,6 @@ const server = new Server(
 server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools: [...TOOLS] }));
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
   try {
-    if (request.params.name === "inspect_toqito_runtime") {
-      const result = await runBridge({ action: "runtime" });
-      return textResult(
-        `toqito ${result.packageVersion} local audit runtime is available. Cloud execution is disabled.`,
-        result,
-      );
-    }
     if (request.params.name === "audit_density_matrix") {
       const auditRequest = normalizeAuditRequest(request.params.arguments);
       const analysis = await runBridge({ action: "audit", request: auditRequest });

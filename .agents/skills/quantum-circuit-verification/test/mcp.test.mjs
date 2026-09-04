@@ -43,13 +43,10 @@ const {createHash}=await import("node:crypto");
 const chunks=[];
 for await (const chunk of process.stdin) chunks.push(chunk);
 const envelope=JSON.parse(Buffer.concat(chunks).toString("utf8"));
-if(envelope.action==="runtime") {
-  process.stdout.write(JSON.stringify({schemaVersion:"1.0",packageVersion:"3.9.0",pythonVersion:"3.12.0",maxQasmBytesPerCircuit:65536,timeoutSeconds:10,cloudExecutionEnabled:false}));
-} else {
+if (envelope.action !== "verify") throw new Error("Unexpected bridge action");
   const sha=(value)=>createHash("sha256").update(value).digest("hex");
   const equivalence=envelope.circuitA===envelope.circuitB?"equivalent":"not_equivalent";
   process.stdout.write(JSON.stringify({schemaVersion:"1.0",packageVersion:"3.9.0",inputDigests:{circuitA:sha(envelope.circuitA),circuitB:sha(envelope.circuitB)},equivalence,statistics:{preprocessingSeconds:0.001,checkSeconds:0.002,performedSimulations:equivalence==="equivalent"?0:1,performedInstantiations:0,checkers:[{checker:"fake-boundary",equivalence,runtimeSeconds:0.002}]},timeoutSeconds:10}));
-}
 `,
   );
   await chmod(uvPath, 0o755);
@@ -74,7 +71,7 @@ after(async () => {
   await rm(temporary, { recursive: true, force: true });
 });
 
-test("QCEC MCP declares two bounded non-destructive lazy-environment tools", async () => {
+test("QCEC MCP exposes only its bounded equivalence action", async () => {
   const tools = (await client.listTools()).tools;
   assert.deepEqual(
     tools.map((tool) => tool.name),
@@ -91,12 +88,12 @@ test("QCEC MCP declares two bounded non-destructive lazy-environment tools", asy
   assert.ok(tools.every((tool) => !tool.annotations.destructiveHint));
 });
 
-test("runtime inspection reports the pinned local-only boundary", async () => {
+test("retired runtime inspection is absent and fails closed", async () => {
+  const tools = (await client.listTools()).tools;
+  assert.equal(tools.some((tool) => tool.name === "inspect_qcec_runtime"), false);
   const result = await client.callTool({ name: "inspect_qcec_runtime", arguments: {} });
-  assert.equal(result.isError, undefined);
-  assert.equal(result.structuredContent.packageVersion, "3.9.0");
-  assert.equal(result.structuredContent.timeoutSeconds, 10);
-  assert.equal(result.structuredContent.cloudExecutionEnabled, false);
+  assert.equal(result.isError, true);
+  assert.match(result.content[0].text, /Unknown tool/);
 });
 
 test("equivalent unitary circuits produce observations without final acceptance", async () => {
@@ -106,6 +103,8 @@ test("equivalent unitary circuits produce observations without final acceptance"
   });
   assert.equal(result.isError, undefined);
   assert.equal(result.structuredContent.result.equivalence, "equivalent");
+  assert.equal(result.structuredContent.packageVersion, "3.9.0");
+  assert.equal(result.structuredContent.result.timeoutSeconds, 10);
   assert.equal(
     result.structuredContent.validation.observations.find(
       (item) => item.id === "circuits.equivalent",

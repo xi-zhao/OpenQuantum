@@ -5,7 +5,6 @@ from __future__ import annotations
 import hashlib
 import json
 import math
-import platform
 import sys
 from typing import Any
 
@@ -282,22 +281,6 @@ def simulation_payload(request: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def runtime_payload() -> dict[str, Any]:
-    import tyxonq as tq
-
-    return {
-        "schemaVersion": "1.0",
-        "tyxonqVersion": str(getattr(tq, "__version__", TYXONQ_VERSION)),
-        "pythonVersion": platform.python_version(),
-        "maxQubits": MAX_QUBITS,
-        "maxOperations": MAX_OPERATIONS,
-        "maxShots": MAX_SHOTS,
-        "gates": sorted(SUPPORTED_GATES),
-        "noiseModels": sorted(NOISE_TYPES),
-        "cloudExecutionEnabled": False,
-    }
-
-
 def main() -> None:
     raw = sys.stdin.buffer.read(256 * 1024 + 1)
     if len(raw) > 256 * 1024:
@@ -306,9 +289,7 @@ def main() -> None:
     if not is_record(value) or set(value) - {"action", "request"}:
         raise ValueError("bridge envelope is invalid")
     action = value.get("action")
-    if action == "runtime":
-        output = runtime_payload()
-    elif action == "simulate":
+    if action == "simulate":
         output = simulation_payload(validate_request(value.get("request")))
     else:
         raise ValueError("bridge action is invalid")

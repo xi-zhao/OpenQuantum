@@ -18,16 +18,15 @@ description: 使用固定版本 toqito 对用户提供的有界多体密度矩�
 
 1. 确认矩阵总维数等于 `subsystemDimensions` 的乘积，且不超过 16。
 2. 明确 `transposeSubsystems` 采用从 0 开始的子系统索引，并且是非空真子集。
-3. 第一次使用时调用 `inspect_toqito_runtime`，记录固定的包版本和本地边界。
-4. 调用 `audit_density_matrix`。复矩阵用 `matrixReal` 和可选的 `matrixImag` 表示；未给虚部时按全零处理。
-5. 分栏报告：
+3. 调用 `audit_density_matrix`。复矩阵用 `matrixReal` 和可选的 `matrixImag` 表示；未给虚部时按全零处理。主动作加载固定环境并返回 `packageVersion`，首次调用可能下载依赖并写入工作区环境，无需单独检查运行时。
+4. 分栏报告实际包版本及：
    - toqito 事实；
    - 独立 Validator observations；
    - 失败、不检查项和适用范围。
-6. 确认 `tool/result` 是否包含 `acceptance_available` 与 Result Commit；只有可信 Host Plugin 通过
+5. 确认 `tool/result` 是否包含 `acceptance_available` 与 Result Commit；只有可信 Host Plugin 通过
    内部 Scientific Result Adapter 进入 Materializer，并完成物化、重读和校验时，才能按 central
    Acceptance Builder 推导的状态报告最终验收。
-7. 不把 negativity 写成普适的纠缠分类结论；它只对应本次指定的二分和部分转置判据。
+6. 不把 negativity 写成普适的纠缠分类结论；它只对应本次指定的二分和部分转置判据。
 
 ## 必须保持的规则
 

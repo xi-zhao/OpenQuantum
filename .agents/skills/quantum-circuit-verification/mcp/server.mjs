@@ -52,34 +52,6 @@ const lazyEnvironmentAnnotations = Object.freeze({
 
 const TOOLS = Object.freeze([
   {
-    name: "inspect_qcec_runtime",
-    title: "Inspect pinned MQT QCEC runtime",
-    description:
-      "Import pinned MQT QCEC and report the bounded local OpenQASM 2 equivalence-checking limits. The first call may build the Python environment through uv; no cloud or hardware execution is available.",
-    inputSchema: { type: "object", properties: {}, additionalProperties: false },
-    outputSchema: {
-      type: "object",
-      properties: {
-        schemaVersion: { type: "string", const: "1.0" },
-        packageVersion: { type: "string" },
-        pythonVersion: { type: "string" },
-        maxQasmBytesPerCircuit: { type: "integer" },
-        timeoutSeconds: { type: "integer" },
-        cloudExecutionEnabled: { type: "boolean", const: false },
-      },
-      required: [
-        "schemaVersion",
-        "packageVersion",
-        "pythonVersion",
-        "maxQasmBytesPerCircuit",
-        "timeoutSeconds",
-        "cloudExecutionEnabled",
-      ],
-      additionalProperties: false,
-    },
-    annotations: lazyEnvironmentAnnotations,
-  },
-  {
     name: "verify_circuit_equivalence",
     title: "Verify two bounded unitary OpenQASM 2 circuits",
     description:
@@ -312,13 +284,6 @@ const server = new Server(
 server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools: [...TOOLS] }));
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
   try {
-    if (request.params.name === "inspect_qcec_runtime") {
-      const result = await runBridge({ action: "runtime" });
-      return textResult(
-        `MQT QCEC ${result.packageVersion} local verification runtime is available. Cloud execution is disabled.`,
-        result,
-      );
-    }
     if (request.params.name === "verify_circuit_equivalence") {
       const normalized = normalizeVerificationRequest(request.params.arguments);
       const result = await runBridge({

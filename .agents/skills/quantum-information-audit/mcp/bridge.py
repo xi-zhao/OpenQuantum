@@ -5,7 +5,6 @@ from __future__ import annotations
 import hashlib
 import json
 import math
-import platform
 import sys
 from importlib.metadata import version
 from typing import Any
@@ -127,17 +126,6 @@ def audit_payload(request: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def runtime_payload() -> dict[str, Any]:
-    return {
-        "schemaVersion": "1.0",
-        "packageVersion": version("toqito"),
-        "pythonVersion": platform.python_version(),
-        "maxDimension": MAX_DIMENSION,
-        "operations": ["is_density", "partial_transpose", "negativity_reconstruction"],
-        "cloudExecutionEnabled": False,
-    }
-
-
 def main() -> None:
     raw = sys.stdin.buffer.read(512 * 1024 + 1)
     if len(raw) > 512 * 1024:
@@ -146,9 +134,7 @@ def main() -> None:
     if not isinstance(envelope, dict) or set(envelope) - {"action", "request"}:
         raise ValueError("bridge envelope is invalid")
     action = envelope.get("action")
-    if action == "runtime":
-        output = runtime_payload()
-    elif action == "audit":
+    if action == "audit":
         output = audit_payload(normalize_request(envelope.get("request")))
     else:
         raise ValueError("bridge action is invalid")

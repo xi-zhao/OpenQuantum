@@ -76,40 +76,6 @@ const quadraticTermSchema = Object.freeze({
 
 const TOOLS = Object.freeze([
   {
-    name: "inspect_qpanda_qubo_runtime",
-    title: "Inspect pyqpanda_alg QUBO local runtime",
-    description:
-      "Import the pinned local pyqpanda_alg package and report its version, bounded QUBO capabilities and the fact that cloud execution is disabled. The first call may build the pinned environment through uv (pyqpanda3 is a native wheel).",
-    inputSchema: {
-      type: "object",
-      properties: {},
-      additionalProperties: false,
-    },
-    outputSchema: {
-      type: "object",
-      properties: {
-        schemaVersion: { type: "string", const: "1.0" },
-        packageVersion: { type: "string" },
-        pythonVersion: { type: "string" },
-        maxVars: { type: "integer" },
-        maxLayer: { type: "integer" },
-        methods: { type: "array", items: { type: "string" } },
-        cloudExecutionEnabled: { type: "boolean", const: false },
-      },
-      required: [
-        "schemaVersion",
-        "packageVersion",
-        "pythonVersion",
-        "maxVars",
-        "maxLayer",
-        "methods",
-        "cloudExecutionEnabled",
-      ],
-      additionalProperties: false,
-    },
-    annotations: lazyEnvironmentAnnotations,
-  },
-  {
     name: "solve_qpanda_qubo",
     title: "Solve a bounded QUBO with pyqpanda_alg",
     description:
@@ -482,13 +448,6 @@ const server = new Server(
 server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools: [...TOOLS] }));
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
   try {
-    if (request.params.name === "inspect_qpanda_qubo_runtime") {
-      const result = await runBridge({ action: "runtime" });
-      return textResult(
-        `pyqpanda_alg ${result.packageVersion} local QUBO runtime is available. Cloud execution is disabled.`,
-        result,
-      );
-    }
     if (request.params.name === "solve_qpanda_qubo") {
       const solve = normalizeSolveRequest(request.params.arguments);
       const result = await runBridge({ action: "solve", request: solve });
