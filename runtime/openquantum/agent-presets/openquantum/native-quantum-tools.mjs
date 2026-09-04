@@ -119,7 +119,7 @@ function groundStateTool() {
   return Object.freeze({
     name: "solve_and_validate_ground_state",
     description:
-      "Preferred atomic tool for ordinary requests. Deterministically compute six two-qubit ground-state facts and immediately run the independent scientific Validator. It reports observations but leaves provenance not_checked until Harness materializes the evidence; it never derives overall Acceptance.",
+      "Preferred atomic tool for ordinary requests. Deterministically compute six two-qubit ground-state facts and immediately run the independent scientific Validator. The composed call saves scientific evidence in the session workspace through the trusted Harness post-execute Host Plugin. Computation reports observations and leaves provenance not_checked until materialization; it never derives overall Acceptance.",
     parameters,
     output: Object.freeze({
       schema: outputSchema,
