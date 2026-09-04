@@ -721,7 +721,9 @@ async function inspectPackage(definition, projectRoot, executionSurface) {
   const issues = [];
   const packageRoot = path.join(projectRoot, ".agents", "skills", definition.id);
   const skillRelative = `.agents/skills/${definition.id}/SKILL.md`;
-  const skillPath = inspectFile(projectRoot, skillRelative, `${definition.id}.skill`, issues);
+  const skillPath = fs.existsSync(path.join(projectRoot, skillRelative))
+    ? inspectFile(projectRoot, skillRelative, `${definition.id}.skill`, issues)
+    : undefined;
   if (skillPath) {
     const skillName = readSkillName(skillPath, `${definition.id}.skill`, issues);
     if (skillName !== definition.id) {
@@ -760,7 +762,7 @@ async function inspectPackage(definition, projectRoot, executionSurface) {
     id: definition.id,
     level: definition.level,
     status: issues.length === 0 ? "pass" : "fail",
-    skill: skillRelative,
+    skill: skillPath ? skillRelative : null,
     execution,
     audit,
     materialization,
@@ -806,11 +808,6 @@ export async function auditCapabilityPackages(options = {}) {
   for (const id of trackedIds) {
     if (!definitionIds.includes(id)) {
       issues.push(`tracked capability ${id} is missing from ${POLICY_PATH}`);
-    }
-  }
-  for (const id of definitionIds) {
-    if (!trackedIds.includes(id)) {
-      issues.push(`${POLICY_PATH} declares non-tracked capability ${id}`);
     }
   }
   const executionSurface = readExecutionSurface(projectRoot, issues);

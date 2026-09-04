@@ -61,8 +61,9 @@ _Avoid_: 模型解释、日志摘要
 ## Native extensions
 
 **Capability（产品能力）**：
-用户可理解的一项有界科研能力，由独立的 Skill、Tool Provider、Validator 和证据按需组合；它不是 Harness
-运行时对象，也不会自动绑定内部模块。
+用户可理解的一项有界科研能力，由相互独立的 Skill、Tool Provider、Validator 和证据按需组合；知识能力
+可以只有 Skill，原子动作可以只有 Tool，只有真实工作流价值才组合两者。它不是 Harness 运行时对象，也不会
+自动绑定内部模块。
 _Avoid_: Runtime、自动安装包、Tool 别名
 
 **Capability Maturity（能力成熟度）**：
@@ -86,7 +87,8 @@ _Avoid_: Tool 本身、Capability
 
 **MCP Server（MCP 服务）**：
 通过 MCP 协议向 Harness MCP Client 暴露确定性计算、数据查询或外部后端 Tool 的进程或远程服务。
-_Avoid_: Tool、Agent Model、Session Runtime
+它只用于独立进程、跨语言、远程部署或明确隔离边界；普通进程内 Module 不为形式统一而套 MCP。
+_Avoid_: Tool、Agent Model、Session Runtime、进程内函数包装层
 
 **Harness MCP Client（Harness MCP 客户端）**：
 连接 MCP Server，将 MCP-exposed Tool 注册进 Harness Tool Registry，并管理连接、超时和重连。

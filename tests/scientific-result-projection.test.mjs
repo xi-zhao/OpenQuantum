@@ -7,9 +7,8 @@ import {
   parseScientificToolResult,
   projectMaterializedScientificResult,
   projectScientificToolResult,
+  QUANTUM_INFORMATION_AUDIT_TOOL,
   SOLVE_AND_VALIDATE_TOOL,
-  SOLVE_TOOL,
-  VALIDATE_TOOL,
 } from "../runtime/openquantum/agent-presets/openquantum/scientific-result-projection.mjs";
 
 function solveCanonicalValue() {
@@ -134,34 +133,37 @@ test("post-execute adapter persists a bounded scientific projection in tool/resu
   apply(ctx);
   assert.equal(typeof listener, "function");
 
-  const canonicalValue = solveCanonicalValue();
+  const canonicalValue = solveAndValidateCanonicalValue().structuredContent;
   const decision = await listener(
-    { name: SOLVE_TOOL, parent: undefined },
+    { name: SOLVE_AND_VALIDATE_TOOL, parent: undefined },
     {
       isError: false,
       value: canonicalValue,
-      content: canonicalValue.content,
+      content: [{ type: "text", text: "Original atomic workflow summary." }],
     },
     async () => ({ kind: "accept" }),
   );
 
   assert.equal(decision.kind, "accept");
   assert.equal(decision.content.length, 1);
-  assert.match(decision.content[0].text, /Original solve summary/);
+  assert.match(decision.content[0].text, /Original atomic workflow summary/);
   const projection = parseScientificToolResult(
-    SOLVE_TOOL,
+    SOLVE_AND_VALIDATE_TOOL,
     decision.content[0].text,
   );
-  assert.equal(projection.operation, "solve");
-  assert.equal(projection.scientificStatus, "not_evaluated");
+  assert.equal(projection.operation, "solve-and-validate");
+  assert.equal(projection.scientificStatus, "observations_available");
   assert.deepEqual(
     projection.details.map((item) => item.label),
     [
       "VQE 扇区能量",
       "精确参考能量",
       "绝对能量差",
-      "优化事实",
-      "函数评估次数",
+      "适用范围",
+      "通过",
+      "警告",
+      "失败",
+      "未检查",
     ],
   );
   assert.ok(decision.content[0].text.length < 2_000);
@@ -169,14 +171,23 @@ test("post-execute adapter persists a bounded scientific projection in tool/resu
 
 test("scientific envelope rejects mismatched tools and malformed payloads", () => {
   const solveProjection = projectScientificToolResult(
-    SOLVE_TOOL,
-    solveCanonicalValue(),
+    SOLVE_AND_VALIDATE_TOOL,
+    solveAndValidateCanonicalValue().structuredContent,
   );
   const encoded = encodeScientificToolResult(solveProjection);
-  assert.equal(parseScientificToolResult(SOLVE_TOOL, encoded).operation, "solve");
-  assert.equal(parseScientificToolResult(VALIDATE_TOOL, encoded), undefined);
   assert.equal(
-    parseScientificToolResult(SOLVE_TOOL, `${encoded.slice(0, -1)}!`),
+    parseScientificToolResult(SOLVE_AND_VALIDATE_TOOL, encoded).operation,
+    "solve-and-validate",
+  );
+  assert.equal(
+    parseScientificToolResult(QUANTUM_INFORMATION_AUDIT_TOOL, encoded),
+    undefined,
+  );
+  assert.equal(
+    parseScientificToolResult(
+      SOLVE_AND_VALIDATE_TOOL,
+      `${encoded.slice(0, -1)}!`,
+    ),
     undefined,
   );
 });

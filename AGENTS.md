@@ -48,6 +48,15 @@ Interface 并随 scope 回收。Skill、Tool、MCP Server、Validator 等是职�
 - **Agent Preset**：组合 Skill Provider、Tool Provider、Agent 策略，以及确有需要的 agent-scoped Host Plugin；不保存模型 Provider Route。
 - **Deployment/Home Patch**：组合 Provider Route、默认模型、默认 Agent Preset、deployment-scoped Host Plugin 与 Client Plugin。
 
+## 扩展选择原则
+
+- Skill 与 Tool 是正交对象：知识/工作流可以只有 Skill，原子动作可以只有 Tool；只有 Skill 确实增加选择、步骤或解释规则时才组合两者，不要求同名或一一绑定。
+- 进程内、同语言且无需隔离的确定性动作默认由原生 Tool Provider 注册；只有独立进程、跨语言、远程部署或明确隔离边界才使用 MCP Server + Harness MCP Client。
+- Agent 只看到完成用户意图所需的最小深 Tool surface；运行时检查、内部分步函数和可由主动作返回的元数据不单独暴露为 Tool。
+- Tool 副作用按一次完整调用的最大可能影响声明。首次调用会下载、安装或写入工作区时，不能标成 `read-only`；若要恢复只读语义，必须把 setup 变成显式、独立且可审计的动作。
+- Skill 可以编排 Harness 已有的通用 Tool；不要仅为让能力“拥有一个 Tool”而再包装 bash、浏览、文件或审批 Tool。能力策略应记录这些依赖和副作用，只有出现稳定业务合同或安全边界时才增加专用 Tool。
+- External API Adapter、Validator、eval 和 benchmark 不因为“统一”而包装成 MCP；先按职责判断，再选择 Cordis Plugin 装配方式。
+
 禁止使用 `MCP/Tool`、`Validator/eval`、`Skill Validator` 或裸写的 `API`。讨论运行时装配时写
 `Cordis Plugin`；讨论具体职责时写明 Skill/Tool Provider、Harness MCP Client、Model Adapter、Host 或
 Client Plugin 角色和 scope。完整定义和选择规则见 `docs/architecture/EXTENSION_MODEL.md`。
@@ -60,7 +69,7 @@ Client Plugin 角色和 scope。完整定义和选择规则见 `docs/architectur
   Validator observations 和来源链推导出状态后，才能宣称科学验收通过。
 - API Key 不得进入源码、日志、Artifact、Git diff 或提交。
 - Provider 配置只引用环境变量名；真实密钥留在忽略的 `.env` 或 credential store。
-- 新增研究能力优先增加原生 Skill、Tool Provider 和必要 Validator；Agent Preset 组合 Skill、Tool Provider，
+- 新增研究能力按职责增加原生 Skill、Tool Provider 和必要 Validator；Agent Preset 组合 Skill、Tool Provider，
   以及只有 Harness hook 确实需要时才声明的 agent-scoped Host Plugin。
   Tool 或 Materializer 显式调用 Validator；可信 Host Plugin 拥有 hook，内部 Scientific Result Adapter
   只做 capability 映射。

@@ -4,10 +4,10 @@
     "id": "ground-state-validator",
     "version": "1.0.0"
   },
-  "generatedAt": "2026-08-14T00:00:00.000Z",
-  "testCommand": "node --test test/*.test.mjs",
-  "tests": 35,
-  "passed": 35,
+  "generatedAt": "2026-09-04T10:53:28.000Z",
+  "testCommand": "npm run capability:quantum-ground-state:test",
+  "tests": 33,
+  "passed": 33,
   "failed": 0,
   "coverage": [
     "analytic and protocol fixtures",
@@ -15,7 +15,7 @@
     "random supported Hamiltonians across coefficient scales",
     "strict input, artifact, and Validator bundle schemas",
     "Validator command-line positive and fail-closed paths",
-    "atomic solve-and-validate MCP workflow with provenance left not_checked",
+    "atomic solve-and-validate native Tool workflow with provenance left not_checked",
     "profile-injected validator thresholds",
     "ansatz, trace, matrix, digest, provenance, and non-finite tamper detection"
   ],

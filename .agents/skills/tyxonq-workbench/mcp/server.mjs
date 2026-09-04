@@ -56,8 +56,8 @@ const NOISE_TYPES = new Set([
   "phase_damping",
   "pauli",
 ]);
-const readOnlyAnnotations = Object.freeze({
-  readOnlyHint: true,
+const lazyEnvironmentAnnotations = Object.freeze({
+  readOnlyHint: false,
   destructiveHint: false,
   idempotentHint: true,
   openWorldHint: true,
@@ -129,7 +129,7 @@ const TOOLS = Object.freeze([
       ],
       additionalProperties: false,
     },
-    annotations: readOnlyAnnotations,
+    annotations: lazyEnvironmentAnnotations,
   },
   {
     name: "simulate_tyxonq_circuit",
@@ -194,7 +194,7 @@ const TOOLS = Object.freeze([
       ],
       additionalProperties: false,
     },
-    annotations: readOnlyAnnotations,
+    annotations: lazyEnvironmentAnnotations,
   },
 ]);
 

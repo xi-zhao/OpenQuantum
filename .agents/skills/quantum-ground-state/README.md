@@ -16,10 +16,10 @@ shots/noise/hardware, or support Pauli `Y`, complex coefficients, other sectors,
 ## Skill interface
 
 - Capability id and Harness Skill name: `quantum-ground-state`.
-- Preferred MCP workflow: `solve_and_validate_ground_state(request)` returns six facts plus
+- Model-facing native Tool: `solve_and_validate_ground_state(request)` returns six facts plus
   deterministic computational observations in one call.
-- Advanced MCP tools: `solve_ground_state(request)` for facts only and
-  `validate_ground_state(bundle)` for an already materialized Result Package.
+- Facts-only solving and materialized validation remain internal solver/Validator interfaces rather
+  than extra model-facing Tools.
 - Solver: `node scripts/solve.mjs <request.json> <new-output-directory>`.
 - Validator: `node validators/validate-result.mjs <validation-bundle.json>`.
 - Eval runner: `node evals/run-evals.mjs`.
@@ -29,11 +29,11 @@ status. The Validator emits only `scopeMatch`, per-check `observations`, `limita
 statement. The Harness scientific contracts own Result Package/Profile validation and derive the
 Acceptance Report status.
 
-The atomic MCP workflow deliberately emits `provenance.complete=not_checked`: its facts are still
+The atomic Tool workflow deliberately emits `provenance.complete=not_checked`: its facts are still
 execution-local structured content. In the OpenQuantum Harness preset, a trusted `tools/post-execute`
 Adapter obtains the real Session/Tool identity, atomically writes the input and six artifacts through
 Harness `ctx.fs`, validates the resulting Result Package, reruns this full Validator against those
-bytes, and only then invokes the central Acceptance Builder. The MCP Server itself never invents Session ids,
+bytes, and only then invokes the central Acceptance Builder. The Tool itself never invents Session ids,
 file paths, digests, or acceptance.
 
 ### Validator host protocol

@@ -1,6 +1,6 @@
 export const FLUX_QUANTUM_WEBERS = 2.067833848e-15;
 
-export const QMCLAW_SERVER_NAME = "qmclaw_local";
+export const QMCLAW_PROVIDER_ID = "openquantum-native-quantum-tools";
 export const QMCLAW_UPSTREAM = Object.freeze({
   repository: "https://github.com/QMC-AI/QMClaw",
   revision: "18d7fa1594949a1203fca4866e651641bbde021f",

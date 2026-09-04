@@ -223,13 +223,24 @@ capability 映射对象，不能被独立安装或当成 Tool Provider。
 | 增加浏览器表单或结果展示 | Client Plugin | 调用 Harness/Host route，只展示或提交意图 |
 | 检查版本质量或回归 | Eval 或 Benchmark | 离线、CI 或受控发布任务 |
 
-三个常见例子：
+选择时遵守六条主原则：
+
+1. Skill 与 Tool 正交：允许 Skill-only、Tool-only 和 Skill + Tool，是否组合取决于是否存在真实工作流知识。
+2. 进程内、同语言且无需隔离的动作默认使用原生 Tool Provider；MCP 只承担独立进程、跨语言、远程部署或明确隔离边界。
+3. Tool surface 保持最小且“深”：一个 Tool 尽量完成一个完整用户意图，内部阶段和运行时元数据不自动升级成模型可见 Tool。
+4. 副作用按完整调用的最大可能影响声明；延迟安装、缓存物化和环境创建都属于写入，不能因最终科学计算只读而隐藏。
+5. Skill 可以直接编排 Harness 已有的通用 Tool；不要为了让每个 capability 都“拥有一个 Tool”而重复包装 shell、浏览、文件或审批能力。只有稳定业务合同或安全边界成立时才增加专用 Tool。
+6. Cordis Plugin 是装配机制，不改变 Skill、Tool、MCP Server、Validator、External API Adapter 和 eval 的职责边界。
+
+四个常见例子：
 
 1. 新增模型：增加 Provider Route；不能把模型包装成 Skill 或 MCP Server。
 2. 新增量子云：先定义有界 Tool 和其 External API Adapter；只有需要独立进程、跨语言或远程部署时
    才用 MCP Server 暴露；再用 Skill 说明选择方法。
-3. 新增科研算法：Skill 描述方法，Tool 执行确定性计算；只有存在可验证主张时才增加 Validator 和
+3. 新增科研算法：有工作流知识时用 Skill 描述方法，Tool 执行确定性计算；只有存在可验证主张时才增加 Validator 和
    Acceptance Profile。
+4. 平台诊断：Skill 编排 Harness 已有的 shell Tool 并保留命令和审批可见性；除非形成稳定、可复用的诊断业务合同，
+   不再套一层 `diagnose_openquantum` Tool。
 
 ## 7. 禁止依赖
 

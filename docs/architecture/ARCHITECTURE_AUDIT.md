@@ -70,8 +70,8 @@ Skill、Tool、MCP Server、Harness MCP Client、External API 等对象的严格
 - `quantum-ground-state` 量子基态 Skill；
 - `quantum-information-audit` 独立量子信息 Validator 与 eval evidence；
 - Qiskit、FieldQKit、QPanda QUBO、MQT QCEC、Stim/PyMatching 与 TyxonQ 等有界 Skill 和 MCP Server-backed Tool 能力；
-- QMClaw 超导量子比特调校 Skill，以及覆盖 13 类实验、固定为合成数据的本地 MCP Server-backed Tool 能力；
-- 通过 Harness MCP Client 独立注册的本地量子求解、验证和后端发现 Tool；
+- QMClaw 超导量子比特调校 Skill，以及覆盖 13 类实验、固定为合成数据的原生 Tool 能力；
+- 共享原生 Tool Provider 注册 QGS 与 QMClaw Tool；其余跨语言、独立进程和远程 Tool 由 Harness MCP Client 注册；
 - 默认关闭、固定源码 commit 且由设置中心做凭据/安装门控的社区量子硬件 MCP Server。
 
 DeepSeek Harness 仍处于 Developer Preview，因此上游接口可能发生破坏性变化。OpenQuantum 通过固定版本、
@@ -225,7 +225,7 @@ credential store。
 flowchart LR
   A["用户提供二量子位 Pauli Hamiltonian"] --> B["Harness Session / Agent"]
   B --> C["加载 quantum-ground-state Skill"]
-  C --> D["调用 MCP-exposed Tool solve_and_validate_ground_state"]
+  C --> D["调用原生 Tool solve_and_validate_ground_state"]
   D --> E["六类结构化事实"]
   D --> F["Tool 内计算级 Validator（执行期）"]
   F --> G["执行期 observations；provenance not_checked"]
@@ -241,26 +241,25 @@ flowchart LR
 `provenance.not_checked`；物化后再次基于重读字节复核，所得 observations 才能与 Profile、provenance 一起
 交给 central Acceptance Builder。二者都不能自行宣布最终 Acceptance。
 
-MCP Server 使用官方 Model Context Protocol SDK 暴露 Tool；Harness MCP Client
-`@deepseek-ai/dsh-mcp-client` 管理 stdio 进程、Tool Registry 注册、超时和重连。MCP Server
-不管理 Session，不读取模型密钥，不写任意文件。
+QGS 与 QMClaw 都是进程内纯 JavaScript，因此由共享的 OpenQuantum 原生 Tool Provider 直接注册；不再为本地
+Module 增加 stdio MCP 进程。跨语言 Python、独立进程与远程服务仍使用 MCP Server + Harness MCP Client。
 
-官方 Harness MCP Client bridge 将完整 `structuredContent` 保留为 Tool pipeline 的执行期 value，而 Session log 持久化
-model-facing `tool/result` content。OpenQuantum 使用一个仓库内可信 Host Plugin 拥有官方
+Harness Tool Registry 将原生 Tool 的 canonical value 保留在执行期，而 Session log 持久化 model-facing
+`tool/result` content。OpenQuantum 使用一个仓库内可信 Host Plugin 拥有官方
 `tools/post-execute` hook；Plugin 查询内部 Scientific Result Adapter Registry。Adapter 映射该 Tool 的输入、
 Artifact 类型、Materializer 和 Validator；Materializer 通过 `ctx.fs` 原子写入并重读真实字节，
 Validator 只接收重读后的结构化证据，central Acceptance Builder 再消费 Profile、observations 和
-provenance。Plugin 只把有界 Result Commit/展示投影放回原生 `tool/result`，不接管 MCP Server 生命周期、
+provenance。Plugin 只把有界 Result Commit/展示投影放回原生 `tool/result`，不接管 Tool Provider 生命周期、
 不另存 Session，也不新增自定义事件类型。Scientific Result Adapter 不是可独立安装的 Tool Provider。
 
 Solver 只产生事实；Validator 只产生作用域和逐项 observation。总体科学验收必须由版本化 Profile 和
-central Acceptance Builder 推导，模型、MCP-exposed Tool 成功或 Harness idle 都不能自行宣称“科学通过”。
+central Acceptance Builder 推导，模型、Tool 成功或 Harness idle 都不能自行宣称“科学通过”。
 
 普通调用使用组合 Tool 是为了隐藏跨 Tool 的大型 bundle 编排，而不是合并科学职责：内部 Solver 和 Validator
-仍是独立模块。MCP-exposed Tool 返回的执行期观察仍固定 `provenance.complete=not_checked`；只有
+仍是独立模块。原子 Tool 返回的执行期观察仍固定 `provenance.complete=not_checked`；只有
 Materializer 物化、重读并校验真实 Result Package，Validator 对重读后的结构化证据产生 observations，
 central Acceptance Builder 才能消费 Profile 与 provenance 派生最终 Acceptance。facts-only 与
-materialized-validation Tool 继续作为高级接口。
+materialized-validation 保持内部 solver/Validator Interface，不增加模型可见 Tool。
 
 ## 7. 状态不变量
 
@@ -280,7 +279,7 @@ materialized-validation Tool 继续作为高级接口。
 3. Runtime 完成不等于科学验收通过；
 4. 模型只能解释 Validator observations 和 Acceptance，不能改写它们；
 5. 有副作用或付费操作仍通过 Harness Tool、权限和审批；
-6. Skill 加载、Harness MCP Client 连接或 MCP-exposed Tool 调用失败必须形成可观察失败，不能降级为模型猜测；
+6. Skill 加载、Tool Provider 注册、Harness MCP Client 连接或 Tool 调用失败必须形成可观察失败，不能降级为模型猜测；
 7. 新增量子场景按需增加独立 Skill、Tool Provider 和 Validator；Agent Preset 组合 Skill Provider、
    Tool Provider，以及确有需要的 agent-scoped Host Plugin；Tool 或 Materializer 显式调用 Validator，
    不修改 Harness 核心；
@@ -298,6 +297,7 @@ DSH Desktop (optional Electron shell) ─┤
                                                   ├── Deployment/Home Patch → model provider routes
                                                   └── OpenQuantum Agent Preset
                                                       ├── native project Skills
+                                                      ├── native Tool Providers → Tools
                                                       └── Harness MCP Client → MCP Server → MCP-exposed Tools
 ```
 
@@ -327,7 +327,7 @@ workspace、网络、进程和凭证隔离；本地开发配置不能被误称�
 每次架构级变更需要持续证明：
 
 - Harness 原生 Skill registry 能发现并加载 `quantum-ground-state`；
-- Harness MCP Client 能列出并调用求解与验证 Tool；
+- Harness Tool Registry 能列出并调用求解与验证 Tool；
 - 非法输入、低预算和篡改结果走确定性失败/observation 路径；
 - UI 输入最终进入真实 Harness Session，而不是 Mock Runtime；
 - Runtime 与 Scientific 状态分开展示；
@@ -344,7 +344,7 @@ workspace、网络、进程和凭证隔离；本地开发配置不能被误称�
 | --- | --- |
 | Harness Developer Preview 发生破坏性变化 | 固定版本、少量原生扩展、真实 E2E、优先上游修复；`0.1.1-rc.2` 已进入升级候选但不绕过安装合同 |
 | Desktop 与 Harness 版本错配 | 成对固定版本、Home patch 组合测试、升级时重跑完整平台检查；GitHub Desktop `2.0.2+` 已适配新 Harness，但对应 `dsh-plugin-desktop` npm 包尚未发布，因此当前保持 `rc.6`/`2.0.0` 同族而不制造双 Runtime |
-| LLM 产生科学幻觉 | MCP-exposed Tool 产数值、Validator 产 observations、Profile 提供规则、central Acceptance Builder 推状态、模型只解释 |
+| LLM 产生科学幻觉 | Tool 产数值、Validator 产 observations、Profile 提供规则、central Acceptance Builder 推状态、模型只解释 |
 | Skill 作用域过度承诺 | supported/out-of-scope、schema、正负例和篡改测试 |
 | MCP Server/Host Plugin 获得宿主权限 | 仓库内可信代码、依赖锁定、显式配置、代码审查 |
 | 社区硬件 MCP Server 提交真实云任务 | 默认关闭、固定到已审阅的 `83d1b92`、显式安装与启用、Harness 凭据引用、最小权限云账户；候选点的连接拓扑、设备状态、漂移门禁与 stabilizer 离线回归已验证，未追随后续共享数据库/qforge 扩张 |

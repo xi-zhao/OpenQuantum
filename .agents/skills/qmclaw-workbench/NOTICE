@@ -11,4 +11,4 @@ remains with the QMClaw contributors.
 
 OpenQuantum does not vendor or execute QMClaw's Agentic Workflow, job runner,
 LabRAD/lqms integration, or mcp_tools_new.py. The bounded local simulator and
-MCP Server in this directory are an independent OpenQuantum implementation.
+native Tool Provider are an independent OpenQuantum implementation.

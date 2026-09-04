@@ -55,11 +55,11 @@ npm run check
 
 `.env` 只放本地凭证，不能进入 Issue、日志、Artifact、截图、Git diff 或提交。
 
-`demo:quantum-ground-state` 是第一条参考纵切的零密钥黄金案例。它通过 Harness MCP Client 调用仓库内
-stdio Server 暴露的 Tool，检查所有计算级 required observation，并保持 provenance / Acceptance 未推导。若你的 Fork
+`demo:quantum-ground-state` 是第一条参考纵切的零密钥黄金案例。它直接调用与 Harness 共用的原生 Tool
+definition，检查所有计算级 required observation，并保持 provenance / Acceptance 未推导。若你的 Fork
 替换了量子后端，先让这个层级的正例和失败例稳定，再接 Harness preset 和真实模型 Tool Calling。
 配置公开或私有 Provider 后，使用 `npm run e2e:quantum-harness -- --provider openquantum-public` 验证
-真实模型是否经过 Harness AgentLoop 调用 MCP-exposed Tool，并形成可复核的 Result Commit。这个在线探针使用临时
+真实模型是否经过 Harness AgentLoop 调用 Tool，并形成可复核的 Result Commit。这个在线探针使用临时
 Session/workspace，不进入默认离线 CI，也不能用 Mock 结果替代。
 
 ## 增加量子 Skill
@@ -130,9 +130,9 @@ model-facing MCP 移到全局 Cordis 层，它会破坏 preset 的工具作用�
 MCP Server。进入 MCP 方案后，本地 stdio 是可复现科研计算的最小传输选择；需要远程部署时再使用
 受控 Streamable HTTP，并明确网络、成本、数据外发和审批要求。
 
-若一个可靠科学动作天然要求“计算后立即做独立检查”，优先把它收敛为一个原子 MCP-exposed Tool，而不是要求
-Model 在两次调用之间复制大型结构化 bundle。仍可保留 facts-only 和 materialized-validation Tool 作为高级
-接口。原子 Tool 只能报告它真正检查过的维度；缺少 Harness 物化来源链时必须返回 `not_checked`，不能填充
+若一个可靠科学动作天然要求“计算后立即做独立检查”，优先把它收敛为一个原子 Tool，而不是要求
+Model 在两次调用之间复制大型结构化 bundle。仍可保留 facts-only solver 和 materialized-validation 作为内部
+接口，但不自动扩大模型可见 Tool surface。原子 Tool 只能报告它真正检查过的维度；缺少 Harness 物化来源链时必须返回 `not_checked`，不能填充
 假的 Session、Artifact path 或 digest。
 
 OpenQuantum 参考实现使用受信任的 Host Plugin 拥有 Harness `tools/post-execute` hook。Plugin 从真实

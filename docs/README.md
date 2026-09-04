@@ -100,13 +100,13 @@ Eval 和 Benchmark 属于开发、CI 和发布证据，不进入用户运行链�
 | 路径 | 最小组合 | 黄金样板 | 关键验证 |
 | --- | --- | --- | --- |
 | L0：知识与方法 | Skill | [`quantum-sdk-advisor`](../.agents/skills/quantum-sdk-advisor/SKILL.md) | `npm run capability:conformance` + 真实 `skill.list` 测试 |
-| L1：Agent 执行动作 | Skill（当前发行版 policy 要求）+ Tool + Tool Provider | [`qpanda-qubo`](../.agents/skills/qpanda-qubo/) | capability test + `npm run capability:contracts:test` + Registry 测试 |
+| L1：Agent 执行动作 | Tool + Tool Provider；Skill 仅在确有工作流价值时增加 | [`quantum-ground-state`](../.agents/skills/quantum-ground-state/) | capability test + `npm run capability:contracts:test` + Registry 测试 |
 | L2：可审计 observations | L1 + schema + Validator + eval evidence | [`platform-diagnostics`](../.agents/skills/platform-diagnostics/) | capability/eval + Validator 失败路径测试 |
 | L3：可回放科学验收 | L2 + Profile + Result Package + Materializer/重读 + central Builder 接入 | [`quantum-ground-state`](../.agents/skills/quantum-ground-state/) | contract + materialization + Result Commit/Session replay 测试 |
 
-概念上 Tool 不依赖 Skill；当前 OpenQuantum **发行版 Capability Package policy** 为每个登记能力要求同名
-`SKILL.md`。这是仓库治理规则，不是 DSH Tool Registry 的限制。新增文件在运行
-`npm run capability:conformance` 前需要先暂存，因为该检查只审计 Git 跟踪的发行版内容。
+Skill 与 Tool 在概念和发行版 policy 中都相互独立：Skill-only、Tool-only 与 Skill + Tool 都是合法组合。
+只有 Skill 增加领域选择、工作步骤或解释边界时才组合，不能为了目录对称制造空 Skill。新增 Skill 文件在运行
+`npm run capability:conformance` 前需要先暂存，因为该检查只审计 Git 跟踪的 Skill 发行版内容。
 
 完整操作步骤见[参与贡献](../CONTRIBUTING.md)。
 

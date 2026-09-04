@@ -27,17 +27,13 @@ const harnessBin = path.join(
   "lib",
   "bin.js",
 );
-const SOLVE_TOOL = "mcp__openquantum_quantum__solve_ground_state";
-const VALIDATE_TOOL = "mcp__openquantum_quantum__validate_ground_state";
-const SOLVE_AND_VALIDATE_TOOL =
-  "mcp__openquantum_quantum__solve_and_validate_ground_state";
+const SOLVE_AND_VALIDATE_TOOL = "solve_and_validate_ground_state";
 const INCLUDE_QISKIT_MCP = process.env.OPENQUANTUM_TEST_QISKIT_MCP === "1";
 const INCLUDE_IBM_RUNTIME_MCP =
   process.env.OPENQUANTUM_TEST_IBM_RUNTIME_MCP === "1";
 const QISKIT_CIRCUIT_TOOL = "mcp__qiskit__transpile_circuit_tool";
 const QISKIT_DOCS_TOOL = "mcp__qiskit_docs__search_docs_tool";
-const QMCLAW_SIMULATE_TOOL =
-  "mcp__qmclaw_local__simulate_qmclaw_experiment";
+const QMCLAW_SIMULATE_TOOL = "simulate_qmclaw_experiment";
 const PLATFORM_SHELL_PROVIDER =
   process.platform === "win32"
     ? "@deepseek-ai/dsh-tool-pwsh"
@@ -319,7 +315,9 @@ test(
           (check) => check.id === "tool-registry",
         );
         assert(
-          toolCheck.items.some((item) => item.id === SOLVE_TOOL),
+          toolCheck.items.some(
+            (item) => item.id === SOLVE_AND_VALIDATE_TOOL,
+          ),
           diagnostics(),
         );
         assert(
@@ -383,13 +381,21 @@ test(
         assert.equal(toolNames.includes(contract.name), false, diagnostics());
       }
       assert(toolNames.includes(SOLVE_AND_VALIDATE_TOOL), diagnostics());
-      assert(toolNames.includes(SOLVE_TOOL), diagnostics());
-      assert(toolNames.includes(VALIDATE_TOOL), diagnostics());
+      assert.equal(toolNames.includes("solve_ground_state"), false, diagnostics());
+      assert.equal(toolNames.includes("validate_ground_state"), false, diagnostics());
       assert(toolNames.includes(QMCLAW_SIMULATE_TOOL), diagnostics());
+      assert.equal(
+        toolNames.includes("inspect_qmclaw_runtime"),
+        false,
+        diagnostics(),
+      );
       const atomicTool = header.data.header.tools.find(
         (tool) => tool.name === SOLVE_AND_VALIDATE_TOOL,
       );
-      assert.match(atomicTool.description, /Preferred tool for ordinary requests/);
+      assert.match(
+        atomicTool.description,
+        /Preferred atomic tool for ordinary requests/,
+      );
       assert.deepEqual(atomicTool.parameters.required, ["request"]);
       assert.equal(atomicTool.parameters.additionalProperties, false);
       if (INCLUDE_QISKIT_MCP) {

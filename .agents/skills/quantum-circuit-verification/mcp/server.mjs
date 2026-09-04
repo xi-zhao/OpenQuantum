@@ -43,8 +43,8 @@ const BRIDGE_ENVIRONMENT_NAMES = Object.freeze([
   "UV_PYTHON_INSTALL_DIR",
   "WINDIR",
 ]);
-const readOnlyAnnotations = Object.freeze({
-  readOnlyHint: true,
+const lazyEnvironmentAnnotations = Object.freeze({
+  readOnlyHint: false,
   destructiveHint: false,
   idempotentHint: true,
   openWorldHint: true,
@@ -77,7 +77,7 @@ const TOOLS = Object.freeze([
       ],
       additionalProperties: false,
     },
-    annotations: readOnlyAnnotations,
+    annotations: lazyEnvironmentAnnotations,
   },
   {
     name: "verify_circuit_equivalence",
@@ -115,7 +115,7 @@ const TOOLS = Object.freeze([
       ],
       additionalProperties: false,
     },
-    annotations: readOnlyAnnotations,
+    annotations: lazyEnvironmentAnnotations,
   },
 ]);
 

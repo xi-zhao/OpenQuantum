@@ -2,6 +2,7 @@
 
 - 状态：MVP 核心链已完成；本文保留首条纵切的历史决策，不再作为当前任务清单
 - 日期：2026-08-24
+- 最近修订：2026-09-04（QGS 与 QMClaw 迁移到原生 Tool Provider）
 - 产品定位：DeepSeek Harness 的开源量子科研发行版
 - 架构约束：UI / Harness / 量子扩展内容 / Model 四个职责面，不增加平行 Runtime
 
@@ -12,7 +13,7 @@
 
 第一版只证明一件事：
 
-> 开发者 Fork OpenQuantum 后，可以沿用 DeepSeek Harness 原生机制增加一个量子 Skill 和一个由 MCP Server 暴露的 Tool，
+> 开发者 Fork OpenQuantum 后，可以沿用 DeepSeek Harness 原生机制按需增加量子 Skill，并用合适的 Tool Provider 注册 Tool，
 > 并在真实 Session 中得到可观察、可验证的科研结果。
 
 首个端到端案例是 `quantum-ground-state`：用户提供二量子位实 Pauli Hamiltonian，在固定
@@ -48,7 +49,7 @@ OpenQuantum 自己只维护量子 Agent Preset、Skill、Tool implementation、�
 科学 Validator，以及通过 Harness 原生扩展点
 注入的必要 UI。
 
-结构化 MCP 返回值仍由 Harness Tool pipeline 执行。对于需要刷新后继续显示的少量科学摘要，仓库内可信
+结构化 Tool 返回值仍由 Harness Tool pipeline 执行。对于需要刷新后继续显示的少量科学摘要，仓库内可信
 插件只在官方 `tools/post-execute` 接缝生成有界展示投影，并随原生 `tool/result` 进入 Session log；它不创建
 第二套执行器、存储或自定义 Session 事件。
 
@@ -57,9 +58,9 @@ OpenQuantum 自己只维护量子 Agent Preset、Skill、Tool implementation、�
 ### 必须完成
 
 1. `quantum-ground-state` 原生 Skill；
-2. 一个本地 stdio MCP，向 Harness 暴露最小基态计算 Tool；
+2. 一个原生 Tool Provider，向 Harness 暴露最小基态计算 Tool；
 3. 与 Skill 共置但独立调用的 Validator、结构化 Artifact 和固定正负案例；
-4. 从 UI 输入到 Harness Session、Agent、MCP、Artifact、Validator、UI 展示的真实 E2E；
+4. 从 UI 输入到 Harness Session、Agent、Tool、Artifact、Validator、UI 展示的真实 E2E；
 5. 面向量子公司的 Fork、Skill、MCP 和 preset 开发指南；
 6. 模型 Provider 模板、凭证隔离和最小健康探测。
 
@@ -112,7 +113,7 @@ DeepSeek Harness 已有配置；量子公司通过 Fork 管理自己的发行版
 flowchart LR
   A["用户输入 Hamiltonian"] --> B["Harness 创建 Session / Turn"]
   B --> C["Agent 加载 quantum-ground-state Skill"]
-  C --> D["Harness 调用 MCP-exposed Tool"]
+  C --> D["Harness 调用 Tool"]
   D --> E["Tool 返回结构化计算 Artifact"]
   E --> F["OpenQuantum Validator 独立检查"]
   F --> G["Harness 记录事件与结果"]
@@ -124,7 +125,7 @@ flowchart LR
 - **Runtime 完成**：Harness Turn / Goal / Job 已结束；
 - **科学验收**：Validator 产生 observations，版本化 Acceptance Profile 定义规则，只有 central Acceptance Builder 推导 `passed / conditional / failed`。
 
-`idle`、模型回答或 MCP-exposed Tool 成功返回都不能自动显示为“科学验收通过”。评分和复现若出现，也保持独立：
+`idle`、模型回答或 Tool 成功返回都不能自动显示为“科学验收通过”。评分和复现若出现，也保持独立：
 
 - 复现成功但科学检查失败：`reproduced + scientific failed`；
 - 没有有效评分证据：`unscored`；
@@ -156,28 +157,29 @@ flowchart LR
 
 退出条件：固定案例可重复运行，数值容差与作用域测试通过；任何 required 检查失败都不能形成 `passed`。
 
-### M2：一个原生 MCP
+### M2：Agent 执行边界（历史方案已迁移）
 
-目标：证明科学计算由 MCP Server 暴露 Tool、再经 Harness MCP Client 注册，不需要 OpenQuantum Tool Runtime。
+最初用 stdio MCP 证明 Harness Tool Registry 的外部协议边界。2026-09-04 按当前扩展原则完成迁移：QGS 是
+进程内纯 JavaScript，改由原生 Tool Provider 注册；MCP 继续服务跨语言、独立进程和远程能力。
 
-- 将最小基态计算 Tool 暴露为本地 stdio MCP；
+- 由共享原生 Tool Provider 注册最小基态计算 Tool；
 - 定义清晰的输入、输出、错误和超时；
 - 在 OpenQuantum preset / Cordis 配置中注册；
-- 验证 MCP 不接触模型密钥，不自行管理 Session；
+- 验证 Provider 不接触模型密钥，不自行管理 Session；
 - 增加 Tool 集成测试和 Harness 调用测试。
 
-退出条件：Harness 能列出并调用 MCP-exposed Tool；非法输入、进程失败和超时均形成可观察的失败事件。
+退出条件：Harness 能列出并调用 Tool；非法输入、执行失败和超时均形成可观察的失败事件。
 
 ### M3：Harness E2E 与开发指南
 
 目标：让使用者能运行，让量子公司能 Fork 后修改。
 
-- UI 发起真实 Session 并展示 MCP 调用过程；
+- UI 发起真实 Session 并展示 Tool 调用过程；
 - Artifact 与 Validator 结果可读；
 - Runtime / Scientific 两组状态分别展示；
 - 真实模型完成至少一次 Tool Calling E2E；
 - 发布 Fork、Skill、Tool、MCP Server、Agent Preset 和 `dsh-plugin` 开发说明；
-- CI 运行 Skill、MCP Server Tool contract、Harness 集成、原生 UI 扩展、lint 和配置展开检查。
+- CI 运行 Skill、原生/MCP Tool contract、Harness 集成、原生 UI 扩展、lint 和配置展开检查。
 
 退出条件：一个新开发者只读仓库文档即可在本机启动、运行黄金案例，并知道如何按需增加独立的
 Skill、Tool Provider 或 Validator；Agent Preset 组合 Skill Provider、Tool Provider 与必要的 agent-scoped Host Plugin，Validator 由 Tool、
@@ -188,14 +190,14 @@ Materializer 或 CI 显式调用。
 | 里程碑 | 状态 | 已有证据 | 尚缺 |
 | --- | --- | --- | --- |
 | M0 | 完成 | Harness-first 架构、preset、原生 Web 扩展与诊断合同已落地 | 持续跟踪 rc 版本变化 |
-| M1 | 完成 | QGS solver、独立 exact reference、Validator、Artifact schema 与 35 项 QGS/MCP 测试 | 无 |
-| M2 | 完成 | 官方 stdio MCP、原子 workflow + 两项高级 Tool、Harness 原生注册测试，以及真实 provider 的 `tool/call`→`tool/result` 事件链 | 无 |
-| M3 | 核心链完成 | QGS 与 QI 两条 L3 Adapter 已完成 `ctx.fs` Result Package 物化、真实字节重读、完整 Validator→中央 Acceptance、Result Commit 与 UI 回放；QGS 真实浏览器卡片已人工验收，另有零密钥黄金案例、双 Session MCP 回归和隔离 Harness CI | 把已验证的浏览器输入→最终验收卡片流程自动化到 CI，并补 QI 在线模型回放证据 |
+| M1 | 完成 | QGS solver、独立 exact reference、Validator、Artifact schema 与边界测试 | 无 |
+| M2 | 完成并迁移 | 共享原生 Tool Provider、单一 QGS 原子 Tool、Harness Registry 测试，以及真实 provider 的 `tool/call`→`tool/result` 事件链 | 无 |
+| M3 | 核心链完成 | QGS 与 QI 两条 L3 Adapter 已完成 `ctx.fs` Result Package 物化、真实字节重读、完整 Validator→中央 Acceptance、Result Commit 与 UI 回放；QGS 真实浏览器卡片已人工验收，另有零密钥黄金案例、双 Session Tool Registry 回归和隔离 Harness CI | 把已验证的浏览器输入→最终验收卡片流程自动化到 CI，并补 QI 在线模型回放证据 |
 
 在配置 `openquantum-public` 凭据的环境中，四层诊断 7/7 为 `ready`：真实 `kimi-k2.7-code` 在 Harness
-Session 中调用 `mcp__openquantum_quantum__solve_and_validate_ground_state`，随后六类 Artifact、Result
+Session 中调用 `solve_and_validate_ground_state`，随后六类 Artifact、Result
 Package、Acceptance Report 和 Result Commit 均通过复核。没有 Provider 凭据的环境仍必须把模型两项记为
-`not_checked`，不得用静态 schema、Mock 或直接 MCP SDK 调用冒充真实模型证据。
+`not_checked`，不得用静态 schema、Mock、直接 Tool implementation 或 MCP SDK 调用冒充真实模型证据。
 
 ## 7. 测试与验收
 
@@ -203,11 +205,11 @@ Package、Acceptance Report 和 Result Commit 均通过复核。没有 Provider 
 | --- | --- |
 | Skill discovery / instruction | frontmatter、触发范围、工作流和工具使用说明正确 |
 | Validator mutation | 缺字段、改单位、改数值或伪状态会被拒绝 |
-| MCP integration | Tool schema、stdio 生命周期、错误和超时正确 |
-| Harness integration | Skill 发现、MCP 调用、事件和权限使用原生机制 |
+| Tool Provider integration | Tool schema、注册、错误和超时正确；MCP 能力另检查传输生命周期 |
+| Harness integration | Skill 发现、Tool 调用、事件和权限使用原生机制 |
 | UI E2E | 用户看到的状态来自真实 Harness 事件 |
 | Model probe | 配置的云模型可生成文本并调用 Tool |
-| `e2e:quantum-harness` | 真实模型经 AgentLoop 调用 QGS MCP，并提交可复核科学验收 |
+| `e2e:quantum-harness` | 真实模型经 AgentLoop 调用 QGS 原生 Tool，并提交可复核科学验收 |
 | Secret scan | 密钥不进入仓库、日志和 Artifact |
 | `npm run check` | lint、测试和 Harness 组合配置检查通过 |
 
@@ -227,14 +229,14 @@ MVP 完成必须同时满足：
 ```text
 Fork OpenQuantum
 → 按需增加原生 SKILL.md
-→ 按需增加或配置 MCP
+→ 按需增加原生 Tool Provider 或配置 MCP Server
 → 有科学主张时增加独立 Validator / eval
 → 组合 Harness preset / dsh-plugin
 → 运行本地测试与 Harness E2E
 → 通过普通 Git PR 或维护自己的发行版发布
 ```
 
-OpenQuantum 可以维护少量参考 Skill 和参考 MCP，帮助开发者理解结构，但它们不要求专用安装器，也不享有
+OpenQuantum 可以维护少量参考 Skill、原生 Tool Provider 和 MCP Server，帮助开发者理解结构，但它们不要求专用安装器，也不享有
 Harness 特权。只有当多个真实贡献者明确需要跨 Fork 分发、安装和升级时，再基于 Harness 上游能力重新评估
 目录或治理；第一版不为假设性市场设计 Interface。
 
@@ -244,7 +246,7 @@ Harness 特权。只有当多个真实贡献者明确需要跨 Fork 分发、安
 | --- | --- |
 | Harness 预览版破坏性变化 | 固定版本、少量原生扩展、真实 E2E、优先上游修复 |
 | 为平台感重复造 Runtime | 每项通用机制先核对 Harness；OpenQuantum 只做量子差异 |
-| LLM 产生科学幻觉 | MCP-exposed Tool 产数值、Validator 产 observations、Acceptance Profile 提供规则、central Acceptance Builder 推状态、模型只解释 |
+| LLM 产生科学幻觉 | Tool 产数值、Validator 产 observations、Acceptance Profile 提供规则、central Acceptance Builder 推状态、模型只解释 |
 | Skill 作用域过度承诺 | 明确 supported / out-of-scope，增加边界负例 |
 | MCP 获得过多权限 | 本地最小权限、显式配置、失败时 fail closed |
 | dsh-plugin 污染宿主 | 首版只接受仓库内可信插件并逐项审查 |

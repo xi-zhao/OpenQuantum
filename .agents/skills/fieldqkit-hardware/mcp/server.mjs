@@ -48,7 +48,13 @@ const PROVIDERS = Object.freeze([
 ]);
 const PROVIDER_IDS = new Set(PROVIDERS.map((provider) => provider.id));
 
-const readOnlyAnnotations = Object.freeze({
+const lazyEnvironmentAnnotations = Object.freeze({
+  readOnlyHint: false,
+  destructiveHint: false,
+  idempotentHint: true,
+  openWorldHint: true,
+});
+const inspectAnnotations = Object.freeze({
   readOnlyHint: true,
   destructiveHint: false,
   idempotentHint: true,
@@ -88,13 +94,13 @@ const TOOLS = Object.freeze([
       required: ["fieldqkitVersion", "providers"],
       additionalProperties: false,
     },
-    annotations: readOnlyAnnotations,
+    annotations: inspectAnnotations,
   },
   {
     name: "discover_fieldqkit_backends",
     title: "Discover FieldQKit quantum backends",
     description:
-      "Use pinned fieldqkit to query backends that satisfy a minimum qubit count. This is read-only but may contact the selected quantum-cloud provider.",
+      "Use pinned fieldqkit to query backends that satisfy a minimum qubit count. It never mutates cloud state, but may materialize the pinned local Python environment and contact the selected provider.",
     inputSchema: {
       type: "object",
       properties: {
@@ -109,7 +115,7 @@ const TOOLS = Object.freeze([
       required: ["provider", "numQubits"],
       additionalProperties: false,
     },
-    annotations: { ...readOnlyAnnotations, openWorldHint: true },
+    annotations: lazyEnvironmentAnnotations,
   },
 ]);
 
@@ -248,7 +254,7 @@ const server = new Server(
   {
     capabilities: { tools: {} },
     instructions:
-      "Read-only FieldQKit integration. Inspect setup before discovering a cloud backend. Never claim that a backend discovery submitted or validated a quantum job.",
+      "Non-destructive FieldQKit integration. Inspect setup before discovering a cloud backend. Discovery may materialize the pinned local Python environment and query a selected provider, but never submits or validates a quantum job.",
   },
 );
 

@@ -19,9 +19,9 @@ description: 求解并科学验收用户提供的二量子位实 Pauli Hamiltoni
 
 1. 按 [inputs/request.schema.json](inputs/request.schema.json) 检查结构，并由 solver 再做语义 preflight。
 2. 明确拒绝 QAOA、Pauli `Y`、复系数、错误单位、其他粒子扇区、更多量子位、shots 和噪声。
-3. 普通用户请求优先调用 MCP-exposed Tool `solve_and_validate_ground_state`；它在一次确定性调用内生成六类事实并运行独立 Validator。
-4. 只需要事实时调用 `solve_ground_state`；只对已物化 Result Package 重验时调用 `validate_ground_state`。
-5. 组合 MCP-exposed Tool 自己的 `provenance.complete` 必须保持 `not_checked`；不得伪造 Session、路径或摘要让它通过。
+3. 普通用户请求调用原生 Tool `solve_and_validate_ground_state`；它在一次确定性调用内生成六类事实并运行独立 Validator。
+4. facts-only 求解和已物化 Result Package 重验是内部 solver/Validator 接口，不增加到模型可见 Tool surface。
+5. 组合 Tool 自己的 `provenance.complete` 必须保持 `not_checked`；不得伪造 Session、路径或摘要让它通过。
 6. OpenQuantum 的可信 Host Plugin 从真实 Session/Tool 身份进入内部 Scientific Result Adapter；
    Materializer 使用 `ctx.fs` 物化、重读和校验 Result Package，Validator 只对重读后的结构化
    证据产生 observations，central Acceptance Builder 再汇聚 Acceptance Profile、observations 和

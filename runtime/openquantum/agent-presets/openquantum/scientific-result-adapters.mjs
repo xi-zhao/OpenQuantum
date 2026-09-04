@@ -3,12 +3,8 @@ import { pathToFileURL } from "node:url";
 
 import { defineScientificResultMaterializer } from "./scientific-result-materializer.mjs";
 
-export const SOLVE_TOOL =
-  "mcp__openquantum_quantum__solve_ground_state";
-export const VALIDATE_TOOL =
-  "mcp__openquantum_quantum__validate_ground_state";
 export const SOLVE_AND_VALIDATE_TOOL =
-  "mcp__openquantum_quantum__solve_and_validate_ground_state";
+  "solve_and_validate_ground_state";
 export const QUANTUM_INFORMATION_AUDIT_TOOL =
   "mcp__toqito_audit__audit_density_matrix";
 
@@ -34,7 +30,7 @@ function moduleUrl(relativePath) {
 
 function groundStateRuntime() {
   groundStateRuntimePromise ??= Promise.all([
-    import(moduleUrl(`${GROUND_STATE_SKILL}/mcp/contracts.mjs`)),
+    import(moduleUrl(`${GROUND_STATE_SKILL}/core/contracts.mjs`)),
     import(moduleUrl(`${GROUND_STATE_SKILL}/validators/validate-result.mjs`)),
   ]).then(([mcpContracts, validator]) => ({
     ...mcpContracts,
@@ -79,8 +75,8 @@ const materializeGroundState = defineScientificResultMaterializer({
   validatorId: "ground-state-validator",
   provenanceTools: [
     {
-      id: "quantum-ground-state-mcp",
-      path: `${GROUND_STATE_SKILL}/mcp/server.mjs`,
+      id: "openquantum-native-quantum-tools",
+      path: "runtime/openquantum/agent-presets/openquantum/native-quantum-tools.mjs",
       version: (capability) => capability.manifest.version,
     },
     {
@@ -393,30 +389,6 @@ function materializedPresentation({
 
 const adapters = new Map([
   [
-    SOLVE_TOOL,
-    Object.freeze({
-      descriptor: Object.freeze({
-        capabilityId: "quantum-ground-state",
-        operation: "solve",
-        title: "量子基态事实",
-        scientificStatuses: Object.freeze(["not_evaluated"]),
-      }),
-      project: groundStateSolvePresentation,
-    }),
-  ],
-  [
-    VALIDATE_TOOL,
-    Object.freeze({
-      descriptor: Object.freeze({
-        capabilityId: "quantum-ground-state",
-        operation: "validate",
-        title: "量子基态科学观察",
-        scientificStatuses: Object.freeze(["observations_available"]),
-      }),
-      project: groundStateValidationPresentation,
-    }),
-  ],
-  [
     SOLVE_AND_VALIDATE_TOOL,
     Object.freeze({
       descriptor: Object.freeze({
@@ -441,13 +413,14 @@ const adapters = new Map([
         return materializeGroundState({
           ...context,
           request: context.arguments?.request,
-          structuredContent: context.canonicalValue?.structuredContent,
+          structuredContent:
+            context.canonicalValue?.structuredContent ?? context.canonicalValue,
         });
       },
       projectMaterialized(canonicalValue, materialized) {
         return materializedPresentation({
           computational: groundStateAtomicPresentation(
-            canonicalValue?.structuredContent,
+            canonicalValue?.structuredContent ?? canonicalValue,
           ),
           materialized,
           title: "量子基态科学验收",

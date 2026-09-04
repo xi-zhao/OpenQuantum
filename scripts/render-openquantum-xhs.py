@@ -302,7 +302,7 @@ def render_capabilities(mark: Image.Image) -> Image.Image:
         draw.ellipse((left + 37, top + 39, left + 55, top + 57), fill="#FFFFFF")
         draw.text((left + 22, top + 103), title, font=font(29, weight="semibold", latin=title != "OpenQuantum"), fill=INK)
         draw.multiline_text((left + 22, top + 151), body, font=font(24), fill=MUTED, spacing=5)
-    draw_footer(draw, 2, dark=False, label="Skill · MCP · Validator，由同一个 Agent 组合")
+    draw_footer(draw, 2, dark=False, label="Skill · Tool · Validator，由同一个 Agent 组合")
     return background
 
 
@@ -732,7 +732,7 @@ def render_experience_v2(mark: Image.Image) -> Image.Image:
     track = [
         ("用户输入", "提供二量子位 Hamiltonian"),
         ("Agent 加载 Skill", "判断方法、参数与适用边界"),
-        ("调用 MCP-exposed Tool", "运行 VQE，返回结构化事实"),
+        ("调用原生 Tool", "运行 VQE，返回结构化事实"),
         ("Materializer 重读", "Validator 独立复核结构化证据"),
         ("Acceptance 派生", "16 项检查通过，写回会话轨迹"),
     ]

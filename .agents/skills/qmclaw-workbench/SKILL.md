@@ -8,7 +8,7 @@ description: 使用 OpenQuantum 的 QMClaw Local Tool 对超导量子比特 S21�
 ## 当前能力
 
 这个 Skill 把 QMClaw 的超导量子比特调校方法组织成 OpenQuantum Capability。真正的确定性执行由
-`qmclaw_local` MCP Server 暴露并经 Harness MCP Client 注册的 Tool 完成。
+OpenQuantum 原生 Tool Provider 注册的 Tool 完成。
 
 当前版本完整覆盖 QMClaw 上游的 13 类实验，但执行后端固定为本地模拟：
 
@@ -22,11 +22,10 @@ description: 使用 OpenQuantum 的 QMClaw Local Tool 对超导量子比特 S21�
 
 ## 工作流
 
-1. 先调用 `inspect_qmclaw_runtime`，确认当前后端是 simulation、真实硬件执行关闭，并读取输入上限。
-2. 不确定实验名称或参数时调用 `list_qmclaw_experiments`；不要根据 Prompt 猜测 Tool 未声明的范围。
-3. 把用户目标整理为一个实验、一个量子比特、采样点数、shots、seed 和该实验允许的 SI 参数；多比特任务拆成独立调用。
-4. 调用 `simulate_qmclaw_experiment`。需要比较两次结果时保持 seed 和无关参数一致，只改变待研究变量。
-5. 解释返回的 axes、series、matrices 和 summary，同时明确这是合成数据和工程预检，不是真实芯片测量。
+1. 不确定实验名称或参数时调用 `list_qmclaw_experiments`；不要根据 Prompt 猜测 Tool 未声明的范围。
+2. 把用户目标整理为一个实验、一个量子比特、采样点数、shots、seed 和该实验允许的 SI 参数；多比特任务拆成独立调用。
+3. 调用 `simulate_qmclaw_experiment`。需要比较两次结果时保持 seed 和无关参数一致，只改变待研究变量。
+4. 解释返回的 axes、series、matrices 和 summary，同时明确这是合成数据和工程预检，不是真实芯片测量。
 
 推荐的单比特调校顺序是：
 
@@ -39,12 +38,11 @@ S21 → 能谱 → Rabi / π 脉冲 → Ramsey → T1 → SingleShot
 
 ## Tool 选择
 
-- `inspect_qmclaw_runtime`：查看版本、来源、13 类实验清单、安全边界和硬件状态。
 - `list_qmclaw_experiments`：查看每类实验允许的参数、默认值、单位和输出形态。
 - `simulate_qmclaw_experiment`：运行一个有界、带 seed 的本地合成实验。
 
-Tool 不存在时，说明 `qmclaw_local` 尚未进入当前 Tool Registry，建议重启 OpenQuantum 并检查设置中心的
-QMClaw Local 连接；不要改用 Bash 直接运行上游 `mcp_tools_new.py`。
+Tool 不存在时，说明 OpenQuantum 原生 Tool Provider 尚未进入当前 Tool Registry，建议重启 OpenQuantum
+并检查 Runtime Readiness；不要改用 Bash 直接运行上游 `mcp_tools_new.py`。
 
 ## 解释边界
 

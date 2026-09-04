@@ -43,30 +43,19 @@
     customSkillDirs:
       - !!js process.cwd() + '/.agents/skills'
 
+# Pure local JavaScript runs in-process through one bounded Tool Provider.
+# MCP remains reserved for independent processes, cross-language runtimes and
+# remote services. The provider exposes only the ordinary user-facing actions.
+- id: tool-openquantum-native-quantum
+  name: ./native-quantum-tools.mjs
+
 # Agent Presets mounts this composition once per process and every joined
 # Session inherits the same Harness MCP Client. Restart Harness after editing this
 # composition: retained hot-reload generations must not own the same
 # serverName concurrently.
-- id: mcp-openquantum-quantum
-  name: '@deepseek-ai/dsh-mcp-client'
-  config:
-    serverName: openquantum_quantum
-    transport: stdio
-    command: !!js process.execPath
-    args:
-      - !!js process.cwd() + '/.agents/skills/quantum-ground-state/mcp/server.mjs'
-    env: {}
-    cwd: !!js process.cwd()
-    toolCallTimeoutMs: 60000
-    failOnStartupError: true
-    reconnect:
-      enabled: true
-      initialDelayMs: 500
-      maxDelayMs: 30000
-      maxAttempts: 10
 
 # FieldQKit is a Python SDK rather than a native MCP Server. This thin trusted
-# bridge exposes only credential status and read-only backend discovery. The
+# bridge exposes only credential status and cloud-side read-only backend discovery. The
 # pinned package is materialized lazily by uv on the first discovery request;
 # no QPU job submission tool is registered in this milestone.
 - id: mcp-fieldqkit
@@ -180,28 +169,6 @@
     reconnect:
       enabled: true
       initialDelayMs: 1000
-      maxDelayMs: 30000
-      maxAttempts: 10
-
-# QMClaw experiment catalog and tune-up workflow are exposed through a bounded
-# OpenQuantum simulator rather than the upstream Agentic Workflow runtime. All
-# 13 experiment families use explicit SI units and synthetic, seeded data; no
-# LabRAD/lqms process, credential, parameter write or real instrument is opened.
-- id: mcp-qmclaw-local
-  name: '@deepseek-ai/dsh-mcp-client'
-  config:
-    serverName: qmclaw_local
-    transport: stdio
-    command: !!js process.execPath
-    args:
-      - !!js process.cwd() + '/.agents/skills/qmclaw-workbench/mcp/server.mjs'
-    env: {}
-    cwd: !!js process.cwd()
-    toolCallTimeoutMs: 30000
-    failOnStartupError: true
-    reconnect:
-      enabled: true
-      initialDelayMs: 500
       maxDelayMs: 30000
       maxAttempts: 10
 

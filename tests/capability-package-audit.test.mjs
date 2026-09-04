@@ -133,30 +133,40 @@ test("repository capability packages conform to their declared L0-L3 evidence", 
   );
   assert.deepEqual(
     report.packages.find((entry) => entry.id === "quantum-ground-state")
-      ?.execution.mcpServers[0].tools,
+      ?.execution.nativeTools,
     [
-      { name: "solve_and_validate_ground_state", effect: "read-only" },
-      { name: "solve_ground_state", effect: "read-only" },
-      { name: "validate_ground_state", effect: "read-only" },
+      {
+        name: "solve_and_validate_ground_state",
+        providerPlugin: "./native-quantum-tools.mjs",
+        activation: "always",
+        contractCheck: "tests/native-quantum-tools.test.mjs",
+        effect: "read-only",
+        effectEvidence: "conservative-provider",
+      },
     ],
-  );
-  assert.equal(
-    report.packages.find((entry) => entry.id === "quantum-ground-state")
-      ?.execution.mcpServers[0].effectEvidence,
-    "mcp-annotations",
-  );
-  assert.equal(
-    report.packages.find((entry) => entry.id === "quantum-ground-state")
-      ?.execution.mcpServers[0].entrypoint,
-    ".agents/skills/quantum-ground-state/mcp/server.mjs",
   );
   assert.deepEqual(
     report.packages.find((entry) => entry.id === "qmclaw-workbench")
-      ?.execution.mcpServers[0].tools,
+      ?.execution.nativeTools,
     [
-      { name: "inspect_qmclaw_runtime", effect: "read-only" },
-      { name: "list_qmclaw_experiments", effect: "read-only" },
-      { name: "simulate_qmclaw_experiment", effect: "read-only" },
+      {
+        name: "list_qmclaw_experiments",
+        providerPlugin: "./native-quantum-tools.mjs",
+        activation: "always",
+        contractCheck:
+          ".agents/skills/qmclaw-workbench/test/tool-provider.test.mjs",
+        effect: "read-only",
+        effectEvidence: "conservative-provider",
+      },
+      {
+        name: "simulate_qmclaw_experiment",
+        providerPlugin: "./native-quantum-tools.mjs",
+        activation: "always",
+        contractCheck:
+          ".agents/skills/qmclaw-workbench/test/tool-provider.test.mjs",
+        effect: "read-only",
+        effectEvidence: "conservative-provider",
+      },
     ],
   );
   assert.equal(
@@ -727,6 +737,39 @@ packages:
 
   assert.equal(report.scope, "static-declaration");
   assert.equal(report.status, "pass", report.issues.join("\n"));
+});
+
+test("Tool-only capabilities do not require a same-name Skill", async (t) => {
+  const root = await temporaryProject(
+    t,
+    `schemaVersion: "1.1"
+packages:
+  - id: demo-capability
+    level: L1
+    execution:
+      mcpServers: []
+      nativeTools:
+        - name: custom_tool
+          providerPlugin: "@example/custom-tool-provider"
+          activation: always
+          contractCheck: tests/demo.test.mjs
+          effect: read-only
+          effectEvidence: conservative-provider
+      checks:
+        - tests/demo.test.mjs
+`,
+  );
+  await write(root, "tests/demo.test.mjs", "export const checked = true;\n");
+  await write(
+    root,
+    "runtime/openquantum/agent-presets/openquantum/agent.cordis.yml",
+    '- id: tool-custom\n  name: "@example/custom-tool-provider"\n',
+  );
+
+  const report = await auditCapabilityPackages({ projectRoot: root });
+
+  assert.equal(report.status, "pass", report.issues.join("\n"));
+  assert.equal(report.packages[0].skill, null);
 });
 
 test("ordinary Cordis plugins cannot impersonate native Tool Providers", async (t) => {

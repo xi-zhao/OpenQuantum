@@ -10,7 +10,7 @@ import {
   MIN_SHOTS,
   PARAMETER_DEFINITIONS,
   QMCLAW_EXPERIMENT_IDS,
-  QMCLAW_SERVER_NAME,
+  QMCLAW_PROVIDER_ID,
   QMCLAW_UPSTREAM,
   QUBIT_PATTERN,
   QUBITS_PER_RUN,
@@ -33,7 +33,7 @@ export {
   INSPECT_OUTPUT_SCHEMA,
   LIST_OUTPUT_SCHEMA,
   QMCLAW_EXPERIMENT_IDS,
-  QMCLAW_SERVER_NAME,
+  QMCLAW_PROVIDER_ID,
   QMCLAW_UPSTREAM,
   SIMULATE_INPUT_SCHEMA,
   SIMULATE_OUTPUT_SCHEMA,
@@ -156,7 +156,7 @@ function requireSimulationRequest(value) {
 
 export function inspectQmclawRuntime() {
   return {
-    serverName: QMCLAW_SERVER_NAME,
+    providerId: QMCLAW_PROVIDER_ID,
     upstream: { ...QMCLAW_UPSTREAM },
     runtimeKind: "bounded_local_simulator",
     hardwareExecutionEnabled: false,
@@ -181,7 +181,7 @@ export function inspectQmclawRuntime() {
 
 export function listQmclawExperiments() {
   return {
-    serverName: QMCLAW_SERVER_NAME,
+    providerId: QMCLAW_PROVIDER_ID,
     sourceKind: "catalog",
     hardwareExecutionEnabled: false,
     experiments: EXPERIMENT_SPECS.map((spec) => ({
@@ -208,7 +208,7 @@ export function simulateQmclawExperiment(argumentsValue) {
   const simulation = simulateExperiment(context);
   return {
     schemaVersion: "1.0",
-    serverName: QMCLAW_SERVER_NAME,
+    providerId: QMCLAW_PROVIDER_ID,
     upstreamRevision: QMCLAW_UPSTREAM.revision,
     experiment: context.spec.id,
     upstreamTool: UPSTREAM_TOOL_BY_ID[context.spec.id],

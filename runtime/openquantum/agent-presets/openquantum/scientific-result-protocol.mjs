@@ -3,8 +3,6 @@ import { scientificResultAdapter } from "./scientific-result-adapters.mjs";
 export {
   QUANTUM_INFORMATION_AUDIT_TOOL,
   SOLVE_AND_VALIDATE_TOOL,
-  SOLVE_TOOL,
-  VALIDATE_TOOL,
 } from "./scientific-result-adapters.mjs";
 
 const ENVELOPE_PREFIX = "OPENQUANTUM_SCIENTIFIC_RESULT_V1 ";
@@ -199,7 +197,9 @@ export function scientificToolDescriptor(toolName) {
 export function projectScientificToolResult(toolName, canonicalValue) {
   const adapter = scientificResultAdapter(toolName);
   if (!adapter || !isRecord(canonicalValue)) return undefined;
-  const projected = adapter.project(canonicalValue.structuredContent);
+  const projected = adapter.project(
+    canonicalValue.structuredContent ?? canonicalValue,
+  );
   return projected && validPresentation(projected, adapter.descriptor)
     ? freezeJson(projected)
     : undefined;

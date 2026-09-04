@@ -10,7 +10,7 @@ import { LocalFileSystem } from "@deepseek-ai/dsh-fs-local";
 import { solveGroundState } from "../.agents/skills/quantum-ground-state/scripts/solve.mjs";
 import {
   trustedAcceptanceProfile,
-} from "../.agents/skills/quantum-ground-state/mcp/contracts.mjs";
+} from "../.agents/skills/quantum-ground-state/core/contracts.mjs";
 import { validateGroundStateComputation } from "../.agents/skills/quantum-ground-state/validators/validate-result.mjs";
 import { scientificResultAdapter } from "../runtime/openquantum/agent-presets/openquantum/scientific-result-adapters.mjs";
 import {

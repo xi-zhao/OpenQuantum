@@ -11,7 +11,8 @@ description: 使用 FieldQuantum fieldqkit 统一检查和发现夸父、天衍�
 2. 凭证缺失时，明确告诉用户前往“设置中心 → 量子组件 → 安全凭据”；不要索要或回显 Token。
 3. 需要选择硬件时调用 `discover_fieldqkit_backends`，传入最小量子位数和可选芯片偏好。
 4. 把返回的 Provider、芯片名、量子位数、耦合拓扑和校准摘要作为事实解释，不推断未返回的可用性、成本或排队时间。
-5. 当前两个 MCP-exposed Tool 只开放只读配置检查和后端发现；不要通过 Bash、Python 或其他 Tool 绕过它们提交真实量子任务。
+5. 当前两个 MCP-exposed Tool 不会改变云端状态或提交任务；首次后端发现可能由 `uv` 在工作区物化固定 Python 环境并访问所选云端，因此其最大副作用声明为 `workspace-write`，不能称为端到端 `read-only`。
+6. 不要通过 Bash、Python 或其他 Tool 绕过它们提交真实量子任务。
 
 ## 边界
 

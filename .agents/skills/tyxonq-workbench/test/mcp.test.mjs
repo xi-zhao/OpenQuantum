@@ -62,19 +62,20 @@ after(async () => {
   await rm(temporary, { recursive: true, force: true });
 });
 
-test("TyxonQ MCP exposes only bounded local read-only tools", async () => {
+test("TyxonQ MCP declares bounded non-destructive lazy-environment tools", async () => {
   const tools = (await client.listTools()).tools;
   assert.deepEqual(
     tools.map((tool) => tool.name),
     declaredToolContract.map((tool) => tool.name),
   );
-  assert.ok(declaredToolContract.every((tool) => tool.effect === "read-only"));
+  assert.ok(declaredToolContract.every((tool) => tool.effect === "workspace-write"));
   assert.ok(
     declaredToolContract.every(
       (tool) => tool.effectEvidence === "mcp-annotations",
     ),
   );
-  assert.ok(tools.every((tool) => tool.annotations.readOnlyHint));
+  assert.ok(tools.every((tool) => tool.annotations.readOnlyHint === false));
+  assert.ok(tools.every((tool) => tool.annotations.openWorldHint === true));
   assert.ok(tools.every((tool) => !tool.annotations.destructiveHint));
   assert.ok(tools.every((tool) => tool.annotations.openWorldHint));
   assert.equal(

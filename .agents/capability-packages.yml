@@ -61,7 +61,7 @@ packages:
             - name: inspect_fieldqkit_setup
               effect: read-only
             - name: discover_fieldqkit_backends
-              effect: read-only
+              effect: workspace-write
       nativeTools: []
       checks:
         - .agents/skills/fieldqkit-hardware/test/mcp.test.mjs
@@ -78,11 +78,11 @@ packages:
           effectEvidence: mcp-annotations
           tools:
             - name: inspect_qpanda_qubo_runtime
-              effect: read-only
+              effect: workspace-write
             - name: solve_qpanda_qubo
-              effect: read-only
+              effect: workspace-write
             - name: model_and_solve_qpanda_qubo
-              effect: read-only
+              effect: workspace-write
       nativeTools: []
       checks:
         - .agents/skills/qpanda-qubo/test/mcp.test.mjs
@@ -99,9 +99,9 @@ packages:
           effectEvidence: mcp-annotations
           tools:
             - name: inspect_qcec_runtime
-              effect: read-only
+              effect: workspace-write
             - name: verify_circuit_equivalence
-              effect: read-only
+              effect: workspace-write
       nativeTools: []
       checks:
         - .agents/skills/quantum-circuit-verification/test/mcp.test.mjs
@@ -118,9 +118,9 @@ packages:
           effectEvidence: mcp-annotations
           tools:
             - name: inspect_qec_runtime
-              effect: read-only
+              effect: workspace-write
             - name: run_qec_memory_experiment
-              effect: read-only
+              effect: workspace-write
       nativeTools: []
       checks:
         - .agents/skills/qec-memory-experiment/test/mcp.test.mjs
@@ -137,9 +137,9 @@ packages:
           effectEvidence: mcp-annotations
           tools:
             - name: inspect_tyxonq_runtime
-              effect: read-only
+              effect: workspace-write
             - name: simulate_tyxonq_circuit
-              effect: read-only
+              effect: workspace-write
       nativeTools: []
       checks:
         - .agents/skills/tyxonq-workbench/test/mcp.test.mjs
@@ -147,23 +147,23 @@ packages:
   - id: qmclaw-workbench
     level: L1
     execution:
-      mcpServers:
-        - name: qmclaw_local
-          source: package
-          entrypoint: .agents/skills/qmclaw-workbench/mcp/server.mjs
+      mcpServers: []
+      nativeTools:
+        - name: list_qmclaw_experiments
+          providerPlugin: ./native-quantum-tools.mjs
           activation: always
-          contractCheck: .agents/skills/qmclaw-workbench/test/mcp.test.mjs
-          effectEvidence: mcp-annotations
-          tools:
-            - name: inspect_qmclaw_runtime
-              effect: read-only
-            - name: list_qmclaw_experiments
-              effect: read-only
-            - name: simulate_qmclaw_experiment
-              effect: read-only
-      nativeTools: []
+          contractCheck: .agents/skills/qmclaw-workbench/test/tool-provider.test.mjs
+          effect: read-only
+          effectEvidence: conservative-provider
+        - name: simulate_qmclaw_experiment
+          providerPlugin: ./native-quantum-tools.mjs
+          activation: always
+          contractCheck: .agents/skills/qmclaw-workbench/test/tool-provider.test.mjs
+          effect: read-only
+          effectEvidence: conservative-provider
       checks:
-        - .agents/skills/qmclaw-workbench/test/mcp.test.mjs
+        - .agents/skills/qmclaw-workbench/test/tool-provider.test.mjs
+        - tests/native-quantum-tools.test.mjs
 
   - id: platform-diagnostics
     level: L2
@@ -199,9 +199,9 @@ packages:
           effectEvidence: mcp-annotations
           tools:
             - name: inspect_toqito_runtime
-              effect: read-only
+              effect: workspace-write
             - name: audit_density_matrix
-              effect: read-only
+              effect: workspace-write
       nativeTools: []
       checks:
         - .agents/skills/quantum-information-audit/test/mcp.test.mjs
@@ -217,23 +217,16 @@ packages:
   - id: quantum-ground-state
     level: L3
     execution:
-      mcpServers:
-        - name: openquantum_quantum
-          source: package
-          entrypoint: .agents/skills/quantum-ground-state/mcp/server.mjs
+      mcpServers: []
+      nativeTools:
+        - name: solve_and_validate_ground_state
+          providerPlugin: ./native-quantum-tools.mjs
           activation: always
-          contractCheck: .agents/skills/quantum-ground-state/test/mcp.test.mjs
-          effectEvidence: mcp-annotations
-          tools:
-            - name: solve_and_validate_ground_state
-              effect: read-only
-            - name: solve_ground_state
-              effect: read-only
-            - name: validate_ground_state
-              effect: read-only
-      nativeTools: []
+          contractCheck: tests/native-quantum-tools.test.mjs
+          effect: read-only
+          effectEvidence: conservative-provider
       checks:
-        - .agents/skills/quantum-ground-state/test/mcp.test.mjs
+        - tests/native-quantum-tools.test.mjs
         - .agents/skills/quantum-ground-state/evals/run-evals.mjs
     audit:
       manifest: capability.yaml

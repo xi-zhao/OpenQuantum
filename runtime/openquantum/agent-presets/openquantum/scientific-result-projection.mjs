@@ -1,7 +1,7 @@
 /**
  * Harness-native Host Plugin for scientific Tool results.
  *
- * The MCP Server owns deterministic computation, Harness owns execution and
+ * The Tool implementation owns deterministic computation, Harness owns execution and
  * Session identity, ctx.fs owns atomic workspace writes, the Scientific
  * Validator owns observations, the Profile owns rules, and only the central
  * Acceptance Builder derives Acceptance. This trusted Host Plugin owns the

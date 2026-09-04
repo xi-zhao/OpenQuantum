@@ -41,19 +41,35 @@ after(async () => {
   await client?.close();
 });
 
-test("FieldQKit MCP exposes only read-only setup and discovery tools", async () => {
+test("FieldQKit MCP separates read-only setup from lazy-environment discovery", async () => {
   const tools = (await client.listTools()).tools;
   assert.deepEqual(
     tools.map((tool) => tool.name),
     declaredToolContract.map((tool) => tool.name),
   );
-  assert.ok(declaredToolContract.every((tool) => tool.effect === "read-only"));
+  assert.deepEqual(
+    declaredToolContract.map((tool) => [tool.name, tool.effect]),
+    [
+      ["inspect_fieldqkit_setup", "read-only"],
+      ["discover_fieldqkit_backends", "workspace-write"],
+    ],
+  );
   assert.ok(
     declaredToolContract.every(
       (tool) => tool.effectEvidence === "mcp-annotations",
     ),
   );
-  assert.ok(tools.every((tool) => tool.annotations.readOnlyHint));
+  const byName = new Map(tools.map((tool) => [tool.name, tool]));
+  assert.equal(byName.get("inspect_fieldqkit_setup").annotations.readOnlyHint, true);
+  assert.equal(byName.get("inspect_fieldqkit_setup").annotations.openWorldHint, false);
+  assert.equal(
+    byName.get("discover_fieldqkit_backends").annotations.readOnlyHint,
+    false,
+  );
+  assert.equal(
+    byName.get("discover_fieldqkit_backends").annotations.openWorldHint,
+    true,
+  );
   assert.ok(tools.every((tool) => !tool.annotations.destructiveHint));
   assert.equal(
     tools.find((tool) => tool.name === "discover_fieldqkit_backends")

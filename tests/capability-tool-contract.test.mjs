@@ -14,13 +14,12 @@ test("MCP contract reader returns policy-owned Tool effects and evidence", () =>
   assert.deepEqual(
     readDeclaredMcpToolContract({
       projectRoot,
-      capabilityId: "quantum-ground-state",
-      serverName: "openquantum_quantum",
+      capabilityId: "fieldqkit-hardware",
+      serverName: "fieldqkit",
     }),
     [
-      { name: "solve_and_validate_ground_state", effect: "read-only", effectEvidence: "mcp-annotations" },
-      { name: "solve_ground_state", effect: "read-only", effectEvidence: "mcp-annotations" },
-      { name: "validate_ground_state", effect: "read-only", effectEvidence: "mcp-annotations" },
+      { name: "inspect_fieldqkit_setup", effect: "read-only", effectEvidence: "mcp-annotations" },
+      { name: "discover_fieldqkit_backends", effect: "workspace-write", effectEvidence: "mcp-annotations" },
     ],
   );
 });
@@ -39,7 +38,7 @@ test("MCP contract reader fails closed for undeclared capabilities and servers",
     () =>
       readDeclaredMcpToolContract({
         projectRoot,
-        capabilityId: "quantum-ground-state",
+        capabilityId: "fieldqkit-hardware",
         serverName: "missing_server",
       }),
     /must declare MCP server missing_server exactly once/,
@@ -90,16 +89,35 @@ test("native Tool contract reader returns Provider, activation and effect", () =
   );
 });
 
+test("in-process quantum capabilities use the shared native Tool Provider", () => {
+  assert.deepEqual(
+    readDeclaredNativeToolContracts({
+      projectRoot,
+      capabilityId: "quantum-ground-state",
+    }),
+    [
+      {
+        name: "solve_and_validate_ground_state",
+        providerPlugin: "./native-quantum-tools.mjs",
+        activation: "always",
+        contractCheck: "tests/native-quantum-tools.test.mjs",
+        effect: "read-only",
+        effectEvidence: "conservative-provider",
+      },
+    ],
+  );
+});
+
 test("default contract checks are derived from package MCP and native Tool policy", () => {
   assert.deepEqual(readDefaultCapabilityContractChecks({ projectRoot }), [
     ".agents/skills/fieldqkit-hardware/test/mcp.test.mjs",
     ".agents/skills/qec-memory-experiment/test/mcp.test.mjs",
-    ".agents/skills/qmclaw-workbench/test/mcp.test.mjs",
+    ".agents/skills/qmclaw-workbench/test/tool-provider.test.mjs",
     ".agents/skills/qpanda-qubo/test/mcp.test.mjs",
     ".agents/skills/quantum-circuit-verification/test/mcp.test.mjs",
-    ".agents/skills/quantum-ground-state/test/mcp.test.mjs",
     ".agents/skills/quantum-information-audit/test/mcp.test.mjs",
     ".agents/skills/tyxonq-workbench/test/mcp.test.mjs",
     "tests/harness-native-quantum.test.mjs",
+    "tests/native-quantum-tools.test.mjs",
   ]);
 });

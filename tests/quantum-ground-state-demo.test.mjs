@@ -27,7 +27,7 @@ function runDemo(requestPath) {
   });
 }
 
-test("newcomer QGS demo runs the atomic MCP workflow without cloud credentials", () => {
+test("newcomer QGS demo runs the atomic native Tool workflow without cloud credentials", () => {
   const result = runDemo();
   assert.equal(result.status, 0, result.stderr);
   assert.equal(result.stderr, "");
@@ -36,7 +36,7 @@ test("newcomer QGS demo runs the atomic MCP workflow without cloud credentials",
     id: "quantum-ground-state",
     version: "0.2.0",
   });
-  assert.equal(report.transport, "stdio");
+  assert.equal(report.provider, "openquantum-native-quantum-tools");
   assert.equal(report.tool, "solve_and_validate_ground_state");
   assert.equal(report.runtime.status, "completed");
   assert.equal(report.result.converged, true);

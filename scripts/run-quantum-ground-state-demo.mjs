@@ -4,12 +4,10 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { Client } from "@modelcontextprotocol/sdk/client/index.js";
-import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
+import { toolDefinitions } from "../runtime/openquantum/agent-presets/openquantum/native-quantum-tools.mjs";
 
 const projectRoot = fileURLToPath(new URL("..", import.meta.url));
 const skillRoot = path.join(projectRoot, ".agents", "skills", "quantum-ground-state");
-const serverPath = path.join(skillRoot, "mcp", "server.mjs");
 const defaultRequestPath = path.join(
   skillRoot,
   "evals",
@@ -18,6 +16,7 @@ const defaultRequestPath = path.join(
   "protocol-fixture.json",
 );
 const atomicToolName = "solve_and_validate_ground_state";
+const atomicTool = toolDefinitions.find((tool) => tool.name === atomicToolName);
 
 function isRecord(value) {
   return value !== null && typeof value === "object" && !Array.isArray(value);
@@ -34,19 +33,7 @@ function readRequest(requestPath) {
   }
 }
 
-function toolErrorText(result) {
-  return (result.content ?? [])
-    .filter((block) => block?.type === "text")
-    .map((block) => block.text)
-    .join("\n")
-    .trim();
-}
-
-function summarize(result) {
-  if (result.isError === true) {
-    throw new Error(toolErrorText(result) || "atomic MCP tool returned an error");
-  }
-  const structured = result.structuredContent;
+function summarize(structured) {
   const facts = structured?.facts;
   const validation = structured?.validation;
   const groundState = facts?.groundStateResult;
@@ -59,7 +46,7 @@ function summarize(result) {
     !isRecord(exact) ||
     !Array.isArray(validation.observations)
   ) {
-    throw new Error("atomic MCP tool returned an incomplete structured result");
+    throw new Error("atomic native Tool returned an incomplete structured result");
   }
 
   const counts = { pass: 0, fail: 0, not_checked: 0 };
@@ -90,9 +77,9 @@ function summarize(result) {
 
   return {
     schemaVersion: "1.0",
-    demo: "openquantum-qgs-native-mcp",
+    demo: "openquantum-qgs-native-tool",
     capability: { id: "quantum-ground-state", version: "0.2.0" },
-    transport: "stdio",
+    provider: "openquantum-native-quantum-tools",
     tool: atomicToolName,
     requestId: facts.problemSpec?.requestId,
     runtime: { status: "completed" },
@@ -113,7 +100,7 @@ function summarize(result) {
       acceptance: "not_derived",
     },
     statement:
-      "The local MCP workflow passed every computational check. Harness materialization and final Acceptance remain separate.",
+      "The local native Tool workflow passed every computational check. Harness materialization and final Acceptance remain separate.",
   };
 }
 
@@ -123,39 +110,11 @@ async function run() {
     throw new Error("Usage: node scripts/run-quantum-ground-state-demo.mjs [request.json]");
   }
   const request = readRequest(requestPath);
-  let serverStderr = "";
-  const transport = new StdioClientTransport({
-    command: process.execPath,
-    args: [serverPath],
-    cwd: projectRoot,
-    stderr: "pipe",
-  });
-  transport.stderr?.on("data", (chunk) => {
-    serverStderr = `${serverStderr}${chunk.toString("utf8")}`.slice(-8_192);
-  });
-  const client = new Client(
-    { name: "openquantum-qgs-demo", version: "1.0.0" },
-    { capabilities: {} },
-  );
-
-  try {
-    await client.connect(transport, { timeout: 10_000, maxTotalTimeout: 10_000 });
-    const tools = await client.listTools();
-    if (!tools.tools.some((tool) => tool.name === atomicToolName)) {
-      throw new Error(`MCP server did not register ${atomicToolName}`);
-    }
-    const result = await client.callTool(
-      { name: atomicToolName, arguments: { request } },
-      undefined,
-      { timeout: 15_000, maxTotalTimeout: 15_000 },
-    );
-    process.stdout.write(`${JSON.stringify(summarize(result), null, 2)}\n`);
-  } finally {
-    await client.close().catch(() => undefined);
-    if (serverStderr.trim()) {
-      process.stderr.write(`QGS MCP stderr:\n${serverStderr.trim()}\n`);
-    }
+  if (!atomicTool) {
+    throw new Error(`native Tool Provider did not register ${atomicToolName}`);
   }
+  const result = await atomicTool.execute({ request });
+  process.stdout.write(`${JSON.stringify(summarize(result), null, 2)}\n`);
 }
 
 run().catch((error) => {

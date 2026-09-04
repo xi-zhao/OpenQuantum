@@ -8,7 +8,7 @@ import {
   MIN_SHOTS,
   PARAMETER_DEFINITIONS,
   QMCLAW_EXPERIMENT_IDS,
-  QMCLAW_SERVER_NAME,
+  QMCLAW_PROVIDER_ID,
   QMCLAW_UPSTREAM,
   QUBITS_PER_RUN,
   SCIENTIFIC_VALIDATION,
@@ -97,7 +97,7 @@ const RESOLVED_PARAMETER_OUTPUT_SCHEMA = Object.freeze({
 export const INSPECT_OUTPUT_SCHEMA = Object.freeze({
   type: "object",
   properties: {
-    serverName: { type: "string", const: QMCLAW_SERVER_NAME },
+    providerId: { type: "string", const: QMCLAW_PROVIDER_ID },
     upstream: {
       type: "object",
       properties: {
@@ -143,7 +143,7 @@ export const INSPECT_OUTPUT_SCHEMA = Object.freeze({
     },
   },
   required: [
-    "serverName",
+    "providerId",
     "upstream",
     "runtimeKind",
     "hardwareExecutionEnabled",
@@ -184,7 +184,7 @@ const CATALOG_PARAMETER_SCHEMA = Object.freeze({
 export const LIST_OUTPUT_SCHEMA = Object.freeze({
   type: "object",
   properties: {
-    serverName: { type: "string", const: QMCLAW_SERVER_NAME },
+    providerId: { type: "string", const: QMCLAW_PROVIDER_ID },
     sourceKind: { type: "string", const: "catalog" },
     hardwareExecutionEnabled: { type: "boolean", const: false },
     experiments: {
@@ -217,7 +217,7 @@ export const LIST_OUTPUT_SCHEMA = Object.freeze({
       },
     },
   },
-  required: ["serverName", "sourceKind", "hardwareExecutionEnabled", "experiments"],
+  required: ["providerId", "sourceKind", "hardwareExecutionEnabled", "experiments"],
   additionalProperties: false,
 });
 
@@ -265,7 +265,7 @@ export const SIMULATE_OUTPUT_SCHEMA = Object.freeze({
   type: "object",
   properties: {
     schemaVersion: { type: "string", const: "1.0" },
-    serverName: { type: "string", const: QMCLAW_SERVER_NAME },
+    providerId: { type: "string", const: QMCLAW_PROVIDER_ID },
     upstreamRevision: { type: "string", const: QMCLAW_UPSTREAM.revision },
     experiment: { type: "string", enum: [...QMCLAW_EXPERIMENT_IDS] },
     upstreamTool: { type: "string" },
@@ -323,7 +323,7 @@ export const SIMULATE_OUTPUT_SCHEMA = Object.freeze({
   },
   required: [
     "schemaVersion",
-    "serverName",
+    "providerId",
     "upstreamRevision",
     "experiment",
     "upstreamTool",

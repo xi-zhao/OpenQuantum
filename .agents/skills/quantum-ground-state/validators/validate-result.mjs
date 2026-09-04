@@ -808,7 +808,7 @@ function evaluateGroundStateFacts({
         observed: {
           materializedResultPackage: false,
           reason:
-            "The computation is still an execution-local MCP result, not a Harness-materialized Result Package.",
+            "The computation is still an execution-local Tool result, not a Harness-materialized Result Package.",
         },
         evidenceRefs: [],
         nextAction:

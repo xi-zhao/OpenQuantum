@@ -1,15 +1,24 @@
 import assert from "node:assert/strict";
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
-import { after, before, test } from "node:test";
+import { test } from "node:test";
 import { fileURLToPath } from "node:url";
 
-import { Client } from "@modelcontextprotocol/sdk/client/index.js";
-import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
+import {
+  inspectQmclawRuntime,
+  SIMULATE_INPUT_SCHEMA,
+} from "../core/experiments.mjs";
+import {
+  name as providerName,
+  toolDefinitions,
+} from "../../../../runtime/openquantum/agent-presets/openquantum/native-quantum-tools.mjs";
 
 const skillRoot = fileURLToPath(new URL("..", import.meta.url));
 const projectRoot = path.resolve(skillRoot, "../../..");
-const serverPath = path.join(skillRoot, "mcp", "server.mjs");
+const providerPath = path.join(
+  projectRoot,
+  "runtime/openquantum/agent-presets/openquantum/native-quantum-tools.mjs",
+);
 const coreDirectory = path.join(skillRoot, "core");
 const upstreamRevision = "18d7fa1594949a1203fca4866e651641bbde021f";
 const secretFixture = "qmclaw-secret-that-must-not-be-observed";
@@ -46,40 +55,43 @@ const upstreamTools = {
   "randomized-benchmarking": "rb",
 };
 
-let client;
-let transport;
-let tools;
-let serverStderr = "";
-
-before(async () => {
-  transport = new StdioClientTransport({
-    command: process.execPath,
-    args: [serverPath],
-    cwd: projectRoot,
-    stderr: "pipe",
-    env: {
-      ...process.env,
-      QMCLAW_TEST_SECRET: secretFixture,
-    },
-  });
-  transport.stderr?.on("data", (chunk) => {
-    serverStderr += chunk.toString("utf8");
-  });
-  client = new Client(
-    { name: "openquantum-qmclaw-mcp-test", version: "1.0.0" },
-    { capabilities: {} },
-  );
-  await client.connect(transport);
-  tools = (await client.listTools()).tools;
-});
-
-after(async () => {
-  await client?.close();
-  assert.equal(serverStderr, "", `MCP server wrote to stderr: ${serverStderr}`);
-});
+const qmclawToolNames = new Set([
+  "list_qmclaw_experiments",
+  "simulate_qmclaw_experiment",
+]);
+const tools = toolDefinitions.filter((tool) => qmclawToolNames.has(tool.name));
+const toolsByName = new Map(tools.map((tool) => [tool.name, tool]));
+const client = {
+  async callTool(request) {
+    try {
+      const value =
+        request.name === "inspect_qmclaw_runtime"
+          ? inspectQmclawRuntime()
+          : await toolsByName.get(request.name)?.execute(request.arguments ?? {});
+      if (value === undefined) throw new Error(`Unknown tool: ${request.name}`);
+      const definition = toolsByName.get(request.name);
+      return {
+        content: definition
+          ? definition.output.render(request.arguments ?? {}, value)
+          : [{ type: "text", text: "Inspected QMClaw runtime." }],
+        structuredContent: value,
+      };
+    } catch (error) {
+      return {
+        content: [
+          {
+            type: "text",
+            text: `QMClaw local tool error: ${error instanceof Error ? error.message : String(error)}`,
+          },
+        ],
+        isError: true,
+      };
+    }
+  },
+};
 
 function standardResult(result) {
-  assert.ok("content" in result, "expected a standard MCP tool result");
+  assert.ok("content" in result, "expected a rendered Tool result");
   return result;
 }
 
@@ -114,33 +126,23 @@ async function expectToolError(argumentsValue, pattern) {
   assert.equal(result.structuredContent, undefined);
 }
 
-test("stdio MCP reports qmclaw_local and exposes exactly three closed-world read-only tools", () => {
-  assert.deepEqual(client.getServerVersion(), { name: "qmclaw_local", version: "0.1.0" });
+test("native Provider exposes exactly two closed-world read-only Tools", () => {
+  assert.equal(providerName, "openquantum-native-quantum-tools");
   assert.deepEqual(
     tools.map((tool) => tool.name),
     [
-      "inspect_qmclaw_runtime",
       "list_qmclaw_experiments",
       "simulate_qmclaw_experiment",
     ],
   );
   for (const tool of tools) {
-    assert.equal(tool.inputSchema.type, "object");
-    assert.equal(tool.inputSchema.additionalProperties, false);
-    assert.equal(tool.outputSchema.type, "object");
-    assert.equal(tool.outputSchema.additionalProperties, false);
-    assert.deepEqual(tool.annotations, {
-      readOnlyHint: true,
-      destructiveHint: false,
-      idempotentHint: true,
-      openWorldHint: false,
-    });
+    assert.equal(tool.parameters.type, "object");
+    assert.equal(tool.parameters.additionalProperties, false);
+    assert.equal(tool.output.schema.type, "object");
+    assert.equal(tool.output.schema.additionalProperties, false);
   }
-  const simulationTool = tools.find(
-    (tool) => tool.name === "simulate_qmclaw_experiment",
-  );
-  assert.equal(simulationTool.inputSchema.properties.qubits.minItems, 1);
-  assert.equal(simulationTool.inputSchema.properties.qubits.maxItems, 1);
+  assert.equal(SIMULATE_INPUT_SCHEMA.properties.qubits.minItems, 1);
+  assert.equal(SIMULATE_INPUT_SCHEMA.properties.qubits.maxItems, 1);
   assert.equal(tools.some((tool) => /update|submit|execute|hardware/.test(tool.name)), false);
 });
 
@@ -154,7 +156,10 @@ test("runtime inspection fixes provenance and proves that external execution is 
     revision: upstreamRevision,
     license: "MIT",
   });
-  assert.equal(inspected.structuredContent.serverName, "qmclaw_local");
+  assert.equal(
+    inspected.structuredContent.providerId,
+    "openquantum-native-quantum-tools",
+  );
   assert.equal(inspected.structuredContent.hardwareExecutionEnabled, false);
   assert.equal(inspected.structuredContent.networkAccessRequired, false);
   assert.deepEqual(inspected.structuredContent.credentialRefs, []);
@@ -402,19 +407,38 @@ test("implementation has no external process, environment, network or parameter-
   const coreFiles = (await readdir(coreDirectory))
     .filter((name) => name.endsWith(".mjs"))
     .sort();
-  const source = (
-    await Promise.all([
-      ...coreFiles.map((name) => readFile(path.join(coreDirectory, name), "utf8")),
-      readFile(serverPath, "utf8"),
-    ])
+  const coreSource = (
+    await Promise.all(
+      coreFiles.map((name) => readFile(path.join(coreDirectory, name), "utf8")),
+    )
   ).join("\n");
+  const providerSource = await readFile(providerPath, "utf8");
+  const source = `${coreSource}\n${providerSource}`;
   assert.doesNotMatch(
     source,
     /node:child_process|node:net|node:http|node:https|node:tls|node:dgram|node:fs/,
   );
   assert.doesNotMatch(source, /process\.env/);
   assert.doesNotMatch(source, /\b(?:fetch|WebSocket)\s*\(/);
-  assert.doesNotMatch(source, /\bimport\s*\(/);
+  assert.doesNotMatch(coreSource, /\bimport\s*\(/);
+  assert.deepEqual(
+    [...providerSource.matchAll(/moduleUrl\(\s*"([^"]+)"\s*,?\s*\)/g)]
+      .map((match) => match[1])
+      .sort(),
+    [
+      ".agents/skills/qmclaw-workbench/core/experiments.mjs",
+      ".agents/skills/quantum-ground-state/core/contracts.mjs",
+      ".agents/skills/quantum-ground-state/scripts/solve.mjs",
+      ".agents/skills/quantum-ground-state/validators/validate-result.mjs",
+    ],
+  );
+  assert.doesNotMatch(
+    providerSource.replace(
+      /import\(\s*moduleUrl\(\s*"[^"]+"\s*,?\s*\)\s*\)/g,
+      "",
+    ),
+    /\bimport\s*\(/,
+  );
   assert.doesNotMatch(source, /\b(?:exec|execFile|spawn|fork|eval|Function)\s*\(/);
   assert.doesNotMatch(source, /mcp_tools_new|labrad|lqms|update_param|query_param/i);
 });

@@ -16,7 +16,7 @@ maturity:
     - id: deterministic-validator-v1
       kind: validator-report
       path: evidence/validator-report-v1.json
-      sha256: 923c971fd044bc10aeec388c081d36851a183fa0934cb050025780a06a18afa3
+      sha256: e979925d9a5975522f51cf6ba3ec983f7b2c6886658634b5edd0ac6146ab33ac
 
 skill:
   name: quantum-ground-state

@@ -457,7 +457,6 @@ test("repository preset exposes reviewed quantum MCPs with safe defaults", async
     "QISKIT_IBM_TOKEN",
     "IONQ_API_KEY",
   ]);
-  assert.equal(byName.get("openquantum_quantum")?.enabled, true);
   assert.equal(byName.get("fieldqkit")?.enabled, true);
   assert.equal(byName.get("fieldqkit")?.packageVersion, "0.1.2@3ef2493");
   assert.deepEqual(byName.get("fieldqkit")?.requiredCredentialRefs, []);
@@ -493,17 +492,8 @@ test("repository preset exposes reviewed quantum MCPs with safe defaults", async
   assert.equal(byName.get("tyxonq_local")?.packageVersion, "1.2.0");
   assert.equal(byName.get("tyxonq_local")?.provider, "TyxonQ / OpenQuantum");
   assert.deepEqual(byName.get("tyxonq_local")?.credentialRefs, []);
-  assert.equal(byName.get("qmclaw_local")?.enabled, true);
-  assert.equal(byName.get("qmclaw_local")?.displayName, "QMClaw 超导测控");
-  assert.equal(
-    byName.get("qmclaw_local")?.packageVersion,
-    "0.1.0@18d7fa1",
-  );
-  assert.equal(
-    byName.get("qmclaw_local")?.provider,
-    "QMClaw / OpenQuantum",
-  );
-  assert.deepEqual(byName.get("qmclaw_local")?.credentialRefs, []);
+  assert.equal(byName.has("openquantum_quantum"), false);
+  assert.equal(byName.has("qmclaw_local"), false);
   assert.equal(byName.get("qpanda_qubo")?.enabled, true);
   assert.equal(byName.get("qpanda_qubo")?.displayName, "QPanda QUBO 建模与求解");
   assert.equal(byName.get("qpanda_qubo")?.packageVersion, "2.0.0");
@@ -552,7 +542,7 @@ test("repository preset exposes reviewed quantum MCPs with safe defaults", async
   assert.match(raw, /quantum-information-audit\/mcp\/server\.mjs/);
   assert.match(raw, /quantum-circuit-verification\/mcp\/server\.mjs/);
   assert.match(raw, /tyxonq-workbench\/mcp\/server\.mjs/);
-  assert.match(raw, /qmclaw-workbench\/mcp\/server\.mjs/);
+  assert.match(raw, /name: \.\/native-quantum-tools\.mjs/);
 });
 
 test("project settings rejects a symlinked Skill file", async (t) => {
