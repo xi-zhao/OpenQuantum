@@ -1,7 +1,7 @@
 # OpenQuantum 架构审计与证据基线
 
 - 状态：日期化审计证据；不是长期架构定义入口
-- 日期：2026-09-01
+- 日期：2026-09-05（扩展边界补审；上游版本结论沿用 2026-09-01 基线）
 - 上游：DeepSeek Harness `0.1.0-rc.6`（已审阅 `0.1.1-rc.2`，等待匹配的可安装 Desktop Host Adapter 包）
 
 稳定的架构总览与文档权威见[文档与架构入口](../README.md)；扩展职责见
@@ -54,6 +54,24 @@ Skill、Tool、MCP Server、Harness MCP Client、External API 等对象的严格
 [`evidence/platform-diagnostics-2026-08-24.json`](evidence/platform-diagnostics-2026-08-24.json) 是
 2026-08-24 的历史基线；其 `degraded` 只说明当时无凭据环境没有运行在线模型检查，不能证明当前
 在线就绪状态，也不表示静态架构失败。
+
+### 1.2 扩展边界遗漏补修（2026-09-05）
+
+本次完成的是已发现的四类边界修复，不是所有外部能力的上线认证：
+
+| 遗漏 | 修复后的规则 | 回归证据 |
+| --- | --- | --- |
+| QGS 只按纯计算标为只读，漏掉后置保存 | 完整调用按 `workspace-write` 声明；带 Materializer 的调用不得声明只读 | `tests/scientific-tool-effects.test.mjs` + QGS/QI 真实物化与回放测试 |
+| 五个 Python 能力重复暴露运行时检查 | 移除五个 `inspect_*_runtime` Tool、内部废弃分支及 Skill 前置调用；主动作返回版本，旧名明确失败 | 五个 MCP 合同测试 + Harness Registry 测试 |
+| 默认关闭的外部 MCP 逃出合同清单 | 13/13 Preset MCP 连接均有唯一合同归属，group 与关闭项也反向审计；补齐 5 个外部 Server 的 136 个 Tool | `tests/capability-package-audit.test.mjs`、`tests/external-mcp-contracts.test.mjs` 与[固定源码审查](../integrations/OPT_IN_MCP_EFFECT_REVIEW.md) |
+| 贡献指南仍要求每个 Tool 配同名 Skill | L0 必须有知识入口；L1–L3 可以 Tool-only，不再凑 Skill；README、贡献指南、模块地图与词汇同步 | Tool-only 正例、空 L0 负例与五个 Skill 校验 |
+
+当前发行版登记 16 个能力（L0=1、L1=12、L2=1、L3=2）；新增五项是已有默认关闭接入的合同，
+不是新增五个可用云服务。外部源码检查共覆盖 31 个固定文件，不启动上游进程。
+
+本地实际 Python 主动作检查覆盖 QEC、QUBO、TyxonQ 和 toqito；QCEC 另用临时锁定环境验证了 3.9.0，
+没有覆盖用户旧缓存。审计时本机 QCEC 缓存为 3.7.0，硬件 checkout 为 `13fbe9f`，均不等于仓库
+固定版本；它们保持原样，不能作为已升级或当前 ready 的证据。真实模型、云端与硬件任务未在本次执行。
 
 ## 2. 当前事实
 

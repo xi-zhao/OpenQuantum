@@ -275,6 +275,10 @@ Scientific Validator 或领域算法可以是 Plugin 内部的普通模块，不
 
 接入新能力时，先定义 Agent 真正需要的最小 Tool surface：进程内、同语言且无需隔离时默认使用原生 Tool Provider；只有独立进程、跨语言、远程部署或明确隔离边界才使用 MCP Server + Harness MCP Client。Skill 与 Tool 相互独立，只有 Skill 确实增加领域选择、工作步骤或解释边界时才组合。涉及科学主张时，再增加 Validator、Acceptance Profile、Materializer 和测试，由 central Acceptance Builder 唯一推导最终状态。
 
+这些边界也进入回归检查：发行版 13 个 MCP 连接均有合同归属，包括默认关闭项；五个本地 Python 能力
+把环境检查收进主动作，随计算结果报告包版本。Tool 副作用包含首次准备环境与后置证据保存。
+外部接入的[固定源码与副作用审查](docs/integrations/OPT_IN_MCP_EFFECT_REVIEW.md)不等于在线可用性或正式启用。
+
 先读[文档与架构入口](docs/README.md)，再按任务进入[贡献指南](CONTRIBUTING.md)、
 [扩展对象模型](docs/architecture/EXTENSION_MODEL.md)、[模块地图](docs/architecture/MODULES.md)或
 [架构审计](docs/architecture/ARCHITECTURE_AUDIT.md)。

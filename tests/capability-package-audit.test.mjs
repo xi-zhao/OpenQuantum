@@ -90,11 +90,12 @@ test("repository capability packages conform to their declared L0-L3 evidence", 
   assert.equal(report.status, "pass", report.issues.join("\n"));
   assert.deepEqual(report.summary.levelCounts, {
     L0: 1,
-    L1: 7,
+    L1: 12,
     L2: 1,
     L3: 2,
   });
-  assert.equal(report.packages.length, 11);
+  assert.equal(report.packages.length, 16);
+  assert.equal(report.packages.flatMap((entry) => entry.execution.mcpServers).length, 13);
   assert(
     report.packages.every((entry) => entry.status === "pass"),
     report.issues.join("\n"),
@@ -770,6 +771,85 @@ packages:
 
   assert.equal(report.status, "pass", report.issues.join("\n"));
   assert.equal(report.packages[0].skill, null);
+});
+
+test("L0 knowledge capabilities cannot become empty placeholder packages", async (t) => {
+  const root = await temporaryProject(t, 'schemaVersion: "1.1"\npackages:\n  - id: empty-knowledge\n    level: L0\n');
+  const report = await auditCapabilityPackages({ projectRoot: root });
+  assert.equal(report.status, "fail");
+  assert.ok(report.issues.includes("empty-knowledge: L0 knowledge capability requires SKILL.md"));
+});
+
+test("unlisted MCP connections fail even when disabled or nested in a disabled group", async (t) => {
+  for (const nested of [false, true]) {
+    const root = await temporaryProject(t, 'schemaVersion: "1.1"\npackages: []\n');
+    const connection = '- id: mcp-unlisted\n  name: "@deepseek-ai/dsh-mcp-client"\n  disabled: true\n  config:\n    serverName: unlisted_server\n';
+    await write(root, "runtime/openquantum/agent-presets/openquantum/agent.cordis.yml",
+      nested
+        ? '- id: optional-group\n  name: cordis:group\n  group: true\n  disabled: true\n  config:\n' + connection.split("\n").filter(Boolean).map((line) => `    ${line}\n`).join("")
+        : connection);
+    const report = await auditCapabilityPackages({ projectRoot: root });
+    assert.equal(report.status, "fail");
+    assert.ok(report.issues.includes("Agent Preset MCP server unlisted_server is missing from .agents/capability-packages.yml"));
+  }
+});
+
+test("one MCP connection cannot have conflicting capability contract owners", async (t) => {
+  const root = await temporaryProject(t, `schemaVersion: "1.1"
+packages:
+${["first-owner", "second-owner"].map((id) => `  - id: ${id}
+    level: L1
+    execution:
+      mcpServers:
+        - name: shared_server
+          source: external
+          activation: opt-in
+          contractCheck: tests/demo.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: query
+              effect: read-only
+      nativeTools: []
+      checks: [tests/demo.test.mjs]
+`).join("")}`);
+  await write(root, "tests/demo.test.mjs", "export const checked = true;\n");
+  await write(root, "runtime/openquantum/agent-presets/openquantum/agent.cordis.yml",
+    '- id: shared\n  name: "@deepseek-ai/dsh-mcp-client"\n  disabled: true\n  config:\n    serverName: shared_server\n');
+  const report = await auditCapabilityPackages({ projectRoot: root });
+  assert.equal(report.status, "fail");
+  assert.ok(report.issues.includes("MCP server shared_server has multiple contract owners: first-owner, second-owner"));
+});
+
+test("group activation is inherited by its declared MCP connection", async (t) => {
+  const entrypoint = ".agents/skills/demo-capability/mcp/server.mjs";
+  const root = await temporaryProject(t, packageEntrypointPolicy(entrypoint).replace("activation: always", "activation: opt-in"));
+  await write(root, entrypoint, "export const server = true;\n");
+  await write(root, "tests/demo.test.mjs", "export const checked = true;\n");
+  await write(root, "runtime/openquantum/agent-presets/openquantum/agent.cordis.yml", `- id: optional-group
+  name: cordis:group
+  group: true
+  disabled: true
+  config:
+    - id: mcp-demo
+      name: "@deepseek-ai/dsh-mcp-client"
+      config:
+        serverName: demo_server
+        command: !!js process.execPath
+        args:
+          - !!js process.cwd() + '/${entrypoint}'
+        cwd: !!js process.cwd()
+`);
+  const report = await auditCapabilityPackages({ projectRoot: root });
+  assert.equal(report.status, "pass", report.issues.join("\n"));
+  assert.equal(report.packages[0].execution.mcpServers[0].activation, "opt-in");
+});
+
+test("an unnamed MCP Client cannot silently escape inventory", async (t) => {
+  const root = await temporaryProject(t, 'schemaVersion: "1.1"\npackages: []\n');
+  await write(root, "runtime/openquantum/agent-presets/openquantum/agent.cordis.yml", '- id: unnamed\n  name: "@deepseek-ai/dsh-mcp-client"\n  disabled: true\n');
+  const report = await auditCapabilityPackages({ projectRoot: root });
+  assert.equal(report.status, "fail");
+  assert.ok(report.issues.some((issue) => issue.includes("MCP Client unnamed requires serverName")));
 });
 
 test("ordinary Cordis plugins cannot impersonate native Tool Providers", async (t) => {

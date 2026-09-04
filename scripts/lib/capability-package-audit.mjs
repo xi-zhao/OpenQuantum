@@ -212,6 +212,22 @@ function trackedSkillIds(projectRoot, issues) {
     .sort();
 }
 
+function* presetEntries(entries, parentActivation = "always") {
+  for (const entry of entries) {
+    if (!isRecord(entry)) continue;
+    const ownActivation = activationOf(entry);
+    const activation = [ownActivation, parentActivation].includes("opt-in")
+      ? "opt-in"
+      : [ownActivation, parentActivation].includes("conditional")
+        ? "conditional"
+        : "always";
+    yield { entry, activation };
+    if (entry.group === true && Array.isArray(entry.config)) {
+      yield* presetEntries(entry.config, activation);
+    }
+  }
+}
+
 function readExecutionSurface(projectRoot, issues) {
   const presetPath = path.join(projectRoot, PRESET_PATH);
   const value = readYaml(presetPath, PRESET_PATH, issues);
@@ -221,8 +237,7 @@ function readExecutionSurface(projectRoot, issues) {
   }
   const mcpServers = new Map();
   const nativeProviders = new Map();
-  for (const entry of value) {
-    if (!isRecord(entry)) continue;
+  for (const { entry, activation } of presetEntries(value)) {
     if (
       typeof entry.id === "string" &&
       entry.id.startsWith("tool-") &&
@@ -236,14 +251,17 @@ function readExecutionSurface(projectRoot, issues) {
       } else {
         nativeProviders.set(entry.name, {
           id: entry.id,
-          activation: activationOf(entry),
+          activation,
         });
       }
     }
     if (!MCP_PLUGINS.has(entry.name)) continue;
     const config = isRecord(entry.config) ? entry.config : {};
     const serverName = config.serverName;
-    if (typeof serverName !== "string" || serverName.length === 0) continue;
+    if (typeof serverName !== "string" || serverName.length === 0) {
+      issues.push(`${PRESET_PATH}: MCP Client ${entry.id ?? entry.name} requires serverName`);
+      continue;
+    }
     if (mcpServers.has(serverName)) {
       issues.push(`${PRESET_PATH} declares duplicate MCP server ${serverName}`);
       continue;
@@ -252,7 +270,7 @@ function readExecutionSurface(projectRoot, issues) {
       command: config.command,
       args: Array.isArray(config.args) ? [...config.args] : [],
       cwd: config.cwd,
-      activation: activationOf(entry),
+      activation,
     });
   }
   return { mcpServers, nativeProviders };
@@ -724,6 +742,9 @@ async function inspectPackage(definition, projectRoot, executionSurface) {
   const skillPath = fs.existsSync(path.join(projectRoot, skillRelative))
     ? inspectFile(projectRoot, skillRelative, `${definition.id}.skill`, issues)
     : undefined;
+  if (definition.level === "L0" && !skillPath) {
+    issues.push(`${definition.id}: L0 knowledge capability requires SKILL.md`);
+  }
   if (skillPath) {
     const skillName = readSkillName(skillPath, `${definition.id}.skill`, issues);
     if (skillName !== definition.id) {
@@ -817,6 +838,24 @@ export async function auditCapabilityPackages(options = {}) {
     packages.push(
       await inspectPackage(definition, projectRoot, executionSurface),
     );
+  }
+  // A disabled connection still belongs to the release surface. Require one
+  // contract owner; Skills may consume it without duplicating its declaration.
+  const serverOwners = new Map();
+  for (const capability of packages) {
+    for (const server of capability.execution.mcpServers) {
+      const owner = serverOwners.get(server.name);
+      if (owner) {
+        issues.push(`MCP server ${server.name} has multiple contract owners: ${owner}, ${capability.id}`);
+      } else {
+        serverOwners.set(server.name, capability.id);
+      }
+    }
+  }
+  for (const serverName of executionSurface.mcpServers.keys()) {
+    if (!serverOwners.has(serverName)) {
+      issues.push(`Agent Preset MCP server ${serverName} is missing from ${POLICY_PATH}`);
+    }
   }
   issues.push(...packages.flatMap((entry) => entry.issues));
   const levelCounts = Object.fromEntries(

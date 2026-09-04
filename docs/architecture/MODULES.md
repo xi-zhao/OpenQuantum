@@ -140,7 +140,7 @@ Harness Settings UI
 | 等级 | 最小证据 | 可以对外声称 |
 | --- | --- | --- |
 | L0 工作流 | `SKILL.md` + 作用域边界 | 能指导模型选择方法，不能声称已执行 |
-| L1 可执行 | L0 + Preset 声明的 Tool Provider + Tool surface 合同测试 | 能在声明范围内执行；不等于科学验收 |
+| L1 执行接入 | Preset 声明的 Tool Provider + Tool 合同与检查入口；Skill 可选 | 有明确执行入口；实际可用性另由运行时证据确认，不等于科学验收 |
 | L2 可审计 | L1 + schema + 独立 Validator + eval evidence | 能输出可复核 observation；仍需明确证据作用域 |
 | L3 可物化验收 | L2 + Profile + Result Package + Harness 物化/重读 + Result Commit | 能基于物化证据给出版本化 Acceptance |
 
@@ -152,7 +152,8 @@ L1 表示实现与合同证据达到可执行成熟度，不表示 Provider 在�
 Server 显式列出 package entrypoint、MCP-exposed Tool、启用方式、合同检查入口、最大副作用及其证据来源；`nativeTools` 列出 Tool、它的
 原生 Tool Plugin、启用方式、合同检查入口、最大副作用和证据来源。Runner 不是 Agent 执行入口，eval runner 只能作为
 `checks` 证据。Conformance report 的作用域固定为 `static-declaration`：只读检查通过 Git 跟踪的
-`SKILL.md` 确认清单覆盖，通过真实 Cordis Agent Preset 确认 Provider 与 activation 声明；L2/L3 继续调用共享合同的
+`SKILL.md` 确认知识内容覆盖，并反向核对所有 Preset MCP 连接（含关闭项和 group），防止遗漏或多个合同归属；
+通过真实 Cordis Agent Preset 确认 Provider 与 activation 声明；L2/L3 继续调用共享合同的
 `loadCapability`，不复制科学 schema。用户本地创建或 Git 忽略的外部 Skill 不会被误当成发行版能力。
 默认离线 CI 通过 `npm run capability:contracts:test` 从 policy 自动收集 package MCP 与 native Tool 的
 `contractCheck`，新增能力不再需要同步维护第二份测试命令清单；外部上游 probe 仍保持显式运行。
@@ -163,6 +164,7 @@ Server 显式列出 package entrypoint、MCP-exposed Tool、启用方式、合�
 | --- | --- | --- |
 | `quantum-sdk-advisor` | L0 | 选型工作流，不执行付费或真实硬件操作 |
 | `qiskit-circuit-workbench` | L1 | 使用独立声明的 Qiskit Harness MCP Client 和显式 Tool contract |
+| `qiskit-ibm-runtime`、`qiskit-ibm-transpiler`、`qiskit-gym`、`qpanda-runtime`、`quantum-hardware` | L1 执行接入 | Tool-only 合同覆盖；全部默认关闭，只有固定源码及副作用审查，在线握手与正式启用证据另验 |
 | `fieldqkit-hardware`、`qpanda-qubo`、`quantum-circuit-verification`、`qec-memory-experiment`、`tyxonq-workbench`、`qmclaw-workbench` | L1 | 有界本地/只读执行与合同测试；`tyxonq-workbench` 为 opt-in，`qmclaw-workbench` 只产生合成实验数据；不宣称最终科学验收 |
 | `platform-diagnostics` | L2 | 报告 schema、固定检查和独立 Validator |
 | `quantum-information-audit` | L3 | 独立重算、Profile/eval，并经 Harness 物化、真实字节重读、验收和回放 |

@@ -27,13 +27,14 @@ OpenQuantum 是 DeepSeek Harness 的开源量子科研发行版。最常见的�
 | 产品需求 | 最小组合 | 黄金样板 | 最小验证 |
 | --- | --- | --- | --- |
 | 只增加知识、选择方法或工作步骤 | Skill | [`quantum-sdk-advisor`](.agents/skills/quantum-sdk-advisor/SKILL.md) | `npm run capability:conformance` + 真实 `skill.list` 测试 |
-| 让 Agent 执行一个动作 | Skill（当前发行版 policy 要求）+ Tool + Tool Provider | [`qpanda-qubo`](.agents/skills/qpanda-qubo/) | capability test + `npm run capability:contracts:test` + Harness Registry 测试 |
+| 让 Agent 执行一个动作 | Tool + Tool Provider；Skill 按工作流需要可选 | [原生 Tool Provider](runtime/openquantum/agent-presets/openquantum/native-quantum-tools.mjs)；跨语言参考 [`qpanda-qubo`](.agents/skills/qpanda-qubo/) | capability test + `npm run capability:contracts:test` + Harness Registry 测试 |
 | 让执行结果形成可审计 observations | L1 + schema + Validator + eval evidence | [`platform-diagnostics`](.agents/skills/platform-diagnostics/) | capability/eval + Validator 失败路径测试 |
 | 对科学主张给出可回放验收 | L2 + Acceptance Profile + Result Package + Materializer/重读 + central Acceptance Builder 接入；只有通过 `post-execute` 自动物化时才增加 agent-scoped Host Plugin/内部 Adapter | [`quantum-ground-state`](.agents/skills/quantum-ground-state/) | contract + materialization + Result Commit/Session replay 测试 |
 
-概念上 Tool 不依赖 Skill；当前发行版 policy 以 Skill 目录组织 Capability Package，因此每个登记的 L0–L3
-能力都需要同名 `SKILL.md`。新增文件在运行 `npm run capability:conformance` 前必须先暂存，因为 conformance
-只审计 Git 跟踪的发行版内容。
+Skill 与 Tool 正交：L0 知识能力需要 `SKILL.md`；L1–L3 的执行能力不强制配同名 Skill。
+只有存在领域选择、工作步骤或解释规则时才组合 Skill。源码共置是维护约定，不是运行时绑定。
+Conformance 核对 policy 引用的工作树文件、Git 跟踪的 Skill 清单，以及 Preset 中所有 MCP 连接，
+包括默认关闭项。新 Skill 在提交前须暂存，使 Git 跟踪清单覆盖它；不必为 Tool-only 能力创建占位 Skill。
 
 不要在 OpenQuantum 中重新实现 Session、Agent loop、Tool Registry、Skill Registry、Harness MCP Client、Host Plugin 或 Client Plugin 系统、
 审批、权限、沙箱、模型路由或持久化。若 Harness 缺少通用能力，优先向 DeepSeek Harness 上游贡献；
@@ -96,12 +97,14 @@ Harness 运行状态：L1 绑定 Agent Preset 声明的 Tool Provider、activati
 `loadCapability` 验证科学合同，L3 还必须
 声明真实 Harness 物化 Adapter 和回放测试。用户本地 Skill 与 Git 忽略的上游挂载不进入这个发行版清单。
 `npm run capability:conformance` 输出的 `scope` 固定为 `static-declaration`，只证明声明互相一致；本地
-Tool surface 由 `npm run capability:contracts:test` 直接按 policy 中的 `contractCheck` 实际查询，Qiskit 等需下载上游依赖的 surface 由显式 probe 验证，二者都不能
-被静态 `pass` 替代。
+Tool surface 由 `npm run capability:contracts:test` 直接按 policy 中的 `contractCheck` 实际查询。外部固定源码
+可先做显式源码摘要检查，真实 `tools/list` 则需独立 probe；[默认关闭接入审查](docs/integrations/OPT_IN_MCP_EFFECT_REVIEW.md)
+明确区分这些证据。源码/静态 `pass` 不能替代运行时握手。
 
 Tool 最大副作用和证据来源也必须分开登记：本地 MCP Server 通常使用 `mcp-annotations`；不提供 annotations
 的固定上游版本使用 `reviewed-source`、以 `effectEvidenceRef` 指向逐 Tool 审查记录，并由显式 probe 拒绝矛盾声明；Harness 原生 Tool 使用
-`conservative-provider`，按 Provider 能力保守分类。`effectEvidence` 不是“运行时已连接”的证明。
+`conservative-provider`，按 Provider 能力保守分类。副作用包括完整调用的环境安装和 Host 后置证据写入，
+不能只检查计算函数。`effectEvidence` 不是“运行时已连接”的证明。
 
 ## 增加 Tool 或 MCP Server
 
@@ -119,6 +122,7 @@ Tool 最大副作用和证据来源也必须分开登记：本地 MCP Server 通
 6. 在 `.agents/capability-packages.yml` 的 `mcpServers[]` 中登记 Server 的 `activation`、`contractCheck` 和
    `effectEvidence`；仓库内 Server 还必须把当前 capability 目录内的安全 canonical POSIX path 显式登记为唯一 `entrypoint`，
    并在 `tools` 中登记每个 Agent-facing Tool 及 `read-only` / `workspace-write` / `external-write` 最大副作用级别；
+   默认关闭也必须登记，每个 Server 只保留一个合同归属；Skill 可以复用其 Tool，不重复声明合同；
 7. 增加 MCP 集成测试和至少一条 Harness 端到端测试。
 
 Harness 会把同一个 Agent preset 在一个进程中挂载一次，再由多个 Session 共享。修改

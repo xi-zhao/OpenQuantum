@@ -79,6 +79,7 @@ _Avoid_: OpenQuantum 私有插件包、页面模式
 **Model-facing Tool（模型可调用 Tool）**：
 Agent 能调用的原子动作，拥有稳定名称、输入输出 schema、错误语义和副作用分类；它可以由 Harness 原生
 Tool Plugin 注册，或由 MCP Server 暴露后经 Harness MCP Client 注册。
+副作用描述一次完整调用的最大影响，包括按需准备环境和后置保存证据，而不仅是内部计算函数。
 _Avoid_: MCP、API、Skill
 
 **Tool Provider（Tool 提供方）**：

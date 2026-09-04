@@ -285,12 +285,14 @@ locality。共置不产生运行时绑定：
 
 `activation` 只有三种静态语义：`always` 表示 Preset 未设置禁用条件，`conditional` 表示是否启用由平台或
 环境表达式决定，`opt-in` 表示 Preset 默认关闭。`contractCheck` 指向验证实际 Tool surface 的测试或显式
-上游探针；本地 MCP Server 测试必须从同一份 policy 读取 Tool 名称，防止声明与 `tools/list` 漂移。
+上游探针，或显式的固定源码摘要检查；本地 MCP Server 测试必须从同一份 policy 读取 Tool 名称，防止声明与 `tools/list` 漂移。
+固定源码检查不能替代运行时握手；各外部接入的证据范围必须明确。Preset 中所有 MCP 连接（含默认关闭和
+Cordis group 内连接）都必须有唯一合同归属；多个 Skill 消费同一 Tool，不表示需要多份 Server 合同。
 `npm run capability:contracts:test` 直接从 policy 收集 package MCP 与 native Tool 的 `contractCheck` 并执行，
 因此新增默认离线合同不需要再手工维护一份 CI 测试清单。
 
 副作用分类是有意限定的：`read-only` 不产生持久变更（但仍可能读取网络，数据外发边界需单独说明）；
-`workspace-write` 只改变本地工作区；`external-write` 改变云端、QPU 任务或其他外部状态，必须额外定义
+`workspace-write` 只改变本地工作区；`external-write` 改变云端、QPU 任务、工作区外的凭据/文件、共享服务或后台进程等状态，必须额外定义
 审批、费用、幂等与恢复规则。
 
 `effectEvidence` 说明副作用声明的证据来源：仓库本地 MCP Server 使用 `mcp-annotations`，合同测试必须
@@ -303,7 +305,8 @@ Harness 原生 Tool 使用 `conservative-provider`，按 Provider
 用户执行入口不接受 `runner` 或 `localRunner`；本地程序只能是 Tool implementation 内部细节，
 或作为 `checks` 中的开发证据。Conformance report 明确标记 `scope=static-declaration`：它只验证 Tool
 contract 声明、Preset 中的 Provider/activation 声明和证据文件静态存在；它不执行 check，也不证明
-Provider 当前已启用或依赖已经 ready。本地 Tool surface 由 `npm run check` 执行的 `contractCheck` 验证；
+Provider 当前已启用或依赖已经 ready。默认关闭外部接入的逐 Tool 合同与版本摘要见
+[源码审查记录](../integrations/OPT_IN_MCP_EFFECT_REVIEW.md)。本地 Tool surface 由 `npm run check` 执行的 `contractCheck` 验证；
 需要下载或访问上游的动态 Tool 清单则由显式 probe 验证。
 
 ## 9. 命名和评审规则
