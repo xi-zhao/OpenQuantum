@@ -23,7 +23,8 @@
   <a href="#快速开始">快速开始</a> ·
   <a href="#从一个真实任务开始">运行证据</a> ·
   <a href="#模型由你选择">模型选择</a> ·
-  <a href="#已集成的量子工具与能力">量子能力</a> ·
+  <a href="#内置-skills">Skill 目录</a> ·
+  <a href="#mcp-服务目录">MCP 服务</a> ·
   <a href="#把你的量子能力接进来">扩展开发</a> ·
   <a href="./docs/README.md#架构总览">架构</a> ·
   <a href="./docs/communications/openquantum-wechat-launch.md">项目故事</a> ·
@@ -219,35 +220,77 @@ Web 与 Desktop 共用 `.openquantum/dsh` 中的本地状态，请先停止 `npm
 
 ## 已集成的量子工具与能力
 
-Qiskit、FieldQKit、QPanda、QMClaw 与 OpenQuantum 自有能力按各自职责接入。目录里的“连接配置开启”只表示加载策略，不保证当前环境、凭据或外部服务已经就绪；首次使用前请在设置中心查看运行证据。
+当前源码分发 **11 个内置 Skill、13 个 MCP 服务连接、3 个原生量子 Tool**；另提供 1 个可选上游 Skill 的安装入口。它们是三种不同的职责，不应相加当作独立科研能力数量：
 
-<details>
-<summary><strong>查看完整集成目录、来源与默认开关</strong></summary>
+- **Skill 是工作方法**：告诉 Agent 何时使用哪些工具、按什么步骤做、怎样解释结果。
+- **Tool 是执行动作**：Agent 真正调用的计算、查询或操作。
+- **MCP Server 是工具服务**：通过协议提供 Tool，由 Harness MCP Client 连接并注册；Skill 本身不启动服务。
 
-| 组件 | 来源与集成方式 | 可以完成的事情 | 默认配置 / 执行位置 |
+从工作流表选择任务，再到服务表确认依赖与开关。清单以仓库默认配置为准，不包含使用者自行安装的扩展；“默认开启”不代表依赖已安装、凭据已配置或服务当前在线。
+
+### 内置 Skills
+
+这 11 个 Skill 随源码提供，由 Harness 按任务需要发现和加载。点击名称即可查看完整的 `SKILL.md`，包括适用范围、执行步骤与限制；Skill 可加载不等于它使用的 MCP 服务已开启。
+
+| Skill | 适合什么任务 | 使用的执行能力 |
+| --- | --- | --- |
+| [`quantum-sdk-advisor`](.agents/skills/quantum-sdk-advisor/SKILL.md) | 量子 SDK 选型、迁移比较与 PoC 技术路线 | 知识型 Skill，不强制绑定专用 Tool；提及某个 SDK 不等于已经集成其执行后端 |
+| [`qiskit-circuit-workbench`](.agents/skills/qiskit-circuit-workbench/SKILL.md) | OpenQASM 3 / QPY 电路分析、转换、转译比较与文档查证 | `qiskit`、`qiskit_docs` 服务提供的 Tools |
+| [`quantum-circuit-verification`](.agents/skills/quantum-circuit-verification/SKILL.md) | 用 MQT QCEC 检查两份有界、无测量 OpenQASM 2 电路的等价性 | `qcec_local` 服务提供的 Tool |
+| [`quantum-information-audit`](.agents/skills/quantum-information-audit/SKILL.md) | 审计密度矩阵合法性、纯度、部分转置谱与 negativity | `toqito_audit` 服务提供的 Tool；可接完整科学验收链 |
+| [`quantum-ground-state`](.agents/skills/quantum-ground-state/SKILL.md) | 二量子位实 Pauli Hamiltonian 在固定粒子扇区内的 VQE 与精确参考比较 | 原生 `solve_and_validate_ground_state`；可接完整科学验收链 |
+| [`qpanda-qubo`](.agents/skills/qpanda-qubo/SKILL.md) | 有界 QUBO 建模、penalty 检查、经典枚举复核与可选本地 QAOA | `qpanda_qubo` 服务提供的 Tools；不提交云任务 |
+| [`qec-memory-experiment`](.agents/skills/qec-memory-experiment/SKILL.md) | surface-code X/Z memory 采样、MWPM 解码与有限 shots 统计 | `qec_local` 服务提供的 Tool；不从单点结果宣称阈值 |
+| [`fieldqkit-hardware`](.agents/skills/fieldqkit-hardware/SKILL.md) | 国内量子云后端发现、量子位筛选、拓扑与凭据缺口检查 | `fieldqkit` 服务提供的 Tools；只读云端，不提交 QPU 任务 |
+| [`tyxonq-workbench`](.agents/skills/tyxonq-workbench/SKILL.md) | 小规模 statevector 电路、采样分布与 density-matrix 噪声仿真 | `tyxonq_local` 服务提供的 Tool；连接默认关闭 |
+| [`qmclaw-workbench`](.agents/skills/qmclaw-workbench/SKILL.md) | S21、Rabi、Ramsey、T1、DRAG、RB 等 13 类超导调校实验的规划与模拟 | 原生 `list_qmclaw_experiments`、`simulate_qmclaw_experiment`；仅合成数据 |
+| [`platform-diagnostics`](.agents/skills/platform-diagnostics/SKILL.md) | UI、Harness、Skill 与 Model 联调排障，形成可追溯的诊断报告 | Harness 通用 Tool 与本地诊断脚本；在线模型探测另需凭据 |
+
+### MCP 服务目录
+
+默认 Preset 声明以下 13 个 MCP 服务连接：**7 个默认开启（其中 Qiskit 两项可通过离线开关关闭），6 个按需启用**。表中的连接名就是配置中的 `serverName`，方便在设置中心、日志和源码中对应查找。
+
+这些 MCP Server 都由本机以 `stdio` 方式启动，不是 OpenQuantum 提供的公共托管端点。其中一部分 Tool 在本地计算，另一部分再访问厂商文档或量子云；“本地启动 MCP Server”不代表所有数据处理都留在本地。
+
+| MCP 服务 / 连接名 | 能提供什么工具能力 | 默认配置 | 使用条件与边界 |
 | --- | --- | --- | --- |
-| Qiskit Circuits | [Qiskit 官方 MCP Server](https://github.com/Qiskit/mcp-servers) · Harness MCP Client + OpenQuantum Skill | 创建、读取、转换和分析 OpenQASM 3 / QPY 电路，比较转译结果 | 连接配置开启，无需凭据 |
-| Qiskit Docs | [Qiskit 官方 MCP Server](https://github.com/Qiskit/mcp-servers) · Harness MCP Client | 查询 Qiskit API、迁移说明、错误码和 IBM Quantum 文档 | 连接配置开启，无需凭据 |
-| 量子电路等价性验证 | [MQT QCEC](https://github.com/munich-quantum-toolkit/qcec) · 固定版本 + 本地 MCP Server + Harness MCP Client + OpenQuantum Skill | 检查两份有界、无测量 OpenQASM 2 电路是否严格等价、相位等价或不等价 | 连接配置开启，本地运行 |
-| 量子信息审计 | [toqito](https://github.com/vprusso/toqito) · 固定版本 + 本地 MCP Server + Harness MCP Client + Validator + Materializer + agent-scoped Host Plugin + 内部 Scientific Result Adapter + Acceptance Profile + central Acceptance Builder | 审计有界密度矩阵的迹、Hermiticity、正半定性、纯度、部分转置谱和 negativity，并生成 Result Package、Acceptance Report 与回放投影 | 连接配置开启，本地运行 |
-| QEC Memory 实验 | [Stim](https://github.com/quantumlib/Stim) + [PyMatching](https://github.com/oscarhiggott/PyMatching) · 固定版本 + 本地 MCP Server + Harness MCP Client + OpenQuantum Skill | 运行有界 rotated surface-code X/Z memory 实验、MWPM 解码和有限 shots 逻辑错误率统计 | 连接配置开启，本地运行 |
-| FieldQKit | [FieldQuantum](https://github.com/FieldQuantum/fieldqkit) · 固定上游提交 + 非破坏性桥接 | 发现国内量子云后端，按量子位筛选，查看拓扑和校准摘要 | 云端只读；首次发现可能写入固定本地 Python 环境 |
-| TyxonQ Local | [TyxonQ](https://github.com/QureGenAI-Biotech/TyxonQ) · 固定 PyPI 版本 + 本地 MCP Server + Harness MCP Client + OpenQuantum Skill | 运行小规模 statevector 电路、有限 shots 与 density-matrix 噪声仿真 | 连接配置关闭，本地能力已接入 |
-| QMClaw 超导测控 | [QMC-AI/QMClaw](https://github.com/QMC-AI/QMClaw) · 固定审阅提交 + OpenQuantum Skill + 原生 Tool Provider | 运行 13 类有界、带 seed 的超导量子比特实验模拟，组织单比特调校流程 | Tool 默认注册，仅合成数据；LabRAD、参数写回和真实仪器关闭 |
-| IBM Runtime | [Qiskit 官方 MCP Server](https://github.com/Qiskit/mcp-servers) · Harness MCP Client + 凭据设置 | 查询 IBM 后端，向 IBM Quantum 提交任务 | 连接配置关闭，远程执行 |
-| IBM Transpiler | [Qiskit 官方 MCP Server](https://github.com/Qiskit/mcp-servers) · Harness MCP Client + 凭据设置 | 使用 IBM Quantum AI Transpiler 路由和优化电路 | 连接配置关闭，远程执行 |
-| Quantum Hardware MCP | [社区项目](https://github.com/Lokesh-2025/quantum-hardware-mcp) · 固定审阅提交 + 安全开关 | 查询 IBM Quantum 与 IonQ 设备，可选提交、取消任务和估算成本 | 连接配置关闭，远程执行 |
-| QPanda3 Runtime | [OriginQ 官方 MCP Server](https://github.com/OriginQ/qpanda3-runtime-mcp-server) · Harness MCP Client + 固定审阅提交 + 凭据设置 | 查询本源悟空 QPU 设备，向本源量子云提交采样、期望值与批量任务并管理任务 | 连接配置关闭，远程执行 |
-| QPanda3 编程 Skill | [OriginQ 官方 Skill](https://github.com/OriginQ/pyqpanda3-skill) · 固定提交检出到 .agents/skills | pyqpanda3 电路构建、QAOA/Grover/VQE/QSVM 算法模板、pyqpanda→pyqpanda3 迁移与 QCloud 使用指导 | 尚未加载，需运行 setup |
-| QPanda QUBO | [pyqpanda_alg](https://github.com/OriginQ/pyqpanda-algorithm) · 固定版本 + 本地 MCP Server 桥 + Harness MCP Client + OpenQuantum Skill | 把命名目标和线性等式约束编译成 QUBO，独立枚举检查可行最优与 penalty，再运行经典求解或可选 QAOA | 连接配置开启，本地运行 |
-| Qiskit Gym | [Qiskit 官方 MCP Server](https://github.com/Qiskit/mcp-servers) · Harness MCP Client | 探索强化学习量子电路综合与优化 | 连接配置关闭，远程依赖 |
-| 量子基态求解 | OpenQuantum 自研 · Skill + 原生 Tool Provider + Validator + Materializer + agent-scoped Host Plugin + 内部 Scientific Result Adapter + Acceptance Profile + central Acceptance Builder | 用一个原子 Tool 求解限定的二量子位 Hamiltonian、运行独立检查，并生成可回放 Result Commit 与 Acceptance Report | Tool 默认注册，本地运行 |
-| 量子 SDK 选型 | OpenQuantum 自研 · Skill | 比较 Qiskit、Cirq、PennyLane、Q#、Braket、CUDA-Q 等工具 | 自动加载允许 |
-| 固定量子能力 Benchmark | [MQT Bench](https://github.com/munich-quantum-toolkit/bench) · 固定 3-case QASM 语料 + manifest + 离线校验 | 为电路能力回归提供固定分母，分列交付、语义正确性、Validator 稳定性和 benchmark 版本 | CI 启用，不注册为 Agent Tool |
+| [`qiskit`](https://github.com/Qiskit/mcp-servers) · Qiskit Circuits | 电路读取、分析、转译与 QASM/QPY 转换 | 默认开启¹ | `uvx`；电路操作无需云凭据，首次启动可能下载依赖 |
+| [`qiskit_docs`](https://github.com/Qiskit/mcp-servers) · Qiskit Docs | Qiskit 文档搜索、页面读取和 IBM Quantum 错误码查询 | 默认开启¹ | `uvx`；文档访问需要网络，无需云凭据 |
+| [`fieldqkit`](https://github.com/FieldQuantum/fieldqkit) · FieldQKit 桥接 | 凭据状态检查、国内量子云后端发现和筛选 | 默认开启 | `uv`；发现对应云后端需要相应凭据；不提交或取消任务 |
+| [`toqito_audit`](https://github.com/vprusso/toqito) · 量子信息审计 | 密度矩阵与纠缠指标计算、独立检查；可接物化验收链 | 默认开启 | `uv`；本地运行，无需云凭据；完整调用会保存科研证据 |
+| [`qcec_local`](https://github.com/munich-quantum-toolkit/qcec) · MQT QCEC | 有界 unitary 电路等价性检查 | 默认开启 | `uv`；本地运行，无需云凭据；不接受动态电路或任意文件路径 |
+| [`qec_local`](https://github.com/quantumlib/Stim) · Stim + [PyMatching](https://github.com/oscarhiggott/PyMatching) | surface-code memory 实验、MWPM 解码与逻辑错误率统计 | 默认开启 | `uv`；本地运行，无需云凭据；固定预算、seed 与统计范围 |
+| [`qpanda_qubo`](https://github.com/OriginQ/pyqpanda-algorithm) · QPanda QUBO | QUBO 编译、枚举复核、经典求解与可选本地 QAOA | 默认开启 | `uv`；本地 CPU 模拟器，无需本源云凭据 |
+| [`tyxonq_local`](https://github.com/QureGenAI-Biotech/TyxonQ) · TyxonQ | 小规模电路与噪声仿真 | 默认关闭 | 手动开启；`uv` 首次准备较大的 Python 环境，无需云凭据 |
+| [`qiskit_ibm_runtime`](https://github.com/Qiskit/mcp-servers) · IBM Runtime | IBM 后端查询、任务提交、结果读取与取消 | 默认关闭 | 手动开启；`uvx`、IBM Token 与可用账户额度；任务操作可能产生费用 |
+| [`qiskit_ibm_transpiler`](https://github.com/Qiskit/mcp-servers) · IBM Transpiler | AI 电路路由、综合与混合转译 | 默认关闭 | 手动开启；`uvx`、IBM Token 与服务权限；调用 IBM 服务 |
+| [`qiskit_gym`](https://github.com/Qiskit/mcp-servers) · Qiskit Gym | 强化学习电路综合、训练环境与模型管理 | 默认关闭 | 手动开启；`uvx`；训练、进程和模型文件操作有副作用 |
+| [`quantum_hardware`](https://github.com/Lokesh-2025/quantum-hardware-mcp) · 社区硬件服务 | IBM / IonQ 设备查询、任务提交与取消、成本估算 | 默认关闭 | 先安装固定源码并配置 IBM Token；IonQ 操作另需相应 Key；真实任务需授权 |
+| [`qpanda_runtime`](https://github.com/OriginQ/qpanda3-runtime-mcp-server) · 本源运行时 | 悟空 QPU 设备查询，采样、期望值、批量任务与任务管理 | 默认关闭 | 先安装固定源码并配置本源凭据；真实任务需要权限、额度与授权 |
 
-第三方组件保留原项目的版权与许可证。对应的版本、来源和 OpenQuantum 集成内容记录在 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
+¹ 两项 Qiskit 服务在未设置 `OPENQUANTUM_DISABLE_QISKIT_MCP=1` 时默认开启。设置中心可以覆盖连接策略；修改 MCP 连接配置后需要重启 Harness。
 
-</details>
+FieldQKit、toqito、QCEC、QEC、TyxonQ 与 QPanda QUBO 使用 OpenQuantum 的本地桥接实现，链接指向所用上游 SDK；它们不是这些 SDK 自带的 MCP Server。首次调用可能下载固定依赖并创建本地 Python 环境，因此即使不改变云端状态，也不能把完整调用笼统标为只读。
+
+启用与验证入口：设置中心 → MCP Server 连接 → 配置必要凭据 → 重启 Harness → 查看运行证据。`quantum_hardware` 和 `qpanda_runtime` 还需分别先运行 `npm run mcp:quantum-hardware:setup`、`npm run mcp:qpanda-runtime:setup`。完整 Tool 名称与副作用声明见[能力合同](.agents/capability-packages.yml)；连接与凭据引用见 [Agent Preset](runtime/openquantum/agent-presets/openquantum/agent.cordis.yml)。
+
+### 原生量子 Tools
+
+以下 3 个动作由 OpenQuantum 的[原生 Tool Provider](runtime/openquantum/agent-presets/openquantum/native-quantum-tools.mjs)在进程内注册，默认 Preset 已包含它们，**不另起 MCP Server**。这里不重复统计 Harness 自带的文件、终端、Skill 加载等通用 Tools。
+
+| 原生 Tool | 做什么 | 完整调用的边界 |
+| --- | --- | --- |
+| `solve_and_validate_ground_state` | 计算限定二量子位基态并执行独立科学检查；组合 Host Plugin 保存证据后，由中央验收构建器推导 Acceptance | 本地科研证据写入，`workspace-write`；不是通用分子求解或真机任务 |
+| `list_qmclaw_experiments` | 列出 [QMClaw](https://github.com/QMC-AI/QMClaw) 的 13 类实验及支持范围 | 只读目录查询，`read-only`；不连接仪器 |
+| `simulate_qmclaw_experiment` | 运行带 seed 的有界 QMClaw 合成数据实验 | 只读计算，`read-only`；不连接 LabRAD/lqms，不写回真实校准参数 |
+
+### 可选上游 Skill 与开发证据
+
+[OriginQ 官方 `pyqpanda3` Skill](https://github.com/OriginQ/pyqpanda3-skill) 提供电路编程、算法模板、迁移与 QCloud 使用指导。它**不计入上面的 11 个内置 Skill，也不会在首次启动时自动安装**；运行 `npm run skill:qpanda:setup` 后，固定审阅版本才会进入项目 Skill 目录。安装这个 Skill 不会自动启用 `qpanda_runtime`，也不会赋予云任务权限。
+
+[固定量子能力 Benchmark](benchmarks/quantum-capabilities/README.md)使用 [MQT Bench](https://github.com/munich-quantum-toolkit/bench) 的 3 个固定电路案例与 manifest 做开发回归，属于开发与 CI 证据，不是 Skill 或 MCP 服务。
+
+第三方组件保留原项目的版权与许可证。版本、来源和集成内容见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)；Skill、Tool Provider 与 MCP Server 的完整分工见[扩展对象模型](docs/architecture/EXTENSION_MODEL.md)。
 
 <table>
   <tr>
