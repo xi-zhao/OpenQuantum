@@ -102,7 +102,7 @@ DeepSeek Harness Runtime
 | Eval | Skill/Tool/Validator 版本是否在固定案例上回归？ | 在开发、CI 和发布期运行可判定案例 | 进入用户请求的生产运行链 |
 | Benchmark | 固定语料上的性能或质量如何对比？ | 使用锁定分母、指标和环境生成可比较证据 | 替代单次科学 Acceptance 或运行时 Validator |
 
-项目中禁止裸写“API”。必须写成 `Harness RPC`、`External API` 或 `Model Provider API`。讨论 DSH 的统一装配机制时
+描述 OpenQuantum 架构时，不用裸写的“API”代替具体接口职责；按下表写明所属接口。代码标识符、外部正式名称和引用原文保持原样。讨论 DSH 的统一装配机制时
 应写 `Cordis Plugin`；讨论具体职责时应写 `Skill Provider Plugin`、`Tool Provider Plugin`、
 `Harness MCP Client Plugin`、`Model Adapter Plugin`、`Host Plugin` 或 `Client Plugin`。只有上下文已经明确具体角色时，才可简称
 `Plugin`，避免把运行时容器、职责 Interface 和安装包混在一起。
@@ -311,7 +311,7 @@ Provider 当前已启用或依赖已经 ready。默认关闭外部接入的逐 T
 
 ## 9. 命名和评审规则
 
-文档、代码注释和 PR 中不要再使用：
+以下规则适用于描述 OpenQuantum 架构的文档、代码注释和 PR；代码标识符、外部正式名称和引用原文保持原样，不因此扩大无关改写：
 
 - `MCP/Tool`：改成“Tool（原生或由 MCP 暴露）”；
 - `Validator/eval`：分别写运行时 Validator 和开发期 eval；
