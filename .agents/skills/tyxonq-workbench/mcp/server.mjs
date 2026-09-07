@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-import { spawn } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -10,6 +9,8 @@ import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
+
+import { runLocalJsonProcess } from "../../../../src/lib/local-json-process.mjs";
 
 const skillRoot = fileURLToPath(new URL("..", import.meta.url));
 const projectRoot = path.resolve(skillRoot, "../../..");
@@ -288,102 +289,18 @@ function bridgeEnvironment() {
   };
 }
 
-function redactBridgeError(value, env) {
-  let redacted = String(value);
-  for (const secret of Object.values(env)) {
-    if (typeof secret === "string" && secret.length >= 4) {
-      redacted = redacted.split(secret).join("[REDACTED]");
-    }
-  }
-  return redacted;
-}
-
-function runBridge(envelope) {
-  const env = bridgeEnvironment();
-  return new Promise((resolve, reject) => {
-    const child = spawn(
-      "uv",
-      [
-        "run",
-        "--quiet",
-        "--frozen",
-        "--project",
-        skillRoot,
-        "--python",
-        "3.12",
-        "python",
-        bridgePath,
-      ],
-      {
-        cwd: skillRoot,
-        env,
-        stdio: ["pipe", "pipe", "pipe"],
-      },
-    );
-    const stdout = [];
-    const stderr = [];
-    let outputBytes = 0;
-    let settled = false;
-    const finish = (callback) => {
-      if (settled) {
-        return;
-      }
-      settled = true;
-      clearTimeout(timeout);
-      callback();
-    };
-    const timeout = setTimeout(() => {
-      child.kill("SIGKILL");
-      finish(() => reject(new Error("TyxonQ local runtime timed out")));
-    }, BRIDGE_TIMEOUT_MS);
-    child.on("error", (error) => {
-      finish(() => {
-        if (error.code === "ENOENT") {
-          reject(new Error("未找到 uv；请先安装 uv 后再使用 TyxonQ 本地仿真"));
-        } else {
-          reject(error);
-        }
-      });
-    });
-    child.stdin.on("error", (error) => {
-      finish(() => reject(error));
-    });
-    for (const [stream, chunks] of [
-      [child.stdout, stdout],
-      [child.stderr, stderr],
-    ]) {
-      stream.on("data", (chunk) => {
-        outputBytes += chunk.length;
-        if (outputBytes > MAX_BRIDGE_OUTPUT_BYTES) {
-          child.kill("SIGKILL");
-          finish(() => reject(new Error("TyxonQ local runtime returned too much data")));
-          return;
-        }
-        chunks.push(chunk);
-      });
-    }
-    child.on("close", (code) => {
-      finish(() => {
-        const stdoutText = Buffer.concat(stdout).toString("utf8").trim();
-        const stderrText = Buffer.concat(stderr).toString("utf8").trim();
-        if (code !== 0) {
-          reject(
-            new Error(
-              stderrText
-                ? redactBridgeError(stderrText.slice(0, 2000), env)
-                : `TyxonQ local runtime exited with code ${code}`,
-            ),
-          );
-          return;
-        }
-        try {
-          resolve(JSON.parse(stdoutText));
-        } catch {
-          reject(new Error("TyxonQ local runtime returned invalid JSON"));
-        }
-      });
-    });
-    child.stdin.end(JSON.stringify(envelope));
+function runBridge(envelope, signal) {
+  return runLocalJsonProcess({
+    command: "uv",
+    args: ["run", "--quiet", "--frozen", "--project", skillRoot, "--python", "3.12", "python", bridgePath],
+    cwd: skillRoot,
+    env: bridgeEnvironment(),
+    input: envelope,
+    signal,
+    timeoutMs: BRIDGE_TIMEOUT_MS,
+    maxOutputBytes: MAX_BRIDGE_OUTPUT_BYTES,
+    label: "TyxonQ local runtime",
+    notFoundMessage: "未找到 uv；请先安装 uv 后再使用 TyxonQ 本地仿真",
   });
 }
 
@@ -409,11 +326,11 @@ const server = new Server(
 );
 
 server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools: [...TOOLS] }));
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
+server.setRequestHandler(CallToolRequestSchema, async (request, { signal }) => {
   try {
     if (request.params.name === "simulate_tyxonq_circuit") {
       const simulation = normalizeSimulationRequest(request.params.arguments);
-      const result = await runBridge({ action: "simulate", request: simulation });
+      const result = await runBridge({ action: "simulate", request: simulation }, signal);
       return textResult(
         `TyxonQ ${result.tyxonqVersion} simulated ${result.circuit.numQubits} qubit(s) in ${result.execution.mode} mode. Scientific validation remains not_evaluated.`,
         result,

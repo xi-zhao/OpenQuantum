@@ -12,6 +12,7 @@ import {
 } from "node:fs/promises";
 import path from "node:path";
 
+import { withFileLock } from "@deepseek-ai/dsh-atomic-write";
 import { parse, parseDocument } from "yaml";
 
 import {
@@ -761,21 +762,35 @@ export async function executeProjectSettingsCommand(
     throw new TypeError("设置请求必须是对象");
   }
 
+  let mutate;
   switch (command.action) {
     case "snapshot":
       return readProjectSettings(projectRoot);
     case "skill.update":
-      return updateSkillSettings(projectRoot, command);
+      mutate = updateSkillSettings;
+      break;
     case "skill.remove":
-      return removeSkillSettings(projectRoot, command);
+      mutate = removeSkillSettings;
+      break;
     case "mcp.update":
-      await assertMcpEnableAllowed(projectRoot, command, credentials);
-      return updateMcpSettings(projectRoot, command);
+      mutate = updateMcpSettings;
+      break;
     case "mcp.register":
-      return registerMcpSettings(projectRoot, command);
+      mutate = registerMcpSettings;
+      break;
     case "mcp.remove":
-      return removeMcpSettings(projectRoot, command);
+      mutate = removeMcpSettings;
+      break;
     default:
       throw new TypeError("未知设置命令");
   }
+
+  const root = await containedRoot(projectRoot);
+  const lockTarget = await containedFile(root, AGENT_CONFIG);
+  // Share one stable lock across settings mutations, including Skill directory
+  // moves. Re-read and check revisions inside it, before any write or removal.
+  return withFileLock(lockTarget, async () => {
+    await assertMcpEnableAllowed(root, command, credentials);
+    return mutate(root, command);
+  });
 }

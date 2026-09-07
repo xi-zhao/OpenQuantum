@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-import { spawn } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -13,6 +12,8 @@ import {
 
 import { normalizeAuditRequest } from "../validators/state-math.mjs";
 import { validateStateAnalysis } from "../validators/validate-state-analysis.mjs";
+
+import { runLocalJsonProcess } from "../../../../src/lib/local-json-process.mjs";
 
 const skillRoot = fileURLToPath(new URL("..", import.meta.url));
 const projectRoot = path.resolve(skillRoot, "../../..");
@@ -120,81 +121,18 @@ function bridgeEnvironment() {
   };
 }
 
-function redactBridgeError(value, environment) {
-  let redacted = String(value);
-  for (const secret of Object.values(environment)) {
-    if (typeof secret === "string" && secret.length >= 4) {
-      redacted = redacted.split(secret).join("[REDACTED]");
-    }
-  }
-  return redacted;
-}
-
-function runBridge(envelope) {
-  const environment = bridgeEnvironment();
-  return new Promise((resolve, reject) => {
-    const child = spawn(
-      "uv",
-      ["run", "--quiet", "--project", skillRoot, "--python", "3.12", "python", bridgePath],
-      { cwd: skillRoot, env: environment, stdio: ["pipe", "pipe", "pipe"] },
-    );
-    const stdout = [];
-    const stderr = [];
-    let outputBytes = 0;
-    let settled = false;
-    const finish = (callback) => {
-      if (settled) return;
-      settled = true;
-      clearTimeout(timeout);
-      callback();
-    };
-    const timeout = setTimeout(() => {
-      child.kill("SIGKILL");
-      finish(() => reject(new Error("toqito audit runtime timed out")));
-    }, BRIDGE_TIMEOUT_MS);
-    child.on("error", (error) => {
-      finish(() => {
-        reject(
-          error.code === "ENOENT"
-            ? new Error("未找到 uv；请先安装 uv 后再使用 toqito 本地审计")
-            : error,
-        );
-      });
-    });
-    child.stdin.on("error", (error) => finish(() => reject(error)));
-    for (const [stream, chunks] of [[child.stdout, stdout], [child.stderr, stderr]]) {
-      stream.on("data", (chunk) => {
-        outputBytes += chunk.length;
-        if (outputBytes > MAX_BRIDGE_OUTPUT_BYTES) {
-          child.kill("SIGKILL");
-          finish(() => reject(new Error("toqito audit runtime returned too much data")));
-          return;
-        }
-        chunks.push(chunk);
-      });
-    }
-    child.on("close", (code) => {
-      finish(() => {
-        const stdoutText = Buffer.concat(stdout).toString("utf8").trim();
-        const stderrText = Buffer.concat(stderr).toString("utf8").trim();
-        if (code !== 0) {
-          reject(
-            new Error(
-              stderrText
-                ? redactBridgeError(stderrText.slice(0, 2000), environment)
-                : `toqito audit runtime exited with code ${code}`,
-            ),
-          );
-          return;
-        }
-        try {
-          resolve(JSON.parse(stdoutText));
-        } catch {
-          reject(new Error("toqito audit runtime returned invalid JSON"));
-        }
-      });
-    });
-    child.stdin.end(JSON.stringify(envelope));
+function runBridge(envelope, signal) {
+  return runLocalJsonProcess({
+    command: "uv",
+    args: ["run", "--quiet", "--project", skillRoot, "--python", "3.12", "python", bridgePath],
+    cwd: skillRoot,
+    env: bridgeEnvironment(),
+    input: envelope,
+    signal,
+    timeoutMs: BRIDGE_TIMEOUT_MS,
+    maxOutputBytes: MAX_BRIDGE_OUTPUT_BYTES,
+    label: "toqito audit runtime",
+    notFoundMessage: "未找到 uv；请先安装 uv 后再使用 toqito 本地审计",
   });
 }
 
@@ -217,11 +155,11 @@ const server = new Server(
 );
 
 server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools: [...TOOLS] }));
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
+server.setRequestHandler(CallToolRequestSchema, async (request, { signal }) => {
   try {
     if (request.params.name === "audit_density_matrix") {
       const auditRequest = normalizeAuditRequest(request.params.arguments);
-      const analysis = await runBridge({ action: "audit", request: auditRequest });
+      const analysis = await runBridge({ action: "audit", request: auditRequest }, signal);
       const validation = validateStateAnalysis({ request: auditRequest, analysis });
       const result = {
         schemaVersion: "1.0",
