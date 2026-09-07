@@ -9,7 +9,8 @@ Registry 生成，避免把“配置已启用”误写成“当前运行就绪�
 ## 模块
 
 - `project-settings.mjs`：通过 `executeProjectSettingsCommand` 处理 Skill 加载策略/删除、MCP Server 连接启用/注册/删除；统一
-  强制 setup 与凭据门控，使用 revision 防止旧页面覆盖新配置，并用受控路径和原子写入保护项目文件。
+  强制 setup 与凭据门控。所有设置修改复用 Harness `withFileLock` 的同一项目写锁，在锁内重读、检查 revision、
+  写入或删除，防止同进程及不同进程中的旧页面静默覆盖配置；受控路径和原子写入继续保护项目文件。
 - `project-settings-catalog.mjs`：集中保存 MCP Server 连接与凭据的展示元数据、固定版本和 setup 描述；只提供只读查询，
   不读取或写入项目设置。
 - `quantum-hardware-mcp.mjs`：集中保存社区 Quantum Hardware MCP Server 的来源 URL、固定 commit、安装路径和来源标记。
@@ -29,6 +30,10 @@ Harness Settings UI
 真实密钥不经过 `project-settings.mjs` 写入项目配置。凭据值由 Harness credential store 保存；项目配置只保存
 凭据引用名称。
 
+并发写入冲突会返回 `ProjectSettingsConflictError`（HTTP 409）；调用方刷新 revision 后才能重试。本次并发控制
+沿用现有配置路径，不迁移为 Harness 用户 settings namespace。写锁位于 `agent.cordis.yml.lock`，也覆盖 Skill
+目录移除，避免把锁随被删除的目录移走。异常退出遗留的锁不会被自动抢占；确认相关写入进程已停止后才可移除。
+
 新增设置行为时，应先扩展这里的命令 Interface 和测试，再让 HTTP route/UI 调用它。不要在 Client Plugin 或
 route 中复制 YAML、路径、命名、setup、凭据或并发规则。
 
@@ -39,6 +44,7 @@ route 中复制 YAML、路径、命名、setup、凭据或并发规则。
 
 ```bash
 node --test tests/project-settings.test.mjs
+node --test tests/project-settings-concurrency.test.mjs
 node --test tests/harness-web-capabilities.test.mjs
 ```
 
