@@ -44,7 +44,7 @@ function sanitizeTree(value, depth = 0, field = "") {
 
 export function validateSlide(content) {
   if (!Array.isArray(content?.elements) || content.elements.length < 1 || content.elements.length > 80) {
-    throw new TypeError("OpenMAIC 未生成有效讲义页");
+    throw new TypeError("量子学习通未生成有效讲义页");
   }
   const cleaned = sanitizeTree(content);
   const supported = new Set(["text", "shape", "line", "latex", "table", "chart", "code"]);
@@ -70,7 +70,7 @@ export function validateSlide(content) {
 
 export function validateQuiz(content) {
   if (!Array.isArray(content?.questions) || content.questions.length < 1 || content.questions.length > 6) {
-    throw new TypeError("OpenMAIC 未生成有效练习");
+    throw new TypeError("量子学习通未生成有效练习");
   }
   return { questions: content.questions.map((q, i) => {
     if (!["single", "multiple", "short_answer"].includes(q.type) || !plain(q.question).trim()) throw new TypeError("练习题型或题目无效");
@@ -116,7 +116,7 @@ export async function generateClassroom({ id, requirements, aiCall, signal }) {
     { imageGenerationEnabled: false, videoGenerationEnabled: false },
   );
   signal.throwIfAborted();
-  if (!result.success || !result.data?.outlines?.length) throw new TypeError("OpenMAIC 课程提纲生成失败，请查看会话后重试");
+  if (!result.success || !result.data?.outlines?.length) throw new TypeError("量子学习通课程提纲生成失败，请查看会话后重试");
   const outlines = result.data.outlines;
   if (outlines.length !== slideCount + 1 || outlines.filter((o) => o.type === "slide").length !== slideCount || outlines.at(-1)?.type !== "quiz") {
     throw new TypeError("模型返回的提纲页数或类型不符合建课要求，请重试");
@@ -139,7 +139,7 @@ export async function generateClassroom({ id, requirements, aiCall, signal }) {
     const actions = generatedActions.filter((a) => a.type === "speech" && plain(a.text).trim()).slice(0, 20)
       .map((a, i) => ({ id: `speech-${index}-${i}`, type: "speech", text: plain(a.text) }));
     const scene = buildCompleteScene(outline, validated, actions, id, { sceneId: `scene-${index + 1}` });
-    if (!scene) throw new TypeError("OpenMAIC 课堂组装失败");
+    if (!scene) throw new TypeError("量子学习通课堂组装失败");
     scenes.push(scene);
   }
   return {

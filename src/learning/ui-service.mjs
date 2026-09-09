@@ -12,20 +12,20 @@ export function uiOrigins(parentOrigin, port) {
   if (parent.protocol !== "http:" || !["localhost", "127.0.0.1"].includes(parent.hostname) || parent.origin !== parentOrigin) {
     throw new TypeError("当前原版 UI 接入用于本机，请从 localhost 或 127.0.0.1 打开 OpenQuantum。");
   }
-  if (!Number.isInteger(port) || port < 1024 || port > 65535 || String(port) === parent.port) throw new TypeError("OpenMAIC UI 端口配置无效。");
+  if (!Number.isInteger(port) || port < 1024 || port > 65535 || String(port) === parent.port) throw new TypeError("量子学习通 UI 端口配置无效。");
   return { parent: parent.origin, origin: `http://${parent.hostname}:${port}` };
 }
 
 export async function verifyUiInstallation(root) {
   const directory = sourceDirectory(root);
   if (!existsSync(path.join(directory, "node_modules/next/dist/bin/next")) || !existsSync(path.join(directory, "packages/@openmaic/editor/dist/core/index.js"))) {
-    throw new TypeError("OpenMAIC 原版界面尚未安装完整，请运行 npm run learning:ui:setup 后重新打开。");
+    throw new TypeError("量子学习通原版界面尚未安装完整，请运行 npm run learning:ui:setup 后重新打开。");
   }
   const manifest = JSON.parse(await readFile(path.join(directory, ".openquantum-ui.json"), "utf8"));
-  if (manifest.revision !== OPENMAIC_REVISION) throw new TypeError("OpenMAIC UI 版本不匹配，请重新准备界面。");
+  if (manifest.revision !== OPENMAIC_REVISION) throw new TypeError("量子学习通 UI 版本不匹配，请重新准备界面。");
   for (const file of manifest.files) {
     const digest = createHash("sha256").update(await readFile(path.join(directory, file.name))).digest("hex");
-    if (digest !== file.sha256) throw new TypeError(`OpenMAIC 界面适配文件已改变：${file.name}`);
+    if (digest !== file.sha256) throw new TypeError(`量子学习通界面适配文件已改变：${file.name}`);
   }
   return directory;
 }
@@ -36,11 +36,11 @@ export async function prepareLearningData(root, directory) {
   let entry;
   try { entry = await lstat(data); } catch (error) { if (error.code !== "ENOENT") throw error; }
   if (entry?.isSymbolicLink()) {
-    if (path.resolve(directory, await readlink(data)) !== persistent) throw new TypeError("OpenMAIC data 已有自定义链接，请核对存储位置后再启动。");
+    if (path.resolve(directory, await readlink(data)) !== persistent) throw new TypeError("量子学习通 data 已有自定义链接，请核对存储位置后再启动。");
     return;
   }
   if (entry) {
-    if (!entry.isDirectory() || existsSync(persistent)) throw new TypeError("OpenMAIC 存在两份数据目录，请先核对内容，避免覆盖课程材料。");
+    if (!entry.isDirectory() || existsSync(persistent)) throw new TypeError("量子学习通存在两份数据目录，请先核对内容，避免覆盖课程材料。");
     await rename(data, persistent);
   } else await mkdir(persistent, { recursive: true, mode: 0o700 });
   await chmod(persistent, 0o700);
@@ -99,8 +99,8 @@ export function createLearningUiService(root, { port = Number(process.env.OPENQU
         const appProcess = child;
         let failure;
         child.stdout.pipe(log, { end: false }); child.stderr.pipe(log, { end: false });
-        child.once("error", () => { failure = "OpenMAIC 进程启动失败。"; closeServices(owned); log.end(); });
-        child.once("exit", () => { failure = "OpenMAIC 未能启动，请检查端口占用和应用日志。"; if (child === appProcess) descriptor = undefined; closeServices(owned); log.end(); });
+        child.once("error", () => { failure = "量子学习通进程启动失败。"; closeServices(owned); log.end(); });
+        child.once("exit", () => { failure = "量子学习通未能启动，请检查端口占用和应用日志。"; if (child === appProcess) descriptor = undefined; closeServices(owned); log.end(); });
         const deadline = Date.now() + 50_000;
         while (Date.now() < deadline && !stopped) {
           if (failure) throw new TypeError(failure);
@@ -115,7 +115,7 @@ export function createLearningUiService(root, { port = Number(process.env.OPENQU
           await new Promise((resolve) => setTimeout(resolve, 400));
         }
         child.kill("SIGTERM");
-        throw new TypeError("OpenMAIC UI 启动超时，请查看 .openquantum/learning/openmaic-ui.log 后重试。");
+        throw new TypeError("量子学习通 UI 启动超时，请查看 .openquantum/learning/openmaic-ui.log 后重试。");
       })();
       try { return await starting; } catch (error) { child?.kill("SIGTERM"); closeServices(); throw error; } finally { starting = undefined; }
     },

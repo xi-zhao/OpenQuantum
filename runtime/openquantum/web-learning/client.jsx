@@ -39,9 +39,9 @@ function LearningApp({ onClose }) {
     return () => { disposed = true; window.removeEventListener("message", receive); };
   }, [service]);
   return <div className="oq-learning-shell">
-    <header className="oq-learning-bar"><strong>量子学习通</strong><small>OpenMAIC</small><button className="oq-learning-return" onClick={onClose}>返回 OpenQuantum</button></header>
+    <header className="oq-learning-bar"><strong>量子学习通</strong><button className="oq-learning-return" onClick={onClose}>返回 OpenQuantum</button></header>
     {error && <div role="alert" className="oq-learning-notice">{error}</div>}
-    {service ? <div className="oq-learning-frame-wrap"><iframe ref={frame} className="oq-learning-frame" src={service.url} title="OpenMAIC · 量子学习通" onLoad={() => setLoaded(true)} allow="fullscreen; clipboard-write; microphone" allowFullScreen />{!loaded && <div className="oq-learning-loading" role="status">正在载入 OpenMAIC…</div>}</div>
+    {service ? <div className="oq-learning-frame-wrap"><iframe ref={frame} className="oq-learning-frame" src={service.url} title="量子学习通" onLoad={() => setLoaded(true)} allow="fullscreen; clipboard-write; microphone" allowFullScreen />{!loaded && <div className="oq-learning-loading" role="status">正在载入量子学习通…</div>}</div>
       : <div className="oq-learning-status">{error ? <button onClick={() => setAttempt(attempt + 1)}>重新打开</button> : "正在启动课堂与课程存储，首次打开需要加载…"}</div>}
   </div>;
 }
