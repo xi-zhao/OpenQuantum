@@ -1,6 +1,21 @@
 schemaVersion: "1.1"
 
 packages:
+  - id: quantum-learning
+    level: L1
+    execution:
+      mcpServers: []
+      nativeTools:
+        - name: generate_quantum_classroom
+          providerPlugin: ./learning-tools.mjs
+          activation: always
+          contractCheck: tests/quantum-learning.test.mjs
+          effect: external-write
+          effectEvidence: conservative-provider
+      checks:
+        - tests/quantum-learning.test.mjs
+        - tests/harness-quantum-learning.test.mjs
+
   - id: quantum-sdk-advisor
     level: L0
 

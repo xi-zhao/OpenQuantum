@@ -65,8 +65,18 @@
     "@deepseek-ai/dsh-host-apiproxy": "0.1.0-rc.6",
     "@deepseek-ai/dsh-mcp-client": "0.1.0-rc.6",
     "@modelcontextprotocol/sdk": "1.30.0",
+    "@openmaic/dsl": "0.11.1",
+    "@openmaic/generation": "0.3.6",
+    "@openmaic/renderer": "0.1.6",
+    "@tailwindcss/cli": "4.3.3",
     "ajv": "8.18.0",
     "cc-connect": "1.5.0",
+    "echarts": "6.1.0",
+    "esbuild": "0.28.2",
+    "katex": "0.16.47",
+    "motion": "13.2.0",
+    "sanitize-html": "2.17.7",
+    "tailwindcss": "4.3.3",
     "yaml": "2.9.0"
   },
   "devDependencies": {

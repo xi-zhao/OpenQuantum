@@ -133,6 +133,7 @@ Skill 与 Tool 在概念和发行版 policy 中都相互独立：Skill-only、To
 - [部署与启动](DEPLOYMENT.md)：本地、Docker、模型配置和启动检查。
 - [常见问题与故障排查](TROUBLESHOOTING.md)：按 UI、模型、MCP Server、凭据和 Docker 分层定位。
 - [消息渠道接入](integrations/CC_CONNECT.md)：通过 CC Connect 和 ACP 接入微信、飞书等平台。
+- [量子学习通 / OpenMAIC](integrations/OPENMAIC.md)：原生建课、讲义与练习展示、保存，以及当前在线验证状态。
 - [项目首页](../README.md)：产品能力、已集成工具和快速开始。
 - [Skill 目录](../README.md#内置-skills)与 [MCP 服务目录](../README.md#mcp-服务目录)：逐项查看工作流、服务用途、默认开关与使用条件；[原生量子 Tools](../README.md#原生量子-tools)单独列出。
 

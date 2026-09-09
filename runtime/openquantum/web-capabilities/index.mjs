@@ -25,7 +25,7 @@ function json(response, status, value) {
 
 export function capabilityRequestBoundary(
   request,
-  { surface = "Capability settings" } = {},
+  { surface = "Capability settings", maxBytes = MAX_REQUEST_BYTES } = {},
 ) {
   if (request.method !== "POST") {
     return { status: 405, error: `${surface} require POST` };
@@ -66,7 +66,7 @@ export function capabilityRequestBoundary(
     return { status: 403, error: `${surface} origin is not trusted` };
   }
   const declaredLength = Number(request.headers["content-length"]);
-  if (Number.isFinite(declaredLength) && declaredLength > MAX_REQUEST_BYTES) {
+  if (Number.isFinite(declaredLength) && declaredLength > maxBytes) {
     return { status: 413, error: `${surface} request is too large` };
   }
   return null;

@@ -49,6 +49,9 @@
 - id: tool-openquantum-native-quantum
   name: ./native-quantum-tools.mjs
 
+- id: tool-quantum-learning
+  name: ./learning-tools.mjs
+
 # Agent Presets mounts this composition once per process and every joined
 # Session inherits the same Harness MCP Client. Restart Harness after editing this
 # composition: retained hot-reload generations must not own the same

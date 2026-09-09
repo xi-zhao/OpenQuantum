@@ -1,0 +1,615 @@
+.oq-learning-launch {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 9px 12px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+  white-space: nowrap;
+}
+.oq-learning-launch:hover {
+  background: #edf3ef;
+  color: #164b39;
+}
+.oq-learning-dialog {
+  margin: auto;
+  padding: 0;
+  width: min(1180px, 96vw);
+  max-width: 96vw;
+  height: min(870px, 94vh);
+  max-height: 94vh;
+  border: 1px solid #d7dfd9;
+  border-radius: 18px;
+  box-shadow: 0 30px 100px #0b251b44;
+  overflow: hidden;
+}
+.oq-learning-dialog::backdrop {
+  background: #10251f65;
+  backdrop-filter: blur(4px);
+}
+.oq-learning {
+  --ql-ink:#203b33;
+  --ql-muted:#64756d;
+  --ql-green:#286448;
+  font-family:
+    Inter,
+    "PingFang SC",
+    "Microsoft YaHei",
+    sans-serif;
+  color: var(--ql-ink);
+  font-size: 14px;
+  line-height: 1.65;
+  background: #fcfdfa;
+  box-sizing: border-box;
+}
+.oq-learning * {
+  box-sizing: border-box;
+}
+.ql-app {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.ql-header {
+  height: 78px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #dfe6df;
+  padding: 0 26px;
+  background: #fff;
+}
+.ql-brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+.ql-brand > span {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  color: #e2f1a4;
+  background: #245b43;
+}
+.oq-learning h1 {
+  font-size: 20px;
+  letter-spacing: 1px;
+  font-weight: 650;
+  margin: 0;
+  line-height: 1.35;
+}
+.ql-brand small {
+  color: #79877f;
+  font-size: 10px;
+  letter-spacing: .4px;
+}
+.oq-learning button {
+  font: inherit;
+  cursor: pointer;
+  transition: background .15s;
+  border: 1px solid #d7e0d9;
+  border-radius: 8px;
+  background: #fff;
+  color: var(--ql-ink);
+  padding: 7px 13px;
+  line-height: 1.5;
+}
+.oq-learning button:disabled {
+  cursor: default;
+  opacity: .45;
+}
+.oq-learning button:hover:not(:disabled) {
+  background: #edf3eb;
+}
+.oq-learning button:focus-visible,
+.oq-learning input:focus-visible,
+.oq-learning textarea:focus-visible,
+.oq-learning select:focus-visible,
+.oq-learning summary:focus-visible {
+  outline: 2px solid #438065;
+  outline-offset: 3px;
+}
+.oq-learning .ql-close {
+  border: 0;
+  font-size: 27px;
+  line-height: 1;
+  padding: 6px 10px;
+  color: #78857e;
+}
+.ql-body {
+  display: flex;
+  min-height: 0;
+  flex: 1;
+}
+.ql-library {
+  width: 235px;
+  flex-shrink: 0;
+  background: #f1f5ef;
+  border-right: 1px solid #dfe6dc;
+  padding: 24px 17px;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+}
+.oq-learning .ql-new {
+  background: #286448;
+  border-color: #286448;
+  color: #fff;
+  width: 100%;
+  font-weight: 550;
+  padding: 10px;
+}
+.oq-learning .ql-new:hover:not(:disabled) {
+  background: #1e543b;
+}
+.ql-library-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #788579;
+  margin: 26px 4px 10px;
+}
+.ql-library-label span {
+  background: #e3eae1;
+  padding: 0 6px;
+  border-radius: 5px;
+}
+.ql-library nav {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+.oq-learning .ql-course-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  border-color: transparent;
+  background: transparent;
+  padding: 12px;
+  width: 100%;
+}
+.oq-learning .ql-course-card.active {
+  border-color: #c6d6c2;
+  background: #fff;
+  box-shadow: 0 2px 6px #324c2608;
+}
+.ql-course-card strong {
+  font-weight: 550;
+  font-size: 13px;
+  line-height: 1.65;
+  margin: 6px 0;
+  overflow-wrap: anywhere;
+}
+.ql-course-card small {
+  font-size: 10px;
+  color: #7c897c;
+}
+.ql-level-tag {
+  background: #e6eedf;
+  color: #55724d;
+  font-size: 10px;
+  line-height: 1.7;
+  border-radius: 4px;
+  padding: 1px 6px;
+}
+.ql-empty {
+  font-size: 12px;
+  color: #879282;
+  margin: 14px 5px;
+  line-height: 2;
+}
+.ql-library-bottom {
+  font-size: 10px;
+  color: #8e998b;
+  margin: auto 0 0;
+  padding-top: 30px;
+  text-align: center;
+  white-space: nowrap;
+}
+.ql-main {
+  flex: 1;
+  min-width: 0;
+  overflow: auto;
+  padding: 32px 38px;
+}
+.ql-kicker {
+  font-size: 10px;
+  letter-spacing: 1.7px;
+  color: #799072;
+  margin-bottom: 10px;
+}
+.oq-learning h2 {
+  font-size: 25px;
+  letter-spacing: .3px;
+  line-height: 1.4;
+  margin: 0 0 12px;
+  font-weight: 580;
+}
+.ql-lead {
+  margin: 0 0 27px;
+  color: var(--ql-muted);
+  font-size: 13px;
+}
+.oq-learning label {
+  display: block;
+  font-size: 13px;
+  font-weight: 550;
+}
+.oq-learning label > span,
+.ql-material summary > span {
+  font-weight: 400;
+  color: #8a9389;
+  font-size: 11px;
+  margin-left: 6px;
+}
+.oq-learning input:not([type=radio]):not([type=checkbox]),
+.oq-learning textarea,
+.oq-learning select {
+  display: block;
+  width: 100%;
+  padding: 11px 12px;
+  border: 1px solid #d5dfd5;
+  border-radius: 8px;
+  background: #fff;
+  color: #263a30;
+  font: inherit;
+  font-size: 13px;
+  line-height: 1.65;
+  margin-top: 8px;
+  resize: vertical;
+}
+.oq-learning input::placeholder,
+.oq-learning textarea::placeholder {
+  color: #9ba59a;
+  font-size: 12px;
+}
+.oq-learning fieldset {
+  border: 0;
+  padding: 0;
+  margin: 23px 0;
+}
+.oq-learning legend {
+  font-size: 13px;
+  font-weight: 550;
+  margin-bottom: 10px;
+}
+.ql-levels {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+.oq-learning .ql-levels button {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 12px 15px;
+  text-align: left;
+  background: #fff;
+  border-color: #d9e2d5;
+}
+.ql-levels button b {
+  font-size: 14px;
+  font-weight: 600;
+}
+.ql-levels button span {
+  font-size: 11px;
+  color: #84907e;
+  margin-top: 3px;
+}
+.oq-learning .ql-levels .selected {
+  border-color: #7f9c6c;
+  background: #f0f6e6;
+  box-shadow: inset 0 0 0 1px #7f9c6c;
+}
+.ql-grid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 24px;
+}
+.ql-note {
+  font-size: 11px;
+  line-height: 1.8;
+  color: #84907e;
+  font-weight: 400;
+  margin: 10px 0;
+}
+.ql-material {
+  border: 1px solid #e0e7da;
+  background: #f7f9f3;
+  padding: 13px 15px;
+  border-radius: 9px;
+  margin-top: 23px;
+}
+.ql-material summary {
+  cursor: pointer;
+  font-size: 12px;
+}
+.ql-material small {
+  font-size: 10px;
+  color: #84907e;
+  display: block;
+  text-align: right;
+  margin-top: 5px;
+}
+.ql-submit {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  border-top: 1px solid #e5eade;
+  padding-top: 22px;
+  margin-top: 25px;
+}
+.ql-submit > span {
+  color: #8a9486;
+  font-size: 11px;
+  line-height: 1.8;
+}
+.oq-learning .ql-primary {
+  background: #286448;
+  color: #fff;
+  border-color: #286448;
+  padding: 10px 22px;
+  white-space: nowrap;
+}
+.oq-learning .ql-primary:hover:not(:disabled) {
+  background: #1e533a;
+}
+.ql-course-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+.ql-course-heading h2 {
+  font-size: 22px;
+}
+.oq-learning .ql-text-button {
+  background: none;
+  border: 0;
+  color: #728267;
+  white-space: nowrap;
+  font-size: 11px;
+  padding: 0;
+}
+.ql-pending {
+  text-align: center;
+  max-width: 480px;
+  margin: 80px auto;
+}
+.ql-pending h3 {
+  font-size: 20px;
+  font-weight: 550;
+  margin: 20px 0 8px;
+}
+.ql-pending p {
+  font-size: 13px;
+  color: #819078;
+  margin-bottom: 24px;
+}
+.ql-orbit {
+  display: grid;
+  place-items: center;
+  width: 75px;
+  height: 75px;
+  border: 1px solid #9dae89;
+  outline: 1px solid #d5dfc3;
+  outline-offset: 9px;
+  border-radius: 50%;
+  color: #426e49;
+  background: #f0f5e4;
+  font-family: Georgia, serif;
+  font-size: 42px;
+  margin: 0 auto;
+}
+.ql-orbit.spinning {
+  animation: ql-breathe 3s ease-in-out infinite;
+}
+@keyframes ql-breathe {
+  50% {
+    outline-offset: 15px;
+    opacity: .6;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ql-orbit.spinning {
+    animation: none;
+  }
+}
+.ql-page-tabs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border-top: 1px solid #e5eadd;
+  padding-top: 18px;
+  margin: 12px 0 17px;
+  overflow: auto;
+}
+.oq-learning .ql-page-tabs button {
+  font-size: 12px;
+  padding: 4px 11px;
+}
+.oq-learning .ql-page-tabs button.selected {
+  background: #286448;
+  border-color: #286448;
+  color: white;
+}
+.ql-page-tabs > span {
+  font-size: 12px;
+  color: #819078;
+  margin-left: 8px;
+  white-space: nowrap;
+}
+.ql-canvas {
+  position: relative;
+  width: 100%;
+  height: 410px;
+  min-height: 280px;
+  background: #e9eddf;
+  border: 1px solid #e0e5d8;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.ql-narration {
+  margin-top: 22px;
+}
+.ql-narration > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.ql-narration h3 {
+  font-size: 13px;
+  font-weight: 600;
+  margin: 0;
+}
+.ql-narration button {
+  font-size: 11px;
+  padding: 3px 9px;
+}
+.ql-narration p {
+  white-space: pre-wrap;
+  font-size: 13px;
+  line-height: 1.95;
+  color: #66795f;
+  margin: 12px 0;
+}
+.ql-classroom-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 24px;
+  border-top: 1px solid #e3e9dc;
+  padding-top: 18px;
+  gap: 12px;
+}
+.ql-classroom-footer > span {
+  font-size: 11px;
+  color: #839079;
+}
+.ql-classroom-footer > div {
+  display: flex;
+  gap: 8px;
+}
+.ql-classroom-footer button {
+  font-size: 11px;
+}
+.ql-quiz {
+  background: white;
+  padding: 25px;
+  border: 1px solid #dce4d6;
+  border-radius: 12px;
+}
+.ql-quiz h3 {
+  font-size: 20px;
+  margin: 0;
+}
+.ql-quiz legend {
+  line-height: 1.9;
+}
+.ql-quiz .ql-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  border: 1px solid #e2e8df;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-weight: 400;
+  margin-bottom: 8px;
+}
+.ql-option input {
+  margin-top: 5px;
+  accent-color: #286448;
+}
+.ql-feedback {
+  background: #eff5e7;
+  border-radius: 7px;
+  padding: 12px;
+  font-size: 12px;
+}
+.ql-feedback p {
+  margin: 4px 0 0;
+  white-space: pre-wrap;
+}
+.ql-error {
+  padding: 12px 16px;
+  background: #fff1e8;
+  border: 1px solid #e8c7a6;
+  border-radius: 8px;
+  font-size: 12px;
+  margin-bottom: 18px;
+  color: #96522e;
+  overflow-wrap: anywhere;
+}
+.ql-loading {
+  color: #839078;
+  margin: 45px;
+  font-size: 13px;
+}
+@media (max-width: 800px) {
+  .ql-library {
+    width: 180px;
+    padding: 18px 12px;
+  }
+  .ql-main {
+    padding: 24px 20px;
+  }
+  .ql-grid {
+    grid-template-columns: 1fr;
+  }
+  .ql-canvas {
+    height: 310px;
+  }
+  .oq-learning h2 {
+    font-size: 21px;
+  }
+  .ql-submit {
+    align-items: flex-start;
+  }
+  .ql-submit > span {
+    max-width: 180px;
+  }
+}
+@media (max-width: 580px) {
+  .ql-library {
+    display: none;
+  }
+  .ql-header {
+    padding: 0 18px;
+    height: 65px;
+  }
+  .ql-main {
+    padding: 23px 17px;
+  }
+  .ql-levels {
+    gap: 6px;
+  }
+  .oq-learning .ql-levels button {
+    padding: 10px;
+  }
+  .ql-levels button span {
+    font-size: 10px;
+  }
+  .ql-course-heading {
+    flex-direction: column;
+  }
+  .ql-canvas {
+    height: 260px;
+  }
+  .ql-classroom-footer {
+    flex-wrap: wrap;
+  }
+}
+.ql-canvas .base-element-latex {
+  font-size: 32px;
+}
