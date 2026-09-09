@@ -38,7 +38,7 @@
       inject: [webServer, credentials, skills, tools, llm]
     - id: openquantum-web-learning
       name: '@openquantum/harness-web-learning'
-      inject: [webServer]
+      inject: [webServer, llm, agentDefaultModel, attachments]
 
 # Profile roots live at $DSH_HOME/profiles/<profile>/cordis.yml; the fragment
 # is materialized beside them so its plugins resolve through the profile's

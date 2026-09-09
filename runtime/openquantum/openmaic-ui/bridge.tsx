@@ -1,10 +1,15 @@
 'use client';
 
-import { useEffect } from 'react';
-import { toast } from 'sonner';
-import { loadStageData, saveStageData } from '@/lib/utils/stage-storage';
+import { loadStageData, saveStageData, listFolders, createFolder, setStageFolder } from '@/lib/utils/stage-storage';
+import { db } from '@/lib/utils/database';
 import { stageDeletionEpoch } from '@/lib/utils/deleted-stages';
 import type { Stage, Scene } from '@/lib/types/stage';
+import { BrowserRuntimeStore } from '@openmaic/storage';
+import { getDocumentStore } from '@/lib/document-store/store';
+import { getRuntimeStore } from '@/lib/runtime/store';
+import { getPersistenceLearnerKey } from '@/lib/persistence/bootstrap';
+import { APP_RUNTIME_PAYLOAD_VALIDATORS } from '@/lib/runtime/payload-validators';
+import { migrateLearningLibrary, migrateLearningFolders } from '@/lib/openquantum-library-migration.mjs';
 
 export const OPENQUANTUM_EMBED = process.env.NEXT_PUBLIC_OPENQUANTUM_EMBED === '1';
 const parentOrigin = process.env.NEXT_PUBLIC_OPENQUANTUM_PARENT_ORIGIN || '';
@@ -12,11 +17,11 @@ const channel = 'openquantum.openmaic.v1';
 const importedKey = 'openquantum:imported-classrooms:v1';
 type Course = { id: string; createdAt: string; document: { stage: Partial<Stage>; scenes: Scene[] } };
 
-function request<T>(type: 'library' | 'generate', payload?: unknown): Promise<T> {
+function request<T>(type: 'library'): Promise<T> {
   if (window.parent === window || !parentOrigin) return Promise.reject(new Error('请从 OpenQuantum 的量子学习通入口打开。'));
   const requestId = crypto.randomUUID();
   return new Promise((resolve, reject) => {
-    const timer = setTimeout(() => finish(new Error('请求尚未完成，请在 OpenQuantum 查看生成记录。')), type === 'library' ? 30_000 : 16 * 60_000);
+    const timer = setTimeout(() => finish(new Error('历史课程同步暂未完成，请稍后重新打开。')), 30_000);
     function finish(error?: Error, value?: T) {
       clearTimeout(timer);
       window.removeEventListener('message', receive);
@@ -27,7 +32,7 @@ function request<T>(type: 'library' | 'generate', payload?: unknown): Promise<T>
       finish(event.data.error ? new Error(event.data.error) : undefined, event.data.result);
     }
     window.addEventListener('message', receive);
-    window.parent.postMessage({ channel, type, requestId, payload }, parentOrigin);
+    window.parent.postMessage({ channel, type, requestId }, parentOrigin);
   });
 }
 
@@ -42,9 +47,24 @@ async function importCourse(course: Course) {
 }
 
 let syncing: Promise<void> | undefined;
+async function migrateBrowserLibrary() {
+  if (process.env.NEXT_PUBLIC_PERSISTENCE !== '1') return;
+  const local = getDocumentStore({ dbName: 'maic-documents' });
+  const remote = getDocumentStore();
+  const localRuntime = new BrowserRuntimeStore({ dbName: 'maic-runtime', payloadValidators: APP_RUNTIME_PAYLOAD_VALIDATORS });
+  const remoteRuntime = getRuntimeStore();
+  const learner = await getPersistenceLearnerKey();
+  await migrateLearningLibrary({ local, remote, localRuntime, remoteRuntime, learner, markers: localStorage });
+  await migrateLearningFolders({
+    folders: await db.folders.toArray(), memberships: await db.stageFolders.toArray(),
+    remote: { list: listFolders, create: createFolder }, setMembership: setStageFolder, markers: localStorage,
+  });
+}
+
 export function syncQuantumLibrary() {
-  if (!OPENQUANTUM_EMBED) return Promise.resolve();
+  if (!OPENQUANTUM_EMBED || window.parent === window) return Promise.resolve();
   return syncing ??= (async () => {
+    await navigator.locks.request('openquantum-library-migration', migrateBrowserLibrary);
     const courses = await request<Course[]>('library');
     const imported = new Set<string>(JSON.parse(localStorage.getItem(importedKey) || '[]'));
     for (const course of courses) {
@@ -54,27 +74,4 @@ export function syncQuantumLibrary() {
       localStorage.setItem(importedKey, JSON.stringify([...imported]));
     }
   })().finally(() => { syncing = undefined; });
-}
-
-export async function generateQuantumCourse(form: { requirement: string; webSearch: boolean; interactiveMode: boolean; courseMaterials: { file: File; name: string }[] }) {
-  const texts: string[] = [];
-  for (const item of form.courseMaterials) {
-    if (!/\.(txt|md)$/i.test(item.name) || item.file.size > 100_000) throw new Error('当前建课入口支持 TXT、Markdown 材料，每份最多 100 KB。');
-    texts.push(`${item.name}\n${await item.file.text()}`);
-  }
-  const material = texts.join('\n\n');
-  if (material.length > 24_000) throw new Error('参考材料合计最多 24,000 字。');
-  const course = await request<Course>('generate', { requirement: form.requirement, material, webSearch: form.webSearch, interactiveMode: form.interactiveMode });
-  await importCourse(course);
-  const imported = new Set<string>(JSON.parse(localStorage.getItem(importedKey) || '[]'));
-  imported.add(course.id);
-  localStorage.setItem(importedKey, JSON.stringify([...imported]));
-  return course.id;
-}
-
-export function QuantumBridgeNotice() {
-  useEffect(() => {
-    if (OPENQUANTUM_EMBED && window.parent === window) toast.info('请从 OpenQuantum 的量子学习通入口创建课堂。');
-  }, []);
-  return null;
 }

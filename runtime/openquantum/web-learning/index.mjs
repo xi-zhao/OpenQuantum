@@ -2,7 +2,7 @@ import path from "node:path";
 import { pathToFileURL } from "node:url";
 const { capabilityRequestBoundary } = await import(pathToFileURL(path.join(process.cwd(), "runtime/openquantum/web-capabilities/index.mjs")).href);
 
-export const inject = ["webServer"];
+export const inject = ["webServer", "llm", "agentDefaultModel", "attachments"];
 const MAX_BYTES = 128 * 1024;
 
 const json = (response, status, value) => {
@@ -38,7 +38,7 @@ export function apply(ctx) {
   const application = import(pathToFileURL(path.join(process.cwd(), "src/learning/application.mjs")).href)
     .then((module) => module.learningApplication(process.cwd()));
   const ui = import(pathToFileURL(path.join(process.cwd(), "src/learning/ui-service.mjs")).href)
-    .then((module) => module.createLearningUiService(process.cwd()));
+    .then((module) => module.createLearningUiService(process.cwd(), { llm: ctx.llm, selection: () => ctx.agentDefaultModel.currentSelection(), attachments: ctx.attachments }));
   ctx.effect(() => () => { void ui.then((service) => service.dispose()); }, "openquantum: OpenMAIC UI lifecycle");
   ctx.effect(() => ctx.webServer.register({
     path: "/openquantum/api/learning", exact: true,

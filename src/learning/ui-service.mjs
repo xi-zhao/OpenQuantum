@@ -1,9 +1,11 @@
 import { spawn } from "node:child_process";
 import { randomUUID, createHash } from "node:crypto";
 import { existsSync, createWriteStream } from "node:fs";
-import { mkdir, readFile } from "node:fs/promises";
+import { mkdir, readFile, appendFile, lstat, readlink, rename, symlink, chmod } from "node:fs/promises";
 import path from "node:path";
 import { OPENMAIC_REVISION, sourceDirectory } from "../../scripts/lib/openmaic-ui-source.mjs";
+import { createLearningDatabase } from "./database-service.mjs";
+import { createModelGateway } from "./model-gateway.mjs";
 
 export function uiOrigins(parentOrigin, port) {
   const parent = new URL(parentOrigin);
@@ -28,10 +30,28 @@ export async function verifyUiInstallation(root) {
   return directory;
 }
 
-/** Owns only the local upstream UI host process, scoped to the Harness Host plugin. */
-export function createLearningUiService(root, { port = Number(process.env.OPENQUANTUM_OPENMAIC_PORT || 3037) } = {}) {
-  let child, starting, descriptor, stopped = false;
-  const dispose = () => { stopped = true; child?.kill("SIGTERM"); };
+export async function prepareLearningData(root, directory) {
+  const data = path.join(directory, "data");
+  const persistent = path.join(root, ".openquantum/learning/openmaic-data");
+  let entry;
+  try { entry = await lstat(data); } catch (error) { if (error.code !== "ENOENT") throw error; }
+  if (entry?.isSymbolicLink()) {
+    if (path.resolve(directory, await readlink(data)) !== persistent) throw new TypeError("OpenMAIC data 已有自定义链接，请核对存储位置后再启动。");
+    return;
+  }
+  if (entry) {
+    if (!entry.isDirectory() || existsSync(persistent)) throw new TypeError("OpenMAIC 存在两份数据目录，请先核对内容，避免覆盖课程材料。");
+    await rename(data, persistent);
+  } else await mkdir(persistent, { recursive: true, mode: 0o700 });
+  await chmod(persistent, 0o700);
+  await symlink(persistent, data, "dir");
+}
+
+/** Owns the external application's process group, not its classroom workflows. */
+export function createLearningUiService(root, { port = Number(process.env.OPENQUANTUM_OPENMAIC_PORT || 3037), llm, selection, attachments } = {}) {
+  let child, starting, descriptor, services, stopped = false;
+  const closeServices = (owned = services) => { owned?.gateway?.dispose(); owned?.database?.dispose(); if (services === owned) services = undefined; };
+  const dispose = () => { stopped = true; child?.kill("SIGTERM"); closeServices(); };
   return {
     dispose,
     async open(parentOrigin) {
@@ -46,22 +66,41 @@ export function createLearningUiService(root, { port = Number(process.env.OPENQU
         const directory = await verifyUiInstallation(root);
         const instance = randomUUID();
         await mkdir(path.join(root, ".openquantum/learning"), { recursive: true });
+        await prepareLearningData(root, directory);
+        if (!llm || !selection) throw new TypeError("课堂模型连接未装配，请重启 OpenQuantum。");
+        const owned = { database: await createLearningDatabase(root) };
+        services = owned;
+        if (stopped) { closeServices(); throw new TypeError("课堂服务已停止。"); }
+        owned.gateway = await createModelGateway({ llm, selection, attachments, record: (value) => appendFile(path.join(root, ".openquantum/learning/model-requests.jsonl"), `${JSON.stringify(value)}\n`, { mode: 0o600 }) });
+        if (stopped) { closeServices(owned); throw new TypeError("课堂服务已停止。"); }
+        const { database, gateway } = owned;
         const log = createWriteStream(path.join(root, ".openquantum/learning/openmaic-ui.log"), { flags: "a", mode: 0o600 });
-        // No provider credentials, proxy tokens or project .env reach the UI host.
+        log.write(`\nOpenMAIC full application start ${new Date().toISOString()}\n`);
+        // LLM keys stay in Harness. Explicitly configured upstream media/search
+        // services remain usable server-side, as do upstream .env.local settings.
+        const optionalServices = Object.fromEntries(Object.entries(process.env).filter(([key]) => /^(TTS_|ASR_|IMAGE_|VIDEO_|WEB_SEARCH_|PDF_|MINERU_|ALIDOCMIND_|TAVILY_|SEARXNG_|RENDER_SERVICE_)/.test(key)));
+        const persistenceToken = randomUUID();
         const env = {
+          ...optionalServices,
           PATH: `${path.dirname(process.execPath)}${path.delimiter}${process.env.PATH || ""}`,
           HOME: process.env.HOME, TMPDIR: process.env.TMPDIR, NODE_ENV: "development",
           NEXT_TELEMETRY_DISABLED: "1", OPENQUANTUM_UI_INSTANCE: instance,
           NEXT_PUBLIC_OPENQUANTUM_EMBED: "1", NEXT_PUBLIC_OPENQUANTUM_PARENT_ORIGIN: origins.parent,
           ALLOWED_FRAME_ANCESTORS: origins.parent, NEXT_PUBLIC_MAIC_EDITOR_ENABLED: "1",
-          OPENMAIC_AGENT_RUNTIME_ENABLED: "0", NEXT_PUBLIC_PRO_WORKBENCH_ENABLED: "0",
-          NEXT_PUBLIC_PI_CHAT_ENABLED: "0", NEXT_PUBLIC_PERSISTENCE: "0",
+          OPENMAIC_AGENT_RUNTIME_ENABLED: "1", NEXT_PUBLIC_PRO_WORKBENCH_ENABLED: "1",
+          NEXT_PUBLIC_PERSISTENCE: "1", DATABASE_URL: database.url,
+          PERSISTENCE_DEV_TOKEN: persistenceToken, NEXT_PUBLIC_PERSISTENCE_TOKEN: persistenceToken,
+          OPENQUANTUM_MODEL_GATEWAY_URL: gateway.url, OPENQUANTUM_MODEL_GATEWAY_TOKEN: gateway.token,
+          DEFAULT_MODEL: "custom-openquantum:harness-default",
+          MODEL_ROUTES: JSON.stringify({ "maic-agent-driver": { model: "custom-openquantum:harness-default", api: "openai-completions" } }),
+          NEXT_PUBLIC_ENABLE_PPTX_IMPORT: "1", NEXT_PUBLIC_ENABLE_VIDEO_EXPORT: "1",
         };
         child = spawn(process.execPath, [path.join(directory, "node_modules/next/dist/bin/next"), "dev", "--hostname", "127.0.0.1", "--port", String(port)], { cwd: directory, env, stdio: ["ignore", "pipe", "pipe"] });
+        const appProcess = child;
         let failure;
         child.stdout.pipe(log, { end: false }); child.stderr.pipe(log, { end: false });
-        child.once("error", () => { failure = "OpenMAIC UI 进程启动失败。"; log.end(); });
-        child.once("exit", () => { failure = "OpenMAIC UI 未能启动，请检查端口占用和界面日志。"; descriptor = undefined; log.end(); });
+        child.once("error", () => { failure = "OpenMAIC 进程启动失败。"; closeServices(owned); log.end(); });
+        child.once("exit", () => { failure = "OpenMAIC 未能启动，请检查端口占用和应用日志。"; if (child === appProcess) descriptor = undefined; closeServices(owned); log.end(); });
         const deadline = Date.now() + 50_000;
         while (Date.now() < deadline && !stopped) {
           if (failure) throw new TypeError(failure);
@@ -78,7 +117,7 @@ export function createLearningUiService(root, { port = Number(process.env.OPENQU
         child.kill("SIGTERM");
         throw new TypeError("OpenMAIC UI 启动超时，请查看 .openquantum/learning/openmaic-ui.log 后重试。");
       })();
-      try { return await starting; } finally { starting = undefined; }
+      try { return await starting; } catch (error) { child?.kill("SIGTERM"); closeServices(); throw error; } finally { starting = undefined; }
     },
   };
 }

@@ -15,6 +15,12 @@ async function run(command, args, cwd, extraEnv = {}) {
     child.once("exit", (code) => code === 0 ? resolve() : reject(new Error(`${command} exited ${code}`)));
   });
 }
+// The pinned PostgreSQL binary package only hydrates its packaged library
+// symlinks. Run this explicit installer even when npm install ignored hooks.
+const postgresPackage = path.join(root, "node_modules/@embedded-postgres", `${process.platform}-${process.arch}`);
+if (existsSync(path.join(postgresPackage, "scripts/hydrate-symlinks.js"))) {
+  await run(process.execPath, ["scripts/hydrate-symlinks.js"], postgresPackage);
+}
 if (!existsSync(directory)) {
   await run("git", ["clone", "--depth", "1", "--branch", "v1.0.1", "https://github.com/THU-MAIC/OpenMAIC.git", directory], root);
 }
@@ -31,4 +37,4 @@ if (!process.argv.includes("--overlay-only")) {
   }
   await run(process.execPath, ["scripts/sync-maic-importer.mjs"], directory);
 }
-console.log(`OpenMAIC UI ready: ${OPENMAIC_REVISION}. Open 量子学习通 in OpenQuantum.`);
+console.log(`OpenMAIC application ready: ${OPENMAIC_REVISION}. Open 量子学习通 in OpenQuantum.`);
