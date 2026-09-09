@@ -1,0 +1,186 @@
+/* OpenQuantum application chrome. Course slides, charts and authored media
+   retain their own styles; only UI tokens and named chrome are adapted here.
+   Embedded mode receives live Harness aliases. Standalone values below match
+   its built-in light/dark palettes and need no parent connection. */
+html.oq-learning-theme {
+  --oq-bg: #fff;
+  --oq-surface: #fff;
+  --oq-popover: #fff;
+  --oq-module: #f5f6f7;
+  --oq-fg: #0f1115;
+  --oq-text-secondary: #61666b;
+  --oq-text-muted: #81858c;
+  --oq-caption: #adb2b8;
+  --oq-border: rgb(0 0 0 / 10%);
+  --oq-border-soft: rgb(0 0 0 / 4%);
+  --oq-primary: #0f1115;
+  --oq-on-primary: #fff;
+  --oq-primary-hover: #43454a;
+  --oq-hover: #f1f3f5;
+  --oq-selected: #ebeef2;
+  --oq-sidebar: #f9fafb;
+  --oq-accent: #4176e6;
+  --oq-danger: #ec1313;
+  --oq-font: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --oq-code-font: 'SF Mono', 'JetBrains Mono', 'Fira Code', Consolas, 'Liberation Mono', Menlo, Courier, 'PingFang SC', 'Microsoft YaHei';
+  --oq-shadow: 0 2px 8px rgb(0 0 0 / 5%);
+  color-scheme: light;
+}
+
+html.oq-learning-theme.dark {
+  --oq-bg: #151517;
+  --oq-surface: #232324;
+  --oq-popover: #353638;
+  --oq-module: #353638;
+  --oq-fg: #f9fafb;
+  --oq-text-secondary: #cfd3d6;
+  --oq-text-muted: #adb2b8;
+  --oq-caption: #81858c;
+  --oq-border: rgb(255 255 255 / 12%);
+  --oq-border-soft: rgb(255 255 255 / 6%);
+  --oq-primary: #f9fafb;
+  --oq-on-primary: #0f1115;
+  --oq-primary-hover: #ebeef2;
+  --oq-hover: #353638;
+  --oq-selected: #43454a;
+  --oq-sidebar: #1b1b1c;
+  --oq-accent: #5686fe;
+  --oq-danger: #f25a5a;
+  --oq-shadow: 0 2px 8px rgb(0 0 0 / 16%);
+  color-scheme: dark;
+}
+
+html.oq-learning-theme {
+  --background: var(--oq-bg);
+  --foreground: var(--oq-fg);
+  --card: var(--oq-surface);
+  --card-foreground: var(--oq-fg);
+  --popover: var(--oq-popover);
+  --popover-foreground: var(--oq-fg);
+  --primary: var(--oq-primary);
+  --primary-foreground: var(--oq-on-primary);
+  --secondary: var(--oq-module);
+  --secondary-foreground: var(--oq-fg);
+  --muted: var(--oq-module);
+  --muted-foreground: var(--oq-text-secondary);
+  --accent: var(--oq-hover);
+  --accent-foreground: var(--oq-fg);
+  --border: var(--oq-border);
+  --input: var(--oq-border);
+  --ring: var(--oq-accent);
+  --destructive: var(--oq-danger);
+  --sidebar: var(--oq-sidebar);
+  --sidebar-foreground: var(--oq-fg);
+  --sidebar-primary: var(--oq-primary);
+  --sidebar-primary-foreground: var(--oq-on-primary);
+  --sidebar-accent: var(--oq-selected);
+  --sidebar-accent-foreground: var(--oq-fg);
+  --sidebar-border: var(--oq-border);
+  --sidebar-ring: var(--oq-accent);
+  --font-sans: var(--oq-font);
+  --radius: 0.75rem;
+}
+
+.oq-learning-theme body { font-family: var(--oq-font); }
+.oq-learning-theme .oq-learning-wordmark { color: var(--oq-fg); }
+.oq-learning-theme [data-slot='button'] { box-shadow: none; }
+.oq-learning-theme [data-slot='button'][data-variant='default']:hover { background: var(--oq-primary-hover); }
+.oq-learning-theme :is([data-slot='dialog-content'], [data-slot='alert-dialog-content'], [data-slot='popover-content'], [data-slot='dropdown-menu-content'], [data-slot='select-content']) {
+  border-color: var(--oq-border);
+  border-radius: 12px;
+  box-shadow: 0 8px 28px rgb(0 0 0 / 12%);
+}
+
+/* Legacy utility colors are remapped only inside application controls and
+   navigation, including portalled menus. Never change renderer color scales. */
+.oq-learning-theme :is(.oq-learning-home, .oq-learning-navigation, .oq-learning-controls, .ws-rail, .ws-composer, [data-slot='dialog-content'], [data-slot='popover-content'], [data-slot='dropdown-menu-content'], [data-slot='select-content']) {
+  --color-violet-50: var(--oq-module);
+  --color-violet-100: var(--oq-selected);
+  --color-violet-200: var(--oq-border);
+  --color-violet-300: var(--oq-text-secondary);
+  --color-violet-400: var(--oq-accent);
+  --color-violet-500: var(--oq-accent);
+  --color-violet-600: var(--oq-accent);
+  --color-violet-700: var(--oq-fg);
+  --color-violet-800: var(--oq-border);
+  --color-violet-900: var(--oq-selected);
+  --color-violet-950: var(--oq-module);
+  --color-purple-50: var(--color-violet-50);
+  --color-purple-100: var(--color-violet-100);
+  --color-purple-200: var(--color-violet-200);
+  --color-purple-300: var(--color-violet-300);
+  --color-purple-400: var(--color-violet-400);
+  --color-purple-500: var(--color-violet-500);
+  --color-purple-600: var(--color-violet-600);
+  --color-purple-700: var(--color-violet-700);
+  --color-purple-800: var(--color-violet-800);
+  --color-purple-900: var(--color-violet-900);
+  --color-purple-950: var(--color-violet-950);
+}
+
+.oq-learning-theme .oq-learning-home { background: var(--oq-bg); }
+.oq-learning-theme .oq-learning-atmosphere { display: none; }
+.oq-learning-theme .oq-learning-topbar {
+  background: var(--oq-surface);
+  border-color: var(--oq-border);
+  border-radius: 12px;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+html[data-oq-host-theme] [data-oq-theme-selector] { display: none; }
+.oq-learning-theme .oq-learning-home [data-pro-morph='composer'] {
+  background: var(--oq-surface);
+  border-color: var(--oq-border);
+  border-radius: 16px;
+  box-shadow: var(--oq-shadow);
+  backdrop-filter: none;
+}
+.oq-learning-theme .oq-learning-home [data-pro-morph='composer']:focus-within {
+  border-color: var(--oq-accent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--oq-accent) 12%, transparent);
+}
+.oq-learning-theme .oq-learning-home textarea::placeholder { color: var(--oq-text-muted); }
+.oq-learning-theme .oq-learning-slogan { color: var(--oq-text-secondary); }
+.oq-learning-theme .oq-learning-navigation {
+  background: var(--oq-sidebar);
+  border-color: var(--oq-border);
+  box-shadow: none;
+  backdrop-filter: none;
+}
+.oq-learning-theme [data-pro-badge] { box-shadow: none; letter-spacing: 0.08em; }
+.oq-learning-theme [data-pro-badge='on'] { background: var(--oq-primary); border-color: var(--oq-primary); color: var(--oq-on-primary); }
+.oq-learning-theme [data-pro-badge='off']:hover { background: var(--oq-hover); border-color: var(--oq-border); color: var(--oq-fg); }
+
+/* Keep the complete workbench layout, replacing its glass/grain materials. */
+html.oq-learning-theme .ws-root {
+  --ws-canvas-top: var(--oq-bg);
+  --ws-canvas-bottom: var(--oq-bg);
+  --ws-rail: var(--oq-sidebar);
+  --ws-surface: var(--oq-surface);
+  --ws-raised: var(--oq-popover);
+  --ws-ink: var(--oq-fg);
+  --ws-ink-soft: var(--oq-text-secondary);
+  --ws-ink-mute: var(--oq-text-secondary);
+  --ws-ink-faint: var(--oq-caption);
+  --ws-line: var(--oq-border);
+  --ws-line-soft: var(--oq-border-soft);
+  --ws-tint: var(--oq-hover);
+  --ws-tint-strong: var(--oq-selected);
+  --ws-accent: var(--oq-accent);
+  --ws-accent-thread: color-mix(in srgb, var(--oq-accent) 35%, transparent);
+  --ws-accent-wash: color-mix(in srgb, var(--oq-accent) 8%, transparent);
+  --ws-lift: var(--oq-shadow);
+  --ws-lift-focus: 0 0 0 2px var(--ws-accent-wash);
+  --ws-lift-sm: none;
+  --ws-lift-sm-hover: var(--oq-shadow);
+  --ws-grain: none;
+  background: var(--oq-bg);
+}
+html.oq-learning-theme .ws-canvas { background-image: none; }
+.oq-learning-theme :is(.ws-rail, .ws-composer) { backdrop-filter: none; -webkit-backdrop-filter: none; }
+.oq-learning-theme .ws-new:hover { transform: none; border-color: var(--oq-border); }
+html.oq-learning-theme :is(.ws-hero-logo, .ws-hero-mark) { filter: none; }
+html.oq-learning-theme .ws-composer:focus-within { transform: none; border-color: var(--oq-accent); }
+html.oq-learning-theme .ws-pane-head { background: var(--oq-surface); }
+.oq-learning-theme .oq-learning-commandbar { height: 56px; background: var(--oq-surface); border-color: var(--oq-border); }
+.oq-learning-theme .wbchat { --wbchat-accent: var(--oq-accent); --wbchat-text-2: var(--oq-text-secondary); }

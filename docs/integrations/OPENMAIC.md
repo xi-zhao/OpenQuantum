@@ -17,7 +17,13 @@ npm run dev
 从 `http://localhost:3000` 侧栏打开「量子学习通」。首次打开会启动 PostgreSQL、私有模型连接和原版 Next.js 应用，
 默认只监听 `127.0.0.1:3037`，随 Harness Host 退出而停止。顶栏「返回 OpenQuantum」关闭展示，后台任务按原版规则运行。
 应用显示名称统一为「量子学习通」，包括首页、工作台、课堂、编辑器、页面标题、多语言提示与视频导出标题。
-MIT 许可和上游源码署名保留；语言和外观设置沿用原版，首次默认中文。
+MIT 许可和上游源码署名保留；首次默认中文。
+
+外观与 OpenQuantum 对齐：复用平台图标、系统字体、中性底色、主按钮、侧栏和弹层层级，
+首页及 Pro 工作台移除装饰渐变、玻璃背景与纹理，课堂与编辑器沿用同一组界面样式。
+课程幻灯片、图表及用户编写的内容保留自身样式。原版页面结构、教学流程和编辑操作继续沿用。
+嵌入时通过 Harness `theme` Interface 的 `theme/change` 通知同步深浅色和公开样式变量，
+外观设置由 OpenQuantum 统一管理；单独打开子应用仍可使用原版外观偏好，不写回或覆盖该偏好。
 
 首页保留标准建课、深度互动、材料附件、课程导入和 PPTX 导入入口；Pro 开关进入原版工作台。
 模型选择显示「OpenQuantum 当前模型」，实际每次请求读取 Harness 当前选择，不写入另一套 Provider Key。
@@ -33,14 +39,14 @@ MIT 许可和上游源码署名保留；语言和外观设置沿用原版，首�
 - `learning:ui:setup` 校验提交、按上游锁文件安装依赖，显式构建工作区包和同步导入器。
 - PostgreSQL 使用固定版本 `embedded-postgres` 的平台二进制；安装入口显式执行其打包库链接准备，不安装全局数据库服务。
 - `scripts/lib/openmaic-ui-source.mjs` 保存可重放的适配。文件内容摘要防止覆盖额外的上游本地改动。
-  首页只增加历史课程同步；页面、CSS、建课、课堂和编辑器实现保留。
+  保留原版页面与业务实现，增加历史课程同步及独立的品牌和样式适配层；不修改上游依赖包。
 - 原版后台任务、素材处理、资源回收和退出逻辑全部保留；Node instrumentation 单独加载，避免 Next.js 的 Edge 编译误处理。
 
 ## 服务与职责
 
 | 对象 | 职责 |
 | --- | --- |
-| Harness Client Plugin | 侧栏入口、独立来源 iframe、返回按钮、旧 SDK 课堂同步 |
+| Harness Client Plugin | 侧栏入口、独立来源 iframe、返回按钮、主题同步、旧 SDK 课堂同步 |
 | Bounded Host Route | `/openquantum/api/learning`，同源 JSON POST 边界，委托应用操作或子应用启动服务 |
 | `ui-service.mjs` | 验证安装、启动本次拥有的服务、核对进程身份、随 Host scope 回收 |
 | `database-service.mjs` / `database-worker.mjs` | 独立 PostgreSQL 进程、随机本机端口、私有凭据和持久目录 |
@@ -59,7 +65,8 @@ OpenQuantum 的通用科研 Agent Runtime 仍由 Harness 提供，没有新增 O
 ### 模型连接
 
 私有连接只接受本机、带本次随机 Bearer Token、且没有浏览器 Origin 的服务端请求。
-Token 和真实模型凭据不会出现在浏览器模型配置中。iframe 消息只接受精确来源、窗口身份、UUID 和 `library` 命令。
+Token 和真实模型凭据不会出现在浏览器模型配置中。课堂同步消息只接受精确来源、窗口身份、UUID 和 `library` 命令。
+独立的外观消息通道只传递深浅色与限定的公开样式变量，也校验精确来源和窗口身份，不开放设置写入或任意 RPC。
 原版应用接口保留自己的身份、所有权及 URL 信任边界，并额外限制本机 Host 与同源 Origin。
 
 适配覆盖文本、内嵌图片、工具定义及历史、工具调用流、推理文本、用量、停止原因、取消和脱敏错误。
@@ -103,11 +110,15 @@ JSON 输出要求通过系统指令传给 Harness；不宣称提供 Provider 原
 
 ```sh
 node --test tests/learning-library-migration.test.mjs tests/learning-model-gateway.test.mjs tests/learning-ui-bridge.test.mjs tests/quantum-learning.test.mjs tests/harness-quantum-learning.test.mjs
+node --test tests/learning-ui-theme.test.mjs
 npm run harness:config
 ```
 
 合同测试覆盖消息隔离、当前模型路由、流式工具调用、取消和错误脱敏、迁移恢复与用户修改保护，以及旧 SDK 会话行为。
 模拟模型和离线课堂只用于验证连接合同，不算真实在线 AI 成功。
+
+外观适配：主题通道检查覆盖来源隔离、深浅色切换、主系统自定义配色和样式字段限制。
+上游 TypeScript、样式解析及 Harness Client 构建检查通过；当前预览工具仍超时，页面目测及交互外观验收尚未完成。
 
 2026-09-09：22 项相关测试通过，适配后的上游 TypeScript 检查、相关 JavaScript 检查与 Harness 组合配置检查通过。
 本机运行证据如下：
