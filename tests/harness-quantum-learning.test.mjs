@@ -48,7 +48,8 @@ test("native UI/API → Harness Session → OpenMAIC SDK → saved classroom and
   const prepared = await prepareOpenQuantumHarnessHome({ projectRoot: root, harnessHome });
   const bundle = await readFile(path.join(prepared.learningTarget, "client.js"), "utf8");
   assert.match(bundle, /@openquantum\/harness-web-learning/);
-  assert.ok(bundle.length > 100_000, "actual renderer is bundled");
+  assert.ok(bundle.length < 100_000, "launcher delegates presentation to the original OpenMAIC app");
+  assert.match(bundle, /iframe/);
   let logs = "";
   const child = spawn(process.execPath, [path.join(root, "node_modules/@deepseek-ai/dsh/lib/bin.js"), "web", "--host", "127.0.0.1", "--port", String(port)], {
     cwd: root, env: { ...process.env, DSH_HOME: harnessHome, DSH_TELEMETRY_DISABLED: "1", OPENQUANTUM_LEARNING_DIR: classrooms,
