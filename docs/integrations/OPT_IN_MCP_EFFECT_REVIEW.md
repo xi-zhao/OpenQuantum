@@ -1,6 +1,6 @@
 # 默认关闭的外部 MCP Server 合同审查
 
-- 审查日期：2026-09-05
+- 审查日期：2026-09-05；社区硬件 MCP 升级复审：2026-09-10
 - 范围：固定源码的 Tool 注册清单、逐 Tool 最大副作用、部署版本引用
 - 逐项证据：[机器可读合同与源码摘要](evidence/opt-in-mcp-tool-contracts.json)
 
@@ -13,11 +13,12 @@
 | `qiskit_ibm_transpiler` | [PyPI 0.4.1](https://pypi.org/project/qiskit-ibm-transpiler-mcp-server/0.4.1/) | 7 | 默认关闭 |
 | `qiskit_gym` | [PyPI 0.4.1](https://pypi.org/project/qiskit-gym-mcp-server/0.4.1/) | 37 | 默认关闭 |
 | `qpanda_runtime` | [OriginQ 固定 commit](https://github.com/OriginQ/qpanda3-runtime-mcp-server/tree/4a06035afa415ed8dc9d571869cb5ca60ed1bcb1) | 19 | 默认关闭 |
-| `quantum_hardware` | [社区硬件固定 commit](https://github.com/Lokesh-2025/quantum-hardware-mcp/tree/83d1b924caaffbec4c07dd20473ccb4c2aacba06) | 53 | 默认关闭 |
+| `quantum_hardware` | [社区硬件固定 commit](https://github.com/Lokesh-2025/quantum-hardware-mcp/tree/55dd9a7bcee32a2a99654db6816dad705c0b6f62) | 53 | 默认关闭 |
 
 固定分母为 **5 个 Server、136 个 Tool**。JSON 每项记录名称、副作用、依据类别、源码文件与行号；
-对应源码记录 SHA-256。本次只读取固定发行包和源码，没有运行这五个 Server，没有使用真实凭据、
-提交 QPU 任务或执行训练。源码覆盖不等于 `tools/list` 握手、在线可用性、完整安全认证或科学验收。
+对应源码记录 SHA-256。9 月 5 日的基础审查只读取源码；9 月 10 日已在不含凭据和用户数据库的隔离目录
+启动社区硬件 MCP，真实 `tools/list` 返回 53 个 Tool，未调用任何 Tool。其余四个 Server 本轮未运行。
+两次审查都没有提交 QPU 任务或执行训练；工具握手不等于在线硬件可用性或科学验收。
 
 ## 副作用口径
 
@@ -39,6 +40,20 @@
 
 启动阶段的包下载、Gym 目录创建和硬件数据库初始化还需独立的安装/启用审批；不能用某个 Tool 的
 只读声明证明 Server 启动无副作用。上游依赖范围也不等于传递依赖完全可复现。
+
+## 社区硬件 MCP 本轮变化（2026-09-10）
+
+从 `83d1b92` 更新到 `55dd9a7`。逐 Tool 函数参数和返回注解保持一致，53 个 Tool 的副作用上界不变；
+`requirements.txt` 和 MIT 许可证未变。摘要覆盖 `server.py`、`mcp_app.py`、`snapshot.py`、
+`tools_chemistry.py`、新增 `turso_db.py`、依赖清单和许可证。
+
+- 部分历史、漂移和芯片身份查询可优先读取 Turso；仅同时存在 `TURSO_DATABASE_URL` 和
+  `TURSO_AUTH_TOKEN` 时启用，HTTP 查询超时 15 秒，失败后回退到项目内 SQLite。
+- MCP 调用链新增的云数据库路径只用于查询。独立 `snapshot.collect()` 命令具备上传校准数据能力，
+  本集成不启动该采集命令，也不设置 Turso 凭据。启用它会新增数据外发目的地，必须另行评估。
+- 没有新增真机提交接口或费用路径；原有提交、取消及化学 Tool 的保守权限声明保持不变。
+- 真实握手确认 53 个 Tool；上游五组离线回归为 35 通过、2 跳过。另以桩验证未配置拒绝、
+  Turso 读取、本地回退、参数/响应映射和超时设置。安装幂等、非受控目录保护、设置门控与配置检查通过。
 
 ## 可重复检查
 

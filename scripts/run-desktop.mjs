@@ -3,19 +3,14 @@ import { fileURLToPath } from "node:url";
 import path from "node:path";
 
 import { prepareOpenQuantumHarnessHome } from "./lib/prepare-harness-home.mjs";
+import { requireDesktopBuild } from "./lib/desktop-source.mjs";
 import { loadProjectEnv } from "./lib/load-project-env.mjs";
 
 const projectRoot = fileURLToPath(new URL("..", import.meta.url));
-const desktopBin = path.join(
-  projectRoot,
-  "node_modules",
-  "dsh-plugin-desktop",
-  "lib",
-  "bin.js",
-);
-const harnessHome = path.join(projectRoot, ".openquantum", "dsh");
+const desktopBin = path.join(await requireDesktopBuild(projectRoot), "lib/bin.js");
 loadProjectEnv(projectRoot);
-await prepareOpenQuantumHarnessHome({ harnessHome, projectRoot });
+const harnessHome = process.env.DSH_HOME ?? path.join(projectRoot, ".openquantum", "dsh");
+await prepareOpenQuantumHarnessHome({ harnessHome, projectRoot, profileName: "desktop" });
 
 const child = spawn(
   process.execPath,
@@ -25,6 +20,9 @@ const child = spawn(
     env: {
       ...process.env,
       DSH_HOME: harnessHome,
+      // Desktop may host plugins inside Electron's Node context. Application
+      // workers must use the real Node executable from this launcher.
+      OPENQUANTUM_NODE_EXECUTABLE: process.execPath,
       DSH_TELEMETRY_DISABLED: process.env.DSH_TELEMETRY_DISABLED ?? "1",
     },
     stdio: "inherit",

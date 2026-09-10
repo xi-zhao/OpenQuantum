@@ -1,3 +1,4 @@
+import { harnessHttpCookie, harnessSessionSnapshot, redactHarnessLaunchTokens } from "../scripts/lib/harness-http-auth.mjs";
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
 import { once } from "node:events";
@@ -156,7 +157,7 @@ test(
       process.execPath,
       [
         harnessBin,
-        "web",
+        "web", "--no-open",
         "--host",
         "127.0.0.1",
         "--port",
@@ -188,16 +189,20 @@ test(
       await rm(sandboxRoot, { recursive: true, force: true });
     });
 
+    let cookie;
     async function rpc(method, payload = {}) {
+      cookie ??= await harnessHttpCookie(baseUrl, logs);
+      if (method === "session/page") { const snapshot = await harnessSessionSnapshot(baseUrl, cookie, payload.sessionId, payload.maxMessages); return { ok: true, value: { events: snapshot.records } }; }
+      if (method === "session/prompt") payload = { requestId: crypto.randomUUID(), ...payload };
       const rpcId = `test-${method}-${crypto.randomUUID()}`;
       const response = await fetch(`${baseUrl}/api/${method}`, {
         method: "POST",
-        headers: { "content-type": "application/json" },
+        headers: { "content-type": "application/json", cookie },
         body: JSON.stringify({
           type: "client-request",
           rpcId,
           method,
-          payload,
+          payload: { args: ["session/modelCatalog", "agentPresets/list"].includes(method) ? {} : { [method === "session/list" ? "_request" : "request"]: payload } },
         }),
         signal: AbortSignal.timeout(INCLUDE_IBM_RUNTIME_MCP ? 90_000 : 5_000),
       });
@@ -224,10 +229,10 @@ test(
       return response.json();
     }
 
-    const diagnostics = () => `Harness output:\n${logs}`;
+    const diagnostics = () => `Harness output:\n${redactHarnessLaunchTokens(logs)}`;
     await waitForValue(
       async () => {
-        const result = await rpc("host.describe");
+        const result = await rpc("session/modelCatalog");
         return result.ok === true ? result.value : undefined;
       },
       {
@@ -237,7 +242,7 @@ test(
       },
     );
 
-    const modelCatalog = await rpc("llm.models");
+    const modelCatalog = await rpc("session/modelCatalog");
     assert.equal(modelCatalog.ok, true, diagnostics());
     const publicModels = modelCatalog.value.groups.find(
       (group) => group.id === "openquantum-public",
@@ -248,7 +253,7 @@ test(
       ["kimi-k2.7-code", "glm5.2"],
     );
 
-    const presetRoster = await rpc("agentPreset.list");
+    const presetRoster = await rpc("agentPresets/list");
     assert.equal(presetRoster.ok, true, diagnostics());
     const openQuantumPreset = presetRoster.value.presets.find(
       (preset) => preset.id === "openquantum",
@@ -271,15 +276,15 @@ test(
         cwd: projectRoot,
         ...(index === 0 ? {} : { agentPreset: "openquantum" }),
       };
-      const created = await rpc("session.create", createPayload);
+      const created = await rpc("session/create", createPayload);
       assert.equal(
         created.ok,
         true,
-        `${diagnostics()}\nsession.create: ${JSON.stringify(created)}`,
+        `${diagnostics()}\nsession/create: ${JSON.stringify(created)}`,
       );
       assert.equal(created.value.sessionId, sessionId);
 
-      const skillList = await rpc("skill.list", { sessionId });
+      const skillList = await rpc("skills/list", { sessionId });
       assert.equal(skillList.ok, true, diagnostics());
       for (const skillName of EXPECTED_QUANTUM_SKILLS) {
         const quantumSkill = skillList.value.skills.find(
@@ -335,7 +340,7 @@ test(
         );
       }
 
-      const prompted = await rpc("session.prompt", {
+      const prompted = await rpc("session/prompt", {
         sessionId,
         mode: "queue",
         content: [
@@ -351,7 +356,7 @@ test(
 
       const header = await waitForValue(
         async () => {
-          const history = await rpc("session.history", {
+          const history = await rpc("session/page", {
             sessionId,
             maxMessages: 200,
           });
@@ -414,7 +419,7 @@ test(
     }
 
     for (const sessionId of sessionIds) {
-      await rpc("session.cancel", { sessionId }).catch(() => undefined);
+      await rpc("session/cancel", { sessionId }).catch(() => undefined);
     }
   },
 );

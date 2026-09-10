@@ -1,8 +1,9 @@
-import { spawn } from "node:child_process";
+import { execFile, spawn } from "node:child_process";
 import { existsSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
+import { promisify } from "node:util";
 import { applyOpenMaicUiOverlay, sourceDirectory, OPENMAIC_REVISION } from "./lib/openmaic-ui-source.mjs";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
@@ -21,8 +22,16 @@ const postgresPackage = path.join(root, "node_modules/@embedded-postgres", `${pr
 if (existsSync(path.join(postgresPackage, "scripts/hydrate-symlinks.js"))) {
   await run(process.execPath, ["scripts/hydrate-symlinks.js"], postgresPackage);
 }
-if (!existsSync(directory)) {
-  await run("git", ["clone", "--depth", "1", "--branch", "v1.0.1", "https://github.com/THU-MAIC/OpenMAIC.git", directory], root);
+const freshSource = !existsSync(directory);
+if (freshSource) {
+  await run("git", ["clone", "--filter=blob:none", "--no-checkout", "https://github.com/THU-MAIC/OpenMAIC.git", directory], root);
+}
+const { stdout: currentRevision } = await promisify(execFile)("git", ["rev-parse", "HEAD"], { cwd: directory });
+if (freshSource || currentRevision.trim() !== OPENMAIC_REVISION) {
+  await run("git", ["fetch", "--depth", "1", "origin", OPENMAIC_REVISION], directory);
+  // Git preserves unrelated local edits and refuses overlapping changes.
+  // Do not reset the original UI overlay or any user-authored files.
+  await run("git", ["checkout", "--detach", OPENMAIC_REVISION], directory);
 }
 await applyOpenMaicUiOverlay(root);
 if (!process.argv.includes("--overlay-only")) {

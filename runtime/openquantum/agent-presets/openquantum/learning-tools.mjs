@@ -10,7 +10,7 @@ export const inject = ["tools", "llm"];
 
 /** SDK model requests use the route captured by the owning Harness step. */
 export function createHarnessAiCall({ llm, agent, signal }) {
-  const config = agent.session.events.findLast((event) => event.type === "request/header")?.data.header.config;
+  const config = agent.session.requestHeader()?.config;
   if (!config?.provider || !config?.model) throw new TypeError("当前会话尚未记录可用的模型，请从建课入口重试");
   const model = {
     provider: config.provider, model: config.model,
@@ -75,7 +75,7 @@ export function classroomTool({ llm, application = learningApplication(process.c
       if (!args || Object.keys(args).some((key) => key !== "courseId")) throw new TypeError("只接受课堂编号");
       requireCourseId(args.courseId);
       if (!exec.agent) throw new TypeError("建课必须在 Harness 会话中执行");
-      const turn = exec.agent.session.events.findLast((event) => event.type === "turn/start")?.data.turn;
+      const turn = exec.agent.session.snapshotEvents().findLast((event) => event.type === "turn/start")?.data.turn;
       if (!Number.isInteger(turn)) throw new TypeError("建课必须在已开始的 Harness Turn 中执行");
       const attempt = `${turn}:${args.courseId}`;
       if (failedAttempts.get(exec.agent) === attempt) throw new TypeError("本轮建课已失败，请等待用户明确重试，不自动重复模型请求");

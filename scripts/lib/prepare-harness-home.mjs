@@ -11,7 +11,8 @@ import { buildLearningClient } from "./build-learning-client.mjs";
  * Desktop adapter, isolated tests and real-provider probes boot the same
  * composition even when each uses a different DSH_HOME.
  */
-export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot }) {
+export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot, profileName = "web" }) {
+  if (!/^[A-Za-z0-9_-]+$/.test(profileName)) throw new Error("Invalid Harness profile name");
   const patchSource = path.join(
     projectRoot,
     "runtime",
@@ -50,6 +51,7 @@ export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot }
   const brandingTarget = path.join(
     harnessHome,
     "profiles",
+    profileName,
     "node_modules",
     "@openquantum",
     "harness-web-branding",
@@ -63,12 +65,13 @@ export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot }
   const capabilitiesTarget = path.join(
     harnessHome,
     "profiles",
+    profileName,
     "node_modules",
     "@openquantum",
     "harness-web-capabilities",
   );
   const learningPresetTarget = path.join(harnessHome, ".agent-presets", "quantum-learning");
-  const learningTarget = path.join(harnessHome, "profiles", "node_modules", "@openquantum", "harness-web-learning");
+  const learningTarget = path.join(harnessHome, "profiles", profileName, "node_modules", "@openquantum", "harness-web-learning");
 
   await Promise.all([
     mkdir(path.dirname(patchTarget), { recursive: true }),

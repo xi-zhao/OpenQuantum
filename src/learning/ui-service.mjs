@@ -1,4 +1,4 @@
-import { spawn } from "node:child_process";
+import { execFile, spawn } from "node:child_process";
 import { randomUUID, createHash } from "node:crypto";
 import { existsSync, createWriteStream } from "node:fs";
 import { mkdir, readFile, appendFile, lstat, readlink, rename, symlink, chmod } from "node:fs/promises";
@@ -49,9 +49,22 @@ export async function prepareLearningData(root, directory) {
 
 /** Owns the external application's process group, not its classroom workflows. */
 export function createLearningUiService(root, { port = Number(process.env.OPENQUANTUM_OPENMAIC_PORT || 3037), llm, selection, attachments } = {}) {
+  const nodeExecutable = process.env.OPENQUANTUM_NODE_EXECUTABLE || process.execPath;
   let child, starting, descriptor, services, stopped = false;
+  const terminating = new WeakSet();
+  const stopApp = (owned = child) => {
+    if (!owned?.pid || terminating.has(owned)) return;
+    terminating.add(owned);
+    // Next owns a server child. Stop this launch's private process group so
+    // a timeout or Desktop exit cannot leave the classroom port occupied.
+    if (process.platform !== "win32") {
+      try { process.kill(-owned.pid, "SIGTERM"); } catch (error) { if (error.code !== "ESRCH") owned.kill("SIGTERM"); }
+    } else if (owned.exitCode === null) {
+      execFile("taskkill", ["/PID", String(owned.pid), "/T", "/F"], { windowsHide: true, timeout: 5000 }, () => {});
+    }
+  };
   const closeServices = (owned = services) => { owned?.gateway?.dispose(); owned?.database?.dispose(); if (services === owned) services = undefined; };
-  const dispose = () => { stopped = true; child?.kill("SIGTERM"); closeServices(); };
+  const dispose = () => { stopped = true; stopApp(); closeServices(); };
   return {
     dispose,
     async open(parentOrigin) {
@@ -82,7 +95,7 @@ export function createLearningUiService(root, { port = Number(process.env.OPENQU
         const persistenceToken = randomUUID();
         const env = {
           ...optionalServices,
-          PATH: `${path.dirname(process.execPath)}${path.delimiter}${process.env.PATH || ""}`,
+          PATH: `${path.dirname(nodeExecutable)}${path.delimiter}${process.env.PATH || ""}`,
           HOME: process.env.HOME, TMPDIR: process.env.TMPDIR, NODE_ENV: "development",
           NEXT_TELEMETRY_DISABLED: "1", OPENQUANTUM_UI_INSTANCE: instance,
           NEXT_PUBLIC_OPENQUANTUM_EMBED: "1", NEXT_PUBLIC_OPENQUANTUM_PARENT_ORIGIN: origins.parent,
@@ -95,12 +108,12 @@ export function createLearningUiService(root, { port = Number(process.env.OPENQU
           MODEL_ROUTES: JSON.stringify({ "maic-agent-driver": { model: "custom-openquantum:harness-default", api: "openai-completions" } }),
           NEXT_PUBLIC_ENABLE_PPTX_IMPORT: "1", NEXT_PUBLIC_ENABLE_VIDEO_EXPORT: "1",
         };
-        child = spawn(process.execPath, [path.join(directory, "node_modules/next/dist/bin/next"), "dev", "--hostname", "127.0.0.1", "--port", String(port)], { cwd: directory, env, stdio: ["ignore", "pipe", "pipe"] });
+        child = spawn(nodeExecutable, [path.join(directory, "node_modules/next/dist/bin/next"), "dev", "--hostname", "127.0.0.1", "--port", String(port)], { cwd: directory, env, detached: process.platform !== "win32", windowsHide: true, stdio: ["ignore", "pipe", "pipe"] });
         const appProcess = child;
         let failure;
         child.stdout.pipe(log, { end: false }); child.stderr.pipe(log, { end: false });
         child.once("error", () => { failure = "量子学习通进程启动失败。"; closeServices(owned); log.end(); });
-        child.once("exit", () => { failure = "量子学习通未能启动，请检查端口占用和应用日志。"; if (child === appProcess) descriptor = undefined; closeServices(owned); log.end(); });
+        child.once("exit", () => { stopApp(appProcess); failure = "量子学习通未能启动，请检查端口占用和应用日志。"; if (child === appProcess) descriptor = undefined; closeServices(owned); log.end(); });
         const deadline = Date.now() + 50_000;
         while (Date.now() < deadline && !stopped) {
           if (failure) throw new TypeError(failure);
@@ -114,10 +127,10 @@ export function createLearningUiService(root, { port = Number(process.env.OPENQU
           } catch { /* Wait for this process, never adopt an unrelated listener. */ }
           await new Promise((resolve) => setTimeout(resolve, 400));
         }
-        child.kill("SIGTERM");
+        stopApp();
         throw new TypeError("量子学习通 UI 启动超时，请查看 .openquantum/learning/openmaic-ui.log 后重试。");
       })();
-      try { return await starting; } catch (error) { child?.kill("SIGTERM"); closeServices(); throw error; } finally { starting = undefined; }
+      try { return await starting; } catch (error) { stopApp(); closeServices(); throw error; } finally { starting = undefined; }
     },
   };
 }

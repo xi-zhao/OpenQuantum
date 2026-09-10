@@ -7,6 +7,7 @@ import {
   resolveCcConnectPaths,
 } from "../src/channels/cc-connect.mjs";
 import { loadProjectEnv } from "./lib/load-project-env.mjs";
+import { prepareOpenQuantumHarnessHome } from "./lib/prepare-harness-home.mjs";
 
 const projectRoot = fileURLToPath(new URL("..", import.meta.url));
 loadProjectEnv(projectRoot);
@@ -16,6 +17,7 @@ if (!new Set(["start", "web"]).has(mode)) {
   throw new TypeError(`未知 CC Connect 启动模式：${mode}`);
 }
 
+await prepareOpenQuantumHarnessHome({ projectRoot, harnessHome: process.env.DSH_HOME ?? `${projectRoot}/.openquantum/dsh` });
 await ensureCcConnectConfig(projectRoot);
 const paths = resolveCcConnectPaths(projectRoot);
 const status = await readCcConnectStatus(projectRoot);

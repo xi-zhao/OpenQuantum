@@ -4,13 +4,20 @@ import { readFile, writeFile, mkdir } from "node:fs/promises";
 import path from "node:path";
 import { promisify } from "node:util";
 const run = promisify(execFile);
-export const OPENMAIC_REVISION = "f50a25644c9c3893503cf0727ccf613c0ce1e748";
+export const OPENMAIC_REVISION = "29735f10d0081859ac3db1a50a0cc92f46436004";
 export const OPENMAIC_VERSION = "1.0.1";
 export const sourceDirectory = (root) => path.join(root, ".openquantum/external/openmaic");
 
 // Preserve the full upstream product. Empty replacement lists restore former
 // UI-only patches (including the disabled instrumentation and API blockers).
 const patches = {
+  "pnpm-lock.yaml": [],
+  "package.json": [
+    ['"next": "16.2.11"', '"next": "16.3.4"'],
+    ['"react": "19.2.3"', '"react": "19.3.0"'],
+    ['"react-dom": "19.2.3"', '"react-dom": "19.3.0"'],
+    ['"katex": "^0.16.33"', '"katex": "0.18.7"'],
+  ],
   "instrumentation.ts": [],
   "app/page.tsx": [
     ["'use client';", "'use client';\n\nimport { LearningWordmark } from '@/components/openquantum-wordmark';"],
@@ -153,6 +160,7 @@ export async function applyOpenMaicUiOverlay(root) {
       if (expected.split(before).length !== 2) throw new Error(`OpenMAIC patch no longer matches ${name}`);
       expected = expected.replace(before, after);
     }
+    if (name === "pnpm-lock.yaml") expected = await readFile(path.join(root, "runtime/openquantum/openmaic-ui/pnpm-lock.yaml"), "utf8");
     if (localizedFiles.has(name)) expected = expected.replaceAll("OpenMAIC", "量子学习通");
     if (appearanceFiles.has(name)) {
       expected = expected

@@ -69,7 +69,7 @@ test("input boundaries and untrusted model content fail closed", () => {
 
 test("SDK calls inherit the logged Harness route, forward abort, redact provider errors", async () => {
   const calls = [];
-  const agent = { id: "session-test", session: { events: [{ type: "request/header", data: { header: { config: { provider: "kept-route", model: "kept-model", reasoningEffort: "high" } } } }] } };
+  const agent = { id: "session-test", session: { requestHeader: () => ({ config: { provider: "kept-route", model: "kept-model", reasoningEffort: "high" } }) } };
   const abort = signal();
   const bridge = createHarnessAiCall({ agent, signal: abort, llm: { async *stream(options) { calls.push(options); yield { type: "text-delta", text: "{}" }; yield { type: "finish", reason: { kind: "stop" } }; } } });
   assert.equal(await bridge.aiCall("system", "user"), "{}");
@@ -114,7 +114,7 @@ test("a failed generation cannot spend another SDK budget in the same Harness tu
   let attempts = 0;
   const tool = classroomTool({ llm: {}, application: { async generate() { attempts++; throw new TypeError("fixture-failure"); } } });
   const events = [{ type: "turn/start", data: { turn: 1 } }, { type: "request/header", data: { header: { config: { provider: "test", model: "test" } } } }];
-  const exec = { signal: signal(), agent: { id: "fixture", session: { events } } };
+  const exec = { signal: signal(), agent: { id: "fixture", session: { snapshotEvents: () => events, requestHeader: () => events.findLast((event) => event.type === "request/header")?.data.header } } };
   const args = { courseId: randomUUID() };
   await assert.rejects(tool.execute(args, exec), /fixture-failure/);
   await assert.rejects(tool.execute(args, exec), /不自动重复/);

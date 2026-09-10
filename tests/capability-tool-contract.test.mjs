@@ -119,5 +119,6 @@ test("default contract checks are derived from package MCP and native Tool polic
     ".agents/skills/tyxonq-workbench/test/mcp.test.mjs",
     "tests/harness-native-quantum.test.mjs",
     "tests/native-quantum-tools.test.mjs",
+    "tests/quantum-learning.test.mjs",
   ]);
 });

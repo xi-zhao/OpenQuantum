@@ -27,7 +27,7 @@ npm run cc-connect:setup
 这个命令只在被 Git 忽略的 `.openquantum/cc-connect/config.toml` 创建本地配置。它会：
 
 - 注册一个名为 `openquantum` 的 ACP Agent；
-- 指向 DeepSeek Harness 官方 `dsh-acp-demo` 入口；
+- 指向 DeepSeek Harness 官方 `dsh --profile acp --patch runtime/openquantum/cc-connect/cordis.yml` 入口；
 - 使用 OpenQuantum 的项目根、Skill 目录、Agent Preset 中的 Harness MCP Client 配置、共享静态模型 Route
   和同一 DSH Home 的用户设置；
 - 生成只属于本机的 CC Connect 管理凭据；
@@ -74,9 +74,11 @@ OpenQuantum 的“设置 → 消息渠道”只展示这条连接的产品状态
 
 页面不会回显管理 Token、Bot Secret 或平台 API Key。具体平台配置仍由 CC Connect 自己的管理后台负责，避免 OpenQuantum 再造一份配置数据库。
 
+旧配置升级时，`cc-connect:setup` 只替换 OpenQuantum 曾生成的精确启动命令，先保存权限为 `0600` 的 `.pre-dsh-0.1.5` 备份；渠道、凭据和自定义命令保持原样。ACP 等待共享模型 Adapter 注册后才接受首次握手，避免启动期间的模型选择竞态。
+
 ## 能力与限制
 
-- `cc-connect` 固定为 `1.5.0`，DeepSeek Harness ACP 入口固定为 `0.1.0-rc.6`；开发期使用固定的 ACP TypeScript SDK `1.4.0` 复核真实 stdio 握手，任一方升级时都要重跑该测试。
+- `cc-connect` 固定为 `1.5.1-beta.1`，DeepSeek Harness ACP 入口固定为 `0.1.5-rc.1`；开发期使用固定的 ACP TypeScript SDK `1.4.0` 复核真实 stdio 握手，任一方升级时都要重跑该测试。
 - ACP 入口创建独立 Harness Session，执行事实写入 `.openquantum/cc-connect/sessions`，不与 Web Host 的 JSONL writer 混用。
 - CC Connect 可以转发文本、权限选择和已提交的 Agent 回复；更完整的工具轨迹仍以 Harness Session 记录为准。
 - 真实量子硬件、付费云任务和需要凭据的 MCP Server 连接继续遵循设置中心的默认关闭与显式启用规则。

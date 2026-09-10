@@ -159,7 +159,7 @@ test("message-channel dispatcher exposes a bounded CC Connect Interface", async 
     action: "snapshot",
   });
   assert.equal(snapshot.id, "cc-connect");
-  assert.equal(snapshot.version, "1.5.0");
+  assert.equal(snapshot.version, "1.5.1-beta.1");
   assert.deepEqual(Object.keys(snapshot.commands), ["setup", "start", "web", "status"]);
   assert.equal(JSON.stringify(snapshot).includes("token"), false);
   await assert.rejects(

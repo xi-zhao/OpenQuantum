@@ -18,7 +18,7 @@ export async function createLearningDatabase(root) {
   await new Promise((resolve, reject) => { reserve.once("error", reject); reserve.listen(0, "127.0.0.1", resolve); });
   const port = reserve.address().port;
   await new Promise((resolve) => reserve.close(resolve));
-  const worker = fork(fileURLToPath(new URL("database-worker.mjs", import.meta.url)), [], { stdio: ["ignore", "ignore", "ignore", "ipc"], execArgv: [], env: { PATH: process.env.PATH, HOME: process.env.HOME, TMPDIR: process.env.TMPDIR } });
+  const worker = fork(fileURLToPath(new URL("database-worker.mjs", import.meta.url)), [], { execPath: process.env.OPENQUANTUM_NODE_EXECUTABLE || process.execPath, stdio: ["ignore", "ignore", "ignore", "ipc"], execArgv: [], env: { PATH: process.env.PATH, HOME: process.env.HOME, TMPDIR: process.env.TMPDIR } });
   const dispose = () => { worker.kill("SIGTERM"); };
   try {
     await new Promise((resolve, reject) => {

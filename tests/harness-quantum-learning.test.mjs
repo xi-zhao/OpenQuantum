@@ -1,3 +1,4 @@
+import { harnessHttpCookie, harnessSessionSnapshot, redactHarnessLaunchTokens } from "../scripts/lib/harness-http-auth.mjs";
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
 import { once } from "node:events";
@@ -51,7 +52,7 @@ test("native UI/API → Harness Session → OpenMAIC SDK → saved classroom and
   assert.ok(bundle.length < 100_000, "launcher delegates presentation to the original OpenMAIC app");
   assert.match(bundle, /iframe/);
   let logs = "";
-  const child = spawn(process.execPath, [path.join(root, "node_modules/@deepseek-ai/dsh/lib/bin.js"), "web", "--host", "127.0.0.1", "--port", String(port)], {
+  const child = spawn(process.execPath, [path.join(root, "node_modules/@deepseek-ai/dsh/lib/bin.js"), "web", "--no-open", "--host", "127.0.0.1", "--port", String(port)], {
     cwd: root, env: { ...process.env, DSH_HOME: harnessHome, DSH_TELEMETRY_DISABLED: "1", OPENQUANTUM_LEARNING_DIR: classrooms,
       OPENQUANTUM_DISABLE_QISKIT_MCP: "1", OPENQUANTUM_PUBLIC_API_KEY: "fixture-only", OPENQUANTUM_PUBLIC_BASE_URL: `http://127.0.0.1:${modelPort}/v1` },
     stdio: ["ignore", "pipe", "pipe"],
@@ -64,37 +65,41 @@ test("native UI/API → Harness Session → OpenMAIC SDK → saved classroom and
     await rm(sandbox, { recursive: true, force: true });
   });
   const base = `http://127.0.0.1:${port}`;
+  let cookie;
   async function rpc(method, payload = {}) {
-    const response = await fetch(`${base}/api/${method}`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ type: "client-request", rpcId: crypto.randomUUID(), method, payload }), signal: AbortSignal.timeout(5000) });
+    cookie ??= await harnessHttpCookie(base, logs);
+    if (method === "session/page") { const snapshot = await harnessSessionSnapshot(base, cookie, payload.sessionId, payload.maxMessages); return { events: snapshot.records }; }
+    if (method === "session/prompt") payload = { requestId: crypto.randomUUID(), ...payload };
+    const response = await fetch(`${base}/api/${method}`, { method: "POST", headers: { "content-type": "application/json", cookie }, body: JSON.stringify({ type: "client-request", rpcId: crypto.randomUUID(), method, payload: { args: ["session/modelCatalog", "agentPresets/list"].includes(method) ? {} : { [method === "session/list" ? "_request" : "request"]: payload } } }), signal: AbortSignal.timeout(5000) });
     const result = (await response.json()).result;
-    assert.equal(result.ok, true, `${JSON.stringify(result)}\n${logs}`);
+    assert.equal(result.ok, true, `${JSON.stringify(result)}\n${redactHarnessLaunchTokens(logs)}`);
     return result.value;
   }
   async function command(value) {
     const response = await fetch(`${base}/openquantum/api/learning`, { method: "POST", headers: { "content-type": "application/json", origin: base }, body: JSON.stringify(value) });
-    assert.equal(response.status, 200, logs); return response.json();
+    assert.equal(response.status, 200, redactHarnessLaunchTokens(logs)); return response.json();
   }
-  await waitFor(() => rpc("host.describe"), "Harness startup");
-  const roster = await rpc("agentPreset.list");
+  await waitFor(() => rpc("session/modelCatalog"), "Harness startup");
+  const roster = await rpc("agentPresets/list");
   assert.ok(roster.presets.some((p) => p.id === "quantum-learning"));
   const sessionId = `session-learning-${crypto.randomUUID()}`;
   const course = await command({ action: "create", requirements, sessionId }); courseId = course.id;
-  await rpc("session.create", { sessionId, agentPreset: "quantum-learning" });
-  await rpc("session.rename", { sessionId, title: "OpenMAIC integration fixture" });
-  await rpc("session.prompt", { sessionId, mode: "queue", content: [{ type: "text", text: `Generate courseId=${course.id}` }] });
+  await rpc("session/create", { sessionId, agentPreset: "quantum-learning" });
+  await rpc("session/rename", { sessionId, title: "OpenMAIC integration fixture" });
+  await rpc("session/prompt", { sessionId, mode: "queue", content: [{ type: "text", text: `Generate courseId=${course.id}` }] });
   const saved = await waitFor(async () => { const value = await command({ action: "get", id: course.id }); return value.document && value; }, "saved classroom");
   assert.equal(saved.document.scenes.length, 3);
   assert.equal(saved.provenance.model.model, "kimi-k2.7-code");
   assert.equal(sdkCalls, 7);
   assert.ok(requests.every((r) => r.model === "kimi-k2.7-code"));
-  const history = await waitFor(async () => { const value = await rpc("session.history", { sessionId, maxMessages: 20 }); return value.events.some((entry) => entry.event?.type === "turn/end") && value; }, "completed Harness turn");
+  const history = await waitFor(async () => { const value = await rpc("session/page", { sessionId, maxMessages: 20 }); return value.events.some((entry) => entry.event?.type === "turn/end") && value; }, "completed Harness turn");
   const serialized = JSON.stringify(history);
   assert.match(serialized, /generate_quantum_classroom/);
   assert.match(serialized, /课堂.*已保存/);
   const persisted = JSON.parse(await readFile(path.join(classrooms, `${courseId}.json`), "utf8"));
   assert.equal(persisted.document.scenes[2].content.questions[0].answer[0], "B");
   const requestCount = requests.length;
-  await rpc("session.prompt", { sessionId, mode: "queue", content: [{ type: "text", text: `Generate courseId=${course.id} again` }] });
-  await waitFor(async () => !(await rpc("session.list")).items.find((s) => s.sessionId === sessionId)?.running, "idempotent retry");
+  await rpc("session/prompt", { sessionId, mode: "queue", content: [{ type: "text", text: `Generate courseId=${course.id} again` }] });
+  await waitFor(async () => !(await rpc("session/list")).items.find((s) => s.sessionId === sessionId)?.running, "idempotent retry");
   assert.equal(requests.length, requestCount + 1, "only the ordinary Agent dispatch, no repeated SDK generation");
 });

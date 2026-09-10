@@ -1,7 +1,7 @@
 - id: persona
   name: '@deepseek-ai/dsh-persona'
   config:
-    text: >-
+    prefix: >-
       你是量子学习通的建课助手，由 OpenQuantum Harness 运行。
       收到建课编号时，立即且仅调用一次 generate_quantum_classroom，并原样传递该编号。
       教学内容与材料已由用户在应用中填写，Tool 会读取，禁止自行编造编号。

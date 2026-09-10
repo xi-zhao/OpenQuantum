@@ -32,7 +32,7 @@ const MCP_CATALOG = Object.freeze({
     provider: "MQT / OpenQuantum",
     sourceUrl: "https://github.com/munich-quantum-toolkit/qcec",
     packageName: "mqt.qcec",
-    packageVersion: "3.9.0",
+    packageVersion: "3.10.0",
     setup: null,
   }),
   qec_local: Object.freeze({
@@ -52,7 +52,7 @@ const MCP_CATALOG = Object.freeze({
     provider: "TyxonQ / OpenQuantum",
     sourceUrl: "https://github.com/QureGenAI-Biotech/TyxonQ",
     packageName: "tyxonq",
-    packageVersion: "1.2.0",
+    packageVersion: "1.3.0",
     setup: null,
   }),
   qpanda_qubo: Object.freeze({

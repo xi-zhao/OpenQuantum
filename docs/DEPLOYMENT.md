@@ -52,22 +52,23 @@ Windows PowerShell 使用 `Copy-Item .env.example .env`，再填写需要的值�
 git clone https://github.com/xi-zhao/openQuantum.git
 cd openQuantum
 npm ci --include=dev
+npm run desktop:setup
 npm run desktop:verify-install
 npm run desktop
 ```
 
 `desktop:verify-install` 是无图形界面的安装检查：它验证 Desktop 与 Harness 版本、OpenQuantum 最终组合和
-桌面启动器。首次真正启动可能继续准备 Desktop profile 和下载 Electron 运行文件，等待原生窗口出现即可。
+桌面启动器。`desktop:setup` 从固定上游源码构建桌面端并安装 Electron 原生模块，需要 Git、Node.js 24、Corepack 和系统 C++ 构建工具；首次打开可能显示上游的可选设置向导。
 模型优先在“设置 → 模型”中配置；只有选择环境文件时，才需要按方式二中的系统对应命令创建 `.env`。
 
-桌面启动器使用社区项目 [DSH Desktop](https://github.com/anywhere-labs/deepseek-harness-desktop) 的 Electron
+桌面启动器使用社区项目 [DSH Desktop](https://github.com/anywhere-labs/dsh-desktop) 的 Electron
 壳承载同一个 Harness Web UI。OpenQuantum 的 Home patch 仍然组合 Provider route、默认 Agent preset、品牌、
 设置、Skill、MCP 与 Validator；Desktop 只增加窗口、托盘、终端和原生通知。
 
 Web 和 Desktop 共用 `.openquantum/dsh`。两种启动方式用于访问同一份本地配置和 Session 状态，不应同时
-运行；从 Web 切换到 Desktop 前先停止 `npm run dev`。当前固定 `dsh-plugin-desktop@2.0.0`，它与项目固定的
-Harness `0.1.0-rc.6` 完全对齐。上游 Desktop `2.0.2` 使用存在破坏性变化的 Harness `0.1.1-rc.2`，不能在
-没有完整平台检查和真实 E2E 的情况下直接替换。
+运行；从 Web 切换到 Desktop 前先停止 `npm run dev`。当前固定 Desktop `2.0.7` 源码提交 `5184a2ab7ab1`，与项目的
+Harness `0.1.5-rc.1` 同族。源码构建尚不是上游正式发行包；版本、兼容性检查与恢复路径见
+[2026-09-10 升级记录](releases/2026-09-10-upstream-update.md)。
 
 不要全局安装或直接 `npx dsh-plugin-desktop`：那条上游命令使用默认 DSH Home，不会自动组合 OpenQuantum
 preset、Skill、MCP 与 Validator。OpenQuantum 品牌 `.dmg` / `.exe` 安装包尚未发布。
@@ -78,7 +79,7 @@ preset、Skill、MCP 与 Validator。OpenQuantum 品牌 `.dmg` / `.exe` 安装�
 npm run desktop:verify-install
 ```
 
-这个检查会在 macOS 和 Windows CI 中从 `npm ci` 开始执行，验证版本锁、最终 Cordis 组合和启动器版本，
+这个检查会在 macOS 和 Windows CI 中从 `npm ci`、`desktop:setup` 开始执行，验证版本锁、最终 Cordis 组合和启动器版本，
 不会打开 Electron 窗口。
 
 ## 方式四：Docker Compose

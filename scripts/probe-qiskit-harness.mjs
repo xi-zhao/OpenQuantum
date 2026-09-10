@@ -8,7 +8,7 @@ const projectRoot = fileURLToPath(new URL("..", import.meta.url));
 const testFile = path.join(projectRoot, "tests", "harness-native-quantum.test.mjs");
 const child = spawn(
   process.execPath,
-  ["--import", "tsx", "--test", testFile],
+  ["--test", testFile],
   {
     cwd: projectRoot,
     env: {

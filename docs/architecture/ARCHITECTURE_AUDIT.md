@@ -8,6 +8,8 @@
 [扩展对象模型](EXTENSION_MODEL.md)，模块依赖见[模块地图](MODULES.md)。本文件只记录本次审计时点的
 结论、证据、风险和后续动作，不与这些长期契约竞争。
 
+2026-09-10 后续升级已采用 Harness `0.1.5-rc.1` 与 Desktop `2.0.7` 固定源码构建；下文的旧版等待结论是历史记录。当前升级事实、兼容性验证与限制见[升级记录](../releases/2026-09-10-upstream-update.md)。
+
 ## 1. 结论
 
 OpenQuantum 是 DeepSeek Harness 的开源量子科研发行版，不是新的 Agent Runtime。

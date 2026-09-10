@@ -8,7 +8,7 @@ import math
 import sys
 from typing import Any
 
-TYXONQ_VERSION = "1.2.0"
+TYXONQ_VERSION = "1.3.0"
 MAX_QUBITS = 8
 MAX_OPERATIONS = 64
 MAX_SHOTS = 8192

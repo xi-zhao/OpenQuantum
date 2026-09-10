@@ -29,7 +29,7 @@ function flattenText(content) {
 }
 
 function matchingCallEvent(session, exec) {
-  return session.events.findLast(
+  return session.snapshotEvents().findLast(
     (event) =>
       event.type === "tool/call" &&
       event.data.callId === exec.callId &&

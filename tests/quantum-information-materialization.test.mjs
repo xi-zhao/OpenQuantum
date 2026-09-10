@@ -81,7 +81,7 @@ async function executePostAdapter({ workspaceRoot, request, value, callId }) {
   const session = {
     id: `session-${callId}`,
     header: { cwd: workspaceRoot },
-    events: [
+    snapshotEvents: () => [
       {
         type: "tool/call",
         seq: 11,

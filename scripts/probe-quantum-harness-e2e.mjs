@@ -1,3 +1,4 @@
+import { harnessHttpCookie, harnessSessionSnapshot } from "./lib/harness-http-auth.mjs";
 import assert from "node:assert/strict";
 import crypto from "node:crypto";
 import { spawn } from "node:child_process";
@@ -201,7 +202,7 @@ export async function runQuantumHarnessE2E({
     process.execPath,
     [
       harnessBin,
-      "web",
+      "web", "--no-open",
       "--host",
       "127.0.0.1",
       "--port",
@@ -225,21 +226,25 @@ export async function runQuantumHarnessE2E({
   child.stdout.on("data", capture);
   child.stderr.on("data", capture);
   const diagnostics = () =>
-    redact(`Harness output:\n${logs}`, [apiKey, process.env.OPENQUANTUM_PRIVATE_API_KEY]);
+    redact(`Harness output:\n${logs.replace(/token=[^\s]+/g, "token=[redacted]")}`, [apiKey, process.env.OPENQUANTUM_PRIVATE_API_KEY]);
 
+  let cookie;
   let sessionId;
   const startedAt = Date.now();
   try {
     async function rpc(method, payload = {}) {
+      cookie ??= await harnessHttpCookie(baseUrlLocal, logs);
+      if (method === "session/page") { const snapshot = await harnessSessionSnapshot(baseUrlLocal, cookie, payload.sessionId, payload.maxMessages); return { ok: true, value: { events: snapshot.records } }; }
+      if (method === "session/prompt") payload = { requestId: crypto.randomUUID(), ...payload };
       const rpcId = `e2e-${method}-${crypto.randomUUID()}`;
       const response = await fetch(`${baseUrlLocal}/api/${method}`, {
         method: "POST",
-        headers: { "content-type": "application/json" },
+        headers: { "content-type": "application/json", cookie },
         body: JSON.stringify({
           type: "client-request",
           rpcId,
           method,
-          payload,
+          payload: { args: ["session/modelCatalog", "agentPresets/list"].includes(method) ? {} : { [method === "session/list" ? "_request" : "request"]: payload } },
         }),
         signal: AbortSignal.timeout(10_000),
       });
@@ -255,31 +260,31 @@ export async function runQuantumHarnessE2E({
 
     await waitForOutcome(
       async () => {
-        const result = await rpc("host.describe");
+        const result = await rpc("session/modelCatalog");
         return result.ok === true ? result.value : undefined;
       },
       { timeoutMs: 30_000, diagnostics },
     );
 
     sessionId = `session-openquantum-real-e2e-${crypto.randomUUID()}`;
-    const created = await rpc("session.create", {
+    const created = await rpc("session/create", {
       sessionId,
       cwd: workspaceRoot,
       agentPreset: "openquantum",
     });
     if (!created.ok) {
-      throw new Error(`session.create failed: ${JSON.stringify(created.error)}`);
+      throw new Error(`session/create failed: ${JSON.stringify(created.error)}`);
     }
-    const selected = await rpc("session.selectModel", {
+    const selected = await rpc("session/selectModel", {
       sessionId,
       provider,
       model: selectedModel,
     });
     if (!selected.ok) {
-      throw new Error(`session.selectModel failed: ${JSON.stringify(selected.error)}`);
+      throw new Error(`session/selectModel failed: ${JSON.stringify(selected.error)}`);
     }
 
-    const skillList = await rpc("skill.list", { sessionId });
+    const skillList = await rpc("skills/list", { sessionId });
     if (!skillList.ok) {
       throw new Error("Harness did not return the quantum Skill registry");
     }
@@ -302,24 +307,24 @@ export async function runQuantumHarnessE2E({
       `After the tool succeeds, reply with exactly ${COMPLETION_MARKER}.`,
       "Do not substitute a plain-text calculation for the tool call.",
     ].join("\n");
-    const prompted = await rpc("session.prompt", {
+    const prompted = await rpc("session/prompt", {
       sessionId,
       mode: "queue",
       content: [{ type: "text", text: prompt }],
       clientTimeZone: "UTC",
     });
     if (!prompted.ok || prompted.value.accepted !== true) {
-      throw new Error(`session.prompt was not accepted: ${JSON.stringify(prompted)}`);
+      throw new Error(`session/prompt was not accepted: ${JSON.stringify(prompted)}`);
     }
 
     const outcome = await waitForOutcome(
       async () => {
-        const history = await rpc("session.history", {
+        const history = await rpc("session/page", {
           sessionId,
           maxMessages: 200,
         });
         if (!history.ok) {
-          throw new Error(`session.history failed: ${JSON.stringify(history.error)}`);
+          throw new Error(`session/page failed: ${JSON.stringify(history.error)}`);
         }
         const events = history.value.events.map((entry) => entry.event);
         const calls = events.filter(
@@ -434,14 +439,14 @@ export async function runQuantumHarnessE2E({
     if (sessionId) {
       try {
         const rpcId = `cleanup-${crypto.randomUUID()}`;
-        await fetch(`${baseUrlLocal}/api/session.cancel`, {
+        await fetch(`${baseUrlLocal}/api/session/cancel`, {
           method: "POST",
-          headers: { "content-type": "application/json" },
+          headers: { "content-type": "application/json", cookie },
           body: JSON.stringify({
             type: "client-request",
             rpcId,
-            method: "session.cancel",
-            payload: { sessionId },
+            method: "session/cancel",
+            payload: { args: { request: { sessionId } } },
           }),
           signal: AbortSignal.timeout(3_000),
         });

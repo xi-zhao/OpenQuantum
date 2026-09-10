@@ -27,10 +27,10 @@ test("hardware MCP setup publishes one pinned local checkout and is idempotent",
   await mkdir(source);
   await mkdir(project);
   await git(source, "init", "--quiet");
-  for (const fileName of ["server.py", "requirements.txt", "mcp_app.py"]) {
+  for (const fileName of ["server.py", "requirements.txt", "mcp_app.py", "turso_db.py"]) {
     await writeFile(path.join(source, fileName), `${fileName}\n`);
   }
-  await git(source, "add", "server.py", "requirements.txt", "mcp_app.py");
+  await git(source, "add", "server.py", "requirements.txt", "mcp_app.py", "turso_db.py");
   await git(
     source,
     "-c",

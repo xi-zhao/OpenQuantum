@@ -153,22 +153,23 @@ docker compose up --build
 
 OpenQuantum 可从源码启动 macOS 和 Windows 桌面客户端，提供系统托盘、原生终端和桌面通知。桌面窗口使用同一套 Session、量子能力、模型设置和科学验收；当前不提供 OpenQuantum 品牌的 `.dmg` 或 `.exe` 安装包。
 
-桌面客户端基于社区开源的 [DSH Desktop](https://github.com/anywhere-labs/deepseek-harness-desktop) 适配。OpenQuantum 只接入桌面宿主，不复制 Harness Runtime，也不维护另一套会话和科研状态。
+桌面客户端基于社区开源的 [DSH Desktop](https://github.com/anywhere-labs/dsh-desktop) 适配。OpenQuantum 只接入桌面宿主，不复制 Harness Runtime，也不维护另一套会话和科研状态。
 
 <details>
 <summary><strong>展开桌面客户端源码安装步骤</strong></summary>
 
-当前发布方式是从 OpenQuantum 仓库启动客户端，不是下载 `.dmg` 或 `.exe` 安装包。请先安装 [Git](https://git-scm.com/downloads) 和 Node.js 24，然后执行：
+当前发布方式是从 OpenQuantum 仓库启动客户端，不是下载 `.dmg` 或 `.exe` 安装包。请先安装 [Git](https://git-scm.com/downloads)、Node.js 24、Corepack 和系统 C++ 构建工具，然后执行：
 
 ```bash
 git clone https://github.com/xi-zhao/openQuantum.git
 cd openQuantum
 npm ci --include=dev
+npm run desktop:setup
 npm run desktop:verify-install
 npm run desktop
 ```
 
-首次启动会准备 Desktop profile，并可能继续下载 Electron 运行文件；终端出现这类提示时保持窗口开启即可。客户端打开后，在“设置 → 模型”中配置 Provider。要使用内置 Qiskit 等量子工具，还需要安装 [uv / uvx](https://docs.astral.sh/uv/getting-started/installation/)。
+`desktop:setup` 会构建固定的上游源码、下载 Electron 并编译原生模块；首次启动可能显示桌面设置向导。客户端打开后，在“设置 → 模型”中配置 Provider。要使用内置 Qiskit 等量子工具，还需要安装 [uv / uvx](https://docs.astral.sh/uv/getting-started/installation/)。
 
 如果希望通过本地 `.env` 提供模型配置，macOS 终端运行 `cp .env.example .env`，Windows PowerShell 运行 `Copy-Item .env.example .env`，再填写所需值；直接使用设置中心时不需要创建 `.env`。
 
