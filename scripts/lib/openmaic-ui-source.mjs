@@ -78,6 +78,12 @@ const patches = {
     ["  const resolvedTheme = theme === 'system' ? systemTheme : theme;", "  const ancestor = useContext(ThemeContext);\n  const hostTheme = useHostTheme(!ancestor);\n  const resolvedTheme = ancestor?.resolvedTheme ?? hostTheme ?? (theme === 'system' ? systemTheme : theme);"],
     ["value={{ theme, setTheme: handleSetTheme, resolvedTheme }}", "value={ancestor ?? { theme: hostTheme ?? theme, setTheme: handleSetTheme, resolvedTheme }}"],
   ],
+  "lib/workbench/pro-swap.ts": [
+    ["  if (typeof doc.startViewTransition !== 'function' || prefersReducedMotion()) {", `  // Embedded WebViews can crash while capturing shared-element transitions.
+  // Use the upstream immediate navigation path inside the OpenQuantum frame.
+  const embedded = process.env.NEXT_PUBLIC_OPENQUANTUM_EMBED === '1' && window.parent !== window;
+  if (embedded || typeof doc.startViewTransition !== 'function' || prefersReducedMotion()) {`],
+  ],
   "components/generation/generation-toolbar.tsx": [
     ['<div className="flex items-center gap-1 flex-wrap">', '<div className="oq-learning-controls flex items-center gap-1 flex-wrap">'],
     ['className="flex min-w-0 shrink-0 items-center gap-1"', 'className="oq-learning-controls flex min-w-0 shrink-0 items-center gap-1"'],
@@ -171,6 +177,7 @@ export async function applyOpenMaicUiOverlay(root) {
   writes.push(["components/openquantum-bridge.tsx", await readFile(path.join(root, "runtime/openquantum/openmaic-ui/bridge.tsx"), "utf8")]);
   writes.push(["components/openquantum-wordmark.tsx", await readFile(path.join(root, "runtime/openquantum/openmaic-ui/wordmark.tsx"), "utf8")]);
   writes.push(["components/openquantum-use-host-theme.ts", await readFile(path.join(root, "runtime/openquantum/openmaic-ui/use-host-theme.ts"), "utf8")]);
+  writes.push(["tests/openquantum/pro-swap.test.ts", await readFile(path.join(root, "runtime/openquantum/openmaic-ui/pro-swap.test.ts"), "utf8")]);
   writes.push(["app/openquantum-theme.css", await readFile(path.join(root, "runtime/openquantum/openmaic-ui/theme.css"), "utf8")]);
   writes.push(["lib/openquantum-ui-theme.mjs", await readFile(path.join(root, "src/learning/ui-theme.mjs"), "utf8")]);
   writes.push(["public/openquantum-mark.svg", await readFile(path.join(root, "packages/openquantum-web-branding/assets/mark.svg"), "utf8")]);
