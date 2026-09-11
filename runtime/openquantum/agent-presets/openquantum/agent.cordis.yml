@@ -151,6 +151,27 @@
       maxDelayMs: 30000
       maxAttempts: 10
 
+# FatQat runs bounded circuit/profile and Hamiltonian experiments in an isolated
+# Python process. Startup only registers Tools; first use materializes the locked
+# environment. The server owns no Session, model route or cloud/QPU operation.
+- id: mcp-fatqat-local
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: fatqat_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/fatqat-workbench/mcp/server.mjs'
+    env: {}
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 135000
+    failOnStartupError: true
+    reconnect:
+      enabled: true
+      initialDelayMs: 1000
+      maxDelayMs: 30000
+      maxAttempts: 10
+
 # TyxonQ is a Python SDK rather than a stable upstream MCP server. This local
 # bridge exposes only bounded circuit and noise simulation. It is disabled by
 # default because the pinned scientific Python environment is large and is

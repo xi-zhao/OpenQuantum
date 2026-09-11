@@ -1,0 +1,11 @@
+[project]
+name = "openquantum-fatqat-bridge"
+version = "0.1.0"
+description = "Pinned FatQat environment for bounded local quantum experiments"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+  "fatqat @ git+https://github.com/spaceqat/fatqat.git@39b75e30ae50ddb4a8c7b840847edce678aa814c",
+]
+
+[tool.uv]
+package = false

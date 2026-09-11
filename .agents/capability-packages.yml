@@ -482,6 +482,27 @@ packages:
       checks:
         - .agents/skills/qec-memory-experiment/test/mcp.test.mjs
 
+  - id: fatqat-workbench
+    level: L1
+    execution:
+      mcpServers:
+        - name: fatqat_local
+          source: package
+          entrypoint: .agents/skills/fatqat-workbench/mcp/server.mjs
+          activation: always
+          contractCheck: .agents/skills/fatqat-workbench/test/mcp.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: simulate_fatqat_circuit
+              effect: workspace-write
+            - name: simulate_fatqat_dynamics
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - .agents/skills/fatqat-workbench/test/mcp.test.mjs
+        - .agents/skills/fatqat-workbench/test/live.test.mjs
+        - tests/harness-fatqat.test.mjs
+
   - id: tyxonq-workbench
     level: L1
     execution:

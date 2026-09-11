@@ -487,6 +487,10 @@ test("repository preset exposes reviewed quantum MCPs with safe defaults", async
     "Stim / PyMatching / OpenQuantum",
   );
   assert.deepEqual(byName.get("qec_local")?.credentialRefs, []);
+  assert.equal(byName.get("fatqat_local")?.enabled, true);
+  assert.equal(byName.get("fatqat_local")?.displayName, "FatQat 量子实验");
+  assert.equal(byName.get("fatqat_local")?.packageVersion, "0.1.0a1@39b75e30");
+  assert.deepEqual(byName.get("fatqat_local")?.credentialRefs, []);
   assert.equal(byName.get("tyxonq_local")?.enabled, false);
   assert.equal(byName.get("tyxonq_local")?.displayName, "TyxonQ Local");
   assert.equal(byName.get("tyxonq_local")?.packageVersion, "1.3.0");

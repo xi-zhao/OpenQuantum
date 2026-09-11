@@ -49,6 +49,7 @@ const EXPECTED_QUANTUM_SKILLS = Object.freeze([
   "qiskit-circuit-workbench",
   "qmclaw-workbench",
   "quantum-sdk-advisor",
+  "fatqat-workbench",
 ]);
 
 async function enableTemporaryMcp(presetRoot, serverName) {
@@ -389,6 +390,8 @@ test(
       assert.equal(toolNames.includes("solve_ground_state"), false, diagnostics());
       assert.equal(toolNames.includes("validate_ground_state"), false, diagnostics());
       assert(toolNames.includes(QMCLAW_SIMULATE_TOOL), diagnostics());
+      assert(toolNames.includes("mcp__fatqat_local__simulate_fatqat_circuit"), diagnostics());
+      assert(toolNames.includes("mcp__fatqat_local__simulate_fatqat_dynamics"), diagnostics());
       assert.equal(
         toolNames.includes("inspect_qmclaw_runtime"),
         false,

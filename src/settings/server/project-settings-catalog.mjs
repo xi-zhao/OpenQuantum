@@ -45,6 +45,16 @@ const MCP_CATALOG = Object.freeze({
     packageVersion: "1.16.0 + 2.4.0",
     setup: null,
   }),
+  fatqat_local: Object.freeze({
+    displayName: "FatQat 量子实验",
+    description:
+      "本地电路、超导与原子阵列约束、transmon 泄漏和里德堡动力学实验；返回数据、图表和明确单位，首次使用准备固定 Python 环境。",
+    provider: "Space Qat / OpenQuantum",
+    sourceUrl: "https://github.com/spaceqat/fatqat",
+    packageName: "fatqat",
+    packageVersion: "0.1.0a1@39b75e30",
+    setup: null,
+  }),
   tyxonq_local: Object.freeze({
     displayName: "TyxonQ Local",
     description:

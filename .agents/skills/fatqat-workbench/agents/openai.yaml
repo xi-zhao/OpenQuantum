@@ -1,0 +1,11 @@
+interface:
+  display_name: "FatQat 量子实验"
+  short_description: "从量子电路和硬件约束到超导泄漏、里德堡原子链动力学的本地实验"
+  default_prompt: "使用 $fatqat-workbench 设计并运行这个量子实验，展示结果图表并说明物理假设、单位和验证边界。"
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "fatqat_local"
+      description: "FatQat 本地电路与脉冲动力学计算工具"
+policy:
+  allow_implicit_invocation: true
