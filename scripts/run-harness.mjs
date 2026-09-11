@@ -14,13 +14,13 @@ const harnessBin = path.join(
   "lib",
   "bin.js",
 );
-const harnessHome = path.join(projectRoot, ".openquantum", "dsh");
 loadProjectEnv(projectRoot);
+const harnessHome = process.env.DSH_HOME ?? path.join(projectRoot, ".openquantum", "dsh");
 await prepareOpenQuantumHarnessHome({ harnessHome, projectRoot });
 
 const child = spawn(
   process.execPath,
-  [harnessBin, "web", ...process.argv.slice(2)],
+  [harnessBin, "--profile", "web", ...process.argv.slice(2)],
   {
     cwd: projectRoot,
     env: {

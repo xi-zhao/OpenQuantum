@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import { runInNewContext } from "node:vm";
 
 import {
   apply,
@@ -159,7 +160,7 @@ test("message-channel dispatcher exposes a bounded CC Connect Interface", async 
     action: "snapshot",
   });
   assert.equal(snapshot.id, "cc-connect");
-  assert.equal(snapshot.version, "1.5.0");
+  assert.equal(snapshot.version, "1.5.1-beta.1");
   assert.deepEqual(Object.keys(snapshot.commands), ["setup", "start", "web", "status"]);
   assert.equal(JSON.stringify(snapshot).includes("token"), false);
   await assert.rejects(
@@ -290,8 +291,9 @@ test("client plugin contributes the native settings section and uses Harness cre
   assert.match(client, /CC Connect/);
   assert.match(client, /DeepSeek Harness/);
   assert.match(client, /channel\.commands\.start/);
-  assert.match(client, /api\.credentials\.set/);
-  assert.match(client, /api\.credentials\.unset/);
+  assert.match(client, /ctx\.remote\.credentials\.set/);
+  assert.match(client, /ctx\.remote\.credentials\.unset/);
+  assert.doesNotMatch(client, /connection\.api/);
   assert.match(client, /已有值不会回显/);
   assert.match(client, /requiredByEnabled/);
   assert.match(client, /Harness MCP Client 独立连接和启停 Server/);
@@ -311,4 +313,37 @@ test("client plugin contributes the native settings section and uses Harness cre
   assert.doesNotMatch(client, /\.oq-cap-credential\{[^}]*grid-template-columns/);
   assert.doesNotMatch(client, /HARNESS EXTENSIONS|className: "oq-cap-hero"/);
   assert.doesNotMatch(client, /localStorage|sessionStorage/);
+});
+
+test("capability settings bind the current Remote credential contract without the removed connection.api", async () => {
+  const source = await readFile(new URL("../runtime/openquantum/web-capabilities/client.js", import.meta.url), "utf8");
+  let plugin;
+  runInNewContext(source, {
+    __ModuleLoader__: { load: ({ factory }) => { plugin = factory(() => ({ createElement() {} })); } },
+  });
+  assert.ok(plugin.inject.includes("remote.credentials"));
+  const registrations = [];
+  const calls = [];
+  const metadata = { TEST_REF: { configured: true, writable: true } };
+  const credentials = {
+    async describe(refs) { calls.push(["describe", refs]); return { ok: true, value: metadata }; },
+    async set(ref, value) { calls.push(["set", ref, value]); return { ok: true, value: undefined }; },
+    async unset(ref) { calls.push(["unset", ref]); return { ok: false, error: { message: "reference is in use" } }; },
+  };
+  plugin.apply({
+    effect: (register) => register(),
+    locale: { register: () => () => {}, bind: () => (key) => key },
+    get: () => ({ isLoopback: true }),
+    remote: { credentials },
+    slots: {
+      inject: (name, register) => register(),
+      register: (entry) => { registrations.push(entry); return () => {}; },
+    },
+  });
+  const props = registrations.find((entry) => entry.id === "openquantum-capabilities").inject();
+  assert.equal(props.loopback, true);
+  assert.equal(await props.credentialOperations.describe(["TEST_REF"]), metadata);
+  assert.equal(await props.credentialOperations.set("TEST_REF", "test-fixture-only"), undefined);
+  await assert.rejects(props.credentialOperations.unset("TEST_REF"), /reference is in use/);
+  assert.deepEqual(calls, [["describe", ["TEST_REF"]], ["set", "TEST_REF", "test-fixture-only"], ["unset", "TEST_REF"]]);
 });

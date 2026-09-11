@@ -68,6 +68,17 @@ DeepSeek Harness Runtime
 | Client Plugin | Cordis Plugin 何时承担浏览器扩展职责？ | Harness 原生 UI Slot、Settings 和只读投影 | 代表全部 Cordis Plugin，或直接调用模型、MCP Server、External API 或 Validator |
 | Host Adapter | 用户从哪种产品入口进入同一 Harness 产品组合？ | 以 Browser、Desktop 或消息渠道承载标准 Host 与传输边界；实现可以复用上游 Cordis Plugin，并可启动独立 Host 进程/Session | 拥有 Agent Runtime 规则或成为 OpenQuantum 领域 Host Plugin |
 
+#### 2.2.1 完整外部子应用
+
+用户要求保留第三方完整产品时，可以由 deployment-scoped Host Plugin 管理固定版本的独立子应用进程，
+Client Plugin 通过独立来源 iframe 提供入口。上游原有的业务任务及持久记录归上游应用所有，不能冒充
+Harness Session、Tool Registry 或科学 Acceptance；通用科研 Agent 仍运行在 Harness 中。
+这不是另建 OpenQuantum domain/platform Runtime 的入口，也不允许在适配层复制 Agent 循环或工具调度。
+
+[OpenMAIC](../integrations/OPENMAIC.md) 保留原版 Pro 教学 runner 和课堂数据模型。其模型请求由服务端私有连接
+委托注入的 Harness LLM Interface，沿用当前模型路由和凭据；浏览器不直接连接模型。Host scope 拥有进程回收，
+适配层只拥有启动、传输和历史数据迁移。上游课堂行为不自动获得 Harness 审批、科研验收或跨应用会话语义。
+
 ### 2.3 Agent Interface
 
 | 对象 | 回答的问题 | 负责 | 明确不负责 |

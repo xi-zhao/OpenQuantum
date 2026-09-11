@@ -16,7 +16,7 @@ test("CI builds and boots the production container before release", async () => 
   assert.match(workflow, /--network host/);
   assert.doesNotMatch(workflow, /--publish/);
   assert.doesNotMatch(workflow, /docker run --detach --rm/);
-  assert.match(workflow, /http:\/\/127\.0\.0\.1:3000\/api\/host\.describe/);
+  assert.match(workflow, /node scripts\/probe-harness-host\.mjs http:\/\/127\.0\.0\.1:3000/);
   assert.match(workflow, /docker logs openquantum-ci/);
   assert.match(workflow, /docker rm --force openquantum-ci/);
   assert.match(dockerfile, /AS production-dependencies/);

@@ -3,43 +3,43 @@ import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import test from "node:test";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
+import { existsSync } from "node:fs";
+import { findPackageJSON } from "node:module";
 
 import {
   composeEntries,
   loadOverlayPatches,
 } from "@deepseek-ai/dsh-app-boot";
-import { prepareDesktopProfile } from "dsh-plugin-desktop/profile";
+import { DESKTOP_SOURCE, desktopPackageDirectory } from "../scripts/lib/desktop-source.mjs";
 
 import { prepareOpenQuantumHarnessHome } from "../scripts/lib/prepare-harness-home.mjs";
 
 const projectRoot = fileURLToPath(new URL("..", import.meta.url));
 
-test("pins a Desktop release built for the same Harness family", async () => {
-  const [openQuantumManifest, desktopManifest, pnpmManifest] = await Promise.all([
+const desktopRoot = desktopPackageDirectory(projectRoot);
+const desktopBuilt = existsSync(path.join(desktopRoot, "lib/profile.js"));
+
+test("pins a Desktop source build for the same Harness family", async () => {
+  const [openQuantumManifest, pnpmManifest] = await Promise.all([
     readFile(new URL("../package.json", import.meta.url), "utf8").then(JSON.parse),
-    readFile(
-      new URL(
-        "../node_modules/dsh-plugin-desktop/package.json",
-        import.meta.url,
-      ),
-      "utf8",
-    ).then(JSON.parse),
     readFile(new URL("../node_modules/pnpm/package.json", import.meta.url), "utf8")
       .then(JSON.parse),
   ]);
 
-  assert.equal(openQuantumManifest.dependencies["@deepseek-ai/dsh"], "0.1.0-rc.6");
+  assert.equal(openQuantumManifest.dependencies["@deepseek-ai/dsh"], DESKTOP_SOURCE.harnessVersion);
   assert.equal(openQuantumManifest.dependencies["dsh-plugin-desktop"], undefined);
-  assert.equal(openQuantumManifest.devDependencies["dsh-plugin-desktop"], "2.0.0");
-  assert.equal(openQuantumManifest.devDependencies.electron, "43.4.0");
-  assert.equal(desktopManifest.version, "2.0.0");
-  assert.equal(desktopManifest.dependencies["@deepseek-ai/dsh"], "0.1.0-rc.6");
-  assert.equal(openQuantumManifest.overrides.pnpm, "11.8.0");
-  assert.equal(pnpmManifest.version, "11.8.0");
+  assert.equal(openQuantumManifest.devDependencies["dsh-plugin-desktop"], undefined);
+  assert.equal(openQuantumManifest.devDependencies.electron, undefined);
+  assert.equal(openQuantumManifest.overrides.pnpm, "11.26.0");
+  assert.equal(pnpmManifest.version, "11.26.0");
 });
 
-test("composes the Desktop shell around the OpenQuantum Harness home", async (t) => {
+test("composes the Desktop shell around the OpenQuantum Harness home", { skip: !desktopBuilt }, async (t) => {
+  const { prepareDesktopProfile } = await import(pathToFileURL(path.join(desktopRoot, "lib/profile.js")));
+  const desktopManifest = JSON.parse(await readFile(path.join(desktopRoot, "package.json"), "utf8"));
+  assert.equal(desktopManifest.version, DESKTOP_SOURCE.version);
+  assert.equal(desktopManifest.dependencies["@deepseek-ai/dsh"], DESKTOP_SOURCE.harnessVersion);
   const sandboxRoot = await mkdtemp(
     path.join(tmpdir(), "openquantum-desktop-integration-"),
   );
@@ -49,12 +49,17 @@ test("composes the Desktop shell around the OpenQuantum Harness home", async (t)
   const { modelRoutesTarget, patchTarget } = await prepareOpenQuantumHarnessHome({
     harnessHome,
     projectRoot,
+    profileName: "desktop",
   });
   const prepared = prepareDesktopProfile(
     "1",
     harnessHome,
     process.platform,
   );
+  for (const name of ["harness-web-branding", "harness-web-capabilities", "harness-web-learning"]) {
+    const manifest = findPackageJSON(`@openquantum/${name}`, pathToFileURL(path.join(harnessHome, "profiles/desktop/package.json")));
+    assert.equal(manifest, path.join(harnessHome, "profiles/desktop/node_modules/@openquantum", name, "package.json"));
+  }
   const rows = new Map();
   for (const row of composeEntries([prepared.patches])) {
     if (typeof row.id === "string") rows.set(row.id, row);

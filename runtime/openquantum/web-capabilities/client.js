@@ -42,10 +42,10 @@ globalThis.__ModuleLoader__.load({
     };
 
     function unwrap(response) {
-      if (!response?.result?.ok) {
-        throw new Error(response?.result?.error?.message ?? "Harness 请求失败");
+      if (!response?.ok) {
+        throw new Error(response?.error?.message ?? "Harness 请求失败");
       }
-      return response.result.value;
+      return response.value;
     }
 
     async function projectRequest(command) {
@@ -188,14 +188,14 @@ globalThis.__ModuleLoader__.load({
       );
     }
 
-    function CredentialCard({ credential, info, requiredByEnabled, api, busy, onBusy, onRefresh, onError, onNotice }) {
+    function CredentialCard({ credential, info, requiredByEnabled, credentialOperations, busy, onBusy, onRefresh, onError, onNotice }) {
       const [value, setValue] = React.useState("");
       const save = async () => {
         if (value.trim() === "") return;
         onBusy(`credential:${credential.ref}`);
         onError(null);
         try {
-          unwrap(await api.credentials.set({ ref: credential.ref, value }));
+          await credentialOperations.set(credential.ref, value);
           setValue("");
           await onRefresh();
           onNotice(`${credential.displayName} 已安全保存。现有值不会在页面回显。`);
@@ -209,7 +209,7 @@ globalThis.__ModuleLoader__.load({
         onBusy(`credential:${credential.ref}`);
         onError(null);
         try {
-          unwrap(await api.credentials.unset({ ref: credential.ref }));
+          await credentialOperations.unset(credential.ref);
           await onRefresh();
           onNotice(`${credential.displayName} 已移除。`);
         } catch (error) {
@@ -242,7 +242,7 @@ globalThis.__ModuleLoader__.load({
       );
     }
 
-    function CapabilitySettingsSection({ api, loopback }) {
+    function CapabilitySettingsSection({ credentialOperations, loopback }) {
       const [snapshot, setSnapshot] = React.useState(null);
       const [readiness, setReadiness] = React.useState(null);
       const [credentials, setCredentials] = React.useState({});
@@ -260,9 +260,8 @@ globalThis.__ModuleLoader__.load({
           setCredentials({});
           return;
         }
-        const described = unwrap(await api.credentials.describe({ refs }));
-        setCredentials(described.credentials);
-      }, [api]);
+        setCredentials(await credentialOperations.describe(refs));
+      }, [credentialOperations]);
 
       const reload = React.useCallback(async () => {
         const next = await projectRequest({ action: "snapshot" });
@@ -361,7 +360,7 @@ globalThis.__ModuleLoader__.load({
         requiredByEnabled: snapshot.mcpServers.some(
           (server) => server.enabled && server.requiredCredentialRefs.includes(credential.ref),
         ),
-        api,
+        credentialOperations,
         busy,
         onBusy: setBusy,
         onRefresh: reload,
@@ -504,18 +503,23 @@ globalThis.__ModuleLoader__.load({
     }
 
     const NS = "settings.openquantumCapabilities";
-    const inject = ["slots", "locale", "connection"];
+    const inject = ["slots", "locale", "connection", "remote", "remote.credentials"];
     function apply(ctx) {
       ctx.effect(() => ctx.locale.register(NS, copy), "openquantum capabilities: dictionaries");
       const t = ctx.locale.bind(NS);
       const connection = ctx.get("connection");
+      const credentialOperations = {
+        describe: async (refs) => unwrap(await ctx.remote.credentials.describe(refs)),
+        set: async (ref, value) => unwrap(await ctx.remote.credentials.set(ref, value)),
+        unset: async (ref) => unwrap(await ctx.remote.credentials.unset(ref)),
+      };
       ctx.slots.inject("settings.section", () => ctx.slots.register({
         name: "settings.section",
         id: "openquantum-capabilities",
         order: 12,
         label: () => t("nav"),
         locale: NS,
-        inject: () => ({ api: connection.api, loopback: connection.isLoopback }),
+        inject: () => ({ credentialOperations, loopback: connection.isLoopback }),
       }, CapabilitySettingsSection));
       ctx.slots.inject("settings.section", () => ctx.slots.register({
         name: "settings.section",

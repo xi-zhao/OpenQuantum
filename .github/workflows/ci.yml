@@ -35,7 +35,7 @@ jobs:
   desktop-source-install:
     name: Desktop source install (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 15
+    timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
@@ -55,6 +55,9 @@ jobs:
 
       - name: Install dependencies
         run: npm ci --include=dev
+
+      - name: Build the pinned Desktop source
+        run: npm run desktop:setup
 
       - name: Verify Desktop source install
         run: npm run desktop:verify-install
@@ -94,11 +97,5 @@ jobs:
             sleep 2
           done
 
-          grep --quiet '<title>OpenQuantum</title>' /tmp/openquantum-index.html
-          curl --fail --silent \
-            --header 'content-type: application/json' \
-            --request POST \
-            --data '{"type":"client-request","rpcId":"ci-host-describe","method":"host.describe","payload":{}}' \
-            --output /tmp/openquantum-host-describe.json \
-            http://127.0.0.1:3000/api/host.describe
-          grep --quiet '"ok":true' /tmp/openquantum-host-describe.json
+          docker logs openquantum-ci 2>&1 | docker exec --interactive openquantum-ci \
+            node scripts/probe-harness-host.mjs http://127.0.0.1:3000

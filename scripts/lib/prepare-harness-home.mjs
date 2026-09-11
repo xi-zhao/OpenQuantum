@@ -1,16 +1,18 @@
 import { cp, mkdir, rm, symlink } from "node:fs/promises";
 import path from "node:path";
+import { buildLearningClient } from "./build-learning-client.mjs";
 
 /**
  * Materialize the OpenQuantum-owned parts of a Harness home.
  *
  * DeepSeek Harness owns the profile and runtime. OpenQuantum contributes one
- * deployment patch, one shared model-route fragment, one Agent preset and two
+ * deployment patch, one shared model-route fragment, Agent presets and three
  * Host Web extensions. Keeping this setup in one place makes the Web launcher,
  * Desktop adapter, isolated tests and real-provider probes boot the same
  * composition even when each uses a different DSH_HOME.
  */
-export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot }) {
+export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot, profileName = "web" }) {
+  if (!/^[A-Za-z0-9_-]+$/.test(profileName)) throw new Error("Invalid Harness profile name");
   const patchSource = path.join(
     projectRoot,
     "runtime",
@@ -49,6 +51,7 @@ export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot }
   const brandingTarget = path.join(
     harnessHome,
     "profiles",
+    profileName,
     "node_modules",
     "@openquantum",
     "harness-web-branding",
@@ -62,10 +65,13 @@ export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot }
   const capabilitiesTarget = path.join(
     harnessHome,
     "profiles",
+    profileName,
     "node_modules",
     "@openquantum",
     "harness-web-capabilities",
   );
+  const learningPresetTarget = path.join(harnessHome, ".agent-presets", "quantum-learning");
+  const learningTarget = path.join(harnessHome, "profiles", profileName, "node_modules", "@openquantum", "harness-web-learning");
 
   await Promise.all([
     mkdir(path.dirname(patchTarget), { recursive: true }),
@@ -83,7 +89,10 @@ export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot }
       recursive: true,
       force: true,
     }),
+    cp(path.join(projectRoot, "runtime/openquantum/agent-presets/quantum-learning"), learningPresetTarget, { recursive: true, force: true }),
+    cp(path.join(projectRoot, "runtime/openquantum/web-learning"), learningTarget, { recursive: true, force: true }),
   ]);
+  await buildLearningClient(projectRoot, path.join(learningTarget, "client.js"));
 
   // Agent preset entries are imported from the isolated DSH_HOME copy. Give
   // that generated copy one explicit dependency root instead of relying on
@@ -99,6 +108,8 @@ export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot }
   return {
     brandingTarget,
     capabilitiesTarget,
+    learningTarget,
+    learningPresetTarget,
     modelRoutesTarget,
     patchTarget,
     presetNodeModulesTarget,

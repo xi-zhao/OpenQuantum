@@ -34,7 +34,7 @@ const envelope = JSON.parse(Buffer.concat(chunks).toString("utf8"));
 if (envelope.action !== "simulate") throw new Error("Unexpected bridge action");
   const request = envelope.request;
   const exact = request.mode === "exact";
-  process.stdout.write(JSON.stringify({schemaVersion:"1.0",tyxonqVersion:"1.2.0",circuit:{numQubits:request.numQubits,operationCount:request.operations.length,sha256:"a".repeat(64)},execution:{mode:request.mode,simulator:request.noise ? "density_matrix" : "statevector",shots:request.shots,noise:request.noise},result:{counts:exact?{}:{"00":5,"11":5},probabilities:{"00":0.5,"11":0.5},statevector:exact?[{real:0.7071067811865475,imag:0},{real:0,imag:0},{real:0,imag:0},{real:0.7071067811865475,imag:0}]:[]},checks:{normalizationSum:1,normalizationError:0,countsMatchShots:exact?null:true},scientificValidation:"not_evaluated",limitations:["local","not independently validated"]}));
+  process.stdout.write(JSON.stringify({schemaVersion:"1.0",tyxonqVersion:"1.3.0",circuit:{numQubits:request.numQubits,operationCount:request.operations.length,sha256:"a".repeat(64)},execution:{mode:request.mode,simulator:request.noise ? "density_matrix" : "statevector",shots:request.shots,noise:request.noise},result:{counts:exact?{}:{"00":5,"11":5},probabilities:{"00":0.5,"11":0.5},statevector:exact?[{real:0.7071067811865475,imag:0},{real:0,imag:0},{real:0,imag:0},{real:0.7071067811865475,imag:0}]:[]},checks:{normalizationSum:1,normalizationError:0,countsMatchShots:exact?null:true},scientificValidation:"not_evaluated",limitations:["local","not independently validated"]}));
 `,
   );
   await chmod(uvPath, 0o755);
@@ -103,7 +103,7 @@ test("exact simulation preserves structured scientific boundary", async () => {
   });
   assert.equal(result.isError, undefined);
   assert.equal(result.structuredContent.execution.shots, 0);
-  assert.equal(result.structuredContent.tyxonqVersion, "1.2.0");
+  assert.equal(result.structuredContent.tyxonqVersion, "1.3.0");
   assert.equal(result.structuredContent.result.statevector.length, 4);
   assert.equal(result.structuredContent.scientificValidation, "not_evaluated");
   assert.match(result.content[0].text, /not_evaluated/);

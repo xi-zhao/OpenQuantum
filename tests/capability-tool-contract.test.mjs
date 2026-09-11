@@ -110,6 +110,7 @@ test("in-process quantum capabilities use the shared native Tool Provider", () =
 
 test("default contract checks are derived from package MCP and native Tool policy", () => {
   assert.deepEqual(readDefaultCapabilityContractChecks({ projectRoot }), [
+    ".agents/skills/fatqat-workbench/test/mcp.test.mjs",
     ".agents/skills/fieldqkit-hardware/test/mcp.test.mjs",
     ".agents/skills/qec-memory-experiment/test/mcp.test.mjs",
     ".agents/skills/qmclaw-workbench/test/tool-provider.test.mjs",
@@ -119,5 +120,6 @@ test("default contract checks are derived from package MCP and native Tool polic
     ".agents/skills/tyxonq-workbench/test/mcp.test.mjs",
     "tests/harness-native-quantum.test.mjs",
     "tests/native-quantum-tools.test.mjs",
+    "tests/quantum-learning.test.mjs",
   ]);
 });

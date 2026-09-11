@@ -1,0 +1,11 @@
+{
+  "name": "@openquantum/harness-web-learning",
+  "version": "0.1.0",
+  "type": "module",
+  "license": "MIT",
+  "exports": { ".": "./index.mjs", "./client": "./client.js", "./package.json": "./package.json" },
+  "dsh": { "client": {
+    "inject": ["@deepseek-ai/dsh-client-connection", "@deepseek-ai/dsh-client-runtime", "@deepseek-ai/dsh-client-ui-sidebar"],
+    "platform": "web"
+  } }
+}

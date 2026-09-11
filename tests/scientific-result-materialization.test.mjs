@@ -93,7 +93,7 @@ test("Harness post-execute materializes facts and projects central Acceptance", 
   const session = {
     id: "session-qgs-materialized",
     header: { cwd: workspaceRoot },
-    events: [callEvent],
+    snapshotEvents: () => [callEvent],
     seq: 8,
   };
   const decision = await listener(
@@ -193,7 +193,7 @@ test("workspace escape fails closed to computational observations", async (t) =>
   const session = {
     id: "session-qgs-escape",
     header: { cwd: workspaceRoot },
-    events: [
+    snapshotEvents: () => [
       {
         type: "tool/call",
         seq: 1,

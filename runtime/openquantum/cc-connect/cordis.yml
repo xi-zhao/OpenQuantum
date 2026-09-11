@@ -1,119 +1,109 @@
-# OpenQuantum automation endpoint for CC Connect.
-#
-# CC Connect owns messaging-platform delivery. DeepSeek Harness remains the
-# only Agent runtime and exposes this automation-only ACP server over stdio.
-# Stdout is reserved for newline-delimited ACP JSON-RPC, so this composition
-# must not mount a stdout logger or Web host.
+# Applied by dsh --profile acp --patch <this file>. The official base and ACP
+# bundles own Agent lifecycle, persistence, permissions and JSON-RPC stdio.
+# This overlay contributes OpenQuantum identity, routes and additional Tools.
 
 - id: credentials
-  name: '@deepseek-ai/dsh-credentials-local'
   config:
     dshHome: !!js process.env.DSH_HOME || process.cwd() + '/.openquantum/dsh'
 
-# ACP reads the same user-owned settings document as Web/Desktop. The static
-# route catalog below is only the composition base; settings.yaml may override
-# its endpoint, model metadata and other non-secret route fields at runtime.
 - id: settings
-  name: '@deepseek-ai/dsh-settings-file'
   config:
     dshHome: !!js process.env.DSH_HOME || process.cwd() + '/.openquantum/dsh'
 
-- id: openquantum-model-routes
-  name: '@deepseek-ai/cordis-plugin-include'
-  config:
-    path: ../model-routes.cordis.yml
+- id: llm-deepseek
+  disabled: true
 
-# ACP sessions use the same workspace-write policy as the OpenQuantum Web
-# preset. Wider file access remains a one-shot permission request that CC
-# Connect can relay to the user.
-- id: sandbox
-  name: '@deepseek-ai/dsh-sandbox-local'
+- id: llm-pi-ai
+  disabled: true
 
-- id: sandbox-policy
-  name: '@deepseek-ai/dsh-sandbox-policy'
-  config:
-    mode: !!js process.env.DSH_PERMISSION_MODE || 'workspace-write'
-    workspaceRoot: !!js process.cwd()
-
-- id: subprocess
-  name: '@deepseek-ai/dsh-subprocess-local'
-
-- id: bash
-  name: '@deepseek-ai/dsh-bash-sandbox'
-  config:
-    timeoutMs: 60000
-
-- id: approval
-  name: '@deepseek-ai/dsh-user-approval'
-  config:
-    policy: !!js >-
-      (process.env.DSH_PERMISSION_MODE ?? 'workspace-write') ===
-      'danger-full-access' ? 'never' : 'ask'
-
-- id: fs-sandbox
-  name: '@deepseek-ai/dsh-fs-sandbox'
-  config:
-    cwd: !!js process.cwd()
-
-- id: fs-observation-policy
-  name: '@deepseek-ai/dsh-fs-observation-policy'
-
-# The official Harness ACP app owns AgentLoop, Session, Skill discovery,
-# persistence, tool registry and the ACP transport. It creates one fresh
-# Harness session for each CC Connect conversation.
-- id: acp-agent
-  name: '@deepseek-ai/dsh-acp-demo'
+- id: acp
+  inject: [acpAppStartup, openquantumAcpModelReady]
   config:
     provider: openquantum-public
     model: kimi-k2.7-code
-    dshHome: !!js process.env.DSH_HOME || process.cwd() + '/.openquantum/dsh'
-    persistenceRoot: !!js process.env.OPENQUANTUM_CC_CONNECT_SESSIONS_ROOT || process.cwd() + '/.openquantum/cc-connect/sessions'
-    workspaceContext:
-      maxBytes: 65536
-    skills:
-      filesystem:
-        providerName: openquantum-capabilities
-        includeDefaultRoots: false
-        customSkillDirs:
-          - !!js process.cwd() + '/.agents/skills'
-    persona: >-
+
+- id: agent-default-model
+  config:
+    provider: openquantum-public
+    model: kimi-k2.7-code
+
+- id: system-prompt
+  config:
+    personaPrefix: >-
       You are OpenQuantum, a scientific research agent powered by {{model}}.
       Your working directory is {{cwd}}. Load the relevant project Skill before
       performing domain work, preserve scientific uncertainty, and never claim
       scientific acceptance unless a trusted Acceptance Report or Result Commit
       records status=passed for the relevant materialized evidence.
+    personaSuffix: ''
 
-# Reuse the exact MCP rows managed by the OpenQuantum settings page. The ACP
-# app already owns the generic Agent/Skill/tool stack, so those duplicate rows
-# are disabled while Harness MCP Clients, scientific result projection and the bounded
-# todo tool stay shared with the Web preset. Web compaction depends on services
-# that the automation-only ACP app does not expose, so it is disabled here.
-- id: openquantum-agent-extensions
-  name: '@deepseek-ai/cordis-plugin-include'
+- id: session-persistence-jsonl
   config:
-    path: ../agent-presets/openquantum/agent.cordis.yml
-    patches:
-      - id: persona
-        disabled: true
-      - id: agent-instructions
-        disabled: true
-      - id: tool-bash
-        disabled: true
-      - id: tool-pwsh
-        disabled: true
-      - id: tool-fs
-        disabled: true
-      - id: tool-jobs
-        disabled: true
-      - id: skill-filesystem
-        disabled: true
-      - id: tool-skill
-        disabled: true
-      - id: tool-goal
-        disabled: true
-      - id: tool-ask-user
-        disabled: true
-      - id: tool-web
-        disabled: true
-      - id: compaction
-        disabled: true
+    root: !!js process.env.OPENQUANTUM_CC_CONNECT_SESSIONS_ROOT || process.cwd() + '/.openquantum/cc-connect/sessions'
+
+- id: skill-filesystem
+  disabled: false
+  config:
+    providerName: openquantum-capabilities
+    includeDefaultRoots: false
+    customSkillDirs:
+      - !!js process.cwd() + '/.agents/skills'
+
+# The shared home can carry Web/Desktop rows; stdio mounts no browser host.
+- id: openquantum-web-branding
+  disabled: true
+- id: openquantum-web-capabilities
+  disabled: true
+- id: openquantum-web-learning
+  disabled: true
+
+# Reuse the route catalog even when this home has never launched Web.
+- id: openquantum-model-routes
+  disabled: true
+
+- insert:
+    - id: openquantum-acp-ready
+      name: ./ready.mjs
+      config:
+        provider: openquantum-public
+
+    - id: openquantum-acp-model-routes
+      name: '@deepseek-ai/cordis-plugin-include'
+      config:
+        path: ../model-routes.cordis.yml
+
+    # Generic rows already belong to dsh-base. Mount only the additional
+    # native Tools, MCP Clients and scientific result hook from this preset.
+    - id: openquantum-agent-extensions
+      name: '@deepseek-ai/cordis-plugin-include'
+      config:
+        path: ../../.agent-presets/openquantum/agent.cordis.yml
+        patches:
+          - id: persona
+            disabled: true
+          - id: agent-instructions
+            disabled: true
+          - id: tool-bash
+            disabled: true
+          - id: tool-pwsh
+            disabled: true
+          - id: tool-fs
+            disabled: true
+          - id: tool-fs-search
+            disabled: true
+          - id: tool-jobs
+            disabled: true
+          - id: skill-filesystem
+            disabled: true
+          - id: tool-skill
+            disabled: true
+          - id: tool-goal
+            disabled: true
+          - id: tool-ask-user
+            disabled: true
+          - id: tool-web
+            disabled: true
+          - id: tool-todo
+            disabled: true
+          - id: compaction
+            disabled: true

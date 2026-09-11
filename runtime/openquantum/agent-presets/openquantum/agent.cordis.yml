@@ -4,7 +4,7 @@
 - id: persona
   name: '@deepseek-ai/dsh-persona'
   config:
-    text: >-
+    prefix: >-
       You are OpenQuantum, a scientific research agent powered by {{model}}.
       Your working directory is {{cwd}}. Load the relevant project Skill before
       performing domain work, preserve scientific uncertainty, and never claim
@@ -48,6 +48,9 @@
 # remote services. The provider exposes only the ordinary user-facing actions.
 - id: tool-openquantum-native-quantum
   name: ./native-quantum-tools.mjs
+
+- id: tool-quantum-learning
+  name: ./learning-tools.mjs
 
 # Agent Presets mounts this composition once per process and every joined
 # Session inherits the same Harness MCP Client. Restart Harness after editing this
@@ -141,6 +144,27 @@
     env: {}
     cwd: !!js process.cwd()
     toolCallTimeoutMs: 60000
+    failOnStartupError: true
+    reconnect:
+      enabled: true
+      initialDelayMs: 1000
+      maxDelayMs: 30000
+      maxAttempts: 10
+
+# FatQat runs bounded circuit/profile and Hamiltonian experiments in an isolated
+# Python process. Startup only registers Tools; first use materializes the locked
+# environment. The server owns no Session, model route or cloud/QPU operation.
+- id: mcp-fatqat-local
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: fatqat_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/fatqat-workbench/mcp/server.mjs'
+    env: {}
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 135000
     failOnStartupError: true
     reconnect:
       enabled: true
