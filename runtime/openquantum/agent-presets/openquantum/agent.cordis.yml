@@ -448,3 +448,112 @@
   config:
     fetch: false
     searchTimeoutMs: 60000
+
+# Paper-backed local science tools. Python/Julia workers use pinned isolated environments.
+- id: mcp-sqd-chemistry
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: sqd_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/sqd-chemistry/mcp/server.mjs'
+    env: {}
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 195000
+    failOnStartupError: true
+    reconnect:
+      enabled: true
+      initialDelayMs: 1000
+      maxDelayMs: 30000
+      maxAttempts: 10
+
+- id: mcp-tjm-dynamics
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: tjm_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/tjm-dynamics/mcp/server.mjs'
+    env: {}
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 195000
+    failOnStartupError: true
+    reconnect:
+      enabled: true
+      initialDelayMs: 1000
+      maxDelayMs: 30000
+      maxAttempts: 10
+
+- id: mcp-ldpc-decoding
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: ldpc_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/ldpc-decoding/mcp/server.mjs'
+    env: {}
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 195000
+    failOnStartupError: true
+    reconnect:
+      enabled: true
+      initialDelayMs: 1000
+      maxDelayMs: 30000
+      maxAttempts: 10
+
+- id: mcp-flow-vqe
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: flow_vqe_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/flow-vqe/mcp/server.mjs'
+    env: {}
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 195000
+    failOnStartupError: true
+    reconnect:
+      enabled: true
+      initialDelayMs: 1000
+      maxDelayMs: 30000
+      maxAttempts: 10
+
+- id: mcp-tenpy-ground-state
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: tenpy_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/tenpy-ground-state/mcp/server.mjs'
+    env: {}
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 195000
+    failOnStartupError: true
+    reconnect:
+      enabled: true
+      initialDelayMs: 1000
+      maxDelayMs: 30000
+      maxAttempts: 10
+
+- id: mcp-randomized-measurements
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: random_meas_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/randomized-measurements/mcp/server.mjs'
+    env: {}
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 195000
+    failOnStartupError: true
+    reconnect:
+      enabled: true
+      initialDelayMs: 1000
+      maxDelayMs: 30000
+      maxAttempts: 10

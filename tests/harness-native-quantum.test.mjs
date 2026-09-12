@@ -50,6 +50,12 @@ const EXPECTED_QUANTUM_SKILLS = Object.freeze([
   "qmclaw-workbench",
   "quantum-sdk-advisor",
   "fatqat-workbench",
+  "sqd-chemistry",
+  "tjm-dynamics",
+  "ldpc-decoding",
+  "flow-vqe",
+  "tenpy-ground-state",
+  "randomized-measurements",
 ]);
 
 async function enableTemporaryMcp(presetRoot, serverName) {
@@ -392,6 +398,9 @@ test(
       assert(toolNames.includes(QMCLAW_SIMULATE_TOOL), diagnostics());
       assert(toolNames.includes("mcp__fatqat_local__simulate_fatqat_circuit"), diagnostics());
       assert(toolNames.includes("mcp__fatqat_local__simulate_fatqat_dynamics"), diagnostics());
+      for (const name of ["mcp__sqd_local__run_sqd_chemistry", "mcp__tjm_local__simulate_tjm_dynamics", "mcp__ldpc_local__decode_ldpc_syndromes", "mcp__flow_vqe_local__train_flow_vqe", "mcp__tenpy_local__solve_tenpy_chain", "mcp__random_meas_local__estimate_randomized_purity"]) {
+        assert(toolNames.includes(name), diagnostics());
+      }
       assert.equal(
         toolNames.includes("inspect_qmclaw_runtime"),
         false,

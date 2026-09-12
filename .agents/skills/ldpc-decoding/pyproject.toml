@@ -1,0 +1,8 @@
+[project]
+name = "openquantum-ldpc-decoding-bridge"
+version = "0.1.0"
+requires-python = ">=3.12,<3.13"
+dependencies = ["ldpc==2.4.1"]
+
+[tool.uv]
+package = false

@@ -1,0 +1,8 @@
+[project]
+name = "openquantum-tjm-dynamics-bridge"
+version = "0.1.0"
+requires-python = ">=3.12,<3.13"
+dependencies = ["mqt.yaqs==0.6.0"]
+
+[tool.uv]
+package = false

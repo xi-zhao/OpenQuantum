@@ -1,0 +1,23 @@
+{
+  "repository": "https://github.com/olsson-group/Flow-VQE",
+  "revision": "f7642afa330e5108ea5738d42fe80b551363733c",
+  "license": "MIT",
+  "files": {
+    "flow_training.py": {
+      "sourcePath": "flow_vqe/flow_training.py",
+      "sha256": "caa54ad326d64ec01edea0f2b4b738614fee256f2dfeb5747d8c41b2ea26f8ae"
+    },
+    "utils.py": {
+      "sourcePath": "flow_vqe/utils.py",
+      "sha256": "9873d46dc15e18b81e1de5f0d636f539d112134b406c552ff25f7961888925a3"
+    },
+    "molecule_configs.py": {
+      "sourcePath": "molecule_configs.py",
+      "sha256": "56a579cf5c384cd3b73887ed0cc5997be829387bede73652af2b824eb88e3a05"
+    },
+    "LICENSE": {
+      "sourcePath": "LICENSE",
+      "sha256": "9f9e2b1595ab4d95076433d36186dfa784b3163acb4095055e775e03762e32f1"
+    }
+  }
+}
