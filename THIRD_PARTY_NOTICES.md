@@ -6,6 +6,12 @@ OpenQuantum 自有代码采用仓库根目录中的 [MIT License](LICENSE)。这
 
 | 组件 | 许可证 | OpenQuantum 中的使用方式 | 上游来源 |
 | --- | --- | --- | --- |
+| Qiskit SQD | Apache-2.0 | 固定 `qiskit-addon-sqd==0.13.1`，隔离环境调用 H₂/STO-3G 采样子空间对角化；源码由包管理器安装 | [Qiskit/qiskit-addon-sqd](https://github.com/Qiskit/qiskit-addon-sqd) |
+| MQT YAQS | MIT | 固定 `mqt.yaqs==0.6.0`，隔离环境调用有界张量跳跃轨迹 | [munich-quantum-toolkit/yaqs](https://github.com/munich-quantum-toolkit/yaqs) |
+| ldpc | MIT | 固定 `ldpc==2.4.1`，调用串行 BP+LSD，OpenQuantum 在进入 C++ 前核对 GF(2) 可解性 | [quantumgizmos/ldpc](https://github.com/quantumgizmos/ldpc) |
+| RandomMeas.jl | Apache-2.0 | Julia Manifest 固定 `89c492bfb05508e5babe9c8c2c40697995be9e42` / `0.3.1`，调用局域 Haar 测量与纯度估计；不重新分发其源码 | [bvermersch/RandomMeas.jl](https://github.com/bvermersch/RandomMeas.jl) |
+| Flow-VQE | MIT | 引入固定 `f7642afa330e5108ea5738d42fe80b551363733c` 的三份未修改 Python 源文件及原始 [MIT License](.agents/skills/flow-vqe/upstream/LICENSE)，逐文件来源与 SHA-256 见同目录 provenance.json；仅调用单上下文训练函数 | [olsson-group/Flow-VQE](https://github.com/olsson-group/Flow-VQE) |
+| TeNPy | Apache-2.0 | 固定 `physics-tenpy==1.1.1`，隔离环境调用有限 XYZ 链 DMRG；采用当前版本许可证 | [tenpy/tenpy](https://github.com/tenpy/tenpy) |
 | DeepSeek Harness | MIT | 作为 Agent Runtime 和 Web UI 基础，DSH 直接依赖统一固定为 `0.1.5-rc.1`；OpenQuantum 使用 Cordis patch、preset 与公开接口扩展，不修改 `node_modules` | [deepseek-ai/deepseek-harness](https://github.com/deepseek-ai/deepseek-harness) |
 | DSH Desktop | MIT | 固定源码 `5184a2ab7ab197e7405c1053feb324003409a142`（版本 `2.0.7`，尚未发布的源码构建），配套 Harness `0.1.5-rc.1` 和上游锁定的 Electron `43.3.0`；构建在忽略目录中，使用公开启动器承载同一个 Harness Web UI 和 Home patch，不重新分发上游源码 | [anywhere-labs/dsh-desktop](https://github.com/anywhere-labs/dsh-desktop) |
 | CC Connect | MIT | 固定 npm `1.5.1-beta.1`，作为可选的消息平台桥；通过 ACP 启动 Harness Agent，不复制上游源码，也不把平台凭据写入仓库 | [chenhg5/cc-connect](https://github.com/chenhg5/cc-connect) |

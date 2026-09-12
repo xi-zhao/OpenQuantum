@@ -135,6 +135,7 @@ Skill 与 Tool 在概念和发行版 policy 中都相互独立：Skill-only、To
 - [消息渠道接入](integrations/CC_CONNECT.md)：通过 CC Connect 和 ACP 接入微信、飞书等平台。
 - [量子学习通 / OpenMAIC](integrations/OPENMAIC.md)：完整原版子应用、Pro 工作台、持久存储与 Harness 当前模型连接；含实际验收和未通过项。
 - [FatQat 量子实验](integrations/FATQAT.md)：Skill、两个 MCP 计算 Tool、固定版本、实验边界与真实数值验证。
+- [论文方法计算接入](integrations/PAPER_BACKED_TOOLS.md)：SQD、TJM、LSD、RandomMeas、Flow-VQE 和 TeNPy 的固定实现、六个 Tool、安装与科学范围。
 - [项目首页](../README.md)：产品能力、已集成工具和快速开始。
 - [Skill 目录](../README.md#内置-skills)与 [MCP 服务目录](../README.md#mcp-服务目录)：逐项查看工作流、服务用途、默认开关与使用条件；[原生量子 Tools](../README.md#原生量子-tools)单独列出。
 
