@@ -1,0 +1,55 @@
+{
+  "schemaVersion": "1.0",
+  "recordedAt": "2026-09-12T00:55:31.017Z",
+  "scope": "Local native Tool execution and computational checks. No external model, Harness Session materialization or final scientific Acceptance was run.",
+  "reproduction": {
+    "command": "npm run demo:quantum-ground-state",
+    "sourceCommit": "4575c9c85c2f4ef1f8536253c2e142617163542c",
+    "entrypoint": {
+      "path": "scripts/run-quantum-ground-state-demo.mjs",
+      "sha256": "43cf719785f84a95a14d5a7e8279532952927d62f6d84a1c7f96754ac829120d"
+    },
+    "request": {
+      "path": ".agents/skills/quantum-ground-state/evals/fixtures/requests/protocol-fixture.json",
+      "sha256": "49749acc2e685e3a4f34662541f0620556ac786bd91e3a7939cebb9e78f17f6b"
+    }
+  },
+  "environment": {
+    "node": "v24.14.1",
+    "platform": "darwin",
+    "architecture": "arm64"
+  },
+  "output": {
+    "schemaVersion": "1.0",
+    "demo": "openquantum-qgs-native-tool",
+    "capability": {
+      "id": "quantum-ground-state",
+      "version": "0.2.0"
+    },
+    "provider": "openquantum-native-quantum-tools",
+    "tool": "solve_and_validate_ground_state",
+    "requestId": "qgs-protocol-fixture-001",
+    "runtime": {
+      "status": "completed"
+    },
+    "result": {
+      "energyHartree": -1.8572750302023806,
+      "exactEnergyHartree": -1.8572750302023802,
+      "absoluteErrorHartree": 4.440892098500626e-16,
+      "converged": true,
+      "evaluationCount": 112
+    },
+    "scientificReview": {
+      "status": "observations_available",
+      "scope": "in_scope",
+      "observations": {
+        "pass": 15,
+        "fail": 0,
+        "not_checked": 1
+      },
+      "provenance": "not_checked",
+      "acceptance": "not_derived"
+    },
+    "statement": "The local native Tool workflow passed every computational check. Harness materialization and final Acceptance remain separate."
+  }
+}

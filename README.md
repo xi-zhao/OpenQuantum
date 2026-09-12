@@ -50,7 +50,7 @@
 | 超导与原子实验 | 调校流程的合成数据实验、原生门约束、三能级 transmon 泄漏与小型里德堡原子链动力学 | QMClaw、FatQat |
 | 量子硬件接入 | 后端发现、拓扑与凭据检查；按需开启云任务查询、提交与取消 | FieldQKit、IBM Quantum、IonQ、本源量子等 |
 
-同类任务可以由不同后端完成，选择取决于输入格式、物理模型、设备条件和验证需求。SDK 选型和工作台排障也有对应 Skill，完整范围见[集成目录](#已集成的量子工具与能力)。
+同类任务可以保留多个后端，由用户根据输入格式、物理模型、设备条件或个人偏好选择。你可以在对话中明确指定后端，具体步骤见[发起任务并选择后端](#发起任务并选择后端)。SDK 选型和工作台排障也有对应 Skill，完整范围见[集成目录](#已集成的量子工具与能力)。
 
 每项计算都有明确适用范围。真实硬件与付费任务入口默认关闭；具备完整科学验收流程的是限定的量子基态求解与量子信息审计，其他能力的计算结果与验证状态分别记录。
 
@@ -65,7 +65,9 @@
 | 制作课程 | 建课预览、课件编辑器和 Pro 专业工作台 |
 | 继续学习 | 本机课程、任务、材料与服务端学习记录持久化，兼容旧版课堂迁移 |
 
-完成下方依赖安装后，运行 `npm run learning:ui:setup` 准备课程应用，再启动 Web 或 Desktop，从侧栏打开「量子学习通」。首次打开会自动启动本机数据库和课程服务，无需另装全局 PostgreSQL；模型请求使用 OpenQuantum 当前选择的模型。
+量子学习通当前已在 macOS 验证安装和启动。完成下方依赖安装后，macOS 用户可运行 `npm run learning:ui:setup`，再启动 Web 或 Desktop，从侧栏打开「量子学习通」。首次打开会自动启动本机数据库和课程服务，无需另装全局 PostgreSQL；模型请求使用 OpenQuantum 当前选择的模型。
+
+学习应用的安装器依赖 `/bin/sh`，尚未适配普通 Windows 环境；Linux 安装与启动也未完成验证。各平台状态见[安装说明](docs/integrations/OPENMAIC.md#使用)。
 
 课程建设目标是覆盖中学基础到前沿研究，按初级、中级、高级组织内容，允许按知识基础跨阶段学习。当前公开资源仍在整理，完整课程体系尚未制作和发布。应用装配、启动和本机持久化已有验证，真实在线 AI 建课、问答和编辑仍待完整验收。
 
@@ -86,6 +88,19 @@ npm run dev
 
 浏览器打开 <http://127.0.0.1:3000>，在设置中心配置模型。还没有模型密钥时，可先用 `npm run demo:quantum-ground-state` 运行本地参考示例；安装 `uv` 后可用 `npm run mcp:qiskit:probe` 检查 Qiskit 接入，首次运行可能下载依赖。
 
+### 发起任务并选择后端
+
+在科研工作台新建对话，直接写出任务和希望使用的后端。下面是同一个 Bell 态任务的两种选择，可以分别复制到对话中：
+
+| 选择 | 示例请求 | 准备条件 |
+| --- | --- | --- |
+| FatQat | 用 FatQat 从双量子位全零态出发，对 q0 施加 H，再以 q0 为控制位、q1 为目标位施加 CX。返回无噪声精确概率，并用 1024 次采样、seed=7 比较频数。 | 默认连接开启；已安装 `uv` |
+| TyxonQ | 用 TyxonQ 从双量子位全零态出发，对 q0 施加 H，再以 q0 为控制位、q1 为目标位施加 CX。返回无噪声精确态矢和概率。 | 先启用 TyxonQ Local 连接 |
+
+两种计算的理想概率都应为 `00`、`11` 各约 50%；有限采样频数会有波动。首次使用可能下载相应的 Python 依赖。
+
+TyxonQ 等默认关闭的后端，在「设置 → 量子组件 → MCP Server 连接」中启用后，重新启动 OpenQuantum，再在对话中指定名称。修改模型配置选择的是对话模型；这里选择的是负责计算的后端。支持范围和默认开关见[服务目录](#mcp-服务目录)。
+
 ### 桌面客户端
 
 桌面端基于 [DSH Desktop](https://github.com/anywhere-labs/dsh-desktop) 适配，提供原生窗口、系统托盘、终端与通知，复用 OpenQuantum 的模型、科研能力和执行记录。当前提供 macOS / Windows 源码启动路径；本机已验证 macOS，未提供 OpenQuantum 品牌的 `.dmg` / `.exe` 安装包。
@@ -100,7 +115,7 @@ npm run desktop
 
 `desktop:setup` 构建固定的上游源码、下载 Electron 并编译原生模块；首次启动可能显示设置向导。请使用仓库中的启动命令，以加载 OpenQuantum 的模型和量子能力配置。
 
-Web 与 Desktop 共用 `.openquantum/dsh` 中的本机状态，切换前先退出正在运行的入口。需要量子学习通时，额外运行一次 `npm run learning:ui:setup`。
+Web 与 Desktop 共用 `.openquantum/dsh` 中的本机状态，切换前先退出正在运行的入口。量子学习通另有安装和平台要求，见[量子学习通](#量子学习通)。
 
 ### 微信、飞书与其他消息入口
 
@@ -124,32 +139,34 @@ npm run cc-connect:start
 
 ## 从一个真实任务开始
 
-以仓库内固定的[二量子位 Pauli Hamiltonian](.agents/skills/quantum-ground-state/evals/fixtures/requests/protocol-fixture.json)为例，OpenQuantum 在指定粒子扇区内运行无噪声 VQE，再用独立闭式计算作为参考。下面的数值来自这一个有界案例，任务结果、工具调用和科学验收可以沿同一条轨迹复核。
+以仓库内固定的[二量子位 Pauli Hamiltonian](.agents/skills/quantum-ground-state/evals/fixtures/requests/protocol-fixture.json)为例，OpenQuantum 在指定粒子扇区内运行无噪声 VQE，再用独立闭式计算作为参考。在仓库目录执行以下命令即可复算，无需模型密钥或量子云凭据：
+
+```bash
+npm run demo:quantum-ground-state
+```
+
+以下结果来自 **2026-09-12 的本地复验**；[原始输出与运行记录](docs/examples/quantum-ground-state-local-demo-2026-09-12.json)包含完整数值、检查状态、时间、源码提交、输入摘要和 Node.js 版本。
 
 <table>
   <tr>
     <td align="center"><strong>-1.85727503 Ha</strong><br /><sub>VQE 能量</sub></td>
     <td align="center"><strong>-1.85727503 Ha</strong><br /><sub>独立精确参考</sub></td>
     <td align="center"><strong>4.44 × 10⁻¹⁶ Ha</strong><br /><sub>能量差</sub></td>
-    <td align="center"><strong>通过</strong><br /><sub>科学验收</sub></td>
+    <td align="center"><strong>15 项通过</strong><br /><sub>本地计算检查</sub></td>
   </tr>
 </table>
 
-<p align="center">
-  <img src="./docs/images/openquantum-quantum-result.jpg" width="720" alt="OpenQuantum 运行量子基态任务并完成科学检查" />
-</p>
+这次运行完成了 15 项本地计算检查，1 项会话来源检查未执行，尚未生成完整科学验收结论。差值表示该数值案例与精确参考的一致程度；科学适用范围仍是给定 Hamiltonian 和粒子扇区。
 
-<p align="center"><sub>真实运行画面　从任务结果到独立科学检查</sub></p>
-
-这个案例展示的是从输入、工具执行到科学证据的完整路径，不是通用分子求解、量子优势或真实硬件性能的证明。你可以用 `npm run demo:quantum-ground-state` 先运行同类本地参考流程；模型驱动的完整 Harness 验收需要另行配置模型。
+完整科学验收还需要通过 Harness 执行任务、保存结果文件和会话来源，并生成可重读的验收报告。配置模型后的验证入口见下方[开发与验证命令](#把你的量子能力接进来)。
 
 ## 执行记录与科学验收
 
-科研工作台保留请求、Skill 加载、工具调用、权限状态与返回结果，便于追踪一次任务的执行过程。设置中的“已启用”表示配置策略；当前工具是否注册、服务是否可达，需要查看对应运行证据。
+科研工作台保留请求、Skill 加载、工具调用、权限状态与返回结果，便于追踪一次任务的执行过程。设置中的“已启用”表示配置策略；当前工具是否可调用、服务是否可达，需要查看对应运行证据。
 
-运行完成与科学验收分别显示。具备完整验收流程的能力会把输入、结果文件、独立检查和 Session 来源链连接起来，由 central Acceptance Builder 推导最终状态。其他工具的数值检查、图表和成功返回保留各自的证据范围。
+运行完成与科学验收分别显示。具备完整验收流程的能力会把输入、结果文件、独立检查和会话记录连接起来，生成验收报告，列出通过、失败或尚未检查的项目。其他工具按各自范围报告数值结果和检查状态。
 
-限定量子基态求解与量子信息审计提供两条完整 L3 参考流程；QUBO、电路等价性检查和 QEC memory 等能力按各自合同报告计算结果与检查。验证依据见[能力声明](.agents/capability-packages.yml)、[架构审计](docs/architecture/ARCHITECTURE_AUDIT.md)和[固定量子能力 Benchmark](benchmarks/quantum-capabilities/README.md)。
+限定量子基态求解与量子信息审计提供完整科学验收流程；QUBO、电路等价性检查和量子纠错存储实验等能力按各自规则报告计算结果与检查。验证依据见[能力声明](.agents/capability-packages.yml)、[架构审计](docs/architecture/ARCHITECTURE_AUDIT.md)和[固定量子能力 Benchmark](benchmarks/quantum-capabilities/README.md)。
 
 ## 已集成的量子工具与能力
 
@@ -215,7 +232,7 @@ FieldQKit、toqito、QCEC、QEC、TyxonQ、FatQat 与 QPanda QUBO 使用 OpenQua
 
 | 原生 Tool | 做什么 | 完整调用的边界 |
 | --- | --- | --- |
-| `solve_and_validate_ground_state` | 计算限定二量子位基态并执行独立科学检查；组合 Host Plugin 保存证据后，由中央验收构建器推导 Acceptance | 本地科研证据写入，`workspace-write`；不是通用分子求解或真机任务 |
+| `solve_and_validate_ground_state` | 计算限定二量子位基态并执行独立检查；完整流程保存结果和会话证据后生成科学验收报告 | 本地科研证据写入，`workspace-write`；不是通用分子求解或真机任务 |
 | `list_qmclaw_experiments` | 列出 [QMClaw](https://github.com/QMC-AI/QMClaw) 的 13 类实验及支持范围 | 只读目录查询，`read-only`；不连接仪器 |
 | `simulate_qmclaw_experiment` | 运行带 seed 的有界 QMClaw 合成数据实验 | 只读计算，`read-only`；不连接 LabRAD/lqms，不写回真实校准参数 |
 
@@ -280,6 +297,8 @@ OpenQuantum 为本地模拟、IBM Quantum、IonQ 和多家国内量子云保留�
 | 稳定的计算、查询或操作 | Tool，由原生 Tool Provider 或 Harness MCP Client 注册 |
 | 独立的科学检查与验收 | Validator；需要最终验收时再组合 Acceptance Profile、证据物化与 central Acceptance Builder |
 | 有独立交互流程的完整产品 | 按应用边界集成，保留其业务与数据职责；量子学习通是现有实例 |
+
+在开发文档中，`L3` 表示具备可回放的完整科学验收流程。Validator 产生检查结果，Acceptance Profile 定义规则，只有 central Acceptance Builder 汇聚检查结果与来源链、推导最终验收状态。能力等级不代表每一次调用都已完成验收。
 
 Skill 与 Tool 可独立存在。计算后端按任务需要选用，只有额外的选择、步骤或解释规则有价值时才增加 Skill。进程内、同语言且无需隔离的动作优先使用原生 Tool Provider；跨语言、独立进程或远程部署时使用 MCP Server，由 Harness MCP Client 注册其 Tool。
 
