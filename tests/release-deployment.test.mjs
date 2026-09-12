@@ -16,6 +16,8 @@ test("CI builds and boots the production container before release", async () => 
   assert.match(workflow, /--network host/);
   assert.doesNotMatch(workflow, /--publish/);
   assert.doesNotMatch(workflow, /docker run --detach --rm/);
+  assert.match(workflow, /docker inspect --format '\{\{\.State\.Health\.Status\}\}'/);
+  assert.doesNotMatch(workflow, /curl --fail --silent http:\/\/127\.0\.0\.1:3000\//);
   assert.match(workflow, /node scripts\/probe-harness-host\.mjs http:\/\/127\.0\.0\.1:3000/);
   assert.match(workflow, /docker logs openquantum-ci/);
   assert.match(workflow, /docker rm --force openquantum-ci/);
@@ -27,6 +29,7 @@ test("CI builds and boots the production container before release", async () => 
     /COPY --from=production-dependencies .*\/workspace\/node_modules/,
   );
   assert.doesNotMatch(dockerfile, /--host.*0\.0\.0\.0/);
+  assert.match(dockerfile, /HEALTHCHECK[^\n]+\\\n\s+CMD \["node", "scripts\/probe-harness-health\.mjs"\]/);
   assert.match(compose, /network_mode: host/);
   assert.doesNotMatch(compose, /^\s+ports:/m);
   assert.equal(manifest.dependencies["dsh-plugin-desktop"], undefined);

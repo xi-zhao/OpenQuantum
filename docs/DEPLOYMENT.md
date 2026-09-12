@@ -92,8 +92,13 @@ cp .env.example .env
 docker compose up --build
 ```
 
-访问 <http://127.0.0.1:3000>。当前不支持通过 Docker 端口映射对外提供服务，也不支持用 `PORT` 修改这个
+首次访问时，打开容器启动日志中带登录令牌的地址，Harness 会设置浏览器 Cookie 并跳转到
+<http://127.0.0.1:3000>。当前不支持通过 Docker 端口映射对外提供服务，也不支持用 `PORT` 修改这个
 入口。macOS 和 Windows 用户请使用前面的桌面客户端或本地 Web 启动方式。
+
+Docker 健康检查确认首页返回 Harness 预期的 `401` 登录提示；匿名请求因此不会被误判为启动失败。
+CI 等待容器变为 `healthy` 后，再通过启动令牌换取 Cookie，检查 OpenQuantum 页面和 Harness RPC。
+这些检查不调用外部模型，也不代表科研能力或真实硬件已经通过验收。
 
 Compose 使用两个命名卷：
 

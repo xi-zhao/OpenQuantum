@@ -8,8 +8,12 @@ OpenQuantum 提供入口、进程管理、持久存储及当前模型连接。�
 
 ## 使用
 
+以下安装与启动步骤已在 macOS 验证。当前安装器在构建工作区包时固定调用 `/bin/sh`，
+尚未适配普通 Windows 环境；Linux 安装与启动也未完成验证。DSH Desktop 的 Windows 源码启动路径
+不代表量子学习通已完成 Windows 适配。此处只记录学习应用的已验证范围。
+
 ```sh
-npm install
+npm ci
 npm run learning:ui:setup
 npm run dev
 ```
