@@ -491,6 +491,19 @@ test("repository preset exposes reviewed quantum MCPs with safe defaults", async
   assert.equal(byName.get("fatqat_local")?.displayName, "FatQat 量子实验");
   assert.equal(byName.get("fatqat_local")?.packageVersion, "0.1.0a1@39b75e30");
   assert.deepEqual(byName.get("fatqat_local")?.credentialRefs, []);
+  for (const [server, displayName, packageVersion] of [
+    ["sqd_local", "SQD 量子化学", "0.13.1"],
+    ["tjm_local", "TJM 开放系统动力学", "0.6.0"],
+    ["ldpc_local", "LSD 纠错解码", "2.4.1"],
+    ["random_meas_local", "RandomMeas 随机测量", "0.3.1@89c492bf"],
+    ["flow_vqe_local", "Flow-VQE 参数学习", "f7642afa"],
+    ["tenpy_local", "TeNPy 多体基态", "1.1.1"],
+  ]) {
+    assert.equal(byName.get(server)?.enabled, true, server);
+    assert.equal(byName.get(server)?.displayName, displayName);
+    assert.equal(byName.get(server)?.packageVersion, packageVersion);
+    assert.deepEqual(byName.get(server)?.credentialRefs, []);
+  }
   assert.equal(byName.get("tyxonq_local")?.enabled, false);
   assert.equal(byName.get("tyxonq_local")?.displayName, "TyxonQ Local");
   assert.equal(byName.get("tyxonq_local")?.packageVersion, "1.3.0");

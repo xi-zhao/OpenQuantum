@@ -588,6 +588,120 @@ packages:
         - tests/quantum-information-materialization.test.mjs
         - tests/scientific-result-projection.test.mjs
 
+  - id: sqd-chemistry
+    level: L1
+    execution:
+      mcpServers:
+        - name: sqd_local
+          source: package
+          entrypoint: .agents/skills/sqd-chemistry/mcp/server.mjs
+          activation: always
+          contractCheck: tests/paper-tools-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: run_sqd_chemistry
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/paper-tools-contracts.test.mjs
+        - tests/paper-tools-live.test.mjs
+        - tests/harness-paper-tools.test.mjs
+
+  - id: tjm-dynamics
+    level: L1
+    execution:
+      mcpServers:
+        - name: tjm_local
+          source: package
+          entrypoint: .agents/skills/tjm-dynamics/mcp/server.mjs
+          activation: always
+          contractCheck: tests/paper-tools-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: simulate_tjm_dynamics
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/paper-tools-contracts.test.mjs
+        - tests/paper-tools-live.test.mjs
+        - tests/harness-paper-tools.test.mjs
+
+  - id: ldpc-decoding
+    level: L1
+    execution:
+      mcpServers:
+        - name: ldpc_local
+          source: package
+          entrypoint: .agents/skills/ldpc-decoding/mcp/server.mjs
+          activation: always
+          contractCheck: tests/paper-tools-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: decode_ldpc_syndromes
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/paper-tools-contracts.test.mjs
+        - tests/paper-tools-live.test.mjs
+        - tests/harness-paper-tools.test.mjs
+
+  - id: flow-vqe
+    level: L1
+    execution:
+      mcpServers:
+        - name: flow_vqe_local
+          source: package
+          entrypoint: .agents/skills/flow-vqe/mcp/server.mjs
+          activation: always
+          contractCheck: tests/paper-tools-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: train_flow_vqe
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/paper-tools-contracts.test.mjs
+        - tests/paper-tools-live.test.mjs
+        - tests/harness-paper-tools.test.mjs
+
+  - id: tenpy-ground-state
+    level: L1
+    execution:
+      mcpServers:
+        - name: tenpy_local
+          source: package
+          entrypoint: .agents/skills/tenpy-ground-state/mcp/server.mjs
+          activation: always
+          contractCheck: tests/paper-tools-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: solve_tenpy_chain
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/paper-tools-contracts.test.mjs
+        - tests/paper-tools-live.test.mjs
+        - tests/harness-paper-tools.test.mjs
+
+  - id: randomized-measurements
+    level: L1
+    execution:
+      mcpServers:
+        - name: random_meas_local
+          source: package
+          entrypoint: .agents/skills/randomized-measurements/mcp/server.mjs
+          activation: always
+          contractCheck: tests/paper-tools-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: estimate_randomized_purity
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/paper-tools-contracts.test.mjs
+        - tests/paper-tools-live.test.mjs
+        - tests/harness-paper-tools.test.mjs
+
   - id: quantum-ground-state
     level: L3
     execution:

@@ -7,3 +7,6 @@
 # Windows launchers retain their native line endings.
 *.bat text eol=crlf
 *.cmd text eol=crlf
+
+# Preserve the audited Flow-VQE source bytes, including upstream whitespace.
+.agents/skills/flow-vqe/upstream/* -text whitespace=-blank-at-eol,-blank-at-eof

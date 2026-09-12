@@ -13,7 +13,7 @@
 
 ## 当前 Skill
 
-以下 12 个 Skill 随源码分发；它们与 MCP Server 不是一一对应关系，知识型 Skill 可以不绑定专用 Tool，
+以下 18 个 Skill 随源码分发；它们与 MCP Server 不是一一对应关系，知识型 Skill 可以不绑定专用 Tool，
 工作流也可以使用多个服务或进程内原生 Tool。连接默认配置与凭据条件见[项目首页](../../README.md#mcp-服务目录)。
 
 | Skill | 作用 | 依赖的执行模块 |
@@ -27,6 +27,12 @@
 | `qec-memory-experiment` | 有界 surface-code memory 采样与 MWPM 解码 | Stim/PyMatching 本地 MCP Server + Harness MCP Client |
 | `tyxonq-workbench` | TyxonQ 小规模电路与噪声仿真工作流 | TyxonQ 本地 MCP Server + Harness MCP Client；默认关闭 |
 | `fatqat-workbench` | 电路与硬件约束、transmon 泄漏和里德堡动力学实验 | FatQat 本地 MCP Server + Harness MCP Client；返回数据、图表与物理单位 |
+| `sqd-chemistry` | H₂/STO-3G 采样子空间对角化与 FCI 参照 | SQD 本地 MCP Server + Harness MCP Client |
+| `tjm-dynamics` | 开放 Ising 链张量跳跃轨迹与 Lindblad 参照 | MQT YAQS 本地 MCP Server + Harness MCP Client |
+| `ldpc-decoding` | 二元校验矩阵的 BP+LSD 解码与 syndrome 检查 | ldpc 本地 MCP Server + Harness MCP Client |
+| `randomized-measurements` | 局域 Haar 测量与子区纯度估计 | RandomMeas.jl 本地 MCP Server + Harness MCP Client；需准备 Julia 1.12.7 环境 |
+| `flow-vqe` | 小 Hamiltonian 的 flow 参数学习与等预算随机搜索 | Flow-VQE 本地 MCP Server + Harness MCP Client |
+| `tenpy-ground-state` | 有限 XYZ 链 DMRG 与精确对角化参照 | TeNPy 本地 MCP Server + Harness MCP Client |
 | `qmclaw-workbench` | QMClaw 超导量子比特测控与单比特调校工作流 | 原生 Tool Provider；13 类有界合成数据模拟，不启动 MCP Server |
 | `quantum-information-audit` | 有界密度矩阵和 negativity 审计 | toqito MCP-exposed Tool + Validator + L3 物化/验收链 |
 | `quantum-ground-state` | 窄作用域二量子位基态工作流 | 原生 Tool Provider + Validator + L3 物化/验收链；完整调用包含工作区证据写入 |

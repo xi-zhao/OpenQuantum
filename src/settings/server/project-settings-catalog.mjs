@@ -5,6 +5,60 @@ import { quantumHardwareMcpIntegration } from "./quantum-hardware-mcp.mjs";
 
 const QISKIT_MCP_SOURCE = "https://github.com/Qiskit/mcp-servers";
 const MCP_CATALOG = Object.freeze({
+  sqd_local: Object.freeze({
+    displayName: "SQD 量子化学",
+    description: "H2/STO-3G 的采样子空间对角化，支持输入频数，并与 FCI 比较。",
+    provider: "qiskit-addon-sqd / OpenQuantum",
+    sourceUrl: "https://github.com/Qiskit/qiskit-addon-sqd",
+    packageName: "qiskit-addon-sqd",
+    packageVersion: "0.13.1",
+    setup: null,
+  }),
+  tjm_local: Object.freeze({
+    displayName: "TJM 开放系统动力学",
+    description: "开放 Ising 链的张量跳跃轨迹，与密度矩阵 Lindblad 演化比较。",
+    provider: "mqt.yaqs / OpenQuantum",
+    sourceUrl: "https://github.com/munich-quantum-toolkit/yaqs",
+    packageName: "mqt.yaqs",
+    packageVersion: "0.6.0",
+    setup: null,
+  }),
+  ldpc_local: Object.freeze({
+    displayName: "LSD 纠错解码",
+    description: "二元校验矩阵的 BP+LSD 解码，独立复核 syndrome 一致性。",
+    provider: "ldpc / OpenQuantum",
+    sourceUrl: "https://github.com/quantumgizmos/ldpc",
+    packageName: "ldpc",
+    packageVersion: "2.4.1",
+    setup: null,
+  }),
+  flow_vqe_local: Object.freeze({
+    displayName: "Flow-VQE 参数学习",
+    description: "调用论文的 flow 训练算法，对小量子 Hamiltonian 学习低能量参数。",
+    provider: "Flow-VQE / OpenQuantum",
+    sourceUrl: "https://github.com/olsson-group/Flow-VQE",
+    packageName: "Flow-VQE",
+    packageVersion: "f7642afa",
+    setup: null,
+  }),
+  tenpy_local: Object.freeze({
+    displayName: "TeNPy 多体基态",
+    description: "有限自旋链 DMRG 基态计算，并与小系统精确对角化比较。",
+    provider: "physics-tenpy / OpenQuantum",
+    sourceUrl: "https://github.com/tenpy/tenpy",
+    packageName: "physics-tenpy",
+    packageVersion: "1.1.1",
+    setup: null,
+  }),
+  random_meas_local: Object.freeze({
+    displayName: "RandomMeas 随机测量",
+    description: "由局部 Haar 随机测量估计小系统子区纯度，并与解析值比较。",
+    provider: "RandomMeas.jl / OpenQuantum",
+    sourceUrl: "https://github.com/bvermersch/RandomMeas.jl",
+    packageName: "RandomMeas.jl",
+    packageVersion: "0.3.1@89c492bf",
+    setup: null,
+  }),
   fieldqkit: Object.freeze({
     displayName: "FieldQKit 量子硬件",
     description:
