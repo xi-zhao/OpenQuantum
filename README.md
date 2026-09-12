@@ -8,8 +8,8 @@
 </p>
 
 <p align="center">
-  面向量子研究、教学与探索的开源科研 Agent 工作台<br />
-  把量子工具组织成工作流，把计算结果连接到可复核的证据
+  面向研究者、学习者与授课者的开源量子 AI 工作台<br />
+  用自然语言发起任务，用计算工具探索，用参考结果检验
 </p>
 
 <p align="center">
@@ -19,54 +19,115 @@
 </p>
 
 <p align="center">
+  <a href="#openquantum-全景">平台全景</a> ·
   <a href="#可以用它做什么">能力全景</a> ·
-  <a href="#量子学习通">量子学习通</a> ·
+  <a href="#从论文方法开始一次计算">论文方法</a> ·
+  <a href="#集成生态与自由选择">集成生态</a> ·
+  <a href="#产品体验">产品体验</a> ·
   <a href="#快速开始">快速开始</a> ·
-  <a href="#从一个真实任务开始">运行证据</a> ·
-  <a href="#内置-skills">Skill 目录</a> ·
-  <a href="#mcp-服务目录">MCP 服务</a> ·
-  <a href="./docs/README.md">文档与架构</a> ·
-  <a href="./CONTRIBUTING.md">参与贡献</a>
+  <a href="#从一个真实任务开始">真实案例</a> ·
+  <a href="./docs/README.md">文档与架构</a>
 </p>
 
-**OpenQuantum 是一个开源量子科研 Agent 工作台，帮助研究者、学习者和实验室从自然语言提出任务，调用真实计算工具，并保留可复查的过程与结果。** 你可以从网页、桌面或配置好的微信、飞书入口使用它，接入自己的模型、算法与科研工作方法。
+**把量子问题带进对话，把计算结果拿来检验。** OpenQuantum 是一个开源量子科研 Agent 工作台，将电路分析、量子化学、多体模拟、纠错与实验模拟工具接到同一个任务入口；教学应用「量子学习通」提供材料、课程和课堂的组织空间。
 
-科研工作台通过 Skill 和 Tool 组织电路、量子态、优化、纠错、实验模拟与硬件接入；教学应用「量子学习通」提供课程、课堂和课件编辑体验。团队可以把可复用的方法、计算接口和检查规则一起保存在仓库中。
+你可以从一个 Bell 态实验开始，也可以用 SQD 计算 H₂、用 TeNPy 求解自旋链。选择模型和计算后端，写清问题与输入，在工作台中查看调用过程、数值结果和适用范围。
 
-项目基于 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness)：Harness 负责通用 Agent 运行、工具调度、模型连接与执行记录，OpenQuantum 提供量子领域能力和应用集成。当前以源码分发，适合本机单用户试用及二次开发。
+- **按问题选工具**：电路、量子态、优化、纠错和动力学各有对应后端，同类任务也可明确指定工具。[查看能做的任务](#可以用它做什么)
+- **带着参照看结果**：在支持的算例中比较精确解、独立检查或统计误差，并查看哪些检查已完成。[查看本地计算证据](#从一个真实任务开始)
+- **把方法留下来复用**：将研究步骤整理成 Skill，把计算接口和独立检查接入工作台，供后续任务使用。[接入自己的能力](#把你的量子能力接进来)
 
-**开始使用 → [快速开始](#快速开始)**　｜　**查看真实案例 → [运行证据](#从一个真实任务开始)**　｜　**接入能力 → [贡献指南](CONTRIBUTING.md)**
+**[安装并开始](#快速开始)**　·　[先看本地计算示例](#从一个真实任务开始)（无需模型密钥）　·　[了解量子学习通](#量子学习通)
 
-<p align="center">
-  <img src="./docs/images/openquantum-workbench-20260912.jpg" width="100%" alt="OpenQuantum 科研工作台主界面：新会话、工作区、量子学习通和设置入口" /><br />
-  <sub>从科研对话开始，也可以直接进入量子学习通。Web 与 Desktop 复用这套工作台界面。</sub>
-</p>
+## OpenQuantum 全景
+
+科研工作台处理计算与分析，量子学习通组织课程与课堂。两者在同一产品中提供入口；计算工具、模型服务和研究方法可以按任务选择、配置和扩展。
+
+<table>
+  <tr>
+    <td width="50%" align="center">
+      <a href="./docs/images/openquantum-workbench-20260912.jpg"><img src="./docs/images/openquantum-workbench-20260912.jpg" width="100%" alt="科研工作台：新会话、工作区与量子学习通入口" /></a><br />
+      <strong>科研工作台</strong><br /><sub>发起任务，选择工具，查看结果</sub>
+    </td>
+    <td width="50%" align="center">
+      <a href="./docs/images/openquantum-learning-20260912.jpg"><img src="./docs/images/openquantum-learning-20260912.jpg" width="100%" alt="量子学习通：课程材料、课堂与课件编辑入口" /></a><br />
+      <strong>量子学习通</strong><br /><sub>组织材料、课程与课堂；课程体系正在建设</sub>
+    </td>
+  </tr>
+</table>
+
+点击截图可查看原图。科研任务支持网页、桌面和配置好的消息入口；教学应用从工作台侧栏打开，详见[产品体验](#产品体验)。
 
 ## 可以用它做什么
 
-按科研任务选择能力，具体 SDK 和服务作为执行后端组合使用。
+从你想完成的任务开始。每个方向都对应已接入的工具或应用，具体的物理假设、输入规模与检查范围见[完整目录](#已集成的量子工具与能力)。
 
-| 任务方向 | 当前覆盖的工作 | 相关能力与后端 |
+| 任务方向 | 可以发起的任务 | 可以查看的结果 |
 | --- | --- | --- |
-| 量子电路 | OpenQASM / QPY 分析与转换、转译比较、等价性检查、小规模态矢与噪声仿真 | Qiskit、MQT QCEC、TyxonQ、FatQat |
-| 量子态与基态 | 密度矩阵和纠缠指标审计；限定二量子位 Hamiltonian 的 VQE 与精确参考比较 | 量子信息审计（toqito）、量子基态求解 |
-| 组合优化 | QUBO 建模、约束 penalty 检查、经典枚举复核与可选本地 QAOA | QPanda QUBO |
-| 量子纠错 | surface-code memory 采样、MWPM 解码与有限 shots 统计 | Stim、PyMatching |
-| 超导与原子实验 | 调校流程的合成数据实验、原生门约束、三能级 transmon 泄漏与小型里德堡原子链动力学 | QMClaw、FatQat |
-| 量子硬件接入 | 后端发现、拓扑与凭据检查；按需开启云任务查询、提交与取消 | FieldQKit、IBM Quantum、IonQ、本源量子等 |
+| 量子电路 | 分析或转换 OpenQASM / QPY 电路，比较转译，检查等价性，运行小规模仿真 | 电路结构、转译结果、等价性检查、态矢或采样分布 |
+| 量子态与测量 | 审计密度矩阵与纠缠指标；模拟已知 product / GHZ 态的局域随机测量 | 状态指标与独立检查，子区纯度估计及有限样本误差 |
+| 量子化学与多体基态 | 用 SQD 求解 H₂/STO-3G，或用 TeNPy 计算有限 XYZ 自旋链基态 | SQD / FCI 能量对照，DMRG 能量、磁化与纠缠熵 |
+| 变分求解与参数学习 | 求解限定二量子位 Hamiltonian 的固定粒子扇区基态；对小型 Hamiltonian 训练 Flow-VQE | VQE 与精确参考对照，Flow 参数学习与等评估预算随机搜索比较 |
+| 组合优化 | 构建有界 QUBO，检查约束 penalty，运行经典求解或可选本地 QAOA | 优化解、约束检查与经典枚举复核 |
+| 量子纠错 | 运行 surface-code memory / MWPM 实验，或对二元校验矩阵进行 BP+LSD 解码 | 表面码有限 shots 统计；LSD 的 syndrome 一致性检查 |
+| 开放系统动力学 | 用 TJM 模拟小型开放 Ising 链的张量跳跃轨迹 | 随时间变化的观测量，与密度矩阵 Lindblad 演化的数值对照 |
+| 超导与原子实验 | 模拟调校流程、原生门约束、三能级 transmon 泄漏或小型里德堡原子链动力学 | 合成实验数据、动力学轨迹与图表 |
+| 量子硬件接入 | 发现后端、检查拓扑与凭据；按需启用云任务查询、提交与取消 | 设备候选、使用条件；已启用任务接口的结果与状态 |
+| 研究方法与工具选型 | 比较量子 SDK、复用研究步骤、排查工作台连接 | 选型建议、工作流说明与诊断记录 |
+| 学习与教学 | 准备材料、制作课件、组织互动课堂与 PBL 项目式学习 | 已集成课程与课堂界面、本机学习记录；[课程建设与 AI 验收进度](#量子学习通) |
 
-同类任务可以保留多个后端，由用户根据输入格式、物理模型、设备条件或个人偏好选择。你可以在对话中明确指定后端，具体步骤见[发起任务并选择后端](#发起任务并选择后端)。SDK 选型和工作台排障也有对应 Skill，完整范围见[集成目录](#已集成的量子工具与能力)。
+本地计算可从无需量子云凭据的任务开始；真实硬件与付费服务按需启用。你也可以把自己的算法和研究方法[接入工作台](#把你的量子能力接进来)。
 
-每项计算都有明确适用范围。真实硬件与付费任务入口默认关闭；具备完整科学验收流程的是限定的量子基态求解与量子信息审计，其他能力的计算结果与验证状态分别记录。
+### 从论文方法开始一次计算
 
-## 量子学习通
+读到一种方法后，可以先在小系统上看它如何工作。OpenQuantum 已接入 **SQD、TJM、BP+LSD、RandomMeas、Flow-VQE 和 TeNPy**：从 H₂ 的采样子空间对角化，到开放系统张量轨迹、二元校验矩阵解码、随机测量、参数学习和自旋链 DMRG。
 
-量子学习通是面向教学与自主学习的子应用，基于 [OpenMAIC](https://github.com/THU-MAIC/OpenMAIC) 的完整原版界面与服务端集成。保留原有教学流程和编辑操作，应用名称、字体、按钮、侧栏和主题与 OpenQuantum 适配，课程内容保留自身样式。
+这六项接入固定了上游实现与依赖版本，限定了输入规模，并随结果返回输入、版本和检查信息。你可以比较 SQD 与同基组 FCI 的能量、TJM 与 Lindblad 演化的观测量，或 DMRG 与精确对角化的结果，用具体算例判断方法的表现。
+
+这六项目前提供小规模本地计算与数值检查，尚未接入完整科学验收流程；论文规模复现仍需单独验证。论文出处、上游仓库、物理假设与验证记录见[论文方法说明](docs/integrations/PAPER_BACKED_TOOLS.md)；准备依赖后，可直接使用下方的[论文方法试用示例](#试用-sqd-与-tenpy)。
+
+## 集成生态与自由选择
+
+同一个 Bell 态任务，可以选择 FatQat 或 TyxonQ；需要分析与转译电路时，可以选择 Qiskit；比较两份电路是否等价时，可以选择 MQT QCEC。OpenQuantum 保留这些选择，让输入格式、物理模型和设备条件决定使用哪种工具。
+
+| 生态层面 | 已接入的项目或服务 | 选择方式与当前范围 |
+| --- | --- | --- |
+| 电路、编译与仿真 | [Qiskit](https://github.com/Qiskit/mcp-servers)、[MQT QCEC](https://github.com/munich-quantum-toolkit/qcec)、[TyxonQ](https://github.com/QureGenAI-Biotech/TyxonQ)、[FatQat](https://github.com/spaceqat/fatqat) | 按电路格式、噪声模型、等价性检查或硬件约束选择；部分连接按需开启 |
+| 量子态、优化与纠错 | [toqito](https://github.com/vprusso/toqito)、[QPanda QUBO](https://github.com/OriginQ/pyqpanda-algorithm)、[Stim](https://github.com/quantumlib/Stim)、[PyMatching](https://github.com/oscarhiggott/PyMatching)、[ldpc / BP+LSD](https://github.com/quantumgizmos/ldpc)，以及内置基态求解 | 量子态审计、限定基态计算、组合优化、纠错存储实验与二元校验矩阵解码 |
+| 量子化学、多体与动力学 | [Qiskit SQD](https://github.com/Qiskit/qiskit-addon-sqd)、[TeNPy](https://github.com/tenpy/tenpy)、[MQT YAQS / TJM](https://github.com/munich-quantum-toolkit/yaqs) | H₂ 子空间对角化、有限自旋链 DMRG、开放 Ising 链张量轨迹 |
+| 参数学习与随机测量 | [Flow-VQE](https://github.com/olsson-group/Flow-VQE)、[RandomMeas.jl](https://github.com/bvermersch/RandomMeas.jl) | 小型 Hamiltonian 的 flow 参数学习，已知量子态的局域随机测量与纯度估计 |
+| 超导与原子实验 | [QMClaw](https://github.com/QMC-AI/QMClaw)、[FatQat](docs/integrations/FATQAT.md) | 调校流程的合成数据实验、原生门约束和有界脉冲动力学 |
+| 量子云与硬件 | [FieldQKit](https://github.com/FieldQuantum/fieldqkit)、IBM Quantum、IonQ、本源量子及其他国内量子云 | 按厂商与任务选择；后端发现需要对应凭据，真机与付费任务按需启用 |
+| 学习与教学 | [OpenMAIC](https://github.com/THU-MAIC/OpenMAIC) → 量子学习通 | 集成完整教学应用；课程体系正在建设，在线 AI 教学流程仍待完整验收 |
+| Agent、桌面与消息 | [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness)、[DSH Desktop](https://github.com/anywhere-labs/dsh-desktop)、[CC Connect](docs/integrations/CC_CONNECT.md) | 从网页、桌面或配置好的消息渠道使用科研能力 |
+
+可以在对话中直接指定后端名称。[首次任务示例](#发起任务并选择后端)给出了 FatQat 和 TyxonQ 的可复制请求及准备条件。
+
+### 模型由你选择
+
+在设置中心接入自己的模型服务，按任务需要选择模型。对话模型负责理解与组织任务，计算后端负责执行相应的量子计算；两者分别配置。切换模型后，可以继续使用已有的研究方法和工具，具体协议兼容性以当前适配和实测为准。
+
+具体的 [Skill 目录](#内置-skills)、[MCP 服务目录](#mcp-服务目录)、[原生量子 Tools](#原生量子-tools)和[量子后端范围](#可以连接哪些量子后端)保留在后文，便于查询连接名、依赖与使用条件。
+
+## 产品体验
+
+### 科研工作台
+
+在对话中写清任务、输入和希望使用的后端。Agent 按任务读取工作方法、调用工具，工作台保留请求与返回结果。使用尚未开启的后端时，先在设置中心启用连接并重启工作台，再在对话中指定它。
 
 <p align="center">
-  <img src="./docs/images/openquantum-learning-20260912.jpg" width="100%" alt="集成在 OpenQuantum 中的量子学习通原版应用首页" /><br />
-  <sub>在同一工作台中打开完整教学应用，保留课程材料、课堂和课件编辑入口。</sub>
+  <img src="./docs/images/openquantum-connections-20260912.jpg" width="100%" alt="量子组件设置中的 MCP Server 连接目录和各后端的配置开关" /><br />
+  <sub>在连接目录中选择后端；配置是否启用与当前运行状态分别展示。</sub>
 </p>
+
+<p align="center">
+  <img src="./docs/images/openquantum-skills-20260912.jpg" width="100%" alt="量子组件设置中的 Skill 指令目录，展示各工作流的说明和来源" /><br />
+  <sub>工作方法与执行后端分别管理，可按研究任务组合使用。</sub>
+</p>
+
+### 量子学习通
+
+把材料、课件和课堂放在一起，方便授课与自主学习。量子学习通集成了 [OpenMAIC](https://github.com/THU-MAIC/OpenMAIC) 的完整原版界面与服务端，保留教学流程和编辑操作，应用名称与主题适配 OpenQuantum，课程内容保留自身样式。
 
 | 学习与教学场景 | 集成内容 |
 | --- | --- |
@@ -75,87 +136,24 @@
 | 制作课程 | 建课预览、课件编辑器和 Pro 专业工作台 |
 | 继续学习 | 本机课程、任务、材料与服务端学习记录持久化，兼容旧版课堂迁移 |
 
-量子学习通当前已在 macOS 验证安装和启动。完成下方依赖安装后，macOS 用户可运行 `npm run learning:ui:setup`，再启动 Web 或 Desktop，从侧栏打开「量子学习通」。首次打开会自动启动本机数据库和课程服务，无需另装全局 PostgreSQL；模型请求使用 OpenQuantum 当前选择的模型。
-
-学习应用的安装器依赖 `/bin/sh`，尚未适配普通 Windows 环境；Linux 安装与启动也未完成验证。各平台状态见[安装说明](docs/integrations/OPENMAIC.md#使用)。
-
 课程建设目标是覆盖中学基础到前沿研究，按初级、中级、高级组织内容，允许按知识基础跨阶段学习。当前公开资源仍在整理，完整课程体系尚未制作和发布。应用装配、启动和本机持久化已有验证，真实在线 AI 建课、问答和编辑仍待完整验收。
 
 Pro 教学任务使用上游应用自己的工具与记录，尚未自动接入科研工作台的量子工具。媒体、语音和搜索等可选能力需要对应服务配置。安装、备份、迁移与逐项验证见[量子学习通集成说明](docs/integrations/OPENMAIC.md)。
 
-## 快速开始
+启动步骤见[量子学习通安装](#量子学习通安装)。
 
-准备 Git、Node.js 24，以及供 Python 量子工具使用的 [uv / uvx](https://docs.astral.sh/uv/getting-started/installation/)。
-
-### 网页工作台
-
-```bash
-git clone https://github.com/xi-zhao/openQuantum.git
-cd openQuantum
-npm ci
-npm run dev
-```
-
-首次打开启动日志中带登录令牌的地址，认证后会跳转到 <http://127.0.0.1:3000>，再在设置中心配置模型。还没有模型密钥时，可先用 `npm run demo:quantum-ground-state` 运行本地参考示例；安装 `uv` 后可用 `npm run mcp:qiskit:probe` 检查 Qiskit 接入，首次运行可能下载依赖。
-
-### 发起任务并选择后端
-
-在科研工作台新建对话，直接写出任务和希望使用的后端。下面是同一个 Bell 态任务的两种选择，可以分别复制到对话中：
-
-| 选择 | 示例请求 | 准备条件 |
-| --- | --- | --- |
-| FatQat | 用 FatQat 从双量子位全零态出发，对 q0 施加 H，再以 q0 为控制位、q1 为目标位施加 CX。返回无噪声精确概率，并用 1024 次采样、seed=7 比较频数。 | 默认连接开启；已安装 `uv` |
-| TyxonQ | 用 TyxonQ 从双量子位全零态出发，对 q0 施加 H，再以 q0 为控制位、q1 为目标位施加 CX。返回无噪声精确态矢和概率。 | 先启用 TyxonQ Local 连接 |
-
-两种计算的理想概率都应为 `00`、`11` 各约 50%；有限采样频数会有波动。首次使用可能下载相应的 Python 依赖。
-
-TyxonQ 等默认关闭的后端，在「设置 → 量子组件 → MCP Server 连接」中启用后，重新启动 OpenQuantum，再在对话中指定名称。修改模型配置选择的是对话模型；这里选择的是负责计算的后端。支持范围和默认开关见[服务目录](#mcp-服务目录)。
-
-<p align="center">
-  <img src="./docs/images/openquantum-connections-20260912.jpg" width="100%" alt="量子组件设置中的 MCP Server 连接目录和各后端的配置开关" /><br />
-  <sub>在连接目录中选择后端；配置是否启用与当前运行状态分别展示。</sub>
-</p>
-
-### 桌面客户端
+### 在桌面和消息中使用
 
 桌面端基于 [DSH Desktop](https://github.com/anywhere-labs/dsh-desktop) 适配，提供原生窗口、系统托盘、终端与通知，复用 OpenQuantum 的模型、科研能力和执行记录。当前提供 macOS / Windows 源码启动路径；本机已验证 macOS，未提供 OpenQuantum 品牌的 `.dmg` / `.exe` 安装包。
 
-完成仓库依赖安装，并准备 Corepack 和系统 C++ 构建工具后：
-
-```bash
-npm run desktop:setup
-npm run desktop:verify-install
-npm run desktop
-```
-
-`desktop:setup` 构建固定的上游源码、下载 Electron 并编译原生模块；首次启动可能显示设置向导。请使用仓库中的启动命令，以加载 OpenQuantum 的模型和量子能力配置。
-
-Web 与 Desktop 共用 `.openquantum/dsh` 中的本机状态，切换前先退出正在运行的入口。量子学习通另有安装和平台要求，见[量子学习通](#量子学习通)。
-
-### 微信、飞书与其他消息入口
-
 [CC Connect](docs/integrations/CC_CONNECT.md) 通过标准 ACP 连接 Harness，可从微信、飞书、钉钉、Slack、Telegram、Discord 等平台发起科研任务。消息入口复用已有 Skill、Tool 和科研执行记录。
-
-```bash
-npm run cc-connect:setup
-npm run cc-connect:feishu
-npm run cc-connect:start
-```
-
-第一项平台需先按上游方式配置。可在另一个终端运行 `npm run cc-connect:web` 打开本地渠道管理后台，配置其他平台及凭据。平台 Token 保存在被 Git 忽略的本地配置中。
 
 <p align="center">
   <img src="./docs/images/openquantum-wechat-chat.jpg" width="380" alt="通过微信 ClawBot 与 OpenQuantum 对话的已有演示截图" /><br />
   <sub>微信渠道的对话入口示例；渠道配置完成后，消息由 CC Connect 转交 Harness。</sub>
 </p>
 
-其他部署方式、模型配置和故障定位见[部署与启动](docs/DEPLOYMENT.md)与[故障排查](docs/TROUBLESHOOTING.md)。源码升级的固定版本、兼容性和验证记录见[上游升级记录](docs/releases/2026-09-10-upstream-update.md)。
-
-## 模型由你选择
-
-在设置中心管理模型服务地址、模型标识和凭据引用，由 Harness 接入对应 Provider。切换模型不需要改写领域 Skill、计算工具或科学检查规则；具体协议与服务可用性以当前适配和实测为准。
-
-密钥保存在本地环境或 Harness 凭据库中，项目配置只保存凭据引用。若希望使用 `.env`，macOS 终端执行 `cp .env.example .env`，Windows PowerShell 执行 `Copy-Item .env.example .env`，再填写所需配置。
+对应启动方式见[桌面客户端](#桌面客户端)与[微信、飞书等消息入口](#微信飞书与其他消息入口)。
 
 ## 从一个真实任务开始
 
@@ -180,7 +178,7 @@ npm run demo:quantum-ground-state
 
 完整科学验收还需要通过 Harness 执行任务、保存结果文件和会话来源，并生成可重读的验收报告。配置模型后的验证入口见下方[开发与验证命令](#把你的量子能力接进来)。
 
-## 执行记录与科学验收
+### 执行记录与科学验收
 
 科研工作台保留请求、Skill 加载、工具调用、权限状态与返回结果，便于追踪一次任务的执行过程。设置中的“已启用”表示配置策略；当前工具是否可调用、服务是否可达，需要查看对应运行证据。
 
@@ -192,6 +190,182 @@ npm run demo:quantum-ground-state
 
 限定量子基态求解与量子信息审计提供完整科学验收流程；QUBO、电路等价性检查和量子纠错存储实验等能力按各自规则报告计算结果与检查。验证依据见[能力声明](.agents/capability-packages.yml)、[架构审计](docs/architecture/ARCHITECTURE_AUDIT.md)和[固定量子能力 Benchmark](benchmarks/quantum-capabilities/README.md)。
 
+## 开始前的几个问题
+
+<details>
+<summary><strong>需要量子计算机账户或模型密钥吗？</strong></summary>
+
+本地量子计算无需量子云凭据。安装依赖后，仓库内的基态示例还可以直接运行，无需模型密钥。通过 Agent 发起任务需要配置模型服务；使用量子云则按所选服务配置凭据并启用连接。
+
+</details>
+
+<details>
+<summary><strong>需要先学会每个量子 SDK 吗？</strong></summary>
+
+可以先用自然语言提出任务，由 Agent 调用已接入的工具。你仍需要明确输入、物理假设与希望检查的结果。具体 Tool 名称、输入范围和后端选择在目录中保留，方便需要时深入使用。
+
+</details>
+
+<details>
+<summary><strong>量子学习通已经有完整课程体系了吗？</strong></summary>
+
+目前已集成教学应用，公开教学资源仍在整理。课程建设目标覆盖中学基础至前沿研究，按初、中、高组织；完整课程体系尚未发布，真实在线 AI 建课、问答和编辑仍待完整验收。
+
+</details>
+
+<details>
+<summary><strong>本地启动需要准备什么？</strong></summary>
+
+当前提供源码安装，需要 Git、Node.js 24，以及 Python 量子工具使用的 uv；RandomMeas 随机测量另需 Julia 1.12.7。可以先启动网页工作台，再按需准备所选工具、桌面端、量子学习通或消息入口；各平台要求见下面的启动步骤。
+
+</details>
+
+**[开始安装](#快速开始)**　·　[先查看本地示例的输入与结果](#从一个真实任务开始)
+
+## 快速开始
+
+当前以源码分发，适合本机单用户试用及二次开发。
+
+准备 Git、Node.js 24，以及供 Python 量子工具使用的 [uv / uvx](https://docs.astral.sh/uv/getting-started/installation/)。
+
+使用 RandomMeas 随机测量时，还需 Julia 1.12.7。SQD、TJM 等论文方法的依赖可按所选能力准备，见[安装说明](docs/integrations/PAPER_BACKED_TOOLS.md#安装与调用)。
+
+### 网页工作台
+
+```bash
+git clone https://github.com/xi-zhao/openQuantum.git
+cd openQuantum
+npm ci
+npm run dev
+```
+
+首次打开启动日志中带登录令牌的地址，认证后会跳转到 <http://127.0.0.1:3000>，再在设置中心配置模型。还没有模型密钥时，可先用 `npm run demo:quantum-ground-state` 运行本地参考示例；安装 `uv` 后可用 `npm run mcp:qiskit:probe` 检查 Qiskit 接入，首次运行可能下载依赖。
+
+### 配置模型
+
+密钥保存在本地环境或 Harness 凭据库中，项目配置只保存凭据引用。若希望使用 `.env`，macOS 终端执行 `cp .env.example .env`，Windows PowerShell 执行 `Copy-Item .env.example .env`，再填写所需配置。
+
+### 发起任务并选择后端
+
+在科研工作台新建对话，直接写出任务和希望使用的后端。下面是同一个 Bell 态任务的两种选择，可以分别复制到对话中：
+
+| 选择 | 示例请求 | 准备条件 |
+| --- | --- | --- |
+| FatQat | 用 FatQat 从双量子位全零态出发，对 q0 施加 H，再以 q0 为控制位、q1 为目标位施加 CX。返回无噪声精确概率，并用 1024 次采样、seed=7 比较频数。 | 默认连接开启；已安装 `uv` |
+| TyxonQ | 用 TyxonQ 从双量子位全零态出发，对 q0 施加 H，再以 q0 为控制位、q1 为目标位施加 CX。返回无噪声精确态矢和概率。 | 先启用 TyxonQ Local 连接 |
+
+两种计算的理想概率都应为 `00`、`11` 各约 50%；有限采样频数会有波动。首次使用可能下载相应的 Python 依赖。
+
+TyxonQ 等默认关闭的后端，在「设置 → 量子组件 → MCP Server 连接」中启用后，重新启动 OpenQuantum，再在对话中指定名称。修改模型配置选择的是对话模型；这里选择的是负责计算的后端。支持范围和默认开关见[服务目录](#mcp-服务目录)。
+
+### 试用 SQD 与 TeNPy
+
+完成上面的安装和模型配置后，可以先准备这两项论文方法的固定依赖：
+
+```bash
+npm run capability:paper-tools:setup -- sqd-chemistry tenpy-ground-state
+```
+
+这两项通过 `uv` 准备 Python 3.12 环境，无需量子云账户。默认连接已开启；已运行的工作台在升级后需重启，再新建对话并复制一条请求：
+
+| 想探索什么 | 示例请求 | 重点查看 |
+| --- | --- | --- |
+| 分子基态 | 用 SQD 计算键长 0.735 Å 的 H₂/STO-3G，使用默认合成样本，报告总能量、同基组 FCI 参考和能量差，并标明样本来源。 | 样本覆盖与能量差；合成样本的结果不构成量子优势证据 |
+| 多体基态 | 用 TeNPy 计算四站点、自旋 1/2 的开放 Heisenberg 链，Jx=Jy=Jz=1，hx=hz=0。报告 DMRG 能量、精确对角化参考、能量差与纠缠熵，并注明 S=Pauli/2。 | Hamiltonian 约定、参考结果与收敛情况 |
+
+其余论文方法也可按需安装；RandomMeas 随机测量另需 Julia 1.12.7。[完整安装与输入范围](docs/integrations/PAPER_BACKED_TOOLS.md#安装与调用)列出了各项准备条件。
+
+### 量子学习通安装
+
+量子学习通当前已在 macOS 验证安装和启动。完成仓库依赖安装后，macOS 用户可运行 `npm run learning:ui:setup`，再启动 Web 或 Desktop，从侧栏打开「量子学习通」。首次打开会自动启动本机数据库和课程服务，无需另装全局 PostgreSQL；模型请求使用 OpenQuantum 当前选择的模型。
+
+学习应用的安装器依赖 `/bin/sh`，尚未适配普通 Windows 环境；Linux 安装与启动也未完成验证。各平台状态见[安装说明](docs/integrations/OPENMAIC.md#使用)。
+
+### 桌面客户端
+
+桌面端的界面与平台状态见上方[产品体验](#在桌面和消息中使用)。
+
+完成仓库依赖安装，并准备 Corepack 和系统 C++ 构建工具后：
+
+```bash
+npm run desktop:setup
+npm run desktop:verify-install
+npm run desktop
+```
+
+`desktop:setup` 构建固定的上游源码、下载 Electron 并编译原生模块；首次启动可能显示设置向导。请使用仓库中的启动命令，以加载 OpenQuantum 的模型和量子能力配置。
+
+Web 与 Desktop 共用 `.openquantum/dsh` 中的本机状态，切换前先退出正在运行的入口。量子学习通另有安装和平台要求，见[量子学习通](#量子学习通)。
+
+### 微信、飞书与其他消息入口
+
+消息渠道通过 CC Connect 连接科研工作台；配置好相应平台后即可发起任务。
+
+```bash
+npm run cc-connect:setup
+npm run cc-connect:feishu
+npm run cc-connect:start
+```
+
+第一项平台需先按上游方式配置。可在另一个终端运行 `npm run cc-connect:web` 打开本地渠道管理后台，配置其他平台及凭据。平台 Token 保存在被 Git 忽略的本地配置中。
+
+其他部署方式、模型配置和故障定位见[部署与启动](docs/DEPLOYMENT.md)与[故障排查](docs/TROUBLESHOOTING.md)。源码升级的固定版本、兼容性和验证记录见[上游升级记录](docs/releases/2026-09-10-upstream-update.md)。
+
+## 把你的量子能力接进来
+
+项目基于 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness)：Harness 负责通用 Agent 运行、工具调度、模型连接与执行记录，OpenQuantum 提供量子领域能力和应用集成。
+
+![OpenQuantum 架构：科研入口进入 Harness，Agent 读取 Skill，通过原生 Tool Provider 或 Harness MCP Client 使用工具，并连接模型服务和执行日志](docs/images/openquantum-platform-overview.png)
+
+这张图展示科研工作台的核心调用关系；[查看可编辑图源](docs/architecture/openquantum-platform-overview.html)。量子学习通的课程任务和数据沿用完整子应用的职责边界，详见[应用集成说明](docs/integrations/OPENMAIC.md)。
+
+先确定用户需要解决的任务，再选择扩展方式：
+
+| 需要增加什么 | 放在哪里 |
+| --- | --- |
+| 领域知识、步骤、工具选择与结果解释 | Skill，可复用已有通用或量子 Tool |
+| 稳定的计算、查询或操作 | Tool，由原生 Tool Provider 或 Harness MCP Client 注册 |
+| 独立的科学检查与验收 | Validator；需要最终验收时再组合 Acceptance Profile、证据物化与 central Acceptance Builder |
+| 有独立交互流程的完整产品 | 按应用边界集成，保留其业务与数据职责；量子学习通是现有实例 |
+
+在开发文档中，`L3` 表示具备可回放的完整科学验收流程。Validator 产生检查结果，Acceptance Profile 定义规则，只有 central Acceptance Builder 汇聚检查结果与来源链、推导最终验收状态。能力等级不代表每一次调用都已完成验收。
+
+Skill 与 Tool 可独立存在。计算后端按任务需要选用，只有额外的选择、步骤或解释规则有价值时才增加 Skill。进程内、同语言且无需隔离的动作优先使用原生 Tool Provider；跨语言、独立进程或远程部署时使用 MCP Server，由 Harness MCP Client 注册其 Tool。
+
+Harness 是通用 Agent Runtime，扩展通过 Cordis Plugin 装配。UI、模型连接、量子计算和科学判定各自保持职责边界。完整外部子应用的教学任务与数据归上游应用维护，其任务不自动获得 Harness Session、科研审批或科学验收语义。
+
+开发前先读[文档与架构入口](docs/README.md)，按需要查阅[贡献指南](CONTRIBUTING.md)、[扩展对象模型](docs/architecture/EXTENSION_MODEL.md)和[模块地图](docs/architecture/MODULES.md)。
+
+<details>
+<summary><strong>开发与验证命令</strong></summary>
+
+```bash
+# 检查 Harness 组合配置
+npm run harness:config
+
+# 运行完整离线质量检查
+npm run check
+
+# 配置模型后运行真实 Agent 端到端测试
+npm run e2e:quantum-harness -- --provider openquantum-public
+```
+
+```text
+.agents/skills/          量子 Skill 与科学资源
+runtime/openquantum/     Agent Preset、原生 Tool Provider、Harness MCP Client 声明和 Harness 界面扩展
+src/settings/server/     设置中心的服务端配置边界
+src/readiness/server/    当前 Harness Registry 的只读运行状态边界
+scripts/                 启动、诊断和端到端测试
+tests/                   平台集成测试
+docs/                    架构、路线与生态文档
+```
+
+更完整的文档入口见 [docs/README.md](docs/README.md)。
+
+</details>
+
+界面截图与示意图的版本、来源和适用范围见[图片说明](docs/images/README.md)。
+
 ## 已集成的量子工具与能力
 
 当前源码分发 **18 个内置 Skill、20 个 MCP 服务连接、3 个原生量子 Tool**；另提供 1 个可选上游 Skill 的安装入口。它们是三种不同的职责，不应相加当作独立科研能力数量：
@@ -200,16 +374,18 @@ npm run demo:quantum-ground-state
 - **Tool 是执行动作**：Agent 真正调用的计算、查询或操作。
 - **MCP Server 是工具服务**：通过协议提供 Tool，由 Harness MCP Client 连接并注册；Skill 本身不启动服务。
 
-从上方任务全景选择方向，再到以下目录确认工作流、执行工具、依赖与开关。清单以仓库默认配置为准，不包含使用者自行安装的扩展；“默认开启”不代表依赖已安装、凭据已配置或服务当前在线。
+从上方能力全景选择方向，再到以下目录确认工作流、执行工具、依赖与开关。清单以仓库默认配置为准，不包含使用者自行安装的扩展；“默认开启”不代表依赖已安装、凭据已配置或服务当前在线。
+
+<p>
+  <a href="#内置-skills">Skill 目录</a> ·
+  <a href="#mcp-服务目录">MCP 服务目录</a> ·
+  <a href="#原生量子-tools">原生量子 Tools</a> ·
+  <a href="#可以连接哪些量子后端">量子后端范围</a>
+</p>
 
 ### 内置 Skills
 
-这 12 个 Skill 随源码提供，由 Harness 按任务需要发现和加载。点击名称即可查看完整的 `SKILL.md`，包括适用范围、执行步骤与限制；Skill 可加载不等于它使用的 MCP 服务已开启。
-
-<p align="center">
-  <img src="./docs/images/openquantum-skills-20260912.jpg" width="100%" alt="量子组件设置中的 Skill 指令目录，展示各工作流的说明和来源" /><br />
-  <sub>工作方法与执行后端分别管理，可按研究任务组合使用。</sub>
-</p>
+这 18 个 Skill 随源码提供，由 Harness 按任务需要发现和加载。点击名称即可查看完整的 `SKILL.md`，包括适用范围、执行步骤与限制；Skill 可加载不等于它使用的 MCP 服务已开启。
 
 | Skill | 适合什么任务 | 使用的执行能力 |
 | --- | --- | --- |
@@ -223,12 +399,12 @@ npm run demo:quantum-ground-state
 | [`fieldqkit-hardware`](.agents/skills/fieldqkit-hardware/SKILL.md) | 国内量子云后端发现、量子位筛选、拓扑与凭据缺口检查 | `fieldqkit` 服务提供的 Tools；只读云端，不提交 QPU 任务 |
 | [`tyxonq-workbench`](.agents/skills/tyxonq-workbench/SKILL.md) | 小规模 statevector 电路、采样分布与 density-matrix 噪声仿真 | `tyxonq_local` 服务提供的 Tool；连接默认关闭 |
 | [`fatqat-workbench`](.agents/skills/fatqat-workbench/SKILL.md) | 超导与原子阵列原生门约束、transmon 泄漏和里德堡动力学；也支持通用电路仿真 | `fatqat_local` 提供两个有界 Tool，返回数据、图表和单位；[接入说明](docs/integrations/FATQAT.md) |
-| [`sqd-chemistry`](.agents/skills/sqd-chemistry/SKILL.md) | SQD 量子化学 | `sqd_local` 的有界本地计算；[范围与验证](docs/integrations/PAPER_BACKED_TOOLS.md) |
-| [`tjm-dynamics`](.agents/skills/tjm-dynamics/SKILL.md) | TJM 开放系统动力学 | `tjm_local` 的有界本地计算；[范围与验证](docs/integrations/PAPER_BACKED_TOOLS.md) |
-| [`ldpc-decoding`](.agents/skills/ldpc-decoding/SKILL.md) | LSD 纠错解码 | `ldpc_local` 的有界本地计算；[范围与验证](docs/integrations/PAPER_BACKED_TOOLS.md) |
-| [`randomized-measurements`](.agents/skills/randomized-measurements/SKILL.md) | RandomMeas 随机测量 | `random_meas_local` 的有界本地计算；[范围与验证](docs/integrations/PAPER_BACKED_TOOLS.md) |
-| [`flow-vqe`](.agents/skills/flow-vqe/SKILL.md) | Flow-VQE 参数学习 | `flow_vqe_local` 的有界本地计算；[范围与验证](docs/integrations/PAPER_BACKED_TOOLS.md) |
-| [`tenpy-ground-state`](.agents/skills/tenpy-ground-state/SKILL.md) | TeNPy 多体基态 | `tenpy_local` 的有界本地计算；[范围与验证](docs/integrations/PAPER_BACKED_TOOLS.md) |
+| [`sqd-chemistry`](.agents/skills/sqd-chemistry/SKILL.md) | H₂/STO-3G 的采样子空间对角化、配置恢复与同基组 FCI 对照 | `sqd_local` 的有界本地计算；[范围与验证](docs/integrations/PAPER_BACKED_TOOLS.md) |
+| [`tjm-dynamics`](.agents/skills/tjm-dynamics/SKILL.md) | 2–6 qubits 开放 Ising 链的张量跳跃轨迹与 Lindblad 演化对照 | `tjm_local` 的有界本地计算；[范围与验证](docs/integrations/PAPER_BACKED_TOOLS.md) |
+| [`ldpc-decoding`](.agents/skills/ldpc-decoding/SKILL.md) | 二元校验矩阵的 BP+LSD 解码与独立 syndrome 一致性检查 | `ldpc_local` 的有界本地计算；[范围与验证](docs/integrations/PAPER_BACKED_TOOLS.md) |
+| [`randomized-measurements`](.agents/skills/randomized-measurements/SKILL.md) | 已知 product / GHZ 态的局域 Haar 测量、子区纯度与有限样本误差 | `random_meas_local` 的有界本地计算；[范围与验证](docs/integrations/PAPER_BACKED_TOOLS.md) |
+| [`flow-vqe`](.agents/skills/flow-vqe/SKILL.md) | 2–4 qubit Hamiltonian 的 flow 参数学习，与等评估预算随机搜索比较 | `flow_vqe_local` 的有界本地计算；[范围与验证](docs/integrations/PAPER_BACKED_TOOLS.md) |
+| [`tenpy-ground-state`](.agents/skills/tenpy-ground-state/SKILL.md) | 3–10 站点自旋 1/2 XYZ 开放链的 DMRG、磁化与纠缠熵 | `tenpy_local` 的有界本地计算；[范围与验证](docs/integrations/PAPER_BACKED_TOOLS.md) |
 | [`qmclaw-workbench`](.agents/skills/qmclaw-workbench/SKILL.md) | S21、Rabi、Ramsey、T1、DRAG、RB 等 13 类超导调校实验的规划与模拟 | 原生 `list_qmclaw_experiments`、`simulate_qmclaw_experiment`；仅合成数据 |
 | [`platform-diagnostics`](.agents/skills/platform-diagnostics/SKILL.md) | UI、Harness、Skill 与 Model 联调排障，形成可追溯的诊断报告 | Harness 通用 Tool 与本地诊断脚本；在线模型探测另需凭据 |
 
@@ -285,7 +461,7 @@ FieldQKit、toqito、QCEC、QEC、TyxonQ、FatQat、QPanda QUBO 及上述六项�
 
 第三方组件保留原项目的版权与许可证。版本、来源和集成内容见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)；Skill、Tool Provider 与 MCP Server 的完整分工见[扩展对象模型](docs/architecture/EXTENSION_MODEL.md)。
 
-## 可以连接哪些量子后端
+### 可以连接哪些量子后端
 
 OpenQuantum 为本地模拟、IBM Quantum、IonQ 和多家国内量子云保留明确的接入边界：先发现后端，再由使用者决定是否配置并启用任务接口。下表是集成范围，不是这些服务当前在线可用的证明。
 
@@ -313,64 +489,13 @@ OpenQuantum 为本地模拟、IBM Quantum、IonQ 和多家国内量子云保留�
 `.openquantum/python-envs/` 创建环境，因此 Tool 合同按完整调用如实声明为 `workspace-write`；环境准备完成后，
 科学计算本身仍不写外部系统。
 
-## 把你的量子能力接进来
-
-![OpenQuantum 架构：科研入口进入 Harness，Agent 读取 Skill，通过原生 Tool Provider 或 Harness MCP Client 使用工具，并连接模型服务和执行日志](docs/images/openquantum-platform-overview.png)
-
-这张图展示科研工作台的核心调用关系；[查看可编辑图源](docs/architecture/openquantum-platform-overview.html)。量子学习通的课程任务和数据沿用完整子应用的职责边界，详见[应用集成说明](docs/integrations/OPENMAIC.md)。
-
-先确定用户需要解决的任务，再选择扩展方式：
-
-| 需要增加什么 | 放在哪里 |
-| --- | --- |
-| 领域知识、步骤、工具选择与结果解释 | Skill，可复用已有通用或量子 Tool |
-| 稳定的计算、查询或操作 | Tool，由原生 Tool Provider 或 Harness MCP Client 注册 |
-| 独立的科学检查与验收 | Validator；需要最终验收时再组合 Acceptance Profile、证据物化与 central Acceptance Builder |
-| 有独立交互流程的完整产品 | 按应用边界集成，保留其业务与数据职责；量子学习通是现有实例 |
-
-在开发文档中，`L3` 表示具备可回放的完整科学验收流程。Validator 产生检查结果，Acceptance Profile 定义规则，只有 central Acceptance Builder 汇聚检查结果与来源链、推导最终验收状态。能力等级不代表每一次调用都已完成验收。
-
-Skill 与 Tool 可独立存在。计算后端按任务需要选用，只有额外的选择、步骤或解释规则有价值时才增加 Skill。进程内、同语言且无需隔离的动作优先使用原生 Tool Provider；跨语言、独立进程或远程部署时使用 MCP Server，由 Harness MCP Client 注册其 Tool。
-
-Harness 是通用 Agent Runtime，扩展通过 Cordis Plugin 装配。UI、模型连接、量子计算和科学判定各自保持职责边界。完整外部子应用的教学任务与数据归上游应用维护，其任务不自动获得 Harness Session、科研审批或科学验收语义。
-
-开发前先读[文档与架构入口](docs/README.md)，按需要查阅[贡献指南](CONTRIBUTING.md)、[扩展对象模型](docs/architecture/EXTENSION_MODEL.md)和[模块地图](docs/architecture/MODULES.md)。
-
-<details>
-<summary><strong>开发与验证命令</strong></summary>
-
-```bash
-# 检查 Harness 组合配置
-npm run harness:config
-
-# 运行完整离线质量检查
-npm run check
-
-# 配置模型后运行真实 Agent 端到端测试
-npm run e2e:quantum-harness -- --provider openquantum-public
-```
-
-```text
-.agents/skills/          量子 Skill 与科学资源
-runtime/openquantum/     Agent Preset、原生 Tool Provider、Harness MCP Client 声明和 Harness 界面扩展
-src/settings/server/     设置中心的服务端配置边界
-src/readiness/server/    当前 Harness Registry 的只读运行状态边界
-scripts/                 启动、诊断和端到端测试
-tests/                   平台集成测试
-docs/                    架构、路线与生态文档
-```
-
-更完整的文档入口见 [docs/README.md](docs/README.md)。
-
-</details>
-
-界面截图与示意图的版本、来源和适用范围见[图片说明](docs/images/README.md)。
-
 ## 一起建设 OpenQuantum
 
 欢迎贡献可复现案例、领域 Skill、计算工具、硬件适配和独立科学检查，也欢迎参与量子学习通的课程设计与资源整理，注明来源、适用基础和授权范围。新增内容应服务明确的科研或教学任务，并说明当前实现与验证范围。
 
 从[贡献指南](CONTRIBUTING.md)开始，产品背景见[项目故事](docs/communications/openquantum-wechat-launch.md)，安全问题请按[安全政策](SECURITY.md)私密报告。
+
+准备开始使用时，可以先[启动网页工作台](#快速开始)，或[复算一个本地示例](#从一个真实任务开始)。已有自己的量子方法或工具，则从[扩展入口](#把你的量子能力接进来)开始。
 
 **量子计算，就在指尖。方法与证据，留在你的工作台。**
 
