@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>OpenQuantum 科学证据与验收流程</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Inter:wght@400;500;600;700&amp;family=Geist+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<style>body{margin:0;background:#f7fbff;color:#061f38}main{max-width:1280px;margin:0 auto}svg{display:block;width:100%;height:auto}footer{padding:16px 48px;font:14px/1.7 'Inter','PingFang SC',sans-serif;color:#4d647a}a{color:#0b7189}</style>
+</head>
+<body>
+<main>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 536" role="img" aria-labelledby="openquantum-evidence-flow-title openquantum-evidence-flow-desc">
+<title id="openquantum-evidence-flow-title">OpenQuantum 科学证据与验收流程</title>
+<desc id="openquantum-evidence-flow-desc">Tool 产生计算结果，Materializer 保存并重读证据，Scientific Validator 产生 observations，只有 central Acceptance Builder 结合 Acceptance Profile 和来源链推导最终验收。</desc>
+<defs>
+<marker id="arrow" markerWidth="8" markerHeight="8" refX="8" refY="4" orient="auto">
+<path d="M0 0 L8 4 L0 8 Z" fill="#4d647a"/>
+</marker>
+<marker id="arrow-accent" markerWidth="8" markerHeight="8" refX="8" refY="4" orient="auto">
+<path d="M0 0 L8 4 L0 8 Z" fill="#6747f4"/>
+</marker>
+<marker id="arrow-link" markerWidth="8" markerHeight="8" refX="8" refY="4" orient="auto">
+<path d="M0 0 L8 4 L0 8 Z" fill="#0b7189"/>
+</marker>
+</defs>
+<rect width="1280" height="536" fill="#f7fbff"/>
+<text x="48" y="60" font-family="'Instrument Serif','Songti SC',serif" font-size="32" font-weight="400" fill="#061f38" text-anchor="start">从计算结果，到可复核的科学证据</text>
+<text x="48" y="96" font-family="'Inter','PingFang SC','Microsoft YaHei',sans-serif" font-size="20" font-weight="400" fill="#4d647a" text-anchor="start">把执行事实、证据文件、独立检查与验收规则连接起来。</text>
+<path d="M288 232 H360" fill="none" stroke="#4d647a" stroke-width="1.6" marker-end="url(#arrow)"/>
+<rect x="300" y="204" width="48" height="20" rx="4" fill="#f7fbff"/>
+<text x="324.0" y="220" font-family="'Inter','PingFang SC','Microsoft YaHei',sans-serif" font-size="16" font-weight="400" fill="#4d647a" text-anchor="middle">物化</text>
+<path d="M600 232 H672" fill="none" stroke="#4d647a" stroke-width="1.6" marker-end="url(#arrow)"/>
+<rect x="612" y="204" width="48" height="20" rx="4" fill="#f7fbff"/>
+<text x="636.0" y="220" font-family="'Inter','PingFang SC','Microsoft YaHei',sans-serif" font-size="16" font-weight="400" fill="#4d647a" text-anchor="middle">复核</text>
+<path d="M912 232 H984" fill="none" stroke="#4d647a" stroke-width="1.6" marker-end="url(#arrow)"/>
+<rect x="924" y="204" width="48" height="20" rx="4" fill="#f7fbff"/>
+<text x="948.0" y="220" font-family="'Inter','PingFang SC','Microsoft YaHei',sans-serif" font-size="16" font-weight="400" fill="#4d647a" text-anchor="middle">汇聚</text>
+<g class="node">
+<rect x="48" y="152" width="240" height="160" rx="8" fill="#ffffff" stroke="#bfd0df" stroke-width="1.2"/>
+<text x="72" y="192" font-family="'Inter','PingFang SC','Microsoft YaHei',sans-serif" font-size="24" font-weight="600" fill="#061f38" text-anchor="start">计算结果</text>
+<text x="72" y="224" font-family="'Inter','PingFang SC','Microsoft YaHei',sans-serif" font-size="16" font-weight="400" fill="#4d647a" text-anchor="start">Solver / Tool</text>
+<text x="72" y="252" font-family="'Inter','PingFang SC','Microsoft YaHei',sans-serif" font-size="16" font-weight="400" fill="#4d647a" text-anchor="start">输入参数 · 数值 · 图表</text>
+</g>
+<g class="node">
+<rect x="360" y="152" width="240" height="160" rx="8" fill="#ffffff" stroke="#bfd0df" stroke-width="1.2"/>
+<text x="384" y="192" font-family="'Inter','PingFang SC','Microsoft YaHei',sans-serif" font-size="24" font-weight="600" fill="#061f38" text-anchor="start">可重读的证据</text>
+<text x="384" y="224" font-family="'Inter','PingFang SC','Microsoft YaHei',sans-serif" font-size="16" font-weight="400" fill="#4d647a" text-anchor="start">Materializer</text>
+<text x="384" y="252" font-family="'Inter','PingFang SC','Microsoft YaHei',sans-serif" font-size="16" font-weight="400" fill="#4d647a" text-anchor="start">保存、重读、核对内容</text>
+</g>
+<g class="node">
+<rect x="672" y="152" width="240" height="160" rx="8" fill="#ffffff" stroke="#bfd0df" stroke-width="1.2"/>
+<text x="696" y="192" font-family="'Inter','PingFang SC','Microsoft YaHei',sans-serif" font-size="24" font-weight="600" fill="#061f38" text-anchor="start">独立检查</text>
+<text x="696" y="224" font-family="'Inter','PingFang SC','Microsoft YaHei',sans-serif" font-size="16" font-weight="400" fill="#4d647a" text-anchor="start">Scientific Validator</text>
+<text x="696" y="252" font-family="'Inter','PingFang SC','Microsoft YaHei',sans-serif" font-size="16" font-weight="400" fill="#4d647a" text-anchor="start">逐项产生 observations</text>
+</g>
+<g class="node">
+<rect x="984" y="152" width="248" height="160" rx="8" fill="#eeeaff" stroke="#6747f4" stroke-width="1.2"/>
+<text x="1008" y="192" font-family="'Inter','PingFang SC','Microsoft YaHei',sans-serif" font-size="24" font-weight="600" fill="#061f38" text-anchor="start">科学验收</text>
+<text x="1008" y="224" font-family="'Inter','PingFang SC','Microsoft YaHei',sans-serif" font-size="16" font-weight="400" fill="#4d647a" text-anchor="start">central Acceptance Builder</text>
+<text x="1008" y="252" font-family="'Inter','PingFang SC','Microsoft YaHei',sans-serif" font-size="16" font-weight="400" fill="#4d647a" text-anchor="start">结合 Profile 与来源链</text>
+</g>
+<rect x="48" y="352" width="1184" height="96" rx="8" fill="#eff8ff" stroke="#bfd0df" stroke-width="1.2"/>
+<text x="72" y="384" font-family="'Inter','PingFang SC','Microsoft YaHei',sans-serif" font-size="20" font-weight="600" fill="#061f38" text-anchor="start">适用范围</text>
+<text x="72" y="416" font-family="'Inter','PingFang SC','Microsoft YaHei',sans-serif" font-size="20" font-weight="400" fill="#4d647a" text-anchor="start">用于已接入完整验收的能力。执行完成或本地检查通过，不会自动补齐证据来源与科学结论。</text>
+<line x1="48" y1="484" x2="1232" y2="484" stroke="#bfd0df"/>
+<text x="48" y="512" font-family="'Inter','PingFang SC','Microsoft YaHei',sans-serif" font-size="16" font-weight="400" fill="#4d647a" text-anchor="start">执行事实：Session event log</text>
+<text x="560" y="512" font-family="'Inter','PingFang SC','Microsoft YaHei',sans-serif" font-size="16" font-weight="400" fill="#4d647a" text-anchor="start">验收规则：Acceptance Profile　·　最终结论：Acceptance Report</text>
+</svg>
+<footer>OpenQuantum · 2026-09-12 · 来源：<a href="../README.md">架构总览</a>、<a href="EXTENSION_MODEL.md">扩展对象模型</a>与仓库固定版本实现。图中省略了非主线的返回消息与配置装配细节。</footer>
+</main>
+</body>
+</html>

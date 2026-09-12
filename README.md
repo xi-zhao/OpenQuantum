@@ -37,6 +37,11 @@
 
 **开始使用 → [快速开始](#快速开始)**　｜　**查看真实案例 → [运行证据](#从一个真实任务开始)**　｜　**接入能力 → [贡献指南](CONTRIBUTING.md)**
 
+<p align="center">
+  <img src="./docs/images/openquantum-workbench-20260912.jpg" width="100%" alt="OpenQuantum 科研工作台主界面：新会话、工作区、量子学习通和设置入口" /><br />
+  <sub>从科研对话开始，也可以直接进入量子学习通。Web 与 Desktop 复用这套工作台界面。</sub>
+</p>
+
 ## 可以用它做什么
 
 按科研任务选择能力，具体 SDK 和服务作为执行后端组合使用。
@@ -57,6 +62,11 @@
 ## 量子学习通
 
 量子学习通是面向教学与自主学习的子应用，基于 [OpenMAIC](https://github.com/THU-MAIC/OpenMAIC) 的完整原版界面与服务端集成。保留原有教学流程和编辑操作，应用名称、字体、按钮、侧栏和主题与 OpenQuantum 适配，课程内容保留自身样式。
+
+<p align="center">
+  <img src="./docs/images/openquantum-learning-20260912.jpg" width="100%" alt="集成在 OpenQuantum 中的量子学习通原版应用首页" /><br />
+  <sub>在同一工作台中打开完整教学应用，保留课程材料、课堂和课件编辑入口。</sub>
+</p>
 
 | 学习与教学场景 | 集成内容 |
 | --- | --- |
@@ -86,7 +96,7 @@ npm ci
 npm run dev
 ```
 
-浏览器打开 <http://127.0.0.1:3000>，在设置中心配置模型。还没有模型密钥时，可先用 `npm run demo:quantum-ground-state` 运行本地参考示例；安装 `uv` 后可用 `npm run mcp:qiskit:probe` 检查 Qiskit 接入，首次运行可能下载依赖。
+首次打开启动日志中带登录令牌的地址，认证后会跳转到 <http://127.0.0.1:3000>，再在设置中心配置模型。还没有模型密钥时，可先用 `npm run demo:quantum-ground-state` 运行本地参考示例；安装 `uv` 后可用 `npm run mcp:qiskit:probe` 检查 Qiskit 接入，首次运行可能下载依赖。
 
 ### 发起任务并选择后端
 
@@ -100,6 +110,11 @@ npm run dev
 两种计算的理想概率都应为 `00`、`11` 各约 50%；有限采样频数会有波动。首次使用可能下载相应的 Python 依赖。
 
 TyxonQ 等默认关闭的后端，在「设置 → 量子组件 → MCP Server 连接」中启用后，重新启动 OpenQuantum，再在对话中指定名称。修改模型配置选择的是对话模型；这里选择的是负责计算的后端。支持范围和默认开关见[服务目录](#mcp-服务目录)。
+
+<p align="center">
+  <img src="./docs/images/openquantum-connections-20260912.jpg" width="100%" alt="量子组件设置中的 MCP Server 连接目录和各后端的配置开关" /><br />
+  <sub>在连接目录中选择后端；配置是否启用与当前运行状态分别展示。</sub>
+</p>
 
 ### 桌面客户端
 
@@ -128,6 +143,11 @@ npm run cc-connect:start
 ```
 
 第一项平台需先按上游方式配置。可在另一个终端运行 `npm run cc-connect:web` 打开本地渠道管理后台，配置其他平台及凭据。平台 Token 保存在被 Git 忽略的本地配置中。
+
+<p align="center">
+  <img src="./docs/images/openquantum-wechat-chat.jpg" width="380" alt="通过微信 ClawBot 与 OpenQuantum 对话的已有演示截图" /><br />
+  <sub>微信渠道的对话入口示例；渠道配置完成后，消息由 CC Connect 转交 Harness。</sub>
+</p>
 
 其他部署方式、模型配置和故障定位见[部署与启动](docs/DEPLOYMENT.md)与[故障排查](docs/TROUBLESHOOTING.md)。源码升级的固定版本、兼容性和验证记录见[上游升级记录](docs/releases/2026-09-10-upstream-update.md)。
 
@@ -166,6 +186,10 @@ npm run demo:quantum-ground-state
 
 运行完成与科学验收分别显示。具备完整验收流程的能力会把输入、结果文件、独立检查和会话记录连接起来，生成验收报告，列出通过、失败或尚未检查的项目。其他工具按各自范围报告数值结果和检查状态。
 
+![从计算结果、证据物化和独立检查，到结合规则与来源链的科学验收](docs/images/openquantum-evidence-flow.png)
+
+图中展示已接入完整科学验收的能力如何形成证据；[查看可编辑图源](docs/architecture/openquantum-evidence-flow.html)。
+
 限定量子基态求解与量子信息审计提供完整科学验收流程；QUBO、电路等价性检查和量子纠错存储实验等能力按各自规则报告计算结果与检查。验证依据见[能力声明](.agents/capability-packages.yml)、[架构审计](docs/architecture/ARCHITECTURE_AUDIT.md)和[固定量子能力 Benchmark](benchmarks/quantum-capabilities/README.md)。
 
 ## 已集成的量子工具与能力
@@ -181,6 +205,11 @@ npm run demo:quantum-ground-state
 ### 内置 Skills
 
 这 12 个 Skill 随源码提供，由 Harness 按任务需要发现和加载。点击名称即可查看完整的 `SKILL.md`，包括适用范围、执行步骤与限制；Skill 可加载不等于它使用的 MCP 服务已开启。
+
+<p align="center">
+  <img src="./docs/images/openquantum-skills-20260912.jpg" width="100%" alt="量子组件设置中的 Skill 指令目录，展示各工作流的说明和来源" /><br />
+  <sub>工作方法与执行后端分别管理，可按研究任务组合使用。</sub>
+</p>
 
 | Skill | 适合什么任务 | 使用的执行能力 |
 | --- | --- | --- |
@@ -244,21 +273,6 @@ FieldQKit、toqito、QCEC、QEC、TyxonQ、FatQat 与 QPanda QUBO 使用 OpenQua
 
 第三方组件保留原项目的版权与许可证。版本、来源和集成内容见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)；Skill、Tool Provider 与 MCP Server 的完整分工见[扩展对象模型](docs/architecture/EXTENSION_MODEL.md)。
 
-<table>
-  <tr>
-    <td width="50%" align="center">
-      <img src="./docs/images/openquantum-quantum-settings.jpg" width="100%" alt="OpenQuantum 量子组件设置中心" />
-    </td>
-    <td width="50%" align="center">
-      <img src="./docs/images/openquantum-trajectory.jpg" width="100%" alt="OpenQuantum Harness 量子任务执行轨迹" />
-    </td>
-  </tr>
-  <tr>
-    <td align="center"><sub>量子 Skill、MCP Server 连接与安全凭据</sub></td>
-    <td align="center"><sub>从用户请求追溯到 Tool 结果</sub></td>
-  </tr>
-</table>
-
 ## 可以连接哪些量子后端
 
 OpenQuantum 为本地模拟、IBM Quantum、IonQ 和多家国内量子云保留明确的接入边界：先发现后端，再由使用者决定是否配置并启用任务接口。下表是集成范围，不是这些服务当前在线可用的证明。
@@ -288,6 +302,10 @@ OpenQuantum 为本地模拟、IBM Quantum、IonQ 和多家国内量子云保留�
 科学计算本身仍不写外部系统。
 
 ## 把你的量子能力接进来
+
+![OpenQuantum 架构：科研入口进入 Harness，Agent 读取 Skill，通过原生 Tool Provider 或 Harness MCP Client 使用工具，并连接模型服务和执行日志](docs/images/openquantum-platform-overview.png)
+
+这张图展示科研工作台的核心调用关系；[查看可编辑图源](docs/architecture/openquantum-platform-overview.html)。量子学习通的课程任务和数据沿用完整子应用的职责边界，详见[应用集成说明](docs/integrations/OPENMAIC.md)。
 
 先确定用户需要解决的任务，再选择扩展方式：
 
@@ -333,6 +351,8 @@ docs/                    架构、路线与生态文档
 更完整的文档入口见 [docs/README.md](docs/README.md)。
 
 </details>
+
+界面截图与示意图的版本、来源和适用范围见[图片说明](docs/images/README.md)。
 
 ## 一起建设 OpenQuantum
 
