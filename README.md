@@ -32,7 +32,7 @@
 
 你选择模型与计算后端，用自然语言发起科研任务。工具调用与结果留在工作台里，方便回看和继续分析；课程材料、课堂与课件则在量子学习通中组织。
 
-已接入 **Qiskit · toqito · Stim · PyMatching · FatQat · QMClaw · QPanda · TyxonQ · FieldQKit** 等工具，具体用途与使用条件见[集成生态](#集成生态与自由选择)。
+已接入 **Qiskit · TeNPy · toqito · Stim · PyMatching · FatQat · QMClaw · QPanda · TyxonQ · FieldQKit** 等工具，具体用途与使用条件见[集成生态](#集成生态与自由选择)。
 
 **[安装并开始](#快速开始)**　·　[先看本地计算示例](#从一个真实任务开始)（无需模型密钥）
 
@@ -62,9 +62,12 @@
 | 任务方向 | 可以发起的任务 | 可以查看的结果 |
 | --- | --- | --- |
 | 量子电路 | 分析或转换 OpenQASM / QPY 电路，比较转译，检查等价性，运行小规模仿真 | 电路结构、转译结果、等价性检查、态矢或采样分布 |
-| 量子态与基态 | 审计密度矩阵与纠缠指标；求解限定二量子位 Hamiltonian 的固定粒子扇区基态 | 状态指标与独立检查，VQE 和精确参考的数值对照 |
+| 量子态与测量 | 审计密度矩阵与纠缠指标；模拟已知 product / GHZ 态的局域随机测量 | 状态指标与独立检查，子区纯度估计及有限样本误差 |
+| 量子化学与多体基态 | 用 SQD 求解 H₂/STO-3G，或用 TeNPy 计算有限 XYZ 自旋链基态 | SQD / FCI 能量对照，DMRG 能量、磁化与纠缠熵 |
+| 变分求解与参数学习 | 求解限定二量子位 Hamiltonian 的固定粒子扇区基态；对小型 Hamiltonian 训练 Flow-VQE | VQE 与精确参考对照，Flow 参数学习与等评估预算随机搜索比较 |
 | 组合优化 | 构建有界 QUBO，检查约束 penalty，运行经典求解或可选本地 QAOA | 优化解、约束检查与经典枚举复核 |
-| 量子纠错 | 运行 surface-code memory 实验，进行 MWPM 解码 | 有限 shots 下的逻辑错误率及统计范围 |
+| 量子纠错 | 运行 surface-code memory / MWPM 实验，或对二元校验矩阵进行 BP+LSD 解码 | 表面码有限 shots 统计；LSD 的 syndrome 一致性检查 |
+| 开放系统动力学 | 用 TJM 模拟小型开放 Ising 链的张量跳跃轨迹 | 随时间变化的观测量，与密度矩阵 Lindblad 演化的数值对照 |
 | 超导与原子实验 | 模拟调校流程、原生门约束、三能级 transmon 泄漏或小型里德堡原子链动力学 | 合成实验数据、动力学轨迹与图表 |
 | 量子硬件接入 | 发现后端、检查拓扑与凭据；按需启用云任务查询、提交与取消 | 设备候选、使用条件；已启用任务接口的结果与状态 |
 | 研究方法与工具选型 | 比较量子 SDK、复用研究步骤、排查工作台连接 | 选型建议、工作流说明与诊断记录 |
@@ -79,13 +82,17 @@
 | 生态层面 | 已接入的项目或服务 | 选择方式与当前范围 |
 | --- | --- | --- |
 | 电路、编译与仿真 | [Qiskit](https://github.com/Qiskit/mcp-servers)、[MQT QCEC](https://github.com/munich-quantum-toolkit/qcec)、[TyxonQ](https://github.com/QureGenAI-Biotech/TyxonQ)、[FatQat](https://github.com/spaceqat/fatqat) | 按电路格式、噪声模型、等价性检查或硬件约束选择；部分连接按需开启 |
-| 量子态、优化与纠错 | [toqito](https://github.com/vprusso/toqito)、[QPanda QUBO](https://github.com/OriginQ/pyqpanda-algorithm)、[Stim](https://github.com/quantumlib/Stim)、[PyMatching](https://github.com/oscarhiggott/PyMatching)，以及内置基态求解 | 覆盖量子态审计、限定基态计算、组合优化和纠错存储实验 |
+| 量子态、优化与纠错 | [toqito](https://github.com/vprusso/toqito)、[QPanda QUBO](https://github.com/OriginQ/pyqpanda-algorithm)、[Stim](https://github.com/quantumlib/Stim)、[PyMatching](https://github.com/oscarhiggott/PyMatching)、[ldpc / BP+LSD](https://github.com/quantumgizmos/ldpc)，以及内置基态求解 | 量子态审计、限定基态计算、组合优化、纠错存储实验与二元校验矩阵解码 |
+| 量子化学、多体与动力学 | [Qiskit SQD](https://github.com/Qiskit/qiskit-addon-sqd)、[TeNPy](https://github.com/tenpy/tenpy)、[MQT YAQS / TJM](https://github.com/munich-quantum-toolkit/yaqs) | H₂ 子空间对角化、有限自旋链 DMRG、开放 Ising 链张量轨迹 |
+| 参数学习与随机测量 | [Flow-VQE](https://github.com/olsson-group/Flow-VQE)、[RandomMeas.jl](https://github.com/bvermersch/RandomMeas.jl) | 小型 Hamiltonian 的 flow 参数学习，已知量子态的局域随机测量与纯度估计 |
 | 超导与原子实验 | [QMClaw](https://github.com/QMC-AI/QMClaw)、[FatQat](docs/integrations/FATQAT.md) | 调校流程的合成数据实验、原生门约束和有界脉冲动力学 |
 | 量子云与硬件 | [FieldQKit](https://github.com/FieldQuantum/fieldqkit)、IBM Quantum、IonQ、本源量子及其他国内量子云 | 按厂商与任务选择；后端发现需要对应凭据，真机与付费任务按需启用 |
 | 学习与教学 | [OpenMAIC](https://github.com/THU-MAIC/OpenMAIC) → 量子学习通 | 集成完整教学应用；课程体系正在建设，在线 AI 教学流程仍待完整验收 |
 | Agent、桌面与消息 | [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness)、[DSH Desktop](https://github.com/anywhere-labs/dsh-desktop)、[CC Connect](docs/integrations/CC_CONNECT.md) | 从网页、桌面或配置好的消息渠道使用科研能力 |
 
 可以在对话中直接指定后端名称。[首次任务示例](#发起任务并选择后端)给出了 FatQat 和 TyxonQ 的可复制请求及准备条件。
+
+SQD、TJM、BP+LSD、RandomMeas、Flow-VQE 与 TeNPy 的输入规模、物理假设和安装要求见[论文方法说明](docs/integrations/PAPER_BACKED_TOOLS.md)。这些接入提供有界本地计算与数值检查，尚未接入完整科学验收。
 
 ### 模型由你选择
 
@@ -200,7 +207,7 @@ npm run demo:quantum-ground-state
 <details>
 <summary><strong>本地启动需要准备什么？</strong></summary>
 
-当前提供源码安装，需要 Git、Node.js 24，以及 Python 量子工具使用的 uv。可以先启动网页工作台，再按需安装桌面端、量子学习通或消息入口；各平台要求见下面的启动步骤。
+当前提供源码安装，需要 Git、Node.js 24，以及 Python 量子工具使用的 uv；RandomMeas 随机测量另需 Julia 1.12.7。可以先启动网页工作台，再按需准备所选工具、桌面端、量子学习通或消息入口；各平台要求见下面的启动步骤。
 
 </details>
 
@@ -211,6 +218,8 @@ npm run demo:quantum-ground-state
 当前以源码分发，适合本机单用户试用及二次开发。
 
 准备 Git、Node.js 24，以及供 Python 量子工具使用的 [uv / uvx](https://docs.astral.sh/uv/getting-started/installation/)。
+
+使用 RandomMeas 随机测量时，还需 Julia 1.12.7。SQD、TJM 等论文方法的依赖可按所选能力准备，见[安装说明](docs/integrations/PAPER_BACKED_TOOLS.md#安装与调用)。
 
 ### 网页工作台
 
