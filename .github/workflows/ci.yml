@@ -81,14 +81,19 @@ jobs:
             --network host \
             openquantum-ci
           cleanup() {
-            docker logs openquantum-ci || true
+            docker logs openquantum-ci 2>&1 | \
+              sed -E 's/([?&]token=)[A-Za-z0-9_-]+/\1[redacted]/g' || true
             docker rm --force openquantum-ci || true
           }
           trap cleanup EXIT
 
           for attempt in $(seq 1 90); do
-            if curl --fail --silent http://127.0.0.1:3000/ >/tmp/openquantum-index.html; then
+            if [ "$(docker inspect --format '{{.State.Health.Status}}' openquantum-ci)" = "healthy" ]; then
               break
+            fi
+            if [ "$(docker inspect --format '{{.State.Running}}' openquantum-ci)" != "true" ]; then
+              echo "OpenQuantum container exited before becoming ready" >&2
+              exit 1
             fi
             if [ "$attempt" -eq 90 ]; then
               echo "OpenQuantum container did not become ready" >&2
