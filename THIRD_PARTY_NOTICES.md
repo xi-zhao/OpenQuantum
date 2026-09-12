@@ -6,6 +6,7 @@ OpenQuantum 自有代码采用仓库根目录中的 [MIT License](LICENSE)。这
 
 | 组件 | 许可证 | OpenQuantum 中的使用方式 | 上游来源 |
 | --- | --- | --- | --- |
+| Quantum-Practices | MIT | 固定提交 `572a24c9b5c9787caec98810351f5cb17c82250e` 的两个原始 ESM 文件（检索器、60 份指南目录）随源码分发；原版 LICENSE、NOTICE 与文件摘要保留在 `src/quantum-practices/upstream/`。本地薄适配负责当前 Harness 注册、中文查询和参考资料边界；不包含上游 Agent、模拟器、Python 环境或安装器 | [unitarylab/quantum-practices](https://github.com/unitarylab/quantum-practices) |
 | Qiskit SQD | Apache-2.0 | 固定 `qiskit-addon-sqd==0.13.1`，隔离环境调用 H₂/STO-3G 采样子空间对角化；源码由包管理器安装 | [Qiskit/qiskit-addon-sqd](https://github.com/Qiskit/qiskit-addon-sqd) |
 | MQT YAQS | MIT | 固定 `mqt.yaqs==0.6.0`，隔离环境调用有界张量跳跃轨迹 | [munich-quantum-toolkit/yaqs](https://github.com/munich-quantum-toolkit/yaqs) |
 | ldpc | MIT | 固定 `ldpc==2.4.1`，调用串行 BP+LSD，OpenQuantum 在进入 C++ 前核对 GF(2) 可解性 | [quantumgizmos/ldpc](https://github.com/quantumgizmos/ldpc) |

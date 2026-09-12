@@ -41,6 +41,7 @@
     "test:harness-web-branding": "node --test tests/harness-web-branding.test.mjs",
     "test:contracts": "node --test .agents/skill-contracts/test/*.test.mjs",
     "capability:conformance": "node scripts/audit-capability-packages.mjs",
+    "capability:quantum-practices:test": "node --test tests/quantum-practices.test.mjs tests/harness-quantum-practices.test.mjs",
     "capability:contracts:test": "node scripts/run-capability-contract-checks.mjs",
     "capability:quantum-ground-state:test": "node --test .agents/skills/quantum-ground-state/test/*.test.mjs tests/native-quantum-tools.test.mjs",
     "capability:fieldqkit-hardware:test": "node --test .agents/skills/fieldqkit-hardware/test/*.test.mjs",

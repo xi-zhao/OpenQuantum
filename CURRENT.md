@@ -21,6 +21,14 @@
 - 已运行固定依赖的真实数值回归，以及本地模型协议替身驱动的真实 Harness 六工具端到端检查。后者不替代外部模型自主任务验收。
 - 上游版本、安装命令、物理边界和证据位置见[论文方法计算接入](docs/integrations/PAPER_BACKED_TOOLS.md)。运行中的 OpenQuantum 需重启加载新增 Preset 连接。
 
+## Quantum-Practices 与 PDE 原型（2026-09-12）
+
+- 默认 Preset 新增原生只读 `quantum_practices` Tool，检索固定 MIT 上游的 60 份算法参考；
+  当前 Harness 的注册、真实调用、失败返回和会话重读已由本地模型协议替身验证，未运行外部模型自主验收。
+- [接入说明](docs/integrations/QUANTUM_PRACTICES.md)记录版本、许可、输入边界与证据；运行中的 Host 需重启后加载。
+- [一维热方程独立实验](experiments/schrodingerization-heat1d/README.md)使用开源数值库验证薛定谔化精度与成本，
+  尚未成为产品计算 Tool；没有引入 UnitaryLab 闭源模拟器或 Agent。
+
 ## 原交接基线（历史）
 
 - 写入本页前的本地 HEAD：`e4e3e4dbc697`，分支 `main`；后续接手先重新查询 Git，不把本页当作实时分支状态。

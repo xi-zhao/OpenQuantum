@@ -54,7 +54,7 @@ const servers = catalogRows(readme, "### MCP 服务目录");
 const nativeTools = catalogRows(readme, "### 原生量子 Tools");
 const declaredServers = report.packages.flatMap((entry) => entry.execution.mcpServers);
 const declaredNativeTools = report.packages.flatMap((entry) => entry.execution.nativeTools)
-  .filter((tool) => tool.providerPlugin === "./native-quantum-tools.mjs");
+  .filter((tool) => ["./native-quantum-tools.mjs", "./quantum-practices-tools.mjs"].includes(tool.providerPlugin));
 
 test("both Skill catalogs enumerate every source-distributed Skill exactly once", () => {
   assert.deepEqual([...skills.keys()].sort(), trackedSkillIds);

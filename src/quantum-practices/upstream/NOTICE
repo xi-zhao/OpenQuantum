@@ -1,0 +1,20 @@
+Quantum-Practices
+=================
+
+Quantum-Practices is based on and adapted from the public GitHub project:
+
+  UnitaryLab Quantum Skills
+  https://github.com/unitarylab/quantum-skills
+  Skill corpus synchronized from upstream commit:
+  2ad300222b6578fbb8c2a6ff648f709108cbff63
+
+The upstream project provides the quantum algorithm guide corpus that this
+repository adapts into a DeepSeek Harness tool bundle.
+This repository adds the DSH Profile Bundle package shape, Cordis tool
+registration, generated read-only practice catalog, package verification,
+security tests, Workshop manifest, and release documentation.
+
+Only public GitHub upstream skill content is used as the source corpus.
+
+The source code in this repository is licensed under the MIT License. See
+LICENSE for the full license text.
