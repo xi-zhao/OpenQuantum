@@ -9,7 +9,7 @@
 
 <p align="center">
   面向研究者、学习者与授课者的开源量子 AI 工作台<br />
-  在同一处选择工具、运行计算、组织课程
+  用自然语言发起任务，用计算工具探索，用参考结果检验
 </p>
 
 <p align="center">
@@ -21,6 +21,7 @@
 <p align="center">
   <a href="#openquantum-全景">平台全景</a> ·
   <a href="#可以用它做什么">能力全景</a> ·
+  <a href="#从论文方法开始一次计算">论文方法</a> ·
   <a href="#集成生态与自由选择">集成生态</a> ·
   <a href="#产品体验">产品体验</a> ·
   <a href="#快速开始">快速开始</a> ·
@@ -28,13 +29,15 @@
   <a href="./docs/README.md">文档与架构</a>
 </p>
 
-**分析电路、模拟实验、连接量子云，也能准备一堂量子课程。** OpenQuantum 把量子计算工具与教学应用集成到一个工作台，供研究、学习和教学使用。
+**把量子问题带进对话，把计算结果拿来检验。** OpenQuantum 是一个开源量子科研 Agent 工作台，将电路分析、量子化学、多体模拟、纠错与实验模拟工具接到同一个任务入口；教学应用「量子学习通」提供材料、课程和课堂的组织空间。
 
-你选择模型与计算后端，用自然语言发起科研任务。工具调用与结果留在工作台里，方便回看和继续分析；课程材料、课堂与课件则在量子学习通中组织。
+你可以从一个 Bell 态实验开始，也可以用 SQD 计算 H₂、用 TeNPy 求解自旋链。选择模型和计算后端，写清问题与输入，在工作台中查看调用过程、数值结果和适用范围。
 
-已接入 **Qiskit · TeNPy · toqito · Stim · PyMatching · FatQat · QMClaw · QPanda · TyxonQ · FieldQKit** 等工具，具体用途与使用条件见[集成生态](#集成生态与自由选择)。
+- **按问题选工具**：电路、量子态、优化、纠错和动力学各有对应后端，同类任务也可明确指定工具。[查看能做的任务](#可以用它做什么)
+- **带着参照看结果**：在支持的算例中比较精确解、独立检查或统计误差，并查看哪些检查已完成。[查看本地计算证据](#从一个真实任务开始)
+- **把方法留下来复用**：将研究步骤整理成 Skill，把计算接口和独立检查接入工作台，供后续任务使用。[接入自己的能力](#把你的量子能力接进来)
 
-**[安装并开始](#快速开始)**　·　[先看本地计算示例](#从一个真实任务开始)（无需模型密钥）
+**[安装并开始](#快速开始)**　·　[先看本地计算示例](#从一个真实任务开始)（无需模型密钥）　·　[了解量子学习通](#量子学习通)
 
 ## OpenQuantum 全景
 
@@ -75,6 +78,14 @@
 
 本地计算可从无需量子云凭据的任务开始；真实硬件与付费服务按需启用。你也可以把自己的算法和研究方法[接入工作台](#把你的量子能力接进来)。
 
+### 从论文方法开始一次计算
+
+读到一种方法后，可以先在小系统上看它如何工作。OpenQuantum 已接入 **SQD、TJM、BP+LSD、RandomMeas、Flow-VQE 和 TeNPy**：从 H₂ 的采样子空间对角化，到开放系统张量轨迹、二元校验矩阵解码、随机测量、参数学习和自旋链 DMRG。
+
+这六项接入固定了上游实现与依赖版本，限定了输入规模，并随结果返回输入、版本和检查信息。你可以比较 SQD 与同基组 FCI 的能量、TJM 与 Lindblad 演化的观测量，或 DMRG 与精确对角化的结果，用具体算例判断方法的表现。
+
+这六项目前提供小规模本地计算与数值检查，尚未接入完整科学验收流程；论文规模复现仍需单独验证。论文出处、上游仓库、物理假设与验证记录见[论文方法说明](docs/integrations/PAPER_BACKED_TOOLS.md)；准备依赖后，可直接使用下方的[论文方法试用示例](#试用-sqd-与-tenpy)。
+
 ## 集成生态与自由选择
 
 同一个 Bell 态任务，可以选择 FatQat 或 TyxonQ；需要分析与转译电路时，可以选择 Qiskit；比较两份电路是否等价时，可以选择 MQT QCEC。OpenQuantum 保留这些选择，让输入格式、物理模型和设备条件决定使用哪种工具。
@@ -91,8 +102,6 @@
 | Agent、桌面与消息 | [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness)、[DSH Desktop](https://github.com/anywhere-labs/dsh-desktop)、[CC Connect](docs/integrations/CC_CONNECT.md) | 从网页、桌面或配置好的消息渠道使用科研能力 |
 
 可以在对话中直接指定后端名称。[首次任务示例](#发起任务并选择后端)给出了 FatQat 和 TyxonQ 的可复制请求及准备条件。
-
-SQD、TJM、BP+LSD、RandomMeas、Flow-VQE 与 TeNPy 的输入规模、物理假设和安装要求见[论文方法说明](docs/integrations/PAPER_BACKED_TOOLS.md)。这些接入提供有界本地计算与数值检查，尚未接入完整科学验收。
 
 ### 模型由你选择
 
@@ -249,6 +258,23 @@ npm run dev
 
 TyxonQ 等默认关闭的后端，在「设置 → 量子组件 → MCP Server 连接」中启用后，重新启动 OpenQuantum，再在对话中指定名称。修改模型配置选择的是对话模型；这里选择的是负责计算的后端。支持范围和默认开关见[服务目录](#mcp-服务目录)。
 
+### 试用 SQD 与 TeNPy
+
+完成上面的安装和模型配置后，可以先准备这两项论文方法的固定依赖：
+
+```bash
+npm run capability:paper-tools:setup -- sqd-chemistry tenpy-ground-state
+```
+
+这两项通过 `uv` 准备 Python 3.12 环境，无需量子云账户。默认连接已开启；已运行的工作台在升级后需重启，再新建对话并复制一条请求：
+
+| 想探索什么 | 示例请求 | 重点查看 |
+| --- | --- | --- |
+| 分子基态 | 用 SQD 计算键长 0.735 Å 的 H₂/STO-3G，使用默认合成样本，报告总能量、同基组 FCI 参考和能量差，并标明样本来源。 | 样本覆盖与能量差；合成样本的结果不构成量子优势证据 |
+| 多体基态 | 用 TeNPy 计算四站点、自旋 1/2 的开放 Heisenberg 链，Jx=Jy=Jz=1，hx=hz=0。报告 DMRG 能量、精确对角化参考、能量差与纠缠熵，并注明 S=Pauli/2。 | Hamiltonian 约定、参考结果与收敛情况 |
+
+其余论文方法也可按需安装；RandomMeas 随机测量另需 Julia 1.12.7。[完整安装与输入范围](docs/integrations/PAPER_BACKED_TOOLS.md#安装与调用)列出了各项准备条件。
+
 ### 量子学习通安装
 
 量子学习通当前已在 macOS 验证安装和启动。完成仓库依赖安装后，macOS 用户可运行 `npm run learning:ui:setup`，再启动 Web 或 Desktop，从侧栏打开「量子学习通」。首次打开会自动启动本机数据库和课程服务，无需另装全局 PostgreSQL；模型请求使用 OpenQuantum 当前选择的模型。
@@ -359,7 +385,7 @@ docs/                    架构、路线与生态文档
 
 ### 内置 Skills
 
-这 12 个 Skill 随源码提供，由 Harness 按任务需要发现和加载。点击名称即可查看完整的 `SKILL.md`，包括适用范围、执行步骤与限制；Skill 可加载不等于它使用的 MCP 服务已开启。
+这 18 个 Skill 随源码提供，由 Harness 按任务需要发现和加载。点击名称即可查看完整的 `SKILL.md`，包括适用范围、执行步骤与限制；Skill 可加载不等于它使用的 MCP 服务已开启。
 
 | Skill | 适合什么任务 | 使用的执行能力 |
 | --- | --- | --- |
@@ -373,12 +399,12 @@ docs/                    架构、路线与生态文档
 | [`fieldqkit-hardware`](.agents/skills/fieldqkit-hardware/SKILL.md) | 国内量子云后端发现、量子位筛选、拓扑与凭据缺口检查 | `fieldqkit` 服务提供的 Tools；只读云端，不提交 QPU 任务 |
 | [`tyxonq-workbench`](.agents/skills/tyxonq-workbench/SKILL.md) | 小规模 statevector 电路、采样分布与 density-matrix 噪声仿真 | `tyxonq_local` 服务提供的 Tool；连接默认关闭 |
 | [`fatqat-workbench`](.agents/skills/fatqat-workbench/SKILL.md) | 超导与原子阵列原生门约束、transmon 泄漏和里德堡动力学；也支持通用电路仿真 | `fatqat_local` 提供两个有界 Tool，返回数据、图表和单位；[接入说明](docs/integrations/FATQAT.md) |
-| [`sqd-chemistry`](.agents/skills/sqd-chemistry/SKILL.md) | SQD 量子化学 | `sqd_local` 的有界本地计算；[范围与验证](docs/integrations/PAPER_BACKED_TOOLS.md) |
-| [`tjm-dynamics`](.agents/skills/tjm-dynamics/SKILL.md) | TJM 开放系统动力学 | `tjm_local` 的有界本地计算；[范围与验证](docs/integrations/PAPER_BACKED_TOOLS.md) |
-| [`ldpc-decoding`](.agents/skills/ldpc-decoding/SKILL.md) | LSD 纠错解码 | `ldpc_local` 的有界本地计算；[范围与验证](docs/integrations/PAPER_BACKED_TOOLS.md) |
-| [`randomized-measurements`](.agents/skills/randomized-measurements/SKILL.md) | RandomMeas 随机测量 | `random_meas_local` 的有界本地计算；[范围与验证](docs/integrations/PAPER_BACKED_TOOLS.md) |
-| [`flow-vqe`](.agents/skills/flow-vqe/SKILL.md) | Flow-VQE 参数学习 | `flow_vqe_local` 的有界本地计算；[范围与验证](docs/integrations/PAPER_BACKED_TOOLS.md) |
-| [`tenpy-ground-state`](.agents/skills/tenpy-ground-state/SKILL.md) | TeNPy 多体基态 | `tenpy_local` 的有界本地计算；[范围与验证](docs/integrations/PAPER_BACKED_TOOLS.md) |
+| [`sqd-chemistry`](.agents/skills/sqd-chemistry/SKILL.md) | H₂/STO-3G 的采样子空间对角化、配置恢复与同基组 FCI 对照 | `sqd_local` 的有界本地计算；[范围与验证](docs/integrations/PAPER_BACKED_TOOLS.md) |
+| [`tjm-dynamics`](.agents/skills/tjm-dynamics/SKILL.md) | 2–6 qubits 开放 Ising 链的张量跳跃轨迹与 Lindblad 演化对照 | `tjm_local` 的有界本地计算；[范围与验证](docs/integrations/PAPER_BACKED_TOOLS.md) |
+| [`ldpc-decoding`](.agents/skills/ldpc-decoding/SKILL.md) | 二元校验矩阵的 BP+LSD 解码与独立 syndrome 一致性检查 | `ldpc_local` 的有界本地计算；[范围与验证](docs/integrations/PAPER_BACKED_TOOLS.md) |
+| [`randomized-measurements`](.agents/skills/randomized-measurements/SKILL.md) | 已知 product / GHZ 态的局域 Haar 测量、子区纯度与有限样本误差 | `random_meas_local` 的有界本地计算；[范围与验证](docs/integrations/PAPER_BACKED_TOOLS.md) |
+| [`flow-vqe`](.agents/skills/flow-vqe/SKILL.md) | 2–4 qubit Hamiltonian 的 flow 参数学习，与等评估预算随机搜索比较 | `flow_vqe_local` 的有界本地计算；[范围与验证](docs/integrations/PAPER_BACKED_TOOLS.md) |
+| [`tenpy-ground-state`](.agents/skills/tenpy-ground-state/SKILL.md) | 3–10 站点自旋 1/2 XYZ 开放链的 DMRG、磁化与纠缠熵 | `tenpy_local` 的有界本地计算；[范围与验证](docs/integrations/PAPER_BACKED_TOOLS.md) |
 | [`qmclaw-workbench`](.agents/skills/qmclaw-workbench/SKILL.md) | S21、Rabi、Ramsey、T1、DRAG、RB 等 13 类超导调校实验的规划与模拟 | 原生 `list_qmclaw_experiments`、`simulate_qmclaw_experiment`；仅合成数据 |
 | [`platform-diagnostics`](.agents/skills/platform-diagnostics/SKILL.md) | UI、Harness、Skill 与 Model 联调排障，形成可追溯的诊断报告 | Harness 通用 Tool 与本地诊断脚本；在线模型探测另需凭据 |
 
