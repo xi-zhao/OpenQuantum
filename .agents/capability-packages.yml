@@ -1,6 +1,20 @@
 schemaVersion: "1.1"
 
 packages:
+  - id: quantum-practices
+    level: L1
+    execution:
+      mcpServers: []
+      nativeTools:
+        - name: quantum_practices
+          providerPlugin: ./quantum-practices-tools.mjs
+          activation: always
+          contractCheck: tests/quantum-practices.test.mjs
+          effect: read-only
+          effectEvidence: conservative-provider
+      checks:
+        - tests/quantum-practices.test.mjs
+        - tests/harness-quantum-practices.test.mjs
   - id: quantum-learning
     level: L1
     execution:

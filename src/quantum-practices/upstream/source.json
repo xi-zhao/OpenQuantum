@@ -1,0 +1,30 @@
+{
+  "repository": "https://github.com/unitarylab/quantum-practices",
+  "commit": "572a24c9b5c9787caec98810351f5cb17c82250e",
+  "version": "0.1.0",
+  "license": "MIT",
+  "corpusCommit": "2ad300222b6578fbb8c2a6ff648f709108cbff63",
+  "catalogEntries": 60,
+  "files": [
+    {
+      "path": "skill-store.js",
+      "sourcePath": "lib/skill-store.js",
+      "sha256": "f9202ac1e61d5c703ac48efe8acf4046298e9fbe69cd0154c0abdf803b669488"
+    },
+    {
+      "path": "generated/skill-catalog.js",
+      "sourcePath": "lib/generated/skill-catalog.js",
+      "sha256": "4a245a2963b47b62c7ca5fa14b65ded215b35e99e03d373df12e470bb94ff989"
+    },
+    {
+      "path": "LICENSE",
+      "sourcePath": "LICENSE",
+      "sha256": "a158fb74a704b7e94cba75d1979e45b260501508b643faa2a6280982af92ffa3"
+    },
+    {
+      "path": "NOTICE",
+      "sourcePath": "NOTICE",
+      "sha256": "407d677959a8bd01cab9f48cd17e9022e21711cebb63dfc3450099b4a8d7b8bf"
+    }
+  ]
+}

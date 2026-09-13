@@ -34,6 +34,7 @@ Scientific Result Adapter 只做 capability 映射。为维护 locality，源码
 
 | 能力 | 形式 | 默认状态 | 说明 |
 | --- | --- | --- | --- |
+| `quantum-practices` | 原生只读 Tool Provider（L1、Tool-only） | 开启 | 2026-09-12 接入固定 MIT 目录的 60 份算法参考；无模拟器依赖，[使用与验证](../integrations/QUANTUM_PRACTICES.md) |
 | `quantum-ground-state` | Skill + 本地 MCP Server + Harness MCP Client + MCP-exposed Tool + Validator | 开启 | Agent Preset 组合 Skill Provider 与 Harness MCP Client；Host Plugin 经内部 Adapter 和 Materializer 交给 Validator，central Acceptance Builder 消费 Acceptance Profile、observations 与 provenance |
 | Qiskit Circuits | 官方 MCP Server + Harness MCP Client + MCP-exposed Tool | 条件开启 | QASM/QPY、转译、分析和优化比较；可由环境变量关闭 |
 | Qiskit Docs | 官方 MCP Server + Harness MCP Client + MCP-exposed Tool | 条件开启 | 文档搜索、页面读取和错误码查询；可由环境变量关闭 |
@@ -57,6 +58,9 @@ Qiskit MCP Server 来自官方 Apache-2.0 项目
 不复制 Qiskit Runtime 或 DeepSeek Harness Runtime。
 
 ## 3. 下一批优先候选
+
+2026-09-12 补充：一维热方程的薛定谔化已有[独立数值原型](../../experiments/schrodingerization-heat1d/README.md)，
+采用 NumPy/SciPy、零 Dirichlet 边界和无源项，尚未形成产品 Tool。UnitaryLab 模拟器及 Agent 受闭源非商业许可约束，未纳入发行版。
 
 | 优先级 | 候选纵切 | 上游 | 计划的独立模块 |
 | ---: | --- | --- | --- |

@@ -122,5 +122,6 @@ test("default contract checks are derived from package MCP and native Tool polic
     "tests/native-quantum-tools.test.mjs",
     "tests/paper-tools-contracts.test.mjs",
     "tests/quantum-learning.test.mjs",
+    "tests/quantum-practices.test.mjs",
   ]);
 });

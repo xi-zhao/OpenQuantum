@@ -22,6 +22,16 @@
 - 上游版本、安装命令、物理边界和证据位置见[论文方法计算接入](docs/integrations/PAPER_BACKED_TOOLS.md)。运行中的 OpenQuantum 需重启加载新增 Preset 连接。
 - 2026-09-12 主线合并前，在独立工作目录通过完整 `npm run check`；资源脚本的格式阻断已由 `bfe8055` 修复。合并检查日志保存在原工作目录的 `.openquantum/merge-paper-tools-evidence/`。
 
+## Quantum-Practices 与 PDE 原型（2026-09-12）
+
+- 默认 Preset 新增原生只读 `quantum_practices` Tool，检索固定 MIT 上游的 60 份算法参考；
+  当前 Harness 的注册、真实调用、失败返回和会话重读已由本地模型协议替身验证，未运行外部模型自主验收。
+- [接入说明](docs/integrations/QUANTUM_PRACTICES.md)记录版本、许可、输入边界与证据；运行中的 Host 需重启后加载。
+- [一维热方程独立实验](experiments/schrodingerization-heat1d/README.md)使用开源数值库验证薛定谔化精度与成本，
+  尚未成为产品计算 Tool；没有引入 UnitaryLab 闭源模拟器或 Agent。
+- 2026-09-13 主线合并前，在独立工作目录通过完整 `npm run check` 与 4 项热方程数值测试；
+  补齐新增原生 Tool 的合同测试清单。本次验证没有调用外部模型或真实硬件。
+
 ## 原交接基线（历史）
 
 - 写入本页前的本地 HEAD：`e4e3e4dbc697`，分支 `main`；后续接手先重新查询 Git，不把本页当作实时分支状态。
