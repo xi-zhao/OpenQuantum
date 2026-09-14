@@ -1,13 +1,15 @@
 ---
 name: flow-vqe
-description: 调用论文的 flow 训练算法，对小量子 Hamiltonian 学习低能量参数。
+description: 调用论文的 flow 训练算法，对 Pauli Hamiltonian 学习低能量参数。
 ---
 
 # Flow-VQE 参数学习
 
 Agent 经 Harness 调用 flow_vqe_local 提供的 `train_flow_vqe`。本 Skill 负责选择和解释，不启动计算进程。
 
-2–4 qubits；Pauli 最左字符是 q0，系数为同一能量单位。使用本地 RY/CNOT 实振幅 ansatz；每种方法最多 512 次训练/搜索能量评估。返回 exactGroundEnergy、重算能量和等预算均匀随机基线。首版为单 Hamiltonian，未接论文分子数据、预训练模型或跨分子泛化；不得宣称一定优于随机搜索或全局最优。
+2–20 qubits；Pauli 最左字符是 q0，系数为同一能量单位。使用无矩阵 RY/CNOT 实振幅 ansatz；最多 128 个 Pauli 项、4 层，每种方法最多 4096 次训练/搜索能量评估，另按状态维度、层数与项数检查联合预算。精确对角化参考至 10 qubits；主计算独立返回重算能量和等预算均匀随机基线。首版为单 Hamiltonian，未接论文分子数据、预训练模型或跨分子泛化；不得宣称一定优于随机搜索或全局最优。
+
+独立参考使用 referenceMode=auto|required|skip：auto 在参考预算内计算，required 在超限时明确报错，skip 主动跳过。未运行时 reference.status=not_run，参考值和差异均为 null；不将缺失参考解释为零误差或通过验证。接口资源上限与本地实测覆盖分别见[计算规模与参考检查](../../../docs/integrations/SCALABLE_BRIDGES.md)。
 
 输入示例：
 

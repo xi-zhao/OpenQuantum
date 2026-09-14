@@ -60,6 +60,13 @@
 - 独立领域审阅另复核 50 个输入及 80 条 MBQC 采样分支；固定版本、范围、安装与证据见[电路与代数工具接入](docs/integrations/UNITARY_NEXT_TOOLS.md)。Graphix 已处理 NumPy 兼容性和旋转角单位转换。
 - 当前四项均为 L1、`scientificValidation=not_evaluated`；全仓 `npm run check` 通过。运行中的 Harness 需重启加载新连接，原模型验收任务保持独立。
 
+## 计算桥接扩展（2026-09-14）
+
+- TeNPy、TJM、Flow-VQE、Clifft 的主计算已与小系统精确参考分开；SQD 新增分子、基组和活性空间输入，包含冻结核贡献。
+- 五项统一提供 `referenceMode=auto|required|skip`，未运行参考时返回原因与 null 参考字段；保持 L1、`scientificValidation=not_evaluated`。
+- 新旧实际数值回归与本地模型协议替身驱动的真实 Harness 五项调用、会话结果重读均已通过。接口资源上限和本地实测规模分开记录，见[计算规模与参考检查](docs/integrations/SCALABLE_BRIDGES.md)。
+- 未调用外部模型或真实硬件；运行中的 Harness 需在后续重启后加载新合同，不替代原模型验收里程碑。
+
 ## 下一唯一里程碑
 
 收口当前模型接入验收：对原执行任务已经选定的模型逐项归档“文本生成、Tool Calling、科研主动作、证据完整性”的结果与未验证项。该任务仍由原执行会话负责；本页不启动第二份验收。

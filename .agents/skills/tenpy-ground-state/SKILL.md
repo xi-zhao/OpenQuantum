@@ -7,7 +7,9 @@ description: 有限自旋链 DMRG 基态计算，并与小系统精确对角化�
 
 Agent 经 Harness 调用 tenpy_local 提供的 `solve_tenpy_chain`。本 Skill 负责选择和解释，不启动计算进程。
 
-3–10 个 spin-1/2 站点，S=Pauli/2；H = Σ(Jx SxSx + Jy SySy + Jz SzSz) - Σ(hx Sx + hz Sz)，开放边界。最多 64 bond dimension、20 sweeps。低 bond 或有限 sweeps 可以未收敛；报告 energyError，不将执行结束等同于基态正确。
+3–256 个 spin-1/2 站点，S=Pauli/2；H = Σ(Jx SxSx + Jy SySy + Jz SzSz) - Σ(hx Sx + hz Sz)，开放边界。最多 256 bond dimension、100 sweeps，且 numSites×maxBondDimension²≤4194304。精确对角化参考至 10 站点；更大链直接运行 DMRG，报告能量、磁化、纠缠熵、sweep 收敛条件和截断误差。criteriaMet 仅表示局部 sweep 判据满足，不保证全局基态。
+
+独立参考使用 referenceMode=auto|required|skip：auto 在参考预算内计算，required 在超限时明确报错，skip 主动跳过。未运行时 reference.status=not_run，参考值和差异均为 null；不将缺失参考解释为零误差或通过验证。接口资源上限与本地实测覆盖分别见[计算规模与参考检查](../../../docs/integrations/SCALABLE_BRIDGES.md)。
 
 输入示例：
 
