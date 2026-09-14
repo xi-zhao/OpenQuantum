@@ -5,7 +5,7 @@ export const referenceModeSchema = {
   type: "string",
   enum: ["auto", "required", "skip"],
   default: "auto",
-  description: "auto selects an independent reference for the default small-case range; required explicitly runs it at the requested scale; skip omits it.",
+  description: "auto computes the reference for default small-system cases; required attempts it at the requested size using the user's resources; skip omits it. A failed reference is an error, never a successful skip.",
 };
 
 export const referenceResultSchema = objectSchema({

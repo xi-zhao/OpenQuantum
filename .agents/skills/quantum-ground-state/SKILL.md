@@ -55,7 +55,8 @@ node scripts/solve.mjs <request.json> <new-output-directory>
 ## 科学验收规则
 
 权威规则位于
-[acceptance-profiles/supplied-pauli-statevector-v1.json](acceptance-profiles/supplied-pauli-statevector-v1.json)。
+[acceptance-profiles/supplied-pauli-statevector-v1.1.json](acceptance-profiles/supplied-pauli-statevector-v1.1.json)。
+当前请求使用 Profile `1.1.0`，按请求预算检查资源使用；`1.0.0` 文件保留作历史记录。
 `1.6 mHa` 只适用于这个 Profile，不是所有体系的普适标准。必须同时检查作用域、canonical digest、
 Hermiticity、扇区不变性、精确参考重算、归一化、期望值回放、变分下界、收敛和 provenance。
 
@@ -67,3 +68,5 @@ Hermiticity、扇区不变性、精确参考重算、归一化、期望值回放
 对用户解释时明确区分：这是“给定 Hamiltonian 的扇区基态”，不是完整的分子 Hamiltonian/FCI 工作流。
 Model 可以解释 Result/Report，但不能修改中央 Acceptance Builder 基于 Validator observations、Profile 和
 来源链推导的结论。
+
+在二量子位固定权重一模型内，优化粗网格点数与评价预算由调用方选择，适配器不额外设置人工规模上限。具体资源配置见[本地计算说明](../../../docs/integrations/SCALABLE_BRIDGES.md)。

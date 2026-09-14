@@ -1,6 +1,6 @@
 ---
 name: qpanda-qubo
-description: 使用 OpenQuantum 通过 Harness MCP Client 注册的 QPanda QUBO Tool，把命名二值目标和线性等式约束编译成 QUBO，或直接求解小规模二次无约束二值优化问题，并用经典暴力枚举复核编译和最优值。用于组合优化/金融建模中的 QUBO 建模、QAOA 变分近似与经典最优解比较；只在本地 CPU 模拟器运行，不连接本源量子云、不提交真实硬件任务，也不替代最终科学 Validator。
+description: 使用 OpenQuantum 通过 Harness MCP Client 注册的 QPanda QUBO Tool，把命名二值目标和线性等式约束编译成 QUBO，或直接求解二次无约束二值优化问题，可选经典枚举复核编译和最优值。用于组合优化/金融建模中的 QUBO 建模、QAOA 变分近似与经典最优解比较；只在本地 CPU 模拟器运行，不连接本源量子云、不提交真实硬件任务，也不替代最终科学 Validator。
 ---
 
 # QPanda QUBO Workbench
@@ -11,11 +11,11 @@ description: 使用 OpenQuantum 通过 Harness MCP Client 注册的 QPanda QUBO 
 底层调用本源官方 `pyqpanda_alg` 的 QUBO 模块（`QuadraticBinary` / `QUBO_QAOA`）。当前只开放
 本地、无凭据的求解；首次调用可能由 `uv` 构建固定的 Python 环境（`pyqpanda3` 是原生 wheel）：
 
-- 1–5 个二值变量；
-- 可以用变量名、minimize/maximize 目标和最多 4 个线性等式约束建模；每个约束必须显式给出 penalty；
+- 二值变量数由模型决定；
+- 可以用变量名、minimize/maximize 目标和线性等式约束建模；每个约束必须显式给出 penalty；
 - QUBO 以数值系数给出：`quadratic`（方阵）、可选 `linear`、可选 `constant`；
 - `method=traversal` 始终返回经典暴力遍历的确定性最优解；
-- `method=qaoa` 额外运行本地 QAOA（`layer` 1–6），返回比特串概率分布。
+- `method=qaoa` 运行本地 QAOA（`layer` 由用户选择），返回比特串概率分布。
 
 当前不开放不等式自动松弛、penalty 自动选择、本源量子云、Token、真机任务提交、任意 Python、
 sympy 表达式字符串、文件路径或数据集加载。
@@ -26,11 +26,11 @@ sympy 表达式字符串、文件路径或数据集加载。
 2. 若 Tool 不存在，告诉用户在“设置中心 → 量子组件 → MCP Server 连接”把 **QPanda QUBO** 配置为启用，重启
    OpenQuantum 后再试；不要改用 Bash 绕过设置。
 3. 用户给的是业务目标和等式约束时，优先调用 `model_and_solve_qpanda_qubo`。检查
-   `constraints.feasible` 和 `penalty.sufficient`；后者失败表示 penalty 太弱，不能把 QUBO 最优解写成
+   `constraints.feasible` 和 `penalty.sufficient`；未检查时不得宣称可行性或 penalty 已验证；后者失败表示 penalty 太弱，不能把 QUBO 最优解写成
    原约束问题的最优解。
 4. 用户已经给出 QUBO 数值时，调用 `solve_qpanda_qubo`：目标是 `x^T Q x + b·x + c`，
    `quadratic` 是 `Q`，`linear` 是 `b`，`constant` 是 `c`。
-5. 先用 `method=traversal` 拿到确定性最优解；需要量子近似时再用 `method=qaoa` 并指定 `layer`。
+5. 按任务选择 traversal 或 qaoa；QAOA 不要求先遍历。两项 Tool 都接受 referenceMode；auto 仅在变量数不超过 12 时穷举，required 尝试所请求规模，skip 不做额外穷举。
 6. 比较 QAOA 概率分布的最高比特串与经典最优解时，注意比特序可能不同，按目标函数值判断而不是
    直接按比特位比较。
 7. 输出时区分：用户模型、编译后的 QUBO、上游工具事实、枚举 observations、尚未完成的来源链验收。
@@ -61,3 +61,5 @@ sympy 表达式字符串、文件路径或数据集加载。
 3. pyqpanda_alg 经典最优值，以及与独立枚举参考的误差；
 4. 若运行 QAOA：`layer`、最高概率比特串与分布要点；
 5. `pyqpanda_alg` 版本和 `scientificValidation` 边界。
+
+变量数、模型项数和 QAOA 层数由调用方选择，适配器不额外设置人工规模上限。具体资源配置见[本地计算说明](../../../docs/integrations/SCALABLE_BRIDGES.md)。

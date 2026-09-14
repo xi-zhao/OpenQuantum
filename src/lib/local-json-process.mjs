@@ -89,7 +89,16 @@ export async function runLocalJsonProcess({
       error.name = "AbortError";
       fail(error);
     };
-    const timeout = timeoutMs === 0 ? undefined : setTimeout(() => fail(new Error(`${label} timed out`)), timeoutMs);
+    let timeout;
+    if (timeoutMs > 0) {
+      const deadline = Date.now() + timeoutMs;
+      const schedule = () => {
+        const remaining = deadline - Date.now();
+        if (remaining <= 0) fail(new Error(`${label} timed out`));
+        else timeout = setTimeout(schedule, Math.min(remaining, 2_147_483_647));
+      };
+      schedule();
+    }
     signal?.addEventListener("abort", onAbort, { once: true });
     if (signal?.aborted) onAbort();
 
@@ -102,7 +111,7 @@ export async function runLocalJsonProcess({
       stream.on("data", (chunk) => {
         if (failure) return;
         outputBytes += chunk.length;
-        if (outputBytes > maxOutputBytes) {
+        if (maxOutputBytes > 0 && outputBytes > maxOutputBytes) {
           fail(new Error(`${label} returned too much data`));
           return;
         }

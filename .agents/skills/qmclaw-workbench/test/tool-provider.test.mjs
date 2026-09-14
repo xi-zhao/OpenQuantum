@@ -168,11 +168,11 @@ test("runtime inspection fixes provenance and proves that external execution is 
   assert.deepEqual(inspected.structuredContent.limits, {
     qubitsPerRun: 1,
     pointsMinimum: 16,
-    pointsMaximum: 256,
+    pointsMaximum: null,
     secondaryPointsMinimum: 8,
-    secondaryPointsMaximum: 64,
+    secondaryPointsMaximum: null,
     shotsMinimum: 16,
-    shotsMaximum: 4096,
+    shotsMaximum: null,
     seedMinimum: 0,
     seedMaximum: 2147483647,
   });
@@ -203,10 +203,10 @@ test("experiment catalog maps all 13 normalized ids to reviewed upstream tools a
     for (const parameter of experiment.inputParameters) {
       assert.ok(allowedSiUnits.has(parameter.unit), `${parameter.name} used ${parameter.unit}`);
       assert.ok(Number.isFinite(parameter.minimum));
-      assert.ok(Number.isFinite(parameter.maximum));
+      assert.ok(parameter.maximum === null || Number.isFinite(parameter.maximum));
       assert.ok(Number.isFinite(parameter.default));
       assert.ok(parameter.default >= parameter.minimum);
-      assert.ok(parameter.default <= parameter.maximum);
+      assert.ok(parameter.maximum === null || parameter.default <= parameter.maximum);
     }
     for (const field of [...experiment.axes, ...experiment.series]) {
       assert.ok(allowedSiUnits.has(field.unit), `${field.id} used ${field.unit}`);
@@ -330,10 +330,10 @@ test("frequency, time, flux and power contracts remain explicit SI quantities", 
 
 test("simulation fails closed for resource, identifier, unit and schema violations", async () => {
   const base = { experiment: "t1", qubits: ["Q0"] };
-  await expectToolError({ ...base, points: 15 }, /points must be an integer from 16 to 256/);
-  await expectToolError({ ...base, points: 257 }, /points must be an integer from 16 to 256/);
-  await expectToolError({ ...base, shots: 15 }, /shots must be an integer from 16 to 4096/);
-  await expectToolError({ ...base, shots: 4097 }, /shots must be an integer from 16 to 4096/);
+  await expectToolError({ ...base, points: 15 }, /points must be an integer at least 16/);
+  await expectToolError({ ...base, points: 16.5 }, /points must be an integer at least 16/);
+  await expectToolError({ ...base, shots: 15 }, /shots must be an integer at least 16/);
+  await expectToolError({ ...base, shots: 16.5 }, /shots must be an integer at least 16/);
   await expectToolError({ ...base, seed: 2147483648 }, /seed must be an integer/);
   await expectToolError({ experiment: "t1", qubits: [] }, /exactly one identifier/);
   await expectToolError(
@@ -351,8 +351,8 @@ test("simulation fails closed for resource, identifier, unit and schema violatio
   );
   await expectToolError({ ...base, secondaryPoints: 16 }, /not supported for t1/);
   await expectToolError(
-    { experiment: "spectroscopy-2d", qubits: ["Q0"], secondaryPoints: 65 },
-    /secondaryPoints must be an integer from 8 to 64/,
+    { experiment: "spectroscopy-2d", qubits: ["Q0"], secondaryPoints: 7 },
+    /secondaryPoints must be an integer at least 8/,
   );
   await expectToolError({ ...base, outputPath: "/tmp/result.json" }, /unsupported properties/);
   await expectToolError(
@@ -373,21 +373,21 @@ test("simulation fails closed for resource, identifier, unit and schema violatio
   );
 });
 
-test("maximum allowed requests stay within the declared output bounds", async () => {
+test("larger sweeps and samples return complete arrays above the former limits", async () => {
   const map = await simulate("power-shift", {
-    points: 256,
-    secondaryPoints: 64,
-    shots: 4096,
+    points: 257,
+    secondaryPoints: 65,
+    shots: 4097,
     seed: 2147483647,
   });
-  assert.deepEqual(map.structuredContent.series[0].shape, [64, 256]);
-  assert.equal(map.structuredContent.series[0].values.length, 64 * 256);
+  assert.deepEqual(map.structuredContent.series[0].shape, [65, 257]);
+  assert.equal(map.structuredContent.series[0].values.length, 65 * 257);
 
-  const shots = await simulate("single-shot", { shots: 4096, seed: 0 });
+  const shots = await simulate("single-shot", { shots: 4097, seed: 0 });
   assert.equal(shots.structuredContent.series.length, 4);
   assert.ok(
     shots.structuredContent.series.every(
-      (series) => series.shape[0] === 4096 && series.values.length === 4096,
+      (series) => series.shape[0] === 4097 && series.values.length === 4097,
     ),
   );
 });

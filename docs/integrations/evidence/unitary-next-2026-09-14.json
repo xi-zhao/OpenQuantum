@@ -1,0 +1,1796 @@
+{
+  "schemaVersion": "1.0",
+  "verifiedAt": "2026-09-14T14:55:33.408596+00:00",
+  "scope": "bounded-development-verification",
+  "scientificValidation": "not_evaluated",
+  "worktreeBaseCommit": "2e6f8d36ecdbef196531a40bbecb19a85a7ea806",
+  "capabilityLevel": "L1",
+  "externalModelTested": false,
+  "realHardwareTested": false,
+  "commands": [
+    {
+      "command": "npm run check",
+      "exitCode": 0,
+      "logSha256": "5059da4f5ca20aefa198a1337f557085f421aaef3a8ea2fd790d4d2f63f1e3fd",
+      "note": "Default checks skip optional live suites; live numerical and Harness checks ran separately."
+    },
+    {
+      "command": "node --test tests/unitary-next-contracts.test.mjs tests/capability-package-audit.test.mjs tests/capability-tool-contract.test.mjs tests/readme-capability-catalog.test.mjs",
+      "exitCode": 0,
+      "passed": 54,
+      "skipped": 0
+    },
+    {
+      "command": "OPENQUANTUM_REAL_UNITARY_NEXT=1 node --test --test-concurrency=1 tests/unitary-next-live.test.mjs",
+      "exitCode": 0,
+      "passed": 4,
+      "numericalInputs": 26,
+      "skipped": 0
+    },
+    {
+      "command": "OPENQUANTUM_REAL_UNITARY_NEXT=1 node --test tests/harness-unitary-next.test.mjs",
+      "exitCode": 0,
+      "passed": 1,
+      "skipped": 0,
+      "logSha256": "0443a74aa60ecb608c942540a949f70c65b6ac0a219d9fc47bd767292df1cb75"
+    },
+    {
+      "command": "npm run capability:unitary-next:setup",
+      "exitCode": 0,
+      "lockFilesChanged": false,
+      "logSha256": "cc8c1791440fd81ca6704b8e6c7d3bcf3b512da0f872e8ab95b50d7a191f2539"
+    }
+  ],
+  "harness": {
+    "model": "local protocol fixture",
+    "sessionId": "session-unitary-13b5a83d-128e-4929-8929-7c90f8d2d66b",
+    "successfulTools": 4,
+    "expectedErrors": 1,
+    "sessionReadBack": true,
+    "rawEventsSha256": "ff5133d38a6c3a0a77e6dc827293496421d4a32d8c58dfa34a552a1593618a12"
+  },
+  "sources": {
+    ".agents/skills/graphix-mbqc/SKILL.md": "9ca507f77db9f08db0f8ed56f9ce2f52dc2c4c862bd9d2000bb37cee6d88379c",
+    ".agents/skills/graphix-mbqc/mcp/bridge.py": "25b47780783ad34d52414992fabfbe76e49bb8734890cc4cf5fd77794ba513b5",
+    ".agents/skills/graphix-mbqc/mcp/contracts.mjs": "e230ab039042e6a76319b8a96b454a42f927371e5941707e1e2bf5e40ffd66c0",
+    ".agents/skills/graphix-mbqc/mcp/server.mjs": "b8a032a0fb45c92f8a67d8219c9a57b7b87d633e7142e8fcc518a283d9deb17c",
+    ".agents/skills/graphix-mbqc/pyproject.toml": "580d004234dfde6d541d384ed4d030c080a0175b45a93b5231522ee896ff4fac",
+    ".agents/skills/graphix-mbqc/uv.lock": "3ee499a48988d84444880db303ebf844a602d9230d4fb45e44cd76a2f3f99040",
+    ".agents/skills/paulie-algebra/SKILL.md": "f5fffb3370e0c24af9e66fadfae2dba558ce95e0da3e354ff41a3b2d59b5afa1",
+    ".agents/skills/paulie-algebra/mcp/bridge.py": "3686c49f915f43a27c1017bd6982a5f9dfe17b2d66016eff714e32a32c0e946f",
+    ".agents/skills/paulie-algebra/mcp/contracts.mjs": "1197254a4cb38e321cd41e32e7f95d1517063f9f4c27b9df24ead20e43d86466",
+    ".agents/skills/paulie-algebra/mcp/server.mjs": "b18aa40442af1a9b950ff3dc8c3c6c19befcd9c3baaa301a13d92663d842fc2e",
+    ".agents/skills/paulie-algebra/pyproject.toml": "75534e9dbfc16de79b820f436a600d12a7c0ab591c0174a4d96a3df08acecae8",
+    ".agents/skills/paulie-algebra/uv.lock": "a94e920a4a7d718e081e8a83c2550b0b0e7c1c1a8a5347eb7bd52e2b7f8094f9",
+    ".agents/skills/pyzx-optimization/SKILL.md": "1f681cdad0883c3a6da8b3b933adc365b3b21f011c1944304cd4dd43e7d308f8",
+    ".agents/skills/pyzx-optimization/mcp/bridge.py": "525bc9a26541a99ce0da1138c716e3724a6be7c964baf8011972109def470c37",
+    ".agents/skills/pyzx-optimization/mcp/contracts.mjs": "bbc3d68953b263278b431fc4159aeb57eb1f745bbd2dec994434c792d8c9d938",
+    ".agents/skills/pyzx-optimization/mcp/server.mjs": "366f1c4e5b296976d92e2749b0ea2b49db3e5dd8c0a033af635716b03e9a8ee0",
+    ".agents/skills/pyzx-optimization/pyproject.toml": "acda5356d415ce27a2930731ac4fd67e3e11175c8e2bdb7080f9f3be36bf9630",
+    ".agents/skills/pyzx-optimization/uv.lock": "cc0e9a97de0fa0439ea4add6b7f13b8bb0ba3b18954b94ebcfba94595676b458",
+    ".agents/skills/symmer-tapering/SKILL.md": "2af45d3b11e05ddc0819a7efde16d41f771b16b2f65069a3dea121f5978799c0",
+    ".agents/skills/symmer-tapering/mcp/bridge.py": "9d37524fa18b5849779b79ea512a77b49127416f1e7ac0309f95149c37256c17",
+    ".agents/skills/symmer-tapering/mcp/contracts.mjs": "036d0b92403d5103236964b7da758b781972f5399c6dfa77f57f23f69fbef774",
+    ".agents/skills/symmer-tapering/mcp/server.mjs": "9f6065c5cd6e630574be40f4dd2fa7ac6339983b73f3d650dc1fd75c495644e0",
+    ".agents/skills/symmer-tapering/pyproject.toml": "86e555351b3fd3fd9ad3c431e23753e44de1b47c6522ec8540c706e859f9687c",
+    ".agents/skills/symmer-tapering/uv.lock": "7504ea581181a6db65692c6ceb6f208d3bd9582c0cbd31b451942044c2ea968a",
+    "src/lib/quantum-circuit-input.mjs": "6b965ae1c2ee75517614c1c7277845756e3fc1068d3a27d9d5e079fc467a1cc4",
+    "src/lib/quantum_reference.py": "0c26c47711e8fc0c900d90ab2dabd59f8e6c5b8ba6d92f1a83f5f7b426a1ff35",
+    "tests/fixtures/unitary-next.mjs": "65d2bbe2355c036f8c1ec9146722612c6d33734e64d29e91bf5f33396fe37e1b",
+    "tests/harness-unitary-next.test.mjs": "27b0b127b866c4160b6c4b68b843812cd12fe949a9c4eb1ddefd3e2b56801834",
+    "tests/unitary-next-contracts.test.mjs": "2e67225b9e6af5b9180ba946c25edf3fb90df45ff10baa92c353d8cc527ba0c2",
+    "tests/unitary-next-live.test.mjs": "6e39bfe04e73d2317b1993307676648ca20adb0da93099b624eed10544cf4732"
+  },
+  "numericalCases": [
+    {
+      "case": "pyzx-optimization-identity",
+      "capability": "pyzx-optimization",
+      "source": {
+        "name": "pyzx",
+        "version": "0.10.6",
+        "repository": "https://github.com/zxcalc/pyzx"
+      },
+      "input": {
+        "numQubits": 1,
+        "gates": [
+          {
+            "gate": "T",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "T",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "T",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "T",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "T",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "T",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "T",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "T",
+            "targets": [
+              0
+            ]
+          }
+        ]
+      },
+      "inputSha256": "966d0e13befc3b5f22deacb8df7a66faf95ab9288d3f1501a7e290bf1c48e12c",
+      "dependencyLockSha256": "cc0e9a97de0fa0439ea4add6b7f13b8bb0ba3b18954b94ebcfba94595676b458",
+      "metric": "unitaryMaxError",
+      "value": 3.3306690738754696e-16,
+      "rawResultSha256": "7296b544c468e11b296a4233e44c33f1f56115f9be099dcb796ad9880ead19b4"
+    },
+    {
+      "case": "pyzx-optimization-phase-permutation",
+      "capability": "pyzx-optimization",
+      "source": {
+        "name": "pyzx",
+        "version": "0.10.6",
+        "repository": "https://github.com/zxcalc/pyzx"
+      },
+      "input": {
+        "numQubits": 3,
+        "gates": [
+          {
+            "gate": "Y",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "H",
+            "targets": [
+              2
+            ]
+          },
+          {
+            "gate": "S",
+            "targets": [
+              2
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              2,
+              0
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              0,
+              2
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              2,
+              0
+            ]
+          },
+          {
+            "gate": "T",
+            "targets": [
+              1
+            ]
+          },
+          {
+            "gate": "CZ",
+            "targets": [
+              1,
+              2
+            ]
+          }
+        ]
+      },
+      "inputSha256": "67691eea69f3244a26e18c8821913e089e453b09dabbef01ed1cec574ca6d416",
+      "dependencyLockSha256": "cc0e9a97de0fa0439ea4add6b7f13b8bb0ba3b18954b94ebcfba94595676b458",
+      "metric": "unitaryMaxError",
+      "value": 1.4027935675498847e-16,
+      "rawResultSha256": "625f2ca0baa6e48f44243c32f7ef06aae3afae5f6046f47d31586f2e5cfa4a8d"
+    },
+    {
+      "case": "pyzx-optimization-six-qubits",
+      "capability": "pyzx-optimization",
+      "source": {
+        "name": "pyzx",
+        "version": "0.10.6",
+        "repository": "https://github.com/zxcalc/pyzx"
+      },
+      "input": {
+        "numQubits": 6,
+        "gates": [
+          {
+            "gate": "H",
+            "targets": [
+              5
+            ]
+          },
+          {
+            "gate": "T",
+            "targets": [
+              5
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              5,
+              0
+            ]
+          },
+          {
+            "gate": "CZ",
+            "targets": [
+              0,
+              3
+            ]
+          },
+          {
+            "gate": "Y",
+            "targets": [
+              2
+            ]
+          }
+        ]
+      },
+      "inputSha256": "f40e1c5c05a524ddd58681b68cb27131528e0b0159cc42f99b1341dd0b99ebea",
+      "dependencyLockSha256": "cc0e9a97de0fa0439ea4add6b7f13b8bb0ba3b18954b94ebcfba94595676b458",
+      "metric": "unitaryMaxError",
+      "value": 2.482534153247273e-16,
+      "rawResultSha256": "5259bd6129204fd96f52fe17c7bf6aa942bae61fcadb5651f58b1a43a0d28a89"
+    },
+    {
+      "case": "pyzx-optimization-t-reduction",
+      "capability": "pyzx-optimization",
+      "source": {
+        "name": "pyzx",
+        "version": "0.10.6",
+        "repository": "https://github.com/zxcalc/pyzx"
+      },
+      "input": {
+        "numQubits": 2,
+        "gates": [
+          {
+            "gate": "H",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "T",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "T",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              0,
+              1
+            ]
+          }
+        ]
+      },
+      "inputSha256": "3a95324d663d0f6c3f07a0659412aabefa3330d524cd49b3861351eb22b63c45",
+      "dependencyLockSha256": "cc0e9a97de0fa0439ea4add6b7f13b8bb0ba3b18954b94ebcfba94595676b458",
+      "metric": "unitaryMaxError",
+      "value": 2.299347170293093e-17,
+      "rawResultSha256": "3ffb499a9f675bc63a963bfeb12ddbe26904af49bef7a666cf9eb3dfd85d1aa3"
+    },
+    {
+      "case": "graphix-mbqc-bell-phase",
+      "capability": "graphix-mbqc",
+      "source": {
+        "name": "graphix",
+        "version": "0.3.5",
+        "repository": "https://github.com/TeamGraphix/graphix"
+      },
+      "input": {
+        "branches": 8,
+        "numQubits": 2,
+        "gates": [
+          {
+            "gate": "H",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "T",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "T",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              0,
+              1
+            ]
+          }
+        ],
+        "initialState": "zero",
+        "seed": 7
+      },
+      "inputSha256": "87864bf47eaece6e6b10f9ffa0b63f83edb33247cad26b90b7f456354b902a1e",
+      "dependencyLockSha256": "3ee499a48988d84444880db303ebf844a602d9230d4fb45e44cd76a2f3f99040",
+      "metric": "maxInfidelity",
+      "value": 2.220446049250313e-16,
+      "rawResultSha256": "b74d96c5f4bc34a0aeeac6db00d215c00afadf3a74758084e4dd2986390ec144"
+    },
+    {
+      "case": "graphix-mbqc-bit-order",
+      "capability": "graphix-mbqc",
+      "source": {
+        "name": "graphix",
+        "version": "0.3.5",
+        "repository": "https://github.com/TeamGraphix/graphix"
+      },
+      "input": {
+        "numQubits": 3,
+        "gates": [
+          {
+            "gate": "X",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "Y",
+            "targets": [
+              2
+            ]
+          }
+        ],
+        "initialState": "zero",
+        "branches": 4,
+        "seed": 7
+      },
+      "inputSha256": "9346e1fba26dce0b67783f235543ae1cc5fd5c06eb832ad4d7937a6a4637d19c",
+      "dependencyLockSha256": "3ee499a48988d84444880db303ebf844a602d9230d4fb45e44cd76a2f3f99040",
+      "metric": "maxInfidelity",
+      "value": 0,
+      "rawResultSha256": "b8dfaad608ecb73a326a966990907700507656333b9aca182b2b3fe96b215643"
+    },
+    {
+      "case": "graphix-mbqc-cz-rotation",
+      "capability": "graphix-mbqc",
+      "source": {
+        "name": "graphix",
+        "version": "0.3.5",
+        "repository": "https://github.com/TeamGraphix/graphix"
+      },
+      "input": {
+        "numQubits": 2,
+        "initialState": "plus",
+        "gates": [
+          {
+            "gate": "CZ",
+            "targets": [
+              1,
+              0
+            ]
+          },
+          {
+            "gate": "RX",
+            "targets": [
+              0
+            ],
+            "angle": -0.7
+          },
+          {
+            "gate": "RY",
+            "targets": [
+              1
+            ],
+            "angle": 1.1
+          },
+          {
+            "gate": "S",
+            "targets": [
+              0
+            ]
+          }
+        ],
+        "branches": 4,
+        "seed": 7
+      },
+      "inputSha256": "83adf6ad4bed655190613bce8a55b7a2c69f46cf114811db9a642e49cc7cc208",
+      "dependencyLockSha256": "3ee499a48988d84444880db303ebf844a602d9230d4fb45e44cd76a2f3f99040",
+      "metric": "maxInfidelity",
+      "value": 0,
+      "rawResultSha256": "0731b005d4f421511d93d9fef064df904b595809714c219df08c4aaf3fd6e050"
+    },
+    {
+      "case": "graphix-mbqc-repeat",
+      "capability": "graphix-mbqc",
+      "source": {
+        "name": "graphix",
+        "version": "0.3.5",
+        "repository": "https://github.com/TeamGraphix/graphix"
+      },
+      "input": {
+        "branches": 8,
+        "numQubits": 2,
+        "gates": [
+          {
+            "gate": "H",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "T",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "T",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              0,
+              1
+            ]
+          }
+        ],
+        "initialState": "zero",
+        "seed": 7
+      },
+      "inputSha256": "87864bf47eaece6e6b10f9ffa0b63f83edb33247cad26b90b7f456354b902a1e",
+      "dependencyLockSha256": "3ee499a48988d84444880db303ebf844a602d9230d4fb45e44cd76a2f3f99040",
+      "metric": "maxInfidelity",
+      "value": 2.220446049250313e-16,
+      "rawResultSha256": "427598959d1f5a3491db7a3eea07508db469360a74d9db4c2c97ad20a1055178"
+    },
+    {
+      "case": "graphix-mbqc-rx",
+      "capability": "graphix-mbqc",
+      "source": {
+        "name": "graphix",
+        "version": "0.3.5",
+        "repository": "https://github.com/TeamGraphix/graphix"
+      },
+      "input": {
+        "numQubits": 1,
+        "gates": [
+          {
+            "gate": "RX",
+            "targets": [
+              0
+            ],
+            "angle": 3.141592653589793
+          }
+        ],
+        "initialState": "zero",
+        "branches": 4,
+        "seed": 7
+      },
+      "inputSha256": "807557ef689720f106ad58c2ad0268e5a6111efcaf34ce3f45d7a925cf4ba5f2",
+      "dependencyLockSha256": "3ee499a48988d84444880db303ebf844a602d9230d4fb45e44cd76a2f3f99040",
+      "metric": "maxInfidelity",
+      "value": 0,
+      "rawResultSha256": "6d0f4a7a187df891e81513015e8b8cbfa05fd5749e5df6a1023f1aff92e5c30a"
+    },
+    {
+      "case": "graphix-mbqc-ry",
+      "capability": "graphix-mbqc",
+      "source": {
+        "name": "graphix",
+        "version": "0.3.5",
+        "repository": "https://github.com/TeamGraphix/graphix"
+      },
+      "input": {
+        "numQubits": 1,
+        "gates": [
+          {
+            "gate": "RY",
+            "targets": [
+              0
+            ],
+            "angle": 1.5707963267948966
+          }
+        ],
+        "initialState": "zero",
+        "branches": 4,
+        "seed": 7
+      },
+      "inputSha256": "34040e865fa689770b824705c217fea5b655b1bef013947686fb91f0e4a2f922",
+      "dependencyLockSha256": "3ee499a48988d84444880db303ebf844a602d9230d4fb45e44cd76a2f3f99040",
+      "metric": "maxInfidelity",
+      "value": 0,
+      "rawResultSha256": "18caa01a3f8e09ab7119df1625fcc5b7f076d418ec359f2f2f2724d439d1b863"
+    },
+    {
+      "case": "graphix-mbqc-rz-plus",
+      "capability": "graphix-mbqc",
+      "source": {
+        "name": "graphix",
+        "version": "0.3.5",
+        "repository": "https://github.com/TeamGraphix/graphix"
+      },
+      "input": {
+        "numQubits": 1,
+        "initialState": "plus",
+        "gates": [
+          {
+            "gate": "RZ",
+            "targets": [
+              0
+            ],
+            "angle": 1.5707963267948966
+          }
+        ],
+        "branches": 4,
+        "seed": 7
+      },
+      "inputSha256": "e322c38e68e6c8934ae6f9ad4f02aac711cfb72bc7000299ee10f4ac7f834037",
+      "dependencyLockSha256": "3ee499a48988d84444880db303ebf844a602d9230d4fb45e44cd76a2f3f99040",
+      "metric": "maxInfidelity",
+      "value": 2.220446049250313e-16,
+      "rawResultSha256": "67c49361b3d68e02925c63b4c7ff946a6cc7bb8c93eaffd1cf1896a1ecf53489"
+    },
+    {
+      "case": "symmer-tapering-product--1--1",
+      "capability": "symmer-tapering",
+      "source": {
+        "name": "symmer",
+        "version": "0.0.13",
+        "commit": "a4ba56e3332424a65d4a2c088fd6363aca0c68e6",
+        "repository": "https://github.com/qmatter-labs/symmer"
+      },
+      "input": {
+        "numQubits": 3,
+        "terms": [
+          {
+            "pauli": "XXZ",
+            "coefficient": 0.7
+          },
+          {
+            "pauli": "ZZI",
+            "coefficient": 0.4
+          },
+          {
+            "pauli": "III",
+            "coefficient": 0.2
+          },
+          {
+            "pauli": "YYZ",
+            "coefficient": -0.3
+          }
+        ],
+        "symmetries": [
+          {
+            "pauli": "XXI",
+            "sector": -1
+          },
+          {
+            "pauli": "ZZI",
+            "sector": -1
+          }
+        ]
+      },
+      "inputSha256": "16dd76aabac95b564cf68ff6b79323cfc6b31be04dcd998ac2b4bcc4eb8ab4ca",
+      "dependencyLockSha256": "7504ea581181a6db65692c6ceb6f208d3bd9582c0cbd31b451942044c2ea968a",
+      "metric": "maxSpectrumError",
+      "value": 1.1102230246251565e-16,
+      "rawResultSha256": "809a31218e1ac43220e5dd77e91ea0ead470bc537c2cb754876d47dcf160622a"
+    },
+    {
+      "case": "symmer-tapering-product--1-1",
+      "capability": "symmer-tapering",
+      "source": {
+        "name": "symmer",
+        "version": "0.0.13",
+        "commit": "a4ba56e3332424a65d4a2c088fd6363aca0c68e6",
+        "repository": "https://github.com/qmatter-labs/symmer"
+      },
+      "input": {
+        "numQubits": 3,
+        "terms": [
+          {
+            "pauli": "XXZ",
+            "coefficient": 0.7
+          },
+          {
+            "pauli": "ZZI",
+            "coefficient": 0.4
+          },
+          {
+            "pauli": "III",
+            "coefficient": 0.2
+          },
+          {
+            "pauli": "YYZ",
+            "coefficient": -0.3
+          }
+        ],
+        "symmetries": [
+          {
+            "pauli": "XXI",
+            "sector": -1
+          },
+          {
+            "pauli": "ZZI",
+            "sector": 1
+          }
+        ]
+      },
+      "inputSha256": "c54e580f300f1b57f663144b348845903bcc5325555a4ac734c08204a5e56c79",
+      "dependencyLockSha256": "7504ea581181a6db65692c6ceb6f208d3bd9582c0cbd31b451942044c2ea968a",
+      "metric": "maxSpectrumError",
+      "value": 2.220446049250313e-16,
+      "rawResultSha256": "65c20b5eb9fd7c62a53e641fa0070d31846210f86d0e804d1720da9e5f1cd527"
+    },
+    {
+      "case": "symmer-tapering-product-1--1",
+      "capability": "symmer-tapering",
+      "source": {
+        "name": "symmer",
+        "version": "0.0.13",
+        "commit": "a4ba56e3332424a65d4a2c088fd6363aca0c68e6",
+        "repository": "https://github.com/qmatter-labs/symmer"
+      },
+      "input": {
+        "numQubits": 3,
+        "terms": [
+          {
+            "pauli": "XXZ",
+            "coefficient": 0.7
+          },
+          {
+            "pauli": "ZZI",
+            "coefficient": 0.4
+          },
+          {
+            "pauli": "III",
+            "coefficient": 0.2
+          },
+          {
+            "pauli": "YYZ",
+            "coefficient": -0.3
+          }
+        ],
+        "symmetries": [
+          {
+            "pauli": "XXI",
+            "sector": 1
+          },
+          {
+            "pauli": "ZZI",
+            "sector": -1
+          }
+        ]
+      },
+      "inputSha256": "cc5c7aa0be08edbb53c553056be9feca1127a9acad77fc38b8c37165b5710fb2",
+      "dependencyLockSha256": "7504ea581181a6db65692c6ceb6f208d3bd9582c0cbd31b451942044c2ea968a",
+      "metric": "maxSpectrumError",
+      "value": 1.1102230246251565e-16,
+      "rawResultSha256": "cb57f459f77512b16066c2f619b4ee1d5b60bc3e3e85e0e6282efb35c0316da6"
+    },
+    {
+      "case": "symmer-tapering-product-1-1",
+      "capability": "symmer-tapering",
+      "source": {
+        "name": "symmer",
+        "version": "0.0.13",
+        "commit": "a4ba56e3332424a65d4a2c088fd6363aca0c68e6",
+        "repository": "https://github.com/qmatter-labs/symmer"
+      },
+      "input": {
+        "numQubits": 3,
+        "terms": [
+          {
+            "pauli": "XXZ",
+            "coefficient": 0.7
+          },
+          {
+            "pauli": "ZZI",
+            "coefficient": 0.4
+          },
+          {
+            "pauli": "III",
+            "coefficient": 0.2
+          },
+          {
+            "pauli": "YYZ",
+            "coefficient": -0.3
+          }
+        ],
+        "symmetries": [
+          {
+            "pauli": "XXI",
+            "sector": 1
+          },
+          {
+            "pauli": "ZZI",
+            "sector": 1
+          }
+        ]
+      },
+      "inputSha256": "2c971b8d6f0db366085669bf671a8e060436269a497e96ca83f00f69b823ef07",
+      "dependencyLockSha256": "7504ea581181a6db65692c6ceb6f208d3bd9582c0cbd31b451942044c2ea968a",
+      "metric": "maxSpectrumError",
+      "value": 2.220446049250313e-16,
+      "rawResultSha256": "896ff0ce40590e13c0ac0f339b83299e4f0c297c9165a60c1fd3d941519d83cd"
+    },
+    {
+      "case": "symmer-tapering-sector--1",
+      "capability": "symmer-tapering",
+      "source": {
+        "name": "symmer",
+        "version": "0.0.13",
+        "commit": "a4ba56e3332424a65d4a2c088fd6363aca0c68e6",
+        "repository": "https://github.com/qmatter-labs/symmer"
+      },
+      "input": {
+        "symmetries": [
+          {
+            "pauli": "ZZ",
+            "sector": -1
+          }
+        ],
+        "numQubits": 2,
+        "terms": [
+          {
+            "pauli": "ZI",
+            "coefficient": 1
+          },
+          {
+            "pauli": "IZ",
+            "coefficient": 0.5
+          },
+          {
+            "pauli": "XX",
+            "coefficient": 0.3
+          }
+        ]
+      },
+      "inputSha256": "869cfb261d808a9d1e84f4cada41c22e0c3f9e3a69d4bb6c58980733236b23bf",
+      "dependencyLockSha256": "7504ea581181a6db65692c6ceb6f208d3bd9582c0cbd31b451942044c2ea968a",
+      "metric": "maxSpectrumError",
+      "value": 0,
+      "rawResultSha256": "26c8731d9f6f0425b1c00b1289b74a1aab7ca669fce5e56cfdea2453751ae4c6"
+    },
+    {
+      "case": "symmer-tapering-sector-1",
+      "capability": "symmer-tapering",
+      "source": {
+        "name": "symmer",
+        "version": "0.0.13",
+        "commit": "a4ba56e3332424a65d4a2c088fd6363aca0c68e6",
+        "repository": "https://github.com/qmatter-labs/symmer"
+      },
+      "input": {
+        "symmetries": [
+          {
+            "pauli": "ZZ",
+            "sector": 1
+          }
+        ],
+        "numQubits": 2,
+        "terms": [
+          {
+            "pauli": "ZI",
+            "coefficient": 1
+          },
+          {
+            "pauli": "IZ",
+            "coefficient": 0.5
+          },
+          {
+            "pauli": "XX",
+            "coefficient": 0.3
+          }
+        ]
+      },
+      "inputSha256": "4655c6613a6af5c972d8500deb8da6ee570fc7e2d18392a7b1de189ff7a82c9b",
+      "dependencyLockSha256": "7504ea581181a6db65692c6ceb6f208d3bd9582c0cbd31b451942044c2ea968a",
+      "metric": "maxSpectrumError",
+      "value": 0,
+      "rawResultSha256": "00aee51bc0835a7a95bf03125ba8d58149f4c04e0b06c09ce6d390a172f1f2a0"
+    },
+    {
+      "case": "symmer-tapering-six-qubits",
+      "capability": "symmer-tapering",
+      "source": {
+        "name": "symmer",
+        "version": "0.0.13",
+        "commit": "a4ba56e3332424a65d4a2c088fd6363aca0c68e6",
+        "repository": "https://github.com/qmatter-labs/symmer"
+      },
+      "input": {
+        "numQubits": 6,
+        "terms": [
+          {
+            "pauli": "IIIIIZ",
+            "coefficient": 0.7
+          },
+          {
+            "pauli": "ZIIIII",
+            "coefficient": 0.2
+          }
+        ],
+        "symmetries": [
+          {
+            "pauli": "ZIIIII",
+            "sector": -1
+          }
+        ]
+      },
+      "inputSha256": "173735884ddae9bb06122cdeefa20c560c96a413eee1f393777b8e06e620cd40",
+      "dependencyLockSha256": "7504ea581181a6db65692c6ceb6f208d3bd9582c0cbd31b451942044c2ea968a",
+      "metric": "maxSpectrumError",
+      "value": 0,
+      "rawResultSha256": "685cdb0218e6b254d00980e3208f1b9ae93cb47833a81ab5bead0f39b244612c"
+    },
+    {
+      "case": "symmer-tapering-y-symmetry--1",
+      "capability": "symmer-tapering",
+      "source": {
+        "name": "symmer",
+        "version": "0.0.13",
+        "commit": "a4ba56e3332424a65d4a2c088fd6363aca0c68e6",
+        "repository": "https://github.com/qmatter-labs/symmer"
+      },
+      "input": {
+        "terms": [
+          {
+            "pauli": "YI",
+            "coefficient": 0.2
+          },
+          {
+            "pauli": "IZ",
+            "coefficient": 0.3
+          },
+          {
+            "pauli": "YX",
+            "coefficient": 0.7
+          }
+        ],
+        "symmetries": [
+          {
+            "pauli": "YI",
+            "sector": -1
+          }
+        ],
+        "numQubits": 2
+      },
+      "inputSha256": "b927867b732fc70e8d11359b83dda134ed384541ca856462a87a3274395e6fad",
+      "dependencyLockSha256": "7504ea581181a6db65692c6ceb6f208d3bd9582c0cbd31b451942044c2ea968a",
+      "metric": "maxSpectrumError",
+      "value": 1.1102230246251565e-16,
+      "rawResultSha256": "2f4ab09619cce0408d43687a200127948fc94f194d845782ab8f3f0e74cbc61c"
+    },
+    {
+      "case": "symmer-tapering-y-symmetry-1",
+      "capability": "symmer-tapering",
+      "source": {
+        "name": "symmer",
+        "version": "0.0.13",
+        "commit": "a4ba56e3332424a65d4a2c088fd6363aca0c68e6",
+        "repository": "https://github.com/qmatter-labs/symmer"
+      },
+      "input": {
+        "terms": [
+          {
+            "pauli": "YI",
+            "coefficient": 0.2
+          },
+          {
+            "pauli": "IZ",
+            "coefficient": 0.3
+          },
+          {
+            "pauli": "YX",
+            "coefficient": 0.7
+          }
+        ],
+        "symmetries": [
+          {
+            "pauli": "YI",
+            "sector": 1
+          }
+        ],
+        "numQubits": 2
+      },
+      "inputSha256": "6118eacaf967adb6ce6673425032558eb34bcdf8372976ee902bdb0c588b0425",
+      "dependencyLockSha256": "7504ea581181a6db65692c6ceb6f208d3bd9582c0cbd31b451942044c2ea968a",
+      "metric": "maxSpectrumError",
+      "value": 1.1102230246251565e-16,
+      "rawResultSha256": "b77e7042745639a6c48646520a4455de5e5647c15a8f38bc1aae6b89f80a483c"
+    },
+    {
+      "case": "symmer-tapering-zero",
+      "capability": "symmer-tapering",
+      "source": {
+        "name": "symmer",
+        "version": "0.0.13",
+        "commit": "a4ba56e3332424a65d4a2c088fd6363aca0c68e6",
+        "repository": "https://github.com/qmatter-labs/symmer"
+      },
+      "input": {
+        "terms": [
+          {
+            "pauli": "II",
+            "coefficient": 0
+          }
+        ],
+        "numQubits": 2,
+        "symmetries": [
+          {
+            "pauli": "ZZ",
+            "sector": 1
+          }
+        ]
+      },
+      "inputSha256": "147adc8ee15d832e1230d0e8169acbacd1d7e19bf3df2ed9151cc4fb2a99185b",
+      "dependencyLockSha256": "7504ea581181a6db65692c6ceb6f208d3bd9582c0cbd31b451942044c2ea968a",
+      "metric": "maxSpectrumError",
+      "value": 0,
+      "rawResultSha256": "5cbe87a86e1076fa534edb120461f25b900c468b39287113a4880bc9ddbf66e0"
+    },
+    {
+      "case": "paulie-algebra-algebra-0",
+      "capability": "paulie-algebra",
+      "source": {
+        "name": "paulie",
+        "version": "0.2.3",
+        "repository": "https://github.com/QPauLie/PauLie"
+      },
+      "input": {
+        "numQubits": 1,
+        "generators": [
+          "X",
+          "Z"
+        ]
+      },
+      "inputSha256": "902e8ef3284bc8fb0181ef6c0429bc830d0e1217afcf065e2725622150425104",
+      "dependencyLockSha256": "a94e920a4a7d718e081e8a83c2550b0b0e7c1c1a8a5347eb7bd52e2b7f8094f9",
+      "metric": "maxSpanResidual",
+      "value": 6.972611193684198e-32,
+      "rawResultSha256": "5cb3aa92303080a9aa07653397a4ad118eb4b970e39760b343e5e0a56e391613"
+    },
+    {
+      "case": "paulie-algebra-algebra-1",
+      "capability": "paulie-algebra",
+      "source": {
+        "name": "paulie",
+        "version": "0.2.3",
+        "repository": "https://github.com/QPauLie/PauLie"
+      },
+      "input": {
+        "numQubits": 2,
+        "generators": [
+          "XI",
+          "IX",
+          "XX"
+        ]
+      },
+      "inputSha256": "b56d2b4ceb0d2a6bb2170ce795dfbc2e72807ff74af08f57a93e2ebcf8d73808",
+      "dependencyLockSha256": "a94e920a4a7d718e081e8a83c2550b0b0e7c1c1a8a5347eb7bd52e2b7f8094f9",
+      "metric": "maxSpanResidual",
+      "value": 0,
+      "rawResultSha256": "20332e09f99142ebc2abeefd6a30cdc53186da01c26caf38a0f72e4e5dc82c8f"
+    },
+    {
+      "case": "paulie-algebra-algebra-2",
+      "capability": "paulie-algebra",
+      "source": {
+        "name": "paulie",
+        "version": "0.2.3",
+        "repository": "https://github.com/QPauLie/PauLie"
+      },
+      "input": {
+        "numQubits": 2,
+        "generators": [
+          "XI",
+          "ZI",
+          "IX",
+          "IZ"
+        ]
+      },
+      "inputSha256": "ea4dd104f257683b9c3833607270aa1a078e05a7fd3c9e8282bde8fe4085ab42",
+      "dependencyLockSha256": "a94e920a4a7d718e081e8a83c2550b0b0e7c1c1a8a5347eb7bd52e2b7f8094f9",
+      "metric": "maxSpanResidual",
+      "value": 0,
+      "rawResultSha256": "19fba8bba80ef8693e7c6ab1456e6d5f6a4b4ad31b12ff855d5aae920db21686"
+    },
+    {
+      "case": "paulie-algebra-algebra-3",
+      "capability": "paulie-algebra",
+      "source": {
+        "name": "paulie",
+        "version": "0.2.3",
+        "repository": "https://github.com/QPauLie/PauLie"
+      },
+      "input": {
+        "numQubits": 2,
+        "generators": [
+          "XI",
+          "ZI",
+          "IX",
+          "IZ",
+          "ZZ"
+        ]
+      },
+      "inputSha256": "0275c9c289c209587070dc54b5b95c5a2c39da08e37c7883e0cd9e5b14b7db1a",
+      "dependencyLockSha256": "a94e920a4a7d718e081e8a83c2550b0b0e7c1c1a8a5347eb7bd52e2b7f8094f9",
+      "metric": "maxSpanResidual",
+      "value": 0,
+      "rawResultSha256": "c428ecdbb224a2310c96f9de6cb7aa34d5ea8dd1ff855c713224828b74c4b796"
+    },
+    {
+      "case": "paulie-algebra-algebra-4",
+      "capability": "paulie-algebra",
+      "source": {
+        "name": "paulie",
+        "version": "0.2.3",
+        "repository": "https://github.com/QPauLie/PauLie"
+      },
+      "input": {
+        "numQubits": 4,
+        "generators": [
+          "XIII",
+          "ZIII",
+          "IXII",
+          "IZII",
+          "IIXI",
+          "IIZI",
+          "IIIX",
+          "IIIZ",
+          "ZZII",
+          "IZZI",
+          "IIZZ"
+        ]
+      },
+      "inputSha256": "2987527911c49b3adefa80bab0768b6486755f327c831b54949bbf1ccbea2865",
+      "dependencyLockSha256": "a94e920a4a7d718e081e8a83c2550b0b0e7c1c1a8a5347eb7bd52e2b7f8094f9",
+      "metric": "maxSpanResidual",
+      "value": 0,
+      "rawResultSha256": "07fa9d2ee3de8313e0bfd5925fb0276f0393df40aead94b6ce752e66246dadd6"
+    }
+  ],
+  "limitations": [
+    "Development checks do not grant central Scientific Acceptance.",
+    "Graphix uses sampled measurement branches and the requested product input, not arbitrary-channel verification.",
+    "Symmer preserves the supplied symmetry sector; no global ground-state claim.",
+    "PauLie span and dimension are checked; classification labels are upstream descriptions.",
+    "Full-check log records the tested workspace at execution time; unrelated concurrent changes are excluded from the integration commit."
+  ],
+  "independentReview": {
+    "status": "passed",
+    "cases": 50,
+    "passed": 50,
+    "casesByCapability": {
+      "pyzx-optimization": 12,
+      "graphix-mbqc": 10,
+      "symmer-tapering": 12,
+      "paulie-algebra": 16
+    },
+    "measurementBranches": 80,
+    "outputContractsPassed": 50,
+    "referenceImplementation": "reviewer-owned basis-bit Pauli actions, direct circuit row-pair updates, safe emitted QASM parser, weighted joint-symmetry eigenspace, matrix commutator label closure and real Gram rank; no product reference helper or upstream SDK imports",
+    "evidenceSha256": {
+      "independent-comparison.json": "99f2ad40c9f70816d37d763f6612843641db56e233ccbeb7daf5a6b62a7ca386",
+      "contract-verification.json": "e5c98fde00609990eb16636380b57a79f7d547f0808621f81773a1dcc3c55967",
+      "analyze_outputs.py": "6d5fefe3c8a49c7d35d6ad415329795f9082e3c94f0c21fcee9e2893434d1ae1",
+      "cases.json": "284e91f206290fe17f9cf5ac1275aa992b31d8b83b28450dc1118501f32920db",
+      "final-source-hashes.json": "b1213404d56a753d2b4073305fe79bacfd43a87b2b8e8bee4e2b80692212dc94"
+    },
+    "note": "Concurrent optional referenceMode changes to the shared MCP helper are excluded from this commit and do not apply to these four tool schemas.",
+    "results": [
+      {
+        "name": "zx_identity",
+        "capability": "pyzx-optimization",
+        "passed": true,
+        "details": {
+          "inputQasmPhaseMaxError": 0.0,
+          "optimizedQasmPhaseMaxError": 2.220446049250313e-16
+        }
+      },
+      {
+        "name": "zx_t_four",
+        "capability": "pyzx-optimization",
+        "passed": true,
+        "details": {
+          "inputQasmPhaseMaxError": 0.0,
+          "optimizedQasmPhaseMaxError": 1.3877787807814457e-16
+        }
+      },
+      {
+        "name": "zx_y_phase",
+        "capability": "pyzx-optimization",
+        "passed": true,
+        "details": {
+          "inputQasmPhaseMaxError": 0.0,
+          "optimizedQasmPhaseMaxError": 1.2412670766236366e-16
+        }
+      },
+      {
+        "name": "zx_asymmetric",
+        "capability": "pyzx-optimization",
+        "passed": true,
+        "details": {
+          "inputQasmPhaseMaxError": 0.0,
+          "optimizedQasmPhaseMaxError": 3.3306690738754696e-16
+        }
+      },
+      {
+        "name": "zx_random_0",
+        "capability": "pyzx-optimization",
+        "passed": true,
+        "details": {
+          "inputQasmPhaseMaxError": 0.0,
+          "optimizedQasmPhaseMaxError": 1.6533864156167814e-16
+        }
+      },
+      {
+        "name": "zx_random_1",
+        "capability": "pyzx-optimization",
+        "passed": true,
+        "details": {
+          "inputQasmPhaseMaxError": 0.0,
+          "optimizedQasmPhaseMaxError": 1.4067292162528775e-16
+        }
+      },
+      {
+        "name": "zx_random_2",
+        "capability": "pyzx-optimization",
+        "passed": true,
+        "details": {
+          "inputQasmPhaseMaxError": 0.0,
+          "optimizedQasmPhaseMaxError": 4.504081967541534e-16
+        }
+      },
+      {
+        "name": "zx_random_3",
+        "capability": "pyzx-optimization",
+        "passed": true,
+        "details": {
+          "inputQasmPhaseMaxError": 0.0,
+          "optimizedQasmPhaseMaxError": 3.510833468576701e-16
+        }
+      },
+      {
+        "name": "zx_random_4",
+        "capability": "pyzx-optimization",
+        "passed": true,
+        "details": {
+          "inputQasmPhaseMaxError": 0.0,
+          "optimizedQasmPhaseMaxError": 2.055531086011657e-16
+        }
+      },
+      {
+        "name": "zx_random_5",
+        "capability": "pyzx-optimization",
+        "passed": true,
+        "details": {
+          "inputQasmPhaseMaxError": 0.0,
+          "optimizedQasmPhaseMaxError": 3.0341892275617534e-16
+        }
+      },
+      {
+        "name": "zx_random_6",
+        "capability": "pyzx-optimization",
+        "passed": true,
+        "details": {
+          "inputQasmPhaseMaxError": 0.0,
+          "optimizedQasmPhaseMaxError": 3.7238012298709097e-16
+        }
+      },
+      {
+        "name": "zx_random_7",
+        "capability": "pyzx-optimization",
+        "passed": true,
+        "details": {
+          "inputQasmPhaseMaxError": 0.0,
+          "optimizedQasmPhaseMaxError": 2.558937633260452e-16
+        }
+      },
+      {
+        "name": "gx_bitorder",
+        "capability": "graphix-mbqc",
+        "passed": true,
+        "details": {
+          "referenceVectorMaxError": 0.0,
+          "branchPhaseMaxError": 6.123233995736766e-17,
+          "maxNormError": 0.0,
+          "minimumFidelity": 1.0,
+          "branches": 8,
+          "distinctMeasurementHistories": 4,
+          "nodes": 5,
+          "independentPeakLiveNodes": 4
+        }
+      },
+      {
+        "name": "gx_entangled",
+        "capability": "graphix-mbqc",
+        "passed": true,
+        "details": {
+          "referenceVectorMaxError": 0.0,
+          "branchPhaseMaxError": 3.775166431889533e-16,
+          "maxNormError": 4.440892098500626e-16,
+          "minimumFidelity": 0.9999999999999998,
+          "branches": 8,
+          "distinctMeasurementHistories": 8,
+          "nodes": 14,
+          "independentPeakLiveNodes": 4
+        }
+      },
+      {
+        "name": "gx_angles",
+        "capability": "graphix-mbqc",
+        "passed": true,
+        "details": {
+          "referenceVectorMaxError": 6.938893903907228e-17,
+          "branchPhaseMaxError": 6.697380712247044e-16,
+          "maxNormError": 4.440892098500626e-16,
+          "minimumFidelity": 0.9999999999999996,
+          "branches": 8,
+          "distinctMeasurementHistories": 8,
+          "nodes": 16,
+          "independentPeakLiveNodes": 2
+        }
+      },
+      {
+        "name": "gx_plus_phase",
+        "capability": "graphix-mbqc",
+        "passed": true,
+        "details": {
+          "referenceVectorMaxError": 1.2412670766236366e-16,
+          "branchPhaseMaxError": 3.7238012298709097e-16,
+          "maxNormError": 2.220446049250313e-16,
+          "minimumFidelity": 0.9999999999999996,
+          "branches": 8,
+          "distinctMeasurementHistories": 8,
+          "nodes": 7,
+          "independentPeakLiveNodes": 2
+        }
+      },
+      {
+        "name": "gx_random_0",
+        "capability": "graphix-mbqc",
+        "passed": true,
+        "details": {
+          "referenceVectorMaxError": 1.3877787807814457e-16,
+          "branchPhaseMaxError": 4.695944831791985e-16,
+          "maxNormError": 2.220446049250313e-16,
+          "minimumFidelity": 0.9999999999999998,
+          "branches": 8,
+          "distinctMeasurementHistories": 8,
+          "nodes": 26,
+          "independentPeakLiveNodes": 2
+        }
+      },
+      {
+        "name": "gx_random_1",
+        "capability": "graphix-mbqc",
+        "passed": true,
+        "details": {
+          "referenceVectorMaxError": 1.22046736798268e-16,
+          "branchPhaseMaxError": 7.941319300282077e-16,
+          "maxNormError": 2.220446049250313e-16,
+          "minimumFidelity": 1.0,
+          "branches": 8,
+          "distinctMeasurementHistories": 8,
+          "nodes": 32,
+          "independentPeakLiveNodes": 3
+        }
+      },
+      {
+        "name": "gx_random_2",
+        "capability": "graphix-mbqc",
+        "passed": true,
+        "details": {
+          "referenceVectorMaxError": 1.4526172914154867e-16,
+          "branchPhaseMaxError": 3.993369613006054e-16,
+          "maxNormError": 2.220446049250313e-16,
+          "minimumFidelity": 0.9999999999999993,
+          "branches": 8,
+          "distinctMeasurementHistories": 8,
+          "nodes": 22,
+          "independentPeakLiveNodes": 4
+        }
+      },
+      {
+        "name": "gx_random_3",
+        "capability": "graphix-mbqc",
+        "passed": true,
+        "details": {
+          "referenceVectorMaxError": 1.5700924586837752e-16,
+          "branchPhaseMaxError": 9.09180472805593e-16,
+          "maxNormError": 4.440892098500626e-16,
+          "minimumFidelity": 0.9999999999999989,
+          "branches": 8,
+          "distinctMeasurementHistories": 8,
+          "nodes": 24,
+          "independentPeakLiveNodes": 4
+        }
+      },
+      {
+        "name": "gx_random_4",
+        "capability": "graphix-mbqc",
+        "passed": true,
+        "details": {
+          "referenceVectorMaxError": 1.2412670766236366e-16,
+          "branchPhaseMaxError": 4.449557262054371e-16,
+          "maxNormError": 4.440892098500626e-16,
+          "minimumFidelity": 0.9999999999999998,
+          "branches": 8,
+          "distinctMeasurementHistories": 8,
+          "nodes": 34,
+          "independentPeakLiveNodes": 3
+        }
+      },
+      {
+        "name": "gx_random_5",
+        "capability": "graphix-mbqc",
+        "passed": true,
+        "details": {
+          "referenceVectorMaxError": 0.0,
+          "branchPhaseMaxError": 3.2368285245694683e-16,
+          "maxNormError": 2.220446049250313e-16,
+          "minimumFidelity": 0.9999999999999993,
+          "branches": 8,
+          "distinctMeasurementHistories": 8,
+          "nodes": 30,
+          "independentPeakLiveNodes": 4
+        }
+      },
+      {
+        "name": "sy_zz_-1",
+        "capability": "symmer-tapering",
+        "passed": true,
+        "details": {
+          "errors": {
+            "reducedSpectrum": 0.0,
+            "referenceSectorSpectrum": 0.0,
+            "reconstructedReducedSpectrum": 0.0,
+            "analyticSpectrum": 0.0
+          },
+          "jointEigenvectorSectorResidual": 0.0,
+          "sectorDimension": 2,
+          "analyticSpectrum": [
+            -0.58309518948453,
+            0.58309518948453
+          ]
+        }
+      },
+      {
+        "name": "sy_yy_-1",
+        "capability": "symmer-tapering",
+        "passed": true,
+        "details": {
+          "errors": {
+            "reducedSpectrum": 4.440892098500626e-16,
+            "referenceSectorSpectrum": 0.0,
+            "reconstructedReducedSpectrum": 4.440892098500626e-16,
+            "analyticSpectrum": 4.440892098500626e-16
+          },
+          "jointEigenvectorSectorResidual": 0.0,
+          "sectorDimension": 2,
+          "analyticSpectrum": [
+            -1.0,
+            3.0
+          ]
+        }
+      },
+      {
+        "name": "sy_zz_1",
+        "capability": "symmer-tapering",
+        "passed": true,
+        "details": {
+          "errors": {
+            "reducedSpectrum": 0.0,
+            "referenceSectorSpectrum": 0.0,
+            "reconstructedReducedSpectrum": 0.0,
+            "analyticSpectrum": 0.0
+          },
+          "jointEigenvectorSectorResidual": 0.0,
+          "sectorDimension": 2,
+          "analyticSpectrum": [
+            -1.5297058540778354,
+            1.5297058540778354
+          ]
+        }
+      },
+      {
+        "name": "sy_yy_1",
+        "capability": "symmer-tapering",
+        "passed": true,
+        "details": {
+          "errors": {
+            "reducedSpectrum": 1.1102230246251565e-16,
+            "referenceSectorSpectrum": 0.0,
+            "reconstructedReducedSpectrum": 1.1102230246251565e-16,
+            "analyticSpectrum": 1.1102230246251565e-16
+          },
+          "jointEigenvectorSectorResidual": 0.0,
+          "sectorDimension": 2,
+          "analyticSpectrum": [
+            0.19999999999999996,
+            0.6000000000000001
+          ]
+        }
+      },
+      {
+        "name": "sy_three_logical",
+        "capability": "symmer-tapering",
+        "passed": true,
+        "details": {
+          "errors": {
+            "reducedSpectrum": 0.0,
+            "referenceSectorSpectrum": 0.0,
+            "reconstructedReducedSpectrum": 0.0,
+            "analyticSpectrum": 2.7755575615628914e-16
+          },
+          "jointEigenvectorSectorResidual": 0.0,
+          "sectorDimension": 2,
+          "analyticSpectrum": [
+            0.47888974490720204,
+            1.9211102550927979
+          ]
+        }
+      },
+      {
+        "name": "sy_zero",
+        "capability": "symmer-tapering",
+        "passed": true,
+        "details": {
+          "errors": {
+            "reducedSpectrum": 0.0,
+            "referenceSectorSpectrum": 0.0,
+            "reconstructedReducedSpectrum": 0.0,
+            "analyticSpectrum": 0.0
+          },
+          "jointEigenvectorSectorResidual": 0.0,
+          "sectorDimension": 2,
+          "analyticSpectrum": [
+            0,
+            0
+          ]
+        }
+      },
+      {
+        "name": "sy_identity",
+        "capability": "symmer-tapering",
+        "passed": true,
+        "details": {
+          "errors": {
+            "reducedSpectrum": 8.881784197001252e-16,
+            "referenceSectorSpectrum": 0.0,
+            "reconstructedReducedSpectrum": 8.881784197001252e-16,
+            "analyticSpectrum": 8.881784197001252e-16
+          },
+          "jointEigenvectorSectorResidual": 0.0,
+          "sectorDimension": 2,
+          "analyticSpectrum": [
+            3.7,
+            3.7
+          ]
+        }
+      },
+      {
+        "name": "sy_random_yx",
+        "capability": "symmer-tapering",
+        "passed": true,
+        "details": {
+          "errors": {
+            "reducedSpectrum": 8.881784197001252e-16,
+            "referenceSectorSpectrum": 0.0,
+            "reconstructedReducedSpectrum": 8.881784197001252e-16
+          },
+          "jointEigenvectorSectorResidual": 8.455206652451151e-16,
+          "sectorDimension": 2,
+          "analyticSpectrum": null
+        }
+      },
+      {
+        "name": "sy_random_xchain",
+        "capability": "symmer-tapering",
+        "passed": true,
+        "details": {
+          "errors": {
+            "reducedSpectrum": 8.881784197001252e-16,
+            "referenceSectorSpectrum": 8.881784197001252e-16,
+            "reconstructedReducedSpectrum": 8.881784197001252e-16
+          },
+          "jointEigenvectorSectorResidual": 1.0547118733938987e-15,
+          "sectorDimension": 2,
+          "analyticSpectrum": null
+        }
+      },
+      {
+        "name": "sy_random_six_single",
+        "capability": "symmer-tapering",
+        "passed": true,
+        "details": {
+          "errors": {
+            "reducedSpectrum": 7.105427357601002e-15,
+            "referenceSectorSpectrum": 6.217248937900877e-15,
+            "reconstructedReducedSpectrum": 7.105427357601002e-15
+          },
+          "jointEigenvectorSectorResidual": 0.0,
+          "sectorDimension": 32,
+          "analyticSpectrum": null
+        }
+      },
+      {
+        "name": "sy_random_six_chain",
+        "capability": "symmer-tapering",
+        "passed": true,
+        "details": {
+          "errors": {
+            "reducedSpectrum": 1.3322676295501878e-15,
+            "referenceSectorSpectrum": 0.0,
+            "reconstructedReducedSpectrum": 1.3322676295501878e-15
+          },
+          "jointEigenvectorSectorResidual": 0.0,
+          "sectorDimension": 2,
+          "analyticSpectrum": null
+        }
+      },
+      {
+        "name": "sy_coefficient_boundary",
+        "capability": "symmer-tapering",
+        "passed": true,
+        "details": {
+          "errors": {
+            "reducedSpectrum": 0.0,
+            "referenceSectorSpectrum": 0.0,
+            "reconstructedReducedSpectrum": 0.0,
+            "analyticSpectrum": 0.0
+          },
+          "jointEigenvectorSectorResidual": 0.0,
+          "sectorDimension": 2,
+          "analyticSpectrum": [
+            0,
+            6400
+          ]
+        }
+      },
+      {
+        "name": "pa_abelian_one",
+        "capability": "paulie-algebra",
+        "passed": true,
+        "details": {
+          "matrixCommutatorClosureDimension": 1,
+          "realSkewHermitianGramRank": 1,
+          "analyticDimension": 1,
+          "closureSetMatches": true,
+          "gramOrthogonalityResidual": 0.0
+        }
+      },
+      {
+        "name": "pa_su2",
+        "capability": "paulie-algebra",
+        "passed": true,
+        "details": {
+          "matrixCommutatorClosureDimension": 3,
+          "realSkewHermitianGramRank": 3,
+          "analyticDimension": 3,
+          "closureSetMatches": true,
+          "gramOrthogonalityResidual": 0.0
+        }
+      },
+      {
+        "name": "pa_product_dependence",
+        "capability": "paulie-algebra",
+        "passed": true,
+        "details": {
+          "matrixCommutatorClosureDimension": 3,
+          "realSkewHermitianGramRank": 3,
+          "analyticDimension": 3,
+          "closureSetMatches": true,
+          "gramOrthogonalityResidual": 0.0
+        }
+      },
+      {
+        "name": "pa_local",
+        "capability": "paulie-algebra",
+        "passed": true,
+        "details": {
+          "matrixCommutatorClosureDimension": 6,
+          "realSkewHermitianGramRank": 6,
+          "analyticDimension": 6,
+          "closureSetMatches": true,
+          "gramOrthogonalityResidual": 0.0
+        }
+      },
+      {
+        "name": "pa_full_two",
+        "capability": "paulie-algebra",
+        "passed": true,
+        "details": {
+          "matrixCommutatorClosureDimension": 15,
+          "realSkewHermitianGramRank": 15,
+          "analyticDimension": 15,
+          "closureSetMatches": true,
+          "gramOrthogonalityResidual": 0.0
+        }
+      },
+      {
+        "name": "pa_centre",
+        "capability": "paulie-algebra",
+        "passed": true,
+        "details": {
+          "matrixCommutatorClosureDimension": 4,
+          "realSkewHermitianGramRank": 4,
+          "analyticDimension": 4,
+          "closureSetMatches": true,
+          "gramOrthogonalityResidual": 0.0
+        }
+      },
+      {
+        "name": "pa_xxyyzz",
+        "capability": "paulie-algebra",
+        "passed": true,
+        "details": {
+          "matrixCommutatorClosureDimension": 3,
+          "realSkewHermitianGramRank": 3,
+          "analyticDimension": 3,
+          "closureSetMatches": true,
+          "gramOrthogonalityResidual": 0.0
+        }
+      },
+      {
+        "name": "pa_single_four",
+        "capability": "paulie-algebra",
+        "passed": true,
+        "details": {
+          "matrixCommutatorClosureDimension": 1,
+          "realSkewHermitianGramRank": 1,
+          "analyticDimension": 1,
+          "closureSetMatches": true,
+          "gramOrthogonalityResidual": 0.0
+        }
+      },
+      {
+        "name": "pa_local_four",
+        "capability": "paulie-algebra",
+        "passed": true,
+        "details": {
+          "matrixCommutatorClosureDimension": 12,
+          "realSkewHermitianGramRank": 12,
+          "analyticDimension": 12,
+          "closureSetMatches": true,
+          "gramOrthogonalityResidual": 0.0
+        }
+      },
+      {
+        "name": "pa_full_four",
+        "capability": "paulie-algebra",
+        "passed": true,
+        "details": {
+          "matrixCommutatorClosureDimension": 255,
+          "realSkewHermitianGramRank": 255,
+          "analyticDimension": 255,
+          "closureSetMatches": true,
+          "gramOrthogonalityResidual": 0.0
+        }
+      },
+      {
+        "name": "pa_random_0",
+        "capability": "paulie-algebra",
+        "passed": true,
+        "details": {
+          "matrixCommutatorClosureDimension": 3,
+          "realSkewHermitianGramRank": 3,
+          "analyticDimension": null,
+          "closureSetMatches": true,
+          "gramOrthogonalityResidual": 0.0
+        }
+      },
+      {
+        "name": "pa_random_1",
+        "capability": "paulie-algebra",
+        "passed": true,
+        "details": {
+          "matrixCommutatorClosureDimension": 10,
+          "realSkewHermitianGramRank": 10,
+          "analyticDimension": null,
+          "closureSetMatches": true,
+          "gramOrthogonalityResidual": 0.0
+        }
+      },
+      {
+        "name": "pa_random_2",
+        "capability": "paulie-algebra",
+        "passed": true,
+        "details": {
+          "matrixCommutatorClosureDimension": 15,
+          "realSkewHermitianGramRank": 15,
+          "analyticDimension": null,
+          "closureSetMatches": true,
+          "gramOrthogonalityResidual": 0.0
+        }
+      },
+      {
+        "name": "pa_random_3",
+        "capability": "paulie-algebra",
+        "passed": true,
+        "details": {
+          "matrixCommutatorClosureDimension": 30,
+          "realSkewHermitianGramRank": 30,
+          "analyticDimension": null,
+          "closureSetMatches": true,
+          "gramOrthogonalityResidual": 0.0
+        }
+      },
+      {
+        "name": "pa_random_4",
+        "capability": "paulie-algebra",
+        "passed": true,
+        "details": {
+          "matrixCommutatorClosureDimension": 63,
+          "realSkewHermitianGramRank": 63,
+          "analyticDimension": null,
+          "closureSetMatches": true,
+          "gramOrthogonalityResidual": 0.0
+        }
+      },
+      {
+        "name": "pa_random_5",
+        "capability": "paulie-algebra",
+        "passed": true,
+        "details": {
+          "matrixCommutatorClosureDimension": 255,
+          "realSkewHermitianGramRank": 255,
+          "analyticDimension": null,
+          "closureSetMatches": true,
+          "gramOrthogonalityResidual": 0.0
+        }
+      }
+    ]
+  }
+}

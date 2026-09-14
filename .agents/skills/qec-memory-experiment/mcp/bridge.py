@@ -9,10 +9,7 @@ import sys
 import time
 from typing import Any
 
-MAX_DISTANCE = 7
-MAX_ROUNDS = 20
-MAX_SHOTS = 50_000
-MAX_ERROR_RATE = 0.05
+MAX_ERROR_RATE = 1
 MAX_SEED = 2**32 - 1
 
 
@@ -32,16 +29,16 @@ def normalize_request(value: Any) -> dict[str, Any]:
     if (
         isinstance(distance, bool)
         or not isinstance(distance, int)
-        or not 3 <= distance <= MAX_DISTANCE
+        or not 3 <= distance
         or distance % 2 == 0
     ):
-        raise ValueError(f"distance must be an odd integer between 3 and {MAX_DISTANCE}")
+        raise ValueError("distance must be an odd integer >= 3")
     rounds = value.get("rounds")
-    if isinstance(rounds, bool) or not isinstance(rounds, int) or not 1 <= rounds <= MAX_ROUNDS:
-        raise ValueError(f"rounds must be an integer between 1 and {MAX_ROUNDS}")
+    if isinstance(rounds, bool) or not isinstance(rounds, int) or not 1 <= rounds:
+        raise ValueError("rounds must be a positive integer")
     shots = value.get("shots")
-    if isinstance(shots, bool) or not isinstance(shots, int) or not 100 <= shots <= MAX_SHOTS:
-        raise ValueError(f"shots must be an integer between 100 and {MAX_SHOTS}")
+    if isinstance(shots, bool) or not isinstance(shots, int) or not 1 <= shots:
+        raise ValueError("shots must be a positive integer")
     error_rate_value = value.get("physicalErrorRate")
     if isinstance(error_rate_value, bool) or not isinstance(error_rate_value, (int, float)):
         raise ValueError("physicalErrorRate must be a finite probability")
@@ -131,9 +128,7 @@ def experiment_payload(request: dict[str, Any]) -> dict[str, Any]:
 
 
 def main() -> None:
-    raw = sys.stdin.buffer.read(128 * 1024 + 1)
-    if len(raw) > 128 * 1024:
-        raise ValueError("bridge request is too large")
+    raw = sys.stdin.buffer.read()
     envelope = json.loads(raw.decode("utf8"))
     if not isinstance(envelope, dict) or set(envelope) - {"action", "request"}:
         raise ValueError("bridge envelope is invalid")

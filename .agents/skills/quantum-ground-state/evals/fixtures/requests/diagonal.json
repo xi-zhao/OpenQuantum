@@ -29,5 +29,5 @@
     },
     "randomness": "none"
   },
-  "acceptanceProfile": { "id": "supplied-pauli-statevector", "version": "1.0.0" }
+  "acceptanceProfile": { "id": "supplied-pauli-statevector", "version": "1.1.0" }
 }

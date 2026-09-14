@@ -848,3 +848,79 @@ packages:
       checks:
         - tests/metriq-data.test.mjs
         - tests/harness-unitary-tools.test.mjs
+
+  - id: pyzx-optimization
+    level: L1
+    execution:
+      mcpServers:
+        - name: pyzx_local
+          source: package
+          entrypoint: .agents/skills/pyzx-optimization/mcp/server.mjs
+          activation: always
+          contractCheck: tests/unitary-next-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: optimize_pyzx_circuit
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/unitary-next-contracts.test.mjs
+        - tests/unitary-next-live.test.mjs
+        - tests/harness-unitary-next.test.mjs
+
+  - id: graphix-mbqc
+    level: L1
+    execution:
+      mcpServers:
+        - name: graphix_local
+          source: package
+          entrypoint: .agents/skills/graphix-mbqc/mcp/server.mjs
+          activation: always
+          contractCheck: tests/unitary-next-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: simulate_graphix_pattern
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/unitary-next-contracts.test.mjs
+        - tests/unitary-next-live.test.mjs
+        - tests/harness-unitary-next.test.mjs
+
+  - id: symmer-tapering
+    level: L1
+    execution:
+      mcpServers:
+        - name: symmer_local
+          source: package
+          entrypoint: .agents/skills/symmer-tapering/mcp/server.mjs
+          activation: always
+          contractCheck: tests/unitary-next-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: taper_symmer_hamiltonian
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/unitary-next-contracts.test.mjs
+        - tests/unitary-next-live.test.mjs
+        - tests/harness-unitary-next.test.mjs
+
+  - id: paulie-algebra
+    level: L1
+    execution:
+      mcpServers:
+        - name: paulie_local
+          source: package
+          entrypoint: .agents/skills/paulie-algebra/mcp/server.mjs
+          activation: always
+          contractCheck: tests/unitary-next-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: analyze_paulie_algebra
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/unitary-next-contracts.test.mjs
+        - tests/unitary-next-live.test.mjs
+        - tests/harness-unitary-next.test.mjs

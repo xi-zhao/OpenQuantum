@@ -2,7 +2,7 @@ import sys
 from math import comb
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[4] / "src/lib"))
-from science_bridge import execute
+from science_bridge import execute, json_integer
 from science_reference import reference_plan
 
 
@@ -14,18 +14,21 @@ def compute(v):
     from qiskit_addon_sqd.fermion import diagonalize_fermionic_hamiltonian
     molecule = v.get("molecule", {"atoms": [{"element": "H", "positionAngstrom": [0, 0, 0]},
         {"element": "H", "positionAngstrom": [0, 0, v["bondLengthAngstrom"]]}], "charge": 0})
+    basis_key = v["basis"].lower().replace("-", "").replace("_", "").replace(" ", "")
+    if basis_key not in gto.basis.ALIAS:
+        raise ValueError("basis must name a basis from the installed PySCF catalog")
     mol = gto.M(atom=[(a["element"], a["positionAngstrom"]) for a in molecule["atoms"]],
         charge=molecule["charge"], basis=v["basis"], unit="Angstrom", spin=0, verbose=0)
     active = v.get("activeSpace", {"numOrbitals": mol.nao_nr(), "numElectrons": mol.nelectron})
     norb, ne = active["numOrbitals"], active["numElectrons"]
     ncore = (mol.nelectron - ne) // 2
-    if not (2 <= norb <= 63 and 2 <= ne <= 2*norb and ne % 2 == 0 and ncore >= 0 and ncore+norb <= mol.nao_nr()):
-        raise ValueError("Choose a compatible active space and even electron count; PySCF signed-int64 CI strings require fewer than 64 active orbitals")
+    if not (2 <= norb < 64 and 2 <= ne <= 2*norb and ne % 2 == 0 and ncore >= 0 and ncore+norb <= mol.nao_nr()):
+        raise ValueError("PySCF signed-int64 CI strings require fewer than 64 orbitals; choose a compatible active space with at least 2 orbitals and an even electron count")
     max_dim = min(v["maxSubspaceDimension"], comb(norb, ne//2))
     determinant_dimension = comb(norb, ne//2)**2
     reference = reference_plan(v["referenceMode"], norb <= 12 and determinant_dimension <= 10000,
         "FCI of the same active-space Hamiltonian, including frozen-core and nuclear energy",
-        "Auto FCI selects up to 12 active orbitals and 10000 determinants; use required for a larger reference.")
+        "Automatic FCI is omitted above 12 active orbitals or 10000 determinants; required attempts it at the requested size.")
     counts = v.get("counts")
     if counts and any(len(key) != 2*norb for key in counts):
         raise ValueError(f"Supplied counts require {2*norb} bits for this active space")
@@ -62,7 +65,7 @@ def compute(v):
         "iterationEnergiesHartree": history, "sampleSource": "supplied_counts" if counts else "synthetic_uniform",
         "totalShots": sum(counts.values()) if counts else v["shots"], "spatialOrbitals": norb,
         "electrons": [ne//2, ne//2], "frozenCoreOrbitals": ncore, "activeOrbitalIndices": list(range(ncore, ncore+norb)),
-        "basis": v["basis"], "fullSpatialOrbitals": mol.nao_nr(), "determinantDimension": determinant_dimension if determinant_dimension <= 2**53-1 else str(determinant_dimension),
+        "basis": v["basis"], "fullSpatialOrbitals": mol.nao_nr(), "determinantDimension": json_integer(determinant_dimension),
         "maxSubspaceDimensionPerSpin": max_dim,
         "bitOrder": " ".join(f"{spin}{i}" for spin in ("beta", "alpha") for i in reversed(range(norb))),
         "spinSector": "n_alpha=n_beta (M_s=0); total spin is not constrained",

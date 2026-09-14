@@ -53,6 +53,13 @@
 - 本地模型协议替身驱动真实 Harness，完成五项成功调用、一次预期查询失败及会话重读；完整 `npm run check` 已通过。此次没有运行外部模型或真实硬件，五项均为 L1、`scientificValidation=not_evaluated`。
 - [接入说明](docs/integrations/UNITARY_ECOSYSTEM.md)包含版本、安装、使用示例和证据。运行中的 Harness 需重启后加载新增 Preset 行；原模型验收里程碑保持独立。
 
+## 电路与代数能力（2026-09-14）
+
+- 新增 PyZX 电路优化、Graphix 测量式计算、Symmer 对称性降比特和 PauLie 代数分析；各有独立 Skill 与默认开启的本地 MCP Tool，依赖固定在隔离 Python 3.12 环境。
+- 26 个真实数值输入、MCP 合同与目录一致性、四次真实 Harness Tool 调用、一次预期错误及 Session 重读通过；Harness 使用本地模型协议替身，没有调用外部模型或真实硬件。
+- 独立领域审阅另复核 50 个输入及 80 条 MBQC 采样分支；固定版本、范围、安装与证据见[电路与代数工具接入](docs/integrations/UNITARY_NEXT_TOOLS.md)。Graphix 已处理 NumPy 兼容性和旋转角单位转换。
+- 当前四项均为 L1、`scientificValidation=not_evaluated`；全仓 `npm run check` 通过。运行中的 Harness 需重启加载新连接，原模型验收任务保持独立。
+
 ## 计算桥接扩展（2026-09-14）
 
 - TeNPy、TJM、Flow-VQE、Clifft 的主计算已与小系统精确参考分开；SQD 新增分子、基组和活性空间输入，包含冻结核贡献。
@@ -62,8 +69,11 @@
 
 ## 用户自行配置计算资源（2026-09-15）
 
-- 五项桥接移除人为规模与工作量上限，由用户选择系统规模和求解参数；新增 `execution` 控制工作进程时间、线程和返回数据量。MCP 连接超时可在现有设置中调整。
-- README 按功能介绍能力；默认参考选择与实际算例归入工具文档。`required` 可显式运行超出默认选择范围的参考，科学状态仍为 `not_evaluated`。
+- 全部 23 项本地计算适配（21 个 MCP 服务及 QMClaw、内置基态两项原生计算能力）按用户选择的规模和求解参数执行，移除人为规模与工作量上限，保留所提供的物理模型、输入结构和后端数据表示要求。
+- 主计算、可选参考、Graphix 模拟和 PauLie 闭包分别配置；`required` 在所请求的规模尝试参考。15 项共享科学服务支持逐次 `execution`，其余本地 MCP 计算使用部署变量；worker 默认无时间或输出上限，连接超时可在设置中心修改。
+- 内置基态的粗网格与评价预算由请求指定；资源检查规则升级为 Profile `1.1.0` 并返回使用比例，旧 `1.0.0` 文件保留用于历史溯源。
+- README 按功能介绍能力；模型、输入输出与资源设置见[本地计算说明](docs/integrations/SCALABLE_BRIDGES.md)。本地算例与版本作为补充材料，见[核验记录](docs/integrations/evidence/local-compute-scale-2026-09-15.json)。
+- 合并后全仓 `npm run check` 通过；另运行 18 个旧适配输入、7 个资源配置输入，以及真实 Harness 的四项调用、预期错误和会话重读。Harness 使用本地模型协议替身；未调用外部模型或真实硬件。本次资源调整不改变各能力的科学验收等级。
 
 ## 下一唯一里程碑
 

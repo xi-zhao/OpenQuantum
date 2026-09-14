@@ -287,8 +287,11 @@ function replayOptimizer(canonical, facts, scale) {
       return normalized.toPrecision(15);
     }),
   );
-  const fullCoarseGrid = expected?.coarsePointsEvaluated === 64;
-  if (fullCoarseGrid && (coarseEntries.length !== 64 || periodicKeys.size !== 64)) {
+  const requestedUniqueNodes = canonical.normalized
+    ? canonical.normalized.method.optimizer.coarsePoints - 1
+    : null;
+  const fullCoarseGrid = expected?.coarsePointsEvaluated === requestedUniqueNodes;
+  if (fullCoarseGrid && (coarseEntries.length !== requestedUniqueNodes || periodicKeys.size !== requestedUniqueNodes)) {
     structurallyConsistent = false;
   }
   if (!fullCoarseGrid && coarseEntries.length !== expected?.coarsePointsEvaluated) {
@@ -757,10 +760,13 @@ function evaluateGroundStateFacts({
       resources?.expectationEvaluations * resources?.pauliTermCount &&
     resources?.shots === 0 &&
     resources?.maxEvaluations === canonical.normalized?.method?.optimizer?.maxEvaluations;
+  const budgetFraction = resources?.maxEvaluations > 0
+    ? resources.expectationEvaluations / resources.maxEvaluations
+    : null;
   const withinBudget =
     resourceCountsMatch &&
-    resources.expectationEvaluations <= definitions.get("resources.within-budget").threshold &&
-    resources.expectationEvaluations <= resources.maxEvaluations;
+    resources.expectationEvaluations <= resources.maxEvaluations &&
+    budgetFraction <= definitions.get("resources.within-budget").threshold;
   observations.set(
     "resources.within-budget",
     makeObservation({
@@ -770,6 +776,7 @@ function evaluateGroundStateFacts({
         resourceCountsMatch,
         expectationEvaluations: resources?.expectationEvaluations ?? null,
         requestedMaxEvaluations: resources?.maxEvaluations ?? null,
+        budgetFraction,
       },
       evidenceRefs: evidence.artifactRefs(
         "resource-estimate",

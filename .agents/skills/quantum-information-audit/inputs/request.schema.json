@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://openquantum.local/capabilities/quantum-information-audit/request.schema.json",
-  "title": "Bounded density-matrix audit request",
+  "title": " density-matrix audit request",
   "type": "object",
   "additionalProperties": false,
   "required": ["matrixReal", "subsystemDimensions", "transposeSubsystems"],
@@ -9,23 +9,19 @@
     "matrixReal": {
       "type": "array",
       "minItems": 4,
-      "maxItems": 16,
       "items": {
         "type": "array",
         "minItems": 4,
-        "maxItems": 16,
-        "items": { "type": "number", "minimum": -1000000, "maximum": 1000000 }
+        "items": { "type": "number" }
       }
     },
     "matrixImag": {
       "type": "array",
       "minItems": 4,
-      "maxItems": 16,
       "items": {
         "type": "array",
         "minItems": 4,
-        "maxItems": 16,
-        "items": { "type": "number", "minimum": -1000000, "maximum": 1000000 }
+        "items": { "type": "number" }
       }
     },
     "subsystemDimensions": {

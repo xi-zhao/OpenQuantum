@@ -2,7 +2,7 @@ import Ajv from "ajv";
 
 export const FATQAT_REVISION = "39b75e30ae50ddb4a8c7b840847edce678aa814c";
 export const FATQAT_VERSION = "0.1.0a1";
-const integer = (minimum, maximum) => ({ type: "integer", minimum, maximum });
+const integer = (minimum, maximum) => ({ type: "integer", minimum, maximum: maximum ?? Number.MAX_SAFE_INTEGER });
 const number = (minimum, maximum) => ({ type: "number", minimum, maximum });
 const object = (properties, required) => ({ type: "object", properties, required, additionalProperties: false });
 export const GATES = Object.freeze({
@@ -11,38 +11,38 @@ export const GATES = Object.freeze({
 });
 const operation = object({
   gate: { type: "string", enum: Object.keys(GATES) },
-  qubits: { type: "array", minItems: 1, maxItems: 2, uniqueItems: true, items: integer(0, 7) },
-  angle: { ...number(-100 * Math.PI, 100 * Math.PI), description: "Rotation angle in radians; required only for rx/ry/rz." },
+  qubits: { type: "array", minItems: 1, maxItems: 2, uniqueItems: true, items: integer(0) },
+  angle: { ...number(undefined), description: "Rotation angle in radians; required only for rx/ry/rz." },
 }, ["gate", "qubits"]);
 const circuitSchema = object({
   backend: { type: "string", enum: ["general", "superconducting", "atom_array"], description: "Hardware profiles validate native instructions; they do not automatically compile or route. Atom sites are loaded at the start." },
-  numQubits: integer(1, 8),
-  operations: { type: "array", maxItems: 64, items: operation },
-  couplings: { type: "array", maxItems: 28, uniqueItems: true, items: { type: "array", minItems: 2, maxItems: 2, uniqueItems: true, items: integer(0, 7) }, description: "Required for superconducting only: undirected native CZ edges on sites 0..numQubits-1. Empty means no CZ edges." },
+  numQubits: integer(1),
+  operations: { type: "array", items: operation },
+  couplings: { type: "array", uniqueItems: true, items: { type: "array", minItems: 2, maxItems: 2, uniqueItems: true, items: integer(0) }, description: "Required for superconducting only: undirected native CZ edges on sites 0..numQubits-1. Empty means no CZ edges." },
   noise: object({
     channel: { type: "string", enum: ["depolarizing", "amplitude_damping", "phase_damping"] },
     probability: number(0, 1),
   }, ["channel", "probability"]),
-  shots: { ...integer(0, 4096), default: 0, description: "Zero returns exact pre-measurement probabilities; positive adds separately sampled terminal measurements." },
+  shots: { ...integer(0), default: 0, description: "Zero returns exact pre-measurement probabilities; positive adds separately sampled terminal measurements." },
   seed: { ...integer(0, 2147483647), default: 7 },
 }, ["backend", "numQubits", "operations"]);
 const transmonSchema = object({
   model: { type: "string", const: "transmon" },
-  durationNs: number(0.01, 200),
-  amplitudeRadPerNs: number(0, 0.5),
-  phaseRad: number(-2 * Math.PI, 2 * Math.PI),
+  durationNs: number(0.01),
+  amplitudeRadPerNs: number(0),
+  phaseRad: number(undefined),
   target: integer(0, 1),
-  samples: integer(2, 51),
+  samples: integer(2),
 }, ["model", "durationNs", "amplitudeRadPerNs"]);
 const rydbergSchema = object({
   model: { type: "string", const: "rydberg" },
-  numAtoms: integer(1, 6),
-  spacingUm: number(4, 20),
-  durationUs: number(0.001, 5),
-  omegaRadPerUs: number(0, 10),
-  detuningRadPerUs: number(-20, 20),
-  c6RadPerUsUm6: number(-1000000, 1000000),
-  samples: integer(2, 51),
+  numAtoms: integer(1),
+  spacingUm: { type: "number", exclusiveMinimum: 0 },
+  durationUs: number(0.001),
+  omegaRadPerUs: number(0),
+  detuningRadPerUs: number(undefined),
+  c6RadPerUsUm6: number(undefined),
+  samples: integer(2),
 }, ["model", "numAtoms", "spacingUm", "durationUs", "omegaRadPerUs"]);
 // Keep the root object explicit for MCP and model-provider schema consumers.
 const dynamicsSchema = {
@@ -72,16 +72,16 @@ const annotations = { readOnlyHint: false, destructiveHint: false, idempotentHin
 export const TOOLS = Object.freeze([
   {
     name: "simulate_fatqat_circuit", title: "FatQat 电路与硬件约束实验",
-    description: "Run a bounded, seeded local FatQat circuit or native hardware-profile experiment and return exact probabilities, optional counts, state data and a plot. Up to 8 qubits (5 with noise), 64 operations and 4096 shots. Noise acts independently on each operand after every unitary instruction, excluding pairing/loading. Profiles do not compile or route. First use may download the locked Python environment; no cloud/QPU execution or scientific acceptance.",
+    description: "Run a seeded local FatQat circuit or native hardware-profile experiment and return exact probabilities, optional counts, state data and a plot. Qubit count, operations and shots follow user inputs. Noise acts independently on each operand after every unitary instruction, excluding pairing/loading. Profiles do not compile or route. First use may download the locked Python environment; no cloud/QPU execution or scientific acceptance.",
     inputSchema: circuitSchema, outputSchema, annotations,
   },
   {
     name: "simulate_fatqat_dynamics", title: "FatQat 脉冲动力学实验",
-    description: "Run a bounded constant-drive experiment and return a population time series, final state, explicit units/model document and plot. Transmon: synthetic two-transmon reference with three physical levels each, one driven site, ns and rad/ns. Rydberg: 1–6 fixed chain sites, global drive/detuning, us, micrometres and rad/us. All runs start in the ground state, without added noise. First use may download locked dependencies. Reference models are not live calibrations; no scientific acceptance.",
+    description: "Run a constant-drive experiment and return a population time series, final state, explicit units/model document and plot. Transmon: synthetic two-transmon reference with three physical levels each, one driven site, ns and rad/ns. Rydberg: a user-selected number of fixed chain sites, global drive/detuning, us, micrometres and rad/us. All runs start in the ground state, without added noise. First use may download locked dependencies. Reference models are not live calibrations; no scientific acceptance.",
     inputSchema: dynamicsSchema, outputSchema, annotations,
   },
 ]);
-const ajv = new Ajv({ allErrors: true, strict: false });
+const ajv = new Ajv({ allErrors: true, strict: false, strictNumbers: true });
 const validators = new Map(TOOLS.map((tool) => [tool.name, ajv.compile(tool.inputSchema)]));
 export const validateOutput = ajv.compile(outputSchema);
 
@@ -98,17 +98,11 @@ export function normalizeRequest(name, value) {
     } else {
       result.detuningRadPerUs ??= 0;
       result.c6RadPerUsUm6 ??= 180955.73684677208;
-      // A single atom has no pair interaction, regardless of C6 or spacing.
-      if (result.numAtoms > 1 && Math.abs(result.c6RadPerUsUm6) / result.spacingUm ** 6 * result.durationUs > 1000) {
-        throw new RangeError("Interaction strength × duration exceeds this local experiment limit");
-      }
     }
     return result;
   }
   result.shots ??= 0;
   result.seed ??= 7;
-  if (result.noise && result.numQubits > 5) throw new RangeError("Noisy density-matrix experiments are limited to 5 qubits");
-  if (result.backend === "atom_array" && result.numQubits > 6) throw new RangeError("Atom-array profiles are limited to 6 sites");
   if (result.backend === "superconducting") {
     if (!result.couplings) throw new TypeError("superconducting requires explicit couplings");
     const edges = result.couplings.map((edge) => {

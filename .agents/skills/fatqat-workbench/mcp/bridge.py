@@ -85,16 +85,11 @@ def encode_plot(figure):
 
 def circuit(request):
     n = request["numQubits"]
-    # These internal guards also bound accidental direct bridge use.
-    if not 1 <= n <= 8 or len(request["operations"]) > 64 or not 0 <= request["shots"] <= 4096:
-        raise ValueError("Circuit exceeds local limits")
+    if n < 1 or request["shots"] < 0:
+        raise ValueError("Invalid circuit dimensions or shot count")
     noise_spec = request.get("noise")
-    if noise_spec and n > 5:
-        raise ValueError("Noisy circuits are limited to 5 qubits")
     program = fq.Program(n, n)
     if request["backend"] == "atom_array":
-        if n > 6:
-            raise ValueError("Atom arrays are limited to 6 sites")
         program.add(ops.Put, tuple(range(n)))
     noise = fq.NoiseModel() if noise_spec else None
     noise_operations = set()
@@ -143,12 +138,12 @@ def circuit(request):
 def dynamics(request):
     is_transmon = request["model"] == "transmon"
     samples = request["samples"]
-    if not 2 <= samples <= 51:
-        raise ValueError("Time series is limited to 51 samples")
+    if samples < 2:
+        raise ValueError("Time series requires at least two samples")
     if is_transmon:
         duration = request["durationNs"]
-        if not 0 < duration <= 200 or not 0 <= request["amplitudeRadPerNs"] <= 0.5:
-            raise ValueError("Transmon pulse exceeds local limits")
+        if duration <= 0 or request["amplitudeRadPerNs"] < 0:
+            raise ValueError("Invalid transmon duration or amplitude")
         document = fq.emulator.load_model_document("transmon.reference")
         model = fq.emulator.TransmonModel.from_document(document)
         backend = fq.emulator.TransmonEmulator(model)
@@ -160,8 +155,8 @@ def dynamics(request):
     elif request["model"] == "rydberg":
         n = request["numAtoms"]
         duration = request["durationUs"]
-        if not 1 <= n <= 6 or not 0 < duration <= 5 or not 4 <= request["spacingUm"] <= 20:
-            raise ValueError("Rydberg experiment exceeds local limits")
+        if n < 1 or duration <= 0 or request["spacingUm"] <= 0:
+            raise ValueError("Invalid Rydberg geometry or duration")
         document = fq.emulator.load_model_document("atom2level.reference")
         document["parameters"]["c6"] = request["c6RadPerUsUm6"]
         document["model"]["id"] = "openquantum-configured-rb87-two-level"
@@ -213,9 +208,7 @@ def dynamics(request):
 
 
 def main():
-    raw = sys.stdin.buffer.read(65537)
-    if len(raw) > 65536:
-        raise ValueError("Bridge input exceeds 64 KiB")
+    raw = sys.stdin.buffer.read()
     envelope = json.loads(raw)
     provenance = source(envelope["dependencyLockSha256"])
     request = envelope["input"]

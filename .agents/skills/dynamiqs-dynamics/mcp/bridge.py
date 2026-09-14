@@ -2,10 +2,10 @@ import os
 import sys
 from pathlib import Path
 
-os.environ["JAX_PLATFORMS"] = "cpu"
 os.environ["JAX_ENABLE_X64"] = "true"
 sys.path.insert(0, str(Path(__file__).resolve().parents[4] / "src/lib"))
 from science_bridge import execute
+from science_reference import reference_plan
 
 
 def compute(v):
@@ -49,16 +49,21 @@ def compute(v):
             raise ValueError("Independent Lindblad reference failed to converge")
         return solution.y.T.reshape(-1, 2, 2)[:, 1, 1].real
 
-    references = np.array([reference(drive) for drive in v["drives"]])
-    delta = 1e-4
-    finite = np.array([(reference(d + delta)[-1] - reference(d - delta)[-1]) / (2 * delta) for d in v["drives"]])
+    reference_info = reference_plan(v["referenceMode"], len(v["drives"]) <= 8 and v["steps"] <= 100,
+        "Independent Lindblad integration and finite differences",
+        "Automatic reference is omitted for larger sweeps; required attempts it at the requested size.")
+    references = finite = None
+    if reference_info["status"] == "computed":
+        references = np.array([reference(drive) for drive in v["drives"]])
+        delta = 1e-4
+        finite = np.array([(reference(d + delta)[-1] - reference(d - delta)[-1]) / (2 * delta) for d in v["drives"]])
     populations = states[:, :, 1, 1].real
-    return {"times": times.tolist(), "excitedPopulations": populations.tolist(), "referencePopulations": references.tolist(),
-        "driveGradients": gradients.tolist(), "finiteDifferenceGradients": finite.tolist(),
-        "maxPopulationDeviation": float(np.max(abs(populations - references))), "maxGradientDeviation": float(np.max(abs(gradients - finite))),
+    return {"times": times.tolist(), "excitedPopulations": populations.tolist(), "reference": reference_info, "referencePopulations": references.tolist() if references is not None else None,
+        "driveGradients": gradients.tolist(), "finiteDifferenceGradients": finite.tolist() if finite is not None else None,
+        "maxPopulationDeviation": float(np.max(abs(populations - references))) if references is not None else None, "maxGradientDeviation": float(np.max(abs(gradients - finite))) if finite is not None else None,
         "maxTraceError": float(np.max(abs(np.trace(states, axis1=-2, axis2=-1) - 1))),
         "minimumEigenvalue": float(np.linalg.eigvalsh(states).min()),
-        "model": "H=(drive X + detuning Z)/2; L=sqrt(gamma)|0><1|; hbar=1", "device": "cpu"}, [
+        "model": "H=(drive X + detuning Z)/2; L=sqrt(gamma)|0><1|; hbar=1", "device": jax.default_backend()}, [
         "Time and all rates use one consistent user-chosen unit; drive and detuning are angular frequencies.",
         "Gradients are of the final excited-state population with respect to drive, holding the other inputs fixed.",
         "A small qubit model with amplitude damping only; no fitted hardware model, pulse optimisation, GPU benchmark or scientific acceptance."]

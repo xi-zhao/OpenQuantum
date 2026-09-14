@@ -8,16 +8,19 @@ import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprotocol/sdk/types.js";
 import { runLocalJsonProcess } from "./local-json-process.mjs";
+import { executionSchema } from "./science-execution.mjs";
+import { localComputeEnvironment, localComputeProcessOptions } from "./local-compute-policy.mjs";
 
 export const sha256 = (value) => createHash("sha256").update(value).digest("hex");
 export const objectSchema = (properties, required = Object.keys(properties)) => ({ type: "object", properties, required, additionalProperties: false });
 export const numberSchema = (minimum, maximum, defaultValue) => ({ type: "number", minimum, maximum, ...(defaultValue === undefined ? {} : { default: defaultValue }) });
-export const integerSchema = (minimum, maximum, defaultValue) => ({ ...numberSchema(minimum, maximum, defaultValue), type: "integer" });
+export const integerSchema = (minimum, maximum, defaultValue) => ({ ...numberSchema(minimum ?? -Number.MAX_SAFE_INTEGER, maximum ?? Number.MAX_SAFE_INTEGER, defaultValue), type: "integer" });
 export const arraySchema = (items, minItems, maxItems) => ({ type: "array", items, minItems, maxItems });
 
 // Only a stdio boundary around one bounded local action; Harness owns registration and lifecycle.
 export function defineScienceTool({ name, description, source, inputSchema, resultSchema, checkInput = () => {} }) {
-  const ajv = new Ajv({ allErrors: true, useDefaults: true, strict: false });
+  inputSchema = { ...inputSchema, properties: { ...inputSchema.properties, execution: executionSchema } };
+  const ajv = new Ajv({ allErrors: true, useDefaults: true, strict: false, strictNumbers: true });
   const validateInput = ajv.compile(inputSchema);
   const outputSchema = objectSchema({
     schemaVersion: { const: "1.0" },
@@ -35,7 +38,7 @@ export function defineScienceTool({ name, description, source, inputSchema, resu
       then: { properties: { result: { properties: { reference: { properties: { mode: { const: mode } } } } } } },
     }));
   }
-  const validateOutput = new Ajv({ strict: false, allErrors: true }).compile(outputSchema);
+  const validateOutput = new Ajv({ strict: false, strictNumbers: true, allErrors: true }).compile(outputSchema);
   return {
     source, validateOutput,
     tool: { name, description, inputSchema, outputSchema, annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: true } },
@@ -55,14 +58,13 @@ export async function serveScienceTool({ entrypoint, id, definition, runtime = "
   const lockFile = runtime === "julia" ? "Manifest.toml" : "uv.lock";
   const dependencyLockSha256 = sha256(await readFile(path.join(skillRoot, lockFile)));
   const allowed = ["HOME", "PATH", "HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY", "NO_PROXY", "SSL_CERT_FILE", "SSL_CERT_DIR", "UV_CACHE_DIR", "UV_PYTHON_INSTALL_DIR", "SYSTEMROOT", "TEMP", "TMP", "TMPDIR", "WINDIR"];
-  const env = {
+  const env = localComputeEnvironment({
     ...Object.fromEntries(allowed.filter((key) => process.env[key]).map((key) => [key, process.env[key]])),
     UV_PROJECT_ENVIRONMENT: path.join(projectRoot, ".openquantum/python-envs", id),
     MPLCONFIGDIR: path.join(projectRoot, ".openquantum/cache", `${id}-matplotlib`),
     PYTHONNOUSERSITE: "1", PYTHONDONTWRITEBYTECODE: "1", MPLBACKEND: "Agg",
-    OMP_NUM_THREADS: "1", OPENBLAS_NUM_THREADS: "1", MKL_NUM_THREADS: "1", NUMBA_NUM_THREADS: "1",
-    JULIA_NUM_THREADS: "1", JULIA_NUM_PRECOMPILE_TASKS: "2", JULIA_PKG_PRECOMPILE_AUTO: "0",
-  };
+    JULIA_NUM_PRECOMPILE_TASKS: "2", JULIA_PKG_PRECOMPILE_AUTO: "0",
+  });
   const server = new Server({ name: `openquantum-${id}`, version: "0.1.0" }, { capabilities: { tools: {} } });
   let active;
   server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools: [definition.tool] }));
@@ -73,17 +75,14 @@ export async function serveScienceTool({ entrypoint, id, definition, runtime = "
       if (active) throw new Error("This local capability is busy; retry when its current call completes");
       controller = new AbortController(); active = controller;
       const inputSha256 = sha256(JSON.stringify(input));
-      const execution = input.execution ?? { timeoutMs: 180000, maxOutputBytes: 2 * 1024 * 1024, threads: 1 };
-      const threads = String(execution.threads);
-      const workerEnv = { ...env, OMP_NUM_THREADS: threads, OPENBLAS_NUM_THREADS: threads, MKL_NUM_THREADS: threads };
       const value = await runLocalJsonProcess({
         command: runtime === "julia" ? "julia" : "uv",
         args: runtime === "julia"
-          ? ["--startup-file=no", "--threads=1", `--project=${skillRoot}`, path.join(skillRoot, "mcp/bridge.jl")]
+          ? ["--startup-file=no", `--project=${skillRoot}`, path.join(skillRoot, "mcp/bridge.jl")]
           : ["run", "--quiet", "--frozen", "--project", skillRoot, "--python", "3.12", "python", path.join(skillRoot, "mcp/bridge.py")],
-        cwd: skillRoot, env: workerEnv, input: { input, inputSha256, dependencyLockSha256, source: definition.source },
+        cwd: skillRoot, env: localComputeEnvironment(env, input.execution), input: { input, inputSha256, dependencyLockSha256, source: definition.source },
         signal: AbortSignal.any([signal, controller.signal].filter(Boolean)),
-        timeoutMs: execution.timeoutMs, maxOutputBytes: execution.maxOutputBytes,
+        ...localComputeProcessOptions(input.execution),
         label: id,
         notFoundMessage: runtime === "julia" ? "需要 Julia；请先运行 npm run capability:paper-tools:setup" : "需要 uv；请先运行 npm run capability:paper-tools:setup",
       });

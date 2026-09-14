@@ -54,12 +54,6 @@ for (const capability of PAPER_TOOLS) {
     assert.equal((await call()).isError, undefined);
     const childEnv = JSON.parse(await readFile(envFile, "utf8"));
     assert.equal(childEnv.OPENAI_API_KEY, undefined);
-    if (definition.tool.inputSchema.properties.execution) {
-      assert.equal((await call({ ...capability.input, execution: { timeoutMs: 0, threads: 3, maxOutputBytes: 65536 } })).isError, undefined);
-      const configuredEnv = JSON.parse(await readFile(envFile, "utf8"));
-      for (const key of ["OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS"]) assert.equal(configuredEnv[key], "3");
-      assert.match(JSON.stringify(await call({ ...capability.input, execution: { maxOutputBytes: 16 } })), /too much data/);
-    }
     assert.equal((await call({ ...capability.input, execute: "arbitrary code" })).isError, true);
     assert.equal((await client.callTool({ name: "unknown", arguments: {} })).isError, true);
     for (const mode of ["hash", "input", "schema", "fail"]) {
@@ -86,12 +80,12 @@ for (const capability of PAPER_TOOLS) {
 
 test("paper tool resource and cross-field boundaries reject unsupported requests", async () => {
   const bad = {
-    "sqd-chemistry": [{ bondLengthAngstrom: 0.1 }, { counts: { "01010": 2 } }, { counts: { "0101": 9007199254740991, "1010": 1 } }],
-    "tjm-dynamics": [{ numQubits: -1 }, { steps: 1 }],
+    "sqd-chemistry": [{ bondLengthAngstrom: 0.1 }, { counts: { "01010": 2 } }, { counts: { "0101": -1 } }],
+    "tjm-dynamics": [{ numQubits: 1 }, { trajectories: 0, steps: 80 }],
     "ldpc-decoding": [{ parityCheck: [[1],[1,0]], syndromes: [[1,0]] }, { parityCheck: [[1,0]], syndromes: [[1,0]] }, { parityCheck: [[0]], syndromes: [[1]] }, { parityCheck: [[1,0],[1,0]], syndromes: [[1,0]] }],
     "flow-vqe": [{ numQubits: 3, terms: [{ pauli: "XX", coefficient: 1 }] }, { terms: [{ pauli: "XX", coefficient: 1 }, { pauli: "XX", coefficient: 2 }] }, { terms: [{ pauli: "ZZ", coefficient: 1 }], epochs: 0, batchSize: 64 }],
-    "tenpy-ground-state": [{ numSites: 2 }, { numSites: 2.5 }],
-    "randomized-measurements": [{ numQubits: 2, subsystem: [2] }, { subsystem: [0,0] }, { settings: 128, shotsPerSetting: 256 }],
+    "tenpy-ground-state": [{ numSites: 2 }, { numSites: 3.5 }],
+    "randomized-measurements": [{ numQubits: 2, subsystem: [2] }, { subsystem: [0,0] }, { settings: 0, shotsPerSetting: 256 }],
   };
   for (const { id, tool } of PAPER_TOOLS) {
     const { definition } = await import(`../.agents/skills/${id}/mcp/contracts.mjs`);

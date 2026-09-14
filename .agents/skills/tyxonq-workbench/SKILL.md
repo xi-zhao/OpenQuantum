@@ -1,6 +1,6 @@
 ---
 name: tyxonq-workbench
-description: 使用 OpenQuantum 通过 Harness MCP Client 注册的 TyxonQ Tool 构建并运行有界量子电路，比较无噪声 statevector 与 density-matrix 噪声采样结果。用于 TyxonQ 电路验证、Bell/GHZ 等小规模态制备、采样分布和退极化/振幅阻尼/相位阻尼/Pauli 噪声分析；不用于真实量子硬件、云任务、任意 Python 执行或替代独立科学 Validator。
+description: 使用 OpenQuantum 通过 Harness MCP Client 注册的 TyxonQ Tool 构建并运行量子电路，比较无噪声 statevector 与 density-matrix 噪声采样结果。用于 TyxonQ 电路验证、Bell/GHZ 等态制备、采样分布和退极化/振幅阻尼/相位阻尼/Pauli 噪声分析；不用于真实量子硬件、云任务、任意 Python 执行或替代独立科学 Validator。
 ---
 
 # TyxonQ Workbench
@@ -11,9 +11,9 @@ description: 使用 OpenQuantum 通过 Harness MCP Client 注册的 TyxonQ Tool 
 当前只开放本地、无凭据的电路仿真；首次调用可能由 `uv` 下载固定依赖，实际计算不连接 TyxonQ
 云端 Provider：
 
-- 1–8 个量子位；
-- 至多 64 个受控门操作；
-- 精确 statevector，或至多 8192 shots 的采样；
+- 量子位数由 numQubits 指定；
+- 门操作列表由 operations 指定；
+- 精确 statevector，或用户指定 shots 的采样；
 - 可选 density-matrix 噪声：depolarizing、amplitude damping、phase damping、Pauli。
 
 当前不开放 TyxonQ 云端 Provider、Token、任务提交、查询或取消，也不开放任意 Python、文件路径、

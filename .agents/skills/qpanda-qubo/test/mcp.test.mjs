@@ -280,17 +280,14 @@ test("invalid problems fail before Python execution", async () => {
   for (const argumentsValue of [
     // non-square matrix
     { quadratic: [[0, 1]], method: "traversal" },
-    // too many variables
-    {
-      quadratic: Array.from({ length: 6 }, () => Array.from({ length: 6 }, () => 0)),
-      method: "traversal",
-    },
+    // Empty matrix
+    { quadratic: [], method: "traversal" },
     // qaoa without a layer
     { quadratic: [[0]], method: "qaoa" },
     // layer supplied for traversal
     { quadratic: [[0]], method: "traversal", layer: 2 },
     // layer out of range
-    { quadratic: [[0]], method: "qaoa", layer: 99 },
+    { quadratic: [[0]], method: "qaoa", layer: 0 },
     // linear length mismatch
     { quadratic: [[0, 1], [0, 0]], linear: [1], method: "traversal" },
   ]) {

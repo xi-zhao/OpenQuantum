@@ -241,8 +241,8 @@
           "additionalProperties": false,
           "required": ["wallTimeSeconds", "memoryMiB", "maxArtifacts", "maxCostUsd"],
           "properties": {
-            "wallTimeSeconds": { "type": "integer", "minimum": 1 },
-            "memoryMiB": { "type": "integer", "minimum": 1 },
+            "wallTimeSeconds": { "type": ["integer", "null"], "minimum": 1, "description": "Null delegates the computation deadline to the deployment or caller." },
+            "memoryMiB": { "type": ["integer", "null"], "minimum": 1, "description": "Null delegates the memory budget to the deployment or caller." },
             "maxArtifacts": { "type": "integer", "minimum": 1 },
             "maxCostUsd": { "type": "number", "minimum": 0 }
           }

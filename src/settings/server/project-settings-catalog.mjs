@@ -5,6 +5,42 @@ import { quantumHardwareMcpIntegration } from "./quantum-hardware-mcp.mjs";
 
 const QISKIT_MCP_SOURCE = "https://github.com/Qiskit/mcp-servers";
 const MCP_CATALOG = Object.freeze({
+  pyzx_local: Object.freeze({
+    displayName: "PyZX 电路优化",
+    description: "ZX 重写、Clifford+T 门数比较与完整酉矩阵对照。",
+    provider: "pyzx / OpenQuantum",
+    sourceUrl: "https://github.com/zxcalc/pyzx",
+    packageName: "pyzx",
+    packageVersion: "0.10.6",
+    setup: null,
+  }),
+  graphix_local: Object.freeze({
+    displayName: "Graphix 测量式计算",
+    description: "电路到 MBQC 模式、资源图、自适应测量和纠正输出。",
+    provider: "graphix / OpenQuantum",
+    sourceUrl: "https://github.com/TeamGraphix/graphix",
+    packageName: "graphix",
+    packageVersion: "0.3.5",
+    setup: null,
+  }),
+  symmer_local: Object.freeze({
+    displayName: "Symmer 对称性降比特",
+    description: "指定 Pauli 对称性扇区的降比特与同扇区保谱检查。",
+    provider: "symmer / OpenQuantum",
+    sourceUrl: "https://github.com/qmatter-labs/symmer",
+    packageName: "symmer",
+    packageVersion: "0.0.13@a4ba56e3",
+    setup: null,
+  }),
+  paulie_local: Object.freeze({
+    displayName: "PauLie 电路代数",
+    description: "Pauli 生成元的 Lie 闭包、分类维数与独立矩阵参照。",
+    provider: "paulie / OpenQuantum",
+    sourceUrl: "https://github.com/QPauLie/PauLie",
+    packageName: "paulie",
+    packageVersion: "0.2.3",
+    setup: null,
+  }),
   dynamiqs_local: Object.freeze({
     displayName: "Dynamiqs 动力学与梯度",
     description: "驱动耗散单量子位、参数批量扫描和人口梯度，含独立数值对照。",
@@ -127,7 +163,7 @@ const MCP_CATALOG = Object.freeze({
   qcec_local: Object.freeze({
     displayName: "量子电路等价性验证",
     description:
-      "使用固定 MQT QCEC 在本地判断两份有界 unitary OpenQASM 2 电路的严格等价、相位等价、不等价或不确定状态；不连接云端或真实硬件。",
+      "使用固定 MQT QCEC 在本地判断两份unitary OpenQASM 2 电路的严格等价、相位等价、不等价或不确定状态；不连接云端或真实硬件。",
     provider: "MQT / OpenQuantum",
     sourceUrl: "https://github.com/munich-quantum-toolkit/qcec",
     packageName: "mqt.qcec",
@@ -137,7 +173,7 @@ const MCP_CATALOG = Object.freeze({
   qec_local: Object.freeze({
     displayName: "QEC Memory 实验",
     description:
-      "使用固定 Stim 与 PyMatching 在本地运行有界、带 seed 的旋转表面码 X/Z memory 实验，报告有限 shots 的逻辑错误率与不确定度；不连接云端或真实硬件，也不据单点结果宣称阈值。",
+      "使用固定 Stim 与 PyMatching 在本地运行带 seed 的旋转表面码 X/Z memory 实验，报告有限 shots 的逻辑错误率与不确定度；不连接云端或真实硬件，也不据单点结果宣称阈值。",
     provider: "Stim / PyMatching / OpenQuantum",
     sourceUrl: "https://github.com/quantumlib/Stim",
     packageName: "stim + pymatching",
@@ -157,7 +193,7 @@ const MCP_CATALOG = Object.freeze({
   tyxonq_local: Object.freeze({
     displayName: "TyxonQ Local",
     description:
-      "本地小规模电路与噪声仿真；首次调用会由 uv 准备固定的 TyxonQ Python 环境，不连接云端或真实量子硬件。",
+      "本地电路与噪声仿真；首次调用会由 uv 准备固定的 TyxonQ Python 环境，不连接云端或真实量子硬件。",
     provider: "TyxonQ / OpenQuantum",
     sourceUrl: "https://github.com/QureGenAI-Biotech/TyxonQ",
     packageName: "tyxonq",

@@ -25,12 +25,12 @@
     "logicalQubits": { "const": 2 },
     "sectorDimension": { "const": 2 },
     "statevectorDimension": { "const": 4 },
-    "pauliTermCount": { "type": "integer", "minimum": 1, "maximum": 32 },
+    "pauliTermCount": { "type": "integer", "minimum": 1 },
     "ansatzParameterCount": { "const": 1 },
-    "expectationEvaluations": { "type": "integer", "minimum": 1, "maximum": 256 },
-    "pauliTermEvaluations": { "type": "integer", "minimum": 1, "maximum": 8192 },
+    "expectationEvaluations": { "type": "integer", "minimum": 1 },
+    "pauliTermEvaluations": { "type": "integer", "minimum": 1 },
     "shots": { "const": 0 },
-    "maxEvaluations": { "type": "integer", "minimum": 8, "maximum": 256 }
+    "maxEvaluations": { "type": "integer", "minimum": 8 }
   },
   "$defs": {
     "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }

@@ -18,9 +18,6 @@ from importlib.metadata import distribution
 from typing import Any
 
 PACKAGE_VERSION = "2.0.0"
-MAX_VARS = 5
-MAX_LAYER = 6
-MAX_ABS_COEFF = 1e6
 
 
 def qubo_api() -> tuple[Any, Any, Any]:
@@ -56,17 +53,17 @@ def finite_number(value: Any, field: str) -> float:
     if isinstance(value, bool) or not isinstance(value, (int, float)):
         raise ValueError(f"{field} must be a finite number")
     number = float(value)
-    if not math.isfinite(number) or abs(number) > MAX_ABS_COEFF:
-        raise ValueError(f"{field} must be a finite number within +/-{MAX_ABS_COEFF}")
+    if not math.isfinite(number):
+        raise ValueError(f"{field} must be a finite number")
     return number
 
 
 def validate_problem(value: Any) -> dict[str, Any]:
-    if not is_record(value) or set(value) - {"quadratic", "linear", "constant", "method", "layer"}:
+    if not is_record(value) or set(value) - {"quadratic", "linear", "constant", "method", "layer", "referenceMode"}:
         raise ValueError("QUBO request is invalid")
     quadratic = value.get("quadratic")
-    if not isinstance(quadratic, list) or not 1 <= len(quadratic) <= MAX_VARS:
-        raise ValueError(f"quadratic must be a matrix with 1 to {MAX_VARS} rows")
+    if not isinstance(quadratic, list) or len(quadratic) < 1:
+        raise ValueError("quadratic must be a nonempty square matrix")
     size = len(quadratic)
     matrix: list[list[float]] = []
     for i, row in enumerate(quadratic):
@@ -89,12 +86,16 @@ def validate_problem(value: Any) -> dict[str, Any]:
         raise ValueError("method must be traversal or qaoa")
     layer = value.get("layer")
     if method == "qaoa":
-        if not isinstance(layer, int) or isinstance(layer, bool) or not 1 <= layer <= MAX_LAYER:
-            raise ValueError(f"layer must be an integer between 1 and {MAX_LAYER} for qaoa")
+        if not isinstance(layer, int) or isinstance(layer, bool) or layer < 1:
+            raise ValueError("layer must be a positive integer for qaoa")
     elif layer is not None:
         raise ValueError("layer only applies to method=qaoa")
 
+    reference_mode = value.get("referenceMode", "auto")
+    if reference_mode not in ("auto", "required", "skip"):
+        raise ValueError("Invalid referenceMode")
     return {
+        "referenceMode": reference_mode,
         "quadratic": matrix,
         "linear": linear,
         "constant": constant,
@@ -131,17 +132,17 @@ def solve_payload(request: dict[str, Any]) -> dict[str, Any]:
     binary = QuadraticBinary(problem)
     n_key, n_res = (int(number) for number in binary.query_qnumber())
 
-    # Classical brute-force reference: the deterministic anchor for this problem.
-    assignments_raw, minimum_value = binary.qubobytraversal()
-    assignments = [[int(bit) for bit in assignment] for assignment in assignments_raw]
-    minimum_value = float(minimum_value)
-
-    # Self-consistency check that does not depend on qubit ordering: the objective
-    # value the upstream reports for a reported optimum must equal the minimum.
+    mode = request["referenceMode"]
+    run_classical = request["method"] == "traversal" or mode == "required" or (mode == "auto" and request["size"] <= 12)
+    classical = None
     consistency_error = None
-    if assignments:
-        recomputed = float(binary.function_value(assignments[0]))
-        consistency_error = abs(recomputed - minimum_value)
+    if run_classical:
+        assignments_raw, minimum_value = binary.qubobytraversal()
+        assignments = [[int(bit) for bit in assignment] for assignment in assignments_raw]
+        minimum_value = float(minimum_value)
+        if assignments:
+            consistency_error = abs(float(binary.function_value(assignments[0])) - minimum_value)
+        classical = {"method": "qubobytraversal", "optimalAssignments": assignments, "minimumValue": minimum_value}
 
     quantum = None
     if request["method"] == "qaoa":
@@ -171,11 +172,10 @@ def solve_payload(request: dict[str, Any]) -> dict[str, Any]:
             "resultQubits": n_res,
             "sha256": hashlib.sha256(problem_bytes).hexdigest(),
         },
-        "classical": {
-            "method": "qubobytraversal",
-            "optimalAssignments": assignments,
-            "minimumValue": minimum_value,
-        },
+        "classical": classical,
+        "classicalRole": "main" if request["method"] == "traversal" else ("reference" if run_classical else "not_run"),
+        "reference": {"mode": mode, "status": "computed" if run_classical and request["method"] == "qaoa" else "not_run",
+            "reason": "Classical traversal used for comparison." if run_classical and request["method"] == "qaoa" else "No additional classical reference; traversal is still executed when selected as the main algorithm."},
         "quantum": quantum,
         "checks": {
             "objectiveConsistencyError": consistency_error,
@@ -201,9 +201,7 @@ def package_version() -> str:
 
 
 def main() -> None:
-    raw = sys.stdin.buffer.read(256 * 1024 + 1)
-    if len(raw) > 256 * 1024:
-        raise ValueError("bridge request is too large")
+    raw = sys.stdin.buffer.read()
     value = json.loads(raw.decode("utf8"))
     if not is_record(value) or set(value) - {"action", "request"}:
         raise ValueError("bridge envelope is invalid")

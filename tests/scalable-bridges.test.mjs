@@ -69,7 +69,7 @@ test("users choose compute scale; physical and representation errors still rejec
   for (const [id,input] of Object.entries(large)) {
     const { definition: d } = await import(`../.agents/skills/${id}/mcp/contracts.mjs`);
     const normalized = d.normalize(d.tool.name, input);
-    assert.deepEqual(normalized.execution, { timeoutMs: 180000, maxOutputBytes: 2097152, threads: 1 });
+    assert.deepEqual(normalized.execution, {});
   }
   const { definition: d } = await import("../.agents/skills/sqd-chemistry/mcp/contracts.mjs");
   for (const input of [
@@ -88,7 +88,7 @@ test("execution options accept user budgets and reject invalid timer/size/thread
     const { definition: d } = await import(`../.agents/skills/${entry.id}/mcp/contracts.mjs`);
     const options = { timeoutMs: 0, maxOutputBytes: 32*1024*1024, threads: 8 };
     assert.deepEqual(d.normalize(entry.tool, { ...entry.input, execution: options }).execution, options);
-    for (const execution of [{ timeoutMs: -1 }, { timeoutMs: 2147483648 }, { maxOutputBytes: 0 }, { threads: 0 }, { command: "arbitrary code" }]) {
+    for (const execution of [{ timeoutMs: -1 }, { timeoutMs: Number.MAX_SAFE_INTEGER + 1 }, { maxOutputBytes: -1 }, { threads: 0 }, { command: "arbitrary code" }]) {
       assert.throws(() => d.normalize(entry.tool, { ...entry.input, execution }));
     }
   }

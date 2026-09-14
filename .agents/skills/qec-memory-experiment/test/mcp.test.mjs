@@ -148,9 +148,9 @@ test("noisy finite-shot experiment reports counts and uncertainty without a thre
 test("invalid code distances and resource requests fail before Python", async () => {
   for (const argumentsValue of [
     { ...zeroNoise, distance: 4 },
-    { ...zeroNoise, distance: 9 },
-    { ...zeroNoise, shots: 99 },
-    { ...zeroNoise, physicalErrorRate: 0.2 },
+    { ...zeroNoise, distance: 1 },
+    { ...zeroNoise, shots: 0 },
+    { ...zeroNoise, physicalErrorRate: 1.2 },
     { ...zeroNoise, basis: "y" },
   ]) {
     const result = await client.callTool({

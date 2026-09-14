@@ -1,10 +1,10 @@
 import { defineScienceTool, objectSchema as obj, numberSchema as num, integerSchema as int, arraySchema as arr } from "../../../../src/lib/bounded-science-mcp.mjs";
-const bits = arr(int(0,1),1,128);
+const bits = arr(int(0,1),1);
 export const definition = defineScienceTool({
   name: "decode_ldpc_syndromes",
-  description: "Run the pinned ldpc BP+LSD decoder on a bounded binary parity-check matrix and syndromes. Returns corrections and independent GF(2) syndrome checks; does not infer logical success.",
+  description: "Decode binary parity-check matrices with pinned BP+LSD and independently replay each syndrome over GF(2). Matrix dimensions, batch size and iteration count are chosen by the user; logical success is not inferred.",
   source: { name: "ldpc", version: "2.4.1", repository: "https://github.com/quantumgizmos/ldpc" },
-  inputSchema: obj({ parityCheck: arr(bits,1,64), syndromes: arr(arr(int(0,1),1,64),1,32), errorRate: num(0.000001,0.49,0.05), bpIterations: int(1,50,10), lsdOrder: int(0,2,0) }, ["parityCheck","syndromes","errorRate","bpIterations","lsdOrder"]),
+  inputSchema: obj({ parityCheck: arr(bits,1), syndromes: arr(arr(int(0,1),1),1), errorRate: num(0,1,0.05), bpIterations: int(1,undefined,10), lsdOrder: int(0,undefined,0) }, ["parityCheck","syndromes","errorRate","bpIterations","lsdOrder"]),
   checkInput(v) {
     const n = v.parityCheck[0].length, m = v.parityCheck.length;
     if (v.parityCheck.some(row => row.length !== n)) throw new Error("parityCheck must be rectangular");
@@ -26,5 +26,5 @@ export const definition = defineScienceTool({
       if (rows.some(row => !row.slice(0,n).some(Boolean) && row[n])) throw new Error("Syndrome is inconsistent with parityCheck over GF(2)");
     }
   },
-  resultSchema: obj({ corrections: arr(bits,1,32), residualSyndromes: arr(arr(int(0,1),1,64),1,32), syndromeSatisfied: arr({ type: "boolean" },1,32), correctionWeights: arr(int(0,128),1,32), implementation: { const: "serial BP+LSD, lsd_cs" }, logicalSuccess: { const: "not_evaluated" } }),
+  resultSchema: obj({ corrections: arr(bits,1), residualSyndromes: arr(arr(int(0,1),1),1), syndromeSatisfied: arr({ type: "boolean" },1), correctionWeights: arr(int(0,undefined),1), implementation: { const: "serial BP+LSD, lsd_cs" }, logicalSuccess: { const: "not_evaluated" } }),
 });

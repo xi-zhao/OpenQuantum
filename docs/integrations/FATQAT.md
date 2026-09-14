@@ -1,6 +1,6 @@
 # FatQat 量子实验
 
-接入日期：2026-09-11。此接入将 FatQat 的有界本地计算提供给 OpenQuantum Agent，
+接入日期：2026-09-11。此接入将 FatQat 的本地计算提供给 OpenQuantum Agent，
 并用 Skill 指导实验选择和解释。它可供量子学习通的教学任务使用；没有新增课程编辑器或独立实验面板。
 
 ## 版本与运行方式
@@ -15,14 +15,14 @@
   Node MCP 边界校验输入，独立 Python worker 调用 FatQat，复用现有 `runLocalJsonProcess` 处理超时和取消。
 - 初次 Tool 调用可能下载依赖、写入 `.openquantum/python-envs/fatqat-workbench` 和绘图库缓存，
   因此两个 Tool 都声明 `workspace-write`、非破坏性、允许联网准备环境；数值实验不访问模型 API 或量子云。
-  每次计算最多 120 秒，服务最多两个并行计算；Harness 调用上限 135 秒。
+  服务同时接受两个计算；worker 默认不设置时间或输出大小上限，支持按调用方配置预算及取消；连接层配置见[本地计算与资源配置](SCALABLE_BRIDGES.md)。
 
 ## 已暴露的计算合同
 
 | Tool | 内容 | 限制 |
 | --- | --- | --- |
-| `simulate_fatqat_circuit` | 通用线路、超导原生门与 CZ 图约束、原子阵列配对；精确概率、可选采样、态与 Z 期望值、PNG 图 | 1–8 qubits，64 操作，4096 shots；噪声最多 5 qubits，原子阵列最多 6 站点 |
-| `simulate_fatqat_dynamics` | 两个三能级 transmon 的单站点恒定驱动，或 1–6 个二能级里德堡原子链的全局恒定驱动、失谐与 C6 作用；人口时间序列、最终态和 PNG 图 | transmon 0.01–200 ns；原子 0.001–5 µs；2–51 个时间点；全基态初态，无附加噪声 |
+| `simulate_fatqat_circuit` | 通用线路、超导原生门与 CZ 图约束、原子阵列配对；精确概率、可选采样、态与 Z 期望值、PNG 图 | 量子位数、操作数、shots 和阵列站点数由用户指定 |
+| `simulate_fatqat_dynamics` | 两个三能级 transmon 的单站点恒定驱动，或指定大小的二能级里德堡原子链的全局恒定驱动、失谐与 C6 作用；人口时间序列、最终态和 PNG 图 | 时长和采样点数由输入决定；固定全基态初态，无附加噪声 |
 
 位序固定为 q0/site0 在最左侧、最高位。电路概率来自测量前的态；counts 是另一条终端测量的有限 shots 结果。
 噪声是每个幺正门后各操作数独立的通道，不作用于加载或配对。原子阵列初始已加载；Pair/Unpair
@@ -32,7 +32,7 @@
 transmon 保留完整 9 维物理态；图上 level 2 是单站点泄漏人口。两类模型均为参考模型，不能当成当前设备校准。
 transmon 驱动是各 site 旋转系中的共振 Rabi 包络，此接口无静态 exchange；泄漏仅计三能级截断的 level 2，
 采样峰值不保证是连续时间峰值。Rydberg 使用 `H/ℏ=(Ω/2)ΣX−ΔΣn+Σ(C6/r⁶)nᵢnⱼ`、`n=|r⟩⟨r|`。
-相互作用强度与时长的计算预算只限制多原子实验，单原子的 C6 和间距不影响轨迹。
+单原子的 C6 和间距不影响轨迹；多原子的作用强度由给定 C6 和几何决定。
 
 输入示例见 [experiments.md](../../.agents/skills/fatqat-workbench/references/experiments.md)。
 用户可在 OpenQuantum 对话中请求“用 FatQat 比较 Bell 态精确概率与 1024 次采样”或

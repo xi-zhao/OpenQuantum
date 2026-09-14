@@ -54,7 +54,7 @@ function assertString(value, label, options = {}) {
 }
 
 function assertFiniteNumber(value, label, options = {}) {
-  const { minimum = -1_000_000, maximum = 1_000_000 } = options;
+  const { minimum = -Infinity, maximum = Infinity } = options;
   if (!Number.isFinite(value) || value < minimum || value > maximum) {
     failInput(
       "INVALID_REQUEST",
@@ -176,10 +176,9 @@ export function canonicalizeRequest(request) {
 
   if (
     !Array.isArray(request.hamiltonian.terms) ||
-    request.hamiltonian.terms.length < 1 ||
-    request.hamiltonian.terms.length > 32
+    request.hamiltonian.terms.length < 1
   ) {
-    failInput("INVALID_REQUEST", "request.hamiltonian.terms must contain between 1 and 32 terms", {
+    failInput("INVALID_REQUEST", "request.hamiltonian.terms must contain at least one term", {
       path: "request.hamiltonian.terms",
     });
   }
@@ -240,7 +239,7 @@ export function canonicalizeRequest(request) {
     "request.method.optimizer.id",
   );
   assertExact(request.method.optimizer.version, "1.0.0", "request.method.optimizer.version");
-  assertExact(request.method.optimizer.coarsePoints, 65, "request.method.optimizer.coarsePoints");
+  assertInteger(request.method.optimizer.coarsePoints, "request.method.optimizer.coarsePoints", { minimum: 4 });
   assertFiniteNumber(
     request.method.optimizer.angleToleranceRadians,
     "request.method.optimizer.angleToleranceRadians",
@@ -248,7 +247,6 @@ export function canonicalizeRequest(request) {
   );
   assertInteger(request.method.optimizer.maxEvaluations, "request.method.optimizer.maxEvaluations", {
     minimum: 8,
-    maximum: 256,
   });
 
   assertOnlyKeys(
@@ -267,7 +265,7 @@ export function canonicalizeRequest(request) {
   });
   assertExact(
     request.acceptanceProfile.version,
-    "1.0.0",
+    "1.1.0",
     "request.acceptanceProfile.version",
   );
 

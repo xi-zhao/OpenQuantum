@@ -10,7 +10,7 @@ def compute(v):
     import numpy as np
     import clifft
     n, shots = v["numQubits"], v["shots"]
-    reference = reference_plan(v["referenceMode"], n <= 6, "Independent dense density-matrix evolution", "Auto reference selects up to 6 qubits; use required to request a larger reference.")
+    reference = reference_plan(v["referenceMode"], n <= 6, "Independent dense density-matrix evolution", "Automatic dense reference is omitted above 6 qubits; required attempts it at the requested size.")
     rho = None
     if reference["status"] == "computed":
         dimension = 2 ** n
@@ -48,9 +48,11 @@ def compute(v):
     circuit = "\n".join(lines)
     program = clifft.compile(circuit)
     width = int(program.peak_active_width)
-    if v.get("maxActiveWidth") is not None and width > v["maxActiveWidth"]:
+    if v["maxActiveWidth"] is not None and width > v["maxActiveWidth"]:
         raise ValueError(f"Compiled peak active width {width} exceeds maxActiveWidth={v['maxActiveWidth']}")
-    sampled = np.asarray(clifft.sample(program, shots=shots, seed=v["seed"], threads=v["execution"]["threads"]).measurements)
+    thread_count = __import__("os").environ.get("OMP_NUM_THREADS")
+    options = {"threads": int(thread_count)} if thread_count else {}
+    sampled = np.asarray(clifft.sample(program, shots=shots, seed=v["seed"], **options).measurements)
     if sampled.shape != (shots, n) or not np.isin(sampled, [0, 1]).all():
         raise ValueError("Clifft returned invalid measurement dimensions or values")
     counts = Counter("".join(map(str, row)) for row in sampled.astype(np.uint8))

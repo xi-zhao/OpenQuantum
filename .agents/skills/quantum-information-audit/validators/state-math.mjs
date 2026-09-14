@@ -1,7 +1,5 @@
 import { createHash } from "node:crypto";
 
-export const MAX_DIMENSION = 16;
-export const MAX_ABS_COEFFICIENT = 1e6;
 export const STRUCTURAL_TOLERANCE = 1e-10;
 export const REPLAY_TOLERANCE = 1e-9;
 
@@ -12,11 +10,10 @@ function isRecord(value) {
 function finiteNumber(value, field) {
   if (
     typeof value !== "number" ||
-    !Number.isFinite(value) ||
-    Math.abs(value) > MAX_ABS_COEFFICIENT
+    !Number.isFinite(value)
   ) {
     throw new TypeError(
-      `${field} must be a finite number within +/-${MAX_ABS_COEFFICIENT}`,
+      `${field} must be a finite number`,
     );
   }
   return Object.is(value, -0) ? 0 : value;
@@ -56,8 +53,8 @@ export function normalizeAuditRequest(value) {
     throw new TypeError("subsystemDimensions must contain at least two integers >= 2");
   }
   const dimension = value.subsystemDimensions.reduce((product, item) => product * item, 1);
-  if (dimension > MAX_DIMENSION) {
-    throw new TypeError(`total matrix dimension must not exceed ${MAX_DIMENSION}`);
+  if (!Number.isSafeInteger(dimension)) {
+    throw new TypeError("total matrix dimension must be an exactly representable integer");
   }
   const matrixReal = normalizeMatrix(value.matrixReal, dimension, "matrixReal");
   const matrixImag =
@@ -184,6 +181,7 @@ function jacobiEigenvalues(input) {
   const matrix = input.map((row) => [...row]);
   const size = matrix.length;
   const maxIterations = 100 * size * size;
+  let converged = false;
   for (let iteration = 0; iteration < maxIterations; iteration += 1) {
     let p = 0;
     let q = 1;
@@ -198,7 +196,7 @@ function jacobiEigenvalues(input) {
         }
       }
     }
-    if (largest <= 1e-14) break;
+    if (largest <= 1e-14) { converged = true; break; }
     const angle = 0.5 * Math.atan2(2 * matrix[p][q], matrix[q][q] - matrix[p][p]);
     const cosine = Math.cos(angle);
     const sine = Math.sin(angle);
@@ -219,6 +217,7 @@ function jacobiEigenvalues(input) {
       matrix[q][i] = matrix[i][q];
     }
   }
+  if (!converged) throw new Error("Independent Jacobi eigensolver did not converge; no spectrum is accepted");
   return matrix.map((row, index) => row[index]).sort((left, right) => left - right);
 }
 

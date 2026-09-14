@@ -7,6 +7,7 @@ import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprotocol/sdk/types.js";
 import { runLocalJsonProcess } from "../../../../src/lib/local-json-process.mjs";
+import { localComputeEnvironment, localComputeProcessOptions } from "../../../../src/lib/local-compute-policy.mjs";
 import { TOOLS, normalizeRequest, validateOutput } from "./contracts.mjs";
 
 const skillRoot = fileURLToPath(new URL("..", import.meta.url));
@@ -32,10 +33,10 @@ server.setRequestHandler(CallToolRequestSchema, async (request, { signal }) => {
     const result = await runLocalJsonProcess({
       command: "uv",
       args: ["run", "--quiet", "--frozen", "--project", skillRoot, "--python", "3.12", "python", path.join(skillRoot, "mcp/bridge.py")],
-      cwd: skillRoot, env: environment,
+      cwd: skillRoot, env: localComputeEnvironment(environment),
       input: { tool: request.params.name, input, dependencyLockSha256 },
       signal: AbortSignal.any([signal, controller.signal].filter(Boolean)),
-      timeoutMs: 120_000, maxOutputBytes: 2 * 1024 * 1024,
+      ...localComputeProcessOptions(),
       label: "FatQat local experiment", notFoundMessage: "未找到 uv；请安装 uv 后再运行 FatQat 实验",
     });
     const { plotPng, ...structuredContent } = result;

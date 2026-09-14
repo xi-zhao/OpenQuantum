@@ -12,6 +12,7 @@ import {
 } from "@modelcontextprotocol/sdk/types.js";
 
 import { runLocalJsonProcess } from "../../../../src/lib/local-json-process.mjs";
+import { localComputeEnvironment, localComputeProcessOptions } from "../../../../src/lib/local-compute-policy.mjs";
 
 const skillRoot = fileURLToPath(new URL("..", import.meta.url));
 const projectRoot = path.resolve(skillRoot, "../../..");
@@ -22,11 +23,6 @@ const projectEnvironment = path.join(
   "python-envs",
   "quantum-circuit-verification",
 );
-const MAX_QASM_BYTES = 64 * 1024;
-const MAX_QUBITS = 16;
-const MAX_STATEMENTS = 512;
-const BRIDGE_TIMEOUT_MS = 30_000;
-const MAX_BRIDGE_OUTPUT_BYTES = 2 * 1024 * 1024;
 const BRIDGE_ENVIRONMENT_NAMES = Object.freeze([
   "HOME",
   "HTTP_PROXY",
@@ -54,14 +50,14 @@ const lazyEnvironmentAnnotations = Object.freeze({
 const TOOLS = Object.freeze([
   {
     name: "verify_circuit_equivalence",
-    title: "Verify two bounded unitary OpenQASM 2 circuits",
+    title: "Verify two unitary OpenQASM 2 circuits",
     description:
       "Use pinned MQT QCEC to classify two supplied unitary OpenQASM 2 circuits as equivalent, non-equivalent, phase-equivalent, probabilistic or inconclusive. Measurements, resets, classical control, arbitrary include files and more than 16 qubits are rejected before Python execution. Returns validation observations, not provenance-complete final acceptance.",
     inputSchema: {
       type: "object",
       properties: {
-        circuitAOpenQasm2: { type: "string", minLength: 1, maxLength: MAX_QASM_BYTES },
-        circuitBOpenQasm2: { type: "string", minLength: 1, maxLength: MAX_QASM_BYTES },
+        circuitAOpenQasm2: { type: "string", minLength: 1 },
+        circuitBOpenQasm2: { type: "string", minLength: 1 },
       },
       required: ["circuitAOpenQasm2", "circuitBOpenQasm2"],
       additionalProperties: false,
@@ -103,8 +99,8 @@ function strippedQasm(value) {
 function summarizeQasm(value, field) {
   if (typeof value !== "string") throw new TypeError(`${field} must be a string`);
   const bytes = Buffer.byteLength(value, "utf8");
-  if (bytes < 1 || bytes > MAX_QASM_BYTES || value.includes("\0")) {
-    throw new TypeError(`${field} must contain 1 to ${MAX_QASM_BYTES} UTF-8 bytes`);
+  if (bytes < 1 || value.includes("\0")) {
+    throw new TypeError(`${field} must be a nonempty OpenQASM string without NUL bytes`);
   }
   const source = strippedQasm(value);
   if (!/^\s*OPENQASM\s+2\.0\s*;/i.test(source)) {
@@ -124,13 +120,10 @@ function summarizeQasm(value, field) {
   const qregs = [...source.matchAll(/\bqreg\s+[A-Za-z_][A-Za-z0-9_]*\[(\d+)\]\s*;/g)];
   if (qregs.length < 1) throw new TypeError(`${field} must declare at least one qreg`);
   const qubits = qregs.reduce((total, match) => total + Number(match[1]), 0);
-  if (!Number.isInteger(qubits) || qubits < 1 || qubits > MAX_QUBITS) {
-    throw new TypeError(`${field} must declare 1 to ${MAX_QUBITS} qubits`);
+  if (!Number.isSafeInteger(qubits) || qubits < 1) {
+    throw new TypeError(`${field} must declare a positive, exactly representable qubit count`);
   }
   const statements = (source.match(/;/g) ?? []).length;
-  if (statements > MAX_STATEMENTS) {
-    throw new TypeError(`${field} must contain at most ${MAX_STATEMENTS} statements`);
-  }
   return {
     bytes,
     sha256: createHash("sha256").update(value).digest("hex"),
@@ -176,11 +169,10 @@ function runBridge(envelope, signal) {
     command: "uv",
     args: ["run", "--quiet", "--project", skillRoot, "--python", "3.12", "python", bridgePath],
     cwd: skillRoot,
-    env: bridgeEnvironment(),
+    env: localComputeEnvironment(bridgeEnvironment()),
     input: envelope,
     signal,
-    timeoutMs: BRIDGE_TIMEOUT_MS,
-    maxOutputBytes: MAX_BRIDGE_OUTPUT_BYTES,
+    ...localComputeProcessOptions(),
     label: "MQT QCEC runtime",
     notFoundMessage: "未找到 uv；请先安装 uv 后再使用 MQT QCEC 本地验证",
   });
@@ -265,7 +257,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request, { signal }) => {
         validation,
         scientificValidation: "observations_available",
         limitations: [
-          "This profile accepts bounded unitary OpenQASM 2 only; measurements, resets and classical control are out of scope.",
+          "This profile accepts unitary OpenQASM 2 only; measurements, resets and classical control are out of scope.",
           "Probabilistic or no_information criteria remain inconclusive and must not be promoted to equivalence claims.",
           "Final scientific acceptance requires materialized artifacts and Session Event Log provenance.",
         ],

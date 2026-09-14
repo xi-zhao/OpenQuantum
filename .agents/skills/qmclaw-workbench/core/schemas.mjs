@@ -22,7 +22,7 @@ const PARAMETER_SCHEMA_PROPERTIES = Object.freeze(
       {
         type: definition.integer ? "integer" : "number",
         minimum: definition.minimum,
-        maximum: definition.maximum,
+        ...(definition.maximum === null ? {} : { maximum: definition.maximum }),
         description: `${definition.description} SI unit: ${definition.unit}.`,
       },
     ]),
@@ -55,23 +55,23 @@ export const SIMULATE_INPUT_SCHEMA = Object.freeze({
     points: {
       type: "integer",
       minimum: MIN_POINTS,
-      maximum: MAX_POINTS,
+
       default: 64,
       description: "Number of points per simulated sweep axis.",
     },
     secondaryPoints: {
       type: "integer",
       minimum: MIN_SECONDARY_POINTS,
-      maximum: MAX_SECONDARY_POINTS,
+
       default: 16,
       description: "Second-axis point count for two-dimensional simulations only.",
     },
     shots: {
       type: "integer",
       minimum: MIN_SHOTS,
-      maximum: MAX_SHOTS,
+
       default: 512,
-      description: "Bounded synthetic shot count; single-shot returns this many samples per state.",
+      description: "Synthetic shot count; single-shot returns this many samples per state.",
     },
     parameters: {
       type: "object",
@@ -120,11 +120,11 @@ export const INSPECT_OUTPUT_SCHEMA = Object.freeze({
       properties: {
         qubitsPerRun: { type: "integer", const: QUBITS_PER_RUN },
         pointsMinimum: { type: "integer", const: MIN_POINTS },
-        pointsMaximum: { type: "integer", const: MAX_POINTS },
+        pointsMaximum: { type: "null", const: MAX_POINTS },
         secondaryPointsMinimum: { type: "integer", const: MIN_SECONDARY_POINTS },
-        secondaryPointsMaximum: { type: "integer", const: MAX_SECONDARY_POINTS },
+        secondaryPointsMaximum: { type: "null", const: MAX_SECONDARY_POINTS },
         shotsMinimum: { type: "integer", const: MIN_SHOTS },
-        shotsMaximum: { type: "integer", const: MAX_SHOTS },
+        shotsMaximum: { type: "null", const: MAX_SHOTS },
         seedMinimum: { type: "integer", const: 0 },
         seedMaximum: { type: "integer", const: MAX_SEED },
       },
@@ -174,7 +174,7 @@ const CATALOG_PARAMETER_SCHEMA = Object.freeze({
     name: { type: "string" },
     unit: { type: "string" },
     minimum: { type: "number" },
-    maximum: { type: "number" },
+    maximum: { type: ["number", "null"] },
     default: { type: "number" },
   },
   required: ["name", "unit", "minimum", "maximum", "default"],
@@ -230,7 +230,6 @@ const AXIS_OUTPUT_SCHEMA = Object.freeze({
     values: {
       type: "array",
       minItems: MIN_SECONDARY_POINTS,
-      maxItems: MAX_SHOTS,
       items: { type: "number" },
     },
   },
@@ -248,12 +247,11 @@ const SERIES_OUTPUT_SCHEMA = Object.freeze({
       type: "array",
       minItems: 1,
       maxItems: 2,
-      items: { type: "integer", minimum: 1, maximum: MAX_SHOTS },
+      items: { type: "integer", minimum: 1 },
     },
     values: {
       type: "array",
       minItems: MIN_POINTS,
-      maxItems: MAX_POINTS * MAX_SECONDARY_POINTS,
       items: { type: "number" },
     },
   },
@@ -270,12 +268,12 @@ export const SIMULATE_OUTPUT_SCHEMA = Object.freeze({
     experiment: { type: "string", enum: [...QMCLAW_EXPERIMENT_IDS] },
     upstreamTool: { type: "string" },
     seed: { type: "integer", minimum: 0, maximum: MAX_SEED },
-    points: { type: "integer", minimum: MIN_POINTS, maximum: MAX_POINTS },
-    shots: { type: "integer", minimum: MIN_SHOTS, maximum: MAX_SHOTS },
+    points: { type: "integer", minimum: MIN_POINTS },
+    shots: { type: "integer", minimum: MIN_SHOTS },
     secondaryPoints: {
       type: ["integer", "null"],
       minimum: MIN_SECONDARY_POINTS,
-      maximum: MAX_SECONDARY_POINTS,
+
     },
     unitSystem: { type: "string", const: "SI" },
     sourceKind: { type: "string", const: SOURCE_KIND },

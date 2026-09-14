@@ -1,6 +1,6 @@
 ---
 name: mitiq-error-mitigation
-description: 使用固定 Mitiq 对有界电路运行 ZNE、REM、PEC、CDR 本地噪声实验，比较相同采样预算下的误差、方差和成本。
+description: 使用固定 Mitiq 对电路运行 ZNE、REM、PEC、CDR 本地噪声实验，比较相同采样预算下的误差、方差和成本。
 ---
 
 # Mitiq 误差缓解实验
@@ -16,13 +16,13 @@ description: 使用固定 Mitiq 对有界电路运行 ZNE、REM、PEC、CDR 本�
 - `pec`：已知局域去极化噪声、理想补偿 Pauli；`pecSamples` 控制准概率电路抽样数。真实噪声表征成本尚未建模。
 - `cdr`：所有非 Clifford 门必须为 `RZ`，且 observable 只含 `I/Z`。训练成本计入预算；全 Clifford 目标及退化训练会报错。
 
-支持 1–4 qubits、1–24 个 `H/X/Y/Z/S/RZ/CX/CZ` 门；RZ angle 单位为弧度，targets 从 0 开始。
+支持 `H/X/Y/Z/S/RZ/CX/CZ` 门；RZ angle 单位为弧度，targets 从 0 开始。
 Pauli 字符串最左字符是 q0。终端测量基变换按理想操作处理；不接受路径、代码、凭据或云任务。
 `depolarizingProbability` 是 Cirq 的 Pauli 错误概率 p，通道为
 `(1-p)rho + p/3*(XrhoX+YrhoY+ZrhoZ)`，不能与 `rho -> (1-p)rho+pI/2` 的 p 混用。
 
 `shotsBudget` 是**每次重复、每个比较臂**的总预算，包含校准和训练；整次调用严格消耗
-`2 * replicates * shotsBudget` 个模拟 shots，最大 524288。默认 8 次完整重复、每臂每次 8192 shots。
+`2 * replicates * shotsBudget` 个模拟 shots。默认 8 次完整重复、每臂每次 8192 shots。
 `seed` 固定整个实验，重复之间重新生成采样、训练和校准数据。比较不同方法时保持电路、噪声、预算和重复数一致。
 
 最小示例：
@@ -45,3 +45,5 @@ Pauli 字符串最左字符是 q0。终端测量基变换按理想操作处理�
 
 安装、许可证、资源和验证记录见 [接入说明](../../../docs/integrations/MITIQ.md)。
 本能力目录按 GPL-3.0-only 许可；详见 [NOTICE](NOTICE) 和 [LICENSE](LICENSE)。
+
+电路量子位数、门数、采样预算和重复次数由调用方选择，适配器不额外设置人工规模上限。具体资源配置见[本地计算说明](../../../docs/integrations/SCALABLE_BRIDGES.md)。

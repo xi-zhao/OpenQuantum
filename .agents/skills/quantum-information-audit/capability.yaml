@@ -28,7 +28,6 @@ scope:
 input:
   id: density-matrix-audit-request
   schema: inputs/request.schema.json
-  maxBytes: 524288
   mediaTypes:
     - application/json
 
@@ -98,8 +97,8 @@ permissions:
     allowed: false
     providers: []
   limits:
-    wallTimeSeconds: 180
-    memoryMiB: 1024
+    wallTimeSeconds: null
+    memoryMiB: null
     maxArtifacts: 2
     maxCostUsd: 0
   data:

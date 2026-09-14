@@ -10,16 +10,15 @@ from importlib.metadata import version
 from pathlib import Path
 from typing import Any
 
-MAX_QASM_BYTES = 64 * 1024
-TIMEOUT_SECONDS = 10
+TIMEOUT_SECONDS = 0
 
 
 def qasm_value(value: Any, field: str) -> str:
     if not isinstance(value, str):
         raise ValueError(f"{field} must be an OpenQASM 2 string")
     encoded = value.encode("utf8")
-    if not encoded or len(encoded) > MAX_QASM_BYTES or b"\x00" in encoded:
-        raise ValueError(f"{field} must contain 1 to {MAX_QASM_BYTES} UTF-8 bytes")
+    if not encoded or b"\x00" in encoded:
+        raise ValueError(f"{field} must be nonempty and contain no NUL bytes")
     return value
 
 
@@ -62,9 +61,7 @@ def verify_payload(circuit_a: str, circuit_b: str) -> dict[str, Any]:
 
 
 def main() -> None:
-    raw = sys.stdin.buffer.read(256 * 1024 + 1)
-    if len(raw) > 256 * 1024:
-        raise ValueError("bridge request is too large")
+    raw = sys.stdin.buffer.read()
     envelope = json.loads(raw.decode("utf8"))
     if not isinstance(envelope, dict) or set(envelope) - {"action", "circuitA", "circuitB"}:
         raise ValueError("bridge envelope is invalid")
