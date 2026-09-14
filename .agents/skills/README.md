@@ -32,11 +32,11 @@
 | `clifft-sampling` | Clifford+T 电路带噪采样与密度矩阵参照 | Clifft 本地 MCP Server + Harness MCP Client |
 | `oqupy-dynamics` | Ohmic spin-boson TEMPO 与记忆截断解释 | OQuPy 本地 MCP Server + Harness MCP Client |
 | `deltakit-qec` | 矩形纠错码片、实际含噪电路与逻辑错误统计 | Deltakit 本地 MCP Server + Harness MCP Client |
-| `sqd-chemistry` | H₂/STO-3G 采样子空间对角化与 FCI 参照 | SQD 本地 MCP Server + Harness MCP Client |
+| `sqd-chemistry` | 分子活性空间 SQD 与可选 FCI 参照 | SQD 本地 MCP Server + Harness MCP Client |
 | `tjm-dynamics` | 开放 Ising 链张量跳跃轨迹与 Lindblad 参照 | MQT YAQS 本地 MCP Server + Harness MCP Client |
 | `ldpc-decoding` | 二元校验矩阵的 BP+LSD 解码与 syndrome 检查 | ldpc 本地 MCP Server + Harness MCP Client |
 | `randomized-measurements` | 局域 Haar 测量与子区纯度估计 | RandomMeas.jl 本地 MCP Server + Harness MCP Client；需准备 Julia 1.12.7 环境 |
-| `flow-vqe` | 小 Hamiltonian 的 flow 参数学习与等预算随机搜索 | Flow-VQE 本地 MCP Server + Harness MCP Client |
+| `flow-vqe` | Pauli Hamiltonian 的 flow 参数学习与等预算随机搜索 | Flow-VQE 本地 MCP Server + Harness MCP Client |
 | `tenpy-ground-state` | 有限 XYZ 链 DMRG 与精确对角化参照 | TeNPy 本地 MCP Server + Harness MCP Client |
 | `qmclaw-workbench` | QMClaw 超导量子比特测控与单比特调校工作流 | 原生 Tool Provider；13 类有界合成数据模拟，不启动 MCP Server |
 | `quantum-information-audit` | 有界密度矩阵和 negativity 审计 | toqito MCP-exposed Tool + Validator + L3 物化/验收链 |

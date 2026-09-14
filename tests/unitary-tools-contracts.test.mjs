@@ -10,6 +10,7 @@ import { UNITARY_TOOLS } from "./fixtures/unitary-tools.mjs";
 
 // A protocol fixture, deliberately not a scientific calculation or scientific evidence.
 function sample(schema) {
+  if (schema.anyOf) return sample(schema.anyOf[0]);
   if (Object.hasOwn(schema, "const")) return schema.const;
   if (schema.enum) return schema.enum[0];
   if (schema.type === "object") return Object.fromEntries((schema.required ?? []).map((key) => [key, sample(schema.properties[key])]));

@@ -136,11 +136,11 @@
 | [`clifft_local`](.agents/skills/clifft-sampling/mcp/server.mjs) · [Clifft](https://github.com/unitaryfoundation/clifft) | 有界 Clifford+T 噪声采样 | 默认开启 | uv；仅结构化门与最终测量；[安装与范围](docs/integrations/UNITARY_ECOSYSTEM.md) |
 | [`oqupy_local`](.agents/skills/oqupy-dynamics/mcp/server.mjs) · [OQuPy](https://github.com/tempoCollaboration/OQuPy) | Ohmic spin-boson TEMPO | 默认开启 | uv；独立 NumPy 1.x 环境；[安装与范围](docs/integrations/UNITARY_ECOSYSTEM.md) |
 | [`deltakit_local`](.agents/skills/deltakit-qec/mcp/server.mjs) · [Deltakit](https://github.com/Deltakit/deltakit) | 纠错存储电路构建与本地噪声实验 | 默认开启 | uv；ToyNoise、Stim、PyMatching；[安装与范围](docs/integrations/UNITARY_ECOSYSTEM.md) |
-| [`sqd_local`](.agents/skills/sqd-chemistry/mcp/server.mjs) · [Qiskit SQD](https://github.com/Qiskit/qiskit-addon-sqd) | H₂ 采样子空间对角化与 FCI 参照 | 默认开启 | uv；[安装与范围](docs/integrations/PAPER_BACKED_TOOLS.md)，不连接云硬件 |
+| [`sqd_local`](.agents/skills/sqd-chemistry/mcp/server.mjs) · [Qiskit SQD](https://github.com/Qiskit/qiskit-addon-sqd) | 分子与活性空间 SQD、可选 FCI 参照 | 默认开启 | uv；[安装与范围](docs/integrations/PAPER_BACKED_TOOLS.md)，不连接云硬件 |
 | [`tjm_local`](.agents/skills/tjm-dynamics/mcp/server.mjs) · [MQT YAQS / TJM](https://github.com/munich-quantum-toolkit/yaqs) | 开放 Ising 链张量轨迹与 Lindblad 参照 | 默认开启 | uv；[安装与范围](docs/integrations/PAPER_BACKED_TOOLS.md)，不连接云硬件 |
 | [`ldpc_local`](.agents/skills/ldpc-decoding/mcp/server.mjs) · [BP+LSD](https://github.com/quantumgizmos/ldpc) | 二元校验矩阵的纠错解码与 syndrome 检查 | 默认开启 | uv；[安装与范围](docs/integrations/PAPER_BACKED_TOOLS.md)，不连接云硬件 |
 | [`random_meas_local`](.agents/skills/randomized-measurements/mcp/server.mjs) · [RandomMeas.jl](https://github.com/bvermersch/RandomMeas.jl) | 局域随机测量与子区纯度估计 | 默认开启 | Julia 1.12.7；先准备固定依赖；[安装与范围](docs/integrations/PAPER_BACKED_TOOLS.md)，不连接云硬件 |
-| [`flow_vqe_local`](.agents/skills/flow-vqe/mcp/server.mjs) · [Flow-VQE](https://github.com/olsson-group/Flow-VQE) | 小 Hamiltonian 的 flow 参数学习与随机搜索比较 | 默认开启 | uv；[安装与范围](docs/integrations/PAPER_BACKED_TOOLS.md)，不连接云硬件 |
+| [`flow_vqe_local`](.agents/skills/flow-vqe/mcp/server.mjs) · [Flow-VQE](https://github.com/olsson-group/Flow-VQE) | Pauli Hamiltonian 的 flow 参数学习与随机搜索比较 | 默认开启 | uv；[安装与范围](docs/integrations/PAPER_BACKED_TOOLS.md)，不连接云硬件 |
 | [`tenpy_local`](.agents/skills/tenpy-ground-state/mcp/server.mjs) · [TeNPy](https://github.com/tenpy/tenpy) | 有限 XYZ 链 DMRG 基态与精确参照 | 默认开启 | uv；[安装与范围](docs/integrations/PAPER_BACKED_TOOLS.md)，不连接云硬件 |
 | [`qiskit`](https://github.com/Qiskit/mcp-servers) · Qiskit Circuits（上游服务） | 电路读取、分析、转译与 QASM/QPY 转换 | 默认开启¹ | `uvx`；电路操作无需云凭据，首次启动可能下载依赖 |
 | [`qiskit_docs`](https://github.com/Qiskit/mcp-servers) · Qiskit Docs（上游服务） | Qiskit 文档搜索、页面读取和 IBM Quantum 错误码查询 | 默认开启¹ | `uvx`；文档访问需要网络，无需云凭据 |
@@ -170,6 +170,8 @@ OpenQuantum 提供以下 5 个原生量子动作，用于基态求解、调校�
 
 ### 当前接入范围与验证记录
 
+**TeNPy、TJM、Flow-VQE、Clifft 与 SQD 已扩展计算桥接。** 主算法可以在各自资源预算内运行更大输入；独立精确参考按成本单独选择，未执行时明确返回 `not_run`。新增范围、可复制请求和实测记录见[计算规模与参考检查](docs/integrations/SCALABLE_BRIDGES.md)。
+
 **方法用途、接口支持和验证覆盖分别说明。** 一个本地算例只能证明该输入下的运行与检查结果；超出已测算例但仍符合接口的输入，属于尚未本地验证。当前 Tool 明确限制的模型、格式或规模，则需要扩展实现后才能支持。
 
 <details>
@@ -183,13 +185,13 @@ OpenQuantum 提供以下 5 个原生量子动作，用于基态求解、调校�
 | 电路等价性验证 | 1–16 qubits、无测量的 OpenQASM 2 电路 | [服务输入校验](.agents/skills/quantum-circuit-verification/mcp/server.mjs) |
 | TyxonQ 电路仿真 | 1–8 qubits，使用接口列出的门和噪声模型 | [服务输入校验](.agents/skills/tyxonq-workbench/mcp/server.mjs) |
 | Dynamiqs 动力学 | 受驱动、振幅阻尼的单量子位模型，CPU 执行 | [输入合同](.agents/skills/dynamiqs-dynamics/mcp/contracts.mjs) |
-| Clifft 噪声采样 | 1–6 qubits，门后去极化噪声与最终 Z 测量 | [输入合同](.agents/skills/clifft-sampling/mcp/contracts.mjs) |
+| Clifft 噪声采样 | 1–128 qubits、最多 2048 门，受 active width 与采样预算约束；密度矩阵参考至 6 qubits | [输入合同](.agents/skills/clifft-sampling/mcp/contracts.mjs) |
 | OQuPy 动力学 | Ohmic spin-boson 模型，按接口设置时间步长与有限环境记忆 | [输入合同](.agents/skills/oqupy-dynamics/mcp/contracts.mjs) |
-| SQD 量子化学 | H₂/STO-3G，可变键长，接受四位测量频数或合成样本 | [输入合同](.agents/skills/sqd-chemistry/mcp/contracts.mjs) · [分子构建](.agents/skills/sqd-chemistry/mcp/bridge.py) |
-| TJM 动力学 | 2–6 qubits 的开放横场 Ising 链，局域振幅阻尼 | [输入合同](.agents/skills/tjm-dynamics/mcp/contracts.mjs) |
+| SQD 量子化学 | H–Ne 分子、三种基组、2–32 个空间轨道的活性空间；接受对应位宽的频数，FCI 参考按行列式维数控制 | [输入合同](.agents/skills/sqd-chemistry/mcp/contracts.mjs) · [分子构建](.agents/skills/sqd-chemistry/mcp/bridge.py) |
+| TJM 动力学 | 2–128 qubits 的开放横场 Ising 链，受张量轨迹预算约束；Lindblad 参考至 6 qubits | [输入合同](.agents/skills/tjm-dynamics/mcp/contracts.mjs) |
 | 随机测量 | 2–6 qubits 的 product / GHZ 态，局域 Haar 测量 | [输入合同](.agents/skills/randomized-measurements/mcp/contracts.mjs) |
-| Flow-VQE 参数学习 | 2–4 qubits 的 Pauli Hamiltonian，本地 RY/CNOT ansatz | [输入合同](.agents/skills/flow-vqe/mcp/contracts.mjs) |
-| TeNPy 基态求解 | 3–10 站点、自旋 1/2 的 XYZ 开放链，返回稠密精确对角化参考 | [输入合同](.agents/skills/tenpy-ground-state/mcp/contracts.mjs) |
+| Flow-VQE 参数学习 | 2–20 qubits 的 Pauli Hamiltonian，无矩阵 RY/CNOT 计算，受评估预算约束；精确参考至 10 qubits | [输入合同](.agents/skills/flow-vqe/mcp/contracts.mjs) |
+| TeNPy 基态求解 | 3–256 站点、自旋 1/2 的 XYZ 开放链，受张量内存预算约束；精确参考至 10 站点 | [输入合同](.agents/skills/tenpy-ground-state/mcp/contracts.mjs) |
 
 </details>
 
@@ -204,13 +206,13 @@ OpenQuantum 提供以下 5 个原生量子动作，用于基态求解、调校�
 | 基态求解与验证 | 提供二量子位实 Pauli Hamiltonian，在固定粒子扇区运行 VQE，并检查精确参考 | 能量、收敛轨迹、独立检查，以及完整流程中的科学验收报告 |
 | 量子电路 | 分析或转换 OpenQASM / QPY 电路，比较转译，检查等价性，运行小规模仿真 | 电路结构、转译结果、等价性检查、态矢或采样分布 |
 | 量子态与测量 | 审计密度矩阵与纠缠指标；模拟已知 product / GHZ 态的局域随机测量 | 状态指标与独立检查，子区纯度估计及有限样本误差 |
-| 量子化学与多体基态 | 用 SQD 求解 H₂/STO-3G，或用 TeNPy 计算有限 XYZ 自旋链基态 | SQD / FCI 能量对照，DMRG 能量、磁化与纠缠熵 |
-| 变分参数学习 | 对小型 Hamiltonian 训练 Flow-VQE，学习低能量电路参数 | Flow 参数学习与等评估预算随机搜索比较 |
+| 量子化学与多体基态 | 用 SQD 研究分子与活性空间，或用 TeNPy 计算 XYZ 自旋链基态 | SQD 能量与轨道占据，DMRG 能量、磁化、纠缠熵及收敛信息；可选精确参考 |
+| 变分参数学习 | 对 Pauli Hamiltonian 训练 Flow-VQE，学习低能量电路参数 | Flow 参数学习与等评估预算随机搜索比较 |
 | 组合优化 | 构建有界 QUBO，检查约束 penalty，运行经典求解或可选本地 QAOA | 优化解、约束检查与经典枚举复核 |
 | 误差缓解 | 用 Mitiq 运行 ZNE、REM、PEC 或 CDR，比较相同采样预算下的原始与缓解结果 | 理想参考、经验偏差、方差和 RMSE，以及校准、训练与采样成本 |
 | 量子纠错 | 用 Stim / PyMatching 运行 surface-code memory，用 Deltakit 构建矩形码片实验，或进行 BP+LSD 解码 | 实际含噪电路、固定 shots 的逻辑错误率与区间；LSD 的 syndrome 一致性检查 |
 | 开放系统动力学 | 用 TJM 计算开放 Ising 链，用 Dynamiqs 扫描单量子位驱动与梯度，或用 OQuPy 研究环境记忆 | 观测量轨迹、独立参考、梯度以及时间步长与记忆截断信息 |
-| Clifford+T 噪声采样 | 用 Clifft 研究小电路的 T 门干涉与门后去极化噪声 | 完整最终位串分布、有限采样误差与独立密度矩阵参考 |
+| Clifford+T 噪声采样 | 用 Clifft 研究 T 门干涉、近 Clifford 电路与门后去极化噪声 | 最终位串频数、有限采样误差；小系统可附完整分布与密度矩阵参考 |
 | 公开设备基准 | 从 Metriq 的 410 条固定历史记录中按厂商、设备或基准类型查询 | 原始参数、指标、时间、来源与许可；保留模拟器标签 |
 | 超导与原子实验 | 模拟调校流程、原生门约束、三能级 transmon 泄漏或小型里德堡原子链动力学 | 合成实验数据、动力学轨迹与图表 |
 | 量子硬件接入 | 发现后端、检查拓扑与凭据；按需启用云任务查询、提交与取消 | 设备候选、使用条件；已启用任务接口的结果与状态 |
@@ -520,13 +522,13 @@ OpenQuantum 的量子能力建立在开放科学与开源软件之上。我们�
 | 电路构建与转译 | [Qiskit MCP Servers](https://github.com/Qiskit/mcp-servers) | 创建、分析和转译电路，读写 QASM / QPY |
 | 电路等价性验证 | [MQT QCEC](https://github.com/munich-quantum-toolkit/qcec) | 比较两份无测量的 OpenQASM 2 电路，区分严格等价、相位等价、不等价与不确定 |
 | 门电路仿真 | [TyxonQ](https://github.com/QureGenAI-Biotech/TyxonQ) | 1–8 量子位电路的无噪声精确结果与含噪采样 |
-| Clifford+T 电路采样 | [Clifft](https://github.com/unitaryfoundation/clifft) | 1–6 量子位电路的门后去极化噪声与最终位串采样，附独立密度矩阵参考 |
+| Clifford+T 电路采样 | [Clifft](https://github.com/unitaryfoundation/clifft) | Clifford+T 电路的门后去极化噪声与最终位串采样，可选独立密度矩阵参考 |
 | 量子态与纠缠审计 | [toqito](https://github.com/vprusso/toqito) | 检查输入密度矩阵，计算纯度、部分转置与指定二分割的 negativity |
 | 随机测量与纯度估计 | [RandomMeas.jl](https://github.com/bvermersch/RandomMeas.jl) | 对已知 product / GHZ 态模拟局域 Haar 测量，估计子区纯度与有限样本误差 |
 | 组合优化 | [QPanda QUBO](https://github.com/OriginQ/pyqpanda-algorithm) | 将二值目标与线性等式约束编译为 QUBO，进行经典求解、枚举复核或可选本地 QAOA |
-| 变分参数学习 | [Flow-VQE](https://github.com/olsson-group/Flow-VQE) | 对 2–4 量子位 Pauli Hamiltonian 训练 flow 模型，学习低能量电路参数 |
-| 量子化学基态 | [Qiskit SQD](https://github.com/Qiskit/qiskit-addon-sqd) | 对 H₂/STO-3G 做采样子空间对角化，并与同基组 FCI 能量比较 |
-| 自旋链基态 | [TeNPy](https://github.com/tenpy/tenpy) | 对 3–10 站点 XYZ 自旋链运行 DMRG，计算能量、磁化与纠缠熵 |
+| 变分参数学习 | [Flow-VQE](https://github.com/olsson-group/Flow-VQE) | 对 Pauli Hamiltonian 训练 flow 模型，以无矩阵计算学习低能量电路参数 |
+| 量子化学基态 | [Qiskit SQD](https://github.com/Qiskit/qiskit-addon-sqd) | 对分子与活性空间做采样子空间对角化，可选同一活性空间 Hamiltonian 的 FCI 参照 |
+| 自旋链基态 | [TeNPy](https://github.com/tenpy/tenpy) | 对 XYZ 自旋链运行 DMRG，计算能量、磁化、纠缠熵与收敛信息 |
 | 马尔可夫动力学与灵敏度 | [Dynamiqs](https://github.com/dynamiqs/dynamiqs) | 求解受驱动耗散单量子位的 Lindblad 动力学，批量扫描驱动并计算末态人口梯度 |
 | 非马尔可夫动力学 | [OQuPy](https://github.com/tempoCollaboration/OQuPy) | 用 TEMPO 求解 Ohmic spin-boson 模型，检查时间步长与环境记忆截断的影响 |
 | 多体开放系统轨迹 | [MQT YAQS / TJM](https://github.com/munich-quantum-toolkit/yaqs) | 模拟开放 Ising 链的张量跳跃轨迹，与密度矩阵 Lindblad 演化比较 |
@@ -571,9 +573,9 @@ IBM Quantum、IonQ 和本源量子是可连接的云服务。任务提交分别�
 
 读到一种方法后，可以先在小系统上看它如何工作。OpenQuantum 已接入 **SQD、TJM、BP+LSD、RandomMeas、Flow-VQE 和 TeNPy**：从 H₂ 的采样子空间对角化，到开放系统张量轨迹、二元校验矩阵解码、随机测量、参数学习和自旋链 DMRG。
 
-这六项接入固定了上游实现与依赖版本，限定了输入规模，并随结果返回输入、版本和检查信息。你可以比较 SQD 与同基组 FCI 的能量、TJM 与 Lindblad 演化的观测量，或 DMRG 与精确对角化的结果，用具体算例判断方法的表现。
+这些接入固定了上游实现与依赖版本，并随结果返回输入、版本和检查信息。主计算与独立精确参考按各自成本运行；参考可用时，可以比较 SQD 与同一活性空间 FCI 的能量、TJM 与 Lindblad 演化的观测量，或 DMRG 与精确对角化的结果。
 
-这六项目前提供小规模本地计算与数值检查，尚未接入完整科学验收流程；论文规模复现仍需单独验证。论文出处、上游仓库、物理假设与验证记录见[论文方法说明](docs/integrations/PAPER_BACKED_TOOLS.md)；准备依赖后，可直接使用前面的[论文方法试用示例](#试用-sqd-与-tenpy)。
+这些能力提供本地计算与数值检查，计算规模按各 Tool 的资源预算控制，实测覆盖另列；尚未接入完整科学验收流程，论文规模复现需单独验证。论文出处、上游仓库、物理假设与验证记录见[论文方法说明](docs/integrations/PAPER_BACKED_TOOLS.md)；准备依赖后，可直接使用前面的[论文方法试用示例](#试用-sqd-与-tenpy)。
 
 ### 可选上游 Skill 与开发证据
 

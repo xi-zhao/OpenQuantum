@@ -1,16 +1,16 @@
 # 论文方法的本地计算接入
 
-2026-09-12。六项以 L1 能力接入同一个 OpenQuantum Harness：每项包含实验选择 Skill 和一个有界计算 Tool。
+首次接入 2026-09-12；计算范围更新 2026-09-14。六项以 L1 能力接入同一个 OpenQuantum Harness：每项包含实验选择 Skill 和一个有界计算 Tool。
 研究价值来自方法与可复核实现，发表期刊本身不保证某个软件版本或算例正确。
 
 | 能力 / 论文 | 固定实现 | 本次开放的 Tool 与科学范围 |
 | --- | --- | --- |
-| [SQD，Science Advances 2025](https://doi.org/10.1126/sciadv.adu9991) | [qiskit-addon-sqd 0.13.1](https://github.com/Qiskit/qiskit-addon-sqd)，Apache-2.0 | `sqd_local.run_sqd_chemistry`：H₂/STO-3G 的采样子空间对角化、配置恢复与同基组 FCI 参照；支持四位输入 counts。 |
-| [TJM，Nature Communications 2025](https://doi.org/10.1038/s41467-025-66846-x) | [MQT YAQS 0.6.0](https://github.com/munich-quantum-toolkit/yaqs)，MIT | `tjm_local.simulate_tjm_dynamics`：2–6 qubits 的开放 Ising 链、局域振幅衰减、张量跳跃轨迹，与密度矩阵 Lindblad 演化比较。 |
+| [SQD，Science Advances 2025](https://doi.org/10.1126/sciadv.adu9991) | [qiskit-addon-sqd 0.13.1](https://github.com/Qiskit/qiskit-addon-sqd)，Apache-2.0 | `sqd_local.run_sqd_chemistry`：分子与活性空间的采样子空间对角化、配置恢复；接受动态位宽 counts，可选同一活性空间 FCI 参照。 |
+| [TJM，Nature Communications 2025](https://doi.org/10.1038/s41467-025-66846-x) | [MQT YAQS 0.6.0](https://github.com/munich-quantum-toolkit/yaqs)，MIT | `tjm_local.simulate_tjm_dynamics`：2–128 qubits 的开放 Ising 链、局域振幅衰减与张量跳跃轨迹；6 qubits 以内可选密度矩阵 Lindblad 参照。 |
 | [LSD，Nature Communications 2025](https://doi.org/10.1038/s41467-025-63214-7) | [ldpc 2.4.1](https://github.com/quantumgizmos/ldpc)，MIT | `ldpc_local.decode_ldpc_syndromes`：≤64×128 二元校验矩阵、≤32 个 syndrome 的串行 BP+LSD 解码和独立 GF(2) 残差检查。 |
 | [RandomMeas，Quantum 2026](https://doi.org/10.22331/q-2026-04-28-2086) | [RandomMeas.jl 0.3.1](https://github.com/bvermersch/RandomMeas.jl/tree/89c492bfb05508e5babe9c8c2c40697995be9e42)，Apache-2.0 | `random_meas_local.estimate_randomized_purity`：2–6 qubits 的 product/GHZ 态、局域 Haar 测量、≤4 sites 子区纯度及有限样本误差。 |
-| [Flow-VQE，npj Quantum Information 2025](https://doi.org/10.1038/s41534-025-01159-x) | [Flow-VQE f7642afa](https://github.com/olsson-group/Flow-VQE/tree/f7642afa330e5108ea5738d42fe80b551363733c)，MIT | `flow_vqe_local.train_flow_vqe`：实际调用论文的单上下文 flow 训练函数，适配 2–4 qubit Pauli Hamiltonian 与小型 RY/CNOT ansatz，比较等评估预算随机搜索。 |
-| [TeNPy，SciPost Physics Codebases 2024](https://doi.org/10.21468/SciPostPhysCodeb.41) | [physics-tenpy 1.1.1](https://github.com/tenpy/tenpy)，Apache-2.0 | `tenpy_local.solve_tenpy_chain`：3–10 sites 自旋 1/2 XYZ 开放链的 two-site DMRG、磁化、纠缠熵和精确对角化参照。 |
+| [Flow-VQE，npj Quantum Information 2025](https://doi.org/10.1038/s41534-025-01159-x) | [Flow-VQE f7642afa](https://github.com/olsson-group/Flow-VQE/tree/f7642afa330e5108ea5738d42fe80b551363733c)，MIT | `flow_vqe_local.train_flow_vqe`：实际调用论文的单上下文 flow 训练函数，适配 2–20 qubit Pauli Hamiltonian 与无矩阵 RY/CNOT ansatz，比较等评估预算随机搜索。 |
+| [TeNPy，SciPost Physics Codebases 2024](https://doi.org/10.21468/SciPostPhysCodeb.41) | [physics-tenpy 1.1.1](https://github.com/tenpy/tenpy)，Apache-2.0 | `tenpy_local.solve_tenpy_chain`：3–256 sites 自旋 1/2 XYZ 开放链的 two-site DMRG、磁化、纠缠熵与收敛信息；10 sites 以内可选精确对角化参照。 |
 
 TeNPy 的基础设施价值独立于首篇论文年份；本次使用当前固定版本。已有 FatQat/QuTiP、Stim/PyMatching、QCEC 等能力保留：
 YAQS 增加张量轨迹算法，LSD 增加一般二元校验矩阵的解码，TeNPy 增加 DMRG，并未重复创建通用电路或表面码接口。
@@ -36,10 +36,14 @@ Julia 包和编译缓存使用标准用户 depot。首次 Python Tool 调用也�
 例如可以请求“用 SQD 计算 0.735 Å 的 H₂，并报告与 FCI 的差异”或“用 TeNPy 算四站点 Heisenberg 链基态”。
 具体数值输入见各 [Skill](../../.agents/skills/) 的 `SKILL.md` 和 Tool schema。
 
+接口上限还受组合资源预算约束；已测规模另列。新增参数、参考模式与实测记录见[计算规模与参考检查](SCALABLE_BRIDGES.md)。
+
 ## 计算约定与限制
 
-- **SQD**：能量包含核排斥项，单位 Hartree；键长 Å；两个空间轨道，alpha/beta 各一电子。
-  位序 `beta1 beta0 alpha1 alpha0`，保留前导零；总 counts≤4096，HF 构型总是包含。
+- **SQD**：坐标与键长用 Å，能量用 Hartree。默认 H₂/STO-3G；可传 H–Ne 分子、三种基组及 2–32 空间轨道的活性空间。
+  闭壳层 RHF 轨道，固定 n_alpha=n_beta（M_s=0），不约束总自旋；位序为 beta(n-1)…beta0 alpha(n-1)…alpha0，保留前导零。
+  总 counts≤4096，HF 构型总是包含。`coreEnergyOffsetHartree` 已含核排斥和冻结核能量，返回总能量不能再加核排斥项。
+  FCI 只在活性轨道≤12 且行列式维数≤10000 时运行；参照对象是同一活性空间 Hamiltonian。
   缺少 counts 时显式使用合成均匀样本，不能作为量子优势证据。有限样本可能只覆盖 HF 子空间而高于 FCI。
 - **TJM**：`H=-JΣZZ-gΣX`，`hbar=1`，初态全零，局域跳跃 `sqrt(gamma)|0><1|`。
   时间与速率采用同一单位；严格包含 0 与请求终点，返回 `steps+1` 点，`steps×trajectories≤4096`。
@@ -49,11 +53,13 @@ Julia 包和编译缓存使用标准用户 depot。首次 Python Tool 调用也�
 - **RandomMeas**：下标从 0 开始，`settings×shotsPerSetting≤16384`。返回上游的有限 shots 偏差修正纯度估计，
   保留可能超出 `[0,1]` 的值；跨独立设置的标准误不是严格置信区间。当前只模拟已知 product/GHZ 态，未导入实验数据。
 - **Flow-VQE**：Pauli 最左字符对应 q0；实振幅 RY/CNOT ansatz 可能无法表达一般 Hamiltonian 的基态。
-  每种搜索最多 512 次目标评估，随机基线为 `[-π,π]` 均匀参数。上游训练用 float32，重算能量用 float64；
+  每种搜索最多 4096 次目标评估，另检查状态维度、层数和项数的联合预算；精确参照至 10 qubits，随机基线为 `[-π,π]` 均匀参数。上游训练用 float32，重算能量用 float64；
   这是单 Hamiltonian 上的训练，不包含论文分子数据、预训练权重、跨分子泛化或优化加速结论。临时训练文件自动回收。
 - **TeNPy**：`S=Pauli/2`，`H=Σ(Jx SxSx+Jy SySy+Jz SzSz)-Σ(hx Sx+hz Sz)`。
-  当前 two-site sweep 需要至少三站点；上限 10 sites、64 bond dimension、20 sweeps。
-  能量差用于判断本次小系统结果，有限 sweep/bond 的执行结束不保证收敛。
+  当前 two-site sweep 需要至少三站点；上限 256 sites、256 bond dimension、100 sweeps，受张量内存预算约束。
+  小系统能量差、sweep 收敛条件和截断误差分别报告；有限 sweep/bond 的执行结束不保证全局基态。
+
+SQD、TJM、Flow-VQE 和 TeNPy 均接受 `referenceMode=auto|required|skip`。主计算与独立参考分开；未运行参考时显式返回 `not_run` 和 null 参考字段，保持 L1。
 
 ## 架构与证据
 

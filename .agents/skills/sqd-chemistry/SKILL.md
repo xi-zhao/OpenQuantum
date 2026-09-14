@@ -1,13 +1,17 @@
 ---
 name: sqd-chemistry
-description: H2/STO-3G 的采样子空间对角化，支持输入频数，并与 FCI 比较。
+description: 分子活性空间的采样子空间对角化，支持输入频数与可选 FCI 参照。
 ---
 
 # SQD 量子化学
 
 Agent 经 Harness 调用 sqd_local 提供的 `run_sqd_chemistry`。本 Skill 负责选择和解释，不启动计算进程。
 
-键长用 Å，能量用 Hartree；固定 2 个空间轨道与 (1,1) 电子。位序为 beta1 beta0 alpha1 alpha0。未提供 counts 时明确标记 synthetic_uniform；参考 HF 构型始终包含。不得把合成样本或同基组 FCI 一致性称为量子优势。
+支持结构化 H–Ne 分子、sto-3g/6-31g/cc-pvdz 基组和可选 activeSpace；默认仍为 H₂/STO-3G。坐标与默认 H₂ 键长用 Å，能量用 Hartree。提供 molecule 后仅以其 atoms/charge 构建分子，bondLengthAngstrom 不参与几何。仅使用闭壳层 RHF 轨道，活性空间含 2–32 个空间轨道和偶数电子；n_alpha=n_beta 固定 M_s=0，不约束总自旋。活性轨道从冻结核之后连续选取；最多 128 个全分子空间轨道，并检查轨道数与子空间维数的联合预算。
+
+counts 位宽为 2×活性空间轨道数，位序 beta(n-1)…beta0 alpha(n-1)…alpha0，保留前导零；总 counts≤4096。maxSubspaceDimension 是每个自旋子空间上限，乘积才是总子空间上限。返回冻结核数、活性轨道索引、电子数和能量偏移；coreEnergyOffsetHartree 已包含核排斥能，不能再加 nuclearEnergyHartree。FCI 仅在活性轨道≤12 且行列式维数≤10000 时可运行，参照对象是同一活性空间 Hamiltonian。未提供 counts 时明确标记 synthetic_uniform；HF 构型始终包含。不得把合成样本或 FCI 一致性称为量子优势。
+
+独立参考使用 referenceMode=auto|required|skip：auto 在参考预算内计算，required 在超限时明确报错，skip 主动跳过。未运行时 reference.status=not_run，参考值和差异均为 null；不将缺失参考解释为零误差或通过验证。接口资源上限与本地实测覆盖分别见[计算规模与参考检查](../../../docs/integrations/SCALABLE_BRIDGES.md)。
 
 输入示例：
 

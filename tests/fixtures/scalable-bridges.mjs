@@ -1,0 +1,7 @@
+export const SCALABLE_BRIDGES = [
+  { id: "tenpy-ground-state", server: "tenpy_local", tool: "solve_tenpy_chain", input: { numSites: 12, jx: 0, jy: 0, jz: 0, hz: 0.8, maxBondDimension: 16 }, referenceFields: ["exactGroundEnergy", "energyError"] },
+  { id: "tjm-dynamics", server: "tjm_local", tool: "simulate_tjm_dynamics", input: { numQubits: 8, coupling: 0, field: 0.7, dampingRate: 0, duration: 0.2, steps: 4, trajectories: 8, maxBondDimension: 8 }, referenceFields: ["referenceSiteZ", "maxAbsoluteDeviation", "referenceTraceError"] },
+  { id: "flow-vqe", server: "flow_vqe_local", tool: "train_flow_vqe", input: { numQubits: 12, terms: [{ pauli: "ZIIIIIIIIIII", coefficient: -1 }, { pauli: "IIIIIIIIIIIX", coefficient: -0.5 }], epochs: 2, batchSize: 4 }, referenceFields: ["exactGroundEnergy", "error"] },
+  { id: "sqd-chemistry", server: "sqd_local", tool: "run_sqd_chemistry", input: { molecule: { atoms: [{ element: "Li", positionAngstrom: [0,0,0] }, { element: "H", positionAngstrom: [0,0,1.6] }] }, activeSpace: { numOrbitals: 4, numElectrons: 2 }, counts: { "00010001": 64 }, iterations: 2 }, referenceFields: ["fciEnergyHartree", "errorHartree"] },
+  { id: "clifft-sampling", server: "clifft_local", tool: "sample_clifft_circuit", input: { numQubits: 80, gates: [{ gate: "H", targets: [0] }, ...Array.from({ length: 79 }, (_,i) => ({ gate: "CX", targets: [i,i+1] }))], shots: 256 }, referenceFields: ["totalVariationDistance", "referenceTraceError"] },
+];

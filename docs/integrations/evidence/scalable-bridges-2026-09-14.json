@@ -1,0 +1,2461 @@
+{
+  "updatedAt": "2026-09-14T15:15:18.415Z",
+  "scope": "Five existing calculation bridges: resource-bounded main calculation and optional independent reference",
+  "scientificValidation": "not_evaluated",
+  "limitsAreNotExhaustivelyValidated": true,
+  "externalModelTested": false,
+  "qpuTested": false,
+  "sourceFiles": {
+    ".agents/skills/tenpy-ground-state/mcp/contracts.mjs": "c73fe9ec692aa8a6e17b885284c3e5c2e037cbd6ab91e8df152ffdda97aaa57e",
+    ".agents/skills/tenpy-ground-state/mcp/bridge.py": "c5cb8e9d32d7dc6b9a0b3ea2d338d303bebbd39cf67656ff64d8be42cd9c24d3",
+    ".agents/skills/tjm-dynamics/mcp/contracts.mjs": "a31149819843ab8f93c11dbb31279a9114ec10ffabd77663a57892b50d96f0f5",
+    ".agents/skills/tjm-dynamics/mcp/bridge.py": "74e47c564a81e5858ccf6c3931d0226688c79e3da4f88b1b3c6cbb99533d4350",
+    ".agents/skills/flow-vqe/mcp/contracts.mjs": "2e59bc90843629627178bb8719bea17890f1f9cfe74f161c3c885d97e1ecd684",
+    ".agents/skills/flow-vqe/mcp/bridge.py": "98a4ddbbf6347a857e9b9244667135ba739a1a2662144b4d17f10069dc8c3d76",
+    ".agents/skills/sqd-chemistry/mcp/contracts.mjs": "b4aaf79b46bc0525dff11d0e2917c31a199dd47c95adcc3dafd32ab8bc02450e",
+    ".agents/skills/sqd-chemistry/mcp/bridge.py": "da80b40709be8b7c9969733a6dbb1a3aa841e93cdbe9dd376db1e55b2110ff30",
+    ".agents/skills/clifft-sampling/mcp/contracts.mjs": "da1c8c420ad5197a624ae00cd68b80346a407a10092eaca2b829f9c33f89ac72",
+    ".agents/skills/clifft-sampling/mcp/bridge.py": "bd53eae163728b2374b1b72b47dfc3748aa514567c698fce14361ce22ba7d1cf",
+    ".agents/skills/flow-vqe/core/statevector.py": "edd15627e5c90f3268258cc89b362ae571a384daeca5b444fce1707bd72b19eb",
+    "src/lib/bounded-science-mcp.mjs": "c5355c6ac321dbc744aff50bf63aebcad748133c88bd5e8f7413a438a98662b3",
+    "src/lib/science-reference.mjs": "d7e85f34249daf65a3f170b6ce194de97ba173cae21bf0d851d55de46cae8815",
+    "src/lib/science_reference.py": "b38a261626ecea129925d1d938c623236ccbd01df22122fbeb6d8a13288abe51",
+    "tests/paper-tools-contracts.test.mjs": "d5ed5795abc708e036a37982050f66289645f1ef24a3eb6ad0e3543d9185f5ac",
+    "tests/unitary-tools-contracts.test.mjs": "75737eaf9d0dbc0a84a88c6ba55bbc8c2647533e2b1409d49c565e563887e9f5",
+    "tests/harness-paper-tools.test.mjs": "13f41351a7e4986e89029db0d5c2a6840f65017b9bb67c3d51285d897b86d153",
+    "tests/scalable-bridges.test.mjs": "be66ce24479bbfb5ff4133006580066d055569ac9b4392d5a012f1c9e8b44ea7",
+    "tests/scalable-bridges-live.test.mjs": "a5a0bcd98b51775ee2b5b20a3cfa358034b67c3ba4aef884bdc44196dca14b10",
+    "tests/fixtures/scalable-bridges.mjs": "10a9f0f3a777f2543ede85f9ff1a2233e9ca74aee938260102d501736a3bd62e",
+    "tests/python/scalable_bridge_oracles.py": "d8e43932444e244ad1f2b321f396f7dc0e847d8a315bdeb6e6cab72642679378",
+    "src/settings/server/project-settings-catalog.mjs": "6662518635a8de799519ebe043ab5f83fc26392ea6d1fba8b807f6675d7c19ba"
+  },
+  "logs": {
+    "contracts.log": {
+      "sha256": "3c55568b2a9c8944a1450ed7b76128809790881f4ce0c2f29039d403957e9336",
+      "tests": [
+        12
+      ],
+      "passed": [
+        12
+      ],
+      "skipped": [
+        0
+      ]
+    },
+    "expanded-contracts.log": {
+      "sha256": "b91dce16d7df3102a8f2529aed2a1d7338640858d1887ece1ceb7bfe6ec979b4",
+      "tests": [
+        6
+      ],
+      "passed": [
+        6
+      ],
+      "skipped": [
+        0
+      ]
+    },
+    "legacy-live.log": {
+      "sha256": "337428e1d236312c87e6bdfc080d79169e0a5bd29bf6bc4b29a00c7e545c8e23",
+      "tests": [
+        4
+      ],
+      "passed": [
+        4
+      ],
+      "skipped": [
+        0
+      ]
+    },
+    "clifft-legacy.log": {
+      "sha256": "f60d2ae189b812ca1dc9182bca04382a06d4210225628337bf75f47a3f9e2fcc",
+      "tests": [
+        1
+      ],
+      "passed": [
+        1
+      ],
+      "skipped": [
+        0
+      ]
+    },
+    "expanded-live.log": {
+      "sha256": "d0493df939ec47019ef3658d84eb3a127bb1762c6a6b6e1883dfbc8cb1d4e08c",
+      "tests": [
+        5
+      ],
+      "passed": [
+        5
+      ],
+      "skipped": [
+        0
+      ]
+    },
+    "sqd-expanded-extra.log": {
+      "sha256": "f045932816c7a01df15e038d90963e02f57c242f35179c098b332418d7958019",
+      "tests": [
+        1
+      ],
+      "passed": [
+        1
+      ],
+      "skipped": [
+        0
+      ]
+    },
+    "harness.log": {
+      "sha256": "695c20ca491d55095a71290d6241c4e363f67a8ab5bb2ab0d55586f7c1ba3dc2",
+      "tests": [
+        1
+      ],
+      "passed": [
+        1
+      ],
+      "skipped": [
+        0
+      ]
+    },
+    "check.log": {
+      "sha256": "538c565529c85ed74777fe2cb4006fc31310868813f61fe7a826269963257589",
+      "tests": [
+        248,
+        119,
+        33,
+        92,
+        3
+      ],
+      "passed": [
+        219,
+        119,
+        33,
+        92,
+        3
+      ],
+      "skipped": [
+        29,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "scoped-check.log": {
+      "sha256": "1cf4d15a4d312e6034bc837936e2915126e5aacf3b7eecfdbe46acaf30355cf1",
+      "tests": [
+        238,
+        119,
+        33,
+        87,
+        3
+      ],
+      "passed": [
+        213,
+        119,
+        33,
+        87,
+        3
+      ],
+      "skipped": [
+        25,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "readme-check.log": {
+      "sha256": "b039c717a7daacc471c28990ff967cb9c3dcdc4a84d1e231c49b27af31a77259",
+      "tests": [
+        6
+      ],
+      "passed": [
+        6
+      ],
+      "skipped": [
+        0
+      ]
+    }
+  },
+  "checkContexts": {
+    "check.log": "Current workspace including concurrent capability additions",
+    "scoped-check.log": "Isolated worktree containing only the task patch; exit 0 using Node 24.14.1 from the existing local runtime"
+  },
+  "docLinks": {
+    "localFileLinksChecked": 179,
+    "broken": []
+  },
+  "harness": {
+    "sessionId": "session-paper-972dc99f-d5a2-44be-81f5-79f3547d055c",
+    "verifiedAt": "2026-09-14T15:01:45.560Z",
+    "model": "local protocol fixture",
+    "calls": 5,
+    "successfulResults": 5,
+    "sessionSha256": "6d2a1beec6b10fa439fc0fc0bba8d48978a4d783d70f31da7b3a13750aa9bcf0"
+  },
+  "independentReview": {
+    "reviewer": "Separate read-only domain reviewer in this task",
+    "status": "No blocking scientific or contract findings for the inspected implementation and measured inputs",
+    "evidenceFilesReviewed": 17,
+    "flowMaximumComplexPauliExpectationError": 1.67e-16,
+    "flowMaximumDenseAnsatzStateError": 1.39e-16,
+    "tjmCoherentMaximumAnalyticError": 1.84e-14,
+    "tjmDampedScope": "32-trajectory case validates execution, jumps and statistical output; it does not establish accuracy or convergence"
+  },
+  "oracles": {
+    "flow": {
+      "pauliWordsChecked": 80,
+      "maximumExpectationError": 1.1102230246251565e-16,
+      "denseAnsatzCases": 2
+    },
+    "sqd": {
+      "frozenCoreEnergyHartree": -7.863681624920645,
+      "coreEnergyOffsetHartree": -6.804012298302044,
+      "activeOrbitalIndices": [
+        1,
+        2,
+        3,
+        4
+      ]
+    }
+  },
+  "cases": [
+    {
+      "file": "clifft-sampling-expanded.json",
+      "verifiedAt": "2026-09-14T15:01:20.425Z",
+      "schemaVersion": "1.0",
+      "source": {
+        "name": "clifft",
+        "version": "0.10.0",
+        "repository": "https://github.com/unitaryfoundation/clifft"
+      },
+      "input": {
+        "numQubits": 80,
+        "gates": [
+          {
+            "gate": "H",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              0,
+              1
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              1,
+              2
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              2,
+              3
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              3,
+              4
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              4,
+              5
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              5,
+              6
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              6,
+              7
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              7,
+              8
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              8,
+              9
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              9,
+              10
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              10,
+              11
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              11,
+              12
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              12,
+              13
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              13,
+              14
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              14,
+              15
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              15,
+              16
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              16,
+              17
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              17,
+              18
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              18,
+              19
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              19,
+              20
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              20,
+              21
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              21,
+              22
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              22,
+              23
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              23,
+              24
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              24,
+              25
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              25,
+              26
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              26,
+              27
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              27,
+              28
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              28,
+              29
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              29,
+              30
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              30,
+              31
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              31,
+              32
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              32,
+              33
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              33,
+              34
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              34,
+              35
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              35,
+              36
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              36,
+              37
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              37,
+              38
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              38,
+              39
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              39,
+              40
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              40,
+              41
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              41,
+              42
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              42,
+              43
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              43,
+              44
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              44,
+              45
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              45,
+              46
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              46,
+              47
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              47,
+              48
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              48,
+              49
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              49,
+              50
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              50,
+              51
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              51,
+              52
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              52,
+              53
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              53,
+              54
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              54,
+              55
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              55,
+              56
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              56,
+              57
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              57,
+              58
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              58,
+              59
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              59,
+              60
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              60,
+              61
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              61,
+              62
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              62,
+              63
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              63,
+              64
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              64,
+              65
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              65,
+              66
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              66,
+              67
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              67,
+              68
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              68,
+              69
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              69,
+              70
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              70,
+              71
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              71,
+              72
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              72,
+              73
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              73,
+              74
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              74,
+              75
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              75,
+              76
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              76,
+              77
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              77,
+              78
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              78,
+              79
+            ]
+          }
+        ],
+        "shots": 256,
+        "noiseProbability": 0,
+        "seed": 7,
+        "maxActiveWidth": 16,
+        "referenceMode": "auto"
+      },
+      "inputSha256": "280a44078edde0825554aec9a13a2a41ae0f991230a3fc4daed1d3059324d15c",
+      "dependencyLockSha256": "c5639fd8ffc3ac1393cfd4aaf0be293cb2e827a7b7354ea96bf816240eb19fac",
+      "result": {
+        "outcomes": [
+          {
+            "bitstring": "00000000000000000000000000000000000000000000000000000000000000000000000000000000",
+            "count": 129,
+            "probability": 0.50390625,
+            "referenceProbability": null
+          },
+          {
+            "bitstring": "11111111111111111111111111111111111111111111111111111111111111111111111111111111",
+            "count": 127,
+            "probability": 0.49609375,
+            "referenceProbability": null
+          }
+        ],
+        "outcomesCoverage": "observed_only",
+        "reference": {
+          "mode": "auto",
+          "status": "not_run",
+          "method": "Independent dense density-matrix evolution",
+          "reason": "Dense reference is limited to 6 qubits; sampling runs independently."
+        },
+        "shots": 256,
+        "totalVariationDistance": null,
+        "referenceTraceError": null,
+        "bitOrder": "left-to-right q0,q1,...",
+        "circuit": "H 0\nCX 0 1\nCX 1 2\nCX 2 3\nCX 3 4\nCX 4 5\nCX 5 6\nCX 6 7\nCX 7 8\nCX 8 9\nCX 9 10\nCX 10 11\nCX 11 12\nCX 12 13\nCX 13 14\nCX 14 15\nCX 15 16\nCX 16 17\nCX 17 18\nCX 18 19\nCX 19 20\nCX 20 21\nCX 21 22\nCX 22 23\nCX 23 24\nCX 24 25\nCX 25 26\nCX 26 27\nCX 27 28\nCX 28 29\nCX 29 30\nCX 30 31\nCX 31 32\nCX 32 33\nCX 33 34\nCX 34 35\nCX 35 36\nCX 36 37\nCX 37 38\nCX 38 39\nCX 39 40\nCX 40 41\nCX 41 42\nCX 42 43\nCX 43 44\nCX 44 45\nCX 45 46\nCX 46 47\nCX 47 48\nCX 48 49\nCX 49 50\nCX 50 51\nCX 51 52\nCX 52 53\nCX 53 54\nCX 54 55\nCX 55 56\nCX 56 57\nCX 57 58\nCX 58 59\nCX 59 60\nCX 60 61\nCX 61 62\nCX 62 63\nCX 63 64\nCX 64 65\nCX 65 66\nCX 66 67\nCX 67 68\nCX 68 69\nCX 69 70\nCX 70 71\nCX 71 72\nCX 72 73\nCX 73 74\nCX 74 75\nCX 75 76\nCX 76 77\nCX 77 78\nCX 78 79\nM 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79",
+        "peakActiveWidth": 0,
+        "nonCliffordGates": 0
+      },
+      "scientificValidation": "not_evaluated",
+      "limitations": [
+        "Initial state |0...0>; independent per-target depolarization follows every gate; final Z measurement only.",
+        "Frequencies have multinomial sampling uncertainty; observed_only omits unobserved bitstrings, not probability mass from the empirical distribution.",
+        "Only the documented bounded Clifford+T gate set is exposed; loss/leakage continuations, dynamic circuits, performance claims and scientific acceptance are out of scope."
+      ]
+    },
+    {
+      "file": "clifft-sampling-explicit-skip.json",
+      "verifiedAt": "2026-09-14T15:01:20.630Z",
+      "schemaVersion": "1.0",
+      "source": {
+        "name": "clifft",
+        "version": "0.10.0",
+        "repository": "https://github.com/unitaryfoundation/clifft"
+      },
+      "input": {
+        "referenceMode": "skip",
+        "numQubits": 2,
+        "gates": [
+          {
+            "gate": "H",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "T",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "H",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              0,
+              1
+            ]
+          }
+        ],
+        "noiseProbability": 0,
+        "shots": 2048,
+        "seed": 7,
+        "maxActiveWidth": 16
+      },
+      "inputSha256": "5c553723e482831c110b04f12a4277bbeb8a0958025a4c91267eeed6ba51567c",
+      "dependencyLockSha256": "c5639fd8ffc3ac1393cfd4aaf0be293cb2e827a7b7354ea96bf816240eb19fac",
+      "result": {
+        "outcomes": [
+          {
+            "bitstring": "00",
+            "count": 1768,
+            "probability": 0.86328125,
+            "referenceProbability": null
+          },
+          {
+            "bitstring": "11",
+            "count": 280,
+            "probability": 0.13671875,
+            "referenceProbability": null
+          }
+        ],
+        "outcomesCoverage": "observed_only",
+        "reference": {
+          "mode": "skip",
+          "status": "not_run",
+          "method": "Independent dense density-matrix evolution",
+          "reason": "Reference explicitly skipped by the caller."
+        },
+        "shots": 2048,
+        "totalVariationDistance": null,
+        "referenceTraceError": null,
+        "bitOrder": "left-to-right q0,q1,...",
+        "circuit": "H 0\nT 0\nH 0\nCX 0 1\nM 0 1",
+        "peakActiveWidth": 1,
+        "nonCliffordGates": 1
+      },
+      "scientificValidation": "not_evaluated",
+      "limitations": [
+        "Initial state |0...0>; independent per-target depolarization follows every gate; final Z measurement only.",
+        "Frequencies have multinomial sampling uncertainty; observed_only omits unobserved bitstrings, not probability mass from the empirical distribution.",
+        "Only the documented bounded Clifford+T gate set is exposed; loss/leakage continuations, dynamic circuits, performance claims and scientific acceptance are out of scope."
+      ]
+    },
+    {
+      "file": "clifft-sampling-wide-bit-order.json",
+      "verifiedAt": "2026-09-14T15:01:20.494Z",
+      "schemaVersion": "1.0",
+      "source": {
+        "name": "clifft",
+        "version": "0.10.0",
+        "repository": "https://github.com/unitaryfoundation/clifft"
+      },
+      "input": {
+        "numQubits": 80,
+        "gates": [
+          {
+            "gate": "X",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "X",
+            "targets": [
+              78
+            ]
+          }
+        ],
+        "shots": 128,
+        "noiseProbability": 0,
+        "seed": 7,
+        "maxActiveWidth": 16,
+        "referenceMode": "auto"
+      },
+      "inputSha256": "f86114d1283922675c930c05428d708c2c9a6713376472843c6cab839b1b7981",
+      "dependencyLockSha256": "c5639fd8ffc3ac1393cfd4aaf0be293cb2e827a7b7354ea96bf816240eb19fac",
+      "result": {
+        "outcomes": [
+          {
+            "bitstring": "10000000000000000000000000000000000000000000000000000000000000000000000000000010",
+            "count": 128,
+            "probability": 1,
+            "referenceProbability": null
+          }
+        ],
+        "outcomesCoverage": "observed_only",
+        "reference": {
+          "mode": "auto",
+          "status": "not_run",
+          "method": "Independent dense density-matrix evolution",
+          "reason": "Dense reference is limited to 6 qubits; sampling runs independently."
+        },
+        "shots": 128,
+        "totalVariationDistance": null,
+        "referenceTraceError": null,
+        "bitOrder": "left-to-right q0,q1,...",
+        "circuit": "X 0\nX 78\nM 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79",
+        "peakActiveWidth": 0,
+        "nonCliffordGates": 0
+      },
+      "scientificValidation": "not_evaluated",
+      "limitations": [
+        "Initial state |0...0>; independent per-target depolarization follows every gate; final Z measurement only.",
+        "Frequencies have multinomial sampling uncertainty; observed_only omits unobserved bitstrings, not probability mass from the empirical distribution.",
+        "Only the documented bounded Clifford+T gate set is exposed; loss/leakage continuations, dynamic circuits, performance claims and scientific acceptance are out of scope."
+      ]
+    },
+    {
+      "file": "flow-vqe-expanded.json",
+      "verifiedAt": "2026-09-14T15:01:09.157Z",
+      "schemaVersion": "1.0",
+      "source": {
+        "name": "Flow-VQE",
+        "revision": "f7642afa330e5108ea5738d42fe80b551363733c",
+        "repository": "https://github.com/olsson-group/Flow-VQE"
+      },
+      "input": {
+        "numQubits": 12,
+        "terms": [
+          {
+            "pauli": "ZIIIIIIIIIII",
+            "coefficient": -1
+          },
+          {
+            "pauli": "IIIIIIIIIIIX",
+            "coefficient": -0.5
+          }
+        ],
+        "epochs": 2,
+        "batchSize": 4,
+        "layers": 1,
+        "seed": 7,
+        "referenceMode": "auto"
+      },
+      "inputSha256": "ffd9d8632ca1f649b86b1d9753eb3a95cda212639c68707c2686d46156f1a261",
+      "dependencyLockSha256": "55a1bd3730cb09266ebe483354bb32f73b7bdfe6bf51f11aae091b15d7e16f92",
+      "result": {
+        "bestEnergy": -1.305859088897705,
+        "recomputedEnergy": -1.305859131806868,
+        "exactGroundEnergy": null,
+        "error": null,
+        "reference": {
+          "mode": "auto",
+          "status": "not_run",
+          "method": "Independent dense Pauli diagonalization",
+          "reason": "Dense reference is limited to 10 qubits; matrix-free training runs independently."
+        },
+        "randomSearchBestEnergy": -0.9206660435603163,
+        "evaluationsPerMethod": 8,
+        "bestParameters": [
+          0.038478076457977295,
+          0.4128721356391907,
+          -1.745504379272461,
+          -1.0821781158447266,
+          1.2721548080444336,
+          1.6348912715911865,
+          -0.09207159280776978,
+          1.8719825744628906,
+          1.3161728382110596,
+          -0.3185245394706726,
+          1.5885069370269775,
+          0.8150312304496765,
+          0.07550448179244995,
+          0.947023332118988,
+          0.5495265126228333,
+          -0.36115676164627075,
+          -1.1280224323272705,
+          -1.178215503692627,
+          -1.4401004314422607,
+          -1.0614964962005615,
+          -1.8471505641937256,
+          -1.2654509544372559,
+          -0.5551686882972717,
+          -0.5478939414024353
+        ],
+        "energyHistory": [
+          -0.8620291948318481,
+          -1.305859088897705
+        ],
+        "normError": 2.4424906541753444e-15,
+        "ansatz": "zero state; RY on every site, then layers of nearest-neighbor CNOT and RY; leftmost Pauli is q0",
+        "units": "same energy units as input coefficients"
+      },
+      "scientificValidation": "not_evaluated",
+      "limitations": [
+        "Upstream single-context training is used with a small local RY/CNOT objective, not the paper's molecular dataset or pretrained model.",
+        "The ansatz has real amplitudes and need not express the exact ground state of an arbitrary Pauli Hamiltonian.",
+        "The equal-evaluation random baseline is uniform on [-pi,pi]; no optimizer-speedup or cross-molecule generalization is established.",
+        "Upstream training stores float32 sampled energies; recomputedEnergy is the local float64 expectation."
+      ]
+    },
+    {
+      "file": "flow-vqe-explicit-skip.json",
+      "verifiedAt": "2026-09-14T15:01:15.163Z",
+      "schemaVersion": "1.0",
+      "source": {
+        "name": "Flow-VQE",
+        "revision": "f7642afa330e5108ea5738d42fe80b551363733c",
+        "repository": "https://github.com/olsson-group/Flow-VQE"
+      },
+      "input": {
+        "terms": [
+          {
+            "pauli": "ZI",
+            "coefficient": -1
+          }
+        ],
+        "epochs": 1,
+        "batchSize": 4,
+        "referenceMode": "skip",
+        "numQubits": 2,
+        "layers": 1,
+        "seed": 7
+      },
+      "inputSha256": "3d54dc959f438486ba54b23dda1d1b53d3f3c050a97d3a3cc2b7e05165d162c5",
+      "dependencyLockSha256": "55a1bd3730cb09266ebe483354bb32f73b7bdfe6bf51f11aae091b15d7e16f92",
+      "result": {
+        "bestEnergy": -0.6317558884620667,
+        "recomputedEnergy": -0.6317559168054732,
+        "exactGroundEnergy": null,
+        "error": null,
+        "reference": {
+          "mode": "skip",
+          "status": "not_run",
+          "method": "Independent dense Pauli diagonalization",
+          "reason": "Reference explicitly skipped by the caller."
+        },
+        "randomSearchBestEnergy": -0.020917688254653066,
+        "evaluationsPerMethod": 4,
+        "bestParameters": [
+          0.30677109956741333,
+          1.6686930656433105,
+          0.5812326073646545,
+          0.7529160380363464
+        ],
+        "energyHistory": [
+          -0.6317558884620667
+        ],
+        "normError": 2.220446049250313e-16,
+        "ansatz": "zero state; RY on every site, then layers of nearest-neighbor CNOT and RY; leftmost Pauli is q0",
+        "units": "same energy units as input coefficients"
+      },
+      "scientificValidation": "not_evaluated",
+      "limitations": [
+        "Upstream single-context training is used with a small local RY/CNOT objective, not the paper's molecular dataset or pretrained model.",
+        "The ansatz has real amplitudes and need not express the exact ground state of an arbitrary Pauli Hamiltonian.",
+        "The equal-evaluation random baseline is uniform on [-pi,pi]; no optimizer-speedup or cross-molecule generalization is established.",
+        "Upstream training stores float32 sampled energies; recomputedEnergy is the local float64 expectation."
+      ]
+    },
+    {
+      "file": "flow-vqe-y-pauli.json",
+      "verifiedAt": "2026-09-14T15:01:12.262Z",
+      "schemaVersion": "1.0",
+      "source": {
+        "name": "Flow-VQE",
+        "revision": "f7642afa330e5108ea5738d42fe80b551363733c",
+        "repository": "https://github.com/olsson-group/Flow-VQE"
+      },
+      "input": {
+        "numQubits": 5,
+        "terms": [
+          {
+            "pauli": "YYIII",
+            "coefficient": 0.7
+          },
+          {
+            "pauli": "IIIIZ",
+            "coefficient": -0.3
+          }
+        ],
+        "epochs": 2,
+        "batchSize": 4,
+        "referenceMode": "required",
+        "layers": 1,
+        "seed": 7
+      },
+      "inputSha256": "4f024bedc94c28587bdd4917f15c8b83f819a4115835c1a0e761e31bf99be92d",
+      "dependencyLockSha256": "55a1bd3730cb09266ebe483354bb32f73b7bdfe6bf51f11aae091b15d7e16f92",
+      "result": {
+        "bestEnergy": -0.3223430812358856,
+        "recomputedEnergy": -0.3223430901517852,
+        "exactGroundEnergy": -1,
+        "error": 0.6776569098482148,
+        "reference": {
+          "mode": "required",
+          "status": "computed",
+          "method": "Independent dense Pauli diagonalization",
+          "reason": "Independent reference computed for this input."
+        },
+        "randomSearchBestEnergy": -0.2679490710959144,
+        "evaluationsPerMethod": 8,
+        "bestParameters": [
+          0.1530209183692932,
+          0.2667173743247986,
+          0.6277278065681458,
+          -0.17543047666549683,
+          -0.905543863773346,
+          -0.6861123442649841,
+          -0.5091115832328796,
+          0.7924148440361023,
+          -1.632124423980713,
+          0.7258012890815735
+        ],
+        "energyHistory": [
+          -0.3223430812358856,
+          -0.3223430812358856
+        ],
+        "normError": 4.440892098500626e-16,
+        "ansatz": "zero state; RY on every site, then layers of nearest-neighbor CNOT and RY; leftmost Pauli is q0",
+        "units": "same energy units as input coefficients"
+      },
+      "scientificValidation": "not_evaluated",
+      "limitations": [
+        "Upstream single-context training is used with a small local RY/CNOT objective, not the paper's molecular dataset or pretrained model.",
+        "The ansatz has real amplitudes and need not express the exact ground state of an arbitrary Pauli Hamiltonian.",
+        "The equal-evaluation random baseline is uniform on [-pi,pi]; no optimizer-speedup or cross-molecule generalization is established.",
+        "Upstream training stores float32 sampled energies; recomputedEnergy is the local float64 expectation."
+      ]
+    },
+    {
+      "file": "sqd-chemistry-expanded.json",
+      "verifiedAt": "2026-09-14T15:05:29.777Z",
+      "schemaVersion": "1.0",
+      "source": {
+        "name": "qiskit-addon-sqd",
+        "version": "0.13.1",
+        "repository": "https://github.com/Qiskit/qiskit-addon-sqd"
+      },
+      "input": {
+        "molecule": {
+          "atoms": [
+            {
+              "element": "Li",
+              "positionAngstrom": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "element": "H",
+              "positionAngstrom": [
+                0,
+                0,
+                1.6
+              ]
+            }
+          ],
+          "charge": 0
+        },
+        "activeSpace": {
+          "numOrbitals": 4,
+          "numElectrons": 2
+        },
+        "counts": {
+          "00010001": 64
+        },
+        "iterations": 2,
+        "bondLengthAngstrom": 0.735,
+        "basis": "sto-3g",
+        "maxSubspaceDimension": 32,
+        "shots": 256,
+        "samplesPerBatch": 16,
+        "seed": 7,
+        "referenceMode": "auto"
+      },
+      "inputSha256": "0ec6c222dc5dea8ac9180ee201ec4d2d4be428b531cc82b2c8053136dd13722d",
+      "dependencyLockSha256": "4f14f930fe555173419c46aa23769abbef0a7345dabb549117788297a3493624",
+      "result": {
+        "energyHartree": -7.8618647698086495,
+        "fciEnergyHartree": -7.86368162492065,
+        "reference": {
+          "mode": "auto",
+          "status": "computed",
+          "method": "FCI of the same active-space Hamiltonian, including frozen-core and nuclear energy",
+          "reason": "Independent reference computed for this input."
+        },
+        "hfEnergyHartree": -7.861864769808647,
+        "errorHartree": 0.0018168551120005816,
+        "nuclearEnergyHartree": 0.992207270475,
+        "coreEnergyOffsetHartree": -6.804012298302049,
+        "occupancies": [
+          [
+            1,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            0,
+            0
+          ]
+        ],
+        "iterationEnergiesHartree": [
+          -7.8618647698086495,
+          -7.8618647698086495
+        ],
+        "sampleSource": "supplied_counts",
+        "totalShots": 64,
+        "spatialOrbitals": 4,
+        "electrons": [
+          1,
+          1
+        ],
+        "frozenCoreOrbitals": 1,
+        "activeOrbitalIndices": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "basis": "sto-3g",
+        "fullSpatialOrbitals": 6,
+        "determinantDimension": 16,
+        "maxSubspaceDimensionPerSpin": 4,
+        "bitOrder": "beta3 beta2 beta1 beta0 alpha3 alpha2 alpha1 alpha0",
+        "spinSector": "n_alpha=n_beta (M_s=0); total spin is not constrained"
+      },
+      "scientificValidation": "not_evaluated",
+      "limitations": [
+        "Molecular orbitals come from closed-shell RHF; active orbitals are contiguous after the frozen core. Total spin is not constrained.",
+        "FCI, when computed, is exact only within the chosen active-space Hamiltonian and finite basis, subject to numerical solver convergence.",
+        "The HF configuration is always included; recovered supplied samples need not span the full sector. Energy includes nuclear and frozen-core contributions.",
+        "Synthetic uniform samples establish no quantum advantage; subspace and iteration limits can leave variational error. Reference observations are not central scientific acceptance."
+      ]
+    },
+    {
+      "file": "sqd-chemistry-explicit-skip.json",
+      "verifiedAt": "2026-09-14T15:05:34.023Z",
+      "schemaVersion": "1.0",
+      "source": {
+        "name": "qiskit-addon-sqd",
+        "version": "0.13.1",
+        "repository": "https://github.com/Qiskit/qiskit-addon-sqd"
+      },
+      "input": {
+        "referenceMode": "skip",
+        "bondLengthAngstrom": 0.735,
+        "basis": "sto-3g",
+        "maxSubspaceDimension": 32,
+        "shots": 256,
+        "samplesPerBatch": 16,
+        "iterations": 3,
+        "seed": 7
+      },
+      "inputSha256": "d7b40e6368283d591a6d8216d64cf78339e204c330b0ddae8ee31c02acf40f2e",
+      "dependencyLockSha256": "4f14f930fe555173419c46aa23769abbef0a7345dabb549117788297a3493624",
+      "result": {
+        "energyHartree": -1.1373060357534004,
+        "fciEnergyHartree": null,
+        "reference": {
+          "mode": "skip",
+          "status": "not_run",
+          "method": "FCI of the same active-space Hamiltonian, including frozen-core and nuclear energy",
+          "reason": "Reference explicitly skipped by the caller."
+        },
+        "hfEnergyHartree": -1.1169989967540044,
+        "errorHartree": null,
+        "nuclearEnergyHartree": 0.7199689944489797,
+        "coreEnergyOffsetHartree": 0.7199689944489797,
+        "occupancies": [
+          [
+            0.9875597343674859,
+            0.012440265632514248
+          ],
+          [
+            0.9875597343674859,
+            0.012440265632514248
+          ]
+        ],
+        "iterationEnergiesHartree": [
+          -1.1373060357534004,
+          -1.1373060357534004
+        ],
+        "sampleSource": "synthetic_uniform",
+        "totalShots": 256,
+        "spatialOrbitals": 2,
+        "electrons": [
+          1,
+          1
+        ],
+        "frozenCoreOrbitals": 0,
+        "activeOrbitalIndices": [
+          0,
+          1
+        ],
+        "basis": "sto-3g",
+        "fullSpatialOrbitals": 2,
+        "determinantDimension": 4,
+        "maxSubspaceDimensionPerSpin": 2,
+        "bitOrder": "beta1 beta0 alpha1 alpha0",
+        "spinSector": "n_alpha=n_beta (M_s=0); total spin is not constrained"
+      },
+      "scientificValidation": "not_evaluated",
+      "limitations": [
+        "Molecular orbitals come from closed-shell RHF; active orbitals are contiguous after the frozen core. Total spin is not constrained.",
+        "FCI, when computed, is exact only within the chosen active-space Hamiltonian and finite basis, subject to numerical solver convergence.",
+        "The HF configuration is always included; recovered supplied samples need not span the full sector. Energy includes nuclear and frozen-core contributions.",
+        "Synthetic uniform samples establish no quantum advantage; subspace and iteration limits can leave variational error. Reference observations are not central scientific acceptance."
+      ]
+    },
+    {
+      "file": "sqd-chemistry-h2-larger-basis.json",
+      "verifiedAt": "2026-09-14T15:05:31.713Z",
+      "schemaVersion": "1.0",
+      "source": {
+        "name": "qiskit-addon-sqd",
+        "version": "0.13.1",
+        "repository": "https://github.com/Qiskit/qiskit-addon-sqd"
+      },
+      "input": {
+        "basis": "cc-pvdz",
+        "referenceMode": "skip",
+        "iterations": 1,
+        "bondLengthAngstrom": 0.735,
+        "maxSubspaceDimension": 32,
+        "shots": 256,
+        "samplesPerBatch": 16,
+        "seed": 7
+      },
+      "inputSha256": "537ea2a551dd073f5fb515f8021f06a80383d96e24cec76d3a21fed46c37806f",
+      "dependencyLockSha256": "4f14f930fe555173419c46aa23769abbef0a7345dabb549117788297a3493624",
+      "result": {
+        "energyHartree": -1.1509566849901276,
+        "fciEnergyHartree": null,
+        "reference": {
+          "mode": "skip",
+          "status": "not_run",
+          "method": "FCI of the same active-space Hamiltonian, including frozen-core and nuclear energy",
+          "reason": "Reference explicitly skipped by the caller."
+        },
+        "hfEnergyHartree": -1.1286227699265918,
+        "errorHartree": null,
+        "nuclearEnergyHartree": 0.7199689944489797,
+        "coreEnergyOffsetHartree": 0.7199689944489797,
+        "occupancies": [
+          [
+            0.988699801043309,
+            0.002516725387877384,
+            0.002861598486274383,
+            0.0021724267731269955,
+            0.0017209235955406783,
+            0.00175951179824407,
+            0.00016471645163050288,
+            0.00010429646399666069,
+            8.63168008725976e-18,
+            0
+          ],
+          [
+            0.9886816121804439,
+            0.004585569540334318,
+            0.003044503800770012,
+            0,
+            0.0017209235955098496,
+            0.001759511798274899,
+            0,
+            0.00010429646399666933,
+            0,
+            0.00010358262067006073
+          ]
+        ],
+        "iterationEnergiesHartree": [
+          -1.1509566849901276
+        ],
+        "sampleSource": "synthetic_uniform",
+        "totalShots": 256,
+        "spatialOrbitals": 10,
+        "electrons": [
+          1,
+          1
+        ],
+        "frozenCoreOrbitals": 0,
+        "activeOrbitalIndices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "basis": "cc-pvdz",
+        "fullSpatialOrbitals": 10,
+        "determinantDimension": 100,
+        "maxSubspaceDimensionPerSpin": 10,
+        "bitOrder": "beta9 beta8 beta7 beta6 beta5 beta4 beta3 beta2 beta1 beta0 alpha9 alpha8 alpha7 alpha6 alpha5 alpha4 alpha3 alpha2 alpha1 alpha0",
+        "spinSector": "n_alpha=n_beta (M_s=0); total spin is not constrained"
+      },
+      "scientificValidation": "not_evaluated",
+      "limitations": [
+        "Molecular orbitals come from closed-shell RHF; active orbitals are contiguous after the frozen core. Total spin is not constrained.",
+        "FCI, when computed, is exact only within the chosen active-space Hamiltonian and finite basis, subject to numerical solver convergence.",
+        "The HF configuration is always included; recovered supplied samples need not span the full sector. Energy includes nuclear and frozen-core contributions.",
+        "Synthetic uniform samples establish no quantum advantage; subspace and iteration limits can leave variational error. Reference observations are not central scientific acceptance."
+      ]
+    },
+    {
+      "file": "sqd-chemistry-h4-large-active.json",
+      "verifiedAt": "2026-09-14T15:05:32.495Z",
+      "schemaVersion": "1.0",
+      "source": {
+        "name": "qiskit-addon-sqd",
+        "version": "0.13.1",
+        "repository": "https://github.com/Qiskit/qiskit-addon-sqd"
+      },
+      "input": {
+        "molecule": {
+          "atoms": [
+            {
+              "element": "H",
+              "positionAngstrom": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "element": "H",
+              "positionAngstrom": [
+                0,
+                0,
+                0.8
+              ]
+            },
+            {
+              "element": "H",
+              "positionAngstrom": [
+                0,
+                0,
+                1.6
+              ]
+            },
+            {
+              "element": "H",
+              "positionAngstrom": [
+                0,
+                0,
+                2.4
+              ]
+            }
+          ],
+          "charge": 0
+        },
+        "basis": "cc-pvdz",
+        "maxSubspaceDimension": 8,
+        "counts": {
+          "0000000000000000001100000000000000000011": 64
+        },
+        "iterations": 1,
+        "bondLengthAngstrom": 0.735,
+        "shots": 256,
+        "samplesPerBatch": 16,
+        "seed": 7,
+        "referenceMode": "auto"
+      },
+      "inputSha256": "b3d9a9ee58b23dd56fadceb60160c73e5a6717ca832e0819d4e47d22d80af159",
+      "dependencyLockSha256": "4f14f930fe555173419c46aa23769abbef0a7345dabb549117788297a3493624",
+      "result": {
+        "energyHartree": -2.167849626976388,
+        "fciEnergyHartree": null,
+        "reference": {
+          "mode": "auto",
+          "status": "not_run",
+          "method": "FCI of the same active-space Hamiltonian, including frozen-core and nuclear energy",
+          "reason": "FCI reference is limited to 12 active spatial orbitals and 10000 determinants."
+        },
+        "hfEnergyHartree": -2.167849626976387,
+        "errorHartree": null,
+        "nuclearEnergyHartree": 2.8663765591500003,
+        "coreEnergyOffsetHartree": 2.8663765591500003,
+        "occupancies": [
+          [
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "iterationEnergiesHartree": [
+          -2.167849626976388
+        ],
+        "sampleSource": "supplied_counts",
+        "totalShots": 64,
+        "spatialOrbitals": 20,
+        "electrons": [
+          2,
+          2
+        ],
+        "frozenCoreOrbitals": 0,
+        "activeOrbitalIndices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19
+        ],
+        "basis": "cc-pvdz",
+        "fullSpatialOrbitals": 20,
+        "determinantDimension": 36100,
+        "maxSubspaceDimensionPerSpin": 8,
+        "bitOrder": "beta19 beta18 beta17 beta16 beta15 beta14 beta13 beta12 beta11 beta10 beta9 beta8 beta7 beta6 beta5 beta4 beta3 beta2 beta1 beta0 alpha19 alpha18 alpha17 alpha16 alpha15 alpha14 alpha13 alpha12 alpha11 alpha10 alpha9 alpha8 alpha7 alpha6 alpha5 alpha4 alpha3 alpha2 alpha1 alpha0",
+        "spinSector": "n_alpha=n_beta (M_s=0); total spin is not constrained"
+      },
+      "scientificValidation": "not_evaluated",
+      "limitations": [
+        "Molecular orbitals come from closed-shell RHF; active orbitals are contiguous after the frozen core. Total spin is not constrained.",
+        "FCI, when computed, is exact only within the chosen active-space Hamiltonian and finite basis, subject to numerical solver convergence.",
+        "The HF configuration is always included; recovered supplied samples need not span the full sector. Energy includes nuclear and frozen-core contributions.",
+        "Synthetic uniform samples establish no quantum advantage; subspace and iteration limits can leave variational error. Reference observations are not central scientific acceptance."
+      ]
+    },
+    {
+      "file": "sqd-chemistry-h4.json",
+      "verifiedAt": "2026-09-14T15:05:30.919Z",
+      "schemaVersion": "1.0",
+      "source": {
+        "name": "qiskit-addon-sqd",
+        "version": "0.13.1",
+        "repository": "https://github.com/Qiskit/qiskit-addon-sqd"
+      },
+      "input": {
+        "molecule": {
+          "atoms": [
+            {
+              "element": "H",
+              "positionAngstrom": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "element": "H",
+              "positionAngstrom": [
+                0,
+                0,
+                0.8
+              ]
+            },
+            {
+              "element": "H",
+              "positionAngstrom": [
+                0,
+                0,
+                1.6
+              ]
+            },
+            {
+              "element": "H",
+              "positionAngstrom": [
+                0,
+                0,
+                2.4
+              ]
+            }
+          ],
+          "charge": 0
+        },
+        "iterations": 2,
+        "bondLengthAngstrom": 0.735,
+        "basis": "sto-3g",
+        "maxSubspaceDimension": 32,
+        "shots": 256,
+        "samplesPerBatch": 16,
+        "seed": 7,
+        "referenceMode": "auto"
+      },
+      "inputSha256": "50f0ddffee5fdcd4741ffab321e41bb7d839f1f5e143d89ff74099605fc6c68c",
+      "dependencyLockSha256": "4f14f930fe555173419c46aa23769abbef0a7345dabb549117788297a3493624",
+      "result": {
+        "energyHartree": -2.167560544132083,
+        "fciEnergyHartree": -2.1675605441340493,
+        "reference": {
+          "mode": "auto",
+          "status": "computed",
+          "method": "FCI of the same active-space Hamiltonian, including frozen-core and nuclear energy",
+          "reason": "Independent reference computed for this input."
+        },
+        "hfEnergyHartree": -2.1213867558702213,
+        "errorHartree": 1.9664270212160773e-12,
+        "nuclearEnergyHartree": 2.8663765591500003,
+        "coreEnergyOffsetHartree": 2.8663765591500003,
+        "occupancies": [
+          [
+            0.9920618071162679,
+            0.9756034397614607,
+            0.026224690056430966,
+            0.006110063065840484
+          ],
+          [
+            0.9920618071162679,
+            0.9756034397614607,
+            0.026224690056430966,
+            0.006110063065840484
+          ]
+        ],
+        "iterationEnergiesHartree": [
+          -2.167560544132083,
+          -2.167560544132083
+        ],
+        "sampleSource": "synthetic_uniform",
+        "totalShots": 256,
+        "spatialOrbitals": 4,
+        "electrons": [
+          2,
+          2
+        ],
+        "frozenCoreOrbitals": 0,
+        "activeOrbitalIndices": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "basis": "sto-3g",
+        "fullSpatialOrbitals": 4,
+        "determinantDimension": 36,
+        "maxSubspaceDimensionPerSpin": 6,
+        "bitOrder": "beta3 beta2 beta1 beta0 alpha3 alpha2 alpha1 alpha0",
+        "spinSector": "n_alpha=n_beta (M_s=0); total spin is not constrained"
+      },
+      "scientificValidation": "not_evaluated",
+      "limitations": [
+        "Molecular orbitals come from closed-shell RHF; active orbitals are contiguous after the frozen core. Total spin is not constrained.",
+        "FCI, when computed, is exact only within the chosen active-space Hamiltonian and finite basis, subject to numerical solver convergence.",
+        "The HF configuration is always included; recovered supplied samples need not span the full sector. Energy includes nuclear and frozen-core contributions.",
+        "Synthetic uniform samples establish no quantum advantage; subspace and iteration limits can leave variational error. Reference observations are not central scientific acceptance."
+      ]
+    },
+    {
+      "file": "tenpy-ground-state-coupled.json",
+      "verifiedAt": "2026-09-14T15:00:55.794Z",
+      "schemaVersion": "1.0",
+      "source": {
+        "name": "physics-tenpy",
+        "version": "1.1.1",
+        "repository": "https://github.com/tenpy/tenpy"
+      },
+      "input": {
+        "numSites": 12,
+        "maxBondDimension": 32,
+        "maxSweeps": 12,
+        "jx": 1,
+        "jy": 1,
+        "jz": 1,
+        "hx": 0,
+        "hz": 0,
+        "referenceMode": "auto"
+      },
+      "inputSha256": "8bbf7c82b311270d41aeb450291079057824ddcfee173fc1e8cf7d6fe1b0f9df",
+      "dependencyLockSha256": "052eb7d1fc6271d516abcb1929c43da9b8ea47ba03e5118fe52337ca4ecd4d1e",
+      "result": {
+        "energy": -5.142090632839007,
+        "exactGroundEnergy": null,
+        "energyError": null,
+        "reference": {
+          "mode": "auto",
+          "status": "not_run",
+          "method": "Independent dense diagonalization",
+          "reason": "Dense reference is limited to 10 sites; DMRG runs independently."
+        },
+        "convergence": {
+          "criteriaMet": true,
+          "lastEnergyChange": -1.5987211554602254e-14,
+          "maxTruncationError": 2.9177068182058366e-11,
+          "statement": "Energy/entropy sweep criteria only; not proof of the global ground state."
+        },
+        "siteSz": [
+          -8.076872504148014e-15,
+          -2.2100377083944522e-15,
+          4.6074255521944e-15,
+          1.1449174941446927e-16,
+          -2.583992590211859e-16,
+          1.3893076752512397e-15,
+          -2.2116436828624464e-15,
+          3.233703018474843e-15,
+          -1.915134717478395e-15,
+          1.9585028043778152e-15,
+          -4.524158825347513e-15,
+          6.6058269965196814e-15
+        ],
+        "entropy": [
+          0.6931471805599452,
+          0.4140311578768954,
+          0.7293379643670028,
+          0.511429132124163,
+          0.7481120283175242,
+          0.5368332535077203,
+          0.7481120283201412,
+          0.5114291321279061,
+          0.7293379643660804,
+          0.41403115787611533,
+          0.6931471805599452
+        ],
+        "maxBondDimensionUsed": 32,
+        "normError": 1.9984014443252818e-15,
+        "sweeps": 5,
+        "hamiltonian": "sum (Jx Sx_i Sx_j + Jy Sy_i Sy_j + Jz Sz_i Sz_j) - sum (hx Sx_i + hz Sz_i); S=Pauli/2; open chain"
+      },
+      "scientificValidation": "not_evaluated",
+      "limitations": [
+        "Finite open chains only, S=1/2; energy units are those of the supplied couplings.",
+        "Limited bond dimension and sweeps may leave a variational state above the ground state; inspect convergence and available reference errors.",
+        "Dense diagonalization is a small-system reference, not evidence for large-system convergence or central acceptance."
+      ]
+    },
+    {
+      "file": "tenpy-ground-state-expanded.json",
+      "verifiedAt": "2026-09-14T15:00:54.835Z",
+      "schemaVersion": "1.0",
+      "source": {
+        "name": "physics-tenpy",
+        "version": "1.1.1",
+        "repository": "https://github.com/tenpy/tenpy"
+      },
+      "input": {
+        "numSites": 12,
+        "jx": 0,
+        "jy": 0,
+        "jz": 0,
+        "hz": 0.8,
+        "maxBondDimension": 16,
+        "hx": 0,
+        "maxSweeps": 8,
+        "referenceMode": "auto"
+      },
+      "inputSha256": "e6ac836ac1c75b75a99955dcc80d06276391eb19be349dba0c0617ac5c09b1a6",
+      "dependencyLockSha256": "052eb7d1fc6271d516abcb1929c43da9b8ea47ba03e5118fe52337ca4ecd4d1e",
+      "result": {
+        "energy": -4.8,
+        "exactGroundEnergy": null,
+        "energyError": null,
+        "reference": {
+          "mode": "auto",
+          "status": "not_run",
+          "method": "Independent dense diagonalization",
+          "reason": "Dense reference is limited to 10 sites; DMRG runs independently."
+        },
+        "convergence": {
+          "criteriaMet": true,
+          "lastEnergyChange": 0,
+          "maxTruncationError": 0,
+          "statement": "Energy/entropy sweep criteria only; not proof of the global ground state."
+        },
+        "siteSz": [
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5
+        ],
+        "entropy": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "maxBondDimensionUsed": 1,
+        "normError": 0,
+        "sweeps": 3,
+        "hamiltonian": "sum (Jx Sx_i Sx_j + Jy Sy_i Sy_j + Jz Sz_i Sz_j) - sum (hx Sx_i + hz Sz_i); S=Pauli/2; open chain"
+      },
+      "scientificValidation": "not_evaluated",
+      "limitations": [
+        "Finite open chains only, S=1/2; energy units are those of the supplied couplings.",
+        "Limited bond dimension and sweeps may leave a variational state above the ground state; inspect convergence and available reference errors.",
+        "Dense diagonalization is a small-system reference, not evidence for large-system convergence or central acceptance."
+      ]
+    },
+    {
+      "file": "tenpy-ground-state-explicit-skip.json",
+      "verifiedAt": "2026-09-14T15:00:56.469Z",
+      "schemaVersion": "1.0",
+      "source": {
+        "name": "physics-tenpy",
+        "version": "1.1.1",
+        "repository": "https://github.com/tenpy/tenpy"
+      },
+      "input": {
+        "referenceMode": "skip",
+        "numSites": 6,
+        "jx": 1,
+        "jy": 1,
+        "jz": 1,
+        "hx": 0,
+        "hz": 0,
+        "maxBondDimension": 32,
+        "maxSweeps": 8
+      },
+      "inputSha256": "0f75f85bd5731de4e787f03bbc55ade03b98b879295e664d1db0544d919b5962",
+      "dependencyLockSha256": "052eb7d1fc6271d516abcb1929c43da9b8ea47ba03e5118fe52337ca4ecd4d1e",
+      "result": {
+        "energy": -2.4935771338879267,
+        "exactGroundEnergy": null,
+        "energyError": null,
+        "reference": {
+          "mode": "skip",
+          "status": "not_run",
+          "method": "Independent dense diagonalization",
+          "reason": "Reference explicitly skipped by the caller."
+        },
+        "convergence": {
+          "criteriaMet": true,
+          "lastEnergyChange": -1.7763568394002505e-15,
+          "maxTruncationError": 1.060699202528168e-26,
+          "statement": "Energy/entropy sweep criteria only; not proof of the global ground state."
+        },
+        "siteSz": [
+          -6.938893903907228e-16,
+          -7.754213937616328e-16,
+          9.43689570931383e-16,
+          -1.3704315460216776e-16,
+          -8.049116928532385e-16,
+          -1.6653345369377348e-16
+        ],
+        "entropy": [
+          0.6931471805599453,
+          0.3756032898440817,
+          0.711373047580601,
+          0.37560328984408076,
+          0.6931471805599453
+        ],
+        "maxBondDimensionUsed": 8,
+        "normError": 1.4432899320127035e-15,
+        "sweeps": 4,
+        "hamiltonian": "sum (Jx Sx_i Sx_j + Jy Sy_i Sy_j + Jz Sz_i Sz_j) - sum (hx Sx_i + hz Sz_i); S=Pauli/2; open chain"
+      },
+      "scientificValidation": "not_evaluated",
+      "limitations": [
+        "Finite open chains only, S=1/2; energy units are those of the supplied couplings.",
+        "Limited bond dimension and sweeps may leave a variational state above the ground state; inspect convergence and available reference errors.",
+        "Dense diagonalization is a small-system reference, not evidence for large-system convergence or central acceptance."
+      ]
+    },
+    {
+      "file": "tjm-dynamics-damped.json",
+      "verifiedAt": "2026-09-14T15:01:04.427Z",
+      "schemaVersion": "1.0",
+      "source": {
+        "name": "mqt.yaqs",
+        "version": "0.6.0",
+        "repository": "https://github.com/munich-quantum-toolkit/yaqs"
+      },
+      "input": {
+        "numQubits": 8,
+        "coupling": 0,
+        "field": 1.5,
+        "dampingRate": 0.8,
+        "duration": 0.8,
+        "steps": 8,
+        "trajectories": 32,
+        "maxBondDimension": 8,
+        "seed": 7,
+        "referenceMode": "auto"
+      },
+      "inputSha256": "90f247bcf2cce699c225f1c7024735e382cd1ec87d36f0e1a957dafebb6c0575",
+      "dependencyLockSha256": "12ba63af14c747b4e32e4a1f0851abcd42f5ebe921ae8a6dba61ffa50980f35f",
+      "result": {
+        "times": [
+          0,
+          0.1,
+          0.2,
+          0.30000000000000004,
+          0.4,
+          0.5,
+          0.6000000000000001,
+          0.7000000000000001,
+          0.8
+        ],
+        "siteZ": [
+          [
+            1,
+            0.9570501618118968,
+            0.8378880368376908,
+            0.6695710511826485,
+            0.43710980525700577,
+            0.18882706756755913,
+            -0.004877026530981609,
+            -0.209108702964936,
+            -0.38849037436146294
+          ],
+          [
+            1,
+            0.9583923442552803,
+            0.8429540356865145,
+            0.6589120528337051,
+            0.5047867147131325,
+            0.22939337814694483,
+            0.008598320684334764,
+            -0.27796512602911455,
+            -0.3234851089161962
+          ],
+          [
+            1,
+            0.957050161812074,
+            0.8378880368380095,
+            0.6682288687398791,
+            0.4496341249945362,
+            0.25421553163486993,
+            -0.054576324142168835,
+            -0.2280496758104731,
+            -0.3126461434005155
+          ],
+          [
+            1,
+            0.957050161811938,
+            0.8378880368376783,
+            0.6802300495315824,
+            0.43710980525709314,
+            0.23684101095798263,
+            0.05189329871079026,
+            -0.14757440040552317,
+            -0.27727559768942284
+          ],
+          [
+            1,
+            0.9570501618119638,
+            0.8378880368378496,
+            0.6589120528341145,
+            0.4371098052574852,
+            0.2128340392632411,
+            -0.009943025379182718,
+            -0.13557321961269359,
+            -0.35221622281661724
+          ],
+          [
+            1,
+            0.9570501618119271,
+            0.8378880368377989,
+            0.6589120528339297,
+            0.4547001238429709,
+            0.18882706756789905,
+            0.092792092991412,
+            -0.2165563357753619,
+            -0.35087790208020636
+          ],
+          [
+            1,
+            0.9570501618119714,
+            0.8378880368378426,
+            0.6802300495314423,
+            0.47094825998485795,
+            0.2331171945521982,
+            0.012849137740734559,
+            0.09136681224251507,
+            -0.24502577721540517
+          ],
+          [
+            1,
+            0.9570501618119741,
+            0.8378880368378472,
+            0.6589120528336243,
+            0.47094825998504464,
+            0.20911022285727066,
+            0.017915136589754417,
+            -0.22535683910705945,
+            -0.35997505836986177
+          ]
+        ],
+        "referenceSiteZ": null,
+        "reference": {
+          "mode": "auto",
+          "status": "not_run",
+          "method": "Independent dense Lindblad integration",
+          "reason": "Dense reference is limited to 6 qubits; tensor trajectories run independently."
+        },
+        "standardErrors": [
+          [
+            0,
+            8.341581689795937e-17,
+            1.0210226446387419e-16,
+            0.010658998348946824,
+            1.079669119275961e-14,
+            1.319556908947983e-14,
+            0.045614373649602004,
+            0.0651443822404268,
+            0.08251429142438634
+          ],
+          [
+            0,
+            0.0013421824433780993,
+            0.005065998848822157,
+            1.1703934292724141e-15,
+            0.03218835445266662,
+            0.02821826410972493,
+            0.04501170133939436,
+            0.033160805902042255,
+            0.09348436931742662
+          ],
+          [
+            0,
+            7.460937479300511e-17,
+            6.528320294387947e-17,
+            0.009316815905551305,
+            0.012524319736887956,
+            0.03756931908390147,
+            0.015860842883870248,
+            0.05822065871767165,
+            0.09755945398289392
+          ],
+          [
+            0,
+            6.383977028007689e-17,
+            5.5174376730324955e-17,
+            0.014828976372750829,
+            8.127221964573461e-15,
+            0.033398899633338155,
+            0.05830954937825392,
+            0.0749222421941537,
+            0.09816680063876186
+          ],
+          [
+            0,
+            5.310890195571084e-17,
+            3.8774577909630885e-17,
+            1.3298445541575797e-14,
+            1.7120843135415645e-14,
+            0.02400697169511948,
+            0.04216518459197211,
+            0.07986294280064424,
+            0.08860250427301784
+          ],
+          [
+            0,
+            1.4850927311738424e-16,
+            6.054320417334803e-17,
+            6.943947160014577e-15,
+            0.017590318585710595,
+            3.1605481574953833e-14,
+            0.0681425566859348,
+            0.06091222376694856,
+            0.08863276144563964
+          ],
+          [
+            0,
+            1.2412670766236366e-16,
+            6.30564305489428e-17,
+            0.014828976372757145,
+            0.02355805357474017,
+            0.030924517448941074,
+            0.04699394797849216,
+            0.10506698870928977,
+            0.10098335945336527
+          ],
+          [
+            0,
+            1.1034875346064991e-16,
+            7.913519228433388e-17,
+            9.531560119192271e-15,
+            0.02355805357473131,
+            0.020283155289696955,
+            0.05003748673624327,
+            0.057317944731682884,
+            0.08669192773591175
+          ]
+        ],
+        "maxAbsoluteDeviation": null,
+        "effectiveTrajectories": 32,
+        "hamiltonian": "-J sum Z_i Z_(i+1) - g sum X_i; hbar=1",
+        "jumpOperator": "sqrt(gamma) |0><1| at every site",
+        "referenceTraceError": null
+      },
+      "scientificValidation": "not_evaluated",
+      "limitations": [
+        "All times and rates use one consistent user-chosen unit with hbar=1; initial state is |0...0>.",
+        "Standard errors describe finite-trajectory sampling only; time-step and tensor truncation bias remain.",
+        "A completed tensor calculation does not establish convergence in time step, bond dimension, or trajectory count; a skipped dense reference supplies no accuracy estimate."
+      ]
+    },
+    {
+      "file": "tjm-dynamics-expanded.json",
+      "verifiedAt": "2026-09-14T15:00:57.920Z",
+      "schemaVersion": "1.0",
+      "source": {
+        "name": "mqt.yaqs",
+        "version": "0.6.0",
+        "repository": "https://github.com/munich-quantum-toolkit/yaqs"
+      },
+      "input": {
+        "numQubits": 8,
+        "coupling": 0,
+        "field": 0.7,
+        "dampingRate": 0,
+        "duration": 0.2,
+        "steps": 4,
+        "trajectories": 8,
+        "maxBondDimension": 8,
+        "seed": 7,
+        "referenceMode": "auto"
+      },
+      "inputSha256": "f165641dbbc2e6a9aaac8bdf02bf3475c0c69a6b780ebf6cd8226c26ec8c8970",
+      "dependencyLockSha256": "12ba63af14c747b4e32e4a1f0851abcd42f5ebe921ae8a6dba61ffa50980f35f",
+      "result": {
+        "times": [
+          0,
+          0.05,
+          0.1,
+          0.15000000000000002,
+          0.2
+        ],
+        "siteZ": [
+          [
+            1,
+            0.9975510002532799,
+            0.990215996212638,
+            0.9780309147241495,
+            0.961055438310774
+          ],
+          [
+            1,
+            0.9975510002532795,
+            0.9902159962126377,
+            0.9780309147241483,
+            0.9610554383107713
+          ],
+          [
+            1,
+            0.997551000253279,
+            0.990215996212638,
+            0.9780309147241497,
+            0.961055438310782
+          ],
+          [
+            1,
+            0.9975510002532793,
+            0.9902159962126341,
+            0.978030914724142,
+            0.9610554383107708
+          ],
+          [
+            1,
+            0.9975510002532801,
+            0.990215996212638,
+            0.978030914724147,
+            0.9610554383107526
+          ],
+          [
+            1,
+            0.9975510002532798,
+            0.9902159962126384,
+            0.9780309147241497,
+            0.9610554383107701
+          ],
+          [
+            1,
+            0.9975510002532796,
+            0.9902159962126381,
+            0.9780309147241502,
+            0.9610554383107763
+          ],
+          [
+            1,
+            0.9975510002532796,
+            0.9902159962126378,
+            0.9780309147241498,
+            0.9610554383107746
+          ]
+        ],
+        "referenceSiteZ": null,
+        "reference": {
+          "mode": "auto",
+          "status": "not_run",
+          "method": "Independent dense Lindblad integration",
+          "reason": "Dense reference is limited to 6 qubits; tensor trajectories run independently."
+        },
+        "standardErrors": [
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "maxAbsoluteDeviation": null,
+        "effectiveTrajectories": 1,
+        "hamiltonian": "-J sum Z_i Z_(i+1) - g sum X_i; hbar=1",
+        "jumpOperator": "sqrt(gamma) |0><1| at every site",
+        "referenceTraceError": null
+      },
+      "scientificValidation": "not_evaluated",
+      "limitations": [
+        "All times and rates use one consistent user-chosen unit with hbar=1; initial state is |0...0>.",
+        "Standard errors describe finite-trajectory sampling only; time-step and tensor truncation bias remain.",
+        "A completed tensor calculation does not establish convergence in time step, bond dimension, or trajectory count; a skipped dense reference supplies no accuracy estimate."
+      ]
+    },
+    {
+      "file": "tjm-dynamics-explicit-skip.json",
+      "verifiedAt": "2026-09-14T15:01:05.345Z",
+      "schemaVersion": "1.0",
+      "source": {
+        "name": "mqt.yaqs",
+        "version": "0.6.0",
+        "repository": "https://github.com/munich-quantum-toolkit/yaqs"
+      },
+      "input": {
+        "numQubits": 2,
+        "steps": 2,
+        "trajectories": 8,
+        "referenceMode": "skip",
+        "coupling": 1,
+        "field": 0.5,
+        "dampingRate": 0.1,
+        "duration": 0.5,
+        "maxBondDimension": 16,
+        "seed": 7
+      },
+      "inputSha256": "79e521a8673b8a8d88f587b044ebdee50e0ccbc4aa318b73faec23526cedd221",
+      "dependencyLockSha256": "12ba63af14c747b4e32e4a1f0851abcd42f5ebe921ae8a6dba61ffa50980f35f",
+      "result": {
+        "times": [
+          0,
+          0.25,
+          0.5
+        ],
+        "siteZ": [
+          [
+            1,
+            0.9699267116033107,
+            0.8900770505036116
+          ],
+          [
+            1,
+            0.9699267116033107,
+            0.8900770505036125
+          ]
+        ],
+        "referenceSiteZ": null,
+        "reference": {
+          "mode": "skip",
+          "status": "not_run",
+          "method": "Independent dense Lindblad integration",
+          "reason": "Reference explicitly skipped by the caller."
+        },
+        "standardErrors": [
+          [
+            0,
+            4.1962486042515756e-17,
+            4.1962486042515756e-17
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "maxAbsoluteDeviation": null,
+        "effectiveTrajectories": 8,
+        "hamiltonian": "-J sum Z_i Z_(i+1) - g sum X_i; hbar=1",
+        "jumpOperator": "sqrt(gamma) |0><1| at every site",
+        "referenceTraceError": null
+      },
+      "scientificValidation": "not_evaluated",
+      "limitations": [
+        "All times and rates use one consistent user-chosen unit with hbar=1; initial state is |0...0>.",
+        "Standard errors describe finite-trajectory sampling only; time-step and tensor truncation bias remain.",
+        "A completed tensor calculation does not establish convergence in time step, bond dimension, or trajectory count; a skipped dense reference supplies no accuracy estimate."
+      ]
+    }
+  ]
+}

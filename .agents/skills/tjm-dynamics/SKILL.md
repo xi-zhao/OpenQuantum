@@ -7,7 +7,9 @@ description: 开放 Ising 链的张量跳跃轨迹，与密度矩阵 Lindblad �
 
 Agent 经 Harness 调用 tjm_local 提供的 `simulate_tjm_dynamics`。本 Skill 负责选择和解释，不启动计算进程。
 
-2–6 qubits、初态全零、开放链。H = -J ΣZZ - g ΣX，跳跃算符 sqrt(gamma)|0><1|，hbar=1。时间和速率须采用一致单位。每站点的 standardErrors 仅含有限轨迹抽样误差，不含步长和张量截断偏差。steps×trajectories≤4096。
+2–128 qubits、初态全零、开放链。H = -J ΣZZ - g ΣX，跳跃算符 sqrt(gamma)|0><1|，hbar=1。时间和速率须采用一致单位。每站点的 standardErrors 仅含有限轨迹抽样误差，不含步长和张量截断偏差。steps×trajectories≤4096，且 numQubits×steps×trajectories×maxBondDimension³≤2147483648；bond dimension≤64。密度矩阵 Lindblad 参考至 6 qubits。
+
+独立参考使用 referenceMode=auto|required|skip：auto 在参考预算内计算，required 在超限时明确报错，skip 主动跳过。未运行时 reference.status=not_run，参考值和差异均为 null；不将缺失参考解释为零误差或通过验证。接口资源上限与本地实测覆盖分别见[计算规模与参考检查](../../../docs/integrations/SCALABLE_BRIDGES.md)。
 
 输入示例：
 

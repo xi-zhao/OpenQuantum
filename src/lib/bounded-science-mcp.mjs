@@ -29,6 +29,12 @@ export function defineScienceTool({ name, description, source, inputSchema, resu
     scientificValidation: { const: "not_evaluated" },
     limitations: arraySchema({ type: "string", minLength: 1 }, 1, 12),
   });
+  if (inputSchema.properties.referenceMode && resultSchema.properties.reference) {
+    outputSchema.allOf = ["auto", "required", "skip"].map(mode => ({
+      if: { properties: { input: { properties: { referenceMode: { const: mode } } } } },
+      then: { properties: { result: { properties: { reference: { properties: { mode: { const: mode } } } } } } },
+    }));
+  }
   const validateOutput = new Ajv({ strict: false, allErrors: true }).compile(outputSchema);
   return {
     source, validateOutput,
