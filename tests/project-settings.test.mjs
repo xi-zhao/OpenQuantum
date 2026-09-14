@@ -492,6 +492,7 @@ test("repository preset exposes reviewed quantum MCPs with safe defaults", async
   assert.equal(byName.get("fatqat_local")?.packageVersion, "0.1.0a1@39b75e30");
   assert.deepEqual(byName.get("fatqat_local")?.credentialRefs, []);
   for (const [server, displayName, packageVersion] of [
+    ["mitiq_local", "Mitiq 误差缓解", "1.1.0"],
     ["sqd_local", "SQD 量子化学", "0.13.1"],
     ["tjm_local", "TJM 开放系统动力学", "0.6.0"],
     ["ldpc_local", "LSD 纠错解码", "2.4.1"],

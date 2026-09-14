@@ -1,0 +1,8 @@
+[project]
+name = "openquantum-mitiq-error-mitigation-bridge"
+version = "0.1.0"
+requires-python = ">=3.12,<3.13"
+dependencies = ["mitiq==1.1.0"]
+
+[tool.uv]
+package = false

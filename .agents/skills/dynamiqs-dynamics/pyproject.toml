@@ -1,0 +1,11 @@
+[project]
+name = "openquantum-dynamiqs-dynamics-bridge"
+version = "0.1.0"
+requires-python = ">=3.12,<3.13"
+dependencies = ["dynamiqs", "jax==0.6.2", "diffrax==0.7.0"]
+
+[tool.uv]
+package = false
+
+[tool.uv.sources]
+dynamiqs = { git = "https://github.com/dynamiqs/dynamiqs", rev = "a49b30fe5cacb5cf7c1d981f2e7ed03b18e05318" }

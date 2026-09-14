@@ -1,0 +1,16 @@
+Mitiq error-mitigation capability
+
+Copyright (C) 2026 OpenQuantum contributors.
+Files in this capability directory are licensed under GPL-3.0-only.
+See LICENSE in this directory. This scoped license takes precedence over the
+repository's general MIT license for this directory.
+
+The Python worker imports Mitiq 1.1.0, Copyright (C) Unitary Foundation,
+https://github.com/unitaryfoundation/mitiq/tree/v1.1.0, licensed under GPLv3.
+Mitiq is installed unmodified from PyPI using the hashed uv.lock; its source
+is not vendored or relicensed here. The license text is reproduced unmodified.
+
+The isolated Python process provides a dependency and execution boundary.
+It is not a claim that IPC removes GPL obligations. Distributors bundling this
+capability and its dependencies must preserve notices and satisfy applicable
+corresponding-source and combined-distribution obligations.

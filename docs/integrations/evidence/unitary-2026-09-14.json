@@ -1,0 +1,2134 @@
+{
+  "schemaVersion": "1.0",
+  "verifiedAt": "2026-09-14T11:55:17.748541+00:00",
+  "scope": "Five L1 local ecosystem capabilities; numerical and integration development evidence, not central scientific acceptance.",
+  "baseCommit": "1b5902cbc451ea7dbf376ed5cf9834a6ed1b0ed9",
+  "branch": "c/unitary-foundation-integrations",
+  "environment": {
+    "node": "v24.14.1",
+    "system": "Darwin",
+    "architecture": "arm64",
+    "pythonEnvironments": {
+      "dynamiqs-dynamics": {
+        "python": "3.12.13",
+        "packages": {
+          "dynamiqs": "0.3.6",
+          "jax": "0.6.2",
+          "jaxlib": "0.6.2",
+          "diffrax": "0.7.0",
+          "numpy": "2.5.3",
+          "scipy": "1.18.1"
+        }
+      },
+      "clifft-sampling": {
+        "python": "3.12.13",
+        "packages": {
+          "clifft": "0.10.0",
+          "stim": "1.16.0",
+          "numpy": "2.5.3"
+        }
+      },
+      "oqupy-dynamics": {
+        "python": "3.12.13",
+        "packages": {
+          "oqupy": "0.5.0",
+          "numpy": "1.26.4",
+          "scipy": "1.17.1"
+        }
+      },
+      "deltakit-qec": {
+        "python": "3.12.13",
+        "packages": {
+          "deltakit": "0.10.0",
+          "deltakit-explorer": "0.9.2",
+          "stim": "1.16.0",
+          "pymatching": "2.4.0",
+          "numpy": "2.4.6"
+        }
+      }
+    }
+  },
+  "validation": {
+    "setup": {
+      "command": "npm run capability:unitary:setup",
+      "exitCode": 0,
+      "dependencyLocksUnchanged": true
+    },
+    "contracts": {
+      "command": "npm run capability:unitary:test",
+      "exitCode": 0,
+      "testsPassed": 8,
+      "note": "The final full check reran these contracts after removal of the superseded Python hash-seed option."
+    },
+    "live": {
+      "command": "npm run capability:unitary:live",
+      "exitCode": 0,
+      "testsPassed": 5,
+      "testsSkipped": 0,
+      "scope": "Four real numerical regression groups and one real Harness integration test with a local model protocol fixture."
+    },
+    "fullCheck": {
+      "command": "npm run check",
+      "exitCode": 0,
+      "nodeTestGroupPasses": [
+        208,
+        119,
+        33,
+        87,
+        3
+      ],
+      "nodeTestsPassed": 450,
+      "nodeTestsSkipped": 19,
+      "platformDiagnosticEvalCasesPassed": 4,
+      "capabilityPackages": 31,
+      "levelCounts": {
+        "L0": 1,
+        "L1": 27,
+        "L2": 1,
+        "L3": 2
+      },
+      "lint": "pass",
+      "harnessConfig": "pass",
+      "note": "Counts are executed tests, not independent scientific claims; some common contracts run in more than one group. Real Unitary numerical tests were enabled and run separately."
+    },
+    "skillFrontmatter": {
+      "checked": 4,
+      "passed": 4,
+      "tool": "skill-creator/scripts/quick_validate.py"
+    },
+    "logs": [
+      {
+        "path": ".openquantum/unitary-setup.log",
+        "sha256": "3ddbe2719bc747dc91df13c1df6a8227c24418f9478e6921286d220f1ed000d1"
+      },
+      {
+        "path": ".openquantum/unitary-contracts.log",
+        "sha256": "25467d41138f99eff46d5b20ec1f90255b081067161e76af4c460696878b4b00"
+      },
+      {
+        "path": ".openquantum/unitary-live-final.log",
+        "sha256": "3d4c27ec9415992e637f456d29ebb26886b8aed3c7fbd21c744c3ff3a163e267"
+      },
+      {
+        "path": ".openquantum/unitary-full-check-final.log",
+        "sha256": "980c3fa2512396b58b30e01de5a0fa3fa486d28322f428476e49179af389a8af"
+      }
+    ]
+  },
+  "harness": {
+    "sessionId": "session-unitary-1b1a61ab-c7fc-46a3-9857-5f2b4c54c643",
+    "model": "local protocol fixture",
+    "externalModelTested": false,
+    "skillDiscoveries": 4,
+    "distinctToolsCalled": 5,
+    "successfulResults": 5,
+    "expectedErrorResults": 1,
+    "sessionEventsReread": true,
+    "scientificValidation": "not_evaluated",
+    "evidencePath": ".openquantum/unitary-tools-evidence/harness-session.json",
+    "evidenceSha256": "de480add4f31626d0dc0158997ba462f51124e43930f7b2d76bc9da7811ff50d"
+  },
+  "numericCases": [
+    {
+      "case": "clifft-sampling-noise-bit-order",
+      "verifiedAt": "2026-09-14T11:45:34.104Z",
+      "source": {
+        "name": "clifft",
+        "version": "0.10.0",
+        "repository": "https://github.com/unitaryfoundation/clifft"
+      },
+      "input": {
+        "numQubits": 2,
+        "gates": [
+          {
+            "gate": "X",
+            "targets": [
+              0
+            ]
+          }
+        ],
+        "noiseProbability": 0.15,
+        "shots": 4096,
+        "seed": 7
+      },
+      "inputSha256": "4aeb4d842bd3a04d76f6576dd9f41051b9bbebb1841853c332455cdb2cb39181",
+      "dependencyLockSha256": "c5639fd8ffc3ac1393cfd4aaf0be293cb2e827a7b7354ea96bf816240eb19fac",
+      "result": {
+        "outcomes": [
+          {
+            "bitstring": "00",
+            "count": 441,
+            "probability": 0.107666015625,
+            "referenceProbability": 0.09999999999999999
+          },
+          {
+            "bitstring": "01",
+            "count": 0,
+            "probability": 0,
+            "referenceProbability": 0
+          },
+          {
+            "bitstring": "10",
+            "count": 3655,
+            "probability": 0.892333984375,
+            "referenceProbability": 0.9
+          },
+          {
+            "bitstring": "11",
+            "count": 0,
+            "probability": 0,
+            "referenceProbability": 0
+          }
+        ],
+        "shots": 4096,
+        "totalVariationDistance": 0.007666015625000015,
+        "referenceTraceError": 0,
+        "bitOrder": "left-to-right q0,q1,...",
+        "nonCliffordGates": 0
+      },
+      "scientificValidation": "not_evaluated",
+      "rawEvidence": ".openquantum/unitary-tools-evidence/clifft-sampling-noise-bit-order.json",
+      "rawEvidenceSha256": "06d82d9c07d34e952b48516e654b51979075e934bfbe5b0701ac7cd187cc1cd2"
+    },
+    {
+      "case": "clifft-sampling-repeat",
+      "verifiedAt": "2026-09-14T11:45:34.031Z",
+      "source": {
+        "name": "clifft",
+        "version": "0.10.0",
+        "repository": "https://github.com/unitaryfoundation/clifft"
+      },
+      "input": {
+        "shots": 4096,
+        "numQubits": 2,
+        "gates": [
+          {
+            "gate": "H",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "T",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "H",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              0,
+              1
+            ]
+          }
+        ],
+        "noiseProbability": 0,
+        "seed": 7
+      },
+      "inputSha256": "4d2a0f343ef3e84ac30ecab2530b9fff08476ea8f3b7dc3fad3e4ae8e8bd7afa",
+      "dependencyLockSha256": "c5639fd8ffc3ac1393cfd4aaf0be293cb2e827a7b7354ea96bf816240eb19fac",
+      "result": {
+        "outcomes": [
+          {
+            "bitstring": "00",
+            "count": 3508,
+            "probability": 0.8564453125,
+            "referenceProbability": 0.8535533905932735
+          },
+          {
+            "bitstring": "01",
+            "count": 0,
+            "probability": 0,
+            "referenceProbability": 0
+          },
+          {
+            "bitstring": "10",
+            "count": 0,
+            "probability": 0,
+            "referenceProbability": 0
+          },
+          {
+            "bitstring": "11",
+            "count": 588,
+            "probability": 0.1435546875,
+            "referenceProbability": 0.14644660940672616
+          }
+        ],
+        "shots": 4096,
+        "totalVariationDistance": 0.0028919219067263247,
+        "referenceTraceError": 3.3306690738754696e-16,
+        "bitOrder": "left-to-right q0,q1,...",
+        "nonCliffordGates": 1
+      },
+      "scientificValidation": "not_evaluated",
+      "rawEvidence": ".openquantum/unitary-tools-evidence/clifft-sampling-repeat.json",
+      "rawEvidenceSha256": "13dab0aef7e84c6af1fe86a01f3af54c9b1c0093ce45880101c410dd21f1f9a8"
+    },
+    {
+      "case": "clifft-sampling-t-interference",
+      "verifiedAt": "2026-09-14T11:45:33.959Z",
+      "source": {
+        "name": "clifft",
+        "version": "0.10.0",
+        "repository": "https://github.com/unitaryfoundation/clifft"
+      },
+      "input": {
+        "shots": 4096,
+        "numQubits": 2,
+        "gates": [
+          {
+            "gate": "H",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "T",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "H",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              0,
+              1
+            ]
+          }
+        ],
+        "noiseProbability": 0,
+        "seed": 7
+      },
+      "inputSha256": "4d2a0f343ef3e84ac30ecab2530b9fff08476ea8f3b7dc3fad3e4ae8e8bd7afa",
+      "dependencyLockSha256": "c5639fd8ffc3ac1393cfd4aaf0be293cb2e827a7b7354ea96bf816240eb19fac",
+      "result": {
+        "outcomes": [
+          {
+            "bitstring": "00",
+            "count": 3508,
+            "probability": 0.8564453125,
+            "referenceProbability": 0.8535533905932735
+          },
+          {
+            "bitstring": "01",
+            "count": 0,
+            "probability": 0,
+            "referenceProbability": 0
+          },
+          {
+            "bitstring": "10",
+            "count": 0,
+            "probability": 0,
+            "referenceProbability": 0
+          },
+          {
+            "bitstring": "11",
+            "count": 588,
+            "probability": 0.1435546875,
+            "referenceProbability": 0.14644660940672616
+          }
+        ],
+        "shots": 4096,
+        "totalVariationDistance": 0.0028919219067263247,
+        "referenceTraceError": 3.3306690738754696e-16,
+        "bitOrder": "left-to-right q0,q1,...",
+        "nonCliffordGates": 1
+      },
+      "scientificValidation": "not_evaluated",
+      "rawEvidence": ".openquantum/unitary-tools-evidence/clifft-sampling-t-interference.json",
+      "rawEvidenceSha256": "4d6ea1b6e8f4ac82c14699d2988d1c8ab6f393d3372086555c8f742eec3d5af6"
+    },
+    {
+      "case": "deltakit-qec-ideal-X",
+      "verifiedAt": "2026-09-14T11:45:38.708Z",
+      "source": {
+        "name": "deltakit",
+        "version": "0.10.0",
+        "repository": "https://github.com/Deltakit/deltakit"
+      },
+      "input": {
+        "width": 3,
+        "height": 5,
+        "basis": "X",
+        "rounds": 2,
+        "noiseProbability": 0,
+        "shots": 256,
+        "seed": 7
+      },
+      "inputSha256": "f158818e86c81aec78f10669c5e5c7e6895b8d6b41bd56a4b82d7f2b31e38bfe",
+      "dependencyLockSha256": "1370209234943bfc7334f0541eee77f85a78162da57ba54181788654a7a307d7",
+      "result": {
+        "numQubits": 29,
+        "numDetectors": 30,
+        "numObservables": 1,
+        "shots": 256,
+        "logicalFailures": 0,
+        "logicalErrorRate": 0,
+        "wilson95": [
+          0,
+          0.01478385642587143
+        ],
+        "detectionEventFraction": 0,
+        "circuitSha256": "933652466795c63157c77e5fdd3f1f2eec4c278aaf5fa1d491db827faebeaf4d",
+        "noiseModel": "Deltakit ToyNoise(p); synthetic local model",
+        "decoder": "PyMatching 2.4.0 MWPM",
+        "simulator": "Stim 1.16.0"
+      },
+      "scientificValidation": "not_evaluated",
+      "rawEvidence": ".openquantum/unitary-tools-evidence/deltakit-qec-ideal-X.json",
+      "rawEvidenceSha256": "61de7e3207fe528b0ba20e3c8353644a5205e7d9bdfc4e8d7e58c392e97ddd48"
+    },
+    {
+      "case": "deltakit-qec-ideal-Z",
+      "verifiedAt": "2026-09-14T11:45:40.283Z",
+      "source": {
+        "name": "deltakit",
+        "version": "0.10.0",
+        "repository": "https://github.com/Deltakit/deltakit"
+      },
+      "input": {
+        "width": 3,
+        "height": 5,
+        "basis": "Z",
+        "rounds": 2,
+        "noiseProbability": 0,
+        "shots": 256,
+        "seed": 7
+      },
+      "inputSha256": "e6a64dacf5d52af126cc2cb6929aae717649a5b1e446e0572900b8f08dfe63e1",
+      "dependencyLockSha256": "1370209234943bfc7334f0541eee77f85a78162da57ba54181788654a7a307d7",
+      "result": {
+        "numQubits": 29,
+        "numDetectors": 26,
+        "numObservables": 1,
+        "shots": 256,
+        "logicalFailures": 0,
+        "logicalErrorRate": 0,
+        "wilson95": [
+          0,
+          0.01478385642587143
+        ],
+        "detectionEventFraction": 0,
+        "circuitSha256": "e11d4427bc4d3028119f35c14218aa1753468fafef751980bcad3520f892bd6b",
+        "noiseModel": "Deltakit ToyNoise(p); synthetic local model",
+        "decoder": "PyMatching 2.4.0 MWPM",
+        "simulator": "Stim 1.16.0"
+      },
+      "scientificValidation": "not_evaluated",
+      "rawEvidence": ".openquantum/unitary-tools-evidence/deltakit-qec-ideal-Z.json",
+      "rawEvidenceSha256": "8a22b5b35631517a38ef5c6909c0273f74b822b05a7384557d59a979410425e4"
+    },
+    {
+      "case": "deltakit-qec-noisy",
+      "verifiedAt": "2026-09-14T11:45:41.654Z",
+      "source": {
+        "name": "deltakit",
+        "version": "0.10.0",
+        "repository": "https://github.com/Deltakit/deltakit"
+      },
+      "input": {
+        "noiseProbability": 0.03,
+        "shots": 2048,
+        "rounds": 3,
+        "width": 3,
+        "height": 3,
+        "basis": "Z",
+        "seed": 7
+      },
+      "inputSha256": "59421ec898ac6011959daafa37d582f2116a7c2baa46515a18e9bcf3f372946e",
+      "dependencyLockSha256": "1370209234943bfc7334f0541eee77f85a78162da57ba54181788654a7a307d7",
+      "result": {
+        "numQubits": 17,
+        "numDetectors": 24,
+        "numObservables": 1,
+        "shots": 2048,
+        "logicalFailures": 466,
+        "logicalErrorRate": 0.2275390625,
+        "wilson95": [
+          0.2099017781817976,
+          0.2461965498822886
+        ],
+        "detectionEventFraction": 0.20530192057291666,
+        "circuitSha256": "edb5f6173bec326fa99510c4abd9e4cc1b275cfb35dd86516d17d779f7b037ae",
+        "noiseModel": "Deltakit ToyNoise(p); synthetic local model",
+        "decoder": "PyMatching 2.4.0 MWPM",
+        "simulator": "Stim 1.16.0"
+      },
+      "scientificValidation": "not_evaluated",
+      "rawEvidence": ".openquantum/unitary-tools-evidence/deltakit-qec-noisy.json",
+      "rawEvidenceSha256": "48075c42aa07893fce4bd93ef564b96610a4b365431b2762b8444c85913a0eab"
+    },
+    {
+      "case": "deltakit-qec-rectangular-noisy",
+      "verifiedAt": "2026-09-14T11:45:44.410Z",
+      "source": {
+        "name": "deltakit",
+        "version": "0.10.0",
+        "repository": "https://github.com/Deltakit/deltakit"
+      },
+      "input": {
+        "width": 5,
+        "height": 3,
+        "basis": "Z",
+        "noiseProbability": 0.02,
+        "shots": 4096,
+        "rounds": 3,
+        "seed": 718
+      },
+      "inputSha256": "0116d702c16b0db4062a2c0e4a45ae4e55f51bc7c4be3c551b109910b9fe1a62",
+      "dependencyLockSha256": "1370209234943bfc7334f0541eee77f85a78162da57ba54181788654a7a307d7",
+      "result": {
+        "numQubits": 29,
+        "numDetectors": 44,
+        "numObservables": 1,
+        "shots": 4096,
+        "logicalFailures": 254,
+        "logicalErrorRate": 0.06201171875,
+        "wilson95": [
+          0.055028262343398096,
+          0.06981594540504582
+        ],
+        "detectionEventFraction": 0.15613347833806818,
+        "circuitSha256": "fbe4dbf37da7ec7e374f898cc3020574a111b3f5435e8dea3b0f369bf3ef9609",
+        "noiseModel": "Deltakit ToyNoise(p); synthetic local model",
+        "decoder": "PyMatching 2.4.0 MWPM",
+        "simulator": "Stim 1.16.0"
+      },
+      "scientificValidation": "not_evaluated",
+      "rawEvidence": ".openquantum/unitary-tools-evidence/deltakit-qec-rectangular-noisy.json",
+      "rawEvidenceSha256": "7b6b5c1156f8095f1382483f52b3e202dd0d71a2c3cbf1e0ac95b66c946434eb"
+    },
+    {
+      "case": "deltakit-qec-rectangular-repeat",
+      "verifiedAt": "2026-09-14T11:45:45.863Z",
+      "source": {
+        "name": "deltakit",
+        "version": "0.10.0",
+        "repository": "https://github.com/Deltakit/deltakit"
+      },
+      "input": {
+        "width": 5,
+        "height": 3,
+        "basis": "Z",
+        "noiseProbability": 0.02,
+        "shots": 4096,
+        "rounds": 3,
+        "seed": 718
+      },
+      "inputSha256": "0116d702c16b0db4062a2c0e4a45ae4e55f51bc7c4be3c551b109910b9fe1a62",
+      "dependencyLockSha256": "1370209234943bfc7334f0541eee77f85a78162da57ba54181788654a7a307d7",
+      "result": {
+        "numQubits": 29,
+        "numDetectors": 44,
+        "numObservables": 1,
+        "shots": 4096,
+        "logicalFailures": 254,
+        "logicalErrorRate": 0.06201171875,
+        "wilson95": [
+          0.055028262343398096,
+          0.06981594540504582
+        ],
+        "detectionEventFraction": 0.15613347833806818,
+        "circuitSha256": "fbe4dbf37da7ec7e374f898cc3020574a111b3f5435e8dea3b0f369bf3ef9609",
+        "noiseModel": "Deltakit ToyNoise(p); synthetic local model",
+        "decoder": "PyMatching 2.4.0 MWPM",
+        "simulator": "Stim 1.16.0"
+      },
+      "scientificValidation": "not_evaluated",
+      "rawEvidence": ".openquantum/unitary-tools-evidence/deltakit-qec-rectangular-repeat.json",
+      "rawEvidenceSha256": "91151a9aeb25f237b9726e1bb143f0cdfc6a298d0a859d4ab4d18ea50eed3aa3"
+    },
+    {
+      "case": "deltakit-qec-repeat",
+      "verifiedAt": "2026-09-14T11:45:43.012Z",
+      "source": {
+        "name": "deltakit",
+        "version": "0.10.0",
+        "repository": "https://github.com/Deltakit/deltakit"
+      },
+      "input": {
+        "noiseProbability": 0.03,
+        "shots": 2048,
+        "rounds": 3,
+        "width": 3,
+        "height": 3,
+        "basis": "Z",
+        "seed": 7
+      },
+      "inputSha256": "59421ec898ac6011959daafa37d582f2116a7c2baa46515a18e9bcf3f372946e",
+      "dependencyLockSha256": "1370209234943bfc7334f0541eee77f85a78162da57ba54181788654a7a307d7",
+      "result": {
+        "numQubits": 17,
+        "numDetectors": 24,
+        "numObservables": 1,
+        "shots": 2048,
+        "logicalFailures": 466,
+        "logicalErrorRate": 0.2275390625,
+        "wilson95": [
+          0.2099017781817976,
+          0.2461965498822886
+        ],
+        "detectionEventFraction": 0.20530192057291666,
+        "circuitSha256": "edb5f6173bec326fa99510c4abd9e4cc1b275cfb35dd86516d17d779f7b037ae",
+        "noiseModel": "Deltakit ToyNoise(p); synthetic local model",
+        "decoder": "PyMatching 2.4.0 MWPM",
+        "simulator": "Stim 1.16.0"
+      },
+      "scientificValidation": "not_evaluated",
+      "rawEvidence": ".openquantum/unitary-tools-evidence/deltakit-qec-repeat.json",
+      "rawEvidenceSha256": "8360b867616815b630428f386c4966cb736528001cc5b66c62dbf17e8393e5a5"
+    },
+    {
+      "case": "dynamiqs-dynamics-damping",
+      "verifiedAt": "2026-09-14T11:45:33.724Z",
+      "source": {
+        "name": "dynamiqs",
+        "version": "0.3.6",
+        "repository": "https://github.com/dynamiqs/dynamiqs",
+        "commit": "a49b30fe5cacb5cf7c1d981f2e7ed03b18e05318"
+      },
+      "input": {
+        "drives": [
+          0,
+          1
+        ],
+        "initialState": "excited",
+        "dampingRate": 0.4,
+        "detuning": 0.3,
+        "duration": 1,
+        "steps": 8
+      },
+      "inputSha256": "0ab832f8560492bdca39894f4f8de78bb01f9542a8d395a9b96881914b02f044",
+      "dependencyLockSha256": "25f0bd615eb24467824c69c774187cdc9eaf404ab71e02fce588bc928dae44c9",
+      "result": {
+        "times": [
+          0,
+          0.125,
+          0.25,
+          0.375,
+          0.5,
+          0.625,
+          0.75,
+          0.875,
+          1
+        ],
+        "excitedPopulations": [
+          [
+            1,
+            0.9512294244997954,
+            0.9048374180405632,
+            0.860707976432469,
+            0.818730753085347,
+            0.7788007830584238,
+            0.7408182206160996,
+            0.7046880896226063,
+            0.6703200460433959
+          ],
+          [
+            1,
+            0.9475509016647222,
+            0.8910301974608232,
+            0.8316635875201436,
+            0.7706417324482653,
+            0.7091018357249318,
+            0.6481114580865306,
+            0.5886546906164956,
+            0.5316207627481235
+          ]
+        ],
+        "referencePopulations": [
+          [
+            1,
+            0.9512294245007353,
+            0.9048374180360271,
+            0.8607079764225319,
+            0.8187307530710908,
+            0.778800783072068,
+            0.7408182206719901,
+            0.7046880897193093,
+            0.670320046037875
+          ],
+          [
+            1,
+            0.947550901663104,
+            0.8910301974749381,
+            0.831663587508034,
+            0.7706417324450549,
+            0.7091018357469508,
+            0.6481114581170351,
+            0.5886546906403702,
+            0.5316207627370473
+          ]
+        ],
+        "driveGradients": [
+          0,
+          -0.2517002157007989
+        ],
+        "finiteDifferenceGradients": [
+          0,
+          -0.25170021531573106
+        ],
+        "maxPopulationDeviation": 9.670297895780777e-11,
+        "maxGradientDeviation": 3.8506786648184743e-10,
+        "maxTraceError": 2.220446049250313e-16,
+        "minimumEigenvalue": 0,
+        "model": "H=(drive X + detuning Z)/2; L=sqrt(gamma)|0><1|; hbar=1",
+        "device": "cpu"
+      },
+      "scientificValidation": "not_evaluated",
+      "rawEvidence": ".openquantum/unitary-tools-evidence/dynamiqs-dynamics-damping.json",
+      "rawEvidenceSha256": "6129f4b4e1b90e5ae4ad9255aefcc8e8aad8576e15640b65c582d9e99576b9fe"
+    },
+    {
+      "case": "dynamiqs-dynamics-rabi",
+      "verifiedAt": "2026-09-14T11:45:29.334Z",
+      "source": {
+        "name": "dynamiqs",
+        "version": "0.3.6",
+        "repository": "https://github.com/dynamiqs/dynamiqs",
+        "commit": "a49b30fe5cacb5cf7c1d981f2e7ed03b18e05318"
+      },
+      "input": {
+        "drives": [
+          -1,
+          0,
+          0.7
+        ],
+        "dampingRate": 0,
+        "duration": 1,
+        "steps": 8,
+        "detuning": 0,
+        "initialState": "ground"
+      },
+      "inputSha256": "9021af52458af5d01974024a20987b622d5f21eb44e3cfb5aa892e64520db4e0",
+      "dependencyLockSha256": "25f0bd615eb24467824c69c774187cdc9eaf404ab71e02fce588bc928dae44c9",
+      "result": {
+        "times": [
+          0,
+          0.125,
+          0.25,
+          0.375,
+          0.5,
+          0.625,
+          0.75,
+          0.875,
+          1
+        ],
+        "excitedPopulations": [
+          [
+            0,
+            0.0039011663844913244,
+            0.015543789149599268,
+            0.03474618904380339,
+            0.06120871905052644,
+            0.09451844024634991,
+            0.1341555655636386,
+            0.17950157091378005,
+            0.22984884707720993
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0.0019128416001323743,
+            0.007636730547808324,
+            0.017127871269336487,
+            0.0303136435860034,
+            0.047093158283534955,
+            0.06733802921122413,
+            0.09089335535043137,
+            0.11757890636485774
+          ]
+        ],
+        "referencePopulations": [
+          [
+            0,
+            0.0039011663856151364,
+            0.015543789145125352,
+            0.03474618904465973,
+            0.061208719056096865,
+            0.09451844025019156,
+            0.13415556557039912,
+            0.1795015709212249,
+            0.2298488470688392
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0.0019128415999704704,
+            0.0076367305480589485,
+            0.01712787127248913,
+            0.030313643578229868,
+            0.04709315828930704,
+            0.06733802918990986,
+            0.090893355359916,
+            0.11757890635978184
+          ]
+        ],
+        "driveGradients": [
+          -0.4207354924662772,
+          0,
+          0.3221088436787183
+        ],
+        "finiteDifferenceGradients": [
+          -0.42073549169852065,
+          0,
+          0.32210884308048193
+        ],
+        "maxPopulationDeviation": 2.1314269793570872e-11,
+        "maxGradientDeviation": 7.677565805330744e-10,
+        "maxTraceError": 2.220446049250313e-16,
+        "minimumEigenvalue": -3.924187664261718e-12,
+        "model": "H=(drive X + detuning Z)/2; L=sqrt(gamma)|0><1|; hbar=1",
+        "device": "cpu"
+      },
+      "scientificValidation": "not_evaluated",
+      "rawEvidence": ".openquantum/unitary-tools-evidence/dynamiqs-dynamics-rabi.json",
+      "rawEvidenceSha256": "1a74de94474c272bf5e52d18736005d2c85a5330b712d880992bec270a56e6f9"
+    },
+    {
+      "case": "oqupy-dynamics-dephasing-12",
+      "verifiedAt": "2026-09-14T11:45:36.935Z",
+      "source": {
+        "name": "oqupy",
+        "version": "0.5.0",
+        "repository": "https://github.com/tempoCollaboration/OQuPy"
+      },
+      "input": {
+        "tunneling": 0,
+        "bias": 0.4,
+        "alpha": 0.1,
+        "cutoff": 2,
+        "temperature": 0,
+        "initialState": "plus",
+        "duration": 0.5,
+        "steps": 12,
+        "memorySteps": 12
+      },
+      "inputSha256": "d1dbdd66743a2766dc757e94efe1cafa65bb792226442486059e479dc4573773",
+      "dependencyLockSha256": "6acb57295909af725a5edd25aec06e4bec5fc28ff43091bb21d96fc531bc7db5",
+      "result": {
+        "times": [
+          0,
+          0.041666666666666664,
+          0.08333333333333333,
+          0.125,
+          0.16666666666666666,
+          0.20833333333333331,
+          0.25,
+          0.29166666666666663,
+          0.3333333333333333,
+          0.375,
+          0.41666666666666663,
+          0.4583333333333333,
+          0.5
+        ],
+        "bloch": [
+          [
+            0.9999999999999998,
+            0,
+            0
+          ],
+          [
+            0.9991694055308477,
+            0.016654365524953692,
+            0
+          ],
+          [
+            0.9967098684983648,
+            0.033235972814760026,
+            -2.220446049250313e-16
+          ],
+          [
+            0.992713691436663,
+            0.04967708904727809,
+            -1.27675647831893e-15
+          ],
+          [
+            0.987321140819756,
+            0.06591909625629722,
+            -1.1102230246251565e-15
+          ],
+          [
+            0.9807038115894677,
+            0.08191502358687278,
+            2.220446049250313e-16
+          ],
+          [
+            0.9730471780620853,
+            0.0976303695345325,
+            3.1086244689504383e-15
+          ],
+          [
+            0.9645354048892646,
+            0.11304247445708483,
+            4.3298697960381105e-15
+          ],
+          [
+            0.9553401442875624,
+            0.1281389291947539,
+            4.3298697960381105e-15
+          ],
+          [
+            0.945613692104224,
+            0.1429155315550807,
+            1.7041923427996153e-14
+          ],
+          [
+            0.9354859405169268,
+            0.15737419753401843,
+            1.7985612998927536e-14
+          ],
+          [
+            0.9250641403758186,
+            0.17152108359935303,
+            2.015054789694659e-14
+          ],
+          [
+            0.9144344510284758,
+            0.1853650400383367,
+            2.3703261575747092e-14
+          ]
+        ],
+        "maxTraceError": 1.1795962775021365e-14,
+        "minimumEigenvalue": 0,
+        "memoryTime": 0.5,
+        "timestep": 0.041666666666666664,
+        "relativeSvdTolerance": 1e-07,
+        "model": "H=(tunneling X+bias Z)/2; bath coupling Z/2; J(w)=2 alpha w exp(-w/cutoff); hbar=kB=1"
+      },
+      "scientificValidation": "not_evaluated",
+      "rawEvidence": ".openquantum/unitary-tools-evidence/oqupy-dynamics-dephasing-12.json",
+      "rawEvidenceSha256": "4d3429d854edee4211dbac3ab5646b0db23a4ddb01ec9d2ce2a5508e8db564d5"
+    },
+    {
+      "case": "oqupy-dynamics-dephasing-8",
+      "verifiedAt": "2026-09-14T11:45:36.276Z",
+      "source": {
+        "name": "oqupy",
+        "version": "0.5.0",
+        "repository": "https://github.com/tempoCollaboration/OQuPy"
+      },
+      "input": {
+        "tunneling": 0,
+        "bias": 0.4,
+        "alpha": 0.1,
+        "cutoff": 2,
+        "temperature": 0,
+        "initialState": "plus",
+        "duration": 0.5,
+        "steps": 8,
+        "memorySteps": 8
+      },
+      "inputSha256": "216affea00cb004e609e78ccf1392849ed2fc7bf4028c9ade2b3d8a89d4c2936",
+      "dependencyLockSha256": "6acb57295909af725a5edd25aec06e4bec5fc28ff43091bb21d96fc531bc7db5",
+      "result": {
+        "times": [
+          0,
+          0.0625,
+          0.125,
+          0.1875,
+          0.25,
+          0.3125,
+          0.375,
+          0.4375,
+          0.5
+        ],
+        "bloch": [
+          [
+            0.9999999999999998,
+            0,
+            0
+          ],
+          [
+            0.9981387830054173,
+            0.02495866951461899,
+            0
+          ],
+          [
+            0.992713691436663,
+            0.049677089047278085,
+            -2.220446049250313e-16
+          ],
+          [
+            0.9841541117387866,
+            0.0739502671554782,
+            -3.3306690738754696e-16
+          ],
+          [
+            0.9730471780620854,
+            0.09763036953453269,
+            3.885780586188048e-16
+          ],
+          [
+            0.9600131863200587,
+            0.12063058804097676,
+            -9.992007221626409e-16
+          ],
+          [
+            0.9456136921042211,
+            0.1429155315550834,
+            -1.7208456881689926e-15
+          ],
+          [
+            0.9303059435568262,
+            0.1644861073867852,
+            -4.385380947269368e-15
+          ],
+          [
+            0.9144344510284665,
+            0.18536504003833712,
+            -7.882583474838611e-15
+          ]
+        ],
+        "maxTraceError": 6.516637383545313e-15,
+        "minimumEigenvalue": 0,
+        "memoryTime": 0.5,
+        "timestep": 0.0625,
+        "relativeSvdTolerance": 1e-07,
+        "model": "H=(tunneling X+bias Z)/2; bath coupling Z/2; J(w)=2 alpha w exp(-w/cutoff); hbar=kB=1"
+      },
+      "scientificValidation": "not_evaluated",
+      "rawEvidence": ".openquantum/unitary-tools-evidence/oqupy-dynamics-dephasing-8.json",
+      "rawEvidenceSha256": "612907c392f4a45c4393d199fdadf76b2714df0b7feb879c70fadb5def613758"
+    },
+    {
+      "case": "oqupy-dynamics-fractional-grid",
+      "verifiedAt": "2026-09-14T11:45:35.619Z",
+      "source": {
+        "name": "oqupy",
+        "version": "0.5.0",
+        "repository": "https://github.com/tempoCollaboration/OQuPy"
+      },
+      "input": {
+        "tunneling": 0,
+        "bias": -0.8,
+        "alpha": 0,
+        "cutoff": 3.5,
+        "temperature": 0,
+        "duration": 0.1,
+        "steps": 11,
+        "memorySteps": 8,
+        "initialState": "plus"
+      },
+      "inputSha256": "d4e904dbd3ab4fd9aab93f440628010355cf1c3101b89cc94036d9a4770fdc09",
+      "dependencyLockSha256": "6acb57295909af725a5edd25aec06e4bec5fc28ff43091bb21d96fc531bc7db5",
+      "result": {
+        "times": [
+          0,
+          0.009090909090909092,
+          0.018181818181818184,
+          0.027272727272727275,
+          0.03636363636363637,
+          0.04545454545454546,
+          0.05454545454545455,
+          0.06363636363636364,
+          0.07272727272727274,
+          0.08181818181818183,
+          0.09090909090909093,
+          0.10000000000000002
+        ],
+        "bloch": [
+          [
+            0.9999999999999998,
+            0,
+            0
+          ],
+          [
+            0.9999735538355755,
+            -0.007272663160700483,
+            0
+          ],
+          [
+            0.9998942167411019,
+            -0.014544941653309463,
+            -2.220446049250313e-16
+          ],
+          [
+            0.9997619929129025,
+            -0.021816450830081432,
+            -5.551115123125783e-17
+          ],
+          [
+            0.9995768893446035,
+            -0.02908680608396197,
+            -2.220446049250313e-16
+          ],
+          [
+            0.9993389158267669,
+            -0.03635562286892985,
+            -9.43689570931383e-16
+          ],
+          [
+            0.9990480849463587,
+            -0.04362251672033758,
+            2.220446049250313e-16
+          ],
+          [
+            0.9987044120861095,
+            -0.05088710327524677,
+            7.216449660063518e-16
+          ],
+          [
+            0.9983079154236698,
+            -0.05814899829275514,
+            -2.6645352591003757e-15
+          ],
+          [
+            0.9978586159306704,
+            -0.06540781767432105,
+            -2.1649348980190553e-15
+          ],
+          [
+            0.9973565373716273,
+            -0.07266317748408643,
+            -2.0539125955565396e-15
+          ],
+          [
+            0.9968017063026184,
+            -0.07991469396917351,
+            -7.771561172376096e-16
+          ]
+        ],
+        "maxTraceError": 5.2756041182341215e-15,
+        "minimumEigenvalue": -3.8580250105724174e-15,
+        "memoryTime": 0.07272727272727274,
+        "timestep": 0.009090909090909092,
+        "relativeSvdTolerance": 1e-07,
+        "model": "H=(tunneling X+bias Z)/2; bath coupling Z/2; J(w)=2 alpha w exp(-w/cutoff); hbar=kB=1"
+      },
+      "scientificValidation": "not_evaluated",
+      "rawEvidence": ".openquantum/unitary-tools-evidence/oqupy-dynamics-fractional-grid.json",
+      "rawEvidenceSha256": "f1acd77bc017372146b289b1702386b816ab7646dccedaee6d9f10cb373e7bf7"
+    },
+    {
+      "case": "oqupy-dynamics-unitary",
+      "verifiedAt": "2026-09-14T11:45:34.981Z",
+      "source": {
+        "name": "oqupy",
+        "version": "0.5.0",
+        "repository": "https://github.com/tempoCollaboration/OQuPy"
+      },
+      "input": {
+        "alpha": 0,
+        "tunneling": 0.7,
+        "bias": 0,
+        "initialState": "ground",
+        "duration": 0.5,
+        "steps": 8,
+        "memorySteps": 8,
+        "cutoff": 2,
+        "temperature": 0
+      },
+      "inputSha256": "a49beb01f27f321ddb97e68f3fa5e00a3da169cf03866f8b7fa6ca8202ec4794",
+      "dependencyLockSha256": "6acb57295909af725a5edd25aec06e4bec5fc28ff43091bb21d96fc531bc7db5",
+      "result": {
+        "times": [
+          0,
+          0.0625,
+          0.125,
+          0.1875,
+          0.25,
+          0.3125,
+          0.375,
+          0.4375,
+          0.5
+        ],
+        "bloch": [
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            -0.04373604462991032,
+            0.9990431213917298
+          ],
+          [
+            9.908801138745669e-22,
+            -0.08738838908878718,
+            0.9961743168002609
+          ],
+          [
+            -1.0403572734829631e-17,
+            -0.13087349338740356,
+            0.9913990764210834
+          ],
+          [
+            -3.122919392032172e-17,
+            -0.17410813759359595,
+            0.9847265389049336
+          ],
+          [
+            3.211629362733963e-17,
+            -0.21700958109501,
+            0.976169473868635
+          ],
+          [
+            6.943462724124213e-17,
+            -0.2594957209445455,
+            0.9657442574571543
+          ],
+          [
+            6.558208331836358e-17,
+            -0.3014852489854616,
+            0.9534708410036332
+          ],
+          [
+            1.464787097171382e-16,
+            -0.3428978074554513,
+            0.9393727128473803
+          ]
+        ],
+        "maxTraceError": 1.7776956205719755e-15,
+        "minimumEigenvalue": -5.910933144944123e-18,
+        "memoryTime": 0.5,
+        "timestep": 0.0625,
+        "relativeSvdTolerance": 1e-07,
+        "model": "H=(tunneling X+bias Z)/2; bath coupling Z/2; J(w)=2 alpha w exp(-w/cutoff); hbar=kB=1"
+      },
+      "scientificValidation": "not_evaluated",
+      "rawEvidence": ".openquantum/unitary-tools-evidence/oqupy-dynamics-unitary.json",
+      "rawEvidenceSha256": "7b0a370784f37c4efdae56ec02d00f1de0ec2e9df9d16719323407103126e53c"
+    }
+  ],
+  "metriq": {
+    "name": "metriq-data",
+    "repository": "https://github.com/unitaryfoundation/metriq-data",
+    "commit": "6730f78b135a9af67691a0ef4fbea041978056c5",
+    "license": "CC-BY-4.0",
+    "snapshotSha256": "45a81f9deadd6c583249817944637c5835b488a30c426ebbae945bc0be834426",
+    "sourceFileCount": 331,
+    "recordOccurrences": 413,
+    "uniqueRecords": 410,
+    "selection": "All JSON record arrays under metriq-gym/v*/; identical complete records deduplicated with all source locations retained. No metric aggregation or ranking.",
+    "archiveReimport": {
+      "reimport": "pass",
+      "verifiedFiles": [
+        "snapshot.json",
+        "source.json",
+        "LICENSE"
+      ],
+      "archiveSha256": "cd833d173f7788c73e59548a93e02ea695f372f4b0db079a6624f0ef9f01b843"
+    },
+    "integersOutsideJavaScriptExactRange": 0
+  },
+  "independentReview": {
+    "summary": {
+      "scope": "Independent scientific scope and numerical forward-testing of four L1 capabilities. Direct fixed-environment workers and actual JS normalizers; no Harness or external-model acceptance.",
+      "independence": "Requests, analytical references and checks selected by reviewer; product live tests and their conclusions were not read.",
+      "cases": {
+        "dynamiqs-dynamics": "Rabi oscillations; undriven excited-state exponential decay; affine Bloch-generator expm and expm_frechet for generic plus state and allowed extreme parameters.",
+        "clifft-sampling": "Asymmetric CX bit order; H-T-S-H interference; CZ Bell correlation; classical Pauli-channel error enumeration; six-qubit 64-gate 8192-shot product-channel boundary.",
+        "oqupy-dynamics": "Zero/finite-temperature exact pure dephasing; zero-bath Bloch rotation; 0.1 duration / 11-step floating-point grid failure and fixed rerun.",
+        "deltakit-qec": "3x5 X and 5x3 Z memory, three rounds, zero and 0.02 ToyNoise, seeded resampling, single-fault corrections, graphlike distance, Wilson roots, and cross-process byte reproducibility."
+      },
+      "inputContractChecks": {
+        "outsideScopeRejections": 26,
+        "allRejected": true,
+        "defaultNormalizations": 4,
+        "allAccepted": true
+      },
+      "findings": [
+        {
+          "id": "OQ-grid-floor",
+          "status": "fixed-and-rechecked",
+          "oldLocation": ".agents/skills/oqupy-dynamics/mcp/bridge.py:17-23",
+          "reproduction": "duration=0.1, steps=11, alpha=0, memorySteps=8",
+          "impact": "Valid input failed because upstream int(end_time/dt) floored 10.999999999999998 to 10.",
+          "fixEvidence": "fix-verification.json, oq_grid_fixed.output.json"
+        },
+        {
+          "id": "DK-equivalent-parity-order",
+          "status": "fixed-and-rechecked",
+          "location": ".agents/skills/deltakit-qec/mcp/bridge.py:8-24",
+          "reproduction": "5x3 Z, rounds=3, p=0.02, shots=4096, seed=718; workers PYTHONHASHSEED=0 vs 8192",
+          "impact": "OBSERVABLE_INCLUDE record-target permutation changes circuit bytes and SHA but not parity or observed failures.",
+          "evidence": "dk_53_Z_0.02_canonical_hash0.output.json and dk_53_Z_0.02_canonical_hash8192.output.json",
+          "fixLocation": ".agents/skills/deltakit-qec/mcp/bridge.py:23-27",
+          "fix": "Sort only pure measurement-record operands within DETECTOR/OBSERVABLE_INCLUDE, preserving multiplicity and measurement/gate schedule.",
+          "fixEvidence": "deltakit-parity-final-verification.json",
+          "closure": "Six process invocations with Python hash seeds 0, 1, 8192, 2147483647, random and random produced identical full results, circuits and resampled detector/observable bytes; 128 exhaustive measurement-record combinations preserve parity, including duplicates and repeat blocks."
+        }
+      ],
+      "limits": [
+        "Finite independent examples, not exhaustive parameter-space validation.",
+        "Finite-memory interacting TEMPO convergence and observable error bounds not certified.",
+        "MWPM model reviewed and single faults checked; no threshold or calibrated hardware claim.",
+        "Clifft multinomial deviations checked against sample size; no large-scale performance result.",
+        "Initial direct-worker test envelopes use a synthetic review source label, so their wrappers are not Harness provenance; installed package versions were separately inspected and corrected-source wrappers were used for fixed reruns."
+      ],
+      "evidenceFiles": [
+        "numeric-analysis.json",
+        "deltakit-analysis.json",
+        "fix-verification.json",
+        "contract-analysis.json",
+        "clifft-boundary-analysis.json",
+        "initial-hashes.json",
+        "reviewed-hashes-in-progress.json",
+        "deltakit-parity-final-verification.json",
+        "final-reviewed-hashes.json"
+      ],
+      "outstandingFindings": [],
+      "reviewConclusion": "No remaining actionable scientific-scope or numerical issue found in the reviewed examples. This closes the independent review findings, not central scientific acceptance.",
+      "deltakitFinalFollowup": {
+        "status": "closed",
+        "reviewedBridgeSha256": "ca6a396e09d3a3d12a022bd5d4bad6190b67c819d1f170a41f9e7d9710b5b65d",
+        "finalCircuitSha256": "fbe4dbf37da7ec7e374f898cc3020574a111b3f5435e8dea3b0f369bf3ef9609",
+        "logicalFailures": 254,
+        "shots": 4096,
+        "timestampUtc": "2026-09-14T11:45:46.002300+00:00",
+        "filesChangedSincePreviousReview": [
+          ".agents/skills/deltakit-qec/mcp/bridge.py"
+        ]
+      }
+    },
+    "numericalChecks": {
+      "dq_rabi": {
+        "independentPopulationMaxError": 1.4847700846587486e-10,
+        "independentGradientMaxError": 2.312704472373639e-10,
+        "bridgeTraceError": 3.3306690738754696e-16,
+        "bridgeMinimumEigenvalue": -5.390978527253218e-12
+      },
+      "dq_decay": {
+        "independentPopulationMaxError": 1.05958020135688e-10,
+        "independentGradientMaxError": 0.0,
+        "bridgeTraceError": 2.220446049250313e-16,
+        "bridgeMinimumEigenvalue": 0.0
+      },
+      "dq_bloch": {
+        "independentPopulationMaxError": 1.1093215235291609e-10,
+        "independentGradientMaxError": 2.2778512409615814e-10,
+        "bridgeTraceError": 8.881784197001252e-16,
+        "bridgeMinimumEigenvalue": 0.0
+      },
+      "dq_boundary": {
+        "independentPopulationMaxError": 1.0623485424687829e-10,
+        "independentGradientMaxError": 1.5054438251560498e-10,
+        "bridgeTraceError": 1.1102230246251565e-15,
+        "bridgeMinimumEigenvalue": 0.0
+      },
+      "cliff_order": {
+        "independentReferenceMaxError": 0.0,
+        "samplingMaxBinZScore": 0.0,
+        "zeroProbabilityBinCount": 0,
+        "shotTotal": 128,
+        "expected": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0
+        ],
+        "counts": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          128,
+          0
+        ]
+      },
+      "cliff_phase": {
+        "independentReferenceMaxError": 2.220446049250313e-16,
+        "samplingMaxBinZScore": 0.6971679918780894,
+        "zeroProbabilityBinCount": 0,
+        "shotTotal": 8192,
+        "expected": [
+          0.1464466094067262,
+          0.8535533905932737
+        ],
+        "counts": [
+          1222,
+          6970
+        ]
+      },
+      "cliff_noise_z": {
+        "independentReferenceMaxError": 0.0,
+        "samplingMaxBinZScore": 0.2838504910371369,
+        "zeroProbabilityBinCount": 0,
+        "shotTotal": 8192,
+        "expected": [
+          0.8666666666666667,
+          0.13333333333333333,
+          0.0,
+          0.0
+        ],
+        "counts": [
+          7091,
+          1101,
+          0,
+          0
+        ]
+      },
+      "cliff_cz": {
+        "independentReferenceMaxError": 2.220446049250313e-16,
+        "samplingMaxBinZScore": 1.0606601717798212,
+        "zeroProbabilityBinCount": 0,
+        "shotTotal": 8192,
+        "expected": [
+          0.5,
+          0.0,
+          0.0,
+          0.5
+        ],
+        "counts": [
+          4144,
+          0,
+          0,
+          4048
+        ]
+      },
+      "cliff_noise": {
+        "independentReferenceMaxError": 1.3877787807814457e-17,
+        "samplingMaxBinZScore": 1.498830871739658,
+        "zeroProbabilityBinCount": 0,
+        "shotTotal": 8192,
+        "expected": [
+          0.11555555555555556,
+          0.11555555555555556,
+          0.11555555555555556,
+          0.6533333333333334
+        ],
+        "counts": [
+          976,
+          936,
+          990,
+          5290
+        ]
+      },
+      "oq_dephase0": {
+        "independentBlochMaxError": 1.7473800184575339e-12,
+        "bridgeTraceError": 7.872571559285828e-15,
+        "bridgeMinimumEigenvalue": 0.0,
+        "finalBloch": [
+          0.5537698850821808,
+          -0.4123059468699508,
+          2.886579864025407e-15
+        ],
+        "analyticFinalBloch": [
+          0.5537698850806736,
+          -0.4123059468688287,
+          0
+        ]
+      },
+      "oq_dephaseT": {
+        "independentBlochMaxError": 1.3697931677825181e-12,
+        "bridgeTraceError": 2.9560542116463306e-15,
+        "bridgeMinimumEigenvalue": 0.0,
+        "finalBloch": [
+          0.4100947682209948,
+          -0.3053335262040837,
+          -1.609823385706477e-15
+        ],
+        "analyticFinalBloch": [
+          0.4100947682198929,
+          -0.3053335262032594,
+          0
+        ]
+      },
+      "oq_nobath": {
+        "independentBlochMaxError": 1.5654144647214707e-14
+      }
+    },
+    "deltakitParityClosure": {
+      "focusedParityChecks": {
+        "allMeasurementRecordsCompared": 128,
+        "detectorAndObservableParityEqual": true,
+        "measurementAndGateSchedulePreserved": true,
+        "canonicalizationIdempotent": true
+      },
+      "crossProcessChecks": {
+        "resultSha256": true,
+        "circuitSha256": true,
+        "logicalFailures": true,
+        "detectionEventFraction": true,
+        "resampledDetectorSha256": true,
+        "resampledObservableSha256": true,
+        "allWorkersSucceeded": true,
+        "bridgeUnchangedDuringRecheck": true
+      },
+      "statuses": [
+        {
+          "case": "dk_parity_final_hash0",
+          "pythonHashSeed": "0",
+          "exitCode": 0,
+          "seconds": 2.396,
+          "resultSha256": "fb388c3b6baf4dbe2b4dd2ece0fb18e5a8e0497982822da85df59535e6717043",
+          "circuitSha256": "fbe4dbf37da7ec7e374f898cc3020574a111b3f5435e8dea3b0f369bf3ef9609",
+          "logicalFailures": 254,
+          "shots": 4096,
+          "detectionEventFraction": 0.15613347833806818,
+          "resampledDetectorSha256": "527814e6f6c4d924a521d3e226fa8cdc4fbb34249be2b13aa332e215865c8451",
+          "resampledObservableSha256": "4c00ea93e0d83303b915132fdf9536ee2a83c84e1ce6a34faf473bdf64d2b425"
+        },
+        {
+          "case": "dk_parity_final_hash1",
+          "pythonHashSeed": "1",
+          "exitCode": 0,
+          "seconds": 2.397,
+          "resultSha256": "fb388c3b6baf4dbe2b4dd2ece0fb18e5a8e0497982822da85df59535e6717043",
+          "circuitSha256": "fbe4dbf37da7ec7e374f898cc3020574a111b3f5435e8dea3b0f369bf3ef9609",
+          "logicalFailures": 254,
+          "shots": 4096,
+          "detectionEventFraction": 0.15613347833806818,
+          "resampledDetectorSha256": "527814e6f6c4d924a521d3e226fa8cdc4fbb34249be2b13aa332e215865c8451",
+          "resampledObservableSha256": "4c00ea93e0d83303b915132fdf9536ee2a83c84e1ce6a34faf473bdf64d2b425"
+        },
+        {
+          "case": "dk_parity_final_hash8192",
+          "pythonHashSeed": "8192",
+          "exitCode": 0,
+          "seconds": 2.168,
+          "resultSha256": "fb388c3b6baf4dbe2b4dd2ece0fb18e5a8e0497982822da85df59535e6717043",
+          "circuitSha256": "fbe4dbf37da7ec7e374f898cc3020574a111b3f5435e8dea3b0f369bf3ef9609",
+          "logicalFailures": 254,
+          "shots": 4096,
+          "detectionEventFraction": 0.15613347833806818,
+          "resampledDetectorSha256": "527814e6f6c4d924a521d3e226fa8cdc4fbb34249be2b13aa332e215865c8451",
+          "resampledObservableSha256": "4c00ea93e0d83303b915132fdf9536ee2a83c84e1ce6a34faf473bdf64d2b425"
+        },
+        {
+          "case": "dk_parity_final_hash2147483647",
+          "pythonHashSeed": "2147483647",
+          "exitCode": 0,
+          "seconds": 2.162,
+          "resultSha256": "fb388c3b6baf4dbe2b4dd2ece0fb18e5a8e0497982822da85df59535e6717043",
+          "circuitSha256": "fbe4dbf37da7ec7e374f898cc3020574a111b3f5435e8dea3b0f369bf3ef9609",
+          "logicalFailures": 254,
+          "shots": 4096,
+          "detectionEventFraction": 0.15613347833806818,
+          "resampledDetectorSha256": "527814e6f6c4d924a521d3e226fa8cdc4fbb34249be2b13aa332e215865c8451",
+          "resampledObservableSha256": "4c00ea93e0d83303b915132fdf9536ee2a83c84e1ce6a34faf473bdf64d2b425"
+        },
+        {
+          "case": "dk_parity_final_hashrandom_a",
+          "pythonHashSeed": "random",
+          "exitCode": 0,
+          "seconds": 1.931,
+          "resultSha256": "fb388c3b6baf4dbe2b4dd2ece0fb18e5a8e0497982822da85df59535e6717043",
+          "circuitSha256": "fbe4dbf37da7ec7e374f898cc3020574a111b3f5435e8dea3b0f369bf3ef9609",
+          "logicalFailures": 254,
+          "shots": 4096,
+          "detectionEventFraction": 0.15613347833806818,
+          "resampledDetectorSha256": "527814e6f6c4d924a521d3e226fa8cdc4fbb34249be2b13aa332e215865c8451",
+          "resampledObservableSha256": "4c00ea93e0d83303b915132fdf9536ee2a83c84e1ce6a34faf473bdf64d2b425"
+        },
+        {
+          "case": "dk_parity_final_hashrandom_b",
+          "pythonHashSeed": "random",
+          "exitCode": 0,
+          "seconds": 1.92,
+          "resultSha256": "fb388c3b6baf4dbe2b4dd2ece0fb18e5a8e0497982822da85df59535e6717043",
+          "circuitSha256": "fbe4dbf37da7ec7e374f898cc3020574a111b3f5435e8dea3b0f369bf3ef9609",
+          "logicalFailures": 254,
+          "shots": 4096,
+          "detectionEventFraction": 0.15613347833806818,
+          "resampledDetectorSha256": "527814e6f6c4d924a521d3e226fa8cdc4fbb34249be2b13aa332e215865c8451",
+          "resampledObservableSha256": "4c00ea93e0d83303b915132fdf9536ee2a83c84e1ce6a34faf473bdf64d2b425"
+        }
+      ],
+      "reviewedBridgeSha256": "ca6a396e09d3a3d12a022bd5d4bad6190b67c819d1f170a41f9e7d9710b5b65d",
+      "status": "closed"
+    },
+    "evidenceDirectory": ".openquantum/unitary-tools-evidence/independent-review",
+    "evidenceInventory": [
+      {
+        "name": "analyze_deltakit.py",
+        "sha256": "29a49f20cfda8c053de3531b36c82a93ff209d24d27a532fc7bbd1a9f9bc247c"
+      },
+      {
+        "name": "analyze_numeric.py",
+        "sha256": "33a0c56466858c621eb96de6b16681e1b7008aa6d74110d1f608db38ec4d1573"
+      },
+      {
+        "name": "check_clifft_boundary.py",
+        "sha256": "45b9206d52c78f00b30eb76c84bdbc6bf4d9ac67938f7e485d07badd525548a9"
+      },
+      {
+        "name": "check_contracts.mjs",
+        "sha256": "71edf0d937f9919f4c13028d0d1cbced43f2ef0e771db7dd9c0d5d3b29101c2e"
+      },
+      {
+        "name": "client.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "cliff_cz.input.json",
+        "sha256": "a9a3efdb08f158c671dd88f41b8884a91d358267d2cfe728a650029d30d3fedd"
+      },
+      {
+        "name": "cliff_cz.output.json",
+        "sha256": "a66ca7d05757b63495500e62b870b8ca948495355464ff84a48974eaa6861448"
+      },
+      {
+        "name": "cliff_cz.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "cliff_noise.input.json",
+        "sha256": "c95063ef790e2a8067d5bb830e063a625e084e38229752e744c28749c4508a17"
+      },
+      {
+        "name": "cliff_noise.output.json",
+        "sha256": "dbcb937743453b18552f5b9b146de0884f9c11060cf955e4e8fc45a85d679989"
+      },
+      {
+        "name": "cliff_noise.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "cliff_noise_z.input.json",
+        "sha256": "e7493fcf08807bffe3b5e7bd74a1fde4aba08d585c2229e5994d216745956081"
+      },
+      {
+        "name": "cliff_noise_z.output.json",
+        "sha256": "0b37dfd73e0142b4c6a9398db1aa119b137edcb6915861e5173955a265d66d65"
+      },
+      {
+        "name": "cliff_noise_z.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "cliff_order.input.json",
+        "sha256": "39f76f8b088a1a8a1a93d5e9d1d83cb59a6820508830e03243d799abf9dc0563"
+      },
+      {
+        "name": "cliff_order.output.json",
+        "sha256": "e3f6a48e48a6ba785d2ccb1b2fd6ea32bc4c3b8ead3996a1a96867049afb4587"
+      },
+      {
+        "name": "cliff_order.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "cliff_phase.input.json",
+        "sha256": "ae636abcd91ad81b7a1d00a6c4ea5b2742495b94740d18c8f9b8596757e6c2a8"
+      },
+      {
+        "name": "cliff_phase.output.json",
+        "sha256": "d019a78b7fdf117ba7a3e8e013ef2e4960a602f4879c07380e27cb136f963fc2"
+      },
+      {
+        "name": "cliff_phase.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "clifft-boundary-analysis.json",
+        "sha256": "3eb165539f25f1e53a1cf2abeb48ece1f6889c7f4573601d3a9ecdd5acf9ea1f"
+      },
+      {
+        "name": "clifft_boundary.input.json",
+        "sha256": "364eb73ee1c6f007678e2e4291965e6dfb309e40b59f802eace4bfc56e26129a"
+      },
+      {
+        "name": "clifft_boundary.output.json",
+        "sha256": "79d5a1015b26f5ffd07dc34e8ef6dfa891074bca717e7db382d8c5df4aab1b75"
+      },
+      {
+        "name": "clifft_boundary.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "contract-analysis.json",
+        "sha256": "b1a56f976b2f9cc3c269006e0e084c1c47d5f874f8716c4d8da8d583017e45df"
+      },
+      {
+        "name": "deltakit-analysis.json",
+        "sha256": "6004a410ae2d0bbad43e798ce7c3055f186c3e976a52487a580f930db320c8ce"
+      },
+      {
+        "name": "deltakit-parity-final-verification.json",
+        "sha256": "5c420cbf68ffd63a0404419e0505155766a8e4d2804bdede7877ce46bef29666"
+      },
+      {
+        "name": "deltakit-parity-focused-after.stim",
+        "sha256": "7f40b300acbaef96f391b0e1bc52e721afb0cd29ec8ddd238aa040eb98361a6d"
+      },
+      {
+        "name": "deltakit-parity-focused-before.stim",
+        "sha256": "73e326ee8c7c2c1703afeaa3aae2de7aba9782c6f15155c4e97cde0f09c3653f"
+      },
+      {
+        "name": "dk_35_X_0.0.input.json",
+        "sha256": "aaa4e674381bb90e45c1756ba581a01fb8f805ff07aa2bb8b6b0dd445a207c78"
+      },
+      {
+        "name": "dk_35_X_0.0.output.json",
+        "sha256": "e3f199a86f4994adf7003038ccfb2ce7609f3809cab21154cf6fd41187a05581"
+      },
+      {
+        "name": "dk_35_X_0.0.stderr.txt",
+        "sha256": "cace1071573ef725e762e8856427937617c8c67e5d0784c45c0e854e56a803a8"
+      },
+      {
+        "name": "dk_35_X_0.02.input.json",
+        "sha256": "9789e4958c01b8e8ff4505fd3847ef7f868f61f33dd6aa8c6707c3f21e137784"
+      },
+      {
+        "name": "dk_35_X_0.02.output.json",
+        "sha256": "7f111947dfd60f195b3dcde05e53ee241a3d6abd12eb952c4d5aa77b59497a4d"
+      },
+      {
+        "name": "dk_35_X_0.02.stderr.txt",
+        "sha256": "cace1071573ef725e762e8856427937617c8c67e5d0784c45c0e854e56a803a8"
+      },
+      {
+        "name": "dk_35_X_0.02_canonical_hash0.input.json",
+        "sha256": "8adfecca9eef2d5c2a5990c68aba40dad10aaede6fcb05b2455f1043b2d1fcbf"
+      },
+      {
+        "name": "dk_35_X_0.02_canonical_hash0.output.json",
+        "sha256": "d84129420d80686af5679eff9c78818207f37a1345ba127497bf05c7b7d60f5c"
+      },
+      {
+        "name": "dk_35_X_0.02_canonical_hash0.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "dk_35_X_0.02_canonical_hash1.input.json",
+        "sha256": "8adfecca9eef2d5c2a5990c68aba40dad10aaede6fcb05b2455f1043b2d1fcbf"
+      },
+      {
+        "name": "dk_35_X_0.02_canonical_hash1.output.json",
+        "sha256": "d84129420d80686af5679eff9c78818207f37a1345ba127497bf05c7b7d60f5c"
+      },
+      {
+        "name": "dk_35_X_0.02_canonical_hash1.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "dk_35_X_0.02_canonical_hash8192.input.json",
+        "sha256": "8adfecca9eef2d5c2a5990c68aba40dad10aaede6fcb05b2455f1043b2d1fcbf"
+      },
+      {
+        "name": "dk_35_X_0.02_canonical_hash8192.output.json",
+        "sha256": "d84129420d80686af5679eff9c78818207f37a1345ba127497bf05c7b7d60f5c"
+      },
+      {
+        "name": "dk_35_X_0.02_canonical_hash8192.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "dk_35_X_0.02_canonical_hashrandom.input.json",
+        "sha256": "8adfecca9eef2d5c2a5990c68aba40dad10aaede6fcb05b2455f1043b2d1fcbf"
+      },
+      {
+        "name": "dk_35_X_0.02_canonical_hashrandom.output.json",
+        "sha256": "d84129420d80686af5679eff9c78818207f37a1345ba127497bf05c7b7d60f5c"
+      },
+      {
+        "name": "dk_35_X_0.02_canonical_hashrandom.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "dk_53_Z_0.0.input.json",
+        "sha256": "b4eb6f4ae693ad457eeae0a3b0ee17e5b9e37122923cdfdf9b962ab66829bab2"
+      },
+      {
+        "name": "dk_53_Z_0.0.output.json",
+        "sha256": "b31c83da6f7a25a7f8bfc8511f40e4c14c2c87fa2cd4f113a2f9c1e1127dc9d1"
+      },
+      {
+        "name": "dk_53_Z_0.0.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "dk_53_Z_0.02.input.json",
+        "sha256": "e0be96f27367c2a21fec00d1010c1eea1965eb9bde044b109beb4fe6e48fba75"
+      },
+      {
+        "name": "dk_53_Z_0.02.output.json",
+        "sha256": "87663df399e3b65dbaff34945a92bde10e91835dec3bd850bdd7a2660395cef6"
+      },
+      {
+        "name": "dk_53_Z_0.02.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "dk_53_Z_0.02_canonical_hash0.input.json",
+        "sha256": "8f78bcd627b55e457a9a080b0491f3bd73429f964b9a8fa47ef3894b2b950de2"
+      },
+      {
+        "name": "dk_53_Z_0.02_canonical_hash0.output.json",
+        "sha256": "054ad2ffed66cd56e4bb5120b7de08a86789ec674de75e0d003f4e2850da423b"
+      },
+      {
+        "name": "dk_53_Z_0.02_canonical_hash0.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "dk_53_Z_0.02_canonical_hash1.input.json",
+        "sha256": "8f78bcd627b55e457a9a080b0491f3bd73429f964b9a8fa47ef3894b2b950de2"
+      },
+      {
+        "name": "dk_53_Z_0.02_canonical_hash1.output.json",
+        "sha256": "054ad2ffed66cd56e4bb5120b7de08a86789ec674de75e0d003f4e2850da423b"
+      },
+      {
+        "name": "dk_53_Z_0.02_canonical_hash1.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "dk_53_Z_0.02_canonical_hash8192.input.json",
+        "sha256": "8f78bcd627b55e457a9a080b0491f3bd73429f964b9a8fa47ef3894b2b950de2"
+      },
+      {
+        "name": "dk_53_Z_0.02_canonical_hash8192.output.json",
+        "sha256": "14e91cd4df7433509c3fbf684e21db47ffadc6f57f31f25b95a32e0f9d9886da"
+      },
+      {
+        "name": "dk_53_Z_0.02_canonical_hash8192.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "dk_53_Z_0.02_canonical_hashrandom.input.json",
+        "sha256": "8f78bcd627b55e457a9a080b0491f3bd73429f964b9a8fa47ef3894b2b950de2"
+      },
+      {
+        "name": "dk_53_Z_0.02_canonical_hashrandom.output.json",
+        "sha256": "054ad2ffed66cd56e4bb5120b7de08a86789ec674de75e0d003f4e2850da423b"
+      },
+      {
+        "name": "dk_53_Z_0.02_canonical_hashrandom.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "dk_parity_final_hash0.input.json",
+        "sha256": "8f78bcd627b55e457a9a080b0491f3bd73429f964b9a8fa47ef3894b2b950de2"
+      },
+      {
+        "name": "dk_parity_final_hash0.output.json",
+        "sha256": "e7973bfac3291fcf349ead96db13747bccb44171046dc221ee28e626cedbb40f"
+      },
+      {
+        "name": "dk_parity_final_hash0.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "dk_parity_final_hash1.input.json",
+        "sha256": "8f78bcd627b55e457a9a080b0491f3bd73429f964b9a8fa47ef3894b2b950de2"
+      },
+      {
+        "name": "dk_parity_final_hash1.output.json",
+        "sha256": "e7973bfac3291fcf349ead96db13747bccb44171046dc221ee28e626cedbb40f"
+      },
+      {
+        "name": "dk_parity_final_hash1.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "dk_parity_final_hash2147483647.input.json",
+        "sha256": "8f78bcd627b55e457a9a080b0491f3bd73429f964b9a8fa47ef3894b2b950de2"
+      },
+      {
+        "name": "dk_parity_final_hash2147483647.output.json",
+        "sha256": "e7973bfac3291fcf349ead96db13747bccb44171046dc221ee28e626cedbb40f"
+      },
+      {
+        "name": "dk_parity_final_hash2147483647.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "dk_parity_final_hash8192.input.json",
+        "sha256": "8f78bcd627b55e457a9a080b0491f3bd73429f964b9a8fa47ef3894b2b950de2"
+      },
+      {
+        "name": "dk_parity_final_hash8192.output.json",
+        "sha256": "e7973bfac3291fcf349ead96db13747bccb44171046dc221ee28e626cedbb40f"
+      },
+      {
+        "name": "dk_parity_final_hash8192.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "dk_parity_final_hashrandom_a.input.json",
+        "sha256": "8f78bcd627b55e457a9a080b0491f3bd73429f964b9a8fa47ef3894b2b950de2"
+      },
+      {
+        "name": "dk_parity_final_hashrandom_a.output.json",
+        "sha256": "e7973bfac3291fcf349ead96db13747bccb44171046dc221ee28e626cedbb40f"
+      },
+      {
+        "name": "dk_parity_final_hashrandom_a.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "dk_parity_final_hashrandom_b.input.json",
+        "sha256": "8f78bcd627b55e457a9a080b0491f3bd73429f964b9a8fa47ef3894b2b950de2"
+      },
+      {
+        "name": "dk_parity_final_hashrandom_b.output.json",
+        "sha256": "e7973bfac3291fcf349ead96db13747bccb44171046dc221ee28e626cedbb40f"
+      },
+      {
+        "name": "dk_parity_final_hashrandom_b.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "dq_bloch.input.json",
+        "sha256": "38a821d9aa7bd704d24818ceafa447acdea6e5c87b3d829bd7c3627fb2c27028"
+      },
+      {
+        "name": "dq_bloch.output.json",
+        "sha256": "5ed0439ac83ecc2dcfb80c7431a13264bc65e684fd57ecc60ea8a91eaf60841c"
+      },
+      {
+        "name": "dq_bloch.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "dq_boundary.input.json",
+        "sha256": "484159d442f69be4854d7991a2764494875be03d7d755191e35933ae405a106f"
+      },
+      {
+        "name": "dq_boundary.output.json",
+        "sha256": "4af452b2d3b9060f5f9e6de85ad96386b5b0d67e7a0b7192bfe824c966d9dd0b"
+      },
+      {
+        "name": "dq_boundary.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "dq_decay.input.json",
+        "sha256": "c468f1eb99652c7f190252c8b53f99cda352ec852f56c8d9864aa99aa0c2c61e"
+      },
+      {
+        "name": "dq_decay.output.json",
+        "sha256": "5c8eb3f1ee161b9607ffd09c8a7bcf531d9c7659c285342ed1b4b3dd55f34cdb"
+      },
+      {
+        "name": "dq_decay.stderr.txt",
+        "sha256": "cace1071573ef725e762e8856427937617c8c67e5d0784c45c0e854e56a803a8"
+      },
+      {
+        "name": "dq_rabi.input.json",
+        "sha256": "83058afc04e98fbc00be806c3b039602785153cba659920179b4f0ad342b5c91"
+      },
+      {
+        "name": "dq_rabi.output.json",
+        "sha256": "66d977d56ea279fcb1aa373db5465ea28f24b00fd78155a203a654747e93b19d"
+      },
+      {
+        "name": "dq_rabi.stderr.txt",
+        "sha256": "cace1071573ef725e762e8856427937617c8c67e5d0784c45c0e854e56a803a8"
+      },
+      {
+        "name": "final-reviewed-hashes.json",
+        "sha256": "ffcc739522db79863ef55521578bebbaffc42dc782707fdb1caa7400aede1009"
+      },
+      {
+        "name": "fix-verification.json",
+        "sha256": "3313231cfbf471aa79f6d93d44dc1f023d8474f0ba6753e0f3728e454e36d92d"
+      },
+      {
+        "name": "initial-hashes.json",
+        "sha256": "6133b4a7f5b301e8cfdb1f19e6b024d3be69526569bbed693906114200b8a943"
+      },
+      {
+        "name": "numeric-analysis.json",
+        "sha256": "db7962af75b4b1a8f65871b17932d89ece37c131ecb1c0fa849cbb9cad16f03f"
+      },
+      {
+        "name": "oq_dephase0.input.json",
+        "sha256": "6ef62e74abd1cc7f1ff7c9d2f1f6479a9976f9298e7ac27a6f618c2744533ae6"
+      },
+      {
+        "name": "oq_dephase0.output.json",
+        "sha256": "c2500f987bb1e136849e09164a28168230982d980b4d8fd3ea68c7a90b67710c"
+      },
+      {
+        "name": "oq_dephase0.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "oq_dephase0_fixed.input.json",
+        "sha256": "30181ab9f67c7ae8c3a41b708171a002a920fbe4ef1910aefe79e70c8d2628d2"
+      },
+      {
+        "name": "oq_dephase0_fixed.output.json",
+        "sha256": "02fbf72cb1571902ab9a7fdd71fd294c93ec86249ca07e9b7878c18d4f2ec0e5"
+      },
+      {
+        "name": "oq_dephase0_fixed.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "oq_dephaseT.input.json",
+        "sha256": "266b71dd1304b87783620bb15471b2175ab4e06ad26c4b6f568e26634a263fdc"
+      },
+      {
+        "name": "oq_dephaseT.output.json",
+        "sha256": "4b34698ec8c7d04be73c9b73714a1244f1566f76c3e62b511790553b0a79c3fd"
+      },
+      {
+        "name": "oq_dephaseT.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "oq_dephaseT_fixed.input.json",
+        "sha256": "ac7e1b5805bb52f2ee191d7a4b0e63d004e92a72fce3913103a9e0b93a76f5e0"
+      },
+      {
+        "name": "oq_dephaseT_fixed.output.json",
+        "sha256": "d25a0347e5c653397e0c1708bc35a40b15906f448608d25d776390def2b74b42"
+      },
+      {
+        "name": "oq_dephaseT_fixed.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "oq_grid.input.json",
+        "sha256": "29333013b36e11eb87f685504c73895f72dc0916d4890c72334e75b0b8ebf23a"
+      },
+      {
+        "name": "oq_grid.output.json",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "oq_grid.stderr.txt",
+        "sha256": "7121424696531adb07f90df2bc9a243be7bbc26d9344dafd0010284767048146"
+      },
+      {
+        "name": "oq_grid_fixed.input.json",
+        "sha256": "c191f2327249733c581891503450271534833b5609d05243f7ef62a25a5e138d"
+      },
+      {
+        "name": "oq_grid_fixed.output.json",
+        "sha256": "b3be34cbfa45e537bada298e23767cd3769a81336c7e981e76e9d414b7f575f3"
+      },
+      {
+        "name": "oq_grid_fixed.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "oq_nobath.input.json",
+        "sha256": "b1bd63a415d3478c6139b558e8cb93222f4d5cb4520ca82b5b2b7dfc326a1501"
+      },
+      {
+        "name": "oq_nobath.output.json",
+        "sha256": "b1bdc69445419931601b37e87e30172c3a23c1caf2cc483a47604699a4706811"
+      },
+      {
+        "name": "oq_nobath.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "oq_nobath_fixed.input.json",
+        "sha256": "146b16da0c8ff153f3bd5d02344f2f5f8a9fffe3f89ad186f50f38eb2aacd2ce"
+      },
+      {
+        "name": "oq_nobath_fixed.output.json",
+        "sha256": "29a57cb63c6c604ad312ff189ac42becc88ddb5556ba7ceac5541a1291d337e8"
+      },
+      {
+        "name": "oq_nobath_fixed.stderr.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "recheck_deltakit_parity.py",
+        "sha256": "d020dd824b3f4ff41a3a4576b811d3cf6e4058bedaaf7ee1a042c5c5d30c56f3"
+      },
+      {
+        "name": "recheck_fixes.py",
+        "sha256": "5aba38ddba85657b108beec7b35853e9bd61e1afc0622b6335a3f319fa195101"
+      },
+      {
+        "name": "review-summary.json",
+        "sha256": "816a5743c93ffd74a6dc7412654c8dded0ca6a209dfae5242d6d06f58ab20f40"
+      },
+      {
+        "name": "reviewed-hashes-in-progress.json",
+        "sha256": "f716e9b586205bd82c8f93f0191e0ec70bb7b73df8e974bd1aebd93f284416ab"
+      },
+      {
+        "name": "run_workers.py",
+        "sha256": "7b6653797ce0ba8831009ff380219499fc9bc06a7efc48dda82c90c432d6bdaa"
+      },
+      {
+        "name": "worker-status.json",
+        "sha256": "3591f61324189684ab730721ec4cce389eb30a7b5542e0bb3462014684c0b14b"
+      }
+    ]
+  },
+  "sourceFileSha256": {
+    ".agents/skills/dynamiqs-dynamics/SKILL.md": "bb905243e5567726d4c5e2ef40897f5c20ee0b91059dbcb838c7941646bbf280",
+    ".agents/skills/dynamiqs-dynamics/mcp/contracts.mjs": "0a80e2530327492f1d6524189e95479399dc35443fec9b9e48ff2eef17c4864e",
+    ".agents/skills/dynamiqs-dynamics/mcp/bridge.py": "a0a3358fdfe27502a399afd24fccad440812e8a2a70ff75a0722e8d7fab5818d",
+    ".agents/skills/dynamiqs-dynamics/mcp/server.mjs": "60e709039d5eb917ff31b024f888edb02c3aff643099056b057ee8121c2df538",
+    ".agents/skills/dynamiqs-dynamics/pyproject.toml": "6f2e31a422a76d2f58d73383032b5072e3b4842c66a744e29ea6fa6cfcdcb1d6",
+    ".agents/skills/clifft-sampling/SKILL.md": "bdeca016275918411a465597d6b3851586feab4d76ecf4addabcfb478c44acc8",
+    ".agents/skills/clifft-sampling/mcp/contracts.mjs": "851baf4e94ce0f82b49797f7d6d3145e5230c97629401b3579cc3b79f6dd12cd",
+    ".agents/skills/clifft-sampling/mcp/bridge.py": "6df7f0b8de1a71cf96d1b84092e1dbb91d50b108fed5a6db32c6f6eb06f288ae",
+    ".agents/skills/clifft-sampling/mcp/server.mjs": "4d2db97e162dbd6bada8f1cc1258a4e1f074c22cafa7801e68ed2f76ff1ab19b",
+    ".agents/skills/clifft-sampling/pyproject.toml": "6aedb9ee225ecb71f3ed3443c9736346efcd9f6ec3e841d3a76d8b14dda5381c",
+    ".agents/skills/oqupy-dynamics/SKILL.md": "9e9f9fc1eede71b19350f9c84e8a531e978cc52a13e66019970d3ef1c9f55b1c",
+    ".agents/skills/oqupy-dynamics/mcp/contracts.mjs": "88b4ee8fbe12e103796b36410c5bde91d0f34d47af5b1faa5687669953550b9a",
+    ".agents/skills/oqupy-dynamics/mcp/bridge.py": "c916cb1449d10195a2dd450c730358b39227a134975430e38ea43f0230836c89",
+    ".agents/skills/oqupy-dynamics/mcp/server.mjs": "aab0e8531519e9576a3a600f10b9a782d37748476fd43c3847797a69a99f03de",
+    ".agents/skills/oqupy-dynamics/pyproject.toml": "8b20b8c4792f81cf83f109c4007493f89d49dc3c8a80a322b3b264f0ad93c38c",
+    ".agents/skills/deltakit-qec/SKILL.md": "0a93b8914509404d26c27ff516fbe9c0bef21b607ff20a3b0d5e4abe0d2baeea",
+    ".agents/skills/deltakit-qec/mcp/contracts.mjs": "6c4f0522f86de79bd7e175ea2582f40cd1f8693dcf4fb8a9f1b178822e62e82f",
+    ".agents/skills/deltakit-qec/mcp/bridge.py": "ca6a396e09d3a3d12a022bd5d4bad6190b67c819d1f170a41f9e7d9710b5b65d",
+    ".agents/skills/deltakit-qec/mcp/server.mjs": "4b3420fdd852ec450af9e7be62de32b4a1b5cb650b7dfc5b0ba0540a4b82ff59",
+    ".agents/skills/deltakit-qec/pyproject.toml": "6aaecd0fda5dae944d6fadd07d9d6f4f1ad6502713f8798e73406bad05bfc6b9",
+    ".agents/skills/dynamiqs-dynamics/uv.lock": "25f0bd615eb24467824c69c774187cdc9eaf404ab71e02fce588bc928dae44c9",
+    ".agents/skills/clifft-sampling/uv.lock": "c5639fd8ffc3ac1393cfd4aaf0be293cb2e827a7b7354ea96bf816240eb19fac",
+    ".agents/skills/oqupy-dynamics/uv.lock": "6acb57295909af725a5edd25aec06e4bec5fc28ff43091bb21d96fc531bc7db5",
+    ".agents/skills/deltakit-qec/uv.lock": "1370209234943bfc7334f0541eee77f85a78162da57ba54181788654a7a307d7",
+    "src/metriq-data/index.mjs": "cf00fc76719c6268176fbd3063d8ba88c2cb39ff562441758e0a370fdf0844f6",
+    "src/metriq-data/upstream/source.json": "b58a832325ddd89220cb614c7233b43e27cb5fae86f16635fa10ff9397ba309a",
+    "src/metriq-data/upstream/snapshot.json": "45a81f9deadd6c583249817944637c5835b488a30c426ebbae945bc0be834426",
+    "src/metriq-data/upstream/LICENSE": "f5b745ef98087f531e719ee8ca6a96809444573ecc7173c6fa68eaad39b3cc3f",
+    "src/metriq-data/upstream/NOTICE": "e97ff1f18a0bc983403d0650ed6a43ec404bbf376898be473e5d23564732b078",
+    "runtime/openquantum/agent-presets/openquantum/metriq-data-tools.mjs": "d96993939cf4282969323fe7b04501975a1fc935d4a006aac2f6a8ce481443cb",
+    "scripts/import-metriq-snapshot.py": "9d8f1e259e4ba07e17c1f175f1c994d2e6d4bd8ad2fac73a6d422e636b6ec0f6",
+    "tests/unitary-tools-live.test.mjs": "e767d944015aa552c845f47f48be365b3c2901abaca4de3c3e727bff038aeadb",
+    "tests/harness-unitary-tools.test.mjs": "fade1f7531fd2356e0d0a4e54b2b13a94bad237b0f6254b61fc6c1b7666c306c",
+    "tests/unitary-tools-contracts.test.mjs": "a49b92638c8c1bede89204d08f6f67608f6ade0338a4bd786fd62572ebdc98d2",
+    "tests/metriq-data.test.mjs": "0948042cbf91517acdc20e2c3db9f5249d5cdfe7effb7b450e8171281e694dc7"
+  },
+  "limits": [
+    "Fixed small-system examples do not validate the full parameter domain or TEMPO convergence.",
+    "No external model, QPU, cloud runner or proprietary decoder was used.",
+    "All five capabilities remain L1 and scientificValidation=not_evaluated.",
+    "An already-running user Host must restart to load the new Preset connections."
+  ]
+}

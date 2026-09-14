@@ -544,6 +544,24 @@
       maxDelayMs: 30000
       maxAttempts: 10
 
+- id: mcp-mitiq-error-mitigation
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: mitiq_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/mitiq-error-mitigation/mcp/server.mjs'
+    env: {}
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 195000
+    failOnStartupError: true
+    reconnect:
+      enabled: true
+      initialDelayMs: 1000
+      maxDelayMs: 30000
+      maxAttempts: 10
+
 - id: mcp-randomized-measurements
   name: '@deepseek-ai/dsh-mcp-client'
   config:
@@ -561,3 +579,56 @@
       initialDelayMs: 1000
       maxDelayMs: 30000
       maxAttempts: 10
+
+# Pinned local Unitary ecosystem capabilities; isolated scientific workers.
+- id: mcp-dynamiqs-dynamics
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: dynamiqs_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/dynamiqs-dynamics/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 195000
+    failOnStartupError: true
+
+- id: mcp-clifft-sampling
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: clifft_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/clifft-sampling/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 195000
+    failOnStartupError: true
+
+- id: mcp-oqupy-dynamics
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: oqupy_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/oqupy-dynamics/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 195000
+    failOnStartupError: true
+
+- id: mcp-deltakit-qec
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: deltakit_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/deltakit-qec/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 195000
+    failOnStartupError: true
+
+# Read-only CC-BY-4.0 benchmark snapshot; no runner or remote job lifecycle.
+- id: tool-metriq-data
+  name: ./metriq-data-tools.mjs

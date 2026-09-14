@@ -1,11 +1,17 @@
 # Third-party notices
 
-OpenQuantum 自有代码采用仓库根目录中的 [MIT License](LICENSE)。这个许可证不替代第三方项目的许可证，也不把第三方代码重新许可为 OpenQuantum 的代码。
+除明确单独许可的目录外，OpenQuantum 自有代码采用仓库根目录中的 [MIT License](LICENSE)。Mitiq 能力目录采用 GPL-3.0-only，见下方说明。根目录许可证不替代第三方项目的许可证，也不把第三方代码重新许可为 OpenQuantum 的代码。
 
 下表记录 OpenQuantum 当前明确接入或直接依赖的主要上游组件。各组件仍由原作者持有版权，并继续遵循其原始许可证。
 
 | 组件 | 许可证 | OpenQuantum 中的使用方式 | 上游来源 |
 | --- | --- | --- | --- |
+| Mitiq | GPLv3；本地能力目录 GPL-3.0-only | 固定 1.1.0，独立 Python 环境调用 ZNE/REM/PEC/CDR；本能力携带独立 LICENSE/NOTICE，见下方 Mitiq 说明 | [unitaryfoundation/mitiq](https://github.com/unitaryfoundation/mitiq/tree/v1.1.0) |
+| Dynamiqs | Apache-2.0 | 固定 0.3.6 源码提交 `a49b30fe5cacb5cf7c1d981f2e7ed03b18e05318`，隔离 Python 环境调用单量子位批量动力学与梯度；源码由包管理器取得 | [dynamiqs/dynamiqs](https://github.com/dynamiqs/dynamiqs) |
+| Clifft | Apache-2.0 | 固定 PyPI 0.10.0，仅执行结构化小型 Clifford+T 最终测量电路；独立环境安装，不复制上游源码 | [QuEraComputing/clifft](https://github.com/unitaryfoundation/clifft) |
+| OQuPy | Apache-2.0 | 固定 PyPI 0.5.0，独立 NumPy 1.x 环境调用 TEMPO；不复制上游源码 | [tempoCollaboration/OQuPy](https://github.com/tempoCollaboration/OQuPy) |
+| Deltakit | Apache-2.0 | 固定 PyPI 0.10.0，构建矩形纠错存储实验并使用本地 ToyNoise；不接入云服务或专有解码器 | [Deltakit/deltakit](https://github.com/Deltakit/deltakit) |
+| Metriq data | CC-BY-4.0 | 固定 `6730f78b135a9af67691a0ef4fbea041978056c5` 的公开 JSON 数据，转为本地索引并去重相同完整记录；保留原始指标、来源文件和署名。原版 LICENSE、NOTICE 与转换清单随 `src/metriq-data/upstream/` 分发 | [unitaryfoundation/metriq-data](https://github.com/unitaryfoundation/metriq-data) |
 | Quantum-Practices | MIT | 固定提交 `572a24c9b5c9787caec98810351f5cb17c82250e` 的两个原始 ESM 文件（检索器、60 份指南目录）随源码分发；原版 LICENSE、NOTICE 与文件摘要保留在 `src/quantum-practices/upstream/`。本地薄适配负责当前 Harness 注册、中文查询和参考资料边界；不包含上游 Agent、模拟器、Python 环境或安装器 | [unitarylab/quantum-practices](https://github.com/unitarylab/quantum-practices) |
 | Qiskit SQD | Apache-2.0 | 固定 `qiskit-addon-sqd==0.13.1`，隔离环境调用 H₂/STO-3G 采样子空间对角化；源码由包管理器安装 | [Qiskit/qiskit-addon-sqd](https://github.com/Qiskit/qiskit-addon-sqd) |
 | MQT YAQS | MIT | 固定 `mqt.yaqs==0.6.0`，隔离环境调用有界张量跳跃轨迹 | [munich-quantum-toolkit/yaqs](https://github.com/munich-quantum-toolkit/yaqs) |
@@ -13,8 +19,10 @@ OpenQuantum 自有代码采用仓库根目录中的 [MIT License](LICENSE)。这
 | RandomMeas.jl | Apache-2.0 | Julia Manifest 固定 `89c492bfb05508e5babe9c8c2c40697995be9e42` / `0.3.1`，调用局域 Haar 测量与纯度估计；不重新分发其源码 | [bvermersch/RandomMeas.jl](https://github.com/bvermersch/RandomMeas.jl) |
 | Flow-VQE | MIT | 引入固定 `f7642afa330e5108ea5738d42fe80b551363733c` 的三份未修改 Python 源文件及原始 [MIT License](.agents/skills/flow-vqe/upstream/LICENSE)，逐文件来源与 SHA-256 见同目录 provenance.json；仅调用单上下文训练函数 | [olsson-group/Flow-VQE](https://github.com/olsson-group/Flow-VQE) |
 | TeNPy | Apache-2.0 | 固定 `physics-tenpy==1.1.1`，隔离环境调用有限 XYZ 链 DMRG；采用当前版本许可证 | [tenpy/tenpy](https://github.com/tenpy/tenpy) |
+| FatQat | Apache-2.0 | 固定 `0.1.0a1` / 源码提交 `39b75e30ae50ddb4a8c7b840847edce678aa814c`，隔离 Python 环境调用有界电路、噪声及超导量子比特／原子阵列模拟；许可全文随依赖包保留，不在本仓库重新分发上游源码 | [spaceqat/fatqat](https://github.com/spaceqat/fatqat/tree/39b75e30ae50ddb4a8c7b840847edce678aa814c) |
 | DeepSeek Harness | MIT | 作为 Agent Runtime 和 Web UI 基础，DSH 直接依赖统一固定为 `0.1.5-rc.1`；OpenQuantum 使用 Cordis patch、preset 与公开接口扩展，不修改 `node_modules` | [deepseek-ai/deepseek-harness](https://github.com/deepseek-ai/deepseek-harness) |
 | DSH Desktop | MIT | 固定源码 `5184a2ab7ab197e7405c1053feb324003409a142`（版本 `2.0.7`，尚未发布的源码构建），配套 Harness `0.1.5-rc.1` 和上游锁定的 Electron `43.3.0`；构建在忽略目录中，使用公开启动器承载同一个 Harness Web UI 和 Home patch，不重新分发上游源码 | [anywhere-labs/dsh-desktop](https://github.com/anywhere-labs/dsh-desktop) |
+| OpenMAIC | MIT | 固定源码提交 `29735f10d0081859ac3db1a50a0cc92f46436004`（`v1.0.1` 后的修复），下载到忽略目录 `.openquantum/external/openmaic`，用于量子学习通的原版课堂与编辑应用，并做入口、模型连接和界面适配；保留上游版权与 LICENSE，不在本仓库重新分发上游源码 | [THU-MAIC/OpenMAIC](https://github.com/THU-MAIC/OpenMAIC/tree/29735f10d0081859ac3db1a50a0cc92f46436004) |
 | CC Connect | MIT | 固定 npm `1.5.1-beta.1`，作为可选的消息平台桥；通过 ACP 启动 Harness Agent，不复制上游源码，也不把平台凭据写入仓库 | [chenhg5/cc-connect](https://github.com/chenhg5/cc-connect) |
 | Agent Client Protocol TypeScript SDK | Apache-2.0 | 项目直接开发依赖固定为 `1.4.0`，仅用于验证 OpenQuantum ACP 入口与 Harness 的真实 stdio 握手；Harness `0.1.5-rc.1` 的正式 ACP 入口同样使用 `1.4.0` | [agentclientprotocol/typescript-sdk](https://github.com/agentclientprotocol/typescript-sdk) |
 | Qiskit MCP Servers | Apache-2.0 | 通过 `uvx` 使用 Circuits `0.3.1`、Docs `0.3.0`、IBM Runtime `0.6.1`、IBM Transpiler `0.4.1` 与 Gym `0.4.1`；上游实现没有复制进本仓库 | [Qiskit/mcp-servers](https://github.com/Qiskit/mcp-servers) |
@@ -37,3 +45,16 @@ OpenQuantum 自有代码采用仓库根目录中的 [MIT License](LICENSE)。这
 通过包管理器或安装脚本取得的组件会携带自己的许可证元数据。发布包含这些第三方组件的 Docker 镜像、安装包或其他二进制分发物时，需要同时保留适用的版权声明、许可证文本和上游要求的 NOTICE 内容。
 
 本文件用于说明项目当前的依赖与分发边界，不构成法律意见。发现遗漏或上游许可证变化时，请提交 Issue 或 Pull Request。
+
+## Mitiq error mitigation
+
+- Upstream: https://github.com/unitaryfoundation/mitiq/tree/v1.1.0
+- Version: Mitiq 1.1.0, Copyright (C) Unitary Foundation, GPLv3.
+- Integration: `.agents/skills/mitiq-error-mitigation/` is explicitly GPL-3.0-only,
+  with its own complete LICENSE and NOTICE; the root MIT grant does not override it.
+- The unmodified dependency is installed using that directory's hashed `uv.lock`.
+  The worker invokes ZNE/REM/PEC/CDR for bounded local Cirq experiments.
+- The process boundary isolates dependencies and execution; it does not by itself
+  determine GPL combined-distribution obligations. Distributors must preserve
+  notices and satisfy applicable corresponding-source requirements.
+- Scope and validation: [Mitiq integration](docs/integrations/MITIQ.md).
