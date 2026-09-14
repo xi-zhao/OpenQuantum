@@ -8,13 +8,13 @@
 </p>
 
 <p align="center">
-  面向研究者、学习者与授课者的开源量子 AI 工作台<br />
+  面向研究者、学习者与授课者的开源量子 Agent 平台<br />
   用自然语言发起任务，用计算工具探索，用参考结果检验
 </p>
 
 <p align="center">
   <a href="https://github.com/xi-zhao/openQuantum/actions/workflows/ci.yml"><img src="https://github.com/xi-zhao/openQuantum/actions/workflows/ci.yml/badge.svg" alt="CI status" /></a>
-  <a href="./LICENSE"><img src="https://img.shields.io/badge/license-MIT-111111.svg" alt="MIT License" /></a>
+  <a href="./THIRD_PARTY_NOTICES.md"><img src="https://img.shields.io/badge/licenses-MIT%20%2B%20component%20licenses-111111.svg" alt="MIT 与组件许可证" /></a>
   <img src="https://img.shields.io/badge/Node.js-24%2B-3c873a.svg" alt="Node.js 24 or newer" />
 </p>
 
@@ -22,6 +22,7 @@
   <a href="#openquantum-全景">平台全景</a> ·
   <a href="#可以用它做什么">能力全景</a> ·
   <a href="#从论文方法开始一次计算">论文方法</a> ·
+  <a href="#试用误差缓解动力学与公开基准">噪声与动力学</a> ·
   <a href="#集成生态与自由选择">集成生态</a> ·
   <a href="#产品体验">产品体验</a> ·
   <a href="#快速开始">快速开始</a> ·
@@ -29,9 +30,9 @@
   <a href="./docs/README.md">文档与架构</a>
 </p>
 
-**把量子问题带进对话，把计算结果拿来检验。** OpenQuantum 是一个开源量子科研 Agent 工作台，将电路分析、量子化学、多体模拟、纠错与实验模拟工具接到同一个任务入口；教学应用「量子学习通」提供材料、课程和课堂的组织空间。
+**把量子问题带进对话，把计算结果拿来检验。** OpenQuantum 是一个开源量子 Agent 平台：科研工作台将电路分析、量子化学、多体模拟、误差缓解、纠错与实验模拟工具接到同一个任务入口；教学应用「量子学习通」提供材料、课程和课堂的组织空间。
 
-你可以从一个 Bell 态实验开始，也可以用 SQD 计算 H₂、用 TeNPy 求解自旋链。选择模型和计算后端，写清问题与输入，在工作台中查看调用过程、数值结果和适用范围。
+你可以从一个 Bell 态实验开始，用 SQD 计算 H₂、用 TeNPy 求解自旋链，也可以比较含噪电路缓解前后的误差，研究耗散与环境记忆。选择模型和计算后端，写清问题与输入，在工作台中查看调用过程、数值结果和适用范围。
 
 - **按问题选工具**：电路、量子态、优化、纠错和动力学各有对应后端，同类任务也可明确指定工具。[查看能做的任务](#可以用它做什么)
 - **带着参照看结果**：在支持的算例中比较精确解、独立检查或统计误差，并查看哪些检查已完成。[查看本地计算证据](#从一个真实任务开始)
@@ -69,13 +70,14 @@
 | 量子化学与多体基态 | 用 SQD 求解 H₂/STO-3G，或用 TeNPy 计算有限 XYZ 自旋链基态 | SQD / FCI 能量对照，DMRG 能量、磁化与纠缠熵 |
 | 变分求解与参数学习 | 求解限定二量子位 Hamiltonian 的固定粒子扇区基态；对小型 Hamiltonian 训练 Flow-VQE | VQE 与精确参考对照，Flow 参数学习与等评估预算随机搜索比较 |
 | 组合优化 | 构建有界 QUBO，检查约束 penalty，运行经典求解或可选本地 QAOA | 优化解、约束检查与经典枚举复核 |
-| 量子纠错 | 运行 surface-code memory / MWPM 实验，或对二元校验矩阵进行 BP+LSD 解码 | 表面码有限 shots 统计；LSD 的 syndrome 一致性检查 |
+| 误差缓解 | 用 Mitiq 运行 ZNE、REM、PEC 或 CDR，比较相同采样预算下的原始与缓解结果 | 理想参考、经验偏差、方差和 RMSE，以及校准、训练与采样成本 |
+| 量子纠错 | 用 Stim / PyMatching 运行 surface-code memory，用 Deltakit 构建矩形码片实验，或进行 BP+LSD 解码 | 实际含噪电路、固定 shots 的逻辑错误率与区间；LSD 的 syndrome 一致性检查 |
 | 开放系统动力学 | 用 TJM 计算开放 Ising 链，用 Dynamiqs 扫描单量子位驱动与梯度，或用 OQuPy 研究环境记忆 | 观测量轨迹、独立参考、梯度以及时间步长与记忆截断信息 |
-| Clifford+T 与纠错建模 | 用 Clifft 采样小电路，或用 Deltakit 构建矩形纠错码片存储实验 | 含噪位串与密度矩阵对照；实际 Stim 电路、固定 shots 逻辑错误统计 |
-| 公开设备基准 | 查询 Metriq 发布的历史 benchmark 数据 | 原始参数、指标、时间、来源与许可；保留模拟器标签 |
+| Clifford+T 噪声采样 | 用 Clifft 研究小电路的 T 门干涉与门后去极化噪声 | 完整最终位串分布、有限采样误差与独立密度矩阵参考 |
+| 公开设备基准 | 从 Metriq 的 410 条固定历史记录中按厂商、设备或基准类型查询 | 原始参数、指标、时间、来源与许可；保留模拟器标签 |
 | 超导与原子实验 | 模拟调校流程、原生门约束、三能级 transmon 泄漏或小型里德堡原子链动力学 | 合成实验数据、动力学轨迹与图表 |
 | 量子硬件接入 | 发现后端、检查拓扑与凭据；按需启用云任务查询、提交与取消 | 设备候选、使用条件；已启用任务接口的结果与状态 |
-| 研究方法与工具选型 | 比较量子 SDK、复用研究步骤、排查工作台连接 | 选型建议、工作流说明与诊断记录 |
+| 算法参考与工具选型 | 检索 Quantum-Practices 的 60 份算法指南、比较量子 SDK、复用研究步骤 | 固定版本的参考材料、适用假设与选型建议 |
 | 学习与教学 | 准备材料、制作课件、组织互动课堂与 PBL 项目式学习 | 已集成课程与课堂界面、本机学习记录；[课程建设与 AI 验收进度](#量子学习通) |
 
 本地计算可从无需量子云凭据的任务开始；真实硬件与付费服务按需启用。你也可以把自己的算法和研究方法[接入工作台](#把你的量子能力接进来)。
@@ -90,22 +92,24 @@
 
 ## 集成生态与自由选择
 
-同一个 Bell 态任务，可以选择 FatQat 或 TyxonQ；需要分析与转译电路时，可以选择 Qiskit；比较两份电路是否等价时，可以选择 MQT QCEC。OpenQuantum 保留这些选择，让输入格式、物理模型和设备条件决定使用哪种工具。
+同一个 Bell 态任务，可以选择 FatQat 或 TyxonQ；需要分析与转译电路时，可以选择 Qiskit；比较两份电路是否等价时，可以选择 MQT QCEC。研究动力学时，Dynamiqs 对应 Lindblad 扫描与梯度，OQuPy 对应环境记忆，TJM 对应开放自旋链轨迹。输入格式、物理模型和设备条件决定使用哪种工具。
 
-| 生态层面 | 已接入的项目或服务 | 选择方式与当前范围 |
+| 生态层面 | 使用或适配的项目与服务 | 选择方式与当前范围 |
 | --- | --- | --- |
-| 电路、编译与仿真 | [Qiskit](https://github.com/Qiskit/mcp-servers)、[MQT QCEC](https://github.com/munich-quantum-toolkit/qcec)、[TyxonQ](https://github.com/QureGenAI-Biotech/TyxonQ)、[FatQat](https://github.com/spaceqat/fatqat) | 按电路格式、噪声模型、等价性检查或硬件约束选择；部分连接按需开启 |
-| 量子态、优化与纠错 | [toqito](https://github.com/vprusso/toqito)、[QPanda QUBO](https://github.com/OriginQ/pyqpanda-algorithm)、[Stim](https://github.com/quantumlib/Stim)、[PyMatching](https://github.com/oscarhiggott/PyMatching)、[ldpc / BP+LSD](https://github.com/quantumgizmos/ldpc)，以及内置基态求解 | 量子态审计、限定基态计算、组合优化、纠错存储实验与二元校验矩阵解码 |
-| 量子化学、多体与动力学 | [Qiskit SQD](https://github.com/Qiskit/qiskit-addon-sqd)、[TeNPy](https://github.com/tenpy/tenpy)、[MQT YAQS / TJM](https://github.com/munich-quantum-toolkit/yaqs) | H₂ 子空间对角化、有限自旋链 DMRG、开放 Ising 链张量轨迹 |
+| 电路、编译与仿真 | [Qiskit](https://github.com/Qiskit/mcp-servers)、[MQT QCEC](https://github.com/munich-quantum-toolkit/qcec)、[TyxonQ](https://github.com/QureGenAI-Biotech/TyxonQ)、[FatQat](https://github.com/spaceqat/fatqat)、[Clifft](https://github.com/unitaryfoundation/clifft) | 电路分析与转译、等价性检查、硬件约束或有界 Clifford+T 带噪采样 |
+| 量子态与优化 | [toqito](https://github.com/vprusso/toqito)、[QPanda QUBO](https://github.com/OriginQ/pyqpanda-algorithm)，以及内置基态求解 | 量子态审计、限定基态计算和组合优化 |
+| 误差缓解 | [Mitiq](https://github.com/unitaryfoundation/mitiq) | ZNE、REM、PEC、CDR 的有界本地实验，比较相同采样预算下的误差与成本 |
+| 量子纠错 | [Stim](https://github.com/quantumlib/Stim)、[PyMatching](https://github.com/oscarhiggott/PyMatching)、[Deltakit](https://github.com/Deltakit/deltakit)、[ldpc / BP+LSD](https://github.com/quantumgizmos/ldpc) | 表面码存储、矩形码片与合成噪声建模、MWPM 和二元校验矩阵解码 |
+| 量子化学与多体 | [Qiskit SQD](https://github.com/Qiskit/qiskit-addon-sqd)、[TeNPy](https://github.com/tenpy/tenpy) | H₂ 子空间对角化与有限自旋链 DMRG |
+| 开放系统动力学 | [Dynamiqs](https://github.com/dynamiqs/dynamiqs)、[OQuPy](https://github.com/tempoCollaboration/OQuPy)、[MQT YAQS / TJM](https://github.com/munich-quantum-toolkit/yaqs) | 单量子位动力学与梯度、Ohmic spin-boson TEMPO、开放 Ising 链张量轨迹 |
 | 参数学习与随机测量 | [Flow-VQE](https://github.com/olsson-group/Flow-VQE)、[RandomMeas.jl](https://github.com/bvermersch/RandomMeas.jl) | 小型 Hamiltonian 的 flow 参数学习，已知量子态的局域随机测量与纯度估计 |
 | 超导与原子实验 | [QMClaw](https://github.com/QMC-AI/QMClaw)、[FatQat](docs/integrations/FATQAT.md) | 调校流程的合成数据实验、原生门约束和有界脉冲动力学 |
 | 量子云与硬件 | [FieldQKit](https://github.com/FieldQuantum/fieldqkit)、IBM Quantum、IonQ、本源量子及其他国内量子云 | 按厂商与任务选择；后端发现需要对应凭据，真机与付费任务按需启用 |
+| 参考资料与公开基准 | [Quantum-Practices](https://github.com/unitarylab/quantum-practices)、[Metriq data](https://github.com/unitaryfoundation/metriq-data) | 本地检索 60 份算法指南与 410 条去重基准记录，保留原始来源 |
 | 学习与教学 | [OpenMAIC](https://github.com/THU-MAIC/OpenMAIC) → 量子学习通 | 集成完整教学应用；课程体系正在建设，在线 AI 教学流程仍待完整验收 |
 | Agent、桌面与消息 | [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness)、[DSH Desktop](https://github.com/anywhere-labs/dsh-desktop)、[CC Connect](docs/integrations/CC_CONNECT.md) | 从网页、桌面或配置好的消息渠道使用科研能力 |
 
-可以在对话中直接指定后端名称。[首次任务示例](#发起任务并选择后端)给出了 FatQat 和 TyxonQ 的可复制请求及准备条件。
-
-Unitary 生态新增 **Dynamiqs、Clifft、OQuPy、Deltakit 与 Metriq 数据查询**。前四项提供有界本地计算，Metriq 查询固定的公开数据快照；[安装、可复制请求与物理范围](docs/integrations/UNITARY_ECOSYSTEM.md)见接入说明。
+可以在对话中直接指定后端名称。从 [Bell 态示例](#发起任务并选择后端)、[SQD 与 TeNPy](#试用-sqd-与-tenpy)，或[误差缓解、动力学与公开基准](#试用误差缓解动力学与公开基准)开始，下面分别给出准备命令和可复制请求。
 
 ### 模型由你选择
 
@@ -148,7 +152,7 @@ Pro 教学任务使用上游应用自己的工具与记录，尚未自动接入�
 
 ### 在桌面和消息中使用
 
-桌面端基于 [DSH Desktop](https://github.com/anywhere-labs/dsh-desktop) 适配，提供原生窗口、系统托盘、终端与通知，复用 OpenQuantum 的模型、科研能力和执行记录。当前提供 macOS / Windows 源码启动路径；本机已验证 macOS，未提供 OpenQuantum 品牌的 `.dmg` / `.exe` 安装包。
+桌面端基于 [DSH Desktop](https://github.com/anywhere-labs/dsh-desktop) 适配，提供原生窗口、系统托盘、终端与通知，复用 OpenQuantum 的模型、科研能力和执行记录。macOS 与 Windows 的源码构建和安装检查均已通过 [CI](https://github.com/xi-zhao/OpenQuantum/actions/runs/34847479127)，本机交互验证覆盖 macOS；当前未提供 OpenQuantum 品牌的 `.dmg` / `.exe` 安装包。
 
 [CC Connect](docs/integrations/CC_CONNECT.md) 通过标准 ACP 连接 Harness，可从微信、飞书、钉钉、Slack、Telegram、Discord 等平台发起科研任务。消息入口复用已有 Skill、Tool 和科研执行记录。
 
@@ -279,6 +283,29 @@ npm run capability:paper-tools:setup -- sqd-chemistry tenpy-ground-state
 
 其余论文方法也可按需安装；RandomMeas 随机测量另需 Julia 1.12.7。[完整安装与输入范围](docs/integrations/PAPER_BACKED_TOOLS.md#安装与调用)列出了各项准备条件。
 
+### 试用误差缓解、动力学与公开基准
+
+Mitiq、Dynamiqs、Clifft、OQuPy 和 Deltakit 的默认连接已开启，可以按需准备固定依赖：
+
+| 要使用的能力 | 准备命令 |
+| --- | --- |
+| Mitiq 误差缓解 | `npm run capability:mitiq:setup` |
+| Dynamiqs、Clifft、OQuPy、Deltakit | `npm run capability:unitary:setup` |
+| Metriq 公开基准查询 | 已随源码提供，完成 `npm ci` 即可，无需 Python 或额外下载 |
+
+五项计算通过 uv 准备各自的 Python 3.12 环境，无需量子云账户；Dynamiqs 当前仅使用 CPU。升级后重启工作台，在科研对话中复制一条请求：
+
+| 想探索什么 | 示例请求 | 重点查看 |
+| --- | --- | --- |
+| 噪声缓解效果 | 用 Mitiq 对单量子位 H–RZ(0.7)–H 电路的 Z 期望值做 ZNE。门去极化概率 0.02，每个比较臂每次 8192 shots，重复 8 次、seed=7；比较原始与缓解后的误差和成本。 | 经验偏差、方差和 RMSE；缓解结果也可能变差 |
+| 驱动灵敏度 | 用 Dynamiqs 从计算基态出发，比较驱动幅度 0.5 和 1，失谐 0、衰减率 0.1、时长 1、20 步；采用一致的无量纲单位，返回激发态人口与末态人口对驱动的梯度。 | 自动微分与独立有限差分是否一致 |
+| T 门干涉 | 用 Clifft 从两量子位全零态出发执行 H(0)、T(0)、H(0)、CX(0,1)，无噪声、4096 shots、seed=7；比较位串频数与密度矩阵参考。 | 位串从左到右为 q0、q1；有限采样误差 |
+| 环境记忆 | 用 OQuPy 从 plus 态出发，tunneling=0、bias=0.4、alpha=0.1、cutoff=2、temperature=0、duration=0.5；分别用 steps=memorySteps=8 和 12，与零温纯退相干解析式比较。 | 两组网格保持相同物理记忆时长；此算例不代表整个参数域收敛 |
+| 纠错码片 | 用 Deltakit 构建 5×3 码片的 Z 存储实验，3 轮、ToyNoise p=0.02、4096 shots、seed=718，返回含噪电路、逻辑失败数和 Wilson 区间。 | 数据量子位尺寸与实际总量子位数；固定采样分母 |
+| 公开设备基准 | 查询 Metriq 中 provider 包含 origin 的记录，列出设备、测试时间、基准类型、原始参数和指标，并标明来源。 | 历史数据的基准定义与实验条件；不等同于当前设备性能 |
+
+这些能力已运行本地数值或数据检查，并验证了真实 Harness 的调用和会话重读；端到端测试使用本地模型协议替身，未验证外部模型自主执行或真实 QPU。当前保持 L1，返回 `scientificValidation=not_evaluated`。完整假设、资源上限与验证记录见 [Mitiq 接入说明](docs/integrations/MITIQ.md)和 [Unitary 生态接入说明](docs/integrations/UNITARY_ECOSYSTEM.md)。
+
 ### 量子学习通安装
 
 量子学习通当前已在 macOS 验证安装和启动。完成仓库依赖安装后，macOS 用户可运行 `npm run learning:ui:setup`，再启动 Web 或 Desktop，从侧栏打开「量子学习通」。首次打开会自动启动本机数据库和课程服务，无需另装全局 PostgreSQL；模型请求使用 OpenQuantum 当前选择的模型。
@@ -349,6 +376,10 @@ npm run harness:config
 
 # 运行完整离线质量检查
 npm run check
+
+# macOS/Linux：用固定依赖运行本地数值回归与 Harness 接线验证
+npm run capability:mitiq:live
+npm run capability:unitary:live
 
 # 配置模型后运行真实 Agent 端到端测试
 npm run e2e:quantum-harness -- --provider openquantum-public
@@ -520,5 +551,7 @@ OpenQuantum 为本地模拟、IBM Quantum、IonQ 和多家国内量子云保留�
 除明确单独许可的目录外，OpenQuantum 自有代码采用 [MIT License](LICENSE)，版权所有 © 2026 Xi Zhao。
 
 [Mitiq 误差缓解能力目录](.agents/skills/mitiq-error-mitigation/)采用 GPL-3.0-only；该目录的 [LICENSE](.agents/skills/mitiq-error-mitigation/LICENSE) 和 [NOTICE](.agents/skills/mitiq-error-mitigation/NOTICE) 优先适用，详见[发行边界](docs/integrations/MITIQ.md#许可证与发行边界)。
+
+[Metriq 公开数据快照](src/metriq-data/upstream/)采用 CC-BY-4.0，保留原版 [LICENSE](src/metriq-data/upstream/LICENSE)、[署名与转换说明](src/metriq-data/upstream/NOTICE)，每次查询同时返回来源与署名。
 
 DeepSeek Harness、DSH Desktop、OpenMAIC、FatQat、Qiskit MCP Servers、FieldQKit、Quantum Hardware MCP 和其他第三方组件沿用各自的许可证，详细来源见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
