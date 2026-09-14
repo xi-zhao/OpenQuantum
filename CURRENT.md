@@ -53,6 +53,13 @@
 - 本地模型协议替身驱动真实 Harness，完成五项成功调用、一次预期查询失败及会话重读；完整 `npm run check` 已通过。此次没有运行外部模型或真实硬件，五项均为 L1、`scientificValidation=not_evaluated`。
 - [接入说明](docs/integrations/UNITARY_ECOSYSTEM.md)包含版本、安装、使用示例和证据。运行中的 Harness 需重启后加载新增 Preset 行；原模型验收里程碑保持独立。
 
+## 电路与代数能力（2026-09-14）
+
+- 新增 PyZX 电路优化、Graphix 测量式计算、Symmer 对称性降比特和 PauLie 代数分析；各有独立 Skill 与默认开启的本地 MCP Tool，依赖固定在隔离 Python 3.12 环境。
+- 26 个真实数值输入、MCP 合同与目录一致性、四次真实 Harness Tool 调用、一次预期错误及 Session 重读通过；Harness 使用本地模型协议替身，没有调用外部模型或真实硬件。
+- 独立领域审阅另复核 50 个输入及 80 条 MBQC 采样分支；固定版本、范围、安装与证据见[电路与代数工具接入](docs/integrations/UNITARY_NEXT_TOOLS.md)。Graphix 已处理 NumPy 兼容性和旋转角单位转换。
+- 当前四项均为 L1、`scientificValidation=not_evaluated`；全仓 `npm run check` 通过。运行中的 Harness 需重启加载新连接，原模型验收任务保持独立。
+
 ## 下一唯一里程碑
 
 收口当前模型接入验收：对原执行任务已经选定的模型逐项归档“文本生成、Tool Calling、科研主动作、证据完整性”的结果与未验证项。该任务仍由原执行会话负责；本页不启动第二份验收。

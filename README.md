@@ -33,8 +33,8 @@
 
 研究者可以从基态求解、电路验证或密度矩阵审计开始；开发者可以把自己的算法与工作流程接进来；学习者与授课者可以通过计算实例和「量子学习通」探索量子知识。
 
-- **让 Agent 懂方法**：23 个领域 Skill 写明工具选择、研究步骤和结果解释规则，供任务按需使用。[查看 Skills](#内置-skills)
-- **让方法能执行**：18 个本地 MCP 桥接实现与 5 个原生量子 Tool，把计算、查询和实验模拟变成 Agent 可调用的动作。[查看 MCP](#mcp-服务目录) · [查看 Tools](#原生量子-tools)
+- **让 Agent 懂方法**：27 个领域 Skill 写明工具选择、研究步骤和结果解释规则，供任务按需使用。[查看 Skills](#内置-skills)
+- **让方法能执行**：22 个本地 MCP 桥接实现与 5 个原生量子 Tool，把计算、查询和实验模拟变成 Agent 可调用的动作。[查看 MCP](#mcp-服务目录) · [查看 Tools](#原生量子-tools)
 - **让结果有依据**：在支持的能力中返回精确参考、独立检查或统计误差；基态求解与量子信息审计还可形成带会话来源的科学验收报告。[查看计算与证据](#从一个真实任务开始)
 
 **[安装并开始](#快速开始)**　·　[先看本地计算示例](#从一个真实任务开始)（无需模型密钥）　·　[了解量子学习通](#量子学习通)
@@ -71,7 +71,7 @@
 | **原生量子 Tool** | 在工作台中直接完成计算与查询，返回结构化结果 | 基态求解与独立检查、实验模拟、算法资料与基准检索 |
 | **科学检查与证据流程** | 将支持能力的输入、结果、独立检查与会话来源连起来，便于复核 | 限定二量子位基态、密度矩阵审计的完整科学验收流程 |
 
-当前源码分发 **23 个内置 Skill、25 个 MCP 服务连接、5 个原生量子 Tool**。其中 18 个 MCP 服务使用 OpenQuantum 的本地桥接实现。Skill 指导工作方法，Tool 执行动作，MCP Server 通过协议提供 Tool；三者职责不同，数量分别统计。
+当前源码分发 **27 个内置 Skill、29 个 MCP 服务连接、5 个原生量子 Tool**。其中 22 个 MCP 服务使用 OpenQuantum 的本地桥接实现。Skill 指导工作方法，Tool 执行动作，MCP Server 通过协议提供 Tool；三者职责不同，数量分别统计。
 
 下面先展示 OpenQuantum 维护的 Skill、桥接实现和原生 Tool。上游算法库、外部 MCP Server 与应用基础的分工见后文[开源生态与致谢](#开源生态与致谢)。
 
@@ -84,7 +84,7 @@
 
 ### 内置 Skills
 
-这 23 个 Skill 是 OpenQuantum 随源码维护的量子工作流，覆盖方法选择、计算实验、结果解释和平台诊断，由 Harness 按任务需要发现和加载。点击名称即可查看完整的 `SKILL.md`，也可作为编写自己 Skill 的起点；所需工具与连接分别配置。
+这 27 个 Skill 是 OpenQuantum 随源码维护的量子工作流，覆盖方法选择、计算实验、结果解释和平台诊断，由 Harness 按任务需要发现和加载。点击名称即可查看完整的 `SKILL.md`，也可作为编写自己 Skill 的起点；所需工具与连接分别配置。
 
 下表按**研究方法与用途**介绍能力。实际可执行的模型、规模和格式见[当前接入范围](#当前接入范围与验证记录)及各 Tool 接口；本地验证记录单独说明测过的算例，不用这些算例定义方法或上游软件的能力上限。
 
@@ -105,6 +105,10 @@
 | [`mitiq-error-mitigation`](.agents/skills/mitiq-error-mitigation/SKILL.md) | 量子误差缓解方法比较、采样预算规划与误差成本分析，涵盖 ZNE、REM、PEC、CDR | `mitiq_local`；[使用说明](docs/integrations/MITIQ.md) |
 | [`dynamiqs-dynamics`](.agents/skills/dynamiqs-dynamics/SKILL.md) | 开放系统 Lindblad 动力学、驱动参数扫描与自动微分灵敏度分析 | `dynamiqs_local` |
 | [`clifft-sampling`](.agents/skills/clifft-sampling/SKILL.md) | Clifford+T 电路模拟、非 Clifford 门干涉与噪声采样分析 | `clifft_local` |
+| [`pyzx-optimization`](.agents/skills/pyzx-optimization/SKILL.md) | ZX 重写、Clifford+T 门数比较与完整酉矩阵对照 | `pyzx_local` |
+| [`graphix-mbqc`](.agents/skills/graphix-mbqc/SKILL.md) | 电路到 MBQC 模式、资源图、自适应测量和纠正输出 | `graphix_local` |
+| [`symmer-tapering`](.agents/skills/symmer-tapering/SKILL.md) | 指定 Pauli 对称性扇区的降比特与同扇区保谱检查 | `symmer_local` |
+| [`paulie-algebra`](.agents/skills/paulie-algebra/SKILL.md) | Pauli 生成元的 Lie 闭包、分类维数与独立矩阵参照 | `paulie_local` |
 | [`oqupy-dynamics`](.agents/skills/oqupy-dynamics/SKILL.md) | 非马尔可夫开放系统动力学、环境记忆效应与 TEMPO 数值收敛分析 | `oqupy_local` |
 | [`deltakit-qec`](.agents/skills/deltakit-qec/SKILL.md) | 表面码码片建模、噪声实验、采样与译码性能分析 | `deltakit_local` |
 | [`sqd-chemistry`](.agents/skills/sqd-chemistry/SKILL.md) | 量子化学的采样子空间对角化、测量频数后处理与电子基态能量分析 | `sqd_local` |
@@ -116,9 +120,9 @@
 
 ### MCP 服务目录
 
-**OpenQuantum 为 18 项计算与设备发现能力开发了本地 MCP 桥接**，把所用 SDK 或数值库转换成 Agent 可调用的有界 Tool。下表先列出这些桥接实现：连接名链接到本仓库源码，旁边保留所用上游的链接；末尾再列 7 个直接接入的上游 MCP 服务。
+**OpenQuantum 为 22 项计算与设备发现能力开发了本地 MCP 桥接**，把所用 SDK 或数值库转换成 Agent 可调用的有界 Tool。下表先列出这些桥接实现：连接名链接到本仓库源码，旁边保留所用上游的链接；末尾再列 7 个直接接入的上游 MCP 服务。
 
-默认 Preset 共声明 25 个 MCP 服务连接：**19 个默认开启（其中 Qiskit 两项可通过离线开关关闭），6 个按需启用**。连接名对应配置中的 `serverName`；“默认开启”表示配置策略，使用前仍需准备依赖和必要凭据。
+默认 Preset 共声明 29 个 MCP 服务连接：**23 个默认开启（其中 Qiskit 两项可通过离线开关关闭），6 个按需启用**。连接名对应配置中的 `serverName`；“默认开启”表示配置策略，使用前仍需准备依赖和必要凭据。
 
 这些 MCP Server 都由本机以 `stdio` 方式启动，不是 OpenQuantum 提供的公共托管端点。其中一部分 Tool 在本地计算，另一部分再访问厂商文档或量子云；“本地启动 MCP Server”不代表所有数据处理都留在本地。
 
@@ -134,6 +138,10 @@
 | [`mitiq_local`](.agents/skills/mitiq-error-mitigation/mcp/server.mjs) · [Mitiq](https://github.com/unitaryfoundation/mitiq) | ZNE、REM、PEC、CDR 噪声实验与有限采样统计 | 默认开启 | uv；隔离 Python 3.12 环境，能力目录 GPL-3.0-only；[接入说明](docs/integrations/MITIQ.md) |
 | [`dynamiqs_local`](.agents/skills/dynamiqs-dynamics/mcp/server.mjs) · [Dynamiqs](https://github.com/dynamiqs/dynamiqs) | 驱动扫描、耗散动力学与自动微分 | 默认开启 | uv、隔离 Python 3.12、CPU；[安装与范围](docs/integrations/UNITARY_ECOSYSTEM.md) |
 | [`clifft_local`](.agents/skills/clifft-sampling/mcp/server.mjs) · [Clifft](https://github.com/unitaryfoundation/clifft) | 有界 Clifford+T 噪声采样 | 默认开启 | uv；仅结构化门与最终测量；[安装与范围](docs/integrations/UNITARY_ECOSYSTEM.md) |
+| [`pyzx_local`](.agents/skills/pyzx-optimization/mcp/server.mjs) · [PyZX](https://github.com/zxcalc/pyzx) | ZX 重写、Clifford+T 门数比较与完整酉矩阵对照 | 默认开启 | uv；隔离 Python 3.12 环境；[安装与范围](docs/integrations/UNITARY_NEXT_TOOLS.md) |
+| [`graphix_local`](.agents/skills/graphix-mbqc/mcp/server.mjs) · [Graphix](https://github.com/TeamGraphix/graphix) | 电路到 MBQC 模式、资源图、自适应测量和纠正输出 | 默认开启 | uv；隔离 Python 3.12 环境；[安装与范围](docs/integrations/UNITARY_NEXT_TOOLS.md) |
+| [`symmer_local`](.agents/skills/symmer-tapering/mcp/server.mjs) · [Symmer](https://github.com/qmatter-labs/symmer) | 指定 Pauli 对称性扇区的降比特与同扇区保谱检查 | 默认开启 | uv；隔离 Python 3.12 环境；[安装与范围](docs/integrations/UNITARY_NEXT_TOOLS.md) |
+| [`paulie_local`](.agents/skills/paulie-algebra/mcp/server.mjs) · [PauLie](https://github.com/QPauLie/PauLie) | Pauli 生成元的 Lie 闭包、分类维数与独立矩阵参照 | 默认开启 | uv；隔离 Python 3.12 环境；[安装与范围](docs/integrations/UNITARY_NEXT_TOOLS.md) |
 | [`oqupy_local`](.agents/skills/oqupy-dynamics/mcp/server.mjs) · [OQuPy](https://github.com/tempoCollaboration/OQuPy) | Ohmic spin-boson TEMPO | 默认开启 | uv；独立 NumPy 1.x 环境；[安装与范围](docs/integrations/UNITARY_ECOSYSTEM.md) |
 | [`deltakit_local`](.agents/skills/deltakit-qec/mcp/server.mjs) · [Deltakit](https://github.com/Deltakit/deltakit) | 纠错存储电路构建与本地噪声实验 | 默认开启 | uv；ToyNoise、Stim、PyMatching；[安装与范围](docs/integrations/UNITARY_ECOSYSTEM.md) |
 | [`sqd_local`](.agents/skills/sqd-chemistry/mcp/server.mjs) · [Qiskit SQD](https://github.com/Qiskit/qiskit-addon-sqd) | H₂ 采样子空间对角化与 FCI 参照 | 默认开启 | uv；[安装与范围](docs/integrations/PAPER_BACKED_TOOLS.md)，不连接云硬件 |
@@ -184,6 +192,10 @@ OpenQuantum 提供以下 5 个原生量子动作，用于基态求解、调校�
 | TyxonQ 电路仿真 | 1–8 qubits，使用接口列出的门和噪声模型 | [服务输入校验](.agents/skills/tyxonq-workbench/mcp/server.mjs) |
 | Dynamiqs 动力学 | 受驱动、振幅阻尼的单量子位模型，CPU 执行 | [输入合同](.agents/skills/dynamiqs-dynamics/mcp/contracts.mjs) |
 | Clifft 噪声采样 | 1–6 qubits，门后去极化噪声与最终 Z 测量 | [输入合同](.agents/skills/clifft-sampling/mcp/contracts.mjs) |
+| PyZX 电路优化 | 1–6 qubits、64 个结构化 Clifford+T 门，无测量 | [输入合同](.agents/skills/pyzx-optimization/mcp/contracts.mjs) |
+| Graphix MBQC | 1–3 逻辑 qubits、12 门、64 资源节点、10 同时存活 qubits；全零或 plus 初态 | [输入合同](.agents/skills/graphix-mbqc/mcp/contracts.mjs) · [资源检查](.agents/skills/graphix-mbqc/mcp/bridge.py) |
+| Symmer 降比特 | 2–6 qubits、64 个实 Pauli 项、显式独立对称性与 ±1 扇区，至少保留一量子位 | [输入合同](.agents/skills/symmer-tapering/mcp/contracts.mjs) |
+| PauLie 代数 | 1–4 qubits、16 个不同非恒等 Pauli 生成元，独立实控制系数 | [输入合同](.agents/skills/paulie-algebra/mcp/contracts.mjs) |
 | OQuPy 动力学 | Ohmic spin-boson 模型，按接口设置时间步长与有限环境记忆 | [输入合同](.agents/skills/oqupy-dynamics/mcp/contracts.mjs) |
 | SQD 量子化学 | H₂/STO-3G，可变键长，接受四位测量频数或合成样本 | [输入合同](.agents/skills/sqd-chemistry/mcp/contracts.mjs) · [分子构建](.agents/skills/sqd-chemistry/mcp/bridge.py) |
 | TJM 动力学 | 2–6 qubits 的开放横场 Ising 链，局域振幅阻尼 | [输入合同](.agents/skills/tjm-dynamics/mcp/contracts.mjs) |
@@ -193,7 +205,7 @@ OpenQuantum 提供以下 5 个原生量子动作，用于基态求解、调校�
 
 </details>
 
-实际跑过的输入、依赖版本与检查结果见[本地基态示例](#从一个真实任务开始)、[论文方法验证](docs/integrations/PAPER_BACKED_TOOLS.md)、[误差缓解验证](docs/integrations/MITIQ.md)和[动力学与纠错验证](docs/integrations/UNITARY_ECOSYSTEM.md)。更大规模任务是否可执行，需要结合当前接口、所用后端与计算资源判断。
+实际跑过的输入、依赖版本与检查结果见[本地基态示例](#从一个真实任务开始)、[论文方法验证](docs/integrations/PAPER_BACKED_TOOLS.md)、[误差缓解验证](docs/integrations/MITIQ.md)、[动力学与纠错验证](docs/integrations/UNITARY_ECOSYSTEM.md)和[电路与代数验证](docs/integrations/UNITARY_NEXT_TOOLS.md)。更大规模任务是否可执行，需要结合当前接口、所用后端与计算资源判断。
 
 ## 可以用它做什么
 
@@ -519,6 +531,10 @@ OpenQuantum 的量子能力建立在开放科学与开源软件之上。我们�
 | --- | --- | --- |
 | 电路构建与转译 | [Qiskit MCP Servers](https://github.com/Qiskit/mcp-servers) | 创建、分析和转译电路，读写 QASM / QPY |
 | 电路等价性验证 | [MQT QCEC](https://github.com/munich-quantum-toolkit/qcec) | 比较两份无测量的 OpenQASM 2 电路，区分严格等价、相位等价、不等价与不确定 |
+| ZX 电路优化 | [PyZX](https://github.com/zxcalc/pyzx) | Clifford+T 电路的 ZX 重写与提取，返回前后 QASM、门数和完整酉矩阵等价性对照 |
+| 测量式量子计算 | [Graphix](https://github.com/TeamGraphix/graphix) | 电路转 MBQC 资源图及测量模式，模拟自适应测量和输出纠正，与独立态矢比较 |
+| 对称性降比特 | [Symmer](https://github.com/qmatter-labs/symmer) | 在指定 Pauli 对称性扇区投影 Hamiltonian，核对降维前后的同扇区完整能谱 |
+| 电路生成元代数 | [PauLie](https://github.com/QPauLie/PauLie) | Pauli 生成元的 Lie 闭包、分类维数与独立矩阵检查，区分理想控制条件和硬件结论 |
 | 门电路仿真 | [TyxonQ](https://github.com/QureGenAI-Biotech/TyxonQ) | 1–8 量子位电路的无噪声精确结果与含噪采样 |
 | Clifford+T 电路采样 | [Clifft](https://github.com/unitaryfoundation/clifft) | 1–6 量子位电路的门后去极化噪声与最终位串采样，附独立密度矩阵参考 |
 | 量子态与纠缠审计 | [toqito](https://github.com/vprusso/toqito) | 检查输入密度矩阵，计算纯度、部分转置与指定二分割的 negativity |
@@ -577,7 +593,7 @@ IBM Quantum、IonQ 和本源量子是可连接的云服务。任务提交分别�
 
 ### 可选上游 Skill 与开发证据
 
-[OriginQ 官方 `pyqpanda3` Skill](https://github.com/OriginQ/pyqpanda3-skill) 提供电路编程、算法模板、迁移与 QCloud 使用指导。它**不计入上面的 23 个内置 Skill，也不会在首次启动时自动安装**；运行 `npm run skill:qpanda:setup` 后，固定审阅版本才会进入项目 Skill 目录。安装这个 Skill 不会自动启用 `qpanda_runtime`，也不会赋予云任务权限。
+[OriginQ 官方 `pyqpanda3` Skill](https://github.com/OriginQ/pyqpanda3-skill) 提供电路编程、算法模板、迁移与 QCloud 使用指导。它**不计入上面的 27 个内置 Skill，也不会在首次启动时自动安装**；运行 `npm run skill:qpanda:setup` 后，固定审阅版本才会进入项目 Skill 目录。安装这个 Skill 不会自动启用 `qpanda_runtime`，也不会赋予云任务权限。
 
 [固定量子能力 Benchmark](benchmarks/quantum-capabilities/README.md)使用 [MQT Bench](https://github.com/munich-quantum-toolkit/bench) 的 3 个固定电路案例与 manifest 做开发回归，属于开发与 CI 证据，不是 Skill 或 MCP 服务。
 

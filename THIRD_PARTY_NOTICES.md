@@ -9,6 +9,10 @@
 | Mitiq | GPLv3；本地能力目录 GPL-3.0-only | 固定 1.1.0，独立 Python 环境调用 ZNE/REM/PEC/CDR；本能力携带独立 LICENSE/NOTICE，见下方 Mitiq 说明 | [unitaryfoundation/mitiq](https://github.com/unitaryfoundation/mitiq/tree/v1.1.0) |
 | Dynamiqs | Apache-2.0 | 固定 0.3.6 源码提交 `a49b30fe5cacb5cf7c1d981f2e7ed03b18e05318`，隔离 Python 环境调用单量子位批量动力学与梯度；源码由包管理器取得 | [dynamiqs/dynamiqs](https://github.com/dynamiqs/dynamiqs) |
 | Clifft | Apache-2.0 | 固定 PyPI 0.10.0，仅执行结构化小型 Clifford+T 最终测量电路；独立环境安装，不复制上游源码 | [QuEraComputing/clifft](https://github.com/unitaryfoundation/clifft) |
+| PyZX | Apache-2.0 | 固定 0.10.6，隔离环境调用ZX 重写、Clifford+T 门数比较与完整酉矩阵对照；上游源码由包管理器安装，保留原始许可证，不随本仓库重新分发 | [zxcalc/pyzx](https://github.com/zxcalc/pyzx) |
+| Graphix | Apache-2.0 | 固定 0.3.5，隔离环境调用电路到 MBQC 模式、资源图、自适应测量和纠正输出；上游源码由包管理器安装，保留原始许可证，不随本仓库重新分发 | [TeamGraphix/graphix](https://github.com/TeamGraphix/graphix) |
+| Symmer | MIT | 固定 0.0.13@a4ba56e3，隔离环境调用指定 Pauli 对称性扇区的降比特与同扇区保谱检查；上游源码由包管理器安装，保留原始许可证，不随本仓库重新分发 | [qmatter-labs/symmer](https://github.com/qmatter-labs/symmer) |
+| PauLie | MIT | 固定 0.2.3，隔离环境调用Pauli 生成元的 Lie 闭包、分类维数与独立矩阵参照；上游源码由包管理器安装，保留原始许可证，不随本仓库重新分发 | [QPauLie/PauLie](https://github.com/QPauLie/PauLie) |
 | OQuPy | Apache-2.0 | 固定 PyPI 0.5.0，独立 NumPy 1.x 环境调用 TEMPO；不复制上游源码 | [tempoCollaboration/OQuPy](https://github.com/tempoCollaboration/OQuPy) |
 | Deltakit | Apache-2.0 | 固定 PyPI 0.10.0，构建矩形纠错存储实验并使用本地 ToyNoise；不接入云服务或专有解码器 | [Deltakit/deltakit](https://github.com/Deltakit/deltakit) |
 | Metriq data | CC-BY-4.0 | 固定 `6730f78b135a9af67691a0ef4fbea041978056c5` 的公开 JSON 数据，转为本地索引并去重相同完整记录；保留原始指标、来源文件和署名。原版 LICENSE、NOTICE 与转换清单随 `src/metriq-data/upstream/` 分发 | [unitaryfoundation/metriq-data](https://github.com/unitaryfoundation/metriq-data) |

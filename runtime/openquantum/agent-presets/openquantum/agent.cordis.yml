@@ -632,3 +632,51 @@
 # Read-only CC-BY-4.0 benchmark snapshot; no runner or remote job lifecycle.
 - id: tool-metriq-data
   name: ./metriq-data-tools.mjs
+
+- id: mcp-pyzx-optimization
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: pyzx_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/pyzx-optimization/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 195000
+    failOnStartupError: true
+
+- id: mcp-graphix-mbqc
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: graphix_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/graphix-mbqc/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 195000
+    failOnStartupError: true
+
+- id: mcp-symmer-tapering
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: symmer_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/symmer-tapering/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 195000
+    failOnStartupError: true
+
+- id: mcp-paulie-algebra
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: paulie_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/paulie-algebra/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 195000
+    failOnStartupError: true

@@ -13,7 +13,7 @@
 
 ## 当前 Skill
 
-以下 23 个 Skill 随源码分发；它们与 MCP Server 不是一一对应关系，知识型 Skill 可以不绑定专用 Tool，
+以下 27 个 Skill 随源码分发；它们与 MCP Server 不是一一对应关系，知识型 Skill 可以不绑定专用 Tool，
 工作流也可以使用多个服务或进程内原生 Tool。连接默认配置与凭据条件见[项目首页](../../README.md#mcp-服务目录)。
 
 | Skill | 作用 | 依赖的执行模块 |
@@ -30,6 +30,10 @@
 | `mitiq-error-mitigation` | ZNE、REM、PEC、CDR 的本地噪声实验及相同采样预算统计 | Mitiq 本地 MCP Server + Harness MCP Client；能力目录 GPL-3.0-only |
 | `dynamiqs-dynamics` | 单量子位动力学、批量扫描、梯度与独立参照 | Dynamiqs 本地 MCP Server + Harness MCP Client |
 | `clifft-sampling` | Clifford+T 电路带噪采样与密度矩阵参照 | Clifft 本地 MCP Server + Harness MCP Client |
+| `pyzx-optimization` | ZX 重写、Clifford+T 门数比较与完整酉矩阵对照 | PyZX 本地 MCP Server + Harness MCP Client |
+| `graphix-mbqc` | 电路到 MBQC 模式、资源图、自适应测量和纠正输出 | Graphix 本地 MCP Server + Harness MCP Client |
+| `symmer-tapering` | 指定 Pauli 对称性扇区的降比特与同扇区保谱检查 | Symmer 本地 MCP Server + Harness MCP Client |
+| `paulie-algebra` | Pauli 生成元的 Lie 闭包、分类维数与独立矩阵参照 | PauLie 本地 MCP Server + Harness MCP Client |
 | `oqupy-dynamics` | Ohmic spin-boson TEMPO 与记忆截断解释 | OQuPy 本地 MCP Server + Harness MCP Client |
 | `deltakit-qec` | 矩形纠错码片、实际含噪电路与逻辑错误统计 | Deltakit 本地 MCP Server + Harness MCP Client |
 | `sqd-chemistry` | H₂/STO-3G 采样子空间对角化与 FCI 参照 | SQD 本地 MCP Server + Harness MCP Client |

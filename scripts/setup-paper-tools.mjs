@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
 const ids = ["sqd-chemistry", "tjm-dynamics", "ldpc-decoding", "flow-vqe", "tenpy-ground-state", "randomized-measurements"];
-const supported = [...ids, "mitiq-error-mitigation", "dynamiqs-dynamics", "clifft-sampling", "oqupy-dynamics", "deltakit-qec"];
+const supported = [...ids, "mitiq-error-mitigation", "dynamiqs-dynamics", "clifft-sampling", "oqupy-dynamics", "deltakit-qec", "pyzx-optimization", "graphix-mbqc", "symmer-tapering", "paulie-algebra"];
 const selected = process.argv.slice(2);
 const allowedEnvironment = ["HOME", "PATH", "HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY", "NO_PROXY", "SSL_CERT_FILE", "SSL_CERT_DIR", "UV_CACHE_DIR", "UV_PYTHON_INSTALL_DIR", "SYSTEMROOT", "TEMP", "TMP", "TMPDIR", "WINDIR"];
 const environment = Object.fromEntries(allowedEnvironment.filter(key => process.env[key]).map(key => [key, process.env[key]]));

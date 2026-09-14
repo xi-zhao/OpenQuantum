@@ -1,0 +1,11 @@
+[project]
+name = "openquantum-symmer-tapering-bridge"
+version = "0.1.0"
+requires-python = ">=3.12,<3.13"
+dependencies = ["symmer"]
+
+[tool.uv]
+package = false
+
+[tool.uv.sources]
+symmer = { git = "https://github.com/qmatter-labs/symmer", rev = "a4ba56e3332424a65d4a2c088fd6363aca0c68e6" }

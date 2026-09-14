@@ -5,6 +5,42 @@ import { quantumHardwareMcpIntegration } from "./quantum-hardware-mcp.mjs";
 
 const QISKIT_MCP_SOURCE = "https://github.com/Qiskit/mcp-servers";
 const MCP_CATALOG = Object.freeze({
+  pyzx_local: Object.freeze({
+    displayName: "PyZX 电路优化",
+    description: "ZX 重写、Clifford+T 门数比较与完整酉矩阵对照。",
+    provider: "pyzx / OpenQuantum",
+    sourceUrl: "https://github.com/zxcalc/pyzx",
+    packageName: "pyzx",
+    packageVersion: "0.10.6",
+    setup: null,
+  }),
+  graphix_local: Object.freeze({
+    displayName: "Graphix 测量式计算",
+    description: "电路到 MBQC 模式、资源图、自适应测量和纠正输出。",
+    provider: "graphix / OpenQuantum",
+    sourceUrl: "https://github.com/TeamGraphix/graphix",
+    packageName: "graphix",
+    packageVersion: "0.3.5",
+    setup: null,
+  }),
+  symmer_local: Object.freeze({
+    displayName: "Symmer 对称性降比特",
+    description: "指定 Pauli 对称性扇区的降比特与同扇区保谱检查。",
+    provider: "symmer / OpenQuantum",
+    sourceUrl: "https://github.com/qmatter-labs/symmer",
+    packageName: "symmer",
+    packageVersion: "0.0.13@a4ba56e3",
+    setup: null,
+  }),
+  paulie_local: Object.freeze({
+    displayName: "PauLie 电路代数",
+    description: "Pauli 生成元的 Lie 闭包、分类维数与独立矩阵参照。",
+    provider: "paulie / OpenQuantum",
+    sourceUrl: "https://github.com/QPauLie/PauLie",
+    packageName: "paulie",
+    packageVersion: "0.2.3",
+    setup: null,
+  }),
   dynamiqs_local: Object.freeze({
     displayName: "Dynamiqs 动力学与梯度",
     description: "驱动耗散单量子位、参数批量扫描和人口梯度，含独立数值对照。",
