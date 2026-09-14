@@ -24,14 +24,16 @@ npm run capability:mitiq:live
 > 用 Mitiq 比较一量子位 H–Rz(0.7)–H 电路的 Z 期望值，门去极化概率 0.02，
 > 每个比较臂每次重复 8192 shots，重复 8 次；报告 ZNE 的误差和资源开销。
 
-Tool 支持 1–4 qubits、最多 24 个 `H/X/Y/Z/S/RZ/CX/CZ` 门，RZ 角度单位为弧度。
+Tool 支持 `H/X/Y/Z/S/RZ/CX/CZ` 门，RZ 角度单位为弧度。
 targets 从 0 开始，Pauli 字符串最左字符对应 q0；默认电路是两量子位 H–Rz(0.7)–H–CX，observable 为 ZI。
-不接收任意 QASM、动态电路或其他硬件后端。当前是 Mitiq 的有界 Cirq 接入，不代表其所有前端与方法均已开放。
+不接收任意 QASM、动态电路或其他硬件后端。当前是 Mitiq 的Cirq 接入，不代表其所有前端与方法均已开放。
+
+量子位数、门数、shots 和重复数由用户选择，适配器不设置规模上限。资源配置见[本地计算说明](SCALABLE_BRIDGES.md)。
 
 ## 实验与成本约定
 
 `shotsBudget` 表示**每次重复、每个比较臂**的总 shots。整次调用为
-`2 × replicates × shotsBudget`，最大 524288 个模拟 shots。
+`2 × replicates × shotsBudget` 个模拟 shots。
 两臂使用独立随机流，每次重复重新采集全部训练、校准和目标数据；不把重复电路的第一次采样免费复用。
 
 | 方法 | 实际调用与预算分配 | 物理假设 |
@@ -56,7 +58,7 @@ CDR 使用明确的经典训练标签，理想目标值只用于最终比较，�
 
 - 记录归一化输入及 SHA-256、依赖锁 SHA-256、上游版本、每个电路摘要、shots、门数、深度和方法细节。
 - `variance` 为重复结果的经验总体方差；`meanStandardError` 使用样本方差除以重复数。
-  bias、RMSE 都相对于小系统理想参考计算；这些是有限重复的统计估计，不是保证区间。
+  bias、RMSE 都相对于该输入的理想参考计算；这些是有限重复的统计估计，不是保证区间。
 - 保留所有 seed 与变差结果；两臂 shots 相同不表示门数、深度、wall time 相同。
 - 本能力为 L1，固定 `scientificValidation=not_evaluated`，没有接入 Acceptance Profile、Materializer 或中央科学验收。
   本地模拟结果不代表真实硬件效果、量子优势或外部模型自主选用能力。

@@ -124,9 +124,9 @@
       "id": "resources.within-budget",
       "category": "resource",
       "required": true,
-      "criterion": "The number of statevector expectation evaluations does not exceed the profile budget.",
-      "threshold": 256,
-      "unit": "evaluations"
+      "criterion": "The number of statevector expectation evaluations does not exceed the evaluation budget supplied in the canonical request.",
+      "threshold": 1,
+      "unit": "fraction of requested evaluation budget"
     },
     {
       "id": "provenance.complete",

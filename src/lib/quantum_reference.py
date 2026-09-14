@@ -53,3 +53,33 @@ def circuit_unitary(n, gates):
 
 def complex_pairs(vector):
     return [[float(z.real), float(z.imag)] for z in np.asarray(vector).reshape(-1)]
+
+
+def circuit_statevector(n, gates, initial_state="zero"):
+    """Independent gate action on a vector; never allocate a full circuit unitary."""
+    state = np.zeros(2 ** n, complex)
+    state[0] = 1
+    if initial_state == "plus":
+        state[:] = 1 / np.sqrt(2 ** n)
+    for instruction in gates:
+        gate, targets = instruction["gate"], instruction["targets"]
+        if gate in PAULIS:
+            local = PAULIS[gate]
+        elif gate == "H":
+            local = (PAULIS["X"] + PAULIS["Z"]) / np.sqrt(2)
+        elif gate in ["S", "T"]:
+            local = np.diag([1, np.exp(1j * np.pi / (2 if gate == "S" else 4))])
+        elif gate in ["RX", "RY", "RZ"]:
+            angle = instruction["angle"]
+            local = np.cos(angle / 2) * PAULIS["I"] - 1j * np.sin(angle / 2) * PAULIS[gate[-1]]
+        elif gate == "CX":
+            local = np.eye(4)[[0, 1, 3, 2]]
+        elif gate == "CZ":
+            local = np.diag([1, 1, 1, -1])
+        else:
+            raise ValueError(f"Unsupported reference gate: {gate}")
+        axes = list(range(len(targets)))
+        tensor = np.moveaxis(state.reshape([2] * n), targets, axes)
+        tensor = (local @ tensor.reshape(2 ** len(targets), -1)).reshape([2] * n)
+        state = np.moveaxis(tensor, axes, targets).reshape(-1)
+    return state

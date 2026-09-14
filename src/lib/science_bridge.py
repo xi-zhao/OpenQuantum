@@ -22,3 +22,13 @@ def tensor_product(operators):
     for operator in operators:
         result = np.kron(result, operator)
     return result
+
+
+def json_integer(value):
+    """Keep ordinary JSON numbers compatible and serialize large integers exactly."""
+    value = int(value)
+    if abs(value) <= 2 ** 53 - 1:
+        return value
+    if hasattr(sys, "set_int_max_str_digits"):
+        sys.set_int_max_str_digits(0)
+    return str(value)

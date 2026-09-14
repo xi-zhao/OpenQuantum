@@ -1,9 +1,6 @@
 import { createHash } from "node:crypto";
 
-const MAX_VARIABLES = 5;
-const MAX_CONSTRAINTS = 4;
-const MAX_ABS_COEFFICIENT = 1e6;
-const VARIABLE_ID = /^[A-Za-z][A-Za-z0-9_]{0,31}$/;
+const VARIABLE_ID = /^[A-Za-z][A-Za-z0-9_]*$/;
 const TOLERANCE = 1e-9;
 
 function isRecord(value) {
@@ -13,11 +10,10 @@ function isRecord(value) {
 function finiteNumber(value, field) {
   if (
     typeof value !== "number" ||
-    !Number.isFinite(value) ||
-    Math.abs(value) > MAX_ABS_COEFFICIENT
+    !Number.isFinite(value)
   ) {
     throw new TypeError(
-      `${field} must be a finite number within +/-${MAX_ABS_COEFFICIENT}`,
+      `${field} must be a finite number`,
     );
   }
   return Object.is(value, -0) ? 0 : value;
@@ -37,9 +33,9 @@ function variableIndex(value, indices, field) {
 }
 
 function normalizeLinearTerms(value, indices, field) {
-  if (value === undefined) return [];
-  if (!Array.isArray(value) || value.length > indices.size) {
-    throw new TypeError(`${field} must be an array with at most ${indices.size} terms`);
+  if (value === undefined) return Array(indices.size).fill(0);
+  if (!Array.isArray(value)) {
+    throw new TypeError(`${field} must be an array`);
   }
   const coefficients = Array(indices.size).fill(0);
   for (const [termIndex, term] of value.entries()) {
@@ -64,7 +60,7 @@ function normalizeObjective(value, variables, indices) {
   }
   const linear = normalizeLinearTerms(value.linear, indices, "model.objective.linear");
   const quadraticValue = value.quadratic ?? [];
-  if (!Array.isArray(quadraticValue) || quadraticValue.length > variables.length ** 2) {
+  if (!Array.isArray(quadraticValue)) {
     throw new TypeError("model.objective.quadratic has too many terms");
   }
   const quadratic = Array.from({ length: variables.length }, () =>
@@ -103,8 +99,8 @@ function normalizeObjective(value, variables, indices) {
 
 function normalizeConstraints(value, variables, indices) {
   if (value === undefined) return [];
-  if (!Array.isArray(value) || value.length > MAX_CONSTRAINTS) {
-    throw new TypeError(`model.constraints must contain at most ${MAX_CONSTRAINTS} constraints`);
+  if (!Array.isArray(value)) {
+    throw new TypeError("model.constraints must be an array");
   }
   const ids = new Set();
   return value.map((constraint, constraintIndex) => {
@@ -146,12 +142,11 @@ function normalizeModel(value) {
   if (
     !Array.isArray(value.variables) ||
     value.variables.length < 1 ||
-    value.variables.length > MAX_VARIABLES ||
     value.variables.some((variable) => typeof variable !== "string" || !VARIABLE_ID.test(variable)) ||
     new Set(value.variables).size !== value.variables.length
   ) {
     throw new TypeError(
-      `model.variables must contain 1 to ${MAX_VARIABLES} unique identifier-like names`,
+      "model.variables must contain unique identifier-like names",
     );
   }
   const variables = [...value.variables];
@@ -215,61 +210,45 @@ function assignmentRecord(model, bits, value) {
   };
 }
 
+const exactInteger = value => value <= BigInt(Number.MAX_SAFE_INTEGER) ? Number(value) : value.toString();
+
 function enumerate(model, qubo) {
-  const rows = [];
-  let compilationMaxError = 0;
-  for (let mask = 0; mask < 2 ** model.variables.length; mask += 1) {
-    const bits = model.variables.map(
-      (_, index) => (mask >> (model.variables.length - index - 1)) & 1,
-    );
+  let assignmentCount = 0n, feasibleAssignmentCount = 0n;
+  let compilationMaxError = 0, compiledMinimum = Infinity, bestFeasibleCost = Infinity;
+  let compiledRows = [], feasibleRows = [];
+  const scale = model.objective.sense === "minimize" ? 1 : -1;
+  for (let mask = 0n; mask < (1n << BigInt(model.variables.length)); mask += 1n) {
+    const bits = model.variables.map((_, i) => Number((mask >> BigInt(model.variables.length - i - 1)) & 1n));
     const objective = objectiveValue(model, bits);
     const constraintResiduals = residuals(model, bits);
-    const expectedCompiled =
-      (model.objective.sense === "minimize" ? 1 : -1) * objective +
-      model.constraints.reduce(
-        (total, constraint, index) =>
-          total + constraint.penalty * constraintResiduals[index].value ** 2,
-        0,
-      );
+    const expected = scale * objective + model.constraints.reduce((sum, constraint, i) => sum + constraint.penalty * constraintResiduals[i].value ** 2, 0);
     const compiled = quboValue(qubo, bits);
-    compilationMaxError = Math.max(
-      compilationMaxError,
-      Math.abs(compiled - expectedCompiled),
-    );
-    rows.push({ bits, objective, constraintResiduals, compiled });
+    if (![objective, expected, compiled].every(Number.isFinite)) throw new Error("QUBO arithmetic exceeded finite numeric representation");
+    compilationMaxError = Math.max(compilationMaxError, Math.abs(compiled - expected));
+    assignmentCount += 1n;
+    const row = { bits, objective, compiled, constraintResiduals };
+    if (compiled < compiledMinimum) {
+      if (compiledMinimum - compiled > TOLERANCE) compiledRows = [];
+      compiledMinimum = compiled;
+    }
+    if (Math.abs(compiled - compiledMinimum) <= TOLERANCE) compiledRows.push(row);
+    if (constraintResiduals.every(item => Math.abs(item.value) <= TOLERANCE)) {
+      feasibleAssignmentCount += 1n;
+      const cost = scale * objective;
+      if (cost < bestFeasibleCost) {
+        if (bestFeasibleCost - cost > TOLERANCE) feasibleRows = [];
+        bestFeasibleCost = cost;
+      }
+      if (Math.abs(cost - bestFeasibleCost) <= TOLERANCE) feasibleRows.push(row);
+    }
   }
-  const compiledMinimum = Math.min(...rows.map((row) => row.compiled));
-  const compiledOptimalRows = rows.filter(
-    (row) => Math.abs(row.compiled - compiledMinimum) <= TOLERANCE,
-  );
-  const compiledAssignments = compiledOptimalRows
-    .map((row) => assignmentRecord(model, row.bits, row.compiled));
-  const feasible = rows.filter((row) =>
-    row.constraintResiduals.every((item) => Math.abs(item.value) <= TOLERANCE),
-  );
-  let feasibleOptimum = null;
-  if (feasible.length > 0) {
-    const values = feasible.map((row) => row.objective);
-    const optimum =
-      model.objective.sense === "minimize" ? Math.min(...values) : Math.max(...values);
-    feasibleOptimum = {
-      objectiveValue: optimum,
-      assignments: feasible
-        .filter((row) => Math.abs(row.objective - optimum) <= TOLERANCE)
-        .map((row) => assignmentRecord(model, row.bits, row.objective)),
-    };
-  }
+  compiledRows = compiledRows.filter(row => Math.abs(row.compiled - compiledMinimum) <= TOLERANCE);
+  feasibleRows = feasibleRows.filter(row => Math.abs(scale * row.objective - bestFeasibleCost) <= TOLERANCE);
   return {
-    assignmentCount: rows.length,
-    feasibleAssignmentCount: feasible.length,
-    compiledMinimum,
-    compiledAssignments,
-    feasibleOptimum,
-    penaltySufficient:
-      feasibleOptimum !== null &&
-      compiledOptimalRows.every((row) =>
-        row.constraintResiduals.every((item) => Math.abs(item.value) <= TOLERANCE),
-      ),
+    assignmentCount: exactInteger(assignmentCount), feasibleAssignmentCount: exactInteger(feasibleAssignmentCount), compiledMinimum,
+    compiledAssignments: compiledRows.map(row => assignmentRecord(model, row.bits, row.compiled)),
+    feasibleOptimum: feasibleRows.length ? { objectiveValue: scale * bestFeasibleCost, assignments: feasibleRows.map(row => assignmentRecord(model, row.bits, row.objective)) } : null,
+    penaltySufficient: feasibleRows.length > 0 && compiledRows.every(row => row.constraintResiduals.every(item => Math.abs(item.value) <= TOLERANCE)),
     compilationMaxError,
   };
 }
@@ -298,21 +277,27 @@ function buildQubo(model) {
     ["linear", linear],
     ["constant", [constant]],
   ]) {
-    if (values.some((value) => !Number.isFinite(value) || Math.abs(value) > MAX_ABS_COEFFICIENT)) {
-      throw new TypeError(`compiled ${field} exceeds the bounded QUBO coefficient range`);
+    if (values.some((value) => !Number.isFinite(value))) {
+      throw new TypeError(`compiled ${field} exceeds finite numeric representation`);
     }
   }
   return { quadratic, linear, constant };
 }
 
-export function compileBinaryLinearModel(value) {
+export function compileBinaryLinearModel(value, { referenceMode = "auto" } = {}) {
+  if (!["auto", "required", "skip"].includes(referenceMode)) throw new TypeError("Invalid referenceMode");
   const model = normalizeModel(value);
   const coefficients = buildQubo(model);
   const qubo = {
     variableOrder: [...model.variables],
     ...coefficients,
   };
-  const reference = enumerate(model, qubo);
+  const runReference = referenceMode === "required" || (referenceMode === "auto" && model.variables.length <= 12);
+  const reference = {
+    mode: referenceMode, status: runReference ? "computed" : "not_run",
+    reason: runReference ? "All binary assignments independently replayed." : "Exhaustive replay omitted; required attempts it at the requested size.",
+    ...(runReference ? enumerate(model, qubo) : { assignmentCount: null, feasibleAssignmentCount: null, compiledMinimum: null, compiledAssignments: null, feasibleOptimum: null, penaltySufficient: null, compilationMaxError: null }),
+  };
   return {
     schemaVersion: "1.0",
     model,

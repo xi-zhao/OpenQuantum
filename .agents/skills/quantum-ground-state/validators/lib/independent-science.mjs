@@ -63,9 +63,7 @@ function supportedTerm(term) {
     exactKeys(term, ["pauli", "coefficient"]) &&
     typeof term.pauli === "string" &&
     /^[IXZ]{2}$/.test(term.pauli) &&
-    Number.isFinite(term.coefficient) &&
-    term.coefficient >= -1_000_000 &&
-    term.coefficient <= 1_000_000
+    Number.isFinite(term.coefficient)
   );
 }
 
@@ -132,7 +130,6 @@ export function inspectRequestScope(request) {
   if (
     !Array.isArray(hamiltonian?.terms) ||
     hamiltonian.terms.length < 1 ||
-    hamiltonian.terms.length > 32 ||
     !hamiltonian.terms.every(supportedTerm) ||
     new Set(hamiltonian.terms.map((term) => term.pauli)).size !== hamiltonian.terms.length ||
     hamiltonian.terms.every((term) => term.coefficient === 0)
@@ -165,8 +162,7 @@ export function inspectRequestScope(request) {
     optimizer.angleToleranceRadians < 1e-14 ||
     optimizer.angleToleranceRadians > 0.01 ||
     !Number.isSafeInteger(optimizer.maxEvaluations) ||
-    optimizer.maxEvaluations < 8 ||
-    optimizer.maxEvaluations > 256
+    optimizer.maxEvaluations < 8
   ) {
     mismatches.push("VQE method");
   }

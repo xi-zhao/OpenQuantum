@@ -11,6 +11,7 @@ import {
 } from "@modelcontextprotocol/sdk/types.js";
 
 import { runLocalJsonProcess } from "../../../../src/lib/local-json-process.mjs";
+import { localComputeEnvironment, localComputeProcessOptions } from "../../../../src/lib/local-compute-policy.mjs";
 
 const skillRoot = fileURLToPath(new URL("..", import.meta.url));
 const projectRoot = path.resolve(skillRoot, "../../..");
@@ -21,11 +22,6 @@ const projectEnvironment = path.join(
   "python-envs",
   "tyxonq-workbench",
 );
-const MAX_QUBITS = 8;
-const MAX_OPERATIONS = 64;
-const MAX_SHOTS = 8192;
-const BRIDGE_TIMEOUT_MS = 180_000;
-const MAX_BRIDGE_OUTPUT_BYTES = 2 * 1024 * 1024;
 const BRIDGE_ENVIRONMENT_NAMES = Object.freeze([
   "HOME",
   "HTTP_PROXY",
@@ -72,7 +68,7 @@ const operationSchema = Object.freeze({
       type: "array",
       minItems: 1,
       maxItems: 2,
-      items: { type: "integer", minimum: 0, maximum: MAX_QUBITS - 1 },
+      items: { type: "integer", minimum: 0 },
     },
     angle: { type: "number" },
   },
@@ -96,28 +92,25 @@ const noiseSchema = Object.freeze({
 const TOOLS = Object.freeze([
   {
     name: "simulate_tyxonq_circuit",
-    title: "Simulate a bounded circuit with TyxonQ",
+    title: "Simulate a circuit with TyxonQ",
     description:
-      "Run a bounded local TyxonQ statevector or density-matrix simulation. The first call may download the pinned package through uv; the calculation never uses TyxonQ cloud providers or quantum hardware and does not claim independent scientific validation.",
+      "Run a local TyxonQ statevector or density-matrix simulation. The first call may download the pinned package through uv; the calculation never uses TyxonQ cloud providers or quantum hardware and does not claim independent scientific validation.",
     inputSchema: {
       type: "object",
       properties: {
         numQubits: {
           type: "integer",
           minimum: 1,
-          maximum: MAX_QUBITS,
         },
         operations: {
           type: "array",
           minItems: 1,
-          maxItems: MAX_OPERATIONS,
           items: operationSchema,
         },
         mode: { type: "string", enum: ["exact", "sampled"] },
         shots: {
           type: "integer",
           minimum: 1,
-          maximum: MAX_SHOTS,
         },
         noise: noiseSchema,
       },
@@ -192,7 +185,7 @@ function normalizeOperation(value, numQubits, index) {
     value.qubits.length !== expectedArity ||
     value.qubits.some(
       (qubit) =>
-        !Number.isInteger(qubit) || qubit < 0 || qubit >= numQubits,
+        !Number.isSafeInteger(qubit) || qubit < 0 || qubit >= numQubits,
     ) ||
     new Set(value.qubits).size !== value.qubits.length
   ) {
@@ -241,12 +234,10 @@ function normalizeSimulationRequest(value) {
     Object.keys(value).some(
       (key) => !["numQubits", "operations", "mode", "shots", "noise"].includes(key),
     ) ||
-    !Number.isInteger(value.numQubits) ||
+    !Number.isSafeInteger(value.numQubits) ||
     value.numQubits < 1 ||
-    value.numQubits > MAX_QUBITS ||
     !Array.isArray(value.operations) ||
     value.operations.length < 1 ||
-    value.operations.length > MAX_OPERATIONS ||
     !["exact", "sampled"].includes(value.mode)
   ) {
     throw new TypeError("TyxonQ simulation request is invalid");
@@ -263,8 +254,8 @@ function normalizeSimulationRequest(value) {
     shots = 0;
   } else {
     shots ??= 1024;
-    if (!Number.isInteger(shots) || shots < 1 || shots > MAX_SHOTS) {
-      throw new TypeError(`shots must be between 1 and ${MAX_SHOTS}`);
+    if (!Number.isSafeInteger(shots) || shots < 1) {
+      throw new TypeError("shots must be a positive integer");
     }
   }
   return {
@@ -294,11 +285,10 @@ function runBridge(envelope, signal) {
     command: "uv",
     args: ["run", "--quiet", "--frozen", "--project", skillRoot, "--python", "3.12", "python", bridgePath],
     cwd: skillRoot,
-    env: bridgeEnvironment(),
+    env: localComputeEnvironment(bridgeEnvironment()),
     input: envelope,
     signal,
-    timeoutMs: BRIDGE_TIMEOUT_MS,
-    maxOutputBytes: MAX_BRIDGE_OUTPUT_BYTES,
+    ...localComputeProcessOptions(),
     label: "TyxonQ local runtime",
     notFoundMessage: "未找到 uv；请先安装 uv 后再使用 TyxonQ 本地仿真",
   });

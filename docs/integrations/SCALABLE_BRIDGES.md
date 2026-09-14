@@ -1,64 +1,103 @@
-# 计算规模与独立参考检查
+# 本地计算功能与资源配置
 
-2026-09-14。OpenQuantum 扩展了 TeNPy、TJM、Flow-VQE、Clifft 和 SQD 的计算桥接。张量算法可以直接处理更长的链，近 Clifford 采样按实际活跃宽度控制成本，Flow-VQE 使用不构造完整矩阵的状态向量运算，SQD 接受分子与活性空间。独立参考按自身成本选择，主算法不再受小系统精确校验规模约束。
+OpenQuantum 为本地量子计算提供结构化输入、SDK 调用和结果返回。量子位数、电路长度、Hamiltonian 项数、矩阵维数、采样量、轨迹数和迭代预算由调用方选择，适配器不设置人工规模上限。实际可运行规模由算法、已安装后端和用户的计算资源决定。
 
-## 支持范围
+## 功能与输入输出
 
-下表是**当前接口允许的范围**，各参数还需同时满足组合预算。它不表示极端参数组合已逐一运行，也不是算法或上游软件的理论上限。超过本地实测规模但满足输入合同的任务可以提交计算；是否在单次时限内完成、是否数值收敛，以实际返回结果为准。
-
-| OpenQuantum Tool | 主计算范围 | 可选独立参考 |
+| 方法 | 输入 | 主要输出 |
 | --- | --- | --- |
-| `tenpy_local.solve_tenpy_chain` | 3–256 站点 spin-1/2 XYZ 开放链；局域 x/z 场；bond dimension≤256、sweeps≤100 | 至 10 站点的稠密精确对角化 |
-| `tjm_local.simulate_tjm_dynamics` | 2–128 qubits 开放横场 Ising 链；局域振幅衰减；bond dimension≤64、steps≤80、trajectories≤128 | 至 6 qubits 的独立 Lindblad 积分 |
-| `flow_vqe_local.train_flow_vqe` | 2–20 qubits，最多 128 个实系数 Pauli 项、4 层 RY/CNOT；每种搜索≤4096 次目标评估 | 至 10 qubits 的独立稠密 Pauli 对角化 |
-| `clifft_local.sample_clifft_circuit` | 1–128 qubits；H/S/T/X/Y/Z/CX/CZ 共≤2048 门；门后去极化与最终 Z 测量；shots≤8192 | 至 6 qubits 的独立密度矩阵演化 |
-| `sqd_local.run_sqd_chemistry` | 最多 16 个 H–Ne 原子；STO-3G、6-31G、cc-pVDZ；闭壳层 RHF 轨道，2–32 个空间轨道的活性空间；可输入对应位宽 counts | 同一活性空间 Hamiltonian 的 FCI：空间轨道≤12 且行列式维数≤10000 |
+| PyZX | Clifford+T 门电路 | ZX 优化与提取后的 QASM、门数和 T-count |
+| Graphix | 门电路、初态、测量采样次数 | MBQC 模式、资源图、空间调度及可选的模拟输出态 |
+| Symmer | Pauli Hamiltonian、独立对称性与 ±1 扇区 | 降维 Hamiltonian、扇区维数；允许降为零量子位标量 |
+| PauLie | 独立控制的非恒等 Pauli 生成元 | Lie 代数分类、精确维数、可选显式闭包 |
+| MQT QCEC | 两份同宽度、无测量的 OpenQASM 2 电路 | 等价、相位等价、不等价或不确定的检查结果 |
+| TyxonQ | 门电路、噪声与 shots | 态矢、概率或带噪采样分布 |
+| Clifft | Clifford+T 电路、门后去极化与 shots | 最终位串频数、编译后的活跃宽度 |
+| FatQat | 门电路与原生门约束，或恒定驱动的物理模型 | 电路概率、可选采样，transmon/里德堡链动力学与图像 |
+| toqito | 复密度矩阵、子系统维数与转置子区 | 迹、纯度、部分转置谱与 negativity，独立 Validator observations |
+| QPanda QUBO | QUBO 系数，或二值目标与线性等式约束 | 编译后的 QUBO、遍历最优解或 QAOA 分布 |
+| Stim + PyMatching | 奇数码距、轮数、噪声和 shots | 表面码存储电路、MWPM 解码及逻辑错误统计 |
+| Deltakit | 奇数矩形码片宽高、轮数和 ToyNoise 参数 | 存储实验电路、采样和解码结果 |
+| BP+LSD | 二元校验矩阵、syndrome 批次与迭代参数 | 纠正向量、残余 syndrome 与校验一致性 |
+| Qiskit SQD | 分子、基组、闭壳层活性空间与频数 | 子空间对角化能量、占据数和冻结核贡献 |
+| TeNPy | XYZ 自旋链、局域场、bond dimension 和 sweeps | DMRG 能量、磁化、纠缠熵与收敛诊断 |
+| TJM | 开放 Ising 链、振幅衰减、时间网格与轨迹预算 | 张量跳跃轨迹的观测量和抽样标准误 |
+| Flow-VQE | Pauli Hamiltonian、RY/CNOT 层数与训练预算 | 低能量参数、能量历史和等预算随机搜索基线 |
+| Dynamiqs | 单量子位驱动批次、失谐、衰减和时间网格 | Lindblad 动力学、末态人口梯度与可选参照 |
+| OQuPy | Ohmic spin-boson 参数、时间网格与记忆长度 | TEMPO 动力学、Bloch 轨迹和数值诊断 |
+| RandomMeas.jl | product/GHZ 态、子区、随机设置和 shots | 局域 Haar 测量、纯度估计与抽样误差 |
+| QMClaw 原生 Tool | 调校实验类型、扫描网格与 shots | S21、Rabi、Ramsey、T₁ 等 13 类实验的合成数据 |
+| 内置基态原生 Tool | 二量子位实 Pauli Hamiltonian、固定权重一扇区、优化预算 | VQE 基态及独立检查，可进入中央科学验收链 |
 
-Flow-VQE 的主计算仍有状态向量的指数内存成本；本次将门作用和 Pauli 期望值从完整矩阵运算改为直接作用于向量。TeNPy 与 TJM 的张量截断和有限迭代误差仍需按任务检查。Clifft 的成本取决于编译后的 active width，不能只看总 qubit 数。
+具体模型由各 Tool 定义。例如内置基态工具的二量子位扇区、Dynamiqs 的单量子位恒定驱动、FatQat 的两个三能级 transmon，以及 QMClaw 的单量子位调校流程都是所提供的模型。适配器继续检查概率、有限数、门目标、矩阵形状、粒子数、对称性对易和独立性。TeNPy 的当前 two-site sweep 至少需要三个站点。
 
-### 组合资源预算
+整数参数必须能被 JSON/JavaScript 精确表示。计算所得的 PauLie 代数维数、Symmer 扇区维数和 SQD 行列式维数若超过 `Number.MAX_SAFE_INTEGER`，返回十进制字符串，避免舍入。
 
-| Tool | 额外预算 |
-| --- | --- |
-| TeNPy | `numSites × maxBondDimension² ≤ 4194304` |
-| TJM | `steps × trajectories ≤ 4096`；`numQubits × steps × trajectories × maxBondDimension³ ≤ 2147483648` |
-| Flow-VQE | `2 × epochs × batchSize × 2^numQubits × [numQubits × (2 × layers + 1) + terms.length] ≤ 536870912`；包含训练与随机搜索两份预算，最终重算单独用于核对 |
-| Clifft | `numQubits × shots ≤ 524288`；编译后的 `peakActiveWidth ≤ maxActiveWidth`（默认 16，可设 0–24）；`2^peakActiveWidth × shots × gates.length ≤ 536870912`，在采样前检查 |
-| SQD | 全分子空间轨道≤128；`activeOrbitals⁴ × maxSubspaceDimension² ≤ 268435456`；`maxSubspaceDimension≤128` 是**每个自旋子空间**的上限，总子空间维数受其平方限制 |
+## 主计算与可选参考
 
-这些预算是本地接口的计算成本防护，不是运行时间预测。延续现有每连接一个计算、单次 180 秒、输出≤2 MiB、进程组取消与超时合同；依赖版本保持固定。
-
-## 如何选择参考检查
-
-五个 Tool 均新增 `referenceMode`，默认 `auto`。
+PyZX、Graphix、Symmer、PauLie、TeNPy、TJM、Flow-VQE、Clifft、SQD、Dynamiqs 和 QPanda 提供 `referenceMode`：
 
 | 模式 | 行为 |
 | --- | --- |
-| `auto` | 在参考预算内运行独立参考；超限时继续主计算，返回 `reference.status="not_run"` 和具体原因 |
-| `required` | 必须运行参考；超过参考预算则明确拒绝，不自动降级 |
-| `skip` | 主动跳过独立参考，直接运行主计算 |
+| `auto`（默认） | 按默认阈值选择额外参考；较大输入继续主计算 |
+| `required` | 在请求规模上尝试参考，使用调用方资源；计算失败或被取消时返回错误 |
+| `skip` | 直接运行主计算，跳过额外参考 |
 
-未执行参考时，参考能量、参考轨迹、参考概率及其差异均为 `null`。`reference` 同时返回 `mode`、`status`、`method` 和 `reason`；输入模式、结果模式、状态与 nullable 字段由输出合同共同检查。已经尝试但失败的参考会使调用失败，不会被转换为普通跳过。
+未执行的参考值及其差异为 `null`，状态为 `not_run`；QPanda 未做穷举的最优性、可行性与 penalty observations 为 `not_checked`。参考失败不会被伪装成正常跳过。计算和参考的完成状态与最终科学验收分别记录。
 
-Clifft 在计算参考时返回完整位串分布（`outcomesCoverage="complete"`）；跳过参考时返回实际出现的位串（`observed_only`），计数之和仍为 shots。TVD 与参考概率为 null 时，不能按零误差解释。
+Graphix 的 `simulate=false` 仅生成模式和资源图，返回 `simulation.status=not_run`；不能同时要求 `referenceMode=required`。模拟时独立电路参考直接作用于态矢，不构造完整酉矩阵。
 
-TeNPy 额外返回 sweep 判据是否满足、最后能量变化和最大截断误差。判据满足不构成全局基态证明。TJM 的标准误只描述有限轨迹抽样；无噪声时上游可以只使用一条有效轨迹，实际数量记录在 `effectiveTrajectories`。
+PauLie 的 `closureMode=full` 枚举闭包，`skip` 不枚举，`auto` 在分类维数不超过 4096 时枚举。分类和维数本身无需闭包枚举。独立矩阵参考可单独执行，`spanResidualTarget` 说明残差检查的是显式闭包还是输入生成元。
 
-所有结果继续是 L1，`scientificValidation="not_evaluated"`。独立数值对照与 Harness 调用成功都不等同于 central Acceptance Builder 的科学验收。
+QPanda 的 `method=traversal` 本身就是穷举求解；`referenceMode=skip` 只跳过额外检查，不会把遍历算法变为 QAOA。`method=qaoa` 不再先强制穷举，模型编译也可单独跳过穷举重放。模型编译在可取消的独立进程中执行。
 
-## SQD 分子与活性空间
+Clifft 的 `maxActiveWidth` 默认为 `null`；只有调用方明确提供该预算时才检查。运行密度矩阵参考时返回完整位串分布；跳过时仅返回观测到的位串，TVD 和参考概率为 `null`。
 
-原有 `bondLengthAngstrom` 请求继续计算 H₂；新增 `molecule` 时，以其 `atoms` 和 `charge` 构建几何，默认键长不参与计算。基组可通过 `basis` 选择。
+<details>
+<summary>默认自动参考阈值</summary>
+
+| 参考 | auto 执行条件 |
+| --- | --- |
+| PyZX 完整酉矩阵、Symmer 同扇区能谱 | 不超过 6 qubits |
+| Graphix 电路态矢 | 开启模拟且不超过 10 个逻辑 qubits |
+| PauLie 稠密 Lie 空间 | 不超过 4 qubits |
+| TeNPy、Flow-VQE 精确对角化 | 不超过 10 站点/qubits |
+| TJM Lindblad、Clifft 密度矩阵 | 不超过 6 qubits |
+| SQD 同一活性空间 FCI | 不超过 12 个空间轨道且行列式维数不超过 10000 |
+| Dynamiqs 独立积分与有限差分 | 驱动批次不超过 8，steps 不超过 100 |
+| QPanda 编译重放与 QAOA 经典参照 | 不超过 12 个变量 |
+
+这些值只控制 auto 的默认行为，`required` 可以在更大输入上执行参考。
+
+</details>
+
+## 运行资源由部署配置
+
+本地计算子进程默认不设置执行时间与输出字节上限。按需设置：
+
+```bash
+# 0 或未设置表示不由计算 worker 限制
+export OPENQUANTUM_COMPUTE_TIMEOUT_MS=0
+export OPENQUANTUM_COMPUTE_MAX_OUTPUT_BYTES=0
+npm run dev
+```
+
+用户设置的 `OMP_NUM_THREADS`、`OPENBLAS_NUM_THREADS`、`MKL_NUM_THREADS`、`NUMBA_NUM_THREADS`、`JULIA_NUM_THREADS` 和 JAX/CUDA 设备、显存配置会传入计算环境。未设置时使用库的默认值。设备选择仍须由所安装的库和后端支持；本适配不自动安装 GPU 运行时。
+
+**连接层另有超时配置。** 当前固定版本的 Harness MCP Client 使用 Node 单个定时器，不支持无限等待。默认 Preset 将本地计算连接的 `toolCallTimeoutMs` 设为该计时器可表示的最大值 `2147483647` 毫秒（约 24.9 天）；可在 `agent.cordis.yml` 的对应连接设置更短超时。外部 MCP 客户端也需设置自己的调用超时。因此 worker 无默认期限不等于所有客户端都无限等待。
+
+每个共享科学服务同时运行一个调用，FatQat 保留两个执行槽；这是连接并发配置。取消会结束本次子进程组并释放执行槽；worker 故障、数值失败及用户配置的超时或输出预算会保留错误语义。QMClaw 与内置基态是原生进程内计算，使用调用参数控制工作量，上述 worker 环境变量不适用于它们。
+
+## SQD 的分子与活性空间
+
+`molecule.atoms/charge` 定义分子，`basis` 使用已安装 PySCF 目录中的命名基组。省略 molecule 时保留 H₂ 键长接口，省略 activeSpace 时使用全空间。当前使用闭壳层 RHF 轨道，活性电子数为偶数，固定 `n_alpha=n_beta`（M_s=0）；活性轨道从冻结核后连续选取。
 
 ```json
 {
-  "molecule": {
-    "atoms": [
-      { "element": "Li", "positionAngstrom": [0, 0, 0] },
-      { "element": "H", "positionAngstrom": [0, 0, 1.6] }
-    ],
-    "charge": 0
-  },
+  "molecule": { "atoms": [
+    { "element": "Li", "positionAngstrom": [0, 0, 0] },
+    { "element": "H", "positionAngstrom": [0, 0, 1.6] }
+  ], "charge": 0 },
   "basis": "sto-3g",
   "activeSpace": { "numOrbitals": 4, "numElectrons": 2 },
   "counts": { "00010001": 64 },
@@ -66,36 +105,16 @@ TeNPy 额外返回 sweep 判据是否满足、最后能量变化和最大截断�
 }
 ```
 
-活性电子数必须为偶数，固定 `n_alpha=n_beta`（M_s=0），不约束总自旋。冻结核轨道数为 `(全分子电子数−活性电子数)/2`，活性轨道从冻结核之后连续选取。省略 `activeSpace` 时使用全空间，仍需满足资源预算。没有任意轨道索引选择、轨道优化或开壳层输入。
+counts 的位宽为活性空间轨道数的两倍，顺序为 `beta(n−1)…beta0 alpha(n−1)…alpha0`，保留前导零。`maxSubspaceDimension` 是每个自旋子空间的预算；其乘积构成总子空间。`coreEnergyOffsetHartree` 已包含核排斥与冻结核贡献，不能再次相加。FCI 与 SQD 对照同一个有效 Hamiltonian。缺少 counts 时使用标注为 `synthetic_uniform` 的样本。
 
-桥接通过 [PySCF CASCI](https://pyscf.org/user/mcscf.html) 构造含冻结核贡献的有效积分。`activeOrbitalIndices`、`frozenCoreOrbitals` 和 `electrons` 记录实际空间；`coreEnergyOffsetHartree` **已经包含核排斥能与冻结核贡献**，不能再加 `nuclearEnergyHartree`。FCI 与 SQD 使用同一个有效 Hamiltonian；它不是全分子全空间或完备基组的精确解。
+## 开发核验记录
 
-counts 位宽为活性空间轨道数的两倍，顺序为 `beta(n−1)…beta0 alpha(n−1)…alpha0`。总频数≤4096，保留前导零。HF 构型始终包含；配置恢复可以调整不符合粒子数的样本。省略 counts 时使用明确标注的合成均匀样本。
-
-## 本地实测覆盖
-
-以下是本次实际运行的代表性输入，完整输入、数值与日志摘要见[版本化证据](evidence/scalable-bridges-2026-09-14.json)。接口最大值与这些已测输入分开报告。
-
-| 能力 | 超出旧范围的实测 | 核对内容 |
-| --- | --- | --- |
-| TeNPy | 12 站点独立自旋与 12 站点耦合 Heisenberg 链 | 场项算例能量 −4.8、每站点 Sz=0.5；耦合链能量、归一化与收敛诊断 |
-| TJM | 8 qubits 无耦合 Rabi 与带阻尼轨迹 | Z(t) 与 cos(1.4t) 的解析对照；真实跳跃导致非零抽样标准误 |
-| Flow-VQE | 12 qubits 真实上游训练；5 qubits 含 YY 项 | 归一化、能量重算、等搜索预算；另对 2/3 qubits 共 80 个 Pauli 字符串的随机复态与稠密矩阵逐项比较 |
-| SQD | LiH 的冻结核 CAS(2e,4o)、H₄/STO-3G、H₂/cc-pVDZ、H₄/cc-pVDZ 的 20 轨道计算 | 独立手工冻结核收缩后 FCI 的能量及偏移对照；动态 counts、粒子数；20 轨道主计算正常完成且 FCI 自动跳过 |
-| Clifft | 80 qubits GHZ 与超过 64 位的非对称置位 | GHZ 相关、shots 总和、首末位序；真实非零 active width 的拒绝路径 |
-
-只含本次改动的隔离工作目录通过完整 `npm run check`（455 项通过、25 项按条件跳过、0 失败）；文档本地文件链接检查通过。
-
-原有 H₂/FCI、TJM/Lindblad、Flow-VQE 种子与变分界、TeNPy 小链解析值、Clifft 干涉与噪声回归同时保留。独立领域审阅另行检查物理约定、参考与 null 合同、冻结核处理、矩阵自由位序以及资源边界。
-
-本地模型协议替身驱动真实 Harness，调用五个扩展输入，并从 Session event log 重读、校验真实 Tool 结果。它验证连接、执行与持久化；没有调用外部模型或 QPU。
+可复现检查入口：
 
 ```bash
-# 合同与资源/参考失败路径
-node --test tests/scalable-bridges.test.mjs tests/paper-tools-contracts.test.mjs tests/unitary-tools-contracts.test.mjs
-
-# 实际数值计算及 Harness 会话重读；使用已准备的固定依赖
-OPENQUANTUM_REAL_SCALABLE_BRIDGES=1 node --test --test-concurrency=1 tests/scalable-bridges-live.test.mjs tests/harness-paper-tools.test.mjs
+node --test tests/local-compute-scale.test.mjs tests/scalable-bridges.test.mjs
+OPENQUANTUM_REAL_LOCAL_SCALE=1 node --test --test-concurrency=1 tests/local-compute-scale-live.test.mjs
+npm run capability:unitary-next:live
 ```
 
-本地完整数据位于 `.openquantum/scalable-bridge-evidence-2026-09-14/`。这次修改不自动重启用户正在运行的 Harness；下次重启后，新输入合同和 Skill 说明随现有连接加载。
+本次核验摘要见 [2026-09-15 记录](evidence/local-compute-scale-2026-09-15.json)。历史输入与结果保留在 [五项计算桥接记录](evidence/scalable-bridges-2026-09-14.json)和[四项电路代数记录](evidence/unitary-next-2026-09-14.json)。这些记录用于复现与回归，所测规模不定义功能上限。

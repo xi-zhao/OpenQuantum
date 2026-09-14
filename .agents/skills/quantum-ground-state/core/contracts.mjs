@@ -79,7 +79,7 @@ const requestSchema = strictObject({
     terms: {
       type: "array",
       description:
-        "One to 32 unique two-character Pauli terms over I/X/Z; coefficients must be finite and within +/-1e6 Hartree.",
+        "Unique two-character Pauli terms over I/X/Z with finite coefficients in Hartree.",
       items: strictObject({
         pauli: { type: "string" },
         coefficient: { type: "number" },
@@ -103,7 +103,7 @@ const requestSchema = strictObject({
       },
       maxEvaluations: {
         type: "integer",
-        description: "Evaluation budget from 8 through 256, inclusive.",
+        description: "Caller-supplied evaluation budget, at least 8.",
       },
     }),
     randomness: stringConstant("none"),

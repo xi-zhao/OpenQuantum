@@ -52,14 +52,14 @@ test("FatQat MCP registers exactly the declared bounded tools with full setup ef
 
 test("malformed and unsupported requests fail before the worker starts", async () => {
   for (const argumentsValue of [
-    { ...circuit, numQubits: 9 },
+    { ...circuit, numQubits: 0 },
     { ...circuit, code: "print('arbitrary')" },
     { ...circuit, operations: [{ gate: "cx", qubits: [0, 0] }] },
     { ...circuit, operations: [{ gate: "x", qubits: [1] }] },
     { ...circuit, operations: [{ gate: "rx", qubits: [0] }] },
     { ...circuit, operations: [{ gate: "x", qubits: [0], angle: 1 }] },
     { ...circuit, operations: [{ gate: "pair", qubits: [0, 1] }], numQubits: 2 },
-    { ...circuit, numQubits: 6, noise: { channel: "depolarizing", probability: 0.1 } },
+    { ...circuit, numQubits: 6, noise: { channel: "depolarizing", probability: 1.1 } },
     { ...circuit, backend: "superconducting" },
     { ...circuit, backend: "superconducting", numQubits: 2, couplings: [[0, 1], [1, 0]] },
     { ...circuit, couplings: [] },
@@ -70,9 +70,9 @@ test("malformed and unsupported requests fail before the worker starts", async (
   }
   for (const argumentsValue of [
     { model: "transmon", durationNs: 20, amplitudeRadPerNs: 0.1, durationUs: 1 },
-    { model: "rydberg", numAtoms: 7, spacingUm: 6, durationUs: 1, omegaRadPerUs: 1 },
-    { model: "rydberg", numAtoms: 2, spacingUm: 4, durationUs: 5, omegaRadPerUs: 1, c6RadPerUsUm6: 1000000 },
-    { model: "transmon", durationNs: 20, amplitudeRadPerNs: 0.1, samples: 100 },
+    { model: "rydberg", numAtoms: 0, spacingUm: 6, durationUs: 1, omegaRadPerUs: 1 },
+    { model: "rydberg", numAtoms: 2, spacingUm: 0, durationUs: 5, omegaRadPerUs: 1, c6RadPerUsUm6: 1000000 },
+    { model: "transmon", durationNs: 20, amplitudeRadPerNs: 0.1, samples: 1 },
   ]) {
     const result = await client.callTool({ name: "simulate_fatqat_dynamics", arguments: argumentsValue });
     assert.equal(result.isError, true, JSON.stringify(argumentsValue));
@@ -91,7 +91,7 @@ test("normalization preserves zero controls, seeds, noise and physical units", (
   assert.equal(physical.samples, 21);
   const singleAtom = { model: "rydberg", numAtoms: 1, spacingUm: 4, durationUs: 5, omegaRadPerUs: 2, c6RadPerUsUm6: 1000000 };
   assert.equal(normalizeRequest("simulate_fatqat_dynamics", singleAtom).c6RadPerUsUm6, 1000000);
-  assert.throws(() => normalizeRequest("simulate_fatqat_dynamics", { ...singleAtom, numAtoms: 2 }), /Interaction strength/);
+  assert.doesNotThrow(() => normalizeRequest("simulate_fatqat_dynamics", { ...singleAtom, numAtoms: 2 }));
   assert.throws(() => normalizeRequest("simulate_fatqat_dynamics", { model: "transmon", durationNs: NaN, amplitudeRadPerNs: 0.1 }));
 });
 

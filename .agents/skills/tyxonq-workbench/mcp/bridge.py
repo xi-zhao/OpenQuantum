@@ -9,9 +9,6 @@ import sys
 from typing import Any
 
 TYXONQ_VERSION = "1.3.0"
-MAX_QUBITS = 8
-MAX_OPERATIONS = 64
-MAX_SHOTS = 8192
 SINGLE_QUBIT_GATES = {"h", "x", "s", "sdg"}
 ROTATION_GATES = {"rx", "ry", "rz"}
 TWO_QUBIT_GATES = {"cx", "cz"}
@@ -114,16 +111,14 @@ def validate_request(value: Any) -> dict[str, Any]:
         isinstance(num_qubits, bool)
         or not isinstance(num_qubits, int)
         or num_qubits < 1
-        or num_qubits > MAX_QUBITS
     ):
-        raise ValueError(f"numQubits must be between 1 and {MAX_QUBITS}")
+        raise ValueError("numQubits must be a positive integer")
     operations = value.get("operations")
     if (
         not isinstance(operations, list)
         or len(operations) < 1
-        or len(operations) > MAX_OPERATIONS
     ):
-        raise ValueError(f"operations must contain 1 to {MAX_OPERATIONS} gates")
+        raise ValueError("operations must contain at least one gate")
     mode = value.get("mode")
     if mode not in {"exact", "sampled"}:
         raise ValueError("mode must be exact or sampled")
@@ -139,9 +134,8 @@ def validate_request(value: Any) -> dict[str, Any]:
         isinstance(shots, bool)
         or not isinstance(shots, int)
         or shots < 1
-        or shots > MAX_SHOTS
     ):
-        raise ValueError(f"shots must be between 1 and {MAX_SHOTS}")
+        raise ValueError("shots must be a positive integer")
     return {
         "numQubits": num_qubits,
         "operations": [
@@ -282,9 +276,7 @@ def simulation_payload(request: dict[str, Any]) -> dict[str, Any]:
 
 
 def main() -> None:
-    raw = sys.stdin.buffer.read(256 * 1024 + 1)
-    if len(raw) > 256 * 1024:
-        raise ValueError("bridge request is too large")
+    raw = sys.stdin.buffer.read()
     value = json.loads(raw.decode("utf8"))
     if not is_record(value) or set(value) - {"action", "request"}:
         raise ValueError("bridge envelope is invalid")

@@ -7,9 +7,9 @@ description: 开放 Ising 链的张量跳跃轨迹，与密度矩阵 Lindblad �
 
 Agent 经 Harness 调用 tjm_local 提供的 `simulate_tjm_dynamics`。本 Skill 负责选择和解释，不启动计算进程。
 
-2–128 qubits、初态全零、开放链。H = -J ΣZZ - g ΣX，跳跃算符 sqrt(gamma)|0><1|，hbar=1。时间和速率须采用一致单位。每站点的 standardErrors 仅含有限轨迹抽样误差，不含步长和张量截断偏差。steps×trajectories≤4096，且 numQubits×steps×trajectories×maxBondDimension³≤2147483648；bond dimension≤64。密度矩阵 Lindblad 参考至 6 qubits。
+至少 2 个量子位、初态全零、开放链。H = -J ΣZZ - g ΣX，跳跃算符 sqrt(gamma)|0><1|，hbar=1。时间与速率用一致单位。量子位数、时间网格、轨迹数与 bond dimension 由输入决定；standardErrors 仅含有限轨迹抽样误差，不含步长与张量截断偏差。
 
-独立参考使用 referenceMode=auto|required|skip：auto 在参考预算内计算，required 在超限时明确报错，skip 主动跳过。未运行时 reference.status=not_run，参考值和差异均为 null；不将缺失参考解释为零误差或通过验证。接口资源上限与本地实测覆盖分别见[计算规模与参考检查](../../../docs/integrations/SCALABLE_BRIDGES.md)。
+独立参考使用 `referenceMode=auto|required|skip`：auto 按默认阈值选择参考，required 使用调用方资源尝试所请求规模，skip 跳过。未执行时 `reference.status=not_run`，参考值和差异为 null；尝试后失败会返回错误。
 
 输入示例：
 
@@ -22,7 +22,7 @@ Agent 经 Harness 调用 tjm_local 提供的 `simulate_tjm_dynamics`。本 Skill
 ```
 
 调用前确认用户问题落在上述范围内；参数含糊且会改变物理结果时先澄清。接口不接受代码、路径、凭据或真实硬件任务。
-单次计算上限 180 秒，每个连接一次只运行一个动作；超时/取消会结束整个计算进程组。
+计算 worker 默认不设置时间或输出大小上限；部署可配置资源预算，取消会终止本次计算进程组。连接层超时与硬件环境配置见[资源配置](../../../docs/integrations/SCALABLE_BRIDGES.md)。
 首次使用可能准备固定依赖或缓存，因此最大副作用为 workspace-write。工具未注册或连接已禁用时，检查设置中心；不要用通用执行工具绕过禁用。
 依赖尚未准备时按仓库文档运行 `npm run capability:paper-tools:setup`；不要自行改版本或扩大输入边界来绕过失败。
 

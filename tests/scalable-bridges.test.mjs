@@ -44,11 +44,11 @@ for (const entry of SCALABLE_BRIDGES) {
     const oversizedReference = entry.id === "sqd-chemistry"
       ? { activeSpace: { numOrbitals: 16, numElectrons: 16 }, maxSubspaceDimension: 8 }
       : entry.input;
-    assert.throws(() => d.normalize(entry.tool, { ...oversizedReference, referenceMode: "required" }), /reference|diagonalization|Lindblad|FCI/);
+    assert.doesNotThrow(() => d.normalize(entry.tool, { ...oversizedReference, referenceMode: "required" }));
   });
 }
 
-test("resource and molecular cross-field budgets reject before launching a worker", async () => {
+test("larger requests are accepted while molecular structural constraints remain enforced", async () => {
   const bad = {
     "tenpy-ground-state": { numSites: 256, maxBondDimension: 256 },
     "tjm-dynamics": { numQubits: 128, trajectories: 128, steps: 32, maxBondDimension: 64 },
@@ -58,7 +58,7 @@ test("resource and molecular cross-field budgets reject before launching a worke
   };
   for (const [id,input] of Object.entries(bad)) {
     const { definition: d } = await import(`../.agents/skills/${id}/mcp/contracts.mjs`);
-    assert.throws(() => d.normalize(d.tool.name, input), /budget/i, id);
+    assert.doesNotThrow(() => d.normalize(d.tool.name, input), id);
   }
   const { definition: d } = await import("../.agents/skills/sqd-chemistry/mcp/contracts.mjs");
   for (const input of [

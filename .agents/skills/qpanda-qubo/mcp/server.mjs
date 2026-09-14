@@ -10,9 +10,10 @@ import {
   ListToolsRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
 
-import { compileBinaryLinearModel } from "../modeling/binary-linear-model.mjs";
+import { referenceModeSchema } from "../../../../src/lib/science-reference.mjs";
 
 import { runLocalJsonProcess } from "../../../../src/lib/local-json-process.mjs";
+import { localComputeEnvironment, localComputeProcessOptions } from "../../../../src/lib/local-compute-policy.mjs";
 
 const skillRoot = fileURLToPath(new URL("..", import.meta.url));
 const projectRoot = path.resolve(skillRoot, "../../..");
@@ -23,11 +24,6 @@ const projectEnvironment = path.join(
   "python-envs",
   "qpanda-qubo",
 );
-const MAX_VARS = 5;
-const MAX_LAYER = 6;
-const MAX_ABS_COEFF = 1e6;
-const BRIDGE_TIMEOUT_MS = 300_000;
-const MAX_BRIDGE_OUTPUT_BYTES = 2 * 1024 * 1024;
 const BRIDGE_ENVIRONMENT_NAMES = Object.freeze([
   "HOME",
   "HTTP_PROXY",
@@ -53,13 +49,13 @@ const lazyEnvironmentAnnotations = Object.freeze({
 });
 const variableNameSchema = Object.freeze({
   type: "string",
-  pattern: "^[A-Za-z][A-Za-z0-9_]{0,31}$",
+  pattern: "^[A-Za-z][A-Za-z0-9_]*$",
 });
 const linearTermSchema = Object.freeze({
   type: "object",
   properties: {
     variable: variableNameSchema,
-    coefficient: { type: "number", minimum: -MAX_ABS_COEFF, maximum: MAX_ABS_COEFF },
+    coefficient: { type: "number" },
   },
   required: ["variable", "coefficient"],
   additionalProperties: false,
@@ -69,7 +65,7 @@ const quadraticTermSchema = Object.freeze({
   properties: {
     left: variableNameSchema,
     right: variableNameSchema,
-    coefficient: { type: "number", minimum: -MAX_ABS_COEFF, maximum: MAX_ABS_COEFF },
+    coefficient: { type: "number" },
   },
   required: ["left", "right", "coefficient"],
   additionalProperties: false,
@@ -78,32 +74,30 @@ const quadraticTermSchema = Object.freeze({
 const TOOLS = Object.freeze([
   {
     name: "solve_qpanda_qubo",
-    title: "Solve a bounded QUBO with pyqpanda_alg",
+    title: "Solve a QUBO with pyqpanda_alg",
     description:
-      "Solve a small quadratic unconstrained binary optimization problem locally with pyqpanda_alg. Always returns the classical brute-force optimum (qubobytraversal) as a deterministic reference; with method=qaoa it also runs the local QAOA solver. The first call may build the pinned environment through uv; the calculation never uses the Origin Quantum cloud or real hardware and does not claim independent scientific validation.",
+      "Solve quadratic unconstrained binary optimization locally with pyqpanda_alg traversal or QAOA. referenceMode selects an optional exhaustive reference for QAOA. The first call may build the pinned environment through uv; the calculation never uses the Origin Quantum cloud or real hardware and does not claim independent scientific validation.",
     inputSchema: {
       type: "object",
       properties: {
         quadratic: {
           type: "array",
           minItems: 1,
-          maxItems: MAX_VARS,
           items: {
             type: "array",
             minItems: 1,
-            maxItems: MAX_VARS,
             items: { type: "number" },
           },
         },
         linear: {
           type: "array",
           minItems: 1,
-          maxItems: MAX_VARS,
           items: { type: "number" },
         },
         constant: { type: "number" },
         method: { type: "string", enum: ["traversal", "qaoa"] },
-        layer: { type: "integer", minimum: 1, maximum: MAX_LAYER },
+        layer: { type: "integer", minimum: 1 },
+        referenceMode: referenceModeSchema,
       },
       required: ["quadratic", "method"],
       additionalProperties: false,
@@ -114,7 +108,9 @@ const TOOLS = Object.freeze([
         schemaVersion: { type: "string", const: "1.0" },
         packageVersion: { type: "string" },
         problem: { type: "object" },
-        classical: { type: "object" },
+        classical: { type: ["object", "null"] },
+        classicalRole: { type: "string", enum: ["main", "reference", "not_run"] },
+        reference: { type: "object" },
         quantum: { type: ["object", "null"] },
         checks: { type: "object" },
         scientificValidation: { type: "string", const: "not_evaluated" },
@@ -135,9 +131,9 @@ const TOOLS = Object.freeze([
   },
   {
     name: "model_and_solve_qpanda_qubo",
-    title: "Compile and solve a bounded binary linear model",
+    title: "Compile and solve a binary linear model",
     description:
-      "Compile a named binary objective plus bounded linear equality constraints into QUBO using explicit penalty weights, exhaustively replay the compilation over every assignment, and solve the compiled QUBO with pyqpanda_alg. Inequalities and automatic penalty selection are intentionally out of scope.",
+      "Compile a named binary objective plus linear equality constraints into QUBO using explicit penalty weights, optionally replay the compilation over every assignment, and solve the compiled QUBO with pyqpanda_alg. Inequalities and automatic penalty selection are intentionally out of scope.",
     inputSchema: {
       type: "object",
       properties: {
@@ -147,7 +143,6 @@ const TOOLS = Object.freeze([
             variables: {
               type: "array",
               minItems: 1,
-              maxItems: MAX_VARS,
               uniqueItems: true,
               items: variableNameSchema,
             },
@@ -155,16 +150,13 @@ const TOOLS = Object.freeze([
               type: "object",
               properties: {
                 sense: { type: "string", enum: ["minimize", "maximize"] },
-                linear: { type: "array", maxItems: MAX_VARS, items: linearTermSchema },
+                linear: { type: "array", items: linearTermSchema },
                 quadratic: {
                   type: "array",
-                  maxItems: MAX_VARS * MAX_VARS,
                   items: quadraticTermSchema,
                 },
                 constant: {
                   type: "number",
-                  minimum: -MAX_ABS_COEFF,
-                  maximum: MAX_ABS_COEFF,
                 },
               },
               required: ["sense"],
@@ -172,7 +164,6 @@ const TOOLS = Object.freeze([
             },
             constraints: {
               type: "array",
-              maxItems: 4,
               items: {
                 type: "object",
                 properties: {
@@ -180,19 +171,15 @@ const TOOLS = Object.freeze([
                   terms: {
                     type: "array",
                     minItems: 1,
-                    maxItems: MAX_VARS,
                     items: linearTermSchema,
                   },
                   relation: { type: "string", const: "eq" },
                   rhs: {
                     type: "number",
-                    minimum: -MAX_ABS_COEFF,
-                    maximum: MAX_ABS_COEFF,
                   },
                   penalty: {
                     type: "number",
                     exclusiveMinimum: 0,
-                    maximum: MAX_ABS_COEFF,
                   },
                 },
                 required: ["id", "terms", "relation", "rhs", "penalty"],
@@ -204,7 +191,8 @@ const TOOLS = Object.freeze([
           additionalProperties: false,
         },
         method: { type: "string", enum: ["traversal", "qaoa"] },
-        layer: { type: "integer", minimum: 1, maximum: MAX_LAYER },
+        layer: { type: "integer", minimum: 1 },
+        referenceMode: referenceModeSchema,
       },
       required: ["model", "method"],
       additionalProperties: false,
@@ -240,21 +228,25 @@ function isRecord(value) {
 }
 
 function boundedNumber(value, field) {
-  if (typeof value !== "number" || !Number.isFinite(value) || Math.abs(value) > MAX_ABS_COEFF) {
-    throw new TypeError(`${field} must be a finite number within +/-${MAX_ABS_COEFF}`);
+  if (typeof value !== "number" || !Number.isFinite(value)) {
+    throw new TypeError(`${field} must be a finite number`);
   }
   return value;
+}
+
+function normalizeReferenceMode(mode = "auto") {
+  if (!["auto", "required", "skip"].includes(mode)) throw new TypeError("Invalid referenceMode");
+  return mode;
 }
 
 function normalizeSolveRequest(value) {
   if (
     !isRecord(value) ||
     Object.keys(value).some(
-      (key) => !["quadratic", "linear", "constant", "method", "layer"].includes(key),
+      (key) => !["quadratic", "linear", "constant", "method", "layer", "referenceMode"].includes(key),
     ) ||
     !Array.isArray(value.quadratic) ||
     value.quadratic.length < 1 ||
-    value.quadratic.length > MAX_VARS ||
     !["traversal", "qaoa"].includes(value.method)
   ) {
     throw new TypeError("QUBO request is invalid");
@@ -282,15 +274,15 @@ function normalizeSolveRequest(value) {
 
   let layer;
   if (value.method === "qaoa") {
-    if (!Number.isInteger(value.layer) || value.layer < 1 || value.layer > MAX_LAYER) {
-      throw new TypeError(`layer must be an integer between 1 and ${MAX_LAYER} for qaoa`);
+    if (!Number.isInteger(value.layer) || value.layer < 1) {
+      throw new TypeError("layer must be a positive integer for qaoa");
     }
     layer = value.layer;
   } else if (value.layer !== undefined) {
     throw new TypeError("layer only applies to method=qaoa");
   }
 
-  const request = { quadratic, method: value.method };
+  const request = { quadratic, method: value.method, referenceMode: normalizeReferenceMode(value.referenceMode) };
   if (linear !== undefined) request.linear = linear;
   if (constant !== undefined) request.constant = constant;
   if (layer !== undefined) request.layer = layer;
@@ -300,20 +292,20 @@ function normalizeSolveRequest(value) {
 function normalizeModelSolveRequest(value) {
   if (
     !isRecord(value) ||
-    Object.keys(value).some((key) => !["model", "method", "layer"].includes(key)) ||
+    Object.keys(value).some((key) => !["model", "method", "layer", "referenceMode"].includes(key)) ||
     !isRecord(value.model) ||
     !["traversal", "qaoa"].includes(value.method)
   ) {
     throw new TypeError("QUBO modeling request is invalid");
   }
   if (value.method === "qaoa") {
-    if (!Number.isInteger(value.layer) || value.layer < 1 || value.layer > MAX_LAYER) {
-      throw new TypeError(`layer must be an integer between 1 and ${MAX_LAYER} for qaoa`);
+    if (!Number.isInteger(value.layer) || value.layer < 1) {
+      throw new TypeError("layer must be a positive integer for qaoa");
     }
   } else if (value.layer !== undefined) {
     throw new TypeError("layer only applies to method=qaoa");
   }
-  return { model: value.model, method: value.method, layer: value.layer };
+  return { model: value.model, method: value.method, layer: value.layer, referenceMode: normalizeReferenceMode(value.referenceMode) };
 }
 
 function bridgeEnvironment() {
@@ -332,11 +324,10 @@ function runBridge(envelope, signal) {
     command: "uv",
     args: ["run", "--quiet", "--project", skillRoot, "--python", "3.12", "python", bridgePath],
     cwd: skillRoot,
-    env: bridgeEnvironment(),
+    env: localComputeEnvironment(bridgeEnvironment()),
     input: envelope,
     signal,
-    timeoutMs: BRIDGE_TIMEOUT_MS,
-    maxOutputBytes: MAX_BRIDGE_OUTPUT_BYTES,
+    ...localComputeProcessOptions(),
     label: "pyqpanda_alg QUBO runtime",
     notFoundMessage: "未找到 uv；请先安装 uv 后再使用 QPanda QUBO 本地求解",
   });
@@ -359,7 +350,7 @@ const server = new Server(
   {
     capabilities: { tools: {} },
     instructions:
-      "Bounded binary equality-model compilation and local pyqpanda_alg QUBO solving. Never use the Origin Quantum cloud, tokens or quantum hardware, and never turn enumeration observations into final scientific acceptance.",
+      "Binary equality-model compilation and local pyqpanda_alg QUBO solving. Never use the Origin Quantum cloud, tokens or quantum hardware, and never turn enumeration observations into final scientific acceptance.",
   },
 );
 
@@ -369,7 +360,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request, { signal }) => {
     if (request.params.name === "solve_qpanda_qubo") {
       const solve = normalizeSolveRequest(request.params.arguments);
       const result = await runBridge({ action: "solve", request: solve }, signal);
-      const optimum = result.classical.minimumValue;
+      const optimum = result.classical?.minimumValue ?? "not computed";
       return textResult(
         `pyqpanda_alg ${result.packageVersion} solved a ${result.problem.size}-variable QUBO. Classical minimum ${optimum}. Scientific validation remains not_evaluated.`,
         result,
@@ -377,41 +368,45 @@ server.setRequestHandler(CallToolRequestSchema, async (request, { signal }) => {
     }
     if (request.params.name === "model_and_solve_qpanda_qubo") {
       const modeledRequest = normalizeModelSolveRequest(request.params.arguments);
-      const modeling = compileBinaryLinearModel(modeledRequest.model);
+      const modeling = await runLocalJsonProcess({
+        command: process.execPath, args: [path.join(skillRoot, "modeling/compile-worker.mjs")], cwd: skillRoot,
+        env: localComputeEnvironment(bridgeEnvironment()), input: modeledRequest, signal, ...localComputeProcessOptions(),
+        label: "QUBO model compilation and optional exhaustive replay", notFoundMessage: "Node.js is required for model compilation",
+      });
       const solveRequest = {
         quadratic: modeling.qubo.quadratic,
         linear: modeling.qubo.linear,
         constant: modeling.qubo.constant,
         method: modeledRequest.method,
+        referenceMode: modeledRequest.referenceMode,
       };
       if (modeledRequest.layer !== undefined) solveRequest.layer = modeledRequest.layer;
       const solver = await runBridge({ action: "solve", request: solveRequest }, signal);
-      const solverMinimumError = Math.abs(
-        solver.classical.minimumValue - modeling.reference.compiledMinimum,
-      );
+      const checked = modeling.reference.status === "computed";
+      const solverMinimumError = checked && solver.classical ? Math.abs(solver.classical.minimumValue - modeling.reference.compiledMinimum) : null;
       const validation = {
         schemaVersion: "1.0",
         observations: [
           {
             id: "compilation.exhaustive-replay",
-            status: modeling.reference.compilationMaxError <= 1e-9 ? "pass" : "fail",
+            status: !checked ? "not_checked" : modeling.reference.compilationMaxError <= 1e-9 ? "pass" : "fail",
             metric: modeling.reference.compilationMaxError,
             threshold: 1e-9,
           },
           {
             id: "solver.classical-reference",
-            status: solverMinimumError <= 1e-9 ? "pass" : "fail",
+            status: solverMinimumError === null ? "not_checked" : solverMinimumError <= 1e-9 ? "pass" : "fail",
             metric: solverMinimumError,
             threshold: 1e-9,
           },
           {
             id: "constraints.feasible",
-            status: modeling.reference.feasibleOptimum === null ? "fail" : "pass",
+            status: !checked ? "not_checked" : modeling.reference.feasibleOptimum === null ? "fail" : "pass",
             feasibleAssignments: modeling.reference.feasibleAssignmentCount,
           },
           {
             id: "penalty.sufficient",
-            status: modeling.reference.penaltySufficient ? "pass" : "fail",
+            status: !checked ? "not_checked" : modeling.reference.penaltySufficient ? "pass" : "fail",
           },
           {
             id: "provenance.complete",

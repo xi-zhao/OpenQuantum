@@ -14,16 +14,14 @@ from toqito.matrix_ops import partial_transpose
 from toqito.matrix_props import is_density
 
 PACKAGE_VERSION = "1.3.1"
-MAX_DIMENSION = 16
-MAX_ABS_COEFFICIENT = 1e6
 
 
 def finite_number(value: Any, field: str) -> int | float:
     if isinstance(value, bool) or not isinstance(value, (int, float)):
         raise ValueError(f"{field} must be a finite number")
     number = float(value)
-    if not math.isfinite(number) or abs(number) > MAX_ABS_COEFFICIENT:
-        raise ValueError(f"{field} must be within +/-{MAX_ABS_COEFFICIENT}")
+    if not math.isfinite(number):
+        raise ValueError(f"{field} must be finite")
     # Preserve JSON integer/float spelling so the cross-language canonical
     # digest is identical to JSON.stringify after the JS boundary check.
     return 0 if number == 0 else value
@@ -54,8 +52,6 @@ def normalize_request(value: Any) -> dict[str, Any]:
     ):
         raise ValueError("subsystemDimensions must contain at least two integers >= 2")
     dimension = math.prod(dimensions)
-    if dimension > MAX_DIMENSION:
-        raise ValueError(f"total matrix dimension must not exceed {MAX_DIMENSION}")
     real = matrix(value.get("matrixReal"), dimension, "matrixReal")
     imag = (
         [[0.0] * dimension for _ in range(dimension)]
@@ -127,9 +123,7 @@ def audit_payload(request: dict[str, Any]) -> dict[str, Any]:
 
 
 def main() -> None:
-    raw = sys.stdin.buffer.read(512 * 1024 + 1)
-    if len(raw) > 512 * 1024:
-        raise ValueError("bridge request is too large")
+    raw = sys.stdin.buffer.read()
     envelope = json.loads(raw.decode("utf8"))
     if not isinstance(envelope, dict) or set(envelope) - {"action", "request"}:
         raise ValueError("bridge envelope is invalid")

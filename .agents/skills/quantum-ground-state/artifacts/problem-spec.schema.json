@@ -61,7 +61,7 @@
             "version": { "const": "1.0.0" },
             "coarsePoints": { "const": 65 },
             "angleToleranceRadians": { "type": "number", "exclusiveMinimum": 0 },
-            "maxEvaluations": { "type": "integer", "minimum": 8, "maximum": 256 }
+            "maxEvaluations": { "type": "integer", "minimum": 8 }
           }
         },
         "randomness": { "const": "none" }

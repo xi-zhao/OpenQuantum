@@ -12,6 +12,7 @@ import {
 } from "@modelcontextprotocol/sdk/types.js";
 
 import { runLocalJsonProcess } from "../../../../src/lib/local-json-process.mjs";
+import { localComputeEnvironment, localComputeProcessOptions } from "../../../../src/lib/local-compute-policy.mjs";
 
 const skillRoot = fileURLToPath(new URL("..", import.meta.url));
 const projectRoot = path.resolve(skillRoot, "../../..");
@@ -22,13 +23,8 @@ const projectEnvironment = path.join(
   "python-envs",
   "qec-memory-experiment",
 );
-const MAX_DISTANCE = 7;
-const MAX_ROUNDS = 20;
-const MAX_SHOTS = 50_000;
-const MAX_ERROR_RATE = 0.05;
+const MAX_ERROR_RATE = 1;
 const MAX_SEED = 2 ** 32 - 1;
-const BRIDGE_TIMEOUT_MS = 60_000;
-const MAX_BRIDGE_OUTPUT_BYTES = 2 * 1024 * 1024;
 const BRIDGE_ENVIRONMENT_NAMES = Object.freeze([
   "HOME",
   "HTTP_PROXY",
@@ -56,16 +52,16 @@ const lazyEnvironmentAnnotations = Object.freeze({
 const TOOLS = Object.freeze([
   {
     name: "run_qec_memory_experiment",
-    title: "Run a bounded rotated-surface-code memory experiment",
+    title: "Run a rotated-surface-code memory experiment",
     description:
       "Generate a rotated surface-code X- or Z-memory circuit with pinned Stim, sample a fixed number of noisy shots with an explicit seed, decode with pinned PyMatching, and report logical-error counts with uncertainty. This is one bounded Monte Carlo experiment, not a threshold or hardware claim.",
     inputSchema: {
       type: "object",
       properties: {
         basis: { type: "string", enum: ["x", "z"] },
-        distance: { type: "integer", minimum: 3, maximum: MAX_DISTANCE },
-        rounds: { type: "integer", minimum: 1, maximum: MAX_ROUNDS },
-        shots: { type: "integer", minimum: 100, maximum: MAX_SHOTS },
+        distance: { type: "integer", minimum: 3 },
+        rounds: { type: "integer", minimum: 1 },
+        shots: { type: "integer", minimum: 1 },
         physicalErrorRate: {
           type: "number",
           minimum: 0,
@@ -122,18 +118,17 @@ function normalizeExperimentRequest(value) {
     throw new TypeError("basis must be x or z");
   }
   if (
-    !Number.isInteger(value.distance) ||
+    !Number.isSafeInteger(value.distance) ||
     value.distance < 3 ||
-    value.distance > MAX_DISTANCE ||
     value.distance % 2 === 0
   ) {
-    throw new TypeError(`distance must be an odd integer between 3 and ${MAX_DISTANCE}`);
+    throw new TypeError("distance must be an odd integer >= 3");
   }
-  if (!Number.isInteger(value.rounds) || value.rounds < 1 || value.rounds > MAX_ROUNDS) {
-    throw new TypeError(`rounds must be an integer between 1 and ${MAX_ROUNDS}`);
+  if (!Number.isSafeInteger(value.rounds) || value.rounds < 1) {
+    throw new TypeError("rounds must be a positive integer");
   }
-  if (!Number.isInteger(value.shots) || value.shots < 100 || value.shots > MAX_SHOTS) {
-    throw new TypeError(`shots must be an integer between 100 and ${MAX_SHOTS}`);
+  if (!Number.isSafeInteger(value.shots) || value.shots < 1) {
+    throw new TypeError("shots must be a positive integer");
   }
   if (
     typeof value.physicalErrorRate !== "number" ||
@@ -143,7 +138,7 @@ function normalizeExperimentRequest(value) {
   ) {
     throw new TypeError(`physicalErrorRate must be between 0 and ${MAX_ERROR_RATE}`);
   }
-  if (!Number.isInteger(value.seed) || value.seed < 0 || value.seed > MAX_SEED) {
+  if (!Number.isSafeInteger(value.seed) || value.seed < 0 || value.seed > MAX_SEED) {
     throw new TypeError(`seed must be an integer between 0 and ${MAX_SEED}`);
   }
   return {
@@ -187,11 +182,10 @@ function runBridge(envelope, signal) {
     command: "uv",
     args: ["run", "--quiet", "--project", skillRoot, "--python", "3.12", "python", bridgePath],
     cwd: skillRoot,
-    env: bridgeEnvironment(),
+    env: localComputeEnvironment(bridgeEnvironment()),
     input: envelope,
     signal,
-    timeoutMs: BRIDGE_TIMEOUT_MS,
-    maxOutputBytes: MAX_BRIDGE_OUTPUT_BYTES,
+    ...localComputeProcessOptions(),
     label: "Stim/PyMatching runtime",
     notFoundMessage: "未找到 uv；请先安装 uv 后再使用 QEC 本地实验",
   });
@@ -213,7 +207,7 @@ function validateFacts(request, facts) {
   const result = facts?.result ?? {};
   const countsMatch =
     result.shots === request.shots &&
-    Number.isInteger(result.logicalErrors) &&
+    Number.isSafeInteger(result.logicalErrors) &&
     result.logicalErrors >= 0 &&
     result.logicalErrors <= request.shots &&
     result.successfulShots === request.shots - result.logicalErrors;

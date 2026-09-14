@@ -35,13 +35,12 @@
         "version": { "const": "1.0.0" },
         "coarsePointsRequested": { "const": 65 },
         "angleToleranceRadians": { "type": "number", "exclusiveMinimum": 0 },
-        "maxEvaluations": { "type": "integer", "minimum": 8, "maximum": 256 }
+        "maxEvaluations": { "type": "integer", "minimum": 8 }
       }
     },
     "entries": {
       "type": "array",
       "minItems": 1,
-      "maxItems": 256,
       "items": {
         "type": "object",
         "additionalProperties": false,
@@ -53,7 +52,7 @@
           "bestEnergyHartree"
         ],
         "properties": {
-          "evaluation": { "type": "integer", "minimum": 1, "maximum": 256 },
+          "evaluation": { "type": "integer", "minimum": 1 },
           "phase": { "enum": ["coarse", "refine", "final"] },
           "thetaRadians": {
             "type": "number",

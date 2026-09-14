@@ -759,8 +759,8 @@ function evaluateGroundStateFacts({
     resources?.maxEvaluations === canonical.normalized?.method?.optimizer?.maxEvaluations;
   const withinBudget =
     resourceCountsMatch &&
-    resources.expectationEvaluations <= definitions.get("resources.within-budget").threshold &&
-    resources.expectationEvaluations <= resources.maxEvaluations;
+    resources.expectationEvaluations <= resources.maxEvaluations &&
+    resources.expectationEvaluations / resources.maxEvaluations <= definitions.get("resources.within-budget").threshold;
   observations.set(
     "resources.within-budget",
     makeObservation({

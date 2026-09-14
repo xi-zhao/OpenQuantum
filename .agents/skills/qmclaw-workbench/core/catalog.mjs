@@ -10,11 +10,11 @@ export const QMCLAW_UPSTREAM = Object.freeze({
 export const SOURCE_KIND = "simulation";
 export const SCIENTIFIC_VALIDATION = "not_evaluated";
 export const MIN_POINTS = 16;
-export const MAX_POINTS = 256;
+export const MAX_POINTS = null;
 export const MIN_SECONDARY_POINTS = 8;
-export const MAX_SECONDARY_POINTS = 64;
+export const MAX_SECONDARY_POINTS = null;
 export const MIN_SHOTS = 16;
-export const MAX_SHOTS = 4096;
+export const MAX_SHOTS = null;
 export const MAX_SEED = 0x7fffffff;
 export const QUBITS_PER_RUN = 1;
 export const QUBIT_PATTERN = /^[A-Za-z0-9][A-Za-z0-9_-]{0,31}$/;
@@ -114,7 +114,7 @@ export const PARAMETER_DEFINITIONS = Object.freeze({
   maximumCliffordCount: Object.freeze({
     unit: "1",
     minimum: 8,
-    maximum: 10000,
+    maximum: null,
     integer: true,
     description: "Largest dimensionless Clifford sequence length.",
   }),

@@ -1,11 +1,26 @@
 import { defineScienceTool, objectSchema as obj, numberSchema as num, integerSchema as int, arraySchema as arr } from "../../../../src/lib/bounded-science-mcp.mjs";
+import { referenceModeSchema, referenceAwareResultSchema, nullable } from "../../../../src/lib/science-reference.mjs";
 import { circuitSchema, checkCircuit } from "../../../../src/lib/quantum-circuit-input.mjs";
-const vector = arr(arr(num(-1.00000001, 1.00000001), 2, 2), 2, 8);
+const vector = arr(arr(num(-1.00000001, 1.00000001), 2, 2), 2);
+const resultSchema = referenceAwareResultSchema({ nodes: arr(int(0), 1), edges: arr(arr(int(0), 2, 2), 0), inputNodes: arr(int(0), 1), outputNodes: arr(int(0), 1), maxSpace: int(1), pattern: { type: "string", minLength: 1 }, simulation: obj({ status: { enum: ["computed", "not_run"] }, backend: { const: "statevector" }, reason: { type: "string", minLength: 1 } }), referenceStatevector: nullable(vector), branches: arr(obj({ seed: int(0, Number.MAX_SAFE_INTEGER), statevector: vector, fidelity: nullable(num(0, 1.00000001)), normError: num(0), measurements: arr(obj({ node: int(0), outcome: int(0, 1) }), 0) }), 0), maxInfidelity: nullable(num(0, 1)), bitOrder: { const: "left-to-right logical q0,q1,... mapped by outputNodes" } }, ["referenceStatevector", "maxInfidelity"]);
+resultSchema.allOf.push({
+  if: { properties: { reference: { properties: { status: { const: "computed" } } } } },
+  then: { properties: { branches: { minItems: 1, items: { properties: { fidelity: { type: "number" } } } } } },
+  else: { properties: { branches: { items: { properties: { fidelity: { type: "null" } } } } } },
+}, {
+  if: { properties: { simulation: { properties: { status: { const: "not_run" } } } } },
+  then: { properties: { branches: { maxItems: 0 }, reference: { properties: { status: { const: "not_run" } } } } },
+  else: { properties: { branches: { minItems: 1 } } },
+});
 export const definition = defineScienceTool({
   name: "simulate_graphix_pattern",
-  description: "Transpile a 1–3 qubit gate circuit into a Graphix MBQC pattern and simulate corrected outputs for several sampled measurement branches. Return resource graph, executable command description and independent dense statevector comparison. Bound to 12 gates, 64 graph nodes and 10 simultaneously live qubits; pure product input, no noise or hardware.",
+  description: "Generate and optimize a Graphix MBQC pattern, resource graph and measurement order. simulate=false generates the pattern without state simulation. Optional statevector simulation returns corrected sampled branches; independent gate-model reference is separately selectable. Size is determined by the user's resources.",
   source: { name: "graphix", version: "0.3.5", repository: "https://github.com/TeamGraphix/graphix" },
-  inputSchema: obj({ ...circuitSchema(3, 12, true), initialState: { type: "string", enum: ["zero", "plus"], default: "zero" }, branches: int(1, 8, 4), seed: int(0, 2147483639, 7) }),
-  checkInput: checkCircuit,
-  resultSchema: obj({ nodes: arr(int(0, 1000), 1, 64), edges: arr(arr(int(0, 1000), 2, 2), 0, 512), inputNodes: arr(int(0, 1000), 1, 3), outputNodes: arr(int(0, 1000), 1, 3), maxSpace: int(1, 10), pattern: { type: "string", minLength: 1, maxLength: 32000 }, referenceStatevector: vector, branches: arr(obj({ seed: int(0, 2147483647), statevector: vector, fidelity: num(0, 1.00000001), normError: num(0, 1), measurements: arr(obj({ node: int(0, 1000), outcome: int(0, 1) }), 0, 64) }), 1, 8), maxInfidelity: num(0, 1), bitOrder: { const: "left-to-right logical q0,q1,... mapped by outputNodes" } }),
+  inputSchema: obj({ ...circuitSchema(undefined, undefined, true), simulate: { type: "boolean", default: true }, initialState: { type: "string", enum: ["zero", "plus"], default: "zero" }, branches: int(1, undefined, 4), seed: int(0, 2147483647, 7), referenceMode: referenceModeSchema }),
+  checkInput(v) {
+    checkCircuit(v);
+    if (!Number.isSafeInteger(v.seed + v.branches - 1)) throw new Error("Branch seeds must be exactly representable integers");
+    if (!v.simulate && v.referenceMode === "required") throw new Error("An output-state reference requires simulate=true");
+  },
+  resultSchema,
 });

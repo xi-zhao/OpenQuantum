@@ -10,7 +10,7 @@ def compute(v):
     from scipy.integrate import solve_ivp
     from mqt.yaqs import AnalogSimParams, Hamiltonian, NoiseModel, Observable, Simulator, State
     n = v["numQubits"]
-    reference = reference_plan(v["referenceMode"], n <= 6, "Independent dense Lindblad integration", "Dense reference is limited to 6 qubits; tensor trajectories run independently.")
+    reference = reference_plan(v["referenceMode"], n <= 6, "Independent dense Lindblad integration", "Automatic dense reference is omitted above 6 qubits; required attempts it at the requested size.")
     parameters = AnalogSimParams(observables=[Observable("z", sites=i) for i in range(n)],
         elapsed_time=v["duration"], dt=v["duration"] / v["steps"], num_traj=v["trajectories"],
         max_bond_dim=v["maxBondDimension"], svd_threshold=1e-10, krylov_tol=1e-10,

@@ -5,7 +5,7 @@ export const referenceModeSchema = {
   type: "string",
   enum: ["auto", "required", "skip"],
   default: "auto",
-  description: "auto computes an independent reference within its cost limit; required rejects an unavailable reference; skip explicitly omits it.",
+  description: "auto computes the reference for default small-system cases; required attempts it at the requested size using the user's resources; skip omits it. A failed reference is an error, never a successful skip.",
 };
 
 export const referenceResultSchema = objectSchema({
@@ -32,10 +32,4 @@ export function referenceAwareResultSchema(properties, referenceFields) {
       })),
     ],
   };
-}
-
-export function checkReferenceRequest(mode, size, maximum, label) {
-  if (mode === "required" && size > maximum) {
-    throw new Error(`${label} reference requires size <= ${maximum}; use referenceMode=auto or skip for the larger main calculation`);
-  }
 }

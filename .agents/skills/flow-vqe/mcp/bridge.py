@@ -12,7 +12,6 @@ from science_reference import reference_plan
 def compute(v):
     import numpy as np
     import torch
-    torch.set_num_threads(1)
     torch.manual_seed(v["seed"])
     np.random.seed(v["seed"])
     # Import only the pinned upstream training module, without its CLI/dataset dependencies.
@@ -26,7 +25,7 @@ def compute(v):
     n = v["numQubits"]
     from core.statevector import PauliObjective
     objective = PauliObjective(n, v["layers"], v["terms"])
-    reference = reference_plan(v["referenceMode"], n <= 10, "Independent dense Pauli diagonalization", "Dense reference is limited to 10 qubits; matrix-free training runs independently.")
+    reference = reference_plan(v["referenceMode"], n <= 10, "Independent dense Pauli diagonalization", "Automatic dense reference is omitted above 10 qubits; required attempts it at the requested size.")
     h = exact = None
     if reference["status"] == "computed":
         paulis = {"I": np.eye(2), "X": np.array([[0,1],[1,0]]),

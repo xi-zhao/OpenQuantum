@@ -1,15 +1,15 @@
 ---
 name: quantum-circuit-verification
-description: 使用 OpenQuantum 的固定版本 MQT QCEC 本地检查两份有界、无测量的 OpenQASM 2 量子电路是否等价，并区分严格等价、相位等价、不等价、概率性结果和无信息结果。用于转译前后语义验证、电路重写审计和回归检查；不用于含测量/经典控制的动态电路、真实硬件、任意文件路径，或在缺少来源链时宣称最终科学验收通过。
+description: 使用 OpenQuantum 的固定版本 MQT QCEC 本地检查两份无测量的 OpenQASM 2 量子电路是否等价，并区分严格等价、相位等价、不等价、概率性结果和无信息结果。用于转译前后语义验证、电路重写审计和回归检查；不用于含测量/经典控制的动态电路、真实硬件、任意文件路径，或在缺少来源链时宣称最终科学验收通过。
 ---
 
 # 量子电路等价性验证
 
 ## 核心边界
 
-核心对象是“一对待比较的有界 unitary OpenQASM 2 电路”。Qiskit 电路工作台负责加载、转换、门数与深度分析；本 Skill 使用 MQT QCEC 回答更窄但更关键的问题：两个电路是否实现等价的量子变换。
+核心对象是“一对待比较的unitary OpenQASM 2 电路”。Qiskit 电路工作台负责加载、转换、门数与深度分析；本 Skill 使用 MQT QCEC 回答更窄但更关键的问题：两个电路是否实现等价的量子变换。
 
-- 每份 QASM 最多 64 KiB、最多 16 个量子位、最多 512 个语句。
+- 提交两份量子位数相同的 OpenQASM 2 字符串；量子位、语句和文本长度由输入决定。
 - 两份电路必须声明相同的总量子位数。
 - 只允许标准 `qelib1.inc`；不接受任意 include 路径。
 - 不接受 `measure`、`reset`、`if`、`creg` 或 `opaque`。
@@ -42,3 +42,5 @@ description: 使用 OpenQuantum 的固定版本 MQT QCEC 本地检查两份有�
 3. checker 与耗时摘要；
 4. conclusive / equivalent / provenance 三类 observations；
 5. 适用范围和未验证项。
+
+计算规模和资源由调用方选择，适配器不设置量子位、门数、项数、采样数或迭代数的人工上限。默认值用于方便调用；模型、格式和数值表示要求仍由输入合同检查。详见[计算参数与资源配置](../../../docs/integrations/SCALABLE_BRIDGES.md)。

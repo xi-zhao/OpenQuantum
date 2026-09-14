@@ -1,6 +1,6 @@
 ---
 name: qec-memory-experiment
-description: 使用 OpenQuantum 的固定版本 Stim 与 PyMatching 运行有界 rotated surface-code X/Z memory 蒙特卡洛实验，生成 detector error model、采样 syndrome、执行 MWPM 解码并报告逻辑错误率及区间。用于 QEC 教学、解码回归、噪声设置对比和小规模研究预检；不用于从单点估计阈值、声称真实硬件性能、接受任意 Stim 文件或在缺少来源链时宣称最终科学验收通过。
+description: 使用 OpenQuantum 的固定版本 Stim 与 PyMatching 运行 rotated surface-code X/Z memory 蒙特卡洛实验，生成 detector error model、采样 syndrome、执行 MWPM 解码并报告逻辑错误率及区间。用于 QEC 教学、解码回归、噪声设置对比和研究计算；不用于从单点估计阈值、声称真实硬件性能、接受任意 Stim 文件或在缺少来源链时宣称最终科学验收通过。
 ---
 
 # QEC Memory Experiment
@@ -12,10 +12,10 @@ description: 使用 OpenQuantum 的固定版本 Stim 与 PyMatching 运行有界
 固定边界：
 
 - `basis`: `x` 或 `z`；
-- `distance`: 奇数 3、5、7；
-- `rounds`: 1–20；
-- `shots`: 100–50,000；
-- `physicalErrorRate`: 0–0.05；
+- `distance`: 不小于 3 的奇数；
+- `rounds`: 正整数；
+- `shots`: 正整数；
+- `physicalErrorRate`: 0–1；
 - `seed`: 0–2^32-1。
 
 统一错误率同时用于 Clifford 后退极化、每轮数据退极化、测量翻转和 reset 翻转。这是版本化实验 profile，不代表某台真实 QPU 的校准模型。
@@ -43,3 +43,5 @@ description: 使用 OpenQuantum 的固定版本 Stim 与 PyMatching 运行有界
 3. 逻辑错误数/率、标准误、Wilson 95% 区间；
 4. validation observations；
 5. 明确写出不能支持的 threshold 与硬件结论。
+
+计算规模和资源由调用方选择，适配器不设置量子位、门数、项数、采样数或迭代数的人工上限。默认值用于方便调用；模型、格式和数值表示要求仍由输入合同检查。详见[计算参数与资源配置](../../../docs/integrations/SCALABLE_BRIDGES.md)。

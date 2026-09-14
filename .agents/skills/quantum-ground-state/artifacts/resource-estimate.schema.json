@@ -27,10 +27,10 @@
     "statevectorDimension": { "const": 4 },
     "pauliTermCount": { "type": "integer", "minimum": 1, "maximum": 32 },
     "ansatzParameterCount": { "const": 1 },
-    "expectationEvaluations": { "type": "integer", "minimum": 1, "maximum": 256 },
+    "expectationEvaluations": { "type": "integer", "minimum": 1 },
     "pauliTermEvaluations": { "type": "integer", "minimum": 1, "maximum": 8192 },
     "shots": { "const": 0 },
-    "maxEvaluations": { "type": "integer", "minimum": 8, "maximum": 256 }
+    "maxEvaluations": { "type": "integer", "minimum": 8 }
   },
   "$defs": {
     "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }

@@ -67,7 +67,7 @@
     "variationalGapHartree": { "type": "number" },
     "converged": { "type": "boolean" },
     "terminationReason": { "enum": ["angle-tolerance", "evaluation-budget"] },
-    "evaluationCount": { "type": "integer", "minimum": 1, "maximum": 256 }
+    "evaluationCount": { "type": "integer", "minimum": 1 }
   },
   "$defs": {
     "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }

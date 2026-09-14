@@ -14,6 +14,7 @@ import { normalizeAuditRequest } from "../validators/state-math.mjs";
 import { validateStateAnalysis } from "../validators/validate-state-analysis.mjs";
 
 import { runLocalJsonProcess } from "../../../../src/lib/local-json-process.mjs";
+import { localComputeEnvironment, localComputeProcessOptions } from "../../../../src/lib/local-compute-policy.mjs";
 
 const skillRoot = fileURLToPath(new URL("..", import.meta.url));
 const projectRoot = path.resolve(skillRoot, "../../..");
@@ -24,8 +25,6 @@ const projectEnvironment = path.join(
   "python-envs",
   "quantum-information-audit",
 );
-const BRIDGE_TIMEOUT_MS = 180_000;
-const MAX_BRIDGE_OUTPUT_BYTES = 2 * 1024 * 1024;
 const BRIDGE_ENVIRONMENT_NAMES = Object.freeze([
   "HOME",
   "HTTP_PROXY",
@@ -53,7 +52,7 @@ const lazyEnvironmentAnnotations = Object.freeze({
 const TOOLS = Object.freeze([
   {
     name: "audit_density_matrix",
-    title: "Audit a bounded multipartite density matrix",
+    title: "Audit a multipartite density matrix",
     description:
       "Compute density-matrix and partial-transpose facts with pinned toqito, then independently replay the key invariants in the OpenQuantum Validator. Returns observations, not final scientific acceptance, because Result Package and Session Event Log provenance are not checked.",
     inputSchema: {
@@ -62,14 +61,12 @@ const TOOLS = Object.freeze([
         matrixReal: {
           type: "array",
           minItems: 4,
-          maxItems: 16,
-          items: { type: "array", minItems: 4, maxItems: 16, items: { type: "number" } },
+          items: { type: "array", minItems: 4, items: { type: "number" } },
         },
         matrixImag: {
           type: "array",
           minItems: 4,
-          maxItems: 16,
-          items: { type: "array", minItems: 4, maxItems: 16, items: { type: "number" } },
+          items: { type: "array", minItems: 4, items: { type: "number" } },
         },
         subsystemDimensions: {
           type: "array",
@@ -126,11 +123,10 @@ function runBridge(envelope, signal) {
     command: "uv",
     args: ["run", "--quiet", "--project", skillRoot, "--python", "3.12", "python", bridgePath],
     cwd: skillRoot,
-    env: bridgeEnvironment(),
+    env: localComputeEnvironment(bridgeEnvironment()),
     input: envelope,
     signal,
-    timeoutMs: BRIDGE_TIMEOUT_MS,
-    maxOutputBytes: MAX_BRIDGE_OUTPUT_BYTES,
+    ...localComputeProcessOptions(),
     label: "toqito audit runtime",
     notFoundMessage: "未找到 uv；请先安装 uv 后再使用 toqito 本地审计",
   });

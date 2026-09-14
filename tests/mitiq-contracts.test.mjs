@@ -10,13 +10,13 @@ import { definition } from "../.agents/skills/mitiq-error-mitigation/mcp/contrac
 
 const name = "run_mitiq_experiment";
 
-test("Mitiq rejects unsupported circuits, method combinations and excessive combined budgets", () => {
+test("Mitiq rejects unsupported circuits, method combinations", () => {
   for (const method of ["zne", "rem", "pec", "cdr"]) assert.equal(definition.normalize(name, { method }).method, method);
   for (const input of [
-    { method: "unknown" }, { numQubits: 5 }, { shotsBudget: 32768, replicates: 16 },
+    { method: "unknown" }, { numQubits: 5 }, { shotsBudget: 0, replicates: 16 },
     { gates: [{ name: "CX", targets: [0, 0] }] }, { gates: [{ name: "X", targets: [2] }] },
     { gates: [{ name: "RZ", targets: [0] }] }, { gates: [{ name: "H", targets: [0], angle: 0 }] },
-    { gates: Array.from({ length: 25 }, () => ({ name: "H", targets: [0] })) },
+    { gates: [] },
     { observable: "II" }, { observable: "Z" }, { gates: [{ name: "MEASURE", targets: [0] }] },
     { method: "zne", readoutProbability: 0.1 }, { method: "zne", trainingCircuits: 12 },
     { method: "rem", pecSamples: 16 }, { method: "cdr", observable: "XX" },

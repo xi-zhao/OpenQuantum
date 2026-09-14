@@ -37,7 +37,6 @@ scope:
 input:
   id: ground-state-request
   schema: inputs/request.schema.json
-  maxBytes: 65536
   mediaTypes:
     - application/json
 
@@ -82,7 +81,7 @@ acceptanceProfiles:
     validator: ground-state-validator
     definition:
       path: acceptance-profiles/supplied-pauli-statevector-v1.json
-      sha256: 3da476e36d255d0dac46252222a0df3132c9b4038af805ad049f523a562c613a
+      sha256: 696519edb69f25a3e6400ca8b03057657dab913cde7a93e98c45a3bde5f49e3a
 
 reproductionProfiles:
   - id: independent-statevector
@@ -118,8 +117,8 @@ permissions:
     allowed: false
     providers: []
   limits:
-    wallTimeSeconds: 60
-    memoryMiB: 256
+    wallTimeSeconds: null
+    memoryMiB: null
     maxArtifacts: 6
     maxCostUsd: 0
   data:

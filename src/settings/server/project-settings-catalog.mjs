@@ -163,7 +163,7 @@ const MCP_CATALOG = Object.freeze({
   qcec_local: Object.freeze({
     displayName: "量子电路等价性验证",
     description:
-      "使用固定 MQT QCEC 在本地判断两份有界 unitary OpenQASM 2 电路的严格等价、相位等价、不等价或不确定状态；不连接云端或真实硬件。",
+      "使用固定 MQT QCEC 在本地判断两份unitary OpenQASM 2 电路的严格等价、相位等价、不等价或不确定状态；不连接云端或真实硬件。",
     provider: "MQT / OpenQuantum",
     sourceUrl: "https://github.com/munich-quantum-toolkit/qcec",
     packageName: "mqt.qcec",
@@ -173,7 +173,7 @@ const MCP_CATALOG = Object.freeze({
   qec_local: Object.freeze({
     displayName: "QEC Memory 实验",
     description:
-      "使用固定 Stim 与 PyMatching 在本地运行有界、带 seed 的旋转表面码 X/Z memory 实验，报告有限 shots 的逻辑错误率与不确定度；不连接云端或真实硬件，也不据单点结果宣称阈值。",
+      "使用固定 Stim 与 PyMatching 在本地运行带 seed 的旋转表面码 X/Z memory 实验，报告有限 shots 的逻辑错误率与不确定度；不连接云端或真实硬件，也不据单点结果宣称阈值。",
     provider: "Stim / PyMatching / OpenQuantum",
     sourceUrl: "https://github.com/quantumlib/Stim",
     packageName: "stim + pymatching",
@@ -193,7 +193,7 @@ const MCP_CATALOG = Object.freeze({
   tyxonq_local: Object.freeze({
     displayName: "TyxonQ Local",
     description:
-      "本地小规模电路与噪声仿真；首次调用会由 uv 准备固定的 TyxonQ Python 环境，不连接云端或真实量子硬件。",
+      "本地电路与噪声仿真；首次调用会由 uv 准备固定的 TyxonQ Python 环境，不连接云端或真实量子硬件。",
     provider: "TyxonQ / OpenQuantum",
     sourceUrl: "https://github.com/QureGenAI-Biotech/TyxonQ",
     packageName: "tyxonq",

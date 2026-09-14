@@ -2,8 +2,8 @@ import { arraySchema as arr, integerSchema as int, numberSchema as num, objectSc
 
 export const CLIFFORD_T_GATES = ["H", "S", "T", "X", "Y", "Z", "CX", "CZ"];
 export function circuitSchema(maxQubits, maxGates, rotations = false) {
-  const properties = { gate: { type: "string", enum: [...CLIFFORD_T_GATES, ...(rotations ? ["RX", "RY", "RZ"] : [])] }, targets: arr(int(0, maxQubits - 1), 1, 2) };
-  if (rotations) properties.angle = num(-2 * Math.PI, 2 * Math.PI);
+  const properties = { gate: { type: "string", enum: [...CLIFFORD_T_GATES, ...(rotations ? ["RX", "RY", "RZ"] : [])] }, targets: arr(int(0, maxQubits === undefined ? undefined : maxQubits - 1), 1, 2) };
+  if (rotations) properties.angle = num();
   return {
     numQubits: int(1, maxQubits, 2),
     gates: { ...arr(obj(properties, ["gate", "targets"]), 1, maxGates), default: [{ gate: "H", targets: [0] }, { gate: "T", targets: [0] }, { gate: "T", targets: [0] }, { gate: "CX", targets: [0, 1] }] },

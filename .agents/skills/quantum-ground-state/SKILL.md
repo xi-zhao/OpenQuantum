@@ -67,3 +67,5 @@ Hermiticity、扇区不变性、精确参考重算、归一化、期望值回放
 对用户解释时明确区分：这是“给定 Hamiltonian 的扇区基态”，不是完整的分子 Hamiltonian/FCI 工作流。
 Model 可以解释 Result/Report，但不能修改中央 Acceptance Builder 基于 Validator observations、Profile 和
 来源链推导的结论。
+
+计算规模和资源由调用方选择，适配器不设置量子位、门数、项数、采样数或迭代数的人工上限。默认值用于方便调用；模型、格式和数值表示要求仍由输入合同检查。详见[计算参数与资源配置](../../../docs/integrations/SCALABLE_BRIDGES.md)。

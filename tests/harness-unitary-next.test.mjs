@@ -10,8 +10,15 @@ import { harnessHttpCookie, harnessSessionSnapshot, redactHarnessLaunchTokens } 
 import { prepareOpenQuantumHarnessHome } from "../scripts/lib/prepare-harness-home.mjs";
 
 import { UNITARY_NEXT_TOOLS } from "./fixtures/unitary-next.mjs";
-const enabled = process.env.OPENQUANTUM_REAL_UNITARY_NEXT === "1";
-const CASES = [...UNITARY_NEXT_TOOLS,
+const scaled = process.env.OPENQUANTUM_REAL_LOCAL_SCALE === "1";
+const enabled = scaled || process.env.OPENQUANTUM_REAL_UNITARY_NEXT === "1";
+const scaledInputs = {
+  "pyzx-optimization": { numQubits: 65, gates: [{ gate: "H", targets: [64] }], referenceMode: "skip" },
+  "graphix-mbqc": { numQubits: 11, gates: [{ gate: "H", targets: [10] }], simulate: false, referenceMode: "skip" },
+  "symmer-tapering": { numQubits: 65, terms: [{ pauli: "I".repeat(64) + "Z", coefficient: 0.5 }], symmetries: [{ pauli: "Z" + "I".repeat(64), sector: -1 }], referenceMode: "skip" },
+  "paulie-algebra": { numQubits: 65, generators: ["I".repeat(64) + "X", "I".repeat(64) + "Z"], closureMode: "skip", referenceMode: "skip" },
+};
+const CASES = [...UNITARY_NEXT_TOOLS.map(c => scaled ? { ...c, input: scaledInputs[c.id] } : c),
   { id: "pyzx-invalid", server: "pyzx_local", tool: "optimize_pyzx_circuit", input: { gates: [] }, expectError: true },
 ];
 const toolNames = CASES.map(c => c.server ? `mcp__${c.server}__${c.tool}` : c.tool);
@@ -81,7 +88,7 @@ test("Harness discovers four ecosystem Skills, runs four real Tools and persists
   await rpc("session/create", { sessionId, cwd: root, agentPreset: "openquantum" });
   const skillList = await rpc("skills/list", { sessionId });
   for (const c of UNITARY_NEXT_TOOLS) assert.ok(skillList.skills.some(skill => skill.name === c.id && skill.modelInvocable), c.id);
-  await rpc("session/prompt", { sessionId, mode: "queue", content: [{ type: "text", text: "Run the five fixed small-system unitary-next cases and return their actual evidence." }] });
+  await rpc("session/prompt", { sessionId, mode: "queue", content: [{ type: "text", text: "Run the configured unitary-next cases and return their actual evidence." }] });
   const history = await waitFor(async () => {
     const snapshot = await harnessSessionSnapshot(base, cookie, sessionId, 500);
     return snapshot.records.some((entry) => entry.event?.type === "turn/end") && snapshot;
@@ -108,11 +115,17 @@ test("Harness discovers four ecosystem Skills, runs four real Tools and persists
       const { definition } = await import(`../.agents/skills/${capability.id}/mcp/contracts.mjs`);
       assert.ok(definition.validateOutput(output), `${capability.id}: invalid persisted result`);
       assert.deepEqual(output.input, definition.normalize(capability.tool, capability.input));
+      if (scaled) {
+        assert.equal(output.result.reference.status, "not_run");
+        if (capability.id === "graphix-mbqc") assert.deepEqual(output.result.branches, []);
+        if (capability.id === "symmer-tapering") assert.equal(output.result.sectorDimension, "18446744073709551616");
+        if (capability.id === "paulie-algebra") { assert.equal(output.result.dimension, 3); assert.equal(output.result.closure, null); }
+      }
 
     }
   }
   assert.equal(sawModelToolResult, true);
   const evidence = path.join(root, ".openquantum/unitary-next-evidence");
   await mkdir(evidence, { recursive: true });
-  await writeFile(path.join(evidence, "harness-session.json"), JSON.stringify({ verifiedAt: new Date().toISOString(), model: "local protocol fixture", externalModelTested: false, sessionId, events }, null, 2));
+  await writeFile(path.join(evidence, scaled ? "harness-scale-session.json" : "harness-session.json"), JSON.stringify({ verifiedAt: new Date().toISOString(), model: "local protocol fixture", externalModelTested: false, sessionId, events }, null, 2));
 });

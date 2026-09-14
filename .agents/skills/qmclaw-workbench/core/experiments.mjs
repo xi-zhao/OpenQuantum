@@ -55,8 +55,8 @@ function rejectUnknownProperties(value, allowed, label) {
 
 function boundedInteger(value, fallback, minimum, maximum, label) {
   const resolved = value === undefined ? fallback : value;
-  if (!Number.isInteger(resolved) || resolved < minimum || resolved > maximum) {
-    throw new RangeError(`${label} must be an integer from ${minimum} to ${maximum}`);
+  if (!Number.isSafeInteger(resolved) || resolved < minimum || (maximum !== null && resolved > maximum)) {
+    throw new RangeError(`${label} must be an integer at least ${minimum}${maximum === null ? "" : ` and at most ${maximum}`}`);
   }
   return resolved;
 }
@@ -75,9 +75,9 @@ function resolvedParameters(spec, parametersValue) {
     if (
       typeof value !== "number" ||
       !Number.isFinite(value) ||
-      (definition.integer && !Number.isInteger(value)) ||
+      (definition.integer && !Number.isSafeInteger(value)) ||
       value < definition.minimum ||
-      value > definition.maximum
+      (definition.maximum !== null && value > definition.maximum)
     ) {
       const kind = definition.integer ? "an integer" : "a finite number";
       throw new RangeError(

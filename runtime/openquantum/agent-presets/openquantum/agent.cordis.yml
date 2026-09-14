@@ -104,7 +104,7 @@
       - !!js process.cwd() + '/.agents/skills/quantum-information-audit/mcp/server.mjs'
     env: {}
     cwd: !!js process.cwd()
-    toolCallTimeoutMs: 180000
+    toolCallTimeoutMs: 2147483647
     failOnStartupError: true
     reconnect:
       enabled: true
@@ -125,7 +125,7 @@
       - !!js process.cwd() + '/.agents/skills/quantum-circuit-verification/mcp/server.mjs'
     env: {}
     cwd: !!js process.cwd()
-    toolCallTimeoutMs: 30000
+    toolCallTimeoutMs: 2147483647
     failOnStartupError: true
     reconnect:
       enabled: true
@@ -147,7 +147,7 @@
       - !!js process.cwd() + '/.agents/skills/qec-memory-experiment/mcp/server.mjs'
     env: {}
     cwd: !!js process.cwd()
-    toolCallTimeoutMs: 60000
+    toolCallTimeoutMs: 2147483647
     failOnStartupError: true
     reconnect:
       enabled: true
@@ -168,7 +168,7 @@
       - !!js process.cwd() + '/.agents/skills/fatqat-workbench/mcp/server.mjs'
     env: {}
     cwd: !!js process.cwd()
-    toolCallTimeoutMs: 135000
+    toolCallTimeoutMs: 2147483647
     failOnStartupError: true
     reconnect:
       enabled: true
@@ -192,7 +192,7 @@
       - !!js process.cwd() + '/.agents/skills/tyxonq-workbench/mcp/server.mjs'
     env: {}
     cwd: !!js process.cwd()
-    toolCallTimeoutMs: 180000
+    toolCallTimeoutMs: 2147483647
     failOnStartupError: true
     reconnect:
       enabled: true
@@ -215,7 +215,7 @@
       - !!js process.cwd() + '/.agents/skills/qpanda-qubo/mcp/server.mjs'
     env: {}
     cwd: !!js process.cwd()
-    toolCallTimeoutMs: 300000
+    toolCallTimeoutMs: 2147483647
     failOnStartupError: true
     reconnect:
       enabled: true
@@ -464,7 +464,7 @@
       - !!js process.cwd() + '/.agents/skills/sqd-chemistry/mcp/server.mjs'
     env: {}
     cwd: !!js process.cwd()
-    toolCallTimeoutMs: 195000
+    toolCallTimeoutMs: 2147483647
     failOnStartupError: true
     reconnect:
       enabled: true
@@ -482,7 +482,7 @@
       - !!js process.cwd() + '/.agents/skills/tjm-dynamics/mcp/server.mjs'
     env: {}
     cwd: !!js process.cwd()
-    toolCallTimeoutMs: 195000
+    toolCallTimeoutMs: 2147483647
     failOnStartupError: true
     reconnect:
       enabled: true
@@ -500,7 +500,7 @@
       - !!js process.cwd() + '/.agents/skills/ldpc-decoding/mcp/server.mjs'
     env: {}
     cwd: !!js process.cwd()
-    toolCallTimeoutMs: 195000
+    toolCallTimeoutMs: 2147483647
     failOnStartupError: true
     reconnect:
       enabled: true
@@ -518,7 +518,7 @@
       - !!js process.cwd() + '/.agents/skills/flow-vqe/mcp/server.mjs'
     env: {}
     cwd: !!js process.cwd()
-    toolCallTimeoutMs: 195000
+    toolCallTimeoutMs: 2147483647
     failOnStartupError: true
     reconnect:
       enabled: true
@@ -536,7 +536,7 @@
       - !!js process.cwd() + '/.agents/skills/tenpy-ground-state/mcp/server.mjs'
     env: {}
     cwd: !!js process.cwd()
-    toolCallTimeoutMs: 195000
+    toolCallTimeoutMs: 2147483647
     failOnStartupError: true
     reconnect:
       enabled: true
@@ -554,7 +554,7 @@
       - !!js process.cwd() + '/.agents/skills/mitiq-error-mitigation/mcp/server.mjs'
     env: {}
     cwd: !!js process.cwd()
-    toolCallTimeoutMs: 195000
+    toolCallTimeoutMs: 2147483647
     failOnStartupError: true
     reconnect:
       enabled: true
@@ -572,7 +572,7 @@
       - !!js process.cwd() + '/.agents/skills/randomized-measurements/mcp/server.mjs'
     env: {}
     cwd: !!js process.cwd()
-    toolCallTimeoutMs: 195000
+    toolCallTimeoutMs: 2147483647
     failOnStartupError: true
     reconnect:
       enabled: true
@@ -590,7 +590,7 @@
     args:
       - !!js process.cwd() + '/.agents/skills/dynamiqs-dynamics/mcp/server.mjs'
     cwd: !!js process.cwd()
-    toolCallTimeoutMs: 195000
+    toolCallTimeoutMs: 2147483647
     failOnStartupError: true
 
 - id: mcp-clifft-sampling
@@ -602,7 +602,7 @@
     args:
       - !!js process.cwd() + '/.agents/skills/clifft-sampling/mcp/server.mjs'
     cwd: !!js process.cwd()
-    toolCallTimeoutMs: 195000
+    toolCallTimeoutMs: 2147483647
     failOnStartupError: true
 
 - id: mcp-oqupy-dynamics
@@ -614,7 +614,7 @@
     args:
       - !!js process.cwd() + '/.agents/skills/oqupy-dynamics/mcp/server.mjs'
     cwd: !!js process.cwd()
-    toolCallTimeoutMs: 195000
+    toolCallTimeoutMs: 2147483647
     failOnStartupError: true
 
 - id: mcp-deltakit-qec
@@ -626,7 +626,7 @@
     args:
       - !!js process.cwd() + '/.agents/skills/deltakit-qec/mcp/server.mjs'
     cwd: !!js process.cwd()
-    toolCallTimeoutMs: 195000
+    toolCallTimeoutMs: 2147483647
     failOnStartupError: true
 
 # Read-only CC-BY-4.0 benchmark snapshot; no runner or remote job lifecycle.
@@ -642,7 +642,7 @@
     args:
       - !!js process.cwd() + '/.agents/skills/pyzx-optimization/mcp/server.mjs'
     cwd: !!js process.cwd()
-    toolCallTimeoutMs: 195000
+    toolCallTimeoutMs: 2147483647
     failOnStartupError: true
 
 - id: mcp-graphix-mbqc
@@ -654,7 +654,7 @@
     args:
       - !!js process.cwd() + '/.agents/skills/graphix-mbqc/mcp/server.mjs'
     cwd: !!js process.cwd()
-    toolCallTimeoutMs: 195000
+    toolCallTimeoutMs: 2147483647
     failOnStartupError: true
 
 - id: mcp-symmer-tapering
@@ -666,7 +666,7 @@
     args:
       - !!js process.cwd() + '/.agents/skills/symmer-tapering/mcp/server.mjs'
     cwd: !!js process.cwd()
-    toolCallTimeoutMs: 195000
+    toolCallTimeoutMs: 2147483647
     failOnStartupError: true
 
 - id: mcp-paulie-algebra
@@ -678,5 +678,5 @@
     args:
       - !!js process.cwd() + '/.agents/skills/paulie-algebra/mcp/server.mjs'
     cwd: !!js process.cwd()
-    toolCallTimeoutMs: 195000
+    toolCallTimeoutMs: 2147483647
     failOnStartupError: true
