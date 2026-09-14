@@ -1,0 +1,655 @@
+{
+  "updatedAt": "2026-09-14T16:24:47.196361+00:00",
+  "baseCommit": "7628ae0f6909c8671d009ba488e7fa63fbefd9c4",
+  "scope": "User-selected computation size and execution budgets for five existing bridges; functional capability presentation in README",
+  "scientificValidation": "not_evaluated",
+  "externalModelTested": false,
+  "qpuTested": false,
+  "sourceFiles": {
+    ".agents/skills/clifft-sampling/mcp/bridge.py": "1161075c3120e838ec36809bf5214071526ec0e1484d3d668d6fd3acaa7b86f8",
+    ".agents/skills/clifft-sampling/mcp/contracts.mjs": "6524fec71f13440986f9aeb5cff5a4b40ee4d15ae2a52c32a86a7776cd3c5f5f",
+    ".agents/skills/flow-vqe/core/statevector.py": "b7d8d7a0f9c0371f0fe4cebb1954515fc8909fc3e4c03b2e9f0a43cf0f869411",
+    ".agents/skills/flow-vqe/mcp/bridge.py": "0388e158907918de821c09b28f14d8a827412ffda927c6f9963bdf79d6207cb6",
+    ".agents/skills/flow-vqe/mcp/contracts.mjs": "eda3b777f819878148f8082ee06eb1bd9d97e07eeb5abc8220da688fb33bef9b",
+    ".agents/skills/sqd-chemistry/mcp/bridge.py": "bf7e4606400bf45fdc5c005d3a3bd57818919169325ef8afd07b40e75f99c3a4",
+    ".agents/skills/sqd-chemistry/mcp/contracts.mjs": "69b4ab73816376bc07ae71d834b1f446be9c02b5ea77b1ec45925fb8ce4dd2c9",
+    ".agents/skills/tenpy-ground-state/mcp/bridge.py": "957fda0247952cd0ff7c9d7adc1ca8e1bef8463d0a6cae1c12aa35829234e06f",
+    ".agents/skills/tenpy-ground-state/mcp/contracts.mjs": "7678ea24537d8114f1fabed29f8c1d84bcf961f09200fc930c4a35a78947cac5",
+    ".agents/skills/tjm-dynamics/mcp/bridge.py": "94a0a4b2fb18b466772232f1faa314fbed3d1552f9746aebefdb8c41510ee0bc",
+    ".agents/skills/tjm-dynamics/mcp/contracts.mjs": "23997c565a79c68de957d9fe4177ad109ebcd8b1b478df8d313eccfa1635fcb3",
+    "runtime/openquantum/web-capabilities/client.js": "d785bb716156b0142c0058cc58f80e335a270f4eccd4a174bf7383b5a0bcfe2e",
+    "src/lib/bounded-science-mcp.mjs": "a5d6b82eba1270f8dce579a5bc8c85ffa4a7cde8bdc69758cefc13bc8bfdfb63",
+    "src/lib/local-json-process.mjs": "443dc54cb4ed9f3075ce1433e07ed2d7f44930cfb403d3f3fad27ceb5e759f22",
+    "src/lib/science-execution.mjs": "b4a3eb36d5b60ccaaf9ca4af21ada4cdf7f8a59d8553a859d3872ffe051fab36",
+    "src/lib/science-reference.mjs": "4341ca1565e9aa95a2ad9f7a50ee3a85c7b55049d66f228f5dd49d1c9c461cd8",
+    "src/lib/science_reference.py": "a2ee3d73589a7951a8599e3a78fe29445adb29e190d0535c9a14ae22285b0d40",
+    "src/settings/server/project-settings.mjs": "c29c873451776647fb5ed61092800863b4838158ca7091ac5d352b88513a3755",
+    "tests/harness-paper-tools.test.mjs": "c8a49f3d20b351b81e99fbdaf8e5aa9a539ecd556ee2b68587e8437a26e6e331",
+    "tests/harness-web-capabilities.test.mjs": "5b9b0e9dcd7028cd064aeb7ed61c0b34d788144a8876634795d257ad51d91750",
+    "tests/local-json-process.test.mjs": "9ab7587ce02503bdf54f513bdab27632dbdadf65cbf660ecdb3412759f1ac828",
+    "tests/paper-tools-contracts.test.mjs": "e0b129a123da4ae4ecfc8f45c770c9cb6eba2e687a08b736aa30349881b8120a",
+    "tests/project-settings.test.mjs": "52bf2d634b6a8444cf4ef847fc03c1778ba6cee60e51edb973842d4371c60650",
+    "tests/python/scalable_bridge_oracles.py": "0688d889cc1bc1b26f657c9fbc0a58045266f76f92b9f14e339bf13abef7af1b",
+    "tests/scalable-bridges-live.test.mjs": "cdc54055a7c76ae5dc6582c52f9df7419766c68c375bdac7c606b407813eedeb",
+    "tests/scalable-bridges.test.mjs": "0de74d47e6e155a537000c0a54be6e360ae34bdd8a0b44ec187172c93a176f9d",
+    "tests/unitary-tools-contracts.test.mjs": "d32219e92e4d33130081d058fdc526811fb6e7105921327501dc20bd069d8c5c",
+    "tests/user-compute-live.test.mjs": "d9d1d580d348dfbfdb4869609e7f9bb0ecac9171dd322ffb08568aa86ae65857"
+  },
+  "logs": {
+    "execution-tests.log": {
+      "sha256": "762b0fd657308c1d4382ae22b197eeb10e819471e068159ab9cafc1de60b9dfe",
+      "tests": [
+        43
+      ],
+      "pass": [
+        43
+      ],
+      "fail": [
+        0
+      ],
+      "skipped": [
+        0
+      ]
+    },
+    "settings-ui.log": {
+      "sha256": "bf28f8fc2ce79891c1798fd025ddae384e1a840664f2281522b9dcbefd42d58f",
+      "tests": [
+        8
+      ],
+      "pass": [
+        8
+      ],
+      "fail": [
+        0
+      ],
+      "skipped": [
+        0
+      ]
+    },
+    "user-compute-live.log": {
+      "sha256": "78b68537a3e3a035e1adbff56641725085a8be1df3771bf8bdf0544f4b29b31e",
+      "tests": [
+        5
+      ],
+      "pass": [
+        5
+      ],
+      "fail": [
+        0
+      ],
+      "skipped": [
+        0
+      ]
+    },
+    "live-harness.log": {
+      "sha256": "c7d22b3bc3e72e7ebeb5221315384ea0b62303a17cf5f934e16aa251acdab27e",
+      "tests": [
+        6
+      ],
+      "pass": [
+        6
+      ],
+      "fail": [
+        0
+      ],
+      "skipped": [
+        0
+      ]
+    },
+    "scoped-check.log": {
+      "sha256": "c20bcf3e4e24bc1bf2ea97ad2dfdab460a27242b13faa0f93ff47bd0f1476d8e",
+      "tests": [
+        247,
+        119,
+        33,
+        87,
+        3
+      ],
+      "pass": [
+        217,
+        119,
+        33,
+        87,
+        3
+      ],
+      "fail": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "skipped": [
+        30,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "readme-catalog.log": {
+      "sha256": "3fa5625402036e338948348ffca3dca9c21bdbbb3f8f0009f97fed996e95f5c4",
+      "tests": [
+        6
+      ],
+      "pass": [
+        6
+      ],
+      "fail": [
+        0
+      ],
+      "skipped": [
+        0
+      ]
+    }
+  },
+  "cases": [
+    {
+      "case": "clifft-sampling-user-required-reference",
+      "verifiedAt": "2026-09-14T16:13:38.391Z",
+      "source": {
+        "name": "clifft",
+        "version": "0.10.0",
+        "repository": "https://github.com/unitaryfoundation/clifft"
+      },
+      "dependencyLockSha256": "c5639fd8ffc3ac1393cfd4aaf0be293cb2e827a7b7354ea96bf816240eb19fac",
+      "normalizedInputSha256": "ef2a95d93a4a724c3b7e2574993e1e431719689568be9abce9c101ab98066e5d",
+      "input": {
+        "numQubits": 7,
+        "gates": [
+          {
+            "gate": "X",
+            "targets": [
+              0
+            ]
+          }
+        ],
+        "shots": 16,
+        "referenceMode": "required",
+        "execution": {
+          "timeoutMs": 0,
+          "maxOutputBytes": 8388608,
+          "threads": 2
+        },
+        "noiseProbability": 0,
+        "seed": 7
+      },
+      "reference": {
+        "mode": "required",
+        "status": "computed",
+        "method": "Independent dense density-matrix evolution",
+        "reason": "Independent reference computed for this input."
+      },
+      "observations": {
+        "peakActiveWidth": 0,
+        "totalVariationDistance": 0,
+        "outcomes": [
+          {
+            "bitstring": "1000000",
+            "count": 16,
+            "probability": 1,
+            "referenceProbability": 1
+          }
+        ]
+      },
+      "rawResultSha256": "bd11eae46f3aa8311dc1fd0dd47acfad647d22b2bf8d6f136923501c718c3a7d"
+    },
+    {
+      "case": "clifft-sampling-user-scale",
+      "verifiedAt": "2026-09-14T16:13:38.324Z",
+      "source": {
+        "name": "clifft",
+        "version": "0.10.0",
+        "repository": "https://github.com/unitaryfoundation/clifft"
+      },
+      "dependencyLockSha256": "c5639fd8ffc3ac1393cfd4aaf0be293cb2e827a7b7354ea96bf816240eb19fac",
+      "normalizedInputSha256": "14af5c901459520778ce44d2d50081706443ec421c89156d84e0231a116da316",
+      "input": {
+        "numQubits": 512,
+        "gates": {
+          "count": 512,
+          "construction": "H(0), followed by CX(i,i+1) for i=0..510; see tests/user-compute-live.test.mjs"
+        },
+        "shots": 128,
+        "execution": {
+          "timeoutMs": 0,
+          "maxOutputBytes": 8388608,
+          "threads": 2
+        },
+        "noiseProbability": 0,
+        "seed": 7,
+        "referenceMode": "auto"
+      },
+      "reference": {
+        "mode": "auto",
+        "status": "not_run",
+        "method": "Independent dense density-matrix evolution",
+        "reason": "Auto reference selects up to 6 qubits; use required to request a larger reference."
+      },
+      "observations": {
+        "peakActiveWidth": 0,
+        "totalVariationDistance": null,
+        "outcomes": [
+          {
+            "bitstring": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+            "count": 67,
+            "probability": 0.5234375,
+            "referenceProbability": null
+          },
+          {
+            "bitstring": "11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+            "count": 61,
+            "probability": 0.4765625,
+            "referenceProbability": null
+          }
+        ]
+      },
+      "rawResultSha256": "cd036b4fc6d1e860e0393a16619fab772140182bfe5f01155b30304db4b28481"
+    },
+    {
+      "case": "flow-vqe-user-scale",
+      "verifiedAt": "2026-09-14T16:13:36.229Z",
+      "source": {
+        "name": "Flow-VQE",
+        "revision": "f7642afa330e5108ea5738d42fe80b551363733c",
+        "repository": "https://github.com/olsson-group/Flow-VQE"
+      },
+      "dependencyLockSha256": "55a1bd3730cb09266ebe483354bb32f73b7bdfe6bf51f11aae091b15d7e16f92",
+      "normalizedInputSha256": "cde8c561b70b4f1a333406047e0fa3ec3dae31935aa6f36703507e818c2d9975",
+      "input": {
+        "numQubits": 2,
+        "terms": [
+          {
+            "pauli": "ZI",
+            "coefficient": -1
+          }
+        ],
+        "layers": 5,
+        "epochs": 201,
+        "batchSize": 4,
+        "execution": {
+          "timeoutMs": 0,
+          "maxOutputBytes": 8388608,
+          "threads": 2
+        },
+        "seed": 7,
+        "referenceMode": "auto"
+      },
+      "reference": {
+        "mode": "auto",
+        "status": "computed",
+        "method": "Independent dense Pauli diagonalization",
+        "reason": "Independent reference computed for this input."
+      },
+      "observations": {
+        "normError": 0,
+        "bestEnergy": -0.9994926452636719,
+        "recomputedEnergy": -0.9994926394031609,
+        "evaluationsPerMethod": 804
+      },
+      "rawResultSha256": "6d0c941c650a47e14859a9d7a5731edbcba542caf67102a030f73505c8173600"
+    },
+    {
+      "case": "sqd-chemistry-user-scale",
+      "verifiedAt": "2026-09-14T16:13:38.055Z",
+      "source": {
+        "name": "qiskit-addon-sqd",
+        "version": "0.13.1",
+        "repository": "https://github.com/Qiskit/qiskit-addon-sqd"
+      },
+      "dependencyLockSha256": "4f14f930fe555173419c46aa23769abbef0a7345dabb549117788297a3493624",
+      "normalizedInputSha256": "62e2a4537b31bf05a5e4e0aa5d58c8d6d46dbc21b63cfaf281a1d4bb5d61b3cc",
+      "input": {
+        "molecule": {
+          "atoms": [
+            {
+              "element": "H",
+              "positionAngstrom": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "element": "H",
+              "positionAngstrom": [
+                0,
+                0,
+                1
+              ]
+            },
+            {
+              "element": "H",
+              "positionAngstrom": [
+                0,
+                0,
+                2
+              ]
+            },
+            {
+              "element": "H",
+              "positionAngstrom": [
+                0,
+                0,
+                3
+              ]
+            },
+            {
+              "element": "H",
+              "positionAngstrom": [
+                0,
+                0,
+                4
+              ]
+            },
+            {
+              "element": "H",
+              "positionAngstrom": [
+                0,
+                0,
+                5
+              ]
+            },
+            {
+              "element": "H",
+              "positionAngstrom": [
+                0,
+                0,
+                6
+              ]
+            },
+            {
+              "element": "H",
+              "positionAngstrom": [
+                0,
+                0,
+                7
+              ]
+            },
+            {
+              "element": "H",
+              "positionAngstrom": [
+                0,
+                0,
+                8
+              ]
+            },
+            {
+              "element": "H",
+              "positionAngstrom": [
+                0,
+                0,
+                9
+              ]
+            }
+          ],
+          "charge": 0
+        },
+        "basis": "cc-pvdz",
+        "activeSpace": {
+          "numOrbitals": 34,
+          "numElectrons": 10
+        },
+        "counts": {
+          "00000000000000000000000000000111110000000000000000000000000000011111": 64
+        },
+        "maxSubspaceDimension": 2,
+        "iterations": 1,
+        "execution": {
+          "timeoutMs": 0,
+          "maxOutputBytes": 8388608,
+          "threads": 2
+        },
+        "bondLengthAngstrom": 0.735,
+        "shots": 256,
+        "samplesPerBatch": 16,
+        "seed": 7,
+        "referenceMode": "auto"
+      },
+      "reference": {
+        "mode": "auto",
+        "status": "not_run",
+        "method": "FCI of the same active-space Hamiltonian, including frozen-core and nuclear energy",
+        "reason": "Auto FCI selects up to 12 active orbitals and 10000 determinants; use required for a larger reference."
+      },
+      "observations": {
+        "energyHartree": -5.376025726006395,
+        "hfEnergyHartree": -5.376025726006402,
+        "spatialOrbitals": 34,
+        "fullSpatialOrbitals": 50
+      },
+      "rawResultSha256": "a2077b0475018d954a66607689aee29de11a499eb399b312cd4e65475e208398"
+    },
+    {
+      "case": "tenpy-ground-state-user-scale",
+      "verifiedAt": "2026-09-14T16:13:29.649Z",
+      "source": {
+        "name": "physics-tenpy",
+        "version": "1.1.1",
+        "repository": "https://github.com/tenpy/tenpy"
+      },
+      "dependencyLockSha256": "052eb7d1fc6271d516abcb1929c43da9b8ea47ba03e5118fe52337ca4ecd4d1e",
+      "normalizedInputSha256": "794aa3af67d8ebbf02ac5a12f891cead3c650d8c4b5f078eb76aa6fe320faa31",
+      "input": {
+        "numSites": 300,
+        "jx": 0,
+        "jy": 0,
+        "jz": 0,
+        "hz": 0.8,
+        "maxBondDimension": 2,
+        "maxSweeps": 4,
+        "execution": {
+          "timeoutMs": 0,
+          "maxOutputBytes": 8388608,
+          "threads": 2
+        },
+        "hx": 0,
+        "referenceMode": "auto"
+      },
+      "reference": {
+        "mode": "auto",
+        "status": "not_run",
+        "method": "Independent dense diagonalization",
+        "reason": "Auto reference selects up to 10 sites; use required to request a larger reference."
+      },
+      "observations": {
+        "energy": -120.00000000000061,
+        "normError": 0,
+        "siteSzRange": [
+          0.5,
+          0.5
+        ]
+      },
+      "rawResultSha256": "bd564152a2062ee8b398356878ea91160be3330f02a3e0a2f485754d2262ad72"
+    },
+    {
+      "case": "tjm-dynamics-user-scale",
+      "verifiedAt": "2026-09-14T16:13:31.124Z",
+      "source": {
+        "name": "mqt.yaqs",
+        "version": "0.6.0",
+        "repository": "https://github.com/munich-quantum-toolkit/yaqs"
+      },
+      "dependencyLockSha256": "12ba63af14c747b4e32e4a1f0851abcd42f5ebe921ae8a6dba61ffa50980f35f",
+      "normalizedInputSha256": "6c9f722cb8377f1c23b33d8ecb56690f205c1c2fc7a09f0a7797e623b1ed4ff5",
+      "input": {
+        "numQubits": 2,
+        "coupling": 0,
+        "field": 0.7,
+        "dampingRate": 0,
+        "duration": 3,
+        "steps": 81,
+        "trajectories": 1,
+        "referenceMode": "skip",
+        "execution": {
+          "timeoutMs": 0,
+          "maxOutputBytes": 8388608,
+          "threads": 2
+        },
+        "maxBondDimension": 16,
+        "seed": 7
+      },
+      "reference": {
+        "mode": "skip",
+        "status": "not_run",
+        "method": "Independent dense Lindblad integration",
+        "reason": "Reference explicitly skipped by the caller."
+      },
+      "observations": {
+        "effectiveTrajectories": 1,
+        "standardErrorStatus": "deterministic",
+        "timePoints": 82,
+        "finalTime": 3
+      },
+      "rawResultSha256": "a09244d217190e65ef12feb52271cf36bcd603bf8b7fd13b7d35cbd47963fba8"
+    },
+    {
+      "case": "tjm-dynamics-user-single-trajectory",
+      "verifiedAt": "2026-09-14T16:13:31.883Z",
+      "source": {
+        "name": "mqt.yaqs",
+        "version": "0.6.0",
+        "repository": "https://github.com/munich-quantum-toolkit/yaqs"
+      },
+      "dependencyLockSha256": "12ba63af14c747b4e32e4a1f0851abcd42f5ebe921ae8a6dba61ffa50980f35f",
+      "normalizedInputSha256": "99b2fae9df5dca69e37ea1f8322e26233e4f2647baf9fc17c3dff43bdc2439ed",
+      "input": {
+        "numQubits": 2,
+        "steps": 2,
+        "trajectories": 1,
+        "dampingRate": 0.5,
+        "execution": {
+          "timeoutMs": 0,
+          "maxOutputBytes": 8388608,
+          "threads": 2
+        },
+        "coupling": 1,
+        "field": 0.5,
+        "duration": 0.5,
+        "maxBondDimension": 16,
+        "seed": 7,
+        "referenceMode": "auto"
+      },
+      "reference": {
+        "mode": "auto",
+        "status": "computed",
+        "method": "Independent dense Lindblad integration",
+        "reason": "Independent reference computed for this input."
+      },
+      "observations": {
+        "effectiveTrajectories": 1,
+        "standardErrorStatus": "insufficient_trajectories",
+        "timePoints": 3,
+        "finalTime": 0.5
+      },
+      "rawResultSha256": "168ec8534ea9092facd7e5c4d34dac8b900f857955f17e96f5cc9ee2b6c8b0ea"
+    }
+  ],
+  "independentMatrixFreeChecks": {
+    "pauliWordsChecked": 80,
+    "maximumExpectationError": 1.1102230246251565e-16,
+    "denseAnsatzCases": 2,
+    "uint64ParityCases": 30,
+    "unrepresentableArrayCases": 3
+  },
+  "harness": {
+    "verifiedAt": "2026-09-14T16:03:37.259Z",
+    "model": "local protocol fixture",
+    "externalModelTested": false,
+    "sessionId": "session-paper-8526b03c-7492-4052-bdee-519e7d15e54b",
+    "eventCount": 33,
+    "rawEventLogSha256": "6e9a0422f2face3094f370375268536e902c9c4e039ac4636916dc0da0fdf5b9",
+    "toolResults": [
+      {
+        "seq": 19,
+        "name": "mcp__tenpy_local__solve_tenpy_chain",
+        "isError": false,
+        "inputSha256": "9a2b8e624094e68127adfcda7eb95ddcfe8210ca91feb315fb0210c6b3991ea5",
+        "dependencyLockSha256": "052eb7d1fc6271d516abcb1929c43da9b8ea47ba03e5118fe52337ca4ecd4d1e",
+        "reference": {
+          "mode": "auto",
+          "status": "not_run",
+          "method": "Independent dense diagonalization",
+          "reason": "Auto reference selects up to 10 sites; use required to request a larger reference."
+        },
+        "scientificValidation": "not_evaluated"
+      },
+      {
+        "seq": 21,
+        "name": "mcp__tjm_local__simulate_tjm_dynamics",
+        "isError": false,
+        "inputSha256": "140b0833d29cdba6a6e10e7a22e732620c6fa4735caf0b7ae2d77a6bcaf28a44",
+        "dependencyLockSha256": "12ba63af14c747b4e32e4a1f0851abcd42f5ebe921ae8a6dba61ffa50980f35f",
+        "reference": {
+          "mode": "auto",
+          "status": "not_run",
+          "method": "Independent dense Lindblad integration",
+          "reason": "Auto reference selects up to 6 qubits; use required to request a larger reference."
+        },
+        "scientificValidation": "not_evaluated"
+      },
+      {
+        "seq": 23,
+        "name": "mcp__flow_vqe_local__train_flow_vqe",
+        "isError": false,
+        "inputSha256": "14c1d93c49ea0255e7bd4d56e51248e8c54bc70ad28556502f29a3eb8c7df69d",
+        "dependencyLockSha256": "55a1bd3730cb09266ebe483354bb32f73b7bdfe6bf51f11aae091b15d7e16f92",
+        "reference": {
+          "mode": "auto",
+          "status": "not_run",
+          "method": "Independent dense Pauli diagonalization",
+          "reason": "Auto reference selects up to 10 qubits; use required to request a larger reference."
+        },
+        "scientificValidation": "not_evaluated"
+      },
+      {
+        "seq": 25,
+        "name": "mcp__sqd_local__run_sqd_chemistry",
+        "isError": false,
+        "inputSha256": "df7b80bb68577a6538b80b6c46f2cd484e9a5b6d003baf6e44d84073a1a27f6d",
+        "dependencyLockSha256": "4f14f930fe555173419c46aa23769abbef0a7345dabb549117788297a3493624",
+        "reference": {
+          "mode": "auto",
+          "status": "computed",
+          "method": "FCI of the same active-space Hamiltonian, including frozen-core and nuclear energy",
+          "reason": "Independent reference computed for this input."
+        },
+        "scientificValidation": "not_evaluated"
+      },
+      {
+        "seq": 27,
+        "name": "mcp__clifft_local__sample_clifft_circuit",
+        "isError": false,
+        "inputSha256": "063ee7cb497692eec0f02a26fada15c95509046d12ac726a2aeff59cd6cb2684",
+        "dependencyLockSha256": "c5639fd8ffc3ac1393cfd4aaf0be293cb2e827a7b7354ea96bf816240eb19fac",
+        "reference": {
+          "mode": "auto",
+          "status": "not_run",
+          "method": "Independent dense density-matrix evolution",
+          "reason": "Auto reference selects up to 6 qubits; use required to request a larger reference."
+        },
+        "scientificValidation": "not_evaluated"
+      }
+    ]
+  },
+  "independentReview": {
+    "role": "Independent domain reviewer",
+    "bridgeRecordsChecked": 24,
+    "checks": [
+      "current output schemas",
+      "normalized inputs and input SHA256",
+      "current dependency lock SHA256",
+      "output dimensions and shots",
+      "SQD occupations and determinant dimensions"
+    ],
+    "findingsResolved": [
+      "MCP timeout settings form added to existing connection UI"
+    ]
+  },
+  "documentationLinks": {
+    "localFileLinksChecked": 147,
+    "missing": []
+  },
+  "rawEvidenceDirectory": ".openquantum/user-owned-compute-2026-09-14/",
+  "reproduction": "See tests/user-compute-live.test.mjs and docs/integrations/SCALABLE_BRIDGES.md"
+}

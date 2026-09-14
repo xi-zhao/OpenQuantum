@@ -10,6 +10,7 @@ import { UNITARY_TOOLS } from "./fixtures/unitary-tools.mjs";
 
 // A protocol fixture, deliberately not a scientific calculation or scientific evidence.
 function sample(schema) {
+  if (schema.anyOf) return sample(schema.anyOf[0]);
   if (Object.hasOwn(schema, "const")) return schema.const;
   if (schema.enum) return schema.enum[0];
   if (schema.type === "object") return Object.fromEntries((schema.required ?? []).map((key) => [key, sample(schema.properties[key])]));
@@ -81,7 +82,7 @@ for (const capability of UNITARY_TOOLS) {
 test("Unitary tool scope rejects arbitrary code and inconsistent physics/resource inputs", async () => {
   const bad = {
     "dynamiqs-dynamics": [{ drives: [] }, { drives: [4] }, { dampingRate: -0.1 }, { initialState: "thermal" }, { steps: 101 }],
-    "clifft-sampling": [{ gates: [{ gate: "LOSS", targets: [0] }] }, { numQubits: 1 }, { gates: [{ gate: "CX", targets: [0, 0] }] }, { gates: [{ gate: "H", targets: [0, 1] }] }, { gates: [{ gate: "T", targets: [5] }] }, { shots: 9000 }],
+    "clifft-sampling": [{ gates: [{ gate: "LOSS", targets: [0] }] }, { numQubits: 1 }, { gates: [{ gate: "CX", targets: [0, 0] }] }, { gates: [{ gate: "H", targets: [0, 1] }] }, { gates: [{ gate: "T", targets: [5] }] }, { shots: 0 }],
     "oqupy-dynamics": [{ steps: 8, memorySteps: 12 }, { temperature: -1 }, { alpha: 1 }, { bathFile: "/tmp/bath" }],
     "deltakit-qec": [{ width: 4 }, { shots: 0 }, { basis: "Y" }, { cloud: true }, { noiseProbability: 0.1 }],
   };

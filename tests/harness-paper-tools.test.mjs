@@ -10,8 +10,11 @@ import { harnessHttpCookie, harnessSessionSnapshot, redactHarnessLaunchTokens } 
 import { prepareOpenQuantumHarnessHome } from "../scripts/lib/prepare-harness-home.mjs";
 
 import { PAPER_TOOLS } from "./fixtures/paper-tools.mjs";
-const enabled = process.env.OPENQUANTUM_REAL_PAPER_TOOLS === "1";
-const toolNames = PAPER_TOOLS.map(c => `mcp__${c.server}__${c.tool}`);
+import { SCALABLE_BRIDGES } from "./fixtures/scalable-bridges.mjs";
+const scalable = process.env.OPENQUANTUM_REAL_SCALABLE_BRIDGES === "1";
+const cases = scalable ? SCALABLE_BRIDGES : PAPER_TOOLS;
+const enabled = scalable || process.env.OPENQUANTUM_REAL_PAPER_TOOLS === "1";
+const toolNames = cases.map(c => `mcp__${c.server}__${c.tool}`);
 async function listen(server) {
   server.listen(0, "127.0.0.1"); await once(server, "listening"); return server.address().port;
 }
@@ -25,7 +28,7 @@ async function waitFor(probe, description, timeoutMs = 45000) {
   throw new Error(`${description}: ${last ?? "timed out"}`);
 }
 
-test("Harness loads all six paper Skills, dispatches their real scientific tools and persists each result", { skip: !enabled, timeout: 600000 }, async (t) => {
+test("Harness loads Skills, dispatches real scientific tools and persists each result", { skip: !enabled, timeout: 600000 }, async (t) => {
   const root = process.cwd();
   const sandbox = await mkdtemp(path.join(tmpdir(), "oq-paper-harness-"));
   const harnessHome = path.join(sandbox, "dsh");
@@ -37,7 +40,7 @@ test("Harness loads all six paper Skills, dispatches their real scientific tools
     sawModelToolResult ||= body.messages?.some((message) => message.role === "tool");
     const initial = !dispatched;
     dispatched = true;
-    const delta = initial ? { role: "assistant", tool_calls: PAPER_TOOLS.map((c, index) => ({ index, id: `paper-fixture-${index}`, type: "function", function: { name: toolNames[index], arguments: JSON.stringify(c.input) } })) } : { role: "assistant", content: "Six local paper experiments completed; scientificValidation=not_evaluated." };
+    const delta = initial ? { role: "assistant", tool_calls: cases.map((c, index) => ({ index, id: `paper-fixture-${index}`, type: "function", function: { name: toolNames[index], arguments: JSON.stringify(c.input) } })) } : { role: "assistant", content: "Local scientific experiments completed; scientificValidation=not_evaluated." };
     response.writeHead(200, { "content-type": "text/event-stream" });
     for (const item of [
       { choices: [{ index: 0, delta, finish_reason: null }] },
@@ -77,14 +80,14 @@ test("Harness loads all six paper Skills, dispatches their real scientific tools
   const sessionId = `session-paper-${crypto.randomUUID()}`;
   await rpc("session/create", { sessionId, cwd: root, agentPreset: "openquantum" });
   const skillList = await rpc("skills/list", { sessionId });
-  for (const c of PAPER_TOOLS) assert.ok(skillList.skills.some(skill => skill.name === c.id && skill.modelInvocable), c.id);
-  await rpc("session/prompt", { sessionId, mode: "queue", content: [{ type: "text", text: "Run the six fixed small-system paper-tool cases and return their actual evidence." }] });
+  for (const c of cases) assert.ok(skillList.skills.some(skill => skill.name === c.id && skill.modelInvocable), c.id);
+  await rpc("session/prompt", { sessionId, mode: "queue", content: [{ type: "text", text: "Run the fixed scientific tool cases and return their actual evidence." }] });
   const history = await waitFor(async () => {
     const snapshot = await harnessSessionSnapshot(base, cookie, sessionId, 500);
     return snapshot.records.some((entry) => entry.event?.type === "turn/end") && snapshot;
   }, "completed paper-tools Harness turn", 540000);
   const events = history.records.map((entry) => entry.event);
-  for (const [index, capability] of PAPER_TOOLS.entries()) {
+  for (const [index, capability] of cases.entries()) {
     const call = events.find(event => event.type === "tool/call" && JSON.stringify(event).includes(toolNames[index]));
     assert.ok(call, `${capability.id}: missing call\n${redactHarnessLaunchTokens(logs)}`);
     const result = events.find(event => event.type === "tool/result" && JSON.stringify(event).includes(`paper-fixture-${index}`));
@@ -99,9 +102,14 @@ test("Harness loads all six paper Skills, dispatches their real scientific tools
     const { definition } = await import(`../.agents/skills/${capability.id}/mcp/contracts.mjs`);
     assert.ok(definition.validateOutput(output), `${capability.id}: invalid persisted result`);
     assert.deepEqual(output.input, definition.normalize(capability.tool, capability.input));
+    if (scalable) {
+      assert.equal(output.result.reference.mode, "auto");
+      assert.equal(output.result.reference.status, capability.id === "sqd-chemistry" ? "computed" : "not_run");
+      if (capability.id !== "sqd-chemistry") capability.referenceFields.forEach(key => assert.equal(output.result[key], null));
+    }
   }
   assert.equal(sawModelToolResult, true);
-  const evidence = path.join(root, ".openquantum/paper-tools-evidence");
+  const evidence = path.join(root, process.env.OPENQUANTUM_SCIENCE_EVIDENCE_DIR ?? (scalable ? ".openquantum/scalable-bridge-evidence-2026-09-14" : ".openquantum/paper-tools-evidence"));
   await mkdir(evidence, { recursive: true });
   await writeFile(path.join(evidence, "harness-session.json"), JSON.stringify({ verifiedAt: new Date().toISOString(), model: "local protocol fixture", externalModelTested: false, sessionId, events }, null, 2));
 });

@@ -7,7 +7,7 @@ OpenQuantum 新增 Dynamiqs、Clifft、OQuPy、Deltakit 与 Metriq 数据查询�
 | 项目 | 固定来源 | 当前切口 | 执行入口 |
 | --- | --- | --- | --- |
 | [Dynamiqs](https://github.com/dynamiqs/dynamiqs) | 0.3.6，提交 `a49b30fe5cacb5cf7c1d981f2e7ed03b18e05318`；Apache-2.0 | CPU 单量子位批量 Lindblad 动力学与驱动梯度 | `dynamiqs_local.simulate_dynamiqs_dynamics` |
-| [Clifft](https://github.com/unitaryfoundation/clifft) | PyPI 0.10.0；Apache-2.0 | 1–6 qubit Clifford+T、门后独立去极化、最终 Z 测量 | `clifft_local.sample_clifft_circuit` |
+| [Clifft](https://github.com/unitaryfoundation/clifft) | PyPI 0.10.0；Apache-2.0 | Clifford+T 电路、门后独立去极化与最终 Z 测量，可选密度矩阵参照 | `clifft_local.sample_clifft_circuit` |
 | [OQuPy](https://github.com/tempoCollaboration/OQuPy) | PyPI 0.5.0；Apache-2.0 | Ohmic spin-boson TEMPO、有限环境记忆 | `oqupy_local.simulate_oqupy_spin_boson` |
 | [Deltakit](https://github.com/Deltakit/deltakit) | PyPI 0.10.0；Apache-2.0 | 矩形 rotated planar-code、ToyNoise、Stim 1.16.0 与 PyMatching 2.4.0 | `deltakit_local.run_deltakit_memory` |
 | [Metriq data](https://github.com/unitaryfoundation/metriq-data/tree/6730f78b135a9af67691a0ef4fbea041978056c5) | 提交 `6730f78b135a9af67691a0ef4fbea041978056c5`；CC-BY-4.0 | 公开历史基准的原始参数、指标与来源查询 | 原生 `metriq_benchmarks` |
@@ -40,7 +40,7 @@ npm run capability:unitary:setup
 
 **Dynamiqs** 使用 `H=(drive X+detuning Z)/2`、`L=sqrt(gamma)|0><1|`，`hbar=1`。批量最多 8 个驱动，时长最多 5、最多 100 步。梯度来自 JAX 自动微分，并与独立 SciPy Lindblad 积分及中央有限差分比较；不开放任意波形、多体系统、GPU 配置或控制优化。`ground/excited` 是计算基标签。
 
-**Clifft** 限定 H、S、T、X、Y、Z、CX、CZ 共 64 个门，最多 8192 shots。门后对受该门作用的各量子位施加 `DEPOLARIZE1(p)`，其中 p 是三类 Pauli 错误的总概率。结果从左到右为 q0、q1……，包含所有位串及零频数。独立密度矩阵参考使用同一噪声合同。首版不开放 loss、leakage、续算、动态反馈或大规模性能主张；固定版本在此范围外的上游能力没有获得本次验证。
+**Clifft** 支持 H、S、T、X、Y、Z、CX、CZ，电路规模与 shots 由用户指定，可用 `execution` 配置执行资源、`maxActiveWidth` 自行设置活跃宽度门槛。门后对该门涉及的各量子位施加 `DEPOLARIZE1(p)`，p 是三类 Pauli 错误的总概率。结果从左到右为 q0、q1……；`auto` 默认对至 6 qubits 计算独立密度矩阵参照，`required` 可显式运行更大输入的参考。`referenceMode=auto|required|skip` 控制参考；运行参考时返回完整位串，跳过时仅返回实际观察到的位串（observed_only），参考概率与 TVD 为 null。loss、leakage、续算与动态反馈仍未开放。执行配置、参考模式与实测记录见[计算工具使用说明](SCALABLE_BRIDGES.md)。
 
 **OQuPy** 使用 `H=(tunneling X+bias Z)/2`，耦合算符 `Z/2`，`J(w)=2 alpha w exp(-w/cutoff)`，`hbar=kB=1`，系统初态与热 Gaussian bath 因子化。最多 40 个时间步、12 个记忆步，`alpha<=0.2`、时长不超过 2。`memoryTime=memorySteps*duration/steps`，减小 dt 时必须同时考虑物理记忆长度；固定 `epsrel=1e-7` 不代表观测量误差上界。适配器对请求终点增加一个向上的浮点 ULP，防止 OQuPy 0.5.0 将整步数取整为少一步，并核对真实输出网格。
 

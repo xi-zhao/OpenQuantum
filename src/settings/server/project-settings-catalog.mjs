@@ -16,7 +16,7 @@ const MCP_CATALOG = Object.freeze({
   }),
   clifft_local: Object.freeze({
     displayName: "Clifft 近 Clifford 采样",
-    description: "有界 Clifford+T 电路的带噪采样，与密度矩阵位串概率比较。",
+    description: "Clifford+T 电路带噪采样与可选密度矩阵参照。",
     provider: "clifft / OpenQuantum",
     sourceUrl: "https://github.com/unitaryfoundation/clifft",
     packageName: "clifft",
@@ -52,7 +52,7 @@ const MCP_CATALOG = Object.freeze({
   }),
   sqd_local: Object.freeze({
     displayName: "SQD 量子化学",
-    description: "H2/STO-3G 的采样子空间对角化，支持输入频数，并与 FCI 比较。",
+    description: "分子活性空间的采样子空间对角化，支持测量频数与可选 FCI 参照。",
     provider: "qiskit-addon-sqd / OpenQuantum",
     sourceUrl: "https://github.com/Qiskit/qiskit-addon-sqd",
     packageName: "qiskit-addon-sqd",
@@ -61,7 +61,7 @@ const MCP_CATALOG = Object.freeze({
   }),
   tjm_local: Object.freeze({
     displayName: "TJM 开放系统动力学",
-    description: "开放 Ising 链的张量跳跃轨迹，与密度矩阵 Lindblad 演化比较。",
+    description: "开放 Ising 链的张量跳跃轨迹、统计分析与可选 Lindblad 参照。",
     provider: "mqt.yaqs / OpenQuantum",
     sourceUrl: "https://github.com/munich-quantum-toolkit/yaqs",
     packageName: "mqt.yaqs",
@@ -79,7 +79,7 @@ const MCP_CATALOG = Object.freeze({
   }),
   flow_vqe_local: Object.freeze({
     displayName: "Flow-VQE 参数学习",
-    description: "调用论文的 flow 训练算法，对小量子 Hamiltonian 学习低能量参数。",
+    description: "调用论文的 flow 训练算法，以无矩阵 Pauli 计算学习低能量参数。",
     provider: "Flow-VQE / OpenQuantum",
     sourceUrl: "https://github.com/olsson-group/Flow-VQE",
     packageName: "Flow-VQE",
@@ -88,7 +88,7 @@ const MCP_CATALOG = Object.freeze({
   }),
   tenpy_local: Object.freeze({
     displayName: "TeNPy 多体基态",
-    description: "有限自旋链 DMRG 基态计算，并与小系统精确对角化比较。",
+    description: "自旋链 DMRG 基态、磁化与纠缠熵计算，可选精确对角化参照。",
     provider: "physics-tenpy / OpenQuantum",
     sourceUrl: "https://github.com/tenpy/tenpy",
     packageName: "physics-tenpy",
