@@ -757,3 +757,94 @@ packages:
       checks:
         - tests/scientific-result-materialization.test.mjs
         - tests/scientific-result-projection.test.mjs
+
+  - id: dynamiqs-dynamics
+    level: L1
+    execution:
+      mcpServers:
+        - name: dynamiqs_local
+          source: package
+          entrypoint: .agents/skills/dynamiqs-dynamics/mcp/server.mjs
+          activation: always
+          contractCheck: tests/unitary-tools-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: simulate_dynamiqs_dynamics
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/unitary-tools-contracts.test.mjs
+        - tests/unitary-tools-live.test.mjs
+        - tests/harness-unitary-tools.test.mjs
+
+  - id: clifft-sampling
+    level: L1
+    execution:
+      mcpServers:
+        - name: clifft_local
+          source: package
+          entrypoint: .agents/skills/clifft-sampling/mcp/server.mjs
+          activation: always
+          contractCheck: tests/unitary-tools-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: sample_clifft_circuit
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/unitary-tools-contracts.test.mjs
+        - tests/unitary-tools-live.test.mjs
+        - tests/harness-unitary-tools.test.mjs
+
+  - id: oqupy-dynamics
+    level: L1
+    execution:
+      mcpServers:
+        - name: oqupy_local
+          source: package
+          entrypoint: .agents/skills/oqupy-dynamics/mcp/server.mjs
+          activation: always
+          contractCheck: tests/unitary-tools-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: simulate_oqupy_spin_boson
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/unitary-tools-contracts.test.mjs
+        - tests/unitary-tools-live.test.mjs
+        - tests/harness-unitary-tools.test.mjs
+
+  - id: deltakit-qec
+    level: L1
+    execution:
+      mcpServers:
+        - name: deltakit_local
+          source: package
+          entrypoint: .agents/skills/deltakit-qec/mcp/server.mjs
+          activation: always
+          contractCheck: tests/unitary-tools-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: run_deltakit_memory
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/unitary-tools-contracts.test.mjs
+        - tests/unitary-tools-live.test.mjs
+        - tests/harness-unitary-tools.test.mjs
+
+  - id: metriq-data
+    level: L1
+    execution:
+      mcpServers: []
+      nativeTools:
+        - name: metriq_benchmarks
+          providerPlugin: ./metriq-data-tools.mjs
+          activation: always
+          contractCheck: tests/metriq-data.test.mjs
+          effect: read-only
+          effectEvidence: conservative-provider
+      checks:
+        - tests/metriq-data.test.mjs
+        - tests/harness-unitary-tools.test.mjs

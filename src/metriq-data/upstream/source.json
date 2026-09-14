@@ -1,0 +1,1999 @@
+{
+  "name": "metriq-data",
+  "repository": "https://github.com/unitaryfoundation/metriq-data",
+  "commit": "6730f78b135a9af67691a0ef4fbea041978056c5",
+  "license": "CC-BY-4.0",
+  "snapshotSha256": "45a81f9deadd6c583249817944637c5835b488a30c426ebbae945bc0be834426",
+  "sourceFileCount": 331,
+  "recordOccurrences": 413,
+  "uniqueRecords": 410,
+  "files": [
+    {
+      "path": "metriq-gym/v0.3/local/results.json",
+      "sha256": "a1ab9569b5d15d2958e4bea98fb914836280cc7f40dd7b40161d533f07e1f0a3",
+      "bytes": 1146,
+      "recordCount": 2
+    },
+    {
+      "path": "metriq-gym/v0.4/aws/arn_aws_braket_eu-north-1_device_qpu_iqm_garnet/2026-01-16_00-59-48_eplg_665664c1.json",
+      "sha256": "ccaf516dd127e8ff725baeefa8835b66daa31a4a21744faa150300e3e1dd7ddc",
+      "bytes": 1458,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/aws/results.json",
+      "sha256": "c828e2c71d239f393edb14e918f3d12dedf4af2ff2efbcbd09168fb8d152e318",
+      "bytes": 1922,
+      "recordCount": 3
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_boston/2025-11-26_17-40-01_linear_ramp_qaoa_23236ca8.json",
+      "sha256": "2a28f129c80dd92c444d3083a0f5e8e0cbd6065325f6ce18c1437b03f693075a",
+      "bytes": 1076,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_boston/2025-12-08_14-02-58_qml_kernel_b31c1b99.json",
+      "sha256": "0111f8b348dfda1e409f2749962e716eb309bf8495bc3725f89f31c7b1d2d633",
+      "bytes": 689,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_boston/2025-12-08_14-03-00_qml_kernel_f1657118.json",
+      "sha256": "c5c87d3f7f14b1e91a0e4cc6d62d2c682b8102d6da9c1872f8fbc87567558043",
+      "bytes": 687,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_boston/2025-12-08_14-03-01_qml_kernel_0dd3ec9e.json",
+      "sha256": "91c16d49982aee06007085b2c540a8a76ff7d8f6a46af2d8d63db14b6be1e508",
+      "bytes": 687,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_boston/2025-12-08_14-03-01_qml_kernel_fe974059.json",
+      "sha256": "9e10ef27e5e87c3457a29c47d3df0fdd3e891b30edffe9522e797fd8538e29ad",
+      "bytes": 687,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_boston/2025-12-08_14-03-06_qml_kernel_c9708f78.json",
+      "sha256": "5d8a19057f64062c6b7e1a839d9a9e80dceb132277040cf9a5cc451911e2f2c7",
+      "bytes": 688,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_boston/2025-12-08_14-03-07_qml_kernel_63b14122.json",
+      "sha256": "9cde2d88519b18474ed8a15011931dc4394b9b3b06d131bdf254dd9e315ca663",
+      "bytes": 688,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_boston/2025-12-08_14-03-07_qml_kernel_89517732.json",
+      "sha256": "a7ed411a89eed04e8c7152b47f3d48229cfff2f0c3cd6b6d779c69a0dafc11ec",
+      "bytes": 688,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_boston/2025-12-08_14-03-08_qml_kernel_d2868335.json",
+      "sha256": "75e117204790b21028a8ff50ba6433f4a6428c779d96c289b222356f9e2e25be",
+      "bytes": 688,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_boston/2025-12-08_14-03-09_qml_kernel_69357d93.json",
+      "sha256": "c02ed127bdfed1c92bb7f960c5c836344e511a2fb7ed26713a1c7aa6651a8f38",
+      "bytes": 688,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_boston/2025-12-08_14-03-10_qml_kernel_b09f034c.json",
+      "sha256": "f52e55932908a16573f4b640b5ae7c0d93d6d8ddeb87dced2a981ba3f6cb80f9",
+      "bytes": 688,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_boston/2025-12-08_14-03-10_qml_kernel_b3074684.json",
+      "sha256": "9f60b2c19bb10293bd55aedec59dbe5db765244e15c8aa3267aab98e318acec9",
+      "bytes": 688,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_boston/2025-12-08_14-03-11_qml_kernel_f855f6db.json",
+      "sha256": "64bfcc03069cbb78be25ea750a5e5a5c948f4682dc005f2a04e92596f1c5bd16",
+      "bytes": 688,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_boston/2025-12-08_14-03-12_qml_kernel_f928be95.json",
+      "sha256": "9abbe78bcf8115b63ea8c1f11fbd9b81a78b0cc4b17e4611e65aedb4f402579b",
+      "bytes": 686,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_boston/2025-12-08_14-03-12_qml_kernel_ffce18ce.json",
+      "sha256": "38558ef9cdff66336a88fb2322ecc03a13ce49465a0a1e5bcc65cb01560d0a32",
+      "bytes": 688,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_boston/2025-12-08_14-03-13_qml_kernel_ec310252.json",
+      "sha256": "daebec510d7af96303fb7571938ccda884cf6db728baa270c8701eaf486fe01d",
+      "bytes": 686,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_boston/2025-12-08_14-03-14_qml_kernel_e4bd3d88.json",
+      "sha256": "68a57994113671c521db647701e4b7328dd1942e7274dd67369918bced4183b4",
+      "bytes": 688,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_boston/2025-12-16_12-12-18_mirror_circuits_7c193847.json",
+      "sha256": "f7ce24b14bb70e262f6a6bfbae391818417b6b86ec134e4ca191f3e9fc81868e",
+      "bytes": 997,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_boston/2025-12-16_12-12-21_mirror_circuits_79a73d50.json",
+      "sha256": "4d04ce3adabbe51a57c56442c7576143b2127f4725f4336a846cea592e66660f",
+      "bytes": 1000,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_boston/2025-12-16_12-12-24_mirror_circuits_2acdbf7c.json",
+      "sha256": "74d39e8b6081443165e6c9057f228ea3c324e43f454796875e731af26199f76f",
+      "bytes": 998,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_boston/2025-12-16_12-12-26_mirror_circuits_53bed25e.json",
+      "sha256": "0155685d5855d3815f40411a9df32099396bbe883745a7ca7ab5802830733877",
+      "bytes": 999,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_boston/2025-12-16_12-12-29_mirror_circuits_bcd02ffb.json",
+      "sha256": "604b5e1607800e874a850542bf8697684e29c8e272de6bf1f9c07e722c0e785a",
+      "bytes": 974,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_boston/2025-12-16_12-12-32_mirror_circuits_e4b2eb9d.json",
+      "sha256": "14fa16a66fc9ac8a4962c82b7cdf3977069eaae44e16ab7113f95187c295de6b",
+      "bytes": 978,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_fez/2025-11-11_16-22-53_qml_kernel_a6d9de56.json",
+      "sha256": "cde7c7447dcac0f54d7471bc30bca158a59ad4abc214f0ec6f559820900129b4",
+      "bytes": 685,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_fez/2025-11-11_16-22-54_qml_kernel_4a421957.json",
+      "sha256": "eeca54bc4f6b31740191f67e659fe54ee4a2e0fd6665ef1cdfd9b67d43a2bad4",
+      "bytes": 685,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_fez/2025-11-11_16-22-54_qml_kernel_e0e92942.json",
+      "sha256": "12a2ebbdba6a6a46914d65b1e9ef41dd24ef51c4013613032aecb66f2c07b40f",
+      "bytes": 685,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_fez/2025-11-11_16-22-55_qml_kernel_7fe13c8c.json",
+      "sha256": "791d566c9505d13b049729a87a85551194253146c53143b11428bdbcec3ca507",
+      "bytes": 685,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_fez/2025-11-11_16-22-56_qml_kernel_3ff1a271.json",
+      "sha256": "5f966498b8829678f6b47b6747c06476fc5b0d9245d2be7aacb54ca080db78c7",
+      "bytes": 686,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_fez/2025-11-11_16-22-56_qml_kernel_dcff849a.json",
+      "sha256": "212d675a2da074fbffe42b4835bedb9ff2d9c3c8b4cece8b88e39e99e84c1ae4",
+      "bytes": 686,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_fez/2025-11-11_16-22-57_qml_kernel_ec0ce05b.json",
+      "sha256": "4f6dcfd6693d2e6f4479b7bcaf69408ed7ff463381ce1ad1e9589f9458b9fda9",
+      "bytes": 686,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_fez/2025-11-11_16-22-58_qml_kernel_16c64459.json",
+      "sha256": "ca0f30108950ceccc3d20c4343bc34288ddb6940dbf02b408d57d87737547daa",
+      "bytes": 686,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_fez/2025-11-11_16-22-58_qml_kernel_3a07f349.json",
+      "sha256": "4570c917326ad5f34b9ad5982ca7d56a2ca05c3f77d252d0a75e19b2163e6ed5",
+      "bytes": 686,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_fez/2025-11-11_16-22-59_qml_kernel_509a7574.json",
+      "sha256": "da2ec08da5e73cc3f53f0397681b58d3eaf5bf93774b9e1ec478365c8b3c0d19",
+      "bytes": 686,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_fez/2025-11-11_16-23-00_qml_kernel_59ecccf6.json",
+      "sha256": "6a1ec8d1cb25bb76ee1548fc83eecf518b97014ef4da5062ba75ade5fea10ad0",
+      "bytes": 686,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_fez/2025-11-11_16-23-00_qml_kernel_b153bcfb.json",
+      "sha256": "863f770a0ddf0c9974b30275ad86756406916e3cb242606d0b3109445cf41564",
+      "bytes": 686,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_fez/2025-11-11_16-23-01_qml_kernel_cc77e30d.json",
+      "sha256": "c342aefb992c0ab29cb8ef6363d991bef27b9ee5edf3db657e560b610b923c41",
+      "bytes": 686,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_fez/2025-11-11_16-23-02_qml_kernel_41d530ed.json",
+      "sha256": "643f9840f27709c9b798f400442b0aabc25b16231b674a32ed89d36110143c8d",
+      "bytes": 686,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_fez/2025-11-11_16-23-02_qml_kernel_87f07dfe.json",
+      "sha256": "916236d5aae0e1504306d980faca1d6444584dd7a172cdf768636bdee59c7222",
+      "bytes": 682,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_fez/2025-11-11_16-23-03_qml_kernel_cf287c0c.json",
+      "sha256": "52d9874e98c5c4b8bcce24b38925ed8e22b57c9be8bf7c20f80614c05074f741",
+      "bytes": 686,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_fez/2025-12-16_11-52-23_mirror_circuits_6b682343.json",
+      "sha256": "e711ec55cf7f82b0eb90a86bbc8c3bf46454b0bf2fc367d7adb7d958ec571658",
+      "bytes": 995,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_fez/2025-12-16_11-52-26_mirror_circuits_02e69959.json",
+      "sha256": "47bbe20be4fb4c80ea2973993cfb046e966e2dbdd35a4aefe346017323f384cf",
+      "bytes": 995,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_fez/2025-12-16_11-52-29_mirror_circuits_15f87181.json",
+      "sha256": "1ae458c24fbd0e4ce08dfd129587ee9ad67b593e03cb44313ad718d1ad5f1d8b",
+      "bytes": 999,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_fez/2025-12-16_11-52-32_mirror_circuits_e7c20cff.json",
+      "sha256": "61aa6c28be7ba84c6de66fd1520e7d4062c945dc3951d95e10dc1e851317a94a",
+      "bytes": 1000,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_fez/2025-12-16_11-52-35_mirror_circuits_b82ff530.json",
+      "sha256": "cb0724f081313d251a0aaf94dd25e9e5f244b489c0a61b0ddbfb853f490c521d",
+      "bytes": 975,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_fez/2025-12-16_11-52-39_mirror_circuits_06155c15.json",
+      "sha256": "1c9e940de16b5baecaa2471493efac4960ca60a07f2585b9ea7b870ce92ba68e",
+      "bytes": 979,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_kingston/2025-11-11_16-31-39_qml_kernel_38cec7b1.json",
+      "sha256": "1b90a7f7c93bdde59473438c763e8e81e16ad79ff5c79a55915387ddeba4667a",
+      "bytes": 691,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_kingston/2025-11-11_16-31-39_qml_kernel_9c24bff4.json",
+      "sha256": "84f66fcb557abd82237718484c343991194ae97f7072e3e0414fcf79ec1637c8",
+      "bytes": 691,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_kingston/2025-11-11_16-31-40_qml_kernel_f75d5834.json",
+      "sha256": "630e9d1fec158700c80e8c8cdca573a29c5607f322e92d9c6fbf24546ed7b76e",
+      "bytes": 689,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_kingston/2025-11-11_16-31-41_qml_kernel_333fbb94.json",
+      "sha256": "3b37e5f82c399c766cb9ace6858d3cbd52cc208cb94a6d4bb47c99ab30491902",
+      "bytes": 689,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_kingston/2025-11-11_16-31-42_qml_kernel_c439143f.json",
+      "sha256": "8943cde0ca8e6e552319f775567491dfb3ef6e0afc7a6c1fbee96c9b9da99316",
+      "bytes": 690,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_kingston/2025-11-11_16-31-42_qml_kernel_f073b641.json",
+      "sha256": "a5da6b3975e281c899db0f9e5a7a58fa460d6f37c32cf6f7a5b476493406ca40",
+      "bytes": 690,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_kingston/2025-11-11_16-31-43_qml_kernel_56c4bb00.json",
+      "sha256": "38ac1e90aaeaad2d972255fb071cbc8317b31be5752bf08b88730f07817c8767",
+      "bytes": 690,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_kingston/2025-11-11_16-31-43_qml_kernel_5b1146e0.json",
+      "sha256": "6e0276b244ddc8807f7a87041512f477fffc392672c5fdfc59a98d70d80173c0",
+      "bytes": 690,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_kingston/2025-11-11_16-31-44_qml_kernel_a27458d5.json",
+      "sha256": "7250f0fc65c4e1e07d43eb937990576dfb876be33956599e885b7ae8ce9b9ced",
+      "bytes": 690,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_kingston/2025-11-11_16-31-45_qml_kernel_472b43dc.json",
+      "sha256": "8cc035b9be6b0f1f613414e61a5a61244fe10ea1437c21b752a2e6a84612a9b6",
+      "bytes": 690,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_kingston/2025-11-11_16-31-45_qml_kernel_b25790a4.json",
+      "sha256": "142060da85a7a012baeedc46d7c3117703ecf09e63a2b97951813ded1817a2e0",
+      "bytes": 686,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_kingston/2025-11-11_16-31-46_qml_kernel_24772698.json",
+      "sha256": "5d12445476e3dbca1cb212683dfee8fe694efd0846156defba3e2fa0ab87b96b",
+      "bytes": 690,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_kingston/2025-11-11_16-31-46_qml_kernel_c79600ec.json",
+      "sha256": "36c8106798106e54c9eb30141379668d1d271b8b93989f29a8d8acd493b7b18c",
+      "bytes": 690,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_kingston/2025-11-11_16-31-47_qml_kernel_4f8ff80d.json",
+      "sha256": "9feee4e27f60a04c25424f2c5510699b5aff31f3b5d40dedbd9c502484f5c898",
+      "bytes": 690,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_kingston/2025-11-11_16-31-48_qml_kernel_19e69668.json",
+      "sha256": "4453d78f547270b0acf40a2408846dc0d10f55aeb3e53f87d0f336af3daf9ca2",
+      "bytes": 690,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_kingston/2025-11-11_16-31-48_qml_kernel_a79f0401.json",
+      "sha256": "02fbf54508c1041dd6b2ea4a78f1e0683cc55455a084833bbb7333a4e1969245",
+      "bytes": 688,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_kingston/2025-12-16_11-53-43_mirror_circuits_4647d5f4.json",
+      "sha256": "36459ab739f67d7ec31cc12330f244f98c6728dfb28fbf1e206077bace942d1c",
+      "bytes": 1000,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_kingston/2025-12-16_11-53-45_mirror_circuits_f7dbbd9e.json",
+      "sha256": "660b7f1a5e5f2a96c475d701e0a083e9f982f6d09239bcf9e3bad059de44b839",
+      "bytes": 1000,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_kingston/2025-12-16_11-53-48_mirror_circuits_644d2d99.json",
+      "sha256": "f828070256372ac0fc6fbd0e993d50794338e4c23332d90eb80b09ba0e1a5c2c",
+      "bytes": 1002,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_kingston/2025-12-16_11-53-51_mirror_circuits_571dc60c.json",
+      "sha256": "83e5e2cc34623805033ed4bcd8302cad6837543b41b5caba3427cc0961987f9d",
+      "bytes": 1004,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_kingston/2025-12-16_11-53-54_mirror_circuits_d89a5de5.json",
+      "sha256": "352d47445df43786f830061d053f3c628d3c5f13f4d100455fd1b9857f691629",
+      "bytes": 979,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_kingston/2025-12-16_11-53-57_mirror_circuits_b9453c55.json",
+      "sha256": "5e1dd3e8a7bb9a5953c5e80b830c09762fbbd168d19966de35c1c4a7b12ce813",
+      "bytes": 980,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_marrakesh/2025-11-11_16-26-36_qml_kernel_5c4a05ae.json",
+      "sha256": "6949a3f1ac04f2fb1b8e66ee0c91b829df493320b8d7153ed61de8d5aee2982b",
+      "bytes": 691,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_marrakesh/2025-11-11_16-26-37_qml_kernel_01c58774.json",
+      "sha256": "0bb6038b656c7f97157fc5f968f98639b36b6c70520d27818e1347ce4356464d",
+      "bytes": 691,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_marrakesh/2025-11-11_16-26-38_qml_kernel_c5948313.json",
+      "sha256": "412a274b442f85b2df28032460b0c7c4e437b4e06444eb45dcbc777922930463",
+      "bytes": 691,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_marrakesh/2025-11-11_16-26-39_qml_kernel_6c1c24a1.json",
+      "sha256": "e56ec74e28645b55acaf0dd307c85dcd417419748343ca0562b35f41c5d993f5",
+      "bytes": 691,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_marrakesh/2025-11-11_16-26-39_qml_kernel_dec7abdd.json",
+      "sha256": "6822e056de03fcc6b179d04a1ea13adc2c790deabb372411d0dc8c8cbee35def",
+      "bytes": 688,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_marrakesh/2025-11-11_16-26-41_qml_kernel_5a4b4b15.json",
+      "sha256": "823c7dd6fef297bf036c8d7b1a2c905fce913bd27e847d347faf26282f1a2060",
+      "bytes": 690,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_marrakesh/2025-11-11_16-26-41_qml_kernel_d1614e32.json",
+      "sha256": "dc654e05f8da696ca417c1799061d69d4b7922ded509e869d3f51411432bcef9",
+      "bytes": 692,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_marrakesh/2025-11-11_16-26-42_qml_kernel_2f942ce0.json",
+      "sha256": "669de3ad0126a0bfd36c0ef214a0cff2c4b610b58cd8f944b96de92e4f8d0ce7",
+      "bytes": 692,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_marrakesh/2025-11-11_16-26-43_qml_kernel_6870d93a.json",
+      "sha256": "272a9ae502d73742d495dedc6b5286fa0cd57fcdc55c1e9569ee5fddee325a6b",
+      "bytes": 692,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_marrakesh/2025-11-11_16-26-43_qml_kernel_f60bde27.json",
+      "sha256": "f18b22fa6b6b8ea659d699639ec831037ee0dcc8c7375345315c0557360cfb49",
+      "bytes": 690,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_marrakesh/2025-11-11_16-26-44_qml_kernel_9b54b9eb.json",
+      "sha256": "54b7337a9b0654734b939f0bf712f680c285763ac15085a52932dca7ce0d31be",
+      "bytes": 690,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_marrakesh/2025-11-11_16-26-45_qml_kernel_772f1a5a.json",
+      "sha256": "308acbebe595d22e46f2264a9b5f98733d89637032aeea97e6c45e00c997327c",
+      "bytes": 692,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_marrakesh/2025-11-11_16-26-45_qml_kernel_f2becdc8.json",
+      "sha256": "b08b8b74a496998342fb4bea2683fc87207838f80768811cb1ed51231c24b344",
+      "bytes": 692,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_marrakesh/2025-11-11_16-26-46_qml_kernel_2958e88b.json",
+      "sha256": "e20013453e1b3e7606589f5e254147eaa2cc1a2a1e8fc235d3de094574437c49",
+      "bytes": 692,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_marrakesh/2025-11-11_16-26-47_qml_kernel_6602ea62.json",
+      "sha256": "8cdc6cb7d0ce5ff18594a7a1cb66b898757c641084e6454050aaf16403fce144",
+      "bytes": 692,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_marrakesh/2025-11-11_16-26-47_qml_kernel_f679343e.json",
+      "sha256": "39086a8cca774b5a1823eebaba030e2244742172ea954e57d9042c3e1b0472db",
+      "bytes": 692,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_marrakesh/2025-12-16_11-57-16_mirror_circuits_0b877bab.json",
+      "sha256": "1f964a781afa9c44a6b31764eb103a61f500c299fa9b127277076a67a0268d01",
+      "bytes": 1003,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_marrakesh/2025-12-16_11-57-20_mirror_circuits_bcd1d7b6.json",
+      "sha256": "e5645f76862b9414fa3e4f1f9dfbd50a51e9474e35bfc8254ce6375803ddb78e",
+      "bytes": 1004,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_marrakesh/2025-12-16_11-57-23_mirror_circuits_d5e027ab.json",
+      "sha256": "cf05acfa4d9f471084326ed4ce6d733becc080c3fc3b4eae277c5bbcc3bde49f",
+      "bytes": 1004,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_marrakesh/2025-12-16_11-57-27_mirror_circuits_ea775e73.json",
+      "sha256": "30fa9804f636e891ed7743588ae5b96b9a715a6af5d6197b6e795a8f1da5df58",
+      "bytes": 1004,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_marrakesh/2025-12-16_11-57-31_mirror_circuits_4c259d58.json",
+      "sha256": "550e5f8efc9211398c4faeaaa4149f28fc1818a76d20a85cde3ae3fc3dd156d8",
+      "bytes": 981,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_marrakesh/2025-12-16_11-57-35_mirror_circuits_7a994efd.json",
+      "sha256": "08fa264c74a8cef96ac89d116be57da1917200a95aeceadc271b48afa35f287f",
+      "bytes": 982,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_pittsburgh/2025-11-11_16-34-30_qml_kernel_26419cac.json",
+      "sha256": "ce2da09b331b8c0f57609365ae83ee16ee35f08f0e0cc00d0cb17b1d02e8e0c4",
+      "bytes": 692,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_pittsburgh/2025-11-11_16-34-30_qml_kernel_8ae74022.json",
+      "sha256": "4ccfaebc97242ff12a4202883dd6086cd41d1d3816ef6f724c9897de470eee9c",
+      "bytes": 694,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_pittsburgh/2025-11-11_16-34-31_qml_kernel_cc016737.json",
+      "sha256": "30fae9db818ec5c481191c3f4fd35e4c412b0e1f714a9a44ba9e5045c48182c9",
+      "bytes": 692,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_pittsburgh/2025-11-11_16-34-32_qml_kernel_2678d449.json",
+      "sha256": "9d2427ec28ac3e3f9cea7c9fd92b963fffd054b8057e44b667f7e0ee4141216a",
+      "bytes": 692,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_pittsburgh/2025-11-11_16-34-33_qml_kernel_2773064e.json",
+      "sha256": "f2afa3faab1c154a6699b5af6b24f0ee5044061b687bffe913a715028dbc776c",
+      "bytes": 689,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_pittsburgh/2025-11-11_16-34-33_qml_kernel_3f477d51.json",
+      "sha256": "89993ad622f10d0dd2bca07205127343b818d8ff725131fb0c74d288ddd6fad0",
+      "bytes": 693,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_pittsburgh/2025-11-11_16-34-34_qml_kernel_80184692.json",
+      "sha256": "f895b8a8615fa7b81bc8dee962dd750dd33ad8fba317746b2fd42594304db723",
+      "bytes": 693,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_pittsburgh/2025-11-11_16-34-35_qml_kernel_92587179.json",
+      "sha256": "3fed3999874c63944d1342582ba2f087bf5f3b5256f79ea1724fc2a20f4e765c",
+      "bytes": 693,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_pittsburgh/2025-11-11_16-34-36_qml_kernel_cad5e1ef.json",
+      "sha256": "60f4eeb6b455925d0aff36558f637d3eb3a114ee08515b2176723d2274035754",
+      "bytes": 691,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_pittsburgh/2025-11-11_16-34-37_qml_kernel_a51da3fa.json",
+      "sha256": "7bfd155960bf861f43cd5e6ba9505182dbd65f343424f2e3a40b4cf805fd1ea6",
+      "bytes": 689,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_pittsburgh/2025-11-11_16-34-37_qml_kernel_f0766dc3.json",
+      "sha256": "efc39081ff5c3baa8e9cf1683febf057aca4d48ea455ad8fb19f2228d31cbd55",
+      "bytes": 693,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_pittsburgh/2025-11-11_16-34-38_qml_kernel_2d9dc8a0.json",
+      "sha256": "1f97ed34ac0870ecb748857319dabb75b62def61eec615b7b1f822f7eff7a76c",
+      "bytes": 693,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_pittsburgh/2025-11-11_16-34-39_qml_kernel_1eafa72b.json",
+      "sha256": "9dca5c8ef64f130ad1d7ccccb508bff6172cbb053246ec6e2bb3a6234bd3d7de",
+      "bytes": 691,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_pittsburgh/2025-11-11_16-34-40_qml_kernel_308a7eba.json",
+      "sha256": "92fa49c1890e25c57646f861044ae49d4fb8f54c9bfe87a3605b6cc341ef29c4",
+      "bytes": 693,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_pittsburgh/2025-11-11_16-34-40_qml_kernel_310691c4.json",
+      "sha256": "13fef37e4fb635a986728bb708b7613363dc89293d288ea508002d476b66ea52",
+      "bytes": 693,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_pittsburgh/2025-11-11_16-34-41_qml_kernel_a7b8a0e2.json",
+      "sha256": "b6b99b52aec8c55775a7ec5c5fd56e07855ce589e017876236decbc253245e54",
+      "bytes": 691,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_pittsburgh/2025-12-16_12-04-25_mirror_circuits_278ba75a.json",
+      "sha256": "52d428e07bd1f0f42036149cc54b0a9dce5b5cb4c8ebdad83520fb43cc892ca7",
+      "bytes": 1003,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_pittsburgh/2025-12-16_12-04-29_mirror_circuits_c93186ca.json",
+      "sha256": "5ae4ea89e7a8d34725f53f3e6ca4c9d701fe12a2fbf31c7747db1612621744f4",
+      "bytes": 1003,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_pittsburgh/2025-12-16_12-04-31_mirror_circuits_e40181a3.json",
+      "sha256": "69bfc2c3a805a6c13dc412c82a3fe2247e3164246e8b285e3a9a1244a645251c",
+      "bytes": 1006,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_pittsburgh/2025-12-16_12-04-34_mirror_circuits_dbbc0039.json",
+      "sha256": "4146095c95b43202fc11aeffc0f369c3b9d87c7516134b53a8bf1ad57e53dd55",
+      "bytes": 1004,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_pittsburgh/2025-12-16_12-04-37_mirror_circuits_bd93fe06.json",
+      "sha256": "3ceb0247ae9f92199ab8d4274498f8d27735f11128e27d4fbef38d60a089a877",
+      "bytes": 982,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_pittsburgh/2025-12-16_12-04-40_mirror_circuits_bdad6192.json",
+      "sha256": "7e12b440d933b8b8a61d8b3720e345af87a2c073fa431cfe2f2815f91b33ed89",
+      "bytes": 980,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_torino/2025-11-11_16-36-27_qml_kernel_222e2e5b.json",
+      "sha256": "67e3dd743d2258880eb565331489255c5016775dc69db45edcca413e831cebcb",
+      "bytes": 689,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_torino/2025-11-11_16-36-28_qml_kernel_59593d5a.json",
+      "sha256": "6df3f83416303bb305ead9b66856b548ed02c627d76739d09b0a0eb1b145af57",
+      "bytes": 689,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_torino/2025-11-11_16-36-29_qml_kernel_c5cb3d35.json",
+      "sha256": "1bb6034616090f4c359f7178885557f6699842d2a44057af392eba7080187054",
+      "bytes": 687,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_torino/2025-11-11_16-36-30_qml_kernel_7d41848a.json",
+      "sha256": "0bf2f4db4cd265983d5ad3d8c636081f459108d39669b3429808f0cc2ebd7ab6",
+      "bytes": 689,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_torino/2025-11-11_16-36-30_qml_kernel_b43c61dc.json",
+      "sha256": "4d7a9fd49f65cbc36854121e1c5565974e0d496c8be0887493224955eeb2d971",
+      "bytes": 690,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_torino/2025-11-11_16-36-31_qml_kernel_5b369c2c.json",
+      "sha256": "6e36432900d10ce15cb6b4feca8c81cad206228b58159d1c64d3a9cce4904745",
+      "bytes": 690,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_torino/2025-11-11_16-36-32_qml_kernel_d9633f47.json",
+      "sha256": "ea82877d942d3fbd2e1c570a65148bf82535ed6004858a1a578512c4a5502cfb",
+      "bytes": 690,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_torino/2025-11-11_16-36-32_qml_kernel_eb1452ae.json",
+      "sha256": "191085308dce5f5fbad4761424d445dfe0d138c3a3a4044da8034a46c6ad1718",
+      "bytes": 688,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_torino/2025-11-11_16-36-33_qml_kernel_4b4480a8.json",
+      "sha256": "980f3581b499f30a8b7dac5e899956efbfbf2b5b34e1f41cad96b12efe38f2dc",
+      "bytes": 690,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_torino/2025-11-11_16-36-34_qml_kernel_2e14a7b7.json",
+      "sha256": "df373bdad1c75a1dcc0046056249eeaba5f47848cb53f582acaff9fdb6f25ab1",
+      "bytes": 688,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_torino/2025-11-11_16-36-34_qml_kernel_e68aca9f.json",
+      "sha256": "f9f14d5243900badb8dd5e551375cf46ca063cb93e59a4da0d0a141bc2303cb3",
+      "bytes": 688,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_torino/2025-11-11_16-36-35_qml_kernel_1c236ea1.json",
+      "sha256": "b9e80c7174bafe3dc162edd978bedfdb8dc2fd01c3f59f2380eb2c27b5627652",
+      "bytes": 690,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_torino/2025-11-11_16-36-36_qml_kernel_9a0176d1.json",
+      "sha256": "90f3896f6166cc958682ccbd3cd8935061e7e1965e8092d1301d6bf83ca5919b",
+      "bytes": 690,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_torino/2025-11-11_16-36-36_qml_kernel_fff51685.json",
+      "sha256": "36bd5a05be8b5744e1d65909ada1170b7595a2fb74f341b7775b02e1c95b7035",
+      "bytes": 690,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_torino/2025-11-11_16-36-37_qml_kernel_7f07c461.json",
+      "sha256": "33224750564b66899a07b6e253a1e5e2694199bd816920f0b3ccd1a9e96dbc44",
+      "bytes": 690,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_torino/2025-11-11_16-36-38_qml_kernel_9f13ad1e.json",
+      "sha256": "1bb577ca6291cd9e4a4b44daed398be3a65f024b6b62422cf80d2fa74dd8a522",
+      "bytes": 652,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_torino/2025-12-16_11-42-15_mirror_circuits_96486f26.json",
+      "sha256": "13b8647759ab9b8bb5689730796dc3253bcecb1132c8a717b39b40643ff4abab",
+      "bytes": 1001,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_torino/2025-12-16_11-42-19_mirror_circuits_1ac28514.json",
+      "sha256": "473a7d1ca4197ab390f5e7525accd89caa94a1cc8d289f436298c0f1e98d9ce2",
+      "bytes": 1003,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_torino/2025-12-16_11-42-22_mirror_circuits_ce8dc05e.json",
+      "sha256": "d0ba7444a8c6156a380e02f92e807907d360f806fffe475ea89580f63beff869",
+      "bytes": 1006,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_torino/2025-12-16_11-42-25_mirror_circuits_c5f6570b.json",
+      "sha256": "e1dff9c9e48d78c2086e8cab57a750fc0214b248751591c5976dd88b89522880",
+      "bytes": 1007,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_torino/2025-12-16_11-42-28_mirror_circuits_406c844f.json",
+      "sha256": "4ee46828193dfac090b40a647e78e51eabad4881a68ac95ecfddf382432bb002",
+      "bytes": 979,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/ibm_torino/2025-12-16_11-42-31_mirror_circuits_da4cd0bc.json",
+      "sha256": "7460415494cfccb5157a21aeb86ae8b353710c992975176e9d2e8e70c5681f7f",
+      "bytes": 917,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/ibm/results.json",
+      "sha256": "42546683add7aa0d7f8f55bd833318a56239393750f8332832d43d9f314dc40e",
+      "bytes": 15508,
+      "recordCount": 23
+    },
+    {
+      "path": "metriq-gym/v0.4/local/results.json",
+      "sha256": "5370691440b8139a85b2da8f9dc57d49a1fd7da5902e9724b9827961ba6ba144",
+      "bytes": 569,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/origin/results.json",
+      "sha256": "6d33c629f07f3f4f1068ebfa52f71c17e121a5b1a1caf6f20cad9425932b8016",
+      "bytes": 9426,
+      "recordCount": 15
+    },
+    {
+      "path": "metriq-gym/v0.4/origin/wukong_72/2025-12-11_14-36-51_quantum_fourier_transform_d32054dd.json",
+      "sha256": "294a269de5304b2c0c1ea2daadcc79fec510a6a333ce4984b404b9fa4a6a43e1",
+      "bytes": 837,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.4/quantinuum/results.json",
+      "sha256": "84161777673a758a5e11b2d0e31b810216058d46cf84265673dff65801e97205",
+      "bytes": 616,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.5/ibm/ibm_boston/2025-11-26_17-36-24_linear_ramp_qaoa_664a4e10.json",
+      "sha256": "80355b493b374fec42edbd6374bd54c2c47380eef5f6f9b9baf5a5c3627e04aa",
+      "bytes": 1044,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.5/ibm/ibm_boston/2025-11-26_17-39-30_linear_ramp_qaoa_f9d574d7.json",
+      "sha256": "6deca63d86603e2310705958e87d9dd0b20b514fe05d69f3be778ec1302b0da9",
+      "bytes": 1043,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.5/ibm/ibm_boston/2025-11-26_17-40-01_linear_ramp_qaoa_23236ca8.json",
+      "sha256": "2a28f129c80dd92c444d3083a0f5e8e0cbd6065325f6ce18c1437b03f693075a",
+      "bytes": 1076,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.5/ibm/ibm_boston/2025-12-16_16-28-23_wit_35774b4e.json",
+      "sha256": "168b7ddf4a0d4d2e951ec39f32e2649b1b13f8e8686dae546cf08b9993b0a7f5",
+      "bytes": 714,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.5/origin/wk_c102-2/2026-01-07_07-27-14_quantum_fourier_transform_88551529.json",
+      "sha256": "be4b654367e3b4f4452dc917b62075d150724f87983117e06834e6f700591d98",
+      "bytes": 816,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.5/origin/wk_c102-2/2026-01-07_07-33-15_qml_kernel_a9139840.json",
+      "sha256": "f7b580dff4c70f519825d2f7d102f970835c8d48352ca55098569fb3fdbcb2aa",
+      "bytes": 651,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.5/origin/wk_c102-2/2026-01-07_09-29-24_qml_kernel_a3911d38.json",
+      "sha256": "5c9c5d570be91d8886d746f7c91b0a686b54aa93ae48e956d80a97ea8712eca4",
+      "bytes": 614,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.5/origin/wk_c102-2/2026-01-07_09-55-41_bseq_729f9500.json",
+      "sha256": "bf15247f7a26593f8cb7a5a145537fe31af613e520ba75b0ba424f7b74d04772",
+      "bytes": 579,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.5/origin/wk_c102-2/2026-01-16_09-08-51_mirror_circuits_db321a98.json",
+      "sha256": "fa16540638b9ad4bb0677c238f06daa1a1e727e223dbc3ae031684aae668940c",
+      "bytes": 956,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.5/origin/wk_c102-2/2026-01-16_09-11-43_mirror_circuits_32b5fe15.json",
+      "sha256": "f0d7d1d421c2e0bb0ec4fb21b495132e9ff93fd71074d73e961dbf5cea8e3ed1",
+      "bytes": 868,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.5/origin/wukong_72/2026-01-06_15-37-51_quantum_fourier_transform_2bd3028c.json",
+      "sha256": "5c6078394cfc396546c0cba1dc754c709596d38474024fa53f089babdb24b450",
+      "bytes": 817,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.5/origin/wukong_72/2026-01-06_15-58-25_linear_ramp_qaoa_450f6cb1.json",
+      "sha256": "5a071eb2d5a59ce4c10d39f8ddc75fe9ae65c64a5f040bb5ad71ef21e8fb607f",
+      "bytes": 1010,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.5/quantinuum/h2-2/2025-12-04_07-20-31_wit_2d1e3ce1.json",
+      "sha256": "c782386b6e7e148dbd4fa9b9552307d772c87fbc74e10b48e3ec5fbca9051c86",
+      "bytes": 659,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.5/quantinuum/h2-2/2025-12-05_08-38-32_wit_1d4f6870.json",
+      "sha256": "fb33718dfd6986228e5e8cca69e52dcabf4d302cce58cdd3bd82505849d6cb08",
+      "bytes": 661,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.5/quantinuum/h2-2/2025-12-07_11-14-53_qml_kernel_06ae68c8.json",
+      "sha256": "068e62bdfd20e9a9d8282742b9c989162e6daf81297dc64cb4c19e13eb04f957",
+      "bytes": 651,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.5/quantinuum/h2-2/2025-12-08_09-12-33_qml_kernel_405f0624.json",
+      "sha256": "2dfa53c2f6c4aa5ec68792a77bb62cf4f67a1be2346faffee59ee5c09ab7f1c8",
+      "bytes": 651,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.5/quantinuum/h2-2/2025-12-08_09-24-14_qml_kernel_30507a53.json",
+      "sha256": "a0b3b809698862d6c680f0346a6bbaa00f3e8db98495dab73bf89ef1b03fe3f8",
+      "bytes": 651,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.5/quantinuum/h2-2/2025-12-08_10-03-08_quantum_fourier_transform_7c1268e7.json",
+      "sha256": "8cf23f76c44ca6b69d0fbee37048931fd2271205676f0a571c59f1d23138092e",
+      "bytes": 815,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.5/quantinuum/h2-2/2025-12-09_15-54-22_mirror_circuits_76c17b21.json",
+      "sha256": "b8231661b44068872974f893bd1c2b29c729faf3765801ff37e8b607dbe3b63b",
+      "bytes": 938,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.5/quantinuum/h2-2/2025-12-09_15-57-08_mirror_circuits_eeb4c387.json",
+      "sha256": "4fc7aa1db9f1f02fc332a0038357c8c741218232140591f522ad10bcf05e03a4",
+      "bytes": 937,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.5/quantinuum/h2-2/2025-12-09_15-57-59_mirror_circuits_7a45d5c7.json",
+      "sha256": "22cbada6abb36994eed6b25b4686abc179b5888317e89e65dbb39342678970d4",
+      "bytes": 940,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.5/quantinuum/h2-2/2025-12-09_15-58-50_mirror_circuits_8d4a9d85.json",
+      "sha256": "627e9518acb73baaed3c8f767073013eac8fac6cd5ec90caa7a0209a31617cbf",
+      "bytes": 940,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.5/quantinuum/h2-2/2025-12-12_14-06-30_linear_ramp_qaoa_defb3125.json",
+      "sha256": "3a32434d1a4f1e5795bbd807b6e5df35a0cdd4f4626c5637a2d1b69d3a5c9d9e",
+      "bytes": 994,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.5/quantinuum/h2-2/2025-12-12_14-09-03_linear_ramp_qaoa_3ab9a496.json",
+      "sha256": "6828a01763dc0e828480d5e93d48b044a77809bfe0ecfbb0dd8ae820d7820199",
+      "bytes": 990,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.5/quantinuum/h2-2/2025-12-12_14-10-06_linear_ramp_qaoa_dc3970fe.json",
+      "sha256": "10c363640c9ed3904bc6ed4ff947d1ef514ace3dac5a7debf53b6e29eb574ac7",
+      "bytes": 993,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.5/quantinuum/h2-2/2025-12-17_13-17-33_qml_kernel_de809a74.json",
+      "sha256": "27dbbb11f851ef40c2bb7776407549cc848cabd381bd62cc0a88620d0b967cbd",
+      "bytes": 637,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.5/quantinuum/h2-2/2025-12-18_07-58-05_bseq_d8a4a9cf.json",
+      "sha256": "6ce426fcc26bb993cd5717e41c78bd20d41e2bff7fe4233d231a114d095e2a81",
+      "bytes": 626,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.5/quantinuum/h2-2/2026-01-19_11-53-54_qml_kernel_4cf633b2.json",
+      "sha256": "017a6c80139e8297ee1e5b8eb6b79ffabe830d4a8c906b8610539ba32eebc05d",
+      "bytes": 662,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/aws/arn_aws_braket_eu-north-1_device_qpu_iqm_emerald/2025-11-19_19-12-53_linear_ramp_qaoa_5c6f5f50.json",
+      "sha256": "d2e25e703e741ef84db72b20e1d0366f49c6cf33018d5ff5f0e6c4ef4497f7e8",
+      "bytes": 1057,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/aws/arn_aws_braket_eu-north-1_device_qpu_iqm_emerald/2025-11-19_19-13-53_linear_ramp_qaoa_fc5b0ba2.json",
+      "sha256": "d282cfdf9958f9da5a069b2e6535eb1bad92e3d923cb2152257ceab8edb7f142",
+      "bytes": 1060,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/aws/arn_aws_braket_eu-north-1_device_qpu_iqm_emerald/2025-11-19_21-16-42_quantum_fourier_transform_fa64f8d9.json",
+      "sha256": "477a1e2586ca1ff42217c9d3bbbea60c770b0c55381f3c576055224751eeca42",
+      "bytes": 883,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/aws/arn_aws_braket_eu-north-1_device_qpu_iqm_garnet/2026-01-09_11-09-29_linear_ramp_qaoa_ccb7c463.json",
+      "sha256": "b1d598f08094f777b055165d7f624c8be0596769b15e4dbd943f85385a9119e3",
+      "bytes": 995,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/aws/arn_aws_braket_eu-north-1_device_qpu_iqm_garnet/2026-01-09_11-13-32_linear_ramp_qaoa_25c9fd3a.json",
+      "sha256": "21e1fa4b12b5847495086d19e6d33a18e38d9ea62dcf3a2bc398f7ca22e911ab",
+      "bytes": 1007,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/aws/arn_aws_braket_eu-north-1_device_qpu_iqm_garnet/2026-03-02_15-34-09_bseq_f044a305.json",
+      "sha256": "5ab129a74dccd4b51ee4039b36cf12bbef6558c4aa6c640b71859929bc1189f2",
+      "bytes": 570,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_boston/2025-11-26_17-36-24_linear_ramp_qaoa_d30eea5b.json",
+      "sha256": "ee0b06a3eb92ae3f91fb1eb0425bd5d439cef4d28fd6cd2e91eeef66ce42fe44",
+      "bytes": 1077,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_boston/2025-11-26_17-39-30_linear_ramp_qaoa_4edde2f3.json",
+      "sha256": "e25df3fda387e79066171ce3441173640fadc9e46c2ee57dfe8e28627b26ff43",
+      "bytes": 1076,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_boston/2025-11-26_17-40-01_linear_ramp_qaoa_23236ca8.json",
+      "sha256": "2a28f129c80dd92c444d3083a0f5e8e0cbd6065325f6ce18c1437b03f693075a",
+      "bytes": 1076,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_boston/2025-12-17_17-05-30_linear_ramp_qaoa_2d4d2fc3.json",
+      "sha256": "da2a16b5cddb0cbd472ed576baef0349f5a7995593c5413bdb625e5ff0c2d98b",
+      "bytes": 1068,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_boston/2026-02-09_13-52-36_clops_d0048f25.json",
+      "sha256": "c1644c2029de301b1f0582ccc35c5b7934e21910fa79fb86d78891a6cf86ca64",
+      "bytes": 834,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_boston/2026-02-09_14-27-04_quantum_fourier_transform_6d15a0a2.json",
+      "sha256": "542c20f271c87803a26c65acd364d0b89cb41da81571e08702dc0f2a46e945dd",
+      "bytes": 897,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_boston/2026-02-09_14-27-15_quantum_fourier_transform_dba4d113.json",
+      "sha256": "8530ae72d8524d608ad1a9d876242613e82a9e10f5458f447137a631284d3188",
+      "bytes": 872,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_boston/2026-02-09_14-27-24_quantum_fourier_transform_8ac7bf8a.json",
+      "sha256": "65e339e3c6f51f3381b3ce950b407ffcf4e2ac06c54325b7778b30df3dd477b5",
+      "bytes": 870,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_boston/2026-02-09_14-27-35_quantum_fourier_transform_c129e787.json",
+      "sha256": "c56fd72bd982d6099c7c4400cdeba7a07153b8e3d1bf77474b1abb58f4a703f3",
+      "bytes": 870,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_boston/2026-02-09_14-27-46_quantum_fourier_transform_1d688e65.json",
+      "sha256": "3f17c4dafa9dbc229010425a0ce7096cdc25ed01107e19c32b29ed7d1cff812a",
+      "bytes": 874,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_boston/2026-02-09_14-27-56_quantum_fourier_transform_257a1e71.json",
+      "sha256": "3361a65908652e53d3eccbe8f50fbb7b64853b832e21ab7647e011aae19fe2ba",
+      "bytes": 874,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_boston/2026-02-09_14-28-06_quantum_fourier_transform_29dbdac5.json",
+      "sha256": "8a3961036559da16f8618a7dd6b1edb2de6f7b3b29bdebd1049b0f444366c90d",
+      "bytes": 874,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_boston/2026-02-09_14-28-16_quantum_fourier_transform_9459f944.json",
+      "sha256": "36a32116538404ddec69a5c2c5396ef713b06794355416e828aff3bb62b6dade",
+      "bytes": 866,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_boston/2026-02-09_14-28-26_quantum_fourier_transform_bbe89fd8.json",
+      "sha256": "a9e4e2596dfc2fd22d9e10965a7225f3c3850ef99eccbbcd5308fd2d78e36492",
+      "bytes": 866,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_boston/2026-02-09_14-28-36_quantum_fourier_transform_cbae26bf.json",
+      "sha256": "06ec1acca6be79847fb5aa60345dc240662f384ce770685f8542bbf39f62530b",
+      "bytes": 866,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_boston/2026-02-18_20-46-15_eplg_81147c7a.json",
+      "sha256": "b10ed09fbf0ee2adc0bb9d26d394b999e830ad5c84222bbe58326427c694402a",
+      "bytes": 3183,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_fez/2026-02-09_14-32-15_quantum_fourier_transform_c332fb55.json",
+      "sha256": "6589d8b5b76ac065c898b03b92c81e722963b333a3438293df72225e78890ad5",
+      "bytes": 896,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_fez/2026-02-09_14-32-26_quantum_fourier_transform_acab2187.json",
+      "sha256": "b7b34ba6ad300075739dfdf663be4a00d43fd858d6843ed972d150361a234dde",
+      "bytes": 869,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_fez/2026-02-09_14-32-36_quantum_fourier_transform_eea2aa6e.json",
+      "sha256": "5d0fd559b81446ecf19b9c9f4592f866952c4f62bbc654633cc8b17e7f041c4e",
+      "bytes": 870,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_fez/2026-02-09_14-32-47_quantum_fourier_transform_d985ff08.json",
+      "sha256": "01f006a2d69b2df433d80dda92608d8ac283bdca0ea8a06fd756c91f1fa6686f",
+      "bytes": 900,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_fez/2026-02-09_14-32-58_quantum_fourier_transform_04ce9841.json",
+      "sha256": "18f4ecb24fdc5eb27fc9cf32189a0bf876e652a078490ff909583471b47b5339",
+      "bytes": 902,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_fez/2026-02-09_14-33-09_quantum_fourier_transform_0d4af69c.json",
+      "sha256": "642bafc2bfd5a1f28a97675479c0c858db056cb5701eb4737c3ccddfa17038b7",
+      "bytes": 867,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_fez/2026-02-09_14-33-20_quantum_fourier_transform_18e23ce6.json",
+      "sha256": "8868c9a3f0cb55aa54d4901bfc18e20ef43e6d7a08501daf8e8c16b8f3ae1d99",
+      "bytes": 864,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_fez/2026-02-09_14-33-32_quantum_fourier_transform_fee4e780.json",
+      "sha256": "e750c8226a518d0ec7883d26fabca6ed170f94fd66d24e0acf76979c578d79a8",
+      "bytes": 864,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_fez/2026-02-09_14-33-43_quantum_fourier_transform_de33db6d.json",
+      "sha256": "d582c26233ead5c7952e3709db6da7a175feabd2c6059b5f5d95c49720367e52",
+      "bytes": 864,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_fez/2026-02-09_14-33-54_quantum_fourier_transform_0922da88.json",
+      "sha256": "633cc85ff3aeeb5deeba152c0e3181dae26039df7d622e71b434e77ce7217c82",
+      "bytes": 863,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_fez/2026-02-16_11-43-40_linear_ramp_qaoa_3b6f5995.json",
+      "sha256": "af093f0ad765dd5da564e963abd74e215cb86491b09f81654f860e207b9055c4",
+      "bytes": 1075,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_fez/2026-02-16_11-57-07_linear_ramp_qaoa_5fed7fd5.json",
+      "sha256": "4899ee567839f9cfa838b8f07b6d25ef844f4fffadb42d468e4e1b9787246e35",
+      "bytes": 1076,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_fez/2026-02-16_11-59-34_linear_ramp_qaoa_97190b9c.json",
+      "sha256": "7aac59ac06fb0b0533fcf2ac7fac6dfff624fab56b6764ae331d34daa5c7f7b4",
+      "bytes": 1074,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_fez/2026-02-16_12-02-36_linear_ramp_qaoa_0c1f667d.json",
+      "sha256": "f5a1daf118884e123eefc75ea5632c1c3152b91c305c7c6ac7d35b16ef8a2887",
+      "bytes": 1077,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_fez/2026-02-17_11-59-32_clops_83be2fab.json",
+      "sha256": "e908e1b1e4483ab4771408b3d7abc1836bb363a4310ad46c37a9886ee9b3b0a6",
+      "bytes": 833,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_kingston/2026-02-09_14-28-47_quantum_fourier_transform_6e1cb467.json",
+      "sha256": "124706e6f76f209d05ca0c18962df6bcca4f0aac02e7f0f0eca0d101b371e4d4",
+      "bytes": 874,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_kingston/2026-02-09_14-28-57_quantum_fourier_transform_c4318218.json",
+      "sha256": "26a67175539c7638680a20a0ca029cdd641bad6d5d1c6a29d3e8c022c17426c1",
+      "bytes": 900,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_kingston/2026-02-09_14-29-07_quantum_fourier_transform_2bdbe655.json",
+      "sha256": "c206d6d12ce949006d4fd1bd64acc391b55f5fb14fe348d9bd4660e4f2d0ea78",
+      "bytes": 874,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_kingston/2026-02-09_14-29-17_quantum_fourier_transform_04965135.json",
+      "sha256": "63d7f254161521afe7ab079ff92d08c94735c1888a0d9f1c17b3b5a0abf7cecf",
+      "bytes": 874,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_kingston/2026-02-09_14-29-27_quantum_fourier_transform_98ac67da.json",
+      "sha256": "c8abf1a85fa7b12b749bc5000cb9c281ef59a71019e1d2eac91fa5e7b2441932",
+      "bytes": 876,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_kingston/2026-02-09_14-29-37_quantum_fourier_transform_21a9658a.json",
+      "sha256": "b349c7b99aff529f7518b3ca10c5599116d5a0f47b7d84228ab1d33ca5b3f7ad",
+      "bytes": 876,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_kingston/2026-02-09_14-29-48_quantum_fourier_transform_ca6415f2.json",
+      "sha256": "562c3575560dd76702c0c8f0464c3c746b3d06c0934ffd52aff58d7ed3bc5edd",
+      "bytes": 868,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_kingston/2026-02-09_14-29-58_quantum_fourier_transform_9843859b.json",
+      "sha256": "70725c9a8ffc226d3c0cbab0e52f74c6d57d403259685b123075bfb7165f810b",
+      "bytes": 868,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_kingston/2026-02-09_14-30-09_quantum_fourier_transform_3f71d007.json",
+      "sha256": "96bc394d5ec7f9bea2c979b6d475db0c96cad654933406072ad05e925cfa7ccf",
+      "bytes": 868,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_kingston/2026-02-09_14-30-20_quantum_fourier_transform_e77ede3f.json",
+      "sha256": "f85ede7e14f2595fbddb61a84cd6b6bfcf6809d2b9427c4b00de39f106e7f113",
+      "bytes": 868,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_kingston/2026-02-17_11-52-34_linear_ramp_qaoa_6151cb7d.json",
+      "sha256": "93a8da151f20646f0367cc72a00d566a3e920d9113a57e174b20738eee023fa7",
+      "bytes": 1077,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_kingston/2026-02-17_11-52-55_linear_ramp_qaoa_21cb5bcf.json",
+      "sha256": "29cbee57f29ac0d5be02995acb09ebb7618572aa1ffe424ff38a052457ce51fa",
+      "bytes": 1077,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_kingston/2026-02-17_11-53-23_linear_ramp_qaoa_ce36c0e8.json",
+      "sha256": "922cda100e1cba05646c98e8cd84ecbfc64b235544756e221b325e1e44ef538a",
+      "bytes": 1078,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_kingston/2026-02-17_11-53-57_linear_ramp_qaoa_a9889f96.json",
+      "sha256": "58ab4eaeb97a2fafe41921c97dd62d62ebbdbf3e86eeaffebd66dafc13e2e780",
+      "bytes": 1078,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_kingston/2026-02-17_11-59-05_clops_2a37912f.json",
+      "sha256": "cc8ac71160eac651ba509c02f2a2a29f96eb3d13e72794847731de45d0a0ad4c",
+      "bytes": 837,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_kingston/2026-02-20_10-56-57_wit_36230d5e.json",
+      "sha256": "b6730784e4862a0c5141b24adea66c41d8a2b2b2e282fb95f89c664317ab0b93",
+      "bytes": 727,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_marrakesh/2026-02-09_14-34-06_quantum_fourier_transform_5edc1a4f.json",
+      "sha256": "2bfba91d284479c716a24c7bce35b2e7bf0ae9832be0d3254a9edac4792f13e1",
+      "bytes": 876,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_marrakesh/2026-02-09_14-34-16_quantum_fourier_transform_03ab6288.json",
+      "sha256": "65140836173aaaf2725f619b15e5d6cb101043bbb00070076bfe224de2fad2be",
+      "bytes": 874,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_marrakesh/2026-02-09_14-34-25_quantum_fourier_transform_83309bb4.json",
+      "sha256": "e6cdf5682e67867db140c24f02037c2c53358ac941c04b00d781072d117c760f",
+      "bytes": 876,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_marrakesh/2026-02-09_14-34-36_quantum_fourier_transform_0e80c27d.json",
+      "sha256": "f792a7b6e94b9f4f40a87aaa1baeac340bd1507ad859ff51d54efffefd9b1997",
+      "bytes": 876,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_marrakesh/2026-02-09_14-34-47_quantum_fourier_transform_fe6bb6dc.json",
+      "sha256": "118de02cee14f746bccfed3a59fe990664d1a835c963467261d92d247b80b243",
+      "bytes": 905,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_marrakesh/2026-02-09_14-34-58_quantum_fourier_transform_478399f8.json",
+      "sha256": "9d73e317bb83b236aa948486e6719bc3f87e253df94422cbf24c1d18b607295f",
+      "bytes": 909,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_marrakesh/2026-02-09_14-35-09_quantum_fourier_transform_29fdbb4a.json",
+      "sha256": "c0f186ab2f7bc89eff90d66d8dc9fb4e482d31059cff909ad1cc2731a6411d42",
+      "bytes": 869,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_marrakesh/2026-02-09_14-35-20_quantum_fourier_transform_71181fd5.json",
+      "sha256": "eae171311be2f5d92752d10a1890ef06348c4b146369c92a3d723f9bb0a277be",
+      "bytes": 870,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_marrakesh/2026-02-09_14-35-32_quantum_fourier_transform_a17ab3b8.json",
+      "sha256": "642cd0a2e544c76f5cd420aec331ef3bb88e70a4ca75703c746eba8c010c1d0d",
+      "bytes": 870,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_marrakesh/2026-02-09_14-35-43_quantum_fourier_transform_d4fde6a9.json",
+      "sha256": "b06523479cf2c9c303a45ac108b926d16a1bac462c7172fd371b1c99b36a1c26",
+      "bytes": 870,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_marrakesh/2026-02-10_12-01-33_wit_15e6d023.json",
+      "sha256": "cc89168cd6fbb953344ed763cd088646aa59c1c21eaccf5383c77a7ddcf8bf4d",
+      "bytes": 729,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_marrakesh/2026-02-17_11-50-35_linear_ramp_qaoa_6ff7535e.json",
+      "sha256": "6d0056a882e169f55ca98f6430b112f5e2afc69a66e6e81088327990f0559ee9",
+      "bytes": 1081,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_marrakesh/2026-02-17_11-51-06_linear_ramp_qaoa_ab8cad73.json",
+      "sha256": "f159c9f7de1ea2748094e657dad417d81d9ac4e22456c6d144d090c1cbcb3175",
+      "bytes": 1080,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_marrakesh/2026-02-17_11-51-33_linear_ramp_qaoa_1e8f7a25.json",
+      "sha256": "218648de0accfdfd2ff291c7ae2cfdd5edf71e848da96c2e7b3e7f4a933c50fa",
+      "bytes": 1080,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_marrakesh/2026-02-17_11-52-06_linear_ramp_qaoa_778d3d61.json",
+      "sha256": "e1609decfdfde8b460fc4ac2e60c34ea6369183a30c2c56677c4d2fa28549bb3",
+      "bytes": 1081,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_marrakesh/2026-02-17_11-59-22_clops_6deffb03.json",
+      "sha256": "e1d3f042c4b8e94ad4ff8d831611e454077ad9d2a4816e4f8e89dff478ee45af",
+      "bytes": 835,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_pittsburgh/2026-02-09_14-30-30_quantum_fourier_transform_c86bc29c.json",
+      "sha256": "2e7c0bbebc178ede9ed270278f9d2e5d9709b2c4459ba7588d862c101dd3b9ce",
+      "bytes": 903,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_pittsburgh/2026-02-09_14-30-40_quantum_fourier_transform_90855144.json",
+      "sha256": "e35ef57223f77c6f32d7dc0a842808b8483411ccb72bfc1327c691acbae14b9b",
+      "bytes": 877,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_pittsburgh/2026-02-09_14-30-50_quantum_fourier_transform_6281aa30.json",
+      "sha256": "5828eaf1ef838ef4d3273c0ace6aa29007ad42cc20cd63b01a2285b093a41d8b",
+      "bytes": 877,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_pittsburgh/2026-02-09_14-31-00_quantum_fourier_transform_8f26d7a6.json",
+      "sha256": "98f7ab29598f4f7502069ba8c4bed54ebc2384df482dcceea856af3c4681949b",
+      "bytes": 905,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_pittsburgh/2026-02-09_14-31-10_quantum_fourier_transform_0daac786.json",
+      "sha256": "a590967a7979b8a40f261dbc5d83ee34de76feb0147ea798d589c119c45e7a93",
+      "bytes": 905,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_pittsburgh/2026-02-09_14-31-20_quantum_fourier_transform_82fa8028.json",
+      "sha256": "45b1cc488720b2e90607b99fa77fb2909cc9fadc9b41b14e4f858afc40db59e4",
+      "bytes": 879,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_pittsburgh/2026-02-09_14-31-31_quantum_fourier_transform_a4679b12.json",
+      "sha256": "0627a9da1b16b3467a1b90c1026a0f3f1150677ce556d442bb9ebe19bf19222a",
+      "bytes": 871,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_pittsburgh/2026-02-09_14-31-42_quantum_fourier_transform_ad66b5fa.json",
+      "sha256": "fc3e4e7b9c91e7123186776265192a7ba84099503cf68072baf2508eec750685",
+      "bytes": 870,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_pittsburgh/2026-02-09_14-31-53_quantum_fourier_transform_a428100d.json",
+      "sha256": "8f68442c83fa7343fc052213c191958f90dba82b38067475b047188a4d5422d7",
+      "bytes": 871,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_pittsburgh/2026-02-09_14-32-04_quantum_fourier_transform_6030e375.json",
+      "sha256": "3312664086cb857c1c9ccdfebb150689b108ab6da5e7a7723fc0474692ad9913",
+      "bytes": 871,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_pittsburgh/2026-02-10_12-02-13_wit_7cac0b0e.json",
+      "sha256": "c188ec205cf64bbb44f77daa6709cc024cbf83f80fc0a194ff3f4b3ac357b0c9",
+      "bytes": 730,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_pittsburgh/2026-02-17_11-30-19_linear_ramp_qaoa_f041eabf.json",
+      "sha256": "35f25494b8e53f2af0bbbf486ed368c2d329d278691c317a7f5ccac5e71b5d49",
+      "bytes": 1081,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_pittsburgh/2026-02-17_11-47-55_linear_ramp_qaoa_a31f67a3.json",
+      "sha256": "ab12d163ea5cad5b250ddc57bc115b68dca5942f52792f46f556c8ae393acf71",
+      "bytes": 1081,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_pittsburgh/2026-02-17_11-48-27_linear_ramp_qaoa_1ebea5e2.json",
+      "sha256": "9915fcdb8ba70be5bd3e66d4cf8b2818273f92fa030f78ccf3121597ed0a7275",
+      "bytes": 1081,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_pittsburgh/2026-02-17_11-50-02_linear_ramp_qaoa_99724204.json",
+      "sha256": "ec12086bc4db665390649268f1724b2e588da2969f574e875a16afb67590370c",
+      "bytes": 1082,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_pittsburgh/2026-02-17_11-58-37_clops_ef80920b.json",
+      "sha256": "1cd7d777178913e4f025795b3c8b568b4dc8bd83393cc5b65a43c15a5c02c6dd",
+      "bytes": 840,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_pittsburgh/2026-02-19_10-49-11_eplg_e5ee1886.json",
+      "sha256": "3d45db000d61396f9b734e112dfd1282b758f4150f53e43cae1dd14427f59772",
+      "bytes": 3182,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_torino/2026-02-09_13-43-56_quantum_fourier_transform_1c28c3ab.json",
+      "sha256": "f9021d7d35160b4cedb99488b157d43d466cb069ddabeed2cece9b297c98ce64",
+      "bytes": 848,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_torino/2026-02-09_13-44-07_quantum_fourier_transform_5969d9e8.json",
+      "sha256": "83d228783b6f31cb5f27af6cf2f2b96add2e5fddad410d7c7b2992c9b0b62427",
+      "bytes": 848,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_torino/2026-02-09_13-46-53_quantum_fourier_transform_04bf7865.json",
+      "sha256": "703577a4367e2db170b7cfd5ef5142ce8a27061a25af2ade4fab9e5237570ca2",
+      "bytes": 854,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_torino/2026-02-09_13-47-03_quantum_fourier_transform_25164dd5.json",
+      "sha256": "06bf2a5f8c7036a9861e981feb15a916dc60b7abecf62cf7c293309c6b207a8d",
+      "bytes": 880,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_torino/2026-02-09_13-47-14_quantum_fourier_transform_d661d8a8.json",
+      "sha256": "26d9ef4a3d92e1cf9aab1c79b0f0017bdd9bb87ec3a323cafaf270d51987b108",
+      "bytes": 854,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_torino/2026-02-09_13-47-24_quantum_fourier_transform_e1804ef3.json",
+      "sha256": "da2c6744fac6a6a09c4de04261d43f04f8d15d87d96553545046e93192f3c5d3",
+      "bytes": 853,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_torino/2026-02-09_13-47-34_quantum_fourier_transform_3dc5e18d.json",
+      "sha256": "9878941ce3d73401c2a65aed6fb73b0c162ad584c323e5024f490bbba27da593",
+      "bytes": 856,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_torino/2026-02-09_13-47-44_quantum_fourier_transform_56a4ce07.json",
+      "sha256": "88b11b79f370ab173246dbf35bde9b4f57dfb40df1584bee035e253ead582f0f",
+      "bytes": 856,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_torino/2026-02-09_13-47-54_quantum_fourier_transform_7894aac7.json",
+      "sha256": "4ee8f375e4df14ef7f2f9282777701467107cb23add2c1a2d7ade17a5d33f25b",
+      "bytes": 847,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_torino/2026-02-09_14-26-54_quantum_fourier_transform_22c28b81.json",
+      "sha256": "5045d587b391822d81a730116739b669773b8cf0c973d03fc5f98469ddc4e4b4",
+      "bytes": 868,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_torino/2026-02-10_16-56-45_linear_ramp_qaoa_f2df62f2.json",
+      "sha256": "ef777be50a4ff423a589eb3c2164c4222e9f2aee67172de24a7b004560fa3b16",
+      "bytes": 1079,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_torino/2026-02-10_16-57-48_linear_ramp_qaoa_ff72a7f6.json",
+      "sha256": "1dd02f5cd920cecb0d28880f81ebaa85335928994879cc111f77459d4dbf4432",
+      "bytes": 1078,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_torino/2026-02-10_17-00-06_linear_ramp_qaoa_b2a92c42.json",
+      "sha256": "4e7baa7ae84fddb010eece3bffbd2513b8e2f4385a6bd69a39ab432427ebad24",
+      "bytes": 1078,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_torino/2026-02-10_17-02-27_linear_ramp_qaoa_a06053bc.json",
+      "sha256": "98e8e06a35d3e8680002e6347dd6e8a392ba6dcf39e3f185eb24ab81253b2602",
+      "bytes": 1079,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_torino/2026-02-17_11-59-46_clops_0a5b6d30.json",
+      "sha256": "1e541f6e9b25d6fb66b44a196984a7e0ca1ca17595074341d70a979e2e7fc158",
+      "bytes": 835,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_torino/2026-02-19_10-23-18_eplg_f3d4641f.json",
+      "sha256": "d29ea907ce6c25ac44e4b4a1f4f643a9535ed2064851a4ff4f19620e127f6975",
+      "bytes": 3137,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_torino/2026-02-19_13-12-29_qml_kernel_afcb6eed.json",
+      "sha256": "2c543bb07e86a94dbaf23c5c9e2227284f2fae00f3d25ae8ea65354e59ff0104",
+      "bytes": 694,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/ibm/ibm_torino/2026-02-19_13-41-42_mirror_circuits_a2f0fc94.json",
+      "sha256": "4e29241efaf38d50149845aaaf777f8ad3379df12c76721240f8c86a501f9621",
+      "bytes": 900,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/origin/wukong_72/2026-02-24_12-03-18_wit_dac80f0e.json",
+      "sha256": "d6b8e8e02fe8b5f1426e1730b002367d00ed740f8097c5d6e46d73ebb13494a6",
+      "bytes": 655,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/origin/wukong_72/2026-02-24_13-17-14_linear_ramp_qaoa_5e865c4b.json",
+      "sha256": "e2086482c898f4f2e29fab53b7820c0d2e4b874758546e389b016bfef125177c",
+      "bytes": 1009,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/origin/wukong_72/2026-02-24_13-18-23_linear_ramp_qaoa_fa544c4d.json",
+      "sha256": "02f9abf4b8ef7cdb48bbced5963d9c17c52cfb8656720cb855f0062c871921f5",
+      "bytes": 978,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/origin/wukong_72/2026-02-24_13-23-52_quantum_fourier_transform_9e67a199.json",
+      "sha256": "965b4eee252c964bb8488d835bab076f2954ea4181ad1e84ba7e4fe3b0896457",
+      "bytes": 811,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/origin/wukong_72/2026-02-24_13-24-38_qml_kernel_26c6266c.json",
+      "sha256": "ac619097fbf17f6c2689fd7c7b9d8860d73dca772fdc5bce74782d17f582224c",
+      "bytes": 649,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/origin/wukong_72/2026-02-24_13-25-12_qml_kernel_d8fbde4e.json",
+      "sha256": "b0ccfbd47287cc448cff35073593d8d52bdabbc7c49162aec3039fde1bf9c952",
+      "bytes": 649,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/origin/wukong_72/2026-02-24_13-36-41_mirror_circuits_56508473.json",
+      "sha256": "62c0550be4d99d723130bbf5007735fd074528a06348d6fcaaa3524ff55c9e1e",
+      "bytes": 944,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/origin/wukong_72/2026-02-24_13-37-02_mirror_circuits_df9a34d0.json",
+      "sha256": "dcc4b21dc1c46ba1e248f2c9f18c897bd0b6b0bc56c6807845b66ac14971ed10",
+      "bytes": 854,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/origin/wukong_72/2026-02-24_13-37-31_mirror_circuits_bae207b7.json",
+      "sha256": "570344b058df747daf8e1a26014d7903e81d544c108ad143f5184590e8459ac7",
+      "bytes": 854,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/origin/wukong_72/2026-03-02_10-12-45_quantum_fourier_transform_d8a4795b.json",
+      "sha256": "f965fce6404cb620bb1e20268603448d59ee17d6120c1042d5cba69fc001fc04",
+      "bytes": 847,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.6/quantinuum/h2-2/2026-01-23_17-05-44_eplg.json",
+      "sha256": "27b41aba92d2ac272c8286b088ed5ef1b1c2a7517cbdbfbdb5c2cb3fb75a6e04",
+      "bytes": 1964,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.7/aws/arn_aws_braket_eu-north-1_device_qpu_iqm_emerald/2026-07-24_09-50-26_qml_kernel_79a6539d.json",
+      "sha256": "7781c1db2d5e44c30360c0a4d457fca9a4d661cd17ec3e69e20dfd961e4e0cc7",
+      "bytes": 812,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.7/aws/arn_aws_braket_eu-north-1_device_qpu_iqm_emerald/2026-07-24_09-52-24_qml_kernel_4a275188.json",
+      "sha256": "d324b12bee32f5cd5168c1bcf0e387fd0cafe1890f45975e8151348ca0d2a99b",
+      "bytes": 814,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.7/aws/arn_aws_braket_eu-north-1_device_qpu_iqm_emerald/2026-07-24_09-53-30_qml_kernel_c56099e3.json",
+      "sha256": "f289aaab234a33f2560d6b43a97c2e201526889a590a7f462824a5478254e030",
+      "bytes": 776,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.7/aws/arn_aws_braket_eu-north-1_device_qpu_iqm_emerald/2026-07-24_09-54-00_qml_kernel_c7e70ff2.json",
+      "sha256": "227b8e48b27bbb4a80a9ff970f1aab377deca714c684a7ec711512982d249217",
+      "bytes": 776,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.7/aws/arn_aws_braket_eu-north-1_device_qpu_iqm_garnet/2026-07-23_12-56-54_qml_kernel_292c9f5f.json",
+      "sha256": "425ebadc247646d80f081d74f6fbc3e21129bc508c5529e58b015696b6966c5b",
+      "bytes": 807,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.7/aws/arn_aws_braket_eu-north-1_device_qpu_iqm_garnet/2026-07-23_12-57-06_qml_kernel_7fc75ac1.json",
+      "sha256": "471a9db56ec06a198a9aa10879076b843d837b61a141cda648c074518eefc4bd",
+      "bytes": 773,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.7/aws/arn_aws_braket_us-east-1_device_qpu_ionq_forte-1/2026-07-10_15-14-15_lr_qaoa_1d_scale_suite_714492a0.json",
+      "sha256": "1d61e9d5a982e461d6eae9d9b99aac9992ac7ccf535e2f7f8ccbc1cfa57678f8",
+      "bytes": 3031,
+      "recordCount": 2
+    },
+    {
+      "path": "metriq-gym/v0.7/aws/arn_aws_braket_us-west-1_device_qpu_rigetti_cepheus-1-108q/2026-07-15_16-26-08_wit_d3fa8744.json",
+      "sha256": "35b775ac7c953c36b9e6a1ea907c978e1b0dbcff52e427fba62d5f7893f3a996",
+      "bytes": 807,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.7/aws/arn_aws_braket_us-west-1_device_qpu_rigetti_cepheus-1-108q/2026-07-24_10-11-51_qml_kernel_b7b8505d.json",
+      "sha256": "09a5113f1957b0a33deee51e5de06740b81d81df1a3133c00b32daa3deb51633",
+      "bytes": 826,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.7/aws/arn_aws_braket_us-west-1_device_qpu_rigetti_cepheus-1-108q/2026-07-24_10-12-31_qml_kernel_8676da35.json",
+      "sha256": "9fd09efcd01473a9269ea89c233be4d960bba0e49312b006c35698f15bbff938",
+      "bytes": 786,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.7/aws/arn_aws_braket_us-west-1_device_qpu_rigetti_cepheus-1-108q/2026-07-24_10-12-56_qml_kernel_03a6125c.json",
+      "sha256": "02aee145bc8e7b2feabd18d2256ac6fa8a13c01e9e411c238ec6ed73a0b9195f",
+      "bytes": 788,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.7/aws/arn_aws_braket_us-west-1_device_qpu_rigetti_cepheus-1-108q/2026-07-24_10-13-21_qml_kernel_f7526f34.json",
+      "sha256": "457a15042a0f98edd8178d1cce7b0ef3a9f28aac00890583e58be5501237d69e",
+      "bytes": 788,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.7/aws/iqm_emerald/2026-08-07_10-00-04_mirror_circuits_5d8f6d26.json",
+      "sha256": "22430ff86fb1224b6402968a5b3c120efdd6abcb715483f2bac71f2d82dbdc44",
+      "bytes": 1273,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.7/aws/iqm_emerald/2026-08-07_10-01-16_mirror_circuits_860cebdd.json",
+      "sha256": "7c437222f67b7efde6b8ddd839ed1ad206bbd266a00a43f6fc77fb0edd86c569",
+      "bytes": 1248,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.7/aws/iqm_emerald/2026-08-07_10-14-20_mirror_circuits_8e2442d1.json",
+      "sha256": "a7658915337b96fee1c8bfbe4f3c92cf6aa4948145fdf7b2c647e166cdc11155",
+      "bytes": 1253,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.7/aws/iqm_emerald/2026-08-07_10-17-24_mirror_circuits_5159e49c.json",
+      "sha256": "9d08c52252cf823c784318e51f065690416d414d2bcb700d51a6bbb4c044ca46",
+      "bytes": 1253,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.7/aws/iqm_garnet/2026-08-07_10-37-06_mirror_circuits_e402e6ae.json",
+      "sha256": "057999b14023d1c6f98863497f5fb912414c827a64c328a8938e62f485ede198",
+      "bytes": 1272,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.7/aws/iqm_garnet/2026-08-07_10-37-26_mirror_circuits_a21eac9b.json",
+      "sha256": "6d627568977629996697f649933e46f52bcca22837dd7e9b32bdb6f08c01067b",
+      "bytes": 1347,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.7/aws/rigetti_cepheus-1-108q/2026-08-04_11-00-50_mirror_circuits_5c659990.json",
+      "sha256": "05b9cf2b0239bbd4741228ff7f0cc70d7dfaf9d854dcaaa43ad1a5cd094bf3b7",
+      "bytes": 1285,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.7/aws/rigetti_cepheus-1-108q/2026-08-04_11-04-21_mirror_circuits_951d96e9.json",
+      "sha256": "bb508f965b9871414a47b45b1e906594d0f5bb1e8de41f0fc80f08859b8be617",
+      "bytes": 1265,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.7/aws/rigetti_cepheus-1-108q/2026-08-04_11-05-14_mirror_circuits_92a0ba4f.json",
+      "sha256": "202131ebff0699209a97f2ae302c2e58b7cff3403b00325fcc905843cab27341",
+      "bytes": 1265,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.7/aws/rigetti_cepheus-1-108q/2026-08-04_12-41-01_mirror_circuits_01c8a96e.json",
+      "sha256": "6304ede81814a83276e422298228021d36874237a0531aa5471e9c9b21719ff5",
+      "bytes": 1264,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.7/aws/rigetti_cepheus-1-108q/2026-08-04_12-41-47_mirror_circuits_5727b2f3.json",
+      "sha256": "da62eee6723e190e01615ecbb04fedaacb1056478658029ee1bf450578052a5f",
+      "bytes": 1264,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.7/aws/rigetti_cepheus-1-108q/2026-08-05_07-07-05_quantum_fourier_transform_e2941c25.json",
+      "sha256": "5198659832952de75fd701e5f3795c0bf0df16f2b57262ef67dee871ae6a21cd",
+      "bytes": 1116,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.7/aws/rigetti_cepheus-1-108q/2026-08-05_07-07-09_quantum_fourier_transform_ddf72dd5.json",
+      "sha256": "0cd856ce13575f442ac059f9d08602438fb1b8ebdbce8f4a51cee31379a9bf57",
+      "bytes": 1084,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.7/braket/arn_aws_braket_us-west-1_device_qpu_rigetti_cepheus-1-108q/2026-07-23_13-12-00_linear_ramp_qaoa_db61cbf0.json",
+      "sha256": "c7ec80c80b2d774626c53c7bb5b2b9351e761f756605f3a1ec0d50979afa3047",
+      "bytes": 1407,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.7/braket/arn_aws_braket_us-west-1_device_qpu_rigetti_cepheus-1-108q/2026-07-24_10-07-20_linear_ramp_qaoa_a1c0bf7c.json",
+      "sha256": "87ffb9914db1364f0ad007f3486eb788efc1ccb114c8dcac413cf151042bb9d2",
+      "bytes": 1424,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.7/braket/arn_aws_braket_us-west-1_device_qpu_rigetti_cepheus-1-108q/2026-07-24_10-11-44_linear_ramp_qaoa_ae9ba470.json",
+      "sha256": "5d0f4a2622460e60a2e19649ca2d0477d3291b9d0b71541713d7d9db33bed04a",
+      "bytes": 1426,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.7/braket/arn_aws_braket_us-west-1_device_qpu_rigetti_cepheus-1-108q/2026-07-24_10-25-20_bseq_921ec9b8.json",
+      "sha256": "b35b11df541f13686668d1bd28681abae152bbdeefbbdb647c5f28c74a1b3161",
+      "bytes": 1112,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.7/braket/arn_aws_braket_us-west-1_device_qpu_rigetti_cepheus-1-108q/2026-07-24_10-41-43_eplg_8007ce82.json",
+      "sha256": "ccfa0893f1e8d144fd11c56175943a87a891f53fc6795f5b36cf6d29447f887a",
+      "bytes": 4349,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.7/ibm/ibm_fez/2026-08-20_19-39-52_metriq_score_1_0_d3435ac9.json",
+      "sha256": "00a3d6bf512a22d5b4c952bf6406035b95b4f5d6db382e9c8367bef6976dcbbe",
+      "bytes": 11380,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.7/ibm/ibm_kingston/2026-08-20_19-09-51_metriq_score_1_0_ce57568d.json",
+      "sha256": "be15ee7395a005c047082cbb34b92ad39b685c6ba96dd5860df264a81229333f",
+      "bytes": 11405,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.7/ibm/ibm_marrakesh/2026-08-14_11-22-25_metriq_score_1_0_46dd2220.json",
+      "sha256": "84b7f38b4eceb3b7f81e84999caaccae475075534f7d080c994070635bbba749",
+      "bytes": 11360,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.7/ibm/ibm_miami/2026-04-16_17-50-27_wit_7069c09b.json",
+      "sha256": "3618e8dbd7db1d2415f52948cf2ad1abdb543fb4e579786f3dee92dcb570f388",
+      "bytes": 716,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.7/ibm/ibm_miami/2026-04-16_18-30-51_lr_qaoa_1d_scale_suite_02d4bf7e.json",
+      "sha256": "d337ce128b4254c8ad91b603f1c0c7900f1fa0e87e267e6fdc856aeba9290a67",
+      "bytes": 4844,
+      "recordCount": 4
+    },
+    {
+      "path": "metriq-gym/v0.7/ibm/ibm_miami/2026-04-16_19-20-20_bseq_4895aa4f.json",
+      "sha256": "e5b56b637047e0c7c12fa046cb4ae9e9a6b627301212327521b3a5f98e11a1a1",
+      "bytes": 622,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.7/ibm/ibm_miami/2026-08-13_16-26-42_metriq_score_1_0_094e0cb2.json",
+      "sha256": "abce794973edbc84028dac5de60784758baad9d69c56bd3c9aaa0fae09b2b1b6",
+      "bytes": 4540,
+      "recordCount": 4
+    },
+    {
+      "path": "metriq-gym/v0.7/ibm/ibm_miami/2026-08-13_17-36-08_metriq_score_1_0_b84e1fec.json",
+      "sha256": "536b61bcce5a0f85189afa1cfaa7057f34b12e79e01233c929ccf0bab0b6c590",
+      "bytes": 4004,
+      "recordCount": 4
+    },
+    {
+      "path": "metriq-gym/v0.7/ibm/ibm_miami/2026-08-14_09-48-26_metriq_score_1_0_81d647f5.json",
+      "sha256": "04f35dc478b779001b6ea79f743af7d9666ce5f40b7c7ae6888f3067d109ed46",
+      "bytes": 7611,
+      "recordCount": 5
+    },
+    {
+      "path": "metriq-gym/v0.7/ibm/ibm_miami/2026-08-14_10-21-53_metriq_score_1_0_c282cd27.json",
+      "sha256": "c7d3fe24b86b594f6eb54669d78f2367de13d56bc6793ed8d2b54c245f52cfcf",
+      "bytes": 11359,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.7/ibm/ibm_miami/2026-08-20_19-33-46_metriq_score_1_0_bd16c9cb.json",
+      "sha256": "d5370da9bbddcb3aedf00043214f1e3ef72ca2e1f964445e9c1250d4bd03c297",
+      "bytes": 29093,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.7/origin/wk_c180/2026-04-17_12-42-24_bseq_c575b7d9.json",
+      "sha256": "c51998adde58ebcd26449463898cee3142b2445e2b1bdcf306ed29c7e6b6d999",
+      "bytes": 575,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.8/aws/iqm_garnet/2026-09-09_15-14-23_metriq_score_1_0_a15febf8.json",
+      "sha256": "5c4073acc19923b198691b62d6033e04ebd1c009c6f08e51e878cb7a8e5e2be4",
+      "bytes": 962,
+      "recordCount": 1
+    },
+    {
+      "path": "metriq-gym/v0.8/aws/iqm_garnet/2026-09-09_16-34-31_metriq_score_1_0_0999d5dc.json",
+      "sha256": "56d60e374d5140be5cded68041e8f744e3183b2b9ed1feefbd9c05898c5e1e9b",
+      "bytes": 4328,
+      "recordCount": 4
+    },
+    {
+      "path": "metriq-gym/v0.8/ibm/ibm_phoenix/2026-09-11_15-29-00_metriq_score_1_0_27440437.json",
+      "sha256": "96c5bcd38519381f723ffe7caeae5729400b92754cf441126e9c12704570e9a8",
+      "bytes": 65589,
+      "recordCount": 21
+    },
+    {
+      "path": "metriq-gym/v0.8/origin/wk_c180/2026-09-04_11-26-31_metriq_score_1_0_3c00fd71.json",
+      "sha256": "c22552b9f1b677c01698ee2fc1347894e81c811c92c6216e913bb479d9354293",
+      "bytes": 4439,
+      "recordCount": 4
+    },
+    {
+      "path": "metriq-gym/v0.8/origin/wk_c180/2026-09-04_11-50-18_metriq_score_1_0_7efa616a.json",
+      "sha256": "22681d92c2faa3b24c1e15be348267619ca2f68f551b10f82d99f85321dce0e5",
+      "bytes": 6040,
+      "recordCount": 4
+    }
+  ],
+  "selection": "All JSON record arrays under metriq-gym/v*/; identical complete records deduplicated with all source locations retained. No metric aggregation or ranking."
+}

@@ -5,6 +5,42 @@ import { quantumHardwareMcpIntegration } from "./quantum-hardware-mcp.mjs";
 
 const QISKIT_MCP_SOURCE = "https://github.com/Qiskit/mcp-servers";
 const MCP_CATALOG = Object.freeze({
+  dynamiqs_local: Object.freeze({
+    displayName: "Dynamiqs 动力学与梯度",
+    description: "驱动耗散单量子位、参数批量扫描和人口梯度，含独立数值对照。",
+    provider: "dynamiqs / OpenQuantum",
+    sourceUrl: "https://github.com/dynamiqs/dynamiqs",
+    packageName: "dynamiqs",
+    packageVersion: "0.3.6@a49b30fe",
+    setup: null,
+  }),
+  clifft_local: Object.freeze({
+    displayName: "Clifft 近 Clifford 采样",
+    description: "有界 Clifford+T 电路的带噪采样，与密度矩阵位串概率比较。",
+    provider: "clifft / OpenQuantum",
+    sourceUrl: "https://github.com/unitaryfoundation/clifft",
+    packageName: "clifft",
+    packageVersion: "0.10.0",
+    setup: null,
+  }),
+  oqupy_local: Object.freeze({
+    displayName: "OQuPy 非马尔可夫动力学",
+    description: "Ohmic spin-boson 模型的有限记忆 TEMPO 演化及状态数值检查。",
+    provider: "oqupy / OpenQuantum",
+    sourceUrl: "https://github.com/tempoCollaboration/OQuPy",
+    packageName: "oqupy",
+    packageVersion: "0.5.0",
+    setup: null,
+  }),
+  deltakit_local: Object.freeze({
+    displayName: "Deltakit 纠错实验",
+    description: "矩形 rotated planar-code 构建、ToyNoise、Stim 采样与 MWPM 解码。",
+    provider: "deltakit / OpenQuantum",
+    sourceUrl: "https://github.com/Deltakit/deltakit",
+    packageName: "deltakit",
+    packageVersion: "0.10.0",
+    setup: null,
+  }),
   mitiq_local: Object.freeze({
     displayName: "Mitiq 误差缓解",
     description: "ZNE、REM、PEC、CDR 本地噪声实验，比较相同采样预算下的误差、方差与成本。",

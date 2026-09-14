@@ -46,6 +46,13 @@
 - 已核实提交与文件：Skill/Tool 正交、完整副作用声明和 MCP 合同补审已进入本地提交；最新提交补充了 Skill 与 MCP 服务目录。详细范围见[日期化审计](docs/architecture/ARCHITECTURE_AUDIT.md)。
 - 原有 `agent.cordis.yml` 未提交改动属于已有工作；本页不覆盖它，也不把配置存在等同于服务在线可用。
 
+## Unitary 生态接入（2026-09-14）
+
+- 新增 Dynamiqs、Clifft、OQuPy、Deltakit 四个 Skill 和四个默认开启的本地计算 Tool；Metriq 以原生只读 Tool 查询固定公开快照的 410 条去重记录。
+- 四个 Python 3.12 锁定环境已实际安装，真实数值回归与独立领域审阅已完成；修复了 TEMPO 整步数取整和 Deltakit 等价电路目标顺序造成的重现性问题。
+- 本地模型协议替身驱动真实 Harness，完成五项成功调用、一次预期查询失败及会话重读；完整 `npm run check` 已通过。此次没有运行外部模型或真实硬件，五项均为 L1、`scientificValidation=not_evaluated`。
+- [接入说明](docs/integrations/UNITARY_ECOSYSTEM.md)包含版本、安装、使用示例和证据。运行中的 Harness 需重启后加载新增 Preset 行；原模型验收里程碑保持独立。
+
 ## 下一唯一里程碑
 
 收口当前模型接入验收：对原执行任务已经选定的模型逐项归档“文本生成、Tool Calling、科研主动作、证据完整性”的结果与未验证项。该任务仍由原执行会话负责；本页不启动第二份验收。

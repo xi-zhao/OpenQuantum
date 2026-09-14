@@ -7,6 +7,11 @@
 | 组件 | 许可证 | OpenQuantum 中的使用方式 | 上游来源 |
 | --- | --- | --- | --- |
 | Mitiq | GPLv3；本地能力目录 GPL-3.0-only | 固定 1.1.0，独立 Python 环境调用 ZNE/REM/PEC/CDR；本能力携带独立 LICENSE/NOTICE，见下方 Mitiq 说明 | [unitaryfoundation/mitiq](https://github.com/unitaryfoundation/mitiq/tree/v1.1.0) |
+| Dynamiqs | Apache-2.0 | 固定 0.3.6 源码提交 `a49b30fe5cacb5cf7c1d981f2e7ed03b18e05318`，隔离 Python 环境调用单量子位批量动力学与梯度；源码由包管理器取得 | [dynamiqs/dynamiqs](https://github.com/dynamiqs/dynamiqs) |
+| Clifft | Apache-2.0 | 固定 PyPI 0.10.0，仅执行结构化小型 Clifford+T 最终测量电路；独立环境安装，不复制上游源码 | [QuEraComputing/clifft](https://github.com/unitaryfoundation/clifft) |
+| OQuPy | Apache-2.0 | 固定 PyPI 0.5.0，独立 NumPy 1.x 环境调用 TEMPO；不复制上游源码 | [tempoCollaboration/OQuPy](https://github.com/tempoCollaboration/OQuPy) |
+| Deltakit | Apache-2.0 | 固定 PyPI 0.10.0，构建矩形纠错存储实验并使用本地 ToyNoise；不接入云服务或专有解码器 | [Deltakit/deltakit](https://github.com/Deltakit/deltakit) |
+| Metriq data | CC-BY-4.0 | 固定 `6730f78b135a9af67691a0ef4fbea041978056c5` 的公开 JSON 数据，转为本地索引并去重相同完整记录；保留原始指标、来源文件和署名。原版 LICENSE、NOTICE 与转换清单随 `src/metriq-data/upstream/` 分发 | [unitaryfoundation/metriq-data](https://github.com/unitaryfoundation/metriq-data) |
 | Quantum-Practices | MIT | 固定提交 `572a24c9b5c9787caec98810351f5cb17c82250e` 的两个原始 ESM 文件（检索器、60 份指南目录）随源码分发；原版 LICENSE、NOTICE 与文件摘要保留在 `src/quantum-practices/upstream/`。本地薄适配负责当前 Harness 注册、中文查询和参考资料边界；不包含上游 Agent、模拟器、Python 环境或安装器 | [unitarylab/quantum-practices](https://github.com/unitarylab/quantum-practices) |
 | Qiskit SQD | Apache-2.0 | 固定 `qiskit-addon-sqd==0.13.1`，隔离环境调用 H₂/STO-3G 采样子空间对角化；源码由包管理器安装 | [Qiskit/qiskit-addon-sqd](https://github.com/Qiskit/qiskit-addon-sqd) |
 | MQT YAQS | MIT | 固定 `mqt.yaqs==0.6.0`，隔离环境调用有界张量跳跃轨迹 | [munich-quantum-toolkit/yaqs](https://github.com/munich-quantum-toolkit/yaqs) |

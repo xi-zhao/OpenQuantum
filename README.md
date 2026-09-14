@@ -70,7 +70,9 @@
 | 变分求解与参数学习 | 求解限定二量子位 Hamiltonian 的固定粒子扇区基态；对小型 Hamiltonian 训练 Flow-VQE | VQE 与精确参考对照，Flow 参数学习与等评估预算随机搜索比较 |
 | 组合优化 | 构建有界 QUBO，检查约束 penalty，运行经典求解或可选本地 QAOA | 优化解、约束检查与经典枚举复核 |
 | 量子纠错 | 运行 surface-code memory / MWPM 实验，或对二元校验矩阵进行 BP+LSD 解码 | 表面码有限 shots 统计；LSD 的 syndrome 一致性检查 |
-| 开放系统动力学 | 用 TJM 模拟小型开放 Ising 链的张量跳跃轨迹 | 随时间变化的观测量，与密度矩阵 Lindblad 演化的数值对照 |
+| 开放系统动力学 | 用 TJM 计算开放 Ising 链，用 Dynamiqs 扫描单量子位驱动与梯度，或用 OQuPy 研究环境记忆 | 观测量轨迹、独立参考、梯度以及时间步长与记忆截断信息 |
+| Clifford+T 与纠错建模 | 用 Clifft 采样小电路，或用 Deltakit 构建矩形纠错码片存储实验 | 含噪位串与密度矩阵对照；实际 Stim 电路、固定 shots 逻辑错误统计 |
+| 公开设备基准 | 查询 Metriq 发布的历史 benchmark 数据 | 原始参数、指标、时间、来源与许可；保留模拟器标签 |
 | 超导与原子实验 | 模拟调校流程、原生门约束、三能级 transmon 泄漏或小型里德堡原子链动力学 | 合成实验数据、动力学轨迹与图表 |
 | 量子硬件接入 | 发现后端、检查拓扑与凭据；按需启用云任务查询、提交与取消 | 设备候选、使用条件；已启用任务接口的结果与状态 |
 | 研究方法与工具选型 | 比较量子 SDK、复用研究步骤、排查工作台连接 | 选型建议、工作流说明与诊断记录 |
@@ -102,6 +104,8 @@
 | Agent、桌面与消息 | [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness)、[DSH Desktop](https://github.com/anywhere-labs/dsh-desktop)、[CC Connect](docs/integrations/CC_CONNECT.md) | 从网页、桌面或配置好的消息渠道使用科研能力 |
 
 可以在对话中直接指定后端名称。[首次任务示例](#发起任务并选择后端)给出了 FatQat 和 TyxonQ 的可复制请求及准备条件。
+
+Unitary 生态新增 **Dynamiqs、Clifft、OQuPy、Deltakit 与 Metriq 数据查询**。前四项提供有界本地计算，Metriq 查询固定的公开数据快照；[安装、可复制请求与物理范围](docs/integrations/UNITARY_ECOSYSTEM.md)见接入说明。
 
 ### 模型由你选择
 
@@ -368,7 +372,7 @@ docs/                    架构、路线与生态文档
 
 ## 已集成的量子工具与能力
 
-当前源码分发 **19 个内置 Skill、21 个 MCP 服务连接、4 个原生量子 Tool**；另提供 1 个可选上游 Skill 的安装入口。它们是三种不同的职责，不应相加当作独立科研能力数量：
+当前源码分发 **23 个内置 Skill、25 个 MCP 服务连接、5 个原生量子 Tool**；另提供 1 个可选上游 Skill 的安装入口。它们是三种不同的职责，不应相加当作独立科研能力数量：
 
 - **Skill 是工作方法**：告诉 Agent 何时使用哪些工具、按什么步骤做、怎样解释结果。
 - **Tool 是执行动作**：Agent 真正调用的计算、查询或操作。
@@ -385,7 +389,7 @@ docs/                    架构、路线与生态文档
 
 ### 内置 Skills
 
-这 19 个 Skill 随源码提供，由 Harness 按任务需要发现和加载。点击名称即可查看完整的 `SKILL.md`，包括适用范围、执行步骤与限制；Skill 可加载不等于它使用的 MCP 服务已开启。
+这 23 个 Skill 随源码提供，由 Harness 按任务需要发现和加载。点击名称即可查看完整的 `SKILL.md`，包括适用范围、执行步骤与限制；Skill 可加载不等于它使用的 MCP 服务已开启。
 
 | Skill | 适合什么任务 | 使用的执行能力 |
 | --- | --- | --- |
@@ -400,6 +404,10 @@ docs/                    架构、路线与生态文档
 | [`tyxonq-workbench`](.agents/skills/tyxonq-workbench/SKILL.md) | 小规模 statevector 电路、采样分布与 density-matrix 噪声仿真 | `tyxonq_local` 服务提供的 Tool；连接默认关闭 |
 | [`fatqat-workbench`](.agents/skills/fatqat-workbench/SKILL.md) | 超导与原子阵列原生门约束、transmon 泄漏和里德堡动力学；也支持通用电路仿真 | `fatqat_local` 提供两个有界 Tool，返回数据、图表和单位；[接入说明](docs/integrations/FATQAT.md) |
 | [`mitiq-error-mitigation`](.agents/skills/mitiq-error-mitigation/SKILL.md) | ZNE、REM、PEC、CDR 的本地误差缓解实验，比较相同采样预算下的误差与成本 | `mitiq_local` 的有界计算；[范围、安装与验证](docs/integrations/MITIQ.md) |
+| [`dynamiqs-dynamics`](.agents/skills/dynamiqs-dynamics/SKILL.md) | 单量子位 Lindblad 动力学、驱动批量扫描与人口梯度 | `dynamiqs_local`；CPU JAX，与独立积分及有限差分比较 |
+| [`clifft-sampling`](.agents/skills/clifft-sampling/SKILL.md) | 1–6 qubit Clifford+T 电路及门后去极化噪声 | `clifft_local`；最终位串采样与独立密度矩阵参考 |
+| [`oqupy-dynamics`](.agents/skills/oqupy-dynamics/SKILL.md) | Ohmic spin-boson 模型的 TEMPO 环境记忆动力学 | `oqupy_local`；有限步长、记忆与张量截断 |
+| [`deltakit-qec`](.agents/skills/deltakit-qec/SKILL.md) | 矩形 rotated planar-code 建模、ToyNoise、采样与解码 | `deltakit_local`；返回真实电路、固定 shots 和 Wilson 区间 |
 | [`sqd-chemistry`](.agents/skills/sqd-chemistry/SKILL.md) | H₂/STO-3G 的采样子空间对角化、配置恢复与同基组 FCI 对照 | `sqd_local` 的有界本地计算；[范围与验证](docs/integrations/PAPER_BACKED_TOOLS.md) |
 | [`tjm-dynamics`](.agents/skills/tjm-dynamics/SKILL.md) | 2–6 qubits 开放 Ising 链的张量跳跃轨迹与 Lindblad 演化对照 | `tjm_local` 的有界本地计算；[范围与验证](docs/integrations/PAPER_BACKED_TOOLS.md) |
 | [`ldpc-decoding`](.agents/skills/ldpc-decoding/SKILL.md) | 二元校验矩阵的 BP+LSD 解码与独立 syndrome 一致性检查 | `ldpc_local` 的有界本地计算；[范围与验证](docs/integrations/PAPER_BACKED_TOOLS.md) |
@@ -411,7 +419,7 @@ docs/                    架构、路线与生态文档
 
 ### MCP 服务目录
 
-默认 Preset 声明以下 21 个 MCP 服务连接：**15 个默认开启（其中 Qiskit 两项可通过离线开关关闭），6 个按需启用**。表中的连接名就是配置中的 `serverName`，方便在设置中心、日志和源码中对应查找。
+默认 Preset 声明以下 25 个 MCP 服务连接：**19 个默认开启（其中 Qiskit 两项可通过离线开关关闭），6 个按需启用**。表中的连接名就是配置中的 `serverName`，方便在设置中心、日志和源码中对应查找。
 
 这些 MCP Server 都由本机以 `stdio` 方式启动，不是 OpenQuantum 提供的公共托管端点。其中一部分 Tool 在本地计算，另一部分再访问厂商文档或量子云；“本地启动 MCP Server”不代表所有数据处理都留在本地。
 
@@ -427,6 +435,10 @@ docs/                    架构、路线与生态文档
 | [`tyxonq_local`](https://github.com/QureGenAI-Biotech/TyxonQ) · TyxonQ | 小规模电路与噪声仿真 | 默认关闭 | 手动开启；`uv` 首次准备较大的 Python 环境，无需云凭据 |
 | [`fatqat_local`](https://github.com/spaceqat/fatqat) · FatQat | 电路与硬件约束、超导和中性原子脉冲动力学 | 默认开启 | `uv`；首次准备锁定的 Python 环境，后续数值计算在本地运行，无云凭据或 QPU 操作 |
 | [`mitiq_local`](https://github.com/unitaryfoundation/mitiq) · Mitiq | ZNE、REM、PEC、CDR 噪声实验与有限采样统计 | 默认开启 | uv；隔离 Python 3.12 环境，能力目录 GPL-3.0-only；[接入说明](docs/integrations/MITIQ.md) |
+| [`dynamiqs_local`](https://github.com/dynamiqs/dynamiqs) · Dynamiqs | 驱动扫描、耗散动力学与自动微分 | 默认开启 | uv、隔离 Python 3.12、CPU；[安装与范围](docs/integrations/UNITARY_ECOSYSTEM.md) |
+| [`clifft_local`](https://github.com/unitaryfoundation/clifft) · Clifft | 有界 Clifford+T 噪声采样 | 默认开启 | uv；仅结构化门与最终测量；[安装与范围](docs/integrations/UNITARY_ECOSYSTEM.md) |
+| [`oqupy_local`](https://github.com/tempoCollaboration/OQuPy) · OQuPy | Ohmic spin-boson TEMPO | 默认开启 | uv；独立 NumPy 1.x 环境；[安装与范围](docs/integrations/UNITARY_ECOSYSTEM.md) |
+| [`deltakit_local`](https://github.com/Deltakit/deltakit) · Deltakit | 纠错存储电路构建与本地噪声实验 | 默认开启 | uv；ToyNoise、Stim、PyMatching；[安装与范围](docs/integrations/UNITARY_ECOSYSTEM.md) |
 | [`sqd_local`](https://github.com/Qiskit/qiskit-addon-sqd) · SQD | H₂ 采样子空间对角化与 FCI 参照 | 默认开启 | uv；[安装与范围](docs/integrations/PAPER_BACKED_TOOLS.md)，不连接云硬件 |
 | [`tjm_local`](https://github.com/munich-quantum-toolkit/yaqs) · TJM / YAQS | 开放 Ising 链张量轨迹与 Lindblad 参照 | 默认开启 | uv；[安装与范围](docs/integrations/PAPER_BACKED_TOOLS.md)，不连接云硬件 |
 | [`ldpc_local`](https://github.com/quantumgizmos/ldpc) · BP+LSD | 二元校验矩阵的纠错解码与 syndrome 检查 | 默认开启 | uv；[安装与范围](docs/integrations/PAPER_BACKED_TOOLS.md)，不连接云硬件 |
@@ -441,13 +453,13 @@ docs/                    架构、路线与生态文档
 
 ¹ 两项 Qiskit 服务在未设置 `OPENQUANTUM_DISABLE_QISKIT_MCP=1` 时默认开启。设置中心可以覆盖连接策略；修改 MCP 连接配置后需要重启 Harness。
 
-FieldQKit、toqito、QCEC、QEC、TyxonQ、FatQat、QPanda QUBO 及上述六项论文方法使用 OpenQuantum 的本地桥接实现，链接指向所用上游；它们不是这些项目自带的 MCP Server。首次调用或准备可能下载固定依赖并创建环境或编译缓存，因此即使不改变云端状态，也不能把完整调用笼统标为只读。
+FieldQKit、toqito、QCEC、QEC、TyxonQ、FatQat、QPanda QUBO、Mitiq、上述六项论文方法与四项 Unitary 生态计算能力使用 OpenQuantum 的本地桥接实现，链接指向所用上游；它们不是这些项目自带的 MCP Server。首次调用或准备可能下载固定依赖并创建环境或编译缓存，因此即使不改变云端状态，也不能把完整调用笼统标为只读。
 
 启用与验证入口：设置中心 → MCP Server 连接 → 配置必要凭据 → 重启 Harness → 查看运行证据。`quantum_hardware` 和 `qpanda_runtime` 还需分别先运行 `npm run mcp:quantum-hardware:setup`、`npm run mcp:qpanda-runtime:setup`。完整 Tool 名称与副作用声明见[能力合同](.agents/capability-packages.yml)；连接与凭据引用见 [Agent Preset](runtime/openquantum/agent-presets/openquantum/agent.cordis.yml)。
 
 ### 原生量子 Tools
 
-以下 4 个动作由 OpenQuantum 的[原生计算 Tool Provider](runtime/openquantum/agent-presets/openquantum/native-quantum-tools.mjs)和[算法参考 Tool Provider](runtime/openquantum/agent-presets/openquantum/quantum-practices-tools.mjs)在进程内注册，默认 Preset 已包含它们，**不另起 MCP Server**。这里不重复统计 Harness 自带的文件、终端、Skill 加载等通用 Tools。
+以下 5 个动作由 OpenQuantum 的[原生计算 Tool Provider](runtime/openquantum/agent-presets/openquantum/native-quantum-tools.mjs)、[算法参考 Tool Provider](runtime/openquantum/agent-presets/openquantum/quantum-practices-tools.mjs)和 [Metriq 数据 Tool Provider](runtime/openquantum/agent-presets/openquantum/metriq-data-tools.mjs)在进程内注册，默认 Preset 已包含它们，**不另起 MCP Server**。这里不重复统计 Harness 自带的文件、终端、Skill 加载等通用 Tools。
 
 | 原生 Tool | 做什么 | 完整调用的边界 |
 | --- | --- | --- |
@@ -455,10 +467,11 @@ FieldQKit、toqito、QCEC、QEC、TyxonQ、FatQat、QPanda QUBO 及上述六项�
 | `list_qmclaw_experiments` | 列出 [QMClaw](https://github.com/QMC-AI/QMClaw) 的 13 类实验及支持范围 | 只读目录查询，`read-only`；不连接仪器 |
 | `simulate_qmclaw_experiment` | 运行带 seed 的有界 QMClaw 合成数据实验 | 只读计算，`read-only`；不连接 LabRAD/lqms，不写回真实校准参数 |
 | `quantum_practices` | 搜索和读取 60 份固定版本的算法参考指南，支持中文算法名；用于方法比较、假设核对与实验设计 | 本地资料检索，`read-only`；不安装或执行 UnitaryLab 模拟器；[使用与验证](docs/integrations/QUANTUM_PRACTICES.md) |
+| `metriq_benchmarks` | 按厂商、设备、基准类型或文字检索 410 条去重后的公开记录，读取原始参数与指标 | 固定本地快照，`read-only`；逐次返回来源与 CC-BY-4.0 署名；[范围与验证](docs/integrations/UNITARY_ECOSYSTEM.md) |
 
 ### 可选上游 Skill 与开发证据
 
-[OriginQ 官方 `pyqpanda3` Skill](https://github.com/OriginQ/pyqpanda3-skill) 提供电路编程、算法模板、迁移与 QCloud 使用指导。它**不计入上面的 19 个内置 Skill，也不会在首次启动时自动安装**；运行 `npm run skill:qpanda:setup` 后，固定审阅版本才会进入项目 Skill 目录。安装这个 Skill 不会自动启用 `qpanda_runtime`，也不会赋予云任务权限。
+[OriginQ 官方 `pyqpanda3` Skill](https://github.com/OriginQ/pyqpanda3-skill) 提供电路编程、算法模板、迁移与 QCloud 使用指导。它**不计入上面的 23 个内置 Skill，也不会在首次启动时自动安装**；运行 `npm run skill:qpanda:setup` 后，固定审阅版本才会进入项目 Skill 目录。安装这个 Skill 不会自动启用 `qpanda_runtime`，也不会赋予云任务权限。
 
 [固定量子能力 Benchmark](benchmarks/quantum-capabilities/README.md)使用 [MQT Bench](https://github.com/munich-quantum-toolkit/bench) 的 3 个固定电路案例与 manifest 做开发回归，属于开发与 CI 证据，不是 Skill 或 MCP 服务。
 

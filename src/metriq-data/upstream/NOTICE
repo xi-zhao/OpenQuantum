@@ -1,0 +1,15 @@
+Metriq benchmark data, maintained by Unitary Foundation and contributors.
+Source: https://github.com/unitaryfoundation/metriq-data
+Commit: 6730f78b135a9af67691a0ef4fbea041978056c5
+License: Creative Commons Attribution 4.0 International (CC-BY-4.0).
+
+OpenQuantum transformed the published JSON record arrays into a local indexed
+snapshot and deduplicated identical complete records, retaining all file/index
+locations and source-file SHA-256 values. No metrics have been aggregated or
+recalculated. The source-file inventory and transformation scope are recorded in
+source.json; the original license is included in LICENSE.
+
+Attribution and source links are returned with every lookup. Dataset inclusion
+and its published outcomes do not constitute OpenQuantum scientific acceptance
+or verification of present device performance. Local simulator entries retain
+their source provider labels.

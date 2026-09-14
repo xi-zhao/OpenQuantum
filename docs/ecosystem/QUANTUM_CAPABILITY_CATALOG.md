@@ -35,6 +35,11 @@ Scientific Result Adapter 只做 capability 映射。为维护 locality，源码
 | 能力 | 形式 | 默认状态 | 说明 |
 | --- | --- | --- | --- |
 | Mitiq 误差缓解 | Skill + 独立 Python MCP Server + Harness MCP Client（L1） | 开启 | 固定 1.1.0，ZNE/REM/PEC/CDR 的 1–4 qubit 本地实验，完整记录训练/校准预算及统计；[范围、验证与 GPL 声明](../integrations/MITIQ.md) |
+| Dynamiqs 动力学 | Skill + Python MCP Server + Harness MCP Client（L1） | 开启 | 固定 0.3.6 源码、CPU JAX，单量子位驱动批量扫描、自动微分、独立积分与有限差分 |
+| Clifft 采样 | Skill + Python MCP Server + Harness MCP Client（L1） | 开启 | 固定 0.10.0，1–6 qubit Clifford+T 与门后去极化噪声；最终测量，独立密度矩阵参照 |
+| OQuPy 动力学 | Skill + Python MCP Server + Harness MCP Client（L1） | 开启 | 固定 0.5.0，Ohmic spin-boson TEMPO；有限网格、记忆与 SVD 截断 |
+| Deltakit 纠错建模 | Skill + Python MCP Server + Harness MCP Client（L1） | 开启 | 固定 0.10.0，矩形 rotated planar-code、ToyNoise、Stim 与 PyMatching |
+| Metriq 数据 | 原生 Tool Provider（L1） | 开启 | 固定公开快照，410 条去重记录；原始指标、参数、来源与 CC-BY-4.0 署名；五项的[安装和边界](../integrations/UNITARY_ECOSYSTEM.md) |
 | `quantum-practices` | 原生只读 Tool Provider（L1、Tool-only） | 开启 | 2026-09-12 接入固定 MIT 目录的 60 份算法参考；无模拟器依赖，[使用与验证](../integrations/QUANTUM_PRACTICES.md) |
 | `quantum-ground-state` | Skill + 本地 MCP Server + Harness MCP Client + MCP-exposed Tool + Validator | 开启 | Agent Preset 组合 Skill Provider 与 Harness MCP Client；Host Plugin 经内部 Adapter 和 Materializer 交给 Validator，central Acceptance Builder 消费 Acceptance Profile、observations 与 provenance |
 | Qiskit Circuits | 官方 MCP Server + Harness MCP Client + MCP-exposed Tool | 条件开启 | QASM/QPY、转译、分析和优化比较；可由环境变量关闭 |
