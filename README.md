@@ -86,31 +86,33 @@
 
 这 23 个 Skill 是 OpenQuantum 随源码维护的量子工作流，覆盖方法选择、计算实验、结果解释和平台诊断，由 Harness 按任务需要发现和加载。点击名称即可查看完整的 `SKILL.md`，也可作为编写自己 Skill 的起点；所需工具与连接分别配置。
 
-| Skill | 适合什么任务 | 使用的执行能力 |
+下表按**研究方法与用途**介绍能力。实际可执行的模型、规模和格式见[当前接入范围](#当前接入范围与验证记录)及各 Tool 接口；本地验证记录单独说明测过的算例，不用这些算例定义方法或上游软件的能力上限。
+
+| Skill | 研究方法与用途 | 执行入口 |
 | --- | --- | --- |
-| [`quantum-ground-state`](.agents/skills/quantum-ground-state/SKILL.md) | 二量子位实 Pauli Hamiltonian 在固定粒子扇区内的 VQE 与精确参考比较 | 原生 `solve_and_validate_ground_state`；可接完整科学验收链 |
-| [`quantum-information-audit`](.agents/skills/quantum-information-audit/SKILL.md) | 审计密度矩阵合法性、纯度、部分转置谱与 negativity | `toqito_audit` 服务提供的 Tool；可接完整科学验收链 |
-| [`quantum-circuit-verification`](.agents/skills/quantum-circuit-verification/SKILL.md) | 用 MQT QCEC 检查两份有界、无测量 OpenQASM 2 电路的等价性 | `qcec_local` 服务提供的 Tool |
-| [`qpanda-qubo`](.agents/skills/qpanda-qubo/SKILL.md) | 有界 QUBO 建模、penalty 检查、经典枚举复核与可选本地 QAOA | `qpanda_qubo` 服务提供的 Tools；不提交云任务 |
-| [`qec-memory-experiment`](.agents/skills/qec-memory-experiment/SKILL.md) | surface-code X/Z memory 采样、MWPM 解码与有限 shots 统计 | `qec_local` 服务提供的 Tool；不从单点结果宣称阈值 |
-| [`qmclaw-workbench`](.agents/skills/qmclaw-workbench/SKILL.md) | S21、Rabi、Ramsey、T1、DRAG、RB 等 13 类超导调校实验的规划与模拟 | 原生 `list_qmclaw_experiments`、`simulate_qmclaw_experiment`；仅合成数据 |
-| [`quantum-sdk-advisor`](.agents/skills/quantum-sdk-advisor/SKILL.md) | 量子 SDK 选型、迁移比较与 PoC 技术路线 | 知识型 Skill，不强制绑定专用 Tool；提及某个 SDK 不等于已经集成其执行后端 |
-| [`fieldqkit-hardware`](.agents/skills/fieldqkit-hardware/SKILL.md) | 国内量子云后端发现、量子位筛选、拓扑与凭据缺口检查 | `fieldqkit` 服务提供的 Tools；只读云端，不提交 QPU 任务 |
-| [`platform-diagnostics`](.agents/skills/platform-diagnostics/SKILL.md) | UI、Harness、Skill 与 Model 联调排障，形成可追溯的诊断报告 | Harness 通用 Tool 与本地诊断脚本；在线模型探测另需凭据 |
-| [`qiskit-circuit-workbench`](.agents/skills/qiskit-circuit-workbench/SKILL.md) | OpenQASM 3 / QPY 电路分析、转换、转译比较与文档查证 | `qiskit`、`qiskit_docs` 服务提供的 Tools |
-| [`tyxonq-workbench`](.agents/skills/tyxonq-workbench/SKILL.md) | 小规模 statevector 电路、采样分布与 density-matrix 噪声仿真 | `tyxonq_local` 服务提供的 Tool；连接默认关闭 |
-| [`fatqat-workbench`](.agents/skills/fatqat-workbench/SKILL.md) | 超导与原子阵列原生门约束、transmon 泄漏和里德堡动力学；也支持通用电路仿真 | `fatqat_local` 提供两个有界 Tool，返回数据、图表和单位；[接入说明](docs/integrations/FATQAT.md) |
-| [`mitiq-error-mitigation`](.agents/skills/mitiq-error-mitigation/SKILL.md) | ZNE、REM、PEC、CDR 的本地误差缓解实验，比较相同采样预算下的误差与成本 | `mitiq_local` 的有界计算；[范围、安装与验证](docs/integrations/MITIQ.md) |
-| [`dynamiqs-dynamics`](.agents/skills/dynamiqs-dynamics/SKILL.md) | 单量子位 Lindblad 动力学、驱动批量扫描与人口梯度 | `dynamiqs_local`；CPU JAX，与独立积分及有限差分比较 |
-| [`clifft-sampling`](.agents/skills/clifft-sampling/SKILL.md) | 1–6 qubit Clifford+T 电路及门后去极化噪声 | `clifft_local`；最终位串采样与独立密度矩阵参考 |
-| [`oqupy-dynamics`](.agents/skills/oqupy-dynamics/SKILL.md) | Ohmic spin-boson 模型的 TEMPO 环境记忆动力学 | `oqupy_local`；有限步长、记忆与张量截断 |
-| [`deltakit-qec`](.agents/skills/deltakit-qec/SKILL.md) | 矩形 rotated planar-code 建模、ToyNoise、采样与解码 | `deltakit_local`；返回真实电路、固定 shots 和 Wilson 区间 |
-| [`sqd-chemistry`](.agents/skills/sqd-chemistry/SKILL.md) | H₂/STO-3G 的采样子空间对角化、配置恢复与同基组 FCI 对照 | `sqd_local` 的有界本地计算；[范围与验证](docs/integrations/PAPER_BACKED_TOOLS.md) |
-| [`tjm-dynamics`](.agents/skills/tjm-dynamics/SKILL.md) | 2–6 qubits 开放 Ising 链的张量跳跃轨迹与 Lindblad 演化对照 | `tjm_local` 的有界本地计算；[范围与验证](docs/integrations/PAPER_BACKED_TOOLS.md) |
-| [`ldpc-decoding`](.agents/skills/ldpc-decoding/SKILL.md) | 二元校验矩阵的 BP+LSD 解码与独立 syndrome 一致性检查 | `ldpc_local` 的有界本地计算；[范围与验证](docs/integrations/PAPER_BACKED_TOOLS.md) |
-| [`randomized-measurements`](.agents/skills/randomized-measurements/SKILL.md) | 已知 product / GHZ 态的局域 Haar 测量、子区纯度与有限样本误差 | `random_meas_local` 的有界本地计算；[范围与验证](docs/integrations/PAPER_BACKED_TOOLS.md) |
-| [`flow-vqe`](.agents/skills/flow-vqe/SKILL.md) | 2–4 qubit Hamiltonian 的 flow 参数学习，与等评估预算随机搜索比较 | `flow_vqe_local` 的有界本地计算；[范围与验证](docs/integrations/PAPER_BACKED_TOOLS.md) |
-| [`tenpy-ground-state`](.agents/skills/tenpy-ground-state/SKILL.md) | 3–10 站点自旋 1/2 XYZ 开放链的 DMRG、磁化与纠缠熵 | `tenpy_local` 的有界本地计算；[范围与验证](docs/integrations/PAPER_BACKED_TOOLS.md) |
+| [`quantum-ground-state`](.agents/skills/quantum-ground-state/SKILL.md) | 变分量子本征求解（VQE）、基态能量估计与独立精确参考比较 | 原生 `solve_and_validate_ground_state`；支持完整科学验收流程 |
+| [`quantum-information-audit`](.agents/skills/quantum-information-audit/SKILL.md) | 量子态合法性检查、密度矩阵性质分析与纠缠诊断 | `toqito_audit`；支持完整科学验收流程 |
+| [`quantum-circuit-verification`](.agents/skills/quantum-circuit-verification/SKILL.md) | 量子电路等价性验证、优化前后对照与全局相位差异判定 | `qcec_local` |
+| [`qpanda-qubo`](.agents/skills/qpanda-qubo/SKILL.md) | 组合优化问题的 QUBO 建模、约束转换、经典求解与本地 QAOA 对照 | `qpanda_qubo` |
+| [`qec-memory-experiment`](.agents/skills/qec-memory-experiment/SKILL.md) | 表面码存储实验、噪声采样、MWPM 译码与逻辑错误率分析 | `qec_local` |
+| [`qmclaw-workbench`](.agents/skills/qmclaw-workbench/SKILL.md) | 超导量子比特调校实验设计、测量流程模拟与合成数据分析，覆盖 S21、Rabi、Ramsey、T₁ 等 | 原生 `list_qmclaw_experiments`、`simulate_qmclaw_experiment` |
+| [`quantum-sdk-advisor`](.agents/skills/quantum-sdk-advisor/SKILL.md) | 量子 SDK 选型、迁移比较与 PoC 技术路线规划 | 知识型 Skill，按任务使用已有通用 Tool |
+| [`fieldqkit-hardware`](.agents/skills/fieldqkit-hardware/SKILL.md) | 量子云设备发现、量子位与拓扑筛选、接入条件检查 | `fieldqkit`；只读设备发现 |
+| [`platform-diagnostics`](.agents/skills/platform-diagnostics/SKILL.md) | 工作台、工具与模型联调排障，形成可追溯的诊断报告 | Harness 通用 Tool 与本地诊断脚本 |
+| [`qiskit-circuit-workbench`](.agents/skills/qiskit-circuit-workbench/SKILL.md) | 量子电路分析、格式转换、转译比较与 Qiskit 文档查证 | `qiskit`、`qiskit_docs` |
+| [`tyxonq-workbench`](.agents/skills/tyxonq-workbench/SKILL.md) | 门电路仿真、态矢演化、量子噪声与采样分布分析 | `tyxonq_local` |
+| [`fatqat-workbench`](.agents/skills/fatqat-workbench/SKILL.md) | 量子电路与硬件原生门约束分析、transmon 泄漏及里德堡原子动力学 | `fatqat_local`；[使用说明](docs/integrations/FATQAT.md) |
+| [`mitiq-error-mitigation`](.agents/skills/mitiq-error-mitigation/SKILL.md) | 量子误差缓解方法比较、采样预算规划与误差成本分析，涵盖 ZNE、REM、PEC、CDR | `mitiq_local`；[使用说明](docs/integrations/MITIQ.md) |
+| [`dynamiqs-dynamics`](.agents/skills/dynamiqs-dynamics/SKILL.md) | 开放系统 Lindblad 动力学、驱动参数扫描与自动微分灵敏度分析 | `dynamiqs_local` |
+| [`clifft-sampling`](.agents/skills/clifft-sampling/SKILL.md) | Clifford+T 电路模拟、非 Clifford 门干涉与噪声采样分析 | `clifft_local` |
+| [`oqupy-dynamics`](.agents/skills/oqupy-dynamics/SKILL.md) | 非马尔可夫开放系统动力学、环境记忆效应与 TEMPO 数值收敛分析 | `oqupy_local` |
+| [`deltakit-qec`](.agents/skills/deltakit-qec/SKILL.md) | 表面码码片建模、噪声实验、采样与译码性能分析 | `deltakit_local` |
+| [`sqd-chemistry`](.agents/skills/sqd-chemistry/SKILL.md) | 量子化学的采样子空间对角化、测量频数后处理与电子基态能量分析 | `sqd_local` |
+| [`tjm-dynamics`](.agents/skills/tjm-dynamics/SKILL.md) | 开放多体系统的张量跳跃轨迹模拟、耗散演化与参考结果比较 | `tjm_local` |
+| [`ldpc-decoding`](.agents/skills/ldpc-decoding/SKILL.md) | 二元校验矩阵的 BP+LSD 解码与 syndrome 一致性检查 | `ldpc_local` |
+| [`randomized-measurements`](.agents/skills/randomized-measurements/SKILL.md) | 局域随机测量、子区纯度估计与有限样本误差分析 | `random_meas_local` |
+| [`flow-vqe`](.agents/skills/flow-vqe/SKILL.md) | 流模型辅助的 VQE 参数学习、低能量态搜索与基线比较 | `flow_vqe_local` |
+| [`tenpy-ground-state`](.agents/skills/tenpy-ground-state/SKILL.md) | 张量网络 DMRG 基态求解、磁性观测量与纠缠结构分析 | `tenpy_local` |
 
 ### MCP 服务目录
 
@@ -165,6 +167,33 @@ OpenQuantum 提供以下 5 个原生量子动作，用于基态求解、调校�
 | `simulate_qmclaw_experiment` | 运行带 seed 的有界 QMClaw 合成数据实验 | 只读计算，`read-only`；不连接 LabRAD/lqms，不写回真实校准参数 |
 | `quantum_practices` | 搜索和读取 60 份固定版本的算法参考指南，支持中文算法名；用于方法比较、假设核对与实验设计 | 本地资料检索，`read-only`；不安装或执行 UnitaryLab 模拟器；[使用与验证](docs/integrations/QUANTUM_PRACTICES.md) |
 | `metriq_benchmarks` | 按厂商、设备、基准类型或文字检索 410 条去重后的公开记录，读取原始参数与指标 | 固定本地快照，`read-only`；逐次返回来源与 CC-BY-4.0 署名；[范围与验证](docs/integrations/UNITARY_ECOSYSTEM.md) |
+
+### 当前接入范围与验证记录
+
+**方法用途、接口支持和验证覆盖分别说明。** 一个本地算例只能证明该输入下的运行与检查结果；超出已测算例但仍符合接口的输入，属于尚未本地验证。当前 Tool 明确限制的模型、格式或规模，则需要扩展实现后才能支持。
+
+<details>
+<summary><strong>查看当前 Tool 的模型与规模限制</strong></summary>
+
+下表摘录当前代码明确执行的部分限制，完整参数以链接中的输入合同为准。这些是 OpenQuantum 当前接入的边界，不能解释为相应算法或上游软件的能力上限。
+
+| 当前执行接口 | 模型与规模限制 | 代码依据 |
+| --- | --- | --- |
+| 原生基态求解 | 二量子位实 Pauli Hamiltonian，固定 Hamming-weight=1 扇区 | [输入校验](.agents/skills/quantum-ground-state/scripts/lib/canonicalize.mjs) |
+| 电路等价性验证 | 1–16 qubits、无测量的 OpenQASM 2 电路 | [服务输入校验](.agents/skills/quantum-circuit-verification/mcp/server.mjs) |
+| TyxonQ 电路仿真 | 1–8 qubits，使用接口列出的门和噪声模型 | [服务输入校验](.agents/skills/tyxonq-workbench/mcp/server.mjs) |
+| Dynamiqs 动力学 | 受驱动、振幅阻尼的单量子位模型，CPU 执行 | [输入合同](.agents/skills/dynamiqs-dynamics/mcp/contracts.mjs) |
+| Clifft 噪声采样 | 1–6 qubits，门后去极化噪声与最终 Z 测量 | [输入合同](.agents/skills/clifft-sampling/mcp/contracts.mjs) |
+| OQuPy 动力学 | Ohmic spin-boson 模型，按接口设置时间步长与有限环境记忆 | [输入合同](.agents/skills/oqupy-dynamics/mcp/contracts.mjs) |
+| SQD 量子化学 | H₂/STO-3G，可变键长，接受四位测量频数或合成样本 | [输入合同](.agents/skills/sqd-chemistry/mcp/contracts.mjs) · [分子构建](.agents/skills/sqd-chemistry/mcp/bridge.py) |
+| TJM 动力学 | 2–6 qubits 的开放横场 Ising 链，局域振幅阻尼 | [输入合同](.agents/skills/tjm-dynamics/mcp/contracts.mjs) |
+| 随机测量 | 2–6 qubits 的 product / GHZ 态，局域 Haar 测量 | [输入合同](.agents/skills/randomized-measurements/mcp/contracts.mjs) |
+| Flow-VQE 参数学习 | 2–4 qubits 的 Pauli Hamiltonian，本地 RY/CNOT ansatz | [输入合同](.agents/skills/flow-vqe/mcp/contracts.mjs) |
+| TeNPy 基态求解 | 3–10 站点、自旋 1/2 的 XYZ 开放链，返回稠密精确对角化参考 | [输入合同](.agents/skills/tenpy-ground-state/mcp/contracts.mjs) |
+
+</details>
+
+实际跑过的输入、依赖版本与检查结果见[本地基态示例](#从一个真实任务开始)、[论文方法验证](docs/integrations/PAPER_BACKED_TOOLS.md)、[误差缓解验证](docs/integrations/MITIQ.md)和[动力学与纠错验证](docs/integrations/UNITARY_ECOSYSTEM.md)。更大规模任务是否可执行，需要结合当前接口、所用后端与计算资源判断。
 
 ## 可以用它做什么
 
