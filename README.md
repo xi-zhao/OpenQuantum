@@ -94,20 +94,53 @@
 
 同一个 Bell 态任务，可以选择 FatQat 或 TyxonQ；需要分析与转译电路时，可以选择 Qiskit；比较两份电路是否等价时，可以选择 MQT QCEC。研究动力学时，Dynamiqs 对应 Lindblad 扫描与梯度，OQuPy 对应环境记忆，TJM 对应开放自旋链轨迹。输入格式、物理模型和设备条件决定使用哪种工具。
 
-| 生态层面 | 使用或适配的项目与服务 | 选择方式与当前范围 |
+### 计算与分析工具
+
+下表按科研任务说明所用项目的分工，以及 OpenQuantum 当前开放的计算范围。具体输入格式、依赖和限制见[完整能力目录](#已集成的量子工具与能力)。
+
+| 科研任务 | 使用或适配的项目 | OpenQuantum 当前支持 |
 | --- | --- | --- |
-| 电路、编译与仿真 | [Qiskit](https://github.com/Qiskit/mcp-servers)、[MQT QCEC](https://github.com/munich-quantum-toolkit/qcec)、[TyxonQ](https://github.com/QureGenAI-Biotech/TyxonQ)、[FatQat](https://github.com/spaceqat/fatqat)、[Clifft](https://github.com/unitaryfoundation/clifft) | 电路分析与转译、等价性检查、硬件约束或有界 Clifford+T 带噪采样 |
-| 量子态与优化 | [toqito](https://github.com/vprusso/toqito)、[QPanda QUBO](https://github.com/OriginQ/pyqpanda-algorithm)，以及内置基态求解 | 量子态审计、限定基态计算和组合优化 |
-| 误差缓解 | [Mitiq](https://github.com/unitaryfoundation/mitiq) | ZNE、REM、PEC、CDR 的有界本地实验，比较相同采样预算下的误差与成本 |
-| 量子纠错 | [Stim](https://github.com/quantumlib/Stim)、[PyMatching](https://github.com/oscarhiggott/PyMatching)、[Deltakit](https://github.com/Deltakit/deltakit)、[ldpc / BP+LSD](https://github.com/quantumgizmos/ldpc) | 表面码存储、矩形码片与合成噪声建模、MWPM 和二元校验矩阵解码 |
-| 量子化学与多体 | [Qiskit SQD](https://github.com/Qiskit/qiskit-addon-sqd)、[TeNPy](https://github.com/tenpy/tenpy) | H₂ 子空间对角化与有限自旋链 DMRG |
-| 开放系统动力学 | [Dynamiqs](https://github.com/dynamiqs/dynamiqs)、[OQuPy](https://github.com/tempoCollaboration/OQuPy)、[MQT YAQS / TJM](https://github.com/munich-quantum-toolkit/yaqs) | 单量子位动力学与梯度、Ohmic spin-boson TEMPO、开放 Ising 链张量轨迹 |
-| 参数学习与随机测量 | [Flow-VQE](https://github.com/olsson-group/Flow-VQE)、[RandomMeas.jl](https://github.com/bvermersch/RandomMeas.jl) | 小型 Hamiltonian 的 flow 参数学习，已知量子态的局域随机测量与纯度估计 |
-| 超导与原子实验 | [QMClaw](https://github.com/QMC-AI/QMClaw)、[FatQat](docs/integrations/FATQAT.md) | 调校流程的合成数据实验、原生门约束和有界脉冲动力学 |
-| 量子云与硬件 | [FieldQKit](https://github.com/FieldQuantum/fieldqkit)、IBM Quantum、IonQ、本源量子及其他国内量子云 | 按厂商与任务选择；后端发现需要对应凭据，真机与付费任务按需启用 |
-| 参考资料与公开基准 | [Quantum-Practices](https://github.com/unitarylab/quantum-practices)、[Metriq data](https://github.com/unitaryfoundation/metriq-data) | 本地检索 60 份算法指南与 410 条去重基准记录，保留原始来源 |
-| 学习与教学 | [OpenMAIC](https://github.com/THU-MAIC/OpenMAIC) → 量子学习通 | 集成完整教学应用；课程体系正在建设，在线 AI 教学流程仍待完整验收 |
-| Agent、桌面与消息 | [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness)、[DSH Desktop](https://github.com/anywhere-labs/dsh-desktop)、[CC Connect](docs/integrations/CC_CONNECT.md) | 从网页、桌面或配置好的消息渠道使用科研能力 |
+| 电路构建与转译 | [Qiskit MCP Servers](https://github.com/Qiskit/mcp-servers) | 创建、分析和转译电路，读写 QASM / QPY |
+| 电路等价性验证 | [MQT QCEC](https://github.com/munich-quantum-toolkit/qcec) | 比较两份无测量的 OpenQASM 2 电路，区分严格等价、相位等价、不等价与不确定 |
+| 门电路仿真 | [TyxonQ](https://github.com/QureGenAI-Biotech/TyxonQ) | 1–8 量子位电路的无噪声精确结果与含噪采样 |
+| Clifford+T 电路采样 | [Clifft](https://github.com/unitaryfoundation/clifft) | 1–6 量子位电路的门后去极化噪声与最终位串采样，附独立密度矩阵参考 |
+| 量子态与纠缠审计 | [toqito](https://github.com/vprusso/toqito) | 检查输入密度矩阵，计算纯度、部分转置与指定二分割的 negativity |
+| 随机测量与纯度估计 | [RandomMeas.jl](https://github.com/bvermersch/RandomMeas.jl) | 对已知 product / GHZ 态模拟局域 Haar 测量，估计子区纯度与有限样本误差 |
+| 组合优化 | [QPanda QUBO](https://github.com/OriginQ/pyqpanda-algorithm) | 将二值目标与线性等式约束编译为 QUBO，进行经典求解、枚举复核或可选本地 QAOA |
+| 变分参数学习 | [Flow-VQE](https://github.com/olsson-group/Flow-VQE) | 对 2–4 量子位 Pauli Hamiltonian 训练 flow 模型，学习低能量电路参数 |
+| 量子化学基态 | [Qiskit SQD](https://github.com/Qiskit/qiskit-addon-sqd) | 对 H₂/STO-3G 做采样子空间对角化，并与同基组 FCI 能量比较 |
+| 自旋链基态 | [TeNPy](https://github.com/tenpy/tenpy) | 对 3–10 站点 XYZ 自旋链运行 DMRG，计算能量、磁化与纠缠熵 |
+| 马尔可夫动力学与灵敏度 | [Dynamiqs](https://github.com/dynamiqs/dynamiqs) | 求解受驱动耗散单量子位的 Lindblad 动力学，批量扫描驱动并计算末态人口梯度 |
+| 非马尔可夫动力学 | [OQuPy](https://github.com/tempoCollaboration/OQuPy) | 用 TEMPO 求解 Ohmic spin-boson 模型，检查时间步长与环境记忆截断的影响 |
+| 多体开放系统轨迹 | [MQT YAQS / TJM](https://github.com/munich-quantum-toolkit/yaqs) | 模拟开放 Ising 链的张量跳跃轨迹，与密度矩阵 Lindblad 演化比较 |
+| 误差缓解 | [Mitiq](https://github.com/unitaryfoundation/mitiq) | 运行 ZNE、REM、PEC、CDR 本地噪声实验，比较相同采样预算下的误差与成本 |
+| 表面码存储与解码 | [Stim](https://github.com/quantumlib/Stim) + [PyMatching](https://github.com/oscarhiggott/PyMatching) | Stim 生成并采样旋转表面码存储电路，PyMatching 做 MWPM 解码，统计逻辑错误率 |
+| 矩形表面码实验建模 | [Deltakit](https://github.com/Deltakit/deltakit) | 构建矩形码片与 ToyNoise 含噪电路，运行 X / Z 存储实验并报告逻辑错误区间 |
+| 二元校验矩阵解码 | [ldpc / BP+LSD](https://github.com/quantumgizmos/ldpc) | 对给定校验矩阵和 syndrome 做 BP+LSD 解码，独立复核 syndrome 一致性 |
+| 超导测控流程模拟 | [QMClaw](https://github.com/QMC-AI/QMClaw) | 适配其调校流程，本地生成 S21、Rabi、Ramsey、T₁ 等实验的合成数据 |
+| 硬件约束与脉冲仿真 | [FatQat](https://github.com/spaceqat/fatqat) | 本地电路、超导原生门与原子阵列约束检查，以及三能级 transmon 和里德堡链的参考模型动力学 |
+
+### 设备发现与量子云
+
+[FieldQKit](https://github.com/FieldQuantum/fieldqkit) 提供国内量子云的凭据检查、只读设备发现、量子位筛选与拓扑查询。
+
+IBM Quantum、IonQ 和本源量子是可连接的云服务。任务提交分别由 IBM Runtime、社区 Quantum Hardware 服务和 QPanda3 Runtime 等[任务接口](#可以连接哪些量子后端)提供，配置凭据并启用后可使用；FieldQKit 的当前接入范围是设备发现。
+
+### 算法资料与公开基准
+
+| 查询目的 | 来源项目 | OpenQuantum 当前提供 |
+| --- | --- | --- |
+| 查找算法说明与参考实现 | [Quantum-Practices](https://github.com/unitarylab/quantum-practices) | 本地检索 60 份固定版本算法指南，保留来源链接 |
+| 查看设备历史基准 | [Metriq data](https://github.com/unitaryfoundation/metriq-data) | 查询 410 条去重历史记录，返回测试条件、原始指标、日期和来源，并保留模拟器标签 |
+
+### 平台与教学应用
+
+| 使用或适配的项目 | 在 OpenQuantum 中承担的职责 |
+| --- | --- |
+| [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) | 科研工作台的 Agent 运行时与原生 Web UI，负责会话、模型调用、工具调度和执行记录 |
+| [DSH Desktop](https://github.com/anywhere-labs/dsh-desktop) | 桌面客户端，提供原生窗口、托盘、终端与通知，复用科研工作台 |
+| [CC Connect](docs/integrations/CC_CONNECT.md) | 消息渠道桥接，将微信、飞书等渠道的请求送入科研工作台 |
+| [OpenMAIC](https://github.com/THU-MAIC/OpenMAIC) | 量子学习通的教学应用基础，提供课程、课件、课堂与学习记录；课程体系和在线 AI 流程验收仍在推进 |
 
 可以在对话中直接指定后端名称。从 [Bell 态示例](#发起任务并选择后端)、[SQD 与 TeNPy](#试用-sqd-与-tenpy)，或[误差缓解、动力学与公开基准](#试用误差缓解动力学与公开基准)开始，下面分别给出准备命令和可复制请求。
 
