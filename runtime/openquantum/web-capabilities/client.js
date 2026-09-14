@@ -329,6 +329,18 @@ globalThis.__ModuleLoader__.load({
           h("p", { className: "oq-cap-desc" }, server.description),
           h("p", { className: "oq-cap-meta" }, `独立 MCP Server 连接 · ${server.transport} · ${server.target}${server.packageVersion ? ` · ${server.packageVersion}` : ""}`),
           h("p", { className: "oq-cap-meta" }, "这里显示的是持久化连接配置，不代表 Server 已运行或 Tool 已进入 Registry；配置变更需重启后生效。"),
+          h("form", { className: "oq-cap-form", key: server.toolCallTimeoutMs, onSubmit: (event) => {
+            event.preventDefault();
+            if (!event.currentTarget.reportValidity()) return;
+            return runProject(`mcp:${server.serverName}`, { action: "mcp.update", serverName: server.serverName, revision: snapshot.mcpRevision, enabled: server.enabled, toolCallTimeoutMs: Number(event.currentTarget.elements.namedItem("toolCallTimeoutMs").value), reconnect: server.reconnect }, "调用超时已保存；重启 OpenQuantum 后使用新配置。");
+          } },
+            h("div", { className: "oq-cap-field oq-cap-span" },
+              h("label", { htmlFor: `mcp-timeout-${server.serverName}` }, "单次调用超时（毫秒）"),
+              h("input", { id: `mcp-timeout-${server.serverName}`, name: "toolCallTimeoutMs", className: "oq-cap-input", type: "number", required: true, min: 1000, max: 2147483647, step: 1, defaultValue: server.toolCallTimeoutMs, disabled }),
+              h("p", { className: "oq-cap-secret-help" }, "长任务可增加等待时间，例如一小时填 3600000。"),
+            ),
+            h("div", { className: "oq-cap-span" }, h("button", { type: "submit", className: "oq-cap-button", disabled }, "保存超时")),
+          ),
           h("div", { className: "oq-cap-actions" },
             h("label", { className: "oq-cap-switch" },
               h("input", { type: "checkbox", checked: server.enabled, disabled: disabled || enableBlocked, title: enableBlocked ? label : undefined, onChange: (event) => runProject(`mcp:${server.serverName}`, { action: "mcp.update", serverName: server.serverName, revision: snapshot.mcpRevision, enabled: event.currentTarget.checked, toolCallTimeoutMs: server.toolCallTimeoutMs, reconnect: server.reconnect }, "MCP Server 连接配置已保存；重启 OpenQuantum 后使用新配置。") }),

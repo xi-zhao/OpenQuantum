@@ -347,3 +347,53 @@ test("capability settings bind the current Remote credential contract without th
   await assert.rejects(props.credentialOperations.unset("TEST_REF"), /reference is in use/);
   assert.deepEqual(calls, [["describe", ["TEST_REF"]], ["set", "TEST_REF", "test-fixture-only"], ["unset", "TEST_REF"]]);
 });
+
+test("MCP settings form saves a user timeout and reflects the persisted value", async () => {
+  const source = await readFile(new URL("../runtime/openquantum/web-capabilities/client.js", import.meta.url), "utf8");
+  const server = { serverName: "tenpy_local", enabled: true, toolCallTimeoutMs: 195000, reconnect: { enabled: true }, requiredCredentialRefs: [] };
+  const snapshot = { mcpServers: [server], mcpCredentials: [], skills: [], mcpRevision: "before" };
+  const state = [snapshot, null, {}, "mcp"];
+  let slot = 0;
+  const react = {
+    createElement: (type, props, ...children) => ({ type, props: props ?? {}, children: children.flat(Infinity) }),
+    useState(initial) {
+      const index = slot++;
+      if (!Object.hasOwn(state, index)) state[index] = initial;
+      return [state[index], next => { state[index] = next; }];
+    },
+    useCallback: callback => callback,
+    useEffect() {},
+  };
+  let plugin, render;
+  const commands = [];
+  runInNewContext(source, {
+    __ModuleLoader__: { load: ({ factory }) => { plugin = factory(() => react); } },
+    fetch: async (url, options) => {
+      assert.equal(url, "/openquantum/api/capabilities");
+      const command = JSON.parse(options.body);
+      commands.push(command);
+      return { ok: true, json: async () => ({ ...snapshot, mcpRevision: "after", mcpServers: [{ ...server, toolCallTimeoutMs: command.toolCallTimeoutMs }] }) };
+    },
+  });
+  plugin.apply({
+    effect: register => register(), locale: { register: () => () => {}, bind: () => key => key },
+    get: () => ({ isLoopback: true }), remote: { credentials: {} },
+    slots: { inject: (_name, register) => register(), register: (entry, component) => { if (entry.id === "openquantum-capabilities") render = component; return () => {}; } },
+  });
+  const flatten = node => node && typeof node === "object" ? [node, ...node.children.flatMap(flatten)] : [];
+  const tree = (loopback = true) => { slot = 0; return flatten(render({ loopback, credentialOperations: {} })); };
+  const nodes = tree();
+  const input = nodes.find(node => node.props.name === "toolCallTimeoutMs");
+  assert.equal(input.props.defaultValue, 195000);
+  const form = nodes.find(node => node.type === "form" && flatten(node).includes(input));
+  let prevented = false;
+  const event = { preventDefault() { prevented = true; }, currentTarget: { reportValidity: () => true, elements: { namedItem: () => ({ value: "3600000" }) } } };
+  await form.props.onSubmit(event);
+  assert.equal(prevented, true);
+  assert.deepEqual(commands, [{ action: "mcp.update", serverName: "tenpy_local", revision: "before", enabled: true, toolCallTimeoutMs: 3600000, reconnect: server.reconnect }]);
+  assert.equal(tree().find(node => node.props.name === "toolCallTimeoutMs").props.defaultValue, 3600000);
+  assert.equal(tree(false).find(node => node.props.name === "toolCallTimeoutMs").props.disabled, true);
+  event.currentTarget.reportValidity = () => false;
+  await form.props.onSubmit(event);
+  assert.equal(commands.length, 1);
+});

@@ -57,8 +57,13 @@
 
 - TeNPy、TJM、Flow-VQE、Clifft 的主计算已与小系统精确参考分开；SQD 新增分子、基组和活性空间输入，包含冻结核贡献。
 - 五项统一提供 `referenceMode=auto|required|skip`，未运行参考时返回原因与 null 参考字段；保持 L1、`scientificValidation=not_evaluated`。
-- 新旧实际数值回归与本地模型协议替身驱动的真实 Harness 五项调用、会话结果重读均已通过。接口资源上限和本地实测规模分开记录，见[计算规模与参考检查](docs/integrations/SCALABLE_BRIDGES.md)。
+- 新旧实际数值回归与本地模型协议替身驱动的真实 Harness 五项调用、会话结果重读均已通过。算例与验证记录见[计算工具使用说明](docs/integrations/SCALABLE_BRIDGES.md)。
 - 未调用外部模型或真实硬件；运行中的 Harness 需在后续重启后加载新合同，不替代原模型验收里程碑。
+
+## 用户自行配置计算资源（2026-09-15）
+
+- 五项桥接移除人为规模与工作量上限，由用户选择系统规模和求解参数；新增 `execution` 控制工作进程时间、线程和返回数据量。MCP 连接超时可在现有设置中调整。
+- README 按功能介绍能力；默认参考选择与实际算例归入工具文档。`required` 可显式运行超出默认选择范围的参考，科学状态仍为 `not_evaluated`。
 
 ## 下一唯一里程碑
 

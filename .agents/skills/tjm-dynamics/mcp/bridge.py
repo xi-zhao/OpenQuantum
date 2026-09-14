@@ -10,7 +10,7 @@ def compute(v):
     from scipy.integrate import solve_ivp
     from mqt.yaqs import AnalogSimParams, Hamiltonian, NoiseModel, Observable, Simulator, State
     n = v["numQubits"]
-    reference = reference_plan(v["referenceMode"], n <= 6, "Independent dense Lindblad integration", "Dense reference is limited to 6 qubits; tensor trajectories run independently.")
+    reference = reference_plan(v["referenceMode"], n <= 6, "Independent dense Lindblad integration", "Auto reference selects up to 6 qubits; use required to request a larger reference.")
     parameters = AnalogSimParams(observables=[Observable("z", sites=i) for i in range(n)],
         elapsed_time=v["duration"], dt=v["duration"] / v["steps"], num_traj=v["trajectories"],
         max_bond_dim=v["maxBondDimension"], svd_threshold=1e-10, krylov_tol=1e-10,
@@ -48,10 +48,16 @@ def compute(v):
         ref_z = np.array([[np.trace(r @ op).real for r in matrices] for op in zs])
     values = np.asarray(run.expectation_values)
     trajectory_count = int(run.trajectories[0].shape[0])
-    sem = np.array([np.std(t, axis=0, ddof=1)/np.sqrt(trajectory_count) for t in run.trajectories]).real if trajectory_count > 1 else np.zeros_like(values)
+    if not v["dampingRate"]:
+        sem, sem_status = np.zeros_like(values), "deterministic"
+    elif trajectory_count > 1:
+        sem = np.array([np.std(t, axis=0, ddof=1)/np.sqrt(trajectory_count) for t in run.trajectories]).real
+        sem_status = "estimated"
+    else:
+        sem, sem_status = None, "insufficient_trajectories"
     return {"times": times.tolist(), "siteZ": values.tolist(), "referenceSiteZ": ref_z.tolist() if ref_z is not None else None,
         "reference": reference,
-        "standardErrors": sem.tolist(), "maxAbsoluteDeviation": float(np.max(np.abs(values-ref_z))) if ref_z is not None else None,
+        "standardErrors": sem.tolist() if sem is not None else None, "standardErrorStatus": sem_status, "maxAbsoluteDeviation": float(np.max(np.abs(values-ref_z))) if ref_z is not None else None,
         "effectiveTrajectories": trajectory_count,
         "hamiltonian": "-J sum Z_i Z_(i+1) - g sum X_i; hbar=1",
         "jumpOperator": "sqrt(gamma) |0><1| at every site",

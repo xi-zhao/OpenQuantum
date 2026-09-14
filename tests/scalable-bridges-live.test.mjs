@@ -8,7 +8,7 @@ import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 import { SCALABLE_BRIDGES } from "./fixtures/scalable-bridges.mjs";
 const enabled = process.env.OPENQUANTUM_REAL_SCALABLE_BRIDGES === "1";
-const evidence = path.join(process.cwd(), ".openquantum/scalable-bridge-evidence-2026-09-14");
+const evidence = path.join(process.cwd(), process.env.OPENQUANTUM_SCIENCE_EVIDENCE_DIR ?? ".openquantum/scalable-bridge-evidence-2026-09-14");
 const near = (x,y,tolerance=1e-8) => assert.ok(Math.abs(x-y) <= tolerance, `${x} vs ${y}, tolerance ${tolerance}`);
 async function oracle(id, mode) {
   const { stdout } = await promisify(execFile)(path.resolve(`.openquantum/python-envs/${id}/bin/python`), ["tests/python/scalable_bridge_oracles.py", mode], { env: { ...process.env, OMP_NUM_THREADS: "1", OPENBLAS_NUM_THREADS: "1", MKL_NUM_THREADS: "1" }, timeout: 60000 });

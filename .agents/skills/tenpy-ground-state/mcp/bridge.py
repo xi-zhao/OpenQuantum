@@ -11,7 +11,7 @@ def compute(v):
     from tenpy.networks.mps import MPS
     from tenpy.algorithms import dmrg
     n = v["numSites"]
-    reference = reference_plan(v["referenceMode"], n <= 10, "Independent dense diagonalization", "Dense reference is limited to 10 sites; DMRG runs independently.")
+    reference = reference_plan(v["referenceMode"], n <= 10, "Independent dense diagonalization", "Auto reference selects up to 10 sites; use required to request a larger reference.")
     model = SpinChain({"L": n, "S": 0.5, "Jx": v["jx"], "Jy": v["jy"], "Jz": v["jz"],
         "hx": v["hx"], "hz": v["hz"], "bc_MPS": "finite", "conserve": None})
     psi = MPS.from_product_state(model.lat.mps_sites(), ["up" if i%2==0 else "down" for i in range(n)], bc="finite", unit_cell_width=n)

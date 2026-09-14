@@ -73,14 +73,17 @@ export async function serveScienceTool({ entrypoint, id, definition, runtime = "
       if (active) throw new Error("This local capability is busy; retry when its current call completes");
       controller = new AbortController(); active = controller;
       const inputSha256 = sha256(JSON.stringify(input));
+      const execution = input.execution ?? { timeoutMs: 180000, maxOutputBytes: 2 * 1024 * 1024, threads: 1 };
+      const threads = String(execution.threads);
+      const workerEnv = { ...env, OMP_NUM_THREADS: threads, OPENBLAS_NUM_THREADS: threads, MKL_NUM_THREADS: threads };
       const value = await runLocalJsonProcess({
         command: runtime === "julia" ? "julia" : "uv",
         args: runtime === "julia"
           ? ["--startup-file=no", "--threads=1", `--project=${skillRoot}`, path.join(skillRoot, "mcp/bridge.jl")]
           : ["run", "--quiet", "--frozen", "--project", skillRoot, "--python", "3.12", "python", path.join(skillRoot, "mcp/bridge.py")],
-        cwd: skillRoot, env, input: { input, inputSha256, dependencyLockSha256, source: definition.source },
+        cwd: skillRoot, env: workerEnv, input: { input, inputSha256, dependencyLockSha256, source: definition.source },
         signal: AbortSignal.any([signal, controller.signal].filter(Boolean)),
-        timeoutMs: 180_000, maxOutputBytes: 2 * 1024 * 1024,
+        timeoutMs: execution.timeoutMs, maxOutputBytes: execution.maxOutputBytes,
         label: id,
         notFoundMessage: runtime === "julia" ? "需要 Julia；请先运行 npm run capability:paper-tools:setup" : "需要 uv；请先运行 npm run capability:paper-tools:setup",
       });

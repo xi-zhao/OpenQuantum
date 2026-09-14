@@ -29,7 +29,7 @@
 | `fatqat-workbench` | 电路与硬件约束、transmon 泄漏和里德堡动力学实验 | FatQat 本地 MCP Server + Harness MCP Client；返回数据、图表与物理单位 |
 | `mitiq-error-mitigation` | ZNE、REM、PEC、CDR 的本地噪声实验及相同采样预算统计 | Mitiq 本地 MCP Server + Harness MCP Client；能力目录 GPL-3.0-only |
 | `dynamiqs-dynamics` | 单量子位动力学、批量扫描、梯度与独立参照 | Dynamiqs 本地 MCP Server + Harness MCP Client |
-| `clifft-sampling` | Clifford+T 电路带噪采样与密度矩阵参照 | Clifft 本地 MCP Server + Harness MCP Client |
+| `clifft-sampling` | Clifford+T 电路带噪采样与可选密度矩阵参照 | Clifft 本地 MCP Server + Harness MCP Client |
 | `oqupy-dynamics` | Ohmic spin-boson TEMPO 与记忆截断解释 | OQuPy 本地 MCP Server + Harness MCP Client |
 | `deltakit-qec` | 矩形纠错码片、实际含噪电路与逻辑错误统计 | Deltakit 本地 MCP Server + Harness MCP Client |
 | `sqd-chemistry` | 分子活性空间 SQD 与可选 FCI 参照 | SQD 本地 MCP Server + Harness MCP Client |

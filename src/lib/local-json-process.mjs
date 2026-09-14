@@ -89,7 +89,7 @@ export async function runLocalJsonProcess({
       error.name = "AbortError";
       fail(error);
     };
-    const timeout = setTimeout(() => fail(new Error(`${label} timed out`)), timeoutMs);
+    const timeout = timeoutMs === 0 ? undefined : setTimeout(() => fail(new Error(`${label} timed out`)), timeoutMs);
     signal?.addEventListener("abort", onAbort, { once: true });
     if (signal?.aborted) onAbort();
 
@@ -136,18 +136,22 @@ export async function runLocalJsonProcess({
         reject(failure);
         return;
       }
-      const stdoutText = Buffer.concat(stdout).toString("utf8").trim();
-      const stderrText = Buffer.concat(stderr).toString("utf8").trim();
-      if (code !== 0) {
-        reject(new Error(stderrText
-          ? redactError(stderrText.slice(0, 2000), env)
-          : `${label} exited with code ${code}`));
-        return;
-      }
       try {
-        resolve(JSON.parse(stdoutText));
-      } catch {
-        reject(new Error(`${label} returned invalid JSON`));
+        const stdoutText = Buffer.concat(stdout).toString("utf8").trim();
+        const stderrText = Buffer.concat(stderr).toString("utf8").trim();
+        if (code !== 0) {
+          reject(new Error(stderrText
+            ? redactError(stderrText.slice(0, 2000), env)
+            : `${label} exited with code ${code}`));
+          return;
+        }
+        try {
+          resolve(JSON.parse(stdoutText));
+        } catch {
+          reject(new Error(`${label} returned invalid JSON`));
+        }
+      } catch (error) {
+        reject(new Error(`${label} could not decode worker output: ${error.message}`));
       }
     });
     child.stdin.end(stdin);

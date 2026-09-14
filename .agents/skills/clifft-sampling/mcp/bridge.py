@@ -10,7 +10,7 @@ def compute(v):
     import numpy as np
     import clifft
     n, shots = v["numQubits"], v["shots"]
-    reference = reference_plan(v["referenceMode"], n <= 6, "Independent dense density-matrix evolution", "Dense reference is limited to 6 qubits; sampling runs independently.")
+    reference = reference_plan(v["referenceMode"], n <= 6, "Independent dense density-matrix evolution", "Auto reference selects up to 6 qubits; use required to request a larger reference.")
     rho = None
     if reference["status"] == "computed":
         dimension = 2 ** n
@@ -48,11 +48,9 @@ def compute(v):
     circuit = "\n".join(lines)
     program = clifft.compile(circuit)
     width = int(program.peak_active_width)
-    if width > v["maxActiveWidth"]:
+    if v.get("maxActiveWidth") is not None and width > v["maxActiveWidth"]:
         raise ValueError(f"Compiled peak active width {width} exceeds maxActiveWidth={v['maxActiveWidth']}")
-    if (2**width) * shots * len(v["gates"]) > 536870912:
-        raise ValueError("Compiled active-state sampling work budget exceeded; reduce active width, gates or shots")
-    sampled = np.asarray(clifft.sample(program, shots=shots, seed=v["seed"], threads=1).measurements)
+    sampled = np.asarray(clifft.sample(program, shots=shots, seed=v["seed"], threads=v["execution"]["threads"]).measurements)
     if sampled.shape != (shots, n) or not np.isin(sampled, [0, 1]).all():
         raise ValueError("Clifft returned invalid measurement dimensions or values")
     counts = Counter("".join(map(str, row)) for row in sampled.astype(np.uint8))
