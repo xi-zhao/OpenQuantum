@@ -46,7 +46,7 @@
       "properties": {
         "schemaVersion": { "const": "1.0" },
         "id": { "const": "supplied-pauli-statevector" },
-        "version": { "const": "1.0.0" },
+        "version": { "const": "1.1.0" },
         "scope": { "type": "object" },
         "checks": {
           "type": "array",

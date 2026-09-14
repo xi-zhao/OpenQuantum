@@ -109,7 +109,7 @@ test("Harness loads Skills, dispatches real scientific tools and persists each r
     }
   }
   assert.equal(sawModelToolResult, true);
-  const evidence = path.join(root, scalable ? ".openquantum/scalable-bridge-evidence-2026-09-14" : ".openquantum/paper-tools-evidence");
+  const evidence = path.join(root, process.env.OPENQUANTUM_SCIENCE_EVIDENCE_DIR ?? (scalable ? ".openquantum/scalable-bridge-evidence-2026-09-14" : ".openquantum/paper-tools-evidence"));
   await mkdir(evidence, { recursive: true });
   await writeFile(path.join(evidence, "harness-session.json"), JSON.stringify({ verifiedAt: new Date().toISOString(), model: "local protocol fixture", externalModelTested: false, sessionId, events }, null, 2));
 });

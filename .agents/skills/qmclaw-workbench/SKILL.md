@@ -63,4 +63,4 @@ Tool 不存在时，说明 OpenQuantum 原生 Tool Provider 尚未进入当前 T
 4. `scientificValidation=not_evaluated`；
 5. 如果用户目标是真实调校，列出仍缺少的硬件 Dataset、设备配置和审批步骤。
 
-计算规模和资源由调用方选择，适配器不设置量子位、门数、项数、采样数或迭代数的人工上限。默认值用于方便调用；模型、格式和数值表示要求仍由输入合同检查。详见[计算参数与资源配置](../../../docs/integrations/SCALABLE_BRIDGES.md)。
+单量子位实验的扫描点数、二维扫描尺寸、shots 和 Clifford 序列长度由调用方选择，适配器不额外设置人工规模上限。具体资源配置见[本地计算说明](../../../docs/integrations/SCALABLE_BRIDGES.md)。

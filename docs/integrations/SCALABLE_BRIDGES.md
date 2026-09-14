@@ -13,6 +13,7 @@ OpenQuantum 为本地量子计算提供结构化输入、SDK 调用和结果返�
 | MQT QCEC | 两份同宽度、无测量的 OpenQASM 2 电路 | 等价、相位等价、不等价或不确定的检查结果 |
 | TyxonQ | 门电路、噪声与 shots | 态矢、概率或带噪采样分布 |
 | Clifft | Clifford+T 电路、门后去极化与 shots | 最终位串频数、编译后的活跃宽度 |
+| Mitiq | 门电路、Pauli 观测量、噪声、方法与采样预算 | ZNE、REM、PEC、CDR 的估计、误差与完整采样成本 |
 | FatQat | 门电路与原生门约束，或恒定驱动的物理模型 | 电路概率、可选采样，transmon/里德堡链动力学与图像 |
 | toqito | 复密度矩阵、子系统维数与转置子区 | 迹、纯度、部分转置谱与 negativity，独立 Validator observations |
 | QPanda QUBO | QUBO 系数，或二值目标与线性等式约束 | 编译后的 QUBO、遍历最优解或 QAOA 分布 |
@@ -27,7 +28,7 @@ OpenQuantum 为本地量子计算提供结构化输入、SDK 调用和结果返�
 | OQuPy | Ohmic spin-boson 参数、时间网格与记忆长度 | TEMPO 动力学、Bloch 轨迹和数值诊断 |
 | RandomMeas.jl | product/GHZ 态、子区、随机设置和 shots | 局域 Haar 测量、纯度估计与抽样误差 |
 | QMClaw 原生 Tool | 调校实验类型、扫描网格与 shots | S21、Rabi、Ramsey、T₁ 等 13 类实验的合成数据 |
-| 内置基态原生 Tool | 二量子位实 Pauli Hamiltonian、固定权重一扇区、优化预算 | VQE 基态及独立检查，可进入中央科学验收链 |
+| 内置基态原生 Tool | 二量子位实 Pauli Hamiltonian、固定权重一扇区、优化网格与预算 | VQE 基态及独立检查，可进入中央科学验收链 |
 
 具体模型由各 Tool 定义。例如内置基态工具的二量子位扇区、Dynamiqs 的单量子位恒定驱动、FatQat 的两个三能级 transmon，以及 QMClaw 的单量子位调校流程都是所提供的模型。适配器继续检查概率、有限数、门目标、矩阵形状、粒子数、对称性对易和独立性。TeNPy 的当前 two-site sweep 至少需要三个站点。
 
@@ -71,7 +72,7 @@ Clifft 的 `maxActiveWidth` 默认为 `null`；只有调用方明确提供该预
 
 </details>
 
-## 运行资源由部署配置
+## 运行资源由用户配置
 
 本地计算子进程默认不设置执行时间与输出字节上限。按需设置：
 
@@ -84,13 +85,27 @@ npm run dev
 
 用户设置的 `OMP_NUM_THREADS`、`OPENBLAS_NUM_THREADS`、`MKL_NUM_THREADS`、`NUMBA_NUM_THREADS`、`JULIA_NUM_THREADS` 和 JAX/CUDA 设备、显存配置会传入计算环境。未设置时使用库的默认值。设备选择仍须由所安装的库和后端支持；本适配不自动安装 GPU 运行时。
 
-**连接层另有超时配置。** 当前固定版本的 Harness MCP Client 使用 Node 单个定时器，不支持无限等待。默认 Preset 将本地计算连接的 `toolCallTimeoutMs` 设为该计时器可表示的最大值 `2147483647` 毫秒（约 24.9 天）；可在 `agent.cordis.yml` 的对应连接设置更短超时。外部 MCP 客户端也需设置自己的调用超时。因此 worker 无默认期限不等于所有客户端都无限等待。
+使用共享科学服务的 15 项适配（上述四项电路代数、四项 Unitary 计算、六项论文方法和 Mitiq）还可在每次调用中传入 `execution`，覆盖部署设置。例如：
+
+```json
+{ "execution": { "timeoutMs": 0, "maxOutputBytes": 0, "threads": 8 } }
+```
+
+时间和输出预算为 `0` 表示关闭该限制，省略则继承部署设置；省略 `threads` 时继承用户环境和库默认值。线程数作用于支持这些设置的数值内核。其余六项本地 MCP 计算适配使用上述部署环境变量。
+
+**连接层另有超时配置。** 当前固定版本的 Harness MCP Client 使用 Node 单个定时器，不支持无限等待。默认 Preset 将本地计算连接的 `toolCallTimeoutMs` 设为该计时器可表示的最大值 `2147483647` 毫秒（约 24.9 天）；可在设置中心的 MCP 连接编辑界面或 `agent.cordis.yml` 中修改。外部 MCP 客户端也需设置自己的调用超时。因此 worker 无默认期限不等于所有客户端都无限等待。
 
 每个共享科学服务同时运行一个调用，FatQat 保留两个执行槽；这是连接并发配置。取消会结束本次子进程组并释放执行槽；worker 故障、数值失败及用户配置的超时或输出预算会保留错误语义。QMClaw 与内置基态是原生进程内计算，使用调用参数控制工作量，上述 worker 环境变量不适用于它们。
+
+内置基态使用 `supplied-pauli-statevector` Profile `1.1.0`，按请求中的优化预算检查资源使用，返回 `budgetFraction`。直接构造请求时应把 `acceptanceProfile.version` 设为 `1.1.0`；旧 `1.0.0` 规则文件保留用于历史溯源。
+
+TJM 在无随机跳跃时返回零抽样标准误；含噪声且只有一条轨迹时返回 `standardErrors=null`、`standardErrorStatus=insufficient_trajectories`，多条轨迹时才估计标准误。
 
 ## SQD 的分子与活性空间
 
 `molecule.atoms/charge` 定义分子，`basis` 使用已安装 PySCF 目录中的命名基组。省略 molecule 时保留 H₂ 键长接口，省略 activeSpace 时使用全空间。当前使用闭壳层 RHF 轨道，活性电子数为偶数，固定 `n_alpha=n_beta`（M_s=0）；活性轨道从冻结核后连续选取。
+
+当前 PySCF 求解路径用 `int64` 表示 CI 位串，要求活性空间轨道数小于 64；分子全空间可以更大。这是所用后端的数据表示要求。
 
 ```json
 {
@@ -117,4 +132,4 @@ OPENQUANTUM_REAL_LOCAL_SCALE=1 node --test --test-concurrency=1 tests/local-comp
 npm run capability:unitary-next:live
 ```
 
-本次核验摘要见 [2026-09-15 记录](evidence/local-compute-scale-2026-09-15.json)。历史输入与结果保留在 [五项计算桥接记录](evidence/scalable-bridges-2026-09-14.json)和[四项电路代数记录](evidence/unitary-next-2026-09-14.json)。这些记录用于复现与回归，所测规模不定义功能上限。
+本次核验摘要见 [2026-09-15 记录](evidence/local-compute-scale-2026-09-15.json)，独立检查范围见[领域审阅记录](evidence/local-compute-review-2026-09-15.md)。历史输入与结果保留在 [五项计算桥接记录](evidence/scalable-bridges-2026-09-14.json)和[四项电路代数记录](evidence/unitary-next-2026-09-14.json)。这些记录用于复现与回归，所测规模不定义功能上限。

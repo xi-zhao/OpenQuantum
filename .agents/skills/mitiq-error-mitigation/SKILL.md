@@ -46,4 +46,4 @@ Pauli 字符串最左字符是 q0。终端测量基变换按理想操作处理�
 安装、许可证、资源和验证记录见 [接入说明](../../../docs/integrations/MITIQ.md)。
 本能力目录按 GPL-3.0-only 许可；详见 [NOTICE](NOTICE) 和 [LICENSE](LICENSE)。
 
-计算规模和资源由调用方选择，适配器不设置量子位、门数、项数、采样数或迭代数的人工上限。默认值用于方便调用；模型、格式和数值表示要求仍由输入合同检查。详见[计算参数与资源配置](../../../docs/integrations/SCALABLE_BRIDGES.md)。
+电路量子位数、门数、采样预算和重复次数由调用方选择，适配器不额外设置人工规模上限。具体资源配置见[本地计算说明](../../../docs/integrations/SCALABLE_BRIDGES.md)。

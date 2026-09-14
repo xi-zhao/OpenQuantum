@@ -525,7 +525,7 @@ async function updateMcpSettings(projectRoot, input) {
   }
   assertRevision(input.revision);
   assertBoolean(input.enabled, "enabled");
-  assertInteger(input.toolCallTimeoutMs, "toolCallTimeoutMs", 1000, 600000);
+  assertInteger(input.toolCallTimeoutMs, "toolCallTimeoutMs", 1000, 2147483647);
   if (!isRecord(input.reconnect)) {
     throw new TypeError("reconnect 配置无效");
   }

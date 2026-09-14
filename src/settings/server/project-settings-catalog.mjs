@@ -52,7 +52,7 @@ const MCP_CATALOG = Object.freeze({
   }),
   clifft_local: Object.freeze({
     displayName: "Clifft 近 Clifford 采样",
-    description: "Clifford+T 电路带噪采样，按活跃宽度控制成本，可选小系统密度矩阵参照。",
+    description: "Clifford+T 电路带噪采样与可选密度矩阵参照。",
     provider: "clifft / OpenQuantum",
     sourceUrl: "https://github.com/unitaryfoundation/clifft",
     packageName: "clifft",
@@ -97,7 +97,7 @@ const MCP_CATALOG = Object.freeze({
   }),
   tjm_local: Object.freeze({
     displayName: "TJM 开放系统动力学",
-    description: "开放 Ising 链的张量跳跃轨迹与统计误差，可选小系统 Lindblad 参照。",
+    description: "开放 Ising 链的张量跳跃轨迹、统计分析与可选 Lindblad 参照。",
     provider: "mqt.yaqs / OpenQuantum",
     sourceUrl: "https://github.com/munich-quantum-toolkit/yaqs",
     packageName: "mqt.yaqs",
@@ -124,7 +124,7 @@ const MCP_CATALOG = Object.freeze({
   }),
   tenpy_local: Object.freeze({
     displayName: "TeNPy 多体基态",
-    description: "有限自旋链 DMRG 基态计算，并与小系统精确对角化比较。",
+    description: "自旋链 DMRG 基态、磁化与纠缠熵计算，可选精确对角化参照。",
     provider: "physics-tenpy / OpenQuantum",
     sourceUrl: "https://github.com/tenpy/tenpy",
     packageName: "physics-tenpy",

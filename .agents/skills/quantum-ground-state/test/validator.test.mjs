@@ -49,7 +49,7 @@ function resultPackageFor(facts) {
       },
       acceptanceProfile: {
         id: "supplied-pauli-statevector",
-        version: "1.0.0",
+        version: "1.1.0",
         sha256: "b".repeat(64),
       },
       inputs: [
@@ -84,7 +84,7 @@ function resultPackageFor(facts) {
 function bundleFor(
   request,
   facts,
-  profile = readJson("acceptance-profiles/supplied-pauli-statevector-v1.json"),
+  profile = readJson("acceptance-profiles/supplied-pauli-statevector-v1.1.json"),
 ) {
   return {
     schemaVersion: "1.0",
@@ -98,7 +98,7 @@ function bundleFor(
 function validate(
   request,
   facts,
-  profile = readJson("acceptance-profiles/supplied-pauli-statevector-v1.json"),
+  profile = readJson("acceptance-profiles/supplied-pauli-statevector-v1.1.json"),
 ) {
   return validateValidationBundle(bundleFor(request, facts, profile));
 }
@@ -111,10 +111,54 @@ function observation(output, id) {
 
 const protocolFixture = readJson("evals/fixtures/requests/protocol-fixture.json");
 
+test("the caller-budget profile has its own version and preserves the historical rule", () => {
+  const previous = readJson("acceptance-profiles/supplied-pauli-statevector-v1.json");
+  const current = readJson("acceptance-profiles/supplied-pauli-statevector-v1.1.json");
+  assert.equal(previous.version, "1.0.0");
+  assert.equal(previous.checks.find(c => c.id === "resources.within-budget").threshold, 256);
+  assert.equal(current.version, "1.1.0");
+  assert.equal(current.checks.find(c => c.id === "resources.within-budget").threshold, 1);
+  const legacy = clone(protocolFixture);
+  legacy.acceptanceProfile.version = "1.0.0";
+  assert.throws(() => solveGroundState(legacy), /1\.1\.0/);
+});
+
+test("resource checks accept user grids above 256 evaluations and distinguish full from exceeded budgets", () => {
+  const request = clone(protocolFixture);
+  request.method.optimizer.coarsePoints = 2049;
+  request.method.optimizer.maxEvaluations = 4096;
+  const computed = solveGroundState(request);
+  assert.ok(computed.groundStateResult.evaluationCount > 256);
+  assert.ok(computed.resourceEstimate.pauliTermEvaluations > 8192);
+  const inside = observation(validate(request, computed), "resources.within-budget");
+  assert.equal(inside.status, "pass");
+  assert.ok(inside.observed.budgetFraction < 1);
+  assert.equal(observation(validate(request, computed), "optimizer.trace-replayed").status, "pass");
+
+  request.method.optimizer.coarsePoints = 513;
+  request.method.optimizer.maxEvaluations = 512;
+  const full = solveGroundState(request);
+  const atLimit = observation(validate(request, full), "resources.within-budget");
+  assert.equal(atLimit.status, "pass");
+  assert.equal(atLimit.observed.budgetFraction, 1);
+
+  // Keep reported counts mutually consistent so the failure tests the request budget.
+  const over = clone(full);
+  over.convergenceTrace.entries.push({ ...over.convergenceTrace.entries.at(-1), evaluation: 513 });
+  over.convergenceTrace.refinementEvaluations += 1;
+  over.groundStateResult.evaluationCount = 513;
+  over.resourceEstimate.expectationEvaluations = 513;
+  over.resourceEstimate.pauliTermEvaluations = 513 * over.resourceEstimate.pauliTermCount;
+  const exceeded = observation(validate(request, over), "resources.within-budget");
+  assert.equal(exceeded.observed.resourceCountsMatch, true);
+  assert.equal(exceeded.observed.budgetFraction, 513 / 512);
+  assert.equal(exceeded.status, "fail");
+});
+
 test("execution-local validation checks computation but never fabricates provenance", () => {
   const facts = solveGroundState(protocolFixture);
   const output = validateGroundStateComputation({
-    profile: readJson("acceptance-profiles/supplied-pauli-statevector-v1.json"),
+    profile: readJson("acceptance-profiles/supplied-pauli-statevector-v1.1.json"),
     request: protocolFixture,
     facts,
   });
@@ -136,7 +180,7 @@ test("execution-local validation checks computation but never fabricates provena
 
 test("validator emits only profile-bound observations for a valid result", () => {
   const facts = solveGroundState(protocolFixture);
-  const profile = readJson("acceptance-profiles/supplied-pauli-statevector-v1.json");
+  const profile = readJson("acceptance-profiles/supplied-pauli-statevector-v1.1.json");
   const output = validate(protocolFixture, facts, profile);
 
   assert.deepEqual(Object.keys(output), [
@@ -174,7 +218,7 @@ test("validator detects ansatz tampering but permits a global phase", () => {
   assert.equal(observation(output, "result.ansatz-replayed").status, "fail");
   assert.equal(observation(output, "result.state-normalized").status, "fail");
 
-  const permissive = readJson("acceptance-profiles/supplied-pauli-statevector-v1.json");
+  const permissive = readJson("acceptance-profiles/supplied-pauli-statevector-v1.1.json");
   permissive.checks.find((check) => check.id === "result.ansatz-replayed").threshold = 1;
   assert.equal(
     observation(validate(protocolFixture, tampered, permissive), "result.ansatz-replayed")

@@ -11,6 +11,7 @@ export const definition = defineScienceTool({
   inputSchema: obj({ bondLengthAngstrom: num(0.3,undefined,0.735), molecule: obj({ atoms: arr(obj({ element: { enum: elements }, positionAngstrom: arr(num(undefined,undefined),3,3) }),1), charge: int(undefined,undefined,0) }), basis: { ...basisSchema, default: "sto-3g" }, activeSpace: obj({ numOrbitals: int(2,undefined), numElectrons: int(2,undefined) }), maxSubspaceDimension: int(2,undefined,32), shots: int(64,undefined,256), samplesPerBatch: int(4,undefined,16), iterations: int(1,undefined,3), seed: int(0,2147483647,7), counts, referenceMode: referenceModeSchema }, ["bondLengthAngstrom","basis","maxSubspaceDimension","shots","samplesPerBatch","iterations","seed","referenceMode"]),
   checkInput(v) {
     const active = v.activeSpace;
+    if (active && active.numOrbitals >= 64) throw new Error("PySCF CI strings use signed int64; active orbitals must be fewer than 64");
     if (active && (active.numElectrons % 2 || active.numElectrons > 2 * active.numOrbitals)) throw new Error("Active electrons must be even and fit the spatial orbitals");
     const width = active ? 2 * active.numOrbitals : (!v.molecule && v.basis === "sto-3g" ? 4 : null);
     if (v.counts && width && Object.keys(v.counts).some(key => key.length !== width)) throw new Error("Supplied counts must match twice the active spatial orbital count");

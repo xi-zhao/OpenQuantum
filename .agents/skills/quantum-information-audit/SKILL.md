@@ -41,4 +41,4 @@ description: 使用固定版本 toqito 对用户提供的多体密度矩阵做�
 
 Bell 态 `|Phi+><Phi+|` 使用 `subsystemDimensions=[2,2]`、`transposeSubsystems=[0]`。预期纯度为 1、部分转置最小本征值为 -0.5、negativity 为 0.5；仍需以实际工具事实和 Validator observations 为准。
 
-计算规模和资源由调用方选择，适配器不设置量子位、门数、项数、采样数或迭代数的人工上限。默认值用于方便调用；模型、格式和数值表示要求仍由输入合同检查。详见[计算参数与资源配置](../../../docs/integrations/SCALABLE_BRIDGES.md)。
+密度矩阵维数、子系统分解与待转置子区由调用方选择，适配器不额外设置人工规模上限。具体资源配置见[本地计算说明](../../../docs/integrations/SCALABLE_BRIDGES.md)。

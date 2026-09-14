@@ -8,6 +8,7 @@ import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprotocol/sdk/types.js";
 import { runLocalJsonProcess } from "./local-json-process.mjs";
+import { executionSchema } from "./science-execution.mjs";
 import { localComputeEnvironment, localComputeProcessOptions } from "./local-compute-policy.mjs";
 
 export const sha256 = (value) => createHash("sha256").update(value).digest("hex");
@@ -18,6 +19,7 @@ export const arraySchema = (items, minItems, maxItems) => ({ type: "array", item
 
 // Only a stdio boundary around one bounded local action; Harness owns registration and lifecycle.
 export function defineScienceTool({ name, description, source, inputSchema, resultSchema, checkInput = () => {} }) {
+  inputSchema = { ...inputSchema, properties: { ...inputSchema.properties, execution: executionSchema } };
   const ajv = new Ajv({ allErrors: true, useDefaults: true, strict: false, strictNumbers: true });
   const validateInput = ajv.compile(inputSchema);
   const outputSchema = objectSchema({
@@ -78,9 +80,9 @@ export async function serveScienceTool({ entrypoint, id, definition, runtime = "
         args: runtime === "julia"
           ? ["--startup-file=no", `--project=${skillRoot}`, path.join(skillRoot, "mcp/bridge.jl")]
           : ["run", "--quiet", "--frozen", "--project", skillRoot, "--python", "3.12", "python", path.join(skillRoot, "mcp/bridge.py")],
-        cwd: skillRoot, env, input: { input, inputSha256, dependencyLockSha256, source: definition.source },
+        cwd: skillRoot, env: localComputeEnvironment(env, input.execution), input: { input, inputSha256, dependencyLockSha256, source: definition.source },
         signal: AbortSignal.any([signal, controller.signal].filter(Boolean)),
-        ...localComputeProcessOptions(),
+        ...localComputeProcessOptions(input.execution),
         label: id,
         notFoundMessage: runtime === "julia" ? "需要 Julia；请先运行 npm run capability:paper-tools:setup" : "需要 uv；请先运行 npm run capability:paper-tools:setup",
       });

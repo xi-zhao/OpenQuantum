@@ -16,4 +16,4 @@ description: 使用固定 Deltakit 构建矩形 rotated planar-code 存储实验
 
 版本、安装与验证见 [接入说明](../../../docs/integrations/UNITARY_ECOSYSTEM.md)。
 
-计算规模和资源由调用方选择，适配器不设置量子位、门数、项数、采样数或迭代数的人工上限。默认值用于方便调用；模型、格式和数值表示要求仍由输入合同检查。详见[计算参数与资源配置](../../../docs/integrations/SCALABLE_BRIDGES.md)。
+码片宽高、存储轮数和采样数由调用方选择，适配器不额外设置人工规模上限。具体资源配置见[本地计算说明](../../../docs/integrations/SCALABLE_BRIDGES.md)。

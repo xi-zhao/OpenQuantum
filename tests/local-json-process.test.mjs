@@ -23,6 +23,10 @@ if (input.mode === "success") {
   process.stdout.write(JSON.stringify({ answer: 42 }));
   process.exit(0);
 }
+if (input.mode === "large-success") {
+  process.stdout.write(JSON.stringify({ payload: "x".repeat(4096) }));
+  process.exit(0);
+}
 if (input.mode === "error") {
   process.stderr.write("fixture-secret failure");
   process.exit(4);
@@ -108,12 +112,31 @@ test("an already cancelled bridge never starts a process", async (t) => {
 test("cancellation stops the bridge and its computing descendant", async (t) => {
   const current = await fixture(t);
   const controller = new AbortController();
-  const result = current.run("hang", { signal: controller.signal });
+  const result = current.run("hang", { signal: controller.signal, timeoutMs: 0 });
   const rejected = assert.rejects(result, { name: "AbortError" });
   const pids = await current.ready();
   controller.abort();
   await rejected;
   await current.stopped(pids);
+});
+
+test("user output budgets and disabled worker timers take effect", async (t) => {
+  const current = await fixture(t);
+  const result = await current.run("large-success", { timeoutMs: 0, maxOutputBytes: 8192 });
+  assert.equal(result.payload.length, 4096);
+  await current.stopped(await current.ready());
+});
+
+test("output buffer allocation errors reject the invocation after cleanup", async (t) => {
+  const current = await fixture(t);
+  const concatenate = Buffer.concat;
+  t.mock.method(Buffer, "concat", (chunks, ...args) => {
+    if (chunks.some(chunk => chunk.toString().includes('"answer":42'))) throw new RangeError("fixture buffer allocation failure");
+    return concatenate(chunks, ...args);
+  });
+  await assert.rejects(current.run("success"), /could not decode worker output: fixture buffer allocation failure/);
+  t.mock.restoreAll();
+  await current.stopped(await current.ready());
 });
 
 test("timeout and output overflow stop the entire invocation", async (t) => {

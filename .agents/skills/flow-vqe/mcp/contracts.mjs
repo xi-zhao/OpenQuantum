@@ -7,6 +7,7 @@ export const definition = defineScienceTool({
   source: { name: "Flow-VQE", revision: "f7642afa330e5108ea5738d42fe80b551363733c", repository: "https://github.com/olsson-group/Flow-VQE" },
   inputSchema: obj({ numQubits: int(2,undefined,2), terms, layers: int(1,undefined,1), epochs: int(1,undefined,8), batchSize: int(4,undefined,8), seed: int(0,2147483647,7), referenceMode: referenceModeSchema }),
   checkInput(v) {
+    if (!Number.isSafeInteger(v.epochs * v.batchSize) || !Number.isSafeInteger(v.numQubits * (v.layers + 1))) throw new Error("Evaluation and parameter counts must be exactly representable JSON integers");
     if (v.terms.some(term => term.pauli.length !== v.numQubits)) throw new Error("Pauli strings must match numQubits");
     if (new Set(v.terms.map(term => term.pauli)).size !== v.terms.length) throw new Error("Combine duplicate Pauli terms");
   },

@@ -22,8 +22,8 @@ def compute(v):
     active = v.get("activeSpace", {"numOrbitals": mol.nao_nr(), "numElectrons": mol.nelectron})
     norb, ne = active["numOrbitals"], active["numElectrons"]
     ncore = (mol.nelectron - ne) // 2
-    if not (2 <= norb and 2 <= ne <= 2*norb and ne % 2 == 0 and ncore >= 0 and ncore+norb <= mol.nao_nr()):
-        raise ValueError("Choose a compatible active space with at least 2 orbitals and an even electron count")
+    if not (2 <= norb < 64 and 2 <= ne <= 2*norb and ne % 2 == 0 and ncore >= 0 and ncore+norb <= mol.nao_nr()):
+        raise ValueError("PySCF signed-int64 CI strings require fewer than 64 orbitals; choose a compatible active space with at least 2 orbitals and an even electron count")
     max_dim = min(v["maxSubspaceDimension"], comb(norb, ne//2))
     determinant_dimension = comb(norb, ne//2)**2
     reference = reference_plan(v["referenceMode"], norb <= 12 and determinant_dimension <= 10000,

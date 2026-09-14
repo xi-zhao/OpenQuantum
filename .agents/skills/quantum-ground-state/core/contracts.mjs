@@ -96,7 +96,7 @@ const requestSchema = strictObject({
     optimizer: strictObject({
       id: stringConstant("coarse-grid-golden-refine"),
       version: stringConstant("1.0.0"),
-      coarsePoints: integerConstant(65),
+      coarsePoints: { type: "integer", minimum: 4, maximum: Number.MAX_SAFE_INTEGER },
       angleToleranceRadians: {
         type: "number",
         description: "Finite angle tolerance in [1e-14, 0.01].",
@@ -110,7 +110,7 @@ const requestSchema = strictObject({
   }),
   acceptanceProfile: strictObject({
     id: stringConstant("supplied-pauli-statevector"),
-    version: stringConstant("1.0.0"),
+    version: stringConstant("1.1.0"),
   }),
 });
 
@@ -196,7 +196,7 @@ const resultPackageSchema = strictObject(
 const profileSchema = strictObject({
   schemaVersion: stringConstant("1.0"),
   id: stringConstant("supplied-pauli-statevector"),
-  version: stringConstant("1.0.0"),
+  version: stringConstant("1.1.0"),
   scope: strictObject({
     supportedClaims: { type: "array", items: { type: "string" } },
     outOfScope: { type: "array", items: { type: "string" } },
@@ -289,7 +289,7 @@ const validators = Object.freeze({
 });
 
 const trustedProfile = readJson(
-  path.join(skillRoot, "acceptance-profiles/supplied-pauli-statevector-v1.json"),
+  path.join(skillRoot, "acceptance-profiles/supplied-pauli-statevector-v1.1.json"),
 );
 
 function validationMessage(label, validate) {
@@ -361,7 +361,7 @@ export function requireValidationBundle(argumentsValue) {
   assertValid("acceptance profile", validators.profile, bundle.profile);
   if (!isDeepStrictEqual(bundle.profile, trustedProfile)) {
     throw new Error(
-      "acceptance profile must exactly match supplied-pauli-statevector version 1.0.0",
+      "acceptance profile must exactly match supplied-pauli-statevector version 1.1.0",
     );
   }
   assertValid("request", validators.request, bundle.request);

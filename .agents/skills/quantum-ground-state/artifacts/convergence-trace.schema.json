@@ -33,7 +33,7 @@
       "properties": {
         "id": { "const": "coarse-grid-golden-refine" },
         "version": { "const": "1.0.0" },
-        "coarsePointsRequested": { "const": 65 },
+        "coarsePointsRequested": { "type": "integer", "minimum": 4, "maximum": 9007199254740991 },
         "angleToleranceRadians": { "type": "number", "exclusiveMinimum": 0 },
         "maxEvaluations": { "type": "integer", "minimum": 8 }
       }
@@ -64,8 +64,8 @@
         }
       }
     },
-    "coarsePointsEvaluated": { "type": "integer", "minimum": 1, "maximum": 65 },
-    "refinementEvaluations": { "type": "integer", "minimum": 0, "maximum": 191 },
+    "coarsePointsEvaluated": { "type": "integer", "minimum": 1 },
+    "refinementEvaluations": { "type": "integer", "minimum": 0 },
     "finalBracketWidthRadians": {
       "anyOf": [
         { "type": "number", "minimum": 0 },

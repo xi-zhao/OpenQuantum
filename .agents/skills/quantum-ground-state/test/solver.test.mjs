@@ -353,7 +353,7 @@ test("non-finite request coefficients are rejected before scientific execution",
 
 test("acceptance profile keeps reproduction separate and requires ansatz and trace replay", () => {
   const profile = readJson(
-    "acceptance-profiles/supplied-pauli-statevector-v1.json",
+    "acceptance-profiles/supplied-pauli-statevector-v1.1.json",
   );
   const checks = new Map(profile.checks.map((check) => [check.id, check]));
 

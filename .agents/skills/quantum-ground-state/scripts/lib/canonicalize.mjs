@@ -239,7 +239,7 @@ export function canonicalizeRequest(request) {
     "request.method.optimizer.id",
   );
   assertExact(request.method.optimizer.version, "1.0.0", "request.method.optimizer.version");
-  assertExact(request.method.optimizer.coarsePoints, 65, "request.method.optimizer.coarsePoints");
+  assertInteger(request.method.optimizer.coarsePoints, "request.method.optimizer.coarsePoints", { minimum: 4 });
   assertFiniteNumber(
     request.method.optimizer.angleToleranceRadians,
     "request.method.optimizer.angleToleranceRadians",
@@ -265,7 +265,7 @@ export function canonicalizeRequest(request) {
   });
   assertExact(
     request.acceptanceProfile.version,
-    "1.0.0",
+    "1.1.0",
     "request.acceptanceProfile.version",
   );
 

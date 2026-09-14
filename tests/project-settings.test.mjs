@@ -169,12 +169,17 @@ test("legacy managed Skill removal stays recoverable without exposing a Skill au
 test("MCP settings update only bounded Harness connection policy", async (t) => {
   const root = await fixture(t);
   const before = await readProjectSettings(root);
+  await assert.rejects(executeProjectSettingsCommand(root, {
+    action: "mcp.update", serverName: "demo_quantum", revision: before.mcpRevision,
+    enabled: false, toolCallTimeoutMs: 2147483648,
+    reconnect: { enabled: false, initialDelayMs: 750, maxDelayMs: 45000, maxAttempts: 7 },
+  }), /toolCallTimeoutMs/);
   const updated = await executeProjectSettingsCommand(root, {
     action: "mcp.update",
     serverName: "demo_quantum",
     revision: before.mcpRevision,
     enabled: false,
-    toolCallTimeoutMs: 90000,
+    toolCallTimeoutMs: 3600000,
     reconnect: {
       enabled: false,
       initialDelayMs: 750,
@@ -183,7 +188,7 @@ test("MCP settings update only bounded Harness connection policy", async (t) => 
     },
   });
   assert.equal(updated.mcpServers[0].enabled, false);
-  assert.equal(updated.mcpServers[0].toolCallTimeoutMs, 90000);
+  assert.equal(updated.mcpServers[0].toolCallTimeoutMs, 3600000);
   assert.equal(updated.mcpServers[0].reconnect.maxAttempts, 7);
 
   const raw = await readFile(
@@ -193,7 +198,7 @@ test("MCP settings update only bounded Harness connection policy", async (t) => 
   const value = parseDocument(raw).toJS();
   assert.equal(value[0].disabled, true);
   assert.equal(value[0].config.serverName, "demo_quantum");
-  assert.equal(value[0].config.toolCallTimeoutMs, 90000);
+  assert.equal(value[0].config.toolCallTimeoutMs, 3600000);
   assert.equal(value[0].config.reconnect.enabled, false);
 });
 

@@ -12,6 +12,8 @@ from science_reference import reference_plan
 def compute(v):
     import numpy as np
     import torch
+    if v.get("execution", {}).get("threads") is not None:
+        torch.set_num_threads(v["execution"]["threads"])
     torch.manual_seed(v["seed"])
     np.random.seed(v["seed"])
     # Import only the pinned upstream training module, without its CLI/dataset dependencies.

@@ -21,6 +21,16 @@ for (const entry of SCALABLE_BRIDGES) {
     const output = sample(d.tool.outputSchema);
     Object.assign(output, { input, inputSha256: "a".repeat(64), dependencyLockSha256: "b".repeat(64) });
     assert.ok(d.validateOutput(output), JSON.stringify(d.validateOutput.errors));
+    if (entry.id === "tjm-dynamics") {
+      output.result.standardErrorStatus = "insufficient_trajectories";
+      assert.equal(d.validateOutput(output), false, "a single noisy trajectory cannot claim a measured standard error");
+      const errors = output.result.standardErrors;
+      output.result.standardErrors = null;
+      assert.ok(d.validateOutput(output));
+      output.result.standardErrorStatus = "estimated";
+      assert.equal(d.validateOutput(output), false);
+      output.result.standardErrors = errors;
+    }
     output.result[entry.referenceFields[0]] = null;
     assert.equal(d.validateOutput(output), false, "computed cannot omit its reference");
     output.result.reference.status = "not_run";
@@ -44,28 +54,42 @@ for (const entry of SCALABLE_BRIDGES) {
     const oversizedReference = entry.id === "sqd-chemistry"
       ? { activeSpace: { numOrbitals: 16, numElectrons: 16 }, maxSubspaceDimension: 8 }
       : entry.input;
-    assert.doesNotThrow(() => d.normalize(entry.tool, { ...oversizedReference, referenceMode: "required" }));
+    assert.equal(d.normalize(entry.tool, { ...oversizedReference, referenceMode: "required" }).referenceMode, "required");
   });
 }
 
-test("larger requests are accepted while molecular structural constraints remain enforced", async () => {
-  const bad = {
-    "tenpy-ground-state": { numSites: 256, maxBondDimension: 256 },
-    "tjm-dynamics": { numQubits: 128, trajectories: 128, steps: 32, maxBondDimension: 64 },
-    "flow-vqe": { numQubits: 20, terms: [{ pauli: "Z".repeat(20), coefficient: 1 }] },
-    "sqd-chemistry": { activeSpace: { numOrbitals: 32, numElectrons: 32 }, maxSubspaceDimension: 128 },
-    "clifft-sampling": { numQubits: 128, shots: 8192 },
+test("users choose compute scale; physical and representation errors still reject", async () => {
+  const large = {
+    "tenpy-ground-state": { numSites: 10000, maxBondDimension: 1024, maxSweeps: 500 },
+    "tjm-dynamics": { numQubits: 1000, trajectories: 10000, steps: 1000, maxBondDimension: 256 },
+    "flow-vqe": { numQubits: 30, terms: [{ pauli: "Z".repeat(30), coefficient: 1 }], layers: 20, epochs: 1000, batchSize: 128 },
+    "sqd-chemistry": { activeSpace: { numOrbitals: 50, numElectrons: 50 }, maxSubspaceDimension: 10000, shots: 1000000 },
+    "clifft-sampling": { numQubits: 10000, shots: 1000000 },
   };
-  for (const [id,input] of Object.entries(bad)) {
+  for (const [id,input] of Object.entries(large)) {
     const { definition: d } = await import(`../.agents/skills/${id}/mcp/contracts.mjs`);
-    assert.doesNotThrow(() => d.normalize(d.tool.name, input), id);
+    const normalized = d.normalize(d.tool.name, input);
+    assert.deepEqual(normalized.execution, {});
   }
   const { definition: d } = await import("../.agents/skills/sqd-chemistry/mcp/contracts.mjs");
   for (const input of [
+    { activeSpace: { numOrbitals: 64, numElectrons: 2 } },
     { activeSpace: { numOrbitals: 4, numElectrons: 3 } },
     { activeSpace: { numOrbitals: 2, numElectrons: 6 } },
     { molecule: { atoms: [{ element: "H", positionAngstrom: [0,0,0] }] } },
     { molecule: { atoms: [{ element: "H", positionAngstrom: [0,0,0] }, { element: "H", positionAngstrom: [0,0,0] }] } },
     { activeSpace: { numOrbitals: 4, numElectrons: 2 }, counts: { "0101": 64 } },
   ]) assert.throws(() => d.normalize(d.tool.name, input));
+});
+
+
+test("execution options accept user budgets and reject invalid timer/size/thread values", async () => {
+  for (const entry of SCALABLE_BRIDGES) {
+    const { definition: d } = await import(`../.agents/skills/${entry.id}/mcp/contracts.mjs`);
+    const options = { timeoutMs: 0, maxOutputBytes: 32*1024*1024, threads: 8 };
+    assert.deepEqual(d.normalize(entry.tool, { ...entry.input, execution: options }).execution, options);
+    for (const execution of [{ timeoutMs: -1 }, { timeoutMs: Number.MAX_SAFE_INTEGER + 1 }, { maxOutputBytes: -1 }, { threads: 0 }, { command: "arbitrary code" }]) {
+      assert.throws(() => d.normalize(entry.tool, { ...entry.input, execution }));
+    }
+  }
 });

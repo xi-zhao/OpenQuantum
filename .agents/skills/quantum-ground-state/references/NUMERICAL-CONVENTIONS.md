@@ -19,13 +19,13 @@
   E0 = (a+d)/2 - hypot((a-d)/2, b)
   ```
 
-- Optimizer: the request's endpoint-inclusive `coarsePoints=65` convention represents 64 unique
-  periodic grid points. Evaluate `-pi + 2*pi*k/64` for `k=0,...,63`; do not evaluate the duplicate
-  `+pi` endpoint. Select both neighbours modulo 64, unwrap those neighbours around the winning
+- Optimizer: the request's endpoint-inclusive `coarsePoints` convention represents `coarsePoints - 1` unique
+  periodic grid points. Evaluate `-pi + 2*pi*k/n` for `n=coarsePoints - 1` and `k=0,...,n-1`; do not evaluate the duplicate
+  `+pi` endpoint. Select both neighbours modulo `n`, unwrap those neighbours around the winning
   grid point, and run golden-section refinement on that continuous unwrapped bracket. Every angle
   passed to the energy function or written to an Artifact is canonicalized to `[-pi, pi)`.
 - Evaluation budget: every energy evaluation, including coarse, refinement, and optional final
-  midpoint evaluation, consumes one budget unit. If fewer than 64 evaluations are available, the
+  midpoint evaluation, consumes one budget unit. If fewer than `n` evaluations are available, the
   run stops after the available coarse nodes and has no final bracket. If all coarse nodes are
   available but refinement exhausts the budget, the current unwrapped bracket width is retained.
 - Hamiltonian scale: `S_H = max(1, sum_j |c_j|)` in Hartree for the canonical Pauli

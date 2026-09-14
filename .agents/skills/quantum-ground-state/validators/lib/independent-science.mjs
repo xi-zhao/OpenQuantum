@@ -157,7 +157,8 @@ export function inspectRequestScope(request) {
     ]) ||
     optimizer.id !== "coarse-grid-golden-refine" ||
     optimizer.version !== "1.0.0" ||
-    optimizer.coarsePoints !== 65 ||
+    !Number.isSafeInteger(optimizer.coarsePoints) ||
+    optimizer.coarsePoints < 4 ||
     !Number.isFinite(optimizer.angleToleranceRadians) ||
     optimizer.angleToleranceRadians < 1e-14 ||
     optimizer.angleToleranceRadians > 0.01 ||
@@ -169,7 +170,7 @@ export function inspectRequestScope(request) {
   if (
     !exactObject(request.acceptanceProfile, {
       id: "supplied-pauli-statevector",
-      version: "1.0.0",
+      version: "1.1.0",
     })
   ) {
     mismatches.push("acceptance profile");

@@ -62,4 +62,4 @@ sympy 表达式字符串、文件路径或数据集加载。
 4. 若运行 QAOA：`layer`、最高概率比特串与分布要点；
 5. `pyqpanda_alg` 版本和 `scientificValidation` 边界。
 
-计算规模和资源由调用方选择，适配器不设置量子位、门数、项数、采样数或迭代数的人工上限。默认值用于方便调用；模型、格式和数值表示要求仍由输入合同检查。详见[计算参数与资源配置](../../../docs/integrations/SCALABLE_BRIDGES.md)。
+变量数、模型项数和 QAOA 层数由调用方选择，适配器不额外设置人工规模上限。具体资源配置见[本地计算说明](../../../docs/integrations/SCALABLE_BRIDGES.md)。

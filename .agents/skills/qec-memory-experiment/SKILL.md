@@ -44,4 +44,4 @@ description: 使用 OpenQuantum 的固定版本 Stim 与 PyMatching 运行 rotat
 4. validation observations；
 5. 明确写出不能支持的 threshold 与硬件结论。
 
-计算规模和资源由调用方选择，适配器不设置量子位、门数、项数、采样数或迭代数的人工上限。默认值用于方便调用；模型、格式和数值表示要求仍由输入合同检查。详见[计算参数与资源配置](../../../docs/integrations/SCALABLE_BRIDGES.md)。
+码距、存储轮数和采样数由调用方选择，适配器不额外设置人工规模上限。具体资源配置见[本地计算说明](../../../docs/integrations/SCALABLE_BRIDGES.md)。

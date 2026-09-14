@@ -2,11 +2,21 @@
 import numpy as np
 
 
+def parity_signs(indices, mask):
+    parity = indices & mask
+    for shift in (32, 16, 8, 4, 2, 1):
+        parity = parity ^ (parity >> shift)
+    return 1. - 2. * (parity & 1)
+
+
 class PauliObjective:
     def __init__(self, num_qubits, layers, terms):
         self.n = num_qubits
         self.layers = layers
-        self.indices = np.arange(2**num_qubits, dtype=np.uint32)
+        # Reject an unrepresentable NumPy array before attempting an allocation.
+        if num_qubits >= np.iinfo(np.intp).bits or 2**num_qubits > np.iinfo(np.intp).max // np.dtype(complex).itemsize:
+            raise ValueError("Statevector exceeds the platform NumPy index/array-byte representation")
+        self.indices = np.arange(2**num_qubits, dtype=np.uint64)
         self.terms = []
         for term in terms:
             flip = phase = y_count = 0
@@ -44,9 +54,6 @@ class PauliObjective:
     def expectation(self, vector):
         energy = 0.
         for coefficient, flip, phase, y_phase in self.terms:
-            parity = self.indices & phase
-            for shift in (16, 8, 4, 2, 1):
-                parity = parity ^ (parity >> shift)
-            signs = 1. - 2. * (parity & 1)
+            signs = parity_signs(self.indices, phase)
             energy += coefficient * np.vdot(vector[self.indices ^ flip], y_phase * signs * vector).real
         return float(energy)

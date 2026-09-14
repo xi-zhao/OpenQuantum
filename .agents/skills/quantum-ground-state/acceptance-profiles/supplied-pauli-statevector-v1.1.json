@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0",
   "id": "supplied-pauli-statevector",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "scope": {
     "supportedClaims": [
       "Ground-state energy within the fixed-hamming-weight=1 sector of a supplied two-qubit real Pauli Hamiltonian",
@@ -116,7 +116,7 @@
       "id": "optimizer.trace-replayed",
       "category": "numerical",
       "required": true,
-      "criterion": "The trace has contiguous evaluation numbers, 64 unique periodic coarse nodes, replayable normalized energies, a correct monotone running best, result-to-trace consistency, truthful bracket/budget termination, and a deterministic independent rerun with the same canonical best. The metric is the maximum normalized energy replay residual; every structural invariant must also hold.",
+      "criterion": "The trace has contiguous evaluation numbers, the requested periodic coarse grid (coarsePoints - 1 unique nodes when completed), replayable normalized energies, a correct monotone running best, result-to-trace consistency, truthful bracket/budget termination, and a deterministic independent rerun with the same canonical best. The metric is the maximum normalized energy replay residual; every structural invariant must also hold.",
       "threshold": 1e-10,
       "unit": "dimensionless"
     },
@@ -124,9 +124,9 @@
       "id": "resources.within-budget",
       "category": "resource",
       "required": true,
-      "criterion": "The number of statevector expectation evaluations does not exceed the profile budget.",
-      "threshold": 256,
-      "unit": "evaluations"
+      "criterion": "The number of statevector expectation evaluations does not exceed the evaluation budget supplied in the canonical request.",
+      "threshold": 1,
+      "unit": "fraction of requested evaluation budget"
     },
     {
       "id": "provenance.complete",

@@ -64,8 +64,16 @@
 
 - TeNPy、TJM、Flow-VQE、Clifft 的主计算已与小系统精确参考分开；SQD 新增分子、基组和活性空间输入，包含冻结核贡献。
 - 五项统一提供 `referenceMode=auto|required|skip`，未运行参考时返回原因与 null 参考字段；保持 L1、`scientificValidation=not_evaluated`。
-- 新旧实际数值回归与本地模型协议替身驱动的真实 Harness 五项调用、会话结果重读均已通过。接口资源上限和本地实测规模分开记录，见[计算规模与参考检查](docs/integrations/SCALABLE_BRIDGES.md)。
+- 新旧实际数值回归与本地模型协议替身驱动的真实 Harness 五项调用、会话结果重读均已通过。算例与验证记录见[计算工具使用说明](docs/integrations/SCALABLE_BRIDGES.md)。
 - 未调用外部模型或真实硬件；运行中的 Harness 需在后续重启后加载新合同，不替代原模型验收里程碑。
+
+## 用户自行配置计算资源（2026-09-15）
+
+- 全部 23 项本地计算适配（21 个 MCP 服务及 QMClaw、内置基态两项原生计算能力）按用户选择的规模和求解参数执行，移除人为规模与工作量上限，保留所提供的物理模型、输入结构和后端数据表示要求。
+- 主计算、可选参考、Graphix 模拟和 PauLie 闭包分别配置；`required` 在所请求的规模尝试参考。15 项共享科学服务支持逐次 `execution`，其余本地 MCP 计算使用部署变量；worker 默认无时间或输出上限，连接超时可在设置中心修改。
+- 内置基态的粗网格与评价预算由请求指定；资源检查规则升级为 Profile `1.1.0` 并返回使用比例，旧 `1.0.0` 文件保留用于历史溯源。
+- README 按功能介绍能力；模型、输入输出与资源设置见[本地计算说明](docs/integrations/SCALABLE_BRIDGES.md)。本地算例与版本作为补充材料，见[核验记录](docs/integrations/evidence/local-compute-scale-2026-09-15.json)。
+- 合并后全仓 `npm run check` 通过；另运行 18 个旧适配输入、7 个资源配置输入，以及真实 Harness 的四项调用、预期错误和会话重读。Harness 使用本地模型协议替身；未调用外部模型或真实硬件。本次资源调整不改变各能力的科学验收等级。
 
 ## 下一唯一里程碑
 

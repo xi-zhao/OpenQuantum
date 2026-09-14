@@ -43,4 +43,4 @@ description: 使用 OpenQuantum 的固定版本 MQT QCEC 本地检查两份无�
 4. conclusive / equivalent / provenance 三类 observations；
 5. 适用范围和未验证项。
 
-计算规模和资源由调用方选择，适配器不设置量子位、门数、项数、采样数或迭代数的人工上限。默认值用于方便调用；模型、格式和数值表示要求仍由输入合同检查。详见[计算参数与资源配置](../../../docs/integrations/SCALABLE_BRIDGES.md)。
+输入电路的量子位数和门数由调用方选择，适配器不额外设置人工规模上限。具体资源配置见[本地计算说明](../../../docs/integrations/SCALABLE_BRIDGES.md)。

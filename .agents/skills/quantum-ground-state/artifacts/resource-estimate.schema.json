@@ -25,10 +25,10 @@
     "logicalQubits": { "const": 2 },
     "sectorDimension": { "const": 2 },
     "statevectorDimension": { "const": 4 },
-    "pauliTermCount": { "type": "integer", "minimum": 1, "maximum": 32 },
+    "pauliTermCount": { "type": "integer", "minimum": 1 },
     "ansatzParameterCount": { "const": 1 },
     "expectationEvaluations": { "type": "integer", "minimum": 1 },
-    "pauliTermEvaluations": { "type": "integer", "minimum": 1, "maximum": 8192 },
+    "pauliTermEvaluations": { "type": "integer", "minimum": 1 },
     "shots": { "const": 0 },
     "maxEvaluations": { "type": "integer", "minimum": 8 }
   },

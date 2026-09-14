@@ -59,7 +59,7 @@
           "properties": {
             "id": { "const": "coarse-grid-golden-refine" },
             "version": { "const": "1.0.0" },
-            "coarsePoints": { "const": 65 },
+            "coarsePoints": { "type": "integer", "minimum": 4, "maximum": 9007199254740991 },
             "angleToleranceRadians": { "type": "number", "exclusiveMinimum": 0 },
             "maxEvaluations": { "type": "integer", "minimum": 8 }
           }

@@ -86,7 +86,7 @@
 
 这 27 个 Skill 是 OpenQuantum 随源码维护的量子工作流，覆盖方法选择、计算实验、结果解释和平台诊断，由 Harness 按任务需要发现和加载。点击名称即可查看完整的 `SKILL.md`，也可作为编写自己 Skill 的起点；所需工具与连接分别配置。
 
-下表按**研究方法与用途**介绍能力。实际可执行的模型、规模和格式见[当前接入范围](#计算参数与运行方式)及各 Tool 接口；本地验证记录单独说明测过的算例，不用这些算例定义方法或上游软件的能力上限。
+下表按**研究方法与用途**介绍能力。各 Tool 提供的模型、参数和输入格式见[计算参数与运行方式](#计算参数与运行方式)。
 
 | Skill | 研究方法与用途 | 执行入口 |
 | --- | --- | --- |
@@ -522,7 +522,7 @@ OpenQuantum 的量子能力建立在开放科学与开源软件之上。我们�
 | 自旋链基态 | [TeNPy](https://github.com/tenpy/tenpy) | 对 XYZ 自旋链运行 DMRG，计算能量、磁化、纠缠熵与收敛信息 |
 | 马尔可夫动力学与灵敏度 | [Dynamiqs](https://github.com/dynamiqs/dynamiqs) | 求解受驱动耗散单量子位的 Lindblad 动力学，批量扫描驱动并计算末态人口梯度 |
 | 非马尔可夫动力学 | [OQuPy](https://github.com/tempoCollaboration/OQuPy) | 用 TEMPO 求解 Ohmic spin-boson 模型，检查时间步长与环境记忆截断的影响 |
-| 多体开放系统轨迹 | [MQT YAQS / TJM](https://github.com/munich-quantum-toolkit/yaqs) | 模拟开放 Ising 链的张量跳跃轨迹，与密度矩阵 Lindblad 演化比较 |
+| 多体开放系统轨迹 | [MQT YAQS / TJM](https://github.com/munich-quantum-toolkit/yaqs) | 模拟开放 Ising 链的张量跳跃轨迹，可选与密度矩阵 Lindblad 演化比较 |
 | 误差缓解 | [Mitiq](https://github.com/unitaryfoundation/mitiq) | 运行 ZNE、REM、PEC、CDR 本地噪声实验，比较相同采样预算下的误差与成本 |
 | 表面码存储与解码 | [Stim](https://github.com/quantumlib/Stim) + [PyMatching](https://github.com/oscarhiggott/PyMatching) | Stim 生成并采样旋转表面码存储电路，PyMatching 做 MWPM 解码，统计逻辑错误率 |
 | 矩形表面码实验建模 | [Deltakit](https://github.com/Deltakit/deltakit) | 构建矩形码片与 ToyNoise 含噪电路，运行 X / Z 存储实验并报告逻辑错误区间 |
@@ -562,11 +562,11 @@ IBM Quantum、IonQ 和本源量子是可连接的云服务。任务提交分别�
 
 ### 从论文方法开始一次计算
 
-读到一种方法后，可以先在小系统上看它如何工作。OpenQuantum 已接入 **SQD、TJM、BP+LSD、RandomMeas、Flow-VQE 和 TeNPy**：从 H₂ 的采样子空间对角化，到开放系统张量轨迹、二元校验矩阵解码、随机测量、参数学习和自旋链 DMRG。
+读到一种方法后，可以把自己的问题交给计算工具。OpenQuantum 已适配 **SQD、TJM、BP+LSD、RandomMeas、Flow-VQE 和 TeNPy**，提供分子活性空间的采样子空间对角化、开放系统张量轨迹、二元校验矩阵解码、随机测量、参数学习和自旋链 DMRG。
 
 这些接入固定了上游实现与依赖版本，并随结果返回输入、版本和检查信息。主计算与独立精确参考按各自成本运行；参考可用时，可以比较 SQD 与同一活性空间 FCI 的能量、TJM 与 Lindblad 演化的观测量，或 DMRG 与精确对角化的结果。
 
-这些能力提供本地计算与数值检查，计算规模按各 Tool 的资源预算控制，实测覆盖另列；尚未接入完整科学验收流程，论文规模复现需单独验证。论文出处、上游仓库、物理假设与验证记录见[论文方法说明](docs/integrations/PAPER_BACKED_TOOLS.md)；准备依赖后，可直接使用前面的[论文方法试用示例](#试用-sqd-与-tenpy)。
+这些能力提供本地计算与数值检查，由用户选择计算规模和求解预算。论文出处、上游仓库、物理模型与补充核验记录见[论文方法说明](docs/integrations/PAPER_BACKED_TOOLS.md)；准备依赖后，可直接使用前面的[论文方法试用示例](#试用-sqd-与-tenpy)。
 
 ### 可选上游 Skill 与开发证据
 

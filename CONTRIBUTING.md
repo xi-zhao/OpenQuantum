@@ -125,6 +125,8 @@ Tool 最大副作用和证据来源也必须分开登记：本地 MCP Server 通
    默认关闭也必须登记，每个 Server 只保留一个合同归属；Skill 可以复用其 Tool，不重复声明合同；
 7. 增加 MCP 集成测试和至少一条 Harness 端到端测试。
 
+本地计算的输入合同描述所提供的模型与操作；量子位数、采样量、迭代数等规模参数由调用方选择，不以开发机算例或测试覆盖设置人工上限。保留物理、结构和后端数据表示要求，并说明其原因。将部署资源设置与方法参数分开；额外的稠密参考、闭包枚举和穷举检查应可独立选择，默认参考阈值不能阻止主计算，也不能限制显式请求的参考规模。功能说明先写输入、方法和输出，核验记录单独保存。
+
 Harness 会把同一个 Agent preset 在一个进程中挂载一次，再由多个 Session 共享。修改
 `agent.cordis.yml` 后应重启本地 Harness；开发期热更新会保留旧 composition generation，两个 generation
 若同时声明相同 MCP `serverName`，Harness MCP Client 会按唯一性规则拒绝新 generation。不要因此把

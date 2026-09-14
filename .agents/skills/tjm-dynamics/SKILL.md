@@ -7,7 +7,7 @@ description: 开放 Ising 链的张量跳跃轨迹，与密度矩阵 Lindblad �
 
 Agent 经 Harness 调用 tjm_local 提供的 `simulate_tjm_dynamics`。本 Skill 负责选择和解释，不启动计算进程。
 
-至少 2 个量子位、初态全零、开放链。H = -J ΣZZ - g ΣX，跳跃算符 sqrt(gamma)|0><1|，hbar=1。时间与速率用一致单位。量子位数、时间网格、轨迹数与 bond dimension 由输入决定；standardErrors 仅含有限轨迹抽样误差，不含步长与张量截断偏差。
+至少 2 个量子位、初态全零、开放链。H = -J ΣZZ - g ΣX，跳跃算符 sqrt(gamma)|0><1|，hbar=1。时间与速率用一致单位。量子位数、时间网格、轨迹数与 bond dimension 由输入决定；standardErrors 仅含有限轨迹抽样误差，不含步长与张量截断偏差。无随机跳跃时标准误为零；含噪声但只有一条轨迹时，返回 standardErrors=null 和 standardErrorStatus=insufficient_trajectories。
 
 独立参考使用 `referenceMode=auto|required|skip`：auto 按默认阈值选择参考，required 使用调用方资源尝试所请求规模，skip 跳过。未执行时 `reference.status=not_run`，参考值和差异为 null；尝试后失败会返回错误。
 

@@ -13,18 +13,21 @@ function configuredInteger(name) {
   return value;
 }
 
-export function localComputeProcessOptions() {
+export function localComputeProcessOptions(execution = {}) {
   return {
-    timeoutMs: configuredInteger("OPENQUANTUM_COMPUTE_TIMEOUT_MS"),
-    maxOutputBytes: configuredInteger("OPENQUANTUM_COMPUTE_MAX_OUTPUT_BYTES"),
+    timeoutMs: execution.timeoutMs ?? configuredInteger("OPENQUANTUM_COMPUTE_TIMEOUT_MS"),
+    maxOutputBytes: execution.maxOutputBytes ?? configuredInteger("OPENQUANTUM_COMPUTE_MAX_OUTPUT_BYTES"),
   };
 }
 
-export function localComputeEnvironment(environment) {
+export function localComputeEnvironment(environment, execution = {}) {
   const value = { ...environment };
   for (const key of hardwareEnvironment) {
     delete value[key];
     if (process.env[key]) value[key] = process.env[key];
+  }
+  if (execution.threads !== undefined) {
+    for (const key of ["OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS", "NUMBA_NUM_THREADS", "JULIA_NUM_THREADS"]) value[key] = String(execution.threads);
   }
   return value;
 }

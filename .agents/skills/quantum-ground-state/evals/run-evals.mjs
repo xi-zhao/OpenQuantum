@@ -41,7 +41,7 @@ function resultPackageFor(facts, packageId) {
       },
       acceptanceProfile: {
         id: "supplied-pauli-statevector",
-        version: "1.0.0",
+        version: "1.1.0",
         sha256: "b".repeat(64),
       },
       inputs: [
@@ -70,7 +70,7 @@ function validate(request, facts, packageId) {
   return validateValidationBundle({
     schemaVersion: "1.0",
     resultPackage: resultPackageFor(facts, packageId),
-    profile: readJson("acceptance-profiles/supplied-pauli-statevector-v1.json"),
+    profile: readJson("acceptance-profiles/supplied-pauli-statevector-v1.1.json"),
     request,
     facts,
   });

@@ -1,0 +1,1878 @@
+{
+  "schemaVersion": "1.0",
+  "recordedAt": "2026-09-14T17:12:42.389981+00:00",
+  "purpose": "Supplementary development and numerical regression evidence. These cases do not define supported scale or establish performance limits.",
+  "implementationScope": {
+    "localComputeCapabilities": [
+      "pyzx-optimization",
+      "graphix-mbqc",
+      "symmer-tapering",
+      "paulie-algebra",
+      "quantum-circuit-verification",
+      "tyxonq-workbench",
+      "clifft-sampling",
+      "mitiq-error-mitigation",
+      "fatqat-workbench",
+      "quantum-information-audit",
+      "qpanda-qubo",
+      "qec-memory-experiment",
+      "deltakit-qec",
+      "ldpc-decoding",
+      "sqd-chemistry",
+      "tenpy-ground-state",
+      "tjm-dynamics",
+      "flow-vqe",
+      "dynamiqs-dynamics",
+      "oqupy-dynamics",
+      "randomized-measurements",
+      "qmclaw-workbench",
+      "quantum-ground-state"
+    ],
+    "mcpServices": 21,
+    "nativeComputeCapabilities": 2,
+    "perRequestExecutionMcpServices": 15
+  },
+  "behavior": {
+    "scale": "Caller supplies problem size and numerical budgets; retain model, structural and backend representation requirements.",
+    "reference": "auto chooses supplementary work; required attempts the requested size; skip does not build the reference. Absent checks are null/not_run or not_checked.",
+    "resources": "Worker timeout and output cap default to 0 (disabled). Optional execution overrides deployment settings; numerical threads inherit caller environment or library defaults.",
+    "harnessConnection": "Preset timeout is 2147483647 ms, the current Node single-timer representation ceiling. It is configurable in MCP settings.",
+    "groundStateProfile": "Current profile is supplied-pauli-statevector 1.1.0; the original 1.0.0 file is retained unchanged for historical interpretation. Coarse grid and evaluation budget are caller supplied; budgetFraction is reported.",
+    "scientificAcceptance": "Resource changes do not promote capability evidence levels or replace central Acceptance Builder."
+  },
+  "checks": {
+    "fullRepository": {
+      "command": "npm run check",
+      "exitCode": 0,
+      "nodeTestPasses": 474,
+      "nodeTestSkips": 53,
+      "nodeTestFailures": 0,
+      "platformDiagnosticCases": 4,
+      "log": ".openquantum/compute-scale-evidence/check-final.log",
+      "logSha256": "174c5cafc77f7226c0884c9e767d2a30f5e1e44ebb2af4702fc8cc422ed23ed7",
+      "runtime": "Node 24.19.0; test files limited to concurrency=2 through a local wrapper"
+    },
+    "groundStateProfile": {
+      "command": "node --test .agents/skills/quantum-ground-state/test/*.test.mjs tests/local-compute-scale.test.mjs",
+      "passed": 34,
+      "failed": 0,
+      "logSha256": "2142e3e34c762a2cc02b4d4ab68e72b109f0c23ce4583d3f08dcd2ad17964ded"
+    },
+    "mergedContracts": {
+      "command": "node --test tests/local-compute-scale.test.mjs tests/scalable-bridges.test.mjs tests/unitary-next-contracts.test.mjs tests/unitary-tools-contracts.test.mjs tests/paper-tools-contracts.test.mjs tests/local-json-process.test.mjs",
+      "passed": 44,
+      "logSha256": "c2175c616dacc58dcead9cd28824ed191a171db1b98490723ead8767eb2e4940"
+    },
+    "live": {
+      "command": "OPENQUANTUM_REAL_LOCAL_SCALE=1 OPENQUANTUM_REAL_USER_COMPUTE=1 node --test --test-concurrency=1 tests/local-compute-scale-live.test.mjs tests/user-compute-live.test.mjs tests/harness-unitary-next.test.mjs",
+      "exitCode": 0,
+      "passed": 24,
+      "failed": 0,
+      "testMachineThreads": "OMP/OPENBLAS/MKL=1; explicit per-request execution.threads=2 in user-compute cases",
+      "log": ".openquantum/compute-scale-evidence/live-merged.log",
+      "logSha256": "e83e4c32d31645dbe08fe76f7b5857dab2c87c0ac32e3265e54972a8dd3f2e9d"
+    }
+  },
+  "realAdapterCases": [
+    {
+      "case": "deltakit-qec-run_deltakit_memory",
+      "rawEvidence": ".openquantum/compute-scale-evidence/live/deltakit-qec-run_deltakit_memory.json",
+      "rawEvidenceSha256": "7f5b0edb2956bd4c9bd6041472fceb29e8b858bfa2796a211b0d718d139176ac",
+      "checkedAt": "2026-09-14T16:47:45.671Z",
+      "input": {
+        "width": 7,
+        "height": 7,
+        "rounds": 11,
+        "shots": 128,
+        "noiseProbability": 0
+      },
+      "inputSha256": "1c18e657b87128d3d77fe1595107f922d8fd6a2f8ac1253da6c8cbc04b338df2",
+      "source": {
+        "name": "deltakit",
+        "version": "0.10.0",
+        "repository": "https://github.com/Deltakit/deltakit"
+      },
+      "dependencyLockSha256": "1370209234943bfc7334f0541eee77f85a78162da57ba54181788654a7a307d7",
+      "resultScalars": {
+        "numQubits": 97,
+        "numDetectors": 528,
+        "numObservables": 1,
+        "shots": 128,
+        "logicalFailures": 0,
+        "logicalErrorRate": 0,
+        "detectionEventFraction": 0,
+        "circuitSha256": "aad48fb1011482165ca036e6594b8efdc918d0d78b3f936593651986ac069526",
+        "noiseModel": "Deltakit ToyNoise(p); synthetic local model",
+        "decoder": "PyMatching 2.4.0 MWPM",
+        "simulator": "Stim 1.16.0"
+      },
+      "scientificValidation": "not_evaluated"
+    },
+    {
+      "case": "dynamiqs-dynamics-simulate_dynamiqs_dynamics",
+      "rawEvidence": ".openquantum/compute-scale-evidence/live/dynamiqs-dynamics-simulate_dynamiqs_dynamics.json",
+      "rawEvidenceSha256": "d0aa6762768e27c0e03c252be3f2bb4ca4c8a0ac677f323d7b3f26ef38ee2a76",
+      "checkedAt": "2026-09-14T16:47:50.893Z",
+      "input": {
+        "drives": {
+          "items": 9,
+          "first": 0
+        },
+        "duration": 6,
+        "steps": 101,
+        "initialState": "excited",
+        "dampingRate": 0.1,
+        "referenceMode": "required"
+      },
+      "inputSha256": "af31e10cfc2aa20fd294d410173de116674e695a0d978dc395d0e737cf860888",
+      "source": {
+        "name": "dynamiqs",
+        "version": "0.3.6",
+        "repository": "https://github.com/dynamiqs/dynamiqs",
+        "commit": "a49b30fe5cacb5cf7c1d981f2e7ed03b18e05318"
+      },
+      "dependencyLockSha256": "25f0bd615eb24467824c69c774187cdc9eaf404ab71e02fce588bc928dae44c9",
+      "resultScalars": {
+        "maxPopulationDeviation": 1.1384126974434139e-10,
+        "maxGradientDeviation": 0,
+        "maxTraceError": 2.220446049250313e-16,
+        "minimumEigenvalue": 0,
+        "model": "H=(drive X + detuning Z)/2; L=sqrt(gamma)|0><1|; hbar=1",
+        "device": "cpu",
+        "reference": {
+          "mode": "required",
+          "status": "computed",
+          "method": "Independent Lindblad integration and finite differences",
+          "reason": "Independent reference computed for this input."
+        }
+      },
+      "scientificValidation": "not_evaluated"
+    },
+    {
+      "case": "fatqat-workbench-simulate_fatqat_circuit",
+      "rawEvidence": ".openquantum/compute-scale-evidence/live/fatqat-workbench-simulate_fatqat_circuit.json",
+      "rawEvidenceSha256": "001f829222b13ec88d4ac912c2ce17f1cc5d7099f8e301c461a89f4e9a6891d6",
+      "checkedAt": "2026-09-14T16:47:37.936Z",
+      "input": {
+        "backend": "general",
+        "numQubits": 9,
+        "operations": {
+          "items": 1,
+          "first": {
+            "gate": "x",
+            "qubits": {
+              "items": 1,
+              "first": 8
+            }
+          }
+        },
+        "shots": 0,
+        "seed": 7
+      },
+      "inputSha256": "8dac6339aabffb0fd7893d5825d228942410eb9cc18450f6287aa291d5fc497b",
+      "source": {
+        "name": "FatQat",
+        "version": "0.1.0a1",
+        "revision": "39b75e30ae50ddb4a8c7b840847edce678aa814c",
+        "dependencyLockSha256": "81585c30cfe2a31228c9f17ada446b3fc190e2d05be69a2cb3efa82c43b5bff8"
+      },
+      "dependencyLockSha256": null,
+      "resultScalars": {},
+      "scientificValidation": "not_evaluated"
+    },
+    {
+      "case": "fatqat-workbench-simulate_fatqat_dynamics",
+      "rawEvidence": ".openquantum/compute-scale-evidence/live/fatqat-workbench-simulate_fatqat_dynamics.json",
+      "rawEvidenceSha256": "ba29075ea1531fab6894a65843f5242b56435fa0d1046c66a92d8bff4304eb91",
+      "checkedAt": "2026-09-14T16:47:40.283Z",
+      "input": {
+        "model": "rydberg",
+        "numAtoms": 7,
+        "spacingUm": 6,
+        "durationUs": 0.01,
+        "omegaRadPerUs": 0,
+        "samples": 52
+      },
+      "inputSha256": "879dee78d732a691928df784a2fe75cef995eb9327a366e7377f90ea7a16f9c3",
+      "source": {
+        "name": "FatQat",
+        "version": "0.1.0a1",
+        "revision": "39b75e30ae50ddb4a8c7b840847edce678aa814c",
+        "dependencyLockSha256": "81585c30cfe2a31228c9f17ada446b3fc190e2d05be69a2cb3efa82c43b5bff8"
+      },
+      "dependencyLockSha256": null,
+      "resultScalars": {},
+      "scientificValidation": "not_evaluated"
+    },
+    {
+      "case": "flow-vqe-train_flow_vqe",
+      "rawEvidence": ".openquantum/compute-scale-evidence/live/flow-vqe-train_flow_vqe.json",
+      "rawEvidenceSha256": "b8367250f3ea3fdbda5ee51a040ad18bfc3f168d562157bc7871583ed3304d4a",
+      "checkedAt": "2026-09-14T16:48:36.136Z",
+      "input": {
+        "numQubits": 12,
+        "terms": {
+          "items": 1,
+          "first": {
+            "pauli": "ZIIIIIIIIIII",
+            "coefficient": -1
+          }
+        },
+        "epochs": 1,
+        "batchSize": 4,
+        "referenceMode": "skip"
+      },
+      "inputSha256": "81eccfd6a0a97ddc561578f73c2681aa69876e9711f5733e1b189ad7ace06175",
+      "source": {
+        "name": "Flow-VQE",
+        "revision": "f7642afa330e5108ea5738d42fe80b551363733c",
+        "repository": "https://github.com/olsson-group/Flow-VQE"
+      },
+      "dependencyLockSha256": "55a1bd3730cb09266ebe483354bb32f73b7bdfe6bf51f11aae091b15d7e16f92",
+      "resultScalars": {
+        "bestEnergy": -0.7676088809967041,
+        "recomputedEnergy": -0.76760889425575,
+        "exactGroundEnergy": null,
+        "error": null,
+        "randomSearchBestEnergy": -0.7673498140603128,
+        "evaluationsPerMethod": 4,
+        "normError": 0,
+        "ansatz": "zero state; RY on every site, then layers of nearest-neighbor CNOT and RY; leftmost Pauli is q0",
+        "units": "same energy units as input coefficients",
+        "reference": {
+          "mode": "skip",
+          "status": "not_run",
+          "method": "Independent dense Pauli diagonalization",
+          "reason": "Reference explicitly skipped by the caller."
+        }
+      },
+      "scientificValidation": "not_evaluated"
+    },
+    {
+      "case": "ldpc-decoding-decode_ldpc_syndromes",
+      "rawEvidence": ".openquantum/compute-scale-evidence/live/ldpc-decoding-decode_ldpc_syndromes.json",
+      "rawEvidenceSha256": "d010cbf57a1a11603c67626c4100284f48f30254d4e0519a47b93e387d2f7b0c",
+      "checkedAt": "2026-09-14T16:47:43.149Z",
+      "input": {
+        "parityCheck": {
+          "items": 65,
+          "first": {
+            "items": 129,
+            "first": 1
+          }
+        },
+        "syndromes": {
+          "items": 1,
+          "first": {
+            "items": 65,
+            "first": 0
+          }
+        },
+        "errorRate": 0.05,
+        "bpIterations": 101,
+        "lsdOrder": 0
+      },
+      "inputSha256": "87a4a88a05b9b7b3da32716f4b25a223e2b0948f7c23e0ffed6fe06213aef1af",
+      "source": {
+        "name": "ldpc",
+        "version": "2.4.1",
+        "repository": "https://github.com/quantumgizmos/ldpc"
+      },
+      "dependencyLockSha256": "828976c42ecf21fe0473c9bb19fb98fcfc329bd37b1c0b918074e9f92b0e0162",
+      "resultScalars": {
+        "implementation": "serial BP+LSD, lsd_cs",
+        "logicalSuccess": "not_evaluated"
+      },
+      "scientificValidation": "not_evaluated"
+    },
+    {
+      "case": "mitiq-error-mitigation-run_mitiq_experiment",
+      "rawEvidence": ".openquantum/compute-scale-evidence/live/mitiq-error-mitigation-run_mitiq_experiment.json",
+      "rawEvidenceSha256": "c0cd569e8e386813b1f4fe9db6ae8057f1b7f2233bd45b61d1ca92fe2451fee9",
+      "checkedAt": "2026-09-14T16:47:53.697Z",
+      "input": {
+        "method": "zne",
+        "numQubits": 5,
+        "gates": {
+          "items": 26,
+          "first": {
+            "name": "H",
+            "targets": {
+              "items": 1,
+              "first": 0
+            }
+          }
+        },
+        "observable": "ZIIII",
+        "depolarizingProbability": 0,
+        "shotsBudget": 1024,
+        "replicates": 4
+      },
+      "inputSha256": "476acefd384a0cd5e498268dd6c4bcacb09ced909ada5f4b1f36bc7e9a638f7d",
+      "source": {
+        "name": "mitiq",
+        "version": "1.1.0",
+        "repository": "https://github.com/unitaryfoundation/mitiq",
+        "license": "GPL-3.0-only"
+      },
+      "dependencyLockSha256": "914bcc855a67783fb87fe58065a04bf11c212ffde290b700ba3545258465fca5",
+      "resultScalars": {
+        "method": "zne",
+        "backend": "cirq-density-matrix-local",
+        "idealExpectation": 1.0000000000000002,
+        "exactNoisyExpectation": 1.0000000000000002,
+        "totalShotsIncludingBaseline": 8192
+      },
+      "scientificValidation": "not_evaluated"
+    },
+    {
+      "case": "oqupy-dynamics-simulate_oqupy_spin_boson",
+      "rawEvidence": ".openquantum/compute-scale-evidence/live/oqupy-dynamics-simulate_oqupy_spin_boson.json",
+      "rawEvidenceSha256": "475291cc968f8bfe94e0a21db8bbd52c7d8ab8cb875f2721f5cbb22d62c11575",
+      "checkedAt": "2026-09-14T16:47:51.953Z",
+      "input": {
+        "tunneling": 0,
+        "bias": 0,
+        "alpha": 0,
+        "duration": 2.1,
+        "steps": 41,
+        "memorySteps": 2,
+        "initialState": "ground"
+      },
+      "inputSha256": "12c498c6db9412960ed80a57b51fd71050ac4864eb2f4010f7cc57b92e91ef52",
+      "source": {
+        "name": "oqupy",
+        "version": "0.5.0",
+        "repository": "https://github.com/tempoCollaboration/OQuPy"
+      },
+      "dependencyLockSha256": "6acb57295909af725a5edd25aec06e4bec5fc28ff43091bb21d96fc531bc7db5",
+      "resultScalars": {
+        "maxTraceError": 2.220446049250313e-16,
+        "minimumEigenvalue": 0,
+        "memoryTime": 0.10243902439024391,
+        "timestep": 0.051219512195121955,
+        "relativeSvdTolerance": 1e-07,
+        "model": "H=(tunneling X+bias Z)/2; bath coupling Z/2; J(w)=2 alpha w exp(-w/cutoff); hbar=kB=1"
+      },
+      "scientificValidation": "not_evaluated"
+    },
+    {
+      "case": "qec-memory-experiment-run_qec_memory_experiment",
+      "rawEvidence": ".openquantum/compute-scale-evidence/live/qec-memory-experiment-run_qec_memory_experiment.json",
+      "rawEvidenceSha256": "4a045e379bab5bfd6700c40c95c8e628d7399880b70cf7e4616553aac431cb68",
+      "checkedAt": "2026-09-14T16:47:32.604Z",
+      "input": {
+        "basis": "z",
+        "distance": 9,
+        "rounds": 21,
+        "shots": 50001,
+        "physicalErrorRate": 0,
+        "seed": 7
+      },
+      "inputSha256": null,
+      "source": {
+        "stim": "1.16.0",
+        "pymatching": "2.4.0"
+      },
+      "dependencyLockSha256": null,
+      "resultScalars": {},
+      "scientificValidation": "observations_available"
+    },
+    {
+      "case": "qpanda-qubo-model_and_solve_qpanda_qubo",
+      "rawEvidence": ".openquantum/compute-scale-evidence/live/qpanda-qubo-model_and_solve_qpanda_qubo.json",
+      "rawEvidenceSha256": "978518882e5b513ae740aab667272b42c58211344d14bbc5bb8d90302da05985",
+      "checkedAt": "2026-09-14T16:47:42.550Z",
+      "input": {
+        "model": {
+          "variables": {
+            "items": 2,
+            "first": "a"
+          },
+          "objective": {
+            "sense": "minimize",
+            "linear": {
+              "items": 1,
+              "first": {
+                "variable": "b",
+                "coefficient": -1
+              }
+            }
+          }
+        },
+        "method": "qaoa",
+        "layer": 1,
+        "referenceMode": "skip"
+      },
+      "inputSha256": null,
+      "source": "2.0.0",
+      "dependencyLockSha256": null,
+      "resultScalars": {},
+      "scientificValidation": "observations_available"
+    },
+    {
+      "case": "qpanda-qubo-solve_qpanda_qubo",
+      "rawEvidence": ".openquantum/compute-scale-evidence/live/qpanda-qubo-solve_qpanda_qubo.json",
+      "rawEvidenceSha256": "ee28046e59c99c769fb08afa2817b784ccab586a57f54dbf919613ccfd41e6a4",
+      "checkedAt": "2026-09-14T16:47:41.720Z",
+      "input": {
+        "quadratic": {
+          "items": 6,
+          "first": {
+            "items": 6,
+            "first": -1
+          }
+        },
+        "method": "traversal",
+        "referenceMode": "skip"
+      },
+      "inputSha256": null,
+      "source": "2.0.0",
+      "dependencyLockSha256": null,
+      "resultScalars": {},
+      "scientificValidation": "not_evaluated"
+    },
+    {
+      "case": "quantum-circuit-verification-verify_circuit_equivalence",
+      "rawEvidence": ".openquantum/compute-scale-evidence/live/quantum-circuit-verification-verify_circuit_equivalence.json",
+      "rawEvidenceSha256": "76c24d44e45c2a9ef3849ab786fd2b1a8cc1f409389c547bd3dcb505e85c1ae3",
+      "checkedAt": "2026-09-14T16:47:32.826Z",
+      "input": {
+        "circuitAOpenQasm2": {
+          "characters": 6049,
+          "sha256": "bd454f46bc7e28169be01450287c9bc5c3a2c3e4d8a5be0b1c6026ec6b35750e"
+        },
+        "circuitBOpenQasm2": {
+          "characters": 71586,
+          "sha256": "3f473ba4d58ddfe970cf6cfaac39db4f2da3124f69f851e893591533a2a41ff1"
+        }
+      },
+      "inputSha256": null,
+      "source": "3.10.0",
+      "dependencyLockSha256": null,
+      "resultScalars": {
+        "schemaVersion": "1.0",
+        "packageVersion": "3.10.0",
+        "equivalence": "equivalent",
+        "timeoutSeconds": 0
+      },
+      "scientificValidation": "observations_available"
+    },
+    {
+      "case": "quantum-information-audit-audit_density_matrix",
+      "rawEvidence": ".openquantum/compute-scale-evidence/live/quantum-information-audit-audit_density_matrix.json",
+      "rawEvidenceSha256": "6247006e80ce9c88b3d9a202de7b8ae881b4b8d9c56962284618b3763b2e74e1",
+      "checkedAt": "2026-09-14T16:47:33.884Z",
+      "input": {
+        "matrixReal": {
+          "items": 32,
+          "first": {
+            "items": 32,
+            "first": 0.03125
+          }
+        },
+        "subsystemDimensions": {
+          "items": 5,
+          "first": 2
+        },
+        "transposeSubsystems": {
+          "items": 2,
+          "first": 0
+        }
+      },
+      "inputSha256": null,
+      "source": "1.3.1",
+      "dependencyLockSha256": null,
+      "resultScalars": {},
+      "scientificValidation": "observations_available"
+    },
+    {
+      "case": "randomized-measurements-estimate_randomized_purity",
+      "rawEvidence": ".openquantum/compute-scale-evidence/live/randomized-measurements-estimate_randomized_purity.json",
+      "rawEvidenceSha256": "0fee13159aa144d24bf5d1b305b0609b1c64281c09408d07995ea5cf6a5eec79",
+      "checkedAt": "2026-09-14T16:48:22.094Z",
+      "input": {
+        "numQubits": 7,
+        "state": "ghz",
+        "subsystem": {
+          "items": 5,
+          "first": 0
+        },
+        "settings": 8,
+        "shotsPerSetting": 16
+      },
+      "inputSha256": "6aa7bdb5815e04f7064a4a3c8994fee8efbe6ab72509b93882f4477a558393c8",
+      "source": {
+        "name": "RandomMeas.jl",
+        "version": "0.3.1",
+        "revision": "89c492bfb05508e5babe9c8c2c40697995be9e42",
+        "repository": "https://github.com/bvermersch/RandomMeas.jl"
+      },
+      "dependencyLockSha256": "2ae0a257e59647abe3997699a871c5530d9d7866617b6705dfe8a10a1479bd52",
+      "resultScalars": {
+        "purityEstimate": -0.00937500000000005,
+        "shotsPerSetting": 16,
+        "ensemble": "independent local Haar unitaries",
+        "settings": 8,
+        "totalShots": 128,
+        "analyticPurity": 0.5,
+        "absoluteError": 0.509375,
+        "settingStandardError": 0.2986927433178018
+      },
+      "scientificValidation": "not_evaluated"
+    },
+    {
+      "case": "sqd-chemistry-run_sqd_chemistry",
+      "rawEvidence": ".openquantum/compute-scale-evidence/live/sqd-chemistry-run_sqd_chemistry.json",
+      "rawEvidenceSha256": "a40d3bdade0fac7bd3c017c72bd58c9df5588f49731c1666867fde54a5dbc19b",
+      "checkedAt": "2026-09-14T16:48:38.651Z",
+      "input": {
+        "molecule": {
+          "atoms": {
+            "items": 2,
+            "first": {
+              "element": "Na",
+              "positionAngstrom": {
+                "items": 3,
+                "first": 0
+              }
+            }
+          }
+        },
+        "basis": "sto-3g",
+        "activeSpace": {
+          "numOrbitals": 2,
+          "numElectrons": 2
+        },
+        "counts": {
+          "0101": 4097
+        },
+        "iterations": 1,
+        "referenceMode": "required"
+      },
+      "inputSha256": "e411956f782c3777f70639c6c10471921c9694800eb309947e496db98de50a4d",
+      "source": {
+        "name": "qiskit-addon-sqd",
+        "version": "0.13.1",
+        "repository": "https://github.com/Qiskit/qiskit-addon-sqd"
+      },
+      "dependencyLockSha256": "4f14f930fe555173419c46aa23769abbef0a7345dabb549117788297a3493624",
+      "resultScalars": {
+        "energyHartree": -160.30085169028547,
+        "fciEnergyHartree": -160.30290694342608,
+        "hfEnergyHartree": -160.3008516902856,
+        "errorHartree": 0.0020552531406110575,
+        "nuclearEnergyHartree": 3.0636575369052634,
+        "coreEnergyOffsetHartree": -159.50285248320807,
+        "sampleSource": "supplied_counts",
+        "totalShots": 4097,
+        "spatialOrbitals": 2,
+        "frozenCoreOrbitals": 5,
+        "basis": "sto-3g",
+        "fullSpatialOrbitals": 10,
+        "determinantDimension": 4,
+        "maxSubspaceDimensionPerSpin": 2,
+        "bitOrder": "beta1 beta0 alpha1 alpha0",
+        "spinSector": "n_alpha=n_beta (M_s=0); total spin is not constrained",
+        "reference": {
+          "mode": "required",
+          "status": "computed",
+          "method": "FCI of the same active-space Hamiltonian, including frozen-core and nuclear energy",
+          "reason": "Independent reference computed for this input."
+        }
+      },
+      "scientificValidation": "not_evaluated"
+    },
+    {
+      "case": "tenpy-ground-state-solve_tenpy_chain",
+      "rawEvidence": ".openquantum/compute-scale-evidence/live/tenpy-ground-state-solve_tenpy_chain.json",
+      "rawEvidenceSha256": "dfc23cf0664ff761ce4a5de95b32f69557f7d35aefaf1a3dbe53173007243c03",
+      "checkedAt": "2026-09-14T16:48:28.165Z",
+      "input": {
+        "numSites": 257,
+        "jx": 0,
+        "jy": 0,
+        "jz": 0,
+        "hz": 0.8,
+        "maxBondDimension": 2,
+        "maxSweeps": 2,
+        "referenceMode": "skip"
+      },
+      "inputSha256": "6e1af2dc7f8b7fd4953b02a0039f89eccb0314168c6c747a38b4807c2a0e16f8",
+      "source": {
+        "name": "physics-tenpy",
+        "version": "1.1.1",
+        "repository": "https://github.com/tenpy/tenpy"
+      },
+      "dependencyLockSha256": "052eb7d1fc6271d516abcb1929c43da9b8ea47ba03e5118fe52337ca4ecd4d1e",
+      "resultScalars": {
+        "energy": -102.80000000000037,
+        "exactGroundEnergy": null,
+        "energyError": null,
+        "maxBondDimensionUsed": 1,
+        "normError": 0,
+        "sweeps": 3,
+        "hamiltonian": "sum (Jx Sx_i Sx_j + Jy Sy_i Sy_j + Jz Sz_i Sz_j) - sum (hx Sx_i + hz Sz_i); S=Pauli/2; open chain",
+        "reference": {
+          "mode": "skip",
+          "status": "not_run",
+          "method": "Independent dense diagonalization",
+          "reason": "Reference explicitly skipped by the caller."
+        }
+      },
+      "scientificValidation": "not_evaluated"
+    },
+    {
+      "case": "tjm-dynamics-simulate_tjm_dynamics",
+      "rawEvidence": ".openquantum/compute-scale-evidence/live/tjm-dynamics-simulate_tjm_dynamics.json",
+      "rawEvidenceSha256": "de73cecd21707fecdd4a4ec25e6b8cf386a2a6a2135b920ec6230909f25c3b66",
+      "checkedAt": "2026-09-14T16:48:30.325Z",
+      "input": {
+        "numQubits": 8,
+        "coupling": 0,
+        "field": 0,
+        "dampingRate": 0,
+        "duration": 0.02,
+        "steps": 2,
+        "trajectories": 8,
+        "maxBondDimension": 2,
+        "referenceMode": "skip"
+      },
+      "inputSha256": "d198f0a32595ba9616861654403076768aa655273fa19a352681db7f243e20ec",
+      "source": {
+        "name": "mqt.yaqs",
+        "version": "0.6.0",
+        "repository": "https://github.com/munich-quantum-toolkit/yaqs"
+      },
+      "dependencyLockSha256": "12ba63af14c747b4e32e4a1f0851abcd42f5ebe921ae8a6dba61ffa50980f35f",
+      "resultScalars": {
+        "referenceSiteZ": null,
+        "standardErrorStatus": "deterministic",
+        "maxAbsoluteDeviation": null,
+        "effectiveTrajectories": 1,
+        "hamiltonian": "-J sum Z_i Z_(i+1) - g sum X_i; hbar=1",
+        "jumpOperator": "sqrt(gamma) |0><1| at every site",
+        "referenceTraceError": null,
+        "reference": {
+          "mode": "skip",
+          "status": "not_run",
+          "method": "Independent dense Lindblad integration",
+          "reason": "Reference explicitly skipped by the caller."
+        }
+      },
+      "scientificValidation": "not_evaluated"
+    },
+    {
+      "case": "tyxonq-workbench-simulate_tyxonq_circuit",
+      "rawEvidence": ".openquantum/compute-scale-evidence/live/tyxonq-workbench-simulate_tyxonq_circuit.json",
+      "rawEvidenceSha256": "41a53a50c1461fd681aea31704741e90e6f8f2985920598efcb59e366f7e6d92",
+      "checkedAt": "2026-09-14T16:47:35.433Z",
+      "input": {
+        "numQubits": 9,
+        "operations": {
+          "items": 1,
+          "first": {
+            "gate": "x",
+            "qubits": {
+              "items": 1,
+              "first": 8
+            }
+          }
+        },
+        "mode": "exact"
+      },
+      "inputSha256": null,
+      "source": "1.3.0",
+      "dependencyLockSha256": null,
+      "resultScalars": {},
+      "scientificValidation": "not_evaluated"
+    }
+  ],
+  "userExecutionCases": [
+    {
+      "case": "clifft-sampling-user-required-reference",
+      "rawEvidence": ".openquantum/compute-scale-evidence/user-compute/clifft-sampling-user-required-reference.json",
+      "rawEvidenceSha256": "a701be65163bf1e3890f169fc449b8c024906e6b959725b5f866170a67bc6e4b",
+      "checkedAt": "2026-09-14T16:48:54.239Z",
+      "input": {
+        "numQubits": 7,
+        "gates": {
+          "items": 1,
+          "first": {
+            "gate": "X",
+            "targets": {
+              "items": 1,
+              "first": 0
+            }
+          }
+        },
+        "shots": 16,
+        "referenceMode": "required",
+        "execution": {
+          "timeoutMs": 0,
+          "maxOutputBytes": 8388608,
+          "threads": 2
+        },
+        "noiseProbability": 0,
+        "seed": 7,
+        "maxActiveWidth": null
+      },
+      "inputSha256": "d8c189cbad06707122c6498beffce34bd288dcbb8878fcb6c8b469b397cc7304",
+      "source": {
+        "name": "clifft",
+        "version": "0.10.0",
+        "repository": "https://github.com/unitaryfoundation/clifft"
+      },
+      "dependencyLockSha256": "c5639fd8ffc3ac1393cfd4aaf0be293cb2e827a7b7354ea96bf816240eb19fac",
+      "resultScalars": {
+        "outcomesCoverage": "complete",
+        "shots": 16,
+        "totalVariationDistance": 0,
+        "referenceTraceError": 0,
+        "bitOrder": "left-to-right q0,q1,...",
+        "circuit": "X 0\nM 0 1 2 3 4 5 6",
+        "peakActiveWidth": 0,
+        "nonCliffordGates": 0,
+        "reference": {
+          "mode": "required",
+          "status": "computed",
+          "method": "Independent dense density-matrix evolution",
+          "reason": "Independent reference computed for this input."
+        }
+      },
+      "scientificValidation": "not_evaluated"
+    },
+    {
+      "case": "clifft-sampling-user-scale",
+      "rawEvidence": ".openquantum/compute-scale-evidence/user-compute/clifft-sampling-user-scale.json",
+      "rawEvidenceSha256": "df6219a24ca044f4e1a818997084eebaba61db295ac7c6fa795131d47dca6e9d",
+      "checkedAt": "2026-09-14T16:48:54.081Z",
+      "input": {
+        "numQubits": 512,
+        "gates": {
+          "items": 512,
+          "first": {
+            "gate": "H",
+            "targets": {
+              "items": 1,
+              "first": 0
+            }
+          }
+        },
+        "shots": 128,
+        "execution": {
+          "timeoutMs": 0,
+          "maxOutputBytes": 8388608,
+          "threads": 2
+        },
+        "noiseProbability": 0,
+        "seed": 7,
+        "maxActiveWidth": null,
+        "referenceMode": "auto"
+      },
+      "inputSha256": "38cdfa111b0201cc869b8322fbe94b457eb4dbe451af42e60af2b51233856e1b",
+      "source": {
+        "name": "clifft",
+        "version": "0.10.0",
+        "repository": "https://github.com/unitaryfoundation/clifft"
+      },
+      "dependencyLockSha256": "c5639fd8ffc3ac1393cfd4aaf0be293cb2e827a7b7354ea96bf816240eb19fac",
+      "resultScalars": {
+        "outcomesCoverage": "observed_only",
+        "shots": 128,
+        "totalVariationDistance": null,
+        "referenceTraceError": null,
+        "bitOrder": "left-to-right q0,q1,...",
+        "peakActiveWidth": 0,
+        "nonCliffordGates": 0,
+        "reference": {
+          "mode": "auto",
+          "status": "not_run",
+          "method": "Independent dense density-matrix evolution",
+          "reason": "Automatic dense reference is omitted above 6 qubits; required attempts it at the requested size."
+        }
+      },
+      "scientificValidation": "not_evaluated"
+    },
+    {
+      "case": "flow-vqe-user-scale",
+      "rawEvidence": ".openquantum/compute-scale-evidence/user-compute/flow-vqe-user-scale.json",
+      "rawEvidenceSha256": "64666e2788b2c458bf325271f1b2745c2766e1e78bda943e8909312aa6580920",
+      "checkedAt": "2026-09-14T16:48:52.149Z",
+      "input": {
+        "numQubits": 2,
+        "terms": {
+          "items": 1,
+          "first": {
+            "pauli": "ZI",
+            "coefficient": -1
+          }
+        },
+        "layers": 5,
+        "epochs": 201,
+        "batchSize": 4,
+        "execution": {
+          "timeoutMs": 0,
+          "maxOutputBytes": 8388608,
+          "threads": 2
+        },
+        "seed": 7,
+        "referenceMode": "auto"
+      },
+      "inputSha256": "cde8c561b70b4f1a333406047e0fa3ec3dae31935aa6f36703507e818c2d9975",
+      "source": {
+        "name": "Flow-VQE",
+        "revision": "f7642afa330e5108ea5738d42fe80b551363733c",
+        "repository": "https://github.com/olsson-group/Flow-VQE"
+      },
+      "dependencyLockSha256": "55a1bd3730cb09266ebe483354bb32f73b7bdfe6bf51f11aae091b15d7e16f92",
+      "resultScalars": {
+        "bestEnergy": -0.9994926452636719,
+        "recomputedEnergy": -0.9994926394031609,
+        "exactGroundEnergy": -1,
+        "error": 0.0005073605968390904,
+        "randomSearchBestEnergy": -0.9949760277645635,
+        "evaluationsPerMethod": 804,
+        "normError": 0,
+        "ansatz": "zero state; RY on every site, then layers of nearest-neighbor CNOT and RY; leftmost Pauli is q0",
+        "units": "same energy units as input coefficients",
+        "reference": {
+          "mode": "auto",
+          "status": "computed",
+          "method": "Independent dense Pauli diagonalization",
+          "reason": "Independent reference computed for this input."
+        }
+      },
+      "scientificValidation": "not_evaluated"
+    },
+    {
+      "case": "sqd-chemistry-user-scale",
+      "rawEvidence": ".openquantum/compute-scale-evidence/user-compute/sqd-chemistry-user-scale.json",
+      "rawEvidenceSha256": "a76fe7826416021d0ab836c0415483617afbfd14a2041b0993f6ea55e4eeedc1",
+      "checkedAt": "2026-09-14T16:48:53.670Z",
+      "input": {
+        "molecule": {
+          "atoms": {
+            "items": 10,
+            "first": {
+              "element": "H",
+              "positionAngstrom": {
+                "items": 3,
+                "first": 0
+              }
+            }
+          },
+          "charge": 0
+        },
+        "basis": "cc-pvdz",
+        "activeSpace": {
+          "numOrbitals": 34,
+          "numElectrons": 10
+        },
+        "counts": {
+          "00000000000000000000000000000111110000000000000000000000000000011111": 64
+        },
+        "maxSubspaceDimension": 2,
+        "iterations": 1,
+        "execution": {
+          "timeoutMs": 0,
+          "maxOutputBytes": 8388608,
+          "threads": 2
+        },
+        "bondLengthAngstrom": 0.735,
+        "shots": 256,
+        "samplesPerBatch": 16,
+        "seed": 7,
+        "referenceMode": "auto"
+      },
+      "inputSha256": "62e2a4537b31bf05a5e4e0aa5d58c8d6d46dbc21b63cfaf281a1d4bb5d61b3cc",
+      "source": {
+        "name": "qiskit-addon-sqd",
+        "version": "0.13.1",
+        "repository": "https://github.com/Qiskit/qiskit-addon-sqd"
+      },
+      "dependencyLockSha256": "4f14f930fe555173419c46aa23769abbef0a7345dabb549117788297a3493624",
+      "resultScalars": {
+        "energyHartree": -5.376025726006395,
+        "fciEnergyHartree": null,
+        "hfEnergyHartree": -5.376025726006402,
+        "errorHartree": null,
+        "nuclearEnergyHartree": 10.20766040588143,
+        "coreEnergyOffsetHartree": 10.20766040588143,
+        "sampleSource": "supplied_counts",
+        "totalShots": 64,
+        "spatialOrbitals": 34,
+        "frozenCoreOrbitals": 0,
+        "basis": "cc-pvdz",
+        "fullSpatialOrbitals": 50,
+        "determinantDimension": 77426401536,
+        "maxSubspaceDimensionPerSpin": 2,
+        "spinSector": "n_alpha=n_beta (M_s=0); total spin is not constrained",
+        "reference": {
+          "mode": "auto",
+          "status": "not_run",
+          "method": "FCI of the same active-space Hamiltonian, including frozen-core and nuclear energy",
+          "reason": "Automatic FCI is omitted above 12 active orbitals or 10000 determinants; required attempts it at the requested size."
+        }
+      },
+      "scientificValidation": "not_evaluated"
+    },
+    {
+      "case": "tenpy-ground-state-user-scale",
+      "rawEvidence": ".openquantum/compute-scale-evidence/user-compute/tenpy-ground-state-user-scale.json",
+      "rawEvidenceSha256": "9fc6072af0254c0864867b7ac0626d71ad8ba10c609efc81d2bd2cec705cdd0b",
+      "checkedAt": "2026-09-14T16:48:44.037Z",
+      "input": {
+        "numSites": 300,
+        "jx": 0,
+        "jy": 0,
+        "jz": 0,
+        "hz": 0.8,
+        "maxBondDimension": 2,
+        "maxSweeps": 4,
+        "execution": {
+          "timeoutMs": 0,
+          "maxOutputBytes": 8388608,
+          "threads": 2
+        },
+        "hx": 0,
+        "referenceMode": "auto"
+      },
+      "inputSha256": "794aa3af67d8ebbf02ac5a12f891cead3c650d8c4b5f078eb76aa6fe320faa31",
+      "source": {
+        "name": "physics-tenpy",
+        "version": "1.1.1",
+        "repository": "https://github.com/tenpy/tenpy"
+      },
+      "dependencyLockSha256": "052eb7d1fc6271d516abcb1929c43da9b8ea47ba03e5118fe52337ca4ecd4d1e",
+      "resultScalars": {
+        "energy": -120.00000000000061,
+        "exactGroundEnergy": null,
+        "energyError": null,
+        "maxBondDimensionUsed": 1,
+        "normError": 0,
+        "sweeps": 3,
+        "hamiltonian": "sum (Jx Sx_i Sx_j + Jy Sy_i Sy_j + Jz Sz_i Sz_j) - sum (hx Sx_i + hz Sz_i); S=Pauli/2; open chain",
+        "reference": {
+          "mode": "auto",
+          "status": "not_run",
+          "method": "Independent dense diagonalization",
+          "reason": "Automatic dense reference is omitted above 10 sites; required attempts it at the requested size."
+        }
+      },
+      "scientificValidation": "not_evaluated"
+    },
+    {
+      "case": "tjm-dynamics-user-scale",
+      "rawEvidence": ".openquantum/compute-scale-evidence/user-compute/tjm-dynamics-user-scale.json",
+      "rawEvidenceSha256": "b11f21c91e7660172db03b4d9f7bddfef5775cec6a00985e92d92b12f45ee419",
+      "checkedAt": "2026-09-14T16:48:45.636Z",
+      "input": {
+        "numQubits": 2,
+        "coupling": 0,
+        "field": 0.7,
+        "dampingRate": 0,
+        "duration": 3,
+        "steps": 81,
+        "trajectories": 1,
+        "referenceMode": "skip",
+        "execution": {
+          "timeoutMs": 0,
+          "maxOutputBytes": 8388608,
+          "threads": 2
+        },
+        "maxBondDimension": 16,
+        "seed": 7
+      },
+      "inputSha256": "6c9f722cb8377f1c23b33d8ecb56690f205c1c2fc7a09f0a7797e623b1ed4ff5",
+      "source": {
+        "name": "mqt.yaqs",
+        "version": "0.6.0",
+        "repository": "https://github.com/munich-quantum-toolkit/yaqs"
+      },
+      "dependencyLockSha256": "12ba63af14c747b4e32e4a1f0851abcd42f5ebe921ae8a6dba61ffa50980f35f",
+      "resultScalars": {
+        "referenceSiteZ": null,
+        "standardErrorStatus": "deterministic",
+        "maxAbsoluteDeviation": null,
+        "effectiveTrajectories": 1,
+        "hamiltonian": "-J sum Z_i Z_(i+1) - g sum X_i; hbar=1",
+        "jumpOperator": "sqrt(gamma) |0><1| at every site",
+        "referenceTraceError": null,
+        "reference": {
+          "mode": "skip",
+          "status": "not_run",
+          "method": "Independent dense Lindblad integration",
+          "reason": "Reference explicitly skipped by the caller."
+        }
+      },
+      "scientificValidation": "not_evaluated"
+    },
+    {
+      "case": "tjm-dynamics-user-single-trajectory",
+      "rawEvidence": ".openquantum/compute-scale-evidence/user-compute/tjm-dynamics-user-single-trajectory.json",
+      "rawEvidenceSha256": "db889501fa44f4561944acdf123ded39e8132923a0a811ca45aa0af7476cc0cd",
+      "checkedAt": "2026-09-14T16:48:46.846Z",
+      "input": {
+        "numQubits": 2,
+        "steps": 2,
+        "trajectories": 1,
+        "dampingRate": 0.5,
+        "execution": {
+          "timeoutMs": 0,
+          "maxOutputBytes": 8388608,
+          "threads": 2
+        },
+        "coupling": 1,
+        "field": 0.5,
+        "duration": 0.5,
+        "maxBondDimension": 16,
+        "seed": 7,
+        "referenceMode": "auto"
+      },
+      "inputSha256": "99b2fae9df5dca69e37ea1f8322e26233e4f2647baf9fc17c3dff43bdc2439ed",
+      "source": {
+        "name": "mqt.yaqs",
+        "version": "0.6.0",
+        "repository": "https://github.com/munich-quantum-toolkit/yaqs"
+      },
+      "dependencyLockSha256": "12ba63af14c747b4e32e4a1f0851abcd42f5ebe921ae8a6dba61ffa50980f35f",
+      "resultScalars": {
+        "standardErrors": null,
+        "standardErrorStatus": "insufficient_trajectories",
+        "maxAbsoluteDeviation": 0.0003601514456925692,
+        "effectiveTrajectories": 1,
+        "hamiltonian": "-J sum Z_i Z_(i+1) - g sum X_i; hbar=1",
+        "jumpOperator": "sqrt(gamma) |0><1| at every site",
+        "referenceTraceError": 3.3306690738754696e-16,
+        "reference": {
+          "mode": "auto",
+          "status": "computed",
+          "method": "Independent dense Lindblad integration",
+          "reason": "Independent reference computed for this input."
+        }
+      },
+      "scientificValidation": "not_evaluated"
+    }
+  ],
+  "harness": {
+    "verifiedAt": "2026-09-14T16:47:31.303Z",
+    "sessionId": "session-unitary-a4485933-34d2-4256-b152-67ad32821842",
+    "model": "local protocol fixture",
+    "externalModelTested": false,
+    "realHardwareTested": false,
+    "successfulComputations": 4,
+    "expectedInvalidInput": 1,
+    "sessionResultReadback": true,
+    "eventCounts": {
+      "permission/preset": 1,
+      "sandbox/mode": 1,
+      "approval/policy": 1,
+      "agent/inbox/spliced": 2,
+      "turn/start": 1,
+      "step/start": 2,
+      "system/message": 1,
+      "user/message": 4,
+      "request/header": 1,
+      "request/context": 1,
+      "session/title": 2,
+      "session/title-llm-request": 1,
+      "assistant/message": 2,
+      "tool/call": 5,
+      "tool/result": 5,
+      "step/end": 2,
+      "turn/end": 1
+    },
+    "rawEvidence": ".openquantum/unitary-next-evidence/harness-scale-session.json",
+    "rawEvidenceSha256": "36740e202d2ba95a4c5eaf67ab0c1a7be45536aab1e98a2e5827057844f2fc95",
+    "calls": [
+      {
+        "name": "mcp__pyzx_local__optimize_pyzx_circuit",
+        "arguments": "{\"numQubits\":65,\"gates\":[{\"gate\":\"H\",\"targets\":[64]}],\"referenceMode\":\"skip\"}"
+      },
+      {
+        "name": "mcp__graphix_local__simulate_graphix_pattern",
+        "arguments": "{\"numQubits\":11,\"gates\":[{\"gate\":\"H\",\"targets\":[10]}],\"simulate\":false,\"referenceMode\":\"skip\"}"
+      },
+      {
+        "name": "mcp__symmer_local__taper_symmer_hamiltonian",
+        "arguments": {
+          "characters": 250,
+          "sha256": "41d4a35f87de8becf6a83bc266c6ce6977c30cb16a18ecd690b0cd0d76620c97"
+        }
+      },
+      {
+        "name": "mcp__paulie_local__analyze_paulie_algebra",
+        "arguments": {
+          "characters": 211,
+          "sha256": "fc28fd2bd3712c0225efc327a82d4a2310bef0638d0463349f67138ea32956b2"
+        }
+      },
+      {
+        "name": "mcp__pyzx_local__optimize_pyzx_circuit",
+        "arguments": "{\"gates\":[]}"
+      }
+    ]
+  },
+  "independentReview": {
+    "identity": "unitary_science_review, separate domain reviewer with read-only product/Git access",
+    "finalReport": {
+      "schemaVersion": "1.0",
+      "reviewer": "independent domain reviewer /root/unitary_science_review",
+      "reviewedAt": "2026-09-14T17:09:10.109519+00:00",
+      "worktree": "/Users/xizhao/my_projects/openQuantum/.openquantum/worktrees/unitary-compute-tools",
+      "branch": "c/scalable-unitary-tools",
+      "initialHead": "3e5997026edb329274fbb652925cb2ae392a8b32",
+      "observedHead": "cc4fa9e2a08828dc7696cf85a26e763d19c22ccc",
+      "conclusion": "No unresolved blocking finding in the reviewed primary/reference separation, numeric representation changes, resource observations or final runtime policy.",
+      "acceptanceBoundary": "Independent engineering/domain review evidence only; not central Scientific Acceptance and not a performance guarantee.",
+      "independentEvidence": {
+        "fourCapabilities": {
+          "totalInputs": 28,
+          "passed": 28,
+          "PyZX": 4,
+          "Graphix": 5,
+          "Symmer": 11,
+          "PauLie": 8,
+          "sampledMbqcBranches": 14,
+          "comparisonFile": "unitary-comparison.json"
+        },
+        "pathGuards": {
+          "capabilities": 4,
+          "skipDoesNotCallReference": true,
+          "requiredFailurePropagates": true,
+          "paulieRequiredClosureSkipDoesNotEnumerateSdkClosure": true,
+          "exactIntegerDecimalDigitsRoundtrip": 4933
+        },
+        "contractChecks": {
+          "outputs": 28,
+          "negativeCases": 2,
+          "file": "unitary-contract-checks.json"
+        },
+        "targetedChecks": {
+          "groups": 8,
+          "file": "legacy-targeted-checks.json"
+        },
+        "flowParity": {
+          "independentComparisons": 1236,
+          "file": "flow-parity-boundaries.json"
+        }
+      },
+      "resolvedFindings": [
+        {
+          "id": "symmer-gf2-width",
+          "resolution": "BigInt GF(2) independence; independent 17/65/129-bit cases and dependent-generator rejection."
+        },
+        {
+          "id": "symmer-small-coefficients",
+          "resolution": "Project unit Pauli operators before restoring coefficients; independent relative-spectrum checks and 1e-200 retained coefficient."
+        },
+        {
+          "id": "symmer-zero-output",
+          "resolution": "All-qubit tapering represented by reducedQubits=0 and empty-word scalar; signed Y and XX/ZZ sectors checked."
+        },
+        {
+          "id": "paulie-exact-dimension",
+          "resolution": "Python arbitrary-precision dimension transported as decimal string above JavaScript safe range; 4^27-1 verified exactly."
+        },
+        {
+          "id": "paulie-hidden-closure",
+          "resolution": "closureMode=skip no longer internally enumerates SDK closure; dense reference remains independent and residual target is labeled."
+        },
+        {
+          "id": "qgs-profile-version-drift",
+          "resolution": "New Profile 1.1.0 uses evaluation budget fraction; original 1.0.0 file exactly restored; manifest digest and current selectors updated."
+        },
+        {
+          "id": "qgs-budget-derived-ceilings",
+          "resolution": "Requested coarse grid, refinement counts and Pauli evaluation counts no longer inherit 65/191/8192 caps. Independent 257-grid run used 301/512 evaluations; real 513-grid run used 512/512, resource pass but convergence fail."
+        },
+        {
+          "id": "pyzx-skill-optional-reference-wording",
+          "resolution": "SKILL frontmatter explicitly calls independent verification optional; equivalence failure applies only when the reference was actually computed."
+        }
+      ],
+      "nonBlockingNotes": [],
+      "structuralReview": [
+        "QPanda compiler worker streams BigInt assignment masks, uses finite coefficient arithmetic and optional exhaustive replay. 13-variable required and 65-variable skip were independently executed. Python QAOA skip returns classical=null; traversal remains the selected primary algorithm, so reference not_run does not mean traversal was skipped.",
+        "Toqito dense supplied-state model retains shape, subsystem and finite-number checks; JavaScript Jacobi now rejects nonconvergence instead of accepting unfinished eigenvalues. This final pass was structural, not an additional independent full-density-matrix numerical suite.",
+        "QCEC retains unitary OpenQASM scope, safe register sizes, and upstream timeout=0. No claim that numerical simulation proves every equivalence outcome.",
+        "TJM reports deterministic zero sampling error for noise-free evolution, insufficient_trajectories/null for noisy single-trajectory sampling, and ddof=1 SEM for multiple trajectories. Time-step and tensor truncation errors remain distinct.",
+        "SQD uses installed PySCF named bases and atoms with closed-shell RHF, fixed alpha/beta particle counts, contiguous active orbitals and the same frozen-core offset for SQD and FCI. The active-space restriction norb<64 is the upstream signed-int64 CI representation boundary, not an arbitrary adapter compute budget.",
+        "Flow parity now folds all 64 bits. NumPy index/byte representation is checked before impossible allocation; this does not promise practical dense-state allocation.",
+        "FatQat fixed transmon model, QMClaw independent single-qubit synthetic models, Dynamiqs single-qubit dynamics and QGS two-qubit fixed-weight-one model remain physical/interface scope. Width/count/iteration removals do not expand them into unsupported physics.",
+        "Legacy and other paper adapters received scope/representation/reference branch review rather than a duplicate of the implementer's 18 live cases."
+      ],
+      "runtimeBoundary": {
+        "workerDefaultTimeoutMs": 0,
+        "workerDefaultMaxOutputBytes": 0,
+        "requestOverrides": {
+          "omitted": "inherits deployment",
+          "zero": "disables worker limit"
+        },
+        "hardware": "user kernel environment preserved; explicit threads overrides supported kernel variables",
+        "localMcpConnections": 21,
+        "presetCallTimeoutMs": 2147483647,
+        "presetCallTimeoutDays": 24.85513480324074,
+        "installedSdkEvidence": "@deepseek-ai/dsh-mcp-client passes config timeout to @modelcontextprotocol/sdk; SDK _setupTimeout uses a single setTimeout",
+        "notClaimed": "No end-to-end unlimited execution; clients, OS, backends and available resources can still stop computation."
+      },
+      "sourceStability": {
+        "fourMathBridgesContractsLocksUnchangedSinceNumericReview": true,
+        "changedSinceUnitaryNumericReview": [
+          ".agents/skills/pyzx-optimization/SKILL.md",
+          ".agents/skills/graphix-mbqc/SKILL.md",
+          ".agents/skills/symmer-tapering/SKILL.md",
+          ".agents/skills/paulie-algebra/SKILL.md",
+          "src/lib/bounded-science-mcp.mjs"
+        ],
+        "snapshotFile": "final-source-hashes.json",
+        "snapshotFiles": 171,
+        "qgsV1OriginalPreserved": true,
+        "qgsV11ManifestDigestVerified": true
+      },
+      "limits": [
+        "No dependency installation, external model, cloud or hardware calls.",
+        "No product files or Git state modified by reviewer; evidence files only.",
+        "Large cases were selected for analytic or sparse/symbolic tractability; no exhaustive validation of all widths, Hamiltonians, MBQC branches, algebra classes or upstream algorithms.",
+        "Main-agent live test and Harness results were not used as independent numerical oracles.",
+        "Final legacy review is strongest for QPanda compiler, QGS resource semantics, Flow parity and shared execution; other legacy functionality remains a structural review in this pass."
+      ]
+    },
+    "readableReport": "docs/integrations/evidence/local-compute-review-2026-09-15.md",
+    "readableReportSha256": "65f8c0e8008ed87594456ca69a3dd32a730ae1c0bbbd397f01eabf47a049a83e",
+    "reviewedSourceFiles": 171,
+    "reviewedSourceHashesSha256": "14ded7344c94b1fdd53036f1ad3a7a76c251787d0760f4d9be5bfdb9158b9679",
+    "numericalComparison": {
+      "cases": 28,
+      "passed": 28,
+      "failures": [],
+      "results": [
+        {
+          "name": "zx_required7",
+          "passed": true,
+          "referenceComputed": true,
+          "metrics": {
+            "inputQasmError": 0.0,
+            "optimizedQasmError": 3.3306690738754696e-16
+          }
+        },
+        {
+          "name": "zx_auto7",
+          "passed": true,
+          "referenceComputed": false,
+          "metrics": {
+            "inputQasmError": 0.0,
+            "optimizedQasmError": 3.3306690738754696e-16
+          }
+        },
+        {
+          "name": "zx_skip3",
+          "passed": true,
+          "referenceComputed": false,
+          "metrics": {
+            "inputQasmError": 0.0,
+            "optimizedQasmError": 1.2412670766236366e-16
+          }
+        },
+        {
+          "name": "zx_wide65",
+          "passed": true,
+          "referenceComputed": false,
+          "metrics": {
+            "analyticalHHcancellation": "all 65 HH pairs cancel; emitted circuit is X(q64)"
+          }
+        },
+        {
+          "name": "gx_required11",
+          "passed": true,
+          "referenceComputed": true,
+          "metrics": {
+            "resourceNodes": 26,
+            "peakLiveNodes": 12,
+            "sampledBranches": 3,
+            "maxVectorError": 2.3714374201337736e-16,
+            "minimumFidelity": 0.9999999999999993
+          }
+        },
+        {
+          "name": "gx_auto11",
+          "passed": true,
+          "referenceComputed": false,
+          "metrics": {
+            "resourceNodes": 26,
+            "peakLiveNodes": 12,
+            "sampledBranches": 2,
+            "maxVectorError": 2.3714374201337736e-16,
+            "minimumFidelity": 0.9999999999999993
+          }
+        },
+        {
+          "name": "gx_pattern129",
+          "passed": true,
+          "referenceComputed": false,
+          "metrics": {
+            "resourceNodes": 136,
+            "peakLiveNodes": 130
+          }
+        },
+        {
+          "name": "gx_skip4",
+          "passed": true,
+          "referenceComputed": false,
+          "metrics": {
+            "resourceNodes": 31,
+            "peakLiveNodes": 5,
+            "sampledBranches": 9,
+            "maxVectorError": 3.925231146709438e-16,
+            "minimumFidelity": 0.9999999999999998
+          }
+        },
+        {
+          "name": "gx_pattern_skip",
+          "passed": true,
+          "referenceComputed": false,
+          "metrics": {
+            "resourceNodes": 4,
+            "peakLiveNodes": 3
+          }
+        },
+        {
+          "name": "sy_tiny",
+          "passed": true,
+          "referenceComputed": true,
+          "metrics": {
+            "spectrumError": 0.0,
+            "relativeSpectrumError": 0.0,
+            "reducedQubits": 1,
+            "sectorDimension": "2"
+          }
+        },
+        {
+          "name": "sy_tiny_rotated",
+          "passed": true,
+          "referenceComputed": true,
+          "metrics": {
+            "spectrumError": 3.009265538105056e-36,
+            "relativeSpectrumError": 3.0093257246195484e-16,
+            "reducedQubits": 1,
+            "sectorDimension": "2"
+          }
+        },
+        {
+          "name": "sy_tiny_skip",
+          "passed": true,
+          "referenceComputed": false,
+          "metrics": {
+            "spectrumError": 0.0,
+            "relativeSpectrumError": 0.0,
+            "reducedQubits": 1,
+            "sectorDimension": "2"
+          }
+        },
+        {
+          "name": "sy_gf2_17",
+          "passed": true,
+          "referenceComputed": false,
+          "metrics": {
+            "reducedQubits": 15,
+            "sectorDimension": "32768"
+          }
+        },
+        {
+          "name": "sy_wide129",
+          "passed": true,
+          "referenceComputed": false,
+          "metrics": {
+            "reducedQubits": 128,
+            "sectorDimension": "340282366920938463463374607431768211456"
+          }
+        },
+        {
+          "name": "sy_required7",
+          "passed": true,
+          "referenceComputed": true,
+          "metrics": {
+            "spectrumError": 0.0,
+            "relativeSpectrumError": 0.0,
+            "reducedQubits": 6,
+            "sectorDimension": "64"
+          }
+        },
+        {
+          "name": "sy_auto7",
+          "passed": true,
+          "referenceComputed": false,
+          "metrics": {
+            "spectrumError": 0.0,
+            "relativeSpectrumError": 0.0,
+            "reducedQubits": 6,
+            "sectorDimension": "64"
+          }
+        },
+        {
+          "name": "sy_scalar1",
+          "passed": true,
+          "referenceComputed": true,
+          "metrics": {
+            "spectrumError": 4.440892098500626e-16,
+            "relativeSpectrumError": 1.3664283380001927e-16,
+            "reducedQubits": 0,
+            "sectorDimension": "1"
+          }
+        },
+        {
+          "name": "sy_scalar_bell1",
+          "passed": true,
+          "referenceComputed": true,
+          "metrics": {
+            "spectrumError": 4.440892098500626e-16,
+            "relativeSpectrumError": 1.4802973661668753e-16,
+            "reducedQubits": 0,
+            "sectorDimension": "1"
+          }
+        },
+        {
+          "name": "sy_scalar_bell-1",
+          "passed": true,
+          "referenceComputed": true,
+          "metrics": {
+            "spectrumError": 2.7755575615628914e-17,
+            "relativeSpectrumError": 1.3877787807814462e-16,
+            "reducedQubits": 0,
+            "sectorDimension": "1"
+          }
+        },
+        {
+          "name": "sy_zero_scalar",
+          "passed": true,
+          "referenceComputed": false,
+          "metrics": {
+            "spectrumError": 0.0,
+            "relativeSpectrumError": 0.0,
+            "reducedQubits": 0,
+            "sectorDimension": "1"
+          }
+        },
+        {
+          "name": "pa_required5",
+          "passed": true,
+          "referenceComputed": true,
+          "metrics": {
+            "dimension": "4",
+            "closureStatus": "not_run"
+          }
+        },
+        {
+          "name": "pa_auto5",
+          "passed": true,
+          "referenceComputed": false,
+          "metrics": {
+            "dimension": "4",
+            "closureStatus": "computed"
+          }
+        },
+        {
+          "name": "pa_skip3",
+          "passed": true,
+          "referenceComputed": false,
+          "metrics": {
+            "dimension": "4",
+            "closureStatus": "not_run"
+          }
+        },
+        {
+          "name": "pa_full5",
+          "passed": true,
+          "referenceComputed": false,
+          "metrics": {
+            "dimension": "3",
+            "closureStatus": "computed"
+          }
+        },
+        {
+          "name": "pa_auto65",
+          "passed": true,
+          "referenceComputed": false,
+          "metrics": {
+            "dimension": "3",
+            "closureStatus": "computed"
+          }
+        },
+        {
+          "name": "pa_su27_width27",
+          "passed": true,
+          "referenceComputed": false,
+          "metrics": {
+            "dimension": "18014398509481983",
+            "closureStatus": "not_run"
+          }
+        },
+        {
+          "name": "pa_su27_width65",
+          "passed": true,
+          "referenceComputed": false,
+          "metrics": {
+            "dimension": "18014398509481983",
+            "closureStatus": "not_run"
+          }
+        },
+        {
+          "name": "pa_abelian80",
+          "passed": true,
+          "referenceComputed": false,
+          "metrics": {
+            "dimension": "80",
+            "closureStatus": "computed"
+          }
+        }
+      ]
+    },
+    "contractChecks": {
+      "cases": 28,
+      "failures": [],
+      "negatives": [
+        {
+          "name": "dependent-65-bit-symmetries",
+          "rejected": true,
+          "error": "Symmetry generators must be independent over GF(2)"
+        },
+        {
+          "name": "required-reference-without-simulation",
+          "rejected": true,
+          "error": "An output-state reference requires simulate=true"
+        }
+      ]
+    },
+    "additionalChecks": [
+      {
+        "id": "qpanda-required13-equality",
+        "status": "pass",
+        "assignmentCount": 8192,
+        "independentExpectedMinimum": 3,
+        "independentFeasibleCount": 78
+      },
+      {
+        "id": "qpanda-skip65-symbolic-only",
+        "status": "pass",
+        "variables": 65,
+        "referenceStatus": "not_run"
+      },
+      {
+        "id": "execution-inheritance-zero-and-threads",
+        "status": "pass"
+      },
+      {
+        "id": "execution-zero-no-default-output-budget",
+        "status": "pass",
+        "payloadCharacters": 2200000
+      },
+      {
+        "id": "execution-timeout-output-and-cancel-errors",
+        "status": "pass"
+      },
+      {
+        "id": "harness-client-real-time-limit",
+        "status": "pass",
+        "connections": 21,
+        "timeoutMs": 2147483647,
+        "days": 24.85513480324074,
+        "scope": "worker deadline disabled is not end-to-end unlimited execution; installed MCP SDK uses one Node timer"
+      },
+      {
+        "id": "qgs-user-budget-and-isolated-boundary-probes",
+        "status": "pass",
+        "profileVersion": "1.1.0",
+        "energy": -1.044030650891055,
+        "independentSectorEnergy": -1.044030650891055,
+        "realObservation": {
+          "id": "resources.within-budget",
+          "status": "pass",
+          "observed": {
+            "resourceCountsMatch": true,
+            "expectationEvaluations": 301,
+            "requestedMaxEvaluations": 512,
+            "budgetFraction": 0.587890625
+          },
+          "evidenceRefs": [
+            {
+              "kind": "artifact",
+              "id": "inline-resource-estimate"
+            },
+            {
+              "kind": "artifact",
+              "id": "inline-convergence-trace"
+            },
+            {
+              "kind": "artifact",
+              "id": "inline-ground-state-result"
+            }
+          ]
+        },
+        "boundaryEqual": {
+          "id": "resources.within-budget",
+          "status": "pass",
+          "observed": {
+            "resourceCountsMatch": true,
+            "expectationEvaluations": 512,
+            "requestedMaxEvaluations": 512,
+            "budgetFraction": 1
+          },
+          "evidenceRefs": [
+            {
+              "kind": "artifact",
+              "id": "inline-resource-estimate"
+            },
+            {
+              "kind": "artifact",
+              "id": "inline-convergence-trace"
+            },
+            {
+              "kind": "artifact",
+              "id": "inline-ground-state-result"
+            }
+          ]
+        },
+        "boundaryOver": {
+          "id": "resources.within-budget",
+          "status": "fail",
+          "observed": {
+            "resourceCountsMatch": true,
+            "expectationEvaluations": 513,
+            "requestedMaxEvaluations": 512,
+            "budgetFraction": 1.001953125
+          },
+          "evidenceRefs": [
+            {
+              "kind": "artifact",
+              "id": "inline-resource-estimate"
+            },
+            {
+              "kind": "artifact",
+              "id": "inline-convergence-trace"
+            },
+            {
+              "kind": "artifact",
+              "id": "inline-ground-state-result"
+            }
+          ],
+          "nextAction": "Regenerate the result package and rerun validator check resources.within-budget."
+        },
+        "note": "Boundary probes alter mutually consistent resource counts only; they are not valid optimizer traces and do not imply all observations pass."
+      },
+      {
+        "id": "qgs-real-exhausted-budget",
+        "status": "pass",
+        "coarsePoints": 513,
+        "maxEvaluations": 512,
+        "resourceObservation": {
+          "id": "resources.within-budget",
+          "status": "pass",
+          "observed": {
+            "resourceCountsMatch": true,
+            "expectationEvaluations": 512,
+            "requestedMaxEvaluations": 512,
+            "budgetFraction": 1
+          },
+          "evidenceRefs": [
+            {
+              "kind": "artifact",
+              "id": "inline-resource-estimate"
+            },
+            {
+              "kind": "artifact",
+              "id": "inline-convergence-trace"
+            },
+            {
+              "kind": "artifact",
+              "id": "inline-ground-state-result"
+            }
+          ]
+        },
+        "optimizerConvergence": "fail as required; resource pass does not imply scientific acceptance"
+      }
+    ],
+    "additionalChecksSha256": "f437e4e81ebe287a4cec07c5b8a6635f2a2995bec87d46b888b826c0527d7a34",
+    "flowParity": {
+      "checks": [
+        {
+          "mask": "0",
+          "checkedIndices": 206,
+          "status": "pass"
+        },
+        {
+          "mask": "2147483648",
+          "checkedIndices": 206,
+          "status": "pass"
+        },
+        {
+          "mask": "4294967296",
+          "checkedIndices": 206,
+          "status": "pass"
+        },
+        {
+          "mask": "9223372036854775808",
+          "checkedIndices": 206,
+          "status": "pass"
+        },
+        {
+          "mask": "18446744073709551615",
+          "checkedIndices": 206,
+          "status": "pass"
+        },
+        {
+          "mask": "12370207230441968690",
+          "checkedIndices": 206,
+          "status": "pass"
+        }
+      ],
+      "arrayRepresentationGuard": "Statevector exceeds the platform NumPy index/array-byte representation"
+    },
+    "flowParitySha256": "3448728b35e6f934d843b7dd2365cf9743cb80505fc0e0412c94277178f56946",
+    "pathGuards": {
+      "unitary-path-guard-graphix-mbqc": {
+        "skipReferenceFunctionsNeverCalled": true,
+        "requiredReferenceFailurePropagates": true
+      },
+      "unitary-path-guard-paulie-algebra": {
+        "skipReferenceFunctionsNeverCalled": true,
+        "requiredReferenceFailurePropagates": true,
+        "requiredWithClosureSkipDoesNotEnumerateSdkClosure": true,
+        "arbitraryPrecisionIntegerRoundtripDecimalDigits": 4933
+      },
+      "unitary-path-guard-pyzx-optimization": {
+        "skipReferenceFunctionsNeverCalled": true,
+        "requiredReferenceFailurePropagates": true
+      },
+      "unitary-path-guard-symmer-tapering": {
+        "skipReferenceFunctionsNeverCalled": true,
+        "requiredReferenceFailurePropagates": true
+      }
+    }
+  },
+  "sourceSha256": {
+    ".agents/skill-contracts/schemas/v1.1/capability-manifest.schema.json": "b9c3965eb0bc33679837b448470ec2b25ca9c24d8111587747665cd7ccf9b072",
+    ".agents/skills/clifft-sampling/mcp/bridge.py": "3967b39c37336ce652db6c6b0215fde43d81bf13d2349f6fc86748ceedf25426",
+    ".agents/skills/clifft-sampling/mcp/contracts.mjs": "278abd86c0148d477e775d94d101f416c5eab96eadf1c380ec97c101461d4463",
+    ".agents/skills/deltakit-qec/mcp/contracts.mjs": "01d25aae2cfdf2766b2c05fcf9cca5b20bcc2f9d4feff4e67aa08d8852f0e408",
+    ".agents/skills/dynamiqs-dynamics/mcp/bridge.py": "c178d395fc05d548c949b0b7fa546860261eeeb86ade736d2b6fcb38f1862371",
+    ".agents/skills/dynamiqs-dynamics/mcp/contracts.mjs": "ecea1f2fbdb3bfad05c1997c1122ce4a261ae86df167d8f476f4551708839801",
+    ".agents/skills/fatqat-workbench/mcp/bridge.py": "dbfc2df39f8f290275b32bb9387b5468f35790f0ce067d281f03650d7842ff55",
+    ".agents/skills/fatqat-workbench/mcp/contracts.mjs": "5eb79534600b879483fdc3b70be2686efdf714a04f86a46edb2f0541983ab5d1",
+    ".agents/skills/fatqat-workbench/mcp/server.mjs": "30311e4cc6050e0e6939d4197c7422ea82b5748cc156e56e46daee045005d8dc",
+    ".agents/skills/fatqat-workbench/test/mcp.test.mjs": "6a82251a90291e48569b987d401ab18642b31504f4a3ecfe92791595e85595a6",
+    ".agents/skills/flow-vqe/core/statevector.py": "b7d8d7a0f9c0371f0fe4cebb1954515fc8909fc3e4c03b2e9f0a43cf0f869411",
+    ".agents/skills/flow-vqe/mcp/bridge.py": "66713a642010b017ab2dd878fe6f98c2b99f45c06bbd831ba9df2139f38c4ec9",
+    ".agents/skills/flow-vqe/mcp/contracts.mjs": "0a2de864719dd2d3d291ea20e11a0a1efded74838b036e0be29a41732666013b",
+    ".agents/skills/graphix-mbqc/mcp/bridge.py": "ee290bf68b7073aefdfe31b0bb9413b680162a67570b24f8b4a8e9eb5edc3486",
+    ".agents/skills/graphix-mbqc/mcp/contracts.mjs": "a9b38115e4dc6d15318f6b3e266a0573225ad27f92fe2e43a439e1586ee41a32",
+    ".agents/skills/ldpc-decoding/mcp/contracts.mjs": "0736119a409acc0023e790f8db6b5954d379e95d00338321495f2f949f1d7a6f",
+    ".agents/skills/mitiq-error-mitigation/mcp/contracts.mjs": "f7bb6906302af92d33362ae489816521af236af2dba4cae81787d451c5e4f092",
+    ".agents/skills/oqupy-dynamics/mcp/contracts.mjs": "450fe023baf29840e15cada7778988431586e3023cee31d88345bb53089ff443",
+    ".agents/skills/paulie-algebra/mcp/bridge.py": "ec191be9944d41e80eed7242e5a6b85bdb4a0d66c590f58ec9edda559979088f",
+    ".agents/skills/paulie-algebra/mcp/contracts.mjs": "026cd9c126572978918bb84279ec005ccf8000685e06e69913008359e25b8e49",
+    ".agents/skills/pyzx-optimization/mcp/bridge.py": "6d4214c024d220cd1a35c00e71fdbb747858de43c2fe11c0419eca91fd70e566",
+    ".agents/skills/pyzx-optimization/mcp/contracts.mjs": "b9de8d136e4e48149ecfe12431c88049d7b64cb9292b49d05dfd5e275fdfa68e",
+    ".agents/skills/qec-memory-experiment/mcp/bridge.py": "18d96bf9d25c11bf5ac70dc9e8184c7aa5628d4f6215bd89a60d857ddebde4ce",
+    ".agents/skills/qec-memory-experiment/mcp/server.mjs": "96a3c88d3fb1398550c0bfdf69df5a295924eeb9ba4e5da2a59c7331fc0f615c",
+    ".agents/skills/qec-memory-experiment/test/mcp.test.mjs": "60057682cb645d198c12cb55cc404ccd79b712e469f8dbfb4dfb1f2192ca57fe",
+    ".agents/skills/qmclaw-workbench/core/catalog.mjs": "9610410d1b83faca00a64583d2efcd56e746847ee0e3616925ddfd9785146ece",
+    ".agents/skills/qmclaw-workbench/core/experiments.mjs": "eb816819c53e1788820bfbc9bdf2ca5d49be26812ca4b2448fb2dd5cc5fe3d7f",
+    ".agents/skills/qmclaw-workbench/core/schemas.mjs": "40932bdb89312198558cd1234f0fe27f51295153549b27beab857a5947dc851e",
+    ".agents/skills/qmclaw-workbench/test/tool-provider.test.mjs": "76ee71b4cc6e8798338f779e55ad741621d9ae8a7ecf02f58aae427afa0b898a",
+    ".agents/skills/qpanda-qubo/mcp/bridge.py": "901750b55e69ad34452efab2ec0c34758274a05aa72a976707481d89ac42d453",
+    ".agents/skills/qpanda-qubo/mcp/server.mjs": "e7aac0e968d3f7c892c91130ea1b518f05f0cbda6c21b30abdef214a3200862d",
+    ".agents/skills/qpanda-qubo/modeling/binary-linear-model.mjs": "df5a5fc2669ff8e7c51abc475421eb3c6c6ca4341a6ffef31b9d51e8a7b1a4f6",
+    ".agents/skills/qpanda-qubo/modeling/compile-worker.mjs": "cbe362d343934eca30b5898bb4d2d3dd3825124197148bcc61d90be7a9a7fc0e",
+    ".agents/skills/qpanda-qubo/test/mcp.test.mjs": "53de00c378bd595a90b13af226c8e7b0ce7a211c765e325fdcf819f78284cee9",
+    ".agents/skills/quantum-circuit-verification/mcp/bridge.py": "ef5a57f20557c88251de814a5d08571a7b80f473fc4694dc5aa657b94daa1442",
+    ".agents/skills/quantum-circuit-verification/mcp/server.mjs": "534d798a0dfb21690adaf510ae0b8790531cc7122fcf4e72225d8f070b175c23",
+    ".agents/skills/quantum-ground-state/acceptance-profiles/supplied-pauli-statevector-v1.1.json": "df8340acd7fe9ed7a8f91e3fabc506817c2264f2db7521a654db50303d987977",
+    ".agents/skills/quantum-ground-state/artifacts/convergence-trace.schema.json": "f781c51a791b2aa18b5c19c7c520787277d01ded8f3aaa225bdee9088016a575",
+    ".agents/skills/quantum-ground-state/artifacts/ground-state-result.schema.json": "4d582bfc26fefa14b5525fcfe304eae5776dc3631bd8952da5ffd4f2524c1e3a",
+    ".agents/skills/quantum-ground-state/artifacts/problem-spec.schema.json": "30de40d6606fb140fe4097cd614c9aff2e526800d5c972c579371be757931f2d",
+    ".agents/skills/quantum-ground-state/artifacts/resource-estimate.schema.json": "35cb3ceb62bd80690ec0264fb4aa863f038b1a210a94d86c27b8f963a7a5a256",
+    ".agents/skills/quantum-ground-state/capability.yaml": "1c48e4819b48f89b1594d1ab4ec15e078dea8e94f204613dd91580a2f74bd7b3",
+    ".agents/skills/quantum-ground-state/core/contracts.mjs": "b6ca9d7425c1cc2b7e130f09afc0c8b8984d0f0b60568f4821a2926b5058c32f",
+    ".agents/skills/quantum-ground-state/evals/fixtures/requests/diagonal.json": "40a2837f21d67af8a999424265eb2e49a13d382bdd1b9d9cbdd6996a4c2d7d8f",
+    ".agents/skills/quantum-ground-state/evals/fixtures/requests/protocol-fixture.json": "8d2e117fb26068a95f51344cef7ced395e22a10d8576325f26d37a639fce1627",
+    ".agents/skills/quantum-ground-state/evals/fixtures/requests/xx-coupled.json": "1f7c16ce3970ab6fa751e73840f7ce8d10ad394ccd485c0db9e88aea0150c035",
+    ".agents/skills/quantum-ground-state/evals/run-evals.mjs": "bb37fdf49387a8d0ce19c5bfcef943223a6e10c6ec73125f7bb1212fed62663e",
+    ".agents/skills/quantum-ground-state/inputs/request.schema.json": "1d4e61ecc116d18c4ef633ba4c63ef01955e418e4b136b659561728e7c30540c",
+    ".agents/skills/quantum-ground-state/scripts/lib/canonicalize.mjs": "412e6b6222016641d6d9154673c98e792314ab40a1a40091b6cfeedc7bc51d0d",
+    ".agents/skills/quantum-ground-state/test/solver.test.mjs": "a3e88b5034f18364f006dc8c8312647c67b1ace6f66ea0d17892d99b40953cf9",
+    ".agents/skills/quantum-ground-state/test/validator.test.mjs": "0bbe1724c18c53ec59ba5ec9a0055c96e79fd9b00c6b0dbeaf4cc69aa2235478",
+    ".agents/skills/quantum-ground-state/validators/lib/independent-science.mjs": "9430435962e9b2ee3d25867ce9868f423f8d74204f7c335756e6c8593f4db1a7",
+    ".agents/skills/quantum-ground-state/validators/result-validation-bundle.schema.json": "92a6a70b9237b21ce4c6c9a73a742203129cae9c9ed5d28865010eff1f7ed54c",
+    ".agents/skills/quantum-ground-state/validators/validate-result.mjs": "dfedba9613b3898fe8d091b3a77bf3ee33fd7bd0d6b5c935d5863ba842ac42b6",
+    ".agents/skills/quantum-information-audit/artifacts/state-analysis.schema.json": "ff2a8f67f1199d295d52290524535876a26ed7a8569f9374d4ee2b5ce8ccb529",
+    ".agents/skills/quantum-information-audit/capability.yaml": "aee66310abab62e47c1e35727397d3f3e274f6836b1db82d45dfdda4280c5279",
+    ".agents/skills/quantum-information-audit/inputs/request.schema.json": "f33d1d76d7a79a46c50c1ca6e3aec61cdf5d7b2a5e573fe297a59d38ad40f104",
+    ".agents/skills/quantum-information-audit/mcp/bridge.py": "fb5310a424cf2624dce1cec6cf54eb841529952db8a73feea0fdcd4c50f56a27",
+    ".agents/skills/quantum-information-audit/mcp/server.mjs": "5b52eb737f1cde43eebda51d9288dcfe8eaf2e5645d3334a3c69fc77d56f1ab4",
+    ".agents/skills/quantum-information-audit/validators/state-math.mjs": "d88a28071fabaab75f54d79d3c69ae6dacf300a4f4252345c70b62abf2dbd446",
+    ".agents/skills/randomized-measurements/mcp/contracts.mjs": "4c72fbcdf74da6614adde82ac4e992c2bb003032dbe8e8d0fa45a773302dd185",
+    ".agents/skills/sqd-chemistry/mcp/bridge.py": "7040899e90c9d7524227b688f4eaf63d1d47bf00d683614da80bde81e6aac220",
+    ".agents/skills/sqd-chemistry/mcp/contracts.mjs": "4c1c0fe9986863cc93adaa1b269f9af494abc472bcaff7c59b885a4e49fb6d03",
+    ".agents/skills/symmer-tapering/mcp/bridge.py": "14387a79a33b327435bb28a6ec19ea79e701502414c39248650edb6115a89178",
+    ".agents/skills/symmer-tapering/mcp/contracts.mjs": "48055ed213a9dc0a853919058ecf653c85bb3d754c7f4308c162237ab0283fa0",
+    ".agents/skills/tenpy-ground-state/mcp/bridge.py": "c441af1e46c8ce5b0cf8d08932d92f404d280d5ee5d0439d7fa49f27e5e56155",
+    ".agents/skills/tenpy-ground-state/mcp/contracts.mjs": "ba02c037baabbb3dcee7c149372cad484e2902d45828152dea415fa4e756cdac",
+    ".agents/skills/tjm-dynamics/mcp/bridge.py": "94a0a4b2fb18b466772232f1faa314fbed3d1552f9746aebefdb8c41510ee0bc",
+    ".agents/skills/tjm-dynamics/mcp/contracts.mjs": "df1ffb9abd54a6967b53bc1eebeb08f63897b3368b815b10c7dac074d7c3588c",
+    ".agents/skills/tyxonq-workbench/mcp/bridge.py": "d7b8511018ac4c7152e21239af5a1b92e44e980914fc353a947a9b5955edade1",
+    ".agents/skills/tyxonq-workbench/mcp/server.mjs": "d547b3fe8ad87172c2bc4e85bf507f37d7cc9151da5ff6c2b2e52033c92ae250",
+    "runtime/openquantum/agent-presets/openquantum/agent.cordis.yml": "06ed831c0adb5511ce46835fff79bcef9dadecf806948fe5d98492b6f294ef40",
+    "runtime/openquantum/web-capabilities/client.js": "d785bb716156b0142c0058cc58f80e335a270f4eccd4a174bf7383b5a0bcfe2e",
+    "src/lib/bounded-science-mcp.mjs": "31611b84e48fc8249e932338c8cc727e419e2921fc041034ae8195e3d27cbc19",
+    "src/lib/local-compute-policy.mjs": "b1738bf5155bea1925f3a4d99ee057fcd5b1d785257eee399c4478e22f63839b",
+    "src/lib/local-json-process.mjs": "6f34a45e9fc3f8d8cbf7572fbd720c39fe37e50669131bc73c52831f846c19ac",
+    "src/lib/quantum-circuit-input.mjs": "57797acb78bb85ba4ab3142a4c300cfe0cd6a79eb5bd67ed22ff368286b3eb04",
+    "src/lib/quantum_reference.py": "1a45bd14f97019f4c11b8bfa58820f51d2d98d9f0e01e95a347b142918f2c1fd",
+    "src/lib/science-execution.mjs": "f13aa0a2bb55c3b24fa59840280654de1ea34c8b02d261005f49e1d0df9e1ac8",
+    "src/lib/science-reference.mjs": "9621f98923aee95282f96a1ffb785f709041977f03f063a32222a59ca4201638",
+    "src/lib/science_bridge.py": "7d1b319c0ce43ae37eacc80b690951975c600e0a995203ecfd3ef8e6005b7803",
+    "src/lib/science_reference.py": "a2ee3d73589a7951a8599e3a78fe29445adb29e190d0535c9a14ae22285b0d40",
+    "src/settings/server/project-settings-catalog.mjs": "5e276bb77650750ef5571cf791a2277e1a08f4e4fbc6c705003c548e41ccf6af",
+    "src/settings/server/project-settings.mjs": "c29c873451776647fb5ed61092800863b4838158ca7091ac5d352b88513a3755",
+    "tests/harness-paper-tools.test.mjs": "c8a49f3d20b351b81e99fbdaf8e5aa9a539ecd556ee2b68587e8437a26e6e331",
+    "tests/harness-unitary-next.test.mjs": "44c1e404c312a49f0ee05cdd112bfdb956be6315cadf7bd2e03d9eb01e545fd2",
+    "tests/harness-web-capabilities.test.mjs": "5b9b0e9dcd7028cd064aeb7ed61c0b34d788144a8876634795d257ad51d91750",
+    "tests/local-compute-scale-live.test.mjs": "dbd557eb579bfe5c9b80d3a5e6cd9f6ad7e0cc881f07632abd8bc2cc7682f8dd",
+    "tests/local-compute-scale.test.mjs": "8b87112a29dc52177f9353025a6d7f7626427a2e37bcf2c29360a7b2625936c6",
+    "tests/local-json-process.test.mjs": "9ab7587ce02503bdf54f513bdab27632dbdadf65cbf660ecdb3412759f1ac828",
+    "tests/mitiq-contracts.test.mjs": "5a34d67c925061dae7863a43f6abb2cf7dd3a13a78d3fe1210c4ba5423f02e4e",
+    "tests/paper-tools-contracts.test.mjs": "f37c1a13fb9f7aba581dcd6e9b903b0e3863ec2fbb47c3ba4c0835153f75f923",
+    "tests/project-settings.test.mjs": "52bf2d634b6a8444cf4ef847fc03c1778ba6cee60e51edb973842d4371c60650",
+    "tests/python/scalable_bridge_oracles.py": "0688d889cc1bc1b26f657c9fbc0a58045266f76f92b9f14e339bf13abef7af1b",
+    "tests/scalable-bridges-live.test.mjs": "cdc54055a7c76ae5dc6582c52f9df7419766c68c375bdac7c606b407813eedeb",
+    "tests/scalable-bridges.test.mjs": "3478447a1d415eb97a5004a7b1d04866f1be9e303b67d67d55420d414e798833",
+    "tests/unitary-next-contracts.test.mjs": "7d88fe568970bd9560937e84f66fe29ff70201951324b1b1360837693a33ec14",
+    "tests/unitary-tools-contracts.test.mjs": "ba9c05505bae0b0ae76fbee507b23802deb29204ac8f50abdfa86d6f8335c4e4",
+    "tests/user-compute-live.test.mjs": "d9d1d580d348dfbfdb4869609e7f9bb0ecac9171dd322ffb08568aa86ae65857"
+  },
+  "dependencyLockSha256": {
+    ".agents/skills/pyzx-optimization/uv.lock": "cc0e9a97de0fa0439ea4add6b7f13b8bb0ba3b18954b94ebcfba94595676b458",
+    ".agents/skills/graphix-mbqc/uv.lock": "3ee499a48988d84444880db303ebf844a602d9230d4fb45e44cd76a2f3f99040",
+    ".agents/skills/symmer-tapering/uv.lock": "7504ea581181a6db65692c6ceb6f208d3bd9582c0cbd31b451942044c2ea968a",
+    ".agents/skills/paulie-algebra/uv.lock": "a94e920a4a7d718e081e8a83c2550b0b0e7c1c1a8a5347eb7bd52e2b7f8094f9",
+    ".agents/skills/quantum-circuit-verification/uv.lock": "7436a034ebca4ade17f628845263eedc503fcbbddbd2850690b5d6751676ffb0",
+    ".agents/skills/tyxonq-workbench/uv.lock": "0a95013f5776196db163bd71c8f34641f7532036431af7f54f555e3b92075bf6",
+    ".agents/skills/clifft-sampling/uv.lock": "c5639fd8ffc3ac1393cfd4aaf0be293cb2e827a7b7354ea96bf816240eb19fac",
+    ".agents/skills/mitiq-error-mitigation/uv.lock": "914bcc855a67783fb87fe58065a04bf11c212ffde290b700ba3545258465fca5",
+    ".agents/skills/fatqat-workbench/uv.lock": "81585c30cfe2a31228c9f17ada446b3fc190e2d05be69a2cb3efa82c43b5bff8",
+    ".agents/skills/quantum-information-audit/uv.lock": "f7881684a77e1c6b5f738f949e4954c8c1bfc812ff8c8077a093515d14a815b9",
+    ".agents/skills/qpanda-qubo/uv.lock": "14be9038e9d6ef216e7aa99c75e7cb905f1fa3347c4a4a73742e6f1545b48421",
+    ".agents/skills/qec-memory-experiment/uv.lock": "7ce22952043711f23b4b65a2a0b85f3e48c096a1567ad2894fbcc64463943823",
+    ".agents/skills/deltakit-qec/uv.lock": "1370209234943bfc7334f0541eee77f85a78162da57ba54181788654a7a307d7",
+    ".agents/skills/ldpc-decoding/uv.lock": "828976c42ecf21fe0473c9bb19fb98fcfc329bd37b1c0b918074e9f92b0e0162",
+    ".agents/skills/sqd-chemistry/uv.lock": "4f14f930fe555173419c46aa23769abbef0a7345dabb549117788297a3493624",
+    ".agents/skills/tenpy-ground-state/uv.lock": "052eb7d1fc6271d516abcb1929c43da9b8ea47ba03e5118fe52337ca4ecd4d1e",
+    ".agents/skills/tjm-dynamics/uv.lock": "12ba63af14c747b4e32e4a1f0851abcd42f5ebe921ae8a6dba61ffa50980f35f",
+    ".agents/skills/flow-vqe/uv.lock": "55a1bd3730cb09266ebe483354bb32f73b7bdfe6bf51f11aae091b15d7e16f92",
+    ".agents/skills/dynamiqs-dynamics/uv.lock": "25f0bd615eb24467824c69c774187cdc9eaf404ab71e02fce588bc928dae44c9",
+    ".agents/skills/oqupy-dynamics/uv.lock": "6acb57295909af725a5edd25aec06e4bec5fc28ff43091bb21d96fc531bc7db5",
+    ".agents/skills/randomized-measurements/Manifest.toml": "2ae0a257e59647abe3997699a871c5530d9d7866617b6705dfe8a10a1479bd52"
+  },
+  "reproduction": "Raw local outputs and logs are retained under .openquantum/compute-scale-evidence and .openquantum/scalable-local-evidence/independent-review. Versioned tests contain the executable inputs and assertions. No external model or hardware request was made."
+}

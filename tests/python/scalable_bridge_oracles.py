@@ -11,6 +11,17 @@ if sys.argv[1] == "flow":
     spec = importlib.util.spec_from_file_location("matrix_free_objective", target)
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
+    indices = np.array([0, 1, 2**32, 2**40+1, 2**58+2**40, 2**63+2**32+1], dtype=np.uint64)
+    for mask in (1, 2**32, 2**40, 2**63, 2**64-1):
+        expected = [(-1)**((int(index) & mask).bit_count()) for index in indices]
+        assert np.array_equal(module.parity_signs(indices, mask), expected)
+    for n in (59, 64, 1000):
+        try:
+            module.PauliObjective(n, 1, [])
+        except ValueError as error:
+            assert "representation" in str(error)
+        else:
+            raise AssertionError("Unrepresentable arrays must fail before allocation")
     paulis = {"I": np.eye(2), "X": np.array([[0,1],[1,0]]), "Y": np.array([[0,-1j],[1j,0]]), "Z": np.diag([1,-1])}
     def kron(matrices):
         result = np.ones((1,1))
@@ -47,7 +58,8 @@ if sys.argv[1] == "flow":
                 c, s = np.cos(parameters[offset]/2), np.sin(parameters[offset]/2); offset += 1
                 expected = kron([np.array([[c,-s],[s,c]]) if i==q else np.eye(2) for i in range(n)]) @ expected
         assert np.max(np.abs(actual-expected)) < 1e-12
-    print(json.dumps({"pauliWordsChecked": 80, "maximumExpectationError": maximum, "denseAnsatzCases": 2}))
+    print(json.dumps({"pauliWordsChecked": 80, "maximumExpectationError": maximum, "denseAnsatzCases": 2,
+        "uint64ParityCases": len(indices)*5, "unrepresentableArrayCases": 3}))
 else:
     from pyscf import gto, scf, ao2mo, fci
     mol = gto.M(atom="Li 0 0 0; H 0 0 1.6", basis="sto-3g", verbose=0)

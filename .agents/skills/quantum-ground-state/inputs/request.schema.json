@@ -107,7 +107,7 @@
           "properties": {
             "id": { "const": "coarse-grid-golden-refine" },
             "version": { "const": "1.0.0" },
-            "coarsePoints": { "const": 65 },
+            "coarsePoints": { "type": "integer", "minimum": 4, "maximum": 9007199254740991 },
             "angleToleranceRadians": {
               "type": "number",
               "minimum": 1e-14,
@@ -128,7 +128,7 @@
       "required": ["id", "version"],
       "properties": {
         "id": { "const": "supplied-pauli-statevector" },
-        "version": { "const": "1.0.0" }
+        "version": { "const": "1.1.0" }
       }
     }
   },

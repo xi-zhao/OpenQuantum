@@ -77,11 +77,11 @@ validators:
 
 acceptanceProfiles:
   - id: supplied-pauli-statevector
-    version: 1.0.0
+    version: 1.1.0
     validator: ground-state-validator
     definition:
-      path: acceptance-profiles/supplied-pauli-statevector-v1.json
-      sha256: 696519edb69f25a3e6400ca8b03057657dab913cde7a93e98c45a3bde5f49e3a
+      path: acceptance-profiles/supplied-pauli-statevector-v1.1.json
+      sha256: df8340acd7fe9ed7a8f91e3fabc506817c2264f2db7521a654db50303d987977
 
 reproductionProfiles:
   - id: independent-statevector
