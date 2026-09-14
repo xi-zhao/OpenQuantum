@@ -32,6 +32,14 @@
 - 2026-09-13 主线合并前，在独立工作目录通过完整 `npm run check` 与 4 项热方程数值测试；
   补齐新增原生 Tool 的合同测试清单。本次验证没有调用外部模型或真实硬件。
 
+## Mitiq 误差缓解接入（2026-09-14）
+
+- 新增 `mitiq-error-mitigation` Skill 和默认开启的 `mitiq_local` 连接，以一个有界 Tool 提供 ZNE、REM、PEC、CDR 本地实验。
+- 固定 Mitiq 1.1.0 与独立 Python 3.12 环境；采样比较包含校准/训练成本，保留有限样本下的变差结果。
+- 四种方法已运行真实数值检查，并由本地模型协议替身驱动真实 Harness 调用及 Session 结果重读；未验证外部模型或 QPU。
+- 完整 `npm run check`、独立 Python 科学检查和安装器幂等复查通过；[版本化验证摘要](docs/integrations/evidence/mitiq-2026-09-14.json)保留输入、数值、源码与日志摘要。
+- 范围、验证命令、GPL 许可和证据目录见 [Mitiq 接入说明](docs/integrations/MITIQ.md)。当前为 L1、`scientificValidation=not_evaluated`；运行中的 Host 需重启加载。
+
 ## 原交接基线（历史）
 
 - 写入本页前的本地 HEAD：`e4e3e4dbc697`，分支 `main`；后续接手先重新查询 Git，不把本页当作实时分支状态。

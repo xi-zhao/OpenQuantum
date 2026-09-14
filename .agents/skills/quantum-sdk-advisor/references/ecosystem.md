@@ -12,7 +12,7 @@
 | 容错量子资源估算和 Q# | Microsoft QDK / Q# | Q# 编译器、资源估算器和 Katas | 可适配，尚未集成 MCP |
 | 稳定子电路与 QEC 解码 | Stim + PyMatching | 高性能稳定子模拟与 MWPM 解码 | 优先候选，需共同 Validator |
 | 分子积分与电子结构 Hamiltonian | PySCF + Qiskit Nature | 经典量化学与量子映射边界清楚 | 优先候选，需固定依赖与 provenance |
-| 误差缓解 | Mitiq | 多框架误差缓解工具集 | 候选；GPL-3.0 需单独审查 |
+| 误差缓解 | Mitiq | 多框架误差缓解工具集 | 已接入 ZNE/REM/PEC/CDR 的有界本地实验；能力目录 GPL-3.0-only，其他后端尚未开放 |
 | AWS 设备和算法样例 | Amazon Braket | 官方 SDK、算法库和多硬件入口 | 云端候选，默认关闭 |
 | GPU/HPC 混合量子工作流 | CUDA-Q | C++/Python 与 NVIDIA 加速生态 | 重型候选，不进入默认安装 |
 

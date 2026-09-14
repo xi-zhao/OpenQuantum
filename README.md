@@ -368,7 +368,7 @@ docs/                    架构、路线与生态文档
 
 ## 已集成的量子工具与能力
 
-当前源码分发 **18 个内置 Skill、20 个 MCP 服务连接、4 个原生量子 Tool**；另提供 1 个可选上游 Skill 的安装入口。它们是三种不同的职责，不应相加当作独立科研能力数量：
+当前源码分发 **19 个内置 Skill、21 个 MCP 服务连接、4 个原生量子 Tool**；另提供 1 个可选上游 Skill 的安装入口。它们是三种不同的职责，不应相加当作独立科研能力数量：
 
 - **Skill 是工作方法**：告诉 Agent 何时使用哪些工具、按什么步骤做、怎样解释结果。
 - **Tool 是执行动作**：Agent 真正调用的计算、查询或操作。
@@ -385,7 +385,7 @@ docs/                    架构、路线与生态文档
 
 ### 内置 Skills
 
-这 18 个 Skill 随源码提供，由 Harness 按任务需要发现和加载。点击名称即可查看完整的 `SKILL.md`，包括适用范围、执行步骤与限制；Skill 可加载不等于它使用的 MCP 服务已开启。
+这 19 个 Skill 随源码提供，由 Harness 按任务需要发现和加载。点击名称即可查看完整的 `SKILL.md`，包括适用范围、执行步骤与限制；Skill 可加载不等于它使用的 MCP 服务已开启。
 
 | Skill | 适合什么任务 | 使用的执行能力 |
 | --- | --- | --- |
@@ -399,6 +399,7 @@ docs/                    架构、路线与生态文档
 | [`fieldqkit-hardware`](.agents/skills/fieldqkit-hardware/SKILL.md) | 国内量子云后端发现、量子位筛选、拓扑与凭据缺口检查 | `fieldqkit` 服务提供的 Tools；只读云端，不提交 QPU 任务 |
 | [`tyxonq-workbench`](.agents/skills/tyxonq-workbench/SKILL.md) | 小规模 statevector 电路、采样分布与 density-matrix 噪声仿真 | `tyxonq_local` 服务提供的 Tool；连接默认关闭 |
 | [`fatqat-workbench`](.agents/skills/fatqat-workbench/SKILL.md) | 超导与原子阵列原生门约束、transmon 泄漏和里德堡动力学；也支持通用电路仿真 | `fatqat_local` 提供两个有界 Tool，返回数据、图表和单位；[接入说明](docs/integrations/FATQAT.md) |
+| [`mitiq-error-mitigation`](.agents/skills/mitiq-error-mitigation/SKILL.md) | ZNE、REM、PEC、CDR 的本地误差缓解实验，比较相同采样预算下的误差与成本 | `mitiq_local` 的有界计算；[范围、安装与验证](docs/integrations/MITIQ.md) |
 | [`sqd-chemistry`](.agents/skills/sqd-chemistry/SKILL.md) | H₂/STO-3G 的采样子空间对角化、配置恢复与同基组 FCI 对照 | `sqd_local` 的有界本地计算；[范围与验证](docs/integrations/PAPER_BACKED_TOOLS.md) |
 | [`tjm-dynamics`](.agents/skills/tjm-dynamics/SKILL.md) | 2–6 qubits 开放 Ising 链的张量跳跃轨迹与 Lindblad 演化对照 | `tjm_local` 的有界本地计算；[范围与验证](docs/integrations/PAPER_BACKED_TOOLS.md) |
 | [`ldpc-decoding`](.agents/skills/ldpc-decoding/SKILL.md) | 二元校验矩阵的 BP+LSD 解码与独立 syndrome 一致性检查 | `ldpc_local` 的有界本地计算；[范围与验证](docs/integrations/PAPER_BACKED_TOOLS.md) |
@@ -410,7 +411,7 @@ docs/                    架构、路线与生态文档
 
 ### MCP 服务目录
 
-默认 Preset 声明以下 20 个 MCP 服务连接：**14 个默认开启（其中 Qiskit 两项可通过离线开关关闭），6 个按需启用**。表中的连接名就是配置中的 `serverName`，方便在设置中心、日志和源码中对应查找。
+默认 Preset 声明以下 21 个 MCP 服务连接：**15 个默认开启（其中 Qiskit 两项可通过离线开关关闭），6 个按需启用**。表中的连接名就是配置中的 `serverName`，方便在设置中心、日志和源码中对应查找。
 
 这些 MCP Server 都由本机以 `stdio` 方式启动，不是 OpenQuantum 提供的公共托管端点。其中一部分 Tool 在本地计算，另一部分再访问厂商文档或量子云；“本地启动 MCP Server”不代表所有数据处理都留在本地。
 
@@ -425,6 +426,7 @@ docs/                    架构、路线与生态文档
 | [`qpanda_qubo`](https://github.com/OriginQ/pyqpanda-algorithm) · QPanda QUBO | QUBO 编译、枚举复核、经典求解与可选本地 QAOA | 默认开启 | `uv`；本地 CPU 模拟器，无需本源云凭据 |
 | [`tyxonq_local`](https://github.com/QureGenAI-Biotech/TyxonQ) · TyxonQ | 小规模电路与噪声仿真 | 默认关闭 | 手动开启；`uv` 首次准备较大的 Python 环境，无需云凭据 |
 | [`fatqat_local`](https://github.com/spaceqat/fatqat) · FatQat | 电路与硬件约束、超导和中性原子脉冲动力学 | 默认开启 | `uv`；首次准备锁定的 Python 环境，后续数值计算在本地运行，无云凭据或 QPU 操作 |
+| [`mitiq_local`](https://github.com/unitaryfoundation/mitiq) · Mitiq | ZNE、REM、PEC、CDR 噪声实验与有限采样统计 | 默认开启 | uv；隔离 Python 3.12 环境，能力目录 GPL-3.0-only；[接入说明](docs/integrations/MITIQ.md) |
 | [`sqd_local`](https://github.com/Qiskit/qiskit-addon-sqd) · SQD | H₂ 采样子空间对角化与 FCI 参照 | 默认开启 | uv；[安装与范围](docs/integrations/PAPER_BACKED_TOOLS.md)，不连接云硬件 |
 | [`tjm_local`](https://github.com/munich-quantum-toolkit/yaqs) · TJM / YAQS | 开放 Ising 链张量轨迹与 Lindblad 参照 | 默认开启 | uv；[安装与范围](docs/integrations/PAPER_BACKED_TOOLS.md)，不连接云硬件 |
 | [`ldpc_local`](https://github.com/quantumgizmos/ldpc) · BP+LSD | 二元校验矩阵的纠错解码与 syndrome 检查 | 默认开启 | uv；[安装与范围](docs/integrations/PAPER_BACKED_TOOLS.md)，不连接云硬件 |
@@ -456,7 +458,7 @@ FieldQKit、toqito、QCEC、QEC、TyxonQ、FatQat、QPanda QUBO 及上述六项�
 
 ### 可选上游 Skill 与开发证据
 
-[OriginQ 官方 `pyqpanda3` Skill](https://github.com/OriginQ/pyqpanda3-skill) 提供电路编程、算法模板、迁移与 QCloud 使用指导。它**不计入上面的 18 个内置 Skill，也不会在首次启动时自动安装**；运行 `npm run skill:qpanda:setup` 后，固定审阅版本才会进入项目 Skill 目录。安装这个 Skill 不会自动启用 `qpanda_runtime`，也不会赋予云任务权限。
+[OriginQ 官方 `pyqpanda3` Skill](https://github.com/OriginQ/pyqpanda3-skill) 提供电路编程、算法模板、迁移与 QCloud 使用指导。它**不计入上面的 19 个内置 Skill，也不会在首次启动时自动安装**；运行 `npm run skill:qpanda:setup` 后，固定审阅版本才会进入项目 Skill 目录。安装这个 Skill 不会自动启用 `qpanda_runtime`，也不会赋予云任务权限。
 
 [固定量子能力 Benchmark](benchmarks/quantum-capabilities/README.md)使用 [MQT Bench](https://github.com/munich-quantum-toolkit/bench) 的 3 个固定电路案例与 manifest 做开发回归，属于开发与 CI 证据，不是 Skill 或 MCP 服务。
 
@@ -502,6 +504,8 @@ OpenQuantum 为本地模拟、IBM Quantum、IonQ 和多家国内量子云保留�
 
 ## License
 
-OpenQuantum 自有代码采用 [MIT License](LICENSE)，版权所有 © 2026 Xi Zhao。
+除明确单独许可的目录外，OpenQuantum 自有代码采用 [MIT License](LICENSE)，版权所有 © 2026 Xi Zhao。
+
+[Mitiq 误差缓解能力目录](.agents/skills/mitiq-error-mitigation/)采用 GPL-3.0-only；该目录的 [LICENSE](.agents/skills/mitiq-error-mitigation/LICENSE) 和 [NOTICE](.agents/skills/mitiq-error-mitigation/NOTICE) 优先适用，详见[发行边界](docs/integrations/MITIQ.md#许可证与发行边界)。
 
 DeepSeek Harness、DSH Desktop、OpenMAIC、FatQat、Qiskit MCP Servers、FieldQKit、Quantum Hardware MCP 和其他第三方组件沿用各自的许可证，详细来源见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。

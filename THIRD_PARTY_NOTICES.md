@@ -1,11 +1,12 @@
 # Third-party notices
 
-OpenQuantum 自有代码采用仓库根目录中的 [MIT License](LICENSE)。这个许可证不替代第三方项目的许可证，也不把第三方代码重新许可为 OpenQuantum 的代码。
+除明确单独许可的目录外，OpenQuantum 自有代码采用仓库根目录中的 [MIT License](LICENSE)。Mitiq 能力目录采用 GPL-3.0-only，见下方说明。根目录许可证不替代第三方项目的许可证，也不把第三方代码重新许可为 OpenQuantum 的代码。
 
 下表记录 OpenQuantum 当前明确接入或直接依赖的主要上游组件。各组件仍由原作者持有版权，并继续遵循其原始许可证。
 
 | 组件 | 许可证 | OpenQuantum 中的使用方式 | 上游来源 |
 | --- | --- | --- | --- |
+| Mitiq | GPLv3；本地能力目录 GPL-3.0-only | 固定 1.1.0，独立 Python 环境调用 ZNE/REM/PEC/CDR；本能力携带独立 LICENSE/NOTICE，见下方 Mitiq 说明 | [unitaryfoundation/mitiq](https://github.com/unitaryfoundation/mitiq/tree/v1.1.0) |
 | Quantum-Practices | MIT | 固定提交 `572a24c9b5c9787caec98810351f5cb17c82250e` 的两个原始 ESM 文件（检索器、60 份指南目录）随源码分发；原版 LICENSE、NOTICE 与文件摘要保留在 `src/quantum-practices/upstream/`。本地薄适配负责当前 Harness 注册、中文查询和参考资料边界；不包含上游 Agent、模拟器、Python 环境或安装器 | [unitarylab/quantum-practices](https://github.com/unitarylab/quantum-practices) |
 | Qiskit SQD | Apache-2.0 | 固定 `qiskit-addon-sqd==0.13.1`，隔离环境调用 H₂/STO-3G 采样子空间对角化；源码由包管理器安装 | [Qiskit/qiskit-addon-sqd](https://github.com/Qiskit/qiskit-addon-sqd) |
 | MQT YAQS | MIT | 固定 `mqt.yaqs==0.6.0`，隔离环境调用有界张量跳跃轨迹 | [munich-quantum-toolkit/yaqs](https://github.com/munich-quantum-toolkit/yaqs) |
@@ -37,3 +38,16 @@ OpenQuantum 自有代码采用仓库根目录中的 [MIT License](LICENSE)。这
 通过包管理器或安装脚本取得的组件会携带自己的许可证元数据。发布包含这些第三方组件的 Docker 镜像、安装包或其他二进制分发物时，需要同时保留适用的版权声明、许可证文本和上游要求的 NOTICE 内容。
 
 本文件用于说明项目当前的依赖与分发边界，不构成法律意见。发现遗漏或上游许可证变化时，请提交 Issue 或 Pull Request。
+
+## Mitiq error mitigation
+
+- Upstream: https://github.com/unitaryfoundation/mitiq/tree/v1.1.0
+- Version: Mitiq 1.1.0, Copyright (C) Unitary Foundation, GPLv3.
+- Integration: `.agents/skills/mitiq-error-mitigation/` is explicitly GPL-3.0-only,
+  with its own complete LICENSE and NOTICE; the root MIT grant does not override it.
+- The unmodified dependency is installed using that directory's hashed `uv.lock`.
+  The worker invokes ZNE/REM/PEC/CDR for bounded local Cirq experiments.
+- The process boundary isolates dependencies and execution; it does not by itself
+  determine GPL combined-distribution obligations. Distributors must preserve
+  notices and satisfy applicable corresponding-source requirements.
+- Scope and validation: [Mitiq integration](docs/integrations/MITIQ.md).

@@ -602,6 +602,25 @@ packages:
         - tests/quantum-information-materialization.test.mjs
         - tests/scientific-result-projection.test.mjs
 
+  - id: mitiq-error-mitigation
+    level: L1
+    execution:
+      mcpServers:
+        - name: mitiq_local
+          source: package
+          entrypoint: .agents/skills/mitiq-error-mitigation/mcp/server.mjs
+          activation: always
+          contractCheck: tests/mitiq-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: run_mitiq_experiment
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/mitiq-contracts.test.mjs
+        - tests/mitiq-live.test.mjs
+        - tests/harness-mitiq.test.mjs
+
   - id: sqd-chemistry
     level: L1
     execution:

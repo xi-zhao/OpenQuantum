@@ -544,6 +544,24 @@
       maxDelayMs: 30000
       maxAttempts: 10
 
+- id: mcp-mitiq-error-mitigation
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: mitiq_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/mitiq-error-mitigation/mcp/server.mjs'
+    env: {}
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 195000
+    failOnStartupError: true
+    reconnect:
+      enabled: true
+      initialDelayMs: 1000
+      maxDelayMs: 30000
+      maxAttempts: 10
+
 - id: mcp-randomized-measurements
   name: '@deepseek-ai/dsh-mcp-client'
   config:

@@ -5,6 +5,15 @@ import { quantumHardwareMcpIntegration } from "./quantum-hardware-mcp.mjs";
 
 const QISKIT_MCP_SOURCE = "https://github.com/Qiskit/mcp-servers";
 const MCP_CATALOG = Object.freeze({
+  mitiq_local: Object.freeze({
+    displayName: "Mitiq 误差缓解",
+    description: "ZNE、REM、PEC、CDR 本地噪声实验，比较相同采样预算下的误差、方差与成本。",
+    provider: "Unitary Foundation / OpenQuantum",
+    sourceUrl: "https://github.com/unitaryfoundation/mitiq",
+    packageName: "mitiq",
+    packageVersion: "1.1.0",
+    setup: null,
+  }),
   sqd_local: Object.freeze({
     displayName: "SQD 量子化学",
     description: "H2/STO-3G 的采样子空间对角化，支持输入频数，并与 FCI 比较。",

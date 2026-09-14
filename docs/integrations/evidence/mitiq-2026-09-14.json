@@ -1,0 +1,430 @@
+{
+  "schemaVersion": "1.0",
+  "verifiedAt": "2026-09-14T07:15:35.432Z",
+  "capability": "mitiq-error-mitigation",
+  "level": "L1",
+  "source": {
+    "name": "mitiq",
+    "version": "1.1.0",
+    "repository": "https://github.com/unitaryfoundation/mitiq/tree/v1.1.0"
+  },
+  "scope": "macOS local Cirq simulation and actual Harness with a local model protocol fixture",
+  "scientificValidation": "not_evaluated",
+  "externalModelTested": false,
+  "hardwareTested": false,
+  "sourceSha256": {
+    ".agents/skills/mitiq-error-mitigation/mcp/bridge.py": "131af0f2b23ea6e45902e573433f9194cd148179911da366558e9e1b5bedcb3d",
+    ".agents/skills/mitiq-error-mitigation/mcp/contracts.mjs": "1a9fa31eaa0a3c510ad3c248a5fea273b3136e06490e30c23fd0e89992da9407",
+    ".agents/skills/mitiq-error-mitigation/mcp/server.mjs": "094082c5a035615574f4152bd3b0a5738b1d650ceb6c5368d97cbb1d677f01bf",
+    ".agents/skills/mitiq-error-mitigation/uv.lock": "914bcc855a67783fb87fe58065a04bf11c212ffde290b700ba3545258465fca5"
+  },
+  "checks": {
+    "fullCheck": {
+      "command": "npm run check",
+      "status": "passed",
+      "nodeTestRuns": [
+        {
+          "tests": 214,
+          "passed": 200,
+          "skipped": 14
+        },
+        {
+          "tests": 119,
+          "passed": 119,
+          "skipped": 0
+        },
+        {
+          "tests": 33,
+          "passed": 33,
+          "skipped": 0
+        },
+        {
+          "tests": 79,
+          "passed": 79,
+          "skipped": 0
+        },
+        {
+          "tests": 3,
+          "passed": 3,
+          "skipped": 0
+        }
+      ]
+    },
+    "numerical": {
+      "status": "passed",
+      "nodeTests": 2,
+      "independentPythonTests": 4
+    },
+    "harness": {
+      "status": "passed",
+      "sessionId": "session-mitiq-9e3755dd-028b-448b-9f1d-8df52244910e",
+      "methods": [
+        "zne",
+        "rem",
+        "pec",
+        "cdr"
+      ],
+      "sessionReread": true
+    },
+    "setup": {
+      "status": "passed",
+      "idempotent": true
+    },
+    "independentReview": {
+      "status": "passed",
+      "reviewer": "independent domain subagent",
+      "remainingBlockingFindings": 0,
+      "changesApplied": [
+        "Restrict PEC signs to -1 or +1",
+        "State gate/depth counting excludes terminal measurement basis changes"
+      ]
+    }
+  },
+  "localEvidence": {
+    ".openquantum/mitiq-evidence/check.log": {
+      "sha256": "7c6d1eafbec79e39fdcb590225e3414e3a6e55dfdae9e0a7a6f37aee159dca06"
+    },
+    ".openquantum/mitiq-evidence/setup.log": {
+      "sha256": "c0a881a4d5eb96ae7b948f85a1afe24c8c3d104c4b5be669423f34949bc5d515"
+    },
+    ".openquantum/mitiq-evidence/harness-test.log": {
+      "sha256": "46a05b7de956633b10019d003773f62c2d547d20a6454037a1edeb31d86e71ca"
+    },
+    ".openquantum/mitiq-evidence/numerical-tests.log": {
+      "sha256": "6c40357c110c2ef6bbfbbd0face86f475182485e303315f4311ab7bb32c71928"
+    },
+    ".openquantum/mitiq-evidence/independent-science-tests.log": {
+      "sha256": "6d6f1766d851edc47a43839ef6be1142897d709f5444ba9dcc1be7fe72925841"
+    },
+    ".openquantum/mitiq-evidence/harness-session.json": {
+      "sha256": "2eca7299641b9c228f87681df807825a7926de14e3216384fdd961ad297b6885"
+    }
+  },
+  "cases": [
+    {
+      "label": "zne",
+      "input": {
+        "numQubits": 1,
+        "gates": [
+          {
+            "name": "H",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "name": "RZ",
+            "targets": [
+              0
+            ],
+            "angle": 0.7
+          },
+          {
+            "name": "H",
+            "targets": [
+              0
+            ]
+          }
+        ],
+        "observable": "Z",
+        "method": "zne",
+        "shotsBudget": 4096,
+        "replicates": 4,
+        "depolarizingProbability": 0.02,
+        "readoutProbability": 0,
+        "seed": 7
+      },
+      "inputSha256": "e883f500e104d4c8b89bf4678ad93ff4d2de06691ee6c0bef009706684762e2a",
+      "dependencyLockSha256": "914bcc855a67783fb87fe58065a04bf11c212ffde290b700ba3545258465fca5",
+      "idealExpectation": 0.7648421872844888,
+      "exactNoisyExpectation": 0.7052719719605334,
+      "statistics": {
+        "unmitigated": {
+          "mean": 0.70068359375,
+          "bias": -0.06415859353448883,
+          "variance": 0.00007700920104980469,
+          "rmse": 0.064755959767218,
+          "meanStandardError": 0.005066530734463991
+        },
+        "mitigated": {
+          "mean": 0.7911476182431527,
+          "bias": 0.02630543095866389,
+          "variance": 0.0012585876133513311,
+          "rmse": 0.044165182115240564,
+          "meanStandardError": 0.020482412075984696
+        },
+        "rmseDifference": -0.020590777651977435
+      },
+      "totalShotsIncludingBaseline": 32768
+    },
+    {
+      "label": "rem",
+      "input": {
+        "numQubits": 1,
+        "gates": [
+          {
+            "name": "H",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "name": "RZ",
+            "targets": [
+              0
+            ],
+            "angle": 0.7
+          },
+          {
+            "name": "H",
+            "targets": [
+              0
+            ]
+          }
+        ],
+        "observable": "Z",
+        "method": "rem",
+        "shotsBudget": 4096,
+        "replicates": 4,
+        "readoutProbability": 0.1,
+        "depolarizingProbability": 0.02,
+        "seed": 7
+      },
+      "inputSha256": "b1357f2ccff124142c5160742709b0efdd98342bc251b42a390465def84cf6ae",
+      "dependencyLockSha256": "914bcc855a67783fb87fe58065a04bf11c212ffde290b700ba3545258465fca5",
+      "idealExpectation": 0.7648421872844888,
+      "exactNoisyExpectation": 0.5642175775684267,
+      "statistics": {
+        "unmitigated": {
+          "mean": 0.559326171875,
+          "bias": -0.20551601540948883,
+          "variance": 0.00010162591934204102,
+          "rmse": 0.2057631126055768,
+          "meanStandardError": 0.0058202496894331785
+        },
+        "mitigated": {
+          "mean": 0.6966807377954157,
+          "bias": -0.0681614494890731,
+          "variance": 0.00043883548812271146,
+          "rmse": 0.07130791459981266,
+          "meanStandardError": 0.012094564731353659
+        },
+        "rmseDifference": -0.13445519800576416
+      },
+      "totalShotsIncludingBaseline": 32768
+    },
+    {
+      "label": "pec",
+      "input": {
+        "numQubits": 1,
+        "gates": [
+          {
+            "name": "H",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "name": "RZ",
+            "targets": [
+              0
+            ],
+            "angle": 0.7
+          },
+          {
+            "name": "H",
+            "targets": [
+              0
+            ]
+          }
+        ],
+        "observable": "Z",
+        "method": "pec",
+        "shotsBudget": 4096,
+        "replicates": 4,
+        "depolarizingProbability": 0.02,
+        "readoutProbability": 0,
+        "seed": 7,
+        "pecSamples": 64
+      },
+      "inputSha256": "3a67d9d995d398dcee35a3e8984fc5c0fdbdc401a1a9d7691256959e16e8761b",
+      "dependencyLockSha256": "914bcc855a67783fb87fe58065a04bf11c212ffde290b700ba3545258465fca5",
+      "idealExpectation": 0.7648421872844888,
+      "exactNoisyExpectation": 0.7052719719605334,
+      "statistics": {
+        "unmitigated": {
+          "mean": 0.70068359375,
+          "bias": -0.06415859353448883,
+          "variance": 0.00007700920104980469,
+          "rmse": 0.064755959767218,
+          "meanStandardError": 0.005066530734463991
+        },
+        "mitigated": {
+          "mean": 0.768352949549763,
+          "bias": 0.0035107622652741366,
+          "variance": 0.0005261937644035778,
+          "rmse": 0.02320601680786367,
+          "meanStandardError": 0.01324378803318217
+        },
+        "rmseDifference": -0.041549942959354325
+      },
+      "totalShotsIncludingBaseline": 32768
+    },
+    {
+      "label": "cdr",
+      "input": {
+        "numQubits": 1,
+        "gates": [
+          {
+            "name": "H",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "name": "RZ",
+            "targets": [
+              0
+            ],
+            "angle": 0.7
+          },
+          {
+            "name": "H",
+            "targets": [
+              0
+            ]
+          }
+        ],
+        "observable": "Z",
+        "method": "cdr",
+        "shotsBudget": 4096,
+        "replicates": 4,
+        "depolarizingProbability": 0.02,
+        "readoutProbability": 0,
+        "seed": 7,
+        "trainingCircuits": 12
+      },
+      "inputSha256": "a65d288bf74bad09d3d1c54c121412286dd9717ca11c85e0b2d09b01872951c1",
+      "dependencyLockSha256": "914bcc855a67783fb87fe58065a04bf11c212ffde290b700ba3545258465fca5",
+      "idealExpectation": 0.7648421872844888,
+      "exactNoisyExpectation": 0.7052719719605334,
+      "statistics": {
+        "unmitigated": {
+          "mean": 0.70068359375,
+          "bias": -0.06415859353448883,
+          "variance": 0.00007700920104980469,
+          "rmse": 0.064755959767218,
+          "meanStandardError": 0.005066530734463991
+        },
+        "mitigated": {
+          "mean": 0.7913688109094335,
+          "bias": 0.026526623624944623,
+          "variance": 0.0004360355419066013,
+          "rmse": 0.033759403176686555,
+          "meanStandardError": 0.012055918904651514
+        },
+        "rmseDifference": -0.030996556590531445
+      },
+      "totalShotsIncludingBaseline": 32768
+    },
+    {
+      "label": "zne-zero-noise-adverse",
+      "input": {
+        "numQubits": 1,
+        "gates": [
+          {
+            "name": "H",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "name": "RZ",
+            "targets": [
+              0
+            ],
+            "angle": 0.7
+          },
+          {
+            "name": "H",
+            "targets": [
+              0
+            ]
+          }
+        ],
+        "observable": "Z",
+        "method": "zne",
+        "depolarizingProbability": 0,
+        "replicates": 16,
+        "seed": 19,
+        "shotsBudget": 2048,
+        "readoutProbability": 0
+      },
+      "inputSha256": "4effe5249a5bf1ef1d1913a8c1d48ddb989b95c445fdcbeedea5dd98553085bb",
+      "dependencyLockSha256": "914bcc855a67783fb87fe58065a04bf11c212ffde290b700ba3545258465fca5",
+      "idealExpectation": 0.7648421872844888,
+      "exactNoisyExpectation": 0.7648421872844888,
+      "statistics": {
+        "unmitigated": {
+          "mean": 0.76300048828125,
+          "bias": -0.001841699003238828,
+          "variance": 0.00018378719687461853,
+          "rmse": 0.013681339557702288,
+          "meanStandardError": 0.00350035423802238
+        },
+        "mitigated": {
+          "mean": 0.7656963481041464,
+          "bias": 0.0008541608196576123,
+          "variance": 0.002915576733331964,
+          "rmse": 0.05400283625919848,
+          "meanStandardError": 0.013941728093107071
+        },
+        "rmseDifference": 0.04032149670149619
+      },
+      "totalShotsIncludingBaseline": 65536
+    },
+    {
+      "label": "rem-bit-order",
+      "input": {
+        "method": "rem",
+        "numQubits": 2,
+        "gates": [
+          {
+            "name": "X",
+            "targets": [
+              0
+            ]
+          }
+        ],
+        "observable": "ZI",
+        "depolarizingProbability": 0,
+        "readoutProbability": 0.15,
+        "shotsBudget": 8192,
+        "replicates": 4,
+        "seed": 7
+      },
+      "inputSha256": "53bcefab830d8f7c1dd425586f9a8362eef55d781a01f8fb2207e32554fcb4a6",
+      "dependencyLockSha256": "914bcc855a67783fb87fe58065a04bf11c212ffde290b700ba3545258465fca5",
+      "idealExpectation": -1,
+      "exactNoisyExpectation": -0.7,
+      "statistics": {
+        "unmitigated": {
+          "mean": -0.69720458984375,
+          "bias": 0.30279541015625,
+          "variance": 0.00003654882311820984,
+          "rmse": 0.3028557564828674,
+          "meanStandardError": 0.0034904070019702977
+        },
+        "mitigated": {
+          "mean": -1.0033317262403973,
+          "bias": -0.003331726240397348,
+          "variance": 0.0008537729524146102,
+          "rmse": 0.02940872918294094,
+          "meanStandardError": 0.016869824662343217
+        },
+        "rmseDifference": -0.2734470272999264
+      },
+      "totalShotsIncludingBaseline": 65536
+    }
+  ]
+}
