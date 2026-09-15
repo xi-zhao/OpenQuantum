@@ -358,6 +358,12 @@ docs/                    架构、路线与生态文档
 
 ### 能力接口目录
 
+<p>
+  <a href="#内置-skills">Skill 目录</a> ·
+  <a href="#mcp-服务目录">MCP 服务目录</a> ·
+  <a href="#原生量子-tools">原生量子 Tools</a>
+</p>
+
 当前源码分发 **27 个内置 Skill、29 个 MCP 服务连接、5 个原生量子 Tool**。其中 22 个 MCP 服务使用 OpenQuantum 的本地桥接实现。Skill 指导工作方法，Tool 执行动作，MCP Server 通过协议提供 Tool；三者分别统计。
 
 <details>

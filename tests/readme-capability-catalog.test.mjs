@@ -103,7 +103,7 @@ test("native quantum Tools are documented separately with their complete-call ef
   }
 });
 
-test("README counts and visible navigation stay aligned with the source inventory", () => {
+test("README counts and expandable catalog navigation stay aligned with the source inventory", () => {
   assert.ok(readme.includes(`${skills.size} 个内置 Skill、${servers.size} 个 MCP 服务连接、${nativeTools.size} 个原生量子 Tool`));
   const optIn = declaredServers.filter((entry) => entry.activation === "opt-in").length;
   assert.ok(readme.includes(`${servers.size - optIn} 个默认开启`));
@@ -112,8 +112,13 @@ test("README counts and visible navigation stay aligned with the source inventor
   assert.ok(readme.includes('href="#mcp-服务目录"'));
   for (const heading of ["### 内置 Skills", "### MCP 服务目录", "### 原生量子 Tools"]) {
     const before = readme.slice(0, readme.indexOf(heading));
-    assert.equal([...before.matchAll(/<details\b/g)].length, [...before.matchAll(/<\/details>/g)].length);
-    assert.doesNotMatch(section(readme, heading), /<details\b/);
+    // Catalogs are deliberately expandable; each heading belongs to one named fold.
+    assert.equal([...before.matchAll(/<details\b/g)].length - [...before.matchAll(/<\/details>/g)].length, 1);
+    const opening = before.slice(before.lastIndexOf("<details>"));
+    assert.match(opening, /<summary><strong>[^<]+<\/strong><\/summary>/);
+    const content = section(readme, heading);
+    assert.ok(content.includes("</details>"));
+    assert.doesNotMatch(content.slice(0, content.indexOf("</details>")), /<details\b/);
   }
 });
 
