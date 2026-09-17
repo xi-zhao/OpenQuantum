@@ -41,28 +41,15 @@
 
 ## 从一个真实任务开始
 
-以 Bell 态的制备与采样为例。完成[快速开始](#快速开始)中的安装与模型配置后，可以把下面的请求复制到科研工作台：
+两条路径：不配模型、直接在本机复算一个固定案例；或者配好模型后让 Agent 执行任务。
 
-> 用 FatQat 从双量子位全零态出发，对 q0 施加 H，再以 q0 为控制位、q1 为目标位施加 CX。返回无噪声精确概率，并用 1024 次采样、seed=7 比较频数。
+### 不需要模型密钥：复算一个固定案例
 
-Agent 可以调用 FatQat 电路工具执行计算，工作台保留工具输入和返回结果。你可以查看精确概率与采样频数，再继续提出问题：
-
-> 保持电路和 seed 不变，把采样量改为 8192 次，比较两次频率与精确概率的偏差。
-
-这个电路的理想概率是 `00`、`11` 各 50%；有限采样的频率会波动。比较两次采样可以观察这种波动，单次增加采样量不保证每个频率都更接近理想值。
-
-此处展示可复制请求与理论预期。FatQat 连接默认开启，需安装 `uv`，首次使用可能下载依赖；接口和本地验证记录见 [FatQat 使用说明](docs/integrations/FATQAT.md)。
-
-<details>
-<summary><strong>无需模型密钥：复算已有基态案例，查看实际数值与运行记录</strong></summary>
-
-先试试 OpenQuantum 的原生 `solve_and_validate_ground_state` Tool。以仓库内固定的[二量子位 Pauli Hamiltonian](.agents/skills/quantum-ground-state/evals/fixtures/requests/protocol-fixture.json)为输入，它在指定粒子扇区内运行无噪声 VQE，再用独立闭式计算检查结果。在仓库目录执行以下命令即可复算，无需模型密钥或量子云凭据：
+以仓库内固定的[二量子位 Pauli Hamiltonian](.agents/skills/quantum-ground-state/evals/fixtures/requests/protocol-fixture.json)为输入，原生 `solve_and_validate_ground_state` Tool 在指定粒子扇区内运行无噪声 VQE，再用独立闭式计算检查结果。完成[快速开始](#快速开始)的 `git clone` 与 `npm ci` 后，在仓库目录执行即可复算，无需模型密钥或量子云凭据：
 
 ```bash
 npm run demo:quantum-ground-state
 ```
-
-以下结果来自 **2026-09-12 的本地复验**；[原始输出与运行记录](docs/examples/quantum-ground-state-local-demo-2026-09-12.json)包含完整数值、检查状态、时间、源码提交、输入摘要和 Node.js 版本。
 
 <table>
   <tr>
@@ -73,11 +60,30 @@ npm run demo:quantum-ground-state
   </tr>
 </table>
 
+以上数值来自 **2026-09-12 的本地复验**；[原始输出与运行记录](docs/examples/quantum-ground-state-local-demo-2026-09-12.json)包含完整数值、检查状态、时间、源码提交、输入摘要和 Node.js 版本。
+
+<details>
+<summary><strong>这次运行检查了什么，以及还差什么</strong></summary>
+
 这次运行完成了 15 项本地计算检查，1 项会话来源检查未执行，尚未生成完整科学验收结论。差值表示该数值案例与精确参考的一致程度；科学适用范围仍是给定 Hamiltonian 和粒子扇区。
 
 完整科学验收还需要通过 Harness 执行任务、保存结果文件和会话来源，并生成可重读的验收报告。配置模型后的验证入口见[开发与验证命令](#把你的量子能力接进来)。
 
 </details>
+
+### 让 Agent 执行任务：Bell 态的制备与采样
+
+完成[快速开始](#快速开始)中的安装与模型配置后，可以把下面的请求复制到科研工作台：
+
+> 用 FatQat 从双量子位全零态出发，对 q0 施加 H，再以 q0 为控制位、q1 为目标位施加 CX。返回无噪声精确概率，并用 1024 次采样、seed=7 比较频数。
+
+Agent 可以调用 FatQat 电路工具执行计算，工作台保留工具输入和返回结果。你可以查看精确概率与采样频数，再继续提出问题：
+
+> 保持电路和 seed 不变，把采样量改为 8192 次，比较两次频率与精确概率的偏差。
+
+这个电路的理想概率是 `00`、`11` 各 50%；有限采样的频率会波动。比较两次采样可以观察这种波动，单次增加采样量不保证每个频率都更接近理想值。
+
+此处展示可复制请求与理论预期。FatQat 连接默认开启，需安装 `uv`，首次使用可能下载依赖；接口和本地验证记录见 [FatQat 使用说明](docs/integrations/FATQAT.md)。这条路径需要先按[配置模型](#配置模型)接入一个支持 Tool Calling 的模型，否则 Agent 不会调用计算 Tool。
 
 <a id="openquantum-的核心能力"></a>
 <a id="已集成的量子工具与能力"></a>
@@ -200,7 +206,15 @@ npm run dev
 
 ### 配置模型
 
-密钥保存在本地环境或 Harness 凭据库中，项目配置只保存凭据引用。若希望使用 `.env`，macOS 终端执行 `cp .env.example .env`，Windows PowerShell 执行 `Copy-Item .env.example .env`，再填写所需配置。
+OpenQuantum 通过 OpenAI-compatible 协议接入模型，任何提供该协议的服务都可以配置。内置的 `openquantum-public` / `openquantum-private` 两条路由是**占位，不是可用的默认值**：`baseURL` 指向 RFC 2606 保留域名 `api.example.invalid`（永不解析），声明的模型名是 `kimi-k2.7-code`、`glm5.2`、`kimi2.7`。两者都要替换成你自己的服务地址和模型名，否则模型调用不会成功。
+
+推荐在「设置 → 模型」中填写服务地址、模型名和 API Key，保存为 Route 覆盖（写入 Git 忽略的 `$DSH_HOME/settings.yaml`）。`.env` 只能覆盖服务地址和密钥，模型名不在其中；macOS 终端执行 `cp .env.example .env`，Windows PowerShell 执行 `Copy-Item .env.example .env`，再按文件内注释填写。密钥保存在本地环境或 Harness 凭据库中，项目配置只保存凭据引用。
+
+**模型需要支持 Tool Calling。** 不支持的模型同样能接上、也能正常对话，但不会调用量子计算 Tool，只会用文本回答量子问题——这种回答没有数值来源。配置完成后分别检查文本生成与工具调用：
+
+```bash
+npm run models:probe -- --provider openquantum-public
+```
 
 ### 发起任务并选择后端
 
