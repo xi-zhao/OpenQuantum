@@ -22,6 +22,10 @@ const PRESENTATION_PATCHES = [
   // app.setPath override) before changing Electron's visible application name.
   ["native data location", /app\.setName\(PRODUCT_NAME\);/g,
     'app.setName("DSH Desktop");\n\tapp.setPath("userData", app.getPath("userData"));\n\tapp.setName(PRODUCT_NAME);'],
+  // The pinned OS dialogs ship only English/Chinese. Respect an explicit
+  // non-Chinese UI choice with English fallback instead of the OS's Chinese.
+  ["native locale fallback", /return preference === "zh" \|\| preference === "en" \? preference : void 0;/g,
+    'return preference === "zh" ? "zh" : preference ? "en" : void 0;'],
 ];
 
 async function filesUnder(root, relative) {

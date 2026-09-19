@@ -58,7 +58,7 @@ test("composes the Desktop shell around the OpenQuantum Harness home", { skip: !
     harnessHome,
     process.platform,
   );
-  for (const name of ["harness-web-branding", "harness-web-capabilities", "harness-web-learning"]) {
+  for (const name of ["harness-web-branding", "harness-web-capabilities", "harness-web-learning", "harness-web-locales"]) {
     const manifest = findPackageJSON(`@openquantum/${name}`, pathToFileURL(path.join(harnessHome, "profiles/desktop/package.json")));
     assert.equal(manifest, path.join(harnessHome, "profiles/desktop/node_modules/@openquantum", name, "package.json"));
   }
@@ -121,6 +121,7 @@ test("prepares native OQ assets while retaining the pinned upstream package and 
   assert.equal(await realpath(path.join(brandedRoot, "node_modules")), await realpath(path.join(desktopRoot, "node_modules")));
   const changes = brandDesktopJavaScript(original);
   assert.equal(changes.size, 4);
+  assert.ok([...changes.values()].some((source) => source.includes('return preference === "zh" ? "zh" : preference ? "en" : void 0;')));
   for (const [file, source] of original) {
     assert.equal(await readFile(path.join(desktopRoot, file), "utf8"), source, "upstream must stay unchanged");
     assert.equal(await readFile(path.join(brandedRoot, file), "utf8"), changes.get(file) ?? source);

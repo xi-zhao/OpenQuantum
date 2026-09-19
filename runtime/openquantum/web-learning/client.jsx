@@ -2,11 +2,15 @@ import React, { useEffect, useRef, useState } from "react";
 import css from "./learning.css";
 import { acceptsMessage, CHANNEL } from "../../../src/learning/ui-bridge.mjs";
 import { acceptsThemeRequest, createThemeMessage } from "../../../src/learning/ui-theme.mjs";
+import { acceptsLocaleRequest, createLocaleMessage, readLocaleMessage } from "../../../src/learning/ui-locale.mjs";
+
+const NS = "openquantum.learning";
+let t = (key) => key;
 
 async function command(value) {
   const response = await fetch("/openquantum/api/learning", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(value) });
   const data = await response.json();
-  if (!response.ok) throw new Error(data.error || "课堂暂时不可用");
+  if (!response.ok) throw new Error(t(data.error || "unavailable"));
   return data;
 }
 
@@ -16,6 +20,19 @@ function LearningApp({ onClose, themeContext }) {
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState("");
   const [attempt, setAttempt] = useState(0);
+  useEffect(() => {
+    if (!service) return;
+    const send = () => frame.current?.contentWindow?.postMessage(createLocaleMessage(themeContext.locale.getSnapshot().active), service.origin);
+    const receive = (event) => {
+      if (acceptsLocaleRequest(event, frame.current?.contentWindow, service.origin)) send();
+      const language = readLocaleMessage(event, frame.current?.contentWindow, service.origin, "select");
+      if (language) themeContext.locale.setLocale(language.id);
+    };
+    const unsubscribe = themeContext.locale.subscribe(send);
+    window.addEventListener("message", receive);
+    send();
+    return () => { unsubscribe(); window.removeEventListener("message", receive); };
+  }, [service, themeContext]);
   useEffect(() => {
     let disposed = false;
     setError("");
@@ -58,10 +75,10 @@ function LearningApp({ onClose, themeContext }) {
     return () => { disposed = true; window.removeEventListener("message", receive); };
   }, [service]);
   return <div className="oq-learning-shell">
-    <header className="oq-learning-bar"><img src="/openquantum/mark.svg" alt="" className="oq-learning-mark" /><strong>量子学习通</strong><span className="oq-learning-parent">OpenQuantum</span><button className="oq-learning-return" onClick={onClose}>返回 OpenQuantum</button></header>
+    <header className="oq-learning-bar"><img src="/openquantum/mark.svg" alt="" className="oq-learning-mark" /><strong>{t("name")}</strong><span className="oq-learning-parent">OpenQuantum</span><button className="oq-learning-return" onClick={onClose}>{t("back")}</button></header>
     {error && <div role="alert" className="oq-learning-notice">{error}</div>}
-    {service ? <div className="oq-learning-frame-wrap"><iframe ref={frame} className="oq-learning-frame" src={service.url} title="量子学习通" onLoad={() => setLoaded(true)} allow="fullscreen; clipboard-write; microphone" allowFullScreen />{!loaded && <div className="oq-learning-loading" role="status">正在载入量子学习通…</div>}</div>
-      : <div className="oq-learning-status">{error ? <button onClick={() => setAttempt(attempt + 1)}>重新打开</button> : "正在启动课堂与课程存储，首次打开需要加载…"}</div>}
+    {service ? <div className="oq-learning-frame-wrap"><iframe ref={frame} className="oq-learning-frame" src={service.url} title={t("name")} onLoad={() => setLoaded(true)} allow="fullscreen; clipboard-write; microphone" allowFullScreen />{!loaded && <div className="oq-learning-loading" role="status">{t("loading")}</div>}</div>
+      : <div className="oq-learning-status">{error ? <button onClick={() => setAttempt(attempt + 1)}>{t("retry")}</button> : t("starting")}</div>}
   </div>;
 }
 
@@ -69,12 +86,13 @@ function LearningEntry({ wide, themeContext }) {
   const [open, setOpen] = useState(false);
   const dialog = useRef(null);
   useEffect(() => { if (open) dialog.current?.showModal(); else dialog.current?.close(); }, [open]);
-  return <><style>{css}</style><button className="oq-learning-launch" title="量子学习通" aria-label="打开量子学习通" onClick={() => setOpen(true)}><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><path d="M12 6.5C8.4 4.8 5.5 4.8 3 5.5v14c3-.8 6-.6 9 1 3-1.6 6-1.8 9-1v-14c-2.5-.7-5.4-.7-9 1Z"/><path d="M12 6.5v14"/></svg>{wide && <span>量子学习通</span>}</button>
+  return <><style>{css}</style><button className="oq-learning-launch" title={t("name")} aria-label={t("open")} onClick={() => setOpen(true)}><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><path d="M12 6.5C8.4 4.8 5.5 4.8 3 5.5v14c3-.8 6-.6 9 1 3-1.6 6-1.8 9-1v-14c-2.5-.7-5.4-.7-9 1Z"/><path d="M12 6.5v14"/></svg>{wide && <span>{t("name")}</span>}</button>
     <dialog className="oq-learning-dialog" ref={dialog} onCancel={() => setOpen(false)} onClose={() => setOpen(false)}>{open && <LearningApp onClose={() => setOpen(false)} themeContext={themeContext} />}</dialog>
   </>;
 }
 
-export const inject = ["slots", "theme"];
+export const inject = ["slots", "theme", "locale"];
 export function apply(ctx) {
-  ctx.slots.inject("sidebar.footer.action", () => ctx.slots.register({ name: "sidebar.footer.action", id: "openquantum-learning", order: 5 }, (props) => <LearningEntry {...props} themeContext={ctx} />));
+  t = ctx.locale.bind(NS);
+  ctx.slots.inject("sidebar.footer.action", () => ctx.slots.register({ name: "sidebar.footer.action", id: "openquantum-learning", order: 5, locale: NS }, (props) => <LearningEntry {...props} themeContext={ctx} />));
 }

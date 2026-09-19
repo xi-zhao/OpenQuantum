@@ -1,12 +1,13 @@
 import { cp, mkdir, rm, symlink } from "node:fs/promises";
 import path from "node:path";
 import { buildLearningClient } from "./build-learning-client.mjs";
+import { buildLocaleClient } from "./build-locale-client.mjs";
 
 /**
  * Materialize the OpenQuantum-owned parts of a Harness home.
  *
  * DeepSeek Harness owns the profile and runtime. OpenQuantum contributes one
- * deployment patch, one shared model-route fragment, Agent presets and three
+ * deployment patch, one shared model-route fragment, Agent presets and four
  * Host Web extensions. Keeping this setup in one place makes the Web launcher,
  * Desktop adapter, isolated tests and real-provider probes boot the same
  * composition even when each uses a different DSH_HOME.
@@ -72,6 +73,7 @@ export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot, 
   );
   const learningPresetTarget = path.join(harnessHome, ".agent-presets", "quantum-learning");
   const learningTarget = path.join(harnessHome, "profiles", profileName, "node_modules", "@openquantum", "harness-web-learning");
+  const localesTarget = path.join(harnessHome, "profiles", profileName, "node_modules", "@openquantum", "harness-web-locales");
 
   await Promise.all([
     mkdir(path.dirname(patchTarget), { recursive: true }),
@@ -91,8 +93,10 @@ export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot, 
     }),
     cp(path.join(projectRoot, "runtime/openquantum/agent-presets/quantum-learning"), learningPresetTarget, { recursive: true, force: true }),
     cp(path.join(projectRoot, "runtime/openquantum/web-learning"), learningTarget, { recursive: true, force: true }),
+    cp(path.join(projectRoot, "runtime/openquantum/web-locales"), localesTarget, { recursive: true, force: true }),
   ]);
   await buildLearningClient(projectRoot, path.join(learningTarget, "client.js"));
+  await buildLocaleClient(projectRoot, path.join(localesTarget, "client.js"));
 
   // Agent preset entries are imported from the isolated DSH_HOME copy. Give
   // that generated copy one explicit dependency root instead of relying on
@@ -109,6 +113,7 @@ export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot, 
     brandingTarget,
     capabilitiesTarget,
     learningTarget,
+    localesTarget,
     learningPresetTarget,
     modelRoutesTarget,
     patchTarget,

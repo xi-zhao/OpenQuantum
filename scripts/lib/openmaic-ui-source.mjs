@@ -3,6 +3,7 @@ import { execFile } from "node:child_process";
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import path from "node:path";
 import { promisify } from "node:util";
+import { dictionariesFor, languages } from "../../runtime/openquantum/web-locales/catalog.mjs";
 const run = promisify(execFile);
 export const OPENMAIC_REVISION = "29735f10d0081859ac3db1a50a0cc92f46436004";
 export const OPENMAIC_VERSION = "1.0.1";
@@ -25,7 +26,7 @@ const patches = {
     ["void Promise.all([loadClassrooms(), loadFolders()]).finally(() => setHydrated(true));", "void syncQuantumLibrary().catch((error) => toast.error(error.message)).then(() => Promise.all([loadClassrooms(), loadFolders()])).finally(() => setHydrated(true));"],
     ['<motion.img\n            src="/logo-horizontal.png"\n            alt="OpenMAIC"', '<motion.div'],
     ['className="h-12 md:h-16 mb-2 -ml-2 md:-ml-3"\n          />', 'className="mb-2 -ml-2 md:-ml-3"\n          >\n            <LearningWordmark className="text-5xl md:text-[64px]" />\n          </motion.div>'],
-    ["OpenMAIC Open Source Project", "量子学习通"],
+    ["OpenMAIC Open Source Project", "OpenQuantum"],
     ['className="min-h-[100dvh] w-full bg-gradient-to-b', 'className="oq-learning-home min-h-[100dvh] w-full bg-gradient-to-b'],
     ['className="fixed top-4 right-4 z-50', 'className="oq-learning-topbar fixed top-4 right-4 z-50'],
     ['{/* Theme Selector */}\n        <div className="relative">', '{/* Appearance follows the parent when embedded. */}\n        <div data-oq-theme-selector className="relative">'],
@@ -34,14 +35,14 @@ const patches = {
     ['className="text-sm text-muted-foreground/60 mb-8"', 'className="oq-learning-slogan text-sm text-muted-foreground/60 mb-8"'],
   ],
   "app/layout.tsx": [
-    ["title: 'OpenMAIC'", "title: '量子学习通'"],
+    ["title: 'OpenMAIC'", "title: 'Quantum Learning · OpenQuantum'"],
     ["import './globals.css';", "import './globals.css';\nimport './openquantum-theme.css';"],
-    ['<html lang="en" suppressHydrationWarning>', '<html lang="zh-CN" className="oq-learning-theme" suppressHydrationWarning>'],
-    ["  title: '量子学习通',", "  title: '量子学习通',\n  icons: { icon: '/openquantum-mark.svg' },"],
+    ['<html lang="en" suppressHydrationWarning>', '<html lang="en" className="oq-learning-theme" suppressHydrationWarning>'],
+    ["  title: 'Quantum Learning · OpenQuantum',", "  title: 'Quantum Learning · OpenQuantum',\n  icons: { icon: '/openquantum-mark.svg' },"],
   ],
   "lib/brand/brand-config.ts": [
-    ["productName: 'OpenMAIC'", "productName: '量子学习通'"],
-    ["shortName: 'OpenMAIC'", "shortName: '量子学习通'"],
+    ["productName: 'OpenMAIC'", "productName: 'Quantum Learning'"],
+    ["shortName: 'OpenMAIC'", "shortName: 'Quantum Learning'"],
     ["logoSrc: '/logo-horizontal.png'", "logoSrc: '/openquantum-mark.svg'"],
     ["markSrc: '/openmaic-mark.png'", "markSrc: '/openquantum-mark.svg'"],
     ["themeColor: '#722ed1'", "themeColor: '#061f38'"],
@@ -67,18 +68,32 @@ const patches = {
     ['<img\n            src={brand.logoSrc}\n            alt=""\n            aria-hidden="true"\n            className="h-[21px] w-auto max-w-[110px] shrink-0"\n          />', '<LearningWordmark brand={brand} className="text-2xl" />'],
   ],
   "components/access-code-modal.tsx": [
-    ['\n                OpenMAIC\n', '\n                量子学习通\n'],
+    ['\n                OpenMAIC\n', "\n                {t('openquantum.name')}\n"],
   ],
   "components/scene-renderers/pbl/v2/workspace.tsx": [
-    ['alt="OpenMAIC"', 'alt="量子学习通"'],
+    ['alt="OpenMAIC"', "alt={t('openquantum.name')}"],
     ['src="/openmaic-mark.png"', 'src="/openquantum-mark.svg"'],
   ],
   "lib/video-export/emit-hyperframes/index.ts": [
-    [' — OpenMAIC video export', ' — 量子学习通视频导出'],
-    [' — OpenMAIC video</title>', ' — 量子学习通视频</title>'],
+    [' — OpenMAIC video export', ' — Quantum Learning video export'],
+    [' — OpenMAIC video</title>', ' — Quantum Learning video</title>'],
   ],
   "lib/hooks/use-i18n.tsx": [
-    ["const raw = stored || navigator.language || defaultLocale;", "const raw = stored || (process.env.NEXT_PUBLIC_OPENQUANTUM_EMBED === '1' ? 'zh-CN' : navigator.language) || defaultLocale;"],
+    ["const LOCALE_STORAGE_KEY", "import { isEmbedded, requestHostLocale, useHostLocale } from '@/components/openquantum-use-host-locale';\n\nconst LOCALE_STORAGE_KEY"],
+    ["  const locale = (i18n.language || defaultLocale) as Locale;", "  useHostLocale(i18n);\n  const locale = (i18n.language || defaultLocale) as Locale;"],
+    ["  useEffect(() => {\n    try {", "  useEffect(() => {\n    if (isEmbedded()) return;\n    try {"],
+    ["  const setLocale = (newLocale: Locale) => {", "  const setLocale = (newLocale: Locale) => {\n    if (requestHostLocale(newLocale)) return;"],
+  ],
+  "lib/i18n/locales.ts": [
+    ["export const supportedLocales = [", "import languages from '@/lib/openquantum-languages.json';\n\nconst upstreamLocales = ["],
+    ["] as const satisfies readonly LocaleEntry[];", `] as const satisfies readonly LocaleEntry[];
+
+// Keep the embedded selector in sync with the deployment's single language list.
+export const supportedLocales = languages.map(({ learningLocale }) => {
+  const locale = upstreamLocales.find(({ code }) => code === learningLocale);
+  if (!locale) throw new Error('Missing learning locale: ' + learningLocale);
+  return locale;
+});`],
   ],
   "lib/hooks/use-theme.tsx": [
     ["type Theme =", "import { useHostTheme } from '@/components/openquantum-use-host-theme';\n\ntype Theme ="],
@@ -111,7 +126,7 @@ const patches = {
   'custom-openquantum': {
     id: 'custom-openquantum', name: 'OpenQuantum', type: 'openai',
     requiresApiKey: true, defaultBaseUrl: '',
-    models: [{ id: 'harness-default', name: 'OpenQuantum 当前模型' }],
+    models: [{ id: 'harness-default', name: 'OpenQuantum' }],
   },`],
   ],
   "lib/server/provider-config.ts": [
@@ -161,7 +176,11 @@ export async function applyOpenMaicUiOverlay(root) {
       expected = expected.replace(before, after);
     }
     if (name === "pnpm-lock.yaml") expected = await readFile(path.join(root, "runtime/openquantum/openmaic-ui/pnpm-lock.yaml"), "utf8");
-    if (localizedFiles.has(name)) expected = expected.replaceAll("OpenMAIC", "量子学习通");
+    if (localizedFiles.has(name)) {
+      expected = expected.replaceAll("OpenMAIC", /\/zh[-.]|\/zh-CN\./.test(name) ? "量子学习通" : "Quantum Learning");
+      const language = languages.find(({ learningLocale }) => name === `lib/i18n/locales/${learningLocale}.json`);
+      if (language) expected = JSON.stringify({ ...JSON.parse(expected), openquantum: dictionariesFor(language.id)["openquantum.learning"] }, null, 2) + "\n";
+    }
     if (appearanceFiles.has(name)) {
       expected = expected
         .replaceAll('bg-gradient-to-b from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900', 'bg-background')
@@ -185,6 +204,9 @@ export async function applyOpenMaicUiOverlay(root) {
   writes.push(["components/openquantum-bridge.tsx", await readFile(path.join(root, "runtime/openquantum/openmaic-ui/bridge.tsx"), "utf8")]);
   writes.push(["components/openquantum-wordmark.tsx", await readFile(path.join(root, "runtime/openquantum/openmaic-ui/wordmark.tsx"), "utf8")]);
   writes.push(["components/openquantum-use-host-theme.ts", await readFile(path.join(root, "runtime/openquantum/openmaic-ui/use-host-theme.ts"), "utf8")]);
+  writes.push(["components/openquantum-use-host-locale.ts", await readFile(path.join(root, "runtime/openquantum/openmaic-ui/use-host-locale.ts"), "utf8")]);
+  writes.push(["lib/openquantum-ui-locale.mjs", (await readFile(path.join(root, "src/learning/ui-locale.mjs"), "utf8")).replace("../../runtime/openquantum/web-locales/languages.json", "./openquantum-languages.json")]);
+  writes.push(["lib/openquantum-languages.json", await readFile(path.join(root, "runtime/openquantum/web-locales/languages.json"), "utf8")]);
   writes.push(["tests/openquantum/pro-swap.test.ts", await readFile(path.join(root, "runtime/openquantum/openmaic-ui/pro-swap.test.ts"), "utf8")]);
   writes.push(["app/openquantum-theme.css", await readFile(path.join(root, "runtime/openquantum/openmaic-ui/theme.css"), "utf8")]);
   writes.push(["lib/openquantum-ui-theme.mjs", await readFile(path.join(root, "src/learning/ui-theme.mjs"), "utf8")]);

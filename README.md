@@ -2,6 +2,8 @@
   <img src="./packages/openquantum-web-branding/assets/lockup.svg" width="430" alt="OpenQuantum" />
 </h1>
 
+<p align="center"><a href="./README.md">简体中文</a> · <a href="./docs/readme/README.en.md">English</a> · <a href="./docs/readme/README.ja.md">日本語</a> · <a href="./docs/readme/README.ko.md">한국어</a> · <a href="./docs/readme/README.es.md">Español</a> · <a href="./docs/readme/README.fr.md">Français</a> · <a href="./docs/readme/README.de.md">Deutsch</a> · <a href="./docs/readme/README.pt.md">Português</a> · <a href="./docs/readme/README.ru.md">Русский</a> · <a href="./docs/readme/README.ar.md">العربية</a></p>
+
 <p align="center">
   <strong>开源量子 Agent 与应用平台</strong><br />
   <sub>An open-source quantum agent and application platform.</sub>
@@ -159,6 +161,12 @@ npm run dev
 ```
 
 首次打开启动日志中带登录令牌的地址，认证后会跳转到 <http://127.0.0.1:3000>，再在设置中心配置模型。还没有模型密钥时，可先用 `npm run demo:quantum-ground-state` 运行本地参考示例；安装 `uv` 后可用 `npm run mcp:qiskit:probe` 检查 Qiskit 接入，首次运行可能下载依赖。
+
+### 界面语言
+
+在「设置 → 通用设置 → 语言」中选择简体中文、英语、日语、韩语、西班牙语、法语、德语、葡萄牙语、俄语或阿拉伯语。选择会保存，学习通跟随工作台；阿拉伯语使用从右到左的阅读方向。界面语言不会改写现有对话、课程材料、用户 Skill 或工具输出。部分原生系统对话框在中英文之外使用英语回退。
+
+![OpenQuantum Desktop 实际界面的语言选择](docs/images/openquantum-languages-20260919.jpg)
 
 ### 配置模型
 

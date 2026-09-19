@@ -267,7 +267,7 @@ test(
     );
     assert(openQuantumPreset, `${diagnostics()}\nmissing OpenQuantum preset`);
     assert.equal(openQuantumPreset.isDefault, true);
-    assert.equal(openQuantumPreset.name, "OpenQuantum（默认）");
+    assert.equal(openQuantumPreset.name, "OpenQuantum");
     assert.match(openQuantumPreset.description, /量子科研模式/);
     assert.match(openQuantumPreset.description, /通用编码/);
     assert.match(openQuantumPreset.description, /PTC/);

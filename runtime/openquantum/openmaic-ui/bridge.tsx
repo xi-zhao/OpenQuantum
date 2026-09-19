@@ -1,6 +1,7 @@
 'use client';
 
 import { loadStageData, saveStageData, listFolders, createFolder, setStageFolder } from '@/lib/utils/stage-storage';
+import { getClientTranslation } from '@/lib/i18n';
 import { db } from '@/lib/utils/database';
 import { stageDeletionEpoch } from '@/lib/utils/deleted-stages';
 import type { Stage, Scene } from '@/lib/types/stage';
@@ -18,10 +19,10 @@ const importedKey = 'openquantum:imported-classrooms:v1';
 type Course = { id: string; createdAt: string; document: { stage: Partial<Stage>; scenes: Scene[] } };
 
 function request<T>(type: 'library'): Promise<T> {
-  if (window.parent === window || !parentOrigin) return Promise.reject(new Error('请从 OpenQuantum 的量子学习通入口打开。'));
+  if (window.parent === window || !parentOrigin) return Promise.reject(new Error(getClientTranslation('openquantum.openFromHost')));
   const requestId = crypto.randomUUID();
   return new Promise((resolve, reject) => {
-    const timer = setTimeout(() => finish(new Error('历史课程同步暂未完成，请稍后重新打开。')), 30_000);
+    const timer = setTimeout(() => finish(new Error(getClientTranslation('openquantum.syncTimeout'))), 30_000);
     function finish(error?: Error, value?: T) {
       clearTimeout(timer);
       window.removeEventListener('message', receive);
@@ -37,13 +38,13 @@ function request<T>(type: 'library'): Promise<T> {
 }
 
 async function importCourse(course: Course) {
-  if (!course.document?.scenes?.length) throw new Error('课堂内容为空。');
+  if (!course.document?.scenes?.length) throw new Error(getClientTranslation('openquantum.emptyClassroom'));
   if (await loadStageData(course.id)) return; // Preserve subsequent edits in OpenMAIC.
   const now = Date.parse(course.createdAt) || Date.now();
-  const stage: Stage = { ...course.document.stage, id: course.id, name: course.document.stage.name || '量子课堂', createdAt: now, updatedAt: now };
+  const stage: Stage = { ...course.document.stage, id: course.id, name: course.document.stage.name || getClientTranslation('openquantum.defaultClassroom'), createdAt: now, updatedAt: now };
   const scenes = course.document.scenes.map((scene, order) => ({ ...scene, stageId: course.id, order, createdAt: now, updatedAt: now }));
   const outcome = await saveStageData(course.id, { stage, scenes, currentSceneId: scenes[0].id, chats: [] }, stageDeletionEpoch(course.id));
-  if (outcome) throw new Error('课堂没有完整保存，请重新打开后重试。');
+  if (outcome) throw new Error(getClientTranslation('openquantum.incompleteSave'));
 }
 
 let syncing: Promise<void> | undefined;

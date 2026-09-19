@@ -1,0 +1,62 @@
+[
+  {
+    "id": "zh",
+    "label": "简体中文",
+    "learningLocale": "zh-CN",
+    "direction": "ltr"
+  },
+  {
+    "id": "en",
+    "label": "English",
+    "learningLocale": "en-US",
+    "direction": "ltr"
+  },
+  {
+    "id": "ja",
+    "label": "日本語",
+    "learningLocale": "ja-JP",
+    "direction": "ltr"
+  },
+  {
+    "id": "ko",
+    "label": "한국어",
+    "learningLocale": "ko-KR",
+    "direction": "ltr"
+  },
+  {
+    "id": "es",
+    "label": "Español",
+    "learningLocale": "es-MX",
+    "direction": "ltr"
+  },
+  {
+    "id": "fr",
+    "label": "Français",
+    "learningLocale": "fr-FR",
+    "direction": "ltr"
+  },
+  {
+    "id": "de",
+    "label": "Deutsch",
+    "learningLocale": "de-DE",
+    "direction": "ltr"
+  },
+  {
+    "id": "pt",
+    "label": "Português",
+    "learningLocale": "pt-BR",
+    "direction": "ltr"
+  },
+  {
+    "id": "ru",
+    "label": "Русский",
+    "learningLocale": "ru-RU",
+    "direction": "ltr"
+  },
+  {
+    "id": "ar",
+    "label": "العربية",
+    "learningLocale": "ar-SA",
+    "direction": "rtl"
+  }
+]

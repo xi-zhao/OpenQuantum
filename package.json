@@ -20,7 +20,7 @@
     "dev": "node scripts/run-harness.mjs --port 3000 --trusted-host localhost:3000",
     "desktop": "node scripts/run-desktop.mjs",
     "desktop:check": "node --test tests/desktop-integration.test.mjs",
-    "desktop:verify-install": "npm run desktop:check && npm run desktop -- --version",
+    "desktop:verify-install": "node scripts/sync-ui-locales.mjs --check --require-desktop && npm run desktop:check && npm run desktop -- --version",
     "harness:dev": "node scripts/run-harness.mjs",
     "harness:config": "node scripts/run-harness.mjs --dump-config",
     "models:probe": "node scripts/probe-models.mjs",
@@ -70,7 +70,9 @@
     "capability:diagnostics:test": "node .agents/skills/platform-diagnostics/evals/run-evals.mjs",
     "start": "node scripts/run-harness.mjs --port 3000 --trusted-host localhost:3000",
     "lint": "eslint .",
-    "check": "npm run lint && npm run capability:conformance && npm run test:p1 && npm run harness:config",
+    "locales:check": "node scripts/sync-ui-locales.mjs --check && node --test tests/ui-locales.test.mjs",
+    "locales:sync": "node scripts/sync-ui-locales.mjs --write",
+    "check": "npm run lint && npm run locales:check && npm run capability:conformance && npm run test:p1 && npm run harness:config",
     "desktop:setup": "node scripts/setup-desktop.mjs",
     "test:quantum-upgrade:live": "node --test tests/quantum-upgrade-live.test.mjs"
   },
@@ -99,6 +101,7 @@
   "devDependencies": {
     "@agentclientprotocol/sdk": "1.4.0",
     "@eslint/js": "9.39.5",
+    "acorn": "8.18.0",
     "eslint": "9.39.5",
     "globals": "17.12.0"
   },

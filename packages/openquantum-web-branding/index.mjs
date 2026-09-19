@@ -78,10 +78,7 @@ const OPENQUANTUM_COPY = Object.freeze({
 const OPENQUANTUM_COPY_SCRIPT = `(() => {
   const replacements = ${JSON.stringify(OPENQUANTUM_COPY)};
   const heroPreviewLabels = new Set(["预览版", "Preview"]);
-  const heroHeadlines = new Set([
-    ${JSON.stringify(OPENQUANTUM_BRAND.tagline.zh)},
-    ${JSON.stringify(OPENQUANTUM_BRAND.tagline.en)},
-  ]);
+  const heroHeadlines = new Set(${JSON.stringify(Object.values(OPENQUANTUM_BRAND.tagline))});
   const connectionSettingLabels = new Set([
     "自定义设置",
     "Customized settings",
@@ -92,6 +89,13 @@ const OPENQUANTUM_COPY_SCRIPT = `(() => {
   function replaceText(node) {
     if (node.nodeType === Node.TEXT_NODE) {
       const parent = node.parentElement;
+      // The pinned layout restores its build-time product title after mounting.
+      // Keep a session title intact while adapting only the product suffix.
+      if (parent?.tagName === "TITLE") {
+        const title = node.nodeValue.replace(/(^| — )DeepSeek Harness$/, "$1${OPENQUANTUM_BRAND.name}");
+        if (title !== node.nodeValue) node.nodeValue = title;
+        return;
+      }
       const headline = parent?.previousElementSibling?.textContent?.trim();
       if (
         parent !== null &&

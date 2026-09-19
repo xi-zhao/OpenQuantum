@@ -50,6 +50,8 @@
       - !!js process.cwd() + '/.agents/skills'
 
 # The shared home can carry Web/Desktop rows; stdio mounts no browser host.
+- id: openquantum-web-locales
+  disabled: true
 - id: openquantum-web-branding
   disabled: true
 - id: openquantum-web-capabilities

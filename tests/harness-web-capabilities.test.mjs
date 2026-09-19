@@ -277,7 +277,7 @@ test("client plugin contributes the native settings section and uses Harness cre
   assert.match(client, /openquantum-capabilities/);
   assert.match(client, /openquantum-channels/);
   assert.match(client, /\/openquantum\/api\/runtime-readiness/);
-  assert.match(client, /\["runtime", "运行状态"\]/);
+  assert.match(client, /\["runtime", t\("运行状态"\)\]/);
   assert.match(client, /React\.useState\("runtime"\)/);
   assert.match(client, /当前运行状态/);
   assert.doesNotMatch(client, /if \(!snapshot\) return/);

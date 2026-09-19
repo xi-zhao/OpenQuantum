@@ -1,0 +1,1212 @@
+{
+  "Settings": {
+    "ja": "設定",
+    "ko": "설정",
+    "es": "Configuración",
+    "fr": "Paramètres",
+    "de": "Einstellungen",
+    "pt": "Configurações",
+    "ru": "Настройки",
+    "ar": "الإعدادات"
+  },
+  "General": {
+    "ja": "一般",
+    "ko": "일반",
+    "es": "General",
+    "fr": "Général",
+    "de": "Allgemein",
+    "pt": "Geral",
+    "ru": "Общие",
+    "ar": "عام"
+  },
+  "Language": {
+    "ja": "言語",
+    "ko": "언어",
+    "es": "Idioma",
+    "fr": "Langue",
+    "de": "Sprache",
+    "pt": "Idioma",
+    "ru": "Язык",
+    "ar": "اللغة"
+  },
+  "Appearance": {
+    "ja": "外観",
+    "ko": "모양",
+    "es": "Apariencia",
+    "fr": "Apparence",
+    "de": "Darstellung",
+    "pt": "Aparência",
+    "ru": "Оформление",
+    "ar": "المظهر"
+  },
+  "Light": {
+    "ja": "ライト",
+    "ko": "라이트",
+    "es": "Claro",
+    "fr": "Clair",
+    "de": "Hell",
+    "pt": "Claro",
+    "ru": "Светлая",
+    "ar": "فاتح"
+  },
+  "Dark": {
+    "ja": "ダーク",
+    "ko": "다크",
+    "es": "Oscuro",
+    "fr": "Sombre",
+    "de": "Dunkel",
+    "pt": "Escuro",
+    "ru": "Тёмная",
+    "ar": "داكن"
+  },
+  "System": {
+    "ja": "システム",
+    "ko": "시스템",
+    "es": "Sistema",
+    "fr": "Système",
+    "de": "System",
+    "pt": "Sistema",
+    "ru": "Системная",
+    "ar": "النظام"
+  },
+  "New Session": {
+    "ja": "新しいセッション",
+    "ko": "새 세션",
+    "es": "Nueva sesión",
+    "fr": "Nouvelle session",
+    "de": "Neue Sitzung",
+    "pt": "Nova sessão",
+    "ru": "Новый сеанс",
+    "ar": "جلسة جديدة"
+  },
+  "New session": {
+    "ja": "新しいセッション",
+    "ko": "새 세션",
+    "es": "Nueva sesión",
+    "fr": "Nouvelle session",
+    "de": "Neue Sitzung",
+    "pt": "Nova sessão",
+    "ru": "Новый сеанс",
+    "ar": "جلسة جديدة"
+  },
+  "Choose workspace": {
+    "ja": "ワークスペースを選択",
+    "ko": "작업 공간 선택",
+    "es": "Elegir espacio de trabajo",
+    "fr": "Choisir un espace de travail",
+    "de": "Arbeitsbereich wählen",
+    "pt": "Escolher espaço de trabalho",
+    "ru": "Выбрать рабочую область",
+    "ar": "اختيار مساحة عمل"
+  },
+  "Choose a workspace to start": {
+    "ja": "ワークスペースを選択して開始",
+    "ko": "작업 공간을 선택하여 시작",
+    "es": "Elige un espacio de trabajo para comenzar",
+    "fr": "Choisissez un espace de travail pour commencer",
+    "de": "Zum Start einen Arbeitsbereich wählen",
+    "pt": "Escolha um espaço de trabalho para começar",
+    "ru": "Выберите рабочую область для начала",
+    "ar": "اختر مساحة عمل للبدء"
+  },
+  "Models": {
+    "ja": "モデル",
+    "ko": "모델",
+    "es": "Modelos",
+    "fr": "Modèles",
+    "de": "Modelle",
+    "pt": "Modelos",
+    "ru": "Модели",
+    "ar": "النماذج"
+  },
+  "Model": {
+    "ja": "モデル",
+    "ko": "모델",
+    "es": "Modelo",
+    "fr": "Modèle",
+    "de": "Modell",
+    "pt": "Modelo",
+    "ru": "Модель",
+    "ar": "النموذج"
+  },
+  "Provider": {
+    "ja": "プロバイダー",
+    "ko": "제공자",
+    "es": "Proveedor",
+    "fr": "Fournisseur",
+    "de": "Anbieter",
+    "pt": "Provedor",
+    "ru": "Провайдер",
+    "ar": "مزود الخدمة"
+  },
+  "Add provider": {
+    "ja": "プロバイダーを追加",
+    "ko": "제공자 추가",
+    "es": "Añadir proveedor",
+    "fr": "Ajouter un fournisseur",
+    "de": "Anbieter hinzufügen",
+    "pt": "Adicionar provedor",
+    "ru": "Добавить провайдера",
+    "ar": "إضافة مزود خدمة"
+  },
+  "Add a custom provider": {
+    "ja": "カスタムプロバイダーを追加",
+    "ko": "사용자 지정 제공자 추가",
+    "es": "Añadir proveedor personalizado",
+    "fr": "Ajouter un fournisseur personnalisé",
+    "de": "Benutzerdefinierten Anbieter hinzufügen",
+    "pt": "Adicionar provedor personalizado",
+    "ru": "Добавить своего провайдера",
+    "ar": "إضافة مزود مخصص"
+  },
+  "Custom": {
+    "ja": "カスタム",
+    "ko": "사용자 지정",
+    "es": "Personalizado",
+    "fr": "Personnalisé",
+    "de": "Benutzerdefiniert",
+    "pt": "Personalizado",
+    "ru": "Свой",
+    "ar": "مخصص"
+  },
+  "API key": {
+    "ja": "API キー",
+    "ko": "API 키",
+    "es": "Clave API",
+    "fr": "Clé API",
+    "de": "API-Schlüssel",
+    "pt": "Chave de API",
+    "ru": "Ключ API",
+    "ar": "مفتاح API"
+  },
+  "Enter your API key": {
+    "ja": "API キーを入力",
+    "ko": "API 키 입력",
+    "es": "Introduce tu clave API",
+    "fr": "Saisissez votre clé API",
+    "de": "API-Schlüssel eingeben",
+    "pt": "Insira sua chave de API",
+    "ru": "Введите ключ API",
+    "ar": "أدخل مفتاح API"
+  },
+  "Base URL": {
+    "ja": "ベース URL",
+    "ko": "기본 URL",
+    "es": "URL base",
+    "fr": "URL de base",
+    "de": "Basis-URL",
+    "pt": "URL base",
+    "ru": "Базовый URL",
+    "ar": "عنوان URL الأساسي"
+  },
+  "Display name": {
+    "ja": "表示名",
+    "ko": "표시 이름",
+    "es": "Nombre para mostrar",
+    "fr": "Nom affiché",
+    "de": "Anzeigename",
+    "pt": "Nome de exibição",
+    "ru": "Отображаемое имя",
+    "ar": "الاسم المعروض"
+  },
+  "Quantum components": {
+    "ja": "量子コンポーネント",
+    "ko": "양자 구성 요소",
+    "es": "Componentes cuánticos",
+    "fr": "Composants quantiques",
+    "de": "Quantenkomponenten",
+    "pt": "Componentes quânticos",
+    "ru": "Квантовые компоненты",
+    "ar": "المكونات الكمومية"
+  },
+  "Messaging channels": {
+    "ja": "メッセージ連携",
+    "ko": "메시징 채널",
+    "es": "Canales de mensajería",
+    "fr": "Canaux de messagerie",
+    "de": "Nachrichtenkanäle",
+    "pt": "Canais de mensagens",
+    "ru": "Каналы сообщений",
+    "ar": "قنوات المراسلة"
+  },
+  "Quantum Learning": {
+    "ja": "量子学習",
+    "ko": "양자 학습",
+    "es": "Aprendizaje cuántico",
+    "fr": "Apprentissage quantique",
+    "de": "Quantenlernen",
+    "pt": "Aprendizagem quântica",
+    "ru": "Квантовое обучение",
+    "ar": "التعلم الكمومي"
+  },
+  "Open Quantum Learning": {
+    "ja": "量子学習を開く",
+    "ko": "양자 학습 열기",
+    "es": "Abrir aprendizaje cuántico",
+    "fr": "Ouvrir l’apprentissage quantique",
+    "de": "Quantenlernen öffnen",
+    "pt": "Abrir aprendizagem quântica",
+    "ru": "Открыть квантовое обучение",
+    "ar": "فتح التعلم الكمومي"
+  },
+  "Back to OpenQuantum": {
+    "ja": "OpenQuantum に戻る",
+    "ko": "OpenQuantum으로 돌아가기",
+    "es": "Volver a OpenQuantum",
+    "fr": "Retour à OpenQuantum",
+    "de": "Zurück zu OpenQuantum",
+    "pt": "Voltar ao OpenQuantum",
+    "ru": "Вернуться в OpenQuantum",
+    "ar": "العودة إلى OpenQuantum"
+  },
+  "Loading Quantum Learning…": {
+    "ja": "量子学習を読み込み中…",
+    "ko": "양자 학습을 불러오는 중…",
+    "es": "Cargando aprendizaje cuántico…",
+    "fr": "Chargement de l’apprentissage quantique…",
+    "de": "Quantenlernen wird geladen…",
+    "pt": "Carregando aprendizagem quântica…",
+    "ru": "Загрузка квантового обучения…",
+    "ar": "جارٍ تحميل التعلم الكمومي…"
+  },
+  "Reopen": {
+    "ja": "開き直す",
+    "ko": "다시 열기",
+    "es": "Volver a abrir",
+    "fr": "Rouvrir",
+    "de": "Erneut öffnen",
+    "pt": "Reabrir",
+    "ru": "Открыть заново",
+    "ar": "إعادة الفتح"
+  },
+  "Cancel": {
+    "ja": "キャンセル",
+    "ko": "취소",
+    "es": "Cancelar",
+    "fr": "Annuler",
+    "de": "Abbrechen",
+    "pt": "Cancelar",
+    "ru": "Отмена",
+    "ar": "إلغاء"
+  },
+  "Close": {
+    "ja": "閉じる",
+    "ko": "닫기",
+    "es": "Cerrar",
+    "fr": "Fermer",
+    "de": "Schließen",
+    "pt": "Fechar",
+    "ru": "Закрыть",
+    "ar": "إغلاق"
+  },
+  "Save": {
+    "ja": "保存",
+    "ko": "저장",
+    "es": "Guardar",
+    "fr": "Enregistrer",
+    "de": "Speichern",
+    "pt": "Salvar",
+    "ru": "Сохранить",
+    "ar": "حفظ"
+  },
+  "Delete": {
+    "ja": "削除",
+    "ko": "삭제",
+    "es": "Eliminar",
+    "fr": "Supprimer",
+    "de": "Löschen",
+    "pt": "Excluir",
+    "ru": "Удалить",
+    "ar": "حذف"
+  },
+  "Remove": {
+    "ja": "削除",
+    "ko": "제거",
+    "es": "Quitar",
+    "fr": "Retirer",
+    "de": "Entfernen",
+    "pt": "Remover",
+    "ru": "Убрать",
+    "ar": "إزالة"
+  },
+  "Edit": {
+    "ja": "編集",
+    "ko": "편집",
+    "es": "Editar",
+    "fr": "Modifier",
+    "de": "Bearbeiten",
+    "pt": "Editar",
+    "ru": "Изменить",
+    "ar": "تعديل"
+  },
+  "Copy": {
+    "ja": "コピー",
+    "ko": "복사",
+    "es": "Copiar",
+    "fr": "Copier",
+    "de": "Kopieren",
+    "pt": "Copiar",
+    "ru": "Копировать",
+    "ar": "نسخ"
+  },
+  "Copied": {
+    "ja": "コピーしました",
+    "ko": "복사됨",
+    "es": "Copiado",
+    "fr": "Copié",
+    "de": "Kopiert",
+    "pt": "Copiado",
+    "ru": "Скопировано",
+    "ar": "تم النسخ"
+  },
+  "Retry": {
+    "ja": "再試行",
+    "ko": "다시 시도",
+    "es": "Reintentar",
+    "fr": "Réessayer",
+    "de": "Erneut versuchen",
+    "pt": "Tentar novamente",
+    "ru": "Повторить",
+    "ar": "إعادة المحاولة"
+  },
+  "Try again": {
+    "ja": "再試行",
+    "ko": "다시 시도",
+    "es": "Intentar de nuevo",
+    "fr": "Réessayer",
+    "de": "Erneut versuchen",
+    "pt": "Tentar novamente",
+    "ru": "Повторить",
+    "ar": "حاول مجددًا"
+  },
+  "Loading…": {
+    "ja": "読み込み中…",
+    "ko": "불러오는 중…",
+    "es": "Cargando…",
+    "fr": "Chargement…",
+    "de": "Wird geladen…",
+    "pt": "Carregando…",
+    "ru": "Загрузка…",
+    "ar": "جارٍ التحميل…"
+  },
+  "Search": {
+    "ja": "検索",
+    "ko": "검색",
+    "es": "Buscar",
+    "fr": "Rechercher",
+    "de": "Suchen",
+    "pt": "Pesquisar",
+    "ru": "Поиск",
+    "ar": "بحث"
+  },
+  "More": {
+    "ja": "その他",
+    "ko": "더 보기",
+    "es": "Más",
+    "fr": "Plus",
+    "de": "Mehr",
+    "pt": "Mais",
+    "ru": "Ещё",
+    "ar": "المزيد"
+  },
+  "Next": {
+    "ja": "次へ",
+    "ko": "다음",
+    "es": "Siguiente",
+    "fr": "Suivant",
+    "de": "Weiter",
+    "pt": "Próximo",
+    "ru": "Далее",
+    "ar": "التالي"
+  },
+  "Previous": {
+    "ja": "前へ",
+    "ko": "이전",
+    "es": "Anterior",
+    "fr": "Précédent",
+    "de": "Zurück",
+    "pt": "Anterior",
+    "ru": "Назад",
+    "ar": "السابق"
+  },
+  "Back": {
+    "ja": "戻る",
+    "ko": "뒤로",
+    "es": "Volver",
+    "fr": "Retour",
+    "de": "Zurück",
+    "pt": "Voltar",
+    "ru": "Назад",
+    "ar": "رجوع"
+  },
+  "Submit": {
+    "ja": "送信",
+    "ko": "제출",
+    "es": "Enviar",
+    "fr": "Envoyer",
+    "de": "Absenden",
+    "pt": "Enviar",
+    "ru": "Отправить",
+    "ar": "إرسال"
+  },
+  "Send message": {
+    "ja": "メッセージを送信",
+    "ko": "메시지 보내기",
+    "es": "Enviar mensaje",
+    "fr": "Envoyer le message",
+    "de": "Nachricht senden",
+    "pt": "Enviar mensagem",
+    "ru": "Отправить сообщение",
+    "ar": "إرسال رسالة"
+  },
+  "Stop generating": {
+    "ja": "生成を停止",
+    "ko": "생성 중지",
+    "es": "Detener generación",
+    "fr": "Arrêter la génération",
+    "de": "Generierung stoppen",
+    "pt": "Parar geração",
+    "ru": "Остановить генерацию",
+    "ar": "إيقاف التوليد"
+  },
+  "Running": {
+    "ja": "実行中",
+    "ko": "실행 중",
+    "es": "En ejecución",
+    "fr": "En cours",
+    "de": "Wird ausgeführt",
+    "pt": "Em execução",
+    "ru": "Выполняется",
+    "ar": "قيد التشغيل"
+  },
+  "Failed": {
+    "ja": "失敗",
+    "ko": "실패",
+    "es": "Falló",
+    "fr": "Échec",
+    "de": "Fehlgeschlagen",
+    "pt": "Falhou",
+    "ru": "Ошибка",
+    "ar": "فشل"
+  },
+  "Stopped": {
+    "ja": "停止",
+    "ko": "중지됨",
+    "es": "Detenido",
+    "fr": "Arrêté",
+    "de": "Gestoppt",
+    "pt": "Parado",
+    "ru": "Остановлено",
+    "ar": "متوقف"
+  },
+  "Done": {
+    "ja": "完了",
+    "ko": "완료",
+    "es": "Completado",
+    "fr": "Terminé",
+    "de": "Fertig",
+    "pt": "Concluído",
+    "ru": "Готово",
+    "ar": "تم"
+  },
+  "Read Only": {
+    "ja": "読み取り専用",
+    "ko": "읽기 전용",
+    "es": "Solo lectura",
+    "fr": "Lecture seule",
+    "de": "Schreibgeschützt",
+    "pt": "Somente leitura",
+    "ru": "Только чтение",
+    "ar": "للقراءة فقط"
+  },
+  "Workspace Write": {
+    "ja": "ワークスペースへの書き込み",
+    "ko": "작업 공간 쓰기",
+    "es": "Escritura en el espacio de trabajo",
+    "fr": "Écriture dans l’espace de travail",
+    "de": "Arbeitsbereich beschreiben",
+    "pt": "Gravação no espaço de trabalho",
+    "ru": "Запись в рабочую область",
+    "ar": "الكتابة في مساحة العمل"
+  },
+  "Full access": {
+    "ja": "フルアクセス",
+    "ko": "전체 접근",
+    "es": "Acceso completo",
+    "fr": "Accès complet",
+    "de": "Vollzugriff",
+    "pt": "Acesso total",
+    "ru": "Полный доступ",
+    "ar": "وصول كامل"
+  },
+  "Enable Full access?": {
+    "ja": "フルアクセスを有効にしますか？",
+    "ko": "전체 접근을 허용할까요?",
+    "es": "¿Habilitar acceso completo?",
+    "fr": "Activer l’accès complet ?",
+    "de": "Vollzugriff aktivieren?",
+    "pt": "Ativar acesso total?",
+    "ru": "Включить полный доступ?",
+    "ar": "هل تريد تفعيل الوصول الكامل؟"
+  },
+  "I understand the risks and want to continue": {
+    "ja": "リスクを理解し、続行します",
+    "ko": "위험을 이해했으며 계속하겠습니다",
+    "es": "Entiendo los riesgos y deseo continuar",
+    "fr": "Je comprends les risques et souhaite continuer",
+    "de": "Ich verstehe die Risiken und möchte fortfahren",
+    "pt": "Entendo os riscos e quero continuar",
+    "ru": "Я понимаю риски и хочу продолжить",
+    "ar": "أفهم المخاطر وأريد المتابعة"
+  },
+  "Enable Full access": {
+    "ja": "フルアクセスを有効にする",
+    "ko": "전체 접근 허용",
+    "es": "Habilitar acceso completo",
+    "fr": "Activer l’accès complet",
+    "de": "Vollzugriff aktivieren",
+    "pt": "Ativar acesso total",
+    "ru": "Включить полный доступ",
+    "ar": "تفعيل الوصول الكامل"
+  },
+  "Desktop settings": {
+    "ja": "デスクトップ設定",
+    "ko": "데스크톱 설정",
+    "es": "Configuración de escritorio",
+    "fr": "Paramètres du bureau",
+    "de": "Desktop-Einstellungen",
+    "pt": "Configurações do desktop",
+    "ru": "Настройки приложения",
+    "ar": "إعدادات سطح المكتب"
+  },
+  "Compatibility mode": {
+    "ja": "互換モード",
+    "ko": "호환 모드",
+    "es": "Modo de compatibilidad",
+    "fr": "Mode de compatibilité",
+    "de": "Kompatibilitätsmodus",
+    "pt": "Modo de compatibilidade",
+    "ru": "Режим совместимости",
+    "ar": "وضع التوافق"
+  },
+  "Restart": {
+    "ja": "再起動",
+    "ko": "다시 시작",
+    "es": "Reiniciar",
+    "fr": "Redémarrer",
+    "de": "Neu starten",
+    "pt": "Reiniciar",
+    "ru": "Перезапустить",
+    "ar": "إعادة التشغيل"
+  },
+  "Restart options": {
+    "ja": "再起動オプション",
+    "ko": "다시 시작 옵션",
+    "es": "Opciones de reinicio",
+    "fr": "Options de redémarrage",
+    "de": "Neustartoptionen",
+    "pt": "Opções de reinicialização",
+    "ru": "Параметры перезапуска",
+    "ar": "خيارات إعادة التشغيل"
+  },
+  "Current version": {
+    "ja": "現在のバージョン",
+    "ko": "현재 버전",
+    "es": "Versión actual",
+    "fr": "Version actuelle",
+    "de": "Aktuelle Version",
+    "pt": "Versão atual",
+    "ru": "Текущая версия",
+    "ar": "الإصدار الحالي"
+  },
+  "Export Diagnostics": {
+    "ja": "診断情報をエクスポート",
+    "ko": "진단 정보 내보내기",
+    "es": "Exportar diagnóstico",
+    "fr": "Exporter le diagnostic",
+    "de": "Diagnose exportieren",
+    "pt": "Exportar diagnóstico",
+    "ru": "Экспорт диагностики",
+    "ar": "تصدير بيانات التشخيص"
+  },
+  "Open configuration file": {
+    "ja": "設定ファイルを開く",
+    "ko": "구성 파일 열기",
+    "es": "Abrir archivo de configuración",
+    "fr": "Ouvrir le fichier de configuration",
+    "de": "Konfigurationsdatei öffnen",
+    "pt": "Abrir arquivo de configuração",
+    "ru": "Открыть файл конфигурации",
+    "ar": "فتح ملف الإعدادات"
+  },
+  "Runtime status": {
+    "ja": "実行状態",
+    "ko": "런타임 상태",
+    "es": "Estado de ejecución",
+    "fr": "État d’exécution",
+    "de": "Laufzeitstatus",
+    "pt": "Estado de execução",
+    "ru": "Состояние выполнения",
+    "ar": "حالة التشغيل"
+  },
+  "Current runtime status": {
+    "ja": "現在の実行状態",
+    "ko": "현재 런타임 상태",
+    "es": "Estado de ejecución actual",
+    "fr": "État d’exécution actuel",
+    "de": "Aktueller Laufzeitstatus",
+    "pt": "Estado atual de execução",
+    "ru": "Текущее состояние выполнения",
+    "ar": "حالة التشغيل الحالية"
+  },
+  "Refresh status": {
+    "ja": "状態を更新",
+    "ko": "상태 새로 고침",
+    "es": "Actualizar estado",
+    "fr": "Actualiser l’état",
+    "de": "Status aktualisieren",
+    "pt": "Atualizar estado",
+    "ru": "Обновить состояние",
+    "ar": "تحديث الحالة"
+  },
+  "MCP Server connections": {
+    "ja": "MCP Server 接続",
+    "ko": "MCP Server 연결",
+    "es": "Conexiones MCP Server",
+    "fr": "Connexions MCP Server",
+    "de": "MCP-Server-Verbindungen",
+    "pt": "Conexões MCP Server",
+    "ru": "Подключения MCP Server",
+    "ar": "اتصالات MCP Server"
+  },
+  "Skill instructions": {
+    "ja": "Skill の指示",
+    "ko": "Skill 지침",
+    "es": "Instrucciones Skill",
+    "fr": "Instructions Skill",
+    "de": "Skill-Anweisungen",
+    "pt": "Instruções Skill",
+    "ru": "Инструкции Skill",
+    "ar": "تعليمات Skill"
+  },
+  "Secure credentials": {
+    "ja": "安全な認証情報",
+    "ko": "보안 자격 증명",
+    "es": "Credenciales seguras",
+    "fr": "Identifiants sécurisés",
+    "de": "Sichere Zugangsdaten",
+    "pt": "Credenciais seguras",
+    "ru": "Защищённые учётные данные",
+    "ar": "بيانات اعتماد آمنة"
+  },
+  "Model routes": {
+    "ja": "モデルルート",
+    "ko": "모델 경로",
+    "es": "Rutas de modelos",
+    "fr": "Routes des modèles",
+    "de": "Modellrouten",
+    "pt": "Rotas de modelos",
+    "ru": "Маршруты моделей",
+    "ar": "مسارات النماذج"
+  },
+  "Installation required": {
+    "ja": "インストールが必要",
+    "ko": "설치 필요",
+    "es": "Requiere instalación",
+    "fr": "Installation requise",
+    "de": "Installation erforderlich",
+    "pt": "Instalação necessária",
+    "ru": "Требуется установка",
+    "ar": "يلزم التثبيت"
+  },
+  "Credentials required": {
+    "ja": "認証情報が必要",
+    "ko": "자격 증명 필요",
+    "es": "Requiere credenciales",
+    "fr": "Identifiants requis",
+    "de": "Zugangsdaten erforderlich",
+    "pt": "Credenciais necessárias",
+    "ru": "Требуются учётные данные",
+    "ar": "تلزم بيانات اعتماد"
+  },
+  "Connection enabled": {
+    "ja": "接続が有効",
+    "ko": "연결 활성화됨",
+    "es": "Conexión habilitada",
+    "fr": "Connexion activée",
+    "de": "Verbindung aktiviert",
+    "pt": "Conexão ativada",
+    "ru": "Подключение включено",
+    "ar": "الاتصال مفعل"
+  },
+  "Connection disabled": {
+    "ja": "接続が無効",
+    "ko": "연결 비활성화됨",
+    "es": "Conexión deshabilitada",
+    "fr": "Connexion désactivée",
+    "de": "Verbindung deaktiviert",
+    "pt": "Conexão desativada",
+    "ru": "Подключение отключено",
+    "ar": "الاتصال معطل"
+  },
+  "Configured": {
+    "ja": "設定済み",
+    "ko": "구성됨",
+    "es": "Configurado",
+    "fr": "Configuré",
+    "de": "Konfiguriert",
+    "pt": "Configurado",
+    "ru": "Настроено",
+    "ar": "تم الإعداد"
+  },
+  "Not configured": {
+    "ja": "未設定",
+    "ko": "구성되지 않음",
+    "es": "Sin configurar",
+    "fr": "Non configuré",
+    "de": "Nicht konfiguriert",
+    "pt": "Não configurado",
+    "ru": "Не настроено",
+    "ar": "غير مُعدّ"
+  },
+  "Source": {
+    "ja": "ソース",
+    "ko": "소스",
+    "es": "Código fuente",
+    "fr": "Code source",
+    "de": "Quellcode",
+    "pt": "Código-fonte",
+    "ru": "Исходный код",
+    "ar": "المصدر"
+  },
+  "No results": {
+    "ja": "結果なし",
+    "ko": "결과 없음",
+    "es": "Sin resultados",
+    "fr": "Aucun résultat",
+    "de": "Keine Ergebnisse",
+    "pt": "Nenhum resultado",
+    "ru": "Нет результатов",
+    "ar": "لا توجد نتائج"
+  },
+  "Collapse": {
+    "ja": "折りたたむ",
+    "ko": "접기",
+    "es": "Contraer",
+    "fr": "Réduire",
+    "de": "Einklappen",
+    "pt": "Recolher",
+    "ru": "Свернуть",
+    "ar": "طي"
+  },
+  "Expand": {
+    "ja": "展開",
+    "ko": "펼치기",
+    "es": "Expandir",
+    "fr": "Développer",
+    "de": "Ausklappen",
+    "pt": "Expandir",
+    "ru": "Развернуть",
+    "ar": "توسيع"
+  },
+  "Unknown": {
+    "ja": "不明",
+    "ko": "알 수 없음",
+    "es": "Desconocido",
+    "fr": "Inconnu",
+    "de": "Unbekannt",
+    "pt": "Desconhecido",
+    "ru": "Неизвестно",
+    "ar": "غير معروف"
+  },
+  "None": {
+    "ja": "なし",
+    "ko": "없음",
+    "es": "Ninguno",
+    "fr": "Aucun",
+    "de": "Keine",
+    "pt": "Nenhum",
+    "ru": "Нет",
+    "ar": "لا شيء"
+  },
+  "Open sidebar": {
+    "ja": "サイドバーを開く",
+    "ko": "사이드바 열기",
+    "es": "Abrir barra lateral",
+    "fr": "Ouvrir la barre latérale",
+    "de": "Seitenleiste öffnen",
+    "pt": "Abrir barra lateral",
+    "ru": "Открыть боковую панель",
+    "ar": "فتح الشريط الجانبي"
+  },
+  "Collapse sidebar": {
+    "ja": "サイドバーを折りたたむ",
+    "ko": "사이드바 접기",
+    "es": "Contraer barra lateral",
+    "fr": "Réduire la barre latérale",
+    "de": "Seitenleiste einklappen",
+    "pt": "Recolher barra lateral",
+    "ru": "Свернуть боковую панель",
+    "ar": "طي الشريط الجانبي"
+  },
+  "Workspaces": {
+    "ja": "ワークスペース",
+    "ko": "작업 공간",
+    "es": "Espacios de trabajo",
+    "fr": "Espaces de travail",
+    "de": "Arbeitsbereiche",
+    "pt": "Espaços de trabalho",
+    "ru": "Рабочие области",
+    "ar": "مساحات العمل"
+  },
+  "Sessions": {
+    "ja": "セッション",
+    "ko": "세션",
+    "es": "Sesiones",
+    "fr": "Sessions",
+    "de": "Sitzungen",
+    "pt": "Sessões",
+    "ru": "Сеансы",
+    "ar": "الجلسات"
+  },
+  "Search sessions": {
+    "ja": "セッションを検索",
+    "ko": "세션 검색",
+    "es": "Buscar sesiones",
+    "fr": "Rechercher des sessions",
+    "de": "Sitzungen suchen",
+    "pt": "Pesquisar sessões",
+    "ru": "Поиск сеансов",
+    "ar": "البحث في الجلسات"
+  },
+  "Search sessions...": {
+    "ja": "セッションを検索…",
+    "ko": "세션 검색…",
+    "es": "Buscar sesiones…",
+    "fr": "Rechercher des sessions…",
+    "de": "Sitzungen suchen…",
+    "pt": "Pesquisar sessões…",
+    "ru": "Поиск сеансов…",
+    "ar": "البحث في الجلسات…"
+  },
+  "No sessions yet": {
+    "ja": "セッションはまだありません",
+    "ko": "아직 세션이 없습니다",
+    "es": "Aún no hay sesiones",
+    "fr": "Aucune session pour le moment",
+    "de": "Noch keine Sitzungen",
+    "pt": "Ainda não há sessões",
+    "ru": "Пока нет сеансов",
+    "ar": "لا توجد جلسات بعد"
+  },
+  "Add workspace": {
+    "ja": "ワークスペースを追加",
+    "ko": "작업 공간 추가",
+    "es": "Añadir espacio de trabajo",
+    "fr": "Ajouter un espace de travail",
+    "de": "Arbeitsbereich hinzufügen",
+    "pt": "Adicionar espaço de trabalho",
+    "ru": "Добавить рабочую область",
+    "ar": "إضافة مساحة عمل"
+  },
+  "View options": {
+    "ja": "表示オプション",
+    "ko": "보기 옵션",
+    "es": "Opciones de vista",
+    "fr": "Options d’affichage",
+    "de": "Ansichtsoptionen",
+    "pt": "Opções de visualização",
+    "ru": "Параметры отображения",
+    "ar": "خيارات العرض"
+  },
+  "Commands": {
+    "ja": "コマンド",
+    "ko": "명령",
+    "es": "Comandos",
+    "fr": "Commandes",
+    "de": "Befehle",
+    "pt": "Comandos",
+    "ru": "Команды",
+    "ar": "الأوامر"
+  },
+  "Add attachment": {
+    "ja": "添付ファイルを追加",
+    "ko": "첨부 파일 추가",
+    "es": "Añadir archivo adjunto",
+    "fr": "Ajouter une pièce jointe",
+    "de": "Anhang hinzufügen",
+    "pt": "Adicionar anexo",
+    "ru": "Добавить вложение",
+    "ar": "إضافة مرفق"
+  },
+  "Permission": {
+    "ja": "権限",
+    "ko": "권한",
+    "es": "Permisos",
+    "fr": "Autorisations",
+    "de": "Berechtigungen",
+    "pt": "Permissões",
+    "ru": "Разрешения",
+    "ar": "الأذونات"
+  },
+  "Agent presets": {
+    "ja": "Agent プリセット",
+    "ko": "Agent 프리셋",
+    "es": "Ajustes de agentes",
+    "fr": "Préréglages des agents",
+    "de": "Agent-Voreinstellungen",
+    "pt": "Predefinições de agentes",
+    "ru": "Предустановки агентов",
+    "ar": "إعدادات الوكلاء"
+  },
+  "Plugins": {
+    "ja": "プラグイン",
+    "ko": "플러그인",
+    "es": "Complementos",
+    "fr": "Extensions",
+    "de": "Plugins",
+    "pt": "Plugins",
+    "ru": "Плагины",
+    "ar": "الإضافات"
+  },
+  "Waiting for approval": {
+    "ja": "承認待ち",
+    "ko": "승인 대기 중",
+    "es": "Esperando aprobación",
+    "fr": "En attente d’autorisation",
+    "de": "Warten auf Genehmigung",
+    "pt": "Aguardando aprovação",
+    "ru": "Ожидание разрешения",
+    "ar": "بانتظار الموافقة"
+  },
+  "Allow once": {
+    "ja": "今回のみ許可",
+    "ko": "한 번 허용",
+    "es": "Permitir una vez",
+    "fr": "Autoriser une fois",
+    "de": "Einmal erlauben",
+    "pt": "Permitir uma vez",
+    "ru": "Разрешить один раз",
+    "ar": "السماح مرة واحدة"
+  },
+  "Full access reduces confirmation steps and lets the agent perform more actions directly, including sensitive operations, file changes, or external commands. Only use it when you trust the current task.": {
+    "ja": "フルアクセスでは確認手順が減り、機密性の高い操作、ファイル変更、外部コマンドなどを Agent が直接実行できるようになります。実行するタスクを信頼できる場合にのみ使用してください。",
+    "ko": "전체 접근을 허용하면 확인 단계가 줄어들고 Agent가 민감한 작업, 파일 변경, 외부 명령 등을 직접 실행할 수 있습니다. 실행할 작업을 신뢰할 때만 사용하세요.",
+    "es": "El acceso completo reduce las confirmaciones y permite al agente realizar directamente operaciones sensibles, cambios de archivos y comandos externos. Úsalo solo si confías en las tareas que se ejecutarán.",
+    "fr": "L’accès complet réduit les confirmations et permet à l’agent d’effectuer directement des opérations sensibles, des modifications de fichiers et des commandes externes. Utilisez-le uniquement pour des tâches de confiance.",
+    "de": "Vollzugriff reduziert Rückfragen und erlaubt dem Agenten, sensible Vorgänge, Dateiänderungen und externe Befehle direkt auszuführen. Verwenden Sie ihn nur für vertrauenswürdige Aufgaben.",
+    "pt": "O acesso total reduz as confirmações e permite ao agente executar diretamente operações sensíveis, alterações de arquivos e comandos externos. Use apenas quando confiar nas tarefas que serão executadas.",
+    "ru": "Полный доступ сокращает число подтверждений и позволяет агенту напрямую выполнять чувствительные операции, изменять файлы и запускать внешние команды. Используйте его только для задач, которым доверяете.",
+    "ar": "يقلل الوصول الكامل خطوات التأكيد ويسمح للوكيل بتنفيذ عمليات حساسة وتعديل الملفات وتشغيل أوامر خارجية مباشرة. استخدمه فقط عندما تثق بالمهام التي ستُنفذ."
+  },
+  "Full access lets new sessions reduce confirmation steps and perform more actions directly, including sensitive operations, file changes, or external commands. Only use it when you trust subsequent tasks.": {
+    "ja": "フルアクセスでは確認手順が減り、機密性の高い操作、ファイル変更、外部コマンドなどを Agent が直接実行できるようになります。実行するタスクを信頼できる場合にのみ使用してください。",
+    "ko": "전체 접근을 허용하면 확인 단계가 줄어들고 Agent가 민감한 작업, 파일 변경, 외부 명령 등을 직접 실행할 수 있습니다. 실행할 작업을 신뢰할 때만 사용하세요.",
+    "es": "El acceso completo reduce las confirmaciones y permite al agente realizar directamente operaciones sensibles, cambios de archivos y comandos externos. Úsalo solo si confías en las tareas que se ejecutarán.",
+    "fr": "L’accès complet réduit les confirmations et permet à l’agent d’effectuer directement des opérations sensibles, des modifications de fichiers et des commandes externes. Utilisez-le uniquement pour des tâches de confiance.",
+    "de": "Vollzugriff reduziert Rückfragen und erlaubt dem Agenten, sensible Vorgänge, Dateiänderungen und externe Befehle direkt auszuführen. Verwenden Sie ihn nur für vertrauenswürdige Aufgaben.",
+    "pt": "O acesso total reduz as confirmações e permite ao agente executar diretamente operações sensíveis, alterações de arquivos e comandos externos. Use apenas quando confiar nas tarefas que serão executadas.",
+    "ru": "Полный доступ сокращает число подтверждений и позволяет агенту напрямую выполнять чувствительные операции, изменять файлы и запускать внешние команды. Используйте его только для задач, которым доверяете.",
+    "ar": "يقلل الوصول الكامل خطوات التأكيد ويسمح للوكيل بتنفيذ عمليات حساسة وتعديل الملفات وتشغيل أوامر خارجية مباشرة. استخدمه فقط عندما تثق بالمهام التي ستُنفذ."
+  },
+  "Choose the default permission mode for new sessions": {
+    "ja": "新しいセッションの既定の権限を選択",
+    "ko": "새 세션의 기본 권한 모드 선택",
+    "es": "Elige los permisos predeterminados de las nuevas sesiones",
+    "fr": "Choisissez les autorisations par défaut des nouvelles sessions",
+    "de": "Standardberechtigungen für neue Sitzungen wählen",
+    "pt": "Escolha as permissões padrão das novas sessões",
+    "ru": "Выберите разрешения по умолчанию для новых сеансов",
+    "ar": "اختر وضع الأذونات الافتراضي للجلسات الجديدة"
+  },
+  "Font size": {
+    "ja": "文字サイズ",
+    "ko": "글꼴 크기",
+    "es": "Tamaño de fuente",
+    "fr": "Taille du texte",
+    "de": "Schriftgröße",
+    "pt": "Tamanho da fonte",
+    "ru": "Размер шрифта",
+    "ar": "حجم الخط"
+  },
+  "Only affects conversation content": {
+    "ja": "会話の内容にのみ適用",
+    "ko": "대화 내용에만 적용됩니다",
+    "es": "Solo afecta al contenido de la conversación",
+    "fr": "S’applique uniquement au contenu des conversations",
+    "de": "Gilt nur für Gesprächsinhalte",
+    "pt": "Afeta apenas o conteúdo da conversa",
+    "ru": "Влияет только на содержимое разговора",
+    "ar": "يؤثر على محتوى المحادثة فقط"
+  },
+  "Increase font size": {
+    "ja": "文字サイズを大きくする",
+    "ko": "글꼴 크기 늘리기",
+    "es": "Aumentar tamaño de fuente",
+    "fr": "Augmenter la taille du texte",
+    "de": "Schrift vergrößern",
+    "pt": "Aumentar fonte",
+    "ru": "Увеличить шрифт",
+    "ar": "تكبير الخط"
+  },
+  "Decrease font size": {
+    "ja": "文字サイズを小さくする",
+    "ko": "글꼴 크기 줄이기",
+    "es": "Reducir tamaño de fuente",
+    "fr": "Réduire la taille du texte",
+    "de": "Schrift verkleinern",
+    "pt": "Diminuir fonte",
+    "ru": "Уменьшить шрифт",
+    "ar": "تصغير الخط"
+  },
+  "Conversation display": {
+    "ja": "会話の表示",
+    "ko": "대화 표시",
+    "es": "Visualización de conversaciones",
+    "fr": "Affichage des conversations",
+    "de": "Gesprächsdarstellung",
+    "pt": "Exibição das conversas",
+    "ru": "Отображение разговора",
+    "ar": "عرض المحادثة"
+  },
+  "Controls process content in completed turns": {
+    "ja": "完了したターンの処理内容の表示を設定",
+    "ko": "완료된 턴의 처리 과정 표시 설정",
+    "es": "Controla los detalles del proceso en turnos completados",
+    "fr": "Contrôle les détails du traitement des tours terminés",
+    "de": "Darstellung der Abläufe abgeschlossener Gesprächsrunden",
+    "pt": "Controla os detalhes do processo em turnos concluídos",
+    "ru": "Настройка отображения процесса в завершённых ходах",
+    "ar": "يحدد عرض تفاصيل التنفيذ في الأدوار المكتملة"
+  },
+  "Compact": {
+    "ja": "コンパクト",
+    "ko": "간결하게",
+    "es": "Compacto",
+    "fr": "Compact",
+    "de": "Kompakt",
+    "pt": "Compacto",
+    "ru": "Компактно",
+    "ar": "موجز"
+  },
+  "Queue": {
+    "ja": "キューに追加",
+    "ko": "대기열에 추가",
+    "es": "Poner en cola",
+    "fr": "Mettre en file",
+    "de": "Einreihen",
+    "pt": "Adicionar à fila",
+    "ru": "В очередь",
+    "ar": "إضافة إلى قائمة الانتظار"
+  },
+  "Steer": {
+    "ja": "実行中の指示を変更",
+    "ko": "실행 중인 지시 변경",
+    "es": "Dirigir la ejecución",
+    "fr": "Réorienter l’exécution",
+    "de": "Ausführung steuern",
+    "pt": "Orientar a execução",
+    "ru": "Скорректировать выполнение",
+    "ar": "توجيه التنفيذ"
+  },
+  "Send behavior while busy": {
+    "ja": "実行中の送信方法",
+    "ko": "실행 중 전송 동작",
+    "es": "Envío durante la ejecución",
+    "fr": "Envoi pendant l’exécution",
+    "de": "Sendeverhalten während der Ausführung",
+    "pt": "Envio durante a execução",
+    "ru": "Отправка во время выполнения",
+    "ar": "سلوك الإرسال أثناء التنفيذ"
+  },
+  "What Enter and the Send button do while the agent is running; Cmd/Ctrl+Enter uses the other behavior": {
+    "ja": "Agent 実行中の Enter と送信ボタンの動作。Cmd/Ctrl+Enter ではもう一方の動作を使用",
+    "ko": "Agent 실행 중 Enter와 보내기 버튼의 동작입니다. Cmd/Ctrl+Enter는 다른 동작을 사용합니다",
+    "es": "Acción de Enter y Enviar mientras se ejecuta el agente; Cmd/Ctrl+Enter usa la otra acción",
+    "fr": "Action d’Entrée et d’Envoyer pendant l’exécution de l’agent ; Cmd/Ctrl+Entrée utilise l’autre action",
+    "de": "Aktion von Enter und Senden während der Agent läuft; Cmd/Ctrl+Enter nutzt die andere Aktion",
+    "pt": "Ação de Enter e Enviar enquanto o agente executa; Cmd/Ctrl+Enter usa a outra ação",
+    "ru": "Действие Enter и кнопки отправки во время работы агента; Cmd/Ctrl+Enter использует другое действие",
+    "ar": "يحدد عمل Enter وزر الإرسال أثناء تنفيذ الوكيل؛ يستخدم Cmd/Ctrl+Enter السلوك الآخر"
+  },
+  "Starting the classroom and course storage. The first launch may take a moment…": {
+    "ja": "教室とコースの保存機能を起動しています。初回は少し時間がかかることがあります…",
+    "ko": "교실과 강좌 저장소를 시작하는 중입니다. 처음 시작할 때는 잠시 걸릴 수 있습니다…",
+    "es": "Iniciando el aula y el almacenamiento de cursos. El primer inicio puede tardar un momento…",
+    "fr": "Démarrage de la classe et du stockage des cours. Le premier démarrage peut prendre un moment…",
+    "de": "Klassenraum und Kursspeicher werden gestartet. Der erste Start kann etwas dauern…",
+    "pt": "Iniciando a sala de aula e o armazenamento de cursos. A primeira inicialização pode demorar um pouco…",
+    "ru": "Запускаются класс и хранилище курсов. Первый запуск может занять некоторое время…",
+    "ar": "جارٍ تشغيل الفصل ومخزن الدورات. قد يستغرق التشغيل الأول بعض الوقت…"
+  },
+  "The classroom is temporarily unavailable": {
+    "ja": "教室を一時的に利用できません",
+    "ko": "교실을 일시적으로 사용할 수 없습니다",
+    "es": "El aula no está disponible temporalmente",
+    "fr": "La classe est temporairement indisponible",
+    "de": "Der Klassenraum ist vorübergehend nicht verfügbar",
+    "pt": "A sala de aula está temporariamente indisponível",
+    "ru": "Класс временно недоступен",
+    "ar": "الفصل غير متاح مؤقتًا"
+  },
+  "Open Quantum Learning from the OpenQuantum sidebar.": {
+    "ja": "OpenQuantum のサイドバーから量子学習を開いてください。",
+    "ko": "OpenQuantum 사이드바에서 양자 학습을 열어 주세요.",
+    "es": "Abre Aprendizaje cuántico desde la barra lateral de OpenQuantum.",
+    "fr": "Ouvrez Apprentissage quantique depuis la barre latérale d’OpenQuantum.",
+    "de": "Öffnen Sie Quantenlernen über die Seitenleiste von OpenQuantum.",
+    "pt": "Abra Aprendizado quântico pela barra lateral do OpenQuantum.",
+    "ru": "Откройте квантовое обучение на боковой панели OpenQuantum.",
+    "ar": "افتح التعلم الكمومي من الشريط الجانبي في OpenQuantum."
+  },
+  "Course history has not finished syncing. Reopen it in a moment.": {
+    "ja": "コース履歴の同期がまだ完了していません。少し待ってから開き直してください。",
+    "ko": "강좌 기록 동기화가 아직 끝나지 않았습니다. 잠시 후 다시 열어 주세요.",
+    "es": "El historial de cursos aún se está sincronizando. Vuelve a abrirlo en un momento.",
+    "fr": "La synchronisation de l’historique des cours est en cours. Rouvrez-le dans un instant.",
+    "de": "Der Kursverlauf wird noch synchronisiert. Öffnen Sie ihn gleich erneut.",
+    "pt": "O histórico de cursos ainda está sendo sincronizado. Abra-o novamente em instantes.",
+    "ru": "История курсов ещё синхронизируется. Откройте её снова чуть позже.",
+    "ar": "لم تكتمل مزامنة سجل الدورات بعد. أعد فتحه بعد قليل."
+  },
+  "The classroom is empty.": {
+    "ja": "教室は空です。",
+    "ko": "교실이 비어 있습니다.",
+    "es": "El aula está vacía.",
+    "fr": "La classe est vide.",
+    "de": "Der Klassenraum ist leer.",
+    "pt": "A sala de aula está vazia.",
+    "ru": "Класс пуст.",
+    "ar": "الفصل فارغ."
+  },
+  "Quantum classroom": {
+    "ja": "量子学習の教室",
+    "ko": "양자 교실",
+    "es": "Aula cuántica",
+    "fr": "Classe quantique",
+    "de": "Quantenklassenzimmer",
+    "pt": "Sala de aula quântica",
+    "ru": "Квантовый класс",
+    "ar": "الفصل الكمومي"
+  },
+  "The classroom was not saved completely. Reopen it and retry.": {
+    "ja": "教室を完全に保存できませんでした。開き直して再試行してください。",
+    "ko": "교실이 완전히 저장되지 않았습니다. 다시 열고 재시도해 주세요.",
+    "es": "El aula no se guardó por completo. Vuelve a abrirla e inténtalo de nuevo.",
+    "fr": "La classe n’a pas été entièrement enregistrée. Rouvrez-la et réessayez.",
+    "de": "Der Klassenraum wurde nicht vollständig gespeichert. Öffnen Sie ihn erneut und versuchen Sie es noch einmal.",
+    "pt": "A sala de aula não foi salva por completo. Abra-a novamente e tente outra vez.",
+    "ru": "Класс сохранён не полностью. Откройте его снова и повторите попытку.",
+    "ar": "لم يُحفظ الفصل بالكامل. أعد فتحه وحاول مجددًا."
+  },
+  "Desktop appearance and behavior": {
+    "ja": "デスクトップの外観と動作",
+    "ko": "데스크톱 모양 및 동작",
+    "es": "Apariencia y comportamiento del escritorio",
+    "fr": "Apparence et comportement du bureau",
+    "de": "Darstellung und Verhalten der Desktop-App",
+    "pt": "Aparência e comportamento do aplicativo",
+    "ru": "Оформление и поведение приложения",
+    "ar": "مظهر تطبيق سطح المكتب وسلوكه"
+  }
+}

@@ -12,6 +12,8 @@
 3. **运行完成不等于科学验收通过。** Tool 产生 facts，Materializer 形成可重读证据，Validator 产生
    observations，Acceptance Profile 定义规则，只有 central Acceptance Builder 推导 Acceptance。
 
+界面与文档语言：工作台支持首批 10 种语言，语言包、学习通同步及原生系统对话框回退范围见[多语言说明](../runtime/openquantum/web-locales/README.md)。
+
 ## 架构总览
 
 OpenQuantum 的产品核心对象是 **Capability**：用户能够理解的一项有界量子科研能力。Capability 按实际需要

@@ -1,0 +1,9 @@
+{
+  "name": "@openquantum/harness-web-locales",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "exports": { ".": "./index.mjs", "./client": "./client.js", "./package.json": "./package.json" },
+  "dsh": { "client": { "inject": ["@deepseek-ai/dsh-client-locale"], "platform": "web" } }
+}

@@ -7,15 +7,18 @@
 .oq-learning-bar { display:flex; align-items:center; flex-shrink:0; gap:8px; min-height:48px; padding:8px 16px; border-bottom:1px solid var(--dsw-alias-border-l2); background:var(--dsw-alias-bg-layer-1); }
 .oq-learning-mark { width:24px; height:24px; }
 .oq-learning-bar strong { font-size:14px; font-weight:600; letter-spacing:-.02em; }
-.oq-learning-parent { margin-left:4px; padding-left:12px; border-left:1px solid var(--dsw-alias-border-l2); color:var(--dsw-alias-label-tertiary); font-size:12px; }
+.oq-learning-parent { margin-inline-start:4px; padding-inline-start:12px; border-inline-start:1px solid var(--dsw-alias-border-l2); color:var(--dsw-alias-label-tertiary); font-size:12px; }
 .oq-learning-dialog button { font:inherit; }
 .oq-learning-return, .oq-learning-status button { border:1px solid var(--dsw-alias-border-l2); border-radius:8px; padding:5px 12px; background:var(--dsw-alias-bg-layer-1); color:var(--dsw-alias-label-primary); cursor:pointer; }
 .oq-learning-return:hover, .oq-learning-status button:hover { background:var(--dsw-alias-interactive-bg-hover-solid); }
 .oq-learning-return:focus-visible, .oq-learning-status button:focus-visible { outline:2px solid var(--dsw-alias-brand-primary-new-colorprimary-new-color); outline-offset:2px; }
-.oq-learning-bar .oq-learning-return { margin-left:auto; font-size:12px; }
+.oq-learning-bar .oq-learning-return { margin-inline-start:auto; font-size:12px; }
 .oq-learning-frame-wrap { position:relative; display:flex; flex:1; min-height:0; }
 .oq-learning-frame { flex:1; width:100%; height:100%; min-height:0; border:0; background:var(--dsw-alias-bg-base); }
 .oq-learning-loading { position:absolute; inset:0; display:grid; place-items:center; background:var(--dsw-alias-bg-base); color:var(--dsw-alias-label-secondary); pointer-events:none; }
 .oq-learning-status { margin:auto; padding:32px; max-width:640px; color:var(--dsw-alias-label-secondary); line-height:1.8; }
 .oq-learning-notice { padding:8px 16px; border-bottom:1px solid var(--dsw-alias-border-l2); background:var(--dsw-alias-bg-module-platform); color:var(--dsw-alias-label-primary); font-size:13px; }
 @media(max-width:650px) { .oq-learning-bar { padding:8px 12px; } .oq-learning-parent { display:none; } }
+
+/* Leave room for native macOS window controls when the classroom fills the window. */
+body[data-dsh-desktop-platform="darwin"] .oq-learning-bar { padding-left:88px; }

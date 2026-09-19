@@ -204,7 +204,7 @@ test("keeps the repository brand name, tagline and mark aligned", async () => {
     readme,
     /packages\/openquantum-web-branding\/assets\/lockup\.svg/,
   );
-  assert.match(preset, /^name: OpenQuantum（默认）$/m);
+  assert.match(preset, /^name: OpenQuantum$/m);
   assert.match(mark, /<title id="title">OpenQuantum<\/title>/);
   assert.match(mark, /OpenQuantum OQ 标记/);
   assert.equal(OPENQUANTUM_BRAND.name, "OpenQuantum");

@@ -30,6 +30,9 @@
 # identity through its index transform and native brand slots. OpenQuantum does not
 # carry a fork of the Harness React frontend.
 - insert:
+    - id: openquantum-web-locales
+      name: '@openquantum/harness-web-locales'
+      inject: [webServer]
     - id: openquantum-web-branding
       name: '@openquantum/harness-web-branding'
       inject: [webServer]

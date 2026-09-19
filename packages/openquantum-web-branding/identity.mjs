@@ -3,6 +3,14 @@ export const OPENQUANTUM_BRAND = Object.freeze({
   tagline: Object.freeze({
     en: "Quantum computing, right at your fingertips",
     zh: "量子计算，就在指尖",
+    ja: "量子コンピューティングを、あなたの手に",
+    ko: "손끝에서 시작하는 양자 컴퓨팅",
+    es: "La computación cuántica, al alcance de tu mano",
+    fr: "L’informatique quantique à portée de main",
+    de: "Quantencomputing zum Greifen nah",
+    pt: "Computação quântica ao seu alcance",
+    ru: "Квантовые вычисления у вас под рукой",
+    ar: "الحوسبة الكمومية بين يديك",
   }),
   mark: Object.freeze({
     faviconPath: "/favicon.svg",
