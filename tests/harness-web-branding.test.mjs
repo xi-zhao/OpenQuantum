@@ -194,7 +194,10 @@ test("keeps the repository brand name, tagline and mark aligned", async () => {
     readme,
     /<h1 align="center">\s*<img src="\.\/packages\/openquantum-web-branding\/assets\/lockup\.svg"[^>]*alt="OpenQuantum"[^>]*\/>\s*<\/h1>/,
   );
-  assert.match(readme, /<strong>量子计算，就在指尖<\/strong>/);
+  assert.ok(
+    readme.includes(OPENQUANTUM_BRAND.tagline.zh),
+    "README must include the canonical Chinese brand tagline",
+  );
   assert.match(
     readme,
     /packages\/openquantum-web-branding\/assets\/lockup\.svg/,
