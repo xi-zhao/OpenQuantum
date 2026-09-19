@@ -10,11 +10,35 @@ OpenQuantum brings quantum tools, specialist methods and complete applications i
 
 **Ask questions, run calculations and build capabilities together.** Start with a supported task, inspect the tool results, and contribute methods or applications that others can use.
 
-[Capabilities](#what-you-can-do) · [Why OpenQuantum](#why-openquantum) · [Quick start](#quick-start) · [Results](#use-and-inspect-results) · [Extend](#extend-the-platform) · [Roadmap](#roadmap-and-rsi) · [Contribute](#documentation-and-support) · [Open source](#license-and-acknowledgments)
+[Why OpenQuantum](#why-openquantum) · [Capabilities](#what-you-can-do) · [Quick start](#quick-start) · [Results](#use-and-inspect-results) · [Extend](#extend-the-platform) · [Roadmap](#roadmap-and-rsi) · [Contribute](#documentation-and-support) · [Open source](#license-and-acknowledgments)
 
 ![OpenQuantum Desktop research workbench](../images/openquantum-desktop-20260919.jpg)
 
 The research workbench is the platform's conversational and computational entry point. Quantum Learning is one integrated application, with its own classroom interface and data boundary.
+
+## Why OpenQuantum
+
+**People, AI and an open ecosystem can build quantum capabilities together.**
+
+OpenQuantum builds on the quantum software ecosystem to make specialist capabilities easier to use, combine and extend. It connects domain methods, agent execution and open tools to concrete tasks. Local calculations, teaching experiments and method validation have practical value today, without depending on a QPU demonstrating an advantage.
+
+### Start with a question, use specialist tools
+
+**Turn a research question into exploration.** You can begin a supported task without first learning every SDK: Skills supply methods, the agent calls specialist Tools, and the workbench records inputs and results. We aim to reduce repeated setup, interface learning and workflow construction so learners can experiment and researchers can spend more time forming hypotheses, designing comparisons and judging results. These judgments remain yours.
+
+**Create new research space by combining tools.** PyZX circuit optimization, QCEC equivalence checking and noise simulation answer different questions. Applied to one research goal, they let you ask whether a simpler ideal circuit also behaves better under noise. We are developing scientifically meaningful combinations by aligning models, units, bit order and budgets, and understanding when methods apply or fail. Connecting interfaces alone does not establish a conclusion. See each tool's current scope in the [computing guide](../integrations/SCALABLE_BRIDGES.md).
+
+### Make one investigation the start of the next
+
+**Leave experience that others can build on.** Reusable steps, calculation results and applicable independent checks support review and further work. We want to preserve method comparisons and failure evidence together with their conditions: why a method applies, and when to take a different route. Well-supported negative results are useful; a program error is not a scientific refutation. Complete scientific acceptance is available only within the [scope of the relevant capabilities](../../README.md#执行记录与科学验收), and organizing experience does not mean the system has learned automatically.
+
+### Make your methods useful to others
+
+**Help others continue creating from a research result.** A method can become a Skill, a calculation program can become a Tool, and a complete application can keep its own interface and workflows. Researchers, teachers, developers, and software or hardware partners can contribute their expertise without rebuilding the entire platform. We want existing work to enter new courses, investigations and applications. [Quantum Learning](#quantum-learning) is one current application entry point.
+
+**Keep choice with users and contributors.** Open implementations and extension interfaces let you inspect, modify and maintain your own combination. Model services and computing backends are configured separately, so applications need not be tied to one model or device. Upstream authors, licenses and contributions remain visible; users decide whether to share research data. Our goal is to preserve professional methods that remain useful as models, computing resources and research directions change.
+
+An investigation that becomes possible, a method applied to a new problem, or a contributor creating an application are all forms of value we want to accumulate. The next step is to make that experience improve the [capabilities used in the next round of research](#research-that-improves-how-research-is-done).
 
 ## What you can do
 
@@ -38,26 +62,6 @@ Each integration has its own installation requirements and scientific scope. Loc
 Prepare materials, edit courseware, learn in interactive classrooms and continue project-based activities. The application keeps its own teaching workflows and local course storage.
 
 Course resources are still being organized; a complete curriculum and full acceptance of the online AI teaching workflows remain unfinished. Teaching tasks do not automatically use the research workbench’s quantum tools. See the [learning application and its scope](../../README.md#量子学习通).
-
-## Why OpenQuantum
-
-**People, AI and an open ecosystem can build quantum capabilities together.** Start with a supported task, then leave methods and results that others can build on.
-
-### Start with a question, use specialist tools
-
-Describe a supported task and let the agent call the appropriate tools. Skills supply methods and steps; the workbench records tool inputs and results. You define the physical assumptions, design comparisons and judge the findings.
-
-Combining tools also opens new questions: optimize a circuit with PyZX, check its equivalence with QCEC, then compare noisy behavior. A simpler circuit need not have a smaller error. Match the model, bit order and budget before interpreting a comparison; see the [computing guide](../integrations/SCALABLE_BRIDGES.md).
-
-### Make one investigation the start of the next
-
-Keep the tool inputs and results, vary parameters and continue the discussion. Reusable procedures can become Skills. Supported capabilities provide reference calculations, statistical errors or scientific acceptance reports within their own scope.
-
-We want to preserve method comparisons and useful failure evidence with their conditions. A program error is not a scientific refutation, and saved experience is not automatic learning.
-
-### Make your methods useful to others
-
-Contribute a method, calculation tool, course or complete application. Applications can retain their own interfaces and workflows, as Quantum Learning does. Model services and computing backends are configured separately; open implementations, upstream authorship and licenses remain visible. Users decide whether to share their research data.
 
 ## Quick start
 
@@ -157,11 +161,30 @@ Choose checks relevant to your change. Tests and local evidence are distinct fro
 
 Our long-term goal is to help people use existing capabilities and create new ones. These are development directions, not a list of delivered features.
 
-| Theme | Direction |
+### Platform foundations
+
+| Long-term track | What we aim to build |
 | --- | --- |
-| Platform foundations | Improve task understanding, tool use and recovery; expand the agent-ready ecosystem; explore collaboration among quantum computing, HPC and AI, including instrument interfaces |
-| Applications and teaching | Integrate applications for concrete problems; connect courses, experiments and assessment from introductory topics to advanced research |
-| Personalization and improvement | Explore proactive support under user control, and evaluate changes to research methods through independent checks and comparable costs |
+| **0 · A more useful quantum agent** | Improve task understanding, method selection, tool calls, result interpretation and failure recovery. Measure progress through the quality, time and cost of completing real tasks. |
+| **1 · An agent-ready quantum software ecosystem** | Connect specialist software and improve execution interfaces, domain Skills and dependency preparation. Preserve applicability conditions and validation records so tools and methods can be reused in real tasks. |
+| **2 · Quantum, HPC and AI workflows** | Connect local CPUs, remote GPUs, HPC, quantum simulators and QPUs, and explore agent-organized quantum–classical workflows. Select resources by task size, precision, time and budget, verifying backend connections, orchestration and coordinated execution step by step. |
+| **3 · Interfaces for intelligent laboratory instruments** | Prepare standardized interfaces for programmable instruments and explore device discovery, experimental control, measurement analysis and feedback, connecting computation with real experiments. |
+
+### Applications and teaching
+
+| Long-term track | What we aim to build |
+| --- | --- |
+| **4 · More high-quality courses** | Build a knowledge map from fundamentals to frontier research and develop introductory, intermediate and advanced courses. Let learners move between levels according to their knowledge and interests, connecting concepts, experiments and assessment. |
+| **5 · Quantum applications for practical problems** | Integrate or co-develop complete applications around defined problems, with problem inputs, computational workflows and result displays. Users should not have to assemble the underlying tools themselves. Document each application's backends, costs, scope and validation results. |
+
+### Personalization and improvement
+
+| Long-term track | What we aim to build |
+| --- | --- |
+| **6 · Proactive, personalized support** | Use learning and research experience to understand a person's knowledge, interests and goals, suggest next topics or methods, and address missing prerequisites. Users control which records inform personalization, where they are stored and how to turn it off. |
+| **7 · Research capabilities that keep improving** | Explore how task experience can improve methods and tools, then the research process itself. Evaluate changes through comparisons on new tasks, independent checks, complete costs and versions that can be rolled back, as described in the RSI direction below. |
+
+Instrument interfaces will draw on explorations such as Anthropic's [Model Hardware Standard (MHS)](https://www.anthropic.com/news/model-hardware-standard-research-preview), starting with simulated devices and collaborative experiments. Real-time control and device constraints remain the responsibility of the corresponding drivers and control systems.
 
 ### Research that improves how research is done
 
