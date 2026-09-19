@@ -42,7 +42,7 @@ OpenQuantum 将量子工具、专业方法与应用汇聚到一个开放平台�
 **[浏览已有能力](#可以用它做什么)**　·　**[开始使用](#快速开始)**　·　[接入工具与应用](#把你的量子能力接进来)
 
 <p align="center">
-  <img src="./docs/images/openquantum-workbench-20260912.jpg" width="100%" alt="OpenQuantum 科研工作台：新会话、工作区与量子学习通入口" /><br />
+  <img src="./docs/images/openquantum-desktop-20260919.jpg" width="100%" alt="OpenQuantum Desktop 科研工作台：新会话、工作区与量子学习通入口" /><br />
   <sub>科研工作台是平台的计算与交互入口；量子学习通是已集成应用之一。应用保留各自的任务与数据边界。</sub>
 </p>
 

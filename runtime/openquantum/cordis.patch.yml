@@ -27,7 +27,7 @@
   disabled: true
 
 # Keep the official DeepSeek Harness Web shell and replace only product
-# identity through its supported index-transform seam. OpenQuantum does not
+# identity through its index transform and native brand slots. OpenQuantum does not
 # carry a fork of the Harness React frontend.
 - insert:
     - id: openquantum-web-branding

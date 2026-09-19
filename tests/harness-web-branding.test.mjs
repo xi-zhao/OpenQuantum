@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import { runInNewContext } from "node:vm";
 
 import {
   apply,
@@ -22,8 +23,9 @@ test("brands the official Harness index without replacing its application shell"
 
   assert.match(branded, /<title>OpenQuantum<\/title>/);
   assert.match(branded, /data-openquantum-branding/);
-  assert.match(branded, /content: "OpenQuantum"/);
-  assert.match(branded, /background-image: url\("\/openquantum\/mark\.svg"\)/);
+  assert.match(branded, /\.oq-brand-name/);
+  assert.match(branded, /\.oq-brand-mark/);
+  assert.doesNotMatch(branded, /svg\[viewBox/);
   assert.doesNotMatch(branded, /content: "OQ"/);
   assert.match(branded, /name="application-name" content="OpenQuantum"/);
   assert.match(branded, /name="theme-color" content="#061f38"/);
@@ -232,6 +234,12 @@ test("replaces the upstream developer notice through the native onboarding slot"
   assert.equal(manifest.exports["./client"], "./client.js");
   assert.equal(manifest.dsh.bundle.patch, "./cordis.patch.yml");
   assert.equal(manifest.dsh.client.platform, "web");
+  assert.deepEqual(manifest.dsh.client.inject, [
+    "@deepseek-ai/dsh-client-ui-renderer",
+    "@deepseek-ai/dsh-client-ui-sidebar",
+    "@deepseek-ai/dsh-client-ui-conversation",
+    "@deepseek-ai/dsh-client-ui-settings",
+  ]);
   assert.equal(manifest.private, undefined);
   assert.equal(manifest.dependencies, undefined);
   assert.match(bundlePatch, /name: '@openquantum\/harness-web-branding'/);
@@ -240,6 +248,65 @@ test("replaces the upstream developer notice through the native onboarding slot"
   assert.match(client, /priority: -1000/);
   assert.match(client, /return null/);
   assert.doesNotMatch(client, /localStorage|sessionStorage/);
+});
+
+test("renders the canonical sidebar name and shared hero mark through native brand slots", async () => {
+  const client = await readFile(
+    new URL("../packages/openquantum-web-branding/client.js", import.meta.url),
+    "utf8",
+  );
+  let plugin;
+  runInNewContext(client, {
+    __ModuleLoader__: {
+      load({ factory }) {
+        plugin = factory((name) => {
+          assert.equal(name, "react");
+          return {
+            createElement(type, props, ...children) {
+              return { type, props, children };
+            },
+          };
+        });
+      },
+    },
+  });
+  const slots = new Map();
+  plugin.apply({
+    slots: {
+      inject(_name, register) {
+        const result = register();
+        if (result?.[Symbol.iterator]) Array.from(result);
+      },
+      register(entry, component) {
+        slots.set(entry.name, { entry, component });
+        return () => {};
+      },
+    },
+  });
+
+  for (const name of ["sidebar.brand.mark", "sidebar.brand.name"]) {
+    assert(slots.has(name), `missing brand occupant: ${name}`);
+    assert(slots.get(name).entry.priority < 0, "must precede the official brand occupant");
+  }
+  const name = slots.get("sidebar.brand.name").component();
+  assert.equal(name.type, "span");
+  assert.equal(name.children.join(""), OPENQUANTUM_BRAND.name);
+  for (const size of [24, 32]) {
+    const mark = slots.get("sidebar.brand.mark").component({ size });
+    assert.equal(mark.type, "img");
+    assert.equal(mark.props.src, OPENQUANTUM_BRAND.mark.svgPath);
+    assert.equal(mark.props.width, size);
+    assert.equal(mark.props.height, size);
+  }
+  const hero = slots.get("conversation.hero.brand.mark").component({
+    size: 34,
+    className: "host-hero-mark",
+  });
+  assert.equal(hero.props.src, OPENQUANTUM_BRAND.mark.svgPath);
+  assert.equal(hero.props.width, 34);
+  assert.equal(hero.props.height, 34);
+  assert.equal(hero.props.className, "oq-brand-mark host-hero-mark");
+  assert.equal(slots.get("settings.onboarding").component(), null);
 });
 
 test("fails loudly if a future Harness shell no longer has an HTML head", () => {

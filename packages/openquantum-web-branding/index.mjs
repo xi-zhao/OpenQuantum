@@ -160,21 +160,13 @@ const BRAND_METADATA = `
 
 const BRAND_STYLES = `
 <style ${BRAND_MARKER}>
-  /* Keep the native Harness layout; replace only its product wordmarks. */
-  svg[viewBox="0 0 182 24"] {
-    display: none;
+  /* Brand occupants use the native sidebar slots in Web and Desktop. */
+  .oq-brand-mark {
+    display: block;
+    object-fit: contain;
   }
 
-  button:has(> svg[viewBox="0 0 182 24"])::before {
-    content: "${OPENQUANTUM_BRAND.name}";
-    display: inline-flex;
-    min-height: 24px;
-    align-items: center;
-    padding-left: 32px;
-    background-image: url("${OPENQUANTUM_BRAND.mark.svgPath}");
-    background-position: left center;
-    background-repeat: no-repeat;
-    background-size: 24px 24px;
+  .oq-brand-name {
     color: inherit;
     font-size: 20px;
     font-weight: 650;
@@ -182,35 +174,15 @@ const BRAND_STYLES = `
     line-height: 24px;
     white-space: nowrap;
   }
-
-  svg[viewBox="0 0 23.16 17.04"] {
-    display: none;
-  }
-
-  :is(button, span):has(> svg[viewBox="0 0 23.16 17.04"])::before {
-    content: "";
-    display: inline-block;
-    width: 24px;
-    height: 24px;
-    background-image: url("${OPENQUANTUM_BRAND.mark.svgPath}");
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: contain;
-  }
-
-  /* The upstream empty-state illustration is decorative brand art. */
-  svg[viewBox="0 0 1051 468"] {
-    display: none;
-  }
 </style>`;
 
 /**
  * Apply the OpenQuantum identity to the official Harness Web shell.
  *
  * The shell, routes and client plugins remain owned by DeepSeek Harness. This
- * host-supported index transform is deliberately limited to browser metadata
- * and product wordmarks, so upgrading Harness does not require carrying a UI
- * source fork.
+ * host-supported index transform supplies browser metadata, product copy and
+ * styles. The companion Client Plugin supplies the sidebar brand through
+ * native slots, without depending on upstream SVG geometry or a UI source fork.
  */
 export function brandHarnessIndex(html) {
   if (html.includes(BRAND_MARKER)) {

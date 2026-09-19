@@ -1,5 +1,16 @@
 # README 图片说明
 
+## 2026-09-19 Desktop 品牌修复
+
+[Desktop 科研工作台](openquantum-desktop-20260919.jpg) 是本次修复后从实际 macOS Electron 窗口
+直接取得的截图，用于 README 首图。基线为 `d049700a0dd72f53964f218539104de33aa6937c`，
+包含本次 OpenQuantum 品牌插件修改；Desktop 为 `2.0.7`，Harness 为 `0.1.5-rc.1`。
+截图使用独立 Harness Home、简体中文和深色主题，图像尺寸为 1171 × 768。
+
+侧栏名称、展开及收起状态的图标，以及首页标语旁的图标均由 OpenQuantum Client Plugin
+通过 Harness 原生品牌插槽提供。已在真实 Desktop 中检查侧栏展开、收起和页面刷新。
+截图未进行图像改字或合成；未发起模型生成或科研计算任务。
+
 ## 2026-09-12 更新
 
 本轮以 OpenQuantum `ca1495edac826f2bdcb595bb94ded4eeb54b20ac` 为基线，在独立工作目录、独立
@@ -8,7 +19,7 @@ Harness Home 和空白学习数据库中启动实际应用。截图使用 macOS 
 
 | 图片 | 内容与来源 |
 | --- | --- |
-| [科研工作台](openquantum-workbench-20260912.jpg) | 当前 Harness 原生 UI、OpenQuantum 默认 Preset、量子学习通入口；科研侧栏仍显示上游 Harness 标志，截图保留该既有适配缺口。 |
+| [历史科研工作台](openquantum-workbench-20260912.jpg) | 当时的 Harness 原生 UI、OpenQuantum 默认 Preset、量子学习通入口；侧栏显示上游 Harness 标志，现已由上方修复后的 Desktop 截图替换首页引用。 |
 | [量子学习通](openquantum-learning-20260912.jpg) | 在工作台内打开完整原版教学应用；上游固定提交 `29735f10d0081859ac3db1a50a0cc92f46436004`，使用仓库已有名称、主题和持久化适配。空课程库用于展示入口，不代表完整课程体系已发布。 |
 | [MCP Server 连接](openquantum-connections-20260912.jpg) | 当前连接目录和配置开关；未更改开关，配置启用不等于服务当前在线。 |
 | [Skill 指令](openquantum-skills-20260912.jpg) | 当前工作流目录、说明和加载策略；未修改 Skill 或运行领域任务。 |
