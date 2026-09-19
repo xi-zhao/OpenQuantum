@@ -1,10 +1,12 @@
 <h1 align="center"><img src="../../packages/openquantum-web-branding/assets/lockup.svg" width="430" alt="OpenQuantum" /></h1>
 
-<p align="center"><strong>Une plateforme ouverte d’agents et d’applications quantiques</strong></p>
+<p align="center"><strong>Mettez vos idées quantiques en action.</strong><br /><sub>Une plateforme ouverte d’agents et d’applications quantiques</sub></p>
 
 <p align="center"><a href="../../README.md">简体中文</a> · <a href="./README.en.md">English</a> · <a href="./README.ja.md">日本語</a> · <a href="./README.ko.md">한국어</a> · <a href="./README.es.md">Español</a> · <a href="./README.fr.md">Français</a> · <a href="./README.de.md">Deutsch</a> · <a href="./README.pt.md">Português</a> · <a href="./README.ru.md">Русский</a> · <a href="./README.ar.md">العربية</a></p>
 
 OpenQuantum rassemble outils quantiques, méthodes spécialisées et applications complètes. Vous pouvez confier un calcul à un agent d’IA, utiliser une application intégrée ou ajouter vos propres algorithmes et services. Les services de modèles et les ressources de calcul se configurent séparément.
+
+**Posez vos questions, lancez des calculs et construisez de nouvelles capacités ensemble.**
 
 ![OpenQuantum Desktop](../images/openquantum-desktop-20260919.jpg)
 
@@ -13,6 +15,14 @@ OpenQuantum rassemble outils quantiques, méthodes spécialisées et application
 Simulez des circuits avec Qiskit et TyxonQ, optimisez-les avec PyZX, explorez le calcul fondé sur les mesures avec Graphix, la réduction par symétries avec Symmer et l’algèbre de Lie avec PauLie. TeNPy, SQD et Flow-VQE couvrent les états fondamentaux et la chimie. Mitiq permet l’atténuation des erreurs ; Stim, PyMatching, Deltakit et BP+LSD permettent d’étudier leur correction. Dynamiqs, OQuPy, TJM et Clifft traitent la dynamique et le bruit ; FatQat propose des expériences sur les systèmes supraconducteurs et atomiques. FieldQKit découvre les dispositifs et Quantum Learning fournit des espaces d’apprentissage et de cours.
 
 Chaque intégration possède ses dépendances et son domaine de validité scientifique. Un calcul local ne démontre pas les performances d’un dispositif réel. La fin d’un appel d’outil ne constitue pas, à elle seule, une validation scientifique.
+
+## Pourquoi choisir OpenQuantum
+
+**De la question au calcul.** Décrivez une tâche prise en charge en langage naturel : l’agent appelle les outils spécialisés. Vous définissez les données et les hypothèses physiques, puis jugez les résultats.
+
+**Chaque recherche prépare la suivante.** L’espace de travail conserve les entrées et les résultats des outils pour poursuivre avec d’autres paramètres. La validation scientifique dépend du périmètre de chaque capacité.
+
+**Des méthodes que d’autres peuvent utiliser.** Ajoutez des Skills, des outils de calcul, des ressources pédagogiques ou des applications. Les modèles et les ressources de calcul se configurent séparément ; les auteurs et les licences des projets d’origine restent identifiés.
 
 ## Démarrage rapide
 
@@ -75,6 +85,12 @@ npm run harness:config
 npm run desktop:check
 npm run check
 ```
+
+## Perspectives et RSI
+
+Nous explorons la coopération entre calcul quantique, HPC et IA, de nouvelles applications et ressources pédagogiques, ainsi que l’amélioration des méthodes de recherche. L’auto-amélioration récursive (RSI) reste un projet de recherche : la boucle proposée n’est pas encore implémentée. Elle nécessite des vérifications indépendantes, des comparaisons sur de nouvelles tâches, le coût total, l’autorisation de l’utilisateur et un retour possible à une version antérieure.
+
+[Feuille de route détaillée](../../README.md#rsi).
 
 ## Licence
 

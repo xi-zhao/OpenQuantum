@@ -1,10 +1,12 @@
 <h1 align="center"><img src="../../packages/openquantum-web-branding/assets/lockup.svg" width="430" alt="OpenQuantum" /></h1>
 
-<p align="center"><strong>Uma plataforma aberta de agentes e aplicações quânticas</strong></p>
+<p align="center"><strong>Coloque suas ideias quânticas em ação.</strong><br /><sub>Uma plataforma aberta de agentes e aplicações quânticas</sub></p>
 
 <p align="center"><a href="../../README.md">简体中文</a> · <a href="./README.en.md">English</a> · <a href="./README.ja.md">日本語</a> · <a href="./README.ko.md">한국어</a> · <a href="./README.es.md">Español</a> · <a href="./README.fr.md">Français</a> · <a href="./README.de.md">Deutsch</a> · <a href="./README.pt.md">Português</a> · <a href="./README.ru.md">Русский</a> · <a href="./README.ar.md">العربية</a></p>
 
 O OpenQuantum reúne ferramentas quânticas, métodos especializados e aplicações completas. Você pode solicitar cálculos a um agente de IA, usar uma aplicação integrada ou adicionar seus próprios algoritmos e serviços. Os serviços de modelos e os recursos de computação são configurados separadamente.
+
+**Faça perguntas, execute cálculos e construa novas capacidades em conjunto.**
 
 ![OpenQuantum Desktop](../images/openquantum-desktop-20260919.jpg)
 
@@ -13,6 +15,14 @@ O OpenQuantum reúne ferramentas quânticas, métodos especializados e aplicaç�
 Simule circuitos com Qiskit e TyxonQ; otimize-os com PyZX; explore computação baseada em medições com Graphix, redução por simetrias com Symmer e álgebra de Lie com PauLie. TeNPy, SQD e Flow-VQE abrangem estados fundamentais e química. Mitiq oferece mitigação de erros; Stim, PyMatching, Deltakit e BP+LSD permitem estudar correção de erros. Dynamiqs, OQuPy, TJM e Clifft tratam de dinâmica e ruído; FatQat oferece experimentos com sistemas supercondutores e atômicos. FieldQKit descobre dispositivos e Quantum Learning oferece recursos para ensino e aprendizagem.
 
 Cada integração possui dependências e um escopo científico próprios. Um cálculo local não comprova o desempenho de hardware real. Concluir uma chamada de ferramenta também não equivale a passar por validação científica.
+
+## Por que escolher o OpenQuantum
+
+**Da pergunta ao cálculo.** Descreva uma tarefa compatível em linguagem natural e o agente chamará as ferramentas especializadas. Você define as entradas e as hipóteses físicas e avalia os resultados.
+
+**Cada pesquisa como ponto de partida.** O ambiente de trabalho preserva as entradas e os resultados das ferramentas para continuar com outros parâmetros. A validação científica depende do escopo de cada capacidade.
+
+**Seus métodos ao alcance de outras pessoas.** É possível contribuir com Skills, ferramentas de cálculo, materiais e aplicações. Modelos e recursos computacionais são configurados separadamente, preservando a autoria e as licenças dos projetos originais.
 
 ## Início rápido
 
@@ -75,6 +85,12 @@ npm run harness:config
 npm run desktop:check
 npm run check
 ```
+
+## Visão de longo prazo e RSI
+
+Exploramos a colaboração entre computação quântica, HPC e IA, novas aplicações e materiais didáticos e a melhoria dos métodos de pesquisa. O autoaperfeiçoamento recursivo (RSI) é uma proposta de pesquisa: o ciclo descrito ainda não foi implementado. Sua avaliação exige verificações independentes, comparação em tarefas novas, custo total, autorização do usuário e possibilidade de retornar a uma versão anterior.
+
+[Roteiro detalhado](../../README.md#rsi).
 
 ## Licença
 

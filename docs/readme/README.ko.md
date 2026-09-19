@@ -1,10 +1,12 @@
 <h1 align="center"><img src="../../packages/openquantum-web-branding/assets/lockup.svg" width="430" alt="OpenQuantum" /></h1>
 
-<p align="center"><strong>오픈 소스 양자 Agent 및 애플리케이션 플랫폼</strong></p>
+<p align="center"><strong>양자 아이디어를 실행으로.</strong><br /><sub>오픈 소스 양자 Agent 및 애플리케이션 플랫폼</sub></p>
 
 <p align="center"><a href="../../README.md">简体中文</a> · <a href="./README.en.md">English</a> · <a href="./README.ja.md">日本語</a> · <a href="./README.ko.md">한국어</a> · <a href="./README.es.md">Español</a> · <a href="./README.fr.md">Français</a> · <a href="./README.de.md">Deutsch</a> · <a href="./README.pt.md">Português</a> · <a href="./README.ru.md">Русский</a> · <a href="./README.ar.md">العربية</a></p>
 
 OpenQuantum은 양자 도구, 전문 연구 방법, 애플리케이션을 하나의 플랫폼에 모읍니다. AI Agent에 계산을 요청하고, 통합 앱을 사용하거나, 자신의 알고리즘과 서비스를 추가할 수 있습니다. 모델 서비스와 계산 백엔드는 서로 독립적으로 설정합니다.
+
+**질문을 던지고, 계산을 실행하고, 새로운 기능을 함께 만듭니다.**
 
 ![OpenQuantum Desktop](../images/openquantum-desktop-20260919.jpg)
 
@@ -13,6 +15,14 @@ OpenQuantum은 양자 도구, 전문 연구 방법, 애플리케이션을 하나
 Qiskit과 TyxonQ를 이용한 회로 시뮬레이션, PyZX 회로 최적화, Graphix 측정 기반 양자 계산, Symmer 대칭성 기반 큐비트 축소, PauLie Lie 대수 분석을 지원합니다. TeNPy·SQD·Flow-VQE는 바닥상태와 화학 계산, Mitiq은 오류 완화, Stim·PyMatching·Deltakit·BP+LSD는 오류 정정을 다룹니다. Dynamiqs·OQuPy·TJM·Clifft로 동역학과 잡음을 분석하고, FatQat으로 초전도 및 원자계 실험을 수행할 수 있습니다. FieldQKit 백엔드 탐색과 Quantum Learning 학습·수업 기능도 통합되어 있습니다.
 
 각 기능의 의존성과 과학적 적용 범위는 개별적으로 정해집니다. 로컬 계산의 성공은 실제 하드웨어 성능을 입증하지 않으며, 도구 실행 완료가 곧 과학적 검증 통과를 의미하지도 않습니다.
+
+## OpenQuantum을 선택하는 이유
+
+**질문에서 계산으로.** 지원되는 작업을 자연어로 요청하면 Agent가 전문 도구를 호출합니다. 입력, 물리적 가정, 결과에 대한 판단은 사용자가 맡습니다.
+
+**한 번의 연구를 다음 연구의 출발점으로.** 작업 공간에 도구 입력과 결과를 남기고 조건을 바꾸며 탐구를 이어갈 수 있습니다. 과학적 검증은 각 기능의 지원 범위에 따릅니다.
+
+**내 방법을 다른 사람도 쓰는 기능으로.** Skill, 계산 도구, 교육 자료와 앱을 추가할 수 있습니다. 모델과 계산 백엔드는 따로 설정하며, 원본 프로젝트의 저자와 라이선스를 존중합니다.
 
 ## 빠른 시작
 
@@ -75,6 +85,12 @@ npm run harness:config
 npm run desktop:check
 npm run check
 ```
+
+## 장기 계획과 RSI
+
+장기적으로 양자 계산·HPC·AI의 연계, 앱과 교육 콘텐츠의 확장, 연구 방법의 지속적인 개선을 탐구합니다. 재귀적 자기 개선(RSI)은 연구 구상이며 현재 이러한 폐쇄 루프는 구현되지 않았습니다. 독립 검증, 새로운 작업에서의 비교, 전체 비용, 사용자 승인과 버전 롤백을 개선 수용의 조건으로 삼습니다.
+
+[자세한 로드맵](../../README.md#rsi).
 
 ## 라이선스
 

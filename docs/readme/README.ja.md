@@ -1,10 +1,12 @@
 <h1 align="center"><img src="../../packages/openquantum-web-branding/assets/lockup.svg" width="430" alt="OpenQuantum" /></h1>
 
-<p align="center"><strong>量子技術のためのオープンソース Agent・アプリケーションプラットフォーム</strong></p>
+<p align="center"><strong>量子のアイデアを、動くかたちに。</strong><br /><sub>量子技術のためのオープンソース Agent・アプリケーションプラットフォーム</sub></p>
 
 <p align="center"><a href="../../README.md">简体中文</a> · <a href="./README.en.md">English</a> · <a href="./README.ja.md">日本語</a> · <a href="./README.ko.md">한국어</a> · <a href="./README.es.md">Español</a> · <a href="./README.fr.md">Français</a> · <a href="./README.de.md">Deutsch</a> · <a href="./README.pt.md">Português</a> · <a href="./README.ru.md">Русский</a> · <a href="./README.ar.md">العربية</a></p>
 
 OpenQuantum は、量子計算ツール、専門的な手法、アプリケーションを一つのプラットフォームに集約します。AI Agent に計算を依頼したり、統合アプリケーションを使ったり、自分のアルゴリズムやサービスを追加したりできます。モデルサービスと計算バックエンドは独立して設定します。
+
+**問いを立て、計算を動かし、新たな能力を共につくる。**
 
 ![OpenQuantum Desktop](../images/openquantum-desktop-20260919.jpg)
 
@@ -13,6 +15,14 @@ OpenQuantum は、量子計算ツール、専門的な手法、アプリケー�
 Qiskit・TyxonQ による回路シミュレーション、PyZX による回路最適化、Graphix による測定型量子計算、Symmer による対称性を用いた量子ビット削減、PauLie による Lie 代数解析を利用できます。TeNPy・SQD・Flow-VQE は基底状態や化学計算、Mitiq は誤り緩和、Stim・PyMatching・Deltakit・BP+LSD は誤り訂正を扱います。Dynamiqs・OQuPy・TJM・Clifft はダイナミクスやノイズの解析、FatQat は超伝導・原子系の実験に対応します。FieldQKit によるバックエンド探索と、Quantum Learning による学習・授業も利用できます。
 
 各機能には個別の依存関係と適用範囲があります。ローカル計算の成功は実機性能の証明ではなく、Tool の実行完了だけで科学的妥当性が保証されるわけでもありません。
+
+## OpenQuantum を選ぶ理由
+
+**問いから計算へ。** 対応するタスクを自然言語で伝え、Agent が専門ツールを呼び出します。入力、物理的な仮定、結果の判断は利用者が担います。
+
+**一度の研究を、次の出発点に。** ワークベンチにはツールの入力と結果が残り、条件を変えて検討を続けられます。科学的な検証は各機能の対応範囲に従います。
+
+**自分の方法を、他の人も使える能力に。** Skill、計算ツール、教材、アプリケーションを追加できます。モデルと計算バックエンドは独立して設定し、上流プロジェクトの著者とライセンスを尊重します。
 
 ## クイックスタート
 
@@ -75,6 +85,12 @@ npm run harness:config
 npm run desktop:check
 npm run check
 ```
+
+## 今後の展望と RSI
+
+長期的には、量子計算・HPC・AI の連携、アプリケーションと教材の拡充、研究手法の継続的な改善を目指します。再帰的自己改善（RSI）は研究構想であり、現在のプラットフォームにその閉ループは実装されていません。独立した検証、新しいタスクでの比較、総コスト、利用者の承認、バージョンのロールバックを条件として検討します。
+
+[詳しいロードマップ](../../README.md#rsi).
 
 ## ライセンス
 

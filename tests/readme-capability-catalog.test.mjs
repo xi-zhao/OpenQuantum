@@ -36,22 +36,25 @@ function section(markdown, heading) {
 function catalogRows(markdown, heading) {
   const rows = section(markdown, heading).split("\n")
     .filter((line) => line.startsWith("|"))
-    .slice(2)
     .map((line) => line.split("|").slice(1, -1).map((cell) => cell.trim()));
   assert.ok(rows.length > 0, `${heading} must contain a visible catalog table`);
+  const header = rows[0];
   const entries = new Map();
   for (const cells of rows) {
+    if (cells.every((cell) => /^:?-+:?$/.test(cell))) continue;
+    if (cells.length === header.length && cells.every((cell, index) => cell === header[index])) continue;
     const match = cells[0].match(/`([a-z0-9_-]+)`/);
     assert.ok(match, `${heading}: each row needs a canonical identifier`);
     assert.ok(!entries.has(match[1]), `${heading}: duplicate ${match[1]}`);
     entries.set(match[1], cells);
   }
+  assert.ok(entries.size > 0, `${heading} must contain catalog entries`);
   return entries;
 }
 
-const skills = catalogRows(readme, "### 内置 Skills");
-const servers = catalogRows(readme, "### MCP 服务目录");
-const nativeTools = catalogRows(readme, "### 原生量子 Tools");
+const skills = catalogRows(readme, "#### 内置 Skills");
+const servers = catalogRows(readme, "#### MCP 服务目录");
+const nativeTools = catalogRows(readme, "#### 原生量子 Tools");
 const declaredServers = report.packages.flatMap((entry) => entry.execution.mcpServers);
 const declaredNativeTools = report.packages.flatMap((entry) => entry.execution.nativeTools)
   .filter((tool) => ["./native-quantum-tools.mjs", "./quantum-practices-tools.mjs", "./metriq-data-tools.mjs"].includes(tool.providerPlugin));
@@ -88,7 +91,7 @@ test("README MCP catalog matches declared connections, activation policies and s
     assert.equal(cells[2], labels[server.activation], `${server.name}: stale default status`);
     assert.ok(cells[0].includes(`(${mcpCatalogEntry(server.name).sourceUrl})`));
   }
-  assert.ok(section(readme, "### MCP 服务目录").includes("OPENQUANTUM_DISABLE_QISKIT_MCP=1"));
+  assert.ok(section(readme, "#### MCP 服务目录").includes("OPENQUANTUM_DISABLE_QISKIT_MCP=1"));
 });
 
 test("native quantum Tools are documented separately with their complete-call effects", () => {
@@ -110,7 +113,7 @@ test("README counts and expandable catalog navigation stay aligned with the sour
   assert.ok(readme.includes(`${optIn} 个按需启用`));
   assert.ok(readme.includes('href="#内置-skills"'));
   assert.ok(readme.includes('href="#mcp-服务目录"'));
-  for (const heading of ["### 内置 Skills", "### MCP 服务目录", "### 原生量子 Tools"]) {
+  for (const heading of ["#### 内置 Skills", "#### MCP 服务目录", "#### 原生量子 Tools"]) {
     const before = readme.slice(0, readme.indexOf(heading));
     // Catalogs are deliberately expandable; each heading belongs to one named fold.
     assert.equal([...before.matchAll(/<details\b/g)].length - [...before.matchAll(/<\/details>/g)].length, 1);
@@ -123,7 +126,7 @@ test("README counts and expandable catalog navigation stay aligned with the sour
 });
 
 test("the upstream QPanda Skill remains an explicit optional installation", () => {
-  const optional = section(readme, "### 可选上游 Skill 与开发证据");
+  const optional = section(readme, "### 可选上游 Skill");
   assert.ok(optional.includes(qpandaSkillIntegration.sourceUrl));
   assert.ok(optional.includes(qpandaSkillIntegration.setupCommand));
   assert.ok(optional.includes(`不计入上面的 ${skills.size} 个内置 Skill`));

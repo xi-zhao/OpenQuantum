@@ -1,10 +1,12 @@
 <h1 align="center"><img src="../../packages/openquantum-web-branding/assets/lockup.svg" width="430" alt="OpenQuantum" /></h1>
 
-<p align="center"><strong>Eine offene Plattform für Quanten-Agenten und Anwendungen</strong></p>
+<p align="center"><strong>Bringen Sie Ihre Quantenideen zum Laufen.</strong><br /><sub>Eine offene Plattform für Quanten-Agenten und Anwendungen</sub></p>
 
 <p align="center"><a href="../../README.md">简体中文</a> · <a href="./README.en.md">English</a> · <a href="./README.ja.md">日本語</a> · <a href="./README.ko.md">한국어</a> · <a href="./README.es.md">Español</a> · <a href="./README.fr.md">Français</a> · <a href="./README.de.md">Deutsch</a> · <a href="./README.pt.md">Português</a> · <a href="./README.ru.md">Русский</a> · <a href="./README.ar.md">العربية</a></p>
 
 OpenQuantum vereint Quantenwerkzeuge, Fachmethoden und vollständige Anwendungen. Sie können einen KI-Agenten mit Berechnungen beauftragen, integrierte Anwendungen nutzen oder eigene Algorithmen und Dienste einbinden. Modelldienste und Rechenressourcen werden unabhängig voneinander konfiguriert.
+
+**Fragen stellen, Berechnungen ausführen und gemeinsam neue Fähigkeiten entwickeln.**
 
 ![OpenQuantum Desktop](../images/openquantum-desktop-20260919.jpg)
 
@@ -13,6 +15,14 @@ OpenQuantum vereint Quantenwerkzeuge, Fachmethoden und vollständige Anwendungen
 Qiskit und TyxonQ ermöglichen Schaltungssimulationen, PyZX die Optimierung, Graphix messbasiertes Quantenrechnen, Symmer die Reduktion anhand von Symmetrien und PauLie die Analyse von Lie-Algebren. TeNPy, SQD und Flow-VQE behandeln Grundzustände und Chemie. Mitiq dient der Fehlerminderung; Stim, PyMatching, Deltakit und BP+LSD unterstützen Fehlerkorrektur. Dynamiqs, OQuPy, TJM und Clifft untersuchen Dynamik und Rauschen. FatQat bietet Experimente mit supraleitenden und atomaren Systemen. Hinzu kommen die Gerätesuche mit FieldQKit und die Lernanwendung Quantum Learning.
 
 Jede Integration hat eigene Abhängigkeiten und einen begrenzten wissenschaftlichen Geltungsbereich. Eine lokale Berechnung belegt keine Leistung realer Hardware. Ein abgeschlossener Werkzeugaufruf bedeutet auch nicht automatisch eine bestandene wissenschaftliche Prüfung.
+
+## Warum OpenQuantum
+
+**Von der Frage zur Berechnung.** Beschreiben Sie eine unterstützte Aufgabe in natürlicher Sprache; der Agent ruft die passenden Fachwerkzeuge auf. Sie bestimmen Eingaben und physikalische Annahmen und beurteilen die Ergebnisse.
+
+**Jede Untersuchung als Ausgangspunkt.** Der Arbeitsbereich hält Werkzeugeingaben und Ergebnisse fest, sodass Sie mit anderen Parametern weiterarbeiten können. Wissenschaftliche Prüfungen richten sich nach dem Umfang der jeweiligen Fähigkeit.
+
+**Eigene Methoden für andere nutzbar machen.** Sie können Skills, Rechenwerkzeuge, Lehrmaterialien und Anwendungen ergänzen. Modelle und Rechenressourcen werden getrennt konfiguriert; Urheberschaft und Lizenzen der eingebundenen Projekte bleiben sichtbar.
 
 ## Schnellstart
 
@@ -75,6 +85,12 @@ npm run harness:config
 npm run desktop:check
 npm run check
 ```
+
+## Langfristige Ziele und RSI
+
+Wir untersuchen das Zusammenspiel von Quantencomputing, HPC und KI, weitere Anwendungen und Lehrangebote sowie die Verbesserung von Forschungsmethoden. Rekursive Selbstverbesserung (RSI) ist ein Forschungsziel; der beschriebene Kreislauf ist noch nicht umgesetzt. Dafür sind unabhängige Prüfungen, Vergleiche mit neuen Aufgaben, Gesamtkosten, Nutzerfreigaben und die Rückkehr zu früheren Versionen vorgesehen.
+
+[Ausführliche Roadmap](../../README.md#rsi).
 
 ## Lizenz
 
