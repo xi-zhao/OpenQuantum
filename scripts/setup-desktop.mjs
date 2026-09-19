@@ -5,6 +5,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
 import { DESKTOP_SOURCE, desktopSourceDirectory, desktopPackageDirectory } from "./lib/desktop-source.mjs";
+import { prepareOpenQuantumDesktop } from "./lib/desktop-branding.mjs";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
 const directory = desktopSourceDirectory(root);
@@ -40,4 +41,5 @@ const packageRoot = desktopPackageDirectory(root);
 await run(process.execPath, [path.join(packageRoot, "node_modules/electron/install.js")]);
 await run("corepack", ["yarn", "workspace", "dsh-plugin-desktop", "prepare:electron-native"]);
 await writeFile(path.join(directory, ".openquantum-build.json"), JSON.stringify(DESKTOP_SOURCE, null, 2));
+await prepareOpenQuantumDesktop(root);
 console.log(`OpenQuantum Desktop ready: ${DESKTOP_SOURCE.version} (${DESKTOP_SOURCE.revision.slice(0, 12)}).`);

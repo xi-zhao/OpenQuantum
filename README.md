@@ -409,7 +409,7 @@ npm run desktop:verify-install
 npm run desktop
 ```
 
-`desktop:setup` 构建固定的上游源码、下载 Electron 并编译原生模块；首次启动可能显示设置向导。请使用仓库中的启动命令，以加载 OpenQuantum 的模型和量子能力配置。
+`desktop:setup` 构建固定的上游源码、下载 Electron、编译原生模块并准备 OpenQuantum 桌面品牌资源；首次启动可能显示设置向导。请使用仓库中的启动命令，以加载 OpenQuantum 的模型和量子能力配置。
 
 Web 与 Desktop 共用 `.openquantum/dsh` 中的本机状态，切换前先退出正在运行的入口。量子学习通另有安装和平台要求，见[量子学习通](#量子学习通)。
 

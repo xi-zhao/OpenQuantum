@@ -42,6 +42,11 @@ OpenQuantum Harness Home
 6. 不依赖 `desktopRuntime`、Electron Window 或其他 DSH Desktop 私有 Interface；
 7. OpenQuantum 当前只支持仓库内源码启动。上游的全局安装和 `npx` 入口使用默认 DSH Home，不能作为
    OpenQuantum Agent Preset、Skill、Tool Provider 与 Validator 组合的安装入口。
+8. 固定版本尚无公开的原生品牌配置。`scripts/lib/desktop-branding.mjs` 从已构建的上游包准备独立的
+   `.openquantum/desktop/<digest>` 运行副本，只替换窗口/应用名称、顶部标题和原生图标；上游源码与
+   `node_modules` 不作修改，依赖仍引用原安装。品牌文字匹配不符合固定版本时中止准备。
+   macOS 托盘位图和 Dock 图标从现有 OQ SVG 派生。原有 native userData 路径、package identity、
+   更新渠道和版本保持原值；顶部版本号表示复用的 DSH Desktop 版本，不冒充 OpenQuantum 版本。
 
 ## 结果
 
@@ -66,6 +71,7 @@ OpenQuantum Harness Home
 - Desktop shell 与 OpenQuantum Home patch 出现在同一最终 Cordis 组合；
 - 默认 OpenQuantum preset、Provider route、品牌与设置插件仍然生效；
 - 桌面启动器能够解析并报告预期版本。
+- 原生品牌副本与固定上游包共享依赖，保留上游文件，并提供透明背景的单色托盘图标及 macOS 图标安全留白。
 
 CI 在 macOS 与 Windows 上分别从 `npm ci` 开始运行这项检查；macOS 另外保留真实 Electron 窗口与 loopback
 页面冒烟验证记录。Windows 生成的 preset 依赖链接使用 directory junction，避免要求管理员级符号链接权限。

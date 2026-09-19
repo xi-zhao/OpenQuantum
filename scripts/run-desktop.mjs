@@ -3,11 +3,11 @@ import { fileURLToPath } from "node:url";
 import path from "node:path";
 
 import { prepareOpenQuantumHarnessHome } from "./lib/prepare-harness-home.mjs";
-import { requireDesktopBuild } from "./lib/desktop-source.mjs";
+import { prepareOpenQuantumDesktop } from "./lib/desktop-branding.mjs";
 import { loadProjectEnv } from "./lib/load-project-env.mjs";
 
 const projectRoot = fileURLToPath(new URL("..", import.meta.url));
-const desktopBin = path.join(await requireDesktopBuild(projectRoot), "lib/bin.js");
+const desktopBin = path.join(await prepareOpenQuantumDesktop(projectRoot), "lib/bin.js");
 loadProjectEnv(projectRoot);
 const harnessHome = process.env.DSH_HOME ?? path.join(projectRoot, ".openquantum", "dsh");
 await prepareOpenQuantumHarnessHome({ harnessHome, projectRoot, profileName: "desktop" });

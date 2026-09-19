@@ -3,12 +3,15 @@
 ## 2026-09-19 Desktop 品牌修复
 
 [Desktop 科研工作台](openquantum-desktop-20260919.jpg) 是本次修复后从实际 macOS Electron 窗口
-直接取得的截图，用于 README 首图。基线为 `d049700a0dd72f53964f218539104de33aa6937c`，
-包含本次 OpenQuantum 品牌插件修改；Desktop 为 `2.0.7`，Harness 为 `0.1.5-rc.1`。
+直接取得的截图，用于 README 首图。当前截图基于 `a8c161ead1984183675ac12984d9fe4cde332e43`，
+并包含本次原生窗口标题与图标修复；Desktop 为 `2.0.7`，Harness 为 `0.1.5-rc.1`。
 截图使用独立 Harness Home、简体中文和深色主题，图像尺寸为 1171 × 768。
 
 侧栏名称、展开及收起状态的图标，以及首页标语旁的图标均由 OpenQuantum Client Plugin
 通过 Harness 原生品牌插槽提供。已在真实 Desktop 中检查侧栏展开、收起和页面刷新。
+原生窗口标题已显示 OpenQuantum Desktop；顶部 `v2.0.7` 是桌面适配器的上游版本。
+Dock 与菜单栏图标由仓库启动流程从同一 OQ SVG 准备，未修改上游源码或依赖目录。
+此图只包含应用窗口，不包含 macOS Dock 或系统菜单栏。
 截图未进行图像改字或合成；未发起模型生成或科研计算任务。
 
 ## 2026-09-12 更新
