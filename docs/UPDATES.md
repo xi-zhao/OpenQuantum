@@ -58,7 +58,7 @@ Switching between Web and Desktop continues to require stopping the other entry 
 To inspect a manifest locally without publishing:
 
 ```bash
-node scripts/build-update-manifest.mjs --tag v0.4.0 --published-at 2026-09-20T00:00:00Z --output .openquantum/release/openquantum-update.json
+node scripts/build-update-manifest.mjs --tag v0.5.0 --published-at 2026-09-20T00:00:00Z --output .openquantum/release/openquantum-update.json
 ```
 
 Use the actual version and publication date. The generator rejects mismatched tags and prerelease
