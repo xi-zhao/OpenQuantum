@@ -9,7 +9,7 @@
 - 首次设置和恢复界面纳入统一品牌适配；OpenQuantum Host / Client 包随应用分发，避免首次 Profile
   依赖初始化移走扩展。构建、数据保留和逐平台验证边界见[安装包说明](docs/DESKTOP_INSTALLERS.md)。
 - 本地 Apple Silicon DMG 的介质校验、复制安装、两次工作台启动和本地工具检查通过；
-  Intel Mac 与 Windows 安装包尚待原生 CI 执行。本轮未推送、未上传 Release。
+  Intel Mac 与 Windows 安装包尚待原生 CI 执行；测试构建不自动创建 Release。
 
 ## 版本提醒（2026-09-20）
 
