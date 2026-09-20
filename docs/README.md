@@ -133,6 +133,7 @@ Skill 与 Tool 在概念和发行版 policy 中都相互独立：Skill-only、To
 
 ### 使用 OpenQuantum
 
+- [桌面测试安装包](DESKTOP_INSTALLERS.md)：DMG / Windows 安装向导、独立用户数据、构建与安装后检查。
 - [部署与启动](DEPLOYMENT.md)：本地、Docker、模型配置和启动检查。
 - [版本更新](UPDATES.md)：新版本提醒、源码升级、发布通道和维护流程。
 - [常见问题与故障排查](TROUBLESHOOTING.md)：按 UI、模型、MCP Server、凭据和 Docker 分层定位。

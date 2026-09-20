@@ -122,8 +122,14 @@ test("prepares native OQ assets while retaining the pinned upstream package and 
   assert.deepEqual(await readFile(path.join(brandedRoot, "package.json")), await readFile(path.join(desktopRoot, "package.json")));
   assert.equal(await realpath(path.join(brandedRoot, "node_modules")), await realpath(path.join(desktopRoot, "node_modules")));
   const changes = brandDesktopJavaScript(original);
-  assert.equal(changes.size, 4);
+  assert.equal(changes.size, 6);
+  assert.doesNotMatch(changes.get(path.join("lib", "main.js")), /(?:title|welcomeTitle): "[^"\n]*DSH Desktop/);
   assert.ok([...changes.values()].some((source) => source.includes('return preference === "zh" ? "zh" : preference ? "en" : void 0;')));
+  for (const filename of ["setup-wizard.html", "recovery.html", "desktop-dialog.html"]) {
+    const nativePage = await readFile(path.join(brandedRoot, "lib/native-ui", filename), "utf8");
+    assert.doesNotMatch(nativePage, /DSH Desktop/);
+    assert.match(nativePage, /OpenQuantum Desktop/);
+  }
   for (const [file, source] of original) {
     assert.equal(await readFile(path.join(desktopRoot, file), "utf8"), source, "upstream must stay unchanged");
     assert.equal(await readFile(path.join(brandedRoot, file), "utf8"), changes.get(file) ?? source);

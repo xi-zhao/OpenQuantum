@@ -159,7 +159,7 @@ Pro 教学任务使用上游应用自己的工具与记录，尚未自动接入�
 
 OpenQuantum 桌面端提供原生窗口、系统托盘、终端与通知，复用科研工作台的模型、量子 Skill、计算工具和执行记录。
 
-macOS 与 Windows 的源码构建和安装检查已通过 [CI](https://github.com/xi-zhao/OpenQuantum/actions/runs/35449185860)，本机交互验证覆盖 macOS；当前未提供 OpenQuantum 品牌的 `.dmg` / `.exe` 安装包。
+macOS 与 Windows 的源码构建和安装检查已通过 [CI](https://github.com/xi-zhao/OpenQuantum/actions/runs/35449185860)，本机交互验证覆盖 macOS。现已加入 OpenQuantum 品牌的 DMG / Windows 测试安装包构建，内置 Node 和 uv；下载、数据保留及平台验证范围见[安装包说明](docs/DESKTOP_INSTALLERS.md)。公开安装文件以 Release 的实际附件为准。
 
 [安装与启动桌面客户端](#桌面客户端)。
 

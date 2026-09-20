@@ -2,6 +2,15 @@
 
 升级核验日期：2026-09-10；原模型验收交接记录日期：2026-09-05。此页只记录工作交接；架构以[文档总入口](docs/README.md)为准，执行事实以 Harness Session event log 为准，科学状态以 Acceptance Report 为准。
 
+## 桌面测试安装包（2026-09-20）
+
+- 增加原生 macOS / Windows 打包入口、固定 Node / uv 运行环境、独立用户数据和分发清单更新。
+  未签名模式用于测试，正式签名与公证仍需维护者配置证书；安装包不是后台 OTA 安装。
+- 首次设置和恢复界面纳入统一品牌适配；OpenQuantum Host / Client 包随应用分发，避免首次 Profile
+  依赖初始化移走扩展。构建、数据保留和逐平台验证边界见[安装包说明](docs/DESKTOP_INSTALLERS.md)。
+- 本地 Apple Silicon DMG 的介质校验、复制安装、两次工作台启动和本地工具检查通过；
+  Intel Mac 与 Windows 安装包尚待原生 CI 执行。本轮未推送、未上传 Release。
+
 ## 版本提醒（2026-09-20）
 
 - Web 与 Desktop 共用 OpenQuantum 正式版本检查和提醒偏好；支持每日自动检查、手动检查、稍后提醒、跳过版本与十语言文案。

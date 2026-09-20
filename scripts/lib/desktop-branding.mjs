@@ -26,6 +26,8 @@ const PRESENTATION_PATCHES = [
   // non-Chinese UI choice with English fallback instead of the OS's Chinese.
   ["native locale fallback", /return preference === "zh" \|\| preference === "en" \? preference : void 0;/g,
     'return preference === "zh" ? "zh" : preference ? "en" : void 0;'],
+  ["native presentation copy", /((?:title|welcomeTitle|presentationBody|communityMarketBody|successBody|startUsing): ")([^"\n]*DSH Desktop[^"\n]*)"/g,
+    (_, prefix, text) => `${prefix}${text.replaceAll("DSH Desktop", PRODUCT_NAME)}"`, 23],
 ];
 
 async function filesUnder(root, relative) {
@@ -56,7 +58,8 @@ export function brandDesktopJavaScript(files) {
     }
   }
   counts.forEach((count, index) => {
-    if (count !== 1) throw new Error(`Desktop branding contract changed: ${PRESENTATION_PATCHES[index][0]} matched ${count} times; expected 1.`);
+    const expected = PRESENTATION_PATCHES[index][3] ?? 1;
+    if (count !== expected) throw new Error(`Desktop branding contract changed: ${PRESENTATION_PATCHES[index][0]} matched ${count} times; expected ${expected}.`);
   });
   return result;
 }
@@ -100,6 +103,12 @@ export async function prepareOpenQuantumDesktop(projectRoot) {
     if (path.dirname(filename) === "lib" && filename.endsWith(".js")) scripts.set(filename, source.toString("utf8"));
   }
   const patched = brandDesktopJavaScript(scripts);
+  for (const filename of files) {
+    if (!filename.replaceAll(path.sep, "/").startsWith("lib/native-ui/") || !/\.(js|html)$/.test(filename)) continue;
+    const source = await readFile(path.join(upstreamRoot, filename), "utf8");
+    const branded = source.replaceAll("DSH Desktop", PRODUCT_NAME).replaceAll("DeepSeek Harness Desktop", PRODUCT_NAME);
+    if (branded !== source) patched.set(filename, branded.replace(/^\/\/# sourceMappingURL=.*$/gm, ""));
+  }
   const digest = hash.digest("hex");
   const root = path.join(projectRoot, ".openquantum/desktop");
   const target = path.join(root, digest.slice(0, 20));

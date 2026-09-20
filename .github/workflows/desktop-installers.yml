@@ -1,0 +1,116 @@
+name: Desktop test installers
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, 'c/desktop-*']
+    paths:
+      - desktop/**
+      - scripts/**
+      - src/**
+      - runtime/**
+      - .agents/**
+      - packages/**
+      - package.json
+      - package-lock.json
+      - .github/workflows/desktop-installers.yml
+  pull_request:
+    branches: [main]
+    paths:
+      - desktop/**
+      - scripts/**
+      - src/**
+      - runtime/**
+      - .agents/**
+      - packages/**
+      - package.json
+      - package-lock.json
+      - .github/workflows/desktop-installers.yml
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Test installer (${{ matrix.target }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-15
+            target: darwin-arm64
+          - os: macos-15-intel
+            target: darwin-x64
+          - os: windows-latest
+            target: win32-x64
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24.14.1
+          cache: npm
+      - name: Install locked build dependencies
+        run: npm ci
+      - name: Check distribution upgrades and source integration
+        run: npm run desktop:package:check
+      - name: Build pinned Desktop source and native dependencies
+        run: npm run desktop:setup
+      - name: Build unsigned test installer
+        run: npm run desktop:package
+      - name: Verify DMG and copy the application from the installation media
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          oq_artifacts=".openquantum/distributions/${{ matrix.target }}/artifacts"
+          (cd "$oq_artifacts" && shasum -a 256 -c SHA256SUMS)
+          oq_images=("$oq_artifacts"/*.dmg)
+          test "${#oq_images[@]}" -eq 1
+          hdiutil verify "${oq_images[0]}"
+          oq_mount="$(mktemp -d "$RUNNER_TEMP/oq-dmg.XXXXXX")"
+          hdiutil attach -nobrowse -readonly -mountpoint "$oq_mount" "${oq_images[0]}"
+          trap 'hdiutil detach "$oq_mount"' EXIT
+          mkdir -p "$RUNNER_TEMP/OpenQuantum install"
+          ditto "$oq_mount/OpenQuantum Desktop.app" "$RUNNER_TEMP/OpenQuantum install/OpenQuantum Desktop.app"
+          echo "OPENQUANTUM_INSTALLED_APP=$RUNNER_TEMP/OpenQuantum install/OpenQuantum Desktop.app" >> "$GITHUB_ENV"
+      - name: Verify checksum and run the Windows installer
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $oqArtifacts = ".openquantum/distributions/win32-x64/artifacts"
+          $oqInstallers = @(Get-ChildItem "$oqArtifacts/*-Setup.exe")
+          if ($oqInstallers.Count -ne 1) { throw "Expected exactly one Windows installer" }
+          $oqInstaller = $oqInstallers[0]
+          $oqChecksum = ((Get-Content "$oqArtifacts/SHA256SUMS").Trim() -split '\s+')[0]
+          if ((Get-FileHash $oqInstaller.FullName -Algorithm SHA256).Hash -ne $oqChecksum) { throw "Installer checksum mismatch" }
+          $oqInstallPath = Join-Path $env:RUNNER_TEMP "OpenQuantum install"
+          $oqProcess = Start-Process -FilePath $oqInstaller.FullName -ArgumentList "/S /currentuser /D=$oqInstallPath" -PassThru
+          if (-not $oqProcess.WaitForExit(300000)) { $oqProcess.Kill(); throw "Installer timed out" }
+          if ($oqProcess.ExitCode -ne 0) { throw "Installer failed: $($oqProcess.ExitCode)" }
+          $oqApp = Join-Path $oqInstallPath "OpenQuantum Desktop.exe"
+          if (-not (Test-Path $oqApp)) { throw "Installed executable is missing" }
+          "OPENQUANTUM_INSTALLED_APP=$oqApp" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+      - name: Verify installed Host, renderer, local Tool and retained data
+        run: npm run desktop:package:smoke
+      - name: Upload test installers and checksums
+        uses: actions/upload-artifact@v7
+        with:
+          name: OpenQuantum-test-${{ matrix.target }}
+          path: |
+            .openquantum/distributions/${{ matrix.target }}/artifacts/*.dmg
+            .openquantum/distributions/${{ matrix.target }}/artifacts/*-Setup.exe
+            .openquantum/distributions/${{ matrix.target }}/artifacts/SHA256SUMS
+          if-no-files-found: error
+          include-hidden-files: true
+          compression-level: 0
+          retention-days: 14
+      - name: Upload verification evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: OpenQuantum-installer-checks-${{ matrix.target }}
+          path: .openquantum/distributions/${{ matrix.target }}/validation
+          if-no-files-found: ignore
+          include-hidden-files: true
+          retention-days: 14
