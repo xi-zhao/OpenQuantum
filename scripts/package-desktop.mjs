@@ -4,7 +4,7 @@ import { createReadStream } from "node:fs";
 import { cp, lstat, mkdir, readFile, readdir, rm, symlink, writeFile } from "node:fs/promises";
 import { createRequire } from "node:module";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { promisify } from "node:util";
 import { prepareOpenQuantumDesktop } from "./lib/desktop-branding.mjs";
 import { DESKTOP_SOURCE, requireDesktopBuild } from "./lib/desktop-source.mjs";
@@ -19,6 +19,7 @@ for (const argument of args) {
   if (!["--dir", "--signed"].includes(argument)) throw new Error(`Unknown package option: ${argument}`);
 }
 const signed = args.has("--signed");
+const directoryOnly = args.has("--dir");
 const target = `${process.platform}-${process.arch}`;
 if (!["darwin-arm64", "darwin-x64", "win32-x64"].includes(target)) throw new Error(`Build on a supported native runner: ${target}`);
 const manifest = JSON.parse(await readFile(path.join(root, "package.json"), "utf8"));
@@ -33,7 +34,8 @@ const stage = path.join(distribution, "stage");
 const application = path.join(stage, "application");
 const payload = path.join(stage, "openquantum");
 const runtimes = path.join(stage, "runtimes");
-const output = path.join(distribution, "artifacts");
+// Diagnostic directory builds must not erase an already verified installer.
+const output = path.join(distribution, directoryOnly ? "directory" : "artifacts");
 const env = { ...process.env, PATH: `${path.dirname(process.execPath)}${path.delimiter}${process.env.PATH}`, NODE_USE_ENV_PROXY: "1" };
 if (env.HTTP_PROXY || env.HTTPS_PROXY || env.http_proxy || env.https_proxy) env.ELECTRON_GET_USE_PROXY = "1";
 if (!signed) {
@@ -161,13 +163,33 @@ const config = {
   afterAllArtifactBuild: path.join(upstream, "scripts/verify-electron-fuses.ts"),
   publish: null,
   forceCodeSigning: signed,
-  mac: { ...upstreamManifest.build.mac, target: args.has("--dir") ? ["dir"] : ["dmg"], identity: signed ? undefined : null, notarize: signed },
+  mac: { ...upstreamManifest.build.mac, target: directoryOnly ? ["dir"] : ["dmg"], identity: signed ? undefined : null, notarize: signed },
   dmg: { artifactName: "OpenQuantum-${version}-macOS-${arch}.${ext}", title: "OpenQuantum Desktop", contents: [
     { x: 140, y: 180, type: "file" }, { x: 420, y: 180, type: "link", path: "/Applications" },
   ] },
-  win: { ...upstreamManifest.build.win, target: args.has("--dir") ? ["dir"] : ["nsis"], signExecutable: signed },
+  win: { ...upstreamManifest.build.win, target: directoryOnly ? ["dir"] : ["nsis"], signExecutable: signed },
   nsis: { ...upstreamManifest.build.nsis, shortcutName: "OpenQuantum Desktop", artifactName: "OpenQuantum-${version}-Windows-${arch}-Setup.${ext}", deleteAppDataOnUninstall: false },
 };
+if (directoryOnly) {
+  // The pinned builder omits dir targets from its final result on macOS and
+  // Windows. Supply this native build's explicit architecture to the unchanged
+  // upstream verifier, which still checks the final executable and every fuse.
+  const hook = path.join(stage, "verify-directory.mjs");
+  const platformKey = process.platform === "darwin" ? "mac" : "win";
+  const arch = upstreamRequire("builder-util").Arch[process.arch];
+  await writeFile(hook, `import verify from ${JSON.stringify(pathToFileURL(config.afterAllArtifactBuild).href)};
+export default function verifyDirectory(result) {
+  const entries = [...result.platformToTargets];
+  if (entries.length !== 1) throw new Error("Unexpected directory build platforms");
+  const [[platform, targets]] = entries;
+  if (platform.buildConfigurationKey !== ${JSON.stringify(platformKey)} || !(targets instanceof Map) || targets.size !== 0) {
+    throw new Error("Pinned builder directory target contract changed");
+  }
+  return verify({ ...result, platformToTargets: new Map([[platform, new Map([[${arch}, []]])]]) });
+}
+`);
+  config.afterAllArtifactBuild = hook;
+}
 const configPath = path.join(stage, "electron-builder.json");
 await writeFile(configPath, JSON.stringify(config, null, 2));
 await run(process.execPath, [upstreamRequire.resolve("electron-builder/cli.js"), "--projectDir", application, "--config", configPath,

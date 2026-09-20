@@ -8,8 +8,9 @@
   未签名模式用于测试，正式签名与公证仍需维护者配置证书；安装包不是后台 OTA 安装。
 - 首次设置和恢复界面纳入统一品牌适配；OpenQuantum Host / Client 包随应用分发，避免首次 Profile
   依赖初始化移走扩展。构建、数据保留和逐平台验证边界见[安装包说明](docs/DESKTOP_INSTALLERS.md)。
-- 本地 Apple Silicon DMG 的介质校验、复制安装、两次工作台启动和本地工具检查通过；
-  Intel Mac 与 Windows 安装包尚待原生 CI 执行；测试构建不自动创建 Release。
+- Apple Silicon / Intel Mac 的 DMG 复制安装、Windows EXE 的静默安装，均通过两次真实工作台启动、
+  配置与 Skill 保留、本地工具检查；[三平台原生 CI 证据](https://github.com/xi-zhao/OpenQuantum/actions/runs/35507856665)。
+  Apple Silicon 另有本地首次向导 UI 检查；测试构建不自动创建 Release。
 
 ## 版本提醒（2026-09-20）
 

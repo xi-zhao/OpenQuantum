@@ -7,9 +7,10 @@
 当前提供的是**未签名的测试构建**，不代表已经完成 Apple 签名、公证或 Windows 签名。
 首次启动可能需要在操作系统的安全提示中确认该应用。正式发布仍以 GitHub Release 的实际附件为准。
 
-2026-09-20 本地验证：Apple Silicon DMG 已完成介质校验、复制安装和两次真实工作台启动，
-自定义配置、Skill 保留与本地计算检查通过。Intel Mac 和 Windows 已有原生构建任务，尚待 CI 实际执行，
-不能据此宣称这两个平台的安装包已经通过验证。
+2026-09-20 [三平台原生 CI 验证](https://github.com/xi-zhao/OpenQuantum/actions/runs/35507856665)通过：
+Apple Silicon 和 Intel Mac 的 DMG 完成介质校验与复制安装，Windows EXE 完成校验与静默安装；
+三个平台均通过两次真实工作台启动、自定义配置与 Skill 保留、内置运行环境和本地计算检查。
+Apple Silicon 还完成本地安装与首次设置向导的 UI 检查。
 
 ## 下载、安装与首次启动
 
@@ -70,14 +71,16 @@ npm run desktop:package:smoke
 ```
 
 `desktop:package -- --dir` 只生成应用目录，便于排查；正常命令生成 DMG 或 NSIS 安装包。
-产物在 `.openquantum/distributions/<platform>-<arch>/artifacts/`，验证报告在同级 `validation/`。
+安装包在 `.openquantum/distributions/<platform>-<arch>/artifacts/`，目录模式输出到同级 `directory/`，
+不会覆盖已有安装包。验证报告在同级 `validation/`。目录模式也保留最终可执行文件和 Electron fuse 检查。
 可以把从安装介质复制出来的应用路径传给验证命令：
 
 ```sh
 npm run desktop:package:smoke -- "/path/to/OpenQuantum Desktop.app"
 ```
 
-Windows 传入安装后的 `OpenQuantum Desktop.exe`。验证使用独立临时用户目录和仅包含系统命令的初始 PATH，
+Windows 传入安装后的 `OpenQuantum Desktop.exe`；目录模式传入 `directory/` 下实际生成的应用路径。
+验证使用独立临时用户目录和仅包含系统命令的初始 PATH，
 检查内置 Node / uv、两次真实 Host / renderer 健康启动、自定义配置和 Skill 保留，以及固定本地量子工具。
 自动检查使用“已跳过首次设置”的测试状态，**首次向导和安装器交互仍需另做人工 UI 验证**。
 测试数据位置会输出到日志，供故障复现；不读取现有用户数据，不调用外部模型或真实硬件。
