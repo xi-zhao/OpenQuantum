@@ -1,4 +1,4 @@
-import { cp, mkdir, rm, symlink } from "node:fs/promises";
+import { cp, mkdir, readFile, rm, symlink, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { buildLearningClient } from "./build-learning-client.mjs";
 import { buildLocaleClient } from "./build-locale-client.mjs";
@@ -7,7 +7,7 @@ import { buildLocaleClient } from "./build-locale-client.mjs";
  * Materialize the OpenQuantum-owned parts of a Harness home.
  *
  * DeepSeek Harness owns the profile and runtime. OpenQuantum contributes one
- * deployment patch, one shared model-route fragment, Agent presets and four
+ * deployment patch, one shared model-route fragment, Agent presets and five
  * Host Web extensions. Keeping this setup in one place makes the Web launcher,
  * Desktop adapter, isolated tests and real-provider probes boot the same
  * composition even when each uses a different DSH_HOME.
@@ -74,6 +74,7 @@ export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot, 
   const learningPresetTarget = path.join(harnessHome, ".agent-presets", "quantum-learning");
   const learningTarget = path.join(harnessHome, "profiles", profileName, "node_modules", "@openquantum", "harness-web-learning");
   const localesTarget = path.join(harnessHome, "profiles", profileName, "node_modules", "@openquantum", "harness-web-locales");
+  const updatesTarget = path.join(harnessHome, "profiles", profileName, "node_modules", "@openquantum", "harness-web-updates");
 
   await Promise.all([
     mkdir(path.dirname(patchTarget), { recursive: true }),
@@ -82,8 +83,12 @@ export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot, 
     mkdir(path.dirname(brandingTarget), { recursive: true }),
     mkdir(path.dirname(capabilitiesTarget), { recursive: true }),
   ]);
+  const deploymentPatch = await readFile(patchSource, "utf8");
+  const desktopPatch = profileName === "desktop"
+    ? await readFile(path.join(projectRoot, "runtime/openquantum/desktop.cordis.patch.yml"), "utf8")
+    : "";
   await Promise.all([
-    cp(patchSource, patchTarget, { force: true }),
+    writeFile(patchTarget, `${deploymentPatch}\n${desktopPatch}`),
     cp(modelRoutesSource, modelRoutesTarget, { force: true }),
     cp(presetSource, presetTarget, { recursive: true, force: true }),
     cp(brandingSource, brandingTarget, { recursive: true, force: true }),
@@ -94,6 +99,7 @@ export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot, 
     cp(path.join(projectRoot, "runtime/openquantum/agent-presets/quantum-learning"), learningPresetTarget, { recursive: true, force: true }),
     cp(path.join(projectRoot, "runtime/openquantum/web-learning"), learningTarget, { recursive: true, force: true }),
     cp(path.join(projectRoot, "runtime/openquantum/web-locales"), localesTarget, { recursive: true, force: true }),
+    cp(path.join(projectRoot, "runtime/openquantum/web-updates"), updatesTarget, { recursive: true, force: true }),
   ]);
   await buildLearningClient(projectRoot, path.join(learningTarget, "client.js"));
   await buildLocaleClient(projectRoot, path.join(localesTarget, "client.js"));
@@ -114,6 +120,7 @@ export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot, 
     capabilitiesTarget,
     learningTarget,
     localesTarget,
+    updatesTarget,
     learningPresetTarget,
     modelRoutesTarget,
     patchTarget,

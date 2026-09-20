@@ -142,7 +142,7 @@ test("real Harness passes anonymous health and authenticated page/RPC probes", {
   const authenticated = await runProbe("scripts/probe-harness-host.mjs", base, logs);
   assert.equal(authenticated.code, 0, authenticated.stderr);
   assert.deepEqual(JSON.parse(authenticated.stdout), {
-    status: "pass", branding: "OpenQuantum", authenticatedRpc: true, modelRequests: 0,
+    status: "pass", branding: "OpenQuantum", authenticatedRpc: true, updateService: true, modelRequests: 0,
   });
   const unauthenticated = await runProbe("scripts/probe-harness-host.mjs", base);
   assert.equal(unauthenticated.code, 1, "an anonymous health response cannot replace authenticated verification");

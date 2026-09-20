@@ -1,0 +1,4 @@
+# Only the Desktop profile contains this upstream row. Its feed distributes DSH installers.
+# The shared OpenQuantum update service owns discovery and the public check route instead.
+- id: desktop-updates
+  disabled: true

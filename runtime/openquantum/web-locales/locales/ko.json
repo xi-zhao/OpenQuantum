@@ -1380,5 +1380,22 @@
   "Windows Terminal": "Windows Terminal",
   "Git Bash": "Git Bash",
   "GNOME Terminal": "GNOME Terminal",
-  "Konsole": "Konsole"
+  "Konsole": "Konsole",
+  "Updates": "업데이트",
+  "Checking for updates…": "업데이트 확인 중…",
+  "OpenQuantum {version} is available.": "OpenQuantum {version} 버전을 사용할 수 있습니다.",
+  "You are using the latest OpenQuantum release.": "최신 OpenQuantum 정식 버전을 사용하고 있습니다.",
+  "No published OpenQuantum update is available yet.": "아직 공개된 OpenQuantum 업데이트가 없습니다.",
+  "Updates could not be checked. Please try again later.": "업데이트를 확인하지 못했습니다. 나중에 다시 시도해 주세요.",
+  "Last checked: {time}": "마지막 확인: {time}",
+  "View release notes": "릴리스 노트 보기",
+  "Upgrade guide": "업그레이드 가이드",
+  "Remind me tomorrow": "내일 알림",
+  "Skip this version": "이 버전 건너뛰기",
+  "Check for updates automatically": "자동으로 업데이트 확인",
+  "Follow the upgrade guide for your installation, or contact your workspace administrator.": "업그레이드 가이드에 따라 업데이트하거나 작업 공간 관리자에게 문의하세요.",
+  "Reminders are disabled for this version.": "이 버전의 알림이 꺼져 있습니다.",
+  "Check for a new OpenQuantum release.": "새 OpenQuantum 버전을 확인하세요.",
+  "Stable releases · Checked daily": "정식 버전 · 매일 확인",
+  "Update preferences could not be saved. Please try again.": "업데이트 설정을 저장하지 못했습니다. 다시 시도해 주세요."
 }

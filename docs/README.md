@@ -123,6 +123,7 @@ Skill 与 Tool 在概念和发行版 policy 中都相互独立：Skill-only、To
 | 发行版 Capability 与 L0–L3 证据引用 | `.agents/capability-packages.yml` | `npm run capability:conformance` |
 | Skill 指令与领域资源 | `.agents/skills/<id>/` | Skill discovery、capability test |
 | 设置命令和状态转换 | `src/settings/server/project-settings.mjs` | project settings tests |
+| 正式版本检查、缓存与提醒偏好 | `src/updates/service.mjs` | updates tests、真实 Host 与 Desktop 组合检查 |
 | 设置页产品目录 | `src/settings/server/project-settings-catalog.mjs` | settings/Web tests |
 | 当前 Model / Skill / Tool Registry 观测 | `src/readiness/server/runtime-readiness.mjs` | readiness/Web/真实 Harness 测试 |
 | 科学合同与最终状态构建 | `.agents/skill-contracts/` + capability Profile/Validator | `npm run test:contracts` + materialization tests |
@@ -133,6 +134,7 @@ Skill 与 Tool 在概念和发行版 policy 中都相互独立：Skill-only、To
 ### 使用 OpenQuantum
 
 - [部署与启动](DEPLOYMENT.md)：本地、Docker、模型配置和启动检查。
+- [版本更新](UPDATES.md)：新版本提醒、源码升级、发布通道和维护流程。
 - [常见问题与故障排查](TROUBLESHOOTING.md)：按 UI、模型、MCP Server、凭据和 Docker 分层定位。
 - [消息渠道接入](integrations/CC_CONNECT.md)：通过 CC Connect 和 ACP 接入微信、飞书等平台。
 - [量子学习通 / OpenMAIC](integrations/OPENMAIC.md)：完整原版子应用、Pro 工作台、持久存储与 Harness 当前模型连接；含实际验收和未通过项。

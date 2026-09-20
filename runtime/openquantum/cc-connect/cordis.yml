@@ -58,6 +58,8 @@
   disabled: true
 - id: openquantum-web-learning
   disabled: true
+- id: openquantum-web-updates
+  disabled: true
 
 # Reuse the route catalog even when this home has never launched Web.
 - id: openquantum-model-routes

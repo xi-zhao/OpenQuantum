@@ -18,4 +18,12 @@ const response = await fetch(`${baseUrl}/api/${method}`, {
 });
 assert.equal(response.status, 200);
 assert.equal((await response.json()).result?.ok, true);
-console.log(JSON.stringify({ status: "pass", branding: "OpenQuantum", authenticatedRpc: true, modelRequests: 0 }));
+const updates = await fetch(`${baseUrl}/openquantum/api/updates`, {
+  method: "POST", headers: { "content-type": "application/json", origin: new URL(baseUrl).origin, cookie },
+  body: JSON.stringify({ action: "snapshot" }), signal: AbortSignal.timeout(5000),
+});
+assert.equal(updates.status, 200);
+const updateSnapshot = await updates.json();
+assert.equal(updateSnapshot.channel, "stable");
+assert.equal(typeof updateSnapshot.currentVersion, "string");
+console.log(JSON.stringify({ status: "pass", branding: "OpenQuantum", authenticatedRpc: true, updateService: true, modelRequests: 0 }));

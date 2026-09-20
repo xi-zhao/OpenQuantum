@@ -1380,5 +1380,22 @@
   "Windows Terminal": "Windows Terminal",
   "Git Bash": "Git Bash",
   "GNOME Terminal": "GNOME Terminal",
-  "Konsole": "Konsole"
+  "Konsole": "Konsole",
+  "Updates": "Обновления",
+  "Checking for updates…": "Проверка обновлений…",
+  "OpenQuantum {version} is available.": "Доступна версия OpenQuantum {version}.",
+  "You are using the latest OpenQuantum release.": "Вы используете последнюю стабильную версию OpenQuantum.",
+  "No published OpenQuantum update is available yet.": "Опубликованных обновлений OpenQuantum пока нет.",
+  "Updates could not be checked. Please try again later.": "Не удалось проверить обновления. Повторите попытку позже.",
+  "Last checked: {time}": "Последняя проверка: {time}",
+  "View release notes": "Что нового в версии",
+  "Upgrade guide": "Руководство по обновлению",
+  "Remind me tomorrow": "Напомнить завтра",
+  "Skip this version": "Пропустить эту версию",
+  "Check for updates automatically": "Проверять обновления автоматически",
+  "Follow the upgrade guide for your installation, or contact your workspace administrator.": "Следуйте руководству по обновлению вашей установки или обратитесь к администратору рабочего пространства.",
+  "Reminders are disabled for this version.": "Напоминания для этой версии отключены.",
+  "Check for a new OpenQuantum release.": "Проверьте наличие новой версии OpenQuantum.",
+  "Stable releases · Checked daily": "Стабильные версии · Ежедневная проверка",
+  "Update preferences could not be saved. Please try again.": "Не удалось сохранить настройки обновлений. Повторите попытку."
 }

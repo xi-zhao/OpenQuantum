@@ -58,7 +58,7 @@ test("composes the Desktop shell around the OpenQuantum Harness home", { skip: !
     harnessHome,
     process.platform,
   );
-  for (const name of ["harness-web-branding", "harness-web-capabilities", "harness-web-learning", "harness-web-locales"]) {
+  for (const name of ["harness-web-branding", "harness-web-capabilities", "harness-web-learning", "harness-web-locales", "harness-web-updates"]) {
     const manifest = findPackageJSON(`@openquantum/${name}`, pathToFileURL(path.join(harnessHome, "profiles/desktop/package.json")));
     assert.equal(manifest, path.join(harnessHome, "profiles/desktop/node_modules/@openquantum", name, "package.json"));
   }
@@ -80,6 +80,8 @@ test("composes the Desktop shell around the OpenQuantum Harness home", { skip: !
   assert.equal(rows.get("agent-presets")?.config?.default, "openquantum");
   assert.equal(rows.get("llm-deepseek")?.disabled, true);
   assert.equal(rows.get("llm-pi-ai")?.disabled, true);
+  assert.equal(rows.get("desktop-updates")?.disabled, true, "the OpenQuantum deployment cannot offer upstream DSH installers");
+  assert.equal(rows.get("openquantum-web-updates")?.name, "@openquantum/harness-web-updates");
   assert.equal(
     rows.get("openquantum-model-routes")?.name,
     "@deepseek-ai/cordis-plugin-include",

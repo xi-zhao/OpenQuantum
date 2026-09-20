@@ -73,6 +73,10 @@ Harness `0.1.5-rc.1` 同族。源码构建尚不是上游正式发行包；版�
 不要全局安装或直接 `npx dsh-plugin-desktop`：那条上游命令使用默认 DSH Home，不会自动组合 OpenQuantum
 preset、Skill、MCP 与 Validator。OpenQuantum 品牌 `.dmg` / `.exe` 安装包尚未发布。
 
+“设置 → 版本更新”可手动检查 OpenQuantum 正式版本；默认每天自动检查，支持稍后提醒和跳过版本。
+桌面端原有“检查更新”入口也使用同一通道。当前阶段提供更新说明与升级指南，
+发布步骤、镜像配置和源码升级方式见[版本更新](UPDATES.md)。
+
 无图形界面的 CI 可以运行：
 
 ```bash

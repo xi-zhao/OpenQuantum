@@ -1380,5 +1380,22 @@
   "Windows Terminal": "Windows Terminal",
   "Git Bash": "Git Bash",
   "GNOME Terminal": "GNOME Terminal",
-  "Konsole": "Konsole"
+  "Konsole": "Konsole",
+  "Updates": "アップデート",
+  "Checking for updates…": "アップデートを確認中…",
+  "OpenQuantum {version} is available.": "OpenQuantum {version} が利用可能です。",
+  "You are using the latest OpenQuantum release.": "最新の OpenQuantum 正式版を使用しています。",
+  "No published OpenQuantum update is available yet.": "公開済みの OpenQuantum アップデートはまだありません。",
+  "Updates could not be checked. Please try again later.": "アップデートを確認できませんでした。後でもう一度お試しください。",
+  "Last checked: {time}": "前回の確認：{time}",
+  "View release notes": "リリースノートを見る",
+  "Upgrade guide": "アップグレードガイド",
+  "Remind me tomorrow": "明日通知する",
+  "Skip this version": "このバージョンをスキップ",
+  "Check for updates automatically": "アップデートを自動確認",
+  "Follow the upgrade guide for your installation, or contact your workspace administrator.": "アップグレードガイドに従って更新するか、ワークスペースの管理者にお問い合わせください。",
+  "Reminders are disabled for this version.": "このバージョンの通知は無効になっています。",
+  "Check for a new OpenQuantum release.": "OpenQuantum の新しいバージョンを確認します。",
+  "Stable releases · Checked daily": "正式版 · 毎日確認",
+  "Update preferences could not be saved. Please try again.": "更新設定を保存できませんでした。もう一度お試しください。"
 }

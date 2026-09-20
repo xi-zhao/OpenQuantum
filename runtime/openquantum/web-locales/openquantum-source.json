@@ -440,5 +440,50 @@
       "defaultClassroom": "量子课堂",
       "incompleteSave": "课堂没有完整保存，请重新打开后重试。"
     }
+  },
+  "settings.openquantumUpdates": {
+    "package": "openquantum",
+    "en": {
+      "nav": "Updates",
+      "check": "Check for updates",
+      "checking": "Checking for updates…",
+      "available": "OpenQuantum {version} is available.",
+      "current": "You are using the latest OpenQuantum release.",
+      "unpublished": "No published OpenQuantum update is available yet.",
+      "failed": "Updates could not be checked. Please try again later.",
+      "lastChecked": "Last checked: {time}",
+      "viewRelease": "View release notes",
+      "upgradeGuide": "Upgrade guide",
+      "later": "Remind me tomorrow",
+      "skip": "Skip this version",
+      "close": "Close",
+      "automatic": "Check for updates automatically",
+      "upgradeHint": "Follow the upgrade guide for your installation, or contact your workspace administrator.",
+      "skipped": "Reminders are disabled for this version.",
+      "idle": "Check for a new OpenQuantum release.",
+      "channel": "Stable releases · Checked daily",
+      "saveFailed": "Update preferences could not be saved. Please try again."
+    },
+    "zh": {
+      "nav": "版本更新",
+      "check": "检查更新",
+      "checking": "正在检查更新…",
+      "available": "OpenQuantum {version} 已可用。",
+      "current": "你正在使用最新的 OpenQuantum 正式版本。",
+      "unpublished": "暂时没有已发布的 OpenQuantum 更新。",
+      "failed": "暂时无法检查更新，请稍后重试。",
+      "lastChecked": "上次检查：{time}",
+      "viewRelease": "查看更新说明",
+      "upgradeGuide": "升级指南",
+      "later": "明天提醒我",
+      "skip": "跳过此版本",
+      "close": "关闭",
+      "automatic": "自动检查更新",
+      "upgradeHint": "请按升级指南更新当前安装，或联系工作区管理员。",
+      "skipped": "已关闭此版本的更新提醒。",
+      "idle": "检查是否有新的 OpenQuantum 版本。",
+      "channel": "正式版本 · 每天检查",
+      "saveFailed": "更新偏好未能保存，请重试。"
+    }
   }
 }

@@ -308,6 +308,7 @@ test("CC Connect ACP shares model composition and deployment defaults", () => {
   assert.equal(acpById.get("llm-pi-ai")?.disabled, true);
   assert.equal(acpById.get("openquantum-acp-model-routes")?.name, "@deepseek-ai/cordis-plugin-include");
   assert.equal(acpById.get("openquantum-web-learning")?.disabled, true);
+  assert.equal(acpById.get("openquantum-web-updates")?.disabled, true);
   assert.equal(
     acpRows.some((row) => row.name === "@deepseek-ai/dsh-llm-pi-ai"),
     false,
