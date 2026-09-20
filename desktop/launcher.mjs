@@ -44,9 +44,13 @@ async function start() {
   await import("./lib/main.js");
 }
 
-start().catch(async (error) => {
+// Electron must wait for the writable paths and environment before `ready`.
+// The error dialog is scheduled after module initialization to avoid waiting
+// for `ready` from a top-level await that itself prevents `ready`.
+await start().catch((error) => {
   console.error("OpenQuantum Desktop could not start:", error.message);
-  await app.whenReady();
-  dialog.showErrorBox("OpenQuantum Desktop", `Unable to prepare the installed application. Your data has been kept.\n\n${error.message}`);
-  app.exit(1);
+  void app.whenReady().then(() => {
+    dialog.showErrorBox("OpenQuantum Desktop", `Unable to prepare the installed application. Your data has been kept.\n\n${error.message}`);
+    app.exit(1);
+  });
 });

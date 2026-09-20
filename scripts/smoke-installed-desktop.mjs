@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { execFile, spawn } from "node:child_process";
 import { createWriteStream } from "node:fs";
-import { chmod, mkdir, mkdtemp, readFile, realpath, writeFile } from "node:fs/promises";
+import { chmod, cp, mkdir, mkdtemp, readFile, realpath, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -35,6 +35,14 @@ const environment = {
 };
 if (windows) for (const name of ["SystemRoot", "WINDIR", "SystemDrive", "COMSPEC"]) {
   if (process.env[name]) environment[name] = process.env[name];
+}
+if (windows) {
+  // Isolate Windows' standard user directories as well as HOME. Omitting these
+  // is not representative of a clean Windows account and obscures crash logs.
+  environment.APPDATA = path.join(home, "AppData/Roaming");
+  environment.LOCALAPPDATA = path.join(home, "AppData/Local");
+  await mkdir(environment.APPDATA, { recursive: true });
+  await mkdir(environment.LOCALAPPDATA, { recursive: true });
 }
 const execute = promisify(execFile);
 const checks = [];
@@ -85,7 +93,10 @@ try {
   for (const attempt of [1, 2]) {
     const previousRuns = new Set((await events()).map((event) => event.runId));
     const log = createWriteStream(path.join(output, `installed-start-${attempt}.log`));
-    const child = spawn(executable, [], { env: environment, cwd: temporary, stdio: ["ignore", "pipe", "pipe"] });
+    // Windows child-process Chromium logs do not reliably reach stderr.
+    const child = spawn(executable, ["--enable-logging=file", `--log-file=${path.join(output, `chromium-start-${attempt}.log`)}`], {
+      env: environment, cwd: temporary, stdio: ["ignore", "pipe", "pipe"],
+    });
     child.stdout.pipe(log, { end: false });
     child.stderr.pipe(log, { end: false });
     const ended = new Promise((resolve, reject) => { child.once("error", reject); child.once("exit", (code, signal) => resolve({ code, signal })); });
@@ -93,7 +104,9 @@ try {
       const deadline = Date.now() + 120_000;
       let healthy;
       while (Date.now() < deadline) {
-        if (child.exitCode !== null || child.signalCode !== null) throw new Error(`Installed app exited before becoming healthy; see installed-start-${attempt}.log`);
+        if (child.exitCode !== null || child.signalCode !== null) {
+          throw new Error(`Installed app exited before becoming healthy (exit ${child.exitCode}, signal ${child.signalCode}); see installed-start-${attempt}.log and chromium-start-${attempt}.log`);
+        }
         const fresh = (await events()).filter((event) => !previousRuns.has(event.runId));
         const failed = fresh.find((event) => event.eventName === "startup.run.failed");
         if (failed) throw new Error(`Installed startup failed: ${JSON.stringify(failed.details)}`);
@@ -129,6 +142,12 @@ try {
   report.error = error.message;
   throw error;
 } finally {
+  // Only this test's fresh data is collected; never copy an existing user's home.
+  for (const directory of ["logs", "lifecycle-events"]) {
+    await cp(path.join(dataRoot, "native", directory), path.join(output, "native", directory), { recursive: true }).catch((error) => {
+      if (error.code !== "ENOENT") console.error(`Could not collect test ${directory}: ${error.message}`);
+    });
+  }
   await writeFile(path.join(output, "installed-smoke.json"), JSON.stringify(report, null, 2));
   console.log(`Installed package evidence: ${output}`);
   console.log(`Test data retained for inspection: ${dataRoot}`);
