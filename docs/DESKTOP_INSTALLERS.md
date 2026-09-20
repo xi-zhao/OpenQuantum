@@ -14,7 +14,8 @@ Apple Silicon 还完成本地安装与首次设置向导的 UI 检查。
 
 ## 下载、安装与首次启动
 
-测试构建工作流输出以下文件；只使用对应平台实际构建、验证成功的附件：
+从 [GitHub Release](https://github.com/xi-zhao/OpenQuantum/releases/latest) 下载对应系统的附件。
+首次提供三平台安装文件的版本为 [v0.5.1](releases/v0.5.1.md)；只发布实际构建、安装验证成功的文件：
 
 | 系统 | 安装文件 | 安装方式 |
 | --- | --- | --- |

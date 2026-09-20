@@ -4,6 +4,8 @@
 
 ## 桌面测试安装包（2026-09-20）
 
+- 本次发行版本为 `0.5.1`，包含三平台未签名测试安装包；[版本说明](docs/releases/v0.5.1.md)、
+  [Release 附件与实际发布状态](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.5.1)。
 - 增加原生 macOS / Windows 打包入口、固定 Node / uv 运行环境、独立用户数据和分发清单更新。
   未签名模式用于测试，正式签名与公证仍需维护者配置证书；安装包不是后台 OTA 安装。
 - 首次设置和恢复界面纳入统一品牌适配；OpenQuantum Host / Client 包随应用分发，避免首次 Profile
@@ -17,7 +19,7 @@
 - Web 与 Desktop 共用 OpenQuantum 正式版本检查和提醒偏好；支持每日自动检查、手动检查、稍后提醒、跳过版本与十语言文案。
 - Desktop 的上游更新插件在桌面组合中禁用；原有公开检查入口委托 OpenQuantum 服务，避免引导安装 DSH Desktop。
 - GitHub 正式 Release 的更新清单由现有质量、双平台桌面安装和容器检查通过后生成；普通 main 推送不触发更新发布。
-- 版本号为 `0.5.0`；变更与升级范围见 [v0.5.0 发布说明](docs/releases/v0.5.0.md)，公开发布状态和清单以对应 GitHub Release 及发布工作流为准。
+- 版本提醒自 `0.5.0` 引入，当前版本为 `0.5.1`；变更与升级范围见 [v0.5.1 发布说明](docs/releases/v0.5.1.md)，公开发布状态和清单以对应 GitHub Release 及发布工作流为准。
 - 本地完整 `npm run check`、macOS Desktop 安装检查及真实 Host/ACP 检查已通过，界面使用隔离的测试版本清单核对中文、英文及阿拉伯语；这些检查不替代安装包或真实外部模型验收。
 - 当前只提供提醒、版本说明和升级指南。自动下载安装待正式安装包阶段；合同、发布流程与升级步骤见[版本更新](docs/UPDATES.md)。
 

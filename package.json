@@ -1,6 +1,6 @@
 {
   "name": "openquantum",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "private": true,
   "description": "A DeepSeek Harness distribution for open quantum research",
   "author": "OpenQuantum contributors",
