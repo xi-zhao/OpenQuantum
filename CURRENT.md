@@ -104,7 +104,7 @@
 - [接入说明](docs/integrations/CANDIDATE_LIBRARIES.md)及[版本化证据](docs/integrations/evidence/candidates-2026-09-20.json)记录锁定版本、使用入口和验收边界。基于 `e92bf0b`（v0.5.1）合并；主线已有 Graphix/PyZX/Symmer/PauLie 能力保留，原工作树未提交改动未混入。
 - 合并适配主线的资源继承规则：四个计算 Tool 的 `execution` 缺省继承部署配置，QCut 可省略线程数，FlagQuantum 启动器保留用户数值线程/设备设置；新增连接超时沿用主线。当前目录为 32 个 Skill、34 个 MCP 连接和 5 个原生量子 Tool。
 - 合并树在本机 macOS 通过完整 `npm run check`、15 个新增数值输入、FlagQuantum 实际调用、10+5 项开发回归；真实 Harness 会话完成五项成功调用及一次预期拒绝。首次与全仓并行时 Harness HTTP 请求超时，单独复测通过，记录保留在本地证据目录。
-- 已合并到本地 main；未 push、发布或修改运行中的 Host，未调用外部模型或提交硬件作业。部署仍需按相应环境准备依赖并重启 Harness。
+- 接入合并提交为 [`e9da4cd`](https://github.com/xi-zhao/OpenQuantum/commit/e9da4cdd42df3ae2c3737cf4a165f11783f1e05e)；源码同步与云端检查以 [GitHub main](https://github.com/xi-zhao/OpenQuantum/tree/main) 和 [CI 记录](https://github.com/xi-zhao/OpenQuantum/actions/workflows/ci.yml)为准。本次未发布或修改运行中的 Host，未调用外部模型或提交硬件作业。部署仍需按相应环境准备依赖并重启 Harness。
 
 ## 下一唯一里程碑
 
