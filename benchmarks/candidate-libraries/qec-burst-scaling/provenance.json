@@ -1,0 +1,20 @@
+{
+  "repository": "https://github.com/AlanPai777/qec-burst-scaling",
+  "revision": "5705366a9bd3d13369fde2b6d1cd6915e0ee0d51",
+  "license": "MIT",
+  "scope": "Unmodified controlled burst circuit builder and Wilson statistics. Sampling/decoder comparison is a local development experiment, not an adopted scaling law.",
+  "files": {
+    "circuit.py": {
+      "upstreamPath": "qecburst/circuit.py",
+      "sha256": "999ee0da96827d6f24cb00581febf4cd454bfd30ea253a4310fc19118c1afefb"
+    },
+    "statistics.py": {
+      "upstreamPath": "qecburst/statistics.py",
+      "sha256": "a093bb3ee0ada2aeda45ebd3ed91e2b52a2ab65baeef8892460424fb4ea1f719"
+    },
+    "LICENSE": {
+      "upstreamPath": "LICENSE",
+      "sha256": "b1f289ee4305d33726c151bcca062c97d6ffad221e12ce4460f9b27b1d09f209"
+    }
+  }
+}

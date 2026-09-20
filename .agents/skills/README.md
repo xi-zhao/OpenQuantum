@@ -13,7 +13,7 @@
 
 ## 当前 Skill
 
-以下 27 个 Skill 随源码分发；它们与 MCP Server 不是一一对应关系，知识型 Skill 可以不绑定专用 Tool，
+以下 32 个 Skill 随源码分发；它们与 MCP Server 不是一一对应关系，知识型 Skill 可以不绑定专用 Tool，
 工作流也可以使用多个服务或进程内原生 Tool。连接默认配置与凭据条件见[项目首页](../../README.md#mcp-服务目录)。
 
 | Skill | 作用 | 依赖的执行模块 |
@@ -45,6 +45,11 @@
 | `qmclaw-workbench` | QMClaw 超导量子比特测控与单比特调校工作流 | 原生 Tool Provider；13 类实验的合成数据模拟，不启动 MCP Server |
 | `quantum-information-audit` | 密度矩阵和 negativity 审计 | toqito MCP-exposed Tool + Validator + L3 物化/验收链 |
 | `quantum-ground-state` | 二量子位固定权重一扇区的基态工作流 | 原生 Tool Provider + Validator + L3 物化/验收链；完整调用包含工作区证据写入 |
+| `qcut-knitting` | 门切割与期望值重建 | `qcut_local` MCP Server + Harness MCP Client；默认开启 |
+| `compact-optimization` | 线路优化与独立等价对照 | `compact_local` MCP Server + Harness MCP Client；默认开启 |
+| `openqarp-excited-states` | VQD 激发态、残差与正交性 | `openqarp_local` MCP Server + Harness MCP Client；默认开启 |
+| `cqlib-kernel` | 角度编码核与 QSVM | `cqlib_kernel_local` MCP Server + Harness MCP Client；默认关闭 |
+| `flagquantum-workbench` | 第二家量子 MCP 电路工作台 | `flagquantum` MCP Server + Harness MCP Client；默认关闭 |
 
 可选的上游 `pyqpanda3` Skill 需要通过 `npm run skill:qpanda:setup` 单独安装，不计入上述内置清单；
 安装 Skill 不会自动启用本源量子云任务服务。安装来源与边界见[可选上游 Skill](../../README.md#可选上游-skill-与开发证据)。

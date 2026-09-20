@@ -1,0 +1,2070 @@
+{
+  "schemaVersion": "1.0",
+  "verifiedAt": "2026-09-20T13:26:15.449Z",
+  "implementationBase": "3f43b6e",
+  "integrationBase": "e92bf0bacc24da3a548e8e1d5fe26922e4ca671d",
+  "applicationVersion": "0.5.1",
+  "scope": "Local dependency, MCP, numerical and Harness integration evidence; no external model, hardware or final scientific Acceptance",
+  "scientificValidation": "not_evaluated",
+  "liveMcp": {
+    "expectedCases": 15,
+    "deliveredCases": 15,
+    "cases": [
+      {
+        "artifact": "qcut-knitting-phase-bell.json",
+        "verifiedAt": "2026-09-20T13:22:32.843Z",
+        "artifactSha256": "ac73841fb7af41bb24a7eec5550b02e983ac49377fdd30aa455362b722a61539",
+        "schemaVersion": "1.0",
+        "source": {
+          "name": "QCut",
+          "version": "2.2.0",
+          "repository": "https://github.com/FiQCI/QCut"
+        },
+        "input": {
+          "numQubits": 2,
+          "gates": [
+            {
+              "gate": "H",
+              "targets": [
+                1
+              ]
+            },
+            {
+              "gate": "S",
+              "targets": [
+                1
+              ]
+            },
+            {
+              "gate": "CX",
+              "targets": [
+                1,
+                0
+              ]
+            }
+          ],
+          "observables": [
+            "XY",
+            "YX",
+            "ZZ"
+          ],
+          "shots": 4096,
+          "strategy": "automatic",
+          "gateCuts": [],
+          "partitions": 2,
+          "maxBatchSize": 32,
+          "seed": 3,
+          "referenceMode": "auto",
+          "execution": {}
+        },
+        "inputSha256": "cceb4a49a3f5c57bc9c9e60ecd8181432be85697e97c04d4542d1a313087d63e",
+        "dependencyLockSha256": "8de73d5490473537d261b8807810bc1c5004df042c5b02b6a91dbc9d54b1c799",
+        "result": {
+          "estimates": [
+            0.9999381303787231,
+            1.0003348588943481,
+            1.0000947713851929
+          ],
+          "exactExpectations": [
+            0.9999999999999998,
+            0.9999999999999998,
+            0.9999999999999998
+          ],
+          "maxAbsoluteError": 0.0003348588943483666,
+          "reference": {
+            "mode": "auto",
+            "status": "computed",
+            "method": "Independent uncut Qiskit statevector Pauli expectations",
+            "reason": "Independent reference computed for this input."
+          },
+          "gamma": 3,
+          "theoreticalSamplingOverhead": 9,
+          "cutCount": 1,
+          "subcircuitWidths": [
+            1,
+            1
+          ],
+          "generatedCircuits": 36,
+          "original": {
+            "gates": 3,
+            "depth": 3,
+            "twoQubitGates": 1,
+            "cxInCommonBasis": 1
+          },
+          "prepared": {
+            "gates": 5,
+            "depth": 4,
+            "twoQubitGates": 1,
+            "cxInCommonBasis": 1
+          },
+          "preprocessing": "u,cz at Qiskit level 0; symmetric gate cuts only",
+          "executionCost": {
+            "jobs": 2,
+            "submittedCircuits": 36,
+            "completedCircuits": 36,
+            "actualShots": 147456
+          },
+          "expansion": "exact QPD; finite-shot Aer execution; no wire communication or consolidation",
+          "observableConvention": "leftmost Pauli is q0"
+        },
+        "scientificValidation": "not_evaluated",
+        "limitations": [
+          "Gate cutting only. Automatic partitioning uses symmetric CZ normalization to avoid the fixed upstream finder's directional-operand bug; normalization can increase cutting cost.",
+          "Exact QPD expansion is still reconstructed from finite shots. Estimates can lie outside [-1,1] and are deliberately not clipped.",
+          "Gamma squared is a theoretical sampling-overhead factor, not measured acceleration, total shots or a statistical confidence interval.",
+          "Local Aer subexperiments support intermediate measurements. Backend actual shots are counted from completed results; no hardware jobs are submitted."
+        ]
+      },
+      {
+        "artifact": "qcut-knitting-reverse-automatic.json",
+        "verifiedAt": "2026-09-20T13:22:35.446Z",
+        "artifactSha256": "e3e21a42c952ce1d70f10c37e23b4ef121d2b13441c50cf337f18a443773bcdb",
+        "schemaVersion": "1.0",
+        "source": {
+          "name": "QCut",
+          "version": "2.2.0",
+          "repository": "https://github.com/FiQCI/QCut"
+        },
+        "input": {
+          "numQubits": 2,
+          "gates": [
+            {
+              "gate": "X",
+              "targets": [
+                1
+              ]
+            },
+            {
+              "gate": "CX",
+              "targets": [
+                1,
+                0
+              ]
+            }
+          ],
+          "observables": [
+            "IZ",
+            "ZI",
+            "IY"
+          ],
+          "strategy": "automatic",
+          "execution": {
+            "threads": 2
+          },
+          "shots": 8192,
+          "gateCuts": [],
+          "partitions": 2,
+          "maxBatchSize": 32,
+          "seed": 3,
+          "referenceMode": "auto"
+        },
+        "inputSha256": "342152804c488e67546108d8e348c918f0f39d79d19d56dec0982f53016d82ce",
+        "dependencyLockSha256": "8de73d5490473537d261b8807810bc1c5004df042c5b02b6a91dbc9d54b1c799",
+        "result": {
+          "estimates": [
+            -0.9969482421875,
+            -0.9813232421875,
+            -0.015369653701782227
+          ],
+          "exactExpectations": [
+            -1,
+            -1,
+            0
+          ],
+          "maxAbsoluteError": 0.0186767578125,
+          "reference": {
+            "mode": "auto",
+            "status": "computed",
+            "method": "Independent uncut Qiskit statevector Pauli expectations",
+            "reason": "Independent reference computed for this input."
+          },
+          "gamma": 3,
+          "theoreticalSamplingOverhead": 9,
+          "cutCount": 1,
+          "subcircuitWidths": [
+            1,
+            1
+          ],
+          "generatedCircuits": 24,
+          "original": {
+            "gates": 2,
+            "depth": 2,
+            "twoQubitGates": 1,
+            "cxInCommonBasis": 1
+          },
+          "prepared": {
+            "gates": 4,
+            "depth": 3,
+            "twoQubitGates": 1,
+            "cxInCommonBasis": 1
+          },
+          "preprocessing": "u,cz at Qiskit level 0; symmetric gate cuts only",
+          "executionCost": {
+            "jobs": 1,
+            "submittedCircuits": 24,
+            "completedCircuits": 24,
+            "actualShots": 196608
+          },
+          "expansion": "exact QPD; finite-shot Aer execution; no wire communication or consolidation",
+          "observableConvention": "leftmost Pauli is q0"
+        },
+        "scientificValidation": "not_evaluated",
+        "limitations": [
+          "Gate cutting only. Automatic partitioning uses symmetric CZ normalization to avoid the fixed upstream finder's directional-operand bug; normalization can increase cutting cost.",
+          "Exact QPD expansion is still reconstructed from finite shots. Estimates can lie outside [-1,1] and are deliberately not clipped.",
+          "Gamma squared is a theoretical sampling-overhead factor, not measured acceleration, total shots or a statistical confidence interval.",
+          "Local Aer subexperiments support intermediate measurements. Backend actual shots are counted from completed results; no hardware jobs are submitted."
+        ]
+      },
+      {
+        "artifact": "qcut-knitting-reverse-explicit.json",
+        "verifiedAt": "2026-09-20T13:22:38.079Z",
+        "artifactSha256": "8a7c8964392d265e9bfd235ba69fffbb0ced39463cbb65c05ac29e89d976fcdf",
+        "schemaVersion": "1.0",
+        "source": {
+          "name": "QCut",
+          "version": "2.2.0",
+          "repository": "https://github.com/FiQCI/QCut"
+        },
+        "input": {
+          "numQubits": 2,
+          "gates": [
+            {
+              "gate": "X",
+              "targets": [
+                1
+              ]
+            },
+            {
+              "gate": "CX",
+              "targets": [
+                1,
+                0
+              ]
+            }
+          ],
+          "observables": [
+            "IZ",
+            "ZI",
+            "IY"
+          ],
+          "strategy": "explicit",
+          "execution": {
+            "threads": 2
+          },
+          "gateCuts": [
+            1
+          ],
+          "shots": 8192,
+          "partitions": 2,
+          "maxBatchSize": 32,
+          "seed": 3,
+          "referenceMode": "auto"
+        },
+        "inputSha256": "549ef8e4371f913b5142bba998c18e50ebd383ab79168d732e6ebe6f073ff03f",
+        "dependencyLockSha256": "8de73d5490473537d261b8807810bc1c5004df042c5b02b6a91dbc9d54b1c799",
+        "result": {
+          "estimates": [
+            -1.01806640625,
+            -0.9974365234375,
+            0.011442542076110843
+          ],
+          "exactExpectations": [
+            -1,
+            -1,
+            0
+          ],
+          "maxAbsoluteError": 0.01806640625,
+          "reference": {
+            "mode": "auto",
+            "status": "computed",
+            "method": "Independent uncut Qiskit statevector Pauli expectations",
+            "reason": "Independent reference computed for this input."
+          },
+          "gamma": 3,
+          "theoreticalSamplingOverhead": 9,
+          "cutCount": 1,
+          "subcircuitWidths": [
+            1,
+            1
+          ],
+          "generatedCircuits": 24,
+          "original": {
+            "gates": 2,
+            "depth": 2,
+            "twoQubitGates": 1,
+            "cxInCommonBasis": 1
+          },
+          "prepared": {
+            "gates": 2,
+            "depth": 2,
+            "twoQubitGates": 1,
+            "cxInCommonBasis": 1
+          },
+          "preprocessing": "explicit original gate indices and operand order",
+          "executionCost": {
+            "jobs": 1,
+            "submittedCircuits": 24,
+            "completedCircuits": 24,
+            "actualShots": 196608
+          },
+          "expansion": "exact QPD; finite-shot Aer execution; no wire communication or consolidation",
+          "observableConvention": "leftmost Pauli is q0"
+        },
+        "scientificValidation": "not_evaluated",
+        "limitations": [
+          "Gate cutting only. Automatic partitioning uses symmetric CZ normalization to avoid the fixed upstream finder's directional-operand bug; normalization can increase cutting cost.",
+          "Exact QPD expansion is still reconstructed from finite shots. Estimates can lie outside [-1,1] and are deliberately not clipped.",
+          "Gamma squared is a theoretical sampling-overhead factor, not measured acceleration, total shots or a statistical confidence interval.",
+          "Local Aer subexperiments support intermediate measurements. Backend actual shots are counted from completed results; no hardware jobs are submitted."
+        ]
+      },
+      {
+        "artifact": "qcut-knitting-skip-reference.json",
+        "verifiedAt": "2026-09-20T13:22:40.977Z",
+        "artifactSha256": "d01ccb39c4bca1a7eb8ed2540e90a4c2133550fe50af2135e93f1faeb596d404",
+        "schemaVersion": "1.0",
+        "source": {
+          "name": "QCut",
+          "version": "2.2.0",
+          "repository": "https://github.com/FiQCI/QCut"
+        },
+        "input": {
+          "numQubits": 2,
+          "gates": [
+            {
+              "gate": "H",
+              "targets": [
+                1
+              ]
+            },
+            {
+              "gate": "S",
+              "targets": [
+                1
+              ]
+            },
+            {
+              "gate": "CX",
+              "targets": [
+                1,
+                0
+              ]
+            }
+          ],
+          "observables": [
+            "XY",
+            "YX",
+            "ZZ"
+          ],
+          "shots": 128,
+          "referenceMode": "skip",
+          "strategy": "automatic",
+          "gateCuts": [],
+          "partitions": 2,
+          "maxBatchSize": 32,
+          "seed": 3,
+          "execution": {}
+        },
+        "inputSha256": "80b097763317ebd07454e3575b04f5011c2e26ac179724f2ff794cb2968af1e0",
+        "dependencyLockSha256": "8de73d5490473537d261b8807810bc1c5004df042c5b02b6a91dbc9d54b1c799",
+        "result": {
+          "estimates": [
+            0.997314453125,
+            1.005859375,
+            1.02294921875
+          ],
+          "exactExpectations": null,
+          "maxAbsoluteError": null,
+          "reference": {
+            "mode": "skip",
+            "status": "not_run",
+            "method": "Independent uncut Qiskit statevector Pauli expectations",
+            "reason": "Reference explicitly skipped by the caller."
+          },
+          "gamma": 3,
+          "theoreticalSamplingOverhead": 9,
+          "cutCount": 1,
+          "subcircuitWidths": [
+            1,
+            1
+          ],
+          "generatedCircuits": 36,
+          "original": {
+            "gates": 3,
+            "depth": 3,
+            "twoQubitGates": 1,
+            "cxInCommonBasis": 1
+          },
+          "prepared": {
+            "gates": 5,
+            "depth": 4,
+            "twoQubitGates": 1,
+            "cxInCommonBasis": 1
+          },
+          "preprocessing": "u,cz at Qiskit level 0; symmetric gate cuts only",
+          "executionCost": {
+            "jobs": 2,
+            "submittedCircuits": 36,
+            "completedCircuits": 36,
+            "actualShots": 4608
+          },
+          "expansion": "exact QPD; finite-shot Aer execution; no wire communication or consolidation",
+          "observableConvention": "leftmost Pauli is q0"
+        },
+        "scientificValidation": "not_evaluated",
+        "limitations": [
+          "Gate cutting only. Automatic partitioning uses symmetric CZ normalization to avoid the fixed upstream finder's directional-operand bug; normalization can increase cutting cost.",
+          "Exact QPD expansion is still reconstructed from finite shots. Estimates can lie outside [-1,1] and are deliberately not clipped.",
+          "Gamma squared is a theoretical sampling-overhead factor, not measured acceleration, total shots or a statistical confidence interval.",
+          "Local Aer subexperiments support intermediate measurements. Backend actual shots are counted from completed results; no hardware jobs are submitted."
+        ]
+      },
+      {
+        "artifact": "compact-optimization-phase-gadget.json",
+        "verifiedAt": "2026-09-20T13:22:41.330Z",
+        "artifactSha256": "9afd03b186f7c0ede25c7153e364f58c62133a54d0f04551154545e4d9681332",
+        "schemaVersion": "1.0",
+        "source": {
+          "name": "Compact",
+          "version": "0.2.1",
+          "repository": "https://github.com/Q-PROOF/Compact"
+        },
+        "input": {
+          "numQubits": 2,
+          "gates": [
+            {
+              "gate": "CX",
+              "targets": [
+                0,
+                1
+              ]
+            },
+            {
+              "gate": "RZ",
+              "targets": [
+                1
+              ],
+              "angle": 0.37
+            },
+            {
+              "gate": "CX",
+              "targets": [
+                0,
+                1
+              ]
+            }
+          ],
+          "searchDepth": 2,
+          "objective": "2q",
+          "referenceMode": "auto",
+          "execution": {}
+        },
+        "inputSha256": "e9477fbf8f6d22444bad173500e564dd28b62040032c39a2998a138b3782382d",
+        "dependencyLockSha256": "b4f19c3065bc51279d0ed2f4c0414b3ac09f52ad202c2f36c09430070bb11dbe",
+        "result": {
+          "original": {
+            "gates": 3,
+            "depth": 3,
+            "twoQubitGates": 2,
+            "cxInCommonBasis": 2
+          },
+          "optimized": {
+            "gates": 3,
+            "depth": 2,
+            "twoQubitGates": 1,
+            "cxInCommonBasis": 2
+          },
+          "optimizedOpenQasm": "OPENQASM 2.0;\ninclude \"qelib1.inc\";\nqreg q[2];\nu3(0,0,0.3700000000000001) q[0];\nu3(0,0,-0.3700000000000001) q[0];\nu3(0,0,0.3700000000000001) q[1];\ncx q[0],q[1];\nu3(0,0,0.3700000000000001) q[1];\ncx q[0],q[1];\nu3(0,0,-0.3700000000000001) q[1];",
+          "exportedBasis": "OpenQASM 2 u3,cx; independently checked after parsing when reference runs",
+          "upstreamVerification": {
+            "status": "computed",
+            "equivalent": true,
+            "tier": 2,
+            "method": "full_unitary"
+          },
+          "reference": {
+            "mode": "auto",
+            "status": "computed",
+            "method": "Independent Qiskit full unitary, fixed wire order, global phase ignored",
+            "reason": "Independent reference computed for this input."
+          },
+          "independentEquivalent": true,
+          "processFidelity": 1,
+          "maxUnitaryDeviation": 3.7238012298709097e-16,
+          "commonBasis": "u,cx; optimization_level=0; no hardware routing",
+          "globalPhaseIgnored": true
+        },
+        "scientificValidation": "not_evaluated",
+        "limitations": [
+          "Only unitary gates are accepted; measurements, resets, dynamic control and noise are outside this contract.",
+          "Compact verification tiers are upstream diagnostics, not formal proof or OpenQuantum scientific acceptance. Known ECR/iSWAP verifier regressions are tracked separately; these gates are not exposed.",
+          "The independent numerical comparison covers this complete unitary with fixed wire order up to global phase; skipped references leave an unchecked candidate.",
+          "Native two-qubit gate reductions need not reduce common-basis CX count or hardware execution cost."
+        ]
+      },
+      {
+        "artifact": "compact-optimization-reverse-wire.json",
+        "verifiedAt": "2026-09-20T13:22:41.555Z",
+        "artifactSha256": "de999915a5e1d0ff31e6c40fe37afd47cab41f031d202e2a1e550f254e163248",
+        "schemaVersion": "1.0",
+        "source": {
+          "name": "Compact",
+          "version": "0.2.1",
+          "repository": "https://github.com/Q-PROOF/Compact"
+        },
+        "input": {
+          "numQubits": 3,
+          "gates": [
+            {
+              "gate": "CX",
+              "targets": [
+                2,
+                0
+              ]
+            },
+            {
+              "gate": "RY",
+              "targets": [
+                1
+              ],
+              "angle": 0.37
+            },
+            {
+              "gate": "CX",
+              "targets": [
+                2,
+                0
+              ]
+            }
+          ],
+          "searchDepth": 2,
+          "objective": "2q",
+          "referenceMode": "auto",
+          "execution": {}
+        },
+        "inputSha256": "1e1b10cd33742db173f517cc0cb63762a08469285e727c15cf29f43ae9c1e845",
+        "dependencyLockSha256": "b4f19c3065bc51279d0ed2f4c0414b3ac09f52ad202c2f36c09430070bb11dbe",
+        "result": {
+          "original": {
+            "gates": 3,
+            "depth": 2,
+            "twoQubitGates": 2,
+            "cxInCommonBasis": 2
+          },
+          "optimized": {
+            "gates": 1,
+            "depth": 1,
+            "twoQubitGates": 0,
+            "cxInCommonBasis": 0
+          },
+          "optimizedOpenQasm": "OPENQASM 2.0;\ninclude \"qelib1.inc\";\nqreg q[3];\nu3(0.37,0,0) q[1];",
+          "exportedBasis": "OpenQASM 2 u3,cx; independently checked after parsing when reference runs",
+          "upstreamVerification": {
+            "status": "computed",
+            "equivalent": true,
+            "tier": 2,
+            "method": "full_unitary"
+          },
+          "reference": {
+            "mode": "auto",
+            "status": "computed",
+            "method": "Independent Qiskit full unitary, fixed wire order, global phase ignored",
+            "reason": "Independent reference computed for this input."
+          },
+          "independentEquivalent": true,
+          "processFidelity": 1,
+          "maxUnitaryDeviation": 0,
+          "commonBasis": "u,cx; optimization_level=0; no hardware routing",
+          "globalPhaseIgnored": true
+        },
+        "scientificValidation": "not_evaluated",
+        "limitations": [
+          "Only unitary gates are accepted; measurements, resets, dynamic control and noise are outside this contract.",
+          "Compact verification tiers are upstream diagnostics, not formal proof or OpenQuantum scientific acceptance. Known ECR/iSWAP verifier regressions are tracked separately; these gates are not exposed.",
+          "The independent numerical comparison covers this complete unitary with fixed wire order up to global phase; skipped references leave an unchecked candidate.",
+          "Native two-qubit gate reductions need not reduce common-basis CX count or hardware execution cost."
+        ]
+      },
+      {
+        "artifact": "compact-optimization-skip-reference.json",
+        "verifiedAt": "2026-09-20T13:22:41.783Z",
+        "artifactSha256": "93ba1cfcd9ac34b1e75e4a79fbba4cdcb5fd40b053bc505bdf532618bc258300",
+        "schemaVersion": "1.0",
+        "source": {
+          "name": "Compact",
+          "version": "0.2.1",
+          "repository": "https://github.com/Q-PROOF/Compact"
+        },
+        "input": {
+          "numQubits": 3,
+          "gates": [
+            {
+              "gate": "CX",
+              "targets": [
+                2,
+                0
+              ]
+            },
+            {
+              "gate": "RY",
+              "targets": [
+                1
+              ],
+              "angle": 0.37
+            },
+            {
+              "gate": "CX",
+              "targets": [
+                2,
+                0
+              ]
+            }
+          ],
+          "referenceMode": "skip",
+          "searchDepth": 2,
+          "objective": "2q",
+          "execution": {}
+        },
+        "inputSha256": "4168ee4244fece0559ae2b8603bc1105a8f8a52efa9c4320b1d23716c1daba07",
+        "dependencyLockSha256": "b4f19c3065bc51279d0ed2f4c0414b3ac09f52ad202c2f36c09430070bb11dbe",
+        "result": {
+          "original": {
+            "gates": 3,
+            "depth": 2,
+            "twoQubitGates": 2,
+            "cxInCommonBasis": 2
+          },
+          "optimized": {
+            "gates": 1,
+            "depth": 1,
+            "twoQubitGates": 0,
+            "cxInCommonBasis": 0
+          },
+          "optimizedOpenQasm": "OPENQASM 2.0;\ninclude \"qelib1.inc\";\nqreg q[3];\nu3(0.37,0,0) q[1];",
+          "exportedBasis": "OpenQASM 2 u3,cx; independently checked after parsing when reference runs",
+          "upstreamVerification": {
+            "status": "not_run",
+            "equivalent": null,
+            "tier": null,
+            "method": "not_run: reference policy skips upstream diagnostic too"
+          },
+          "reference": {
+            "mode": "skip",
+            "status": "not_run",
+            "method": "Independent Qiskit full unitary, fixed wire order, global phase ignored",
+            "reason": "Reference explicitly skipped by the caller."
+          },
+          "independentEquivalent": null,
+          "processFidelity": null,
+          "maxUnitaryDeviation": null,
+          "commonBasis": "u,cx; optimization_level=0; no hardware routing",
+          "globalPhaseIgnored": true
+        },
+        "scientificValidation": "not_evaluated",
+        "limitations": [
+          "Only unitary gates are accepted; measurements, resets, dynamic control and noise are outside this contract.",
+          "Compact verification tiers are upstream diagnostics, not formal proof or OpenQuantum scientific acceptance. Known ECR/iSWAP verifier regressions are tracked separately; these gates are not exposed.",
+          "The independent numerical comparison covers this complete unitary with fixed wire order up to global phase; skipped references leave an unchecked candidate.",
+          "Native two-qubit gate reductions need not reduce common-basis CX count or hardware execution cost."
+        ]
+      },
+      {
+        "artifact": "compact-optimization-identity.json",
+        "verifiedAt": "2026-09-20T13:22:42.004Z",
+        "artifactSha256": "c394a9feefa8ca6cd6bae121b5e0bdd1a30582e75dcbbf1963c971f9fbad31b8",
+        "schemaVersion": "1.0",
+        "source": {
+          "name": "Compact",
+          "version": "0.2.1",
+          "repository": "https://github.com/Q-PROOF/Compact"
+        },
+        "input": {
+          "numQubits": 1,
+          "gates": [],
+          "referenceMode": "required",
+          "searchDepth": 2,
+          "objective": "2q",
+          "execution": {}
+        },
+        "inputSha256": "0e161b7b49cf17bb69a260e1c9e374513f70b030e6d2b1c295262bbc97eca4e7",
+        "dependencyLockSha256": "b4f19c3065bc51279d0ed2f4c0414b3ac09f52ad202c2f36c09430070bb11dbe",
+        "result": {
+          "original": {
+            "gates": 0,
+            "depth": 0,
+            "twoQubitGates": 0,
+            "cxInCommonBasis": 0
+          },
+          "optimized": {
+            "gates": 0,
+            "depth": 0,
+            "twoQubitGates": 0,
+            "cxInCommonBasis": 0
+          },
+          "optimizedOpenQasm": "OPENQASM 2.0;\ninclude \"qelib1.inc\";\nqreg q[1];",
+          "exportedBasis": "OpenQASM 2 u3,cx; independently checked after parsing when reference runs",
+          "upstreamVerification": {
+            "status": "computed",
+            "equivalent": true,
+            "tier": 3,
+            "method": "clifford_tableau"
+          },
+          "reference": {
+            "mode": "required",
+            "status": "computed",
+            "method": "Independent Qiskit full unitary, fixed wire order, global phase ignored",
+            "reason": "Independent reference computed for this input."
+          },
+          "independentEquivalent": true,
+          "processFidelity": 1,
+          "maxUnitaryDeviation": 0,
+          "commonBasis": "u,cx; optimization_level=0; no hardware routing",
+          "globalPhaseIgnored": true
+        },
+        "scientificValidation": "not_evaluated",
+        "limitations": [
+          "Only unitary gates are accepted; measurements, resets, dynamic control and noise are outside this contract.",
+          "Compact verification tiers are upstream diagnostics, not formal proof or OpenQuantum scientific acceptance. Known ECR/iSWAP verifier regressions are tracked separately; these gates are not exposed.",
+          "The independent numerical comparison covers this complete unitary with fixed wire order up to global phase; skipped references leave an unchecked candidate.",
+          "Native two-qubit gate reductions need not reduce common-basis CX count or hardware execution cost."
+        ]
+      },
+      {
+        "artifact": "openqarp-excited-states-complex-Y.json",
+        "verifiedAt": "2026-09-20T13:22:44.719Z",
+        "artifactSha256": "f5968e0e1ff766b1c47efda281d665b5a4cba564ca91a18ce5e15b91bc4d731d",
+        "schemaVersion": "1.0",
+        "source": {
+          "name": "OpenQARP",
+          "version": "0.1.0",
+          "repository": "https://github.com/OpenQARP/openqarp"
+        },
+        "input": {
+          "numQubits": 1,
+          "terms": [
+            {
+              "pauli": "Y",
+              "coefficient": 1
+            }
+          ],
+          "layers": 1,
+          "states": 2,
+          "maxIterations": 200,
+          "seed": 42,
+          "referenceMode": "auto",
+          "execution": {}
+        },
+        "inputSha256": "2778533972b18d33a660471b6d8c6604fce799d1c6c3b585b6551a79391baa4f",
+        "dependencyLockSha256": "0f93f30d04b2319100138c0c6dc91c14326758934090d0e7607672cedb8646c4",
+        "result": {
+          "energies": [
+            -1,
+            1
+          ],
+          "recomputedEnergies": [
+            -1,
+            1
+          ],
+          "residualVariances": [
+            1.661832706901676e-21,
+            5.982492538083247e-18
+          ],
+          "overlaps": [
+            [
+              1,
+              1.5046612315422406e-18
+            ],
+            [
+              1.5046612315422406e-18,
+              1
+            ]
+          ],
+          "normErrors": [
+            0,
+            0
+          ],
+          "maxEnergyConsistencyError": 0,
+          "penalty": 3.0000000000000004,
+          "parameters": [
+            [
+              {
+                "name": "ry_0_0",
+                "value": 1.5707963267726244
+              },
+              {
+                "name": "rz_0_0",
+                "value": -1.5707963268290401
+              }
+            ],
+            [
+              {
+                "name": "ry_0_0",
+                "value": 1.5707963285814948
+              },
+              {
+                "name": "rz_0_0",
+                "value": 1.5707963284653932
+              }
+            ]
+          ],
+          "optimizer": [
+            {
+              "success": true,
+              "message": "Optimization terminated successfully.",
+              "iterations": 6,
+              "evaluations": 7
+            },
+            {
+              "success": true,
+              "message": "Optimization terminated successfully.",
+              "iterations": 9,
+              "evaluations": 10
+            }
+          ],
+          "reference": {
+            "mode": "auto",
+            "status": "computed",
+            "method": "Independent NumPy Pauli eigenspectrum",
+            "reason": "Independent reference computed for this input."
+          },
+          "exactEnergies": [
+            -1,
+            1
+          ],
+          "energyErrors": [
+            0,
+            0
+          ],
+          "ansatz": "RY then RZ on each qubit, then linear CX per layer; q0 is least significant bit",
+          "units": "input Hamiltonian energy units; residual variance in squared units"
+        },
+        "scientificValidation": "not_evaluated",
+        "limitations": [
+          "VQD is a local variational optimization; optimizer success, small variance and correct excited-state ordering are distinct observations.",
+          "Energies stay in deflation order; nonorthogonality, duplicate states and nonconvergence are reported without sorting or concealing them.",
+          "The fixed complex ansatz can still have insufficient expressivity. Matrix-free independent state/Pauli checks use exponential statevector memory.",
+          "No hardware, cloud service or quantum advantage claim is involved; numerical diagnostics are not final scientific acceptance."
+        ]
+      },
+      {
+        "artifact": "openqarp-excited-states-asymmetric-with-offset.json",
+        "verifiedAt": "2026-09-20T13:22:46.884Z",
+        "artifactSha256": "a479f44e3e7bc33fb7fa9b0baafc5f379566ab9c0a0f7dfe77c8e52348e8e2a9",
+        "schemaVersion": "1.0",
+        "source": {
+          "name": "OpenQARP",
+          "version": "0.1.0",
+          "repository": "https://github.com/OpenQARP/openqarp"
+        },
+        "input": {
+          "numQubits": 2,
+          "terms": [
+            {
+              "pauli": "ZI",
+              "coefficient": 1
+            },
+            {
+              "pauli": "IZ",
+              "coefficient": 2
+            },
+            {
+              "pauli": "II",
+              "coefficient": 3
+            }
+          ],
+          "states": 2,
+          "layers": 2,
+          "maxIterations": 250,
+          "seed": 42,
+          "referenceMode": "auto",
+          "execution": {}
+        },
+        "inputSha256": "b97cdb1a0439d28dea6b4c3800519d85f5db189ef4607c57f9da3b3c6165f54e",
+        "dependencyLockSha256": "0f93f30d04b2319100138c0c6dc91c14326758934090d0e7607672cedb8646c4",
+        "result": {
+          "energies": [
+            2.3913649168020706e-17,
+            1.9999999999999996
+          ],
+          "recomputedEnergies": [
+            2.3913649616021346e-17,
+            1.9999999999999996
+          ],
+          "residualVariances": [
+            1.1304519855376997e-16,
+            4.477413404032372e-17
+          ],
+          "overlaps": [
+            [
+              1.0000000000000004,
+              4.978756202608271e-18
+            ],
+            [
+              4.978756202608271e-18,
+              0.9999999999999996
+            ]
+          ],
+          "normErrors": [
+            2.220446049250313e-16,
+            2.220446049250313e-16
+          ],
+          "maxEnergyConsistencyError": 4.48000640829384e-25,
+          "penalty": 7.000000000000001,
+          "parameters": [
+            [
+              {
+                "name": "ry_0_0",
+                "value": -1.6500147277547047e-8
+              },
+              {
+                "name": "ry_0_1",
+                "value": 1.5507477942990517
+              },
+              {
+                "name": "ry_1_0",
+                "value": 3.1415926676903085
+              },
+              {
+                "name": "ry_1_1",
+                "value": 1.5507477914700898
+              },
+              {
+                "name": "rz_0_0",
+                "value": -3.1613728212557337
+              },
+              {
+                "name": "rz_0_1",
+                "value": 3.1415926509235668
+              },
+              {
+                "name": "rz_1_0",
+                "value": 1.6407891386670415
+              },
+              {
+                "name": "rz_1_1",
+                "value": 1.797395039824692
+              }
+            ],
+            [
+              {
+                "name": "ry_0_0",
+                "value": 1.4127647345589613
+              },
+              {
+                "name": "ry_0_1",
+                "value": -1.5707963239889877
+              },
+              {
+                "name": "ry_1_0",
+                "value": -1.4127647359713909
+              },
+              {
+                "name": "ry_1_1",
+                "value": 1.5707963288124516
+              },
+              {
+                "name": "rz_0_0",
+                "value": -3.822196897703357e-9
+              },
+              {
+                "name": "rz_0_1",
+                "value": 3.14159265677785
+              },
+              {
+                "name": "rz_1_0",
+                "value": -0.35553909081065255
+              },
+              {
+                "name": "rz_1_1",
+                "value": -1.7138096469997215
+              }
+            ]
+          ],
+          "optimizer": [
+            {
+              "success": true,
+              "message": "Optimization terminated successfully.",
+              "iterations": 24,
+              "evaluations": 25
+            },
+            {
+              "success": true,
+              "message": "Optimization terminated successfully.",
+              "iterations": 15,
+              "evaluations": 18
+            }
+          ],
+          "reference": {
+            "mode": "auto",
+            "status": "computed",
+            "method": "Independent NumPy Pauli eigenspectrum",
+            "reason": "Independent reference computed for this input."
+          },
+          "exactEnergies": [
+            0,
+            2
+          ],
+          "energyErrors": [
+            2.3913649616021346e-17,
+            -4.440892098500626e-16
+          ],
+          "ansatz": "RY then RZ on each qubit, then linear CX per layer; q0 is least significant bit",
+          "units": "input Hamiltonian energy units; residual variance in squared units"
+        },
+        "scientificValidation": "not_evaluated",
+        "limitations": [
+          "VQD is a local variational optimization; optimizer success, small variance and correct excited-state ordering are distinct observations.",
+          "Energies stay in deflation order; nonorthogonality, duplicate states and nonconvergence are reported without sorting or concealing them.",
+          "The fixed complex ansatz can still have insufficient expressivity. Matrix-free independent state/Pauli checks use exponential statevector memory.",
+          "No hardware, cloud service or quantum advantage claim is involved; numerical diagnostics are not final scientific acceptance."
+        ]
+      },
+      {
+        "artifact": "openqarp-excited-states-budget-exhausted.json",
+        "verifiedAt": "2026-09-20T13:22:49.045Z",
+        "artifactSha256": "b6ccdf3b6406bc92dcccb7f33a3c0347e8406c4fc1c5a08457aceca703ccd75d",
+        "schemaVersion": "1.0",
+        "source": {
+          "name": "OpenQARP",
+          "version": "0.1.0",
+          "repository": "https://github.com/OpenQARP/openqarp"
+        },
+        "input": {
+          "numQubits": 2,
+          "terms": [
+            {
+              "pauli": "ZI",
+              "coefficient": 1
+            },
+            {
+              "pauli": "IZ",
+              "coefficient": 2
+            },
+            {
+              "pauli": "II",
+              "coefficient": 3
+            }
+          ],
+          "states": 2,
+          "layers": 2,
+          "maxIterations": 1,
+          "seed": 42,
+          "referenceMode": "auto",
+          "execution": {}
+        },
+        "inputSha256": "eb5ba7d6d8d2a35f0dc7b7653eb89653bb35b3b7b18b1259f46911df90d6e56e",
+        "dependencyLockSha256": "0f93f30d04b2319100138c0c6dc91c14326758934090d0e7607672cedb8646c4",
+        "result": {
+          "energies": [
+            1.045694304044521,
+            0.7926099525187092
+          ],
+          "recomputedEnergies": [
+            1.0456943040445208,
+            0.7926099525187091
+          ],
+          "residualVariances": [
+            1.8977588467282438,
+            1.2419350271406782
+          ],
+          "overlaps": [
+            [
+              1.0000000000000009,
+              0.12429100980048371
+            ],
+            [
+              0.12429100980048371,
+              0.9999999999999991
+            ]
+          ],
+          "normErrors": [
+            4.440892098500626e-16,
+            4.440892098500626e-16
+          ],
+          "maxEnergyConsistencyError": 2.220446049250313e-16,
+          "penalty": 7.000000000000001,
+          "parameters": [
+            [
+              {
+                "name": "ry_0_0",
+                "value": 1.443577859256284
+              },
+              {
+                "name": "ry_0_1",
+                "value": 0.12934160430384112
+              },
+              {
+                "name": "ry_1_0",
+                "value": 1.9665030406132558
+              },
+              {
+                "name": "ry_1_1",
+                "value": 0.7175067145823472
+              },
+              {
+                "name": "rz_0_0",
+                "value": -3.115545304000154
+              },
+              {
+                "name": "rz_0_1",
+                "value": 3.052755507053752
+              },
+              {
+                "name": "rz_1_0",
+                "value": 1.6407891386670415
+              },
+              {
+                "name": "rz_1_1",
+                "value": 1.797395039824692
+              }
+            ],
+            [
+              {
+                "name": "ry_0_0",
+                "value": -1.850323977618036
+              },
+              {
+                "name": "ry_0_1",
+                "value": 0.08656511114410131
+              },
+              {
+                "name": "ry_1_0",
+                "value": -0.09654916544535741
+              },
+              {
+                "name": "ry_1_1",
+                "value": 2.9238526642109215
+              },
+              {
+                "name": "rz_0_0",
+                "value": 1.08323511627366
+              },
+              {
+                "name": "rz_0_1",
+                "value": 2.1516116993245578
+              },
+              {
+                "name": "rz_1_0",
+                "value": -0.4262853499722402
+              },
+              {
+                "name": "rz_1_1",
+                "value": -1.6671703266061946
+              }
+            ]
+          ],
+          "optimizer": [
+            {
+              "success": false,
+              "message": "Maximum number of iterations has been exceeded.",
+              "iterations": 1,
+              "evaluations": 2
+            },
+            {
+              "success": false,
+              "message": "Maximum number of iterations has been exceeded.",
+              "iterations": 1,
+              "evaluations": 2
+            }
+          ],
+          "reference": {
+            "mode": "auto",
+            "status": "computed",
+            "method": "Independent NumPy Pauli eigenspectrum",
+            "reason": "Independent reference computed for this input."
+          },
+          "exactEnergies": [
+            0,
+            2
+          ],
+          "energyErrors": [
+            1.0456943040445208,
+            -1.2073900474812909
+          ],
+          "ansatz": "RY then RZ on each qubit, then linear CX per layer; q0 is least significant bit",
+          "units": "input Hamiltonian energy units; residual variance in squared units"
+        },
+        "scientificValidation": "not_evaluated",
+        "limitations": [
+          "VQD is a local variational optimization; optimizer success, small variance and correct excited-state ordering are distinct observations.",
+          "Energies stay in deflation order; nonorthogonality, duplicate states and nonconvergence are reported without sorting or concealing them.",
+          "The fixed complex ansatz can still have insufficient expressivity. Matrix-free independent state/Pauli checks use exponential statevector memory.",
+          "No hardware, cloud service or quantum advantage claim is involved; numerical diagnostics are not final scientific acceptance."
+        ]
+      },
+      {
+        "artifact": "openqarp-excited-states-skip-spectrum.json",
+        "verifiedAt": "2026-09-20T13:22:51.224Z",
+        "artifactSha256": "7199c86d7c1498f6c4c2d26c61c601e7a265fd0fe6cd9b7df602209c845f07ae",
+        "schemaVersion": "1.0",
+        "source": {
+          "name": "OpenQARP",
+          "version": "0.1.0",
+          "repository": "https://github.com/OpenQARP/openqarp"
+        },
+        "input": {
+          "numQubits": 1,
+          "terms": [
+            {
+              "pauli": "Y",
+              "coefficient": 1
+            }
+          ],
+          "layers": 1,
+          "states": 2,
+          "maxIterations": 200,
+          "referenceMode": "skip",
+          "seed": 42,
+          "execution": {}
+        },
+        "inputSha256": "589072a51597317ecf287bd65baa9361b695a5a43784ce9d1506cad5b11a89ad",
+        "dependencyLockSha256": "0f93f30d04b2319100138c0c6dc91c14326758934090d0e7607672cedb8646c4",
+        "result": {
+          "energies": [
+            -1,
+            1
+          ],
+          "recomputedEnergies": [
+            -1,
+            1
+          ],
+          "residualVariances": [
+            1.661832706901676e-21,
+            5.982492538083247e-18
+          ],
+          "overlaps": [
+            [
+              1,
+              1.5046612315422406e-18
+            ],
+            [
+              1.5046612315422406e-18,
+              1
+            ]
+          ],
+          "normErrors": [
+            0,
+            0
+          ],
+          "maxEnergyConsistencyError": 0,
+          "penalty": 3.0000000000000004,
+          "parameters": [
+            [
+              {
+                "name": "ry_0_0",
+                "value": 1.5707963267726244
+              },
+              {
+                "name": "rz_0_0",
+                "value": -1.5707963268290401
+              }
+            ],
+            [
+              {
+                "name": "ry_0_0",
+                "value": 1.5707963285814948
+              },
+              {
+                "name": "rz_0_0",
+                "value": 1.5707963284653932
+              }
+            ]
+          ],
+          "optimizer": [
+            {
+              "success": true,
+              "message": "Optimization terminated successfully.",
+              "iterations": 6,
+              "evaluations": 7
+            },
+            {
+              "success": true,
+              "message": "Optimization terminated successfully.",
+              "iterations": 9,
+              "evaluations": 10
+            }
+          ],
+          "reference": {
+            "mode": "skip",
+            "status": "not_run",
+            "method": "Independent NumPy Pauli eigenspectrum",
+            "reason": "Reference explicitly skipped by the caller."
+          },
+          "exactEnergies": null,
+          "energyErrors": null,
+          "ansatz": "RY then RZ on each qubit, then linear CX per layer; q0 is least significant bit",
+          "units": "input Hamiltonian energy units; residual variance in squared units"
+        },
+        "scientificValidation": "not_evaluated",
+        "limitations": [
+          "VQD is a local variational optimization; optimizer success, small variance and correct excited-state ordering are distinct observations.",
+          "Energies stay in deflation order; nonorthogonality, duplicate states and nonconvergence are reported without sorting or concealing them.",
+          "The fixed complex ansatz can still have insufficient expressivity. Matrix-free independent state/Pauli checks use exponential statevector memory.",
+          "No hardware, cloud service or quantum advantage claim is involved; numerical diagnostics are not final scientific acceptance."
+        ]
+      },
+      {
+        "artifact": "cqlib-kernel-held-out-angle.json",
+        "verifiedAt": "2026-09-20T13:22:53.033Z",
+        "artifactSha256": "313427bb749387b576eeeacabb7e7cdae3a68f962df9450c90804639a3987585",
+        "schemaVersion": "1.0",
+        "source": {
+          "name": "cqlib-qml kernel adaptation",
+          "revision": "b3aeb784cf50150f7bb39c86a3a16e397d52ea50",
+          "sdkRevision": "1d0a2c49ac32712d995f46147dfc5e3c4f4ac8e6",
+          "repository": "https://github.com/cq-lib/cqlib-qml"
+        },
+        "input": {
+          "trainX": [
+            [
+              0,
+              0
+            ],
+            [
+              0.1,
+              0.2
+            ],
+            [
+              1.5707963267948966,
+              0
+            ],
+            [
+              1.4707963267948965,
+              0.2
+            ]
+          ],
+          "trainY": [
+            0,
+            0,
+            1,
+            1
+          ],
+          "testX": [
+            [
+              0.05,
+              0.1
+            ],
+            [
+              1.5207963267948965,
+              0.1
+            ]
+          ],
+          "testY": [
+            0,
+            1
+          ],
+          "regularization": 1,
+          "execution": {}
+        },
+        "inputSha256": "0fde36785b870422cf67103ce29b47309e2ca668101bc5fb86eaffc12e5ff67a",
+        "dependencyLockSha256": "82a7f162a55fa2a213f86eb939247cf3dfe24c0bd82f81f7af3d4078c41c4542",
+        "result": {
+          "trainFidelityKernel": [
+            [
+              1,
+              0.9509571670548967,
+              3.749399456654644e-33,
+              0.009573329946545901
+            ],
+            [
+              0.9509571670548967,
+              1,
+              0.009573329946545882,
+              0.039469502998557525
+            ],
+            [
+              3.749399456654644e-33,
+              0.009573329946545882,
+              1,
+              0.9509571670548965
+            ],
+            [
+              0.009573329946545901,
+              0.039469502998557525,
+              0.9509571670548965,
+              0.9999999999999998
+            ]
+          ],
+          "testKernel": [
+            [
+              0.9875602675802709,
+              0.9875602675802709,
+              0.0024730213403499996,
+              0.022109181282859134
+            ],
+            [
+              0.0024730213403500035,
+              0.022109181282859127,
+              0.9875602675802709,
+              0.9875602675802709
+            ]
+          ],
+          "predictions": [
+            0,
+            1
+          ],
+          "analyticPredictions": [
+            0,
+            1
+          ],
+          "rbfPredictions": [
+            0,
+            1
+          ],
+          "testAccuracy": 1,
+          "rbfTestAccuracy": 1,
+          "maxAnalyticKernelError": 2.220446049250313e-16,
+          "minimumGramEigenvalue": 0.03867457884347572,
+          "trainingDiagonalJitter": 1e-8,
+          "encoder": "tensor product RY(2*x_i); raw features in radians; no implicit scaling",
+          "sourceTreeSha256": "d99b7a4775854de7679535b49cadf49d5575e5a86ce79490f3b91f00130174c7"
+        },
+        "scientificValidation": "not_evaluated",
+        "limitations": [
+          "Only the fixed classical angle encoder is exposed. Signed amplitude encoding, shared-parameter shift gradients, VQC and swap-test paths are excluded.",
+          "The Apache-2.0 QKM/QSVM source is adapted with explicit MCGate import aliases and narrowed package exports for the pinned beta Rust SDK.",
+          "Returned trainFidelityKernel excludes jitter; the upstream QSVM adds 1e-8 to the training diagonal only. Test rows never enter model fitting or scaling.",
+          "This classically simulated product-state kernel has a closed analytic form. Scores on supplied test rows do not establish quantum advantage or out-of-sample validity of a user-chosen split."
+        ]
+      },
+      {
+        "artifact": "cqlib-kernel-changed-test-only.json",
+        "verifiedAt": "2026-09-20T13:22:54.468Z",
+        "artifactSha256": "94d03239aea0a2464d87851b246b0b56415a38e03c571298adb70964e8ef16f6",
+        "schemaVersion": "1.0",
+        "source": {
+          "name": "cqlib-qml kernel adaptation",
+          "revision": "b3aeb784cf50150f7bb39c86a3a16e397d52ea50",
+          "sdkRevision": "1d0a2c49ac32712d995f46147dfc5e3c4f4ac8e6",
+          "repository": "https://github.com/cq-lib/cqlib-qml"
+        },
+        "input": {
+          "trainX": [
+            [
+              0,
+              0
+            ],
+            [
+              0.1,
+              0.2
+            ],
+            [
+              1.5707963267948966,
+              0
+            ],
+            [
+              1.4707963267948965,
+              0.2
+            ]
+          ],
+          "trainY": [
+            0,
+            0,
+            1,
+            1
+          ],
+          "testX": [
+            [
+              0.9,
+              -0.2
+            ]
+          ],
+          "testY": [],
+          "regularization": 1,
+          "execution": {}
+        },
+        "inputSha256": "89e9bd4d64e1022d3a07a3c985d9d579127a3c04a3c8b21a9785a105bb37ae2e",
+        "dependencyLockSha256": "82a7f162a55fa2a213f86eb939247cf3dfe24c0bd82f81f7af3d4078c41c4542",
+        "result": {
+          "trainFidelityKernel": [
+            [
+              1,
+              0.9509571670548967,
+              3.749399456654644e-33,
+              0.009573329946545901
+            ],
+            [
+              0.9509571670548967,
+              1,
+              0.009573329946545882,
+              0.039469502998557525
+            ],
+            [
+              3.749399456654644e-33,
+              0.009573329946545882,
+              1,
+              0.9509571670548965
+            ],
+            [
+              0.009573329946545901,
+              0.039469502998557525,
+              0.9509571670548965,
+              0.9999999999999998
+            ]
+          ],
+          "testKernel": [
+            [
+              0.3711479780330613,
+              0.4117909209872092,
+              0.5893825189683811,
+              0.6006964597475751
+            ]
+          ],
+          "predictions": [
+            1
+          ],
+          "analyticPredictions": [
+            1
+          ],
+          "rbfPredictions": [
+            1
+          ],
+          "testAccuracy": null,
+          "rbfTestAccuracy": null,
+          "maxAnalyticKernelError": 2.220446049250313e-16,
+          "minimumGramEigenvalue": 0.03867457884347572,
+          "trainingDiagonalJitter": 1e-8,
+          "encoder": "tensor product RY(2*x_i); raw features in radians; no implicit scaling",
+          "sourceTreeSha256": "d99b7a4775854de7679535b49cadf49d5575e5a86ce79490f3b91f00130174c7"
+        },
+        "scientificValidation": "not_evaluated",
+        "limitations": [
+          "Only the fixed classical angle encoder is exposed. Signed amplitude encoding, shared-parameter shift gradients, VQC and swap-test paths are excluded.",
+          "The Apache-2.0 QKM/QSVM source is adapted with explicit MCGate import aliases and narrowed package exports for the pinned beta Rust SDK.",
+          "Returned trainFidelityKernel excludes jitter; the upstream QSVM adds 1e-8 to the training diagonal only. Test rows never enter model fitting or scaling.",
+          "This classically simulated product-state kernel has a closed analytic form. Scores on supplied test rows do not establish quantum advantage or out-of-sample validity of a user-chosen split."
+        ]
+      },
+      {
+        "artifact": "cqlib-kernel-signed-angle-duplicates.json",
+        "verifiedAt": "2026-09-20T13:22:55.903Z",
+        "artifactSha256": "9645771550a7484a75cb160f9c27c2a9a16ef25f0fc04afab415ecdfaab011a9",
+        "schemaVersion": "1.0",
+        "source": {
+          "name": "cqlib-qml kernel adaptation",
+          "revision": "b3aeb784cf50150f7bb39c86a3a16e397d52ea50",
+          "sdkRevision": "1d0a2c49ac32712d995f46147dfc5e3c4f4ac8e6",
+          "repository": "https://github.com/cq-lib/cqlib-qml"
+        },
+        "input": {
+          "trainX": [
+            [
+              0,
+              -0.2,
+              0.4
+            ],
+            [
+              0,
+              -0.2,
+              0.4
+            ],
+            [
+              1,
+              0.4,
+              -0.3
+            ]
+          ],
+          "trainY": [
+            0,
+            0,
+            1
+          ],
+          "testX": [
+            [
+              0.5,
+              -0.1,
+              0.2
+            ]
+          ],
+          "testY": [],
+          "regularization": 1,
+          "execution": {}
+        },
+        "inputSha256": "a0910efbd8ca93d773109f880de2a38fe473f041cb351fa09cef908d0aefb63d",
+        "dependencyLockSha256": "82a7f162a55fa2a213f86eb939247cf3dfe24c0bd82f81f7af3d4078c41c4542",
+        "result": {
+          "trainFidelityKernel": [
+            [
+              1.0000000000000004,
+              1.0000000000000004,
+              0.11632645250172281
+            ],
+            [
+              1.0000000000000004,
+              1.0000000000000004,
+              0.11632645250172281
+            ],
+            [
+              0.11632645250172281,
+              0.11632645250172281,
+              1
+            ]
+          ],
+          "testKernel": [
+            [
+              0.7323807585982457,
+              0.7323807585982457,
+              0.45680190850433755
+            ]
+          ],
+          "predictions": [
+            0
+          ],
+          "analyticPredictions": [
+            0
+          ],
+          "rbfPredictions": [
+            0
+          ],
+          "testAccuracy": null,
+          "rbfTestAccuracy": null,
+          "maxAnalyticKernelError": 4.440892098500626e-16,
+          "minimumGramEigenvalue": 8.12561341242659e-17,
+          "trainingDiagonalJitter": 1e-8,
+          "encoder": "tensor product RY(2*x_i); raw features in radians; no implicit scaling",
+          "sourceTreeSha256": "d99b7a4775854de7679535b49cadf49d5575e5a86ce79490f3b91f00130174c7"
+        },
+        "scientificValidation": "not_evaluated",
+        "limitations": [
+          "Only the fixed classical angle encoder is exposed. Signed amplitude encoding, shared-parameter shift gradients, VQC and swap-test paths are excluded.",
+          "The Apache-2.0 QKM/QSVM source is adapted with explicit MCGate import aliases and narrowed package exports for the pinned beta Rust SDK.",
+          "Returned trainFidelityKernel excludes jitter; the upstream QSVM adds 1e-8 to the training diagonal only. Test rows never enter model fitting or scaling.",
+          "This classically simulated product-state kernel has a closed analytic form. Scores on supplied test rows do not establish quantum advantage or out-of-sample validity of a user-chosen split."
+        ]
+      }
+    ]
+  },
+  "upstreamMcp": {
+    "name": "FlagQuantum",
+    "version": "0.3.0",
+    "sdkVersion": "0.2.0",
+    "declaredTools": 17,
+    "scope": "Full schema snapshot compared; numerical smoke covers Bell probabilities and analysis, not all upstream algorithms",
+    "results": {
+      "analysis": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"status\":\"success\",\"circuit\":{\"n_qubits\":2,\"n_instructions\":2,\"ir_version\":\"1.0\",\"content_hash\":\"115198c73eac555ee1a6d58c4b3fb300ce04a7d9cc224fac83e4e3a6754c1582\"},\"analysis\":{\"n_wires\":2,\"n_instructions\":2,\"depth\":2,\"gate_counts\":{\"h\":1,\"cx\":1},\"wire_usage\":[2,1],\"max_gate_width\":2,\"two_qubit_gates\":1,\"multi_qubit_gates\":0,\"channel_count\":0,\"has_noise\":false}}"
+          }
+        ],
+        "structuredContent": {
+          "status": "success",
+          "circuit": {
+            "n_qubits": 2,
+            "n_instructions": 2,
+            "ir_version": "1.0",
+            "content_hash": "115198c73eac555ee1a6d58c4b3fb300ce04a7d9cc224fac83e4e3a6754c1582"
+          },
+          "analysis": {
+            "n_wires": 2,
+            "n_instructions": 2,
+            "depth": 2,
+            "gate_counts": {
+              "h": 1,
+              "cx": 1
+            },
+            "wire_usage": [
+              2,
+              1
+            ],
+            "max_gate_width": 2,
+            "two_qubit_gates": 1,
+            "multi_qubit_gates": 0,
+            "channel_count": 0,
+            "has_noise": false
+          }
+        },
+        "isError": false
+      },
+      "simulation": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"status\":\"success\",\"outputs\":[{\"kind\":\"probabilities\",\"wires\":[0,1],\"shots\":null,\"value\":[0.5,1.4901161193847656e-8,1.4901161193847656e-8,0.5]}],\"execution\":{\"execution_path\":\"local_statevector\",\"platform_provider\":\"pytorch_cpu\",\"simulation_engine\":\"pytorch_statevector\",\"mode\":\"statevector\",\"device\":\"cpu\",\"accuracy\":{\"version\":\"1.0\",\"metric\":\"not_measured\",\"value\":null,\"tolerance\":null,\"passed\":null}}}"
+          }
+        ],
+        "structuredContent": {
+          "status": "success",
+          "outputs": [
+            {
+              "kind": "probabilities",
+              "wires": [
+                0,
+                1
+              ],
+              "shots": null,
+              "value": [
+                0.5,
+                1.4901161193847656e-8,
+                1.4901161193847656e-8,
+                0.5
+              ]
+            }
+          ],
+          "execution": {
+            "execution_path": "local_statevector",
+            "platform_provider": "pytorch_cpu",
+            "simulation_engine": "pytorch_statevector",
+            "mode": "statevector",
+            "device": "cpu",
+            "accuracy": {
+              "version": "1.0",
+              "metric": "not_measured",
+              "value": null,
+              "tolerance": null,
+              "passed": null
+            }
+          }
+        },
+        "isError": false
+      },
+      "invalid": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"status\":\"error\",\"error\":{\"code\":\"INVALID_INPUT\",\"message\":\"Circuit payload is not valid JSON: Expecting value at line 1 column 1.\"}}"
+          }
+        ],
+        "structuredContent": {
+          "status": "error",
+          "error": {
+            "code": "INVALID_INPUT",
+            "message": "Circuit payload is not valid JSON: Expecting value at line 1 column 1."
+          }
+        },
+        "isError": false
+      }
+    }
+  },
+  "harness": {
+    "sessionId": "session-candidate-12f9a60e-fc5c-4f3a-8e77-467f8d8670f7",
+    "model": "local protocol fixture",
+    "externalModelTested": false,
+    "toolResults": 6,
+    "successes": 5,
+    "expectedInputRejections": 1,
+    "eventArtifactSha256": "1b1d7ead754bee8b015cc0f6dd91c3ef6e1860608a4b1527f6f599cd8a528651"
+  },
+  "developmentRegressions": [
+    {
+      "scope": "fixed development regression corpus",
+      "denominator": 10,
+      "passed": 10,
+      "scientificValidation": "not_evaluated",
+      "cases": [
+        {
+          "case": "qiskit-16594-single-qubit-003",
+          "level": 2,
+          "processInfidelity": 0,
+          "tolerance": 1e-12
+        },
+        {
+          "case": "qiskit-16594-single-qubit-003",
+          "level": 3,
+          "processInfidelity": 0,
+          "tolerance": 1e-12
+        },
+        {
+          "case": "qiskit-commutative-cancellation-001",
+          "level": 2,
+          "processInfidelity": 0,
+          "tolerance": 1e-12
+        },
+        {
+          "case": "qiskit-commutative-cancellation-001",
+          "level": 3,
+          "processInfidelity": 0,
+          "tolerance": 1e-12
+        },
+        {
+          "case": "qiskit-cp-small-angle-002",
+          "level": 2,
+          "processInfidelity": 5.787632595399828e-10,
+          "tolerance": 1e-8
+        },
+        {
+          "case": "qiskit-cp-small-angle-002",
+          "level": 3,
+          "processInfidelity": 5.787632595399828e-10,
+          "tolerance": 1e-8
+        },
+        {
+          "case": "oracle-controls",
+          "detectsHiddenCZ": true,
+          "ignoresGlobalPhase": true
+        },
+        {
+          "case": "compact-ecr-wire-false-positive",
+          "upstreamTier": 2,
+          "independentEquivalent": false
+        },
+        {
+          "case": "compact-iswap-wire-false-positive",
+          "upstreamTier": 2,
+          "independentEquivalent": false
+        },
+        {
+          "case": "adapter-independent-rejection",
+          "rejectedWrongUnitary": true
+        }
+      ]
+    },
+    {
+      "scope": "fixed development regression, phenomenological independent local depolarization; not a correlated Pauli burst or scaling-law validation",
+      "denominator": 5,
+      "passed": 5,
+      "scientificValidation": "not_evaluated",
+      "cases": [
+        {
+          "case": "memory-x-width-1",
+          "distance": 3,
+          "rounds": 3,
+          "burstStartRound": 1,
+          "burstDuration": 1,
+          "qubits": [
+            10
+          ],
+          "p0": 0.01,
+          "pTarget": 0.2,
+          "extraChannelProbability": 0.19256756756756757,
+          "excessExposure": 0.19,
+          "seed": 2718,
+          "shots": 4096,
+          "circuitSha256": "d63dc50c10db71a557a9f880e61a3a0fc038dcaab71a8b5b2da8121ce8ab5440",
+          "sharedSyndromeSha256": "6002c2549efefe145fec54eeb0430930149ac7dc6ff7ad2d23ee254405c2a187",
+          "baseline": {
+            "failures": 30,
+            "shots": 4096,
+            "rate": 0.00732421875,
+            "wilson95": [
+              0.0051352858767219015,
+              0.010436403775652586
+            ]
+          },
+          "informed": {
+            "failures": 30,
+            "shots": 4096,
+            "rate": 0.00732421875,
+            "wilson95": [
+              0.0051352858767219015,
+              0.010436403775652586
+            ]
+          },
+          "baselineOnlyFailures": 0,
+          "informedOnlyFailures": 0
+        },
+        {
+          "case": "memory-x-width-5",
+          "distance": 3,
+          "rounds": 3,
+          "burstStartRound": 1,
+          "burstDuration": 1,
+          "qubits": [
+            10,
+            3,
+            8,
+            12,
+            17
+          ],
+          "p0": 0.01,
+          "pTarget": 0.048,
+          "extraChannelProbability": 0.03851351351351351,
+          "excessExposure": 0.19,
+          "seed": 2718,
+          "shots": 4096,
+          "circuitSha256": "2e9c54232f8f9e51bfa9bb67df8e9f589639d973775c4a5543f00c74085e580b",
+          "sharedSyndromeSha256": "ffe74f0cf0ea4ae10bfbdf70a9cca08dc9fb761dba4d6dbd1007c28efdc3d9c4",
+          "baseline": {
+            "failures": 35,
+            "shots": 4096,
+            "rate": 0.008544921875,
+            "wilson95": [
+              0.006150578678096599,
+              0.011860229681779438
+            ]
+          },
+          "informed": {
+            "failures": 35,
+            "shots": 4096,
+            "rate": 0.008544921875,
+            "wilson95": [
+              0.006150578678096599,
+              0.011860229681779438
+            ]
+          },
+          "baselineOnlyFailures": 0,
+          "informedOnlyFailures": 0
+        },
+        {
+          "case": "memory-z-width-1",
+          "distance": 3,
+          "rounds": 3,
+          "burstStartRound": 1,
+          "burstDuration": 1,
+          "qubits": [
+            10
+          ],
+          "p0": 0.01,
+          "pTarget": 0.2,
+          "extraChannelProbability": 0.19256756756756757,
+          "excessExposure": 0.19,
+          "seed": 2718,
+          "shots": 4096,
+          "circuitSha256": "2ec4d7a5566841d1258c57cad9059cbbcfd37c5089ce1b536cdc80b6365a5f97",
+          "sharedSyndromeSha256": "e6db0f9fe278aecc30dc3df7191d73d70ec18c7c0a5533de49fbb148d9a20fb6",
+          "baseline": {
+            "failures": 23,
+            "shots": 4096,
+            "rate": 0.005615234375,
+            "wilson95": [
+              0.003744712895050349,
+              0.00841221056682197
+            ]
+          },
+          "informed": {
+            "failures": 23,
+            "shots": 4096,
+            "rate": 0.005615234375,
+            "wilson95": [
+              0.003744712895050349,
+              0.00841221056682197
+            ]
+          },
+          "baselineOnlyFailures": 0,
+          "informedOnlyFailures": 0
+        },
+        {
+          "case": "memory-z-width-5",
+          "distance": 3,
+          "rounds": 3,
+          "burstStartRound": 1,
+          "burstDuration": 1,
+          "qubits": [
+            10,
+            3,
+            8,
+            12,
+            17
+          ],
+          "p0": 0.01,
+          "pTarget": 0.048,
+          "extraChannelProbability": 0.03851351351351351,
+          "excessExposure": 0.19,
+          "seed": 2718,
+          "shots": 4096,
+          "circuitSha256": "6c35e1907be1ced342eed3183bdd277f08083befbb1df5cf909ab27ff6f7a8a8",
+          "sharedSyndromeSha256": "a9b5f056b6b53db2ea66523a3139bf23b25ae67c0c538e609e9a036b9ac77d45",
+          "baseline": {
+            "failures": 41,
+            "shots": 4096,
+            "rate": 0.010009765625,
+            "wilson95": [
+              0.0073873457194077235,
+              0.013550405089470172
+            ]
+          },
+          "informed": {
+            "failures": 41,
+            "shots": 4096,
+            "rate": 0.010009765625,
+            "wilson95": [
+              0.0073873457194077235,
+              0.013550405089470172
+            ]
+          },
+          "baselineOnlyFailures": 0,
+          "informedOnlyFailures": 0
+        },
+        {
+          "case": "stim-dem-tags-comments-and-invalid-eof",
+          "taggedRoundTrip": true,
+          "pymatchingDetectors": 1,
+          "unfinishedTagEOF": "bounded_child_timeout_known_upstream_defect"
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "QCut wire/sample/consolidated cuts are outside this adapter",
+    "Compact upstream tiers are not independently trusted; unverified candidates remain unverified",
+    "cqlib gradient/amplitude/training paths are excluded; Rust beta SDK and audited source adaptation required",
+    "Stim 1.16.0 unfinished tag EOF is a known parser defect, observed only in a bounded subprocess",
+    "Four local-burst samples showed no difference between baseline and informed decoders",
+    "Graphix/PyZX/Symmer/PauLie are preserved from main; their science is outside this candidate evidence set"
+  ],
+  "independentReview": "candidate-domain-review-2026-09-20.json",
+  "sourceMap": {
+    ".agents/capability-packages.yml": "44ac9ff51a48a1b1e450a523fd0c256704efb984b70a9b2d639d0e79dc20d35b",
+    ".agents/skills/compact-optimization/SKILL.md": "acf758afde90bfdd71b529f50ecdfabd8b082f4865dbe8b0a4c56ea836f30e1f",
+    ".agents/skills/compact-optimization/mcp/bridge.py": "9fe7f051746376afdd58501d73f78385e8cd15247a7be2e9994d8da1a24dd0c8",
+    ".agents/skills/compact-optimization/mcp/contracts.mjs": "81078d12b8af9d955196f2dc4c84da815da25d68b2979a787fe5b260f090f582",
+    ".agents/skills/compact-optimization/mcp/server.mjs": "6004276e7f60998f44862cce74ffa1450dc9ecc2dcef57384208f8f07c836db6",
+    ".agents/skills/compact-optimization/pyproject.toml": "0f912c54ba84d22c7bf640072bba1cf10c27ae0a4c643c0b319d23e93b32e742",
+    ".agents/skills/compact-optimization/uv.lock": "b4f19c3065bc51279d0ed2f4c0414b3ac09f52ad202c2f36c09430070bb11dbe",
+    ".agents/skills/cqlib-kernel/SKILL.md": "36cce327150f6b3e25d7a7b342b5d52514bcca618613773c5e841e0a06337c52",
+    ".agents/skills/cqlib-kernel/mcp/bridge.py": "79e627266cc0158d07b103e418486b678b72a82de14645a11d8f82eaf8c4e399",
+    ".agents/skills/cqlib-kernel/mcp/contracts.mjs": "e109d99ee6869685f6a0c72da9123caac21a57ffb3edf7b33462d3a306cbb0e5",
+    ".agents/skills/cqlib-kernel/mcp/server.mjs": "8a050228182f70e2554bd5cfd2c817636bfb7c70a74a8176768e6f7b39e674df",
+    ".agents/skills/cqlib-kernel/pyproject.toml": "e29a553a969aab5aed60baa991ec7972d36de98e241b69fef957bef821f785cf",
+    ".agents/skills/cqlib-kernel/upstream/LICENSE": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+    ".agents/skills/cqlib-kernel/upstream/README.md": "d855d6d6c3811feb07961b9af3a7c4919423ff160b353fe098ff2238d8b0b525",
+    ".agents/skills/cqlib-kernel/upstream/compatibility.patch": "aff91f0e3f88d34eb39a18f557797baab85447832deca93295f65cdc0d4df712",
+    ".agents/skills/cqlib-kernel/upstream/cqlib_qml/__init__.py": "c2ff038d26648c440986c486c03d81d5a28a15d13273ff472029f5a5964944c5",
+    ".agents/skills/cqlib-kernel/upstream/cqlib_qml/algorithms/QKM.py": "46cb58eac49b3d969c94d9cfa69c84f7bd0f15b3f3927ea311f0a48e6aa2131f",
+    ".agents/skills/cqlib-kernel/upstream/cqlib_qml/algorithms/QSVM.py": "0ae071969584e1955031dd8dce4e1349482e7d935d832a48049a2a1e2ab969fc",
+    ".agents/skills/cqlib-kernel/upstream/cqlib_qml/algorithms/__init__.py": "d3e505372bdabe2321933daa448406e41645e3c10f02ee0dbb6344844dd7eecf",
+    ".agents/skills/cqlib-kernel/upstream/cqlib_qml/encoder/ZZFeature.py": "d3bfb2ce99d5b248b333b529d0440a9b3b2d2dd0054bf5a982e3679090195700",
+    ".agents/skills/cqlib-kernel/upstream/cqlib_qml/encoder/__init__.py": "3af7d56c995983d7f24d60cc0c0635b717b11c9e3b72c6aaf78b220118fdd0df",
+    ".agents/skills/cqlib-kernel/upstream/cqlib_qml/encoder/amplitude.py": "ebdaefcccef6c8e8ee1dbc7faeaaeb21790d4c39ece7d840fc638fe2d8353d1c",
+    ".agents/skills/cqlib-kernel/upstream/cqlib_qml/encoder/angle.py": "8c9e8e9ee9481647ec3566cfa44c89e7e05a7a93b9dff802d9b99946484d7cf9",
+    ".agents/skills/cqlib-kernel/upstream/provenance.json": "d99b7a4775854de7679535b49cadf49d5575e5a86ce79490f3b91f00130174c7",
+    ".agents/skills/cqlib-kernel/uv.lock": "82a7f162a55fa2a213f86eb939247cf3dfe24c0bd82f81f7af3d4078c41c4542",
+    ".agents/skills/flagquantum-workbench/SKILL.md": "0492cf4b59370ad9b24016b33a9fb926fd25a0735080d1b7d6fb3adfe129f9e0",
+    ".agents/skills/flagquantum-workbench/mcp/server.mjs": "5a1315fb7864fe0831c117694fdea651c75102af642984d8dfb85ad6a6821754",
+    ".agents/skills/flagquantum-workbench/mcp/upstream-tools.json": "aacbd5c96d2f3a4c47b1d104ada4b7853b49e91b519e5fbd031c4aa62e50e30b",
+    ".agents/skills/flagquantum-workbench/pyproject.toml": "df8b1707fa2f48412c435420052406fad32598d557a0a70b2b4fd19dc19182bf",
+    ".agents/skills/flagquantum-workbench/uv.lock": "e9212ef9156fa2fd0abedc2567af8fe845cfabecfc2cd3aa881d6f89518b2664",
+    ".agents/skills/openqarp-excited-states/SKILL.md": "9a8064cbfbdf2e9babe67fd65986c09b0ffabc13c391a477666af5882eaa7469",
+    ".agents/skills/openqarp-excited-states/mcp/bridge.py": "594a1f4e0ca3bf10cebc2ee0b696bfd19dfba99c5b5294cbab35ca36c2d97239",
+    ".agents/skills/openqarp-excited-states/mcp/contracts.mjs": "ee59e1769e2c3a5931b86ca9aed2e864ebea78fc8eb4ea320b587aab48cf0236",
+    ".agents/skills/openqarp-excited-states/mcp/server.mjs": "a0793c8c888faefa380b5fbf70a0828a3fc59107e2edc5d327657458d025ec1d",
+    ".agents/skills/openqarp-excited-states/pyproject.toml": "f49c17bd383b138353650a13e7fab231b51c639dc5aa884e0f6a59c11d3e761f",
+    ".agents/skills/openqarp-excited-states/uv.lock": "0f93f30d04b2319100138c0c6dc91c14326758934090d0e7607672cedb8646c4",
+    ".agents/skills/qcut-knitting/SKILL.md": "0027a6e3e20486b0bde6a9ab8bee332fe857a5601de66b752c86cc02a03dcece",
+    ".agents/skills/qcut-knitting/mcp/bridge.py": "54187f33bb02c6aa1162d14928b8bda16bcf403b564b099fdc1c8e046af78ea7",
+    ".agents/skills/qcut-knitting/mcp/contracts.mjs": "c8cafaf50a0863db9dc3fd7e72a7f6ee74b02437dc71fbccdd35b071be3fb72c",
+    ".agents/skills/qcut-knitting/mcp/server.mjs": "6c2650bde6e182bbf7e66c19856d2bb51591524c9c17ff4ca3efdd1a54202eb8",
+    ".agents/skills/qcut-knitting/pyproject.toml": "5dede6571a7fbfef5a9fd43e45af195fbd97ed98a9d897491467f110e8b872d7",
+    ".agents/skills/qcut-knitting/uv.lock": "8de73d5490473537d261b8807810bc1c5004df042c5b02b6a91dbc9d54b1c799",
+    ".agents/skills/qec-memory-experiment/uv.lock": "7ce22952043711f23b4b65a2a0b85f3e48c096a1567ad2894fbcc64463943823",
+    "benchmarks/candidate-libraries/README.md": "570e3a395ac9c8cf9a6c77ac4b7e975b37c312fd70ca9af9a8386ace47042444",
+    "benchmarks/candidate-libraries/cleitonforge/LICENSE": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+    "benchmarks/candidate-libraries/cleitonforge/provenance.json": "ea82af0a599b913f7e765be51ce4b0145c3b7215bcc74838c49ecd1312390a3b",
+    "benchmarks/candidate-libraries/cleitonforge/qiskit-16594-single-qubit-003.json": "92e5f76660f9a26e762f011d49202ca8f19e35798ed5743c96004970e0b603ad",
+    "benchmarks/candidate-libraries/cleitonforge/qiskit-commutative-cancellation-001.json": "8a0909dfff5ecca0c4e0afcadf26bb2ea94fc3d0861f4dbc598ca02075efa573",
+    "benchmarks/candidate-libraries/cleitonforge/qiskit-cp-small-angle-002.json": "71576ddb4532dcde8be95f680e710a3e66875def077a2aea6a95812435788f8a",
+    "benchmarks/candidate-libraries/compiler_regressions.py": "f1b28151d833d3a29ca5fbeddba2e7b63b6d6726b628a58511c82daab7fb91b1",
+    "benchmarks/candidate-libraries/qec-burst-scaling/LICENSE": "b1f289ee4305d33726c151bcca062c97d6ffad221e12ce4460f9b27b1d09f209",
+    "benchmarks/candidate-libraries/qec-burst-scaling/circuit.py": "999ee0da96827d6f24cb00581febf4cd454bfd30ea253a4310fc19118c1afefb",
+    "benchmarks/candidate-libraries/qec-burst-scaling/provenance.json": "8b055a9467e981b583b948d305d7ea36bb99fc098fa6fd37dfe2fdbf0c1e5312",
+    "benchmarks/candidate-libraries/qec-burst-scaling/statistics.py": "a093bb3ee0ada2aeda45ebd3ed91e2b52a2ab65baeef8892460424fb4ea1f719",
+    "benchmarks/candidate-libraries/qec_burst_regression.py": "e5f3a3aa426984858bcc2c3833f34e9d8b76684595829e7645d7152fb26e5a58",
+    "runtime/openquantum/agent-presets/openquantum/agent.cordis.yml": "ef9587012b3bee1ad9827deb1a10a6172f4e3c14bb531ae13961117a901a366c",
+    "scripts/setup-paper-tools.mjs": "40d7ec150f88e01b50d93d8e24fa0a888c79d6d640700b36c7badde1abb2ce89",
+    "scripts/summarize-candidate-evidence.mjs": "9a7381d1e2e551cf20e65a701b870186a9badd16833e9f71d6cbe0f14cf5f7d4",
+    "src/lib/bounded-science-mcp.mjs": "83f673d3047bfcaf08a8376ab517444c5bd5fb023fe279ca808d371f8080d136",
+    "src/lib/candidate-circuit.mjs": "eeae130b0c5b10ea75485c7305642caf6541ba750fca4fff08c5bd3bedbd4f18",
+    "src/lib/candidate_science.py": "aa34422c682e663bfccaf511e0a407d98b9b69b831b140457141421e48fe1fe6",
+    "src/lib/local-compute-policy.mjs": "b1738bf5155bea1925f3a4d99ee057fcd5b1d785257eee399c4478e22f63839b",
+    "src/lib/local-json-process.mjs": "6f34a45e9fc3f8d8cbf7572fbd720c39fe37e50669131bc73c52831f846c19ac",
+    "src/lib/science-execution.mjs": "f13aa0a2bb55c3b24fa59840280654de1ea34c8b02d261005f49e1d0df9e1ac8",
+    "tests/candidate-tools-contracts.test.mjs": "dcf0fda59f8cbc23193efb501ca2ddb7fc560d180919b6813333f3b26f19fc86",
+    "tests/candidate-tools-live.test.mjs": "9af826a573199e0cfde428591c6ca86d21c0ed3fc3d8bdd914a99c347d03f332",
+    "tests/candidate-upstream-regressions.test.mjs": "118ea1ec8a426e1db3086477f9433cb513a6d9b78a3773eb4ab2f0ec10896e09",
+    "tests/fixtures/candidate-tools.mjs": "f7596da02b760a0301b6c20e9ac39d46dc7b1c7f760959233612ddd19bab04fa",
+    "tests/flagquantum-contracts.test.mjs": "a8bebef56c4bc0af576f22a7f2c6c155f15f3692b1ef8935eb4b336f962265a4",
+    "tests/harness-candidate-tools.test.mjs": "e84b1370d3be88cc59b514c838c91dbcc088e7452ac241112de4038b24d0e72e"
+  }
+}

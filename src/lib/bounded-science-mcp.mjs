@@ -61,6 +61,7 @@ export async function serveScienceTool({ entrypoint, id, definition, runtime = "
   const env = localComputeEnvironment({
     ...Object.fromEntries(allowed.filter((key) => process.env[key]).map((key) => [key, process.env[key]])),
     UV_PROJECT_ENVIRONMENT: path.join(projectRoot, ".openquantum/python-envs", id),
+    CARGO_HOME: path.join(projectRoot, ".openquantum/cargo-cache"),
     MPLCONFIGDIR: path.join(projectRoot, ".openquantum/cache", `${id}-matplotlib`),
     PYTHONNOUSERSITE: "1", PYTHONDONTWRITEBYTECODE: "1", MPLBACKEND: "Agg",
     JULIA_NUM_PRECOMPILE_TASKS: "2", JULIA_PKG_PRECOMPILE_AUTO: "0",

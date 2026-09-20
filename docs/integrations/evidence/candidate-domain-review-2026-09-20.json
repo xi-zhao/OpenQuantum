@@ -1,0 +1,175 @@
+{
+  "reviewedSourceSha256": {
+    ".agents/skills/cqlib-kernel/mcp/contracts.mjs": "e109d99ee6869685f6a0c72da9123caac21a57ffb3edf7b33462d3a306cbb0e5",
+    ".agents/skills/cqlib-kernel/mcp/bridge.py": "79e627266cc0158d07b103e418486b678b72a82de14645a11d8f82eaf8c4e399",
+    ".agents/skills/openqarp-excited-states/mcp/contracts.mjs": "ee59e1769e2c3a5931b86ca9aed2e864ebea78fc8eb4ea320b587aab48cf0236",
+    ".agents/skills/openqarp-excited-states/mcp/bridge.py": "594a1f4e0ca3bf10cebc2ee0b696bfd19dfba99c5b5294cbab35ca36c2d97239",
+    "src/lib/candidate_science.py": "aa34422c682e663bfccaf511e0a407d98b9b69b831b140457141421e48fe1fe6"
+  },
+  "sourceProvenanceChecks": [
+    {
+      "path": "cqlib_qml/algorithms/QKM.py",
+      "adaptedDigestMatched": true,
+      "upstreamDigestMatched": true,
+      "onlyDeclaredPatch": true
+    },
+    {
+      "path": "cqlib_qml/algorithms/QSVM.py",
+      "adaptedDigestMatched": true,
+      "upstreamDigestMatched": true,
+      "onlyDeclaredPatch": true
+    },
+    {
+      "path": "cqlib_qml/encoder/angle.py",
+      "adaptedDigestMatched": true,
+      "upstreamDigestMatched": true,
+      "onlyDeclaredPatch": true
+    },
+    {
+      "path": "cqlib_qml/encoder/amplitude.py",
+      "adaptedDigestMatched": true,
+      "upstreamDigestMatched": true,
+      "onlyDeclaredPatch": true
+    },
+    {
+      "path": "cqlib_qml/encoder/ZZFeature.py",
+      "adaptedDigestMatched": true,
+      "upstreamDigestMatched": true,
+      "onlyDeclaredPatch": true
+    },
+    {
+      "path": "cqlib_qml/__init__.py",
+      "adaptedDigestMatched": true
+    },
+    {
+      "path": "cqlib_qml/algorithms/__init__.py",
+      "adaptedDigestMatched": true
+    },
+    {
+      "path": "cqlib_qml/encoder/__init__.py",
+      "adaptedDigestMatched": true
+    }
+  ],
+  "licenseTextEquivalent": true,
+  "cases": [
+    {
+      "name": "multiclass_negative_angles_and_test_label_isolation",
+      "predictions": [
+        -3,
+        4,
+        9
+      ],
+      "maxKernelError": 7.771561172376096e-16,
+      "accuraciesBeforeAfterLabelOnlyChange": [
+        1.0,
+        0.0
+      ]
+    },
+    {
+      "name": "three_state_mixed_Pauli_full_matrix_oracle",
+      "energies": [
+        -0.018534425873616797,
+        0.6624523799855171,
+        1.937547620014483
+      ],
+      "exact": [
+        -0.018534425873616724,
+        0.6624523799855173,
+        1.937547620014483
+      ],
+      "maxIndependentEnergyError": 4.440892098500626e-16,
+      "optimizerSuccess": [
+        true,
+        true,
+        true
+      ],
+      "maxVariance": 4.32093254694927e-17,
+      "penalty": 4.900000000000001
+    },
+    {
+      "name": "identity_degeneracy",
+      "energies": [
+        7.499999999999998,
+        7.5
+      ],
+      "reference": {
+        "mode": "required",
+        "status": "computed",
+        "method": "Independent NumPy Pauli eigenspectrum",
+        "reason": "Independent reference computed for this input."
+      },
+      "penalty": 1.0000000000000002,
+      "optimizerSuccess": [
+        true,
+        true
+      ]
+    },
+    {
+      "name": "above_auto_reference_budget_zero_operator",
+      "energies": [
+        0.0
+      ],
+      "reference": {
+        "mode": "auto",
+        "status": "not_run",
+        "method": "Independent NumPy Pauli eigenspectrum",
+        "reason": "Auto dense diagonalization selects up to 10 qubits; required requests the larger reference at caller cost."
+      },
+      "penalty": 1.0000000000000002,
+      "optimizerSuccess": [
+        true
+      ]
+    }
+  ],
+  "scope": "Independent domain review of implemented cqlib kernel/VQD; numerical checks are not final scientific Acceptance.",
+  "finalSourceAttributionReview": {
+    "sourceManifestSha256": "d99b7a4775854de7679535b49cadf49d5575e5a86ce79490f3b91f00130174c7",
+    "declaredSourceAndAlgorithmEquivalence": true,
+    "modifiedSourceNoticesPresent": true,
+    "patchIncludesNotices": true,
+    "files": [
+      {
+        "path": "cqlib_qml/algorithms/QKM.py",
+        "sha256": "46cb58eac49b3d969c94d9cfa69c84f7bd0f15b3f3927ea311f0a48e6aa2131f",
+        "verified": true
+      },
+      {
+        "path": "cqlib_qml/algorithms/QSVM.py",
+        "sha256": "0ae071969584e1955031dd8dce4e1349482e7d935d832a48049a2a1e2ab969fc",
+        "verified": true
+      },
+      {
+        "path": "cqlib_qml/encoder/angle.py",
+        "sha256": "8c9e8e9ee9481647ec3566cfa44c89e7e05a7a93b9dff802d9b99946484d7cf9",
+        "verified": true
+      },
+      {
+        "path": "cqlib_qml/encoder/amplitude.py",
+        "sha256": "ebdaefcccef6c8e8ee1dbc7faeaaeb21790d4c39ece7d840fc638fe2d8353d1c",
+        "verified": true
+      },
+      {
+        "path": "cqlib_qml/encoder/ZZFeature.py",
+        "sha256": "d3bfb2ce99d5b248b333b529d0440a9b3b2d2dd0054bf5a982e3679090195700",
+        "verified": true
+      },
+      {
+        "path": "cqlib_qml/__init__.py",
+        "sha256": "c2ff038d26648c440986c486c03d81d5a28a15d13273ff472029f5a5964944c5",
+        "verified": true
+      },
+      {
+        "path": "cqlib_qml/algorithms/__init__.py",
+        "sha256": "d3e505372bdabe2321933daa448406e41645e3c10f02ee0dbb6344844dd7eecf",
+        "verified": true
+      },
+      {
+        "path": "cqlib_qml/encoder/__init__.py",
+        "sha256": "3af7d56c995983d7f24d60cc0c0635b717b11c9e3b72c6aaf78b220118fdd0df",
+        "verified": true
+      }
+    ],
+    "numericalRerunRequired": false,
+    "reason": "Only source attribution comments and corresponding digests changed after numerical review."
+  }
+}

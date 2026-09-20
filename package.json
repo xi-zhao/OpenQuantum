@@ -77,7 +77,11 @@
     "locales:sync": "node scripts/sync-ui-locales.mjs --write",
     "check": "npm run lint && npm run locales:check && npm run capability:conformance && npm run test:p1 && npm run harness:config",
     "desktop:setup": "node scripts/setup-desktop.mjs",
-    "test:quantum-upgrade:live": "node --test tests/quantum-upgrade-live.test.mjs"
+    "test:quantum-upgrade:live": "node --test tests/quantum-upgrade-live.test.mjs",
+    "capability:candidates:setup": "node scripts/setup-paper-tools.mjs qcut-knitting compact-optimization openqarp-excited-states cqlib-kernel flagquantum-workbench",
+    "capability:candidates:test": "node --test tests/candidate-tools-contracts.test.mjs tests/flagquantum-contracts.test.mjs",
+    "capability:candidates:live": "OPENQUANTUM_REAL_CANDIDATE_TOOLS=1 node --test --test-concurrency=1 tests/candidate-tools-live.test.mjs tests/flagquantum-contracts.test.mjs tests/harness-candidate-tools.test.mjs",
+    "benchmark:candidate-regressions": "OPENQUANTUM_REAL_CANDIDATE_TOOLS=1 node --test tests/candidate-upstream-regressions.test.mjs"
   },
   "dependencies": {
     "@deepseek-ai/dsh": "0.1.5-rc.1",

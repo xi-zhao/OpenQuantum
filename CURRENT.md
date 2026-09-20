@@ -96,6 +96,16 @@
 - README 按功能介绍能力；模型、输入输出与资源设置见[本地计算说明](docs/integrations/SCALABLE_BRIDGES.md)。本地算例与版本作为补充材料，见[核验记录](docs/integrations/evidence/local-compute-scale-2026-09-15.json)。
 - 合并后全仓 `npm run check` 通过；另运行 18 个旧适配输入、7 个资源配置输入，以及真实 Harness 的四项调用、预期错误和会话重读。Harness 使用本地模型协议替身；未调用外部模型或真实硬件。本次资源调整不改变各能力的科学验收等级。
 
+## 候选库接入与主线合并（2026-09-20）
+
+- QCut 门切割、Compact 线路优化、OpenQARP VQD 新增默认开启的 Skill 与 MCP Tool；cqlib-qml angle 核适配及 FlagQuantum 原生 MCP 新增可选入口，默认关闭。
+- 四个适配 Tool 与一个上游 MCP 已运行真实依赖、实际调用及本地模型协议替身驱动的 Harness 会话；完成独立科学复审。L1 数值结果不等于最终科学 Acceptance。
+- CleitonForge 回归样本与 qec-burst-scaling 实验模块只进入开发证据；固定 Stim 的未闭合 tag EOF 缺陷通过短超时子进程隔离并单列，不宣称修复上游。
+- [接入说明](docs/integrations/CANDIDATE_LIBRARIES.md)及[版本化证据](docs/integrations/evidence/candidates-2026-09-20.json)记录锁定版本、使用入口和验收边界。基于 `e92bf0b`（v0.5.1）合并；主线已有 Graphix/PyZX/Symmer/PauLie 能力保留，原工作树未提交改动未混入。
+- 合并适配主线的资源继承规则：四个计算 Tool 的 `execution` 缺省继承部署配置，QCut 可省略线程数，FlagQuantum 启动器保留用户数值线程/设备设置；新增连接超时沿用主线。当前目录为 32 个 Skill、34 个 MCP 连接和 5 个原生量子 Tool。
+- 合并树在本机 macOS 通过完整 `npm run check`、15 个新增数值输入、FlagQuantum 实际调用、10+5 项开发回归；真实 Harness 会话完成五项成功调用及一次预期拒绝。首次与全仓并行时 Harness HTTP 请求超时，单独复测通过，记录保留在本地证据目录。
+- 已合并到本地 main；未 push、发布或修改运行中的 Host，未调用外部模型或提交硬件作业。部署仍需按相应环境准备依赖并重启 Harness。
+
 ## 下一唯一里程碑
 
 收口当前模型接入验收：对原执行任务已经选定的模型逐项归档“文本生成、Tool Calling、科研主动作、证据完整性”的结果与未验证项。该任务仍由原执行会话负责；本页不启动第二份验收。

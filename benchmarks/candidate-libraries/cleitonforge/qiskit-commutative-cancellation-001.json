@@ -1,0 +1,26 @@
+{
+  "id": "qiskit-commutative-cancellation-001",
+  "target": "Qiskit (qiskit-terra) transpiler",
+  "target_version": "2.5.0 (latest at discovery, 2026-07-16)",
+  "component": "qiskit.transpiler.passes.CommutativeCancellation (default at optimization_level >= 2)",
+  "severity": "silent wrong answer — output distribution changes, no error raised",
+  "status": "reported 2026-07-16 — https://github.com/Qiskit/qiskit/issues/16594",
+  "found_by": "cforge-fuzz campaign via tools/fuzz_qiskit.py, N1 amplitude oracle, seed 42; 10/3000 random circuits hit it, shrinker reduced all to the same 3-gate core",
+  "num_qubits": 2,
+  "gates": [
+    {"gate": "sxdg", "qubits": [1], "params": []},
+    {"gate": "sx", "qubits": [0], "params": []},
+    {"gate": "sxdg", "qubits": [1], "params": []}
+  ],
+  "qasm2": "OPENQASM 2.0;\ninclude \"qelib1.inc\";\nqreg q[2];\nsxdg q[1];\nsx q[0];\nsxdg q[1];\n",
+  "expected": "sxdg . sxdg = (SX-dagger)^2 = X exactly, so qubit 1 must end in |1> from |0> with probability 1",
+  "observed": "CommutativeCancellation deletes both sxdg gates; qubit 1 stays |0>. transpile(qc, optimization_level=3) counts: {'00','01'} instead of {'10','11'}",
+  "standalone_reproducer_python": "from qiskit import QuantumCircuit\nfrom qiskit.transpiler import PassManager\nfrom qiskit.transpiler.passes import CommutativeCancellation\nfrom qiskit.quantum_info import Operator\nqc = QuantumCircuit(2)\nqc.sxdg(1); qc.sx(0); qc.sxdg(1)\nout = PassManager([CommutativeCancellation()]).run(qc)\nprint(out)                              # only sx(0) survives\nprint(Operator(qc).equiv(Operator(out)))  # False\n",
+  "notes": [
+    "optimization_level 0 and 1 are correct; 2 and 3 are wrong (pass enabled at O2+)",
+    "adjacent-in-list sxdg;sxdg on the same qubit is handled CORRECTLY (merged to rx) — the bug needs an interleaved instruction on another qubit, then the pair is treated as inverse-cancelling",
+    "sx;sx is left untouched, so the self-inverse treatment is asymmetric and specific to sxdg",
+    "distinct from open issue Qiskit/qiskit#5878 (2021): that one needs a cz and commutation through it; this one has no two-qubit gate at all",
+    "n1_amplitude_distance 7.071e-01, probability-level distance 1.0 on qubit 1 — visible in counts, NOT a theorem-class bug"
+  ]
+}

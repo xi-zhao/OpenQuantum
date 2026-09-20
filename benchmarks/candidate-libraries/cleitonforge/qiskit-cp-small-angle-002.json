@@ -1,0 +1,46 @@
+{
+    "id": "qiskit-cp-small-angle-002",
+    "target": "Qiskit (qiskit-terra) transpiler",
+    "target_version": "2.5.0 (latest at discovery, 2026-07-16)",
+    "component": "optimization_level>=2 two-qubit resynthesis (Consolidate Blocks / unitary synthesis)",
+    "severity": "none - documented behaviour within stated numerical tolerance",
+    "status": "verified 2026-09-15, NOT REPORTED - deliberate: finding does not survive measurement",
+    "found_by": "cforge-fuzz Qiskit campaign, N1 amplitude oracle, seed 777",
+    "num_qubits": 2,
+    "gates": [
+        {
+            "gate": "cp",
+            "qubits": [
+                0,
+                1
+            ],
+            "params": [
+                9.623000288527805e-05
+            ]
+        }
+    ],
+    "qasm2": "OPENQASM 2.0;\ninclude \"qelib1.inc\";\nqreg q[2];\ncp(0.000096230003) q[0],q[1];\n",
+    "expected": "cp(theta) = diag(1,1,1,e^{i*theta}); exact decomposition uses 2 CX",
+    "observed": "at optimization_level 2 and 3, cp(theta) for |theta| below sqrt(2)e-4 is synthesized as two rz gates with zero CX. Levels 0 and 1 keep both CX exactly. Process infidelity at theta=9.623e-05 is 5.788e-10. Independent of approximation_degree (same result for 1.0 and None).",
+    "reproducer_python": "import numpy as np\nfrom qiskit import QuantumCircuit, transpile\nfrom qiskit.quantum_info import Operator\nqc = QuantumCircuit(2); qc.cp(9.623e-05, 0, 1)\nt = transpile(qc, basis_gates=['rz','sx','x','cx'], optimization_level=3, approximation_degree=1.0)\nprint([i.operation.name for i in t.data])   # ['rz','rz'] — no cx\n",
+    "notes": [
+        "CORRECTIONS to the original entry, both found on re-measurement 2026-09-15:",
+        "  (1) it fires at optimization_level 2 as well, not only 3;",
+        "  (2) the error is 5.8e-10 process infidelity, not the 2.4e-5 quoted. That figure was an N1 amplitude distance, a different metric, and quoting it here overstated the finding.",
+        "DECISION: not reported. The original entry made reporting conditional on the Qiskit maintainers showing interest in edge cases on entry 001. They confirmed and fixed #16594, which is not the same thing. The condition was never met.",
+        "Kept in the zoo as a negative result. A campaign that only records what it reports is not an honest record of what it found."
+    ],
+    "verification_2026_09_15": {
+        "qiskit_versions": [
+            "2.5.0",
+            "2.6.0.dev0+dca1d59 (main)"
+        ],
+        "still_reproduces": true,
+        "threshold_theta": 0.00014142135,
+        "threshold_note": "exactly sqrt(2) x 1e-4; root cause NOT traced, the decision lives in the Rust accelerate crate",
+        "infidelity_single_gate": 5.788e-10,
+        "accumulation_same_pair": "does NOT accumulate. Ten cp(1e-4) on the same pair are consolidated first, the total angle clears the threshold, and both CX are kept with exact fidelity. The mechanism that could amplify this is the one Qiskit handles correctly.",
+        "accumulation_distinct_pairs": "linear at 6.25e-10 per gate: 4.375e-09 across a 7-gate chain. Reaching 1e-3 infidelity would take roughly 1.6 million such gates.",
+        "documentation": "transpile() docstring states approximation_degree=1.0 means 'no approximation (up to numerical tolerance)'. 6e-10 is numerical tolerance under any reasonable reading."
+    }
+}

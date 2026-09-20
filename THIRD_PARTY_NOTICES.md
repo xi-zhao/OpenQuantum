@@ -62,3 +62,22 @@
   determine GPL combined-distribution obligations. Distributors must preserve
   notices and satisfy applicable corresponding-source requirements.
 - Scope and validation: [Mitiq integration](docs/integrations/MITIQ.md).
+
+
+## Candidate quantum libraries (2026-09-20)
+
+| Upstream | Fixed source | License and use |
+| --- | --- | --- |
+| [QCut](https://github.com/FiQCI/QCut) | 2.2.0 | Apache-2.0; unmodified locked dependency, local gate-cutting adapter |
+| [Compact](https://github.com/Q-PROOF/Compact) | compactq 0.2.1 | MIT; unmodified locked dependency, independently checked optimization |
+| [OpenQARP](https://github.com/OpenQARP/openqarp) | 0.1.0 | Apache-2.0; preserve upstream NOTICE and LICENSES_bundled when redistributing the dependency |
+| [cqlib-qml](https://github.com/cq-lib/cqlib-qml) | b3aeb784cf50150f7bb39c86a3a16e397d52ea50 | Apache-2.0; five kernel/encoder files adapted in `.agents/skills/cqlib-kernel/upstream`, with LICENSE, modified-file notices, compatibility patch and original/adapted SHA records |
+| [cqlib](https://github.com/cq-lib/cqlib) | 1d0a2c49ac32712d995f46147dfc5e3c4f4ac8e6 / 1.4.0b1 | Apache-2.0; pinned Rust SDK build in an optional isolated environment |
+| [FlagQuantum MCP](https://github.com/FlagQuantum/mcp-servers) | 0.3.0, SDK 0.2.0 | Apache-2.0; unmodified optional upstream MCP, locked transitive dependencies |
+| [CleitonForge](https://github.com/cleitonaugusto/CleitonForge) | 331b6086d56a307c6a68f09177c7b37fc098b440 | Apache-2.0; three unmodified bug-zoo JSON files and LICENSE under `benchmarks/candidate-libraries/cleitonforge` |
+| [qec-burst-scaling](https://github.com/AlanPai777/qec-burst-scaling) | 5705366a9bd3d13369fde2b6d1cd6915e0ee0d51 | MIT; unmodified circuit/statistics modules and LICENSE under `benchmarks/candidate-libraries/qec-burst-scaling` |
+
+The root MIT license does not replace these component licenses. Source manifests distinguish
+unmodified dependencies, adapted code, copied regression inputs and conceptual references.
+No code or data from Dense-Evolution, polypus, stresscf or hardware CAD projects is redistributed here.
+The independent numerical checks are local observations, not formal verification or scientific acceptance.

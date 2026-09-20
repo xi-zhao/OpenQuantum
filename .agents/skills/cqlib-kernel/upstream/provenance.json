@@ -1,0 +1,45 @@
+{
+  "repository": "https://github.com/cq-lib/cqlib-qml",
+  "revision": "b3aeb784cf50150f7bb39c86a3a16e397d52ea50",
+  "license": "Apache-2.0",
+  "scope": "Kernel-only source adaptation; five upstream files, narrowed package initializers and McGate -> MCGate import aliases. Only classical AngleEncoder is exposed.",
+  "files": {
+    "cqlib_qml/algorithms/QKM.py": {
+      "upstreamPath": "cqlib_qml/algorithms/QKM.py",
+      "upstreamSha256": "00cf9129febdedabdcc583631db43f9e5923d8b850f77fbffe8bb4cc0200ae37",
+      "sha256": "46cb58eac49b3d969c94d9cfa69c84f7bd0f15b3f3927ea311f0a48e6aa2131f"
+    },
+    "cqlib_qml/algorithms/QSVM.py": {
+      "upstreamPath": "cqlib_qml/algorithms/QSVM.py",
+      "upstreamSha256": "0ae071969584e1955031dd8dce4e1349482e7d935d832a48049a2a1e2ab969fc",
+      "sha256": "0ae071969584e1955031dd8dce4e1349482e7d935d832a48049a2a1e2ab969fc"
+    },
+    "cqlib_qml/encoder/angle.py": {
+      "upstreamPath": "cqlib_qml/encoder/angle.py",
+      "upstreamSha256": "8c9e8e9ee9481647ec3566cfa44c89e7e05a7a93b9dff802d9b99946484d7cf9",
+      "sha256": "8c9e8e9ee9481647ec3566cfa44c89e7e05a7a93b9dff802d9b99946484d7cf9"
+    },
+    "cqlib_qml/encoder/amplitude.py": {
+      "upstreamPath": "cqlib_qml/encoder/amplitude.py",
+      "upstreamSha256": "0903d4f3fe7e766a503050145e83a245a7cff62a834701e9ac6ae18fba48fc9c",
+      "sha256": "ebdaefcccef6c8e8ee1dbc7faeaaeb21790d4c39ece7d840fc638fe2d8353d1c"
+    },
+    "cqlib_qml/encoder/ZZFeature.py": {
+      "upstreamPath": "cqlib_qml/encoder/ZZFeature.py",
+      "upstreamSha256": "d3bfb2ce99d5b248b333b529d0440a9b3b2d2dd0054bf5a982e3679090195700",
+      "sha256": "d3bfb2ce99d5b248b333b529d0440a9b3b2d2dd0054bf5a982e3679090195700"
+    },
+    "cqlib_qml/__init__.py": {
+      "adaptation": "Minimal package exports; no training/image imports",
+      "sha256": "c2ff038d26648c440986c486c03d81d5a28a15d13273ff472029f5a5964944c5"
+    },
+    "cqlib_qml/algorithms/__init__.py": {
+      "adaptation": "Minimal package exports; no training/image imports",
+      "sha256": "d3e505372bdabe2321933daa448406e41645e3c10f02ee0dbb6344844dd7eecf"
+    },
+    "cqlib_qml/encoder/__init__.py": {
+      "adaptation": "Minimal package exports; no training/image imports",
+      "sha256": "3af7d56c995983d7f24d60cc0c0635b717b11c9e3b72c6aaf78b220118fdd0df"
+    }
+  }
+}
