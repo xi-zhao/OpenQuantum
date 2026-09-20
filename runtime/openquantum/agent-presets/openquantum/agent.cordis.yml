@@ -632,3 +632,70 @@
 # Read-only CC-BY-4.0 benchmark snapshot; no runner or remote job lifecycle.
 - id: tool-metriq-data
   name: ./metriq-data-tools.mjs
+
+# QCut: pinned local execution; scientific acceptance remains separate.
+- id: mcp-qcut-knitting
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: qcut_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/qcut-knitting/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 195000
+    failOnStartupError: true
+
+# Compact: pinned local execution; scientific acceptance remains separate.
+- id: mcp-compact-optimization
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: compact_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/compact-optimization/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 195000
+    failOnStartupError: true
+
+# OpenQARP: pinned local execution; scientific acceptance remains separate.
+- id: mcp-openqarp-excited-states
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: openqarp_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/openqarp-excited-states/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 195000
+    failOnStartupError: true
+
+# cqlib-qml: pinned local execution; scientific acceptance remains separate.
+- id: mcp-cqlib-kernel
+  name: '@deepseek-ai/dsh-mcp-client'
+  disabled: true
+  config:
+    serverName: cqlib_kernel_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/cqlib-kernel/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 195000
+    failOnStartupError: true
+
+# FlagQuantum: pinned local execution; scientific acceptance remains separate.
+- id: mcp-flagquantum-workbench
+  name: '@deepseek-ai/dsh-mcp-client'
+  disabled: true
+  config:
+    serverName: flagquantum
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/flagquantum-workbench/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 195000
+    failOnStartupError: true

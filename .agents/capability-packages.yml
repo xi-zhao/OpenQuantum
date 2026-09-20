@@ -848,3 +848,131 @@ packages:
       checks:
         - tests/metriq-data.test.mjs
         - tests/harness-unitary-tools.test.mjs
+
+  - id: qcut-knitting
+    level: L1
+    execution:
+      mcpServers:
+        - name: qcut_local
+          source: package
+          entrypoint: .agents/skills/qcut-knitting/mcp/server.mjs
+          activation: always
+          contractCheck: tests/candidate-tools-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: knit_qcut_circuit
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/candidate-tools-contracts.test.mjs
+        - tests/candidate-tools-live.test.mjs
+        - tests/harness-candidate-tools.test.mjs
+
+  - id: compact-optimization
+    level: L1
+    execution:
+      mcpServers:
+        - name: compact_local
+          source: package
+          entrypoint: .agents/skills/compact-optimization/mcp/server.mjs
+          activation: always
+          contractCheck: tests/candidate-tools-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: optimize_compact_circuit
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/candidate-tools-contracts.test.mjs
+        - tests/candidate-tools-live.test.mjs
+        - tests/harness-candidate-tools.test.mjs
+
+  - id: openqarp-excited-states
+    level: L1
+    execution:
+      mcpServers:
+        - name: openqarp_local
+          source: package
+          entrypoint: .agents/skills/openqarp-excited-states/mcp/server.mjs
+          activation: always
+          contractCheck: tests/candidate-tools-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: solve_openqarp_vqd
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/candidate-tools-contracts.test.mjs
+        - tests/candidate-tools-live.test.mjs
+        - tests/harness-candidate-tools.test.mjs
+
+  - id: cqlib-kernel
+    level: L1
+    execution:
+      mcpServers:
+        - name: cqlib_kernel_local
+          source: package
+          entrypoint: .agents/skills/cqlib-kernel/mcp/server.mjs
+          activation: opt-in
+          contractCheck: tests/candidate-tools-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: fit_cqlib_angle_kernel
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/candidate-tools-contracts.test.mjs
+        - tests/candidate-tools-live.test.mjs
+        - tests/harness-candidate-tools.test.mjs
+
+  - id: flagquantum-workbench
+    level: L1
+    execution:
+      mcpServers:
+        - name: flagquantum
+          source: package
+          entrypoint: .agents/skills/flagquantum-workbench/mcp/server.mjs
+          activation: opt-in
+          contractCheck: tests/flagquantum-contracts.test.mjs
+          effectEvidence: reviewed-source
+          effectEvidenceRef: docs/integrations/CANDIDATE_LIBRARIES.md
+          tools:
+            - name: analyze_circuit_tool
+              effect: workspace-write
+            - name: serialize_circuit_tool
+              effect: workspace-write
+            - name: deserialize_circuit_tool
+              effect: workspace-write
+            - name: optimize_circuit_tool
+              effect: workspace-write
+            - name: route_circuit_tool
+              effect: workspace-write
+            - name: compare_topologies_tool
+              effect: workspace-write
+            - name: emit_openqasm_tool
+              effect: workspace-write
+            - name: emit_qcis_tool
+              effect: workspace-write
+            - name: plan_execution_tool
+              effect: workspace-write
+            - name: simulate_circuit_tool
+              effect: workspace-write
+            - name: train_parameters_tool
+              effect: workspace-write
+            - name: describe_gate_set_tool
+              effect: workspace-write
+            - name: inspect_parameters_tool
+              effect: workspace-write
+            - name: bind_parameters_tool
+              effect: workspace-write
+            - name: describe_layers_tool
+              effect: workspace-write
+            - name: describe_topology_tool
+              effect: workspace-write
+            - name: draw_circuit_tool
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/flagquantum-contracts.test.mjs
+        - tests/candidate-tools-live.test.mjs
+        - tests/harness-candidate-tools.test.mjs

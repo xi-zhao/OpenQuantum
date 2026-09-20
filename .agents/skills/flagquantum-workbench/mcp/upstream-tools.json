@@ -1,0 +1,959 @@
+{
+  "tools": [
+    {
+      "name": "analyze_circuit_tool",
+      "description": "Report gate counts, depth and wire usage for one circuit.\n\nGate counts and depth are self-explanatory; the rest of the analysis is\nworth stating. wire_usage has one entry per wire, counting the instructions\nthat touch it, so a two-qubit gate counts on both of its wires.\ntwo_qubit_gates counts width-2 instructions and multi_qubit_gates counts\nwidth-3-and-up, so a cx is two-qubit and not multi. max_gate_width is the\nwidest single instruction, and channel_count counts instructions marked as\nchannels in metadata, with has_noise being channel_count > 0.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "circuit": {
+            "type": "string",
+            "description": "Circuit payload. With circuit_format=\"qir\" pass a gate list such as\n'[{\"name\": \"h\", \"index\": [0]}, {\"name\": \"cx\", \"index\": [0, 1]}]'. A gate\ncarries its arguments under \"parameters\", so a rotation is\n'[{\"name\": \"rz\", \"index\": [0], \"parameters\": {\"theta\": 0.5}}]'. With\ncircuit_format=\"ir\" pass FlagQuantum IR JSON. A parameter is a number,\nor a symbol written {\"theta\": {\"$parameter\": \"theta\"}}. OpenQASM is not\naccepted."
+          },
+          "circuit_format": {
+            "default": "ir",
+            "enum": [
+              "ir",
+              "qir"
+            ],
+            "type": "string",
+            "description": "\"ir\" for FlagQuantum IR JSON, \"qir\" for a gate list."
+          }
+        },
+        "required": [
+          "circuit"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "serialize_circuit_tool",
+      "description": "Canonicalize a circuit into FlagQuantum IR JSON.\n\nAccepts either input format and always answers with the canonical \"ir\"\nform, so a circuit written as a gate list gains a version and a content\nhash.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "circuit": {
+            "type": "string",
+            "description": "Circuit payload. With circuit_format=\"qir\" pass a gate list such as\n'[{\"name\": \"h\", \"index\": [0]}, {\"name\": \"cx\", \"index\": [0, 1]}]'. A gate\ncarries its arguments under \"parameters\", so a rotation is\n'[{\"name\": \"rz\", \"index\": [0], \"parameters\": {\"theta\": 0.5}}]'. With\ncircuit_format=\"ir\" pass FlagQuantum IR JSON. A parameter is a number,\nor a symbol written {\"theta\": {\"$parameter\": \"theta\"}}. OpenQASM is not\naccepted."
+          },
+          "circuit_format": {
+            "default": "qir",
+            "enum": [
+              "ir",
+              "qir"
+            ],
+            "type": "string",
+            "description": "\"ir\" for FlagQuantum IR JSON, \"qir\" for a gate list."
+          },
+          "indent": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Optional indentation width for the returned JSON."
+          }
+        },
+        "required": [
+          "circuit"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "deserialize_circuit_tool",
+      "description": "Validate IR JSON and report whether it round-trips unchanged.\n\n``round_trip_stable`` compares the text you sent against FlagQuantum's\ncanonical serialization, which is compact. It is about your input, not\nabout ``indent``: asking for indented output does not change it.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "ir_json": {
+            "type": "string",
+            "description": "FlagQuantum IR JSON text."
+          },
+          "indent": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Optional indentation width for the canonical re-serialization."
+          }
+        },
+        "required": [
+          "ir_json"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "optimize_circuit_tool",
+      "description": "Apply target-independent optimizations and report what changed.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "circuit": {
+            "type": "string",
+            "description": "Circuit payload. With circuit_format=\"qir\" pass a gate list such as\n'[{\"name\": \"h\", \"index\": [0]}, {\"name\": \"cx\", \"index\": [0, 1]}]'. A gate\ncarries its arguments under \"parameters\", so a rotation is\n'[{\"name\": \"rz\", \"index\": [0], \"parameters\": {\"theta\": 0.5}}]'. With\ncircuit_format=\"ir\" pass FlagQuantum IR JSON. A parameter is a number,\nor a symbol written {\"theta\": {\"$parameter\": \"theta\"}}. OpenQASM is not\naccepted."
+          },
+          "circuit_format": {
+            "default": "ir",
+            "enum": [
+              "ir",
+              "qir"
+            ],
+            "type": "string",
+            "description": "\"ir\" for FlagQuantum IR JSON, \"qir\" for a gate list."
+          }
+        },
+        "required": [
+          "circuit"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "route_circuit_tool",
+      "description": "Route a circuit onto a coupling map, inserting SWAPs where needed.\n\nThe SWAP overhead is reported as ``instruction_delta``: a non-zero delta\nmeans the routed circuit is not the same size as the source, so it should\nnot be described as equivalent to it.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "circuit": {
+            "type": "string",
+            "description": "Circuit payload. With circuit_format=\"qir\" pass a gate list such as\n'[{\"name\": \"h\", \"index\": [0]}, {\"name\": \"cx\", \"index\": [0, 1]}]'. A gate\ncarries its arguments under \"parameters\", so a rotation is\n'[{\"name\": \"rz\", \"index\": [0], \"parameters\": {\"theta\": 0.5}}]'. With\ncircuit_format=\"ir\" pass FlagQuantum IR JSON. A parameter is a number,\nor a symbol written {\"theta\": {\"$parameter\": \"theta\"}}. OpenQASM is not\naccepted."
+          },
+          "circuit_format": {
+            "default": "ir",
+            "enum": [
+              "ir",
+              "qir"
+            ],
+            "type": "string",
+            "description": "\"ir\" for FlagQuantum IR JSON, \"qir\" for a gate list."
+          },
+          "topology": {
+            "default": "line",
+            "type": "string",
+            "description": "\"line\", \"ring\", \"grid\" or \"custom\"."
+          },
+          "rows": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Grid rows; required when topology is \"grid\"."
+          },
+          "cols": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Grid columns; required when topology is \"grid\"."
+          },
+          "edges": {
+            "anyOf": [
+              {
+                "items": {
+                  "items": {
+                    "type": "integer"
+                  },
+                  "type": "array"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Explicit wire pairs; required when topology is \"custom\"."
+          },
+          "strategy": {
+            "default": "restore_after_each_gate",
+            "type": "string",
+            "description": "\"restore_after_each_gate\" or \"persistent_layout\"."
+          },
+          "optimize_first": {
+            "default": true,
+            "type": "boolean",
+            "description": "Optimize before routing."
+          }
+        },
+        "required": [
+          "circuit"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "compare_topologies_tool",
+      "description": "Route one circuit onto several topologies and compare the cost.\n\nOne entry per topology, each with its routed gate count, depth and SWAP\noverhead, plus which topology was cheapest on those measures.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "circuit": {
+            "type": "string",
+            "description": "Circuit payload. With circuit_format=\"qir\" pass a gate list such as\n'[{\"name\": \"h\", \"index\": [0]}, {\"name\": \"cx\", \"index\": [0, 1]}]'. A gate\ncarries its arguments under \"parameters\", so a rotation is\n'[{\"name\": \"rz\", \"index\": [0], \"parameters\": {\"theta\": 0.5}}]'. With\ncircuit_format=\"ir\" pass FlagQuantum IR JSON. A parameter is a number,\nor a symbol written {\"theta\": {\"$parameter\": \"theta\"}}. OpenQASM is not\naccepted."
+          },
+          "circuit_format": {
+            "default": "ir",
+            "enum": [
+              "ir",
+              "qir"
+            ],
+            "type": "string",
+            "description": "\"ir\" for FlagQuantum IR JSON, \"qir\" for a gate list."
+          },
+          "topologies": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Topology kinds to compare; defaults to line, ring and grid."
+          },
+          "strategy": {
+            "default": "restore_after_each_gate",
+            "type": "string",
+            "description": "\"restore_after_each_gate\" or \"persistent_layout\"."
+          },
+          "optimize_first": {
+            "default": true,
+            "type": "boolean",
+            "description": "Optimize before routing."
+          }
+        },
+        "required": [
+          "circuit"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "emit_openqasm_tool",
+      "description": "Render a circuit as OpenQASM 2.0 or 3.0 text.\n\nThe result measures every wire unless ``result_wires`` says otherwise, so\nthe emitted text usually carries measurements that the source circuit does\nnot. ``content_hash`` identifies that source circuit, not the text.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "circuit": {
+            "type": "string",
+            "description": "Circuit payload. With circuit_format=\"qir\" pass a gate list such as\n'[{\"name\": \"h\", \"index\": [0]}, {\"name\": \"cx\", \"index\": [0, 1]}]'. A gate\ncarries its arguments under \"parameters\", so a rotation is\n'[{\"name\": \"rz\", \"index\": [0], \"parameters\": {\"theta\": 0.5}}]'. With\ncircuit_format=\"ir\" pass FlagQuantum IR JSON. A parameter is a number,\nor a symbol written {\"theta\": {\"$parameter\": \"theta\"}}. OpenQASM is not\naccepted."
+          },
+          "circuit_format": {
+            "default": "ir",
+            "enum": [
+              "ir",
+              "qir"
+            ],
+            "type": "string",
+            "description": "\"ir\" for FlagQuantum IR JSON, \"qir\" for a gate list."
+          },
+          "version": {
+            "default": 3,
+            "type": "number",
+            "description": "OpenQASM version, 2.0 or 3.0."
+          },
+          "result_wires": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "integer"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Wires to measure; omit to measure every wire."
+          }
+        },
+        "required": [
+          "circuit"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "emit_qcis_tool",
+      "description": "Render a circuit as QCIS text.\n\nA circuit containing an arbitrary matrix gate comes back as an error rather\nthan as text, because QCIS has no way to express one. Report that refusal\nrather than silently substituting a different gate: a circuit that exports\nsuccessfully because a gate was swapped is not the circuit the caller wrote,\nand nothing in the text would say so.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "circuit": {
+            "type": "string",
+            "description": "Circuit payload. With circuit_format=\"qir\" pass a gate list such as\n'[{\"name\": \"h\", \"index\": [0]}, {\"name\": \"cx\", \"index\": [0, 1]}]'. A gate\ncarries its arguments under \"parameters\", so a rotation is\n'[{\"name\": \"rz\", \"index\": [0], \"parameters\": {\"theta\": 0.5}}]'. With\ncircuit_format=\"ir\" pass FlagQuantum IR JSON. A parameter is a number,\nor a symbol written {\"theta\": {\"$parameter\": \"theta\"}}. OpenQASM is not\naccepted."
+          },
+          "circuit_format": {
+            "default": "ir",
+            "enum": [
+              "ir",
+              "qir"
+            ],
+            "type": "string",
+            "description": "\"ir\" for FlagQuantum IR JSON, \"qir\" for a gate list."
+          }
+        },
+        "required": [
+          "circuit"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "plan_execution_tool",
+      "description": "Plan execution without running anything.\n\nNothing is executed and no state is allocated: the result is the resolved\nexecution contract (mode, backend, device, precision) plus a summary\ncarrying depth, state_bytes, shardable_wires and the claim fields\n(claim_evidence_type, scalability_claim_allowed, release_gate_allowed) that\nsay what this plan does and does not license. To actually run the circuit\nlocally, call simulate_circuit_tool with the same options and outputs.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "circuit": {
+            "type": "string",
+            "description": "Circuit payload. With circuit_format=\"qir\" pass a gate list such as\n'[{\"name\": \"h\", \"index\": [0]}, {\"name\": \"cx\", \"index\": [0, 1]}]'. A gate\ncarries its arguments under \"parameters\", so a rotation is\n'[{\"name\": \"rz\", \"index\": [0], \"parameters\": {\"theta\": 0.5}}]'. With\ncircuit_format=\"ir\" pass FlagQuantum IR JSON. A parameter is a number,\nor a symbol written {\"theta\": {\"$parameter\": \"theta\"}}. OpenQASM is not\naccepted."
+          },
+          "circuit_format": {
+            "default": "ir",
+            "enum": [
+              "ir",
+              "qir"
+            ],
+            "type": "string",
+            "description": "\"ir\" for FlagQuantum IR JSON, \"qir\" for a gate list."
+          },
+          "options": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Partial execution options. Supported keys: mode, backend,\ndevice, target, batch_size, precision, shots, seed,\nmemory_limit_bytes, require_gradients, allow_approximate,\nallow_backend_fallback."
+          },
+          "outputs": {
+            "anyOf": [
+              {
+                "items": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Requested outputs; each has a \"kind\" of \"counts\",\n\"expectation\", \"probabilities\" or \"samples\", plus either a \"wires\"\nlist or, for \"expectation\", a \"pauli\" string such as \"ZZI\". For a\nweighted sum—a Hamiltonian—give \"terms\" instead of \"pauli\":\n{\"kind\": \"expectation\", \"terms\": [{\"pauli\": \"ZZ\", \"coefficient\":\n1.0}, {\"pauli\": \"XI\", \"coefficient\": -0.5}]}. Each term comes back\nas its own row carrying its \"coefficient\", and the total is the\ncaller's to add."
+          }
+        },
+        "required": [
+          "circuit"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "simulate_circuit_tool",
+      "description": "Run a circuit locally and return the outputs it was asked for.\n\nThis is the only tool here that executes anything, and it executes in this\nprocess on CPU: no network, no credentials, no provider. The engine is\nchosen by options[\"mode\"], and all five the SDK offers are reachable —\n\"statevector\" (the default), \"mps\", \"tensor_network\", \"density_matrix\" and\n\"auto\"; a sixth spelling is refused with the five named. They are engines\nof one local run rather than different places to run, so none of them\nleaves this process — but they are not interchangeable in cost, and the\nspread is wider than the circuit's width suggests. Measured at 20 wires on\na product state, plan_execution_tool's summary reports 8 MB of state for\n\"statevector\" and 8.8 TB for \"density_matrix\". Ask the plan before\nchoosing a non-default mode. The result's \"execution\" block records the\nengine that ran, alongside \"simulation_engine\", \"device\" and the accuracy\ncontract whose metric is \"not_measured\" — an ideal simulation is not\nevidence about any hardware, and this tool does not present it as such.\nThat field holds the engine, not the request: \"auto\" comes back as whatever\nthe SDK settled on — \"statevector\", since this tool passes no noise model —\nrather than as the word \"auto\". \"execution_path\" and \"platform_provider\"\nread \"local_statevector\" and \"pytorch_cpu\" for a statevector run and are\nempty strings for \"mps\", \"tensor_network\" and \"density_matrix\", which is\nhow the SDK reports those engines rather than a failure.\n\nWhat is returned, in order of precedence: the outputs you pass; otherwise\nthe circuit's own \"measurements\" field, which the SDK reads and which\ncarries its own shot count; otherwise probabilities over every wire.\nWidths that the SDK will not compute a marginal for are refused with the\nalternatives named.\n\nRefused rather than guessed at: a circuit with unbound parameters (bind it\nfirst), a circuit carrying \"observables\" (a local statevector run never\nevaluates them — ask for an \"expectation\" output instead), and outputs\npassed alongside the circuit's own measurements.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "circuit": {
+            "type": "string",
+            "description": "Circuit payload. With circuit_format=\"qir\" pass a gate list such as\n'[{\"name\": \"h\", \"index\": [0]}, {\"name\": \"cx\", \"index\": [0, 1]}]'. A gate\ncarries its arguments under \"parameters\", so a rotation is\n'[{\"name\": \"rz\", \"index\": [0], \"parameters\": {\"theta\": 0.5}}]'. With\ncircuit_format=\"ir\" pass FlagQuantum IR JSON. A parameter is a number,\nor a symbol written {\"theta\": {\"$parameter\": \"theta\"}}. OpenQASM is not\naccepted."
+          },
+          "circuit_format": {
+            "default": "ir",
+            "enum": [
+              "ir",
+              "qir"
+            ],
+            "type": "string",
+            "description": "\"ir\" for FlagQuantum IR JSON, \"qir\" for a gate list."
+          },
+          "options": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Partial execution options. Supported keys: mode, backend,\ndevice, target, batch_size, precision, shots, seed,\nmemory_limit_bytes, require_gradients, allow_approximate,\nallow_backend_fallback. A \"shots\" value is required by \"counts\" and\n\"samples\" outputs."
+          },
+          "outputs": {
+            "anyOf": [
+              {
+                "items": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Requested outputs; each has a \"kind\" of \"counts\",\n\"expectation\", \"probabilities\" or \"samples\", plus either a \"wires\"\nlist or, for \"expectation\", a \"pauli\" string such as \"ZZI\". For a\nweighted sum—a Hamiltonian—give \"terms\" instead of \"pauli\":\n{\"kind\": \"expectation\", \"terms\": [{\"pauli\": \"ZZ\", \"coefficient\":\n1.0}, {\"pauli\": \"XI\", \"coefficient\": -0.5}]}. Each term comes back\nas its own row carrying its \"coefficient\", and the total is the\ncaller's to add."
+          }
+        },
+        "required": [
+          "circuit"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "train_parameters_tool",
+      "description": "Optimize a parameterized circuit's angles against a Pauli-sum energy.\n\nThis is the gradient step that simulate_circuit_tool cannot take. That tool\nevaluates an energy; this one improves it. Fifty calls to simulate, each one\na guess, is a manual scan; one call here is a descent, because the SDK\nreports exact gradients for a statevector simulation and this tool uses\nthem.\n\nThe objective is the Hamiltonian expectation, and it has to be given: the\n\"hamiltonian\" argument takes the same term list an \"expectation\" output\ntakes, one letter per wire. There is no default, because without an\nobjective the number being minimised is not an energy.\n\nRuns in this process: a statevector simulation on CPU, no network, no\ncredentials, no provider. The result carries the SDK's provenance and its\naccuracy contract, which reports metric \"not_measured\" — an ideal\nsimulation is not evidence about hardware.\n\nRefused before starting: a circuit with no parameters, a missing or\nmalformed objective, a starting value that names a parameter the circuit\ndoes not have or omits one it does, a step count that is not a positive\nwhole number or a learning rate that is not a positive finite number (either\nof them too large for a float included), a circuit carrying \"observables\"\n(never read — put the objective in \"hamiltonian\"), and any run whose\npredicted cost is past the budget. The prediction is an estimate, not a\nmeasurement of your machine.\n\nA learning rate that is finite and positive but larger than the optimizer's\nown arithmetic can hold is not caught before the run — it fails inside the\nSDK's first update, and the refusal that comes back names \"learning_rate\"\nand the rate it overflowed on rather than the circuit. Measured on the SDK\ninstalled here, 3.4e37 trains and 4e37 does not, at every width tried; that\nboundary is float32's maximum divided by ten.\n\nAdam at the learning rate you set. Losses are reported one per step, so a\ncaller can see whether the run is still moving; whether it has converged is\nyour reading, not this tool's claim. The parameters it ended on come back as\n\"parameters\"; pass those back as \"values\" to continue a run rather than\nrestart it.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "circuit": {
+            "type": "string",
+            "description": "Circuit payload carrying parameters. With circuit_format=\"qir\"\npass a gate list such as '[{\"name\": \"h\", \"index\": [0]}, {\"name\":\n\"ry\", \"index\": [0], \"parameters\": {\"theta\": {\"$parameter\": \"t0\"}}}]'.\nA gate carries its arguments under \"parameters\", so a symbol is\nwritten {\"theta\": {\"$parameter\": \"t0\"}}. With circuit_format=\"ir\"\npass FlagQuantum IR JSON. OpenQASM is not accepted."
+          },
+          "hamiltonian": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "description": "The objective, as a list of {\"pauli\": ..., \"coefficient\":\n...} objects, one letter per wire: [{\"pauli\": \"Z\", \"coefficient\":\n1.0}, {\"pauli\": \"X\", \"coefficient\": -0.5}]. The circuit example\nabove is one wire, so each term is one letter; a two-wire circuit\ntakes \"ZZ\". A term whose length does not match the circuit is\nrefused. Required."
+          },
+          "circuit_format": {
+            "default": "ir",
+            "enum": [
+              "ir",
+              "qir"
+            ],
+            "type": "string",
+            "description": "\"ir\" for FlagQuantum IR JSON, \"qir\" for a gate list."
+          },
+          "values": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "type": "number"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Starting value for each parameter, by name: {\"t0\": 0.1}. Every\nparameter needs one, and no others are accepted. Defaults to zeros."
+          },
+          "steps": {
+            "default": 50,
+            "type": "integer",
+            "description": "Number of optimizer updates. Default 50."
+          },
+          "learning_rate": {
+            "default": 0.1,
+            "type": "number",
+            "description": "Adam's learning rate. Default 0.1."
+          }
+        },
+        "required": [
+          "circuit",
+          "hamiltonian"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "describe_gate_set_tool",
+      "description": "Describe gates: wire count, parameter names, aliases and kind.\n\nCall this before writing a gate list by hand. A gate's signature is not\npart of the circuit format, so this is the only place to learn that ``rz``\ntakes one parameter named ``theta`` while ``u3`` takes three.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "gates": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Gate names or aliases to describe. Omit to describe every gate."
+          }
+        },
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "inspect_parameters_tool",
+      "description": "Report whether a circuit is parameterized, and where each symbol sits.\n\nA symbol is written ``{\"theta\": {\"$parameter\": \"theta\"}}`` in either input\nformat. A bare string is not a symbol: it is a value, and the circuit would\nreport itself as unparameterized, so it is rejected instead.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "circuit": {
+            "type": "string",
+            "description": "Circuit payload. With circuit_format=\"qir\" pass a gate list such as\n'[{\"name\": \"h\", \"index\": [0]}, {\"name\": \"cx\", \"index\": [0, 1]}]'. A gate\ncarries its arguments under \"parameters\", so a rotation is\n'[{\"name\": \"rz\", \"index\": [0], \"parameters\": {\"theta\": 0.5}}]'. With\ncircuit_format=\"ir\" pass FlagQuantum IR JSON. A parameter is a number,\nor a symbol written {\"theta\": {\"$parameter\": \"theta\"}}. OpenQASM is not\naccepted."
+          },
+          "circuit_format": {
+            "default": "ir",
+            "enum": [
+              "ir",
+              "qir"
+            ],
+            "type": "string",
+            "description": "\"ir\" for FlagQuantum IR JSON, \"qir\" for a gate list."
+          }
+        },
+        "required": [
+          "circuit"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "bind_parameters_tool",
+      "description": "Substitute values for a circuit's parameters.\n\nThe result is no longer parameterized, so it can be exported. Export is the\nonly step that needed this: analysis, optimization, routing, drawing and\nplan_execution_tool all accept a parameterized circuit as-is, because none\nof them reads a parameter value.\n\nThe values are yours to choose, and a chosen value is not a result: say\nwhich gates carry parameters and what values you assumed, whenever a number\ndownstream depends on them. inspect_parameters_tool reports which gates\ncarry a parameter and what it is named, so nothing has to be inferred.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "circuit": {
+            "type": "string",
+            "description": "Circuit payload. With circuit_format=\"qir\" pass a gate list such as\n'[{\"name\": \"h\", \"index\": [0]}, {\"name\": \"cx\", \"index\": [0, 1]}]'. A gate\ncarries its arguments under \"parameters\", so a rotation is\n'[{\"name\": \"rz\", \"index\": [0], \"parameters\": {\"theta\": 0.5}}]'. With\ncircuit_format=\"ir\" pass FlagQuantum IR JSON. A parameter is a number,\nor a symbol written {\"theta\": {\"$parameter\": \"theta\"}}. OpenQASM is not\naccepted."
+          },
+          "values": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "description": "One number per parameter name, for example {\"theta\": 0.5}."
+          },
+          "circuit_format": {
+            "default": "ir",
+            "enum": [
+              "ir",
+              "qir"
+            ],
+            "type": "string",
+            "description": "\"ir\" for FlagQuantum IR JSON, \"qir\" for a gate list."
+          }
+        },
+        "required": [
+          "circuit",
+          "values"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "describe_layers_tool",
+      "description": "Decompose a circuit into the layers it can execute in.\n\nGates in one returned layer run concurrently, so n_layers is the circuit's\ndepth: it is the longest chain of gates that cannot be reordered.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "circuit": {
+            "type": "string",
+            "description": "Circuit payload. With circuit_format=\"qir\" pass a gate list such as\n'[{\"name\": \"h\", \"index\": [0]}, {\"name\": \"cx\", \"index\": [0, 1]}]'. A gate\ncarries its arguments under \"parameters\", so a rotation is\n'[{\"name\": \"rz\", \"index\": [0], \"parameters\": {\"theta\": 0.5}}]'. With\ncircuit_format=\"ir\" pass FlagQuantum IR JSON. A parameter is a number,\nor a symbol written {\"theta\": {\"$parameter\": \"theta\"}}. OpenQASM is not\naccepted."
+          },
+          "circuit_format": {
+            "default": "ir",
+            "enum": [
+              "ir",
+              "qir"
+            ],
+            "type": "string",
+            "description": "\"ir\" or \"qir\"."
+          }
+        },
+        "required": [
+          "circuit"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "describe_topology_tool",
+      "description": "Describe a coupling map before routing onto it.\n\nFor each requested pair the result gives the shortest path and its distance,\nwhere distance is the number of edges on that path — the number of SWAPs a\nnaive route would need, so adjacent wires are distance 1. Omit ``pairs`` to\nmeasure adjacent wires.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "n_qubits": {
+            "type": "integer",
+            "description": "Number of wires the topology must hold."
+          },
+          "topology": {
+            "default": "line",
+            "type": "string",
+            "description": "\"line\", \"ring\", \"grid\" or \"custom\"."
+          },
+          "rows": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Grid rows; required for \"grid\", or derived when both are omitted."
+          },
+          "cols": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Grid columns; see rows."
+          },
+          "edges": {
+            "anyOf": [
+              {
+                "items": {
+                  "items": {
+                    "type": "integer"
+                  },
+                  "type": "array"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Explicit wire pairs; required for \"custom\"."
+          },
+          "pairs": {
+            "anyOf": [
+              {
+                "items": {
+                  "items": {
+                    "type": "integer"
+                  },
+                  "type": "array"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Specific wire pairs to measure. Omit to measure adjacent wires."
+          }
+        },
+        "required": [
+          "n_qubits"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "draw_circuit_tool",
+      "description": "Draw a circuit as text.\n\nA symbol is rendered as the SDK's repr of it, so ``RY(theta)`` appears as\n``RY(Parameter(name='theta'))``. That is the symbol, not a broken value:\nFlagQuantum's ``Parameter`` defines no ``__str__``.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "circuit": {
+            "type": "string",
+            "description": "Circuit payload. With circuit_format=\"qir\" pass a gate list such as\n'[{\"name\": \"h\", \"index\": [0]}, {\"name\": \"cx\", \"index\": [0, 1]}]'. A gate\ncarries its arguments under \"parameters\", so a rotation is\n'[{\"name\": \"rz\", \"index\": [0], \"parameters\": {\"theta\": 0.5}}]'. With\ncircuit_format=\"ir\" pass FlagQuantum IR JSON. A parameter is a number,\nor a symbol written {\"theta\": {\"$parameter\": \"theta\"}}. OpenQASM is not\naccepted."
+          },
+          "circuit_format": {
+            "default": "ir",
+            "enum": [
+              "ir",
+              "qir"
+            ],
+            "type": "string",
+            "description": "\"ir\" or \"qir\"."
+          },
+          "decimals": {
+            "default": 3,
+            "type": "integer",
+            "description": "Digits shown per parameter."
+          },
+          "line_width": {
+            "default": 100,
+            "type": "integer",
+            "description": "Maximum characters per wire line before the drawer wraps."
+          },
+          "show_all_wires": {
+            "default": false,
+            "type": "boolean",
+            "description": "Keep wires that carry no gate."
+          },
+          "show_initial_state": {
+            "default": false,
+            "type": "boolean",
+            "description": "Annotate each wire's initial state."
+          }
+        },
+        "required": [
+          "circuit"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    }
+  ]
+}

@@ -65,6 +65,14 @@
 - 五项桥接移除人为规模与工作量上限，由用户选择系统规模和求解参数；新增 `execution` 控制工作进程时间、线程和返回数据量。MCP 连接超时可在现有设置中调整。
 - README 按功能介绍能力；默认参考选择与实际算例归入工具文档。`required` 可显式运行超出默认选择范围的参考，科学状态仍为 `not_evaluated`。
 
+## 候选库接入（2026-09-20，独立本地实现）
+
+- QCut 门切割、Compact 线路优化、OpenQARP VQD 新增默认开启的 Skill 与 MCP Tool；cqlib-qml angle 核适配及 FlagQuantum 原生 MCP 新增可选入口，默认关闭。
+- 四个适配 Tool 与一个上游 MCP 已运行真实依赖、实际调用及本地模型协议替身驱动的 Harness 会话；完成独立科学复审。L1 数值结果不等于最终科学 Acceptance。
+- CleitonForge 回归样本与 qec-burst-scaling 实验模块只进入开发证据；固定 Stim 的未闭合 tag EOF 缺陷通过短超时子进程隔离并单列，不宣称修复上游。
+- [接入说明](docs/integrations/CANDIDATE_LIBRARIES.md)及[版本化证据](docs/integrations/evidence/candidates-2026-09-20.json)记录锁定版本、使用入口和验收边界。原工作树已有 Graphix/PyZX/Symmer/PauLie 暂存工作保持独立。
+- 本轮完整 `npm run check` 通过；未修改运行中的 Host、调用外部模型、提交硬件作业或发布。后续合并此独立分支并重启 Harness 后才进入实际部署。
+
 ## 下一唯一里程碑
 
 收口当前模型接入验收：对原执行任务已经选定的模型逐项归档“文本生成、Tool Calling、科研主动作、证据完整性”的结果与未验证项。该任务仍由原执行会话负责；本页不启动第二份验收。

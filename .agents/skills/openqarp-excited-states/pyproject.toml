@@ -1,0 +1,8 @@
+[project]
+name = "openquantum-openqarp-excited-states-bridge"
+version = "0.1.0"
+requires-python = ">=3.12,<3.13"
+dependencies = ["openqarp==0.1.0", "numpy==2.4.6"]
+
+[tool.uv]
+package = false

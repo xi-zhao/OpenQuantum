@@ -1,0 +1,34 @@
+{
+  "id": "qiskit-16594-single-qubit-003",
+  "qiskit_version": "2.5.0",
+  "oracle": "qcec (run_simulation_checker=False)",
+  "pass": "CommutativeCancellation",
+  "criterion": "not_equivalent",
+  "generator_seed": 2358,
+  "num_qubits": 4,
+  "gates": [
+    {
+      "gate": "sxdg",
+      "qubits": [
+        2
+      ],
+      "params": []
+    },
+    {
+      "gate": "sxdg",
+      "qubits": [
+        2
+      ],
+      "params": []
+    },
+    {
+      "gate": "sx",
+      "qubits": [
+        2
+      ],
+      "params": []
+    }
+  ],
+  "qasm2": "OPENQASM 2.0;\ninclude \"qelib1.inc\";\nqreg q[4];\nsxdg q[2];\nsxdg q[2];\nsx q[2];\n",
+  "note": "Simpler witness than qiskit-commutative-cancellation-001: three gates on a single qubit, no second qubit involved. This one disproves a claim in our own report (Qiskit#16594), which said the fault needs a gate on another qubit between the two sxdg. It does not. sxdg sxdg sx combines to -pi/2, so one sxdg should survive; the pass emits nothing. Exhaustive sweep of all 62 sx/sxdg sequences up to length 5 on one qubit: 22 break, none at length 1 or 2. The breaking ones mix sx and sxdg and sum to a negative angle; a pure run survives, so sxdg sxdg sxdg is correct at -3pi/2 while sx sxdg sxdg sxdg sxdg drops everything at the same -3pi/2."
+}

@@ -1,0 +1,14 @@
+--- cqlib_qml/algorithms/QKM.py
++++ cqlib_qml/algorithms/QKM.py
+@@ -0,0 +1 @@
++# Modified by OpenQuantum (2026-09-20): public SDK import McGate is adapted to MCGate; algorithm unchanged.
+@@ -33 +34 @@
+-from cqlib.circuit import Circuit, McGate, StandardGate
++from cqlib.circuit import Circuit, MCGate as McGate, StandardGate
+--- cqlib_qml/encoder/amplitude.py
++++ cqlib_qml/encoder/amplitude.py
+@@ -0,0 +1 @@
++# Modified by OpenQuantum (2026-09-20): public SDK import McGate is adapted to MCGate; algorithm unchanged.
+@@ -30 +31 @@
+-from cqlib.circuit import Circuit, McGate
++from cqlib.circuit import Circuit, MCGate as McGate

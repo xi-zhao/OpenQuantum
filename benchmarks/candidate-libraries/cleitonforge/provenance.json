@@ -1,0 +1,24 @@
+{
+  "repository": "https://github.com/cleitonaugusto/CleitonForge",
+  "revision": "331b6086d56a307c6a68f09177c7b37fc098b440",
+  "license": "Apache-2.0",
+  "scope": "Three unmodified bug-zoo inputs. Qiskit fixed soundness witnesses and an intentional numerical-tolerance negative result; the Rust fuzzer is not installed.",
+  "files": {
+    "qiskit-16594-single-qubit-003.json": {
+      "upstreamPath": "bug-zoo/qiskit-16594-single-qubit-003.json",
+      "sha256": "92e5f76660f9a26e762f011d49202ca8f19e35798ed5743c96004970e0b603ad"
+    },
+    "qiskit-commutative-cancellation-001.json": {
+      "upstreamPath": "bug-zoo/qiskit-commutative-cancellation-001.json",
+      "sha256": "8a0909dfff5ecca0c4e0afcadf26bb2ea94fc3d0861f4dbc598ca02075efa573"
+    },
+    "qiskit-cp-small-angle-002.json": {
+      "upstreamPath": "bug-zoo/qiskit-cp-small-angle-002.json",
+      "sha256": "71576ddb4532dcde8be95f680e710a3e66875def077a2aea6a95812435788f8a"
+    },
+    "LICENSE": {
+      "upstreamPath": "LICENSE",
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    }
+  }
+}

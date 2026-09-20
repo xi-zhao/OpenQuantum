@@ -173,3 +173,5 @@ Skill 与 Tool 在概念和发行版 policy 中都相互独立：Skill-only、To
 - **未来计划**：Roadmap，只表示意图，不证明已经实现。
 
 如果规范与实现不一致，应说明架构偏差及其影响，不静默选择其中一份作为一致事实。仅在完成当前任务确实需要且已有授权时修复；纯诊断只给出证据和建议。
+
+- [候选量子库接入与科学边界](integrations/CANDIDATE_LIBRARIES.md) · [实施计划与去重决策](integrations/CANDIDATE_INTEGRATION_PLAN.md)

@@ -1,0 +1,12 @@
+[project]
+name = "openquantum-cqlib-kernel-bridge"
+version = "0.1.0"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+  "cqlib @ git+https://github.com/cq-lib/cqlib.git@1d0a2c49ac32712d995f46147dfc5e3c4f4ac8e6#subdirectory=crates/binding-python",
+  "numpy==2.4.6",
+  "scikit-learn==1.9.1",
+]
+
+[tool.uv]
+package = false

@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
 const ids = ["sqd-chemistry", "tjm-dynamics", "ldpc-decoding", "flow-vqe", "tenpy-ground-state", "randomized-measurements"];
-const supported = [...ids, "mitiq-error-mitigation", "dynamiqs-dynamics", "clifft-sampling", "oqupy-dynamics", "deltakit-qec"];
+const supported = [...ids, "qcut-knitting", "compact-optimization", "openqarp-excited-states", "cqlib-kernel", "flagquantum-workbench", "mitiq-error-mitigation", "dynamiqs-dynamics", "clifft-sampling", "oqupy-dynamics", "deltakit-qec"];
 const selected = process.argv.slice(2);
 const allowedEnvironment = ["HOME", "PATH", "HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY", "NO_PROXY", "SSL_CERT_FILE", "SSL_CERT_DIR", "UV_CACHE_DIR", "UV_PYTHON_INSTALL_DIR", "SYSTEMROOT", "TEMP", "TMP", "TMPDIR", "WINDIR"];
 const environment = Object.fromEntries(allowedEnvironment.filter(key => process.env[key]).map(key => [key, process.env[key]]));
@@ -22,7 +22,7 @@ for (const id of selected.length ? selected : ids) {
     ? ["--startup-file=no", `--project=${skillRoot}`, "-e", 'using Pkg; VERSION == v"1.12.7" || error("Use Julia 1.12.7 for this lock"); Pkg.instantiate(;allow_autoprecomp=false); Pkg.precompile(["JSON3", "RandomMeas"]); using JSON3, RandomMeas']
     : ["sync", "--frozen", "--no-dev", "--project", skillRoot, "--python", "3.12"], {
     cwd: root, stdio: "inherit", timeout: 1_800_000,
-    env: { ...environment, UV_PROJECT_ENVIRONMENT: path.join(root, ".openquantum/python-envs", id), JULIA_NUM_PRECOMPILE_TASKS: "2", JULIA_PKG_PRECOMPILE_AUTO: "0" },
+    env: { ...environment, UV_PROJECT_ENVIRONMENT: path.join(root, ".openquantum/python-envs", id), CARGO_HOME: path.join(root, ".openquantum/cargo-cache"), JULIA_NUM_PRECOMPILE_TASKS: "2", JULIA_PKG_PRECOMPILE_AUTO: "0" },
   });
   if (run.error || run.status !== 0) throw new Error(`${id} setup failed: ${run.error?.message ?? run.status}`);
   if (digest(lock) !== before) throw new Error(`${id} dependency lock changed during setup; review before running tools`);

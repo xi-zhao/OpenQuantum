@@ -34,8 +34,8 @@
 
 研究者可以从基态求解、电路验证或密度矩阵审计开始；开发者可以把自己的算法与工作流程接进来；学习者与授课者可以通过计算实例和「量子学习通」探索量子知识。
 
-- **让 Agent 懂方法**：23 个领域 Skill 写明工具选择、研究步骤和结果解释规则，供任务按需使用。[查看 Skills](#内置-skills)
-- **让方法能执行**：18 个本地 MCP 桥接实现与 5 个原生量子 Tool，把计算、查询和实验模拟变成 Agent 可调用的动作。[查看 MCP](#mcp-服务目录) · [查看 Tools](#原生量子-tools)
+- **让 Agent 懂方法**：28 个领域 Skill 写明工具选择、研究步骤和结果解释规则，供任务按需使用。[查看 Skills](#内置-skills)
+- **让方法能执行**：22 个本地 MCP 桥接实现与 5 个原生量子 Tool，把计算、查询和实验模拟变成 Agent 可调用的动作。[查看 MCP](#mcp-服务目录) · [查看 Tools](#原生量子-tools)
 - **让结果有依据**：在支持的能力中返回精确参考、独立检查或统计误差；基态求解与量子信息审计还可形成带会话来源的科学验收报告。[查看计算与证据](#从一个真实任务开始)
 
 **[安装并开始](#快速开始)**　·　[先看本地计算示例](#从一个真实任务开始)（无需模型密钥）　·　[了解量子学习通](#量子学习通)
@@ -88,7 +88,7 @@
 | **原生量子 Tool** | 在工作台中直接完成计算与查询，返回结构化结果 | 基态求解与独立检查、实验模拟、算法资料与基准检索 |
 | **科学检查与证据流程** | 将支持能力的输入、结果、独立检查与会话来源连起来，便于复核 | 限定二量子位基态、密度矩阵审计的完整科学验收流程 |
 
-当前源码分发 **23 个内置 Skill、25 个 MCP 服务连接、5 个原生量子 Tool**。其中 18 个 MCP 服务使用 OpenQuantum 的本地桥接实现。Skill 指导工作方法，Tool 执行动作，MCP Server 通过协议提供 Tool；三者职责不同，数量分别统计。
+当前源码分发 **28 个内置 Skill、30 个 MCP 服务连接、5 个原生量子 Tool**。其中 18 个 MCP 服务使用 OpenQuantum 的本地桥接实现。Skill 指导工作方法，Tool 执行动作，MCP Server 通过协议提供 Tool；三者职责不同，数量分别统计。
 
 下面先展示 OpenQuantum 维护的 Skill、桥接实现和原生 Tool。上游算法库、外部 MCP Server 与应用基础的分工见后文[开源生态与致谢](#开源生态与致谢)。
 
@@ -101,7 +101,7 @@
 
 ### 内置 Skills
 
-这 23 个 Skill 是 OpenQuantum 随源码维护的量子工作流，覆盖方法选择、计算实验、结果解释和平台诊断，由 Harness 按任务需要发现和加载。点击名称即可查看完整的 `SKILL.md`，也可作为编写自己 Skill 的起点；所需工具与连接分别配置。
+这 28 个 Skill 是 OpenQuantum 随源码维护的量子工作流，覆盖方法选择、计算实验、结果解释和平台诊断，由 Harness 按任务需要发现和加载。点击名称即可查看完整的 `SKILL.md`，也可作为编写自己 Skill 的起点；所需工具与连接分别配置。
 
 下表按**研究方法与用途**介绍能力。实际可执行的模型、规模和格式见[当前接入范围](#当前接入范围与验证记录)及各 Tool 接口；本地验证记录单独说明测过的算例，不用这些算例定义方法或上游软件的能力上限。
 
@@ -131,11 +131,17 @@
 | [`flow-vqe`](.agents/skills/flow-vqe/SKILL.md) | 流模型辅助的 VQE 参数学习、低能量态搜索与基线比较 | `flow_vqe_local` |
 | [`tenpy-ground-state`](.agents/skills/tenpy-ground-state/SKILL.md) | 张量网络 DMRG 基态求解、磁性观测量与纠缠结构分析 | `tenpy_local` |
 
+| [`qcut-knitting`](.agents/skills/qcut-knitting/SKILL.md) | 门切割与期望值重建 | `qcut_local`；[使用说明](docs/integrations/CANDIDATE_LIBRARIES.md) |
+| [`compact-optimization`](.agents/skills/compact-optimization/SKILL.md) | 线路优化与独立等价对照 | `compact_local`；[使用说明](docs/integrations/CANDIDATE_LIBRARIES.md) |
+| [`openqarp-excited-states`](.agents/skills/openqarp-excited-states/SKILL.md) | VQD 激发态、残差与正交性 | `openqarp_local`；[使用说明](docs/integrations/CANDIDATE_LIBRARIES.md) |
+| [`cqlib-kernel`](.agents/skills/cqlib-kernel/SKILL.md) | 角度编码核与 QSVM | `cqlib_kernel_local`；[使用说明](docs/integrations/CANDIDATE_LIBRARIES.md) |
+| [`flagquantum-workbench`](.agents/skills/flagquantum-workbench/SKILL.md) | 第二家量子 MCP 电路工作台 | `flagquantum`；[使用说明](docs/integrations/CANDIDATE_LIBRARIES.md) |
+
 ### MCP 服务目录
 
-**OpenQuantum 为 18 项计算与设备发现能力开发了本地 MCP 桥接**，把所用 SDK 或数值库转换成 Agent 可调用的有界 Tool。下表先列出这些桥接实现：连接名链接到本仓库源码，旁边保留所用上游的链接；末尾再列 7 个直接接入的上游 MCP 服务。
+**OpenQuantum 为 22 项计算与设备发现能力开发了本地 MCP 桥接**，把所用 SDK 或数值库转换成 Agent 可调用的有界 Tool。下表先列出这些桥接实现：连接名链接到本仓库源码，旁边保留所用上游的链接；另列 8 个直接接入的上游 MCP 服务。
 
-默认 Preset 共声明 25 个 MCP 服务连接：**19 个默认开启（其中 Qiskit 两项可通过离线开关关闭），6 个按需启用**。连接名对应配置中的 `serverName`；“默认开启”表示配置策略，使用前仍需准备依赖和必要凭据。
+默认 Preset 共声明 30 个 MCP 服务连接：**22 个默认开启（其中 Qiskit 两项可通过离线开关关闭），8 个按需启用**。连接名对应配置中的 `serverName`；“默认开启”表示配置策略，使用前仍需准备依赖和必要凭据。
 
 这些 MCP Server 都由本机以 `stdio` 方式启动，不是 OpenQuantum 提供的公共托管端点。其中一部分 Tool 在本地计算，另一部分再访问厂商文档或量子云；“本地启动 MCP Server”不代表所有数据处理都留在本地。
 
@@ -159,6 +165,10 @@
 | [`random_meas_local`](.agents/skills/randomized-measurements/mcp/server.mjs) · [RandomMeas.jl](https://github.com/bvermersch/RandomMeas.jl) | 局域随机测量与子区纯度估计 | 默认开启 | Julia 1.12.7；先准备固定依赖；[安装与范围](docs/integrations/PAPER_BACKED_TOOLS.md)，不连接云硬件 |
 | [`flow_vqe_local`](.agents/skills/flow-vqe/mcp/server.mjs) · [Flow-VQE](https://github.com/olsson-group/Flow-VQE) | Pauli Hamiltonian 的 flow 参数学习与随机搜索比较 | 默认开启 | uv；[安装与范围](docs/integrations/PAPER_BACKED_TOOLS.md)，不连接云硬件 |
 | [`tenpy_local`](.agents/skills/tenpy-ground-state/mcp/server.mjs) · [TeNPy](https://github.com/tenpy/tenpy) | 有限 XYZ 链 DMRG 基态与精确参照 | 默认开启 | uv；[安装与范围](docs/integrations/PAPER_BACKED_TOOLS.md)，不连接云硬件 |
+| [`qcut_local`](.agents/skills/qcut-knitting/mcp/server.mjs) · [QCut](https://github.com/FiQCI/QCut) | 门切割与期望值重建 | 默认开启 | Python 3.12 + uv；本地计算、无需云凭据；[范围](docs/integrations/CANDIDATE_LIBRARIES.md) |
+| [`compact_local`](.agents/skills/compact-optimization/mcp/server.mjs) · [Compact](https://github.com/Q-PROOF/Compact) | 线路优化与独立等价对照 | 默认开启 | Python 3.12 + uv；本地计算、无需云凭据；[范围](docs/integrations/CANDIDATE_LIBRARIES.md) |
+| [`openqarp_local`](.agents/skills/openqarp-excited-states/mcp/server.mjs) · [OpenQARP](https://github.com/OpenQARP/openqarp) | VQD 激发态、残差与正交性 | 默认开启 | Python 3.12 + uv；本地计算、无需云凭据；[范围](docs/integrations/CANDIDATE_LIBRARIES.md) |
+| [`cqlib_kernel_local`](.agents/skills/cqlib-kernel/mcp/server.mjs) · [cqlib-qml](https://github.com/cq-lib/cqlib-qml) | 角度编码核与 QSVM | 默认关闭 | Python 3.12 + uv；本地计算、无需云凭据；首次构建需 Rust ≥1.89，固定 beta SDK；[范围](docs/integrations/CANDIDATE_LIBRARIES.md) |
 | [`qiskit`](https://github.com/Qiskit/mcp-servers) · Qiskit Circuits（上游服务） | 电路读取、分析、转译与 QASM/QPY 转换 | 默认开启¹ | `uvx`；电路操作无需云凭据，首次启动可能下载依赖 |
 | [`qiskit_docs`](https://github.com/Qiskit/mcp-servers) · Qiskit Docs（上游服务） | Qiskit 文档搜索、页面读取和 IBM Quantum 错误码查询 | 默认开启¹ | `uvx`；文档访问需要网络，无需云凭据 |
 | [`qiskit_ibm_runtime`](https://github.com/Qiskit/mcp-servers) · IBM Runtime（上游服务） | IBM 后端查询、任务提交、结果读取与取消 | 默认关闭 | 手动开启；`uvx`、IBM Token 与可用账户额度；任务操作可能产生费用 |
@@ -166,6 +176,7 @@
 | [`qiskit_gym`](https://github.com/Qiskit/mcp-servers) · Qiskit Gym（上游服务） | 强化学习电路综合、训练环境与模型管理 | 默认关闭 | 手动开启；`uvx`；训练、进程和模型文件操作有副作用 |
 | [`quantum_hardware`](https://github.com/Lokesh-2025/quantum-hardware-mcp) · 社区硬件服务（上游服务） | IBM / IonQ 设备查询、任务提交与取消、成本估算 | 默认关闭 | 先安装固定源码并配置 IBM Token；IonQ 操作另需相应 Key；真实任务需授权 |
 | [`qpanda_runtime`](https://github.com/OriginQ/qpanda3-runtime-mcp-server) · 本源运行时（上游服务） | 悟空 QPU 设备查询，采样、期望值、批量任务与任务管理 | 默认关闭 | 先安装固定源码并配置本源凭据；真实任务需要权限、额度与授权 |
+| [`flagquantum`](.agents/skills/flagquantum-workbench/mcp/server.mjs) · [FlagQuantum](https://github.com/FlagQuantum/mcp-servers) | 第二家量子 MCP 电路工作台 | 默认关闭 | Python 3.12 + uv；本地计算、无需云凭据；[范围](docs/integrations/CANDIDATE_LIBRARIES.md) |
 
 ¹ 两项 Qiskit 服务在未设置 `OPENQUANTUM_DISABLE_QISKIT_MCP=1` 时默认开启。设置中心可以覆盖连接策略；修改 MCP 连接配置后需要重启 Harness。
 
@@ -571,7 +582,7 @@ IBM Quantum、IonQ 和本源量子是可连接的云服务。任务提交分别�
 
 ### 可选上游 Skill 与开发证据
 
-[OriginQ 官方 `pyqpanda3` Skill](https://github.com/OriginQ/pyqpanda3-skill) 提供电路编程、算法模板、迁移与 QCloud 使用指导。它**不计入上面的 23 个内置 Skill，也不会在首次启动时自动安装**；运行 `npm run skill:qpanda:setup` 后，固定审阅版本才会进入项目 Skill 目录。安装这个 Skill 不会自动启用 `qpanda_runtime`，也不会赋予云任务权限。
+[OriginQ 官方 `pyqpanda3` Skill](https://github.com/OriginQ/pyqpanda3-skill) 提供电路编程、算法模板、迁移与 QCloud 使用指导。它**不计入上面的 28 个内置 Skill，也不会在首次启动时自动安装**；运行 `npm run skill:qpanda:setup` 后，固定审阅版本才会进入项目 Skill 目录。安装这个 Skill 不会自动启用 `qpanda_runtime`，也不会赋予云任务权限。
 
 [固定量子能力 Benchmark](benchmarks/quantum-capabilities/README.md)使用 [MQT Bench](https://github.com/munich-quantum-toolkit/bench) 的 3 个固定电路案例与 manifest 做开发回归，属于开发与 CI 证据，不是 Skill 或 MCP 服务。
 
