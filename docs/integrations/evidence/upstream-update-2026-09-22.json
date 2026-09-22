@@ -1,0 +1,1811 @@
+{
+  "schema": "openquantum.quantum-upstream-update.v1",
+  "verifiedAt": "2026-09-22T06:17:58.887093+00:00",
+  "baselineCommit": "97181b39f9970cd3d2135885ec8fb7a445e76f29",
+  "platform": "macOS-27.0-arm64-arm-64bit-Mach-O",
+  "nodeVersion": "v24.14.1",
+  "scientificValidation": "not_evaluated",
+  "externalModelTested": false,
+  "hardwareTested": false,
+  "releaseCreated": false,
+  "runtimeLockChanges": {
+    "compact-optimization": {
+      "lockSha256": "8f23e69d59afd5a711a24a0c31f664a2b819603bde9196aea10daf203464c8c1",
+      "changedPackages": {
+        "compactq": {
+          "before": "0.2.1",
+          "after": "0.2.3"
+        },
+        "qiskit": {
+          "before": "2.5.1",
+          "after": "2.5.2"
+        }
+      }
+    },
+    "qcut-knitting": {
+      "lockSha256": "4c5fddebffd2070fd663b01f36c7d95eb06f905f53288403299dc0b2b3cf5b95",
+      "changedPackages": {
+        "qiskit": {
+          "before": "2.5.1",
+          "after": "2.5.2"
+        }
+      }
+    },
+    "clifft-sampling": {
+      "lockSha256": "42f3d4cf1a642b2cea2b25a61ae36a4de9c0e467f1ea27354d9e09f40ddc4530",
+      "changedPackages": {
+        "clifft": {
+          "before": "0.10.0",
+          "after": "0.10.1"
+        }
+      }
+    },
+    "graphix-mbqc": {
+      "lockSha256": "2b74cae528965098bbb935c518fe2a58e9ba2c1dcbb96ec6e28beeae685d4518",
+      "changedPackages": {
+        "graphix": {
+          "before": "0.3.5",
+          "after": "0.4"
+        },
+        "opt-einsum": {
+          "before": "3.4.0",
+          "after": null
+        }
+      }
+    }
+  },
+  "developmentProbes": {
+    "stim": {
+      "version": "1.17.dev1790038003",
+      "productionVersion": "1.16.0",
+      "promotedToRuntime": false
+    },
+    "flagquantum": {
+      "source": "https://github.com/flagos-ai/FlagQuantum",
+      "commit": "917bd5f7c1b16576f74f3b7b99a1142c0c052772",
+      "reportedSdkVersion": "0.2.0",
+      "mcpVersion": "0.3.0",
+      "productionSdkSource": "PyPI wheel",
+      "promotedToRuntime": false
+    }
+  },
+  "regressions": {
+    "compiler-upgrade": {
+      "versions": {
+        "compactq": "0.2.3",
+        "qiskit": "2.5.2",
+        "numpy": "2.4.6"
+      },
+      "denominator": 14,
+      "passed": 14,
+      "cases": [
+        {
+          "case": "qiskit-clifford-t-no-sx",
+          "level": 0,
+          "processInfidelity": 3.3084646133829665e-14
+        },
+        {
+          "case": "qiskit-clifford-t-no-sx",
+          "level": 1,
+          "processInfidelity": 4.285460875053104e-14
+        },
+        {
+          "case": "qiskit-clifford-t-no-sx",
+          "level": 2,
+          "processInfidelity": 4.3298697960381105e-14
+        },
+        {
+          "case": "qiskit-clifford-t-no-sx",
+          "level": 3,
+          "processInfidelity": 4.3298697960381105e-14
+        },
+        {
+          "case": "compact-search-roundtrip",
+          "inputGates": 16,
+          "objective": "2q",
+          "maxUnitaryDeviation": 2.6651134375294657e-15
+        },
+        {
+          "case": "compact-search-roundtrip",
+          "inputGates": 16,
+          "objective": "depth",
+          "maxUnitaryDeviation": 6.004449063730082e-16
+        },
+        {
+          "case": "compact-search-roundtrip",
+          "inputGates": 16,
+          "objective": "gate_count",
+          "maxUnitaryDeviation": 6.004449063730082e-16
+        },
+        {
+          "case": "compact-search-roundtrip",
+          "inputGates": 24,
+          "objective": "2q",
+          "maxUnitaryDeviation": 3.417008968066607e-16
+        },
+        {
+          "case": "compact-search-roundtrip",
+          "inputGates": 24,
+          "objective": "depth",
+          "maxUnitaryDeviation": 3.510833468576701e-16
+        },
+        {
+          "case": "compact-search-roundtrip",
+          "inputGates": 24,
+          "objective": "gate_count",
+          "maxUnitaryDeviation": 4.66301930857378e-16
+        },
+        {
+          "case": "compact-search-roundtrip",
+          "inputGates": 48,
+          "objective": "2q",
+          "maxUnitaryDeviation": 6.329245045284193e-16
+        },
+        {
+          "case": "compact-search-roundtrip",
+          "inputGates": 48,
+          "objective": "depth",
+          "maxUnitaryDeviation": 6.329245045284193e-16
+        },
+        {
+          "case": "compact-search-roundtrip",
+          "inputGates": 48,
+          "objective": "gate_count",
+          "maxUnitaryDeviation": 6.329245045284193e-16
+        },
+        {
+          "case": "compact-auto-reference-scope",
+          "logicalQubits": 9,
+          "reference": "not_run",
+          "independentEquivalent": null
+        }
+      ],
+      "scientificValidation": "not_evaluated"
+    },
+    "clifft-continuation": {
+      "versions": {
+        "clifft": "0.10.1",
+        "numpy": "2.5.3"
+      },
+      "denominator": 2,
+      "passed": 2,
+      "cases": [
+        {
+          "case": "LOSS",
+          "shots": 8192,
+          "seed": 2209,
+          "observedSpectatorFlipProbability": 0.058837890625,
+          "expectedProbability": 0.058199999999999995,
+          "tolerance": 0.015642263182395335,
+          "serialParallelIdentical": true
+        },
+        {
+          "case": "LEAKAGE",
+          "shots": 8192,
+          "seed": 2209,
+          "observedSpectatorFlipProbability": 0.058837890625,
+          "expectedProbability": 0.058199999999999995,
+          "tolerance": 0.015642263182395335,
+          "serialParallelIdentical": true
+        }
+      ],
+      "scope": "development-only loss/leakage API; the product Tool still exposes final-measurement circuits only",
+      "scientificValidation": "not_evaluated"
+    },
+    "stim-eof": {
+      "versions": {
+        "stim": "1.17.dev1790038003",
+        "pymatching": "2.4.0"
+      },
+      "denominator": 3,
+      "passed": 3,
+      "cases": [
+        {
+          "case": "Circuit-unfinished-tag",
+          "status": "rejected",
+          "message": "rejected: A tag wasn't closed with ']' before the end of the line.\nHit a line feed character (0x0A) while trying to parse the tag of a 'X' instruction.\nIn tags, use the escape sequence '\\r' for carriage returns and '\\n' for line feeds."
+        },
+        {
+          "case": "DetectorErrorModel-unfinished-tag",
+          "status": "rejected",
+          "message": "rejected: A tag wasn't closed with ']' before the end of the line.\nHit a line feed character (0x0A) while trying to parse the tag of an instruction.\nIn tags, use the escape sequence '\\r' for carriage returns and '\\n' for line feeds."
+        },
+        {
+          "case": "tag-comment-roundtrip-and-pymatching",
+          "status": "passed"
+        }
+      ],
+      "scope": "isolated development build; production Stim pin is unchanged",
+      "scientificValidation": "not_evaluated"
+    },
+    "stim-burst": {
+      "scope": "fixed development regression, phenomenological independent local depolarization; not a correlated Pauli burst or scaling-law validation",
+      "denominator": 5,
+      "passed": 5,
+      "scientificValidation": "not_evaluated",
+      "cases": [
+        {
+          "case": "memory-x-width-1",
+          "distance": 3,
+          "rounds": 3,
+          "burstStartRound": 1,
+          "burstDuration": 1,
+          "qubits": [
+            10
+          ],
+          "p0": 0.01,
+          "pTarget": 0.2,
+          "extraChannelProbability": 0.19256756756756757,
+          "excessExposure": 0.19,
+          "seed": 2718,
+          "shots": 4096,
+          "circuitSha256": "d63dc50c10db71a557a9f880e61a3a0fc038dcaab71a8b5b2da8121ce8ab5440",
+          "sharedSyndromeSha256": "6002c2549efefe145fec54eeb0430930149ac7dc6ff7ad2d23ee254405c2a187",
+          "baseline": {
+            "failures": 30,
+            "shots": 4096,
+            "rate": 0.00732421875,
+            "wilson95": [
+              0.0051352858767219015,
+              0.010436403775652586
+            ]
+          },
+          "informed": {
+            "failures": 30,
+            "shots": 4096,
+            "rate": 0.00732421875,
+            "wilson95": [
+              0.0051352858767219015,
+              0.010436403775652586
+            ]
+          },
+          "baselineOnlyFailures": 0,
+          "informedOnlyFailures": 0
+        },
+        {
+          "case": "memory-x-width-5",
+          "distance": 3,
+          "rounds": 3,
+          "burstStartRound": 1,
+          "burstDuration": 1,
+          "qubits": [
+            10,
+            3,
+            8,
+            12,
+            17
+          ],
+          "p0": 0.01,
+          "pTarget": 0.048,
+          "extraChannelProbability": 0.03851351351351351,
+          "excessExposure": 0.19,
+          "seed": 2718,
+          "shots": 4096,
+          "circuitSha256": "2e9c54232f8f9e51bfa9bb67df8e9f589639d973775c4a5543f00c74085e580b",
+          "sharedSyndromeSha256": "ffe74f0cf0ea4ae10bfbdf70a9cca08dc9fb761dba4d6dbd1007c28efdc3d9c4",
+          "baseline": {
+            "failures": 35,
+            "shots": 4096,
+            "rate": 0.008544921875,
+            "wilson95": [
+              0.006150578678096599,
+              0.011860229681779438
+            ]
+          },
+          "informed": {
+            "failures": 35,
+            "shots": 4096,
+            "rate": 0.008544921875,
+            "wilson95": [
+              0.006150578678096599,
+              0.011860229681779438
+            ]
+          },
+          "baselineOnlyFailures": 0,
+          "informedOnlyFailures": 0
+        },
+        {
+          "case": "memory-z-width-1",
+          "distance": 3,
+          "rounds": 3,
+          "burstStartRound": 1,
+          "burstDuration": 1,
+          "qubits": [
+            10
+          ],
+          "p0": 0.01,
+          "pTarget": 0.2,
+          "extraChannelProbability": 0.19256756756756757,
+          "excessExposure": 0.19,
+          "seed": 2718,
+          "shots": 4096,
+          "circuitSha256": "2ec4d7a5566841d1258c57cad9059cbbcfd37c5089ce1b536cdc80b6365a5f97",
+          "sharedSyndromeSha256": "e6db0f9fe278aecc30dc3df7191d73d70ec18c7c0a5533de49fbb148d9a20fb6",
+          "baseline": {
+            "failures": 23,
+            "shots": 4096,
+            "rate": 0.005615234375,
+            "wilson95": [
+              0.003744712895050349,
+              0.00841221056682197
+            ]
+          },
+          "informed": {
+            "failures": 23,
+            "shots": 4096,
+            "rate": 0.005615234375,
+            "wilson95": [
+              0.003744712895050349,
+              0.00841221056682197
+            ]
+          },
+          "baselineOnlyFailures": 0,
+          "informedOnlyFailures": 0
+        },
+        {
+          "case": "memory-z-width-5",
+          "distance": 3,
+          "rounds": 3,
+          "burstStartRound": 1,
+          "burstDuration": 1,
+          "qubits": [
+            10,
+            3,
+            8,
+            12,
+            17
+          ],
+          "p0": 0.01,
+          "pTarget": 0.048,
+          "extraChannelProbability": 0.03851351351351351,
+          "excessExposure": 0.19,
+          "seed": 2718,
+          "shots": 4096,
+          "circuitSha256": "6c35e1907be1ced342eed3183bdd277f08083befbb1df5cf909ab27ff6f7a8a8",
+          "sharedSyndromeSha256": "a9b5f056b6b53db2ea66523a3139bf23b25ae67c0c538e609e9a036b9ac77d45",
+          "baseline": {
+            "failures": 41,
+            "shots": 4096,
+            "rate": 0.010009765625,
+            "wilson95": [
+              0.0073873457194077235,
+              0.013550405089470172
+            ]
+          },
+          "informed": {
+            "failures": 41,
+            "shots": 4096,
+            "rate": 0.010009765625,
+            "wilson95": [
+              0.0073873457194077235,
+              0.013550405089470172
+            ]
+          },
+          "baselineOnlyFailures": 0,
+          "informedOnlyFailures": 0
+        },
+        {
+          "case": "stim-dem-tags-comments-and-invalid-eof",
+          "taggedRoundTrip": true,
+          "pymatchingDetectors": 1,
+          "unfinishedTagEOF": "rejected"
+        }
+      ]
+    },
+    "flag-sdk": {
+      "versions": {
+        "flagquantum": "0.2.0",
+        "flagquantum-mcp-server": "0.3.0",
+        "torch": "2.13.0"
+      },
+      "denominator": 10,
+      "passed": 10,
+      "cases": [
+        {
+          "case": "angle-bool",
+          "status": "rejected",
+          "errorType": "TypeError",
+          "message": "gate 'ry' parameter 'theta' must be a real number, not a bool"
+        },
+        {
+          "case": "angle-string",
+          "status": "rejected",
+          "errorType": "TypeError",
+          "message": "gate 'ry' parameter 'theta' must be a real number, got str"
+        },
+        {
+          "case": "angle-complex",
+          "status": "rejected",
+          "errorType": "TypeError",
+          "message": "gate 'ry' parameter 'theta' must be a real number, got complex"
+        },
+        {
+          "case": "wire-bool",
+          "status": "rejected",
+          "errorType": "TypeError",
+          "message": "probabilities output wire must be an integer, got True"
+        },
+        {
+          "case": "wire-empty-string",
+          "status": "rejected",
+          "errorType": "TypeError",
+          "message": "probabilities output wire must be an integer, got ''"
+        },
+        {
+          "case": "wire-bytes",
+          "status": "rejected",
+          "errorType": "TypeError",
+          "message": "probabilities output wire must be an integer, got b'0'"
+        },
+        {
+          "case": "wire-float",
+          "status": "rejected",
+          "errorType": "TypeError",
+          "message": "probabilities output wire must be an integer, got 0.5"
+        },
+        {
+          "case": "ir-real-dtype",
+          "status": "rejected",
+          "errorType": "IRValidationError",
+          "message": "IR dtype 'float32' is not supported; expected 'complex64', 'complex128'"
+        },
+        {
+          "case": "bell-probabilities",
+          "values": [
+            0.5,
+            1.4901161193847656e-08,
+            1.4901161193847656e-08,
+            0.5
+          ],
+          "accuracyMetric": "not_measured"
+        },
+        {
+          "case": "impossible-tn-budget",
+          "status": "rejected",
+          "errorType": "ValueError",
+          "message": "max_intermediate_bytes=1 cannot hold one 8-byte tensor element."
+        }
+      ],
+      "scope": "isolated SDK commit; CPU contract checks, no native peak-memory measurement or hardware submission",
+      "scientificValidation": "not_evaluated"
+    },
+    "existing-compiler": {
+      "scope": "fixed development regression corpus",
+      "denominator": 10,
+      "passed": 10,
+      "scientificValidation": "not_evaluated",
+      "cases": [
+        {
+          "case": "qiskit-16594-single-qubit-003",
+          "level": 2,
+          "processInfidelity": 0.0,
+          "tolerance": 1e-12
+        },
+        {
+          "case": "qiskit-16594-single-qubit-003",
+          "level": 3,
+          "processInfidelity": 0.0,
+          "tolerance": 1e-12
+        },
+        {
+          "case": "qiskit-commutative-cancellation-001",
+          "level": 2,
+          "processInfidelity": 0.0,
+          "tolerance": 1e-12
+        },
+        {
+          "case": "qiskit-commutative-cancellation-001",
+          "level": 3,
+          "processInfidelity": 0.0,
+          "tolerance": 1e-12
+        },
+        {
+          "case": "qiskit-cp-small-angle-002",
+          "level": 2,
+          "processInfidelity": 5.787632595399828e-10,
+          "tolerance": 1e-08
+        },
+        {
+          "case": "qiskit-cp-small-angle-002",
+          "level": 3,
+          "processInfidelity": 5.787632595399828e-10,
+          "tolerance": 1e-08
+        },
+        {
+          "case": "oracle-controls",
+          "detectsHiddenCZ": true,
+          "ignoresGlobalPhase": true
+        },
+        {
+          "case": "compact-ecr-wire-false-positive",
+          "upstreamTier": 2,
+          "independentEquivalent": false
+        },
+        {
+          "case": "compact-iswap-wire-false-positive",
+          "upstreamTier": 2,
+          "independentEquivalent": false
+        },
+        {
+          "case": "adapter-independent-rejection",
+          "rejectedWrongUnitary": true
+        }
+      ]
+    },
+    "flag-mcp": {
+      "toolSchemasMatched": 17,
+      "denominator": 4,
+      "passed": 4,
+      "scope": "all schemas; analysis, Bell simulation and error calls only",
+      "scientificValidation": "not_evaluated"
+    }
+  },
+  "realToolCases": [
+    {
+      "case": "compact-optimization-identity",
+      "source": {
+        "name": "Compact",
+        "version": "0.2.3",
+        "repository": "https://github.com/Q-PROOF/Compact"
+      },
+      "input": {
+        "numQubits": 1,
+        "gates": [],
+        "referenceMode": "required",
+        "searchDepth": 2,
+        "objective": "2q",
+        "execution": {}
+      },
+      "metrics": {
+        "independentEquivalent": true,
+        "processFidelity": 1,
+        "maxUnitaryDeviation": 0,
+        "reference": {
+          "mode": "required",
+          "status": "computed",
+          "method": "Independent Qiskit full unitary, fixed wire order, global phase ignored",
+          "reason": "Independent reference computed for this input."
+        }
+      },
+      "rawSha256": "8a1c03fe695f136fb14a53a807e63366d2f80df968ab448efbb9dd2ac9bc67cd"
+    },
+    {
+      "case": "compact-optimization-phase-gadget",
+      "source": {
+        "name": "Compact",
+        "version": "0.2.3",
+        "repository": "https://github.com/Q-PROOF/Compact"
+      },
+      "input": {
+        "numQubits": 2,
+        "gates": [
+          {
+            "gate": "CX",
+            "targets": [
+              0,
+              1
+            ]
+          },
+          {
+            "gate": "RZ",
+            "targets": [
+              1
+            ],
+            "angle": 0.37
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              0,
+              1
+            ]
+          }
+        ],
+        "searchDepth": 2,
+        "objective": "2q",
+        "referenceMode": "auto",
+        "execution": {}
+      },
+      "metrics": {
+        "independentEquivalent": true,
+        "processFidelity": 1,
+        "maxUnitaryDeviation": 3.7238012298709097e-16,
+        "reference": {
+          "mode": "auto",
+          "status": "computed",
+          "method": "Independent Qiskit full unitary, fixed wire order, global phase ignored",
+          "reason": "Independent reference computed for this input."
+        }
+      },
+      "rawSha256": "b231dcc61200ef812df6669111f6d4ae287607ef83ee81081786f39f4a8667d5"
+    },
+    {
+      "case": "compact-optimization-reverse-wire",
+      "source": {
+        "name": "Compact",
+        "version": "0.2.3",
+        "repository": "https://github.com/Q-PROOF/Compact"
+      },
+      "input": {
+        "numQubits": 3,
+        "gates": [
+          {
+            "gate": "CX",
+            "targets": [
+              2,
+              0
+            ]
+          },
+          {
+            "gate": "RY",
+            "targets": [
+              1
+            ],
+            "angle": 0.37
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              2,
+              0
+            ]
+          }
+        ],
+        "searchDepth": 2,
+        "objective": "2q",
+        "referenceMode": "auto",
+        "execution": {}
+      },
+      "metrics": {
+        "independentEquivalent": true,
+        "processFidelity": 1,
+        "maxUnitaryDeviation": 0,
+        "reference": {
+          "mode": "auto",
+          "status": "computed",
+          "method": "Independent Qiskit full unitary, fixed wire order, global phase ignored",
+          "reason": "Independent reference computed for this input."
+        }
+      },
+      "rawSha256": "eba77cbaaa1f65782ee539b9b1d1645fc756a90407d06d034c0c82bc4fe8ce8a"
+    },
+    {
+      "case": "compact-optimization-skip-reference",
+      "source": {
+        "name": "Compact",
+        "version": "0.2.3",
+        "repository": "https://github.com/Q-PROOF/Compact"
+      },
+      "input": {
+        "numQubits": 3,
+        "gates": [
+          {
+            "gate": "CX",
+            "targets": [
+              2,
+              0
+            ]
+          },
+          {
+            "gate": "RY",
+            "targets": [
+              1
+            ],
+            "angle": 0.37
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              2,
+              0
+            ]
+          }
+        ],
+        "referenceMode": "skip",
+        "searchDepth": 2,
+        "objective": "2q",
+        "execution": {}
+      },
+      "metrics": {
+        "independentEquivalent": null,
+        "processFidelity": null,
+        "maxUnitaryDeviation": null,
+        "reference": {
+          "mode": "skip",
+          "status": "not_run",
+          "method": "Independent Qiskit full unitary, fixed wire order, global phase ignored",
+          "reason": "Reference explicitly skipped by the caller."
+        }
+      },
+      "rawSha256": "77ed536c646faa73f9a059135b8d848ecb1751f5860ee0c8bde8e262b843001a"
+    },
+    {
+      "case": "qcut-knitting-phase-bell",
+      "source": {
+        "name": "QCut",
+        "version": "2.2.0",
+        "repository": "https://github.com/FiQCI/QCut"
+      },
+      "input": {
+        "numQubits": 2,
+        "gates": [
+          {
+            "gate": "H",
+            "targets": [
+              1
+            ]
+          },
+          {
+            "gate": "S",
+            "targets": [
+              1
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              1,
+              0
+            ]
+          }
+        ],
+        "observables": [
+          "XY",
+          "YX",
+          "ZZ"
+        ],
+        "shots": 4096,
+        "strategy": "automatic",
+        "gateCuts": [],
+        "partitions": 2,
+        "maxBatchSize": 32,
+        "seed": 3,
+        "referenceMode": "auto",
+        "execution": {}
+      },
+      "metrics": {
+        "estimates": [
+          0.9999381303787231,
+          1.0003348588943481,
+          1.0000947713851929
+        ],
+        "exactExpectations": [
+          0.9999999999999998,
+          0.9999999999999998,
+          0.9999999999999998
+        ],
+        "maxAbsoluteError": 0.0003348588943483666,
+        "reference": {
+          "mode": "auto",
+          "status": "computed",
+          "method": "Independent uncut Qiskit statevector Pauli expectations",
+          "reason": "Independent reference computed for this input."
+        }
+      },
+      "rawSha256": "a8bdf01550cd528a7f3c9b8d65c1969e64274bdccfb65623c9e771262056dfcc"
+    },
+    {
+      "case": "qcut-knitting-reverse-automatic",
+      "source": {
+        "name": "QCut",
+        "version": "2.2.0",
+        "repository": "https://github.com/FiQCI/QCut"
+      },
+      "input": {
+        "numQubits": 2,
+        "gates": [
+          {
+            "gate": "X",
+            "targets": [
+              1
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              1,
+              0
+            ]
+          }
+        ],
+        "observables": [
+          "IZ",
+          "ZI",
+          "IY"
+        ],
+        "strategy": "automatic",
+        "execution": {
+          "threads": 2
+        },
+        "shots": 8192,
+        "gateCuts": [],
+        "partitions": 2,
+        "maxBatchSize": 32,
+        "seed": 3,
+        "referenceMode": "auto"
+      },
+      "metrics": {
+        "estimates": [
+          -0.9969482421875,
+          -0.9813232421875,
+          -0.015369653701782227
+        ],
+        "exactExpectations": [
+          -1,
+          -1,
+          0
+        ],
+        "maxAbsoluteError": 0.0186767578125,
+        "reference": {
+          "mode": "auto",
+          "status": "computed",
+          "method": "Independent uncut Qiskit statevector Pauli expectations",
+          "reason": "Independent reference computed for this input."
+        }
+      },
+      "rawSha256": "c70c573f26d634e8c7dd2947aee791447724b88c928f2c066794f75cd71671ab"
+    },
+    {
+      "case": "qcut-knitting-reverse-explicit",
+      "source": {
+        "name": "QCut",
+        "version": "2.2.0",
+        "repository": "https://github.com/FiQCI/QCut"
+      },
+      "input": {
+        "numQubits": 2,
+        "gates": [
+          {
+            "gate": "X",
+            "targets": [
+              1
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              1,
+              0
+            ]
+          }
+        ],
+        "observables": [
+          "IZ",
+          "ZI",
+          "IY"
+        ],
+        "strategy": "explicit",
+        "execution": {
+          "threads": 2
+        },
+        "gateCuts": [
+          1
+        ],
+        "shots": 8192,
+        "partitions": 2,
+        "maxBatchSize": 32,
+        "seed": 3,
+        "referenceMode": "auto"
+      },
+      "metrics": {
+        "estimates": [
+          -1.01806640625,
+          -0.9974365234375,
+          0.011442542076110843
+        ],
+        "exactExpectations": [
+          -1,
+          -1,
+          0
+        ],
+        "maxAbsoluteError": 0.01806640625,
+        "reference": {
+          "mode": "auto",
+          "status": "computed",
+          "method": "Independent uncut Qiskit statevector Pauli expectations",
+          "reason": "Independent reference computed for this input."
+        }
+      },
+      "rawSha256": "40c2455df9e7c63b2e065d0b60383054e1ef96916754479f4279abaafe5ceed7"
+    },
+    {
+      "case": "qcut-knitting-skip-reference",
+      "source": {
+        "name": "QCut",
+        "version": "2.2.0",
+        "repository": "https://github.com/FiQCI/QCut"
+      },
+      "input": {
+        "numQubits": 2,
+        "gates": [
+          {
+            "gate": "H",
+            "targets": [
+              1
+            ]
+          },
+          {
+            "gate": "S",
+            "targets": [
+              1
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              1,
+              0
+            ]
+          }
+        ],
+        "observables": [
+          "XY",
+          "YX",
+          "ZZ"
+        ],
+        "shots": 128,
+        "referenceMode": "skip",
+        "strategy": "automatic",
+        "gateCuts": [],
+        "partitions": 2,
+        "maxBatchSize": 32,
+        "seed": 3,
+        "execution": {}
+      },
+      "metrics": {
+        "estimates": [
+          0.997314453125,
+          1.005859375,
+          1.02294921875
+        ],
+        "exactExpectations": null,
+        "maxAbsoluteError": null,
+        "reference": {
+          "mode": "skip",
+          "status": "not_run",
+          "method": "Independent uncut Qiskit statevector Pauli expectations",
+          "reason": "Reference explicitly skipped by the caller."
+        }
+      },
+      "rawSha256": "e45f80d78ac9cc567be498aa5a02a8eeb36bde7a2be37be04aedff5b018a1968"
+    },
+    {
+      "case": "clifft-sampling-noise-bit-order",
+      "source": {
+        "name": "clifft",
+        "version": "0.10.1",
+        "repository": "https://github.com/unitaryfoundation/clifft"
+      },
+      "input": {
+        "numQubits": 2,
+        "gates": [
+          {
+            "gate": "X",
+            "targets": [
+              0
+            ]
+          }
+        ],
+        "noiseProbability": 0.15,
+        "shots": 4096,
+        "seed": 7,
+        "maxActiveWidth": null,
+        "referenceMode": "auto",
+        "execution": {}
+      },
+      "metrics": {
+        "totalVariationDistance": 0.007666015625000015,
+        "referenceTraceError": 0,
+        "reference": {
+          "mode": "auto",
+          "status": "computed",
+          "method": "Independent dense density-matrix evolution",
+          "reason": "Independent reference computed for this input."
+        },
+        "bitOrder": "left-to-right q0,q1,..."
+      },
+      "rawSha256": "5d14849d169e835de5a79119a18960c1b1c42f6d0c6169cb15b5e1c1af3b3766"
+    },
+    {
+      "case": "clifft-sampling-repeat",
+      "source": {
+        "name": "clifft",
+        "version": "0.10.1",
+        "repository": "https://github.com/unitaryfoundation/clifft"
+      },
+      "input": {
+        "shots": 4096,
+        "numQubits": 2,
+        "gates": [
+          {
+            "gate": "H",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "T",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "H",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              0,
+              1
+            ]
+          }
+        ],
+        "noiseProbability": 0,
+        "seed": 7,
+        "maxActiveWidth": null,
+        "referenceMode": "auto",
+        "execution": {}
+      },
+      "metrics": {
+        "totalVariationDistance": 0.0028919219067263247,
+        "referenceTraceError": 3.3306690738754696e-16,
+        "reference": {
+          "mode": "auto",
+          "status": "computed",
+          "method": "Independent dense density-matrix evolution",
+          "reason": "Independent reference computed for this input."
+        },
+        "bitOrder": "left-to-right q0,q1,..."
+      },
+      "rawSha256": "1a0abec440fb84d07fe9d8e493d1a00e973290431b9482bc8b2f2a86ba53a50e"
+    },
+    {
+      "case": "clifft-sampling-t-interference",
+      "source": {
+        "name": "clifft",
+        "version": "0.10.1",
+        "repository": "https://github.com/unitaryfoundation/clifft"
+      },
+      "input": {
+        "shots": 4096,
+        "numQubits": 2,
+        "gates": [
+          {
+            "gate": "H",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "T",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "H",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              0,
+              1
+            ]
+          }
+        ],
+        "noiseProbability": 0,
+        "seed": 7,
+        "maxActiveWidth": null,
+        "referenceMode": "auto",
+        "execution": {}
+      },
+      "metrics": {
+        "totalVariationDistance": 0.0028919219067263247,
+        "referenceTraceError": 3.3306690738754696e-16,
+        "reference": {
+          "mode": "auto",
+          "status": "computed",
+          "method": "Independent dense density-matrix evolution",
+          "reason": "Independent reference computed for this input."
+        },
+        "bitOrder": "left-to-right q0,q1,..."
+      },
+      "rawSha256": "11bf9be53dbee4819573dd262632cf502c9af726ef8526035424c3d06a9072a8"
+    },
+    {
+      "case": "graphix-mbqc-bell-phase",
+      "source": {
+        "name": "graphix",
+        "version": "0.4",
+        "repository": "https://github.com/TeamGraphix/graphix"
+      },
+      "input": {
+        "branches": 8,
+        "numQubits": 2,
+        "gates": [
+          {
+            "gate": "H",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "T",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "T",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              0,
+              1
+            ]
+          }
+        ],
+        "simulate": true,
+        "initialState": "zero",
+        "seed": 7,
+        "referenceMode": "auto",
+        "execution": {}
+      },
+      "metrics": {
+        "maxInfidelity": 2.220446049250313e-16,
+        "reference": {
+          "mode": "auto",
+          "status": "computed",
+          "method": "Independent gate-model statevector evolution",
+          "reason": "Independent reference computed for this input."
+        },
+        "maxSpace": 3,
+        "bitOrder": "left-to-right logical q0,q1,... mapped by outputNodes",
+        "branches": 8,
+        "maxNormError": 2.220446049250313e-16
+      },
+      "rawSha256": "06d767cd50c5a669a07bb6826989024667918c5cdc1fb953cac1331b4f5848ac"
+    },
+    {
+      "case": "graphix-mbqc-bit-order",
+      "source": {
+        "name": "graphix",
+        "version": "0.4",
+        "repository": "https://github.com/TeamGraphix/graphix"
+      },
+      "input": {
+        "numQubits": 3,
+        "gates": [
+          {
+            "gate": "X",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "Y",
+            "targets": [
+              2
+            ]
+          }
+        ],
+        "simulate": true,
+        "initialState": "zero",
+        "branches": 4,
+        "seed": 7,
+        "referenceMode": "auto",
+        "execution": {}
+      },
+      "metrics": {
+        "maxInfidelity": 0,
+        "reference": {
+          "mode": "auto",
+          "status": "computed",
+          "method": "Independent gate-model statevector evolution",
+          "reason": "Independent reference computed for this input."
+        },
+        "maxSpace": 4,
+        "bitOrder": "left-to-right logical q0,q1,... mapped by outputNodes",
+        "branches": 4,
+        "maxNormError": 0
+      },
+      "rawSha256": "7ca88b5545db24a697ac038c2ad000069103bf7ccd4110694d2e5313246d482f"
+    },
+    {
+      "case": "graphix-mbqc-cz-rotation",
+      "source": {
+        "name": "graphix",
+        "version": "0.4",
+        "repository": "https://github.com/TeamGraphix/graphix"
+      },
+      "input": {
+        "numQubits": 2,
+        "initialState": "plus",
+        "gates": [
+          {
+            "gate": "CZ",
+            "targets": [
+              1,
+              0
+            ]
+          },
+          {
+            "gate": "RX",
+            "targets": [
+              0
+            ],
+            "angle": -0.7
+          },
+          {
+            "gate": "RY",
+            "targets": [
+              1
+            ],
+            "angle": 1.1
+          },
+          {
+            "gate": "S",
+            "targets": [
+              0
+            ]
+          }
+        ],
+        "simulate": true,
+        "branches": 4,
+        "seed": 7,
+        "referenceMode": "auto",
+        "execution": {}
+      },
+      "metrics": {
+        "maxInfidelity": 2.220446049250313e-16,
+        "reference": {
+          "mode": "auto",
+          "status": "computed",
+          "method": "Independent gate-model statevector evolution",
+          "reason": "Independent reference computed for this input."
+        },
+        "maxSpace": 3,
+        "bitOrder": "left-to-right logical q0,q1,... mapped by outputNodes",
+        "branches": 4,
+        "maxNormError": 2.220446049250313e-16
+      },
+      "rawSha256": "009905618ecba8fd5c64b5b4d365a735d1ef57483c24e0df6ff2cbefa7ebb03b"
+    },
+    {
+      "case": "graphix-mbqc-repeat",
+      "source": {
+        "name": "graphix",
+        "version": "0.4",
+        "repository": "https://github.com/TeamGraphix/graphix"
+      },
+      "input": {
+        "branches": 8,
+        "numQubits": 2,
+        "gates": [
+          {
+            "gate": "H",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "T",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "T",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              0,
+              1
+            ]
+          }
+        ],
+        "simulate": true,
+        "initialState": "zero",
+        "seed": 7,
+        "referenceMode": "auto",
+        "execution": {}
+      },
+      "metrics": {
+        "maxInfidelity": 2.220446049250313e-16,
+        "reference": {
+          "mode": "auto",
+          "status": "computed",
+          "method": "Independent gate-model statevector evolution",
+          "reason": "Independent reference computed for this input."
+        },
+        "maxSpace": 3,
+        "bitOrder": "left-to-right logical q0,q1,... mapped by outputNodes",
+        "branches": 8,
+        "maxNormError": 2.220446049250313e-16
+      },
+      "rawSha256": "02806967216d055690b88afbf0294584377eaafefda83935004affbfe94bfe35"
+    },
+    {
+      "case": "graphix-mbqc-rx",
+      "source": {
+        "name": "graphix",
+        "version": "0.4",
+        "repository": "https://github.com/TeamGraphix/graphix"
+      },
+      "input": {
+        "numQubits": 1,
+        "gates": [
+          {
+            "gate": "RX",
+            "targets": [
+              0
+            ],
+            "angle": 3.141592653589793
+          }
+        ],
+        "simulate": true,
+        "initialState": "zero",
+        "branches": 4,
+        "seed": 7,
+        "referenceMode": "auto",
+        "execution": {}
+      },
+      "metrics": {
+        "maxInfidelity": 0,
+        "reference": {
+          "mode": "auto",
+          "status": "computed",
+          "method": "Independent gate-model statevector evolution",
+          "reason": "Independent reference computed for this input."
+        },
+        "maxSpace": 2,
+        "bitOrder": "left-to-right logical q0,q1,... mapped by outputNodes",
+        "branches": 4,
+        "maxNormError": 0
+      },
+      "rawSha256": "ed8cbe5be1df5272d5d948aaee66617a85da5f106e961d2339853a9ccc795463"
+    },
+    {
+      "case": "graphix-mbqc-ry",
+      "source": {
+        "name": "graphix",
+        "version": "0.4",
+        "repository": "https://github.com/TeamGraphix/graphix"
+      },
+      "input": {
+        "numQubits": 1,
+        "gates": [
+          {
+            "gate": "RY",
+            "targets": [
+              0
+            ],
+            "angle": 1.5707963267948966
+          }
+        ],
+        "simulate": true,
+        "initialState": "zero",
+        "branches": 4,
+        "seed": 7,
+        "referenceMode": "auto",
+        "execution": {}
+      },
+      "metrics": {
+        "maxInfidelity": 2.220446049250313e-16,
+        "reference": {
+          "mode": "auto",
+          "status": "computed",
+          "method": "Independent gate-model statevector evolution",
+          "reason": "Independent reference computed for this input."
+        },
+        "maxSpace": 2,
+        "bitOrder": "left-to-right logical q0,q1,... mapped by outputNodes",
+        "branches": 4,
+        "maxNormError": 2.220446049250313e-16
+      },
+      "rawSha256": "0659264386a3b5be6be850a4372960280e5d80cbc08268f6e6808fd96d7093a0"
+    },
+    {
+      "case": "graphix-mbqc-rz-plus",
+      "source": {
+        "name": "graphix",
+        "version": "0.4",
+        "repository": "https://github.com/TeamGraphix/graphix"
+      },
+      "input": {
+        "numQubits": 1,
+        "initialState": "plus",
+        "gates": [
+          {
+            "gate": "RZ",
+            "targets": [
+              0
+            ],
+            "angle": 1.5707963267948966
+          }
+        ],
+        "simulate": true,
+        "branches": 4,
+        "seed": 7,
+        "referenceMode": "auto",
+        "execution": {}
+      },
+      "metrics": {
+        "maxInfidelity": 0,
+        "reference": {
+          "mode": "auto",
+          "status": "computed",
+          "method": "Independent gate-model statevector evolution",
+          "reason": "Independent reference computed for this input."
+        },
+        "maxSpace": 2,
+        "bitOrder": "left-to-right logical q0,q1,... mapped by outputNodes",
+        "branches": 4,
+        "maxNormError": 2.220446049250313e-16
+      },
+      "rawSha256": "b28933db137ab8f5dac445ec695c2195c6776643283030b847c060de96708ea3"
+    }
+  ],
+  "graphixScopeCases": [
+    {
+      "input": {
+        "numQubits": 11,
+        "gates": [
+          {
+            "gate": "H",
+            "targets": [
+              10
+            ]
+          }
+        ],
+        "simulate": false,
+        "initialState": "zero",
+        "branches": 4,
+        "seed": 7,
+        "referenceMode": "auto",
+        "execution": {}
+      },
+      "source": {
+        "name": "graphix",
+        "version": "0.4",
+        "repository": "https://github.com/TeamGraphix/graphix"
+      },
+      "reference": {
+        "mode": "auto",
+        "status": "not_run",
+        "method": "Independent gate-model statevector evolution",
+        "reason": "Automatic reference requires simulation and at most 10 logical qubits; required attempts any simulated size."
+      },
+      "simulation": {
+        "status": "not_run",
+        "backend": "statevector",
+        "reason": "Pattern generation requested without state simulation."
+      },
+      "branches": 0,
+      "maxInfidelity": null
+    },
+    {
+      "input": {
+        "referenceMode": "skip",
+        "numQubits": 2,
+        "gates": [
+          {
+            "gate": "H",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "T",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "T",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              0,
+              1
+            ]
+          }
+        ],
+        "simulate": true,
+        "initialState": "zero",
+        "branches": 4,
+        "seed": 7,
+        "execution": {}
+      },
+      "source": {
+        "name": "graphix",
+        "version": "0.4",
+        "repository": "https://github.com/TeamGraphix/graphix"
+      },
+      "reference": {
+        "mode": "skip",
+        "status": "not_run",
+        "method": "Independent gate-model statevector evolution",
+        "reason": "Reference explicitly skipped by the caller."
+      },
+      "simulation": {
+        "status": "computed",
+        "backend": "statevector",
+        "reason": "Sampled corrected output states computed."
+      },
+      "branches": 4,
+      "maxInfidelity": null
+    },
+    {
+      "input": {
+        "numQubits": 4,
+        "initialState": "plus",
+        "branches": 12,
+        "referenceMode": "required",
+        "gates": [
+          {
+            "gate": "CX",
+            "targets": [
+              3,
+              0
+            ]
+          },
+          {
+            "gate": "RY",
+            "targets": [
+              2
+            ],
+            "angle": -1.3
+          },
+          {
+            "gate": "RZ",
+            "targets": [
+              0
+            ],
+            "angle": 0.73
+          },
+          {
+            "gate": "CZ",
+            "targets": [
+              2,
+              0
+            ]
+          },
+          {
+            "gate": "RX",
+            "targets": [
+              3
+            ],
+            "angle": 0.9
+          },
+          {
+            "gate": "T",
+            "targets": [
+              1
+            ]
+          },
+          {
+            "gate": "Y",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              0,
+              3
+            ]
+          }
+        ],
+        "simulate": true,
+        "seed": 7,
+        "execution": {}
+      },
+      "source": {
+        "name": "graphix",
+        "version": "0.4",
+        "repository": "https://github.com/TeamGraphix/graphix"
+      },
+      "reference": {
+        "mode": "required",
+        "status": "computed",
+        "method": "Independent gate-model statevector evolution",
+        "reason": "Independent reference computed for this input."
+      },
+      "simulation": {
+        "status": "computed",
+        "backend": "statevector",
+        "reason": "Sampled corrected output states computed."
+      },
+      "branches": 12,
+      "maxInfidelity": 2.220446049250313e-16
+    }
+  ],
+  "harness": [
+    {
+      "group": "candidate-tools-evidence",
+      "model": "local protocol fixture",
+      "externalModelTested": false,
+      "successes": 5,
+      "expectedErrors": 1,
+      "sessionReRead": true,
+      "rawSha256": "d4ab535f6c5606031ba8d84840077cac5062a153d337649965dcfd8684f4bc0f"
+    },
+    {
+      "group": "unitary-tools-evidence",
+      "model": "local protocol fixture",
+      "externalModelTested": false,
+      "successes": 5,
+      "expectedErrors": 1,
+      "sessionReRead": true,
+      "rawSha256": "65e5e94011c5e893754cd88c5389d2fd431fad7959003bca55212f2e3987f1b0"
+    },
+    {
+      "group": "unitary-next-evidence",
+      "model": "local protocol fixture",
+      "externalModelTested": false,
+      "successes": 4,
+      "expectedErrors": 1,
+      "sessionReRead": true,
+      "rawSha256": "886e12f3aa833e99dc2d432d2e11ffd4f8f692a41634605403d82132d06196e2"
+    }
+  ],
+  "checks": {
+    "check": {
+      "passed": true,
+      "rawSha256": "5d2bccadeb2f4c0180c5471f6677675cde57a3a70bf7cf15eab3c1a65ea37c0b",
+      "summary": [
+        "ℹ tests 6",
+        "ℹ pass 6",
+        "ℹ fail 0",
+        "ℹ cancelled 0",
+        "ℹ skipped 0",
+        "ℹ tests 331",
+        "ℹ pass 266",
+        "ℹ fail 0",
+        "ℹ cancelled 0",
+        "ℹ skipped 65",
+        "ℹ tests 119",
+        "ℹ pass 119",
+        "ℹ fail 0",
+        "ℹ cancelled 0",
+        "ℹ skipped 0",
+        "ℹ tests 35",
+        "ℹ pass 35",
+        "ℹ fail 0",
+        "ℹ cancelled 0",
+        "ℹ skipped 0",
+        "ℹ tests 100",
+        "ℹ pass 99",
+        "ℹ fail 0",
+        "ℹ cancelled 0",
+        "ℹ skipped 1",
+        "ℹ tests 3",
+        "ℹ pass 3",
+        "ℹ fail 0",
+        "ℹ cancelled 0",
+        "ℹ skipped 0"
+      ]
+    },
+    "target-contracts": {
+      "passed": true,
+      "rawSha256": "fb771a56d523366e92a5677600baf7a435392adf080efeba5276a13840f7addb",
+      "summary": [
+        "ℹ tests 24",
+        "ℹ pass 23",
+        "ℹ fail 0",
+        "ℹ cancelled 0",
+        "ℹ skipped 1"
+      ]
+    },
+    "first-batch-live": {
+      "passed": true,
+      "rawSha256": "4bf05a2d8320a9c772e45cf9085aa54d955645fbfaafb44c8ae8b8ae7bda97cb",
+      "summary": [
+        "ℹ tests 3",
+        "ℹ pass 3",
+        "ℹ fail 0",
+        "ℹ cancelled 0",
+        "ℹ skipped 0"
+      ]
+    },
+    "graphix-live": {
+      "passed": true,
+      "rawSha256": "0a6037319088f2a072c3d3630d4b813216541f1ea11672de570146433588718a",
+      "summary": [
+        "ℹ tests 1",
+        "ℹ pass 1",
+        "ℹ fail 0",
+        "ℹ cancelled 0",
+        "ℹ skipped 0"
+      ]
+    },
+    "graphix-scope": {
+      "passed": true,
+      "rawSha256": "7c3502b59b962c7e6784b8a521d9430b88846c637c9eeedf53e2a2f11d51af07",
+      "summary": [
+        "ℹ tests 1",
+        "ℹ pass 1",
+        "ℹ fail 0",
+        "ℹ cancelled 0",
+        "ℹ skipped 0"
+      ]
+    },
+    "harness-live": {
+      "passed": true,
+      "rawSha256": "7a6f524d417ce21442b9fbcab842e98b6dc30c87b3289abb0e4bee3e902ee129",
+      "summary": [
+        "ℹ tests 3",
+        "ℹ pass 3",
+        "ℹ fail 0",
+        "ℹ cancelled 0",
+        "ℹ skipped 0"
+      ]
+    },
+    "upgrade-live": {
+      "passed": true,
+      "rawSha256": "fe8bffa7144713a736d2ea54a98bade23ede917385796333bcdf1ae7415dae51",
+      "summary": [
+        "ℹ tests 3",
+        "ℹ pass 3",
+        "ℹ fail 0",
+        "ℹ cancelled 0",
+        "ℹ skipped 0"
+      ]
+    }
+  },
+  "sourceSha256": {
+    ".agents/skills/clifft-sampling/mcp/contracts.mjs": "65cbd1d394f200a6aa146f7a4fc8747d25d7232d5dac51f401e4ca80f94126f9",
+    ".agents/skills/clifft-sampling/pyproject.toml": "6bb16aea62390dec70567a40815cab8fde6e59d1c412d1e1c5181f703f3cea65",
+    ".agents/skills/clifft-sampling/uv.lock": "42f3d4cf1a642b2cea2b25a61ae36a4de9c0e467f1ea27354d9e09f40ddc4530",
+    ".agents/skills/compact-optimization/mcp/contracts.mjs": "699f20f7077b3fd8c876eafd0db8f6a6dced4be884aca5f153294d6dbc51150e",
+    ".agents/skills/compact-optimization/pyproject.toml": "a45cf69255217081cd84b115058f5e1936002a3468c6993eb4645cdc6563af61",
+    ".agents/skills/compact-optimization/uv.lock": "8f23e69d59afd5a711a24a0c31f664a2b819603bde9196aea10daf203464c8c1",
+    ".agents/skills/graphix-mbqc/SKILL.md": "98d6a5c26b851409ed70f4d3a66763383da953fa4ac88301738df85871750457",
+    ".agents/skills/graphix-mbqc/mcp/bridge.py": "6ecf740eb39bc82605878f8e1083262f4835a106cdbf71e6951a1b3712d3e542",
+    ".agents/skills/graphix-mbqc/mcp/contracts.mjs": "ec2442df17cac990243aabc09b955541a18c664012a01861fe8e791a31da409f",
+    ".agents/skills/graphix-mbqc/pyproject.toml": "518a020b038009c8a3b96046fb58ea9533e909a9856c2612a1ce637eb2c28683",
+    ".agents/skills/graphix-mbqc/uv.lock": "2b74cae528965098bbb935c518fe2a58e9ba2c1dcbb96ec6e28beeae685d4518",
+    ".agents/skills/qcut-knitting/pyproject.toml": "721a76b79eca243cc371c9be19c847defba9f1ee0df706f26f6d07f08adc8fcc",
+    ".agents/skills/qcut-knitting/uv.lock": "4c5fddebffd2070fd663b01f36c7d95eb06f905f53288403299dc0b2b3cf5b95",
+    "benchmarks/upstream-updates/README.md": "eb732b1c9786b1314bd67073cf53758fb48bb5749a4397eb3c303eeab814b008",
+    "benchmarks/upstream-updates/clifft_regressions.py": "894c67f55f56e228f5b5c01468d16157cbd33a1f64ccec3c8204fb82de79087f",
+    "benchmarks/upstream-updates/compiler_regressions.py": "44fe4642bcc8b7c71bd281465730ed678b487c42c53634cf4835251e5b5459d8",
+    "benchmarks/upstream-updates/flagquantum_mcp.mjs": "a0c7008d56693740e42ebbf24a74778cb7ef8d931e491e9fd19fe6e0c4e20b4f",
+    "benchmarks/upstream-updates/flagquantum_probe.py": "831d1f2f6a93db6cc23c286834bb3cdb80f156b5cc299571b204ab12e4bce8f9",
+    "benchmarks/upstream-updates/probes/flagquantum/pyproject.toml": "477a3034ef558266c4a38ed3a3d89e8ef7f21522bd164cb06b70ae4bc70df5eb",
+    "benchmarks/upstream-updates/probes/flagquantum/uv.lock": "3f993b39d2554267a7de5a03ef2e2eb186d362abd37d9fca1f11a40d3347521e",
+    "benchmarks/upstream-updates/probes/stim/pyproject.toml": "eb2e4929b860e7e587ad7d7d5e8e3133dbe0f0ab4b02dfddee141b134c700e4e",
+    "benchmarks/upstream-updates/probes/stim/uv.lock": "37ca17e704e01367b72ec2b23ffca72dc4f1d31714c21319481c0b9d0febb106",
+    "benchmarks/upstream-updates/stim_probe.py": "94f296513abd39363c5e5c1384315dedad67c3878e5a73a0853a7994d69ba2eb",
+    "package.json": "a81d9d666e3cd8278e896f50f970c95a3f0ef9cd7ca0f642c166d35f623c12d3",
+    "tests/upstream-updates-live.test.mjs": "c8477906a81068a71ca05469ec4e3c5cd4f16fd12e80d55f56469e0bd2648071"
+  },
+  "limits": [
+    "Finite development checks do not establish scientific Acceptance.",
+    "Graphix 0.4 is marked prerelease on GitHub; the frozen bounded adapter was tested on macOS arm64.",
+    "Compact ECR/iSWAP false-positive controls still reproduce; these gates remain excluded.",
+    "FlagQuantum matched 17 schemas but executed analysis, Bell simulation and malformed-input calls only.",
+    "The tensor-network probe checks actual budget rejection, not native peak-memory measurement.",
+    "Stim development wheels and the FlagQuantum SDK source commit are benchmark-only; runtime pins are unchanged."
+  ]
+}

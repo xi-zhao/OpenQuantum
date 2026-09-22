@@ -81,7 +81,8 @@
     "capability:candidates:setup": "node scripts/setup-paper-tools.mjs qcut-knitting compact-optimization openqarp-excited-states cqlib-kernel flagquantum-workbench",
     "capability:candidates:test": "node --test tests/candidate-tools-contracts.test.mjs tests/flagquantum-contracts.test.mjs",
     "capability:candidates:live": "OPENQUANTUM_REAL_CANDIDATE_TOOLS=1 node --test --test-concurrency=1 tests/candidate-tools-live.test.mjs tests/flagquantum-contracts.test.mjs tests/harness-candidate-tools.test.mjs",
-    "benchmark:candidate-regressions": "OPENQUANTUM_REAL_CANDIDATE_TOOLS=1 node --test tests/candidate-upstream-regressions.test.mjs"
+    "benchmark:candidate-regressions": "OPENQUANTUM_REAL_CANDIDATE_TOOLS=1 node --test tests/candidate-upstream-regressions.test.mjs",
+    "test:upstream-updates:live": "OPENQUANTUM_REAL_UPSTREAM_UPDATES=1 node --test --test-concurrency=1 tests/upstream-updates-live.test.mjs"
   },
   "dependencies": {
     "@deepseek-ai/dsh": "0.1.5-rc.1",

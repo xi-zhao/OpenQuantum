@@ -8,9 +8,9 @@
 | --- | --- | --- | --- |
 | Mitiq | GPLv3；本地能力目录 GPL-3.0-only | 固定 1.1.0，独立 Python 环境调用 ZNE/REM/PEC/CDR；本能力携带独立 LICENSE/NOTICE，见下方 Mitiq 说明 | [unitaryfoundation/mitiq](https://github.com/unitaryfoundation/mitiq/tree/v1.1.0) |
 | Dynamiqs | Apache-2.0 | 固定 0.3.6 源码提交 `a49b30fe5cacb5cf7c1d981f2e7ed03b18e05318`，隔离 Python 环境调用单量子位批量动力学与梯度；源码由包管理器取得 | [dynamiqs/dynamiqs](https://github.com/dynamiqs/dynamiqs) |
-| Clifft | Apache-2.0 | 固定 PyPI 0.10.0，仅执行结构化小型 Clifford+T 最终测量电路；独立环境安装，不复制上游源码 | [QuEraComputing/clifft](https://github.com/unitaryfoundation/clifft) |
+| Clifft | Apache-2.0 | 固定 PyPI 0.10.1，仅执行结构化小型 Clifford+T 最终测量电路；独立环境安装，不复制上游源码 | [QuEraComputing/clifft](https://github.com/unitaryfoundation/clifft) |
 | PyZX | Apache-2.0 | 固定 0.10.6，隔离环境调用ZX 重写、Clifford+T 门数比较与完整酉矩阵对照；上游源码由包管理器安装，保留原始许可证，不随本仓库重新分发 | [zxcalc/pyzx](https://github.com/zxcalc/pyzx) |
-| Graphix | Apache-2.0 | 固定 0.3.5，隔离环境调用电路到 MBQC 模式、资源图、自适应测量和纠正输出；上游源码由包管理器安装，保留原始许可证，不随本仓库重新分发 | [TeamGraphix/graphix](https://github.com/TeamGraphix/graphix) |
+| Graphix | Apache-2.0 | 固定 0.4，隔离环境调用电路到 MBQC 模式、资源图、自适应测量和纠正输出；上游源码由包管理器安装，保留原始许可证，不随本仓库重新分发 | [TeamGraphix/graphix](https://github.com/TeamGraphix/graphix) |
 | Symmer | MIT | 固定 0.0.13@a4ba56e3，隔离环境调用指定 Pauli 对称性扇区的降比特与同扇区保谱检查；上游源码由包管理器安装，保留原始许可证，不随本仓库重新分发 | [qmatter-labs/symmer](https://github.com/qmatter-labs/symmer) |
 | PauLie | MIT | 固定 0.2.3，隔离环境调用Pauli 生成元的 Lie 闭包、分类维数与独立矩阵参照；上游源码由包管理器安装，保留原始许可证，不随本仓库重新分发 | [QPauLie/PauLie](https://github.com/QPauLie/PauLie) |
 | OQuPy | Apache-2.0 | 固定 PyPI 0.5.0，独立 NumPy 1.x 环境调用 TEMPO；不复制上游源码 | [tempoCollaboration/OQuPy](https://github.com/tempoCollaboration/OQuPy) |
@@ -69,7 +69,7 @@
 | Upstream | Fixed source | License and use |
 | --- | --- | --- |
 | [QCut](https://github.com/FiQCI/QCut) | 2.2.0 | Apache-2.0; unmodified locked dependency, local gate-cutting adapter |
-| [Compact](https://github.com/Q-PROOF/Compact) | compactq 0.2.1 | MIT; unmodified locked dependency, independently checked optimization |
+| [Compact](https://github.com/Q-PROOF/Compact) | compactq 0.2.3 | MIT; unmodified locked dependency, independently checked optimization |
 | [OpenQARP](https://github.com/OpenQARP/openqarp) | 0.1.0 | Apache-2.0; preserve upstream NOTICE and LICENSES_bundled when redistributing the dependency |
 | [cqlib-qml](https://github.com/cq-lib/cqlib-qml) | b3aeb784cf50150f7bb39c86a3a16e397d52ea50 | Apache-2.0; five kernel/encoder files adapted in `.agents/skills/cqlib-kernel/upstream`, with LICENSE, modified-file notices, compatibility patch and original/adapted SHA records |
 | [cqlib](https://github.com/cq-lib/cqlib) | 1d0a2c49ac32712d995f46147dfc5e3c4f4ac8e6 / 1.4.0b1 | Apache-2.0; pinned Rust SDK build in an optional isolated environment |

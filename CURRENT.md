@@ -1,6 +1,12 @@
 # OpenQuantum 当前交接
 
-升级核验日期：2026-09-10；原模型验收交接记录日期：2026-09-05。此页只记录工作交接；架构以[文档总入口](docs/README.md)为准，执行事实以 Harness Session event log 为准，科学状态以 Acceptance Report 为准。
+量子依赖核验日期：2026-09-22；平台升级记录日期：2026-09-10；原模型验收交接记录日期：2026-09-05。此页只记录工作交接；架构以[文档总入口](docs/README.md)为准，执行事实以 Harness Session event log 为准，科学状态以 Acceptance Report 为准。
+
+## 量子库更新（2026-09-22）
+
+- Compact 0.2.3、Qiskit 2.5.2、Clifft 0.10.1 与 Graphix 0.4 已更新固定依赖；Graphix 迁移资源图、空间调度和分支结果 API。
+- Stim 开发构建和 FlagQuantum 固定 SDK 提交仅在隔离开发环境验证，发行版稳定锁保持不变；MQT core/QCEC 保持配套版本。
+- 版本、复跑命令、预发布标记与数值/执行边界见[升级记录](docs/releases/2026-09-22-quantum-upstream-update.md)。本次源码更新不是新安装包或应用 Release。
 
 ## 桌面测试安装包（2026-09-20）
 

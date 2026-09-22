@@ -145,6 +145,7 @@ Skill 与 Tool 在概念和发行版 policy 中都相互独立：Skill-only、To
 - [Unitary 生态计算与数据](integrations/UNITARY_ECOSYSTEM.md)：Dynamiqs、Clifft、OQuPy、Deltakit 的计算接口，以及 Metriq 公开数据快照查询。
 - [电路与代数工具](integrations/UNITARY_NEXT_TOOLS.md)：PyZX 电路优化、Graphix 测量式计算、Symmer 对称性降比特与 PauLie 代数分析。
 - [候选量子库接入与科学边界](integrations/CANDIDATE_LIBRARIES.md) · [实施计划与去重决策](integrations/CANDIDATE_INTEGRATION_PLAN.md)
+- [2026-09-22 量子库更新](releases/2026-09-22-quantum-upstream-update.md)：Compact、Clifft、Qiskit 更新，Graphix 迁移与隔离开发版回归。
 - [本地计算功能与资源配置](integrations/SCALABLE_BRIDGES.md)：全部本地计算适配的输入输出、可选参考、运行资源设置及补充核验记录。
 - [量子算法参考检索](integrations/QUANTUM_PRACTICES.md)：固定 Quantum-Practices 资料、原生只读 Tool、中文查询和许可边界。
 - [项目首页](../README.md)：产品能力、已集成工具和快速开始。

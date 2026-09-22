@@ -6,14 +6,15 @@
 
 | 能力 | 固定来源 | 默认策略 | 执行入口 |
 | --- | --- | --- | --- |
-| 门切割与期望值重建 | QCut 2.2.0；Qiskit 2.5.1；cutting addon 0.10.0 | 开启 | `qcut_local` → `knit_qcut_circuit` |
-| 线路优化 | compactq 0.2.1；Qiskit 2.5.1 | 开启 | `compact_local` → `optimize_compact_circuit` |
+| 门切割与期望值重建 | QCut 2.2.0；Qiskit 2.5.2；cutting addon 0.10.0 | 开启 | `qcut_local` → `knit_qcut_circuit` |
+| 线路优化 | compactq 0.2.3；Qiskit 2.5.2 | 开启 | `compact_local` → `optimize_compact_circuit` |
 | VQD 激发态 | OpenQARP 0.1.0 | 开启 | `openqarp_local` → `solve_openqarp_vqd` |
 | angle 核与 QSVM | cqlib-qml `b3aeb784cf50150f7bb39c86a3a16e397d52ea50` 五文件适配；Rust cqlib `1d0a2c49ac32712d995f46147dfc5e3c4f4ac8e6`（1.4.0b1） | 按需启用 | `cqlib_kernel_local` → `fit_cqlib_angle_kernel` |
 | 第二家量子 MCP | flagquantum-mcp-server 0.3.0；flagquantum 0.2.0 | 按需启用 | `flagquantum`，17 个原生上游 Tool |
 
 所有依赖在各能力的 `uv.lock` 固定。四个适配 Tool 始终返回 `scientificValidation=not_evaluated`；
 FlagQuantum 原生结果的 `status=success` / `accuracy.metric=not_measured` 也不等于科学 Acceptance。
+2026-09-22 的版本更新、回归与开发版试验见[升级记录](../releases/2026-09-22-quantum-upstream-update.md)。
 默认开启是配置策略，不表示已重启当前运行中的 Host。可选项在量子组件设置中心启用后重启 Harness。
 
 ## 安装与运行
