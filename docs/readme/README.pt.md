@@ -14,6 +14,8 @@ O OpenQuantum reúne ferramentas quânticas, métodos especializados e aplicaç�
 
 Simule circuitos com Qiskit e TyxonQ; otimize-os com PyZX; explore computação baseada em medições com Graphix, redução por simetrias com Symmer e álgebra de Lie com PauLie. TeNPy, SQD e Flow-VQE abrangem estados fundamentais e química. Mitiq oferece mitigação de erros; Stim, PyMatching, Deltakit e BP+LSD permitem estudar correção de erros. Dynamiqs, OQuPy, TJM e Clifft tratam de dinâmica e ruído; FatQat oferece experimentos com sistemas supercondutores e atômicos. FieldQKit descobre dispositivos e Quantum Learning oferece recursos para ensino e aprendizagem.
 
+O código de `main` também inclui corte de portas e reconstrução de valores esperados com QCut, otimização de circuitos com Compact e estados excitados por VQD com OpenQARP. Essas conexões são ativadas por padrão, mas suas dependências precisam ser preparadas. O QSVM com kernel angular do cqlib-qml e o ambiente de circuitos FlagQuantum ficam desativados até serem habilitados. Consulte o [escopo e a verificação](../integrations/CANDIDATE_LIBRARIES.md).
+
 Cada integração possui dependências e um escopo científico próprios. Um cálculo local não comprova o desempenho de hardware real. Concluir uma chamada de ferramenta também não equivale a passar por validação científica.
 
 ## Por que escolher o OpenQuantum
@@ -26,7 +28,17 @@ Cada integração possui dependências e um escopo científico próprios. Um cá
 
 ## Início rápido
 
-A distribuição atual é executada a partir do código-fonte e destina-se ao uso local individual e ao desenvolvimento. Prepare Git, Node.js 24 ou superior e uv para as ferramentas Python.
+Para uso local individual, escolha o instalador de desktop ou a execução a partir do código-fonte.
+
+### Instalador para desktop
+
+Baixe o instalador para Mac (Apple Silicon / Intel) ou Windows no [GitHub Releases](https://github.com/xi-zhao/OpenQuantum/releases/latest). Node.js e uv estão incluídos, sem necessidade de compilar o código-fonte. São versões de teste sem assinatura. Siga o [guia de instalação](../DESKTOP_INSTALLERS.md), abra o aplicativo e configure um modelo. Algumas dependências Python são baixadas no primeiro uso; Quantum Learning e outros aplicativos opcionais exigem preparação separada.
+
+Os [instaladores v0.5.1](../releases/v0.5.1.md) não incluem os recursos adicionados posteriormente a `main` nem as [atualizações das bibliotecas quânticas de 22 de setembro](../releases/2026-09-22-quantum-upstream-update.md). Mudanças no código-fonte não atualizam automaticamente o aplicativo instalado.
+
+### Executar a partir do código-fonte
+
+Para desenvolver ou usar os recursos de `main`, prepare Git, Node.js 24 ou superior e uv para as ferramentas Python. Depois siga os passos abaixo.
 
 [uv](https://docs.astral.sh/uv/getting-started/installation/)
 
@@ -53,12 +65,15 @@ Após configurar o modelo, experimente: “Use FatQat para preparar um estado de
 
 ### Desktop
 
+Para compilar o Desktop a partir da mesma cópia do código, conclua a instalação pelas fontes e prepare Corepack e as ferramentas de compilação C++ do sistema.
+
 ```bash
 npm run desktop:setup
+npm run desktop:verify-install
 npm run desktop
 ```
 
-Web e Desktop compartilham a composição do Harness. Feche o outro host antes de usar o mesmo diretório de dados.
+Web e Desktop compartilham os dados e a configuração do Harness quando iniciados a partir da mesma cópia do código-fonte. Feche o outro host antes de usar o mesmo diretório de dados.
 
 ## Quantum Learning
 

@@ -14,6 +14,8 @@ OpenQuantum は、量子計算ツール、専門的な手法、アプリケー�
 
 Qiskit・TyxonQ による回路シミュレーション、PyZX による回路最適化、Graphix による測定型量子計算、Symmer による対称性を用いた量子ビット削減、PauLie による Lie 代数解析を利用できます。TeNPy・SQD・Flow-VQE は基底状態や化学計算、Mitiq は誤り緩和、Stim・PyMatching・Deltakit・BP+LSD は誤り訂正を扱います。Dynamiqs・OQuPy・TJM・Clifft はダイナミクスやノイズの解析、FatQat は超伝導・原子系の実験に対応します。FieldQKit によるバックエンド探索と、Quantum Learning による学習・授業も利用できます。
 
+ソースの `main` には、QCut のゲート切断と期待値再構成、Compact の回路最適化、OpenQARP の VQD 励起状態計算も含まれます。これらの接続は標準で有効ですが、依存関係の準備が必要です。cqlib-qml の角度カーネル QSVM と FlagQuantum 回路ワークベンチは標準では無効で、必要に応じて有効化します。[適用範囲と検証](../integrations/CANDIDATE_LIBRARIES.md)をご覧ください。
+
 各機能には個別の依存関係と適用範囲があります。ローカル計算の成功は実機性能の証明ではなく、Tool の実行完了だけで科学的妥当性が保証されるわけでもありません。
 
 ## OpenQuantum を選ぶ理由
@@ -26,7 +28,17 @@ Qiskit・TyxonQ による回路シミュレーション、PyZX による回路�
 
 ## クイックスタート
 
-現在はソースコードから起動する、本機での単一ユーザー利用向けの配布形態です。Git、Node.js 24 以降、Python 用ツールを管理する uv を用意してください。
+本機での単一ユーザー利用向けに、デスクトップインストーラーとソースからの起動を選べます。
+
+### デスクトップ版のインストール
+
+[GitHub Releases](https://github.com/xi-zhao/OpenQuantum/releases/latest) から Mac（Apple Silicon / Intel）または Windows 用インストーラーをダウンロードできます。Node.js と uv を同梱した未署名のテストビルドで、ソースのビルドは不要です。[インストール手順](../DESKTOP_INSTALLERS.md)に従って起動し、モデルを設定してください。一部の Python 依存関係は初回にダウンロードされ、Quantum Learning などは別途準備が必要です。
+
+[v0.5.1 インストーラー](../releases/v0.5.1.md)には、その後 `main` に追加された上記の機能や [9 月 22 日の量子ライブラリ更新](../releases/2026-09-22-quantum-upstream-update.md)は含まれません。ソースの更新だけでインストール済みアプリが自動更新されることはありません。
+
+### ソースから起動
+
+開発やソースの `main` にある機能を利用する場合は、Git、Node.js 24 以降、Python ツール用の uv を用意して、次の手順で起動してください。
 
 [uv](https://docs.astral.sh/uv/getting-started/installation/)
 
@@ -53,12 +65,15 @@ npm run demo:quantum-ground-state
 
 ### デスクトップ
 
+同じソースから Desktop をビルドする場合は、上のソースインストールを完了し、Corepack とシステムの C++ ビルドツールを用意してください。
+
 ```bash
 npm run desktop:setup
+npm run desktop:verify-install
 npm run desktop
 ```
 
-Web と Desktop は同じ Harness 構成を使います。同じホームを使うもう一方のホストは、起動前に終了してください。
+同じソースディレクトリから起動する Web と Desktop は Harness のデータと設定を共有します。同じデータディレクトリを使うもう一方のホストは、起動前に終了してください。
 
 ## Quantum Learning
 

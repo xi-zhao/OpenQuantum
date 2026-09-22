@@ -14,6 +14,8 @@ OpenQuantum은 양자 도구, 전문 연구 방법, 애플리케이션을 하나
 
 Qiskit과 TyxonQ를 이용한 회로 시뮬레이션, PyZX 회로 최적화, Graphix 측정 기반 양자 계산, Symmer 대칭성 기반 큐비트 축소, PauLie Lie 대수 분석을 지원합니다. TeNPy·SQD·Flow-VQE는 바닥상태와 화학 계산, Mitiq은 오류 완화, Stim·PyMatching·Deltakit·BP+LSD는 오류 정정을 다룹니다. Dynamiqs·OQuPy·TJM·Clifft로 동역학과 잡음을 분석하고, FatQat으로 초전도 및 원자계 실험을 수행할 수 있습니다. FieldQKit 백엔드 탐색과 Quantum Learning 학습·수업 기능도 통합되어 있습니다.
 
+소스 `main`에는 QCut 게이트 분할과 기댓값 재구성, Compact 회로 최적화, OpenQARP VQD 들뜬상태 계산도 포함됩니다. 이 연결들은 기본으로 활성화되지만 의존성을 준비해야 합니다. cqlib-qml 각도 커널 QSVM과 FlagQuantum 회로 작업대는 기본으로 비활성화되어 필요할 때 켭니다. [적용 범위와 검증](../integrations/CANDIDATE_LIBRARIES.md)을 참고하세요.
+
 각 기능의 의존성과 과학적 적용 범위는 개별적으로 정해집니다. 로컬 계산의 성공은 실제 하드웨어 성능을 입증하지 않으며, 도구 실행 완료가 곧 과학적 검증 통과를 의미하지도 않습니다.
 
 ## OpenQuantum을 선택하는 이유
@@ -26,7 +28,17 @@ Qiskit과 TyxonQ를 이용한 회로 시뮬레이션, PyZX 회로 최적화, Gra
 
 ## 빠른 시작
 
-현재 소스 코드로 실행하는 로컬 단일 사용자용 배포입니다. Git, Node.js 24 이상, Python 도구를 위한 uv를 준비하세요.
+로컬 단일 사용자용으로 데스크톱 설치 파일 또는 소스 실행을 선택할 수 있습니다.
+
+### 데스크톱 설치 파일
+
+[GitHub Releases](https://github.com/xi-zhao/OpenQuantum/releases/latest)에서 Mac(Apple Silicon / Intel) 또는 Windows 설치 파일을 받으세요. Node.js와 uv가 포함된 서명되지 않은 테스트 빌드이며 소스 빌드가 필요하지 않습니다. [설치 안내](../DESKTOP_INSTALLERS.md)에 따라 앱을 실행한 뒤 모델을 설정하세요. 일부 Python 의존성은 최초 사용 시 다운로드하며 Quantum Learning 등은 별도 준비가 필요합니다.
+
+[v0.5.1 설치 파일](../releases/v0.5.1.md)에는 이후 `main`에 추가된 위 기능과 [9월 22일 양자 라이브러리 업데이트](../releases/2026-09-22-quantum-upstream-update.md)가 포함되지 않습니다. 소스가 변경되어도 설치된 앱이 자동으로 업데이트되지는 않습니다.
+
+### 소스로 실행
+
+개발하거나 소스 `main`의 기능을 사용하려면 Git, Node.js 24 이상, Python 도구용 uv를 준비하고 아래 절차로 실행하세요.
 
 [uv](https://docs.astral.sh/uv/getting-started/installation/)
 
@@ -53,12 +65,15 @@ npm run demo:quantum-ground-state
 
 ### 데스크톱
 
+같은 소스에서 Desktop을 빌드하려면 위 소스 설치를 완료하고 Corepack과 시스템 C++ 빌드 도구를 준비하세요.
+
 ```bash
 npm run desktop:setup
+npm run desktop:verify-install
 npm run desktop
 ```
 
-Web과 Desktop은 같은 Harness 구성을 사용합니다. 동일한 홈을 사용하는 다른 호스트는 먼저 종료하세요.
+동일한 소스 디렉터리에서 실행하는 Web과 Desktop은 Harness 데이터와 설정을 공유합니다. 같은 데이터 디렉터리를 사용하는 다른 호스트는 먼저 종료하세요.
 
 ## Quantum Learning
 

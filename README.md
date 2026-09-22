@@ -161,9 +161,9 @@ Pro 教学任务使用上游应用自己的工具与记录，尚未自动接入�
 
 OpenQuantum 桌面端提供原生窗口、系统托盘、终端与通知，复用科研工作台的模型、量子 Skill、计算工具和执行记录。
 
-从 [GitHub Release](https://github.com/xi-zhao/OpenQuantum/releases/latest) 下载 Mac（Apple Silicon / Intel）或 Windows 安装包，内置 Node 和 uv，无需先配置源码构建环境。当前为未签名测试构建；安装方式、数据保留及平台验证范围见[安装包说明](docs/DESKTOP_INSTALLERS.md)。
+提供 Mac（Apple Silicon / Intel）和 Windows 桌面安装包，也支持从源码构建。
 
-[安装与启动桌面客户端](#桌面客户端)。
+[下载并安装桌面客户端](#桌面安装包) · [从源码启动桌面客户端](#桌面客户端)。
 
 #### 消息入口
 
@@ -186,9 +186,17 @@ OpenQuantum 桌面端提供原生窗口、系统托盘、终端与通知，复�
 
 ## 快速开始
 
-当前以源码分发，适合本机单用户试用及二次开发。先准备 Git、Node.js 24；Python 量子工具还需要 [uv / uvx](https://docs.astral.sh/uv/getting-started/installation/)。其他依赖按所选能力安装，例如 RandomMeas 需要 Julia 1.12.7。
+OpenQuantum 支持桌面安装包和源码运行，适合本机单用户使用。直接使用工作台可下载安装包；二次开发或使用源码主线能力可选择源码路径。
+
+### 桌面安装包
+
+从 [GitHub Release](https://github.com/xi-zhao/OpenQuantum/releases/latest) 下载 Mac（Apple Silicon / Intel）或 Windows 安装包。安装包内置 Node 和 uv，无需先配置源码构建环境；当前为未签名测试构建。按[安装说明](docs/DESKTOP_INSTALLERS.md)安装并启动后，继续[配置模型](#配置模型)。部分 Python 计算组件首次使用时仍需联网准备固定依赖，量子学习通等可选应用另有安装步骤。
+
+本页能力目录描述源码 `main`。[v0.5.1 安装包](docs/releases/v0.5.1.md)不包含后续的[新增量子能力](docs/integrations/CANDIDATE_LIBRARIES.md)及 [9 月 22 日量子库更新](docs/releases/2026-09-22-quantum-upstream-update.md)，也不会随源码主线更新而自动升级。安装版使用独立数据目录，迁移与备份见[安装包说明](docs/DESKTOP_INSTALLERS.md#数据与升级)。
 
 ### 安装源码
+
+先准备 Git、Node.js 24；Python 量子工具还需要 [uv / uvx](https://docs.astral.sh/uv/getting-started/installation/)。其他依赖按所选能力安装，例如 RandomMeas 需要 Julia 1.12.7。
 
 ```bash
 git clone https://github.com/xi-zhao/openQuantum.git
@@ -200,7 +208,7 @@ npm ci
 
 ### 选择工作台入口
 
-Web 与 Desktop 使用同一套模型配置、量子能力和执行记录，共用 `.openquantum/dsh` 中的本机状态。切换前先退出正在运行的入口。
+从同一源码目录启动的 Web 与 Desktop 使用同一套模型配置、量子能力和执行记录，共用 `.openquantum/dsh` 中的本机状态。切换前先退出正在运行的入口。
 
 #### 网页工作台
 
@@ -732,7 +740,7 @@ docs/                    架构、路线与生态文档
 
 [固定量子能力 Benchmark](benchmarks/quantum-capabilities/README.md)使用 [MQT Bench](https://github.com/munich-quantum-toolkit/bench) 的 3 个固定电路案例与 manifest 做开发回归，属于开发与 CI 证据，不是 Skill 或 MCP 服务。
 
-源码升级的固定版本、兼容性和验证记录见[上游升级记录](docs/releases/2026-09-10-upstream-update.md)。
+源码升级的固定版本、兼容性和验证记录见 [2026-09-22 量子库更新](docs/releases/2026-09-22-quantum-upstream-update.md)及 [2026-09-10 平台升级](docs/releases/2026-09-10-upstream-update.md)。应用安装包的变化另见[发布说明](docs/releases/v0.5.1.md)。
 
 </details>
 

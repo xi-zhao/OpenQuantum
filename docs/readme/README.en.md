@@ -44,9 +44,11 @@ An investigation that becomes possible, a method applied to a new problem, or a 
 
 | Area | Available tools and results |
 | --- | --- |
-| Circuits | Qiskit and TyxonQ circuit creation, analysis, transpilation and local simulation; MQT QCEC equivalence checks |
+| Circuits | Qiskit and TyxonQ circuit creation, analysis, transpilation and local simulation; MQT QCEC equivalence checks; optional FlagQuantum circuit workbench |
 | Optimization and algebra | PyZX rewriting, Graphix measurement-based computing, Symmer symmetry tapering and PauLie Lie algebra calculations |
+| Circuit optimization and cutting | Compact optimization with independent equivalence checks; QCut gate cutting and expectation reconstruction with sampling costs and an optional uncut reference |
 | Ground states and chemistry | A bounded two-qubit VQE example, TeNPy spin-chain DMRG, SQD active-space chemistry and Flow-VQE parameter learning |
+| Excited states and kernel classification | OpenQARP VQD low-energy states, residuals and orthogonality checks; optional cqlib-qml angle-kernel QSVM with held-out test results and classical baselines |
 | Quantum information | toqito density-matrix and entanglement checks; RandomMeas subsystem-purity estimates |
 | Error mitigation and correction | Mitiq ZNE, REM, PEC and CDR; Stim and PyMatching memory experiments; Deltakit code construction; BP+LSD decoding |
 | Dynamics | Dynamiqs driven dissipative qubits, OQuPy non-Markovian evolution, TJM open Ising chains and Clifft noisy sampling |
@@ -54,6 +56,8 @@ An investigation that becomes possible, a method applied to a new problem, or a 
 | Superconducting and atomic systems | FatQat local experiments, transmon leakage and Rydberg dynamics |
 | Hardware and reference material | FieldQKit backend discovery; optional cloud job interfaces; fixed Metriq records and Quantum-Practices guides |
 | Learning and teaching | Materials, slides, interactive classrooms and project-based learning through Quantum Learning |
+
+The table describes source `main`. QCut, Compact and OpenQARP connections are enabled by default; cqlib-qml and FlagQuantum are disabled until selected. Dependencies still need preparation. See the [integration guide and verification scope](../integrations/CANDIDATE_LIBRARIES.md).
 
 Each integration has its own installation requirements and scientific scope. Local results do not establish hardware performance, and a completed tool call does not automatically imply scientific acceptance. See the [detailed capability catalog](../../README.md#可以用它做什么) and [integration documentation](../README.md).
 
@@ -65,7 +69,17 @@ Course resources are still being organized; a complete curriculum and full accep
 
 ## Quick start
 
-The current distribution runs from source and is intended for local, single-user use and development. Install Git, Node.js 24 or newer, and [uv](https://docs.astral.sh/uv/getting-started/installation/) for Python quantum tools. Individual capabilities may need additional dependencies.
+OpenQuantum supports desktop installers and source builds for local, single-user use. Choose an installer to use the workbench, or run from source for development and capabilities available on `main`.
+
+### Desktop installer
+
+Download the Mac (Apple Silicon / Intel) or Windows installer from [GitHub Releases](https://github.com/xi-zhao/OpenQuantum/releases/latest). Node.js and uv are bundled, so no source build is needed. These are unsigned test builds. Follow the [installation guide](../DESKTOP_INSTALLERS.md), open the app, then [configure a model](#configure-a-model). Some Python components need network access to prepare dependencies on first use; optional applications such as Quantum Learning have separate setup steps.
+
+The [v0.5.1 installers](../releases/v0.5.1.md) do not include the later QCut, Compact, OpenQARP, cqlib-qml and FlagQuantum integrations or the [September 22 quantum-library updates](../releases/2026-09-22-quantum-upstream-update.md). Changes to source `main` do not automatically update an installed app. Installers use a separate data directory; see the [data and migration guide](../DESKTOP_INSTALLERS.md#数据与升级).
+
+### From source
+
+Install Git, Node.js 24 or newer, and [uv](https://docs.astral.sh/uv/getting-started/installation/) for Python quantum tools. Individual capabilities may need additional dependencies.
 
 ```bash
 git clone https://github.com/xi-zhao/openQuantum.git
@@ -78,12 +92,15 @@ Open the login URL printed by the launcher. After authentication, the browser op
 
 ### Desktop
 
+To build Desktop from the same source checkout, complete the source installation above and prepare Corepack and system C++ build tools.
+
 ```bash
 npm run desktop:setup
+npm run desktop:verify-install
 npm run desktop
 ```
 
-Web and Desktop use the same Harness composition. Close the other host before opening the same home. See [desktop installation and platform requirements](../DEPLOYMENT.md).
+When launched from the same source checkout, Web and Desktop share the same Harness home and configuration. Close the other host before opening the same home. See [desktop installation and platform requirements](../DEPLOYMENT.md).
 
 ### Configure a model
 
