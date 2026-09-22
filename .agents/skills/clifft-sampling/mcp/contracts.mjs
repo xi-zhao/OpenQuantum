@@ -9,7 +9,7 @@ resultSchema.allOf.push({
 export const definition = defineScienceTool({
   name: "sample_clifft_circuit",
   description: "Sample Clifford+T circuits with per-target depolarizing noise using Clifft. Return observed final bitstrings and compiled active width. No adapter size limit; an optional user-specified maxActiveWidth and independent density-matrix reference are supported.",
-  source: { name: "clifft", version: "0.10.0", repository: "https://github.com/unitaryfoundation/clifft" },
+  source: { name: "clifft", version: "0.10.1", repository: "https://github.com/unitaryfoundation/clifft" },
   inputSchema: obj({ numQubits: int(1,undefined,2), gates: { ...arr(obj({ gate: { type: "string", enum: ["H","S","T","X","Y","Z","CX","CZ"] }, targets: arr(int(0,undefined),1,2) }),1), default: [{ gate: "H", targets: [0] }, { gate: "T", targets: [0] }, { gate: "H", targets: [0] }, { gate: "CX", targets: [0,1] }] }, noiseProbability: num(0,1,0), shots: int(1,undefined,2048), seed: int(0,2147483647,7), maxActiveWidth: { ...nullable(int(0)), default: null }, referenceMode: referenceModeSchema }),
   checkInput(v) {
     for (const { gate, targets } of v.gates) {

@@ -2,7 +2,7 @@
 name = "openquantum-qcut-knitting-bridge"
 version = "0.1.0"
 requires-python = ">=3.12,<3.13"
-dependencies = ["QCut==2.2.0", "qiskit==2.5.1", "qiskit-addon-cutting==0.10.0"]
+dependencies = ["QCut==2.2.0", "qiskit==2.5.2", "qiskit-addon-cutting==0.10.0"]
 
 [tool.uv]
 package = false

@@ -4,17 +4,17 @@ requires-python = "==3.12.*"
 
 [[package]]
 name = "clifft"
-version = "0.10.0"
+version = "0.10.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "numpy" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/ed/4d/e240ccc94e546f08fad0183f58fe046683c41681b9e7f73e8090d96c81df/clifft-0.10.0.tar.gz", hash = "sha256:f7819d18677c94f6ad6f10b53ee573ab7d977d14eb2588f16377fece85ac118c", size = 2735749, upload-time = "2026-09-03T19:35:13.373Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/ea/05/d19bd06f51043006a7fb86a052f92e6b5da8752c774930b5b52dca879eba/clifft-0.10.1.tar.gz", hash = "sha256:567cb7b88a6ffc00471145b8aae7fd596f887e389bc1a11bfa26dc0c427d1e61", size = 2947089, upload-time = "2026-09-14T14:44:39.384Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/92/b5/9c4afff4a23e4c68445e96d62cb7c35497579c782a3a9ba696feb2a90732/clifft-0.10.0-cp312-abi3-macosx_14_0_arm64.whl", hash = "sha256:e63a4a928def665a4d61fba30e125068336e5dc8d88419e5374ad2d41ed9ca65", size = 780396, upload-time = "2026-09-03T19:35:06.122Z" },
-    { url = "https://files.pythonhosted.org/packages/18/78/b838fa700962a4d1bf83f3a126e102229e5c34d8713399261a294cb86fc2/clifft-0.10.0-cp312-abi3-manylinux_2_26_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:fcbd938d659eb33826e4bf297d7138bbbe76fc26c5bd3efe7f68501bae76f016", size = 999404, upload-time = "2026-09-03T19:35:07.92Z" },
-    { url = "https://files.pythonhosted.org/packages/28/3d/d8b7012618bb175a49603bc6fb14fa1cde04e8897fbe44bcee0df0f9cbf4/clifft-0.10.0-cp312-abi3-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:d5807243551a3039a04dd6df62c28065525c4b67ccda4a87a73a2bbfc7283a29", size = 1122735, upload-time = "2026-09-03T19:35:09.976Z" },
-    { url = "https://files.pythonhosted.org/packages/a8/3c/3b53f1a10ab99b571803240b98ce61a3fe6dcdf1720d2901589e8d0f391b/clifft-0.10.0-cp312-abi3-win_amd64.whl", hash = "sha256:0dea3118235181576d3e476388f7bc6fa6ab784ca02a01ee50de28c0ec225415", size = 815341, upload-time = "2026-09-03T19:35:11.589Z" },
+    { url = "https://files.pythonhosted.org/packages/2c/ae/9c78501555f1a5f41a3c8989fb0393cc20db3924b18b9e363b4e0afe7818/clifft-0.10.1-cp312-abi3-macosx_14_0_arm64.whl", hash = "sha256:ff1a15843fd8a59fc49e140804240a5ad6801e68cd41483c66330a3509f9bb90", size = 781112, upload-time = "2026-09-14T14:44:31.818Z" },
+    { url = "https://files.pythonhosted.org/packages/2d/7e/6f09b30dcf396b31e836e39b0f75fb28b009efa8b6f06b8a80211856b8b9/clifft-0.10.1-cp312-abi3-manylinux_2_26_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:7358c355ff628edd28f09acfaedd1bfbd9bf118bb32d8ec9ef9ab34f8bc0ec15", size = 1000033, upload-time = "2026-09-14T14:44:33.791Z" },
+    { url = "https://files.pythonhosted.org/packages/73/c5/a834563188bc30a5a6904160ec9407ae3f322aade3adbc394b09e92759bf/clifft-0.10.1-cp312-abi3-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:3977240d9efd218b19e96bc4e8fc4f7cad879ec4a70cefa4085668b808a54d7d", size = 1123016, upload-time = "2026-09-14T14:44:35.836Z" },
+    { url = "https://files.pythonhosted.org/packages/bf/2a/695821eb137d996e9547c33d4c15c5d2ae17109fb63e30c9a13781962c4a/clifft-0.10.1-cp312-abi3-win_amd64.whl", hash = "sha256:0804d388e57c1a59c526dad5a97d5a86c2233adcb3b4256296f28a6344bfa635", size = 815281, upload-time = "2026-09-14T14:44:37.586Z" },
 ]
 
 [[package]]
@@ -47,7 +47,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "clifft", specifier = "==0.10.0" },
+    { name = "clifft", specifier = "==0.10.1" },
     { name = "stim", specifier = "==1.16.0" },
 ]
 

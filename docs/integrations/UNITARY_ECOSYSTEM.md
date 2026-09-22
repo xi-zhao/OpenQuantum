@@ -7,7 +7,7 @@ OpenQuantum 新增 Dynamiqs、Clifft、OQuPy、Deltakit 与 Metriq 数据查询�
 | 项目 | 固定来源 | 当前切口 | 执行入口 |
 | --- | --- | --- | --- |
 | [Dynamiqs](https://github.com/dynamiqs/dynamiqs) | 0.3.6，提交 `a49b30fe5cacb5cf7c1d981f2e7ed03b18e05318`；Apache-2.0 | 单量子位批量 Lindblad 动力学与驱动梯度 | `dynamiqs_local.simulate_dynamiqs_dynamics` |
-| [Clifft](https://github.com/unitaryfoundation/clifft) | PyPI 0.10.0；Apache-2.0 | Clifford+T、门后独立去极化、最终 Z 测量，返回 active width 与采样统计 | `clifft_local.sample_clifft_circuit` |
+| [Clifft](https://github.com/unitaryfoundation/clifft) | PyPI 0.10.1；Apache-2.0 | Clifford+T、门后独立去极化、最终 Z 测量，返回 active width 与采样统计 | `clifft_local.sample_clifft_circuit` |
 | [OQuPy](https://github.com/tempoCollaboration/OQuPy) | PyPI 0.5.0；Apache-2.0 | Ohmic spin-boson TEMPO、有限环境记忆 | `oqupy_local.simulate_oqupy_spin_boson` |
 | [Deltakit](https://github.com/Deltakit/deltakit) | PyPI 0.10.0；Apache-2.0 | 矩形 rotated planar-code、ToyNoise、Stim 1.16.0 与 PyMatching 2.4.0 | `deltakit_local.run_deltakit_memory` |
 | [Metriq data](https://github.com/unitaryfoundation/metriq-data/tree/6730f78b135a9af67691a0ef4fbea041978056c5) | 提交 `6730f78b135a9af67691a0ef4fbea041978056c5`；CC-BY-4.0 | 公开历史基准的原始参数、指标与来源查询 | 原生 `metriq_benchmarks` |
