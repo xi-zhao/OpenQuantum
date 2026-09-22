@@ -113,21 +113,21 @@ wheels = [
 
 [[package]]
 name = "graphix"
-version = "0.3.5"
+version = "0.4"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "matplotlib" },
     { name = "networkx" },
+    { name = "numba" },
     { name = "numpy" },
-    { name = "opt-einsum" },
     { name = "quimb" },
     { name = "scipy" },
     { name = "sympy" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/89/f7/6820c1cba556c5209e97d2935c38dfe16b0d63959494608b07dd46eef79b/graphix-0.3.5.tar.gz", hash = "sha256:8de9263266a37686530a7fbdab5cbd749ea11356ff6b4bbe56532a9ed76ebe66", size = 162431, upload-time = "2026-03-31T09:15:19.522Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/f7/db/052f921993ff8ae6b118df8b2ef28dde0ef5fec2a94ac850f097151053ac/graphix-0.4.tar.gz", hash = "sha256:8d4c61d64446c36a8e76689afdbc9910a17f598036ec9b119f7b90cae38469fe", size = 393032, upload-time = "2026-08-18T16:03:26.248Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/89/ee/3cc0e9212f29a74c7b543c489e28ed3b4b5f9631b8c38c128e2ead5c64ee/graphix-0.3.5-py3-none-any.whl", hash = "sha256:6bb51cb58e89a8117662a43874b29ceb36403537b09cbf71c40ad799bd907801", size = 181220, upload-time = "2026-03-31T09:15:17.631Z" },
+    { url = "https://files.pythonhosted.org/packages/06/fd/e5049c5d37e01f7d38cf4c4ab4d8e9276ff58166c833b29007f594648d2b/graphix-0.4-py3-none-any.whl", hash = "sha256:b2d25443f6650ac1aac6728d7d9703782747765dba5861a3e1e59db0fa8869c3", size = 219504, upload-time = "2026-08-18T16:03:24.715Z" },
 ]
 
 [[package]]
@@ -258,17 +258,8 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "graphix", specifier = "==0.3.5" },
+    { name = "graphix", specifier = "==0.4" },
     { name = "numpy", specifier = "==2.4.6" },
-]
-
-[[package]]
-name = "opt-einsum"
-version = "3.4.0"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/8c/b9/2ac072041e899a52f20cf9510850ff58295003aa75525e58343591b0cbfb/opt_einsum-3.4.0.tar.gz", hash = "sha256:96ca72f1b886d148241348783498194c577fa30a8faac108586b14f1ba4473ac", size = 63004, upload-time = "2024-09-26T14:33:24.483Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/23/cd/066e86230ae37ed0be70aae89aabf03ca8d9f39c8aea0dec8029455b5540/opt_einsum-3.4.0-py3-none-any.whl", hash = "sha256:69bb92469f86a1565195ece4ac0323943e83477171b91d24c35afe028a90d7cd", size = 71932, upload-time = "2024-09-26T14:33:23.039Z" },
 ]
 
 [[package]]

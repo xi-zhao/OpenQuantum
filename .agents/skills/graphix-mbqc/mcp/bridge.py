@@ -12,7 +12,7 @@ def compute(v):
     from graphix.transpiler import Circuit
     from graphix.simulator import PatternSimulator, DefaultMeasureMethod
     from graphix.states import BasicStates
-    if version("graphix") != "0.3.5":
+    if version("graphix") != "0.4":
         raise ValueError("Unexpected Graphix version; restore the frozen environment")
     n = v["numQubits"]
     circuit = Circuit(n)
@@ -21,16 +21,16 @@ def compute(v):
         if gate == "T":
             circuit.rz(targets[0], 0.25)
         elif gate in ["RX", "RY", "RZ"]:
-            # Graphix 0.3.5 uses multiples of pi, while this Tool accepts radians.
+            # Graphix uses multiples of pi, while this Tool accepts radians.
             getattr(circuit, gate.lower())(targets[0], instruction["angle"] / np.pi)
         else:
             getattr(circuit, "cnot" if gate == "CX" else gate.lower())(*targets)
     pattern = circuit.transpile().pattern
-    resource = pattern.extract_graph()
+    resource = pattern.to_opengraph().graph
     nodes, edges = list(resource.nodes), list(resource.edges)
     pattern.standardize()
     pattern.shift_signals()
-    pattern.minimize_space()
+    pattern = pattern.minimize_space()
     space = pattern.max_space()
     reference_info = reference_plan(v["referenceMode"], v["simulate"] and n <= 10,
         "Independent gate-model statevector evolution",
@@ -39,7 +39,8 @@ def compute(v):
     branches = []
     for index in range(v["branches"] if v["simulate"] else 0):
         seed = v["seed"] + index
-        measure = DefaultMeasureMethod(pattern.results)
+        # No Pauli preprocessing or prior measurements: each branch starts empty.
+        measure = DefaultMeasureMethod()
         simulator = PatternSimulator(pattern, backend="statevector", measure_method=measure)
         simulator.run(input_state=BasicStates.ZERO if v["initialState"] == "zero" else BasicStates.PLUS, rng=np.random.default_rng(seed))
         output = np.asarray(simulator.backend.state.flatten(), dtype=complex)
@@ -60,7 +61,7 @@ def compute(v):
         "Pure zero or plus product input, noiseless adaptive MBQC, with output Pauli corrections included. Angles are radians at the circuit input.",
         "Seeds select sampled measurement branches; they do not exhaust all branches or prove arbitrary-input channel equivalence.",
         "Graph nodes are MBQC resource qubits, not logical width. The returned pattern includes preparation, entanglement, measurement and correction commands.",
-        "Fixed NumPy 2.4.6 avoids Graphix 0.3.5's import incompatibility with NumPy 2.5. No hardware, noise model or central scientific acceptance."]
+        "Graphix 0.4 and NumPy 2.4.6 are frozen together. No hardware, noise model or central scientific acceptance."]
 
 
 execute(compute)

@@ -5,11 +5,11 @@ OpenQuantum 对四个上游项目做了计算适配，分别解决电路优化�
 | 项目与固定版本 | 连接 / Tool | 当前范围 |
 | --- | --- | --- |
 | [PyZX 0.10.6](https://github.com/zxcalc/pyzx/tree/v0.10.6)，Apache-2.0 | `pyzx_local` / `optimize_pyzx_circuit` | Clifford+T 电路的 ZX 重写、提取、QASM 和门数；可选完整酉矩阵对照 |
-| [Graphix 0.3.5](https://github.com/TeamGraphix/graphix/tree/v0.3.5)，Apache-2.0 | `graphix_local` / `simulate_graphix_pattern` | 电路转 MBQC 模式与资源图；可选测量过程模拟、输出纠正及独立态矢对照 |
+| [Graphix 0.4](https://github.com/TeamGraphix/graphix/tree/v0.4)，Apache-2.0 | `graphix_local` / `simulate_graphix_pattern` | 电路转 MBQC 模式与资源图；可选测量过程模拟、输出纠正及独立态矢对照 |
 | [Symmer 0.0.13 / a4ba56e3](https://github.com/qmatter-labs/symmer/tree/a4ba56e3332424a65d4a2c088fd6363aca0c68e6)，MIT | `symmer_local` / `taper_symmer_hamiltonian` | 实 Pauli Hamiltonian 按指定独立对称性和扇区降维；允许零量子位标量 |
 | [PauLie 0.2.3](https://github.com/QPauLie/PauLie/tree/v0.2.3)，MIT | `paulie_local` / `analyze_paulie_algebra` | 非恒等 Pauli 生成元的分类与精确维数；可选闭包及独立实 Lie 空间对照 |
 
-每个目录的 `pyproject.toml` 与带包摘要的 `uv.lock` 固定完整依赖。Symmer 使用表中的完整源码 SHA，避免把较旧 GitHub Release 与开发分支混为同一版本。Graphix 0.3.5 与 NumPy 2.5.3 的 `NDArray` 类型别名不兼容，本适配固定 `numpy==2.4.6`，不修改上游安装文件。四个项目的许可证及分发边界见[第三方声明](../../THIRD_PARTY_NOTICES.md)。
+每个目录的 `pyproject.toml` 与带包摘要的 `uv.lock` 固定完整依赖。Symmer 使用表中的完整源码 SHA，避免把较旧 GitHub Release 与开发分支混为同一版本。Graphix 升至 0.4 后继续固定 `numpy==2.4.6`；0.4 在 PyPI 可用，但 GitHub Release 仍标记为预发布。资源图、空间调度和测量结果 API 的迁移与验证见[2026-09-22 升级记录](../releases/2026-09-22-quantum-upstream-update.md)。四个项目的许可证及分发边界见[第三方声明](../../THIRD_PARTY_NOTICES.md)。
 
 ## 安装与执行
 
@@ -40,7 +40,7 @@ npm run capability:unitary-next:live
 
 PyZX 使用 `full_reduce`、保持输出排列的电路提取和基础门优化。选择参考时，适配器独立构造输入及提取电路的完整酉矩阵，在整体相位下比较，最大逐元素误差超过 `1e-8` 时失败。输入 Y 在 PyZX QASM 中展开为 X 后接 Z；门数统计对应展开后的电路。T-count、总门数和双量子位门数可能互相取舍，不保证每项都减少，也不提供硬件路由或规模性能结论。
 
-Graphix 对门电路生成测量模式，执行标准化、信号移动与空间调度。Tool 输入角度是弧度，桥接明确转换为 Graphix 0.3.5 使用的 π 倍数；初态明确为全零或全 plus。每次模拟包含自适应测量和输出 Pauli 纠正，态矢按 outputNodes 对应的逻辑量子位排序。模拟与参考分别由 simulate 和 referenceMode 控制；参考态采用无矩阵门作用。实际运行的 fidelity 和归一化偏差容差为 `1e-8`。seed+i 采样可以重复分支，有限次对照不证明全部分支或任意输入通道等价；当前不做 Pauli 预处理、带噪 MBQC 或光子硬件实验。
+Graphix 对门电路生成测量模式，执行标准化、信号移动与空间调度。Tool 输入角度是弧度，桥接明确转换为 Graphix 使用的 π 倍数；初态明确为全零或全 plus。每次模拟包含自适应测量和输出 Pauli 纠正，态矢按 outputNodes 对应的逻辑量子位排序。模拟与参考分别由 simulate 和 referenceMode 控制；参考态采用无矩阵门作用。实际运行的 fidelity 和归一化偏差容差为 `1e-8`。seed+i 采样可以重复分支，有限次对照不证明全部分支或任意输入通道等价；当前不做 Pauli 预处理、带噪 MBQC 或光子硬件实验。
 
 Symmer 使用 `IndependentOp` 和 `S3Projection.perform_projection`，不自动发现或挑选稳定子。投影前强制检查生成元独立、两两对易并与每个非零 Hamiltonian 项对易，避免上游投影操作静默删除反对易项。参考开启时独立计算 `P=∏(I+s_i S_i)/2`，取 P 的 range 正交基 Q 后对角化 `Q†HQ`，不把 PHP 的补空间零特征值混入能谱。与降维能谱最大绝对差超过 `1e-8` 时失败。保谱仅限所选扇区，降维坐标不等于删去原始物理量子位。
 
