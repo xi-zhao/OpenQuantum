@@ -1,6 +1,25 @@
 schemaVersion: "1.1"
 
 packages:
+  - id: hamiltonian-simulation
+    level: L1
+    execution:
+      mcpServers:
+        - name: hamiltonian_local
+          source: package
+          entrypoint: .agents/skills/hamiltonian-simulation/mcp/server.mjs
+          activation: always
+          contractCheck: tests/hamiltonian-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: simulate_hamiltonian
+              effect: read-only
+      nativeTools: []
+      checks:
+        - tests/hamiltonian-contracts.test.mjs
+        - tests/hamiltonian-live.test.mjs
+        - tests/harness-hamiltonian.test.mjs
+
   - id: quantum-practices
     level: L1
     execution:

@@ -2,6 +2,14 @@
 
 量子依赖核验日期：2026-09-22；平台升级记录日期：2026-09-10；原模型验收交接记录日期：2026-09-05。此页只记录工作交接；架构以[文档总入口](docs/README.md)为准，执行事实以 Harness Session event log 为准，科学状态以 Acceptance Report 为准。
 
+## UnitaryLab 开源适配（2026-09-24）
+
+- 参考库更新到固定 quantum-skills 的 66 份指南，保持只读资料边界，Trotter/qDrift 条目指向本地执行合同。
+- 新增 `hamiltonian-simulation` Skill 与 `hamiltonian_local` 连接，使用 Qiskit/NumPy/SciPy 适配 MIT 算法序列。
+  计算前显式 setup；计算调用不安装、不联网或写结果文件，不引入 UnitaryLab 模拟器依赖。
+- 数值、合同和本地协议替身驱动的 Harness 验证见[集成说明](docs/integrations/UNITARYLAB_OPEN_ADAPTATION.md)。
+  这是 L1 源码接入，不表示外部模型验收、科学 Acceptance 或新安装包发布。
+
 ## 量子库更新（2026-09-22）
 
 - Compact 0.2.3、Qiskit 2.5.2、Clifft 0.10.1 与 Graphix 0.4 已更新固定依赖；Graphix 迁移资源图、空间调度和分支结果 API。

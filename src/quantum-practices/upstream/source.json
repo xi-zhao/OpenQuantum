@@ -3,8 +3,8 @@
   "commit": "572a24c9b5c9787caec98810351f5cb17c82250e",
   "version": "0.1.0",
   "license": "MIT",
-  "corpusCommit": "2ad300222b6578fbb8c2a6ff648f709108cbff63",
-  "catalogEntries": 60,
+  "corpusCommit": "c5436bb120812ad903ac776f58df89b803ced48c",
+  "catalogEntries": 66,
   "files": [
     {
       "path": "skill-store.js",
@@ -13,8 +13,8 @@
     },
     {
       "path": "generated/skill-catalog.js",
-      "sourcePath": "lib/generated/skill-catalog.js",
-      "sha256": "4a245a2963b47b62c7ca5fa14b65ded215b35e99e03d373df12e470bb94ff989"
+      "sha256": "0524f93e27d266ec3a0e967019753709e266dbcf7652b63eee41796cd05ee85c",
+      "generatedFrom": "guides; scripts/build-quantum-practices-catalog.mjs"
     },
     {
       "path": "LICENSE",
@@ -25,6 +25,348 @@
       "path": "NOTICE",
       "sourcePath": "NOTICE",
       "sha256": "407d677959a8bd01cab9f48cd17e9022e21711cebb63dfc3450099b4a8d7b8bf"
+    },
+    {
+      "path": "quantum-skills-LICENSE",
+      "sourceRepository": "https://github.com/unitarylab/quantum-skills",
+      "sourceCommit": "c5436bb120812ad903ac776f58df89b803ced48c",
+      "sourcePath": "LICENSE",
+      "sha256": "dd7de183a152199c19d8e16fb81a0b92c73640896bf0213917650c96ce37b3b0",
+      "upstreamSha256": "b0f1374e4a4497373abea5469b73139b878d4e5761a3e70d699bda5a5ecc952b",
+      "modification": "Trailing whitespace normalized; copyright and permission text unchanged"
+    }
+  ],
+  "corpusRepository": "https://github.com/unitarylab/quantum-skills",
+  "guides": [
+    {
+      "id": "algorithms",
+      "path": "algorithms/SKILL.md",
+      "sha256": "0c5b07553a22de058910c11c0be1405d79153a500a96b9035a8e387a20e3675d"
+    },
+    {
+      "id": "algorithms/cryptography",
+      "path": "algorithms/cryptography/SKILL.md",
+      "sha256": "a6540b9392b971bc8c230073918cde2718a984212a822a870d26922cbd505ba6"
+    },
+    {
+      "id": "algorithms/cryptography/discretelog",
+      "path": "algorithms/cryptography/discretelog/SKILL.md",
+      "sha256": "261e7bf3d08a1d2c647dc0de8a083acd0c0aa7fd2069c220c918fdfb89a7385e"
+    },
+    {
+      "id": "algorithms/cryptography/shor",
+      "path": "algorithms/cryptography/shor/SKILL.md",
+      "sha256": "f259ace6bb0951e8db5453d9451b04da5b18521f53cf05dfa51e1fb18536b19a"
+    },
+    {
+      "id": "algorithms/cryptography/simon",
+      "path": "algorithms/cryptography/simon/SKILL.md",
+      "sha256": "2d42db3536dc60f2c0f206196cab0fc9e3f1a452dbd0739857afcb3e92084e78"
+    },
+    {
+      "id": "algorithms/eigensolvers",
+      "path": "algorithms/eigensolvers/SKILL.md",
+      "sha256": "d63aa51307d5f59720d5aeca6796f71ee82631e4055e7bab1d9d2c046e8f8f26"
+    },
+    {
+      "id": "algorithms/eigensolvers/minimum-eigensolvers/numpy-minimum-eigensolver",
+      "path": "algorithms/eigensolvers/minimum-eigensolvers/numpy-minimum-eigensolver/SKILL.md",
+      "sha256": "50927a0ed8f10491b681294f9ff8bffb4c788229288f960e17d3308cd59a04ea"
+    },
+    {
+      "id": "algorithms/eigensolvers/numyeigensolver",
+      "path": "algorithms/eigensolvers/numyeigensolver/SKILL.md",
+      "sha256": "f674699e1e6fda1440be5bcc16a1863c08f95d3ef9af37fb65944fe74f33cdbe"
+    },
+    {
+      "id": "algorithms/eigensolvers/vqd",
+      "path": "algorithms/eigensolvers/vqd/SKILL.md",
+      "sha256": "4bd8cc2996e6b74199aa234fa2c9f2f82b80ba231252a8673e444b2ca51a0c1b"
+    },
+    {
+      "id": "algorithms/gradients",
+      "path": "algorithms/gradients/SKILL.md",
+      "sha256": "a5239bb0543acc24241fa01341ffb2fb57a7ceea993eaca498a05695a8320432"
+    },
+    {
+      "id": "algorithms/gradients/finite-difference",
+      "path": "algorithms/gradients/finite-difference/SKILL.md",
+      "sha256": "215ec327afd1f44dedff311c6d165b63336bfa5bb401e26dc6540793156ae15b"
+    },
+    {
+      "id": "algorithms/gradients/linear-combination",
+      "path": "algorithms/gradients/linear-combination/SKILL.md",
+      "sha256": "b2b9039cebdd2dde72bedf1887015a8545b5b8e632cc0447c961e8a2ae74bb24"
+    },
+    {
+      "id": "algorithms/gradients/parameter-shift",
+      "path": "algorithms/gradients/parameter-shift/SKILL.md",
+      "sha256": "f50f343e001553e82478d986337c62d9df1b12a57c898ed76de2c2db87cf4fb1"
+    },
+    {
+      "id": "algorithms/gradients/qfi",
+      "path": "algorithms/gradients/qfi/SKILL.md",
+      "sha256": "2f5f05730d3c6c4ac4c1a87c7fac3fda247c76a567cf4f1ed80980132ec8d310"
+    },
+    {
+      "id": "algorithms/gradients/reverse",
+      "path": "algorithms/gradients/reverse/SKILL.md",
+      "sha256": "e9daa3ac303b2a6e8be4d37062bac8ab61bb2f1d929bfe3c942b77f689a9b274"
+    },
+    {
+      "id": "algorithms/gradients/spsa",
+      "path": "algorithms/gradients/spsa/SKILL.md",
+      "sha256": "04e06f1a1a2c3b64ac349fa81bb010e0877478b40aa5edb9ec81648a95a06803"
+    },
+    {
+      "id": "algorithms/hamiltonian-simulation",
+      "path": "algorithms/hamiltonian-simulation/SKILL.md",
+      "sha256": "8d59071711636230c6b67e3658fd0ee57731f59dd97a6916523ce9898b0cde78"
+    },
+    {
+      "id": "algorithms/hamiltonian-simulation/cartan",
+      "path": "algorithms/hamiltonian-simulation/cartan/SKILL.md",
+      "sha256": "f0379cf9eb57b70a0167df2f7ca6629b8f342ed481b32375081b00f179b445bb"
+    },
+    {
+      "id": "algorithms/hamiltonian-simulation/qdrift",
+      "path": "algorithms/hamiltonian-simulation/qdrift/SKILL.md",
+      "sha256": "c4cd378d77f07a4f14ebfb4ce0d9ae0f6806d6278ae5c358a3673581288e874a"
+    },
+    {
+      "id": "algorithms/hamiltonian-simulation/qsp",
+      "path": "algorithms/hamiltonian-simulation/qsp/SKILL.md",
+      "sha256": "8981553b8daa5fccb493be211be049043400e364c1242e0408e5253378b2018c"
+    },
+    {
+      "id": "algorithms/hamiltonian-simulation/taylor",
+      "path": "algorithms/hamiltonian-simulation/taylor/SKILL.md",
+      "sha256": "635197ed2c6f74534cb80c4c33fa2f7b005535d4401f14a7c14d219342e4ef79"
+    },
+    {
+      "id": "algorithms/hamiltonian-simulation/trotter",
+      "path": "algorithms/hamiltonian-simulation/trotter/SKILL.md",
+      "sha256": "0ef1c387a295be256de3ad2d2be66314d9849fa89a1daef6e60dc5f55d4c235f"
+    },
+    {
+      "id": "algorithms/linear-systems",
+      "path": "algorithms/linear-systems/SKILL.md",
+      "sha256": "1878a42a590550117ea77b21306f6ec7085a6ec61f942611c384c2aa87e113af"
+    },
+    {
+      "id": "algorithms/linear-systems/aqc",
+      "path": "algorithms/linear-systems/aqc/SKILL.md",
+      "sha256": "398625331d80a504617e50da50135f03bfac1127dc39508f223fd883f72d43c6"
+    },
+    {
+      "id": "algorithms/linear-systems/hhl",
+      "path": "algorithms/linear-systems/hhl/SKILL.md",
+      "sha256": "fb1f39a2e05448c449d77a671b4ac203a670c45f4e2dff28bfa2fdd1d5dd5181"
+    },
+    {
+      "id": "algorithms/linear-systems/lcu",
+      "path": "algorithms/linear-systems/lcu/SKILL.md",
+      "sha256": "1c208442a354c2ab10677ad24a0e9f046c5c0ab29d5cd3e976f7284fd7ae4cb6"
+    },
+    {
+      "id": "algorithms/linear-systems/qsvt-qlsa",
+      "path": "algorithms/linear-systems/qsvt-qlsa/SKILL.md",
+      "sha256": "e0a74c3b866b588bfc9d41a25900df011805e6265f2653ca4faa196a7cf2eb7b"
+    },
+    {
+      "id": "algorithms/linear-systems/quantum-fourier-transform",
+      "path": "algorithms/linear-systems/quantum-fourier-transform/SKILL.md",
+      "sha256": "71e8978bd1efda730669df12197ee7266aae61767416add3181831d32b351ea1"
+    },
+    {
+      "id": "algorithms/linear-systems/quantum-signal-processing",
+      "path": "algorithms/linear-systems/quantum-signal-processing/SKILL.md",
+      "sha256": "f2d8f9a132336ba23d982ca12186494f0bf942d2d64513e463bc50f4022c73c4"
+    },
+    {
+      "id": "algorithms/linear-systems/vqls",
+      "path": "algorithms/linear-systems/vqls/SKILL.md",
+      "sha256": "699cfacb1a1126713dacf63eb446c65905a2b83c9793ff3365a47e8767eec114"
+    },
+    {
+      "id": "algorithms/primitives",
+      "path": "algorithms/primitives/SKILL.md",
+      "sha256": "844a06dd2ea0ff16aed4df1a9207135e4adb38605061ea2a71b3c0f10f5a7e94"
+    },
+    {
+      "id": "algorithms/primitives/amplitude-amplification",
+      "path": "algorithms/primitives/amplitude-amplification/SKILL.md",
+      "sha256": "2ea1458b3147d33f548996d9b93dc4cc53e80fa8eb5592d4542b84255f080417"
+    },
+    {
+      "id": "algorithms/primitives/amplitude-estimation",
+      "path": "algorithms/primitives/amplitude-estimation/SKILL.md",
+      "sha256": "fa7b64000af594a91f527f621eabbb3e1b9383897de36527813b18bd4c1f10d8"
+    },
+    {
+      "id": "algorithms/primitives/grover",
+      "path": "algorithms/primitives/grover/SKILL.md",
+      "sha256": "9aecc48ff271610abaf7f56334d94de773097d8a42917b55ed2995ed8994bd84"
+    },
+    {
+      "id": "algorithms/primitives/hadamard-test",
+      "path": "algorithms/primitives/hadamard-test/SKILL.md",
+      "sha256": "4b612f2dda988394fd9b650083e4419d0ce6e4b2654c1519592f9f0ad09c31ef"
+    },
+    {
+      "id": "algorithms/primitives/hadamard-transform",
+      "path": "algorithms/primitives/hadamard-transform/SKILL.md",
+      "sha256": "2a899496e6d7107765805f234adb50eb3b5c64f107b334008e5c8046b2d0568c"
+    },
+    {
+      "id": "algorithms/primitives/quantum-phase-estimation",
+      "path": "algorithms/primitives/quantum-phase-estimation/SKILL.md",
+      "sha256": "259f746f7fdd38749fa98689ff5c2eda037681fabfcb544e44fa6ff10068ea31"
+    },
+    {
+      "id": "algorithms/quantum-chemistry",
+      "path": "algorithms/quantum-chemistry/SKILL.md",
+      "sha256": "dbc604cd860bf21f68eb3fe22c59b7cdca02ebf5844f5b946eba0fcbe06309cb"
+    },
+    {
+      "id": "algorithms/quantum-chemistry/molecular-dmrg",
+      "path": "algorithms/quantum-chemistry/molecular-dmrg/SKILL.md",
+      "sha256": "a30430ca7e366e95c796540514bffda9b431b108db9d4b96898aa863b1b76ded"
+    },
+    {
+      "id": "algorithms/quantum-error-correction",
+      "path": "algorithms/quantum-error-correction/SKILL.md",
+      "sha256": "cb2e5e6dabcdf4fcc7182b7e8dfac99f9b5bdcb50d5015660e9ae7bb9e5ca788"
+    },
+    {
+      "id": "algorithms/quantum-machine-learning",
+      "path": "algorithms/quantum-machine-learning/SKILL.md",
+      "sha256": "06af97e2905adf0466f6bbcb3662a0de7318f47a25d049b2ee38ff271ce3c5f7"
+    },
+    {
+      "id": "algorithms/quantum-machine-learning/cvqnn",
+      "path": "algorithms/quantum-machine-learning/cvqnn/SKILL.md",
+      "sha256": "9b2d5b782893b649ddfc505d4d75b7443f8516530d86ffb2c41f7e0038ee3e62"
+    },
+    {
+      "id": "algorithms/quantum-machine-learning/fermi-hubbard-vqe",
+      "path": "algorithms/quantum-machine-learning/fermi-hubbard-vqe/SKILL.md",
+      "sha256": "1b784e854ab2d8689a98f28533374851d7a8116ba65a81584955baa90cfb76f4"
+    },
+    {
+      "id": "algorithms/quantum-machine-learning/ising",
+      "path": "algorithms/quantum-machine-learning/ising/SKILL.md",
+      "sha256": "7cdebea1f5baca3cced468f81d2ea222f34a216a195aa1d4188ea58acbe27d18"
+    },
+    {
+      "id": "algorithms/quantum-machine-learning/qaoa",
+      "path": "algorithms/quantum-machine-learning/qaoa/SKILL.md",
+      "sha256": "aaecdb5db89804428dcef30cde0c54b473ac687b26690a986208a09e9cb561df"
+    },
+    {
+      "id": "algorithms/quantum-machine-learning/qcbm",
+      "path": "algorithms/quantum-machine-learning/qcbm/SKILL.md",
+      "sha256": "efce23fe1c990e511d540e79ead9f4ac2161c4e285ef588adc1c81aba59b623b"
+    },
+    {
+      "id": "algorithms/quantum-machine-learning/vqc",
+      "path": "algorithms/quantum-machine-learning/vqc/SKILL.md",
+      "sha256": "6e56ececf1cf2e77c78850065489b7330ee655378c55a6f91976554f1cc6bef7"
+    },
+    {
+      "id": "algorithms/quantum-machine-learning/vqe",
+      "path": "algorithms/quantum-machine-learning/vqe/SKILL.md",
+      "sha256": "1c6589174257617d3016b58271afc86b070dbed5786ef9740769fca1ddcd4de9"
+    },
+    {
+      "id": "algorithms/schrodingerization",
+      "path": "algorithms/schrodingerization/SKILL.md",
+      "sha256": "c55760d11179978e75ec1833c285a7f5b2770b837ccd6fc4a2e7829cf31d1609"
+    },
+    {
+      "id": "algorithms/schrodingerization/advection-schrodingerization",
+      "path": "algorithms/schrodingerization/advection-schrodingerization/SKILL.md",
+      "sha256": "76ce8336f7e9912e64e9adc18e5abf5870aff34524dcf500e4f07ed91f2f1816"
+    },
+    {
+      "id": "algorithms/schrodingerization/heat-1d-schrodingerization",
+      "path": "algorithms/schrodingerization/heat-1d-schrodingerization/SKILL.md",
+      "sha256": "2c481aa13cc439f571cd33eab1887cc6b370565248899fcf8e63c581a6863f15"
+    },
+    {
+      "id": "algorithms/schrodingerization/heat-2d-schrodingerization",
+      "path": "algorithms/schrodingerization/heat-2d-schrodingerization/SKILL.md",
+      "sha256": "cf1fbf337a6a4762a87156734151974a098136cbba0b60094e278294b9c510e4"
+    },
+    {
+      "id": "algorithms/search",
+      "path": "algorithms/search/SKILL.md",
+      "sha256": "83d29590693b9a51c59baa4324200e034d8dda2db1152104ec81f4adeaa9374e"
+    },
+    {
+      "id": "algorithms/search/glued-trees",
+      "path": "algorithms/search/glued-trees/SKILL.md",
+      "sha256": "0998251bd277c523fa41e753a69eb1ee51dfa04c0802ed7ea6c7dc86d60af724"
+    },
+    {
+      "id": "algorithms/search/hidden-shift",
+      "path": "algorithms/search/hidden-shift/SKILL.md",
+      "sha256": "5a7f929d626ae95374c13fd308bff2b5219e490516221a9343212b3854cde260"
+    },
+    {
+      "id": "algorithms/state-preparation",
+      "path": "algorithms/state-preparation/SKILL.md",
+      "sha256": "21989424a9e04c5cb9a2324eb88a5a9ff68a1f53073c91ef24ff4bb238a583c9"
+    },
+    {
+      "id": "algorithms/state-preparation/mottonen",
+      "path": "algorithms/state-preparation/mottonen/SKILL.md",
+      "sha256": "1fdd278bfc6fe97ea2ca207a194a0349b6a44979d68591610b685b48a535cf29"
+    },
+    {
+      "id": "algorithms/state-preparation/mps",
+      "path": "algorithms/state-preparation/mps/SKILL.md",
+      "sha256": "8dcf32c6a9087c9d2a3da8b03bd7dd65943fde30b1f6484449a140d7a06db44f"
+    },
+    {
+      "id": "algorithms/state-preparation/multiplexer",
+      "path": "algorithms/state-preparation/multiplexer/SKILL.md",
+      "sha256": "5739b9fbf35dd2e95b95b2a29486d7effd51f97af37fa2dc8552617fb5e69de0"
+    },
+    {
+      "id": "algorithms/state-preparation/pauli",
+      "path": "algorithms/state-preparation/pauli/SKILL.md",
+      "sha256": "7459d20da728e9535c110003f76dd82f6e8cfc3f6d867047c0dca16941336341"
+    },
+    {
+      "id": "algorithms/state-preparation/superposition",
+      "path": "algorithms/state-preparation/superposition/SKILL.md",
+      "sha256": "8e06ebf2a0e23d2071bc44fe56063c5aaf7cf398140e76925cb7c18a96f7d16b"
+    },
+    {
+      "id": "root",
+      "path": "SKILL.md",
+      "sha256": "6dd68b86dfe6bc5f7bc0f4dbda0cbea9bd742f2f6737854f7a4279c4ec20f2af"
+    },
+    {
+      "id": "simulators",
+      "path": "simulators/SKILL.md",
+      "sha256": "d9587657d7879aedd5fcf4d6602c24dd7ea4f9aad645bcbad09e1e2284e953f3"
+    },
+    {
+      "id": "simulators/pennylane",
+      "path": "simulators/pennylane/SKILL.md",
+      "sha256": "8df881a4f103e6ebae7b54333d9012facf61d4b5b8587c82abfe446d7366a930"
+    },
+    {
+      "id": "simulators/qiskit",
+      "path": "simulators/qiskit/SKILL.md",
+      "sha256": "bd93929d5a7a0e65c612c0be852f140e8d5589bfcb231d06242657abee0d63bb"
+    },
+    {
+      "id": "simulators/unitarylab",
+      "path": "simulators/unitarylab/SKILL.md",
+      "sha256": "0f06565299364e4ccfc687e8b4217e7e9d1c0c400c75bf15e237c416ca8e76c8"
     }
   ]
 }

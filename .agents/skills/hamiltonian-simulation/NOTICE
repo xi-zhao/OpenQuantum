@@ -1,0 +1,10 @@
+OpenQuantum Hamiltonian simulation
+
+The Suzuki recursion and qDrift sampling formula in mcp/bridge.py are adapted
+from the MIT-licensed UnitaryLab Algorithms source identified in source.json.
+The upstream copyright and full MIT permission notice are preserved in LICENSE (trailing whitespace normalized).
+OpenQuantum modifications (2026): Qiskit circuit construction; explicit Pauli
+input, exact caller-selected steps, deterministic local random seed, identity
+phase handling, no file outputs, optional simulation and independent reference.
+No UnitaryLab simulator, Agent, or unitarylab-algorithms package is included.
+Qiskit is Apache-2.0; NumPy and SciPy are BSD-3-Clause dependencies.

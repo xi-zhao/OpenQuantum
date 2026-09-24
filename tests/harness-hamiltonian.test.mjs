@@ -9,7 +9,10 @@ import test from "node:test";
 
 import { harnessHttpCookie, harnessSessionSnapshot, redactHarnessLaunchTokens } from "../scripts/lib/harness-http-auth.mjs";
 import { prepareOpenQuantumHarnessHome } from "../scripts/lib/prepare-harness-home.mjs";
-import { SOURCE } from "../src/quantum-practices/index.mjs";
+import { definition } from "../.agents/skills/hamiltonian-simulation/mcp/contracts.mjs";
+import { HAMILTONIAN_INPUT } from "./fixtures/hamiltonian.mjs";
+
+const toolName = "mcp__hamiltonian_local__simulate_hamiltonian";
 
 async function listen(server) {
   server.listen(0, "127.0.0.1");
@@ -32,16 +35,15 @@ async function waitFor(probe, description, timeoutMs = 30_000) {
   throw new Error(`${description}: ${lastError ?? "timed out"}`);
 }
 
-test("Harness invokes reference retrieval, persists sources and returns invalid-input errors", { timeout: 60_000 }, async (t) => {
+test("Harness discovers the Hamiltonian Skill, runs both open formulas and rereads success and failure", { skip: process.env.OPENQUANTUM_REAL_HAMILTONIAN !== "1", timeout: 120_000 }, async (t) => {
   const root = process.cwd();
-  const sandbox = await mkdtemp(path.join(tmpdir(), "oq-practices-harness-"));
+  const sandbox = await mkdtemp(path.join(tmpdir(), "oq-hamiltonian-harness-"));
   const harnessHome = path.join(sandbox, "dsh");
   const fixtureCalls = [
-    { id: "practice-hhl", input: { action: "get", query: "HHL matrix constraints" } },
-    { id: "practice-heat", input: { action: "get", query: "一维热方程的假设" } },
-    { id: "practice-invalid", input: { action: "get", id: "../../.env" } },
+    { id: "hamiltonian-trotter", input: HAMILTONIAN_INPUT },
+    { id: "hamiltonian-qdrift", input: { numQubits: 1, terms: [{ pauli: "Y", coefficient: -0.7 }], time: 0.4, method: "qdrift", steps: 8, seed: 3 } },
+    { id: "hamiltonian-invalid", input: { ...HAMILTONIAN_INPUT, order: 3 } },
   ];
-  let dispatched = false;
   let registeredTool;
   let child;
   const deliveredResults = [];
@@ -49,23 +51,21 @@ test("Harness invokes reference retrieval, persists sources and returns invalid-
     const chunks = [];
     for await (const chunk of request) chunks.push(chunk);
     const body = JSON.parse(Buffer.concat(chunks).toString());
-    registeredTool ??= body.tools?.find(tool => tool.function?.name === "quantum_practices");
+    registeredTool ??= body.tools?.find(tool => tool.function?.name === toolName);
     deliveredResults.push(...(body.messages ?? []).filter(message => message.role === "tool"));
-    const initial = !dispatched;
-    dispatched = true;
-    const delta = initial ? {
+    const completed = new Set(deliveredResults.map(message => message.tool_call_id));
+    const next = fixtureCalls.find(call => !completed.has(call.id));
+    const initial = Boolean(next);
+    const delta = next ? {
       role: "assistant",
-      tool_calls: fixtureCalls.map((call, index) => ({
-        index, id: call.id, type: "function",
-        function: { name: "quantum_practices", arguments: JSON.stringify(call.input) },
-      })),
-    } : { role: "assistant", content: "Reference retrieval complete; no scientific computation performed." };
+      tool_calls: [{ index: 0, id: next.id, type: "function", function: { name: toolName, arguments: JSON.stringify(next.input) } }],
+    } : { role: "assistant", content: "Open Hamiltonian computations complete; scientificValidation=not_evaluated." };
     response.writeHead(200, { "content-type": "text/event-stream" });
     for (const choice of [
       { delta, finish_reason: null },
       { delta: {}, finish_reason: initial ? "tool_calls" : "stop" },
     ]) {
-      response.write(`data: ${JSON.stringify({ id: "practice-model-fixture", object: "chat.completion.chunk", created: 1, model: body.model, choices: [{ index: 0, ...choice }], usage: { prompt_tokens: 10, completion_tokens: 10, total_tokens: 20 } })}\n\n`);
+      response.write(`data: ${JSON.stringify({ id: "hamiltonian-model-fixture", object: "chat.completion.chunk", created: 1, model: body.model, choices: [{ index: 0, ...choice }], usage: { prompt_tokens: 10, completion_tokens: 10, total_tokens: 20 } })}\n\n`);
     }
     response.end("data: [DONE]\n\n");
   });
@@ -120,16 +120,18 @@ test("Harness invokes reference retrieval, persists sources and returns invalid-
     return result.value;
   }
   await waitFor(() => rpc("session/modelCatalog"), "Harness startup");
-  const sessionId = `session-practices-${crypto.randomUUID()}`;
+  const sessionId = `session-hamiltonian-${crypto.randomUUID()}`;
   await rpc("session/create", { sessionId, cwd: root, agentPreset: "openquantum" });
+  const skills = await rpc("skills/list", { sessionId });
+  assert.ok(skills.skills.some(skill => skill.name === "hamiltonian-simulation" && skill.modelInvocable));
   await rpc("session/prompt", {
     sessionId, mode: "queue",
-    content: [{ type: "text", text: "Look up the fixed HHL and heat-equation references; include the invalid-id error check." }],
+    content: [{ type: "text", text: "Run both fixed Hamiltonian cases and the invalid-order case using their actual Tool results." }],
   });
   const history = await waitFor(async () => {
     const snapshot = await harnessSessionSnapshot(base, cookie, sessionId, 200);
     return snapshot.records.some(entry => entry.event?.type === "turn/end") && snapshot;
-  }, "completed reference retrieval turn");
+  }, "completed Hamiltonian turn", 90000);
   assert.ok(registeredTool, "real Harness request must include the registered Tool");
   assert.equal(registeredTool.function.parameters.additionalProperties, false);
   const events = history.records.map(entry => entry.event);
@@ -141,25 +143,28 @@ test("Harness invokes reference retrieval, persists sources and returns invalid-
     assert.ok(result, `${call.id}: missing persisted result`);
     const block = result.data.message.content.find(item => item.type === "tool-result");
     const content = block.content.map(item => item.text ?? "").join("\n");
-    if (call.id === "practice-invalid") {
+    if (call.id === "hamiltonian-invalid") {
       assert.equal(block.isError, true);
-      assert.match(content, /not a filesystem path/);
+      assert.match(content, /order must be 1 or even/);
     } else {
       assert.equal(block.isError, false);
-      assert.ok(content.includes(SOURCE.corpusCommit));
-      assert.match(content, /reference material only/);
-      assert.match(content, call.id === "practice-hhl" ? /id: algorithms\/linear-systems\/hhl/ : /id: algorithms\/schrodingerization\/heat-1d-schrodingerization/);
+      const output = JSON.parse(content);
+      assert.ok(definition.validateOutput(output), JSON.stringify(definition.validateOutput.errors));
+      assert.deepEqual(output.input, definition.normalize("simulate_hamiltonian", call.input));
+      assert.equal(output.scientificValidation, "not_evaluated");
+      assert.ok(output.result.unitaryFrobeniusError < 0.001);
     }
     assert.ok(deliveredResults.some(message => message.tool_call_id === call.id), `${call.id}: result must return to the model protocol`);
     evidence.push({ call: called, result });
   }
-  if (process.env.OPENQUANTUM_PRACTICES_EVIDENCE) {
-    const target = path.resolve(process.env.OPENQUANTUM_PRACTICES_EVIDENCE);
-    await mkdir(path.dirname(target), { recursive: true });
-    await writeFile(target, JSON.stringify({
-      verifiedAt: new Date().toISOString(), harness: "0.1.5-rc.1",
-      model: "local protocol fixture", externalModelTested: false,
-      source: SOURCE, sessionId, events: evidence,
-    }, null, 2) + "\n");
-  }
+  const replay = await harnessSessionSnapshot(base, cookie, sessionId, 200);
+  assert.deepEqual(replay.records.filter(item => item.event?.type === "tool/result").map(item => item.event),
+    history.records.filter(item => item.event?.type === "tool/result").map(item => item.event));
+  const target = path.join(root, ".openquantum/hamiltonian-evidence/harness-session.json");
+  await mkdir(path.dirname(target), { recursive: true });
+  await writeFile(target, JSON.stringify({
+    verifiedAt: new Date().toISOString(), harness: "0.1.5-rc.1",
+    model: "local protocol fixture", externalModelTested: false,
+    source: definition.source, sessionId, events: evidence,
+  }, null, 2) + "\n");
 });

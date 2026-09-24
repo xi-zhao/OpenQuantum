@@ -1,7 +1,7 @@
 # 量子算法参考检索
 
 OpenQuantum 默认 Preset 注册原生只读 Tool `quantum_practices`，为算法解释、方法比较、假设核对和实验设计提供
-60 份固定版本参考指南。它是 L1、Tool-only 能力；不会把这 60 份文档注册为活跃 Skill，也不执行其中的代码。
+66 份固定版本参考指南。它是 L1、Tool-only 能力；不会把这 66 份文档注册为活跃 Skill，也不执行其中的代码。
 
 ## 使用
 
@@ -21,11 +21,12 @@ OpenQuantum 默认 Preset 注册原生只读 Tool `quantum_practices`，为算�
 
 ## 来源与接入方式
 
-- 上游：[unitarylab/quantum-practices](https://github.com/unitarylab/quantum-practices)。
-- 固定提交：`572a24c9b5c9787caec98810351f5cb17c82250e`，版本 `0.1.0`。
-- 上游资料来自 quantum-skills `2ad300222b6578fbb8c2a6ff648f709108cbff63`，不自动跟随最新分支。
-- 原始检索器和生成目录保存在 [`src/quantum-practices/upstream`](../../src/quantum-practices/upstream/)，
-  与上游 Git blob 逐一匹配；SHA-256 固定在 [`source.json`](../../src/quantum-practices/upstream/source.json)。
+- 检索器来源：[unitarylab/quantum-practices](https://github.com/unitarylab/quantum-practices)，固定提交
+  `572a24c9b5c9787caec98810351f5cb17c82250e`，版本 `0.1.0`；保留原始 `skill-store.js`、LICENSE 和 NOTICE。
+- 资料来源：[unitarylab/quantum-skills](https://github.com/unitarylab/quantum-skills)，固定提交
+  `c5436bb120812ad903ac776f58df89b803ced48c`；当前 66 份指南由本地脚本生成目录，保留内容原文与独立许可文件。
+- [`source.json`](../../src/quantum-practices/upstream/source.json) 分别记录检索器、资料提交、66 份原文及生成文件的 SHA-256。
+  返回的原文链接指向资料仓库的固定提交，而不是检索器仓库。
 - [`src/quantum-practices/index.mjs`](../../src/quantum-practices/index.mjs) 只增加严格输入检查、中文查询映射和资料来源/执行边界。
 - [`quantum-practices-tools.mjs`](../../runtime/openquantum/agent-presets/openquantum/quantum-practices-tools.mjs)
   在当前 Harness `0.1.5-rc.1` 中注册一个 Tool；不加载上游针对 RC.6 的 Provider，不增加 MCP Server。
@@ -35,12 +36,15 @@ Harness 自身保存调用事件，不等于该 Tool 物化科研结果；此能
 
 ## 许可与更新
 
-原始资料和检索器为 MIT，保留完整 LICENSE 和 NOTICE；本地新增的 `package.json` 仅声明 ESM 格式。
+原始资料和检索器为 MIT，保留完整许可与原始 NOTICE；后者描述检索器当时的历史资料来源，
+当前资料来源由 source.json 单独固定。本地 `package.json` 仅声明 ESM 格式。
 模拟器 `unitarylab` 与 UnitaryLab Agent 是另外的闭源授权软件，不能从内容仓库的 MIT 许可推导其分发或服务使用权限。
 本集成不包含这些依赖。[第三方声明](../../THIRD_PARTY_NOTICES.md)记录分发边界。
 
 更新时显式选择完整 commit，审阅内容与检索器差异，替换对应原始文件、更新摘要并重跑下列检查。
 不要只改 source.json 的摘要而跳过来源和许可核对。
+资料目录使用 `node scripts/build-quantum-practices-catalog.mjs --source /path/to/pinned/quantum-skills` 重建；
+脚本逐文档核对已审阅摘要，`--check` 离线核对生成一致性。
 
 ## 验证
 
@@ -59,3 +63,7 @@ Harness 注册、调用、结果回传和 Session event log 重读。Harness 测
 
 一维热方程的计算方向另见[独立原型](../../experiments/schrodingerization-heat1d/README.md)，
 不计入这项知识检索能力的计算或验收结果。
+
+2026-09-24 更新包含 6 份新指南、4 份已改动指南，无删除。Trotter/qDrift 条目现在给出本地
+`hamiltonian-simulation` / `simulate_hamiltonian` 开源执行路线；参考 Tool 本身仍不执行计算。
+上游安装命令和模拟器偏好不覆盖本地开源策略。新增计算与当前验证见[开源适配说明](UNITARYLAB_OPEN_ADAPTATION.md)。

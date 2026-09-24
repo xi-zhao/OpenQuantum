@@ -13,7 +13,7 @@
 
 ## 当前 Skill
 
-以下 32 个 Skill 随源码分发；它们与 MCP Server 不是一一对应关系，知识型 Skill 可以不绑定专用 Tool，
+以下 33 个 Skill 随源码分发；它们与 MCP Server 不是一一对应关系，知识型 Skill 可以不绑定专用 Tool，
 工作流也可以使用多个服务或进程内原生 Tool。连接默认配置与凭据条件见[项目首页](../../README.md#mcp-服务目录)。
 
 | Skill | 作用 | 依赖的执行模块 |
@@ -45,6 +45,7 @@
 | `qmclaw-workbench` | QMClaw 超导量子比特测控与单比特调校工作流 | 原生 Tool Provider；13 类实验的合成数据模拟，不启动 MCP Server |
 | `quantum-information-audit` | 密度矩阵和 negativity 审计 | toqito MCP-exposed Tool + Validator + L3 物化/验收链 |
 | `quantum-ground-state` | 二量子位固定权重一扇区的基态工作流 | 原生 Tool Provider + Validator + L3 物化/验收链；完整调用包含工作区证据写入 |
+| `hamiltonian-simulation` | Trotter/qDrift 演化、电路资源与独立误差对照 | `hamiltonian_local` MCP Server + Harness MCP Client；显式 setup 后本地计算 |
 | `qcut-knitting` | 门切割与期望值重建 | `qcut_local` MCP Server + Harness MCP Client；默认开启 |
 | `compact-optimization` | 线路优化与独立等价对照 | `compact_local` MCP Server + Harness MCP Client；默认开启 |
 | `openqarp-excited-states` | VQD 激发态、残差与正交性 | `openqarp_local` MCP Server + Harness MCP Client；默认开启 |

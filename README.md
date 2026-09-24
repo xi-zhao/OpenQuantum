@@ -119,7 +119,7 @@ OpenQuantum 把专业量子软件、研究方法与完整应用接到你的问�
 
 | 任务方向 | 可以发起的任务 | 可以查看的结果 |
 | --- | --- | --- |
-| 算法参考与工具选型 | 检索 Quantum-Practices 的 60 份算法指南、比较量子 SDK、复用研究步骤 | 固定版本的参考材料、适用假设与选型建议 |
+| 算法参考与工具选型 | 检索 Quantum-Practices 的 66 份算法指南、比较量子 SDK、复用研究步骤 | 固定版本的参考材料、适用假设与选型建议 |
 | 公开设备基准 | 从 Metriq 的 410 条固定历史记录中按厂商、设备或基准类型查询 | 原始参数、指标、时间、来源与许可；保留模拟器标签 |
 
 <a id="学习应用"></a>
@@ -509,14 +509,14 @@ Harness 是通用 Agent Runtime，扩展通过 Cordis Plugin 装配。UI、模�
   <a href="#原生量子-tools">原生量子 Tools</a>
 </p>
 
-当前源码分发 **32 个内置 Skill、34 个 MCP 服务连接、5 个原生量子 Tool**。其中 26 个 MCP 服务使用 OpenQuantum 的本地桥接实现。Skill 指导工作方法，Tool 执行动作，MCP Server 通过协议提供 Tool；三者分别统计。
+当前源码分发 **33 个内置 Skill、35 个 MCP 服务连接、5 个原生量子 Tool**。其中 27 个 MCP 服务使用 OpenQuantum 的本地桥接实现。Skill 指导工作方法，Tool 执行动作，MCP Server 通过协议提供 Tool；三者分别统计。
 
 <details>
 <summary><strong>内置 Skills：按研究方法查找工作流</strong></summary>
 
 #### 内置 Skills
 
-这 32 个 Skill 是 OpenQuantum 随源码维护的量子工作流，覆盖方法选择、计算实验、结果解释和平台诊断，由 Harness 按任务需要发现和加载。点击名称即可查看完整的 `SKILL.md`，也可作为编写自己 Skill 的起点；所需工具与连接分别配置。
+这 33 个 Skill 是 OpenQuantum 随源码维护的量子工作流，覆盖方法选择、计算实验、结果解释和平台诊断，由 Harness 按任务需要发现和加载。点击名称即可查看完整的 `SKILL.md`，也可作为编写自己 Skill 的起点；所需工具与连接分别配置。
 
 下表按**研究方法与用途**介绍能力。各 Tool 提供的模型、参数和输入格式见[计算参数与运行方式](#计算参数与运行方式)。
 
@@ -529,6 +529,7 @@ Harness 是通用 Agent Runtime，扩展通过 Cordis Plugin 装配。UI、模�
 | [`tyxonq-workbench`](.agents/skills/tyxonq-workbench/SKILL.md) | 门电路仿真、态矢演化、量子噪声与采样分布分析 | `tyxonq_local` |
 | [`pyzx-optimization`](.agents/skills/pyzx-optimization/SKILL.md) | ZX 重写、Clifford+T 优化与电路提取 | `pyzx_local` |
 | [`compact-optimization`](.agents/skills/compact-optimization/SKILL.md) | 线路优化与独立等价对照 | `compact_local`；[使用说明](docs/integrations/CANDIDATE_LIBRARIES.md) |
+| [`hamiltonian-simulation`](.agents/skills/hamiltonian-simulation/SKILL.md) | Trotter/qDrift 演化电路、态矢量与独立误差对照 | `hamiltonian_local`；[使用说明](docs/integrations/UNITARYLAB_OPEN_ADAPTATION.md) |
 | [`qcut-knitting`](.agents/skills/qcut-knitting/SKILL.md) | 门切割与期望值重建 | `qcut_local`；[使用说明](docs/integrations/CANDIDATE_LIBRARIES.md) |
 | [`graphix-mbqc`](.agents/skills/graphix-mbqc/SKILL.md) | 电路到 MBQC 模式、资源图、自适应测量和纠正输出 | `graphix_local` |
 | [`quantum-circuit-verification`](.agents/skills/quantum-circuit-verification/SKILL.md) | 量子电路等价性验证、优化前后对照与全局相位差异判定 | `qcec_local` |
@@ -596,7 +597,7 @@ Harness 是通用 Agent Runtime，扩展通过 Cordis Plugin 装配。UI、模�
 
 **OpenQuantum 为 26 项计算与设备发现能力开发了本地 MCP 桥接**，另直接接入 8 个上游 MCP 服务。下表按用途分组：本地桥接链接到仓库源码并保留上游来源，直接接入的服务明确标记为“上游服务”。
 
-默认 Preset 共声明 34 个 MCP 服务连接：**26 个默认开启（其中 Qiskit 两项可通过离线开关关闭），8 个按需启用**。连接名对应配置中的 `serverName`；“默认开启”表示配置策略，使用前仍需准备依赖和必要凭据。
+默认 Preset 共声明 35 个 MCP 服务连接：**27 个默认开启（其中 Qiskit 两项可通过离线开关关闭），8 个按需启用**。连接名对应配置中的 `serverName`；“默认开启”表示配置策略，使用前仍需准备依赖和必要凭据。
 
 这些 MCP Server 都由本机以 `stdio` 方式启动，不是 OpenQuantum 提供的公共托管端点。其中一部分 Tool 在本地计算，另一部分再访问厂商文档或量子云；“本地启动 MCP Server”不代表所有数据处理都留在本地。
 
@@ -609,6 +610,7 @@ Harness 是通用 Agent Runtime，扩展通过 Cordis Plugin 装配。UI、模�
 | [`tyxonq_local`](.agents/skills/tyxonq-workbench/mcp/server.mjs) · [TyxonQ](https://github.com/QureGenAI-Biotech/TyxonQ) | 电路与噪声仿真 | 默认关闭 | 手动开启；`uv` 首次准备较大的 Python 环境，无需云凭据 |
 | [`pyzx_local`](.agents/skills/pyzx-optimization/mcp/server.mjs) · [PyZX](https://github.com/zxcalc/pyzx) | ZX 重写、Clifford+T 优化与电路提取 | 默认开启 | uv；隔离 Python 3.12 环境；[安装与范围](docs/integrations/UNITARY_NEXT_TOOLS.md) |
 | [`compact_local`](.agents/skills/compact-optimization/mcp/server.mjs) · [Compact](https://github.com/Q-PROOF/Compact) | 线路优化与独立等价对照 | 默认开启 | Python 3.12 + uv；本地计算、无需云凭据；[范围](docs/integrations/CANDIDATE_LIBRARIES.md) |
+| [`hamiltonian_local`](.agents/skills/hamiltonian-simulation/mcp/server.mjs) · [UnitaryLab MIT 算法适配](https://github.com/unitarylab/unitarylab_algorithms) | Trotter/qDrift 哈密顿量演化 | 默认开启 | 显式运行 `npm run capability:hamiltonian:setup`；Qiskit/NumPy/SciPy 开放依赖；[范围](docs/integrations/UNITARYLAB_OPEN_ADAPTATION.md) |
 | [`qcut_local`](.agents/skills/qcut-knitting/mcp/server.mjs) · [QCut](https://github.com/FiQCI/QCut) | 门切割与期望值重建 | 默认开启 | Python 3.12 + uv；本地计算、无需云凭据；[范围](docs/integrations/CANDIDATE_LIBRARIES.md) |
 | [`graphix_local`](.agents/skills/graphix-mbqc/mcp/server.mjs) · [Graphix](https://github.com/TeamGraphix/graphix) | 电路到 MBQC 模式、资源图、自适应测量和纠正输出 | 默认开启 | uv；隔离 Python 3.12 环境；[安装与范围](docs/integrations/UNITARY_NEXT_TOOLS.md) |
 | [`qcec_local`](.agents/skills/quantum-circuit-verification/mcp/server.mjs) · [MQT QCEC](https://github.com/munich-quantum-toolkit/qcec) | unitary 电路等价性检查 | 默认开启 | `uv`；本地运行，无需云凭据；不接受动态电路或任意文件路径 |
@@ -699,7 +701,7 @@ OpenQuantum 提供以下 5 个原生量子动作，用于基态求解、调校�
 | `solve_and_validate_ground_state` | 计算限定二量子位基态并执行独立检查；完整流程保存结果和会话证据后生成科学验收报告 | 本地科研证据写入，`workspace-write`；不是通用分子求解或真机任务 |
 | `list_qmclaw_experiments` | 列出 [QMClaw](https://github.com/QMC-AI/QMClaw) 的 13 类实验及支持范围 | 只读目录查询，`read-only`；不连接仪器 |
 | `simulate_qmclaw_experiment` | 运行带 seed 的 QMClaw 合成数据实验 | 只读计算，`read-only`；不连接 LabRAD/lqms，不写回真实校准参数 |
-| `quantum_practices` | 搜索和读取 60 份固定版本的算法参考指南，支持中文算法名；用于方法比较、假设核对与实验设计 | 本地资料检索，`read-only`；不安装或执行 UnitaryLab 模拟器；[使用与验证](docs/integrations/QUANTUM_PRACTICES.md) |
+| `quantum_practices` | 搜索和读取 66 份固定版本的算法参考指南，支持中文算法名；用于方法比较、假设核对与实验设计 | 本地资料检索，`read-only`；不安装或执行 UnitaryLab 模拟器；[使用与验证](docs/integrations/QUANTUM_PRACTICES.md) |
 | `metriq_benchmarks` | 按厂商、设备、基准类型或文字检索 410 条去重后的公开记录，读取原始参数与指标 | 固定本地快照，`read-only`；逐次返回来源与 CC-BY-4.0 署名；[范围与验证](docs/integrations/UNITARY_ECOSYSTEM.md) |
 
 </details>
@@ -748,7 +750,7 @@ docs/                    架构、路线与生态文档
 
 ### 可选上游 Skill
 
-[OriginQ 官方 `pyqpanda3` Skill](https://github.com/OriginQ/pyqpanda3-skill) 提供电路编程、算法模板、迁移与 QCloud 使用指导。它**不计入上面的 32 个内置 Skill，也不会在首次启动时自动安装**；运行 `npm run skill:qpanda:setup` 后，固定审阅版本才会进入项目 Skill 目录。安装这个 Skill 不会自动启用 `qpanda_runtime`，也不会赋予云任务权限。
+[OriginQ 官方 `pyqpanda3` Skill](https://github.com/OriginQ/pyqpanda3-skill) 提供电路编程、算法模板、迁移与 QCloud 使用指导。它**不计入上面的 33 个内置 Skill，也不会在首次启动时自动安装**；运行 `npm run skill:qpanda:setup` 后，固定审阅版本才会进入项目 Skill 目录。安装这个 Skill 不会自动启用 `qpanda_runtime`，也不会赋予云任务权限。
 
 ## 长期发展规划
 
@@ -914,7 +916,7 @@ IBM Quantum、IonQ 和本源量子是可连接的云服务。任务提交分别�
 
 | 查询目的 | 来源项目 | OpenQuantum 当前提供 |
 | --- | --- | --- |
-| 查找算法说明与参考实现 | [Quantum-Practices](https://github.com/unitarylab/quantum-practices) | 本地检索 60 份固定版本算法指南，保留来源链接 |
+| 查找算法说明与参考实现 | [Quantum-Practices](https://github.com/unitarylab/quantum-practices) | 本地检索 66 份固定版本算法指南，保留来源链接 |
 | 查看设备历史基准 | [Metriq data](https://github.com/unitaryfoundation/metriq-data) | 查询 410 条去重历史记录，返回测试条件、原始指标、日期和来源，并保留模拟器标签 |
 
 </details>

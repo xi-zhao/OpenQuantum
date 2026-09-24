@@ -56,6 +56,19 @@
 - id: tool-quantum-practices
   name: ./quantum-practices-tools.mjs
 
+# Open MIT algorithm adaptation; Python environment is prepared explicitly.
+- id: mcp-hamiltonian-simulation
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: hamiltonian_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/hamiltonian-simulation/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: true
+
 # Agent Presets mounts this composition once per process and every joined
 # Session inherits the same Harness MCP Client. Restart Harness after editing this
 # composition: retained hot-reload generations must not own the same
