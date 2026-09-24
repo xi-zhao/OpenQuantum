@@ -26,7 +26,7 @@ OpenQuantum 是 DeepSeek Harness 的开源量子科研发行版。最常见的�
 
 | 产品需求 | 最小组合 | 黄金样板 | 最小验证 |
 | --- | --- | --- | --- |
-| 只增加知识、选择方法或工作步骤 | Skill | [`quantum-sdk-advisor`](.agents/skills/quantum-sdk-advisor/SKILL.md) | `npm run capability:conformance` + 真实 `skill.list` 测试 |
+| 只增加知识、选择方法或工作步骤 | Skill | [`quantum-sdk-advisor`](.agents/skills/quantum-sdk-advisor/SKILL.md) | `npm run capability:conformance` + 真实 `skills/list` 测试 |
 | 让 Agent 执行一个动作 | Tool + Tool Provider；Skill 按工作流需要可选 | [原生 Tool Provider](runtime/openquantum/agent-presets/openquantum/native-quantum-tools.mjs)；跨语言参考 [`qpanda-qubo`](.agents/skills/qpanda-qubo/) | capability test + `npm run capability:contracts:test` + Harness Registry 测试 |
 | 让执行结果形成可审计 observations | L1 + schema + Validator + eval evidence | [`platform-diagnostics`](.agents/skills/platform-diagnostics/) | capability/eval + Validator 失败路径测试 |
 | 对科学主张给出可回放验收 | L2 + Acceptance Profile + Result Package + Materializer/重读 + central Acceptance Builder 接入；只有通过 `post-execute` 自动物化时才增加 agent-scoped Host Plugin/内部 Adapter | [`quantum-ground-state`](.agents/skills/quantum-ground-state/) | contract + materialization + Result Commit/Session replay 测试 |
@@ -80,6 +80,11 @@ Session/workspace，不进入默认离线 CI，也不能用 Mock 结果替代。
 
 其中只有 `SKILL.md` 会被 Harness Skill provider 当作 Skill 加载。其余目录只是为了让同一科研纵切的
 源码便于审查而共置；Harness 不会因此自动启动程序、连接 MCP Server、注册 Tool 或执行 Validator。
+
+纯分类索引可以使用 Harness 原生 `disable-model-invocation: true` 与 `user-invocable: true`，
+保留手动入口并让模型直接选择实际方法。调整已有入口时验证用户显式调用与模型目录，保留旧名称；
+不要为分类导航创建 Tool。接入现有 SDK、增强本地算法、外部模型验收分别声明范围和验证，
+不把三者默认捆绑为一次接入的完成条件。现有条目的分批建议见[治理清单](docs/architecture/EXTENSION_GOVERNANCE.md)。
 
 保持作用域小而明确。`SKILL.md` 可以指导 Agent，但以下规则不能只写在 Prompt 中：
 

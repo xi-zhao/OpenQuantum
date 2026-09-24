@@ -5,13 +5,15 @@ description: 使用 FieldQuantum fieldqkit 统一检查和发现夸父、天衍�
 
 # FieldQKit Hardware
 
+相近入口、后端准备与位序差异按[共同选择说明](../../../docs/integrations/CAPABILITY_SELECTION.md)判断。
+
 ## 工作流
 
 1. 先调用 `inspect_fieldqkit_setup`，确认目标 Provider 的凭证是否已在 OpenQuantum 设置中心配置。
 2. 凭证缺失时，明确告诉用户前往“设置中心 → 量子组件 → 安全凭据”；不要索要或回显 Token。
 3. 需要选择硬件时调用 `discover_fieldqkit_backends`，传入最小量子位数和可选芯片偏好。
 4. 把返回的 Provider、芯片名、量子位数、耦合拓扑和校准摘要作为事实解释，不推断未返回的可用性、成本或排队时间。
-5. 当前两个 MCP-exposed Tool 不会改变云端状态或提交任务；首次后端发现可能由 `uv` 在工作区物化固定 Python 环境并访问所选云端，因此其最大副作用声明为 `workspace-write`，不能称为端到端 `read-only`。
+5. 当前两个 MCP-exposed Tool 不会改变云端状态或提交任务；后端发现使用显式准备的环境，可能写 SDK 缓存并访问所选云端，因此其最大副作用声明为 `workspace-write`，不能称为端到端 `read-only`。
 6. 不要通过 Bash、Python 或其他 Tool 绕过它们提交真实量子任务。
 
 ## 边界
@@ -23,3 +25,7 @@ description: 使用 FieldQuantum fieldqkit 统一检查和发现夸父、天衍�
 - Qiskit 电路分析与转译优先使用 `qiskit-circuit-workbench`；严格二量子位基态验收使用 `quantum-ground-state`。
 
 Provider 与凭据对应关系见 [references/providers.md](references/providers.md)。
+
+## 依赖准备
+
+运行前执行 `node scripts/setup-paper-tools.mjs fieldqkit-hardware`。缺失、旧锁和已安装环境的处理见[共同准备说明](../../../docs/integrations/LOCAL_ENVIRONMENTS.md)；Tool 不自动安装或升级依赖。

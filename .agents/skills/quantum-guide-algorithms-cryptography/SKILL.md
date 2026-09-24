@@ -1,11 +1,15 @@
 ---
 name: quantum-guide-algorithms-cryptography
 description: "为 algorithms/cryptography 选择完整的开源算法工作流，路由到本地可发现的专用 Skills。"
+disable-model-invocation: true
+user-invocable: true
 ---
 
 # algorithms/cryptography
 
 本地开源适配。上游指南 ID：`algorithms/cryptography`。
+
+分类导航：保留用户显式调用；自动任务直接选择叶子方法 Skill，或使用 `quantum-algorithms` 查找。
 
 ## 选择工作流
 

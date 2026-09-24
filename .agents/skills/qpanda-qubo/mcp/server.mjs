@@ -12,6 +12,7 @@ import {
 
 import { referenceModeSchema } from "../../../../src/lib/science-reference.mjs";
 
+import { preparedPythonLaunch } from "../../../../src/lib/prepared-python.mjs";
 import { runLocalJsonProcess } from "../../../../src/lib/local-json-process.mjs";
 import { localComputeEnvironment, localComputeProcessOptions } from "../../../../src/lib/local-compute-policy.mjs";
 
@@ -41,7 +42,7 @@ const BRIDGE_ENVIRONMENT_NAMES = Object.freeze([
   "UV_PYTHON_INSTALL_DIR",
   "WINDIR",
 ]);
-const lazyEnvironmentAnnotations = Object.freeze({
+const localExecutionAnnotations = Object.freeze({
   readOnlyHint: false,
   destructiveHint: false,
   idempotentHint: true,
@@ -76,7 +77,7 @@ const TOOLS = Object.freeze([
     name: "solve_qpanda_qubo",
     title: "Solve a QUBO with pyqpanda_alg",
     description:
-      "Solve quadratic unconstrained binary optimization locally with pyqpanda_alg traversal or QAOA. referenceMode selects an optional exhaustive reference for QAOA. The first call may build the pinned environment through uv; the calculation never uses the Origin Quantum cloud or real hardware and does not claim independent scientific validation.",
+      "Solve quadratic unconstrained binary optimization locally with pyqpanda_alg traversal or QAOA. referenceMode selects an optional exhaustive reference for QAOA. Dependencies must be prepared explicitly before calling this tool; the calculation never uses the Origin Quantum cloud or real hardware and does not claim independent scientific validation.",
     inputSchema: {
       type: "object",
       properties: {
@@ -127,7 +128,7 @@ const TOOLS = Object.freeze([
       ],
       additionalProperties: false,
     },
-    annotations: lazyEnvironmentAnnotations,
+    annotations: localExecutionAnnotations,
   },
   {
     name: "model_and_solve_qpanda_qubo",
@@ -219,7 +220,7 @@ const TOOLS = Object.freeze([
       ],
       additionalProperties: false,
     },
-    annotations: lazyEnvironmentAnnotations,
+    annotations: localExecutionAnnotations,
   },
 ]);
 
@@ -319,17 +320,15 @@ function bridgeEnvironment() {
   };
 }
 
-function runBridge(envelope, signal) {
+async function runBridge(envelope, signal) {
   return runLocalJsonProcess({
-    command: "uv",
-    args: ["run", "--quiet", "--project", skillRoot, "--python", "3.12", "python", bridgePath],
+    ...await preparedPythonLaunch({ skillRoot, args: [bridgePath] }),
     cwd: skillRoot,
     env: localComputeEnvironment(bridgeEnvironment()),
     input: envelope,
     signal,
     ...localComputeProcessOptions(),
     label: "pyqpanda_alg QUBO runtime",
-    notFoundMessage: "未找到 uv；请先安装 uv 后再使用 QPanda QUBO 本地求解",
   });
 }
 

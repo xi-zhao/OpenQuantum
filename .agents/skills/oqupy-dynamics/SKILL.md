@@ -13,8 +13,12 @@ description: 使用 OQuPy TEMPO 求解Ohmic spin-boson 非马尔可夫动力学�
 - `memoryTime = memorySteps * duration / steps`。减小时间步长时要相应增大 memorySteps 才能保持同一物理记忆；若资源边界不允许，明确说明无法进行该收敛比较。
 - 用独立的记忆长度扫描判断记忆截断影响，再看时间网格与 SVD 截断。固定 `epsrel=1e-7` 不是观测量误差上界。
 - 读取 Bloch 轨迹、迹误差和最小本征值；有限记忆 TEMPO 不能自动宣称数值收敛、精确解或科学验收。
-- 本能力为 L1，`scientificValidation=not_evaluated`。首次调用可安装固定依赖、写缓存；独立环境保留 OQuPy 所需 NumPy 1.x。
+- 本能力为 L1，`scientificValidation=not_evaluated`。依赖须显式准备；计算可能写缓存；独立环境保留 OQuPy 所需 NumPy 1.x。
 
 安装、范围和解析对照见 [接入说明](../../../docs/integrations/UNITARY_ECOSYSTEM.md)。
 
 spin-boson 模型的演化时间、时间网格和记忆长度由调用方选择，适配器不额外设置人工规模上限。具体资源配置见[本地计算说明](../../../docs/integrations/SCALABLE_BRIDGES.md)。
+
+## 依赖准备
+
+运行前执行 `node scripts/setup-paper-tools.mjs oqupy-dynamics`。缺失、旧锁和已安装环境的处理见[共同准备说明](../../../docs/integrations/LOCAL_ENVIRONMENTS.md)；Tool 不自动安装或升级依赖。

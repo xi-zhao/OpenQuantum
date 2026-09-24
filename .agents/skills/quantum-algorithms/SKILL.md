@@ -9,12 +9,9 @@ description: "为 量子计算任务 选择完整的开源算法工作流，路�
 
 ## 选择工作流
 
-按用户的数学问题、输入表示、计算规模和需要的输出选择一个叶子 Skill。知识解释可直接使用原理；计算任务加载叶子 Skill，使用其中的开源实现和现有代码执行 Tool。无需为阅读指南启动额外服务。
+按用户的数学问题、输入、计算规模和输出要求选择实际方法。先用已有 `quantum_practices` Tool 的 search/get 查询方法，返回结果包含本地叶子 Skill；直接加载该方法 Skill。所有入口见[覆盖表](../../../docs/integrations/UNITARYLAB_OPEN_COVERAGE.md)，参数与准备步骤见[共同运行说明](../../../examples/quantum-algorithms/README.md)。
 
-- [quantum-guide-algorithms](../quantum-guide-algorithms/SKILL.md)：algorithms
-- [quantum-guide-simulators](../quantum-guide-simulators/SKILL.md)：simulators
-
-全量条目见[覆盖表](../../../docs/integrations/UNITARYLAB_OPEN_COVERAGE.md)。如果用户描述跨领域，按实际依赖组合相关叶子 Skill；不要要求用户先阅读整条目录链。
+13 个分类索引保留为用户手动导航，不进入模型自动选择目录。无需按目录层级逐级加载。Qiskit/PennyLane 后端指南和开源迁移指南仍可自动选择。知识解释不自动开始计算；计算任务使用已有 Harness Tool，按实际依赖组合方法。
 
 ## 来源与边界
 

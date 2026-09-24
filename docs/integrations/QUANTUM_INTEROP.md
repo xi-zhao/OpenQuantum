@@ -4,8 +4,8 @@
 
 | 上游与固定版本 | Tool | 默认连接 | 完整调用副作用 |
 | --- | --- | --- | --- |
-| [Clifft 0.10.1](https://github.com/unitaryfoundation/clifft) | `clifft_local.sample_clifft_qec`，保留 `sample_clifft_circuit` | 开启 | workspace-write：首次调用可准备依赖与缓存 |
-| [qBraid 0.12.2](https://github.com/qBraid/qBraid/tree/v0.12.2) | `qbraid_local.convert_qbraid_circuit` | 开启 | workspace-write：首次调用可准备依赖与缓存 |
+| [Clifft 0.10.1](https://github.com/unitaryfoundation/clifft) | `clifft_local.sample_clifft_qec`，保留 `sample_clifft_circuit` | 开启 | workspace-write：显式准备依赖后，计算仍可能写缓存 |
+| [qBraid 0.12.2](https://github.com/qBraid/qBraid/tree/v0.12.2) | `qbraid_local.convert_qbraid_circuit` | 开启 | workspace-write：显式准备依赖后，计算仍可能写缓存 |
 | [QDMI 1.3.3](https://github.com/Munich-Quantum-Software-Stack/QDMI/tree/v1.3.3) | `qdmi_local.inspect_qdmi_devices` | 关闭，准备后手动开启 | read-only：仅运行预先准备的查询环境 |
 
 三项均为 L1 执行能力。返回 `scientificValidation=not_evaluated`，未接入 Scientific Validator 或 central Acceptance Builder。单次数值对照、合同测试及 Session 执行成功分别保留其含义，不推导最终科学验收。
@@ -144,3 +144,5 @@ npm run harness:config
 2026-09-24 的验证覆盖 T 干涉解析概率、记录反馈与奇偶值、重复/重置、observable 空位，双向转换的非对称位序/空闲位/完整门集/SWAP，以及官方 QDMI 示例的 5 个 sites、4 个 operations 和 10 对有向 coupling。另由独立领域审阅者复核采样语义、C ABI 与转换位序，发现的 SWAP 导出问题已修复。
 
 可重跑测试分别为 [合同](../../tests/interop-contracts.test.mjs)、[真实库](../../tests/interop-live.test.mjs) 和 [Harness](../../tests/harness-interop.test.mjs)。运行时详细 JSON 写入忽略目录 `.openquantum/interop-evidence/`，可提交的摘要、输入与结果摘要见 [验证记录](evidence/interop-2026-09-24.json)。这些证据不覆盖外部模型、云端提交、实际硬件、CUDA 或最终科学 Acceptance。
+
+当前环境准备、旧环境复用与失败恢复统一见[本地计算环境准备](LOCAL_ENVIRONMENTS.md)。

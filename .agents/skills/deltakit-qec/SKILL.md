@@ -12,8 +12,12 @@ description: 使用固定 Deltakit 构建矩形 rotated planar-code 存储实验
 - Tool 生成电路后由固定 Stim 采样 detector 与 observable，再由 PyMatching MWPM 解码。报告失败数、固定 shots 分母和 Wilson 95% 区间；零失败时上界仍大于零。
 - 返回的 Stim 电路及 SHA-256 是本次真实生成对象。不同码片/轮次/噪声模型之间比较时说明各自资源与统计预算。
 - 单点或少数码距结果不能支持 threshold 或实时硬件性能主张。未开放云平台、专有解码器或泄漏服务。
-- 当前 L1，`scientificValidation=not_evaluated`；首次调用可能安装固定依赖和写本地缓存。
+- 当前 L1，`scientificValidation=not_evaluated`；依赖须显式准备；计算可能写本地缓存。
 
 版本、安装与验证见 [接入说明](../../../docs/integrations/UNITARY_ECOSYSTEM.md)。
 
 码片宽高、存储轮数和采样数由调用方选择，适配器不额外设置人工规模上限。具体资源配置见[本地计算说明](../../../docs/integrations/SCALABLE_BRIDGES.md)。
+
+## 依赖准备
+
+运行前执行 `node scripts/setup-paper-tools.mjs deltakit-qec`。缺失、旧锁和已安装环境的处理见[共同准备说明](../../../docs/integrations/LOCAL_ENVIRONMENTS.md)；Tool 不自动安装或升级依赖。

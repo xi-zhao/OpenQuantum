@@ -19,7 +19,7 @@ description: 使用 OpenQuantum 的固定版本 MQT QCEC 本地检查两份无�
 
 1. 先确认比较目标：通常是原电路与转译/优化后的电路。
 2. 若输入是 OpenQASM 3 或 QPY，先用 `$qiskit-circuit-workbench` 做受控转换；不要自行猜测语义。
-3. 调用 `verify_circuit_equivalence`，传入两份 QASM 文本，不传文件路径。主动作加载固定环境并返回 `packageVersion`；首次调用可能下载依赖并写入工作区环境，无需单独检查运行时。
+3. 调用 `verify_circuit_equivalence`，传入两份 QASM 文本，不传文件路径。主动作加载固定环境并返回 `packageVersion`；依赖须显式准备；缺失或旧锁环境返回准备命令，不在 Tool 中安装。
 4. 按以下语义解释 `result.equivalence`：
    - `equivalent`：QCEC 给出等价结论；
    - `equivalent_up_to_phase` / `equivalent_up_to_global_phase`：只在用户目标允许相位等价时采用；
@@ -44,3 +44,7 @@ description: 使用 OpenQuantum 的固定版本 MQT QCEC 本地检查两份无�
 5. 适用范围和未验证项。
 
 输入电路的量子位数和门数由调用方选择，适配器不额外设置人工规模上限。具体资源配置见[本地计算说明](../../../docs/integrations/SCALABLE_BRIDGES.md)。
+
+## 依赖准备
+
+运行前执行 `node scripts/setup-paper-tools.mjs quantum-circuit-verification`。缺失、旧锁和已安装环境的处理见[共同准备说明](../../../docs/integrations/LOCAL_ENVIRONMENTS.md)；Tool 不自动安装或升级依赖。

@@ -8,6 +8,7 @@ import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprotocol/sdk/types.js";
 import { runLocalJsonProcess } from "./local-json-process.mjs";
+import { preparedPythonLaunch } from "./prepared-python.mjs";
 import { executionSchema } from "./science-execution.mjs";
 import { localComputeEnvironment, localComputeProcessOptions } from "./local-compute-policy.mjs";
 
@@ -52,14 +53,11 @@ export function defineScienceTool({ name, description, source, inputSchema, resu
   };
 }
 
-export async function serveScienceTool({ entrypoint, id, definition, definitions = [definition], runtime = "python", preparedEnvironment = false }) {
-  if (preparedEnvironment && runtime !== "python") throw new Error("Prepared environments require Python");
+export async function serveScienceTool({ entrypoint, id, definition, definitions = [definition], runtime = "python" }) {
   const skillRoot = fileURLToPath(new URL("..", entrypoint));
   const projectRoot = path.resolve(skillRoot, "../../..");
   const lockFile = runtime === "julia" ? "Manifest.toml" : "uv.lock";
   const dependencyLockSha256 = sha256(await readFile(path.join(skillRoot, lockFile)));
-  const environmentRoot = path.join(projectRoot, ".openquantum/python-envs", id);
-  const preparedPython = path.join(environmentRoot, process.platform === "win32" ? "Scripts/python.exe" : "bin/python");
   const allowed = ["HOME", "PATH", "HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY", "NO_PROXY", "SSL_CERT_FILE", "SSL_CERT_DIR", "UV_CACHE_DIR", "UV_PYTHON_INSTALL_DIR", "SYSTEMROOT", "TEMP", "TMP", "TMPDIR", "WINDIR"];
   const env = localComputeEnvironment({
     ...Object.fromEntries(allowed.filter((key) => process.env[key]).map((key) => [key, process.env[key]])),
@@ -80,23 +78,16 @@ export async function serveScienceTool({ entrypoint, id, definition, definitions
       const input = definition.normalize(request.params.name, request.params.arguments);
       if (active) throw new Error("This local capability is busy; retry when its current call completes");
       controller = new AbortController(); active = controller;
-      if (preparedEnvironment) {
-        const marker = await readFile(path.join(environmentRoot, "openquantum-lock.sha256"), "utf8").catch(() => "");
-        if (marker.trim() !== dependencyLockSha256) {
-          throw new Error(`Prepared environment missing or stale; run node scripts/setup-paper-tools.mjs ${id}`);
-        }
-      }
       const inputSha256 = sha256(JSON.stringify(input));
       const value = await runLocalJsonProcess({
-        command: preparedEnvironment ? preparedPython : runtime === "julia" ? "julia" : "uv",
-        args: preparedEnvironment ? ["-B", path.join(skillRoot, "mcp/bridge.py")] : runtime === "julia"
-          ? ["--startup-file=no", `--project=${skillRoot}`, path.join(skillRoot, "mcp/bridge.jl")]
-          : ["run", "--quiet", "--frozen", "--project", skillRoot, "--python", "3.12", "python", path.join(skillRoot, "mcp/bridge.py")],
+        ...(runtime === "julia" ? {
+          command: "julia", args: ["--startup-file=no", `--project=${skillRoot}`, path.join(skillRoot, "mcp/bridge.jl")],
+          notFoundMessage: "需要 Julia；请先运行 npm run capability:paper-tools:setup",
+        } : await preparedPythonLaunch({ skillRoot, id, dependencyLockSha256 })),
         cwd: skillRoot, env: localComputeEnvironment(env, input.execution), input: { input, inputSha256, dependencyLockSha256, source: definition.source },
         signal: AbortSignal.any([signal, controller.signal].filter(Boolean)),
         ...localComputeProcessOptions(input.execution),
         label: id,
-        notFoundMessage: preparedEnvironment ? `Prepared Python missing; run node scripts/setup-paper-tools.mjs ${id}` : runtime === "julia" ? "需要 Julia；请先运行 npm run capability:paper-tools:setup" : "需要 uv；请先运行 npm run capability:paper-tools:setup",
       });
       if (!definition.validateOutput(value)
         || value.inputSha256 !== inputSha256 || value.dependencyLockSha256 !== dependencyLockSha256

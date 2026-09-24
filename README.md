@@ -305,7 +305,7 @@ Agent 可以调用 FatQat 电路工具执行计算，工作台保留工具输入
 
 这个电路的理想概率是 `00`、`11` 各 50%；有限采样的频率会波动。比较两次采样可以观察这种波动，单次增加采样量不保证每个频率都更接近理想值。
 
-此处展示可复制请求与理论预期。FatQat 连接默认开启，需安装 `uv`，首次使用可能下载依赖；接口和本地验证记录见 [FatQat 使用说明](docs/integrations/FATQAT.md)。这条路径需要先按[配置模型](#配置模型)接入一个支持 Tool Calling 的模型，否则 Agent 不会调用计算 Tool。
+此处展示可复制请求与理论预期。FatQat 连接默认开启，先用 `node scripts/setup-paper-tools.mjs fatqat-workbench` 准备锁定依赖；接口和本地验证记录见 [FatQat 使用说明](docs/integrations/FATQAT.md)。这条路径需要先按[配置模型](#配置模型)接入一个支持 Tool Calling 的模型，否则 Agent 不会调用计算 Tool。
 
 ### 按需开启其他入口
 
@@ -365,7 +365,7 @@ OpenQuantum 为本地模拟、IBM Quantum、IonQ 和多家国内量子云保留�
 
 | 后端 | 当前能力 | 凭据或使用条件 |
 | --- | --- | --- |
-| 本地计算 | 电路与噪声仿真、基态参考计算、量子态审计、纠错采样、优化与实验模拟；各有输入范围 | 数值计算无需云凭据；部分依赖首次使用时下载 |
+| 本地计算 | 电路与噪声仿真、基态参考计算、量子态审计、纠错采样、优化与实验模拟；各有输入范围 | 数值计算无需云凭据；计算前显式准备锁定依赖 |
 | IBM Quantum | Runtime、AI Transpiler、硬件查询，可选真实任务提交与取消 | `QISKIT_IBM_TOKEN`，任务类 MCP Server 连接按需开启 |
 | IonQ | 硬件查询，可选真实任务提交、取消与成本估算 | `IONQ_API_KEY`，任务类 MCP Server 连接按需开启 |
 | 本源量子云 | 只读后端发现（FieldQKit）；另经 QPanda3 Runtime MCP Server 查询悟空 QPU，并可选提交采样、期望值与批量任务 | `ORIGIN_API_TOKEN` 只读发现；`QPANDA3_API_KEY` 可选开启真机任务 |
@@ -378,9 +378,8 @@ OpenQuantum 为本地模拟、IBM Quantum、IonQ 和多家国内量子云保留�
 
 硬件任务和付费服务按需开启。后端发现类能力保持只读，适合先了解设备、拓扑和校准信息，再决定是否进入真实任务流程。
 
-这里的“只读”仅指不改变云端/QPU 状态。部分固定 Python 能力会在首次调用时由 `uv` 下载依赖并在
-`.openquantum/python-envs/` 创建环境，因此 Tool 合同按完整调用如实声明为 `workspace-write`；环境准备完成后，
-科学计算本身仍不写外部系统。
+这里的“只读”仅指不改变云端/QPU 状态。本地 Python 计算桥接在调用前[显式准备锁定环境](docs/integrations/LOCAL_ENVIRONMENTS.md)；
+计算 Tool 不再自动安装依赖。SDK 缓存和结果物化仍可能写入工作区，因此保留相应 `workspace-write` 合同。
 
 </details>
 
@@ -517,7 +516,9 @@ Harness 是通用 Agent Runtime，扩展通过 Cordis Plugin 装配。UI、模�
 
 #### 内置 Skills
 
-这 101 个 Skill 覆盖方法选择、计算实验、结果解释和平台诊断，由 Harness 按任务需要发现和加载。点击名称即可查看完整的 `SKILL.md`；所需工具与连接分别配置。新增算法工作流的参数、安装与开源替换差异见[运行说明](examples/quantum-algorithms/README.md)。
+全量条目与完成情况见[治理清单](docs/architecture/EXTENSION_GOVERNANCE.md)；相近入口及大型可选服务的专业工具范围见[能力选择](docs/integrations/CAPABILITY_SELECTION.md)。
+
+这 101 个 Skill 覆盖方法选择、计算实验、结果解释和平台诊断。其中 88 项可由 Agent 自动选择，13 个分类索引保留为用户手动导航；原名称和手动调用均可继续使用。点击名称即可查看完整的 `SKILL.md`；所需工具与连接分别配置。新增算法工作流的参数、安装与开源替换差异见[运行说明](examples/quantum-algorithms/README.md)。
 
 下表按**研究方法与用途**介绍能力。各 Tool 提供的模型、参数和输入格式见[计算参数与运行方式](#计算参数与运行方式)。
 
@@ -594,33 +595,33 @@ Harness 是通用 Agent Runtime，扩展通过 Cordis Plugin 装配。UI、模�
 <!-- BEGIN OPEN ALGORITHM SKILLS -->
 ##### 开源算法与后端工作流
 
-66 个适配 Skill 共用现有执行工具；49 个算法示例覆盖原库的 39 个模块和指南新增方法。
+66 个适配 Skill 共用现有执行工具；49 个算法示例覆盖原库的 39 个模块和指南新增方法。13 个分类索引保留为手动导航，53 个方法与入口可由 Agent 自动选择。
 
 | Skill | 研究方法与用途 | 执行入口 |
 | --- | --- | --- |
-| [`quantum-guide-algorithms`](.agents/skills/quantum-guide-algorithms/SKILL.md) | algorithms 分类、后端或迁移指引 | 按任务组合已有 Skill 和通用 Tool |
-| [`quantum-guide-algorithms-cryptography`](.agents/skills/quantum-guide-algorithms-cryptography/SKILL.md) | algorithms/cryptography 分类、后端或迁移指引 | 按任务组合已有 Skill 和通用 Tool |
+| [`quantum-guide-algorithms`](.agents/skills/quantum-guide-algorithms/SKILL.md) | algorithms 分类、后端或迁移指引 | 手动分类导航；自动任务直接选择方法 Skill |
+| [`quantum-guide-algorithms-cryptography`](.agents/skills/quantum-guide-algorithms-cryptography/SKILL.md) | algorithms/cryptography 分类、后端或迁移指引 | 手动分类导航；自动任务直接选择方法 Skill |
 | [`quantum-discrete-log`](.agents/skills/quantum-discrete-log/SKILL.md) | 可逆 g^a y^b oracle、循环群 Fourier 采样与同余恢复 | 已有 Harness `bash` / `pwsh`；`discrete_log` 开源示例 |
 | [`quantum-shor`](.agents/skills/quantum-shor/SKILL.md) | 可逆模乘 oracle、QPE/连分数和因子验证 | 已有 Harness `bash` / `pwsh`；`shor` 开源示例 |
 | [`quantum-simon`](.agents/skills/quantum-simon/SKILL.md) | 二对一 XOR oracle、Hadamard 采样和 GF(2) 零空间恢复 | 已有 Harness `bash` / `pwsh`；`simon` 开源示例 |
-| [`quantum-guide-algorithms-eigensolvers`](.agents/skills/quantum-guide-algorithms-eigensolvers/SKILL.md) | algorithms/eigensolvers 分类、后端或迁移指引 | 按任务组合已有 Skill 和通用 Tool |
+| [`quantum-guide-algorithms-eigensolvers`](.agents/skills/quantum-guide-algorithms-eigensolvers/SKILL.md) | algorithms/eigensolvers 分类、后端或迁移指引 | 手动分类导航；自动任务直接选择方法 Skill |
 | [`quantum-numpy-minimum-eigensolver`](.agents/skills/quantum-numpy-minimum-eigensolver/SKILL.md) | NumPy 最小本征对，明确标记经典算法并报告残差。 | 已有 Harness `bash` / `pwsh`；`numpy_minimum_eigensolver` 开源示例 |
 | [`quantum-numpy-eigensolver`](.agents/skills/quantum-numpy-eigensolver/SKILL.md) | NumPy Hermitian 稠密本征求解，明确标记经典算法并报告特征残差。 | 已有 Harness `bash` / `pwsh`；`numpy_eigensolver` 开源示例 |
 | [`quantum-vqd`](.agents/skills/quantum-vqd/SKILL.md) | 通过逐态重叠惩罚求激发态（VQD），报告能量与态间重叠 | 已有 Harness `bash` / `pwsh`；`vqd` 开源示例 |
-| [`quantum-guide-algorithms-gradients`](.agents/skills/quantum-guide-algorithms-gradients/SKILL.md) | algorithms/gradients 分类、后端或迁移指引 | 按任务组合已有 Skill 和通用 Tool |
+| [`quantum-guide-algorithms-gradients`](.agents/skills/quantum-guide-algorithms-gradients/SKILL.md) | algorithms/gradients 分类、后端或迁移指引 | 手动分类导航；自动任务直接选择方法 Skill |
 | [`quantum-finite-difference`](.agents/skills/quantum-finite-difference/SKILL.md) | Qiskit FiniteDiffEstimatorGradient，中心差分与显式 epsilon。 | 已有 Harness `bash` / `pwsh`；`finite_difference` 开源示例 |
 | [`quantum-linear-combination`](.agents/skills/quantum-linear-combination/SKILL.md) | Qiskit LinCombEstimatorGradient，实际生成线性组合导数电路。 | 已有 Harness `bash` / `pwsh`；`linear_combination` 开源示例 |
 | [`quantum-parameter-shift`](.agents/skills/quantum-parameter-shift/SKILL.md) | Qiskit ParamShiftEstimatorGradient，RY 参数移位规则。 | 已有 Harness `bash` / `pwsh`；`parameter_shift` 开源示例 |
 | [`quantum-qfi`](.agents/skills/quantum-qfi/SKILL.md) | Qiskit QFI/ReverseQGT，纯态量子 Fisher 信息 | 已有 Harness `bash` / `pwsh`；`qfi` 开源示例 |
 | [`quantum-reverse`](.agents/skills/quantum-reverse/SKILL.md) | Qiskit ReverseEstimatorGradient，反向态矢量导数。 | 已有 Harness `bash` / `pwsh`；`reverse` 开源示例 |
 | [`quantum-spsa`](.agents/skills/quantum-spsa/SKILL.md) | Qiskit SPSAEstimatorGradient，显式 epsilon、批量与随机种子 | 已有 Harness `bash` / `pwsh`；`spsa` 开源示例 |
-| [`quantum-guide-algorithms-hamiltonian-simulation`](.agents/skills/quantum-guide-algorithms-hamiltonian-simulation/SKILL.md) | algorithms/hamiltonian-simulation 分类、后端或迁移指引 | 按任务组合已有 Skill 和通用 Tool |
+| [`quantum-guide-algorithms-hamiltonian-simulation`](.agents/skills/quantum-guide-algorithms-hamiltonian-simulation/SKILL.md) | algorithms/hamiltonian-simulation 分类、后端或迁移指引 | 手动分类导航；自动任务直接选择方法 Skill |
 | [`quantum-cartan`](.agents/skills/quantum-cartan/SKILL.md) | 实对称 Hamiltonian 的 SO(N) 谱 Cartan 分解 | 已有 Harness `bash` / `pwsh`；`cartan` 开源示例 |
 | [`quantum-qdrift`](.agents/skills/quantum-qdrift/SKILL.md) | 使用 Qiskit 的显式量子电路，保留输入、方法参数、实际概率或态矢量 | 已有 Harness `bash` / `pwsh`；`qdrift` 开源示例 |
 | [`quantum-hamiltonian-qsp`](.agents/skills/quantum-hamiltonian-qsp/SKILL.md) | 偶/奇 QSP 多项式通过 LCU 合成 exp(-iHt) | 已有 Harness `bash` / `pwsh`；`hamiltonian_qsp` 开源示例 |
 | [`quantum-taylor`](.agents/skills/quantum-taylor/SKILL.md) | 截断 Taylor 级数展开为 Pauli LCU，实际执行 PREPARE/SELECT/unprepare 并报告后选择概率 | 已有 Harness `bash` / `pwsh`；`taylor` 开源示例 |
 | [`quantum-trotter`](.agents/skills/quantum-trotter/SKILL.md) | 使用 Qiskit 的显式量子电路，保留输入、方法参数、实际概率或态矢量 | 已有 Harness `bash` / `pwsh`；`trotter` 开源示例 |
-| [`quantum-guide-algorithms-linear-systems`](.agents/skills/quantum-guide-algorithms-linear-systems/SKILL.md) | algorithms/linear-systems 分类、后端或迁移指引 | 按任务组合已有 Skill 和通用 Tool |
+| [`quantum-guide-algorithms-linear-systems`](.agents/skills/quantum-guide-algorithms-linear-systems/SKILL.md) | algorithms/linear-systems 分类、后端或迁移指引 | 手动分类导航；自动任务直接选择方法 Skill |
 | [`quantum-aqc`](.agents/skills/quantum-aqc/SKILL.md) | 正定 Hermitian 系统的绝热线性求解路径、条件数相关 schedule 与分片幺正演化 | 已有 Harness `bash` / `pwsh`；`aqc` 开源示例 |
 | [`quantum-hhl`](.agents/skills/quantum-hhl/SKILL.md) | Hermitian 非奇异 A、QPE、有符号倒数旋转、反 QPE 与后选择 | 已有 Harness `bash` / `pwsh`；`hhl` 开源示例 |
 | [`quantum-lcu`](.agents/skills/quantum-lcu/SKILL.md) | 使用 Qiskit 的显式量子电路，保留输入、方法参数、实际概率或态矢量 | 已有 Harness `bash` / `pwsh`；`lcu` 开源示例 |
@@ -628,17 +629,17 @@ Harness 是通用 Agent Runtime，扩展通过 Cordis Plugin 装配。UI、模�
 | [`quantum-qft`](.agents/skills/quantum-qft/SKILL.md) | 使用 Qiskit 的显式量子电路，保留输入、方法参数、实际概率或态矢量 | 已有 Harness `bash` / `pwsh`；`qft` 开源示例 |
 | [`quantum-qsp`](.agents/skills/quantum-qsp/SKILL.md) | QSP/QSVT 相位综合计算 cos(t x) 的有界偶次多项式 | 已有 Harness `bash` / `pwsh`；`qsp` 开源示例 |
 | [`quantum-vqls`](.agents/skills/quantum-vqls/SKILL.md) | Qiskit 参数电路与全局归一化残差 cost 的变分线性求解 | 已有 Harness `bash` / `pwsh`；`vqls` 开源示例 |
-| [`quantum-guide-algorithms-primitives`](.agents/skills/quantum-guide-algorithms-primitives/SKILL.md) | algorithms/primitives 分类、后端或迁移指引 | 按任务组合已有 Skill 和通用 Tool |
+| [`quantum-guide-algorithms-primitives`](.agents/skills/quantum-guide-algorithms-primitives/SKILL.md) | algorithms/primitives 分类、后端或迁移指引 | 手动分类导航；自动任务直接选择方法 Skill |
 | [`quantum-amplitude-amplification`](.agents/skills/quantum-amplitude-amplification/SKILL.md) | 使用 Qiskit 的显式量子电路，保留输入、方法参数、实际概率或态矢量 | 已有 Harness `bash` / `pwsh`；`amplitude_amplification` 开源示例 |
 | [`quantum-amplitude-estimation`](.agents/skills/quantum-amplitude-estimation/SKILL.md) | 使用 Qiskit 的显式量子电路，保留输入、方法参数、实际概率或态矢量 | 已有 Harness `bash` / `pwsh`；`amplitude_estimation` 开源示例 |
 | [`quantum-grover`](.agents/skills/quantum-grover/SKILL.md) | 使用 Qiskit 的显式量子电路，保留输入、方法参数、实际概率或态矢量 | 已有 Harness `bash` / `pwsh`；`grover` 开源示例 |
 | [`quantum-hadamard-test`](.agents/skills/quantum-hadamard-test/SKILL.md) | 使用 Qiskit 的显式量子电路，保留输入、方法参数、实际概率或态矢量 | 已有 Harness `bash` / `pwsh`；`hadamard_test` 开源示例 |
 | [`quantum-hadamard-transform`](.agents/skills/quantum-hadamard-transform/SKILL.md) | 使用 Qiskit 的显式量子电路，保留输入、方法参数、实际概率或态矢量 | 已有 Harness `bash` / `pwsh`；`hadamard_transform` 开源示例 |
 | [`quantum-qpe`](.agents/skills/quantum-qpe/SKILL.md) | 使用 Qiskit 的显式量子电路，保留输入、方法参数、实际概率或态矢量 | 已有 Harness `bash` / `pwsh`；`qpe` 开源示例 |
-| [`quantum-guide-algorithms-quantum-chemistry`](.agents/skills/quantum-guide-algorithms-quantum-chemistry/SKILL.md) | algorithms/quantum-chemistry 分类、后端或迁移指引 | 按任务组合已有 Skill 和通用 Tool |
+| [`quantum-guide-algorithms-quantum-chemistry`](.agents/skills/quantum-guide-algorithms-quantum-chemistry/SKILL.md) | algorithms/quantum-chemistry 分类、后端或迁移指引 | 手动分类导航；自动任务直接选择方法 Skill |
 | [`quantum-molecular-dmrg`](.agents/skills/quantum-molecular-dmrg/SKILL.md) | PySCF 活性空间积分、Jordan-Wigner MPO 与 quimb 双站点 DMRG。使用开源态制备替换闭源 CVD | 已有 Harness `bash` / `pwsh`；`molecular_dmrg` 开源示例 |
 | [`quantum-qldpc`](.agents/skills/quantum-qldpc/SKILL.md) | HGP CSS 校验矩阵、GF(2) 秩、交换关系和 syndrome | 已有 Harness `bash` / `pwsh`；`qldpc` 开源示例 |
-| [`quantum-guide-algorithms-quantum-machine-learning`](.agents/skills/quantum-guide-algorithms-quantum-machine-learning/SKILL.md) | algorithms/quantum-machine-learning 分类、后端或迁移指引 | 按任务组合已有 Skill 和通用 Tool |
+| [`quantum-guide-algorithms-quantum-machine-learning`](.agents/skills/quantum-guide-algorithms-quantum-machine-learning/SKILL.md) | algorithms/quantum-machine-learning 分类、后端或迁移指引 | 手动分类导航；自动任务直接选择方法 Skill |
 | [`quantum-cvqnn`](.agents/skills/quantum-cvqnn/SKILL.md) | 两模有限 Fock 空间的位移、压缩、旋转、Kerr 和分束器层 | 已有 Harness `bash` / `pwsh`；`cvqnn` 开源示例 |
 | [`quantum-fermi-hubbard-vqe`](.agents/skills/quantum-fermi-hubbard-vqe/SKILL.md) | 开放边界 Hubbard 链，Jordan-Wigner 与全 Fock 空间 VQE | 已有 Harness `bash` / `pwsh`；`fermi_hubbard_vqe` 开源示例 |
 | [`quantum-ising`](.agents/skills/quantum-ising/SKILL.md) | 开放边界二维矩形 Ising 网格，quimb MPS 与二阶 Strang 演化 | 已有 Harness `bash` / `pwsh`；`ising` 开源示例 |
@@ -646,21 +647,21 @@ Harness 是通用 Agent Runtime，扩展通过 Cordis Plugin 装配。UI、模�
 | [`quantum-qcbm`](.agents/skills/quantum-qcbm/SKILL.md) | 参数电路 Born 分布拟合目标概率，KL 目标与 total variation 对照。 | 已有 Harness `bash` / `pwsh`；`qcbm` 开源示例 |
 | [`quantum-vqc`](.agents/skills/quantum-vqc/SKILL.md) | RY 特征编码与参数电路二分类 | 已有 Harness `bash` / `pwsh`；`vqc` 开源示例 |
 | [`quantum-vqe`](.agents/skills/quantum-vqe/SKILL.md) | 实 Pauli Hamiltonian、RY/RZ/CX ansatz 和 SciPy 优化 | 已有 Harness `bash` / `pwsh`；`vqe` 开源示例 |
-| [`quantum-guide-algorithms-schrodingerization`](.agents/skills/quantum-guide-algorithms-schrodingerization/SKILL.md) | algorithms/schrodingerization 分类、后端或迁移指引 | 按任务组合已有 Skill 和通用 Tool |
+| [`quantum-guide-algorithms-schrodingerization`](.agents/skills/quantum-guide-algorithms-schrodingerization/SKILL.md) | algorithms/schrodingerization 分类、后端或迁移指引 | 手动分类导航；自动任务直接选择方法 Skill |
 | [`quantum-advection`](.agents/skills/quantum-advection/SKILL.md) | 周期边界、常速一维平流，中心差分和显式薛定谔化电路 | 已有 Harness `bash` / `pwsh`；`advection` 开源示例 |
 | [`quantum-heat-1d`](.agents/skills/quantum-heat-1d/SKILL.md) | 齐次一维热方程，周期或零 Dirichlet 边界 | 已有 Harness `bash` / `pwsh`；`heat_1d` 开源示例 |
 | [`quantum-heat-2d`](.agents/skills/quantum-heat-2d/SKILL.md) | 齐次二维方形网格热方程，周期或零 Dirichlet 边界 | 已有 Harness `bash` / `pwsh`；`heat_2d` 开源示例 |
-| [`quantum-guide-algorithms-search`](.agents/skills/quantum-guide-algorithms-search/SKILL.md) | algorithms/search 分类、后端或迁移指引 | 按任务组合已有 Skill 和通用 Tool |
+| [`quantum-guide-algorithms-search`](.agents/skills/quantum-guide-algorithms-search/SKILL.md) | algorithms/search 分类、后端或迁移指引 | 手动分类导航；自动任务直接选择方法 Skill |
 | [`quantum-glued-trees`](.agents/skills/quantum-glued-trees/SKILL.md) | 随机交替叶环连接的双树连续时间邻接矩阵量子行走 | 已有 Harness `bash` / `pwsh`；`glued_trees` 开源示例 |
 | [`quantum-hidden-shift`](.agents/skills/quantum-hidden-shift/SKILL.md) | 偶数位二次 bent 函数的 shifted/dual 相位 oracle | 已有 Harness `bash` / `pwsh`；`hidden_shift` 开源示例 |
-| [`quantum-guide-algorithms-state-preparation`](.agents/skills/quantum-guide-algorithms-state-preparation/SKILL.md) | algorithms/state-preparation 分类、后端或迁移指引 | 按任务组合已有 Skill 和通用 Tool |
+| [`quantum-guide-algorithms-state-preparation`](.agents/skills/quantum-guide-algorithms-state-preparation/SKILL.md) | algorithms/state-preparation 分类、后端或迁移指引 | 手动分类导航；自动任务直接选择方法 Skill |
 | [`quantum-mottonen`](.agents/skills/quantum-mottonen/SKILL.md) | PennyLane Möttönen 均匀受控旋转态制备 | 已有 Harness `bash` / `pwsh`；`mottonen` 开源示例 |
 | [`quantum-mps`](.agents/skills/quantum-mps/SKILL.md) | SVD 分解、可选键截断、显式右规范化与 PennyLane MPSPrep | 已有 Harness `bash` / `pwsh`；`mps` 开源示例 |
 | [`quantum-multiplexer`](.agents/skills/quantum-multiplexer/SKILL.md) | Qiskit StatePreparation/Isometry 的均匀受控门合成 | 已有 Harness `bash` / `pwsh`；`multiplexer` 开源示例 |
 | [`quantum-pauli`](.agents/skills/quantum-pauli/SKILL.md) | PennyLane ArbitraryStatePreparation 的 Pauli 旋转优化 | 已有 Harness `bash` / `pwsh`；`pauli` 开源示例 |
 | [`quantum-superposition`](.agents/skills/quantum-superposition/SKILL.md) | PennyLane Superposition 的计算基叠加与辅助位清零 | 已有 Harness `bash` / `pwsh`；`superposition` 开源示例 |
 | [`quantum-algorithms`](.agents/skills/quantum-algorithms/SKILL.md) | root 分类、后端或迁移指引 | 按任务组合已有 Skill 和通用 Tool |
-| [`quantum-guide-simulators`](.agents/skills/quantum-guide-simulators/SKILL.md) | simulators 分类、后端或迁移指引 | 按任务组合已有 Skill 和通用 Tool |
+| [`quantum-guide-simulators`](.agents/skills/quantum-guide-simulators/SKILL.md) | simulators 分类、后端或迁移指引 | 手动分类导航；自动任务直接选择方法 Skill |
 | [`quantum-guide-simulators-pennylane`](.agents/skills/quantum-guide-simulators-pennylane/SKILL.md) | simulators/pennylane 分类、后端或迁移指引 | 按任务组合已有 Skill 和通用 Tool |
 | [`quantum-guide-simulators-qiskit`](.agents/skills/quantum-guide-simulators-qiskit/SKILL.md) | simulators/qiskit 分类、后端或迁移指引 | 按任务组合已有 Skill 和通用 Tool |
 | [`quantum-guide-simulators-unitarylab`](.agents/skills/quantum-guide-simulators-unitarylab/SKILL.md) | simulators/unitarylab 分类、后端或迁移指引 | 按任务组合已有 Skill 和通用 Tool |
@@ -685,7 +686,7 @@ Harness 是通用 Agent Runtime，扩展通过 Cordis Plugin 装配。UI、模�
 | --- | --- | --- | --- |
 | [`qiskit`](https://github.com/Qiskit/mcp-servers) · Qiskit Circuits（上游服务） | 电路读取、分析、转译与 QASM/QPY 转换 | 默认开启¹ | `uvx`；电路操作无需云凭据，首次启动可能下载依赖 |
 | [`flagquantum`](.agents/skills/flagquantum-workbench/mcp/server.mjs) · [FlagQuantum](https://github.com/FlagQuantum/mcp-servers)（上游服务） | 第二家量子 MCP 电路工作台 | 默认关闭 | Python 3.12 + uv；本地计算、无需云凭据；[范围](docs/integrations/CANDIDATE_LIBRARIES.md) |
-| [`tyxonq_local`](.agents/skills/tyxonq-workbench/mcp/server.mjs) · [TyxonQ](https://github.com/QureGenAI-Biotech/TyxonQ) | 电路与噪声仿真 | 默认关闭 | 手动开启；`uv` 首次准备较大的 Python 环境，无需云凭据 |
+| [`tyxonq_local`](.agents/skills/tyxonq-workbench/mcp/server.mjs) · [TyxonQ](https://github.com/QureGenAI-Biotech/TyxonQ) | 电路与噪声仿真 | 默认关闭 | 手动开启；显式准备较大的 Python 环境，无需云凭据 |
 | [`pyzx_local`](.agents/skills/pyzx-optimization/mcp/server.mjs) · [PyZX](https://github.com/zxcalc/pyzx) | ZX 重写、Clifford+T 优化与电路提取 | 默认开启 | uv；隔离 Python 3.12 环境；[安装与范围](docs/integrations/UNITARY_NEXT_TOOLS.md) |
 | [`compact_local`](.agents/skills/compact-optimization/mcp/server.mjs) · [Compact](https://github.com/Q-PROOF/Compact) | 线路优化与独立等价对照 | 默认开启 | Python 3.12 + uv；本地计算、无需云凭据；[范围](docs/integrations/CANDIDATE_LIBRARIES.md) |
 | [`hamiltonian_local`](.agents/skills/hamiltonian-simulation/mcp/server.mjs) · [UnitaryLab MIT 算法适配](https://github.com/unitarylab/unitarylab_algorithms) | Trotter/qDrift 哈密顿量演化 | 默认开启 | 显式运行 `npm run capability:hamiltonian:setup`；Qiskit/NumPy/SciPy 开放依赖；[范围](docs/integrations/UNITARYLAB_OPEN_ADAPTATION.md) |
@@ -736,7 +737,7 @@ Harness 是通用 Agent Runtime，扩展通过 Cordis Plugin 装配。UI、模�
 
 | MCP 服务 / 连接名 | 能提供什么工具能力 | 默认配置 | 使用条件与边界 |
 | --- | --- | --- | --- |
-| [`fatqat_local`](.agents/skills/fatqat-workbench/mcp/server.mjs) · [FatQat](https://github.com/spaceqat/fatqat) | 电路与硬件约束、超导和中性原子脉冲动力学 | 默认开启 | `uv`；首次准备锁定的 Python 环境，后续数值计算在本地运行，无云凭据或 QPU 操作 |
+| [`fatqat_local`](.agents/skills/fatqat-workbench/mcp/server.mjs) · [FatQat](https://github.com/spaceqat/fatqat) | 电路与硬件约束、超导和中性原子脉冲动力学 | 默认开启 | 显式准备锁定 Python 环境；数值计算本地运行，无云凭据或 QPU 操作 |
 
 ##### 资料与设备发现
 
@@ -763,7 +764,7 @@ Harness 是通用 Agent Runtime，扩展通过 Cordis Plugin 装配。UI、模�
 
 ¹ 两项 Qiskit 服务在未设置 `OPENQUANTUM_DISABLE_QISKIT_MCP=1` 时默认开启。设置中心可以覆盖连接策略；修改 MCP 连接配置后需要重启 Harness。
 
-本地桥接中的数值算法和 SDK 来自相应上游项目；OpenQuantum 负责桥接接口、输入范围、调用流程及适用的结果检查。首次调用或准备可能下载固定依赖并创建环境或编译缓存，完整调用的副作用见[能力合同](.agents/capability-packages.yml)。
+本地桥接中的数值算法和 SDK 来自相应上游项目；OpenQuantum 负责桥接接口、输入范围、调用流程及适用的结果检查。本地计算环境在显式准备时安装；上游服务启动仍可能物化自身依赖，SDK 计算也可能创建缓存。完整调用副作用见[能力合同](.agents/capability-packages.yml)。
 
 启用与验证入口：设置中心 → MCP Server 连接 → 配置必要凭据 → 重启 Harness → 查看运行证据。`quantum_hardware` 和 `qpanda_runtime` 还需分别先运行 `npm run mcp:quantum-hardware:setup`、`npm run mcp:qpanda-runtime:setup`。完整 Tool 名称与副作用声明见[能力合同](.agents/capability-packages.yml)；连接与凭据引用见 [Agent Preset](runtime/openquantum/agent-presets/openquantum/agent.cordis.yml)。
 

@@ -21,7 +21,7 @@ npm run capability:unitary-next:test
 npm run capability:unitary-next:live
 ```
 
-安装器使用 `uv sync --frozen`，环境位于 `.openquantum/python-envs/<capability-id>/`。首次调用也可能下载依赖、写缓存，完整调用副作用为 `workspace-write`。工具只接收结构化参数，不执行用户提供的程序，不接收任意文件路径，也不使用量子云凭据。worker 默认不设置时间或输出大小上限，支持按调用方配置预算及取消；连接层配置见[本地计算与资源配置](SCALABLE_BRIDGES.md)。
+安装器使用 `uv sync --frozen`，环境位于 `.openquantum/python-envs/<capability-id>/`。计算前须显式准备，Tool 不再下载依赖；SDK 缓存仍可能写入，保留 `workspace-write`。工具只接收结构化参数，不执行用户提供的程序，不接收任意文件路径，也不使用量子云凭据。worker 默认不设置时间或输出大小上限，支持按调用方配置预算及取消；连接层配置见[本地计算与资源配置](SCALABLE_BRIDGES.md)。
 
 运行中的 Harness 需重启后加载新增 Preset 连接。工具是否配置开启、是否能成功执行、结果是否获得正式科学验收是不同状态。
 
@@ -55,3 +55,5 @@ PauLie 先运行分类和 `get_dla_dim`；closureMode 按需选择显式闭包�
 Harness 端到端测试使用隔离的真实 Host 和本地模型协议替身，检查四个 Skill 的发现、四个 Tool 的成功调用、一次预期错误及 Session event log 重读。它不验证外部模型自主选工具，也不涉及真实硬件。
 
 本次扩展的检查见[2026-09-15 记录](evidence/local-compute-scale-2026-09-15.json)。原接入时的本地原始结果位于 `.openquantum/unitary-next-evidence/`；版本化摘要见 [2026-09-14 验证记录](evidence/unitary-next-2026-09-14.json)。
+
+当前环境准备、旧环境复用与失败恢复统一见[本地计算环境准备](LOCAL_ENVIRONMENTS.md)。

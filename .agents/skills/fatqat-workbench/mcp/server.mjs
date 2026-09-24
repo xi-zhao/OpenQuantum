@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprotocol/sdk/types.js";
+import { preparedPythonLaunch } from "../../../../src/lib/prepared-python.mjs";
 import { runLocalJsonProcess } from "../../../../src/lib/local-json-process.mjs";
 import { localComputeEnvironment, localComputeProcessOptions } from "../../../../src/lib/local-compute-policy.mjs";
 import { TOOLS, normalizeRequest, validateOutput } from "./contracts.mjs";
@@ -31,13 +32,12 @@ server.setRequestHandler(CallToolRequestSchema, async (request, { signal }) => {
     if (active.size >= 2) throw new Error("FatQat is busy; wait for an existing experiment to finish");
     active.add(controller);
     const result = await runLocalJsonProcess({
-      command: "uv",
-      args: ["run", "--quiet", "--frozen", "--project", skillRoot, "--python", "3.12", "python", path.join(skillRoot, "mcp/bridge.py")],
+      ...await preparedPythonLaunch({ skillRoot, dependencyLockSha256 }),
       cwd: skillRoot, env: localComputeEnvironment(environment),
       input: { tool: request.params.name, input, dependencyLockSha256 },
       signal: AbortSignal.any([signal, controller.signal].filter(Boolean)),
       ...localComputeProcessOptions(),
-      label: "FatQat local experiment", notFoundMessage: "未找到 uv；请安装 uv 后再运行 FatQat 实验",
+      label: "FatQat local experiment",
     });
     const { plotPng, ...structuredContent } = result;
     if (!validateOutput(structuredContent)) throw new Error("FatQat bridge returned an invalid result contract");

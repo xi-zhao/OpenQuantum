@@ -10,6 +10,7 @@ import {
   ListToolsRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
 
+import { preparedPythonLaunch } from "../../../../src/lib/prepared-python.mjs";
 import { runLocalJsonProcess } from "../../../../src/lib/local-json-process.mjs";
 import { localComputeEnvironment, localComputeProcessOptions } from "../../../../src/lib/local-compute-policy.mjs";
 
@@ -53,7 +54,7 @@ const NOISE_TYPES = new Set([
   "phase_damping",
   "pauli",
 ]);
-const lazyEnvironmentAnnotations = Object.freeze({
+const localExecutionAnnotations = Object.freeze({
   readOnlyHint: false,
   destructiveHint: false,
   idempotentHint: true,
@@ -94,7 +95,7 @@ const TOOLS = Object.freeze([
     name: "simulate_tyxonq_circuit",
     title: "Simulate a circuit with TyxonQ",
     description:
-      "Run a local TyxonQ statevector or density-matrix simulation. The first call may download the pinned package through uv; the calculation never uses TyxonQ cloud providers or quantum hardware and does not claim independent scientific validation.",
+      "Run a local TyxonQ statevector or density-matrix simulation. Dependencies must be prepared explicitly before calling this tool; the calculation never uses TyxonQ cloud providers or quantum hardware and does not claim independent scientific validation.",
     inputSchema: {
       type: "object",
       properties: {
@@ -150,7 +151,7 @@ const TOOLS = Object.freeze([
       ],
       additionalProperties: false,
     },
-    annotations: lazyEnvironmentAnnotations,
+    annotations: localExecutionAnnotations,
   },
 ]);
 
@@ -280,17 +281,15 @@ function bridgeEnvironment() {
   };
 }
 
-function runBridge(envelope, signal) {
+async function runBridge(envelope, signal) {
   return runLocalJsonProcess({
-    command: "uv",
-    args: ["run", "--quiet", "--frozen", "--project", skillRoot, "--python", "3.12", "python", bridgePath],
+    ...await preparedPythonLaunch({ skillRoot, args: [bridgePath] }),
     cwd: skillRoot,
     env: localComputeEnvironment(bridgeEnvironment()),
     input: envelope,
     signal,
     ...localComputeProcessOptions(),
     label: "TyxonQ local runtime",
-    notFoundMessage: "未找到 uv；请先安装 uv 后再使用 TyxonQ 本地仿真",
   });
 }
 

@@ -5,6 +5,8 @@ description: 使用 OpenQuantum 通过 Harness MCP Client 注册的 Qiskit 与 Q
 
 # Qiskit Circuit Workbench
 
+相近入口、后端准备与位序差异按[共同选择说明](../../../docs/integrations/CAPABILITY_SELECTION.md)判断。
+
 ## 工作边界
 
 把这个 Skill 当作量子电路工程工作台，而不是通用量子求解器。默认只使用无凭据的

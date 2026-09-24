@@ -23,7 +23,7 @@ description: 使用 OpenQuantum 的固定版本 Stim 与 PyMatching 运行 rotat
 ## 工作流
 
 1. 选择 basis、distance、rounds、shots、physicalErrorRate 和显式 seed。
-2. 调用 `run_qec_memory_experiment`。主动作加载固定环境并返回 `packages`；首次调用可能下载依赖并写入工作区环境，无需单独检查运行时。
+2. 调用 `run_qec_memory_experiment`。主动作加载固定环境并返回 `packages`；依赖须显式准备；缺失或旧锁环境返回准备命令，不在 Tool 中安装。
 3. 报告实际包版本、电路/DEM 摘要与 SHA-256、逻辑错误数、逻辑错误率、标准误和 Wilson 95% 区间。
 4. 检查 observations：实验摘要、seed、计数恒等式、错误率重算、区间边界、零噪声不变量、来源链。
 5. 比较多组实验时，每组都保留固定 shots 与 seed 策略；不要选择性丢弃失败点。环境不可用时报告工具错误，不编造结果。
@@ -45,3 +45,7 @@ description: 使用 OpenQuantum 的固定版本 Stim 与 PyMatching 运行 rotat
 5. 明确写出不能支持的 threshold 与硬件结论。
 
 码距、存储轮数和采样数由调用方选择，适配器不额外设置人工规模上限。具体资源配置见[本地计算说明](../../../docs/integrations/SCALABLE_BRIDGES.md)。
+
+## 依赖准备
+
+运行前执行 `node scripts/setup-paper-tools.mjs qec-memory-experiment`。缺失、旧锁和已安装环境的处理见[共同准备说明](../../../docs/integrations/LOCAL_ENVIRONMENTS.md)；Tool 不自动安装或升级依赖。

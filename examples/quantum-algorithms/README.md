@@ -5,6 +5,10 @@ unitarylab_algorithms 的全部 39 个算法模块，以及指南独有的本征
 另外 17 份指南负责分类、后端选择和开源迁移。完整对应关系见
 [覆盖表](../../docs/integrations/UNITARYLAB_OPEN_COVERAGE.md)。
 
+66 项中有 53 项可由 Agent 自动选择；13 个纯分类索引保留原名称及用户显式调用，
+例如 `/quantum-guide-algorithms`。自动任务通过 `quantum-algorithms` 或直接选择具体方法，
+无需逐级加载分类目录。详情见[治理清单](../../docs/architecture/EXTENSION_GOVERNANCE.md)。
+
 Agent 加载对应的原生 Skill，通过已有 Harness `bash` / `pwsh` Tool 执行这些代码。
 这里没有新的服务、Tool Provider 或运行时。示例可以直接运行，也可以作为用户任务代码的起点；
 它们是明确输入和方法的开源实现，不是原库所有 Python 参数及闭源后端功能的兼容层。
@@ -18,6 +22,13 @@ L0 指令与工作流，不重复登记同一个通用 Tool 的合同。
 ```bash
 npm run capability:algorithms:setup
 ```
+
+不带参数保持原完整安装。只需要基础方法时可使用 `npm run capability:algorithms:setup -- --minimal`；
+按工作流增加依赖使用 `--group gradients|pennylane|tensor|chemistry`，可重复指定 `--group`。
+最小环境包含 NumPy、SciPy、Qiskit；梯度组增加 qiskit-algorithms，PennyLane 组服务可微电路、
+态制备及 QSP/QSVT，tensor 组增加 quimb，chemistry 组包含 tensor 与 PySCF。
+各方法的组记录在 `coverage.json`，缺依赖时 runner 给出对应命令。分组准备保留已安装的其他组；
+完整准备重新同步全部默认组。`--list` 和 `--describe` 只需 Python 3.12，不导入计算 SDK。
 
 需要已有 `uv`；setup 使用 `uv sync --locked`，会下载依赖并创建此目录下忽略的 `.venv`。
 计算脚本直接调用该环境，不联网、安装依赖或创建隐藏结果目录。安装、任务文件与报告写入仍由
@@ -61,6 +72,9 @@ examples/quantum-algorithms/.venv/bin/python examples/quantum-algorithms/run.py 
 不会改跑其他算法。算法返回的未收敛、需重试或样本不足状态必须一并解释。
 
 ## 参数与结果
+
+`dependencies` 只报告该方法声明的基础包及选用依赖组，未使用的可选 SDK 不再要求存在。
+相近方法的选择与位序转换集中见[能力选择](../../docs/integrations/CAPABILITY_SELECTION.md)。
 
 - `--describe <algorithm>` 返回精确参数签名；方法细节和限制在各原生 Skill 与
   [coverage.json](coverage.json) 的 `scope` 字段。不存在的参数不被静默忽略。

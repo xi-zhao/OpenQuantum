@@ -47,3 +47,5 @@ npm run check
 
 完整目录关系见 [仓库地图](../../docs/REPOSITORY_GUIDE.md)，模块演进契约见
 [模块地图](../../docs/architecture/MODULES.md)。
+
+可选的工具范围由 `agent-presets/openquantum/optional-tool-profiles.mjs` 在 Agent scope 使用 Harness 原生限制；配置与兼容说明见[相近能力选择](../../docs/integrations/CAPABILITY_SELECTION.md)。

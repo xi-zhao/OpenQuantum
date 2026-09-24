@@ -28,7 +28,7 @@ npm run capability:paper-tools:setup -- sqd-chemistry tenpy-ground-state
 ```
 
 安装器不改变全局 Python/Julia 项目，不更新锁文件。Python 环境在忽略目录 `.openquantum/python-envs/<capability>`；
-Julia 包和编译缓存使用标准用户 depot。首次 Python Tool 调用也可由 uv 懒加载；Julia 应先完成上述准备。
+Julia 包和编译缓存使用标准用户 depot。Python 和 Julia 都须先完成上述准备；Python Tool 不再运行包管理器。
 没有将整个上游代码仓库或大型训练数据默认下载到用户工作区。
 
 六个连接在 Preset 中默认开启，设置中心分别显示上述中文名称；新建会话即可发现对应 Skill 和 Tool。
@@ -67,7 +67,7 @@ SQD、TJM、Flow-VQE 和 TeNPy 均接受 `referenceMode=auto|required|skip`。�
 `src/lib/bounded-science-mcp.mjs` 复用已有 `runLocalJsonProcess`，不另建 Registry、Session、任务队列或 Runtime。
 每个连接同时接受一个计算；worker 默认不设置时间或输出大小上限，支持按调用方配置预算及取消；连接层配置见[本地计算与资源配置](SCALABLE_BRIDGES.md)。
 Tool 不接受路径、任意程序、凭据或云任务。子进程仅继承运行环境白名单，不继承模型 API Key。
-首次准备依赖、编译缓存和 Flow-VQE 临时 checkpoint 都按最大副作用声明为 `workspace-write`。
+依赖安装已移到显式准备；计算时的编译缓存和 Flow-VQE 临时 checkpoint 仍按最大副作用声明为 `workspace-write`。
 
 结果保留完整归一化输入、输入 SHA-256、依赖锁 SHA-256、固定来源及物理范围。
 六项均为 L1，统一返回 `scientificValidation=not_evaluated`；没有添加 Acceptance Profile，数值比较不冒充中央科学验收。
@@ -97,3 +97,5 @@ TeNPy/解析自旋链与场符号、RandomMeas/解析纯度。Harness 测试用�
 首次全仓 `npm run check` 曾被 `outputs/01a08166-quantum-learning-resources/library/library.js:23` 的
 `no-irregular-whitespace` 错误阻断。随后 `bfe8055` 将该字符改为等价转义并单独纳入版本库；
 主线合并前在独立工作目录通过完整 `npm run check`，无需排除该资源文件。
+
+当前环境准备、旧环境复用与失败恢复统一见[本地计算环境准备](LOCAL_ENVIRONMENTS.md)。

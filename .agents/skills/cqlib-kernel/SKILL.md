@@ -9,4 +9,8 @@ description: 用固定 cqlib-qml 执行角度编码核与 QSVM，解释输入语
 
 报告真实 SDK 核与独立 ∏cos²(x−y) 对照，区分无 jitter 的 fidelity Gram 与上游训练时的 1e-8 对角 jitter；同时给解析核分类和同数据 RBF baseline。该核可经典解析，不宣称量子优势。只开放 classical angle 核，不开放 signed amplitude、共享参数 parameter-shift、VQC 或 swap test。若用户要求这些路径，解释上游当前缺陷，不能暗中用不同算法替代。
 
-资源由用户选择，通过 `execution.timeoutMs`、`maxOutputBytes`、`threads` 控制进程；首调可能物化锁定环境，因此完整调用为 workspace-write。不要把执行成功或参考相符写成最终科学验收。安装、来源与示例见 [候选库接入说明](../../../docs/integrations/CANDIDATE_LIBRARIES.md)。
+资源由用户选择，通过 `execution.timeoutMs`、`maxOutputBytes`、`threads` 控制进程；依赖须显式准备；计算仍可能写 SDK 缓存，保留 workspace-write。不要把执行成功或参考相符写成最终科学验收。安装、来源与示例见 [候选库接入说明](../../../docs/integrations/CANDIDATE_LIBRARIES.md)。
+
+## 依赖准备
+
+运行前执行 `node scripts/setup-paper-tools.mjs cqlib-kernel`。缺失、旧锁和已安装环境的处理见[共同准备说明](../../../docs/integrations/LOCAL_ENVIRONMENTS.md)；Tool 不自动安装或升级依赖。

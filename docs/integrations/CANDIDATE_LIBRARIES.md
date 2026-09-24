@@ -32,7 +32,7 @@ npm run benchmark:candidate-regressions
 ```
 
 也可只准备所需环境，如 `node scripts/setup-paper-tools.mjs qcut-knitting compact-optimization`。
-首次依赖物化会下载并写入本地磁盘；完整调用的最大副作用均按 `workspace-write` 登记。
+四个本地桥接在调用前显式准备依赖；FlagQuantum 上游服务启动器仍按锁准备自身环境。SDK 缓存与完整调用继续按 `workspace-write` 登记。
 计算子进程只接收明确允许的运行环境，不转发模型或硬件凭据。四个适配复用已有 worker 的取消、
 并发互斥、超时、输出大小和失败协议。`execution` 省略时继承部署配置，worker 默认无时间/输出上限，线程数保留用户环境或后端默认值；逐次可覆盖。没有人为 qubit/数据规模上限。
 大任务仍受实际内存、上游算法和 Harness 工具超时限制，需同步调整连接超时。新增连接沿用主线 `2147483647` ms 的默认调用超时，可在设置中心调整。FlagQuantum 保留原生 Tool schema，不接受 `execution`；数值线程/设备继承部署环境。
@@ -114,3 +114,5 @@ Harness 首次与全仓检查并行时出现 HTTP 请求超时；单独复测完
 
 本次合并保留 26 个默认开启、8 个按需开启的 MCP 连接。worker 的缺省 `execution`、线程继承与
 连接超时均对齐主线资源策略，相关合同测试验证了环境继承和逐次覆盖。源码合并不等于 Host 已重新加载。
+
+当前环境准备、旧环境复用与失败恢复统一见[本地计算环境准备](LOCAL_ENVIRONMENTS.md)。

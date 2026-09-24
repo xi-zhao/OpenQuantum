@@ -263,24 +263,40 @@ version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
     { name = "numpy" },
-    { name = "pennylane" },
-    { name = "pyscf" },
     { name = "qiskit" },
-    { name = "qiskit-algorithms" },
-    { name = "quimb" },
     { name = "scipy" },
+]
+
+[package.dev-dependencies]
+chemistry = [
+    { name = "pyscf" },
+    { name = "quimb" },
+]
+gradients = [
+    { name = "qiskit-algorithms" },
+]
+pennylane = [
+    { name = "pennylane" },
+]
+tensor = [
+    { name = "quimb" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "numpy", specifier = "==2.5.3" },
-    { name = "pennylane", specifier = "==0.45.1" },
-    { name = "pyscf", specifier = "==2.14.0" },
     { name = "qiskit", specifier = "==2.5.2" },
-    { name = "qiskit-algorithms", specifier = "==0.4.0" },
-    { name = "quimb", specifier = "==1.15.0" },
     { name = "scipy", specifier = "==1.18.1" },
 ]
+
+[package.metadata.requires-dev]
+chemistry = [
+    { name = "pyscf", specifier = "==2.14.0" },
+    { name = "quimb", specifier = "==1.15.0" },
+]
+gradients = [{ name = "qiskit-algorithms", specifier = "==0.4.0" }]
+pennylane = [{ name = "pennylane", specifier = "==0.45.1" }]
+tensor = [{ name = "quimb", specifier = "==1.15.0" }]
 
 [[package]]
 name = "packaging"

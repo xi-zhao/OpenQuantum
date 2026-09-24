@@ -1,3 +1,4 @@
+import { preparePythonFixture } from "../../../../tests/helpers/prepared-python.mjs";
 import assert from "node:assert/strict";
 import { chmod, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
@@ -38,12 +39,14 @@ if (envelope.action !== "simulate") throw new Error("Unexpected bridge action");
 `,
   );
   await chmod(uvPath, 0o755);
+  const prepared = await preparePythonFixture({ root: projectRoot, sandbox: temporary, id: "tyxonq-workbench", executable: uvPath });
   transport = new StdioClientTransport({
     command: process.execPath,
     args: [serverPath],
     cwd: projectRoot,
     env: {
       ...process.env,
+      ...prepared,
       PATH: `${temporary}${path.delimiter}${process.env.PATH ?? ""}`,
     },
   });
@@ -59,7 +62,7 @@ after(async () => {
   await rm(temporary, { recursive: true, force: true });
 });
 
-test("TyxonQ MCP declares bounded non-destructive lazy-environment tools", async () => {
+test("TyxonQ MCP declares bounded non-destructive prepared-environment tools", async () => {
   const tools = (await client.listTools()).tools;
   assert.deepEqual(
     tools.map((tool) => tool.name),
@@ -160,7 +163,8 @@ test("bridge environment is allowlisted and cloud credentials are absent", async
   const source = await readFile(serverPath, "utf8");
   assert.doesNotMatch(source, /env:\s*process\.env/);
   assert.match(source, /BRIDGE_ENVIRONMENT_NAMES/);
-  assert.match(source, /"--frozen"/);
+  assert.match(source, /preparedPythonLaunch/);
+  assert.doesNotMatch(source, /command: "uv"/);
   assert.match(source, /UV_PROJECT_ENVIRONMENT/);
   assert.doesNotMatch(source, /TYXONQ_API_KEY|QCOS|QUAFU|QISKIT_IBM_TOKEN/);
 });

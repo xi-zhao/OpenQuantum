@@ -13,8 +13,8 @@
 - [Skill](../../.agents/skills/fatqat-workbench/SKILL.md) 由现有文件系统 Skill Provider 发现。
 - `fatqat_local` 是 Agent Preset 中默认开启的本地 stdio MCP 连接；Harness MCP Client 负责注册 Tool。
   Node MCP 边界校验输入，独立 Python worker 调用 FatQat，复用现有 `runLocalJsonProcess` 处理超时和取消。
-- 初次 Tool 调用可能下载依赖、写入 `.openquantum/python-envs/fatqat-workbench` 和绘图库缓存，
-  因此两个 Tool 都声明 `workspace-write`、非破坏性、允许联网准备环境；数值实验不访问模型 API 或量子云。
+- 运行前执行 `node scripts/setup-paper-tools.mjs fatqat-workbench`，在原目录准备锁定依赖；计算 Tool 不调用包管理器。
+  绘图库缓存仍可能写入，因此两个 Tool 保留 `workspace-write`、非破坏性；数值实验不访问模型 API 或量子云。
   服务同时接受两个计算；worker 默认不设置时间或输出大小上限，支持按调用方配置预算及取消；连接层配置见[本地计算与资源配置](SCALABLE_BRIDGES.md)。
 
 ## 已暴露的计算合同
@@ -67,3 +67,5 @@ MCP、FatQat 计算与持久事件记录，确认数据和 PNG 图进入 `tool/r
 未新增 Scientific Validator、Acceptance Profile 或独立运行时。
 没有暴露任意 Python、用户路径、自定义物理文档、编译器、动态控制流、通用 qudit 门、
 上游私有三能级原子接口或 QPU 提交。上游完整教程和课程 UI 尚未自动导入。
+
+当前环境准备、旧环境复用与失败恢复统一见[本地计算环境准备](LOCAL_ENVIRONMENTS.md)。
