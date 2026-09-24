@@ -10,8 +10,6 @@ OpenQuantum is an open-source agent and application platform for quantum researc
 
 **Ask questions, run calculations and build capabilities together.** Start with a supported task, inspect the tool results, and contribute methods or applications that others can use.
 
-Source `main` includes **49 runnable open-source algorithm examples**, alongside tools for circuits, chemistry, error correction and dynamics. Choose a method, prepare its dependencies and inspect the actual computation. Installer capabilities follow their own release notes.
-
 [Why OpenQuantum](#why-openquantum) · [Capabilities](#what-you-can-do) · [Quick start](#quick-start) · [Results](#use-and-inspect-results) · [Extend](#extend-the-platform) · [Roadmap](#roadmap-and-rsi) · [Contribute](#documentation-and-support) · [Open source](#license-and-acknowledgments)
 
 ![OpenQuantum Desktop research workbench](../images/openquantum-desktop-20260919.jpg)
