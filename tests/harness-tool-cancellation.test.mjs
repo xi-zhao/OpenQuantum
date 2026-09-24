@@ -1,3 +1,4 @@
+import { preparePythonFixture } from "./helpers/prepared-python.mjs";
 import assert from "node:assert/strict";
 import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
@@ -95,6 +96,7 @@ test("Harness cancellation reaches the QEC computation tree and preserves the MC
   });
   await writeFile(path.join(directory, "uv"), stubSource(pidsPath), { mode: 0o700 });
 
+  const prepared = await preparePythonFixture({ root: projectRoot, sandbox: directory, id: "qec-memory-experiment", executable: path.join(directory, "uv") });
   const context = new Context();
   fibers.push(await context.plugin(SystemPrompt, {}));
   fibers.push(await context.plugin(ToolRuntime, { mode: "native" }));
@@ -104,7 +106,7 @@ test("Harness cancellation reaches the QEC computation tree and preserves the MC
     command: process.execPath,
     args: [path.join(projectRoot, ".agents/skills/qec-memory-experiment/mcp/server.mjs")],
     cwd: directory,
-    env: { PATH: `${directory}${path.delimiter}${path.dirname(process.execPath)}${path.delimiter}${process.env.PATH ?? ""}` },
+    env: { ...prepared, PATH: `${directory}${path.delimiter}${path.dirname(process.execPath)}${path.delimiter}${process.env.PATH ?? ""}` },
     toolCallTimeoutMs: 10000,
     failOnStartupError: true,
     reconnect: { enabled: false },

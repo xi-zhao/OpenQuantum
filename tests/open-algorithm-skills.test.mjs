@@ -37,6 +37,9 @@ test("all pinned guides and algorithm modules map to distinct native workflows",
       assert.equal(row.invocation, "automatic", "Computational methods must remain directly selectable");
       assert.ok(existsSync(path.join(root, row.exampleFile)));
       assert.ok(content.includes(`--algorithm ${row.algorithm}`));
+      assert.ok(Array.isArray(row.dependencyGroups));
+      assert.ok(row.dependencyGroups.every(group => ["gradients", "pennylane", "tensor", "chemistry"].includes(group)));
+      assert.ok(content.includes(row.dependencyGroups.length ? `--group ${row.dependencyGroups[0]}` : "--minimal"));
     }
     for (const link of content.matchAll(/\]\((\.\.?\/[^)]+)\)/g)) {
       assert.ok(existsSync(path.resolve(path.dirname(filename), link[1])), `${row.skill}: missing ${link[1]}`);

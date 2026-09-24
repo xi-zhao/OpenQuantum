@@ -9,7 +9,7 @@ description: 使用 OpenQuantum 通过 Harness MCP Client 注册的 QPanda QUBO 
 
 这个 Skill 负责组织 QUBO 求解工作流，真正的计算由 `qpanda_qubo` MCP Server 暴露并经 Harness MCP Client 注册的 Tool 完成，
 底层调用本源官方 `pyqpanda_alg` 的 QUBO 模块（`QuadraticBinary` / `QUBO_QAOA`）。当前只开放
-本地、无凭据的求解；首次调用可能由 `uv` 构建固定的 Python 环境（`pyqpanda3` 是原生 wheel）：
+本地、无凭据的求解；调用前须显式准备固定 Python 环境（`pyqpanda3` 是原生 wheel）：
 
 - 二值变量数由模型决定；
 - 可以用变量名、minimize/maximize 目标和线性等式约束建模；每个约束必须显式给出 penalty；
@@ -63,3 +63,7 @@ sympy 表达式字符串、文件路径或数据集加载。
 5. `pyqpanda_alg` 版本和 `scientificValidation` 边界。
 
 变量数、模型项数和 QAOA 层数由调用方选择，适配器不额外设置人工规模上限。具体资源配置见[本地计算说明](../../../docs/integrations/SCALABLE_BRIDGES.md)。
+
+## 依赖准备
+
+运行前执行 `node scripts/setup-paper-tools.mjs qpanda-qubo`。缺失、旧锁和已安装环境的处理见[共同准备说明](../../../docs/integrations/LOCAL_ENVIRONMENTS.md)；Tool 不自动安装或升级依赖。

@@ -1,3 +1,4 @@
+import { preparedPythonLaunch } from "../src/lib/prepared-python.mjs";
 import assert from "node:assert/strict";
 import path from "node:path";
 import test from "node:test";
@@ -14,8 +15,7 @@ const environment = Object.fromEntries(
 
 async function bridge(skill, input) {
   return runLocalJsonProcess({
-    command: "uv",
-    args: ["run", "--frozen", "--project", `.agents/skills/${skill}`, "python", `.agents/skills/${skill}/mcp/bridge.py`],
+    ...await preparedPythonLaunch({ skillRoot: path.join(root, ".agents/skills", skill) }),
     cwd: root,
     env: { ...environment, UV_PROJECT_ENVIRONMENT: path.join(root, ".openquantum/python-envs", skill) },
     input, timeoutMs: 240_000, maxOutputBytes: 2 * 1024 * 1024, label: skill,

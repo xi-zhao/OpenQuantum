@@ -11,6 +11,7 @@ import {
   ListToolsRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
 
+import { preparedPythonLaunch } from "../../../../src/lib/prepared-python.mjs";
 import { runLocalJsonProcess } from "../../../../src/lib/local-json-process.mjs";
 import { localComputeEnvironment, localComputeProcessOptions } from "../../../../src/lib/local-compute-policy.mjs";
 
@@ -40,7 +41,7 @@ const BRIDGE_ENVIRONMENT_NAMES = Object.freeze([
   "UV_PYTHON_INSTALL_DIR",
   "WINDIR",
 ]);
-const lazyEnvironmentAnnotations = Object.freeze({
+const localExecutionAnnotations = Object.freeze({
   readOnlyHint: false,
   destructiveHint: false,
   idempotentHint: true,
@@ -84,7 +85,7 @@ const TOOLS = Object.freeze([
       ],
       additionalProperties: false,
     },
-    annotations: lazyEnvironmentAnnotations,
+    annotations: localExecutionAnnotations,
   },
 ]);
 
@@ -164,17 +165,15 @@ function bridgeEnvironment() {
   };
 }
 
-function runBridge(envelope, signal) {
+async function runBridge(envelope, signal) {
   return runLocalJsonProcess({
-    command: "uv",
-    args: ["run", "--quiet", "--project", skillRoot, "--python", "3.12", "python", bridgePath],
+    ...await preparedPythonLaunch({ skillRoot, args: [bridgePath] }),
     cwd: skillRoot,
     env: localComputeEnvironment(bridgeEnvironment()),
     input: envelope,
     signal,
     ...localComputeProcessOptions(),
     label: "MQT QCEC runtime",
-    notFoundMessage: "未找到 uv；请先安装 uv 后再使用 MQT QCEC 本地验证",
   });
 }
 

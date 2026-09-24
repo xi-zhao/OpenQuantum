@@ -42,7 +42,7 @@ Skill 不启动计算进程。固定上游 SHA、依赖锁摘要、完整输入�
 
 ## 完成与失败边界
 
-首次计算可能由 uv 下载锁定依赖、准备本地 Python 环境和绘图库缓存，因此是 workspace-write；
+计算前显式准备锁定依赖；计算仍可能写绘图库缓存，因此保留 workspace-write；
 实际仿真不使用外部模型、云端计算或真实硬件。计算 worker 默认不设置时间或输出大小上限；部署可配置资源预算，取消会终止本次计算进程组。连接层超时与硬件环境配置见[资源配置](../../../docs/integrations/SCALABLE_BRIDGES.md)。
 
 Tool 不在 Registry 中时，检查“设置中心 → MCP Server 连接 → FatQat 量子实验”，启用后重启
@@ -53,3 +53,7 @@ OpenQuantum；不要用 Bash 绕过用户禁用的连接。保留不支持的门
 报告实验假设、关键数值、单位、固定版本和未验证项；MCP 成功和图表都不能作为科研验收或真机性能证明。
 任意 Python、用户文件路径、任意模型文档、自动编译、动态控制流、通用 qudit 门、三能级原子私有接口、
 QPU 提交和完整课程 UI 不属于这两个 Tool 的能力。更广的科研请求保留这些边界，不把整个上游 SDK 宣称为已暴露。
+
+## 依赖准备
+
+运行前执行 `node scripts/setup-paper-tools.mjs fatqat-workbench`。缺失、旧锁和已安装环境的处理见[共同准备说明](../../../docs/integrations/LOCAL_ENVIRONMENTS.md)；Tool 不自动安装或升级依赖。

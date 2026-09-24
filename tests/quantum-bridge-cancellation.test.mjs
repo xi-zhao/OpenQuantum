@@ -1,3 +1,4 @@
+import { preparePythonFixture } from "./helpers/prepared-python.mjs";
 import assert from "node:assert/strict";
 import { chmod, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
@@ -64,11 +65,12 @@ writeFileSync(${JSON.stringify(directory)} + "/" + key + ".json", JSON.stringify
 setInterval(() => {}, 1000);
 `);
   await chmod(uvPath, 0o755);
+  const prepared = await preparePythonFixture({ root: projectRoot, sandbox: directory, id: capability, executable: uvPath });
   const transport = new StdioClientTransport({
     command: process.execPath,
     args: [path.join(projectRoot, ".agents/skills", capability, "mcp/server.mjs")],
     cwd: projectRoot,
-    env: { ...process.env, PATH: `${directory}${path.delimiter}${process.env.PATH ?? ""}` },
+    env: { ...process.env, ...prepared, PATH: `${directory}${path.delimiter}${process.env.PATH ?? ""}` },
   });
   const client = new Client({ name: "openquantum-cancellation-test", version: "1.0.0" });
   t.after(async () => {

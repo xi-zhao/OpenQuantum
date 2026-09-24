@@ -9,7 +9,7 @@ description: "为 simulators/qiskit 选择完整的开源算法工作流，路�
 
 ## 后端工作流
 
-阅读[共同运行说明](../../../examples/quantum-algorithms/README.md)，使用锁定的 Qiskit 环境。现有 qiskit-circuit-workbench Skill 和 Qiskit 文档 Tool 可以继续复用。最小本地电路例子见 quantum-hadamard-transform、quantum-qpe。
+阅读[共同运行说明](../../../examples/quantum-algorithms/README.md)，使用锁定的 Qiskit 环境。电路审查、格式转换、MCP 连接与本地 SDK 的选择统一按[共同选择说明](../../../docs/integrations/CAPABILITY_SELECTION.md)。最小本地电路例子见 quantum-hadamard-transform、quantum-qpe。
 
 根据问题加载一个对应算法 Skill，再通过已有 bash/pwsh Tool 执行开源任务代码。明确量子位顺序、shots 与解析态矢量的区别、后端和版本。先运行 CPU 小例子；只有用户要求且授权时才选择额外的设备或网络后端。
 

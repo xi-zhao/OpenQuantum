@@ -1,6 +1,5 @@
 """Reuse SDK state-preparation implementations, preserving the different methods."""
 import numpy as np
-import pennylane as qml
 from scipy.optimize import minimize
 from qiskit import QuantumCircuit
 from qiskit.circuit.library import StatePreparation
@@ -12,6 +11,7 @@ def target_state(target):
 
 
 def pennylane_prepare(target, operation, auxiliary=0):
+  import pennylane as qml
   psi = target_state(target)
   n = qubits(len(psi))
   wires = list(reversed(range(n)))
@@ -28,6 +28,7 @@ def pennylane_prepare(target, operation, auxiliary=0):
 
 
 def mottonen(target=None):
+  import pennylane as qml
   return pennylane_prepare(target, lambda psi, wires, _: qml.MottonenStatePreparation(psi, wires))
 
 
@@ -42,6 +43,7 @@ def multiplexer(target=None):
 
 
 def superposition(target=None):
+  import pennylane as qml
   def operation(psi, wires, work):
     support = np.flatnonzero(abs(psi) > 0)
     bases = np.array([[int(bit) for bit in format(int(k), f"0{len(wires)}b")] for k in support])
@@ -80,6 +82,7 @@ def state_to_mps(psi, max_bond):
 
 
 def mps(target=None, max_bond=None):
+  import pennylane as qml
   psi = target_state(target)
   n = qubits(len(psi))
   if n == 1:
@@ -94,6 +97,7 @@ def mps(target=None, max_bond=None):
 
 
 def pauli(target=None, maxiter=300, seed=7, tolerance=1e-9):
+  import pennylane as qml
   psi = target_state(target)
   integer(maxiter, "maxiter")
   n = qubits(len(psi))

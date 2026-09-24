@@ -41,7 +41,7 @@ after(async () => {
   await client?.close();
 });
 
-test("FieldQKit MCP separates read-only setup from lazy-environment discovery", async () => {
+test("FieldQKit MCP separates read-only setup from explicitly prepared discovery", async () => {
   const tools = (await client.listTools()).tools;
   assert.deepEqual(
     tools.map((tool) => tool.name),

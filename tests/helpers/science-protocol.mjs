@@ -5,6 +5,7 @@ import path from "node:path";
 import test from "node:test";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
+import { preparePythonFixture } from "./prepared-python.mjs";
 import { readDeclaredMcpToolContract } from "../../scripts/lib/capability-tool-contract.mjs";
 
 // A protocol fixture, deliberately not a scientific calculation or scientific evidence.
@@ -44,10 +45,11 @@ export function registerScienceProtocolTests(capabilities, { cancellationId } = 
         process.stdout.write(JSON.stringify(output));
       });\n`;
       for (const name of ["uv", "julia"]) { const file = path.join(sandbox, name); await writeFile(file, executable); await chmod(file, 0o755); }
+      const prepared = capability.id === "randomized-measurements" ? {} : await preparePythonFixture({ root, sandbox, id: capability.id, executable: path.join(sandbox, "uv") });
       const client = new Client({ name: "science-protocol-fixture", version: "1" }, { capabilities: {} });
       t.after(async () => { await client.close(); await rm(sandbox, { recursive: true, force: true }); });
       await client.connect(new StdioClientTransport({ command: process.execPath, args: [path.join(root, ".agents/skills", capability.id, "mcp/server.mjs")], cwd: root,
-        env: { ...process.env, PATH: `${sandbox}${path.delimiter}${process.env.PATH}`, OPENAI_API_KEY: "science-contract-secret-sentinel", OMP_NUM_THREADS: "7", MKL_NUM_THREADS: "4" } }));
+        env: { ...process.env, ...prepared, PATH: `${sandbox}${path.delimiter}${process.env.PATH}`, OPENAI_API_KEY: "science-contract-secret-sentinel", OMP_NUM_THREADS: "7", MKL_NUM_THREADS: "4" } }));
       const listed = (await client.listTools()).tools;
       assert.deepEqual(listed.map(tool => tool.name), declared.map(tool => tool.name));
       const selected = listed.find(tool => tool.name === capability.tool);

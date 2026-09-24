@@ -12,10 +12,14 @@ description: 用固定 Symmer 将实 Pauli Hamiltonian 投影到显式指定的�
 - 如果用户未指定扇区，先说明对称性选择并取得具体输入，不能将 Tool 的示例默认扇区当成用户模型的全局基态扇区。必要时分别运行多个允许扇区比较最低能量。
 - 返回 reducedTerms 和 sectorDimension，可选 reducedSpectrum 和 referenceSectorSpectrum。独立参考取投影算符 range 内的正交基，在该子空间对 Hamiltonian 对角化；不能把全维 PHP 的零本征值混入扇区能谱。
 - 降维 Pauli 轴是 Symmer 变换后的坐标，不能直接视作删去某些物理量子位。保谱仅限指定扇区，最低值不自动等于全系统基态。
-- 不开放 contextual-subspace VQE、自动对称性发现或多项式加速主张。当前 L1，`scientificValidation=not_evaluated`；首次调用可安装固定依赖并写本地缓存。
+- 不开放 contextual-subspace VQE、自动对称性发现或多项式加速主张。当前 L1，`scientificValidation=not_evaluated`；依赖须显式准备；计算可能写本地缓存。
 
 版本与验证见[接入说明](../../../docs/integrations/UNITARY_NEXT_TOOLS.md)。
 
 独立参考使用 `referenceMode=auto|required|skip`：auto 按默认阈值选择参考，required 使用调用方资源尝试所请求规模，skip 跳过。未执行时 `reference.status=not_run`，参考值和差异为 null；尝试后失败会返回错误。
 
 Hamiltonian 量子位数、Pauli 项数及独立对称性由调用方选择，适配器不额外设置人工规模上限。具体资源配置见[本地计算说明](../../../docs/integrations/SCALABLE_BRIDGES.md)。
+
+## 依赖准备
+
+运行前执行 `node scripts/setup-paper-tools.mjs symmer-tapering`。缺失、旧锁和已安装环境的处理见[共同准备说明](../../../docs/integrations/LOCAL_ENVIRONMENTS.md)；Tool 不自动安装或升级依赖。

@@ -1,3 +1,4 @@
+import { preparedPythonLaunch } from "../src/lib/prepared-python.mjs";
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
 import { once } from "node:events";
@@ -71,7 +72,8 @@ test("real Mitiq: four methods, exact noise model, full budgets, reproducibility
 });
 
 test("real Mitiq: independent channel reconstruction and numerical boundary regressions", { skip: !enabled, timeout: 120000 }, async () => {
-  const child = spawn("uv", ["run", "--quiet", "--frozen", "--project", ".agents/skills/mitiq-error-mitigation", "--python", "3.12", "python", ".agents/skills/mitiq-error-mitigation/test/science_test.py"], {
+  const launch = await preparedPythonLaunch({ skillRoot: path.join(process.cwd(), ".agents/skills/mitiq-error-mitigation"), args: [".agents/skills/mitiq-error-mitigation/test/science_test.py"] });
+  const child = spawn(launch.command, launch.args, {
     env: { ...process.env, PYTHONDONTWRITEBYTECODE: "1", UV_PROJECT_ENVIRONMENT: path.join(process.cwd(), ".openquantum/python-envs/mitiq-error-mitigation") },
     stdio: ["ignore", "pipe", "pipe"],
   });

@@ -46,7 +46,8 @@
         "sha256": "5604b82f1dee50272b67f4276ea8e819642f14b551fb89d6f4911e31eece7d33"
       },
       "scope": "可逆 g^a y^b oracle、循环群 Fourier 采样与同余恢复；不把已知对数写进 oracle。",
-      "invocation": "automatic"
+      "invocation": "automatic",
+      "dependencyGroups": []
     },
     {
       "guideId": "algorithms/cryptography/shor",
@@ -62,7 +63,8 @@
         "sha256": "1a112ce147e71dbcd7aa362fd3f7915371a149f68fe482698e4c922dd1c371de"
       },
       "scope": "可逆模乘 oracle、QPE/连分数和因子验证；密集 oracle 的教学规模模拟，失败明确返回需换基数或精度。",
-      "invocation": "automatic"
+      "invocation": "automatic",
+      "dependencyGroups": []
     },
     {
       "guideId": "algorithms/cryptography/simon",
@@ -78,7 +80,8 @@
         "sha256": "065b65f11d0d18c554daedd46b6dbb58ef5b8fd27471d5f648d4f84407d185b2"
       },
       "scope": "二对一 XOR oracle、Hadamard 采样和 GF(2) 零空间恢复；样本不足时不编造 secret。",
-      "invocation": "automatic"
+      "invocation": "automatic",
+      "dependencyGroups": []
     },
     {
       "guideId": "algorithms/eigensolvers",
@@ -100,7 +103,8 @@
       "signature": "(hamiltonian=None)",
       "sourceAlgorithm": null,
       "scope": "NumPy 最小本征对，明确标记经典算法并报告残差。",
-      "invocation": "automatic"
+      "invocation": "automatic",
+      "dependencyGroups": []
     },
     {
       "guideId": "algorithms/eigensolvers/numyeigensolver",
@@ -113,7 +117,8 @@
       "signature": "(hamiltonian=None, k=None)",
       "sourceAlgorithm": null,
       "scope": "NumPy Hermitian 稠密本征求解，明确标记经典算法并报告特征残差。",
-      "invocation": "automatic"
+      "invocation": "automatic",
+      "dependencyGroups": []
     },
     {
       "guideId": "algorithms/eigensolvers/vqd",
@@ -126,7 +131,8 @@
       "signature": "(terms=None, k=2, layers=2, maxiter=200, penalty=None, seed=7)",
       "sourceAlgorithm": null,
       "scope": "通过逐态重叠惩罚求激发态（VQD），报告能量与态间重叠；惩罚和 ansatz 会影响收敛。",
-      "invocation": "automatic"
+      "invocation": "automatic",
+      "dependencyGroups": []
     },
     {
       "guideId": "algorithms/gradients",
@@ -148,7 +154,10 @@
       "signature": "(angles=None, observable=None, epsilon=1e-05)",
       "sourceAlgorithm": null,
       "scope": "Qiskit FiniteDiffEstimatorGradient，中心差分与显式 epsilon。",
-      "invocation": "automatic"
+      "invocation": "automatic",
+      "dependencyGroups": [
+        "gradients"
+      ]
     },
     {
       "guideId": "algorithms/gradients/linear-combination",
@@ -161,7 +170,10 @@
       "signature": "(angles=None, observable=None)",
       "sourceAlgorithm": null,
       "scope": "Qiskit LinCombEstimatorGradient，实际生成线性组合导数电路。",
-      "invocation": "automatic"
+      "invocation": "automatic",
+      "dependencyGroups": [
+        "gradients"
+      ]
     },
     {
       "guideId": "algorithms/gradients/parameter-shift",
@@ -174,7 +186,10 @@
       "signature": "(angles=None, observable=None)",
       "sourceAlgorithm": null,
       "scope": "Qiskit ParamShiftEstimatorGradient，RY 参数移位规则。",
-      "invocation": "automatic"
+      "invocation": "automatic",
+      "dependencyGroups": [
+        "gradients"
+      ]
     },
     {
       "guideId": "algorithms/gradients/qfi",
@@ -187,7 +202,10 @@
       "signature": "(angles=None)",
       "sourceAlgorithm": null,
       "scope": "Qiskit QFI/ReverseQGT，纯态量子 Fisher 信息；不将其等同于任意测量的经典 Fisher 信息。",
-      "invocation": "automatic"
+      "invocation": "automatic",
+      "dependencyGroups": [
+        "gradients"
+      ]
     },
     {
       "guideId": "algorithms/gradients/reverse",
@@ -200,7 +218,10 @@
       "signature": "(angles=None, observable=None)",
       "sourceAlgorithm": null,
       "scope": "Qiskit ReverseEstimatorGradient，反向态矢量导数。",
-      "invocation": "automatic"
+      "invocation": "automatic",
+      "dependencyGroups": [
+        "gradients"
+      ]
     },
     {
       "guideId": "algorithms/gradients/spsa",
@@ -213,7 +234,10 @@
       "signature": "(angles=None, observable=None, epsilon=0.001, batch_size=256, seed=7)",
       "sourceAlgorithm": null,
       "scope": "Qiskit SPSAEstimatorGradient，显式 epsilon、批量与随机种子；单次估计有统计误差。",
-      "invocation": "automatic"
+      "invocation": "automatic",
+      "dependencyGroups": [
+        "gradients"
+      ]
     },
     {
       "guideId": "algorithms/hamiltonian-simulation",
@@ -238,7 +262,8 @@
         "sha256": "130b76490112bafbb1e01fe9e9074c5f5c87da84a9a504f3c698a6a19755d2ea"
       },
       "scope": "实对称 Hamiltonian 的 SO(N) 谱 Cartan 分解；采用 SciPy Schur 替换未开放的 Cartan-Lax 优化器，不宣称复刻其优化轨迹。",
-      "invocation": "automatic"
+      "invocation": "automatic",
+      "dependencyGroups": []
     },
     {
       "guideId": "algorithms/hamiltonian-simulation/qdrift",
@@ -254,7 +279,8 @@
         "sha256": "db8a607c511aadd5ec8e82a066f03b7f76f4e91d832fbce48498dc5027d0782c"
       },
       "scope": "使用 Qiskit 的显式量子电路，保留输入、方法参数、实际概率或态矢量；模拟器全态读取不代表硬件可高效读取。",
-      "invocation": "automatic"
+      "invocation": "automatic",
+      "dependencyGroups": []
     },
     {
       "guideId": "algorithms/hamiltonian-simulation/qsp",
@@ -270,7 +296,10 @@
         "sha256": "4a299554d2aba9ff151752b96b6282a0d92bdff8d096d64fdcb9b4f7f925ed0d"
       },
       "scope": "偶/奇 QSP 多项式通过 LCU 合成 exp(-iHt)；稠密 block encoding 与后选择，次数控制截断误差。",
-      "invocation": "automatic"
+      "invocation": "automatic",
+      "dependencyGroups": [
+        "pennylane"
+      ]
     },
     {
       "guideId": "algorithms/hamiltonian-simulation/taylor",
@@ -286,7 +315,8 @@
         "sha256": "a33896ad664daf1673067f785e99edd87457bb52606b8ceb8fc33e82f3ba0527"
       },
       "scope": "截断 Taylor 级数展开为 Pauli LCU，实际执行 PREPARE/SELECT/unprepare 并报告后选择概率；无量子加速主张。",
-      "invocation": "automatic"
+      "invocation": "automatic",
+      "dependencyGroups": []
     },
     {
       "guideId": "algorithms/hamiltonian-simulation/trotter",
@@ -302,7 +332,8 @@
         "sha256": "1bfb54372aa20c34b547097cf82f487fb770368385d8e573a3d052f3c4f9f968"
       },
       "scope": "使用 Qiskit 的显式量子电路，保留输入、方法参数、实际概率或态矢量；模拟器全态读取不代表硬件可高效读取。",
-      "invocation": "automatic"
+      "invocation": "automatic",
+      "dependencyGroups": []
     },
     {
       "guideId": "algorithms/linear-systems",
@@ -327,7 +358,8 @@
         "sha256": "06d1ba052d50055482b7cc1b0d10c0f8315066e409600a90b8363b7df194ee8e"
       },
       "scope": "正定 Hermitian 系统的绝热线性求解路径、条件数相关 schedule 与分片幺正演化；增加 total_time 和 steps 检查绝热与离散误差。",
-      "invocation": "automatic"
+      "invocation": "automatic",
+      "dependencyGroups": []
     },
     {
       "guideId": "algorithms/linear-systems/hhl",
@@ -343,7 +375,8 @@
         "sha256": "fdcabeae7d632d368530d7e04d6cb639c7f50adfe3c68f7f76e2f64b7f23fa16"
       },
       "scope": "Hermitian 非奇异 A、QPE、有符号倒数旋转、反 QPE 与后选择；完整解向量来自模拟器，受相位位数和条件数影响。",
-      "invocation": "automatic"
+      "invocation": "automatic",
+      "dependencyGroups": []
     },
     {
       "guideId": "algorithms/linear-systems/lcu",
@@ -359,7 +392,8 @@
         "sha256": "b771bb57cf08d20f7b15fe48e5ae9e2adb9a6cca0b348cd72b655ca69fdbca91"
       },
       "scope": "使用 Qiskit 的显式量子电路，保留输入、方法参数、实际概率或态矢量；模拟器全态读取不代表硬件可高效读取。",
-      "invocation": "automatic"
+      "invocation": "automatic",
+      "dependencyGroups": []
     },
     {
       "guideId": "algorithms/linear-systems/qsvt-qlsa",
@@ -375,7 +409,10 @@
         "sha256": "d65e33127a1e6d550684b7f6b8b47032fd28c965b05fa783cdd7e0591b767b1d"
       },
       "scope": "Hermitian 非奇异矩阵，PennyLane QSVT 和受控 U/U† 后选择；有界奇次几何倒数多项式，输出实际残差，不承诺输入 epsilon 自动满足。",
-      "invocation": "automatic"
+      "invocation": "automatic",
+      "dependencyGroups": [
+        "pennylane"
+      ]
     },
     {
       "guideId": "algorithms/linear-systems/quantum-fourier-transform",
@@ -391,7 +428,8 @@
         "sha256": "37bcfd2f3caf6b787eff8118f322d14209798adb38258edf03d6b6068133699b"
       },
       "scope": "使用 Qiskit 的显式量子电路，保留输入、方法参数、实际概率或态矢量；模拟器全态读取不代表硬件可高效读取。",
-      "invocation": "automatic"
+      "invocation": "automatic",
+      "dependencyGroups": []
     },
     {
       "guideId": "algorithms/linear-systems/quantum-signal-processing",
@@ -407,7 +445,10 @@
         "sha256": "b20905c96e9eac5039cdec57199370879986f36b721397691aa25bb1f1bda861"
       },
       "scope": "QSP/QSVT 相位综合计算 cos(t x) 的有界偶次多项式；报告截断误差和 block 缩放。",
-      "invocation": "automatic"
+      "invocation": "automatic",
+      "dependencyGroups": [
+        "pennylane"
+      ]
     },
     {
       "guideId": "algorithms/linear-systems/vqls",
@@ -423,7 +464,8 @@
         "sha256": "064f21530dbad741780b051b392043097a259963b3161d1bb5a0806bb2da48aa"
       },
       "scope": "Qiskit 参数电路与全局归一化残差 cost 的变分线性求解；报告数值残差与优化终止原因。",
-      "invocation": "automatic"
+      "invocation": "automatic",
+      "dependencyGroups": []
     },
     {
       "guideId": "algorithms/primitives",
@@ -448,7 +490,8 @@
         "sha256": "3ac71d87745c79bbcbcf3d69e174088dcbac0a4bbed8fffa38955e6458b6697b"
       },
       "scope": "使用 Qiskit 的显式量子电路，保留输入、方法参数、实际概率或态矢量；模拟器全态读取不代表硬件可高效读取。",
-      "invocation": "automatic"
+      "invocation": "automatic",
+      "dependencyGroups": []
     },
     {
       "guideId": "algorithms/primitives/amplitude-estimation",
@@ -464,7 +507,8 @@
         "sha256": "6e7de14190a6008543cf1a51f27193a77faf2da370dfb634832b561f9ede5b39"
       },
       "scope": "使用 Qiskit 的显式量子电路，保留输入、方法参数、实际概率或态矢量；模拟器全态读取不代表硬件可高效读取。",
-      "invocation": "automatic"
+      "invocation": "automatic",
+      "dependencyGroups": []
     },
     {
       "guideId": "algorithms/primitives/grover",
@@ -480,7 +524,8 @@
         "sha256": "3c9091fd67f24d72bcbc5d67b6b94af9df79db16ae6b4ef88de2f6600bba003a"
       },
       "scope": "使用 Qiskit 的显式量子电路，保留输入、方法参数、实际概率或态矢量；模拟器全态读取不代表硬件可高效读取。",
-      "invocation": "automatic"
+      "invocation": "automatic",
+      "dependencyGroups": []
     },
     {
       "guideId": "algorithms/primitives/hadamard-test",
@@ -496,7 +541,8 @@
         "sha256": "c499cddbde4c4a6b25f5ac9c609755c49755e87b913d7b2348c510880edd825e"
       },
       "scope": "使用 Qiskit 的显式量子电路，保留输入、方法参数、实际概率或态矢量；模拟器全态读取不代表硬件可高效读取。",
-      "invocation": "automatic"
+      "invocation": "automatic",
+      "dependencyGroups": []
     },
     {
       "guideId": "algorithms/primitives/hadamard-transform",
@@ -512,7 +558,8 @@
         "sha256": "c67d0fef9f70c93a918f1622df83ce2b2fbee3916ff02a4f25cde584c7560e5f"
       },
       "scope": "使用 Qiskit 的显式量子电路，保留输入、方法参数、实际概率或态矢量；模拟器全态读取不代表硬件可高效读取。",
-      "invocation": "automatic"
+      "invocation": "automatic",
+      "dependencyGroups": []
     },
     {
       "guideId": "algorithms/primitives/quantum-phase-estimation",
@@ -528,7 +575,8 @@
         "sha256": "ad6e57ea00dd4590d9f4b5e0641c601a5a64e366f1fa103bf30035981d54caf1"
       },
       "scope": "使用 Qiskit 的显式量子电路，保留输入、方法参数、实际概率或态矢量；模拟器全态读取不代表硬件可高效读取。",
-      "invocation": "automatic"
+      "invocation": "automatic",
+      "dependencyGroups": []
     },
     {
       "guideId": "algorithms/quantum-chemistry",
@@ -553,7 +601,10 @@
         "sha256": "2b8a89ef372149e6c7cfa18be5ee5c7a23f434de33e481e4b6128937c5b8d688"
       },
       "scope": "PySCF 活性空间积分、Jordan-Wigner MPO 与 quimb 双站点 DMRG。使用开源态制备替换闭源 CVD；当前示例的稠密 Hamiltonian 预处理需要 O(4^n) 存储。",
-      "invocation": "automatic"
+      "invocation": "automatic",
+      "dependencyGroups": [
+        "chemistry"
+      ]
     },
     {
       "guideId": "algorithms/quantum-error-correction",
@@ -566,7 +617,8 @@
       "signature": "(h1=None, h2=None, x_error=None, z_error=None)",
       "sourceAlgorithm": null,
       "scope": "HGP CSS 校验矩阵、GF(2) 秩、交换关系和 syndrome；码距未计算。解码任务继续使用 ldpc-decoding Skill。",
-      "invocation": "automatic"
+      "invocation": "automatic",
+      "dependencyGroups": []
     },
     {
       "guideId": "algorithms/quantum-machine-learning",
@@ -591,7 +643,8 @@
         "sha256": "1708cff8bbdf3f15888f2347cc17d2c6069b8c6de3101fe7e643c7c63fdbe3f9"
       },
       "scope": "两模有限 Fock 空间的位移、压缩、旋转、Kerr 和分束器层；SciPy 有限差分优化替换 Torch autograd，需增加 cutoff 检查截断。",
-      "invocation": "automatic"
+      "invocation": "automatic",
+      "dependencyGroups": []
     },
     {
       "guideId": "algorithms/quantum-machine-learning/fermi-hubbard-vqe",
@@ -607,7 +660,8 @@
         "sha256": "752e77b704ab79cd8d5ee54ae0fa78bcd3fef07828c41bf020565bcdbd8aa5ff"
       },
       "scope": "开放边界 Hubbard 链，Jordan-Wigner 与全 Fock 空间 VQE；粒子数是测量值，未强制固定粒子数扇区。",
-      "invocation": "automatic"
+      "invocation": "automatic",
+      "dependencyGroups": []
     },
     {
       "guideId": "algorithms/quantum-machine-learning/ising",
@@ -623,7 +677,10 @@
         "sha256": "8734ecc611f78ea07ad15c6a3c956cb120db9036d4080ff0fbe650e14a0e724f"
       },
       "scope": "开放边界二维矩形 Ising 网格，quimb MPS 与二阶 Strang 演化；报告键维数及截断参数，不分配完整态矢量。",
-      "invocation": "automatic"
+      "invocation": "automatic",
+      "dependencyGroups": [
+        "tensor"
+      ]
     },
     {
       "guideId": "algorithms/quantum-machine-learning/qaoa",
@@ -639,7 +696,8 @@
         "sha256": "ee73669de2465fc0aab8ba32e1ee02e75cd21ae5d11896b148afa9a05bb82fac"
       },
       "scope": "无权 MaxCut 的交替 cost/mixer 电路与参数优化；输出平均 cut 和最高概率位串。",
-      "invocation": "automatic"
+      "invocation": "automatic",
+      "dependencyGroups": []
     },
     {
       "guideId": "algorithms/quantum-machine-learning/qcbm",
@@ -655,7 +713,8 @@
         "sha256": "c09eb0625d484d2aecc20d4d07edc844f21f94609f04638742a38ab098b8fe7d"
       },
       "scope": "参数电路 Born 分布拟合目标概率，KL 目标与 total variation 对照。",
-      "invocation": "automatic"
+      "invocation": "automatic",
+      "dependencyGroups": []
     },
     {
       "guideId": "algorithms/quantum-machine-learning/vqc",
@@ -671,7 +730,8 @@
         "sha256": "9524c0f10348bfd1bf604b8a1b41e3a64591d96d41296c44fc31b079a314bcde"
       },
       "scope": "RY 特征编码与参数电路二分类；输出训练集指标，不能当作泛化效果。",
-      "invocation": "automatic"
+      "invocation": "automatic",
+      "dependencyGroups": []
     },
     {
       "guideId": "algorithms/quantum-machine-learning/vqe",
@@ -687,7 +747,8 @@
         "sha256": "34a9c0389ae28a25422b792d67dbc4475ba886045760c001b0de88544640ebe5"
       },
       "scope": "实 Pauli Hamiltonian、RY/RZ/CX ansatz 和 SciPy 优化；能量、优化记录及保留的参数可复查。",
-      "invocation": "automatic"
+      "invocation": "automatic",
+      "dependencyGroups": []
     },
     {
       "guideId": "algorithms/schrodingerization",
@@ -712,7 +773,8 @@
         "sha256": "139748e0d20c835b21ccd7b320c33308f16013a3909893687e459e85ae907c00"
       },
       "scope": "周期边界、常速一维平流，中心差分和显式薛定谔化电路；不接受并静默回退所谓 block 模式。",
-      "invocation": "automatic"
+      "invocation": "automatic",
+      "dependencyGroups": []
     },
     {
       "guideId": "algorithms/schrodingerization/heat-1d-schrodingerization",
@@ -728,7 +790,8 @@
         "sha256": "4fd87757b027e4bdd636800fb80832a1b9ba9e9d4df6b53c47912ec2eb042a52"
       },
       "scope": "齐次一维热方程，周期或零 Dirichlet 边界；显式辅助 Fourier 寄存器的幺正薛定谔化电路、截面恢复和离散热方程参照。",
-      "invocation": "automatic"
+      "invocation": "automatic",
+      "dependencyGroups": []
     },
     {
       "guideId": "algorithms/schrodingerization/heat-2d-schrodingerization",
@@ -744,7 +807,8 @@
         "sha256": "1553e6ffcc115ead64e294532dd893e16370976608178c0f9be5678d22339422"
       },
       "scope": "齐次二维方形网格热方程，周期或零 Dirichlet 边界；显式薛定谔化电路。空间与辅助网格误差需要分别收敛。",
-      "invocation": "automatic"
+      "invocation": "automatic",
+      "dependencyGroups": []
     },
     {
       "guideId": "algorithms/search",
@@ -769,7 +833,8 @@
         "sha256": "1ab3332b62203068df1fcc4e58aa44261f7955574d482c5c6f596b89089b4969"
       },
       "scope": "随机交替叶环连接的双树连续时间邻接矩阵量子行走；稠密编译和出口概率，不宣称搜索加速。",
-      "invocation": "automatic"
+      "invocation": "automatic",
+      "dependencyGroups": []
     },
     {
       "guideId": "algorithms/search/hidden-shift",
@@ -785,7 +850,8 @@
         "sha256": "7a5788739ad473c4842ebe2afefbb69d0f123c8ae9f668ebac53fc1bdf8db7a1"
       },
       "scope": "偶数位二次 bent 函数的 shifted/dual 相位 oracle；其他函数族需要另写任务代码。",
-      "invocation": "automatic"
+      "invocation": "automatic",
+      "dependencyGroups": []
     },
     {
       "guideId": "algorithms/state-preparation",
@@ -810,7 +876,10 @@
         "sha256": "7434ce7973d6b922e3b001e24609c75f5c134f93fe488042b0277ef9d3ef9e15"
       },
       "scope": "PennyLane Möttönen 均匀受控旋转态制备；输入正规化后保留复相位。",
-      "invocation": "automatic"
+      "invocation": "automatic",
+      "dependencyGroups": [
+        "pennylane"
+      ]
     },
     {
       "guideId": "algorithms/state-preparation/mps",
@@ -826,7 +895,10 @@
         "sha256": "6b4894fc8286e873db8ed9b4d4bc0f4731cf3d0c0101968024935a6f56c85051"
       },
       "scope": "SVD 分解、可选键截断、显式右规范化与 PennyLane MPSPrep；报告实际制备保真度及辅助位清零概率。",
-      "invocation": "automatic"
+      "invocation": "automatic",
+      "dependencyGroups": [
+        "pennylane"
+      ]
     },
     {
       "guideId": "algorithms/state-preparation/multiplexer",
@@ -842,7 +914,8 @@
         "sha256": "909916a7f987631ac750d7088b782f0505c1eda1936c2282f39d4c82ee579a4b"
       },
       "scope": "Qiskit StatePreparation/Isometry 的均匀受控门合成；保留复振幅、输出位序与保真度。",
-      "invocation": "automatic"
+      "invocation": "automatic",
+      "dependencyGroups": []
     },
     {
       "guideId": "algorithms/state-preparation/pauli",
@@ -858,7 +931,10 @@
         "sha256": "aae89b225f2c4a06b1b645c0fd9fa149043c127c17c27278b3bef4ea251b8d64"
       },
       "scope": "PennyLane ArbitraryStatePreparation 的 Pauli 旋转优化；报告保真度及优化状态，迭代结束不自动代表达到目标误差。",
-      "invocation": "automatic"
+      "invocation": "automatic",
+      "dependencyGroups": [
+        "pennylane"
+      ]
     },
     {
       "guideId": "algorithms/state-preparation/superposition",
@@ -874,7 +950,10 @@
         "sha256": "288955018fd0fbbd1a4eb73000e23757abdc8d705c055cc443d386fc56ee85cc"
       },
       "scope": "PennyLane Superposition 的计算基叠加与辅助位清零；系数可为复数。",
-      "invocation": "automatic"
+      "invocation": "automatic",
+      "dependencyGroups": [
+        "pennylane"
+      ]
     },
     {
       "guideId": "root",

@@ -22,7 +22,7 @@ OpenQuantum 新增 Dynamiqs、Clifft、OQuPy、Deltakit 与 Metriq 数据查询�
 npm run capability:unitary:setup
 ```
 
-需要 Node.js 24、Git 与 uv。安装器使用 `uv sync --frozen`，环境位于 `.openquantum/python-envs/<capability-id>/`。Metriq 数据已经随源码提供，不需要 Python 或联网。首次数值调用也可能下载固定依赖并写入环境、编译或绘图缓存，因此四个计算 Tool 的完整副作用声明是 `workspace-write`；Metriq 查询声明为 `read-only`。
+需要 Node.js 24、Git 与 uv。安装器使用 `uv sync --frozen`，环境位于 `.openquantum/python-envs/<capability-id>/`。Metriq 数据已经随源码提供，不需要 Python 或联网。固定依赖由显式 setup 准备；计算仍可能写编译或绘图缓存，四个计算 Tool 保留 `workspace-write`；Metriq 查询声明为 `read-only`。
 
 运行中的 OpenQuantum 需要重启 Harness 后加载新增 Preset 行。连接设置页可分别开关四个计算服务，Metriq 由默认 Preset 的原生 Tool Provider 注册。所有数值输入均为结构化参数，不接收任意 Python、任意电路文本或文件路径；worker 默认不设置时间或输出大小上限，支持按调用方配置预算及取消；连接层配置见[本地计算与资源配置](SCALABLE_BRIDGES.md)。
 
@@ -76,3 +76,5 @@ npm run check
 Harness 检查启动隔离的真实 Host，确认四个 Skill 可发现，五个 Tool 可调用，五次成功与一次预期错误写入并重读 Session event log。模型端是本地协议替身，只验证运行接线；没有调用外部模型或真实硬件。
 
 日期化结果与源码摘要见 [2026-09-14 验证记录](evidence/unitary-2026-09-14.json)。本机原始数值结果和 Harness 会话保存于 `.openquantum/unitary-tools-evidence/`，供复查。
+
+当前环境准备、旧环境复用与失败恢复统一见[本地计算环境准备](LOCAL_ENVIRONMENTS.md)。

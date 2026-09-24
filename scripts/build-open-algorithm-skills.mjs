@@ -33,10 +33,11 @@ function render(row) {
   if (row.invocation === "manual") body += "分类导航：保留用户显式调用；自动任务直接选择叶子方法 Skill，或使用 `quantum-algorithms` 查找。\n\n";
   if (row.algorithm) {
     body += `## 适用方法\n\n${row.scope}\n\n`;
+    if (["trotter", "qdrift", "vqd", "numpy_eigensolver", "numpy_minimum_eigensolver"].includes(row.algorithm)) body += "相近入口的选择、共用实现和位序约定见[共同选择说明](../../../docs/integrations/CAPABILITY_SELECTION.md)。\n\n";
     body += `## 使用步骤\n\n1. 先识别用户是在询问原理、要求运行，还是要求生成/修改代码；仅解释时不自动开始计算。\n`;
     body += `2. 阅读[共同运行说明](../../../examples/quantum-algorithms/README.md)和[本地实现](../../../${row.exampleFile})。可通过已有 \`quantum_practices\` Tool 的 \`get\` 动作、\`id=${row.guideId}\` 读取完整理论、原始参数和推导；其中的外部安装命令及 UnitaryLab 后端要求不适用于本地执行。\n`;
     body += `3. 根据任务准备实际输入，核对下面的参数签名。省略输入只会运行教学示例，不能把它冒充用户数据的结果。需要示例以外的 ansatz、oracle、边界条件或输出时，基于开源 SDK 生成可审查的任务代码。\n`;
-    body += `4. 使用 Harness 已有的 \`bash\`（Windows 为 \`pwsh\`）Tool 执行。在 OpenQuantum 仓库根目录，先检查示例 Python 环境；缺少依赖时按共同说明显式 setup。执行和安装均受现有 Harness 权限、审批、超时及 Job 管理约束。Skill 不启动服务。\n`;
+    body += `4. 使用 Harness 已有的 \`bash\`（Windows 为 \`pwsh\`）Tool 执行。在 OpenQuantum 仓库根目录，先检查示例 Python 环境；缺少依赖时显式执行 \`npm run capability:algorithms:setup -- ${row.dependencyGroups.length ? row.dependencyGroups.map(group => `--group ${group}`).join(" ") : "--minimal"}\`。执行和安装均受现有 Harness 权限、审批、超时及 Job 管理约束。Skill 不启动服务。\n`;
     body += `5. 读取实际结果和错误；保留输入、依赖版本、种子、近似参数与输出。优化未收敛、后选择概率低、码距未计算或样本不足都必须按实际字段报告。通过经典对照或收敛检查支持数值结论；最终科学验收仍为 \`not_evaluated\`。\n\n`;
     body += `参数：\n\n\`\`\`text\n${row.algorithm}${row.signature}\n\`\`\`\n\n`;
     body += `最小可运行示例（macOS/Linux；Windows Python 路径见共同说明）：\n\n\`\`\`bash\nexamples/quantum-algorithms/.venv/bin/python examples/quantum-algorithms/run.py --algorithm ${row.algorithm}\n\`\`\`\n\n`;
@@ -44,14 +45,12 @@ function render(row) {
     if (row.algorithm === "molecular_dmrg") {
       body += `分子工作流继续步骤：检查粒子数方差和 sweep 收敛后，可把输出态交给 \`quantum-mps\` 或 \`quantum-multiplexer\` 的开源态制备；用 Qiskit Pauli 测量估计能量并与 DMRG 期望值比较。生成电路时保留映射和位序，按需要导出 QASM。闭源 CVD 优化器的压缩效果不属于本地已验证结果。\n\n`;
     }
-    if (row.algorithm === "trotter" || row.algorithm === "qdrift") {
-      body += `已有固定 Tool 也可复用：\`hamiltonian-simulation\` Skill 与 \`simulate_hamiltonian\`。注意该 Tool 以 q0 为最左 Pauli/状态位，本文示例采用 Qiskit 位序；转换输入后再交叉比较。\n\n`;
-    }
+
   } else if (row.kind === "open-migration") {
     body += `## 开源迁移\n\n按用户所需的物理问题选择下列已有入口：\n\n- Circuit / QFT / QPE / oracle：Qiskit，读取 \`quantum-guide-simulators-qiskit\` 和对应算法 Skill。\n- 可微电路 / 态制备 / QSP、QSVT：PennyLane，读取 \`quantum-guide-simulators-pennylane\`。\n- TensorNet / Ising：quimb CircuitMPS，读取 \`quantum-ising\`。\n- 分子积分和 DMRG：PySCF + quimb，读取 \`quantum-molecular-dmrg\`。\n- 算法入口：读取 \`quantum-algorithms\`，按名称查找完整覆盖表。\n\n不安装或导入 \`unitarylab\` / \`unitarylab_algorithms\`；它们的原始 API 不能仅通过修改 backend 字符串变成开源执行。显式转换位序、初始化、控制门、期望值和输出合同；先运行本地小例子，再改写任务代码。\n\n`;
   } else if (row.guideId === "simulators/qiskit" || row.guideId === "simulators/pennylane") {
     const isQiskit = row.guideId.endsWith("qiskit");
-    body += `## 后端工作流\n\n阅读[共同运行说明](../../../examples/quantum-algorithms/README.md)，使用锁定的 ${isQiskit ? "Qiskit" : "PennyLane"} 环境。${isQiskit ? "现有 qiskit-circuit-workbench Skill 和 Qiskit 文档 Tool 可以继续复用。最小本地电路例子见 quantum-hadamard-transform、quantum-qpe。" : "最小可运行例子见 quantum-mottonen、quantum-qsvt-qlsa、quantum-pauli。"}\n\n根据问题加载一个对应算法 Skill，再通过已有 bash/pwsh Tool 执行开源任务代码。明确量子位顺序、shots 与解析态矢量的区别、后端和版本。先运行 CPU 小例子；只有用户要求且授权时才选择额外的设备或网络后端。\n\n`;
+    body += `## 后端工作流\n\n阅读[共同运行说明](../../../examples/quantum-algorithms/README.md)，使用锁定的 ${isQiskit ? "Qiskit" : "PennyLane"} 环境。${isQiskit ? "电路审查、格式转换、MCP 连接与本地 SDK 的选择统一按[共同选择说明](../../../docs/integrations/CAPABILITY_SELECTION.md)。最小本地电路例子见 quantum-hadamard-transform、quantum-qpe。" : "最小可运行例子见 quantum-mottonen、quantum-qsvt-qlsa、quantum-pauli。"}\n\n根据问题加载一个对应算法 Skill，再通过已有 bash/pwsh Tool 执行开源任务代码。明确量子位顺序、shots 与解析态矢量的区别、后端和版本。先运行 CPU 小例子；只有用户要求且授权时才选择额外的设备或网络后端。\n\n`;
   } else if (row.guideId === "root") {
     body += `## 选择工作流\n\n按用户的数学问题、输入、计算规模和输出要求选择实际方法。先用已有 \`quantum_practices\` Tool 的 search/get 查询方法，返回结果包含本地叶子 Skill；直接加载该方法 Skill。所有入口见[覆盖表](../../../docs/integrations/UNITARYLAB_OPEN_COVERAGE.md)，参数与准备步骤见[共同运行说明](../../../examples/quantum-algorithms/README.md)。\n\n13 个分类索引保留为用户手动导航，不进入模型自动选择目录。无需按目录层级逐级加载。Qiskit/PennyLane 后端指南和开源迁移指南仍可自动选择。知识解释不自动开始计算；计算任务使用已有 Harness Tool，按实际依赖组合方法。\n\n`;
   } else {

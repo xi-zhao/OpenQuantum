@@ -35,6 +35,15 @@
 - id: tool-jobs
   name: '@deepseek-ai/dsh-tool-jobs'
 
+# Optional operator-selected Tool subsets; default full preserves existing sessions.
+# This scoped Host Plugin uses Harness restrictions without another Tool registry.
+- id: optional-tool-profiles
+  name: ./optional-tool-profiles.mjs
+  config:
+    qiskit_gym: !!js process.env.OPENQUANTUM_GYM_TOOL_PROFILE || 'full'
+    quantum_hardware: !!js process.env.OPENQUANTUM_HARDWARE_TOOL_PROFILE || 'full'
+    flagquantum: !!js process.env.OPENQUANTUM_FLAGQUANTUM_TOOL_PROFILE || 'full'
+
 - id: skill-filesystem
   name: '@deepseek-ai/dsh-skill-filesystem'
   config:
@@ -76,7 +85,7 @@
 
 # FieldQKit is a Python SDK rather than a native MCP Server. This thin trusted
 # bridge exposes only credential status and cloud-side read-only backend discovery. The
-# pinned package is materialized lazily by uv on the first discovery request;
+# pinned package is prepared explicitly with setup-paper-tools.mjs fieldqkit-hardware;
 # no QPU job submission tool is registered in this milestone.
 - id: mcp-fieldqkit
   name: ./credentialed-mcp-client.mjs
@@ -192,7 +201,7 @@
 # TyxonQ is a Python SDK rather than a stable upstream MCP server. This local
 # bridge exposes only bounded circuit and noise simulation. It is disabled by
 # default because the pinned scientific Python environment is large and is
-# materialized lazily by uv on the first tool call. No cloud token or hardware
+# prepared explicitly with setup-paper-tools.mjs tyxonq-workbench. No cloud token or hardware
 # submission Tool is registered.
 - id: mcp-tyxonq-local
   name: '@deepseek-ai/dsh-mcp-client'
@@ -215,7 +224,7 @@
 
 # Local pyqpanda_alg QUBO modeling and solving bridge. The MCP process starts
 # cheaply; its pinned scientific Python environment (pyqpanda3 is a native
-# wheel) is materialized lazily by uv on the first tool call. It only compiles
+# wheel) is prepared explicitly with setup-paper-tools.mjs qpanda-qubo. It only compiles
 # and solves bounded QUBO problems on the CPU simulator and registers no Origin
 # Quantum cloud token or hardware submission Tool.
 - id: mcp-qpanda-qubo

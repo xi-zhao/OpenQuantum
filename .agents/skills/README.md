@@ -23,7 +23,7 @@
 | `platform-diagnostics` | UI、Harness、Skill 和 Model 四个职责面的平台诊断 | Harness Tool、诊断 Validator 与 eval evidence |
 | `quantum-sdk-advisor` | 量子软件栈选型 | 无强制 Tool Provider |
 | `qiskit-circuit-workbench` | QASM/QPY 电路分析和转译工作流 | Qiskit MCP Server + Harness MCP Client |
-| `fieldqkit-hardware` | 国内量子云后端发现和凭据缺口解释 | FieldQKit 本地 MCP Server + Harness MCP Client；云端只读，首次发现可写本地 Python 环境 |
+| `fieldqkit-hardware` | 国内量子云后端发现和凭据缺口解释 | FieldQKit 本地 MCP Server + Harness MCP Client；不改变云状态；显式准备 Python 环境，发现可能写 SDK 缓存 |
 | `qdmi-device` | 已配置驱动的设备、门集与耦合只读查询 | QDMI 本地 MCP Server + Harness MCP Client；默认关闭，需显式准备驱动 |
 | `qpanda-qubo` | QUBO 编译、可选经典参照与本地 QAOA | QPanda 本地 MCP Server + Harness MCP Client |
 | `quantum-circuit-verification` | OpenQASM 2 电路等价性验证 | MQT QCEC 本地 MCP Server + Harness MCP Client |

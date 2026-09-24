@@ -1,0 +1,190 @@
+{
+  "verifiedAt": "2026-09-24T05:28:39.887Z",
+  "baseline": "9254ab2f73830d6f635433fd1ab21c7e017f8059",
+  "complete": true,
+  "inventory": {
+    "skills": 101,
+    "automaticSkills": 88,
+    "mcpConnections": 37,
+    "mcpTools": 196,
+    "configurableToolNames": 220
+  },
+  "decisions": {
+    "skills": {
+      "保留": 75,
+      "简化": 17,
+      "合并": 9,
+      "迁移": 0
+    },
+    "mcp": {
+      "保留": 8,
+      "简化": 3,
+      "合并": 0,
+      "迁移": 26
+    },
+    "tools": {
+      "保留": 81,
+      "简化": 106,
+      "合并": 4,
+      "迁移": 29
+    }
+  },
+  "migration": {
+    "sharedPythonMigrated": 19,
+    "bespokePythonMigrated": 7,
+    "hamiltonianReused": true,
+    "preparedIds": [
+      "clifft-sampling",
+      "compact-optimization",
+      "cqlib-kernel",
+      "deltakit-qec",
+      "dynamiqs-dynamics",
+      "flow-vqe",
+      "graphix-mbqc",
+      "hamiltonian-simulation",
+      "ldpc-decoding",
+      "mitiq-error-mitigation",
+      "openqarp-excited-states",
+      "oqupy-dynamics",
+      "paulie-algebra",
+      "pyzx-optimization",
+      "qbraid-conversion",
+      "qcut-knitting",
+      "sqd-chemistry",
+      "symmer-tapering",
+      "tenpy-ground-state",
+      "tjm-dynamics",
+      "fieldqkit-hardware",
+      "qpanda-qubo",
+      "quantum-circuit-verification",
+      "qec-memory-experiment",
+      "fatqat-workbench",
+      "tyxonq-workbench",
+      "quantum-information-audit"
+    ],
+    "legacyEnvironmentDirectoryPreserved": true,
+    "failedSetupInvalidatesMarker": true
+  },
+  "optionalProfiles": {
+    "qiskit_gym": {
+      "training": 32,
+      "synthesis": 17,
+      "conversion": 2
+    },
+    "quantum_hardware": {
+      "devices": 11,
+      "jobs": 32,
+      "chemistry": 39,
+      "search": 43,
+      "verification": 35
+    },
+    "flagquantum": {
+      "compile": 15,
+      "simulate": 11,
+      "train": 12
+    }
+  },
+  "algorithms": {
+    "workflowCount": 49,
+    "numericalTestGroups": 12,
+    "minimalVerified": [
+      "hhl",
+      "qft",
+      "multiplexer"
+    ],
+    "optionalFailuresVerified": [
+      "qsvt_qlsa",
+      "molecular_dmrg"
+    ],
+    "groupAdded": "pennylane",
+    "groupRetainedByMinimalSetup": true,
+    "dependencyGroups": [
+      "gradients",
+      "pennylane",
+      "chemistry",
+      "tensor"
+    ],
+    "fullEvidenceSha256": "11b25dc8754544e53784732c9a2c15acccabd762336a8752e6c578eb6446b613"
+  },
+  "validation": {
+    "migration-contracts": {
+      "sha256": "9bae5917d1949d3e75359a5e3dcafcaf1a1cac42f58a67317f4d94ec66348ad0",
+      "summaries": [
+        "ℹ tests 81",
+        "ℹ pass 81",
+        "ℹ fail 0",
+        "ℹ skipped 0"
+      ]
+    },
+    "numerical-live": {
+      "sha256": "09400028e85479abf04a5f96c10f40b219c42b614dd202925d259bc95c96f15c",
+      "summaries": [
+        "ℹ tests 29",
+        "ℹ pass 26",
+        "ℹ fail 0",
+        "ℹ skipped 3"
+      ]
+    },
+    "upgrade-live": {
+      "sha256": "6f8c095827713ec77659d81ba8fce2460947f23c3927375f61f9e6e5ab077d58",
+      "summaries": [
+        "ℹ tests 3",
+        "ℹ pass 3",
+        "ℹ fail 0",
+        "ℹ skipped 0"
+      ]
+    },
+    "harness-live": {
+      "sha256": "40342aba6e5efff5e62f2c44dc328c790916fa695663968669218510acec4cec",
+      "summaries": [
+        "ℹ tests 3",
+        "ℹ pass 3",
+        "ℹ fail 0",
+        "ℹ skipped 0"
+      ]
+    },
+    "complete-check": {
+      "sha256": "696c0b647077754b1b0b272de6ce1dcca1021dcaf23b2402afd7544671d4d139",
+      "summaries": [
+        "ℹ tests 6",
+        "ℹ pass 6",
+        "ℹ fail 0",
+        "ℹ skipped 0",
+        "ℹ tests 355",
+        "ℹ pass 282",
+        "ℹ fail 0",
+        "ℹ skipped 73",
+        "ℹ tests 119",
+        "ℹ pass 119",
+        "ℹ fail 0",
+        "ℹ skipped 0",
+        "ℹ tests 35",
+        "ℹ pass 35",
+        "ℹ fail 0",
+        "ℹ skipped 0",
+        "ℹ tests 106",
+        "ℹ pass 105",
+        "ℹ fail 0",
+        "ℹ skipped 1",
+        "ℹ tests 3",
+        "ℹ pass 3",
+        "ℹ fail 0",
+        "ℹ skipped 0"
+      ]
+    }
+  },
+  "sourceSha256": {
+    "src/lib/prepared-python.mjs": "1e9716d3a1f90acfc7858a794ac968d141b23fe0152823c263c6bdbb50e43ba4",
+    "src/lib/bounded-science-mcp.mjs": "0552fea82ca88d127c97378bc978cdd09d1e09ab1a630e7ffc33dfe689056fbe",
+    "scripts/setup-paper-tools.mjs": "b035e655fc288ba6e1e7d77c422e51f2141e139028edc55e152cfdf071575745",
+    "scripts/setup-open-algorithm-examples.mjs": "42da27ad61522ca5afe731c94f2c77150bbe6f8e4d3c5db89c1710945e87d56f",
+    "runtime/openquantum/agent-presets/openquantum/optional-tool-profiles.mjs": "45f6ad45b1e071fbc696ac253a16e977dab296407231d03b67a56aff51b91caf",
+    "examples/quantum-algorithms/run.py": "9b323523b4202e86ef464f10743abaa48a7a6d79818ec06521f2c94aa468feda",
+    "examples/quantum-algorithms/uv.lock": "585bb8da25a31ca525cddbf5bea4ab8a813c42f9ce8ece97b85314adade5713c"
+  },
+  "externalModelTested": false,
+  "cloudJobsSubmitted": false,
+  "hardwareTested": false,
+  "scientificAcceptance": "unchanged; not evaluated by this governance",
+  "platform": "macOS arm64 CPU; Windows/Linux scientific SDK execution not claimed"
+}

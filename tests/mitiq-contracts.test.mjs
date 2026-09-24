@@ -6,6 +6,7 @@ import test from "node:test";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 import { readDeclaredMcpToolContract } from "../scripts/lib/capability-tool-contract.mjs";
+import { preparePythonFixture } from "./helpers/prepared-python.mjs";
 import { definition } from "../.agents/skills/mitiq-error-mitigation/mcp/contracts.mjs";
 
 const name = "run_mitiq_experiment";
@@ -58,10 +59,11 @@ test("Mitiq MCP policy, annotations, provenance, failure, cancellation and isola
   });\n`;
   await writeFile(path.join(sandbox, "uv"), worker);
   await chmod(path.join(sandbox, "uv"), 0o755);
+  const prepared = await preparePythonFixture({ root, sandbox, id: "mitiq-error-mitigation", executable: path.join(sandbox, "uv") });
   const client = new Client({ name: "mitiq-contract-test", version: "1" }, { capabilities: {} });
   t.after(async () => { await client.close(); await rm(sandbox, { recursive: true, force: true }); });
   await client.connect(new StdioClientTransport({ command: process.execPath, args: [path.join(root, ".agents/skills/mitiq-error-mitigation/mcp/server.mjs")],
-    env: { ...process.env, PATH: `${sandbox}${path.delimiter}${process.env.PATH}`, OPENAI_API_KEY: "mitiq-contract-secret-sentinel" } }));
+    env: { ...process.env, ...prepared, PATH: `${sandbox}${path.delimiter}${process.env.PATH}`, OPENAI_API_KEY: "mitiq-contract-secret-sentinel" } }));
   const listed = (await client.listTools()).tools;
   assert.deepEqual(listed.map(tool => tool.name), declared.map(tool => tool.name));
   assert.equal(declared[0].effect, "workspace-write");

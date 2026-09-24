@@ -6,6 +6,7 @@ import test from "node:test";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 import { readDeclaredMcpToolContract } from "../scripts/lib/capability-tool-contract.mjs";
+import { preparePythonFixture } from "./helpers/prepared-python.mjs";
 import { INTEROP_TOOLS } from "./fixtures/interop.mjs";
 
 function sample(schema) {
@@ -53,7 +54,7 @@ for (const c of INTEROP_TOOLS) {
     await client.connect(new StdioClientTransport({ command: process.execPath,
       args: [path.join(project, ".agents/skills", c.id, "mcp/server.mjs")], cwd: project,
       env: { ...process.env, PATH: sandbox + path.delimiter + process.env.PATH,
-        OPENAI_API_KEY: "interop-test-sentinel", OPENQUANTUM_CLIENT_SECRET: "interop-qdmi-sentinel" } }));
+        OPENQUANTUM_PYTHON_ENV_ROOT: path.join(sandbox, "python-envs"), OPENAI_API_KEY: "interop-test-sentinel", OPENQUANTUM_CLIENT_SECRET: "interop-qdmi-sentinel" } }));
     const tools = (await client.listTools()).tools;
     assert.deepEqual(tools.map(x => x.name), declared.map(x => x.name));
     const listed = tools.find(x => x.name === c.tool);
@@ -67,6 +68,7 @@ for (const c of INTEROP_TOOLS) {
     }
     await mkdir(path.dirname(executable), { recursive: true });
     await writeFile(executable, worker); await chmod(executable, 0o755);
+    if (c.id !== "qdmi-device") await preparePythonFixture({ root, sandbox, id: c.id, executable });
     assert.notEqual((await call()).isError, true);
     const env = JSON.parse(await readFile(envFile, "utf8"));
     assert.equal(env.OPENAI_API_KEY, undefined); assert.equal(env.OPENQUANTUM_CLIENT_SECRET, undefined);

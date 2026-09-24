@@ -15,7 +15,7 @@ npm run capability:mitiq:live
 需要 Node.js 24+ 和 uv。依赖固定于能力目录的 `uv.lock`，安装到
 `.openquantum/python-envs/mitiq-error-mitigation`，Python 3.12；不会修改全局解释器或其他能力环境。
 当前锁包含 Mitiq 1.1.0、Cirq 1.6.1、NumPy 2.2.6、SciPy 1.17.1。
-首次 Tool 调用也会由 uv 准备环境，因此完整调用声明为 `workspace-write`，可访问包源下载依赖。
+计算前须运行上述 setup；缺失或旧锁环境返回准备提示，Tool 不下载或安装依赖。SDK 缓存仍可写入，保留 `workspace-write`。
 数值计算不访问云 API、不接收路径/代码/凭据、不提交 QPU 任务。
 
 默认 OpenQuantum Preset 开启 `mitiq_local`，设置中心显示“Mitiq 误差缓解”。运行中的 Host 需要重启加载
@@ -88,3 +88,5 @@ GPL-3.0-only，并携带完整 LICENSE 与 NOTICE；根目录的 MIT 声明不�
 按实际组合方式履行相应源码提供等义务；本次本地接入不构成对所有未来发行形态的兼容性判断。
 参见 [GNU FAQ](https://www.gnu.org/licenses/gpl-faq.html.en#MereAggregation) 和
 [第三方声明](../../THIRD_PARTY_NOTICES.md)。
+
+当前环境准备、旧环境复用与失败恢复统一见[本地计算环境准备](LOCAL_ENVIRONMENTS.md)。

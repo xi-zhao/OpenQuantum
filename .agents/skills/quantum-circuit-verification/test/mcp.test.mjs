@@ -1,3 +1,4 @@
+import { preparePythonFixture } from "../../../../tests/helpers/prepared-python.mjs";
 import assert from "node:assert/strict";
 import { chmod, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
@@ -50,12 +51,14 @@ if (envelope.action !== "verify") throw new Error("Unexpected bridge action");
 `,
   );
   await chmod(uvPath, 0o755);
+  const prepared = await preparePythonFixture({ root: projectRoot, sandbox: temporary, id: "quantum-circuit-verification", executable: uvPath });
   transport = new StdioClientTransport({
     command: process.execPath,
     args: [serverPath],
     cwd: projectRoot,
     env: {
       ...process.env,
+      ...prepared,
       PATH: `${temporary}${path.delimiter}${process.env.PATH ?? ""}`,
     },
   });

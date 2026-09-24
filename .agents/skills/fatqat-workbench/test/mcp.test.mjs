@@ -1,3 +1,4 @@
+import { preparePythonFixture } from "../../../../tests/helpers/prepared-python.mjs";
 import assert from "node:assert/strict";
 import { chmod, mkdtemp, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
@@ -30,10 +31,11 @@ else {
 }
 `);
   await chmod(script, 0o755);
+  const prepared = await preparePythonFixture({ root: root, sandbox: temporary, id: "fatqat-workbench", executable: script });
   client = new Client({ name: "fatqat-contract-test", version: "1" }, { capabilities: {} });
   await client.connect(new StdioClientTransport({
     command: process.execPath, args: [path.join(root, ".agents/skills/fatqat-workbench/mcp/server.mjs")], cwd: root,
-    env: { ...process.env, PATH: `${temporary}${path.delimiter}${process.env.PATH}`, FATQAT_TEST_SECRET: "must-stay-in-host" },
+    env: { ...process.env, ...prepared, PATH: `${temporary}${path.delimiter}${process.env.PATH}`, FATQAT_TEST_SECRET: "must-stay-in-host" },
   }));
 });
 after(async () => { await client?.close(); await rm(temporary, { recursive: true, force: true }); });

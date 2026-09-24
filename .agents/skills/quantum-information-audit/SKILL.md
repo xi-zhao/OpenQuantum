@@ -18,7 +18,7 @@ description: 使用固定版本 toqito 对用户提供的多体密度矩阵做�
 
 1. 确认矩阵总维数等于 `subsystemDimensions` 的乘积。
 2. 明确 `transposeSubsystems` 采用从 0 开始的子系统索引，并且是非空真子集。
-3. 调用 `audit_density_matrix`。复矩阵用 `matrixReal` 和可选的 `matrixImag` 表示；未给虚部时按全零处理。主动作加载固定环境并返回 `packageVersion`，首次调用可能下载依赖并写入工作区环境，无需单独检查运行时。
+3. 调用 `audit_density_matrix`。复矩阵用 `matrixReal` 和可选的 `matrixImag` 表示；未给虚部时按全零处理。主动作加载固定环境并返回 `packageVersion`，依赖须显式准备；缺失或旧锁环境返回准备命令，不在 Tool 中安装。
 4. 分栏报告实际包版本及：
    - toqito 事实；
    - 独立 Validator observations；
@@ -42,3 +42,7 @@ description: 使用固定版本 toqito 对用户提供的多体密度矩阵做�
 Bell 态 `|Phi+><Phi+|` 使用 `subsystemDimensions=[2,2]`、`transposeSubsystems=[0]`。预期纯度为 1、部分转置最小本征值为 -0.5、negativity 为 0.5；仍需以实际工具事实和 Validator observations 为准。
 
 密度矩阵维数、子系统分解与待转置子区由调用方选择，适配器不额外设置人工规模上限。具体资源配置见[本地计算说明](../../../docs/integrations/SCALABLE_BRIDGES.md)。
+
+## 依赖准备
+
+运行前执行 `node scripts/setup-paper-tools.mjs quantum-information-audit`。缺失、旧锁和已安装环境的处理见[共同准备说明](../../../docs/integrations/LOCAL_ENVIRONMENTS.md)；Tool 不自动安装或升级依赖。

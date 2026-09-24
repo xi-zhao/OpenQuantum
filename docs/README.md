@@ -101,7 +101,7 @@ Eval 和 Benchmark 属于开发、CI 和发布证据，不进入用户运行链�
 
 | 路径 | 最小组合 | 黄金样板 | 关键验证 |
 | --- | --- | --- | --- |
-| L0：知识与方法 | Skill | [`quantum-sdk-advisor`](../.agents/skills/quantum-sdk-advisor/SKILL.md) | `npm run capability:conformance` + 真实 `skill.list` 测试 |
+| L0：知识与方法 | Skill | [`quantum-sdk-advisor`](../.agents/skills/quantum-sdk-advisor/SKILL.md) | `npm run capability:conformance` + 真实 `skills/list` 测试 |
 | L1：Agent 执行动作 | Tool + Tool Provider；Skill 仅在确有工作流价值时增加 | [`quantum-ground-state`](../.agents/skills/quantum-ground-state/) | capability test + `npm run capability:contracts:test` + Registry 测试 |
 | L2：可审计 observations | L1 + schema + Validator + eval evidence | [`platform-diagnostics`](../.agents/skills/platform-diagnostics/) | capability/eval + Validator 失败路径测试 |
 | L3：可回放科学验收 | L2 + Profile + Result Package + Materializer/重读 + central Builder 接入 | [`quantum-ground-state`](../.agents/skills/quantum-ground-state/) | contract + materialization + Result Commit/Session replay 测试 |
@@ -185,3 +185,5 @@ Skill 与 Tool 在概念和发行版 policy 中都相互独立：Skill-only、To
 - **未来计划**：Roadmap，只表示意图，不证明已经实现。
 
 如果规范与实现不一致，应说明架构偏差及其影响，不静默选择其中一份作为一致事实。仅在完成当前任务确实需要且已有授权时修复；纯诊断只给出证据和建议。
+
+扩展治理的当前条目见[全量治理清单](architecture/EXTENSION_GOVERNANCE.md)，使用规则见[环境准备](integrations/LOCAL_ENVIRONMENTS.md)与[相近能力选择](integrations/CAPABILITY_SELECTION.md)。

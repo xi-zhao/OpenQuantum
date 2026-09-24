@@ -18,16 +18,20 @@ description: 审计 OpenQuantum 的 UI、Harness、Skill 和 Model 四层是否�
 
 ## 检查流程
 
+先确定本次诊断范围和已有运行证据，只执行与问题相关的检查。未执行项按原 schema 标为
+`not_checked` 并写明原因；局部修改不要求自动启动全部探针或外部模型请求。
+
 1. UI：确认 UI 只通过 Harness transport adapter 发出会话命令，不直接调用 Model Provider 或 MCP Server。
 2. Harness 配置：运行 `npm run harness:config`，确认组合能展开且默认模型属于 OpenQuantum route。
-3. Harness Host：检查 Host 根页面、`session.list` 和 `llm.models` Harness RPC；未启动时记录 `not_checked`，
+3. Harness Host：检查 Host 根页面、`session/list` 和 `session/modelCatalog` Harness RPC；未启动时记录 `not_checked`，
    不把静态配置当成运行证据。
-4. Skill：通过 Harness `skill.list` 或当前成功加载的 Skill 上下文证明项目 Skill 可发现。
-5. Model：运行 `npm run models:probe -- --provider openquantum-public`，分别验证目录、文本生成和
+4. Skill：通过 Harness `skills/list` 或当前成功加载的 Skill 上下文证明项目 Skill 可发现。
+5. Model：只有本次任务要求且已授权外部模型请求时，运行 `npm run models:probe -- --provider openquantum-public`，分别验证目录、文本生成和
    强制函数调用。不要把“接口返回 200”替代工具调用验收。
-6. 端到端：有 Provider 凭据时运行 `npm run e2e:quantum-harness -- --provider openquantum-public`，确认
+6. 端到端：仅在任务要求科研链路验收且已授权外部模型请求时，运行 `npm run e2e:quantum-harness -- --provider openquantum-public`，确认
    真实模型在 Harness Session 中产生 QGS `tool/call` / `tool/result`，且 Result Commit 与中央 Acceptance
    通过复核。绕过 Harness MCP Client 直接调用 MCP Server SDK 不能替代这条证据。
+   本地连通/协议问题可使用仓库已有的 Harness 本地模型 fixture；标记其为协议证据，不能替代真实 Provider 或科学验收。已有凭据不等于获准请求外部模型，不切换现有模型路由。
 7. 可选路由：私有网关不可达时记录 `warn` 或可选检查项 `fail`；只要它不是当前任务的硬性要求，
    不得覆盖公开主路由的有效证据。
 8. 按 schema 生成 JSON 报告，不得写入 API Key、Authorization header、完整 Prompt 或敏感科研数据。

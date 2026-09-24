@@ -1,3 +1,4 @@
+import { preparePythonFixture } from "../../../../tests/helpers/prepared-python.mjs";
 import assert from "node:assert/strict";
 import { chmod, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
@@ -56,12 +57,14 @@ if (envelope.action !== "solve") throw new Error("Unexpected bridge action");
 `,
   );
   await chmod(uvPath, 0o755);
+  const prepared = await preparePythonFixture({ root: projectRoot, sandbox: temporary, id: "qpanda-qubo", executable: uvPath });
   transport = new StdioClientTransport({
     command: process.execPath,
     args: [serverPath],
     cwd: projectRoot,
     env: {
       ...process.env,
+      ...prepared,
       PATH: `${temporary}${path.delimiter}${process.env.PATH ?? ""}`,
     },
   });
@@ -77,7 +80,7 @@ after(async () => {
   await rm(temporary, { recursive: true, force: true });
 });
 
-test("QPanda QUBO MCP declares bounded non-destructive lazy-environment tools", async () => {
+test("QPanda QUBO MCP declares bounded non-destructive prepared-environment tools", async () => {
   const tools = (await client.listTools()).tools;
   assert.deepEqual(
     tools.map((tool) => tool.name),

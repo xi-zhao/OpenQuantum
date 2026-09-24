@@ -34,7 +34,7 @@ Pauli 字符串最左字符是 q0。终端测量基变换按理想操作处理�
 ## 执行与解释
 
 1. 明确需要评估哪种噪声、观测量和方法；使用 Tool schema 检查支持范围。
-2. 若连接未开启，告知设置位置；不要绕过用户禁用状态。首次调用会准备锁定环境并写缓存，按 `workspace-write` 处理。
+2. 若连接未开启，告知设置位置；不要绕过用户禁用状态。计算前显式准备锁定环境；计算仍可能写缓存，按 `workspace-write` 处理。
 3. 读取 `idealExpectation`、`exactNoisyExpectation`、每次重复的原始/缓解估计及两臂成本。
 4. 用 `statistics` 报告经验 bias、variance、RMSE 和跨重复均值标准误。`rmseDifference<0` 仅表示本次有限样本比较改善。
 5. 保留越界估计与变差结果，不挑选成功 seed；shots 相同不代表门数、深度、运行时间相同。
@@ -47,3 +47,7 @@ Pauli 字符串最左字符是 q0。终端测量基变换按理想操作处理�
 本能力目录按 GPL-3.0-only 许可；详见 [NOTICE](NOTICE) 和 [LICENSE](LICENSE)。
 
 电路量子位数、门数、采样预算和重复次数由调用方选择，适配器不额外设置人工规模上限。具体资源配置见[本地计算说明](../../../docs/integrations/SCALABLE_BRIDGES.md)。
+
+## 依赖准备
+
+运行前执行 `node scripts/setup-paper-tools.mjs mitiq-error-mitigation`。缺失、旧锁和已安装环境的处理见[共同准备说明](../../../docs/integrations/LOCAL_ENVIRONMENTS.md)；Tool 不自动安装或升级依赖。

@@ -2,13 +2,13 @@
 
 量子依赖核验日期：2026-09-22；平台升级记录日期：2026-09-10；原模型验收交接记录日期：2026-09-05。此页只记录工作交接；架构以[文档总入口](docs/README.md)为准，执行事实以 Harness Session event log 为准，科学状态以 Acceptance Report 为准。
 
-## 扩展治理第一批（2026-09-24）
+## 全量扩展治理（2026-09-24）
 
-- [全量治理清单](docs/architecture/EXTENSION_GOVERNANCE.md)覆盖 101 个 Skill、37 个 MCP 连接和 220 个可配置注册的 Tool 名称，逐项区分保留、简化、合并、迁移，并记录理由与兼容影响。Tool 数量包含跨平台和按需连接，不表示同时在线；当前关闭的 `web_fetch` 另列。
-- 第一批保留全部 Skill 名称，将 13 个纯分类索引改为手动调用，88 项继续自动可选；总入口、分类页和参考检索指向实际方法。
-- 四套重复 MCP 协议测试合并为公共 helper，保留 18 个计算动作的合同检查与四组领域边界测试；运行时 Server、算法和 Tool schema 未改。
-- 完整 `npm run check` 通过；实际 Harness 验证了用户手动调用、模型目录与拒绝行为、HHL/QSVT 执行及 Session 重读。模型为本地协议替身，未做外部模型或硬件验收。
-- 依赖准备分离、示例依赖分组、诊断接口更新和交叉入口整合仍为后续批次；没有据此变更已有部署或发布安装包。
+- [治理清单](docs/architecture/EXTENSION_GOVERNANCE.md)中的 B1/B2/B3 已完成，逐项覆盖 101 个 Skill、37 个 MCP 连接和 220 个可配置 Tool 名称，保留全部原名。88 个 Skill 自动可选，13 个分类索引手动调用；数量不等于同时在线。
+- 26 个 Python 计算桥接迁到[显式准备](docs/integrations/LOCAL_ENVIRONMENTS.md)，复用旧环境位置；Hamiltonian 共用同一检查，失败准备不保留成功标记。Julia、C 驱动与上游服务保留各自边界。
+- 49 个算法示例延迟导入并按依赖组准备，无参数命令仍完整安装。最小环境、按组补装、已有组保留、49 方法数值回归及实际 Harness 通过。
+- 相近入口共用[选择说明](docs/integrations/CAPABILITY_SELECTION.md)；Gym、硬件和 FlagQuantum 的专业工具范围由 Harness 原生 scoped restriction 实现，默认 full 与关闭开关兼容旧配置。诊断 Skill 已更新当前 RPC 并按授权范围选择探针。
+- 完整 `npm run check`、迁移协议/取消、真实 SDK 与 Harness 会话重读通过；[证据摘要](docs/integrations/evidence/extension-governance-2026-09-24.json)记录数量与范围。未修改科学阈值，未做外部模型、云任务或硬件验收，未发布安装包。
 
 ## UnitaryLab 开源适配（2026-09-24）
 

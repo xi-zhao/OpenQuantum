@@ -8,7 +8,7 @@ description: 使用 OpenQuantum 通过 Harness MCP Client 注册的 TyxonQ Tool 
 ## 工作边界
 
 这个 Skill 负责组织 TyxonQ 工作流，真正的计算由 `tyxonq_local` MCP Server 暴露并经 Harness MCP Client 注册的 Tool 完成。
-当前只开放本地、无凭据的电路仿真；首次调用可能由 `uv` 下载固定依赖，实际计算不连接 TyxonQ
+当前只开放本地、无凭据的电路仿真；依赖须显式准备，实际计算不连接 TyxonQ
 云端 Provider：
 
 - 量子位数由 numQubits 指定；
@@ -53,3 +53,7 @@ description: 使用 OpenQuantum 通过 Harness MCP Client 注册的 TyxonQ Tool 
 3. 主要概率/频数与结构检查；
 4. TyxonQ 版本；
 5. `scientificValidation=not_evaluated` 及仍需独立验证的限制。
+
+## 依赖准备
+
+运行前执行 `node scripts/setup-paper-tools.mjs tyxonq-workbench`。缺失、旧锁和已安装环境的处理见[共同准备说明](../../../docs/integrations/LOCAL_ENVIRONMENTS.md)；Tool 不自动安装或升级依赖。

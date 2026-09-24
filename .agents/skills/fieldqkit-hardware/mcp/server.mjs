@@ -12,13 +12,12 @@ import {
   ListToolsRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
 
+import { preparedPythonLaunch } from "../../../../src/lib/prepared-python.mjs";
+
 const executeFile = promisify(execFile);
 const skillRoot = fileURLToPath(new URL("..", import.meta.url));
 const bridgePath = path.join(skillRoot, "mcp", "bridge.py");
 const FIELDQKIT_VERSION = "0.1.2";
-const FIELDQKIT_REVISION = "3ef2493d3f840b6a924af66a0c3f1b79cfce3fa0";
-const FIELDQKIT_REQUIREMENT =
-  `fieldqkit @ git+https://github.com/FieldQuantum/fieldqkit.git@${FIELDQKIT_REVISION}`;
 const BRIDGE_ENVIRONMENT_NAMES = Object.freeze([
   "HOME",
   "HTTP_PROXY",
@@ -48,7 +47,7 @@ const PROVIDERS = Object.freeze([
 ]);
 const PROVIDER_IDS = new Set(PROVIDERS.map((provider) => provider.id));
 
-const lazyEnvironmentAnnotations = Object.freeze({
+const localExecutionAnnotations = Object.freeze({
   readOnlyHint: false,
   destructiveHint: false,
   idempotentHint: true,
@@ -100,7 +99,7 @@ const TOOLS = Object.freeze([
     name: "discover_fieldqkit_backends",
     title: "Discover FieldQKit quantum backends",
     description:
-      "Use pinned fieldqkit to query backends that satisfy a minimum qubit count. It never mutates cloud state, but may materialize the pinned local Python environment and contact the selected provider.",
+      "Use pinned fieldqkit to query backends that satisfy a minimum qubit count. It never mutates cloud state, but requires explicit dependency setup and may contact the selected provider.",
     inputSchema: {
       type: "object",
       properties: {
@@ -115,7 +114,7 @@ const TOOLS = Object.freeze([
       required: ["provider", "numQubits"],
       additionalProperties: false,
     },
-    annotations: lazyEnvironmentAnnotations,
+    annotations: localExecutionAnnotations,
   },
 ]);
 
@@ -206,18 +205,14 @@ async function discover(argumentsValue) {
       `${provider.displayName} 尚未配置 ${provider.credentialRef}；请在 OpenQuantum 设置中心保存凭据`,
     );
   }
+  const launch = await preparedPythonLaunch({ skillRoot, args: [bridgePath] });
   let stdout;
   const env = bridgeEnvironment(provider);
   try {
     ({ stdout } = await executeFile(
-      "uv",
+      launch.command,
       [
-        "run",
-        "--quiet",
-        "--with",
-        FIELDQKIT_REQUIREMENT,
-        "python",
-        bridgePath,
+        ...launch.args,
         request.provider,
         String(request.numQubits),
         JSON.stringify(request.preferredHardware),
@@ -230,7 +225,7 @@ async function discover(argumentsValue) {
     ));
   } catch (error) {
     if (error && typeof error === "object" && error.code === "ENOENT") {
-      throw new Error("未找到 uv；请先安装 uv 后再使用 FieldQKit 后端发现");
+      throw new Error("Prepared Python missing; run node scripts/setup-paper-tools.mjs fieldqkit-hardware");
     }
     const stderr =
       error && typeof error === "object" && typeof error.stderr === "string"
@@ -254,7 +249,7 @@ const server = new Server(
   {
     capabilities: { tools: {} },
     instructions:
-      "Non-destructive FieldQKit integration. Inspect setup before discovering a cloud backend. Discovery may materialize the pinned local Python environment and query a selected provider, but never submits or validates a quantum job.",
+      "Non-destructive FieldQKit integration. Inspect setup before discovering a cloud backend. Discovery requires explicit dependency setup and may query a selected provider, but never submits or validates a quantum job.",
   },
 );
 

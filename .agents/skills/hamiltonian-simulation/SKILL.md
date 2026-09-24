@@ -5,6 +5,8 @@ description: 使用开源 Qiskit 对实 Pauli 哈密顿量构建 Trotter-Suzuki 
 
 # 哈密顿量演化
 
+相近入口、后端准备与位序差异按[共同选择说明](../../../docs/integrations/CAPABILITY_SELECTION.md)判断。
+
 用于时间无关 Hermitian 哈密顿量的门模型演化、产品公式选择和精度/深度比较。
 先确认实系数 Pauli 项、时间与单位（hbar=1）、初态、方法和步数。
 Pauli 最左字符与返回态矢量的最高位均是 q0，电路 wire q[0] 对应同一物理量子位。
