@@ -53,8 +53,14 @@ test("Harness discovers all 66 open workflows and executes SDK examples through 
     { id: "open-hhl", command: run("hhl") },
     { id: "open-qsvt", command: run("qsvt_qlsa") },
     { id: "open-invalid", command: run("unknown_algorithm") },
-  ].map(call => ({ ...call, input: { command: call.command, workdir: root, timeoutMs: 30000, description: "Read and run the open quantum workflow" } }));
+  ].map(call => ({ ...call, name: toolName, input: { command: call.command, workdir: root, timeoutMs: 30000, description: "Read and run the open quantum workflow" } }));
+  fixtureCalls.unshift(
+    { id: "open-leaf-load", name: "skill", input: { name: "quantum-hhl" } },
+    { id: "open-category-reject", name: "skill", input: { name: "quantum-guide-algorithms" } },
+  );
   let registeredTool;
+  let manualNavigationReceived = false;
+  const registeredToolNames = new Set();
   let child;
   const deliveredResults = [];
   const model = createServer(async (request, response) => {
@@ -62,13 +68,15 @@ test("Harness discovers all 66 open workflows and executes SDK examples through 
     for await (const chunk of request) chunks.push(chunk);
     const body = JSON.parse(Buffer.concat(chunks).toString());
     registeredTool ??= body.tools?.find(tool => tool.function?.name === toolName);
+    for (const tool of body.tools ?? []) registeredToolNames.add(tool.function.name);
+    manualNavigationReceived ||= JSON.stringify(body.messages).includes("分类导航：保留用户显式调用");
     deliveredResults.push(...(body.messages ?? []).filter(message => message.role === "tool"));
     const completed = new Set(deliveredResults.map(message => message.tool_call_id));
     const next = fixtureCalls.find(call => !completed.has(call.id));
     const initial = Boolean(next);
     const delta = next ? {
       role: "assistant",
-      tool_calls: [{ index: 0, id: next.id, type: "function", function: { name: toolName, arguments: JSON.stringify(next.input) } }],
+      tool_calls: [{ index: 0, id: next.id, type: "function", function: { name: next.name, arguments: JSON.stringify(next.input) } }],
     } : { role: "assistant", content: "Open SDK workflows complete; scientificValidation=not_evaluated." };
     response.writeHead(200, { "content-type": "text/event-stream" });
     for (const choice of [
@@ -134,11 +142,13 @@ test("Harness discovers all 66 open workflows and executes SDK examples through 
   await rpc("session/create", { sessionId, cwd: root, agentPreset: "openquantum" });
   const skills = await rpc("skills/list", { sessionId });
   for (const row of coverage.guides) {
-    assert.ok(skills.skills.some(skill => skill.name === row.skill && skill.modelInvocable), `Missing native Skill: ${row.skill}`);
+    const skill = skills.skills.find(skill => skill.name === row.skill);
+    assert.ok(skill, `Existing user-visible Skill must be preserved: ${row.skill}`);
+    assert.equal(skill.modelInvocable, row.invocation !== "manual", `${row.skill}: wrong automatic selection policy`);
   }
   await rpc("session/prompt", {
     sessionId, mode: "queue",
-    content: [{ type: "text", text: "Read the local HHL Skill, run HHL and QSVT through the existing shell Tool, and report the actual invalid-algorithm failure." }],
+    content: [{ type: "text", text: "/quantum-guide-algorithms Read the local HHL Skill, run HHL and QSVT through the existing shell Tool, and report the actual invalid-algorithm failure." }],
   });
   const history = await waitFor(async () => {
     const snapshot = await harnessSessionSnapshot(base, cookie, sessionId, 200);
@@ -147,6 +157,13 @@ test("Harness discovers all 66 open workflows and executes SDK examples through 
   assert.ok(registeredTool, "real Harness request must include the registered Tool");
   assert.equal(registeredTool.function.parameters.properties.command.type, "string");
   const events = history.records.map(entry => entry.event);
+  assert.ok(manualNavigationReceived, "Explicit user invocation must still inject the category instructions");
+  const catalogNames = events.filter(event => event.type === "user/message" && event.data.source?.kind === "skill-catalog")
+    .flatMap(event => event.data.source.entries.map(entry => entry.name));
+  assert.ok(catalogNames.includes("quantum-hhl"));
+  for (const row of coverage.guides.filter(row => row.invocation === "manual")) {
+    assert.ok(!catalogNames.includes(row.skill), `${row.skill}: manual navigation must not clutter the model catalog`);
+  }
   const evidence = [];
   for (const call of fixtureCalls) {
     const called = events.find(event => event.type === "tool/call" && JSON.stringify(event).includes(call.id));
@@ -155,7 +172,13 @@ test("Harness discovers all 66 open workflows and executes SDK examples through 
     assert.ok(result, `${call.id}: missing persisted result`);
     const block = result.data.message.content.find(item => item.type === "tool-result");
     const content = block.content.map(item => item.text ?? "").join("\n");
-    if (call.id === "open-invalid") {
+    if (call.id === "open-category-reject") {
+      assert.equal(block.isError, true);
+      assert.match(content, /not available for model invocation/);
+    } else if (call.id === "open-leaf-load") {
+      assert.equal(block.isError, false);
+      assert.match(content, /--algorithm hhl/);
+    } else if (call.id === "open-invalid") {
       assert.match(content, /Unknown algorithm unknown_algorithm/);
       assert.match(content, /exit code: 2/);
     } else if (call.id === "open-skill-read") {
@@ -183,6 +206,8 @@ test("Harness discovers all 66 open workflows and executes SDK examples through 
     verifiedAt: new Date().toISOString(), harness: "0.1.5-rc.1",
     model: "local protocol fixture", externalModelTested: false,
     skillCount: coverage.guides.length, skills: coverage.guides.map(row => row.skill),
+    automaticSkills: coverage.guides.filter(row => row.invocation !== "manual").length,
+    manualNavigationReceived, registeredToolNames: [...registeredToolNames].sort(),
     tool: toolName, sessionId, events: evidence,
   }, null, 2) + "\n");
 });

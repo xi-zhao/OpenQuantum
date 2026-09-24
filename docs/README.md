@@ -166,6 +166,7 @@ Skill 与 Tool 在概念和发行版 policy 中都相互独立：Skill-only、To
 
 - [领域语言](../CONTEXT.md)：唯一的产品与科研术语表，不放实现细节。
 - [架构审计与证据基线](architecture/ARCHITECTURE_AUDIT.md)：日期化结论、证据、风险和待办。
+- [扩展治理清单（2026-09-24）](architecture/EXTENSION_GOVERNANCE.md)：101 个 Skill、37 个 MCP 连接及全部配置 Tool 的逐项建议、兼容影响与分批状态。
 - [ADR-002：Harness 原生扩展优先](architecture/ADR-002-HARNESS-NATIVE-EXTENSIONS-FIRST.md)：当前有效。
 - [ADR-003：Desktop 作为 Host Adapter](architecture/ADR-003-DESKTOP-AS-HARNESS-HOST-ADAPTER.md)：当前有效。
 - [ADR-001：知情审批默认拒绝](architecture/ADR-001-INFORMED-APPROVAL-FAIL-CLOSED.md)：历史记录，已由 Harness 原生审批机制取代，不是当前实现契约。

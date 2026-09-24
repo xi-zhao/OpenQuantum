@@ -81,6 +81,11 @@ Session/workspace，不进入默认离线 CI，也不能用 Mock 结果替代。
 其中只有 `SKILL.md` 会被 Harness Skill provider 当作 Skill 加载。其余目录只是为了让同一科研纵切的
 源码便于审查而共置；Harness 不会因此自动启动程序、连接 MCP Server、注册 Tool 或执行 Validator。
 
+纯分类索引可以使用 Harness 原生 `disable-model-invocation: true` 与 `user-invocable: true`，
+保留手动入口并让模型直接选择实际方法。调整已有入口时验证用户显式调用与模型目录，保留旧名称；
+不要为分类导航创建 Tool。接入现有 SDK、增强本地算法、外部模型验收分别声明范围和验证，
+不把三者默认捆绑为一次接入的完成条件。现有条目的分批建议见[治理清单](docs/architecture/EXTENSION_GOVERNANCE.md)。
+
 保持作用域小而明确。`SKILL.md` 可以指导 Agent，但以下规则不能只写在 Prompt 中：
 
 - 数值阈值、单位和适用范围；

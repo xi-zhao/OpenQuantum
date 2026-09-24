@@ -14,6 +14,7 @@ const root = fileURLToPath(new URL("../", import.meta.url));
 test("all pinned guides and algorithm modules map to distinct native workflows", () => {
   assert.equal(coverage.guides.length, 66);
   assert.equal(new Set(coverage.guides.map(row => row.skill)).size, 66);
+  assert.equal(coverage.guides.filter(row => row.invocation === "manual").length, 13);
   const algorithms = coverage.guides.filter(row => row.algorithm);
   assert.equal(algorithms.length, 49);
   assert.equal(new Set(algorithms.map(row => row.algorithm)).size, 49);
@@ -27,9 +28,13 @@ test("all pinned guides and algorithm modules map to distinct native workflows",
     const frontmatter = parse(content.split("---")[1]);
     assert.equal(frontmatter.name, row.skill);
     assert.ok(frontmatter.description.length > 20);
+    assert.ok(["manual", "automatic"].includes(row.invocation));
+    assert.equal(frontmatter["disable-model-invocation"] === true, row.invocation === "manual");
+    assert.notEqual(frontmatter["user-invocable"], false, "Existing user invocation must remain available");
     const declaration = policy.packages.find(entry => entry.id === row.skill);
     assert.equal(declaration.level, row.skill === "quantum-algorithms" ? "L1" : "L0");
     if (row.algorithm) {
+      assert.equal(row.invocation, "automatic", "Computational methods must remain directly selectable");
       assert.ok(existsSync(path.join(root, row.exampleFile)));
       assert.ok(content.includes(`--algorithm ${row.algorithm}`));
     }
@@ -49,6 +54,7 @@ test("each reference lookup points to its adapted execution or routing Skill", (
     assert.ok(text.includes(`Adapted native Skill: ${row.skill}.`));
     if (row.algorithm) assert.ok(text.includes(`--algorithm ${row.algorithm}`));
     assert.match(text, /reference material only/);
+    if (row.invocation === "manual") assert.match(text, /For automatic tasks use quantum-algorithms/);
   }
 });
 

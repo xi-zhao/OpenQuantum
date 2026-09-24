@@ -1,84 +1,9 @@
 import assert from "node:assert/strict";
-import { chmod, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
-import { tmpdir } from "node:os";
-import path from "node:path";
 import test from "node:test";
-import { Client } from "@modelcontextprotocol/sdk/client/index.js";
-import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
-import { readDeclaredMcpToolContract } from "../scripts/lib/capability-tool-contract.mjs";
 import { UNITARY_NEXT_TOOLS } from "./fixtures/unitary-next.mjs";
+import { registerScienceProtocolTests } from "./helpers/science-protocol.mjs";
 
-// A protocol fixture, deliberately not a scientific calculation or scientific evidence.
-function sample(schema) {
-  if (schema.anyOf) return sample(schema.anyOf[0]);
-  if (Object.hasOwn(schema, "const")) return schema.const;
-  if (schema.enum) return schema.enum[0];
-  if (schema.type === "object") return Object.fromEntries((schema.required ?? []).map((key) => [key, sample(schema.properties[key])]));
-  if (schema.type === "array") return Array.from({ length: Math.max(1, schema.minItems ?? 1) }, () => sample(schema.items));
-  if (schema.type === "number" || schema.type === "integer") return Math.max(0, schema.minimum ?? 0);
-  if (schema.type === "boolean") return false;
-  if (schema.pattern === "^[01]+$") return "0";
-  if (["^[IXYZ]+$", "^[IXYZ]*$"].includes(schema.pattern)) return "I".repeat(schema.minLength ?? 1);
-  return "x".repeat(Math.max(1, schema.minLength ?? 1));
-}
-for (const capability of UNITARY_NEXT_TOOLS) {
-  test(`${capability.id}: policy, strict MCP schema, provenance, errors and worker environment`, async (t) => {
-    const root = process.cwd();
-    const { definition } = await import(`../.agents/skills/${capability.id}/mcp/contracts.mjs`);
-    const declared = readDeclaredMcpToolContract({ projectRoot: root, capabilityId: capability.id, serverName: capability.server });
-    const sandbox = await mkdtemp(path.join(tmpdir(), "oq-unitary-contract-"));
-    const modeFile = path.join(sandbox, "mode");
-    const envFile = path.join(sandbox, "worker-env.json");
-    await writeFile(modeFile, "valid");
-    const executable = `#!${process.execPath}\nconst fs=require('node:fs');let input='';process.stdin.on('data',c=>input+=c);process.stdin.on('end',()=>{
-      fs.writeFileSync(${JSON.stringify(envFile)},JSON.stringify(process.env));
-      const mode=fs.readFileSync(${JSON.stringify(modeFile)},'utf8');
-      if(mode==='fail'){process.stderr.write('controlled worker failure');process.exit(2);}
-      if(mode==='wait'){setInterval(()=>{},1000);return;}
-      const r=JSON.parse(input);const output={schemaVersion:'1.0',source:r.source,input:r.input,inputSha256:r.inputSha256,dependencyLockSha256:r.dependencyLockSha256,result:${JSON.stringify(sample(definition.tool.outputSchema.properties.result))},scientificValidation:'not_evaluated',limitations:['Protocol fixture only']};
-      if(mode==='hash')output.inputSha256='0'.repeat(64);
-      if(mode==='input')output.input={};
-      if(mode==='schema')output.scientificValidation='passed';
-      process.stdout.write(JSON.stringify(output));
-    });\n`;
-    for (const name of ["uv", "julia"]) { const file = path.join(sandbox, name); await writeFile(file, executable); await chmod(file, 0o755); }
-    const client = new Client({ name: "unitary-protocol-fixture", version: "1" }, { capabilities: {} });
-    t.after(async () => { await client.close(); await rm(sandbox, { recursive: true, force: true }); });
-    await client.connect(new StdioClientTransport({ command: process.execPath, args: [path.join(root, ".agents/skills", capability.id, "mcp/server.mjs")], cwd: root,
-      env: { ...process.env, PATH: `${sandbox}${path.delimiter}${process.env.PATH}`, OPENAI_API_KEY: "unitary-contract-secret-sentinel" } }));
-    const listed = (await client.listTools()).tools;
-    assert.deepEqual(listed.map(tool => tool.name), declared.map(tool => tool.name));
-    assert.equal(listed.length, 1);
-    assert.equal(declared[0].effect, "workspace-write");
-    assert.equal(listed[0].annotations.readOnlyHint, false);
-    assert.equal(listed[0].inputSchema.additionalProperties, false);
-    const call = (args = capability.input, options) => client.callTool({ name: listed[0].name, arguments: args }, undefined, options);
-    assert.equal((await call()).isError, undefined);
-    const childEnv = JSON.parse(await readFile(envFile, "utf8"));
-    assert.equal(childEnv.OPENAI_API_KEY, undefined);
-    assert.equal((await call({ ...capability.input, execute: "arbitrary code" })).isError, true);
-    assert.equal((await client.callTool({ name: "unknown", arguments: {} })).isError, true);
-    for (const mode of ["hash", "input", "schema", "fail"]) {
-      await writeFile(modeFile, mode);
-      assert.equal((await call()).isError, true, mode);
-    }
-    if (capability.id === "pyzx-optimization") {
-      await writeFile(modeFile, "wait");
-      const controller = new AbortController();
-      const pending = call(capability.input, { signal: controller.signal }).catch(error => error);
-      await new Promise(resolve => setTimeout(resolve, 200));
-      assert.match(JSON.stringify(await call()), /busy/);
-      controller.abort(); await pending;
-      await writeFile(modeFile, "valid");
-      let recovered;
-      for (let tries = 0; tries < 20; tries++) {
-        recovered = await call(); if (!recovered.isError) break;
-        await new Promise(resolve => setTimeout(resolve, 50));
-      }
-      assert.equal(recovered.isError, undefined, "Cancellation must free the active worker slot");
-    }
-  });
-}
+registerScienceProtocolTests(UNITARY_NEXT_TOOLS, { cancellationId: "pyzx-optimization" });
 
 test("Unitary next tools reject out-of-scope circuits, inconsistent sectors and invalid generators", async () => {
   const bad = {

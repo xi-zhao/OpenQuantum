@@ -5,6 +5,10 @@ unitarylab_algorithms 的全部 39 个算法模块，以及指南独有的本征
 另外 17 份指南负责分类、后端选择和开源迁移。完整对应关系见
 [覆盖表](../../docs/integrations/UNITARYLAB_OPEN_COVERAGE.md)。
 
+66 项中有 53 项可由 Agent 自动选择；13 个纯分类索引保留原名称及用户显式调用，
+例如 `/quantum-guide-algorithms`。自动任务通过 `quantum-algorithms` 或直接选择具体方法，
+无需逐级加载分类目录。详情见[治理清单](../../docs/architecture/EXTENSION_GOVERNANCE.md)。
+
 Agent 加载对应的原生 Skill，通过已有 Harness `bash` / `pwsh` Tool 执行这些代码。
 这里没有新的服务、Tool Provider 或运行时。示例可以直接运行，也可以作为用户任务代码的起点；
 它们是明确输入和方法的开源实现，不是原库所有 Python 参数及闭源后端功能的兼容层。

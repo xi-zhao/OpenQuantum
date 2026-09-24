@@ -4,6 +4,10 @@
 开源示例**，逐项覆盖 unitarylab_algorithms 的 **39 个算法模块**。其余 17 项是分类、后端和开源迁移指南。
 参考原文仍可通过 `quantum_practices` 检索，每项返回对应的本地使用路径。
 
+66 项中，53 个方法与入口可由模型自动选择；13 个分类索引仅保留用户显式调用，
+例如 `/quantum-guide-algorithms`。所有原名称、来源映射与 49 个计算入口保留。
+这一导航调整及其兼容验证见[扩展治理清单](../architecture/EXTENSION_GOVERNANCE.md)。
+
 Agent 根据任务加载 Skill，经 Harness 已有 `bash` / `pwsh` Tool 使用开源 SDK 执行代码并返回结果。
 新增工作流不增加服务或运行时；执行依赖和 L1 检查集中于 `quantum-algorithms` 能力，其他适配 Skill
 是复用这些工具的 L0 指令，不重复登记执行合同。

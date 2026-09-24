@@ -10,12 +10,14 @@ const check = process.argv.includes("--check");
 assert.equal(manifest.guides.length, 66);
 assert.equal(manifest.guides.filter(row => row.algorithm).length, 49);
 assert.equal(manifest.guides.filter(row => row.sourceAlgorithm).length, 39);
+assert.equal(manifest.guides.filter(row => row.invocation === "manual").length, 13);
+assert.ok(manifest.guides.every(row => ["manual", "automatic"].includes(row.invocation)));
 assert.deepEqual(manifest.guides.map(row => [row.guideId, row.guideSha256]), reference.guides.map(row => [row.id, row.sha256]));
 assert.equal(new Set(manifest.guides.map(row => row.skill)).size, 66);
 
 function children(row) {
-  if (row.guideId === "root") return manifest.guides.filter(item => ["algorithms", "simulators"].includes(item.guideId));
   const candidates = manifest.guides.filter(item => item.guideId.startsWith(`${row.guideId}/`));
+  if (row.invocation === "manual") return candidates.filter(item => item.invocation !== "manual");
   return candidates.filter(item => !candidates.some(parent => item.guideId.startsWith(`${parent.guideId}/`)));
 }
 
@@ -26,8 +28,9 @@ function render(row) {
     : row.kind === "open-migration"
       ? "把 UnitaryLab 电路、算法和模拟器调用迁移到 Qiskit、PennyLane、quimb、PySCF 开源后端。"
       : `为 ${row.guideId === "root" ? "量子计算任务" : row.guideId} 选择完整的开源算法工作流，路由到本地可发现的专用 Skills。`;
-  let body = `---\nname: ${row.skill}\ndescription: ${JSON.stringify(description)}\n---\n\n# ${title}\n\n`;
+  let body = `---\nname: ${row.skill}\ndescription: ${JSON.stringify(description)}\n${row.invocation === "manual" ? "disable-model-invocation: true\nuser-invocable: true\n" : ""}---\n\n# ${title}\n\n`;
   body += `本地开源适配。上游指南 ID：\`${row.guideId}\`。\n\n`;
+  if (row.invocation === "manual") body += "分类导航：保留用户显式调用；自动任务直接选择叶子方法 Skill，或使用 `quantum-algorithms` 查找。\n\n";
   if (row.algorithm) {
     body += `## 适用方法\n\n${row.scope}\n\n`;
     body += `## 使用步骤\n\n1. 先识别用户是在询问原理、要求运行，还是要求生成/修改代码；仅解释时不自动开始计算。\n`;
@@ -49,6 +52,8 @@ function render(row) {
   } else if (row.guideId === "simulators/qiskit" || row.guideId === "simulators/pennylane") {
     const isQiskit = row.guideId.endsWith("qiskit");
     body += `## 后端工作流\n\n阅读[共同运行说明](../../../examples/quantum-algorithms/README.md)，使用锁定的 ${isQiskit ? "Qiskit" : "PennyLane"} 环境。${isQiskit ? "现有 qiskit-circuit-workbench Skill 和 Qiskit 文档 Tool 可以继续复用。最小本地电路例子见 quantum-hadamard-transform、quantum-qpe。" : "最小可运行例子见 quantum-mottonen、quantum-qsvt-qlsa、quantum-pauli。"}\n\n根据问题加载一个对应算法 Skill，再通过已有 bash/pwsh Tool 执行开源任务代码。明确量子位顺序、shots 与解析态矢量的区别、后端和版本。先运行 CPU 小例子；只有用户要求且授权时才选择额外的设备或网络后端。\n\n`;
+  } else if (row.guideId === "root") {
+    body += `## 选择工作流\n\n按用户的数学问题、输入、计算规模和输出要求选择实际方法。先用已有 \`quantum_practices\` Tool 的 search/get 查询方法，返回结果包含本地叶子 Skill；直接加载该方法 Skill。所有入口见[覆盖表](../../../docs/integrations/UNITARYLAB_OPEN_COVERAGE.md)，参数与准备步骤见[共同运行说明](../../../examples/quantum-algorithms/README.md)。\n\n13 个分类索引保留为用户手动导航，不进入模型自动选择目录。无需按目录层级逐级加载。Qiskit/PennyLane 后端指南和开源迁移指南仍可自动选择。知识解释不自动开始计算；计算任务使用已有 Harness Tool，按实际依赖组合方法。\n\n`;
   } else {
     body += `## 选择工作流\n\n按用户的数学问题、输入表示、计算规模和需要的输出选择一个叶子 Skill。知识解释可直接使用原理；计算任务加载叶子 Skill，使用其中的开源实现和现有代码执行 Tool。无需为阅读指南启动额外服务。\n\n`;
     for (const child of children(row)) {
@@ -70,8 +75,8 @@ for (const row of manifest.guides) {
   }
 }
 
-const rows = manifest.guides.map(row => `| \`${row.guideId}\` | [${row.skill}](../../.agents/skills/${row.skill}/SKILL.md) | ${row.algorithm ? `\`${row.algorithm}\`` : row.kind === "open-migration" ? "开源迁移指引" : "分类/后端工作流"} | ${row.sourceAlgorithm ? `\`${row.sourceAlgorithm.path}\`` : "quantum-skills 独有指南"} |`);
-const table = `# UnitaryLab 开源适配覆盖表\n\n66 份上游指南逐项对应原生 Skill，其中 49 项算法工作流带可执行示例；覆盖原算法仓库的全部 39 个模块。其余 17 项是分类、后端或开源迁移指南。\n\n这张表说明工作流与模块覆盖，不表示兼容上游 Python API 的所有参数、优化器和后端。每项实际方法、范围和替换差异以 Skill 与 [coverage.json](../../examples/quantum-algorithms/coverage.json) 为准。\n\n| 上游指南 | 本地 Skill | 运行示例 | 上游算法模块 |\n| --- | --- | --- | --- |\n${rows.join("\n")}\n`;
+const rows = manifest.guides.map(row => `| \`${row.guideId}\` | [${row.skill}](../../.agents/skills/${row.skill}/SKILL.md) | ${row.algorithm ? `\`${row.algorithm}\`` : row.kind === "open-migration" ? "开源迁移指引" : row.invocation === "manual" ? "手动分类导航" : "自动可选的总入口/后端指南"} | ${row.sourceAlgorithm ? `\`${row.sourceAlgorithm.path}\`` : "quantum-skills 独有指南"} |`);
+const table = `# UnitaryLab 开源适配覆盖表\n\n66 份上游指南逐项对应原生 Skill，其中 49 项算法工作流带可执行示例；覆盖原算法仓库的全部 39 个模块。其余 17 项是分类、后端或开源迁移指南。13 个分类索引保留原名称和用户显式调用，不进入模型自动选择目录；53 个方法与入口继续自动可选。\n\n这张表说明工作流与模块覆盖，不表示兼容上游 Python API 的所有参数、优化器和后端。每项实际方法、范围和替换差异以 Skill 与 [coverage.json](../../examples/quantum-algorithms/coverage.json) 为准。\n\n| 上游指南 | 本地 Skill | 运行示例 | 上游算法模块 |\n| --- | --- | --- | --- |\n${rows.join("\n")}\n`;
 const tablePath = path.join(root, "docs/integrations/UNITARYLAB_OPEN_COVERAGE.md");
 if (check) assert.equal(await readFile(tablePath, "utf8"), table, "Outdated coverage table");
 else await writeFile(tablePath, table);
@@ -83,11 +88,11 @@ for (const [relativePath, prefix] of [["README.md", ".agents/skills/"], [".agent
   const heading = relativePath === "README.md" ? "##### 开源算法与后端工作流" : "### 开源算法与后端工作流";
   const catalog = manifest.guides.map(row => {
     const purpose = row.algorithm ? row.scope.split("；")[0].replaceAll("|", "\\|") : `${row.guideId} 分类、后端或迁移指引`;
-    const execution = row.algorithm ? `已有 Harness \`bash\` / \`pwsh\`；\`${row.algorithm}\` 开源示例` : "按任务组合已有 Skill 和通用 Tool";
+    const execution = row.invocation === "manual" ? "手动分类导航；自动任务直接选择方法 Skill" : row.algorithm ? `已有 Harness \`bash\` / \`pwsh\`；\`${row.algorithm}\` 开源示例` : "按任务组合已有 Skill 和通用 Tool";
     return `| [\`${row.skill}\`](${prefix}${row.skill}/SKILL.md) | ${purpose} | ${execution} |`;
   });
   const header = relativePath === "README.md" ? "| Skill | 研究方法与用途 | 执行入口 |" : "| Skill | 作用 | 依赖的执行模块 |";
-  const block = `${begin}\n${heading}\n\n66 个适配 Skill 共用现有执行工具；49 个算法示例覆盖原库的 39 个模块和指南新增方法。\n\n${header}\n| --- | --- | --- |\n${catalog.join("\n")}\n${end}`;
+  const block = `${begin}\n${heading}\n\n66 个适配 Skill 共用现有执行工具；49 个算法示例覆盖原库的 39 个模块和指南新增方法。13 个分类索引保留为手动导航，53 个方法与入口可由 Agent 自动选择。\n\n${header}\n| --- | --- | --- |\n${catalog.join("\n")}\n${end}`;
   if (markdown.includes(begin)) {
     const start = markdown.indexOf(begin);
     const stop = markdown.indexOf(end, start) + end.length;
