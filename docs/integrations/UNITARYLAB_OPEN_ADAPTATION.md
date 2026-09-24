@@ -1,10 +1,48 @@
 # UnitaryLab 内容与算法的开源适配
 
-OpenQuantum 将 MIT 参考内容与可执行算法分别接入。参考检索覆盖固定版本的 66 份指南；
-首批计算适配是 Trotter-Suzuki 与 qDrift 哈密顿量模拟，使用 Qiskit、NumPy 和 SciPy。
-这不表示接入整个 `unitarylab_algorithms` 库，也没有安装或执行 `unitarylab` 模拟器。
+固定版本的 **66 份 quantum-skills 指南已全部对应为原生 Skill**；其中 **49 项算法工作流带可运行
+开源示例**，逐项覆盖 unitarylab_algorithms 的 **39 个算法模块**。其余 17 项是分类、后端和开源迁移指南。
+参考原文仍可通过 `quantum_practices` 检索，每项返回对应的本地使用路径。
 
-## 用户可以做什么
+Agent 根据任务加载 Skill，经 Harness 已有 `bash` / `pwsh` Tool 使用开源 SDK 执行代码并返回结果。
+新增工作流不增加服务或运行时；执行依赖和 L1 检查集中于 `quantum-algorithms` 能力，其他适配 Skill
+是复用这些工具的 L0 指令，不重复登记执行合同。
+
+## 使用全部开源工作流
+
+```bash
+npm run capability:algorithms:setup
+```
+
+重启使用本仓库 Preset 的 Harness 后可直接提出任务，例如“用 HHL 解这个矩阵并检查残差”、
+“算 H₂/STO-3G 的 DMRG 能量并与 FCI 比较”或“运行二维热方程薛定谔化的网格收敛检查”。
+实际参数、JSON 输入、Windows 命令与复跑方式见[运行说明](../../examples/quantum-algorithms/README.md)；
+[覆盖表](UNITARYLAB_OPEN_COVERAGE.md)逐项列出全部 Skill、示例和上游模块。
+
+完整覆盖指指南和算法模块都有本地使用路径，**不表示原库全部 Python API、参数组合和闭源优化器兼容**。
+Cartan 用谱分解替换未开放的 Cartan-Lax；分子 DMRG 使用 PySCF + quimb，输出态可用开源 MPS/Isometry
+制备，未复制闭源 CVD。QSP/QSVT 使用实际相位综合和后选择电路；PDE 使用显式辅助寄存器的幺正
+薛定谔化，没有隐式经典回退。所有范围与替换差异见
+[`coverage.json`](../../examples/quantum-algorithms/coverage.json)和各 Skill。
+
+```bash
+npm run capability:algorithms:catalog
+npm run capability:algorithms:test
+npm run capability:algorithms:live
+```
+
+live 核验实际运行 49 个入口，包括复数态制备、有符号 HHL 与 RHS 范数、QSVT 多项式收敛、
+解析梯度、MPS/dense Strang、DMRG/独立 FCI 和 PDE 辅助网格收敛。真实 Harness 核对全部 66 个 Skill
+的发现，并读取 HHL Skill、经现有 shell Tool 执行 HHL/QSVT、接收预期错误和重读 Session event log。
+模型使用本地协议替身，未调用外部模型或硬件；结果保持 `scientificValidation=not_evaluated`。
+见[完整适配核验摘要](evidence/unitarylab-complete-open-2026-09-24.json)。
+
+依赖采用 Qiskit 2.5.2、Qiskit Algorithms 0.4.0、PennyLane 0.45.1、quimb 1.15.0、PySCF 2.14.0、
+NumPy 2.5.3 和 SciPy 1.18.1；完整 uv.lock、MIT 来源与变更说明随
+[示例目录](../../examples/quantum-algorithms/NOTICE)保存，不包含 UnitaryLab 模拟器依赖。
+桌面分发清单包含这些 Skill、示例和锁；源码接入不表示已发布新安装包。
+
+## 保留的固定 Hamiltonian 计算 Tool
 
 提供时间无关的实 Pauli 哈密顿量、演化时间与步数，调用 `simulate_hamiltonian`：
 
@@ -70,8 +108,8 @@ Pauli 最左字符对应 q0；Qiskit wire q[0] 仍是同一物理量子位，适
 | 组件 | 固定来源 | 本地使用 |
 | --- | --- | --- |
 | 参考检索器 | quantum-practices `572a24c9b5c9787caec98810351f5cb17c82250e`，MIT | 保留原始检索代码与版权 |
-| 参考指南 | quantum-skills `c5436bb120812ad903ac776f58df89b803ced48c`，MIT | 66 份指南作为只读数据，逐文件摘要；不批量激活为 Skills |
-| 算法序列 | unitarylab_algorithms `a8362e374da2ec2c68f582db645a7782e45bfc4b`，MIT | 适配 Trotter 的 Suzuki 递推、qDrift 的抽样公式 |
+| 参考指南 | quantum-skills `c5436bb120812ad903ac776f58df89b803ced48c`，MIT | 原文作为只读数据，逐文件摘要；另外生成 66 个开源适配 Skill |
+| 算法序列 | unitarylab_algorithms `a8362e374da2ec2c68f582db645a7782e45bfc4b`，MIT | 39 个模块逐项映射开源工作流；Trotter/qDrift 的固定 Tool 保留独立合同 |
 | 电路与数值后端 | Qiskit 2.5.2 / NumPy 2.5.3 / SciPy 1.18.1 | Apache-2.0 / BSD-3-Clause / BSD-3-Clause；完整依赖锁随源码 |
 
 原算法文件的路径与 SHA-256 见
@@ -112,4 +150,4 @@ npm run harness:config
 参考误差不是中央 Acceptance。qDrift 单次随机电路误差不是平均通道误差界，
 不承诺随单次步数单调下降；Trotter 步数与阶数也不自动保证用户目标误差。
 门数使用发出的 h/s/sdg/rz/cx 基础门集合，不含初态制备成本，不是具体硬件资源估计。
-HHL、QSVT、其他算法和 PDE 不在首批执行范围内；独立热方程原型的状态保持不变。
+HHL、QSVT、其他算法和 PDE 通过上述完整工作流使用；已有独立热方程原型保留为历史实验。

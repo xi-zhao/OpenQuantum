@@ -4,7 +4,9 @@
 
 ## UnitaryLab 开源适配（2026-09-24）
 
-- 参考库更新到固定 quantum-skills 的 66 份指南，保持只读资料边界，Trotter/qDrift 条目指向本地执行合同。
+- 固定 quantum-skills 的全部 66 份指南已对应原生 Skill；49 个可运行开源示例覆盖原算法库的全部 39 个模块和指南独有方法。
+  执行合同集中于 `quantum-algorithms` 能力，复用 Harness `bash` / `pwsh`；其余适配 Skill 不重复建立 Tool 或 MCP。
+- 原始参考库保持只读资料边界，全部条目指向本地适配路径；Cartan、DMRG/CVD 等实现差异逐项披露，未宣称原 Python API 全兼容。
 - 新增 `hamiltonian-simulation` Skill 与 `hamiltonian_local` 连接，使用 Qiskit/NumPy/SciPy 适配 MIT 算法序列。
   计算前显式 setup；计算调用不安装、不联网或写结果文件，不引入 UnitaryLab 模拟器依赖。
 - 数值、合同和本地协议替身驱动的 Harness 验证见[集成说明](docs/integrations/UNITARYLAB_OPEN_ADAPTATION.md)。

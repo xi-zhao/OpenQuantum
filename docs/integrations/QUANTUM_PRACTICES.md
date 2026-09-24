@@ -1,7 +1,8 @@
 # 量子算法参考检索
 
 OpenQuantum 默认 Preset 注册原生只读 Tool `quantum_practices`，为算法解释、方法比较、假设核对和实验设计提供
-66 份固定版本参考指南。它是 L1、Tool-only 能力；不会把这 66 份文档注册为活跃 Skill，也不执行其中的代码。
+66 份固定版本参考指南。检索器是 L1、Tool-only 能力；它不执行原文代码。对应的 66 个开源适配
+Skill 已独立注册，检索结果指向本地使用路径；原始资料仍作为外部参考保留。
 
 ## 使用
 
@@ -64,6 +65,6 @@ Harness 注册、调用、结果回传和 Session event log 重读。Harness 测
 一维热方程的计算方向另见[独立原型](../../experiments/schrodingerization-heat1d/README.md)，
 不计入这项知识检索能力的计算或验收结果。
 
-2026-09-24 更新包含 6 份新指南、4 份已改动指南，无删除。Trotter/qDrift 条目现在给出本地
-`hamiltonian-simulation` / `simulate_hamiltonian` 开源执行路线；参考 Tool 本身仍不执行计算。
+2026-09-24 更新包含 6 份新指南、4 份已改动指南，无删除。所有条目现在指向对应的本地原生 Skill，
+其中 49 项带开源算法示例；Trotter/qDrift 还保留 `simulate_hamiltonian` 固定合同入口。参考 Tool 本身仍不执行计算。
 上游安装命令和模拟器偏好不覆盖本地开源策略。新增计算与当前验证见[开源适配说明](UNITARYLAB_OPEN_ADAPTATION.md)。

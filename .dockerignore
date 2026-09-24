@@ -5,6 +5,8 @@
 .env.*
 !.env.example
 node_modules
+**/.venv
+**/__pycache__
 coverage
 results
 docs

@@ -1,0 +1,39 @@
+OpenQuantum open quantum algorithm workflows
+
+Upstream algorithm descriptions and mathematical workflows:
+  https://github.com/unitarylab/unitarylab_algorithms
+  revision a8362e374da2ec2c68f582db645a7782e45bfc4b, MIT
+  The original MIT license is retained in LICENSE (trailing whitespace normalized).
+
+Upstream Skills:
+  https://github.com/unitarylab/quantum-skills
+  revision c5436bb120812ad903ac776f58df89b803ced48c, MIT
+  License: ../../src/quantum-practices/upstream/quantum-skills-LICENSE
+  Original guide text remains in the fixed reference catalog, with per-file hashes.
+
+coverage.json records every upstream guide and every one of the 39 algorithm
+module paths and source hashes. The 66 native Skills are adapted operational
+instructions, not unmodified copies of the upstream execution policy.
+
+Local modifications:
+  Replaced UnitaryLab runtime dependencies with Qiskit, PennyLane, NumPy, SciPy,
+  Qiskit Algorithms, PySCF and quimb. Kept explicit circuits, oracles, finite-Fock
+  optical layers, binary code construction and the stated numerical methods.
+  CVQNN's optical layer follows the MIT CVSimulator/CVClassifier formulas; SciPy
+  finite-difference optimization replaces Torch autograd. The existing MIT
+  Trotter/qDrift adaptation is reused with explicit bit-order conversion.
+  The upstream closed Cartan-Lax optimizer is replaced by spectral SO(N) Cartan
+  factorization. Closed CVD is not copied; molecular states can be prepared with
+  open MPS/Isometry methods. See README.md and each coverage scope for differences.
+  No unitarylab or unitarylab_algorithms distribution is imported or installed.
+
+Direct runtime dependencies (transitive distributions are fixed in uv.lock):
+  Qiskit 2.5.2 — Apache-2.0
+  Qiskit Algorithms 0.4.0 — Apache-2.0
+  PennyLane 0.45.1 — Apache-2.0
+  quimb 1.15.0 — Apache-2.0
+  PySCF 2.14.0 — Apache-2.0
+  NumPy 2.5.3 — BSD-3-Clause
+  SciPy 1.18.1 — BSD-3-Clause
+
+No dependency wheels are vendored. Setup is explicit, separate from computation.

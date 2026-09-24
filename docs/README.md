@@ -147,7 +147,7 @@ Skill 与 Tool 在概念和发行版 policy 中都相互独立：Skill-only、To
 - [候选量子库接入与科学边界](integrations/CANDIDATE_LIBRARIES.md) · [实施计划与去重决策](integrations/CANDIDATE_INTEGRATION_PLAN.md)
 - [2026-09-22 量子库更新](releases/2026-09-22-quantum-upstream-update.md)：Compact、Clifft、Qiskit 更新，Graphix 迁移与隔离开发版回归。
 - [本地计算功能与资源配置](integrations/SCALABLE_BRIDGES.md)：全部本地计算适配的输入输出、可选参考、运行资源设置及补充核验记录。
-- [UnitaryLab 开源适配](integrations/UNITARYLAB_OPEN_ADAPTATION.md)：66 份参考指南、Trotter/qDrift 原生 Skill 与开源计算 Tool。
+- [UnitaryLab 开源适配](integrations/UNITARYLAB_OPEN_ADAPTATION.md)：66 个原生 Skill、49 个可运行开源示例，逐项覆盖 39 个上游算法模块；复用现有代码执行工具。
 - [量子算法参考检索](integrations/QUANTUM_PRACTICES.md)：固定 Quantum-Practices 资料、原生只读 Tool、中文查询和许可边界。
 - [项目首页](../README.md)：产品能力、已集成工具和快速开始。
 - [Skill 目录](../README.md#内置-skills)与 [MCP 服务目录](../README.md#mcp-服务目录)：逐项查看工作流、服务用途、默认开关与使用条件；[原生量子 Tools](../README.md#原生量子-tools)单独列出。

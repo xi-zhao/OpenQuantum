@@ -71,7 +71,7 @@ await mkdir(application, { recursive: true });
 await mkdir(payload, { recursive: true });
 // Only selected version-controlled product files can enter the installer.
 // In particular, no local .env, Harness home, caches or untracked experiments.
-const { stdout } = await promisify(execFile)("git", ["ls-files", "-z", "--", ".agents", "runtime", "src", "scripts", "packages", "docs", "public", "package.json", "package-lock.json", "LICENSE", "THIRD_PARTY_NOTICES.md"], { cwd: root, maxBuffer: 8 * 1024 * 1024 });
+const { stdout } = await promisify(execFile)("git", ["ls-files", "-z", "--", ".agents", "runtime", "src", "scripts", "packages", "docs", "public", "examples/quantum-algorithms", "package.json", "package-lock.json", "LICENSE", "THIRD_PARTY_NOTICES.md"], { cwd: root, maxBuffer: 8 * 1024 * 1024 });
 const files = new Set(stdout.split("\0").filter(Boolean));
 const { stdout: revision } = await promisify(execFile)("git", ["rev-parse", "HEAD"], { cwd: root });
 const { stdout: modifications } = await promisify(execFile)("git", ["status", "--porcelain", "--untracked-files=no"], { cwd: root });
