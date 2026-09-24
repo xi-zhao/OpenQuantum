@@ -16,6 +16,12 @@ Qiskit과 TyxonQ를 이용한 회로 시뮬레이션, PyZX 회로 최적화, Gra
 
 소스 `main`에는 QCut 게이트 분할과 기댓값 재구성, Compact 회로 최적화, OpenQARP VQD 들뜬상태 계산도 포함됩니다. 이 연결들은 기본으로 활성화되지만 의존성을 준비해야 합니다. cqlib-qml 각도 커널 QSVM과 FlagQuantum 회로 작업대는 기본으로 비활성화되어 필요할 때 켭니다. [적용 범위와 검증](../integrations/CANDIDATE_LIBRARIES.md)을 참고하세요.
 
+현재 소스에는 **Skill 101개**(자동 선택 88개, 수동 분류 색인 13개), **MCP 연결 37개**, **설정 가능한 Tool 이름 220개**가 있습니다. 이는 구성 목록이며 동시에 사용할 수 있는 도구 수는 아닙니다. 기존 이름은 유지하고 비슷한 기능의 선택 기준을 정리했습니다. [기능 선택 안내](../integrations/CAPABILITY_SELECTION.md)를 참고하세요.
+
+UnitaryLab의 **quantum-skills 가이드 66개**를 네이티브 Skill로 옮겼으며, **실행 가능한 예제 49개**가 원본 알고리즘 모듈 **39개**와 가이드의 추가 방법을 다룹니다. Qiskit, PennyLane, quimb, PySCF, NumPy/SciPy를 사용하며 비공개 UnitaryLab 런타임에 의존하지 않습니다. 전체 API 호환성을 뜻하지 않으며 구현 차이는 [대응표](../integrations/UNITARYLAB_OPEN_COVERAGE.md)에 공개되어 있습니다.
+
+Pauli Hamiltonian의 Trotter / qDrift 시뮬레이션과 함께 [qBraid Qiskit/Cirq 변환, Clifft 측정 및 원시 패리티 기록, QDMI의 구성된 C 드라이버 조회](../integrations/QUANTUM_INTEROP.md)를 지원합니다. QDMI 예제 드라이버의 데이터는 실제 온라인 QPU 상태가 아닙니다.
+
 각 기능의 의존성과 과학적 적용 범위는 개별적으로 정해집니다. 로컬 계산의 성공은 실제 하드웨어 성능을 입증하지 않으며, 도구 실행 완료가 곧 과학적 검증 통과를 의미하지도 않습니다.
 
 ## OpenQuantum을 선택하는 이유
@@ -32,9 +38,9 @@ Qiskit과 TyxonQ를 이용한 회로 시뮬레이션, PyZX 회로 최적화, Gra
 
 ### 데스크톱 설치 파일
 
-[GitHub Releases](https://github.com/xi-zhao/OpenQuantum/releases/latest)에서 Mac(Apple Silicon / Intel) 또는 Windows 설치 파일을 받으세요. Node.js와 uv가 포함된 서명되지 않은 테스트 빌드이며 소스 빌드가 필요하지 않습니다. [설치 안내](../DESKTOP_INSTALLERS.md)에 따라 앱을 실행한 뒤 모델을 설정하세요. 일부 Python 의존성은 최초 사용 시 다운로드하며 Quantum Learning 등은 별도 준비가 필요합니다.
+[GitHub Releases](https://github.com/xi-zhao/OpenQuantum/releases/latest)에서 Mac(Apple Silicon / Intel) 또는 Windows 설치 파일을 받으세요. Node.js와 uv가 포함된 서명되지 않은 테스트 빌드이며 소스 빌드가 필요하지 않습니다. [설치 안내](../DESKTOP_INSTALLERS.md)에 따라 앱을 실행한 뒤 모델을 설정하세요. 계산 구성 요소와 Quantum Learning의 의존성은 해당 버전의 준비 안내를 따르세요.
 
-[v0.5.1 설치 파일](../releases/v0.5.1.md)에는 이후 `main`에 추가된 위 기능과 [9월 22일 양자 라이브러리 업데이트](../releases/2026-09-22-quantum-upstream-update.md)가 포함되지 않습니다. 소스가 변경되어도 설치된 앱이 자동으로 업데이트되지는 않습니다.
+[v0.5.1 설치 파일](../releases/v0.5.1.md)에는 이후 `main`에 추가된 위 기능과 [9월 22일 양자 라이브러리 업데이트](../releases/2026-09-22-quantum-upstream-update.md)가 포함되지 않습니다. 소스가 변경되어도 설치된 앱이 자동으로 업데이트되지는 않습니다. 9월 24일 알고리즘·상호 운용 기능과 [확장 구성 정리](../architecture/EXTENSION_GOVERNANCE.md)도 소스 업데이트이며 v0.5.1에는 포함되지 않습니다.
 
 ### 소스로 실행
 
@@ -61,7 +67,17 @@ npm run dev
 npm run demo:quantum-ground-state
 ```
 
-모델 설정 후 다음과 같이 요청해 보세요. “FatQat으로 두 큐비트의 영 상태에서 Bell 상태를 준비하세요. q0에 H를 적용한 뒤 q0를 제어, q1을 표적으로 CX를 적용하고, 정확한 확률을 seed=7, 1024 shots의 측정 빈도와 비교하세요.” 이상적인 확률은 00과 11이 각각 50%입니다. 실제 도구 입력과 계산 결과를 확인하세요. 최초 사용 시 의존성을 다운로드할 수 있습니다.
+소스 버전에서 아래 FatQat 작업을 실행하기 전에 저장소 루트에서 환경을 명시적으로 준비하세요. 다운로드는 준비 단계에서 수행하며 계산 호출이 의존성을 자동 설치하지 않습니다.
+
+```bash
+node scripts/setup-paper-tools.mjs fatqat-workbench
+```
+
+알고리즘 예제는 `npm run capability:algorithms:setup -- --minimal`로 시작할 수 있습니다. 필요에 따라 `--group gradients`, `--group pennylane`, `--group tensor`, `--group chemistry`로 추가하며 기존 그룹은 유지합니다. 인자 없는 준비는 전체 의존성을 설치합니다. 전체 환경은 PySCF를 포함하므로 Windows에서는 WSL을 권장하며 수치 검증은 macOS CPU에서 수행했습니다. [실행 안내](../../examples/quantum-algorithms/README.md)를 참고하세요.
+
+소스 업데이트 후에는 사용하는 기능의 준비 명령을 다시 실행하고 워크벤치를 재시작한 뒤 새 세션을 여세요. 기존 Python 환경은 같은 위치에서 확인하고 동기화합니다. [환경 준비와 업그레이드](../integrations/LOCAL_ENVIRONMENTS.md).
+
+모델 설정 후 다음과 같이 요청해 보세요. “FatQat으로 두 큐비트의 영 상태에서 Bell 상태를 준비하세요. q0에 H를 적용한 뒤 q0를 제어, q1을 표적으로 CX를 적용하고, 정확한 확률을 seed=7, 1024 shots의 측정 빈도와 비교하세요.” 이상적인 확률은 00과 11이 각각 50%입니다. 실제 도구 입력과 계산 결과를 확인하세요.
 
 ### 데스크톱
 

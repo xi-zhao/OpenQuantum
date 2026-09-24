@@ -16,6 +16,12 @@ Qiskit・TyxonQ による回路シミュレーション、PyZX による回路�
 
 ソースの `main` には、QCut のゲート切断と期待値再構成、Compact の回路最適化、OpenQARP の VQD 励起状態計算も含まれます。これらの接続は標準で有効ですが、依存関係の準備が必要です。cqlib-qml の角度カーネル QSVM と FlagQuantum 回路ワークベンチは標準では無効で、必要に応じて有効化します。[適用範囲と検証](../integrations/CANDIDATE_LIBRARIES.md)をご覧ください。
 
+現在のソースには **101 個の Skill**（自動選択 88、手動の分類索引 13）、**37 個の MCP 接続**、**220 個の設定可能な Tool 名**があります。これらは構成上の一覧であり、同時に利用可能な数ではありません。既存の名前を維持し、類似する入口の選び方を整理しました。[能力の選択](../integrations/CAPABILITY_SELECTION.md)を参照してください。
+
+UnitaryLab の **quantum-skills の全 66 件のガイド**をネイティブ Skill に移植し、**49 個の実行可能な例**で上流の **39 個のアルゴリズムモジュール**とガイド固有の手法をカバーしています。Qiskit、PennyLane、quimb、PySCF、NumPy/SciPy を使用し、非公開の UnitaryLab ランタイムには依存しません。API 全体の互換性を意味するものではなく、置換による違いは[対応表](../integrations/UNITARYLAB_OPEN_COVERAGE.md)に記載しています。
+
+Pauli Hamiltonian の Trotter / qDrift シミュレーションに加え、[qBraid による Qiskit/Cirq 変換、Clifft の測定・生のパリティ記録、QDMI の設定済み C ドライバー照会](../integrations/QUANTUM_INTEROP.md)を利用できます。QDMI のサンプルドライバーはオンライン QPU の状態を示すものではありません。
+
 各機能には個別の依存関係と適用範囲があります。ローカル計算の成功は実機性能の証明ではなく、Tool の実行完了だけで科学的妥当性が保証されるわけでもありません。
 
 ## OpenQuantum を選ぶ理由
@@ -32,9 +38,9 @@ Qiskit・TyxonQ による回路シミュレーション、PyZX による回路�
 
 ### デスクトップ版のインストール
 
-[GitHub Releases](https://github.com/xi-zhao/OpenQuantum/releases/latest) から Mac（Apple Silicon / Intel）または Windows 用インストーラーをダウンロードできます。Node.js と uv を同梱した未署名のテストビルドで、ソースのビルドは不要です。[インストール手順](../DESKTOP_INSTALLERS.md)に従って起動し、モデルを設定してください。一部の Python 依存関係は初回にダウンロードされ、Quantum Learning などは別途準備が必要です。
+[GitHub Releases](https://github.com/xi-zhao/OpenQuantum/releases/latest) から Mac（Apple Silicon / Intel）または Windows 用インストーラーをダウンロードできます。Node.js と uv を同梱した未署名のテストビルドで、ソースのビルドは不要です。[インストール手順](../DESKTOP_INSTALLERS.md)に従って起動し、モデルを設定してください。計算コンポーネントと Quantum Learning の依存関係は、利用するバージョンの準備手順を確認してください。
 
-[v0.5.1 インストーラー](../releases/v0.5.1.md)には、その後 `main` に追加された上記の機能や [9 月 22 日の量子ライブラリ更新](../releases/2026-09-22-quantum-upstream-update.md)は含まれません。ソースの更新だけでインストール済みアプリが自動更新されることはありません。
+[v0.5.1 インストーラー](../releases/v0.5.1.md)には、その後 `main` に追加された上記の機能や [9 月 22 日の量子ライブラリ更新](../releases/2026-09-22-quantum-upstream-update.md)は含まれません。ソースの更新だけでインストール済みアプリが自動更新されることはありません。 9 月 24 日のアルゴリズム・相互運用機能と[拡張整理](../architecture/EXTENSION_GOVERNANCE.md)もソース版の更新で、v0.5.1 には含まれません。
 
 ### ソースから起動
 
@@ -61,7 +67,17 @@ npm run dev
 npm run demo:quantum-ground-state
 ```
 
-モデルの設定後は、例えば「FatQat で二量子ビットのゼロ状態から Bell 状態を作成してください。q0 に H、続いて q0 を制御、q1 を標的とする CX を適用し、厳密な確率と seed=7、1024 shots の測定頻度を比較してください」と依頼できます。理想確率は 00 と 11 がそれぞれ 50% です。実際の Tool 入力と計算結果を確認してください。初回は依存関係のダウンロードが発生する場合があります。
+ソース版で以下の FatQat タスクを実行する前に、リポジトリのルートで依存環境を明示的に準備してください。ダウンロードは準備時に行い、計算中に自動インストールはしません。
+
+```bash
+node scripts/setup-paper-tools.mjs fatqat-workbench
+```
+
+アルゴリズム例は `npm run capability:algorithms:setup -- --minimal` から始められます。必要に応じて `--group gradients`、`--group pennylane`、`--group tensor`、`--group chemistry` で追加でき、既存のグループは保持されます。引数なしの準備は全依存関係を対象とします。完全な環境には PySCF が含まれるため Windows では WSL を推奨し、数値検証の範囲は macOS CPU です。[実行手順](../../examples/quantum-algorithms/README.md)を参照してください。
+
+ソース更新後は使用する能力の準備コマンドを再実行し、ワークベンチを再起動して新しいセッションを開いてください。既存の Python 環境は同じ場所で検証・同期されます。[環境の準備と更新](../integrations/LOCAL_ENVIRONMENTS.md)。
+
+モデルの設定後は、例えば「FatQat で二量子ビットのゼロ状態から Bell 状態を作成してください。q0 に H、続いて q0 を制御、q1 を標的とする CX を適用し、厳密な確率と seed=7、1024 shots の測定頻度を比較してください」と依頼できます。理想確率は 00 と 11 がそれぞれ 50% です。実際の Tool 入力と計算結果を確認してください。
 
 ### デスクトップ
 

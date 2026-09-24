@@ -16,6 +16,12 @@ Simulez des circuits avec Qiskit et TyxonQ, optimisez-les avec PyZX, explorez le
 
 Le code de `main` comprend aussi la découpe de portes et la reconstruction de valeurs moyennes avec QCut, l’optimisation de circuits avec Compact et le calcul d’états excités par VQD avec OpenQARP. Ces connexions sont activées par défaut, mais leurs dépendances doivent être préparées. Le QSVM à noyau angulaire de cqlib-qml et l’environnement de circuits FlagQuantum restent désactivés jusqu’à leur activation explicite. Consultez le [périmètre et les vérifications](../integrations/CANDIDATE_LIBRARIES.md).
 
+L’inventaire actuel comprend **101 Skills** (88 sélectionnables par l’agent et 13 index manuels), **37 connexions MCP** et **220 noms de Tool configurables**. Ils ne sont pas tous disponibles simultanément. Les noms existants sont conservés et les critères de choix entre fonctions proches sont regroupés dans le [guide de sélection](../integrations/CAPABILITY_SELECTION.md).
+
+Les **66 guides quantum-skills** d’UnitaryLab ont une adaptation native ; **49 exemples exécutables** couvrent les **39 modules d’algorithmes d’origine** et des méthodes propres aux guides. Ils utilisent Qiskit, PennyLane, quimb, PySCF et NumPy/SciPy sans dépendre du runtime propriétaire d’UnitaryLab. Il ne s’agit pas d’une compatibilité complète des API : les différences figurent dans la [table de couverture](../integrations/UNITARYLAB_OPEN_COVERAGE.md).
+
+S’y ajoutent la simulation Trotter / qDrift de Hamiltoniens de Pauli, la [conversion Qiskit/Cirq avec qBraid, les mesures et parités brutes avec Clifft, ainsi que les requêtes QDMI vers un pilote C configuré](../integrations/QUANTUM_INTEROP.md). Les données du pilote d’exemple QDMI ne décrivent pas une QPU réelle en ligne.
+
 Chaque intégration possède ses dépendances et son domaine de validité scientifique. Un calcul local ne démontre pas les performances d’un dispositif réel. La fin d’un appel d’outil ne constitue pas, à elle seule, une validation scientifique.
 
 ## Pourquoi choisir OpenQuantum
@@ -32,9 +38,9 @@ Pour un usage local individuel, choisissez le programme d’installation ou l’
 
 ### Programme d’installation de bureau
 
-Téléchargez le programme pour Mac (Apple Silicon / Intel) ou Windows depuis [GitHub Releases](https://github.com/xi-zhao/OpenQuantum/releases/latest). Node.js et uv sont inclus : aucune compilation des sources n’est nécessaire. Il s’agit de versions de test non signées. Suivez le [guide d’installation](../DESKTOP_INSTALLERS.md), ouvrez l’application et configurez un modèle. Certaines dépendances Python sont téléchargées au premier usage ; Quantum Learning et les autres applications facultatives nécessitent une préparation distincte.
+Téléchargez le programme pour Mac (Apple Silicon / Intel) ou Windows depuis [GitHub Releases](https://github.com/xi-zhao/OpenQuantum/releases/latest). Node.js et uv sont inclus : aucune compilation des sources n’est nécessaire. Il s’agit de versions de test non signées. Suivez le [guide d’installation](../DESKTOP_INSTALLERS.md), ouvrez l’application et configurez un modèle. Consultez les prérequis des composants de calcul et de Quantum Learning pour la version choisie.
 
-Les [programmes d’installation v0.5.1](../releases/v0.5.1.md) ne contiennent pas les capacités ajoutées ensuite à `main` ni les [mises à jour des bibliothèques quantiques du 22 septembre](../releases/2026-09-22-quantum-upstream-update.md). Les changements des sources ne mettent pas automatiquement à jour l’application installée.
+Les [programmes d’installation v0.5.1](../releases/v0.5.1.md) ne contiennent pas les capacités ajoutées ensuite à `main` ni les [mises à jour des bibliothèques quantiques du 22 septembre](../releases/2026-09-22-quantum-upstream-update.md). Les changements des sources ne mettent pas automatiquement à jour l’application installée. Les adaptations d’algorithmes, l’interopérabilité et la [réorganisation des extensions](../architecture/EXTENSION_GOVERNANCE.md) du 24 septembre sont également des mises à jour des sources, absentes de v0.5.1.
 
 ### Exécuter depuis les sources
 
@@ -61,7 +67,17 @@ L’exemple local de référence pour un Hamiltonien fixé à deux qubits foncti
 npm run demo:quantum-ground-state
 ```
 
-Une fois le modèle configuré, essayez : « Avec FatQat, prépare un état de Bell à partir de deux qubits dans l’état zéro. Applique H à q0, puis CX avec q0 comme contrôle et q1 comme cible. Compare les probabilités exactes à 1024 échantillons avec seed=7. » Les probabilités idéales de 00 et 11 sont chacune de 50 %. Vérifiez les entrées de l’outil et les résultats du calcul. La première utilisation peut télécharger des dépendances.
+Avant d’exécuter la tâche FatQat ci-dessous depuis les sources, préparez explicitement son environnement à la racine du dépôt. Cette préparation peut télécharger des dépendances ; le calcul ne les installe pas automatiquement.
+
+```bash
+node scripts/setup-paper-tools.mjs fatqat-workbench
+```
+
+Pour les exemples d’algorithmes, commencez avec `npm run capability:algorithms:setup -- --minimal`. Ajoutez `--group gradients`, `--group pennylane`, `--group tensor` ou `--group chemistry` selon la méthode ; les groupes déjà installés sont conservés. Sans argument, la préparation reste complète. L’environnement complet comprend PySCF : WSL est recommandé sous Windows, et la vérification numérique a été réalisée sur CPU macOS. Voir les [instructions d’exécution](../../examples/quantum-algorithms/README.md).
+
+Après une mise à jour des sources, relancez la préparation des capacités utilisées, redémarrez le poste de travail et ouvrez une nouvelle session. Les environnements Python existants sont vérifiés et synchronisés sur place. [Préparation et mise à jour des environnements](../integrations/LOCAL_ENVIRONMENTS.md).
+
+Une fois le modèle configuré, essayez : « Avec FatQat, prépare un état de Bell à partir de deux qubits dans l’état zéro. Applique H à q0, puis CX avec q0 comme contrôle et q1 comme cible. Compare les probabilités exactes à 1024 échantillons avec seed=7. » Les probabilités idéales de 00 et 11 sont chacune de 50 %. Vérifiez les entrées de l’outil et les résultats du calcul.
 
 ### Application de bureau
 

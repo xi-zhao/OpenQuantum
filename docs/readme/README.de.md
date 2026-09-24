@@ -16,6 +16,12 @@ Qiskit und TyxonQ ermöglichen Schaltungssimulationen, PyZX die Optimierung, Gra
 
 Der Quellcode auf `main` enthält auch Gate-Cutting und die Rekonstruktion von Erwartungswerten mit QCut, Schaltungsoptimierung mit Compact und angeregte Zustände per VQD mit OpenQARP. Diese Verbindungen sind standardmäßig aktiviert; ihre Abhängigkeiten müssen vorbereitet werden. Das Winkelkernel-QSVM von cqlib-qml und die Schaltungswerkzeuge von FlagQuantum sind standardmäßig deaktiviert und werden bei Bedarf eingeschaltet. Siehe [Umfang und Prüfungen](../integrations/CANDIDATE_LIBRARIES.md).
 
+Der aktuelle Quellcode enthält **101 Skills** (88 automatisch auswählbar, 13 manuelle Kategorieindizes), **37 MCP-Verbindungen** und **220 konfigurierbare Tool-Namen**. Dies ist der Konfigurationsbestand, nicht die Zahl gleichzeitig verfügbarer Werkzeuge. Bestehende Namen bleiben erhalten; gemeinsame Auswahlregeln stehen im [Auswahlleitfaden](../integrations/CAPABILITY_SELECTION.md).
+
+Alle **66 quantum-skills-Anleitungen** von UnitaryLab sind als native Skills adaptiert. **49 ausführbare Beispiele** decken die **39 ursprünglichen Algorithmusmodule** und weitere Methoden aus den Anleitungen ab. Sie verwenden Qiskit, PennyLane, quimb, PySCF und NumPy/SciPy ohne proprietäre UnitaryLab-Laufzeit. Eine vollständige API-Kompatibilität wird damit nicht zugesagt; Unterschiede sind in der [Abdeckungstabelle](../integrations/UNITARYLAB_OPEN_COVERAGE.md) dokumentiert.
+
+Hinzu kommen Trotter-/qDrift-Simulationen von Pauli-Hamiltonoperatoren sowie [Qiskit/Cirq-Konvertierung mit qBraid, Messwerte und rohe Paritäten mit Clifft und QDMI-Abfragen über einen konfigurierten C-Treiber](../integrations/QUANTUM_INTEROP.md). Daten des QDMI-Beispieltreibers beschreiben keine tatsächlich erreichbare QPU.
+
 Jede Integration hat eigene Abhängigkeiten und einen begrenzten wissenschaftlichen Geltungsbereich. Eine lokale Berechnung belegt keine Leistung realer Hardware. Ein abgeschlossener Werkzeugaufruf bedeutet auch nicht automatisch eine bestandene wissenschaftliche Prüfung.
 
 ## Warum OpenQuantum
@@ -32,9 +38,9 @@ Für die lokale Nutzung durch eine einzelne Person stehen ein Desktop-Installati
 
 ### Desktop-Installationspaket
 
-Laden Sie das Paket für Mac (Apple Silicon / Intel) oder Windows von [GitHub Releases](https://github.com/xi-zhao/OpenQuantum/releases/latest) herunter. Node.js und uv sind enthalten; ein eigener Quellcode-Build ist nicht erforderlich. Es handelt sich um unsignierte Testversionen. Folgen Sie der [Installationsanleitung](../DESKTOP_INSTALLERS.md), öffnen Sie die Anwendung und konfigurieren Sie ein Modell. Einige Python-Abhängigkeiten werden beim ersten Aufruf heruntergeladen; Quantum Learning und andere optionale Anwendungen benötigen eine eigene Einrichtung.
+Laden Sie das Paket für Mac (Apple Silicon / Intel) oder Windows von [GitHub Releases](https://github.com/xi-zhao/OpenQuantum/releases/latest) herunter. Node.js und uv sind enthalten; ein eigener Quellcode-Build ist nicht erforderlich. Es handelt sich um unsignierte Testversionen. Folgen Sie der [Installationsanleitung](../DESKTOP_INSTALLERS.md), öffnen Sie die Anwendung und konfigurieren Sie ein Modell. Beachten Sie die Vorbereitungsschritte für Rechenkomponenten und Quantum Learning in der jeweiligen Version.
 
-Die [Installationspakete v0.5.1](../releases/v0.5.1.md) enthalten weder die später zu `main` hinzugefügten Fähigkeiten noch die [Updates der Quantenbibliotheken vom 22. September](../releases/2026-09-22-quantum-upstream-update.md). Änderungen am Quellcode aktualisieren eine installierte Anwendung nicht automatisch.
+Die [Installationspakete v0.5.1](../releases/v0.5.1.md) enthalten weder die später zu `main` hinzugefügten Fähigkeiten noch die [Updates der Quantenbibliotheken vom 22. September](../releases/2026-09-22-quantum-upstream-update.md). Änderungen am Quellcode aktualisieren eine installierte Anwendung nicht automatisch. Auch die Algorithmusanpassungen, Interoperabilitätsfunktionen und die [Neuordnung der Erweiterungen](../architecture/EXTENSION_GOVERNANCE.md) vom 24. September sind Quellcode-Updates und nicht in v0.5.1 enthalten.
 
 ### Aus dem Quellcode starten
 
@@ -61,7 +67,17 @@ Das lokale Referenzbeispiel für einen festen Hamiltonoperator mit zwei Qubits b
 npm run demo:quantum-ground-state
 ```
 
-Nach der Modellkonfiguration können Sie fragen: „Erzeuge mit FatQat einen Bell-Zustand aus zwei Qubits im Nullzustand. Wende H auf q0 an und anschließend CX mit q0 als Kontroll- und q1 als Zielqubit. Vergleiche die exakten Wahrscheinlichkeiten mit 1024 Messungen bei seed=7.“ Ideal sind 00 und 11 jeweils zu 50 % wahrscheinlich. Prüfen Sie die tatsächlichen Werkzeugeingaben und Rechenergebnisse. Beim ersten Aufruf können Abhängigkeiten heruntergeladen werden.
+Bereiten Sie vor der folgenden FatQat-Aufgabe aus dem Quellcode die Umgebung ausdrücklich im Repository-Hauptverzeichnis vor. Dabei können Abhängigkeiten heruntergeladen werden; der Rechenaufruf installiert sie nicht automatisch.
+
+```bash
+node scripts/setup-paper-tools.mjs fatqat-workbench
+```
+
+Beginnen Sie für Algorithmusbeispiele mit `npm run capability:algorithms:setup -- --minimal`. Ergänzen Sie je nach Methode `--group gradients`, `--group pennylane`, `--group tensor` oder `--group chemistry`; vorhandene Gruppen bleiben erhalten. Ohne Argumente werden weiterhin alle Abhängigkeiten vorbereitet. Die vollständige Umgebung enthält PySCF; unter Windows wird WSL empfohlen. Numerische Prüfungen wurden auf macOS mit CPU durchgeführt. Siehe [Ausführung der Beispiele](../../examples/quantum-algorithms/README.md).
+
+Führen Sie nach einem Quellcode-Update die Vorbereitung für die verwendeten Fähigkeiten erneut aus, starten Sie den Arbeitsbereich neu und öffnen Sie eine neue Sitzung. Vorhandene Python-Umgebungen werden am bisherigen Ort geprüft und synchronisiert. [Umgebungen vorbereiten und aktualisieren](../integrations/LOCAL_ENVIRONMENTS.md).
+
+Nach der Modellkonfiguration können Sie fragen: „Erzeuge mit FatQat einen Bell-Zustand aus zwei Qubits im Nullzustand. Wende H auf q0 an und anschließend CX mit q0 als Kontroll- und q1 als Zielqubit. Vergleiche die exakten Wahrscheinlichkeiten mit 1024 Messungen bei seed=7.“ Ideal sind 00 und 11 jeweils zu 50 % wahrscheinlich. Prüfen Sie die tatsächlichen Werkzeugeingaben und Rechenergebnisse.
 
 ### Desktop
 

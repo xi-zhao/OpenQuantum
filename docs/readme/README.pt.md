@@ -16,6 +16,12 @@ Simule circuitos com Qiskit e TyxonQ; otimize-os com PyZX; explore computação 
 
 O código de `main` também inclui corte de portas e reconstrução de valores esperados com QCut, otimização de circuitos com Compact e estados excitados por VQD com OpenQARP. Essas conexões são ativadas por padrão, mas suas dependências precisam ser preparadas. O QSVM com kernel angular do cqlib-qml e o ambiente de circuitos FlagQuantum ficam desativados até serem habilitados. Consulte o [escopo e a verificação](../integrations/CANDIDATE_LIBRARIES.md).
 
+O inventário atual contém **101 Skills** (88 selecionáveis pelo agente e 13 índices manuais), **37 conexões MCP** e **220 nomes de Tool configuráveis**. Esses números não representam ferramentas disponíveis simultaneamente. Os nomes existentes foram preservados e os critérios de escolha entre funções semelhantes estão no [guia de seleção](../integrations/CAPABILITY_SELECTION.md).
+
+Os **66 guias quantum-skills** da UnitaryLab foram adaptados como Skills nativas; **49 exemplos executáveis** cobrem os **39 módulos de algoritmos originais** e métodos adicionais dos guias. Eles usam Qiskit, PennyLane, quimb, PySCF e NumPy/SciPy sem depender do runtime proprietário da UnitaryLab. Isso não significa compatibilidade completa de API; as diferenças estão na [tabela de cobertura](../integrations/UNITARYLAB_OPEN_COVERAGE.md).
+
+Também há simulação Trotter / qDrift de Hamiltonianos de Pauli, [conversão Qiskit/Cirq com qBraid, registros de medidas e paridades brutas com Clifft e consultas QDMI a um driver C configurado](../integrations/QUANTUM_INTEROP.md). Os dados do driver de exemplo QDMI não representam uma QPU real conectada.
+
 Cada integração possui dependências e um escopo científico próprios. Um cálculo local não comprova o desempenho de hardware real. Concluir uma chamada de ferramenta também não equivale a passar por validação científica.
 
 ## Por que escolher o OpenQuantum
@@ -32,9 +38,9 @@ Para uso local individual, escolha o instalador de desktop ou a execução a par
 
 ### Instalador para desktop
 
-Baixe o instalador para Mac (Apple Silicon / Intel) ou Windows no [GitHub Releases](https://github.com/xi-zhao/OpenQuantum/releases/latest). Node.js e uv estão incluídos, sem necessidade de compilar o código-fonte. São versões de teste sem assinatura. Siga o [guia de instalação](../DESKTOP_INSTALLERS.md), abra o aplicativo e configure um modelo. Algumas dependências Python são baixadas no primeiro uso; Quantum Learning e outros aplicativos opcionais exigem preparação separada.
+Baixe o instalador para Mac (Apple Silicon / Intel) ou Windows no [GitHub Releases](https://github.com/xi-zhao/OpenQuantum/releases/latest). Node.js e uv estão incluídos, sem necessidade de compilar o código-fonte. São versões de teste sem assinatura. Siga o [guia de instalação](../DESKTOP_INSTALLERS.md), abra o aplicativo e configure um modelo. Consulte os requisitos de preparação dos componentes de cálculo e do Quantum Learning para a versão escolhida.
 
-Os [instaladores v0.5.1](../releases/v0.5.1.md) não incluem os recursos adicionados posteriormente a `main` nem as [atualizações das bibliotecas quânticas de 22 de setembro](../releases/2026-09-22-quantum-upstream-update.md). Mudanças no código-fonte não atualizam automaticamente o aplicativo instalado.
+Os [instaladores v0.5.1](../releases/v0.5.1.md) não incluem os recursos adicionados posteriormente a `main` nem as [atualizações das bibliotecas quânticas de 22 de setembro](../releases/2026-09-22-quantum-upstream-update.md). Mudanças no código-fonte não atualizam automaticamente o aplicativo instalado. As adaptações de algoritmos, a interoperabilidade e a [reorganização das extensões](../architecture/EXTENSION_GOVERNANCE.md) de 24 de setembro também exigem o código-fonte atualizado e não estão na v0.5.1.
 
 ### Executar a partir do código-fonte
 
@@ -61,7 +67,17 @@ O exemplo local de referência de um Hamiltoniano fixo com dois qubits pode ser 
 npm run demo:quantum-ground-state
 ```
 
-Após configurar o modelo, experimente: “Use FatQat para preparar um estado de Bell a partir de dois qubits no estado zero. Aplique H a q0 e depois CX com q0 como controle e q1 como alvo. Compare as probabilidades exatas com 1024 amostras usando seed=7.” As probabilidades ideais de 00 e 11 são de 50% cada. Verifique as entradas reais da ferramenta e os resultados do cálculo. O primeiro uso pode baixar dependências.
+Antes de executar a tarefa FatQat abaixo a partir do código-fonte, prepare explicitamente o ambiente na raiz do repositório. Essa etapa pode baixar dependências; o cálculo não as instala automaticamente.
+
+```bash
+node scripts/setup-paper-tools.mjs fatqat-workbench
+```
+
+Para os exemplos de algoritmos, comece com `npm run capability:algorithms:setup -- --minimal`. Adicione `--group gradients`, `--group pennylane`, `--group tensor` ou `--group chemistry` conforme o método; os grupos já instalados são preservados. Sem argumentos, a preparação continua completa. O ambiente completo inclui PySCF, por isso recomendamos WSL no Windows; a verificação numérica foi realizada em CPU no macOS. Veja as [instruções de execução](../../examples/quantum-algorithms/README.md).
+
+Após atualizar o código-fonte, execute novamente a preparação dos recursos usados, reinicie o ambiente de trabalho e abra uma nova sessão. Os ambientes Python existentes são verificados e sincronizados no mesmo local. [Preparação e atualização dos ambientes](../integrations/LOCAL_ENVIRONMENTS.md).
+
+Após configurar o modelo, experimente: “Use FatQat para preparar um estado de Bell a partir de dois qubits no estado zero. Aplique H a q0 e depois CX com q0 como controle e q1 como alvo. Compare as probabilidades exatas com 1024 amostras usando seed=7.” As probabilidades ideais de 00 e 11 são de 50% cada. Verifique as entradas reais da ferramenta e os resultados do cálculo.
 
 ### Desktop
 

@@ -15,9 +15,11 @@
   <img src="https://img.shields.io/badge/Node.js-24%2B-3c873a.svg" alt="Node.js 24 or newer" />
 </p>
 
-OpenQuantum 把专业量子软件、研究方法与完整应用接到你的问题上。你可以用自然语言发起计算、检查工具返回的结果，也可以进入量子学习通准备课程，或把自己的算法与应用接进来。
+OpenQuantum 是面向量子研究、实验与教学的开源 Agent 与应用平台。你可以用自然语言选择方法、调用专业量子软件、查看计算过程与结果，也可以直接复跑算法示例、进入量子学习通准备课程，或接入自己的算法与应用。
 
 **提出问题，运行计算，共创能力。** 从学习者的第一次实验，到研究者的方法比较，再到开发者的应用集成，都可以从已支持的任务开始。
+
+当前源码提供 **49 个可运行的开源算法示例**，以及电路、量子化学、纠错、动力学等计算工具。按任务选择方法、准备所需依赖，再检查实际运行结果；完整范围见[能力目录](#可以用它做什么)。本页以源码 `main` 为准，安装包所含功能以对应[发布说明](docs/DESKTOP_INSTALLERS.md)为准。
 
 <p align="center">
   <a href="#为什么选择-openquantum">为什么选择</a> ·
@@ -70,18 +72,38 @@ OpenQuantum 把专业量子软件、研究方法与完整应用接到你的问�
 
 选择一个方向，告诉工作台你的问题、输入和希望检查的结果。OpenQuantum 的 Agent 按任务使用 Skill 中的方法，并调用相应 Tool 执行计算；量子学习通提供独立的教学界面。
 
-[电路与量子信息](#电路与量子信息) · [基态、化学与优化](#基态化学与优化) · [误差缓解与量子纠错](#误差缓解与量子纠错) · [开放系统动力学](#开放系统动力学) · [实验模拟与硬件](#实验模拟与硬件) · [参考资料与选型](#参考资料与选型) · [量子学习通](#量子学习通)
+[算法学习与方法比较](#算法学习与方法比较) · [电路与量子信息](#电路与量子信息) · [基态、化学与优化](#基态化学与优化) · [误差缓解与量子纠错](#误差缓解与量子纠错) · [哈密顿量模拟与开放系统](#哈密顿量模拟与开放系统) · [实验模拟与硬件](#实验模拟与硬件) · [参考资料与选型](#参考资料与选型) · [量子学习通](#量子学习通)
 
 本地计算可以从无需量子云账户的任务开始。真实硬件和付费服务按需配置；各方法的输入范围、准备条件与验证状态分别保留在详细目录中。
+
+### 算法学习与方法比较
+
+从一个可运行示例开始，修改输入、检查数值结果，再把方法用于自己的问题。已将 UnitaryLab 的 **66 份 quantum-skills 指南**适配为原生 Skill，其中 **49 项提供可执行示例**，逐项覆盖原算法库的 **39 个模块**及指南独有方法；其余指南用于分类、后端选择和迁移。
+
+| 任务方向 | 可运行的方法与示例 |
+| --- | --- |
+| 算法基础与搜索 | QFT、QPE、Hadamard test、振幅放大与估计、Grover、Shor、Simon、离散对数和图行走 |
+| 线性系统与矩阵方法 | HHL、VQLS、QSVT 线性求解、绝热求解、LCU 与 QSP；附经典本征求解参考 |
+| 哈密顿量模拟 | Trotter–Suzuki、qDrift、QSP、Taylor LCU，以及披露替换方式的 Cartan 示例 |
+| 变分计算与机器学习 | VQE、VQD、QAOA、VQC、QCBM、CVQNN，以及梯度与量子 Fisher 信息计算 |
+| 态制备与多体计算 | Möttönen、MPS、Isometry、变分态制备，分子 DMRG、Fermi–Hubbard VQE 与 Ising 演化 |
+| 纠错构码与微分方程 | qLDPC 构码与 syndrome；一维、二维热方程和周期平流的薛定谔化示例 |
+
+这些示例使用 Qiskit、PennyLane、quimb、PySCF、NumPy/SciPy 等开源后端，可直接运行，也可由 Agent 经已有代码执行工具调用。默认参数是教学算例；实际输入、参考误差和收敛状态需要按任务检查。
+
+适配保留上游来源与许可证，不依赖闭源 UnitaryLab 运行时。工作流覆盖不表示上游 Python API、优化器或后端完全兼容；Cartan、CVQNN、DMRG 等差异在[逐项覆盖表](docs/integrations/UNITARYLAB_OPEN_COVERAGE.md)和[运行说明](examples/quantum-algorithms/README.md)中公开。
+
+[直接运行算法示例](#直接运行开源算法示例) · [选择相近方法](docs/integrations/CAPABILITY_SELECTION.md)
 
 ### 电路与量子信息
 
 | 任务方向 | 可以发起的任务 | 可以查看的结果 |
 | --- | --- | --- |
 | 量子电路 | 分析或转换 OpenQASM / QPY 电路，比较转译，检查等价性，运行电路仿真 | 电路结构、转译结果、等价性检查、态矢或采样分布 |
+| Qiskit / Cirq 互操作 | 用 qBraid 按固定 OpenQASM 2 路径转换受支持的酉电路 | 转换后的电路、保留的量子位编号与空闲位；可选完整酉矩阵对照 |
 | 电路优化与测量式计算 | 用 PyZX 做 ZX 重写与电路提取，用 Graphix 转换和模拟 MBQC 模式 | 优化前后电路与门数、资源图和测量模式；可选独立对照 |
 | 电路优化与切割 | 用 Compact 优化门序列，用 QCut 切分电路并重建期望值 | 优化前后电路与独立等价对照；切割开销、实际采样量与可选未切割参考 |
-| Clifford+T 噪声采样 | 用 Clifft 研究 T 门干涉、近 Clifford 电路与门后去极化噪声 | 最终位串频数、有限采样误差；小系统可附完整分布与密度矩阵参考 |
+| Clifford+T 噪声采样 | 用 Clifft 研究 T 门干涉与噪声，或采样受支持的 Stim 格式电路 | 最终位串频数与可选密度矩阵参考；另可返回中间测量及 detector / observable 原始奇偶记录 |
 | 量子态与测量 | 审计密度矩阵与纠缠指标；模拟已知 product / GHZ 态的局域随机测量 | 状态指标与独立检查，子区纯度估计及有限样本误差 |
 
 ### 基态、化学与优化
@@ -102,10 +124,13 @@ OpenQuantum 把专业量子软件、研究方法与完整应用接到你的问�
 | 误差缓解 | 用 Mitiq 运行 ZNE、REM、PEC 或 CDR，比较相同采样预算下的原始与缓解结果 | 理想参考、经验偏差、方差和 RMSE，以及校准、训练与采样成本 |
 | 量子纠错 | 用 Stim / PyMatching 运行 surface-code memory，用 Deltakit 构建矩形码片实验，或进行 BP+LSD 解码 | 实际含噪电路、固定 shots 的逻辑错误率与区间；LSD 的 syndrome 一致性检查 |
 
-### 开放系统动力学
+<a id="开放系统动力学"></a>
+
+### 哈密顿量模拟与开放系统
 
 | 任务方向 | 可以发起的任务 | 可以查看的结果 |
 | --- | --- | --- |
+| 哈密顿量模拟 | 提供实系数 Pauli Hamiltonian，用 Trotter–Suzuki 或 qDrift 构建演化电路或计算末态 | 电路、资源指标、态矢及可选独立矩阵参考；步数、阶数、时间与随机种子可配置 |
 | 开放系统动力学 | 用 TJM 计算开放 Ising 链，用 Dynamiqs 扫描单量子位驱动与梯度，或用 OQuPy 研究环境记忆 | 观测量轨迹、独立参考、梯度以及时间步长与记忆截断信息 |
 
 ### 实验模拟与硬件
@@ -114,6 +139,7 @@ OpenQuantum 把专业量子软件、研究方法与完整应用接到你的问�
 | --- | --- | --- |
 | 超导与原子实验 | 模拟调校流程、原生门约束、三能级 transmon 泄漏或小型里德堡原子链动力学 | 合成实验数据、动力学轨迹与图表 |
 | 量子硬件接入 | 发现后端、检查拓扑与凭据；按需启用云任务查询、提交与取消 | 设备候选、使用条件；已启用任务接口的结果与状态 |
+| 本地设备接口 | 用 QDMI 查询已配置的 C 驱动 | 驱动报告的设备、量子位、门与耦合信息；官方示例驱动用于接口验证，不代表在线 QPU |
 
 ### 参考资料与选型
 
@@ -190,9 +216,9 @@ OpenQuantum 支持桌面安装包和源码运行，适合本机单用户使用�
 
 ### 桌面安装包
 
-从 [GitHub Release](https://github.com/xi-zhao/OpenQuantum/releases/latest) 下载 Mac（Apple Silicon / Intel）或 Windows 安装包。安装包内置 Node 和 uv，无需先配置源码构建环境；当前为未签名测试构建。按[安装说明](docs/DESKTOP_INSTALLERS.md)安装并启动后，继续[配置模型](#配置模型)。部分 Python 计算组件首次使用时仍需联网准备固定依赖，量子学习通等可选应用另有安装步骤。
+从 [GitHub Release](https://github.com/xi-zhao/OpenQuantum/releases/latest) 下载 Mac（Apple Silicon / Intel）或 Windows 安装包。安装包内置 Node 和 uv，无需先配置源码构建环境；当前为未签名测试构建。按[安装说明](docs/DESKTOP_INSTALLERS.md)安装并启动后，继续[配置模型](#配置模型)。计算组件的额外依赖按对应版本说明准备，量子学习通等可选应用另有安装步骤。
 
-本页能力目录描述源码 `main`。[v0.5.1 安装包](docs/releases/v0.5.1.md)不包含后续的[新增量子能力](docs/integrations/CANDIDATE_LIBRARIES.md)及 [9 月 22 日量子库更新](docs/releases/2026-09-22-quantum-upstream-update.md)，也不会随源码主线更新而自动升级。安装版使用独立数据目录，迁移与备份见[安装包说明](docs/DESKTOP_INSTALLERS.md#数据与升级)。
+本页能力目录描述源码 `main`。[v0.5.1 安装包](docs/releases/v0.5.1.md)不包含后续的[新增量子能力](docs/integrations/CANDIDATE_LIBRARIES.md)、[9 月 22 日量子库更新](docs/releases/2026-09-22-quantum-upstream-update.md)，以及 9 月 24 日的[算法适配](docs/integrations/UNITARYLAB_OPEN_ADAPTATION.md)、[互操作接入](docs/integrations/QUANTUM_INTEROP.md)和[扩展治理](docs/architecture/EXTENSION_GOVERNANCE.md)。使用这些更新请选择源码路径；安装版不会随主线自动升级，数据迁移与备份见[安装包说明](docs/DESKTOP_INSTALLERS.md#数据与升级)。
 
 ### 安装源码
 
@@ -256,6 +282,20 @@ npm run models:probe -- --provider openquantum-public
 
 </details>
 
+### 按任务准备计算环境
+
+源码中的本地 Python 计算工具使用显式准备的固定依赖。完成 `npm ci` 后，在仓库根目录选择要使用的能力执行准备命令；准备阶段可能联网下载和构建，计算调用不再自动安装依赖。
+
+| 准备什么 | 命令或入口 |
+| --- | --- |
+| 第一个 Bell 态实验 | `node scripts/setup-paper-tools.mjs fatqat-workbench` |
+| Trotter / qDrift 哈密顿量模拟 | `npm run capability:hamiltonian:setup` |
+| Clifft 采样与 qBraid 电路转换 | `npm run capability:interop:setup` |
+| 指定其他 Python 计算能力 | `node scripts/setup-paper-tools.mjs <能力 ID>`，例如 `qec-memory-experiment`；各 Skill 列出自己的准备命令 |
+| 算法示例 | 从[最小依赖环境](#直接运行开源算法示例)开始，按需补充梯度、PennyLane、张量或化学依赖 |
+
+环境准备、连接启用与模型配置分别完成。默认开启的连接也需要准备依赖；计算时若缺少环境或锁文件已更新，Tool 会返回具体准备命令。Julia、QDMI 驱动和上游 MCP 服务按各自说明准备。详见[本地计算环境](docs/integrations/LOCAL_ENVIRONMENTS.md)。
+
 <a id="科研工作台"></a>
 
 <a id="从一个真实任务开始"></a>
@@ -307,6 +347,38 @@ Agent 可以调用 FatQat 电路工具执行计算，工作台保留工具输入
 
 此处展示可复制请求与理论预期。FatQat 连接默认开启，先用 `node scripts/setup-paper-tools.mjs fatqat-workbench` 准备锁定依赖；接口和本地验证记录见 [FatQat 使用说明](docs/integrations/FATQAT.md)。这条路径需要先按[配置模型](#配置模型)接入一个支持 Tool Calling 的模型，否则 Agent 不会调用计算 Tool。
 
+#### 直接运行开源算法示例
+
+不需要模型密钥或量子云账户。基础方法先准备 NumPy、SciPy 和 Qiskit：
+
+```bash
+npm run capability:algorithms:setup -- --minimal
+```
+
+macOS / Linux 可直接查看方法、输入说明并运行默认 HHL 算例：
+
+```bash
+examples/quantum-algorithms/.venv/bin/python examples/quantum-algorithms/run.py --list
+examples/quantum-algorithms/.venv/bin/python examples/quantum-algorithms/run.py --describe hhl
+examples/quantum-algorithms/.venv/bin/python examples/quantum-algorithms/run.py --algorithm hhl
+```
+
+Windows PowerShell 使用对应解释器路径：
+
+```powershell
+& examples/quantum-algorithms/.venv/Scripts/python.exe examples/quantum-algorithms/run.py --algorithm hhl
+```
+
+需要 QSP/QSVT 等方法时，运行 `npm run capability:algorithms:setup -- --group pennylane`；其他组为 `gradients`、`tensor`、`chemistry`，补装会保留已安装的其他组。不带参数的 `npm run capability:algorithms:setup` 仍准备全部依赖。完整环境含 PySCF，Windows 建议使用 WSL；已完成的数值验证范围是 macOS CPU。
+
+自己的参数通过 JSON 文件和 `--input` 传入，结果可用 `--output` 保存。也可以在配置模型后，让 Agent 使用 `quantum-algorithms` 或具体方法 Skill 执行。完整参数、位序、方法差异与依赖组见[算法示例说明](examples/quantum-algorithms/README.md)。
+
+### 从已有源码升级
+
+按[版本更新说明](docs/UPDATES.md)更新源码和项目依赖，再为要使用的计算能力运行一次原准备命令。Python 桥接会在原环境目录核验并同步锁定依赖，无需删除环境；算法示例可继续按组补装。
+
+随后重启工作台并新建会话。已有 Skill、Tool 名称和参数保持有效；13 个分类索引仍可手动调用，Agent 自动任务改为直接选择 `quantum-algorithms` 或具体方法。需要恢复可选服务的完整工具范围时，使用默认 `full` 配置，详见[能力选择与兼容说明](docs/integrations/CAPABILITY_SELECTION.md)。
+
 ### 按需开启其他入口
 
 <details>
@@ -349,6 +421,12 @@ npm run cc-connect:start
 ## 使用与结果
 
 一次任务跑通以后，你可以选择其他后端、调整计算规模，再带着结果继续研究。
+
+### 选择合适的入口
+
+学习或修改算法时，从[可运行示例](#算法学习与方法比较)开始；需要既定输入输出的计算动作时，选择下面的专业工具。Trotter / qDrift、VQD、Qiskit 和本征求解的相近入口已有[统一选择说明](docs/integrations/CAPABILITY_SELECTION.md)，原名称保留，具有不同物理假设或数值方法的实现仍分别提供。
+
+Qiskit Gym、Quantum Hardware 和 FlagQuantum 默认关闭。需要这些服务时，可按训练、设备查询、编译或仿真等用途配置较小的工具范围；未选择时仍使用兼容旧配置的 `full`。当前会话可调用的工具取决于已启用连接、实际注册状态和所选范围。
 
 ### 本地计算与量子云
 
@@ -405,6 +483,7 @@ OpenQuantum 为本地模拟、IBM Quantum、IonQ 和多家国内量子云保留�
 | 能力 | 准备命令 |
 | --- | --- |
 | SQD 与 TeNPy | `npm run capability:paper-tools:setup -- sqd-chemistry tenpy-ground-state` |
+| Trotter / qDrift | `npm run capability:hamiltonian:setup` |
 | Mitiq 误差缓解 | `npm run capability:mitiq:setup` |
 | Dynamiqs、Clifft、OQuPy、Deltakit | `npm run capability:unitary:setup` |
 | Clifft 记录采样与 qBraid 转换；QDMI 驱动查询 | `npm run capability:interop:setup`；QDMI 另运行 `npm run capability:qdmi:setup` 并启用连接，见[接入说明](docs/integrations/QUANTUM_INTEROP.md) |
@@ -412,6 +491,8 @@ OpenQuantum 为本地模拟、IBM Quantum、IonQ 和多家国内量子云保留�
 
 | 想探索什么 | 示例请求 | 重点查看 |
 | --- | --- | --- |
+| 演化精度与资源 | 用 hamiltonian-simulation 从两量子位全零态出发，模拟 H = XX + 0.5 ZI 的无量纲演化 t=1；分别使用二阶 Trotter、4 步和 8 步，要求独立精确参考，返回末态并比较酉矩阵误差与电路资源。 | Pauli 字符从左到右为 q0、q1；步数与误差、资源的关系 |
+| 电路互操作 | 用 qBraid 把三量子位电路 H(0)、CX(0,2) 从 Qiskit 转为 Cirq，保留空闲 q1，并检查完整酉矩阵在忽略整体相位后是否一致。 | 空闲量子位、位序、转换路径与实际参考状态 |
 | T 门干涉 | 用 Clifft 从两量子位全零态出发执行 H(0)、T(0)、H(0)、CX(0,1)，无噪声、4096 shots、seed=7；比较位串频数与密度矩阵参考。 | 位串从左到右为 q0、q1；有限采样误差 |
 | 分子基态 | 用 SQD 计算键长 0.735 Å 的 H₂/STO-3G，使用默认合成样本，报告总能量、同基组 FCI 参考和能量差，并标明样本来源。 | 样本覆盖与能量差；合成样本的结果不构成量子优势证据 |
 | 多体基态 | 用 TeNPy 计算四站点、自旋 1/2 的开放 Heisenberg 链，Jx=Jy=Jz=1，hx=hz=0。报告 DMRG 能量、精确对角化参考、能量差与纠缠熵，并注明 S=Pauli/2。 | Hamiltonian 约定、参考结果与收敛情况 |
@@ -459,6 +540,8 @@ OpenQuantum 为本地模拟、IBM Quantum、IonQ 和多家国内量子云保留�
 - 需要量子计算机账户或模型密钥吗？查看[本地示例](#不需要模型密钥复算一个固定案例)、[模型配置](#配置模型)与[量子云连接](#本地计算与量子云)。
 - [需要先学会每套 SDK 吗？](#从问题出发调用专业能力)
 - [只有文字回复，算完成计算了吗？](#让-agent-执行任务bell-态的制备与采样)
+- [升级后提示需要准备环境，怎么处理？](#从已有源码升级)
+- [算法示例和专业计算工具，该选哪个？](#选择合适的入口)
 - [量子学习通已有完整课程吗？](#量子学习通)
 
 ## 把你的量子能力接进来
@@ -510,6 +593,8 @@ Harness 是通用 Agent Runtime，扩展通过 Cordis Plugin 装配。UI、模�
 </p>
 
 当前源码分发 **101 个内置 Skill、37 个 MCP 服务连接、5 个原生量子 Tool**。其中 66 个 Skill 来自 quantum-skills 的开源工作流适配，共用现有代码执行工具；其中 49 项提供可运行示例，覆盖 unitarylab_algorithms 的全部 39 个模块。29 个 MCP 服务使用 OpenQuantum 的本地桥接实现。Skill、Tool 和 MCP 连接分别统计。
+
+治理清单共覆盖 **220 个可配置 Tool 名称**：196 个由 MCP 服务提供，18 个为 Harness 通用工具，6 个为平台原生工具（上面的 5 个量子动作及 1 个教学生成动作）。这是配置全集；`bash` / `pwsh` 按平台互斥，连接开关、环境和工具范围也会影响实际可调用集合。逐项决定、兼容影响与验证范围见[完整治理记录](docs/architecture/EXTENSION_GOVERNANCE.md)。
 
 <details>
 <summary><strong>内置 Skills：按研究方法查找工作流</strong></summary>
@@ -803,6 +888,9 @@ npm run check
 npm run capability:mitiq:live
 npm run capability:unitary:live
 npm run capability:candidates:live
+npm run capability:hamiltonian:live
+npm run capability:interop:live
+npm run capability:algorithms:live
 npm run benchmark:candidate-regressions
 
 # 配置模型后运行真实 Agent 端到端测试
@@ -811,6 +899,7 @@ npm run e2e:quantum-harness -- --provider openquantum-public
 
 ```text
 .agents/skills/          量子 Skill 与科学资源
+examples/quantum-algorithms/  可修改的开源算法示例、输入说明与覆盖映射
 runtime/openquantum/     Agent Preset、原生 Tool Provider、Harness MCP Client 声明和 Harness 界面扩展
 src/settings/server/     设置中心的服务端配置边界
 src/readiness/server/    当前 Harness Registry 的只读运行状态边界
@@ -824,6 +913,8 @@ docs/                    架构、路线与生态文档
 [固定量子能力 Benchmark](benchmarks/quantum-capabilities/README.md)使用 [MQT Bench](https://github.com/munich-quantum-toolkit/bench) 的 3 个固定电路案例与 manifest 做开发回归，属于开发与 CI 证据，不是 Skill 或 MCP 服务。
 
 源码升级的固定版本、兼容性和验证记录见 [2026-09-22 量子库更新](docs/releases/2026-09-22-quantum-upstream-update.md)及 [2026-09-10 平台升级](docs/releases/2026-09-10-upstream-update.md)。应用安装包的变化另见[发布说明](docs/releases/v0.5.1.md)。
+
+2026-09-24 的[算法适配](docs/integrations/UNITARYLAB_OPEN_ADAPTATION.md)、[本地互操作](docs/integrations/QUANTUM_INTEROP.md)和[治理证据](docs/integrations/evidence/extension-governance-2026-09-24.json)分别记录源码接入、实际 SDK 计算与 Harness 会话验证；这些记录不代表新安装包发布、外部模型或真实硬件验收。
 
 </details>
 
@@ -944,6 +1035,16 @@ OpenQuantum 的量子能力建立在开放科学与开源软件之上。我们�
 | Clifford+T 电路采样 | [Clifft](https://github.com/unitaryfoundation/clifft) | Clifford+T 最终位串采样与可选密度矩阵参考；另支持 Stim 格式的中间测量、detector/observable 原始记录 |
 | Qiskit/Cirq 电路互转 | [qBraid](https://github.com/qBraid/qBraid) | 固定 QASM2 转换路径，保持空闲量子位与编号，可选完整酉矩阵对照 |
 
+#### 开源算法与工作流
+
+| 使用或适配的项目 | 在 OpenQuantum 中承担的职责 |
+| --- | --- |
+| [quantum-skills](https://github.com/unitarylab/quantum-skills) | 66 份指南的原生 Skill 适配，保留来源；方法可自动选择，纯分类索引供手动导航 |
+| [unitarylab_algorithms](https://github.com/unitarylab/unitarylab_algorithms) | 39 个算法模块的开源工作流覆盖与 Trotter / qDrift 计算适配；保留 MIT 来源，逐项披露实现差异 |
+| [Qiskit](https://github.com/Qiskit/qiskit)、[PennyLane](https://github.com/PennyLaneAI/pennylane)、[quimb](https://github.com/jcmgray/quimb)、[PySCF](https://github.com/pyscf/pyscf)、NumPy / SciPy | 49 个可执行示例使用的开放计算后端，按方法准备锁定依赖 |
+
+适配说明与署名见[覆盖表](docs/integrations/UNITARYLAB_OPEN_COVERAGE.md)和[算法示例 NOTICE](examples/quantum-algorithms/NOTICE)。
+
 #### 量子态与测量
 
 | 科研任务 | 使用或适配的项目 | OpenQuantum 当前支持 |
@@ -991,6 +1092,8 @@ OpenQuantum 的量子能力建立在开放科学与开源软件之上。我们�
 ### 设备发现与量子云
 
 [FieldQKit](https://github.com/FieldQuantum/fieldqkit) 提供国内量子云的凭据检查、只读设备发现、量子位筛选与拓扑查询。
+
+[QDMI](https://github.com/Munich-Quantum-Software-Stack/QDMI) 提供本地 C 驱动设备查询接口；OpenQuantum 适配只读元数据查询，官方示例驱动用于本地接口验证。
 
 IBM Quantum、IonQ 和本源量子是可连接的云服务。任务提交分别由 IBM Runtime、社区 Quantum Hardware 服务和 QPanda3 Runtime 等[任务接口](#可以连接哪些量子后端)提供，配置凭据并启用后可使用；FieldQKit 的当前接入范围是设备发现。
 

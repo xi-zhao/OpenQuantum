@@ -135,6 +135,8 @@ Skill 与 Tool 在概念和发行版 policy 中都相互独立：Skill-only、To
 
 - [桌面测试安装包](DESKTOP_INSTALLERS.md)：DMG / Windows 安装向导、独立用户数据、构建与安装后检查。
 - [部署与启动](DEPLOYMENT.md)：本地、Docker、模型配置和启动检查。
+- [本地计算环境准备](integrations/LOCAL_ENVIRONMENTS.md)：按能力显式准备固定依赖，已有环境原地核验与升级。
+- [相近能力的选择](integrations/CAPABILITY_SELECTION.md)：算法示例与专业计算入口的选择，以及大型可选服务的工具范围。
 - [版本更新](UPDATES.md)：新版本提醒、源码升级、发布通道和维护流程。
 - [常见问题与故障排查](TROUBLESHOOTING.md)：按 UI、模型、MCP Server、凭据和 Docker 分层定位。
 - [消息渠道接入](integrations/CC_CONNECT.md)：通过 CC Connect 和 ACP 接入微信、飞书等平台。
@@ -166,7 +168,7 @@ Skill 与 Tool 在概念和发行版 policy 中都相互独立：Skill-only、To
 
 - [领域语言](../CONTEXT.md)：唯一的产品与科研术语表，不放实现细节。
 - [架构审计与证据基线](architecture/ARCHITECTURE_AUDIT.md)：日期化结论、证据、风险和待办。
-- [扩展治理清单（2026-09-24）](architecture/EXTENSION_GOVERNANCE.md)：101 个 Skill、37 个 MCP 连接及全部配置 Tool 的逐项建议、兼容影响与分批状态。
+- [扩展治理清单（2026-09-24）](architecture/EXTENSION_GOVERNANCE.md)：101 个 Skill、37 个 MCP 连接及 220 个可配置 Tool 名称的逐项决定、兼容影响与实施结果。
 - [ADR-002：Harness 原生扩展优先](architecture/ADR-002-HARNESS-NATIVE-EXTENSIONS-FIRST.md)：当前有效。
 - [ADR-003：Desktop 作为 Host Adapter](architecture/ADR-003-DESKTOP-AS-HARNESS-HOST-ADAPTER.md)：当前有效。
 - [ADR-001：知情审批默认拒绝](architecture/ADR-001-INFORMED-APPROVAL-FAIL-CLOSED.md)：历史记录，已由 Harness 原生审批机制取代，不是当前实现契约。

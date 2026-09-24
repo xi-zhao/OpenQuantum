@@ -6,9 +6,11 @@
 
 <p align="center"><a href="../../README.md">简体中文</a> · <a href="./README.en.md">English</a> · <a href="./README.ja.md">日本語</a> · <a href="./README.ko.md">한국어</a> · <a href="./README.es.md">Español</a> · <a href="./README.fr.md">Français</a> · <a href="./README.de.md">Deutsch</a> · <a href="./README.pt.md">Português</a> · <a href="./README.ru.md">Русский</a> · <a href="./README.ar.md">العربية</a></p>
 
-OpenQuantum brings quantum tools, specialist methods and complete applications into one open platform. Use an AI agent to connect a question to computation, open an integrated application, or contribute your own algorithm, service or product.
+OpenQuantum is an open-source agent and application platform for quantum research, experiments and teaching. Use natural language to select methods, run specialist software and inspect results; run algorithm examples directly, open Quantum Learning, or contribute your own methods and applications.
 
 **Ask questions, run calculations and build capabilities together.** Start with a supported task, inspect the tool results, and contribute methods or applications that others can use.
+
+Source `main` includes **49 runnable open-source algorithm examples**, alongside tools for circuits, chemistry, error correction and dynamics. Choose a method, prepare its dependencies and inspect the actual computation. Installer capabilities follow their own release notes.
 
 [Why OpenQuantum](#why-openquantum) · [Capabilities](#what-you-can-do) · [Quick start](#quick-start) · [Results](#use-and-inspect-results) · [Extend](#extend-the-platform) · [Roadmap](#roadmap-and-rsi) · [Contribute](#documentation-and-support) · [Open source](#license-and-acknowledgments)
 
@@ -44,7 +46,10 @@ An investigation that becomes possible, a method applied to a new problem, or a 
 
 | Area | Available tools and results |
 | --- | --- |
+| Algorithm examples | QFT/QPE, Grover/Shor, HHL/VQLS/QSVT, VQE/VQD/QAOA, gradients, state preparation, DMRG, qLDPC and Schrödingerization examples; editable inputs and method-specific checks |
+| Hamiltonian simulation | Trotter–Suzuki and qDrift for Pauli Hamiltonians; circuits, resource metrics, states and optional independent matrix references |
 | Circuits | Qiskit and TyxonQ circuit creation, analysis, transpilation and local simulation; MQT QCEC equivalence checks; optional FlagQuantum circuit workbench |
+| Local interoperability | qBraid Qiskit/Cirq unitary-circuit conversion through QASM2, Clifft intermediate measurements and raw detector/observable parities, and optional QDMI metadata queries through a configured C driver |
 | Optimization and algebra | PyZX rewriting, Graphix measurement-based computing, Symmer symmetry tapering and PauLie Lie algebra calculations |
 | Circuit optimization and cutting | Compact optimization with independent equivalence checks; QCut gate cutting and expectation reconstruction with sampling costs and an optional uncut reference |
 | Ground states and chemistry | A bounded two-qubit VQE example, TeNPy spin-chain DMRG, SQD active-space chemistry and Flow-VQE parameter learning |
@@ -58,6 +63,10 @@ An investigation that becomes possible, a method applied to a new problem, or a 
 | Learning and teaching | Materials, slides, interactive classrooms and project-based learning through Quantum Learning |
 
 The table describes source `main`. QCut, Compact and OpenQARP connections are enabled by default; cqlib-qml and FlagQuantum are disabled until selected. Dependencies still need preparation. See the [integration guide and verification scope](../integrations/CANDIDATE_LIBRARIES.md).
+
+All **66 quantum-skills guides** have native Skill adaptations; **49 executable workflows** cover the **39 upstream algorithm modules** and additional methods from the guides. They use Qiskit, PennyLane, quimb, PySCF and NumPy/SciPy, with no proprietary UnitaryLab runtime dependency. Coverage describes workflows, not complete upstream Python API or backend compatibility. See the [per-method mapping and differences](../integrations/UNITARYLAB_OPEN_COVERAGE.md).
+
+The source inventory contains **101 Skills** (88 automatically selectable and 13 manual category indexes), **37 MCP connections** and **220 configurable Tool names**. These counts describe the configured inventory; the tools available in a session depend on the platform, enabled connections, prepared environments and selected tool profiles. Existing names remain available. See the [capability catalog](../../README.md#能力接口目录) and [governance record](../architecture/EXTENSION_GOVERNANCE.md).
 
 Each integration has its own installation requirements and scientific scope. Local results do not establish hardware performance, and a completed tool call does not automatically imply scientific acceptance. See the [detailed capability catalog](../../README.md#可以用它做什么) and [integration documentation](../README.md).
 
@@ -73,9 +82,9 @@ OpenQuantum supports desktop installers and source builds for local, single-user
 
 ### Desktop installer
 
-Download the Mac (Apple Silicon / Intel) or Windows installer from [GitHub Releases](https://github.com/xi-zhao/OpenQuantum/releases/latest). Node.js and uv are bundled, so no source build is needed. These are unsigned test builds. Follow the [installation guide](../DESKTOP_INSTALLERS.md), open the app, then [configure a model](#configure-a-model). Some Python components need network access to prepare dependencies on first use; optional applications such as Quantum Learning have separate setup steps.
+Download the Mac (Apple Silicon / Intel) or Windows installer from [GitHub Releases](https://github.com/xi-zhao/OpenQuantum/releases/latest). Node.js and uv are bundled, so no source build is needed. These are unsigned test builds. Follow the [installation guide](../DESKTOP_INSTALLERS.md), open the app, then [configure a model](#configure-a-model). Follow the corresponding version's instructions for additional computation dependencies; optional applications such as Quantum Learning have separate setup steps.
 
-The [v0.5.1 installers](../releases/v0.5.1.md) do not include the later QCut, Compact, OpenQARP, cqlib-qml and FlagQuantum integrations or the [September 22 quantum-library updates](../releases/2026-09-22-quantum-upstream-update.md). Changes to source `main` do not automatically update an installed app. Installers use a separate data directory; see the [data and migration guide](../DESKTOP_INSTALLERS.md#数据与升级).
+The [v0.5.1 installers](../releases/v0.5.1.md) do not include the later QCut, Compact, OpenQARP, cqlib-qml and FlagQuantum integrations, the [September 22 quantum-library updates](../releases/2026-09-22-quantum-upstream-update.md), or the September 24 [algorithm adaptations](../integrations/UNITARYLAB_OPEN_ADAPTATION.md), [interoperability tools](../integrations/QUANTUM_INTEROP.md) and [governance changes](../architecture/EXTENSION_GOVERNANCE.md). Use source `main` for these updates. Changes to source do not automatically update an installed app. See the [data and migration guide](../DESKTOP_INSTALLERS.md#数据与升级).
 
 ### From source
 
@@ -118,11 +127,44 @@ The repository records a local check of this bounded two-qubit Hamiltonian at ap
 
 ### Try an agent task
 
-After configuring a model and installing uv, ask the workbench:
+After configuring a model and installing uv, explicitly prepare FatQat's pinned environment from the repository root:
+
+```bash
+node scripts/setup-paper-tools.mjs fatqat-workbench
+```
+
+Then ask the workbench:
 
 > Use FatQat to prepare a Bell state from two qubits in the zero state: apply H to q0, then CX with q0 as control and q1 as target. Return the exact noiseless probabilities and compare them with 1024 samples using seed=7.
 
-The ideal probabilities for `00` and `11` are each 50%. Finite samples fluctuate. Check that the session contains actual tool inputs and returned computation results, as well as an explanation. The first use may download the pinned Python dependencies.
+The ideal probabilities for `00` and `11` are each 50%. Finite samples fluctuate. Check that the session contains actual tool inputs and returned computation results, as well as an explanation. Setup may download dependencies; the computation does not install them automatically. Missing or stale environments produce an actionable setup command. See [local environment preparation](../integrations/LOCAL_ENVIRONMENTS.md).
+
+### Run an algorithm example directly
+
+No model key or quantum-cloud account is required. Start with NumPy, SciPy and Qiskit:
+
+```bash
+npm run capability:algorithms:setup -- --minimal
+```
+
+On macOS / Linux, inspect the HHL input contract and run the default example:
+
+```bash
+examples/quantum-algorithms/.venv/bin/python examples/quantum-algorithms/run.py --describe hhl
+examples/quantum-algorithms/.venv/bin/python examples/quantum-algorithms/run.py --algorithm hhl
+```
+
+On Windows PowerShell:
+
+```powershell
+& examples/quantum-algorithms/.venv/Scripts/python.exe examples/quantum-algorithms/run.py --algorithm hhl
+```
+
+Add dependencies with `npm run capability:algorithms:setup -- --group pennylane`, or choose `gradients`, `tensor` or `chemistry`. Adding a group preserves other installed groups; setup without arguments still prepares the full environment. The full environment includes PySCF, for which WSL is recommended on Windows. Numerical verification was performed on macOS CPU. See the [examples, custom inputs and method differences](../../examples/quantum-algorithms/README.md).
+
+### Upgrade an existing source installation
+
+Follow the [source update guide](../UPDATES.md), then rerun the preparation command for each computation capability you use. Python bridges verify and synchronize pinned dependencies in their existing environment directories; no environment deletion is needed. Restart the workbench and start a new session. Existing Skill and Tool names are retained; automatic tasks use `quantum-algorithms` or a specific method instead of the 13 manual category indexes.
 
 ### Set up Quantum Learning
 
@@ -151,6 +193,8 @@ Language selection changes interface text. It does not translate existing conver
 Choose a computing backend separately from the language model. Local calculations do not need quantum-cloud credentials. Optional IBM Quantum, IonQ and Origin Quantum job interfaces require the corresponding credentials, permissions and quota; device discovery has a separate scope.
 
 Use the settings page to enable the required MCP Server connection, restart the workbench and specify the backend in the task. Each tool defines its own physical model, input format and resource controls. See the [backend directory](../../README.md#可以连接哪些量子后端) and [computing parameters](../integrations/SCALABLE_BRIDGES.md).
+
+Use algorithm examples when learning or changing a method, and specialist tools when you need their defined input/output contract. [Shared selection guidance](../integrations/CAPABILITY_SELECTION.md) covers overlapping Hamiltonian, VQD, Qiskit and eigensolver entry points. Qiskit Gym, Quantum Hardware and FlagQuantum remain opt-in; their optional tool profiles expose a smaller set for a specific task, with `full` preserving the default complete interface.
 
 A model reply, a completed tool call and scientific acceptance are separate outcomes. Inspect the actual tool input and return value; supported capabilities may also provide independent references, error estimates or a complete acceptance report with recorded provenance.
 
@@ -221,6 +265,8 @@ See the [full roadmap](../../README.md#长期发展规划) and [current architec
 
 - [Documentation index](../README.md)
 - [Deployment](../DEPLOYMENT.md)
+- [Prepare local environments](../integrations/LOCAL_ENVIRONMENTS.md)
+- [Choose methods and tool profiles](../integrations/CAPABILITY_SELECTION.md)
 - [Troubleshooting](../TROUBLESHOOTING.md)
 - [Development roadmap](../../README.md#长期发展规划)
 - [Report an issue](https://github.com/xi-zhao/openQuantum/issues)
