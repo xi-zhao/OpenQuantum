@@ -12,7 +12,7 @@ OpenQuantum 为本地量子计算提供结构化输入、SDK 调用和结果返�
 | PauLie | 独立控制的非恒等 Pauli 生成元 | Lie 代数分类、精确维数、可选显式闭包 |
 | MQT QCEC | 两份同宽度、无测量的 OpenQASM 2 电路 | 等价、相位等价、不等价或不确定的检查结果 |
 | TyxonQ | 门电路、噪声与 shots | 态矢、概率或带噪采样分布 |
-| Clifft | Clifford+T 电路、门后去极化与 shots | 最终位串频数、编译后的活跃宽度 |
+| Clifft 最终测量 | Clifford+T 电路、门后去极化与 shots | 最终位串频数、编译后的活跃宽度 |
 | Mitiq | 门电路、Pauli 观测量、噪声、方法与采样预算 | ZNE、REM、PEC、CDR 的估计、误差与完整采样成本 |
 | FatQat | 门电路与原生门约束，或恒定驱动的物理模型 | 电路概率、可选采样，transmon/里德堡链动力学与图像 |
 | toqito | 复密度矩阵、子系统维数与转置子区 | 迹、纯度、部分转置谱与 negativity，独立 Validator observations |
@@ -36,7 +36,7 @@ OpenQuantum 为本地量子计算提供结构化输入、SDK 调用和结果返�
 
 ## 主计算与可选参考
 
-PyZX、Graphix、Symmer、PauLie、TeNPy、TJM、Flow-VQE、Clifft、SQD、Dynamiqs 和 QPanda 提供 `referenceMode`：
+PyZX、Graphix、Symmer、PauLie、TeNPy、TJM、Flow-VQE、Clifft 最终测量、SQD、Dynamiqs 和 QPanda 提供 `referenceMode`：
 
 | 模式 | 行为 |
 | --- | --- |
@@ -52,7 +52,7 @@ PauLie 的 `closureMode=full` 枚举闭包，`skip` 不枚举，`auto` 在分类
 
 QPanda 的 `method=traversal` 本身就是穷举求解；`referenceMode=skip` 只跳过额外检查，不会把遍历算法变为 QAOA。`method=qaoa` 不再先强制穷举，模型编译也可单独跳过穷举重放。模型编译在可取消的独立进程中执行。
 
-Clifft 的 `maxActiveWidth` 默认为 `null`；只有调用方明确提供该预算时才检查。运行密度矩阵参考时返回完整位串分布；跳过时仅返回观测到的位串，TVD 和参考概率为 `null`。
+Clifft 最终测量接口的 `maxActiveWidth` 默认为 `null`；只有调用方明确提供该预算时才检查。运行密度矩阵参考时返回完整位串分布；跳过时仅返回观测到的位串，TVD 和参考概率为 `null`。
 
 <details>
 <summary>默认自动参考阈值</summary>

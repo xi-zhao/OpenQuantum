@@ -52,7 +52,7 @@ export function defineScienceTool({ name, description, source, inputSchema, resu
   };
 }
 
-export async function serveScienceTool({ entrypoint, id, definition, runtime = "python" }) {
+export async function serveScienceTool({ entrypoint, id, definition, definitions = [definition], runtime = "python" }) {
   const skillRoot = fileURLToPath(new URL("..", entrypoint));
   const projectRoot = path.resolve(skillRoot, "../../..");
   const lockFile = runtime === "julia" ? "Manifest.toml" : "uv.lock";
@@ -68,10 +68,12 @@ export async function serveScienceTool({ entrypoint, id, definition, runtime = "
   });
   const server = new Server({ name: `openquantum-${id}`, version: "0.1.0" }, { capabilities: { tools: {} } });
   let active;
-  server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools: [definition.tool] }));
+  server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools: definitions.map(item => item.tool) }));
   server.setRequestHandler(CallToolRequestSchema, async (request, { signal }) => {
     let controller;
     try {
+      const definition = definitions.find(item => item.tool.name === request.params.name);
+      if (!definition) throw new Error("Unknown tool: " + request.params.name);
       const input = definition.normalize(request.params.name, request.params.arguments);
       if (active) throw new Error("This local capability is busy; retry when its current call completes");
       controller = new AbortController(); active = controller;

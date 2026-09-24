@@ -747,3 +747,28 @@
     cwd: !!js process.cwd()
     toolCallTimeoutMs: 2147483647
     failOnStartupError: true
+
+- id: mcp-qbraid-conversion
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: qbraid_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/qbraid-conversion/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: true
+
+- id: mcp-qdmi-device
+  name: '@deepseek-ai/dsh-mcp-client'
+  disabled: true
+  config:
+    serverName: qdmi_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/qdmi-device/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: true

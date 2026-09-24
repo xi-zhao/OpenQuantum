@@ -5,6 +5,24 @@ import { quantumHardwareMcpIntegration } from "./quantum-hardware-mcp.mjs";
 
 const QISKIT_MCP_SOURCE = "https://github.com/Qiskit/mcp-servers";
 const MCP_CATALOG = Object.freeze({
+  qbraid_local: Object.freeze({
+    displayName: "qBraid 电路转换",
+    description: "Qiskit 与 Cirq 本地转换、OpenQASM 2 导出和完整酉矩阵对照；不提交云任务。",
+    provider: "qBraid / OpenQuantum",
+    sourceUrl: "https://github.com/qBraid/qBraid",
+    packageName: "qbraid",
+    packageVersion: "0.12.2",
+    setup: null,
+  }),
+  qdmi_local: Object.freeze({
+    displayName: "QDMI 设备能力查询",
+    description: "按需启用；先准备受控驱动，再只读查询设备、门集与耦合关系。示例驱动不代表真机。",
+    provider: "QDMI / OpenQuantum",
+    sourceUrl: "https://github.com/Munich-Quantum-Software-Stack/QDMI",
+    packageName: "QDMI",
+    packageVersion: "1.3.3",
+    setup: null,
+  }),
   pyzx_local: Object.freeze({
     displayName: "PyZX 电路优化",
     description: "ZX 重写、Clifford+T 门数比较与完整酉矩阵对照。",
@@ -99,11 +117,11 @@ const MCP_CATALOG = Object.freeze({
   }),
   clifft_local: Object.freeze({
     displayName: "Clifft 近 Clifford 采样",
-    description: "Clifford+T 电路带噪采样与可选密度矩阵参照。",
+    description: "Clifford+T 最终测量与可选密度矩阵参照；另提供 Stim 格式固定 shots 的测量及原始奇偶记录。",
     provider: "clifft / OpenQuantum",
     sourceUrl: "https://github.com/unitaryfoundation/clifft",
     packageName: "clifft",
-    packageVersion: "0.10.0",
+    packageVersion: "0.10.1",
     setup: null,
   }),
   oqupy_local: Object.freeze({

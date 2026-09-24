@@ -15,7 +15,9 @@
 | 误差缓解 | Mitiq | 多框架误差缓解工具集 | 已接入 ZNE/REM/PEC/CDR 的有界本地实验；能力目录 GPL-3.0-only，其他后端尚未开放 |
 | 耗散动力学扫描与局部梯度 | Dynamiqs | JAX 批量计算与自动微分 | 已接入 CPU 单量子位模型及独立积分/有限差分参考 |
 | 环境记忆动力学 | OQuPy | TEMPO 处理非马尔可夫 bath | 已接入有界 Ohmic spin-boson；需区分 dt、物理记忆长度与截断 |
-| 小型 Clifford+T 噪声采样 | Clifft | T 门与近 Clifford 电路 | 已接入 1–6 qubits、最终测量与独立密度矩阵参考；无 loss/leakage |
+| Clifford+T 噪声与纠错记录采样 | Clifft | T 门与近 Clifford 电路 | 已接入最终测量与可选密度矩阵参考，以及 Stim 格式原始记录；无 loss/leakage/CUDA 或自动解码 |
+| Qiskit/Cirq 酉电路迁移 | qBraid | 固定 QASM2 转换路径与独立矩阵对照 | 已接入结构化门集、空闲位与编号保持；无云任务或任意程序输入 |
+| C ABI 设备能力发现 | QDMI | 设备契约与驱动分离 | 已接入 1.3.3 只读查询，默认关闭；示例驱动已验证，真实厂商驱动需配置 |
 | 矩形纠错存储电路构建 | Deltakit | 显式码片、QPU 噪声模型和电路生成 | 已接入 rotated planar-code 与 ToyNoise、Stim/PyMatching；无云任务 |
 | 公开设备基准查证 | Metriq data | 保留基准参数、指标与出处 | 已接入固定历史快照的原生只读 Tool；不能作为实时设备排名 |
 | AWS 设备和算法样例 | Amazon Braket | 官方 SDK、算法库和多硬件入口 | 云端候选，默认关闭 |

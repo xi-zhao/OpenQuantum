@@ -1,6 +1,6 @@
 # Unitary 生态计算与数据接入
 
-OpenQuantum 新增 Dynamiqs、Clifft、OQuPy、Deltakit 与 Metriq 数据查询。四项计算各提供一个Tool 和有用的领域 Skill；Metriq 是原生只读 Tool。默认 Preset 已声明全部五项，Harness 继续负责调度、进程生命周期和会话记录。
+OpenQuantum 新增 Dynamiqs、Clifft、OQuPy、Deltakit 与 Metriq 数据查询。首批四项计算接口各提供一个 Tool 和相应领域 Skill；Metriq 是原生只读 Tool。默认 Preset 已声明全部五项，Harness 继续负责调度、进程生命周期和会话记录。
 
 ## 固定来源与执行范围
 
@@ -40,7 +40,9 @@ npm run capability:unitary:setup
 
 **Dynamiqs** 使用 `H=(drive X+detuning Z)/2`、`L=sqrt(gamma)|0><1|`，`hbar=1`。驱动批次、时长和步数由用户指定。梯度来自 JAX 自动微分，可选独立 SciPy Lindblad 积分及中央有限差分比较；不开放任意波形、多体系统或控制优化。`ground/excited` 是计算基标签。
 
-**Clifft** 支持 H、S、T、X、Y、Z、CX、CZ，量子位、门数和 shots 由输入决定；仅在用户指定 maxActiveWidth 时检查该预算。门后对该门涉及的各量子位施加 `DEPOLARIZE1(p)`，p 是三类 Pauli 错误的总概率。结果从左到右为 q0、q1……；独立密度矩阵参照由 referenceMode 选择。`referenceMode=auto|required|skip` 控制参考；运行参考时返回完整位串，跳过时仅返回实际观察到的位串（observed_only），参考概率与 TVD 为 null。loss、leakage、续算与动态反馈仍未开放。参数、资源配置与本地实测记录见[计算规模与参考检查](SCALABLE_BRIDGES.md)。
+**Clifft `sample_clifft_circuit`** 支持 H、S、T、X、Y、Z、CX、CZ，量子位、门数和 shots 由输入决定；仅在用户指定 maxActiveWidth 时检查该预算。门后对该门涉及的各量子位施加 `DEPOLARIZE1(p)`，p 是三类 Pauli 错误的总概率。结果从左到右为 q0、q1……；独立密度矩阵参照由 referenceMode 选择。`referenceMode=auto|required|skip` 控制参考；运行参考时返回完整位串，跳过时仅返回实际观察到的位串（observed_only），参考概率与 TVD 为 null。该结构化最终测量接口不开放 loss、leakage、续算与动态反馈。参数、资源配置与本地实测记录见[计算规模与参考检查](SCALABLE_BRIDGES.md)。
+
+新增的 Stim 格式固定 shots、测量反馈及 detector/observable 原始记录采样使用独立 `sample_clifft_qec` Tool，范围见[互操作接入](QUANTUM_INTEROP.md)。
 
 **OQuPy** 使用 `H=(tunneling X+bias Z)/2`，耦合算符 `Z/2`，`J(w)=2 alpha w exp(-w/cutoff)`，`hbar=kB=1`，系统初态与热 Gaussian bath 因子化。步数、记忆长度、耦合强度和时长由用户指定。`memoryTime=memorySteps*duration/steps`，减小 dt 时必须同时考虑物理记忆长度；固定 `epsrel=1e-7` 不代表观测量误差上界。适配器对请求终点增加一个向上的浮点 ULP，防止 OQuPy 0.5.0 将整步数取整为少一步，并核对真实输出网格。
 

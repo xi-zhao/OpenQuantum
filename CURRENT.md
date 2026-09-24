@@ -2,6 +2,12 @@
 
 量子依赖核验日期：2026-09-22；平台升级记录日期：2026-09-10；原模型验收交接记录日期：2026-09-05。此页只记录工作交接；架构以[文档总入口](docs/README.md)为准，执行事实以 Harness Session event log 为准，科学状态以 Acceptance Report 为准。
 
+## 本地互操作接入（2026-09-24）
+
+- Clifft 0.10.1 新增 Stim 格式固定 shots 记录接口；qBraid 0.12.2 新增 Qiskit/Cirq 双向酉电路转换；QDMI 1.3.3 提供默认关闭、显式准备驱动的只读查询。
+- 属于 L1 执行能力；本地真实库、Harness 协议夹具和独立领域审阅的范围见[接入说明](docs/integrations/QUANTUM_INTEROP.md)与[验证记录](docs/integrations/evidence/interop-2026-09-24.json)。没有验证外部模型、真实硬件或最终科学 Acceptance。
+- 本次源码目录为 34 个内置 Skill、36 个 MCP 连接和 5 个原生量子 Tool；不代表已发布安装包。
+
 ## 量子库更新（2026-09-22）
 
 - Compact 0.2.3、Qiskit 2.5.2、Clifft 0.10.1 与 Graphix 0.4 已更新固定依赖；Graphix 迁移资源图、空间调度和分支结果 API。

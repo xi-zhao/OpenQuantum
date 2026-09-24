@@ -47,7 +47,7 @@ for (const capability of UNITARY_TOOLS) {
       env: { ...process.env, PATH: `${sandbox}${path.delimiter}${process.env.PATH}`, OPENAI_API_KEY: "unitary-contract-secret-sentinel" } }));
     const listed = (await client.listTools()).tools;
     assert.deepEqual(listed.map(tool => tool.name), declared.map(tool => tool.name));
-    assert.equal(listed.length, 1);
+    assert.equal(listed.length, capability.id === "clifft-sampling" ? 2 : 1);
     assert.equal(declared[0].effect, "workspace-write");
     assert.equal(listed[0].annotations.readOnlyHint, false);
     assert.equal(listed[0].inputSchema.additionalProperties, false);

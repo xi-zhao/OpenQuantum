@@ -790,11 +790,16 @@ packages:
           tools:
             - name: sample_clifft_circuit
               effect: workspace-write
+            - name: sample_clifft_qec
+              effect: workspace-write
       nativeTools: []
       checks:
         - tests/unitary-tools-contracts.test.mjs
         - tests/unitary-tools-live.test.mjs
         - tests/harness-unitary-tools.test.mjs
+        - tests/interop-contracts.test.mjs
+        - tests/interop-live.test.mjs
+        - tests/harness-interop.test.mjs
 
   - id: oqupy-dynamics
     level: L1
@@ -1052,3 +1057,41 @@ packages:
         - tests/flagquantum-contracts.test.mjs
         - tests/candidate-tools-live.test.mjs
         - tests/harness-candidate-tools.test.mjs
+
+  - id: qbraid-conversion
+    level: L1
+    execution:
+      mcpServers:
+        - name: qbraid_local
+          source: package
+          entrypoint: .agents/skills/qbraid-conversion/mcp/server.mjs
+          activation: always
+          contractCheck: tests/interop-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: convert_qbraid_circuit
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/interop-contracts.test.mjs
+        - tests/interop-live.test.mjs
+        - tests/harness-interop.test.mjs
+
+  - id: qdmi-device
+    level: L1
+    execution:
+      mcpServers:
+        - name: qdmi_local
+          source: package
+          entrypoint: .agents/skills/qdmi-device/mcp/server.mjs
+          activation: opt-in
+          contractCheck: tests/interop-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: inspect_qdmi_devices
+              effect: read-only
+      nativeTools: []
+      checks:
+        - tests/interop-contracts.test.mjs
+        - tests/interop-live.test.mjs
+        - tests/harness-interop.test.mjs

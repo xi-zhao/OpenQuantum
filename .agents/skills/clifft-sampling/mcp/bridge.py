@@ -70,4 +70,50 @@ def compute(v):
         "Only the documented bounded Clifford+T gate set is exposed; loss/leakage continuations, dynamic circuits, performance claims and scientific acceptance are out of scope."]
 
 
-execute(compute)
+
+def compute_qec(v):
+    import hashlib
+    import re
+    import clifft
+    import numpy as np
+    circuit = v["stimCircuit"]
+    # This is circuit data consumed by Clifft's parser, never Python or a shell.
+    allowed = {"I", "X", "Y", "Z", "H", "S", "S_DAG", "T", "T_DAG", "CX", "CNOT",
+        "CY", "CZ", "SWAP", "R", "RX", "RY", "M", "MX", "MY", "MR", "MRX", "MRY",
+        "X_ERROR", "Y_ERROR", "Z_ERROR", "DEPOLARIZE1", "DEPOLARIZE2",
+        "PAULI_CHANNEL_1", "PAULI_CHANNEL_2", "TICK", "QUBIT_COORDS", "SHIFT_COORDS",
+        "DETECTOR", "OBSERVABLE_INCLUDE", "REPEAT"}
+    cleaned = "\n".join(line.split("#", 1)[0] for line in circuit.splitlines())
+    instructions = re.findall(r"(?:^|[{}])\s*([A-Za-z_][A-Za-z_0-9]*)", cleaned, re.M)
+    if not instructions or any(op.upper() not in allowed for op in instructions):
+        raise ValueError("Circuit contains instructions outside the documented fixed-shot Clifft subset")
+    program = clifft.compile(circuit)
+    if program.has_postselection or program.num_exp_vals:
+        raise ValueError("Postselection and expectation-value records are not supported")
+    width = int(program.peak_active_width)
+    if v.get("maxActiveWidth") is not None and width > v["maxActiveWidth"]:
+        raise ValueError("Compiled peak active width exceeds maxActiveWidth")
+    result = clifft.sample(program, shots=v["shots"], seed=v["seed"],
+                          **({"threads": v["execution"]["threads"]} if "threads" in v["execution"] else {}))
+    outputs = {}
+    for name, size in (("measurements", program.num_measurements),
+                       ("detectors", program.num_detectors), ("observables", program.num_observables)):
+        rows = np.asarray(getattr(result, name))
+        if rows.shape != (v["shots"], size) or not np.isin(rows, [0, 1]).all():
+            raise ValueError("Clifft returned invalid " + name + " dimensions or values")
+        outputs[name] = ["".join(map(str, row)) for row in rows.astype(np.uint8)]
+    return {**outputs, "shots": v["shots"], "numQubits": int(program.num_qubits),
+        "numMeasurements": int(program.num_measurements), "numDetectors": int(program.num_detectors),
+        "numObservables": int(program.num_observables), "peakActiveWidth": width,
+        "circuitSha256": hashlib.sha256(circuit.encode()).hexdigest(),
+        "recordOrder": "left-to-right measurement record index / detector declaration index / observable id",
+        "detectorConvention": "raw parity of referenced measurement records; no automatic reference-sample subtraction",
+        "decoded": False}, [
+        "CPU, fixed-shot sampling of the documented Stim-format subset; CUDA, loss, leakage and postselection are excluded.",
+        "Detector and observable bits are raw record parities, not automatically normalized detection events or logical failures.",
+        "No detector error model, matching weights or decoder is inferred; non-Clifford sampling does not establish PyMatching compatibility.",
+        "Seed reproducibility is limited to the fixed backend, version, scheduling and batching; frequencies carry sampling uncertainty.",
+        "This call reports execution facts only; scientific acceptance remains not_evaluated."]
+
+
+execute(lambda v: compute_qec(v) if "stimCircuit" in v else compute(v))

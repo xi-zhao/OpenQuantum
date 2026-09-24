@@ -143,6 +143,7 @@ Skill 与 Tool 在概念和发行版 policy 中都相互独立：Skill-only、To
 - [论文方法计算接入](integrations/PAPER_BACKED_TOOLS.md)：SQD、TJM、LSD、RandomMeas、Flow-VQE 和 TeNPy 的固定实现、六个 Tool、安装与科学范围。
 - [Mitiq 误差缓解](integrations/MITIQ.md)：ZNE、REM、PEC、CDR 的本地实验、相同 shots 预算、统计和 GPL 发行边界。
 - [Unitary 生态计算与数据](integrations/UNITARY_ECOSYSTEM.md)：Dynamiqs、Clifft、OQuPy、Deltakit 的计算接口，以及 Metriq 公开数据快照查询。
+- [Clifft、qBraid 与 QDMI](integrations/QUANTUM_INTEROP.md)：Stim 格式固定 shots 记录、Qiskit/Cirq 本地转换与显式配置驱动的只读设备查询。
 - [电路与代数工具](integrations/UNITARY_NEXT_TOOLS.md)：PyZX 电路优化、Graphix 测量式计算、Symmer 对称性降比特与 PauLie 代数分析。
 - [候选量子库接入与科学边界](integrations/CANDIDATE_LIBRARIES.md) · [实施计划与去重决策](integrations/CANDIDATE_INTEGRATION_PLAN.md)
 - [2026-09-22 量子库更新](releases/2026-09-22-quantum-upstream-update.md)：Compact、Clifft、Qiskit 更新，Graphix 迁移与隔离开发版回归。

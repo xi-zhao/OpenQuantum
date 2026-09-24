@@ -8,7 +8,10 @@
 | --- | --- | --- | --- |
 | Mitiq | GPLv3；本地能力目录 GPL-3.0-only | 固定 1.1.0，独立 Python 环境调用 ZNE/REM/PEC/CDR；本能力携带独立 LICENSE/NOTICE，见下方 Mitiq 说明 | [unitaryfoundation/mitiq](https://github.com/unitaryfoundation/mitiq/tree/v1.1.0) |
 | Dynamiqs | Apache-2.0 | 固定 0.3.6 源码提交 `a49b30fe5cacb5cf7c1d981f2e7ed03b18e05318`，隔离 Python 环境调用单量子位批量动力学与梯度；源码由包管理器取得 | [dynamiqs/dynamiqs](https://github.com/dynamiqs/dynamiqs) |
-| Clifft | Apache-2.0 | 固定 PyPI 0.10.1，仅执行结构化小型 Clifford+T 最终测量电路；独立环境安装，不复制上游源码 | [QuEraComputing/clifft](https://github.com/unitaryfoundation/clifft) |
+| Clifft | Apache-2.0 | 固定 PyPI 0.10.1，执行结构化 Clifford+T 最终测量及限定 Stim 格式的固定 shots 记录采样；独立环境安装，不复制上游源码 | [unitaryfoundation/clifft](https://github.com/unitaryfoundation/clifft) |
+| qBraid | Apache-2.0 | 固定 0.12.2，独立 Python 环境调用 Qiskit/QASM2/Cirq 双向转换；不使用云 Provider，不复制上游源码 | [qBraid/qBraid](https://github.com/qBraid/qBraid/tree/v0.12.2) |
+| QDMI | Apache-2.0 WITH LLVM-exception | 固定 v1.3.3 / `18cfb67fd9042761d3005c2f8655751c1758f9c5`；显式安装器在忽略目录构建官方示例 client driver/device 并保留 LICENSE，Python ctypes 只读查询 client ABI；不重新分发上游源码或二进制 | [Munich-Quantum-Software-Stack/QDMI](https://github.com/Munich-Quantum-Software-Stack/QDMI/tree/v1.3.3) |
+| Cirq / Qiskit SDK | Apache-2.0 | qBraid 环境固定 Cirq 1.6.1 / Qiskit 2.5.2，用于电路表示、转换和独立矩阵对照；由包管理器安装并保留各自许可证 | [Cirq](https://github.com/quantumlib/Cirq) / [Qiskit](https://github.com/Qiskit/qiskit) |
 | PyZX | Apache-2.0 | 固定 0.10.6，隔离环境调用ZX 重写、Clifford+T 门数比较与完整酉矩阵对照；上游源码由包管理器安装，保留原始许可证，不随本仓库重新分发 | [zxcalc/pyzx](https://github.com/zxcalc/pyzx) |
 | Graphix | Apache-2.0 | 固定 0.4，隔离环境调用电路到 MBQC 模式、资源图、自适应测量和纠正输出；上游源码由包管理器安装，保留原始许可证，不随本仓库重新分发 | [TeamGraphix/graphix](https://github.com/TeamGraphix/graphix) |
 | Symmer | MIT | 固定 0.0.13@a4ba56e3，隔离环境调用指定 Pauli 对称性扇区的降比特与同扇区保谱检查；上游源码由包管理器安装，保留原始许可证，不随本仓库重新分发 | [qmatter-labs/symmer](https://github.com/qmatter-labs/symmer) |

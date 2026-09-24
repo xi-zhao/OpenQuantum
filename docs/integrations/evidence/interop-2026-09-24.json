@@ -1,0 +1,1067 @@
+{
+  "schemaVersion": "1.0",
+  "verifiedAt": "2026-09-24T01:37:21.096325+00:00",
+  "scope": "Local CPU adapters; pinned real libraries and official QDMI example; no final scientific Acceptance",
+  "baseCommit": "7b0500e1216db1207d680c02a79568d5c862133d",
+  "environment": {
+    "system": "Darwin",
+    "release": "27.0.0",
+    "machine": "arm64",
+    "node": "v24.14.1",
+    "pythonPackages": {
+      "clifft-sampling": {
+        "clifft": "0.10.1",
+        "stim": "1.16.0",
+        "numpy": "2.5.3"
+      },
+      "qbraid-conversion": {
+        "qbraid": "0.12.2",
+        "qiskit": "2.5.2",
+        "cirq-core": "1.6.1",
+        "ply": "3.11"
+      }
+    }
+  },
+  "checks": [
+    {
+      "command": "npm run capability:contracts:test",
+      "status": "pass",
+      "counts": {
+        "tests": 104,
+        "pass": 103,
+        "fail": 0,
+        "skipped": 1,
+        "cancelled": 0
+      },
+      "logSha256": "b155a8d486166c9b67867a7f3aa2df5f10a838fbe31eb20190fca709b6e6e9d7"
+    },
+    {
+      "command": "node --test tests/capability-package-audit.test.mjs tests/capability-tool-contract.test.mjs tests/readme-capability-catalog.test.mjs",
+      "status": "pass",
+      "counts": {
+        "tests": 49,
+        "pass": 49,
+        "fail": 0,
+        "skipped": 0,
+        "cancelled": 0
+      },
+      "logSha256": "77fa61a31d727d7a500afa2304bf85df404d69d9d1f359e113d33273b4eee4c8"
+    },
+    {
+      "command": "node --test tests/project-settings.test.mjs tests/project-settings-concurrency.test.mjs",
+      "status": "pass",
+      "counts": {
+        "tests": 16,
+        "pass": 16,
+        "fail": 0,
+        "skipped": 0,
+        "cancelled": 0
+      },
+      "logSha256": "c17906635a3fa57d152a2870888d424aef03ea5f4f01d35eee21f6d36980c4ee"
+    },
+    {
+      "command": "npm run capability:interop:live",
+      "status": "pass",
+      "counts": {
+        "tests": 5,
+        "pass": 5,
+        "fail": 0,
+        "skipped": 0,
+        "cancelled": 0
+      },
+      "logSha256": "18fc7cac791760a24262b26f18715b6d1b2e1e1c1f019a66cad7f9a39048286d"
+    },
+    {
+      "command": "npm run lint",
+      "status": "pass",
+      "logSha256": "737c52118307ee296ae8993ff264bd3fc8f8e9ab65158364f46ec3676b05e557"
+    },
+    {
+      "command": "npm run capability:conformance",
+      "status": "pass",
+      "logSha256": "a55036e9d26e36a6bf8ab38c9520f1f1ddd3fde552df68c6a812e94e2a6e700e"
+    },
+    {
+      "command": "npm run harness:config",
+      "status": "pass",
+      "logSha256": "33622d6070328f2831c551da40894893d23c7bac39edb61e6cf195534e9296ec"
+    }
+  ],
+  "skippedContractTest": "Unrelated opt-in real FlagQuantum upstream probe",
+  "harness": {
+    "model": "local protocol fixture",
+    "externalModelTested": false,
+    "toolCalls": 4,
+    "successfulResults": 3,
+    "expectedRejectedInputs": 1,
+    "sessionReplayVerified": true,
+    "eventCounts": {
+      "permission/preset": 1,
+      "sandbox/mode": 1,
+      "approval/policy": 1,
+      "agent/inbox/spliced": 2,
+      "turn/start": 1,
+      "step/start": 2,
+      "system/message": 1,
+      "user/message": 4,
+      "request/header": 1,
+      "request/context": 1,
+      "session/title": 2,
+      "session/title-llm-request": 1,
+      "assistant/message": 2,
+      "tool/call": 4,
+      "tool/result": 4,
+      "step/end": 2,
+      "turn/end": 1
+    },
+    "artifact": ".openquantum/interop-evidence/harness-session.json",
+    "artifactSha256": "8c3a46389abe9bbef351221d24c780a117d7e39e24f245406cf14269fea9e03f"
+  },
+  "setup": {
+    "unchangedBuildIdentity": true,
+    "modifiedSourceRejected": true,
+    "configuredDriverPreserved": true
+  },
+  "independentDomainReview": {
+    "method": "Separate agent inspected pinned APIs and ran independent CPU calculations",
+    "result": "No unresolved blockers after QASM2 SWAP export normalization",
+    "scope": [
+      "Clifft measurement order, reset/repeat, raw parities, observable IDs and feedback",
+      "qBraid wire order, idle wires, unitary comparison, global phase and canonical export",
+      "QDMI 1.3.3 C signatures, enums, size_t/handles and unsupported-property semantics"
+    ]
+  },
+  "runtimeAndTestFilesSha256": {
+    ".agents/capability-packages.yml": "1e05c46504ea3caa689a5139b0f06d78a8c1f9939549bf0799455eb5fed52ccb",
+    ".agents/skills/clifft-sampling/mcp/bridge.py": "5190e832053a2e50a0e553436076b87b3e05c712c1bbc2a3595566f0efe45047",
+    ".agents/skills/clifft-sampling/mcp/qec-contracts.mjs": "25c80bd65ec5620bb9c7c1cebf38bb1f73a3650b720878f28f97af3383ef8726",
+    ".agents/skills/clifft-sampling/mcp/server.mjs": "94a7a9cecf873c797b8b6b4eee69e24ef516208115a850887530a2e5f2f781d0",
+    ".agents/skills/qbraid-conversion/mcp/bridge.py": "bb973212a1ff57fa112557de213a79a9f5d479e237bbeb67b2ee67ef043fff70",
+    ".agents/skills/qbraid-conversion/mcp/contracts.mjs": "84e8a9002ae96e85cead26513fd7f2da5837018cb3c5eb42ec2120ca2a145433",
+    ".agents/skills/qbraid-conversion/mcp/server.mjs": "6725a901d949e45c34ae2cfcf5c4637d679f28396d424decc853661d79532a76",
+    ".agents/skills/qbraid-conversion/pyproject.toml": "1ba4bb29ba494068ac777dd44d9896575312bda196028f269946c41cc05d2a83",
+    ".agents/skills/qbraid-conversion/uv.lock": "6ff5730c1e3d5970a8eacfb2431805768055b9ac22705518e6bc53140fe20ad0",
+    ".agents/skills/qdmi-device/mcp/bridge.py": "bcd3a1f47f652ca01d77f6e7ae6be1374ff266aeef7ab5b485d9348429198a6b",
+    ".agents/skills/qdmi-device/mcp/contracts.mjs": "25a60c174e1a80db07be25b68d8b23cd920afc307d7eb8e1012fa03a46dcb9f5",
+    ".agents/skills/qdmi-device/mcp/server.mjs": "c916d184eb23f533bbfbf4c90d4d1f7ae127d26ed767ab7e0196cc9b5b195924",
+    ".agents/skills/qdmi-device/pyproject.toml": "d651309b6d17656a09522ed1ea7f44fa0fb3f108bf84fc647fb5fd9371d16f21",
+    ".agents/skills/qdmi-device/uv.lock": "30c0d56545224097d96efbea14a1887809bca829c55f9c770005f5a63569636a",
+    "package.json": "d4701704d98af8c44589a0439cc207015831bf3794e71df386bf7802d9722dcd",
+    "runtime/openquantum/agent-presets/openquantum/agent.cordis.yml": "404ad9245a33e207acc3182ebee0ff78d8a5775ab1e971fda8a95a9eedcb8f96",
+    "scripts/setup-paper-tools.mjs": "564ed8602cad53e886a85a180ae9994b9bf7dfa18438e9defa0ca62aa4430dd6",
+    "scripts/setup-qdmi.mjs": "afe9525130f054bd4f92f848507792e49898b1b60b55da379fe87eb50798d008",
+    "src/lib/bounded-science-mcp.mjs": "626e2384c23750304429ac2e3efd54d7fc7ec34cb1f40c1621e3518864b47755",
+    "src/settings/server/project-settings-catalog.mjs": "a6ceabcb8a8005ab3f2b53da17b4acdd278b07f0b63818f66012cba89bfc96ab",
+    "tests/capability-package-audit.test.mjs": "449679b6ae92192e255287bb5a0a79a8a1b598455b675b86415f4ff17dadce71",
+    "tests/capability-tool-contract.test.mjs": "f4ac1f0344fd25e52bc80bbf29fb19617c9ac3ee68252e900ab8a78821412f8a",
+    "tests/fixtures/interop.mjs": "bbc086a772a6379a5b4ae1e5c20dadb2d994c386f23d2ea422e2260b1136d458",
+    "tests/harness-interop.test.mjs": "1bdfd1c1553185ad1f112759be40da31f0767d9ee58973b819db69dfa4306598",
+    "tests/interop-contracts.test.mjs": "cff09c1a8e9ba1c709b5c11e2056c303404a475ab9aef15ce3012cd60eaa5391",
+    "tests/interop-live.test.mjs": "977b16e9a7d13e188f8bffbe27af4838446f2593edd1a7e4162b2e742850e44e",
+    "tests/unitary-tools-contracts.test.mjs": "57eaa4672f91d43c8971c6a92e045ad88503114189d650aba71f75eecf425c0c"
+  },
+  "cases": [
+    {
+      "artifact": ".openquantum/interop-evidence/clifft-sampling-feedback.json",
+      "artifactSha256": "e39bc4ca646d364849ade824be0db88ad5bbc83c6f46f2b490902f52296b0876",
+      "source": {
+        "name": "clifft",
+        "version": "0.10.1",
+        "repository": "https://github.com/unitaryfoundation/clifft"
+      },
+      "input": {
+        "stimCircuit": "H 0\nM 0\nCX rec[-1] 1\nM 1\nDETECTOR rec[-1] rec[-2]\nOBSERVABLE_INCLUDE(2) rec[-1]",
+        "shots": 128,
+        "seed": 7,
+        "execution": {}
+      },
+      "inputSha256": "3ada02c07e744fc7a22356ac102a12c6f175c93275d1db6f9e9bacdabd14487d",
+      "dependencyLockSha256": "42f3d4cf1a642b2cea2b25a61ae36a4de9c0e467f1ea27354d9e09f40ddc4530",
+      "result": {
+        "shots": 128,
+        "numQubits": 2,
+        "numMeasurements": 2,
+        "numDetectors": 1,
+        "numObservables": 3,
+        "peakActiveWidth": 0,
+        "circuitSha256": "174a105208cbc1e8c9894ecfda928414c5326b71b13456d625e49945bd336960",
+        "recordOrder": "left-to-right measurement record index / detector declaration index / observable id",
+        "detectorConvention": "raw parity of referenced measurement records; no automatic reference-sample subtraction",
+        "decoded": false,
+        "histograms": {
+          "measurements": {
+            "00": 67,
+            "11": 61
+          },
+          "detectors": {
+            "0": 128
+          },
+          "observables": {
+            "000": 67,
+            "001": 61
+          }
+        }
+      },
+      "scientificValidation": "not_evaluated"
+    },
+    {
+      "artifact": ".openquantum/interop-evidence/clifft-sampling-no-detectors.json",
+      "artifactSha256": "8f10af7042333d5b80c907b5b92ede45f1bb5f48ef1d089465aa92082f4ec60a",
+      "source": {
+        "name": "clifft",
+        "version": "0.10.1",
+        "repository": "https://github.com/unitaryfoundation/clifft"
+      },
+      "input": {
+        "stimCircuit": "H 0\nM 0",
+        "shots": 4,
+        "seed": 7,
+        "execution": {}
+      },
+      "inputSha256": "5287feb7228ea31e091894dd0cadf815d3ab1d67eb817877064ec87935498994",
+      "dependencyLockSha256": "42f3d4cf1a642b2cea2b25a61ae36a4de9c0e467f1ea27354d9e09f40ddc4530",
+      "result": {
+        "shots": 4,
+        "numQubits": 1,
+        "numMeasurements": 1,
+        "numDetectors": 0,
+        "numObservables": 0,
+        "peakActiveWidth": 0,
+        "circuitSha256": "cce71cf2d32cfaf78af5b89bc928e9b58525cc336f1a20ad8613fdb0d9278282",
+        "recordOrder": "left-to-right measurement record index / detector declaration index / observable id",
+        "detectorConvention": "raw parity of referenced measurement records; no automatic reference-sample subtraction",
+        "decoded": false,
+        "histograms": {
+          "measurements": {
+            "1": 3,
+            "0": 1
+          },
+          "detectors": {
+            "": 4
+          },
+          "observables": {
+            "": 4
+          }
+        }
+      },
+      "scientificValidation": "not_evaluated"
+    },
+    {
+      "artifact": ".openquantum/interop-evidence/clifft-sampling-raw-parity.json",
+      "artifactSha256": "ca85e680bada607673d3be1d25a66811e244c7de9dd24d312ef182351a82a9a3",
+      "source": {
+        "name": "clifft",
+        "version": "0.10.1",
+        "repository": "https://github.com/unitaryfoundation/clifft"
+      },
+      "input": {
+        "stimCircuit": "X 0\nM 0\nDETECTOR rec[-1]\nOBSERVABLE_INCLUDE(0) rec[-1]",
+        "shots": 8,
+        "seed": 7,
+        "execution": {}
+      },
+      "inputSha256": "a95b21a3bc34b4d6276b78bf77e7a03eb1b44ab25d8ef696cbe078583a9cc9fc",
+      "dependencyLockSha256": "42f3d4cf1a642b2cea2b25a61ae36a4de9c0e467f1ea27354d9e09f40ddc4530",
+      "result": {
+        "shots": 8,
+        "numQubits": 1,
+        "numMeasurements": 1,
+        "numDetectors": 1,
+        "numObservables": 1,
+        "peakActiveWidth": 0,
+        "circuitSha256": "c9ec21d960d18935fb6320cd6284a97bc39c0541faed40c21d4fa236099f6388",
+        "recordOrder": "left-to-right measurement record index / detector declaration index / observable id",
+        "detectorConvention": "raw parity of referenced measurement records; no automatic reference-sample subtraction",
+        "decoded": false,
+        "histograms": {
+          "measurements": {
+            "1": 8
+          },
+          "detectors": {
+            "1": 8
+          },
+          "observables": {
+            "1": 8
+          }
+        }
+      },
+      "scientificValidation": "not_evaluated"
+    },
+    {
+      "artifact": ".openquantum/interop-evidence/clifft-sampling-repeat-seed.json",
+      "artifactSha256": "024161b41bc9eb8f68ec05ba8eda0b7c56525ee59827cc1129f74c64346d8d13",
+      "source": {
+        "name": "clifft",
+        "version": "0.10.1",
+        "repository": "https://github.com/unitaryfoundation/clifft"
+      },
+      "input": {
+        "stimCircuit": "H 0\nT 0\nH 0\nM 0\nDETECTOR rec[-1]\nOBSERVABLE_INCLUDE(0) rec[-1]",
+        "shots": 8192,
+        "seed": 7,
+        "execution": {}
+      },
+      "inputSha256": "5d38328abd17b200f764e13e7775645d64f4b8d8eb1dbe13845a50aaf5a5cf8b",
+      "dependencyLockSha256": "42f3d4cf1a642b2cea2b25a61ae36a4de9c0e467f1ea27354d9e09f40ddc4530",
+      "result": {
+        "shots": 8192,
+        "numQubits": 1,
+        "numMeasurements": 1,
+        "numDetectors": 1,
+        "numObservables": 1,
+        "peakActiveWidth": 1,
+        "circuitSha256": "14dc3fef19cf77a2c554a62e51a8046a44c070442d14e822735cc0b57583283b",
+        "recordOrder": "left-to-right measurement record index / detector declaration index / observable id",
+        "detectorConvention": "raw parity of referenced measurement records; no automatic reference-sample subtraction",
+        "decoded": false,
+        "histograms": {
+          "measurements": {
+            "0": 6976,
+            "1": 1216
+          },
+          "detectors": {
+            "0": 6976,
+            "1": 1216
+          },
+          "observables": {
+            "0": 6976,
+            "1": 1216
+          }
+        }
+      },
+      "scientificValidation": "not_evaluated"
+    },
+    {
+      "artifact": ".openquantum/interop-evidence/clifft-sampling-reset-repeat.json",
+      "artifactSha256": "ce5f54a9869c90f33bb5b62429b89956e4f9b933c5e2801a9f89ee33a8639cda",
+      "source": {
+        "name": "clifft",
+        "version": "0.10.1",
+        "repository": "https://github.com/unitaryfoundation/clifft"
+      },
+      "input": {
+        "stimCircuit": "R 0\nREPEAT 3 {\nX 0\nMR 0\nDETECTOR rec[-1]\n}\nOBSERVABLE_INCLUDE(0) rec[-1]",
+        "shots": 16,
+        "seed": 7,
+        "execution": {}
+      },
+      "inputSha256": "de4e8463a21cd44027772b244396fbb04f36b7ef18b135ee9cbfc5101a04e934",
+      "dependencyLockSha256": "42f3d4cf1a642b2cea2b25a61ae36a4de9c0e467f1ea27354d9e09f40ddc4530",
+      "result": {
+        "shots": 16,
+        "numQubits": 1,
+        "numMeasurements": 3,
+        "numDetectors": 3,
+        "numObservables": 1,
+        "peakActiveWidth": 0,
+        "circuitSha256": "d9dfa888ba1c7dc96d09d0afafb57f9859fa1acf237c4eceea253afa54df74a5",
+        "recordOrder": "left-to-right measurement record index / detector declaration index / observable id",
+        "detectorConvention": "raw parity of referenced measurement records; no automatic reference-sample subtraction",
+        "decoded": false,
+        "histograms": {
+          "measurements": {
+            "111": 16
+          },
+          "detectors": {
+            "111": 16
+          },
+          "observables": {
+            "1": 16
+          }
+        }
+      },
+      "scientificValidation": "not_evaluated"
+    },
+    {
+      "artifact": ".openquantum/interop-evidence/clifft-sampling-t-interference.json",
+      "artifactSha256": "024161b41bc9eb8f68ec05ba8eda0b7c56525ee59827cc1129f74c64346d8d13",
+      "source": {
+        "name": "clifft",
+        "version": "0.10.1",
+        "repository": "https://github.com/unitaryfoundation/clifft"
+      },
+      "input": {
+        "stimCircuit": "H 0\nT 0\nH 0\nM 0\nDETECTOR rec[-1]\nOBSERVABLE_INCLUDE(0) rec[-1]",
+        "shots": 8192,
+        "seed": 7,
+        "execution": {}
+      },
+      "inputSha256": "5d38328abd17b200f764e13e7775645d64f4b8d8eb1dbe13845a50aaf5a5cf8b",
+      "dependencyLockSha256": "42f3d4cf1a642b2cea2b25a61ae36a4de9c0e467f1ea27354d9e09f40ddc4530",
+      "result": {
+        "shots": 8192,
+        "numQubits": 1,
+        "numMeasurements": 1,
+        "numDetectors": 1,
+        "numObservables": 1,
+        "peakActiveWidth": 1,
+        "circuitSha256": "14dc3fef19cf77a2c554a62e51a8046a44c070442d14e822735cc0b57583283b",
+        "recordOrder": "left-to-right measurement record index / detector declaration index / observable id",
+        "detectorConvention": "raw parity of referenced measurement records; no automatic reference-sample subtraction",
+        "decoded": false,
+        "histograms": {
+          "measurements": {
+            "0": 6976,
+            "1": 1216
+          },
+          "detectors": {
+            "0": 6976,
+            "1": 1216
+          },
+          "observables": {
+            "0": 6976,
+            "1": 1216
+          }
+        },
+        "analyticReference": {
+          "oneProbability": 0.14644660940672624,
+          "observedOneProbability": 0.1484375,
+          "absoluteDeviation": 0.0019908905932737586,
+          "testTolerance": 0.025
+        }
+      },
+      "scientificValidation": "not_evaluated"
+    },
+    {
+      "artifact": ".openquantum/interop-evidence/qbraid-conversion-cirq-to-qiskit-all-gates.json",
+      "artifactSha256": "ac65403b0b1077a20d8ed31ee5d51fd974f18aee4925b586c3328cb1669eae66",
+      "source": {
+        "name": "qBraid",
+        "version": "0.12.2",
+        "repository": "https://github.com/qBraid/qBraid"
+      },
+      "input": {
+        "numQubits": 4,
+        "gates": [
+          {
+            "gate": "H",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "X",
+            "targets": [
+              1
+            ]
+          },
+          {
+            "gate": "Y",
+            "targets": [
+              2
+            ]
+          },
+          {
+            "gate": "Z",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "S",
+            "targets": [
+              1
+            ]
+          },
+          {
+            "gate": "SDG",
+            "targets": [
+              2
+            ]
+          },
+          {
+            "gate": "T",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "TDG",
+            "targets": [
+              1
+            ]
+          },
+          {
+            "gate": "RX",
+            "targets": [
+              0
+            ],
+            "angle": -0.37
+          },
+          {
+            "gate": "RY",
+            "targets": [
+              1
+            ],
+            "angle": -0.74
+          },
+          {
+            "gate": "RZ",
+            "targets": [
+              2
+            ],
+            "angle": -1.1099999999999999
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              2,
+              0
+            ]
+          },
+          {
+            "gate": "CZ",
+            "targets": [
+              0,
+              1
+            ]
+          },
+          {
+            "gate": "SWAP",
+            "targets": [
+              1,
+              2
+            ]
+          }
+        ],
+        "direction": "cirq-to-qiskit",
+        "referenceMode": "auto",
+        "execution": {}
+      },
+      "inputSha256": "43055407cf1a74afbbc3eb9d25cffed7a1f25412f2ccedcbd16ee78c530592b1",
+      "dependencyLockSha256": "6ff5730c1e3d5970a8eacfb2431805768055b9ac22705518e6bc53140fe20ad0",
+      "result": {
+        "numQubits": 4,
+        "direction": "cirq-to-qiskit",
+        "conversionPath": [
+          "cirq",
+          "qasm2",
+          "qiskit"
+        ],
+        "openQasm2": "OPENQASM 2.0;\ninclude \"qelib1.inc\";\nqreg q[4];\nu3(0,0,0) q[0];\nu3(pi/2,0,pi) q[0];\nu3(0,0,pi) q[0];\nu3(0,0,pi/4) q[0];\nu3(-0.37,-pi/2,pi/2) q[0];\nu3(0,0,0) q[1];\nu3(pi,0,pi) q[1];\nu3(0,0,pi/2) q[1];\nu3(0,0,-pi/4) q[1];\nu3(-0.74,0,0) q[1];\nu3(pi/2,0,pi) q[1];\nu3(0,0,0) q[2];\nu3(pi,pi/2,pi/2) q[2];\nu3(0,0,-pi/2) q[2];\nu3(0,0,-1.1099999999999999) q[2];\ncx q[2],q[0];\ncx q[0],q[1];\nu3(pi/2,0,pi) q[1];\ncx q[1],q[2];\ncx q[2],q[1];\ncx q[1],q[2];\nu3(0,0,0) q[3];",
+        "wireOrder": "q[i] preserves input qubit i; comparison uses q0 as least significant bit",
+        "reference": {
+          "mode": "auto",
+          "status": "computed",
+          "method": "Independent Qiskit and Cirq full unitaries plus parsed OpenQASM 2; fixed wires, global phase ignored",
+          "reason": "Independent reference computed for this input."
+        },
+        "independentEquivalent": true,
+        "maxUnitaryDeviation": 3.663841114510704e-16,
+        "globalPhaseIgnored": true,
+        "cloudSubmitted": false
+      },
+      "scientificValidation": "not_evaluated"
+    },
+    {
+      "artifact": ".openquantum/interop-evidence/qbraid-conversion-cirq-to-qiskit-asymmetric-idle.json",
+      "artifactSha256": "966facd828ebb0f8800729066f5bb062bcae2b85d5e02171738d8af4fc2ef199",
+      "source": {
+        "name": "qBraid",
+        "version": "0.12.2",
+        "repository": "https://github.com/qBraid/qBraid"
+      },
+      "input": {
+        "numQubits": 3,
+        "gates": [
+          {
+            "gate": "X",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "RY",
+            "targets": [
+              2
+            ],
+            "angle": 0.4
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              2,
+              0
+            ]
+          }
+        ],
+        "direction": "cirq-to-qiskit",
+        "referenceMode": "auto",
+        "execution": {}
+      },
+      "inputSha256": "fb0e7f79430875734b9485842172dd57ae878d4cd81769c4f22a65c7d9863310",
+      "dependencyLockSha256": "6ff5730c1e3d5970a8eacfb2431805768055b9ac22705518e6bc53140fe20ad0",
+      "result": {
+        "numQubits": 3,
+        "direction": "cirq-to-qiskit",
+        "conversionPath": [
+          "cirq",
+          "qasm2",
+          "qiskit"
+        ],
+        "openQasm2": "OPENQASM 2.0;\ninclude \"qelib1.inc\";\nqreg q[3];\nu3(0,0,0) q[0];\nu3(pi,0,pi) q[0];\nu3(0,0,0) q[1];\nu3(0,0,0) q[2];\nu3(0.39999999999999997,0,0) q[2];\ncx q[2],q[0];",
+        "wireOrder": "q[i] preserves input qubit i; comparison uses q0 as least significant bit",
+        "reference": {
+          "mode": "auto",
+          "status": "computed",
+          "method": "Independent Qiskit and Cirq full unitaries plus parsed OpenQASM 2; fixed wires, global phase ignored",
+          "reason": "Independent reference computed for this input."
+        },
+        "independentEquivalent": true,
+        "maxUnitaryDeviation": 6.001176987522884e-17,
+        "globalPhaseIgnored": true,
+        "cloudSubmitted": false
+      },
+      "scientificValidation": "not_evaluated"
+    },
+    {
+      "artifact": ".openquantum/interop-evidence/qbraid-conversion-cirq-to-qiskit-empty.json",
+      "artifactSha256": "9c554470804a437f4886eb8dc530067a576874012b75b43aa17aaa333532ca27",
+      "source": {
+        "name": "qBraid",
+        "version": "0.12.2",
+        "repository": "https://github.com/qBraid/qBraid"
+      },
+      "input": {
+        "numQubits": 3,
+        "gates": [],
+        "direction": "cirq-to-qiskit",
+        "referenceMode": "auto",
+        "execution": {}
+      },
+      "inputSha256": "7158106ccc54601ae65c85dfc514fa40a43557e386f47fd17fbaa143d8f397d8",
+      "dependencyLockSha256": "6ff5730c1e3d5970a8eacfb2431805768055b9ac22705518e6bc53140fe20ad0",
+      "result": {
+        "numQubits": 3,
+        "direction": "cirq-to-qiskit",
+        "conversionPath": [
+          "cirq",
+          "qasm2",
+          "qiskit"
+        ],
+        "openQasm2": "OPENQASM 2.0;\ninclude \"qelib1.inc\";\nqreg q[3];\nu3(0,0,0) q[0];\nu3(0,0,0) q[1];\nu3(0,0,0) q[2];",
+        "wireOrder": "q[i] preserves input qubit i; comparison uses q0 as least significant bit",
+        "reference": {
+          "mode": "auto",
+          "status": "computed",
+          "method": "Independent Qiskit and Cirq full unitaries plus parsed OpenQASM 2; fixed wires, global phase ignored",
+          "reason": "Independent reference computed for this input."
+        },
+        "independentEquivalent": true,
+        "maxUnitaryDeviation": 0,
+        "globalPhaseIgnored": true,
+        "cloudSubmitted": false
+      },
+      "scientificValidation": "not_evaluated"
+    },
+    {
+      "artifact": ".openquantum/interop-evidence/qbraid-conversion-qiskit-to-cirq-all-gates.json",
+      "artifactSha256": "640db03fe1e5820636a78534fa4b325d0271f4c9abfcff8f97c2430fe7000aab",
+      "source": {
+        "name": "qBraid",
+        "version": "0.12.2",
+        "repository": "https://github.com/qBraid/qBraid"
+      },
+      "input": {
+        "numQubits": 4,
+        "gates": [
+          {
+            "gate": "H",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "X",
+            "targets": [
+              1
+            ]
+          },
+          {
+            "gate": "Y",
+            "targets": [
+              2
+            ]
+          },
+          {
+            "gate": "Z",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "S",
+            "targets": [
+              1
+            ]
+          },
+          {
+            "gate": "SDG",
+            "targets": [
+              2
+            ]
+          },
+          {
+            "gate": "T",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "TDG",
+            "targets": [
+              1
+            ]
+          },
+          {
+            "gate": "RX",
+            "targets": [
+              0
+            ],
+            "angle": -0.37
+          },
+          {
+            "gate": "RY",
+            "targets": [
+              1
+            ],
+            "angle": -0.74
+          },
+          {
+            "gate": "RZ",
+            "targets": [
+              2
+            ],
+            "angle": -1.1099999999999999
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              2,
+              0
+            ]
+          },
+          {
+            "gate": "CZ",
+            "targets": [
+              0,
+              1
+            ]
+          },
+          {
+            "gate": "SWAP",
+            "targets": [
+              1,
+              2
+            ]
+          }
+        ],
+        "direction": "qiskit-to-cirq",
+        "referenceMode": "auto",
+        "execution": {}
+      },
+      "inputSha256": "dddc51e56d79d4c51489ddfbd7aded07845f7d52405c80b3e2fc0c4c3d548d3d",
+      "dependencyLockSha256": "6ff5730c1e3d5970a8eacfb2431805768055b9ac22705518e6bc53140fe20ad0",
+      "result": {
+        "numQubits": 4,
+        "direction": "qiskit-to-cirq",
+        "conversionPath": [
+          "qiskit",
+          "qasm2",
+          "cirq"
+        ],
+        "openQasm2": "OPENQASM 2.0;\ninclude \"qelib1.inc\";\nqreg q[4];\nu3(pi/2,0,pi) q[0];\nu3(0,0,pi) q[0];\nu3(0,0,pi/4) q[0];\nu3(-0.37,-pi/2,pi/2) q[0];\nu3(pi,0,pi) q[1];\nu3(0,0,pi/2) q[1];\nu3(0,0,-pi/4) q[1];\nu3(-0.74,0,0) q[1];\nu3(pi/2,0,pi) q[1];\nu3(pi,pi/2,pi/2) q[2];\nu3(0,0,-pi/2) q[2];\nu3(0,0,-1.1099999999999999) q[2];\ncx q[2],q[0];\ncx q[0],q[1];\nu3(0,0,0) q[0];\nu3(pi/2,0,pi) q[1];\ncx q[1],q[2];\ncx q[2],q[1];\ncx q[1],q[2];\nu3(0,0,0) q[1];\nu3(0,0,0) q[2];\nu3(0,0,0) q[3];",
+        "wireOrder": "q[i] preserves input qubit i; comparison uses q0 as least significant bit",
+        "reference": {
+          "mode": "auto",
+          "status": "computed",
+          "method": "Independent Qiskit and Cirq full unitaries plus parsed OpenQASM 2; fixed wires, global phase ignored",
+          "reason": "Independent reference computed for this input."
+        },
+        "independentEquivalent": true,
+        "maxUnitaryDeviation": 3.663841114510704e-16,
+        "globalPhaseIgnored": true,
+        "cloudSubmitted": false
+      },
+      "scientificValidation": "not_evaluated"
+    },
+    {
+      "artifact": ".openquantum/interop-evidence/qbraid-conversion-qiskit-to-cirq-asymmetric-idle.json",
+      "artifactSha256": "8f533d52d7b1e7e319d2efee3b785299f91537e3b7f08fc7812fdfbb9c659376",
+      "source": {
+        "name": "qBraid",
+        "version": "0.12.2",
+        "repository": "https://github.com/qBraid/qBraid"
+      },
+      "input": {
+        "numQubits": 3,
+        "gates": [
+          {
+            "gate": "X",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "RY",
+            "targets": [
+              2
+            ],
+            "angle": 0.4
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              2,
+              0
+            ]
+          }
+        ],
+        "direction": "qiskit-to-cirq",
+        "referenceMode": "auto",
+        "execution": {}
+      },
+      "inputSha256": "efa94834a0b2432c722b6887c7fb20a9d9ffb88eefe3c43b7a885939d88e812e",
+      "dependencyLockSha256": "6ff5730c1e3d5970a8eacfb2431805768055b9ac22705518e6bc53140fe20ad0",
+      "result": {
+        "numQubits": 3,
+        "direction": "qiskit-to-cirq",
+        "conversionPath": [
+          "qiskit",
+          "qasm2",
+          "cirq"
+        ],
+        "openQasm2": "OPENQASM 2.0;\ninclude \"qelib1.inc\";\nqreg q[3];\nu3(pi,0,pi) q[0];\nu3(0,0,0) q[1];\nu3(0.39999999999999997,0,0) q[2];\ncx q[2],q[0];\nu3(0,0,0) q[0];\nu3(0,0,0) q[2];",
+        "wireOrder": "q[i] preserves input qubit i; comparison uses q0 as least significant bit",
+        "reference": {
+          "mode": "auto",
+          "status": "computed",
+          "method": "Independent Qiskit and Cirq full unitaries plus parsed OpenQASM 2; fixed wires, global phase ignored",
+          "reason": "Independent reference computed for this input."
+        },
+        "independentEquivalent": true,
+        "maxUnitaryDeviation": 6.001176987522884e-17,
+        "globalPhaseIgnored": true,
+        "cloudSubmitted": false
+      },
+      "scientificValidation": "not_evaluated"
+    },
+    {
+      "artifact": ".openquantum/interop-evidence/qbraid-conversion-qiskit-to-cirq-empty.json",
+      "artifactSha256": "37cee70687beb0a796ec23de0d3d5113c35e625eb17bec32fd6052ad3832fa23",
+      "source": {
+        "name": "qBraid",
+        "version": "0.12.2",
+        "repository": "https://github.com/qBraid/qBraid"
+      },
+      "input": {
+        "numQubits": 3,
+        "gates": [],
+        "direction": "qiskit-to-cirq",
+        "referenceMode": "auto",
+        "execution": {}
+      },
+      "inputSha256": "b63a7fdfd48d213cd6767f721f6951b1cc10f0e1bf50c9662041d8673cd732c0",
+      "dependencyLockSha256": "6ff5730c1e3d5970a8eacfb2431805768055b9ac22705518e6bc53140fe20ad0",
+      "result": {
+        "numQubits": 3,
+        "direction": "qiskit-to-cirq",
+        "conversionPath": [
+          "qiskit",
+          "qasm2",
+          "cirq"
+        ],
+        "openQasm2": "OPENQASM 2.0;\ninclude \"qelib1.inc\";\nqreg q[3];\nu3(0,0,0) q[0];\nu3(0,0,0) q[1];\nu3(0,0,0) q[2];",
+        "wireOrder": "q[i] preserves input qubit i; comparison uses q0 as least significant bit",
+        "reference": {
+          "mode": "auto",
+          "status": "computed",
+          "method": "Independent Qiskit and Cirq full unitaries plus parsed OpenQASM 2; fixed wires, global phase ignored",
+          "reason": "Independent reference computed for this input."
+        },
+        "independentEquivalent": true,
+        "maxUnitaryDeviation": 0,
+        "globalPhaseIgnored": true,
+        "cloudSubmitted": false
+      },
+      "scientificValidation": "not_evaluated"
+    },
+    {
+      "artifact": ".openquantum/interop-evidence/qbraid-conversion-skip.json",
+      "artifactSha256": "2d368c88c99099ba8bdc99e12d931738a2f976eef3b46108a720136a8168d47e",
+      "source": {
+        "name": "qBraid",
+        "version": "0.12.2",
+        "repository": "https://github.com/qBraid/qBraid"
+      },
+      "input": {
+        "numQubits": 3,
+        "gates": [
+          {
+            "gate": "X",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "RY",
+            "targets": [
+              2
+            ],
+            "angle": 0.4
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              2,
+              0
+            ]
+          }
+        ],
+        "referenceMode": "skip",
+        "direction": "qiskit-to-cirq",
+        "execution": {}
+      },
+      "inputSha256": "b3c22f9e9a1c4032ebe9d49c58998cad3f5650272b9b11d6b56256f296519ea2",
+      "dependencyLockSha256": "6ff5730c1e3d5970a8eacfb2431805768055b9ac22705518e6bc53140fe20ad0",
+      "result": {
+        "numQubits": 3,
+        "direction": "qiskit-to-cirq",
+        "conversionPath": [
+          "qiskit",
+          "qasm2",
+          "cirq"
+        ],
+        "openQasm2": "OPENQASM 2.0;\ninclude \"qelib1.inc\";\nqreg q[3];\nu3(pi,0,pi) q[0];\nu3(0,0,0) q[1];\nu3(0.39999999999999997,0,0) q[2];\ncx q[2],q[0];\nu3(0,0,0) q[0];\nu3(0,0,0) q[2];",
+        "wireOrder": "q[i] preserves input qubit i; comparison uses q0 as least significant bit",
+        "reference": {
+          "mode": "skip",
+          "status": "not_run",
+          "method": "Independent Qiskit and Cirq full unitaries plus parsed OpenQASM 2; fixed wires, global phase ignored",
+          "reason": "Reference explicitly skipped by the caller."
+        },
+        "independentEquivalent": null,
+        "maxUnitaryDeviation": null,
+        "globalPhaseIgnored": true,
+        "cloudSubmitted": false
+      },
+      "scientificValidation": "not_evaluated"
+    },
+    {
+      "artifact": ".openquantum/interop-evidence/qdmi-device-example.json",
+      "artifactSha256": "ee3d2951a0b9a444a71ab330191c07c8b9560715cb6d1156114ad02f25a958f1",
+      "source": {
+        "name": "QDMI",
+        "version": "1.3.3",
+        "repository": "https://github.com/Munich-Quantum-Software-Stack/QDMI",
+        "commit": "18cfb67fd9042761d3005c2f8655751c1758f9c5"
+      },
+      "input": {
+        "maxDevices": 64,
+        "maxPropertyBytes": 1048576,
+        "execution": {}
+      },
+      "inputSha256": "47738fc433c5277fb06305a8f5e52f87995b40e8509f50c053222e7165d6cbc9",
+      "dependencyLockSha256": "30c0d56545224097d96efbea14a1887809bca829c55f9c770005f5a63569636a",
+      "result": {
+        "driverKind": "example",
+        "driverSha256": "41a607940731e43b3d7dbeefc511e25efca71bd85e8fdd2e70ea1baf2ff31bf7",
+        "configurationSha256": "144bb6b31c42dd5a591137c185f0ca3b58220961ee1f0832e96a30ef42c8a432",
+        "interfaceVersion": "1.3.3",
+        "queriedAt": "2026-09-24T01:33:44.940943+00:00",
+        "devices": [
+          {
+            "index": 0,
+            "name": "C++ Device with 5 qubits",
+            "version": "0.1.0",
+            "qdmiVersion": "1.3.3",
+            "numQubits": 5,
+            "sites": [
+              0,
+              1,
+              2,
+              3,
+              4
+            ],
+            "operations": [
+              {
+                "name": "rx",
+                "numQubits": 1,
+                "numParameters": 1
+              },
+              {
+                "name": "ry",
+                "numQubits": 1,
+                "numParameters": 1
+              },
+              {
+                "name": "rz",
+                "numQubits": 1,
+                "numParameters": 1
+              },
+              {
+                "name": "cx",
+                "numQubits": 2,
+                "numParameters": 0
+              }
+            ],
+            "coupling": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                2
+              ],
+              [
+                2,
+                1
+              ],
+              [
+                2,
+                3
+              ],
+              [
+                3,
+                2
+              ],
+              [
+                3,
+                4
+              ],
+              [
+                4,
+                3
+              ],
+              [
+                4,
+                0
+              ],
+              [
+                0,
+                4
+              ]
+            ]
+          }
+        ],
+        "hardwareVerified": false,
+        "jobsSubmitted": 0
+      },
+      "scientificValidation": "not_evaluated"
+    }
+  ],
+  "boundaries": {
+    "externalModelTested": false,
+    "hardwareTested": false,
+    "vendorDriversTested": false,
+    "cloudJobsSubmitted": 0,
+    "cudaTested": false,
+    "scientificValidation": "not_evaluated",
+    "rawArtifactsCommitted": false
+  }
+}

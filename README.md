@@ -408,6 +408,7 @@ OpenQuantum 为本地模拟、IBM Quantum、IonQ 和多家国内量子云保留�
 | SQD 与 TeNPy | `npm run capability:paper-tools:setup -- sqd-chemistry tenpy-ground-state` |
 | Mitiq 误差缓解 | `npm run capability:mitiq:setup` |
 | Dynamiqs、Clifft、OQuPy、Deltakit | `npm run capability:unitary:setup` |
+| Clifft 记录采样与 qBraid 转换；QDMI 驱动查询 | `npm run capability:interop:setup`；QDMI 另运行 `npm run capability:qdmi:setup` 并启用连接，见[接入说明](docs/integrations/QUANTUM_INTEROP.md) |
 | Metriq 公开基准查询 | 已随源码提供，完成 `npm ci` 即可，无需 Python 或额外下载 |
 
 | 想探索什么 | 示例请求 | 重点查看 |
@@ -509,14 +510,14 @@ Harness 是通用 Agent Runtime，扩展通过 Cordis Plugin 装配。UI、模�
   <a href="#原生量子-tools">原生量子 Tools</a>
 </p>
 
-当前源码分发 **32 个内置 Skill、34 个 MCP 服务连接、5 个原生量子 Tool**。其中 26 个 MCP 服务使用 OpenQuantum 的本地桥接实现。Skill 指导工作方法，Tool 执行动作，MCP Server 通过协议提供 Tool；三者分别统计。
+当前源码分发 **34 个内置 Skill、36 个 MCP 服务连接、5 个原生量子 Tool**。其中 28 个 MCP 服务使用 OpenQuantum 的本地桥接实现。Skill 指导工作方法，Tool 执行动作，MCP Server 通过协议提供 Tool；三者分别统计。
 
 <details>
 <summary><strong>内置 Skills：按研究方法查找工作流</strong></summary>
 
 #### 内置 Skills
 
-这 32 个 Skill 是 OpenQuantum 随源码维护的量子工作流，覆盖方法选择、计算实验、结果解释和平台诊断，由 Harness 按任务需要发现和加载。点击名称即可查看完整的 `SKILL.md`，也可作为编写自己 Skill 的起点；所需工具与连接分别配置。
+这 34 个 Skill 是 OpenQuantum 随源码维护的量子工作流，覆盖方法选择、计算实验、结果解释和平台诊断，由 Harness 按任务需要发现和加载。点击名称即可查看完整的 `SKILL.md`，也可作为编写自己 Skill 的起点；所需工具与连接分别配置。
 
 下表按**研究方法与用途**介绍能力。各 Tool 提供的模型、参数和输入格式见[计算参数与运行方式](#计算参数与运行方式)。
 
@@ -532,7 +533,8 @@ Harness 是通用 Agent Runtime，扩展通过 Cordis Plugin 装配。UI、模�
 | [`qcut-knitting`](.agents/skills/qcut-knitting/SKILL.md) | 门切割与期望值重建 | `qcut_local`；[使用说明](docs/integrations/CANDIDATE_LIBRARIES.md) |
 | [`graphix-mbqc`](.agents/skills/graphix-mbqc/SKILL.md) | 电路到 MBQC 模式、资源图、自适应测量和纠正输出 | `graphix_local` |
 | [`quantum-circuit-verification`](.agents/skills/quantum-circuit-verification/SKILL.md) | 量子电路等价性验证、优化前后对照与全局相位差异判定 | `qcec_local` |
-| [`clifft-sampling`](.agents/skills/clifft-sampling/SKILL.md) | Clifford+T 电路模拟、非 Clifford 门干涉与噪声采样分析 | `clifft_local` |
+| [`clifft-sampling`](.agents/skills/clifft-sampling/SKILL.md) | Clifford+T 噪声采样、Stim 格式记录与 detector/observable 原始奇偶值 | `clifft_local` |
+| [`qbraid-conversion`](.agents/skills/qbraid-conversion/SKILL.md) | Qiskit/Cirq 酉电路转换、OpenQASM 2 导出与位序等价对照 | `qbraid_local` |
 
 ##### 量子态与测量
 
@@ -579,6 +581,7 @@ Harness 是通用 Agent Runtime，扩展通过 Cordis Plugin 装配。UI、模�
 | [`qmclaw-workbench`](.agents/skills/qmclaw-workbench/SKILL.md) | 超导量子比特调校实验设计、测量流程模拟与合成数据分析，覆盖 S21、Rabi、Ramsey、T₁ 等 | 原生 `list_qmclaw_experiments`、`simulate_qmclaw_experiment` |
 | [`fatqat-workbench`](.agents/skills/fatqat-workbench/SKILL.md) | 量子电路与硬件原生门约束分析、transmon 泄漏及里德堡原子动力学 | `fatqat_local`；[使用说明](docs/integrations/FATQAT.md) |
 | [`fieldqkit-hardware`](.agents/skills/fieldqkit-hardware/SKILL.md) | 量子云设备发现、量子位与拓扑筛选、接入条件检查 | `fieldqkit`；只读设备发现 |
+| [`qdmi-device`](.agents/skills/qdmi-device/SKILL.md) | 已配置 QDMI 驱动的设备、门集与耦合关系查询 | `qdmi_local`；默认关闭，需显式准备驱动 |
 
 ##### 方法选型与平台支持
 
@@ -594,9 +597,9 @@ Harness 是通用 Agent Runtime，扩展通过 Cordis Plugin 装配。UI、模�
 
 #### MCP 服务目录
 
-**OpenQuantum 为 26 项计算与设备发现能力开发了本地 MCP 桥接**，另直接接入 8 个上游 MCP 服务。下表按用途分组：本地桥接链接到仓库源码并保留上游来源，直接接入的服务明确标记为“上游服务”。
+**OpenQuantum 为 28 项计算与设备发现能力开发了本地 MCP 桥接**，另直接接入 8 个上游 MCP 服务。下表按用途分组：本地桥接链接到仓库源码并保留上游来源，直接接入的服务明确标记为“上游服务”。
 
-默认 Preset 共声明 34 个 MCP 服务连接：**26 个默认开启（其中 Qiskit 两项可通过离线开关关闭），8 个按需启用**。连接名对应配置中的 `serverName`；“默认开启”表示配置策略，使用前仍需准备依赖和必要凭据。
+默认 Preset 共声明 36 个 MCP 服务连接：**27 个默认开启（其中 Qiskit 两项可通过离线开关关闭），9 个按需启用**。连接名对应配置中的 `serverName`；“默认开启”表示配置策略，使用前仍需准备依赖和必要凭据。
 
 这些 MCP Server 都由本机以 `stdio` 方式启动，不是 OpenQuantum 提供的公共托管端点。其中一部分 Tool 在本地计算，另一部分再访问厂商文档或量子云；“本地启动 MCP Server”不代表所有数据处理都留在本地。
 
@@ -612,7 +615,8 @@ Harness 是通用 Agent Runtime，扩展通过 Cordis Plugin 装配。UI、模�
 | [`qcut_local`](.agents/skills/qcut-knitting/mcp/server.mjs) · [QCut](https://github.com/FiQCI/QCut) | 门切割与期望值重建 | 默认开启 | Python 3.12 + uv；本地计算、无需云凭据；[范围](docs/integrations/CANDIDATE_LIBRARIES.md) |
 | [`graphix_local`](.agents/skills/graphix-mbqc/mcp/server.mjs) · [Graphix](https://github.com/TeamGraphix/graphix) | 电路到 MBQC 模式、资源图、自适应测量和纠正输出 | 默认开启 | uv；隔离 Python 3.12 环境；[安装与范围](docs/integrations/UNITARY_NEXT_TOOLS.md) |
 | [`qcec_local`](.agents/skills/quantum-circuit-verification/mcp/server.mjs) · [MQT QCEC](https://github.com/munich-quantum-toolkit/qcec) | unitary 电路等价性检查 | 默认开启 | `uv`；本地运行，无需云凭据；不接受动态电路或任意文件路径 |
-| [`clifft_local`](.agents/skills/clifft-sampling/mcp/server.mjs) · [Clifft](https://github.com/unitaryfoundation/clifft) | Clifford+T 噪声采样 | 默认开启 | uv；仅结构化门与最终测量；[安装与范围](docs/integrations/UNITARY_ECOSYSTEM.md) |
+| [`clifft_local`](.agents/skills/clifft-sampling/mcp/server.mjs) · [Clifft](https://github.com/unitaryfoundation/clifft) | Clifford+T 最终测量与 Stim 格式纠错记录采样 | 默认开启 | uv；CPU 固定 shots，原始奇偶值需另行解码；[安装与范围](docs/integrations/QUANTUM_INTEROP.md) |
+| [`qbraid_local`](.agents/skills/qbraid-conversion/mcp/server.mjs) · [qBraid](https://github.com/qBraid/qBraid) | Qiskit/Cirq 双向本地转换与可选完整酉矩阵对照 | 默认开启 | uv；结构化酉电路，无云任务；[安装与范围](docs/integrations/QUANTUM_INTEROP.md) |
 
 ##### 量子态与测量
 
@@ -663,6 +667,7 @@ Harness 是通用 Agent Runtime，扩展通过 Cordis Plugin 装配。UI、模�
 | --- | --- | --- | --- |
 | [`qiskit_docs`](https://github.com/Qiskit/mcp-servers) · Qiskit Docs（上游服务） | Qiskit 文档搜索、页面读取和 IBM Quantum 错误码查询 | 默认开启¹ | `uvx`；文档访问需要网络，无需云凭据 |
 | [`fieldqkit`](.agents/skills/fieldqkit-hardware/mcp/server.mjs) · [FieldQKit](https://github.com/FieldQuantum/fieldqkit) | 凭据状态检查、国内量子云后端发现和筛选 | 默认开启 | `uv`；发现对应云后端需要相应凭据；不提交或取消任务 |
+| [`qdmi_local`](.agents/skills/qdmi-device/mcp/server.mjs) · [QDMI](https://github.com/Munich-Quantum-Software-Stack/QDMI) | 设备、门集与耦合的只读发现 | 默认关闭 | 显式准备固定驱动；官方示例不代表真实硬件；[安装与范围](docs/integrations/QUANTUM_INTEROP.md) |
 
 ##### 量子云任务
 
@@ -748,7 +753,7 @@ docs/                    架构、路线与生态文档
 
 ### 可选上游 Skill
 
-[OriginQ 官方 `pyqpanda3` Skill](https://github.com/OriginQ/pyqpanda3-skill) 提供电路编程、算法模板、迁移与 QCloud 使用指导。它**不计入上面的 32 个内置 Skill，也不会在首次启动时自动安装**；运行 `npm run skill:qpanda:setup` 后，固定审阅版本才会进入项目 Skill 目录。安装这个 Skill 不会自动启用 `qpanda_runtime`，也不会赋予云任务权限。
+[OriginQ 官方 `pyqpanda3` Skill](https://github.com/OriginQ/pyqpanda3-skill) 提供电路编程、算法模板、迁移与 QCloud 使用指导。它**不计入上面的 34 个内置 Skill，也不会在首次启动时自动安装**；运行 `npm run skill:qpanda:setup` 后，固定审阅版本才会进入项目 Skill 目录。安装这个 Skill 不会自动启用 `qpanda_runtime`，也不会赋予云任务权限。
 
 ## 长期发展规划
 
@@ -858,7 +863,8 @@ OpenQuantum 的量子能力建立在开放科学与开源软件之上。我们�
 | 第二家电路工作台 | [FlagQuantum MCP](https://github.com/FlagQuantum/mcp-servers) | 按需启用固定上游服务，提供电路分析、转换、仿真及参数操作 |
 | 测量式量子计算 | [Graphix](https://github.com/TeamGraphix/graphix) | 电路转 MBQC 资源图及测量模式，模拟自适应测量和输出纠正，可选独立态矢比较 |
 | 电路等价性验证 | [MQT QCEC](https://github.com/munich-quantum-toolkit/qcec) | 比较两份无测量的 OpenQASM 2 电路，区分严格等价、相位等价、不等价与不确定 |
-| Clifford+T 电路采样 | [Clifft](https://github.com/unitaryfoundation/clifft) | Clifford+T 电路的门后去极化噪声与最终位串采样，可选独立密度矩阵参考 |
+| Clifford+T 电路采样 | [Clifft](https://github.com/unitaryfoundation/clifft) | Clifford+T 最终位串采样与可选密度矩阵参考；另支持 Stim 格式的中间测量、detector/observable 原始记录 |
+| Qiskit/Cirq 电路互转 | [qBraid](https://github.com/qBraid/qBraid) | 固定 QASM2 转换路径，保持空闲量子位与编号，可选完整酉矩阵对照 |
 
 #### 量子态与测量
 

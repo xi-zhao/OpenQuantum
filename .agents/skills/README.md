@@ -13,7 +13,7 @@
 
 ## 当前 Skill
 
-以下 32 个 Skill 随源码分发；它们与 MCP Server 不是一一对应关系，知识型 Skill 可以不绑定专用 Tool，
+以下 34 个 Skill 随源码分发；它们与 MCP Server 不是一一对应关系，知识型 Skill 可以不绑定专用 Tool，
 工作流也可以使用多个服务或进程内原生 Tool。连接默认配置与凭据条件见[项目首页](../../README.md#mcp-服务目录)。
 
 | Skill | 作用 | 依赖的执行模块 |
@@ -22,6 +22,7 @@
 | `quantum-sdk-advisor` | 量子软件栈选型 | 无强制 Tool Provider |
 | `qiskit-circuit-workbench` | QASM/QPY 电路分析和转译工作流 | Qiskit MCP Server + Harness MCP Client |
 | `fieldqkit-hardware` | 国内量子云后端发现和凭据缺口解释 | FieldQKit 本地 MCP Server + Harness MCP Client；云端只读，首次发现可写本地 Python 环境 |
+| `qdmi-device` | 已配置驱动的设备、门集与耦合只读查询 | QDMI 本地 MCP Server + Harness MCP Client；默认关闭，需显式准备驱动 |
 | `qpanda-qubo` | QUBO 编译、可选经典参照与本地 QAOA | QPanda 本地 MCP Server + Harness MCP Client |
 | `quantum-circuit-verification` | OpenQASM 2 电路等价性验证 | MQT QCEC 本地 MCP Server + Harness MCP Client |
 | `qec-memory-experiment` | surface-code memory 采样与 MWPM 解码 | Stim/PyMatching 本地 MCP Server + Harness MCP Client |
@@ -29,7 +30,8 @@
 | `fatqat-workbench` | 电路与硬件约束、transmon 泄漏和里德堡动力学实验 | FatQat 本地 MCP Server + Harness MCP Client；返回数据、图表与物理单位 |
 | `mitiq-error-mitigation` | ZNE、REM、PEC、CDR 的本地噪声实验及相同采样预算统计 | Mitiq 本地 MCP Server + Harness MCP Client；能力目录 GPL-3.0-only |
 | `dynamiqs-dynamics` | 单量子位动力学、批量扫描、梯度与独立参照 | Dynamiqs 本地 MCP Server + Harness MCP Client |
-| `clifft-sampling` | Clifford+T 电路带噪采样与密度矩阵参照 | Clifft 本地 MCP Server + Harness MCP Client |
+| `clifft-sampling` | Clifford+T 最终测量及 Stim 格式纠错记录采样 | Clifft 本地 MCP Server + Harness MCP Client |
+| `qbraid-conversion` | Qiskit/Cirq 双向酉电路转换与可选完整矩阵对照 | qBraid 本地 MCP Server + Harness MCP Client |
 | `pyzx-optimization` | ZX 重写、Clifford+T 门数比较与可选酉矩阵对照 | PyZX 本地 MCP Server + Harness MCP Client |
 | `graphix-mbqc` | 电路到 MBQC 模式、资源图、自适应测量和纠正输出 | Graphix 本地 MCP Server + Harness MCP Client |
 | `symmer-tapering` | 指定 Pauli 对称性扇区的降比特与同扇区保谱检查 | Symmer 本地 MCP Server + Harness MCP Client |
