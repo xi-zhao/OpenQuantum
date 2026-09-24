@@ -23,6 +23,15 @@ const MCP_CATALOG = Object.freeze({
     packageVersion: "1.3.3",
     setup: null,
   }),
+  hamiltonian_local: Object.freeze({
+    displayName: "Trotter / qDrift 哈密顿量演化",
+    description: "开源电路、态矢量与独立误差对照；需先运行 npm run capability:hamiltonian:setup 准备依赖。",
+    provider: "OpenQuantum / UnitaryLab MIT adaptation",
+    sourceUrl: "https://github.com/unitarylab/unitarylab_algorithms",
+    packageName: "openquantum-hamiltonian-simulation",
+    packageVersion: "0.1.0",
+    setup: null,
+  }),
   pyzx_local: Object.freeze({
     displayName: "PyZX 电路优化",
     description: "ZX 重写、Clifford+T 门数比较与完整酉矩阵对照。",

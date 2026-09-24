@@ -1,0 +1,8 @@
+[project]
+name = "openquantum-hamiltonian-simulation"
+version = "0.1.0"
+requires-python = ">=3.12,<3.13"
+dependencies = ["qiskit==2.5.2", "numpy==2.5.3", "scipy==1.18.1"]
+
+[tool.uv]
+package = false

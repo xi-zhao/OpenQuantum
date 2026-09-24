@@ -1,0 +1,859 @@
+{
+  "schemaVersion": 1,
+  "skillsSource": {
+    "repository": "https://github.com/unitarylab/quantum-skills",
+    "commit": "c5436bb120812ad903ac776f58df89b803ced48c",
+    "license": "MIT"
+  },
+  "algorithmsSource": {
+    "repository": "https://github.com/unitarylab/unitarylab_algorithms",
+    "commit": "a8362e374da2ec2c68f582db645a7782e45bfc4b",
+    "license": "MIT",
+    "upstreamLicenseSha256": "b0f1374e4a4497373abea5469b73139b878d4e5761a3e70d699bda5a5ecc952b"
+  },
+  "execution": "Existing Harness bash/pwsh Tools; native Skills plus open SDK example code. No new Tool Provider or MCP Server.",
+  "compatibility": "Complete guide/module mapping and executable examples; not a drop-in replacement for the upstream Python API or every proprietary backend feature.",
+  "guides": [
+    {
+      "guideId": "algorithms",
+      "guidePath": "algorithms/SKILL.md",
+      "guideSha256": "0c5b07553a22de058910c11c0be1405d79153a500a96b9035a8e387a20e3675d",
+      "skill": "quantum-guide-algorithms",
+      "kind": "routing-guide",
+      "algorithm": null
+    },
+    {
+      "guideId": "algorithms/cryptography",
+      "guidePath": "algorithms/cryptography/SKILL.md",
+      "guideSha256": "a6540b9392b971bc8c230073918cde2718a984212a822a870d26922cbd505ba6",
+      "skill": "quantum-guide-algorithms-cryptography",
+      "kind": "routing-guide",
+      "algorithm": null
+    },
+    {
+      "guideId": "algorithms/cryptography/discretelog",
+      "guidePath": "algorithms/cryptography/discretelog/SKILL.md",
+      "guideSha256": "261e7bf3d08a1d2c647dc0de8a083acd0c0aa7fd2069c220c918fdfb89a7385e",
+      "skill": "quantum-discrete-log",
+      "kind": "algorithm-workflow",
+      "algorithm": "discrete_log",
+      "exampleFile": "examples/quantum-algorithms/search.py",
+      "signature": "(g=3, y=5, modulus=7)",
+      "sourceAlgorithm": {
+        "path": "cryptology/discrete_log/algorithm.py",
+        "sha256": "5604b82f1dee50272b67f4276ea8e819642f14b551fb89d6f4911e31eece7d33"
+      },
+      "scope": "可逆 g^a y^b oracle、循环群 Fourier 采样与同余恢复；不把已知对数写进 oracle。"
+    },
+    {
+      "guideId": "algorithms/cryptography/shor",
+      "guidePath": "algorithms/cryptography/shor/SKILL.md",
+      "guideSha256": "f259ace6bb0951e8db5453d9451b04da5b18521f53cf05dfa51e1fb18536b19a",
+      "skill": "quantum-shor",
+      "kind": "algorithm-workflow",
+      "algorithm": "shor",
+      "exampleFile": "examples/quantum-algorithms/search.py",
+      "signature": "(n=15, base=2, phase_bits=None)",
+      "sourceAlgorithm": {
+        "path": "cryptology/shor/algorithm.py",
+        "sha256": "1a112ce147e71dbcd7aa362fd3f7915371a149f68fe482698e4c922dd1c371de"
+      },
+      "scope": "可逆模乘 oracle、QPE/连分数和因子验证；密集 oracle 的教学规模模拟，失败明确返回需换基数或精度。"
+    },
+    {
+      "guideId": "algorithms/cryptography/simon",
+      "guidePath": "algorithms/cryptography/simon/SKILL.md",
+      "guideSha256": "2d42db3536dc60f2c0f206196cab0fc9e3f1a452dbd0739857afcb3e92084e78",
+      "skill": "quantum-simon",
+      "kind": "algorithm-workflow",
+      "algorithm": "simon",
+      "exampleFile": "examples/quantum-algorithms/search.py",
+      "signature": "(secret='101', shots=64, seed=7)",
+      "sourceAlgorithm": {
+        "path": "cryptology/simon/algorithm.py",
+        "sha256": "065b65f11d0d18c554daedd46b6dbb58ef5b8fd27471d5f648d4f84407d185b2"
+      },
+      "scope": "二对一 XOR oracle、Hadamard 采样和 GF(2) 零空间恢复；样本不足时不编造 secret。"
+    },
+    {
+      "guideId": "algorithms/eigensolvers",
+      "guidePath": "algorithms/eigensolvers/SKILL.md",
+      "guideSha256": "d63aa51307d5f59720d5aeca6796f71ee82631e4055e7bab1d9d2c046e8f8f26",
+      "skill": "quantum-guide-algorithms-eigensolvers",
+      "kind": "routing-guide",
+      "algorithm": null
+    },
+    {
+      "guideId": "algorithms/eigensolvers/minimum-eigensolvers/numpy-minimum-eigensolver",
+      "guidePath": "algorithms/eigensolvers/minimum-eigensolvers/numpy-minimum-eigensolver/SKILL.md",
+      "guideSha256": "50927a0ed8f10491b681294f9ff8bffb4c788229288f960e17d3308cd59a04ea",
+      "skill": "quantum-numpy-minimum-eigensolver",
+      "kind": "algorithm-workflow",
+      "algorithm": "numpy_minimum_eigensolver",
+      "exampleFile": "examples/quantum-algorithms/variational.py",
+      "signature": "(hamiltonian=None)",
+      "sourceAlgorithm": null,
+      "scope": "NumPy 最小本征对，明确标记经典算法并报告残差。"
+    },
+    {
+      "guideId": "algorithms/eigensolvers/numyeigensolver",
+      "guidePath": "algorithms/eigensolvers/numyeigensolver/SKILL.md",
+      "guideSha256": "f674699e1e6fda1440be5bcc16a1863c08f95d3ef9af37fb65944fe74f33cdbe",
+      "skill": "quantum-numpy-eigensolver",
+      "kind": "algorithm-workflow",
+      "algorithm": "numpy_eigensolver",
+      "exampleFile": "examples/quantum-algorithms/variational.py",
+      "signature": "(hamiltonian=None, k=None)",
+      "sourceAlgorithm": null,
+      "scope": "NumPy Hermitian 稠密本征求解，明确标记经典算法并报告特征残差。"
+    },
+    {
+      "guideId": "algorithms/eigensolvers/vqd",
+      "guidePath": "algorithms/eigensolvers/vqd/SKILL.md",
+      "guideSha256": "4bd8cc2996e6b74199aa234fa2c9f2f82b80ba231252a8673e444b2ca51a0c1b",
+      "skill": "quantum-vqd",
+      "kind": "algorithm-workflow",
+      "algorithm": "vqd",
+      "exampleFile": "examples/quantum-algorithms/variational.py",
+      "signature": "(terms=None, k=2, layers=2, maxiter=200, penalty=None, seed=7)",
+      "sourceAlgorithm": null,
+      "scope": "通过逐态重叠惩罚求激发态（VQD），报告能量与态间重叠；惩罚和 ansatz 会影响收敛。"
+    },
+    {
+      "guideId": "algorithms/gradients",
+      "guidePath": "algorithms/gradients/SKILL.md",
+      "guideSha256": "a5239bb0543acc24241fa01341ffb2fb57a7ceea993eaca498a05695a8320432",
+      "skill": "quantum-guide-algorithms-gradients",
+      "kind": "routing-guide",
+      "algorithm": null
+    },
+    {
+      "guideId": "algorithms/gradients/finite-difference",
+      "guidePath": "algorithms/gradients/finite-difference/SKILL.md",
+      "guideSha256": "215ec327afd1f44dedff311c6d165b63336bfa5bb401e26dc6540793156ae15b",
+      "skill": "quantum-finite-difference",
+      "kind": "algorithm-workflow",
+      "algorithm": "finite_difference",
+      "exampleFile": "examples/quantum-algorithms/gradients.py",
+      "signature": "(angles=None, observable=None, epsilon=1e-05)",
+      "sourceAlgorithm": null,
+      "scope": "Qiskit FiniteDiffEstimatorGradient，中心差分与显式 epsilon。"
+    },
+    {
+      "guideId": "algorithms/gradients/linear-combination",
+      "guidePath": "algorithms/gradients/linear-combination/SKILL.md",
+      "guideSha256": "b2b9039cebdd2dde72bedf1887015a8545b5b8e632cc0447c961e8a2ae74bb24",
+      "skill": "quantum-linear-combination",
+      "kind": "algorithm-workflow",
+      "algorithm": "linear_combination",
+      "exampleFile": "examples/quantum-algorithms/gradients.py",
+      "signature": "(angles=None, observable=None)",
+      "sourceAlgorithm": null,
+      "scope": "Qiskit LinCombEstimatorGradient，实际生成线性组合导数电路。"
+    },
+    {
+      "guideId": "algorithms/gradients/parameter-shift",
+      "guidePath": "algorithms/gradients/parameter-shift/SKILL.md",
+      "guideSha256": "f50f343e001553e82478d986337c62d9df1b12a57c898ed76de2c2db87cf4fb1",
+      "skill": "quantum-parameter-shift",
+      "kind": "algorithm-workflow",
+      "algorithm": "parameter_shift",
+      "exampleFile": "examples/quantum-algorithms/gradients.py",
+      "signature": "(angles=None, observable=None)",
+      "sourceAlgorithm": null,
+      "scope": "Qiskit ParamShiftEstimatorGradient，RY 参数移位规则。"
+    },
+    {
+      "guideId": "algorithms/gradients/qfi",
+      "guidePath": "algorithms/gradients/qfi/SKILL.md",
+      "guideSha256": "2f5f05730d3c6c4ac4c1a87c7fac3fda247c76a567cf4f1ed80980132ec8d310",
+      "skill": "quantum-qfi",
+      "kind": "algorithm-workflow",
+      "algorithm": "qfi",
+      "exampleFile": "examples/quantum-algorithms/gradients.py",
+      "signature": "(angles=None)",
+      "sourceAlgorithm": null,
+      "scope": "Qiskit QFI/ReverseQGT，纯态量子 Fisher 信息；不将其等同于任意测量的经典 Fisher 信息。"
+    },
+    {
+      "guideId": "algorithms/gradients/reverse",
+      "guidePath": "algorithms/gradients/reverse/SKILL.md",
+      "guideSha256": "e9daa3ac303b2a6e8be4d37062bac8ab61bb2f1d929bfe3c942b77f689a9b274",
+      "skill": "quantum-reverse",
+      "kind": "algorithm-workflow",
+      "algorithm": "reverse",
+      "exampleFile": "examples/quantum-algorithms/gradients.py",
+      "signature": "(angles=None, observable=None)",
+      "sourceAlgorithm": null,
+      "scope": "Qiskit ReverseEstimatorGradient，反向态矢量导数。"
+    },
+    {
+      "guideId": "algorithms/gradients/spsa",
+      "guidePath": "algorithms/gradients/spsa/SKILL.md",
+      "guideSha256": "04e06f1a1a2c3b64ac349fa81bb010e0877478b40aa5edb9ec81648a95a06803",
+      "skill": "quantum-spsa",
+      "kind": "algorithm-workflow",
+      "algorithm": "spsa",
+      "exampleFile": "examples/quantum-algorithms/gradients.py",
+      "signature": "(angles=None, observable=None, epsilon=0.001, batch_size=256, seed=7)",
+      "sourceAlgorithm": null,
+      "scope": "Qiskit SPSAEstimatorGradient，显式 epsilon、批量与随机种子；单次估计有统计误差。"
+    },
+    {
+      "guideId": "algorithms/hamiltonian-simulation",
+      "guidePath": "algorithms/hamiltonian-simulation/SKILL.md",
+      "guideSha256": "8d59071711636230c6b67e3658fd0ee57731f59dd97a6916523ce9898b0cde78",
+      "skill": "quantum-guide-algorithms-hamiltonian-simulation",
+      "kind": "routing-guide",
+      "algorithm": null
+    },
+    {
+      "guideId": "algorithms/hamiltonian-simulation/cartan",
+      "guidePath": "algorithms/hamiltonian-simulation/cartan/SKILL.md",
+      "guideSha256": "f0379cf9eb57b70a0167df2f7ca6629b8f342ed481b32375081b00f179b445bb",
+      "skill": "quantum-cartan",
+      "kind": "algorithm-workflow",
+      "algorithm": "cartan",
+      "exampleFile": "examples/quantum-algorithms/simulation.py",
+      "signature": "(hamiltonian=None, time=0.8, initial_state=None)",
+      "sourceAlgorithm": {
+        "path": "hamiltonian_simulation/cartan/algorithm.py",
+        "sha256": "130b76490112bafbb1e01fe9e9074c5f5c87da84a9a504f3c698a6a19755d2ea"
+      },
+      "scope": "实对称 Hamiltonian 的 SO(N) 谱 Cartan 分解；采用 SciPy Schur 替换未开放的 Cartan-Lax 优化器，不宣称复刻其优化轨迹。"
+    },
+    {
+      "guideId": "algorithms/hamiltonian-simulation/qdrift",
+      "guidePath": "algorithms/hamiltonian-simulation/qdrift/SKILL.md",
+      "guideSha256": "c4cd378d77f07a4f14ebfb4ce0d9ae0f6806d6278ae5c358a3673581288e874a",
+      "skill": "quantum-qdrift",
+      "kind": "algorithm-workflow",
+      "algorithm": "qdrift",
+      "exampleFile": "examples/quantum-algorithms/simulation.py",
+      "signature": "(terms=None, time=0.8, steps=128, seed=7, initial_state=None)",
+      "sourceAlgorithm": {
+        "path": "hamiltonian_simulation/qdrift/algorithm.py",
+        "sha256": "db8a607c511aadd5ec8e82a066f03b7f76f4e91d832fbce48498dc5027d0782c"
+      },
+      "scope": "使用 Qiskit 的显式量子电路，保留输入、方法参数、实际概率或态矢量；模拟器全态读取不代表硬件可高效读取。"
+    },
+    {
+      "guideId": "algorithms/hamiltonian-simulation/qsp",
+      "guidePath": "algorithms/hamiltonian-simulation/qsp/SKILL.md",
+      "guideSha256": "8981553b8daa5fccb493be211be049043400e364c1242e0408e5253378b2018c",
+      "skill": "quantum-hamiltonian-qsp",
+      "kind": "algorithm-workflow",
+      "algorithm": "hamiltonian_qsp",
+      "exampleFile": "examples/quantum-algorithms/simulation.py",
+      "signature": "(terms=None, time=0.8, degree=9, initial_state=None)",
+      "sourceAlgorithm": {
+        "path": "hamiltonian_simulation/qsp/algorithm.py",
+        "sha256": "4a299554d2aba9ff151752b96b6282a0d92bdff8d096d64fdcb9b4f7f925ed0d"
+      },
+      "scope": "偶/奇 QSP 多项式通过 LCU 合成 exp(-iHt)；稠密 block encoding 与后选择，次数控制截断误差。"
+    },
+    {
+      "guideId": "algorithms/hamiltonian-simulation/taylor",
+      "guidePath": "algorithms/hamiltonian-simulation/taylor/SKILL.md",
+      "guideSha256": "635197ed2c6f74534cb80c4c33fa2f7b005535d4401f14a7c14d219342e4ef79",
+      "skill": "quantum-taylor",
+      "kind": "algorithm-workflow",
+      "algorithm": "taylor",
+      "exampleFile": "examples/quantum-algorithms/simulation.py",
+      "signature": "(terms=None, time=0.8, degree=6, initial_state=None)",
+      "sourceAlgorithm": {
+        "path": "hamiltonian_simulation/taylor/algorithm.py",
+        "sha256": "a33896ad664daf1673067f785e99edd87457bb52606b8ceb8fc33e82f3ba0527"
+      },
+      "scope": "截断 Taylor 级数展开为 Pauli LCU，实际执行 PREPARE/SELECT/unprepare 并报告后选择概率；无量子加速主张。"
+    },
+    {
+      "guideId": "algorithms/hamiltonian-simulation/trotter",
+      "guidePath": "algorithms/hamiltonian-simulation/trotter/SKILL.md",
+      "guideSha256": "0ef1c387a295be256de3ad2d2be66314d9849fa89a1daef6e60dc5f55d4c235f",
+      "skill": "quantum-trotter",
+      "kind": "algorithm-workflow",
+      "algorithm": "trotter",
+      "exampleFile": "examples/quantum-algorithms/simulation.py",
+      "signature": "(terms=None, time=0.8, steps=16, order=2, initial_state=None)",
+      "sourceAlgorithm": {
+        "path": "hamiltonian_simulation/trotter/algorithm.py",
+        "sha256": "1bfb54372aa20c34b547097cf82f487fb770368385d8e573a3d052f3c4f9f968"
+      },
+      "scope": "使用 Qiskit 的显式量子电路，保留输入、方法参数、实际概率或态矢量；模拟器全态读取不代表硬件可高效读取。"
+    },
+    {
+      "guideId": "algorithms/linear-systems",
+      "guidePath": "algorithms/linear-systems/SKILL.md",
+      "guideSha256": "1878a42a590550117ea77b21306f6ec7085a6ec61f942611c384c2aa87e113af",
+      "skill": "quantum-guide-algorithms-linear-systems",
+      "kind": "routing-guide",
+      "algorithm": null
+    },
+    {
+      "guideId": "algorithms/linear-systems/aqc",
+      "guidePath": "algorithms/linear-systems/aqc/SKILL.md",
+      "guideSha256": "398625331d80a504617e50da50135f03bfac1127dc39508f223fd883f72d43c6",
+      "skill": "quantum-aqc",
+      "kind": "algorithm-workflow",
+      "algorithm": "aqc",
+      "exampleFile": "examples/quantum-algorithms/linear.py",
+      "signature": "(a=None, b=None, total_time=40.0, steps=200, schedule_power=1.4)",
+      "sourceAlgorithm": {
+        "path": "linear_algebra/aqc/algorithm.py",
+        "sha256": "06d1ba052d50055482b7cc1b0d10c0f8315066e409600a90b8363b7df194ee8e"
+      },
+      "scope": "正定 Hermitian 系统的绝热线性求解路径、条件数相关 schedule 与分片幺正演化；增加 total_time 和 steps 检查绝热与离散误差。"
+    },
+    {
+      "guideId": "algorithms/linear-systems/hhl",
+      "guidePath": "algorithms/linear-systems/hhl/SKILL.md",
+      "guideSha256": "fb1f39a2e05448c449d77a671b4ac203a670c45f4e2dff28bfa2fdd1d5dd5181",
+      "skill": "quantum-hhl",
+      "kind": "algorithm-workflow",
+      "algorithm": "hhl",
+      "exampleFile": "examples/quantum-algorithms/linear.py",
+      "signature": "(a=None, b=None, phase_bits=4)",
+      "sourceAlgorithm": {
+        "path": "linear_algebra/hhl/algorithm.py",
+        "sha256": "fdcabeae7d632d368530d7e04d6cb639c7f50adfe3c68f7f76e2f64b7f23fa16"
+      },
+      "scope": "Hermitian 非奇异 A、QPE、有符号倒数旋转、反 QPE 与后选择；完整解向量来自模拟器，受相位位数和条件数影响。"
+    },
+    {
+      "guideId": "algorithms/linear-systems/lcu",
+      "guidePath": "algorithms/linear-systems/lcu/SKILL.md",
+      "guideSha256": "1c208442a354c2ab10677ad24a0e9f046c5c0ab29d5cd3e976f7284fd7ae4cb6",
+      "skill": "quantum-lcu",
+      "kind": "algorithm-workflow",
+      "algorithm": "lcu",
+      "exampleFile": "examples/quantum-algorithms/linear.py",
+      "signature": "(coefficients=None, unitaries=None, initial_state=None)",
+      "sourceAlgorithm": {
+        "path": "linear_algebra/lcu/algorithm.py",
+        "sha256": "b771bb57cf08d20f7b15fe48e5ae9e2adb9a6cca0b348cd72b655ca69fdbca91"
+      },
+      "scope": "使用 Qiskit 的显式量子电路，保留输入、方法参数、实际概率或态矢量；模拟器全态读取不代表硬件可高效读取。"
+    },
+    {
+      "guideId": "algorithms/linear-systems/qsvt-qlsa",
+      "guidePath": "algorithms/linear-systems/qsvt-qlsa/SKILL.md",
+      "guideSha256": "e0a74c3b866b588bfc9d41a25900df011805e6265f2653ca4faa196a7cf2eb7b",
+      "skill": "quantum-qsvt-qlsa",
+      "kind": "algorithm-workflow",
+      "algorithm": "qsvt_qlsa",
+      "exampleFile": "examples/quantum-algorithms/linear.py",
+      "signature": "(a=None, b=None, degree=11)",
+      "sourceAlgorithm": {
+        "path": "linear_algebra/qsvt_qlsa/algorithm.py",
+        "sha256": "d65e33127a1e6d550684b7f6b8b47032fd28c965b05fa783cdd7e0591b767b1d"
+      },
+      "scope": "Hermitian 非奇异矩阵，PennyLane QSVT 和受控 U/U† 后选择；有界奇次几何倒数多项式，输出实际残差，不承诺输入 epsilon 自动满足。"
+    },
+    {
+      "guideId": "algorithms/linear-systems/quantum-fourier-transform",
+      "guidePath": "algorithms/linear-systems/quantum-fourier-transform/SKILL.md",
+      "guideSha256": "71e8978bd1efda730669df12197ee7266aae61767416add3181831d32b351ea1",
+      "skill": "quantum-qft",
+      "kind": "algorithm-workflow",
+      "algorithm": "qft",
+      "exampleFile": "examples/quantum-algorithms/linear.py",
+      "signature": "(n=3, initial_state=None, inverse=False)",
+      "sourceAlgorithm": {
+        "path": "linear_algebra/qft/algorithm.py",
+        "sha256": "37bcfd2f3caf6b787eff8118f322d14209798adb38258edf03d6b6068133699b"
+      },
+      "scope": "使用 Qiskit 的显式量子电路，保留输入、方法参数、实际概率或态矢量；模拟器全态读取不代表硬件可高效读取。"
+    },
+    {
+      "guideId": "algorithms/linear-systems/quantum-signal-processing",
+      "guidePath": "algorithms/linear-systems/quantum-signal-processing/SKILL.md",
+      "guideSha256": "f2d8f9a132336ba23d982ca12186494f0bf942d2d64513e463bc50f4022c73c4",
+      "skill": "quantum-qsp",
+      "kind": "algorithm-workflow",
+      "algorithm": "qsp",
+      "exampleFile": "examples/quantum-algorithms/linear.py",
+      "signature": "(t=1.0, degree=8, x=0.5)",
+      "sourceAlgorithm": {
+        "path": "linear_algebra/qsp/algorithm.py",
+        "sha256": "b20905c96e9eac5039cdec57199370879986f36b721397691aa25bb1f1bda861"
+      },
+      "scope": "QSP/QSVT 相位综合计算 cos(t x) 的有界偶次多项式；报告截断误差和 block 缩放。"
+    },
+    {
+      "guideId": "algorithms/linear-systems/vqls",
+      "guidePath": "algorithms/linear-systems/vqls/SKILL.md",
+      "guideSha256": "699cfacb1a1126713dacf63eb446c65905a2b83c9793ff3365a47e8767eec114",
+      "skill": "quantum-vqls",
+      "kind": "algorithm-workflow",
+      "algorithm": "vqls",
+      "exampleFile": "examples/quantum-algorithms/variational.py",
+      "signature": "(a=None, b=None, layers=2, maxiter=150, seed=7)",
+      "sourceAlgorithm": {
+        "path": "linear_algebra/vqls/algorithm.py",
+        "sha256": "064f21530dbad741780b051b392043097a259963b3161d1bb5a0806bb2da48aa"
+      },
+      "scope": "Qiskit 参数电路与全局归一化残差 cost 的变分线性求解；报告数值残差与优化终止原因。"
+    },
+    {
+      "guideId": "algorithms/primitives",
+      "guidePath": "algorithms/primitives/SKILL.md",
+      "guideSha256": "844a06dd2ea0ff16aed4df1a9207135e4adb38605061ea2a71b3c0f10f5a7e94",
+      "skill": "quantum-guide-algorithms-primitives",
+      "kind": "routing-guide",
+      "algorithm": null
+    },
+    {
+      "guideId": "algorithms/primitives/amplitude-amplification",
+      "guidePath": "algorithms/primitives/amplitude-amplification/SKILL.md",
+      "guideSha256": "2ea1458b3147d33f548996d9b93dc4cc53e80fa8eb5592d4542b84255f080417",
+      "skill": "quantum-amplitude-amplification",
+      "kind": "algorithm-workflow",
+      "algorithm": "amplitude_amplification",
+      "exampleFile": "examples/quantum-algorithms/fundamentals.py",
+      "signature": "(initial_state=None, good_states=None, repetitions=1)",
+      "sourceAlgorithm": {
+        "path": "fundamental_algorithm/amplitude_amplification/algorithm.py",
+        "sha256": "3ac71d87745c79bbcbcf3d69e174088dcbac0a4bbed8fffa38955e6458b6697b"
+      },
+      "scope": "使用 Qiskit 的显式量子电路，保留输入、方法参数、实际概率或态矢量；模拟器全态读取不代表硬件可高效读取。"
+    },
+    {
+      "guideId": "algorithms/primitives/amplitude-estimation",
+      "guidePath": "algorithms/primitives/amplitude-estimation/SKILL.md",
+      "guideSha256": "fa7b64000af594a91f527f621eabbb3e1b9383897de36527813b18bd4c1f10d8",
+      "skill": "quantum-amplitude-estimation",
+      "kind": "algorithm-workflow",
+      "algorithm": "amplitude_estimation",
+      "exampleFile": "examples/quantum-algorithms/fundamentals.py",
+      "signature": "(initial_state=None, good_states=None, phase_bits=5)",
+      "sourceAlgorithm": {
+        "path": "fundamental_algorithm/amplitude_estimation/algorithm.py",
+        "sha256": "6e7de14190a6008543cf1a51f27193a77faf2da370dfb634832b561f9ede5b39"
+      },
+      "scope": "使用 Qiskit 的显式量子电路，保留输入、方法参数、实际概率或态矢量；模拟器全态读取不代表硬件可高效读取。"
+    },
+    {
+      "guideId": "algorithms/primitives/grover",
+      "guidePath": "algorithms/primitives/grover/SKILL.md",
+      "guideSha256": "9aecc48ff271610abaf7f56334d94de773097d8a42917b55ed2995ed8994bd84",
+      "skill": "quantum-grover",
+      "kind": "algorithm-workflow",
+      "algorithm": "grover",
+      "exampleFile": "examples/quantum-algorithms/fundamentals.py",
+      "signature": "(n=3, target=5, repetitions=None)",
+      "sourceAlgorithm": {
+        "path": "fundamental_algorithm/grover/algorithm.py",
+        "sha256": "3c9091fd67f24d72bcbc5d67b6b94af9df79db16ae6b4ef88de2f6600bba003a"
+      },
+      "scope": "使用 Qiskit 的显式量子电路，保留输入、方法参数、实际概率或态矢量；模拟器全态读取不代表硬件可高效读取。"
+    },
+    {
+      "guideId": "algorithms/primitives/hadamard-test",
+      "guidePath": "algorithms/primitives/hadamard-test/SKILL.md",
+      "guideSha256": "4b612f2dda988394fd9b650083e4419d0ce6e4b2654c1519592f9f0ad09c31ef",
+      "skill": "quantum-hadamard-test",
+      "kind": "algorithm-workflow",
+      "algorithm": "hadamard_test",
+      "exampleFile": "examples/quantum-algorithms/fundamentals.py",
+      "signature": "(unitary=None, initial_state=None, imag=False)",
+      "sourceAlgorithm": {
+        "path": "fundamental_algorithm/hadamard_test/algorithm.py",
+        "sha256": "c499cddbde4c4a6b25f5ac9c609755c49755e87b913d7b2348c510880edd825e"
+      },
+      "scope": "使用 Qiskit 的显式量子电路，保留输入、方法参数、实际概率或态矢量；模拟器全态读取不代表硬件可高效读取。"
+    },
+    {
+      "guideId": "algorithms/primitives/hadamard-transform",
+      "guidePath": "algorithms/primitives/hadamard-transform/SKILL.md",
+      "guideSha256": "2a899496e6d7107765805f234adb50eb3b5c64f107b334008e5c8046b2d0568c",
+      "skill": "quantum-hadamard-transform",
+      "kind": "algorithm-workflow",
+      "algorithm": "hadamard_transform",
+      "exampleFile": "examples/quantum-algorithms/fundamentals.py",
+      "signature": "(n=3, initial_state=None)",
+      "sourceAlgorithm": {
+        "path": "fundamental_algorithm/hadamard_transform/algorithm.py",
+        "sha256": "c67d0fef9f70c93a918f1622df83ce2b2fbee3916ff02a4f25cde584c7560e5f"
+      },
+      "scope": "使用 Qiskit 的显式量子电路，保留输入、方法参数、实际概率或态矢量；模拟器全态读取不代表硬件可高效读取。"
+    },
+    {
+      "guideId": "algorithms/primitives/quantum-phase-estimation",
+      "guidePath": "algorithms/primitives/quantum-phase-estimation/SKILL.md",
+      "guideSha256": "259f746f7fdd38749fa98689ff5c2eda037681fabfcb544e44fa6ff10068ea31",
+      "skill": "quantum-qpe",
+      "kind": "algorithm-workflow",
+      "algorithm": "qpe",
+      "exampleFile": "examples/quantum-algorithms/fundamentals.py",
+      "signature": "(unitary=None, initial_state=None, phase_bits=4)",
+      "sourceAlgorithm": {
+        "path": "fundamental_algorithm/qpe/algorithm.py",
+        "sha256": "ad6e57ea00dd4590d9f4b5e0641c601a5a64e366f1fa103bf30035981d54caf1"
+      },
+      "scope": "使用 Qiskit 的显式量子电路，保留输入、方法参数、实际概率或态矢量；模拟器全态读取不代表硬件可高效读取。"
+    },
+    {
+      "guideId": "algorithms/quantum-chemistry",
+      "guidePath": "algorithms/quantum-chemistry/SKILL.md",
+      "guideSha256": "dbc604cd860bf21f68eb3fe22c59b7cdca02ebf5844f5b946eba0fcbe06309cb",
+      "skill": "quantum-guide-algorithms-quantum-chemistry",
+      "kind": "routing-guide",
+      "algorithm": null
+    },
+    {
+      "guideId": "algorithms/quantum-chemistry/molecular-dmrg",
+      "guidePath": "algorithms/quantum-chemistry/molecular-dmrg/SKILL.md",
+      "guideSha256": "a30430ca7e366e95c796540514bffda9b431b108db9d4b96898aa863b1b76ded",
+      "skill": "quantum-molecular-dmrg",
+      "kind": "algorithm-workflow",
+      "algorithm": "molecular_dmrg",
+      "exampleFile": "examples/quantum-algorithms/chemistry.py",
+      "signature": "(atoms=None, basis='sto-3g', charge=0, spin=0, active_orbitals=None, active_electrons=None, max_bond=32, sweeps=12, tolerance=1e-09, seed=7)",
+      "sourceAlgorithm": {
+        "path": "quantum_chemistry/molecular_dmrg/algorithm.py",
+        "sha256": "2b8a89ef372149e6c7cfa18be5ee5c7a23f434de33e481e4b6128937c5b8d688"
+      },
+      "scope": "PySCF 活性空间积分、Jordan-Wigner MPO 与 quimb 双站点 DMRG。使用开源态制备替换闭源 CVD；当前示例的稠密 Hamiltonian 预处理需要 O(4^n) 存储。"
+    },
+    {
+      "guideId": "algorithms/quantum-error-correction",
+      "guidePath": "algorithms/quantum-error-correction/SKILL.md",
+      "guideSha256": "cb2e5e6dabcdf4fcc7182b7e8dfac99f9b5bdcb50d5015660e9ae7bb9e5ca788",
+      "skill": "quantum-qldpc",
+      "kind": "algorithm-workflow",
+      "algorithm": "qldpc",
+      "exampleFile": "examples/quantum-algorithms/error_correction.py",
+      "signature": "(h1=None, h2=None, x_error=None, z_error=None)",
+      "sourceAlgorithm": null,
+      "scope": "HGP CSS 校验矩阵、GF(2) 秩、交换关系和 syndrome；码距未计算。解码任务继续使用 ldpc-decoding Skill。"
+    },
+    {
+      "guideId": "algorithms/quantum-machine-learning",
+      "guidePath": "algorithms/quantum-machine-learning/SKILL.md",
+      "guideSha256": "06af97e2905adf0466f6bbcb3662a0de7318f47a25d049b2ee38ff271ce3c5f7",
+      "skill": "quantum-guide-algorithms-quantum-machine-learning",
+      "kind": "routing-guide",
+      "algorithm": null
+    },
+    {
+      "guideId": "algorithms/quantum-machine-learning/cvqnn",
+      "guidePath": "algorithms/quantum-machine-learning/cvqnn/SKILL.md",
+      "guideSha256": "9b2d5b782893b649ddfc505d4d75b7443f8516530d86ffb2c41f7e0038ee3e62",
+      "skill": "quantum-cvqnn",
+      "kind": "algorithm-workflow",
+      "algorithm": "cvqnn",
+      "exampleFile": "examples/quantum-algorithms/cv.py",
+      "signature": "(features=None, labels=None, layers=1, cutoff=4, maxiter=40, seed=7)",
+      "sourceAlgorithm": {
+        "path": "quantum_machine_learning/cvqnn/algorithm.py",
+        "sha256": "1708cff8bbdf3f15888f2347cc17d2c6069b8c6de3101fe7e643c7c63fdbe3f9"
+      },
+      "scope": "两模有限 Fock 空间的位移、压缩、旋转、Kerr 和分束器层；SciPy 有限差分优化替换 Torch autograd，需增加 cutoff 检查截断。"
+    },
+    {
+      "guideId": "algorithms/quantum-machine-learning/fermi-hubbard-vqe",
+      "guidePath": "algorithms/quantum-machine-learning/fermi-hubbard-vqe/SKILL.md",
+      "guideSha256": "1b784e854ab2d8689a98f28533374851d7a8116ba65a81584955baa90cfb76f4",
+      "skill": "quantum-fermi-hubbard-vqe",
+      "kind": "algorithm-workflow",
+      "algorithm": "fermi_hubbard_vqe",
+      "exampleFile": "examples/quantum-algorithms/variational.py",
+      "signature": "(sites=2, hopping=1.0, interaction=4.0, field=1.5, layers=3, maxiter=200, seed=7)",
+      "sourceAlgorithm": {
+        "path": "quantum_machine_learning/fermi_hubbard_vqe/algorithm.py",
+        "sha256": "752e77b704ab79cd8d5ee54ae0fa78bcd3fef07828c41bf020565bcdbd8aa5ff"
+      },
+      "scope": "开放边界 Hubbard 链，Jordan-Wigner 与全 Fock 空间 VQE；粒子数是测量值，未强制固定粒子数扇区。"
+    },
+    {
+      "guideId": "algorithms/quantum-machine-learning/ising",
+      "guidePath": "algorithms/quantum-machine-learning/ising/SKILL.md",
+      "guideSha256": "7cdebea1f5baca3cced468f81d2ea222f34a216a195aa1d4188ea58acbe27d18",
+      "skill": "quantum-ising",
+      "kind": "algorithm-workflow",
+      "algorithm": "ising",
+      "exampleFile": "examples/quantum-algorithms/dynamics.py",
+      "signature": "(rows=2, cols=2, coupling=1.0, field=0.7, time_step=0.025, steps=8, max_bond=32, cutoff=1e-12)",
+      "sourceAlgorithm": {
+        "path": "quantum_machine_learning/ising/algorithm.py",
+        "sha256": "8734ecc611f78ea07ad15c6a3c956cb120db9036d4080ff0fbe650e14a0e724f"
+      },
+      "scope": "开放边界二维矩形 Ising 网格，quimb MPS 与二阶 Strang 演化；报告键维数及截断参数，不分配完整态矢量。"
+    },
+    {
+      "guideId": "algorithms/quantum-machine-learning/qaoa",
+      "guidePath": "algorithms/quantum-machine-learning/qaoa/SKILL.md",
+      "guideSha256": "aaecdb5db89804428dcef30cde0c54b473ac687b26690a986208a09e9cb561df",
+      "skill": "quantum-qaoa",
+      "kind": "algorithm-workflow",
+      "algorithm": "qaoa",
+      "exampleFile": "examples/quantum-algorithms/variational.py",
+      "signature": "(edges=None, n=4, layers=2, maxiter=100, seed=7)",
+      "sourceAlgorithm": {
+        "path": "quantum_machine_learning/qaoa/algorithm.py",
+        "sha256": "ee73669de2465fc0aab8ba32e1ee02e75cd21ae5d11896b148afa9a05bb82fac"
+      },
+      "scope": "无权 MaxCut 的交替 cost/mixer 电路与参数优化；输出平均 cut 和最高概率位串。"
+    },
+    {
+      "guideId": "algorithms/quantum-machine-learning/qcbm",
+      "guidePath": "algorithms/quantum-machine-learning/qcbm/SKILL.md",
+      "guideSha256": "efce23fe1c990e511d540e79ead9f4ac2161c4e285ef588adc1c81aba59b623b",
+      "skill": "quantum-qcbm",
+      "kind": "algorithm-workflow",
+      "algorithm": "qcbm",
+      "exampleFile": "examples/quantum-algorithms/variational.py",
+      "signature": "(target_probabilities=None, layers=2, maxiter=100, seed=7)",
+      "sourceAlgorithm": {
+        "path": "quantum_machine_learning/qcbm/algorithm.py",
+        "sha256": "c09eb0625d484d2aecc20d4d07edc844f21f94609f04638742a38ab098b8fe7d"
+      },
+      "scope": "参数电路 Born 分布拟合目标概率，KL 目标与 total variation 对照。"
+    },
+    {
+      "guideId": "algorithms/quantum-machine-learning/vqc",
+      "guidePath": "algorithms/quantum-machine-learning/vqc/SKILL.md",
+      "guideSha256": "6e56ececf1cf2e77c78850065489b7330ee655378c55a6f91976554f1cc6bef7",
+      "skill": "quantum-vqc",
+      "kind": "algorithm-workflow",
+      "algorithm": "vqc",
+      "exampleFile": "examples/quantum-algorithms/variational.py",
+      "signature": "(features=None, labels=None, layers=2, maxiter=100, seed=7)",
+      "sourceAlgorithm": {
+        "path": "quantum_machine_learning/vqc/algorithm.py",
+        "sha256": "9524c0f10348bfd1bf604b8a1b41e3a64591d96d41296c44fc31b079a314bcde"
+      },
+      "scope": "RY 特征编码与参数电路二分类；输出训练集指标，不能当作泛化效果。"
+    },
+    {
+      "guideId": "algorithms/quantum-machine-learning/vqe",
+      "guidePath": "algorithms/quantum-machine-learning/vqe/SKILL.md",
+      "guideSha256": "1c6589174257617d3016b58271afc86b070dbed5786ef9740769fca1ddcd4de9",
+      "skill": "quantum-vqe",
+      "kind": "algorithm-workflow",
+      "algorithm": "vqe",
+      "exampleFile": "examples/quantum-algorithms/variational.py",
+      "signature": "(terms=None, layers=2, maxiter=150, seed=7)",
+      "sourceAlgorithm": {
+        "path": "quantum_machine_learning/vqe/algorithm.py",
+        "sha256": "34a9c0389ae28a25422b792d67dbc4475ba886045760c001b0de88544640ebe5"
+      },
+      "scope": "实 Pauli Hamiltonian、RY/RZ/CX ansatz 和 SciPy 优化；能量、优化记录及保留的参数可复查。"
+    },
+    {
+      "guideId": "algorithms/schrodingerization",
+      "guidePath": "algorithms/schrodingerization/SKILL.md",
+      "guideSha256": "c55760d11179978e75ec1833c285a7f5b2770b837ccd6fc4a2e7829cf31d1609",
+      "skill": "quantum-guide-algorithms-schrodingerization",
+      "kind": "routing-guide",
+      "algorithm": null
+    },
+    {
+      "guideId": "algorithms/schrodingerization/advection-schrodingerization",
+      "guidePath": "algorithms/schrodingerization/advection-schrodingerization/SKILL.md",
+      "guideSha256": "76ce8336f7e9912e64e9adc18e5abf5870aff34524dcf500e4f07ed91f2f1816",
+      "skill": "quantum-advection",
+      "kind": "algorithm-workflow",
+      "algorithm": "advection",
+      "exampleFile": "examples/quantum-algorithms/dynamics.py",
+      "signature": "(points=4, velocity=0.3, time=0.1, length=1.0, initial=None, auxiliary_points=32, half_width=8.0, recovery_p=1.0)",
+      "sourceAlgorithm": {
+        "path": "schrodingerization/equation_advection/algorithm.py",
+        "sha256": "139748e0d20c835b21ccd7b320c33308f16013a3909893687e459e85ae907c00"
+      },
+      "scope": "周期边界、常速一维平流，中心差分和显式薛定谔化电路；不接受并静默回退所谓 block 模式。"
+    },
+    {
+      "guideId": "algorithms/schrodingerization/heat-1d-schrodingerization",
+      "guidePath": "algorithms/schrodingerization/heat-1d-schrodingerization/SKILL.md",
+      "guideSha256": "2c481aa13cc439f571cd33eab1887cc6b370565248899fcf8e63c581a6863f15",
+      "skill": "quantum-heat-1d",
+      "kind": "algorithm-workflow",
+      "algorithm": "heat_1d",
+      "exampleFile": "examples/quantum-algorithms/dynamics.py",
+      "signature": "(points=4, diffusivity=0.1, time=0.05, length=1.0, boundary='dirichlet', initial=None, auxiliary_points=128, half_width=8.0, recovery_p=1.0)",
+      "sourceAlgorithm": {
+        "path": "schrodingerization/equation_heat/algorithm.py",
+        "sha256": "4fd87757b027e4bdd636800fb80832a1b9ba9e9d4df6b53c47912ec2eb042a52"
+      },
+      "scope": "齐次一维热方程，周期或零 Dirichlet 边界；显式辅助 Fourier 寄存器的幺正薛定谔化电路、截面恢复和离散热方程参照。"
+    },
+    {
+      "guideId": "algorithms/schrodingerization/heat-2d-schrodingerization",
+      "guidePath": "algorithms/schrodingerization/heat-2d-schrodingerization/SKILL.md",
+      "guideSha256": "cf1fbf337a6a4762a87156734151974a098136cbba0b60094e278294b9c510e4",
+      "skill": "quantum-heat-2d",
+      "kind": "algorithm-workflow",
+      "algorithm": "heat_2d",
+      "exampleFile": "examples/quantum-algorithms/dynamics.py",
+      "signature": "(points=4, diffusivity=0.1, time=0.02, length=1.0, boundary='dirichlet', initial=None, auxiliary_points=128, half_width=8.0, recovery_p=1.0)",
+      "sourceAlgorithm": {
+        "path": "schrodingerization/equation_heat2d/algorithm.py",
+        "sha256": "1553e6ffcc115ead64e294532dd893e16370976608178c0f9be5678d22339422"
+      },
+      "scope": "齐次二维方形网格热方程，周期或零 Dirichlet 边界；显式薛定谔化电路。空间与辅助网格误差需要分别收敛。"
+    },
+    {
+      "guideId": "algorithms/search",
+      "guidePath": "algorithms/search/SKILL.md",
+      "guideSha256": "83d29590693b9a51c59baa4324200e034d8dda2db1152104ec81f4adeaa9374e",
+      "skill": "quantum-guide-algorithms-search",
+      "kind": "routing-guide",
+      "algorithm": null
+    },
+    {
+      "guideId": "algorithms/search/glued-trees",
+      "guidePath": "algorithms/search/glued-trees/SKILL.md",
+      "guideSha256": "0998251bd277c523fa41e753a69eb1ee51dfa04c0802ed7ea6c7dc86d60af724",
+      "skill": "quantum-glued-trees",
+      "kind": "algorithm-workflow",
+      "algorithm": "glued_trees",
+      "exampleFile": "examples/quantum-algorithms/search.py",
+      "signature": "(depth=2, time=2.0, seed=7)",
+      "sourceAlgorithm": {
+        "path": "search/glued_trees/algorithm.py",
+        "sha256": "1ab3332b62203068df1fcc4e58aa44261f7955574d482c5c6f596b89089b4969"
+      },
+      "scope": "随机交替叶环连接的双树连续时间邻接矩阵量子行走；稠密编译和出口概率，不宣称搜索加速。"
+    },
+    {
+      "guideId": "algorithms/search/hidden-shift",
+      "guidePath": "algorithms/search/hidden-shift/SKILL.md",
+      "guideSha256": "5a7f929d626ae95374c13fd308bff2b5219e490516221a9343212b3854cde260",
+      "skill": "quantum-hidden-shift",
+      "kind": "algorithm-workflow",
+      "algorithm": "hidden_shift",
+      "exampleFile": "examples/quantum-algorithms/search.py",
+      "signature": "(qubits=4, shift='1010', shots=64, seed=7)",
+      "sourceAlgorithm": {
+        "path": "search/hidden_shift/algorithm.py",
+        "sha256": "7a5788739ad473c4842ebe2afefbb69d0f123c8ae9f668ebac53fc1bdf8db7a1"
+      },
+      "scope": "偶数位二次 bent 函数的 shifted/dual 相位 oracle；其他函数族需要另写任务代码。"
+    },
+    {
+      "guideId": "algorithms/state-preparation",
+      "guidePath": "algorithms/state-preparation/SKILL.md",
+      "guideSha256": "21989424a9e04c5cb9a2324eb88a5a9ff68a1f53073c91ef24ff4bb238a583c9",
+      "skill": "quantum-guide-algorithms-state-preparation",
+      "kind": "routing-guide",
+      "algorithm": null
+    },
+    {
+      "guideId": "algorithms/state-preparation/mottonen",
+      "guidePath": "algorithms/state-preparation/mottonen/SKILL.md",
+      "guideSha256": "1fdd278bfc6fe97ea2ca207a194a0349b6a44979d68591610b685b48a535cf29",
+      "skill": "quantum-mottonen",
+      "kind": "algorithm-workflow",
+      "algorithm": "mottonen",
+      "exampleFile": "examples/quantum-algorithms/state_preparation.py",
+      "signature": "(target=None)",
+      "sourceAlgorithm": {
+        "path": "state_preparation/mottonen/algorithm.py",
+        "sha256": "7434ce7973d6b922e3b001e24609c75f5c134f93fe488042b0277ef9d3ef9e15"
+      },
+      "scope": "PennyLane Möttönen 均匀受控旋转态制备；输入正规化后保留复相位。"
+    },
+    {
+      "guideId": "algorithms/state-preparation/mps",
+      "guidePath": "algorithms/state-preparation/mps/SKILL.md",
+      "guideSha256": "8dcf32c6a9087c9d2a3da8b03bd7dd65943fde30b1f6484449a140d7a06db44f",
+      "skill": "quantum-mps",
+      "kind": "algorithm-workflow",
+      "algorithm": "mps",
+      "exampleFile": "examples/quantum-algorithms/state_preparation.py",
+      "signature": "(target=None, max_bond=None)",
+      "sourceAlgorithm": {
+        "path": "state_preparation/mps/algorithm.py",
+        "sha256": "6b4894fc8286e873db8ed9b4d4bc0f4731cf3d0c0101968024935a6f56c85051"
+      },
+      "scope": "SVD 分解、可选键截断、显式右规范化与 PennyLane MPSPrep；报告实际制备保真度及辅助位清零概率。"
+    },
+    {
+      "guideId": "algorithms/state-preparation/multiplexer",
+      "guidePath": "algorithms/state-preparation/multiplexer/SKILL.md",
+      "guideSha256": "5739b9fbf35dd2e95b95b2a29486d7effd51f97af37fa2dc8552617fb5e69de0",
+      "skill": "quantum-multiplexer",
+      "kind": "algorithm-workflow",
+      "algorithm": "multiplexer",
+      "exampleFile": "examples/quantum-algorithms/state_preparation.py",
+      "signature": "(target=None)",
+      "sourceAlgorithm": {
+        "path": "state_preparation/multiplexer/algorithm.py",
+        "sha256": "909916a7f987631ac750d7088b782f0505c1eda1936c2282f39d4c82ee579a4b"
+      },
+      "scope": "Qiskit StatePreparation/Isometry 的均匀受控门合成；保留复振幅、输出位序与保真度。"
+    },
+    {
+      "guideId": "algorithms/state-preparation/pauli",
+      "guidePath": "algorithms/state-preparation/pauli/SKILL.md",
+      "guideSha256": "7459d20da728e9535c110003f76dd82f6e8cfc3f6d867047c0dca16941336341",
+      "skill": "quantum-pauli",
+      "kind": "algorithm-workflow",
+      "algorithm": "pauli",
+      "exampleFile": "examples/quantum-algorithms/state_preparation.py",
+      "signature": "(target=None, maxiter=300, seed=7, tolerance=1e-09)",
+      "sourceAlgorithm": {
+        "path": "state_preparation/pauli/algorithm.py",
+        "sha256": "aae89b225f2c4a06b1b645c0fd9fa149043c127c17c27278b3bef4ea251b8d64"
+      },
+      "scope": "PennyLane ArbitraryStatePreparation 的 Pauli 旋转优化；报告保真度及优化状态，迭代结束不自动代表达到目标误差。"
+    },
+    {
+      "guideId": "algorithms/state-preparation/superposition",
+      "guidePath": "algorithms/state-preparation/superposition/SKILL.md",
+      "guideSha256": "8e06ebf2a0e23d2071bc44fe56063c5aaf7cf398140e76925cb7c18a96f7d16b",
+      "skill": "quantum-superposition",
+      "kind": "algorithm-workflow",
+      "algorithm": "superposition",
+      "exampleFile": "examples/quantum-algorithms/state_preparation.py",
+      "signature": "(target=None)",
+      "sourceAlgorithm": {
+        "path": "state_preparation/Superposition/algorithm.py",
+        "sha256": "288955018fd0fbbd1a4eb73000e23757abdc8d705c055cc443d386fc56ee85cc"
+      },
+      "scope": "PennyLane Superposition 的计算基叠加与辅助位清零；系数可为复数。"
+    },
+    {
+      "guideId": "root",
+      "guidePath": "SKILL.md",
+      "guideSha256": "6dd68b86dfe6bc5f7bc0f4dbda0cbea9bd742f2f6737854f7a4279c4ec20f2af",
+      "skill": "quantum-algorithms",
+      "kind": "routing-guide",
+      "algorithm": null
+    },
+    {
+      "guideId": "simulators",
+      "guidePath": "simulators/SKILL.md",
+      "guideSha256": "d9587657d7879aedd5fcf4d6602c24dd7ea4f9aad645bcbad09e1e2284e953f3",
+      "skill": "quantum-guide-simulators",
+      "kind": "routing-guide",
+      "algorithm": null
+    },
+    {
+      "guideId": "simulators/pennylane",
+      "guidePath": "simulators/pennylane/SKILL.md",
+      "guideSha256": "8df881a4f103e6ebae7b54333d9012facf61d4b5b8587c82abfe446d7366a930",
+      "skill": "quantum-guide-simulators-pennylane",
+      "kind": "routing-guide",
+      "algorithm": null
+    },
+    {
+      "guideId": "simulators/qiskit",
+      "guidePath": "simulators/qiskit/SKILL.md",
+      "guideSha256": "bd93929d5a7a0e65c612c0be852f140e8d5589bfcb231d06242657abee0d63bb",
+      "skill": "quantum-guide-simulators-qiskit",
+      "kind": "routing-guide",
+      "algorithm": null
+    },
+    {
+      "guideId": "simulators/unitarylab",
+      "guidePath": "simulators/unitarylab/SKILL.md",
+      "guideSha256": "0f06565299364e4ccfc687e8b4217e7e9d1c0c400c75bf15e237c416ca8e76c8",
+      "skill": "quantum-guide-simulators-unitarylab",
+      "kind": "open-migration",
+      "algorithm": null
+    }
+  ]
+}

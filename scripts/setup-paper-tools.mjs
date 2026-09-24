@@ -1,12 +1,12 @@
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { readFileSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
 const ids = ["sqd-chemistry", "tjm-dynamics", "ldpc-decoding", "flow-vqe", "tenpy-ground-state", "randomized-measurements"];
-const supported = ["qbraid-conversion", "qdmi-device", ...ids, "qcut-knitting", "compact-optimization", "openqarp-excited-states", "cqlib-kernel", "flagquantum-workbench", "mitiq-error-mitigation", "dynamiqs-dynamics", "clifft-sampling", "oqupy-dynamics", "deltakit-qec", "pyzx-optimization", "graphix-mbqc", "symmer-tapering", "paulie-algebra"];
+const supported = ["qbraid-conversion", "qdmi-device", ...ids, "hamiltonian-simulation", "qcut-knitting", "compact-optimization", "openqarp-excited-states", "cqlib-kernel", "flagquantum-workbench", "mitiq-error-mitigation", "dynamiqs-dynamics", "clifft-sampling", "oqupy-dynamics", "deltakit-qec", "pyzx-optimization", "graphix-mbqc", "symmer-tapering", "paulie-algebra"];
 const selected = process.argv.slice(2);
 const allowedEnvironment = ["HOME", "PATH", "HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY", "NO_PROXY", "SSL_CERT_FILE", "SSL_CERT_DIR", "UV_CACHE_DIR", "UV_PYTHON_INSTALL_DIR", "SYSTEMROOT", "TEMP", "TMP", "TMPDIR", "WINDIR"];
 const environment = Object.fromEntries(allowedEnvironment.filter(key => process.env[key]).map(key => [key, process.env[key]]));
@@ -26,4 +26,7 @@ for (const id of selected.length ? selected : ids) {
   });
   if (run.error || run.status !== 0) throw new Error(`${id} setup failed: ${run.error?.message ?? run.status}`);
   if (digest(lock) !== before) throw new Error(`${id} dependency lock changed during setup; review before running tools`);
+  if (id === "hamiltonian-simulation") {
+    writeFileSync(path.join(root, ".openquantum/python-envs", id, "openquantum-lock.sha256"), before + "\n");
+  }
 }

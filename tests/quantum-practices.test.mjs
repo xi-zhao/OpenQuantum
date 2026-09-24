@@ -17,7 +17,12 @@ test("pinned MIT catalog retains exact source digests and a single declared read
   }
   assert.equal(SOURCE.commit, "572a24c9b5c9787caec98810351f5cb17c82250e");
   assert.equal(skills.length, SOURCE.catalogEntries);
-  assert.equal(new Set(skills.map(skill => skill.id)).size, 60);
+  assert.equal(new Set(skills.map(skill => skill.id)).size, 66);
+  assert.equal(SOURCE.corpusCommit, "c5436bb120812ad903ac776f58df89b803ced48c");
+  for (const guide of manifest.guides) {
+    const entry = skills.find(skill => skill.id === guide.id);
+    assert.equal(createHash("sha256").update(entry.content).digest("hex"), guide.sha256, guide.path);
+  }
   const contracts = readDeclaredNativeToolContracts({
     projectRoot: fileURLToPath(new URL("..", import.meta.url)),
     capabilityId: "quantum-practices",
@@ -40,7 +45,7 @@ test("English and Chinese requests retrieve the intended guides with source and 
   ]) {
     const result = retrieveQuantumPractice({ action: "get", query });
     assert.ok(result.includes(`id: ${id}`), query);
-    assert.ok(result.includes(`${SOURCE.repository}/blob/${SOURCE.commit}/${id}/SKILL.md`));
+    assert.ok(result.includes(`${SOURCE.corpusRepository}/blob/${SOURCE.corpusCommit}/${id}/SKILL.md`));
     assert.match(result, /not active Skill instructions or execution evidence/);
     assert.match(result, /separately licensed dependency/);
     assert.match(result, /BEGIN UPSTREAM REFERENCE/);
@@ -50,6 +55,14 @@ test("English and Chinese requests retrieve the intended guides with source and 
   assert.match(hhl, /power of 2/);
   assert.match(retrieveQuantumPractice({ action: "search", query: "HHL", limit: 2 }), /algorithms\/linear-systems\/hhl/);
   assert.match(retrieveQuantumPractice({ action: "list", limit: 20 }), /Quantum practice catalog/);
+  for (const name of ["trotter", "qdrift"]) {
+    const adapted = retrieveQuantumPractice({ action: "get", id: `algorithms/hamiltonian-simulation/${name}` });
+    assert.match(adapted, /open-source backends only/);
+    assert.match(adapted, /Tool simulate_hamiltonian via hamiltonian_local/);
+  }
+  for (const id of ["algorithms/search/hidden-shift", "algorithms/quantum-chemistry/molecular-dmrg", "algorithms/quantum-machine-learning/ising"]) {
+    assert.ok(retrieveQuantumPractice({ action: "get", id }).includes(`id: ${id}`));
+  }
 });
 
 test("all guides respect output bounds in brief and full modes", () => {

@@ -5,6 +5,7 @@ node_modules/
 # Python bridge build artifacts
 __pycache__/
 *.pyc
+.venv/
 
 # Local OpenQuantum runtime state and scientific outputs
 .openquantum/

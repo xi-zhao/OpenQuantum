@@ -1,0 +1,497 @@
+{
+  "schemaVersion": "1.0",
+  "verifiedAt": "2026-09-24T00:55:16.935Z",
+  "baseCommit": "7b0500e1216db1207d680c02a79568d5c862133d",
+  "platform": {
+    "system": "Darwin",
+    "machine": "arm64",
+    "node": "24.14.1",
+    "python": "3.12.13"
+  },
+  "scope": "L1 open-source adaptation of Trotter/qDrift plus fixed MIT guide retrieval; not the complete upstream library",
+  "source": {
+    "name": "UnitaryLab Algorithms MIT adaptation",
+    "repository": "https://github.com/unitarylab/unitarylab_algorithms",
+    "commit": "a8362e374da2ec2c68f582db645a7782e45bfc4b",
+    "backend": "Qiskit 2.5.2 / NumPy 2.5.3 / SciPy 1.18.1"
+  },
+  "corpusUpdate": {
+    "oldCount": 60,
+    "newCount": 66,
+    "added": [
+      "algorithms/quantum-chemistry",
+      "algorithms/quantum-chemistry/molecular-dmrg",
+      "algorithms/quantum-machine-learning/ising",
+      "algorithms/search",
+      "algorithms/search/glued-trees",
+      "algorithms/search/hidden-shift"
+    ],
+    "changed": [
+      "algorithms",
+      "algorithms/quantum-machine-learning",
+      "simulators",
+      "simulators/unitarylab"
+    ],
+    "removed": []
+  },
+  "scientificValidation": "not_evaluated",
+  "externalModelTested": false,
+  "hardwareTested": false,
+  "fullRepositoryCheckRun": false,
+  "checks": [
+    {
+      "command": "npm run lint",
+      "status": "passed"
+    },
+    {
+      "command": "npm run capability:conformance",
+      "status": "passed",
+      "packages": 41,
+      "levels": {
+        "L0": 1,
+        "L1": 37,
+        "L2": 1,
+        "L3": 2
+      }
+    },
+    {
+      "command": "node --test tests/hamiltonian-contracts.test.mjs tests/quantum-practices.test.mjs tests/capability-package-audit.test.mjs tests/capability-tool-contract.test.mjs tests/readme-capability-catalog.test.mjs tests/scientific-tool-effects.test.mjs",
+      "status": "passed",
+      "passed": 57
+    },
+    {
+      "command": "npm run capability:contracts:test",
+      "status": "passed",
+      "passed": 101,
+      "skipped": 1,
+      "skipReason": "Existing opt-in real FlagQuantum integration not enabled; protocol contract passed"
+    },
+    {
+      "command": "npm run capability:hamiltonian:live",
+      "status": "passed",
+      "passed": 2
+    },
+    {
+      "command": "OPENQUANTUM_PRACTICES_EVIDENCE=.openquantum/hamiltonian-evidence/practices-session.json node --test tests/harness-quantum-practices.test.mjs",
+      "status": "passed",
+      "passed": 1
+    },
+    {
+      "command": "node --test tests/project-settings.test.mjs tests/scalable-bridges.test.mjs",
+      "status": "passed",
+      "passed": 19
+    },
+    {
+      "command": "npm run harness:config",
+      "status": "passed"
+    },
+    {
+      "command": "node scripts/build-quantum-practices-catalog.mjs --check",
+      "status": "passed",
+      "guides": 66
+    },
+    {
+      "command": "node --test tests/local-compute-scale.test.mjs",
+      "status": "passed",
+      "passed": 3
+    }
+  ],
+  "numericalCases": [
+    {
+      "name": "asymmetric-q0",
+      "method": "trotter",
+      "numQubits": 2,
+      "steps": 1,
+      "order": 2,
+      "pauliRotations": 1,
+      "frobeniusError": 4.606656315939702e-16,
+      "spectralError": 2.303328157969851e-16,
+      "stateNorm": 0.9999999999999996,
+      "reference": "computed"
+    },
+    {
+      "name": "zero-time",
+      "method": "qdrift",
+      "numQubits": 2,
+      "steps": 4,
+      "seed": 0,
+      "pauliRotations": 0,
+      "frobeniusError": 0,
+      "spectralError": 0,
+      "stateNorm": 1,
+      "reference": "computed"
+    },
+    {
+      "name": "zero-H",
+      "method": "qdrift",
+      "numQubits": 2,
+      "steps": 4,
+      "seed": 0,
+      "pauliRotations": 0,
+      "frobeniusError": 0,
+      "spectralError": 0,
+      "stateNorm": 1,
+      "reference": "computed"
+    },
+    {
+      "name": "cancellation",
+      "method": "qdrift",
+      "numQubits": 2,
+      "steps": 4,
+      "seed": 0,
+      "pauliRotations": 0,
+      "frobeniusError": 0,
+      "spectralError": 0,
+      "stateNorm": 1,
+      "reference": "computed"
+    },
+    {
+      "name": "identity-phase",
+      "method": "trotter",
+      "numQubits": 1,
+      "steps": 1,
+      "order": 2,
+      "pauliRotations": 0,
+      "frobeniusError": 0,
+      "spectralError": 0,
+      "stateNorm": 1,
+      "reference": "computed"
+    },
+    {
+      "name": "commuting-negative-time",
+      "method": "trotter",
+      "numQubits": 2,
+      "steps": 3,
+      "order": 1,
+      "pauliRotations": 6,
+      "frobeniusError": 5.453105385130469e-16,
+      "spectralError": 2.8056330427764467e-16,
+      "stateNorm": 0.9999999999999993,
+      "reference": "computed"
+    },
+    {
+      "name": "order-1-steps-4",
+      "method": "trotter",
+      "numQubits": 2,
+      "steps": 4,
+      "order": 1,
+      "pauliRotations": 12,
+      "frobeniusError": 0.08800891575354204,
+      "spectralError": 0.0550953680816556,
+      "stateNorm": 0.9999999999999964,
+      "reference": "computed"
+    },
+    {
+      "name": "order-1-steps-8",
+      "method": "trotter",
+      "numQubits": 2,
+      "steps": 8,
+      "order": 1,
+      "pauliRotations": 24,
+      "frobeniusError": 0.04397727419465684,
+      "spectralError": 0.027554602425482234,
+      "stateNorm": 0.9999999999999942,
+      "reference": "computed"
+    },
+    {
+      "name": "order-2-steps-4",
+      "method": "trotter",
+      "numQubits": 2,
+      "steps": 4,
+      "order": 2,
+      "pauliRotations": 20,
+      "frobeniusError": 0.0029954064136220896,
+      "spectralError": 0.0016258060235765093,
+      "stateNorm": 0.9999999999999933,
+      "reference": "computed"
+    },
+    {
+      "name": "order-2-steps-8",
+      "method": "trotter",
+      "numQubits": 2,
+      "steps": 8,
+      "order": 2,
+      "pauliRotations": 40,
+      "frobeniusError": 0.000747764457562268,
+      "spectralError": 0.0004053649836740671,
+      "stateNorm": 0.999999999999988,
+      "reference": "computed"
+    },
+    {
+      "name": "order-4-steps-4",
+      "method": "trotter",
+      "numQubits": 2,
+      "steps": 4,
+      "order": 4,
+      "pauliRotations": 100,
+      "frobeniusError": 2.014002440791389e-06,
+      "spectralError": 1.4144274697745443e-06,
+      "stateNorm": 0.99999999999997,
+      "reference": "computed"
+    },
+    {
+      "name": "order-4-steps-8",
+      "method": "trotter",
+      "numQubits": 2,
+      "steps": 8,
+      "order": 4,
+      "pauliRotations": 200,
+      "frobeniusError": 1.25459752208288e-07,
+      "spectralError": 8.810364451029365e-08,
+      "stateNorm": 0.9999999999999303,
+      "reference": "computed"
+    },
+    {
+      "name": "dense-oracle-0",
+      "method": "trotter",
+      "numQubits": 2,
+      "steps": 8,
+      "order": 1,
+      "pauliRotations": 24,
+      "frobeniusError": 0.025371466223257425,
+      "spectralError": 0.015803639141526445,
+      "stateNorm": 0.9999999999999949,
+      "reference": "computed"
+    },
+    {
+      "name": "dense-oracle-1",
+      "method": "trotter",
+      "numQubits": 2,
+      "steps": 8,
+      "order": 2,
+      "pauliRotations": 40,
+      "frobeniusError": 0.0003253941990880326,
+      "spectralError": 0.00017878873922677456,
+      "stateNorm": 0.9999999999999888,
+      "reference": "computed"
+    },
+    {
+      "name": "dense-oracle-2",
+      "method": "qdrift",
+      "numQubits": 2,
+      "steps": 23,
+      "seed": 17,
+      "pauliRotations": 23,
+      "frobeniusError": 0.21456757911631594,
+      "spectralError": 0.12457822708729042,
+      "stateNorm": 0.9999999999999898,
+      "reference": "computed"
+    },
+    {
+      "name": "seed-repeat",
+      "method": "qdrift",
+      "numQubits": 2,
+      "steps": 23,
+      "seed": 17,
+      "pauliRotations": 23,
+      "frobeniusError": 0.21456757911631594,
+      "spectralError": 0.12457822708729042,
+      "stateNorm": 0.9999999999999898,
+      "reference": "computed"
+    },
+    {
+      "name": "same-seed",
+      "method": "qdrift",
+      "numQubits": 2,
+      "steps": 23,
+      "seed": 17,
+      "pauliRotations": 23,
+      "frobeniusError": 0.21456757911631594,
+      "spectralError": 0.12457822708729042,
+      "stateNorm": 0.9999999999999898,
+      "reference": "computed"
+    },
+    {
+      "name": "different-seed",
+      "method": "qdrift",
+      "numQubits": 2,
+      "steps": 23,
+      "seed": 18,
+      "pauliRotations": 23,
+      "frobeniusError": 0.3902125498512371,
+      "spectralError": 0.20872735059337022,
+      "stateNorm": 0.9999999999999909,
+      "reference": "computed"
+    },
+    {
+      "name": "qdrift-single-negative-term",
+      "method": "qdrift",
+      "numQubits": 1,
+      "steps": 17,
+      "seed": 5,
+      "pauliRotations": 17,
+      "frobeniusError": 4.497431116530025e-15,
+      "spectralError": 3.2351906690530197e-15,
+      "stateNorm": 0.9999999999999938,
+      "reference": "computed"
+    },
+    {
+      "name": "circuit-30q",
+      "method": "trotter",
+      "numQubits": 30,
+      "steps": 2,
+      "order": 2,
+      "pauliRotations": 2,
+      "reference": "not_run"
+    },
+    {
+      "name": "reference-above-auto-threshold",
+      "method": "trotter",
+      "numQubits": 7,
+      "steps": 1,
+      "order": 2,
+      "pauliRotations": 1,
+      "frobeniusError": 1.4043333874306805e-15,
+      "spectralError": 1.2412670766236366e-16,
+      "reference": "computed"
+    },
+    {
+      "name": "skip-reference-plus-state",
+      "method": "trotter",
+      "numQubits": 2,
+      "steps": 8,
+      "order": 2,
+      "pauliRotations": 40,
+      "stateNorm": 0.9999999999999889,
+      "reference": "not_run"
+    }
+  ],
+  "harness": {
+    "version": "0.1.5-rc.1",
+    "model": "local protocol fixture",
+    "sessionId": "session-hamiltonian-1c4338d6-eca0-4421-8f60-71e942b27d12",
+    "successfulCalls": 2,
+    "rejectedCalls": 1,
+    "skillDiscovered": true,
+    "resultsDeliveredToModelProtocol": true,
+    "sessionReread": true
+  },
+  "referenceHarness": {
+    "sessionId": "session-practices-1db37247-1a7e-438c-8a15-90ca318e80d0",
+    "successfulCalls": 2,
+    "rejectedCalls": 1
+  },
+  "sourceFiles": [
+    {
+      "path": ".agents/skills/hamiltonian-simulation/mcp/bridge.py",
+      "sha256": "74dea2548dcb29416061fcfd330488b5c6a9fd08cdb78f9a4be7032530002a7b"
+    },
+    {
+      "path": ".agents/skills/hamiltonian-simulation/mcp/contracts.mjs",
+      "sha256": "e0e801574bbe89d52315757dd39542f5c24156d7dbd4e93267cb7bd0cc4206aa"
+    },
+    {
+      "path": ".agents/skills/hamiltonian-simulation/mcp/server.mjs",
+      "sha256": "8526698884254541a4e66abf6328b538fcaaa145fb1482b058acc9e77e1ab984"
+    },
+    {
+      "path": ".agents/skills/hamiltonian-simulation/uv.lock",
+      "sha256": "29be3d89c73a3a5dd34c4826daff00bc02f6cbcde8355ed070675581b6cfab46"
+    },
+    {
+      "path": "src/lib/bounded-science-mcp.mjs",
+      "sha256": "785226d6acf70cc1fed24924a3855420633747fe7f5d9fcceeba787074e9b90d"
+    },
+    {
+      "path": "scripts/setup-paper-tools.mjs",
+      "sha256": "42bb9fdd04c0c2ec38d59418dab7725cc64497d2254841f51ae49b6f55231bab"
+    },
+    {
+      "path": "scripts/build-quantum-practices-catalog.mjs",
+      "sha256": "2c598a74dd4363269a897eb766fa675b86dfec30bfdd2a65d316e0ec5670aa6e"
+    },
+    {
+      "path": "src/quantum-practices/index.mjs",
+      "sha256": "19a242e169143b701a409d3e6dbe2b501c5b06d9acea7dbe68538f9fa364e819"
+    },
+    {
+      "path": "src/quantum-practices/upstream/source.json",
+      "sha256": "cb67f9a9187726b9915172be40421ffcfd615eabbf806116f103119625cbb263"
+    },
+    {
+      "path": "src/quantum-practices/upstream/generated/skill-catalog.js",
+      "sha256": "0524f93e27d266ec3a0e967019753709e266dbcf7652b63eee41796cd05ee85c"
+    },
+    {
+      "path": "tests/fixtures/hamiltonian-oracle.py",
+      "sha256": "eebdc004e468a0ecd5ae27c72030998a384d323f21e24ec1d418cb849f39a1e1"
+    },
+    {
+      "path": "tests/hamiltonian-live.test.mjs",
+      "sha256": "08fb9bec9d73171eb6151e60d2d9db83212eead6a8c97fb9485d6ded0b6283f9"
+    },
+    {
+      "path": "tests/harness-hamiltonian.test.mjs",
+      "sha256": "d572019c66689ab428bc23df39d2a6fc9e3e85f981f17a71cd7c8829a1050c2c"
+    },
+    {
+      "path": "tests/hamiltonian-contracts.test.mjs",
+      "sha256": "7e19c9b06440aeb4d1edbab2fed6ea646d628397f28b30f000ade40c9c5fb08f"
+    }
+  ],
+  "rawEvidence": [
+    {
+      "localPath": ".openquantum/hamiltonian-evidence/numerical.json",
+      "sha256": "5be27724acd9f344ef61ab1361adb8b75968462a43810a033de76d73afdcdbb9",
+      "committed": false
+    },
+    {
+      "localPath": ".openquantum/hamiltonian-evidence/harness-session.json",
+      "sha256": "b770ad72405c2c8642f278e38e3aa2655bcdc5b4a2dd75d57c3af9a38b6eeb76",
+      "committed": false
+    },
+    {
+      "localPath": ".openquantum/hamiltonian-evidence/practices-session.json",
+      "sha256": "23596c251e6340fcd6140a675e175c9f79eb34ad9c62676b97b2a0d284edd787",
+      "committed": false
+    },
+    {
+      "localPath": ".openquantum/hamiltonian-evidence/dependencies.json",
+      "sha256": "aead6c7bb452d60c18034e6b224dcfb0274c9bf05fd56541c916d7eabef2e7f8",
+      "committed": false
+    }
+  ],
+  "installedDependencies": [
+    {
+      "name": "numpy",
+      "version": "2.5.3",
+      "licenseMetadata": "BSD-3-Clause AND 0BSD AND MIT AND Zlib AND CC0-1.0"
+    },
+    {
+      "name": "rustworkx",
+      "version": "0.18.1",
+      "licenseMetadata": "Apache-2.0"
+    },
+    {
+      "name": "qiskit",
+      "version": "2.5.2",
+      "licenseMetadata": "Apache-2.0"
+    },
+    {
+      "name": "stevedore",
+      "version": "5.9.1",
+      "licenseMetadata": "Apache-2.0"
+    },
+    {
+      "name": "typing_extensions",
+      "version": "4.16.0",
+      "licenseMetadata": "PSF-2.0"
+    },
+    {
+      "name": "scipy",
+      "version": "1.18.1",
+      "licenseMetadata": "Copyright (c) 2001-2002 Enthought, Inc. 2003, SciPy Developers.\n All rights reserved.\n\n Redistribution and use in source and binary forms, with or wit"
+    },
+    {
+      "name": "dill",
+      "version": "0.4.1",
+      "licenseMetadata": "BSD-3-Clause"
+    }
+  ],
+  "primaryWorktreeUnchanged": true,
+  "validationLimits": [
+    "Verified locally on macOS arm64; no external model or hardware task.",
+    "The POSIX interpreter protocol fixture is skipped on Windows; live suite uses the actual prepared Python interpreter.",
+    "Scientific Acceptance and a release were not evaluated."
+  ]
+}

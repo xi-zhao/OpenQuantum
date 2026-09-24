@@ -1,6 +1,25 @@
 schemaVersion: "1.1"
 
 packages:
+  - id: hamiltonian-simulation
+    level: L1
+    execution:
+      mcpServers:
+        - name: hamiltonian_local
+          source: package
+          entrypoint: .agents/skills/hamiltonian-simulation/mcp/server.mjs
+          activation: always
+          contractCheck: tests/hamiltonian-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: simulate_hamiltonian
+              effect: read-only
+      nativeTools: []
+      checks:
+        - tests/hamiltonian-contracts.test.mjs
+        - tests/hamiltonian-live.test.mjs
+        - tests/harness-hamiltonian.test.mjs
+
   - id: quantum-practices
     level: L1
     execution:
@@ -1095,3 +1114,220 @@ packages:
         - tests/interop-contracts.test.mjs
         - tests/interop-live.test.mjs
         - tests/harness-interop.test.mjs
+
+
+  - id: quantum-guide-algorithms
+    level: L0
+
+  - id: quantum-guide-algorithms-cryptography
+    level: L0
+
+  - id: quantum-discrete-log
+    level: L0
+
+  - id: quantum-shor
+    level: L0
+
+  - id: quantum-simon
+    level: L0
+
+  - id: quantum-guide-algorithms-eigensolvers
+    level: L0
+
+  - id: quantum-numpy-minimum-eigensolver
+    level: L0
+
+  - id: quantum-numpy-eigensolver
+    level: L0
+
+  - id: quantum-vqd
+    level: L0
+
+  - id: quantum-guide-algorithms-gradients
+    level: L0
+
+  - id: quantum-finite-difference
+    level: L0
+
+  - id: quantum-linear-combination
+    level: L0
+
+  - id: quantum-parameter-shift
+    level: L0
+
+  - id: quantum-qfi
+    level: L0
+
+  - id: quantum-reverse
+    level: L0
+
+  - id: quantum-spsa
+    level: L0
+
+  - id: quantum-guide-algorithms-hamiltonian-simulation
+    level: L0
+
+  - id: quantum-cartan
+    level: L0
+
+  - id: quantum-qdrift
+    level: L0
+
+  - id: quantum-hamiltonian-qsp
+    level: L0
+
+  - id: quantum-taylor
+    level: L0
+
+  - id: quantum-trotter
+    level: L0
+
+  - id: quantum-guide-algorithms-linear-systems
+    level: L0
+
+  - id: quantum-aqc
+    level: L0
+
+  - id: quantum-hhl
+    level: L0
+
+  - id: quantum-lcu
+    level: L0
+
+  - id: quantum-qsvt-qlsa
+    level: L0
+
+  - id: quantum-qft
+    level: L0
+
+  - id: quantum-qsp
+    level: L0
+
+  - id: quantum-vqls
+    level: L0
+
+  - id: quantum-guide-algorithms-primitives
+    level: L0
+
+  - id: quantum-amplitude-amplification
+    level: L0
+
+  - id: quantum-amplitude-estimation
+    level: L0
+
+  - id: quantum-grover
+    level: L0
+
+  - id: quantum-hadamard-test
+    level: L0
+
+  - id: quantum-hadamard-transform
+    level: L0
+
+  - id: quantum-qpe
+    level: L0
+
+  - id: quantum-guide-algorithms-quantum-chemistry
+    level: L0
+
+  - id: quantum-molecular-dmrg
+    level: L0
+
+  - id: quantum-qldpc
+    level: L0
+
+  - id: quantum-guide-algorithms-quantum-machine-learning
+    level: L0
+
+  - id: quantum-cvqnn
+    level: L0
+
+  - id: quantum-fermi-hubbard-vqe
+    level: L0
+
+  - id: quantum-ising
+    level: L0
+
+  - id: quantum-qaoa
+    level: L0
+
+  - id: quantum-qcbm
+    level: L0
+
+  - id: quantum-vqc
+    level: L0
+
+  - id: quantum-vqe
+    level: L0
+
+  - id: quantum-guide-algorithms-schrodingerization
+    level: L0
+
+  - id: quantum-advection
+    level: L0
+
+  - id: quantum-heat-1d
+    level: L0
+
+  - id: quantum-heat-2d
+    level: L0
+
+  - id: quantum-guide-algorithms-search
+    level: L0
+
+  - id: quantum-glued-trees
+    level: L0
+
+  - id: quantum-hidden-shift
+    level: L0
+
+  - id: quantum-guide-algorithms-state-preparation
+    level: L0
+
+  - id: quantum-mottonen
+    level: L0
+
+  - id: quantum-mps
+    level: L0
+
+  - id: quantum-multiplexer
+    level: L0
+
+  - id: quantum-pauli
+    level: L0
+
+  - id: quantum-superposition
+    level: L0
+
+  - id: quantum-algorithms
+    level: L1
+    execution:
+      mcpServers: []
+      nativeTools:
+        - name: bash
+          providerPlugin: "@deepseek-ai/dsh-tool-bash"
+          activation: conditional
+          contractCheck: tests/harness-native-quantum.test.mjs
+          effect: external-write
+          effectEvidence: conservative-provider
+        - name: pwsh
+          providerPlugin: "@deepseek-ai/dsh-tool-pwsh"
+          activation: conditional
+          contractCheck: tests/harness-native-quantum.test.mjs
+          effect: external-write
+          effectEvidence: conservative-provider
+      checks:
+        - tests/open-algorithm-skills.test.mjs
+        - tests/harness-open-algorithms.test.mjs
+
+  - id: quantum-guide-simulators
+    level: L0
+
+  - id: quantum-guide-simulators-pennylane
+    level: L0
+
+  - id: quantum-guide-simulators-qiskit
+    level: L0
+
+  - id: quantum-guide-simulators-unitarylab
+    level: L0

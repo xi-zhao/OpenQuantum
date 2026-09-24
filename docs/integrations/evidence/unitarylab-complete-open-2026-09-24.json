@@ -1,0 +1,808 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-24T02:57:58.793899+00:00",
+  "scope": "Complete pinned guide/module mapping with executable open SDK examples; not upstream Python API or closed backend feature compatibility.",
+  "sources": {
+    "skills": {
+      "repository": "https://github.com/unitarylab/quantum-skills",
+      "commit": "c5436bb120812ad903ac776f58df89b803ced48c",
+      "license": "MIT"
+    },
+    "algorithms": {
+      "repository": "https://github.com/unitarylab/unitarylab_algorithms",
+      "commit": "a8362e374da2ec2c68f582db645a7782e45bfc4b",
+      "license": "MIT",
+      "upstreamLicenseSha256": "b0f1374e4a4497373abea5469b73139b878d4e5761a3e70d699bda5a5ecc952b"
+    }
+  },
+  "coverage": {
+    "nativeSkills": 66,
+    "executableWorkflows": 49,
+    "upstreamAlgorithmModules": 39,
+    "routingBackendAndMigrationGuides": 17,
+    "newMcpServersForThisExpansion": 0,
+    "newToolProvidersForThisExpansion": 0,
+    "execution": "Existing Harness bash/pwsh Tools; one shared L1 capability and 65 L0 instructional Skills"
+  },
+  "repositoryInventory": {
+    "nativeSkills": 99,
+    "capabilityPackages": 107,
+    "levels": {
+      "L0": 66,
+      "L1": 38,
+      "L2": 1,
+      "L3": 2
+    },
+    "mcpConnections": 35,
+    "nativeQuantumTools": 5
+  },
+  "environment": {
+    "os": "Darwin",
+    "architecture": "arm64",
+    "python": "Python 3.12.13",
+    "directDependencies": {
+      "numpy": "2.5.3",
+      "scipy": "1.18.1",
+      "qiskit": "2.5.2",
+      "qiskit-algorithms": "0.4.0",
+      "pennylane": "0.45.1",
+      "quimb": "1.15.0",
+      "pyscf": "2.14.0"
+    },
+    "platformScope": "Validated on macOS arm64 CPU. Native Windows SDK installation was not tested; PySCF official wheels target macOS/Linux."
+  },
+  "verification": {
+    "numerical": {
+      "status": "passed",
+      "checkedAt": "2026-09-24T02:50:33.242801+00:00",
+      "workflowCount": 49,
+      "testGroups": [
+        "test_all_sources_and_workflows_covered",
+        "test_primitives_and_fourier",
+        "test_linear_solvers_and_postselection",
+        "test_simulation_formulas",
+        "test_state_preparation_complex_states",
+        "test_oracle_algorithms_recover_from_distributions",
+        "test_variational_and_classical_eigensolvers",
+        "test_independent_gradient_identities",
+        "test_css_known_code_and_failure_paths",
+        "test_pde_discretization_and_auxiliary_convergence",
+        "test_mps_ising_against_dense_strang",
+        "test_molecular_dmrg_against_independent_fci"
+      ],
+      "evidenceSha256": "f33d261371e6a9e40091271f1cc32a6a0cdf058e9315e374a83241231218e6c6",
+      "command": "OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 NUMBA_NUM_THREADS=1 .venv/bin/python test_algorithms.py",
+      "workingDirectory": "examples/quantum-algorithms",
+      "note": "All 49 defaults plus complex inputs, RHS scaling, signed and small-unit HHL, QSVT and PDE convergence, analytic gradients, independent PySCF FCI and dense MPS/Strang references, and explicit failure cases."
+    },
+    "harness": {
+      "status": "passed",
+      "verifiedAt": "2026-09-24T02:31:13.549Z",
+      "version": "0.1.5-rc.1",
+      "model": "local protocol fixture",
+      "externalModelTested": false,
+      "discoveredSkills": 66,
+      "tool": "bash",
+      "calls": [
+        {
+          "callId": "open-skill-read",
+          "callEventSeq": 17,
+          "resultEventSeq": 18
+        },
+        {
+          "callId": "open-hhl",
+          "callEventSeq": 22,
+          "resultEventSeq": 23
+        },
+        {
+          "callId": "open-qsvt",
+          "callEventSeq": 27,
+          "resultEventSeq": 28
+        },
+        {
+          "callId": "open-invalid",
+          "callEventSeq": 32,
+          "resultEventSeq": 33
+        }
+      ],
+      "checks": [
+        "All 66 adapted Skills discovered and model-invocable",
+        "Read HHL Skill through existing shell Tool",
+        "Run HHL and QSVT examples through existing shell Tool",
+        "Unknown algorithm returns exit code 2 with explicit error",
+        "Tool results received by model protocol and recovered from persisted Session event log"
+      ],
+      "evidenceSha256": "83d4fef23eb70cc0662b33adf54dd0eae7b150f23e2c1205292e7d8b697bed42",
+      "command": "OPENQUANTUM_REAL_ALGORITHMS=1 node --test tests/harness-open-algorithms.test.mjs"
+    },
+    "staticAndRegression": {
+      "status": "passed",
+      "tests": 66,
+      "failed": 0,
+      "command": "node --test tests/open-algorithm-skills.test.mjs tests/quantum-practices.test.mjs tests/capability-package-audit.test.mjs tests/capability-tool-contract.test.mjs tests/readme-capability-catalog.test.mjs tests/desktop-distribution.test.mjs"
+    },
+    "toolContracts": {
+      "status": "passed",
+      "tests": 102,
+      "passed": 101,
+      "skipped": 1,
+      "skip": "Existing opt-in FlagQuantum contract",
+      "command": "npm run capability:contracts:test"
+    },
+    "lint": {
+      "status": "passed",
+      "command": "npm run lint"
+    },
+    "harnessConfiguration": {
+      "status": "passed",
+      "command": "npm run harness:config"
+    },
+    "catalogGeneration": {
+      "status": "passed",
+      "command": "npm run capability:algorithms:catalog"
+    },
+    "proprietaryRuntime": {
+      "unitarylabImportable": false,
+      "unitarylabAlgorithmsImportable": false,
+      "dependencyOrImportFound": false
+    }
+  },
+  "results": {
+    "hadamard_transform": {
+      "input": "documented defaults at source hashes below",
+      "metrics": {
+        "backend": "qiskit-statevector",
+        "qubits": 3,
+        "depth": 2
+      }
+    },
+    "qpe": {
+      "input": "documented defaults at source hashes below",
+      "metrics": {
+        "backend": "qiskit-statevector",
+        "qubits": 5,
+        "depth": 6,
+        "estimatedPhase": 0.25
+      }
+    },
+    "amplitude_amplification": {
+      "input": "documented defaults at source hashes below",
+      "metrics": {
+        "backend": "qiskit-statevector",
+        "qubits": 2,
+        "depth": 2,
+        "successProbability": 1.0
+      }
+    },
+    "amplitude_estimation": {
+      "input": "documented defaults at source hashes below",
+      "metrics": {
+        "backend": "qiskit-statevector",
+        "qubits": 6,
+        "depth": 7,
+        "estimatedPhase": 0.15625,
+        "estimatedProbability": 0.22221488349019888,
+        "inputProbability": 0.2000000000000001
+      }
+    },
+    "grover": {
+      "input": "documented defaults at source hashes below",
+      "metrics": {
+        "backend": "qiskit-statevector",
+        "qubits": 3,
+        "depth": 3,
+        "successProbability": 0.9453124999999996,
+        "target": 5,
+        "repetitions": 2
+      }
+    },
+    "hadamard_test": {
+      "input": "documented defaults at source hashes below",
+      "metrics": {
+        "backend": "qiskit-statevector",
+        "qubits": 2,
+        "depth": 3,
+        "estimate": 0.4999999999999998,
+        "reference": 0.4999999999999999
+      }
+    },
+    "qft": {
+      "input": "documented defaults at source hashes below",
+      "metrics": {
+        "backend": "qiskit-statevector",
+        "qubits": 3,
+        "depth": 2
+      }
+    },
+    "lcu": {
+      "input": "documented defaults at source hashes below",
+      "metrics": {
+        "backend": "qiskit-statevector",
+        "qubits": 2,
+        "depth": 4,
+        "postselectionProbability": 0.5555555555555555,
+        "coefficientL1Norm": 1.5
+      }
+    },
+    "hhl": {
+      "input": "documented defaults at source hashes below",
+      "metrics": {
+        "backend": "qiskit-statevector",
+        "qubits": 6,
+        "depth": 27,
+        "postselectionProbability": 0.04857722176339088,
+        "referenceFidelity": 0.9998447911437748,
+        "residual": 0.021489565386403984,
+        "rhsNorm": 1.0,
+        "evolutionTime": 0.21874999999999994
+      }
+    },
+    "aqc": {
+      "input": "documented defaults at source hashes below",
+      "metrics": {
+        "backend": "qiskit-statevector",
+        "qubits": 2,
+        "depth": 201,
+        "postselectionProbability": 0.999704038814207,
+        "referenceFidelity": 0.9999916420565039,
+        "conditionNumber": 2.000000000000001,
+        "rhsNorm": 1.0,
+        "steps": 200,
+        "totalTime": 40.0
+      }
+    },
+    "qsp": {
+      "input": "documented defaults at source hashes below",
+      "metrics": {
+        "backend": "pennylane-qsvt/qiskit-lcu",
+        "qubits": 3,
+        "depth": 4,
+        "estimate": 0.8775825621581019,
+        "reference": 0.8775825618903728,
+        "blockScale": 1.5585111607142856,
+        "absoluteError": 2.677291721653319e-10
+      }
+    },
+    "qsvt_qlsa": {
+      "input": "documented defaults at source hashes below",
+      "metrics": {
+        "backend": "pennylane-qsvt/qiskit-lcu",
+        "qubits": 3,
+        "depth": 4,
+        "postselectionProbability": 0.012857222247117531,
+        "referenceFidelity": 0.9931563175199218,
+        "residual": 0.12585031870387853,
+        "rhsNorm": 1.0,
+        "degree": 11,
+        "approximation": "bounded geometric reciprocal polynomial; increase odd degree for convergence"
+      }
+    },
+    "trotter": {
+      "input": "documented defaults at source hashes below",
+      "metrics": {
+        "method": "trotter",
+        "numQubits": 1,
+        "steps": 16,
+        "order": 2,
+        "seed": 0,
+        "identityCoefficient": 0.0,
+        "lambda": 1.0,
+        "pauliRotations": 48,
+        "sequenceSha256": "bcbc343d23ea9859ecd7eef3281e6e706d4052d262dbaf4b91f0aec0a0c68400",
+        "stateNorm": 0.9999999999999898,
+        "unitaryFrobeniusError": 8.624730318704809e-05,
+        "unitarySpectralError": 6.098605294262857e-05,
+        "convention": "Qiskit little endian; Pauli label leftmost is q[n-1]",
+        "interpretation": "deterministic product formula"
+      }
+    },
+    "qdrift": {
+      "input": "documented defaults at source hashes below",
+      "metrics": {
+        "method": "qdrift",
+        "numQubits": 1,
+        "steps": 128,
+        "order": 1,
+        "seed": 7,
+        "identityCoefficient": 0.0,
+        "lambda": 1.0,
+        "pauliRotations": 128,
+        "sequenceSha256": "2065e2c1bc4e269be053eeaafacaf7196582c25a2e85d1973e8a011d720d260c",
+        "stateNorm": 0.9999999999999571,
+        "unitaryFrobeniusError": 0.0446109127936917,
+        "unitarySpectralError": 0.031544678951341124,
+        "convention": "Qiskit little endian; Pauli label leftmost is q[n-1]",
+        "interpretation": "one seeded random circuit; not an ensemble channel error or error guarantee"
+      }
+    },
+    "cartan": {
+      "input": "documented defaults at source hashes below",
+      "metrics": {
+        "backend": "qiskit-statevector",
+        "qubits": 1,
+        "depth": 4,
+        "decompositionResidual": 2.603703785810335e-16,
+        "stateError": 2.874982961040845e-16,
+        "variant": "SO(N) spectral Cartan factorization via real Schur; replaces the unavailable Cartan-Lax optimizer"
+      }
+    },
+    "taylor": {
+      "input": "documented defaults at source hashes below",
+      "metrics": {
+        "backend": "qiskit-statevector",
+        "qubits": 3,
+        "depth": 6,
+        "postselectionProbability": 0.40492674909557175,
+        "blockScale": 1.5714954514887112,
+        "approximationError": 6.169053036550701e-06,
+        "degree": 6,
+        "variant": "truncated Taylor series, classical Pauli expansion, PREPARE-SELECT-unprepare LCU"
+      }
+    },
+    "hamiltonian_qsp": {
+      "input": "documented defaults at source hashes below",
+      "metrics": {
+        "backend": "pennylane-qsvt/qiskit-lcu",
+        "qubits": 4,
+        "depth": 6,
+        "postselectionProbability": 0.2898401915146196,
+        "blockScale": 1.8574652462339483,
+        "degree": 9,
+        "approximationError": 1.9387901221708708e-09,
+        "variant": "even/odd QSP polynomial transforms combined by heralded LCU; dense block encoding"
+      }
+    },
+    "simon": {
+      "input": "documented defaults at source hashes below",
+      "metrics": {
+        "backend": "qiskit-statevector",
+        "qubits": 6,
+        "depth": 5,
+        "recoveredSecret": "101",
+        "equationRank": 2,
+        "status": "resolved"
+      }
+    },
+    "shor": {
+      "input": "documented defaults at source hashes below",
+      "metrics": {
+        "backend": "qiskit-statevector",
+        "qubits": 12,
+        "depth": 10,
+        "estimatedPhase": 0.25,
+        "factors": [
+          3,
+          5
+        ],
+        "order": 4,
+        "status": "factored"
+      }
+    },
+    "discrete_log": {
+      "input": "documented defaults at source hashes below",
+      "metrics": {
+        "backend": "qiskit-statevector",
+        "qubits": 9,
+        "depth": 56,
+        "candidates": [
+          5
+        ],
+        "groupOrder": 6,
+        "status": "resolved"
+      }
+    },
+    "hidden_shift": {
+      "input": "documented defaults at source hashes below",
+      "metrics": {
+        "backend": "qiskit-statevector",
+        "qubits": 4,
+        "depth": 5,
+        "recoveredShift": "1010"
+      }
+    },
+    "glued_trees": {
+      "input": "documented defaults at source hashes below",
+      "metrics": {
+        "backend": "qiskit-statevector",
+        "qubits": 4,
+        "depth": 1,
+        "vertices": 14,
+        "exitVertex": 7,
+        "exitProbability": 0.401797931077584,
+        "variant": "dense continuous-time adjacency walk; padded states disconnected"
+      }
+    },
+    "mottonen": {
+      "input": "documented defaults at source hashes below",
+      "metrics": {
+        "backend": "pennylane-default.qubit",
+        "qubits": 2,
+        "fidelity": 1.0,
+        "cleanAncillaProbability": 0.9999999999999996
+      }
+    },
+    "multiplexer": {
+      "input": "documented defaults at source hashes below",
+      "metrics": {
+        "backend": "qiskit-statevector",
+        "qubits": 2,
+        "depth": 1,
+        "fidelity": 1.0,
+        "variant": "Qiskit Isometry / uniformly controlled gate synthesis"
+      }
+    },
+    "superposition": {
+      "input": "documented defaults at source hashes below",
+      "metrics": {
+        "backend": "pennylane-default.qubit",
+        "qubits": 3,
+        "fidelity": 1.0,
+        "cleanAncillaProbability": 0.9999999999999996
+      }
+    },
+    "mps": {
+      "input": "documented defaults at source hashes below",
+      "metrics": {
+        "backend": "pennylane-default.qubit",
+        "qubits": 3,
+        "fidelity": 1.0,
+        "cleanAncillaProbability": 1.0,
+        "maxBond": 2,
+        "truncationFidelity": 1.0
+      }
+    },
+    "pauli": {
+      "input": "documented defaults at source hashes below",
+      "metrics": {
+        "backend": "pennylane-default.qubit/scipy-BFGS",
+        "qubits": 2,
+        "fidelity": 0.9999999999999987,
+        "optimizerSuccess": false,
+        "optimizerMessage": "Desired error not necessarily achieved due to precision loss.",
+        "iterations": 51,
+        "variant": "optimized Pauli-word rotations (ArbitraryStatePreparation)"
+      }
+    },
+    "vqe": {
+      "input": "documented defaults at source hashes below",
+      "metrics": {
+        "backend": "qiskit-statevector",
+        "qubits": 2,
+        "depth": 6,
+        "energy": -2.022374841615527,
+        "optimizerSuccess": true,
+        "optimizerMessage": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+        "iterations": 18,
+        "finalObjective": -2.022374841615527
+      }
+    },
+    "vqls": {
+      "input": "documented defaults at source hashes below",
+      "metrics": {
+        "backend": "qiskit-statevector",
+        "qubits": 1,
+        "depth": 4,
+        "residual": 4.0399276735385394e-08,
+        "rhsNorm": 1.0,
+        "optimizerSuccess": true,
+        "optimizerMessage": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+        "iterations": 8,
+        "finalObjective": 1.5543122344752192e-15
+      }
+    },
+    "qaoa": {
+      "input": "documented defaults at source hashes below",
+      "metrics": {
+        "backend": "qiskit-statevector",
+        "qubits": 4,
+        "depth": 8,
+        "expectedCut": 3.999999999999992,
+        "mostLikelyBitstring": "0101",
+        "mostLikelyCut": 4,
+        "optimizerSuccess": true,
+        "optimizerMessage": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+        "iterations": 17,
+        "finalObjective": -3.999999999999992
+      }
+    },
+    "qcbm": {
+      "input": "documented defaults at source hashes below",
+      "metrics": {
+        "backend": "qiskit-statevector",
+        "qubits": 2,
+        "depth": 6,
+        "totalVariation": 2.9622058000944307e-08,
+        "optimizerSuccess": true,
+        "optimizerMessage": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+        "iterations": 12,
+        "finalObjective": 2.6305156837610797e-15
+      }
+    },
+    "vqc": {
+      "input": "documented defaults at source hashes below",
+      "metrics": {
+        "backend": "qiskit-statevector/scipy-L-BFGS-B",
+        "trainingAccuracy": 1.0,
+        "evaluationScope": "training data only; no generalization claim",
+        "optimizerSuccess": true,
+        "optimizerMessage": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+        "iterations": 2,
+        "finalObjective": 9.999778782803785e-13
+      }
+    },
+    "numpy_eigensolver": {
+      "input": "documented defaults at source hashes below",
+      "metrics": {
+        "backend": "numpy-linalg-eigh",
+        "eigenvalues": [
+          1.0,
+          2.0
+        ],
+        "residuals": [
+          0.0,
+          0.0
+        ],
+        "executionKind": "classical eigensolver"
+      }
+    },
+    "numpy_minimum_eigensolver": {
+      "input": "documented defaults at source hashes below",
+      "metrics": {
+        "backend": "numpy-linalg-eigh",
+        "eigenvalues": [
+          1.0
+        ],
+        "residuals": [
+          0.0
+        ],
+        "executionKind": "classical eigensolver"
+      }
+    },
+    "vqd": {
+      "input": "documented defaults at source hashes below",
+      "metrics": {
+        "backend": "qiskit-statevector/scipy-L-BFGS-B",
+        "energies": [
+          -1.7117242768623635,
+          -0.3605551275464016
+        ],
+        "penalty": 7.846897107449476
+      }
+    },
+    "fermi_hubbard_vqe": {
+      "input": "documented defaults at source hashes below",
+      "metrics": {
+        "backend": "qiskit-statevector",
+        "qubits": 4,
+        "depth": 13,
+        "energy": -2.9999999999981646,
+        "optimizerSuccess": true,
+        "optimizerMessage": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+        "iterations": 43,
+        "finalObjective": -2.9999999999981646,
+        "particleNumber": 1.999999999999738,
+        "variant": "open-boundary Hubbard chain, Jordan-Wigner, unrestricted Fock-space VQE"
+      }
+    },
+    "finite_difference": {
+      "input": "documented defaults at source hashes below",
+      "metrics": {
+        "backend": "qiskit-algorithms/StatevectorEstimator",
+        "method": "FiniteDiffEstimatorGradient",
+        "gradient": [
+          -0.18298657130655369,
+          -0.38165590209859873
+        ],
+        "circuit": "RY per qubit followed by nearest-neighbor CZ"
+      }
+    },
+    "linear_combination": {
+      "input": "documented defaults at source hashes below",
+      "metrics": {
+        "backend": "qiskit-algorithms/StatevectorEstimator",
+        "method": "LinCombEstimatorGradient",
+        "gradient": [
+          -0.18298657129998697,
+          -0.3816559020950483
+        ],
+        "circuit": "RY per qubit followed by nearest-neighbor CZ"
+      }
+    },
+    "parameter_shift": {
+      "input": "documented defaults at source hashes below",
+      "metrics": {
+        "backend": "qiskit-algorithms/StatevectorEstimator",
+        "method": "ParamShiftEstimatorGradient",
+        "gradient": [
+          -0.1829865712999872,
+          -0.3816559020950483
+        ],
+        "circuit": "RY per qubit followed by nearest-neighbor CZ"
+      }
+    },
+    "reverse": {
+      "input": "documented defaults at source hashes below",
+      "metrics": {
+        "backend": "qiskit-algorithms/StatevectorEstimator",
+        "method": "ReverseEstimatorGradient",
+        "gradient": [
+          -0.18298657129998708,
+          -0.38165590209504835
+        ],
+        "circuit": "RY per qubit followed by nearest-neighbor CZ"
+      }
+    },
+    "spsa": {
+      "input": "documented defaults at source hashes below",
+      "metrics": {
+        "backend": "qiskit-algorithms/StatevectorEstimator",
+        "method": "SPSAEstimatorGradient",
+        "gradient": [
+          -0.19491318829817508,
+          -0.38737397419886416
+        ],
+        "circuit": "RY per qubit followed by nearest-neighbor CZ"
+      }
+    },
+    "qfi": {
+      "input": "documented defaults at source hashes below",
+      "metrics": {
+        "backend": "qiskit-algorithms/ReverseQGT",
+        "quantumFisherInformation": [
+          [
+            1.0,
+            -1.3182942035870257e-18
+          ],
+          [
+            -1.3182942035870257e-18,
+            1.0
+          ]
+        ]
+      }
+    },
+    "qldpc": {
+      "input": "documented defaults at source hashes below",
+      "metrics": {
+        "backend": "numpy-gf2",
+        "physicalQubits": 13,
+        "logicalQubits": 1,
+        "cssCommutes": true,
+        "distanceStatus": "not_computed",
+        "executionKind": "classical code construction and syndrome calculation"
+      }
+    },
+    "heat_1d": {
+      "input": "documented defaults at source hashes below",
+      "metrics": {
+        "backend": "qiskit-statevector",
+        "qubits": 9,
+        "depth": 4,
+        "relativeL2Error": 0.0063012494859145726,
+        "unitaryNormDrift": 5.329070518200751e-15,
+        "recoveryPoint": 1.0,
+        "sliceProbability": 0.015485901081291888,
+        "executionKind": "statevector simulation of an explicit warped-phase unitary dilation circuit",
+        "readout": "full simulated amplitudes; no hardware readout or quantum speedup claim",
+        "boundary": "dirichlet"
+      }
+    },
+    "heat_2d": {
+      "input": "documented defaults at source hashes below",
+      "metrics": {
+        "backend": "qiskit-statevector",
+        "qubits": 11,
+        "depth": 4,
+        "relativeL2Error": 0.005534721558147218,
+        "unitaryNormDrift": 4.374278717023117e-14,
+        "recoveryPoint": 1.0,
+        "sliceProbability": 0.015761029863046325,
+        "executionKind": "statevector simulation of an explicit warped-phase unitary dilation circuit",
+        "readout": "full simulated amplitudes; no hardware readout or quantum speedup claim",
+        "boundary": "dirichlet"
+      }
+    },
+    "advection": {
+      "input": "documented defaults at source hashes below",
+      "metrics": {
+        "backend": "qiskit-statevector",
+        "qubits": 7,
+        "depth": 4,
+        "relativeL2Error": 4.684956031595694e-15,
+        "unitaryNormDrift": 0.0,
+        "recoveryPoint": 1.0,
+        "sliceProbability": 0.06254076340431701,
+        "executionKind": "statevector simulation of an explicit warped-phase unitary dilation circuit",
+        "readout": "full simulated amplitudes; no hardware readout or quantum speedup claim",
+        "boundary": "periodic",
+        "spatialScheme": "centered finite difference"
+      }
+    },
+    "ising": {
+      "input": "documented defaults at source hashes below",
+      "metrics": {
+        "backend": "quimb-CircuitMPS",
+        "qubits": 4,
+        "energy": -2.7995838702229463,
+        "maxBondUsed": 4,
+        "norm": 0.999999999999998,
+        "steps": 8,
+        "time": 0.2,
+        "trotterOrder": 2,
+        "maxBond": 32,
+        "cutoff": 1e-12,
+        "variant": "open rectangular grid, MPS with long-range gate routing; no dense-state allocation"
+      }
+    },
+    "molecular_dmrg": {
+      "input": "documented defaults at source hashes below",
+      "metrics": {
+        "backend": "pyscf/quimb-DMRG2",
+        "energyHartree": -1.1372838344885017,
+        "activeOrbitals": 2,
+        "activeElectrons": 2,
+        "qubits": 4,
+        "particleNumber": 2.000000000000001,
+        "particleNumberVariance": 2.3212161553124306e-31,
+        "spinProjectionTwice": 2.0439973974355307e-31,
+        "spinProjectionVariance": 2.318664479404208e-31,
+        "converged": true,
+        "maxBondUsed": 2,
+        "scfEnergyHartree": -1.1167593073964255,
+        "variant": "active-space integrals, dense Jordan-Wigner to MPO, two-site DMRG; no CVD compression stage",
+        "scaleCost": "dense Hamiltonian preprocessing uses O(4^qubits) storage; choose an explicit active space"
+      }
+    },
+    "cvqnn": {
+      "input": "documented defaults at source hashes below",
+      "metrics": {
+        "backend": "numpy-scipy-finite-Fock",
+        "trainingAccuracy": 1.0,
+        "cutoff": 4,
+        "evaluationScope": "training set; repeat with larger Fock cutoff before physical interpretation",
+        "optimizerSuccess": true,
+        "optimizerMessage": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+        "iterations": 18,
+        "finalObjective": 0.35865028705961577
+      }
+    }
+  },
+  "sourceSha256": {
+    "examples/quantum-algorithms/chemistry.py": "5512c0f0b1b5467d28f74c153eb24de636a64f06f9582edb94fef9ca3f9f9be4",
+    "examples/quantum-algorithms/common.py": "843e9ba549f73b496e2c9f6e62ac860c24efbd94c983f06108f1606d24f2bc72",
+    "examples/quantum-algorithms/coverage.json": "3cdaf8c183326540f28c06855be422efa996e4799391cd839c8d5c693b3ab391",
+    "examples/quantum-algorithms/cv.py": "9c1fe68eaae0b827a3db8875f379df0d95a3abb9eb0f03324511a17cfc176082",
+    "examples/quantum-algorithms/dynamics.py": "c2c8f3286e78c8f45e1d26e4c1ba9fd4ed7543b1e1da0888e33dfb5f4667cbfd",
+    "examples/quantum-algorithms/error_correction.py": "db52cdbbca7da0d06d20eef058828aa72b5dba35b07acb18e40a279d8f488e0e",
+    "examples/quantum-algorithms/fundamentals.py": "2b74209cd302ea8ef1d8a9632d2aa7873d19dc164fbbd88ccea12cdad31d76c0",
+    "examples/quantum-algorithms/gradients.py": "b8a24f577a04556cf24633df713230815a5c7b21dd023765cdbab5ba0647d032",
+    "examples/quantum-algorithms/linear.py": "68831f6bb4150b371eaf8b585b62caf97d4af2c07780e9b80d7c5d40fe3e7d2f",
+    "examples/quantum-algorithms/pyproject.toml": "de954f50f83361585919ad9e3edb4041e88d975c58a9ca41f94c23ed12f3f54e",
+    "examples/quantum-algorithms/run.py": "cb1f1f9786ddbd94d8a9bb42c93c9e8a5f5914c66eddd9a01b3ab2fdfd88e895",
+    "examples/quantum-algorithms/search.py": "6111350752f3fe811b1c653e2a5c5031f8fd6ca6d4c63c7b31b633b7cd61cec4",
+    "examples/quantum-algorithms/simulation.py": "9e5e85737bdf29e32f71041f3e3eb220b5f476b59267cbfe2921c02249a042e8",
+    "examples/quantum-algorithms/state_preparation.py": "283569d31bd2a194a282c5bb7415fcb366039b2494f56a1fef2abbcea0993f72",
+    "examples/quantum-algorithms/test_algorithms.py": "a30b00811863ad0c4ed9323f47ffee2557573ebbc26b38b341c71f91f4eb69ef",
+    "examples/quantum-algorithms/uv.lock": "7dfa81157430765baa4e036853885238a59594c1416a34dfbcdb8b7cbca6e51b",
+    "examples/quantum-algorithms/variational.py": "da22fe97a89ec5cc126082fbd9cd8cd6697fa91a99013bd738b2dac2f190c50c",
+    "scripts/build-open-algorithm-skills.mjs": "73ea6518d4f4a4bdd239c05af0af33583d03c05a74add8191218b0e743ba5ae9",
+    "scripts/setup-open-algorithm-examples.mjs": "3fac345c7fd61d5add3a25505a7b9a8dc366251c982987e1ea19daa09a8dc0a8",
+    "scripts/test-open-algorithm-examples.mjs": "b32df221f8f8acdc399ccfeb09b79a532a1e1b688b12901a863da62d4ebdd249",
+    "tests/harness-open-algorithms.test.mjs": "4db25059f14df947d78c4b27cdb8928b3090bae6b5b114b3293f49c2d39abd32",
+    "tests/open-algorithm-skills.test.mjs": "24fd1230c5922d8b399373cfa48d5247404b4eab221583ba0fae08040fd24dd5"
+  },
+  "scientificValidation": "not_evaluated",
+  "limitations": [
+    "Examples do not reproduce every upstream API parameter or optimizer.",
+    "Cartan uses spectral SO(N) factorization instead of the unavailable Cartan-Lax optimizer.",
+    "Molecular DMRG uses PySCF and quimb; no closed CVD compression. Hamiltonian preprocessing is dense.",
+    "Statevector amplitudes and postselection are simulation results, not hardware readout efficiency or quantum speedup.",
+    "Default approximations have finite residuals; optimizer warnings are retained even when an independent numerical check passes.",
+    "Harness checks use a local model protocol fixture; no external model or QPU was tested.",
+    "No desktop installer was built or published by these checks."
+  ],
+  "delivery": {
+    "scope": "Local isolated worktree implementation and verification",
+    "pushed": false,
+    "published": false
+  }
+}

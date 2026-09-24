@@ -2,11 +2,23 @@
 
 量子依赖核验日期：2026-09-22；平台升级记录日期：2026-09-10；原模型验收交接记录日期：2026-09-05。此页只记录工作交接；架构以[文档总入口](docs/README.md)为准，执行事实以 Harness Session event log 为准，科学状态以 Acceptance Report 为准。
 
+## UnitaryLab 开源适配（2026-09-24）
+
+- 固定 quantum-skills 的全部 66 份指南已对应原生 Skill；49 个可运行开源示例覆盖原算法库的全部 39 个模块和指南独有方法。
+  执行合同集中于 `quantum-algorithms` 能力，复用 Harness `bash` / `pwsh`；其余适配 Skill 不重复建立 Tool 或 MCP。
+- 原始参考库保持只读资料边界，全部条目指向本地适配路径；Cartan、DMRG/CVD 等实现差异逐项披露，未宣称原 Python API 全兼容。
+- 新增 `hamiltonian-simulation` Skill 与 `hamiltonian_local` 连接，使用 Qiskit/NumPy/SciPy 适配 MIT 算法序列。
+  计算前显式 setup；计算调用不安装、不联网或写结果文件，不引入 UnitaryLab 模拟器依赖。
+- 数值、合同和本地协议替身驱动的 Harness 验证见[集成说明](docs/integrations/UNITARYLAB_OPEN_ADAPTATION.md)。
+  这是 L1 源码接入，不表示外部模型验收、科学 Acceptance 或新安装包发布。
+- 与同日互操作适配合并后，源码目录为 101 个内置 Skill、37 个 MCP 连接和 5 个原生量子 Tool。
+- 合并树通过完整 `npm run check`，并复跑 Hamiltonian 数值检查、Hamiltonian Harness 调用及全部 66 个适配 Skill 的发现与 HHL/QSVT 执行；模型为本地协议替身。
+
 ## 本地互操作接入（2026-09-24）
 
 - Clifft 0.10.1 新增 Stim 格式固定 shots 记录接口；qBraid 0.12.2 新增 Qiskit/Cirq 双向酉电路转换；QDMI 1.3.3 提供默认关闭、显式准备驱动的只读查询。
 - 属于 L1 执行能力；本地真实库、Harness 协议夹具和独立领域审阅的范围见[接入说明](docs/integrations/QUANTUM_INTEROP.md)与[验证记录](docs/integrations/evidence/interop-2026-09-24.json)。没有验证外部模型、真实硬件或最终科学 Acceptance。
-- 本次源码目录为 34 个内置 Skill、36 个 MCP 连接和 5 个原生量子 Tool；不代表已发布安装包。
+- 该互操作提交时源码目录为 34 个内置 Skill、36 个 MCP 连接和 5 个原生量子 Tool；不代表已发布安装包。
 
 ## 量子库更新（2026-09-22）
 

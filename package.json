@@ -86,7 +86,15 @@
     "capability:interop:setup": "node scripts/setup-paper-tools.mjs clifft-sampling qbraid-conversion",
     "capability:qdmi:setup": "node scripts/setup-qdmi.mjs",
     "capability:interop:test": "node --test tests/interop-contracts.test.mjs",
-    "capability:interop:live": "OPENQUANTUM_REAL_INTEROP=1 node --test --test-concurrency=1 tests/interop-live.test.mjs tests/harness-interop.test.mjs"
+    "capability:interop:live": "OPENQUANTUM_REAL_INTEROP=1 node --test --test-concurrency=1 tests/interop-live.test.mjs tests/harness-interop.test.mjs",
+    "capability:hamiltonian:setup": "node scripts/setup-paper-tools.mjs hamiltonian-simulation",
+    "capability:hamiltonian:test": "node --test tests/hamiltonian-contracts.test.mjs",
+    "capability:hamiltonian:live": "OPENQUANTUM_REAL_HAMILTONIAN=1 node --test --test-concurrency=1 tests/hamiltonian-live.test.mjs tests/harness-hamiltonian.test.mjs",
+    "capability:quantum-practices:catalog": "node scripts/build-quantum-practices-catalog.mjs --check",
+    "capability:algorithms:setup": "node scripts/setup-open-algorithm-examples.mjs",
+    "capability:algorithms:catalog": "node scripts/build-open-algorithm-skills.mjs --check",
+    "capability:algorithms:test": "node --test tests/open-algorithm-skills.test.mjs",
+    "capability:algorithms:live": "node scripts/test-open-algorithm-examples.mjs"
   },
   "dependencies": {
     "@deepseek-ai/dsh": "0.1.5-rc.1",

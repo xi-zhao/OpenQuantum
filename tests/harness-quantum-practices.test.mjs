@@ -146,7 +146,7 @@ test("Harness invokes reference retrieval, persists sources and returns invalid-
       assert.match(content, /not a filesystem path/);
     } else {
       assert.equal(block.isError, false);
-      assert.ok(content.includes(SOURCE.commit));
+      assert.ok(content.includes(SOURCE.corpusCommit));
       assert.match(content, /reference material only/);
       assert.match(content, call.id === "practice-hhl" ? /id: algorithms\/linear-systems\/hhl/ : /id: algorithms\/schrodingerization\/heat-1d-schrodingerization/);
     }

@@ -1,0 +1,19 @@
+{
+  "repository": "https://github.com/unitarylab/unitarylab_algorithms",
+  "commit": "a8362e374da2ec2c68f582db645a7782e45bfc4b",
+  "license": "MIT",
+  "adaptedFiles": [
+    {
+      "path": "hamiltonian_simulation/trotter/algorithm.py",
+      "sha256": "1bfb54372aa20c34b547097cf82f487fb770368385d8e573a3d052f3c4f9f968"
+    },
+    {
+      "path": "hamiltonian_simulation/qdrift/algorithm.py",
+      "sha256": "db8a607c511aadd5ec8e82a066f03b7f76f4e91d832fbce48498dc5027d0782c"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "b0f1374e4a4497373abea5469b73139b878d4e5761a3e70d699bda5a5ecc952b"
+    }
+  ]
+}
