@@ -112,7 +112,10 @@ test("Harness invokes reference retrieval, persists sources and returns invalid-
         type: "client-request", rpcId: crypto.randomUUID(), method,
         payload: { args: method === "session/modelCatalog" ? {} : { request: payload } },
       }),
-      signal: AbortSignal.timeout(5000),
+      // Session creation initializes every enabled MCP client on a cold CI runner.
+      signal: AbortSignal.timeout(method === "session/create" ? 30_000 : 5000),
+    }).catch((cause) => {
+      throw new Error(`Harness RPC ${method} failed.\n${redactHarnessLaunchTokens(logs)}`, { cause });
     });
     assert.equal(response.status, 200);
     const result = (await response.json()).result;

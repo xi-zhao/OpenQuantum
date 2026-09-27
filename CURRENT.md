@@ -6,7 +6,7 @@
 
 - [17 个新增能力包](docs/integrations/VENDOR_SDKS.md)覆盖国内 DeepQuantum、TensorCircuit、MindQuantum、Kaiwu Community、SpinQit、QuTrunk，以及 PennyLane、TKET、Ocean、pyQuil、Perceval、IQM、Alice & Bob、Pulser、QoolQit、IonQ 和 Superstaq。既有 QPanda、Stim、Bloqade 等继续复用。
 - 新增 17 个 Skill、17 个独立 Python MCP 连接和 19 个 Tool。当前源码共 119 个内置 Skill、55 个 MCP 连接、240 个可配置 Tool 名称；106 个 Skill 自动可选、13 个分类索引手动调用。QoolQit 与 Superstaq 默认关闭。
-- 全部 17 个锁定环境已显式准备；45 项新合同测试、35 项真实 SDK/MCP/Harness 测试全过且无跳过，完整 `npm run check` 通过。数值与独立审阅见[证据汇总](docs/integrations/evidence/vendor-sdks-2026-09-27.json)。新增连接增加集成测试进程数，平台测试并发度降为 2，以避免同时启动多套完整 Harness 造成测试超时。
+- 全部 17 个锁定环境已显式准备；45 项新合同测试、35 项真实 SDK/MCP/Harness 测试全过且无跳过，完整 `npm run check` 通过。数值与独立审阅见[证据汇总](docs/integrations/evidence/vendor-sdks-2026-09-27.json)。新增连接增加集成测试进程数，平台测试并发度降为 2；会话创建回归单独预留 30 秒初始化全部连接，普通 RPC 仍保持 5 秒截止时间。
 - 真实执行验证限于 macOS arm64；Harness 使用本地模型协议夹具，Superstaq 远程路径使用真实 SDK 加 HTTP 传输夹具，没有在线账户、远程编译、QPU 或外部模型验收。全部新能力保持 L1 / `scientificValidation=not_evaluated`。
 - Bloqade Analog（`5d995fa`）与本批厂商 SDK（`3f344ad`）已合入 `main`；远端版本与持续集成状态分别见 [main](https://github.com/xi-zhao/OpenQuantum/tree/main) 和 [CI](https://github.com/xi-zhao/OpenQuantum/actions/workflows/ci.yml?query=branch%3Amain)。此次源码合并未创建正式 Release；已有工作台需更新源码、显式准备所需环境并重启后加载新能力。
 
