@@ -216,7 +216,7 @@ OpenQuantum 支持桌面安装包和源码运行，适合本机单用户使用�
 
 从 [GitHub Release](https://github.com/xi-zhao/OpenQuantum/releases/latest) 下载 Mac（Apple Silicon / Intel）或 Windows 安装包。安装包内置 Node 和 uv，无需先配置源码构建环境；当前为未签名测试构建。按[安装说明](docs/DESKTOP_INSTALLERS.md)安装并启动后，继续[配置模型](#配置模型)。计算组件的额外依赖按对应版本说明准备，量子学习通等可选应用另有安装步骤。
 
-本页能力目录描述源码 `main`。[v0.5.1 安装包](docs/releases/v0.5.1.md)不包含后续的[新增量子能力](docs/integrations/CANDIDATE_LIBRARIES.md)、[9 月 22 日量子库更新](docs/releases/2026-09-22-quantum-upstream-update.md)，以及 9 月 24 日的[算法适配](docs/integrations/UNITARYLAB_OPEN_ADAPTATION.md)、[互操作接入](docs/integrations/QUANTUM_INTEROP.md)和[扩展治理](docs/architecture/EXTENSION_GOVERNANCE.md)。使用这些更新请选择源码路径；安装版不会随主线自动升级，数据迁移与备份见[安装包说明](docs/DESKTOP_INSTALLERS.md#数据与升级)。
+本页能力目录描述当前源码检出版本。[v0.5.1 安装包](docs/releases/v0.5.1.md)不包含后续的[新增量子能力](docs/integrations/CANDIDATE_LIBRARIES.md)、[9 月 22 日量子库更新](docs/releases/2026-09-22-quantum-upstream-update.md)，以及 9 月 24 日的[算法适配](docs/integrations/UNITARYLAB_OPEN_ADAPTATION.md)、[互操作接入](docs/integrations/QUANTUM_INTEROP.md)、[扩展治理](docs/architecture/EXTENSION_GOVERNANCE.md)和 9 月 27 日的[厂商 SDK](docs/integrations/VENDOR_SDKS.md)。使用这些更新需取得包含相应提交的源码；安装版不会随源码提交自动升级，数据迁移与备份见[安装包说明](docs/DESKTOP_INSTALLERS.md#数据与升级)。
 
 ### 安装源码
 
@@ -476,7 +476,7 @@ OpenQuantum 为本地模拟、IBM Quantum、IonQ 和多家国内量子云保留�
 <details>
 <summary><strong>电路、基态、噪声、动力学与基准查询示例</strong></summary>
 
-先完成模型配置，再按所选能力准备固定依赖。以下计算无需量子云账户；使用 uv 的能力准备各自的 Python 3.12 环境，Dynamiqs 使用已安装的 JAX 后端。升级后重启工作台并新建会话。
+先完成模型配置，再按所选能力准备固定依赖。以下本地计算无需量子云账户；使用 uv 的能力准备各自的固定 Python 环境，版本见相应说明，Dynamiqs 使用已安装的 JAX 后端。升级后重启工作台并新建会话。
 
 | 能力 | 准备命令 |
 | --- | --- |
@@ -485,6 +485,7 @@ OpenQuantum 为本地模拟、IBM Quantum、IonQ 和多家国内量子云保留�
 | Mitiq 误差缓解 | `npm run capability:mitiq:setup` |
 | Dynamiqs、Clifft、OQuPy、Deltakit | `npm run capability:unitary:setup` |
 | Bloqade Analog | `npm run capability:bloqade:setup` |
+| 国内外厂商 SDK：可微分、编译、优化、光子与设备模型 | `npm run capability:vendor-sdks:setup`；[17 项范围、许可与调用示例](docs/integrations/VENDOR_SDKS.md) |
 | Clifft 记录采样与 qBraid 转换；QDMI 驱动查询 | `npm run capability:interop:setup`；QDMI 另运行 `npm run capability:qdmi:setup` 并启用连接，见[接入说明](docs/integrations/QUANTUM_INTEROP.md) |
 | Metriq 公开基准查询 | 已随源码提供，完成 `npm ci` 即可，无需 Python 或额外下载 |
 
@@ -591,9 +592,9 @@ Harness 是通用 Agent Runtime，扩展通过 Cordis Plugin 装配。UI、模�
   <a href="#原生量子-tools">原生量子 Tools</a>
 </p>
 
-当前源码分发 **102 个内置 Skill、38 个 MCP 服务连接、5 个原生量子 Tool**。其中 66 个 Skill 来自 quantum-skills 的开源工作流适配，共用现有代码执行工具；其中 49 项提供可运行示例，覆盖 unitarylab_algorithms 的全部 39 个模块。30 个 MCP 服务使用 OpenQuantum 的本地桥接实现。Skill、Tool 和 MCP 连接分别统计。
+当前源码分发 **119 个内置 Skill、55 个 MCP 服务连接、5 个原生量子 Tool**。其中 66 个 Skill 来自 quantum-skills 的开源工作流适配，共用现有代码执行工具；其中 49 项提供可运行示例，覆盖 unitarylab_algorithms 的全部 39 个模块。47 个 MCP 服务使用 OpenQuantum 的本地桥接实现。Skill、Tool 和 MCP 连接分别统计。
 
-当前配置共包含 **221 个可配置 Tool 名称**：197 个由 MCP 服务提供，18 个为 Harness 通用工具，6 个为平台原生工具（上面的 5 个量子动作及 1 个教学生成动作）。这是配置全集；`bash` / `pwsh` 按平台互斥，连接开关、环境和工具范围也会影响实际可调用集合。既有能力的逐项决定见[治理记录](docs/architecture/EXTENSION_GOVERNANCE.md)，新增中性原子动力学见 [Bloqade Analog](docs/integrations/BLOQADE_ANALOG.md)。
+当前配置共包含 **240 个可配置 Tool 名称**：216 个由 MCP 服务提供，18 个为 Harness 通用工具，6 个为平台原生工具（上面的 5 个量子动作及 1 个教学生成动作）。这是配置全集；`bash` / `pwsh` 按平台互斥，连接开关、环境和工具范围也会影响实际可调用集合。既有能力的逐项决定见[治理记录](docs/architecture/EXTENSION_GOVERNANCE.md)，新增中性原子动力学见 [Bloqade Analog](docs/integrations/BLOQADE_ANALOG.md)。
 
 <details>
 <summary><strong>内置 Skills：按研究方法查找工作流</strong></summary>
@@ -602,7 +603,7 @@ Harness 是通用 Agent Runtime，扩展通过 Cordis Plugin 装配。UI、模�
 
 既有条目与治理情况见[治理清单](docs/architecture/EXTENSION_GOVERNANCE.md)；相近入口及大型可选服务的专业工具范围见[能力选择](docs/integrations/CAPABILITY_SELECTION.md)。
 
-这 102 个 Skill 覆盖方法选择、计算实验、结果解释和平台诊断。其中 89 项可由 Agent 自动选择，13 个分类索引保留为用户手动导航；原名称和手动调用均可继续使用。点击名称即可查看完整的 `SKILL.md`；所需工具与连接分别配置。新增算法工作流的参数、安装与开源替换差异见[运行说明](examples/quantum-algorithms/README.md)。
+这 119 个 Skill 覆盖方法选择、计算实验、结果解释和平台诊断。其中 106 项可由 Agent 自动选择，13 个分类索引保留为用户手动导航；原名称和手动调用均可继续使用。点击名称即可查看完整的 `SKILL.md`；所需工具与连接分别配置。新增算法工作流的参数、安装与开源替换差异见[运行说明](examples/quantum-algorithms/README.md)。
 
 下表按**研究方法与用途**介绍能力。各 Tool 提供的模型、参数和输入格式见[计算参数与运行方式](#计算参数与运行方式)。
 
@@ -669,6 +670,30 @@ Harness 是通用 Agent Runtime，扩展通过 Cordis Plugin 装配。UI、模�
 | [`bloqade-analog`](.agents/skills/bloqade-analog/SKILL.md) | 二维 Rydberg 阵列、分段线性脉冲、逐原子占据与末态概率 | `bloqade_local` |
 | [`fieldqkit-hardware`](.agents/skills/fieldqkit-hardware/SKILL.md) | 量子云设备发现、量子位与拓扑筛选、接入条件检查 | `fieldqkit`；只读设备发现 |
 | [`qdmi-device`](.agents/skills/qdmi-device/SKILL.md) | 已配置 QDMI 驱动的设备、门集与耦合关系查询 | `qdmi_local`；默认关闭，需显式准备驱动 |
+
+##### 厂商 SDK 专业入口
+
+新增能力均使用固定依赖；Superstaq 和 QoolQit 按需开启。版本、位序、许可与验证范围见[厂商 SDK 接入](docs/integrations/VENDOR_SDKS.md)。
+
+| Skill | 研究方法与用途 | 执行入口 |
+| --- | --- | --- |
+| [`pennylane-differentiable`](.agents/skills/pennylane-differentiable/SKILL.md) | 用户电路的概率、Pauli 期望值和参数梯度。 | `pennylane_local` |
+| [`deepquantum-differentiable`](.agents/skills/deepquantum-differentiable/SKILL.md) | 基于 PyTorch 的电路概率、期望值和参数梯度。 | `deepquantum_local` |
+| [`tensorcircuit-differentiable`](.agents/skills/tensorcircuit-differentiable/SKILL.md) | 张量网络电路的概率、期望值和参数梯度。 | `tensorcircuit_local` |
+| [`mindquantum-differentiable`](.agents/skills/mindquantum-differentiable/SKILL.md) | 本地电路模拟、Pauli 期望值和参数梯度。 | `mindquantum_local` |
+| [`pytket-compilation`](.agents/skills/pytket-compilation/SKILL.md) | 本地电路优化、门数比较与 OpenQASM 导出。 | `pytket_local` |
+| [`ocean-optimization`](.agents/skills/ocean-optimization/SKILL.md) | 二值二次模型的本地穷举或模拟退火；不是量子退火硬件执行。 | `ocean_local` |
+| [`kaiwu-qubo`](.agents/skills/kaiwu-qubo/SKILL.md) | 社区版符号 QUBO、约束罚项和 Ising 转换；不使用企业版或真机。 | `kaiwu_local` |
+| [`pyquil-simulation`](.agents/skills/pyquil-simulation/SKILL.md) | 本地 Quil 电路模拟，不提交 Rigetti 云作业。 | `pyquil_local` |
+| [`spinqit-simulation`](.agents/skills/spinqit-simulation/SKILL.md) | 量旋 SDK 的本地电路模拟，不连接设备。 | `spinqit_local` |
+| [`qutrunk-simulation`](.agents/skills/qutrunk-simulation/SKILL.md) | 启科 SDK 的本地电路模拟，不连接设备。 | `qutrunk_local` |
+| [`perceval-photonics`](.agents/skills/perceval-photonics/SKILL.md) | 用户 Fock 输入、分束器和移相网络的本地光子分布。 | `perceval_local` |
+| [`iqm-circuit-workbench`](.agents/skills/iqm-circuit-workbench/SKILL.md) | IQM 原生门转译与本地模拟，不连接真实设备。 | `iqm_local` |
+| [`alicebob-cat-circuits`](.agents/skills/alicebob-cat-circuits/SKILL.md) | 官方本地猫态量子比特模型与电路仿真。 | `alicebob_local` |
+| [`pulser-dynamics`](.agents/skills/pulser-dynamics/SKILL.md) | Pasqal 全局脉冲、Rydberg 阵列与本地动力学。 | `pulser_local` |
+| [`qoolqit-workbench`](.agents/skills/qoolqit-workbench/SKILL.md) | 无量纲 Rydberg 程序编译与本地计算；需审阅上游定制许可证。 | `qoolqit_local` |
+| [`ionq-programs`](.agents/skills/ionq-programs/SKILL.md) | 使用官方 SDK 将结构化电路转换为 IonQ QIS 程序；不提交云任务。 | `ionq_local` |
+| [`superstaq-compilation`](.agents/skills/superstaq-compilation/SKILL.md) | 本地程序序列化和可选远程编译；远程操作外发电路，需要账户，不执行 QPU 任务。 | `superstaq_cloud` |
 
 ##### 方法选型与平台支持
 
@@ -759,9 +784,9 @@ Harness 是通用 Agent Runtime，扩展通过 Cordis Plugin 装配。UI、模�
 
 #### MCP 服务目录
 
-**OpenQuantum 为 30 项计算与设备发现能力开发了本地 MCP 桥接**，另直接接入 8 个上游 MCP 服务。下表按用途分组：本地桥接链接到仓库源码并保留上游来源，直接接入的服务明确标记为“上游服务”。
+**OpenQuantum 为 47 项计算与设备发现能力开发了本地 MCP 桥接**，另直接接入 8 个上游 MCP 服务。下表按用途分组：本地桥接链接到仓库源码并保留上游来源，直接接入的服务明确标记为“上游服务”。
 
-默认 Preset 共声明 38 个 MCP 服务连接：**29 个默认开启（其中 Qiskit 两项可通过离线开关关闭），9 个按需启用**。连接名对应配置中的 `serverName`；“默认开启”表示配置策略，使用前仍需准备依赖和必要凭据。
+默认 Preset 共声明 55 个 MCP 服务连接：**44 个默认开启（其中 Qiskit 两项可通过离线开关关闭），11 个按需启用**。连接名对应配置中的 `serverName`；“默认开启”表示配置策略，使用前仍需准备依赖和必要凭据。
 
 这些 MCP Server 都由本机以 `stdio` 方式启动，不是 OpenQuantum 提供的公共托管端点。其中一部分 Tool 在本地计算，另一部分再访问厂商文档或量子云；“本地启动 MCP Server”不代表所有数据处理都留在本地。
 
@@ -824,6 +849,28 @@ Harness 是通用 Agent Runtime，扩展通过 Cordis Plugin 装配。UI、模�
 | --- | --- | --- | --- |
 | [`fatqat_local`](.agents/skills/fatqat-workbench/mcp/server.mjs) · [FatQat](https://github.com/spaceqat/fatqat) | 电路与硬件约束、超导和中性原子脉冲动力学 | 默认开启 | 显式准备锁定 Python 环境；数值计算本地运行，无云凭据或 QPU 操作 |
 | [`bloqade_local`](.agents/skills/bloqade-analog/mcp/server.mjs) · [Bloqade Analog](https://github.com/QuEraComputing/bloqade-analog) | 自定义二维阵列与全局时变脉冲的本地 Rydberg 仿真 | 默认开启 | Python 3.12 + uv；显式准备环境，无需云凭据；[使用说明](docs/integrations/BLOQADE_ANALOG.md) |
+
+##### 国内外厂商 SDK
+
+| MCP 服务 / 连接名 | 能提供什么工具能力 | 默认配置 | 使用条件与边界 |
+| --- | --- | --- | --- |
+| [`pennylane_local`](.agents/skills/pennylane-differentiable/mcp/server.mjs) · [pennylane](https://github.com/PennyLaneAI/pennylane) | 用户电路的概率、Pauli 期望值和参数梯度。 | 默认开启 | 显式准备独立环境；[版本与边界](docs/integrations/VENDOR_SDKS.md) |
+| [`deepquantum_local`](.agents/skills/deepquantum-differentiable/mcp/server.mjs) · [deepquantum](https://github.com/TuringQ/deepquantum) | 基于 PyTorch 的电路概率、期望值和参数梯度。 | 默认开启 | 显式准备独立环境；[版本与边界](docs/integrations/VENDOR_SDKS.md) |
+| [`tensorcircuit_local`](.agents/skills/tensorcircuit-differentiable/mcp/server.mjs) · [tensorcircuit](https://github.com/tencent-quantum-lab/tensorcircuit) | 张量网络电路的概率、期望值和参数梯度。 | 默认开启 | 显式准备独立环境；[版本与边界](docs/integrations/VENDOR_SDKS.md) |
+| [`mindquantum_local`](.agents/skills/mindquantum-differentiable/mcp/server.mjs) · [mindquantum](https://gitee.com/mindspore/mindquantum) | 本地电路模拟、Pauli 期望值和参数梯度。 | 默认开启 | 显式准备独立环境；[版本与边界](docs/integrations/VENDOR_SDKS.md) |
+| [`pytket_local`](.agents/skills/pytket-compilation/mcp/server.mjs) · [pytket](https://github.com/Quantinuum/tket) | 本地电路优化、门数比较与 OpenQASM 导出。 | 默认开启 | 显式准备独立环境；[版本与边界](docs/integrations/VENDOR_SDKS.md) |
+| [`ocean_local`](.agents/skills/ocean-optimization/mcp/server.mjs) · [dimod + dwave-samplers](https://github.com/dwavesystems/dwave-ocean-sdk) | 二值二次模型的本地穷举或模拟退火；不是量子退火硬件执行。 | 默认开启 | 显式准备独立环境；[版本与边界](docs/integrations/VENDOR_SDKS.md) |
+| [`kaiwu_local`](.agents/skills/kaiwu-qubo/mcp/server.mjs) · [kaiwu-community](https://github.com/qboson/kaiwu_community) | 社区版符号 QUBO、约束罚项和 Ising 转换；不使用企业版或真机。 | 默认开启 | 显式准备独立环境；[版本与边界](docs/integrations/VENDOR_SDKS.md) |
+| [`pyquil_local`](.agents/skills/pyquil-simulation/mcp/server.mjs) · [pyquil](https://github.com/rigetti/pyquil) | 本地 Quil 电路模拟，不提交 Rigetti 云作业。 | 默认开启 | 显式准备独立环境；[版本与边界](docs/integrations/VENDOR_SDKS.md) |
+| [`spinqit_local`](.agents/skills/spinqit-simulation/mcp/server.mjs) · [spinqit](https://github.com/SpinQTech/SpinQit) | 量旋 SDK 的本地电路模拟，不连接设备。 | 默认开启 | 显式准备独立环境；[版本与边界](docs/integrations/VENDOR_SDKS.md) |
+| [`qutrunk_local`](.agents/skills/qutrunk-simulation/mcp/server.mjs) · [qutrunk](https://github.com/qudoor/qutrunk) | 启科 SDK 的本地电路模拟，不连接设备。 | 默认开启 | 显式准备独立环境；[版本与边界](docs/integrations/VENDOR_SDKS.md) |
+| [`perceval_local`](.agents/skills/perceval-photonics/mcp/server.mjs) · [perceval-quandela](https://github.com/Quandela/Perceval) | 用户 Fock 输入、分束器和移相网络的本地光子分布。 | 默认开启 | 显式准备独立环境；[版本与边界](docs/integrations/VENDOR_SDKS.md) |
+| [`iqm_local`](.agents/skills/iqm-circuit-workbench/mcp/server.mjs) · [iqm-client](https://github.com/iqm-finland/iqm-client) | IQM 原生门转译与本地模拟，不连接真实设备。 | 默认开启 | 显式准备独立环境；[版本与边界](docs/integrations/VENDOR_SDKS.md) |
+| [`alicebob_local`](.agents/skills/alicebob-cat-circuits/mcp/server.mjs) · [qiskit-alice-bob-provider](https://github.com/Alice-Bob-SW/qiskit-alice-bob-provider) | 官方本地猫态量子比特模型与电路仿真。 | 默认开启 | 显式准备独立环境；[版本与边界](docs/integrations/VENDOR_SDKS.md) |
+| [`pulser_local`](.agents/skills/pulser-dynamics/mcp/server.mjs) · [pulser-core + pulser-simulation](https://github.com/pasqal-io/Pulser) | Pasqal 全局脉冲、Rydberg 阵列与本地动力学。 | 默认开启 | 显式准备独立环境；[版本与边界](docs/integrations/VENDOR_SDKS.md) |
+| [`qoolqit_local`](.agents/skills/qoolqit-workbench/mcp/server.mjs) · [qoolqit](https://github.com/pasqal-io/qoolqit) | 无量纲 Rydberg 程序编译与本地计算；需审阅上游定制许可证。 | 默认关闭 | 显式准备独立环境；[版本与边界](docs/integrations/VENDOR_SDKS.md) |
+| [`ionq_local`](.agents/skills/ionq-programs/mcp/server.mjs) · [qiskit-ionq](https://github.com/qiskit-community/qiskit-ionq) | 使用官方 SDK 将结构化电路转换为 IonQ QIS 程序；不提交云任务。 | 默认开启 | 显式准备独立环境；[版本与边界](docs/integrations/VENDOR_SDKS.md) |
+| [`superstaq_cloud`](.agents/skills/superstaq-compilation/mcp/server.mjs) · [qiskit-superstaq](https://github.com/Infleqtion/client-superstaq) | 本地程序序列化和可选远程编译；远程操作外发电路，需要账户，不执行 QPU 任务。 | 默认关闭 | 显式准备独立环境；[版本与边界](docs/integrations/VENDOR_SDKS.md) |
 
 ##### 资料与设备发现
 
@@ -923,7 +970,7 @@ docs/                    架构、路线与生态文档
 
 ### 可选上游 Skill
 
-[OriginQ 官方 `pyqpanda3` Skill](https://github.com/OriginQ/pyqpanda3-skill) 提供电路编程、算法模板、迁移与 QCloud 使用指导。它**不计入上面的 102 个内置 Skill，也不会在首次启动时自动安装**；运行 `npm run skill:qpanda:setup` 后，固定审阅版本才会进入项目 Skill 目录。安装这个 Skill 不会自动启用 `qpanda_runtime`，也不会赋予云任务权限。
+[OriginQ 官方 `pyqpanda3` Skill](https://github.com/OriginQ/pyqpanda3-skill) 提供电路编程、算法模板、迁移与 QCloud 使用指导。它**不计入上面的 119 个内置 Skill，也不会在首次启动时自动安装**；运行 `npm run skill:qpanda:setup` 后，固定审阅版本才会进入项目 Skill 目录。安装这个 Skill 不会自动启用 `qpanda_runtime`，也不会赋予云任务权限。
 
 ## 长期发展规划
 

@@ -1,0 +1,615 @@
+{
+  "schemaVersion": "1.0",
+  "date": "2026-09-27",
+  "reviewer": "independent sdk_compilers_optimization agent; not author of device adapters",
+  "status": "pass_after_fixes",
+  "scope": [
+    "perceval-photonics",
+    "iqm-circuit-workbench",
+    "alicebob-cat-circuits",
+    "pulser-dynamics",
+    "qoolqit-workbench"
+  ],
+  "executionBoundary": "real local SDKs; Python socket connections blocked; no cloud, external model or QPU; not scientific Acceptance",
+  "findings": [
+    {
+      "id": "DEV-1",
+      "priority": "P2",
+      "status": "resolved",
+      "file": ".agents/skills/perceval-photonics/mcp/bridge.py",
+      "line": 16,
+      "title": "Contract accepts nonadjacent or reversed optical modes that circuit.add rejects",
+      "reproduction": {
+        "inputOccupation": [
+          0,
+          1,
+          2,
+          0
+        ],
+        "operations": [
+          {
+            "gate": "BS",
+            "modes": [
+              3,
+              1
+            ],
+            "angleRad": 0.94
+          }
+        ]
+      },
+      "observed": "AssertionError: Range must be a consecutive set of port indexes",
+      "requested": "Preserve arbitrary distinct mode ordering through real SDK permutation or unitary embedding, then verify against independent optical reference.",
+      "resolution": "SDK PERM routes the ordered selected modes to ports 0/1, applies BS.H, then inversely permutes. Independent same-port binomial, reversed nonadjacent involution and four-mode complex matrix tests now pass.",
+      "verificationArtifact": ".openquantum/sdk-evidence/device-review/perceval.json"
+    },
+    {
+      "id": "DEV-2",
+      "priority": "P2",
+      "status": "resolved",
+      "file": ".agents/skills/qoolqit-workbench/mcp/bridge.py",
+      "title": "Expose or reject positive input segments dropped by ns quantization",
+      "observed": "durations=[0.0001,0.1], rabiAmplitude=[100000,0,0], E=1 compiles to an entirely zero 100ns drive because the first 0.1ns segment is omitted",
+      "requested": "Return per-segment compiled durations including zeros and explicit dropped segment indices, or explicitly reject unrepresentable nonzero segments. Keep actual SDK compilation semantics visible.",
+      "resolution": "Uses pinned SDK round_to_sum allocation. Positive segments rounded to zero and one-nanosecond unequal endpoints now fail explicitly. Actual per-segment integer durations and evaluation boundaries are returned.",
+      "verificationArtifact": ".openquantum/sdk-evidence/device-review/quantization-fixed.json",
+      "preFixArtifact": ".openquantum/sdk-evidence/device-review/quantization.json"
+    }
+  ],
+  "checks": [
+    {
+      "artifact": ".openquantum/sdk-evidence/device-review/analog.json",
+      "sha256": "06cb9ce004ff1107a04a12e8851c4ae1a8d8257412f5f93101b436bc076af8d7",
+      "observations": [
+        {
+          "case": "constant-pulse independent dense Hamiltonian",
+          "input": {
+            "atomPositionsUm": [
+              [
+                0,
+                0
+              ]
+            ],
+            "pulses": [
+              {
+                "durationNs": 400,
+                "amplitudeRadPerUs": [
+                  3.3,
+                  3.3
+                ],
+                "detuningRadPerUs": [
+                  -0.7,
+                  -0.7
+                ],
+                "phaseRad": 0.83
+              }
+            ],
+            "timeSteps": 4,
+            "atol": 1e-11,
+            "rtol": 1e-11,
+            "maxSolverSteps": 100000,
+            "solverMaxStepNs": 0.2
+          },
+          "maxAmplitudeDifferenceVsContinuousPulse": 0.0004438870609246787,
+          "note": "Pulser samples pulse at ns grid and extends terminal sample to zero; continuous pulse comparison includes discretization",
+          "maxNormError": 2.1806201289109595e-10,
+          "phaseConventionVerified": "excitation proportional to exp(+i*phase)",
+          "atomCount": 1
+        },
+        {
+          "case": "constant-pulse independent dense Hamiltonian",
+          "input": {
+            "atomPositionsUm": [
+              [
+                0,
+                0
+              ],
+              [
+                6,
+                0
+              ],
+              [
+                0,
+                11
+              ]
+            ],
+            "pulses": [
+              {
+                "durationNs": 90,
+                "amplitudeRadPerUs": [
+                  2.1,
+                  2.1
+                ],
+                "detuningRadPerUs": [
+                  0.43,
+                  0.43
+                ],
+                "phaseRad": -0.74
+              }
+            ],
+            "timeSteps": 4,
+            "atol": 1e-11,
+            "rtol": 1e-11,
+            "maxSolverSteps": 100000,
+            "solverMaxStepNs": 0.2
+          },
+          "maxAmplitudeDifferenceVsContinuousPulse": 0.00034878972922172235,
+          "note": "Pulser samples pulse at ns grid and extends terminal sample to zero; continuous pulse comparison includes discretization",
+          "maxNormError": 2.0888946128394537e-10,
+          "phaseConventionVerified": "excitation proportional to exp(+i*phase)",
+          "atomCount": 3
+        },
+        {
+          "case": "phase-jump no-delay segment timing",
+          "compiledDurationNs": 200,
+          "timesUs": [
+            0.0,
+            0.05,
+            0.1,
+            0.123,
+            0.15000000000000002,
+            0.2
+          ],
+          "maxNormError": 1.5073697845480183e-10
+        },
+        {
+          "case": "QoolQit independent dimensional mapping to equivalent Pulser input",
+          "energyScaleRadPerUs": 0.5,
+          "conversionFactors": {
+            "timeNs": 2000.0,
+            "energyRadPerUs": 0.5,
+            "distanceUm": 14.876713435972878
+          },
+          "compiledDurationNs": 814,
+          "amplitudeDifference": 0.0,
+          "quantizationNs": 0.0
+        },
+        {
+          "case": "QoolQit independent dimensional mapping to equivalent Pulser input",
+          "energyScaleRadPerUs": 2.3,
+          "conversionFactors": {
+            "timeNs": 434.7826086956522,
+            "energyRadPerUs": 2.3,
+            "distanceUm": 11.535790461758527
+          },
+          "compiledDurationNs": 177,
+          "amplitudeDifference": 0.0,
+          "quantizationNs": 0.043478260869562746
+        },
+        {
+          "case": "QoolQit independent dimensional mapping to equivalent Pulser input",
+          "energyScaleRadPerUs": 8,
+          "conversionFactors": {
+            "timeNs": 125.0,
+            "energyRadPerUs": 8.0,
+            "distanceUm": 9.371742205618057
+          },
+          "compiledDurationNs": 51,
+          "amplitudeDifference": 0.0,
+          "quantizationNs": 0.125
+        }
+      ]
+    },
+    {
+      "artifact": ".openquantum/sdk-evidence/device-review/iqm-circuit-workbench.json",
+      "sha256": "21b13af7c7184507d1e5564e72f04b36057971af180947750f3ef87b685dcf3d",
+      "observations": [
+        {
+          "case": "reverse control and routed swap preserves logical bits",
+          "backend": "adonis",
+          "counts": [
+            {
+              "bits": "011",
+              "count": 97
+            }
+          ],
+          "compiledGateCounts": [
+            {
+              "gate": "cz",
+              "count": 7
+            },
+            {
+              "gate": "measure",
+              "count": 3
+            },
+            {
+              "gate": "r",
+              "count": 17
+            }
+          ]
+        },
+        {
+          "case": "reverse control and routed swap preserves logical bits",
+          "backend": "apollo",
+          "counts": [
+            {
+              "bits": "011",
+              "count": 97
+            }
+          ],
+          "compiledGateCounts": [
+            {
+              "gate": "cz",
+              "count": 7
+            },
+            {
+              "gate": "measure",
+              "count": 3
+            },
+            {
+              "gate": "r",
+              "count": 17
+            }
+          ]
+        },
+        {
+          "case": "reverse control and routed swap preserves logical bits",
+          "backend": "aphrodite",
+          "counts": [
+            {
+              "bits": "011",
+              "count": 97
+            }
+          ],
+          "compiledGateCounts": [
+            {
+              "gate": "cz",
+              "count": 10
+            },
+            {
+              "gate": "measure",
+              "count": 3
+            },
+            {
+              "gate": "r",
+              "count": 23
+            }
+          ]
+        },
+        {
+          "case": "static IQM readout noise and deterministic replay",
+          "counts": [
+            {
+              "bits": "0",
+              "count": 3920
+            },
+            {
+              "bits": "1",
+              "count": 80
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "artifact": ".openquantum/sdk-evidence/device-review/alicebob-cat-circuits.json",
+      "sha256": "176772b8213942e2c587fcbf783f5ff5f07f6b0cd4dfe7fc496988561753c8d3",
+      "observations": [
+        {
+          "case": "encoded initial state with Hadamard",
+          "state": "0",
+          "counts": [
+            {
+              "bits": "0",
+              "count": 3031
+            },
+            {
+              "bits": "1",
+              "count": 2969
+            }
+          ],
+          "parameters": {
+            "kappa1Hz": 100,
+            "kappa2Hz": 10000000,
+            "averagePhotons": 19,
+            "distance": 15
+          }
+        },
+        {
+          "case": "encoded initial state with Hadamard",
+          "state": "1",
+          "counts": [
+            {
+              "bits": "0",
+              "count": 3031
+            },
+            {
+              "bits": "1",
+              "count": 2969
+            }
+          ],
+          "parameters": {
+            "kappa1Hz": 100,
+            "kappa2Hz": 10000000,
+            "averagePhotons": 19,
+            "distance": 15
+          }
+        },
+        {
+          "case": "encoded initial state with Hadamard",
+          "state": "+",
+          "counts": [
+            {
+              "bits": "0",
+              "count": 6000
+            }
+          ],
+          "parameters": {
+            "kappa1Hz": 100,
+            "kappa2Hz": 10000000,
+            "averagePhotons": 19,
+            "distance": 15
+          }
+        },
+        {
+          "case": "encoded initial state with Hadamard",
+          "state": "-",
+          "counts": [
+            {
+              "bits": "1",
+              "count": 6000
+            }
+          ],
+          "parameters": {
+            "kappa1Hz": 100,
+            "kappa2Hz": 10000000,
+            "averagePhotons": 19,
+            "distance": 15
+          }
+        },
+        {
+          "case": "actual physical/logical cat model reverse control",
+          "model": "physical",
+          "counts": [
+            {
+              "bits": "11",
+              "count": 2000
+            }
+          ],
+          "parameters": {
+            "kappa1Hz": 100,
+            "kappa2Hz": 10000000,
+            "averagePhotons": 16,
+            "distance": 0
+          }
+        },
+        {
+          "case": "actual physical/logical cat model reverse control",
+          "model": "logical",
+          "counts": [
+            {
+              "bits": "11",
+              "count": 2000
+            }
+          ],
+          "parameters": {
+            "kappa1Hz": 100,
+            "kappa2Hz": 10000000,
+            "averagePhotons": 19,
+            "distance": 15
+          }
+        }
+      ]
+    },
+    {
+      "artifact": ".openquantum/sdk-evidence/device-review/perceval.json",
+      "sha256": "3a9d1f4f824504ac2289b90aa397a442487bb5b029c26de21889c266ac555de0",
+      "observations": [
+        {
+          "case": "two photons same port binomial splitting",
+          "thetaRad": 0.2,
+          "maxProbabilityError": 1.0408340855860843e-17,
+          "totalProbability": 1.0000000000000002
+        },
+        {
+          "case": "two photons same port binomial splitting",
+          "thetaRad": 1.1,
+          "maxProbabilityError": 1.1102230246251565e-16,
+          "totalProbability": 1.0
+        },
+        {
+          "case": "two photons same port binomial splitting",
+          "thetaRad": 2.7,
+          "maxProbabilityError": 0.0,
+          "totalProbability": 1.0
+        },
+        {
+          "case": "reversed nonadjacent mode involution",
+          "correctProbability": 1.0,
+          "outcomes": 20
+        },
+        {
+          "case": "phase sign and occupation conservation",
+          "maxUnitaryError": 7.108895957933346e-16,
+          "totalProbability": 1.0000000000000004
+        },
+        {
+          "case": "four-mode reversed BS and phase network independent matrix",
+          "maxUnitaryError": 2.9893669801409083e-16,
+          "totalProbability": 1.0
+        }
+      ]
+    },
+    {
+      "artifact": ".openquantum/sdk-evidence/device-review/quantization-fixed.json",
+      "sha256": "ea6f447279d2b066e095e67761465f9f6f092b0af9ff6707e8327cc71e4e3936",
+      "observations": [
+        {
+          "case": "unrepresentable pulse is rejected",
+          "input": {
+            "atomPositions": [
+              [
+                0,
+                0
+              ]
+            ],
+            "durations": [
+              0.0001,
+              0.1
+            ],
+            "rabiAmplitude": [
+              100000,
+              0,
+              0
+            ],
+            "detuning": [
+              0,
+              0,
+              0
+            ],
+            "phaseRad": 0,
+            "energyScaleRadPerUs": 1,
+            "timeSteps": 4,
+            "atol": 1e-10,
+            "rtol": 1e-10,
+            "maxSolverSteps": 100000,
+            "solverMaxStepNs": 0.2
+          },
+          "observedError": "A positive input segment rounds to 0 ns; choose a representable duration or energy scale"
+        },
+        {
+          "case": "unrepresentable pulse is rejected",
+          "input": {
+            "atomPositions": [
+              [
+                0,
+                0
+              ]
+            ],
+            "durations": [
+              0.001,
+              0.1
+            ],
+            "rabiAmplitude": [
+              100000,
+              0,
+              0
+            ],
+            "detuning": [
+              0,
+              0,
+              0
+            ],
+            "phaseRad": 0,
+            "energyScaleRadPerUs": 1,
+            "timeSteps": 4,
+            "atol": 1e-10,
+            "rtol": 1e-10,
+            "maxSolverSteps": 100000,
+            "solverMaxStepNs": 0.2
+          },
+          "observedError": "One nanosecond cannot represent unequal waveform endpoints"
+        },
+        {
+          "case": "unrepresentable pulse is rejected",
+          "input": {
+            "atomPositions": [
+              [
+                0,
+                0
+              ]
+            ],
+            "durations": [
+              0.0039
+            ],
+            "rabiAmplitude": [
+              1,
+              1
+            ],
+            "detuning": [
+              0,
+              0
+            ],
+            "phaseRad": 0,
+            "energyScaleRadPerUs": 2,
+            "timeSteps": 4,
+            "atol": 1e-10,
+            "rtol": 1e-10,
+            "maxSolverSteps": 100000,
+            "solverMaxStepNs": 0.2
+          },
+          "observedError": "Compiled pulse duration must be representable and at least 4 ns"
+        },
+        {
+          "case": "actual integer segment allocation and boundary times are returned",
+          "compiledDurationNs": 278,
+          "compiledSegmentDurationsNs": [
+            52,
+            104,
+            122
+          ],
+          "timesUs": [
+            0.0,
+            0.052,
+            0.0695,
+            0.139,
+            0.156,
+            0.20850000000000002,
+            0.278
+          ]
+        }
+      ]
+    }
+  ],
+  "licenseReview": {
+    "perceval-photonics": "MIT, including the upstream special exception for exqalibur Python bindings used by Perceval",
+    "iqm-circuit-workbench": "Apache-2.0 (installed distribution LICENSE.txt)",
+    "alicebob-cat-circuits": "Apache-2.0 (installed distribution LICENSE)",
+    "pulser-dynamics": "Apache-2.0 (installed pulser-core and pulser-simulation licenses)",
+    "qoolqit-workbench": "PASQAL MIT-derived; patent grant limited to internal research or academic use; default-disabled preset verified"
+  },
+  "licenseSources": [
+    "https://github.com/Quandela/Perceval/blob/main/LICENSE",
+    "https://github.com/pasqal-io/Pulser/blob/develop/LICENSE",
+    "https://github.com/pasqal-io/qoolqit/blob/main/LICENSE.md"
+  ],
+  "sourceSha256": {
+    ".agents/skills/alicebob-cat-circuits/mcp/bridge.py": "139f89d45469ded06a7a7a0163ab965f3805365e47433509632b8ed1d116406b",
+    ".agents/skills/alicebob-cat-circuits/mcp/contracts.mjs": "9bf957e6b50593100a319a7f48f2c2d7a8656213883e86504213a5216e9b12f1",
+    ".agents/skills/alicebob-cat-circuits/mcp/server.mjs": "cf89abe0e8723cfd7512a11717ef538eb288f4b267b7758170b5269a5d6cad7b",
+    ".agents/skills/alicebob-cat-circuits/pyproject.toml": "9cc7e2c6532be02e419300c90d573c3779cb60e4928d52ea60940796f157ba90",
+    ".agents/skills/alicebob-cat-circuits/test/science_test.py": "0cc07c13bf8fcce8bcd13af8957cd1033ebffe2c9229aced86b43ed82d71a1f5",
+    ".agents/skills/alicebob-cat-circuits/uv.lock": "09dc45fe507beea933e5e1d89927c44cf74b8f63e61763d3ec2ff701c16f5942",
+    ".agents/skills/iqm-circuit-workbench/mcp/bridge.py": "37035e095a4139b12269030ee9bb5e85334a88496f54073c4ece8b6fa2f2f31a",
+    ".agents/skills/iqm-circuit-workbench/mcp/contracts.mjs": "21f7e7d1a0b19c084436a5713d629489d3b00fffbc30d5a8cd1170a1a291df15",
+    ".agents/skills/iqm-circuit-workbench/mcp/server.mjs": "3ed546b63bea1ca5f7d480d5fc35c94f61f7d71d521f4ded0be426bae54fea89",
+    ".agents/skills/iqm-circuit-workbench/pyproject.toml": "9a531c6809f6eec1cb576cd9709c37acd23b4c7415dd198b3e23472e7b0804b7",
+    ".agents/skills/iqm-circuit-workbench/test/science_test.py": "1d1a2379c924281750599f843be3a8522c92c1660ecc1c07a33a4724037432f4",
+    ".agents/skills/iqm-circuit-workbench/uv.lock": "2e57c08430e1f2d92683393ed4bdeb4076ef1ec0f176ec85d2510e8ae627a922",
+    ".agents/skills/perceval-photonics/mcp/bridge.py": "d946147c0289b3d4196ba83ff68c3bdb2684f6b3bbedf4e31c3671de11ff499f",
+    ".agents/skills/perceval-photonics/mcp/contracts.mjs": "b2fcabf52f57bd4a13d5fd5dd80884fb1fd68d34e743b1c5aaa069700e0a6564",
+    ".agents/skills/perceval-photonics/mcp/server.mjs": "8c52508eef9f5b07e02b2291f4d8604d230bc37c0dcb31ffb00f3168a86ceddf",
+    ".agents/skills/perceval-photonics/pyproject.toml": "977e59e634621c09ee9ae4e12644c4dba8c7fbc6877516dbb2a7557bff483571",
+    ".agents/skills/perceval-photonics/test/science_test.py": "90b00f949d4b012fa089f751b21c447f031fff91de64d076f3b1c552faa24dfa",
+    ".agents/skills/perceval-photonics/uv.lock": "1f1d7ae4e3469f7b78a307bcc675cc47c04b33c9ca37e5da13349471de323c7a",
+    ".agents/skills/pulser-dynamics/mcp/bridge.py": "fe2aba4ff49e57eda92b1166a6f1dcb0f3c221b36f70b54480fde68441cd26db",
+    ".agents/skills/pulser-dynamics/mcp/contracts.mjs": "938360fb8af4833f700837ce67eeef61b2fdce1a2ee6054f0ba9ab3cbc0c1ba7",
+    ".agents/skills/pulser-dynamics/mcp/server.mjs": "884c1b25dd0aaf075feb640e58336dd1452ab9b961951c6ea7c56044a5f90cad",
+    ".agents/skills/pulser-dynamics/pyproject.toml": "93b21a8f54210e5fe184548aff57bca8b84c52e860b8d086428fc13c66107167",
+    ".agents/skills/pulser-dynamics/test/science_test.py": "fd703267aac0abb15966ee6879ed8f32bd424fd000ace35907c3832123dcfe71",
+    ".agents/skills/pulser-dynamics/uv.lock": "4dae145858855becf894f9e47ad8517a8865d7299b0628931672a550dd4b85c9",
+    ".agents/skills/qoolqit-workbench/mcp/bridge.py": "4df7e2230ce44de1b4ff447eb006f308e205c22d3bd71ee9087f3e37e1ff2063",
+    ".agents/skills/qoolqit-workbench/mcp/contracts.mjs": "84a51cf0ffc7093e90fda82617864e2f3781886ba9147b74974643bee2792de9",
+    ".agents/skills/qoolqit-workbench/mcp/server.mjs": "2b1395f1dac35477c66c48135d6740e87189160031e41111725a5c2d22d34584",
+    ".agents/skills/qoolqit-workbench/pyproject.toml": "2bd0dfc208abb8078e522a1095fd27600cee647841bbec24d629f0f7d17ae4e7",
+    ".agents/skills/qoolqit-workbench/test/science_test.py": "a9d283e04a3d8dc821d23cdfa3cd4e0fca50f8c7febbd7a7f1739e0f7c0d40ef",
+    ".agents/skills/qoolqit-workbench/uv.lock": "5304a7a9dd049936694af34e6e08234f8ed142d2cd4cd0b12f41488bcf4ce3c6",
+    "src/lib/sdk-devices.mjs": "5b961e87a8c54670b544f4af5a18e44a9ea325e2ea2b7f0430643e5e6000a644",
+    "src/lib/sdk_device_models.py": "42fcea08153c188c16a310669c2cc625efa9d0b1559117f51e04680c3d9314dc",
+    "tests/fixtures/sdk_devices_science.py": "76feade38114e32c5d99f861fe27b0e8cbf1223999aeb0d7135219d684c83253"
+  },
+  "reviewScripts": {
+    ".openquantum/sdk-evidence/device-review/review_analog.py": "faee78addcece68ddc653de4b7a88daf978be4b8e8c3071f5e6d4a62664884b4",
+    ".openquantum/sdk-evidence/device-review/review_digital.py": "3a6c4f3eabb0f1c3d01c662614f9e5f8cfd3d24c9c55cccb4aabc7bce53783bf",
+    ".openquantum/sdk-evidence/device-review/review_perceval.py": "452c4731e68738741f3ec75c91b1c651e0c66dae8c7976f69c861a2d35a1371d",
+    ".openquantum/sdk-evidence/device-review/review_quantization.py": "0bcfa9fd6195b4313bbc2f0026f56f7d8e97641c94e988af9a7c90460353db9a",
+    ".openquantum/sdk-evidence/device-review/review_quantization_fixed.py": "221c187c48d2421f2b9c9b830ecb6fb42db48c80b6ff71b5c5120f9d70cc3046"
+  },
+  "scopeNotes": [
+    "Physical and logical cat gates use analytical SDK error models, not bosonic Fock-space dynamics. Adapter currently measures in the encoded computational/Z basis only.",
+    "Pulser public C6 and reported amplitudes were independently compared to a dense Hamiltonian including phase and asymmetric three-atom interactions. Differences of approximately 3.5e-4 to 4.4e-4 against an ideal continuous constant pulse are attributable to the explicitly documented nanosecond sampling/terminal zero interpolation; solver tolerance is not a bound on that model discretization.",
+    "QoolQit uses actual compilation, and independent checks verified TIME*ENERGY=1000 and DISTANCE^6*ENERGY=C6 as well as equivalence to separately built physical Pulser inputs.",
+    "IQM local transpilation and validation are real SDK operations. Three fake targets were tested with a routed reverse-control/swap circuit; compiled measurements preserve logical classical-bit identity. Static readout noise and seeded Aer replay were verified."
+  ],
+  "independentCheckCount": 26,
+  "hashScope": "Frozen implementation, contracts, numerical tests and dependency locks. Documentation and later Harness/live test additions are outside this implementation hash snapshot."
+}

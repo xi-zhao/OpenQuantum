@@ -150,7 +150,7 @@ export async function runLocalJsonProcess({
         const stderrText = Buffer.concat(stderr).toString("utf8").trim();
         if (code !== 0) {
           reject(new Error(stderrText
-            ? redactError(stderrText.slice(0, 2000), env)
+            ? redactError(stderrText, env).slice(0, 2000)
             : `${label} exited with code ${code}`));
           return;
         }

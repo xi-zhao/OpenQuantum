@@ -1350,3 +1350,330 @@ packages:
         - tests/bloqade-contracts.test.mjs
         - tests/bloqade-live.test.mjs
         - tests/harness-bloqade.test.mjs
+
+  - id: pennylane-differentiable
+    level: L1
+    execution:
+      mcpServers:
+        - name: pennylane_local
+          source: package
+          entrypoint: .agents/skills/pennylane-differentiable/mcp/server.mjs
+          activation: always
+          contractCheck: tests/sdk-differentiable-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: differentiate_pennylane_circuit
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/sdk-differentiable-contracts.test.mjs
+        - tests/sdk-differentiable-live.test.mjs
+        - tests/harness-vendor-sdks.test.mjs
+
+  - id: deepquantum-differentiable
+    level: L1
+    execution:
+      mcpServers:
+        - name: deepquantum_local
+          source: package
+          entrypoint: .agents/skills/deepquantum-differentiable/mcp/server.mjs
+          activation: always
+          contractCheck: tests/sdk-differentiable-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: differentiate_deepquantum_circuit
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/sdk-differentiable-contracts.test.mjs
+        - tests/sdk-differentiable-live.test.mjs
+        - tests/harness-vendor-sdks.test.mjs
+
+  - id: tensorcircuit-differentiable
+    level: L1
+    execution:
+      mcpServers:
+        - name: tensorcircuit_local
+          source: package
+          entrypoint: .agents/skills/tensorcircuit-differentiable/mcp/server.mjs
+          activation: always
+          contractCheck: tests/sdk-differentiable-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: differentiate_tensorcircuit_circuit
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/sdk-differentiable-contracts.test.mjs
+        - tests/sdk-differentiable-live.test.mjs
+        - tests/harness-vendor-sdks.test.mjs
+
+  - id: mindquantum-differentiable
+    level: L1
+    execution:
+      mcpServers:
+        - name: mindquantum_local
+          source: package
+          entrypoint: .agents/skills/mindquantum-differentiable/mcp/server.mjs
+          activation: always
+          contractCheck: tests/sdk-differentiable-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: differentiate_mindquantum_circuit
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/sdk-differentiable-contracts.test.mjs
+        - tests/sdk-differentiable-live.test.mjs
+        - tests/harness-vendor-sdks.test.mjs
+
+  - id: pytket-compilation
+    level: L1
+    execution:
+      mcpServers:
+        - name: pytket_local
+          source: package
+          entrypoint: .agents/skills/pytket-compilation/mcp/server.mjs
+          activation: always
+          contractCheck: tests/sdk-compilers-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: compile_pytket_circuit
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/sdk-compilers-contracts.test.mjs
+        - tests/sdk-compilers-live.test.mjs
+        - tests/harness-vendor-sdks.test.mjs
+
+  - id: ocean-optimization
+    level: L1
+    execution:
+      mcpServers:
+        - name: ocean_local
+          source: package
+          entrypoint: .agents/skills/ocean-optimization/mcp/server.mjs
+          activation: always
+          contractCheck: tests/sdk-compilers-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: sample_ocean_model
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/sdk-compilers-contracts.test.mjs
+        - tests/sdk-compilers-live.test.mjs
+        - tests/harness-vendor-sdks.test.mjs
+
+  - id: kaiwu-qubo
+    level: L1
+    execution:
+      mcpServers:
+        - name: kaiwu_local
+          source: package
+          entrypoint: .agents/skills/kaiwu-qubo/mcp/server.mjs
+          activation: always
+          contractCheck: tests/sdk-compilers-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: build_kaiwu_qubo
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/sdk-compilers-contracts.test.mjs
+        - tests/sdk-compilers-live.test.mjs
+        - tests/harness-vendor-sdks.test.mjs
+
+  - id: pyquil-simulation
+    level: L1
+    execution:
+      mcpServers:
+        - name: pyquil_local
+          source: package
+          entrypoint: .agents/skills/pyquil-simulation/mcp/server.mjs
+          activation: always
+          contractCheck: tests/sdk-compilers-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: simulate_pyquil_circuit
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/sdk-compilers-contracts.test.mjs
+        - tests/sdk-compilers-live.test.mjs
+        - tests/harness-vendor-sdks.test.mjs
+
+  - id: spinqit-simulation
+    level: L1
+    execution:
+      mcpServers:
+        - name: spinqit_local
+          source: package
+          entrypoint: .agents/skills/spinqit-simulation/mcp/server.mjs
+          activation: always
+          contractCheck: tests/sdk-compilers-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: simulate_spinqit_circuit
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/sdk-compilers-contracts.test.mjs
+        - tests/sdk-compilers-live.test.mjs
+        - tests/harness-vendor-sdks.test.mjs
+
+  - id: qutrunk-simulation
+    level: L1
+    execution:
+      mcpServers:
+        - name: qutrunk_local
+          source: package
+          entrypoint: .agents/skills/qutrunk-simulation/mcp/server.mjs
+          activation: always
+          contractCheck: tests/sdk-compilers-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: simulate_qutrunk_circuit
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/sdk-compilers-contracts.test.mjs
+        - tests/sdk-compilers-live.test.mjs
+        - tests/harness-vendor-sdks.test.mjs
+
+  - id: perceval-photonics
+    level: L1
+    execution:
+      mcpServers:
+        - name: perceval_local
+          source: package
+          entrypoint: .agents/skills/perceval-photonics/mcp/server.mjs
+          activation: always
+          contractCheck: tests/sdk-devices-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: simulate_perceval_photonics
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/sdk-devices-contracts.test.mjs
+        - tests/sdk-devices-live.test.mjs
+        - tests/harness-vendor-sdks.test.mjs
+
+  - id: iqm-circuit-workbench
+    level: L1
+    execution:
+      mcpServers:
+        - name: iqm_local
+          source: package
+          entrypoint: .agents/skills/iqm-circuit-workbench/mcp/server.mjs
+          activation: always
+          contractCheck: tests/sdk-devices-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: run_iqm_local_circuit
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/sdk-devices-contracts.test.mjs
+        - tests/sdk-devices-live.test.mjs
+        - tests/harness-vendor-sdks.test.mjs
+
+  - id: alicebob-cat-circuits
+    level: L1
+    execution:
+      mcpServers:
+        - name: alicebob_local
+          source: package
+          entrypoint: .agents/skills/alicebob-cat-circuits/mcp/server.mjs
+          activation: always
+          contractCheck: tests/sdk-devices-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: run_alicebob_local_circuit
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/sdk-devices-contracts.test.mjs
+        - tests/sdk-devices-live.test.mjs
+        - tests/harness-vendor-sdks.test.mjs
+
+  - id: pulser-dynamics
+    level: L1
+    execution:
+      mcpServers:
+        - name: pulser_local
+          source: package
+          entrypoint: .agents/skills/pulser-dynamics/mcp/server.mjs
+          activation: always
+          contractCheck: tests/sdk-devices-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: simulate_pulser_rydberg
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/sdk-devices-contracts.test.mjs
+        - tests/sdk-devices-live.test.mjs
+        - tests/harness-vendor-sdks.test.mjs
+
+  - id: qoolqit-workbench
+    level: L1
+    execution:
+      mcpServers:
+        - name: qoolqit_local
+          source: package
+          entrypoint: .agents/skills/qoolqit-workbench/mcp/server.mjs
+          activation: opt-in
+          contractCheck: tests/sdk-devices-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: simulate_qoolqit_analog
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/sdk-devices-contracts.test.mjs
+        - tests/sdk-devices-live.test.mjs
+        - tests/harness-vendor-sdks.test.mjs
+
+  - id: ionq-programs
+    level: L1
+    execution:
+      mcpServers:
+        - name: ionq_local
+          source: package
+          entrypoint: .agents/skills/ionq-programs/mcp/server.mjs
+          activation: always
+          contractCheck: tests/sdk-cloud-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: prepare_ionq_program
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/sdk-cloud-contracts.test.mjs
+        - tests/sdk-cloud-live.test.mjs
+        - tests/harness-vendor-sdks.test.mjs
+
+  - id: superstaq-compilation
+    level: L1
+    execution:
+      mcpServers:
+        - name: superstaq_cloud
+          source: package
+          entrypoint: .agents/skills/superstaq-compilation/mcp/server.mjs
+          activation: opt-in
+          contractCheck: tests/sdk-cloud-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: prepare_superstaq_circuit
+              effect: workspace-write
+            - name: list_superstaq_targets
+              effect: workspace-write
+            - name: compile_superstaq_circuit
+              effect: external-write
+      nativeTools: []
+      checks:
+        - tests/sdk-cloud-contracts.test.mjs
+        - tests/sdk-cloud-live.test.mjs
+        - tests/harness-vendor-sdks.test.mjs

@@ -13,9 +13,9 @@
 
 ## 当前 Skill
 
-以下 102 个 Skill 随源码分发；它们与 MCP Server 不是一一对应关系，知识型 Skill 可以不绑定专用 Tool，
+以下 119 个 Skill 随源码分发；它们与 MCP Server 不是一一对应关系，知识型 Skill 可以不绑定专用 Tool，
 工作流也可以使用多个服务或进程内原生 Tool。连接默认配置与凭据条件见[项目首页](../../README.md#mcp-服务目录)。
-当前 88 项可由模型自动选择，13 个分类索引仅保留用户显式调用；名称和来源映射不变。
+当前 106 项可由模型自动选择，13 个分类索引仅保留用户显式调用；名称和来源映射不变。
 分批建议与兼容影响见[扩展治理清单](../../docs/architecture/EXTENSION_GOVERNANCE.md)。
 
 | Skill | 作用 | 依赖的执行模块 |
@@ -137,3 +137,27 @@
 
 新增或修改 Skill 前先读[文档与架构入口](../../docs/README.md)和[贡献指南](../../CONTRIBUTING.md)。
 发行版当前 Skill 清单与 L0–L3 证据等级以 [`.agents/capability-packages.yml`](../capability-packages.yml) 为机器权威。
+
+### 厂商 SDK 专业能力
+
+以下 17 项均有独立 Skill 与 Python MCP Server，由 Harness MCP Client 注册 Tool；QoolQit 与 Superstaq 默认关闭。具体范围见[厂商 SDK 接入](../../docs/integrations/VENDOR_SDKS.md)。
+
+| Skill | 作用 | 依赖的执行模块 |
+| --- | --- | --- |
+| [`pennylane-differentiable`](pennylane-differentiable/SKILL.md) | 用户电路的概率、Pauli 期望值和参数梯度。 | `pennylane_local` |
+| [`deepquantum-differentiable`](deepquantum-differentiable/SKILL.md) | 基于 PyTorch 的电路概率、期望值和参数梯度。 | `deepquantum_local` |
+| [`tensorcircuit-differentiable`](tensorcircuit-differentiable/SKILL.md) | 张量网络电路的概率、期望值和参数梯度。 | `tensorcircuit_local` |
+| [`mindquantum-differentiable`](mindquantum-differentiable/SKILL.md) | 本地电路模拟、Pauli 期望值和参数梯度。 | `mindquantum_local` |
+| [`pytket-compilation`](pytket-compilation/SKILL.md) | 本地电路优化、门数比较与 OpenQASM 导出。 | `pytket_local` |
+| [`ocean-optimization`](ocean-optimization/SKILL.md) | 二值二次模型的本地穷举或模拟退火；不是量子退火硬件执行。 | `ocean_local` |
+| [`kaiwu-qubo`](kaiwu-qubo/SKILL.md) | 社区版符号 QUBO、约束罚项和 Ising 转换；不使用企业版或真机。 | `kaiwu_local` |
+| [`pyquil-simulation`](pyquil-simulation/SKILL.md) | 本地 Quil 电路模拟，不提交 Rigetti 云作业。 | `pyquil_local` |
+| [`spinqit-simulation`](spinqit-simulation/SKILL.md) | 量旋 SDK 的本地电路模拟，不连接设备。 | `spinqit_local` |
+| [`qutrunk-simulation`](qutrunk-simulation/SKILL.md) | 启科 SDK 的本地电路模拟，不连接设备。 | `qutrunk_local` |
+| [`perceval-photonics`](perceval-photonics/SKILL.md) | 用户 Fock 输入、分束器和移相网络的本地光子分布。 | `perceval_local` |
+| [`iqm-circuit-workbench`](iqm-circuit-workbench/SKILL.md) | IQM 原生门转译与本地模拟，不连接真实设备。 | `iqm_local` |
+| [`alicebob-cat-circuits`](alicebob-cat-circuits/SKILL.md) | 官方本地猫态量子比特模型与电路仿真。 | `alicebob_local` |
+| [`pulser-dynamics`](pulser-dynamics/SKILL.md) | Pasqal 全局脉冲、Rydberg 阵列与本地动力学。 | `pulser_local` |
+| [`qoolqit-workbench`](qoolqit-workbench/SKILL.md) | 无量纲 Rydberg 程序编译与本地计算；需审阅上游定制许可证。 | `qoolqit_local` |
+| [`ionq-programs`](ionq-programs/SKILL.md) | 使用官方 SDK 将结构化电路转换为 IonQ QIS 程序；不提交云任务。 | `ionq_local` |
+| [`superstaq-compilation`](superstaq-compilation/SKILL.md) | 本地程序序列化和可选远程编译；远程操作外发电路，需要账户，不执行 QPU 任务。 | `superstaq_cloud` |

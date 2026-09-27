@@ -430,6 +430,13 @@ test("repository preset exposes reviewed quantum MCPs with safe defaults", async
   const byName = new Map(snapshot.mcpServers.map((server) => [server.serverName, server]));
 
   assert.equal(byName.get("qiskit")?.enabled, true);
+  for (const [server, version, enabled] of [["pennylane_local","0.45.1",true],["deepquantum_local","4.5.0",true],["tensorcircuit_local","0.12.0",true],["mindquantum_local","0.12.0",true],["pytket_local","2.18.4",true],["ocean_local","0.12.22 / 1.8.0",true],["kaiwu_local","1.0.7",true],["pyquil_local","4.21.0",true],["spinqit_local","0.2.4",true],["qutrunk_local","0.2.2",true],["perceval_local","1.3.0",true],["iqm_local","35.0.3",true],["alicebob_local","1.3.0",true],["pulser_local","1.9.1",true],["qoolqit_local","1.4.0",false],["ionq_local","1.1.1",true],["superstaq_cloud","0.5.69",false]]) {
+    assert.equal(byName.get(server)?.packageVersion, version, server);
+    assert.equal(byName.get(server)?.enabled, enabled, server);
+    assert.deepEqual(byName.get(server)?.requiredCredentialRefs, [], server);
+    assert.deepEqual(byName.get(server)?.credentialRefs, server === "superstaq_cloud" ? ["SUPERSTAQ_API_KEY"] : [], server);
+  }
+  assert.deepEqual(snapshot.mcpCredentials.find(credential => credential.ref === "SUPERSTAQ_API_KEY")?.serverNames, ["superstaq_cloud"]);
   assert.equal(byName.get("qiskit")?.packageVersion, "0.3.1");
   assert.equal(byName.get("qiskit_docs")?.enabled, true);
   assert.equal(byName.get("qiskit_docs")?.packageVersion, "0.3.0");

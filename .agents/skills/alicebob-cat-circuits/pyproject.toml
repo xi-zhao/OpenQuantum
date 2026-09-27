@@ -1,0 +1,8 @@
+[project]
+name = "openquantum-alicebob-cat-circuits"
+version = "0.1.0"
+requires-python = ">=3.12,<3.13"
+dependencies = ["qiskit-alice-bob-provider==1.3.0"]
+
+[tool.uv]
+package = false

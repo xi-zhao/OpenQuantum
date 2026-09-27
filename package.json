@@ -69,7 +69,7 @@
     "capability:quantum-circuit-verification:test": "node --test .agents/skills/quantum-circuit-verification/test/*.test.mjs",
     "capability:qec-memory-experiment:test": "node --test .agents/skills/qec-memory-experiment/test/*.test.mjs",
     "benchmark:quantum-capabilities:test": "node --test benchmarks/quantum-capabilities/test/*.test.mjs",
-    "test:p1": "node --test tests/*.test.mjs && npm run test:contracts && npm run capability:diagnostics:test && npm run capability:quantum-ground-state:test && npm run capability:contracts:test && npm run benchmark:quantum-capabilities:test",
+    "test:p1": "node --test --test-concurrency=2 tests/*.test.mjs && npm run test:contracts && npm run capability:diagnostics:test && npm run capability:quantum-ground-state:test && npm run capability:contracts:test && npm run benchmark:quantum-capabilities:test",
     "capability:diagnostics:test": "node .agents/skills/platform-diagnostics/evals/run-evals.mjs",
     "start": "node scripts/run-harness.mjs --port 3000 --trusted-host localhost:3000",
     "lint": "eslint .",
@@ -97,7 +97,10 @@
     "capability:algorithms:live": "node scripts/test-open-algorithm-examples.mjs",
     "capability:bloqade:setup": "node scripts/setup-paper-tools.mjs bloqade-analog",
     "capability:bloqade:test": "node --test tests/bloqade-contracts.test.mjs",
-    "capability:bloqade:live": "OPENQUANTUM_REAL_BLOQADE=1 node --test --test-concurrency=1 tests/bloqade-live.test.mjs tests/harness-bloqade.test.mjs"
+    "capability:bloqade:live": "OPENQUANTUM_REAL_BLOQADE=1 node --test --test-concurrency=1 tests/bloqade-live.test.mjs tests/harness-bloqade.test.mjs",
+    "capability:vendor-sdks:setup": "node scripts/setup-paper-tools.mjs pennylane-differentiable deepquantum-differentiable tensorcircuit-differentiable mindquantum-differentiable pytket-compilation ocean-optimization kaiwu-qubo pyquil-simulation spinqit-simulation qutrunk-simulation perceval-photonics iqm-circuit-workbench alicebob-cat-circuits pulser-dynamics qoolqit-workbench ionq-programs superstaq-compilation",
+    "capability:vendor-sdks:test": "node --test tests/sdk-differentiable-contracts.test.mjs tests/sdk-compilers-contracts.test.mjs tests/sdk-devices-contracts.test.mjs tests/sdk-cloud-contracts.test.mjs",
+    "capability:vendor-sdks:live": "OPENQUANTUM_REAL_DIFFERENTIABLE=1 OPENQUANTUM_REAL_SDK_COMPILERS=1 OPENQUANTUM_REAL_SDK_DEVICES=1 OPENQUANTUM_REAL_SDK_CLOUD=1 OPENQUANTUM_REAL_VENDOR_SDKS=1 node --test --test-concurrency=1 tests/sdk-differentiable-live.test.mjs tests/sdk-compilers-live.test.mjs tests/sdk-devices-live.test.mjs tests/sdk-cloud-live.test.mjs tests/harness-vendor-sdks.test.mjs"
   },
   "dependencies": {
     "@deepseek-ai/dsh": "0.1.5-rc.1",

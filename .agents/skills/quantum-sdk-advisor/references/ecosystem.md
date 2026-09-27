@@ -7,7 +7,7 @@
 | QASM 3 电路解析、转译、指标比较 | Qiskit | 已有官方 MCP，默认无凭据可用 | 已集成 |
 | Qiskit API、迁移和错误码查证 | Qiskit Docs | 官方文档 MCP，可返回直接页面 | 已集成 |
 | 二量子位固定扇区 VQE 基态 | `quantum-ground-state` | 有确定性 solver、独立 reference、Validator 和 eval | 已集成并科学验收 |
-| 可微分混合量子机器学习 | PennyLane | 自动微分、设备抽象、PyTorch/JAX 生态 | 可适配，尚未集成 MCP |
+| 用户电路的可微分观测 | PennyLane / DeepQuantum / TensorCircuit / MindQuantum | Pauli 期望与所选旋转角 Jacobian | 已接入四个独立本地 MCP Tool；完整模型训练仍由工作流组织 |
 | Google 风格 NISQ、电路噪声和底层编译 | Cirq | 原生噪声模型、设备与门级控制 | 可适配，尚未集成 MCP |
 | 容错量子资源估算和 Q# | Microsoft QDK / Q# | Q# 编译器、资源估算器和 Katas | 可适配，尚未集成 MCP |
 | 稳定子电路与 QEC 解码 | Stim + PyMatching | 高性能稳定子模拟与 MWPM 解码 | 优先候选，需共同 Validator |
@@ -35,7 +35,9 @@
 
 适合自动微分、混合优化、量子机器学习和跨设备原型。把梯度、优化器状态、数据划分和后端配置纳入
 Artifact；不要只保留最终 loss。官方来源：
-[PennyLane](https://github.com/PennyLaneAI/pennylane)。
+[PennyLane](https://github.com/PennyLaneAI/pennylane)。结构化电路直接使用 `pennylane-differentiable`；
+既有算法示例继续适合代码级工作流。其他厂商的编译、优化、光子和设备模型入口见
+[17 项 SDK 接入范围](../../../../docs/integrations/VENDOR_SDKS.md)。
 
 ### Cirq
 

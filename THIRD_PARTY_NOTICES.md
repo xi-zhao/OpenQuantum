@@ -86,3 +86,35 @@ The root MIT license does not replace these component licenses. Source manifests
 unmodified dependencies, adapted code, copied regression inputs and conceptual references.
 No code or data from Dense-Evolution, polypus, stresscf or hardware CAD projects is redistributed here.
 The independent numerical checks are local observations, not formal verification or scientific acceptance.
+
+## Vendor SDK integrations (2026-09-27)
+
+All dependencies below are installed into separate environments from hashed `uv.lock` files.
+The repository distributes its own adapters and Skills, not upstream SDK source, wheels or binaries.
+Installed dependencies retain their own license files; redistributing a combined environment requires
+preserving the applicable upstream terms and notices. Scope and verification: [Vendor SDKs](docs/integrations/VENDOR_SDKS.md).
+
+| Upstream | Fixed version | License of the locked distribution | Adapter scope |
+| --- | --- | --- | --- |
+| [pennylane](https://github.com/PennyLaneAI/pennylane) | 0.45.1 | Apache-2.0 | 用户电路的概率、Pauli 期望值和参数梯度。 |
+| [deepquantum](https://github.com/TuringQ/deepquantum) | 4.5.0 | Apache-2.0 | 基于 PyTorch 的电路概率、期望值和参数梯度。 |
+| [tensorcircuit](https://github.com/tencent-quantum-lab/tensorcircuit) | 0.12.0 | Apache-2.0 | 张量网络电路的概率、期望值和参数梯度。 |
+| [mindquantum](https://gitee.com/mindspore/mindquantum) | 0.12.0 | Apache-2.0 | 本地电路模拟、Pauli 期望值和参数梯度。 |
+| [pytket](https://github.com/Quantinuum/tket) | 2.18.4 | Apache-2.0 | 本地电路优化、门数比较与 OpenQASM 导出。 |
+| [dimod + dwave-samplers](https://github.com/dwavesystems/dwave-ocean-sdk) | 0.12.22 / 1.8.0 | Apache-2.0 | 二值二次模型的本地穷举或模拟退火；不是量子退火硬件执行。 |
+| [kaiwu-community](https://github.com/qboson/kaiwu_community) | 1.0.7 | Apache-2.0 | 社区版符号 QUBO、约束罚项和 Ising 转换；不使用企业版或真机。 |
+| [pyquil](https://github.com/rigetti/pyquil) | 4.21.0 | Apache-2.0 | 本地 Quil 电路模拟，不提交 Rigetti 云作业。 |
+| [spinqit](https://github.com/SpinQTech/SpinQit) | 0.2.4 | Apache-2.0 | 量旋 SDK 的本地电路模拟，不连接设备。 |
+| [qutrunk](https://github.com/qudoor/qutrunk) | 0.2.2 | Apache-2.0 | 启科 SDK 的本地电路模拟，不连接设备。 |
+| [perceval-quandela](https://github.com/Quandela/Perceval) | 1.3.0 | MIT；Exqalibur Python binding 组合例外 | 用户 Fock 输入、分束器和移相网络的本地光子分布。 |
+| [iqm-client](https://github.com/iqm-finland/iqm-client) | 35.0.3 | Apache-2.0 | IQM 原生门转译与本地模拟，不连接真实设备。 |
+| [qiskit-alice-bob-provider](https://github.com/Alice-Bob-SW/qiskit-alice-bob-provider) | 1.3.0 | Apache-2.0 | 官方本地猫态量子比特模型与电路仿真。 |
+| [pulser-core + pulser-simulation](https://github.com/pasqal-io/Pulser) | 1.9.1 | Apache-2.0 | Pasqal 全局脉冲、Rydberg 阵列与本地动力学。 |
+| [qoolqit](https://github.com/pasqal-io/qoolqit) | 1.4.0 | MIT 衍生定制许可证；专利授权限于 internal research / academic use | 无量纲 Rydberg 程序编译与本地计算；需审阅上游定制许可证。 |
+| [qiskit-ionq](https://github.com/qiskit-community/qiskit-ionq) | 1.1.1 | Apache-2.0 | 使用官方 SDK 将结构化电路转换为 IonQ QIS 程序；不提交云任务。 |
+| [qiskit-superstaq](https://github.com/Infleqtion/client-superstaq) | 0.5.69 | Apache-2.0 | 本地程序序列化和可选远程编译；远程操作外发电路，需要账户，不执行 QPU 任务。 |
+
+QoolQit is opt-in and must not be described as standard MIT: its additional patent grant is limited
+to internal research and academic use. This record does not establish permission for every commercial use.
+Perceval's MIT terms include the Exqalibur binding combination exception; installing either does not
+replace the other component's terms. Source URLs and lock hashes are retained in the integration evidence.

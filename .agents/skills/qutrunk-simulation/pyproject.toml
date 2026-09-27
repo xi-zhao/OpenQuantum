@@ -1,0 +1,8 @@
+[project]
+name = "openquantum-qutrunk-simulation"
+version = "0.1.0"
+requires-python = ">=3.10,<3.11"
+dependencies = ["qutrunk==0.2.2"]
+
+[tool.uv]
+package = false

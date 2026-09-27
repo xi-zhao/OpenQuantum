@@ -18,7 +18,7 @@ export const numberSchema = (minimum, maximum, defaultValue) => ({ type: "number
 export const integerSchema = (minimum, maximum, defaultValue) => ({ ...numberSchema(minimum ?? -Number.MAX_SAFE_INTEGER, maximum ?? Number.MAX_SAFE_INTEGER, defaultValue), type: "integer" });
 export const arraySchema = (items, minItems, maxItems) => ({ type: "array", items, minItems, maxItems });
 
-// Only a stdio boundary around one bounded local action; Harness owns registration and lifecycle.
+// Strict stdio contracts only; Harness owns registration and lifecycle.
 export function defineScienceTool({ name, description, source, inputSchema, resultSchema, checkInput = () => {} }) {
   inputSchema = { ...inputSchema, properties: { ...inputSchema.properties, execution: executionSchema } };
   const ajv = new Ajv({ allErrors: true, useDefaults: true, strict: false, strictNumbers: true });
@@ -53,12 +53,18 @@ export function defineScienceTool({ name, description, source, inputSchema, resu
   };
 }
 
-export async function serveScienceTool({ entrypoint, id, definition, definitions = [definition], runtime = "python" }) {
+export async function serveScienceTool({ entrypoint, id, definition, definitions = [definition], runtime = "python", credentialEnvironment = [] }) {
   const skillRoot = fileURLToPath(new URL("..", entrypoint));
   const projectRoot = path.resolve(skillRoot, "../../..");
   const lockFile = runtime === "julia" ? "Manifest.toml" : "uv.lock";
   const dependencyLockSha256 = sha256(await readFile(path.join(skillRoot, lockFile)));
-  const allowed = ["HOME", "PATH", "HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY", "NO_PROXY", "SSL_CERT_FILE", "SSL_CERT_DIR", "UV_CACHE_DIR", "UV_PYTHON_INSTALL_DIR", "SYSTEMROOT", "TEMP", "TMP", "TMPDIR", "WINDIR"];
+  const allowed = ["HOME", "PATH", "HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY", "NO_PROXY", "SSL_CERT_FILE", "SSL_CERT_DIR", "REQUESTS_CA_BUNDLE", "CURL_CA_BUNDLE", "UV_CACHE_DIR", "UV_PYTHON_INSTALL_DIR", "SYSTEMROOT", "TEMP", "TMP", "TMPDIR", "WINDIR"];
+  // A trusted server entrypoint may name its own credential references. No
+  // request-controlled environment names or credentials enter tool arguments.
+  for (const name of credentialEnvironment) {
+    if (!/^[A-Z][A-Z0-9_]*_API_KEY$/.test(name)) throw new Error("Invalid SDK credential environment name");
+    allowed.push(name);
+  }
   const env = localComputeEnvironment({
     ...Object.fromEntries(allowed.filter((key) => process.env[key]).map((key) => [key, process.env[key]])),
     UV_PROJECT_ENVIRONMENT: path.join(projectRoot, ".openquantum/python-envs", id),
@@ -84,7 +90,7 @@ export async function serveScienceTool({ entrypoint, id, definition, definitions
           command: "julia", args: ["--startup-file=no", `--project=${skillRoot}`, path.join(skillRoot, "mcp/bridge.jl")],
           notFoundMessage: "需要 Julia；请先运行 npm run capability:paper-tools:setup",
         } : await preparedPythonLaunch({ skillRoot, id, dependencyLockSha256 })),
-        cwd: skillRoot, env: localComputeEnvironment(env, input.execution), input: { input, inputSha256, dependencyLockSha256, source: definition.source },
+        cwd: skillRoot, env: localComputeEnvironment(env, input.execution), input: { input, inputSha256, dependencyLockSha256, source: definition.source, ...(definitions.length > 1 ? { toolName: request.params.name } : {}) },
         signal: AbortSignal.any([signal, controller.signal].filter(Boolean)),
         ...localComputeProcessOptions(input.execution),
         label: id,

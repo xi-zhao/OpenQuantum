@@ -5,6 +5,159 @@ import { quantumHardwareMcpIntegration } from "./quantum-hardware-mcp.mjs";
 
 const QISKIT_MCP_SOURCE = "https://github.com/Qiskit/mcp-servers";
 const MCP_CATALOG = Object.freeze({
+  pennylane_local: Object.freeze({
+    "displayName": "PennyLane 可微分电路",
+    "description": "用户电路的概率、Pauli 期望值和参数梯度。",
+    "provider": "Xanadu / OpenQuantum",
+    "sourceUrl": "https://github.com/PennyLaneAI/pennylane",
+    "packageName": "pennylane",
+    "packageVersion": "0.45.1",
+    "setup": null
+  }),
+  deepquantum_local: Object.freeze({
+    "displayName": "DeepQuantum 可微分电路",
+    "description": "基于 PyTorch 的电路概率、期望值和参数梯度。",
+    "provider": "图灵量子 / OpenQuantum",
+    "sourceUrl": "https://github.com/TuringQ/deepquantum",
+    "packageName": "deepquantum",
+    "packageVersion": "4.5.0",
+    "setup": null
+  }),
+  tensorcircuit_local: Object.freeze({
+    "displayName": "TensorCircuit 可微分电路",
+    "description": "张量网络电路的概率、期望值和参数梯度。",
+    "provider": "腾讯量子实验室 / OpenQuantum",
+    "sourceUrl": "https://github.com/tencent-quantum-lab/tensorcircuit",
+    "packageName": "tensorcircuit",
+    "packageVersion": "0.12.0",
+    "setup": null
+  }),
+  mindquantum_local: Object.freeze({
+    "displayName": "MindQuantum 可微分电路",
+    "description": "本地电路模拟、Pauli 期望值和参数梯度。",
+    "provider": "华为 HiQ / MindSpore / OpenQuantum",
+    "sourceUrl": "https://gitee.com/mindspore/mindquantum",
+    "packageName": "mindquantum",
+    "packageVersion": "0.12.0",
+    "setup": null
+  }),
+  pytket_local: Object.freeze({
+    "displayName": "TKET 电路编译",
+    "description": "本地电路优化、门数比较与 OpenQASM 导出。",
+    "provider": "Quantinuum / OpenQuantum",
+    "sourceUrl": "https://github.com/Quantinuum/tket",
+    "packageName": "pytket",
+    "packageVersion": "2.18.4",
+    "setup": null
+  }),
+  ocean_local: Object.freeze({
+    "displayName": "D-Wave Ocean 经典采样",
+    "description": "二值二次模型的本地穷举或模拟退火；不是量子退火硬件执行。",
+    "provider": "D-Wave / OpenQuantum",
+    "sourceUrl": "https://github.com/dwavesystems/dwave-ocean-sdk",
+    "packageName": "dimod + dwave-samplers",
+    "packageVersion": "0.12.22 / 1.8.0",
+    "setup": null
+  }),
+  kaiwu_local: Object.freeze({
+    "displayName": "Kaiwu Community 建模",
+    "description": "社区版符号 QUBO、约束罚项和 Ising 转换；不使用企业版或真机。",
+    "provider": "玻色量子 / OpenQuantum",
+    "sourceUrl": "https://github.com/qboson/kaiwu_community",
+    "packageName": "kaiwu-community",
+    "packageVersion": "1.0.7",
+    "setup": null
+  }),
+  pyquil_local: Object.freeze({
+    "displayName": "pyQuil 本地仿真",
+    "description": "本地 Quil 电路模拟，不提交 Rigetti 云作业。",
+    "provider": "Rigetti / OpenQuantum",
+    "sourceUrl": "https://github.com/rigetti/pyquil",
+    "packageName": "pyquil",
+    "packageVersion": "4.21.0",
+    "setup": null
+  }),
+  spinqit_local: Object.freeze({
+    "displayName": "SpinQit 本地仿真",
+    "description": "量旋 SDK 的本地电路模拟，不连接设备。",
+    "provider": "量旋科技 / OpenQuantum",
+    "sourceUrl": "https://github.com/SpinQTech/SpinQit",
+    "packageName": "spinqit",
+    "packageVersion": "0.2.4",
+    "setup": null
+  }),
+  qutrunk_local: Object.freeze({
+    "displayName": "QuTrunk 本地仿真",
+    "description": "启科 SDK 的本地电路模拟，不连接设备。",
+    "provider": "启科量子 / OpenQuantum",
+    "sourceUrl": "https://github.com/qudoor/qutrunk",
+    "packageName": "qutrunk",
+    "packageVersion": "0.2.2",
+    "setup": null
+  }),
+  perceval_local: Object.freeze({
+    "displayName": "Perceval 光量子仿真",
+    "description": "用户 Fock 输入、分束器和移相网络的本地光子分布。",
+    "provider": "Quandela / OpenQuantum",
+    "sourceUrl": "https://github.com/Quandela/Perceval",
+    "packageName": "perceval-quandela",
+    "packageVersion": "1.3.0",
+    "setup": null
+  }),
+  iqm_local: Object.freeze({
+    "displayName": "IQM 电路与模拟后端",
+    "description": "IQM 原生门转译与本地模拟，不连接真实设备。",
+    "provider": "IQM / OpenQuantum",
+    "sourceUrl": "https://github.com/iqm-finland/iqm-client",
+    "packageName": "iqm-client",
+    "packageVersion": "35.0.3",
+    "setup": null
+  }),
+  alicebob_local: Object.freeze({
+    "displayName": "Alice & Bob 猫态模型",
+    "description": "官方本地猫态量子比特模型与电路仿真。",
+    "provider": "Alice & Bob / OpenQuantum",
+    "sourceUrl": "https://github.com/Alice-Bob-SW/qiskit-alice-bob-provider",
+    "packageName": "qiskit-alice-bob-provider",
+    "packageVersion": "1.3.0",
+    "setup": null
+  }),
+  pulser_local: Object.freeze({
+    "displayName": "Pulser Rydberg 动力学",
+    "description": "Pasqal 全局脉冲、Rydberg 阵列与本地动力学。",
+    "provider": "Pasqal / OpenQuantum",
+    "sourceUrl": "https://github.com/pasqal-io/Pulser",
+    "packageName": "pulser-core + pulser-simulation",
+    "packageVersion": "1.9.1",
+    "setup": null
+  }),
+  qoolqit_local: Object.freeze({
+    "displayName": "QoolQit 模拟程序",
+    "description": "无量纲 Rydberg 程序编译与本地计算；需审阅上游定制许可证。",
+    "provider": "Pasqal / OpenQuantum",
+    "sourceUrl": "https://github.com/pasqal-io/qoolqit",
+    "packageName": "qoolqit",
+    "packageVersion": "1.4.0",
+    "setup": null
+  }),
+  ionq_local: Object.freeze({
+    "displayName": "IonQ 本地程序准备",
+    "description": "使用官方 SDK 将结构化电路转换为 IonQ QIS 程序；不提交云任务。",
+    "provider": "IonQ / OpenQuantum",
+    "sourceUrl": "https://github.com/qiskit-community/qiskit-ionq",
+    "packageName": "qiskit-ionq",
+    "packageVersion": "1.1.1",
+    "setup": null
+  }),
+  superstaq_cloud: Object.freeze({
+    "displayName": "Superstaq 电路编译",
+    "description": "本地程序序列化和可选远程编译；远程操作外发电路，需要账户，不执行 QPU 任务。",
+    "provider": "Infleqtion / OpenQuantum",
+    "sourceUrl": "https://github.com/Infleqtion/client-superstaq",
+    "packageName": "qiskit-superstaq",
+    "packageVersion": "0.5.69",
+    "setup": null
+  }),
   qbraid_local: Object.freeze({
     displayName: "qBraid 电路转换",
     description: "Qiskit 与 Cirq 本地转换、OpenQASM 2 导出和完整酉矩阵对照；不提交云任务。",
@@ -380,6 +533,11 @@ const MCP_CATALOG = Object.freeze({
 });
 
 const MCP_CREDENTIAL_CATALOG = Object.freeze({
+  SUPERSTAQ_API_KEY: Object.freeze({
+    displayName: "Superstaq API Key",
+    description: "用于 Infleqtion 目标查询与远程电路编译；编译会外发电路，不执行 QPU 作业。密钥只保存在 Harness 凭据库。",
+    documentationUrl: "https://superstaq.readthedocs.io/en/latest/",
+  }),
   QPANDA3_API_KEY: Object.freeze({
     displayName: "本源量子 API Key",
     description:

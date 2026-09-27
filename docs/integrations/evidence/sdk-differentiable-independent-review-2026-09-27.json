@@ -1,0 +1,2764 @@
+{
+  "reviewer": "independent agent /root/bloqade_science_review",
+  "reviewedAt": "2026-09-27T12:36:30.480675+00:00",
+  "status": "pass_with_stated_numerical_limits",
+  "scope": "Read-only review of four differentiable bridges, shared formatting/representation/schema helpers, author numerical test oracle and source-bound evidence. Independently executed six additional cases per SDK.",
+  "scientificValidation": "not_evaluated",
+  "authorEvidenceSourceHashes": "all verified to match current files",
+  "method": "Direct dense gate expansion and forward tangent-state derivative propagation; independent of author parameter-shift references, SDK autodiff and SDK gradient calls.",
+  "cases": 24,
+  "coverage": [
+    "Four-qubit asymmetric circuits with complex Y/S/T phases and reversed/nonadjacent controlled gates",
+    "Three independent-axis rotations with reordered selected gate indices including indices >=10; unselected rotations remain constants",
+    "Duplicate Pauli-observable rows; Identity expectation and stationary/zero-angle derivatives",
+    "Idle qubits and q0-most-significant public ordering; no-gradient shape",
+    "Raw state norm and probability serialization consistency; socket connections blocked during all runs"
+  ],
+  "findings": [],
+  "limits": [
+    "DeepQuantum retains native complex64 construction error in fixed gate constants; this independent sample saw maximum gradient error 6.79e-8. It remains disclosed, unnormalized and not promoted to scientific Acceptance.",
+    "Tests cover supported ideal CPU state-vector gate semantics on this host; no noisy/photonic/MPS/GPU/distributed paths, cloud services or actual hardware were evaluated.",
+    "This review did not re-run Harness integration or alter other agents files."
+  ],
+  "independentScript": {
+    "path": "tests/fixtures/sdk_differentiable_independent.py",
+    "sha256": "e82077003add29134cde1f3e4640c79122fcbef8dd0b5611e2ae56b783597918",
+    "executedScriptBeforeArchiveSha256": "e2af340102297d2890836f6b76bfd93bf4564f9172db9a1c612cc583fa9fe020",
+    "archiveChange": "Added argparse --project-root and repository-relative default; numerical algorithm and cases unchanged. Checked Python AST and CLI help."
+  },
+  "results": [
+    {
+      "sdk": "pennylane",
+      "passed": true,
+      "cases": [
+        {
+          "case": 0,
+          "input": {
+            "numQubits": 4,
+            "gates": [
+              {
+                "gate": "RX",
+                "targets": [
+                  0
+                ],
+                "angle": -0.5943193244113738
+              },
+              {
+                "gate": "CX",
+                "targets": [
+                  2,
+                  1
+                ]
+              },
+              {
+                "gate": "Z",
+                "targets": [
+                  1
+                ]
+              },
+              {
+                "gate": "RX",
+                "targets": [
+                  0
+                ],
+                "angle": -0.6947713093903269
+              },
+              {
+                "gate": "CX",
+                "targets": [
+                  2,
+                  3
+                ]
+              },
+              {
+                "gate": "RZ",
+                "targets": [
+                  2
+                ],
+                "angle": 0.027011959691839227
+              },
+              {
+                "gate": "X",
+                "targets": [
+                  2
+                ]
+              },
+              {
+                "gate": "SWAP",
+                "targets": [
+                  1,
+                  3
+                ]
+              },
+              {
+                "gate": "S",
+                "targets": [
+                  0
+                ]
+              },
+              {
+                "gate": "H",
+                "targets": [
+                  1
+                ]
+              },
+              {
+                "gate": "RY",
+                "targets": [
+                  3
+                ],
+                "angle": 0.7853006986841753
+              },
+              {
+                "gate": "X",
+                "targets": [
+                  1
+                ]
+              },
+              {
+                "gate": "RX",
+                "targets": [
+                  2
+                ],
+                "angle": 1.4432094112379024
+              },
+              {
+                "gate": "SWAP",
+                "targets": [
+                  0,
+                  3
+                ]
+              },
+              {
+                "gate": "H",
+                "targets": [
+                  3
+                ]
+              },
+              {
+                "gate": "Z",
+                "targets": [
+                  0
+                ]
+              },
+              {
+                "gate": "RY",
+                "targets": [
+                  0
+                ],
+                "angle": 0.39300700306663927
+              },
+              {
+                "gate": "Y",
+                "targets": [
+                  0
+                ]
+              }
+            ],
+            "observables": [
+              "YZXI",
+              "IXYZ",
+              "YYYY",
+              "XXXX",
+              "ZZZZ",
+              "IIZI",
+              "IIII",
+              "YZXI"
+            ],
+            "trainableGateIndices": [
+              16,
+              0,
+              12,
+              5,
+              10
+            ]
+          },
+          "errors": {
+            "state": 5.701542859207485e-17,
+            "expectation": 1.1102230246251565e-16,
+            "jacobian": 2.7755575615628914e-16,
+            "rawNormConsistency": 0.0
+          },
+          "normSquared": 0.9999999999999998
+        },
+        {
+          "case": 1,
+          "input": {
+            "numQubits": 4,
+            "gates": [
+              {
+                "gate": "RX",
+                "targets": [
+                  0
+                ],
+                "angle": -0.2928013171098387
+              },
+              {
+                "gate": "CX",
+                "targets": [
+                  2,
+                  0
+                ]
+              },
+              {
+                "gate": "X",
+                "targets": [
+                  0
+                ]
+              },
+              {
+                "gate": "RX",
+                "targets": [
+                  3
+                ],
+                "angle": 0.8368040226394919
+              },
+              {
+                "gate": "CX",
+                "targets": [
+                  0,
+                  1
+                ]
+              },
+              {
+                "gate": "RZ",
+                "targets": [
+                  1
+                ],
+                "angle": -1.5248935290725836
+              },
+              {
+                "gate": "Y",
+                "targets": [
+                  1
+                ]
+              },
+              {
+                "gate": "SWAP",
+                "targets": [
+                  2,
+                  0
+                ]
+              },
+              {
+                "gate": "T",
+                "targets": [
+                  3
+                ]
+              },
+              {
+                "gate": "Z",
+                "targets": [
+                  2
+                ]
+              },
+              {
+                "gate": "RY",
+                "targets": [
+                  1
+                ],
+                "angle": -0.06063854444614547
+              },
+              {
+                "gate": "S",
+                "targets": [
+                  0
+                ]
+              },
+              {
+                "gate": "RX",
+                "targets": [
+                  1
+                ],
+                "angle": 1.9299056734532383
+              },
+              {
+                "gate": "CX",
+                "targets": [
+                  0,
+                  2
+                ]
+              },
+              {
+                "gate": "T",
+                "targets": [
+                  3
+                ]
+              },
+              {
+                "gate": "Z",
+                "targets": [
+                  0
+                ]
+              },
+              {
+                "gate": "RY",
+                "targets": [
+                  1
+                ],
+                "angle": -1.6234832551639817
+              },
+              {
+                "gate": "H",
+                "targets": [
+                  3
+                ]
+              }
+            ],
+            "observables": [
+              "YZXI",
+              "IXYZ",
+              "YYYY",
+              "XXXX",
+              "ZZZZ",
+              "IIZI",
+              "IIII",
+              "YZXI"
+            ],
+            "trainableGateIndices": [
+              16,
+              0,
+              12,
+              5,
+              10
+            ]
+          },
+          "errors": {
+            "state": 1.1102230246251565e-16,
+            "expectation": 2.220446049250313e-16,
+            "jacobian": 5.551115123125783e-16,
+            "rawNormConsistency": 0.0
+          },
+          "normSquared": 0.9999999999999998
+        },
+        {
+          "case": 2,
+          "input": {
+            "numQubits": 4,
+            "gates": [
+              {
+                "gate": "RX",
+                "targets": [
+                  1
+                ],
+                "angle": -1.6428012944333217
+              },
+              {
+                "gate": "SWAP",
+                "targets": [
+                  1,
+                  3
+                ]
+              },
+              {
+                "gate": "T",
+                "targets": [
+                  2
+                ]
+              },
+              {
+                "gate": "RX",
+                "targets": [
+                  2
+                ],
+                "angle": -1.4887564051110425
+              },
+              {
+                "gate": "SWAP",
+                "targets": [
+                  1,
+                  3
+                ]
+              },
+              {
+                "gate": "RZ",
+                "targets": [
+                  0
+                ],
+                "angle": -1.0932871007055782
+              },
+              {
+                "gate": "T",
+                "targets": [
+                  3
+                ]
+              },
+              {
+                "gate": "SWAP",
+                "targets": [
+                  0,
+                  3
+                ]
+              },
+              {
+                "gate": "S",
+                "targets": [
+                  3
+                ]
+              },
+              {
+                "gate": "Z",
+                "targets": [
+                  2
+                ]
+              },
+              {
+                "gate": "RY",
+                "targets": [
+                  0
+                ],
+                "angle": -1.2536071726864781
+              },
+              {
+                "gate": "H",
+                "targets": [
+                  2
+                ]
+              },
+              {
+                "gate": "RX",
+                "targets": [
+                  0
+                ],
+                "angle": 0.6117414906507443
+              },
+              {
+                "gate": "SWAP",
+                "targets": [
+                  3,
+                  2
+                ]
+              },
+              {
+                "gate": "H",
+                "targets": [
+                  3
+                ]
+              },
+              {
+                "gate": "T",
+                "targets": [
+                  3
+                ]
+              },
+              {
+                "gate": "RY",
+                "targets": [
+                  0
+                ],
+                "angle": -1.7110246226316672
+              },
+              {
+                "gate": "Y",
+                "targets": [
+                  0
+                ]
+              }
+            ],
+            "observables": [
+              "YZXI",
+              "IXYZ",
+              "YYYY",
+              "XXXX",
+              "ZZZZ",
+              "IIZI",
+              "IIII",
+              "YZXI"
+            ],
+            "trainableGateIndices": [
+              16,
+              0,
+              12,
+              5,
+              10
+            ]
+          },
+          "errors": {
+            "state": 1.1102230246251565e-16,
+            "expectation": 1.1102230246251565e-16,
+            "jacobian": 1.3270634591222574e-16,
+            "rawNormConsistency": 0.0
+          },
+          "normSquared": 1.0
+        },
+        {
+          "case": 3,
+          "input": {
+            "numQubits": 4,
+            "gates": [
+              {
+                "gate": "RX",
+                "targets": [
+                  2
+                ],
+                "angle": 1.7349720678404137
+              },
+              {
+                "gate": "CX",
+                "targets": [
+                  0,
+                  1
+                ]
+              },
+              {
+                "gate": "Z",
+                "targets": [
+                  2
+                ]
+              },
+              {
+                "gate": "RX",
+                "targets": [
+                  3
+                ],
+                "angle": 0.8099040817026069
+              },
+              {
+                "gate": "CZ",
+                "targets": [
+                  1,
+                  0
+                ]
+              },
+              {
+                "gate": "RZ",
+                "targets": [
+                  1
+                ],
+                "angle": -0.9063488164225211
+              },
+              {
+                "gate": "S",
+                "targets": [
+                  0
+                ]
+              },
+              {
+                "gate": "CX",
+                "targets": [
+                  0,
+                  2
+                ]
+              },
+              {
+                "gate": "X",
+                "targets": [
+                  1
+                ]
+              },
+              {
+                "gate": "H",
+                "targets": [
+                  0
+                ]
+              },
+              {
+                "gate": "RY",
+                "targets": [
+                  3
+                ],
+                "angle": 1.7020989376151832
+              },
+              {
+                "gate": "T",
+                "targets": [
+                  0
+                ]
+              },
+              {
+                "gate": "RX",
+                "targets": [
+                  2
+                ],
+                "angle": -1.5105077072994346
+              },
+              {
+                "gate": "CX",
+                "targets": [
+                  0,
+                  3
+                ]
+              },
+              {
+                "gate": "Z",
+                "targets": [
+                  0
+                ]
+              },
+              {
+                "gate": "T",
+                "targets": [
+                  1
+                ]
+              },
+              {
+                "gate": "RY",
+                "targets": [
+                  3
+                ],
+                "angle": -0.6764723030353945
+              },
+              {
+                "gate": "Z",
+                "targets": [
+                  1
+                ]
+              }
+            ],
+            "observables": [
+              "YZXI",
+              "IXYZ",
+              "YYYY",
+              "XXXX",
+              "ZZZZ",
+              "IIZI",
+              "IIII",
+              "YZXI"
+            ],
+            "trainableGateIndices": [
+              16,
+              0,
+              12,
+              5,
+              10
+            ]
+          },
+          "errors": {
+            "state": 1.2118257228641695e-16,
+            "expectation": 2.7755575615628914e-16,
+            "jacobian": 2.3592239273284576e-16,
+            "rawNormConsistency": 0.0
+          },
+          "normSquared": 1.0000000000000002
+        },
+        {
+          "case": 4,
+          "input": {
+            "numQubits": 4,
+            "gates": [
+              {
+                "gate": "RX",
+                "targets": [
+                  0
+                ],
+                "angle": 0
+              },
+              {
+                "gate": "RY",
+                "targets": [
+                  3
+                ],
+                "angle": 0
+              }
+            ],
+            "observables": [
+              "YIII",
+              "IIIX",
+              "IIII",
+              "ZIIY"
+            ],
+            "trainableGateIndices": [
+              1,
+              0
+            ]
+          },
+          "errors": {
+            "state": 0.0,
+            "expectation": 0.0,
+            "jacobian": 2.220446049250313e-16,
+            "rawNormConsistency": 0.0
+          },
+          "normSquared": 1.0
+        },
+        {
+          "case": 5,
+          "input": {
+            "numQubits": 4,
+            "gates": [
+              {
+                "gate": "X",
+                "targets": [
+                  2
+                ]
+              }
+            ],
+            "observables": [
+              "IIZI",
+              "ZIII",
+              "IIIZ",
+              "IIII"
+            ],
+            "trainableGateIndices": []
+          },
+          "errors": {
+            "state": 0.0,
+            "expectation": 0.0,
+            "jacobian": 0.0,
+            "rawNormConsistency": 0.0
+          },
+          "normSquared": 1.0
+        }
+      ],
+      "tolerance": 2e-10,
+      "reference": "independent forward tangent-state derivatives; no parameter shift, autodiff or author test helper used",
+      "networkConnectBlocked": true,
+      "sourceHashes": {
+        ".agents/skills/pennylane-differentiable/mcp/bridge.py": "b79cf6515ee183114b60ec97d21c6e08aefb18bb582711a1ad164f56d489dfd4",
+        "src/lib/sdk_differentiable.py": "85f6c7edb0d1e930d5dfa1fb817bed5338dcd700fa1f560993486b1be76860f6",
+        "src/lib/sdk-differentiable.mjs": "fcdb7b0a4e11a0265c175c522cf657289ea5ecb6f086552419cf69f13e93143d",
+        "tests/fixtures/sdk_differentiable_science.py": "b8e1a752d2d7f794a6599c2302333ebc1ada020b0451a15977dcea0fa3908803"
+      },
+      "scientificValidation": "not_evaluated"
+    },
+    {
+      "sdk": "deepquantum",
+      "passed": true,
+      "cases": [
+        {
+          "case": 0,
+          "input": {
+            "numQubits": 4,
+            "gates": [
+              {
+                "gate": "RX",
+                "targets": [
+                  0
+                ],
+                "angle": -0.5943193244113738
+              },
+              {
+                "gate": "CX",
+                "targets": [
+                  2,
+                  1
+                ]
+              },
+              {
+                "gate": "Z",
+                "targets": [
+                  1
+                ]
+              },
+              {
+                "gate": "RX",
+                "targets": [
+                  0
+                ],
+                "angle": -0.6947713093903269
+              },
+              {
+                "gate": "CX",
+                "targets": [
+                  2,
+                  3
+                ]
+              },
+              {
+                "gate": "RZ",
+                "targets": [
+                  2
+                ],
+                "angle": 0.027011959691839227
+              },
+              {
+                "gate": "X",
+                "targets": [
+                  2
+                ]
+              },
+              {
+                "gate": "SWAP",
+                "targets": [
+                  1,
+                  3
+                ]
+              },
+              {
+                "gate": "S",
+                "targets": [
+                  0
+                ]
+              },
+              {
+                "gate": "H",
+                "targets": [
+                  1
+                ]
+              },
+              {
+                "gate": "RY",
+                "targets": [
+                  3
+                ],
+                "angle": 0.7853006986841753
+              },
+              {
+                "gate": "X",
+                "targets": [
+                  1
+                ]
+              },
+              {
+                "gate": "RX",
+                "targets": [
+                  2
+                ],
+                "angle": 1.4432094112379024
+              },
+              {
+                "gate": "SWAP",
+                "targets": [
+                  0,
+                  3
+                ]
+              },
+              {
+                "gate": "H",
+                "targets": [
+                  3
+                ]
+              },
+              {
+                "gate": "Z",
+                "targets": [
+                  0
+                ]
+              },
+              {
+                "gate": "RY",
+                "targets": [
+                  0
+                ],
+                "angle": 0.39300700306663927
+              },
+              {
+                "gate": "Y",
+                "targets": [
+                  0
+                ]
+              }
+            ],
+            "observables": [
+              "YZXI",
+              "IXYZ",
+              "YYYY",
+              "XXXX",
+              "ZZZZ",
+              "IIZI",
+              "IIII",
+              "YZXI"
+            ],
+            "trainableGateIndices": [
+              16,
+              0,
+              12,
+              5,
+              10
+            ]
+          },
+          "errors": {
+            "state": 1.7645575086469185e-08,
+            "expectation": 6.845708200309275e-08,
+            "jacobian": 6.79006508796931e-08,
+            "rawNormConsistency": 0.0
+          },
+          "normSquared": 0.9999999315429176
+        },
+        {
+          "case": 1,
+          "input": {
+            "numQubits": 4,
+            "gates": [
+              {
+                "gate": "RX",
+                "targets": [
+                  0
+                ],
+                "angle": -0.2928013171098387
+              },
+              {
+                "gate": "CX",
+                "targets": [
+                  2,
+                  0
+                ]
+              },
+              {
+                "gate": "X",
+                "targets": [
+                  0
+                ]
+              },
+              {
+                "gate": "RX",
+                "targets": [
+                  3
+                ],
+                "angle": 0.8368040226394919
+              },
+              {
+                "gate": "CX",
+                "targets": [
+                  0,
+                  1
+                ]
+              },
+              {
+                "gate": "RZ",
+                "targets": [
+                  1
+                ],
+                "angle": -1.5248935290725836
+              },
+              {
+                "gate": "Y",
+                "targets": [
+                  1
+                ]
+              },
+              {
+                "gate": "SWAP",
+                "targets": [
+                  2,
+                  0
+                ]
+              },
+              {
+                "gate": "T",
+                "targets": [
+                  3
+                ]
+              },
+              {
+                "gate": "Z",
+                "targets": [
+                  2
+                ]
+              },
+              {
+                "gate": "RY",
+                "targets": [
+                  1
+                ],
+                "angle": -0.06063854444614547
+              },
+              {
+                "gate": "S",
+                "targets": [
+                  0
+                ]
+              },
+              {
+                "gate": "RX",
+                "targets": [
+                  1
+                ],
+                "angle": 1.9299056734532383
+              },
+              {
+                "gate": "CX",
+                "targets": [
+                  0,
+                  2
+                ]
+              },
+              {
+                "gate": "T",
+                "targets": [
+                  3
+                ]
+              },
+              {
+                "gate": "Z",
+                "targets": [
+                  0
+                ]
+              },
+              {
+                "gate": "RY",
+                "targets": [
+                  1
+                ],
+                "angle": -1.6234832551639817
+              },
+              {
+                "gate": "H",
+                "targets": [
+                  3
+                ]
+              }
+            ],
+            "observables": [
+              "YZXI",
+              "IXYZ",
+              "YYYY",
+              "XXXX",
+              "ZZZZ",
+              "IIZI",
+              "IIII",
+              "YZXI"
+            ],
+            "trainableGateIndices": [
+              16,
+              0,
+              12,
+              5,
+              10
+            ]
+          },
+          "errors": {
+            "state": 1.1407425244665585e-08,
+            "expectation": 3.422854177870249e-08,
+            "jacobian": 2.5361494127018602e-08,
+            "rawNormConsistency": 0.0
+          },
+          "normSquared": 0.999999965771458
+        },
+        {
+          "case": 2,
+          "input": {
+            "numQubits": 4,
+            "gates": [
+              {
+                "gate": "RX",
+                "targets": [
+                  1
+                ],
+                "angle": -1.6428012944333217
+              },
+              {
+                "gate": "SWAP",
+                "targets": [
+                  1,
+                  3
+                ]
+              },
+              {
+                "gate": "T",
+                "targets": [
+                  2
+                ]
+              },
+              {
+                "gate": "RX",
+                "targets": [
+                  2
+                ],
+                "angle": -1.4887564051110425
+              },
+              {
+                "gate": "SWAP",
+                "targets": [
+                  1,
+                  3
+                ]
+              },
+              {
+                "gate": "RZ",
+                "targets": [
+                  0
+                ],
+                "angle": -1.0932871007055782
+              },
+              {
+                "gate": "T",
+                "targets": [
+                  3
+                ]
+              },
+              {
+                "gate": "SWAP",
+                "targets": [
+                  0,
+                  3
+                ]
+              },
+              {
+                "gate": "S",
+                "targets": [
+                  3
+                ]
+              },
+              {
+                "gate": "Z",
+                "targets": [
+                  2
+                ]
+              },
+              {
+                "gate": "RY",
+                "targets": [
+                  0
+                ],
+                "angle": -1.2536071726864781
+              },
+              {
+                "gate": "H",
+                "targets": [
+                  2
+                ]
+              },
+              {
+                "gate": "RX",
+                "targets": [
+                  0
+                ],
+                "angle": 0.6117414906507443
+              },
+              {
+                "gate": "SWAP",
+                "targets": [
+                  3,
+                  2
+                ]
+              },
+              {
+                "gate": "H",
+                "targets": [
+                  3
+                ]
+              },
+              {
+                "gate": "T",
+                "targets": [
+                  3
+                ]
+              },
+              {
+                "gate": "RY",
+                "targets": [
+                  0
+                ],
+                "angle": -1.7110246226316672
+              },
+              {
+                "gate": "Y",
+                "targets": [
+                  0
+                ]
+              }
+            ],
+            "observables": [
+              "YZXI",
+              "IXYZ",
+              "YYYY",
+              "XXXX",
+              "ZZZZ",
+              "IIZI",
+              "IIII",
+              "YZXI"
+            ],
+            "trainableGateIndices": [
+              16,
+              0,
+              12,
+              5,
+              10
+            ]
+          },
+          "errors": {
+            "state": 1.8322229520677132e-08,
+            "expectation": 6.845708222513736e-08,
+            "jacobian": 5.463761887369856e-09,
+            "rawNormConsistency": 0.0
+          },
+          "normSquared": 0.9999999315429176
+        },
+        {
+          "case": 3,
+          "input": {
+            "numQubits": 4,
+            "gates": [
+              {
+                "gate": "RX",
+                "targets": [
+                  2
+                ],
+                "angle": 1.7349720678404137
+              },
+              {
+                "gate": "CX",
+                "targets": [
+                  0,
+                  1
+                ]
+              },
+              {
+                "gate": "Z",
+                "targets": [
+                  2
+                ]
+              },
+              {
+                "gate": "RX",
+                "targets": [
+                  3
+                ],
+                "angle": 0.8099040817026069
+              },
+              {
+                "gate": "CZ",
+                "targets": [
+                  1,
+                  0
+                ]
+              },
+              {
+                "gate": "RZ",
+                "targets": [
+                  1
+                ],
+                "angle": -0.9063488164225211
+              },
+              {
+                "gate": "S",
+                "targets": [
+                  0
+                ]
+              },
+              {
+                "gate": "CX",
+                "targets": [
+                  0,
+                  2
+                ]
+              },
+              {
+                "gate": "X",
+                "targets": [
+                  1
+                ]
+              },
+              {
+                "gate": "H",
+                "targets": [
+                  0
+                ]
+              },
+              {
+                "gate": "RY",
+                "targets": [
+                  3
+                ],
+                "angle": 1.7020989376151832
+              },
+              {
+                "gate": "T",
+                "targets": [
+                  0
+                ]
+              },
+              {
+                "gate": "RX",
+                "targets": [
+                  2
+                ],
+                "angle": -1.5105077072994346
+              },
+              {
+                "gate": "CX",
+                "targets": [
+                  0,
+                  3
+                ]
+              },
+              {
+                "gate": "Z",
+                "targets": [
+                  0
+                ]
+              },
+              {
+                "gate": "T",
+                "targets": [
+                  1
+                ]
+              },
+              {
+                "gate": "RY",
+                "targets": [
+                  3
+                ],
+                "angle": -0.6764723030353945
+              },
+              {
+                "gate": "Z",
+                "targets": [
+                  1
+                ]
+              }
+            ],
+            "observables": [
+              "YZXI",
+              "IXYZ",
+              "YYYY",
+              "XXXX",
+              "ZZZZ",
+              "IIZI",
+              "IIII",
+              "YZXI"
+            ],
+            "trainableGateIndices": [
+              16,
+              0,
+              12,
+              5,
+              10
+            ]
+          },
+          "errors": {
+            "state": 1.0460540352343997e-08,
+            "expectation": 3.42285422227917e-08,
+            "jacobian": 1.814841077418805e-08,
+            "rawNormConsistency": 0.0
+          },
+          "normSquared": 0.999999965771458
+        },
+        {
+          "case": 4,
+          "input": {
+            "numQubits": 4,
+            "gates": [
+              {
+                "gate": "RX",
+                "targets": [
+                  0
+                ],
+                "angle": 0
+              },
+              {
+                "gate": "RY",
+                "targets": [
+                  3
+                ],
+                "angle": 0
+              }
+            ],
+            "observables": [
+              "YIII",
+              "IIIX",
+              "IIII",
+              "ZIIY"
+            ],
+            "trainableGateIndices": [
+              1,
+              0
+            ]
+          },
+          "errors": {
+            "state": 0.0,
+            "expectation": 0.0,
+            "jacobian": 0.0,
+            "rawNormConsistency": 0.0
+          },
+          "normSquared": 1.0
+        },
+        {
+          "case": 5,
+          "input": {
+            "numQubits": 4,
+            "gates": [
+              {
+                "gate": "X",
+                "targets": [
+                  2
+                ]
+              }
+            ],
+            "observables": [
+              "IIZI",
+              "ZIII",
+              "IIIZ",
+              "IIII"
+            ],
+            "trainableGateIndices": []
+          },
+          "errors": {
+            "state": 0.0,
+            "expectation": 0.0,
+            "jacobian": 0.0,
+            "rawNormConsistency": 0.0
+          },
+          "normSquared": 1.0
+        }
+      ],
+      "tolerance": 5e-07,
+      "reference": "independent forward tangent-state derivatives; no parameter shift, autodiff or author test helper used",
+      "networkConnectBlocked": true,
+      "sourceHashes": {
+        ".agents/skills/deepquantum-differentiable/mcp/bridge.py": "90c7d953b0f37834a441278ce647330b98382b06903d13898bf9782999605177",
+        "src/lib/sdk_differentiable.py": "85f6c7edb0d1e930d5dfa1fb817bed5338dcd700fa1f560993486b1be76860f6",
+        "src/lib/sdk-differentiable.mjs": "fcdb7b0a4e11a0265c175c522cf657289ea5ecb6f086552419cf69f13e93143d",
+        "tests/fixtures/sdk_differentiable_science.py": "b8e1a752d2d7f794a6599c2302333ebc1ada020b0451a15977dcea0fa3908803"
+      },
+      "scientificValidation": "not_evaluated"
+    },
+    {
+      "sdk": "tensorcircuit",
+      "passed": true,
+      "cases": [
+        {
+          "case": 0,
+          "input": {
+            "numQubits": 4,
+            "gates": [
+              {
+                "gate": "RX",
+                "targets": [
+                  0
+                ],
+                "angle": -0.5943193244113738
+              },
+              {
+                "gate": "CX",
+                "targets": [
+                  2,
+                  1
+                ]
+              },
+              {
+                "gate": "Z",
+                "targets": [
+                  1
+                ]
+              },
+              {
+                "gate": "RX",
+                "targets": [
+                  0
+                ],
+                "angle": -0.6947713093903269
+              },
+              {
+                "gate": "CX",
+                "targets": [
+                  2,
+                  3
+                ]
+              },
+              {
+                "gate": "RZ",
+                "targets": [
+                  2
+                ],
+                "angle": 0.027011959691839227
+              },
+              {
+                "gate": "X",
+                "targets": [
+                  2
+                ]
+              },
+              {
+                "gate": "SWAP",
+                "targets": [
+                  1,
+                  3
+                ]
+              },
+              {
+                "gate": "S",
+                "targets": [
+                  0
+                ]
+              },
+              {
+                "gate": "H",
+                "targets": [
+                  1
+                ]
+              },
+              {
+                "gate": "RY",
+                "targets": [
+                  3
+                ],
+                "angle": 0.7853006986841753
+              },
+              {
+                "gate": "X",
+                "targets": [
+                  1
+                ]
+              },
+              {
+                "gate": "RX",
+                "targets": [
+                  2
+                ],
+                "angle": 1.4432094112379024
+              },
+              {
+                "gate": "SWAP",
+                "targets": [
+                  0,
+                  3
+                ]
+              },
+              {
+                "gate": "H",
+                "targets": [
+                  3
+                ]
+              },
+              {
+                "gate": "Z",
+                "targets": [
+                  0
+                ]
+              },
+              {
+                "gate": "RY",
+                "targets": [
+                  0
+                ],
+                "angle": 0.39300700306663927
+              },
+              {
+                "gate": "Y",
+                "targets": [
+                  0
+                ]
+              }
+            ],
+            "observables": [
+              "YZXI",
+              "IXYZ",
+              "YYYY",
+              "XXXX",
+              "ZZZZ",
+              "IIZI",
+              "IIII",
+              "YZXI"
+            ],
+            "trainableGateIndices": [
+              16,
+              0,
+              12,
+              5,
+              10
+            ]
+          },
+          "errors": {
+            "state": 1.6680653908556425e-16,
+            "expectation": 6.661338147750939e-16,
+            "jacobian": 4.440892098500626e-16,
+            "rawNormConsistency": 0.0
+          },
+          "normSquared": 1.0
+        },
+        {
+          "case": 1,
+          "input": {
+            "numQubits": 4,
+            "gates": [
+              {
+                "gate": "RX",
+                "targets": [
+                  0
+                ],
+                "angle": -0.2928013171098387
+              },
+              {
+                "gate": "CX",
+                "targets": [
+                  2,
+                  0
+                ]
+              },
+              {
+                "gate": "X",
+                "targets": [
+                  0
+                ]
+              },
+              {
+                "gate": "RX",
+                "targets": [
+                  3
+                ],
+                "angle": 0.8368040226394919
+              },
+              {
+                "gate": "CX",
+                "targets": [
+                  0,
+                  1
+                ]
+              },
+              {
+                "gate": "RZ",
+                "targets": [
+                  1
+                ],
+                "angle": -1.5248935290725836
+              },
+              {
+                "gate": "Y",
+                "targets": [
+                  1
+                ]
+              },
+              {
+                "gate": "SWAP",
+                "targets": [
+                  2,
+                  0
+                ]
+              },
+              {
+                "gate": "T",
+                "targets": [
+                  3
+                ]
+              },
+              {
+                "gate": "Z",
+                "targets": [
+                  2
+                ]
+              },
+              {
+                "gate": "RY",
+                "targets": [
+                  1
+                ],
+                "angle": -0.06063854444614547
+              },
+              {
+                "gate": "S",
+                "targets": [
+                  0
+                ]
+              },
+              {
+                "gate": "RX",
+                "targets": [
+                  1
+                ],
+                "angle": 1.9299056734532383
+              },
+              {
+                "gate": "CX",
+                "targets": [
+                  0,
+                  2
+                ]
+              },
+              {
+                "gate": "T",
+                "targets": [
+                  3
+                ]
+              },
+              {
+                "gate": "Z",
+                "targets": [
+                  0
+                ]
+              },
+              {
+                "gate": "RY",
+                "targets": [
+                  1
+                ],
+                "angle": -1.6234832551639817
+              },
+              {
+                "gate": "H",
+                "targets": [
+                  3
+                ]
+              }
+            ],
+            "observables": [
+              "YZXI",
+              "IXYZ",
+              "YYYY",
+              "XXXX",
+              "ZZZZ",
+              "IIZI",
+              "IIII",
+              "YZXI"
+            ],
+            "trainableGateIndices": [
+              16,
+              0,
+              12,
+              5,
+              10
+            ]
+          },
+          "errors": {
+            "state": 1.6653345369377348e-16,
+            "expectation": 2.220446049250313e-16,
+            "jacobian": 2.220446049250313e-16,
+            "rawNormConsistency": 0.0
+          },
+          "normSquared": 1.0
+        },
+        {
+          "case": 2,
+          "input": {
+            "numQubits": 4,
+            "gates": [
+              {
+                "gate": "RX",
+                "targets": [
+                  1
+                ],
+                "angle": -1.6428012944333217
+              },
+              {
+                "gate": "SWAP",
+                "targets": [
+                  1,
+                  3
+                ]
+              },
+              {
+                "gate": "T",
+                "targets": [
+                  2
+                ]
+              },
+              {
+                "gate": "RX",
+                "targets": [
+                  2
+                ],
+                "angle": -1.4887564051110425
+              },
+              {
+                "gate": "SWAP",
+                "targets": [
+                  1,
+                  3
+                ]
+              },
+              {
+                "gate": "RZ",
+                "targets": [
+                  0
+                ],
+                "angle": -1.0932871007055782
+              },
+              {
+                "gate": "T",
+                "targets": [
+                  3
+                ]
+              },
+              {
+                "gate": "SWAP",
+                "targets": [
+                  0,
+                  3
+                ]
+              },
+              {
+                "gate": "S",
+                "targets": [
+                  3
+                ]
+              },
+              {
+                "gate": "Z",
+                "targets": [
+                  2
+                ]
+              },
+              {
+                "gate": "RY",
+                "targets": [
+                  0
+                ],
+                "angle": -1.2536071726864781
+              },
+              {
+                "gate": "H",
+                "targets": [
+                  2
+                ]
+              },
+              {
+                "gate": "RX",
+                "targets": [
+                  0
+                ],
+                "angle": 0.6117414906507443
+              },
+              {
+                "gate": "SWAP",
+                "targets": [
+                  3,
+                  2
+                ]
+              },
+              {
+                "gate": "H",
+                "targets": [
+                  3
+                ]
+              },
+              {
+                "gate": "T",
+                "targets": [
+                  3
+                ]
+              },
+              {
+                "gate": "RY",
+                "targets": [
+                  0
+                ],
+                "angle": -1.7110246226316672
+              },
+              {
+                "gate": "Y",
+                "targets": [
+                  0
+                ]
+              }
+            ],
+            "observables": [
+              "YZXI",
+              "IXYZ",
+              "YYYY",
+              "XXXX",
+              "ZZZZ",
+              "IIZI",
+              "IIII",
+              "YZXI"
+            ],
+            "trainableGateIndices": [
+              16,
+              0,
+              12,
+              5,
+              10
+            ]
+          },
+          "errors": {
+            "state": 1.1102230246251565e-16,
+            "expectation": 2.220446049250313e-16,
+            "jacobian": 1.5211973247974343e-16,
+            "rawNormConsistency": 0.0
+          },
+          "normSquared": 0.9999999999999998
+        },
+        {
+          "case": 3,
+          "input": {
+            "numQubits": 4,
+            "gates": [
+              {
+                "gate": "RX",
+                "targets": [
+                  2
+                ],
+                "angle": 1.7349720678404137
+              },
+              {
+                "gate": "CX",
+                "targets": [
+                  0,
+                  1
+                ]
+              },
+              {
+                "gate": "Z",
+                "targets": [
+                  2
+                ]
+              },
+              {
+                "gate": "RX",
+                "targets": [
+                  3
+                ],
+                "angle": 0.8099040817026069
+              },
+              {
+                "gate": "CZ",
+                "targets": [
+                  1,
+                  0
+                ]
+              },
+              {
+                "gate": "RZ",
+                "targets": [
+                  1
+                ],
+                "angle": -0.9063488164225211
+              },
+              {
+                "gate": "S",
+                "targets": [
+                  0
+                ]
+              },
+              {
+                "gate": "CX",
+                "targets": [
+                  0,
+                  2
+                ]
+              },
+              {
+                "gate": "X",
+                "targets": [
+                  1
+                ]
+              },
+              {
+                "gate": "H",
+                "targets": [
+                  0
+                ]
+              },
+              {
+                "gate": "RY",
+                "targets": [
+                  3
+                ],
+                "angle": 1.7020989376151832
+              },
+              {
+                "gate": "T",
+                "targets": [
+                  0
+                ]
+              },
+              {
+                "gate": "RX",
+                "targets": [
+                  2
+                ],
+                "angle": -1.5105077072994346
+              },
+              {
+                "gate": "CX",
+                "targets": [
+                  0,
+                  3
+                ]
+              },
+              {
+                "gate": "Z",
+                "targets": [
+                  0
+                ]
+              },
+              {
+                "gate": "T",
+                "targets": [
+                  1
+                ]
+              },
+              {
+                "gate": "RY",
+                "targets": [
+                  3
+                ],
+                "angle": -0.6764723030353945
+              },
+              {
+                "gate": "Z",
+                "targets": [
+                  1
+                ]
+              }
+            ],
+            "observables": [
+              "YZXI",
+              "IXYZ",
+              "YYYY",
+              "XXXX",
+              "ZZZZ",
+              "IIZI",
+              "IIII",
+              "YZXI"
+            ],
+            "trainableGateIndices": [
+              16,
+              0,
+              12,
+              5,
+              10
+            ]
+          },
+          "errors": {
+            "state": 2.2591401799415137e-16,
+            "expectation": 4.440892098500626e-16,
+            "jacobian": 1.5265566588595902e-16,
+            "rawNormConsistency": 0.0
+          },
+          "normSquared": 1.0
+        },
+        {
+          "case": 4,
+          "input": {
+            "numQubits": 4,
+            "gates": [
+              {
+                "gate": "RX",
+                "targets": [
+                  0
+                ],
+                "angle": 0
+              },
+              {
+                "gate": "RY",
+                "targets": [
+                  3
+                ],
+                "angle": 0
+              }
+            ],
+            "observables": [
+              "YIII",
+              "IIIX",
+              "IIII",
+              "ZIIY"
+            ],
+            "trainableGateIndices": [
+              1,
+              0
+            ]
+          },
+          "errors": {
+            "state": 0.0,
+            "expectation": 0.0,
+            "jacobian": 0.0,
+            "rawNormConsistency": 0.0
+          },
+          "normSquared": 1.0
+        },
+        {
+          "case": 5,
+          "input": {
+            "numQubits": 4,
+            "gates": [
+              {
+                "gate": "X",
+                "targets": [
+                  2
+                ]
+              }
+            ],
+            "observables": [
+              "IIZI",
+              "ZIII",
+              "IIIZ",
+              "IIII"
+            ],
+            "trainableGateIndices": []
+          },
+          "errors": {
+            "state": 0.0,
+            "expectation": 0.0,
+            "jacobian": 0.0,
+            "rawNormConsistency": 0.0
+          },
+          "normSquared": 1.0
+        }
+      ],
+      "tolerance": 2e-10,
+      "reference": "independent forward tangent-state derivatives; no parameter shift, autodiff or author test helper used",
+      "networkConnectBlocked": true,
+      "sourceHashes": {
+        ".agents/skills/tensorcircuit-differentiable/mcp/bridge.py": "05b5ae56e77cf13513f9092cd4bccdd275302a293820a498de56cd1eed77ca1a",
+        "src/lib/sdk_differentiable.py": "85f6c7edb0d1e930d5dfa1fb817bed5338dcd700fa1f560993486b1be76860f6",
+        "src/lib/sdk-differentiable.mjs": "fcdb7b0a4e11a0265c175c522cf657289ea5ecb6f086552419cf69f13e93143d",
+        "tests/fixtures/sdk_differentiable_science.py": "b8e1a752d2d7f794a6599c2302333ebc1ada020b0451a15977dcea0fa3908803"
+      },
+      "scientificValidation": "not_evaluated"
+    },
+    {
+      "sdk": "mindquantum",
+      "passed": true,
+      "cases": [
+        {
+          "case": 0,
+          "input": {
+            "numQubits": 4,
+            "gates": [
+              {
+                "gate": "RX",
+                "targets": [
+                  0
+                ],
+                "angle": -0.5943193244113738
+              },
+              {
+                "gate": "CX",
+                "targets": [
+                  2,
+                  1
+                ]
+              },
+              {
+                "gate": "Z",
+                "targets": [
+                  1
+                ]
+              },
+              {
+                "gate": "RX",
+                "targets": [
+                  0
+                ],
+                "angle": -0.6947713093903269
+              },
+              {
+                "gate": "CX",
+                "targets": [
+                  2,
+                  3
+                ]
+              },
+              {
+                "gate": "RZ",
+                "targets": [
+                  2
+                ],
+                "angle": 0.027011959691839227
+              },
+              {
+                "gate": "X",
+                "targets": [
+                  2
+                ]
+              },
+              {
+                "gate": "SWAP",
+                "targets": [
+                  1,
+                  3
+                ]
+              },
+              {
+                "gate": "S",
+                "targets": [
+                  0
+                ]
+              },
+              {
+                "gate": "H",
+                "targets": [
+                  1
+                ]
+              },
+              {
+                "gate": "RY",
+                "targets": [
+                  3
+                ],
+                "angle": 0.7853006986841753
+              },
+              {
+                "gate": "X",
+                "targets": [
+                  1
+                ]
+              },
+              {
+                "gate": "RX",
+                "targets": [
+                  2
+                ],
+                "angle": 1.4432094112379024
+              },
+              {
+                "gate": "SWAP",
+                "targets": [
+                  0,
+                  3
+                ]
+              },
+              {
+                "gate": "H",
+                "targets": [
+                  3
+                ]
+              },
+              {
+                "gate": "Z",
+                "targets": [
+                  0
+                ]
+              },
+              {
+                "gate": "RY",
+                "targets": [
+                  0
+                ],
+                "angle": 0.39300700306663927
+              },
+              {
+                "gate": "Y",
+                "targets": [
+                  0
+                ]
+              }
+            ],
+            "observables": [
+              "YZXI",
+              "IXYZ",
+              "YYYY",
+              "XXXX",
+              "ZZZZ",
+              "IIZI",
+              "IIII",
+              "YZXI"
+            ],
+            "trainableGateIndices": [
+              16,
+              0,
+              12,
+              5,
+              10
+            ]
+          },
+          "errors": {
+            "state": 2.7771969332047215e-16,
+            "expectation": 1.1102230246251565e-15,
+            "jacobian": 9.992007221626409e-16,
+            "rawNormConsistency": 0.0
+          },
+          "normSquared": 1.0000000000000004
+        },
+        {
+          "case": 1,
+          "input": {
+            "numQubits": 4,
+            "gates": [
+              {
+                "gate": "RX",
+                "targets": [
+                  0
+                ],
+                "angle": -0.2928013171098387
+              },
+              {
+                "gate": "CX",
+                "targets": [
+                  2,
+                  0
+                ]
+              },
+              {
+                "gate": "X",
+                "targets": [
+                  0
+                ]
+              },
+              {
+                "gate": "RX",
+                "targets": [
+                  3
+                ],
+                "angle": 0.8368040226394919
+              },
+              {
+                "gate": "CX",
+                "targets": [
+                  0,
+                  1
+                ]
+              },
+              {
+                "gate": "RZ",
+                "targets": [
+                  1
+                ],
+                "angle": -1.5248935290725836
+              },
+              {
+                "gate": "Y",
+                "targets": [
+                  1
+                ]
+              },
+              {
+                "gate": "SWAP",
+                "targets": [
+                  2,
+                  0
+                ]
+              },
+              {
+                "gate": "T",
+                "targets": [
+                  3
+                ]
+              },
+              {
+                "gate": "Z",
+                "targets": [
+                  2
+                ]
+              },
+              {
+                "gate": "RY",
+                "targets": [
+                  1
+                ],
+                "angle": -0.06063854444614547
+              },
+              {
+                "gate": "S",
+                "targets": [
+                  0
+                ]
+              },
+              {
+                "gate": "RX",
+                "targets": [
+                  1
+                ],
+                "angle": 1.9299056734532383
+              },
+              {
+                "gate": "CX",
+                "targets": [
+                  0,
+                  2
+                ]
+              },
+              {
+                "gate": "T",
+                "targets": [
+                  3
+                ]
+              },
+              {
+                "gate": "Z",
+                "targets": [
+                  0
+                ]
+              },
+              {
+                "gate": "RY",
+                "targets": [
+                  1
+                ],
+                "angle": -1.6234832551639817
+              },
+              {
+                "gate": "H",
+                "targets": [
+                  3
+                ]
+              }
+            ],
+            "observables": [
+              "YZXI",
+              "IXYZ",
+              "YYYY",
+              "XXXX",
+              "ZZZZ",
+              "IIZI",
+              "IIII",
+              "YZXI"
+            ],
+            "trainableGateIndices": [
+              16,
+              0,
+              12,
+              5,
+              10
+            ]
+          },
+          "errors": {
+            "state": 1.3092278833360675e-16,
+            "expectation": 1.1102230246251565e-16,
+            "jacobian": 2.220446049250313e-16,
+            "rawNormConsistency": 0.0
+          },
+          "normSquared": 1.0
+        },
+        {
+          "case": 2,
+          "input": {
+            "numQubits": 4,
+            "gates": [
+              {
+                "gate": "RX",
+                "targets": [
+                  1
+                ],
+                "angle": -1.6428012944333217
+              },
+              {
+                "gate": "SWAP",
+                "targets": [
+                  1,
+                  3
+                ]
+              },
+              {
+                "gate": "T",
+                "targets": [
+                  2
+                ]
+              },
+              {
+                "gate": "RX",
+                "targets": [
+                  2
+                ],
+                "angle": -1.4887564051110425
+              },
+              {
+                "gate": "SWAP",
+                "targets": [
+                  1,
+                  3
+                ]
+              },
+              {
+                "gate": "RZ",
+                "targets": [
+                  0
+                ],
+                "angle": -1.0932871007055782
+              },
+              {
+                "gate": "T",
+                "targets": [
+                  3
+                ]
+              },
+              {
+                "gate": "SWAP",
+                "targets": [
+                  0,
+                  3
+                ]
+              },
+              {
+                "gate": "S",
+                "targets": [
+                  3
+                ]
+              },
+              {
+                "gate": "Z",
+                "targets": [
+                  2
+                ]
+              },
+              {
+                "gate": "RY",
+                "targets": [
+                  0
+                ],
+                "angle": -1.2536071726864781
+              },
+              {
+                "gate": "H",
+                "targets": [
+                  2
+                ]
+              },
+              {
+                "gate": "RX",
+                "targets": [
+                  0
+                ],
+                "angle": 0.6117414906507443
+              },
+              {
+                "gate": "SWAP",
+                "targets": [
+                  3,
+                  2
+                ]
+              },
+              {
+                "gate": "H",
+                "targets": [
+                  3
+                ]
+              },
+              {
+                "gate": "T",
+                "targets": [
+                  3
+                ]
+              },
+              {
+                "gate": "RY",
+                "targets": [
+                  0
+                ],
+                "angle": -1.7110246226316672
+              },
+              {
+                "gate": "Y",
+                "targets": [
+                  0
+                ]
+              }
+            ],
+            "observables": [
+              "YZXI",
+              "IXYZ",
+              "YYYY",
+              "XXXX",
+              "ZZZZ",
+              "IIZI",
+              "IIII",
+              "YZXI"
+            ],
+            "trainableGateIndices": [
+              16,
+              0,
+              12,
+              5,
+              10
+            ]
+          },
+          "errors": {
+            "state": 1.2412670766236366e-16,
+            "expectation": 2.220446049250313e-16,
+            "jacobian": 3.608224830031759e-16,
+            "rawNormConsistency": 0.0
+          },
+          "normSquared": 1.0000000000000002
+        },
+        {
+          "case": 3,
+          "input": {
+            "numQubits": 4,
+            "gates": [
+              {
+                "gate": "RX",
+                "targets": [
+                  2
+                ],
+                "angle": 1.7349720678404137
+              },
+              {
+                "gate": "CX",
+                "targets": [
+                  0,
+                  1
+                ]
+              },
+              {
+                "gate": "Z",
+                "targets": [
+                  2
+                ]
+              },
+              {
+                "gate": "RX",
+                "targets": [
+                  3
+                ],
+                "angle": 0.8099040817026069
+              },
+              {
+                "gate": "CZ",
+                "targets": [
+                  1,
+                  0
+                ]
+              },
+              {
+                "gate": "RZ",
+                "targets": [
+                  1
+                ],
+                "angle": -0.9063488164225211
+              },
+              {
+                "gate": "S",
+                "targets": [
+                  0
+                ]
+              },
+              {
+                "gate": "CX",
+                "targets": [
+                  0,
+                  2
+                ]
+              },
+              {
+                "gate": "X",
+                "targets": [
+                  1
+                ]
+              },
+              {
+                "gate": "H",
+                "targets": [
+                  0
+                ]
+              },
+              {
+                "gate": "RY",
+                "targets": [
+                  3
+                ],
+                "angle": 1.7020989376151832
+              },
+              {
+                "gate": "T",
+                "targets": [
+                  0
+                ]
+              },
+              {
+                "gate": "RX",
+                "targets": [
+                  2
+                ],
+                "angle": -1.5105077072994346
+              },
+              {
+                "gate": "CX",
+                "targets": [
+                  0,
+                  3
+                ]
+              },
+              {
+                "gate": "Z",
+                "targets": [
+                  0
+                ]
+              },
+              {
+                "gate": "T",
+                "targets": [
+                  1
+                ]
+              },
+              {
+                "gate": "RY",
+                "targets": [
+                  3
+                ],
+                "angle": -0.6764723030353945
+              },
+              {
+                "gate": "Z",
+                "targets": [
+                  1
+                ]
+              }
+            ],
+            "observables": [
+              "YZXI",
+              "IXYZ",
+              "YYYY",
+              "XXXX",
+              "ZZZZ",
+              "IIZI",
+              "IIII",
+              "YZXI"
+            ],
+            "trainableGateIndices": [
+              16,
+              0,
+              12,
+              5,
+              10
+            ]
+          },
+          "errors": {
+            "state": 2.1544120232613906e-16,
+            "expectation": 5.551115123125783e-16,
+            "jacobian": 2.220446049250313e-16,
+            "rawNormConsistency": 0.0
+          },
+          "normSquared": 0.9999999999999998
+        },
+        {
+          "case": 4,
+          "input": {
+            "numQubits": 4,
+            "gates": [
+              {
+                "gate": "RX",
+                "targets": [
+                  0
+                ],
+                "angle": 0
+              },
+              {
+                "gate": "RY",
+                "targets": [
+                  3
+                ],
+                "angle": 0
+              }
+            ],
+            "observables": [
+              "YIII",
+              "IIIX",
+              "IIII",
+              "ZIIY"
+            ],
+            "trainableGateIndices": [
+              1,
+              0
+            ]
+          },
+          "errors": {
+            "state": 0.0,
+            "expectation": 0.0,
+            "jacobian": 0.0,
+            "rawNormConsistency": 0.0
+          },
+          "normSquared": 1.0
+        },
+        {
+          "case": 5,
+          "input": {
+            "numQubits": 4,
+            "gates": [
+              {
+                "gate": "X",
+                "targets": [
+                  2
+                ]
+              }
+            ],
+            "observables": [
+              "IIZI",
+              "ZIII",
+              "IIIZ",
+              "IIII"
+            ],
+            "trainableGateIndices": []
+          },
+          "errors": {
+            "state": 0.0,
+            "expectation": 0.0,
+            "jacobian": 0.0,
+            "rawNormConsistency": 0.0
+          },
+          "normSquared": 1.0
+        }
+      ],
+      "tolerance": 2e-10,
+      "reference": "independent forward tangent-state derivatives; no parameter shift, autodiff or author test helper used",
+      "networkConnectBlocked": true,
+      "sourceHashes": {
+        ".agents/skills/mindquantum-differentiable/mcp/bridge.py": "3e26fc51c739de897661dcd044d66c78b3260595372e8af844f373c9ead0931f",
+        "src/lib/sdk_differentiable.py": "85f6c7edb0d1e930d5dfa1fb817bed5338dcd700fa1f560993486b1be76860f6",
+        "src/lib/sdk-differentiable.mjs": "fcdb7b0a4e11a0265c175c522cf657289ea5ecb6f086552419cf69f13e93143d",
+        "tests/fixtures/sdk_differentiable_science.py": "b8e1a752d2d7f794a6599c2302333ebc1ada020b0451a15977dcea0fa3908803"
+      },
+      "scientificValidation": "not_evaluated"
+    }
+  ],
+  "replayCommand": "<prepared SDK Python> -B tests/fixtures/sdk_differentiable_independent.py <pennylane|deepquantum|tensorcircuit|mindquantum> --project-root <checkout>"
+}

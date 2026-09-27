@@ -143,6 +143,7 @@ Skill 与 Tool 在概念和发行版 policy 中都相互独立：Skill-only、To
 - [量子学习通 / OpenMAIC](integrations/OPENMAIC.md)：完整原版子应用、Pro 工作台、持久存储与 Harness 当前模型连接；含实际验收和未通过项。
 - [FatQat 量子实验](integrations/FATQAT.md)：Skill、两个 MCP 计算 Tool、固定版本、实验边界与真实数值验证。
 - [Bloqade Analog 中性原子动力学](integrations/BLOQADE_ANALOG.md)：二维阵列、全局时变脉冲、本地 Python 仿真、单位和验证范围。
+- [国内外厂商 SDK](integrations/VENDOR_SDKS.md)：17 个固定 SDK 能力包、19 个 Tool、安装与许可，以及本地和远程验证边界。
 - [论文方法计算接入](integrations/PAPER_BACKED_TOOLS.md)：SQD、TJM、LSD、RandomMeas、Flow-VQE 和 TeNPy 的固定实现、六个 Tool、安装与科学范围。
 - [Mitiq 误差缓解](integrations/MITIQ.md)：ZNE、REM、PEC、CDR 的本地实验、相同 shots 预算、统计和 GPL 发行边界。
 - [Unitary 生态计算与数据](integrations/UNITARY_ECOSYSTEM.md)：Dynamiqs、Clifft、OQuPy、Deltakit 的计算接口，以及 Metriq 公开数据快照查询。

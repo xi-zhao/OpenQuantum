@@ -56,3 +56,18 @@ VQD 两个实现的输入、优化过程与结果合同不同，只合并选择�
 无效范围使配置明确失败，不静默开放全部工具。精确名单见
 [Host Plugin](../../runtime/openquantum/agent-presets/openquantum/optional-tool-profiles.mjs)，
 它使用 Harness 原生 scoped restriction；原副作用及凭据规则不变。
+
+## 厂商 SDK 与既有入口
+
+- 用户给出结构化线路并需要 Pauli 期望及梯度时，在 PennyLane、DeepQuantum、TensorCircuit、
+  MindQuantum 中按指定 SDK 选择一个入口；需要修改算法代码或优化循环时继续使用既有算法示例。
+- 电路优化选择 TKET 或既有 PyZX / Compact，比较前统一门集、线序与全局相位。
+  pyQuil、SpinQit、QuTrunk 返回各自 SDK 的本地电路结果，不代表真实设备数据。
+- Ocean 用于 BQM/SPIN 的穷举或经典模拟退火；Kaiwu Community 用于符号罚项与 Ising 建模；
+  QPanda QUBO 保留本源算法路径。不同能量约定先换算再比较。
+- Perceval 输入光学模式和 Fock 态；IQM 与 Alice & Bob 提供具体设备/噪声模型。
+  中性原子动力学按 Bloqade、Pulser 或 QoolQit 所需表达选择，明确角频率、距离和时间单位。
+- IonQ 本地程序准备不需要账户；已有硬件连接继续承担独立授权的云任务。
+  Superstaq 的本地序列化和远程编译是两个不同 Tool，只有远程路径传输电路。
+
+全部固定版本、准备与许可边界见[厂商 SDK](VENDOR_SDKS.md)。

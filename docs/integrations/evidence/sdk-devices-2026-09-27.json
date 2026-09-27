@@ -1,0 +1,1529 @@
+{
+  "schemaVersion": "1.0",
+  "verifiedAt": "2026-09-27T12:34:10.325468+00:00",
+  "platform": {
+    "system": "Darwin",
+    "release": "27.0.0",
+    "machine": "arm64"
+  },
+  "scope": "Five real SDK adapters for local photonic probabilities, device-target compilation and sampling, cat-qubit circuit models, physical and dimensionless Rydberg simulation. No cloud/QPU execution.",
+  "scientificValidation": "not_evaluated",
+  "checks": [
+    {
+      "command": "node scripts/setup-paper-tools.mjs perceval-photonics iqm-circuit-workbench alicebob-cat-circuits pulser-dynamics qoolqit-workbench",
+      "result": "five frozen environments prepared; Python 3.12"
+    },
+    {
+      "command": "node --test tests/sdk-devices-contracts.test.mjs",
+      "passed": 11,
+      "failed": 0
+    },
+    {
+      "command": "OPENQUANTUM_REAL_SDK_DEVICES=1 node --test tests/sdk-devices-live.test.mjs",
+      "passed": 10,
+      "failed": 0,
+      "skipped": 0,
+      "numericalTests": 15,
+      "network": "socket connections blocked in numerical tests"
+    },
+    {
+      "check": "ESLint new JavaScript and Python AST compilation",
+      "result": "passed"
+    }
+  ],
+  "sharedSourceHashes": {
+    "src/lib/sdk-devices.mjs": "5b961e87a8c54670b544f4af5a18e44a9ea325e2ea2b7f0430643e5e6000a644",
+    "src/lib/sdk_device_models.py": "42fcea08153c188c16a310669c2cc625efa9d0b1559117f51e04680c3d9314dc",
+    "tests/fixtures/sdk-devices.mjs": "92d7c5574adc3267343f806c9f4ba4a052d59fb69ef598dbb83d181a0735ebb3",
+    "tests/fixtures/sdk_devices_science.py": "76feade38114e32c5d99f861fe27b0e8cbf1223999aeb0d7135219d684c83253",
+    "tests/sdk-devices-contracts.test.mjs": "66d6b313eda13a78aa9cc47e41bcf0e5564129c1013ef8f3c227032e2e9e19c5",
+    "tests/sdk-devices-live.test.mjs": "a5e28830375a2dacb43867fc4db7cb9931136cff874e06b4c3c9c77beeef38f3"
+  },
+  "independentReview": {
+    "path": "docs/integrations/evidence/sdk-devices-independent-review-2026-09-27.json",
+    "sha256": "65ebdd8ac1326d225372b082eba7fc51df77a0111fa8caac06d9c63619a00867",
+    "status": "pass_after_fixes"
+  },
+  "limitations": [
+    "QoolQit is opt-in under PASQAL MIT-derived terms including a patent grant limited to internal research or academic use; it is not labeled standard MIT.",
+    "Perceval MIT includes an Exqalibur Python-bindings combination exception. The adapter computes lossless ideal Fock probabilities without sampling, loss, postselection or distinguishability.",
+    "IQM static fake-device topology/noise models are not live hardware calibration. The pinned fake backend ignores seed_simulator, so Aer is called explicitly with the IQM noise model and seed.",
+    "Alice & Bob models gate-level encoded cat-qubit noise, not a bosonic master equation. Qiskit 1.x is isolated; upstream unsupported macOS CRY/RCCX/RCCCX are excluded.",
+    "Pulser and QoolQit retain actual 1 ns sampling and rounding. Continuous-ideal constant-drive errors include grid endpoints, not just ODE tolerances; maximum observed asymmetric 3-atom amplitude difference was 8.878e-4.",
+    "Pulser phase convention differs from Bloqade by a phase sign and their fixed Rb C6 constants differ. These adapters return the actual SDK model and do not normalize or clip states.",
+    "The deprecated but still public pinned QutipEmulator API is used because it exposes solver tolerances/raw states; upgrading it requires renewed interface verification.",
+    "Only this macOS arm64 host was executed. Passing numerical regressions, protocol tests or independent code review is not final scientific Acceptance."
+  ],
+  "capabilities": [
+    {
+      "id": "perceval-photonics",
+      "python": "3.12.13 (main, Mar 20 2026, 00:20:20) [Clang 22.1.1 ]",
+      "packages": {
+        "perceval-quandela": "1.3.0",
+        "exqalibur": "1.4.2"
+      },
+      "sourceHashes": {
+        ".agents/skills/perceval-photonics/uv.lock": "1f1d7ae4e3469f7b78a307bcc675cc47c04b33c9ca37e5da13349471de323c7a",
+        ".agents/skills/perceval-photonics/pyproject.toml": "977e59e634621c09ee9ae4e12644c4dba8c7fbc6877516dbb2a7557bff483571",
+        ".agents/skills/perceval-photonics/SKILL.md": "a176a817205c101201df5cf638c445edb1cedd4f37f43f08316adfa61446c77e",
+        ".agents/skills/perceval-photonics/test/science_test.py": "90b00f949d4b012fa089f751b21c447f031fff91de64d076f3b1c552faa24dfa",
+        ".agents/skills/perceval-photonics/references/UPSTREAM.md": "7aed646c110add7a07ac85b016ff44e8d7e7114213d738ffbb32d8887052b2cd",
+        ".agents/skills/perceval-photonics/mcp/bridge.py": "d946147c0289b3d4196ba83ff68c3bdb2684f6b3bbedf4e31c3671de11ff499f",
+        ".agents/skills/perceval-photonics/mcp/contracts.mjs": "b2fcabf52f57bd4a13d5fd5dd80884fb1fd68d34e743b1c5aaa069700e0a6564",
+        ".agents/skills/perceval-photonics/mcp/server.mjs": "8c52508eef9f5b07e02b2291f4d8604d230bc37c0dcb31ffb00f3168a86ceddf"
+      },
+      "numericalRegression": {
+        "capability": "perceval-photonics",
+        "passed": true,
+        "testsRun": 3,
+        "network": "socket connections disabled",
+        "scientificValidation": "not_evaluated",
+        "cases": [
+          {
+            "case": "two-photon HOM",
+            "maxProbabilityError": 1.1102230246251565e-16,
+            "totalProbability": 1.0000000000000002
+          },
+          {
+            "case": "nonadjacent modes, phase and independent permanent",
+            "maxProbabilityError": 2.7755575615628914e-17,
+            "unitaryError": 1.5700924586837752e-16,
+            "outputStates": 10
+          },
+          {
+            "case": "vacuum",
+            "totalProbability": 1.0
+          }
+        ]
+      },
+      "mcpCalls": [
+        {
+          "label": "fixture",
+          "input": {
+            "inputOccupation": [
+              1,
+              1
+            ],
+            "operations": [
+              {
+                "gate": "BS",
+                "modes": [
+                  0,
+                  1
+                ],
+                "angleRad": 1.5707963267948966
+              }
+            ],
+            "execution": {}
+          },
+          "inputSha256": "29405295328d2553b2057c984ee7462e47b39b58ca9059491fe9e5b4530469e2",
+          "dependencyLockSha256": "1f1d7ae4e3469f7b78a307bcc675cc47c04b33c9ca37e5da13349471de323c7a",
+          "result": {
+            "modeCount": 2,
+            "photonCount": 2,
+            "totalProbability": 1.0000000000000002,
+            "outcomes": [
+              {
+                "occupation": [
+                  0,
+                  2
+                ],
+                "probability": 0.5000000000000001
+              },
+              {
+                "occupation": [
+                  1,
+                  1
+                ],
+                "probability": 4.930380657631324e-32
+              },
+              {
+                "occupation": [
+                  2,
+                  0
+                ],
+                "probability": 0.5000000000000001
+              }
+            ],
+            "unitary": [
+              [
+                [
+                  0.7071067811865476,
+                  0
+                ],
+                [
+                  0.7071067811865475,
+                  0
+                ]
+              ],
+              [
+                [
+                  0.7071067811865475,
+                  0
+                ],
+                [
+                  -0.7071067811865476,
+                  0
+                ]
+              ]
+            ],
+            "backend": "Perceval SLOSBackend",
+            "modeOrder": "occupation[i] and unitary row/column i refer to input mode i"
+          },
+          "artifactSha256": "7c6e94b2f772cba79fb87b82e149e22f45a66754433bef54c281c7d6dcf53c6e"
+        },
+        {
+          "label": "defaults",
+          "input": {
+            "inputOccupation": [
+              1,
+              1
+            ],
+            "operations": [
+              {
+                "gate": "BS",
+                "modes": [
+                  0,
+                  1
+                ],
+                "angleRad": 1.5707963267948966
+              }
+            ],
+            "execution": {}
+          },
+          "inputSha256": "29405295328d2553b2057c984ee7462e47b39b58ca9059491fe9e5b4530469e2",
+          "dependencyLockSha256": "1f1d7ae4e3469f7b78a307bcc675cc47c04b33c9ca37e5da13349471de323c7a",
+          "result": {
+            "modeCount": 2,
+            "photonCount": 2,
+            "totalProbability": 1.0000000000000002,
+            "outcomes": [
+              {
+                "occupation": [
+                  0,
+                  2
+                ],
+                "probability": 0.5000000000000001
+              },
+              {
+                "occupation": [
+                  1,
+                  1
+                ],
+                "probability": 4.930380657631324e-32
+              },
+              {
+                "occupation": [
+                  2,
+                  0
+                ],
+                "probability": 0.5000000000000001
+              }
+            ],
+            "unitary": [
+              [
+                [
+                  0.7071067811865476,
+                  0
+                ],
+                [
+                  0.7071067811865475,
+                  0
+                ]
+              ],
+              [
+                [
+                  0.7071067811865475,
+                  0
+                ],
+                [
+                  -0.7071067811865476,
+                  0
+                ]
+              ]
+            ],
+            "backend": "Perceval SLOSBackend",
+            "modeOrder": "occupation[i] and unitary row/column i refer to input mode i"
+          },
+          "artifactSha256": "7c6e94b2f772cba79fb87b82e149e22f45a66754433bef54c281c7d6dcf53c6e"
+        }
+      ]
+    },
+    {
+      "id": "iqm-circuit-workbench",
+      "python": "3.12.13 (main, Mar 20 2026, 00:20:20) [Clang 22.1.1 ]",
+      "packages": {
+        "iqm-client": "35.0.3",
+        "qiskit": "2.1.2",
+        "qiskit-aer": "0.17.2"
+      },
+      "sourceHashes": {
+        ".agents/skills/iqm-circuit-workbench/uv.lock": "2e57c08430e1f2d92683393ed4bdeb4076ef1ec0f176ec85d2510e8ae627a922",
+        ".agents/skills/iqm-circuit-workbench/pyproject.toml": "9a531c6809f6eec1cb576cd9709c37acd23b4c7415dd198b3e23472e7b0804b7",
+        ".agents/skills/iqm-circuit-workbench/SKILL.md": "40f97bc97b4fbfaa374ce80408a1b51b3028452df13c9e12a5b1a1bfe99a4ac0",
+        ".agents/skills/iqm-circuit-workbench/test/science_test.py": "1d1a2379c924281750599f843be3a8522c92c1660ecc1c07a33a4724037432f4",
+        ".agents/skills/iqm-circuit-workbench/references/UPSTREAM.md": "cad5260da0e785cef7b93c94460e83b091892499600b1aefae793458f72569f2",
+        ".agents/skills/iqm-circuit-workbench/mcp/bridge.py": "37035e095a4139b12269030ee9bb5e85334a88496f54073c4ece8b6fa2f2f31a",
+        ".agents/skills/iqm-circuit-workbench/mcp/contracts.mjs": "21f7e7d1a0b19c084436a5713d629489d3b00fffbc30d5a8cd1170a1a291df15",
+        ".agents/skills/iqm-circuit-workbench/mcp/server.mjs": "3ed546b63bea1ca5f7d480d5fc35c94f61f7d71d521f4ded0be426bae54fea89"
+      },
+      "numericalRegression": {
+        "capability": "iqm-circuit-workbench",
+        "passed": true,
+        "testsRun": 3,
+        "network": "socket connections disabled",
+        "scientificValidation": "not_evaluated",
+        "cases": [
+          {
+            "case": "asymmetric logical bit order",
+            "measuredProbabilities": {
+              "10": 0.8408203125,
+              "11": 0.1591796875
+            },
+            "analyticalP11": 0.1552507835241265,
+            "samplingError": 0.0039289039758735045
+          },
+          {
+            "case": "ideal Bell and reproducible seed",
+            "counts": {
+              "00": 2026,
+              "11": 2070
+            },
+            "deviation": 0.00537109375,
+            "compiledGateCounts": [
+              {
+                "gate": "cz",
+                "count": 1
+              },
+              {
+                "gate": "measure",
+                "count": 2
+              },
+              {
+                "gate": "r",
+                "count": 3
+              }
+            ]
+          },
+          {
+            "case": "actual IQM noise profile and capacity rejection",
+            "bellLeakageCounts": 364,
+            "shots": 4096,
+            "physicalQubits": 5
+          }
+        ]
+      },
+      "mcpCalls": [
+        {
+          "label": "fixture",
+          "input": {
+            "simulationMode": "ideal",
+            "shots": 512,
+            "numQubits": 2,
+            "backend": "adonis",
+            "operations": [
+              {
+                "gate": "h",
+                "qubits": [
+                  0
+                ],
+                "angleRad": 0
+              },
+              {
+                "gate": "cx",
+                "qubits": [
+                  0,
+                  1
+                ],
+                "angleRad": 0
+              }
+            ],
+            "seed": 7,
+            "optimizationLevel": 1,
+            "execution": {}
+          },
+          "inputSha256": "7223740cbe53d8136880be1e138c184d07f20b83a11ab25c8238716e6134b063",
+          "dependencyLockSha256": "2e57c08430e1f2d92683393ed4bdeb4076ef1ec0f176ec85d2510e8ae627a922",
+          "result": {
+            "numQubits": 2,
+            "shots": 512,
+            "counts": [
+              {
+                "bits": "00",
+                "count": 260
+              },
+              {
+                "bits": "11",
+                "count": 252
+              }
+            ],
+            "nativeGateNames": [
+              "cz",
+              "delay",
+              "id",
+              "measure",
+              "r"
+            ],
+            "compiledGateCounts": [
+              {
+                "gate": "cz",
+                "count": 1
+              },
+              {
+                "gate": "measure",
+                "count": 2
+              },
+              {
+                "gate": "r",
+                "count": 3
+              }
+            ],
+            "bitOrder": "leftmost bit is input qubit 0",
+            "backendName": "IQMFakeAdonisBackend",
+            "deviceQubits": 5,
+            "couplingMap": [
+              [
+                0,
+                2
+              ],
+              [
+                1,
+                2
+              ],
+              [
+                2,
+                3
+              ],
+              [
+                2,
+                4
+              ]
+            ],
+            "simulationMode": "ideal",
+            "sdkCircuitValidation": "passed",
+            "simulator": "Qiskit AerSimulator"
+          },
+          "artifactSha256": "9aaf86c2fbb3612b57a0a815525b178fa7fe69d7a4df6ae5afb3bf15014f3808"
+        },
+        {
+          "label": "defaults",
+          "input": {
+            "numQubits": 2,
+            "backend": "adonis",
+            "operations": [
+              {
+                "gate": "h",
+                "qubits": [
+                  0
+                ],
+                "angleRad": 0
+              },
+              {
+                "gate": "cx",
+                "qubits": [
+                  0,
+                  1
+                ],
+                "angleRad": 0
+              }
+            ],
+            "shots": 1024,
+            "seed": 7,
+            "simulationMode": "device-noise",
+            "optimizationLevel": 1,
+            "execution": {}
+          },
+          "inputSha256": "749b615eb7272a807980319a42dc3a6adc2ff4a94332681e90a7db53913cf0c7",
+          "dependencyLockSha256": "2e57c08430e1f2d92683393ed4bdeb4076ef1ec0f176ec85d2510e8ae627a922",
+          "result": {
+            "numQubits": 2,
+            "shots": 1024,
+            "counts": [
+              {
+                "bits": "00",
+                "count": 482
+              },
+              {
+                "bits": "01",
+                "count": 54
+              },
+              {
+                "bits": "10",
+                "count": 57
+              },
+              {
+                "bits": "11",
+                "count": 431
+              }
+            ],
+            "nativeGateNames": [
+              "cz",
+              "delay",
+              "id",
+              "measure",
+              "r"
+            ],
+            "compiledGateCounts": [
+              {
+                "gate": "cz",
+                "count": 1
+              },
+              {
+                "gate": "measure",
+                "count": 2
+              },
+              {
+                "gate": "r",
+                "count": 3
+              }
+            ],
+            "bitOrder": "leftmost bit is input qubit 0",
+            "backendName": "IQMFakeAdonisBackend",
+            "deviceQubits": 5,
+            "couplingMap": [
+              [
+                0,
+                2
+              ],
+              [
+                1,
+                2
+              ],
+              [
+                2,
+                3
+              ],
+              [
+                2,
+                4
+              ]
+            ],
+            "simulationMode": "device-noise",
+            "sdkCircuitValidation": "passed",
+            "simulator": "Qiskit AerSimulator"
+          },
+          "artifactSha256": "5a3beb12a262e23140b853c4e74e5bfe1dc7ab0a7258f4de9d818d906be0f33a"
+        }
+      ]
+    },
+    {
+      "id": "alicebob-cat-circuits",
+      "python": "3.12.13 (main, Mar 20 2026, 00:20:20) [Clang 22.1.1 ]",
+      "packages": {
+        "qiskit-alice-bob-provider": "1.3.0",
+        "qiskit": "1.4.6",
+        "qiskit-aer": "0.17.2"
+      },
+      "sourceHashes": {
+        ".agents/skills/alicebob-cat-circuits/uv.lock": "09dc45fe507beea933e5e1d89927c44cf74b8f63e61763d3ec2ff701c16f5942",
+        ".agents/skills/alicebob-cat-circuits/pyproject.toml": "9cc7e2c6532be02e419300c90d573c3779cb60e4928d52ea60940796f157ba90",
+        ".agents/skills/alicebob-cat-circuits/SKILL.md": "4fea51b359ec62d4826886b83df856a14f6ee7eb6faf18cd169062e91db8b5e9",
+        ".agents/skills/alicebob-cat-circuits/test/science_test.py": "0cc07c13bf8fcce8bcd13af8957cd1033ebffe2c9229aced86b43ed82d71a1f5",
+        ".agents/skills/alicebob-cat-circuits/references/UPSTREAM.md": "64ca3784da9baf591b743249b14459f845c1993e8ceebe406499878c4a0d62e5",
+        ".agents/skills/alicebob-cat-circuits/mcp/bridge.py": "139f89d45469ded06a7a7a0163ab965f3805365e47433509632b8ed1d116406b",
+        ".agents/skills/alicebob-cat-circuits/mcp/contracts.mjs": "9bf957e6b50593100a319a7f48f2c2d7a8656213883e86504213a5216e9b12f1",
+        ".agents/skills/alicebob-cat-circuits/mcp/server.mjs": "cf89abe0e8723cfd7512a11717ef538eb288f4b267b7758170b5269a5d6cad7b"
+      },
+      "numericalRegression": {
+        "capability": "alicebob-cat-circuits",
+        "passed": true,
+        "testsRun": 3,
+        "network": "socket connections disabled",
+        "scientificValidation": "not_evaluated",
+        "cases": [
+          {
+            "case": "logical noiseless Bell and seed replay",
+            "counts": {
+              "00": 1993,
+              "11": 2103
+            }
+          },
+          {
+            "case": "logical phase interference and asymmetric order",
+            "samplingError": 0.002723312468273731,
+            "counts": {
+              "01": 3485,
+              "11": 611
+            },
+            "analyticalP01": 0.8535533905932737
+          },
+          {
+            "case": "real SDK cat models and invalid noise parameter",
+            "results": [
+              {
+                "model": "physical",
+                "counts": {
+                  "10": 512
+                },
+                "parameters": {
+                  "kappa1Hz": 100,
+                  "kappa2Hz": 10000000,
+                  "averagePhotons": 16,
+                  "distance": 0
+                }
+              },
+              {
+                "model": "logical",
+                "counts": {
+                  "10": 512
+                },
+                "parameters": {
+                  "kappa1Hz": 100,
+                  "kappa2Hz": 10000000,
+                  "averagePhotons": 19,
+                  "distance": 15
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "mcpCalls": [
+        {
+          "label": "fixture",
+          "input": {
+            "model": "logical-noiseless",
+            "shots": 512,
+            "numQubits": 2,
+            "initialStates": [
+              "+",
+              "0"
+            ],
+            "operations": [
+              {
+                "gate": "cx",
+                "qubits": [
+                  0,
+                  1
+                ],
+                "angleRad": 0
+              }
+            ],
+            "modelParameters": {},
+            "seed": 7,
+            "execution": {}
+          },
+          "inputSha256": "e0cd4d4f29658758c5cc26442ef2b2c7e69a147f519d3d55ff1cafca4ed2c36d",
+          "dependencyLockSha256": "09dc45fe507beea933e5e1d89927c44cf74b8f63e61763d3ec2ff701c16f5942",
+          "result": {
+            "numQubits": 2,
+            "shots": 512,
+            "counts": [
+              {
+                "bits": "00",
+                "count": 248
+              },
+              {
+                "bits": "11",
+                "count": 264
+              }
+            ],
+            "nativeGateNames": [
+              "ccx",
+              "cx",
+              "delay",
+              "for_loop",
+              "h",
+              "if_else",
+              "initialize",
+              "measure",
+              "measure_x",
+              "s",
+              "sdg",
+              "switch_case",
+              "t",
+              "tdg",
+              "while_loop",
+              "x",
+              "z"
+            ],
+            "compiledGateCounts": [
+              {
+                "gate": "cx",
+                "count": 1
+              },
+              {
+                "gate": "initialize",
+                "count": 2
+              },
+              {
+                "gate": "measure",
+                "count": 2
+              }
+            ],
+            "bitOrder": "leftmost bit is input qubit 0",
+            "backendName": "OpenQuantumLocalCatModel",
+            "model": "logical-noiseless",
+            "resolvedModelParameters": {
+              "kappa1Hz": 100,
+              "kappa2Hz": 10000000,
+              "averagePhotons": 19,
+              "distance": 15
+            },
+            "connectivity": "SDK all-to-all local model",
+            "simulator": "AliceBobLocalProvider ProcessorSimulator"
+          },
+          "artifactSha256": "d604d9679ef566773ae98ec2ea07b74e83b4f2a39c191f925851748f435d7e2d"
+        },
+        {
+          "label": "defaults",
+          "input": {
+            "numQubits": 2,
+            "model": "physical",
+            "initialStates": [
+              "+",
+              "0"
+            ],
+            "operations": [
+              {
+                "gate": "cx",
+                "qubits": [
+                  0,
+                  1
+                ],
+                "angleRad": 0
+              }
+            ],
+            "modelParameters": {},
+            "shots": 1024,
+            "seed": 7,
+            "execution": {}
+          },
+          "inputSha256": "e142dd0f4f822663c1eb808f46435fa2a2760846129a27ff54c2fd82d93c5252",
+          "dependencyLockSha256": "09dc45fe507beea933e5e1d89927c44cf74b8f63e61763d3ec2ff701c16f5942",
+          "result": {
+            "numQubits": 2,
+            "shots": 1024,
+            "counts": [
+              {
+                "bits": "00",
+                "count": 527
+              },
+              {
+                "bits": "11",
+                "count": 497
+              }
+            ],
+            "nativeGateNames": [
+              "cx",
+              "delay",
+              "for_loop",
+              "if_else",
+              "initialize",
+              "measure",
+              "measure_x",
+              "rz",
+              "switch_case",
+              "while_loop",
+              "x",
+              "z"
+            ],
+            "compiledGateCounts": [
+              {
+                "gate": "cx",
+                "count": 1
+              },
+              {
+                "gate": "delay",
+                "count": 1
+              },
+              {
+                "gate": "initialize",
+                "count": 2
+              },
+              {
+                "gate": "measure",
+                "count": 2
+              }
+            ],
+            "bitOrder": "leftmost bit is input qubit 0",
+            "backendName": "OpenQuantumLocalCatModel",
+            "model": "physical",
+            "resolvedModelParameters": {
+              "kappa1Hz": 100,
+              "kappa2Hz": 10000000,
+              "averagePhotons": 16,
+              "distance": 0
+            },
+            "connectivity": "SDK all-to-all local model",
+            "simulator": "AliceBobLocalProvider ProcessorSimulator"
+          },
+          "artifactSha256": "fd8845383ae10dda62a6949f755dcceca987d8c071802edab362930eccf30948"
+        }
+      ]
+    },
+    {
+      "id": "pulser-dynamics",
+      "python": "3.12.13 (main, Mar 20 2026, 00:20:20) [Clang 22.1.1 ]",
+      "packages": {
+        "pulser-core": "1.9.1",
+        "pulser-simulation": "1.9.1",
+        "qutip": "5.3.1"
+      },
+      "sourceHashes": {
+        ".agents/skills/pulser-dynamics/uv.lock": "4dae145858855becf894f9e47ad8517a8865d7299b0628931672a550dd4b85c9",
+        ".agents/skills/pulser-dynamics/pyproject.toml": "93b21a8f54210e5fe184548aff57bca8b84c52e860b8d086428fc13c66107167",
+        ".agents/skills/pulser-dynamics/SKILL.md": "ca4c13bf243e650c88016ba44c4f43c595bbbb8e5bab8d7c684c362cd4791ef1",
+        ".agents/skills/pulser-dynamics/test/science_test.py": "fd703267aac0abb15966ee6879ed8f32bd424fd000ace35907c3832123dcfe71",
+        ".agents/skills/pulser-dynamics/references/UPSTREAM.md": "37e5089ed9110527c5ea5ecc785e4034d0c1e3bc7a8e43f75f8736dcd5ea018c",
+        ".agents/skills/pulser-dynamics/mcp/bridge.py": "fe2aba4ff49e57eda92b1166a6f1dcb0f3c221b36f70b54480fde68441cd26db",
+        ".agents/skills/pulser-dynamics/mcp/contracts.mjs": "938360fb8af4833f700837ce67eeef61b2fdce1a2ee6054f0ba9ab3cbc0c1ba7",
+        ".agents/skills/pulser-dynamics/mcp/server.mjs": "884c1b25dd0aaf075feb640e58336dd1452ab9b961951c6ea7c56044a5f90cad"
+      },
+      "numericalRegression": {
+        "capability": "pulser-dynamics",
+        "passed": true,
+        "testsRun": 3,
+        "network": "socket connections disabled",
+        "scientificValidation": "not_evaluated",
+        "cases": [
+          {
+            "case": "asymmetric 2D dense reference, detuning and phase",
+            "amplitudeErrorVsContinuousIdeal": 0.0008877995794852807,
+            "populations": [
+              0.35688065233382776,
+              0.40870327407602347,
+              0.4508516592606816
+            ],
+            "maxNormError": 2.70738731433795e-09
+          },
+          {
+            "case": "finite-distance blockade and ns phase boundary",
+            "doubleExcitation": 3.4369646030398666e-10,
+            "collectiveExcitationError": 0.00023731595669779226,
+            "compiledDurationNs": 300
+          },
+          {
+            "case": "triangular single-atom area and nonzero phase",
+            "amplitudeError": 2.2019567502695736e-08,
+            "maxNormError": 8.512968108220775e-11
+          }
+        ]
+      },
+      "mcpCalls": [
+        {
+          "label": "fixture",
+          "input": {
+            "atomPositionsUm": [
+              [
+                0,
+                0
+              ]
+            ],
+            "pulses": [
+              {
+                "durationNs": 200,
+                "amplitudeRadPerUs": [
+                  2,
+                  2
+                ],
+                "detuningRadPerUs": [
+                  0,
+                  0
+                ],
+                "phaseRad": 0
+              }
+            ],
+            "timeSteps": 4,
+            "atol": 1e-09,
+            "rtol": 1e-09,
+            "maxSolverSteps": 100000,
+            "solverMaxStepNs": 1,
+            "execution": {}
+          },
+          "inputSha256": "e6a0b3e98192336c3d280794fede463584f46480f6a38df5b8823e339472456f",
+          "dependencyLockSha256": "4dae145858855becf894f9e47ad8517a8865d7299b0628931672a550dd4b85c9",
+          "result": {
+            "timesUs": [
+              0,
+              0.05,
+              0.1,
+              0.15000000000000002,
+              0.2
+            ],
+            "rydbergPopulations": [
+              [
+                0
+              ],
+              [
+                0.0024979173609513813
+              ],
+              [
+                0.009966711079308244
+              ],
+              [
+                0.022331755437091736
+              ],
+              [
+                0.03933729008535183
+              ]
+            ],
+            "finalOutcomes": [
+              {
+                "bits": "0",
+                "probability": 0.9606627087126542,
+                "amplitude": [
+                  0.9801340258927114,
+                  0
+                ]
+              },
+              {
+                "bits": "1",
+                "probability": 0.03933729008535183,
+                "amplitude": [
+                  0,
+                  -0.19833630551503129
+                ]
+              }
+            ],
+            "maxNormError": 1.2019939488183695e-09,
+            "atomCount": 1,
+            "hilbertDimension": 2,
+            "compiledDurationNs": 200,
+            "compiledPositionsUm": [
+              [
+                0,
+                0
+              ]
+            ],
+            "c6RadPerUsUm6": 5420158.53,
+            "backend": "Pulser QutipEmulator",
+            "bitOrder": "leftmost bit is input atom 0; 0=ground, 1=Rydberg",
+            "model": "H/hbar=sum_i Omega(t)/2*(exp(-i*phi)|g><r|+exp(i*phi)|r><g|)-Delta(t)*n_i + sum_i<j C6/r_ij^6*n_i*n_j",
+            "units": {
+              "position": "um",
+              "time": "us",
+              "angularFrequency": "rad/us",
+              "phase": "rad"
+            }
+          },
+          "artifactSha256": "700caad20e83f23cb34a2501eb5c5ae0d5a32e018c52424dc601538cf25148f0"
+        },
+        {
+          "label": "defaults",
+          "input": {
+            "atomPositionsUm": [
+              [
+                0,
+                0
+              ],
+              [
+                7,
+                0
+              ]
+            ],
+            "pulses": [
+              {
+                "durationNs": 500,
+                "amplitudeRadPerUs": [
+                  0,
+                  4
+                ],
+                "detuningRadPerUs": [
+                  0,
+                  0
+                ],
+                "phaseRad": 0
+              },
+              {
+                "durationNs": 500,
+                "amplitudeRadPerUs": [
+                  4,
+                  0
+                ],
+                "detuningRadPerUs": [
+                  0,
+                  0
+                ],
+                "phaseRad": 0
+              }
+            ],
+            "timeSteps": 20,
+            "atol": 1e-09,
+            "rtol": 1e-09,
+            "maxSolverSteps": 100000,
+            "solverMaxStepNs": 1,
+            "execution": {}
+          },
+          "inputSha256": "1ed8599d29d72f62a7ee8ceeb513daa50aaa67313c1bd7f138ebeb63bbae991e",
+          "dependencyLockSha256": "4dae145858855becf894f9e47ad8517a8865d7299b0628931672a550dd4b85c9",
+          "result": {
+            "timesUs": [
+              0,
+              0.05,
+              0.1,
+              0.15000000000000002,
+              0.2,
+              0.25,
+              0.30000000000000004,
+              0.35000000000000003,
+              0.4,
+              0.45,
+              0.5,
+              0.55,
+              0.6000000000000001,
+              0.65,
+              0.7000000000000001,
+              0.75,
+              0.8,
+              0.8500000000000001,
+              0.9,
+              0.9500000000000001,
+              1
+            ],
+            "rydbergPopulations": [
+              [
+                0,
+                0
+              ],
+              [
+                2.510006711584261e-05,
+                2.510006711584261e-05
+              ],
+              [
+                0.0004015262748482682,
+                0.0004015262748482682
+              ],
+              [
+                0.002030745792834028,
+                0.002030745792834028
+              ],
+              [
+                0.006400127333997989,
+                0.006400127333997989
+              ],
+              [
+                0.01553164224875069,
+                0.01553164224875069
+              ],
+              [
+                0.03185283468118653,
+                0.03185283468118653
+              ],
+              [
+                0.05793809733179987,
+                0.05793809733179987
+              ],
+              [
+                0.09607646211362864,
+                0.09607646211362864
+              ],
+              [
+                0.14762323794242774,
+                0.14762323794242774
+              ],
+              [
+                0.21216389573104688,
+                0.21216389573104688
+              ],
+              [
+                0.27916480283159106,
+                0.27916480283159106
+              ],
+              [
+                0.3370708839313351,
+                0.3370708839313351
+              ],
+              [
+                0.3845053848810293,
+                0.3845053848810293
+              ],
+              [
+                0.42060850606545486,
+                0.42060850606545486
+              ],
+              [
+                0.44655990306908255,
+                0.44655990306908255
+              ],
+              [
+                0.4645681556092608,
+                0.4645681556092608
+              ],
+              [
+                0.47597047892633804,
+                0.47597047892633804
+              ],
+              [
+                0.48279381687949946,
+                0.48279381687949946
+              ],
+              [
+                0.4863858857159813,
+                0.4863858857159813
+              ],
+              [
+                0.48742861136457,
+                0.48742861136457
+              ]
+            ],
+            "finalOutcomes": [
+              {
+                "bits": "00",
+                "probability": 0.02517480816575684,
+                "amplitude": [
+                  0.1576029417632498,
+                  -0.018333600664532004
+                ]
+              },
+              {
+                "bits": "01",
+                "probability": 0.4873965802469004,
+                "amplitude": [
+                  0.020341984309289986,
+                  -0.6978415177683691
+                ]
+              },
+              {
+                "bits": "10",
+                "probability": 0.4873965802469004,
+                "amplitude": [
+                  0.020341984309289986,
+                  -0.6978415177683691
+                ]
+              },
+              {
+                "bits": "11",
+                "probability": 3.2031117669580526e-05,
+                "amplitude": [
+                  0.004949023222422395,
+                  -0.0027455940729657
+                ]
+              }
+            ],
+            "maxNormError": 2.2277280020688295e-10,
+            "atomCount": 2,
+            "hilbertDimension": 4,
+            "compiledDurationNs": 1000,
+            "compiledPositionsUm": [
+              [
+                0,
+                0
+              ],
+              [
+                7,
+                0
+              ]
+            ],
+            "c6RadPerUsUm6": 5420158.53,
+            "backend": "Pulser QutipEmulator",
+            "bitOrder": "leftmost bit is input atom 0; 0=ground, 1=Rydberg",
+            "model": "H/hbar=sum_i Omega(t)/2*(exp(-i*phi)|g><r|+exp(i*phi)|r><g|)-Delta(t)*n_i + sum_i<j C6/r_ij^6*n_i*n_j",
+            "units": {
+              "position": "um",
+              "time": "us",
+              "angularFrequency": "rad/us",
+              "phase": "rad"
+            }
+          },
+          "artifactSha256": "6b2e17975aeb45d53fb7cf1cff00d7bbc94d35232c25896547e6ee953034a4cd"
+        }
+      ]
+    },
+    {
+      "id": "qoolqit-workbench",
+      "python": "3.12.13 (main, Mar 20 2026, 00:20:20) [Clang 22.1.1 ]",
+      "packages": {
+        "qoolqit": "1.4.0",
+        "pulser": "1.9.1",
+        "pulser-core": "1.9.1",
+        "pulser-simulation": "1.9.1"
+      },
+      "sourceHashes": {
+        ".agents/skills/qoolqit-workbench/uv.lock": "5304a7a9dd049936694af34e6e08234f8ed142d2cd4cd0b12f41488bcf4ce3c6",
+        ".agents/skills/qoolqit-workbench/pyproject.toml": "2bd0dfc208abb8078e522a1095fd27600cee647841bbec24d629f0f7d17ae4e7",
+        ".agents/skills/qoolqit-workbench/SKILL.md": "bf014025c51e2fcbcf26e9f24f691db7e3fd1c9fbd059ed56b382dc10308dffb",
+        ".agents/skills/qoolqit-workbench/test/science_test.py": "a9d283e04a3d8dc821d23cdfa3cd4e0fca50f8c7febbd7a7f1739e0f7c0d40ef",
+        ".agents/skills/qoolqit-workbench/references/UPSTREAM.md": "e42d08f6f041301bc1fd4979c886204eb975c4943da189c223c1c9b6ab0cb823",
+        ".agents/skills/qoolqit-workbench/mcp/bridge.py": "4df7e2230ce44de1b4ff447eb006f308e205c22d3bd71ee9087f3e37e1ff2063",
+        ".agents/skills/qoolqit-workbench/mcp/contracts.mjs": "84a51cf0ffc7093e90fda82617864e2f3781886ba9147b74974643bee2792de9",
+        ".agents/skills/qoolqit-workbench/mcp/server.mjs": "2b1395f1dac35477c66c48135d6740e87189160031e41111725a5c2d22d34584"
+      },
+      "numericalRegression": {
+        "capability": "qoolqit-workbench",
+        "passed": true,
+        "testsRun": 3,
+        "network": "socket connections disabled",
+        "scientificValidation": "not_evaluated",
+        "cases": [
+          {
+            "case": "compiled Pulser equivalence and 0.1+0.2 rounding",
+            "amplitudeError": 0.0,
+            "compiledDurationNs": 300
+          },
+          {
+            "case": "actual QoolQit compilation and pulse area",
+            "amplitudeError": 2.2019567502695736e-08,
+            "conversionFactors": {
+              "timeNs": 1000.0,
+              "energyRadPerUs": 1.0,
+              "distanceUm": 13.253644930249399
+            },
+            "compiledDurationNs": 1000
+          },
+          {
+            "case": "dimensionless-to-physical conversion and scale invariance",
+            "maxProbabilityDifference": 2.774308536013237e-06,
+            "durationNs": [
+              1000,
+              500
+            ],
+            "physicalPositions": [
+              [
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  13.253644930249399,
+                  9.27755145117458
+                ]
+              ],
+              [
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  11.807655279046397,
+                  8.265358695332477
+                ]
+              ]
+            ]
+          }
+        ]
+      },
+      "mcpCalls": [
+        {
+          "label": "fixture",
+          "input": {
+            "atomPositions": [
+              [
+                0,
+                0
+              ]
+            ],
+            "durations": [
+              0.2
+            ],
+            "rabiAmplitude": [
+              2,
+              2
+            ],
+            "detuning": [
+              0,
+              0
+            ],
+            "timeSteps": 4,
+            "phaseRad": 0,
+            "energyScaleRadPerUs": 1,
+            "atol": 1e-09,
+            "rtol": 1e-09,
+            "maxSolverSteps": 100000,
+            "solverMaxStepNs": 1,
+            "execution": {}
+          },
+          "inputSha256": "5ab1fb7531f3033af1ea0887b32e38784898274bdba0bfaec6eea65a233f1323",
+          "dependencyLockSha256": "5304a7a9dd049936694af34e6e08234f8ed142d2cd4cd0b12f41488bcf4ce3c6",
+          "result": {
+            "timesUs": [
+              0,
+              0.05,
+              0.1,
+              0.15000000000000002,
+              0.2
+            ],
+            "rydbergPopulations": [
+              [
+                0
+              ],
+              [
+                0.0024979173609513813
+              ],
+              [
+                0.009966711079308244
+              ],
+              [
+                0.022331755437091736
+              ],
+              [
+                0.03933729008535183
+              ]
+            ],
+            "finalOutcomes": [
+              {
+                "bits": "0",
+                "probability": 0.9606627087126542,
+                "amplitude": [
+                  0.9801340258927114,
+                  0
+                ]
+              },
+              {
+                "bits": "1",
+                "probability": 0.03933729008535183,
+                "amplitude": [
+                  0,
+                  -0.19833630551503129
+                ]
+              }
+            ],
+            "maxNormError": 1.2019939488183695e-09,
+            "atomCount": 1,
+            "hilbertDimension": 2,
+            "compiledDurationNs": 200,
+            "compiledPositionsUm": [
+              [
+                0,
+                0
+              ]
+            ],
+            "c6RadPerUsUm6": 5420158.53,
+            "backend": "Pulser QutipEmulator",
+            "bitOrder": "leftmost bit is input atom 0; 0=ground, 1=Rydberg",
+            "model": "H/hbar=sum_i Omega(t)/2*(exp(-i*phi)|g><r|+exp(i*phi)|r><g|)-Delta(t)*n_i + sum_i<j C6/r_ij^6*n_i*n_j",
+            "units": {
+              "position": "um",
+              "time": "us",
+              "angularFrequency": "rad/us",
+              "phase": "rad"
+            },
+            "qoolqitCompiled": true,
+            "compilerProfile": "default",
+            "conversionFactors": {
+              "timeNs": 1000,
+              "energyRadPerUs": 1,
+              "distanceUm": 13.253644930249399
+            },
+            "dimensionlessDuration": 0.2,
+            "compiledSegmentDurationsNs": [
+              200
+            ]
+          },
+          "artifactSha256": "8f6993c0cb9bb7eee0e1306dd2f15506790a0f671a546023cd03527b257efa3c"
+        },
+        {
+          "label": "defaults",
+          "input": {
+            "atomPositions": [
+              [
+                0,
+                0
+              ],
+              [
+                1,
+                0
+              ]
+            ],
+            "durations": [
+              0.5,
+              0.5
+            ],
+            "rabiAmplitude": [
+              0,
+              4,
+              0
+            ],
+            "detuning": [
+              0,
+              0,
+              0
+            ],
+            "phaseRad": 0,
+            "energyScaleRadPerUs": 1,
+            "timeSteps": 20,
+            "atol": 1e-09,
+            "rtol": 1e-09,
+            "maxSolverSteps": 100000,
+            "solverMaxStepNs": 1,
+            "execution": {}
+          },
+          "inputSha256": "13b5f647882ac0f7b6d3dd50a90a53a6a6ee2a4e6ececfabc00f1639911dd575",
+          "dependencyLockSha256": "5304a7a9dd049936694af34e6e08234f8ed142d2cd4cd0b12f41488bcf4ce3c6",
+          "result": {
+            "timesUs": [
+              0,
+              0.05,
+              0.1,
+              0.15000000000000002,
+              0.2,
+              0.25,
+              0.30000000000000004,
+              0.35000000000000003,
+              0.4,
+              0.45,
+              0.5,
+              0.55,
+              0.6000000000000001,
+              0.65,
+              0.7000000000000001,
+              0.75,
+              0.8,
+              0.8500000000000001,
+              0.9,
+              0.9500000000000001,
+              1
+            ],
+            "rydbergPopulations": [
+              [
+                0,
+                0
+              ],
+              [
+                2.5100097858995836e-05,
+                2.5100097858995836e-05
+              ],
+              [
+                0.00040155106570243133,
+                0.00040155106570243133
+              ],
+              [
+                0.002031746007898845,
+                0.002031746007898845
+              ],
+              [
+                0.006411909334668018,
+                0.006411909334668018
+              ],
+              [
+                0.015605672413978505,
+                0.015605672413978505
+              ],
+              [
+                0.03217784509680258,
+                0.03217784509680258
+              ],
+              [
+                0.05906052449031818,
+                0.05906052449031818
+              ],
+              [
+                0.09931927628669233,
+                0.09931927628669233
+              ],
+              [
+                0.15578805902333207,
+                0.15578805902333207
+              ],
+              [
+                0.23055040457956716,
+                0.23055040457956716
+              ],
+              [
+                0.3147648261743904,
+                0.3147648261743904
+              ],
+              [
+                0.3956820665353559,
+                0.3956820665353559
+              ],
+              [
+                0.46941171313079444,
+                0.46941171313079444
+              ],
+              [
+                0.5336259782160004,
+                0.5336259782160004
+              ],
+              [
+                0.5872206518079159,
+                0.5872206518079159
+              ],
+              [
+                0.6299586721508273,
+                0.6299586721508273
+              ],
+              [
+                0.6621438436237367,
+                0.6621438436237367
+              ],
+              [
+                0.6843497218010814,
+                0.6843497218010814
+              ],
+              [
+                0.6972129324261,
+                0.6972129324261
+              ],
+              [
+                0.7012918232863422,
+                0.7012918232863422
+              ]
+            ],
+            "finalOutcomes": [
+              {
+                "bits": "00",
+                "probability": 0.08442745578114128,
+                "amplitude": [
+                  0.29005481415067214,
+                  -0.017194783196084206
+                ]
+              },
+              {
+                "bits": "01",
+                "probability": 0.21428072054359013,
+                "amplitude": [
+                  0.04327198758359349,
+                  -0.46087770138525413
+                ]
+              },
+              {
+                "bits": "10",
+                "probability": 0.21428072054359013,
+                "amplitude": [
+                  0.04327198758359349,
+                  -0.46087770138525413
+                ]
+              },
+              {
+                "bits": "11",
+                "probability": 0.4870111027427521,
+                "amplitude": [
+                  -0.6438457043000081,
+                  0.2692096056926252
+                ]
+              }
+            ],
+            "maxNormError": 3.889263355816297e-10,
+            "atomCount": 2,
+            "hilbertDimension": 4,
+            "compiledDurationNs": 1000,
+            "compiledPositionsUm": [
+              [
+                0,
+                0
+              ],
+              [
+                13.253644930249399,
+                0
+              ]
+            ],
+            "c6RadPerUsUm6": 5420158.53,
+            "backend": "Pulser QutipEmulator",
+            "bitOrder": "leftmost bit is input atom 0; 0=ground, 1=Rydberg",
+            "model": "H/hbar=sum_i Omega(t)/2*(exp(-i*phi)|g><r|+exp(i*phi)|r><g|)-Delta(t)*n_i + sum_i<j C6/r_ij^6*n_i*n_j",
+            "units": {
+              "position": "um",
+              "time": "us",
+              "angularFrequency": "rad/us",
+              "phase": "rad"
+            },
+            "qoolqitCompiled": true,
+            "compilerProfile": "default",
+            "conversionFactors": {
+              "timeNs": 1000,
+              "energyRadPerUs": 1,
+              "distanceUm": 13.253644930249399
+            },
+            "dimensionlessDuration": 1,
+            "compiledSegmentDurationsNs": [
+              500,
+              500
+            ]
+          },
+          "artifactSha256": "041d68c8b76a06b954a9e667d3766bf68f54b4818d83a7ee5a8a3c15417d116b"
+        }
+      ]
+    }
+  ]
+}

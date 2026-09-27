@@ -1,0 +1,8 @@
+[project]
+name = "openquantum-perceval-photonics"
+version = "0.1.0"
+requires-python = ">=3.12,<3.13"
+dependencies = ["perceval-quandela==1.3.0"]
+
+[tool.uv]
+package = false

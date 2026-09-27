@@ -7,6 +7,21 @@ import test from "node:test";
 
 import { runLocalJsonProcess } from "../src/lib/local-json-process.mjs";
 
+test("worker errors redact credentials before truncating long stderr", async () => {
+  const syntheticKey = "test-only-boundary-credential";
+  await assert.rejects(runLocalJsonProcess({
+    command: process.execPath,
+    args: ["-e", "process.stdin.resume();process.stdin.on('end',()=>{process.stderr.write('x'.repeat(1990)+process.env.SUPERSTAQ_API_KEY+' failed');process.exit(2);});"],
+    cwd: process.cwd(), env: { SUPERSTAQ_API_KEY: syntheticKey }, input: {},
+    timeoutMs: 5000, maxOutputBytes: 10000, label: "credential truncation fixture",
+  }), error => {
+    assert.doesNotMatch(error.message, /test-only/);
+    assert.match(error.message, /\[REDACTED\]/);
+    assert.equal(error.message.length, 2000);
+    return true;
+  });
+});
+
 const fixtureSource = `
 import { spawn } from "node:child_process";
 import { writeFileSync } from "node:fs";

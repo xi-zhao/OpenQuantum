@@ -1,0 +1,779 @@
+{
+  "schemaVersion": "1.0",
+  "date": "2026-09-27",
+  "scope": "local real SDK execution and development regression; no cloud, QPU, external model or scientific Acceptance",
+  "platform": {
+    "system": "Darwin",
+    "machine": "arm64"
+  },
+  "checks": {
+    "contractTests": {
+      "passed": 18,
+      "failed": 0,
+      "skipped": 0,
+      "command": "node --test tests/sdk-compilers-contracts.test.mjs"
+    },
+    "liveTests": {
+      "passed": 12,
+      "failed": 0,
+      "skipped": 0,
+      "command": "OPENQUANTUM_REAL_SDK_COMPILERS=1 node --test tests/sdk-compilers-live.test.mjs"
+    },
+    "setup": "node scripts/setup-paper-tools.mjs pytket-compilation ocean-optimization kaiwu-qubo pyquil-simulation spinqit-simulation qutrunk-simulation",
+    "setupResult": "all six fixed lock environments prepared and rechecked",
+    "lint": {
+      "status": "pass",
+      "scope": "six new capability MCP contracts/servers and dedicated JS tests/fixtures"
+    }
+  },
+  "capabilities": [
+    {
+      "capability": "pytket-compilation",
+      "tool": "compile_pytket_circuit",
+      "version": "2.18.4",
+      "license": "Apache-2.0",
+      "repository": "https://github.com/Quantinuum/tket",
+      "python": "3.12",
+      "science": {
+        "pythonTests": 2,
+        "caseCount": 34,
+        "maximumNumericalError": 1.898773513585258e-15,
+        "reference": "independent dense gate matrices",
+        "networkGuard": "Python socket connect and create_connection denied"
+      },
+      "example": {
+        "schemaVersion": "1.0",
+        "source": {
+          "name": "pytket",
+          "version": "2.18.4",
+          "repository": "https://github.com/Quantinuum/tket"
+        },
+        "input": {
+          "numQubits": 2,
+          "gates": [
+            {
+              "gate": "X",
+              "targets": [
+                0
+              ]
+            },
+            {
+              "gate": "RY",
+              "targets": [
+                1
+              ],
+              "angle": 0.4
+            },
+            {
+              "gate": "CX",
+              "targets": [
+                0,
+                1
+              ]
+            }
+          ],
+          "optimize": true,
+          "execution": {}
+        },
+        "inputSha256": "80d9dd73462a390bdf40c21367b94bd9da05c68682bdb1e2e0d8e51762ad82d9",
+        "dependencyLockSha256": "0bbf79ff0307f691ab2ac86711edfc36fb2a7355b33a317e43b0e63a92af073e",
+        "result": {
+          "numQubits": 2,
+          "before": {
+            "gates": 3,
+            "depth": 2,
+            "twoQubitGates": 1,
+            "gateCounts": [
+              {
+                "gate": "CX",
+                "count": 1
+              },
+              {
+                "gate": "Ry",
+                "count": 1
+              },
+              {
+                "gate": "X",
+                "count": 1
+              }
+            ]
+          },
+          "after": {
+            "gates": 5,
+            "depth": 4,
+            "twoQubitGates": 1,
+            "gateCounts": [
+              {
+                "gate": "CX",
+                "count": 1
+              },
+              {
+                "gate": "Rx",
+                "count": 2
+              },
+              {
+                "gate": "Rz",
+                "count": 2
+              }
+            ]
+          },
+          "qasm": "OPENQASM 2.0;\ninclude \"qelib1.inc\";\n\nqreg q[2];\nrx(1.0*pi) q[0];\nrz(3.5*pi) q[1];\nrx(0.12732395447351627*pi) q[1];\nrz(0.5*pi) q[1];\ncx q[0],q[1];\n",
+          "globalPhaseRadians": 1.5707963267948966,
+          "nativeGates": [
+            "CX",
+            "Rx",
+            "Ry",
+            "Rz"
+          ],
+          "backend": "pytket FullPeepholeOptimise + AutoRebase",
+          "qubitMapping": "q[i] retains input qubit i; implicit swaps disabled"
+        },
+        "scientificValidation": "not_evaluated",
+        "limitations": [
+          "Unitary gate compilation only, without connectivity routing, calibrated error rates or hardware execution.",
+          "OpenQASM 2 omits global phase. Multiply its unitary by exp(i*globalPhaseRadians) to reconstruct the compiled circuit's phase.",
+          "Optimization does not guarantee fewer gates in every target basis, optimal depth, or better physical fidelity; before and after use different gate bases.",
+          "No dense unitary is computed by this tool; numerical equivalence checks belong to development evidence, not scientific acceptance."
+        ]
+      },
+      "sourceSha256": {
+        ".agents/skills/pytket-compilation/SKILL.md": "6302edeb350650509ad186ee608517255fa73413a29f6dea24e01313c9778404",
+        ".agents/skills/pytket-compilation/mcp/bridge.py": "784b2730bd1bf6b8f1b8ccb6552fb1f2c322c30ea8cbfc8ae6ec0fb7c42a319b",
+        ".agents/skills/pytket-compilation/mcp/contracts.mjs": "128b87d491f739d01f8b48c50c5d7be158ab87cad79e9a97ae9376aeefbbfd11",
+        ".agents/skills/pytket-compilation/mcp/server.mjs": "90b867f7bd8304271605577dec1a89eb566d729ba0140687ff9a8aaead4420c4",
+        ".agents/skills/pytket-compilation/pyproject.toml": "8edf70498c01976403ef78ba13424b518c84e06d215dd95c92f26ea3c381da25",
+        ".agents/skills/pytket-compilation/test/science_test.py": "ae4d1b58d20bbd960eae7df06ea45128c4050dc041419f078e430f460a2d3900",
+        ".agents/skills/pytket-compilation/uv.lock": "0bbf79ff0307f691ab2ac86711edfc36fb2a7355b33a317e43b0e63a92af073e"
+      }
+    },
+    {
+      "capability": "ocean-optimization",
+      "tool": "sample_ocean_model",
+      "version": "dimod 0.12.22 + dwave-samplers 1.8.0",
+      "license": "Apache-2.0",
+      "repository": "https://github.com/dwavesystems/dimod",
+      "python": "3.12",
+      "science": {
+        "pythonTests": 3,
+        "caseCount": 2,
+        "maximumNumericalError": 1.7763568394002505e-15,
+        "reference": "independent polynomial energy and binary-spin mapping",
+        "networkGuard": "Python socket connect and create_connection denied"
+      },
+      "example": {
+        "schemaVersion": "1.0",
+        "source": {
+          "name": "dimod + dwave-samplers",
+          "version": "0.12.22 + 1.8.0",
+          "repository": "https://github.com/dwavesystems/dimod"
+        },
+        "input": {
+          "linear": [
+            -1,
+            2
+          ],
+          "quadratic": [
+            {
+              "i": 0,
+              "j": 1,
+              "bias": -3
+            }
+          ],
+          "offset": 0.4,
+          "vartype": "BINARY",
+          "method": "exact",
+          "numReads": 100,
+          "numSweeps": 1000,
+          "seed": 17,
+          "execution": {}
+        },
+        "inputSha256": "9d52d22aab34c0c8af146971fc625efe73422fb4180c9ee1f8b0902024020e48",
+        "dependencyLockSha256": "1d96eaa55d8daf1287d9404f317c3e71450ebbf3cc955db8eb7977168459d43d",
+        "result": {
+          "vartype": "BINARY",
+          "samples": [
+            {
+              "values": [
+                1,
+                1
+              ],
+              "energy": -1.6,
+              "numOccurrences": 1
+            },
+            {
+              "values": [
+                1,
+                0
+              ],
+              "energy": -0.6,
+              "numOccurrences": 1
+            },
+            {
+              "values": [
+                0,
+                0
+              ],
+              "energy": 0.4,
+              "numOccurrences": 1
+            },
+            {
+              "values": [
+                0,
+                1
+              ],
+              "energy": 2.4,
+              "numOccurrences": 1
+            }
+          ],
+          "binaryModel": {
+            "linear": [
+              -1,
+              2
+            ],
+            "quadratic": [
+              {
+                "i": 0,
+                "j": 1,
+                "bias": -3
+              }
+            ],
+            "offset": 0.4
+          },
+          "spinModel": {
+            "linear": [
+              -1.25,
+              0.25
+            ],
+            "quadratic": [
+              {
+                "i": 0,
+                "j": 1,
+                "bias": -0.75
+              }
+            ],
+            "offset": 0.15000000000000002
+          },
+          "minimumEnergyFound": -1.6,
+          "exhaustive": true,
+          "backend": "dimod.ExactSolver"
+        },
+        "scientificValidation": "not_evaluated",
+        "limitations": [
+          "Both samplers are classical CPU algorithms. This call does not use quantum annealing hardware, Leap services or hybrid cloud solvers.",
+          "Energy is offset + sum_i linear[i]*v_i + sum_{i<j} quadratic[i,j]*v_i*v_j; BINARY v is 0/1 and SPIN v is -1/+1, with s=2*x-1.",
+          "ExactSolver enumerates 2^N configurations. Simulated annealing is heuristic and minimumEnergyFound is not an optimality certificate.",
+          "numReads, numSweeps and seed apply only to simulated annealing. Exact mode returns each configuration once; scientific acceptance is not evaluated."
+        ]
+      },
+      "sourceSha256": {
+        ".agents/skills/ocean-optimization/SKILL.md": "7b58bb416af4024d9781623cbd5152d2aa41afa26cfbefe0c67cb58e84037b3a",
+        ".agents/skills/ocean-optimization/mcp/bridge.py": "2d9da3f667bab1db5bea7ab9af17d10e01fe1eaae18f89e37f81484d9182f6cd",
+        ".agents/skills/ocean-optimization/mcp/contracts.mjs": "7448e8abdd6f10259891a6f79008c0d1ebff38b5bc12cc825e696710c6895e85",
+        ".agents/skills/ocean-optimization/mcp/server.mjs": "a3b87ed57c613af37cde12795606195c9dfd18363b3f4039db61c7c6c8c3e72d",
+        ".agents/skills/ocean-optimization/pyproject.toml": "17467e3d8e96898ce8bd9d396ff924b4a085c3ffff56599e08934f4cd7ee009a",
+        ".agents/skills/ocean-optimization/test/science_test.py": "9c2e172fe359820fa450050aefc39327e90d369d69e5bf8eaa7e6eaf5b479dbe",
+        ".agents/skills/ocean-optimization/uv.lock": "1d96eaa55d8daf1287d9404f317c3e71450ebbf3cc955db8eb7977168459d43d"
+      }
+    },
+    {
+      "capability": "kaiwu-qubo",
+      "tool": "build_kaiwu_qubo",
+      "version": "1.0.7",
+      "license": "Apache-2.0",
+      "repository": "https://github.com/qboson/kaiwu_community",
+      "python": "3.12",
+      "science": {
+        "pythonTests": 3,
+        "caseCount": 8,
+        "maximumNumericalError": 3.552713678800501e-15,
+        "reference": "independent polynomial energy and binary-spin mapping",
+        "networkGuard": "Python socket connect and create_connection denied"
+      },
+      "example": {
+        "schemaVersion": "1.0",
+        "source": {
+          "name": "kaiwu-community",
+          "version": "1.0.7",
+          "repository": "https://github.com/qboson/kaiwu_community"
+        },
+        "input": {
+          "linear": [
+            -1,
+            -2
+          ],
+          "constraints": [
+            {
+              "coefficients": [
+                1,
+                1
+              ],
+              "rhs": 1,
+              "penalty": 4
+            }
+          ],
+          "assignments": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "quadratic": [],
+          "offset": 0,
+          "execution": {}
+        },
+        "inputSha256": "f271fa5ece762e5e0cf108131306e592bacea1382b788190859028edf4ac5a9d",
+        "dependencyLockSha256": "6329dcb78a2b07e81ec7fec5a183e8af0547c366411b1e41a5920ae7e6c3140b",
+        "result": {
+          "variableNames": [
+            "x_0",
+            "x_1"
+          ],
+          "quboMatrix": [
+            [
+              -5,
+              8
+            ],
+            [
+              0,
+              -6
+            ]
+          ],
+          "quboOffset": 4,
+          "isingMatrix": [
+            [
+              0,
+              -1,
+              0.25
+            ],
+            [
+              -1,
+              0,
+              0.5
+            ],
+            [
+              0.25,
+              0.5,
+              0
+            ]
+          ],
+          "isingOffset": 0.5,
+          "isingConvention": "E(x) = -s^T J s + isingOffset; s_i=2*x_i-1, final auxiliary spin=+1",
+          "evaluations": [
+            {
+              "values": [
+                0,
+                0
+              ],
+              "objective": 0,
+              "constraintResiduals": [
+                -1
+              ],
+              "penaltyEnergy": 4,
+              "energy": 4
+            },
+            {
+              "values": [
+                0,
+                1
+              ],
+              "objective": -2,
+              "constraintResiduals": [
+                0
+              ],
+              "penaltyEnergy": 0,
+              "energy": -2
+            },
+            {
+              "values": [
+                1,
+                0
+              ],
+              "objective": -1,
+              "constraintResiduals": [
+                0
+              ],
+              "penaltyEnergy": 0,
+              "energy": -1
+            },
+            {
+              "values": [
+                1,
+                1
+              ],
+              "objective": -3,
+              "constraintResiduals": [
+                1
+              ],
+              "penaltyEnergy": 4,
+              "energy": 1
+            }
+          ],
+          "backend": "kaiwu.core.QuboModel + qubo_matrix_to_ising_matrix"
+        },
+        "scientificValidation": "not_evaluated",
+        "limitations": [
+          "Only the Apache-2.0 Kaiwu Community modeling package is used. No enterprise license, proprietary optimizer, telemetry or hardware submission is invoked.",
+          "QUBO energy is x^T Q x + quboOffset; off-diagonal Q entries are counted exactly as returned, without an extra factor of two.",
+          "The SDK uses an augmented symmetric Ising matrix and a negative Hamiltonian sign. Fix the final auxiliary spin to +1 and use s_i=2*x_i-1.",
+          "Equality constraints contribute penalty*(a.x-rhs)^2. Caller chooses penalty strengths; finite penalties do not prove that an optimum is feasible.",
+          "This action constructs and evaluates models, it does not solve them or certify scientific acceptance."
+        ]
+      },
+      "sourceSha256": {
+        ".agents/skills/kaiwu-qubo/SKILL.md": "80f002be164d627166ee6a63d3fa220f859ba52b63290874c3506ab647d63bed",
+        ".agents/skills/kaiwu-qubo/mcp/bridge.py": "469c02972920805e5729f2249cd0d4249e07ea39f9a1279618bf0f4921477ded",
+        ".agents/skills/kaiwu-qubo/mcp/contracts.mjs": "73d1ac925b0369c25e2c913641bc92e0c4d8084183d77d04200608549705236d",
+        ".agents/skills/kaiwu-qubo/mcp/server.mjs": "b3209b8ba7d975447f24ec16de391d8eeab3a9e823cbf4317f4d8ba97fe555a3",
+        ".agents/skills/kaiwu-qubo/pyproject.toml": "c2f2a822bfe16526223b8f6e8e9c4bb276dc8f8fb989ff4c86413f95e4ec74e4",
+        ".agents/skills/kaiwu-qubo/test/science_test.py": "9e908d5cb5bef7b78fcfc2eb521764cb9f2247f4eca678cbc3e8ecff5bd65d13",
+        ".agents/skills/kaiwu-qubo/uv.lock": "6329dcb78a2b07e81ec7fec5a183e8af0547c366411b1e41a5920ae7e6c3140b"
+      }
+    },
+    {
+      "capability": "pyquil-simulation",
+      "tool": "simulate_pyquil_circuit",
+      "version": "4.21.0",
+      "license": "Apache-2.0",
+      "repository": "https://github.com/rigetti/pyquil",
+      "python": "3.12",
+      "science": {
+        "pythonTests": 2,
+        "caseCount": 17,
+        "maximumNumericalError": 0.0,
+        "reference": "independent dense gate matrices",
+        "networkGuard": "Python socket connect and create_connection denied"
+      },
+      "example": {
+        "schemaVersion": "1.0",
+        "source": {
+          "name": "pyquil",
+          "version": "4.21.0",
+          "repository": "https://github.com/rigetti/pyquil"
+        },
+        "input": {
+          "numQubits": 2,
+          "gates": [
+            {
+              "gate": "X",
+              "targets": [
+                0
+              ]
+            },
+            {
+              "gate": "RY",
+              "targets": [
+                1
+              ],
+              "angle": 0.4
+            },
+            {
+              "gate": "CX",
+              "targets": [
+                0,
+                1
+              ]
+            }
+          ],
+          "execution": {}
+        },
+        "inputSha256": "2d54595b0734e1d1c52ac278c91772f420a6c776a66adbf984115979df03ffbe",
+        "dependencyLockSha256": "41a68cfc243c0233fae9ff7d5e5d886b212f4bc6e4c6b9125b51b23973191596",
+        "result": {
+          "numQubits": 2,
+          "outcomes": [
+            {
+              "bits": "00",
+              "probability": 0,
+              "amplitude": [
+                0,
+                0
+              ]
+            },
+            {
+              "bits": "01",
+              "probability": 0,
+              "amplitude": [
+                0,
+                0
+              ]
+            },
+            {
+              "bits": "10",
+              "probability": 0.039469502998557456,
+              "amplitude": [
+                0.19866933079506122,
+                0
+              ]
+            },
+            {
+              "bits": "11",
+              "probability": 0.9605304970014426,
+              "amplitude": [
+                0.9800665778412416,
+                0
+              ]
+            }
+          ],
+          "normError": 0,
+          "backend": "pyquil.simulation.NumpyWavefunctionSimulator",
+          "program": "X 0\nRY(0.4) 1\nCNOT 0 1\n",
+          "bitOrder": "leftmost bit is qubit 0"
+        },
+        "scientificValidation": "not_evaluated",
+        "limitations": [
+          "All-zero input and ideal unitary gates only; no noise, measurements, classical control or calibrated Rigetti device model.",
+          "Uses Rigetti's local NumPy wavefunction simulator, not the separate QVM server, quilc compiler, QCS cloud or QPU.",
+          "Amplitudes and probabilities are raw numerical state-vector values, without clipping or normalization, not finite-shot counts.",
+          "Full state-vector memory grows as 2^N. Caller chooses circuit size and execution resources; no scientific acceptance is declared."
+        ]
+      },
+      "sourceSha256": {
+        ".agents/skills/pyquil-simulation/SKILL.md": "b08728a52691bedfbce26ec73adbdc3ff0a3f70f5e881ff876fa79f6714440b4",
+        ".agents/skills/pyquil-simulation/mcp/bridge.py": "66983460c75fd922359cd91ebadaccdbd36d05ad3e0d30e5464665bdcecd8f5a",
+        ".agents/skills/pyquil-simulation/mcp/contracts.mjs": "e46182c252129abbb17ca9a9a46210f8b70e6b1548b276f09891d4d85c38b567",
+        ".agents/skills/pyquil-simulation/mcp/server.mjs": "60341c3e48a8a731d581d93ef069b74537d166a7e307845d650062e88641c6f2",
+        ".agents/skills/pyquil-simulation/pyproject.toml": "d4f7b629f2607acddb0b27592e998bf423bd99869cd50a0354f5cd7980ba8b5f",
+        ".agents/skills/pyquil-simulation/test/science_test.py": "cca9067d68fde3d8dc5913de9caca177bdd46b653c5f0054e61eee274d297323",
+        ".agents/skills/pyquil-simulation/uv.lock": "41a68cfc243c0233fae9ff7d5e5d886b212f4bc6e4c6b9125b51b23973191596"
+      }
+    },
+    {
+      "capability": "spinqit-simulation",
+      "tool": "simulate_spinqit_circuit",
+      "version": "0.2.4",
+      "license": "Apache-2.0",
+      "repository": "https://github.com/SpinQTech/SpinQit",
+      "python": "3.10",
+      "science": {
+        "pythonTests": 2,
+        "caseCount": 17,
+        "maximumNumericalError": 1.0029036956117461e-09,
+        "reference": "independent dense gate matrices",
+        "networkGuard": "Python socket connect and create_connection denied"
+      },
+      "example": {
+        "schemaVersion": "1.0",
+        "source": {
+          "name": "spinqit",
+          "version": "0.2.4",
+          "repository": "https://github.com/SpinQTech/SpinQit"
+        },
+        "input": {
+          "numQubits": 2,
+          "gates": [
+            {
+              "gate": "X",
+              "targets": [
+                0
+              ]
+            },
+            {
+              "gate": "RY",
+              "targets": [
+                1
+              ],
+              "angle": 0.4
+            },
+            {
+              "gate": "CX",
+              "targets": [
+                0,
+                1
+              ]
+            }
+          ],
+          "execution": {}
+        },
+        "inputSha256": "2d54595b0734e1d1c52ac278c91772f420a6c776a66adbf984115979df03ffbe",
+        "dependencyLockSha256": "28118456b8620a5f2c9e5b38eb381fa369ac7f52938a33d39d6e3e7a3305860d",
+        "result": {
+          "numQubits": 2,
+          "outcomes": [
+            {
+              "bits": "00",
+              "probability": 0,
+              "amplitude": [
+                0,
+                0
+              ]
+            },
+            {
+              "bits": "01",
+              "probability": 0,
+              "amplitude": [
+                0,
+                0
+              ]
+            },
+            {
+              "bits": "10",
+              "probability": 0.03946950298889405,
+              "amplitude": [
+                0.19866933077074087,
+                0
+              ]
+            },
+            {
+              "bits": "11",
+              "probability": 0.9605304970111059,
+              "amplitude": [
+                0.9800665778461716,
+                0
+              ]
+            }
+          ],
+          "normError": 0,
+          "backend": "SpinQit basic simulator",
+          "program": "Instruction(gate:X, qubits:[0], clbits:[], params:[])\nInstruction(gate:Ry, qubits:[1], clbits:[], params:[0.4])\nInstruction(gate:CX, qubits:[0, 1], clbits:[], params:[])",
+          "bitOrder": "leftmost bit is qubit 0"
+        },
+        "scientificValidation": "not_evaluated",
+        "limitations": [
+          "All-zero input and ideal unitary gates only; no noise, measurements, classical control or SpinQ hardware calibration.",
+          "Uses the native compiler at optimization level 0 and the basic local simulator; no cloud or NMR operation is invoked.",
+          "Probabilities are calculated from the SDK's raw amplitudes without clipping or normalization. SDK rounded counts are not returned as shot measurements.",
+          "SpinQit 0.2.4 uses Python 3.10. Its macOS wheel's bundled interface library is preloaded to resolve an upstream rpath issue; the library is not modified.",
+          "Full state-vector memory grows as 2^N. Caller chooses size and execution resources; no scientific acceptance is declared."
+        ]
+      },
+      "sourceSha256": {
+        ".agents/skills/spinqit-simulation/SKILL.md": "b20b0b407457598195984d3c2938b69fe70219c24baf4363a042ce9f46215861",
+        ".agents/skills/spinqit-simulation/mcp/bridge.py": "ab62f50cfebbbca57793c43e907166e97d43ea8dbbf44b9b4adf426f9825d652",
+        ".agents/skills/spinqit-simulation/mcp/contracts.mjs": "9b2af31730c3112cbff8cc6abe0b33b1fa925ceba256a5fab4cdff08519a58b1",
+        ".agents/skills/spinqit-simulation/mcp/server.mjs": "7a88809dc4b0a00138d368f37a9e418035b6b798d047ee18bf14eed8eafefa52",
+        ".agents/skills/spinqit-simulation/pyproject.toml": "04f6aca4e328149764a800cdc452a4c3a3b0436e1dfd3aff912d79886abccba1",
+        ".agents/skills/spinqit-simulation/test/science_test.py": "557b195352a8f2a10dc4f14c0f51f1a1491a1e8741f3d42d758b4c6614cc27e3",
+        ".agents/skills/spinqit-simulation/uv.lock": "28118456b8620a5f2c9e5b38eb381fa369ac7f52938a33d39d6e3e7a3305860d"
+      }
+    },
+    {
+      "capability": "qutrunk-simulation",
+      "tool": "simulate_qutrunk_circuit",
+      "version": "0.2.2",
+      "license": "Apache-2.0",
+      "repository": "https://github.com/qudoor/qutrunk",
+      "python": "3.10",
+      "science": {
+        "pythonTests": 2,
+        "caseCount": 17,
+        "maximumNumericalError": 1.77857806510033e-16,
+        "reference": "independent dense gate matrices",
+        "networkGuard": "Python socket connect and create_connection denied"
+      },
+      "example": {
+        "schemaVersion": "1.0",
+        "source": {
+          "name": "qutrunk",
+          "version": "0.2.2",
+          "repository": "https://github.com/qudoor/qutrunk"
+        },
+        "input": {
+          "numQubits": 2,
+          "gates": [
+            {
+              "gate": "X",
+              "targets": [
+                0
+              ]
+            },
+            {
+              "gate": "RY",
+              "targets": [
+                1
+              ],
+              "angle": 0.4
+            },
+            {
+              "gate": "CX",
+              "targets": [
+                0,
+                1
+              ]
+            }
+          ],
+          "execution": {}
+        },
+        "inputSha256": "2d54595b0734e1d1c52ac278c91772f420a6c776a66adbf984115979df03ffbe",
+        "dependencyLockSha256": "c076facc05e4cd00d0c9da278593f4815cb384bfe76690adc09578d5c4003032",
+        "result": {
+          "numQubits": 2,
+          "outcomes": [
+            {
+              "bits": "00",
+              "probability": 0,
+              "amplitude": [
+                0,
+                0
+              ]
+            },
+            {
+              "bits": "01",
+              "probability": 0,
+              "amplitude": [
+                0,
+                0
+              ]
+            },
+            {
+              "bits": "10",
+              "probability": 0.039469502998557456,
+              "amplitude": [
+                0.19866933079506122,
+                0
+              ]
+            },
+            {
+              "bits": "11",
+              "probability": 0.9605304970014426,
+              "amplitude": [
+                0.9800665778412416,
+                0
+              ]
+            }
+          ],
+          "normError": 0,
+          "backend": "QuTrunk BackendLocal",
+          "program": "OPENQASM 2.0;\ninclude \"qelib1.inc\";\nqreg q[2];\nx q[0];\nry(0.4) q[1];\ncx q[0],q[1];",
+          "bitOrder": "leftmost bit is qubit 0"
+        },
+        "scientificValidation": "not_evaluated",
+        "limitations": [
+          "All-zero input and ideal unitary gates only; no noise, mid-circuit measurement, classical control or hardware calibration.",
+          "BackendLocal(run_mode='local') is selected explicitly; QuSAAS, GPU/MPI and environment-selected remote backends are not used.",
+          "Amplitudes and probabilities are raw numerical state-vector values, without clipping or normalization, not finite-shot counts.",
+          "QuTrunk 0.2.2 requires Python 3.10. Full state-vector memory grows as 2^N; no scientific acceptance is declared."
+        ]
+      },
+      "sourceSha256": {
+        ".agents/skills/qutrunk-simulation/SKILL.md": "1161748c9f707623d45993898b07f02e5d3b0f30b4b45c18ffa48990bac97afb",
+        ".agents/skills/qutrunk-simulation/mcp/bridge.py": "93a7b637f479f8f1c8566d010e75ef39c17e03ad58820a377b1818368b0840b1",
+        ".agents/skills/qutrunk-simulation/mcp/contracts.mjs": "1b5adf8695fd900a1a18c8fe9f4f0fee6379d0494e0c9216c76f73ca85449fe2",
+        ".agents/skills/qutrunk-simulation/mcp/server.mjs": "ef8a29aae2cb70318538d42cdf537ce2b164b0d0e68066712123e39005ec577f",
+        ".agents/skills/qutrunk-simulation/pyproject.toml": "7106e33b5dd8a7166cc4a8cca929dcbfd3a3fcc95dc0cefb9c5c6e5043c416fa",
+        ".agents/skills/qutrunk-simulation/test/science_test.py": "18095bbe8b8100e6d3456c50994802b87b753c86f2b1bcca6fd9409e1b40eb48",
+        ".agents/skills/qutrunk-simulation/uv.lock": "c076facc05e4cd00d0c9da278593f4815cb384bfe76690adc09578d5c4003032"
+      }
+    }
+  ],
+  "compatibility": [
+    "SpinQit 0.2.4 and QuTrunk 0.2.2 need Python 3.10; remaining four tested on Python 3.12.",
+    "SpinQit pins SciPy 1.14.1: SciPy 1.15.3 macOS cp310 wheel failed dyld section validation.",
+    "SpinQit macOS wheel uses an unresolved $ORIGIN rpath; adapter preloads the bundled dylib by exact installed path, without changing binaries.",
+    "pytket supported wheel platform requirements are inherited from upstream.",
+    "No CI, other OS/architecture or live external services were validated by these local tests."
+  ],
+  "rawEvidenceDirectory": ".openquantum/sdk-evidence/compilers",
+  "testHelperSha256": "d2184bc5434fd2f7d0f87798c274952cb1d9bcf8ca71a1b8f845476cc7570ab6"
+}

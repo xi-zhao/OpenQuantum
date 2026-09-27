@@ -1,0 +1,3935 @@
+{
+  "schemaVersion": "1.0",
+  "verifiedAt": "2026-09-27T12:10:38.343882+00:00",
+  "platform": {
+    "system": "Darwin",
+    "release": "27.0.0",
+    "machine": "arm64"
+  },
+  "scope": "Four independent SDKs locally compute state vectors, Pauli expectations and selected-angle derivatives. This does not expose each upstream SDK in full.",
+  "setup": {
+    "command": "node scripts/setup-paper-tools.mjs pennylane-differentiable deepquantum-differentiable tensorcircuit-differentiable mindquantum-differentiable",
+    "result": "All four explicitly prepared environments checked against frozen dependency locks; Python 3.11 for MindQuantum and 3.12 for the other three."
+  },
+  "checks": [
+    {
+      "command": "node --test tests/sdk-differentiable-contracts.test.mjs",
+      "passed": 12,
+      "failed": 0,
+      "skipped": 0,
+      "evidence": "strict schema, registry declaration, provenance mismatch rejection, worker errors, credentials excluded, thread forwarding and cancellation recovery"
+    },
+    {
+      "command": "OPENQUANTUM_REAL_DIFFERENTIABLE=1 node --test --test-concurrency=1 tests/sdk-differentiable-live.test.mjs",
+      "passed": 8,
+      "failed": 0,
+      "skipped": 0,
+      "evidence": "Each SDK has seven independent dense and exact parameter-shift cases; actual stdio MCP tools/list plus explicit/default calls and invalid parameter rejection."
+    },
+    {
+      "check": "ESLint for all new JavaScript in this group",
+      "result": "passed"
+    },
+    {
+      "check": "Python source compilation for all new Python in this group",
+      "result": "passed"
+    }
+  ],
+  "scienceCases": 28,
+  "externalModelTested": false,
+  "cloudSubmissionTested": false,
+  "hardwareTested": false,
+  "scientificValidation": "not_evaluated",
+  "limitations": [
+    "Harness-wide execution and independent domain review are separate aggregate integration evidence, not claimed by this SDK-only record.",
+    "DeepQuantum retains native fixed-H complex64 construction error after conversion to float64; maximum observed state error is about 6.85e-8 and Jacobian error about 5.34e-8 in these cases. No output was clipped or normalized.",
+    "DeepQuantum photonic, Gaussian, Fock, MPS and distributed methods are not exposed by this qubit differentiation action.",
+    "TensorCircuit 0.12.0 is pinned with JAX/JAXlib 0.4.38 and NumPy 1.26.4; TensorCircuit-NG and GPU execution are not covered.",
+    "PennyLane uses default.qubit only; MindQuantum uses mqvector without the MindSpore optional training framework.",
+    "Current host was tested. Other operating systems are represented by locked dependency distributions but were not executed here."
+  ],
+  "capabilities": [
+    {
+      "id": "pennylane-differentiable",
+      "sdk": "pennylane",
+      "version": "0.45.1",
+      "license": "Apache-2.0",
+      "sourceRepository": "https://github.com/PennyLaneAI/pennylane",
+      "officialDocumentation": "https://docs.pennylane.ai/en/stable/introduction/interfaces.html",
+      "python": "3.12.13 (main, Mar 20 2026, 00:20:20) [Clang 22.1.1 ]",
+      "tool": "differentiate_pennylane_circuit",
+      "mcpServer": "pennylane_local",
+      "maturity": "L1",
+      "sourceHashes": {
+        ".agents/skills/pennylane-differentiable/pyproject.toml": "a54094fb1d25e57d44bdc7f26cb27f7955ade712b4159eb438e82914287cbe64",
+        ".agents/skills/pennylane-differentiable/uv.lock": "35ab949679c7eac7e5900385c78d51f76330b1597a65d7800b908ba3d531fdad",
+        ".agents/skills/pennylane-differentiable/SKILL.md": "2b29ce29ee52d405f5b5d0786daa1e652ac2378df1307527bb72111579a0bc78",
+        ".agents/skills/pennylane-differentiable/mcp/bridge.py": "b79cf6515ee183114b60ec97d21c6e08aefb18bb582711a1ad164f56d489dfd4",
+        ".agents/skills/pennylane-differentiable/mcp/contracts.mjs": "d52c9eab09359c97ece3aa6387415385b7aac8866d34c31fd3ea7961fd57eb31",
+        ".agents/skills/pennylane-differentiable/mcp/server.mjs": "e50b23bbe79526b86e0acdcd879cd743fe3128b43fa38cd48d3545d1074770ae",
+        ".agents/skills/pennylane-differentiable/test/science_test.py": "1734bc3f43e2165c5244786459aee8cd6f5abda199ec4960c7c458f6089226ab",
+        "src/lib/sdk-differentiable.mjs": "fcdb7b0a4e11a0265c175c522cf657289ea5ecb6f086552419cf69f13e93143d",
+        "src/lib/sdk_differentiable.py": "85f6c7edb0d1e930d5dfa1fb817bed5338dcd700fa1f560993486b1be76860f6",
+        "tests/fixtures/sdk_differentiable_science.py": "b8e1a752d2d7f794a6599c2302333ebc1ada020b0451a15977dcea0fa3908803",
+        "tests/sdk-differentiable-contracts.test.mjs": "ab45259bc5a2db1f521ad0acee73e796420b94ca021fd201f173a75cf349a6f0",
+        "tests/sdk-differentiable-live.test.mjs": "9506007a2b0bd6eddffbcb49aef86490b05926e2a3c086a8f546f16a9b768cc6",
+        "tests/fixtures/sdk-differentiable.mjs": "69943caaf37b29cdbaefeaee494023dac2e9c93ce60b0544f937eeb7aaf0bc7b"
+      },
+      "scienceRegression": {
+        "sdk": "pennylane",
+        "version": "0.45.1",
+        "python": "3.12.13 (main, Mar 20 2026, 00:20:20) [Clang 22.1.1 ]",
+        "testsRun": 7,
+        "failures": 0,
+        "errors": 0,
+        "reference": "independent dense Pauli/gate algebra and exact parameter-shift derivative",
+        "tolerance": 1e-10,
+        "networkConnectBlocked": true,
+        "cases": [
+          {
+            "label": "all-gates-three-qubits",
+            "input": {
+              "numQubits": 3,
+              "gates": [
+                {
+                  "gate": "H",
+                  "targets": [
+                    2
+                  ]
+                },
+                {
+                  "gate": "RY",
+                  "targets": [
+                    0
+                  ],
+                  "angle": 0.31
+                },
+                {
+                  "gate": "CX",
+                  "targets": [
+                    2,
+                    0
+                  ]
+                },
+                {
+                  "gate": "RX",
+                  "targets": [
+                    1
+                  ],
+                  "angle": -0.61
+                },
+                {
+                  "gate": "CZ",
+                  "targets": [
+                    1,
+                    2
+                  ]
+                },
+                {
+                  "gate": "Y",
+                  "targets": [
+                    0
+                  ]
+                },
+                {
+                  "gate": "S",
+                  "targets": [
+                    2
+                  ]
+                },
+                {
+                  "gate": "T",
+                  "targets": [
+                    1
+                  ]
+                },
+                {
+                  "gate": "RZ",
+                  "targets": [
+                    2
+                  ],
+                  "angle": 1.23
+                },
+                {
+                  "gate": "SWAP",
+                  "targets": [
+                    2,
+                    0
+                  ]
+                },
+                {
+                  "gate": "X",
+                  "targets": [
+                    1
+                  ]
+                },
+                {
+                  "gate": "Z",
+                  "targets": [
+                    2
+                  ]
+                },
+                {
+                  "gate": "RX",
+                  "targets": [
+                    0
+                  ],
+                  "angle": 0.12
+                },
+                {
+                  "gate": "H",
+                  "targets": [
+                    1
+                  ]
+                }
+              ],
+              "observables": [
+                "XZY",
+                "YIX",
+                "IZZ",
+                "IIY",
+                "III",
+                "ZZZ",
+                "IXX"
+              ],
+              "trainableGateIndices": [
+                8,
+                1,
+                3
+              ]
+            },
+            "result": {
+              "numQubits": 3,
+              "amplitudes": [
+                [
+                  -0.004806988263371649,
+                  -0.08795003709806336
+                ],
+                [
+                  -0.12313044421407113,
+                  -0.3640412100622054
+                ],
+                [
+                  0.04739576951575853,
+                  0.0782640081280767
+                ],
+                [
+                  0.41452910009715116,
+                  0.4115227120740154
+                ],
+                [
+                  0.526740579253456,
+                  0.2474439357730226
+                ],
+                [
+                  0.06126179229522748,
+                  0.04601552503277624
+                ],
+                [
+                  -0.23439912542877403,
+                  -0.30040469489862875
+                ],
+                [
+                  -0.012639233102743466,
+                  -0.07139599254364713
+                ]
+              ],
+              "probabilities": [
+                0.007758316161714914,
+                0.14768710891590928,
+                0.00837161393626256,
+                0.341185317380107,
+                0.3386841391831101,
+                0.005870435739265649,
+                0.14518593071891234,
+                0.005257137964718004
+              ],
+              "stateNormSquared": 0.9999999999999998,
+              "expectations": [
+                -0.36358373677318157,
+                0.27198716389011035,
+                0.38576982137930005,
+                0.0,
+                0.9999999999999998,
+                -2.7755575615628914e-17,
+                -0.25004070668751305
+              ],
+              "jacobian": [
+                [
+                  -0.12893882829104258,
+                  0.11646587128746191,
+                  0.5202087916020217
+                ],
+                [
+                  -0.7669536842563041,
+                  -6.938893903907228e-18,
+                  0.19009695914013025
+                ],
+                [
+                  6.923632136152596e-17,
+                  -0.12357268441678762,
+                  -0.5519522253588768
+                ],
+                [
+                  -3.9340936628410604e-17,
+                  -1.2246674546612935e-16,
+                  -1.2304301757490475e-17
+                ],
+                [
+                  1.3610278125610278e-16,
+                  0.0,
+                  -5.551115123125783e-17
+                ],
+                [
+                  -1.3877787807814457e-17,
+                  -1.2854542504272909e-17,
+                  -1.0173087990523405e-16
+                ],
+                [
+                  3.562445585200235e-17,
+                  -0.780578322884534,
+                  -0.17475816624107143
+                ]
+              ],
+              "trainableGateIndices": [
+                8,
+                1,
+                3
+              ],
+              "bitOrder": "lexicographic bitstrings q0 q1 ...; q0 is the leftmost, most significant bit",
+              "angleUnit": "rad",
+              "backend": "default.qubit (CPU)",
+              "gradientMethod": "PennyLane Autograd backpropagation"
+            },
+            "limitations": [
+              "Ideal pure-state simulation from the all-zero state, with no noise or finite-shot sampling.",
+              "Each selected rotation angle is an independent parameter; no parameter sharing, optimization loop or hardware execution.",
+              "Probabilities and amplitudes are raw numerical outputs without clipping or renormalization; full state output grows as 2^numQubits.",
+              "This L1 execution does not establish scientific Acceptance or external-model validation."
+            ],
+            "maxAmplitudeError": 2.7755575615628914e-17,
+            "maxExpectationError": 2.220446049250313e-16,
+            "maxJacobianError": 3.3306690738754696e-16
+          },
+          {
+            "label": "analytic-ry",
+            "input": {
+              "numQubits": 1,
+              "gates": [
+                {
+                  "gate": "RY",
+                  "targets": [
+                    0
+                  ],
+                  "angle": 0.37
+                }
+              ],
+              "observables": [
+                "X",
+                "Y",
+                "Z",
+                "I"
+              ],
+              "trainableGateIndices": [
+                0
+              ]
+            },
+            "result": {
+              "numQubits": 1,
+              "amplitudes": [
+                [
+                  0.9829362506302315,
+                  0.0
+                ],
+                [
+                  0.18394653352804122,
+                  0.0
+                ]
+              ],
+              "probabilities": [
+                0.9661636728030173,
+                0.03383632719698279
+              ],
+              "stateNormSquared": 1.0,
+              "expectations": [
+                0.361615431964962,
+                0.0,
+                0.9323273456060345,
+                1.0
+              ],
+              "jacobian": [
+                [
+                  0.9323273456060343
+                ],
+                [
+                  0.0
+                ],
+                [
+                  -0.361615431964962
+                ],
+                [
+                  0.0
+                ]
+              ],
+              "trainableGateIndices": [
+                0
+              ],
+              "bitOrder": "lexicographic bitstrings q0 q1 ...; q0 is the leftmost, most significant bit",
+              "angleUnit": "rad",
+              "backend": "default.qubit (CPU)",
+              "gradientMethod": "PennyLane Autograd backpropagation"
+            },
+            "limitations": [
+              "Ideal pure-state simulation from the all-zero state, with no noise or finite-shot sampling.",
+              "Each selected rotation angle is an independent parameter; no parameter sharing, optimization loop or hardware execution.",
+              "Probabilities and amplitudes are raw numerical outputs without clipping or renormalization; full state output grows as 2^numQubits.",
+              "This L1 execution does not establish scientific Acceptance or external-model validation."
+            ],
+            "maxAmplitudeError": 0.0,
+            "maxExpectationError": 0.0,
+            "maxJacobianError": 1.6653345369377348e-16
+          },
+          {
+            "label": "q0-most-significant",
+            "input": {
+              "numQubits": 3,
+              "gates": [
+                {
+                  "gate": "X",
+                  "targets": [
+                    0
+                  ]
+                }
+              ],
+              "observables": [
+                "ZII",
+                "IIZ",
+                "IZI"
+              ],
+              "trainableGateIndices": []
+            },
+            "result": {
+              "numQubits": 3,
+              "amplitudes": [
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ]
+              ],
+              "probabilities": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "stateNormSquared": 1.0,
+              "expectations": [
+                -1.0,
+                1.0,
+                1.0
+              ],
+              "jacobian": [
+                [],
+                [],
+                []
+              ],
+              "trainableGateIndices": [],
+              "bitOrder": "lexicographic bitstrings q0 q1 ...; q0 is the leftmost, most significant bit",
+              "angleUnit": "rad",
+              "backend": "default.qubit (CPU)",
+              "gradientMethod": "PennyLane Autograd backpropagation"
+            },
+            "limitations": [
+              "Ideal pure-state simulation from the all-zero state, with no noise or finite-shot sampling.",
+              "Each selected rotation angle is an independent parameter; no parameter sharing, optimization loop or hardware execution.",
+              "Probabilities and amplitudes are raw numerical outputs without clipping or renormalization; full state output grows as 2^numQubits.",
+              "This L1 execution does not establish scientific Acceptance or external-model validation."
+            ],
+            "maxAmplitudeError": 0.0,
+            "maxExpectationError": 0.0,
+            "maxJacobianError": 0
+          },
+          {
+            "label": "empty-circuit-no-parameters",
+            "input": {
+              "numQubits": 2,
+              "gates": [],
+              "observables": [
+                "II",
+                "ZI",
+                "IX",
+                "YY"
+              ],
+              "trainableGateIndices": []
+            },
+            "result": {
+              "numQubits": 2,
+              "amplitudes": [
+                [
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ]
+              ],
+              "probabilities": [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "stateNormSquared": 1.0,
+              "expectations": [
+                1.0,
+                1.0,
+                0.0,
+                0.0
+              ],
+              "jacobian": [
+                [],
+                [],
+                [],
+                []
+              ],
+              "trainableGateIndices": [],
+              "bitOrder": "lexicographic bitstrings q0 q1 ...; q0 is the leftmost, most significant bit",
+              "angleUnit": "rad",
+              "backend": "default.qubit (CPU)",
+              "gradientMethod": "PennyLane Autograd backpropagation"
+            },
+            "limitations": [
+              "Ideal pure-state simulation from the all-zero state, with no noise or finite-shot sampling.",
+              "Each selected rotation angle is an independent parameter; no parameter sharing, optimization loop or hardware execution.",
+              "Probabilities and amplitudes are raw numerical outputs without clipping or renormalization; full state output grows as 2^numQubits.",
+              "This L1 execution does not establish scientific Acceptance or external-model validation."
+            ],
+            "maxAmplitudeError": 0.0,
+            "maxExpectationError": 0.0,
+            "maxJacobianError": 0
+          },
+          {
+            "label": "raw-norm-no-renormalization",
+            "input": {
+              "numQubits": 1,
+              "gates": [
+                {
+                  "gate": "H",
+                  "targets": [
+                    0
+                  ]
+                },
+                {
+                  "gate": "H",
+                  "targets": [
+                    0
+                  ]
+                },
+                {
+                  "gate": "H",
+                  "targets": [
+                    0
+                  ]
+                },
+                {
+                  "gate": "H",
+                  "targets": [
+                    0
+                  ]
+                }
+              ],
+              "observables": [
+                "I",
+                "Z"
+              ],
+              "trainableGateIndices": []
+            },
+            "result": {
+              "numQubits": 1,
+              "amplitudes": [
+                [
+                  0.9999999999999997,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ]
+              ],
+              "probabilities": [
+                0.9999999999999993,
+                0.0
+              ],
+              "stateNormSquared": 0.9999999999999993,
+              "expectations": [
+                0.9999999999999993,
+                0.9999999999999993
+              ],
+              "jacobian": [
+                [],
+                []
+              ],
+              "trainableGateIndices": [],
+              "bitOrder": "lexicographic bitstrings q0 q1 ...; q0 is the leftmost, most significant bit",
+              "angleUnit": "rad",
+              "backend": "default.qubit (CPU)",
+              "gradientMethod": "PennyLane Autograd backpropagation"
+            },
+            "limitations": [
+              "Ideal pure-state simulation from the all-zero state, with no noise or finite-shot sampling.",
+              "Each selected rotation angle is an independent parameter; no parameter sharing, optimization loop or hardware execution.",
+              "Probabilities and amplitudes are raw numerical outputs without clipping or renormalization; full state output grows as 2^numQubits.",
+              "This L1 execution does not establish scientific Acceptance or external-model validation."
+            ],
+            "maxAmplitudeError": 0.0,
+            "maxExpectationError": 0.0,
+            "maxJacobianError": 0
+          },
+          {
+            "label": "complex-phase-reordered-parameters",
+            "input": {
+              "numQubits": 1,
+              "gates": [
+                {
+                  "gate": "RY",
+                  "targets": [
+                    0
+                  ],
+                  "angle": 0.71
+                },
+                {
+                  "gate": "RZ",
+                  "targets": [
+                    0
+                  ],
+                  "angle": -0.43
+                }
+              ],
+              "observables": [
+                "Y",
+                "X",
+                "I",
+                "Z"
+              ],
+              "trainableGateIndices": [
+                1,
+                0
+              ]
+            },
+            "result": {
+              "numQubits": 1,
+              "amplitudes": [
+                [
+                  0.916058485687453,
+                  0.2000444670448664
+                ],
+                [
+                  0.33958758168910286,
+                  -0.07415751052518423
+                ]
+              ],
+              "probabilities": [
+                0.8791809379952541,
+                0.12081906200474592
+              ],
+              "stateNormSquared": 1.0,
+              "expectations": [
+                -0.2717304671762064,
+                0.5924945723399984,
+                1.0,
+                0.7583618759905082
+              ],
+              "jacobian": [
+                [
+                  0.5924945723399984,
+                  -0.3161389237758848
+                ],
+                [
+                  0.27173046717620636,
+                  0.6893249711345645
+                ],
+                [
+                  1.673320060327761e-17,
+                  5.551115123125783e-17
+                ],
+                [
+                  1.8399468787002776e-17,
+                  -0.6518337710215367
+                ]
+              ],
+              "trainableGateIndices": [
+                1,
+                0
+              ],
+              "bitOrder": "lexicographic bitstrings q0 q1 ...; q0 is the leftmost, most significant bit",
+              "angleUnit": "rad",
+              "backend": "default.qubit (CPU)",
+              "gradientMethod": "PennyLane Autograd backpropagation"
+            },
+            "limitations": [
+              "Ideal pure-state simulation from the all-zero state, with no noise or finite-shot sampling.",
+              "Each selected rotation angle is an independent parameter; no parameter sharing, optimization loop or hardware execution.",
+              "Probabilities and amplitudes are raw numerical outputs without clipping or renormalization; full state output grows as 2^numQubits.",
+              "This L1 execution does not establish scientific Acceptance or external-model validation."
+            ],
+            "maxAmplitudeError": 0.0,
+            "maxExpectationError": 1.1102230246251565e-16,
+            "maxJacobianError": 2.220446049250313e-16
+          },
+          {
+            "label": "zero-rotation-stationary-points",
+            "input": {
+              "numQubits": 2,
+              "gates": [
+                {
+                  "gate": "RX",
+                  "targets": [
+                    0
+                  ],
+                  "angle": 0
+                },
+                {
+                  "gate": "RY",
+                  "targets": [
+                    1
+                  ],
+                  "angle": 0
+                }
+              ],
+              "observables": [
+                "YI",
+                "IX",
+                "ZZ",
+                "II"
+              ],
+              "trainableGateIndices": [
+                1,
+                0
+              ]
+            },
+            "result": {
+              "numQubits": 2,
+              "amplitudes": [
+                [
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ]
+              ],
+              "probabilities": [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "stateNormSquared": 1.0,
+              "expectations": [
+                0.0,
+                0.0,
+                1.0,
+                1.0
+              ],
+              "jacobian": [
+                [
+                  0.0,
+                  -0.9999999999999998
+                ],
+                [
+                  0.9999999999999998,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ]
+              ],
+              "trainableGateIndices": [
+                1,
+                0
+              ],
+              "bitOrder": "lexicographic bitstrings q0 q1 ...; q0 is the leftmost, most significant bit",
+              "angleUnit": "rad",
+              "backend": "default.qubit (CPU)",
+              "gradientMethod": "PennyLane Autograd backpropagation"
+            },
+            "limitations": [
+              "Ideal pure-state simulation from the all-zero state, with no noise or finite-shot sampling.",
+              "Each selected rotation angle is an independent parameter; no parameter sharing, optimization loop or hardware execution.",
+              "Probabilities and amplitudes are raw numerical outputs without clipping or renormalization; full state output grows as 2^numQubits.",
+              "This L1 execution does not establish scientific Acceptance or external-model validation."
+            ],
+            "maxAmplitudeError": 0.0,
+            "maxExpectationError": 0.0,
+            "maxJacobianError": 2.220446049250313e-16
+          }
+        ]
+      },
+      "realMcpCalls": [
+        {
+          "schemaVersion": "1.0",
+          "source": {
+            "name": "pennylane",
+            "version": "0.45.1",
+            "repository": "https://github.com/PennyLaneAI/pennylane"
+          },
+          "input": {
+            "numQubits": 2,
+            "gates": [
+              {
+                "gate": "RY",
+                "targets": [
+                  0
+                ],
+                "angle": 0.4
+              },
+              {
+                "gate": "CX",
+                "targets": [
+                  0,
+                  1
+                ]
+              }
+            ],
+            "observables": [
+              "ZI",
+              "IZ",
+              "XX"
+            ],
+            "trainableGateIndices": [
+              0
+            ],
+            "execution": {}
+          },
+          "inputSha256": "c41be1fe9e8966d53a1ae654a31fba9bb16d432bac5614c7ea424b7c391c5237",
+          "dependencyLockSha256": "35ab949679c7eac7e5900385c78d51f76330b1597a65d7800b908ba3d531fdad",
+          "result": {
+            "numQubits": 2,
+            "amplitudes": [
+              [
+                0.9800665778412416,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0.19866933079506122,
+                0
+              ]
+            ],
+            "probabilities": [
+              0.9605304970014426,
+              0,
+              0,
+              0.039469502998557456
+            ],
+            "stateNormSquared": 1,
+            "expectations": [
+              0.9210609940028851,
+              0.9210609940028851,
+              0.3894183423086504
+            ],
+            "jacobian": [
+              [
+                -0.38941834230865047
+              ],
+              [
+                -0.38941834230865047
+              ],
+              [
+                0.9210609940028847
+              ]
+            ],
+            "trainableGateIndices": [
+              0
+            ],
+            "bitOrder": "lexicographic bitstrings q0 q1 ...; q0 is the leftmost, most significant bit",
+            "angleUnit": "rad",
+            "backend": "default.qubit (CPU)",
+            "gradientMethod": "PennyLane Autograd backpropagation"
+          },
+          "scientificValidation": "not_evaluated",
+          "limitations": [
+            "Ideal pure-state simulation from the all-zero state, with no noise or finite-shot sampling.",
+            "Each selected rotation angle is an independent parameter; no parameter sharing, optimization loop or hardware execution.",
+            "Probabilities and amplitudes are raw numerical outputs without clipping or renormalization; full state output grows as 2^numQubits.",
+            "This L1 execution does not establish scientific Acceptance or external-model validation."
+          ]
+        },
+        {
+          "schemaVersion": "1.0",
+          "source": {
+            "name": "pennylane",
+            "version": "0.45.1",
+            "repository": "https://github.com/PennyLaneAI/pennylane"
+          },
+          "input": {
+            "numQubits": 2,
+            "gates": [
+              {
+                "gate": "RY",
+                "targets": [
+                  0
+                ],
+                "angle": 0.4
+              },
+              {
+                "gate": "CX",
+                "targets": [
+                  0,
+                  1
+                ]
+              }
+            ],
+            "observables": [
+              "ZI",
+              "IZ",
+              "XX"
+            ],
+            "trainableGateIndices": [
+              0
+            ],
+            "execution": {}
+          },
+          "inputSha256": "c41be1fe9e8966d53a1ae654a31fba9bb16d432bac5614c7ea424b7c391c5237",
+          "dependencyLockSha256": "35ab949679c7eac7e5900385c78d51f76330b1597a65d7800b908ba3d531fdad",
+          "result": {
+            "numQubits": 2,
+            "amplitudes": [
+              [
+                0.9800665778412416,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0.19866933079506122,
+                0
+              ]
+            ],
+            "probabilities": [
+              0.9605304970014426,
+              0,
+              0,
+              0.039469502998557456
+            ],
+            "stateNormSquared": 1,
+            "expectations": [
+              0.9210609940028851,
+              0.9210609940028851,
+              0.3894183423086504
+            ],
+            "jacobian": [
+              [
+                -0.38941834230865047
+              ],
+              [
+                -0.38941834230865047
+              ],
+              [
+                0.9210609940028847
+              ]
+            ],
+            "trainableGateIndices": [
+              0
+            ],
+            "bitOrder": "lexicographic bitstrings q0 q1 ...; q0 is the leftmost, most significant bit",
+            "angleUnit": "rad",
+            "backend": "default.qubit (CPU)",
+            "gradientMethod": "PennyLane Autograd backpropagation"
+          },
+          "scientificValidation": "not_evaluated",
+          "limitations": [
+            "Ideal pure-state simulation from the all-zero state, with no noise or finite-shot sampling.",
+            "Each selected rotation angle is an independent parameter; no parameter sharing, optimization loop or hardware execution.",
+            "Probabilities and amplitudes are raw numerical outputs without clipping or renormalization; full state output grows as 2^numQubits.",
+            "This L1 execution does not establish scientific Acceptance or external-model validation."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "deepquantum-differentiable",
+      "sdk": "deepquantum",
+      "version": "4.5.0",
+      "license": "Apache-2.0",
+      "sourceRepository": "https://github.com/TuringQ/deepquantum",
+      "officialDocumentation": "https://dqapi.turingq.com/",
+      "python": "3.12.13 (main, Mar 20 2026, 00:20:20) [Clang 22.1.1 ]",
+      "tool": "differentiate_deepquantum_circuit",
+      "mcpServer": "deepquantum_local",
+      "maturity": "L1",
+      "sourceHashes": {
+        ".agents/skills/deepquantum-differentiable/pyproject.toml": "e527601ce2ae0982c5b1cdcaa41c7550dd4c74fca0039af5da80534191230d6b",
+        ".agents/skills/deepquantum-differentiable/uv.lock": "9668859c1a79677565c5c6c7c6e5cc0318c38077eda36140c8b28053132c96ff",
+        ".agents/skills/deepquantum-differentiable/SKILL.md": "1915efadfa2e81b36591987dbe918ec52174ebac68fcb5aa1b49981176be5478",
+        ".agents/skills/deepquantum-differentiable/mcp/bridge.py": "90c7d953b0f37834a441278ce647330b98382b06903d13898bf9782999605177",
+        ".agents/skills/deepquantum-differentiable/mcp/contracts.mjs": "dc20c84bec2fbb23a41b59195d5f51015bb24bb195713e43371e0f0c143b4494",
+        ".agents/skills/deepquantum-differentiable/mcp/server.mjs": "c5581348bb7415e4b03ae310e2ed8d44fa7dc311919493d34ad15eb61e8b9bdc",
+        ".agents/skills/deepquantum-differentiable/test/science_test.py": "1734bc3f43e2165c5244786459aee8cd6f5abda199ec4960c7c458f6089226ab",
+        "src/lib/sdk-differentiable.mjs": "fcdb7b0a4e11a0265c175c522cf657289ea5ecb6f086552419cf69f13e93143d",
+        "src/lib/sdk_differentiable.py": "85f6c7edb0d1e930d5dfa1fb817bed5338dcd700fa1f560993486b1be76860f6",
+        "tests/fixtures/sdk_differentiable_science.py": "b8e1a752d2d7f794a6599c2302333ebc1ada020b0451a15977dcea0fa3908803",
+        "tests/sdk-differentiable-contracts.test.mjs": "ab45259bc5a2db1f521ad0acee73e796420b94ca021fd201f173a75cf349a6f0",
+        "tests/sdk-differentiable-live.test.mjs": "9506007a2b0bd6eddffbcb49aef86490b05926e2a3c086a8f546f16a9b768cc6",
+        "tests/fixtures/sdk-differentiable.mjs": "69943caaf37b29cdbaefeaee494023dac2e9c93ce60b0544f937eeb7aaf0bc7b"
+      },
+      "scienceRegression": {
+        "sdk": "deepquantum",
+        "version": "4.5.0",
+        "python": "3.12.13 (main, Mar 20 2026, 00:20:20) [Clang 22.1.1 ]",
+        "testsRun": 7,
+        "failures": 0,
+        "errors": 0,
+        "reference": "independent dense Pauli/gate algebra and exact parameter-shift derivative",
+        "tolerance": 2e-07,
+        "networkConnectBlocked": true,
+        "cases": [
+          {
+            "label": "all-gates-three-qubits",
+            "input": {
+              "numQubits": 3,
+              "gates": [
+                {
+                  "gate": "H",
+                  "targets": [
+                    2
+                  ]
+                },
+                {
+                  "gate": "RY",
+                  "targets": [
+                    0
+                  ],
+                  "angle": 0.31
+                },
+                {
+                  "gate": "CX",
+                  "targets": [
+                    2,
+                    0
+                  ]
+                },
+                {
+                  "gate": "RX",
+                  "targets": [
+                    1
+                  ],
+                  "angle": -0.61
+                },
+                {
+                  "gate": "CZ",
+                  "targets": [
+                    1,
+                    2
+                  ]
+                },
+                {
+                  "gate": "Y",
+                  "targets": [
+                    0
+                  ]
+                },
+                {
+                  "gate": "S",
+                  "targets": [
+                    2
+                  ]
+                },
+                {
+                  "gate": "T",
+                  "targets": [
+                    1
+                  ]
+                },
+                {
+                  "gate": "RZ",
+                  "targets": [
+                    2
+                  ],
+                  "angle": 1.23
+                },
+                {
+                  "gate": "SWAP",
+                  "targets": [
+                    2,
+                    0
+                  ]
+                },
+                {
+                  "gate": "X",
+                  "targets": [
+                    1
+                  ]
+                },
+                {
+                  "gate": "Z",
+                  "targets": [
+                    2
+                  ]
+                },
+                {
+                  "gate": "RX",
+                  "targets": [
+                    0
+                  ],
+                  "angle": 0.12
+                },
+                {
+                  "gate": "H",
+                  "targets": [
+                    1
+                  ]
+                }
+              ],
+              "observables": [
+                "XZY",
+                "YIX",
+                "IZZ",
+                "IIY",
+                "III",
+                "ZZZ",
+                "IXX"
+              ],
+              "trainableGateIndices": [
+                8,
+                1,
+                3
+              ]
+            },
+            "result": {
+              "numQubits": 3,
+              "amplitudes": [
+                [
+                  -0.004806988098835459,
+                  -0.08795003408766185
+                ],
+                [
+                  -0.12313043999949552,
+                  -0.36404119760160575
+                ],
+                [
+                  0.04739576789347047,
+                  0.07826400544921384
+                ],
+                [
+                  0.4145290859084246,
+                  0.41152269798819324
+                ],
+                [
+                  0.5267405612238942,
+                  0.24744392730337755
+                ],
+                [
+                  0.061261790198325686,
+                  0.04601552345773193
+                ],
+                [
+                  -0.23439911740563382,
+                  -0.3004046846162141
+                ],
+                [
+                  -0.012639232670120949,
+                  -0.07139599009986644
+                ]
+              ],
+              "probabilities": [
+                0.007758315630603227,
+                0.1476870988056807,
+                0.0083716133631663,
+                0.34118529402355574,
+                0.33868411599778236,
+                0.005870435337392752,
+                0.14518592077990716,
+                0.005257137604829679
+              ],
+              "stateNormSquared": 0.9999999315429179,
+              "expectations": [
+                -0.36358371188329996,
+                0.2719871452706632,
+                0.38576979497062397,
+                4.314787766249904e-17,
+                0.999999931542918,
+                -5.551115123125783e-17,
+                -0.250040689570456
+              ],
+              "jacobian": [
+                [
+                  -0.1289388194642667,
+                  0.11646586331454825,
+                  0.520208755990046
+                ],
+                [
+                  -0.7669536317528931,
+                  0.0,
+                  0.19009694612664726
+                ],
+                [
+                  -1.724495612756769e-17,
+                  -0.1235726759573623,
+                  -0.5519521875738378
+                ],
+                [
+                  2.0084415839696653e-17,
+                  7.310731529303681e-17,
+                  1.8110841292909977e-17
+                ],
+                [
+                  -1.3571579491570487e-16,
+                  0.0,
+                  0.0
+                ],
+                [
+                  3.20276317847477e-17,
+                  -7.90474963953285e-18,
+                  6.195230505635445e-17
+                ],
+                [
+                  5.329880071474356e-18,
+                  -0.7805782694484201,
+                  -0.17475815427763744
+                ]
+              ],
+              "trainableGateIndices": [
+                8,
+                1,
+                3
+              ],
+              "bitOrder": "lexicographic bitstrings q0 q1 ...; q0 is the leftmost, most significant bit",
+              "angleUnit": "rad",
+              "backend": "QubitCircuit state vector (CPU)",
+              "gradientMethod": "PyTorch reverse-mode autodifferentiation"
+            },
+            "limitations": [
+              "Ideal pure-state simulation from the all-zero state, with no noise or finite-shot sampling.",
+              "Each selected rotation angle is an independent parameter; no parameter sharing, optimization loop or hardware execution.",
+              "Probabilities and amplitudes are raw numerical outputs without clipping or renormalization; full state output grows as 2^numQubits.",
+              "This L1 execution does not establish scientific Acceptance or external-model validation.",
+              "DeepQuantum constructs some fixed gate constants, including H, at complex64 precision before promotion; numerical norm drift is returned unchanged.",
+              "This action exposes differentiable qubit circuits; DeepQuantum photonic, Gaussian, Fock, MPS and distributed APIs are outside this tool contract."
+            ],
+            "maxAmplitudeError": 1.9993257573217515e-08,
+            "maxExpectationError": 6.845708167002584e-08,
+            "maxJacobianError": 5.343611408914484e-08
+          },
+          {
+            "label": "analytic-ry",
+            "input": {
+              "numQubits": 1,
+              "gates": [
+                {
+                  "gate": "RY",
+                  "targets": [
+                    0
+                  ],
+                  "angle": 0.37
+                }
+              ],
+              "observables": [
+                "X",
+                "Y",
+                "Z",
+                "I"
+              ],
+              "trainableGateIndices": [
+                0
+              ]
+            },
+            "result": {
+              "numQubits": 1,
+              "amplitudes": [
+                [
+                  0.9829362506302315,
+                  0.0
+                ],
+                [
+                  0.18394653352804122,
+                  0.0
+                ]
+              ],
+              "probabilities": [
+                0.9661636728030173,
+                0.03383632719698279
+              ],
+              "stateNormSquared": 1.0,
+              "expectations": [
+                0.361615431964962,
+                0.0,
+                0.9323273456060345,
+                1.0
+              ],
+              "jacobian": [
+                [
+                  0.9323273456060345
+                ],
+                [
+                  0.0
+                ],
+                [
+                  -0.361615431964962
+                ],
+                [
+                  0.0
+                ]
+              ],
+              "trainableGateIndices": [
+                0
+              ],
+              "bitOrder": "lexicographic bitstrings q0 q1 ...; q0 is the leftmost, most significant bit",
+              "angleUnit": "rad",
+              "backend": "QubitCircuit state vector (CPU)",
+              "gradientMethod": "PyTorch reverse-mode autodifferentiation"
+            },
+            "limitations": [
+              "Ideal pure-state simulation from the all-zero state, with no noise or finite-shot sampling.",
+              "Each selected rotation angle is an independent parameter; no parameter sharing, optimization loop or hardware execution.",
+              "Probabilities and amplitudes are raw numerical outputs without clipping or renormalization; full state output grows as 2^numQubits.",
+              "This L1 execution does not establish scientific Acceptance or external-model validation.",
+              "DeepQuantum constructs some fixed gate constants, including H, at complex64 precision before promotion; numerical norm drift is returned unchanged.",
+              "This action exposes differentiable qubit circuits; DeepQuantum photonic, Gaussian, Fock, MPS and distributed APIs are outside this tool contract."
+            ],
+            "maxAmplitudeError": 0.0,
+            "maxExpectationError": 0.0,
+            "maxJacobianError": 1.6653345369377348e-16
+          },
+          {
+            "label": "q0-most-significant",
+            "input": {
+              "numQubits": 3,
+              "gates": [
+                {
+                  "gate": "X",
+                  "targets": [
+                    0
+                  ]
+                }
+              ],
+              "observables": [
+                "ZII",
+                "IIZ",
+                "IZI"
+              ],
+              "trainableGateIndices": []
+            },
+            "result": {
+              "numQubits": 3,
+              "amplitudes": [
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ]
+              ],
+              "probabilities": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "stateNormSquared": 1.0,
+              "expectations": [
+                -1.0,
+                1.0,
+                1.0
+              ],
+              "jacobian": [
+                [],
+                [],
+                []
+              ],
+              "trainableGateIndices": [],
+              "bitOrder": "lexicographic bitstrings q0 q1 ...; q0 is the leftmost, most significant bit",
+              "angleUnit": "rad",
+              "backend": "QubitCircuit state vector (CPU)",
+              "gradientMethod": "PyTorch reverse-mode autodifferentiation"
+            },
+            "limitations": [
+              "Ideal pure-state simulation from the all-zero state, with no noise or finite-shot sampling.",
+              "Each selected rotation angle is an independent parameter; no parameter sharing, optimization loop or hardware execution.",
+              "Probabilities and amplitudes are raw numerical outputs without clipping or renormalization; full state output grows as 2^numQubits.",
+              "This L1 execution does not establish scientific Acceptance or external-model validation.",
+              "DeepQuantum constructs some fixed gate constants, including H, at complex64 precision before promotion; numerical norm drift is returned unchanged.",
+              "This action exposes differentiable qubit circuits; DeepQuantum photonic, Gaussian, Fock, MPS and distributed APIs are outside this tool contract."
+            ],
+            "maxAmplitudeError": 0.0,
+            "maxExpectationError": 0.0,
+            "maxJacobianError": 0
+          },
+          {
+            "label": "empty-circuit-no-parameters",
+            "input": {
+              "numQubits": 2,
+              "gates": [],
+              "observables": [
+                "II",
+                "ZI",
+                "IX",
+                "YY"
+              ],
+              "trainableGateIndices": []
+            },
+            "result": {
+              "numQubits": 2,
+              "amplitudes": [
+                [
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ]
+              ],
+              "probabilities": [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "stateNormSquared": 1.0,
+              "expectations": [
+                1.0,
+                1.0,
+                0.0,
+                0.0
+              ],
+              "jacobian": [
+                [],
+                [],
+                [],
+                []
+              ],
+              "trainableGateIndices": [],
+              "bitOrder": "lexicographic bitstrings q0 q1 ...; q0 is the leftmost, most significant bit",
+              "angleUnit": "rad",
+              "backend": "QubitCircuit state vector (CPU)",
+              "gradientMethod": "PyTorch reverse-mode autodifferentiation"
+            },
+            "limitations": [
+              "Ideal pure-state simulation from the all-zero state, with no noise or finite-shot sampling.",
+              "Each selected rotation angle is an independent parameter; no parameter sharing, optimization loop or hardware execution.",
+              "Probabilities and amplitudes are raw numerical outputs without clipping or renormalization; full state output grows as 2^numQubits.",
+              "This L1 execution does not establish scientific Acceptance or external-model validation.",
+              "DeepQuantum constructs some fixed gate constants, including H, at complex64 precision before promotion; numerical norm drift is returned unchanged.",
+              "This action exposes differentiable qubit circuits; DeepQuantum photonic, Gaussian, Fock, MPS and distributed APIs are outside this tool contract."
+            ],
+            "maxAmplitudeError": 0.0,
+            "maxExpectationError": 0.0,
+            "maxJacobianError": 0
+          },
+          {
+            "label": "raw-norm-no-renormalization",
+            "input": {
+              "numQubits": 1,
+              "gates": [
+                {
+                  "gate": "H",
+                  "targets": [
+                    0
+                  ]
+                },
+                {
+                  "gate": "H",
+                  "targets": [
+                    0
+                  ]
+                },
+                {
+                  "gate": "H",
+                  "targets": [
+                    0
+                  ]
+                },
+                {
+                  "gate": "H",
+                  "targets": [
+                    0
+                  ]
+                }
+              ],
+              "observables": [
+                "I",
+                "Z"
+              ],
+              "trainableGateIndices": []
+            },
+            "result": {
+              "numQubits": 1,
+              "amplitudes": [
+                [
+                  0.9999999315429176,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ]
+              ],
+              "probabilities": [
+                0.9999998630858398,
+                0.0
+              ],
+              "stateNormSquared": 0.9999998630858398,
+              "expectations": [
+                0.9999998630858398,
+                0.9999998630858398
+              ],
+              "jacobian": [
+                [],
+                []
+              ],
+              "trainableGateIndices": [],
+              "bitOrder": "lexicographic bitstrings q0 q1 ...; q0 is the leftmost, most significant bit",
+              "angleUnit": "rad",
+              "backend": "QubitCircuit state vector (CPU)",
+              "gradientMethod": "PyTorch reverse-mode autodifferentiation"
+            },
+            "limitations": [
+              "Ideal pure-state simulation from the all-zero state, with no noise or finite-shot sampling.",
+              "Each selected rotation angle is an independent parameter; no parameter sharing, optimization loop or hardware execution.",
+              "Probabilities and amplitudes are raw numerical outputs without clipping or renormalization; full state output grows as 2^numQubits.",
+              "This L1 execution does not establish scientific Acceptance or external-model validation.",
+              "DeepQuantum constructs some fixed gate constants, including H, at complex64 precision before promotion; numerical norm drift is returned unchanged.",
+              "This action exposes differentiable qubit circuits; DeepQuantum photonic, Gaussian, Fock, MPS and distributed APIs are outside this tool contract."
+            ],
+            "maxAmplitudeError": 6.845708211411505e-08,
+            "maxExpectationError": 1.369141595652934e-07,
+            "maxJacobianError": 0
+          },
+          {
+            "label": "complex-phase-reordered-parameters",
+            "input": {
+              "numQubits": 1,
+              "gates": [
+                {
+                  "gate": "RY",
+                  "targets": [
+                    0
+                  ],
+                  "angle": 0.71
+                },
+                {
+                  "gate": "RZ",
+                  "targets": [
+                    0
+                  ],
+                  "angle": -0.43
+                }
+              ],
+              "observables": [
+                "Y",
+                "X",
+                "I",
+                "Z"
+              ],
+              "trainableGateIndices": [
+                1,
+                0
+              ]
+            },
+            "result": {
+              "numQubits": 1,
+              "amplitudes": [
+                [
+                  0.916058485687453,
+                  0.2000444670448664
+                ],
+                [
+                  0.33958758168910286,
+                  -0.07415751052518423
+                ]
+              ],
+              "probabilities": [
+                0.8791809379952541,
+                0.12081906200474592
+              ],
+              "stateNormSquared": 1.0,
+              "expectations": [
+                -0.2717304671762064,
+                0.5924945723399985,
+                1.0,
+                0.7583618759905082
+              ],
+              "jacobian": [
+                [
+                  0.5924945723399985,
+                  -0.31613892377588476
+                ],
+                [
+                  0.27173046717620647,
+                  0.6893249711345646
+                ],
+                [
+                  2.7072007313316434e-17,
+                  5.551115123125783e-17
+                ],
+                [
+                  2.6642578305161118e-17,
+                  -0.6518337710215367
+                ]
+              ],
+              "trainableGateIndices": [
+                1,
+                0
+              ],
+              "bitOrder": "lexicographic bitstrings q0 q1 ...; q0 is the leftmost, most significant bit",
+              "angleUnit": "rad",
+              "backend": "QubitCircuit state vector (CPU)",
+              "gradientMethod": "PyTorch reverse-mode autodifferentiation"
+            },
+            "limitations": [
+              "Ideal pure-state simulation from the all-zero state, with no noise or finite-shot sampling.",
+              "Each selected rotation angle is an independent parameter; no parameter sharing, optimization loop or hardware execution.",
+              "Probabilities and amplitudes are raw numerical outputs without clipping or renormalization; full state output grows as 2^numQubits.",
+              "This L1 execution does not establish scientific Acceptance or external-model validation.",
+              "DeepQuantum constructs some fixed gate constants, including H, at complex64 precision before promotion; numerical norm drift is returned unchanged.",
+              "This action exposes differentiable qubit circuits; DeepQuantum photonic, Gaussian, Fock, MPS and distributed APIs are outside this tool contract."
+            ],
+            "maxAmplitudeError": 0.0,
+            "maxExpectationError": 0.0,
+            "maxJacobianError": 1.1102230246251565e-16
+          },
+          {
+            "label": "zero-rotation-stationary-points",
+            "input": {
+              "numQubits": 2,
+              "gates": [
+                {
+                  "gate": "RX",
+                  "targets": [
+                    0
+                  ],
+                  "angle": 0
+                },
+                {
+                  "gate": "RY",
+                  "targets": [
+                    1
+                  ],
+                  "angle": 0
+                }
+              ],
+              "observables": [
+                "YI",
+                "IX",
+                "ZZ",
+                "II"
+              ],
+              "trainableGateIndices": [
+                1,
+                0
+              ]
+            },
+            "result": {
+              "numQubits": 2,
+              "amplitudes": [
+                [
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ]
+              ],
+              "probabilities": [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "stateNormSquared": 1.0,
+              "expectations": [
+                0.0,
+                0.0,
+                1.0,
+                1.0
+              ],
+              "jacobian": [
+                [
+                  0.0,
+                  -1.0
+                ],
+                [
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ]
+              ],
+              "trainableGateIndices": [
+                1,
+                0
+              ],
+              "bitOrder": "lexicographic bitstrings q0 q1 ...; q0 is the leftmost, most significant bit",
+              "angleUnit": "rad",
+              "backend": "QubitCircuit state vector (CPU)",
+              "gradientMethod": "PyTorch reverse-mode autodifferentiation"
+            },
+            "limitations": [
+              "Ideal pure-state simulation from the all-zero state, with no noise or finite-shot sampling.",
+              "Each selected rotation angle is an independent parameter; no parameter sharing, optimization loop or hardware execution.",
+              "Probabilities and amplitudes are raw numerical outputs without clipping or renormalization; full state output grows as 2^numQubits.",
+              "This L1 execution does not establish scientific Acceptance or external-model validation.",
+              "DeepQuantum constructs some fixed gate constants, including H, at complex64 precision before promotion; numerical norm drift is returned unchanged.",
+              "This action exposes differentiable qubit circuits; DeepQuantum photonic, Gaussian, Fock, MPS and distributed APIs are outside this tool contract."
+            ],
+            "maxAmplitudeError": 0.0,
+            "maxExpectationError": 0.0,
+            "maxJacobianError": 0.0
+          }
+        ]
+      },
+      "realMcpCalls": [
+        {
+          "schemaVersion": "1.0",
+          "source": {
+            "name": "deepquantum",
+            "version": "4.5.0",
+            "repository": "https://github.com/TuringQ/deepquantum"
+          },
+          "input": {
+            "numQubits": 2,
+            "gates": [
+              {
+                "gate": "RY",
+                "targets": [
+                  0
+                ],
+                "angle": 0.4
+              },
+              {
+                "gate": "CX",
+                "targets": [
+                  0,
+                  1
+                ]
+              }
+            ],
+            "observables": [
+              "ZI",
+              "IZ",
+              "XX"
+            ],
+            "trainableGateIndices": [
+              0
+            ],
+            "execution": {}
+          },
+          "inputSha256": "c41be1fe9e8966d53a1ae654a31fba9bb16d432bac5614c7ea424b7c391c5237",
+          "dependencyLockSha256": "9668859c1a79677565c5c6c7c6e5cc0318c38077eda36140c8b28053132c96ff",
+          "result": {
+            "numQubits": 2,
+            "amplitudes": [
+              [
+                0.9800665778412416,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0.19866933079506122,
+                0
+              ]
+            ],
+            "probabilities": [
+              0.9605304970014426,
+              0,
+              0,
+              0.039469502998557456
+            ],
+            "stateNormSquared": 1,
+            "expectations": [
+              0.9210609940028851,
+              0.9210609940028851,
+              0.38941834230865047
+            ],
+            "jacobian": [
+              [
+                -0.38941834230865047
+              ],
+              [
+                -0.38941834230865047
+              ],
+              [
+                0.9210609940028851
+              ]
+            ],
+            "trainableGateIndices": [
+              0
+            ],
+            "bitOrder": "lexicographic bitstrings q0 q1 ...; q0 is the leftmost, most significant bit",
+            "angleUnit": "rad",
+            "backend": "QubitCircuit state vector (CPU)",
+            "gradientMethod": "PyTorch reverse-mode autodifferentiation"
+          },
+          "scientificValidation": "not_evaluated",
+          "limitations": [
+            "Ideal pure-state simulation from the all-zero state, with no noise or finite-shot sampling.",
+            "Each selected rotation angle is an independent parameter; no parameter sharing, optimization loop or hardware execution.",
+            "Probabilities and amplitudes are raw numerical outputs without clipping or renormalization; full state output grows as 2^numQubits.",
+            "This L1 execution does not establish scientific Acceptance or external-model validation.",
+            "DeepQuantum constructs some fixed gate constants, including H, at complex64 precision before promotion; numerical norm drift is returned unchanged.",
+            "This action exposes differentiable qubit circuits; DeepQuantum photonic, Gaussian, Fock, MPS and distributed APIs are outside this tool contract."
+          ]
+        },
+        {
+          "schemaVersion": "1.0",
+          "source": {
+            "name": "deepquantum",
+            "version": "4.5.0",
+            "repository": "https://github.com/TuringQ/deepquantum"
+          },
+          "input": {
+            "numQubits": 2,
+            "gates": [
+              {
+                "gate": "RY",
+                "targets": [
+                  0
+                ],
+                "angle": 0.4
+              },
+              {
+                "gate": "CX",
+                "targets": [
+                  0,
+                  1
+                ]
+              }
+            ],
+            "observables": [
+              "ZI",
+              "IZ",
+              "XX"
+            ],
+            "trainableGateIndices": [
+              0
+            ],
+            "execution": {}
+          },
+          "inputSha256": "c41be1fe9e8966d53a1ae654a31fba9bb16d432bac5614c7ea424b7c391c5237",
+          "dependencyLockSha256": "9668859c1a79677565c5c6c7c6e5cc0318c38077eda36140c8b28053132c96ff",
+          "result": {
+            "numQubits": 2,
+            "amplitudes": [
+              [
+                0.9800665778412416,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0.19866933079506122,
+                0
+              ]
+            ],
+            "probabilities": [
+              0.9605304970014426,
+              0,
+              0,
+              0.039469502998557456
+            ],
+            "stateNormSquared": 1,
+            "expectations": [
+              0.9210609940028851,
+              0.9210609940028851,
+              0.38941834230865047
+            ],
+            "jacobian": [
+              [
+                -0.38941834230865047
+              ],
+              [
+                -0.38941834230865047
+              ],
+              [
+                0.9210609940028851
+              ]
+            ],
+            "trainableGateIndices": [
+              0
+            ],
+            "bitOrder": "lexicographic bitstrings q0 q1 ...; q0 is the leftmost, most significant bit",
+            "angleUnit": "rad",
+            "backend": "QubitCircuit state vector (CPU)",
+            "gradientMethod": "PyTorch reverse-mode autodifferentiation"
+          },
+          "scientificValidation": "not_evaluated",
+          "limitations": [
+            "Ideal pure-state simulation from the all-zero state, with no noise or finite-shot sampling.",
+            "Each selected rotation angle is an independent parameter; no parameter sharing, optimization loop or hardware execution.",
+            "Probabilities and amplitudes are raw numerical outputs without clipping or renormalization; full state output grows as 2^numQubits.",
+            "This L1 execution does not establish scientific Acceptance or external-model validation.",
+            "DeepQuantum constructs some fixed gate constants, including H, at complex64 precision before promotion; numerical norm drift is returned unchanged.",
+            "This action exposes differentiable qubit circuits; DeepQuantum photonic, Gaussian, Fock, MPS and distributed APIs are outside this tool contract."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tensorcircuit-differentiable",
+      "sdk": "tensorcircuit",
+      "version": "0.12.0",
+      "license": "Apache-2.0",
+      "sourceRepository": "https://github.com/tencent-quantum-lab/tensorcircuit",
+      "officialDocumentation": "https://tensorcircuit.readthedocs.io/en/latest/quickstart.html",
+      "python": "3.12.13 (main, Mar 20 2026, 00:20:20) [Clang 22.1.1 ]",
+      "tool": "differentiate_tensorcircuit_circuit",
+      "mcpServer": "tensorcircuit_local",
+      "maturity": "L1",
+      "sourceHashes": {
+        ".agents/skills/tensorcircuit-differentiable/pyproject.toml": "cbcd6c100bfe0baa52c76ef6789a3034ca8149a9d424aaf78492751a03d35c11",
+        ".agents/skills/tensorcircuit-differentiable/uv.lock": "fe09754e6b38f6f60eed1503d253c190389d08aa5cd7f43ffadcc7a4e37d1534",
+        ".agents/skills/tensorcircuit-differentiable/SKILL.md": "d8a0a942b37ec7a72d8294c7e86f0b7a8ae15d57dd6f5f8f74a31fbff6d27c6e",
+        ".agents/skills/tensorcircuit-differentiable/mcp/bridge.py": "05b5ae56e77cf13513f9092cd4bccdd275302a293820a498de56cd1eed77ca1a",
+        ".agents/skills/tensorcircuit-differentiable/mcp/contracts.mjs": "d174b083f9095c994eab357d6598c74cb6b8dea1cecca9553e175dfc1597f2aa",
+        ".agents/skills/tensorcircuit-differentiable/mcp/server.mjs": "5eb228eb59cde229ee4a7ca4c3a2c7ebd9d1bc9980bac64e94171da09face6b9",
+        ".agents/skills/tensorcircuit-differentiable/test/science_test.py": "1734bc3f43e2165c5244786459aee8cd6f5abda199ec4960c7c458f6089226ab",
+        "src/lib/sdk-differentiable.mjs": "fcdb7b0a4e11a0265c175c522cf657289ea5ecb6f086552419cf69f13e93143d",
+        "src/lib/sdk_differentiable.py": "85f6c7edb0d1e930d5dfa1fb817bed5338dcd700fa1f560993486b1be76860f6",
+        "tests/fixtures/sdk_differentiable_science.py": "b8e1a752d2d7f794a6599c2302333ebc1ada020b0451a15977dcea0fa3908803",
+        "tests/sdk-differentiable-contracts.test.mjs": "ab45259bc5a2db1f521ad0acee73e796420b94ca021fd201f173a75cf349a6f0",
+        "tests/sdk-differentiable-live.test.mjs": "9506007a2b0bd6eddffbcb49aef86490b05926e2a3c086a8f546f16a9b768cc6",
+        "tests/fixtures/sdk-differentiable.mjs": "69943caaf37b29cdbaefeaee494023dac2e9c93ce60b0544f937eeb7aaf0bc7b"
+      },
+      "scienceRegression": {
+        "sdk": "tensorcircuit",
+        "version": "0.12.0",
+        "python": "3.12.13 (main, Mar 20 2026, 00:20:20) [Clang 22.1.1 ]",
+        "testsRun": 7,
+        "failures": 0,
+        "errors": 0,
+        "reference": "independent dense Pauli/gate algebra and exact parameter-shift derivative",
+        "tolerance": 1e-10,
+        "networkConnectBlocked": true,
+        "cases": [
+          {
+            "label": "all-gates-three-qubits",
+            "input": {
+              "numQubits": 3,
+              "gates": [
+                {
+                  "gate": "H",
+                  "targets": [
+                    2
+                  ]
+                },
+                {
+                  "gate": "RY",
+                  "targets": [
+                    0
+                  ],
+                  "angle": 0.31
+                },
+                {
+                  "gate": "CX",
+                  "targets": [
+                    2,
+                    0
+                  ]
+                },
+                {
+                  "gate": "RX",
+                  "targets": [
+                    1
+                  ],
+                  "angle": -0.61
+                },
+                {
+                  "gate": "CZ",
+                  "targets": [
+                    1,
+                    2
+                  ]
+                },
+                {
+                  "gate": "Y",
+                  "targets": [
+                    0
+                  ]
+                },
+                {
+                  "gate": "S",
+                  "targets": [
+                    2
+                  ]
+                },
+                {
+                  "gate": "T",
+                  "targets": [
+                    1
+                  ]
+                },
+                {
+                  "gate": "RZ",
+                  "targets": [
+                    2
+                  ],
+                  "angle": 1.23
+                },
+                {
+                  "gate": "SWAP",
+                  "targets": [
+                    2,
+                    0
+                  ]
+                },
+                {
+                  "gate": "X",
+                  "targets": [
+                    1
+                  ]
+                },
+                {
+                  "gate": "Z",
+                  "targets": [
+                    2
+                  ]
+                },
+                {
+                  "gate": "RX",
+                  "targets": [
+                    0
+                  ],
+                  "angle": 0.12
+                },
+                {
+                  "gate": "H",
+                  "targets": [
+                    1
+                  ]
+                }
+              ],
+              "observables": [
+                "XZY",
+                "YIX",
+                "IZZ",
+                "IIY",
+                "III",
+                "ZZZ",
+                "IXX"
+              ],
+              "trainableGateIndices": [
+                8,
+                1,
+                3
+              ]
+            },
+            "result": {
+              "numQubits": 3,
+              "amplitudes": [
+                [
+                  -0.004806988263371642,
+                  -0.08795003709806337
+                ],
+                [
+                  -0.12313044421407113,
+                  -0.3640412100622055
+                ],
+                [
+                  0.047395769515758523,
+                  0.07826400812807668
+                ],
+                [
+                  0.41452910009715116,
+                  0.4115227120740155
+                ],
+                [
+                  0.526740579253456,
+                  0.24744393577302262
+                ],
+                [
+                  0.06126179229522748,
+                  0.04601552503277624
+                ],
+                [
+                  -0.23439912542877409,
+                  -0.30040469489862875
+                ],
+                [
+                  -0.01263923310274347,
+                  -0.07139599254364713
+                ]
+              ],
+              "probabilities": [
+                0.007758316161714917,
+                0.14768710891590936,
+                0.008371613936262559,
+                0.341185317380107,
+                0.3386841391831101,
+                0.005870435739265649,
+                0.14518593071891234,
+                0.005257137964718004
+              ],
+              "stateNormSquared": 0.9999999999999999,
+              "expectations": [
+                -0.36358373677318157,
+                0.27198716389011074,
+                0.38576982137930005,
+                -1.3877787807814457e-17,
+                1.0,
+                1.9081958235744878e-17,
+                -0.2500407066875132
+              ],
+              "jacobian": [
+                [
+                  -0.12893882829104275,
+                  0.11646587128746197,
+                  0.5202087916020222
+                ],
+                [
+                  -0.7669536842563045,
+                  0.0,
+                  0.19009695914013036
+                ],
+                [
+                  -2.7755575615628914e-17,
+                  -0.12357268441678765,
+                  -0.5519522253588768
+                ],
+                [
+                  -2.3345370502427216e-17,
+                  -2.4353922172523852e-17,
+                  -1.2453592726776737e-17
+                ],
+                [
+                  0.0,
+                  -5.551115123125783e-17,
+                  5.551115123125783e-17
+                ],
+                [
+                  -3.4005025749440483e-17,
+                  3.427853593939711e-18,
+                  -4.878173746977253e-17
+                ],
+                [
+                  4.163336342344337e-17,
+                  -0.7805783228845345,
+                  -0.17475816624107152
+                ]
+              ],
+              "trainableGateIndices": [
+                8,
+                1,
+                3
+              ],
+              "bitOrder": "lexicographic bitstrings q0 q1 ...; q0 is the leftmost, most significant bit",
+              "angleUnit": "rad",
+              "backend": "TensorCircuit contraction with JAX CPU complex128",
+              "gradientMethod": "JAX reverse-mode autodifferentiation"
+            },
+            "limitations": [
+              "Ideal pure-state simulation from the all-zero state, with no noise or finite-shot sampling.",
+              "Each selected rotation angle is an independent parameter; no parameter sharing, optimization loop or hardware execution.",
+              "Probabilities and amplitudes are raw numerical outputs without clipping or renormalization; full state output grows as 2^numQubits.",
+              "This L1 execution does not establish scientific Acceptance or external-model validation."
+            ],
+            "maxAmplitudeError": 1.1102230246251565e-16,
+            "maxExpectationError": 2.7755575615628914e-16,
+            "maxJacobianError": 3.3306690738754696e-16
+          },
+          {
+            "label": "analytic-ry",
+            "input": {
+              "numQubits": 1,
+              "gates": [
+                {
+                  "gate": "RY",
+                  "targets": [
+                    0
+                  ],
+                  "angle": 0.37
+                }
+              ],
+              "observables": [
+                "X",
+                "Y",
+                "Z",
+                "I"
+              ],
+              "trainableGateIndices": [
+                0
+              ]
+            },
+            "result": {
+              "numQubits": 1,
+              "amplitudes": [
+                [
+                  0.9829362506302315,
+                  0.0
+                ],
+                [
+                  0.18394653352804122,
+                  0.0
+                ]
+              ],
+              "probabilities": [
+                0.9661636728030173,
+                0.03383632719698279
+              ],
+              "stateNormSquared": 1.0,
+              "expectations": [
+                0.361615431964962,
+                0.0,
+                0.9323273456060345,
+                1.0
+              ],
+              "jacobian": [
+                [
+                  0.9323273456060345
+                ],
+                [
+                  0.0
+                ],
+                [
+                  -0.361615431964962
+                ],
+                [
+                  0.0
+                ]
+              ],
+              "trainableGateIndices": [
+                0
+              ],
+              "bitOrder": "lexicographic bitstrings q0 q1 ...; q0 is the leftmost, most significant bit",
+              "angleUnit": "rad",
+              "backend": "TensorCircuit contraction with JAX CPU complex128",
+              "gradientMethod": "JAX reverse-mode autodifferentiation"
+            },
+            "limitations": [
+              "Ideal pure-state simulation from the all-zero state, with no noise or finite-shot sampling.",
+              "Each selected rotation angle is an independent parameter; no parameter sharing, optimization loop or hardware execution.",
+              "Probabilities and amplitudes are raw numerical outputs without clipping or renormalization; full state output grows as 2^numQubits.",
+              "This L1 execution does not establish scientific Acceptance or external-model validation."
+            ],
+            "maxAmplitudeError": 0.0,
+            "maxExpectationError": 0.0,
+            "maxJacobianError": 1.6653345369377348e-16
+          },
+          {
+            "label": "q0-most-significant",
+            "input": {
+              "numQubits": 3,
+              "gates": [
+                {
+                  "gate": "X",
+                  "targets": [
+                    0
+                  ]
+                }
+              ],
+              "observables": [
+                "ZII",
+                "IIZ",
+                "IZI"
+              ],
+              "trainableGateIndices": []
+            },
+            "result": {
+              "numQubits": 3,
+              "amplitudes": [
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ]
+              ],
+              "probabilities": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "stateNormSquared": 1.0,
+              "expectations": [
+                -1.0,
+                1.0,
+                1.0
+              ],
+              "jacobian": [
+                [],
+                [],
+                []
+              ],
+              "trainableGateIndices": [],
+              "bitOrder": "lexicographic bitstrings q0 q1 ...; q0 is the leftmost, most significant bit",
+              "angleUnit": "rad",
+              "backend": "TensorCircuit contraction with JAX CPU complex128",
+              "gradientMethod": "JAX reverse-mode autodifferentiation"
+            },
+            "limitations": [
+              "Ideal pure-state simulation from the all-zero state, with no noise or finite-shot sampling.",
+              "Each selected rotation angle is an independent parameter; no parameter sharing, optimization loop or hardware execution.",
+              "Probabilities and amplitudes are raw numerical outputs without clipping or renormalization; full state output grows as 2^numQubits.",
+              "This L1 execution does not establish scientific Acceptance or external-model validation."
+            ],
+            "maxAmplitudeError": 0.0,
+            "maxExpectationError": 0.0,
+            "maxJacobianError": 0
+          },
+          {
+            "label": "empty-circuit-no-parameters",
+            "input": {
+              "numQubits": 2,
+              "gates": [],
+              "observables": [
+                "II",
+                "ZI",
+                "IX",
+                "YY"
+              ],
+              "trainableGateIndices": []
+            },
+            "result": {
+              "numQubits": 2,
+              "amplitudes": [
+                [
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ]
+              ],
+              "probabilities": [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "stateNormSquared": 1.0,
+              "expectations": [
+                1.0,
+                1.0,
+                0.0,
+                0.0
+              ],
+              "jacobian": [
+                [],
+                [],
+                [],
+                []
+              ],
+              "trainableGateIndices": [],
+              "bitOrder": "lexicographic bitstrings q0 q1 ...; q0 is the leftmost, most significant bit",
+              "angleUnit": "rad",
+              "backend": "TensorCircuit contraction with JAX CPU complex128",
+              "gradientMethod": "JAX reverse-mode autodifferentiation"
+            },
+            "limitations": [
+              "Ideal pure-state simulation from the all-zero state, with no noise or finite-shot sampling.",
+              "Each selected rotation angle is an independent parameter; no parameter sharing, optimization loop or hardware execution.",
+              "Probabilities and amplitudes are raw numerical outputs without clipping or renormalization; full state output grows as 2^numQubits.",
+              "This L1 execution does not establish scientific Acceptance or external-model validation."
+            ],
+            "maxAmplitudeError": 0.0,
+            "maxExpectationError": 0.0,
+            "maxJacobianError": 0
+          },
+          {
+            "label": "raw-norm-no-renormalization",
+            "input": {
+              "numQubits": 1,
+              "gates": [
+                {
+                  "gate": "H",
+                  "targets": [
+                    0
+                  ]
+                },
+                {
+                  "gate": "H",
+                  "targets": [
+                    0
+                  ]
+                },
+                {
+                  "gate": "H",
+                  "targets": [
+                    0
+                  ]
+                },
+                {
+                  "gate": "H",
+                  "targets": [
+                    0
+                  ]
+                }
+              ],
+              "observables": [
+                "I",
+                "Z"
+              ],
+              "trainableGateIndices": []
+            },
+            "result": {
+              "numQubits": 1,
+              "amplitudes": [
+                [
+                  0.9999999999999997,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ]
+              ],
+              "probabilities": [
+                0.9999999999999993,
+                0.0
+              ],
+              "stateNormSquared": 0.9999999999999993,
+              "expectations": [
+                0.9999999999999993,
+                0.9999999999999993
+              ],
+              "jacobian": [
+                [],
+                []
+              ],
+              "trainableGateIndices": [],
+              "bitOrder": "lexicographic bitstrings q0 q1 ...; q0 is the leftmost, most significant bit",
+              "angleUnit": "rad",
+              "backend": "TensorCircuit contraction with JAX CPU complex128",
+              "gradientMethod": "JAX reverse-mode autodifferentiation"
+            },
+            "limitations": [
+              "Ideal pure-state simulation from the all-zero state, with no noise or finite-shot sampling.",
+              "Each selected rotation angle is an independent parameter; no parameter sharing, optimization loop or hardware execution.",
+              "Probabilities and amplitudes are raw numerical outputs without clipping or renormalization; full state output grows as 2^numQubits.",
+              "This L1 execution does not establish scientific Acceptance or external-model validation."
+            ],
+            "maxAmplitudeError": 6.223285321735373e-19,
+            "maxExpectationError": 0.0,
+            "maxJacobianError": 0
+          },
+          {
+            "label": "complex-phase-reordered-parameters",
+            "input": {
+              "numQubits": 1,
+              "gates": [
+                {
+                  "gate": "RY",
+                  "targets": [
+                    0
+                  ],
+                  "angle": 0.71
+                },
+                {
+                  "gate": "RZ",
+                  "targets": [
+                    0
+                  ],
+                  "angle": -0.43
+                }
+              ],
+              "observables": [
+                "Y",
+                "X",
+                "I",
+                "Z"
+              ],
+              "trainableGateIndices": [
+                1,
+                0
+              ]
+            },
+            "result": {
+              "numQubits": 1,
+              "amplitudes": [
+                [
+                  0.916058485687453,
+                  0.2000444670448664
+                ],
+                [
+                  0.33958758168910286,
+                  -0.07415751052518423
+                ]
+              ],
+              "probabilities": [
+                0.8791809379952541,
+                0.12081906200474592
+              ],
+              "stateNormSquared": 1.0,
+              "expectations": [
+                -0.2717304671762064,
+                0.5924945723399985,
+                1.0,
+                0.7583618759905082
+              ],
+              "jacobian": [
+                [
+                  0.5924945723399985,
+                  -0.31613892377588476
+                ],
+                [
+                  0.2717304671762064,
+                  0.6893249711345646
+                ],
+                [
+                  2.7755575615628914e-17,
+                  5.551115123125783e-17
+                ],
+                [
+                  0.0,
+                  -0.6518337710215367
+                ]
+              ],
+              "trainableGateIndices": [
+                1,
+                0
+              ],
+              "bitOrder": "lexicographic bitstrings q0 q1 ...; q0 is the leftmost, most significant bit",
+              "angleUnit": "rad",
+              "backend": "TensorCircuit contraction with JAX CPU complex128",
+              "gradientMethod": "JAX reverse-mode autodifferentiation"
+            },
+            "limitations": [
+              "Ideal pure-state simulation from the all-zero state, with no noise or finite-shot sampling.",
+              "Each selected rotation angle is an independent parameter; no parameter sharing, optimization loop or hardware execution.",
+              "Probabilities and amplitudes are raw numerical outputs without clipping or renormalization; full state output grows as 2^numQubits.",
+              "This L1 execution does not establish scientific Acceptance or external-model validation."
+            ],
+            "maxAmplitudeError": 0.0,
+            "maxExpectationError": 5.551115123125783e-17,
+            "maxJacobianError": 2.7755575615628914e-16
+          },
+          {
+            "label": "zero-rotation-stationary-points",
+            "input": {
+              "numQubits": 2,
+              "gates": [
+                {
+                  "gate": "RX",
+                  "targets": [
+                    0
+                  ],
+                  "angle": 0
+                },
+                {
+                  "gate": "RY",
+                  "targets": [
+                    1
+                  ],
+                  "angle": 0
+                }
+              ],
+              "observables": [
+                "YI",
+                "IX",
+                "ZZ",
+                "II"
+              ],
+              "trainableGateIndices": [
+                1,
+                0
+              ]
+            },
+            "result": {
+              "numQubits": 2,
+              "amplitudes": [
+                [
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ]
+              ],
+              "probabilities": [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "stateNormSquared": 1.0,
+              "expectations": [
+                0.0,
+                0.0,
+                1.0,
+                1.0
+              ],
+              "jacobian": [
+                [
+                  0.0,
+                  -1.0
+                ],
+                [
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ]
+              ],
+              "trainableGateIndices": [
+                1,
+                0
+              ],
+              "bitOrder": "lexicographic bitstrings q0 q1 ...; q0 is the leftmost, most significant bit",
+              "angleUnit": "rad",
+              "backend": "TensorCircuit contraction with JAX CPU complex128",
+              "gradientMethod": "JAX reverse-mode autodifferentiation"
+            },
+            "limitations": [
+              "Ideal pure-state simulation from the all-zero state, with no noise or finite-shot sampling.",
+              "Each selected rotation angle is an independent parameter; no parameter sharing, optimization loop or hardware execution.",
+              "Probabilities and amplitudes are raw numerical outputs without clipping or renormalization; full state output grows as 2^numQubits.",
+              "This L1 execution does not establish scientific Acceptance or external-model validation."
+            ],
+            "maxAmplitudeError": 0.0,
+            "maxExpectationError": 0.0,
+            "maxJacobianError": 0.0
+          }
+        ]
+      },
+      "realMcpCalls": [
+        {
+          "schemaVersion": "1.0",
+          "source": {
+            "name": "tensorcircuit",
+            "version": "0.12.0",
+            "repository": "https://github.com/tencent-quantum-lab/tensorcircuit"
+          },
+          "input": {
+            "numQubits": 2,
+            "gates": [
+              {
+                "gate": "RY",
+                "targets": [
+                  0
+                ],
+                "angle": 0.4
+              },
+              {
+                "gate": "CX",
+                "targets": [
+                  0,
+                  1
+                ]
+              }
+            ],
+            "observables": [
+              "ZI",
+              "IZ",
+              "XX"
+            ],
+            "trainableGateIndices": [
+              0
+            ],
+            "execution": {}
+          },
+          "inputSha256": "c41be1fe9e8966d53a1ae654a31fba9bb16d432bac5614c7ea424b7c391c5237",
+          "dependencyLockSha256": "fe09754e6b38f6f60eed1503d253c190389d08aa5cd7f43ffadcc7a4e37d1534",
+          "result": {
+            "numQubits": 2,
+            "amplitudes": [
+              [
+                0.9800665778412416,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0.19866933079506122,
+                0
+              ]
+            ],
+            "probabilities": [
+              0.9605304970014426,
+              0,
+              0,
+              0.039469502998557456
+            ],
+            "stateNormSquared": 1,
+            "expectations": [
+              0.9210609940028851,
+              0.9210609940028851,
+              0.38941834230865047
+            ],
+            "jacobian": [
+              [
+                -0.38941834230865047
+              ],
+              [
+                -0.38941834230865047
+              ],
+              [
+                0.9210609940028851
+              ]
+            ],
+            "trainableGateIndices": [
+              0
+            ],
+            "bitOrder": "lexicographic bitstrings q0 q1 ...; q0 is the leftmost, most significant bit",
+            "angleUnit": "rad",
+            "backend": "TensorCircuit contraction with JAX CPU complex128",
+            "gradientMethod": "JAX reverse-mode autodifferentiation"
+          },
+          "scientificValidation": "not_evaluated",
+          "limitations": [
+            "Ideal pure-state simulation from the all-zero state, with no noise or finite-shot sampling.",
+            "Each selected rotation angle is an independent parameter; no parameter sharing, optimization loop or hardware execution.",
+            "Probabilities and amplitudes are raw numerical outputs without clipping or renormalization; full state output grows as 2^numQubits.",
+            "This L1 execution does not establish scientific Acceptance or external-model validation."
+          ]
+        },
+        {
+          "schemaVersion": "1.0",
+          "source": {
+            "name": "tensorcircuit",
+            "version": "0.12.0",
+            "repository": "https://github.com/tencent-quantum-lab/tensorcircuit"
+          },
+          "input": {
+            "numQubits": 2,
+            "gates": [
+              {
+                "gate": "RY",
+                "targets": [
+                  0
+                ],
+                "angle": 0.4
+              },
+              {
+                "gate": "CX",
+                "targets": [
+                  0,
+                  1
+                ]
+              }
+            ],
+            "observables": [
+              "ZI",
+              "IZ",
+              "XX"
+            ],
+            "trainableGateIndices": [
+              0
+            ],
+            "execution": {}
+          },
+          "inputSha256": "c41be1fe9e8966d53a1ae654a31fba9bb16d432bac5614c7ea424b7c391c5237",
+          "dependencyLockSha256": "fe09754e6b38f6f60eed1503d253c190389d08aa5cd7f43ffadcc7a4e37d1534",
+          "result": {
+            "numQubits": 2,
+            "amplitudes": [
+              [
+                0.9800665778412416,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0.19866933079506122,
+                0
+              ]
+            ],
+            "probabilities": [
+              0.9605304970014426,
+              0,
+              0,
+              0.039469502998557456
+            ],
+            "stateNormSquared": 1,
+            "expectations": [
+              0.9210609940028851,
+              0.9210609940028851,
+              0.38941834230865047
+            ],
+            "jacobian": [
+              [
+                -0.38941834230865047
+              ],
+              [
+                -0.38941834230865047
+              ],
+              [
+                0.9210609940028851
+              ]
+            ],
+            "trainableGateIndices": [
+              0
+            ],
+            "bitOrder": "lexicographic bitstrings q0 q1 ...; q0 is the leftmost, most significant bit",
+            "angleUnit": "rad",
+            "backend": "TensorCircuit contraction with JAX CPU complex128",
+            "gradientMethod": "JAX reverse-mode autodifferentiation"
+          },
+          "scientificValidation": "not_evaluated",
+          "limitations": [
+            "Ideal pure-state simulation from the all-zero state, with no noise or finite-shot sampling.",
+            "Each selected rotation angle is an independent parameter; no parameter sharing, optimization loop or hardware execution.",
+            "Probabilities and amplitudes are raw numerical outputs without clipping or renormalization; full state output grows as 2^numQubits.",
+            "This L1 execution does not establish scientific Acceptance or external-model validation."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mindquantum-differentiable",
+      "sdk": "mindquantum",
+      "version": "0.12.0",
+      "license": "Apache-2.0",
+      "sourceRepository": "https://github.com/mindspore-ai/mindquantum",
+      "officialDocumentation": "https://www.mindspore.cn/mindquantum/docs/en/r0.12/simulator/mindquantum.simulator.Simulator.html",
+      "python": "3.11.15 (main, Mar  3 2026, 00:52:57) [Clang 17.0.0 (clang-1700.6.3.2)]",
+      "tool": "differentiate_mindquantum_circuit",
+      "mcpServer": "mindquantum_local",
+      "maturity": "L1",
+      "sourceHashes": {
+        ".agents/skills/mindquantum-differentiable/pyproject.toml": "02223c9bd70f5cdf4e2bf0be52af0107ae97ec683299a2a5dce9d955074133c3",
+        ".agents/skills/mindquantum-differentiable/uv.lock": "db42d48608b8226b0ec2d2c7d71c855fcaecd6ffa82224d6ed938c731cf60c9d",
+        ".agents/skills/mindquantum-differentiable/SKILL.md": "56e157c2d20fa461ad674ded0c52307477e675819ffc6216ab109a806a5119ea",
+        ".agents/skills/mindquantum-differentiable/mcp/bridge.py": "3e26fc51c739de897661dcd044d66c78b3260595372e8af844f373c9ead0931f",
+        ".agents/skills/mindquantum-differentiable/mcp/contracts.mjs": "4f9bf938df927e67849fb3fed7715b4a7a8113970a8f7abcdd5d826abfd6f475",
+        ".agents/skills/mindquantum-differentiable/mcp/server.mjs": "995f6c433528277d170d9bf6d4154a4567b7a1bc6e1c3be0b58e135d4e1aa2e2",
+        ".agents/skills/mindquantum-differentiable/test/science_test.py": "1734bc3f43e2165c5244786459aee8cd6f5abda199ec4960c7c458f6089226ab",
+        "src/lib/sdk-differentiable.mjs": "fcdb7b0a4e11a0265c175c522cf657289ea5ecb6f086552419cf69f13e93143d",
+        "src/lib/sdk_differentiable.py": "85f6c7edb0d1e930d5dfa1fb817bed5338dcd700fa1f560993486b1be76860f6",
+        "tests/fixtures/sdk_differentiable_science.py": "b8e1a752d2d7f794a6599c2302333ebc1ada020b0451a15977dcea0fa3908803",
+        "tests/sdk-differentiable-contracts.test.mjs": "ab45259bc5a2db1f521ad0acee73e796420b94ca021fd201f173a75cf349a6f0",
+        "tests/sdk-differentiable-live.test.mjs": "9506007a2b0bd6eddffbcb49aef86490b05926e2a3c086a8f546f16a9b768cc6",
+        "tests/fixtures/sdk-differentiable.mjs": "69943caaf37b29cdbaefeaee494023dac2e9c93ce60b0544f937eeb7aaf0bc7b"
+      },
+      "scienceRegression": {
+        "sdk": "mindquantum",
+        "version": "0.12.0",
+        "python": "3.11.15 (main, Mar  3 2026, 00:52:57) [Clang 17.0.0 (clang-1700.6.3.2)]",
+        "testsRun": 7,
+        "failures": 0,
+        "errors": 0,
+        "reference": "independent dense Pauli/gate algebra and exact parameter-shift derivative",
+        "tolerance": 1e-10,
+        "networkConnectBlocked": true,
+        "cases": [
+          {
+            "label": "all-gates-three-qubits",
+            "input": {
+              "numQubits": 3,
+              "gates": [
+                {
+                  "gate": "H",
+                  "targets": [
+                    2
+                  ]
+                },
+                {
+                  "gate": "RY",
+                  "targets": [
+                    0
+                  ],
+                  "angle": 0.31
+                },
+                {
+                  "gate": "CX",
+                  "targets": [
+                    2,
+                    0
+                  ]
+                },
+                {
+                  "gate": "RX",
+                  "targets": [
+                    1
+                  ],
+                  "angle": -0.61
+                },
+                {
+                  "gate": "CZ",
+                  "targets": [
+                    1,
+                    2
+                  ]
+                },
+                {
+                  "gate": "Y",
+                  "targets": [
+                    0
+                  ]
+                },
+                {
+                  "gate": "S",
+                  "targets": [
+                    2
+                  ]
+                },
+                {
+                  "gate": "T",
+                  "targets": [
+                    1
+                  ]
+                },
+                {
+                  "gate": "RZ",
+                  "targets": [
+                    2
+                  ],
+                  "angle": 1.23
+                },
+                {
+                  "gate": "SWAP",
+                  "targets": [
+                    2,
+                    0
+                  ]
+                },
+                {
+                  "gate": "X",
+                  "targets": [
+                    1
+                  ]
+                },
+                {
+                  "gate": "Z",
+                  "targets": [
+                    2
+                  ]
+                },
+                {
+                  "gate": "RX",
+                  "targets": [
+                    0
+                  ],
+                  "angle": 0.12
+                },
+                {
+                  "gate": "H",
+                  "targets": [
+                    1
+                  ]
+                }
+              ],
+              "observables": [
+                "XZY",
+                "YIX",
+                "IZZ",
+                "IIY",
+                "III",
+                "ZZZ",
+                "IXX"
+              ],
+              "trainableGateIndices": [
+                8,
+                1,
+                3
+              ]
+            },
+            "result": {
+              "numQubits": 3,
+              "amplitudes": [
+                [
+                  -0.004806988263371654,
+                  -0.08795003709806339
+                ],
+                [
+                  -0.12313044421407118,
+                  -0.3640412100622055
+                ],
+                [
+                  0.047395769515758544,
+                  0.07826400812807673
+                ],
+                [
+                  0.41452910009715127,
+                  0.4115227120740156
+                ],
+                [
+                  0.5267405792534562,
+                  0.24744393577302273
+                ],
+                [
+                  0.061261792295227505,
+                  0.046015525032776255
+                ],
+                [
+                  -0.2343991254287741,
+                  -0.30040469489862887
+                ],
+                [
+                  -0.012639233102743482,
+                  -0.07139599254364715
+                ]
+              ],
+              "probabilities": [
+                0.00775831616171492,
+                0.14768710891590936,
+                0.00837161393626257,
+                0.3411853173801072,
+                0.33868413918311036,
+                0.005870435739265655,
+                0.14518593071891248,
+                0.005257137964718005
+              ],
+              "stateNormSquared": 1.0000000000000004,
+              "expectations": [
+                -0.3635837367731818,
+                0.27198716389011074,
+                0.3857698213793003,
+                -1.3877787807814457e-17,
+                1.0000000000000004,
+                -1.214306433183765e-16,
+                -0.2500407066875133
+              ],
+              "jacobian": [
+                [
+                  -0.1289388282910427,
+                  0.11646587128746204,
+                  0.5202087916020225
+                ],
+                [
+                  -0.7669536842563052,
+                  -3.1987498122512485e-17,
+                  0.1900969591401305
+                ],
+                [
+                  0.0,
+                  -0.12357268441678779,
+                  -0.5519522253588771
+                ],
+                [
+                  1.2800742546430786e-17,
+                  -2.292062957543073e-18,
+                  1.1049830897850792e-18
+                ],
+                [
+                  1.0073222949646407e-17,
+                  -2.5761301062059877e-18,
+                  -1.2508473386006558e-17
+                ],
+                [
+                  -6.938893903907228e-17,
+                  4.266980764757637e-18,
+                  5.551115123125783e-17
+                ],
+                [
+                  -1.4904818469408716e-17,
+                  -0.780578322884535,
+                  -0.17475816624107166
+                ]
+              ],
+              "trainableGateIndices": [
+                8,
+                1,
+                3
+              ],
+              "bitOrder": "lexicographic bitstrings q0 q1 ...; q0 is the leftmost, most significant bit",
+              "angleUnit": "rad",
+              "backend": "mqvector CPU complex128",
+              "gradientMethod": "MindQuantum adjoint expectation gradient"
+            },
+            "limitations": [
+              "Ideal pure-state simulation from the all-zero state, with no noise or finite-shot sampling.",
+              "Each selected rotation angle is an independent parameter; no parameter sharing, optimization loop or hardware execution.",
+              "Probabilities and amplitudes are raw numerical outputs without clipping or renormalization; full state output grows as 2^numQubits.",
+              "This L1 execution does not establish scientific Acceptance or external-model validation."
+            ],
+            "maxAmplitudeError": 2.3714374201337736e-16,
+            "maxExpectationError": 6.661338147750939e-16,
+            "maxJacobianError": 7.771561172376096e-16
+          },
+          {
+            "label": "analytic-ry",
+            "input": {
+              "numQubits": 1,
+              "gates": [
+                {
+                  "gate": "RY",
+                  "targets": [
+                    0
+                  ],
+                  "angle": 0.37
+                }
+              ],
+              "observables": [
+                "X",
+                "Y",
+                "Z",
+                "I"
+              ],
+              "trainableGateIndices": [
+                0
+              ]
+            },
+            "result": {
+              "numQubits": 1,
+              "amplitudes": [
+                [
+                  0.9829362506302315,
+                  0.0
+                ],
+                [
+                  0.18394653352804122,
+                  0.0
+                ]
+              ],
+              "probabilities": [
+                0.9661636728030173,
+                0.03383632719698279
+              ],
+              "stateNormSquared": 1.0,
+              "expectations": [
+                0.361615431964962,
+                0.0,
+                0.9323273456060345,
+                1.0
+              ],
+              "jacobian": [
+                [
+                  0.9323273456060345
+                ],
+                [
+                  0.0
+                ],
+                [
+                  -0.361615431964962
+                ],
+                [
+                  -8.562522600583296e-18
+                ]
+              ],
+              "trainableGateIndices": [
+                0
+              ],
+              "bitOrder": "lexicographic bitstrings q0 q1 ...; q0 is the leftmost, most significant bit",
+              "angleUnit": "rad",
+              "backend": "mqvector CPU complex128",
+              "gradientMethod": "MindQuantum adjoint expectation gradient"
+            },
+            "limitations": [
+              "Ideal pure-state simulation from the all-zero state, with no noise or finite-shot sampling.",
+              "Each selected rotation angle is an independent parameter; no parameter sharing, optimization loop or hardware execution.",
+              "Probabilities and amplitudes are raw numerical outputs without clipping or renormalization; full state output grows as 2^numQubits.",
+              "This L1 execution does not establish scientific Acceptance or external-model validation."
+            ],
+            "maxAmplitudeError": 0.0,
+            "maxExpectationError": 0.0,
+            "maxJacobianError": 1.6653345369377348e-16
+          },
+          {
+            "label": "q0-most-significant",
+            "input": {
+              "numQubits": 3,
+              "gates": [
+                {
+                  "gate": "X",
+                  "targets": [
+                    0
+                  ]
+                }
+              ],
+              "observables": [
+                "ZII",
+                "IIZ",
+                "IZI"
+              ],
+              "trainableGateIndices": []
+            },
+            "result": {
+              "numQubits": 3,
+              "amplitudes": [
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ]
+              ],
+              "probabilities": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "stateNormSquared": 1.0,
+              "expectations": [
+                -1.0,
+                1.0,
+                1.0
+              ],
+              "jacobian": [
+                [],
+                [],
+                []
+              ],
+              "trainableGateIndices": [],
+              "bitOrder": "lexicographic bitstrings q0 q1 ...; q0 is the leftmost, most significant bit",
+              "angleUnit": "rad",
+              "backend": "mqvector CPU complex128",
+              "gradientMethod": "MindQuantum adjoint expectation gradient"
+            },
+            "limitations": [
+              "Ideal pure-state simulation from the all-zero state, with no noise or finite-shot sampling.",
+              "Each selected rotation angle is an independent parameter; no parameter sharing, optimization loop or hardware execution.",
+              "Probabilities and amplitudes are raw numerical outputs without clipping or renormalization; full state output grows as 2^numQubits.",
+              "This L1 execution does not establish scientific Acceptance or external-model validation."
+            ],
+            "maxAmplitudeError": 0.0,
+            "maxExpectationError": 0.0,
+            "maxJacobianError": 0
+          },
+          {
+            "label": "empty-circuit-no-parameters",
+            "input": {
+              "numQubits": 2,
+              "gates": [],
+              "observables": [
+                "II",
+                "ZI",
+                "IX",
+                "YY"
+              ],
+              "trainableGateIndices": []
+            },
+            "result": {
+              "numQubits": 2,
+              "amplitudes": [
+                [
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ]
+              ],
+              "probabilities": [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "stateNormSquared": 1.0,
+              "expectations": [
+                1.0,
+                1.0,
+                0.0,
+                0.0
+              ],
+              "jacobian": [
+                [],
+                [],
+                [],
+                []
+              ],
+              "trainableGateIndices": [],
+              "bitOrder": "lexicographic bitstrings q0 q1 ...; q0 is the leftmost, most significant bit",
+              "angleUnit": "rad",
+              "backend": "mqvector CPU complex128",
+              "gradientMethod": "MindQuantum adjoint expectation gradient"
+            },
+            "limitations": [
+              "Ideal pure-state simulation from the all-zero state, with no noise or finite-shot sampling.",
+              "Each selected rotation angle is an independent parameter; no parameter sharing, optimization loop or hardware execution.",
+              "Probabilities and amplitudes are raw numerical outputs without clipping or renormalization; full state output grows as 2^numQubits.",
+              "This L1 execution does not establish scientific Acceptance or external-model validation."
+            ],
+            "maxAmplitudeError": 0.0,
+            "maxExpectationError": 0.0,
+            "maxJacobianError": 0
+          },
+          {
+            "label": "raw-norm-no-renormalization",
+            "input": {
+              "numQubits": 1,
+              "gates": [
+                {
+                  "gate": "H",
+                  "targets": [
+                    0
+                  ]
+                },
+                {
+                  "gate": "H",
+                  "targets": [
+                    0
+                  ]
+                },
+                {
+                  "gate": "H",
+                  "targets": [
+                    0
+                  ]
+                },
+                {
+                  "gate": "H",
+                  "targets": [
+                    0
+                  ]
+                }
+              ],
+              "observables": [
+                "I",
+                "Z"
+              ],
+              "trainableGateIndices": []
+            },
+            "result": {
+              "numQubits": 1,
+              "amplitudes": [
+                [
+                  1.0000000000000002,
+                  0.0
+                ],
+                [
+                  -3.5840407048292336e-17,
+                  0.0
+                ]
+              ],
+              "probabilities": [
+                1.0000000000000004,
+                1.284534777387283e-33
+              ],
+              "stateNormSquared": 1.0000000000000004,
+              "expectations": [
+                1.0000000000000004,
+                1.0000000000000004
+              ],
+              "jacobian": [
+                [],
+                []
+              ],
+              "trainableGateIndices": [],
+              "bitOrder": "lexicographic bitstrings q0 q1 ...; q0 is the leftmost, most significant bit",
+              "angleUnit": "rad",
+              "backend": "mqvector CPU complex128",
+              "gradientMethod": "MindQuantum adjoint expectation gradient"
+            },
+            "limitations": [
+              "Ideal pure-state simulation from the all-zero state, with no noise or finite-shot sampling.",
+              "Each selected rotation angle is an independent parameter; no parameter sharing, optimization loop or hardware execution.",
+              "Probabilities and amplitudes are raw numerical outputs without clipping or renormalization; full state output grows as 2^numQubits.",
+              "This L1 execution does not establish scientific Acceptance or external-model validation."
+            ],
+            "maxAmplitudeError": 5.551115123125783e-16,
+            "maxExpectationError": 1.1102230246251565e-15,
+            "maxJacobianError": 0
+          },
+          {
+            "label": "complex-phase-reordered-parameters",
+            "input": {
+              "numQubits": 1,
+              "gates": [
+                {
+                  "gate": "RY",
+                  "targets": [
+                    0
+                  ],
+                  "angle": 0.71
+                },
+                {
+                  "gate": "RZ",
+                  "targets": [
+                    0
+                  ],
+                  "angle": -0.43
+                }
+              ],
+              "observables": [
+                "Y",
+                "X",
+                "I",
+                "Z"
+              ],
+              "trainableGateIndices": [
+                1,
+                0
+              ]
+            },
+            "result": {
+              "numQubits": 1,
+              "amplitudes": [
+                [
+                  0.916058485687453,
+                  0.2000444670448664
+                ],
+                [
+                  0.33958758168910286,
+                  -0.07415751052518423
+                ]
+              ],
+              "probabilities": [
+                0.8791809379952541,
+                0.12081906200474592
+              ],
+              "stateNormSquared": 1.0,
+              "expectations": [
+                -0.2717304671762064,
+                0.5924945723399985,
+                1.0,
+                0.7583618759905082
+              ],
+              "jacobian": [
+                [
+                  0.5924945723399985,
+                  -0.31613892377588476
+                ],
+                [
+                  0.27173046717620647,
+                  0.6893249711345646
+                ],
+                [
+                  1.6961436556657905e-17,
+                  8.885012095592854e-19
+                ],
+                [
+                  1.6961436556657905e-17,
+                  -0.6518337710215367
+                ]
+              ],
+              "trainableGateIndices": [
+                1,
+                0
+              ],
+              "bitOrder": "lexicographic bitstrings q0 q1 ...; q0 is the leftmost, most significant bit",
+              "angleUnit": "rad",
+              "backend": "mqvector CPU complex128",
+              "gradientMethod": "MindQuantum adjoint expectation gradient"
+            },
+            "limitations": [
+              "Ideal pure-state simulation from the all-zero state, with no noise or finite-shot sampling.",
+              "Each selected rotation angle is an independent parameter; no parameter sharing, optimization loop or hardware execution.",
+              "Probabilities and amplitudes are raw numerical outputs without clipping or renormalization; full state output grows as 2^numQubits.",
+              "This L1 execution does not establish scientific Acceptance or external-model validation."
+            ],
+            "maxAmplitudeError": 0.0,
+            "maxExpectationError": 5.551115123125783e-17,
+            "maxJacobianError": 2.2293310613459057e-16
+          },
+          {
+            "label": "zero-rotation-stationary-points",
+            "input": {
+              "numQubits": 2,
+              "gates": [
+                {
+                  "gate": "RX",
+                  "targets": [
+                    0
+                  ],
+                  "angle": 0
+                },
+                {
+                  "gate": "RY",
+                  "targets": [
+                    1
+                  ],
+                  "angle": 0
+                }
+              ],
+              "observables": [
+                "YI",
+                "IX",
+                "ZZ",
+                "II"
+              ],
+              "trainableGateIndices": [
+                1,
+                0
+              ]
+            },
+            "result": {
+              "numQubits": 2,
+              "amplitudes": [
+                [
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ]
+              ],
+              "probabilities": [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "stateNormSquared": 1.0,
+              "expectations": [
+                0.0,
+                0.0,
+                1.0,
+                1.0
+              ],
+              "jacobian": [
+                [
+                  0.0,
+                  -1.0
+                ],
+                [
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0
+                ]
+              ],
+              "trainableGateIndices": [
+                1,
+                0
+              ],
+              "bitOrder": "lexicographic bitstrings q0 q1 ...; q0 is the leftmost, most significant bit",
+              "angleUnit": "rad",
+              "backend": "mqvector CPU complex128",
+              "gradientMethod": "MindQuantum adjoint expectation gradient"
+            },
+            "limitations": [
+              "Ideal pure-state simulation from the all-zero state, with no noise or finite-shot sampling.",
+              "Each selected rotation angle is an independent parameter; no parameter sharing, optimization loop or hardware execution.",
+              "Probabilities and amplitudes are raw numerical outputs without clipping or renormalization; full state output grows as 2^numQubits.",
+              "This L1 execution does not establish scientific Acceptance or external-model validation."
+            ],
+            "maxAmplitudeError": 0.0,
+            "maxExpectationError": 0.0,
+            "maxJacobianError": 0.0
+          }
+        ]
+      },
+      "realMcpCalls": [
+        {
+          "schemaVersion": "1.0",
+          "source": {
+            "name": "mindquantum",
+            "version": "0.12.0",
+            "repository": "https://github.com/mindspore-ai/mindquantum"
+          },
+          "input": {
+            "numQubits": 2,
+            "gates": [
+              {
+                "gate": "RY",
+                "targets": [
+                  0
+                ],
+                "angle": 0.4
+              },
+              {
+                "gate": "CX",
+                "targets": [
+                  0,
+                  1
+                ]
+              }
+            ],
+            "observables": [
+              "ZI",
+              "IZ",
+              "XX"
+            ],
+            "trainableGateIndices": [
+              0
+            ],
+            "execution": {}
+          },
+          "inputSha256": "c41be1fe9e8966d53a1ae654a31fba9bb16d432bac5614c7ea424b7c391c5237",
+          "dependencyLockSha256": "db42d48608b8226b0ec2d2c7d71c855fcaecd6ffa82224d6ed938c731cf60c9d",
+          "result": {
+            "numQubits": 2,
+            "amplitudes": [
+              [
+                0.9800665778412416,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0.19866933079506122,
+                0
+              ]
+            ],
+            "probabilities": [
+              0.9605304970014426,
+              0,
+              0,
+              0.039469502998557456
+            ],
+            "stateNormSquared": 1,
+            "expectations": [
+              0.9210609940028851,
+              0.9210609940028851,
+              0.38941834230865047
+            ],
+            "jacobian": [
+              [
+                -0.38941834230865047
+              ],
+              [
+                -0.38941834230865047
+              ],
+              [
+                0.9210609940028851
+              ]
+            ],
+            "trainableGateIndices": [
+              0
+            ],
+            "bitOrder": "lexicographic bitstrings q0 q1 ...; q0 is the leftmost, most significant bit",
+            "angleUnit": "rad",
+            "backend": "mqvector CPU complex128",
+            "gradientMethod": "MindQuantum adjoint expectation gradient"
+          },
+          "scientificValidation": "not_evaluated",
+          "limitations": [
+            "Ideal pure-state simulation from the all-zero state, with no noise or finite-shot sampling.",
+            "Each selected rotation angle is an independent parameter; no parameter sharing, optimization loop or hardware execution.",
+            "Probabilities and amplitudes are raw numerical outputs without clipping or renormalization; full state output grows as 2^numQubits.",
+            "This L1 execution does not establish scientific Acceptance or external-model validation."
+          ]
+        },
+        {
+          "schemaVersion": "1.0",
+          "source": {
+            "name": "mindquantum",
+            "version": "0.12.0",
+            "repository": "https://github.com/mindspore-ai/mindquantum"
+          },
+          "input": {
+            "numQubits": 2,
+            "gates": [
+              {
+                "gate": "RY",
+                "targets": [
+                  0
+                ],
+                "angle": 0.4
+              },
+              {
+                "gate": "CX",
+                "targets": [
+                  0,
+                  1
+                ]
+              }
+            ],
+            "observables": [
+              "ZI",
+              "IZ",
+              "XX"
+            ],
+            "trainableGateIndices": [
+              0
+            ],
+            "execution": {}
+          },
+          "inputSha256": "c41be1fe9e8966d53a1ae654a31fba9bb16d432bac5614c7ea424b7c391c5237",
+          "dependencyLockSha256": "db42d48608b8226b0ec2d2c7d71c855fcaecd6ffa82224d6ed938c731cf60c9d",
+          "result": {
+            "numQubits": 2,
+            "amplitudes": [
+              [
+                0.9800665778412416,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0.19866933079506122,
+                0
+              ]
+            ],
+            "probabilities": [
+              0.9605304970014426,
+              0,
+              0,
+              0.039469502998557456
+            ],
+            "stateNormSquared": 1,
+            "expectations": [
+              0.9210609940028851,
+              0.9210609940028851,
+              0.38941834230865047
+            ],
+            "jacobian": [
+              [
+                -0.38941834230865047
+              ],
+              [
+                -0.38941834230865047
+              ],
+              [
+                0.9210609940028851
+              ]
+            ],
+            "trainableGateIndices": [
+              0
+            ],
+            "bitOrder": "lexicographic bitstrings q0 q1 ...; q0 is the leftmost, most significant bit",
+            "angleUnit": "rad",
+            "backend": "mqvector CPU complex128",
+            "gradientMethod": "MindQuantum adjoint expectation gradient"
+          },
+          "scientificValidation": "not_evaluated",
+          "limitations": [
+            "Ideal pure-state simulation from the all-zero state, with no noise or finite-shot sampling.",
+            "Each selected rotation angle is an independent parameter; no parameter sharing, optimization loop or hardware execution.",
+            "Probabilities and amplitudes are raw numerical outputs without clipping or renormalization; full state output grows as 2^numQubits.",
+            "This L1 execution does not establish scientific Acceptance or external-model validation."
+          ]
+        }
+      ]
+    }
+  ]
+}

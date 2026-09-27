@@ -1,0 +1,8 @@
+[project]
+name = "openquantum-ocean-optimization"
+version = "0.1.0"
+requires-python = ">=3.12,<3.13"
+dependencies = ["dimod==0.12.22", "dwave-samplers==1.8.0"]
+
+[tool.uv]
+package = false

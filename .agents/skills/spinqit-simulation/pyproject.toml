@@ -1,0 +1,9 @@
+[project]
+name = "openquantum-spinqit-simulation"
+version = "0.1.0"
+requires-python = ">=3.10,<3.11"
+# SciPy 1.15.3's cp310 macOS wheel fails dyld's Mach-O section validation.
+dependencies = ["spinqit==0.2.4", "scipy==1.14.1"]
+
+[tool.uv]
+package = false

@@ -1,0 +1,1015 @@
+{
+  "schemaVersion": "1.0",
+  "reviewDate": "2026-09-27",
+  "reviewer": "independent integration review by sdk_compilers_optimization",
+  "status": "pass_after_documentation_clarification",
+  "scope": "Read-only static cross-check of the 17 new SDK integrations across capability policy, Agent Preset, settings catalog, contracts, Skills, fixed project/lock dependencies, Vendor SDK guide, README catalogs and third-party notices. The only shared-file changes made by this reviewer were the explicitly authorized release-boundary sentence in each of nine new localized README SDK paragraphs.",
+  "sourceContext": {
+    "branch": "c/bloqade-analog",
+    "headBeforeParentCommit": "5d995fa212bc1b20631cbc9ef1daacb802602bb3",
+    "workingTreeIsImplementationUnderReview": true,
+    "publishedMainVerified": false,
+    "installationPackageUpdated": false
+  },
+  "scientificValidation": "not_evaluated",
+  "assertionCount": 509,
+  "failures": [],
+  "counts": {
+    "skills": 119,
+    "autoSkills": 106,
+    "manualSkills": 13,
+    "mcpServers": 55,
+    "defaultMcp": 44,
+    "optInMcp": 11,
+    "mcpTools": 216,
+    "genericTools": 18,
+    "nativeTools": 6,
+    "localBridges": 47,
+    "upstreamMcp": 8,
+    "totalTools": 240
+  },
+  "capabilities": [
+    {
+      "id": "pennylane-differentiable",
+      "serverName": "pennylane_local",
+      "tools": [
+        "differentiate_pennylane_circuit"
+      ],
+      "versions": {
+        "pennylane": "0.45.1"
+      },
+      "python": "3.12",
+      "license": "Apache-2.0",
+      "activation": "always",
+      "catalogDisplayName": "PennyLane 可微分电路",
+      "sourceUrl": "https://github.com/PennyLaneAI/pennylane",
+      "contractSource": {
+        "name": "pennylane",
+        "version": "0.45.1",
+        "repository": "https://github.com/PennyLaneAI/pennylane"
+      },
+      "declaredEffects": [
+        {
+          "name": "differentiate_pennylane_circuit",
+          "effect": "workspace-write"
+        }
+      ]
+    },
+    {
+      "id": "deepquantum-differentiable",
+      "serverName": "deepquantum_local",
+      "tools": [
+        "differentiate_deepquantum_circuit"
+      ],
+      "versions": {
+        "deepquantum": "4.5.0"
+      },
+      "python": "3.12",
+      "license": "Apache-2.0",
+      "activation": "always",
+      "catalogDisplayName": "DeepQuantum 可微分电路",
+      "sourceUrl": "https://github.com/TuringQ/deepquantum",
+      "contractSource": {
+        "name": "deepquantum",
+        "version": "4.5.0",
+        "repository": "https://github.com/TuringQ/deepquantum"
+      },
+      "declaredEffects": [
+        {
+          "name": "differentiate_deepquantum_circuit",
+          "effect": "workspace-write"
+        }
+      ]
+    },
+    {
+      "id": "tensorcircuit-differentiable",
+      "serverName": "tensorcircuit_local",
+      "tools": [
+        "differentiate_tensorcircuit_circuit"
+      ],
+      "versions": {
+        "tensorcircuit": "0.12.0"
+      },
+      "python": "3.12",
+      "license": "Apache-2.0",
+      "activation": "always",
+      "catalogDisplayName": "TensorCircuit 可微分电路",
+      "sourceUrl": "https://github.com/tencent-quantum-lab/tensorcircuit",
+      "contractSource": {
+        "name": "tensorcircuit",
+        "version": "0.12.0",
+        "repository": "https://github.com/tencent-quantum-lab/tensorcircuit"
+      },
+      "declaredEffects": [
+        {
+          "name": "differentiate_tensorcircuit_circuit",
+          "effect": "workspace-write"
+        }
+      ]
+    },
+    {
+      "id": "mindquantum-differentiable",
+      "serverName": "mindquantum_local",
+      "tools": [
+        "differentiate_mindquantum_circuit"
+      ],
+      "versions": {
+        "mindquantum": "0.12.0"
+      },
+      "python": "3.11",
+      "license": "Apache-2.0",
+      "activation": "always",
+      "catalogDisplayName": "MindQuantum 可微分电路",
+      "sourceUrl": "https://gitee.com/mindspore/mindquantum",
+      "contractSource": {
+        "name": "mindquantum",
+        "version": "0.12.0",
+        "repository": "https://github.com/mindspore-ai/mindquantum"
+      },
+      "declaredEffects": [
+        {
+          "name": "differentiate_mindquantum_circuit",
+          "effect": "workspace-write"
+        }
+      ]
+    },
+    {
+      "id": "pytket-compilation",
+      "serverName": "pytket_local",
+      "tools": [
+        "compile_pytket_circuit"
+      ],
+      "versions": {
+        "pytket": "2.18.4"
+      },
+      "python": "3.12",
+      "license": "Apache-2.0",
+      "activation": "always",
+      "catalogDisplayName": "TKET 电路编译",
+      "sourceUrl": "https://github.com/Quantinuum/tket",
+      "contractSource": {
+        "name": "pytket",
+        "version": "2.18.4",
+        "repository": "https://github.com/Quantinuum/tket"
+      },
+      "declaredEffects": [
+        {
+          "name": "compile_pytket_circuit",
+          "effect": "workspace-write"
+        }
+      ]
+    },
+    {
+      "id": "ocean-optimization",
+      "serverName": "ocean_local",
+      "tools": [
+        "sample_ocean_model"
+      ],
+      "versions": {
+        "dimod": "0.12.22",
+        "dwave-samplers": "1.8.0"
+      },
+      "python": "3.12",
+      "license": "Apache-2.0",
+      "activation": "always",
+      "catalogDisplayName": "D-Wave Ocean 经典采样",
+      "sourceUrl": "https://github.com/dwavesystems/dwave-ocean-sdk",
+      "contractSource": {
+        "name": "dimod + dwave-samplers",
+        "version": "0.12.22 + 1.8.0",
+        "repository": "https://github.com/dwavesystems/dimod"
+      },
+      "declaredEffects": [
+        {
+          "name": "sample_ocean_model",
+          "effect": "workspace-write"
+        }
+      ]
+    },
+    {
+      "id": "kaiwu-qubo",
+      "serverName": "kaiwu_local",
+      "tools": [
+        "build_kaiwu_qubo"
+      ],
+      "versions": {
+        "kaiwu-community": "1.0.7"
+      },
+      "python": "3.12",
+      "license": "Apache-2.0",
+      "activation": "always",
+      "catalogDisplayName": "Kaiwu Community 建模",
+      "sourceUrl": "https://github.com/qboson/kaiwu_community",
+      "contractSource": {
+        "name": "kaiwu-community",
+        "version": "1.0.7",
+        "repository": "https://github.com/qboson/kaiwu_community"
+      },
+      "declaredEffects": [
+        {
+          "name": "build_kaiwu_qubo",
+          "effect": "workspace-write"
+        }
+      ]
+    },
+    {
+      "id": "pyquil-simulation",
+      "serverName": "pyquil_local",
+      "tools": [
+        "simulate_pyquil_circuit"
+      ],
+      "versions": {
+        "pyquil": "4.21.0"
+      },
+      "python": "3.12",
+      "license": "Apache-2.0",
+      "activation": "always",
+      "catalogDisplayName": "pyQuil 本地仿真",
+      "sourceUrl": "https://github.com/rigetti/pyquil",
+      "contractSource": {
+        "name": "pyquil",
+        "version": "4.21.0",
+        "repository": "https://github.com/rigetti/pyquil"
+      },
+      "declaredEffects": [
+        {
+          "name": "simulate_pyquil_circuit",
+          "effect": "workspace-write"
+        }
+      ]
+    },
+    {
+      "id": "spinqit-simulation",
+      "serverName": "spinqit_local",
+      "tools": [
+        "simulate_spinqit_circuit"
+      ],
+      "versions": {
+        "spinqit": "0.2.4"
+      },
+      "python": "3.10",
+      "license": "Apache-2.0",
+      "activation": "always",
+      "catalogDisplayName": "SpinQit 本地仿真",
+      "sourceUrl": "https://github.com/SpinQTech/SpinQit",
+      "contractSource": {
+        "name": "spinqit",
+        "version": "0.2.4",
+        "repository": "https://github.com/SpinQTech/SpinQit"
+      },
+      "declaredEffects": [
+        {
+          "name": "simulate_spinqit_circuit",
+          "effect": "workspace-write"
+        }
+      ]
+    },
+    {
+      "id": "qutrunk-simulation",
+      "serverName": "qutrunk_local",
+      "tools": [
+        "simulate_qutrunk_circuit"
+      ],
+      "versions": {
+        "qutrunk": "0.2.2"
+      },
+      "python": "3.10",
+      "license": "Apache-2.0",
+      "activation": "always",
+      "catalogDisplayName": "QuTrunk 本地仿真",
+      "sourceUrl": "https://github.com/qudoor/qutrunk",
+      "contractSource": {
+        "name": "qutrunk",
+        "version": "0.2.2",
+        "repository": "https://github.com/qudoor/qutrunk"
+      },
+      "declaredEffects": [
+        {
+          "name": "simulate_qutrunk_circuit",
+          "effect": "workspace-write"
+        }
+      ]
+    },
+    {
+      "id": "perceval-photonics",
+      "serverName": "perceval_local",
+      "tools": [
+        "simulate_perceval_photonics"
+      ],
+      "versions": {
+        "perceval-quandela": "1.3.0"
+      },
+      "python": "3.12",
+      "license": "MIT; Exqalibur Python binding combination exception",
+      "activation": "always",
+      "catalogDisplayName": "Perceval 光量子仿真",
+      "sourceUrl": "https://github.com/Quandela/Perceval",
+      "contractSource": {
+        "name": "perceval-quandela",
+        "version": "1.3.0",
+        "repository": "https://github.com/Quandela/Perceval"
+      },
+      "declaredEffects": [
+        {
+          "name": "simulate_perceval_photonics",
+          "effect": "workspace-write"
+        }
+      ]
+    },
+    {
+      "id": "iqm-circuit-workbench",
+      "serverName": "iqm_local",
+      "tools": [
+        "run_iqm_local_circuit"
+      ],
+      "versions": {
+        "iqm-client": "35.0.3"
+      },
+      "python": "3.12",
+      "license": "Apache-2.0",
+      "activation": "always",
+      "catalogDisplayName": "IQM 电路与模拟后端",
+      "sourceUrl": "https://github.com/iqm-finland/iqm-client",
+      "contractSource": {
+        "name": "iqm-client",
+        "version": "35.0.3",
+        "repository": "https://github.com/iqm-finland/iqm-client"
+      },
+      "declaredEffects": [
+        {
+          "name": "run_iqm_local_circuit",
+          "effect": "workspace-write"
+        }
+      ]
+    },
+    {
+      "id": "alicebob-cat-circuits",
+      "serverName": "alicebob_local",
+      "tools": [
+        "run_alicebob_local_circuit"
+      ],
+      "versions": {
+        "qiskit-alice-bob-provider": "1.3.0"
+      },
+      "python": "3.12",
+      "license": "Apache-2.0",
+      "activation": "always",
+      "catalogDisplayName": "Alice & Bob 猫态模型",
+      "sourceUrl": "https://github.com/Alice-Bob-SW/qiskit-alice-bob-provider",
+      "contractSource": {
+        "name": "qiskit-alice-bob-provider",
+        "version": "1.3.0",
+        "repository": "https://github.com/Alice-Bob-SW/qiskit-alice-bob-provider"
+      },
+      "declaredEffects": [
+        {
+          "name": "run_alicebob_local_circuit",
+          "effect": "workspace-write"
+        }
+      ]
+    },
+    {
+      "id": "pulser-dynamics",
+      "serverName": "pulser_local",
+      "tools": [
+        "simulate_pulser_rydberg"
+      ],
+      "versions": {
+        "pulser-core": "1.9.1",
+        "pulser-simulation": "1.9.1"
+      },
+      "python": "3.12",
+      "license": "Apache-2.0",
+      "activation": "always",
+      "catalogDisplayName": "Pulser Rydberg 动力学",
+      "sourceUrl": "https://github.com/pasqal-io/Pulser",
+      "contractSource": {
+        "name": "pulser-core + pulser-simulation",
+        "version": "1.9.1",
+        "repository": "https://github.com/pasqal-io/Pulser"
+      },
+      "declaredEffects": [
+        {
+          "name": "simulate_pulser_rydberg",
+          "effect": "workspace-write"
+        }
+      ]
+    },
+    {
+      "id": "qoolqit-workbench",
+      "serverName": "qoolqit_local",
+      "tools": [
+        "simulate_qoolqit_analog"
+      ],
+      "versions": {
+        "qoolqit": "1.4.0"
+      },
+      "python": "3.12",
+      "license": "MIT-derived custom terms; patent grant limited to internal research / academic use",
+      "activation": "opt-in",
+      "catalogDisplayName": "QoolQit 模拟程序",
+      "sourceUrl": "https://github.com/pasqal-io/qoolqit",
+      "contractSource": {
+        "name": "qoolqit",
+        "version": "1.4.0",
+        "repository": "https://github.com/pasqal-io/qoolqit"
+      },
+      "declaredEffects": [
+        {
+          "name": "simulate_qoolqit_analog",
+          "effect": "workspace-write"
+        }
+      ]
+    },
+    {
+      "id": "ionq-programs",
+      "serverName": "ionq_local",
+      "tools": [
+        "prepare_ionq_program"
+      ],
+      "versions": {
+        "qiskit-ionq": "1.1.1"
+      },
+      "python": "3.12",
+      "license": "Apache-2.0",
+      "activation": "always",
+      "catalogDisplayName": "IonQ 本地程序准备",
+      "sourceUrl": "https://github.com/qiskit-community/qiskit-ionq",
+      "contractSource": {
+        "name": "qiskit-ionq",
+        "version": "1.1.1",
+        "repository": "https://github.com/qiskit-community/qiskit-ionq"
+      },
+      "declaredEffects": [
+        {
+          "name": "prepare_ionq_program",
+          "effect": "workspace-write"
+        }
+      ]
+    },
+    {
+      "id": "superstaq-compilation",
+      "serverName": "superstaq_cloud",
+      "tools": [
+        "prepare_superstaq_circuit",
+        "list_superstaq_targets",
+        "compile_superstaq_circuit"
+      ],
+      "versions": {
+        "qiskit-superstaq": "0.5.69"
+      },
+      "python": "3.12",
+      "license": "Apache-2.0",
+      "activation": "opt-in",
+      "catalogDisplayName": "Superstaq 电路编译",
+      "sourceUrl": "https://github.com/Infleqtion/client-superstaq",
+      "contractSource": {
+        "name": "qiskit-superstaq",
+        "version": "0.5.69",
+        "repository": "https://github.com/Infleqtion/client-superstaq"
+      },
+      "declaredEffects": [
+        {
+          "name": "prepare_superstaq_circuit",
+          "effect": "workspace-write"
+        },
+        {
+          "name": "list_superstaq_targets",
+          "effect": "workspace-write"
+        },
+        {
+          "name": "compile_superstaq_circuit",
+          "effect": "external-write"
+        }
+      ]
+    }
+  ],
+  "genericToolNames": [
+    "bash",
+    "pwsh",
+    "read",
+    "write",
+    "edit",
+    "read_image",
+    "glob",
+    "grep",
+    "job_output",
+    "job_list",
+    "job_kill",
+    "skill",
+    "get_goal",
+    "create_goal",
+    "update_goal",
+    "ask_user_question",
+    "todo_write",
+    "web_search"
+  ],
+  "nativeToolNames": [
+    "quantum_practices",
+    "generate_quantum_classroom",
+    "list_qmclaw_experiments",
+    "simulate_qmclaw_experiment",
+    "solve_and_validate_ground_state",
+    "metriq_benchmarks"
+  ],
+  "upstreamMcpNames": [
+    "qiskit_ibm_runtime",
+    "qiskit_ibm_transpiler",
+    "qiskit_gym",
+    "qpanda_runtime",
+    "quantum_hardware",
+    "qiskit",
+    "qiskit_docs",
+    "flagquantum"
+  ],
+  "countingNotes": [
+    "Both bash and pwsh are configurable names, although their preset platform conditions are mutually exclusive.",
+    "web_fetch is exported upstream but excluded because this Preset sets fetch:false.",
+    "FlagQuantum is policy source=package because of its local launcher, but the launcher starts the unmodified upstream server; it counts among eight upstream services, not 47 OpenQuantum MCP adapters.",
+    "A local MCP adapter may expose a bounded downstream network action; Superstaq is counted as a local adapter and is opt-in."
+  ],
+  "manualScopeChecks": [
+    {
+      "area": "differentiable circuits",
+      "status": "consistent",
+      "detail": "Four providers expose ideal user circuits, Pauli expectations and selected rotation-angle Jacobians, not complete training platforms or QPUs."
+    },
+    {
+      "area": "compilers and optimization",
+      "status": "consistent",
+      "detail": "TKET is local compilation; Ocean exact/SA are classical; Kaiwu Community exposes symbolic QUBO/Ising only; pyQuil, SpinQit and QuTrunk use local SDK simulators."
+    },
+    {
+      "area": "device models",
+      "status": "consistent",
+      "detail": "Perceval uses lossless indistinguishable-photon Fock networks; IQM/AliceBob expose documented static local models; Pulser/QoolQit retain distinct time and angle conventions."
+    },
+    {
+      "area": "IonQ and Superstaq",
+      "status": "consistent",
+      "detail": "IonQ only prepares QIS programs. Superstaq distinguishes local QPY preparation from credentialed target queries and external-write remote compilation; no cloud execution verification is claimed."
+    },
+    {
+      "area": "license and defaults",
+      "status": "consistent",
+      "detail": "QoolQit custom patent terms and Perceval binding exception are retained; QoolQit and Superstaq remain opt-in."
+    }
+  ],
+  "resolvedFindings": [
+    {
+      "id": "INT-2",
+      "severity": "documentation",
+      "problem": "The Korean README inventory paragraph retained pre-integration counts 102/89/38/221 while the other language editions were updated.",
+      "resolution": "Parent corrected the Korean inventory paragraph to 119 Skills, 106 automatically selectable Skills, 55 MCP connections and 240 configurable Tools; this static review rechecked the final text."
+    },
+    {
+      "id": "INT-1",
+      "severity": "documentation",
+      "problem": "The root README described its whole capability inventory as source main even though these new SDK additions are still in an unpublished working tree.",
+      "resolution": "Parent changed the root README to the current source checkout and requires the relevant commits; reviewer added equivalent source-commit and v0.5.1 exclusion boundaries only to each of nine new localized SDK paragraphs."
+    }
+  ],
+  "limits": [
+    "No SDK process, cloud service, QPU, external model, full repository test or install was invoked for this integration review.",
+    "This review checks declared scope and license consistency; upstream numerical validation and package-license inspections are separately recorded in the capability-group evidence and their independent reviews.",
+    "The review does not establish scientific acceptance, release publication, remote main state, or installer availability.",
+    "Files are hashed at review time; later parent evidence/commit finalization may add files outside this snapshot."
+  ],
+  "sourceHashes": [
+    {
+      "path": ".agents/capability-packages.yml",
+      "sha256": "06743349aed3654d7b96b517d78e047cda527cbfe2496d9713d24525029f73fc"
+    },
+    {
+      "path": ".agents/skills/README.md",
+      "sha256": "48a4742475b2d457ddcf02562bf93cafab373099728f75abcaaee24fc0c85973"
+    },
+    {
+      "path": ".agents/skills/alicebob-cat-circuits/SKILL.md",
+      "sha256": "4fea51b359ec62d4826886b83df856a14f6ee7eb6faf18cd169062e91db8b5e9"
+    },
+    {
+      "path": ".agents/skills/alicebob-cat-circuits/mcp/contracts.mjs",
+      "sha256": "9bf957e6b50593100a319a7f48f2c2d7a8656213883e86504213a5216e9b12f1"
+    },
+    {
+      "path": ".agents/skills/alicebob-cat-circuits/mcp/server.mjs",
+      "sha256": "cf89abe0e8723cfd7512a11717ef538eb288f4b267b7758170b5269a5d6cad7b"
+    },
+    {
+      "path": ".agents/skills/alicebob-cat-circuits/pyproject.toml",
+      "sha256": "9cc7e2c6532be02e419300c90d573c3779cb60e4928d52ea60940796f157ba90"
+    },
+    {
+      "path": ".agents/skills/alicebob-cat-circuits/uv.lock",
+      "sha256": "09dc45fe507beea933e5e1d89927c44cf74b8f63e61763d3ec2ff701c16f5942"
+    },
+    {
+      "path": ".agents/skills/deepquantum-differentiable/SKILL.md",
+      "sha256": "1915efadfa2e81b36591987dbe918ec52174ebac68fcb5aa1b49981176be5478"
+    },
+    {
+      "path": ".agents/skills/deepquantum-differentiable/mcp/contracts.mjs",
+      "sha256": "dc20c84bec2fbb23a41b59195d5f51015bb24bb195713e43371e0f0c143b4494"
+    },
+    {
+      "path": ".agents/skills/deepquantum-differentiable/mcp/server.mjs",
+      "sha256": "c5581348bb7415e4b03ae310e2ed8d44fa7dc311919493d34ad15eb61e8b9bdc"
+    },
+    {
+      "path": ".agents/skills/deepquantum-differentiable/pyproject.toml",
+      "sha256": "e527601ce2ae0982c5b1cdcaa41c7550dd4c74fca0039af5da80534191230d6b"
+    },
+    {
+      "path": ".agents/skills/deepquantum-differentiable/uv.lock",
+      "sha256": "9668859c1a79677565c5c6c7c6e5cc0318c38077eda36140c8b28053132c96ff"
+    },
+    {
+      "path": ".agents/skills/ionq-programs/SKILL.md",
+      "sha256": "e5ac775e41e758fe38695ee7fcd5aa889ad93d0a3caabe4d2890dd34688622c7"
+    },
+    {
+      "path": ".agents/skills/ionq-programs/mcp/contracts.mjs",
+      "sha256": "469305b81c3b4f8920a6418db7921ba8ac8ccbccce1493b95e70ce760c64b1ca"
+    },
+    {
+      "path": ".agents/skills/ionq-programs/mcp/server.mjs",
+      "sha256": "fa94f66fe2304423511a9ba4479e65de7453383e99cffef3a2a17facf191ab14"
+    },
+    {
+      "path": ".agents/skills/ionq-programs/pyproject.toml",
+      "sha256": "e666be36c792fffdf0b6df5abcac8c2a225cf7eee579ce57ed03a15a10f26f6f"
+    },
+    {
+      "path": ".agents/skills/ionq-programs/uv.lock",
+      "sha256": "e6ea0caec14bd65b09f580827fd42889d370bfd4da00991f4b33a0260cf24b20"
+    },
+    {
+      "path": ".agents/skills/iqm-circuit-workbench/SKILL.md",
+      "sha256": "40f97bc97b4fbfaa374ce80408a1b51b3028452df13c9e12a5b1a1bfe99a4ac0"
+    },
+    {
+      "path": ".agents/skills/iqm-circuit-workbench/mcp/contracts.mjs",
+      "sha256": "21f7e7d1a0b19c084436a5713d629489d3b00fffbc30d5a8cd1170a1a291df15"
+    },
+    {
+      "path": ".agents/skills/iqm-circuit-workbench/mcp/server.mjs",
+      "sha256": "3ed546b63bea1ca5f7d480d5fc35c94f61f7d71d521f4ded0be426bae54fea89"
+    },
+    {
+      "path": ".agents/skills/iqm-circuit-workbench/pyproject.toml",
+      "sha256": "9a531c6809f6eec1cb576cd9709c37acd23b4c7415dd198b3e23472e7b0804b7"
+    },
+    {
+      "path": ".agents/skills/iqm-circuit-workbench/uv.lock",
+      "sha256": "2e57c08430e1f2d92683393ed4bdeb4076ef1ec0f176ec85d2510e8ae627a922"
+    },
+    {
+      "path": ".agents/skills/kaiwu-qubo/SKILL.md",
+      "sha256": "80f002be164d627166ee6a63d3fa220f859ba52b63290874c3506ab647d63bed"
+    },
+    {
+      "path": ".agents/skills/kaiwu-qubo/mcp/contracts.mjs",
+      "sha256": "73d1ac925b0369c25e2c913641bc92e0c4d8084183d77d04200608549705236d"
+    },
+    {
+      "path": ".agents/skills/kaiwu-qubo/mcp/server.mjs",
+      "sha256": "b3209b8ba7d975447f24ec16de391d8eeab3a9e823cbf4317f4d8ba97fe555a3"
+    },
+    {
+      "path": ".agents/skills/kaiwu-qubo/pyproject.toml",
+      "sha256": "c2f2a822bfe16526223b8f6e8e9c4bb276dc8f8fb989ff4c86413f95e4ec74e4"
+    },
+    {
+      "path": ".agents/skills/kaiwu-qubo/uv.lock",
+      "sha256": "6329dcb78a2b07e81ec7fec5a183e8af0547c366411b1e41a5920ae7e6c3140b"
+    },
+    {
+      "path": ".agents/skills/mindquantum-differentiable/SKILL.md",
+      "sha256": "56e157c2d20fa461ad674ded0c52307477e675819ffc6216ab109a806a5119ea"
+    },
+    {
+      "path": ".agents/skills/mindquantum-differentiable/mcp/contracts.mjs",
+      "sha256": "4f9bf938df927e67849fb3fed7715b4a7a8113970a8f7abcdd5d826abfd6f475"
+    },
+    {
+      "path": ".agents/skills/mindquantum-differentiable/mcp/server.mjs",
+      "sha256": "995f6c433528277d170d9bf6d4154a4567b7a1bc6e1c3be0b58e135d4e1aa2e2"
+    },
+    {
+      "path": ".agents/skills/mindquantum-differentiable/pyproject.toml",
+      "sha256": "02223c9bd70f5cdf4e2bf0be52af0107ae97ec683299a2a5dce9d955074133c3"
+    },
+    {
+      "path": ".agents/skills/mindquantum-differentiable/uv.lock",
+      "sha256": "db42d48608b8226b0ec2d2c7d71c855fcaecd6ffa82224d6ed938c731cf60c9d"
+    },
+    {
+      "path": ".agents/skills/ocean-optimization/SKILL.md",
+      "sha256": "7b58bb416af4024d9781623cbd5152d2aa41afa26cfbefe0c67cb58e84037b3a"
+    },
+    {
+      "path": ".agents/skills/ocean-optimization/mcp/contracts.mjs",
+      "sha256": "7448e8abdd6f10259891a6f79008c0d1ebff38b5bc12cc825e696710c6895e85"
+    },
+    {
+      "path": ".agents/skills/ocean-optimization/mcp/server.mjs",
+      "sha256": "a3b87ed57c613af37cde12795606195c9dfd18363b3f4039db61c7c6c8c3e72d"
+    },
+    {
+      "path": ".agents/skills/ocean-optimization/pyproject.toml",
+      "sha256": "17467e3d8e96898ce8bd9d396ff924b4a085c3ffff56599e08934f4cd7ee009a"
+    },
+    {
+      "path": ".agents/skills/ocean-optimization/uv.lock",
+      "sha256": "1d96eaa55d8daf1287d9404f317c3e71450ebbf3cc955db8eb7977168459d43d"
+    },
+    {
+      "path": ".agents/skills/pennylane-differentiable/SKILL.md",
+      "sha256": "2b29ce29ee52d405f5b5d0786daa1e652ac2378df1307527bb72111579a0bc78"
+    },
+    {
+      "path": ".agents/skills/pennylane-differentiable/mcp/contracts.mjs",
+      "sha256": "d52c9eab09359c97ece3aa6387415385b7aac8866d34c31fd3ea7961fd57eb31"
+    },
+    {
+      "path": ".agents/skills/pennylane-differentiable/mcp/server.mjs",
+      "sha256": "e50b23bbe79526b86e0acdcd879cd743fe3128b43fa38cd48d3545d1074770ae"
+    },
+    {
+      "path": ".agents/skills/pennylane-differentiable/pyproject.toml",
+      "sha256": "a54094fb1d25e57d44bdc7f26cb27f7955ade712b4159eb438e82914287cbe64"
+    },
+    {
+      "path": ".agents/skills/pennylane-differentiable/uv.lock",
+      "sha256": "35ab949679c7eac7e5900385c78d51f76330b1597a65d7800b908ba3d531fdad"
+    },
+    {
+      "path": ".agents/skills/perceval-photonics/SKILL.md",
+      "sha256": "a176a817205c101201df5cf638c445edb1cedd4f37f43f08316adfa61446c77e"
+    },
+    {
+      "path": ".agents/skills/perceval-photonics/mcp/contracts.mjs",
+      "sha256": "b2fcabf52f57bd4a13d5fd5dd80884fb1fd68d34e743b1c5aaa069700e0a6564"
+    },
+    {
+      "path": ".agents/skills/perceval-photonics/mcp/server.mjs",
+      "sha256": "8c52508eef9f5b07e02b2291f4d8604d230bc37c0dcb31ffb00f3168a86ceddf"
+    },
+    {
+      "path": ".agents/skills/perceval-photonics/pyproject.toml",
+      "sha256": "977e59e634621c09ee9ae4e12644c4dba8c7fbc6877516dbb2a7557bff483571"
+    },
+    {
+      "path": ".agents/skills/perceval-photonics/uv.lock",
+      "sha256": "1f1d7ae4e3469f7b78a307bcc675cc47c04b33c9ca37e5da13349471de323c7a"
+    },
+    {
+      "path": ".agents/skills/pulser-dynamics/SKILL.md",
+      "sha256": "ca4c13bf243e650c88016ba44c4f43c595bbbb8e5bab8d7c684c362cd4791ef1"
+    },
+    {
+      "path": ".agents/skills/pulser-dynamics/mcp/contracts.mjs",
+      "sha256": "938360fb8af4833f700837ce67eeef61b2fdce1a2ee6054f0ba9ab3cbc0c1ba7"
+    },
+    {
+      "path": ".agents/skills/pulser-dynamics/mcp/server.mjs",
+      "sha256": "884c1b25dd0aaf075feb640e58336dd1452ab9b961951c6ea7c56044a5f90cad"
+    },
+    {
+      "path": ".agents/skills/pulser-dynamics/pyproject.toml",
+      "sha256": "93b21a8f54210e5fe184548aff57bca8b84c52e860b8d086428fc13c66107167"
+    },
+    {
+      "path": ".agents/skills/pulser-dynamics/uv.lock",
+      "sha256": "4dae145858855becf894f9e47ad8517a8865d7299b0628931672a550dd4b85c9"
+    },
+    {
+      "path": ".agents/skills/pyquil-simulation/SKILL.md",
+      "sha256": "b08728a52691bedfbce26ec73adbdc3ff0a3f70f5e881ff876fa79f6714440b4"
+    },
+    {
+      "path": ".agents/skills/pyquil-simulation/mcp/contracts.mjs",
+      "sha256": "e46182c252129abbb17ca9a9a46210f8b70e6b1548b276f09891d4d85c38b567"
+    },
+    {
+      "path": ".agents/skills/pyquil-simulation/mcp/server.mjs",
+      "sha256": "60341c3e48a8a731d581d93ef069b74537d166a7e307845d650062e88641c6f2"
+    },
+    {
+      "path": ".agents/skills/pyquil-simulation/pyproject.toml",
+      "sha256": "d4f7b629f2607acddb0b27592e998bf423bd99869cd50a0354f5cd7980ba8b5f"
+    },
+    {
+      "path": ".agents/skills/pyquil-simulation/uv.lock",
+      "sha256": "41a68cfc243c0233fae9ff7d5e5d886b212f4bc6e4c6b9125b51b23973191596"
+    },
+    {
+      "path": ".agents/skills/pytket-compilation/SKILL.md",
+      "sha256": "6302edeb350650509ad186ee608517255fa73413a29f6dea24e01313c9778404"
+    },
+    {
+      "path": ".agents/skills/pytket-compilation/mcp/contracts.mjs",
+      "sha256": "128b87d491f739d01f8b48c50c5d7be158ab87cad79e9a97ae9376aeefbbfd11"
+    },
+    {
+      "path": ".agents/skills/pytket-compilation/mcp/server.mjs",
+      "sha256": "90b867f7bd8304271605577dec1a89eb566d729ba0140687ff9a8aaead4420c4"
+    },
+    {
+      "path": ".agents/skills/pytket-compilation/pyproject.toml",
+      "sha256": "8edf70498c01976403ef78ba13424b518c84e06d215dd95c92f26ea3c381da25"
+    },
+    {
+      "path": ".agents/skills/pytket-compilation/uv.lock",
+      "sha256": "0bbf79ff0307f691ab2ac86711edfc36fb2a7355b33a317e43b0e63a92af073e"
+    },
+    {
+      "path": ".agents/skills/qoolqit-workbench/SKILL.md",
+      "sha256": "bf014025c51e2fcbcf26e9f24f691db7e3fd1c9fbd059ed56b382dc10308dffb"
+    },
+    {
+      "path": ".agents/skills/qoolqit-workbench/mcp/contracts.mjs",
+      "sha256": "84a51cf0ffc7093e90fda82617864e2f3781886ba9147b74974643bee2792de9"
+    },
+    {
+      "path": ".agents/skills/qoolqit-workbench/mcp/server.mjs",
+      "sha256": "2b1395f1dac35477c66c48135d6740e87189160031e41111725a5c2d22d34584"
+    },
+    {
+      "path": ".agents/skills/qoolqit-workbench/pyproject.toml",
+      "sha256": "2bd0dfc208abb8078e522a1095fd27600cee647841bbec24d629f0f7d17ae4e7"
+    },
+    {
+      "path": ".agents/skills/qoolqit-workbench/uv.lock",
+      "sha256": "5304a7a9dd049936694af34e6e08234f8ed142d2cd4cd0b12f41488bcf4ce3c6"
+    },
+    {
+      "path": ".agents/skills/qutrunk-simulation/SKILL.md",
+      "sha256": "1161748c9f707623d45993898b07f02e5d3b0f30b4b45c18ffa48990bac97afb"
+    },
+    {
+      "path": ".agents/skills/qutrunk-simulation/mcp/contracts.mjs",
+      "sha256": "1b5adf8695fd900a1a18c8fe9f4f0fee6379d0494e0c9216c76f73ca85449fe2"
+    },
+    {
+      "path": ".agents/skills/qutrunk-simulation/mcp/server.mjs",
+      "sha256": "ef8a29aae2cb70318538d42cdf537ce2b164b0d0e68066712123e39005ec577f"
+    },
+    {
+      "path": ".agents/skills/qutrunk-simulation/pyproject.toml",
+      "sha256": "7106e33b5dd8a7166cc4a8cca929dcbfd3a3fcc95dc0cefb9c5c6e5043c416fa"
+    },
+    {
+      "path": ".agents/skills/qutrunk-simulation/uv.lock",
+      "sha256": "c076facc05e4cd00d0c9da278593f4815cb384bfe76690adc09578d5c4003032"
+    },
+    {
+      "path": ".agents/skills/spinqit-simulation/SKILL.md",
+      "sha256": "b20b0b407457598195984d3c2938b69fe70219c24baf4363a042ce9f46215861"
+    },
+    {
+      "path": ".agents/skills/spinqit-simulation/mcp/contracts.mjs",
+      "sha256": "9b2af31730c3112cbff8cc6abe0b33b1fa925ceba256a5fab4cdff08519a58b1"
+    },
+    {
+      "path": ".agents/skills/spinqit-simulation/mcp/server.mjs",
+      "sha256": "7a88809dc4b0a00138d368f37a9e418035b6b798d047ee18bf14eed8eafefa52"
+    },
+    {
+      "path": ".agents/skills/spinqit-simulation/pyproject.toml",
+      "sha256": "04f6aca4e328149764a800cdc452a4c3a3b0436e1dfd3aff912d79886abccba1"
+    },
+    {
+      "path": ".agents/skills/spinqit-simulation/uv.lock",
+      "sha256": "28118456b8620a5f2c9e5b38eb381fa369ac7f52938a33d39d6e3e7a3305860d"
+    },
+    {
+      "path": ".agents/skills/superstaq-compilation/SKILL.md",
+      "sha256": "c87e3f34c7aff427d6efbf4c19f71d5c3aaf073d17a100c8a25c2a28d467c335"
+    },
+    {
+      "path": ".agents/skills/superstaq-compilation/mcp/contracts.mjs",
+      "sha256": "aa958b986854c0ae5d8aaf3ad088c5d2a1e42972025cc7cd2cf0991c913842a8"
+    },
+    {
+      "path": ".agents/skills/superstaq-compilation/mcp/server.mjs",
+      "sha256": "dbbed6ac1d36c4ffa006d911a8a68f1a0428d4c8bdad0f8896e1746ea599a4b5"
+    },
+    {
+      "path": ".agents/skills/superstaq-compilation/pyproject.toml",
+      "sha256": "927289d76cc640303afee7c7a0bd19725cf92b79bcbf9415c2c6ada24d83e861"
+    },
+    {
+      "path": ".agents/skills/superstaq-compilation/uv.lock",
+      "sha256": "d2b51bd05246512e5b09e5e7a74b903f8b62a47a006456469a0e3c6a4e863659"
+    },
+    {
+      "path": ".agents/skills/tensorcircuit-differentiable/SKILL.md",
+      "sha256": "d8a0a942b37ec7a72d8294c7e86f0b7a8ae15d57dd6f5f8f74a31fbff6d27c6e"
+    },
+    {
+      "path": ".agents/skills/tensorcircuit-differentiable/mcp/contracts.mjs",
+      "sha256": "d174b083f9095c994eab357d6598c74cb6b8dea1cecca9553e175dfc1597f2aa"
+    },
+    {
+      "path": ".agents/skills/tensorcircuit-differentiable/mcp/server.mjs",
+      "sha256": "5eb228eb59cde229ee4a7ca4c3a2c7ebd9d1bc9980bac64e94171da09face6b9"
+    },
+    {
+      "path": ".agents/skills/tensorcircuit-differentiable/pyproject.toml",
+      "sha256": "cbcd6c100bfe0baa52c76ef6789a3034ca8149a9d424aaf78492751a03d35c11"
+    },
+    {
+      "path": ".agents/skills/tensorcircuit-differentiable/uv.lock",
+      "sha256": "fe09754e6b38f6f60eed1503d253c190389d08aa5cd7f43ffadcc7a4e37d1534"
+    },
+    {
+      "path": "CURRENT.md",
+      "sha256": "d232b0f148dd97d27879907e5dfce495f511eaae3ac3f0e807df586928a650f4"
+    },
+    {
+      "path": "README.md",
+      "sha256": "543b834fc3362a37f320750c8063dd333f21564be15d593e730134c968c2b2b4"
+    },
+    {
+      "path": "THIRD_PARTY_NOTICES.md",
+      "sha256": "0d126c241dcbbe103d807946f99e5a692b0f66d726449f3674ce3c8ff9fb34e1"
+    },
+    {
+      "path": "docs/integrations/VENDOR_SDKS.md",
+      "sha256": "4239d5149a38dd98a893a24df902e4d5ed69867dc68602d243023451e017f624"
+    },
+    {
+      "path": "docs/readme/README.ar.md",
+      "sha256": "af06b8edbbf5b5f3f2feb3535714366f9d0ca4bb013e6563383def7db9553d78"
+    },
+    {
+      "path": "docs/readme/README.de.md",
+      "sha256": "615d85dfedc6f67663d35e564e5d160efa2b11051051baaa687a4920a96afb58"
+    },
+    {
+      "path": "docs/readme/README.en.md",
+      "sha256": "e2227aa37b6b87834f1c76f65243852f7eb53800b7db8d5e12e1cb954da56b68"
+    },
+    {
+      "path": "docs/readme/README.es.md",
+      "sha256": "0b4e909beed491e099ec1a8e1667745992eb8021fcf9eca74df224a82a286d50"
+    },
+    {
+      "path": "docs/readme/README.fr.md",
+      "sha256": "4e4c26b3566072c4da9e6fd7cb13e1b8e9717059e6a95235a5155603f560e214"
+    },
+    {
+      "path": "docs/readme/README.ja.md",
+      "sha256": "2f998560aad1fb93e2da62453dd9d606b5072ae4d1c520186ab50097f7f3290a"
+    },
+    {
+      "path": "docs/readme/README.ko.md",
+      "sha256": "ad65b96173afe4438a5b9434e1e5033ab8769b2d901181463a272f8f72f8485c"
+    },
+    {
+      "path": "docs/readme/README.pt.md",
+      "sha256": "85b886969637a060201654ab393182c947555d3b7a5309ba73b2264916eea22f"
+    },
+    {
+      "path": "docs/readme/README.ru.md",
+      "sha256": "e1d4cf21501cba307e2bfc8ba704a78d29805c9952859d819ecd0cf57e75a90e"
+    },
+    {
+      "path": "package.json",
+      "sha256": "647f114f2ceaad12d55916285ba32417fc41c69c061c045c771b4c3f19683c28"
+    },
+    {
+      "path": "runtime/openquantum/agent-presets/openquantum/agent.cordis.yml",
+      "sha256": "41068bd7b48f6d2c9e825cd825201565e7fb0b96fe5d9963661be7997e090a39"
+    },
+    {
+      "path": "scripts/setup-paper-tools.mjs",
+      "sha256": "aea7180b84174b40f01a9e92e57f53e29b9d9eb7c72da2bb6f776bc27ef23365"
+    },
+    {
+      "path": "src/lib/bounded-science-mcp.mjs",
+      "sha256": "6f6fd0505c06c93e9e697774a9aaf9a99e9091ab192d3d84b04bae5f36c01163"
+    },
+    {
+      "path": "src/lib/sdk-differentiable.mjs",
+      "sha256": "fcdb7b0a4e11a0265c175c522cf657289ea5ecb6f086552419cf69f13e93143d"
+    },
+    {
+      "path": "src/settings/server/project-settings-catalog.mjs",
+      "sha256": "c85c3af87a9dc87f126e2eb89567c054cfc8f3c95e90d480587eca346d5bac45"
+    },
+    {
+      "path": "src/settings/server/project-settings.mjs",
+      "sha256": "c29c873451776647fb5ed61092800863b4838158ca7091ac5d352b88513a3755"
+    }
+  ],
+  "reproduction": {
+    "script": ".openquantum/sdk-evidence/integration-review/static-review.mjs",
+    "scriptSha256": "c4cf8625e87c39a7b5d11ee8f4d6c40a51839ebc974c212cae23393b3782faa9",
+    "command": "node .openquantum/sdk-evidence/integration-review/static-review.mjs",
+    "dependencies": "Node.js with the repository dependencies; no Python SDK execution"
+  },
+  "currentHandoffReview": "CURRENT.md explicitly limits these SDK results to local source implementation and validation, and disclaims push, main merge and installer publication. Test counts are parent-owned evidence; this static review did not rerun them."
+}

@@ -65,13 +65,15 @@ Qiskit MCP Server 来自官方 Apache-2.0 项目
 
 ## 3. 下一批优先候选
 
+2026-09-27 新增 [17 个国内外厂商 SDK 能力包](../integrations/VENDOR_SDKS.md)，覆盖可微分电路、编译与经典优化、光子与设备模型、IonQ 程序准备及可选 Superstaq 编译；当前为 L1，不表示所有上游 API 或真实硬件均已接通。
+
 2026-09-12 补充：一维热方程的薛定谔化已有[独立数值原型](../../experiments/schrodingerization-heat1d/README.md)，
 采用 NumPy/SciPy、零 Dirichlet 边界和无源项，尚未形成产品 Tool。UnitaryLab 模拟器及 Agent 受闭源非商业许可约束，未纳入发行版。
 
 | 优先级 | 候选纵切 | 上游 | 计划的独立模块 |
 | ---: | --- | --- | --- |
 | 1 | 分子几何到 qubit Hamiltonian | [PySCF](https://github.com/pyscf/pyscf) + [Qiskit Nature](https://github.com/qiskit-community/qiskit-nature) | `quantum-chemistry-hamiltonian` Skill + 本地 Tool（必要时由 MCP Server 暴露）+ 积分/映射重放 Validator |
-| 2 | 可微分量子机器学习 | [PennyLane](https://github.com/PennyLaneAI/pennylane) | `pennylane-hybrid-workflow` + 固定数据/梯度 Artifact + eval |
+| 2 | 完整可微分模型训练与评测 | [PennyLane](https://github.com/PennyLaneAI/pennylane) | 单线路期望/梯度已由 `pennylane-differentiable` 接入；完整训练、数据和优化器工作流仍为候选 |
 | 3 | NISQ 噪声与 Google 风格电路 | [Cirq](https://github.com/quantumlib/Cirq) | `cirq-noise-workbench` Skill + 本地模拟 Tool（必要时由 MCP Server 暴露）+ channel/trace 检查 |
 | 4 | 容错资源估算 | [Microsoft QDK](https://github.com/microsoft/qdk) | `qsharp-resource-estimation` + Q# Tool + 假设完整性 Validator |
 

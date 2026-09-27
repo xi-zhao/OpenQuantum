@@ -27,3 +27,9 @@ FieldQKit 使用原固定 Git 修订及新增提交的依赖锁。RandomMeas 的
 可信结果物化也有工作区写入，因此保留既有 `workspace-write` 声明。Hamiltonian 保留原只读合同。
 FieldQKit 的模拟器发现可本地执行；云后端发现仍是所选服务的网络查询，不提交云任务。
 环境就绪不等于连接启用、模型可用或科学 Acceptance 通过。
+
+2026-09-27 新增的 [17 个厂商 SDK](VENDOR_SDKS.md) 复用同一个安装器。
+MindQuantum 固定 Python 3.11，SpinQit 与 QuTrunk 固定 3.10，其余使用 3.12；
+安装器按能力选择解释器，不把互不兼容的 Qiskit、NumPy、JAX、PyTorch 环境合并。
+`npm run capability:vendor-sdks:setup` 显式准备全部 17 项，也可传单个能力 ID。
+QoolQit 的定制许可证和 Superstaq 的可选网络操作见各自说明；准备环境不会启用连接或授权外发电路。

@@ -1,0 +1,352 @@
+{
+  "schemaVersion": "1.0",
+  "verifiedAt": "2026-09-27T12:52:38.122378+00:00",
+  "scope": "Real installed SDK serialization and HTTP transport fixtures; no online service or quantum hardware calls",
+  "scientificValidation": "not_evaluated",
+  "checks": {
+    "contractTests": 4,
+    "realSDKAndMCPTests": 4,
+    "ionqPythonTests": 2,
+    "superstaqPythonTests": 7,
+    "networkInPythonNumericalTests": "socket connect disabled; requests transport mocked for remote paths"
+  },
+  "capabilities": [
+    {
+      "id": "ionq-programs",
+      "server": "ionq_local",
+      "tool": "prepare_ionq_program",
+      "group": "sdk-cloud",
+      "displayName": "IonQ 本地程序准备",
+      "description": "使用官方 SDK 将结构化电路转换为 IonQ QIS 程序；不提交云任务。",
+      "provider": "IonQ",
+      "packageName": "qiskit-ionq",
+      "packageVersion": "1.1.1",
+      "sourceUrl": "https://github.com/qiskit-community/qiskit-ionq",
+      "optIn": false,
+      "installed": {
+        "python": "3.12.13",
+        "packages": {
+          "qiskit-ionq": "1.1.1"
+        }
+      },
+      "preparedLockVerified": true,
+      "sourceSha256": {
+        ".agents/skills/ionq-programs/SKILL.md": "e5ac775e41e758fe38695ee7fcd5aa889ad93d0a3caabe4d2890dd34688622c7",
+        ".agents/skills/ionq-programs/mcp/bridge.py": "0178d1a616377dd3b58e0dea72b720b3bedb69e31d53a090d041c5a3a15b7269",
+        ".agents/skills/ionq-programs/mcp/contracts.mjs": "469305b81c3b4f8920a6418db7921ba8ac8ccbccce1493b95e70ce760c64b1ca",
+        ".agents/skills/ionq-programs/mcp/server.mjs": "fa94f66fe2304423511a9ba4479e65de7453383e99cffef3a2a17facf191ab14",
+        ".agents/skills/ionq-programs/pyproject.toml": "e666be36c792fffdf0b6df5abcac8c2a225cf7eee579ce57ed03a15a10f26f6f",
+        ".agents/skills/ionq-programs/test/science_test.py": "d995851c455488507201432e9b26210f875aae5f567013a669a5195232b041f8",
+        ".agents/skills/ionq-programs/uv.lock": "e6ea0caec14bd65b09f580827fd42889d370bfd4da00991f4b33a0260cf24b20"
+      }
+    },
+    {
+      "id": "superstaq-compilation",
+      "server": "superstaq_cloud",
+      "tool": "prepare_superstaq_circuit",
+      "group": "sdk-cloud",
+      "displayName": "Superstaq 电路编译",
+      "description": "本地程序序列化和可选远程编译；远程操作外发电路，需要账户，不执行 QPU 任务。",
+      "provider": "Infleqtion",
+      "packageName": "qiskit-superstaq",
+      "packageVersion": "0.5.69",
+      "sourceUrl": "https://github.com/Infleqtion/client-superstaq",
+      "optIn": true,
+      "installed": {
+        "python": "3.12.13",
+        "packages": {
+          "qiskit-superstaq": "0.5.69"
+        }
+      },
+      "preparedLockVerified": true,
+      "sourceSha256": {
+        ".agents/skills/superstaq-compilation/SKILL.md": "c87e3f34c7aff427d6efbf4c19f71d5c3aaf073d17a100c8a25c2a28d467c335",
+        ".agents/skills/superstaq-compilation/mcp/bridge.py": "6e4ed73605fdd082b74700a5233a1603fc516d8ead1ab4f64f2fb20eee1292fa",
+        ".agents/skills/superstaq-compilation/mcp/contracts.mjs": "aa958b986854c0ae5d8aaf3ad088c5d2a1e42972025cc7cd2cf0991c913842a8",
+        ".agents/skills/superstaq-compilation/mcp/server.mjs": "dbbed6ac1d36c4ffa006d911a8a68f1a0428d4c8bdad0f8896e1746ea599a4b5",
+        ".agents/skills/superstaq-compilation/pyproject.toml": "927289d76cc640303afee7c7a0bd19725cf92b79bcbf9415c2c6ada24d83e861",
+        ".agents/skills/superstaq-compilation/test/science_test.py": "81d6f69efd3f06f2f18f15217478f9c202f37d3148874e53a985875ef90d12c1",
+        ".agents/skills/superstaq-compilation/uv.lock": "d2b51bd05246512e5b09e5e7a74b903f8b62a47a006456469a0e3c6a4e863659"
+      }
+    }
+  ],
+  "mcpOutputs": {
+    "mcp-ionq-programs-defaults": {
+      "schemaVersion": "1.0",
+      "source": {
+        "name": "qiskit-ionq",
+        "version": "1.1.1",
+        "repository": "https://github.com/qiskit-community/qiskit-ionq"
+      },
+      "input": {
+        "numQubits": 2,
+        "gates": [
+          {
+            "gate": "H",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "T",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "T",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              0,
+              1
+            ]
+          }
+        ],
+        "execution": {}
+      },
+      "inputSha256": "ecf3d41c8063ae7f53bcea8fba9ed1d30ffcf844f08e1ecd410bed8f04bfa962",
+      "dependencyLockSha256": "e6ea0caec14bd65b09f580827fd42889d370bfd4da00991f4b33a0260cf24b20",
+      "result": {
+        "numQubits": 2,
+        "gateset": "qis",
+        "instructions": [
+          {
+            "gate": "h",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "t",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "t",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "x",
+            "targets": [
+              1
+            ],
+            "controls": [
+              0
+            ]
+          }
+        ],
+        "measurementCount": 2,
+        "classicalToQubit": [
+          0,
+          1
+        ],
+        "qasm": "OPENQASM 2.0;\ninclude \"qelib1.inc\";\nqreg q[2];\ncreg c[2];\nh q[0];\nt q[0];\nt q[0];\ncx q[0],q[1];\nmeasure q[0] -> c[0];\nmeasure q[1] -> c[1];",
+        "networkUsed": false,
+        "interpretation": "instruction indices are input qubit indices; classicalToQubit[c] is the qubit measured into classical bit c"
+      },
+      "scientificValidation": "not_evaluated",
+      "limitations": [
+        "Official SDK QIS instruction conversion is local program preparation; it does not perform IonQ's remote hardware-aware native compiler passes.",
+        "Terminal measurements map every input qubit to the same-index classical bit. No shots, device calibration or hardware results are generated.",
+        "Cloud access remains in the existing optional hardware connection; this Tool does not receive credentials or submit jobs."
+      ]
+    },
+    "mcp-ionq-programs-explicit": {
+      "schemaVersion": "1.0",
+      "source": {
+        "name": "qiskit-ionq",
+        "version": "1.1.1",
+        "repository": "https://github.com/qiskit-community/qiskit-ionq"
+      },
+      "input": {
+        "numQubits": 3,
+        "gates": [
+          {
+            "gate": "RY",
+            "targets": [
+              2
+            ],
+            "angle": 0.4
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              2,
+              0
+            ]
+          }
+        ],
+        "execution": {}
+      },
+      "inputSha256": "d7489c538c503cb7ff075f43dfa2a51cbfd26429aa456526b063a0ad7ab7c0df",
+      "dependencyLockSha256": "e6ea0caec14bd65b09f580827fd42889d370bfd4da00991f4b33a0260cf24b20",
+      "result": {
+        "numQubits": 3,
+        "gateset": "qis",
+        "instructions": [
+          {
+            "gate": "ry",
+            "targets": [
+              2
+            ],
+            "rotation": 0.4
+          },
+          {
+            "gate": "x",
+            "targets": [
+              0
+            ],
+            "controls": [
+              2
+            ]
+          }
+        ],
+        "measurementCount": 3,
+        "classicalToQubit": [
+          0,
+          1,
+          2
+        ],
+        "qasm": "OPENQASM 2.0;\ninclude \"qelib1.inc\";\nqreg q[3];\ncreg c[3];\nry(0.4) q[2];\ncx q[2],q[0];\nmeasure q[0] -> c[0];\nmeasure q[1] -> c[1];\nmeasure q[2] -> c[2];",
+        "networkUsed": false,
+        "interpretation": "instruction indices are input qubit indices; classicalToQubit[c] is the qubit measured into classical bit c"
+      },
+      "scientificValidation": "not_evaluated",
+      "limitations": [
+        "Official SDK QIS instruction conversion is local program preparation; it does not perform IonQ's remote hardware-aware native compiler passes.",
+        "Terminal measurements map every input qubit to the same-index classical bit. No shots, device calibration or hardware results are generated.",
+        "Cloud access remains in the existing optional hardware connection; this Tool does not receive credentials or submit jobs."
+      ]
+    },
+    "mcp-superstaq-compilation-defaults": {
+      "schemaVersion": "1.0",
+      "source": {
+        "name": "qiskit-superstaq",
+        "version": "0.5.69",
+        "repository": "https://github.com/Infleqtion/client-superstaq"
+      },
+      "input": {
+        "numQubits": 2,
+        "gates": [
+          {
+            "gate": "H",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "T",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "T",
+            "targets": [
+              0
+            ]
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              0,
+              1
+            ]
+          }
+        ],
+        "execution": {}
+      },
+      "inputSha256": "ecf3d41c8063ae7f53bcea8fba9ed1d30ffcf844f08e1ecd410bed8f04bfa962",
+      "dependencyLockSha256": "d2b51bd05246512e5b09e5e7a74b903f8b62a47a006456469a0e3c6a4e863659",
+      "result": {
+        "numQubits": 2,
+        "depth": 4,
+        "gates": [
+          {
+            "name": "cx",
+            "count": 1
+          },
+          {
+            "name": "h",
+            "count": 1
+          },
+          {
+            "name": "t",
+            "count": 2
+          }
+        ],
+        "serializedCircuit": "UUlTS0lUDQIFAgAAAAAAAAABcHEAFWYACAAAAAIAAAAAAAAAAAAAAAIAAAABAAAAAAAAAAQAAAAA\nb3BlbnF1YW50dW1fc3VwZXJzdGFxAAAAAAAAAAB7fXEBAAAAAgABAXEAAAAAAAAAAAAAAAAAAAAB\nAAAAAAAAAAAABQAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABIR2F0ZXEAAAAAAAUAAAAA\nAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAVEdhdGVxAAAAAAAFAAAAAAAAAAEAAAAAAAAAAAAA\nAAAAAAAAAAAAAAAAAFRHYXRlcQAAAAAABgAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAFD\nWEdhdGVxAAAAAHEAAAABAAAA////////////////AAAAAAAAAAA=\n",
+        "qasm": "OPENQASM 2.0;\ninclude \"qelib1.inc\";\nqreg q[2];\nh q[0];\nt q[0];\nt q[0];\ncx q[0],q[1];",
+        "networkUsed": false,
+        "serialization": "qiskit-superstaq QPY"
+      },
+      "scientificValidation": "not_evaluated",
+      "limitations": [
+        "This is local SDK serialization and round-trip validation, not target compilation or execution.",
+        "Gate angles use radians. Qubit indices and idle qubits are retained; Qiskit basis strings use the highest qubit index at the left."
+      ]
+    },
+    "mcp-superstaq-compilation-explicit": {
+      "schemaVersion": "1.0",
+      "source": {
+        "name": "qiskit-superstaq",
+        "version": "0.5.69",
+        "repository": "https://github.com/Infleqtion/client-superstaq"
+      },
+      "input": {
+        "numQubits": 3,
+        "gates": [
+          {
+            "gate": "RY",
+            "targets": [
+              2
+            ],
+            "angle": 0.4
+          },
+          {
+            "gate": "CX",
+            "targets": [
+              2,
+              0
+            ]
+          }
+        ],
+        "execution": {}
+      },
+      "inputSha256": "d7489c538c503cb7ff075f43dfa2a51cbfd26429aa456526b063a0ad7ab7c0df",
+      "dependencyLockSha256": "d2b51bd05246512e5b09e5e7a74b903f8b62a47a006456469a0e3c6a4e863659",
+      "result": {
+        "numQubits": 3,
+        "depth": 2,
+        "gates": [
+          {
+            "name": "cx",
+            "count": 1
+          },
+          {
+            "name": "ry",
+            "count": 1
+          }
+        ],
+        "serializedCircuit": "UUlTS0lUDQIFAgAAAAAAAAABcHEAFWYACAAAAAMAAAAAAAAAAAAAAAIAAAABAAAAAAAAAAIAAAAA\nb3BlbnF1YW50dW1fc3VwZXJzdGFxAAAAAAAAAAB7fXEBAAAAAwABAXEAAAAAAAAAAAAAAAAAAAAB\nAAAAAAAAAAIAAAAAAAAAAAAGAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFJZR2F0ZXEA\nAAACZgAAAAAAAAAImpmZmZmZ2T8ABgAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAFDWEdh\ndGVxAAAAAnEAAAAAAAAA////////////////AAAAAAAAAAA=\n",
+        "qasm": "OPENQASM 2.0;\ninclude \"qelib1.inc\";\nqreg q[3];\nry(0.4) q[2];\ncx q[2],q[0];",
+        "networkUsed": false,
+        "serialization": "qiskit-superstaq QPY"
+      },
+      "scientificValidation": "not_evaluated",
+      "limitations": [
+        "This is local SDK serialization and round-trip validation, not target compilation or execution.",
+        "Gate angles use radians. Qubit indices and idle qubits are retained; Qiskit basis strings use the highest qubit index at the left."
+      ]
+    }
+  },
+  "independentReview": "sdk-cloud-independent-review-2026-09-27.json"
+}

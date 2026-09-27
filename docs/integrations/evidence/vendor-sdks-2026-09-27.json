@@ -1,0 +1,669 @@
+{
+  "schemaVersion": "1.0",
+  "verifiedAt": "2026-09-27T12:52:38.122378+00:00",
+  "platform": {
+    "system": "Darwin",
+    "machine": "arm64"
+  },
+  "scope": "Source integration of 17 vendor SDK capability slices, with no remote cloud/QPU or external model validation",
+  "scientificValidation": "not_evaluated",
+  "newInventory": {
+    "skills": 17,
+    "mcpConnections": 17,
+    "tools": 19,
+    "defaultOn": 15,
+    "optIn": 2
+  },
+  "sourceInventory": {
+    "skills": 119,
+    "automaticallySelectableSkills": 106,
+    "manualSkillIndexes": 13,
+    "mcpConnections": 55,
+    "defaultOnMcp": 44,
+    "optInMcp": 11,
+    "configuredTools": 240,
+    "mcpTools": 216,
+    "harnessGeneralTools": 18,
+    "nativeTools": 6,
+    "localBridges": 47,
+    "directUpstreamServices": 8
+  },
+  "capabilities": [
+    {
+      "id": "pennylane-differentiable",
+      "server": "pennylane_local",
+      "tool": "differentiate_pennylane_circuit",
+      "group": "sdk-differentiable",
+      "displayName": "PennyLane 可微分电路",
+      "description": "用户电路的概率、Pauli 期望值和参数梯度。",
+      "provider": "Xanadu",
+      "packageName": "pennylane",
+      "packageVersion": "0.45.1",
+      "sourceUrl": "https://github.com/PennyLaneAI/pennylane",
+      "optIn": false,
+      "installed": {
+        "python": "3.12.13",
+        "packages": {
+          "pennylane": "0.45.1"
+        }
+      },
+      "preparedLockVerified": true,
+      "sourceSha256": {
+        ".agents/skills/pennylane-differentiable/SKILL.md": "2b29ce29ee52d405f5b5d0786daa1e652ac2378df1307527bb72111579a0bc78",
+        ".agents/skills/pennylane-differentiable/mcp/bridge.py": "b79cf6515ee183114b60ec97d21c6e08aefb18bb582711a1ad164f56d489dfd4",
+        ".agents/skills/pennylane-differentiable/mcp/contracts.mjs": "d52c9eab09359c97ece3aa6387415385b7aac8866d34c31fd3ea7961fd57eb31",
+        ".agents/skills/pennylane-differentiable/mcp/server.mjs": "e50b23bbe79526b86e0acdcd879cd743fe3128b43fa38cd48d3545d1074770ae",
+        ".agents/skills/pennylane-differentiable/pyproject.toml": "a54094fb1d25e57d44bdc7f26cb27f7955ade712b4159eb438e82914287cbe64",
+        ".agents/skills/pennylane-differentiable/test/science_test.py": "1734bc3f43e2165c5244786459aee8cd6f5abda199ec4960c7c458f6089226ab",
+        ".agents/skills/pennylane-differentiable/uv.lock": "35ab949679c7eac7e5900385c78d51f76330b1597a65d7800b908ba3d531fdad"
+      }
+    },
+    {
+      "id": "deepquantum-differentiable",
+      "server": "deepquantum_local",
+      "tool": "differentiate_deepquantum_circuit",
+      "group": "sdk-differentiable",
+      "displayName": "DeepQuantum 可微分电路",
+      "description": "基于 PyTorch 的电路概率、期望值和参数梯度。",
+      "provider": "图灵量子",
+      "packageName": "deepquantum",
+      "packageVersion": "4.5.0",
+      "sourceUrl": "https://github.com/TuringQ/deepquantum",
+      "optIn": false,
+      "installed": {
+        "python": "3.12.13",
+        "packages": {
+          "deepquantum": "4.5.0"
+        }
+      },
+      "preparedLockVerified": true,
+      "sourceSha256": {
+        ".agents/skills/deepquantum-differentiable/SKILL.md": "1915efadfa2e81b36591987dbe918ec52174ebac68fcb5aa1b49981176be5478",
+        ".agents/skills/deepquantum-differentiable/mcp/bridge.py": "90c7d953b0f37834a441278ce647330b98382b06903d13898bf9782999605177",
+        ".agents/skills/deepquantum-differentiable/mcp/contracts.mjs": "dc20c84bec2fbb23a41b59195d5f51015bb24bb195713e43371e0f0c143b4494",
+        ".agents/skills/deepquantum-differentiable/mcp/server.mjs": "c5581348bb7415e4b03ae310e2ed8d44fa7dc311919493d34ad15eb61e8b9bdc",
+        ".agents/skills/deepquantum-differentiable/pyproject.toml": "e527601ce2ae0982c5b1cdcaa41c7550dd4c74fca0039af5da80534191230d6b",
+        ".agents/skills/deepquantum-differentiable/test/science_test.py": "1734bc3f43e2165c5244786459aee8cd6f5abda199ec4960c7c458f6089226ab",
+        ".agents/skills/deepquantum-differentiable/uv.lock": "9668859c1a79677565c5c6c7c6e5cc0318c38077eda36140c8b28053132c96ff"
+      }
+    },
+    {
+      "id": "tensorcircuit-differentiable",
+      "server": "tensorcircuit_local",
+      "tool": "differentiate_tensorcircuit_circuit",
+      "group": "sdk-differentiable",
+      "displayName": "TensorCircuit 可微分电路",
+      "description": "张量网络电路的概率、期望值和参数梯度。",
+      "provider": "腾讯量子实验室",
+      "packageName": "tensorcircuit",
+      "packageVersion": "0.12.0",
+      "sourceUrl": "https://github.com/tencent-quantum-lab/tensorcircuit",
+      "optIn": false,
+      "installed": {
+        "python": "3.12.13",
+        "packages": {
+          "tensorcircuit": "0.12.0"
+        }
+      },
+      "preparedLockVerified": true,
+      "sourceSha256": {
+        ".agents/skills/tensorcircuit-differentiable/SKILL.md": "d8a0a942b37ec7a72d8294c7e86f0b7a8ae15d57dd6f5f8f74a31fbff6d27c6e",
+        ".agents/skills/tensorcircuit-differentiable/mcp/bridge.py": "05b5ae56e77cf13513f9092cd4bccdd275302a293820a498de56cd1eed77ca1a",
+        ".agents/skills/tensorcircuit-differentiable/mcp/contracts.mjs": "d174b083f9095c994eab357d6598c74cb6b8dea1cecca9553e175dfc1597f2aa",
+        ".agents/skills/tensorcircuit-differentiable/mcp/server.mjs": "5eb228eb59cde229ee4a7ca4c3a2c7ebd9d1bc9980bac64e94171da09face6b9",
+        ".agents/skills/tensorcircuit-differentiable/pyproject.toml": "cbcd6c100bfe0baa52c76ef6789a3034ca8149a9d424aaf78492751a03d35c11",
+        ".agents/skills/tensorcircuit-differentiable/test/science_test.py": "1734bc3f43e2165c5244786459aee8cd6f5abda199ec4960c7c458f6089226ab",
+        ".agents/skills/tensorcircuit-differentiable/uv.lock": "fe09754e6b38f6f60eed1503d253c190389d08aa5cd7f43ffadcc7a4e37d1534"
+      }
+    },
+    {
+      "id": "mindquantum-differentiable",
+      "server": "mindquantum_local",
+      "tool": "differentiate_mindquantum_circuit",
+      "group": "sdk-differentiable",
+      "displayName": "MindQuantum 可微分电路",
+      "description": "本地电路模拟、Pauli 期望值和参数梯度。",
+      "provider": "华为 HiQ / MindSpore",
+      "packageName": "mindquantum",
+      "packageVersion": "0.12.0",
+      "sourceUrl": "https://gitee.com/mindspore/mindquantum",
+      "optIn": false,
+      "installed": {
+        "python": "3.11.15",
+        "packages": {
+          "mindquantum": "0.12.0"
+        }
+      },
+      "preparedLockVerified": true,
+      "sourceSha256": {
+        ".agents/skills/mindquantum-differentiable/SKILL.md": "56e157c2d20fa461ad674ded0c52307477e675819ffc6216ab109a806a5119ea",
+        ".agents/skills/mindquantum-differentiable/mcp/bridge.py": "3e26fc51c739de897661dcd044d66c78b3260595372e8af844f373c9ead0931f",
+        ".agents/skills/mindquantum-differentiable/mcp/contracts.mjs": "4f9bf938df927e67849fb3fed7715b4a7a8113970a8f7abcdd5d826abfd6f475",
+        ".agents/skills/mindquantum-differentiable/mcp/server.mjs": "995f6c433528277d170d9bf6d4154a4567b7a1bc6e1c3be0b58e135d4e1aa2e2",
+        ".agents/skills/mindquantum-differentiable/pyproject.toml": "02223c9bd70f5cdf4e2bf0be52af0107ae97ec683299a2a5dce9d955074133c3",
+        ".agents/skills/mindquantum-differentiable/test/science_test.py": "1734bc3f43e2165c5244786459aee8cd6f5abda199ec4960c7c458f6089226ab",
+        ".agents/skills/mindquantum-differentiable/uv.lock": "db42d48608b8226b0ec2d2c7d71c855fcaecd6ffa82224d6ed938c731cf60c9d"
+      }
+    },
+    {
+      "id": "pytket-compilation",
+      "server": "pytket_local",
+      "tool": "compile_pytket_circuit",
+      "group": "sdk-compilers",
+      "displayName": "TKET 电路编译",
+      "description": "本地电路优化、门数比较与 OpenQASM 导出。",
+      "provider": "Quantinuum",
+      "packageName": "pytket",
+      "packageVersion": "2.18.4",
+      "sourceUrl": "https://github.com/Quantinuum/tket",
+      "optIn": false,
+      "installed": {
+        "python": "3.12.13",
+        "packages": {
+          "pytket": "2.18.4"
+        }
+      },
+      "preparedLockVerified": true,
+      "sourceSha256": {
+        ".agents/skills/pytket-compilation/SKILL.md": "6302edeb350650509ad186ee608517255fa73413a29f6dea24e01313c9778404",
+        ".agents/skills/pytket-compilation/mcp/bridge.py": "784b2730bd1bf6b8f1b8ccb6552fb1f2c322c30ea8cbfc8ae6ec0fb7c42a319b",
+        ".agents/skills/pytket-compilation/mcp/contracts.mjs": "128b87d491f739d01f8b48c50c5d7be158ab87cad79e9a97ae9376aeefbbfd11",
+        ".agents/skills/pytket-compilation/mcp/server.mjs": "90b867f7bd8304271605577dec1a89eb566d729ba0140687ff9a8aaead4420c4",
+        ".agents/skills/pytket-compilation/pyproject.toml": "8edf70498c01976403ef78ba13424b518c84e06d215dd95c92f26ea3c381da25",
+        ".agents/skills/pytket-compilation/test/science_test.py": "ae4d1b58d20bbd960eae7df06ea45128c4050dc041419f078e430f460a2d3900",
+        ".agents/skills/pytket-compilation/uv.lock": "0bbf79ff0307f691ab2ac86711edfc36fb2a7355b33a317e43b0e63a92af073e"
+      }
+    },
+    {
+      "id": "ocean-optimization",
+      "server": "ocean_local",
+      "tool": "sample_ocean_model",
+      "group": "sdk-compilers",
+      "displayName": "D-Wave Ocean 经典采样",
+      "description": "二值二次模型的本地穷举或模拟退火；不是量子退火硬件执行。",
+      "provider": "D-Wave",
+      "packageName": "dimod + dwave-samplers",
+      "packageVersion": "0.12.22 / 1.8.0",
+      "sourceUrl": "https://github.com/dwavesystems/dwave-ocean-sdk",
+      "optIn": false,
+      "installed": {
+        "python": "3.12.13",
+        "packages": {
+          "dimod": "0.12.22",
+          "dwave-samplers": "1.8.0"
+        }
+      },
+      "preparedLockVerified": true,
+      "sourceSha256": {
+        ".agents/skills/ocean-optimization/SKILL.md": "7b58bb416af4024d9781623cbd5152d2aa41afa26cfbefe0c67cb58e84037b3a",
+        ".agents/skills/ocean-optimization/mcp/bridge.py": "2d9da3f667bab1db5bea7ab9af17d10e01fe1eaae18f89e37f81484d9182f6cd",
+        ".agents/skills/ocean-optimization/mcp/contracts.mjs": "7448e8abdd6f10259891a6f79008c0d1ebff38b5bc12cc825e696710c6895e85",
+        ".agents/skills/ocean-optimization/mcp/server.mjs": "a3b87ed57c613af37cde12795606195c9dfd18363b3f4039db61c7c6c8c3e72d",
+        ".agents/skills/ocean-optimization/pyproject.toml": "17467e3d8e96898ce8bd9d396ff924b4a085c3ffff56599e08934f4cd7ee009a",
+        ".agents/skills/ocean-optimization/test/science_test.py": "9c2e172fe359820fa450050aefc39327e90d369d69e5bf8eaa7e6eaf5b479dbe",
+        ".agents/skills/ocean-optimization/uv.lock": "1d96eaa55d8daf1287d9404f317c3e71450ebbf3cc955db8eb7977168459d43d"
+      }
+    },
+    {
+      "id": "kaiwu-qubo",
+      "server": "kaiwu_local",
+      "tool": "build_kaiwu_qubo",
+      "group": "sdk-compilers",
+      "displayName": "Kaiwu Community 建模",
+      "description": "社区版符号 QUBO、约束罚项和 Ising 转换；不使用企业版或真机。",
+      "provider": "玻色量子",
+      "packageName": "kaiwu-community",
+      "packageVersion": "1.0.7",
+      "sourceUrl": "https://github.com/qboson/kaiwu_community",
+      "optIn": false,
+      "installed": {
+        "python": "3.12.13",
+        "packages": {
+          "kaiwu-community": "1.0.7"
+        }
+      },
+      "preparedLockVerified": true,
+      "sourceSha256": {
+        ".agents/skills/kaiwu-qubo/SKILL.md": "80f002be164d627166ee6a63d3fa220f859ba52b63290874c3506ab647d63bed",
+        ".agents/skills/kaiwu-qubo/mcp/bridge.py": "469c02972920805e5729f2249cd0d4249e07ea39f9a1279618bf0f4921477ded",
+        ".agents/skills/kaiwu-qubo/mcp/contracts.mjs": "73d1ac925b0369c25e2c913641bc92e0c4d8084183d77d04200608549705236d",
+        ".agents/skills/kaiwu-qubo/mcp/server.mjs": "b3209b8ba7d975447f24ec16de391d8eeab3a9e823cbf4317f4d8ba97fe555a3",
+        ".agents/skills/kaiwu-qubo/pyproject.toml": "c2f2a822bfe16526223b8f6e8e9c4bb276dc8f8fb989ff4c86413f95e4ec74e4",
+        ".agents/skills/kaiwu-qubo/test/science_test.py": "9e908d5cb5bef7b78fcfc2eb521764cb9f2247f4eca678cbc3e8ecff5bd65d13",
+        ".agents/skills/kaiwu-qubo/uv.lock": "6329dcb78a2b07e81ec7fec5a183e8af0547c366411b1e41a5920ae7e6c3140b"
+      }
+    },
+    {
+      "id": "pyquil-simulation",
+      "server": "pyquil_local",
+      "tool": "simulate_pyquil_circuit",
+      "group": "sdk-compilers",
+      "displayName": "pyQuil 本地仿真",
+      "description": "本地 Quil 电路模拟，不提交 Rigetti 云作业。",
+      "provider": "Rigetti",
+      "packageName": "pyquil",
+      "packageVersion": "4.21.0",
+      "sourceUrl": "https://github.com/rigetti/pyquil",
+      "optIn": false,
+      "installed": {
+        "python": "3.12.13",
+        "packages": {
+          "pyquil": "4.21.0"
+        }
+      },
+      "preparedLockVerified": true,
+      "sourceSha256": {
+        ".agents/skills/pyquil-simulation/SKILL.md": "b08728a52691bedfbce26ec73adbdc3ff0a3f70f5e881ff876fa79f6714440b4",
+        ".agents/skills/pyquil-simulation/mcp/bridge.py": "66983460c75fd922359cd91ebadaccdbd36d05ad3e0d30e5464665bdcecd8f5a",
+        ".agents/skills/pyquil-simulation/mcp/contracts.mjs": "e46182c252129abbb17ca9a9a46210f8b70e6b1548b276f09891d4d85c38b567",
+        ".agents/skills/pyquil-simulation/mcp/server.mjs": "60341c3e48a8a731d581d93ef069b74537d166a7e307845d650062e88641c6f2",
+        ".agents/skills/pyquil-simulation/pyproject.toml": "d4f7b629f2607acddb0b27592e998bf423bd99869cd50a0354f5cd7980ba8b5f",
+        ".agents/skills/pyquil-simulation/test/science_test.py": "cca9067d68fde3d8dc5913de9caca177bdd46b653c5f0054e61eee274d297323",
+        ".agents/skills/pyquil-simulation/uv.lock": "41a68cfc243c0233fae9ff7d5e5d886b212f4bc6e4c6b9125b51b23973191596"
+      }
+    },
+    {
+      "id": "spinqit-simulation",
+      "server": "spinqit_local",
+      "tool": "simulate_spinqit_circuit",
+      "group": "sdk-compilers",
+      "displayName": "SpinQit 本地仿真",
+      "description": "量旋 SDK 的本地电路模拟，不连接设备。",
+      "provider": "量旋科技",
+      "packageName": "spinqit",
+      "packageVersion": "0.2.4",
+      "sourceUrl": "https://github.com/SpinQTech/SpinQit",
+      "optIn": false,
+      "installed": {
+        "python": "3.10.20",
+        "packages": {
+          "spinqit": "0.2.4"
+        }
+      },
+      "preparedLockVerified": true,
+      "sourceSha256": {
+        ".agents/skills/spinqit-simulation/SKILL.md": "b20b0b407457598195984d3c2938b69fe70219c24baf4363a042ce9f46215861",
+        ".agents/skills/spinqit-simulation/mcp/bridge.py": "ab62f50cfebbbca57793c43e907166e97d43ea8dbbf44b9b4adf426f9825d652",
+        ".agents/skills/spinqit-simulation/mcp/contracts.mjs": "9b2af31730c3112cbff8cc6abe0b33b1fa925ceba256a5fab4cdff08519a58b1",
+        ".agents/skills/spinqit-simulation/mcp/server.mjs": "7a88809dc4b0a00138d368f37a9e418035b6b798d047ee18bf14eed8eafefa52",
+        ".agents/skills/spinqit-simulation/pyproject.toml": "04f6aca4e328149764a800cdc452a4c3a3b0436e1dfd3aff912d79886abccba1",
+        ".agents/skills/spinqit-simulation/test/science_test.py": "557b195352a8f2a10dc4f14c0f51f1a1491a1e8741f3d42d758b4c6614cc27e3",
+        ".agents/skills/spinqit-simulation/uv.lock": "28118456b8620a5f2c9e5b38eb381fa369ac7f52938a33d39d6e3e7a3305860d"
+      }
+    },
+    {
+      "id": "qutrunk-simulation",
+      "server": "qutrunk_local",
+      "tool": "simulate_qutrunk_circuit",
+      "group": "sdk-compilers",
+      "displayName": "QuTrunk 本地仿真",
+      "description": "启科 SDK 的本地电路模拟，不连接设备。",
+      "provider": "启科量子",
+      "packageName": "qutrunk",
+      "packageVersion": "0.2.2",
+      "sourceUrl": "https://github.com/qudoor/qutrunk",
+      "optIn": false,
+      "installed": {
+        "python": "3.10.20",
+        "packages": {
+          "qutrunk": "0.2.2"
+        }
+      },
+      "preparedLockVerified": true,
+      "sourceSha256": {
+        ".agents/skills/qutrunk-simulation/SKILL.md": "1161748c9f707623d45993898b07f02e5d3b0f30b4b45c18ffa48990bac97afb",
+        ".agents/skills/qutrunk-simulation/mcp/bridge.py": "93a7b637f479f8f1c8566d010e75ef39c17e03ad58820a377b1818368b0840b1",
+        ".agents/skills/qutrunk-simulation/mcp/contracts.mjs": "1b5adf8695fd900a1a18c8fe9f4f0fee6379d0494e0c9216c76f73ca85449fe2",
+        ".agents/skills/qutrunk-simulation/mcp/server.mjs": "ef8a29aae2cb70318538d42cdf537ce2b164b0d0e68066712123e39005ec577f",
+        ".agents/skills/qutrunk-simulation/pyproject.toml": "7106e33b5dd8a7166cc4a8cca929dcbfd3a3fcc95dc0cefb9c5c6e5043c416fa",
+        ".agents/skills/qutrunk-simulation/test/science_test.py": "18095bbe8b8100e6d3456c50994802b87b753c86f2b1bcca6fd9409e1b40eb48",
+        ".agents/skills/qutrunk-simulation/uv.lock": "c076facc05e4cd00d0c9da278593f4815cb384bfe76690adc09578d5c4003032"
+      }
+    },
+    {
+      "id": "perceval-photonics",
+      "server": "perceval_local",
+      "tool": "simulate_perceval_photonics",
+      "group": "sdk-devices",
+      "displayName": "Perceval 光量子仿真",
+      "description": "用户 Fock 输入、分束器和移相网络的本地光子分布。",
+      "provider": "Quandela",
+      "packageName": "perceval-quandela",
+      "packageVersion": "1.3.0",
+      "sourceUrl": "https://github.com/Quandela/Perceval",
+      "optIn": false,
+      "installed": {
+        "python": "3.12.13",
+        "packages": {
+          "perceval-quandela": "1.3.0"
+        }
+      },
+      "preparedLockVerified": true,
+      "sourceSha256": {
+        ".agents/skills/perceval-photonics/SKILL.md": "a176a817205c101201df5cf638c445edb1cedd4f37f43f08316adfa61446c77e",
+        ".agents/skills/perceval-photonics/mcp/bridge.py": "d946147c0289b3d4196ba83ff68c3bdb2684f6b3bbedf4e31c3671de11ff499f",
+        ".agents/skills/perceval-photonics/mcp/contracts.mjs": "b2fcabf52f57bd4a13d5fd5dd80884fb1fd68d34e743b1c5aaa069700e0a6564",
+        ".agents/skills/perceval-photonics/mcp/server.mjs": "8c52508eef9f5b07e02b2291f4d8604d230bc37c0dcb31ffb00f3168a86ceddf",
+        ".agents/skills/perceval-photonics/pyproject.toml": "977e59e634621c09ee9ae4e12644c4dba8c7fbc6877516dbb2a7557bff483571",
+        ".agents/skills/perceval-photonics/references/UPSTREAM.md": "7aed646c110add7a07ac85b016ff44e8d7e7114213d738ffbb32d8887052b2cd",
+        ".agents/skills/perceval-photonics/test/science_test.py": "90b00f949d4b012fa089f751b21c447f031fff91de64d076f3b1c552faa24dfa",
+        ".agents/skills/perceval-photonics/uv.lock": "1f1d7ae4e3469f7b78a307bcc675cc47c04b33c9ca37e5da13349471de323c7a"
+      }
+    },
+    {
+      "id": "iqm-circuit-workbench",
+      "server": "iqm_local",
+      "tool": "run_iqm_local_circuit",
+      "group": "sdk-devices",
+      "displayName": "IQM 电路与模拟后端",
+      "description": "IQM 原生门转译与本地模拟，不连接真实设备。",
+      "provider": "IQM",
+      "packageName": "iqm-client",
+      "packageVersion": "35.0.3",
+      "sourceUrl": "https://github.com/iqm-finland/iqm-client",
+      "optIn": false,
+      "installed": {
+        "python": "3.12.13",
+        "packages": {
+          "iqm-client": "35.0.3"
+        }
+      },
+      "preparedLockVerified": true,
+      "sourceSha256": {
+        ".agents/skills/iqm-circuit-workbench/SKILL.md": "40f97bc97b4fbfaa374ce80408a1b51b3028452df13c9e12a5b1a1bfe99a4ac0",
+        ".agents/skills/iqm-circuit-workbench/mcp/bridge.py": "37035e095a4139b12269030ee9bb5e85334a88496f54073c4ece8b6fa2f2f31a",
+        ".agents/skills/iqm-circuit-workbench/mcp/contracts.mjs": "21f7e7d1a0b19c084436a5713d629489d3b00fffbc30d5a8cd1170a1a291df15",
+        ".agents/skills/iqm-circuit-workbench/mcp/server.mjs": "3ed546b63bea1ca5f7d480d5fc35c94f61f7d71d521f4ded0be426bae54fea89",
+        ".agents/skills/iqm-circuit-workbench/pyproject.toml": "9a531c6809f6eec1cb576cd9709c37acd23b4c7415dd198b3e23472e7b0804b7",
+        ".agents/skills/iqm-circuit-workbench/references/UPSTREAM.md": "cad5260da0e785cef7b93c94460e83b091892499600b1aefae793458f72569f2",
+        ".agents/skills/iqm-circuit-workbench/test/science_test.py": "1d1a2379c924281750599f843be3a8522c92c1660ecc1c07a33a4724037432f4",
+        ".agents/skills/iqm-circuit-workbench/uv.lock": "2e57c08430e1f2d92683393ed4bdeb4076ef1ec0f176ec85d2510e8ae627a922"
+      }
+    },
+    {
+      "id": "alicebob-cat-circuits",
+      "server": "alicebob_local",
+      "tool": "run_alicebob_local_circuit",
+      "group": "sdk-devices",
+      "displayName": "Alice & Bob 猫态模型",
+      "description": "官方本地猫态量子比特模型与电路仿真。",
+      "provider": "Alice & Bob",
+      "packageName": "qiskit-alice-bob-provider",
+      "packageVersion": "1.3.0",
+      "sourceUrl": "https://github.com/Alice-Bob-SW/qiskit-alice-bob-provider",
+      "optIn": false,
+      "installed": {
+        "python": "3.12.13",
+        "packages": {
+          "qiskit-alice-bob-provider": "1.3.0"
+        }
+      },
+      "preparedLockVerified": true,
+      "sourceSha256": {
+        ".agents/skills/alicebob-cat-circuits/SKILL.md": "4fea51b359ec62d4826886b83df856a14f6ee7eb6faf18cd169062e91db8b5e9",
+        ".agents/skills/alicebob-cat-circuits/mcp/bridge.py": "139f89d45469ded06a7a7a0163ab965f3805365e47433509632b8ed1d116406b",
+        ".agents/skills/alicebob-cat-circuits/mcp/contracts.mjs": "9bf957e6b50593100a319a7f48f2c2d7a8656213883e86504213a5216e9b12f1",
+        ".agents/skills/alicebob-cat-circuits/mcp/server.mjs": "cf89abe0e8723cfd7512a11717ef538eb288f4b267b7758170b5269a5d6cad7b",
+        ".agents/skills/alicebob-cat-circuits/pyproject.toml": "9cc7e2c6532be02e419300c90d573c3779cb60e4928d52ea60940796f157ba90",
+        ".agents/skills/alicebob-cat-circuits/references/UPSTREAM.md": "64ca3784da9baf591b743249b14459f845c1993e8ceebe406499878c4a0d62e5",
+        ".agents/skills/alicebob-cat-circuits/test/science_test.py": "0cc07c13bf8fcce8bcd13af8957cd1033ebffe2c9229aced86b43ed82d71a1f5",
+        ".agents/skills/alicebob-cat-circuits/uv.lock": "09dc45fe507beea933e5e1d89927c44cf74b8f63e61763d3ec2ff701c16f5942"
+      }
+    },
+    {
+      "id": "pulser-dynamics",
+      "server": "pulser_local",
+      "tool": "simulate_pulser_rydberg",
+      "group": "sdk-devices",
+      "displayName": "Pulser Rydberg 动力学",
+      "description": "Pasqal 全局脉冲、Rydberg 阵列与本地动力学。",
+      "provider": "Pasqal",
+      "packageName": "pulser-core + pulser-simulation",
+      "packageVersion": "1.9.1",
+      "sourceUrl": "https://github.com/pasqal-io/Pulser",
+      "optIn": false,
+      "installed": {
+        "python": "3.12.13",
+        "packages": {
+          "pulser-core": "1.9.1",
+          "pulser-simulation": "1.9.1"
+        }
+      },
+      "preparedLockVerified": true,
+      "sourceSha256": {
+        ".agents/skills/pulser-dynamics/SKILL.md": "ca4c13bf243e650c88016ba44c4f43c595bbbb8e5bab8d7c684c362cd4791ef1",
+        ".agents/skills/pulser-dynamics/mcp/bridge.py": "fe2aba4ff49e57eda92b1166a6f1dcb0f3c221b36f70b54480fde68441cd26db",
+        ".agents/skills/pulser-dynamics/mcp/contracts.mjs": "938360fb8af4833f700837ce67eeef61b2fdce1a2ee6054f0ba9ab3cbc0c1ba7",
+        ".agents/skills/pulser-dynamics/mcp/server.mjs": "884c1b25dd0aaf075feb640e58336dd1452ab9b961951c6ea7c56044a5f90cad",
+        ".agents/skills/pulser-dynamics/pyproject.toml": "93b21a8f54210e5fe184548aff57bca8b84c52e860b8d086428fc13c66107167",
+        ".agents/skills/pulser-dynamics/references/UPSTREAM.md": "37e5089ed9110527c5ea5ecc785e4034d0c1e3bc7a8e43f75f8736dcd5ea018c",
+        ".agents/skills/pulser-dynamics/test/science_test.py": "fd703267aac0abb15966ee6879ed8f32bd424fd000ace35907c3832123dcfe71",
+        ".agents/skills/pulser-dynamics/uv.lock": "4dae145858855becf894f9e47ad8517a8865d7299b0628931672a550dd4b85c9"
+      }
+    },
+    {
+      "id": "qoolqit-workbench",
+      "server": "qoolqit_local",
+      "tool": "simulate_qoolqit_analog",
+      "group": "sdk-devices",
+      "displayName": "QoolQit 模拟程序",
+      "description": "无量纲 Rydberg 程序编译与本地计算；需审阅上游定制许可证。",
+      "provider": "Pasqal",
+      "packageName": "qoolqit",
+      "packageVersion": "1.4.0",
+      "sourceUrl": "https://github.com/pasqal-io/qoolqit",
+      "optIn": true,
+      "installed": {
+        "python": "3.12.13",
+        "packages": {
+          "qoolqit": "1.4.0"
+        }
+      },
+      "preparedLockVerified": true,
+      "sourceSha256": {
+        ".agents/skills/qoolqit-workbench/SKILL.md": "bf014025c51e2fcbcf26e9f24f691db7e3fd1c9fbd059ed56b382dc10308dffb",
+        ".agents/skills/qoolqit-workbench/mcp/bridge.py": "4df7e2230ce44de1b4ff447eb006f308e205c22d3bd71ee9087f3e37e1ff2063",
+        ".agents/skills/qoolqit-workbench/mcp/contracts.mjs": "84a51cf0ffc7093e90fda82617864e2f3781886ba9147b74974643bee2792de9",
+        ".agents/skills/qoolqit-workbench/mcp/server.mjs": "2b1395f1dac35477c66c48135d6740e87189160031e41111725a5c2d22d34584",
+        ".agents/skills/qoolqit-workbench/pyproject.toml": "2bd0dfc208abb8078e522a1095fd27600cee647841bbec24d629f0f7d17ae4e7",
+        ".agents/skills/qoolqit-workbench/references/UPSTREAM.md": "e42d08f6f041301bc1fd4979c886204eb975c4943da189c223c1c9b6ab0cb823",
+        ".agents/skills/qoolqit-workbench/test/science_test.py": "a9d283e04a3d8dc821d23cdfa3cd4e0fca50f8c7febbd7a7f1739e0f7c0d40ef",
+        ".agents/skills/qoolqit-workbench/uv.lock": "5304a7a9dd049936694af34e6e08234f8ed142d2cd4cd0b12f41488bcf4ce3c6"
+      }
+    },
+    {
+      "id": "ionq-programs",
+      "server": "ionq_local",
+      "tool": "prepare_ionq_program",
+      "group": "sdk-cloud",
+      "displayName": "IonQ 本地程序准备",
+      "description": "使用官方 SDK 将结构化电路转换为 IonQ QIS 程序；不提交云任务。",
+      "provider": "IonQ",
+      "packageName": "qiskit-ionq",
+      "packageVersion": "1.1.1",
+      "sourceUrl": "https://github.com/qiskit-community/qiskit-ionq",
+      "optIn": false,
+      "installed": {
+        "python": "3.12.13",
+        "packages": {
+          "qiskit-ionq": "1.1.1"
+        }
+      },
+      "preparedLockVerified": true,
+      "sourceSha256": {
+        ".agents/skills/ionq-programs/SKILL.md": "e5ac775e41e758fe38695ee7fcd5aa889ad93d0a3caabe4d2890dd34688622c7",
+        ".agents/skills/ionq-programs/mcp/bridge.py": "0178d1a616377dd3b58e0dea72b720b3bedb69e31d53a090d041c5a3a15b7269",
+        ".agents/skills/ionq-programs/mcp/contracts.mjs": "469305b81c3b4f8920a6418db7921ba8ac8ccbccce1493b95e70ce760c64b1ca",
+        ".agents/skills/ionq-programs/mcp/server.mjs": "fa94f66fe2304423511a9ba4479e65de7453383e99cffef3a2a17facf191ab14",
+        ".agents/skills/ionq-programs/pyproject.toml": "e666be36c792fffdf0b6df5abcac8c2a225cf7eee579ce57ed03a15a10f26f6f",
+        ".agents/skills/ionq-programs/test/science_test.py": "d995851c455488507201432e9b26210f875aae5f567013a669a5195232b041f8",
+        ".agents/skills/ionq-programs/uv.lock": "e6ea0caec14bd65b09f580827fd42889d370bfd4da00991f4b33a0260cf24b20"
+      }
+    },
+    {
+      "id": "superstaq-compilation",
+      "server": "superstaq_cloud",
+      "tool": "prepare_superstaq_circuit",
+      "group": "sdk-cloud",
+      "displayName": "Superstaq 电路编译",
+      "description": "本地程序序列化和可选远程编译；远程操作外发电路，需要账户，不执行 QPU 任务。",
+      "provider": "Infleqtion",
+      "packageName": "qiskit-superstaq",
+      "packageVersion": "0.5.69",
+      "sourceUrl": "https://github.com/Infleqtion/client-superstaq",
+      "optIn": true,
+      "installed": {
+        "python": "3.12.13",
+        "packages": {
+          "qiskit-superstaq": "0.5.69"
+        }
+      },
+      "preparedLockVerified": true,
+      "sourceSha256": {
+        ".agents/skills/superstaq-compilation/SKILL.md": "c87e3f34c7aff427d6efbf4c19f71d5c3aaf073d17a100c8a25c2a28d467c335",
+        ".agents/skills/superstaq-compilation/mcp/bridge.py": "6e4ed73605fdd082b74700a5233a1603fc516d8ead1ab4f64f2fb20eee1292fa",
+        ".agents/skills/superstaq-compilation/mcp/contracts.mjs": "aa958b986854c0ae5d8aaf3ad088c5d2a1e42972025cc7cd2cf0991c913842a8",
+        ".agents/skills/superstaq-compilation/mcp/server.mjs": "dbbed6ac1d36c4ffa006d911a8a68f1a0428d4c8bdad0f8896e1746ea599a4b5",
+        ".agents/skills/superstaq-compilation/pyproject.toml": "927289d76cc640303afee7c7a0bd19725cf92b79bcbf9415c2c6ada24d83e861",
+        ".agents/skills/superstaq-compilation/test/science_test.py": "81d6f69efd3f06f2f18f15217478f9c202f37d3148874e53a985875ef90d12c1",
+        ".agents/skills/superstaq-compilation/uv.lock": "d2b51bd05246512e5b09e5e7a74b903f8b62a47a006456469a0e3c6a4e863659"
+      }
+    }
+  ],
+  "checks": {
+    "explicitSetup": {
+      "command": "npm run capability:vendor-sdks:setup",
+      "result": "17 frozen environments prepared and lock markers verified"
+    },
+    "contracts": {
+      "command": "npm run capability:vendor-sdks:test",
+      "passed": 45,
+      "failed": 0,
+      "skipped": 0
+    },
+    "live": {
+      "command": "OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 npm run capability:vendor-sdks:live",
+      "passed": 35,
+      "failed": 0,
+      "skipped": 0,
+      "harnessActions": 17,
+      "harnessRejectedInputs": 1,
+      "lastRuntimeChange": "After the live run, requests/curl CA variable forwarding was added; the matching worker-environment contract and full check passed afterward. Numerical SDK implementations did not change."
+    },
+    "fullCheck": {
+      "command": "npm run check",
+      "exitCode": 0,
+      "stageCounts": [
+        {
+          "tests": 6,
+          "pass": 6,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "tests": 442,
+          "pass": 331,
+          "fail": 0,
+          "skipped": 111
+        },
+        {
+          "tests": 119,
+          "pass": 119,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "tests": 35,
+          "pass": 35,
+          "fail": 0,
+          "skipped": 0
+        },
+        {
+          "tests": 154,
+          "pass": 153,
+          "fail": 0,
+          "skipped": 1
+        },
+        {
+          "tests": 3,
+          "pass": 3,
+          "fail": 0,
+          "skipped": 0
+        }
+      ],
+      "defaultSkippedTests": "Existing optional/live suites are skipped by the default check; all 35 new vendor live tests ran separately with zero skips."
+    }
+  },
+  "sharedSourceSha256": {
+    "src/lib/bounded-science-mcp.mjs": "6f6fd0505c06c93e9e697774a9aaf9a99e9091ab192d3d84b04bae5f36c01163",
+    "src/lib/local-json-process.mjs": "a9d927a94b1138892afd4fbdb5a8a92e24eb40261c05008a30bc45bf65266948",
+    "src/lib/sdk-differentiable.mjs": "fcdb7b0a4e11a0265c175c522cf657289ea5ecb6f086552419cf69f13e93143d",
+    "src/lib/sdk_differentiable.py": "85f6c7edb0d1e930d5dfa1fb817bed5338dcd700fa1f560993486b1be76860f6",
+    "src/lib/sdk-devices.mjs": "5b961e87a8c54670b544f4af5a18e44a9ea325e2ea2b7f0430643e5e6000a644",
+    "src/lib/sdk_device_models.py": "42fcea08153c188c16a310669c2cc625efa9d0b1559117f51e04680c3d9314dc",
+    "runtime/openquantum/agent-presets/openquantum/agent.cordis.yml": "41068bd7b48f6d2c9e825cd825201565e7fb0b96fe5d9963661be7997e090a39",
+    ".agents/capability-packages.yml": "06743349aed3654d7b96b517d78e047cda527cbfe2496d9713d24525029f73fc",
+    "src/settings/server/project-settings-catalog.mjs": "c85c3af87a9dc87f126e2eb89567c054cfc8f3c95e90d480587eca346d5bac45",
+    "scripts/setup-paper-tools.mjs": "aea7180b84174b40f01a9e92e57f53e29b9d9eb7c72da2bb6f776bc27ef23365",
+    "package.json": "647f114f2ceaad12d55916285ba32417fc41c69c061c045c771b4c3f19683c28",
+    "tests/harness-vendor-sdks.test.mjs": "2f34a608b3be4325869504301e30f7d58ccb565283da3c393c94c3a7f1f1b1c3",
+    "tests/sdk-cloud-contracts.test.mjs": "96e51677b5093bc7a47daa1ab7947e1757381bce5200b29147948e7b76310b03",
+    "tests/sdk-cloud-live.test.mjs": "694cd1040a6e9c5345376f668ca31225ad4abb0e048a82e497be55f2bc67727d"
+  },
+  "evidenceFiles": [
+    "sdk-differentiable-2026-09-27.json",
+    "sdk-compilers-2026-09-27.json",
+    "sdk-devices-2026-09-27.json",
+    "sdk-cloud-2026-09-27.json",
+    "sdk-differentiable-independent-review-2026-09-27.json",
+    "sdk-compilers-independent-review-2026-09-27.json",
+    "sdk-devices-independent-review-2026-09-27.json",
+    "sdk-cloud-independent-review-2026-09-27.json",
+    "sdk-integration-independent-review-2026-09-27.json",
+    "vendor-sdk-harness-session-2026-09-27.json"
+  ],
+  "localLogs": {
+    ".openquantum/sdk-evidence/vendor-contracts.log": {
+      "sha256": "0b21b03077fba389dada7514fbdd7b4709ecc421085a45281c27a461e8dcbb6f",
+      "bytes": 4948
+    },
+    ".openquantum/sdk-evidence/vendor-live-final.log": {
+      "sha256": "c952450b346f81fa7ccf17ef5f467dfa1c269784f143f1df737ac61ba086f304",
+      "bytes": 4180
+    },
+    ".openquantum/sdk-evidence/vendor-full-check.log": {
+      "sha256": "f6e4411ef580fa0773638785c5839c16a2d34a531cceb49a393ebf7ba86940b9",
+      "bytes": 94326
+    },
+    ".openquantum/sdk-evidence/vendor-full-check-initial.log": {
+      "sha256": "4bd313baf261ec97c431c91096b9e45ce4154adec23788d0a8ffa12d76451c5b",
+      "bytes": 59463
+    },
+    ".openquantum/sdk-evidence/vendor-full-check-concurrency.log": {
+      "sha256": "4ee05b36dae861a50896cecd64657c7d3f5a54f99f0e5960e7c1348a60a20d4e",
+      "bytes": 47554
+    }
+  },
+  "resolvedIssues": [
+    "Perceval routing now supports nonadjacent/reversed requested modes through SDK permutations.",
+    "QoolQit refuses a positive segment that rounds to zero nanoseconds and returns realized timing.",
+    "Worker errors redact credential values before truncating stderr.",
+    "Superstaq explicit auth prevents implicit netrc credentials; redirects and preparation of follow-up requests are disabled.",
+    "Single-action worker envelopes retain compatibility; only multi-action bridges receive toolName.",
+    "Platform tests run at concurrency 2 to avoid simultaneous complete Harness startup overload; first runs and failures are preserved in local logs.",
+    "CC Connect fixed-version binary was prepared by its official installer before the final existing management-service regression."
+  ],
+  "notVerified": [
+    "Actual Superstaq target access or remote compilation",
+    "Any quantum hardware execution",
+    "External model autonomous task completion",
+    "Non-macOS-arm64 execution",
+    "Central scientific Acceptance",
+    "Application release or remote publication"
+  ],
+  "gitBoundary": {
+    "baseCommit": "5d995fa212bc1b20631cbc9ef1daacb802602bb3",
+    "branch": "c/bloqade-analog",
+    "delivery": "Independent local commit; no push, main merge or release performed"
+  }
+}

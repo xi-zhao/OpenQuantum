@@ -1,0 +1,848 @@
+{
+  "verifiedAt": "2026-09-27T12:35:45.614Z",
+  "model": "local protocol fixture",
+  "externalModelTested": false,
+  "sourceSessionSha256": "30a70d462ae2900819639f1fc9ad68d5122d5047dbaab3431778eb52ad39c851",
+  "sessionId": "session-vendor-7ad91ca6-d1bd-4476-ad81-2f55ef2be0dd",
+  "events": [
+    {
+      "type": "tool/call",
+      "seq": 17,
+      "time": 1790512524069,
+      "data": {
+        "turn": 1,
+        "step": 1,
+        "callId": "vendor-fixture-0",
+        "name": "mcp__pennylane_local__differentiate_pennylane_circuit",
+        "arguments": "{\"numQubits\":2,\"gates\":[{\"gate\":\"RY\",\"targets\":[0],\"angle\":0.4},{\"gate\":\"CX\",\"targets\":[0,1]}],\"observables\":[\"ZI\",\"IZ\",\"XX\"],\"trainableGateIndices\":[0]}"
+      }
+    },
+    {
+      "type": "tool/result",
+      "seq": 19,
+      "time": 1790512525270,
+      "data": {
+        "turn": 1,
+        "step": 1,
+        "message": {
+          "source": {
+            "kind": "tool",
+            "callId": "vendor-fixture-0"
+          },
+          "content": [
+            {
+              "type": "tool-result",
+              "toolCallId": "vendor-fixture-0",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "{\"schemaVersion\":\"1.0\",\"source\":{\"name\":\"pennylane\",\"version\":\"0.45.1\",\"repository\":\"https://github.com/PennyLaneAI/pennylane\"},\"input\":{\"numQubits\":2,\"gates\":[{\"gate\":\"RY\",\"targets\":[0],\"angle\":0.4},{\"gate\":\"CX\",\"targets\":[0,1]}],\"observables\":[\"ZI\",\"IZ\",\"XX\"],\"trainableGateIndices\":[0],\"execution\":{}},\"inputSha256\":\"c41be1fe9e8966d53a1ae654a31fba9bb16d432bac5614c7ea424b7c391c5237\",\"dependencyLockSha256\":\"35ab949679c7eac7e5900385c78d51f76330b1597a65d7800b908ba3d531fdad\",\"result\":{\"numQubits\":2,\"amplitudes\":[[0.9800665778412416,0],[0,0],[0,0],[0.19866933079506122,0]],\"probabilities\":[0.9605304970014426,0,0,0.039469502998557456],\"stateNormSquared\":1,\"expectations\":[0.9210609940028851,0.9210609940028851,0.3894183423086504],\"jacobian\":[[-0.38941834230865047],[-0.38941834230865047],[0.9210609940028847]],\"trainableGateIndices\":[0],\"bitOrder\":\"lexicographic bitstrings q0 q1 ...; q0 is the leftmost, most significant bit\",\"angleUnit\":\"rad\",\"backend\":\"default.qubit (CPU)\",\"gradientMethod\":\"PennyLane Autograd backpropagation\"},\"scientificValidation\":\"not_evaluated\",\"limitations\":[\"Ideal pure-state simulation from the all-zero state, with no noise or finite-shot sampling.\",\"Each selected rotation angle is an independent parameter; no parameter sharing, optimization loop or hardware execution.\",\"Probabilities and amplitudes are raw numerical outputs without clipping or renormalization; full state output grows as 2^numQubits.\",\"This L1 execution does not establish scientific Acceptance or external-model validation.\"]}"
+                }
+              ],
+              "isError": false
+            }
+          ],
+          "role": "user",
+          "id": "5cb4f0ce-70e5-4de1-b725-670c365bc1f4"
+        }
+      },
+      "sourceEventSeqs": [
+        17
+      ],
+      "surfaceOp": "append"
+    },
+    {
+      "type": "tool/call",
+      "seq": 20,
+      "time": 1790512525270,
+      "data": {
+        "turn": 1,
+        "step": 1,
+        "callId": "vendor-fixture-1",
+        "name": "mcp__deepquantum_local__differentiate_deepquantum_circuit",
+        "arguments": "{\"numQubits\":2,\"gates\":[{\"gate\":\"RY\",\"targets\":[0],\"angle\":0.4},{\"gate\":\"CX\",\"targets\":[0,1]}],\"observables\":[\"ZI\",\"IZ\",\"XX\"],\"trainableGateIndices\":[0]}"
+      }
+    },
+    {
+      "type": "tool/result",
+      "seq": 21,
+      "time": 1790512528608,
+      "data": {
+        "turn": 1,
+        "step": 1,
+        "message": {
+          "source": {
+            "kind": "tool",
+            "callId": "vendor-fixture-1"
+          },
+          "content": [
+            {
+              "type": "tool-result",
+              "toolCallId": "vendor-fixture-1",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "{\"schemaVersion\":\"1.0\",\"source\":{\"name\":\"deepquantum\",\"version\":\"4.5.0\",\"repository\":\"https://github.com/TuringQ/deepquantum\"},\"input\":{\"numQubits\":2,\"gates\":[{\"gate\":\"RY\",\"targets\":[0],\"angle\":0.4},{\"gate\":\"CX\",\"targets\":[0,1]}],\"observables\":[\"ZI\",\"IZ\",\"XX\"],\"trainableGateIndices\":[0],\"execution\":{}},\"inputSha256\":\"c41be1fe9e8966d53a1ae654a31fba9bb16d432bac5614c7ea424b7c391c5237\",\"dependencyLockSha256\":\"9668859c1a79677565c5c6c7c6e5cc0318c38077eda36140c8b28053132c96ff\",\"result\":{\"numQubits\":2,\"amplitudes\":[[0.9800665778412416,0],[0,0],[0,0],[0.19866933079506122,0]],\"probabilities\":[0.9605304970014426,0,0,0.039469502998557456],\"stateNormSquared\":1,\"expectations\":[0.9210609940028851,0.9210609940028851,0.38941834230865047],\"jacobian\":[[-0.38941834230865047],[-0.38941834230865047],[0.9210609940028851]],\"trainableGateIndices\":[0],\"bitOrder\":\"lexicographic bitstrings q0 q1 ...; q0 is the leftmost, most significant bit\",\"angleUnit\":\"rad\",\"backend\":\"QubitCircuit state vector (CPU)\",\"gradientMethod\":\"PyTorch reverse-mode autodifferentiation\"},\"scientificValidation\":\"not_evaluated\",\"limitations\":[\"Ideal pure-state simulation from the all-zero state, with no noise or finite-shot sampling.\",\"Each selected rotation angle is an independent parameter; no parameter sharing, optimization loop or hardware execution.\",\"Probabilities and amplitudes are raw numerical outputs without clipping or renormalization; full state output grows as 2^numQubits.\",\"This L1 execution does not establish scientific Acceptance or external-model validation.\",\"DeepQuantum constructs some fixed gate constants, including H, at complex64 precision before promotion; numerical norm drift is returned unchanged.\",\"This action exposes differentiable qubit circuits; DeepQuantum photonic, Gaussian, Fock, MPS and distributed APIs are outside this tool contract.\"]}"
+                }
+              ],
+              "isError": false
+            }
+          ],
+          "role": "user",
+          "id": "76e3d719-8a37-4f86-9763-805fff0c0d85"
+        }
+      },
+      "sourceEventSeqs": [
+        20
+      ],
+      "surfaceOp": "append"
+    },
+    {
+      "type": "tool/call",
+      "seq": 22,
+      "time": 1790512528608,
+      "data": {
+        "turn": 1,
+        "step": 1,
+        "callId": "vendor-fixture-2",
+        "name": "mcp__tensorcircuit_local__differentiate_tensorcircuit_circuit",
+        "arguments": "{\"numQubits\":2,\"gates\":[{\"gate\":\"RY\",\"targets\":[0],\"angle\":0.4},{\"gate\":\"CX\",\"targets\":[0,1]}],\"observables\":[\"ZI\",\"IZ\",\"XX\"],\"trainableGateIndices\":[0]}"
+      }
+    },
+    {
+      "type": "tool/result",
+      "seq": 23,
+      "time": 1790512530723,
+      "data": {
+        "turn": 1,
+        "step": 1,
+        "message": {
+          "source": {
+            "kind": "tool",
+            "callId": "vendor-fixture-2"
+          },
+          "content": [
+            {
+              "type": "tool-result",
+              "toolCallId": "vendor-fixture-2",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "{\"schemaVersion\":\"1.0\",\"source\":{\"name\":\"tensorcircuit\",\"version\":\"0.12.0\",\"repository\":\"https://github.com/tencent-quantum-lab/tensorcircuit\"},\"input\":{\"numQubits\":2,\"gates\":[{\"gate\":\"RY\",\"targets\":[0],\"angle\":0.4},{\"gate\":\"CX\",\"targets\":[0,1]}],\"observables\":[\"ZI\",\"IZ\",\"XX\"],\"trainableGateIndices\":[0],\"execution\":{}},\"inputSha256\":\"c41be1fe9e8966d53a1ae654a31fba9bb16d432bac5614c7ea424b7c391c5237\",\"dependencyLockSha256\":\"fe09754e6b38f6f60eed1503d253c190389d08aa5cd7f43ffadcc7a4e37d1534\",\"result\":{\"numQubits\":2,\"amplitudes\":[[0.9800665778412416,0],[0,0],[0,0],[0.19866933079506122,0]],\"probabilities\":[0.9605304970014426,0,0,0.039469502998557456],\"stateNormSquared\":1,\"expectations\":[0.9210609940028851,0.9210609940028851,0.38941834230865047],\"jacobian\":[[-0.38941834230865047],[-0.38941834230865047],[0.9210609940028851]],\"trainableGateIndices\":[0],\"bitOrder\":\"lexicographic bitstrings q0 q1 ...; q0 is the leftmost, most significant bit\",\"angleUnit\":\"rad\",\"backend\":\"TensorCircuit contraction with JAX CPU complex128\",\"gradientMethod\":\"JAX reverse-mode autodifferentiation\"},\"scientificValidation\":\"not_evaluated\",\"limitations\":[\"Ideal pure-state simulation from the all-zero state, with no noise or finite-shot sampling.\",\"Each selected rotation angle is an independent parameter; no parameter sharing, optimization loop or hardware execution.\",\"Probabilities and amplitudes are raw numerical outputs without clipping or renormalization; full state output grows as 2^numQubits.\",\"This L1 execution does not establish scientific Acceptance or external-model validation.\"]}"
+                }
+              ],
+              "isError": false
+            }
+          ],
+          "role": "user",
+          "id": "e53476df-8303-4314-8e13-cb7d72ee228d"
+        }
+      },
+      "sourceEventSeqs": [
+        22
+      ],
+      "surfaceOp": "append"
+    },
+    {
+      "type": "tool/call",
+      "seq": 24,
+      "time": 1790512530724,
+      "data": {
+        "turn": 1,
+        "step": 1,
+        "callId": "vendor-fixture-3",
+        "name": "mcp__mindquantum_local__differentiate_mindquantum_circuit",
+        "arguments": "{\"numQubits\":2,\"gates\":[{\"gate\":\"RY\",\"targets\":[0],\"angle\":0.4},{\"gate\":\"CX\",\"targets\":[0,1]}],\"observables\":[\"ZI\",\"IZ\",\"XX\"],\"trainableGateIndices\":[0]}"
+      }
+    },
+    {
+      "type": "tool/result",
+      "seq": 25,
+      "time": 1790512531198,
+      "data": {
+        "turn": 1,
+        "step": 1,
+        "message": {
+          "source": {
+            "kind": "tool",
+            "callId": "vendor-fixture-3"
+          },
+          "content": [
+            {
+              "type": "tool-result",
+              "toolCallId": "vendor-fixture-3",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "{\"schemaVersion\":\"1.0\",\"source\":{\"name\":\"mindquantum\",\"version\":\"0.12.0\",\"repository\":\"https://github.com/mindspore-ai/mindquantum\"},\"input\":{\"numQubits\":2,\"gates\":[{\"gate\":\"RY\",\"targets\":[0],\"angle\":0.4},{\"gate\":\"CX\",\"targets\":[0,1]}],\"observables\":[\"ZI\",\"IZ\",\"XX\"],\"trainableGateIndices\":[0],\"execution\":{}},\"inputSha256\":\"c41be1fe9e8966d53a1ae654a31fba9bb16d432bac5614c7ea424b7c391c5237\",\"dependencyLockSha256\":\"db42d48608b8226b0ec2d2c7d71c855fcaecd6ffa82224d6ed938c731cf60c9d\",\"result\":{\"numQubits\":2,\"amplitudes\":[[0.9800665778412416,0],[0,0],[0,0],[0.19866933079506122,0]],\"probabilities\":[0.9605304970014426,0,0,0.039469502998557456],\"stateNormSquared\":1,\"expectations\":[0.9210609940028851,0.9210609940028851,0.38941834230865047],\"jacobian\":[[-0.38941834230865047],[-0.38941834230865047],[0.9210609940028851]],\"trainableGateIndices\":[0],\"bitOrder\":\"lexicographic bitstrings q0 q1 ...; q0 is the leftmost, most significant bit\",\"angleUnit\":\"rad\",\"backend\":\"mqvector CPU complex128\",\"gradientMethod\":\"MindQuantum adjoint expectation gradient\"},\"scientificValidation\":\"not_evaluated\",\"limitations\":[\"Ideal pure-state simulation from the all-zero state, with no noise or finite-shot sampling.\",\"Each selected rotation angle is an independent parameter; no parameter sharing, optimization loop or hardware execution.\",\"Probabilities and amplitudes are raw numerical outputs without clipping or renormalization; full state output grows as 2^numQubits.\",\"This L1 execution does not establish scientific Acceptance or external-model validation.\"]}"
+                }
+              ],
+              "isError": false
+            }
+          ],
+          "role": "user",
+          "id": "019baecc-1195-4834-a213-b62f799fb6af"
+        }
+      },
+      "sourceEventSeqs": [
+        24
+      ],
+      "surfaceOp": "append"
+    },
+    {
+      "type": "tool/call",
+      "seq": 26,
+      "time": 1790512531199,
+      "data": {
+        "turn": 1,
+        "step": 1,
+        "callId": "vendor-fixture-4",
+        "name": "mcp__pytket_local__compile_pytket_circuit",
+        "arguments": "{\"numQubits\":2,\"gates\":[{\"gate\":\"X\",\"targets\":[0]},{\"gate\":\"RY\",\"targets\":[1],\"angle\":0.4},{\"gate\":\"CX\",\"targets\":[0,1]}]}"
+      }
+    },
+    {
+      "type": "tool/result",
+      "seq": 27,
+      "time": 1790512531708,
+      "data": {
+        "turn": 1,
+        "step": 1,
+        "message": {
+          "source": {
+            "kind": "tool",
+            "callId": "vendor-fixture-4"
+          },
+          "content": [
+            {
+              "type": "tool-result",
+              "toolCallId": "vendor-fixture-4",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "{\"schemaVersion\":\"1.0\",\"source\":{\"name\":\"pytket\",\"version\":\"2.18.4\",\"repository\":\"https://github.com/Quantinuum/tket\"},\"input\":{\"numQubits\":2,\"gates\":[{\"gate\":\"X\",\"targets\":[0]},{\"gate\":\"RY\",\"targets\":[1],\"angle\":0.4},{\"gate\":\"CX\",\"targets\":[0,1]}],\"optimize\":true,\"execution\":{}},\"inputSha256\":\"80d9dd73462a390bdf40c21367b94bd9da05c68682bdb1e2e0d8e51762ad82d9\",\"dependencyLockSha256\":\"0bbf79ff0307f691ab2ac86711edfc36fb2a7355b33a317e43b0e63a92af073e\",\"result\":{\"numQubits\":2,\"before\":{\"gates\":3,\"depth\":2,\"twoQubitGates\":1,\"gateCounts\":[{\"gate\":\"CX\",\"count\":1},{\"gate\":\"Ry\",\"count\":1},{\"gate\":\"X\",\"count\":1}]},\"after\":{\"gates\":5,\"depth\":4,\"twoQubitGates\":1,\"gateCounts\":[{\"gate\":\"CX\",\"count\":1},{\"gate\":\"Rx\",\"count\":2},{\"gate\":\"Rz\",\"count\":2}]},\"qasm\":\"OPENQASM 2.0;\\ninclude \\\"qelib1.inc\\\";\\n\\nqreg q[2];\\nrx(1.0*pi) q[0];\\nrz(3.5*pi) q[1];\\nrx(0.12732395447351627*pi) q[1];\\nrz(0.5*pi) q[1];\\ncx q[0],q[1];\\n\",\"globalPhaseRadians\":1.5707963267948966,\"nativeGates\":[\"CX\",\"Rx\",\"Ry\",\"Rz\"],\"backend\":\"pytket FullPeepholeOptimise + AutoRebase\",\"qubitMapping\":\"q[i] retains input qubit i; implicit swaps disabled\"},\"scientificValidation\":\"not_evaluated\",\"limitations\":[\"Unitary gate compilation only, without connectivity routing, calibrated error rates or hardware execution.\",\"OpenQASM 2 omits global phase. Multiply its unitary by exp(i*globalPhaseRadians) to reconstruct the compiled circuit's phase.\",\"Optimization does not guarantee fewer gates in every target basis, optimal depth, or better physical fidelity; before and after use different gate bases.\",\"No dense unitary is computed by this tool; numerical equivalence checks belong to development evidence, not scientific acceptance.\"]}"
+                }
+              ],
+              "isError": false
+            }
+          ],
+          "role": "user",
+          "id": "b8dbe3d4-94f4-4b7d-a0ae-70fa486f1ffe"
+        }
+      },
+      "sourceEventSeqs": [
+        26
+      ],
+      "surfaceOp": "append"
+    },
+    {
+      "type": "tool/call",
+      "seq": 28,
+      "time": 1790512531708,
+      "data": {
+        "turn": 1,
+        "step": 1,
+        "callId": "vendor-fixture-5",
+        "name": "mcp__ocean_local__sample_ocean_model",
+        "arguments": "{\"linear\":[-1,2],\"quadratic\":[{\"i\":0,\"j\":1,\"bias\":-3}],\"offset\":0.4}"
+      }
+    },
+    {
+      "type": "tool/result",
+      "seq": 29,
+      "time": 1790512531990,
+      "data": {
+        "turn": 1,
+        "step": 1,
+        "message": {
+          "source": {
+            "kind": "tool",
+            "callId": "vendor-fixture-5"
+          },
+          "content": [
+            {
+              "type": "tool-result",
+              "toolCallId": "vendor-fixture-5",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "{\"schemaVersion\":\"1.0\",\"source\":{\"name\":\"dimod + dwave-samplers\",\"version\":\"0.12.22 + 1.8.0\",\"repository\":\"https://github.com/dwavesystems/dimod\"},\"input\":{\"linear\":[-1,2],\"quadratic\":[{\"i\":0,\"j\":1,\"bias\":-3}],\"offset\":0.4,\"vartype\":\"BINARY\",\"method\":\"exact\",\"numReads\":100,\"numSweeps\":1000,\"seed\":17,\"execution\":{}},\"inputSha256\":\"9d52d22aab34c0c8af146971fc625efe73422fb4180c9ee1f8b0902024020e48\",\"dependencyLockSha256\":\"1d96eaa55d8daf1287d9404f317c3e71450ebbf3cc955db8eb7977168459d43d\",\"result\":{\"vartype\":\"BINARY\",\"samples\":[{\"values\":[1,1],\"energy\":-1.6,\"numOccurrences\":1},{\"values\":[1,0],\"energy\":-0.6,\"numOccurrences\":1},{\"values\":[0,0],\"energy\":0.4,\"numOccurrences\":1},{\"values\":[0,1],\"energy\":2.4,\"numOccurrences\":1}],\"binaryModel\":{\"linear\":[-1,2],\"quadratic\":[{\"i\":0,\"j\":1,\"bias\":-3}],\"offset\":0.4},\"spinModel\":{\"linear\":[-1.25,0.25],\"quadratic\":[{\"i\":0,\"j\":1,\"bias\":-0.75}],\"offset\":0.15000000000000002},\"minimumEnergyFound\":-1.6,\"exhaustive\":true,\"backend\":\"dimod.ExactSolver\"},\"scientificValidation\":\"not_evaluated\",\"limitations\":[\"Both samplers are classical CPU algorithms. This call does not use quantum annealing hardware, Leap services or hybrid cloud solvers.\",\"Energy is offset + sum_i linear[i]*v_i + sum_{i<j} quadratic[i,j]*v_i*v_j; BINARY v is 0/1 and SPIN v is -1/+1, with s=2*x-1.\",\"ExactSolver enumerates 2^N configurations. Simulated annealing is heuristic and minimumEnergyFound is not an optimality certificate.\",\"numReads, numSweeps and seed apply only to simulated annealing. Exact mode returns each configuration once; scientific acceptance is not evaluated.\"]}"
+                }
+              ],
+              "isError": false
+            }
+          ],
+          "role": "user",
+          "id": "ce01bbae-6a70-41a1-87cf-ecbe3b6d25da"
+        }
+      },
+      "sourceEventSeqs": [
+        28
+      ],
+      "surfaceOp": "append"
+    },
+    {
+      "type": "tool/call",
+      "seq": 30,
+      "time": 1790512531990,
+      "data": {
+        "turn": 1,
+        "step": 1,
+        "callId": "vendor-fixture-6",
+        "name": "mcp__kaiwu_local__build_kaiwu_qubo",
+        "arguments": "{\"linear\":[-1,-2],\"constraints\":[{\"coefficients\":[1,1],\"rhs\":1,\"penalty\":4}],\"assignments\":[[0,0],[0,1],[1,0],[1,1]]}"
+      }
+    },
+    {
+      "type": "tool/result",
+      "seq": 31,
+      "time": 1790512532098,
+      "data": {
+        "turn": 1,
+        "step": 1,
+        "message": {
+          "source": {
+            "kind": "tool",
+            "callId": "vendor-fixture-6"
+          },
+          "content": [
+            {
+              "type": "tool-result",
+              "toolCallId": "vendor-fixture-6",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "{\"schemaVersion\":\"1.0\",\"source\":{\"name\":\"kaiwu-community\",\"version\":\"1.0.7\",\"repository\":\"https://github.com/qboson/kaiwu_community\"},\"input\":{\"linear\":[-1,-2],\"constraints\":[{\"coefficients\":[1,1],\"rhs\":1,\"penalty\":4}],\"assignments\":[[0,0],[0,1],[1,0],[1,1]],\"quadratic\":[],\"offset\":0,\"execution\":{}},\"inputSha256\":\"f271fa5ece762e5e0cf108131306e592bacea1382b788190859028edf4ac5a9d\",\"dependencyLockSha256\":\"6329dcb78a2b07e81ec7fec5a183e8af0547c366411b1e41a5920ae7e6c3140b\",\"result\":{\"variableNames\":[\"x_0\",\"x_1\"],\"quboMatrix\":[[-5,8],[0,-6]],\"quboOffset\":4,\"isingMatrix\":[[0,-1,0.25],[-1,0,0.5],[0.25,0.5,0]],\"isingOffset\":0.5,\"isingConvention\":\"E(x) = -s^T J s + isingOffset; s_i=2*x_i-1, final auxiliary spin=+1\",\"evaluations\":[{\"values\":[0,0],\"objective\":0,\"constraintResiduals\":[-1],\"penaltyEnergy\":4,\"energy\":4},{\"values\":[0,1],\"objective\":-2,\"constraintResiduals\":[0],\"penaltyEnergy\":0,\"energy\":-2},{\"values\":[1,0],\"objective\":-1,\"constraintResiduals\":[0],\"penaltyEnergy\":0,\"energy\":-1},{\"values\":[1,1],\"objective\":-3,\"constraintResiduals\":[1],\"penaltyEnergy\":4,\"energy\":1}],\"backend\":\"kaiwu.core.QuboModel + qubo_matrix_to_ising_matrix\"},\"scientificValidation\":\"not_evaluated\",\"limitations\":[\"Only the Apache-2.0 Kaiwu Community modeling package is used. No enterprise license, proprietary optimizer, telemetry or hardware submission is invoked.\",\"QUBO energy is x^T Q x + quboOffset; off-diagonal Q entries are counted exactly as returned, without an extra factor of two.\",\"The SDK uses an augmented symmetric Ising matrix and a negative Hamiltonian sign. Fix the final auxiliary spin to +1 and use s_i=2*x_i-1.\",\"Equality constraints contribute penalty*(a.x-rhs)^2. Caller chooses penalty strengths; finite penalties do not prove that an optimum is feasible.\",\"This action constructs and evaluates models, it does not solve them or certify scientific acceptance.\"]}"
+                }
+              ],
+              "isError": false
+            }
+          ],
+          "role": "user",
+          "id": "e6b40055-942d-4f0e-9c07-30a083e0380b"
+        }
+      },
+      "sourceEventSeqs": [
+        30
+      ],
+      "surfaceOp": "append"
+    },
+    {
+      "type": "tool/call",
+      "seq": 32,
+      "time": 1790512532098,
+      "data": {
+        "turn": 1,
+        "step": 1,
+        "callId": "vendor-fixture-7",
+        "name": "mcp__pyquil_local__simulate_pyquil_circuit",
+        "arguments": "{\"numQubits\":2,\"gates\":[{\"gate\":\"X\",\"targets\":[0]},{\"gate\":\"RY\",\"targets\":[1],\"angle\":0.4},{\"gate\":\"CX\",\"targets\":[0,1]}]}"
+      }
+    },
+    {
+      "type": "tool/result",
+      "seq": 33,
+      "time": 1790512532543,
+      "data": {
+        "turn": 1,
+        "step": 1,
+        "message": {
+          "source": {
+            "kind": "tool",
+            "callId": "vendor-fixture-7"
+          },
+          "content": [
+            {
+              "type": "tool-result",
+              "toolCallId": "vendor-fixture-7",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "{\"schemaVersion\":\"1.0\",\"source\":{\"name\":\"pyquil\",\"version\":\"4.21.0\",\"repository\":\"https://github.com/rigetti/pyquil\"},\"input\":{\"numQubits\":2,\"gates\":[{\"gate\":\"X\",\"targets\":[0]},{\"gate\":\"RY\",\"targets\":[1],\"angle\":0.4},{\"gate\":\"CX\",\"targets\":[0,1]}],\"execution\":{}},\"inputSha256\":\"2d54595b0734e1d1c52ac278c91772f420a6c776a66adbf984115979df03ffbe\",\"dependencyLockSha256\":\"41a68cfc243c0233fae9ff7d5e5d886b212f4bc6e4c6b9125b51b23973191596\",\"result\":{\"numQubits\":2,\"outcomes\":[{\"bits\":\"00\",\"probability\":0,\"amplitude\":[0,0]},{\"bits\":\"01\",\"probability\":0,\"amplitude\":[0,0]},{\"bits\":\"10\",\"probability\":0.039469502998557456,\"amplitude\":[0.19866933079506122,0]},{\"bits\":\"11\",\"probability\":0.9605304970014426,\"amplitude\":[0.9800665778412416,0]}],\"normError\":0,\"backend\":\"pyquil.simulation.NumpyWavefunctionSimulator\",\"program\":\"X 0\\nRY(0.4) 1\\nCNOT 0 1\\n\",\"bitOrder\":\"leftmost bit is qubit 0\"},\"scientificValidation\":\"not_evaluated\",\"limitations\":[\"All-zero input and ideal unitary gates only; no noise, measurements, classical control or calibrated Rigetti device model.\",\"Uses Rigetti's local NumPy wavefunction simulator, not the separate QVM server, quilc compiler, QCS cloud or QPU.\",\"Amplitudes and probabilities are raw numerical state-vector values, without clipping or normalization, not finite-shot counts.\",\"Full state-vector memory grows as 2^N. Caller chooses circuit size and execution resources; no scientific acceptance is declared.\"]}"
+                }
+              ],
+              "isError": false
+            }
+          ],
+          "role": "user",
+          "id": "b828543f-f455-4287-9a9c-4d5b24e0704d"
+        }
+      },
+      "sourceEventSeqs": [
+        32
+      ],
+      "surfaceOp": "append"
+    },
+    {
+      "type": "tool/call",
+      "seq": 34,
+      "time": 1790512532544,
+      "data": {
+        "turn": 1,
+        "step": 1,
+        "callId": "vendor-fixture-8",
+        "name": "mcp__spinqit_local__simulate_spinqit_circuit",
+        "arguments": "{\"numQubits\":2,\"gates\":[{\"gate\":\"X\",\"targets\":[0]},{\"gate\":\"RY\",\"targets\":[1],\"angle\":0.4},{\"gate\":\"CX\",\"targets\":[0,1]}]}"
+      }
+    },
+    {
+      "type": "tool/result",
+      "seq": 35,
+      "time": 1790512534708,
+      "data": {
+        "turn": 1,
+        "step": 1,
+        "message": {
+          "source": {
+            "kind": "tool",
+            "callId": "vendor-fixture-8"
+          },
+          "content": [
+            {
+              "type": "tool-result",
+              "toolCallId": "vendor-fixture-8",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "{\"schemaVersion\":\"1.0\",\"source\":{\"name\":\"spinqit\",\"version\":\"0.2.4\",\"repository\":\"https://github.com/SpinQTech/SpinQit\"},\"input\":{\"numQubits\":2,\"gates\":[{\"gate\":\"X\",\"targets\":[0]},{\"gate\":\"RY\",\"targets\":[1],\"angle\":0.4},{\"gate\":\"CX\",\"targets\":[0,1]}],\"execution\":{}},\"inputSha256\":\"2d54595b0734e1d1c52ac278c91772f420a6c776a66adbf984115979df03ffbe\",\"dependencyLockSha256\":\"28118456b8620a5f2c9e5b38eb381fa369ac7f52938a33d39d6e3e7a3305860d\",\"result\":{\"numQubits\":2,\"outcomes\":[{\"bits\":\"00\",\"probability\":0,\"amplitude\":[0,0]},{\"bits\":\"01\",\"probability\":0,\"amplitude\":[0,0]},{\"bits\":\"10\",\"probability\":0.03946950298889405,\"amplitude\":[0.19866933077074087,0]},{\"bits\":\"11\",\"probability\":0.9605304970111059,\"amplitude\":[0.9800665778461716,0]}],\"normError\":0,\"backend\":\"SpinQit basic simulator\",\"program\":\"Instruction(gate:X, qubits:[0], clbits:[], params:[])\\nInstruction(gate:Ry, qubits:[1], clbits:[], params:[0.4])\\nInstruction(gate:CX, qubits:[0, 1], clbits:[], params:[])\",\"bitOrder\":\"leftmost bit is qubit 0\"},\"scientificValidation\":\"not_evaluated\",\"limitations\":[\"All-zero input and ideal unitary gates only; no noise, measurements, classical control or SpinQ hardware calibration.\",\"Uses the native compiler at optimization level 0 and the basic local simulator; no cloud or NMR operation is invoked.\",\"Probabilities are calculated from the SDK's raw amplitudes without clipping or normalization. SDK rounded counts are not returned as shot measurements.\",\"SpinQit 0.2.4 uses Python 3.10. Its macOS wheel's bundled interface library is preloaded to resolve an upstream rpath issue; the library is not modified.\",\"Full state-vector memory grows as 2^N. Caller chooses size and execution resources; no scientific acceptance is declared.\"]}"
+                }
+              ],
+              "isError": false
+            }
+          ],
+          "role": "user",
+          "id": "4ade1b14-35b4-44b5-b4f9-b2eb95dc27c2"
+        }
+      },
+      "sourceEventSeqs": [
+        34
+      ],
+      "surfaceOp": "append"
+    },
+    {
+      "type": "tool/call",
+      "seq": 36,
+      "time": 1790512534708,
+      "data": {
+        "turn": 1,
+        "step": 1,
+        "callId": "vendor-fixture-9",
+        "name": "mcp__qutrunk_local__simulate_qutrunk_circuit",
+        "arguments": "{\"numQubits\":2,\"gates\":[{\"gate\":\"X\",\"targets\":[0]},{\"gate\":\"RY\",\"targets\":[1],\"angle\":0.4},{\"gate\":\"CX\",\"targets\":[0,1]}]}"
+      }
+    },
+    {
+      "type": "tool/result",
+      "seq": 37,
+      "time": 1790512534899,
+      "data": {
+        "turn": 1,
+        "step": 1,
+        "message": {
+          "source": {
+            "kind": "tool",
+            "callId": "vendor-fixture-9"
+          },
+          "content": [
+            {
+              "type": "tool-result",
+              "toolCallId": "vendor-fixture-9",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "{\"schemaVersion\":\"1.0\",\"source\":{\"name\":\"qutrunk\",\"version\":\"0.2.2\",\"repository\":\"https://github.com/qudoor/qutrunk\"},\"input\":{\"numQubits\":2,\"gates\":[{\"gate\":\"X\",\"targets\":[0]},{\"gate\":\"RY\",\"targets\":[1],\"angle\":0.4},{\"gate\":\"CX\",\"targets\":[0,1]}],\"execution\":{}},\"inputSha256\":\"2d54595b0734e1d1c52ac278c91772f420a6c776a66adbf984115979df03ffbe\",\"dependencyLockSha256\":\"c076facc05e4cd00d0c9da278593f4815cb384bfe76690adc09578d5c4003032\",\"result\":{\"numQubits\":2,\"outcomes\":[{\"bits\":\"00\",\"probability\":0,\"amplitude\":[0,0]},{\"bits\":\"01\",\"probability\":0,\"amplitude\":[0,0]},{\"bits\":\"10\",\"probability\":0.039469502998557456,\"amplitude\":[0.19866933079506122,0]},{\"bits\":\"11\",\"probability\":0.9605304970014426,\"amplitude\":[0.9800665778412416,0]}],\"normError\":0,\"backend\":\"QuTrunk BackendLocal\",\"program\":\"OPENQASM 2.0;\\ninclude \\\"qelib1.inc\\\";\\nqreg q[2];\\nx q[0];\\nry(0.4) q[1];\\ncx q[0],q[1];\",\"bitOrder\":\"leftmost bit is qubit 0\"},\"scientificValidation\":\"not_evaluated\",\"limitations\":[\"All-zero input and ideal unitary gates only; no noise, mid-circuit measurement, classical control or hardware calibration.\",\"BackendLocal(run_mode='local') is selected explicitly; QuSAAS, GPU/MPI and environment-selected remote backends are not used.\",\"Amplitudes and probabilities are raw numerical state-vector values, without clipping or normalization, not finite-shot counts.\",\"QuTrunk 0.2.2 requires Python 3.10. Full state-vector memory grows as 2^N; no scientific acceptance is declared.\"]}"
+                }
+              ],
+              "isError": false
+            }
+          ],
+          "role": "user",
+          "id": "d9eb6970-19f8-4874-b57e-7427bf9fe411"
+        }
+      },
+      "sourceEventSeqs": [
+        36
+      ],
+      "surfaceOp": "append"
+    },
+    {
+      "type": "tool/call",
+      "seq": 38,
+      "time": 1790512534899,
+      "data": {
+        "turn": 1,
+        "step": 1,
+        "callId": "vendor-fixture-10",
+        "name": "mcp__perceval_local__simulate_perceval_photonics",
+        "arguments": "{\"inputOccupation\":[1,1],\"operations\":[{\"gate\":\"BS\",\"modes\":[0,1],\"angleRad\":1.5707963267948966}]}"
+      }
+    },
+    {
+      "type": "tool/result",
+      "seq": 39,
+      "time": 1790512535997,
+      "data": {
+        "turn": 1,
+        "step": 1,
+        "message": {
+          "source": {
+            "kind": "tool",
+            "callId": "vendor-fixture-10"
+          },
+          "content": [
+            {
+              "type": "tool-result",
+              "toolCallId": "vendor-fixture-10",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "{\"schemaVersion\":\"1.0\",\"source\":{\"name\":\"perceval-quandela\",\"version\":\"1.3.0\",\"repository\":\"https://github.com/Quandela/Perceval\"},\"input\":{\"inputOccupation\":[1,1],\"operations\":[{\"gate\":\"BS\",\"modes\":[0,1],\"angleRad\":1.5707963267948966}],\"execution\":{}},\"inputSha256\":\"29405295328d2553b2057c984ee7462e47b39b58ca9059491fe9e5b4530469e2\",\"dependencyLockSha256\":\"1f1d7ae4e3469f7b78a307bcc675cc47c04b33c9ca37e5da13349471de323c7a\",\"result\":{\"modeCount\":2,\"photonCount\":2,\"totalProbability\":1.0000000000000002,\"outcomes\":[{\"occupation\":[0,2],\"probability\":0.5000000000000001},{\"occupation\":[1,1],\"probability\":4.930380657631324e-32},{\"occupation\":[2,0],\"probability\":0.5000000000000001}],\"unitary\":[[[0.7071067811865476,0],[0.7071067811865475,0]],[[0.7071067811865475,0],[-0.7071067811865476,0]]],\"backend\":\"Perceval SLOSBackend\",\"modeOrder\":\"occupation[i] and unitary row/column i refer to input mode i\"},\"scientificValidation\":\"not_evaluated\",\"limitations\":[\"Lossless passive BS/PS circuit with perfectly indistinguishable photons, fixed Fock input and exact numerical probabilities; no source/detector noise, loss, postselection or finite-shot sampling.\",\"BS.H(theta) uses [[cos(theta/2),sin(theta/2)],[sin(theta/2),-cos(theta/2)]], and PS(phi) multiplies its mode by exp(i*phi). All angles are radians.\",\"Every Fock output at the conserved photon count is returned without adapter pruning or normalization. Fock space grows combinatorially; caller chooses scale and execution resources.\",\"A successful numerical run does not imply scientific acceptance or measured hardware performance.\"]}"
+                }
+              ],
+              "isError": false
+            }
+          ],
+          "role": "user",
+          "id": "320a08b4-7925-44e2-a3bf-987f31c61104"
+        }
+      },
+      "sourceEventSeqs": [
+        38
+      ],
+      "surfaceOp": "append"
+    },
+    {
+      "type": "tool/call",
+      "seq": 40,
+      "time": 1790512535997,
+      "data": {
+        "turn": 1,
+        "step": 1,
+        "callId": "vendor-fixture-11",
+        "name": "mcp__iqm_local__run_iqm_local_circuit",
+        "arguments": "{\"simulationMode\":\"ideal\",\"shots\":512}"
+      }
+    },
+    {
+      "type": "tool/result",
+      "seq": 41,
+      "time": 1790512539377,
+      "data": {
+        "turn": 1,
+        "step": 1,
+        "message": {
+          "source": {
+            "kind": "tool",
+            "callId": "vendor-fixture-11"
+          },
+          "content": [
+            {
+              "type": "tool-result",
+              "toolCallId": "vendor-fixture-11",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "{\"schemaVersion\":\"1.0\",\"source\":{\"name\":\"iqm-client\",\"version\":\"35.0.3\",\"repository\":\"https://github.com/iqm-finland/iqm-client\"},\"input\":{\"simulationMode\":\"ideal\",\"shots\":512,\"numQubits\":2,\"backend\":\"adonis\",\"operations\":[{\"gate\":\"h\",\"qubits\":[0],\"angleRad\":0},{\"gate\":\"cx\",\"qubits\":[0,1],\"angleRad\":0}],\"seed\":7,\"optimizationLevel\":1,\"execution\":{}},\"inputSha256\":\"7223740cbe53d8136880be1e138c184d07f20b83a11ab25c8238716e6134b063\",\"dependencyLockSha256\":\"2e57c08430e1f2d92683393ed4bdeb4076ef1ec0f176ec85d2510e8ae627a922\",\"result\":{\"numQubits\":2,\"shots\":512,\"counts\":[{\"bits\":\"00\",\"count\":260},{\"bits\":\"11\",\"count\":252}],\"nativeGateNames\":[\"cz\",\"delay\",\"id\",\"measure\",\"r\"],\"compiledGateCounts\":[{\"gate\":\"cz\",\"count\":1},{\"gate\":\"measure\",\"count\":2},{\"gate\":\"r\",\"count\":3}],\"bitOrder\":\"leftmost bit is input qubit 0\",\"backendName\":\"IQMFakeAdonisBackend\",\"deviceQubits\":5,\"couplingMap\":[[0,2],[1,2],[2,3],[2,4]],\"simulationMode\":\"ideal\",\"sdkCircuitValidation\":\"passed\",\"simulator\":\"Qiskit AerSimulator\"},\"scientificValidation\":\"not_evaluated\",\"limitations\":[\"IQM SDK fake-device topology, native-gate target and static noise profile are local models, not live calibrations or QPU results.\",\"Compilation and native-circuit validation use iqm-client. Execution uses Qiskit Aer explicitly to honor seed_simulator; IQMFakeBackend.run does not forward that option in the pinned version.\",\"Counts are finite-shot samples in the original logical classical-bit order; different package/platform versions can change compilation or random streams.\",\"Selected physical device capacity constrains numQubits. Caller controls shots and execution resources; SDK validation is not scientific acceptance.\"]}"
+                }
+              ],
+              "isError": false
+            }
+          ],
+          "role": "user",
+          "id": "4bedb3f3-3879-4fb7-b305-3a792379b199"
+        }
+      },
+      "sourceEventSeqs": [
+        40
+      ],
+      "surfaceOp": "append"
+    },
+    {
+      "type": "tool/call",
+      "seq": 42,
+      "time": 1790512539377,
+      "data": {
+        "turn": 1,
+        "step": 1,
+        "callId": "vendor-fixture-12",
+        "name": "mcp__alicebob_local__run_alicebob_local_circuit",
+        "arguments": "{\"model\":\"logical-noiseless\",\"shots\":512}"
+      }
+    },
+    {
+      "type": "tool/result",
+      "seq": 43,
+      "time": 1790512540940,
+      "data": {
+        "turn": 1,
+        "step": 1,
+        "message": {
+          "source": {
+            "kind": "tool",
+            "callId": "vendor-fixture-12"
+          },
+          "content": [
+            {
+              "type": "tool-result",
+              "toolCallId": "vendor-fixture-12",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "{\"schemaVersion\":\"1.0\",\"source\":{\"name\":\"qiskit-alice-bob-provider\",\"version\":\"1.3.0\",\"repository\":\"https://github.com/Alice-Bob-SW/qiskit-alice-bob-provider\"},\"input\":{\"model\":\"logical-noiseless\",\"shots\":512,\"numQubits\":2,\"initialStates\":[\"+\",\"0\"],\"operations\":[{\"gate\":\"cx\",\"qubits\":[0,1],\"angleRad\":0}],\"modelParameters\":{},\"seed\":7,\"execution\":{}},\"inputSha256\":\"e0cd4d4f29658758c5cc26442ef2b2c7e69a147f519d3d55ff1cafca4ed2c36d\",\"dependencyLockSha256\":\"09dc45fe507beea933e5e1d89927c44cf74b8f63e61763d3ec2ff701c16f5942\",\"result\":{\"numQubits\":2,\"shots\":512,\"counts\":[{\"bits\":\"00\",\"count\":248},{\"bits\":\"11\",\"count\":264}],\"nativeGateNames\":[\"ccx\",\"cx\",\"delay\",\"for_loop\",\"h\",\"if_else\",\"initialize\",\"measure\",\"measure_x\",\"s\",\"sdg\",\"switch_case\",\"t\",\"tdg\",\"while_loop\",\"x\",\"z\"],\"compiledGateCounts\":[{\"gate\":\"cx\",\"count\":1},{\"gate\":\"initialize\",\"count\":2},{\"gate\":\"measure\",\"count\":2}],\"bitOrder\":\"leftmost bit is input qubit 0\",\"backendName\":\"OpenQuantumLocalCatModel\",\"model\":\"logical-noiseless\",\"resolvedModelParameters\":{\"kappa1Hz\":100,\"kappa2Hz\":10000000,\"averagePhotons\":19,\"distance\":15},\"connectivity\":\"SDK all-to-all local model\",\"simulator\":\"AliceBobLocalProvider ProcessorSimulator\"},\"scientificValidation\":\"not_evaluated\",\"limitations\":[\"Digital circuit simulation uses Alice & Bob's analytical physical/logical cat error models and scheduled gate durations. It does not evolve a bosonic oscillator or establish hardware performance.\",\"Initial 0/1/+/- and measurement are in the encoded qubit basis; physical-cat supports x,z,rz,cx, while logical models expose discrete x,z,h,s,sdg,t,tdg,cx,ccx gates.\",\"This configurable local model uses SDK all-to-all connectivity and no arbitrary qubit cap. Noise-model validity constraints remain enforced; shots and execution resources are caller-controlled.\",\"The pinned provider requires its isolated Qiskit 1.x environment. Unsupported macOS CRY/RCCX/RCCCX gates are excluded. Counts and successful execution are not scientific acceptance.\"]}"
+                }
+              ],
+              "isError": false
+            }
+          ],
+          "role": "user",
+          "id": "ceeff2a1-1254-4fea-b455-2b4be282e846"
+        }
+      },
+      "sourceEventSeqs": [
+        42
+      ],
+      "surfaceOp": "append"
+    },
+    {
+      "type": "tool/call",
+      "seq": 44,
+      "time": 1790512540940,
+      "data": {
+        "turn": 1,
+        "step": 1,
+        "callId": "vendor-fixture-13",
+        "name": "mcp__pulser_local__simulate_pulser_rydberg",
+        "arguments": "{\"atomPositionsUm\":[[0,0]],\"pulses\":[{\"durationNs\":200,\"amplitudeRadPerUs\":[2,2],\"detuningRadPerUs\":[0,0],\"phaseRad\":0}],\"timeSteps\":4}"
+      }
+    },
+    {
+      "type": "tool/result",
+      "seq": 45,
+      "time": 1790512541938,
+      "data": {
+        "turn": 1,
+        "step": 1,
+        "message": {
+          "source": {
+            "kind": "tool",
+            "callId": "vendor-fixture-13"
+          },
+          "content": [
+            {
+              "type": "tool-result",
+              "toolCallId": "vendor-fixture-13",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "{\"schemaVersion\":\"1.0\",\"source\":{\"name\":\"pulser-core + pulser-simulation\",\"version\":\"1.9.1\",\"repository\":\"https://github.com/pasqal-io/Pulser\"},\"input\":{\"atomPositionsUm\":[[0,0]],\"pulses\":[{\"durationNs\":200,\"amplitudeRadPerUs\":[2,2],\"detuningRadPerUs\":[0,0],\"phaseRad\":0}],\"timeSteps\":4,\"atol\":1e-9,\"rtol\":1e-9,\"maxSolverSteps\":100000,\"solverMaxStepNs\":1,\"execution\":{}},\"inputSha256\":\"e6a0b3e98192336c3d280794fede463584f46480f6a38df5b8823e339472456f\",\"dependencyLockSha256\":\"4dae145858855becf894f9e47ad8517a8865d7299b0628931672a550dd4b85c9\",\"result\":{\"timesUs\":[0,0.05,0.1,0.15000000000000002,0.2],\"rydbergPopulations\":[[0],[0.0024979173609513813],[0.009966711079308244],[0.022331755437091736],[0.03933729008535183]],\"finalOutcomes\":[{\"bits\":\"0\",\"probability\":0.9606627087126542,\"amplitude\":[0.9801340258927114,0]},{\"bits\":\"1\",\"probability\":0.03933729008535183,\"amplitude\":[0,-0.19833630551503129]}],\"maxNormError\":1.2019939488183695e-9,\"atomCount\":1,\"hilbertDimension\":2,\"compiledDurationNs\":200,\"compiledPositionsUm\":[[0,0]],\"c6RadPerUsUm6\":5420158.53,\"backend\":\"Pulser QutipEmulator\",\"bitOrder\":\"leftmost bit is input atom 0; 0=ground, 1=Rydberg\",\"model\":\"H/hbar=sum_i Omega(t)/2*(exp(-i*phi)|g><r|+exp(i*phi)|r><g|)-Delta(t)*n_i + sum_i<j C6/r_ij^6*n_i*n_j\",\"units\":{\"position\":\"um\",\"time\":\"us\",\"angularFrequency\":\"rad/us\",\"phase\":\"rad\"}},\"scientificValidation\":\"not_evaluated\",\"limitations\":[\"Closed two-level, fixed-position, globally driven Rb70S model from all-ground state; no dissipation, atom motion, local addressing, cloud or calibrated hardware.\",\"Pulser samples pulse envelopes on its nanosecond grid and interpolates them for QuTiP; solver tolerances do not bound error relative to a continuous-time ideal waveform. Endpoints and rounding must be checked for convergence.\",\"Probabilities are raw wavefunction values, not finite-shot counts. No adapter clipping, normalization or global-phase removal; inspect maxNormError and perform convergence checks.\",\"The full 2^N Hilbert space is simulated. Caller selects problem size and deployment execution limits. Numerical comparisons do not constitute scientific acceptance.\"]}"
+                }
+              ],
+              "isError": false
+            }
+          ],
+          "role": "user",
+          "id": "615e77aa-79d0-47f9-851c-378c8809cef7"
+        }
+      },
+      "sourceEventSeqs": [
+        44
+      ],
+      "surfaceOp": "append"
+    },
+    {
+      "type": "tool/call",
+      "seq": 46,
+      "time": 1790512541939,
+      "data": {
+        "turn": 1,
+        "step": 1,
+        "callId": "vendor-fixture-14",
+        "name": "mcp__qoolqit_local__simulate_qoolqit_analog",
+        "arguments": "{\"atomPositions\":[[0,0]],\"durations\":[0.2],\"rabiAmplitude\":[2,2],\"detuning\":[0,0],\"timeSteps\":4}"
+      }
+    },
+    {
+      "type": "tool/result",
+      "seq": 47,
+      "time": 1790512544314,
+      "data": {
+        "turn": 1,
+        "step": 1,
+        "message": {
+          "source": {
+            "kind": "tool",
+            "callId": "vendor-fixture-14"
+          },
+          "content": [
+            {
+              "type": "tool-result",
+              "toolCallId": "vendor-fixture-14",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "{\"schemaVersion\":\"1.0\",\"source\":{\"name\":\"qoolqit\",\"version\":\"1.4.0\",\"repository\":\"https://github.com/pasqal-io/qoolqit\"},\"input\":{\"atomPositions\":[[0,0]],\"durations\":[0.2],\"rabiAmplitude\":[2,2],\"detuning\":[0,0],\"timeSteps\":4,\"phaseRad\":0,\"energyScaleRadPerUs\":1,\"atol\":1e-9,\"rtol\":1e-9,\"maxSolverSteps\":100000,\"solverMaxStepNs\":1,\"execution\":{}},\"inputSha256\":\"5ab1fb7531f3033af1ea0887b32e38784898274bdba0bfaec6eea65a233f1323\",\"dependencyLockSha256\":\"5304a7a9dd049936694af34e6e08234f8ed142d2cd4cd0b12f41488bcf4ce3c6\",\"result\":{\"timesUs\":[0,0.05,0.1,0.15000000000000002,0.2],\"rydbergPopulations\":[[0],[0.0024979173609513813],[0.009966711079308244],[0.022331755437091736],[0.03933729008535183]],\"finalOutcomes\":[{\"bits\":\"0\",\"probability\":0.9606627087126542,\"amplitude\":[0.9801340258927114,0]},{\"bits\":\"1\",\"probability\":0.03933729008535183,\"amplitude\":[0,-0.19833630551503129]}],\"maxNormError\":1.2019939488183695e-9,\"atomCount\":1,\"hilbertDimension\":2,\"compiledDurationNs\":200,\"compiledPositionsUm\":[[0,0]],\"c6RadPerUsUm6\":5420158.53,\"backend\":\"Pulser QutipEmulator\",\"bitOrder\":\"leftmost bit is input atom 0; 0=ground, 1=Rydberg\",\"model\":\"H/hbar=sum_i Omega(t)/2*(exp(-i*phi)|g><r|+exp(i*phi)|r><g|)-Delta(t)*n_i + sum_i<j C6/r_ij^6*n_i*n_j\",\"units\":{\"position\":\"um\",\"time\":\"us\",\"angularFrequency\":\"rad/us\",\"phase\":\"rad\"},\"qoolqitCompiled\":true,\"compilerProfile\":\"default\",\"conversionFactors\":{\"timeNs\":1000,\"energyRadPerUs\":1,\"distanceUm\":13.253644930249399},\"dimensionlessDuration\":0.2,\"compiledSegmentDurationsNs\":[200]},\"scientificValidation\":\"not_evaluated\",\"limitations\":[\"Actual QoolQit QuantumProgram.compile_to(default) performs conversion to a virtual Pulser device. Dimensionless durations, drives and positions scale by the returned factors; compiled ns rounding can break exact scale invariance.\",\"QoolQit uses a PASQAL MIT-derived license with a patent grant restricted to internal research and academic purposes; this integration is explicitly opt-in.\",\"Closed two-level, fixed-position, globally driven Rb70S model from all-ground state; no dissipation, atom motion, local addressing, cloud or calibrated hardware.\",\"Pulser samples pulse envelopes on its nanosecond grid and interpolates them for QuTiP; solver tolerances do not bound error relative to a continuous-time ideal waveform. Endpoints and rounding must be checked for convergence.\",\"Probabilities are raw wavefunction values, not finite-shot counts. No adapter clipping, normalization or global-phase removal; inspect maxNormError and perform convergence checks.\",\"The full 2^N Hilbert space is simulated. Caller selects problem size and deployment execution limits. Numerical comparisons do not constitute scientific acceptance.\"]}"
+                }
+              ],
+              "isError": false
+            }
+          ],
+          "role": "user",
+          "id": "95285763-e322-496c-8b4a-7344b254c0e2"
+        }
+      },
+      "sourceEventSeqs": [
+        46
+      ],
+      "surfaceOp": "append"
+    },
+    {
+      "type": "tool/call",
+      "seq": 48,
+      "time": 1790512544314,
+      "data": {
+        "turn": 1,
+        "step": 1,
+        "callId": "vendor-fixture-15",
+        "name": "mcp__ionq_local__prepare_ionq_program",
+        "arguments": "{\"numQubits\":3,\"gates\":[{\"gate\":\"RY\",\"targets\":[2],\"angle\":0.4},{\"gate\":\"CX\",\"targets\":[2,0]}]}"
+      }
+    },
+    {
+      "type": "tool/result",
+      "seq": 49,
+      "time": 1790512544688,
+      "data": {
+        "turn": 1,
+        "step": 1,
+        "message": {
+          "source": {
+            "kind": "tool",
+            "callId": "vendor-fixture-15"
+          },
+          "content": [
+            {
+              "type": "tool-result",
+              "toolCallId": "vendor-fixture-15",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "{\"schemaVersion\":\"1.0\",\"source\":{\"name\":\"qiskit-ionq\",\"version\":\"1.1.1\",\"repository\":\"https://github.com/qiskit-community/qiskit-ionq\"},\"input\":{\"numQubits\":3,\"gates\":[{\"gate\":\"RY\",\"targets\":[2],\"angle\":0.4},{\"gate\":\"CX\",\"targets\":[2,0]}],\"execution\":{}},\"inputSha256\":\"d7489c538c503cb7ff075f43dfa2a51cbfd26429aa456526b063a0ad7ab7c0df\",\"dependencyLockSha256\":\"e6ea0caec14bd65b09f580827fd42889d370bfd4da00991f4b33a0260cf24b20\",\"result\":{\"numQubits\":3,\"gateset\":\"qis\",\"instructions\":[{\"gate\":\"ry\",\"targets\":[2],\"rotation\":0.4},{\"gate\":\"x\",\"targets\":[0],\"controls\":[2]}],\"measurementCount\":3,\"classicalToQubit\":[0,1,2],\"qasm\":\"OPENQASM 2.0;\\ninclude \\\"qelib1.inc\\\";\\nqreg q[3];\\ncreg c[3];\\nry(0.4) q[2];\\ncx q[2],q[0];\\nmeasure q[0] -> c[0];\\nmeasure q[1] -> c[1];\\nmeasure q[2] -> c[2];\",\"networkUsed\":false,\"interpretation\":\"instruction indices are input qubit indices; classicalToQubit[c] is the qubit measured into classical bit c\"},\"scientificValidation\":\"not_evaluated\",\"limitations\":[\"Official SDK QIS instruction conversion is local program preparation; it does not perform IonQ's remote hardware-aware native compiler passes.\",\"Terminal measurements map every input qubit to the same-index classical bit. No shots, device calibration or hardware results are generated.\",\"Cloud access remains in the existing optional hardware connection; this Tool does not receive credentials or submit jobs.\"]}"
+                }
+              ],
+              "isError": false
+            }
+          ],
+          "role": "user",
+          "id": "c738c737-cd94-4f11-81bd-9967e33d867c"
+        }
+      },
+      "sourceEventSeqs": [
+        48
+      ],
+      "surfaceOp": "append"
+    },
+    {
+      "type": "tool/call",
+      "seq": 50,
+      "time": 1790512544688,
+      "data": {
+        "turn": 1,
+        "step": 1,
+        "callId": "vendor-fixture-16",
+        "name": "mcp__superstaq_cloud__prepare_superstaq_circuit",
+        "arguments": "{\"numQubits\":3,\"gates\":[{\"gate\":\"RY\",\"targets\":[2],\"angle\":0.4},{\"gate\":\"CX\",\"targets\":[2,0]}]}"
+      }
+    },
+    {
+      "type": "tool/result",
+      "seq": 51,
+      "time": 1790512545148,
+      "data": {
+        "turn": 1,
+        "step": 1,
+        "message": {
+          "source": {
+            "kind": "tool",
+            "callId": "vendor-fixture-16"
+          },
+          "content": [
+            {
+              "type": "tool-result",
+              "toolCallId": "vendor-fixture-16",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "{\"schemaVersion\":\"1.0\",\"source\":{\"name\":\"qiskit-superstaq\",\"version\":\"0.5.69\",\"repository\":\"https://github.com/Infleqtion/client-superstaq\"},\"input\":{\"numQubits\":3,\"gates\":[{\"gate\":\"RY\",\"targets\":[2],\"angle\":0.4},{\"gate\":\"CX\",\"targets\":[2,0]}],\"execution\":{}},\"inputSha256\":\"d7489c538c503cb7ff075f43dfa2a51cbfd26429aa456526b063a0ad7ab7c0df\",\"dependencyLockSha256\":\"d2b51bd05246512e5b09e5e7a74b903f8b62a47a006456469a0e3c6a4e863659\",\"result\":{\"numQubits\":3,\"depth\":2,\"gates\":[{\"name\":\"cx\",\"count\":1},{\"name\":\"ry\",\"count\":1}],\"serializedCircuit\":\"UUlTS0lUDQIFAgAAAAAAAAABcHEAFWYACAAAAAMAAAAAAAAAAAAAAAIAAAABAAAAAAAAAAIAAAAA\\nb3BlbnF1YW50dW1fc3VwZXJzdGFxAAAAAAAAAAB7fXEBAAAAAwABAXEAAAAAAAAAAAAAAAAAAAAB\\nAAAAAAAAAAIAAAAAAAAAAAAGAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFJZR2F0ZXEA\\nAAACZgAAAAAAAAAImpmZmZmZ2T8ABgAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAFDWEdh\\ndGVxAAAAAnEAAAAAAAAA////////////////AAAAAAAAAAA=\\n\",\"qasm\":\"OPENQASM 2.0;\\ninclude \\\"qelib1.inc\\\";\\nqreg q[3];\\nry(0.4) q[2];\\ncx q[2],q[0];\",\"networkUsed\":false,\"serialization\":\"qiskit-superstaq QPY\"},\"scientificValidation\":\"not_evaluated\",\"limitations\":[\"This is local SDK serialization and round-trip validation, not target compilation or execution.\",\"Gate angles use radians. Qubit indices and idle qubits are retained; Qiskit basis strings use the highest qubit index at the left.\"]}"
+                }
+              ],
+              "isError": false
+            }
+          ],
+          "role": "user",
+          "id": "1d1ea68d-a676-4e39-9ede-a5a5cd8eb5b7"
+        }
+      },
+      "sourceEventSeqs": [
+        50
+      ],
+      "surfaceOp": "append"
+    },
+    {
+      "type": "tool/call",
+      "seq": 52,
+      "time": 1790512545149,
+      "data": {
+        "turn": 1,
+        "step": 1,
+        "callId": "vendor-fixture-17",
+        "name": "mcp__pennylane_local__differentiate_pennylane_circuit",
+        "arguments": "{\"numQubits\":1,\"gates\":[{\"gate\":\"CX\",\"targets\":[0,0]}]}"
+      }
+    },
+    {
+      "type": "tool/result",
+      "seq": 53,
+      "time": 1790512545155,
+      "data": {
+        "turn": 1,
+        "step": 1,
+        "message": {
+          "source": {
+            "kind": "tool",
+            "callId": "vendor-fixture-17"
+          },
+          "content": [
+            {
+              "type": "tool-result",
+              "toolCallId": "vendor-fixture-17",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Error: pennylane-differentiable: Gate targets must be distinct, in range, and match gate arity"
+                }
+              ],
+              "isError": true
+            }
+          ],
+          "role": "user",
+          "id": "12a5a886-5f68-42ee-b296-d76e8b3611a6"
+        }
+      },
+      "sourceEventSeqs": [
+        52
+      ],
+      "surfaceOp": "append"
+    },
+    {
+      "type": "turn/end",
+      "seq": 58,
+      "time": 1790512545177,
+      "data": {
+        "turn": 1,
+        "reason": {
+          "kind": "completed"
+        }
+      }
+    }
+  ]
+}

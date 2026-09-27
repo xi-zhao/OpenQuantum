@@ -807,3 +807,228 @@
     cwd: !!js process.cwd()
     toolCallTimeoutMs: 2147483647
     failOnStartupError: true
+
+# PennyLane 可微分电路; explicit environment setup, isolated fixed dependencies.
+- id: mcp-pennylane-differentiable
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: pennylane_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/pennylane-differentiable/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# DeepQuantum 可微分电路; explicit environment setup, isolated fixed dependencies.
+- id: mcp-deepquantum-differentiable
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: deepquantum_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/deepquantum-differentiable/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# TensorCircuit 可微分电路; explicit environment setup, isolated fixed dependencies.
+- id: mcp-tensorcircuit-differentiable
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: tensorcircuit_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/tensorcircuit-differentiable/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# MindQuantum 可微分电路; explicit environment setup, isolated fixed dependencies.
+- id: mcp-mindquantum-differentiable
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: mindquantum_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/mindquantum-differentiable/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# TKET 电路编译; explicit environment setup, isolated fixed dependencies.
+- id: mcp-pytket-compilation
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: pytket_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/pytket-compilation/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# D-Wave Ocean 经典采样; explicit environment setup, isolated fixed dependencies.
+- id: mcp-ocean-optimization
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: ocean_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/ocean-optimization/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# Kaiwu Community 建模; explicit environment setup, isolated fixed dependencies.
+- id: mcp-kaiwu-qubo
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: kaiwu_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/kaiwu-qubo/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# pyQuil 本地仿真; explicit environment setup, isolated fixed dependencies.
+- id: mcp-pyquil-simulation
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: pyquil_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/pyquil-simulation/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# SpinQit 本地仿真; explicit environment setup, isolated fixed dependencies.
+- id: mcp-spinqit-simulation
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: spinqit_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/spinqit-simulation/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# QuTrunk 本地仿真; explicit environment setup, isolated fixed dependencies.
+- id: mcp-qutrunk-simulation
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: qutrunk_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/qutrunk-simulation/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# Perceval 光量子仿真; explicit environment setup, isolated fixed dependencies.
+- id: mcp-perceval-photonics
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: perceval_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/perceval-photonics/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# IQM 电路与模拟后端; explicit environment setup, isolated fixed dependencies.
+- id: mcp-iqm-circuit-workbench
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: iqm_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/iqm-circuit-workbench/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# Alice & Bob 猫态模型; explicit environment setup, isolated fixed dependencies.
+- id: mcp-alicebob-cat-circuits
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: alicebob_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/alicebob-cat-circuits/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# Pulser Rydberg 动力学; explicit environment setup, isolated fixed dependencies.
+- id: mcp-pulser-dynamics
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: pulser_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/pulser-dynamics/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# QoolQit 模拟程序; explicit environment setup, isolated fixed dependencies.
+- id: mcp-qoolqit-workbench
+  name: '@deepseek-ai/dsh-mcp-client'
+  disabled: true
+  config:
+    serverName: qoolqit_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/qoolqit-workbench/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# IonQ 本地程序准备; explicit environment setup, isolated fixed dependencies.
+- id: mcp-ionq-programs
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: ionq_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/ionq-programs/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# Superstaq 电路编译; explicit environment setup, isolated fixed dependencies.
+- id: mcp-superstaq-compilation
+  name: ./credentialed-mcp-client.mjs
+  disabled: true
+  config:
+    serverName: superstaq_cloud
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/superstaq-compilation/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    optionalCredentialEnv:
+      SUPERSTAQ_API_KEY: SUPERSTAQ_API_KEY
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false

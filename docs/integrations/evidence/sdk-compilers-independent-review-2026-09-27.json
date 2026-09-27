@@ -1,0 +1,65 @@
+{
+  "reviewer": "sdk_differentiable independent review of sdk_compilers",
+  "verifiedAt": "2026-09-27T12:21:16.756729+00:00",
+  "findings": [],
+  "conclusion": "No blocking finding in the reviewed local contracts and numerical paths.",
+  "independentCases": [
+    {
+      "id": "pytket-compilation",
+      "cases": 24,
+      "maxUnitaryError": 1.8371172076229083e-15
+    },
+    {
+      "id": "pyquil-simulation",
+      "cases": 12,
+      "maxAmplitudeError": 0.0
+    },
+    {
+      "id": "spinqit-simulation",
+      "cases": 12,
+      "maxAmplitudeError": 1.0497745329628008e-09
+    },
+    {
+      "id": "qutrunk-simulation",
+      "cases": 12,
+      "maxAmplitudeError": 1.716587549445839e-16
+    },
+    {
+      "id": "ocean-optimization",
+      "cases": 20,
+      "maxEnergyError": 2.6645352591003757e-15
+    },
+    {
+      "id": "kaiwu-qubo",
+      "cases": 12,
+      "maxEnergyError": 2.842170943040401e-14
+    }
+  ],
+  "caseScope": "New seed, four-qubit circuits with 33 gates and nonadjacent/reversed controls; pytket both optimization settings and complete unitary including reported phase; random binary/spin models; one/three/five/eleven-variable Kaiwu constraints and x_10 ordering.",
+  "additionalChecks": {
+    "missingPreparationMcpFailures": 6,
+    "preparedLockDigestsMatch": 6,
+    "recordedSourceDigestMismatches": 0,
+    "pyquilSerializedProgramReplayMaxError": 0.0,
+    "qutrunkQasmParsedWithPytketMaxError": 1.1102230246251565e-16
+  },
+  "network": "Python socket connect and create_connection denied for independent numeric cases; no cloud or QPU requested.",
+  "boundaries": [
+    "Current macOS arm64 only.",
+    "This does not establish scientific Acceptance, external-model behavior or hardware fidelity.",
+    "SDK source, own development tests, and contract/runtime failure checks were reviewed; only the newly described numerical and failure/replay cases were independently executed."
+  ],
+  "reviewScript": "tests/fixtures/sdk_compilers_independent.py",
+  "reviewScriptSha256": "2d76e366171cebd44bb1a0881a44537b4a4994438031e18f6b78271eecaffb5b",
+  "bridgeHashes": {
+    ".agents/skills/pytket-compilation/mcp/bridge.py": "784b2730bd1bf6b8f1b8ccb6552fb1f2c322c30ea8cbfc8ae6ec0fb7c42a319b",
+    ".agents/skills/ocean-optimization/mcp/bridge.py": "2d9da3f667bab1db5bea7ab9af17d10e01fe1eaae18f89e37f81484d9182f6cd",
+    ".agents/skills/kaiwu-qubo/mcp/bridge.py": "469c02972920805e5729f2249cd0d4249e07ea39f9a1279618bf0f4921477ded",
+    ".agents/skills/pyquil-simulation/mcp/bridge.py": "66983460c75fd922359cd91ebadaccdbd36d05ad3e0d30e5464665bdcecd8f5a",
+    ".agents/skills/spinqit-simulation/mcp/bridge.py": "ab62f50cfebbbca57793c43e907166e97d43ea8dbbf44b9b4adf426f9825d652",
+    ".agents/skills/qutrunk-simulation/mcp/bridge.py": "93a7b637f479f8f1c8566d010e75ef39c17e03ad58820a377b1818368b0840b1"
+  },
+  "executedOriginalScriptSha256": "74746f78d1848b0f7c96adf1564cce540090ec214b3d913ef6a9a88e3b9b8d64",
+  "archivalChanges": "Only CLI/path configuration and module documentation changed when archiving; numerical cases and assertions are unchanged. Archived source compilation checked; numerical results retain their original observed execution record.",
+  "replayCommand": "<prepared SDK Python> -B tests/fixtures/sdk_compilers_independent.py <capability-id> --project-root <checkout>"
+}

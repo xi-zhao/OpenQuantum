@@ -130,6 +130,10 @@ test("default contract checks are derived from package MCP and native Tool polic
     "tests/paper-tools-contracts.test.mjs",
     "tests/quantum-learning.test.mjs",
     "tests/quantum-practices.test.mjs",
+    "tests/sdk-cloud-contracts.test.mjs",
+    "tests/sdk-compilers-contracts.test.mjs",
+    "tests/sdk-devices-contracts.test.mjs",
+    "tests/sdk-differentiable-contracts.test.mjs",
     "tests/unitary-next-contracts.test.mjs",
     "tests/unitary-tools-contracts.test.mjs",
   ]);

@@ -2,6 +2,14 @@
 
 量子依赖核验日期：2026-09-22；平台升级记录日期：2026-09-10；原模型验收交接记录日期：2026-09-05。此页只记录工作交接；架构以[文档总入口](docs/README.md)为准，执行事实以 Harness Session event log 为准，科学状态以 Acceptance Report 为准。
 
+## 国内外厂商 SDK 接入（2026-09-27）
+
+- [17 个新增能力包](docs/integrations/VENDOR_SDKS.md)覆盖国内 DeepQuantum、TensorCircuit、MindQuantum、Kaiwu Community、SpinQit、QuTrunk，以及 PennyLane、TKET、Ocean、pyQuil、Perceval、IQM、Alice & Bob、Pulser、QoolQit、IonQ 和 Superstaq。既有 QPanda、Stim、Bloqade 等继续复用。
+- 新增 17 个 Skill、17 个独立 Python MCP 连接和 19 个 Tool。当前源码共 119 个内置 Skill、55 个 MCP 连接、240 个可配置 Tool 名称；106 个 Skill 自动可选、13 个分类索引手动调用。QoolQit 与 Superstaq 默认关闭。
+- 全部 17 个锁定环境已显式准备；45 项新合同测试、35 项真实 SDK/MCP/Harness 测试全过且无跳过，完整 `npm run check` 通过。数值与独立审阅见[证据汇总](docs/integrations/evidence/vendor-sdks-2026-09-27.json)。新增连接增加集成测试进程数，平台测试并发度降为 2，以避免同时启动多套完整 Harness 造成测试超时。
+- 真实执行验证限于 macOS arm64；Harness 使用本地模型协议夹具，Superstaq 远程路径使用真实 SDK 加 HTTP 传输夹具，没有在线账户、远程编译、QPU 或外部模型验收。全部新能力保持 L1 / `scientificValidation=not_evaluated`。
+- 此条记录对应本地源码实现与验证，不代表已推送、合并主线或发布安装包；运行已有工作台不会自动载入独立开发分支。
+
 ## 全量扩展治理（2026-09-24）
 
 - [治理清单](docs/architecture/EXTENSION_GOVERNANCE.md)中的 B1/B2/B3 已完成，逐项覆盖 101 个 Skill、37 个 MCP 连接和 220 个可配置 Tool 名称，保留全部原名。88 个 Skill 自动可选，13 个分类索引手动调用；数量不等于同时在线。

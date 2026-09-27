@@ -1,0 +1,8 @@
+[project]
+name = "openquantum-pulser-dynamics"
+version = "0.1.0"
+requires-python = ">=3.12,<3.13"
+dependencies = ["pulser-core==1.9.1", "pulser-simulation==1.9.1"]
+
+[tool.uv]
+package = false

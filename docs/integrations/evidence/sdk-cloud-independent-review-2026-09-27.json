@@ -1,0 +1,242 @@
+{
+  "reviewer": "sdk_differentiable independent review of root SDK program/cloud adapters",
+  "verifiedAt": "2026-09-27T12:38:00.025513+00:00",
+  "conclusion": "Two actionable credential-boundary findings were reproduced, fixed by the implementation owner, and independently rechecked. No open blocking finding in the reviewed paths.",
+  "openBlockingFindings": 0,
+  "scientificValidation": "not_evaluated",
+  "scope": {
+    "capabilities": [
+      "ionq-programs",
+      "superstaq-compilation"
+    ],
+    "sharedRuntimeChanges": [
+      "src/lib/bounded-science-mcp.mjs",
+      "src/lib/local-json-process.mjs"
+    ],
+    "focus": [
+      "named credential allowlist",
+      "fixed service endpoint",
+      "no terms acceptance",
+      "no redirect follow or preparation",
+      "no automatic retry",
+      "no job or QPU submission",
+      "real SDK serialization and input/output mapping",
+      "tests and their network boundary"
+    ],
+    "implementationEditsByReviewer": false
+  },
+  "reviewedInstalledVersions": {
+    "ionq-programs": {
+      "qiskit-ionq": "1.1.1",
+      "qiskit": "2.5.2",
+      "python": "3.12"
+    },
+    "superstaq-compilation": {
+      "qiskit-superstaq": "0.5.69",
+      "qiskit": "2.5.2",
+      "python": "3.12"
+    }
+  },
+  "findings": [
+    {
+      "id": "cloud-review-credential-truncation",
+      "priority": "P2",
+      "status": "resolved_and_reverified",
+      "location": {
+        "path": "src/lib/local-json-process.mjs",
+        "line": 153
+      },
+      "problem": "Truncating nonzero-exit stderr before redaction could retain a prefix of the newly forwarded SUPERSTAQ_API_KEY when the value straddled the 2000-character boundary.",
+      "before": {
+        "syntheticCredentialOffset": 1990,
+        "errorLimitCharacters": 2000,
+        "credentialPrefixLeaked": true
+      },
+      "fix": "Redact complete stderr using the child environment before slicing the displayed error.",
+      "after": {
+        "errorLength": 2000,
+        "credentialPrefixLeaked": false,
+        "redactionMarkerPresent": true
+      },
+      "regression": {
+        "path": "tests/local-json-process.test.mjs",
+        "line": 10
+      },
+      "verification": "Independent runLocalJsonProcess child wrote padding and a synthetic environment value to stderr, then exited nonzero. No real credential was used."
+    },
+    {
+      "id": "cloud-review-implicit-netrc",
+      "priority": "P2",
+      "status": "resolved_and_reverified",
+      "location": {
+        "path": ".agents/skills/superstaq-compilation/mcp/bridge.py",
+        "line": 40
+      },
+      "problem": "Requests default trust_env could consult netrc and replace the explicitly configured API key with unrelated Basic credentials. Even allow_redirects=False can prepare response.next, which consults the redirect target netrc.",
+      "before": {
+        "normalRequestNetrcConsulted": true,
+        "configuredKeyRetained": false,
+        "observedAuthorizationScheme": "Basic",
+        "redirectNextPrepared": true,
+        "redirectNetrcConsulted": true,
+        "redirectActuallyFollowed": false
+      },
+      "fix": "An explicit AuthBase always sets Authorization to the configured key. OfficialSession.resolve_redirects yields no next request; request rejects 3xx while trust_env remains enabled for user proxy and CA handling.",
+      "after": {
+        "normalRequestNetrcConsulted": false,
+        "configuredKeyRetained": true,
+        "normalRequestSendCount": 1,
+        "sessionTrustEnv": true,
+        "sessionLevelHttpsProxyPreserved": true,
+        "sessionLevelRequestsCaBundlePreserved": true,
+        "sessionLevelAllowRedirects": false,
+        "redirectCases": [
+          {
+            "statusCode": 302,
+            "httpAdapterSendCount": 1,
+            "netrcConsulted": false,
+            "nextRequestPrepared": false,
+            "redirectFollowed": false,
+            "explicitRedirectError": true
+          },
+          {
+            "statusCode": 303,
+            "httpAdapterSendCount": 1,
+            "netrcConsulted": false,
+            "nextRequestPrepared": false,
+            "redirectFollowed": false,
+            "explicitRedirectError": true
+          },
+          {
+            "statusCode": 307,
+            "httpAdapterSendCount": 1,
+            "netrcConsulted": false,
+            "nextRequestPrepared": false,
+            "redirectFollowed": false,
+            "explicitRedirectError": true
+          },
+          {
+            "statusCode": 308,
+            "httpAdapterSendCount": 1,
+            "netrcConsulted": false,
+            "nextRequestPrepared": false,
+            "redirectFollowed": false,
+            "explicitRedirectError": true
+          }
+        ]
+      },
+      "regression": {
+        "path": ".agents/skills/superstaq-compilation/test/science_test.py",
+        "line": 104
+      },
+      "verification": "Normal requests used a patched Session.send and get_netrc_auth that raises. Redirect checks patched HTTPAdapter.send, retained real Requests request preparation, and made any get_netrc_auth access fail. Proxy/CA observations apply at the Python session boundary; the shared worker environment retains its own explicit allowlist. The final MCP contract regression additionally confirms REQUESTS_CA_BUNDLE survives the controlled worker environment boundary."
+    }
+  ],
+  "independentlyExecutedExistingTests": [
+    {
+      "command": "node --test tests/sdk-cloud-contracts.test.mjs",
+      "passed": 4,
+      "failed": 0,
+      "skipped": 0,
+      "scope": "Schema rejection, protocol fixtures, named credential forwarding and error redaction. Fixture workers are not claimed as numerical SDK evidence."
+    },
+    {
+      "command": ".openquantum/python-envs/ionq-programs/bin/python -B .agents/skills/ionq-programs/test/science_test.py",
+      "passed": 2,
+      "failed": 0,
+      "scope": "Actual qiskit-ionq local serialization, gate encodings, radians, terminal measurements, idle qubits and reversed controls."
+    },
+    {
+      "command": ".openquantum/python-envs/superstaq-compilation/bin/python -B .agents/skills/superstaq-compilation/test/science_test.py",
+      "passed": 7,
+      "failed": 0,
+      "scope": "Actual qiskit-superstaq request/response and QPY mapping with local HTTP transport mocks; includes the final lower-level redirect/netrc regression."
+    }
+  ],
+  "additionalIndependentChecks": {
+    "errorTruncation": "Synthetic credential straddling the display boundary no longer leaks a prefix.",
+    "connectionFailures": [
+      {
+        "type": "ConnectTimeout",
+        "sessionSendCount": 1,
+        "raised": "TimeoutError",
+        "automaticRetry": false
+      },
+      {
+        "type": "ConnectionError",
+        "sessionSendCount": 1,
+        "raised": "TimeoutError",
+        "automaticRetry": false
+      }
+    ],
+    "providerConfiguration": {
+      "fixedEndpoint": "https://superstaq.infleqtion.com/v0.2.0",
+      "verifyHttps": true,
+      "maxRetrySeconds": 0,
+      "clientKwargs": {},
+      "useStoredIbmqCredentials": false
+    },
+    "credentialPolicy": "Only the trusted Superstaq entrypoint names SUPERSTAQ_API_KEY; requests cannot supply credential names, values, URLs or endpoints. Another synthetic provider key was not forwarded.",
+    "termsBoundary": "401 is intercepted before upstream interactive account/terms behavior; 3xx is rejected before SDK handling.",
+    "submissionBoundary": "Source and SDK call paths use serialization, targets and compilation only; no backend.run, job creation, shots or QPU submission surface is exposed.",
+    "diffWhitespaceCheck": "git diff --check passed after the reviewed fixes.",
+    "workerProtocolCompatibility": "Final increment sends toolName only for multiple-definition servers; the SDK-cloud contracts were rerun after this increment: four passed, zero failed/skipped.",
+    "caWorkerEnvironment": {
+      "reviewedFiles": [
+        "src/lib/bounded-science-mcp.mjs",
+        "tests/sdk-cloud-contracts.test.mjs"
+      ],
+      "trustedAllowlistAdditions": [
+        "REQUESTS_CA_BUNDLE",
+        "CURL_CA_BUNDLE"
+      ],
+      "credentialRuleChanged": false,
+      "requestsCaBundleRuntimeCheck": {
+        "capabilities": [
+          "ionq-programs",
+          "superstaq-compilation"
+        ],
+        "syntheticPathPreserved": true,
+        "transport": "actual MCP stdio and controlled local worker fixture"
+      },
+      "curlCaBundleCheck": "Source review confirms the same explicit environment allowlist forwarding path; no separate runtime assertion was added.",
+      "commentReview": "The stdio contract comment now covers both single-action and multi-action servers without implying that every action is local.",
+      "contractRegression": {
+        "passed": 4,
+        "failed": 0,
+        "skipped": 0
+      },
+      "targetedDiffCheck": "passed",
+      "newFindings": []
+    }
+  },
+  "boundaries": [
+    "Actual installed SDK code was used; external HTTP was mocked and Python socket connection entry points were denied in the SDK tests.",
+    "No real API credential, cloud account, cloud compiler, billing operation, external model or QPU was exercised.",
+    "The node SDK-cloud live MCP suite was inspected, but its implementation-owner execution is not counted as this reviewer independent run.",
+    "Proxy and CA preservation was checked directly on the Python session; a subsequent actual MCP/controlled-worker regression verifies that REQUESTS_CA_BUNDLE reaches both SDK worker environments. CURL_CA_BUNDLE forwarding was reviewed in the same explicit allowlist. No real TLS exchange was attempted.",
+    "These are engineering and local SDK mapping checks on macOS arm64, not scientific Acceptance or remote-service availability evidence."
+  ],
+  "sourceSha256": {
+    ".agents/skills/ionq-programs/SKILL.md": "e5ac775e41e758fe38695ee7fcd5aa889ad93d0a3caabe4d2890dd34688622c7",
+    ".agents/skills/ionq-programs/mcp/bridge.py": "0178d1a616377dd3b58e0dea72b720b3bedb69e31d53a090d041c5a3a15b7269",
+    ".agents/skills/ionq-programs/mcp/contracts.mjs": "469305b81c3b4f8920a6418db7921ba8ac8ccbccce1493b95e70ce760c64b1ca",
+    ".agents/skills/ionq-programs/mcp/server.mjs": "fa94f66fe2304423511a9ba4479e65de7453383e99cffef3a2a17facf191ab14",
+    ".agents/skills/ionq-programs/pyproject.toml": "e666be36c792fffdf0b6df5abcac8c2a225cf7eee579ce57ed03a15a10f26f6f",
+    ".agents/skills/ionq-programs/uv.lock": "e6ea0caec14bd65b09f580827fd42889d370bfd4da00991f4b33a0260cf24b20",
+    ".agents/skills/ionq-programs/test/science_test.py": "d995851c455488507201432e9b26210f875aae5f567013a669a5195232b041f8",
+    ".agents/skills/superstaq-compilation/SKILL.md": "c87e3f34c7aff427d6efbf4c19f71d5c3aaf073d17a100c8a25c2a28d467c335",
+    ".agents/skills/superstaq-compilation/mcp/bridge.py": "6e4ed73605fdd082b74700a5233a1603fc516d8ead1ab4f64f2fb20eee1292fa",
+    ".agents/skills/superstaq-compilation/mcp/contracts.mjs": "aa958b986854c0ae5d8aaf3ad088c5d2a1e42972025cc7cd2cf0991c913842a8",
+    ".agents/skills/superstaq-compilation/mcp/server.mjs": "dbbed6ac1d36c4ffa006d911a8a68f1a0428d4c8bdad0f8896e1746ea599a4b5",
+    ".agents/skills/superstaq-compilation/pyproject.toml": "927289d76cc640303afee7c7a0bd19725cf92b79bcbf9415c2c6ada24d83e861",
+    ".agents/skills/superstaq-compilation/uv.lock": "d2b51bd05246512e5b09e5e7a74b903f8b62a47a006456469a0e3c6a4e863659",
+    ".agents/skills/superstaq-compilation/test/science_test.py": "81d6f69efd3f06f2f18f15217478f9c202f37d3148874e53a985875ef90d12c1",
+    "src/lib/bounded-science-mcp.mjs": "6f6fd0505c06c93e9e697774a9aaf9a99e9091ab192d3d84b04bae5f36c01163",
+    "src/lib/local-json-process.mjs": "a9d927a94b1138892afd4fbdb5a8a92e24eb40261c05008a30bc45bf65266948",
+    "tests/sdk-cloud-contracts.test.mjs": "96e51677b5093bc7a47daa1ab7947e1757381bce5200b29147948e7b76310b03",
+    "tests/sdk-cloud-live.test.mjs": "694cd1040a6e9c5345376f668ca31225ad4abb0e048a82e497be55f2bc67727d",
+    "tests/fixtures/sdk-cloud.mjs": "7c51980cc51580e671edb03034519ebc141a78fe271aea21e61cbd4c65b6ba60",
+    "tests/local-json-process.test.mjs": "3c442b31e157ff047d6b48bfed28640d8ae978eb94ed33490f0b6547c61f648c"
+  }
+}
