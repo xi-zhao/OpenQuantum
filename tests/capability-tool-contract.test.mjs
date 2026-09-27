@@ -118,6 +118,7 @@ test("default contract checks are derived from package MCP and native Tool polic
     ".agents/skills/quantum-circuit-verification/test/mcp.test.mjs",
     ".agents/skills/quantum-information-audit/test/mcp.test.mjs",
     ".agents/skills/tyxonq-workbench/test/mcp.test.mjs",
+    "tests/bloqade-contracts.test.mjs",
     "tests/candidate-tools-contracts.test.mjs",
     "tests/flagquantum-contracts.test.mjs",
     "tests/hamiltonian-contracts.test.mjs",

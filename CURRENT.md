@@ -153,3 +153,10 @@
 - 最新在线验收的固定模型清单、预算、执行中状态和报告位置尚未在本页核实；由原执行任务补入脱敏报告链接后才能标记完成。
 - 允许：读取证据、更新此页、在已有授权范围内维护本地实现和相关检查。
 - 此页不授予新的模型请求、安装、硬件、发布或 push 权限；跨 ChatGPT/Codex 接手时携带仓库、分支、证据链接和原授权范围，不携带密钥。
+
+## Bloqade Analog 接入（2026-09-27）
+
+- 新增 `bloqade-analog` Skill 与默认加载的 `bloqade_local` 连接，提供二维 Rydberg 原子阵列、全局分段线性脉冲的本地 Python 仿真，返回占据、振幅和位串概率。
+- 固定 Bloqade Analog 0.16.9 与 NumPy 2.4.2，依赖经显式 setup 准备；计算不自动安装、不提交云或 QPU 任务。
+- 7 项数值回归、11 项独立领域检查、真实 MCP 与本地模型协议替身驱动的 Harness 调用及会话结果重读已通过。全部能力合同 108 项通过、1 项既有 opt-in 检查跳过；相关目录/设置/多语言检查、lint 和配置展开通过。
+- 当前为 L1、`scientificValidation=not_evaluated`；没有外部模型或真实硬件验收，未运行完整仓库检查。范围、使用方法和版本化证据见 [Bloqade Analog](docs/integrations/BLOQADE_ANALOG.md)。使用本分支源码时需重启 Harness 加载新连接。

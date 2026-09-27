@@ -13,7 +13,7 @@
 
 ## 当前 Skill
 
-以下 101 个 Skill 随源码分发；它们与 MCP Server 不是一一对应关系，知识型 Skill 可以不绑定专用 Tool，
+以下 102 个 Skill 随源码分发；它们与 MCP Server 不是一一对应关系，知识型 Skill 可以不绑定专用 Tool，
 工作流也可以使用多个服务或进程内原生 Tool。连接默认配置与凭据条件见[项目首页](../../README.md#mcp-服务目录)。
 当前 88 项可由模型自动选择，13 个分类索引仅保留用户显式调用；名称和来源映射不变。
 分批建议与兼容影响见[扩展治理清单](../../docs/architecture/EXTENSION_GOVERNANCE.md)。
@@ -30,6 +30,7 @@
 | `qec-memory-experiment` | surface-code memory 采样与 MWPM 解码 | Stim/PyMatching 本地 MCP Server + Harness MCP Client |
 | `tyxonq-workbench` | TyxonQ 电路与噪声仿真工作流 | TyxonQ 本地 MCP Server + Harness MCP Client；默认关闭 |
 | `fatqat-workbench` | 电路与硬件约束、transmon 泄漏和里德堡动力学实验 | FatQat 本地 MCP Server + Harness MCP Client；返回数据、图表与物理单位 |
+| `bloqade-analog` | 二维 Rydberg 阵列、时变全局脉冲与本地态演化 | `bloqade_local` MCP Server + Harness MCP Client |
 | `mitiq-error-mitigation` | ZNE、REM、PEC、CDR 的本地噪声实验及相同采样预算统计 | Mitiq 本地 MCP Server + Harness MCP Client；能力目录 GPL-3.0-only |
 | `dynamiqs-dynamics` | 单量子位动力学、批量扫描、梯度与独立参照 | Dynamiqs 本地 MCP Server + Harness MCP Client |
 | `clifft-sampling` | Clifford+T 最终测量及 Stim 格式纠错记录采样 | Clifft 本地 MCP Server + Harness MCP Client |

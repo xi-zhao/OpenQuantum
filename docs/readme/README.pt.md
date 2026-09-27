@@ -16,7 +16,7 @@ Simule circuitos com Qiskit e TyxonQ; otimize-os com PyZX; explore computação 
 
 O código de `main` também inclui corte de portas e reconstrução de valores esperados com QCut, otimização de circuitos com Compact e estados excitados por VQD com OpenQARP. Essas conexões são ativadas por padrão, mas suas dependências precisam ser preparadas. O QSVM com kernel angular do cqlib-qml e o ambiente de circuitos FlagQuantum ficam desativados até serem habilitados. Consulte o [escopo e a verificação](../integrations/CANDIDATE_LIBRARIES.md).
 
-O inventário atual contém **101 Skills** (88 selecionáveis pelo agente e 13 índices manuais), **37 conexões MCP** e **220 nomes de Tool configuráveis**. Esses números não representam ferramentas disponíveis simultaneamente. Os nomes existentes foram preservados e os critérios de escolha entre funções semelhantes estão no [guia de seleção](../integrations/CAPABILITY_SELECTION.md).
+O inventário atual contém **102 Skills** (89 selecionáveis pelo agente e 13 índices manuais), **38 conexões MCP** e **221 nomes de Tool configuráveis**. Esses números não representam ferramentas disponíveis simultaneamente. Os nomes existentes foram preservados e os critérios de escolha entre funções semelhantes estão no [guia de seleção](../integrations/CAPABILITY_SELECTION.md).
 
 Os **66 guias quantum-skills** da UnitaryLab foram adaptados como Skills nativas; **49 exemplos executáveis** cobrem os **39 módulos de algoritmos originais** e métodos adicionais dos guias. Eles usam Qiskit, PennyLane, quimb, PySCF e NumPy/SciPy sem depender do runtime proprietário da UnitaryLab. Isso não significa compatibilidade completa de API; as diferenças estão na [tabela de cobertura](../integrations/UNITARYLAB_OPEN_COVERAGE.md).
 

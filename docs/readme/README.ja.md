@@ -16,7 +16,7 @@ Qiskit・TyxonQ による回路シミュレーション、PyZX による回路�
 
 ソースの `main` には、QCut のゲート切断と期待値再構成、Compact の回路最適化、OpenQARP の VQD 励起状態計算も含まれます。これらの接続は標準で有効ですが、依存関係の準備が必要です。cqlib-qml の角度カーネル QSVM と FlagQuantum 回路ワークベンチは標準では無効で、必要に応じて有効化します。[適用範囲と検証](../integrations/CANDIDATE_LIBRARIES.md)をご覧ください。
 
-現在のソースには **101 個の Skill**（自動選択 88、手動の分類索引 13）、**37 個の MCP 接続**、**220 個の設定可能な Tool 名**があります。これらは構成上の一覧であり、同時に利用可能な数ではありません。既存の名前を維持し、類似する入口の選び方を整理しました。[能力の選択](../integrations/CAPABILITY_SELECTION.md)を参照してください。
+現在のソースには **102 個の Skill**（自動選択 89、手動の分類索引 13）、**38 個の MCP 接続**、**221 個の設定可能な Tool 名**があります。これらは構成上の一覧であり、同時に利用可能な数ではありません。既存の名前を維持し、類似する入口の選び方を整理しました。[能力の選択](../integrations/CAPABILITY_SELECTION.md)を参照してください。
 
 UnitaryLab の **quantum-skills の全 66 件のガイド**をネイティブ Skill に移植し、**49 個の実行可能な例**で上流の **39 個のアルゴリズムモジュール**とガイド固有の手法をカバーしています。Qiskit、PennyLane、quimb、PySCF、NumPy/SciPy を使用し、非公開の UnitaryLab ランタイムには依存しません。API 全体の互換性を意味するものではなく、置換による違いは[対応表](../integrations/UNITARYLAB_OPEN_COVERAGE.md)に記載しています。
 

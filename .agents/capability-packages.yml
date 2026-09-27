@@ -1331,3 +1331,22 @@ packages:
 
   - id: quantum-guide-simulators-unitarylab
     level: L0
+
+  - id: bloqade-analog
+    level: L1
+    execution:
+      mcpServers:
+        - name: bloqade_local
+          source: package
+          entrypoint: .agents/skills/bloqade-analog/mcp/server.mjs
+          activation: always
+          contractCheck: tests/bloqade-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: simulate_bloqade_analog
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/bloqade-contracts.test.mjs
+        - tests/bloqade-live.test.mjs
+        - tests/harness-bloqade.test.mjs

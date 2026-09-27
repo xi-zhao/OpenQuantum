@@ -115,6 +115,15 @@ const MCP_CATALOG = Object.freeze({
     setup: null,
   }),
 
+  bloqade_local: Object.freeze({
+    displayName: "Bloqade Analog 中性原子动力学",
+    description: "二维 Rydberg 原子阵列、全局分段线性脉冲和本地纯态演化；返回占据、末态概率及明确单位。",
+    provider: "QuEra / OpenQuantum",
+    sourceUrl: "https://github.com/QuEraComputing/bloqade-analog",
+    packageName: "bloqade-analog",
+    packageVersion: "0.16.9",
+    setup: null,
+  }),
   dynamiqs_local: Object.freeze({
     displayName: "Dynamiqs 动力学与梯度",
     description: "驱动耗散单量子位、参数批量扫描和人口梯度，含独立数值对照。",

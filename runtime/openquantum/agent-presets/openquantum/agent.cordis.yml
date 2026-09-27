@@ -794,3 +794,16 @@
     cwd: !!js process.cwd()
     toolCallTimeoutMs: 2147483647
     failOnStartupError: true
+
+# Local Rydberg-array dynamics; dependencies are prepared by explicit setup.
+- id: mcp-bloqade-analog
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: bloqade_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/bloqade-analog/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: true

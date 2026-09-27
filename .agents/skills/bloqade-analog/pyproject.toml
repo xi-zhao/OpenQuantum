@@ -1,0 +1,10 @@
+[project]
+name = "openquantum-bloqade-analog"
+version = "0.1.0"
+requires-python = ">=3.12,<3.13"
+# NumPy 2.5 changes NDArray typing and breaks Bloqade's beartype-decorated import.
+# 2.4.2 is present in the upstream v0.16.9 lock for Python 3.12.
+dependencies = ["bloqade-analog==0.16.9", "numpy==2.4.2"]
+
+[tool.uv]
+package = false

@@ -94,7 +94,10 @@
     "capability:algorithms:setup": "node scripts/setup-open-algorithm-examples.mjs",
     "capability:algorithms:catalog": "node scripts/build-open-algorithm-skills.mjs --check",
     "capability:algorithms:test": "node --test tests/open-algorithm-skills.test.mjs",
-    "capability:algorithms:live": "node scripts/test-open-algorithm-examples.mjs"
+    "capability:algorithms:live": "node scripts/test-open-algorithm-examples.mjs",
+    "capability:bloqade:setup": "node scripts/setup-paper-tools.mjs bloqade-analog",
+    "capability:bloqade:test": "node --test tests/bloqade-contracts.test.mjs",
+    "capability:bloqade:live": "OPENQUANTUM_REAL_BLOQADE=1 node --test --test-concurrency=1 tests/bloqade-live.test.mjs tests/harness-bloqade.test.mjs"
   },
   "dependencies": {
     "@deepseek-ai/dsh": "0.1.5-rc.1",

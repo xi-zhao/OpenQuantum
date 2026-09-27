@@ -16,7 +16,7 @@ Qiskit과 TyxonQ를 이용한 회로 시뮬레이션, PyZX 회로 최적화, Gra
 
 소스 `main`에는 QCut 게이트 분할과 기댓값 재구성, Compact 회로 최적화, OpenQARP VQD 들뜬상태 계산도 포함됩니다. 이 연결들은 기본으로 활성화되지만 의존성을 준비해야 합니다. cqlib-qml 각도 커널 QSVM과 FlagQuantum 회로 작업대는 기본으로 비활성화되어 필요할 때 켭니다. [적용 범위와 검증](../integrations/CANDIDATE_LIBRARIES.md)을 참고하세요.
 
-현재 소스에는 **Skill 101개**(자동 선택 88개, 수동 분류 색인 13개), **MCP 연결 37개**, **설정 가능한 Tool 이름 220개**가 있습니다. 이는 구성 목록이며 동시에 사용할 수 있는 도구 수는 아닙니다. 기존 이름은 유지하고 비슷한 기능의 선택 기준을 정리했습니다. [기능 선택 안내](../integrations/CAPABILITY_SELECTION.md)를 참고하세요.
+현재 소스에는 **Skill 102개**(자동 선택 89개, 수동 분류 색인 13개), **MCP 연결 38개**, **설정 가능한 Tool 이름 221개**가 있습니다. 이는 구성 목록이며 동시에 사용할 수 있는 도구 수는 아닙니다. 기존 이름은 유지하고 비슷한 기능의 선택 기준을 정리했습니다. [기능 선택 안내](../integrations/CAPABILITY_SELECTION.md)를 참고하세요.
 
 UnitaryLab의 **quantum-skills 가이드 66개**를 네이티브 Skill로 옮겼으며, **실행 가능한 예제 49개**가 원본 알고리즘 모듈 **39개**와 가이드의 추가 방법을 다룹니다. Qiskit, PennyLane, quimb, PySCF, NumPy/SciPy를 사용하며 비공개 UnitaryLab 런타임에 의존하지 않습니다. 전체 API 호환성을 뜻하지 않으며 구현 차이는 [대응표](../integrations/UNITARYLAB_OPEN_COVERAGE.md)에 공개되어 있습니다.
 

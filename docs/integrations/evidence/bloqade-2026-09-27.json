@@ -1,0 +1,806 @@
+{
+  "schemaVersion": "1.0",
+  "verifiedAt": "2026-09-27T09:10:52.164730+00:00",
+  "scope": "Bloqade Analog local Python integration and finite-case numerical verification; not scientific Acceptance",
+  "baseCommit": "1815ed1",
+  "versions": {
+    "bloqade-analog": "0.16.9",
+    "numpy": "2.4.2",
+    "scipy": "1.18.1",
+    "numba": "0.67.0",
+    "beartype": "0.22.9"
+  },
+  "sourceSha256": {
+    ".agents/skills/bloqade-analog/mcp/bridge.py": "706abe3fef68c05c18dbf465a476ee025af63d64ebc57c6a1b89c14e89feca94",
+    ".agents/skills/bloqade-analog/mcp/contracts.mjs": "75268977fa34e89a0d964ea2a338edc98e30428eee46dfb579eeb982e1df03c4",
+    ".agents/skills/bloqade-analog/mcp/server.mjs": "35e35d6b2516b1f8328051e7202078cd7d18b23a09917778ea18be70c756e4e2",
+    ".agents/skills/bloqade-analog/pyproject.toml": "15b270bc02d277451338d83b6d0ea451576d57ef8df875382471a4c08bbd952c",
+    ".agents/skills/bloqade-analog/uv.lock": "8ac056ef22d4741ecc9b1d7c16b6de20ed83477628fbd01ee8a8f01399e31fca",
+    ".agents/skills/bloqade-analog/test/science_test.py": "acf21e26a294a549d457c369a4b4333e9d9bb95b445f95595c3cc178659ba7b3",
+    "tests/bloqade-contracts.test.mjs": "31b37083cca22f5729d052b3468a083fe3e03d402b6e24b2c6a87bf1b5cddc1f",
+    "tests/bloqade-live.test.mjs": "8e05616d527d83537ba6ba925e572a869ade5df7e91bb2e59957d8f2b640b9aa",
+    "tests/harness-bloqade.test.mjs": "fdc9d680e0e51d96ee956deaa3964500fbf98cd6b2e2b72ed1e7063e3d55473d"
+  },
+  "validation": {
+    "focusedContractsAndCatalog": {
+      "passed": 52,
+      "failed": 0
+    },
+    "allCapabilityContracts": {
+      "passed": 108,
+      "failed": 0,
+      "skipped": 1,
+      "skipReason": "Existing opt-in FlagQuantum live probe"
+    },
+    "settingsAndLocales": {
+      "passed": 18,
+      "failed": 0
+    },
+    "bloqadeLive": {
+      "passed": 3,
+      "failed": 0,
+      "skipped": 0
+    },
+    "scienceRegression": {
+      "passed": true,
+      "testsRun": 7,
+      "networkConnectionsBlocked": true
+    },
+    "independentDomainReview": {
+      "passed": 11,
+      "checks": [
+        {
+          "case": "single_atom_resonant_analytic_pi_pulse",
+          "input": {
+            "atomPositionsUm": [
+              [
+                0.0,
+                0.0
+              ]
+            ],
+            "durationsUs": [
+              1.5707963267948966
+            ],
+            "rabiRadPerUs": [
+              2.0,
+              2.0
+            ],
+            "detuningRadPerUs": [
+              0.0,
+              0.0
+            ],
+            "phaseRad": [
+              0.0,
+              0.0
+            ],
+            "timeSteps": 17,
+            "atol": 1e-11,
+            "rtol": 1e-11
+          },
+          "observed": {
+            "max_population_error": 8.881784197001252e-16,
+            "final_amplitude_error": 4.440892098500626e-16,
+            "final_probability_error": 8.881784197001252e-16,
+            "final_norm2": 1.0000000000000009,
+            "maxNormError": 8.881784197001252e-16
+          },
+          "status": "pass"
+        },
+        {
+          "case": "single_atom_detuned_phase_ramp_analytic",
+          "input": {
+            "atomPositionsUm": [
+              [
+                0.0,
+                0.0
+              ]
+            ],
+            "durationsUs": [
+              0.9
+            ],
+            "rabiRadPerUs": [
+              2.0,
+              2.0
+            ],
+            "detuningRadPerUs": [
+              1.0,
+              1.0
+            ],
+            "phaseRad": [
+              0.0,
+              1.8
+            ],
+            "timeSteps": 17,
+            "atol": 1e-11,
+            "rtol": 1e-11
+          },
+          "observed": {
+            "max_population_error": 2.7755575615628914e-16,
+            "final_amplitude_error": 2.220446049250313e-16,
+            "final_probability_error": 2.7755575615628914e-16,
+            "final_norm2": 1.0000000000000004,
+            "maxNormError": 4.440892098500626e-16,
+            "correct_final_Pr": 0.30687055700319843,
+            "wrong_phase_sign_final_Pr": 0.5709780610218155
+          },
+          "status": "pass"
+        },
+        {
+          "case": "two_atom_finite_blockade_independent_expm",
+          "input": {
+            "atomPositionsUm": [
+              [
+                0.0,
+                0.0
+              ],
+              [
+                5.0,
+                0.0
+              ]
+            ],
+            "durationsUs": [
+              1.1107207345395915
+            ],
+            "rabiRadPerUs": [
+              2.0,
+              2.0
+            ],
+            "detuningRadPerUs": [
+              0.0,
+              0.0
+            ],
+            "phaseRad": [
+              0.37,
+              0.37
+            ],
+            "timeSteps": 17,
+            "atol": 1e-11,
+            "rtol": 1e-11
+          },
+          "observed": {
+            "max_population_error": 2.185973624335702e-12,
+            "final_amplitude_error": 6.528941886131952e-10,
+            "final_probability_error": 4.979233781472921e-13,
+            "final_norm2": 0.9999999999999927,
+            "maxNormError": 7.66053886991358e-15,
+            "V_rad_per_us": 346.90823248964847,
+            "final_Prr": 1.649903632477968e-05,
+            "final_single_excitation_probability": 0.9999793463805224
+          },
+          "status": "pass"
+        },
+        {
+          "case": "three_atom_2d_asymmetric_piecewise_independent_rk45",
+          "input": {
+            "atomPositionsUm": [
+              [
+                0.0,
+                0.0
+              ],
+              [
+                8.0,
+                1.0
+              ],
+              [
+                1.0,
+                9.5
+              ]
+            ],
+            "durationsUs": [
+              0.13,
+              0.27,
+              0.31
+            ],
+            "rabiRadPerUs": [
+              0.0,
+              6.0,
+              4.0,
+              0.0
+            ],
+            "detuningRadPerUs": [
+              -2.0,
+              1.0,
+              3.0,
+              -1.0
+            ],
+            "phaseRad": [
+              0.0,
+              0.4,
+              -0.3,
+              0.8
+            ],
+            "timeSteps": 17,
+            "atol": 1e-11,
+            "rtol": 1e-11
+          },
+          "observed": {
+            "max_population_error": 5.861977570020827e-13,
+            "final_amplitude_error": 1.6198036255159027e-11,
+            "final_probability_error": 2.8632651805082787e-13,
+            "final_norm2": 0.999999999999084,
+            "maxNormError": 9.160450176182167e-13,
+            "final_populations": [
+              0.39333474119856965,
+              0.5096387686215708,
+              0.6899548449553322
+            ],
+            "x_only_distance_mutation_hamiltonian_difference": 5420477.970513691,
+            "wrong_phase_mutation_final_population_difference": 0.06676149242654479,
+            "reverse_site_order_final_population_difference": 0.29662010375676257,
+            "times_include_knots": true
+          },
+          "status": "pass"
+        },
+        {
+          "case": "decimal_durations_01_plus_02_and_knot_union",
+          "input": {
+            "atomPositionsUm": [
+              [
+                0.0,
+                0.0
+              ]
+            ],
+            "durationsUs": [
+              0.1,
+              0.2
+            ],
+            "rabiRadPerUs": [
+              3.0,
+              3.0,
+              3.0
+            ],
+            "detuningRadPerUs": [
+              0.7,
+              0.7,
+              0.7
+            ],
+            "phaseRad": [
+              0.2,
+              0.2,
+              0.2
+            ],
+            "timeSteps": 7,
+            "atol": 1e-11,
+            "rtol": 1e-11
+          },
+          "observed": {
+            "max_population_error": 1.1102230246251565e-16,
+            "final_amplitude_error": 5.928593550334434e-17,
+            "final_probability_error": 4.440892098500626e-16,
+            "final_norm2": 1.0,
+            "maxNormError": 4.440892098500626e-16,
+            "final_time": 0.3,
+            "times": [
+              0.0,
+              0.04285714285714286,
+              0.08571428571428572,
+              0.1,
+              0.12857142857142856,
+              0.17142857142857143,
+              0.2142857142857143,
+              0.2571428571428571,
+              0.3
+            ]
+          },
+          "status": "pass"
+        },
+        {
+          "case": "zero_drive_stays_all_ground",
+          "input": {
+            "atomPositionsUm": [
+              [
+                0.0,
+                0.0
+              ],
+              [
+                3.0,
+                4.0
+              ]
+            ],
+            "durationsUs": [
+              0.1,
+              0.2
+            ],
+            "rabiRadPerUs": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "detuningRadPerUs": [
+              -10.0,
+              15.0,
+              -3.0
+            ],
+            "phaseRad": [
+              0.4,
+              -0.2,
+              0.9
+            ],
+            "timeSteps": 17,
+            "atol": 1e-11,
+            "rtol": 1e-11
+          },
+          "observed": {
+            "max_population_error": 0.0,
+            "final_amplitude_error": 0.0,
+            "final_probability_error": 0.0,
+            "final_norm2": 1.0,
+            "maxNormError": 0.0
+          },
+          "status": "pass"
+        },
+        {
+          "case": "loose_tolerance_raw_norm_not_renormalized",
+          "input": {
+            "atomPositionsUm": [
+              [
+                0.0,
+                0.0
+              ]
+            ],
+            "durationsUs": [
+              20.0
+            ],
+            "rabiRadPerUs": [
+              15.0,
+              15.0
+            ],
+            "detuningRadPerUs": [
+              1.0,
+              1.0
+            ],
+            "phaseRad": [
+              0.4,
+              0.4
+            ],
+            "timeSteps": 5,
+            "atol": 0.01,
+            "rtol": 0.01
+          },
+          "observed": {
+            "final_norm2": 0.6708281662933824,
+            "maxNormError": 0.3291718337066176,
+            "final_analytic_probability_error": 0.277890394863084
+          },
+          "status": "pass"
+        },
+        {
+          "case": "reject_59_atoms_address_representation",
+          "input": {
+            "atomPositionsUm": [
+              [
+                0.0,
+                0.0
+              ],
+              [
+                1.0,
+                0.0
+              ],
+              [
+                2.0,
+                0.0
+              ],
+              [
+                3.0,
+                0.0
+              ],
+              [
+                4.0,
+                0.0
+              ],
+              [
+                5.0,
+                0.0
+              ],
+              [
+                6.0,
+                0.0
+              ],
+              [
+                7.0,
+                0.0
+              ],
+              [
+                8.0,
+                0.0
+              ],
+              [
+                9.0,
+                0.0
+              ],
+              [
+                10.0,
+                0.0
+              ],
+              [
+                11.0,
+                0.0
+              ],
+              [
+                12.0,
+                0.0
+              ],
+              [
+                13.0,
+                0.0
+              ],
+              [
+                14.0,
+                0.0
+              ],
+              [
+                15.0,
+                0.0
+              ],
+              [
+                16.0,
+                0.0
+              ],
+              [
+                17.0,
+                0.0
+              ],
+              [
+                18.0,
+                0.0
+              ],
+              [
+                19.0,
+                0.0
+              ],
+              [
+                20.0,
+                0.0
+              ],
+              [
+                21.0,
+                0.0
+              ],
+              [
+                22.0,
+                0.0
+              ],
+              [
+                23.0,
+                0.0
+              ],
+              [
+                24.0,
+                0.0
+              ],
+              [
+                25.0,
+                0.0
+              ],
+              [
+                26.0,
+                0.0
+              ],
+              [
+                27.0,
+                0.0
+              ],
+              [
+                28.0,
+                0.0
+              ],
+              [
+                29.0,
+                0.0
+              ],
+              [
+                30.0,
+                0.0
+              ],
+              [
+                31.0,
+                0.0
+              ],
+              [
+                32.0,
+                0.0
+              ],
+              [
+                33.0,
+                0.0
+              ],
+              [
+                34.0,
+                0.0
+              ],
+              [
+                35.0,
+                0.0
+              ],
+              [
+                36.0,
+                0.0
+              ],
+              [
+                37.0,
+                0.0
+              ],
+              [
+                38.0,
+                0.0
+              ],
+              [
+                39.0,
+                0.0
+              ],
+              [
+                40.0,
+                0.0
+              ],
+              [
+                41.0,
+                0.0
+              ],
+              [
+                42.0,
+                0.0
+              ],
+              [
+                43.0,
+                0.0
+              ],
+              [
+                44.0,
+                0.0
+              ],
+              [
+                45.0,
+                0.0
+              ],
+              [
+                46.0,
+                0.0
+              ],
+              [
+                47.0,
+                0.0
+              ],
+              [
+                48.0,
+                0.0
+              ],
+              [
+                49.0,
+                0.0
+              ],
+              [
+                50.0,
+                0.0
+              ],
+              [
+                51.0,
+                0.0
+              ],
+              [
+                52.0,
+                0.0
+              ],
+              [
+                53.0,
+                0.0
+              ],
+              [
+                54.0,
+                0.0
+              ],
+              [
+                55.0,
+                0.0
+              ],
+              [
+                56.0,
+                0.0
+              ],
+              [
+                57.0,
+                0.0
+              ],
+              [
+                58.0,
+                0.0
+              ]
+            ],
+            "durationsUs": [
+              1.0
+            ],
+            "rabiRadPerUs": [
+              2.0,
+              2.0
+            ],
+            "detuningRadPerUs": [
+              0.0,
+              0.0
+            ],
+            "phaseRad": [
+              0.0,
+              0.0
+            ],
+            "timeSteps": 17,
+            "atol": 1e-11,
+            "rtol": 1e-11
+          },
+          "observed": {
+            "exception": "ValueError",
+            "message": "Full state vector exceeds this backend's addressable array representation"
+          },
+          "status": "pass"
+        },
+        {
+          "case": "reject_unrepresentable_segment_increment",
+          "input": {
+            "atomPositionsUm": [
+              [
+                0.0,
+                0.0
+              ]
+            ],
+            "durationsUs": [
+              1.0,
+              1e-20
+            ],
+            "rabiRadPerUs": [
+              2.0,
+              2.0,
+              2.0
+            ],
+            "detuningRadPerUs": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "phaseRad": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "timeSteps": 17,
+            "atol": 1e-11,
+            "rtol": 1e-11
+          },
+          "observed": {
+            "exception": "ValueError",
+            "message": "Pulse segment times must be finite and strictly increasing"
+          },
+          "status": "pass"
+        },
+        {
+          "case": "reject_coincident_coordinates",
+          "input": {
+            "atomPositionsUm": [
+              [
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0
+              ]
+            ],
+            "durationsUs": [
+              1.0
+            ],
+            "rabiRadPerUs": [
+              2.0,
+              2.0
+            ],
+            "detuningRadPerUs": [
+              0.0,
+              0.0
+            ],
+            "phaseRad": [
+              0.0,
+              0.0
+            ],
+            "timeSteps": 17,
+            "atol": 1e-11,
+            "rtol": 1e-11
+          },
+          "observed": {
+            "exception": "ValueError",
+            "message": "Atom separation or pair interaction is not numerically representable"
+          },
+          "status": "pass"
+        },
+        {
+          "case": "reject_unrepresentable_pair_interaction",
+          "input": {
+            "atomPositionsUm": [
+              [
+                0.0,
+                0.0
+              ],
+              [
+                1e-80,
+                0.0
+              ]
+            ],
+            "durationsUs": [
+              1.0
+            ],
+            "rabiRadPerUs": [
+              2.0,
+              2.0
+            ],
+            "detuningRadPerUs": [
+              0.0,
+              0.0
+            ],
+            "phaseRad": [
+              0.0,
+              0.0
+            ],
+            "timeSteps": 17,
+            "atol": 1e-11,
+            "rtol": 1e-11
+          },
+          "observed": {
+            "exception": "ValueError",
+            "message": "Atom separation or pair interaction is not numerically representable"
+          },
+          "status": "pass"
+        }
+      ],
+      "reviewedBridgeSha256": "706abe3fef68c05c18dbf465a476ee025af63d64ebc57c6a1b89c14e89feca94",
+      "note": "Review suggested replacing exact with numerical probabilities; wording corrected. Final contract also fixes the C6 output constant."
+    },
+    "lint": "passed",
+    "harnessConfig": "passed",
+    "fullRepositoryCheck": "not_run; scoped contracts, catalog, settings, locale and integration checks performed",
+    "setupRepeat": "passed; checked 64 packages without reinstall; dependency lock unchanged",
+    "documentationLinksAndSourceHashes": "passed"
+  },
+  "harness": {
+    "model": "local protocol fixture",
+    "externalModelTested": false,
+    "sessionId": "session-bloqade-80a2c0aa-2503-4232-964b-c58d8b604fb4",
+    "successfulCalculations": 1,
+    "expectedInputErrors": 1,
+    "persistedSessionReadback": true,
+    "eventTypes": [
+      "agent/inbox/spliced",
+      "approval/policy",
+      "assistant/message",
+      "permission/preset",
+      "request/context",
+      "request/header",
+      "sandbox/mode",
+      "session/title",
+      "session/title-llm-request",
+      "step/end",
+      "step/start",
+      "system/message",
+      "tool/call",
+      "tool/result",
+      "turn/end",
+      "turn/start",
+      "user/message"
+    ]
+  },
+  "scientificValidation": "not_evaluated",
+  "hardwareVerified": false,
+  "cloudJobsSubmitted": 0,
+  "rawEvidence": {
+    "harness-session.json": "ddaf04ec46aa61c7d8bcb98842d8b58c4ca95ec86a74d6f88d3b95d06dc5bb98",
+    "reviewer-science.py": "408eb8f8b7a6f544fe7d9076ef4fcec02e8061ab605c31ef44995af054b624ee",
+    "mcp-single-atom.json": "fcab9d42fbe7cf78e38aca54b69b59247ce6d0cfc4e661aa00efe1ccc0a53e02",
+    "reviewer-science.json": "ae7432daa50159c9ded26b35338584e5e0f3a68748c1a39cd8ed5937186651ca",
+    "mcp-defaults.json": "b8016b3330f6dbde0e702d0b8380d0d903e8ae546ca3b9d2bdebed8a2c938486",
+    "independent-science.json": "0666d3905198394499d0ff44b8416d9e993b76eda4d49f7e9d49e6d1bcde6635"
+  },
+  "rawEvidenceDirectory": ".openquantum/bloqade-evidence",
+  "logs": {
+    "bloqade-contracts.log": "aaeac76b150cb62f5d5186999d1ce2f21c053ecdd0e7d3e6d35984885910ce70",
+    "bloqade-all-contracts.log": "5a1976f59dbf7eb3fb007b531cd82faf4d35dad9e09100c3693fee9ecf23fb2a",
+    "bloqade-settings.log": "e22535d92ad0b4ca27394930b8d6026a0b086744af4b1801047e4d584efcb6cc",
+    "bloqade-live.log": "88a7670acf20cec81fac912f15b299bc8b3645a4e77582a6749acfebe52313c5",
+    "bloqade-lint.log": "737c52118307ee296ae8993ff264bd3fc8f8e9ab65158364f46ec3676b05e557",
+    "bloqade-config.log": "f953188a9b39fc77749a5483ef74f237a2431d6d4d23936052537a7b534863f1",
+    "bloqade-setup-repeat.log": "a699cce58519ebbfe659e3eda1e6bb05c8a37b4bd7fe644e5ae2e5e307cb498f",
+    "bloqade-final-docs.log": "faf3bb19556773c8607a5c949b173d075e10a8f3913ec30817a0082ca152dae6"
+  }
+}
