@@ -1,0 +1,9 @@
+[project]
+name = "openquantum-qcover-optimization"
+version = "0.1.0"
+requires-python = ">=3.10,<3.11"
+dependencies = ["Qcover==2.6.0", "qiskit==0.45.3", "qiskit-aer==0.13.3", "cirq==1.3.0", "quimb==1.8.4", "projectq==0.8.0", "networkx==2.8.8", "numpy==1.26.4", "scipy==1.12.0"]
+
+[tool.uv]
+package = false
+build-constraint-dependencies = ["setuptools==68.2.2"]

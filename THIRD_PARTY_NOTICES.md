@@ -118,3 +118,37 @@ QoolQit is opt-in and must not be described as standard MIT: its additional pate
 to internal research and academic use. This record does not establish permission for every commercial use.
 Perceval's MIT terms include the Exqalibur binding combination exception; installing either does not
 replace the other component's terms. Source URLs and lock hashes are retained in the integration evidence.
+
+## Company and institution SDK expansion (2026-09-28)
+
+The repository distributes OpenQuantum adapters, instructions and dependency metadata only. Upstream SDKs retain their licenses;
+installed environments, proprietary packages and NetSquid binaries are not redistributed. Users obtain credentials and any required rights.
+[Integration scope and verification](docs/integrations/SDK_EXPANSION.md) distinguishes compilation, simulation and authenticated services.
+
+| Upstream | Pinned dependency | License / separate conditions |
+| --- | --- | --- |
+| [BAQIS](https://github.com/BAQIS-Quantum/qsteed) | qsteed==0.2.3 | Apache-2.0 |
+| [QuAIR](https://github.com/QuAIR/QuAIRKit) | quairkit==0.5.1 | Apache-2.0 |
+| [Baidu](https://github.com/baidu/QCompute) | QCompute==3.3.5 | Apache-2.0 |
+| [Qibo / TII / INFN](https://github.com/qiboteam/qibo) | qibo==0.3.5 | Apache-2.0 |
+| [Eclipse / Fraunhofer](https://github.com/eclipse-qrisp/Qrisp) | qrisp==0.9.9 | EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0 |
+| [Aegiq](https://github.com/Aegiq/lightworks) | lightworks==2.3.5 | Apache-2.0 |
+| [Amazon](https://github.com/amazon-braket/amazon-braket-sdk-python) | amazon-braket-sdk==1.127.2 | Apache-2.0 |
+| [QunaSys](https://github.com/QunaSys/quri-sdk) | quri-parts[qulacs]==0.27.0 | Apache-2.0 (QURI Parts); MIT (Qulacs) |
+| [Microsoft](https://github.com/microsoft/qdk) | qdk[qre]==1.32.3 | MIT |
+| [Google Quantum AI](https://github.com/quantumlib/Qualtran) | qualtran==0.7.0 | Apache-2.0 |
+| [Google Quantum AI](https://github.com/quantumlib/OpenFermion) | openfermion==1.8.1 | Apache-2.0 |
+| [TUM / MQT](https://github.com/munich-quantum-toolkit/ddsim) | mqt-ddsim==2.6.0 | MIT |
+| [TUM / MQT](https://github.com/munich-quantum-toolkit/qmap) | mqt-qmap==3.10.0 | MIT |
+| [Classiq](https://docs.classiq.io/) | classiq==1.29.1 | Classiq proprietary evaluation license (wheel LICENSE.txt); no bundled SDK redistribution |
+| [Q-CTRL](https://docs.q-ctrl.com/) | boulder-opal==6.1.0 / fire-opal==12.3.0 | Proprietary Q-CTRL Terms of Service https://q-ctrl.com/terms |
+| [Quantum Machines](https://github.com/qm-labs/qm-qua-sdk-public) | qm-qua==1.4.1 | BSD-3-Clause |
+| [Zurich Instruments](https://github.com/zhinst/laboneq) | laboneq==26.7.0 | Apache-2.0 |
+| [MolSSI](https://github.com/MolSSI/QCFractal) | qcportal==0.70 | BSD-3-Clause |
+| [NVIDIA](https://github.com/NVIDIA/cuda-quantum) | cuda-quantum-cu13==0.16.0 | Apache-2.0 |
+| [QuTech](https://github.com/QuTech-Delft/squidasm) | netqasm==2.0.0 | MIT with upstream patent notice; optional NetSquid separately licensed |
+
+Classiq 1.29.1 includes an evaluation license with restrictions, including evaluation duration, redistribution and disclosure of testing results.
+Q-CTRL SDKs reference proprietary terms. Both are opt-in and excluded from the default bulk setup. Qrisp remains an independent process under its own terms.
+NetQASM carries an upstream patent/commercial-use notice; MIT source licensing alone does not resolve that notice. Optional SquidASM is pinned to 0.13.6,
+while its privately obtained NetSquid dependency stack is not represented as publicly locked or verified here.

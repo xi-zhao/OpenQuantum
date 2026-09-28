@@ -1,0 +1,8 @@
+[project]
+name = "openquantum-lightworks-photonics"
+version = "0.1.0"
+requires-python = ">=3.12,<3.13"
+dependencies = ["lightworks==2.3.5"]
+
+[tool.uv]
+package = false

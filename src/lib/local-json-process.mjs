@@ -4,13 +4,31 @@ import { promisify } from "node:util";
 const execFileAsync = promisify(execFile);
 
 function redactError(value, environment) {
-  let redacted = String(value);
-  for (const value of Object.values(environment)) {
-    if (typeof value === "string" && value.length >= 4) {
-      redacted = redacted.split(value).join("[REDACTED]");
+  const original = String(value);
+  const values = Object.entries(environment).filter(([name, value]) => {
+    const secret = /_(?:API_KEY|TOKEN|PASSWORD|CLIENT_SECRET)$/.test(name);
+    return typeof value === "string" && value.length >= (secret ? 1 : 4);
+  }).map(([, value]) => value);
+  if (!values.length) return original;
+  // Union every match against the original text, including matches that start
+  // inside another value. Replacing one value first can otherwise expose a
+  // password suffix or modify a previously inserted redaction placeholder.
+  const covered = new Uint8Array(original.length);
+  for (const value of new Set(values)) {
+    for (let start = original.indexOf(value); start !== -1; start = original.indexOf(value, start + 1)) {
+      covered.fill(1, start, start + value.length);
     }
   }
-  return redacted;
+  const pieces = [];
+  let cursor = 0;
+  for (let index = 0; index < covered.length; index += 1) {
+    if (!covered[index]) continue;
+    pieces.push(original.slice(cursor, index), "[REDACTED]");
+    while (covered[index + 1]) index += 1;
+    cursor = index + 1;
+  }
+  pieces.push(original.slice(cursor));
+  return pieces.join("");
 }
 
 // This owns only one bridge invocation, not MCP or Harness lifecycle.

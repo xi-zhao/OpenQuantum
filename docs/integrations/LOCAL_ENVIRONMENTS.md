@@ -33,3 +33,9 @@ MindQuantum 固定 Python 3.11，SpinQit 与 QuTrunk 固定 3.10，其余使用 
 安装器按能力选择解释器，不把互不兼容的 Qiskit、NumPy、JAX、PyTorch 环境合并。
 `npm run capability:vendor-sdks:setup` 显式准备全部 17 项，也可传单个能力 ID。
 QoolQit 的定制许可证和 Superstaq 的可选网络操作见各自说明；准备环境不会启用连接或授权外发电路。
+
+2026-09-28 的[公司与机构 SDK 补充](SDK_EXPANSION.md)继续使用该安装器。`capability:sdk-expansion:setup` 只准备
+14 个默认开启的环境；Classiq、Q-CTRL、Qrisp、CUDA-Q、QCArchive 与 NetQASM 分别按能力 ID 显式准备。
+QCompute/NetQASM 为 Python 3.10，其余为 3.12。CUDA-Q 固定二进制只支持 Linux 与 Apple Silicon macOS。
+NetQASM 基础锁不覆盖受限 NetSquid 依赖，用户在基础准备后自行安装可选 SquidASM 0.13.6；再次基础同步会清理锁外包。
+服务凭据由用户在设置中保存，准备环境不会替用户登录或验证在线账户。

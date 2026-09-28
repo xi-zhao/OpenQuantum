@@ -1,0 +1,12 @@
+[project]
+name = "openquantum-mrmustard-optics"
+version = "0.1.0"
+requires-python = ">=3.11,<3.12"
+dependencies = ["mrmustard==0.7.3", "tensorflow==2.15.0"]
+
+[tool.uv]
+package = false
+# TensorFlow 2.15's optional GCS filesystem has no Apple Silicon wheel.
+# The upstream MrMustard marker already excludes it there; these local optics
+# actions do not use GCS. Apply the same marker to transitive TF metadata.
+override-dependencies = ["tensorflow-io-gcs-filesystem; sys_platform != 'darwin' or platform_machine != 'arm64'"]

@@ -62,7 +62,7 @@ export async function serveScienceTool({ entrypoint, id, definition, definitions
   // A trusted server entrypoint may name its own credential references. No
   // request-controlled environment names or credentials enter tool arguments.
   for (const name of credentialEnvironment) {
-    if (!/^[A-Z][A-Z0-9_]*_API_KEY$/.test(name)) throw new Error("Invalid SDK credential environment name");
+    if (!/^[A-Z][A-Z0-9_]*_(?:API_KEY|TOKEN|USERNAME|PASSWORD|CLIENT_ID|CLIENT_SECRET|ADDRESS|ENDPOINT|HOST|PORT)$/.test(name)) throw new Error("Invalid SDK credential environment name");
     allowed.push(name);
   }
   const env = localComputeEnvironment({
