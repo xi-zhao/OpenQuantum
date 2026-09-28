@@ -138,6 +138,10 @@ test("default contract checks are derived from package MCP and native Tool polic
     "tests/sdk-expansion-cloud-control-contracts.test.mjs",
     "tests/sdk-expansion-io-contracts.test.mjs",
     "tests/sdk-expansion-resources-contracts.test.mjs",
+    "tests/sdk-gaps-cloud-contracts.test.mjs",
+    "tests/sdk-gaps-control-contracts.test.mjs",
+    "tests/sdk-gaps-domestic-contracts.test.mjs",
+    "tests/sdk-gaps-simulation-contracts.test.mjs",
     "tests/unitary-next-contracts.test.mjs",
     "tests/unitary-tools-contracts.test.mjs",
   ]);

@@ -592,9 +592,9 @@ Harness 是通用 Agent Runtime，扩展通过 Cordis Plugin 装配。UI、模�
   <a href="#原生量子-tools">原生量子 Tools</a>
 </p>
 
-当前源码分发 **139 个内置 Skill、75 个 MCP 服务连接、5 个原生量子 Tool**。其中 66 个 Skill 来自 quantum-skills 的开源工作流适配，共用现有代码执行工具；其中 49 项提供可运行示例，覆盖 unitarylab_algorithms 的全部 39 个模块。67 个 MCP 服务使用 OpenQuantum 的本地桥接实现。Skill、Tool 和 MCP 连接分别统计。
+当前源码分发 **154 个内置 Skill、90 个 MCP 服务连接、5 个原生量子 Tool**。其中 66 个 Skill 来自 quantum-skills 的开源工作流适配，共用现有代码执行工具；其中 49 项提供可运行示例，覆盖 unitarylab_algorithms 的全部 39 个模块。83 个 MCP 服务使用 OpenQuantum 的本地桥接实现。Skill、Tool 和 MCP 连接分别统计。
 
-当前配置共包含 **263 个可配置 Tool 名称**：239 个由 MCP 服务提供，18 个为 Harness 通用工具，6 个为平台原生工具（上面的 5 个量子动作及 1 个教学生成动作）。这是配置全集；`bash` / `pwsh` 按平台互斥，连接开关、环境和工具范围也会影响实际可调用集合。既有能力的逐项决定见[治理记录](docs/architecture/EXTENSION_GOVERNANCE.md)，新增中性原子动力学见 [Bloqade Analog](docs/integrations/BLOQADE_ANALOG.md)。
+当前配置共包含 **281 个可配置 Tool 名称**：257 个由 MCP 服务提供，18 个为 Harness 通用工具，6 个为平台原生工具（上面的 5 个量子动作及 1 个教学生成动作）。这是配置全集；`bash` / `pwsh` 按平台互斥，连接开关、环境和工具范围也会影响实际可调用集合。既有能力的逐项决定见[治理记录](docs/architecture/EXTENSION_GOVERNANCE.md)，新增中性原子动力学见 [Bloqade Analog](docs/integrations/BLOQADE_ANALOG.md)。
 
 <details>
 <summary><strong>内置 Skills：按研究方法查找工作流</strong></summary>
@@ -603,7 +603,7 @@ Harness 是通用 Agent Runtime，扩展通过 Cordis Plugin 装配。UI、模�
 
 既有条目与治理情况见[治理清单](docs/architecture/EXTENSION_GOVERNANCE.md)；相近入口及大型可选服务的专业工具范围见[能力选择](docs/integrations/CAPABILITY_SELECTION.md)。
 
-这 139 个 Skill 覆盖方法选择、计算实验、结果解释和平台诊断。其中 126 项可由 Agent 自动选择，13 个分类索引保留为用户手动导航；原名称和手动调用均可继续使用。点击名称即可查看完整的 `SKILL.md`；所需工具与连接分别配置。新增算法工作流的参数、安装与开源替换差异见[运行说明](examples/quantum-algorithms/README.md)。
+这 154 个 Skill 覆盖方法选择、计算实验、结果解释和平台诊断。其中 141 项可由 Agent 自动选择，13 个分类索引保留为用户手动导航；原名称和手动调用均可继续使用。点击名称即可查看完整的 `SKILL.md`；所需工具与连接分别配置。新增算法工作流的参数、安装与开源替换差异见[运行说明](examples/quantum-algorithms/README.md)。
 
 下表按**研究方法与用途**介绍能力。各 Tool 提供的模型、参数和输入格式见[计算参数与运行方式](#计算参数与运行方式)。
 
@@ -722,6 +722,28 @@ Harness 是通用 Agent Runtime，扩展通过 Cordis Plugin 装配。UI、模�
 | [`cudaq-simulation`](.agents/skills/cudaq-simulation/SKILL.md) | 固定 qpp-cpu 后端的精确概率与采样；Linux 或 Apple Silicon macOS。 | `cudaq_local` |
 | [`netqasm-network`](.agents/skills/netqasm-network/SKILL.md) | 本地双节点 EPR 程序编译；仿真需用户自行准备有许可的 NetSquid 环境。 | `netqasm_local` |
 
+##### 网络、控制、光学与云接口补充
+
+实际动作、固定版本和鉴权设置见[本批说明](docs/integrations/SDK_GAPS.md)。
+
+| Skill | 研究方法与用途 | 执行入口 |
+| --- | --- | --- |
+| [`simqn-network`](.agents/skills/simqn-network/SKILL.md) | SimQN 单链路的离散事件、随机损失与 Werner 衰减。 | `simqn_local` |
+| [`qcover-optimization`](.agents/skills/qcover-optimization/SKILL.md) | Qcover 按图分解评估给定 QAOA 参数的能量与相关量。 | `qcover_local` |
+| [`vqnet-learning`](.agents/skills/vqnet-learning/SKILL.md) | VQNet CPU 电路期望、概率与每个旋转参数的自动微分。 | `vqnet_local` |
+| [`pychemiq-chemistry`](.agents/skills/pychemiq-chemistry/SKILL.md) | pyChemiQ 费米算符到 Jordan–Wigner Pauli 项，保留微小系数。 | `pychemiq_local` |
+| [`qblox-scheduling`](.agents/skills/qblox-scheduling/SKILL.md) | Qblox 方波排程和波形采样，不连接 HardwareAgent。 | `qblox_local` |
+| [`qililab-control`](.agents/skills/qililab-control/SKILL.md) | Qililab 将 I/Q 方波离线编译到 Qblox Q1ASM。 | `qililab_local` |
+| [`guppy-programs`](.agents/skills/guppy-programs/SKILL.md) | Guppy/Selene 的中途测量、复位和经典条件反馈仿真。 | `guppy_local` |
+| [`oqc-qat`](.agents/skills/oqc-qat/SKILL.md) | QAT 脉冲时序与复基带波形，不执行后端测量。 | `qat_local` |
+| [`mrmustard-optics`](.agents/skills/mrmustard-optics/SKILL.md) | MrMustard 高斯光学矩和截断 Fock 概率；上游已归档。 | `mrmustard_local` |
+| [`merlin-learning`](.agents/skills/merlin-learning/SKILL.md) | MerLin 完整 Fock 概率、批量推断与相移梯度。 | `merlin_local` |
+| [`mimiq-simulation`](.agents/skills/mimiq-simulation/SKILL.md) | MIMIQ Exaqt 本地态矢量和种子采样。 | `mimiq_local` |
+| [`myqlm-simulation`](.agents/skills/myqlm-simulation/SKILL.md) | myQLM PyLinalg 本地理想电路仿真。 | `myqlm_local` |
+| [`aqt-workbench`](.agents/skills/aqt-workbench/SKILL.md) | AQT 原生门编译、离线采样与可选设备查询。 | `aqt_local` |
+| [`oqc-cloud`](.agents/skills/oqc-cloud/SKILL.md) | OQC 本地任务准备、查询及显式单次云提交。 | `oqc_cloud` |
+| [`quantuminspire-cloud`](.agents/skills/quantuminspire-cloud/SKILL.md) | Quantum Inspire 分页设备类型与既有任务状态查询。 | `quantuminspire_cloud` |
+
 ##### 方法选型与平台支持
 
 | Skill | 研究方法与用途 | 执行入口 |
@@ -813,7 +835,7 @@ Harness 是通用 Agent Runtime，扩展通过 Cordis Plugin 装配。UI、模�
 
 **OpenQuantum 为 67 项计算与设备发现能力开发了本地 MCP 桥接**，另直接接入 8 个上游 MCP 服务。下表按用途分组：本地桥接链接到仓库源码并保留上游来源，直接接入的服务明确标记为“上游服务”。
 
-默认 Preset 共声明 75 个 MCP 服务连接：**58 个默认开启（其中 Qiskit 两项可通过离线开关关闭），17 个按需启用**。连接名对应配置中的 `serverName`；“默认开启”表示配置策略，使用前仍需准备依赖和必要凭据。
+默认 Preset 共声明 90 个 MCP 服务连接：**65 个默认开启（其中 Qiskit 两项可通过离线开关关闭），25 个按需启用**。连接名对应配置中的 `serverName`；“默认开启”表示配置策略，使用前仍需准备依赖和必要凭据。
 
 这些 MCP Server 都由本机以 `stdio` 方式启动，不是 OpenQuantum 提供的公共托管端点。其中一部分 Tool 在本地计算，另一部分再访问厂商文档或量子云；“本地启动 MCP Server”不代表所有数据处理都留在本地。
 
@@ -926,6 +948,27 @@ Harness 是通用 Agent Runtime，扩展通过 Cordis Plugin 装配。UI、模�
 
 固定版本、显式准备和凭据配置见[SDK 补充接入说明](docs/integrations/SDK_EXPANSION.md)。
 
+##### 网络、控制、光学与云接口补充
+
+| MCP 服务 / 连接名 | 能提供什么工具能力 | 默认配置 | 使用条件与边界 |
+| --- | --- | --- | --- |
+| [`simqn_local`](.agents/skills/simqn-network/mcp/server.mjs) · [qns](https://github.com/QNLab-USTC/SimQN) | SimQN 单链路的离散事件、随机损失与 Werner 衰减。 | 默认关闭 | 显式准备；[版本、配置与边界](docs/integrations/SDK_GAPS.md) |
+| [`qcover_local`](.agents/skills/qcover-optimization/mcp/server.mjs) · [Qcover](https://github.com/BAQIS-Quantum/Qcover) | Qcover 按图分解评估给定 QAOA 参数的能量与相关量。 | 默认开启 | 显式准备；[版本、配置与边界](docs/integrations/SDK_GAPS.md) |
+| [`vqnet_local`](.agents/skills/vqnet-learning/mcp/server.mjs) · [pyvqnet](https://vqnet20-tutorial.readthedocs.io/en/main/index.html) | VQNet CPU 电路期望、概率与每个旋转参数的自动微分。 | 默认关闭 | 显式准备；[版本、配置与边界](docs/integrations/SDK_GAPS.md) |
+| [`pychemiq_local`](.agents/skills/pychemiq-chemistry/mcp/server.mjs) · [pychemiq](https://github.com/OriginQ/pyChemiQ) | pyChemiQ 费米算符到 Jordan–Wigner Pauli 项，保留微小系数。 | 默认开启 | 显式准备；[版本、配置与边界](docs/integrations/SDK_GAPS.md) |
+| [`qblox_local`](.agents/skills/qblox-scheduling/mcp/server.mjs) · [qblox-scheduler](https://docs.qblox.com/en/main/products/qblox_scheduler/index.html) | Qblox 方波排程和波形采样，不连接 HardwareAgent。 | 默认开启 | 显式准备；[版本、配置与边界](docs/integrations/SDK_GAPS.md) |
+| [`qililab_local`](.agents/skills/qililab-control/mcp/server.mjs) · [qililab](https://github.com/qilimanjaro-tech/qililab) | Qililab 将 I/Q 方波离线编译到 Qblox Q1ASM。 | 默认开启 | 显式准备；[版本、配置与边界](docs/integrations/SDK_GAPS.md) |
+| [`guppy_local`](.agents/skills/guppy-programs/mcp/server.mjs) · [guppylang](https://github.com/Quantinuum/guppylang) | Guppy/Selene 的中途测量、复位和经典条件反馈仿真。 | 默认开启 | 显式准备；[版本、配置与边界](docs/integrations/SDK_GAPS.md) |
+| [`qat_local`](.agents/skills/oqc-qat/mcp/server.mjs) · [qat-compiler](https://github.com/oqc-community/qat) | QAT 脉冲时序与复基带波形，不执行后端测量。 | 默认开启 | 显式准备；[版本、配置与边界](docs/integrations/SDK_GAPS.md) |
+| [`mrmustard_local`](.agents/skills/mrmustard-optics/mcp/server.mjs) · [mrmustard](https://github.com/XanaduAI/MrMustard) | MrMustard 高斯光学矩和截断 Fock 概率；上游已归档。 | 默认关闭 | 显式准备；[版本、配置与边界](docs/integrations/SDK_GAPS.md) |
+| [`merlin_local`](.agents/skills/merlin-learning/mcp/server.mjs) · [merlinquantum](https://github.com/merlinquantum/merlin) | MerLin 完整 Fock 概率、批量推断与相移梯度。 | 默认开启 | 显式准备；[版本、配置与边界](docs/integrations/SDK_GAPS.md) |
+| [`mimiq_local`](.agents/skills/mimiq-simulation/mcp/server.mjs) · [mimiq-exaqt](https://docs.qperfect.io/exaqt-python/) | MIMIQ Exaqt 本地态矢量和种子采样。 | 默认关闭 | 显式准备；[版本、配置与边界](docs/integrations/SDK_GAPS.md) |
+| [`myqlm_local`](.agents/skills/myqlm-simulation/mcp/server.mjs) · [myqlm](https://myqlm.github.io/) | myQLM PyLinalg 本地理想电路仿真。 | 默认关闭 | 显式准备；[版本、配置与边界](docs/integrations/SDK_GAPS.md) |
+| [`aqt_local`](.agents/skills/aqt-workbench/mcp/server.mjs) · [qiskit-aqt-provider](https://github.com/qiskit-community/qiskit-aqt-provider) | AQT 原生门编译、离线采样与可选设备查询。 | 默认关闭 | 显式准备；[版本、配置与边界](docs/integrations/SDK_GAPS.md) |
+| [`oqc_cloud`](.agents/skills/oqc-cloud/mcp/server.mjs) · [oqc-qcaas-client](https://docs.oqc.app/) | OQC 本地任务准备、查询及显式单次云提交。 | 默认关闭 | 显式准备；[版本、配置与边界](docs/integrations/SDK_GAPS.md) |
+| [`quantuminspire_cloud`](.agents/skills/quantuminspire-cloud/mcp/server.mjs) · [quantuminspire](https://github.com/QuTech-Delft/quantuminspire) | Quantum Inspire 分页设备类型与既有任务状态查询。 | 默认关闭 | 显式准备；[版本、配置与边界](docs/integrations/SDK_GAPS.md) |
+
+
 ##### 资料与设备发现
 
 | MCP 服务 / 连接名 | 能提供什么工具能力 | 默认配置 | 使用条件与边界 |
@@ -1024,7 +1067,7 @@ docs/                    架构、路线与生态文档
 
 ### 可选上游 Skill
 
-[OriginQ 官方 `pyqpanda3` Skill](https://github.com/OriginQ/pyqpanda3-skill) 提供电路编程、算法模板、迁移与 QCloud 使用指导。它**不计入上面的 139 个内置 Skill，也不会在首次启动时自动安装**；运行 `npm run skill:qpanda:setup` 后，固定审阅版本才会进入项目 Skill 目录。安装这个 Skill 不会自动启用 `qpanda_runtime`，也不会赋予云任务权限。
+[OriginQ 官方 `pyqpanda3` Skill](https://github.com/OriginQ/pyqpanda3-skill) 提供电路编程、算法模板、迁移与 QCloud 使用指导。它**不计入上面的 154 个内置 Skill，也不会在首次启动时自动安装**；运行 `npm run skill:qpanda:setup` 后，固定审阅版本才会进入项目 Skill 目录。安装这个 Skill 不会自动启用 `qpanda_runtime`，也不会赋予云任务权限。
 
 ## 长期发展规划
 

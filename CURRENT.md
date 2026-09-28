@@ -2,6 +2,15 @@
 
 量子依赖核验日期：2026-09-22；平台升级记录日期：2026-09-10；原模型验收交接记录日期：2026-09-05。此页只记录工作交接；架构以[文档总入口](docs/README.md)为准，执行事实以 Harness Session event log 为准，科学状态以 Acceptance Report 为准。
 
+## 网络、控制、光学与云 SDK 接入（2026-09-28）
+
+- 继续新增 [15 个能力包](docs/integrations/SDK_GAPS.md)、15 个 Skill、15 个独立 MCP 连接与 18 个 Tool，覆盖 SimQN、Qcover、VQNet、pyChemiQ、Qblox Scheduler、Qililab、Guppy/Selene、OQC QAT/QCaaS、MrMustard、MerLin、MIMIQ Exaqt、myQLM、AQT 和 Quantum Inspire。
+- 当前源码共 154 个 Skill（141 个自动可选、13 个手动索引）、90 个 MCP 连接、281 个可配置 Tool 名称；本轮 7 个连接默认开启、8 个按需启用。鉴权、账户权限及适用许可仍由用户配置。
+- 15 个固定依赖环境均已显式准备。26 项合同检查、30 项真实 SDK/MCP 检查及 1 项 Harness 集成检查通过；后者从 Session 日志重读 14 项成功和 5 项预期失败。完整 `npm run check` 通过，其默认跳过的外部/可选 live 测试不计作实跑；本轮 live 检查另外显式运行。
+- 独立复核修复 pyChemiQ 默认剪枝导致微小系数变零的问题，并检查了长乘积、小残差和不可表示的下溢。MerLin 使用完整 Fock 空间，VQNet 保持系数双精度；[版本化证据](docs/integrations/evidence/sdk-gaps-2026-09-28.json)记录来源哈希、环境、数值边界和复核结果。
+- 实际平台为 macOS arm64；云接口使用真实 SDK 加受控 HTTP 响应，Harness 使用本地模型协议夹具。未验证真实账户、收费云提交、QPU、实验室设备或外部模型，仍为 L1 / `scientificValidation=not_evaluated`。MrMustard 已归档，作为可选固定兼容适配；Qblox Scheduler 固定预发布版，原生 SDK 平台限制见说明。
+- 本轮形成独立本地提交，尚未推送、合并 main 或发布安装包。使用已有工作台时需更新源码、显式准备所需环境并重启 Harness。
+
 ## 公司与机构 SDK 补充接入（2026-09-28）
 
 - 在前一批厂商能力之外，新增 [20 个能力包](docs/integrations/SDK_EXPANSION.md)、20 个 Skill、20 个 MCP 连接及 23 个 Tool；覆盖 QSteed、QuAIRKit、QCompute、Qibo、Qrisp、Lightworks、Braket、QURI Parts、QDK、Qualtran、OpenFermion、MQT DDSIM/QMAP、Classiq、Q-CTRL、QUA、LabOne Q、QCArchive、CUDA-Q 和 NetQASM/SquidASM。

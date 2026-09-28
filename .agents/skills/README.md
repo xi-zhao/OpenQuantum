@@ -13,9 +13,9 @@
 
 ## 当前 Skill
 
-以下 139 个 Skill 随源码分发；它们与 MCP Server 不是一一对应关系，知识型 Skill 可以不绑定专用 Tool，
+以下 154 个 Skill 随源码分发；它们与 MCP Server 不是一一对应关系，知识型 Skill 可以不绑定专用 Tool，
 工作流也可以使用多个服务或进程内原生 Tool。连接默认配置与凭据条件见[项目首页](../../README.md#mcp-服务目录)。
-当前 126 项可由模型自动选择，13 个分类索引仅保留用户显式调用；名称和来源映射不变。
+当前 141 项可由模型自动选择，13 个分类索引仅保留用户显式调用；名称和来源映射不变。
 分批建议与兼容影响见[扩展治理清单](../../docs/architecture/EXTENSION_GOVERNANCE.md)。
 
 | Skill | 作用 | 依赖的执行模块 |
@@ -186,3 +186,23 @@
 | [`qcarchive-query`](qcarchive-query/SKILL.md) | 只读查询既有单点记录，返回分子、原子单位能量和计算来源。 | `qcarchive_data` |
 | [`cudaq-simulation`](cudaq-simulation/SKILL.md) | 固定 qpp-cpu 后端的精确概率与采样；Linux 或 Apple Silicon macOS。 | `cudaq_local` |
 | [`netqasm-network`](netqasm-network/SKILL.md) | 本地双节点 EPR 程序编译；仿真需用户自行准备有许可的 NetSquid 环境。 | `netqasm_local` |
+
+### 网络、控制、光学与云 SDK 补充（2026-09-28）
+
+| Skill | 作用 | 依赖的执行模块 |
+| --- | --- | --- |
+| [`simqn-network`](simqn-network/SKILL.md) | SimQN 单链路的离散事件、随机损失与 Werner 衰减。 | `simqn_local` MCP Server + Harness MCP Client |
+| [`qcover-optimization`](qcover-optimization/SKILL.md) | Qcover 按图分解评估给定 QAOA 参数的能量与相关量。 | `qcover_local` MCP Server + Harness MCP Client |
+| [`vqnet-learning`](vqnet-learning/SKILL.md) | VQNet CPU 电路期望、概率与每个旋转参数的自动微分。 | `vqnet_local` MCP Server + Harness MCP Client |
+| [`pychemiq-chemistry`](pychemiq-chemistry/SKILL.md) | pyChemiQ 费米算符到 Jordan–Wigner Pauli 项，保留微小系数。 | `pychemiq_local` MCP Server + Harness MCP Client |
+| [`qblox-scheduling`](qblox-scheduling/SKILL.md) | Qblox 方波排程和波形采样，不连接 HardwareAgent。 | `qblox_local` MCP Server + Harness MCP Client |
+| [`qililab-control`](qililab-control/SKILL.md) | Qililab 将 I/Q 方波离线编译到 Qblox Q1ASM。 | `qililab_local` MCP Server + Harness MCP Client |
+| [`guppy-programs`](guppy-programs/SKILL.md) | Guppy/Selene 的中途测量、复位和经典条件反馈仿真。 | `guppy_local` MCP Server + Harness MCP Client |
+| [`oqc-qat`](oqc-qat/SKILL.md) | QAT 脉冲时序与复基带波形，不执行后端测量。 | `qat_local` MCP Server + Harness MCP Client |
+| [`mrmustard-optics`](mrmustard-optics/SKILL.md) | MrMustard 高斯光学矩和截断 Fock 概率；上游已归档。 | `mrmustard_local` MCP Server + Harness MCP Client |
+| [`merlin-learning`](merlin-learning/SKILL.md) | MerLin 完整 Fock 概率、批量推断与相移梯度。 | `merlin_local` MCP Server + Harness MCP Client |
+| [`mimiq-simulation`](mimiq-simulation/SKILL.md) | MIMIQ Exaqt 本地态矢量和种子采样。 | `mimiq_local` MCP Server + Harness MCP Client |
+| [`myqlm-simulation`](myqlm-simulation/SKILL.md) | myQLM PyLinalg 本地理想电路仿真。 | `myqlm_local` MCP Server + Harness MCP Client |
+| [`aqt-workbench`](aqt-workbench/SKILL.md) | AQT 原生门编译、离线采样与可选设备查询。 | `aqt_local` MCP Server + Harness MCP Client |
+| [`oqc-cloud`](oqc-cloud/SKILL.md) | OQC 本地任务准备、查询及显式单次云提交。 | `oqc_cloud` MCP Server + Harness MCP Client |
+| [`quantuminspire-cloud`](quantuminspire-cloud/SKILL.md) | Quantum Inspire 分页设备类型与既有任务状态查询。 | `quantuminspire_cloud` MCP Server + Harness MCP Client |

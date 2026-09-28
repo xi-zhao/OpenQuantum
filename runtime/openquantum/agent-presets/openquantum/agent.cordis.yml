@@ -1306,3 +1306,213 @@
     cwd: !!js process.cwd()
     toolCallTimeoutMs: 2147483647
     failOnStartupError: false
+
+# SimQN network; explicit isolated environment, user-owned service credentials.
+- id: mcp-simqn-network
+  name: '@deepseek-ai/dsh-mcp-client'
+  disabled: true
+  config:
+    serverName: simqn_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/simqn-network/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# Qcover QAOA; explicit isolated environment, user-owned service credentials.
+- id: mcp-qcover-optimization
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: qcover_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/qcover-optimization/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# VQNet learning; explicit isolated environment, user-owned service credentials.
+- id: mcp-vqnet-learning
+  name: '@deepseek-ai/dsh-mcp-client'
+  disabled: true
+  config:
+    serverName: vqnet_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/vqnet-learning/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# pyChemiQ chemistry; explicit isolated environment, user-owned service credentials.
+- id: mcp-pychemiq-chemistry
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: pychemiq_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/pychemiq-chemistry/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# Qblox Scheduler; explicit isolated environment, user-owned service credentials.
+- id: mcp-qblox-scheduling
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: qblox_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/qblox-scheduling/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# Qililab; explicit isolated environment, user-owned service credentials.
+- id: mcp-qililab-control
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: qililab_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/qililab-control/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# Guppy and Selene; explicit isolated environment, user-owned service credentials.
+- id: mcp-guppy-programs
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: guppy_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/guppy-programs/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# OQC QAT; explicit isolated environment, user-owned service credentials.
+- id: mcp-oqc-qat
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: qat_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/oqc-qat/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# MrMustard Optics; explicit isolated environment, user-owned service credentials.
+- id: mcp-mrmustard-optics
+  name: '@deepseek-ai/dsh-mcp-client'
+  disabled: true
+  config:
+    serverName: mrmustard_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/mrmustard-optics/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# MerLin Learning; explicit isolated environment, user-owned service credentials.
+- id: mcp-merlin-learning
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: merlin_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/merlin-learning/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# MIMIQ Exaqt; explicit isolated environment, user-owned service credentials.
+- id: mcp-mimiq-simulation
+  name: '@deepseek-ai/dsh-mcp-client'
+  disabled: true
+  config:
+    serverName: mimiq_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/mimiq-simulation/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# myQLM Simulation; explicit isolated environment, user-owned service credentials.
+- id: mcp-myqlm-simulation
+  name: '@deepseek-ai/dsh-mcp-client'
+  disabled: true
+  config:
+    serverName: myqlm_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/myqlm-simulation/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# AQT 电路与设备; explicit isolated environment, user-owned service credentials.
+- id: mcp-aqt-workbench
+  name: ./credentialed-mcp-client.mjs
+  disabled: true
+  config:
+    serverName: aqt_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/aqt-workbench/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    optionalCredentialEnv:
+      AQT_API_TOKEN: AQT_API_TOKEN
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# OQC 云任务; explicit isolated environment, user-owned service credentials.
+- id: mcp-oqc-cloud
+  name: ./credentialed-mcp-client.mjs
+  disabled: true
+  config:
+    serverName: oqc_cloud
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/oqc-cloud/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    optionalCredentialEnv:
+      OQC_API_TOKEN: OQC_API_TOKEN
+      OQC_API_ENDPOINT: OQC_API_ENDPOINT
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# Quantum Inspire 查询; explicit isolated environment, user-owned service credentials.
+- id: mcp-quantuminspire-cloud
+  name: ./credentialed-mcp-client.mjs
+  disabled: true
+  config:
+    serverName: quantuminspire_cloud
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/quantuminspire-cloud/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    optionalCredentialEnv:
+      QUANTUMINSPIRE_API_TOKEN: QUANTUMINSPIRE_API_TOKEN
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false

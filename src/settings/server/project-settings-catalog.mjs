@@ -5,6 +5,141 @@ import { quantumHardwareMcpIntegration } from "./quantum-hardware-mcp.mjs";
 
 const QISKIT_MCP_SOURCE = "https://github.com/Qiskit/mcp-servers";
 const MCP_CATALOG = Object.freeze({
+  simqn_local: Object.freeze({
+    "displayName": "SimQN network",
+    "description": "Simulate lossy quantum-link delivery and Werner-state fidelity with the SimQN discrete-event engine.",
+    "provider": "qns / OpenQuantum",
+    "sourceUrl": "https://github.com/QNLab-USTC/SimQN",
+    "packageName": "qns",
+    "packageVersion": "0.2.3",
+    "setup": null
+  }),
+  qcover_local: Object.freeze({
+    "displayName": "Qcover QAOA",
+    "description": "Evaluate an Ising graph QAOA energy using Qcover graph decomposition and Qulacs.",
+    "provider": "Qcover / OpenQuantum",
+    "sourceUrl": "https://github.com/BAQIS-Quantum/Qcover",
+    "packageName": "Qcover",
+    "packageVersion": "2.6.0",
+    "setup": null
+  }),
+  vqnet_local: Object.freeze({
+    "displayName": "VQNet learning",
+    "description": "Evaluate a VQNet quantum circuit and differentiate an observable on CPU.",
+    "provider": "pyvqnet / OpenQuantum",
+    "sourceUrl": "https://vqnet20-tutorial.readthedocs.io/en/main/index.html",
+    "packageName": "pyvqnet",
+    "packageVersion": "2.18.1",
+    "setup": null
+  }),
+  pychemiq_local: Object.freeze({
+    "displayName": "pyChemiQ chemistry",
+    "description": "Map structured fermionic operators to qubit Pauli operators using pyChemiQ.",
+    "provider": "pychemiq / OpenQuantum",
+    "sourceUrl": "https://github.com/OriginQ/pyChemiQ",
+    "packageName": "pychemiq",
+    "packageVersion": "1.1.4",
+    "setup": null
+  }),
+  qblox_local: Object.freeze({
+    "displayName": "Qblox Scheduler",
+    "description": "Qblox pulse schedule timing and waveform samples",
+    "provider": "qblox-scheduler / OpenQuantum",
+    "sourceUrl": "https://docs.qblox.com/en/main/products/qblox_scheduler/index.html",
+    "packageName": "qblox-scheduler",
+    "packageVersion": "1.0.0b8",
+    "setup": null
+  }),
+  qililab_local: Object.freeze({
+    "displayName": "Qililab",
+    "description": "Qililab offline pulse compilation to Qblox sequencer programs",
+    "provider": "qililab / OpenQuantum",
+    "sourceUrl": "https://github.com/qilimanjaro-tech/qililab",
+    "packageName": "qililab",
+    "packageVersion": "0.33.3",
+    "setup": null
+  }),
+  guppy_local: Object.freeze({
+    "displayName": "Guppy and Selene",
+    "description": "Compile and emulate structured quantum programs with classical measurement feedback",
+    "provider": "guppylang / OpenQuantum",
+    "sourceUrl": "https://github.com/Quantinuum/guppylang",
+    "packageName": "guppylang",
+    "packageVersion": "1.1.1",
+    "setup": null
+  }),
+  qat_local: Object.freeze({
+    "displayName": "OQC QAT",
+    "description": "OQC QAT offline pulse compilation and echo waveform buffers",
+    "provider": "qat-compiler / OpenQuantum",
+    "sourceUrl": "https://github.com/oqc-community/qat",
+    "packageName": "qat-compiler",
+    "packageVersion": "3.5.0",
+    "setup": null
+  }),
+  mrmustard_local: Object.freeze({
+    "displayName": "MrMustard Optics",
+    "description": "Gaussian continuous-variable optics, moments and truncated Fock probabilities",
+    "provider": "mrmustard / OpenQuantum",
+    "sourceUrl": "https://github.com/XanaduAI/MrMustard",
+    "packageName": "mrmustard",
+    "packageVersion": "0.7.3",
+    "setup": null
+  }),
+  merlin_local: Object.freeze({
+    "displayName": "MerLin Learning",
+    "description": "Local photonic quantum-layer probabilities and gradients",
+    "provider": "merlinquantum / OpenQuantum",
+    "sourceUrl": "https://github.com/merlinquantum/merlin",
+    "packageName": "merlinquantum",
+    "packageVersion": "0.4.1",
+    "setup": null
+  }),
+  mimiq_local: Object.freeze({
+    "displayName": "MIMIQ Exaqt",
+    "description": "Local exact state-vector circuit simulation and seeded samples",
+    "provider": "mimiq-exaqt / OpenQuantum",
+    "sourceUrl": "https://docs.qperfect.io/exaqt-python/",
+    "packageName": "mimiq-exaqt",
+    "packageVersion": "0.3.0",
+    "setup": null
+  }),
+  myqlm_local: Object.freeze({
+    "displayName": "myQLM Simulation",
+    "description": "Local gate-model state-vector simulation using PyLinalg",
+    "provider": "myqlm / OpenQuantum",
+    "sourceUrl": "https://myqlm.github.io/",
+    "packageName": "myqlm",
+    "packageVersion": "1.13.7",
+    "setup": null
+  }),
+  aqt_local: Object.freeze({
+    "displayName": "AQT 电路与设备",
+    "description": "官方离子阱后端本地编译与仿真，以及用户鉴权后的设备查询。",
+    "provider": "qiskit-aqt-provider / OpenQuantum",
+    "sourceUrl": "https://github.com/qiskit-community/qiskit-aqt-provider",
+    "packageName": "qiskit-aqt-provider",
+    "packageVersion": "1.15.0",
+    "setup": null
+  }),
+  oqc_cloud: Object.freeze({
+    "displayName": "OQC 云任务",
+    "description": "本地准备任务、查询设备与状态，以及显式提交一次云任务。",
+    "provider": "oqc-qcaas-client / OpenQuantum",
+    "sourceUrl": "https://docs.oqc.app/",
+    "packageName": "oqc-qcaas-client",
+    "packageVersion": "3.23.0",
+    "setup": null
+  }),
+  quantuminspire_cloud: Object.freeze({
+    "displayName": "Quantum Inspire 查询",
+    "description": "通过官方 SDK 分页查询设备与既有任务状态。",
+    "provider": "quantuminspire / OpenQuantum",
+    "sourceUrl": "https://github.com/QuTech-Delft/quantuminspire",
+    "packageName": "quantuminspire",
+    "packageVersion": "4.1.0",
+    "setup": null
+  }),
   qsteed_local: Object.freeze({
     "displayName": "QSteed 电路编译",
     "description": "PyQuafu 电路编译到指定门集，保留全局相位与线路，不连接资源数据库。",
@@ -713,6 +848,26 @@ const MCP_CATALOG = Object.freeze({
 });
 
 const MCP_CREDENTIAL_CATALOG = Object.freeze({
+  AQT_API_TOKEN: Object.freeze({
+    "displayName": "AQT_API_TOKEN",
+    "description": "AQT Arnica 访问令牌；用户自行配置，仅用于显式设备查询。",
+    "documentationUrl": "https://qiskit-community.github.io/qiskit-aqt-provider/"
+  }),
+  OQC_API_TOKEN: Object.freeze({
+    "displayName": "OQC_API_TOKEN",
+    "description": "OQC 服务访问令牌；用户自行配置，云任务提交可能产生费用。",
+    "documentationUrl": "https://docs.oqc.app/account_management.html"
+  }),
+  OQC_API_ENDPOINT: Object.freeze({
+    "displayName": "OQC_API_ENDPOINT",
+    "description": "可选官方 oqc.app HTTPS 服务地址；默认 https://cloud.oqc.app。",
+    "documentationUrl": "https://docs.oqc.app/"
+  }),
+  QUANTUMINSPIRE_API_TOKEN: Object.freeze({
+    "displayName": "QUANTUMINSPIRE_API_TOKEN",
+    "description": "Quantum Inspire OAuth access token；用户自行更新过期令牌，不读取本机 CLI 账户文件。",
+    "documentationUrl": "https://github.com/QuTech-Delft/quantuminspire"
+  }),
   CLASSIQ_XCH_TOKEN: Object.freeze({
     "displayName": "CLASSIQ_XCH_TOKEN",
     "description": "Classiq SDK exchange token created by the user; required only for remote synthesis",

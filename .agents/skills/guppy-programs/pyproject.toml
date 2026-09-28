@@ -1,0 +1,8 @@
+[project]
+name = "openquantum-guppy-programs"
+version = "0.1.0"
+requires-python = ">=3.12,<3.13"
+dependencies = ["guppylang==1.1.1", "selene-sim==0.3.2"]
+
+[tool.uv]
+package = false

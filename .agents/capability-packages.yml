@@ -2063,3 +2063,294 @@ packages:
         - tests/sdk-expansion-io-contracts.test.mjs
         - tests/sdk-expansion-io-live.test.mjs
         - tests/harness-sdk-expansion.test.mjs
+
+  - id: simqn-network
+    level: L1
+    execution:
+      mcpServers:
+        - name: simqn_local
+          source: package
+          entrypoint: .agents/skills/simqn-network/mcp/server.mjs
+          activation: opt-in
+          contractCheck: tests/sdk-gaps-domestic-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: simulate_simqn_link
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/sdk-gaps-domestic-contracts.test.mjs
+        - tests/sdk-gaps-domestic-live.test.mjs
+        - tests/harness-sdk-gaps.test.mjs
+
+  - id: qcover-optimization
+    level: L1
+    execution:
+      mcpServers:
+        - name: qcover_local
+          source: package
+          entrypoint: .agents/skills/qcover-optimization/mcp/server.mjs
+          activation: always
+          contractCheck: tests/sdk-gaps-domestic-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: evaluate_qcover_qaoa
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/sdk-gaps-domestic-contracts.test.mjs
+        - tests/sdk-gaps-domestic-live.test.mjs
+        - tests/harness-sdk-gaps.test.mjs
+
+  - id: vqnet-learning
+    level: L1
+    execution:
+      mcpServers:
+        - name: vqnet_local
+          source: package
+          entrypoint: .agents/skills/vqnet-learning/mcp/server.mjs
+          activation: opt-in
+          contractCheck: tests/sdk-gaps-domestic-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: differentiate_vqnet_circuit
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/sdk-gaps-domestic-contracts.test.mjs
+        - tests/sdk-gaps-domestic-live.test.mjs
+        - tests/harness-sdk-gaps.test.mjs
+
+  - id: pychemiq-chemistry
+    level: L1
+    execution:
+      mcpServers:
+        - name: pychemiq_local
+          source: package
+          entrypoint: .agents/skills/pychemiq-chemistry/mcp/server.mjs
+          activation: always
+          contractCheck: tests/sdk-gaps-domestic-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: map_pychemiq_fermions
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/sdk-gaps-domestic-contracts.test.mjs
+        - tests/sdk-gaps-domestic-live.test.mjs
+        - tests/harness-sdk-gaps.test.mjs
+
+  - id: qblox-scheduling
+    level: L1
+    execution:
+      mcpServers:
+        - name: qblox_local
+          source: package
+          entrypoint: .agents/skills/qblox-scheduling/mcp/server.mjs
+          activation: always
+          contractCheck: tests/sdk-gaps-control-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: schedule_qblox_pulses
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/sdk-gaps-control-contracts.test.mjs
+        - tests/sdk-gaps-control-live.test.mjs
+        - tests/harness-sdk-gaps.test.mjs
+
+  - id: qililab-control
+    level: L1
+    execution:
+      mcpServers:
+        - name: qililab_local
+          source: package
+          entrypoint: .agents/skills/qililab-control/mcp/server.mjs
+          activation: always
+          contractCheck: tests/sdk-gaps-control-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: compile_qililab_pulses
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/sdk-gaps-control-contracts.test.mjs
+        - tests/sdk-gaps-control-live.test.mjs
+        - tests/harness-sdk-gaps.test.mjs
+
+  - id: guppy-programs
+    level: L1
+    execution:
+      mcpServers:
+        - name: guppy_local
+          source: package
+          entrypoint: .agents/skills/guppy-programs/mcp/server.mjs
+          activation: always
+          contractCheck: tests/sdk-gaps-control-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: simulate_guppy_feedback
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/sdk-gaps-control-contracts.test.mjs
+        - tests/sdk-gaps-control-live.test.mjs
+        - tests/harness-sdk-gaps.test.mjs
+
+  - id: oqc-qat
+    level: L1
+    execution:
+      mcpServers:
+        - name: qat_local
+          source: package
+          entrypoint: .agents/skills/oqc-qat/mcp/server.mjs
+          activation: always
+          contractCheck: tests/sdk-gaps-control-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: compile_oqc_qat_pulses
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/sdk-gaps-control-contracts.test.mjs
+        - tests/sdk-gaps-control-live.test.mjs
+        - tests/harness-sdk-gaps.test.mjs
+
+  - id: mrmustard-optics
+    level: L1
+    execution:
+      mcpServers:
+        - name: mrmustard_local
+          source: package
+          entrypoint: .agents/skills/mrmustard-optics/mcp/server.mjs
+          activation: opt-in
+          contractCheck: tests/sdk-gaps-simulation-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: simulate_mrmustard_optics
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/sdk-gaps-simulation-contracts.test.mjs
+        - tests/sdk-gaps-simulation-live.test.mjs
+        - tests/harness-sdk-gaps.test.mjs
+
+  - id: merlin-learning
+    level: L1
+    execution:
+      mcpServers:
+        - name: merlin_local
+          source: package
+          entrypoint: .agents/skills/merlin-learning/mcp/server.mjs
+          activation: always
+          contractCheck: tests/sdk-gaps-simulation-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: evaluate_merlin_layer
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/sdk-gaps-simulation-contracts.test.mjs
+        - tests/sdk-gaps-simulation-live.test.mjs
+        - tests/harness-sdk-gaps.test.mjs
+
+  - id: mimiq-simulation
+    level: L1
+    execution:
+      mcpServers:
+        - name: mimiq_local
+          source: package
+          entrypoint: .agents/skills/mimiq-simulation/mcp/server.mjs
+          activation: opt-in
+          contractCheck: tests/sdk-gaps-simulation-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: simulate_mimiq_circuit
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/sdk-gaps-simulation-contracts.test.mjs
+        - tests/sdk-gaps-simulation-live.test.mjs
+        - tests/harness-sdk-gaps.test.mjs
+
+  - id: myqlm-simulation
+    level: L1
+    execution:
+      mcpServers:
+        - name: myqlm_local
+          source: package
+          entrypoint: .agents/skills/myqlm-simulation/mcp/server.mjs
+          activation: opt-in
+          contractCheck: tests/sdk-gaps-simulation-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: simulate_myqlm_circuit
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/sdk-gaps-simulation-contracts.test.mjs
+        - tests/sdk-gaps-simulation-live.test.mjs
+        - tests/harness-sdk-gaps.test.mjs
+
+  - id: aqt-workbench
+    level: L1
+    execution:
+      mcpServers:
+        - name: aqt_local
+          source: package
+          entrypoint: .agents/skills/aqt-workbench/mcp/server.mjs
+          activation: opt-in
+          contractCheck: tests/sdk-gaps-cloud-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: simulate_aqt_circuit
+              effect: workspace-write
+            - name: list_aqt_devices
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/sdk-gaps-cloud-contracts.test.mjs
+        - tests/sdk-gaps-cloud-live.test.mjs
+        - tests/harness-sdk-gaps.test.mjs
+
+  - id: oqc-cloud
+    level: L1
+    execution:
+      mcpServers:
+        - name: oqc_cloud
+          source: package
+          entrypoint: .agents/skills/oqc-cloud/mcp/server.mjs
+          activation: opt-in
+          contractCheck: tests/sdk-gaps-cloud-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: prepare_oqc_task
+              effect: workspace-write
+            - name: query_oqc_service
+              effect: workspace-write
+            - name: submit_oqc_task
+              effect: external-write
+      nativeTools: []
+      checks:
+        - tests/sdk-gaps-cloud-contracts.test.mjs
+        - tests/sdk-gaps-cloud-live.test.mjs
+        - tests/harness-sdk-gaps.test.mjs
+
+  - id: quantuminspire-cloud
+    level: L1
+    execution:
+      mcpServers:
+        - name: quantuminspire_cloud
+          source: package
+          entrypoint: .agents/skills/quantuminspire-cloud/mcp/server.mjs
+          activation: opt-in
+          contractCheck: tests/sdk-gaps-cloud-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: query_quantum_inspire
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/sdk-gaps-cloud-contracts.test.mjs
+        - tests/sdk-gaps-cloud-live.test.mjs
+        - tests/harness-sdk-gaps.test.mjs

@@ -145,6 +145,7 @@ Skill 与 Tool 在概念和发行版 policy 中都相互独立：Skill-only、To
 - [Bloqade Analog 中性原子动力学](integrations/BLOQADE_ANALOG.md)：二维阵列、全局时变脉冲、本地 Python 仿真、单位和验证范围。
 - [国内外厂商 SDK](integrations/VENDOR_SDKS.md)：17 个固定 SDK 能力包、19 个 Tool、安装与许可，以及本地和远程验证边界。
 - [公司与机构 SDK 补充](integrations/SDK_EXPANSION.md)：20 个新增能力、23 个 Tool，覆盖量子通道、资源估算、化学数据、光子学和控制；凭据由用户设置。
+- [网络、控制、光学与云 SDK 补充](integrations/SDK_GAPS.md)：15 个新增能力、18 个 Tool，含 SimQN、Qcover、VQNet、pyChemiQ、Guppy、MerLin 及 AQT/OQC/Quantum Inspire。
 - [论文方法计算接入](integrations/PAPER_BACKED_TOOLS.md)：SQD、TJM、LSD、RandomMeas、Flow-VQE 和 TeNPy 的固定实现、六个 Tool、安装与科学范围。
 - [Mitiq 误差缓解](integrations/MITIQ.md)：ZNE、REM、PEC、CDR 的本地实验、相同 shots 预算、统计和 GPL 发行边界。
 - [Unitary 生态计算与数据](integrations/UNITARY_ECOSYSTEM.md)：Dynamiqs、Clifft、OQuPy、Deltakit 的计算接口，以及 Metriq 公开数据快照查询。
