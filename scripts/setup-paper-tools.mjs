@@ -16,8 +16,32 @@ supported.push(
   "perceval-photonics", "iqm-circuit-workbench", "alicebob-cat-circuits", "pulser-dynamics", "qoolqit-workbench",
   "ionq-programs", "superstaq-compilation",
 );
+supported.push(
+  "qsteed-compilation",
+  "quairkit-information",
+  "qcompute-simulation",
+  "qibo-simulation",
+  "qrisp-arithmetic",
+  "lightworks-photonics",
+  "braket-simulation",
+  "quri-parts-estimation",
+  "qdk-resource-estimation",
+  "qualtran-resources",
+  "openfermion-mapping",
+  "mqt-ddsim",
+  "mqt-qmap",
+  "classiq-synthesis",
+  "qctrl-workbench",
+  "qua-programs",
+  "laboneq-control",
+  "qcarchive-query",
+  "cudaq-simulation",
+  "netqasm-network"
+);
 // These SDKs publish different Python ABIs; keep their environments isolated.
 const pythonVersions = {
+  "qcompute-simulation": "3.10",
+  "netqasm-network": "3.10",
   "mindquantum-differentiable": "3.11",
   "spinqit-simulation": "3.10",
   "qutrunk-simulation": "3.10",
@@ -28,6 +52,7 @@ const environment = Object.fromEntries(allowedEnvironment.filter(key => process.
 if (selected.some((id) => !supported.includes(id))) throw new Error(`Expected capability ids from: ${supported.join(", ")}`);
 const digest = (file) => createHash("sha256").update(readFileSync(file)).digest("hex");
 for (const id of selected.length ? selected : ids) {
+  if (id === "cudaq-simulation" && !(process.platform === "linux" || (process.platform === "darwin" && process.arch === "arm64"))) throw new Error("CUDA-Q 0.16.0 requires Linux or Apple Silicon macOS; prepare it on a supported host");
   const skillRoot = path.join(root, ".agents/skills", id);
   const julia = id === "randomized-measurements";
   const lock = path.join(skillRoot, julia ? "Manifest.toml" : "uv.lock");

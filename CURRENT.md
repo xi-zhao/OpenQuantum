@@ -2,6 +2,14 @@
 
 量子依赖核验日期：2026-09-22；平台升级记录日期：2026-09-10；原模型验收交接记录日期：2026-09-05。此页只记录工作交接；架构以[文档总入口](docs/README.md)为准，执行事实以 Harness Session event log 为准，科学状态以 Acceptance Report 为准。
 
+## 公司与机构 SDK 补充接入（2026-09-28）
+
+- 在前一批厂商能力之外，新增 [20 个能力包](docs/integrations/SDK_EXPANSION.md)、20 个 Skill、20 个 MCP 连接及 23 个 Tool；覆盖 QSteed、QuAIRKit、QCompute、Qibo、Qrisp、Lightworks、Braket、QURI Parts、QDK、Qualtran、OpenFermion、MQT DDSIM/QMAP、Classiq、Q-CTRL、QUA、LabOne Q、QCArchive、CUDA-Q 和 NetQASM/SquidASM。
+- 当前源码目录为 139 个 Skill（126 个自动可选、13 个手动索引）、75 个 MCP 连接与 263 个可配置 Tool 名称。新增连接 14 个默认开启、6 个按需启用；账户、凭据、许可与服务权限由用户配置。
+- 20 个公开依赖环境已显式准备并核对锁定版本；35 项新增合同检查、41 项真实 SDK/MCP/Harness 测试及完整 `npm run check` 通过。Harness 使用本地模型协议夹具，从 Session 日志重读 19 项成功及 4 项预期失败。独立复核发现的 Qrisp 大整数精度问题已修复，并覆盖 54–80 位输入；[版本化证据](docs/integrations/evidence/sdk-expansion-2026-09-28.json)记录源文件哈希、复核与验证范围。
+- 实际执行验证限于 macOS arm64。本批未使用真实云账户、QPU、实验室仪器或外部模型；Classiq/Q-CTRL 使用真实 SDK 加传输夹具，QCArchive 使用真实 QCPortal 加回环服务。NetQASM 编译已验证，SquidASM/NetSquid 数值测试因私有依赖未准备而跳过；不把适配代码存在写成后端已实跑。所有新能力仍为 L1 / `scientificValidation=not_evaluated`。
+- 本批在独立分支形成本地提交，尚未推送、合并或发布安装包。需要部署时，更新源码、显式准备所需环境并重启 Harness。
+
 ## 国内外厂商 SDK 接入（2026-09-27）
 
 - [17 个新增能力包](docs/integrations/VENDOR_SDKS.md)覆盖国内 DeepQuantum、TensorCircuit、MindQuantum、Kaiwu Community、SpinQit、QuTrunk，以及 PennyLane、TKET、Ocean、pyQuil、Perceval、IQM、Alice & Bob、Pulser、QoolQit、IonQ 和 Superstaq。既有 QPanda、Stim、Bloqade 等继续复用。

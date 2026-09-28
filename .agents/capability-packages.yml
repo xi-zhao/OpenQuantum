@@ -1677,3 +1677,389 @@ packages:
         - tests/sdk-cloud-contracts.test.mjs
         - tests/sdk-cloud-live.test.mjs
         - tests/harness-vendor-sdks.test.mjs
+
+  - id: qsteed-compilation
+    level: L1
+    execution:
+      mcpServers:
+        - name: qsteed_local
+          source: package
+          entrypoint: .agents/skills/qsteed-compilation/mcp/server.mjs
+          activation: always
+          contractCheck: tests/sdk-expansion-circuits-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: compile_qsteed_circuit
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/sdk-expansion-circuits-contracts.test.mjs
+        - tests/sdk-expansion-circuits-live.test.mjs
+        - tests/harness-sdk-expansion.test.mjs
+
+  - id: quairkit-information
+    level: L1
+    execution:
+      mcpServers:
+        - name: quairkit_local
+          source: package
+          entrypoint: .agents/skills/quairkit-information/mcp/server.mjs
+          activation: always
+          contractCheck: tests/sdk-expansion-circuits-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: simulate_quairkit_channel
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/sdk-expansion-circuits-contracts.test.mjs
+        - tests/sdk-expansion-circuits-live.test.mjs
+        - tests/harness-sdk-expansion.test.mjs
+
+  - id: qcompute-simulation
+    level: L1
+    execution:
+      mcpServers:
+        - name: qcompute_local
+          source: package
+          entrypoint: .agents/skills/qcompute-simulation/mcp/server.mjs
+          activation: always
+          contractCheck: tests/sdk-expansion-circuits-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: simulate_qcompute_circuit
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/sdk-expansion-circuits-contracts.test.mjs
+        - tests/sdk-expansion-circuits-live.test.mjs
+        - tests/harness-sdk-expansion.test.mjs
+
+  - id: qibo-simulation
+    level: L1
+    execution:
+      mcpServers:
+        - name: qibo_local
+          source: package
+          entrypoint: .agents/skills/qibo-simulation/mcp/server.mjs
+          activation: always
+          contractCheck: tests/sdk-expansion-circuits-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: simulate_qibo_circuit
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/sdk-expansion-circuits-contracts.test.mjs
+        - tests/sdk-expansion-circuits-live.test.mjs
+        - tests/harness-sdk-expansion.test.mjs
+
+  - id: qrisp-arithmetic
+    level: L1
+    execution:
+      mcpServers:
+        - name: qrisp_local
+          source: package
+          entrypoint: .agents/skills/qrisp-arithmetic/mcp/server.mjs
+          activation: opt-in
+          contractCheck: tests/sdk-expansion-circuits-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: compute_qrisp_modular_sum
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/sdk-expansion-circuits-contracts.test.mjs
+        - tests/sdk-expansion-circuits-live.test.mjs
+        - tests/harness-sdk-expansion.test.mjs
+
+  - id: lightworks-photonics
+    level: L1
+    execution:
+      mcpServers:
+        - name: lightworks_local
+          source: package
+          entrypoint: .agents/skills/lightworks-photonics/mcp/server.mjs
+          activation: always
+          contractCheck: tests/sdk-expansion-circuits-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: simulate_lightworks_photonics
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/sdk-expansion-circuits-contracts.test.mjs
+        - tests/sdk-expansion-circuits-live.test.mjs
+        - tests/harness-sdk-expansion.test.mjs
+
+  - id: braket-simulation
+    level: L1
+    execution:
+      mcpServers:
+        - name: braket_local
+          source: package
+          entrypoint: .agents/skills/braket-simulation/mcp/server.mjs
+          activation: always
+          contractCheck: tests/sdk-expansion-circuits-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: simulate_braket_circuit
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/sdk-expansion-circuits-contracts.test.mjs
+        - tests/sdk-expansion-circuits-live.test.mjs
+        - tests/harness-sdk-expansion.test.mjs
+
+  - id: quri-parts-estimation
+    level: L1
+    execution:
+      mcpServers:
+        - name: quri_parts_local
+          source: package
+          entrypoint: .agents/skills/quri-parts-estimation/mcp/server.mjs
+          activation: always
+          contractCheck: tests/sdk-expansion-resources-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: estimate_quri_observable
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/sdk-expansion-resources-contracts.test.mjs
+        - tests/sdk-expansion-resources-live.test.mjs
+        - tests/harness-sdk-expansion.test.mjs
+
+  - id: qdk-resource-estimation
+    level: L1
+    execution:
+      mcpServers:
+        - name: qdk_local
+          source: package
+          entrypoint: .agents/skills/qdk-resource-estimation/mcp/server.mjs
+          activation: always
+          contractCheck: tests/sdk-expansion-resources-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: estimate_qdk_resources
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/sdk-expansion-resources-contracts.test.mjs
+        - tests/sdk-expansion-resources-live.test.mjs
+        - tests/harness-sdk-expansion.test.mjs
+
+  - id: qualtran-resources
+    level: L1
+    execution:
+      mcpServers:
+        - name: qualtran_local
+          source: package
+          entrypoint: .agents/skills/qualtran-resources/mcp/server.mjs
+          activation: always
+          contractCheck: tests/sdk-expansion-resources-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: estimate_qualtran_resources
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/sdk-expansion-resources-contracts.test.mjs
+        - tests/sdk-expansion-resources-live.test.mjs
+        - tests/harness-sdk-expansion.test.mjs
+
+  - id: openfermion-mapping
+    level: L1
+    execution:
+      mcpServers:
+        - name: openfermion_local
+          source: package
+          entrypoint: .agents/skills/openfermion-mapping/mcp/server.mjs
+          activation: always
+          contractCheck: tests/sdk-expansion-resources-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: map_openfermion_operator
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/sdk-expansion-resources-contracts.test.mjs
+        - tests/sdk-expansion-resources-live.test.mjs
+        - tests/harness-sdk-expansion.test.mjs
+
+  - id: mqt-ddsim
+    level: L1
+    execution:
+      mcpServers:
+        - name: mqt_ddsim_local
+          source: package
+          entrypoint: .agents/skills/mqt-ddsim/mcp/server.mjs
+          activation: always
+          contractCheck: tests/sdk-expansion-resources-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: simulate_mqt_ddsim
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/sdk-expansion-resources-contracts.test.mjs
+        - tests/sdk-expansion-resources-live.test.mjs
+        - tests/harness-sdk-expansion.test.mjs
+
+  - id: mqt-qmap
+    level: L1
+    execution:
+      mcpServers:
+        - name: mqt_qmap_local
+          source: package
+          entrypoint: .agents/skills/mqt-qmap/mcp/server.mjs
+          activation: always
+          contractCheck: tests/sdk-expansion-resources-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: map_mqt_circuit
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/sdk-expansion-resources-contracts.test.mjs
+        - tests/sdk-expansion-resources-live.test.mjs
+        - tests/harness-sdk-expansion.test.mjs
+
+  - id: classiq-synthesis
+    level: L1
+    execution:
+      mcpServers:
+        - name: classiq_cloud
+          source: package
+          entrypoint: .agents/skills/classiq-synthesis/mcp/server.mjs
+          activation: opt-in
+          contractCheck: tests/sdk-expansion-cloud-control-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: prepare_classiq_model
+              effect: workspace-write
+            - name: synthesize_classiq_circuit
+              effect: external-write
+      nativeTools: []
+      checks:
+        - tests/sdk-expansion-cloud-control-contracts.test.mjs
+        - tests/sdk-expansion-cloud-control-live.test.mjs
+        - tests/harness-sdk-expansion.test.mjs
+
+  - id: qctrl-workbench
+    level: L1
+    execution:
+      mcpServers:
+        - name: qctrl_cloud
+          source: package
+          entrypoint: .agents/skills/qctrl-workbench/mcp/server.mjs
+          activation: opt-in
+          contractCheck: tests/sdk-expansion-cloud-control-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: prepare_boulder_opal_control
+              effect: workspace-write
+            - name: get_qctrl_job_status
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/sdk-expansion-cloud-control-contracts.test.mjs
+        - tests/sdk-expansion-cloud-control-live.test.mjs
+        - tests/harness-sdk-expansion.test.mjs
+
+  - id: qua-programs
+    level: L1
+    execution:
+      mcpServers:
+        - name: qua_local
+          source: package
+          entrypoint: .agents/skills/qua-programs/mcp/server.mjs
+          activation: always
+          contractCheck: tests/sdk-expansion-cloud-control-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: prepare_qua_pulse_program
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/sdk-expansion-cloud-control-contracts.test.mjs
+        - tests/sdk-expansion-cloud-control-live.test.mjs
+        - tests/harness-sdk-expansion.test.mjs
+
+  - id: laboneq-control
+    level: L1
+    execution:
+      mcpServers:
+        - name: laboneq_local
+          source: package
+          entrypoint: .agents/skills/laboneq-control/mcp/server.mjs
+          activation: always
+          contractCheck: tests/sdk-expansion-cloud-control-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: compile_laboneq_pulses
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/sdk-expansion-cloud-control-contracts.test.mjs
+        - tests/sdk-expansion-cloud-control-live.test.mjs
+        - tests/harness-sdk-expansion.test.mjs
+
+  - id: qcarchive-query
+    level: L1
+    execution:
+      mcpServers:
+        - name: qcarchive_data
+          source: package
+          entrypoint: .agents/skills/qcarchive-query/mcp/server.mjs
+          activation: opt-in
+          contractCheck: tests/sdk-expansion-io-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: query_qcarchive_singlepoints
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/sdk-expansion-io-contracts.test.mjs
+        - tests/sdk-expansion-io-live.test.mjs
+        - tests/harness-sdk-expansion.test.mjs
+
+  - id: cudaq-simulation
+    level: L1
+    execution:
+      mcpServers:
+        - name: cudaq_local
+          source: package
+          entrypoint: .agents/skills/cudaq-simulation/mcp/server.mjs
+          activation: opt-in
+          contractCheck: tests/sdk-expansion-io-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: simulate_cudaq_circuit
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/sdk-expansion-io-contracts.test.mjs
+        - tests/sdk-expansion-io-live.test.mjs
+        - tests/harness-sdk-expansion.test.mjs
+
+  - id: netqasm-network
+    level: L1
+    execution:
+      mcpServers:
+        - name: netqasm_local
+          source: package
+          entrypoint: .agents/skills/netqasm-network/mcp/server.mjs
+          activation: opt-in
+          contractCheck: tests/sdk-expansion-io-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: prepare_netqasm_bell_program
+              effect: workspace-write
+            - name: simulate_squidasm_bell_pairs
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/sdk-expansion-io-contracts.test.mjs
+        - tests/sdk-expansion-io-live.test.mjs
+        - tests/harness-sdk-expansion.test.mjs

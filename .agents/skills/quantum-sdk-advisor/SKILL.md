@@ -21,7 +21,9 @@ description: 为量子计算项目按问题类型、硬件目标、数值方法�
 5. 优先复用 OpenQuantum 已有能力：
    - 通用电路与 Qiskit 文档：默认 Qiskit MCP Server；
    - 窄作用域二量子位基态：`quantum-ground-state`；
-   - 其他 SDK：先作为候选，不假装平台已经安装或验证。
+   - 其他 SDK：先查 [厂商 SDK 范围](../../../docs/integrations/VENDOR_SDKS.md)和
+     [公司与机构补充接入](../../../docs/integrations/SDK_EXPANSION.md)，按表内动作复用已有 Tool；
+     源码集成、依赖准备、服务联通与科学验收分别核实，目录未覆盖的动作仍作为候选。
 6. 云硬件、凭据和可能付费的任务一律单独列出，并要求用户显式选择；技术选型本身不触发提交。
 7. 给出一个主推荐、一个备选和明确的淘汰理由，不堆砌所有框架。
 

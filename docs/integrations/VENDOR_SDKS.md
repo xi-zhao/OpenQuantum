@@ -1,5 +1,8 @@
 # 国内外厂商 SDK 接入
 
+本页记录 2026-09-27 的 17 项接入；后续公司与机构的 20 项能力见[补充清单](SDK_EXPANSION.md)。
+
+
 本轮新增 17 个 Skill、17 个 MCP Server 连接和 19 个 Tool。每个 Python SDK 使用独立的固定依赖环境，
 Tool 返回结构化输入、来源版本、输入摘要和依赖锁摘要；Skill 负责选择方法、组织参数和解释结果。
 Harness MCP Client 将 Tool 注册进现有 Harness Runtime，不引入另一个执行框架。

@@ -1032,3 +1032,277 @@
       SUPERSTAQ_API_KEY: SUPERSTAQ_API_KEY
     toolCallTimeoutMs: 2147483647
     failOnStartupError: false
+
+# QSteed 电路编译; explicit environment preparation, user-owned service access.
+- id: mcp-qsteed-compilation
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: qsteed_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/qsteed-compilation/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# QuAIRKit 量子通道; explicit environment preparation, user-owned service access.
+- id: mcp-quairkit-information
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: quairkit_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/quairkit-information/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# QCompute 本地仿真; explicit environment preparation, user-owned service access.
+- id: mcp-qcompute-simulation
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: qcompute_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/qcompute-simulation/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# Qibo 电路仿真; explicit environment preparation, user-owned service access.
+- id: mcp-qibo-simulation
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: qibo_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/qibo-simulation/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# Qrisp 量子算术; explicit environment preparation, user-owned service access.
+- id: mcp-qrisp-arithmetic
+  name: '@deepseek-ai/dsh-mcp-client'
+  disabled: true
+  config:
+    serverName: qrisp_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/qrisp-arithmetic/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# Lightworks 光子仿真; explicit environment preparation, user-owned service access.
+- id: mcp-lightworks-photonics
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: lightworks_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/lightworks-photonics/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# Braket 本地仿真; explicit environment preparation, user-owned service access.
+- id: mcp-braket-simulation
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: braket_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/braket-simulation/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# QURI 可观测量估计; explicit environment preparation, user-owned service access.
+- id: mcp-quri-parts-estimation
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: quri_parts_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/quri-parts-estimation/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# QDK 容错资源估算; explicit environment preparation, user-owned service access.
+- id: mcp-qdk-resource-estimation
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: qdk_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/qdk-resource-estimation/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# Qualtran 资源计数; explicit environment preparation, user-owned service access.
+- id: mcp-qualtran-resources
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: qualtran_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/qualtran-resources/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# OpenFermion 算符映射; explicit environment preparation, user-owned service access.
+- id: mcp-openfermion-mapping
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: openfermion_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/openfermion-mapping/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# MQT 决策图仿真; explicit environment preparation, user-owned service access.
+- id: mcp-mqt-ddsim
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: mqt_ddsim_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/mqt-ddsim/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# MQT 硬件拓扑映射; explicit environment preparation, user-owned service access.
+- id: mcp-mqt-qmap
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: mqt_qmap_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/mqt-qmap/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# Classiq 电路综合; explicit environment preparation, user-owned service access.
+- id: mcp-classiq-synthesis
+  name: ./credentialed-mcp-client.mjs
+  disabled: true
+  config:
+    serverName: classiq_cloud
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/classiq-synthesis/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    optionalCredentialEnv:
+      CLASSIQ_XCH_TOKEN: CLASSIQ_XCH_TOKEN
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# Q-CTRL 控制模型与作业查询; explicit environment preparation, user-owned service access.
+- id: mcp-qctrl-workbench
+  name: ./credentialed-mcp-client.mjs
+  disabled: true
+  config:
+    serverName: qctrl_cloud
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/qctrl-workbench/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    optionalCredentialEnv:
+      QCTRL_API_KEY: QCTRL_API_KEY
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# QUA 脉冲程序; explicit environment preparation, user-owned service access.
+- id: mcp-qua-programs
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: qua_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/qua-programs/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# LabOne Q 离线控制; explicit environment preparation, user-owned service access.
+- id: mcp-laboneq-control
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: laboneq_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/laboneq-control/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# QCArchive 计算记录查询; explicit environment preparation, user-owned service access.
+- id: mcp-qcarchive-query
+  name: ./credentialed-mcp-client.mjs
+  disabled: true
+  config:
+    serverName: qcarchive_data
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/qcarchive-query/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    optionalCredentialEnv:
+      QCPORTAL_ADDRESS: QCPORTAL_ADDRESS
+      QCPORTAL_USERNAME: QCPORTAL_USERNAME
+      QCPORTAL_PASSWORD: QCPORTAL_PASSWORD
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# CUDA-Q CPU 仿真; explicit environment preparation, user-owned service access.
+- id: mcp-cudaq-simulation
+  name: '@deepseek-ai/dsh-mcp-client'
+  disabled: true
+  config:
+    serverName: cudaq_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/cudaq-simulation/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# NetQASM / SquidASM 网络; explicit environment preparation, user-owned service access.
+- id: mcp-netqasm-network
+  name: '@deepseek-ai/dsh-mcp-client'
+  disabled: true
+  config:
+    serverName: netqasm_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/netqasm-network/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false

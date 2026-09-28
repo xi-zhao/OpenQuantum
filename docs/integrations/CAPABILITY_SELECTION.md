@@ -71,3 +71,12 @@ VQD 两个实现的输入、优化过程与结果合同不同，只合并选择�
   Superstaq 的本地序列化和远程编译是两个不同 Tool，只有远程路径传输电路。
 
 全部固定版本、准备与许可边界见[厂商 SDK](VENDOR_SDKS.md)。
+
+## 公司与机构 SDK 补充
+
+[补充接入表](SDK_EXPANSION.md)区分计算、编译、资源估算与远程查询。一般电路任务可继续使用既有 Qiskit，
+需要特定 SDK 语义时再选 QURI/Qibo/Braket/CUDA-Q/MQT；需要噪声通道选 QuAIRKit，线性光学选 Lightworks/Perceval。
+QSteed 与 QMAP 分别提供基门编译、硬件图映射；QDK/Qualtran 给出指定模型下的资源估计。
+OpenFermion 做算符表示，QCArchive 查既有化学记录，两者不替代 PySCF/SQD。
+QUA/LabOne Q 的程序和波形不等于量子动力学或设备执行。NetQASM 编译与需要 NetSquid 的 SquidASM 仿真明确分开。
+Classiq/Q-CTRL 的服务权限与凭据由用户配置；本地准备成功不说明远程服务已联通。

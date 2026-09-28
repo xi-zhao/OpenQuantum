@@ -1,0 +1,8 @@
+[project]
+name = "openquantum-qcompute-simulation"
+version = "0.1.0"
+requires-python = ">=3.10,<3.11"
+dependencies = ["QCompute==3.3.5", "numpy==1.26.4"]
+
+[tool.uv]
+package = false

@@ -13,9 +13,9 @@
 
 ## 当前 Skill
 
-以下 119 个 Skill 随源码分发；它们与 MCP Server 不是一一对应关系，知识型 Skill 可以不绑定专用 Tool，
+以下 139 个 Skill 随源码分发；它们与 MCP Server 不是一一对应关系，知识型 Skill 可以不绑定专用 Tool，
 工作流也可以使用多个服务或进程内原生 Tool。连接默认配置与凭据条件见[项目首页](../../README.md#mcp-服务目录)。
-当前 106 项可由模型自动选择，13 个分类索引仅保留用户显式调用；名称和来源映射不变。
+当前 126 项可由模型自动选择，13 个分类索引仅保留用户显式调用；名称和来源映射不变。
 分批建议与兼容影响见[扩展治理清单](../../docs/architecture/EXTENSION_GOVERNANCE.md)。
 
 | Skill | 作用 | 依赖的执行模块 |
@@ -161,3 +161,28 @@
 | [`qoolqit-workbench`](qoolqit-workbench/SKILL.md) | 无量纲 Rydberg 程序编译与本地计算；需审阅上游定制许可证。 | `qoolqit_local` |
 | [`ionq-programs`](ionq-programs/SKILL.md) | 使用官方 SDK 将结构化电路转换为 IonQ QIS 程序；不提交云任务。 | `ionq_local` |
 | [`superstaq-compilation`](superstaq-compilation/SKILL.md) | 本地程序序列化和可选远程编译；远程操作外发电路，需要账户，不执行 QPU 任务。 | `superstaq_cloud` |
+
+### 公司与机构 SDK 补充（2026-09-28）
+
+| Skill | 作用 | 依赖的执行模块 |
+| --- | --- | --- |
+| [`qsteed-compilation`](qsteed-compilation/SKILL.md) | PyQuafu 电路编译到指定门集，保留全局相位与线路，不连接资源数据库。 | `qsteed_local` |
+| [`quairkit-information`](quairkit-information/SKILL.md) | CPU 密度矩阵电路与去极化、振幅阻尼、相位阻尼通道。 | `quairkit_local` |
+| [`qcompute-simulation`](qcompute-simulation/SKILL.md) | 使用百度 QCompute 本地模拟器计算电路概率。 | `qcompute_local` |
+| [`qibo-simulation`](qibo-simulation/SKILL.md) | 使用明确选定的 NumPy CPU 后端计算态矢量。 | `qibo_local` |
+| [`qrisp-arithmetic`](qrisp-arithmetic/SKILL.md) | 本地 QuantumFloat 无符号模加法；需考虑 EPL-2.0 许可。 | `qrisp_local` |
+| [`lightworks-photonics`](lightworks-photonics/SKILL.md) | 本地线性光学网络与 Fock 输入的输出概率。 | `lightworks_local` |
+| [`braket-simulation`](braket-simulation/SKILL.md) | 显式 LocalSimulator 电路振幅与概率，不创建 AWS 云任务。 | `braket_local` |
+| [`quri-parts-estimation`](quri-parts-estimation/SKILL.md) | QURI Parts 电路与 Qulacs 本地 Pauli 期望值。 | `quri_parts_local` |
+| [`qdk-resource-estimation`](qdk-resource-estimation/SKILL.md) | 由电路和硬件假设估算物理量子位与运行时间。 | `qdk_local` |
+| [`qualtran-resources`](qualtran-resources/SKILL.md) | 算术 Bloq 的容错门资源；实验性 API，保留计数假设。 | `qualtran_local` |
+| [`openfermion-mapping`](openfermion-mapping/SKILL.md) | 结构化费米算符到 Jordan-Wigner 或 Bravyi-Kitaev Pauli 项。 | `openfermion_local` |
+| [`mqt-ddsim`](mqt-ddsim/SKILL.md) | 使用决策图模拟电路，返回指定计算基态概率。 | `mqt_ddsim_local` |
+| [`mqt-qmap`](mqt-qmap/SKILL.md) | 将电路映射到耦合图，返回物理线路及逻辑输入、输出映射。 | `mqt_qmap_local` |
+| [`classiq-synthesis`](classiq-synthesis/SKILL.md) | 本地模型准备及可选云端综合；用户自行配置 Token 和服务权限。 | `classiq_cloud` |
+| [`qctrl-workbench`](qctrl-workbench/SKILL.md) | 本地 Boulder Opal 控制图与已有 Boulder/Fire Opal 作业状态查询。 | `qctrl_cloud` |
+| [`qua-programs`](qua-programs/SKILL.md) | 本地生成 OPX 脉冲程序与配置，不连接 QOP 服务。 | `qua_local` |
+| [`laboneq-control`](laboneq-control/SKILL.md) | 离线脉冲编译与 HDAWG 输出波形仿真，不执行设备程序。 | `laboneq_local` |
+| [`qcarchive-query`](qcarchive-query/SKILL.md) | 只读查询既有单点记录，返回分子、原子单位能量和计算来源。 | `qcarchive_data` |
+| [`cudaq-simulation`](cudaq-simulation/SKILL.md) | 固定 qpp-cpu 后端的精确概率与采样；Linux 或 Apple Silicon macOS。 | `cudaq_local` |
+| [`netqasm-network`](netqasm-network/SKILL.md) | 本地双节点 EPR 程序编译；仿真需用户自行准备有许可的 NetSquid 环境。 | `netqasm_local` |
