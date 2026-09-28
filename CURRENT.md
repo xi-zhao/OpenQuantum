@@ -9,7 +9,7 @@
 - 15 个固定依赖环境均已显式准备。26 项合同检查、30 项真实 SDK/MCP 检查及 1 项 Harness 集成检查通过；后者从 Session 日志重读 14 项成功和 5 项预期失败。完整 `npm run check` 通过，其默认跳过的外部/可选 live 测试不计作实跑；本轮 live 检查另外显式运行。
 - 独立复核修复 pyChemiQ 默认剪枝导致微小系数变零的问题，并检查了长乘积、小残差和不可表示的下溢。MerLin 使用完整 Fock 空间，VQNet 保持系数双精度；[版本化证据](docs/integrations/evidence/sdk-gaps-2026-09-28.json)记录来源哈希、环境、数值边界和复核结果。
 - 实际平台为 macOS arm64；云接口使用真实 SDK 加受控 HTTP 响应，Harness 使用本地模型协议夹具。未验证真实账户、收费云提交、QPU、实验室设备或外部模型，仍为 L1 / `scientificValidation=not_evaluated`。MrMustard 已归档，作为可选固定兼容适配；Qblox Scheduler 固定预发布版，原生 SDK 平台限制见说明。
-- 本轮形成独立本地提交，尚未推送、合并 main 或发布安装包。使用已有工作台时需更新源码、显式准备所需环境并重启 Harness。
+- 本轮实现提交为 `4386e3d`；源码交付状态见[远端 main](https://github.com/xi-zhao/OpenQuantum/tree/main)和[持续集成](https://github.com/xi-zhao/OpenQuantum/actions/workflows/ci.yml?query=branch%3Amain)。源码接入不创建正式 Release；使用已有工作台时需更新源码、显式准备所需环境并重启 Harness。
 
 ## 公司与机构 SDK 补充接入（2026-09-28）
 
@@ -17,7 +17,7 @@
 - 当前源码目录为 139 个 Skill（126 个自动可选、13 个手动索引）、75 个 MCP 连接与 263 个可配置 Tool 名称。新增连接 14 个默认开启、6 个按需启用；账户、凭据、许可与服务权限由用户配置。
 - 20 个公开依赖环境已显式准备并核对锁定版本；35 项新增合同检查、41 项真实 SDK/MCP/Harness 测试及完整 `npm run check` 通过。Harness 使用本地模型协议夹具，从 Session 日志重读 19 项成功及 4 项预期失败。独立复核发现的 Qrisp 大整数精度问题已修复，并覆盖 54–80 位输入；[版本化证据](docs/integrations/evidence/sdk-expansion-2026-09-28.json)记录源文件哈希、复核与验证范围。
 - 实际执行验证限于 macOS arm64。本批未使用真实云账户、QPU、实验室仪器或外部模型；Classiq/Q-CTRL 使用真实 SDK 加传输夹具，QCArchive 使用真实 QCPortal 加回环服务。NetQASM 编译已验证，SquidASM/NetSquid 数值测试因私有依赖未准备而跳过；不把适配代码存在写成后端已实跑。所有新能力仍为 L1 / `scientificValidation=not_evaluated`。
-- 本批在独立分支形成本地提交，尚未推送、合并或发布安装包。需要部署时，更新源码、显式准备所需环境并重启 Harness。
+- 本批实现提交为 `15104b0`；源码交付状态见[远端 main](https://github.com/xi-zhao/OpenQuantum/tree/main)和[持续集成](https://github.com/xi-zhao/OpenQuantum/actions/workflows/ci.yml?query=branch%3Amain)。源码接入不创建正式 Release；需要部署时，更新源码、显式准备所需环境并重启 Harness。
 
 ## 国内外厂商 SDK 接入（2026-09-27）
 
