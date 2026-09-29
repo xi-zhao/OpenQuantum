@@ -2,6 +2,13 @@
 
 量子依赖核验日期：2026-09-22；平台升级记录日期：2026-09-10；原模型验收交接记录日期：2026-09-05。此页只记录工作交接；架构以[文档总入口](docs/README.md)为准，执行事实以 Harness Session event log 为准，科学状态以 Acceptance Report 为准。
 
+## v0.6.0 发行内容与入口（2026-09-29）
+
+- 产品版本提升为 `0.6.0`；[版本说明](docs/releases/v0.6.0.md)汇集自 v0.5.1 后的算法、互操作、Bloqade 与三批 52 个 SDK 能力包，README 十种语言同步用户任务、依赖准备与配置范围。
+- Harness `0.1.5-rc.1`、Desktop `2.0.7` 保持不变。安装包包含适配代码；SDK 环境、账户、鉴权、许可与可选连接仍由用户准备和配置，既有用户改动按安装版更新规则保留。
+- 本次发布要求精确提交的源码 CI、Mac arm64 / x64 与 Windows x64 原生安装检查和附件摘要核对；发布及稳定更新清单的实际状态以 [v0.6.0 Release](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.6.0)及对应工作流为准，下面各批次记录保留其原始验证范围。
+- 修复资料检索 Harness 测试中辅助模型请求提前消耗用例的时序问题，并显式覆盖先请求会话标题、再调用检索 Tool 的顺序。
+
 ## 网络、控制、光学与云 SDK 接入（2026-09-28）
 
 - 继续新增 [15 个能力包](docs/integrations/SDK_GAPS.md)、15 个 Skill、15 个独立 MCP 连接与 18 个 Tool，覆盖 SimQN、Qcover、VQNet、pyChemiQ、Qblox Scheduler、Qililab、Guppy/Selene、OQC QAT/QCaaS、MrMustard、MerLin、MIMIQ Exaqt、myQLM、AQT 和 Quantum Inspire。

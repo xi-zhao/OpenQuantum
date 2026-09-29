@@ -70,9 +70,11 @@ OpenQuantum 是面向量子研究、实验与教学的开源 Agent 与应用平�
 
 选择一个方向，告诉工作台你的问题、输入和希望检查的结果。OpenQuantum 的 Agent 按任务使用 Skill 中的方法，并调用相应 Tool 执行计算；量子学习通提供独立的教学界面。
 
-[算法学习与方法比较](#算法学习与方法比较) · [电路与量子信息](#电路与量子信息) · [基态、化学与优化](#基态化学与优化) · [误差缓解与量子纠错](#误差缓解与量子纠错) · [哈密顿量模拟与开放系统](#哈密顿量模拟与开放系统) · [实验模拟与硬件](#实验模拟与硬件) · [参考资料与选型](#参考资料与选型) · [量子学习通](#量子学习通)
+[算法学习与方法比较](#算法学习与方法比较) · [电路与量子信息](#电路与量子信息) · [基态、化学与优化](#基态化学与优化) · [误差缓解与量子纠错](#误差缓解与量子纠错) · [哈密顿量模拟与开放系统](#哈密顿量模拟与开放系统) · [实验模拟与硬件](#实验模拟与硬件) · [光子计算与量子网络](#光子计算与量子网络) · [参考资料与选型](#参考资料与选型) · [量子学习通](#量子学习通)
 
 本地计算可以从无需量子云账户的任务开始。真实硬件和付费服务按需配置；各方法的输入范围、准备条件与验证状态分别保留在详细目录中。
+
+v0.6.0 汇集近期新增的国内外公司与机构 SDK：从可微分电路、容错资源估算，到光子计算、脉冲编译和量子网络。三批接入分别见[17 项厂商 SDK](docs/integrations/VENDOR_SDKS.md)、[20 项公司与机构能力](docs/integrations/SDK_EXPANSION.md)和[15 项网络、控制与云接口](docs/integrations/SDK_GAPS.md)，另含 [QuEra Bloqade Analog](docs/integrations/BLOQADE_ANALOG.md)。每项开放的动作以适配说明为准；账户、鉴权、服务权限与适用许可由用户配置。
 
 ### 算法学习与方法比较
 
@@ -98,6 +100,9 @@ OpenQuantum 是面向量子研究、实验与教学的开源 Agent 与应用平�
 | 任务方向 | 可以发起的任务 | 可以查看的结果 |
 | --- | --- | --- |
 | 量子电路 | 分析或转换 OpenQASM / QPY 电路，比较转译，检查等价性，运行电路仿真 | 电路结构、转译结果、等价性检查、态矢或采样分布 |
+| 本地编译与仿真 | 用 TKET、QSteed、MQT QMAP 编译或映射电路，用 Braket LocalSimulator、QCompute、Qibo 等运行本地模拟 | 门集与线路映射、态矢或概率；保留各 SDK 的位序约定 |
+| 可微分电路与混合程序 | 用 PennyLane、DeepQuantum、TensorCircuit、MindQuantum 或 VQNet 求期望和梯度；用 Guppy / Selene 模拟测量、复位与经典反馈 | 参数梯度、概率和程序执行结果 |
+| 容错资源估算 | 用 Microsoft QDK 估算物理资源，用 Qualtran 统计指定 Bloq 的门资源 | 量子位、时间或门计数，以及对应硬件与分解假设 |
 | Qiskit / Cirq 互操作 | 用 qBraid 按固定 OpenQASM 2 路径转换受支持的酉电路 | 转换后的电路、保留的量子位编号与空闲位；可选完整酉矩阵对照 |
 | 电路优化与测量式计算 | 用 PyZX 做 ZX 重写与电路提取，用 Graphix 转换和模拟 MBQC 模式 | 优化前后电路与门数、资源图和测量模式；可选独立对照 |
 | 电路优化与切割 | 用 Compact 优化门序列，用 QCut 切分电路并重建期望值 | 优化前后电路与独立等价对照；切割开销、实际采样量与可选未切割参考 |
@@ -113,7 +118,8 @@ OpenQuantum 是面向量子研究、实验与教学的开源 Agent 与应用平�
 | 变分参数学习 | 对 Pauli Hamiltonian 训练 Flow-VQE，学习低能量电路参数 | Flow 参数学习与等评估预算随机搜索比较 |
 | 激发态与核分类 | 用 OpenQARP VQD 搜索多个低能态，或用 cqlib 角度核训练 QSVM | 能量、残差、正交性与可选精确谱；独立测试集分类、解析核及经典基线 |
 | 对称性与控制代数 | 用 Symmer 在指定对称性扇区降比特，用 PauLie 分析 Pauli 生成元 | 降维 Hamiltonian、Lie 代数分类与维数；可选能谱对照或闭包 |
-| 组合优化 | 构建 QUBO，检查约束 penalty，运行经典求解或可选本地 QAOA | 优化解、约束检查与经典枚举复核 |
+| 组合优化 | 用 QPanda、Ocean 或 Kaiwu 构建和求解本地优化问题，用 Qcover 评估给定 QAOA 参数 | 优化解、约束检查、能量与相关量；按接口提供经典对照 |
+| 化学算符与既有数据 | 用 OpenFermion / pyChemiQ 映射费米算符，按需用 QCPortal 查询 QCArchive 既有单点记录 | Pauli 项，分子、能量、计算方法与来源；查询保留单位与缺失字段 |
 
 ### 误差缓解与量子纠错
 
@@ -135,9 +141,17 @@ OpenQuantum 是面向量子研究、实验与教学的开源 Agent 与应用平�
 
 | 任务方向 | 可以发起的任务 | 可以查看的结果 |
 | --- | --- | --- |
-| 超导与原子实验 | 模拟调校流程、原生门约束、三能级 transmon 泄漏或小型里德堡原子链动力学 | 合成实验数据、动力学轨迹与图表 |
+| 超导与原子实验 | 模拟调校流程、原生门约束、transmon 泄漏；用 Bloqade Analog / Pulser 研究受支持的原子阵列与脉冲 | 合成数据、动力学轨迹、逐原子占据与末态概率 |
+| 脉冲程序与控制 | 用 QUA、LabOne Q、Qblox Scheduler、Qililab 或 OQC QAT 构建程序、排程和离线编译 | 程序、时序、目标指令或波形；当前适配不执行实验室设备程序 |
 | 量子硬件接入 | 发现后端、检查拓扑与凭据；按需启用云任务查询、提交与取消 | 设备候选、使用条件；已启用任务接口的结果与状态 |
 | 本地设备接口 | 用 QDMI 查询已配置的 C 驱动 | 驱动报告的设备、量子位、门与耦合信息；官方示例驱动用于接口验证，不代表在线 QPU |
+
+### 光子计算与量子网络
+
+| 任务方向 | 可以发起的任务 | 可以查看的结果 |
+| --- | --- | --- |
+| 光子电路与学习 | 用 Perceval、Lightworks 计算线性光学输出，用 MerLin 运行批量推断与相移梯度；可选 MrMustard 高斯模型 | Fock 概率、梯度或光学矩；明确模式顺序与截断条件 |
+| 网络建模与程序 | 用 SimQN 模拟单链路损失与退相干，用 NetQASM 生成双节点程序 | 链路统计和编译产物；SquidASM 数值仿真另需用户准备有许可的 NetSquid 环境 |
 
 ### 参考资料与选型
 
@@ -216,7 +230,7 @@ OpenQuantum 支持桌面安装包和源码运行，适合本机单用户使用�
 
 从 [GitHub Release](https://github.com/xi-zhao/OpenQuantum/releases/latest) 下载 Mac（Apple Silicon / Intel）或 Windows 安装包。安装包内置 Node 和 uv，无需先配置源码构建环境；当前为未签名测试构建。按[安装说明](docs/DESKTOP_INSTALLERS.md)安装并启动后，继续[配置模型](#配置模型)。计算组件的额外依赖按对应版本说明准备，量子学习通等可选应用另有安装步骤。
 
-本页能力目录描述当前源码检出版本。[v0.5.1 安装包](docs/releases/v0.5.1.md)不包含后续的[新增量子能力](docs/integrations/CANDIDATE_LIBRARIES.md)、[9 月 22 日量子库更新](docs/releases/2026-09-22-quantum-upstream-update.md)，以及 9 月 24 日的[算法适配](docs/integrations/UNITARYLAB_OPEN_ADAPTATION.md)、[互操作接入](docs/integrations/QUANTUM_INTEROP.md)、[扩展治理](docs/architecture/EXTENSION_GOVERNANCE.md)和 9 月 27 日的[厂商 SDK](docs/integrations/VENDOR_SDKS.md)。使用这些更新需取得包含相应提交的源码；安装版不会随源码提交自动升级，数据迁移与备份见[安装包说明](docs/DESKTOP_INSTALLERS.md#数据与升级)。
+本页能力目录随当前源码维护。[v0.6.0 发布说明](docs/releases/v0.6.0.md)汇集自 v0.5.1 以来的算法示例、互操作与 SDK 接入；安装文件以对应 Release 的实际附件为准。安装包包含适配代码，计算依赖仍需按所选能力显式准备。原有安装版需下载新版并覆盖安装；用户改过的 Skill 或 MCP 配置会保留，新默认内容可能需要手动比较采用，见[数据与升级](docs/DESKTOP_INSTALLERS.md#数据与升级)。
 
 ### 安装源码
 
@@ -486,6 +500,8 @@ OpenQuantum 为本地模拟、IBM Quantum、IonQ 和多家国内量子云保留�
 | Dynamiqs、Clifft、OQuPy、Deltakit | `npm run capability:unitary:setup` |
 | Bloqade Analog | `npm run capability:bloqade:setup` |
 | 国内外厂商 SDK：可微分、编译、优化、光子与设备模型 | `npm run capability:vendor-sdks:setup`；[17 项范围、许可与调用示例](docs/integrations/VENDOR_SDKS.md) |
+| 公司与机构 SDK：编译、仿真、化学与资源估算 | `npm run capability:sdk-expansion:setup` 准备 14 个默认连接环境；[20 项范围与可选入口](docs/integrations/SDK_EXPANSION.md) |
+| 网络、控制、光学与云 SDK | `npm run capability:sdk-gaps:setup` 准备 7 个默认连接环境；[15 项范围与可选入口](docs/integrations/SDK_GAPS.md) |
 | Clifft 记录采样与 qBraid 转换；QDMI 驱动查询 | `npm run capability:interop:setup`；QDMI 另运行 `npm run capability:qdmi:setup` 并启用连接，见[接入说明](docs/integrations/QUANTUM_INTEROP.md) |
 | Metriq 公开基准查询 | 已随源码提供，完成 `npm ci` 即可，无需 Python 或额外下载 |
 
@@ -501,6 +517,8 @@ OpenQuantum 为本地模拟、IBM Quantum、IonQ 和多家国内量子云保留�
 | 驱动灵敏度 | 用 Dynamiqs 从计算基态出发，比较驱动幅度 0.5 和 1，失谐 0、衰减率 0.1、时长 1、20 步；采用一致的无量纲单位，返回激发态人口与末态人口对驱动的梯度。 | 自动微分与独立有限差分是否一致 |
 | 环境记忆 | 用 OQuPy 从 plus 态出发，tunneling=0、bias=0.4、alpha=0.1、cutoff=2、temperature=0、duration=0.5；分别用 steps=memorySteps=8 和 12，与零温纯退相干解析式比较。 | 两组网格保持相同物理记忆时长；此算例不代表整个参数域收敛 |
 | 公开设备基准 | 查询 Metriq 中 provider 包含 origin 的记录，列出设备、测试时间、基准类型、原始参数和指标，并标明来源。 | 历史数据的基准定义与实验条件；不等同于当前设备性能 |
+
+只准备所需 SDK 时，运行 `node scripts/setup-paper-tools.mjs <capability-id>`，能力 ID 见对应接入表。准备环境与启用连接分别完成；云服务的账户、密钥和权限由用户设置。各 SDK 的平台支持与许可不同，安装包验证不表示所有可选 SDK 都已在三个平台运行。
 
 其余论文方法也可按需安装；RandomMeas 随机测量另需 Julia 1.12.7。[完整安装与输入范围](docs/integrations/PAPER_BACKED_TOOLS.md#安装与调用)列出了各项准备条件。
 
@@ -1036,6 +1054,10 @@ npm run capability:candidates:live
 npm run capability:hamiltonian:live
 npm run capability:interop:live
 npm run capability:algorithms:live
+npm run capability:bloqade:live
+npm run capability:vendor-sdks:live
+npm run capability:sdk-expansion:live
+npm run capability:sdk-gaps:live
 npm run benchmark:candidate-regressions
 
 # 配置模型后运行真实 Agent 端到端测试
@@ -1057,7 +1079,7 @@ docs/                    架构、路线与生态文档
 
 [固定量子能力 Benchmark](benchmarks/quantum-capabilities/README.md)使用 [MQT Bench](https://github.com/munich-quantum-toolkit/bench) 的 3 个固定电路案例与 manifest 做开发回归，属于开发与 CI 证据，不是 Skill 或 MCP 服务。
 
-源码升级的固定版本、兼容性和验证记录见 [2026-09-22 量子库更新](docs/releases/2026-09-22-quantum-upstream-update.md)及 [2026-09-10 平台升级](docs/releases/2026-09-10-upstream-update.md)。应用安装包的变化另见[发布说明](docs/releases/v0.5.1.md)。
+源码升级的固定版本、兼容性和验证记录见 [2026-09-22 量子库更新](docs/releases/2026-09-22-quantum-upstream-update.md)及 [2026-09-10 平台升级](docs/releases/2026-09-10-upstream-update.md)。应用安装包的变化另见[v0.6.0 发布说明](docs/releases/v0.6.0.md)。
 
 2026-09-24 的[算法适配](docs/integrations/UNITARYLAB_OPEN_ADAPTATION.md)、[本地互操作](docs/integrations/QUANTUM_INTEROP.md)和[治理证据](docs/integrations/evidence/extension-governance-2026-09-24.json)分别记录源码接入、实际 SDK 计算与 Harness 会话验证；这些记录不代表新安装包发布、外部模型或真实硬件验收。
 

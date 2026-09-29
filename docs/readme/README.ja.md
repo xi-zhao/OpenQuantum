@@ -18,7 +18,7 @@ Qiskit・TyxonQ による回路シミュレーション、PyZX による回路�
 
 現在のソースには **154 個の Skill**（自動選択 141、手動の分類索引 13）、**90 個の MCP 接続**、**281 個の設定可能な Tool 名**があります。これらは構成上の一覧であり、同時に利用可能な数ではありません。既存の名前を維持し、類似する入口の選び方を整理しました。[能力の選択](../integrations/CAPABILITY_SELECTION.md)を参照してください。
 
-新しい[各社 SDK 連携](../integrations/VENDOR_SDKS.md)は、微分可能回路、コンパイル、古典最適化、光量子計算、デバイスモデルに対応する 17 Skills と 19 Tools を追加します。Superstaq と QoolQit は任意で有効化します。ローカル検証はクラウド、QPU、科学的受入れの検証ではありません。 これらの SDK 追加を使うには対応コミットを含むソースが必要で、v0.5.1 インストーラーには含まれません。ソースの変更だけで公開リリースが行われたことにはなりません。
+v0.6.0 は、[各社 SDK 17 件](../integrations/VENDOR_SDKS.md)、[企業・研究機関の能力 20 件](../integrations/SDK_EXPANSION.md)、[ネットワーク・制御・光学・クラウドの 15 件](../integrations/SDK_GAPS.md)という 3 回の統合で追加した **52 個の SDK 能力パッケージ**をまとめます。微分可能回路、資源見積もり、化学演算子、光子計算、パルスコンパイル、量子ネットワークを扱い、[Bloqade Analog](../integrations/BLOQADE_ANALOG.md) による原子配列のローカル計算も加わります。公開する操作は各説明の範囲に限られ、アカウント、認証、権限、ライセンスは利用者が設定します。ローカル検証はクラウド接続、QPU、科学的受入れの検証を意味しません。
 
 UnitaryLab の **quantum-skills の全 66 件のガイド**をネイティブ Skill に移植し、**49 個の実行可能な例**で上流の **39 個のアルゴリズムモジュール**とガイド固有の手法をカバーしています。Qiskit、PennyLane、quimb、PySCF、NumPy/SciPy を使用し、非公開の UnitaryLab ランタイムには依存しません。API 全体の互換性を意味するものではなく、置換による違いは[対応表](../integrations/UNITARYLAB_OPEN_COVERAGE.md)に記載しています。
 
@@ -42,7 +42,7 @@ Pauli Hamiltonian の Trotter / qDrift シミュレーションに加え、[qBra
 
 [GitHub Releases](https://github.com/xi-zhao/OpenQuantum/releases/latest) から Mac（Apple Silicon / Intel）または Windows 用インストーラーをダウンロードできます。Node.js と uv を同梱した未署名のテストビルドで、ソースのビルドは不要です。[インストール手順](../DESKTOP_INSTALLERS.md)に従って起動し、モデルを設定してください。計算コンポーネントと Quantum Learning の依存関係は、利用するバージョンの準備手順を確認してください。
 
-[v0.5.1 インストーラー](../releases/v0.5.1.md)には、その後 `main` に追加された上記の機能や [9 月 22 日の量子ライブラリ更新](../releases/2026-09-22-quantum-upstream-update.md)は含まれません。ソースの更新だけでインストール済みアプリが自動更新されることはありません。 9 月 24 日のアルゴリズム・相互運用機能と[拡張整理](../architecture/EXTENSION_GOVERNANCE.md)もソース版の更新で、v0.5.1 には含まれません。
+[v0.6.0 リリースノート](../releases/v0.6.0.md)は、v0.5.1 以降のアルゴリズム例、相互運用、SDK 統合をまとめています。ダウンロードは Release の実際の添付ファイルを確認してください。インストーラーにはアダプターコードが含まれますが、計算依存関係は使う能力ごとに明示的に準備します。既存のアプリは新しいインストーラーで更新してください。変更済みの Skill や MCP 設定は保持され、新しい標準設定の採用には比較が必要な場合があります。[データと更新](../DESKTOP_INSTALLERS.md#数据与升级)を参照してください。
 
 ### ソースから起動
 

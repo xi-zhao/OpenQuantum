@@ -15,7 +15,7 @@ Apple Silicon 还完成本地安装与首次设置向导的 UI 检查。
 ## 下载、安装与首次启动
 
 从 [GitHub Release](https://github.com/xi-zhao/OpenQuantum/releases/latest) 下载对应系统的附件。
-首次提供三平台安装文件的版本为 [v0.5.1](releases/v0.5.1.md)；只发布实际构建、安装验证成功的文件：
+[v0.6.0](releases/v0.6.0.md)汇集新增量子 SDK、算法示例与互操作工具；首次提供三平台安装文件的版本为 [v0.5.1](releases/v0.5.1.md)。只发布实际构建、安装验证成功的文件：
 
 | 系统 | 安装文件 | 安装方式 |
 | --- | --- | --- |
@@ -29,7 +29,7 @@ Apple Silicon 还完成本地安装与首次设置向导的 UI 检查。
 首次打开会显示 OpenQuantum Desktop 设置向导，可以使用默认的兼容模式和仅本机访问。
 进入工作台后选择工作区，再在模型设置中添加服务。未配置模型时仍可使用不依赖模型的内置计算工具。
 
-Python 计算组件按各自的固定依赖首次准备，可能需要网络。Julia、Git 依赖的可选组件，以及
+安装包包含 SDK 适配代码。Python 计算组件按所选能力[显式准备固定依赖](integrations/LOCAL_ENVIRONMENTS.md)，准备阶段可能需要网络；计算调用不会自动安装这些环境。各 SDK 的系统与许可要求单独适用，三平台安装包验证不等于每个可选 SDK 都已跨平台验证。Julia、Git 依赖的可选组件，以及
 [量子学习通原版界面](integrations/OPENMAIC.md)仍有各自的准备步骤；本安装包不会把这些步骤宣称为已经完成。
 
 ## 数据与升级

@@ -138,6 +138,7 @@ Skill 与 Tool 在概念和发行版 policy 中都相互独立：Skill-only、To
 - [本地计算环境准备](integrations/LOCAL_ENVIRONMENTS.md)：按能力显式准备固定依赖，已有环境原地核验与升级。
 - [相近能力的选择](integrations/CAPABILITY_SELECTION.md)：算法示例与专业计算入口的选择，以及大型可选服务的工具范围。
 - [版本更新](UPDATES.md)：新版本提醒、源码升级、发布通道和维护流程。
+- [v0.6.0 发行说明](releases/v0.6.0.md)：新增 SDK、算法与互操作能力，安装升级、用户自配鉴权及验证范围。
 - [常见问题与故障排查](TROUBLESHOOTING.md)：按 UI、模型、MCP Server、凭据和 Docker 分层定位。
 - [消息渠道接入](integrations/CC_CONNECT.md)：通过 CC Connect 和 ACP 接入微信、飞书等平台。
 - [量子学习通 / OpenMAIC](integrations/OPENMAIC.md)：完整原版子应用、Pro 工作台、持久存储与 Harness 当前模型连接；含实际验收和未通过项。

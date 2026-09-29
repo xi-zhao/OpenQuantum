@@ -47,6 +47,9 @@ An investigation that becomes possible, a method applied to a new problem, or a 
 | Algorithm examples | QFT/QPE, Grover/Shor, HHL/VQLS/QSVT, VQE/VQD/QAOA, gradients, state preparation, DMRG, qLDPC and Schrödingerization examples; editable inputs and method-specific checks |
 | Hamiltonian simulation | Trotter–Suzuki and qDrift for Pauli Hamiltonians; circuits, resource metrics, states and optional independent matrix references |
 | Circuits | Qiskit and TyxonQ circuit creation, analysis, transpilation and local simulation; MQT QCEC equivalence checks; optional FlagQuantum circuit workbench |
+| Local compilation and simulation | TKET, QSteed and MQT QMAP compilation or mapping; Braket LocalSimulator, QCompute, Qibo and other local simulators; explicit gate sets and bit-order conventions |
+| Differentiable and hybrid programs | PennyLane, DeepQuantum, TensorCircuit, MindQuantum and VQNet expectations and gradients; Guppy / Selene measurement, reset and classical feedback |
+| Fault-tolerant resources | Microsoft QDK physical-resource estimates and Qualtran Bloq gate counts, with hardware and decomposition assumptions |
 | Local interoperability | qBraid Qiskit/Cirq unitary-circuit conversion through QASM2, Clifft intermediate measurements and raw detector/observable parities, and optional QDMI metadata queries through a configured C driver |
 | Optimization and algebra | PyZX rewriting, Graphix measurement-based computing, Symmer symmetry tapering and PauLie Lie algebra calculations |
 | Circuit optimization and cutting | Compact optimization with independent equivalence checks; QCut gate cutting and expectation reconstruction with sampling costs and an optional uncut reference |
@@ -56,7 +59,11 @@ An investigation that becomes possible, a method applied to a new problem, or a 
 | Error mitigation and correction | Mitiq ZNE, REM, PEC and CDR; Stim and PyMatching memory experiments; Deltakit code construction; BP+LSD decoding |
 | Dynamics | Dynamiqs driven dissipative qubits, OQuPy non-Markovian evolution, TJM open Ising chains and Clifft noisy sampling |
 | Optimization problems | QPanda QUBO compilation, constraint checks and local solving |
-| Superconducting and atomic systems | FatQat local experiments, transmon leakage and Rydberg dynamics |
+| Superconducting and atomic systems | FatQat local experiments and transmon leakage; Bloqade Analog / Pulser supported atom-array and pulse simulations |
+| Pulse programs and control | QUA, LabOne Q, Qblox Scheduler, Qililab and OQC QAT program construction, scheduling and offline compilation; no laboratory-device execution through these adapters |
+| Photonics and learning | Perceval and Lightworks linear-optical probabilities; MerLin batch inference and phase gradients; optional MrMustard Gaussian models |
+| Quantum networks | SimQN link loss and decoherence; NetQASM two-node program compilation, with separately prepared licensed dependencies required for SquidASM simulation |
+| Chemistry operators and data | OpenFermion / pyChemiQ fermion-to-Pauli mappings and optional read-only QCArchive single-point record queries through QCPortal |
 | Hardware and reference material | FieldQKit backend discovery; optional cloud job interfaces; fixed Metriq records and Quantum-Practices guides |
 | Learning and teaching | Materials, slides, interactive classrooms and project-based learning through Quantum Learning |
 
@@ -66,11 +73,13 @@ All **66 quantum-skills guides** have native Skill adaptations; **49 executable 
 
 The source inventory contains **154 Skills** (141 automatically selectable and 13 manual category indexes), **90 MCP connections** and **281 configurable Tool names**. These counts describe the configured inventory; the tools available in a session depend on the platform, enabled connections, prepared environments and selected tool profiles. Existing names remain available. See the [capability catalog](../../README.md#能力接口目录) and [governance record](../architecture/EXTENSION_GOVERNANCE.md).
 
-The new [vendor SDK integrations](../integrations/VENDOR_SDKS.md) add 17 Skills and 19 Tools for differentiable circuits, compilation, classical optimization, photonics and device models. Superstaq and QoolQit are opt-in; local verification does not establish cloud, QPU or scientific acceptance. These SDK additions require a source checkout containing the corresponding commits and are not included in v0.5.1 installers; a source change does not itself constitute a release.
+v0.6.0 brings together **52 SDK capability packages across three integration batches**: [17 vendor SDKs](../integrations/VENDOR_SDKS.md), [20 company and research-institution capabilities](../integrations/SDK_EXPANSION.md), and [15 network, control, optics and cloud interfaces](../integrations/SDK_GAPS.md). Each adapter exposes the documented actions, rather than the whole upstream API. Users configure accounts, credentials, service permissions and applicable licenses. New adapters retain L1 / `scientificValidation=not_evaluated`; local and protocol-fixture tests do not establish live cloud, QPU or scientific acceptance.
 
 [Bloqade Analog](../integrations/BLOQADE_ANALOG.md) adds local Python simulation of 2D Rydberg arrays with piecewise-linear global amplitude, detuning and phase. Prepare its pinned environment with `npm run capability:bloqade:setup`; the Tool returns site populations, final amplitudes and probabilities with explicit units. This interface does not submit cloud or QPU jobs.
 
 Each integration has its own installation requirements and scientific scope. Local results do not establish hardware performance, and a completed tool call does not automatically imply scientific acceptance. See the [detailed capability catalog](../../README.md#可以用它做什么) and [integration documentation](../README.md).
+
+For one capability, run `node scripts/setup-paper-tools.mjs <capability-id>`. Batch setup commands are `npm run capability:vendor-sdks:setup` (17 environments), `npm run capability:sdk-expansion:setup` (14 default environments), and `npm run capability:sdk-gaps:setup` (7 default environments). The linked guides list optional environments, activation and platform requirements; setup does not configure cloud credentials.
 
 ### Quantum Learning
 
@@ -86,7 +95,7 @@ OpenQuantum supports desktop installers and source builds for local, single-user
 
 Download the Mac (Apple Silicon / Intel) or Windows installer from [GitHub Releases](https://github.com/xi-zhao/OpenQuantum/releases/latest). Node.js and uv are bundled, so no source build is needed. These are unsigned test builds. Follow the [installation guide](../DESKTOP_INSTALLERS.md), open the app, then [configure a model](#configure-a-model). Follow the corresponding version's instructions for additional computation dependencies; optional applications such as Quantum Learning have separate setup steps.
 
-The [v0.5.1 installers](../releases/v0.5.1.md) do not include the later QCut, Compact, OpenQARP, cqlib-qml and FlagQuantum integrations, the [September 22 quantum-library updates](../releases/2026-09-22-quantum-upstream-update.md), or the September 24 [algorithm adaptations](../integrations/UNITARYLAB_OPEN_ADAPTATION.md), [interoperability tools](../integrations/QUANTUM_INTEROP.md) and [governance changes](../architecture/EXTENSION_GOVERNANCE.md). Use source `main` for these updates. Changes to source do not automatically update an installed app. See the [data and migration guide](../DESKTOP_INSTALLERS.md#数据与升级).
+The [v0.6.0 release notes](../releases/v0.6.0.md) cover the algorithm examples, interoperability and SDK integrations added since v0.5.1. Download availability is determined by the actual Release attachments. Installers include adapter code; prepare the dependencies for the capabilities you choose. Replace an existing installation with the new installer. Modified Skills and MCP configuration are preserved, so adopting new defaults may require a manual comparison. See [data and upgrades](../DESKTOP_INSTALLERS.md#数据与升级).
 
 ### From source
 

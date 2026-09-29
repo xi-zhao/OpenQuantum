@@ -18,7 +18,7 @@ Qiskit과 TyxonQ를 이용한 회로 시뮬레이션, PyZX 회로 최적화, Gra
 
 현재 소스에는 **Skill 154개**(자동 선택 141개, 수동 분류 색인 13개), **MCP 연결 90개**, **설정 가능한 Tool 이름 281개**가 있습니다. 이는 구성 목록이며 동시에 사용할 수 있는 도구 수는 아닙니다. 기존 이름은 유지하고 비슷한 기능의 선택 기준을 정리했습니다. [기능 선택 안내](../integrations/CAPABILITY_SELECTION.md)를 참고하세요.
 
-새로운 [기업 SDK 통합](../integrations/VENDOR_SDKS.md)은 미분 가능한 회로, 컴파일, 고전 최적화, 광자 및 장치 모델을 위한 17 Skills와 19 Tools를 추가합니다. Superstaq와 QoolQit은 선택적으로 활성화하며, 로컬 검증은 클라우드·QPU·과학적 승인 검증을 의미하지 않습니다. 이 SDK 추가 기능을 사용하려면 해당 커밋을 포함한 소스가 필요하며, v0.5.1 설치 패키지에는 포함되지 않습니다. 소스 변경 자체가 공개 릴리스를 의미하지는 않습니다.
+v0.6.0은 [기업 SDK 17개](../integrations/VENDOR_SDKS.md), [기업·연구기관 기능 20개](../integrations/SDK_EXPANSION.md), [네트워크·제어·광학·클라우드 기능 15개](../integrations/SDK_GAPS.md)로 구성된 세 차례 통합의 **SDK 기능 패키지 52개**를 모았습니다. 미분 가능한 회로, 자원 추정, 화학 연산자, 광자 계산, 펄스 컴파일과 양자 네트워크를 다루며, [Bloqade Analog](../integrations/BLOQADE_ANALOG.md)의 로컬 원자 배열 계산도 추가됩니다. 각 어댑터는 문서에 명시된 동작을 제공하고 계정, 인증, 권한과 라이선스는 사용자가 설정합니다. 로컬 검증은 실제 클라우드 연결, QPU 또는 과학적 승인 검증을 뜻하지 않습니다.
 
 UnitaryLab의 **quantum-skills 가이드 66개**를 네이티브 Skill로 옮겼으며, **실행 가능한 예제 49개**가 원본 알고리즘 모듈 **39개**와 가이드의 추가 방법을 다룹니다. Qiskit, PennyLane, quimb, PySCF, NumPy/SciPy를 사용하며 비공개 UnitaryLab 런타임에 의존하지 않습니다. 전체 API 호환성을 뜻하지 않으며 구현 차이는 [대응표](../integrations/UNITARYLAB_OPEN_COVERAGE.md)에 공개되어 있습니다.
 
@@ -42,7 +42,7 @@ Pauli Hamiltonian의 Trotter / qDrift 시뮬레이션과 함께 [qBraid Qiskit/C
 
 [GitHub Releases](https://github.com/xi-zhao/OpenQuantum/releases/latest)에서 Mac(Apple Silicon / Intel) 또는 Windows 설치 파일을 받으세요. Node.js와 uv가 포함된 서명되지 않은 테스트 빌드이며 소스 빌드가 필요하지 않습니다. [설치 안내](../DESKTOP_INSTALLERS.md)에 따라 앱을 실행한 뒤 모델을 설정하세요. 계산 구성 요소와 Quantum Learning의 의존성은 해당 버전의 준비 안내를 따르세요.
 
-[v0.5.1 설치 파일](../releases/v0.5.1.md)에는 이후 `main`에 추가된 위 기능과 [9월 22일 양자 라이브러리 업데이트](../releases/2026-09-22-quantum-upstream-update.md)가 포함되지 않습니다. 소스가 변경되어도 설치된 앱이 자동으로 업데이트되지는 않습니다. 9월 24일 알고리즘·상호 운용 기능과 [확장 구성 정리](../architecture/EXTENSION_GOVERNANCE.md)도 소스 업데이트이며 v0.5.1에는 포함되지 않습니다.
+[v0.6.0 릴리스 안내](../releases/v0.6.0.md)는 v0.5.1 이후의 알고리즘 예제, 상호 운용과 SDK 통합을 정리합니다. 다운로드 가능 여부는 Release의 실제 첨부 파일을 확인하세요. 설치 파일에는 어댑터 코드가 포함되며 계산 의존성은 선택한 기능별로 명시적으로 준비해야 합니다. 기존 앱은 새 설치 파일로 업데이트하세요. 수정한 Skill과 MCP 설정은 보존되므로 새 기본 설정을 적용하려면 비교가 필요할 수 있습니다. [데이터와 업그레이드](../DESKTOP_INSTALLERS.md#数据与升级)를 참고하세요.
 
 ### 소스로 실행
 
