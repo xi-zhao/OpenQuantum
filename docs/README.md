@@ -143,6 +143,7 @@ Skill 与 Tool 在概念和发行版 policy 中都相互独立：Skill-only、To
 - [消息渠道接入](integrations/CC_CONNECT.md)：通过 CC Connect 和 ACP 接入微信、飞书等平台。
 - [量子学习通 / OpenMAIC](integrations/OPENMAIC.md)：完整原版子应用、Pro 工作台、持久存储与 Harness 当前模型连接；含实际验收和未通过项。
 - [FatQat 量子实验](integrations/FATQAT.md)：Skill、两个 MCP 计算 Tool、固定版本、实验边界与真实数值验证。
+- [PairInteraction 原子对相互作用](integrations/PAIRINTERACTION.md)：独立软件环境和数据库快照，S–S 势能、S–P 交换、微扰边界与版本治理。
 - [Bloqade Analog 中性原子动力学](integrations/BLOQADE_ANALOG.md)：二维阵列、全局时变脉冲、本地 Python 仿真、单位和验证范围。
 - [国内外厂商 SDK](integrations/VENDOR_SDKS.md)：17 个固定 SDK 能力包、19 个 Tool、安装与许可，以及本地和远程验证边界。
 - [公司与机构 SDK 补充](integrations/SDK_EXPANSION.md)：20 个新增能力、23 个 Tool，覆盖量子通道、资源估算、化学数据、光子学和控制；凭据由用户设置。

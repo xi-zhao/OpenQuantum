@@ -93,6 +93,14 @@
 - 范围、固定版本、验证和恢复说明见[2026-09-10 升级记录](docs/releases/2026-09-10-upstream-update.md)。
 - 真实外部模型、真机硬件和发布验收不由本次本地升级替代；原模型验收里程碑仍保留。
 
+## PairInteraction 独立接入（2026-10-09）
+
+- 在独立工作树新增 `pairinteraction-rydberg` Skill、`pairinteraction_local` MCP 连接与有界原子对计算 Tool；FatQat 保持独立，未修改其代码或版本锁。
+- 固定 PairInteraction 2.7.0、独立 Python 3.12 环境和数据库 v2.0 的逐文件快照。计算前校验本地数据，显式 setup 才安装或下载。
+- 已通过实际 S–S / S–P 数值检查、解析与完整性测试、MCP 合同、FatQat 合同回归，以及本地协议替身驱动的真实 Harness 调用与会话重读。
+- 范围、单位、微扰失效示例和版本治理见 [PairInteraction 接入说明](docs/integrations/PAIRINTERACTION.md)。当前 L1、`scientificValidation=not_evaluated`；未做论文全案例复现、独立领域审阅、外部模型验收或部署。
+- 主线集成以 `0e8221ad` 为基线，仅合入此能力，保留主线 Harness `0.1.5-rc.1` 和模型配置；适配共享环境摘要与资源策略。完整 `npm run check`、相关合同和真实计算/Harness 重读通过；[集成记录](docs/integrations/evidence/pairinteraction-main-2026-10-09.json)区分先前工作分支的 `0.2.0-rc.2` 证据。
+
 ## FatQat 接入（2026-09-11）
 
 - 新增 `fatqat-workbench` Skill 与默认开启的 `fatqat_local` MCP 连接，提供电路/硬件约束和脉冲动力学两个 Tool。

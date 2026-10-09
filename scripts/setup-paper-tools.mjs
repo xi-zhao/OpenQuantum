@@ -56,11 +56,20 @@ const pythonVersions = {
   "qutrunk-simulation": "3.10",
 };
 const selected = process.argv.slice(2);
+supported.push("pairinteraction-rydberg");
 const allowedEnvironment = ["HOME", "PATH", "HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY", "NO_PROXY", "SSL_CERT_FILE", "SSL_CERT_DIR", "UV_CACHE_DIR", "UV_PYTHON_INSTALL_DIR", "SYSTEMROOT", "TEMP", "TMP", "TMPDIR", "WINDIR"];
 const environment = Object.fromEntries(allowedEnvironment.filter(key => process.env[key]).map(key => [key, process.env[key]]));
 if (selected.some((id) => !supported.includes(id))) throw new Error(`Expected capability ids from: ${supported.join(", ")}`);
 const digest = (file) => createHash("sha256").update(readFileSync(file)).digest("hex");
 for (const id of selected.length ? selected : ids) {
+  if (id === "pairinteraction-rydberg") {
+    const run = spawnSync(process.execPath, [path.join(root, ".agents/skills/pairinteraction-rydberg/scripts/setup.mjs")], {
+      cwd: root, stdio: "inherit", timeout: 1_800_000,
+      env: { ...environment, ...(process.env.OPENQUANTUM_PYTHON_ENV_ROOT ? { OPENQUANTUM_PYTHON_ENV_ROOT: process.env.OPENQUANTUM_PYTHON_ENV_ROOT } : {}) },
+    });
+    if (run.error || run.status !== 0) throw new Error(`${id} setup failed: ${run.error?.message ?? run.status}`);
+    continue;
+  }
   if (id === "cudaq-simulation" && !(process.platform === "linux" || (process.platform === "darwin" && process.arch === "arm64"))) throw new Error("CUDA-Q 0.16.0 requires Linux or Apple Silicon macOS; prepare it on a supported host");
   if (id === "mimiq-simulation" && !((process.platform === "darwin" && process.arch === "arm64") || (["linux", "win32"].includes(process.platform) && process.arch === "x64"))) throw new Error("MIMIQ Exaqt 0.3.0 requires Apple Silicon macOS, Linux x64 (glibc >= 2.34), or Windows x64; other native targets are not published");
   const skillRoot = path.join(root, ".agents/skills", id);

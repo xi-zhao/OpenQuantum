@@ -731,6 +731,15 @@ const MCP_CATALOG = Object.freeze({
     packageVersion: "1.16.0 + 2.4.0",
     setup: null,
   }),
+  pairinteraction_local: Object.freeze({
+    displayName: "PairInteraction 原子对相互作用",
+    description: "Rb 原子对势能与二阶有效哈密顿量。先独立准备软件和固定原子数据库，再运行本地计算。",
+    provider: "PairInteraction / OpenQuantum",
+    sourceUrl: "https://github.com/pairinteraction/pairinteraction",
+    packageName: "pairinteraction",
+    packageVersion: "2.7.0",
+    setup: null,
+  }),
   fatqat_local: Object.freeze({
     displayName: "FatQat 量子实验",
     description:

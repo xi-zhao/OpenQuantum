@@ -127,6 +127,7 @@ test("default contract checks are derived from package MCP and native Tool polic
     "tests/metriq-data.test.mjs",
     "tests/mitiq-contracts.test.mjs",
     "tests/native-quantum-tools.test.mjs",
+    "tests/pairinteraction-contracts.test.mjs",
     "tests/paper-tools-contracts.test.mjs",
     "tests/quantum-learning.test.mjs",
     "tests/quantum-practices.test.mjs",

@@ -536,6 +536,25 @@ packages:
         - .agents/skills/fatqat-workbench/test/live.test.mjs
         - tests/harness-fatqat.test.mjs
 
+  - id: pairinteraction-rydberg
+    level: L1
+    execution:
+      mcpServers:
+        - name: pairinteraction_local
+          source: package
+          entrypoint: .agents/skills/pairinteraction-rydberg/mcp/server.mjs
+          activation: always
+          contractCheck: tests/pairinteraction-contracts.test.mjs
+          effectEvidence: mcp-annotations
+          tools:
+            - name: calculate_rydberg_pair
+              effect: workspace-write
+      nativeTools: []
+      checks:
+        - tests/pairinteraction-contracts.test.mjs
+        - tests/pairinteraction-live.test.mjs
+        - tests/harness-pairinteraction.test.mjs
+
   - id: tyxonq-workbench
     level: L1
     execution:

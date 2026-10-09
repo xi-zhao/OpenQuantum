@@ -198,6 +198,26 @@
       maxDelayMs: 30000
       maxAttempts: 10
 
+# PairInteraction owns a separate Python environment and atomic database lock.
+# Registration is lightweight; dependency and data setup is an explicit action.
+- id: mcp-pairinteraction-rydberg
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: pairinteraction_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/pairinteraction-rydberg/mcp/server.mjs'
+    env: {}
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: true
+    reconnect:
+      enabled: true
+      initialDelayMs: 1000
+      maxDelayMs: 30000
+      maxAttempts: 10
+
 # TyxonQ is a Python SDK rather than a stable upstream MCP server. This local
 # bridge exposes only bounded circuit and noise simulation. It is disabled by
 # default because the pinned scientific Python environment is large and is

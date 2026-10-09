@@ -301,6 +301,7 @@ npm run models:probe -- --provider openquantum-public
 | 准备什么 | 命令或入口 |
 | --- | --- |
 | 第一个 Bell 态实验 | `node scripts/setup-paper-tools.mjs fatqat-workbench` |
+| Rb 原子对静态相互作用 | `npm run capability:pairinteraction:setup`；[模型与版本治理](docs/integrations/PAIRINTERACTION.md) |
 | Trotter / qDrift 哈密顿量模拟 | `npm run capability:hamiltonian:setup` |
 | Clifft 采样与 qBraid 电路转换 | `npm run capability:interop:setup` |
 | 指定其他 Python 计算能力 | `node scripts/setup-paper-tools.mjs <能力 ID>`，例如 `qec-memory-experiment`；各 Skill 列出自己的准备命令 |
@@ -610,9 +611,9 @@ Harness 是通用 Agent Runtime，扩展通过 Cordis Plugin 装配。UI、模�
   <a href="#原生量子-tools">原生量子 Tools</a>
 </p>
 
-当前源码分发 **154 个内置 Skill、90 个 MCP 服务连接、5 个原生量子 Tool**。其中 66 个 Skill 来自 quantum-skills 的开源工作流适配，共用现有代码执行工具；其中 49 项提供可运行示例，覆盖 unitarylab_algorithms 的全部 39 个模块。83 个 MCP 服务使用 OpenQuantum 的本地桥接实现。Skill、Tool 和 MCP 连接分别统计。
+当前源码分发 **155 个内置 Skill、91 个 MCP 服务连接、5 个原生量子 Tool**。其中 66 个 Skill 来自 quantum-skills 的开源工作流适配，共用现有代码执行工具；其中 49 项提供可运行示例，覆盖 unitarylab_algorithms 的全部 39 个模块。84 个 MCP 服务使用 OpenQuantum 的本地桥接实现。Skill、Tool 和 MCP 连接分别统计。
 
-当前配置共包含 **281 个可配置 Tool 名称**：257 个由 MCP 服务提供，18 个为 Harness 通用工具，6 个为平台原生工具（上面的 5 个量子动作及 1 个教学生成动作）。这是配置全集；`bash` / `pwsh` 按平台互斥，连接开关、环境和工具范围也会影响实际可调用集合。既有能力的逐项决定见[治理记录](docs/architecture/EXTENSION_GOVERNANCE.md)，新增中性原子动力学见 [Bloqade Analog](docs/integrations/BLOQADE_ANALOG.md)。
+当前配置共包含 **282 个可配置 Tool 名称**：258 个由 MCP 服务提供，18 个为 Harness 通用工具，6 个为平台原生工具（上面的 5 个量子动作及 1 个教学生成动作）。这是配置全集；`bash` / `pwsh` 按平台互斥，连接开关、环境和工具范围也会影响实际可调用集合。既有能力的逐项决定见[治理记录](docs/architecture/EXTENSION_GOVERNANCE.md)，新增中性原子动力学见 [Bloqade Analog](docs/integrations/BLOQADE_ANALOG.md)。
 
 <details>
 <summary><strong>内置 Skills：按研究方法查找工作流</strong></summary>
@@ -621,7 +622,7 @@ Harness 是通用 Agent Runtime，扩展通过 Cordis Plugin 装配。UI、模�
 
 既有条目与治理情况见[治理清单](docs/architecture/EXTENSION_GOVERNANCE.md)；相近入口及大型可选服务的专业工具范围见[能力选择](docs/integrations/CAPABILITY_SELECTION.md)。
 
-这 154 个 Skill 覆盖方法选择、计算实验、结果解释和平台诊断。其中 141 项可由 Agent 自动选择，13 个分类索引保留为用户手动导航；原名称和手动调用均可继续使用。点击名称即可查看完整的 `SKILL.md`；所需工具与连接分别配置。新增算法工作流的参数、安装与开源替换差异见[运行说明](examples/quantum-algorithms/README.md)。
+这 155 个 Skill 覆盖方法选择、计算实验、结果解释和平台诊断。其中 142 项可由 Agent 自动选择，13 个分类索引保留为用户手动导航；原名称和手动调用均可继续使用。点击名称即可查看完整的 `SKILL.md`；所需工具与连接分别配置。新增算法工作流的参数、安装与开源替换差异见[运行说明](examples/quantum-algorithms/README.md)。
 
 下表按**研究方法与用途**介绍能力。各 Tool 提供的模型、参数和输入格式见[计算参数与运行方式](#计算参数与运行方式)。
 
@@ -685,6 +686,7 @@ Harness 是通用 Agent Runtime，扩展通过 Cordis Plugin 装配。UI、模�
 | --- | --- | --- |
 | [`qmclaw-workbench`](.agents/skills/qmclaw-workbench/SKILL.md) | 超导量子比特调校实验设计、测量流程模拟与合成数据分析，覆盖 S21、Rabi、Ramsey、T₁ 等 | 原生 `list_qmclaw_experiments`、`simulate_qmclaw_experiment` |
 | [`fatqat-workbench`](.agents/skills/fatqat-workbench/SKILL.md) | 量子电路与硬件原生门约束分析、transmon 泄漏及里德堡原子动力学 | `fatqat_local`；[使用说明](docs/integrations/FATQAT.md) |
+| [`pairinteraction-rydberg`](.agents/skills/pairinteraction-rydberg/SKILL.md) | Rb 原子对势能、S–P 交换和二阶有效哈密顿量，含微扰适用性检查 | `pairinteraction_local`；[使用与版本治理](docs/integrations/PAIRINTERACTION.md) |
 | [`bloqade-analog`](.agents/skills/bloqade-analog/SKILL.md) | 二维 Rydberg 阵列、分段线性脉冲、逐原子占据与末态概率 | `bloqade_local` |
 | [`fieldqkit-hardware`](.agents/skills/fieldqkit-hardware/SKILL.md) | 量子云设备发现、量子位与拓扑筛选、接入条件检查 | `fieldqkit`；只读设备发现 |
 | [`qdmi-device`](.agents/skills/qdmi-device/SKILL.md) | 已配置 QDMI 驱动的设备、门集与耦合关系查询 | `qdmi_local`；默认关闭，需显式准备驱动 |
@@ -853,7 +855,7 @@ Harness 是通用 Agent Runtime，扩展通过 Cordis Plugin 装配。UI、模�
 
 **OpenQuantum 为 67 项计算与设备发现能力开发了本地 MCP 桥接**，另直接接入 8 个上游 MCP 服务。下表按用途分组：本地桥接链接到仓库源码并保留上游来源，直接接入的服务明确标记为“上游服务”。
 
-默认 Preset 共声明 90 个 MCP 服务连接：**65 个默认开启（其中 Qiskit 两项可通过离线开关关闭），25 个按需启用**。连接名对应配置中的 `serverName`；“默认开启”表示配置策略，使用前仍需准备依赖和必要凭据。
+默认 Preset 共声明 91 个 MCP 服务连接：**66 个默认开启（其中 Qiskit 两项可通过离线开关关闭），25 个按需启用**。连接名对应配置中的 `serverName`；“默认开启”表示配置策略，使用前仍需准备依赖和必要凭据。
 
 这些 MCP Server 都由本机以 `stdio` 方式启动，不是 OpenQuantum 提供的公共托管端点。其中一部分 Tool 在本地计算，另一部分再访问厂商文档或量子云；“本地启动 MCP Server”不代表所有数据处理都留在本地。
 
@@ -915,6 +917,7 @@ Harness 是通用 Agent Runtime，扩展通过 Cordis Plugin 装配。UI、模�
 | MCP 服务 / 连接名 | 能提供什么工具能力 | 默认配置 | 使用条件与边界 |
 | --- | --- | --- | --- |
 | [`fatqat_local`](.agents/skills/fatqat-workbench/mcp/server.mjs) · [FatQat](https://github.com/spaceqat/fatqat) | 电路与硬件约束、超导和中性原子脉冲动力学 | 默认开启 | 显式准备锁定 Python 环境；数值计算本地运行，无云凭据或 QPU 操作 |
+| [`pairinteraction_local`](.agents/skills/pairinteraction-rydberg/mcp/server.mjs) · [PairInteraction](https://github.com/pairinteraction/pairinteraction) | 两颗 Rb 原子的静态势能与有效哈密顿量 | 默认开启 | 独立 Python 3.12 与固定数据库；先显式运行 `npm run capability:pairinteraction:setup`，计算不下载 |
 | [`bloqade_local`](.agents/skills/bloqade-analog/mcp/server.mjs) · [Bloqade Analog](https://github.com/QuEraComputing/bloqade-analog) | 自定义二维阵列与全局时变脉冲的本地 Rydberg 仿真 | 默认开启 | Python 3.12 + uv；显式准备环境，无需云凭据；[使用说明](docs/integrations/BLOQADE_ANALOG.md) |
 
 ##### 国内外厂商 SDK
@@ -1089,7 +1092,7 @@ docs/                    架构、路线与生态文档
 
 ### 可选上游 Skill
 
-[OriginQ 官方 `pyqpanda3` Skill](https://github.com/OriginQ/pyqpanda3-skill) 提供电路编程、算法模板、迁移与 QCloud 使用指导。它**不计入上面的 154 个内置 Skill，也不会在首次启动时自动安装**；运行 `npm run skill:qpanda:setup` 后，固定审阅版本才会进入项目 Skill 目录。安装这个 Skill 不会自动启用 `qpanda_runtime`，也不会赋予云任务权限。
+[OriginQ 官方 `pyqpanda3` Skill](https://github.com/OriginQ/pyqpanda3-skill) 提供电路编程、算法模板、迁移与 QCloud 使用指导。它**不计入上面的 155 个内置 Skill，也不会在首次启动时自动安装**；运行 `npm run skill:qpanda:setup` 后，固定审阅版本才会进入项目 Skill 目录。安装这个 Skill 不会自动启用 `qpanda_runtime`，也不会赋予云任务权限。
 
 ## 长期发展规划
 
