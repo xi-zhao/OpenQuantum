@@ -452,6 +452,10 @@
 # Preserve one bounded scientific presentation in Harness-native tool/result
 # content. The plugin owns no runtime or storage; it only adapts MCP
 # structuredContent at the official tools/post-execute seam.
+# Persist large L1 results before replacing model-facing text with a summary.
+- id: science-result-delivery
+  name: ./science-result-delivery.mjs
+
 - id: scientific-result-projection
   name: ./scientific-result-projection.mjs
 
