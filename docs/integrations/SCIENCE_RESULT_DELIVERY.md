@@ -49,6 +49,7 @@ node --test tests/scientific-result-materialization.test.mjs tests/quantum-infor
 定向检查覆盖：完整数据逐值读回、SHA-256、关键指标保留、小结果兼容、真实只读沙箱、取消、磁盘错误、
 冲突与越界、Session/call 隔离，以及真实 MCP Client → Harness Agent → 模型上下文 → 原生 `read`
 → Host 进程重启 → 同会话再次读取。模型和数值工作进程使用本地协议夹具，没有调用外部模型或真实 SDK/QPU。
+该 Harness 集成夹具依赖 POSIX shebang，在 Windows 明确跳过；本轮不表示 Windows 运行验收。
 
 12 量子位解析 RY-GHZ 夹具含 4,096 个复振幅：原始紧凑 JSON 为 34,180 字符，摘要主体为 1,534 字符
 （不含文件引用和读取说明）。这只是该夹具的输出体积对比，不是性能基准或科学验收。

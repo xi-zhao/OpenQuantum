@@ -34,7 +34,10 @@ async function stop(child) {
   await exited; clearTimeout(timer);
 }
 
-test("real Harness/MCP delivery reaches model context, native file read and process restart without recomputation", { timeout: 120000 }, async t => {
+test("real Harness/MCP delivery reaches model context, native file read and process restart without recomputation", {
+  timeout: 120000,
+  skip: process.platform === "win32" ? "The numerical protocol fixture uses a POSIX shebang; Windows execution is not covered" : false,
+}, async t => {
   const root = process.cwd();
   const sandbox = await mkdtemp(path.join(tmpdir(), "oq-result-harness-"));
   const harnessHome = path.join(sandbox, "dsh");
