@@ -12,6 +12,7 @@ description: 使用 图灵量子 的 DeepQuantum 在本地对用户定义量子�
 - `trainableGateIndices` 明确选择 gates 数组中需要求导的 RX/RY/RZ；每项是独立参数。可填空数组只做仿真。Jacobian 行对应 observables，列严格对应该索引数组的顺序，不是所有旋转门的隐含顺序。
 - `amplitudes[k]` 为 `[real,imag]`，概率向量按 q0 在最左的二进制字典序排列。返回 SDK 原始数值，不裁剪、不归一化；`stateNormSquared` 用来检查数值漂移。这些是精确线路仿真的数值期望，不是 finite-shots 频数。
 - 参数数量、量子位数和门数由调用方决定；完整输出按 2^N 增长，可寻址数组表示限制仍适用。资源预算通过独立 `execution` 参数设置，不改变线路语义。
+- OpenQuantum Harness 对大结果自动返回 `openquantum-science-summary`：先查看 `summary.result` 中的期望、Jacobian、范数与单位；需要完整态矢量时，用已有文件或 shell Tool 读取会话工作区内的 `fullResult.path`，再取 JSON 的 `result.amplitudes` / `result.probabilities`。`omitted: true` 表示数据保存在文件中，不表示零值或计算缺失；不要为了获取被省略的数据重新计算。保存失败时仍返回完整输出，科学状态保持 `not_evaluated`。
 - DeepQuantum 的部分固定门（包括 H）先在上游以 complex64 常量构造再提升精度；检查返回的原始范数，勿把舍入漂移当作物理损耗。这里只接可微分量子比特线路，未覆盖该 SDK 的光子/Fock/Gaussian/MPS 和分布式接口。
 - 梯度仅对当前输入的理想线路有效，不自动构成优化收敛、抗噪声能力或硬件优势结论。对复杂电路先选择解析可核对例子，必要时与第二 SDK、参数移位或有限差分对照。
 - 当前是 L1，`scientificValidation=not_evaluated`；成功计算与数值回归不等于最终科学 Acceptance。

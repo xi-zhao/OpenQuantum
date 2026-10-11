@@ -2,6 +2,12 @@
 
 量子依赖核验日期：2026-09-22；平台升级记录日期：2026-09-10；原模型验收交接记录日期：2026-09-05。此页只记录工作交接；架构以[文档总入口](docs/README.md)为准，执行事实以 Harness Session event log 为准，科学状态以 Acceptance Report 为准。
 
+## 大结果交付（2026-10-11）
+
+- 默认 Harness Preset 对共享科学 envelope 的大结果先保存并校验完整 JSON，再向 Agent 提供摘要和文件引用；小结果及 MCP 输出合同保留原样，科学状态不变。
+- 已验证真实 Harness/MCP 链路中的摘要、原生文件读取与进程重启后读取，以及只读会话、取消、冲突和越界失败路径。模型与数值计算采用本地协议夹具，未进行外部模型、SDK 数值或科学 Acceptance 验收。
+- 实现边界与复跑命令见[大结果交付说明](docs/integrations/SCIENCE_RESULT_DELIVERY.md)。源码交付状态见[远端 main](https://github.com/xi-zhao/OpenQuantum/tree/main)与[持续集成](https://github.com/xi-zhao/OpenQuantum/actions/workflows/ci.yml?query=branch%3Amain)；本轮不包含部署或发布。
+
 ## v0.6.0 发行内容与入口（2026-09-29）
 
 - 产品版本提升为 `0.6.0`；[版本说明](docs/releases/v0.6.0.md)汇集自 v0.5.1 后的算法、互操作、Bloqade 与三批 52 个 SDK 能力包，README 十种语言同步用户任务、依赖准备与配置范围。
