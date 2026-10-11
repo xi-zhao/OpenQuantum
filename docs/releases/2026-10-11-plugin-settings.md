@@ -43,3 +43,18 @@
 
 复跑入口：`plugin:test`、`plugin:build`、`plugin:probe`、`plugin:host-check`。
 `plugin:host-check` 中的 `0.7.5-fixture` 仅用于验证缓存路径变化，不是发布版本。
+
+## Desktop 入口清理（独立修改）
+
+`scripts/lib/product-ui-policy.mjs` 在受控 Home patch 中停用上游已存在的账户、账户控制器、插件市场与
+插件管理 UI row：`ui-settings-account`、`account-controller`、`ui-plugin-manager`、
+`ui-settings-plugin-inventory`、`ui-settings-plugins`。DeepSeek 登录、余额和充值入口随账户界面停用。
+内部 Cordis Plugin、Skill 和 MCP 装配仍保留；模型路由、聊天、项目与学习通继续使用已有实现。
+
+策略读取固定上游 patch 并只输出存在的 row，兼容基线 Harness `0.1.5-rc.1` 的模块差异，
+不修改 `node_modules`。主工作区 `0.2.0-rc.2` 固定源码的五个目标 row 已静态核对。
+
+- 两项策略与真实 Cordis 组合测试通过；只关闭目标 UI row，底层注册模块仍在。
+- 接入策略后 Harness 资料检索集成测试通过。Desktop 固定来源检查通过；本工作树尚未构建
+  原生 Desktop，因此另外两项原生安装检查跳过。没有把配置测试记为真实桌面显示验收。
+- 尚未替换用户 Desktop 安装或创建 Desktop 发行包；原生界面的隐藏效果仍需安装验收。

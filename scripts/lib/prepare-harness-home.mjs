@@ -2,6 +2,7 @@ import { cp, mkdir, readFile, rm, symlink, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { buildLearningClient } from "./build-learning-client.mjs";
 import { buildLocaleClient } from "./build-locale-client.mjs";
+import { productUiOverlay } from "./product-ui-policy.mjs";
 
 /**
  * Materialize the OpenQuantum-owned parts of a Harness home.
@@ -87,8 +88,9 @@ export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot, 
   const desktopPatch = profileName === "desktop"
     ? await readFile(path.join(projectRoot, "runtime/openquantum/desktop.cordis.patch.yml"), "utf8")
     : "";
+  const productUi = await productUiOverlay(projectRoot);
   await Promise.all([
-    writeFile(patchTarget, `${deploymentPatch}\n${desktopPatch}`),
+    writeFile(patchTarget, `${deploymentPatch}\n${desktopPatch}\n${productUi}`),
     cp(modelRoutesSource, modelRoutesTarget, { force: true }),
     cp(presetSource, presetTarget, { recursive: true, force: true }),
     cp(brandingSource, brandingTarget, { recursive: true, force: true }),
