@@ -22,11 +22,12 @@ OpenQuantum 是面向量子研究、实验与教学的开源 Agent 与应用平�
 OpenQuantum 有两个发行入口：**Desktop** 提供科研工作台和量子学习通；**[Codex 插件](docs/integrations/CODEX_PLUGIN.md)**
 将量子 Skill 与科学 Tool 接入 Codex 原生对话，侧边入口用于管理能力开关、MCP 连接和 Token。两者复用同一份领域能力。
 
-让 Codex 帮你安装插件：[给 AI Agent 的安装指南与复制用语](docs/integrations/CODEX_AGENT_INSTALL.md)。
+直接在 Codex 中使用：[插件安装与使用](#codex-plugin)，包含可复制给 Codex 的安装指令。
 
 <p align="center">
   <a href="#为什么选择-openquantum">为什么选择</a> ·
   <a href="#可以用它做什么">浏览能力</a> ·
+  <a href="#codex-plugin">Codex 插件</a> ·
   <a href="#快速开始">开始使用</a> ·
   <a href="#使用与结果">使用与结果</a> ·
   <a href="#把你的量子能力接进来">开发与扩展</a> ·
@@ -230,6 +231,56 @@ OpenQuantum 桌面端提供原生窗口、系统托盘、终端与通知，复�
 ## 快速开始
 
 OpenQuantum 支持桌面安装包和源码运行，适合本机单用户使用。直接使用工作台可下载安装包；二次开发或使用源码主线能力可选择源码路径。
+
+<a id="codex-plugin"></a>
+
+### Codex 插件：安装与使用
+
+安装一次 OpenQuantum 插件，即可同时注册 **Skills、本机 MCP 服务与科学 Tools，以及 OpenQuantum 设置页**。
+你继续在 Codex 原生聊天中提问、管理项目和查看结果；左侧设置页用于配置 OpenQuantum 的能力。
+
+**让 Codex 帮你安装：**打开 Codex，新建聊天，把下面这段话复制给它：
+
+```text
+请帮我安装 OpenQuantum 的 Codex 插件，仓库是 https://github.com/xi-zhao/OpenQuantum。
+先阅读仓库 README 中的“Codex 插件：安装与使用”和 docs/integrations/CODEX_AGENT_INSTALL.md，
+检查当前源码是否包含插件安装脚本，再检查 Codex、Node.js 和 npm 环境，使用仓库安装器完成安装。
+请保留已有插件和用户配置，安装后核对 Skills、MCP 工具和左侧全局“OpenQuantum 设置”入口。
+若仓库当前版本还没有插件安装材料，请明确说明缺少什么；需要我重载应用时，告诉我具体操作。
+最后报告实际验证的结果，以及仍需准备的科学计算依赖。
+```
+
+当前插件为 **0.7.7 测试候选**，尚未发布正式插件安装包；可使用包含插件代码的 Git checkout 构建安装，
+或使用提供者交付的候选源码与插件 ZIP。需要支持插件及全局设置页的 Codex、Node.js 24+ 和 npm，
+由 Agent 按[安装指南](docs/integrations/CODEX_AGENT_INSTALL.md)检查并处理依赖。macOS 本机安装已验证，
+其他平台和宿主版本仍需检查兼容性。
+
+**安装后这样使用：**
+
+1. 按提示重载 Codex，再进入新聊天，让新的 Skills 和工具加载。
+2. 直接在聊天中提出任务，例如：“用 OpenQuantum 查询量子纠错有哪些方法，并推荐一个入门实验。”
+3. 打开左侧 **“…” → “OpenQuantum 设置”**，在 **Skills / MCP 连接 / Tools** 三个标签中管理能力。
+   内置服务随插件配置；添加自己的 MCP 时，填写连接信息，并通过专用凭据窗口保存所需 Token。
+
+插件安装包含能力代码与配置入口；部分科学计算还需要按需准备 Python、量子 SDK 或第三方服务账号。
+具体范围见[插件说明](docs/integrations/CODEX_PLUGIN.md)。
+
+<details>
+<summary><strong>手动安装（可选）</strong></summary>
+
+在包含插件代码的 Git checkout 中，准备好 Node.js 24+、npm 和支持插件的 Codex CLI 后执行：
+
+```sh
+npm ci
+npm run plugin:build
+npm run plugin:install
+```
+
+若安装器未找到当前 Codex 应用的 CLI，用 `OPENQUANTUM_CODEX_CLI` 指定实际路径。
+已有插件 ZIP 时，可用 `npm run plugin:install -- /完整路径/插件.zip` 安装。
+安装、失败处理和逐项验收见[Agent 安装指南](docs/integrations/CODEX_AGENT_INSTALL.md)。
+
+</details>
 
 ### 桌面安装包
 
