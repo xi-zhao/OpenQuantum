@@ -8,7 +8,8 @@ import { createInterface } from "node:readline";
 import { installPlugin } from "./install-codex-plugin.mjs";
 import { Settings } from "../src/settings/codex/application.mjs";
 
-const archive = path.resolve(process.argv[2] || "dist/codex-plugin/openquantum-0.7.4-codex-plugin.zip");
+const { version } = JSON.parse(await fs.readFile(new URL("../distributions/codex-plugin/package.json", import.meta.url), "utf8"));
+const archive = path.resolve(process.argv[2] || `dist/codex-plugin/openquantum-${version}-codex-plugin.zip`);
 const cli = process.env.OPENQUANTUM_CODEX_CLI || "/Applications/ChatGPT.app/Contents/Resources/codex-cli/bin/codex";
 const home = await fs.mkdtemp(path.join(os.tmpdir(), "oq-host-validation-"));
 const codexHome = path.join(home, ".codex");

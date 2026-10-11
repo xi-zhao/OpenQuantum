@@ -42,7 +42,7 @@
   对应代码提交 `b6c789dd044277c71a8e66ca740654f6cae3d75d`。
 - 安装器启动检查再次读到 131 个 Skill、71 个科学 Tool，资料检索与禁用检查通过。
 - 当前对话的插件工具目录随后更新，真实 `quantum_practices` 只读调用成功。
-- 在当前任务的原生 MCP Apps 侧边页读到版本 0.7.4、Skills / MCP 连接 / Tools 三个标签，
+- 在当前任务聊天旁的 MCP 设置标签页读到版本 0.7.4、Skills / MCP 连接 / Tools 三个标签，
   Tools 页显示 71 项配置启用。切换到 MCP 连接页并刷新后，表单正常显示、全部按钮恢复启用，
   状态栏恢复为配置说明；已保存原生页面截图。此检查未改变用户的 Skill、Tool 或 MCP 配置。
 - 页面检查中两次 DOM 自动化请求超时；随后截图与只读 DOM 检查成功，未发现页面仍在更新。
@@ -63,7 +63,8 @@
 
 ## 原生设置交互验收（2026-10-11）
 
-对象为已安装的 0.7.4，源代码提交仍为 `b6c789dd`；使用当前任务的原生 MCP Apps 侧边页。
+对象为已安装的 0.7.4，源代码提交仍为 `b6c789dd`；使用当前任务聊天旁的 MCP 设置标签页。
+此处“原生页面”均指该标签页，不指左侧“…”菜单里的全局应用。
 **结论：核心设置流程部分通过，凭据窗口自动打开路径未通过验收，不能签为完整通过。**
 本轮没有修改产品代码、推送或发布。
 
@@ -96,6 +97,23 @@
 `native-acceptance-cleanup.json`，以及 `acceptance-skill-disabled.png`、`acceptance-tool-disabled.png`、
 `acceptance-http-enabled.png`、`acceptance-token-saved.png`、`acceptance-token-removed.png`、
 `acceptance-mcp-offline.png` 和最终恢复截图。真实凭据与用户配置快照不进入验收材料。
+
+## 全局入口升级修复（0.7.5，2026-10-11）
+
+用户指定的入口是左侧“…”→“OpenQuantum 设置”。此前已验收的聊天旁标签页不是这个入口。
+本机 Codex 静态加载代码 `view-page` 将全局页面作为 app 生命周期保留，实例身份包含 Tool 名称和
+resource URI；旧实现同时沿用 `open_openquantum` 与 `ui://openquantum/workbench.html`。
+这确认了旧身份被复用的条件；尚未直接读取用户所见全局页面，不能据此断言唯一根因。
+
+- 全局菜单改为专用 `open_openquantum_settings`，只宣告一个 OpenQuantum 全局项，标题仍为“OpenQuantum 设置”。
+- 全局入口与插件设置入口共用当前设置 HTML；资源 URI 包含其 SHA-256，HTML 变化时资源身份随之变化。
+- 旧 opener/resource 请求若由宿主转发，服务端仍返回当前设置；旧工作台不再被宣告为全局入口。
+  这不承诺宿主能继续解析旧 Tool 名称的已保存导航地址，应使用当前菜单项。
+- `plugin:probe` 必须实际发现唯一全局入口、调用它、读取其资源并核对 HTML 摘要和三个设置标签。
+  检查结果仍保留 `hostPlacementVerified=false`，防止把协议检查写成界面验收。
+- 相关测试 16 项中 15 项通过，Keychain 隔离条目测试本轮未启用而跳过；目标文件 ESLint 与 diff 检查通过。
+  新增回归覆盖入口绑定、同内容重启 URI 稳定、HTML 更新后 URI 变化，以及旧协议请求兼容。
+- 此段记录源码检查；安装后版本、实际全局显示与剩余限制另行记录。
 
 ## Desktop 入口清理（独立修改）
 

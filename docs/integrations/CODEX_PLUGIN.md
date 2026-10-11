@@ -15,12 +15,15 @@ Codex 插件在外层 Codex 对话中提供量子 Skill 和科学 Tool。OpenQua
 | `distributions/codex-plugin/` | 独立插件版本及运行依赖锁定 |
 
 构建从能力策略和真实 `tools/list` 生成目录、Skill 和完整输入合同，检查重复名称和策略漂移。
-当前候选包为 **0.7.4**，基于 Desktop 核心版本 0.6.0 的主线：**131 个 Skill、71 个科学 Tool**。
+当前候选包为 **0.7.5**，基于 Desktop 核心版本 0.6.0 的主线：**131 个 Skill、71 个科学 Tool**。
 其中没有执行 Tool 的 Skill 明确提供方法解释与选型参考，不把知识目录数量等同于可执行计算数量。
 依赖宿主源码/Shell 的算法总入口、平台诊断、学习通、真实硬件以及尚未适配的按需连接不进入默认插件。
 
 `plugin.json` 使用 Agent Plugins 1.0，并保留 `.codex-plugin/plugin.json` 兼容入口。插件身份仍为
-`openquantum@personal`，设置资源仍为 `ui://openquantum/workbench.html`。品牌素材复用现有 OpenQuantum 标识。
+`openquantum@personal`。左侧“…”菜单的全局入口由 `open_openquantum_settings` 提供，名称为
+“OpenQuantum 设置”；与插件设置入口共享 `ui://openquantum/settings/<HTML SHA-256>.html`。
+独立入口标识避免复用旧工作台路由，内容摘要让页面变化时使用新资源身份。服务端兼容旧 opener 和
+`ui://openquantum/workbench.html` 请求，但不再向菜单宣告旧工作台入口。品牌素材复用现有 OpenQuantum 标识。
 运行依赖只包括 MCP、UI bridge、JSON Schema、TOML/YAML 和系统凭据库，不包含 DSH、Codex CLI、Electron
 或另一套聊天应用。配置和 Token 不进入发行 ZIP。
 
@@ -62,7 +65,7 @@ Skill 关闭、其他 Skill 保留、缓存路径升级后的状态与重新开�
 可通过 `OPENQUANTUM_CODEX_CLI` 指定 CLI 路径。Keychain 集成测试另用
 `OPENQUANTUM_TEST_KEYCHAIN=1 npm run plugin:test`，只创建并清理随机测试服务条目。
 
-产物为 `dist/codex-plugin/openquantum-0.7.4-codex-plugin.zip`。构建不会安装到当前用户。明确安装时执行：
+产物为 `dist/codex-plugin/openquantum-0.7.5-codex-plugin.zip`。构建不会安装到当前用户。明确安装时执行：
 
 ```sh
 npm run plugin:install
@@ -87,5 +90,7 @@ npm run plugin:install
 不能为取得配置 RPC 自动启动第二个 Codex daemon。
 
 HTTP OAuth、分页 MCP 目录、跨电脑密钥同步不在此版本范围。用户需要逐项启用自定义工具。
-本地浏览器预览、协议握手、原生 CLI 安装检查与真实桌面侧边栏显示是不同验收层级；
+本地浏览器预览、协议握手、原生 CLI 安装检查、聊天旁 MCP 设置标签页和左侧菜单的全局入口
+是不同验收层级。必须从左侧“…”→“OpenQuantum 设置”进入，确认三个标签及关键配置操作；
+聊天旁标签页显示新版不能证明全局入口已经更新。
 [本轮验收记录](../releases/2026-10-11-plugin-settings.md)分别记录这些结果。

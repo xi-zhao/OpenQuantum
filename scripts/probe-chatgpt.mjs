@@ -4,6 +4,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
+import { OPENER, settingsResourceUri } from "../runtime/chatgpt/server.mjs";
 
 export async function probeTransport(transport) {
   const client = new Client({ name: "openquantum-release-probe", version: "1.0.0" });
@@ -11,19 +12,25 @@ export async function probeTransport(transport) {
   try {
     await client.connect(transport, { timeout: 60000 });
     const { tools } = await client.listTools();
-    const opener = tools.find(tool => tool.name === "open_openquantum");
-    if (!opener?._meta?.["openai/ui"]?.entrypoints?.some(item => item.type === "global") || !opener._meta.ui.visibility.includes("app")) throw new Error("Missing settings entrypoint");
+    const globalEntries = tools.filter(tool => tool._meta?.["openai/ui"]?.entrypoints?.some(item => item.type === "global"));
+    const [opener] = globalEntries;
+    if (globalEntries.length !== 1 || opener.name !== OPENER || opener.title !== "OpenQuantum 设置" ||
+        !opener._meta.ui.visibility.includes("app")) throw new Error("Missing unique global settings entrypoint");
     const result = await client.callTool({ name: opener.name, arguments: {} });
     const settings = result._meta?.openquantumSettings;
     if (result.isError || !Array.isArray(settings?.skills) || !Array.isArray(settings?.connections) || result.content.length) throw new Error("Invalid settings opener result");
     const resource = await client.readResource({ uri: opener._meta.ui.resourceUri });
-    if (!resource.contents[0]?.text?.includes("OpenQuantum")) throw new Error("Missing app resource");
+    const html = resource.contents[0]?.text;
+    if (!html || settingsResourceUri(html) !== opener._meta.ui.resourceUri ||
+        !["skills", "connections", "tools"].every(tab => html.includes(`data-tab="${tab}"`))) throw new Error("Global entrypoint does not resolve to the current settings document");
     const reference = await client.callTool({ name: "quantum_practices", arguments: { action: "list", limit: 1 } });
     if (reference.isError) throw new Error("Reference tool failed");
     const disabled = await client.callTool({ name: "openquantum_settings", arguments: { action: "tool.set", id: "quantum_practices", enabled: false, revision: settings.revision } });
     if (disabled.isError || (await client.listTools()).tools.some(tool => tool.name === "quantum_practices")) throw new Error("Tool disable did not change inventory");
     if (!(await client.callTool({ name: "quantum_practices", arguments: { action: "list" } })).isError) throw new Error("Disabled Tool accepted a cached call");
-    return { version: client.getServerVersion().version, tools: tools.length - 2, skills: settings.skills.length, settingsResource: true, referenceExecution: true, disabledToolRejected: true, hostPlacementVerified: false };
+    return { version: client.getServerVersion().version, tools: tools.length - 2, skills: settings.skills.length,
+      globalEntrypoint: opener.name, settingsResourceUri: opener._meta.ui.resourceUri,
+      settingsResource: true, referenceExecution: true, disabledToolRejected: true, hostPlacementVerified: false };
   } finally { await client.close(); }
 }
 
