@@ -413,7 +413,15 @@ test("implementation has no external process, environment, network or parameter-
     )
   ).join("\n");
   const providerSource = await readFile(providerPath, "utf8");
-  const source = `${coreSource}\n${providerSource}`;
+  const definitionSource = await readFile(
+    path.join(projectRoot, "src/capabilities/native-quantum-tools.mjs"),
+    "utf8",
+  );
+  const schemaSource = await readFile(
+    path.join(path.dirname(providerPath), "tool-schema.mjs"),
+    "utf8",
+  );
+  const source = `${coreSource}\n${providerSource}\n${definitionSource}\n${schemaSource}`;
   assert.doesNotMatch(
     source,
     /node:child_process|node:net|node:http|node:https|node:tls|node:dgram|node:fs/,
@@ -422,7 +430,7 @@ test("implementation has no external process, environment, network or parameter-
   assert.doesNotMatch(source, /\b(?:fetch|WebSocket)\s*\(/);
   assert.doesNotMatch(coreSource, /\bimport\s*\(/);
   assert.deepEqual(
-    [...providerSource.matchAll(/moduleUrl\(\s*"([^"]+)"\s*,?\s*\)/g)]
+    [...definitionSource.matchAll(/moduleUrl\(\s*"([^"]+)"\s*,?\s*\)/g)]
       .map((match) => match[1])
       .sort(),
     [
@@ -433,10 +441,17 @@ test("implementation has no external process, environment, network or parameter-
     ],
   );
   assert.doesNotMatch(
-    providerSource.replace(
+    definitionSource.replace(
       /import\(\s*moduleUrl\(\s*"[^"]+"\s*,?\s*\)\s*\)/g,
       "",
     ),
+    /\bimport\s*\(/,
+  );
+  // The copied Harness adapter may load only the shared definition module.
+  const adapterImports = /import\(\s*pathToFileURL\(path\.join\(\s*process\.cwd\(\),\s*"src\/capabilities\/native-quantum-tools\.mjs",?\s*\)\)\.href\)/g;
+  assert.equal([...providerSource.matchAll(adapterImports)].length, 1);
+  assert.doesNotMatch(
+    `${providerSource.replace(adapterImports, "")}\n${schemaSource}`,
     /\bimport\s*\(/,
   );
   assert.doesNotMatch(source, /\b(?:exec|execFile|spawn|fork|eval|Function)\s*\(/);
