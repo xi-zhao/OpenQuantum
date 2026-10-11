@@ -1,5 +1,14 @@
 # README 图片说明
 
+## 2026-10-11 Codex 插件设置页
+
+[Codex 内的 OpenQuantum 设置页](openquantum-codex-settings-20261011.png) 来自用户在本次任务中提供、
+并以“现在正常了”确认的真实 Codex 界面截图。图中显示左侧全局应用入口、Skills 列表，以及 MCP 连接
+和 Tools 标签；插件界面版本为 **0.7.5**。原图尺寸为 **3908 × 1936**，按原始字节保存，未裁剪、改字或合成。
+
+README 使用此图展示插件在 Codex 内的入口和布局。后续 0.7.7 增加的品牌介绍及 GitHub Star 链接
+未出现在这张截图中；此图不作为 0.7.7 的最新界面或所有配置操作均已通过验收的证据。
+
 ## 2026-09-19 Desktop 品牌修复
 
 [Desktop 科研工作台](openquantum-desktop-20260919.jpg) 是本次修复后从实际 macOS Electron 窗口

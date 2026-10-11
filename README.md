@@ -239,6 +239,11 @@ OpenQuantum 支持桌面安装包和源码运行，适合本机单用户使用�
 安装一次 OpenQuantum 插件，即可同时注册 **Skills、本机 MCP 服务与科学 Tools，以及 OpenQuantum 设置页**。
 你继续在 Codex 原生聊天中提问、管理项目和查看结果；左侧设置页用于配置 OpenQuantum 的能力。
 
+<p align="center">
+  <a href="./docs/images/openquantum-codex-settings-20261011.png"><img src="./docs/images/openquantum-codex-settings-20261011.png" width="100%" alt="Codex 内的 OpenQuantum 全局设置页：左侧应用入口、Skills 列表、MCP 连接和 Tools 标签" /></a><br />
+  <sub>在 Codex 中管理 OpenQuantum 的 Skills、MCP 连接和 Tools（0.7.5 实际界面，点击查看大图）。</sub>
+</p>
+
 **让 Codex 帮你安装：**打开 Codex，新建聊天，把下面这段话复制给它：
 
 ```text
