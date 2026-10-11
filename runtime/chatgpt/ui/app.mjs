@@ -1,5 +1,4 @@
 import { App } from "@modelcontextprotocol/ext-apps";
-import { mountGitHubStar } from "./github-star.mjs";
 import "./style.css";
 
 const $ = selector => document.querySelector(selector);
@@ -24,10 +23,10 @@ async function run(input) {
   if (busy) return;
   busy = true;
   notice(input.action === "connection.test" ? "正在连接 MCP 并读取工具清单…" : "正在更新设置…");
-  document.querySelectorAll("nav button,#toolbar input,#content button,#content input,#content select,#content textarea").forEach(node => node.disabled = true);
+  document.querySelectorAll("button,input,select,textarea").forEach(node => node.disabled = true);
   try { snapshot = await request({ ...input, ...(snapshot && input.action !== "snapshot" ? { revision: snapshot.revision } : {}) }); notice(snapshot.notice); }
   catch (error) { notice(error.message, true); }
-  finally { busy = false; document.querySelectorAll("nav button,#toolbar input,#content button,#content input,#content select,#content textarea").forEach(node => node.disabled = false); render(); }
+  finally { busy = false; document.querySelectorAll("button,input,select,textarea").forEach(node => node.disabled = false); render(); }
 }
 function switchFor(checked, label, action) {
   const node = element("label", undefined, "switch");
@@ -133,18 +132,18 @@ function render() {
 document.querySelectorAll("[data-tab]").forEach(node => node.onclick = () => { tab = node.dataset.tab; $("#search").value = ""; document.querySelectorAll("[data-tab]").forEach(button => button.classList.toggle("active", button === node)); render(); });
 $("#search").oninput = render;
 $("#refresh").onclick = () => run({ action: "snapshot" });
-const githubStar = mountGitHubStar({ request, openLink: async url => {
-  if (preview) { window.open(url, "_blank", "noopener,noreferrer"); return; }
-  const result = await app.openLink({ url });
-  if (result.isError) throw new Error("GitHub link was not opened");
-} });
-window.addEventListener("pagehide", () => void githubStar.close());
-try {
-  if (!preview) {
-    app = new App({ name: "OpenQuantum Settings", version: "__RELEASE_VERSION__" });
-    app.onteardown = async () => { await githubStar.close(); return {}; };
-    await app.connect();
+const githubLink = $("#github-link");
+githubLink.onclick = async event => {
+  if (preview) return;
+  event.preventDefault();
+  try {
+    const result = await app.openLink({ url: githubLink.href });
+    if (result.isError) throw new Error("GitHub link was not opened");
+  } catch {
+    notice(`未能打开 GitHub，请在浏览器访问：${githubLink.href}`, true);
   }
-  void githubStar.refresh();
+};
+try {
+  if (!preview) { app = new App({ name: "OpenQuantum Settings", version: "__RELEASE_VERSION__" }); await app.connect(); }
   await run({ action: "snapshot" });
 } catch (error) { notice(error.message, true); }

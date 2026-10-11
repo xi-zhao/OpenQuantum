@@ -15,9 +15,7 @@ Codex 插件在外层 Codex 对话中提供量子 Skill 和科学 Tool。OpenQua
 | `distributions/codex-plugin/` | 独立插件版本及运行依赖锁定 |
 
 构建从能力策略和真实 `tools/list` 生成目录、Skill 和完整输入合同，检查重复名称和策略漂移。
-当前候选包为 **0.7.8**，基于 Desktop 核心版本 0.6.0 的主线：**131 个 Skill、71 个科学 Tool**。
-0.7.8 增加用户主动发起的 GitHub 授权与原地 Star；尚缺真实 GitHub App Client ID，当前已安装版仍为 0.7.7。
-一次性注册配置、用户交互及验证边界见 [GitHub Star](GITHUB_STAR.md)。
+当前候选包为 **0.7.7**，基于 Desktop 核心版本 0.6.0 的主线：**131 个 Skill、71 个科学 Tool**。
 其中没有执行 Tool 的 Skill 明确提供方法解释与选型参考，不把知识目录数量等同于可执行计算数量。
 依赖宿主源码/Shell 的算法总入口、平台诊断、学习通、真实硬件以及尚未适配的按需连接不进入默认插件。
 
@@ -28,6 +26,10 @@ Codex 插件在外层 Codex 对话中提供量子 Skill 和科学 Tool。OpenQua
 `ui://openquantum/workbench.html` 请求，但不再向菜单宣告旧工作台入口。品牌素材复用现有 OpenQuantum 标识。
 运行依赖只包括 MCP、UI bridge、JSON Schema、TOML/YAML 和系统凭据库，不包含 DSH、Codex CLI、Electron
 或另一套聊天应用。配置和 Token 不进入发行 ZIP。
+
+品牌介绍下的 GitHub Star 链接只打开 `https://github.com/xi-zhao/OpenQuantum`，由用户在 GitHub
+仓库页面自己点击 Star。插件不申请 GitHub 授权、不显示设备授权码、不保存 GitHub Token，也不调用 Star API。
+宿主拒绝或打开失败时，设置页显示仓库地址，方便用户手动访问。
 
 ## 设置实际影响什么
 
@@ -67,7 +69,7 @@ Skill 关闭、其他 Skill 保留、缓存路径升级后的状态与重新开�
 可通过 `OPENQUANTUM_CODEX_CLI` 指定 CLI 路径。Keychain 集成测试另用
 `OPENQUANTUM_TEST_KEYCHAIN=1 npm run plugin:test`，只创建并清理随机测试服务条目。
 
-产物为 `dist/codex-plugin/openquantum-0.7.8-codex-plugin.zip`。构建不会安装到当前用户。明确安装时执行：
+产物为 `dist/codex-plugin/openquantum-0.7.7-codex-plugin.zip`。构建不会安装到当前用户。明确安装时执行：
 
 ```sh
 npm run plugin:install
