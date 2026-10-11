@@ -1,5 +1,32 @@
 # Codex 能力插件与设置页：本地候选验收
 
+## GitHub 授权与原地 Star（0.7.8，源码候选）
+
+在品牌介绍区域新增原地 Star 按钮。已有有效 OpenQuantum 授权时，由本机 Application Interface
+向固定仓库 `xi-zhao/OpenQuantum` 提交 Star；首次使用通过 GitHub App 设备授权，确认后由仍有效的
+原页面自动完成本次 Star。安装、打开页面和刷新只读取状态。Codex 连接器授权不能直接提供给本插件。
+
+当前缺少项目 GitHub App 的公开 Client ID；[注册配置](../integrations/GITHUB_STAR.md)已准备，
+`runtime/chatgpt/github-app.json` 保持空配置。不把本地模拟成功写成真实账号已经可用。
+本轮没有替换已安装的 0.7.7，没有真实授权、Star、推送或发布。
+
+- 工程检查：全部 51 项插件测试通过，无跳过，含随机隔离服务名的 macOS 系统凭据库读写和清理；
+  GitHub 流程自身使用内存凭据及 HTTP 夹具，不构成真实 OAuth Token 的 Keychain 联调。
+  相关 ESLint、`git diff --check` 和 0.7.8 构建通过，能力数量保持 131 个 Skill、71 个科学 Tool。
+- 独立审查：发现并修复宿主取消未传递、取消时跨进程误删授权，以及迟到取消使 UI 停留在提交状态
+  三个问题。复审独立运行 GitHub 回归 35/35 通过，无新的实质阻断。
+- 浏览器预览：使用真实构建 HTML、隔离 Settings、真实应用服务与模拟 GitHub 响应。
+  点击显示授权码、取消后未发送 PUT、设置刷新不重新启用 Star 按钮、模拟授权后自动显示已 Star、
+  断开本机授权的操作通过。完整模拟序列只发出一次 PUT，没有调用真实 GitHub Star API。
+- 窄屏实测 `innerWidth=clientWidth=scrollWidth=560`，授权面板宽 524 CSS px，按钮和授权码完整显示，
+  无横向溢出；不把浏览器请求的设备尺寸当作实测 CSS 宽度。测试页面和服务已关闭，临时凭据及设置已清理。
+- 本地证据保存在任务 `implementation/`：`github-auth-0.7.8-evidence.json`、
+  `github-auth-0.7.8-pending.png`、`github-auth-0.7.8-success.png`、
+  `github-auth-0.7.8-narrow.png`、`github-auth-0.7.8-pending-narrow.png`，以及可复现的
+  `github-auth-preview.mjs` 和仅含方法/路径的 `github-auth-preview-calls.json`。
+- 待验收：真实 Client ID 注册、两位自愿测试用户的真实授权/Star，以及新版 Codex 左侧全局入口中的
+  打开 GitHub 和关闭页面行为；浏览器预览与 MCP 取消回归不能替代这些检查。科学状态没有改变。
+
 日期：2026-10-11。任务分支 `c/openquantum-plugin-settings`，实施基线为远端 main 的
 `16b621e674c58e206f54f4180ad304dd82bee06f`。本记录分别描述候选验证与随后本机安装，
 不代表已推送、公开发布或通过最终科学 Acceptance。

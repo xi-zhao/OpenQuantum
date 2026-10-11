@@ -11,10 +11,12 @@ export async function startPreview(context) {
     if (request.headers.host !== new URL(origin).host) return send(403, { error: "Forbidden" });
     if (request.method === "GET" && request.url === "/") return send(200, context.html, "text/html; charset=utf-8");
     if (request.method !== "POST" || request.url !== "/settings" || request.headers.origin !== origin || request.headers.authorization !== `Bearer ${token}` || !request.headers["content-type"]?.startsWith("application/json")) return send(403, { error: "Forbidden" });
+    const controller = new AbortController();
+    response.once("close", () => { if (!response.writableEnded) controller.abort(); });
     try {
       let body = "";
       for await (const chunk of request) { body += chunk; if (Buffer.byteLength(body) > 32768) return send(413, { error: "Request too large" }); }
-      send(200, await settingsRequest(context, JSON.parse(body)));
+      send(200, await settingsRequest(context, JSON.parse(body), controller.signal));
     } catch (error) { send(400, { error: error.message }); }
   });
   server.requestTimeout = 15000;
