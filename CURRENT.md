@@ -4,11 +4,12 @@
 
 ## Codex 能力插件与设置页（2026-10-11，本地候选）
 
-- 新增独立 Codex 插件发行定义，共享 Skill、Tool implementation 和科学合同；当前候选为 0.7.6，131 个 Skill、71 个科学 Tool。
+- 新增独立 Codex 插件发行定义，共享 Skill、Tool implementation 和科学合同；当前候选为 0.7.7，131 个 Skill、71 个科学 Tool。
 - Codex 原生界面负责聊天、项目、线程和登录，侧边页只管理本插件的 Skill、MCP、Tool 和系统凭据；不接入学习通。
 - 临时原生 Codex 安装、Skill 关闭/重开及缓存路径升级检查通过。随后本机 Codex 已从 0.7.3 更新并启用 0.7.4；聊天旁的 MCP 设置标签页已显示 Skills、MCP 连接、Tools，切换与刷新检查通过。此证据不覆盖左侧菜单的全局入口。Desktop 安装未替换。
 - 0.7.5 已安装并启用，为全局设置入口使用独立的 opener 和带 HTML 摘要的资源地址；用户已提供左侧全局应用截图并确认正常，版本、三个设置标签及 Skill 列表显示验收通过。用户配置保持不变；此确认不扩展为所有配置操作的完整验收。
 - 0.7.6 已安装并启用，将设置页顶部的操作说明替换为 OpenQuantum 品牌介绍，沿用“让量子想法运行起来”的项目主张；设置功能和能力目录保持不变。已检查本机预览排版及实际安装内容，详情见验收记录。
+- 0.7.7 在品牌介绍下新增 GitHub Star 入口，指向 `xi-zhao/OpenQuantum`；原生宿主通过 `openLink` 打开，拒绝或失败时显示可复制的仓库地址。本机安装与显示核验待完成。
 - 随后原生交互验收验证了 Skill 配置写入、内置 Tool 实际禁用、HTTP/stdio MCP 握手及启停；测试配置和凭据已恢复。凭据表单单独打开可用，但原生入口自动开窗尚未通过，且 `openLink` 的 `isError` 未检查，完整产品验收暂不通过。
 - Desktop 的受控 Home patch 停用 DeepSeek 账户、充值与插件管理/市场界面；保留 Cordis 内部装配。配置组合检查通过，原生 Desktop 显示尚未验收。
 - 实现与验收范围、尚未验证的原生交互及配置并发限制见[验收记录](docs/releases/2026-10-11-plugin-settings.md)，使用和恢复见[插件说明](docs/integrations/CODEX_PLUGIN.md)。未发布、未 push，不改变下方既有模型或科学验收状态。

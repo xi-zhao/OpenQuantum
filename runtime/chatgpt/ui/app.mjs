@@ -132,6 +132,17 @@ function render() {
 document.querySelectorAll("[data-tab]").forEach(node => node.onclick = () => { tab = node.dataset.tab; $("#search").value = ""; document.querySelectorAll("[data-tab]").forEach(button => button.classList.toggle("active", button === node)); render(); });
 $("#search").oninput = render;
 $("#refresh").onclick = () => run({ action: "snapshot" });
+const githubLink = $("#github-link");
+githubLink.onclick = async event => {
+  if (preview) return;
+  event.preventDefault();
+  try {
+    const result = await app.openLink({ url: githubLink.href });
+    if (result.isError) throw new Error("GitHub link was not opened");
+  } catch {
+    notice(`未能打开 GitHub，请在浏览器访问：${githubLink.href}`, true);
+  }
+};
 try {
   if (!preview) { app = new App({ name: "OpenQuantum Settings", version: "__RELEASE_VERSION__" }); await app.connect(); }
   await run({ action: "snapshot" });

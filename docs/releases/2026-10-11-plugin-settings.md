@@ -159,6 +159,15 @@ Skill 搜索框、131/131 项启用计数和 Skill 卡片正常显示。因此�
   安装记录为 `implementation/local-install-0.7.6.log`。本次排版截图是本机浏览器预览，
   不冒充 Codex 全局截图；全局入口显示的用户验收证据对应上文 0.7.5。
 
+## GitHub Star 入口（0.7.7，2026-10-11）
+
+品牌介绍下新增“GitHub · 给 OpenQuantum 点个 Star”链接，并显示“欢迎支持项目，一起让量子计算更易用。”。
+地址为仓库 origin 对应的 `https://github.com/xi-zhao/OpenQuantum`。本机预览使用标准新标签页链接；
+MCP App 使用宿主 `openLink`，检查 `isError` 并捕获异常，失败时显示仓库地址供用户复制。
+链接只负责打开仓库，由用户自行选择 Star。候选版本递增至 0.7.7。
+
+既有入口回归 2/2、前端 ESLint 和 diff 检查通过。排版、跳转及本机安装核验待补充。
+
 ## Desktop 入口清理（独立修改）
 
 `scripts/lib/product-ui-policy.mjs` 在受控 Home patch 中停用上游已存在的账户、账户控制器、插件市场与

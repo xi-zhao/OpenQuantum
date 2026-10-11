@@ -15,7 +15,7 @@ Codex 插件在外层 Codex 对话中提供量子 Skill 和科学 Tool。OpenQua
 | `distributions/codex-plugin/` | 独立插件版本及运行依赖锁定 |
 
 构建从能力策略和真实 `tools/list` 生成目录、Skill 和完整输入合同，检查重复名称和策略漂移。
-当前候选包为 **0.7.6**，基于 Desktop 核心版本 0.6.0 的主线：**131 个 Skill、71 个科学 Tool**。
+当前候选包为 **0.7.7**，基于 Desktop 核心版本 0.6.0 的主线：**131 个 Skill、71 个科学 Tool**。
 其中没有执行 Tool 的 Skill 明确提供方法解释与选型参考，不把知识目录数量等同于可执行计算数量。
 依赖宿主源码/Shell 的算法总入口、平台诊断、学习通、真实硬件以及尚未适配的按需连接不进入默认插件。
 
@@ -65,7 +65,7 @@ Skill 关闭、其他 Skill 保留、缓存路径升级后的状态与重新开�
 可通过 `OPENQUANTUM_CODEX_CLI` 指定 CLI 路径。Keychain 集成测试另用
 `OPENQUANTUM_TEST_KEYCHAIN=1 npm run plugin:test`，只创建并清理随机测试服务条目。
 
-产物为 `dist/codex-plugin/openquantum-0.7.6-codex-plugin.zip`。构建不会安装到当前用户。明确安装时执行：
+产物为 `dist/codex-plugin/openquantum-0.7.7-codex-plugin.zip`。构建不会安装到当前用户。明确安装时执行：
 
 ```sh
 npm run plugin:install
