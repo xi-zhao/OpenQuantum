@@ -115,6 +115,25 @@ resource URI；旧实现同时沿用 `open_openquantum` 与 `ui://openquantum/wo
   新增回归覆盖入口绑定、同内容重启 URI 稳定、HTML 更新后 URI 变化，以及旧协议请求兼容。
 - 此段记录源码检查；安装后版本、实际全局显示与剩余限制另行记录。
 
+### 0.7.5 本机安装读回
+
+- 源码提交 `a92b641cc03fb5fbbac19584f589b8c4f838801f`，从干净工作树构建；独立审查无新增阻断，
+  审查者另跑入口测试 2/2 通过。
+- 原生 CLI 安装成功，随后 `plugin list` 读回 `openquantum@personal` 为 0.7.5，
+  `installed=true`、`enabled=true`。安装源为
+  `.local/share/openquantum/desktop/0.7.5-99489a9720d06ff9/plugin`。
+- ZIP SHA-256：`99489a9720d06ff9d34541dc9c85b982212836ec701f1af22344b08851d0d7ff`。
+- 从实际安装缓存 `.codex/plugins/cache/personal/openquantum/0.7.5` 启动隔离配置的 MCP 探针，
+  读到唯一全局 opener `open_openquantum_settings`；其资源为
+  `ui://openquantum/settings/a082d894e24fd5dfc6eba19adedca9f1493959fb6f27a11ea973dc6011932345.html`，
+  内容摘要及三个设置标签相符。131 个 Skill、71 个科学 Tool、实际资料检索与禁用拒绝检查通过。
+- 升级前后的真实 Codex 配置和插件设置文件摘要一致，没有改变用户能力开关或连接配置。
+- **全局页面仍未完成目视验收。** 当前 Computer Use 禁止操作 Codex 主窗口，而 MCP Apps
+  自动化只暴露当前聊天的侧边标签页；因此没有用新标签页或协议检查替代左侧全局入口的验收。
+  需从左侧“…”→“OpenQuantum 设置”确认显示 0.7.5 与三个标签。此前 0.7.4 的凭据入口缺口仍保留。
+- 本机材料：`implementation/local-install-0.7.5.log` 和
+  `implementation/global-upgrade-preservation.json`。仅本地安装、提交，未推送、创建 PR 或公开发布。
+
 ## Desktop 入口清理（独立修改）
 
 `scripts/lib/product-ui-policy.mjs` 在受控 Home patch 中停用上游已存在的账户、账户控制器、插件市场与
