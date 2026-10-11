@@ -194,4 +194,4 @@ Skill 与 Tool 在概念和发行版 policy 中都相互独立：Skill-only、To
 
 如果规范与实现不一致，应说明架构偏差及其影响，不静默选择其中一份作为一致事实。仅在完成当前任务确实需要且已有授权时修复；纯诊断只给出证据和建议。
 
-扩展治理的当前条目见[全量治理清单](architecture/EXTENSION_GOVERNANCE.md)，使用规则见[环境准备](integrations/LOCAL_ENVIRONMENTS.md)与[相近能力选择](integrations/CAPABILITY_SELECTION.md)。
+扩展治理的当前条目见[全量治理清单](architecture/EXTENSION_GOVERNANCE.md)，使用规则见[环境准备](integrations/LOCAL_ENVIRONMENTS.md)、[相近能力选择](integrations/CAPABILITY_SELECTION.md)与[大型结果交付](integrations/SCIENCE_RESULT_DELIVERY.md)。
