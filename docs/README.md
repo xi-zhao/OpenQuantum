@@ -5,8 +5,8 @@
 
 ## 先记住三个结论
 
-1. **OpenQuantum 是 DeepSeek Harness 的量子科研发行版，不是第二个 Agent Runtime。** Session、Agent loop、
-   Tool Registry、Skill Registry、审批、沙箱、模型调用和事件日志都以 Harness 为权威。
+1. **OpenQuantum 提供共享量子能力，有 Desktop 与 Codex 插件两个发行入口。** Desktop 使用 DeepSeek Harness，
+   保留量子学习通；Codex 插件使用宿主原生聊天与登录，侧边页只配置能力。OpenQuantum 不新增 Agent Runtime。
 2. **Agent 唯一直接调用的执行原语是 Tool。** Skill 提供工作方法；原生 Tool Plugin 或 Harness MCP Client
    把 Tool 注册进 Registry；MCP Server 只是 Tool 的进程外或远程提供方式。
 3. **运行完成不等于科学验收通过。** Tool 产生 facts，Materializer 形成可重读证据，Validator 产生
@@ -15,6 +15,18 @@
 界面与文档语言：工作台支持首批 10 种语言，语言包、学习通同步及原生系统对话框回退范围见[多语言说明](../runtime/openquantum/web-locales/README.md)。
 
 ## 架构总览
+
+```mermaid
+flowchart TB
+  S[共享 Skill、Tool implementation 与科学合同] --> D[Desktop / DeepSeek Harness]
+  S --> C[Codex 插件 / 本机 MCP]
+  D --> L[量子学习通与科研工作台]
+  C --> H[Codex 原生聊天、项目与线程]
+  C --> P[OpenQuantum 能力设置页]
+```
+
+Codex 的目录、打包和设置边界见 [Codex 插件](integrations/CODEX_PLUGIN.md)。下方 Harness Runtime、
+Agent Preset 和事件日志的详细结构描述 Desktop 发行版；Codex 插件不复制这些运行时对象。
 
 OpenQuantum 的产品核心对象是 **Capability**：用户能够理解的一项有界量子科研能力。Capability 按实际需要
 组合 Skill、Tool Provider、科学验证和证据，不会自动创造新的 Runtime 对象。

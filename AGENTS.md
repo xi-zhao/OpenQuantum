@@ -36,7 +36,12 @@ Model 等要求描述 OpenQuantum 产品架构，不要求仓库维护任务都�
 
 ## 产品与架构基线
 
-OpenQuantum 是一个科研 Agent 操作平台。DeepSeek Harness 负责通用 Agent Runtime，量子计算、
+OpenQuantum 以共享 Skill、Tool implementation 和科学合同为核心，有两个发行入口：Desktop 与 Codex 插件。
+Desktop 保留量子学习通，由 DeepSeek Harness 负责通用 Agent Runtime；Codex 插件使用外层 Codex 的聊天、
+项目、线程、登录和模型，侧边页只配置本插件的 Skill、MCP 连接与 Tool，不携带第二个 app-server 或学习通。
+Codex 打包与设置合同见 `docs/integrations/CODEX_PLUGIN.md`；以下 Harness/Cordis 生命周期规则适用于 Desktop。
+
+Desktop 中，量子计算、
 性质预测、案例咨询和通用问答等产品能力由 Agent Preset 组合独立的 Harness Skill 与 Tool Provider；
 Tool 可以由原生 Tool Plugin 注册，或由 MCP Server 暴露后经 Harness MCP Client 注册，必要时再调用
 OpenQuantum Scientific Validator。只有 Tool hook 等 Agent 生命周期行为才在同一 Preset 组合受信任的
@@ -116,6 +121,10 @@ Model Adapter、Host 或 Client Plugin 角色和 scope；上下文已明确时�
 
 ## 代码位置
 
+- `src/capabilities`：与宿主无关的原生 Tool 定义与计算，Harness 和 Codex 适配器共同引用。
+- `runtime/chatgpt`：Codex 本机 MCP 与设置页适配器；不拥有聊天、模型、项目或科研 Acceptance。
+- `src/settings/codex`：本插件的设置、MCP 连接与系统凭据窗口；不得修改其他插件的开关。
+- `distributions/codex-plugin`：插件自己的发布版本和最小运行依赖，独立于 Desktop 版本。
 - `runtime/openquantum`：Harness patch、preset、模型 route、品牌和原生 Client Plugin。
 - `src/settings/server`：项目 Skill、MCP Server 连接与凭据引用的受控设置实现。
 - `.agents/skills`：Harness 原生 Skill 指令，以及为维护 locality 可选共置的领域资源；连接 MCP Server 的

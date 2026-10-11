@@ -7,6 +7,7 @@ export default [
       ".openquantum/**",
       "coverage/**",
       "node_modules/**",
+      "dist/**",
     ],
   },
   js.configs.recommended,

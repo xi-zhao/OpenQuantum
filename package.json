@@ -2,7 +2,7 @@
   "name": "openquantum",
   "version": "0.6.0",
   "private": true,
-  "description": "A DeepSeek Harness distribution for open quantum research",
+  "description": "Quantum research Skills and Tools for DeepSeek Harness Desktop and Codex",
   "author": "OpenQuantum contributors",
   "license": "MIT",
   "keywords": [
@@ -109,7 +109,14 @@
     "capability:sdk-expansion:live": "OPENQUANTUM_REAL_SDK_EXPANSION_CIRCUITS=1 OPENQUANTUM_REAL_SDK_EXPANSION_RESOURCES=1 OPENQUANTUM_REAL_SDK_EXPANSION_CLOUD_CONTROL=1 OPENQUANTUM_REAL_SDK_EXPANSION_IO=1 OPENQUANTUM_REAL_SDK_EXPANSION=1 node --test --test-concurrency=1 tests/sdk-expansion-circuits-live.test.mjs tests/sdk-expansion-resources-live.test.mjs tests/sdk-expansion-cloud-control-live.test.mjs tests/sdk-expansion-io-live.test.mjs tests/harness-sdk-expansion.test.mjs",
     "capability:sdk-gaps:setup": "node scripts/setup-paper-tools.mjs qcover-optimization pychemiq-chemistry qblox-scheduling qililab-control guppy-programs oqc-qat merlin-learning",
     "capability:sdk-gaps:test": "node --test tests/sdk-gaps-domestic-contracts.test.mjs tests/sdk-gaps-control-contracts.test.mjs tests/sdk-gaps-simulation-contracts.test.mjs tests/sdk-gaps-cloud-contracts.test.mjs",
-    "capability:sdk-gaps:live": "OPENQUANTUM_REAL_SDK_GAPS_DOMESTIC=1 OPENQUANTUM_REAL_SDK_GAPS_CONTROL=1 OPENQUANTUM_REAL_SDK_GAPS_SIMULATION=1 OPENQUANTUM_REAL_SDK_GAPS_CLOUD=1 OPENQUANTUM_REAL_SDK_GAPS=1 node --test --test-concurrency=1 tests/sdk-gaps-domestic-live.test.mjs tests/sdk-gaps-control-live.test.mjs tests/sdk-gaps-simulation-live.test.mjs tests/sdk-gaps-cloud-live.test.mjs tests/harness-sdk-gaps.test.mjs"
+    "capability:sdk-gaps:live": "OPENQUANTUM_REAL_SDK_GAPS_DOMESTIC=1 OPENQUANTUM_REAL_SDK_GAPS_CONTROL=1 OPENQUANTUM_REAL_SDK_GAPS_SIMULATION=1 OPENQUANTUM_REAL_SDK_GAPS_CLOUD=1 OPENQUANTUM_REAL_SDK_GAPS=1 node --test --test-concurrency=1 tests/sdk-gaps-domestic-live.test.mjs tests/sdk-gaps-control-live.test.mjs tests/sdk-gaps-simulation-live.test.mjs tests/sdk-gaps-cloud-live.test.mjs tests/harness-sdk-gaps.test.mjs",
+    "plugin:build": "node scripts/build-codex-plugin.mjs",
+    "plugin:release": "node scripts/build-codex-release.mjs",
+    "plugin:preview": "node runtime/chatgpt/main.mjs --preview",
+    "plugin:test": "node --test tests/codex-plugin-*.test.mjs",
+    "plugin:install": "node scripts/install-codex-plugin.mjs",
+    "plugin:probe": "node scripts/probe-chatgpt.mjs dist/codex-plugin/openquantum",
+    "plugin:host-check": "node scripts/verify-codex-plugin-host.mjs"
   },
   "dependencies": {
     "@deepseek-ai/dsh": "0.1.5-rc.1",
@@ -131,7 +138,11 @@
     "pnpm": "11.26.0",
     "sanitize-html": "2.17.7",
     "ws": "8.21.3",
-    "yaml": "2.9.0"
+    "yaml": "2.9.0",
+    "@modelcontextprotocol/ext-apps": "1.7.5",
+    "@napi-rs/keyring": "2.1.1",
+    "smol-toml": "1.9.1",
+    "fflate": "0.8.3"
   },
   "devDependencies": {
     "@agentclientprotocol/sdk": "1.4.0",

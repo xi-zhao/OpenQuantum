@@ -1,0 +1,17 @@
+{
+  "name": "openquantum-codex-plugin",
+  "version": "0.7.8",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "description": "OpenQuantum scientific tools and capability settings for the native Codex host",
+  "engines": { "node": ">=24" },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.30.0",
+    "@modelcontextprotocol/ext-apps": "1.7.5",
+    "@napi-rs/keyring": "2.1.1",
+    "ajv": "8.20.0",
+    "smol-toml": "1.9.1",
+    "yaml": "2.9.0"
+  }
+}

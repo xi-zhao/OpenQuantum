@@ -1,0 +1,156 @@
+import path from "node:path";
+import os from "node:os";
+import { randomUUID } from "node:crypto";
+import { parse, stringify } from "smol-toml";
+import { atomicWrite, digest, readOptional, withLock } from "./storage.mjs";
+
+const NAME = /^[a-z][a-z0-9_-]{0,31}$/;
+const ENV = /^[A-Za-z_][A-Za-z0-9_]{0,63}$/;
+const fresh = () => ({ schemaVersion: 1, disabledTools: [], disabledProviders: [], connections: [] });
+export const credentialRef = id => `mcp-${id}`;
+export const externalToolName = (id, tool) => `oqext_${id.slice(0, 16)}_${tool.slice(0, 16)}_${digest(JSON.stringify([id, tool])).slice(0, 20)}`;
+function record(value) { return value && typeof value === "object" && !Array.isArray(value); }
+function requireKeys(input, keys) {
+  if (!record(input) || Object.keys(input).some(key => !keys.includes(key))) throw new Error("设置字段无效");
+}
+function bool(value) { if (typeof value !== "boolean") throw new Error("启用状态必须是布尔值"); return value; }
+function toggle(list, name, enabled) { return enabled ? list.filter(value => value !== name) : [...new Set([...list, name])]; }
+function skillSelector(entry, id, skillRoot) {
+  return entry.name === `openquantum:${id}` || (typeof entry.path === "string" && path.resolve(entry.path) === path.join(skillRoot, id, "SKILL.md"));
+}
+
+export function validateConnection(input) {
+  requireKeys(input, ["id", "transport", "url", "command", "args", "tokenEnv", "authentication"]);
+  if (typeof input.id !== "string" || !NAME.test(input.id) || !["none", "token"].includes(input.authentication)) throw new Error("连接名称或认证方式无效");
+  if (input.transport === "http") {
+    if (typeof input.url !== "string" || input.url.length > 2048) throw new Error("MCP 地址无效");
+    const url = new URL(input.url);
+    if (url.username || url.password || url.search || url.hash || (url.protocol !== "https:" && !(url.protocol === "http:" && ["127.0.0.1", "[::1]", "localhost"].includes(url.hostname)))) throw new Error("请使用不含凭据的 HTTPS MCP 地址（本机测试允许 HTTP）");
+    return { id: input.id, transport: "http", url: url.href, authentication: input.authentication, enabled: false, tools: [] };
+  }
+  if (input.transport !== "stdio" || typeof input.command !== "string" || !input.command.trim() || input.command.length > 1024 || /[\r\n\0]/.test(input.command)) throw new Error("stdio 命令无效");
+  if (!Array.isArray(input.args) || input.args.length > 32 || input.args.some(arg => typeof arg !== "string" || arg.length > 2048 || /[\r\n\0]/.test(arg))) throw new Error("启动参数无效");
+  if (input.authentication === "token" && (typeof input.tokenEnv !== "string" || !ENV.test(input.tokenEnv))) throw new Error("请填写接收 Token 的环境变量名");
+  return { id: input.id, transport: "stdio", command: input.command, args: input.args, authentication: input.authentication,
+    ...(input.authentication === "token" ? { tokenEnv: input.tokenEnv } : {}), enabled: false, tools: [] };
+}
+
+export class Settings {
+  constructor({ backend, credentials, skillRoot, directory = path.join(os.homedir(), ".openquantum/plugins/codex"), codexHome = process.env.CODEX_HOME || path.join(os.homedir(), ".codex") }) {
+    Object.assign(this, { backend, credentials, skillRoot });
+    this.file = path.join(directory, "settings.json");
+    this.codexFile = path.join(codexHome, "config.toml");
+    this.listeners = new Set();
+    this.statuses = new Map();
+  }
+  async read() {
+    const [raw, codexRaw] = await Promise.all([readOptional(this.file), readOptional(this.codexFile)]);
+    let config;
+    try { config = raw ? JSON.parse(raw) : fresh(); }
+    catch { throw new Error("OpenQuantum 配置无法解析，请保留文件并检查升级说明"); }
+    if (config.schemaVersion !== 1 || !Array.isArray(config.disabledTools) || !Array.isArray(config.disabledProviders) || !Array.isArray(config.connections)) throw new Error("设置版本不受支持，请保留文件并检查升级说明");
+    let codex;
+    try { codex = codexRaw ? parse(codexRaw) : {}; }
+    catch { throw new Error("Codex 配置无法解析，请修复用户配置后重试"); }
+    return { config, codex, raw, codexRaw, revision: digest(`${raw}\0${codexRaw}`) };
+  }
+  skills(codex) {
+    return this.backend.sourceCapabilities.filter(item => item.status === "available" && item.skill).map(item => {
+      const override = codex.skills?.config?.findLast(value => skillSelector(value, item.id, this.skillRoot));
+      return { id: item.id, title: item.title, description: item.description, tools: item.tools, enabled: override?.enabled !== false };
+    });
+  }
+  async snapshot() {
+    const { config, codex, revision } = await this.read();
+    const providers = this.backend.providers.map(provider => ({ id: provider.key, title: provider.title || provider.key, enabled: !config.disabledProviders.includes(provider.key), bundled: true }));
+    const tools = this.backend.tools.map(tool => ({ id: tool.name, title: tool.title || tool.name, description: tool.description,
+      provider: this.backend.providerFor(tool.name), enabled: !config.disabledTools.includes(tool.name), readOnly: tool.annotations?.readOnlyHint === true }));
+    const connections = await Promise.all(config.connections.map(async connection => ({ ...connection,
+      credential: connection.authentication === "token" ? await this.credentials.describe(credentialRef(connection.id)) : { configured: false },
+      status: this.statuses.get(connection.id) ?? { state: "not_checked", message: "尚未测试连接" },
+    })));
+    return { revision, skills: this.skills(codex), providers, tools, connections,
+      notice: "Skill 开关保存在 Codex 用户配置；已有聊天可能需要重载。Tool 禁用立即阻止新的调用。", scope: "当前用户的 OpenQuantum 插件" };
+  }
+  async enabled(name) {
+    const { config } = await this.read();
+    const provider = this.backend.providerFor(name);
+    if (provider) return !config.disabledProviders.includes(provider) && !config.disabledTools.includes(name);
+    return config.connections.some(connection => connection.enabled && connection.tools.some(tool => externalToolName(connection.id, tool.name) === name && tool.enabled));
+  }
+  async listTools() {
+    const { config } = await this.read();
+    return [
+      ...this.backend.tools.filter(tool => !config.disabledTools.includes(tool.name) && !config.disabledProviders.includes(this.backend.providerFor(tool.name))),
+      ...config.connections.filter(connection => connection.enabled).flatMap(connection => connection.tools.filter(tool => tool.enabled).map(({ enabled: _enabled, ...tool }) => ({ ...tool, name: externalToolName(connection.id, tool.name) }))),
+    ];
+  }
+  async command(input) {
+    requireKeys(input, ["action", "revision", "id", "enabled", "connection", "tool"]);
+    if (typeof input.revision !== "string") throw new Error("缺少设置版本，请刷新页面");
+    await withLock(this.file, () => withLock(this.codexFile, async () => {
+      const current = await this.read();
+      if (input.revision !== current.revision) throw new Error("配置已被其他操作更新，请刷新后重试");
+      const { config, codex } = current;
+      switch (input.action) {
+        case "skill.set": {
+          if (!this.skills(codex).some(skill => skill.id === input.id)) throw new Error("未知 OpenQuantum Skill");
+          const entries = (codex.skills?.config ?? []).filter(value => !skillSelector(value, input.id, this.skillRoot));
+          // The native plugin-qualified selector survives versioned cache paths.
+          entries.push({ name: `openquantum:${input.id}`, enabled: bool(input.enabled) });
+          codex.skills = { ...codex.skills, config: entries };
+          // The current desktop host has no supported config-write bridge.
+          // Preserve the previous document privately; the guarded replacement
+          // detects observed conflicts, but is not a cross-process atomic CAS.
+          await atomicWrite(`${this.codexFile}.openquantum-backup`, current.codexRaw);
+          await atomicWrite(this.codexFile, stringify(codex), { expected: current.codexRaw });
+          break;
+        }
+        case "tool.set":
+          if (!this.backend.tools.some(tool => tool.name === input.id)) throw new Error("未知内置 Tool");
+          config.disabledTools = toggle(config.disabledTools, input.id, bool(input.enabled)); break;
+        case "provider.set":
+          if (!this.backend.providers.some(provider => provider.key === input.id)) throw new Error("未知内置 MCP 连接");
+          config.disabledProviders = toggle(config.disabledProviders, input.id, bool(input.enabled)); break;
+        case "connection.add": {
+          const connection = validateConnection(input.connection);
+          if (config.connections.some(value => value.id === connection.id) || config.connections.length >= 32) throw new Error("连接名称重复或已达数量上限");
+          config.connections.push({ ...connection, instance: randomUUID() }); break;
+        }
+        case "connection.set": {
+          const connection = config.connections.find(value => value.id === input.id);
+          if (!connection) throw new Error("连接不存在");
+          if (bool(input.enabled) && connection.authentication === "token" && !(await this.credentials.describe(credentialRef(connection.id))).configured) throw new Error("请先保存此连接需要的 Token");
+          connection.enabled = input.enabled; break;
+        }
+        case "connection.tool.set": {
+          const connection = config.connections.find(value => value.id === input.id);
+          const tool = connection?.tools.find(value => value.name === input.tool);
+          if (!tool) throw new Error("请先测试连接，获取真实 Tool 列表");
+          tool.enabled = bool(input.enabled); break;
+        }
+        case "connection.remove": {
+          const connection = config.connections.find(value => value.id === input.id);
+          if (!connection || connection.enabled) throw new Error("请先关闭连接再移除");
+          if (connection.authentication === "token" && (await this.credentials.describe(credentialRef(connection.id))).configured) throw new Error("请先移除此连接的 Token");
+          config.connections = config.connections.filter(value => value.id !== input.id); break;
+        }
+        default: throw new Error("未知设置操作");
+      }
+      if (input.action !== "skill.set") await atomicWrite(this.file, JSON.stringify(config, null, 2) + "\n");
+    }));
+    await this.changed();
+    return this.snapshot();
+  }
+  async inventory(id, tools, before) {
+    await withLock(this.file, async () => {
+      const { config } = await this.read();
+      const connection = config.connections.find(value => value.id === id);
+      if (!connection || JSON.stringify({ ...connection, tools: [] }) !== before) throw new Error("连接配置已变化，请重新测试");
+      connection.tools = tools.map(tool => ({ ...tool, enabled: connection.tools.find(value => value.name === tool.name)?.enabled === true }));
+      await atomicWrite(this.file, JSON.stringify(config, null, 2) + "\n");
+    });
+    await this.changed();
+  }
+  async changed() { await Promise.allSettled([...this.listeners].map(listener => listener())); }
+}
