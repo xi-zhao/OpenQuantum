@@ -50,9 +50,8 @@
 
 ## 仍未验证或存在的限制
 
-- 用户真实 Codex 插件已更新，原生侧边页显示与只读刷新已实测。真实宿主内的 Skill / Tool 开关写入、
-  添加 MCP 连接及打开本机凭据链接尚未实测；本地浏览器、隔离 CLI 与原生页面的证据分别记录，
-  不把局部检查等同于完整桌面产品验收。
+- 用户真实 Codex 插件已更新，原生侧边页、开关写入、MCP 添加和握手已实测；完整产品验收暂未通过，
+  凭据入口的自动打开路径仍待确认和修复错误处理。下方逐项记录真实界面与独立后端检查的边界。
 - 当前宿主默认控制 socket 不存在，也没有 MCP Apps 原生配置写桥。直接 TOML 写入有受保护备份、
   锁、revision 和替换前比较，但与其他 Codex 进程之间不是原子 CAS；最后替换仍存在竞态窗口。
   注释与排版会重新序列化。使用和恢复见[插件说明](../integrations/CODEX_PLUGIN.md)。
@@ -61,6 +60,42 @@
 
 复跑入口：`plugin:test`、`plugin:build`、`plugin:probe`、`plugin:host-check`。
 `plugin:host-check` 中的 `0.7.5-fixture` 仅用于验证缓存路径变化，不是发布版本。
+
+## 原生设置交互验收（2026-10-11）
+
+对象为已安装的 0.7.4，源代码提交仍为 `b6c789dd`；使用当前任务的原生 MCP Apps 侧边页。
+**结论：核心设置流程部分通过，凭据窗口自动打开路径未通过验收，不能签为完整通过。**
+本轮没有修改产品代码、推送或发布。
+
+| 场景 | 结果与直接证据 |
+| --- | --- |
+| Skill 搜索、关闭、刷新、恢复 | 原生页面关闭 `quantum-guide-algorithms-search` 后，计数从 131 变为 130；刷新后仍关闭；`config.toml` 对应命名空间条目为 `enabled=false`，其余配置值相同；重新开启成功 |
+| 内置 Tool 关闭与实际调用 | 原生页面关闭 `quantum_practices` 后，当前对话的真实 Tool 调用返回 `isError=true` 和“Tool 未启用”；重新开启后同一查询成功 |
+| HTTP MCP 添加与默认状态 | 原生页面添加回环测试服务，连接默认关闭；没有 Token 时启用被拒绝 |
+| Token 表单和系统凭据库 | 单独在 Chrome 打开设置页生成的凭据链接，测试值保存成功、输入清空、按钮禁用；原生页刷新后显示已配置；新后端进程仍能读取凭据状态；设置 JSON 不包含测试值 |
+| 带认证的 HTTP 握手 | 原生页面“测试连接”成功，发现一个整数乘二 Tool；新 Tool 默认关闭 |
+| MCP Tool 授权和执行 | 仅启用连接时目录不包含该 Tool、调用被拒绝；勾选 Tool 后新启动的已安装插件后端列出它并返回 `3 → 6`；关闭连接后目录和调用重新拒绝 |
+| stdio MCP | 在原生页面切换字段、添加 Node fixture、真实握手并勾选连接与 Tool；新启动的已安装插件后端成功返回 `3 → 6` |
+| 服务离线 | 停止本轮 HTTP fixture 后，原生页显示连接测试失败，全部按钮恢复可用 |
+| 删除保护与清理 | 含已保存 Token 的连接不能直接移除；凭据表单移除测试 Token 后成功删除连接；stdio 关闭后删除；原生页最终为 0 个自定义连接 |
+| 配置保留与恢复 | 多次从实际 0.7.4 安装 manifest 启动独立 MCP 后端，均读到已保存状态。结束时 Codex 配置字节恢复到验收前，原本不存在的插件设置文件恢复为不存在，Keychain 测试条目已删除 |
+
+### 阻断与尚未覆盖
+
+- 原生侧边页的“配置 Token”和后续“打开本机凭据窗口”均未在可访问的浏览器标签页中产生可核实的窗口。
+  页面仍提示去凭据窗口保存。直接打开生成的链接能正常工作，因此这次绕行不能记为原生入口通过。
+  Codex 宿主确认弹窗不可由当前自动化读取，是否被该弹窗拦住尚未确认。
+- 已确认的代码缺口：`runtime/chatgpt/ui/app.mjs` 的 `openCredential` 只等待 `app.openLink`，没有检查
+  返回的 `isError`。已安装 SDK 的合同明确允许宿主通过 `{ isError: true }` 拒绝开链，未必抛异常；
+  当前实现会继续显示后续操作提示。应检查结果、显示失败原因并提供明确的人工打开方式，然后重做原生入口验收。
+- Skill 的新聊天加载、完整 Codex 退出重启恢复、刚加入的自定义 Tool 在新聊天中的自动发现未在本轮验证。
+  独立 MCP 后端重启证据不替代整个 Codex 重启；当前对话的内置 Tool 调用和独立后端的自定义 Tool 调用分别记录。
+- Token 仅用于本机整数乘二 fixture，不是任何真实远程账户；未测试 OAuth 或真实第三方权限。
+
+本机复查材料位于本任务 `implementation/` 工件目录：`native-acceptance-probes.jsonl`、
+`native-acceptance-cleanup.json`，以及 `acceptance-skill-disabled.png`、`acceptance-tool-disabled.png`、
+`acceptance-http-enabled.png`、`acceptance-token-saved.png`、`acceptance-token-removed.png`、
+`acceptance-mcp-offline.png` 和最终恢复截图。真实凭据与用户配置快照不进入验收材料。
 
 ## Desktop 入口清理（独立修改）
 
