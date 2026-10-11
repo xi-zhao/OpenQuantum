@@ -103,7 +103,7 @@
 用户指定的入口是左侧“…”→“OpenQuantum 设置”。此前已验收的聊天旁标签页不是这个入口。
 本机 Codex 静态加载代码 `view-page` 将全局页面作为 app 生命周期保留，实例身份包含 Tool 名称和
 resource URI；旧实现同时沿用 `open_openquantum` 与 `ui://openquantum/workbench.html`。
-这确认了旧身份被复用的条件；尚未直接读取用户所见全局页面，不能据此断言唯一根因。
+这确认了旧身份被复用的条件；修复前未直接读取用户所见全局页面，不能据此断言唯一根因。
 
 - 全局菜单改为专用 `open_openquantum_settings`，只宣告一个 OpenQuantum 全局项，标题仍为“OpenQuantum 设置”。
 - 全局入口与插件设置入口共用当前设置 HTML；资源 URI 包含其 SHA-256，HTML 变化时资源身份随之变化。
@@ -128,11 +128,19 @@ resource URI；旧实现同时沿用 `open_openquantum` 与 `ui://openquantum/wo
   `ui://openquantum/settings/a082d894e24fd5dfc6eba19adedca9f1493959fb6f27a11ea973dc6011932345.html`，
   内容摘要及三个设置标签相符。131 个 Skill、71 个科学 Tool、实际资料检索与禁用拒绝检查通过。
 - 升级前后的真实 Codex 配置和插件设置文件摘要一致，没有改变用户能力开关或连接配置。
-- **全局页面仍未完成目视验收。** 当前 Computer Use 禁止操作 Codex 主窗口，而 MCP Apps
+- 安装时全局页面尚未完成目视验收。当前 Computer Use 禁止操作 Codex 主窗口，而 MCP Apps
   自动化只暴露当前聊天的侧边标签页；因此没有用新标签页或协议检查替代左侧全局入口的验收。
   需从左侧“…”→“OpenQuantum 设置”确认显示 0.7.5 与三个标签。此前 0.7.4 的凭据入口缺口仍保留。
 - 本机材料：`implementation/local-install-0.7.5.log` 和
   `implementation/global-upgrade-preservation.json`。仅本地安装、提交，未推送、创建 PR 或公开发布。
+
+### 用户确认全局显示（2026-10-11）
+
+用户从指定全局入口打开应用，提供截图并明确确认“现在正常了”。截图显示左侧 OpenQuantum
+应用处于选中状态，主体为设置页，版本 0.7.5，Skills / MCP 连接 / Tools 三个标签、
+Skill 搜索框、131/131 项启用计数和 Skill 卡片正常显示。因此本次全局入口与页面显示验收通过。
+证据保存在 `implementation/acceptance-global-0.7.5-user.png`。
+这不代表已重验全部设置操作、凭据自动开窗或 Codex 重启恢复；这些检查仍沿用上文的已验证范围和限制。
 
 ## Desktop 入口清理（独立修改）
 
