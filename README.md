@@ -247,18 +247,19 @@ OpenQuantum 支持桌面安装包和源码运行，适合本机单用户使用�
 **让 Codex 帮你安装：**打开 Codex，新建聊天，把下面这段话复制给它：
 
 ```text
-请帮我安装 OpenQuantum 的 Codex 插件，仓库是 https://github.com/xi-zhao/OpenQuantum。
-先阅读仓库 README 中的“Codex 插件：安装与使用”和 docs/integrations/CODEX_AGENT_INSTALL.md，
-检查当前源码是否包含插件安装脚本，再检查 Codex、Node.js 和 npm 环境，使用仓库安装器完成安装。
-请保留已有插件和用户配置，安装后核对 Skills、MCP 工具和左侧全局“OpenQuantum 设置”入口。
-若仓库当前版本还没有插件安装材料，请明确说明缺少什么；需要我重载应用时，告诉我具体操作。
-最后报告实际验证的结果，以及仍需准备的科学计算依赖。
+请帮我安装 OpenQuantum Codex 插件 0.7.8。先阅读安装指南：
+https://github.com/xi-zhao/OpenQuantum/blob/codex-v0.7.8/docs/integrations/CODEX_AGENT_INSTALL.md
+从 https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.7.8 下载完整安装包与 SHA256SUMS，
+核对摘要后，检查 Codex、Node.js 24+ 和 npm，使用包内安装器完成安装。
+请保留已有插件和用户配置，核对 Skills、MCP 工具和左侧全局“OpenQuantum 设置”入口。
+需要我重载应用时，告诉我具体操作。最后报告实际验证的结果，以及仍需准备的科学计算依赖。
 ```
 
-当前插件为 **0.7.7 测试候选**，尚未发布正式插件安装包；可使用包含插件代码的 Git checkout 构建安装，
-或使用提供者交付的候选源码与插件 ZIP。需要支持插件及全局设置页的 Codex、Node.js 24+ 和 npm，
-由 Agent 按[安装指南](docs/integrations/CODEX_AGENT_INSTALL.md)检查并处理依赖。macOS 本机安装已验证，
-其他平台和宿主版本仍需检查兼容性。
+**[下载 Codex 插件 0.7.8 完整安装包](https://github.com/xi-zhao/OpenQuantum/releases/download/codex-v0.7.8/openquantum-0.7.8-codex-install.zip)**
+（[发布说明与 SHA256SUMS](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.7.8)）。
+安装包包含插件 ZIP、安装脚本和依赖锁文件，无需另行取得源码。需要支持插件及全局设置页的 Codex、
+Node.js 24+ 和 npm；由 Agent 按[安装指南](docs/integrations/CODEX_AGENT_INSTALL.md)检查并处理依赖。
+macOS 本机安装已验证，其他平台和宿主版本仍需检查兼容性。
 
 **安装后这样使用：**
 
@@ -273,11 +274,10 @@ OpenQuantum 支持桌面安装包和源码运行，适合本机单用户使用�
 <details>
 <summary><strong>手动安装（可选）</strong></summary>
 
-在包含插件代码的 Git checkout 中，准备好 Node.js 24+、npm 和支持插件的 Codex CLI 后执行：
+下载并校验完整安装包，解压后在其目录中执行（需要 Node.js 24+、npm 和支持插件的 Codex CLI）：
 
 ```sh
-npm ci
-npm run plugin:build
+npm ci --ignore-scripts
 npm run plugin:install
 ```
 

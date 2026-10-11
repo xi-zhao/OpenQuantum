@@ -15,7 +15,7 @@ Codex 插件在外层 Codex 对话中提供量子 Skill 和科学 Tool。OpenQua
 | `distributions/codex-plugin/` | 独立插件版本及运行依赖锁定 |
 
 构建从能力策略和真实 `tools/list` 生成目录、Skill 和完整输入合同，检查重复名称和策略漂移。
-当前候选包为 **0.7.7**，基于 Desktop 核心版本 0.6.0 的主线：**131 个 Skill、71 个科学 Tool**。
+正式插件包为 **0.7.8**，基于 Desktop 核心版本 0.6.0 的主线：**131 个 Skill、71 个科学 Tool**。
 其中没有执行 Tool 的 Skill 明确提供方法解释与选型参考，不把知识目录数量等同于可执行计算数量。
 依赖宿主源码/Shell 的算法总入口、平台诊断、学习通、真实硬件以及尚未适配的按需连接不进入默认插件。
 
@@ -43,6 +43,7 @@ Codex 插件在外层 Codex 对话中提供量子 Skill 和科学 Tool。OpenQua
   新连接与新发现的工具默认关闭。测试连接执行真实握手和目录查询，不调用计算工具。
 - **Token**：设置页打开仅绑定回环地址的专用窗口，将值直接写入系统凭据库。已有值不回显，不经过聊天、
   MCP Tool 参数、设置 JSON 或日志。窗口带限时、一次性的访问标识，并绑定连接实例；不提供明文回退。
+  宿主拒绝打开窗口时显示明确提示；卡片提供可复制的短时本机地址作为备用入口。
   关闭连接后才能移除其 Token。远程工具目录若回显此连接的 Token，会被拒绝持久化。
 - **科学状态**：调用成功或 Validator observations 不构成最终科学 Acceptance。插件没有 Harness Session
   证据物化和 central Acceptance Builder 链；不能声称已经生成 Harness Acceptance Report。
@@ -52,6 +53,10 @@ Codex 插件在外层 Codex 对话中提供量子 Skill 和科学 Tool。OpenQua
 setup 规则，插件安装不会批量下载数值环境；缺少依赖时应报告具体错误。
 
 ## 构建、检查与安装
+
+正式包见 [codex-v0.7.8 Release](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.7.8)。
+首次安装下载 `openquantum-0.7.8-codex-install.zip`，其中已包含安装器、锁文件与插件 ZIP；
+解压后执行 `npm ci --ignore-scripts` 和 `npm run plugin:install`。
 
 让 Codex Agent 代为安装时，使用[面向 Agent 的安装指南](CODEX_AGENT_INSTALL.md)。指南包含现成插件包与
 源码构建两条路径、环境检查、安装后验收和可直接交给 Codex 的话。
@@ -72,7 +77,7 @@ Skill 关闭、其他 Skill 保留、缓存路径升级后的状态与重新开�
 可通过 `OPENQUANTUM_CODEX_CLI` 指定 CLI 路径。Keychain 集成测试另用
 `OPENQUANTUM_TEST_KEYCHAIN=1 npm run plugin:test`，只创建并清理随机测试服务条目。
 
-产物为 `dist/codex-plugin/openquantum-0.7.7-codex-plugin.zip`。构建不会安装到当前用户。明确安装时执行：
+产物为 `dist/codex-plugin/openquantum-0.7.8-codex-plugin.zip`。构建不会安装到当前用户。明确安装时执行：
 
 ```sh
 npm run plugin:install
@@ -82,6 +87,10 @@ npm run plugin:install
 `~/.local/share/openquantum/desktop/<version>-<digest>/runtime`，然后通过原生 `codex plugin add` 安装轻量插件。
 目录名沿用旧安装器以便升级，不表示启动 Desktop Runtime。插件升级不删除用户设置、Token 或以前的运行目录。
 安装器只接管自己管理的原 OpenQuantum 本地来源；其他来源冲突会明确报错。安装后按宿主提示重载。
+
+维护者运行 `npm run plugin:release` 生成独立插件 ZIP、完整安装包与 `SHA256SUMS`；要求干净的提交。
+完整安装包回归使用 `node scripts/verify-codex-release.mjs dist/codex-release/openquantum-0.7.8-codex-install.zip`。
+发布使用 `codex-v<版本>` 标签，并保持 Desktop 的 `latest` 与更新清单不变。
 
 开发预览使用 `npm run plugin:preview`。做交互测试时应设置独立 `CODEX_HOME` 和
 `OPENQUANTUM_PLUGIN_SETTINGS_HOME`，避免修改真实 Skill 开关。预览只监听 `127.0.0.1`，写请求需要访问标识与同源校验。

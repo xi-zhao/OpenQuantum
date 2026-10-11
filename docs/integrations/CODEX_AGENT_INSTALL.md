@@ -4,27 +4,25 @@
 插件，同时加载 Skills、本机 MCP 服务及科学 Tools、左侧全局“OpenQuantum 设置”入口。
 聊天、项目、线程、登录和模型继续使用 Codex；本次安装不启动 Desktop 或量子学习通。
 
-当前候选为 **0.7.7**，包含 **131 个 Skill、71 个科学 Tool**。数量按所安装包的 `release.json`
+正式插件版本为 **0.7.8**，包含 **131 个 Skill、71 个科学 Tool**。数量按所安装包的 `release.json`
 核对。macOS 本机安装已验证；其他操作系统、Codex 版本与全新机器仍需逐项验证。
 
 ## 1. 取得本次安装材料
 
-先使用用户提供的候选源码目录或源码包，以及可选的 `openquantum-<版本>-codex-plugin.zip`。
-源码中必须存在：
+从 [Codex 插件 0.7.8 Release](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.7.8)
+下载 `openquantum-0.7.8-codex-install.zip` 和 `SHA256SUMS`。完整安装包已包含插件 ZIP、
+安装脚本与依赖锁文件，解压后无需克隆仓库或构建插件。
 
-- `scripts/install-codex-plugin.mjs`
-- `scripts/probe-chatgpt.mjs`、`scripts/probe-codex-host.mjs`
-- `distributions/codex-plugin/package.json`
-- 根目录的 `package.json`、`package-lock.json`
+先比较完整安装包的 SHA-256 与同一 Release 的 `SHA256SUMS`，一致后再解压。
+macOS/Linux 可用 `shasum -a 256 <文件>`，PowerShell 可用 `Get-FileHash <文件> -Algorithm SHA256`。
+GitHub Desktop 的 `releases/latest` 仍对应 Desktop；不要用它替代上面的独立插件发布页。
 
-**当前候选尚未公开发布。** 分发者需要一并提供上述源码与插件包，或提供包含本候选的可访问 Git ref。
-不要假设公共 `main` 或 Desktop 的 `releases/latest` 包含这个插件，也不要拼接猜测下载地址。
-若用户只给了指南而没有可取得的安装材料，先报告缺少哪一项，等待提供者补齐。
-插件 ZIP 本身不包含上述安装脚本；只有 ZIP 时，仍需取得同版本候选源码中的安装器。
+解压目录应包含 `package.json`、`package-lock.json`、`scripts/install-codex-plugin.mjs`，以及
+`dist/codex-plugin/openquantum-0.7.8-codex-plugin.zip`。单独的 `codex-plugin.zip` 面向已有
+安装器的使用者；首次安装优先下载 `codex-install.zip`。
 
-若提供者指定了远端源码 ref，在独立目录获取并核对 ref；不要切换或重置用户正在开发的工作区。
-只有源码且需要构建时，必须使用包含 Git 元数据的 checkout。现有构建脚本读取 Git 提交信息，
-没有 `.git` 的源码压缩包应搭配预构建的插件 ZIP，不能直接照抄源码构建步骤。
+需要从源码构建时，在独立目录检出 `codex-v0.7.8` 标签，不要切换或重置用户正在开发的工作区。
+构建要求 Git checkout；没有 `.git` 的源码压缩包应搭配预构建插件 ZIP。
 
 不要用“复制 Skill 文件”或“仅添加一个 MCP 地址”代替完整插件安装，那样不能交付全部三个入口。
 
@@ -65,20 +63,25 @@ oq_codex_cli='/实际路径/codex'
 
 ## 3. 执行安装
 
-在专用源码目录中安装该 checkout 的依赖。已有完整、匹配锁文件的依赖可复用：
+推荐在完整安装包解压目录中执行：
+
+```sh
+npm ci --ignore-scripts
+OPENQUANTUM_CODEX_CLI="$oq_codex_cli" npm run plugin:install
+```
+
+这会使用包内固定版本的插件 ZIP。安装器本身只安装必要的 Node 依赖，随后准备插件的运行依赖。
+不要在插件 ZIP 的 `openquantum/` 目录中执行这组命令。
+
+已有同版本源码 checkout 时，也可安装 Release 的独立插件 ZIP：
 
 ```sh
 npm ci
-```
-
-优先使用提供者给出的插件 ZIP。将 `oq_plugin_zip` 替换为该文件的绝对路径：
-
-```sh
-oq_plugin_zip='/实际路径/openquantum-0.7.7-codex-plugin.zip'
+oq_plugin_zip='/实际路径/openquantum-0.7.8-codex-plugin.zip'
 OPENQUANTUM_CODEX_CLI="$oq_codex_cli" npm run plugin:install -- "$oq_plugin_zip"
 ```
 
-如果提供者只交付了可构建的 Git checkout，在核对源码版本后构建，再安装默认产物：
+只有开发者需要从 Git checkout 构建：
 
 ```sh
 npm run plugin:build
@@ -121,7 +124,7 @@ OPENQUANTUM_CODEX_CLI="$oq_codex_cli" npm run plugin:install
 
 | 现象 | 下一步 |
 | --- | --- |
-| 找不到候选源码或 ZIP | 请求提供者补齐安装材料，不改用 Desktop 安装包或虚构 Release 地址 |
+| 下载不到完整安装包或摘要不符 | 核对上面的插件 Release 与下载结果；停止执行不完整或摘要不符的材料 |
 | Node 版本过低或找不到 npm | 选择已有的合适环境，或在授权范围内准备 Node.js 24+，随后重新检查实际版本 |
 | npm 下载失败 | 根据错误检查网络、代理和包源；没有完整缓存时不要使用 `--offline`，不关闭证书验证 |
 | 现有 OpenQuantum 来源不属于本安装器 | 报告来源冲突，保留原配置；不要删掉旧插件或整个 marketplace 文件来强行继续 |
@@ -130,7 +133,8 @@ OPENQUANTUM_CODEX_CLI="$oq_codex_cli" npm run plugin:install
 | 某个计算工具提示缺少 Python/SDK | 按该能力的准备说明处理；插件安装不会一次装齐全部科学计算环境 |
 
 插件本身不申请 GitHub Star 授权，也不要求远程 MCP Token 或量子云账号。后续连接第三方服务时，用户在设置页的
-专用凭据窗口中配置，凭据不经聊天传递。GitHub Star 按钮只是仓库链接，由用户在 GitHub 自己操作。
+专用凭据窗口中配置，凭据不经聊天传递。宿主未打开窗口时，复制设置页卡片中的本机地址到浏览器；
+该地址短时有效，也不要发到聊天中。GitHub Star 按钮只是仓库链接，由用户在 GitHub 自己操作。
 
 ## 6. 向用户交付安装结果
 
@@ -139,7 +143,9 @@ OPENQUANTUM_CODEX_CLI="$oq_codex_cli" npm run plugin:install
 
 ## 可以直接交给 Codex 的话
 
-> 请阅读我提供的《由 AI Agent 安装 OpenQuantum Codex 插件》指南，使用一并提供的安装材料，
-> 把 OpenQuantum 安装到我当前使用的 Codex 中。请检查并处理必要依赖，保留已有插件和用户配置，
-> 安装后核对 Skills、MCP 工具以及左侧全局“OpenQuantum 设置”入口。继续完成你能执行的步骤；
-> 需要我重载应用或缺少安装材料时，明确告诉我具体操作。最后说明已验证的结果和仍需准备的计算环境。
+> 请帮我安装 OpenQuantum Codex 插件 0.7.8。先阅读
+> https://github.com/xi-zhao/OpenQuantum/blob/codex-v0.7.8/docs/integrations/CODEX_AGENT_INSTALL.md，
+> 从 https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.7.8 下载完整安装包与 SHA256SUMS，
+> 核对摘要后，检查 Codex、Node.js 24+ 与 npm，使用包内安装器完成安装。
+> 请保留已有插件和用户配置，核对 Skills、MCP 工具和左侧全局“OpenQuantum 设置”入口。
+> 需要我重载应用时，告诉我具体操作。最后说明已验证的结果和仍需准备的计算环境。

@@ -1,4 +1,5 @@
 import { App } from "@modelcontextprotocol/ext-apps";
+import { openHostLink } from "./open-link.mjs";
 import "./style.css";
 
 const $ = selector => document.querySelector(selector);
@@ -62,12 +63,26 @@ function renderTools(container) {
 async function openCredential(id, container) {
   try {
     const { url } = await request({ action: "credentials.open", id });
+    container.querySelector(".credential-window")?.remove();
+    const panel = element("div", undefined, "credential-window");
     const link = element("a", "打开本机凭据窗口", "credential-link"); link.href = url; link.target = "_blank"; link.rel = "noopener noreferrer";
-    link.onclick = async event => { if (!preview) { event.preventDefault(); await app.openLink({ url }); } };
-    container.append(link);
-    if (!preview) await app.openLink({ url });
-    else window.open(url, "_blank", "noopener,noreferrer");
-    notice("在本机凭据窗口保存后，返回这里刷新状态或测试连接。");
+    const label = element("label", "窗口未打开时，复制本机地址到浏览器：");
+    const address = element("input"); address.type = "text"; address.readOnly = true; address.value = url;
+    address.setAttribute("aria-label", "本机凭据窗口地址"); address.onclick = () => address.select(); label.append(address);
+    panel.append(link, label, element("p", "地址短时有效，请勿发送到聊天中。保存后返回这里刷新状态或测试连接。", "hint"));
+    container.append(panel);
+    const open = async () => {
+      try {
+        await openHostLink(app, url);
+        notice("已请求打开本机凭据窗口。若没有弹出，请复制卡片中的地址到浏览器。");
+      } catch { notice("未能打开本机凭据窗口，请复制卡片中的地址到浏览器继续。", true); }
+    };
+    link.onclick = async event => { if (!preview) { event.preventDefault(); await open(); } };
+    if (!preview) await open();
+    else {
+      window.open(url, "_blank", "noopener,noreferrer");
+      notice("请在本机凭据窗口保存；若没有弹出，请复制卡片中的地址到浏览器。");
+    }
   } catch (error) { notice(error.message, true); }
 }
 function renderConnections(container) {
@@ -137,8 +152,7 @@ githubLink.onclick = async event => {
   if (preview) return;
   event.preventDefault();
   try {
-    const result = await app.openLink({ url: githubLink.href });
-    if (result.isError) throw new Error("GitHub link was not opened");
+    await openHostLink(app, githubLink.href);
   } catch {
     notice(`未能打开 GitHub，请在浏览器访问：${githubLink.href}`, true);
   }

@@ -111,6 +111,7 @@
     "capability:sdk-gaps:test": "node --test tests/sdk-gaps-domestic-contracts.test.mjs tests/sdk-gaps-control-contracts.test.mjs tests/sdk-gaps-simulation-contracts.test.mjs tests/sdk-gaps-cloud-contracts.test.mjs",
     "capability:sdk-gaps:live": "OPENQUANTUM_REAL_SDK_GAPS_DOMESTIC=1 OPENQUANTUM_REAL_SDK_GAPS_CONTROL=1 OPENQUANTUM_REAL_SDK_GAPS_SIMULATION=1 OPENQUANTUM_REAL_SDK_GAPS_CLOUD=1 OPENQUANTUM_REAL_SDK_GAPS=1 node --test --test-concurrency=1 tests/sdk-gaps-domestic-live.test.mjs tests/sdk-gaps-control-live.test.mjs tests/sdk-gaps-simulation-live.test.mjs tests/sdk-gaps-cloud-live.test.mjs tests/harness-sdk-gaps.test.mjs",
     "plugin:build": "node scripts/build-codex-plugin.mjs",
+    "plugin:release": "node scripts/build-codex-release.mjs",
     "plugin:preview": "node runtime/chatgpt/main.mjs --preview",
     "plugin:test": "node --test tests/codex-plugin-*.test.mjs",
     "plugin:install": "node scripts/install-codex-plugin.mjs",
