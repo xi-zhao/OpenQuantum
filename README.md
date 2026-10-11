@@ -19,6 +19,9 @@ OpenQuantum 是面向量子研究、实验与教学的开源 Agent 与应用平�
 
 **提出问题，运行计算，共创能力。** 从学习者的第一次实验，到研究者的方法比较，再到开发者的应用集成，都可以从已支持的任务开始。
 
+OpenQuantum 有两个发行入口：**Desktop** 提供科研工作台和量子学习通；**[Codex 插件](docs/integrations/CODEX_PLUGIN.md)**
+将量子 Skill 与科学 Tool 接入 Codex 原生对话，侧边入口用于管理能力开关、MCP 连接和 Token。两者复用同一份领域能力。
+
 <p align="center">
   <a href="#为什么选择-openquantum">为什么选择</a> ·
   <a href="#可以用它做什么">浏览能力</a> ·

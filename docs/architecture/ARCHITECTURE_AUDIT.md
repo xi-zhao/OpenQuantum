@@ -10,6 +10,10 @@
 
 2026-09-10 后续升级已采用 Harness `0.1.5-rc.1` 与 Desktop `2.0.7` 固定源码构建；下文的旧版等待结论是历史记录。当前升级事实、兼容性验证与限制见[升级记录](../releases/2026-09-10-upstream-update.md)。
 
+2026-10-11 新增 Codex 能力插件发行入口；共享内容、宿主职责和独立设置边界见 [Codex 插件](../integrations/CODEX_PLUGIN.md)，
+本地实现、原生 CLI 验证与尚未安装的边界见[验收记录](../releases/2026-10-11-plugin-settings.md)。
+下方 Harness 唯一 Runtime 的历史结论限定于 Desktop；Codex 发行入口复用外层 Codex Runtime。
+
 ## 1. 结论
 
 OpenQuantum 是 DeepSeek Harness 的开源量子科研发行版，不是新的 Agent Runtime。

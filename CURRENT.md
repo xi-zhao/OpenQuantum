@@ -2,6 +2,13 @@
 
 量子依赖核验日期：2026-09-22；平台升级记录日期：2026-09-10；原模型验收交接记录日期：2026-09-05。此页只记录工作交接；架构以[文档总入口](docs/README.md)为准，执行事实以 Harness Session event log 为准，科学状态以 Acceptance Report 为准。
 
+## Codex 能力插件与设置页（2026-10-11，本地候选）
+
+- 新增独立 Codex 插件发行定义，共享 Skill、Tool implementation 和科学合同；当前候选为 0.7.4，131 个 Skill、71 个科学 Tool。
+- Codex 原生界面负责聊天、项目、线程和登录，侧边页只管理本插件的 Skill、MCP、Tool 和系统凭据；不接入学习通。
+- 临时原生 Codex 安装、Skill 关闭/重开及缓存路径升级检查通过；用户现有插件和 Desktop 安装未替换。
+- 实现与验收范围、原生桌面界面尚未验证及配置并发限制见[验收记录](docs/releases/2026-10-11-plugin-settings.md)，使用和恢复见[插件说明](docs/integrations/CODEX_PLUGIN.md)。未发布、未 push，不改变下方既有模型或科学验收状态。
+
 ## v0.6.0 发行内容与入口（2026-09-29）
 
 - 产品版本提升为 `0.6.0`；[版本说明](docs/releases/v0.6.0.md)汇集自 v0.5.1 后的算法、互操作、Bloqade 与三批 52 个 SDK 能力包，README 十种语言同步用户任务、依赖准备与配置范围。

@@ -6,6 +6,10 @@
 
 第一次阅读请先看[文档与架构入口](../README.md#架构总览)；本文件只负责严格术语、选择规则和禁止依赖。
 
+Skill、Tool、MCP Server 与 Validator 的职责在两个发行入口中保持一致。本文 Harness Registry、Cordis、
+Agent Preset 与 Host Plugin 的装配规则适用于 Desktop；[Codex 插件](../integrations/CODEX_PLUGIN.md)使用原生
+Codex Skill 和 MCP 接口，不复制 Harness 生命周期、Session 或 Acceptance 链。
+
 ## 1. 核心结论
 
 OpenQuantum 的扩展对象不是一条 `Skill -> MCP -> Validator` 的固定流水线。正确模型是：
