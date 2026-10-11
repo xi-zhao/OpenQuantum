@@ -166,7 +166,19 @@ Skill 搜索框、131/131 项启用计数和 Skill 卡片正常显示。因此�
 MCP App 使用宿主 `openLink`，检查 `isError` 并捕获异常，失败时显示仓库地址供用户复制。
 链接只负责打开仓库，由用户自行选择 Star。候选版本递增至 0.7.7。
 
-既有入口回归 2/2、前端 ESLint 和 diff 检查通过。排版、跳转及本机安装核验待补充。
+- 代码提交 `b0b7002111c1afb4382b73982206e88d4ba225ec`，干净工作树构建；既有入口回归 2/2、
+  前端 ESLint 和 diff 检查通过。
+- 隔离配置的 Chrome 预览确认品牌介绍和链接显示正常，实际点击打开公开的 `xi-zhao/OpenQuantum`
+  仓库。窄视口实测 CSS 宽度 540 px，无横向溢出；链接与支持文案自动换行。
+  截图为 `implementation/github-star-0.7.7-preview.png` 和 `implementation/github-star-0.7.7-narrow.png`。
+- 原生 CLI 读回 `openquantum@personal` 版本 0.7.7，`installed=true`、`enabled=true`。
+  实际安装 HTML 包含品牌介绍、GitHub 链接与 Star 文案；设置资源、资料检索和禁用拒绝探针通过。
+  安装前后真实 Codex 配置与插件设置文件摘要一致。
+- ZIP SHA-256：`0bc76a3d6a4fc005d806cf9dbfdfb9eab6b971811725505d61c68beaa63f7812`。
+  安装记录为 `implementation/local-install-0.7.7.log`，内容及配置保留读回为
+  `implementation/github-star-0.7.7-install-readback.json`。
+- 本轮截图及跳转验收来自浏览器预览，未重新操作 Codex 全局页面或验证宿主 `openLink` 的实际点击。
+  全局入口显示的用户验收仍对应 0.7.5。结束后关闭临时页面、预览服务并清理隔离设置。
 
 ## Desktop 入口清理（独立修改）
 
