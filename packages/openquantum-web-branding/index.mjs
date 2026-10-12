@@ -245,7 +245,12 @@ function staticAssetHandler(contentType, body) {
 
 export function apply(ctx, { minimalUi = false } = {}) {
   ctx.effect(
-    () => ctx.webServer.tapIndex(brandHarnessIndex),
+    () => ctx.webServer.tapIndex((html) => {
+      const branded = brandHarnessIndex(html);
+      return minimalUi && !branded.includes('name="openquantum-minimal-ui"')
+        ? branded.replace("</head>", '<meta name="openquantum-minimal-ui" content="true" />\n</head>')
+        : branded;
+    }),
     "openquantum: native Harness Web branding",
   );
   ctx.effect(

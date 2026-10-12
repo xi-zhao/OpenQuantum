@@ -1397,5 +1397,10 @@
   "Reminders are disabled for this version.": "Les rappels sont désactivés pour cette version.",
   "Check for a new OpenQuantum release.": "Recherchez une nouvelle version d’OpenQuantum.",
   "Stable releases · Checked daily": "Versions stables · Vérification quotidienne",
-  "Update preferences could not be saved. Please try again.": "Impossible d’enregistrer les préférences de mise à jour. Réessayez."
+  "Update preferences could not be saved. Please try again.": "Impossible d’enregistrer les préférences de mise à jour. Réessayez.",
+  "Computation tools": "Outils de calcul",
+  "Waiting for a session": "En attente d’une session",
+  "Add a model first": "Ajoutez d’abord un modèle",
+  "Add a model in Settings → Models, then start an OpenQuantum session.": "Ajoutez un modèle dans Paramètres → Modèles, puis démarrez une session OpenQuantum.",
+  "Diagnostic details": "Détails du diagnostic"
 }

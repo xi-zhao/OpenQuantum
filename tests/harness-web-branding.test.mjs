@@ -315,3 +315,94 @@ test("fails loudly if a future Harness shell no longer has an HTML head", () => 
     /requires a Harness HTML head/,
   );
 });
+
+test("Desktop empty model hint restores the native selector on configuration, failure and disposal", async () => {
+  const client = await readFile(new URL("../packages/openquantum-web-branding/client.js", import.meta.url), "utf8");
+  const slots = new Map(), listeners = new Map(), pending = [], effects = [], directories = [];
+  let plugin;
+  const locale = { active: "zh" };
+  runInNewContext(client, {
+    document: { querySelector: () => ({}) },
+    __ModuleLoader__: { load({ factory }) {
+      plugin = factory(() => ({
+        createElement: (type, props, ...children) => ({ type, props, children }),
+        useSyncExternalStore: (_subscribe, snapshot) => snapshot(),
+      }));
+    } },
+  });
+  const on = (event, callback) => { listeners.set(event, callback); return () => listeners.delete(event); };
+  const ctx = {
+    slots: {
+      inject(_name, register) { const result = register(); if (result?.[Symbol.iterator]) Array.from(result); },
+      register(entry, component) { slots.set(entry.name, sessionId => component(entry.inject?.(sessionId))); return () => slots.delete(entry.name); },
+    },
+    inject(_names, register) { register(ctx); },
+    effect(register) { effects.push(register()); },
+    on,
+    locale: { subscribe: () => () => {}, getSnapshot: () => locale },
+    modelDirectories: { directoryFor: sessionId => directories.push(sessionId) },
+    sessions: { subagentAddress: sessionId => sessionId === "child" ? {} : undefined },
+    remote: { $on: on, session: { modelCatalog: () => new Promise((resolve, reject) => pending.push({ resolve, reject })) } },
+  };
+  const hint = () => slots.get("conversation.input.model");
+  const empty = { ok: true, value: { groups: [], routableProviders: [], failures: [] } };
+  const configured = { ok: true, value: { groups: [], routableProviders: ["user-provider"], failures: [] } };
+  plugin.apply(ctx);
+  pending.shift().resolve(empty);
+  await new Promise(setImmediate);
+  assert.match(hint()("fresh-session").children.join(""), /请在设置/);
+  assert.deepEqual(directories, ["fresh-session"]);
+  assert.equal(hint()("child"), null);
+  assert.deepEqual(directories, ["fresh-session"]);
+  locale.active = "en";
+  assert.match(hint()().children.join(""), /Settings → Models/);
+
+  const configuredRead = listeners.get("settings/document-updated")();
+  pending.shift().resolve(configured);
+  await configuredRead;
+  assert.equal(hint(), undefined);
+
+  const oldRead = listeners.get("llm/adapters-updated")();
+  const old = pending.shift();
+  const freshRead = listeners.get("credentials/reference-updated")();
+  pending.shift().resolve(configured);
+  await freshRead;
+  old.resolve(empty);
+  await oldRead;
+  assert.equal(hint(), undefined, "an older response must not hide the configured selector");
+
+  for (const result of [empty, { ok: true, value: { groups: [], routableProviders: [], failures: [{ provider: "broken" }] } }, empty, { ok: false }]) {
+    const read = listeners.get("settings/document-updated")();
+    pending.shift().resolve(result);
+    await read;
+    assert.equal(Boolean(hint()), result === empty);
+  }
+  const read = listeners.get("settings/document-updated")();
+  pending.shift().resolve(empty);
+  await read;
+  listeners.get("connection/reset")();
+  assert.equal(hint(), undefined, "reconnect immediately clears previous Host state");
+  pending.shift().reject(new Error("offline"));
+  await new Promise(setImmediate);
+  assert.equal(hint(), undefined);
+
+  const lateRead = listeners.get("settings/document-updated")();
+  effects.forEach(dispose => dispose());
+  pending.shift().resolve(empty);
+  await lateRead;
+  assert.equal(hint(), undefined);
+  assert.equal(listeners.size, 0);
+});
+
+test("only minimal Desktop composition enables the empty model hint", () => {
+  for (const minimalUi of [false, true]) {
+    let transform;
+    apply({
+      effect: register => register(),
+      webServer: { tapIndex(fn) { transform = fn; return () => {}; }, register: () => () => {} },
+    }, { minimalUi });
+    const html = transform(HARNESS_INDEX);
+    assert.equal(html.includes('name="openquantum-minimal-ui"'), minimalUi);
+    assert.equal(transform(html), html);
+  }
+});

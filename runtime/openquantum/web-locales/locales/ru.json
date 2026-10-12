@@ -1397,5 +1397,10 @@
   "Reminders are disabled for this version.": "Напоминания для этой версии отключены.",
   "Check for a new OpenQuantum release.": "Проверьте наличие новой версии OpenQuantum.",
   "Stable releases · Checked daily": "Стабильные версии · Ежедневная проверка",
-  "Update preferences could not be saved. Please try again.": "Не удалось сохранить настройки обновлений. Повторите попытку."
+  "Update preferences could not be saved. Please try again.": "Не удалось сохранить настройки обновлений. Повторите попытку.",
+  "Computation tools": "Вычислительные инструменты",
+  "Waiting for a session": "Ожидание сеанса",
+  "Add a model first": "Сначала добавьте модель",
+  "Add a model in Settings → Models, then start an OpenQuantum session.": "Добавьте модель в разделе Настройки → Модели, затем начните сеанс OpenQuantum.",
+  "Diagnostic details": "Подробности диагностики"
 }
