@@ -62,6 +62,13 @@ Switching between Web and Desktop continues to require stopping the other entry 
 3. Create the matching `vX.Y.Z` tag at that commit. Prepare a draft Release with user-facing notes,
    all three installers and the combined checksum file, verify the uploaded assets, then publish it
    as a non-prerelease. Identify unsigned test builds explicitly; publishing is not code signing.
+
+   If local large-file transfers are unreliable, manually run `release-artifacts.yml` with the tag,
+   successful push CI run ID and successful push installer run ID. It requires the same source commit,
+   an existing draft Release, all seven successful jobs and the three exact installer checksums. It
+   uploads from GitHub runners, preserves matching existing assets and rejects mismatches. Upload the
+   combined `SHA256SUMS` and any validation records separately, then verify all remote assets before
+   publishing. This workflow does not create a Release, publish it or change `latest`.
 4. `release-updates.yml` runs the same quality, macOS/Windows Desktop installation and container gates
    as CI against the release revision. Only after all gates pass does it attach `openquantum-update.json`.
    Ordinary pushes, draft releases and prereleases do not publish this stable update asset.
