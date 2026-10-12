@@ -40,7 +40,7 @@ OpenQuantum Harness Home
 5. Desktop 与 Harness family 成对固定；当前版本与安全覆盖以 `package.json`、lockfile 和 Desktop 集成测试为权威，
    不在 ADR 中维护第二份版本常量；
 6. 不依赖 `desktopRuntime`、Electron Window 或其他 DSH Desktop 私有 Interface；
-7. 2026-10-12 起，直接使用第三方原版客户端。OpenQuantum 独立交付能力包、正式 Profile 依赖和 Home patch，不复制或修改上游应用。
+7. 2026-10-12 起，直接使用第三方原版客户端。OpenQuantum 独立交付能力包和正式 Profile 依赖，Desktop 的启用配置放在同一 Profile 的声明式 bundle 中，不复制或修改上游应用。
 8. 原生应用名称、图标、向导和更新渠道属于 DSH Desktop；OpenQuantum 设置扩展与内容版本属于 OpenQuantum。具体安装方式见[桌面发行说明](../DESKTOP_INSTALLERS.md)。
 9. 通过部署位置记录解析领域代码根目录，不依赖 Finder 的进程工作目录。生成的 MCP 配置使用明确的 Node/uv 路径及 worker 环境。
 10. 旧版运行时不得写入新版 V4 Home；有不兼容会话时准备必须在写入前停止。
@@ -50,7 +50,7 @@ OpenQuantum Harness Home
 收益：
 
 - 用户获得原生桌面入口，同时保留完全相同的量子能力和执行证据；
-- OpenQuantum 只维护一个 Home patch，Web 与 Desktop 不会发生产品配置漂移；
+- Web 的 Home patch 与 Desktop 的 Profile bundle 共用产品配置源；Desktop 在此基础上保留原生设置与更新方式；
 - Desktop 未来可以替换或升级，而不触碰量子 Skill、Tool Provider、MCP Server 或 Validator。
 
 代价与风险：
@@ -65,7 +65,7 @@ OpenQuantum Harness Home
 `npm run desktop:verify-install` 在不启动图形界面的情况下验证：
 
 - Desktop 与 Harness 的固定版本一致；
-- Desktop shell 与 OpenQuantum Home patch 出现在同一最终 Cordis 组合；
+- Desktop shell 与 OpenQuantum Profile bundle 出现在同一最终 Cordis 组合，其他原生 Profile 不加载 OpenQuantum 扩展；
 - 默认 OpenQuantum preset、Provider route、品牌与设置插件仍然生效；
 - 桌面启动器能够解析并报告预期版本。
 - 正式 Profile 依赖可恢复，且上游 JavaScript 与原生资源完全不变。

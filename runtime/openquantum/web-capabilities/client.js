@@ -48,7 +48,11 @@ globalThis.__ModuleLoader__.load({
         body: JSON.stringify(command),
       });
       const value = await response.json();
-      if (!response.ok) throw new Error(value.error ?? t("能力设置请求失败"));
+      if (!response.ok) {
+        const error = new Error(value.error ?? t("能力设置请求失败"));
+        error.projectSaved = value.code === "DESKTOP_PRESET_CONFLICT" && value.projectSaved === true;
+        throw error;
+      }
       return value;
     }
 
@@ -315,6 +319,10 @@ globalThis.__ModuleLoader__.load({
           await loadCredentials(next);
           setNotice(success);
         } catch (caught) {
+          if (caught?.projectSaved) {
+            // Keep the reconciliation message even if refreshing also fails.
+            try { await reload(); } catch { /* The next explicit refresh can retry. */ }
+          }
           setError(caught instanceof Error ? caught.message : t("能力设置保存失败"));
         } finally {
           setBusy(null);

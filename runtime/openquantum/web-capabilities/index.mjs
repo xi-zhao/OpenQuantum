@@ -141,6 +141,10 @@ export function createCapabilitySettingsHandler({
         json(response, 409, { error: error.message });
         return;
       }
+      if (error?.name === "DesktopPresetConflictError") {
+        json(response, 409, { error: error.message, code: "DESKTOP_PRESET_CONFLICT", projectSaved: error.projectSaved === true });
+        return;
+      }
       if (error instanceof SyntaxError || error instanceof TypeError) {
         json(response, 400, { error: error.message });
         return;

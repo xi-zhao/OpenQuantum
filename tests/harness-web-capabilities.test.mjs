@@ -3,6 +3,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { runInNewContext } from "node:vm";
 import { dictionariesFor } from "../runtime/openquantum/web-locales/catalog.mjs";
+import { DesktopPresetConflictError } from "../src/settings/server/desktop-preset.mjs";
 
 import {
   apply,
@@ -43,6 +44,23 @@ function response() {
     },
   };
 }
+
+test("returns actionable Desktop conflicts while masking unknown failures", async t => {
+  for (const projectSaved of [false, true]) {
+    const failure = new DesktopPresetConflictError(projectSaved);
+    const handler = createCapabilitySettingsHandler({ dispatch: async () => { throw failure; } });
+    const reply = response();
+    await handler(request({ action: "mcp.update" }), reply);
+    assert.equal(reply.result.status, 409);
+    assert.deepEqual(JSON.parse(reply.result.body), { error: failure.message, code: "DESKTOP_PRESET_CONFLICT", projectSaved });
+  }
+  t.mock.method(console, "error", () => {});
+  const handler = createCapabilitySettingsHandler({ dispatch: async () => { throw new Error("private internal detail"); } });
+  const reply = response();
+  await handler(request({ action: "mcp.update" }), reply);
+  assert.equal(reply.result.status, 500);
+  assert.deepEqual(JSON.parse(reply.result.body), { error: "能力设置暂时不可用" });
+});
 
 test("registers Harness-native routes and wires credentials into capability commands", async () => {
   const routes = [];
@@ -365,7 +383,8 @@ test("MCP settings form saves a user timeout and reflects the persisted value", 
     useCallback: callback => callback,
     useEffect() {},
   };
-  let plugin, render;
+  let plugin, render, conflict = false;
+  const partialSaveMessage = new DesktopPresetConflictError(true).message;
   const commands = [];
   runInNewContext(source, {
     __ModuleLoader__: { load: ({ factory }) => { plugin = factory(() => react); } },
@@ -373,6 +392,12 @@ test("MCP settings form saves a user timeout and reflects the persisted value", 
       assert.equal(url, "/openquantum/api/capabilities");
       const command = JSON.parse(options.body);
       commands.push(command);
+      if (conflict && command.action === "mcp.update") {
+        return { ok: false, json: async () => ({ error: partialSaveMessage, code: "DESKTOP_PRESET_CONFLICT", projectSaved: true }) };
+      }
+      if (command.action === "snapshot") {
+        return { ok: true, json: async () => ({ ...snapshot, mcpRevision: "partially-saved", mcpServers: [{ ...server, toolCallTimeoutMs: 7200000 }] }) };
+      }
       return { ok: true, json: async () => ({ ...snapshot, mcpRevision: "after", mcpServers: [{ ...server, toolCallTimeoutMs: command.toolCallTimeoutMs }] }) };
     },
   });
@@ -397,6 +422,15 @@ test("MCP settings form saves a user timeout and reflects the persisted value", 
   event.currentTarget.reportValidity = () => false;
   await form.props.onSubmit(event);
   assert.equal(commands.length, 1);
+  conflict = true;
+  event.currentTarget.reportValidity = () => true;
+  event.currentTarget.elements.namedItem = () => ({ value: "7200000" });
+  await tree().find(node => node.type === "form").props.onSubmit(event);
+  assert.equal(commands[1].revision, "after");
+  assert.deepEqual(commands[2], { action: "snapshot" });
+  assert.equal(tree().find(node => node.props.name === "toolCallTimeoutMs").props.defaultValue, 7200000);
+  assert.ok(tree().some(node => node.props.className === "oq-cap-error" && node.children.includes(partialSaveMessage)));
+  assert.ok(!tree().some(node => node.props.className === "oq-cap-notice"));
 });
 
 test("component status distinguishes first setup from errors and keeps diagnostics available", async () => {
