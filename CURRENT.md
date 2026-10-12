@@ -2,6 +2,13 @@
 
 量子依赖核验日期：2026-09-22；平台升级记录日期：2026-09-10；原模型验收交接记录日期：2026-09-05。此页只记录工作交接；架构以[文档总入口](docs/README.md)为准，执行事实以 Harness Session event log 为准，科学状态以 Acceptance Report 为准。
 
+## 统一产品版本（2026-10-12）
+
+- Desktop、Codex 插件和安装器从 `0.8.1` 起共用一个产品版本；根 `package.json` 为唯一来源，`npm run release:version -- X.Y.Z` 同时更新三个包及其锁文件。CI 和打包检查拒绝版本漂移。
+- 同步发行的 `vX.Y.Z` 与 `codex-vX.Y.Z` 标签指向同一提交，前缀只区分渠道；Desktop 保留 `latest` 与稳定更新清单。此前独立编号的已发布记录不改写。
+- 范围见[统一发行说明](docs/releases/v0.8.1.md)；实际发布与逐包验证以 [Desktop Release](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.1) 和 [Codex Release](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.1) 为准。
+- 本轮只统一版本管理与发行，沿用既有 SDK 接入和科学边界；仍不使用真实科研任务验收，`scientificValidation=not_evaluated`。
+
 ## 完整 SDK 接入发行（2026-10-12）
 
 - Desktop / 源码版本 `0.7.0`，Codex 插件及安装器版本 `0.8.0`；共享 85 个原生 SDK 环境入口，Codex 包含 133 个 Skill、71 个科学 Tool。完整接入不表示穷尽上游 API 或跨平台科学验证。

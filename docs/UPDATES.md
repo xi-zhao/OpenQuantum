@@ -54,8 +54,18 @@ Switching between Web and Desktop continues to require stopping the other entry 
 
 ## Publishing a stable update
 
-1. Bump the OpenQuantum version in `package.json` and `package-lock.json`, review dependency compatibility
-   and migration notes, then merge the reviewed release change.
+Starting with 0.8.1, Desktop, the Codex plugin and its installer share one OpenQuantum product version.
+The root `package.json` is authoritative; the two distribution manifests and all three lockfiles
+carry the same version. Pinned third-party dependencies retain their own version numbers.
+The `vX.Y.Z` and `codex-vX.Y.Z` tags distinguish release channels, not product versions. Synchronized
+releases point both tags at the same reviewed commit. Existing releases and tags remain unchanged.
+The shared release command and packaging guards currently accept plain stable `X.Y.Z` only,
+without prerelease suffixes or build metadata, matching the supported synchronized release pipeline.
+
+1. Run `npm run release:version -- X.Y.Z` to update all six manifests/lockfiles together, then update
+   the shared release notes and current download links. Review dependency compatibility and migration
+   notes, run `npm run release:check`, and merge the reviewed change. `npm run check` and both package
+   builders reject mismatched product versions. The version command does not change dependencies.
 2. Wait for CI and all three `Desktop test installers` jobs at that exact commit to pass. Download
    their installer and `SHA256SUMS` artifacts; verify each hash and combine the three checksum lines
    into one `SHA256SUMS`. Preserve the installer filenames, versions and bytes.
@@ -72,8 +82,12 @@ Switching between Web and Desktop continues to require stopping the other entry 
 4. `release-updates.yml` runs the same quality, macOS/Windows Desktop installation and container gates
    as CI against the release revision. Only after all gates pass does it attach `openquantum-update.json`.
    Ordinary pushes, draft releases and prereleases do not publish this stable update asset.
-5. Verify the asset and a client check. Mark the intended release as latest on GitHub. Re-running the
-   job regenerates the same manifest from the tag and publication date; it does not create another release.
+5. Verify the asset and a client check. Mark the intended Desktop release as latest on GitHub. Re-running
+   the job regenerates the same manifest from the tag and publication date; it does not create another release.
+6. From that same clean commit, build and verify the [Codex packages](integrations/CODEX_PLUGIN.md),
+   then publish `codex-vX.Y.Z` with the shared release notes, checksums and its validation record.
+   Set the Codex Release to **not latest** so the Desktop update feed continues to resolve the Desktop
+   Release. Confirm both public packages report X.Y.Z and reference the same source commit.
 
 To inspect a manifest locally without publishing:
 

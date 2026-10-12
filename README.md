@@ -80,7 +80,7 @@ OpenQuantum 有两个发行入口：**Desktop** 提供科研工作台和量子�
 
 本地计算可以从无需量子云账户的任务开始。真实硬件和付费服务按需配置；各方法的输入范围、准备条件与验证状态分别保留在详细目录中。
 
-v0.7.0 为 **85 个 SDK/源码环境**提供完整原生 API 的使用路径。Agent 可编写自定义程序、组合公开 API，并保存完整结果；便捷 Tool 的预设案例不再限制研究程序。环境按需显式准备，平台、账户、许可和可选后端限制仍适用。逐库工程检查及其范围见[完整 SDK 接入记录](docs/integrations/FULL_SDK_ACCESS.md)；没有用真实科研任务做验收，科学状态仍为 `not_evaluated`。
+v0.8.1 为 **85 个 SDK/源码环境**提供完整原生 API 的使用路径。Agent 可编写自定义程序、组合公开 API，并保存完整结果；便捷 Tool 的预设案例不再限制研究程序。环境按需显式准备，平台、账户、许可和可选后端限制仍适用。逐库工程检查及其范围见[完整 SDK 接入记录](docs/integrations/FULL_SDK_ACCESS.md)；没有用真实科研任务做验收，科学状态仍为 `not_evaluated`。
 
 v0.6.0 汇集近期新增的国内外公司与机构 SDK：从可微分电路、容错资源估算，到光子计算、脉冲编译和量子网络。三批接入分别见[17 项厂商 SDK](docs/integrations/VENDOR_SDKS.md)、[20 项公司与机构能力](docs/integrations/SDK_EXPANSION.md)和[15 项网络、控制与云接口](docs/integrations/SDK_GAPS.md)，另含 [QuEra Bloqade Analog](docs/integrations/BLOQADE_ANALOG.md)。每项开放的动作以适配说明为准；账户、鉴权、服务权限与适用许可由用户配置。
 
@@ -249,16 +249,18 @@ OpenQuantum 支持桌面安装包和源码运行，适合本机单用户使用�
 **让 Codex 帮你安装：**打开 Codex，新建聊天，把下面这段话复制给它：
 
 ```text
-请帮我安装 OpenQuantum Codex 插件 0.8.0。先阅读安装指南：
-https://github.com/xi-zhao/OpenQuantum/blob/codex-v0.8.0/docs/integrations/CODEX_AGENT_INSTALL.md
-从 https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.0 下载完整安装包与 SHA256SUMS，
+请帮我安装 OpenQuantum Codex 插件 0.8.1。先阅读安装指南：
+https://github.com/xi-zhao/OpenQuantum/blob/codex-v0.8.1/docs/integrations/CODEX_AGENT_INSTALL.md
+从 https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.1 下载完整安装包与 SHA256SUMS，
 核对摘要后，检查 Codex、Node.js 24+ 和 npm，使用包内安装器完成安装。
 请保留已有插件和用户配置，核对 Skills、MCP 工具和左侧全局“OpenQuantum 设置”入口。
 需要我重载应用时，告诉我具体操作。最后报告实际验证的结果，以及仍需准备的科学计算依赖。
 ```
 
-**[下载 Codex 插件 0.8.0 完整安装包](https://github.com/xi-zhao/OpenQuantum/releases/download/codex-v0.8.0/openquantum-0.8.0-codex-install.zip)**
-（[发布说明与 SHA256SUMS](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.0)）。
+Desktop 与 Codex 插件统一使用 **OpenQuantum 0.8.1**；之后同步更新只需记录一个产品版本号，渠道标签分别为 `v0.8.1` 和 `codex-v0.8.1`。
+
+**[下载 Codex 插件 0.8.1 完整安装包](https://github.com/xi-zhao/OpenQuantum/releases/download/codex-v0.8.1/openquantum-0.8.1-codex-install.zip)**
+（[发布说明与 SHA256SUMS](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.1)）。
 安装包包含插件 ZIP、安装脚本和依赖锁文件，无需另行取得源码。需要支持插件及全局设置页的 Codex、
 Node.js 24+ 和 npm；由 Agent 按[安装指南](docs/integrations/CODEX_AGENT_INSTALL.md)检查并处理依赖。
 macOS 本机安装已验证，其他平台和宿主版本仍需检查兼容性。
@@ -293,7 +295,7 @@ npm run plugin:install
 
 从 [GitHub Release](https://github.com/xi-zhao/OpenQuantum/releases/latest) 下载 Mac（Apple Silicon / Intel）或 Windows 安装包。安装包内置 Node 和 uv，无需先配置源码构建环境；当前为未签名测试构建。按[安装说明](docs/DESKTOP_INSTALLERS.md)安装并启动后，继续[配置模型](#配置模型)。计算组件的额外依赖按对应版本说明准备，量子学习通等可选应用另有安装步骤。
 
-本页能力目录随当前源码维护。[v0.7.0 发布说明](docs/releases/v0.7.0.md)说明完整原生 SDK 接入、大结果文件交付和升级范围；安装文件以对应 Release 的实际附件为准。安装包包含适配代码，计算依赖仍需按所选能力显式准备。原有安装版需下载新版并覆盖安装；用户改过的 Skill 或 MCP 配置会保留，新默认内容可能需要手动比较采用，见[数据与升级](docs/DESKTOP_INSTALLERS.md#数据与升级)。
+本页能力目录随当前源码维护。[v0.8.1 发布说明](docs/releases/v0.8.1.md)说明完整原生 SDK 接入、大结果文件交付和升级范围；安装文件以对应 Release 的实际附件为准。安装包包含适配代码，计算依赖仍需按所选能力显式准备。原有安装版需下载新版并覆盖安装；用户改过的 Skill 或 MCP 配置会保留，新默认内容可能需要手动比较采用，见[数据与升级](docs/DESKTOP_INSTALLERS.md#数据与升级)。
 
 ### 安装源码
 
@@ -1146,7 +1148,7 @@ docs/                    架构、路线与生态文档
 
 [固定量子能力 Benchmark](benchmarks/quantum-capabilities/README.md)使用 [MQT Bench](https://github.com/munich-quantum-toolkit/bench) 的 3 个固定电路案例与 manifest 做开发回归，属于开发与 CI 证据，不是 Skill 或 MCP 服务。
 
-源码升级的固定版本、兼容性和验证记录见 [2026-09-22 量子库更新](docs/releases/2026-09-22-quantum-upstream-update.md)及 [2026-09-10 平台升级](docs/releases/2026-09-10-upstream-update.md)。应用安装包的变化另见[v0.7.0 发布说明](docs/releases/v0.7.0.md)。
+源码升级的固定版本、兼容性和验证记录见 [2026-09-22 量子库更新](docs/releases/2026-09-22-quantum-upstream-update.md)及 [2026-09-10 平台升级](docs/releases/2026-09-10-upstream-update.md)。应用安装包的变化另见[v0.8.1 发布说明](docs/releases/v0.8.1.md)。
 
 2026-09-24 的[算法适配](docs/integrations/UNITARYLAB_OPEN_ADAPTATION.md)、[本地互操作](docs/integrations/QUANTUM_INTEROP.md)和[治理证据](docs/integrations/evidence/extension-governance-2026-09-24.json)分别记录源码接入、实际 SDK 计算与 Harness 会话验证；这些记录不代表新安装包发布、外部模型或真实硬件验收。
 

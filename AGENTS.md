@@ -124,7 +124,7 @@ Model Adapter、Host 或 Client Plugin 角色和 scope；上下文已明确时�
 - `src/capabilities`：与宿主无关的原生 Tool 定义与计算，Harness 和 Codex 适配器共同引用。
 - `runtime/chatgpt`：Codex 本机 MCP 与设置页适配器；不拥有聊天、模型、项目或科研 Acceptance。
 - `src/settings/codex`：本插件的设置、MCP 连接与系统凭据窗口；不得修改其他插件的开关。
-- `distributions/codex-plugin`：插件自己的发布版本和最小运行依赖，独立于 Desktop 版本。
+- `distributions/codex-plugin`：插件的最小运行依赖；产品版本与 Desktop、安装器一致，以根 `package.json` 为准。
 - `runtime/openquantum`：Harness patch、preset、模型 route、品牌和原生 Client Plugin。
 - `src/settings/server`：项目 Skill、MCP Server 连接与凭据引用的受控设置实现。
 - `.agents/skills`：Harness 原生 Skill 指令，以及为维护 locality 可选共置的领域资源；连接 MCP Server 的
@@ -140,7 +140,9 @@ Model Adapter、Host 或 Client Plugin 角色和 scope；上下文已明确时�
 - `npm run harness:config`：展开并检查 Harness 组合配置。
 - `npm run models:probe -- --provider openquantum-public`：验证模型目录、文本生成和工具调用。
 - `npm run capability:diagnostics:test`：验证平台诊断能力包和评分规则。
-- `npm run check`：运行 lint、能力声明一致性检查、平台/科学测试并验证 Harness 组合配置。
+- `npm run release:version -- X.Y.Z`：统一更新 Desktop、Codex 插件、安装器及三份锁文件的产品版本；依赖版本不变。
+- `npm run release:check`：检查所有产品版本副本一致；同步发行使用同一提交的 `vX.Y.Z` 与 `codex-vX.Y.Z` 标签。
+- `npm run check`：运行版本一致性、lint、能力声明一致性检查、平台/科学测试并验证 Harness 组合配置。
 
 ## 实现规则
 

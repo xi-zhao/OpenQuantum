@@ -128,6 +128,7 @@ Skill 与 Tool 在概念和发行版 policy 中都相互独立：Skill-only、To
 
 | 事实 | 权威位置 | 验证 |
 | --- | --- | --- |
+| Desktop、Codex 插件和安装器的统一产品版本 | 根 `package.json`；通过 `npm run release:version -- X.Y.Z` 更新各包与锁文件 | `npm run release:check`、CI 和打包入口 |
 | 静态模型 Provider catalog | `runtime/openquantum/model-routes.cordis.yml` | Web/Desktop/ACP 组合一致性测试 + model probe |
 | 用户模型 Route 覆盖 | Git 忽略的 `$DSH_HOME/settings.yaml` | Web 设置测试 + ACP 本地模型回路测试 |
 | Deployment 默认模型、Agent Preset 与 Host 扩展 | `runtime/openquantum/cordis.patch.yml` | `npm run harness:config`、`npm run desktop:check` |
@@ -151,6 +152,7 @@ Skill 与 Tool 在概念和发行版 policy 中都相互独立：Skill-only、To
 - [完整 SDK 接入与逐库审计](integrations/FULL_SDK_ACCESS.md)：原生公开 API、环境定位、自定义程序、分批补齐与工程验证；便捷 Tool 的模型范围不再是 SDK 能力上限。
 - [相近能力的选择](integrations/CAPABILITY_SELECTION.md)：算法示例与专业计算入口的选择，以及大型可选服务的工具范围。
 - [版本更新](UPDATES.md)：新版本提醒、源码升级、发布通道和维护流程。
+- [v0.8.1 统一发行说明](releases/v0.8.1.md)：Desktop、Codex 插件和安装器共用产品版本及更新命令；发行渠道分别保留。
 - [v0.7.0 发行说明](releases/v0.7.0.md)：完整原生 SDK 接入、大结果交付、Desktop 安装升级及工程验证范围。
 - [Codex 插件 0.8.0](releases/codex-v0.8.0.md)：133 个 Skill、71 个科学 Tool、85 个 SDK 环境入口和独立安装包。
 - [常见问题与故障排查](TROUBLESHOOTING.md)：按 UI、模型、MCP Server、凭据和 Docker 分层定位。

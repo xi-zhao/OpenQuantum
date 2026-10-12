@@ -1,6 +1,6 @@
 {
   "name": "openquantum",
-  "version": "0.7.0",
+  "version": "0.8.1",
   "private": true,
   "description": "Quantum research Skills and Tools for DeepSeek Harness Desktop and Codex",
   "author": "OpenQuantum contributors",
@@ -78,7 +78,9 @@
     "lint": "eslint .",
     "locales:check": "node scripts/sync-ui-locales.mjs --check && node --test tests/ui-locales.test.mjs",
     "locales:sync": "node scripts/sync-ui-locales.mjs --write",
-    "check": "npm run lint && npm run locales:check && npm run capability:conformance && npm run sdk:guides:check && npm run sdk:inventory:check && npm run test:p1 && npm run harness:config",
+    "check": "npm run release:check && npm run lint && npm run locales:check && npm run capability:conformance && npm run sdk:guides:check && npm run sdk:inventory:check && npm run test:p1 && npm run harness:config",
+    "release:version": "node scripts/release-version.mjs",
+    "release:check": "node scripts/release-version.mjs --check",
     "desktop:setup": "node scripts/setup-desktop.mjs",
     "test:quantum-upgrade:live": "node --test tests/quantum-upgrade-live.test.mjs",
     "capability:candidates:setup": "node scripts/setup-paper-tools.mjs qcut-knitting compact-optimization openqarp-excited-states cqlib-kernel flagquantum-workbench",

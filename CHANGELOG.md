@@ -5,6 +5,17 @@ OpenQuantum 的重要变更记录在此。格式遵循 [Keep a Changelog](https:
 
 ## [Unreleased]
 
+## [0.8.1] - 2026-10-12
+
+### Changed
+
+- Desktop、Codex 插件及安装器统一使用 `0.8.1`；同步发行的两个渠道标签指向同一提交，已有发布记录保留。范围见[统一发行说明](docs/releases/v0.8.1.md)。
+- 当前安装指南、下载入口和十种语言 README 同步统一版本。SDK 能力、固定依赖和科学验收边界不变。
+
+### Added
+
+- `npm run release:version -- X.Y.Z` 一次更新三个包和三份锁文件；`npm run release:check`、CI 及打包入口检查产品版本一致性。
+
 ## [0.7.0] - 2026-10-12
 
 ### Added
