@@ -59,6 +59,8 @@ The root `package.json` is authoritative; the two distribution manifests and all
 carry the same version. Pinned third-party dependencies retain their own version numbers.
 The `vX.Y.Z` and `codex-vX.Y.Z` tags distinguish release channels, not product versions. Synchronized
 releases point both tags at the same reviewed commit. Existing releases and tags remain unchanged.
+The shared release command and packaging guards currently accept plain stable `X.Y.Z` only,
+without prerelease suffixes or build metadata, matching the supported synchronized release pipeline.
 
 1. Run `npm run release:version -- X.Y.Z` to update all six manifests/lockfiles together, then update
    the shared release notes and current download links. Review dependency compatibility and migration

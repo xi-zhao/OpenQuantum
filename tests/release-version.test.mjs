@@ -61,7 +61,7 @@ test("version checks reject drift in either manifests or either lockfile version
 test("invalid versions, downgrades and malformed lockfiles fail before any writes", async t => {
   const f = await fixture(t);
   let before = await f.snapshot();
-  for (const version of ["v1.3.0", "1.03.0", "1.1.0", "1.3.0-01"]) {
+  for (const version of ["v1.3.0", "1.03.0", "1.1.0", "1.3.0-01", "1.3.0-rc.1", "1.3.0+build.1"]) {
     await assert.rejects(setReleaseVersion(version, f.root));
     assert.deepEqual(await f.snapshot(), before);
   }
@@ -71,6 +71,21 @@ test("invalid versions, downgrades and malformed lockfiles fail before any write
   before = await f.snapshot();
   await assert.rejects(setReleaseVersion("1.3.0", f.root), /Missing root package version/);
   assert.deepEqual(await f.snapshot(), before);
+});
+
+test("matching unsupported version formats are rejected by the packaging guard", async t => {
+  for (const version of ["1.3.0+build.1", "1.3.0-rc.1"]) {
+    const f = await fixture(t);
+    for (const file of f.files) {
+      const value = JSON.parse(await fs.readFile(file, "utf8"));
+      value.version = version;
+      if (value.packages) value.packages[""].version = version;
+      await fs.writeFile(file, JSON.stringify(value));
+    }
+    const before = await f.snapshot();
+    await assert.rejects(checkReleaseVersions(f.root), /Invalid stable product version/);
+    assert.deepEqual(await f.snapshot(), before);
+  }
 });
 
 test("version updates refuse to downgrade a distribution or a lockfile root copy", async t => {

@@ -5,6 +5,8 @@ import { compareVersions, parseVersion } from "../../src/updates/release.mjs";
 
 const PROJECT_ROOT = fileURLToPath(new URL("../../", import.meta.url));
 const packages = ["", "distributions/codex-plugin", "distributions/codex-installer"];
+// Both release channels currently publish plain, stable X.Y.Z product versions.
+const isProductVersion = value => Boolean(parseVersion(value) && /^\d+\.\d+\.\d+$/.test(value));
 
 async function readManifests(root) {
   const files = [];
@@ -12,9 +14,9 @@ async function readManifests(root) {
     for (const name of ["package.json", "package-lock.json"]) {
       const relative = path.join(directory, name);
       const value = JSON.parse(await fs.readFile(path.join(root, relative), "utf8"));
-      if (!parseVersion(value.version)) throw new Error(`Invalid version in ${relative}`);
+      if (!isProductVersion(value.version)) throw new Error(`Invalid stable product version in ${relative}`);
       const locked = name === "package-lock.json";
-      if (locked && !parseVersion(value.packages?.[""]?.version)) throw new Error(`Missing root package version in ${relative}`);
+      if (locked && !isProductVersion(value.packages?.[""]?.version)) throw new Error(`Missing root package version or invalid stable product version in ${relative}`);
       files.push({ relative, value, locked });
     }
   }
@@ -34,7 +36,7 @@ export async function checkReleaseVersions(root = PROJECT_ROOT) {
 }
 
 export async function setReleaseVersion(version, root = PROJECT_ROOT) {
-  if (!parseVersion(version)) throw new Error("Expected a semantic version such as 0.8.1");
+  if (!isProductVersion(version)) throw new Error("Expected a stable X.Y.Z version such as 0.8.1, without prerelease or build metadata");
   // Read and validate all inputs before changing any file. Dependency versions stay untouched.
   const files = await readManifests(root);
   for (const { relative, value, locked } of files) {
