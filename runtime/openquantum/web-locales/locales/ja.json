@@ -1397,5 +1397,11 @@
   "Reminders are disabled for this version.": "このバージョンの通知は無効になっています。",
   "Check for a new OpenQuantum release.": "OpenQuantum の新しいバージョンを確認します。",
   "Stable releases · Checked daily": "正式版 · 毎日確認",
-  "Update preferences could not be saved. Please try again.": "更新設定を保存できませんでした。もう一度お試しください。"
+  "Update preferences could not be saved. Please try again.": "更新設定を保存できませんでした。もう一度お試しください。",
+  "Computation tools": "計算ツール",
+  "Waiting for a session": "セッションの開始待ち",
+  "Add a model first": "先にモデルを追加",
+  "Add a model in Settings → Models, then start an OpenQuantum session.": "設定の「モデル」でモデルを追加してから、OpenQuantum セッションを開始してください。",
+  "Diagnostic details": "診断の詳細",
+  "MCP": "MCP"
 }

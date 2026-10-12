@@ -1,4 +1,4 @@
-name: Upload verified release installers
+name: Upload verified DSH capability packages
 
 on:
   workflow_dispatch:
@@ -80,7 +80,7 @@ jobs:
           pattern: OpenQuantum-test-*
           path: release-artifacts
 
-      - name: Verify checksums and upload only matching installers
+      - name: Verify checksums and upload only matching capability packages
         shell: bash
         run: |
           set -euo pipefail
@@ -97,9 +97,9 @@ jobs:
               return value
           version = tag[1:]
           expected = {
-              'darwin-arm64': f'OpenQuantum-{version}-macOS-arm64.dmg',
-              'darwin-x64': f'OpenQuantum-{version}-macOS-x64.dmg',
-              'win32-x64': f'OpenQuantum-{version}-Windows-x64-Setup.exe',
+              'darwin-arm64': f'OpenQuantum-{version}-DSH-darwin-arm64.tar.gz',
+              'darwin-x64': f'OpenQuantum-{version}-DSH-darwin-x64.tar.gz',
+              'win32-x64': f'OpenQuantum-{version}-DSH-win32-x64.tar.gz',
           }
           root = pathlib.Path('release-artifacts')
           assert {p.name for p in root.iterdir()} == {'OpenQuantum-test-' + t for t in expected}

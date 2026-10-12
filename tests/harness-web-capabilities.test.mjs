@@ -2,6 +2,8 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { runInNewContext } from "node:vm";
+import { dictionariesFor } from "../runtime/openquantum/web-locales/catalog.mjs";
+import { DesktopPresetConflictError } from "../src/settings/server/desktop-preset.mjs";
 
 import {
   apply,
@@ -42,6 +44,23 @@ function response() {
     },
   };
 }
+
+test("returns actionable Desktop conflicts while masking unknown failures", async t => {
+  for (const projectSaved of [false, true]) {
+    const failure = new DesktopPresetConflictError(projectSaved);
+    const handler = createCapabilitySettingsHandler({ dispatch: async () => { throw failure; } });
+    const reply = response();
+    await handler(request({ action: "mcp.update" }), reply);
+    assert.equal(reply.result.status, 409);
+    assert.deepEqual(JSON.parse(reply.result.body), { error: failure.message, code: "DESKTOP_PRESET_CONFLICT", projectSaved });
+  }
+  t.mock.method(console, "error", () => {});
+  const handler = createCapabilitySettingsHandler({ dispatch: async () => { throw new Error("private internal detail"); } });
+  const reply = response();
+  await handler(request({ action: "mcp.update" }), reply);
+  assert.equal(reply.result.status, 500);
+  assert.deepEqual(JSON.parse(reply.result.body), { error: "能力设置暂时不可用" });
+});
 
 test("registers Harness-native routes and wires credentials into capability commands", async () => {
   const routes = [];
@@ -364,7 +383,8 @@ test("MCP settings form saves a user timeout and reflects the persisted value", 
     useCallback: callback => callback,
     useEffect() {},
   };
-  let plugin, render;
+  let plugin, render, conflict = false;
+  const partialSaveMessage = new DesktopPresetConflictError(true).message;
   const commands = [];
   runInNewContext(source, {
     __ModuleLoader__: { load: ({ factory }) => { plugin = factory(() => react); } },
@@ -372,6 +392,12 @@ test("MCP settings form saves a user timeout and reflects the persisted value", 
       assert.equal(url, "/openquantum/api/capabilities");
       const command = JSON.parse(options.body);
       commands.push(command);
+      if (conflict && command.action === "mcp.update") {
+        return { ok: false, json: async () => ({ error: partialSaveMessage, code: "DESKTOP_PRESET_CONFLICT", projectSaved: true }) };
+      }
+      if (command.action === "snapshot") {
+        return { ok: true, json: async () => ({ ...snapshot, mcpRevision: "partially-saved", mcpServers: [{ ...server, toolCallTimeoutMs: 7200000 }] }) };
+      }
       return { ok: true, json: async () => ({ ...snapshot, mcpRevision: "after", mcpServers: [{ ...server, toolCallTimeoutMs: command.toolCallTimeoutMs }] }) };
     },
   });
@@ -396,4 +422,83 @@ test("MCP settings form saves a user timeout and reflects the persisted value", 
   event.currentTarget.reportValidity = () => false;
   await form.props.onSubmit(event);
   assert.equal(commands.length, 1);
+  conflict = true;
+  event.currentTarget.reportValidity = () => true;
+  event.currentTarget.elements.namedItem = () => ({ value: "7200000" });
+  await tree().find(node => node.type === "form").props.onSubmit(event);
+  assert.equal(commands[1].revision, "after");
+  assert.deepEqual(commands[2], { action: "snapshot" });
+  assert.equal(tree().find(node => node.props.name === "toolCallTimeoutMs").props.defaultValue, 7200000);
+  assert.ok(tree().some(node => node.props.className === "oq-cap-error" && node.children.includes(partialSaveMessage)));
+  assert.ok(!tree().some(node => node.props.className === "oq-cap-notice"));
+});
+
+test("component status distinguishes first setup from errors and keeps diagnostics available", async () => {
+  const source = await readFile(new URL("../runtime/openquantum/web-capabilities/client.js", import.meta.url), "utf8");
+  const dictionary = dictionariesFor("zh")["settings.openquantumCapabilities"];
+  let plugin, render, snapshot, cursor = 0;
+  const react = {
+    createElement(type, props, ...children) {
+      if (typeof type === "function") return type(props);
+      return { type, props: props ?? {}, children: children.flat(Infinity) };
+    },
+    useState(initial) { return [cursor++ === 1 ? snapshot : initial, () => {}]; },
+    useCallback: callback => callback,
+    useEffect() {},
+  };
+  runInNewContext(source, {
+    __ModuleLoader__: { load: ({ factory }) => { plugin = factory(() => react); } },
+  });
+  plugin.apply({
+    locale: {
+      getSnapshot: () => ({ active: "zh" }),
+      bind: () => (key, values = {}) => (dictionary[key] ?? key).replace(/\{(\w+)\}/g, (_match, id) => String(values[id])),
+    },
+    get: () => ({ isLoopback: true }), remote: { credentials: {} },
+    slots: { inject: (_name, register) => register(), register: (entry, component) => {
+      if (entry.id === "openquantum-capabilities") render = component;
+      return () => {};
+    } },
+  });
+  const initial = {
+    status: "partial", observedAt: "2026-10-12T10:00:00Z",
+    preset: { id: "openquantum", state: "not_observed", generationCount: 0 },
+    checks: [
+      { id: "model-routes", state: "incomplete", reasonCodes: ["NO_MODEL_ROUTES_OBSERVED"], itemCount: 0, items: [] },
+      ...["skill-registry", "tool-registry"].map(id => ({ id, state: "not_observed", reasonCodes: ["PRESET_NOT_MOUNTED"], itemCount: 0, items: [] })),
+    ],
+  };
+  const nodes = (node) => node && typeof node === "object" ? [node, ...node.children.flatMap(nodes)] : [];
+  const text = (node, collapsed = true) => typeof node === "string" ? node : node && typeof node === "object"
+    ? (collapsed && node.type === "details" ? node.children.slice(0, 1) : node.children).map(child => text(child, collapsed)).join(" ") : "";
+  const show = value => { snapshot = value; cursor = 0; return render({ loopback: true, credentialOperations: {} }); };
+  let tree = show(initial);
+  assert.match(text(tree), /先添加模型/);
+  assert.match(text(tree), /等待会话启动/);
+  assert.doesNotMatch(text(tree), /需要检查|Registry|scope|generation|NO_MODEL/);
+  assert.match(text(tree, false), /NO_MODEL_ROUTES_OBSERVED/);
+  assert.match(text(tree, false), /连接尚未测试/);
+  assert.equal(nodes(tree).filter(node => node.props["data-tone"] === "attention").length, 0);
+  assert.equal(nodes(tree).find(node => node.type === "details").props.open, undefined);
+
+  const failure = structuredClone(initial);
+  failure.checks[1] = { ...failure.checks[1], state: "failed", reasonCodes: ["SKILL_REGISTRY_TIMEOUT"] };
+  tree = show(failure);
+  assert.match(text(tree), /部分组件需要检查/);
+  assert.match(text(tree), /读取失败/);
+  assert.match(text(tree), /读取超时/);
+  assert.equal(nodes(tree).filter(node => node.props["data-tone"] === "attention").length, 1);
+
+  const mounted = structuredClone(initial);
+  mounted.preset = { ...mounted.preset, state: "multiple_generations", generationCount: 2 };
+  tree = show(mounted);
+  assert.match(text(tree), /部分组件需要检查/);
+  const loaded = structuredClone(initial);
+  loaded.status = "observed";
+  loaded.preset = { ...loaded.preset, state: "observed", generationCount: 1 };
+  loaded.checks = loaded.checks.map(check => ({ ...check, state: "observed", reasonCodes: [], itemCount: 1, items: [{ id: "test-entry" }] }));
+  tree = show(loaded);
+  assert.match(text(tree), /组件已加载/);
+  assert.match(text(tree), /实际使用时确认/);
+  assert.doesNotMatch(text(tree), /已连接|科学验收通过/);
 });

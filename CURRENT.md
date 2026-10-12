@@ -2,6 +2,16 @@
 
 量子依赖核验日期：2026-09-22；平台升级记录日期：2026-09-10；原模型验收交接记录日期：2026-09-05。此页只记录工作交接；架构以[文档总入口](docs/README.md)为准，执行事实以 Harness Session event log 为准，科学状态以 Acceptance Report 为准。
 
+## 原版第三方 Desktop（2026-10-12）
+
+- 后续桌面交付改为原版 `anywhere-labs/dsh-desktop` 客户端 + OpenQuantum 能力包；兼容基线仍为 Desktop `2.0.7` / Harness `0.1.5-rc.1`。
+- OpenQuantum 内容与 Codex 插件仍共用 `0.8.1` 产品版本，第三方客户端保留自己的版本、原生界面与更新渠道。此前已发布的私有 DMG/EXE 不改写。
+- 保留品牌、量子组件、量子学习通与更新入口；移除 Desktop 中未配置的示例 Gateway 与默认模型，模型由用户在原生设置中添加。隐藏内测声明，简化两个量子模式的简介和设置页终端标签。
+- 空模型目录提示用户去原生设置添加模型；量子组件使用 Tools、MCP、Skills 名称，中文说明按用途和操作组织，未配置、未启动会话与读取失败分别显示，原始状态保留在折叠诊断中。
+- Desktop 扩展通过 `desktop` Profile bundle 启用，与依赖保持同一作用域；其他原生 Profile 可独立使用，用户 Profile 配置保持上游覆盖顺序。
+- 安装与迁移边界、包名和工程检查见[桌面说明](docs/DESKTOP_INSTALLERS.md)。本地实施和验证不等于已合并或已发布；实际源码与附件以 main / Release 为准。
+- 新版 V4 Home 保留，禁止旧运行时降级写入；本轮仍不使用真实科研任务验收。
+
 ## 统一产品版本（2026-10-12）
 
 - Desktop、Codex 插件和安装器从 `0.8.1` 起共用一个产品版本；根 `package.json` 为唯一来源，`npm run release:version -- X.Y.Z` 同时更新三个包及其锁文件。CI 和打包检查拒绝版本漂移。

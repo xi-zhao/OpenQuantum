@@ -272,11 +272,7 @@ test(
     assert(openQuantumPreset, `${diagnostics()}\nmissing OpenQuantum preset`);
     assert.equal(openQuantumPreset.isDefault, true);
     assert.equal(openQuantumPreset.name, "OpenQuantum");
-    assert.match(openQuantumPreset.description, /量子科研模式/);
-    assert.match(openQuantumPreset.description, /通用编码/);
-    assert.match(openQuantumPreset.description, /PTC/);
-    assert.match(openQuantumPreset.description, /极简编码/);
-    assert.match(openQuantumPreset.description, /preset 创作/);
+    assert.match(openQuantumPreset.description, /量子科研/);
 
     const sessionIds = [];
     for (let index = 0; index < 2; index += 1) {

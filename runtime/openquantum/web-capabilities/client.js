@@ -48,7 +48,11 @@ globalThis.__ModuleLoader__.load({
         body: JSON.stringify(command),
       });
       const value = await response.json();
-      if (!response.ok) throw new Error(value.error ?? t("能力设置请求失败"));
+      if (!response.ok) {
+        const error = new Error(value.error ?? t("能力设置请求失败"));
+        error.projectSaved = value.code === "DESKTOP_PRESET_CONFLICT" && value.projectSaved === true;
+        throw error;
+      }
       return value;
     }
 
@@ -85,26 +89,31 @@ globalThis.__ModuleLoader__.load({
     const runtimeCheckCopy = () => ({
       "model-routes": {
         title: t("模型路由"),
-        code: "Host · Model Registry",
         description: t("当前 Host 已注册的模型 Adapter Route；不发送模型请求，也不检查 Endpoint 或鉴权。"),
       },
       "skill-registry": {
-        title: "Skill Registry",
-        code: "OpenQuantum Agent Preset",
+        title: t("Skill 指令"),
         description: t("当前已挂载 OpenQuantum Agent scope 中发现的 Skill；Snapshot 不返回或展示 Skill 正文。"),
       },
       "tool-registry": {
-        title: "Tool Registry",
-        code: "OpenQuantum Agent Preset",
+        title: t("计算工具"),
         description: t("当前 Agent scope 中可见的 Tool schema；Tool 已注册不等于 MCP Server 此刻在线。"),
       },
     });
+
+    function expectedSetupState(check) {
+      return check.state !== "failed" && check.reasonCodes.length > 0 &&
+        check.reasonCodes.every((code) => ["PRESET_NOT_MOUNTED", "NO_MODEL_ROUTES_OBSERVED"].includes(code));
+    }
 
     function runtimeCheckStatus(check) {
       if (check.state === "observed") {
         return check.id === "model-routes"
           ? [t("Route 已注册"), "ready"]
           : [t("Registry 已观测"), "ready"];
+      }
+      if (expectedSetupState(check)) {
+        return check.id === "model-routes" ? [t("未配置"), "off"] : [t("等待会话启动"), "off"];
       }
       if (check.state === "incomplete") return [t("观测不完整"), "attention"];
       if (check.state === "failed") return [t("观测失败"), "attention"];
@@ -140,10 +149,15 @@ globalThis.__ModuleLoader__.load({
           h("button", { type: "button", className: "oq-cap-button", disabled: busy, onClick: onRefresh }, t("重新读取")),
         );
       }
-      const overall = snapshot.status === "observed"
-        ? [t("运行证据已形成"), t("当前 Host、OpenQuantum Agent 的 Model、Skill 与 Tool Registry 均已完成只读观测。")]
-        : snapshot.status === "partial"
+      const needsAttention = snapshot.preset.state === "failed" || snapshot.preset.generationCount > 1 ||
+        snapshot.checks.some((check) => ["failed", "incomplete"].includes(check.state) && !expectedSetupState(check));
+      const modelMissing = snapshot.checks.some((check) => check.id === "model-routes" && expectedSetupState(check));
+      const overall = needsAttention
         ? [t("运行证据需要关注"), t("部分 Registry 观测不完整或存在多个 Preset generation；展开卡片查看当前事实。")]
+        : modelMissing
+        ? [t("先添加模型"), t("请在设置的「模型」页面添加模型，再开始 OpenQuantum 会话。")]
+        : snapshot.status === "observed"
+        ? [t("运行证据已形成"), t("当前 Host、OpenQuantum Agent 的 Model、Skill 与 Tool Registry 均已完成只读观测。")]
         : [t("等待 Agent 运行观测"), t("当前 Host 尚未挂载 OpenQuantum Agent Preset。打开或创建一个 OpenQuantum 会话后再刷新。")];
       const observedAt = new Date(snapshot.observedAt).toLocaleString(activeLocale());
       return h("div", null,
@@ -152,12 +166,11 @@ globalThis.__ModuleLoader__.load({
           h("div", null,
             h("strong", null, overall[0]),
             h("p", null, overall[1]),
-            h("p", null, t("被动观测 · {p0} · {p1} 个 generation · {p2}", { p0: snapshot.preset.id, p1: snapshot.preset.generationCount, p2: observedAt })),
           ),
           h("button", { type: "button", className: "oq-cap-button", disabled: busy, onClick: onRefresh }, busy ? t("正在读取…") : t("刷新状态")),
         ),
         h("div", { className: "oq-cap-grid" }, snapshot.checks.map((check) => {
-          const copy = runtimeCheckCopy()[check.id] ?? { title: check.id, code: check.scope, description: t("当前 Runtime 的只读观测。") };
+          const copy = runtimeCheckCopy()[check.id] ?? { title: check.id, description: t("当前 Runtime 的只读观测。") };
           const [label, tone] = runtimeCheckStatus(check);
           const groups = check.groups?.length
             ? t(" · {p0} 个 MCP Tool namespace", { p0: check.groups.length })
@@ -165,11 +178,12 @@ globalThis.__ModuleLoader__.load({
           const reason = runtimeReason(check);
           return h("article", { className: "oq-cap-card", key: check.id },
             h("div", { className: "oq-cap-card-head" },
-              h("div", { className: "oq-cap-title" }, h("h3", null, copy.title), h("code", { className: "oq-cap-code" }, copy.code)),
+              h("div", { className: "oq-cap-title" }, h("h3", null, copy.title)),
               h("span", { className: "oq-cap-badge", "data-tone": tone }, label),
             ),
             h("p", { className: "oq-cap-desc" }, copy.description),
-            h("p", { className: "oq-cap-meta" }, t("{p0} 项当前 Registry 证据{p1}", { p0: check.itemCount, p1: groups })),
+            check.state === "observed" || check.itemCount > 0
+              ? h("p", { className: "oq-cap-meta" }, t("{p0} 项当前 Registry 证据{p1}", { p0: check.itemCount, p1: groups })) : null,
             reason ? h("p", { className: "oq-cap-meta" }, t("提示：{p0}", { p0: reason })) : null,
             check.items.length ? h("details", { className: "oq-runtime-items" },
               h("summary", null, t("查看已观测项目")),
@@ -177,7 +191,12 @@ globalThis.__ModuleLoader__.load({
             ) : null,
           );
         })),
-        h("p", { className: "oq-runtime-limit" }, t("检查边界：不会启动 MCP Server、执行 Tool、调用模型、访问量子云或读取凭据。Model Endpoint、MCP 连接和下游服务可达性本次均为 not_checked。")),
+        h("details", { className: "oq-runtime-items" },
+          h("summary", null, t("诊断详情")),
+          h("p", { className: "oq-cap-meta" }, t("被动观测 · {p0} · {p1} 个 generation · {p2}", { p0: snapshot.preset.id, p1: snapshot.preset.generationCount, p2: observedAt })),
+          snapshot.checks.map((check) => h("code", { key: check.id }, `${check.id}: ${check.state}${check.reasonCodes.length ? ` · ${check.reasonCodes.join(", ")}` : ""}`)),
+          h("p", { className: "oq-runtime-limit" }, t("检查边界：不会启动 MCP Server、执行 Tool、调用模型、访问量子云或读取凭据。Model Endpoint、MCP 连接和下游服务可达性本次均为 not_checked。")),
+        ),
       );
     }
 
@@ -300,6 +319,10 @@ globalThis.__ModuleLoader__.load({
           await loadCredentials(next);
           setNotice(success);
         } catch (caught) {
+          if (caught?.projectSaved) {
+            // Keep the reconciliation message even if refreshing also fails.
+            try { await reload(); } catch { /* The next explicit refresh can retry. */ }
+          }
           setError(caught instanceof Error ? caught.message : t("能力设置保存失败"));
         } finally {
           setBusy(null);
@@ -526,7 +549,7 @@ globalThis.__ModuleLoader__.load({
         locale: NS,
         inject: () => ({ credentialOperations, loopback: connection.isLoopback }),
       }, CapabilitySettingsSection));
-      ctx.slots.inject("settings.section", () => ctx.slots.register({
+      if (!globalThis.document?.querySelector('meta[name="openquantum-channels"][content="disabled"]')) ctx.slots.inject("settings.section", () => ctx.slots.register({
         name: "settings.section",
         id: "openquantum-channels",
         order: 13,

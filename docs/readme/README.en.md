@@ -91,13 +91,13 @@ Course resources are still being organized; a complete curriculum and full accep
 
 ## Quick start
 
-OpenQuantum supports desktop installers and source builds for local, single-user use. Choose an installer to use the workbench, or run from source for development and capabilities available on `main`.
+OpenQuantum supports an upstream Desktop with a capability package and source builds for local, single-user use. The current source distribution model is described below.
 
 ### Desktop installer
 
-Download the Mac (Apple Silicon / Intel) or Windows installer from [GitHub Releases](https://github.com/xi-zhao/OpenQuantum/releases/latest). Node.js and uv are bundled, so no source build is needed. These are unsigned test builds. Follow the [installation guide](../DESKTOP_INSTALLERS.md), open the app, then [configure a model](#configure-a-model). Follow the corresponding version's instructions for additional computation dependencies; optional applications such as Quantum Learning have separate setup steps.
+Future desktop distributions use the original [anywhere-labs DSH Desktop 2.0.7](https://github.com/anywhere-labs/dsh-desktop/releases/tag/v2.0.7) with an OpenQuantum capability archive. Harness stays at `0.1.5-rc.1`. The archive includes Node.js and uv; install it using `install.command` on Mac or `install.cmd` on Windows. Branding, quantum components, Quantum Learning and OpenQuantum updates are retained with minimal changes to the upstream interface. Follow the [installation and upgrade guide](../DESKTOP_INSTALLERS.md).
 
-The [v0.8.1 release notes](../releases/v0.8.1.md) describe native SDK workflows, complete result-file delivery and upgrade scope. Download availability is determined by the actual Release attachments. Installers include adapter code; prepare the dependencies for the capabilities you choose. Replace an existing installation with the new installer. Modified Skills and MCP configuration are preserved, so adopting new defaults may require a manual comparison. See [data and upgrades](../DESKTOP_INSTALLERS.md#数据与升级).
+Previously published v0.8.1 DMG/EXE files use the earlier private-client format. New capability archives are available only when attached to an OpenQuantum Release. OpenQuantum and its Codex plugin keep the same product version; the original Desktop retains its own upstream version. Modified Skills, model routes and MCP configuration are preserved. Compute environments and Quantum Learning still have their documented setup requirements.
 
 ### From source
 
@@ -119,7 +119,7 @@ To build Desktop from the same source checkout, complete the source installation
 ```bash
 npm run desktop:setup
 npm run desktop:verify-install
-npm run desktop
+npm run desktop -- --source
 ```
 
 When launched from the same source checkout, Web and Desktop share the same Harness home and configuration. Close the other host before opening the same home. See [desktop installation and platform requirements](../DEPLOYMENT.md).

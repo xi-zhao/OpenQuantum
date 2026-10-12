@@ -3,7 +3,18 @@ import { mkdir, mkdtemp, readFile, realpath, rm, symlink, writeFile } from "node
 import { tmpdir } from "node:os";
 import path from "node:path";
 import test from "node:test";
-import { installDesktopDistribution, sha256 } from "../scripts/lib/desktop-distribution.mjs";
+import { desktopPayloadIdentity, installDesktopDistribution, sha256 } from "../scripts/lib/desktop-distribution.mjs";
+
+test("same-version packages keep separate dependencies across native architectures and runtime locks", () => {
+  const manifest = { kind: "dsh-capability-package", version: "0.8.1", target: "darwin-arm64", runtimeLockSha256: sha256("runtime 1"), files: {} };
+  const arm = { platform: "darwin", arch: "arm64" };
+  const intel = { platform: "darwin", arch: "x64" };
+  const identity = desktopPayloadIdentity(manifest, arm);
+  assert.notEqual(identity, desktopPayloadIdentity({ ...manifest, target: "darwin-x64" }, intel));
+  assert.notEqual(identity, desktopPayloadIdentity({ ...manifest, runtimeLockSha256: sha256("runtime 2") }, arm));
+  assert.throws(() => desktopPayloadIdentity(manifest, intel), /Incompatible/);
+  assert.throws(() => desktopPayloadIdentity({ ...manifest, version: "../escape" }, arm), /invalid/);
+});
 
 async function fixture(t) {
   const root = await mkdtemp(path.join(await realpath(tmpdir()), "oq-distribution-"));
@@ -113,4 +124,28 @@ test("rejects manifest escapes and writes through directory links", async (t) =>
   await symlink(outside, path.join(f.projectRoot, "src"), process.platform === "win32" ? "junction" : "dir");
   await assert.rejects(f.install(), /Refusing to write through a link/);
   await assert.rejects(readFile(path.join(outside, "main.mjs")), { code: "ENOENT" });
+});
+
+test("rejects a V4 Home before changing any installed program", async (t) => {
+  const f = await fixture(t);
+  await f.release("1", { "src/main.mjs": "old" });
+  await f.install();
+  const logs = path.join(f.projectRoot, ".openquantum/dsh/sessions/new-session");
+  await mkdir(logs, { recursive: true });
+  await writeFile(path.join(logs, "log.v4.jsonl"), "newer session format");
+  await f.release("2", { "src/main.mjs": "new" });
+  await assert.rejects(f.install(), /V4 sessions/);
+  assert.equal(await readFile(path.join(f.projectRoot, "src/main.mjs"), "utf8"), "old");
+  assert.equal(await readFile(path.join(logs, "log.v4.jsonl"), "utf8"), "newer session format");
+});
+
+test("preserves modified provider routes through capability package updates", async (t) => {
+  const f = await fixture(t);
+  const config = "runtime/openquantum/model-routes.cordis.yml";
+  await f.release("1", { [config]: "provider default" });
+  await f.install();
+  await writeFile(path.join(f.projectRoot, config), "personal provider reference");
+  await f.release("2", { [config]: "new provider default" });
+  await f.install();
+  assert.equal(await readFile(path.join(f.projectRoot, config), "utf8"), "personal provider reference");
 });

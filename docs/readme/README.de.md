@@ -42,9 +42,9 @@ Für die lokale Nutzung durch eine einzelne Person stehen ein Desktop-Installati
 
 ### Desktop-Installationspaket
 
-Laden Sie das Paket für Mac (Apple Silicon / Intel) oder Windows von [GitHub Releases](https://github.com/xi-zhao/OpenQuantum/releases/latest) herunter. Node.js und uv sind enthalten; ein eigener Quellcode-Build ist nicht erforderlich. Es handelt sich um unsignierte Testversionen. Folgen Sie der [Installationsanleitung](../DESKTOP_INSTALLERS.md), öffnen Sie die Anwendung und konfigurieren Sie ein Modell. Beachten Sie die Vorbereitungsschritte für Rechenkomponenten und Quantum Learning in der jeweiligen Version.
+Künftige Desktop-Ausgaben verwenden das Original [anywhere-labs DSH Desktop 2.0.7](https://github.com/anywhere-labs/dsh-desktop/releases/tag/v2.0.7) mit einem OpenQuantum-Funktionspaket. Harness bleibt bei `0.1.5-rc.1`. Das Archiv enthält Node.js und uv; starten Sie `install.command` auf dem Mac oder `install.cmd` unter Windows. Marke, Quantenkomponenten, Quantum Learning und OpenQuantum-Updates bleiben mit möglichst wenigen Änderungen an der Oberfläche erhalten. Siehe [Installation und Aktualisierung](../DESKTOP_INSTALLERS.md).
 
-Die [Versionshinweise zu v0.8.1](../releases/v0.8.1.md) beschreiben native SDK-Programme, vollständige Ergebnisdateien und den Umfang der Aktualisierung. Maßgeblich für Downloads sind die tatsächlichen Release-Anhänge. Die Installationspakete enthalten den Adaptercode; Rechenabhängigkeiten werden für die gewählten Fähigkeiten ausdrücklich vorbereitet. Aktualisieren Sie eine vorhandene Anwendung mit dem neuen Installationspaket. Geänderte Skills und MCP-Konfigurationen bleiben erhalten; neue Voreinstellungen müssen gegebenenfalls verglichen und übernommen werden. Siehe [Daten und Aktualisierung](../DESKTOP_INSTALLERS.md#数据与升级).
+Bereits veröffentlichte DMG/EXE-Dateien für v0.8.1 verwenden den früheren eigenen Client. Neue Archive sind erst mit den entsprechenden Release-Anhängen verfügbar. OpenQuantum und das Codex-Plugin teilen die Produktversion; Desktop behält seine Upstream-Version. Geänderte Skills, Modellrouten und MCP-Einstellungen bleiben erhalten. Rechenumgebungen und Quantum Learning benötigen weiterhin die dokumentierte Vorbereitung.
 
 ### Aus dem Quellcode starten
 
@@ -90,7 +90,7 @@ Um Desktop aus derselben Arbeitskopie zu bauen, schließen Sie die obige Quellco
 ```bash
 npm run desktop:setup
 npm run desktop:verify-install
-npm run desktop
+npm run desktop -- --source
 ```
 
 Web und Desktop teilen die Harness-Daten und -Konfiguration, wenn sie aus derselben Quellcode-Arbeitskopie gestartet werden. Beenden Sie den anderen Host, bevor Sie dasselbe Datenverzeichnis verwenden.

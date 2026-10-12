@@ -10,6 +10,11 @@ Web and Desktop, including the collapsed sidebar, and reuses the same mark in
 the shared assets, styles, product copy and browser metadata through `tapIndex`.
 Sidebar branding does not depend on the upstream SVG shape or DOM nesting.
 
+The Desktop `minimalUi` composition also uses the native model Slot to show a
+setup hint when the Host model catalog is empty. Configured providers and failed
+catalog reads retain the original selector. This reads the public catalog RPC;
+it does not alter saved models or Session history.
+
 ```bash
 dsh plugin --profile web add github:xi-zhao/OpenQuantum#path:/packages/openquantum-web-branding
 ```
