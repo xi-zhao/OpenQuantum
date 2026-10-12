@@ -1,0 +1,144 @@
+name: Upload verified release installers
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing stable Desktop tag with a draft Release
+        required: true
+        type: string
+      ci_run_id:
+        description: Successful push CI run for the tag commit
+        required: true
+        type: string
+      installer_run_id:
+        description: Successful push installer run for the tag commit
+        required: true
+        type: string
+
+permissions:
+  actions: read
+  contents: write
+
+concurrency:
+  group: release-installers-${{ inputs.tag }}
+  cancel-in-progress: false
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      RELEASE_TAG: ${{ inputs.tag }}
+      CI_RUN_ID: ${{ inputs.ci_run_id }}
+      INSTALLER_RUN_ID: ${{ inputs.installer_run_id }}
+    steps:
+      - name: Validate request syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$RELEASE_TAG" =~ ^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]
+          [[ "$CI_RUN_ID" =~ ^[1-9][0-9]*$ ]]
+          [[ "$INSTALLER_RUN_ID" =~ ^[1-9][0-9]*$ ]]
+
+      - uses: actions/checkout@v7
+        with:
+          ref: refs/tags/${{ inputs.tag }}
+          persist-credentials: false
+
+      - name: Verify successful source runs and existing draft
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, pathlib, subprocess
+          repo, tag = os.environ['GH_REPO'], os.environ['RELEASE_TAG']
+          def gh(*args):
+              return json.loads(subprocess.check_output(['gh', *args], text=True))
+          source = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
+          tagged = subprocess.check_output(['git', 'rev-parse', f'refs/tags/{tag}^{{commit}}'], text=True).strip()
+          assert source == tagged
+          assert json.loads(pathlib.Path('package.json').read_text())['version'] == tag[1:]
+          for key, workflow, jobs in [('CI_RUN_ID', 'ci.yml', 4), ('INSTALLER_RUN_ID', 'desktop-installers.yml', 3)]:
+              run = gh('api', f'repos/{repo}/actions/runs/{os.environ[key]}')
+              assert run['head_sha'] == source and run['event'] == 'push'
+              assert run['path'].split('@', 1)[0] == '.github/workflows/' + workflow
+              assert run['status'] == 'completed' and run['conclusion'] == 'success'
+              checks = gh('api', f'repos/{repo}/actions/runs/{run["id"]}/jobs?per_page=100')['jobs']
+              assert len(checks) == jobs and all(j['conclusion'] == 'success' for j in checks)
+          release = gh('release', 'view', tag, '--repo', repo, '--json', 'databaseId,tagName,isDraft,isPrerelease')
+          assert release['tagName'] == tag and release['isDraft'] and not release['isPrerelease']
+          pathlib.Path('release-upload-context.json').write_text(json.dumps({'releaseId': release['databaseId'], 'tag': tag, 'commit': source}))
+          PY
+
+      - uses: actions/download-artifact@v7
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.installer_run_id }}
+          pattern: OpenQuantum-test-*
+          path: release-artifacts
+
+      - name: Verify checksums and upload only matching installers
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib, json, os, pathlib, re, subprocess
+          repo, tag = os.environ['GH_REPO'], os.environ['RELEASE_TAG']
+          context = json.loads(pathlib.Path('release-upload-context.json').read_text())
+          release_id = context['releaseId']
+          def gh(*args):
+              return json.loads(subprocess.check_output(['gh', *args], text=True))
+          def draft():
+              value = gh('api', f'repos/{repo}/releases/{release_id}')
+              assert value['draft'] and not value['prerelease'] and value['tag_name'] == tag
+              return value
+          version = tag[1:]
+          expected = {
+              'darwin-arm64': f'OpenQuantum-{version}-macOS-arm64.dmg',
+              'darwin-x64': f'OpenQuantum-{version}-macOS-x64.dmg',
+              'win32-x64': f'OpenQuantum-{version}-Windows-x64-Setup.exe',
+          }
+          root = pathlib.Path('release-artifacts')
+          assert {p.name for p in root.iterdir()} == {'OpenQuantum-test-' + t for t in expected}
+          verified = []
+          for target, name in expected.items():
+              folder = root / ('OpenQuantum-test-' + target)
+              assert {p.name for p in folder.iterdir()} == {name, 'SHA256SUMS'}
+              file, sums = folder / name, folder / 'SHA256SUMS'
+              assert all(p.is_file() and not p.is_symlink() for p in [file, sums])
+              lines = sums.read_text().strip().splitlines()
+              assert len(lines) == 1
+              checksum, filename = lines[0].split(maxsplit=1)
+              assert filename.lstrip('*') == name and re.fullmatch('[a-f0-9]{64}', checksum)
+              h = hashlib.sha256()
+              with file.open('rb') as stream:
+                  for block in iter(lambda: stream.read(8 * 1024 * 1024), b''):
+                      h.update(block)
+              assert h.hexdigest() == checksum
+              verified.append({'name': name, 'size': file.stat().st_size, 'sha256': checksum, 'path': str(file)})
+          # Verify every local installer before any upload. Preserve notes and small assets.
+          for item in verified:
+              assets = draft()['assets']
+              existing = next((a for a in assets if a['name'] == item['name']), None)
+              if existing and existing['state'] == 'starter' and existing['size'] == 0:
+                  subprocess.run(['gh', 'api', '--method', 'DELETE', f'repos/{repo}/releases/assets/{existing["id"]}'], check=True)
+                  existing = None
+              if existing:
+                  assert existing['state'] == 'uploaded' and existing['size'] == item['size'] and existing['digest'] == 'sha256:' + item['sha256']
+              else:
+                  subprocess.run(['gh', 'release', 'upload', tag, item['path'], '--repo', repo], check=True)
+              uploaded = next(a for a in draft()['assets'] if a['name'] == item['name'])
+              assert uploaded['state'] == 'uploaded' and uploaded['size'] == item['size'] and uploaded['digest'] == 'sha256:' + item['sha256']
+              print(item['name'], item['sha256'], 'verified on GitHub')
+          pathlib.Path('release-asset-upload.json').write_text(json.dumps({**context, 'ciRunId': os.environ['CI_RUN_ID'], 'installerRunId': os.environ['INSTALLER_RUN_ID'], 'published': False, 'assets': [{k: v for k, v in a.items() if k != 'path'} for a in verified]}, indent=2))
+          PY
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: Release-asset-upload-${{ inputs.tag }}
+          path: release-asset-upload.json
+          if-no-files-found: error
+          retention-days: 14
