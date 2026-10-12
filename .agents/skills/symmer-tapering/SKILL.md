@@ -5,6 +5,17 @@ description: 用固定 Symmer 将实 Pauli Hamiltonian 投影到显式指定的�
 
 # Symmer 对称性降比特
 
+<!-- BEGIN NATIVE SDK ACCESS -->
+## 原生 SDK 路径
+
+本能力同时支持 **Symmer 的原生公开 API**。用户需要 PauliwordOp、投影、对称性、tapering 与子空间方法 时，由 Agent 在固定依赖环境中编写和运行任务代码，不限于下文便捷 Tool 的预设模型。
+
+使用 `node scripts/sdk-access.mjs inspect symmer-tapering` 定位环境，按[完整 SDK 工作流](../quantum-sdk-workbench/references/workflow.md)执行。模块导航：`symmer`；导航不是 API 白名单。
+
+下文关于模型、门集、输入与预算的限制描述便捷 Tool 的合同；原生 SDK 另受上游版本、可选依赖、宿主资源与用户授权约束。已禁用或被拒绝的动作不能借代码路径绕过。执行状态和科研验收分别报告。
+<!-- END NATIVE SDK ACCESS -->
+
+
 用户已有 Hamiltonian 和要研究的对称性扇区时，调用 Harness 注册的 `symmer_local.taper_symmer_hamiltonian`。本能力使用 Symmer 的 S3Projection 稳定子投影原语；不自动选择基态扇区。
 
 - `terms` 用 `{pauli, coefficient}` 表示 实 Pauli Hamiltonian；量子位数和项数由输入决定。字符串从左到右为 q0、q1……；重复项先合并。

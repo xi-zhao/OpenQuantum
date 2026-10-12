@@ -5,6 +5,17 @@ description: 使用 OpenQuantum 通过 Harness MCP Client 注册的 TyxonQ Tool 
 
 # TyxonQ Workbench
 
+<!-- BEGIN NATIVE SDK ACCESS -->
+## 原生 SDK 路径
+
+本能力同时支持 **TyxonQ 的原生公开 API**。用户需要 电路、门、测量与上游后端接口 时，由 Agent 在固定依赖环境中编写和运行任务代码，不限于下文便捷 Tool 的预设模型。
+
+使用 `node scripts/sdk-access.mjs inspect tyxonq-workbench` 定位环境，按[完整 SDK 工作流](../quantum-sdk-workbench/references/workflow.md)执行。模块导航：`tyxonq`；导航不是 API 白名单。
+
+下文关于模型、门集、输入与预算的限制描述便捷 Tool 的合同；原生 SDK 另受上游版本、可选依赖、宿主资源与用户授权约束。已禁用或被拒绝的动作不能借代码路径绕过。执行状态和科研验收分别报告。
+<!-- END NATIVE SDK ACCESS -->
+
+
 ## 工作边界
 
 这个 Skill 负责组织 TyxonQ 工作流，真正的计算由 `tyxonq_local` MCP Server 暴露并经 Harness MCP Client 注册的 Tool 完成。

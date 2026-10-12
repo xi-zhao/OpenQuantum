@@ -5,6 +5,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { pythonEnvironmentRoot } from "../src/lib/prepared-python.mjs";
+import { assertInstalledPythonFiles } from "../src/lib/installed-python.mjs";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
 const ids = ["sqd-chemistry", "tjm-dynamics", "ldpc-decoding", "flow-vqe", "tenpy-ground-state", "randomized-measurements"];
@@ -57,7 +58,7 @@ const pythonVersions = {
 };
 const selected = process.argv.slice(2);
 supported.push("pairinteraction-rydberg");
-const allowedEnvironment = ["HOME", "PATH", "HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY", "NO_PROXY", "SSL_CERT_FILE", "SSL_CERT_DIR", "UV_CACHE_DIR", "UV_PYTHON_INSTALL_DIR", "SYSTEMROOT", "TEMP", "TMP", "TMPDIR", "WINDIR"];
+const allowedEnvironment = ["HOME", "PATH", "HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY", "NO_PROXY", "SSL_CERT_FILE", "SSL_CERT_DIR", "UV_CACHE_DIR", "UV_PYTHON_INSTALL_DIR", "UV_CONCURRENT_DOWNLOADS", "UV_HTTP_TIMEOUT", "UV_HTTP_RETRIES", "UV_LINK_MODE", "SYSTEMROOT", "TEMP", "TMP", "TMPDIR", "WINDIR"];
 const environment = Object.fromEntries(allowedEnvironment.filter(key => process.env[key]).map(key => [key, process.env[key]]));
 if (selected.some((id) => !supported.includes(id))) throw new Error(`Expected capability ids from: ${supported.join(", ")}`);
 const digest = (file) => createHash("sha256").update(readFileSync(file)).digest("hex");
@@ -92,6 +93,7 @@ for (const id of selected.length ? selected : ids) {
   if (!julia) {
     const python = path.join(environmentRoot, process.platform === "win32" ? "Scripts/python.exe" : "bin/python");
     if (!existsSync(python)) throw new Error(`${id} setup did not produce Python`);
+    assertInstalledPythonFiles(python, { cwd: root, env: environment });
     const pending = `${marker}.${process.pid}.tmp`;
     writeFileSync(pending, before + "\n");
     renameSync(pending, marker);

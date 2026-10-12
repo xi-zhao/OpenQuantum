@@ -13,15 +13,16 @@
 
 ## 当前 Skill
 
-以下 155 个 Skill 随源码分发；它们与 MCP Server 不是一一对应关系，知识型 Skill 可以不绑定专用 Tool，
+以下 156 个 Skill 随源码分发；它们与 MCP Server 不是一一对应关系，知识型 Skill 可以不绑定专用 Tool，
 工作流也可以使用多个服务或进程内原生 Tool。连接默认配置与凭据条件见[项目首页](../../README.md#mcp-服务目录)。
-当前 142 项可由模型自动选择，13 个分类索引仅保留用户显式调用；名称和来源映射不变。
+当前 143 项可由模型自动选择，13 个分类索引仅保留用户显式调用；名称和来源映射不变。
 分批建议与兼容影响见[扩展治理清单](../../docs/architecture/EXTENSION_GOVERNANCE.md)。
 
 | Skill | 作用 | 依赖的执行模块 |
 | --- | --- | --- |
 | `platform-diagnostics` | UI、Harness、Skill 和 Model 四个职责面的平台诊断 | Harness Tool、诊断 Validator 与 eval evidence |
 | `quantum-sdk-advisor` | 量子软件栈选型 | 无强制 Tool Provider |
+| `quantum-sdk-workbench` | 固定依赖中的原生 SDK、自定义代码与复现工件 | 宿主已有 `bash` / `pwsh`；不新增任意代码 MCP |
 | `qiskit-circuit-workbench` | QASM/QPY 电路分析和转译工作流 | Qiskit MCP Server + Harness MCP Client |
 | `fieldqkit-hardware` | 国内量子云后端发现和凭据缺口解释 | FieldQKit 本地 MCP Server + Harness MCP Client；不改变云状态；显式准备 Python 环境，发现可能写 SDK 缓存 |
 | `qdmi-device` | 已配置驱动的设备、门集与耦合只读查询 | QDMI 本地 MCP Server + Harness MCP Client；默认关闭，需显式准备驱动 |

@@ -5,6 +5,17 @@ description: 用 QuEra Bloqade Analog 在本地模拟二维 Rydberg 原子阵列
 
 # Bloqade Analog 中性原子动力学
 
+<!-- BEGIN NATIVE SDK ACCESS -->
+## 原生 SDK 路径
+
+本能力同时支持 **Bloqade Analog 的原生公开 API**。用户需要 任意原子布局、波形、局部/全局驱动、程序构建与模拟 时，由 Agent 在固定依赖环境中编写和运行任务代码，不限于下文便捷 Tool 的预设模型。
+
+使用 `node scripts/sdk-access.mjs inspect bloqade-analog` 定位环境，按[完整 SDK 工作流](../quantum-sdk-workbench/references/workflow.md)执行。模块导航：`bloqade.analog`；导航不是 API 白名单。
+
+下文关于模型、门集、输入与预算的限制描述便捷 Tool 的合同；原生 SDK 另受上游版本、可选依赖、宿主资源与用户授权约束。已禁用或被拒绝的动作不能借代码路径绕过。执行状态和科研验收分别报告。
+<!-- END NATIVE SDK ACCESS -->
+
+
 适用于用户自定义原子坐标、Rabi 振幅、失谐和相位波形的模拟量子程序。Agent 经 Harness 调用 `bloqade_local` 提供的 `simulate_bloqade_analog`；本 Skill 负责模型选择、输入和解释，Tool 执行计算。
 
 - 输入 `atomPositionsUm` 是依输入顺序排列的二维坐标，单位 µm。所有位置必须不同；原子静止且全部占位。

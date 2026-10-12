@@ -5,7 +5,7 @@ import path from "node:path";
 
 export function pythonEnvironmentRoot(projectRoot, id, environment = process.env) {
   const root = environment.OPENQUANTUM_PYTHON_ENV_ROOT || path.join(projectRoot, ".openquantum/python-envs");
-  return path.join(path.resolve(root), id);
+  return path.join(path.resolve(projectRoot, root), id);
 }
 
 // Environment preparation is an explicit installer action, never a Tool fallback.

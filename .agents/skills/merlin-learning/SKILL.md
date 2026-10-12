@@ -5,6 +5,17 @@ description: 用 Quandela MerLin 在 CPU 上批量计算无损光子线路的完
 
 # MerLin 光子层推断与梯度
 
+<!-- BEGIN NATIVE SDK ACCESS -->
+## 原生 SDK 路径
+
+本能力同时支持 **MerLin 的原生公开 API**。用户需要 自定义光学电路、QuantumLayer、测量策略与 Torch 训练 时，由 Agent 在固定依赖环境中编写和运行任务代码，不限于下文便捷 Tool 的预设模型。
+
+使用 `node scripts/sdk-access.mjs inspect merlin-learning` 定位环境，按[完整 SDK 工作流](../quantum-sdk-workbench/references/workflow.md)执行。模块导航：`merlin`、`perceval`；导航不是 API 白名单。
+
+下文关于模型、门集、输入与预算的限制描述便捷 Tool 的合同；原生 SDK 另受上游版本、可选依赖、宿主资源与用户授权约束。已禁用或被拒绝的动作不能借代码路径绕过。执行状态和科研验收分别报告。
+<!-- END NATIVE SDK ACCESS -->
+
+
 Agent 经 Harness 调用 `merlin_local` 的 `evaluate_merlin_layer`。用于分析光子量子层的可微响应；完整训练模型、准确率对比和实机推断需要其他工作流与证据。
 
 输入模式数、Fock `occupation`、目标 `targetOccupation`、`BS`/`PS` 操作序列及二维 `phases`。每个 phase 行是一次参数取值，各列按线路中 PS 出现的顺序绑定。`BS.theta` 使用 Perceval Rx 约定：对角元 cos(theta/2)，非对角元 i sin(theta/2)；所有角度为弧度。目标与输入光子总数必须相同；MerLin SLOS 后端要求输入至少一个光子。每条线路至少有一个 PS，参数可跨批次比较。

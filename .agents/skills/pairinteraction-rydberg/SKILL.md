@@ -5,6 +5,21 @@ description: 使用独立固定版本 PairInteraction 计算 Rb Rydberg 原子�
 
 # PairInteraction 原子对相互作用
 
+<!-- BEGIN NATIVE SDK ACCESS -->
+## 原生 SDK 路径
+
+本能力同时支持 **PairInteraction 的原生公开 API**。用户需要 原子态、单原子与双原子基、相互作用矩阵、场扫描与截断选择 时，由 Agent 在固定依赖环境中编写和运行任务代码，不限于下文便捷 Tool 的预设模型。
+
+使用 `node scripts/sdk-access.mjs inspect pairinteraction-rydberg` 定位环境，按[完整 SDK 工作流](../quantum-sdk-workbench/references/workflow.md)执行。模块导航：`pairinteraction.real`、`pairinteraction.complex`；导航不是 API 白名单。
+
+默认数据锁仅含 Rb 和通用 Wigner 表。其他原子及模型的表可通过上游数据准备接口在独立任务目录显式下载或生成，记录版本与文件摘要后，以 bootstrap 的 data_directory 参数接入；不是把原生 API 限定为 Rb。
+
+原生程序导入库前，按环境定位器的 `bootstrap` 执行启动兼容处理：显式使用已准备的原子数据库并禁止计算阶段自动下载；其他原子或自定义表通过 data_directory 指定独立数据快照。这不限制公开 API，也不替换数值算法。
+
+下文关于模型、门集、输入与预算的限制描述便捷 Tool 的合同；原生 SDK 另受上游版本、可选依赖、宿主资源与用户授权约束。已禁用或被拒绝的动作不能借代码路径绕过。执行状态和科研验收分别报告。
+<!-- END NATIVE SDK ACCESS -->
+
+
 用于两个 Rb Rydberg 原子的静态相互作用或小模型有效哈密顿量。原子对沿 z，磁场沿 z，电场为零；当前仅支持 S–S 与 S–P 交换，目标态均为 m=1/2，忽略超精细结构和抗磁项。
 
 通过 Harness 调用 `mcp__pairinteraction_local__calculate_rydberg_pair`。Skill 提供步骤，独立 MCP Server 执行计算；不启动其他 Runtime，不依赖 FatQat。

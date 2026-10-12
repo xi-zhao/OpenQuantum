@@ -5,6 +5,17 @@ description: 使用固定 Deltakit 构建矩形 rotated planar-code 存储实验
 
 # Deltakit 纠错实验构建
 
+<!-- BEGIN NATIVE SDK ACCESS -->
+## 原生 SDK 路径
+
+本能力同时支持 **Deltakit 的原生公开 API**。用户需要 自定义码、电路、噪声、QPU 模型、采样与译码 时，由 Agent 在固定依赖环境中编写和运行任务代码，不限于下文便捷 Tool 的预设模型。
+
+使用 `node scripts/sdk-access.mjs inspect deltakit-qec` 定位环境，按[完整 SDK 工作流](../quantum-sdk-workbench/references/workflow.md)执行。模块导航：`deltakit`、`stim`、`pymatching`；导航不是 API 白名单。
+
+下文关于模型、门集、输入与预算的限制描述便捷 Tool 的合同；原生 SDK 另受上游版本、可选依赖、宿主资源与用户授权约束。已禁用或被拒绝的动作不能借代码路径绕过。执行状态和科研验收分别报告。
+<!-- END NATIVE SDK ACCESS -->
+
+
 调用 Harness 注册的 `deltakit_local.run_deltakit_memory`。适用于比较不同奇数宽高码片在 X/Z 存储实验中的表现，或查看 Deltakit 生成的实际含噪电路。
 
 - `width` 和 `height` 是数据量子位码片尺寸，不是全部物理量子位数；实际资源以结果 `numQubits/numDetectors/numObservables` 为准。

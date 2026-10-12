@@ -5,6 +5,21 @@ description: 用 Eclipse Qrisp 的 QuantumFloat 编译并本地模拟无符号�
 
 # Qrisp 量子模加法
 
+<!-- BEGIN NATIVE SDK ACCESS -->
+## 原生 SDK 路径
+
+本能力同时支持 **Qrisp 的原生公开 API**。用户需要 量子类型、算术、控制结构、会话与编译 时，由 Agent 在固定依赖环境中编写和运行任务代码，不限于下文便捷 Tool 的预设模型。
+
+使用 `node scripts/sdk-access.mjs inspect qrisp-arithmetic` 定位环境，按[完整 SDK 工作流](../quantum-sdk-workbench/references/workflow.md)执行。模块导航：`qrisp`；导航不是 API 白名单。
+
+上游 EPL 许可与可选后端单独核对，不改变现有 MCP 默认关闭状态。
+
+显式选择 JAX 数值精度和 target；需要 float64 时在建立数组前启用 jax_enable_x64。CPU、GPU 选择按任务与已安装后端决定。
+
+下文关于模型、门集、输入与预算的限制描述便捷 Tool 的合同；原生 SDK 另受上游版本、可选依赖、宿主资源与用户授权约束。已禁用或被拒绝的动作不能借代码路径绕过。执行状态和科研验收分别报告。
+<!-- END NATIVE SDK ACCESS -->
+
+
 Agent 经 Harness 调用 `qrisp_local` 的 `compute_qrisp_modular_sum`。Skill 负责选择与解释，Tool 负责真实 SDK 执行。
 
 输入 `bitWidth`、二进制 `initialBits` 与 `addendBits`；二进制串均为最高有效位在左，不得超过寄存器宽度。`preparation=basis` 编码指定整数；`uniform` 要求 `initialBits` 为零，再对全部数据位施加 H。

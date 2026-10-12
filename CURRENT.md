@@ -2,6 +2,13 @@
 
 量子依赖核验日期：2026-09-22；平台升级记录日期：2026-09-10；原模型验收交接记录日期：2026-09-05。此页只记录工作交接；架构以[文档总入口](docs/README.md)为准，执行事实以 Harness Session event log 为准，科学状态以 Acceptance Report 为准。
 
+## 原生 SDK 接入（2026-10-12，本地任务分支）
+
+- 全量梳理 85 个 SDK/源码环境入口，增加宿主代码工具使用完整原生 API 的路径；源 Skill、算法指南和 Codex 插件不再将便捷 Tool 的预设案例作为功能范围。
+- 补齐 Flow-VQE 完整源码、CQLib QML 完整包、Ocean 元包，以及 QPanda/Qcover/SpinQit/VQNet 导入依赖与兼容处理。安装与计算保持分离，不新增任意代码执行 MCP。
+- 分批状态、复跑命令、实际通过项与未验证平台见[完整接入记录](docs/integrations/FULL_SDK_ACCESS.md)及其版本化工程证据；静态目录覆盖不等于全部 API 已验证。本轮按用户要求不使用真实科研任务验收。
+- 成果位于独立任务分支 `c/full-sdk-integration`，没有更新运行中的安装或发布版本；已有主工作区改动由原任务保留。
+
 ## Codex 能力插件与设置页（2026-10-11，独立发行）
 
 - 新增独立 Codex 插件发行定义，共享 Skill、Tool implementation 和科学合同；当前发行版本为 0.7.8，131 个 Skill、71 个科学 Tool。

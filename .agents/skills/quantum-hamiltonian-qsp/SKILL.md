@@ -36,3 +36,7 @@ examples/quantum-algorithms/.venv/bin/python examples/quantum-algorithms/run.py 
 ## 来源与边界
 
 上游 MIT 指南：[algorithms/hamiltonian-simulation/qsp](https://github.com/unitarylab/quantum-skills/blob/c5436bb120812ad903ac776f58df89b803ced48c/algorithms/hamiltonian-simulation/qsp/SKILL.md)。原文作为参考保存在固定检索库，本文件将执行路线改为开源 SDK。来源摘要和算法模块对应关系见[coverage.json](../../../examples/quantum-algorithms/coverage.json)，许可证与改动说明见[NOTICE](../../../examples/quantum-algorithms/NOTICE)。
+
+## 自定义 SDK 程序
+
+示例用于解释和接口核验，不是可执行任务的边界。用户需要其他模型、数据、算法步骤、梯度或后端时，按[原生 SDK 工作台](../quantum-sdk-workbench/SKILL.md)在固定环境中编写并执行自定义代码；由 Agent 完成程序与工件交付。使用 `quantum-algorithms` 环境定位相关 SDK，保留本算法的数学假设与数值误差说明。

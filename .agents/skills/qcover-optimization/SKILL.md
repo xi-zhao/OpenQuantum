@@ -5,6 +5,21 @@ description: 用北京量子院 Qcover 的局部子图分解和 Qulacs 后端评
 
 # Qcover QAOA 参数点评估
 
+<!-- BEGIN NATIVE SDK ACCESS -->
+## 原生 SDK 路径
+
+本能力同时支持 **Qcover 的原生公开 API**。用户需要 用户图、优化器、后端、ansatz 与优化流程 时，由 Agent 在固定依赖环境中编写和运行任务代码，不限于下文便捷 Tool 的预设模型。
+
+使用 `node scripts/sdk-access.mjs inspect qcover-optimization` 定位环境，按[完整 SDK 工作流](../quantum-sdk-workbench/references/workflow.md)执行。模块导航：`Qcover`；导航不是 API 白名单。
+
+旧 Qiskit、ProjectQ 与 native build 依赖必须保持隔离；顶层导入失败应记录并修复，不替换成预设 QAOA 结果。
+
+原生程序导入库前，按环境定位器的 `bootstrap` 执行启动兼容处理：为旧上游提供进程内 collections.Callable 兼容别名。这不限制公开 API，也不替换数值算法。
+
+下文关于模型、门集、输入与预算的限制描述便捷 Tool 的合同；原生 SDK 另受上游版本、可选依赖、宿主资源与用户授权约束。已禁用或被拒绝的动作不能借代码路径绕过。执行状态和科研验收分别报告。
+<!-- END NATIVE SDK ACCESS -->
+
+
 Agent 经 Harness 调用 `qcover_local` 的 `evaluate_qcover_qaoa`。适合比较手头 QAOA 参数、检查图分解结果和独立算法交叉核对。
 
 输入 `fields[i]` 表示节点 i 的 Z 场，`edges` 中每条边包含 `source`、`target` 和 `coupling`，Hamiltonian 是 `sum_i h_i Z_i + sum_edges J_ij Z_i Z_j`，没有常数偏移。节点编号从 0 起，保留无边的孤立节点；无向重复边应先合并，自环应化为常数偏移并在 Tool 外单独记录。

@@ -1,0 +1,3714 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-12",
+  "purpose": "Engineering audit of full programmable native SDK access. No real research-task or scientific acceptance.",
+  "baseline": {
+    "target": "origin/main",
+    "commit": "95bde719662b0510b74e369efd75fa04b96daed8",
+    "branch": "c/full-sdk-integration"
+  },
+  "platform": {
+    "os": "macOS",
+    "arch": "arm64",
+    "node": "v24.14.1"
+  },
+  "scope": {
+    "environmentEntries": 85,
+    "distinctLibraryCount": "not_derived_from_environment_count",
+    "passedScopedEngineering": 13,
+    "notChecked": 72,
+    "otherCapabilities": 79
+  },
+  "batches": [
+    {
+      "id": 1,
+      "scope": "Common native-code workflow, catalog and packaging; discovered missing dependencies/source and local compatibility gaps; selected arbitrary API programs."
+    },
+    {
+      "id": 2,
+      "scope": "Remaining local circuits, compilers, differentiable and optimization SDKs."
+    },
+    {
+      "id": 3,
+      "scope": "Remaining physics, chemistry, information, QEC, optics and network SDKs."
+    },
+    {
+      "id": 4,
+      "scope": "Platform-specific native/Julia/GPU environments and local construction using service SDKs; live cloud/hardware operations require their own authorization."
+    }
+  ],
+  "validation": {
+    "commands": [
+      {
+        "command": "npm run check",
+        "status": "passed",
+        "note": "Full default engineering check after SDK dependency updates and installed-file validation. The final PairInteraction delegated setup and Flow cold-start test budget were subsequently checked in the targeted and native runs.",
+        "log": {
+          "path": ".openquantum/sdk-checks/check-final-implementation.log",
+          "bytes": 121608,
+          "sha256": "f2eacd726b3c06274f0a5d9c16484881b2bf88fb96940dee54005a91b0dc486b"
+        }
+      },
+      {
+        "command": "node --test tests/prepared-python.test.mjs tests/sdk-access.test.mjs tests/candidate-tools-contracts.test.mjs tests/sdk-package.test.mjs tests/pairinteraction-contracts.test.mjs",
+        "status": "passed",
+        "note": "20 passed; includes installed-file corruption, delegated PairInteraction recovery and actual plugin packaging.",
+        "log": {
+          "path": ".openquantum/sdk-checks/targeted-final-with-package.log",
+          "bytes": 2287,
+          "sha256": "6b63eda0c0aedd0a526ae40788f2bcbb45b742282d4401b772d8178cb5529956"
+        }
+      },
+      {
+        "command": "npm run sdk:test",
+        "status": "passed",
+        "note": "7 passed, including real package build, split runtime and relocated cached Skills.",
+        "log": {
+          "path": ".openquantum/sdk-checks/sdk-final.log",
+          "bytes": 974,
+          "sha256": "c8dfce9f58c72a3647b1a0779a5fbb36891faae2b2aebd2cd4a2fe53ebba4ec0"
+        }
+      },
+      {
+        "command": "npm run lint",
+        "status": "passed",
+        "note": "",
+        "log": {
+          "path": ".openquantum/sdk-checks/lint-final.log",
+          "bytes": 38,
+          "sha256": "49b3b56adf1e16a158c939467fc13bc21fa1bf5f0da64ffafcc0d7ee6583f838"
+        }
+      },
+      {
+        "command": "npm run sdk:guides:check",
+        "status": "passed",
+        "note": "",
+        "log": {
+          "path": ".openquantum/sdk-checks/guides-final.log",
+          "bytes": 83,
+          "sha256": "06ffc86f3c556c639d521f6573cd5adfac378751ba75390900185c0d9155d87d"
+        }
+      },
+      {
+        "command": "npm run sdk:inventory:check",
+        "status": "passed",
+        "note": "",
+        "log": {
+          "path": ".openquantum/sdk-checks/inventory-final.log",
+          "bytes": 156,
+          "sha256": "1d92b1016e478aa70f2424c8b201e4339de0df1d02f45ee8b5450c058f770d43"
+        }
+      },
+      {
+        "command": "OPENQUANTUM_NATIVE_SDK_CHECKS=1 OPENQUANTUM_SDK_CHECK_OUTPUT=.openquantum/sdk-checks node --test tests/sdk-native-code.test.mjs",
+        "status": "partial_pass",
+        "note": "10 SDK environments plus subprocess cancellation/resume passed; Flow/Ocean/CQLib were unprepared at this execution. Later results supersede individual failures.",
+        "log": {
+          "path": ".openquantum/sdk-checks/native-established.log",
+          "bytes": 4976,
+          "sha256": "9ad4804d51eeb44a5f20f79cca288732a4cafbf798b2d4ad30b69d105e821fbd"
+        }
+      },
+      {
+        "command": "OPENQUANTUM_NATIVE_SDK_CHECKS=1 OPENQUANTUM_SDK_CHECK_OUTPUT=.openquantum/sdk-checks node --test --test-name-pattern='cqlib-kernel' tests/sdk-native-code.test.mjs",
+        "status": "passed",
+        "note": "Native QNN construction, symbolic parameters, gradient matrices and Adjoint API regression; no training.",
+        "log": {
+          "path": ".openquantum/sdk-checks/native-cqlib-paired.log",
+          "bytes": 333,
+          "sha256": "7b44ea86aab338da00ad3b3f99e631c4bd2f1e199e807ec48fa3d2bc58d7fa48"
+        }
+      },
+      {
+        "command": "OPENQUANTUM_REAL_CANDIDATE_TOOLS=1 node --test --test-name-pattern='real cqlib' tests/candidate-tools-live.test.mjs",
+        "status": "passed",
+        "note": "Existing adapted angle-kernel Tool regression after core version update.",
+        "log": {
+          "path": ".openquantum/sdk-checks/cqlib-tool-regression.log",
+          "bytes": 231,
+          "sha256": "ac6f44a5df586f4a7c151db11328a66cb04f84a645d5f47d967bba69cf6c78f4"
+        }
+      },
+      {
+        "command": "OPENQUANTUM_NATIVE_SDK_CHECKS=1 OPENQUANTUM_SDK_CHECK_OUTPUT=.openquantum/sdk-checks node --test --test-name-pattern='flow-vqe' tests/sdk-native-code.test.mjs",
+        "status": "passed",
+        "note": "",
+        "log": {
+          "path": ".openquantum/sdk-checks/native-flow-final.log",
+          "bytes": 327,
+          "sha256": "965683f50dfa8743a2992462024456da221aceff72bd8b3c5965d6c22e721367"
+        }
+      },
+      {
+        "command": "OPENQUANTUM_NATIVE_SDK_CHECKS=1 OPENQUANTUM_SDK_CHECK_OUTPUT=.openquantum/sdk-checks node --test --test-name-pattern='ocean-optimization' tests/sdk-native-code.test.mjs",
+        "status": "passed",
+        "note": "",
+        "log": {
+          "path": ".openquantum/sdk-checks/native-ocean-final.log",
+          "bytes": 348,
+          "sha256": "e00165bed25a30bf90c60fc7f121bbdcedfbd2b512e0d1b181a5b9e33362c151"
+        }
+      }
+    ],
+    "independentReview": {
+      "status": "no_new_P1_P2",
+      "scope": "Independent diff and contract/package review. Eleven checks passed after adding installed-file validation. The identified PairInteraction bypass was fixed; final review checked that diff, the 20-test result, and Flow/Ocean runtime evidence. No remaining P1/P2 findings.",
+      "limitations": [
+        "Classiq and Q-CTRL bootstrap imports not run in this worktree.",
+        "Flow/Ocean runtime checks were completed by the implementing agent; final review independently read their records and compared current lock hashes."
+      ]
+    },
+    "sourceFiles": [
+      {
+        "path": "src/lib/sdk-access.mjs",
+        "bytes": 9635,
+        "sha256": "ebbc634c787d0b8f289c257104a60c0879c75150a208c5b628555f9217ae168f"
+      },
+      {
+        "path": "src/lib/sdk_bootstrap.py",
+        "bytes": 4930,
+        "sha256": "c16ba2f5c3026a94f4b7d929a3140bd2fa45785739516a1ddbb98253487d56cb"
+      },
+      {
+        "path": "scripts/setup-sdk.mjs",
+        "bytes": 3168,
+        "sha256": "6c26a07e5e7a8ed35c08065e23ba7d1009aea2eaebf7c13b608bacfd85af3102"
+      },
+      {
+        "path": "scripts/setup-paper-tools.mjs",
+        "bytes": 6442,
+        "sha256": "98c1a5f93e17e95c9c1459c1d3c6083fea2d6f7063b02834dbed2cc3d42c69e7"
+      },
+      {
+        "path": "scripts/setup-open-algorithm-examples.mjs",
+        "bytes": 2138,
+        "sha256": "bf68471575437442a90882688cddbbfc991f7ac68293dfa7f940c42aa3ac7859"
+      },
+      {
+        "path": "src/lib/installed-python.mjs",
+        "bytes": 807,
+        "sha256": "c40bb08c4fcc83a997715a355fd85bafc89141a7f07cda09f252cadb37f34bef"
+      },
+      {
+        "path": "src/lib/check_python_install.py",
+        "bytes": 1840,
+        "sha256": "dc12c02f58f62d6fc6571628c04d8472c56bb04190836f44a65662feed46234a"
+      },
+      {
+        "path": ".agents/skills/pairinteraction-rydberg/scripts/setup.mjs",
+        "bytes": 2012,
+        "sha256": "e58e5f719a5be422e5ead8c95ad1b7a7ac23147b86c0ca0ddca77e2c34ed3242"
+      },
+      {
+        "path": "tests/prepared-python.test.mjs",
+        "bytes": 10740,
+        "sha256": "e15502cd35e9456681b546a8d677a130bf65a0f97cc0f85b3225caa64ec6f1cc"
+      },
+      {
+        "path": "runtime/chatgpt/sdk-access.mjs",
+        "bytes": 1587,
+        "sha256": "f91959146815809811954f0b5df66ef1ff263810f246c47e86e81ea7fac691d8"
+      },
+      {
+        "path": "scripts/build-codex-plugin.mjs",
+        "bytes": 7101,
+        "sha256": "59a396d4a036de47055181f66111ea2f30966fe7d9b3ac0c9822663d8e92f979"
+      },
+      {
+        "path": "tests/sdk-access.test.mjs",
+        "bytes": 9259,
+        "sha256": "33332bf3fb9d72cb92783bc87b20f71f9c0c01a8b05c764dda7cff3bb76bbf2f"
+      },
+      {
+        "path": "tests/sdk-package.test.mjs",
+        "bytes": 4141,
+        "sha256": "536587f297df3b5975108daaf1a4a275056f417f430b62f9b92e9370781a30c9"
+      },
+      {
+        "path": "tests/sdk-native-code.test.mjs",
+        "bytes": 15137,
+        "sha256": "b0aa5e26893568e758756e9a91b21cef657ca0703917a9007b7123e00c94f454"
+      }
+    ]
+  },
+  "observedFailures": [
+    {
+      "id": "ocean-optimization",
+      "status": "resolved_by_locked_reinstall_and_setup_guard",
+      "observation": "A disk-full installation left 680 NumPy and 37 dimod files invalid while distribution metadata survived; uv sync alone did not detect them. Reinstalled the two packages at their locked versions. Generic, algorithm and delegated PairInteraction setup now validate original wheel RECORD paths and sizes before attestation.",
+      "diagnostic": {
+        "path": ".openquantum/sdk-checks/ocean-incomplete-files.json",
+        "bytes": 351,
+        "sha256": "c7b80bf208608e41a3a96ef7b937d4a89dcc5c53b36a4f646d23256646646cfc"
+      }
+    },
+    {
+      "id": "flow-vqe",
+      "status": "resolved_by_compatible_scipy_pin",
+      "observation": "The SciPy 1.15.2 PROPACK extension could not load on this macOS arm64 host. Pinned SciPy 1.17.1, whose PROPACK implementation is in C; full source API construction then passed. A subsequent 100-second cold-import/font-cache timeout was retained and the test-only budget increased to 300 seconds; final execution took 27.44 seconds.",
+      "sources": [
+        "https://github.com/scipy/scipy/issues/25635",
+        "https://docs.scipy.org/doc/scipy/release/1.17.0-notes.html"
+      ],
+      "coldStartFailure": {
+        "path": ".openquantum/sdk-checks/native-flow-cold-timeout.log",
+        "bytes": 2056,
+        "sha256": "e255c1a370f6e87a4cfed519f96698403402ae1f75445fc968c8c50b56ee8a43"
+      }
+    },
+    {
+      "id": "cqlib-kernel",
+      "status": "resolved_by_version_pair",
+      "observation": "Old core 1.4.0b1 plus complete old QML failed on Operation/ValueInstruction and parameter-gradient API differences. Import-only aliases were rejected. Pinned compatible upstream core 2.0.0b4 and QML 0.1.0b3; native gradient and previous Tool regressions passed.",
+      "log": {
+        "path": ".openquantum/sdk-checks/native-cqlib.log",
+        "bytes": 3996,
+        "sha256": "8971c02fa22bb318a5ec531314d3bfa6e7ef11bc41b7afa030148d5618bc76e0"
+      }
+    },
+    {
+      "id": "qpanda-qubo",
+      "status": "resolved_on_macos_arm64",
+      "observation": "Full pyqpanda_alg package needed additional pandas/scikit-learn imports and fmt 11 ABI. Added locked dependencies and isolated fixed-revision fmt build; full VQE/HHL/QUBO package import passed."
+    },
+    {
+      "id": "flow-vqe/ocean-optimization",
+      "status": "see_per_environment_result",
+      "observation": "Large dependency downloads repeatedly timed out. Interrupted installers remained unprepared; no success marker was used. Task-owned cache moved to an external volume; any manual wheel download is verified against the committed lock before the normal frozen setup is completed."
+    }
+  ],
+  "limits": [
+    "Each passed SDK row covers only its listed operations, not every public API or optional backend.",
+    "3 and 7 are engineering fixture sizes, not product limits. The native route accepts arbitrary saved user programs.",
+    "Cancellation/resume checks cover a local subprocess and saved checkpoint; no live model-driven Harness/Codex conversation or UI acceptance was run.",
+    "No external account, billable cloud job, QPU, laboratory hardware, Linux/Windows or GPU execution was verified.",
+    "Evidence directories and logs are local ignored artifacts. Committed hashes and test sources support reruns; raw outputs are not bundled in Git.",
+    "No real research-task validation; no scientific acceptance derived."
+  ],
+  "scientificValidation": "not_evaluated",
+  "libraries": [
+    {
+      "id": "alicebob-cat-circuits",
+      "title": "Alice & Bob Qiskit Provider",
+      "group": "circuits",
+      "language": "python",
+      "project": ".agents/skills/alicebob-cat-circuits",
+      "modules": [
+        "qiskit_alice_bob_provider"
+      ],
+      "dependencies": [
+        "qiskit-alice-bob-provider==1.3.0"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/alicebob-cat-circuits/pyproject.toml",
+        "sha256": "9cc7e2c6532be02e419300c90d573c3779cb60e4928d52ea60940796f157ba90"
+      },
+      "lock": {
+        "path": ".agents/skills/alicebob-cat-circuits/uv.lock",
+        "sha256": "09dc45fe507beea933e5e1d89927c44cf74b8f63e61763d3ec2ff701c16f5942"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 2,
+      "knownConditions": [],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "aqt-workbench",
+      "title": "AQT Provider",
+      "group": "services",
+      "language": "python",
+      "project": ".agents/skills/aqt-workbench",
+      "modules": [
+        "qiskit_aqt_provider"
+      ],
+      "dependencies": [
+        "qiskit-aqt-provider==1.15.0"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/aqt-workbench/pyproject.toml",
+        "sha256": "361f079af2d84cdd439ee0b8520a9b8f09f0b4bb20e0035b3987ca6849c1900a"
+      },
+      "lock": {
+        "path": ".agents/skills/aqt-workbench/uv.lock",
+        "sha256": "1d908bc32fb79e0ef0a3006cb8169a50c39fb33369de8feb4ff99a6f45c9366f"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 4,
+      "knownConditions": [
+        "本地程序构建与外部调用分开；账户、凭据、费用、设备操作和数据外发沿用宿主及用户授权。原生 SDK 访问不自动启用服务。"
+      ],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "bloqade-analog",
+      "title": "Bloqade Analog",
+      "group": "physics",
+      "language": "python",
+      "project": ".agents/skills/bloqade-analog",
+      "modules": [
+        "bloqade.analog"
+      ],
+      "dependencies": [
+        "bloqade-analog==0.16.9",
+        "numpy==2.4.2"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/bloqade-analog/pyproject.toml",
+        "sha256": "15b270bc02d277451338d83b6d0ea451576d57ef8df875382471a4c08bbd952c"
+      },
+      "lock": {
+        "path": ".agents/skills/bloqade-analog/uv.lock",
+        "sha256": "8ac056ef22d4741ecc9b1d7c16b6de20ed83477628fbd01ee8a8f01399e31fca"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 3,
+      "knownConditions": [],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "braket-simulation",
+      "title": "Amazon Braket",
+      "group": "services",
+      "language": "python",
+      "project": ".agents/skills/braket-simulation",
+      "modules": [
+        "braket.circuits",
+        "braket.devices",
+        "braket.aws"
+      ],
+      "dependencies": [
+        "amazon-braket-sdk==1.127.2"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/braket-simulation/pyproject.toml",
+        "sha256": "ffd574314f8c35057316d76385fd320e05abd7db64ea619faa25cc2f76f50411"
+      },
+      "lock": {
+        "path": ".agents/skills/braket-simulation/uv.lock",
+        "sha256": "51d48dd1a2e23ba52c77247550a3a56ae19681af527a32578123e8109f176709"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 4,
+      "knownConditions": [
+        "本地程序构建与外部调用分开；账户、凭据、费用、设备操作和数据外发沿用宿主及用户授权。原生 SDK 访问不自动启用服务。"
+      ],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "classiq-synthesis",
+      "title": "Classiq",
+      "group": "services",
+      "language": "python",
+      "project": ".agents/skills/classiq-synthesis",
+      "modules": [
+        "classiq"
+      ],
+      "dependencies": [
+        "httpx[socks]==0.28.1",
+        "classiq==1.29.1"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/classiq-synthesis/pyproject.toml",
+        "sha256": "fc9e17a726bcfcb50f21de5fbec576906668b032b594c713bfa7be2d8ae2f7be"
+      },
+      "lock": {
+        "path": ".agents/skills/classiq-synthesis/uv.lock",
+        "sha256": "47ca3626699a647198110760f0938ee0c91ae12a3541c7497deac4134900e489"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 4,
+      "knownConditions": [
+        "本地程序构建与外部调用分开；账户、凭据、费用、设备操作和数据外发沿用宿主及用户授权。原生 SDK 访问不自动启用服务。"
+      ],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "clifft-sampling",
+      "title": "Clifft / Stim",
+      "group": "qec",
+      "language": "python",
+      "project": ".agents/skills/clifft-sampling",
+      "modules": [
+        "clifft",
+        "stim"
+      ],
+      "dependencies": [
+        "clifft==0.10.1",
+        "stim==1.16.0"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/clifft-sampling/pyproject.toml",
+        "sha256": "6bb16aea62390dec70567a40815cab8fde6e59d1c412d1e1c5181f703f3cea65"
+      },
+      "lock": {
+        "path": ".agents/skills/clifft-sampling/uv.lock",
+        "sha256": "42f3d4cf1a642b2cea2b25a61ae36a4de9c0e467f1ea27354d9e09f40ddc4530"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 3,
+      "knownConditions": [],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "compact-optimization",
+      "title": "CompactQ",
+      "group": "compilers",
+      "language": "python",
+      "project": ".agents/skills/compact-optimization",
+      "modules": [
+        "compactq"
+      ],
+      "dependencies": [
+        "compactq==0.2.3",
+        "qiskit==2.5.2",
+        "numpy==2.4.6"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/compact-optimization/pyproject.toml",
+        "sha256": "a45cf69255217081cd84b115058f5e1936002a3468c6993eb4645cdc6563af61"
+      },
+      "lock": {
+        "path": ".agents/skills/compact-optimization/uv.lock",
+        "sha256": "8f23e69d59afd5a711a24a0c31f664a2b819603bde9196aea10daf203464c8c1"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 2,
+      "knownConditions": [],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "cqlib-kernel",
+      "title": "CQLib",
+      "group": "learning",
+      "language": "python",
+      "project": ".agents/skills/cqlib-kernel",
+      "modules": [
+        "cqlib",
+        "cqlib_qml"
+      ],
+      "dependencies": [
+        "cqlib @ git+https://github.com/cq-lib/cqlib.git@759a7bbef4d47af70fe7e0455876b633080257a4#subdirectory=crates/binding-python",
+        "numpy==2.4.6",
+        "scikit-learn==1.9.1",
+        "cqlib-qml @ git+https://github.com/cq-lib/cqlib-qml.git@4576a575727b93fd300dbee6dc4cb7ab2a93dac1",
+        "torch==2.11.0",
+        "torchvision==0.26.0"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/cqlib-kernel/pyproject.toml",
+        "sha256": "12a3ac33678562f94740ca6882db548d6dafa55c5a383c98691efe8f0adcb058"
+      },
+      "lock": {
+        "path": ".agents/skills/cqlib-kernel/uv.lock",
+        "sha256": "ddfc1aef935e9f10d21cc9cdd53e6e8625ff8d61389d715d46f477229e19fef9"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "passed_scoped_engineering",
+      "batch": 1,
+      "knownConditions": [
+        "固定兼容的 CQLib 2.0.0b4 与完整 cqlib-qml Git 包；两者仍属上游预发布接口。原生 API 使用已安装 QML 包，不能把 Skill/upstream 的旧裁剪适配目录加到 sys.path。便捷 Tool 保留旧 angle-kernel 适配及独立回归。"
+      ],
+      "scientificValidation": "not_evaluated",
+      "observation": {
+        "packages": {
+          "cqlib": "2.0.0b4",
+          "cqlib-qml": "0.1.0b3",
+          "torch": "2.11.0"
+        },
+        "scope": [
+          "full QML package imports",
+          "custom multilayer QNN; no training",
+          "symbolic parameter binding and adjoint API regression"
+        ],
+        "objects": [
+          {
+            "qubits": 3,
+            "parameters": 6,
+            "adjointGradientShape": [
+              1
+            ]
+          },
+          {
+            "qubits": 7,
+            "parameters": 18,
+            "adjointGradientShape": [
+              1
+            ]
+          }
+        ],
+        "evidenceDirectory": ".openquantum/sdk-checks/cqlib-kernel-ZSpC2q",
+        "files": [
+          {
+            "path": ".openquantum/sdk-checks/cqlib-kernel-ZSpC2q/sdk.json",
+            "bytes": 9462,
+            "sha256": "b8a0bc844c26aa00f42040ecb0d21f617b78c7cc2a466adecc37d332437ffc20"
+          },
+          {
+            "path": ".openquantum/sdk-checks/cqlib-kernel-ZSpC2q/api-objects.json",
+            "bytes": 274,
+            "sha256": "6788d5b678634814dc8f88c535ffa887dfdf27a3ca15dd6b1dc7c84bbc97c769"
+          },
+          {
+            "path": ".openquantum/sdk-checks/cqlib-kernel-ZSpC2q/custom program.py",
+            "bytes": 2090,
+            "sha256": "e87ca270e31f5cddface06ad3ccbce0a1e79e0ffcde1d47ea62372ce7881c26e"
+          },
+          {
+            "path": ".openquantum/sdk-checks/cqlib-kernel-ZSpC2q/input.json",
+            "bytes": 15,
+            "sha256": "3efa546e738e87beb9a25168da3a2cb4abb3b02df15e2639f62895da8946dca2"
+          },
+          {
+            "path": ".openquantum/sdk-checks/cqlib-kernel-ZSpC2q/full-array.npy",
+            "bytes": 3145856,
+            "sha256": "dc23460b2b194d5acd7a5c6ffffefd44bd1be9d890565440613d1edee214b72f"
+          }
+        ],
+        "executionRecord": {
+          "path": ".openquantum/sdk-checks/cqlib-kernel-ZSpC2q/execution.json",
+          "bytes": 2360,
+          "sha256": "a83b1a03ba133308cb24de6538c7245704ea920217dea2a666a0bbeb18637a33"
+        }
+      }
+    },
+    {
+      "id": "cudaq-simulation",
+      "title": "CUDA-Q",
+      "group": "circuits",
+      "language": "python",
+      "project": ".agents/skills/cudaq-simulation",
+      "modules": [
+        "cudaq"
+      ],
+      "dependencies": [
+        "cuda-quantum-cu13==0.16.0"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/cudaq-simulation/pyproject.toml",
+        "sha256": "905dfb085388eabde2d27b3f2d4937c67d155f2b941d48fda10a14c2e9da1918"
+      },
+      "lock": {
+        "path": ".agents/skills/cudaq-simulation/uv.lock",
+        "sha256": "c157028857b3e633a83c356e701e0e59e5cfb856f0c41c83d3b3912e63bcc02a"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 4,
+      "knownConditions": [
+        "已固定版本要求 Linux 或 Apple Silicon macOS；GPU target 取决于驱动、硬件和上游支持。"
+      ],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "deepquantum-differentiable",
+      "title": "DeepQuantum",
+      "group": "learning",
+      "language": "python",
+      "project": ".agents/skills/deepquantum-differentiable",
+      "modules": [
+        "deepquantum",
+        "torch"
+      ],
+      "dependencies": [
+        "deepquantum==4.5.0",
+        "torch==2.11.0"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/deepquantum-differentiable/pyproject.toml",
+        "sha256": "e527601ce2ae0982c5b1cdcaa41c7550dd4c74fca0039af5da80534191230d6b"
+      },
+      "lock": {
+        "path": ".agents/skills/deepquantum-differentiable/uv.lock",
+        "sha256": "9668859c1a79677565c5c6c7c6e5cc0318c38077eda36140c8b28053132c96ff"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 2,
+      "knownConditions": [],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "deltakit-qec",
+      "title": "Deltakit",
+      "group": "qec",
+      "language": "python",
+      "project": ".agents/skills/deltakit-qec",
+      "modules": [
+        "deltakit",
+        "stim",
+        "pymatching"
+      ],
+      "dependencies": [
+        "deltakit==0.10.0",
+        "stim==1.16.0",
+        "pymatching==2.4.0"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/deltakit-qec/pyproject.toml",
+        "sha256": "6aaecd0fda5dae944d6fadd07d9d6f4f1ad6502713f8798e73406bad05bfc6b9"
+      },
+      "lock": {
+        "path": ".agents/skills/deltakit-qec/uv.lock",
+        "sha256": "1370209234943bfc7334f0541eee77f85a78162da57ba54181788654a7a307d7"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 3,
+      "knownConditions": [],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "dynamiqs-dynamics",
+      "title": "Dynamiqs",
+      "group": "physics",
+      "language": "python",
+      "project": ".agents/skills/dynamiqs-dynamics",
+      "modules": [
+        "dynamiqs",
+        "jax"
+      ],
+      "dependencies": [
+        "dynamiqs",
+        "jax==0.6.2",
+        "diffrax==0.7.0"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/dynamiqs-dynamics/pyproject.toml",
+        "sha256": "6f2e31a422a76d2f58d73383032b5072e3b4842c66a744e29ea6fa6cfcdcb1d6"
+      },
+      "lock": {
+        "path": ".agents/skills/dynamiqs-dynamics/uv.lock",
+        "sha256": "25f0bd615eb24467824c69c774187cdc9eaf404ab71e02fce588bc928dae44c9"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "passed_scoped_engineering",
+      "batch": 1,
+      "knownConditions": [
+        "显式选择 JAX 数值精度和 target；需要 float64 时在建立数组前启用 jax_enable_x64。CPU、GPU 选择按任务与已安装后端决定。"
+      ],
+      "scientificValidation": "not_evaluated",
+      "observation": {
+        "packages": {
+          "dynamiqs": "0.3.6",
+          "jax": "0.6.2"
+        },
+        "scope": [
+          "custom dimension",
+          "time-dependent operator"
+        ],
+        "objects": [
+          {
+            "dimension": 3,
+            "shape": [
+              3,
+              3
+            ]
+          },
+          {
+            "dimension": 7,
+            "shape": [
+              7,
+              7
+            ]
+          }
+        ],
+        "evidenceDirectory": ".openquantum/sdk-checks/dynamiqs-dynamics-udV8rq",
+        "files": [
+          {
+            "path": ".openquantum/sdk-checks/dynamiqs-dynamics-udV8rq/sdk.json",
+            "bytes": 8871,
+            "sha256": "a28633bf0180f1d87c49649f350abee53a6253d4e6f62ba21d40eddd08d0d1f7"
+          },
+          {
+            "path": ".openquantum/sdk-checks/dynamiqs-dynamics-udV8rq/api-objects.json",
+            "bytes": 145,
+            "sha256": "1224b35ba4c6b2a93e6091ad77590e9430d1875d8ae43a35dfd104ede288dfb3"
+          },
+          {
+            "path": ".openquantum/sdk-checks/dynamiqs-dynamics-udV8rq/custom program.py",
+            "bytes": 1233,
+            "sha256": "979616fca7d1ec90a8eab7f61012efb94d4f7fbabfe4cc65a19a4a06aec75932"
+          },
+          {
+            "path": ".openquantum/sdk-checks/dynamiqs-dynamics-udV8rq/input.json",
+            "bytes": 15,
+            "sha256": "3efa546e738e87beb9a25168da3a2cb4abb3b02df15e2639f62895da8946dca2"
+          },
+          {
+            "path": ".openquantum/sdk-checks/dynamiqs-dynamics-udV8rq/full-array.npy",
+            "bytes": 3145856,
+            "sha256": "dc23460b2b194d5acd7a5c6ffffefd44bd1be9d890565440613d1edee214b72f"
+          }
+        ],
+        "executionRecord": {
+          "path": ".openquantum/sdk-checks/dynamiqs-dynamics-udV8rq/execution.json",
+          "bytes": 2380,
+          "sha256": "fb40d79ec01043b753f0a3468b35ffb4d9ef1bfa90f71d43a7404adcf4b62c14"
+        }
+      }
+    },
+    {
+      "id": "fatqat-workbench",
+      "title": "FatQat / QuTiP",
+      "group": "physics",
+      "language": "python",
+      "project": ".agents/skills/fatqat-workbench",
+      "modules": [
+        "fatqat",
+        "qutip"
+      ],
+      "dependencies": [
+        "fatqat @ git+https://github.com/spaceqat/fatqat.git@39b75e30ae50ddb4a8c7b840847edce678aa814c"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/fatqat-workbench/pyproject.toml",
+        "sha256": "bbdfe05624325591e169a8a3b9ec5c4fd7499a3feb1181b21ffd1b42a3069970"
+      },
+      "lock": {
+        "path": ".agents/skills/fatqat-workbench/uv.lock",
+        "sha256": "81585c30cfe2a31228c9f17ada446b3fc190e2d05be69a2cb3efa82c43b5bff8"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "passed_scoped_engineering",
+      "batch": 1,
+      "knownConditions": [],
+      "scientificValidation": "not_evaluated",
+      "observation": {
+        "packages": {
+          "fatqat": "0.1.0a1",
+          "qutip": "5.3.1"
+        },
+        "scope": [
+          "composite operator",
+          "native serialization"
+        ],
+        "objects": [
+          {
+            "dimensions": [
+              3,
+              3
+            ],
+            "shape": [
+              9,
+              9
+            ]
+          },
+          {
+            "dimensions": [
+              7,
+              3
+            ],
+            "shape": [
+              21,
+              21
+            ]
+          }
+        ],
+        "evidenceDirectory": ".openquantum/sdk-checks/fatqat-workbench-8pCFEE",
+        "files": [
+          {
+            "path": ".openquantum/sdk-checks/fatqat-workbench-8pCFEE/sdk.json",
+            "bytes": 5305,
+            "sha256": "d66cd1d4643f764335d008746ce7de96f4b2e4449b6047b0e34bcdf54cbd6fae"
+          },
+          {
+            "path": ".openquantum/sdk-checks/fatqat-workbench-8pCFEE/api-objects.json",
+            "bytes": 158,
+            "sha256": "08844d18943cbc4eb38836a4ea1cde2d40b0b27d54595bc1bee95f45850ca8a7"
+          },
+          {
+            "path": ".openquantum/sdk-checks/fatqat-workbench-8pCFEE/custom program.py",
+            "bytes": 1450,
+            "sha256": "cfe7d58c6db5e94a848856fed34d9f3f9e5e6fd7e597a75be4f76f84649eed1c"
+          },
+          {
+            "path": ".openquantum/sdk-checks/fatqat-workbench-8pCFEE/input.json",
+            "bytes": 15,
+            "sha256": "3efa546e738e87beb9a25168da3a2cb4abb3b02df15e2639f62895da8946dca2"
+          },
+          {
+            "path": ".openquantum/sdk-checks/fatqat-workbench-8pCFEE/model-3.qu",
+            "bytes": 1629,
+            "sha256": "0c9dad113ea55ae7c535f9e6293166c1d3f9c8d3355f44a388454a09343fc424"
+          },
+          {
+            "path": ".openquantum/sdk-checks/fatqat-workbench-8pCFEE/model-7.qu",
+            "bytes": 2425,
+            "sha256": "7a6cd4b8247146302812fd4dd6c60f0e27b2143644f0d860e344c048dcb3a4eb"
+          },
+          {
+            "path": ".openquantum/sdk-checks/fatqat-workbench-8pCFEE/full-array.npy",
+            "bytes": 3145856,
+            "sha256": "dc23460b2b194d5acd7a5c6ffffefd44bd1be9d890565440613d1edee214b72f"
+          }
+        ],
+        "executionRecord": {
+          "path": ".openquantum/sdk-checks/fatqat-workbench-8pCFEE/execution.json",
+          "bytes": 2886,
+          "sha256": "e4305ac9d8632c3dc027010fcc15fa081f31fdadabc6df8fb21c5f52d688863d"
+        }
+      }
+    },
+    {
+      "id": "fieldqkit-hardware",
+      "title": "FieldQKit",
+      "group": "services",
+      "language": "python",
+      "project": ".agents/skills/fieldqkit-hardware",
+      "modules": [
+        "fieldqkit"
+      ],
+      "dependencies": [
+        "fieldqkit @ git+https://github.com/FieldQuantum/fieldqkit.git@3ef2493d3f840b6a924af66a0c3f1b79cfce3fa0"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/fieldqkit-hardware/pyproject.toml",
+        "sha256": "607562591aca509474aef4f6fd412545e72fd6c8b181428d6a0d00ace3288eec"
+      },
+      "lock": {
+        "path": ".agents/skills/fieldqkit-hardware/uv.lock",
+        "sha256": "ff13251b636db6a4be1f71b01431ffee6666ac445dd81b882c15d1a59dcdfa69"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 4,
+      "knownConditions": [
+        "本地程序构建与外部调用分开；账户、凭据、费用、设备操作和数据外发沿用宿主及用户授权。原生 SDK 访问不自动启用服务。"
+      ],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "flagquantum-workbench",
+      "title": "FlagQuantum",
+      "group": "circuits",
+      "language": "python",
+      "project": ".agents/skills/flagquantum-workbench",
+      "modules": [
+        "flagquantum"
+      ],
+      "dependencies": [
+        "flagquantum-mcp-server==0.3.0",
+        "flagquantum==0.2.0"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/flagquantum-workbench/pyproject.toml",
+        "sha256": "df8b1707fa2f48412c435420052406fad32598d557a0a70b2b4fd19dc19182bf"
+      },
+      "lock": {
+        "path": ".agents/skills/flagquantum-workbench/uv.lock",
+        "sha256": "e9212ef9156fa2fd0abedc2567af8fe845cfabecfc2cd3aa881d6f89518b2664"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 2,
+      "knownConditions": [],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "flow-vqe",
+      "title": "Flow-VQE source / Torch / Zuko",
+      "group": "learning",
+      "language": "python",
+      "project": ".agents/skills/flow-vqe",
+      "modules": [
+        "flow_vqe",
+        "optimization_baselines",
+        "ansatz",
+        "torch",
+        "zuko"
+      ],
+      "dependencies": [
+        "torch==2.6.0",
+        "torchaudio==2.6.0",
+        "torchvision==0.21.0",
+        "zuko==1.4.0",
+        "numpy==1.26.4",
+        "pennylane==0.40.0",
+        "pennylane-lightning==0.40.0",
+        "autoray==0.7.2",
+        "scipy==1.17.1",
+        "matplotlib==3.10.1",
+        "h5py==3.13.0",
+        "pandas==2.2.3",
+        "pyscf==2.8.0",
+        "openfermion==1.7.0",
+        "openfermionpyscf==0.5",
+        "tqdm==4.67.1",
+        "seaborn==0.13.2",
+        "basis-set-exchange"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/flow-vqe/pyproject.toml",
+        "sha256": "9907bf9a348d7979b27f2d91678ccfe5af816a446204ba5250402a53c7fcfede"
+      },
+      "lock": {
+        "path": ".agents/skills/flow-vqe/uv.lock",
+        "sha256": "6f78391373bf041c9a2e323cc03644c6ff0790f3bb5469b0722f8cc43944c8c2"
+      },
+      "sourceProject": {
+        "repository": "https://github.com/olsson-group/Flow-VQE.git",
+        "revision": "f7642afa330e5108ea5738d42fe80b551363733c"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "passed_scoped_engineering",
+      "batch": 1,
+      "knownConditions": [
+        "完整 SDK setup 另取固定版本上游源码，论文程序的预置 CLI 不限制用户用公开函数自定义任务。旧 upstream/ 仅供原有便捷 Tool 的稳定实现。",
+        "SciPy 固定为 1.17.1，以避开原 1.15.2 PROPACK 扩展在当前 macOS 的加载失败；这是记录在依赖锁中的兼容性调整。"
+      ],
+      "scientificValidation": "not_evaluated",
+      "observation": {
+        "packages": {
+          "torch": "2.6.0",
+          "zuko": "1.4.0",
+          "pennylane": "0.40.0",
+          "openfermion": "1.7.0",
+          "scipy": "1.17.1"
+        },
+        "scope": [
+          "complete upstream package",
+          "training and baseline APIs reachable",
+          "custom ansatz construction without training"
+        ],
+        "objects": [
+          {
+            "qubits": 3,
+            "parameters": 9
+          },
+          {
+            "qubits": 7,
+            "parameters": 21
+          }
+        ],
+        "evidenceDirectory": ".openquantum/sdk-checks/flow-vqe-CVhyAl",
+        "files": [
+          {
+            "path": ".openquantum/sdk-checks/flow-vqe-CVhyAl/sdk.json",
+            "bytes": 15390,
+            "sha256": "31b54a7174091cee729e708bd2530aa7fea646f7ecd1f225e46079520d413650"
+          },
+          {
+            "path": ".openquantum/sdk-checks/flow-vqe-CVhyAl/api-objects.json",
+            "bytes": 209,
+            "sha256": "d938eaf61d4d54181b03c44e812ecb99b9be12ac3ffd063d2c529fcd20576bdc"
+          },
+          {
+            "path": ".openquantum/sdk-checks/flow-vqe-CVhyAl/custom program.py",
+            "bytes": 1857,
+            "sha256": "2539fad25cb127b0dbd812702e747d24a914f5616c4c905561ae39a1063f2497"
+          },
+          {
+            "path": ".openquantum/sdk-checks/flow-vqe-CVhyAl/input.json",
+            "bytes": 15,
+            "sha256": "3efa546e738e87beb9a25168da3a2cb4abb3b02df15e2639f62895da8946dca2"
+          },
+          {
+            "path": ".openquantum/sdk-checks/flow-vqe-CVhyAl/full-array.npy",
+            "bytes": 3145856,
+            "sha256": "dc23460b2b194d5acd7a5c6ffffefd44bd1be9d890565440613d1edee214b72f"
+          }
+        ],
+        "executionRecord": {
+          "path": ".openquantum/sdk-checks/flow-vqe-CVhyAl/execution.json",
+          "bytes": 2367,
+          "sha256": "083d9a5a97de6f33648f2e6075ee9138d0d58c0706ed7ace54b33ae82c79a7b6"
+        }
+      }
+    },
+    {
+      "id": "graphix-mbqc",
+      "title": "Graphix",
+      "group": "compilers",
+      "language": "python",
+      "project": ".agents/skills/graphix-mbqc",
+      "modules": [
+        "graphix"
+      ],
+      "dependencies": [
+        "graphix==0.4",
+        "numpy==2.4.6"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/graphix-mbqc/pyproject.toml",
+        "sha256": "518a020b038009c8a3b96046fb58ea9533e909a9856c2612a1ce637eb2c28683"
+      },
+      "lock": {
+        "path": ".agents/skills/graphix-mbqc/uv.lock",
+        "sha256": "2b74cae528965098bbb935c518fe2a58e9ba2c1dcbb96ec6e28beeae685d4518"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 2,
+      "knownConditions": [],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "guppy-programs",
+      "title": "Guppy / Selene",
+      "group": "compilers",
+      "language": "python",
+      "project": ".agents/skills/guppy-programs",
+      "modules": [
+        "guppylang",
+        "selene_sim"
+      ],
+      "dependencies": [
+        "guppylang==1.1.1",
+        "selene-sim==0.3.2"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/guppy-programs/pyproject.toml",
+        "sha256": "fbb59f13ad86279b4bc8c1e4f988d6046f25174d902b5f77232f868be22f184e"
+      },
+      "lock": {
+        "path": ".agents/skills/guppy-programs/uv.lock",
+        "sha256": "4253407a5220693f6b8e0ae638ce86fd43190a8fd1c9419e3d5b24e519b390db"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 2,
+      "knownConditions": [],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "hamiltonian-simulation",
+      "title": "Qiskit",
+      "group": "circuits",
+      "language": "python",
+      "project": ".agents/skills/hamiltonian-simulation",
+      "modules": [
+        "qiskit"
+      ],
+      "dependencies": [
+        "qiskit==2.5.2",
+        "numpy==2.5.3",
+        "scipy==1.18.1"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/hamiltonian-simulation/pyproject.toml",
+        "sha256": "64b9c2af702159fa7f2a86a9f8e78913539a73dafb95509927eb29cb344b184f"
+      },
+      "lock": {
+        "path": ".agents/skills/hamiltonian-simulation/uv.lock",
+        "sha256": "29be3d89c73a3a5dd34c4826daff00bc02f6cbcde8355ed070675581b6cfab46"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 2,
+      "knownConditions": [],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "ionq-programs",
+      "title": "Qiskit IonQ",
+      "group": "services",
+      "language": "python",
+      "project": ".agents/skills/ionq-programs",
+      "modules": [
+        "qiskit_ionq"
+      ],
+      "dependencies": [
+        "qiskit-ionq==1.1.1",
+        "qiskit==2.5.2"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/ionq-programs/pyproject.toml",
+        "sha256": "e666be36c792fffdf0b6df5abcac8c2a225cf7eee579ce57ed03a15a10f26f6f"
+      },
+      "lock": {
+        "path": ".agents/skills/ionq-programs/uv.lock",
+        "sha256": "e6ea0caec14bd65b09f580827fd42889d370bfd4da00991f4b33a0260cf24b20"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 4,
+      "knownConditions": [
+        "本地程序构建与外部调用分开；账户、凭据、费用、设备操作和数据外发沿用宿主及用户授权。原生 SDK 访问不自动启用服务。"
+      ],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "iqm-circuit-workbench",
+      "title": "IQM Client / Qiskit IQM",
+      "group": "services",
+      "language": "python",
+      "project": ".agents/skills/iqm-circuit-workbench",
+      "modules": [
+        "iqm.iqm_client",
+        "iqm.qiskit_iqm"
+      ],
+      "dependencies": [
+        "iqm-client[qiskit]==35.0.3"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/iqm-circuit-workbench/pyproject.toml",
+        "sha256": "9a531c6809f6eec1cb576cd9709c37acd23b4c7415dd198b3e23472e7b0804b7"
+      },
+      "lock": {
+        "path": ".agents/skills/iqm-circuit-workbench/uv.lock",
+        "sha256": "2e57c08430e1f2d92683393ed4bdeb4076ef1ec0f176ec85d2510e8ae627a922"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 4,
+      "knownConditions": [
+        "本地程序构建与外部调用分开；账户、凭据、费用、设备操作和数据外发沿用宿主及用户授权。原生 SDK 访问不自动启用服务。"
+      ],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "kaiwu-qubo",
+      "title": "Kaiwu Community",
+      "group": "learning",
+      "language": "python",
+      "project": ".agents/skills/kaiwu-qubo",
+      "modules": [
+        "kaiwu"
+      ],
+      "dependencies": [
+        "kaiwu-community==1.0.7"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/kaiwu-qubo/pyproject.toml",
+        "sha256": "c2f2a822bfe16526223b8f6e8e9c4bb276dc8f8fb989ff4c86413f95e4ec74e4"
+      },
+      "lock": {
+        "path": ".agents/skills/kaiwu-qubo/uv.lock",
+        "sha256": "6329dcb78a2b07e81ec7fec5a183e8af0547c366411b1e41a5920ae7e6c3140b"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 2,
+      "knownConditions": [
+        "固定的是 Kaiwu Community；商业服务和企业版不是该发行版的一部分。"
+      ],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "laboneq-control",
+      "title": "LabOne Q",
+      "group": "services",
+      "language": "python",
+      "project": ".agents/skills/laboneq-control",
+      "modules": [
+        "laboneq"
+      ],
+      "dependencies": [
+        "laboneq==26.7.0"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/laboneq-control/pyproject.toml",
+        "sha256": "e03ad555f0feacf145d7fbfd7aab0ca5240046e322f9b596fb5321572f207974"
+      },
+      "lock": {
+        "path": ".agents/skills/laboneq-control/uv.lock",
+        "sha256": "29f51a5a378e4f106a2b53d62771c799bdaf809f914b8beb98d84269216e3c3d"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 4,
+      "knownConditions": [
+        "本地程序构建与外部调用分开；账户、凭据、费用、设备操作和数据外发沿用宿主及用户授权。原生 SDK 访问不自动启用服务。"
+      ],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "ldpc-decoding",
+      "title": "LDPC",
+      "group": "qec",
+      "language": "python",
+      "project": ".agents/skills/ldpc-decoding",
+      "modules": [
+        "ldpc"
+      ],
+      "dependencies": [
+        "ldpc==2.4.1"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/ldpc-decoding/pyproject.toml",
+        "sha256": "218a2a6568e2ae3762218f6637e7c388de03cbc521d4acdba552fe0621fa0a0a"
+      },
+      "lock": {
+        "path": ".agents/skills/ldpc-decoding/uv.lock",
+        "sha256": "828976c42ecf21fe0473c9bb19fb98fcfc329bd37b1c0b918074e9f92b0e0162"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 3,
+      "knownConditions": [],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "lightworks-photonics",
+      "title": "Lightworks",
+      "group": "optics",
+      "language": "python",
+      "project": ".agents/skills/lightworks-photonics",
+      "modules": [
+        "lightworks"
+      ],
+      "dependencies": [
+        "lightworks==2.3.5"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/lightworks-photonics/pyproject.toml",
+        "sha256": "7832b32dc723be2a3a0ac806f5cc45f038deaca5d0c423995a2d18a5e8e457e0"
+      },
+      "lock": {
+        "path": ".agents/skills/lightworks-photonics/uv.lock",
+        "sha256": "6ad593778634f74004e23c2281a5bf3e209995767850df83a35abb6c5b05d318"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 3,
+      "knownConditions": [],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "merlin-learning",
+      "title": "MerLin",
+      "group": "optics",
+      "language": "python",
+      "project": ".agents/skills/merlin-learning",
+      "modules": [
+        "merlin",
+        "perceval"
+      ],
+      "dependencies": [
+        "merlinquantum==0.4.1",
+        "perceval-quandela==1.2.1"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/merlin-learning/pyproject.toml",
+        "sha256": "e3e7ba89d716bf5de4fda69e89d9e4103eeb8fac8911d7be2340d059e8db1134"
+      },
+      "lock": {
+        "path": ".agents/skills/merlin-learning/uv.lock",
+        "sha256": "54a2b505bf16fba2c433444de58e9b363c3866cbdfdf4a05108a8f6898486338"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 3,
+      "knownConditions": [],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "mimiq-simulation",
+      "title": "MIMIQ",
+      "group": "circuits",
+      "language": "python",
+      "project": ".agents/skills/mimiq-simulation",
+      "modules": [
+        "mimiqcircuits",
+        "exaqt"
+      ],
+      "dependencies": [
+        "mimiq-exaqt==0.3.0",
+        "mimiqcircuits==0.28.0"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/mimiq-simulation/pyproject.toml",
+        "sha256": "1e2bda05cae2d20e46fbd8d01140c9cd28784bbc32a9b26c67f7155cc73cc183"
+      },
+      "lock": {
+        "path": ".agents/skills/mimiq-simulation/uv.lock",
+        "sha256": "18884f1cfee2794e954ecbe47c633955b23a43f570c19687572f0b6b9502b330"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 2,
+      "knownConditions": [
+        "原生 Exaqt 目标有限；MIMIQ 远程服务、许可证和二进制平台分别核实。"
+      ],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "mindquantum-differentiable",
+      "title": "MindQuantum",
+      "group": "learning",
+      "language": "python",
+      "project": ".agents/skills/mindquantum-differentiable",
+      "modules": [
+        "mindquantum"
+      ],
+      "dependencies": [
+        "mindquantum==0.12.0",
+        "numpy==1.26.4"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/mindquantum-differentiable/pyproject.toml",
+        "sha256": "02223c9bd70f5cdf4e2bf0be52af0107ae97ec683299a2a5dce9d955074133c3"
+      },
+      "lock": {
+        "path": ".agents/skills/mindquantum-differentiable/uv.lock",
+        "sha256": "db42d48608b8226b0ec2d2c7d71c855fcaecd6ffa82224d6ed938c731cf60c9d"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 2,
+      "knownConditions": [],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "mitiq-error-mitigation",
+      "title": "Mitiq / Cirq",
+      "group": "qec",
+      "language": "python",
+      "project": ".agents/skills/mitiq-error-mitigation",
+      "modules": [
+        "mitiq",
+        "cirq"
+      ],
+      "dependencies": [
+        "mitiq==1.1.0"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/mitiq-error-mitigation/pyproject.toml",
+        "sha256": "67237500b7e42ca7e55ad4f8e98cf10524a0681c450146c7783eb44f4cbc3958"
+      },
+      "lock": {
+        "path": ".agents/skills/mitiq-error-mitigation/uv.lock",
+        "sha256": "914bcc855a67783fb87fe58065a04bf11c212ffde290b700ba3545258465fca5"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 3,
+      "knownConditions": [],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "mqt-ddsim",
+      "title": "MQT DDSIM",
+      "group": "circuits",
+      "language": "python",
+      "project": ".agents/skills/mqt-ddsim",
+      "modules": [
+        "mqt.ddsim"
+      ],
+      "dependencies": [
+        "mqt-ddsim==2.6.0"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/mqt-ddsim/pyproject.toml",
+        "sha256": "4c0aa7b47ef5a73c08d1cb7fc2bf39e0a5e207b1c31e4213a63aac81d33ffbb8"
+      },
+      "lock": {
+        "path": ".agents/skills/mqt-ddsim/uv.lock",
+        "sha256": "2be6e27fc8d6f83b18e80f7e6bfb8dce774f998fa381020f72be7cd56ad6bfbc"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 2,
+      "knownConditions": [],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "mqt-qmap",
+      "title": "MQT QMAP",
+      "group": "compilers",
+      "language": "python",
+      "project": ".agents/skills/mqt-qmap",
+      "modules": [
+        "mqt.qmap"
+      ],
+      "dependencies": [
+        "mqt-qmap==3.10.0"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/mqt-qmap/pyproject.toml",
+        "sha256": "b48064ad80dc6025f7e62deca812fe62908940496d72109fbe5d6e4c00caac5e"
+      },
+      "lock": {
+        "path": ".agents/skills/mqt-qmap/uv.lock",
+        "sha256": "016d65dc4433c08b9705e995d16de09b48fd45620dae6532c18c809a996d8482"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 2,
+      "knownConditions": [],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "mrmustard-optics",
+      "title": "MrMustard",
+      "group": "optics",
+      "language": "python",
+      "project": ".agents/skills/mrmustard-optics",
+      "modules": [
+        "mrmustard"
+      ],
+      "dependencies": [
+        "mrmustard==0.7.3",
+        "tensorflow==2.15.0"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/mrmustard-optics/pyproject.toml",
+        "sha256": "033af9368d5a9cab8a3c74505760f43f456835eba9396a19d6f68e2122b473c8"
+      },
+      "lock": {
+        "path": ".agents/skills/mrmustard-optics/uv.lock",
+        "sha256": "4bcf737b9a50c05b8c216c408eb3f29b12e5c7d8dec0e4f9c555e22209673251"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 3,
+      "knownConditions": [
+        "固定 Python 3.11 / TensorFlow 2.15 环境；原生 wheel 与目标平台兼容性需核验。"
+      ],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "myqlm-simulation",
+      "title": "myQLM",
+      "group": "circuits",
+      "language": "python",
+      "project": ".agents/skills/myqlm-simulation",
+      "modules": [
+        "qat.lang",
+        "qat.qpus"
+      ],
+      "dependencies": [
+        "myqlm==1.13.7"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/myqlm-simulation/pyproject.toml",
+        "sha256": "e191f9abd78156cb75d13f7dbb160e6c1593d3dfebede2eb9c3287f770b07aa8"
+      },
+      "lock": {
+        "path": ".agents/skills/myqlm-simulation/uv.lock",
+        "sha256": "d2408269bc962e89892ec0e426939f5cd1f1993dc562c3b7ca9c38090150ced0"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 2,
+      "knownConditions": [
+        "myQLM 按上游 EULA 使用；不能视为 OQC 的同名 qat 包，两者环境必须隔离。"
+      ],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "netqasm-network",
+      "title": "NetQASM",
+      "group": "network",
+      "language": "python",
+      "project": ".agents/skills/netqasm-network",
+      "modules": [
+        "netqasm"
+      ],
+      "dependencies": [
+        "netqasm==2.0.0",
+        "numpy==1.26.4",
+        "scipy==1.14.1"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/netqasm-network/pyproject.toml",
+        "sha256": "80c3b78d349c939755e6e1a0a03685ac8de895bbd31d3d5211b3475d1ecfe8d1"
+      },
+      "lock": {
+        "path": ".agents/skills/netqasm-network/uv.lock",
+        "sha256": "928abc3fb1d5fc7b4d22d3ad75113f105ed0a1ffa2f2e74aa7a25db4d0de707b"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 3,
+      "knownConditions": [
+        "本锁不含受许可限制的 NetSquid/SquidASM，端到端网络运行须准备相应运行时。"
+      ],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "ocean-optimization",
+      "title": "D-Wave Ocean SDK",
+      "group": "learning",
+      "language": "python",
+      "project": ".agents/skills/ocean-optimization",
+      "modules": [
+        "dimod",
+        "dwave.samplers",
+        "dwave.system",
+        "dwave.cloud",
+        "dwave.optimization"
+      ],
+      "dependencies": [
+        "dimod==0.12.22",
+        "dwave-ocean-sdk==9.5.0",
+        "dwave-samplers==1.8.0"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/ocean-optimization/pyproject.toml",
+        "sha256": "5d1a1b2337182c5df5103312c249793dad12040017d06e36abeae82323e7f0f2"
+      },
+      "lock": {
+        "path": ".agents/skills/ocean-optimization/uv.lock",
+        "sha256": "0946b1ea85ee0a76334e82a9920e69bd40a24d49c58d85bbf121a55acc3c7cd4"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "passed_scoped_engineering",
+      "batch": 1,
+      "knownConditions": [
+        "完整 Ocean 元包已进入依赖锁；本地模型、采样器与云客户端共享原生 API。连接 Leap、提交收费或 QPU 作业仍需用户授权与凭据。"
+      ],
+      "scientificValidation": "not_evaluated",
+      "observation": {
+        "packages": {
+          "dwave-ocean-sdk": "9.5.0",
+          "dimod": "0.12.22",
+          "dwave-optimization": "0.7.3",
+          "dwave-cloud-client": "0.14.8"
+        },
+        "scope": [
+          "custom CQM",
+          "nonlinear model",
+          "full Ocean imports without cloud connection"
+        ],
+        "objects": [
+          {
+            "variables": 3,
+            "constraints": 1
+          },
+          {
+            "variables": 7,
+            "constraints": 1
+          }
+        ],
+        "evidenceDirectory": ".openquantum/sdk-checks/ocean-optimization-4hirzy",
+        "files": [
+          {
+            "path": ".openquantum/sdk-checks/ocean-optimization-4hirzy/sdk.json",
+            "bytes": 10319,
+            "sha256": "f9d97908354edebfc6795317448612a471c67d212513e3bb5276e1c3bce06f70"
+          },
+          {
+            "path": ".openquantum/sdk-checks/ocean-optimization-4hirzy/api-objects.json",
+            "bytes": 180,
+            "sha256": "6e8a37b80bd20aafa1014ce641d0c5c74a6cebe595c5577e6a50eae898c8565d"
+          },
+          {
+            "path": ".openquantum/sdk-checks/ocean-optimization-4hirzy/custom program.py",
+            "bytes": 1802,
+            "sha256": "109aeb64eb7c9a105705174d62587d363356cf377cd13af53c6b649295465cbc"
+          },
+          {
+            "path": ".openquantum/sdk-checks/ocean-optimization-4hirzy/input.json",
+            "bytes": 15,
+            "sha256": "3efa546e738e87beb9a25168da3a2cb4abb3b02df15e2639f62895da8946dca2"
+          },
+          {
+            "path": ".openquantum/sdk-checks/ocean-optimization-4hirzy/full-array.npy",
+            "bytes": 3145856,
+            "sha256": "dc23460b2b194d5acd7a5c6ffffefd44bd1be9d890565440613d1edee214b72f"
+          }
+        ],
+        "executionRecord": {
+          "path": ".openquantum/sdk-checks/ocean-optimization-4hirzy/execution.json",
+          "bytes": 2473,
+          "sha256": "85406b740a71b73474d380295470386a61da723966b0f945e3ebaa627341d35b"
+        }
+      }
+    },
+    {
+      "id": "openfermion-mapping",
+      "title": "OpenFermion",
+      "group": "chemistry",
+      "language": "python",
+      "project": ".agents/skills/openfermion-mapping",
+      "modules": [
+        "openfermion"
+      ],
+      "dependencies": [
+        "openfermion==1.8.1"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/openfermion-mapping/pyproject.toml",
+        "sha256": "3c1506a19979a6503c2e86b21479ef5216f81f703e2d8d0d0a2a813d614602ff"
+      },
+      "lock": {
+        "path": ".agents/skills/openfermion-mapping/uv.lock",
+        "sha256": "eaee7a237294f4dd1504cf823aac0f3babfeef710166c42f63b1395526102d8e"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 3,
+      "knownConditions": [],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "openqarp-excited-states",
+      "title": "OpenQARP",
+      "group": "learning",
+      "language": "python",
+      "project": ".agents/skills/openqarp-excited-states",
+      "modules": [
+        "qarp"
+      ],
+      "dependencies": [
+        "openqarp==0.1.0",
+        "numpy==2.4.6"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/openqarp-excited-states/pyproject.toml",
+        "sha256": "f49c17bd383b138353650a13e7fab231b51c639dc5aa884e0f6a59c11d3e761f"
+      },
+      "lock": {
+        "path": ".agents/skills/openqarp-excited-states/uv.lock",
+        "sha256": "0f93f30d04b2319100138c0c6dc91c14326758934090d0e7607672cedb8646c4"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 2,
+      "knownConditions": [],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "oqc-cloud",
+      "title": "OQC QCAAS",
+      "group": "services",
+      "language": "python",
+      "project": ".agents/skills/oqc-cloud",
+      "modules": [
+        "qcaas_client"
+      ],
+      "dependencies": [
+        "oqc-qcaas-client==3.23.0"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/oqc-cloud/pyproject.toml",
+        "sha256": "3d918c2b50194bcbfdc99b008f5d3557306698bc2f1e5bbd22bf1ee5c0ca0e7b"
+      },
+      "lock": {
+        "path": ".agents/skills/oqc-cloud/uv.lock",
+        "sha256": "62ae35e5e164d9d0e0356de98c91b8654045787ba3136b5c73cfc64cdab2f768"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 4,
+      "knownConditions": [
+        "本地程序构建与外部调用分开；账户、凭据、费用、设备操作和数据外发沿用宿主及用户授权。原生 SDK 访问不自动启用服务。"
+      ],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "oqc-qat",
+      "title": "OQC QAT",
+      "group": "compilers",
+      "language": "python",
+      "project": ".agents/skills/oqc-qat",
+      "modules": [
+        "qat"
+      ],
+      "dependencies": [
+        "qat-compiler==3.5.0"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/oqc-qat/pyproject.toml",
+        "sha256": "829fa6d4e8422e106ced2ff8a43793f3dbf3bae82fdc0c5bccdf7e5505a413e3"
+      },
+      "lock": {
+        "path": ".agents/skills/oqc-qat/uv.lock",
+        "sha256": "da5ff4088e3093a7fe3a1f8d61e27f7ecd9a25a0453f6b52578bcd485324b347"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 2,
+      "knownConditions": [
+        "与 myQLM 共享 qat 导入名，但项目和环境不同，不能混装。"
+      ],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "oqupy-dynamics",
+      "title": "OQuPy",
+      "group": "physics",
+      "language": "python",
+      "project": ".agents/skills/oqupy-dynamics",
+      "modules": [
+        "oqupy"
+      ],
+      "dependencies": [
+        "oqupy==0.5.0"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/oqupy-dynamics/pyproject.toml",
+        "sha256": "8b20b8c4792f81cf83f109c4007493f89d49dc3c8a80a322b3b264f0ad93c38c"
+      },
+      "lock": {
+        "path": ".agents/skills/oqupy-dynamics/uv.lock",
+        "sha256": "6acb57295909af725a5edd25aec06e4bec5fc28ff43091bb21d96fc531bc7db5"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "passed_scoped_engineering",
+      "batch": 1,
+      "knownConditions": [],
+      "scientificValidation": "not_evaluated",
+      "observation": {
+        "packages": {
+          "oqupy": "0.5.0"
+        },
+        "scope": [
+          "custom multilevel system",
+          "custom bath correlation"
+        ],
+        "objects": [
+          {
+            "dimension": 3
+          },
+          {
+            "dimension": 7
+          }
+        ],
+        "evidenceDirectory": ".openquantum/sdk-checks/oqupy-dynamics-RdwqXH",
+        "files": [
+          {
+            "path": ".openquantum/sdk-checks/oqupy-dynamics-RdwqXH/sdk.json",
+            "bytes": 4927,
+            "sha256": "4d6efbc9694413a53b28b30de464cd976895b995790214a1d20507f024abcea1"
+          },
+          {
+            "path": ".openquantum/sdk-checks/oqupy-dynamics-RdwqXH/api-objects.json",
+            "bytes": 119,
+            "sha256": "e0de0b6b54e8f3434acd8b6bf241f78accac26e49217aecd7215ca1467a0afcf"
+          },
+          {
+            "path": ".openquantum/sdk-checks/oqupy-dynamics-RdwqXH/custom program.py",
+            "bytes": 1344,
+            "sha256": "c7190013aa5e53b1e264454709b837747189f9cfdffa75f450755fefa3cf6324"
+          },
+          {
+            "path": ".openquantum/sdk-checks/oqupy-dynamics-RdwqXH/input.json",
+            "bytes": 15,
+            "sha256": "3efa546e738e87beb9a25168da3a2cb4abb3b02df15e2639f62895da8946dca2"
+          },
+          {
+            "path": ".openquantum/sdk-checks/oqupy-dynamics-RdwqXH/full-array.npy",
+            "bytes": 3145856,
+            "sha256": "dc23460b2b194d5acd7a5c6ffffefd44bd1be9d890565440613d1edee214b72f"
+          }
+        ],
+        "executionRecord": {
+          "path": ".openquantum/sdk-checks/oqupy-dynamics-RdwqXH/execution.json",
+          "bytes": 2327,
+          "sha256": "a993dc104503f0ae123c2b396daba811816d8b5a53330057046c742c794e23a7"
+        }
+      }
+    },
+    {
+      "id": "pairinteraction-rydberg",
+      "title": "PairInteraction",
+      "group": "physics",
+      "language": "python",
+      "project": ".agents/skills/pairinteraction-rydberg",
+      "modules": [
+        "pairinteraction.real",
+        "pairinteraction.complex"
+      ],
+      "dependencies": [
+        "pairinteraction==2.7.0"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/pairinteraction-rydberg/pyproject.toml",
+        "sha256": "e4addb622196a7156bda1ef44d88cf8156b370a04978a3e485f23a49f29f7eeb"
+      },
+      "lock": {
+        "path": ".agents/skills/pairinteraction-rydberg/uv.lock",
+        "sha256": "585467d5d936e8d82afae2c2649fec93a53aa4df17beb382d463ed906efc2a3a"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 3,
+      "knownConditions": [
+        "默认数据锁仅含 Rb 和通用 Wigner 表。其他原子及模型的表可通过上游数据准备接口在独立任务目录显式下载或生成，记录版本与文件摘要后，以 bootstrap 的 data_directory 参数接入；不是把原生 API 限定为 Rb。"
+      ],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "paulie-algebra",
+      "title": "Paulie",
+      "group": "information",
+      "language": "python",
+      "project": ".agents/skills/paulie-algebra",
+      "modules": [
+        "paulie"
+      ],
+      "dependencies": [
+        "paulie==0.2.3"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/paulie-algebra/pyproject.toml",
+        "sha256": "75534e9dbfc16de79b820f436a600d12a7c0ab591c0174a4d96a3df08acecae8"
+      },
+      "lock": {
+        "path": ".agents/skills/paulie-algebra/uv.lock",
+        "sha256": "a94e920a4a7d718e081e8a83c2550b0b0e7c1c1a8a5347eb7bd52e2b7f8094f9"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 3,
+      "knownConditions": [],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "pennylane-differentiable",
+      "title": "PennyLane",
+      "group": "learning",
+      "language": "python",
+      "project": ".agents/skills/pennylane-differentiable",
+      "modules": [
+        "pennylane"
+      ],
+      "dependencies": [
+        "pennylane==0.45.1"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/pennylane-differentiable/pyproject.toml",
+        "sha256": "a54094fb1d25e57d44bdc7f26cb27f7955ade712b4159eb438e82914287cbe64"
+      },
+      "lock": {
+        "path": ".agents/skills/pennylane-differentiable/uv.lock",
+        "sha256": "35ab949679c7eac7e5900385c78d51f76330b1597a65d7800b908ba3d531fdad"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 2,
+      "knownConditions": [],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "perceval-photonics",
+      "title": "Perceval",
+      "group": "optics",
+      "language": "python",
+      "project": ".agents/skills/perceval-photonics",
+      "modules": [
+        "perceval"
+      ],
+      "dependencies": [
+        "perceval-quandela==1.3.0"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/perceval-photonics/pyproject.toml",
+        "sha256": "977e59e634621c09ee9ae4e12644c4dba8c7fbc6877516dbb2a7557bff483571"
+      },
+      "lock": {
+        "path": ".agents/skills/perceval-photonics/uv.lock",
+        "sha256": "1f1d7ae4e3469f7b78a307bcc675cc47c04b33c9ca37e5da13349471de323c7a"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 3,
+      "knownConditions": [],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "pulser-dynamics",
+      "title": "Pulser",
+      "group": "physics",
+      "language": "python",
+      "project": ".agents/skills/pulser-dynamics",
+      "modules": [
+        "pulser",
+        "pulser_simulation"
+      ],
+      "dependencies": [
+        "pulser-core==1.9.1",
+        "pulser-simulation==1.9.1"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/pulser-dynamics/pyproject.toml",
+        "sha256": "93b21a8f54210e5fe184548aff57bca8b84c52e860b8d086428fc13c66107167"
+      },
+      "lock": {
+        "path": ".agents/skills/pulser-dynamics/uv.lock",
+        "sha256": "4dae145858855becf894f9e47ad8517a8865d7299b0628931672a550dd4b85c9"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 3,
+      "knownConditions": [],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "pychemiq-chemistry",
+      "title": "PyChemiQ",
+      "group": "chemistry",
+      "language": "python",
+      "project": ".agents/skills/pychemiq-chemistry",
+      "modules": [
+        "pychemiq"
+      ],
+      "dependencies": [
+        "pychemiq==1.1.4",
+        "numpy==1.26.4"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/pychemiq-chemistry/pyproject.toml",
+        "sha256": "fed85e60da8477e38d835fdc67b54c97feb5993e9dc2020af8fdf7bf1a99e998"
+      },
+      "lock": {
+        "path": ".agents/skills/pychemiq-chemistry/uv.lock",
+        "sha256": "4a021d001c7d38167dbdaa1d796d51ce162a071394d36c16e9bcfe44ab6b5e2b"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 3,
+      "knownConditions": [],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "pyquil-simulation",
+      "title": "pyQuil",
+      "group": "circuits",
+      "language": "python",
+      "project": ".agents/skills/pyquil-simulation",
+      "modules": [
+        "pyquil"
+      ],
+      "dependencies": [
+        "pyquil==4.21.0"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/pyquil-simulation/pyproject.toml",
+        "sha256": "d4f7b629f2607acddb0b27592e998bf423bd99869cd50a0354f5cd7980ba8b5f"
+      },
+      "lock": {
+        "path": ".agents/skills/pyquil-simulation/uv.lock",
+        "sha256": "41a68cfc243c0233fae9ff7d5e5d886b212f4bc6e4c6b9125b51b23973191596"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 2,
+      "knownConditions": [],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "pytket-compilation",
+      "title": "pytket",
+      "group": "compilers",
+      "language": "python",
+      "project": ".agents/skills/pytket-compilation",
+      "modules": [
+        "pytket"
+      ],
+      "dependencies": [
+        "pytket==2.18.4"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/pytket-compilation/pyproject.toml",
+        "sha256": "8edf70498c01976403ef78ba13424b518c84e06d215dd95c92f26ea3c381da25"
+      },
+      "lock": {
+        "path": ".agents/skills/pytket-compilation/uv.lock",
+        "sha256": "0bbf79ff0307f691ab2ac86711edfc36fb2a7355b33a317e43b0e63a92af073e"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 2,
+      "knownConditions": [],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "pyzx-optimization",
+      "title": "PyZX",
+      "group": "compilers",
+      "language": "python",
+      "project": ".agents/skills/pyzx-optimization",
+      "modules": [
+        "pyzx"
+      ],
+      "dependencies": [
+        "pyzx==0.10.6"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/pyzx-optimization/pyproject.toml",
+        "sha256": "acda5356d415ce27a2930731ac4fd67e3e11175c8e2bdb7080f9f3be36bf9630"
+      },
+      "lock": {
+        "path": ".agents/skills/pyzx-optimization/uv.lock",
+        "sha256": "cc0e9a97de0fa0439ea4add6b7f13b8bb0ba3b18954b94ebcfba94595676b458"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 2,
+      "knownConditions": [],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "qblox-scheduling",
+      "title": "Qblox Scheduler",
+      "group": "services",
+      "language": "python",
+      "project": ".agents/skills/qblox-scheduling",
+      "modules": [
+        "qblox_scheduler",
+        "qblox_instruments"
+      ],
+      "dependencies": [
+        "qblox-scheduler==1.0.0b8"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/qblox-scheduling/pyproject.toml",
+        "sha256": "fa2f7c4a042975396de85631bea3b1b4746ea65b5b44fa702436a1505708af20"
+      },
+      "lock": {
+        "path": ".agents/skills/qblox-scheduling/uv.lock",
+        "sha256": "01ad3726194feb96a8ade0f69237912eebf2141603e7ca6ebcfa1b64bb8cbb36"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 4,
+      "knownConditions": [
+        "本地程序构建与外部调用分开；账户、凭据、费用、设备操作和数据外发沿用宿主及用户授权。原生 SDK 访问不自动启用服务。"
+      ],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "qbraid-conversion",
+      "title": "qBraid / Cirq",
+      "group": "compilers",
+      "language": "python",
+      "project": ".agents/skills/qbraid-conversion",
+      "modules": [
+        "qbraid",
+        "cirq",
+        "qiskit"
+      ],
+      "dependencies": [
+        "qbraid==0.12.2",
+        "qiskit==2.5.2",
+        "cirq-core==1.6.1",
+        "ply==3.11"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/qbraid-conversion/pyproject.toml",
+        "sha256": "1ba4bb29ba494068ac777dd44d9896575312bda196028f269946c41cc05d2a83"
+      },
+      "lock": {
+        "path": ".agents/skills/qbraid-conversion/uv.lock",
+        "sha256": "6ff5730c1e3d5970a8eacfb2431805768055b9ac22705518e6bc53140fe20ad0"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 2,
+      "knownConditions": [],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "qcarchive-query",
+      "title": "QCArchive Portal",
+      "group": "services",
+      "language": "python",
+      "project": ".agents/skills/qcarchive-query",
+      "modules": [
+        "qcportal"
+      ],
+      "dependencies": [
+        "qcportal==0.70"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/qcarchive-query/pyproject.toml",
+        "sha256": "ccb0132f4d8d3136b566264732cecf23d30922bf5f23ca5712e2a9a6f0bac617"
+      },
+      "lock": {
+        "path": ".agents/skills/qcarchive-query/uv.lock",
+        "sha256": "523bb82d003d9786e4014dba95c42dc80202989453cc5133f25a117c83b19562"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 4,
+      "knownConditions": [
+        "本地程序构建与外部调用分开；账户、凭据、费用、设备操作和数据外发沿用宿主及用户授权。原生 SDK 访问不自动启用服务。"
+      ],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "qcompute-simulation",
+      "title": "QCompute",
+      "group": "circuits",
+      "language": "python",
+      "project": ".agents/skills/qcompute-simulation",
+      "modules": [
+        "QCompute"
+      ],
+      "dependencies": [
+        "QCompute==3.3.5",
+        "numpy==1.26.4"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/qcompute-simulation/pyproject.toml",
+        "sha256": "2b9fc37abbb113ca199fe3ca8a27f97877be7dc6a0cd122f57996d625bf2c7c7"
+      },
+      "lock": {
+        "path": ".agents/skills/qcompute-simulation/uv.lock",
+        "sha256": "20ab6414c8036510bbeff2be66a4d8958abc5a1797aab0b58f6b07ca9b40333f"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 2,
+      "knownConditions": [],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "qcover-optimization",
+      "title": "Qcover",
+      "group": "learning",
+      "language": "python",
+      "project": ".agents/skills/qcover-optimization",
+      "modules": [
+        "Qcover"
+      ],
+      "dependencies": [
+        "Qcover==2.6.0",
+        "qiskit==0.45.3",
+        "qiskit-aer==0.13.3",
+        "cirq==1.3.0",
+        "quimb==1.8.4",
+        "projectq==0.8.0",
+        "networkx==2.8.8",
+        "numpy==1.26.4",
+        "scipy==1.12.0"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/qcover-optimization/pyproject.toml",
+        "sha256": "25c3bac8869c40cf6160037db68f886c82f2e6c8830d2d2f6bfe40ba6fb68a44"
+      },
+      "lock": {
+        "path": ".agents/skills/qcover-optimization/uv.lock",
+        "sha256": "b7506c6c82865ab6c030c535d0ac5ff8e0f7e199fdff0d5b17244c41b0881d3b"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "passed_scoped_engineering",
+      "batch": 1,
+      "knownConditions": [
+        "旧 Qiskit、ProjectQ 与 native build 依赖必须保持隔离；顶层导入失败应记录并修复，不替换成预设 QAOA 结果。"
+      ],
+      "scientificValidation": "not_evaluated",
+      "observation": {
+        "packages": {
+          "Qcover": "2.6.0"
+        },
+        "scope": [
+          "custom graph",
+          "graph decomposition without optimization"
+        ],
+        "objects": [
+          {
+            "sites": 3,
+            "subgraphs": 6
+          },
+          {
+            "sites": 7,
+            "subgraphs": 14
+          }
+        ],
+        "evidenceDirectory": ".openquantum/sdk-checks/qcover-optimization-0tjnjN",
+        "files": [
+          {
+            "path": ".openquantum/sdk-checks/qcover-optimization-0tjnjN/sdk.json",
+            "bytes": 22724,
+            "sha256": "4543d062ff6cc1dfa6914e832cf5cc7c96f0a8420b1e430cdbec4a2b9194cd7d"
+          },
+          {
+            "path": ".openquantum/sdk-checks/qcover-optimization-0tjnjN/api-objects.json",
+            "bytes": 149,
+            "sha256": "1e33c85ce4a1dff15b7584cfbc324545ee8e0ffe6005927796a8edfcec1054ee"
+          },
+          {
+            "path": ".openquantum/sdk-checks/qcover-optimization-0tjnjN/custom program.py",
+            "bytes": 1677,
+            "sha256": "57e274601621251334ef6e4300154a7ec17172dad9ba12cc73cade01353dce35"
+          },
+          {
+            "path": ".openquantum/sdk-checks/qcover-optimization-0tjnjN/input.json",
+            "bytes": 15,
+            "sha256": "3efa546e738e87beb9a25168da3a2cb4abb3b02df15e2639f62895da8946dca2"
+          },
+          {
+            "path": ".openquantum/sdk-checks/qcover-optimization-0tjnjN/full-array.npy",
+            "bytes": 3145856,
+            "sha256": "dc23460b2b194d5acd7a5c6ffffefd44bd1be9d890565440613d1edee214b72f"
+          }
+        ],
+        "executionRecord": {
+          "path": ".openquantum/sdk-checks/qcover-optimization-0tjnjN/execution.json",
+          "bytes": 2379,
+          "sha256": "b38ace1522e164a57b247b0bbf6a3247c8e0173a1f109574189084529af4f944"
+        }
+      }
+    },
+    {
+      "id": "qctrl-workbench",
+      "title": "Boulder Opal / Fire Opal",
+      "group": "services",
+      "language": "python",
+      "project": ".agents/skills/qctrl-workbench",
+      "modules": [
+        "boulderopal",
+        "fireopal"
+      ],
+      "dependencies": [
+        "httpx[socks]==0.28.1",
+        "boulder-opal==6.1.0",
+        "fire-opal==12.3.0"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/qctrl-workbench/pyproject.toml",
+        "sha256": "59d0561726624ead504142a6a9a98626bc7d7db0a83f5729a8b38d843e3dd41e"
+      },
+      "lock": {
+        "path": ".agents/skills/qctrl-workbench/uv.lock",
+        "sha256": "e7bc58905fb580fa5de85871d514d3aa882a6c20d502ae4d4205c6b205bc5db7"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 4,
+      "knownConditions": [
+        "本地程序构建与外部调用分开；账户、凭据、费用、设备操作和数据外发沿用宿主及用户授权。原生 SDK 访问不自动启用服务。"
+      ],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "qcut-knitting",
+      "title": "QCut / Qiskit Addon Cutting",
+      "group": "compilers",
+      "language": "python",
+      "project": ".agents/skills/qcut-knitting",
+      "modules": [
+        "QCut",
+        "qiskit_addon_cutting"
+      ],
+      "dependencies": [
+        "QCut==2.2.0",
+        "qiskit==2.5.2",
+        "qiskit-addon-cutting==0.10.0"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/qcut-knitting/pyproject.toml",
+        "sha256": "721a76b79eca243cc371c9be19c847defba9f1ee0df706f26f6d07f08adc8fcc"
+      },
+      "lock": {
+        "path": ".agents/skills/qcut-knitting/uv.lock",
+        "sha256": "4c5fddebffd2070fd663b01f36c7d95eb06f905f53288403299dc0b2b3cf5b95"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 2,
+      "knownConditions": [],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "qdk-resource-estimation",
+      "title": "QDK",
+      "group": "chemistry",
+      "language": "python",
+      "project": ".agents/skills/qdk-resource-estimation",
+      "modules": [
+        "qdk"
+      ],
+      "dependencies": [
+        "qdk[qre]==1.32.3"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/qdk-resource-estimation/pyproject.toml",
+        "sha256": "394a6ceb509bde8a97e4f293fa43fa6bda4a95f0431164f6f915c468ee38ec6c"
+      },
+      "lock": {
+        "path": ".agents/skills/qdk-resource-estimation/uv.lock",
+        "sha256": "fcef07febcdbb9ae583f81b37d0f590f67674c2ffc78bf3a1e2f8385ad9eade5"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 3,
+      "knownConditions": [],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "qdmi-device",
+      "title": "QDMI C API",
+      "group": "services",
+      "language": "native",
+      "project": ".agents/skills/qdmi-device",
+      "modules": [],
+      "dependencies": [],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/qdmi-device/pyproject.toml",
+        "sha256": "d651309b6d17656a09522ed1ea7f44fa0fb3f108bf84fc647fb5fd9371d16f21"
+      },
+      "lock": {
+        "path": ".agents/skills/qdmi-device/uv.lock",
+        "sha256": "30c0d56545224097d96efbea14a1887809bca829c55f9c770005f5a63569636a"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 4,
+      "knownConditions": [
+        "原生 C ABI；setup 下载已固定源码并构建官方示例，真实驱动需单独配置，示例驱动不代表硬件支持。",
+        "本地程序构建与外部调用分开；账户、凭据、费用、设备操作和数据外发沿用宿主及用户授权。原生 SDK 访问不自动启用服务。"
+      ],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "qec-memory-experiment",
+      "title": "Stim / PyMatching",
+      "group": "qec",
+      "language": "python",
+      "project": ".agents/skills/qec-memory-experiment",
+      "modules": [
+        "stim",
+        "pymatching"
+      ],
+      "dependencies": [
+        "pymatching==2.4.0",
+        "stim==1.16.0"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/qec-memory-experiment/pyproject.toml",
+        "sha256": "99bedfae79ca85112d5c4b46f3ad978bf95e5421a20c6572d7f8cc5a783b6181"
+      },
+      "lock": {
+        "path": ".agents/skills/qec-memory-experiment/uv.lock",
+        "sha256": "7ce22952043711f23b4b65a2a0b85f3e48c096a1567ad2894fbcc64463943823"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "passed_scoped_engineering",
+      "batch": 1,
+      "knownConditions": [],
+      "scientificValidation": "not_evaluated",
+      "observation": {
+        "packages": {
+          "stim": "1.16.0",
+          "pymatching": "2.4.0"
+        },
+        "scope": [
+          "custom detectors",
+          "DEM to matching graph"
+        ],
+        "objects": [
+          {
+            "detectors": 3
+          },
+          {
+            "detectors": 7
+          }
+        ],
+        "evidenceDirectory": ".openquantum/sdk-checks/qec-memory-experiment-haqa1y",
+        "files": [
+          {
+            "path": ".openquantum/sdk-checks/qec-memory-experiment-haqa1y/sdk.json",
+            "bytes": 4604,
+            "sha256": "76b098bcb566b9d6379059d9fcc3384fafb104fe396b8ce63aa89cd5c769bfa1"
+          },
+          {
+            "path": ".openquantum/sdk-checks/qec-memory-experiment-haqa1y/api-objects.json",
+            "bytes": 109,
+            "sha256": "690f5c2ea574f6c75ea2c235f298cb015d5a1fe8e9afc48924dc9440d39259ce"
+          },
+          {
+            "path": ".openquantum/sdk-checks/qec-memory-experiment-haqa1y/custom-7.stim",
+            "bytes": 209,
+            "sha256": "d285472b448065672c69e177cabaf81c0bc847b0d32010011193b0db35a9e6e6"
+          },
+          {
+            "path": ".openquantum/sdk-checks/qec-memory-experiment-haqa1y/custom program.py",
+            "bytes": 1606,
+            "sha256": "78901a678fd53bb452b1fd26824b370ef44709a2bae1fe41246f626d58d02c93"
+          },
+          {
+            "path": ".openquantum/sdk-checks/qec-memory-experiment-haqa1y/input.json",
+            "bytes": 15,
+            "sha256": "3efa546e738e87beb9a25168da3a2cb4abb3b02df15e2639f62895da8946dca2"
+          },
+          {
+            "path": ".openquantum/sdk-checks/qec-memory-experiment-haqa1y/custom-3.stim",
+            "bytes": 117,
+            "sha256": "dd39049b789c1d628c0bc5f63b91eb52612f1f28bd479294d67976b86f9cc8e6"
+          },
+          {
+            "path": ".openquantum/sdk-checks/qec-memory-experiment-haqa1y/full-array.npy",
+            "bytes": 3145856,
+            "sha256": "dc23460b2b194d5acd7a5c6ffffefd44bd1be9d890565440613d1edee214b72f"
+          }
+        ],
+        "executionRecord": {
+          "path": ".openquantum/sdk-checks/qec-memory-experiment-haqa1y/execution.json",
+          "bytes": 2952,
+          "sha256": "64b47789d7a9b43f3447bf95a9502d58a31399e8fe29cdac0365dde6166f3460"
+        }
+      }
+    },
+    {
+      "id": "qibo-simulation",
+      "title": "Qibo",
+      "group": "circuits",
+      "language": "python",
+      "project": ".agents/skills/qibo-simulation",
+      "modules": [
+        "qibo"
+      ],
+      "dependencies": [
+        "qibo==0.3.5"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/qibo-simulation/pyproject.toml",
+        "sha256": "498dd81ed37298c1fd783c71026ce0933dfbc9100a0e2bca0c82acf285a08fb2"
+      },
+      "lock": {
+        "path": ".agents/skills/qibo-simulation/uv.lock",
+        "sha256": "5ba109fe893a576a2e6cb9a57bd1195e3878d5741c42322eb279b292e8f6a3e8"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 2,
+      "knownConditions": [],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "qililab-control",
+      "title": "Qililab",
+      "group": "services",
+      "language": "python",
+      "project": ".agents/skills/qililab-control",
+      "modules": [
+        "qililab"
+      ],
+      "dependencies": [
+        "qililab==0.33.3"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/qililab-control/pyproject.toml",
+        "sha256": "a73191aada8db11b05b535547774d24157701272170456edecda28bd5444c9c2"
+      },
+      "lock": {
+        "path": ".agents/skills/qililab-control/uv.lock",
+        "sha256": "916dc0a943e8d10fea309af765704c4333a4ec4b2cbe09d7fcee8846777d6d03"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 4,
+      "knownConditions": [
+        "本地程序构建与外部调用分开；账户、凭据、费用、设备操作和数据外发沿用宿主及用户授权。原生 SDK 访问不自动启用服务。"
+      ],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "qoolqit-workbench",
+      "title": "QoolQit",
+      "group": "physics",
+      "language": "python",
+      "project": ".agents/skills/qoolqit-workbench",
+      "modules": [
+        "qoolqit"
+      ],
+      "dependencies": [
+        "qoolqit==1.4.0",
+        "pulser==1.9.1"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/qoolqit-workbench/pyproject.toml",
+        "sha256": "2bd0dfc208abb8078e522a1095fd27600cee647841bbec24d629f0f7d17ae4e7"
+      },
+      "lock": {
+        "path": ".agents/skills/qoolqit-workbench/uv.lock",
+        "sha256": "5304a7a9dd049936694af34e6e08234f8ed142d2cd4cd0b12f41488bcf4ce3c6"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 3,
+      "knownConditions": [
+        "上游自定义许可证，安装前按当前使用范围核对。"
+      ],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "qpanda-qubo",
+      "title": "QPanda Algorithm",
+      "group": "learning",
+      "language": "python",
+      "project": ".agents/skills/qpanda-qubo",
+      "modules": [
+        "pyqpanda_alg"
+      ],
+      "dependencies": [
+        "pyqpanda_alg==2.0.0",
+        "pandas==2.3.3",
+        "scikit-learn==1.9.1"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/qpanda-qubo/pyproject.toml",
+        "sha256": "1ea6869aecfef7c18b98a56dc227791f8a6461c3cc20f7bf53548cbccd55687b"
+      },
+      "lock": {
+        "path": ".agents/skills/qpanda-qubo/uv.lock",
+        "sha256": "180c8f8f4022619b23a69756c7b121dcfd0d7984cc626b5501c86b7b1a23df68"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "passed_scoped_engineering",
+      "batch": 1,
+      "knownConditions": [
+        "macOS 的完整 SDK setup 需要 Git、CMake 和 C++ 编译器，以固定 fmt 11.2.0 源码构建隔离动态库；其余上游 wheel 的系统依赖仍按平台核验，不修改 Homebrew 或裁剪算法模块。"
+      ],
+      "scientificValidation": "not_evaluated",
+      "observation": {
+        "packages": {
+          "pyqpanda-alg": "2.0.0"
+        },
+        "scope": [
+          "full upstream package initialization including VQE and HHL; no namespace trimming"
+        ],
+        "objects": [
+          "Grover",
+          "HHL",
+          "QAE",
+          "QAOA",
+          "QARM",
+          "QCmp",
+          "QKmeans",
+          "QPCA",
+          "QSEncode",
+          "QSVD",
+          "QSVM",
+          "QSVR",
+          "QUBO",
+          "QmRMR",
+          "VQE",
+          "plugin",
+          "warnings"
+        ],
+        "evidenceDirectory": ".openquantum/sdk-checks/qpanda-qubo-btshEO",
+        "files": [
+          {
+            "path": ".openquantum/sdk-checks/qpanda-qubo-btshEO/sdk.json",
+            "bytes": 12130,
+            "sha256": "352450e34980dff4014c8bd07b53a5a52f65785c8ce2b11fe391bf7d7794f841"
+          },
+          {
+            "path": ".openquantum/sdk-checks/qpanda-qubo-btshEO/api-objects.json",
+            "bytes": 263,
+            "sha256": "60886be1c4fbddc2714b733d7fc4e52d88eeb0bcd9a2daf667bc9e512f88fc3c"
+          },
+          {
+            "path": ".openquantum/sdk-checks/qpanda-qubo-btshEO/custom program.py",
+            "bytes": 1457,
+            "sha256": "6cefb25747d69da5f6581bd35c8a77a388aab7b978f0ee6ca112e4a5d821f52f"
+          },
+          {
+            "path": ".openquantum/sdk-checks/qpanda-qubo-btshEO/input.json",
+            "bytes": 15,
+            "sha256": "3efa546e738e87beb9a25168da3a2cb4abb3b02df15e2639f62895da8946dca2"
+          },
+          {
+            "path": ".openquantum/sdk-checks/qpanda-qubo-btshEO/full-array.npy",
+            "bytes": 3145856,
+            "sha256": "dc23460b2b194d5acd7a5c6ffffefd44bd1be9d890565440613d1edee214b72f"
+          }
+        ],
+        "executionRecord": {
+          "path": ".openquantum/sdk-checks/qpanda-qubo-btshEO/execution.json",
+          "bytes": 2305,
+          "sha256": "407e1116411e1b708e3fa98dd35ccb5e870c7f1b6ad82c753952089db4d335a9"
+        }
+      }
+    },
+    {
+      "id": "qrisp-arithmetic",
+      "title": "Qrisp",
+      "group": "circuits",
+      "language": "python",
+      "project": ".agents/skills/qrisp-arithmetic",
+      "modules": [
+        "qrisp"
+      ],
+      "dependencies": [
+        "qrisp==0.9.9"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/qrisp-arithmetic/pyproject.toml",
+        "sha256": "8f0d6261ac2e6549e5e0f2bd7f996c1525d2e516dedd5355de68e428595840c3"
+      },
+      "lock": {
+        "path": ".agents/skills/qrisp-arithmetic/uv.lock",
+        "sha256": "129e18ab889ddf465bf8f2361253e204607da8b5196c7ff8267ef7709023e79e"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 2,
+      "knownConditions": [
+        "上游 EPL 许可与可选后端单独核对，不改变现有 MCP 默认关闭状态。",
+        "显式选择 JAX 数值精度和 target；需要 float64 时在建立数组前启用 jax_enable_x64。CPU、GPU 选择按任务与已安装后端决定。"
+      ],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "qsteed-compilation",
+      "title": "QSteed / Quafu",
+      "group": "compilers",
+      "language": "python",
+      "project": ".agents/skills/qsteed-compilation",
+      "modules": [
+        "qsteed",
+        "quafu"
+      ],
+      "dependencies": [
+        "qsteed==0.2.3",
+        "pyquafu==0.4.4"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/qsteed-compilation/pyproject.toml",
+        "sha256": "4cb29b35b6582dd05db87ccfcbcd6537b08e4bf1257cfe2ce7551be203407d92"
+      },
+      "lock": {
+        "path": ".agents/skills/qsteed-compilation/uv.lock",
+        "sha256": "83583ef1ead10edef47051425548877285ede8888101715b4a8d76b296cb5cc3"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 2,
+      "knownConditions": [],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "qua-programs",
+      "title": "QUA",
+      "group": "services",
+      "language": "python",
+      "project": ".agents/skills/qua-programs",
+      "modules": [
+        "qm.qua",
+        "qm"
+      ],
+      "dependencies": [
+        "qm-qua==1.4.1"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/qua-programs/pyproject.toml",
+        "sha256": "f62ab12ce6303dc051c1c96692a29c74c0479d833a639afe044442539e2e6377"
+      },
+      "lock": {
+        "path": ".agents/skills/qua-programs/uv.lock",
+        "sha256": "27e616ae50ce4d5fc03ee4fa3312b73a1b1d32a592a62adc6ac46cb321a14b9c"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 4,
+      "knownConditions": [
+        "本地程序构建与外部调用分开；账户、凭据、费用、设备操作和数据外发沿用宿主及用户授权。原生 SDK 访问不自动启用服务。",
+        "qm 导入会读取用户配置并初始化日志；离线程序构建先使用本 Skill bridge.py 的 offline_user_config 上下文，真实设备任务则使用用户授权的实际配置。不要在离线步骤构造 QuantumMachinesManager。"
+      ],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "quairkit-information",
+      "title": "QuAIRKit",
+      "group": "information",
+      "language": "python",
+      "project": ".agents/skills/quairkit-information",
+      "modules": [
+        "quairkit"
+      ],
+      "dependencies": [
+        "quairkit==0.5.1",
+        "torch==2.11.0"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/quairkit-information/pyproject.toml",
+        "sha256": "b0416e0dbfb90f3d6adb2be5e1279af09fd6cf4bdf041bb34ca3933f296d054d"
+      },
+      "lock": {
+        "path": ".agents/skills/quairkit-information/uv.lock",
+        "sha256": "5db109bab241980290da2c18c7b8ca0e6cd52ad31b93cd2109d9dec3e09a8110"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 3,
+      "knownConditions": [],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "qualtran-resources",
+      "title": "Qualtran",
+      "group": "chemistry",
+      "language": "python",
+      "project": ".agents/skills/qualtran-resources",
+      "modules": [
+        "qualtran"
+      ],
+      "dependencies": [
+        "qualtran==0.7.0"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/qualtran-resources/pyproject.toml",
+        "sha256": "bc11fef0b2ae1d87ea4e6a02ec198f396cad361e5828b4c1f59c9a4c1c31fefd"
+      },
+      "lock": {
+        "path": ".agents/skills/qualtran-resources/uv.lock",
+        "sha256": "0cd995c7405f7a81737b6c60796fe29b67649d69d71a84ec95cd3c39984c9a0a"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 3,
+      "knownConditions": [],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "quantum-algorithms",
+      "title": "Qiskit / PennyLane / quimb / PySCF",
+      "group": "chemistry",
+      "language": "python",
+      "project": "examples/quantum-algorithms",
+      "modules": [
+        "qiskit",
+        "qiskit_algorithms",
+        "pennylane",
+        "quimb",
+        "pyscf"
+      ],
+      "dependencies": [
+        "numpy==2.5.3",
+        "scipy==1.18.1",
+        "qiskit==2.5.2"
+      ],
+      "dependencyGroups": {
+        "gradients": [
+          "qiskit-algorithms==0.4.0"
+        ],
+        "pennylane": [
+          "pennylane==0.45.1"
+        ],
+        "tensor": [
+          "quimb==1.15.0"
+        ],
+        "chemistry": [
+          {
+            "include-group": "tensor"
+          },
+          "pyscf==2.14.0"
+        ]
+      },
+      "manifest": {
+        "path": "examples/quantum-algorithms/pyproject.toml",
+        "sha256": "bc50ed7e9f62f7c137a5459a805ca2e0869bd3a13d29dd51cb6d4959a2008155"
+      },
+      "lock": {
+        "path": "examples/quantum-algorithms/uv.lock",
+        "sha256": "585bb8da25a31ca525cddbf5bea4ab8a813c42f9ce8ece97b85314adade5713c"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "passed_scoped_engineering",
+      "batch": 1,
+      "knownConditions": [
+        "依赖组有 gradients、pennylane、tensor、chemistry；完整 setup 安装所有默认组，算法示例不是允许调用的 API 白名单。"
+      ],
+      "scientificValidation": "not_evaluated",
+      "observation": {
+        "packages": {
+          "qiskit": "2.5.2",
+          "pennylane": "0.45.1",
+          "quimb": "1.15.0",
+          "pyscf": "2.14.0"
+        },
+        "scope": [
+          "parameterized circuit",
+          "QPY round trip",
+          "custom observable",
+          "tensor network",
+          "molecule construction without solver"
+        ],
+        "objects": [
+          {
+            "qubits": 3,
+            "tensors": 3
+          },
+          {
+            "qubits": 7,
+            "tensors": 7
+          }
+        ],
+        "evidenceDirectory": ".openquantum/sdk-checks/quantum-algorithms-vjd0l2",
+        "files": [
+          {
+            "path": ".openquantum/sdk-checks/quantum-algorithms-vjd0l2/sdk.json",
+            "bytes": 8133,
+            "sha256": "0dd06b826f564b3158696f8ad57b43eab923b42b09687220e9ef79d0641ba7a3"
+          },
+          {
+            "path": ".openquantum/sdk-checks/quantum-algorithms-vjd0l2/custom-7.qpy",
+            "bytes": 1084,
+            "sha256": "adf5e69ba1947854035b81c74f996d7580f897811fe6def5309d21ef265c3bf0"
+          },
+          {
+            "path": ".openquantum/sdk-checks/quantum-algorithms-vjd0l2/custom-3.qpy",
+            "bytes": 504,
+            "sha256": "07867cd941ed7a51c942708e40634073af640c193f055cabd3b0f0ae95e77752"
+          },
+          {
+            "path": ".openquantum/sdk-checks/quantum-algorithms-vjd0l2/api-objects.json",
+            "bytes": 208,
+            "sha256": "69cd800ff1c671b3736455a99ea02b79642ad54fdffe0b3aac6bae6b1d504860"
+          },
+          {
+            "path": ".openquantum/sdk-checks/quantum-algorithms-vjd0l2/custom program.py",
+            "bytes": 1949,
+            "sha256": "ea2d9536048303e55790f7418a13b7ea8166f82dd641ccd7ecd210e4eec97fcf"
+          },
+          {
+            "path": ".openquantum/sdk-checks/quantum-algorithms-vjd0l2/input.json",
+            "bytes": 15,
+            "sha256": "3efa546e738e87beb9a25168da3a2cb4abb3b02df15e2639f62895da8946dca2"
+          },
+          {
+            "path": ".openquantum/sdk-checks/quantum-algorithms-vjd0l2/full-array.npy",
+            "bytes": 3145856,
+            "sha256": "dc23460b2b194d5acd7a5c6ffffefd44bd1be9d890565440613d1edee214b72f"
+          }
+        ],
+        "executionRecord": {
+          "path": ".openquantum/sdk-checks/quantum-algorithms-vjd0l2/execution.json",
+          "bytes": 2942,
+          "sha256": "08155b1ae4185cfb86acdccf6a88a20b13b4ee84e67da77d195f3e53e98c8938"
+        }
+      }
+    },
+    {
+      "id": "quantum-circuit-verification",
+      "title": "MQT QCEC",
+      "group": "compilers",
+      "language": "python",
+      "project": ".agents/skills/quantum-circuit-verification",
+      "modules": [
+        "mqt.qcec"
+      ],
+      "dependencies": [
+        "mqt.qcec==3.10.0"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/quantum-circuit-verification/pyproject.toml",
+        "sha256": "39d567d79458e3edb8bfaadfe1931e7ebf993d8a72ae8985143d1372b9c5aa75"
+      },
+      "lock": {
+        "path": ".agents/skills/quantum-circuit-verification/uv.lock",
+        "sha256": "7436a034ebca4ade17f628845263eedc503fcbbddbd2850690b5d6751676ffb0"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 2,
+      "knownConditions": [],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "quantum-information-audit",
+      "title": "toqito",
+      "group": "information",
+      "language": "python",
+      "project": ".agents/skills/quantum-information-audit",
+      "modules": [
+        "toqito"
+      ],
+      "dependencies": [
+        "toqito==1.3.1"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/quantum-information-audit/pyproject.toml",
+        "sha256": "3e091bbb81c511141c6f53d05f67a3ab7feb7929227f8ab768659e77610ba856"
+      },
+      "lock": {
+        "path": ".agents/skills/quantum-information-audit/uv.lock",
+        "sha256": "f7881684a77e1c6b5f738f949e4954c8c1bfc812ff8c8077a093515d14a815b9"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 3,
+      "knownConditions": [],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "quantuminspire-cloud",
+      "title": "Quantum Inspire",
+      "group": "services",
+      "language": "python",
+      "project": ".agents/skills/quantuminspire-cloud",
+      "modules": [
+        "quantuminspire"
+      ],
+      "dependencies": [
+        "quantuminspire==4.1.0"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/quantuminspire-cloud/pyproject.toml",
+        "sha256": "a0a1a64b39370b80c1be1c432ae2e290081ca990e10ef1657283c92d2804b525"
+      },
+      "lock": {
+        "path": ".agents/skills/quantuminspire-cloud/uv.lock",
+        "sha256": "6a3d6ea5258a9d74e252c1982762e4501c6ecee123bbede75a44d43406eef945"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 4,
+      "knownConditions": [
+        "本地程序构建与外部调用分开；账户、凭据、费用、设备操作和数据外发沿用宿主及用户授权。原生 SDK 访问不自动启用服务。"
+      ],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "quri-parts-estimation",
+      "title": "QURI Parts / Qulacs",
+      "group": "circuits",
+      "language": "python",
+      "project": ".agents/skills/quri-parts-estimation",
+      "modules": [
+        "quri_parts",
+        "qulacs"
+      ],
+      "dependencies": [
+        "quri-parts[qulacs]==0.27.0",
+        "qulacs==0.6.14"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/quri-parts-estimation/pyproject.toml",
+        "sha256": "b148a1e042887d5d986de0fc09a0ebf80513758c79ae6774647805ba75d18479"
+      },
+      "lock": {
+        "path": ".agents/skills/quri-parts-estimation/uv.lock",
+        "sha256": "d6a2580b3b4c3b230b9fd537427c12d19a2326bf91c99a153aba2f52689d26c5"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 2,
+      "knownConditions": [],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "qutrunk-simulation",
+      "title": "QuTrunk",
+      "group": "circuits",
+      "language": "python",
+      "project": ".agents/skills/qutrunk-simulation",
+      "modules": [
+        "qutrunk"
+      ],
+      "dependencies": [
+        "qutrunk==0.2.2"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/qutrunk-simulation/pyproject.toml",
+        "sha256": "7106e33b5dd8a7166cc4a8cca929dcbfd3a3fcc95dc0cefb9c5c6e5043c416fa"
+      },
+      "lock": {
+        "path": ".agents/skills/qutrunk-simulation/uv.lock",
+        "sha256": "c076facc05e4cd00d0c9da278593f4815cb384bfe76690adc09578d5c4003032"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 2,
+      "knownConditions": [],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "randomized-measurements",
+      "title": "RandomMeas.jl",
+      "group": "qec",
+      "language": "julia",
+      "project": ".agents/skills/randomized-measurements",
+      "modules": [
+        "RandomMeas",
+        "JSON3"
+      ],
+      "dependencies": {
+        "JSON3": "0f8b85d8-7281-11e9-16c2-39a750bddbf1",
+        "RandomMeas": "a9f96d1f-ed6a-4404-822f-5927c777f274"
+      },
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/randomized-measurements/Project.toml",
+        "sha256": "2c29528f132ba0f4d660ddb499432eafbdc11c7702432c9127453b6c7c8cd34e"
+      },
+      "lock": {
+        "path": ".agents/skills/randomized-measurements/Manifest.toml",
+        "sha256": "2ae0a257e59647abe3997699a871c5530d9d7866617b6705dfe8a10a1479bd52"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 4,
+      "knownConditions": [],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "simqn-network",
+      "title": "SimQN",
+      "group": "network",
+      "language": "python",
+      "project": ".agents/skills/simqn-network",
+      "modules": [
+        "qns"
+      ],
+      "dependencies": [
+        "qns==0.2.3"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/simqn-network/pyproject.toml",
+        "sha256": "2e950004b2865ab1dfbe680d685b7a5f124cb9abf0bd63b590111e9e0bf48f05"
+      },
+      "lock": {
+        "path": ".agents/skills/simqn-network/uv.lock",
+        "sha256": "b1703d3ed5099cc784d53520b3ef8df252fadbb272731bb43222627295c1204c"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 3,
+      "knownConditions": [
+        "上游 GPL 许可；保持独立进程，不改变现有 MCP 默认关闭状态。"
+      ],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "spinqit-simulation",
+      "title": "SpinQit",
+      "group": "circuits",
+      "language": "python",
+      "project": ".agents/skills/spinqit-simulation",
+      "modules": [
+        "spinqit"
+      ],
+      "dependencies": [
+        "spinqit==0.2.4",
+        "scipy==1.14.1"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/spinqit-simulation/pyproject.toml",
+        "sha256": "04f6aca4e328149764a800cdc452a4c3a3b0436e1dfd3aff912d79886abccba1"
+      },
+      "lock": {
+        "path": ".agents/skills/spinqit-simulation/uv.lock",
+        "sha256": "28118456b8620a5f2c9e5b38eb381fa369ac7f52938a33d39d6e3e7a3305860d"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "passed_scoped_engineering",
+      "batch": 1,
+      "knownConditions": [],
+      "scientificValidation": "not_evaluated",
+      "observation": {
+        "packages": {
+          "spinqit": "0.2.4"
+        },
+        "scope": [
+          "native circuit and rotations"
+        ],
+        "objects": [
+          {
+            "qubits": 3,
+            "instructions": 3
+          },
+          {
+            "qubits": 7,
+            "instructions": 7
+          }
+        ],
+        "evidenceDirectory": ".openquantum/sdk-checks/spinqit-simulation-ms2Mqf",
+        "files": [
+          {
+            "path": ".openquantum/sdk-checks/spinqit-simulation-ms2Mqf/sdk.json",
+            "bytes": 11749,
+            "sha256": "13e657272107028274d1c11d49bd948033085c22ebb323c79d19e79685213c09"
+          },
+          {
+            "path": ".openquantum/sdk-checks/spinqit-simulation-ms2Mqf/api-objects.json",
+            "bytes": 128,
+            "sha256": "8976f8dcc891a13f11398eeab45ffa6e913daf48ea4dc3347bd748bec15c9783"
+          },
+          {
+            "path": ".openquantum/sdk-checks/spinqit-simulation-ms2Mqf/custom program.py",
+            "bytes": 1493,
+            "sha256": "08868265563946f087785612a97ed39d5eb38a37a1e578c2e4bbb2883f6288b5"
+          },
+          {
+            "path": ".openquantum/sdk-checks/spinqit-simulation-ms2Mqf/input.json",
+            "bytes": 15,
+            "sha256": "3efa546e738e87beb9a25168da3a2cb4abb3b02df15e2639f62895da8946dca2"
+          },
+          {
+            "path": ".openquantum/sdk-checks/spinqit-simulation-ms2Mqf/full-array.npy",
+            "bytes": 3145856,
+            "sha256": "dc23460b2b194d5acd7a5c6ffffefd44bd1be9d890565440613d1edee214b72f"
+          }
+        ],
+        "executionRecord": {
+          "path": ".openquantum/sdk-checks/spinqit-simulation-ms2Mqf/execution.json",
+          "bytes": 2370,
+          "sha256": "64f3b1db4a4e001f669b34a5baa96d283d687ff88f4dc9ca234d25b6cd1bfb25"
+        }
+      }
+    },
+    {
+      "id": "sqd-chemistry",
+      "title": "Qiskit Addon SQD",
+      "group": "chemistry",
+      "language": "python",
+      "project": ".agents/skills/sqd-chemistry",
+      "modules": [
+        "qiskit_addon_sqd"
+      ],
+      "dependencies": [
+        "qiskit-addon-sqd==0.13.1"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/sqd-chemistry/pyproject.toml",
+        "sha256": "df263af0594be0097f545617fb587156c5f7d9797113a499d3abde2ca15c39bb"
+      },
+      "lock": {
+        "path": ".agents/skills/sqd-chemistry/uv.lock",
+        "sha256": "4f14f930fe555173419c46aa23769abbef0a7345dabb549117788297a3493624"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 3,
+      "knownConditions": [],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "superstaq-compilation",
+      "title": "Qiskit Superstaq",
+      "group": "services",
+      "language": "python",
+      "project": ".agents/skills/superstaq-compilation",
+      "modules": [
+        "qiskit_superstaq"
+      ],
+      "dependencies": [
+        "qiskit-superstaq==0.5.69",
+        "qiskit==2.5.2"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/superstaq-compilation/pyproject.toml",
+        "sha256": "927289d76cc640303afee7c7a0bd19725cf92b79bcbf9415c2c6ada24d83e861"
+      },
+      "lock": {
+        "path": ".agents/skills/superstaq-compilation/uv.lock",
+        "sha256": "d2b51bd05246512e5b09e5e7a74b903f8b62a47a006456469a0e3c6a4e863659"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 4,
+      "knownConditions": [
+        "本地程序构建与外部调用分开；账户、凭据、费用、设备操作和数据外发沿用宿主及用户授权。原生 SDK 访问不自动启用服务。"
+      ],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "symmer-tapering",
+      "title": "Symmer",
+      "group": "information",
+      "language": "python",
+      "project": ".agents/skills/symmer-tapering",
+      "modules": [
+        "symmer"
+      ],
+      "dependencies": [
+        "symmer"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/symmer-tapering/pyproject.toml",
+        "sha256": "86e555351b3fd3fd9ad3c431e23753e44de1b47c6522ec8540c706e859f9687c"
+      },
+      "lock": {
+        "path": ".agents/skills/symmer-tapering/uv.lock",
+        "sha256": "7504ea581181a6db65692c6ceb6f208d3bd9582c0cbd31b451942044c2ea968a"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 3,
+      "knownConditions": [],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "tenpy-ground-state",
+      "title": "TeNPy",
+      "group": "physics",
+      "language": "python",
+      "project": ".agents/skills/tenpy-ground-state",
+      "modules": [
+        "tenpy"
+      ],
+      "dependencies": [
+        "physics-tenpy==1.1.1"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/tenpy-ground-state/pyproject.toml",
+        "sha256": "744521a3dae3baae425a15d9bf63f17d0ca4bf4031ff972e13d91c3dae52f9fb"
+      },
+      "lock": {
+        "path": ".agents/skills/tenpy-ground-state/uv.lock",
+        "sha256": "052eb7d1fc6271d516abcb1929c43da9b8ea47ba03e5118fe52337ca4ecd4d1e"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "passed_scoped_engineering",
+      "batch": 1,
+      "knownConditions": [],
+      "scientificValidation": "not_evaluated",
+      "observation": {
+        "packages": {
+          "physics-tenpy": "1.1.1"
+        },
+        "scope": [
+          "bosonic model",
+          "MPS construction"
+        ],
+        "objects": [
+          {
+            "sites": 3,
+            "localDimension": 4
+          },
+          {
+            "sites": 7,
+            "localDimension": 4
+          }
+        ],
+        "evidenceDirectory": ".openquantum/sdk-checks/tenpy-ground-state-EDKejN",
+        "files": [
+          {
+            "path": ".openquantum/sdk-checks/tenpy-ground-state-EDKejN/sdk.json",
+            "bytes": 2893,
+            "sha256": "05742ffa378e51e55797c1a51fca926074809582978ac180331f7894a214183a"
+          },
+          {
+            "path": ".openquantum/sdk-checks/tenpy-ground-state-EDKejN/api-objects.json",
+            "bytes": 135,
+            "sha256": "2a88bf8bab70db93b198acd1ba42482a95c9cd941f16531c8949bc498a5d078b"
+          },
+          {
+            "path": ".openquantum/sdk-checks/tenpy-ground-state-EDKejN/custom program.py",
+            "bytes": 1384,
+            "sha256": "7d736c31aa2caad55094f9a016daffa58a545c37f6dbeb0bfd105e0365a61198"
+          },
+          {
+            "path": ".openquantum/sdk-checks/tenpy-ground-state-EDKejN/input.json",
+            "bytes": 15,
+            "sha256": "3efa546e738e87beb9a25168da3a2cb4abb3b02df15e2639f62895da8946dca2"
+          },
+          {
+            "path": ".openquantum/sdk-checks/tenpy-ground-state-EDKejN/full-array.npy",
+            "bytes": 3145856,
+            "sha256": "dc23460b2b194d5acd7a5c6ffffefd44bd1be9d890565440613d1edee214b72f"
+          }
+        ],
+        "executionRecord": {
+          "path": ".openquantum/sdk-checks/tenpy-ground-state-EDKejN/execution.json",
+          "bytes": 2375,
+          "sha256": "ebf2d4ff70d1a2b800ee57cf86f0c0e0879c154a61570f7f2de76a4ba151759c"
+        }
+      }
+    },
+    {
+      "id": "tensorcircuit-differentiable",
+      "title": "TensorCircuit",
+      "group": "learning",
+      "language": "python",
+      "project": ".agents/skills/tensorcircuit-differentiable",
+      "modules": [
+        "tensorcircuit",
+        "jax"
+      ],
+      "dependencies": [
+        "tensorcircuit==0.12.0",
+        "jax==0.4.38",
+        "jaxlib==0.4.38",
+        "numpy==1.26.4"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/tensorcircuit-differentiable/pyproject.toml",
+        "sha256": "cbcd6c100bfe0baa52c76ef6789a3034ca8149a9d424aaf78492751a03d35c11"
+      },
+      "lock": {
+        "path": ".agents/skills/tensorcircuit-differentiable/uv.lock",
+        "sha256": "fe09754e6b38f6f60eed1503d253c190389d08aa5cd7f43ffadcc7a4e37d1534"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 2,
+      "knownConditions": [
+        "显式选择 JAX 数值精度和 target；需要 float64 时在建立数组前启用 jax_enable_x64。CPU、GPU 选择按任务与已安装后端决定。"
+      ],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "tjm-dynamics",
+      "title": "MQT YAQS",
+      "group": "physics",
+      "language": "python",
+      "project": ".agents/skills/tjm-dynamics",
+      "modules": [
+        "mqt.yaqs"
+      ],
+      "dependencies": [
+        "mqt.yaqs==0.6.0"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/tjm-dynamics/pyproject.toml",
+        "sha256": "9f3c63560efc540453be9ed4ce4c0659c83b69f8f7f46d97f33c163c1aecd0ac"
+      },
+      "lock": {
+        "path": ".agents/skills/tjm-dynamics/uv.lock",
+        "sha256": "12ba63af14c747b4e32e4a1f0851abcd42f5ebe921ae8a6dba61ffa50980f35f"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 3,
+      "knownConditions": [],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "tyxonq-workbench",
+      "title": "TyxonQ",
+      "group": "circuits",
+      "language": "python",
+      "project": ".agents/skills/tyxonq-workbench",
+      "modules": [
+        "tyxonq"
+      ],
+      "dependencies": [
+        "tyxonq==1.3.0"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/tyxonq-workbench/pyproject.toml",
+        "sha256": "c069250b5380fc8f9c98079efeefb83942fad3434a60b00b4aa81a54ed7318d2"
+      },
+      "lock": {
+        "path": ".agents/skills/tyxonq-workbench/uv.lock",
+        "sha256": "0a95013f5776196db163bd71c8f34641f7532036431af7f54f555e3b92075bf6"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "not_checked",
+      "batch": 2,
+      "knownConditions": [],
+      "scientificValidation": "not_evaluated",
+      "nextCheck": "Prepare the locked environment and exercise user-defined public API objects and workflows; verify optional components for the selected target. Prior convenience Tool results are not reused as full API evidence."
+    },
+    {
+      "id": "vqnet-learning",
+      "title": "VQNet",
+      "group": "learning",
+      "language": "python",
+      "project": ".agents/skills/vqnet-learning",
+      "modules": [
+        "pyvqnet"
+      ],
+      "dependencies": [
+        "pyvqnet==2.18.1",
+        "numpy==1.26.4"
+      ],
+      "dependencyGroups": {},
+      "manifest": {
+        "path": ".agents/skills/vqnet-learning/pyproject.toml",
+        "sha256": "442a5c51f29e89958fab1e66d54422e8e3a0905d72dcd4705eca89393bc22851"
+      },
+      "lock": {
+        "path": ".agents/skills/vqnet-learning/uv.lock",
+        "sha256": "528a4844c3ec39de0ca4aae9dd59a5e0fe0114b7495e3fb6cb02e0291e1f41cd"
+      },
+      "nativeAccess": "provided",
+      "packaging": "checked",
+      "executionVerified": "passed_scoped_engineering",
+      "batch": 1,
+      "knownConditions": [],
+      "scientificValidation": "not_evaluated",
+      "observation": {
+        "packages": {
+          "pyvqnet": "2.18.1"
+        },
+        "scope": [
+          "native tensor",
+          "quantum machine"
+        ],
+        "objects": [
+          {
+            "qubits": 3,
+            "tensorShape": [
+              3,
+              3
+            ]
+          },
+          {
+            "qubits": 7,
+            "tensorShape": [
+              7,
+              3
+            ]
+          }
+        ],
+        "evidenceDirectory": ".openquantum/sdk-checks/vqnet-learning-7LECVT",
+        "files": [
+          {
+            "path": ".openquantum/sdk-checks/vqnet-learning-7LECVT/sdk.json",
+            "bytes": 6200,
+            "sha256": "e1fc3a9578e19559283f91bc12b5ab70a492e62dd84b7bd7f7547268e399b53b"
+          },
+          {
+            "path": ".openquantum/sdk-checks/vqnet-learning-7LECVT/api-objects.json",
+            "bytes": 140,
+            "sha256": "c4f81ff6db31a66ec223f3309e8686fee527c90b502829bc92fd07503ea0bd07"
+          },
+          {
+            "path": ".openquantum/sdk-checks/vqnet-learning-7LECVT/custom program.py",
+            "bytes": 1503,
+            "sha256": "0442686a9bf438596ee8acc77a4ecb8e0da7ed7d6c48a25bd4d8790eca822a40"
+          },
+          {
+            "path": ".openquantum/sdk-checks/vqnet-learning-7LECVT/input.json",
+            "bytes": 15,
+            "sha256": "3efa546e738e87beb9a25168da3a2cb4abb3b02df15e2639f62895da8946dca2"
+          },
+          {
+            "path": ".openquantum/sdk-checks/vqnet-learning-7LECVT/full-array.npy",
+            "bytes": 3145856,
+            "sha256": "dc23460b2b194d5acd7a5c6ffffefd44bd1be9d890565440613d1edee214b72f"
+          }
+        ],
+        "executionRecord": {
+          "path": ".openquantum/sdk-checks/vqnet-learning-7LECVT/execution.json",
+          "bytes": 2330,
+          "sha256": "986b849145cee5fc2f5d0e22109dbfa2d168020f8159adca25b91dd7b7f68b39"
+        }
+      }
+    }
+  ]
+}

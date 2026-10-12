@@ -5,6 +5,17 @@ description: 用 QunaSys QURI Parts 和 Qulacs 在本地计算结构化电路上
 
 # QURI Parts / Qulacs 期望值
 
+<!-- BEGIN NATIVE SDK ACCESS -->
+## 原生 SDK 路径
+
+本能力同时支持 **QURI Parts / Qulacs 的原生公开 API**。用户需要 电路、态、算符、estimator、sampler、梯度与后端 时，由 Agent 在固定依赖环境中编写和运行任务代码，不限于下文便捷 Tool 的预设模型。
+
+使用 `node scripts/sdk-access.mjs inspect quri-parts-estimation` 定位环境，按[完整 SDK 工作流](../quantum-sdk-workbench/references/workflow.md)执行。模块导航：`quri_parts`、`qulacs`；导航不是 API 白名单。
+
+下文关于模型、门集、输入与预算的限制描述便捷 Tool 的合同；原生 SDK 另受上游版本、可选依赖、宿主资源与用户授权约束。已禁用或被拒绝的动作不能借代码路径绕过。执行状态和科研验收分别报告。
+<!-- END NATIVE SDK ACCESS -->
+
+
 Agent 经 Harness 调用 `quri_parts_local` 提供的 `estimate_quri_observable`。这是 QURI SDK 中 Parts 与 Qulacs 后端的有界能力，不代表 QURI Algo、VM 或所有云后端均已接入。
 
 输入 `numQubits`、`gates` 与 `terms`。支持 H/S/T/X/Y/Z、CX/CZ 和 RX/RY/RZ；旋转 `angle` 用 rad，CX 的首个 target 为控制位。Pauli 字符串长度必须等于量子位数，**最左字符是 qubit 0**。每个 term 的实 `coefficient` 可重复，重复 Pauli 会相加。

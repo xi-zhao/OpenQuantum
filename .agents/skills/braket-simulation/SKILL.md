@@ -5,6 +5,19 @@ description: 使用 Amazon Braket LocalSimulator 在本地计算结构化量子�
 
 # Amazon Braket 本地模拟
 
+<!-- BEGIN NATIVE SDK ACCESS -->
+## 原生 SDK 路径
+
+本能力同时支持 **Amazon Braket 的原生公开 API**。用户需要 电路、模拟器、AHS、噪声、设备、task/batch 与参数化程序 时，由 Agent 在固定依赖环境中编写和运行任务代码，不限于下文便捷 Tool 的预设模型。
+
+使用 `node scripts/sdk-access.mjs inspect braket-simulation` 定位环境，按[完整 SDK 工作流](../quantum-sdk-workbench/references/workflow.md)执行。模块导航：`braket.circuits`、`braket.devices`、`braket.aws`；导航不是 API 白名单。
+
+本地程序构建与外部调用分开；账户、凭据、费用、设备操作和数据外发沿用宿主及用户授权。原生 SDK 访问不自动启用服务。
+
+下文关于模型、门集、输入与预算的限制描述便捷 Tool 的合同；原生 SDK 另受上游版本、可选依赖、宿主资源与用户授权约束。已禁用或被拒绝的动作不能借代码路径绕过。执行状态和科研验收分别报告。
+<!-- END NATIVE SDK ACCESS -->
+
+
 Agent 经 Harness 调用 `braket_local` 的 `simulate_braket_circuit`。Skill 负责选择与解释，Tool 负责真实 SDK 执行。
 
 接受全零初态上的 `numQubits` 与 H/S/T/X/Y/Z/CX/CZ/RX/RY/RZ 有序门列表；旋转角为 rad。适配层显式保留空闲量子位，输出位串最左位始终对应 qubit 0。

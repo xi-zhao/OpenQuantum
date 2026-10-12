@@ -5,6 +5,17 @@ description: 用 MQT QMAP 将结构化电路路由到指定连接图，返回有
 
 # MQT QMAP 电路拓扑映射
 
+<!-- BEGIN NATIVE SDK ACCESS -->
+## 原生 SDK 路径
+
+本能力同时支持 **MQT QMAP 的原生公开 API**。用户需要 自定义架构、configuration、映射与布局算法 时，由 Agent 在固定依赖环境中编写和运行任务代码，不限于下文便捷 Tool 的预设模型。
+
+使用 `node scripts/sdk-access.mjs inspect mqt-qmap` 定位环境，按[完整 SDK 工作流](../quantum-sdk-workbench/references/workflow.md)执行。模块导航：`mqt.qmap`；导航不是 API 白名单。
+
+下文关于模型、门集、输入与预算的限制描述便捷 Tool 的合同；原生 SDK 另受上游版本、可选依赖、宿主资源与用户授权约束。已禁用或被拒绝的动作不能借代码路径绕过。执行状态和科研验收分别报告。
+<!-- END NATIVE SDK ACCESS -->
+
+
 Agent 经 Harness 调用 `mqt_qmap_local` 提供的 `map_mqt_circuit`。先明确逻辑电路与硬件连接图，再比较路由成本；这里不使用真实校准数据。
 
 输入 `numQubits`、`gates`、`numPhysicalQubits` 与有向 `coupling: [[control,target], ...]`。图忽略方向后必须连通，物理位数不少于逻辑位数。门集支持 H/S/T/X/Y/Z、CX/CZ、RX/RY/RZ，旋转角用 rad。

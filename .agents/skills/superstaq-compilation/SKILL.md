@@ -5,6 +5,19 @@ description: 使用 Infleqtion 官方 SDK 在本地序列化电路，或按明�
 
 # Superstaq 编译
 
+<!-- BEGIN NATIVE SDK ACCESS -->
+## 原生 SDK 路径
+
+本能力同时支持 **Qiskit Superstaq 的原生公开 API**。用户需要 自定义电路、编译选项、targets、provider 与执行结果 时，由 Agent 在固定依赖环境中编写和运行任务代码，不限于下文便捷 Tool 的预设模型。
+
+使用 `node scripts/sdk-access.mjs inspect superstaq-compilation` 定位环境，按[完整 SDK 工作流](../quantum-sdk-workbench/references/workflow.md)执行。模块导航：`qiskit_superstaq`；导航不是 API 白名单。
+
+本地程序构建与外部调用分开；账户、凭据、费用、设备操作和数据外发沿用宿主及用户授权。原生 SDK 访问不自动启用服务。
+
+下文关于模型、门集、输入与预算的限制描述便捷 Tool 的合同；原生 SDK 另受上游版本、可选依赖、宿主资源与用户授权约束。已禁用或被拒绝的动作不能借代码路径绕过。执行状态和科研验收分别报告。
+<!-- END NATIVE SDK ACCESS -->
+
+
 `superstaq_cloud` 默认关闭。先运行 `node scripts/setup-paper-tools.mjs superstaq-compilation`，
 再在设置中心按需启用连接。凭据只通过 Harness 的 `SUPERSTAQ_API_KEY` 引用，不进入 Tool 参数。
 

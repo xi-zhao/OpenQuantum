@@ -5,6 +5,17 @@ description: 用本源 pyChemiQ 把结构化费米产生湮灭算符经 Jordan-W
 
 # pyChemiQ 费米算符映射
 
+<!-- BEGIN NATIVE SDK ACCESS -->
+## 原生 SDK 路径
+
+本能力同时支持 **PyChemiQ 的原生公开 API**。用户需要 分子、映射、ansatz、VQE 与化学计算接口 时，由 Agent 在固定依赖环境中编写和运行任务代码，不限于下文便捷 Tool 的预设模型。
+
+使用 `node scripts/sdk-access.mjs inspect pychemiq-chemistry` 定位环境，按[完整 SDK 工作流](../quantum-sdk-workbench/references/workflow.md)执行。模块导航：`pychemiq`；导航不是 API 白名单。
+
+下文关于模型、门集、输入与预算的限制描述便捷 Tool 的合同；原生 SDK 另受上游版本、可选依赖、宿主资源与用户授权约束。已禁用或被拒绝的动作不能借代码路径绕过。执行状态和科研验收分别报告。
+<!-- END NATIVE SDK ACCESS -->
+
+
 Agent 经 Harness 调用 `pychemiq_local` 的 `map_pychemiq_fermions`，为电子结构模型映射和反对易关系核对提供 pyChemiQ 后端。
 
 输入 `numModes` 和 `terms`。每项包含复 `coefficient={real,imaginary}`，以及有序 `operators` 列表，其中每个元素为 `{mode,action}`，`action` 是 `create` 或 `annihilate`。列表表示从左到右的算符乘积，**最右算符最先作用**；空列表表示恒等项。模式从 0 编号，未使用的模式保留为恒等 Pauli 因子。

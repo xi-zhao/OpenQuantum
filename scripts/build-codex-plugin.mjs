@@ -5,6 +5,7 @@ import { parse, stringify } from "yaml";
 import { zipSync } from "fflate";
 import { buildChatgpt, git, json } from "./build-chatgpt.mjs";
 import { readCapabilities, PROJECT_ROOT } from "../runtime/chatgpt/catalog.mjs";
+import { readSdkLibraries } from "../src/lib/sdk-access.mjs";
 
 export async function buildPlugin({ root = PROJECT_ROOT, output = path.join(root, "dist/codex-plugin") } = {}) {
   const runtimePackage = JSON.parse(await fs.readFile(path.join(root, "distributions/codex-plugin/package.json"), "utf8"));
@@ -14,6 +15,7 @@ export async function buildPlugin({ root = PROJECT_ROOT, output = path.join(root
   const selected = (await readCapabilities(root)).filter(item => item.status === "available");
   const skillCount = selected.filter(item => item.skill).length;
   const owned = new Set(selected.map(item => item.id));
+  const sdkIds = new Set((await readSdkLibraries(root)).map(item => item.id));
   const pluginRoot = path.join(output, "openquantum");
   await fs.rm(pluginRoot, { recursive: true, force: true });
   const serverRoot = path.join(pluginRoot, "server");
@@ -23,12 +25,12 @@ export async function buildPlugin({ root = PROJECT_ROOT, output = path.join(root
     const dest = path.join(serverRoot, target); await fs.mkdir(path.dirname(dest), { recursive: true }); await fs.copyFile(path.join(root, source), dest);
   };
   // Explicit product inputs, not an archive of the whole repository.
-  const prefixes = ["runtime/chatgpt/", "src/capabilities/", "src/settings/codex/", "src/lib/", "src/quantum-practices/", "src/metriq-data/", ".agents/skill-contracts/"];
-  const metadataFiles = ["src/settings/server/project-settings-catalog.mjs", "src/settings/server/quantum-hardware-mcp.mjs", "src/settings/server/qpanda-runtime-mcp.mjs", "src/settings/server/qpanda-skill.mjs", "examples/quantum-algorithms/coverage.json"];
+  const prefixes = ["runtime/chatgpt/", "src/capabilities/", "src/settings/codex/", "src/lib/", "src/quantum-practices/", "src/metriq-data/", ".agents/skill-contracts/", "examples/quantum-algorithms/"];
+  const metadataFiles = ["src/settings/server/project-settings-catalog.mjs", "src/settings/server/quantum-hardware-mcp.mjs", "src/settings/server/qpanda-runtime-mcp.mjs", "src/settings/server/qpanda-skill.mjs", ".agents/sdk-libraries.json", "scripts/sdk-access.mjs", "scripts/setup-sdk.mjs", "scripts/setup-paper-tools.mjs", "scripts/setup-open-algorithm-examples.mjs", "scripts/setup-qdmi.mjs"];
   const files = git(root, ["ls-files", "--cached", "--others", "--exclude-standard", "-z"]).split("\0").filter(Boolean);
   for (const file of files) {
     const capability = file.match(/^\.agents\/skills\/([^/]+)\//)?.[1];
-    if (prefixes.some(prefix => file.startsWith(prefix)) || metadataFiles.includes(file) || owned.has(capability)) {
+    if (prefixes.some(prefix => file.startsWith(prefix)) || metadataFiles.includes(file) || owned.has(capability) || sdkIds.has(capability)) {
       if (/(?:^|\/)(?:test|tests|evals|__pycache__|artifacts)\//.test(file) && !file.startsWith(".agents/skills/quantum-ground-state/")) continue;
       if (/\.env(?:\.|$)|\.(?:key|pem)$/.test(file)) throw new Error("Credential-like source cannot be packaged");
       await copy(file);
@@ -36,7 +38,8 @@ export async function buildPlugin({ root = PROJECT_ROOT, output = path.join(root
   }
   const policy = parse(await fs.readFile(path.join(root, ".agents/capability-packages.yml"), "utf8"));
   await fs.mkdir(path.join(serverRoot, ".agents"), { recursive: true });
-  await fs.writeFile(path.join(serverRoot, ".agents/capability-packages.yml"), stringify({ ...policy, packages: policy.packages.filter(item => owned.has(item.id)) }));
+  // Retain opt-in capability metadata for SDK discovery without enabling its MCP.
+  await fs.writeFile(path.join(serverRoot, ".agents/capability-packages.yml"), stringify({ ...policy, packages: policy.packages.filter(item => owned.has(item.id) || sdkIds.has(item.id)) }));
   await copy("distributions/codex-plugin/package.json", "package.json");
   await copy("distributions/codex-plugin/package-lock.json", "package-lock.json");
   await fs.cp(built.output, path.join(serverRoot, "dist/chatgpt"), { recursive: true });

@@ -5,6 +5,19 @@ description: 用固定 MrMustard 计算真空经高斯光学门与衰减后的�
 
 # MrMustard 连续变量光学
 
+<!-- BEGIN NATIVE SDK ACCESS -->
+## 原生 SDK 路径
+
+本能力同时支持 **MrMustard 的原生公开 API**。用户需要 任意连续变量态、门、信道、参数与优化 时，由 Agent 在固定依赖环境中编写和运行任务代码，不限于下文便捷 Tool 的预设模型。
+
+使用 `node scripts/sdk-access.mjs inspect mrmustard-optics` 定位环境，按[完整 SDK 工作流](../quantum-sdk-workbench/references/workflow.md)执行。模块导航：`mrmustard`；导航不是 API 白名单。
+
+固定 Python 3.11 / TensorFlow 2.15 环境；原生 wheel 与目标平台兼容性需核验。
+
+下文关于模型、门集、输入与预算的限制描述便捷 Tool 的合同；原生 SDK 另受上游版本、可选依赖、宿主资源与用户授权约束。已禁用或被拒绝的动作不能借代码路径绕过。执行状态和科研验收分别报告。
+<!-- END NATIVE SDK ACCESS -->
+
+
 Agent 经 Harness 调用 `mrmustard_local` 的 `simulate_mrmustard_optics`。适合相干、压缩、双模关联和线性光学模型；有确定光子数输入时优先选 Perceval/Lightworks，需要可微 Fock 层时选 MerLin。
 
 输入 `numModes`、操作序列和每模式的 `cutoff`。初态为真空。`D` 使用 `x,y`，对应复位移 `alpha=x+iy`；`S` 与 `S2` 使用非负压缩量 `r` 和相位 `phi`；`R` 使用 `theta`；`BS` 使用 `theta,phi`，幅度混合的系数为 cos(theta)、sin(theta)；`LOSS` 使用 `[0,1]` 的 `transmissivity`。角度均为弧度，模式从 0 编号。两个模式的门接受任意不同模式。

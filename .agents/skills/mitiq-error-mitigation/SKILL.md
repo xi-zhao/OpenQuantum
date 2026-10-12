@@ -5,6 +5,17 @@ description: 使用固定 Mitiq 对电路运行 ZNE、REM、PEC、CDR 本地噪�
 
 # Mitiq 误差缓解实验
 
+<!-- BEGIN NATIVE SDK ACCESS -->
+## 原生 SDK 路径
+
+本能力同时支持 **Mitiq / Cirq 的原生公开 API**。用户需要 用户 executor、缩放与拟合策略、ZNE、PEC、CDR、读出缓解 时，由 Agent 在固定依赖环境中编写和运行任务代码，不限于下文便捷 Tool 的预设模型。
+
+使用 `node scripts/sdk-access.mjs inspect mitiq-error-mitigation` 定位环境，按[完整 SDK 工作流](../quantum-sdk-workbench/references/workflow.md)执行。模块导航：`mitiq`、`cirq`；导航不是 API 白名单。
+
+下文关于模型、门集、输入与预算的限制描述便捷 Tool 的合同；原生 SDK 另受上游版本、可选依赖、宿主资源与用户授权约束。已禁用或被拒绝的动作不能借代码路径绕过。执行状态和科研验收分别报告。
+<!-- END NATIVE SDK ACCESS -->
+
+
 当用户要评估零噪声外推、读出误差校正、概率误差抵消或 Clifford 数据回归时使用本 Skill。
 它负责选择实验和解释结果，计算由 `mitiq_local` 连接注册的 `run_mitiq_experiment` Tool 执行。
 不要把 Mitiq 的其他算法、任意 SDK 电路、真实硬件或误差纠正解释为本 Tool 已提供的能力。
