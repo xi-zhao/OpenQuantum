@@ -5,6 +5,17 @@ description: 用 Microsoft QDK 的现代 qdk.qre 对结构化 Q# 电路估算容
 
 # QDK 容错资源估算
 
+<!-- BEGIN NATIVE SDK ACCESS -->
+## 原生 SDK 路径
+
+本能力同时支持 **QDK 的原生公开 API**。用户需要 Q# 程序、资源模型、误差预算与资源估算接口 时，由 Agent 在固定依赖环境中编写和运行任务代码，不限于下文便捷 Tool 的预设模型。
+
+使用 `node scripts/sdk-access.mjs inspect qdk-resource-estimation` 定位环境，按[完整 SDK 工作流](../quantum-sdk-workbench/references/workflow.md)执行。模块导航：`qdk`；导航不是 API 白名单。
+
+下文关于模型、门集、输入与预算的限制描述便捷 Tool 的合同；原生 SDK 另受上游版本、可选依赖、宿主资源与用户授权约束。已禁用或被拒绝的动作不能借代码路径绕过。执行状态和科研验收分别报告。
+<!-- END NATIVE SDK ACCESS -->
+
+
 Agent 经 Harness 调用 `qdk_local` 提供的 `estimate_qdk_resources`。Tool 接收结构化门列表，内部生成 Q# 的固定语法，并调用现代 `qdk.qre`；不接收任意 Q# 源码或使用已弃用的 `qsharp.estimate`。
 
 先确定逻辑电路 `numQubits`、`gates`，再明确硬件假设：`physicalErrorRate` 为物理操作错误概率，`gateTimeNs`、`measurementTimeNs` 用 ns，`maxError` 为整体估计错误预算，四者都有可读回的默认值。电路支持 H/S/T/X/Y/Z、CX/CZ、RX/RY/RZ，旋转角度用 rad。

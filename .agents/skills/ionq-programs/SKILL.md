@@ -5,6 +5,19 @@ description: 使用 IonQ 官方 qiskit-ionq 在本地准备结构化量子电路
 
 # IonQ 程序准备
 
+<!-- BEGIN NATIVE SDK ACCESS -->
+## 原生 SDK 路径
+
+本能力同时支持 **Qiskit IonQ 的原生公开 API**。用户需要 原生门、电路转换、provider、backend 与 job API 时，由 Agent 在固定依赖环境中编写和运行任务代码，不限于下文便捷 Tool 的预设模型。
+
+使用 `node scripts/sdk-access.mjs inspect ionq-programs` 定位环境，按[完整 SDK 工作流](../quantum-sdk-workbench/references/workflow.md)执行。模块导航：`qiskit_ionq`；导航不是 API 白名单。
+
+本地程序构建与外部调用分开；账户、凭据、费用、设备操作和数据外发沿用宿主及用户授权。原生 SDK 访问不自动启用服务。
+
+下文关于模型、门集、输入与预算的限制描述便捷 Tool 的合同；原生 SDK 另受上游版本、可选依赖、宿主资源与用户授权约束。已禁用或被拒绝的动作不能借代码路径绕过。执行状态和科研验收分别报告。
+<!-- END NATIVE SDK ACCESS -->
+
+
 通过 `ionq_local.prepare_ionq_program` 将用户门序列转换为 IonQ QIS 程序。输入为 `numQubits`、`gates`，
 每个门具有 `gate` 和 `targets`，RX/RY/RZ 必须给出弧度 `angle`。控制门的第一个 target 是控制位。
 

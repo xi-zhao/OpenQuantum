@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 import { readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { pythonEnvironmentRoot } from "../../../../src/lib/prepared-python.mjs";
+import { assertInstalledPythonFiles } from "../../../../src/lib/installed-python.mjs";
 
 const skillRoot = fileURLToPath(new URL("..", import.meta.url));
 const root = path.resolve(skillRoot, "../../..");
@@ -21,7 +22,9 @@ const run = (command, args) => {
 rmSync(marker, { force: true });
 run("uv", ["sync", "--frozen", "--no-dev", "--project", skillRoot, "--python", "3.12"]);
 if (digest() !== before) throw new Error("PairInteraction dependency lock changed during setup");
-run(path.join(environment, process.platform === "win32" ? "Scripts/python.exe" : "bin/python"), [path.join(skillRoot, "scripts/setup_database.py")]);
+const python = path.join(environment, process.platform === "win32" ? "Scripts/python.exe" : "bin/python");
+assertInstalledPythonFiles(python, { cwd: root, env });
+run(python, [path.join(skillRoot, "scripts/setup_database.py")]);
 const pending = `${marker}.${process.pid}.tmp`;
 writeFileSync(pending, before + "\n");
 renameSync(pending, marker);

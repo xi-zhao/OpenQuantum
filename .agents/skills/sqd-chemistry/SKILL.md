@@ -5,6 +5,17 @@ description: 分子活性空间的采样子空间对角化，支持输入频数�
 
 # SQD 量子化学
 
+<!-- BEGIN NATIVE SDK ACCESS -->
+## 原生 SDK 路径
+
+本能力同时支持 **Qiskit Addon SQD 的原生公开 API**。用户需要 用户 bitstrings、configuration recovery、投影子空间与费米子求解 时，由 Agent 在固定依赖环境中编写和运行任务代码，不限于下文便捷 Tool 的预设模型。
+
+使用 `node scripts/sdk-access.mjs inspect sqd-chemistry` 定位环境，按[完整 SDK 工作流](../quantum-sdk-workbench/references/workflow.md)执行。模块导航：`qiskit_addon_sqd`；导航不是 API 白名单。
+
+下文关于模型、门集、输入与预算的限制描述便捷 Tool 的合同；原生 SDK 另受上游版本、可选依赖、宿主资源与用户授权约束。已禁用或被拒绝的动作不能借代码路径绕过。执行状态和科研验收分别报告。
+<!-- END NATIVE SDK ACCESS -->
+
+
 Agent 经 Harness 调用 sqd_local 提供的 `run_sqd_chemistry`。本 Skill 负责选择和解释，不启动计算进程。
 
 支持结构化分子、已安装 PySCF 目录中的命名基组和可选 activeSpace；默认 H₂/STO-3G。坐标用 Å，能量用 Hartree。提供 molecule 后以其 atoms/charge 构建分子，默认键长不参与几何。使用闭壳层 RHF 轨道，活性电子数为偶数，n_alpha=n_beta 固定 M_s=0，不约束总自旋；活性轨道从冻结核之后连续选取。轨道数、样本数和子空间尺寸由用户选择。当前 PySCF 的 CI 位串使用 int64，活性空间轨道数须小于 64；分子全空间可以更大。

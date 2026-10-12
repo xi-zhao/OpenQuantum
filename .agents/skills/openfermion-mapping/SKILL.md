@@ -5,6 +5,17 @@ description: 用 Google OpenFermion 将有序费米产生湮灭算符乘积映�
 
 # OpenFermion 算符映射
 
+<!-- BEGIN NATIVE SDK ACCESS -->
+## 原生 SDK 路径
+
+本能力同时支持 **OpenFermion 的原生公开 API**。用户需要 费米子/玻色子算符、映射、张量、模型与化学接口 时，由 Agent 在固定依赖环境中编写和运行任务代码，不限于下文便捷 Tool 的预设模型。
+
+使用 `node scripts/sdk-access.mjs inspect openfermion-mapping` 定位环境，按[完整 SDK 工作流](../quantum-sdk-workbench/references/workflow.md)执行。模块导航：`openfermion`；导航不是 API 白名单。
+
+下文关于模型、门集、输入与预算的限制描述便捷 Tool 的合同；原生 SDK 另受上游版本、可选依赖、宿主资源与用户授权约束。已禁用或被拒绝的动作不能借代码路径绕过。执行状态和科研验收分别报告。
+<!-- END NATIVE SDK ACCESS -->
+
+
 Agent 经 Harness 调用 `openfermion_local` 提供的 `map_openfermion_operator`。用途是二次量子化算符到量子位算符的表示转换；已有化学求解能力不由本 Skill 替代。
 
 输入 `numModes`、`mapping` 和 `terms`。每个 term 包含复系数 `coefficient: {real, imag}` 与有序 `operators: [{mode, action}]`，action 是 `create` 或 `annihilate`。乘积按给定顺序书写，最右算符先作用在 ket 上。空 operators 表示常数项；重复项由上游合并。

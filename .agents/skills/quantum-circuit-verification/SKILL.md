@@ -5,6 +5,17 @@ description: 使用 OpenQuantum 的固定版本 MQT QCEC 本地检查两份无�
 
 # 量子电路等价性验证
 
+<!-- BEGIN NATIVE SDK ACCESS -->
+## 原生 SDK 路径
+
+本能力同时支持 **MQT QCEC 的原生公开 API**。用户需要 任意受支持电路、编译流程配置与等价性验证接口 时，由 Agent 在固定依赖环境中编写和运行任务代码，不限于下文便捷 Tool 的预设模型。
+
+使用 `node scripts/sdk-access.mjs inspect quantum-circuit-verification` 定位环境，按[完整 SDK 工作流](../quantum-sdk-workbench/references/workflow.md)执行。模块导航：`mqt.qcec`、`qiskit`；导航不是 API 白名单。
+
+下文关于模型、门集、输入与预算的限制描述便捷 Tool 的合同；原生 SDK 另受上游版本、可选依赖、宿主资源与用户授权约束。已禁用或被拒绝的动作不能借代码路径绕过。执行状态和科研验收分别报告。
+<!-- END NATIVE SDK ACCESS -->
+
+
 ## 核心边界
 
 核心对象是“一对待比较的unitary OpenQASM 2 电路”。Qiskit 电路工作台负责加载、转换、门数与深度分析；本 Skill 使用 MQT QCEC 回答更窄但更关键的问题：两个电路是否实现等价的量子变换。

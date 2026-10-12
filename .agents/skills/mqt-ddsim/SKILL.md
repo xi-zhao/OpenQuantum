@@ -5,6 +5,17 @@ description: 用 MQT DDSIM 决策图在本地模拟结构化量子电路，采�
 
 # MQT DDSIM 决策图仿真
 
+<!-- BEGIN NATIVE SDK ACCESS -->
+## 原生 SDK 路径
+
+本能力同时支持 **MQT DDSIM 的原生公开 API**。用户需要 自定义电路、模拟后端、模拟选项与结果 时，由 Agent 在固定依赖环境中编写和运行任务代码，不限于下文便捷 Tool 的预设模型。
+
+使用 `node scripts/sdk-access.mjs inspect mqt-ddsim` 定位环境，按[完整 SDK 工作流](../quantum-sdk-workbench/references/workflow.md)执行。模块导航：`mqt.ddsim`；导航不是 API 白名单。
+
+下文关于模型、门集、输入与预算的限制描述便捷 Tool 的合同；原生 SDK 另受上游版本、可选依赖、宿主资源与用户授权约束。已禁用或被拒绝的动作不能借代码路径绕过。执行状态和科研验收分别报告。
+<!-- END NATIVE SDK ACCESS -->
+
+
 Agent 经 Harness 调用 `mqt_ddsim_local` 提供的 `simulate_mqt_ddsim`。适用于能利用决策图结构的无噪声电路仿真，和其他模拟器的数值对照。
 
 输入 `numQubits`、`gates`、`shots`、`seed`。支持 H/S/T/X/Y/Z、CX/CZ 和 RX/RY/RZ；旋转角度用 rad，CX 首个 target 是控制位。Tool 从全零态出发，在末尾测量所有量子位。`counts` 的位串按 **q[n-1]...q[0]** 排列；例如只对 q0 施加 X，三位结果是 `001`。

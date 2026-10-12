@@ -5,6 +5,19 @@ description: 用中国科大 QNLab SimQN 模拟单条量子链路的随机丢失
 
 # SimQN 量子链路
 
+<!-- BEGIN NATIVE SDK ACCESS -->
+## 原生 SDK 路径
+
+本能力同时支持 **SimQN 的原生公开 API**。用户需要 拓扑、节点、信道、存储、事件与自定义协议 时，由 Agent 在固定依赖环境中编写和运行任务代码，不限于下文便捷 Tool 的预设模型。
+
+使用 `node scripts/sdk-access.mjs inspect simqn-network` 定位环境，按[完整 SDK 工作流](../quantum-sdk-workbench/references/workflow.md)执行。模块导航：`qns`；导航不是 API 白名单。
+
+上游 GPL 许可；保持独立进程，不改变现有 MCP 默认关闭状态。
+
+下文关于模型、门集、输入与预算的限制描述便捷 Tool 的合同；原生 SDK 另受上游版本、可选依赖、宿主资源与用户授权约束。已禁用或被拒绝的动作不能借代码路径绕过。执行状态和科研验收分别报告。
+<!-- END NATIVE SDK ACCESS -->
+
+
 Agent 经 Harness 调用 `simqn_local` 的 `simulate_simqn_link`，比较不同链路参数下的到达次数、到达时间和保真度。这里的 network 是仿真的量子网络，不会访问互联网。
 
 输入 `attempts` 次独立发送，时间间隔 `intervalSeconds`、固定传播延迟 `delaySeconds`，长度 `lengthMeters`，随机丢失概率 `dropProbability`，以及 Werner 态初始 `initialFidelity`。`decoherencePerMeter` 是每米衰减率；SDK 用 `w=(4F-1)/3`、`w'=w exp(-rate*length)` 计算保真度。延迟没有额外加入存储退相干。`timeSlotsPerSecond` 控制离散时间精度，SDK 向下量化时间；`seed` 使用 NumPy RandomState 可表示的 32 位无符号整数。

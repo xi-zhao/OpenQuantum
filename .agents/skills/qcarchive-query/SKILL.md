@@ -5,6 +5,19 @@ description: 使用 MolSSI QCPortal 查询 QCArchive 单点计算记录，按 ID
 
 # QCArchive 数据查询
 
+<!-- BEGIN NATIVE SDK ACCESS -->
+## 原生 SDK 路径
+
+本能力同时支持 **QCArchive Portal 的原生公开 API**。用户需要 PortalClient、分子、记录、dataset、查询与任务提交接口 时，由 Agent 在固定依赖环境中编写和运行任务代码，不限于下文便捷 Tool 的预设模型。
+
+使用 `node scripts/sdk-access.mjs inspect qcarchive-query` 定位环境，按[完整 SDK 工作流](../quantum-sdk-workbench/references/workflow.md)执行。模块导航：`qcportal`；导航不是 API 白名单。
+
+本地程序构建与外部调用分开；账户、凭据、费用、设备操作和数据外发沿用宿主及用户授权。原生 SDK 访问不自动启用服务。
+
+下文关于模型、门集、输入与预算的限制描述便捷 Tool 的合同；原生 SDK 另受上游版本、可选依赖、宿主资源与用户授权约束。已禁用或被拒绝的动作不能借代码路径绕过。执行状态和科研验收分别报告。
+<!-- END NATIVE SDK ACCESS -->
+
+
 适用于检索已有量子化学结果、核对计算条件和收集可追溯参考。实时小分子计算仍使用现有 PySCF/SQD 能力。
 
 1. 显式准备 `node scripts/setup-paper-tools.mjs qcarchive-query`，在量子组件设置启用 `qcarchive_data`。

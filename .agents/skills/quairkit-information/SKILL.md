@@ -5,6 +5,17 @@ description: 用 QuAIRKit 在 CPU 上模拟结构化电路后的有序局域噪�
 
 # QuAIRKit 量子信道
 
+<!-- BEGIN NATIVE SDK ACCESS -->
+## 原生 SDK 路径
+
+本能力同时支持 **QuAIRKit 的原生公开 API**。用户需要 任意维数态、信道、算符、电路与可微优化 时，由 Agent 在固定依赖环境中编写和运行任务代码，不限于下文便捷 Tool 的预设模型。
+
+使用 `node scripts/sdk-access.mjs inspect quairkit-information` 定位环境，按[完整 SDK 工作流](../quantum-sdk-workbench/references/workflow.md)执行。模块导航：`quairkit`；导航不是 API 白名单。
+
+下文关于模型、门集、输入与预算的限制描述便捷 Tool 的合同；原生 SDK 另受上游版本、可选依赖、宿主资源与用户授权约束。已禁用或被拒绝的动作不能借代码路径绕过。执行状态和科研验收分别报告。
+<!-- END NATIVE SDK ACCESS -->
+
+
 Agent 经 Harness 调用 `quairkit_local` 的 `simulate_quairkit_channel`。Skill 负责选择与解释，Tool 负责真实 SDK 执行。
 
 先提供 `numQubits`、结构化 `gates`，再提供 `channels`。输入态固定为全零；H/S/T/X/Y/Z/CX/CZ 和 RX/RY/RZ 的角度用 rad。所有信道在整个电路之后按列表顺序作用，不能将其描述为每门噪声模型。

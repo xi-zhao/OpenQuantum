@@ -5,6 +5,21 @@ description: 使用 Q-CTRL Boulder Opal 构建单量子位分段控制图，或�
 
 # Q-CTRL 控制图与作业状态
 
+<!-- BEGIN NATIVE SDK ACCESS -->
+## 原生 SDK 路径
+
+本能力同时支持 **Boulder Opal / Fire Opal 的原生公开 API**。用户需要 控制图、噪声、优化、任务与执行接口 时，由 Agent 在固定依赖环境中编写和运行任务代码，不限于下文便捷 Tool 的预设模型。
+
+使用 `node scripts/sdk-access.mjs inspect qctrl-workbench` 定位环境，按[完整 SDK 工作流](../quantum-sdk-workbench/references/workflow.md)执行。模块导航：`boulderopal`、`fireopal`；导航不是 API 白名单。
+
+本地程序构建与外部调用分开；账户、凭据、费用、设备操作和数据外发沿用宿主及用户授权。原生 SDK 访问不自动启用服务。
+
+原生程序导入库前，按环境定位器的 `bootstrap` 执行启动兼容处理：关闭导入时的 PyPI 版本查询和客户端 tracking，保留上游控制与任务 API。这不限制公开 API，也不替换数值算法。
+
+下文关于模型、门集、输入与预算的限制描述便捷 Tool 的合同；原生 SDK 另受上游版本、可选依赖、宿主资源与用户授权约束。已禁用或被拒绝的动作不能借代码路径绕过。执行状态和科研验收分别报告。
+<!-- END NATIVE SDK ACCESS -->
+
+
 `qctrl_cloud` 默认关闭。用户按自己的厂商许可显式执行 `node scripts/setup-paper-tools.mjs qctrl-workbench`，
 再启用连接。固定 Boulder Opal 6.1.0、Fire Opal 12.3.0；二者使用 [Q-CTRL 专有服务条款](https://q-ctrl.com/terms)。
 OpenQuantum 提供适配，不复制上游 SDK 源码，不代用户申请账号或订阅。

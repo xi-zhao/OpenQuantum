@@ -5,6 +5,17 @@ description: 开放 Ising 链的张量跳跃轨迹，与密度矩阵 Lindblad �
 
 # TJM 开放系统动力学
 
+<!-- BEGIN NATIVE SDK ACCESS -->
+## 原生 SDK 路径
+
+本能力同时支持 **MQT YAQS 的原生公开 API**。用户需要 自定义 MPS/MPO、电路、噪声模型、时间演化与张量跳跃 时，由 Agent 在固定依赖环境中编写和运行任务代码，不限于下文便捷 Tool 的预设模型。
+
+使用 `node scripts/sdk-access.mjs inspect tjm-dynamics` 定位环境，按[完整 SDK 工作流](../quantum-sdk-workbench/references/workflow.md)执行。模块导航：`mqt.yaqs`；导航不是 API 白名单。
+
+下文关于模型、门集、输入与预算的限制描述便捷 Tool 的合同；原生 SDK 另受上游版本、可选依赖、宿主资源与用户授权约束。已禁用或被拒绝的动作不能借代码路径绕过。执行状态和科研验收分别报告。
+<!-- END NATIVE SDK ACCESS -->
+
+
 Agent 经 Harness 调用 tjm_local 提供的 `simulate_tjm_dynamics`。本 Skill 负责选择和解释，不启动计算进程。
 
 至少 2 个量子位、初态全零、开放链。H = -J ΣZZ - g ΣX，跳跃算符 sqrt(gamma)|0><1|，hbar=1。时间与速率用一致单位。量子位数、时间网格、轨迹数与 bond dimension 由输入决定；standardErrors 仅含有限轨迹抽样误差，不含步长与张量截断偏差。无随机跳跃时标准误为零；含噪声但只有一条轨迹时，返回 standardErrors=null 和 standardErrorStatus=insufficient_trajectories。

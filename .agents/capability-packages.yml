@@ -52,6 +52,28 @@ packages:
   - id: quantum-sdk-advisor
     level: L0
 
+  - id: quantum-sdk-workbench
+    level: L1
+    execution:
+      mcpServers: []
+      nativeTools:
+        - name: bash
+          providerPlugin: "@deepseek-ai/dsh-tool-bash"
+          activation: conditional
+          contractCheck: tests/harness-native-quantum.test.mjs
+          effect: external-write
+          effectEvidence: conservative-provider
+        - name: pwsh
+          providerPlugin: "@deepseek-ai/dsh-tool-pwsh"
+          activation: conditional
+          contractCheck: tests/harness-native-quantum.test.mjs
+          effect: external-write
+          effectEvidence: conservative-provider
+      checks:
+        - tests/sdk-access.test.mjs
+        - tests/sdk-package.test.mjs
+        - tests/sdk-native-code.test.mjs
+
   - id: qiskit-ibm-runtime
     level: L1
     execution:

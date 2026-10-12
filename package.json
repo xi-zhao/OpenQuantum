@@ -78,7 +78,7 @@
     "lint": "eslint .",
     "locales:check": "node scripts/sync-ui-locales.mjs --check && node --test tests/ui-locales.test.mjs",
     "locales:sync": "node scripts/sync-ui-locales.mjs --write",
-    "check": "npm run lint && npm run locales:check && npm run capability:conformance && npm run test:p1 && npm run harness:config",
+    "check": "npm run lint && npm run locales:check && npm run capability:conformance && npm run sdk:guides:check && npm run sdk:inventory:check && npm run test:p1 && npm run harness:config",
     "desktop:setup": "node scripts/setup-desktop.mjs",
     "test:quantum-upgrade:live": "node --test tests/quantum-upgrade-live.test.mjs",
     "capability:candidates:setup": "node scripts/setup-paper-tools.mjs qcut-knitting compact-optimization openqarp-excited-states cqlib-kernel flagquantum-workbench",
@@ -116,7 +116,12 @@
     "plugin:test": "node --test tests/codex-plugin-*.test.mjs",
     "plugin:install": "node scripts/install-codex-plugin.mjs",
     "plugin:probe": "node scripts/probe-chatgpt.mjs dist/codex-plugin/openquantum",
-    "plugin:host-check": "node scripts/verify-codex-plugin-host.mjs"
+    "plugin:host-check": "node scripts/verify-codex-plugin-host.mjs",
+    "sdk:list": "node scripts/sdk-access.mjs list",
+    "sdk:inventory": "node scripts/sdk-access.mjs inventory",
+    "sdk:inventory:check": "node scripts/audit-sdk-integration.mjs --check",
+    "sdk:guides:check": "node scripts/build-sdk-skills.mjs --check",
+    "sdk:test": "node --test tests/sdk-access.test.mjs tests/sdk-package.test.mjs"
   },
   "dependencies": {
     "@deepseek-ai/dsh": "0.1.5-rc.1",

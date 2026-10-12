@@ -5,6 +5,17 @@ description: 用固定 Graphix 将量子电路转为测量式量子计算模式�
 
 # Graphix 测量式量子计算
 
+<!-- BEGIN NATIVE SDK ACCESS -->
+## 原生 SDK 路径
+
+本能力同时支持 **Graphix 的原生公开 API**。用户需要 自定义 pattern、测量平面、依赖、标准化、优化与模拟 时，由 Agent 在固定依赖环境中编写和运行任务代码，不限于下文便捷 Tool 的预设模型。
+
+使用 `node scripts/sdk-access.mjs inspect graphix-mbqc` 定位环境，按[完整 SDK 工作流](../quantum-sdk-workbench/references/workflow.md)执行。模块导航：`graphix`；导航不是 API 白名单。
+
+下文关于模型、门集、输入与预算的限制描述便捷 Tool 的合同；原生 SDK 另受上游版本、可选依赖、宿主资源与用户授权约束。已禁用或被拒绝的动作不能借代码路径绕过。执行状态和科研验收分别报告。
+<!-- END NATIVE SDK ACCESS -->
+
+
 当用户研究电路模型到 MBQC 的转换、资源图和测量反馈时，调用 Harness 注册的 `graphix_local.simulate_graphix_pattern`。
 
 - 输入逻辑量子位数和门列表。支持 H、S、T、X、Y、Z、CX、CZ、RX、RY、RZ；仅旋转门必须提供 `angle`，本 Tool 的输入单位为弧度。

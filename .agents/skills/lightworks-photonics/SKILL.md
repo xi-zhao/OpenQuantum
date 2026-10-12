@@ -5,6 +5,17 @@ description: 用 Aegiq Lightworks permanent 后端计算无损线性光学网络
 
 # Lightworks 光子干涉
 
+<!-- BEGIN NATIVE SDK ACCESS -->
+## 原生 SDK 路径
+
+本能力同时支持 **Lightworks 的原生公开 API**。用户需要 PhotonicCircuit、自定义输入、计算任务、后端与误差模型 时，由 Agent 在固定依赖环境中编写和运行任务代码，不限于下文便捷 Tool 的预设模型。
+
+使用 `node scripts/sdk-access.mjs inspect lightworks-photonics` 定位环境，按[完整 SDK 工作流](../quantum-sdk-workbench/references/workflow.md)执行。模块导航：`lightworks`；导航不是 API 白名单。
+
+下文关于模型、门集、输入与预算的限制描述便捷 Tool 的合同；原生 SDK 另受上游版本、可选依赖、宿主资源与用户授权约束。已禁用或被拒绝的动作不能借代码路径绕过。执行状态和科研验收分别报告。
+<!-- END NATIVE SDK ACCESS -->
+
+
 Agent 经 Harness 调用 `lightworks_local` 的 `simulate_lightworks_photonics`。Skill 负责选择与解释，Tool 负责真实 SDK 执行。
 
 `inputOccupation[i]` 为模式 i 的非负整数光子数，允许真空。`operations` 按时间排序，BS 使用两个不同模式与功率反射率 `reflectivity`，PS 使用单模式与 `phaseRad`。

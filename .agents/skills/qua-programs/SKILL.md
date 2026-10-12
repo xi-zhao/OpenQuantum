@@ -5,6 +5,21 @@ description: 用 Quantum Machines qm-qua SDK 本地生成 OPX 单通道脉冲程
 
 # QUA 脉冲程序准备
 
+<!-- BEGIN NATIVE SDK ACCESS -->
+## 原生 SDK 路径
+
+本能力同时支持 **QUA 的原生公开 API**。用户需要 任意 program、控制流、stream processing、配置与量子机器接口 时，由 Agent 在固定依赖环境中编写和运行任务代码，不限于下文便捷 Tool 的预设模型。
+
+使用 `node scripts/sdk-access.mjs inspect qua-programs` 定位环境，按[完整 SDK 工作流](../quantum-sdk-workbench/references/workflow.md)执行。模块导航：`qm.qua`、`qm`；导航不是 API 白名单。
+
+本地程序构建与外部调用分开；账户、凭据、费用、设备操作和数据外发沿用宿主及用户授权。原生 SDK 访问不自动启用服务。
+
+qm 导入会读取用户配置并初始化日志；离线程序构建先使用本 Skill bridge.py 的 offline_user_config 上下文，真实设备任务则使用用户授权的实际配置。不要在离线步骤构造 QuantumMachinesManager。
+
+下文关于模型、门集、输入与预算的限制描述便捷 Tool 的合同；原生 SDK 另受上游版本、可选依赖、宿主资源与用户授权约束。已禁用或被拒绝的动作不能借代码路径绕过。执行状态和科研验收分别报告。
+<!-- END NATIVE SDK ACCESS -->
+
+
 调用 `qua_local` 的 `prepare_qua_pulse_program`，为 Quantum Machines OPX1 单模拟输出构建确定性的常数脉冲序列。
 显式准备环境：`node scripts/setup-paper-tools.mjs qua-programs`。固定 `qm-qua==1.4.1`，SDK 为 BSD-3-Clause。
 

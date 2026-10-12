@@ -5,6 +5,19 @@ description: 用 IQM Client 内置 Qiskit adapter 转译和校验本地设备原
 
 # IQM 本地电路工作台
 
+<!-- BEGIN NATIVE SDK ACCESS -->
+## 原生 SDK 路径
+
+本能力同时支持 **IQM Client / Qiskit IQM 的原生公开 API**。用户需要 电路验证、动态架构、fake backends、转译与远程客户端 时，由 Agent 在固定依赖环境中编写和运行任务代码，不限于下文便捷 Tool 的预设模型。
+
+使用 `node scripts/sdk-access.mjs inspect iqm-circuit-workbench` 定位环境，按[完整 SDK 工作流](../quantum-sdk-workbench/references/workflow.md)执行。模块导航：`iqm.iqm_client`、`iqm.qiskit_iqm`；导航不是 API 白名单。
+
+本地程序构建与外部调用分开；账户、凭据、费用、设备操作和数据外发沿用宿主及用户授权。原生 SDK 访问不自动启用服务。
+
+下文关于模型、门集、输入与预算的限制描述便捷 Tool 的合同；原生 SDK 另受上游版本、可选依赖、宿主资源与用户授权约束。已禁用或被拒绝的动作不能借代码路径绕过。执行状态和科研验收分别报告。
+<!-- END NATIVE SDK ACCESS -->
+
+
 适用于检查门电路如何映射到 IQM Adonis、Apollo 或 Aphrodite 的本地设备模型。Agent 经 Harness 调用 `iqm_local` 的 `run_iqm_local_circuit`。
 
 - `numQubits` 是逻辑量子位数；所选设备的实际容量和拓扑由 IQM SDK 检查。`operations` 按时间顺序，量子位从 0 开始，单/双量子位门的索引必须有效且不同。

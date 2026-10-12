@@ -5,6 +5,17 @@ description: 用 Google Qualtran 计算加法器、常数比较器和受控寄�
 
 # Qualtran 算术资源分析
 
+<!-- BEGIN NATIVE SDK ACCESS -->
+## 原生 SDK 路径
+
+本能力同时支持 **Qualtran 的原生公开 API**。用户需要 自定义 Bloq、组合、分解、call graph 与符号资源计数 时，由 Agent 在固定依赖环境中编写和运行任务代码，不限于下文便捷 Tool 的预设模型。
+
+使用 `node scripts/sdk-access.mjs inspect qualtran-resources` 定位环境，按[完整 SDK 工作流](../quantum-sdk-workbench/references/workflow.md)执行。模块导航：`qualtran`；导航不是 API 白名单。
+
+下文关于模型、门集、输入与预算的限制描述便捷 Tool 的合同；原生 SDK 另受上游版本、可选依赖、宿主资源与用户授权约束。已禁用或被拒绝的动作不能借代码路径绕过。执行状态和科研验收分别报告。
+<!-- END NATIVE SDK ACCESS -->
+
+
 Agent 经 Harness 调用 `qualtran_local` 提供的 `estimate_qualtran_resources`。适用于分析明确算术子模块的资源，不应把单个 bloq 成本称为完整算法或物理硬件成本。
 
 `operation` 选择 `add`（两个等宽无符号寄存器相加，目标模 2^bitsize）、`less_than_constant`（将 x<constant 的真假 XOR 到 target）或 `controlled_swap`（受控交换两个等宽寄存器）。`bitsize` 是数据寄存器宽度；只有比较操作使用 `constant`，其值必须能由该无符号寄存器表示，其余操作保持 0。

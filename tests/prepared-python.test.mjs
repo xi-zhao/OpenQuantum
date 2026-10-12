@@ -73,7 +73,8 @@ test("explicit setup reuses an existing environment, attests its lock, invalidat
   const mode = path.join(sandbox, "mode");
   const observed = path.join(sandbox, "observed.json");
   await mkdir(path.dirname(python), { recursive: true });
-  await writeFile(python, "retain installed interpreter");
+  const interpreterFixture = `#!${process.execPath}\nif (require('node:fs').readFileSync(${JSON.stringify(mode)}, 'utf8') === 'incomplete') { console.log(JSON.stringify({incomplete:[{package:'fixture'}]})); process.exit(1); }\nconsole.log(JSON.stringify({incomplete:[]}));\n`;
+  await writeFile(python, interpreterFixture);
   await chmod(python, 0o755);
   await writeFile(mode, "success");
   await writeFile(path.join(sandbox, "uv"), `#!${process.execPath}
@@ -94,7 +95,7 @@ if (fs.readFileSync(${JSON.stringify(mode)}, 'utf8') === 'fail') process.exit(2)
     assert.equal(observation.environment.OPENAI_API_KEY, undefined);
     assert.equal(observation.environment.UV_PROJECT_ENVIRONMENT, directory);
     assert.ok(observation.args.includes("--frozen"));
-    assert.equal(await readFile(python, "utf8"), "retain installed interpreter");
+    assert.equal(await readFile(python, "utf8"), interpreterFixture);
   }
   assert.notEqual(setup("not-a-capability").status, 0);
   assert.ok(await readFile(marker));
@@ -104,4 +105,96 @@ if (fs.readFileSync(${JSON.stringify(mode)}, 'utf8') === 'fail') process.exit(2)
   await writeFile(mode, "success");
   assert.equal(setup().status, 0);
   assert.ok(await readFile(marker));
+  await writeFile(mode, "incomplete");
+  const incomplete = setup();
+  assert.notEqual(incomplete.status, 0);
+  assert.match(incomplete.stderr, /Python installation is incomplete/);
+  await assert.rejects(readFile(marker), { code: "ENOENT" });
+  await writeFile(mode, "success");
+  assert.equal(setup().status, 0);
+  assert.ok(await readFile(marker));
+});
+
+test("installed-file validation detects a missing module despite surviving distribution metadata", async t => {
+  const sandbox = await mkdtemp(path.join(tmpdir(), "oq-incomplete-wheel-"));
+  t.after(() => rm(sandbox, { recursive: true, force: true }));
+  const info = path.join(sandbox, "fixture-1.0.dist-info");
+  const module = path.join(sandbox, "fixture/__init__.py");
+  await mkdir(info, { recursive: true });
+  await mkdir(path.dirname(module));
+  await writeFile(path.join(info, "METADATA"), "Metadata-Version: 2.1\nName: fixture\nVersion: 1.0\n");
+  await writeFile(path.join(info, "RECORD"), "fixture/__init__.py,,5\nfixture/__pycache__/optional.pyc,,10\n");
+  const check = () => spawnSync("python3", ["-I", "-B", "src/lib/check_python_install.py", sandbox], { cwd: root, encoding: "utf8" });
+  assert.equal(check().status, 1);
+  assert.equal(JSON.parse(check().stdout).incomplete[0].package, "fixture");
+  await writeFile(module, "short");
+  assert.equal(check().status, 0);
+  await writeFile(module, "truncated");
+  assert.equal(check().status, 1);
+  await writeFile(path.join(info, "RECORD"), "");
+  assert.equal(check().status, 1);
+  await rm(path.join(info, "RECORD"));
+  assert.equal(check().status, 1);
+});
+
+test("PairInteraction delegated setup rejects incomplete files before data setup and recovers", {
+  skip: process.platform === "win32" ? "POSIX installer fixture" : false,
+}, async t => {
+  const sandbox = await mkdtemp(path.join(tmpdir(), "oq-pair-setup-"));
+  t.after(() => rm(sandbox, { recursive: true, force: true }));
+  const id = "pairinteraction-rydberg";
+  const directory = path.join(sandbox, "envs", id);
+  const python = path.join(directory, "bin/python");
+  const marker = path.join(directory, "openquantum-lock.sha256");
+  const mode = path.join(sandbox, "mode");
+  const database = path.join(sandbox, "database-prepared");
+  await mkdir(path.dirname(python), { recursive: true });
+  await writeFile(mode, "incomplete");
+  await writeFile(marker, "previous success");
+  await writeFile(path.join(sandbox, "uv"), `#!${process.execPath}\nprocess.exit(0);\n`);
+  await chmod(path.join(sandbox, "uv"), 0o755);
+  await writeFile(python, `#!${process.execPath}\nconst fs=require('node:fs');\nif(process.argv.some(a=>a.endsWith('setup_database.py'))){fs.writeFileSync(${JSON.stringify(database)}, 'prepared');process.exit(0);}\nif(fs.readFileSync(${JSON.stringify(mode)}, 'utf8')==='incomplete'){console.log(JSON.stringify({incomplete:[{package:'fixture'}]}));process.exit(1);}\nconsole.log(JSON.stringify({incomplete:[]}));\n`);
+  await chmod(python, 0o755);
+  const setup = () => spawnSync(process.execPath, ["scripts/setup-paper-tools.mjs", id], {
+    cwd: root, encoding: "utf8", env: { ...process.env, PATH: `${sandbox}${path.delimiter}${process.env.PATH}`, OPENQUANTUM_PYTHON_ENV_ROOT: path.join(sandbox, "envs") },
+  });
+  const failed = setup();
+  assert.notEqual(failed.status, 0);
+  assert.match(failed.stderr, /Python installation is incomplete/);
+  await assert.rejects(readFile(marker), { code: "ENOENT" });
+  await assert.rejects(readFile(database), { code: "ENOENT" });
+  await writeFile(mode, "repaired");
+  assert.equal(setup().status, 0);
+  assert.equal(await readFile(database, "utf8"), "prepared");
+  assert.equal((await readFile(marker, "utf8")).trim(), digest(await readFile(path.join(root, ".agents/skills", id, "uv.lock"))));
+});
+
+test("installed-file validation handles declared shared console wrappers without accepting corruption", async t => {
+  const sandbox = await mkdtemp(path.join(tmpdir(), "oq-shared-wrapper-"));
+  t.after(() => rm(sandbox, { recursive: true, force: true }));
+  const site = path.join(sandbox, "site");
+  const script = path.join(sandbox, "bin/format-code");
+  await mkdir(path.dirname(script), { recursive: true });
+  const contents = ["first wrapper", "second installed wrapper"];
+  for (let index = 0; index < 2; index++) {
+    const info = path.join(site, `owner${index}-1.0.dist-info`);
+    await mkdir(info, { recursive: true });
+    await writeFile(path.join(info, "METADATA"), `Metadata-Version: 2.1\nName: owner${index}\nVersion: 1.0\n`);
+    await writeFile(path.join(info, "entry_points.txt"), `[console_scripts]\nformat-code = owner${index}:main\n`);
+    const hash = createHash("sha256").update(contents[index]).digest("base64url");
+    await writeFile(path.join(info, "RECORD"), `../bin/format-code,sha256=${hash},${contents[index].length}\n`);
+  }
+  const check = () => spawnSync("python3", ["-I", "-B", "src/lib/check_python_install.py", site], { cwd: root, encoding: "utf8" });
+  await writeFile(script, contents[1]);
+  assert.equal(check().status, 0, check().stdout);
+  const undeclared = path.join(site, "undeclared-1.0.dist-info");
+  await mkdir(undeclared);
+  await writeFile(path.join(undeclared, "METADATA"), "Metadata-Version: 2.1\nName: undeclared\nVersion: 1.0\n");
+  await writeFile(path.join(undeclared, "RECORD"), "../bin/format-code,,5\n");
+  assert.equal(check().status, 1, "non-wrapper RECORD entries cannot borrow the shared-wrapper exception");
+  await rm(undeclared, { recursive: true });
+  await writeFile(script, "x".repeat(contents[1].length));
+  assert.equal(check().status, 1, "same-length unknown wrapper must not satisfy the other owner");
+  await rm(script);
+  assert.equal(check().status, 1);
 });
