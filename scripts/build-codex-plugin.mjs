@@ -6,10 +6,11 @@ import { zipSync } from "fflate";
 import { buildChatgpt, git, json } from "./build-chatgpt.mjs";
 import { readCapabilities, PROJECT_ROOT } from "../runtime/chatgpt/catalog.mjs";
 import { readSdkLibraries } from "../src/lib/sdk-access.mjs";
+import { checkReleaseVersions } from "./lib/release-version.mjs";
 
 export async function buildPlugin({ root = PROJECT_ROOT, output = path.join(root, "dist/codex-plugin") } = {}) {
-  const runtimePackage = JSON.parse(await fs.readFile(path.join(root, "distributions/codex-plugin/package.json"), "utf8"));
-  const release = { version: runtimePackage.version, coreVersion: JSON.parse(await fs.readFile(path.join(root, "package.json"), "utf8")).version,
+  const version = await checkReleaseVersions(root);
+  const release = { version, coreVersion: version,
     commit: git(root, ["rev-parse", "HEAD"]), dirty: Boolean(git(root, ["status", "--porcelain"])), connection: "local-desktop" };
   const built = await buildChatgpt({ root, release });
   const selected = (await readCapabilities(root)).filter(item => item.status === "available");

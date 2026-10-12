@@ -18,7 +18,7 @@ Qiskit과 TyxonQ를 이용한 회로 시뮬레이션, PyZX 회로 최적화, Gra
 
 현재 소스에는 **156개 Skill**(자동 선택 143개, 수동 분류 색인 13개), **91개 MCP 연결**, **5개 네이티브 양자 Tool**이 있습니다. 세션에서 사용할 수 있는 기능은 활성 연결과 준비된 환경에 따라 달라집니다. [기능 선택 안내](../integrations/CAPABILITY_SELECTION.md)를 참조하세요.
 
-v0.7.0은 **85개 SDK/소스 환경**에서 네이티브 공개 API를 사용할 수 있는 경로를 제공합니다. 에이전트는 사용자 정의 프로그램을 작성하고 API를 조합하며 전체 결과물을 저장할 수 있습니다. 편의 Tool의 사전 설정 예제에 사용 범위를 한정하지 않습니다. 작업별로 의존성을 명시적으로 준비해야 하며 플랫폼, 계정, 라이선스 및 선택적 백엔드 제한은 유지됩니다. 공학 검증 범위는 [SDK 통합 기록](../integrations/FULL_SDK_ACCESS.md)을 참조하세요. 실제 연구 과제를 통한 인수 검증은 수행하지 않았으며 `scientificValidation=not_evaluated`입니다.
+v0.8.1은 **85개 SDK/소스 환경**에서 네이티브 공개 API를 사용할 수 있는 경로를 제공합니다. 에이전트는 사용자 정의 프로그램을 작성하고 API를 조합하며 전체 결과물을 저장할 수 있습니다. 편의 Tool의 사전 설정 예제에 사용 범위를 한정하지 않습니다. 작업별로 의존성을 명시적으로 준비해야 하며 플랫폼, 계정, 라이선스 및 선택적 백엔드 제한은 유지됩니다. 공학 검증 범위는 [SDK 통합 기록](../integrations/FULL_SDK_ACCESS.md)을 참조하세요. 실제 연구 과제를 통한 인수 검증은 수행하지 않았으며 `scientificValidation=not_evaluated`입니다.
 
 v0.6.0은 [기업 SDK 17개](../integrations/VENDOR_SDKS.md), [기업·연구기관 기능 20개](../integrations/SDK_EXPANSION.md), [네트워크·제어·광학·클라우드 기능 15개](../integrations/SDK_GAPS.md)로 구성된 세 차례 통합의 **SDK 기능 패키지 52개**를 모았습니다. 미분 가능한 회로, 자원 추정, 화학 연산자, 광자 계산, 펄스 컴파일과 양자 네트워크를 다루며, [Bloqade Analog](../integrations/BLOQADE_ANALOG.md)의 로컬 원자 배열 계산도 추가됩니다. 각 어댑터는 문서에 명시된 동작을 제공하고 계정, 인증, 권한과 라이선스는 사용자가 설정합니다. 로컬 검증은 실제 클라우드 연결, QPU 또는 과학적 승인 검증을 뜻하지 않습니다.
 
@@ -44,7 +44,7 @@ Pauli Hamiltonian의 Trotter / qDrift 시뮬레이션과 함께 [qBraid Qiskit/C
 
 [GitHub Releases](https://github.com/xi-zhao/OpenQuantum/releases/latest)에서 Mac(Apple Silicon / Intel) 또는 Windows 설치 파일을 받으세요. Node.js와 uv가 포함된 서명되지 않은 테스트 빌드이며 소스 빌드가 필요하지 않습니다. [설치 안내](../DESKTOP_INSTALLERS.md)에 따라 앱을 실행한 뒤 모델을 설정하세요. 계산 구성 요소와 Quantum Learning의 의존성은 해당 버전의 준비 안내를 따르세요.
 
-[v0.7.0 릴리스 노트](../releases/v0.7.0.md)는 네이티브 SDK 프로그램, 전체 결과 파일 저장 및 업그레이드 범위를 설명합니다. 다운로드 가능 여부는 Release의 실제 첨부 파일을 확인하세요. 설치 파일에는 어댑터 코드가 포함되며 계산 의존성은 선택한 기능별로 명시적으로 준비해야 합니다. 기존 앱은 새 설치 파일로 업데이트하세요. 수정한 Skill과 MCP 설정은 보존되므로 새 기본 설정을 적용하려면 비교가 필요할 수 있습니다. [데이터와 업그레이드](../DESKTOP_INSTALLERS.md#数据与升级)를 참고하세요.
+[v0.8.1 릴리스 노트](../releases/v0.8.1.md)는 네이티브 SDK 프로그램, 전체 결과 파일 저장 및 업그레이드 범위를 설명합니다. 다운로드 가능 여부는 Release의 실제 첨부 파일을 확인하세요. 설치 파일에는 어댑터 코드가 포함되며 계산 의존성은 선택한 기능별로 명시적으로 준비해야 합니다. 기존 앱은 새 설치 파일로 업데이트하세요. 수정한 Skill과 MCP 설정은 보존되므로 새 기본 설정을 적용하려면 비교가 필요할 수 있습니다. [데이터와 업그레이드](../DESKTOP_INSTALLERS.md#数据与升级)를 참고하세요.
 
 ### 소스로 실행
 

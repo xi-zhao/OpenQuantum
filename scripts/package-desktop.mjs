@@ -12,8 +12,10 @@ import { prepareDesktopRuntimes } from "./lib/desktop-runtimes.mjs";
 import { sha256 } from "./lib/desktop-distribution.mjs";
 import { copyDesktopProductionDependencies } from "./lib/desktop-package-dependencies.mjs";
 import { prepareOpenQuantumHarnessHome } from "./lib/prepare-harness-home.mjs";
+import { checkReleaseVersions } from "./lib/release-version.mjs";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
+await checkReleaseVersions(root);
 const args = new Set(process.argv.slice(2));
 for (const argument of args) {
   if (!["--dir", "--signed"].includes(argument)) throw new Error(`Unknown package option: ${argument}`);
