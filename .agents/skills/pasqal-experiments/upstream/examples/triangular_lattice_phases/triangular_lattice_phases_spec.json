@@ -1,0 +1,70 @@
+{
+  "experiment_name": "triangular_lattice_phases",
+  "version": "1.0",
+  "objective": "Determine whether the sqrt3 x sqrt3 three-sublattice order of Guo et al. is reachable on a 49-atom triangular patch, using the per-shot sublattice order parameter <|m|> as the discriminator.",
+  "paper": {
+    "title": "Order-by-disorder and emergent Kosterlitz-Thouless phase in a triangular Rydberg array",
+    "authors": "S. Guo et al.",
+    "arxiv_id": "2302.08963",
+    "year": 2023
+  },
+  "device": "FRESNEL_CAN1",
+  "register": {
+    "geometry": "triangular_rhombus",
+    "N_atoms": 49,
+    "builder_params": {
+      "L": 7,
+      "spacing_um": 5.3
+    }
+  },
+  "channel": {
+    "type": "rydberg_global",
+    "eom_mode": false
+  },
+  "pulse": {
+    "type": "adiabatic_detuning_ramp",
+    "omega_max_mhz": 2.0,
+    "ramp_edge_ns": 100
+  },
+  "scan": {
+    "variable": "tau_ns",
+    "values": [200, 500, 1000, 2000, 3600, 5800],
+    "fixed_params": {
+      "L": 7,
+      "spacing_um": 5.3,
+      "omega_max_mhz": 2.0,
+      "delta_i_mhz": -6.0,
+      "delta_f_mhz": 6.0
+    }
+  },
+  "observable": {
+    "type": "sublattice_order_parameter",
+    "description": "<|m|> — modulus of the per-shot three-sublattice order parameter m = (3/N) sum_j (n_j - nbar) exp(i K.r_j), averaged over shots",
+    "fn_name": "compute_observable",
+    "expected_max": 1.0
+  },
+  "validation": {
+    "noise_retention_min": 0.5
+  },
+  "shots_per_point": 500,
+  "output_dir": "experiments/triangular_lattice_phases/results",
+  "sequence_file": "triangular_lattice_phases_sequence.py",
+  "builder_fn": "build_sequence",
+  "open_questions": [
+    {
+      "field": "observable.expected_max",
+      "question": "1.0 is the algebraic maximum of <|m|>, not a prediction. <|m|> already reads 0.18 on a *disordered* 49-atom array — what value should count as having observed order?",
+      "provisional": 1.0,
+      "why": "no finite-size prediction for this geometry was available when the spec was written",
+      "impact": "no step reads this number; it only matters to whoever judges the result, and a ceiling that cannot be reached makes any measured order look weak"
+    },
+    {
+      "field": "register.builder_params.L",
+      "question": "L = 7 (N = 49) is what a FRESNEL_CAN1-class device fits; Guo et al. work at larger N. Is 49 enough for the order to separate from the finite-size floor?",
+      "provisional": 7,
+      "why": "L = 10 reaches ~41 um and needs an SA1-class device",
+      "impact": "if not, the whole scan measures the floor and the experiment cannot answer the objective"
+    }
+  ],
+  "_notes": "R_b/a sets the phase, not a paper value copied across: at Omega = 2*pi*2 MHz and the FRESNEL_CAN1-class C6, R_b = 6.4 um, so a = 5.3 um gives R_b/a = 1.21 — an atom blockades its six nearest neighbours but not the next-nearest, which is what selects the sqrt3 x sqrt3 three-sublattice order. Guo et al. quote R_b ~ 1.2a. a = 5.3 um also clears the 5 um minimum trap spacing. tau_ns stops at 5800 because the two 100 ns amplitude edges plus tau must fit the 6000 ns maximum sequence duration. N = 49 (L = 7) is the FRESNEL_CAN1-class variant; L = 10 (N = 100) reaches ~41 um and needs SA1 — see README.md. The register was sized against Pulser's bundled AnalogDevice as a stand-in, not against live device specs, so validate-emu will reject it if the live device is tighter."
+}

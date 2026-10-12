@@ -1,0 +1,9 @@
+{
+  "experiment_name": "single_atom_rabi_engineering_check",
+  "device": "AnalogDevice",
+  "register": {"N_atoms": 1, "geometry": "custom", "atom_ids": ["q0"]},
+  "scan": {"variable": "duration_ns", "values": [200, 400, 800], "fixed_params": {"omega_rad_us": 3.141592653589793}},
+  "observable": {"type": "rydberg_population", "description": "Fraction of shots with bit 1, in register.qubit_ids order"},
+  "shots_per_point": 10000,
+  "open_questions": []
+}

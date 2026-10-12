@@ -1,0 +1,78 @@
+{
+  "experiment_name": "literature_z2_reproduction",
+  "version": "1.0",
+  "objective": "Measure how the Z2 correlation length grows with the detuning-ramp time on a 56-atom ring, and test whether the Kibble-Zurek scaling reported by Keesling et al. is recoverable on a FRESNEL_CAN1-class device.",
+  "paper": {
+    "title": "Quantum Kibble-Zurek mechanism and critical dynamics on a programmable Rydberg simulator",
+    "authors": "A. Keesling et al.",
+    "journal": "Nature 568, 207 (2019)",
+    "arxiv_id": "1809.05540",
+    "year": 2019
+  },
+  "device": "FRESNEL_CAN1",
+  "register": {
+    "geometry": "ring",
+    "N_atoms": 56,
+    "builder_params": {
+      "N_atoms": 56,
+      "spacing_um": 5.1
+    }
+  },
+  "channel": {
+    "type": "rydberg_global",
+    "eom_mode": false
+  },
+  "pulse": {
+    "type": "linear_detuning_ramp",
+    "omega_max_mhz": 2.0,
+    "ramp_edge_ns": 100
+  },
+  "scan": {
+    "variable": "tau_ns",
+    "values": [200, 400, 800, 1600, 3200, 5800],
+    "fixed_params": {
+      "N_atoms": 56,
+      "spacing_um": 5.1,
+      "omega_max_mhz": 2.0,
+      "delta_i_mhz": -6.0,
+      "delta_f_mhz": 6.0
+    }
+  },
+  "observable": {
+    "type": "correlation_length",
+    "description": "Z2 correlation length xi in lattice sites, from a log-linear fit of the connected correlator G(r) = (1/N) sum_i [<n_i n_i+r> - <n_i><n_i+r>] over the ring",
+    "fn_name": "compute_observable",
+    "expected_max": 28.0
+  },
+  "validation": {
+    "noise_retention_min": 0.5
+  },
+  "shots_per_point": 500,
+  "output_dir": "experiments/literature_z2_reproduction/results",
+  "sequence_file": "literature_z2_reproduction_sequence.py",
+  "builder_fn": "build_sequence",
+  "open_questions": [
+    {
+      "field": "register.geometry",
+      "question": "Keesling et al. measure a chain; this spec uses a ring of the same spacing. Is the periodic geometry an acceptable substitute for comparing against their exponent?",
+      "provisional": "ring",
+      "why": "G(r) then averages over N equivalent pairs instead of mixing bulk with ends, and the end bias is worst where xi is largest",
+      "impact": "removes a known finite-size bias, but the boundary conditions are no longer the published ones"
+    },
+    {
+      "field": "device",
+      "question": "the ring radius is 45.5 um at N = 56 — does the target project expose a device with that radial reach?",
+      "provisional": "FRESNEL_CAN1",
+      "why": "sized against Pulser's bundled AnalogDevice, whose 38 um cap this register already exceeds",
+      "impact": "a tighter live device rejects the spec outright; N would have to come down, changing the accessible xi range"
+    },
+    {
+      "field": "scan.values",
+      "question": "six ramp times over 200-5800 ns — enough to fit the Kibble-Zurek exponent, or should the fast-ramp end be sampled more densely?",
+      "provisional": [200, 400, 800, 1600, 3200, 5800],
+      "why": "geometric spacing over the range the 6000 ns duration limit allows",
+      "impact": "the exponent is the slope of a log-log fit; six points give it wide error bars"
+    }
+  ],
+  "_notes": "Ring rather than chain: periodic boundaries make every atom equivalent, so G(r) averages over N identical pairs instead of mixing bulk with ends — and the end bias is worst exactly where xi is largest, which is the regime the experiment probes. a = 5.1 um gives R_b/a = 1.26 at Omega = 2*pi*2 MHz and the FRESNEL_CAN1-class C6, inside the Z2 lobe (1 < R_b/a < 2) and clear of the 5 um minimum trap spacing. The cost of the ring is field of view: R = a/(2 sin(pi/N)) = 45.5 um at N = 56, so N = 96 needs a radius of ~78 um and an SA1-class device — see README.md. expected_max = 28 = N/2 is the largest separation the ring can resolve, a saturation ceiling rather than a prediction. tau_ns stops at 5800 so that tau plus the two 100 ns amplitude edges fits the 6000 ns maximum sequence duration. The register exceeds the radial cap of Pulser's bundled AnalogDevice, so local validation uses the unconstrained MockDevice as a stand-in; validate-emu will reject the spec if the live device is tighter than assumed."
+}

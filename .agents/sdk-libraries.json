@@ -560,15 +560,16 @@
     },
     {
       "id": "pulser-dynamics",
-      "title": "Pulser",
+      "title": "Pulser / Pasqal Cloud",
       "language": "python",
       "modules": [
         "pulser",
-        "pulser_simulation"
+        "pulser_simulation",
+        "pasqal_cloud"
       ],
       "group": "physics",
-      "workflow": "Register、Device、Sequence、waveform、pulse、变量、噪声与模拟",
-      "conditions": []
+      "workflow": "Register、Device、Sequence、waveform、变量、噪声与模拟；Pasqal Cloud connections、backends、jobs、batches、workloads 与完整实验工作流",
+      "conditions": ["pasqal-experiments 复用此环境；云操作需项目、凭据和相应授权，本地运行不联网"]
     },
     {
       "id": "pychemiq-chemistry",

@@ -1,0 +1,205 @@
+{
+  "schemaVersion": 1,
+  "verifiedAt": "2026-10-12T14:20:46.058063+00:00",
+  "scope": "Seven-stage Pasqal workflow, full native Cloud SDK access in existing Pulser environment, and bounded convenience scripts",
+  "platform": {
+    "system": "Darwin",
+    "machine": "arm64",
+    "python": "3.12.13",
+    "node": "v24.19.0"
+  },
+  "packages": {
+    "pulser-core": "1.9.1",
+    "pulser-simulation": "1.9.1",
+    "pasqal-cloud": "0.24.0",
+    "qutip": "5.3.1",
+    "numpy": "2.5.3"
+  },
+  "scientificValidation": "not_evaluated",
+  "maturity": "L1",
+  "upstream": {
+    "repository": "https://github.com/pasqal-io/agent-marketplace",
+    "revision": "2b0353d83e65ce4cc44c9bfa7e7dfe2549201bb1",
+    "license": "Apache-2.0",
+    "manifest": ".agents/skills/pasqal-experiments/upstream-manifest.json"
+  },
+  "checks": {
+    "workflowAndHarness": {
+      "command": "OPENQUANTUM_REAL_PASQAL=1 node --test --test-concurrency=1 tests/pasqal-experiments.test.mjs tests/harness-pasqal.test.mjs",
+      "passed": 4,
+      "failed": 0,
+      "skipped": 0,
+      "pythonSubtests": {
+        "passed": 22,
+        "failed": 0,
+        "skipped": 0
+      },
+      "harnessActions": 6,
+      "harnessExpectedRejectedInputs": 1,
+      "model": "local protocol fixture",
+      "sessionReadback": "passed"
+    },
+    "existingPulser": {
+      "command": "OPENQUANTUM_REAL_SDK_DEVICES=1 node --test --test-name-pattern=pulser-dynamics tests/sdk-devices-live.test.mjs",
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0,
+      "numericalChecks": 3
+    },
+    "sharedRegression": {
+      "command": "node --test tests/sdk-access.test.mjs tests/sdk-devices-contracts.test.mjs tests/codex-plugin-package.test.mjs",
+      "passed": 21,
+      "failed": 0,
+      "skipped": 0
+    },
+    "package": {
+      "command": "node scripts/build-codex-plugin.mjs",
+      "exitCode": 0,
+      "skills": 134,
+      "scientificTools": 71,
+      "sdkEnvironments": 85,
+      "version": "0.8.1",
+      "sourceReleaseState": "base commit plus dirty task files; local verification build only",
+      "zipSha256": "d5e349f598a3dbce277ae679829d2ab3e953344e6c2df420c4e0064a5c9257c9",
+      "packagedWorkflowSourceMatches": true,
+      "offlineCliCommandsPassed": 5,
+      "researchExamplePlans": [
+        {
+          "atoms": 25,
+          "points": 10,
+          "device": "AnalogDevice"
+        },
+        {
+          "atoms": 49,
+          "points": 6,
+          "device": "AnalogDevice"
+        },
+        {
+          "atoms": 56,
+          "points": 6,
+          "device": "MockDevice"
+        }
+      ],
+      "geometryRejection": "56-atom 5.1-um ring rejected on AnalogDevice radial limit; no automatic size reduction",
+      "interpreter": "source worktree prepared locked environment; not a native installed-plugin test"
+    },
+    "static": {
+      "conformancePackages": 165,
+      "conformanceIssues": 0,
+      "eslint": "passed for catalog and two new JS tests",
+      "sdkGuides": "passed",
+      "sdkInventory": "passed",
+      "harnessConfiguration": "passed"
+    },
+    "fullRepositoryCheck": {
+      "run": false,
+      "reason": "Focused capability, transport, numerical, host and packaging verification for this integration; no unrelated full-suite result claimed"
+    }
+  },
+  "independentReview": {
+    "reviewer": "independent subagent /root/pasqal_review",
+    "decision": "no unresolved P1/P2 in reviewed working tree",
+    "scope": [
+      "architecture and shared Pulser environment",
+      "credential and single-attempt transport boundary",
+      "submission, append, cancel/close, recovery and durable job mapping",
+      "raw data, atom order, numerical references and scientific status",
+      "Harness session evidence and package resource paths"
+    ],
+    "independentlyRerunRegressions": {
+      "passed": 5,
+      "failed": 0,
+      "names": [
+        "lost_older_receipts_retain_mapping_and_control_after_appends",
+        "create_mapping_holds_batch_and_request_locks",
+        "append_reservation_failure_is_unsent_and_never_matches_later_jobs",
+        "missing_receipt_reconstruction_and_copied_plan_cannot_resubmit",
+        "unknown_append_blocks_next_append_until_recovered"
+      ]
+    },
+    "reviewedCoreSha256": {
+      ".agents/skills/pasqal-experiments/scripts/cloud.py": "49e2ced8c8ff5ca49206aeec03a7cd541f220af1e086966e676f34d57da215cc",
+      ".agents/skills/pasqal-experiments/scripts/experiment.py": "eb181c50c7e53c562203d3aef94cca2e07fc09dc3149bce0221bb54397a0f30b",
+      ".agents/skills/pasqal-experiments/scripts/workflow.py": "26bae83393fee833c0d50bc258ed7b49d66fe7153b2ea426ace4f0cd2824a6ac",
+      ".agents/skills/pasqal-experiments/test/workflow_test.py": "adf07d5313ae84576df37452d57e1d2ac34ff020f8f7aea993bbb529829f03f2"
+    },
+    "limits": [
+      "No live account, Cloud EMU, QPU or external-model review",
+      "No final scientific Acceptance",
+      "Final package was rebuilt and executed by primary agent after the reviewer checked prior package resource paths"
+    ]
+  },
+  "sourceSha256": {
+    ".agents/capability-packages.yml": "335018cee54909eb710fb7b9dc05e84df5469a9f27e753fdeed0728f6918637d",
+    ".agents/sdk-libraries.json": "ce6d8cac727018da0a59647c500a7c393c46ebd83b90e6102b3e525a7ddaa3d6",
+    ".agents/skills/pasqal-experiments/LICENSE.upstream": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+    ".agents/skills/pasqal-experiments/NOTICE.md": "ba4eb761266272b797ed80060abd297b9f726452a4921771d26e97402f45b7ca",
+    ".agents/skills/pasqal-experiments/SKILL.md": "358f0107c08aa65a6abc2cd4d610d8a936c188f5db9441de948f28935e79b877",
+    ".agents/skills/pasqal-experiments/examples/rabi_sequence.py": "d8187def8726b3cd837b9483d7871eeaa83739e2df3bf23eac605da1c4c2dce9",
+    ".agents/skills/pasqal-experiments/examples/rabi_spec.json": "3762a824ba24fcb4b56556e0f0aaa0c46943c822b5171dc410588c447debc8cc",
+    ".agents/skills/pasqal-experiments/references/execution.md": "b23d47a56b02e47762609750a4aa6ccf8769b596914ea095adfa8b93f17f2d27",
+    ".agents/skills/pasqal-experiments/references/workflow.md": "d90c428939d003c6112e768b76c089104bfb81d108ad00677bb86933b2d2e1e5",
+    ".agents/skills/pasqal-experiments/scripts/cloud.py": "49e2ced8c8ff5ca49206aeec03a7cd541f220af1e086966e676f34d57da215cc",
+    ".agents/skills/pasqal-experiments/scripts/experiment.py": "eb181c50c7e53c562203d3aef94cca2e07fc09dc3149bce0221bb54397a0f30b",
+    ".agents/skills/pasqal-experiments/scripts/workflow.py": "26bae83393fee833c0d50bc258ed7b49d66fe7153b2ea426ace4f0cd2824a6ac",
+    ".agents/skills/pasqal-experiments/test/workflow_test.py": "adf07d5313ae84576df37452d57e1d2ac34ff020f8f7aea993bbb529829f03f2",
+    ".agents/skills/pasqal-experiments/upstream-manifest.json": "e3ad19afac54e348145973b731797a707263f6d7f68027c52c2bde06573303f1",
+    ".agents/skills/pasqal-experiments/upstream/examples/literature_z2_reproduction/README.md": "3fdd1eef6f2d0ec7d280b5617a07ff4be016040f408faca6f4b0ba4a0123e54a",
+    ".agents/skills/pasqal-experiments/upstream/examples/literature_z2_reproduction/literature_z2_reproduction_sequence.py": "f13da557f07ba7cbcf86aeafd09eed2a86d3447f8006c1e1712866c2d7ee67f4",
+    ".agents/skills/pasqal-experiments/upstream/examples/literature_z2_reproduction/literature_z2_reproduction_spec.json": "55f7f1df28c5cbbebf2bce6618d8c9cbb5818c0054e247ed70fc99a7901c3d00",
+    ".agents/skills/pasqal-experiments/upstream/examples/square_lattice_eom_quench/README.md": "e552c485667b00a98163843c3b91aba0ee0fed5e0636c2fd8424811331d1fcb8",
+    ".agents/skills/pasqal-experiments/upstream/examples/square_lattice_eom_quench/square_lattice_eom_quench_sequence.py": "c6f6ea5cc08fcd43c0b412491ced8958812a6ef6f25a94ed9cc4b2cc2e92c5a3",
+    ".agents/skills/pasqal-experiments/upstream/examples/square_lattice_eom_quench/square_lattice_eom_quench_spec.json": "2f6e67310b3e93368154d406f1f02b4e841ba9f813e506c898c875b6fdf1dc14",
+    ".agents/skills/pasqal-experiments/upstream/examples/triangular_lattice_phases/README.md": "fc8ba225d465dc597ded1ba5316d25639cf6ad280d78ff56f523f2eebd24ef60",
+    ".agents/skills/pasqal-experiments/upstream/examples/triangular_lattice_phases/triangular_lattice_phases_sequence.py": "06e9478c3eab8dd4a811f9140243855f3bebf90d45d597ee4f549f91f944cb76",
+    ".agents/skills/pasqal-experiments/upstream/examples/triangular_lattice_phases/triangular_lattice_phases_spec.json": "59bc36a4f420bcc0d958bbdc89bfb3bcd39966f8f24902b5975531cb4280b3d1",
+    ".agents/skills/pasqal-experiments/upstream/skills/application-to-idea/references/emulation-ladder.md": "d063ee17d07f96fbe4dc0f46a99bc234e9cacda1bd3005e6cf03003e9d35ee67",
+    ".agents/skills/pasqal-experiments/upstream/skills/application-to-idea/references/handoff-template.md": "ddd877b1a0f7b5c2b942d3a5ca930f398bf79750421f6cc9e5aa084a9fe20fe0",
+    ".agents/skills/pasqal-experiments/upstream/skills/application-to-idea/references/method-catalog.md": "f8cf11909e81c83aee73e771af1c8d8863a343277b696b8f2292bfc657484c73",
+    ".agents/skills/pasqal-experiments/upstream/skills/application-to-idea/references/pasqal-stack.md": "ba0d785454f3392679a6f69f626db57199e9b1a1ad3bcc2769db477244759671",
+    ".agents/skills/pasqal-experiments/upstream/skills/application-to-idea/references/pulser-primitives.md": "773c0fc98e79e7c5519249d2a01a08a2e6ba8835d0bd2c933caaaec21dc2f568",
+    ".agents/skills/pasqal-experiments/upstream/skills/application-to-idea/references/selection-rubric.md": "bbb5685a9acac316bad437218d7a6ada3070a7358b79db200eca8f7825fbe0e0",
+    ".agents/skills/pasqal-experiments/upstream/skills/application-to-idea/references/sources.md": "1509803c231ef8bd6ce6067af267ef8c53f677d9b964b53e34673c9af6c42fea",
+    ".agents/skills/pasqal-experiments/upstream/skills/application-to-idea/support/validate_idea_note.py": "401a8768d25b3414fa4f125599e0925e611c0d4541b281cd7a0282330d29e946",
+    ".agents/skills/pulser-dynamics/SKILL.md": "03da9ebd79a69a0cba77a0ccefc388c9919bd9935008aea8a480faea17d23b0f",
+    ".agents/skills/pulser-dynamics/mcp/bridge.py": "fe2aba4ff49e57eda92b1166a6f1dcb0f3c221b36f70b54480fde68441cd26db",
+    ".agents/skills/pulser-dynamics/pyproject.toml": "08e9f5754e0561bcba4c7cc24c0e1ab696eb1d82290aca9bd6746ab7114d07b4",
+    ".agents/skills/pulser-dynamics/references/UPSTREAM.md": "ea4d9e35fc7a7c5093f179df548919bf07952b5c9071a772f9662a1d671fdd71",
+    ".agents/skills/pulser-dynamics/test/science_test.py": "fd703267aac0abb15966ee6879ed8f32bd424fd000ace35907c3832123dcfe71",
+    ".agents/skills/pulser-dynamics/uv.lock": "e70871694651b4582c5e0fa2226504d9c03b20699d7ebe6fdf861a487fc3f0d2",
+    ".agents/skills/quantum-sdk-advisor/SKILL.md": "86b18c2e38ff72482f59002403406d30bc10b19831b5f3e47e984fd01b8f86bc",
+    "CURRENT.md": "fb67f38d832403da0318d53852df97a36dc6e5689f88a097a1d8d860418028cd",
+    "THIRD_PARTY_NOTICES.md": "d8c81150940ef0ff95811521e456a208502a223dd41b1a586dac9e50c22c8094",
+    "docs/README.md": "b6d02aa1f532b5c95bdfcd2bee89f9720bbf51957d5ccd95a833bfa488ef752c",
+    "docs/integrations/CAPABILITY_SELECTION.md": "d24bcdf8d673d94c6085f7ec883794a0572ac8f4993f8448a73f0f6b422e0b2e",
+    "docs/integrations/PASQAL.md": "c2d277638cb8ceb2370cd67441f101575bb32368c3b667ed827e0eeece858c11",
+    "docs/integrations/SDK_INVENTORY.md": "851e191999628b375e1e147b5c9017d1ac7055163d5bca41d079e347d291219f",
+    "runtime/chatgpt/catalog.mjs": "f93c46cf1920243cad2c469f6c83b334c01bfe2d8ef33831683077eb6912742f",
+    "src/lib/sdk_device_models.py": "42fcea08153c188c16a310669c2cc625efa9d0b1559117f51e04680c3d9314dc",
+    "tests/harness-pasqal.test.mjs": "248a57dc6efb68618ab424ba8720ace10eca958f6642d235163335c2540eabd8",
+    "tests/pasqal-experiments.test.mjs": "31148d93f0fcfc13fcf24bb46a1ad60aa08a3fa39efabfeccf19ad8b05103837"
+  },
+  "evidenceArchive": {
+    "path": "pasqal-2026-10-12.tar.gz",
+    "sha256": "b2d92dda54e7f29205980128a79620da65faacbb0a7600182def5806475580eb",
+    "bytes": 126298,
+    "manifest": "pasqal-2026-10-12/manifest.json",
+    "files": 29
+  },
+  "notVerified": [
+    "Real Pasqal credentials, account permissions or device entitlement",
+    "Live Cloud EMU/QPU requests and billing",
+    "Exhaustive upstream API behavior",
+    "External model autonomous task completion",
+    "Native installed Desktop or Codex plugin",
+    "Other OS/architectures",
+    "Full-scale scientific reproduction of vendored research examples",
+    "Central scientific Acceptance"
+  ],
+  "gitBoundary": {
+    "baseCommit": "732b06d7efabb79fec8ea219e5714e63a93645bb",
+    "branch": "c/pasqal-experiments",
+    "delivery": "Independent local commit containing this record; no push, merge, release or deployment"
+  },
+  "environmentNote": "System Homebrew Node could not load llhttp; checks used the existing bundled Node 24.19.0 runtime without changing system configuration. Existing identical-lock node_modules was temporarily reused via a task-worktree symlink."
+}
