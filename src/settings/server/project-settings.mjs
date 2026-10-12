@@ -1,3 +1,4 @@
+import { desktopPresetProjection } from "./desktop-preset.mjs";
 import { createHash, randomUUID } from "node:crypto";
 import {
   chmod,
@@ -791,6 +792,9 @@ export async function executeProjectSettingsCommand(
   // moves. Re-read and check revisions inside it, before any write or removal.
   return withFileLock(lockTarget, async () => {
     await assertMcpEnableAllowed(root, command, credentials);
-    return mutate(root, command);
+    const synchronize = command.action.startsWith("mcp.") ? await desktopPresetProjection(root) : null;
+    const result = await mutate(root, command);
+    if (synchronize) await synchronize();
+    return result;
   });
 }

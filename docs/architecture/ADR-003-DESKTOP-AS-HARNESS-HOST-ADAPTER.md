@@ -10,7 +10,7 @@ OpenQuantum 已经通过 DeepSeek Harness 原生 Web UI 提供量子 Agent 工�
 桌面入口，包括原生窗口、托盘、终端和通知，但这些能力不应产生第二套 Session、Agent loop、Tool registry
 或科研状态。
 
-[DSH Desktop](https://github.com/anywhere-labs/deepseek-harness-desktop) 的产品角色是 Host Adapter；其实现可以
+[DSH Desktop](https://github.com/anywhere-labs/dsh-desktop) 的产品角色是 Host Adapter；其实现可以
 由上游 Cordis Plugin 组合，并继续使用 loopback HTTP/WebSocket 承载官方 Web UI。它提供了适合复用的
 宿主入口 seam，但不是 OpenQuantum 领域 Host Plugin。
 
@@ -40,13 +40,10 @@ OpenQuantum Harness Home
 5. Desktop 与 Harness family 成对固定；当前版本与安全覆盖以 `package.json`、lockfile 和 Desktop 集成测试为权威，
    不在 ADR 中维护第二份版本常量；
 6. 不依赖 `desktopRuntime`、Electron Window 或其他 DSH Desktop 私有 Interface；
-7. OpenQuantum 当前只支持仓库内源码启动。上游的全局安装和 `npx` 入口使用默认 DSH Home，不能作为
-   OpenQuantum Agent Preset、Skill、Tool Provider 与 Validator 组合的安装入口。
-8. 固定版本尚无公开的原生品牌配置。`scripts/lib/desktop-branding.mjs` 从已构建的上游包准备独立的
-   `.openquantum/desktop/<digest>` 运行副本，只替换窗口/应用名称、顶部标题和原生图标；上游源码与
-   `node_modules` 不作修改，依赖仍引用原安装。品牌文字匹配不符合固定版本时中止准备。
-   macOS 托盘位图和 Dock 图标从现有 OQ SVG 派生。原有 native userData 路径、package identity、
-   更新渠道和版本保持原值；顶部版本号表示复用的 DSH Desktop 版本，不冒充 OpenQuantum 版本。
+7. 2026-10-12 起，直接使用第三方原版客户端。OpenQuantum 独立交付能力包、正式 Profile 依赖和 Home patch，不复制或修改上游应用。
+8. 原生应用名称、图标、向导和更新渠道属于 DSH Desktop；OpenQuantum 设置扩展与内容版本属于 OpenQuantum。具体安装方式见[桌面发行说明](../DESKTOP_INSTALLERS.md)。
+9. 通过部署位置记录解析领域代码根目录，不依赖 Finder 的进程工作目录。生成的 MCP 配置使用明确的 Node/uv 路径及 worker 环境。
+10. 旧版运行时不得写入新版 V4 Home；有不兼容会话时准备必须在写入前停止。
 
 ## 结果
 
@@ -71,7 +68,7 @@ OpenQuantum Harness Home
 - Desktop shell 与 OpenQuantum Home patch 出现在同一最终 Cordis 组合；
 - 默认 OpenQuantum preset、Provider route、品牌与设置插件仍然生效；
 - 桌面启动器能够解析并报告预期版本。
-- 原生品牌副本与固定上游包共享依赖，保留上游文件，并提供透明背景的单色托盘图标及 macOS 图标安全留白。
+- 正式 Profile 依赖可恢复，且上游 JavaScript 与原生资源完全不变。
 
 CI 在 macOS 与 Windows 上分别从 `npm ci` 开始运行这项检查；macOS 另外保留真实 Electron 窗口与 loopback
 页面冒烟验证记录。Windows 生成的 preset 依赖链接使用 directory junction，避免要求管理员级符号链接权限。

@@ -1,3 +1,4 @@
+import { projectRoot as openQuantumProjectRoot } from "../../project-root.mjs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 
@@ -8,7 +9,7 @@ export const SOLVE_AND_VALIDATE_TOOL =
 export const QUANTUM_INFORMATION_AUDIT_TOOL =
   "mcp__toqito_audit__audit_density_matrix";
 
-const repositoryRoot = process.cwd();
+const repositoryRoot = openQuantumProjectRoot;
 const GROUND_STATE_SKILL = ".agents/skills/quantum-ground-state";
 const QUANTUM_INFORMATION_SKILL =
   ".agents/skills/quantum-information-audit";

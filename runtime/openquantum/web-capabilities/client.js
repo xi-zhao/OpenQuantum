@@ -526,7 +526,7 @@ globalThis.__ModuleLoader__.load({
         locale: NS,
         inject: () => ({ credentialOperations, loopback: connection.isLoopback }),
       }, CapabilitySettingsSection));
-      ctx.slots.inject("settings.section", () => ctx.slots.register({
+      if (!globalThis.document?.querySelector('meta[name="openquantum-channels"][content="disabled"]')) ctx.slots.inject("settings.section", () => ctx.slots.register({
         name: "settings.section",
         id: "openquantum-channels",
         order: 13,

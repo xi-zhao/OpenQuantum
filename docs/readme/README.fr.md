@@ -42,9 +42,9 @@ Pour un usage local individuel, choisissez le programme d’installation ou l’
 
 ### Programme d’installation de bureau
 
-Téléchargez le programme pour Mac (Apple Silicon / Intel) ou Windows depuis [GitHub Releases](https://github.com/xi-zhao/OpenQuantum/releases/latest). Node.js et uv sont inclus : aucune compilation des sources n’est nécessaire. Il s’agit de versions de test non signées. Suivez le [guide d’installation](../DESKTOP_INSTALLERS.md), ouvrez l’application et configurez un modèle. Consultez les prérequis des composants de calcul et de Quantum Learning pour la version choisie.
+Les prochaines distributions utilisent le client original [anywhere-labs DSH Desktop 2.0.7](https://github.com/anywhere-labs/dsh-desktop/releases/tag/v2.0.7) et une archive de capacités OpenQuantum. Harness reste en `0.1.5-rc.1`. L’archive contient Node.js et uv ; lancez `install.command` sur Mac ou `install.cmd` sur Windows. La marque, les composants quantiques, Quantum Learning et les mises à jour restent disponibles, avec un minimum de changements de l’interface. Voir le [guide d’installation et de mise à niveau](../DESKTOP_INSTALLERS.md).
 
-Les [notes de v0.8.1](../releases/v0.8.1.md) décrivent les programmes SDK natifs, les fichiers de résultats complets et le périmètre de mise à niveau. Les téléchargements disponibles sont les pièces jointes effectives de la Release. Les installateurs contiennent le code des adaptateurs ; préparez explicitement les dépendances des capacités choisies. Mettez à jour une application existante avec le nouvel installateur. Les Skills et configurations MCP modifiées sont conservées ; adopter les nouveaux paramètres par défaut peut nécessiter une comparaison. Voir [données et mise à niveau](../DESKTOP_INSTALLERS.md#数据与升级).
+Les DMG/EXE v0.8.1 déjà publiés utilisent l’ancien client privé. Vérifiez les pièces jointes de la Release pour les nouvelles archives. OpenQuantum et son plugin Codex partagent la version produit ; Desktop conserve sa version amont. Les Skills, routes de modèles et paramètres MCP modifiés sont conservés. Les environnements de calcul et Quantum Learning gardent leurs étapes de préparation.
 
 ### Exécuter depuis les sources
 
@@ -90,7 +90,7 @@ Pour compiler Desktop depuis la même copie des sources, terminez l’installati
 ```bash
 npm run desktop:setup
 npm run desktop:verify-install
-npm run desktop
+npm run desktop -- --source
 ```
 
 Web et Desktop partagent les données et la configuration de Harness lorsqu’ils sont lancés depuis la même copie des sources. Fermez l’autre hôte avant d’utiliser le même répertoire de données.

@@ -42,9 +42,9 @@
 
 ### مثبّت تطبيق سطح المكتب
 
-نزّل مثبّت Mac ‏(Apple Silicon / Intel) أو Windows من [GitHub Releases](https://github.com/xi-zhao/OpenQuantum/releases/latest). يتضمن Node.js وuv، ولا يتطلب بناء التطبيق من المصدر. هذه إصدارات اختبار غير موقّعة رقميًا. اتبع [دليل التثبيت](../DESKTOP_INSTALLERS.md)، ثم افتح التطبيق واضبط النموذج. راجع متطلبات تجهيز المكونات الحسابية وQuantum Learning الخاصة بالإصدار المختار.
+ستستخدم التوزيعات القادمة النسخة الأصلية من [anywhere-labs DSH Desktop 2.0.7](https://github.com/anywhere-labs/dsh-desktop/releases/tag/v2.0.7) مع أرشيف قدرات OpenQuantum. يبقى Harness عند `0.1.5-rc.1`. يتضمن الأرشيف Node.js وuv؛ شغّل `install.command` على Mac أو `install.cmd` على Windows. تبقى الهوية ومكونات الكم وQuantum Learning ومدخل التحديث، مع أقل تغييرات ممكنة في الواجهة الأصلية. راجع [دليل التثبيت والترقية](../DESKTOP_INSTALLERS.md).
 
-توضح [ملاحظات v0.8.1](../releases/v0.8.1.md) برامج SDK الأصلية وملفات النتائج الكاملة ونطاق الترقية. تتحدد التنزيلات المتاحة بالمرفقات الفعلية في Release. تتضمن حزم التثبيت شيفرة المحوّلات، ويجب إعداد تبعيات الحساب صراحةً للقدرات المختارة. حدّث التطبيق الحالي بحزمة التثبيت الجديدة. تُحفظ Skills وإعدادات MCP التي عدّلها المستخدم، وقد يتطلب اعتماد الإعدادات الافتراضية الجديدة مقارنتها يدويًا. راجع [البيانات والترقية](../DESKTOP_INSTALLERS.md#数据与升级).
+ملفات DMG/EXE المنشورة للإصدار v0.8.1 تستخدم العميل الخاص السابق. تحقق من مرفقات كل Release لتوفر الأرشيفات الجديدة. يشترك OpenQuantum وإضافة Codex في رقم إصدار المنتج، بينما يحتفظ Desktop برقم إصداره الأصلي. تُحفظ Skills ومسارات النماذج وإعدادات MCP المعدّلة. تظل بيئات الحساب وQuantum Learning بحاجة إلى خطوات الإعداد الموثقة.
 
 ### التشغيل من المصدر
 
@@ -90,7 +90,7 @@ node scripts/setup-paper-tools.mjs fatqat-workbench
 ```bash
 npm run desktop:setup
 npm run desktop:verify-install
-npm run desktop
+npm run desktop -- --source
 ```
 
 عند تشغيل Web وDesktop من نسخة المصدر نفسها، يشتركان في بيانات Harness وإعداداته. أغلق المضيف الآخر قبل استخدام مجلد البيانات نفسه.

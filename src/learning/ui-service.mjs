@@ -1,3 +1,4 @@
+import { nodeExecutable as deployedNodeExecutable } from "../../runtime/openquantum/project-root.mjs";
 import { execFile, spawn } from "node:child_process";
 import { randomUUID, createHash } from "node:crypto";
 import { existsSync, createWriteStream } from "node:fs";
@@ -49,7 +50,7 @@ export async function prepareLearningData(root, directory) {
 
 /** Owns the external application's process group, not its classroom workflows. */
 export function createLearningUiService(root, { port = Number(process.env.OPENQUANTUM_OPENMAIC_PORT || 3037), llm, selection, attachments } = {}) {
-  const nodeExecutable = process.env.OPENQUANTUM_NODE_EXECUTABLE || process.execPath;
+  const nodeExecutable = process.env.OPENQUANTUM_NODE_EXECUTABLE || deployedNodeExecutable;
   let child, starting, descriptor, services, stopped = false;
   const terminating = new WeakSet();
   const stopApp = (owned = child) => {

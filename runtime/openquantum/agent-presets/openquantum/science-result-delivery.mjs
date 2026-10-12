@@ -1,3 +1,4 @@
+import { projectRoot as openQuantumProjectRoot } from "../../project-root.mjs";
 import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
@@ -7,7 +8,7 @@ import { parseDocument } from "yaml";
 
 // Presets are copied into DSH_HOME; shared implementation stays in the project.
 const { scienceResultSummary } = await import(
-  pathToFileURL(path.join(process.cwd(), "src/lib/science-result-summary.mjs")).href
+  pathToFileURL(path.join(openQuantumProjectRoot, "src/lib/science-result-summary.mjs")).href
 );
 
 export const name = "openquantum-science-result-delivery";
@@ -15,7 +16,7 @@ export const inject = ["tools", "fs", "sandboxPolicy"];
 const sha256 = value => createHash("sha256").update(value).digest("hex");
 
 // Use the existing declaration as the authority; this does not register Tools.
-const policy = parseDocument(await readFile(path.join(process.cwd(), ".agents/capability-packages.yml"), "utf8"), { uniqueKeys: true });
+const policy = parseDocument(await readFile(path.join(openQuantumProjectRoot, ".agents/capability-packages.yml"), "utf8"), { uniqueKeys: true });
 if (policy.errors.length) throw policy.errors[0];
 const eligibleTools = new Set(policy.toJS({ maxAliasCount: 20 }).packages.flatMap(capability =>
   (capability.execution?.mcpServers ?? []).filter(server => server.source === "package").flatMap(server =>

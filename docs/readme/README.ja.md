@@ -42,9 +42,9 @@ Pauli Hamiltonian の Trotter / qDrift シミュレーションに加え、[qBra
 
 ### デスクトップ版のインストール
 
-[GitHub Releases](https://github.com/xi-zhao/OpenQuantum/releases/latest) から Mac（Apple Silicon / Intel）または Windows 用インストーラーをダウンロードできます。Node.js と uv を同梱した未署名のテストビルドで、ソースのビルドは不要です。[インストール手順](../DESKTOP_INSTALLERS.md)に従って起動し、モデルを設定してください。計算コンポーネントと Quantum Learning の依存関係は、利用するバージョンの準備手順を確認してください。
+今後の配布では、原版 [anywhere-labs DSH Desktop 2.0.7](https://github.com/anywhere-labs/dsh-desktop/releases/tag/v2.0.7) と OpenQuantum 能力アーカイブを使用します。Harness は `0.1.5-rc.1` のままです。アーカイブは Node.js と uv を同梱し、Mac は `install.command`、Windows は `install.cmd` で導入します。ブランド、量子コンポーネント、Quantum Learning、更新入口を保ち、原版 UI の変更を最小限にします。[インストールと更新手順](../DESKTOP_INSTALLERS.md)を確認してください。
 
-[v0.8.1 リリースノート](../releases/v0.8.1.md)は、ネイティブ SDK プログラム、完全な結果ファイルの保存、更新範囲を説明します。ダウンロードは Release の実際の添付ファイルを確認してください。インストーラーにはアダプターコードが含まれますが、計算依存関係は使う能力ごとに明示的に準備します。既存のアプリは新しいインストーラーで更新してください。変更済みの Skill や MCP 設定は保持され、新しい標準設定の採用には比較が必要な場合があります。[データと更新](../DESKTOP_INSTALLERS.md#数据与升级)を参照してください。
+公開済み v0.8.1 DMG/EXE は旧独自クライアントです。新しいアーカイブの有無は各 Release の添付ファイルで確認してください。OpenQuantum と Codex プラグインは製品バージョンを共有し、Desktop は上流のバージョンを維持します。変更済みの Skill、モデル経路、MCP 設定を保持します。計算環境と Quantum Learning は引き続き所定の準備が必要です。
 
 ### ソースから起動
 
@@ -90,7 +90,7 @@ node scripts/setup-paper-tools.mjs fatqat-workbench
 ```bash
 npm run desktop:setup
 npm run desktop:verify-install
-npm run desktop
+npm run desktop -- --source
 ```
 
 同じソースディレクトリから起動する Web と Desktop は Harness のデータと設定を共有します。同じデータディレクトリを使うもう一方のホストは、起動前に終了してください。

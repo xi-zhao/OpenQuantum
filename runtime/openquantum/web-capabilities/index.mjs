@@ -1,3 +1,4 @@
+import { projectRoot as openQuantumProjectRoot } from "../project-root.mjs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 
@@ -117,7 +118,7 @@ export async function dispatchMessageChannelCommand(projectRoot, command) {
 }
 
 export function createCapabilitySettingsHandler({
-  projectRoot = process.cwd(),
+  projectRoot = openQuantumProjectRoot,
   dispatch = dispatchCapabilityCommand,
   surface = "Capability settings",
   failureMessage = "能力设置暂时不可用",
@@ -151,7 +152,7 @@ export function createCapabilitySettingsHandler({
 }
 
 export function createRuntimeReadinessHandler({
-  projectRoot = process.cwd(),
+  projectRoot = openQuantumProjectRoot,
   dispatch,
 } = {}) {
   if (typeof dispatch !== "function") {
@@ -165,7 +166,8 @@ export function createRuntimeReadinessHandler({
   });
 }
 
-export function apply(ctx) {
+export function apply(ctx, { channels = true } = {}) {
+  if (!channels) ctx.effect(() => ctx.webServer.tapIndex(html => html.replace("</head>", '<meta name="openquantum-channels" content="disabled" />\n</head>')), "openquantum: capability navigation");
   const capabilityHandler = createCapabilitySettingsHandler({
     dispatch: (projectRoot, command) =>
       dispatchCapabilityCommand(projectRoot, command, {

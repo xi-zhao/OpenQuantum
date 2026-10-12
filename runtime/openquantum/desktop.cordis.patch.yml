@@ -1,4 +1,9 @@
-# Only the Desktop profile contains this upstream row. Its feed distributes DSH installers.
-# The shared OpenQuantum update service owns discovery and the public check route instead.
-- id: desktop-updates
-  disabled: true
+# The original DSH Desktop owns its native interface and update feed.
+# OpenQuantum registers only /openquantum/api/updates for its capability package.
+- id: openquantum-web-branding
+  config:
+    minimalUi: true
+
+- id: openquantum-web-capabilities
+  config:
+    channels: false

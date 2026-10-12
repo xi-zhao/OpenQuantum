@@ -1,9 +1,9 @@
 # OpenQuantum updates
 
 **Settings → Updates** shows the installed OpenQuantum version, last check and release notes.
-The sidebar update button also opens this view. Reminders offer **Remind me tomorrow** and
+The OpenQuantum sidebar update button also opens this view. Reminders offer **Remind me tomorrow** and
 **Skip this version** in the workbench's selected language. The Desktop title-bar **Check for updates**
-command uses the same service. Settings identifies the OpenQuantum product version separately from
+command checks the original DSH Desktop client through its upstream service. Settings identifies the OpenQuantum product version separately from
 the pinned Desktop dependency.
 
 ## Discovery and reminders
@@ -26,16 +26,11 @@ from a confirmed current version; the timestamp remains visible.
 
 ## Upgrading
 
-This edition provides discovery and reminders. Starting with v0.5.1, releases include native Mac
-and Windows installers; the current installers are unsigned test builds. The update service does
-not download, install or restart applications. **View release notes** and **Upgrade guide** link to
-the selected release, keeping instructions tied to the version being offered.
+OpenQuantum content updates and original DSH Desktop updates are separate. OpenQuantum capability packages and the Codex plugin share one product version; the original client retains its upstream version.
+The OpenQuantum service only offers release notes and upgrade instructions; it does not download, install or restart the client.
 
-For an installed Desktop application, finish active tasks, quit the app and back up its
-[data directory](DESKTOP_INSTALLERS.md#数据与升级). Download the installer for your platform from the
-selected release, check it against the attached `SHA256SUMS`, then replace the application using the
-DMG or Windows installer. User data is stored separately. A source installation is not automatically
-migrated into the installer data directory.
+For an installed capability package, quit the Host, back up the OpenQuantum data directory, verify and extract the new capability archive, then run its installer. Keep the original DSH Desktop on the compatible version named in the release notes. See [installation and migration](DESKTOP_INSTALLERS.md).
+Previously published OpenQuantum DMG/EXE files are historical private-client builds, not the new distribution format.
 
 For a source installation:
 
@@ -66,16 +61,16 @@ without prerelease suffixes or build metadata, matching the supported synchroniz
    the shared release notes and current download links. Review dependency compatibility and migration
    notes, run `npm run release:check`, and merge the reviewed change. `npm run check` and both package
    builders reject mismatched product versions. The version command does not change dependencies.
-2. Wait for CI and all three `Desktop test installers` jobs at that exact commit to pass. Download
-   their installer and `SHA256SUMS` artifacts; verify each hash and combine the three checksum lines
-   into one `SHA256SUMS`. Preserve the installer filenames, versions and bytes.
+2. Wait for CI and all three `DSH capability packages` jobs at that exact commit to pass. Download
+   their capability archives and `SHA256SUMS` artifacts; verify each hash and combine the three checksum lines
+   into one `SHA256SUMS`. Preserve the archive filenames, versions and bytes.
 3. Create the matching `vX.Y.Z` tag at that commit. Prepare a draft Release with user-facing notes,
-   all three installers and the combined checksum file, verify the uploaded assets, then publish it
-   as a non-prerelease. Identify unsigned test builds explicitly; publishing is not code signing.
+   all three capability archives and the combined checksum file, verify the uploaded assets, then publish it
+   as a non-prerelease. Link the compatible original upstream client; do not relabel its version or signature.
 
    If local large-file transfers are unreliable, manually run `release-artifacts.yml` with the tag,
    successful push CI run ID and successful push installer run ID. It requires the same source commit,
-   an existing draft Release, all seven successful jobs and the three exact installer checksums. It
+   an existing draft Release, all seven successful jobs and the three exact capability-archive checksums. It
    uploads from GitHub runners, preserves matching existing assets and rejects mismatches. Upload the
    combined `SHA256SUMS` and any validation records separately, then verify all remote assets before
    publishing. This workflow does not create a Release, publish it or change `latest`.
@@ -109,13 +104,8 @@ verified, signed installers; an entry alone cannot enable installation.
   Session, installer or restart operations.
 - `runtime/openquantum/web-updates`: deployment-scoped Host routes and a Harness Client Plugin using
   the existing settings and sidebar slots. Browsers call only same-origin bounded routes.
-- The deployment disables the upstream `desktop-updates` plugin, whose feed distributes DSH installers.
-  Its public `/api/desktop/updates/check` route becomes a tested adapter into the OpenQuantum service,
-  retaining the pinned Desktop's `{accepted:true}` contract. No private Electron-runtime access or
-  upstream edits are needed. Recheck this public contract when upgrading Desktop.
+- The original `desktop-updates` plugin and `/api/desktop/updates/check` route remain owned by DSH Desktop. OpenQuantum registers only `/openquantum/api/updates`; neither update channel impersonates the other.
 - Copy uses `settings.openquantumUpdates` in the existing ten-language catalog and language preference.
 
 Run `node --test tests/updates.test.mjs tests/update-client.test.mjs tests/desktop-integration.test.mjs`
-and `npm run locales:check`. CI includes these through its normal test entry point. Future native
-installation must add signed packaging, artifact verification and data migration tests, and wait
-for the user's restart choice after active tasks finish.
+and `npm run locales:check`. CI includes these through its normal test entry point. Capability installation checks must cover archive verification, configuration retention and the pinned original client. Native UI checks remain separate from content-install tests.

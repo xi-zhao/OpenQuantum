@@ -42,9 +42,9 @@ Pauli Hamiltonian의 Trotter / qDrift 시뮬레이션과 함께 [qBraid Qiskit/C
 
 ### 데스크톱 설치 파일
 
-[GitHub Releases](https://github.com/xi-zhao/OpenQuantum/releases/latest)에서 Mac(Apple Silicon / Intel) 또는 Windows 설치 파일을 받으세요. Node.js와 uv가 포함된 서명되지 않은 테스트 빌드이며 소스 빌드가 필요하지 않습니다. [설치 안내](../DESKTOP_INSTALLERS.md)에 따라 앱을 실행한 뒤 모델을 설정하세요. 계산 구성 요소와 Quantum Learning의 의존성은 해당 버전의 준비 안내를 따르세요.
+이후 배포는 원본 [anywhere-labs DSH Desktop 2.0.7](https://github.com/anywhere-labs/dsh-desktop/releases/tag/v2.0.7)과 OpenQuantum 기능 압축 파일을 사용합니다. Harness는 `0.1.5-rc.1`로 유지합니다. Node.js와 uv가 포함되며 Mac에서는 `install.command`, Windows에서는 `install.cmd`를 실행하세요. 브랜드, 양자 구성 요소, Quantum Learning, 업데이트 메뉴를 유지하고 원본 UI 변경을 최소화합니다. [설치 및 업데이트 안내](../DESKTOP_INSTALLERS.md)를 확인하세요.
 
-[v0.8.1 릴리스 노트](../releases/v0.8.1.md)는 네이티브 SDK 프로그램, 전체 결과 파일 저장 및 업그레이드 범위를 설명합니다. 다운로드 가능 여부는 Release의 실제 첨부 파일을 확인하세요. 설치 파일에는 어댑터 코드가 포함되며 계산 의존성은 선택한 기능별로 명시적으로 준비해야 합니다. 기존 앱은 새 설치 파일로 업데이트하세요. 수정한 Skill과 MCP 설정은 보존되므로 새 기본 설정을 적용하려면 비교가 필요할 수 있습니다. [데이터와 업그레이드](../DESKTOP_INSTALLERS.md#数据与升级)를 참고하세요.
+이미 배포한 v0.8.1 DMG/EXE는 이전 자체 클라이언트입니다. 새 압축 파일은 각 Release의 실제 첨부 파일을 확인하세요. OpenQuantum과 Codex 플러그인은 제품 버전을 공유하며 Desktop은 업스트림 버전을 유지합니다. 수정한 Skill, 모델 경로, MCP 설정은 보존합니다. 계산 환경과 Quantum Learning은 문서에 따른 준비가 필요합니다.
 
 ### 소스로 실행
 
@@ -90,7 +90,7 @@ node scripts/setup-paper-tools.mjs fatqat-workbench
 ```bash
 npm run desktop:setup
 npm run desktop:verify-install
-npm run desktop
+npm run desktop -- --source
 ```
 
 동일한 소스 디렉터리에서 실행하는 Web과 Desktop은 Harness 데이터와 설정을 공유합니다. 같은 데이터 디렉터리를 사용하는 다른 호스트는 먼저 종료하세요.

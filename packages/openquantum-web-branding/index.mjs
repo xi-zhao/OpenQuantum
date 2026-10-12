@@ -75,8 +75,17 @@ const OPENQUANTUM_COPY = Object.freeze({
   "Customized settings": "Connection and model settings",
 });
 
-const OPENQUANTUM_COPY_SCRIPT = `(() => {
-  const replacements = ${JSON.stringify(OPENQUANTUM_COPY)};
+function brandCopyScript(minimalUi) {
+  const copy = minimalUi ? {
+    "探索未至之境": OPENQUANTUM_BRAND.tagline.zh,
+    "Into the Unknown": OPENQUANTUM_BRAND.tagline.en,
+    "打开 DSH 终端": "打开终端",
+    "Open DSH Terminal": "Open Terminal",
+    "暂时无法打开 DSH 终端。你仍可以从应用菜单中打开。": "暂时无法打开终端。你仍可以从应用菜单中打开。",
+    "DSH Terminal could not be opened just now. You can still open it from the application menu.": "Terminal could not be opened just now. You can still open it from the application menu.",
+  } : OPENQUANTUM_COPY;
+  return `(() => {
+  const replacements = ${JSON.stringify(copy)};
   const heroPreviewLabels = new Set(["预览版", "Preview"]);
   const heroHeadlines = new Set(${JSON.stringify(Object.values(OPENQUANTUM_BRAND.tagline))});
   const connectionSettingLabels = new Set([
@@ -98,6 +107,7 @@ const OPENQUANTUM_COPY_SCRIPT = `(() => {
       }
       const headline = parent?.previousElementSibling?.textContent?.trim();
       if (
+        !${minimalUi} &&
         parent !== null &&
         heroPreviewLabels.has(node.nodeValue) &&
         heroHeadlines.has(headline)
@@ -135,7 +145,7 @@ const OPENQUANTUM_COPY_SCRIPT = `(() => {
 
   function enhance(node) {
     replaceText(node);
-    revealProviderConnectionSettings(node);
+    if (!${minimalUi}) revealProviderConnectionSettings(node);
   }
 
   enhance(document.documentElement);
@@ -153,6 +163,7 @@ const OPENQUANTUM_COPY_SCRIPT = `(() => {
     subtree: true,
   });
 })();`;
+}
 
 const BRAND_METADATA = `
 <meta name="application-name" content="${OPENQUANTUM_BRAND.name}" ${BRAND_MARKER} />
@@ -232,7 +243,7 @@ function staticAssetHandler(contentType, body) {
   };
 }
 
-export function apply(ctx) {
+export function apply(ctx, { minimalUi = false } = {}) {
   ctx.effect(
     () => ctx.webServer.tapIndex(brandHarnessIndex),
     "openquantum: native Harness Web branding",
@@ -334,7 +345,7 @@ export function apply(ctx) {
         path: "/openquantum-branding.js",
         handler: staticAssetHandler(
           "text/javascript; charset=utf-8",
-          OPENQUANTUM_COPY_SCRIPT,
+          brandCopyScript(minimalUi),
         ),
       }),
     "openquantum: product copy",
