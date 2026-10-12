@@ -1402,5 +1402,6 @@
   "Waiting for a session": "Esperando una sesión",
   "Add a model first": "Añade primero un modelo",
   "Add a model in Settings → Models, then start an OpenQuantum session.": "Añade un modelo en Ajustes → Modelos y luego inicia una sesión de OpenQuantum.",
-  "Diagnostic details": "Detalles de diagnóstico"
+  "Diagnostic details": "Detalles de diagnóstico",
+  "MCP": "MCP"
 }

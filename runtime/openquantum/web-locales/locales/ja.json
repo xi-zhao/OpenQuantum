@@ -1402,5 +1402,6 @@
   "Waiting for a session": "セッションの開始待ち",
   "Add a model first": "先にモデルを追加",
   "Add a model in Settings → Models, then start an OpenQuantum session.": "設定の「モデル」でモデルを追加してから、OpenQuantum セッションを開始してください。",
-  "Diagnostic details": "診断の詳細"
+  "Diagnostic details": "診断の詳細",
+  "MCP": "MCP"
 }

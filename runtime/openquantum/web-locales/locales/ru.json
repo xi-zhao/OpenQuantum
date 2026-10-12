@@ -1402,5 +1402,6 @@
   "Waiting for a session": "Ожидание сеанса",
   "Add a model first": "Сначала добавьте модель",
   "Add a model in Settings → Models, then start an OpenQuantum session.": "Добавьте модель в разделе Настройки → Модели, затем начните сеанс OpenQuantum.",
-  "Diagnostic details": "Подробности диагностики"
+  "Diagnostic details": "Подробности диагностики",
+  "MCP": "MCP"
 }
