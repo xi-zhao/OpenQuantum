@@ -16,6 +16,9 @@ export async function desktopPresetProjection(projectRoot, home = process.env.DS
   if (sha256(current) !== state.files[relative]) throw new Error("Desktop Home has an independently edited preset. Reconcile it with the project configuration before changing MCP settings.");
   return async () => {
     const source = await readFile(path.join(projectRoot, "runtime/openquantum/agent-presets/openquantum/agent.cordis.yml"), "utf8");
-    await writeManagedHomeFiles(home, new Map([[relative, desktopPreset(source, projectRoot, marker.nodeExecutable)]]));
+    const preserved = await writeManagedHomeFiles(home, new Map([[relative, desktopPreset(source, projectRoot, marker.nodeExecutable)]]));
+    if (preserved.includes(relative)) {
+      throw new Error("项目配置已保存，但 Desktop 配置同时被修改，本次设置未应用到 Desktop。请比较 .openquantum-defaults 中的新配置，合并后再重试。");
+    }
   };
 }

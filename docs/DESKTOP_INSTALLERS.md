@@ -56,7 +56,9 @@ Desktop 保留上游设置的布局、插件、Agent 预设和原生操作，不
 
 模型目录为空时，原生输入区显示「请在设置 → 模型中添加模型」。配置后恢复原版模型选择器；读取失败时保留原版错误处理，不改写历史会话的模型选择。量子组件使用 Tools、MCP、Skills 名称，中文说明分别解释工具、服务连接和任务指导的用途；首次配置或等待会话时显示下一步操作，读取超时等异常仍明确显示。技术状态与检查边界保留在折叠的「诊断详情」中，已加载不等于连接或科学验收通过。
 
-五个 OpenQuantum Web 包通过 Profile 的正式 `link:` 依赖注册，激活由 Home patch 统一负责。
+五个 OpenQuantum Web 包和一个声明配置的 bundle 通过 `desktop` Profile 的正式 `link:` 依赖注册。
+扩展只在该 Profile 激活，新建和切换其他原生 Profile 不会加载这些依赖。用户的 Profile patch 保留原文，覆盖顺序沿用上游规则。
+升级只迁移仍与安装记录一致的全局 Home patch，并在 `.openquantum-migrations` 保留原件；若其中的 OpenQuantum 配置已被手动修改，先停止迁移并提示合并配置。
 原生 Profile 修复可以按 manifest 重建链接，无需向上游 app 或其 `node_modules` 注入文件。
 
 工程检查覆盖安装、再次安装、配置保留、独立工作目录和捆绑运行环境；不运行外部模型或真实科研任务。

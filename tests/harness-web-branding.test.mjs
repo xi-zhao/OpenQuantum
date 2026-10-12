@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { runInNewContext } from "node:vm";
+import { Context } from "@deepseek-ai/cordis";
 
 import {
   apply,
@@ -336,7 +337,7 @@ test("Desktop empty model hint restores the native selector on configuration, fa
       inject(_name, register) { const result = register(); if (result?.[Symbol.iterator]) Array.from(result); },
       register(entry, component) { slots.set(entry.name, sessionId => component(entry.inject?.(sessionId))); return () => slots.delete(entry.name); },
     },
-    inject(_names, register) { register(ctx); },
+    inject(_names, register) { register(ctx); return { dispose() {} }; },
     effect(register) { effects.push(register()); },
     on,
     locale: { subscribe: () => () => {}, getSnapshot: () => locale },
@@ -392,6 +393,53 @@ test("Desktop empty model hint restores the native selector on configuration, fa
   await lateRead;
   assert.equal(hint(), undefined);
   assert.equal(listeners.size, 0);
+});
+
+test("native Cordis disposes and remounts the model hint with its slot declaration", async t => {
+  const client = await readFile(new URL("../packages/openquantum-web-branding/client.js", import.meta.url), "utf8");
+  let plugin, registerSlot;
+  runInNewContext(client, {
+    document: { querySelector: () => ({}) },
+    __ModuleLoader__: { load({ factory }) { plugin = factory(() => ({})); } },
+  });
+  const ctx = new Context();
+  t.after(() => ctx.fiber.dispose());
+  const listeners = new Map(), pending = [], slots = new Set();
+  const remote = {
+    $on(event, callback) { listeners.set(event, callback); return () => listeners.delete(event); },
+    session: { modelCatalog: () => new Promise(resolve => pending.push(resolve)) },
+  };
+  ctx.provide("remote", remote);
+  ctx.provide("remote.session", remote.session);
+  ctx.provide("locale", {});
+  ctx.provide("modelDirectories", {});
+  ctx.provide("sessions", {});
+  ctx.provide("slots", {
+    inject(name, register) {
+      if (name === "conversation.input.model") registerSlot = register;
+      return () => {};
+    },
+    register(entry) { slots.add(entry.name); return () => slots.delete(entry.name); },
+  });
+  plugin.apply(ctx);
+  const empty = { ok: true, value: { groups: [], routableProviders: [], failures: [] } };
+  for (let mount = 0; mount < 2; mount++) {
+    // The pinned SlotRegistry uses this actual effect boundary for each declaration.
+    const dispose = ctx.effect(registerSlot);
+    await dispose;
+    await new Promise(setImmediate);
+    assert.equal(listeners.size, 3);
+    pending.shift()(empty);
+    await new Promise(setImmediate);
+    assert.ok(slots.has("conversation.input.model"));
+    const lateRead = listeners.get("settings/document-updated")();
+    await dispose();
+    assert.equal(listeners.size, 0);
+    assert.equal(slots.size, 0);
+    pending.shift()(empty);
+    await lateRead;
+    assert.equal(slots.size, 0, "a late catalog cannot restore a disposed slot");
+  }
 });
 
 test("only minimal Desktop composition enables the empty model hint", () => {

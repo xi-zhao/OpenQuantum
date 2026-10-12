@@ -24,8 +24,8 @@ globalThis.__ModuleLoader__.load({
     }
 
     function showModelSetupHint(ctx) {
-      ctx.slots.inject("conversation.input.model", () =>
-        ctx.inject(["remote", "remote.session", "locale", "modelDirectories", "sessions"], (scope) => {
+      ctx.slots.inject("conversation.input.model", () => {
+        const fiber = ctx.inject(["remote", "remote.session", "locale", "modelDirectories", "sessions"], (scope) => {
           function ModelSetupHint({ available }) {
             const locale = React.useSyncExternalStore(
               (notify) => scope.locale.subscribe(notify),
@@ -86,8 +86,9 @@ globalThis.__ModuleLoader__.load({
               hide();
             };
           }, "openquantum: empty model catalog hint");
-        }),
-      );
+        });
+        return () => fiber.dispose();
+      });
     }
 
     const inject = ["slots"];

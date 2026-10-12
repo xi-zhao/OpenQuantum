@@ -12,6 +12,7 @@ import { writeManagedHomeFiles } from "./managed-home-files.mjs";
 import { desktopEnvironmentDefaults, persistDesktopCredentials } from "./desktop-environment.mjs";
 import { assertNoLinks } from "./desktop-distribution.mjs";
 import { desktopModelRoutes, desktopModelDefault, clearRemovedDesktopModelSelection } from "./desktop-model-routes.mjs";
+import { DESKTOP_PROFILE_BUNDLE, DESKTOP_PROFILE_DIRECTORY, DESKTOP_PROFILE_PATCH, desktopHomePatchMigration, desktopProfileManifest } from "./desktop-profile-bundle.mjs";
 
 const extensions = {
   branding: ["packages/openquantum-web-branding", "harness-web-branding"],
@@ -46,6 +47,7 @@ export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot, 
     await preflightTree(extensionRoot);
   }
   await assertCompatibleHarnessHome(harnessHome);
+  const migration = desktop ? await desktopHomePatchMigration(harnessHome, legacyHomeFiles) : new Map();
   const result = {};
   const marker = JSON.stringify({ projectRoot: path.resolve(projectRoot), nodeExecutable: process.execPath });
   await mkdir(path.join(projectRoot, ".openquantum"), { recursive: true });
@@ -65,13 +67,19 @@ export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot, 
   await buildLocaleClient(projectRoot, path.join(result.localesTarget, "client.js"));
 
   if (desktop) {
-    // Record ordinary local dependencies. Using `dsh plugin add` here would also
-    // activate branding's bundle and duplicate the Home patch's plugin row.
+    // One declarative bundle owns activation in the same Profile as its dependencies.
+    const bundleDirectory = path.join(harnessHome, DESKTOP_PROFILE_DIRECTORY);
+    const { version } = JSON.parse(await readFile(path.join(projectRoot, "package.json"), "utf8"));
+    await mkdir(bundleDirectory, { recursive: true });
+    await writeFile(path.join(bundleDirectory, "package.json"), JSON.stringify({
+      name: DESKTOP_PROFILE_BUNDLE, version, private: true, type: "module", dsh: { bundle: { patch: "./cordis.patch.yml" } },
+    }, null, 2));
     initProfile(profile, PROFILE_TEMPLATES.web.bundles, PROFILE_TEMPLATES.web.patchReload);
     const manifest = JSON.parse(await readFile(path.join(profile, "package.json"), "utf8"));
     const packages = Object.values(extensions).map(([, name]) => ({
       name: `@openquantum/${name}`, spec: `link:${path.join(extensionRoot, name).replaceAll("\\", "/")}`,
     }));
+    packages.push({ name: DESKTOP_PROFILE_BUNDLE, spec: `link:${bundleDirectory.replaceAll("\\", "/")}` });
     let install = false;
     for (const pkg of packages) {
       if (manifest.dependencies?.[pkg.name] !== pkg.spec || !await lstat(path.join(profile, "node_modules", pkg.name)).catch(() => null)) install = true;
@@ -79,6 +87,8 @@ export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot, 
     if (install) await promisify(execFile)(process.execPath, [path.join(projectRoot, "node_modules/pnpm/bin/pnpm.cjs"), "--dir", profile, "add", ...packages.map(pkg => `${pkg.name}@${pkg.spec}`)], {
       cwd: projectRoot, maxBuffer: 2 * 1024 * 1024, env: { ...process.env, PATH: `${path.dirname(process.execPath)}${path.delimiter}${process.env.PATH}` },
     });
+    const currentManifest = JSON.parse(await readFile(path.join(profile, "package.json"), "utf8"));
+    await writeFile(path.join(profile, "package.json"), JSON.stringify(desktopProfileManifest(currentManifest), null, 2) + "\n");
   }
 
   const deploymentPatch = await readFile(path.join(projectRoot, "runtime/openquantum/cordis.patch.yml"), "utf8");
@@ -94,7 +104,8 @@ export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot, 
     const activeRoutes = await readFile(path.join(harnessHome, routeFile), "utf8");
     effectivePatch = desktopModelDefault(deploymentPatch, activeRoutes, desktopRoutes.removed);
   }
-  const files = new Map([["cordis.patch.yml", `${effectivePatch}\n${uiPatch}`]]);
+  const patchRelative = desktop ? DESKTOP_PROFILE_PATCH : "cordis.patch.yml";
+  const files = new Map([...migration, [patchRelative, `${effectivePatch}\n${uiPatch}`]]);
   if (!desktop) files.set(routeFile, modelRoutes);
   async function presetFiles(source, relative) {
     for (const entry of await readdir(source, { withFileTypes: true })) {
@@ -116,6 +127,9 @@ export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot, 
     await writeFile(path.join(harnessHome, relative), content);
   }
   if (desktop) {
+    if (migration.has("cordis.patch.yml") && result.preservedFiles.includes("cordis.patch.yml")) {
+      throw new Error("Desktop Home patch changed during migration. It was preserved; reconcile cordis.patch.yml before launching.");
+    }
     await clearRemovedDesktopModelSelection(harnessHome, desktopRoutes.removed);
     const unresolved = (result.preservedFiles || []).filter(name => name.startsWith(".agent-presets/") && name.endsWith(".mjs"));
     const active = await readFile(path.join(harnessHome, ".agent-presets/openquantum/agent.cordis.yml"), "utf8");
@@ -134,7 +148,7 @@ export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot, 
   await symlink(path.join(projectRoot, "node_modules"), presetNodeModulesTarget, process.platform === "win32" ? "junction" : "dir");
   return { ...result, presetTarget, presetNodeModulesTarget,
     modelRoutesTarget: path.join(harnessHome, "profiles/model-routes.cordis.yml"),
-    patchTarget: path.join(harnessHome, "cordis.patch.yml"),
+    patchTarget: path.join(harnessHome, patchRelative),
     learningPresetTarget: path.join(harnessHome, ".agent-presets/quantum-learning"),
   };
 }

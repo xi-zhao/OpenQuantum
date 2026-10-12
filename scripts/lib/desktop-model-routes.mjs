@@ -9,6 +9,7 @@ import { FileSettingsProvider } from "@deepseek-ai/dsh-settings-file";
 import { AgentDefaultModelConfig } from "@deepseek-ai/dsh-agent-default-model";
 import { createLaunchEnvironmentSnapshot } from "@deepseek-ai/dsh-launch-environment";
 import { projectEnvironment } from "./desktop-environment.mjs";
+import { DESKTOP_PROFILE_PATCH } from "./desktop-profile-bundle.mjs";
 
 // Semantic fingerprints of the shipped 0.8.1 example providers. Comparing the
 // whole object preserves partial user edits to models, names or credential refs.
@@ -83,6 +84,7 @@ export async function clearRemovedDesktopModelSelection(harnessHome, removed) {
   // that layer after the Profile. Keep both its ordering and identity checks.
   const entries = composeEntries([
     [{ insert: [{ id: "agent-default-model", name: "@deepseek-ai/dsh-agent-default-model", config: { provider: "", model: "" } }] }],
+    loadOptionalPatches("OpenQuantum", path.join(harnessHome, DESKTOP_PROFILE_PATCH)) ?? [],
     loadOptionalPatches("OpenQuantum", path.join(harnessHome, "profiles/desktop/cordis.patch.yml")) ?? [],
     document(homeSource).toJS() == null ? [] : loadOptionalPatches("OpenQuantum", homePatch),
   ]);

@@ -27,11 +27,16 @@ await writeFile(route, original + "\n# retained user route preference\n");
 const customSkill = path.join(projectRoot, ".agents/skills/smoke-retention/SKILL.md");
 await mkdir(path.dirname(customSkill), { recursive: true });
 await writeFile(customSkill, "---\nname: smoke-retention\ndescription: isolated engineering check\n---\nRetain this user Skill.\n");
+const userPatch = path.join(home, "profiles/desktop/cordis.patch.yml");
+const profilePatch = await readFile(userPatch, "utf8") + "\n# retained native Profile override\n";
+await writeFile(userPatch, profilePatch);
 await install();
 assert.match(await readFile(route, "utf8"), /retained user route preference/);
 assert.match(await readFile(customSkill, "utf8"), /Retain this user Skill/);
+assert.equal(await readFile(userPatch, "utf8"), profilePatch);
 const profile = JSON.parse(await readFile(path.join(home, "profiles/desktop/package.json")));
-assert.equal(Object.keys(profile.dependencies).filter(name => name.startsWith("@openquantum/")).length, 5);
+assert.equal(Object.keys(profile.dependencies).filter(name => name.startsWith("@openquantum/")).length, 6);
+assert.equal(profile.dsh.profile.bundles.filter(name => name === "@openquantum/harness-desktop-profile").length, 1);
 const preset = await readFile(path.join(home, ".agent-presets/openquantum/agent.cordis.yml"), "utf8");
 assert.doesNotMatch(preset, /process\.cwd\(\)|process\.execPath/);
 const runtime = JSON.parse(await readFile(path.join(projectRoot, ".openquantum/runtime.json")));
@@ -40,7 +45,7 @@ const uv = path.join(path.dirname(runtime.nodeExecutable), process.platform === 
 await execute(uv, ["--version"], { env });
 // Import the installed OQ modules from an unrelated cwd, as Finder does.
 await execute(runtime.nodeExecutable, ["--input-type=module", "-e", `const { projectRoot } = await import(${JSON.stringify(pathToFileURL(path.join(home, "project-root.mjs")).href)}); if (projectRoot !== ${JSON.stringify(projectRoot)}) throw Error('wrong project'); await import(${JSON.stringify(pathToFileURL(path.join(home, ".agent-presets/openquantum/native-quantum-tools.mjs")).href)});`], { cwd: temporary, env });
-const report = { target, dataRoot, checks: ["installation", "repeat-install", "user-configuration-retained", "five-profile-dependencies", "persistent-node-and-uv", "independent-working-directory"],
+const report = { target, dataRoot, checks: ["installation", "repeat-install", "user-configuration-retained", "profile-bundle-and-dependencies", "persistent-node-and-uv", "independent-working-directory"],
   upstreamClient: "not-bundled", nativeUI: "not-tested-by-this-command", scientificValidation: "not_evaluated" };
 await writeFile(path.join(output, "content-install.json"), JSON.stringify(report, null, 2));
 console.log(JSON.stringify(report));

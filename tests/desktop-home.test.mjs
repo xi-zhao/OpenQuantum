@@ -240,3 +240,31 @@ test("MCP settings update the active Desktop projection without relaunching a wr
   assert.match(await readFile(path.join(home, ".agent-presets/openquantum/agent.cordis.yml"), "utf8"), /disabled: true/);
   assert.equal(JSON.parse(await readFile(path.join(home, ".openquantum-home.json"))).files["model.yml"], sha256("retained"));
 });
+
+test("Desktop MCP projection reports concurrent Home edits and recovers after reconciliation", async t => {
+  const { desktopPresetProjection } = await import("../src/settings/server/desktop-preset.mjs");
+  const root = await mkdtemp(path.join(await realpath(tmpdir()), "oq-preset-conflict-"));
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const home = path.join(root, "home");
+  const relative = ".agent-presets/openquantum/agent.cordis.yml";
+  const source = path.join(root, "runtime/openquantum/agent-presets/openquantum/agent.cordis.yml");
+  const initial = "- id: example\n  disabled: false\n";
+  const changed = "- id: example\n  disabled: true\n";
+  await mkdir(path.dirname(source), { recursive: true });
+  await writeFile(source, initial);
+  await writeManagedHomeFiles(home, new Map([[relative, desktopPreset(initial, root)]]));
+  await writeFile(path.join(home, "openquantum-project.json"), JSON.stringify({ projectRoot: root, nodeExecutable: process.execPath }));
+  const synchronize = await desktopPresetProjection(root, home);
+  const manual = `${initial}# concurrent user edit\n`;
+  await writeFile(path.join(home, relative), manual);
+  await writeFile(source, changed);
+  await assert.rejects(synchronize(), /项目配置已保存.*本次设置未应用到 Desktop/);
+  assert.equal(await readFile(source, "utf8"), changed);
+  assert.equal(await readFile(path.join(home, relative), "utf8"), manual);
+  const rendered = desktopPreset(changed, root);
+  const review = path.join(home, ".openquantum-defaults", sha256(rendered), relative);
+  assert.equal(await readFile(review, "utf8"), rendered);
+  await writeFile(path.join(home, relative), await readFile(review));
+  await (await desktopPresetProjection(root, home))();
+  assert.equal(await readFile(path.join(home, relative), "utf8"), rendered);
+});

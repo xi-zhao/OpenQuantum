@@ -63,11 +63,11 @@ jobs:
           oq_artifacts=".openquantum/distributions/${{ matrix.target }}/artifacts"
           cd "$oq_artifacts"
           if command -v shasum >/dev/null; then shasum -a 256 -c SHA256SUMS; else sha256sum -c SHA256SUMS; fi
-          mkdir -p "$RUNNER_TEMP/oq-content"
-          tar -xzf OpenQuantum-*-DSH-*.tar.gz -C "$RUNNER_TEMP/oq-content"
+          mkdir -p ../verified-content
+          tar -xzf OpenQuantum-*-DSH-*.tar.gz -C ../verified-content
       - name: Verify installed dependencies, configuration retention and runtimes
         shell: bash
-        run: npm run desktop:package:smoke -- "$RUNNER_TEMP/oq-content"
+        run: npm run desktop:package:smoke -- ".openquantum/distributions/${{ matrix.target }}/verified-content"
       - name: Upload verified capability archive
         uses: actions/upload-artifact@v7
         with:
