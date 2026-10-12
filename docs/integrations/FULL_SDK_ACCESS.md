@@ -46,12 +46,12 @@ Agent 读取 `inspect` 返回的绝对解释器路径和 argv，在用户工作�
 | --- | --- | --- |
 | 全目录与产品入口 | 85 个环境的原生导航、源 Skill 与 Codex 投影；66 个算法指南明确支持自定义程序；打包携带锁、setup 与源码资源 | 静态覆盖、真实打包及缓存/外置运行时路径检查；不据此宣称 85 个环境均已运行 |
 | 已发现的接入缺口 | Flow-VQE 完整源码与依赖、CQLib 完整 QML 包、Ocean 完整元包、QPanda 完整包的导入依赖；Qcover/SpinQit/VQNet 共用导入兼容层 | 自定义 API 对象与导入检查；具体通过项和失败记录见下方版本化证据 |
-| 其余本地 SDK | 统一原生入口已提供，各 SDK 的完整模块/可选依赖兼容性继续按清单逐项核验 | 未执行的环境保持 `not_checked`；下一批按电路/编译/QML、纠错/测量、多体/光学分组，不能沿用便捷 Tool 的历史通过状态 |
-| 平台及外部服务 | Julia、QDMI、CUDA/GPU、其他操作系统和云/硬件接口分别记录运行条件 | 本机未验证的目标保持未验证；外部服务需要对应授权与环境，不属于本轮真实科研验收 |
+| 其余本地 SDK | 30 个电路/编译/QML 环境与 24 个物理/化学/纠错/光学/网络环境已逐库运行原生工程程序 | 固定版本、公开模块、自定义对象和工件检查；范围按逐库证据列出 |
+| 平台及外部服务 | 18 个环境的本地接口已逐库运行，包含 Julia、QDMI C 接口、CUDA-Q CPU 内核和服务 SDK 的本地程序/配置 | 未连接账户、云服务、QPU 或仪器；其他操作系统与 GPU 仍未验证 |
 
-## 本批实际检查结果
+## 首批 13 个环境的检查记录
 
-macOS arm64 上，**13 个环境通过下列原生 API 工程检查，72 个环境尚未执行这类检查**。完整矩阵逐项记录通过范围、版本、锁摘要、工件哈希与后续批次，不把历史便捷 Tool 的结果补算进来。
+首批在 macOS arm64 上，**13 个环境通过下列原生 API 工程检查**。[首批证据](evidence/full-sdk-access-2026-10-12.json)保留当时 72 个环境尚未执行的历史状态。本轮补齐这 72 项，没有改写首批记录，也没有将便捷 Tool 的历史结果补算为原生检查。
 
 | 环境 | 已运行的检查范围 |
 | --- | --- |
@@ -64,15 +64,37 @@ macOS arm64 上，**13 个环境通过下列原生 API 工程检查，72 个环�
 | Stim/PyMatching | 自定义电路、detector model、matching graph 与序列化 |
 | 算法共享环境 | Qiskit 参数化电路/QPY 读回、PennyLane 算符、quimb 张量网络、PySCF 分子构造；未求解 |
 
-每个环境还检查了完整文件输出与失败后中间文件保留；另外验证宿主子进程停止后按 checkpoint 重跑。真实插件打包、缓存 Skill 定位、外置运行时与安装失败恢复有独立测试。完整默认检查通过；最后的安装器、合同与打包检查 20 项通过，独立审查未发现剩余 P1/P2。没有运行真实模型驱动的宿主会话或 UI 验收。
+首批每个环境还检查了完整文件输出与失败后中间文件保留；另外验证宿主子进程停止后按 checkpoint 重跑。真实插件打包、缓存 Skill 定位、外置运行时与安装失败恢复有独立测试。完整默认检查通过；最后的安装器、合同与打包检查 20 项通过，独立审查未发现剩余 P1/P2。没有运行真实模型驱动的宿主会话或 UI 验收。
 
 检查中发现并处理了几项真实缺口：CQLib 改用配套上游版本；QPanda 增补完整导入依赖和隔离 fmt；Flow-VQE 调整 SciPy 固定版本；Ocean 修复磁盘写满造成的残缺安装。通用 Python、算法和 PairInteraction 安装器现在均在标记成功前核对原始 wheel `RECORD` 的文件存在性与大小；该检查不替代 API 测试。Flow 的旧 PROPACK 加载错误与 [SciPy 上游问题](https://github.com/scipy/scipy/issues/25635) 一致，本批使用的 1.17.1 属于 [PROPACK 改为 C 实现之后的版本](https://docs.scipy.org/doc/scipy/release/1.17.0-notes.html)，实际运行通过。
 
-后续工程核验按三批列入矩阵：电路/编译/QML 等 30 个环境；物理/化学/纠错/光学/网络等 24 个环境；平台专用与服务 SDK 的本地接口 18 个环境。Classiq 与 Q-CTRL 的新增 bootstrap 尚未实际导入验证。远程账户、收费服务、QPU、其他操作系统与 GPU 不从本批结果推断。
+## 剩余 72 个环境的实际结果
 
-本轮的工程判据是：用户代码能使用原生 API 表达自定义对象；依赖与源码可定位并锁定；完整工件可保存；错误能暴露且中间文件保留；宿主能停止并重新运行程序；安装路径与用户项目路径分离后仍可工作。小输入仅用于检查接口与运行机制，不是产品规模上限。
+**本轮 72/72 通过各自声明范围内的原生 API 工程检查**，加上首批 13 项，85 个环境均有逐库工程运行记录。这里的“通过”不代表穷尽上游 API，也不替代真实科研任务验收。[逐库证据](evidence/full-sdk-engineering-2026-10-12.json)保存程序、实际版本、锁摘要、原生对象、完整文件哈希和失败/重试记录。
 
-每批工程记录包含锁摘要、实际版本、程序和输入、检查范围、失败原因及未验证项。来源入口为[版本化工程证据](evidence/full-sdk-access-2026-10-12.json)。可复跑命令：
+| 剩余三批 | 实际通过 | 检查内容举例 |
+| --- | --- | --- |
+| 电路、编译、QML | 30/30 | 自定义电路与参数、原生 IR/序列化、编译配置、自动微分与优化器接口 |
+| 物理、化学、纠错、光学、网络 | 24/24 | 自定义算符、原子基、张量/光学对象、纠错配置、化学数据和网络程序 |
+| 平台及服务 SDK 本地接口 | 18/18 | QDMI 原生 C 编译及示例驱动生命周期、Julia RandomMeas 数据与约化、CUDA-Q CPU 内核、云/控制 SDK 本地模型与程序导出 |
+
+Python 的 70 个环境均运行保存到磁盘的自定义程序，导入其目录声明的公开模块，并核验完整文件输出、错误诊断和失败后文件保留。大文件交付使用独立的合成二进制工件检查，不将其称为 SDK 科研结果。Julia 另查实际运行时和包版本、原生测量数据与失败文件；QDMI 查固定源码/头文件/驱动哈希、变长元数据、无效属性错误和资源释放。工程程序在 macOS 的操作系统级网络隔离下运行，TCP、UDP 与子进程的阻断另有实际检查。下载只发生在显式准备阶段。
+
+本轮修复了三类接入缺口：
+
+- **MQT QCEC**：补上其 Qiskit extra，自定义 Qiskit 电路可以直接进入原生验证 API。
+- **TensorCircuit**：补上 Optax、Qiskit 和 Cirq。固定兼容的 Qiskit 0.46.3，使原生转换接口可用；自定义梯度、优化器更新和 Qiskit 往返检查通过。TensorFlow、PyTorch、CuPy 和 GPU 仍属需另备兼容依赖的可选后端。
+- **安装完整性检查**：OQC QAT 的两个上游包声明同名 console wrapper。保留缺失文件及普通文件长度异常的拒绝；共享 wrapper 的长度冲突仅在匹配已声明所有者的大小和 SHA-256 时放行。该例外不表示所有安装文件都做内容哈希校验。
+
+Classiq 与 Q-CTRL 的离线 bootstrap 已实际验证。下载中断涉及的 CUDA-Q、Symmer、PairInteraction 等最终均按原固定版本与哈希准备成功；未更换来源或放宽校验。Qblox 等检查程序按固定版本的原生 API 修正。证据汇总还加入开始记录，较新的失败或中断尝试不会被旧成功覆盖；缺失收据、工件损坏和检查程序变化均拒绝计为通过。
+
+最终 `npm run check` 通过；安装器与证据汇总的 9 项回归检查通过。默认检查跳过的可选实跑不计为通过，72 项原生运行由上面的独立证据确认。[验证日志索引](evidence/full-sdk-engineering-validation-2026-10-12.json)记录命令、退出码、源码哈希与 72 项显式准备日志。
+
+这 72 项没有运行真实科研任务、远程账户/收费服务、QPU、实验室仪器、GPU 或其他操作系统。NetQASM 的本地编译不代表私有 NetSquid/SquidASM 后端已运行；服务 SDK 的本地序列化不代表远程服务验收。首批与本轮均未进行真实模型驱动的宿主会话或 UI 验收。
+
+两轮的工程判据是：用户代码能使用原生 API 表达自定义对象；依赖与源码可定位并锁定；完整工件可保存；错误能暴露且中间文件保留；宿主能停止并重新运行程序；安装路径与用户项目路径分离后仍可工作。停止与重跑属于首批已经验证的共享宿主机制，本轮没有为每个库重复进行取消检查。小输入仅用于检查接口与运行机制，不是产品规模上限。
+
+每批工程记录包含锁摘要、实际版本、程序和输入、检查范围、失败原因及未验证项。来源入口为[首批证据](evidence/full-sdk-access-2026-10-12.json)与[本轮逐库证据](evidence/full-sdk-engineering-2026-10-12.json)。原始程序、输出和失败记录保留在任务工作树的 `.openquantum/sdk-checks/remaining/`；依赖环境使用独立目录，未替换运行中的插件。可复跑命令：
 
 ```sh
 npm run sdk:test
@@ -82,6 +104,13 @@ npm run capability:algorithms:catalog
 # 先显式准备测试列出的 SDK 环境；本命令不安装、不连接远程服务。
 OPENQUANTUM_NATIVE_SDK_CHECKS=1 OPENQUANTUM_SDK_CHECK_OUTPUT=.openquantum/sdk-checks \
   node --test tests/sdk-native-code.test.mjs
+# 本轮 72 项；当前隔离 runner 仅支持 macOS，需先完成各环境 setup。
+# 依赖外置时先设置 OPENQUANTUM_PYTHON_ENV_ROOT 为对应目录。
+OPENQUANTUM_NATIVE_SDK_CHECKS=1 OPENQUANTUM_SDK_CHECK_OUTPUT=.openquantum/sdk-checks/remaining \
+  node --test --test-concurrency=1 tests/sdk-native-remaining.test.mjs tests/sdk-native-platforms.test.mjs
+node --test tests/prepared-python.test.mjs tests/sdk-engineering-evidence.test.mjs
+node scripts/sdk-engineering-evidence.mjs .openquantum/sdk-checks/remaining \
+  .openquantum/sdk-checks/remaining/report.json --require-complete
 ```
 
 本轮没有运行真实科研任务，不作科学有效性判断。所有记录保持 `scientificValidation=not_evaluated`。Validator observations、Acceptance Profile 和 central Acceptance Builder 的既有职责不变；工程检查不升级能力的科学验收等级。

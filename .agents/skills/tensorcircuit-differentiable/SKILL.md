@@ -10,9 +10,11 @@ description: 使用 腾讯量子实验室 的 TensorCircuit 在本地对用户�
 
 本能力同时支持 **TensorCircuit 的原生公开 API**。用户需要 自定义电路、张量网络、后端、vmap、梯度与优化 时，由 Agent 在固定依赖环境中编写和运行任务代码，不限于下文便捷 Tool 的预设模型。
 
-使用 `node scripts/sdk-access.mjs inspect tensorcircuit-differentiable` 定位环境，按[完整 SDK 工作流](../quantum-sdk-workbench/references/workflow.md)执行。模块导航：`tensorcircuit`、`jax`；导航不是 API 白名单。
+使用 `node scripts/sdk-access.mjs inspect tensorcircuit-differentiable` 定位环境，按[完整 SDK 工作流](../quantum-sdk-workbench/references/workflow.md)执行。模块导航：`tensorcircuit`、`jax`、`optax`、`qiskit`、`cirq`；导航不是 API 白名单。
 
 显式选择 JAX 数值精度和 target；需要 float64 时在建立数组前启用 jax_enable_x64。CPU、GPU 选择按任务与已安装后端决定。
+
+TensorCircuit 0.12 的转换接口使用 Qiskit 0.46.3，在独立环境内固定；JAX、Optax 和 Cirq 转换依赖已提供。TensorFlow、PyTorch、CuPy 和 GPU 是上游可选后端，需按目标另备兼容依赖；本机工程检查不覆盖这些后端。
 
 下文关于模型、门集、输入与预算的限制描述便捷 Tool 的合同；原生 SDK 另受上游版本、可选依赖、宿主资源与用户授权约束。已禁用或被拒绝的动作不能借代码路径绕过。执行状态和科研验收分别报告。
 <!-- END NATIVE SDK ACCESS -->

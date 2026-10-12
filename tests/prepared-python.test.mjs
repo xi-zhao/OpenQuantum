@@ -168,3 +168,33 @@ test("PairInteraction delegated setup rejects incomplete files before data setup
   assert.equal(await readFile(database, "utf8"), "prepared");
   assert.equal((await readFile(marker, "utf8")).trim(), digest(await readFile(path.join(root, ".agents/skills", id, "uv.lock"))));
 });
+
+test("installed-file validation handles declared shared console wrappers without accepting corruption", async t => {
+  const sandbox = await mkdtemp(path.join(tmpdir(), "oq-shared-wrapper-"));
+  t.after(() => rm(sandbox, { recursive: true, force: true }));
+  const site = path.join(sandbox, "site");
+  const script = path.join(sandbox, "bin/format-code");
+  await mkdir(path.dirname(script), { recursive: true });
+  const contents = ["first wrapper", "second installed wrapper"];
+  for (let index = 0; index < 2; index++) {
+    const info = path.join(site, `owner${index}-1.0.dist-info`);
+    await mkdir(info, { recursive: true });
+    await writeFile(path.join(info, "METADATA"), `Metadata-Version: 2.1\nName: owner${index}\nVersion: 1.0\n`);
+    await writeFile(path.join(info, "entry_points.txt"), `[console_scripts]\nformat-code = owner${index}:main\n`);
+    const hash = createHash("sha256").update(contents[index]).digest("base64url");
+    await writeFile(path.join(info, "RECORD"), `../bin/format-code,sha256=${hash},${contents[index].length}\n`);
+  }
+  const check = () => spawnSync("python3", ["-I", "-B", "src/lib/check_python_install.py", site], { cwd: root, encoding: "utf8" });
+  await writeFile(script, contents[1]);
+  assert.equal(check().status, 0, check().stdout);
+  const undeclared = path.join(site, "undeclared-1.0.dist-info");
+  await mkdir(undeclared);
+  await writeFile(path.join(undeclared, "METADATA"), "Metadata-Version: 2.1\nName: undeclared\nVersion: 1.0\n");
+  await writeFile(path.join(undeclared, "RECORD"), "../bin/format-code,,5\n");
+  assert.equal(check().status, 1, "non-wrapper RECORD entries cannot borrow the shared-wrapper exception");
+  await rm(undeclared, { recursive: true });
+  await writeFile(script, "x".repeat(contents[1].length));
+  assert.equal(check().status, 1, "same-length unknown wrapper must not satisfy the other owner");
+  await rm(script);
+  assert.equal(check().status, 1);
+});

@@ -77,7 +77,7 @@
 | `quairkit-information` | QuAIRKit | python | quairkit==0.5.1, torch==2.11.0 | 任意维数态、信道、算符、电路与可微优化 | 按固定版本、已安装可选组件及目标平台核实 |
 | `qualtran-resources` | Qualtran | python | qualtran==0.7.0 | 自定义 Bloq、组合、分解、call graph 与符号资源计数 | 按固定版本、已安装可选组件及目标平台核实 |
 | `quantum-algorithms` | Qiskit / PennyLane / quimb / PySCF | python | numpy==2.5.3, scipy==1.18.1, qiskit==2.5.2 | 原生 SDK 电路、任意张量网络、MPS/MPO、分子、积分与量子化学计算 | 依赖组有 gradients、pennylane、tensor、chemistry；完整 setup 安装所有默认组，算法示例不是允许调用的 API 白名单。 |
-| `quantum-circuit-verification` | MQT QCEC | python | mqt.qcec==3.10.0 | 任意受支持电路、编译流程配置与等价性验证接口 | 按固定版本、已安装可选组件及目标平台核实 |
+| `quantum-circuit-verification` | MQT QCEC | python | mqt.qcec[qiskit]==3.10.0 | 任意受支持电路、编译流程配置与等价性验证接口 | 按固定版本、已安装可选组件及目标平台核实 |
 | `quantum-information-audit` | toqito | python | toqito==1.3.1 | 态、信道、矩阵、熵、纠缠、态区分与优化接口 | 按固定版本、已安装可选组件及目标平台核实 |
 | `quantuminspire-cloud` | Quantum Inspire | python | quantuminspire==4.1.0 | 上游 SDK 认证、平台、程序、job 与结果接口 | 本地程序构建与外部调用分开；账户、凭据、费用、设备操作和数据外发沿用宿主及用户授权。原生 SDK 访问不自动启用服务。 |
 | `quri-parts-estimation` | QURI Parts / Qulacs | python | quri-parts[qulacs]==0.27.0, qulacs==0.6.14 | 电路、态、算符、estimator、sampler、梯度与后端 | 按固定版本、已安装可选组件及目标平台核实 |
@@ -89,7 +89,7 @@
 | `superstaq-compilation` | Qiskit Superstaq | python | qiskit-superstaq==0.5.69, qiskit==2.5.2 | 自定义电路、编译选项、targets、provider 与执行结果 | 本地程序构建与外部调用分开；账户、凭据、费用、设备操作和数据外发沿用宿主及用户授权。原生 SDK 访问不自动启用服务。 |
 | `symmer-tapering` | Symmer | python | symmer | PauliwordOp、投影、对称性、tapering 与子空间方法 | 按固定版本、已安装可选组件及目标平台核实 |
 | `tenpy-ground-state` | TeNPy | python | physics-tenpy==1.1.1 | 自定义 site、lattice、CouplingMPOModel、MPS、DMRG、TEBD 与保存恢复 | 按固定版本、已安装可选组件及目标平台核实 |
-| `tensorcircuit-differentiable` | TensorCircuit | python | tensorcircuit==0.12.0, jax==0.4.38, jaxlib==0.4.38, numpy==1.26.4 | 自定义电路、张量网络、后端、vmap、梯度与优化 | 显式选择 JAX 数值精度和 target；需要 float64 时在建立数组前启用 jax_enable_x64。CPU、GPU 选择按任务与已安装后端决定。 |
+| `tensorcircuit-differentiable` | TensorCircuit | python | tensorcircuit==0.12.0, jax==0.4.38, jaxlib==0.4.38, numpy==1.26.4, optax==0.2.4, qiskit==0.46.3, cirq-core==1.5.0 | 自定义电路、张量网络、后端、vmap、梯度与优化 | 显式选择 JAX 数值精度和 target；需要 float64 时在建立数组前启用 jax_enable_x64。CPU、GPU 选择按任务与已安装后端决定。 TensorCircuit 0.12 的转换接口使用 Qiskit 0.46.3，在独立环境内固定；JAX、Optax 和 Cirq 转换依赖已提供。TensorFlow、PyTorch、CuPy 和 GPU 是上游可选后端，需按目标另备兼容依赖；本机工程检查不覆盖这些后端。 |
 | `tjm-dynamics` | MQT YAQS | python | mqt.yaqs==0.6.0 | 自定义 MPS/MPO、电路、噪声模型、时间演化与张量跳跃 | 按固定版本、已安装可选组件及目标平台核实 |
 | `tyxonq-workbench` | TyxonQ | python | tyxonq==1.3.0 | 电路、门、测量与上游后端接口 | 按固定版本、已安装可选组件及目标平台核实 |
 | `vqnet-learning` | VQNet | python | pyvqnet==2.18.1, numpy==1.26.4 | tensor、量子/经典层、模型、数据与优化器 | 按固定版本、已安装可选组件及目标平台核实 |
