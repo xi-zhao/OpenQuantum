@@ -15,7 +15,7 @@ Apple Silicon 还完成本地安装与首次设置向导的 UI 检查。
 ## 下载、安装与首次启动
 
 从 [GitHub Release](https://github.com/xi-zhao/OpenQuantum/releases/latest) 下载对应系统的附件。
-[v0.6.0](releases/v0.6.0.md)汇集新增量子 SDK、算法示例与互操作工具；首次提供三平台安装文件的版本为 [v0.5.1](releases/v0.5.1.md)。只发布实际构建、安装验证成功的文件：
+[v0.7.0](releases/v0.7.0.md)提供完整原生 SDK 程序入口、大结果文件交付与最新能力设置；首次提供三平台安装文件的版本为 [v0.5.1](releases/v0.5.1.md)。只发布实际构建、安装验证成功的文件：
 
 | 系统 | 安装文件 | 安装方式 |
 | --- | --- | --- |

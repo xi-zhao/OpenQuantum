@@ -151,7 +151,8 @@ Skill 与 Tool 在概念和发行版 policy 中都相互独立：Skill-only、To
 - [完整 SDK 接入与逐库审计](integrations/FULL_SDK_ACCESS.md)：原生公开 API、环境定位、自定义程序、分批补齐与工程验证；便捷 Tool 的模型范围不再是 SDK 能力上限。
 - [相近能力的选择](integrations/CAPABILITY_SELECTION.md)：算法示例与专业计算入口的选择，以及大型可选服务的工具范围。
 - [版本更新](UPDATES.md)：新版本提醒、源码升级、发布通道和维护流程。
-- [v0.6.0 发行说明](releases/v0.6.0.md)：新增 SDK、算法与互操作能力，安装升级、用户自配鉴权及验证范围。
+- [v0.7.0 发行说明](releases/v0.7.0.md)：完整原生 SDK 接入、大结果交付、Desktop 安装升级及工程验证范围。
+- [Codex 插件 0.8.0](releases/codex-v0.8.0.md)：133 个 Skill、71 个科学 Tool、85 个 SDK 环境入口和独立安装包。
 - [常见问题与故障排查](TROUBLESHOOTING.md)：按 UI、模型、MCP Server、凭据和 Docker 分层定位。
 - [消息渠道接入](integrations/CC_CONNECT.md)：通过 CC Connect 和 ACP 接入微信、飞书等平台。
 - [量子学习通 / OpenMAIC](integrations/OPENMAIC.md)：完整原版子应用、Pro 工作台、持久存储与 Harness 当前模型连接；含实际验收和未通过项。

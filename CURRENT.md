@@ -2,6 +2,13 @@
 
 量子依赖核验日期：2026-09-22；平台升级记录日期：2026-09-10；原模型验收交接记录日期：2026-09-05。此页只记录工作交接；架构以[文档总入口](docs/README.md)为准，执行事实以 Harness Session event log 为准，科学状态以 Acceptance Report 为准。
 
+## 完整 SDK 接入发行（2026-10-12）
+
+- Desktop / 源码版本 `0.7.0`，Codex 插件及安装器版本 `0.8.0`；共享 85 个原生 SDK 环境入口，Codex 包含 133 个 Skill、71 个科学 Tool。完整接入不表示穷尽上游 API 或跨平台科学验证。
+- 发行范围与安装方式见 [Desktop 说明](docs/releases/v0.7.0.md)和 [Codex 说明](docs/releases/codex-v0.8.0.md)。实际发布状态、附件及逐包验证以 [v0.7.0 Release](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.7.0)和 [codex-v0.8.0 Release](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.0)为准。
+- Desktop 发布要求当前提交的 CI、三平台安装包验证、附件摘要与更新清单核对；Codex 发布要求干净提交构建、隔离安装和原生宿主检查。Desktop 安装包仍为未签名测试构建，Codex 保持独立版本通道。
+- 按用户要求不使用真实科研任务验收，`scientificValidation=not_evaluated`。本次发布不更新运行中的安装；已有主工作区改动继续保留。
+
 ## 原生 SDK 完整接入（2026-10-12）
 
 - 全量梳理 85 个 SDK/源码环境入口，增加宿主代码工具使用完整原生 API 的路径；源 Skill、算法指南和 Codex 插件不再将便捷 Tool 的预设案例作为功能范围。
@@ -9,11 +16,11 @@
 - 剩余三批 72 个环境已逐库完成原生 API 工程检查：30/30、24/24、18/18。加上首批 13 项，85 个环境均有明确范围的工程记录；不表示穷尽上游 API。补齐 QCEC 的 Qiskit extra、TensorCircuit 的优化/转换依赖，并修复 QAT 共享 console wrapper 的安装校验误报。
 - 原始收据、程序、完整工件和日志已无损归档到仓库，可在不含原工作区或 SDK 的新目录中离线复核。
 - 分批状态、复跑命令、实际通过项与未验证平台见[完整接入记录](docs/integrations/FULL_SDK_ACCESS.md)及其版本化工程证据；静态目录覆盖不等于全部 API 已验证。本轮按用户要求不使用真实科研任务验收。
-- 源码交付状态以 [main](https://github.com/xi-zhao/OpenQuantum/tree/main) 与 [CI](https://github.com/xi-zhao/OpenQuantum/actions/workflows/ci.yml?query=branch%3Amain) 为准。本次不包含发布或更新运行中的安装；已有主工作区改动由原任务保留。
+- 源码交付状态以 [main](https://github.com/xi-zhao/OpenQuantum/tree/main) 与 [CI](https://github.com/xi-zhao/OpenQuantum/actions/workflows/ci.yml?query=branch%3Amain) 为准。原接入 PR #8 只交付源码；后续发行见上节。已有主工作区改动由原任务保留。
 
 ## Codex 能力插件与设置页（2026-10-11，独立发行）
 
-- 新增独立 Codex 插件发行定义，共享 Skill、Tool implementation 和科学合同；当前发行版本为 0.7.8，131 个 Skill、71 个科学 Tool。
+- 新增独立 Codex 插件发行定义，共享 Skill、Tool implementation 和科学合同；当时发行版本为 0.7.8，131 个 Skill、71 个科学 Tool。
 - 0.7.8 提供完整安装包、独立插件 ZIP、校验和及 Agent 安装指南；发布事实与逐包验收以 [codex-v0.7.8 Release](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.7.8) 为准。发布准备、修复和验证范围见[版本说明](docs/releases/codex-v0.7.8.md)。
 - 凭据开链已检查宿主拒绝结果，并提供可复制的短时本机地址；拒绝提示、地址打开表单、测试值保存和状态刷新已在隔离浏览器夹具中验证。它不替代原生自动开窗与完整应用重启验收。
 - Codex 原生界面负责聊天、项目、线程和登录，侧边页只管理本插件的 Skill、MCP、Tool 和系统凭据；不接入学习通。

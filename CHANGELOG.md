@@ -5,6 +5,25 @@ OpenQuantum 的重要变更记录在此。格式遵循 [Keep a Changelog](https:
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-10-12
+
+### Added
+
+- 85 个固定 SDK/源码环境的原生公开 API 导航、显式依赖准备和自定义程序路径；便捷 Tool 的预设案例不再定义库的使用范围。
+- 13+30+24+18 项逐库工程记录及可离线核对的原始证据归档。检查范围按库记录，不代表穷尽 API、可选后端或跨平台验证；未使用真实科研任务验收。
+- 独立 Codex 插件发行入口；同步版本 [0.8.0](docs/releases/codex-v0.8.0.md)提供 133 个 Skill、71 个科学 Tool 和 85 个 SDK 环境入口。
+
+### Changed
+
+- 默认 Harness Preset 将大结果完整保存为 JSON，再返回摘要和文件引用；小结果与科学合同保持不变。
+- README 十种语言同步原生 SDK 使用和升级说明；当前源码目录为 156 个 Skill、91 个 MCP 连接和 5 个原生量子 Tool。
+- Desktop 继续提供三平台未签名测试安装包；依赖、账户和许可按任务显式准备，科学状态仍为 `not_evaluated`。完整范围见 [v0.7.0 发布说明](docs/releases/v0.7.0.md)。
+
+### Fixed
+
+- 补齐 Flow-VQE 完整源码、CQLib QML、Ocean 元包，以及 QPanda、Qcover、SpinQit、VQNet 的导入依赖与兼容处理。
+- 补充 QCEC 的 Qiskit extra、TensorCircuit 的优化/转换依赖，并修复 QAT 共享 console wrapper 的安装校验误报。
+
 ## [0.6.0] - 2026-09-29
 
 ### Added
