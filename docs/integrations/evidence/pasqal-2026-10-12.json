@@ -1,5 +1,7 @@
 {
   "schemaVersion": 1,
+  "snapshotCommit": "37096a30b8c269ce3e10c4342a91291e62d86f0c",
+  "snapshotMeaning": "Verification and source hashes describe the implementation commit before PR creation; subsequent delivery status is recorded in CURRENT.md.",
   "verifiedAt": "2026-10-12T14:20:46.058063+00:00",
   "scope": "Seven-stage Pasqal workflow, full native Cloud SDK access in existing Pulser environment, and bounded convenience scripts",
   "platform": {

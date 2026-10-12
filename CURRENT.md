@@ -2,12 +2,12 @@
 
 量子依赖核验日期：2026-09-22；平台升级记录日期：2026-09-10；原模型验收交接记录日期：2026-09-05。此页只记录工作交接；架构以[文档总入口](docs/README.md)为准，执行事实以 Harness Session event log 为准，科学状态以 Acceptance Report 为准。
 
-## Pasqal 实验工作流与 Cloud SDK（2026-10-12，本地源码交付）
+## Pasqal 实验工作流与 Cloud SDK（2026-10-12，PR 待审阅）
 
 - `pasqal-experiments` 接入从实验想法到结果分析的七阶段流程；复用 `pulser-dynamics` 的 Pulser 1.9.1 环境，增加固定版 `pasqal-cloud==0.24.0` 完整原生 API，不新增 Runtime 或云 MCP。
 - 云辅助器支持设备快照、可审阅计划、批次创建/追加/关闭/取消、单次 HTTP 提交、未知结果恢复和原始数据采集；保留请求索引、失效点与科学未验状态。
 - 真实 Pulser 数值、Cloud SDK 传输夹具、Harness 会话执行/读回、Codex 包资源与离线流程验证通过，独立审阅无未解决 P1/P2。范围和可复查工件见 [Pasqal 集成记录](docs/integrations/PASQAL.md)。
-- 本地任务分支 `c/pasqal-experiments`；未推送、合并、发布或替换已安装产品。未调用真实 Cloud/QPU 或外部模型，`scientificValidation=not_evaluated`。
+- 任务分支 `c/pasqal-experiments` 已推送，实现提交 `37096a30` 已提交 [PR #13](https://github.com/xi-zhao/OpenQuantum/pull/13)，目标为 `main`；CI 与审阅状态以 PR 页面为准。未合并、发布或替换已安装产品。未调用真实 Cloud/QPU 或外部模型，`scientificValidation=not_evaluated`。
 
 ## 统一产品版本（2026-10-12）
 
