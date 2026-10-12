@@ -124,6 +124,9 @@ export async function verifyEvidenceBundle({ repository = root } = {}) {
     assert.equal(objects.get(record.sha256).length, record.bytes, filename);
     index.set(key, record);
   }
+  const storedObjects = await fs.readdir(path.join(destination, "objects"), { withFileTypes: true });
+  assert.deepEqual(storedObjects.map(entry => entry.name).sort(), [...objects.keys()].map(digest => `${digest}.gz`).sort(), "Unlisted or missing archived objects");
+  assert.ok(storedObjects.every(entry => entry.isFile()), "Archived objects must be regular files");
   const read = record => {
     const filename = logicalPath(record.path, manifest.originalRepository);
     const entry = index.get(`${filename}\0${record.sha256}`);

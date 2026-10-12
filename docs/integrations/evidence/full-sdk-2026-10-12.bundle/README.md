@@ -15,7 +15,7 @@ node scripts/sdk-evidence-bundle.mjs verify
 node scripts/sdk-evidence-bundle.mjs read .openquantum/sdk-checks/remaining/alicebob-cat-circuits-vDZvwR/verification.json
 ```
 
-`verify` 只读仓库中的三份报告和证据包。它核对全部对象、引用覆盖、历史版本和成功收据之间的关系；已列对象缺失、大小/摘要不符、重复映射或损坏压缩数据均失败，已知历史缺口明确输出。它不会读取原本地路径、访问 Git 历史、下载、导入第三方 SDK 或运行归档程序。`read` 先校验归档，再把所选文件的原始字节写到标准输出。
+`verify` 只读仓库中的三份报告和证据包。它核对全部对象、引用覆盖、历史版本和成功收据之间的关系；已列对象缺失、未列出的多余对象、大小/摘要不符、重复映射或损坏压缩数据均失败，已知历史缺口明确输出。`objects/` 必须恰好包含 manifest 引用的普通文件，因此重建遗留文件也会报错。它不会读取原本地路径、访问 Git 历史、下载、导入第三方 SDK 或运行归档程序。`read` 先校验归档，再把所选文件的原始字节写到标准输出。
 
 新目录可复核性和篡改拒绝由 `tests/sdk-evidence-bundle.test.mjs` 验证：只复制三份报告、此证据包与标准库校验脚本，不带 `.git`、`.openquantum` 或 `node_modules`。负例另外在隔离目录中放入同路径的原始文件，即使该文件存在，归档缺失或损坏也必须失败。
 

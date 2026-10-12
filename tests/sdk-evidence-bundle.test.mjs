@@ -64,9 +64,14 @@ test("durable evidence rejects omitted report references, changed reports and co
   const current = JSON.parse(await fs.readFile(path.join(repository, reportPaths[1])));
   const receipt = current.libraries[0].verification;
   manifest.files = manifest.files.filter(entry => entry.path !== receipt.path || entry.sha256 !== receipt.sha256);
+  assert.ok(!manifest.files.some(entry => entry.sha256 === receipt.sha256), "this receipt has its own object");
+  const missingObject = path.join(repository, bundlePath, "objects", `${receipt.sha256}.gz`);
+  const objectBytes = await fs.readFile(missingObject);
+  await fs.rm(missingObject);
   await fs.writeFile(file, JSON.stringify(manifest));
   await assert.rejects(verifyEvidenceBundle({ repository }), /Missing archived reference/);
   await fs.writeFile(file, bytes);
+  await fs.writeFile(missingObject, objectBytes);
   const conflict = JSON.parse(bytes);
   conflict.files.push({ ...conflict.files[0], bytes: 1 });
   await fs.writeFile(file, JSON.stringify(conflict));
@@ -79,4 +84,15 @@ test("durable evidence rejects omitted report references, changed reports and co
   await fs.writeFile(file, bytes);
   await fs.appendFile(path.join(repository, reportPaths[1]), " ");
   await assert.rejects(verifyEvidenceBundle({ repository }));
+});
+
+test("durable evidence rejects stale or injected objects not listed in the manifest", async t => {
+  const repository = await freshRepository(t);
+  const directory = path.join(repository, bundlePath, "objects");
+  const [object] = await fs.readdir(directory);
+  const unlisted = path.join(directory, `${"0".repeat(64)}.gz`);
+  await fs.copyFile(path.join(directory, object), unlisted);
+  await assert.rejects(verifyEvidenceBundle({ repository }), /Unlisted or missing archived objects/);
+  await fs.rm(unlisted);
+  await verifyEvidenceBundle({ repository });
 });
