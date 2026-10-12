@@ -207,7 +207,7 @@ Pro 教学任务使用上游应用自己的工具与记录，尚未自动接入�
 
 OpenQuantum 桌面端提供原生窗口、系统托盘、终端与通知，复用科研工作台的模型、量子 Skill、计算工具和执行记录。
 
-提供 Mac（Apple Silicon / Intel）和 Windows 桌面安装包，也支持从源码构建。
+使用第三方原版 DSH Desktop，OpenQuantum 单独交付量子能力包；支持 Mac（Apple Silicon / Intel）、Windows 和源码运行。
 
 [下载并安装桌面客户端](#桌面安装包) · [从源码启动桌面客户端](#桌面客户端)。
 
@@ -257,7 +257,7 @@ https://github.com/xi-zhao/OpenQuantum/blob/codex-v0.8.1/docs/integrations/CODEX
 需要我重载应用时，告诉我具体操作。最后报告实际验证的结果，以及仍需准备的科学计算依赖。
 ```
 
-Desktop 与 Codex 插件统一使用 **OpenQuantum 0.8.1**；之后同步更新只需记录一个产品版本号，渠道标签分别为 `v0.8.1` 和 `codex-v0.8.1`。
+OpenQuantum 桌面能力包与 Codex 插件统一使用 **OpenQuantum 0.8.1**；之后同步更新只需记录一个产品版本号，渠道标签分别为 `v0.8.1` 和 `codex-v0.8.1`。
 
 **[下载 Codex 插件 0.8.1 完整安装包](https://github.com/xi-zhao/OpenQuantum/releases/download/codex-v0.8.1/openquantum-0.8.1-codex-install.zip)**
 （[发布说明与 SHA256SUMS](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.1)）。
@@ -293,9 +293,9 @@ npm run plugin:install
 
 ### 桌面安装包
 
-从 [GitHub Release](https://github.com/xi-zhao/OpenQuantum/releases/latest) 下载 Mac（Apple Silicon / Intel）或 Windows 安装包。安装包内置 Node 和 uv，无需先配置源码构建环境；当前为未签名测试构建。按[安装说明](docs/DESKTOP_INSTALLERS.md)安装并启动后，继续[配置模型](#配置模型)。计算组件的额外依赖按对应版本说明准备，量子学习通等可选应用另有安装步骤。
+后续发行采用 [DSH Desktop 2.0.7 原版客户端](https://github.com/anywhere-labs/dsh-desktop/releases/tag/v2.0.7)与独立 OpenQuantum 能力包。能力包保留完整 SDK 入口、量子 Skill、Tool 和配置，并包含 Node / uv。原生应用名称、界面和客户端更新由第三方维护。
 
-本页能力目录随当前源码维护。[v0.8.1 发布说明](docs/releases/v0.8.1.md)说明完整原生 SDK 接入、大结果文件交付和升级范围；安装文件以对应 Release 的实际附件为准。安装包包含适配代码，计算依赖仍需按所选能力显式准备。原有安装版需下载新版并覆盖安装；用户改过的 Skill 或 MCP 配置会保留，新默认内容可能需要手动比较采用，见[数据与升级](docs/DESKTOP_INSTALLERS.md#数据与升级)。
+请按[安装与迁移说明](docs/DESKTOP_INSTALLERS.md)选择原版客户端及对应能力包。已经发布的 [v0.8.1](docs/releases/v0.8.1.md) DMG/EXE 属于此前的私有客户端发行方式；新包是否已发布以 Release 的实际附件为准。第三方客户端显示上游版本 `2.0.7`，OpenQuantum 能力包与 Codex 插件仍按统一产品版本标记。计算环境、账户与许可继续按能力显式准备。
 
 ### 安装源码
 
@@ -331,10 +331,10 @@ npm run dev
 ```bash
 npm run desktop:setup
 npm run desktop:verify-install
-npm run desktop
+npm run desktop -- --source
 ```
 
-`desktop:setup` 构建固定的上游源码、下载 Electron、编译原生模块并准备 OpenQuantum 品牌资源。请使用仓库启动命令，加载模型和量子能力配置。
+`desktop:setup` 构建固定的上游源码、下载 Electron、编译原生模块；不改写第三方界面或资源。请使用仓库启动命令，加载模型和量子能力配置。
 
 </details>
 
@@ -342,7 +342,7 @@ npm run desktop
 
 ### 配置模型
 
-在「设置 → 模型」填写支持 OpenAI-compatible Chat Completions 协议的服务地址、模型名称和 API Key，保持 OpenQuantum 为默认 Agent Preset。**模型需要支持 Tool Calling，才能调用量子计算工具。** 这里配置的是模型服务，量子云凭据在对应后端中另行配置。
+Desktop 全新安装的模型列表为空。在「设置 → 模型」添加提供方，填写支持 OpenAI-compatible Chat Completions 协议的服务地址、模型名称和 API Key，保持 OpenQuantum 为默认 Agent Preset。**模型需要支持 Tool Calling，才能调用量子计算工具。** 这里配置的是模型服务，量子云凭据在对应后端中另行配置。
 
 内置 `openquantum-public` / `openquantum-private` 的默认地址均为 `.invalid` 占位地址，请替换为自己的服务。
 

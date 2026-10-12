@@ -620,3 +620,22 @@ test("mounted upstream pyqpanda3 skill loads under its upstream name", async (t)
   assert.equal(skill.managed, false);
   assert.match(skill.description, /pyqpanda3 programming/);
 });
+
+test("a Desktop MCP settings command updates the active preset for native restart", async t => {
+  const { realpath } = await import("node:fs/promises");
+  const { writeManagedHomeFiles } = await import("../scripts/lib/managed-home-files.mjs");
+  const { desktopPreset } = await import("../scripts/lib/desktop-profile-config.mjs");
+  const root = await realpath(await fixture(t));
+  const home = path.join(root, "desktop-home");
+  const relative = ".agent-presets/openquantum/agent.cordis.yml";
+  const source = await readFile(path.join(root, "runtime/openquantum/agent-presets/openquantum/agent.cordis.yml"), "utf8");
+  await writeManagedHomeFiles(home, new Map([[relative, desktopPreset(source, root)]]));
+  await writeFile(path.join(home, "openquantum-project.json"), JSON.stringify({ projectRoot: root, nodeExecutable: process.execPath }));
+  const previous = process.env.DSH_HOME;
+  process.env.DSH_HOME = home;
+  t.after(() => { if (previous === undefined) delete process.env.DSH_HOME; else process.env.DSH_HOME = previous; });
+  const before = await readProjectSettings(root);
+  await executeProjectSettingsCommand(root, { action: "mcp.update", serverName: "demo_quantum", revision: before.mcpRevision,
+    enabled: false, toolCallTimeoutMs: 60000, reconnect: { enabled: true, initialDelayMs: 500, maxDelayMs: 30000, maxAttempts: 10 } });
+  assert.match(await readFile(path.join(home, relative), "utf8"), /disabled: true/);
+});

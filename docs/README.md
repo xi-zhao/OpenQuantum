@@ -146,7 +146,7 @@ Skill 与 Tool 在概念和发行版 policy 中都相互独立：Skill-only、To
 
 ### 使用 OpenQuantum
 
-- [桌面测试安装包](DESKTOP_INSTALLERS.md)：DMG / Windows 安装向导、独立用户数据、构建与安装后检查。
+- [桌面测试安装包](DESKTOP_INSTALLERS.md)：原版 DSH Desktop、OpenQuantum 能力包、数据保留与工程检查。
 - [部署与启动](DEPLOYMENT.md)：本地、Docker、模型配置和启动检查。
 - [本地计算环境准备](integrations/LOCAL_ENVIRONMENTS.md)：按能力显式准备固定依赖，已有环境原地核验与升级。
 - [完整 SDK 接入与逐库审计](integrations/FULL_SDK_ACCESS.md)：原生公开 API、环境定位、自定义程序、分批补齐与工程验证；便捷 Tool 的模型范围不再是 SDK 能力上限。

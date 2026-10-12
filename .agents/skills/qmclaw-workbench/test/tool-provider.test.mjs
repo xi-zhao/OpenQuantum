@@ -448,7 +448,7 @@ test("implementation has no external process, environment, network or parameter-
     /\bimport\s*\(/,
   );
   // The copied Harness adapter may load only the shared definition module.
-  const adapterImports = /import\(\s*pathToFileURL\(path\.join\(\s*process\.cwd\(\),\s*"src\/capabilities\/native-quantum-tools\.mjs",?\s*\)\)\.href\)/g;
+  const adapterImports = /import\(\s*pathToFileURL\(path\.join\(\s*openQuantumProjectRoot,\s*"src\/capabilities\/native-quantum-tools\.mjs",?\s*\)\)\.href\)/g;
   assert.equal([...providerSource.matchAll(adapterImports)].length, 1);
   assert.doesNotMatch(
     `${providerSource.replace(adapterImports, "")}\n${schemaSource}`,

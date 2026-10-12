@@ -1397,5 +1397,11 @@
   "Reminders are disabled for this version.": "تم تعطيل التذكيرات لهذا الإصدار.",
   "Check for a new OpenQuantum release.": "تحقق من وجود إصدار جديد من OpenQuantum.",
   "Stable releases · Checked daily": "الإصدارات المستقرة · تحقق يومي",
-  "Update preferences could not be saved. Please try again.": "تعذّر حفظ تفضيلات التحديث. يُرجى المحاولة مجددًا."
+  "Update preferences could not be saved. Please try again.": "تعذّر حفظ تفضيلات التحديث. يُرجى المحاولة مجددًا.",
+  "Computation tools": "أدوات الحساب",
+  "Waiting for a session": "بانتظار بدء جلسة",
+  "Add a model first": "أضف نموذجًا أولًا",
+  "Add a model in Settings → Models, then start an OpenQuantum session.": "أضف نموذجًا من الإعدادات ← النماذج، ثم ابدأ جلسة OpenQuantum.",
+  "Diagnostic details": "تفاصيل التشخيص",
+  "MCP": "MCP"
 }
