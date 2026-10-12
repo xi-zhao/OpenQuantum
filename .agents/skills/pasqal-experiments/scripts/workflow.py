@@ -3,9 +3,9 @@
 Derived workflow contract: pasqal-io/agent-marketplace, Apache-2.0;
 see ../NOTICE.md. User sequence files execute through the host's code Tool.
 """
+import ast
 import contextlib
 import hashlib
-import importlib.util
 import json
 import math
 import os
@@ -13,6 +13,7 @@ from pathlib import Path
 import tempfile
 from datetime import datetime, timezone
 from importlib.metadata import version
+from types import ModuleType
 from uuid import uuid4
 
 import numpy as np
@@ -83,15 +84,46 @@ def mutation_lock(plan, identity):
 
 
 def provenance():
-    return {"packages": {p: version(p) for p in ("pulser-core", "pulser-simulation", "pasqal-cloud")},
+    return {"packages": {p: version(p) for p in ("pulser-core", "pulser-simulation", "pasqal-cloud", "numpy", "scipy", "qutip")},
             "dependencyLockSha256": file_digest(Path(__file__).resolve().parents[2] / "pulser-dynamics/uv.lock"),
             "scientificValidation": "not_evaluated"}
 
 
-def module(file):
-    spec = importlib.util.spec_from_file_location("experiment_sequence", file)
-    loaded = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(loaded)
+def module(file, *, expected_sha256=None):
+    """Load the convenience runner's single-file contract, not a Python sandbox.
+
+    Helper functions/constants belong in this file. Multi-file research projects
+    use the full native SDK through the host code Tool instead of this runner.
+    """
+    source = Path(file).read_bytes()
+    source_sha256 = hashlib.sha256(source).hexdigest()
+    if expected_sha256 is not None and source_sha256 != expected_sha256:
+        raise ValueError("Observable code changed since preparation")
+    tree = ast.parse(source, filename=str(file))
+    # Bundled research examples also have a stand-alone CLI. This branch never
+    # runs under our fixed module name and is not part of the loaded experiment.
+    main_guard = ast.dump(ast.parse('__name__ == "__main__"', mode="eval").body)
+    tree.body = [part for node in tree.body for part in
+                 (node.orelse if isinstance(node, ast.If) and ast.dump(node.test) == main_guard else [node])]
+    allowed_imports = {"__future__", "numpy", "scipy", "qutip", "pulser", "math", "cmath", "statistics",
+                       "collections", "itertools", "functools", "operator", "typing"}
+    dynamic_names = {"__import__", "__builtins__", "eval", "exec", "compile"}
+    for node in ast.walk(tree):
+        if isinstance(node, (ast.Import, ast.ImportFrom)):
+            names = [alias.name for alias in node.names] if isinstance(node, ast.Import) else [node.module or ""]
+            if (isinstance(node, ast.ImportFrom) and node.level) or any(name.split(".")[0] not in allowed_imports for name in names):
+                raise ValueError("Sequence must be self-contained: put local helpers and constants in the sequence file; only declared numerical imports are supported")
+        if isinstance(node, ast.Name) and node.id in dynamic_names:
+            raise ValueError("Sequence must be self-contained: dynamic code loading is unsupported")
+    loaded = ModuleType("experiment_sequence")
+    loaded.__file__ = str(file)
+    # Compile the bytes we hashed, without a timestamp-based bytecode cache.
+    exec(compile(tree, str(file), "exec"), loaded.__dict__)
+    for name in ("build_sequence", "compute_observable"):
+        function = getattr(loaded, name, None)
+        if not callable(function) or getattr(function, "__globals__", None) is not loaded.__dict__:
+            raise ValueError(f"Sequence must define its own {name} function")
+    loaded.source_sha256 = source_sha256
     return loaded
 
 
@@ -215,7 +247,7 @@ def prepare(spec_file, sequence_file, output, *, target="local", project_id=None
     plan = {"schemaVersion": 1, "request_id": str(uuid4()), "target": target,
             "project_id": project_id, "region": region, "open": bool(open_batch),
             "spec": spec, "specSha256": file_digest(spec_file),
-            "sequenceSha256": file_digest(sequence_file), "device": snapshot,
+            "sequenceSha256": mod.source_sha256, "device": snapshot,
             "noise": noise, "backend_configuration": backend_configuration,
             "total_shots": sum(r["job"]["runs"] for r in rows), "rows": rows,
             **provenance()}
@@ -231,6 +263,15 @@ def verify_plan(plan):
     return plan
 
 
+def verify_environment(plan):
+    """Bind new execution to the reviewed environment; keep recovery available."""
+    current = provenance()
+    for field in ("packages", "dependencyLockSha256"):
+        if plan.get(field) != current[field]:
+            raise ValueError(f"Execution environment differs from the plan: {field}; restore the reviewed environment or prepare and review a new plan")
+    return current
+
+
 def counts_checked(counts, n):
     if not isinstance(counts, dict) or not counts:
         raise ValueError("No sampled counts")
@@ -244,13 +285,14 @@ def counts_checked(counts, n):
 def local_run(plan_file, output, *, seed=42, max_atoms=12, solver=None):
     from pulser_simulation import QutipEmulator
     plan = verify_plan(read(plan_file))
+    current = verify_environment(plan)
     if plan["target"] != "local":
         raise ValueError("local-run requires a local plan")
     positive_int(max_atoms, "max_atoms")
     if any(len(row["atom_ids"]) > max_atoms for row in plan["rows"]):
         raise ValueError("Register exceeds the explicit local resource budget; no automatic size reduction")
     output_data = {"schemaVersion": 1, "plan": plan, "networkUsed": False,
-                   "seed": seed, "solver": solver or {}, "rows": [], **provenance()}
+                   "seed": seed, "solver": solver or {}, "rows": [], **current}
     write(output, output_data, new=True)
     state = np.random.get_state()
     try:
@@ -328,6 +370,7 @@ def clear_pending(plan, batch_id):
 
 def submit(plan_file, receipt_file, approve_plan, *, parent_receipt=None, sdk=None):
     plan = verify_plan(read(plan_file))
+    verify_environment(plan)
     if plan["target"] == "local" or approve_plan != plan["planSha256"]:
         raise ValueError("Review the cloud plan and pass its exact --approve-plan digest under host authorization")
     if Path(receipt_file).exists():
@@ -533,13 +576,12 @@ def analyze(raw_file, sequence_file, output, *, bootstrap=300, seed=42,
             baseline_file=None, sigma_tolerance=3.0, readout=None):
     data = read(raw_file)
     plan = verify_plan(data["plan"])
-    if file_digest(sequence_file) != plan["sequenceSha256"]:
-        raise ValueError("Observable code changed since preparation")
+    current = verify_environment(plan)
     if type(bootstrap) is not int or bootstrap < 2:
         raise ValueError("bootstrap must be at least 2")
     if not math.isfinite(sigma_tolerance) or sigma_tolerance <= 0:
         raise ValueError("sigma_tolerance must be positive and finite")
-    observable = module(sequence_file).compute_observable
+    observable = module(sequence_file, expected_sha256=plan["sequenceSha256"]).compute_observable
     rng = np.random.default_rng(seed)
     rows = []
     incoming = {r["scan_value"]: r for r in data["rows"]}
@@ -572,7 +614,7 @@ def analyze(raw_file, sequence_file, output, *, bootstrap=300, seed=42,
               "sequenceSha256": plan["sequenceSha256"], "spec": plan["spec"],
               "bootstrap": bootstrap, "seed": seed, "rows": rows,
               "complete": all(r["observation"] is not None for r in rows),
-              "readout": readout, "comparison": None, **provenance(),
+              "readout": readout, "comparison": None, **current,
               "limitations": ["Finite-shot bootstrap excludes calibration and model uncertainty; degenerate samples can give zero uncertainty.",
                               "Readout correction applies only to per-site densities; values are not clipped and arbitrary observables are not corrected.",
                               "Model agreement is diagnostic, not scientific Acceptance or a hardware go-ahead."]}

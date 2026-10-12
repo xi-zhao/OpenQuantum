@@ -55,6 +55,18 @@ QPU 使用 `--target QPU`；只有具体 Device、已解决的待决问题和经
 原始输出包含所有计划点的状态与 raw result；分析仅推导数值事实，保留 `scientificValidation=not_evaluated`。
 所有结果使用严格 JSON，不写 NaN/Infinity。分析代码变更必须生成新的实验计划；不能混用旧来源摘要。
 
+辅助 CLI 的研究代码须自包含在一个序列文件内，`build_sequence` 与 `compute_observable` 均在该文件定义，
+研究常量和辅助函数也放在同一文件。准备和分析前检查全部函数体内的导入，拒绝本地/相对导入、动态导入和
+`eval`/`exec`。支持 `numpy`、`scipy`、`qutip`、`pulser`，以及 `math`、`cmath`、`statistics`、`collections`、
+`itertools`、`functools`、`operator`、`typing` 和 `__future__`；独立 CLI 的标准 `__main__` 分支不执行。
+这是便捷入口的来源合同，不是 Python 安全沙箱；程序仍须按宿主代码 Tool 的权限审阅，不能从外部文件或网络
+暗中读取观测量实现或研究常量。多文件、动态加载等需求走完整原生 SDK，并自行保存完整依赖与输入证据。
+
+`local-run`、`analyze` 和新 `submit` 在执行前核对计划记录的实际 Pulser/Cloud SDK、NumPy、SciPy、QuTiP
+版本及 `uv.lock` 摘要；不一致时不创建输出、不求解、不运行序列模块、不发云请求。
+恢复原环境，或重新准备并审阅新计划后才能执行。旧计划缺少新增版本字段也会明确拒绝，不能静默迁移。
+这些检查不阻断已有云任务的 `recover`、`harvest`、`close` 或 `cancel`，原始计划和数据继续保留。
+
 完整 SDK 路径：直接在相同 Python 环境导入 `PasqalCloudClient`、`PasqalCloudConnection`、`OVHConnection`
 和所需 backend。用本版本 `help()` / `inspect.signature()` 核实方法。可以复用 `scripts/cloud.py` 的
 `client(project_id, region)` 以获得单次 HTTP 策略；裸 SDK 的自动重试与认证行为遵循上游，不能据此绕过

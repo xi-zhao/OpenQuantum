@@ -119,7 +119,10 @@ class WorkflowTests(unittest.TestCase):
         from pasqal_cloud import PasqalCloudConnection, OVHConnection
         from pasqal_cloud import RemoteMPSBackend, RemoteSVBackend, RemoteEmuFreeBackend
         self.assertTrue(all((PasqalCloudConnection, OVHConnection, RemoteMPSBackend, RemoteSVBackend, RemoteEmuFreeBackend)))
-        self.assertEqual(w.provenance()["packages"], {"pulser-core": "1.9.1", "pulser-simulation": "1.9.1", "pasqal-cloud": "0.24.0"})
+        packages = w.provenance()["packages"]
+        self.assertEqual({p: packages[p] for p in ("pulser-core", "pulser-simulation", "pasqal-cloud")},
+                         {"pulser-core": "1.9.1", "pulser-simulation": "1.9.1", "pasqal-cloud": "0.24.0"})
+        self.assertTrue(all(packages[p] for p in ("numpy", "scipy", "qutip")))
         for method in ("get_batches", "get_jobs", "cancel_job", "cancel_jobs", "rebatch", "create_workload", "get_workload", "cancel_workload"):
             self.assertTrue(callable(getattr(self.sdk, method)))
 
@@ -281,6 +284,107 @@ class WorkflowTests(unittest.TestCase):
         missing = w.analyze(raw, SEQ, self.directory / "missing.json", bootstrap=30, baseline_file=baseline)
         self.assertEqual(missing["comparison"]["status"], "incomplete")
         self.assertEqual(missing["rows"][2]["status"], "MISSING")
+
+    def test_local_imports_and_dynamic_loading_fail_before_sequence_execution(self):
+        _, original = self.plan()
+        source = self.directory / "sequence.py"
+        snippets = [
+            "from analysis_helper import compute_observable",
+            "from analysis_helper import SCALE",
+            "from .analysis_helper import SCALE",
+            "def compute_observable(counts):\n    from analysis_helper import SCALE\n    return SCALE",
+            "import importlib as loader",
+            "loader = __import__",
+            "loader = eval",
+            "loader = exec",
+        ]
+        for index, snippet in enumerate(snippets):
+            with self.subTest(snippet=snippet):
+                source.write_text('raise AssertionError("Module ran before validation")\n' + SEQ.read_text() + "\n" + snippet + "\n")
+                plan_file = self.directory / f"rejected-{index}.json"
+                with self.assertRaisesRegex(ValueError, "self-contained"):
+                    w.prepare(self.spec_file, source, plan_file)
+                self.assertFalse(plan_file.exists())
+                # A pre-fix plan could contain only this entry-file fingerprint.
+                legacy = copy.deepcopy(original)
+                legacy["sequenceSha256"] = w.file_digest(source)
+                legacy["planSha256"] = w.digest({k: v for k, v in legacy.items() if k != "planSha256"})
+                raw = self.directory / f"legacy-{index}.json"
+                w.write(raw, {"plan": legacy, "rows": []})
+                report = self.directory / f"analysis-{index}.json"
+                with self.assertRaisesRegex(ValueError, "self-contained"):
+                    w.analyze(raw, source, report)
+                self.assertFalse(report.exists())
+
+    def test_entrypoints_must_belong_to_the_hashed_module(self):
+        source = self.directory / "sequence.py"
+        source.write_text(SEQ.read_text() + "\nfrom numpy import mean as compute_observable\n")
+        with self.assertRaisesRegex(ValueError, "own compute_observable"):
+            w.prepare(self.spec_file, source, self.directory / "no.json")
+
+    def test_main_guard_keeps_else_validation_and_source_bypasses_stale_bytecode(self):
+        import py_compile
+        source = self.directory / "sequence.py"
+        source.write_text(SEQ.read_text() + "\ndef compute_observable(counts):\n    return 1.0\n")
+        original_stat = source.stat()
+        py_compile.compile(str(source), doraise=True)
+        source.write_text(source.read_text().replace("return 1.0", "return 2.0"))
+        os.utime(source, ns=(original_stat.st_atime_ns, original_stat.st_mtime_ns))
+        self.assertEqual(source.stat().st_size, original_stat.st_size)
+        loaded = w.module(source)
+        self.assertEqual(loaded.compute_observable({"0": 1}), 2.0)
+        self.assertEqual(loaded.source_sha256, w.file_digest(source))
+        source.write_text(SEQ.read_text() + '\nif __name__ == "__main__":\n    import cli_only\nelse:\n    import analysis_helper\n')
+        with self.assertRaisesRegex(ValueError, "self-contained"):
+            w.module(source)
+
+    def test_environment_drift_blocks_execution_analysis_and_new_submission(self):
+        local_file, local_plan = self.plan()
+        cloud_file, cloud_plan = self.plan("QPU")
+        raw = self.directory / "raw.json"
+        w.write(raw, {"plan": local_plan, "rows": []})
+        for field in ("packages", "dependencyLockSha256"):
+            changed = copy.deepcopy(w.provenance())
+            if field == "packages":
+                changed[field]["numpy"] = "changed-version"
+            else:
+                changed[field] = "0" * 64
+            output = self.directory / f"no-{field}.json"
+            calls_before = len(self.transport.calls)
+            with self.subTest(field=field), patch.object(w, "provenance", return_value=changed), \
+                    patch.object(w, "module", side_effect=AssertionError("User code loaded")), \
+                    patch("pulser_simulation.QutipEmulator.from_sequence", side_effect=AssertionError("Solver started")):
+                with self.assertRaisesRegex(ValueError, "environment differs.*" + field):
+                    w.local_run(local_file, output)
+                with self.assertRaisesRegex(ValueError, "environment differs.*" + field):
+                    w.analyze(raw, SEQ, output)
+                with self.assertRaisesRegex(ValueError, "environment differs.*" + field):
+                    w.submit(cloud_file, output, cloud_plan["planSha256"], sdk=self.sdk)
+            self.assertFalse(output.exists())
+            self.assertEqual(len(self.transport.calls), calls_before)
+            self.assertFalse(w.state_path(cloud_plan, "requests", cloud_plan["request_id"]).exists())
+
+    def test_environment_drift_preserves_existing_cloud_recovery_and_control(self):
+        _, _, receipt, _ = self.submitted(open_batch=True)
+        changed = copy.deepcopy(w.provenance())
+        changed["packages"]["pulser-core"] = "changed-version"
+        changed["dependencyLockSha256"] = "0" * 64
+        with patch.object(w, "provenance", return_value=changed):
+            recovered = w.recover(receipt, sdk=self.sdk)
+            self.assertEqual(recovered["state"], "submitted")
+            harvested = w.harvest(receipt, self.directory / "harvested.json", sdk=self.sdk)
+            self.assertEqual(len(harvested["rows"]), 3)
+            w.control(receipt, "cancel", confirmed=True, sdk=self.sdk)
+        self.assertEqual(self.transport.batch["status"], "CANCELED")
+
+    def test_bundled_research_modules_remain_usable_at_original_register_sizes(self):
+        expected = {"literature_z2_reproduction": 56, "square_lattice_eom_quench": 25, "triangular_lattice_phases": 49}
+        for name, size in expected.items():
+            with self.subTest(name=name):
+                directory = ROOT / "upstream/examples" / name
+                plan = w.prepare(directory / f"{name}_spec.json", directory / f"{name}_sequence.py",
+                                 self.directory / f"{name}.json", local_device="MockDevice" if size == 56 else "AnalogDevice")
+                self.assertTrue(all(len(row["atom_ids"]) == size for row in plan["rows"]))
 
     def test_bad_counts_are_explicit_and_readout_keeps_unclipped_values(self):
         _, plan = self.plan()

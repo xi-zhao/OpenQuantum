@@ -18,6 +18,9 @@ description: 将中性原子研究问题转成实验规范与任意 Pulser 序�
 - Agent 通过宿主现有代码 Tool 保存并运行任意原生程序。`pulser`、`pulser_simulation`、`pasqal_cloud`
   全部公开 API 可用，包括参数化序列、映射寄存器、各 backend、jobs、batches、workloads 和原生连接。
   辅助 CLI 的扫描合同不是 SDK 的能力上限；复杂扫描、校准、优化及非计数结果使用原生 API。
+- 辅助 CLI 要求单文件研究模块：两个入口函数、研究常量与辅助函数放在同一序列文件，不从本地模块或动态代码加载。
+  允许的数值库与环境核对见[命令合同](references/execution.md)。代码、包版本或依赖锁变化后须重新准备和审阅计划；
+  旧任务仍可恢复、采集或取消。多文件研究项目使用宿主代码 Tool 直接调用原生 SDK。
 - 现有 `simulate_pulser_rydberg` 保持其本地便捷合同。Skill 不启动额外 Agent Runtime，也不新增任意代码执行 MCP。
 
 ## 七阶段与交付
