@@ -94,9 +94,11 @@ Classiq 与 Q-CTRL 的离线 bootstrap 已实际验证。下载中断涉及的 C
 
 两轮的工程判据是：用户代码能使用原生 API 表达自定义对象；依赖与源码可定位并锁定；完整工件可保存；错误能暴露且中间文件保留；宿主能停止并重新运行程序；安装路径与用户项目路径分离后仍可工作。停止与重跑属于首批已经验证的共享宿主机制，本轮没有为每个库重复进行取消检查。小输入仅用于检查接口与运行机制，不是产品规模上限。
 
-每批工程记录包含锁摘要、实际版本、程序和输入、检查范围、失败原因及未验证项。来源入口为[首批证据](evidence/full-sdk-access-2026-10-12.json)与[本轮逐库证据](evidence/full-sdk-engineering-2026-10-12.json)。原始程序、输出和失败记录保留在任务工作树的 `.openquantum/sdk-checks/remaining/`；依赖环境使用独立目录，未替换运行中的插件。可复跑命令：
+每批工程记录包含锁摘要、实际版本、程序和输入、检查范围、失败原因及未验证项。来源入口为[首批证据](evidence/full-sdk-access-2026-10-12.json)与[本轮逐库证据](evidence/full-sdk-engineering-2026-10-12.json)。三份报告引用的原始收据、程序、完整工件、日志以及失败/中断记录已收入[随仓库保存的离线证据包](evidence/full-sdk-2026-10-12.bundle/README.md)。包内按内容哈希去重、无损压缩；报告中的 `.openquantum/` 路径是原始运行位置，由 manifest 映射到归档对象，复核不依赖那台机器或 SDK。历史源文件按路径和 SHA-256 保留多个版本，没有改写旧报告。依赖环境仍使用独立目录，未替换运行中的插件。可复跑命令：
 
 ```sh
+# 新检出仓库即可离线核对全部已归档证据，无需安装 SDK 或 npm 依赖。
+node scripts/sdk-evidence-bundle.mjs verify
 npm run sdk:test
 npm run sdk:guides:check
 node scripts/audit-sdk-integration.mjs --check

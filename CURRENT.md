@@ -7,6 +7,7 @@
 - 全量梳理 85 个 SDK/源码环境入口，增加宿主代码工具使用完整原生 API 的路径；源 Skill、算法指南和 Codex 插件不再将便捷 Tool 的预设案例作为功能范围。
 - 补齐 Flow-VQE 完整源码、CQLib QML 完整包、Ocean 元包，以及 QPanda/Qcover/SpinQit/VQNet 导入依赖与兼容处理。安装与计算保持分离，不新增任意代码执行 MCP。
 - 剩余三批 72 个环境已逐库完成原生 API 工程检查：30/30、24/24、18/18。加上首批 13 项，85 个环境均有明确范围的工程记录；不表示穷尽上游 API。补齐 QCEC 的 Qiskit extra、TensorCircuit 的优化/转换依赖，并修复 QAT 共享 console wrapper 的安装校验误报。
+- 原始收据、程序、完整工件和日志已无损归档到仓库，可在不含原工作区或 SDK 的新目录中离线复核。
 - 分批状态、复跑命令、实际通过项与未验证平台见[完整接入记录](docs/integrations/FULL_SDK_ACCESS.md)及其版本化工程证据；静态目录覆盖不等于全部 API 已验证。本轮按用户要求不使用真实科研任务验收。
 - 源码交付状态以 [main](https://github.com/xi-zhao/OpenQuantum/tree/main) 与 [CI](https://github.com/xi-zhao/OpenQuantum/actions/workflows/ci.yml?query=branch%3Amain) 为准。本次不包含发布或更新运行中的安装；已有主工作区改动由原任务保留。
 
