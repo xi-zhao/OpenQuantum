@@ -64,7 +64,7 @@ jobs:
           for key, workflow, jobs in [('CI_RUN_ID', 'ci.yml', 4), ('INSTALLER_RUN_ID', 'desktop-installers.yml', 3)]:
               run = gh('api', f'repos/{repo}/actions/runs/{os.environ[key]}')
               assert run['head_sha'] == source and run['event'] == 'push'
-              assert run['path'] == '.github/workflows/' + workflow
+              assert run['path'].split('@', 1)[0] == '.github/workflows/' + workflow
               assert run['status'] == 'completed' and run['conclusion'] == 'success'
               checks = gh('api', f'repos/{repo}/actions/runs/{run["id"]}/jobs?per_page=100')['jobs']
               assert len(checks) == jobs and all(j['conclusion'] == 'success' for j in checks)
