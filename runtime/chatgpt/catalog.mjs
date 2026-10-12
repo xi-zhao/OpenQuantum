@@ -76,6 +76,7 @@ export async function readCapabilities(root = PROJECT_ROOT) {
     const title = NATIVE_PRESENTATION[entry.id]?.title ?? presentation?.displayName ?? skill?.match(/^# (.+)$/m)?.[1] ?? entry.id;
     const sourceDescription = NATIVE_PRESENTATION[entry.id]?.description ?? metadata.description ?? title;
     const sdkIds = entry.id === "quantum-sdk-workbench" ? sdkLibraries.map((library) => library.id)
+      : entry.id === "pasqal-experiments" ? ["pulser-dynamics"]
       : sdkLibraries.some((library) => library.id === entry.id) ? [entry.id]
         : algorithmIds.has(entry.id) ? ["quantum-algorithms"] : [];
     const description = sdkIds.length ? `${sourceDescription} 可经宿主代码工具使用锁定环境中的原生 SDK 公开 API，自定义任务不限于便捷 Tool 的参数范围。`

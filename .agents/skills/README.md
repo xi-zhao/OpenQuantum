@@ -13,9 +13,9 @@
 
 ## 当前 Skill
 
-以下 156 个 Skill 随源码分发；它们与 MCP Server 不是一一对应关系，知识型 Skill 可以不绑定专用 Tool，
+以下 157 个 Skill 随源码分发；它们与 MCP Server 不是一一对应关系，知识型 Skill 可以不绑定专用 Tool，
 工作流也可以使用多个服务或进程内原生 Tool。连接默认配置与凭据条件见[项目首页](../../README.md#mcp-服务目录)。
-当前 143 项可由模型自动选择，13 个分类索引仅保留用户显式调用；名称和来源映射不变。
+当前 144 项可由模型自动选择，13 个分类索引仅保留用户显式调用；名称和来源映射不变。
 分批建议与兼容影响见[扩展治理清单](../../docs/architecture/EXTENSION_GOVERNANCE.md)。
 
 | Skill | 作用 | 依赖的执行模块 |
@@ -160,6 +160,7 @@
 | [`iqm-circuit-workbench`](iqm-circuit-workbench/SKILL.md) | IQM 原生门转译与本地模拟，不连接真实设备。 | `iqm_local` |
 | [`alicebob-cat-circuits`](alicebob-cat-circuits/SKILL.md) | 官方本地猫态量子比特模型与电路仿真。 | `alicebob_local` |
 | [`pulser-dynamics`](pulser-dynamics/SKILL.md) | Pasqal 全局脉冲、Rydberg 阵列与本地动力学。 | `pulser_local` |
+| [`pasqal-experiments`](pasqal-experiments/SKILL.md) | Pasqal 实验规范、理想/含噪仿真、云批次恢复与采样分析。 | 宿主代码 Tool；共享 `pulser-dynamics` SDK 环境 |
 | [`qoolqit-workbench`](qoolqit-workbench/SKILL.md) | 无量纲 Rydberg 程序编译与本地计算；需审阅上游定制许可证。 | `qoolqit_local` |
 | [`ionq-programs`](ionq-programs/SKILL.md) | 使用官方 SDK 将结构化电路转换为 IonQ QIS 程序；不提交云任务。 | `ionq_local` |
 | [`superstaq-compilation`](superstaq-compilation/SKILL.md) | 本地程序序列化和可选远程编译；远程操作外发电路，需要账户，不执行 QPU 任务。 | `superstaq_cloud` |

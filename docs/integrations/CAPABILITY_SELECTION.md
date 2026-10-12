@@ -67,6 +67,8 @@ VQD 两个实现的输入、优化过程与结果合同不同，只合并选择�
   QPanda QUBO 保留本源算法路径。不同能量约定先换算再比较。
 - Perceval 输入光学模式和 Fock 态；IQM 与 Alice & Bob 提供具体设备/噪声模型。
   中性原子动力学按 Bloqade、Pulser 或 QoolQit 所需表达选择，明确角频率、距离和时间单位。
+  从研究问题到 Pasqal Cloud 实验的完整工作流选择 `pasqal-experiments`：复用 Pulser 环境和完整 Cloud SDK，
+  覆盖规范、序列、理想/含噪扫描、提交恢复与采样分析。云任务需另行具备项目、凭据及操作授权，见 [Pasqal 接入](PASQAL.md)。
 - IonQ 本地程序准备不需要账户；已有硬件连接继续承担独立授权的云任务。
   Superstaq 的本地序列化和远程编译是两个不同 Tool，只有远程路径传输电路。
 

@@ -1,5 +1,10 @@
 # Third-party notices
 
+Pasqal agent-marketplace 的实验方法与三个研究示例固定于 `2b0353d83e65ce4cc44c9bfa7e7dfe2549201bb1`，
+采用 Apache-2.0；许可证、逐文件来源及 OpenQuantum 适配说明见
+[Pasqal NOTICE](.agents/skills/pasqal-experiments/NOTICE.md)。`pasqal-cloud==0.24.0`（Apache-2.0）
+由已有 Pulser 环境安装。未默认分发或安装独立许可的本地 emu-mps。
+
 除明确单独许可的目录外，OpenQuantum 自有代码采用仓库根目录中的 [MIT License](LICENSE)。Mitiq 能力目录采用 GPL-3.0-only，见下方说明。根目录许可证不替代第三方项目的许可证，也不把第三方代码重新许可为 OpenQuantum 的代码。
 
 下表记录 OpenQuantum 当前明确接入或直接依赖的主要上游组件。各组件仍由原作者持有版权，并继续遵循其原始许可证。

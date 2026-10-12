@@ -1,0 +1,23 @@
+{
+  "repository": "https://github.com/pasqal-io/agent-marketplace",
+  "revision": "2b0353d83e65ce4cc44c9bfa7e7dfe2549201bb1",
+  "files": {
+    "skills/application-to-idea/references/selection-rubric.md": "bbb5685a9acac316bad437218d7a6ada3070a7358b79db200eca8f7825fbe0e0",
+    "skills/application-to-idea/references/pasqal-stack.md": "ba0d785454f3392679a6f69f626db57199e9b1a1ad3bcc2769db477244759671",
+    "skills/application-to-idea/references/handoff-template.md": "ddd877b1a0f7b5c2b942d3a5ca930f398bf79750421f6cc9e5aa084a9fe20fe0",
+    "skills/application-to-idea/references/sources.md": "1509803c231ef8bd6ce6067af267ef8c53f677d9b964b53e34673c9af6c42fea",
+    "skills/application-to-idea/references/pulser-primitives.md": "773c0fc98e79e7c5519249d2a01a08a2e6ba8835d0bd2c933caaaec21dc2f568",
+    "skills/application-to-idea/references/emulation-ladder.md": "d063ee17d07f96fbe4dc0f46a99bc234e9cacda1bd3005e6cf03003e9d35ee67",
+    "skills/application-to-idea/references/method-catalog.md": "f8cf11909e81c83aee73e771af1c8d8863a343277b696b8f2292bfc657484c73",
+    "skills/application-to-idea/support/validate_idea_note.py": "401a8768d25b3414fa4f125599e0925e611c0d4541b281cd7a0282330d29e946",
+    "examples/literature_z2_reproduction/literature_z2_reproduction_spec.json": "55f7f1df28c5cbbebf2bce6618d8c9cbb5818c0054e247ed70fc99a7901c3d00",
+    "examples/literature_z2_reproduction/literature_z2_reproduction_sequence.py": "f13da557f07ba7cbcf86aeafd09eed2a86d3447f8006c1e1712866c2d7ee67f4",
+    "examples/literature_z2_reproduction/README.md": "3fdd1eef6f2d0ec7d280b5617a07ff4be016040f408faca6f4b0ba4a0123e54a",
+    "examples/triangular_lattice_phases/triangular_lattice_phases_spec.json": "59bc36a4f420bcc0d958bbdc89bfb3bcd39966f8f24902b5975531cb4280b3d1",
+    "examples/triangular_lattice_phases/README.md": "fc8ba225d465dc597ded1ba5316d25639cf6ad280d78ff56f523f2eebd24ef60",
+    "examples/triangular_lattice_phases/triangular_lattice_phases_sequence.py": "06e9478c3eab8dd4a811f9140243855f3bebf90d45d597ee4f549f91f944cb76",
+    "examples/square_lattice_eom_quench/square_lattice_eom_quench_sequence.py": "c6f6ea5cc08fcd43c0b412491ced8958812a6ef6f25a94ed9cc4b2cc2e92c5a3",
+    "examples/square_lattice_eom_quench/square_lattice_eom_quench_spec.json": "2f6e67310b3e93368154d406f1f02b4e841ba9f813e506c898c875b6fdf1dc14",
+    "examples/square_lattice_eom_quench/README.md": "e552c485667b00a98163843c3b91aba0ee0fed5e0636c2fd8424811331d1fcb8"
+  }
+}

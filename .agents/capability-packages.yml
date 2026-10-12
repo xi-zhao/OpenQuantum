@@ -1658,6 +1658,27 @@ packages:
         - tests/sdk-devices-live.test.mjs
         - tests/harness-vendor-sdks.test.mjs
 
+  - id: pasqal-experiments
+    level: L1
+    execution:
+      mcpServers: []
+      nativeTools:
+        - name: bash
+          providerPlugin: "@deepseek-ai/dsh-tool-bash"
+          activation: conditional
+          contractCheck: tests/harness-native-quantum.test.mjs
+          effect: external-write
+          effectEvidence: conservative-provider
+        - name: pwsh
+          providerPlugin: "@deepseek-ai/dsh-tool-pwsh"
+          activation: conditional
+          contractCheck: tests/harness-native-quantum.test.mjs
+          effect: external-write
+          effectEvidence: conservative-provider
+      checks:
+        - tests/pasqal-experiments.test.mjs
+        - tests/harness-pasqal.test.mjs
+
   - id: qoolqit-workbench
     level: L1
     execution:

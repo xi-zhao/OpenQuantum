@@ -1,0 +1,67 @@
+{
+  "experiment_name": "square_lattice_eom_quench",
+  "version": "1.0",
+  "objective": "Exercise the pipeline end to end on a transverse-field Ising quench: does the lattice-averaged occupation <n> relax towards the plateau the noise model predicts at hx/J = 6?",
+  "paper": {
+    "title": "Transverse-field Ising quench on a square Rydberg lattice",
+    "authors": "unpublished — internal test case",
+    "arxiv_id": null,
+    "year": null
+  },
+  "device": "FRESNEL_CAN1",
+  "register": {
+    "geometry": "square",
+    "N_atoms": 25,
+    "builder_params": {
+      "L": 5,
+      "spacing_note": "derived from hx, omega and C6 by the builder, not fixed here"
+    }
+  },
+  "channel": {
+    "type": "rydberg_global",
+    "eom_mode": true
+  },
+  "pulse": {
+    "type": "eom_quench",
+    "omega_max_mhz": 2.0
+  },
+  "scan": {
+    "variable": "t_ns",
+    "values": [16, 100, 300, 600, 1000, 1500, 2000, 2600, 3200, 4000],
+    "fixed_params": {
+      "N": 5,
+      "hx": 6.0,
+      "omega_max_mhz": 2.0
+    }
+  },
+  "observable": {
+    "type": "occupation",
+    "description": "lattice-averaged Rydberg occupation <n> vs quench duration",
+    "fn_name": "compute_observable",
+    "expected_max": 0.5
+  },
+  "validation": {
+    "noise_retention_min": 0.5
+  },
+  "shots_per_point": 300,
+  "output_dir": "experiments/square_lattice_eom_quench/results",
+  "sequence_file": "square_lattice_eom_quench_sequence.py",
+  "builder_fn": "build_sequence",
+  "open_questions": [
+    {
+      "field": "scan.values",
+      "question": "the original run scanned 75 time points in one parametric batch; 10 are kept here because this pipeline submits one batch per point. Is 10 enough to resolve the approach to the plateau?",
+      "provisional": 10,
+      "why": "10 batches x 300 shots is the smallest scan that still shows the relaxation",
+      "impact": "sets the time resolution; more points cost proportionally more QPU shots"
+    },
+    {
+      "field": "scan.fixed_params.hx",
+      "question": "hx/J = 6 was chosen because the noise model tracks hardware best there, not because the physics is most interesting there. Keep it, or move closer to the critical point?",
+      "provisional": 6.0,
+      "why": "this case exists to validate the pipeline, so agreement with the noise model is the point",
+      "impact": "nearer criticality the quench is more sensitive to noise and a QPU-vs-EMU disagreement gets harder to attribute"
+    }
+  ],
+  "_notes": "hx/J = 6 is the paramagnetic regime, where the FC1 noise model tracks hardware most closely — the reason this case was used to validate the pipeline. The lattice spacing is not a free parameter: the builder derives it from hx, omega and the live C6 so that the interaction sets the requested hx/J. The original submission scanned 75 time points in a single parametric batch; this spec uses 10 points because the pipeline submits one batch per scan point."
+}

@@ -52,7 +52,7 @@
 | `paulie-algebra` | Paulie | python | paulie==0.2.3 | Pauli 表达式、代数运算与库公开分析接口 | 按固定版本、已安装可选组件及目标平台核实 |
 | `pennylane-differentiable` | PennyLane | python | pennylane==0.45.1 | QNode、自定义电路、算符、测量、设备、梯度、变换与混合优化 | 按固定版本、已安装可选组件及目标平台核实 |
 | `perceval-photonics` | Perceval | python | perceval-quandela==1.3.0 | 任意光学网络、Fock 输入、processor、sampler、噪声与损耗 | 按固定版本、已安装可选组件及目标平台核实 |
-| `pulser-dynamics` | Pulser | python | pulser-core==1.9.1, pulser-simulation==1.9.1 | Register、Device、Sequence、waveform、pulse、变量、噪声与模拟 | 按固定版本、已安装可选组件及目标平台核实 |
+| `pulser-dynamics` | Pulser / Pasqal Cloud | python | pulser-core==1.9.1, pulser-simulation==1.9.1, pasqal-cloud==0.24.0 | Register、Device、Sequence、waveform、变量、噪声与模拟；Pasqal Cloud connections、backends、jobs、batches、workloads 与完整实验工作流 | pasqal-experiments 复用此环境；云操作需项目、凭据和相应授权，本地运行不联网 |
 | `pychemiq-chemistry` | PyChemiQ | python | pychemiq==1.1.4, numpy==1.26.4 | 分子、映射、ansatz、VQE 与化学计算接口 | 按固定版本、已安装可选组件及目标平台核实 |
 | `pyquil-simulation` | pyQuil | python | pyquil==4.21.0 | Program、自定义 gates、Quil 控制流、编译器与模拟/设备接口 | 按固定版本、已安装可选组件及目标平台核实 |
 | `pytket-compilation` | pytket | python | pytket==2.18.4 | 自定义 Circuit、Architecture、pass、predicate、路由与后端 | 按固定版本、已安装可选组件及目标平台核实 |
@@ -105,7 +105,7 @@
 - `quantum-hardware`：`quantum_hardware` (opt-in)
 - `qiskit-circuit-workbench`：`qiskit` (conditional)、`qiskit_docs` (conditional)
 
-## 原生实现（7 项）
+## 原生实现（8 项）
 
 - `quantum-practices`
 - `quantum-learning`
@@ -114,6 +114,7 @@
 - `platform-diagnostics`
 - `quantum-ground-state`
 - `metriq-data`
+- `pasqal-experiments`
 
 这些是 OpenQuantum 原生实现或宿主能力，不冒充对应项目的全部上游 SDK。特别是 QMClaw 当前是测控模拟实现，不能称作完整 QMClaw 实验室运行时。
 

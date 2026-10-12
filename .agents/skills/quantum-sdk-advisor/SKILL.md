@@ -21,6 +21,7 @@ description: 为量子计算项目按问题类型、硬件目标、数值方法�
 5. 优先复用 OpenQuantum 已有能力：
    - 通用电路与 Qiskit 文档：默认 Qiskit MCP Server；
    - 窄作用域二量子位基态：`quantum-ground-state`；
+   - 中性原子实验设计、Pulser 理想/含噪扫描、Pasqal Cloud 批次及采样分析：`pasqal-experiments`，复用 `pulser-dynamics` 环境；
    - 其他 SDK：先查 [厂商 SDK 范围](../../../docs/integrations/VENDOR_SDKS.md)和
      [公司与机构补充接入](../../../docs/integrations/SDK_EXPANSION.md)及
      [网络、控制、光学与云接口补充](../../../docs/integrations/SDK_GAPS.md)，按表内动作复用已有 Tool；

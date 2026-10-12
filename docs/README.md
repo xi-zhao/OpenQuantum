@@ -150,6 +150,7 @@ Skill 与 Tool 在概念和发行版 policy 中都相互独立：Skill-only、To
 - [部署与启动](DEPLOYMENT.md)：本地、Docker、模型配置和启动检查。
 - [本地计算环境准备](integrations/LOCAL_ENVIRONMENTS.md)：按能力显式准备固定依赖，已有环境原地核验与升级。
 - [完整 SDK 接入与逐库审计](integrations/FULL_SDK_ACCESS.md)：原生公开 API、环境定位、自定义程序、分批补齐与工程验证；便捷 Tool 的模型范围不再是 SDK 能力上限。
+- [Pasqal 实验工作流与 Cloud SDK](integrations/PASQAL.md)：复用 Pulser，覆盖实验规范、理想/含噪扫描、云提交恢复与原始采样分析。
 - [相近能力的选择](integrations/CAPABILITY_SELECTION.md)：算法示例与专业计算入口的选择，以及大型可选服务的工具范围。
 - [版本更新](UPDATES.md)：新版本提醒、源码升级、发布通道和维护流程。
 - [v0.8.1 统一发行说明](releases/v0.8.1.md)：Desktop、Codex 插件和安装器共用产品版本及更新命令；发行渠道分别保留。
