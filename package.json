@@ -149,7 +149,8 @@
     "@modelcontextprotocol/ext-apps": "1.7.5",
     "@napi-rs/keyring": "2.1.1",
     "smol-toml": "1.9.1",
-    "fflate": "0.8.3"
+    "fflate": "0.8.3",
+    "jose": "6.2.12"
   },
   "devDependencies": {
     "@agentclientprotocol/sdk": "1.4.0",

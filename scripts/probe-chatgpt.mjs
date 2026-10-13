@@ -6,6 +6,7 @@ import { randomUUID } from "node:crypto";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 import { OPENER, settingsResourceUri } from "../runtime/chatgpt/server.mjs";
+import { sealCredentialField } from "../src/settings/credential-seal.mjs";
 
 function credentialOriginOf(resource) {
   const origin = resource?.text?.match(/name="openquantum-credential-origin" content="([^"]+)"/)?.[1];
@@ -38,6 +39,17 @@ export async function probeTransport(transport, discoveredResource) {
       action: "credential.field.issue", id: "fieldqkit", field: "QUAFU_API_TOKEN", operation: "set", origin: "null",
     } });
     if (permission.isError || new URL(permission._meta.openquantumSettings.url).origin !== credentialOrigin) throw new Error("Credential authorization does not match the app resource process");
+    const prepared = await client.callTool({ name: "openquantum_settings", arguments: {
+      action: "credential.field.prepare", id: "fieldqkit", field: "QUAFU_API_TOKEN", operation: "set",
+    } });
+    if (prepared.isError) throw new Error("Encrypted credential channel is unavailable");
+    const authorization = prepared._meta.openquantumSettings;
+    // An intentionally invalid empty value verifies decryption and field
+    // validation without creating a credential in the release probe.
+    const encryptedRequest = { name: "openquantum_settings", arguments: { action: "credential.field.commit", nonce: authorization.nonce,
+      ciphertext: await sealCredentialField(authorization, { value: "" }) } };
+    if ((await client.callTool(encryptedRequest))._meta?.openquantumSettings?.status !== 400 ||
+        (await client.callTool(encryptedRequest))._meta?.openquantumSettings?.status !== 403) throw new Error("Encrypted credential validation or replay protection failed");
     if (!Array.isArray(settings.services) || !Array.isArray(settings.tools)) throw new Error("Missing service configuration inventory");
     const managed = settings.services.filter(service => service.supported);
     if (managed.some(service => service.enabled || service.tools.some(tool => tool.enabled)) ||
@@ -51,7 +63,7 @@ export async function probeTransport(transport, discoveredResource) {
       services: settings.services.length, configurableServices: managed.length, credentialedServicesDefaultOff: true,
       globalEntrypoint: opener.name, settingsResourceUri: opener._meta.ui.resourceUri,
       settingsResource: true, crossProcessResource: Boolean(discoveredResource), credentialOriginBound: true,
-      credentialAuthorizationBound: true, referenceExecution: true, disabledToolRejected: true, hostPlacementVerified: false };
+      credentialAuthorizationBound: true, encryptedCredentialTransport: true, referenceExecution: true, disabledToolRejected: true, hostPlacementVerified: false };
   } finally { await client.close(); }
 }
 

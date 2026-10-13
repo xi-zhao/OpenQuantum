@@ -55,6 +55,7 @@ Pasqal agent-marketplace 的实验方法与三个研究示例固定于 `2b0353d8
 | PyQPanda3 Skill | Apache-2.0 | 安装命令把固定提交 `130a7237628096526afcc14ddd67c0ded45ee01d` 检出到被 Git 忽略的 `.agents/skills/pyqpanda3` 目录，作为官方 Agent Skill 原样挂载；默认不随仓库分发，OpenQuantum 不在本仓库重新分发上游源码 | [OriginQ/pyqpanda3-skill](https://github.com/OriginQ/pyqpanda3-skill) |
 | pyqpanda-algorithm | Apache-2.0 | 通过 `uv` 按需使用 PyPI `pyqpanda_alg==2.0.0`（会引入 `pyqpanda3` 原生 wheel）；OpenQuantum 维护独立的有界本地 QUBO 求解 MCP 与 Skill，只在 CPU 模拟器调用上游 QUBO 算法，不复制上游源码，也不开放上游云端任务接口 | [OriginQ/pyqpanda-algorithm](https://github.com/OriginQ/pyqpanda-algorithm) |
 | Model Context Protocol TypeScript SDK | MIT | 作为本地 MCP 服务和测试的直接 npm 依赖，固定为 `1.30.0` | [modelcontextprotocol/typescript-sdk](https://github.com/modelcontextprotocol/typescript-sdk) |
+| jose | MIT | 固定为 `6.2.12`；Codex 设置使用 JWE 加密凭据，浏览器构建附带上游许可证文本 | [panva/jose](https://github.com/panva/jose) |
 
 仓库中的 OpenQuantum 自研桥接、配置、Skill 和 Validator 受根目录 MIT License 约束。它们调用或编排某个上游项目，并不改变上游项目的许可证。
 

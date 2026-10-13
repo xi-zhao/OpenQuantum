@@ -21,7 +21,8 @@ export function prepareSettingsDocument(html, origin) {
   return html.replace("<!-- CREDENTIAL_ORIGIN -->", `<meta name="openquantum-credential-origin" content="${url.origin}">`);
 }
 export const ICON = `data:image/svg+xml;base64,${Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="24" cy="24" rx="21" ry="8" transform="rotate(45 24 24)"/><ellipse cx="24" cy="24" rx="21" ry="8" transform="rotate(-45 24 24)"/><circle cx="24" cy="24" r="3" fill="currentColor"/></svg>').toString("base64")}`;
-const schema = { type: "object", properties: { action: { type: "string", enum: ["snapshot", "skill.set", "tool.set", "provider.set", "connection.add", "connection.set", "connection.tool.set", "connection.remove", "connection.test", "credentials.open", "service.credentials.open", "credential.field.issue"] },
+const schema = { type: "object", properties: { action: { type: "string", enum: ["snapshot", "skill.set", "tool.set", "provider.set", "connection.add", "connection.set", "connection.tool.set", "connection.remove", "connection.test", "credentials.open", "service.credentials.open", "credential.field.issue", "credential.field.prepare", "credential.field.commit"] },
+  nonce: { type: "string", pattern: "^[a-f0-9]{64}$" }, ciphertext: { type: "string", maxLength: 32768 },
   field: { type: "string", maxLength: 128 }, operation: { enum: ["set", "remove"] }, origin: { type: "string", maxLength: 2048 },
   revision: { type: "string", maxLength: 64 }, id: { type: "string", maxLength: 128 }, enabled: { type: "boolean" }, tool: { type: "string", maxLength: 128 },
   connection: { type: "object", additionalProperties: false, properties: { id: { type: "string", maxLength: 32 }, transport: { enum: ["stdio", "http"] }, url: { type: "string", maxLength: 2048 }, command: { type: "string", maxLength: 1024 }, args: { type: "array", maxItems: 32, items: { type: "string", maxLength: 2048 } }, tokenEnv: { type: "string", maxLength: 64 }, authentication: { enum: ["none", "token"] } }, required: ["id", "transport", "authentication"] },
@@ -32,6 +33,8 @@ export async function settingsRequest({ settings, connections, credentialWindow 
   if (input.action === "credentials.open") return { url: await credentialWindow.open(input.id) };
   if (input.action === "service.credentials.open") return { url: await credentialWindow.openService(input.id) };
   if (input.action === "credential.field.issue") return credentialWindow.issueField(input);
+  if (input.action === "credential.field.prepare") return credentialWindow.prepareField(input);
+  if (input.action === "credential.field.commit") return credentialWindow.commitField(input);
   if (input.action === "snapshot") return settings.snapshot();
   if (input.action === "connection.test") return connections.probe(input.id);
   return settings.command(input);
@@ -52,7 +55,7 @@ export function createMcpServer({ backend, settings, connections, credentialWind
     { name: OPENER, title: "OpenQuantum 设置", description: "Open settings for OpenQuantum Skills, MCP connections and Tools.", inputSchema: { type: "object", properties: {}, additionalProperties: false },
       annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }, icons: [{ src: ICON, mimeType: "image/svg+xml" }],
       _meta: { ui: { resourceUri: uiUri, visibility: ["app"] }, "openai/ui": { entrypoints: [{ type: "global" }, { type: "settings", searchTerms: ["quantum", "skills", "mcp"] }] } } },
-    { name: SETTINGS_TOOL, title: "OpenQuantum 能力设置", description: "Configure OpenQuantum capabilities from the settings UI. Never pass credentials in this tool.", inputSchema: schema,
+    { name: SETTINGS_TOOL, title: "OpenQuantum 能力设置", description: "Configure OpenQuantum capabilities from the settings UI. Never pass plaintext credentials in this tool.", inputSchema: schema,
       annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: true },
       _meta: { ui: { resourceUri: uiUri, visibility: ["app"] } } },
     ...await settings.listTools(),

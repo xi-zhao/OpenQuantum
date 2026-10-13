@@ -5,11 +5,13 @@ import { withLock } from "./storage.mjs";
 import { serviceById, serviceCredentialRef, serviceValues, validateServiceValues } from "./service-catalog.mjs";
 import { credentialHtml, credentialCss, credentialJs } from "./credential-ui.mjs";
 import { createCredentialBridge } from "./credential-bridge.mjs";
+import { createCredentialChannel } from "./credential-channel.mjs";
 
 export async function createCredentialWindow({ settings, credentials }) {
   const sessions = new Map();
   let origin;
   const bridge = createCredentialBridge({ settings, credentials, sessions, getOrigin: () => origin });
+  const channel = createCredentialChannel({ settings, credentials });
   const server = createServer(async (request, response) => {
     const reply = (status, value, type = "application/json", headers = {}) => {
       if (response.headersSent) return;
@@ -80,6 +82,8 @@ export async function createCredentialWindow({ settings, credentials }) {
   return {
     origin,
     issueField: input => bridge.issue(input),
+    prepareField: input => channel.prepare(input),
+    commitField: input => channel.commit(input),
     async openService(id) {
       const service = serviceById(id);
       if (!service?.supported || !settings.backend.providers.some(provider => provider.key === id)) throw new Error("此服务尚未接入插件凭据配置，请查看认证说明");
@@ -99,6 +103,6 @@ export async function createCredentialWindow({ settings, credentials }) {
       sessions.set(nonce, { id, instance: connection.instance, expires: Date.now() + 10 * 60 * 1000 });
       return `${origin}/credentials#${nonce}`;
     },
-    close() { sessions.clear(); server.closeAllConnections(); return new Promise(resolve => server.close(resolve)); },
+    close() { sessions.clear(); channel.close(); server.closeAllConnections(); return new Promise(resolve => server.close(resolve)); },
   };
 }

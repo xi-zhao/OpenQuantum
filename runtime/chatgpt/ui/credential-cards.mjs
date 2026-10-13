@@ -1,4 +1,5 @@
 import { credentialCard, credentialCardCss } from "../../../src/settings/credential-card.mjs";
+import { sealCredentialField } from "../../../src/settings/credential-seal.mjs";
 
 const style = document.createElement("style"); style.textContent = credentialCardCss; document.head.append(style);
 const drafts = new Map();
@@ -57,25 +58,20 @@ export function renderCredentialCards(container, entries, { request, refresh, no
       }
       pending.add(field.name);
       card.querySelectorAll("input,button").forEach(node => node.disabled = true);
-      let attempted = false, failed = false, message;
+      let attempted = false, failed = false, offerFallback = true, message;
       try {
-        const permission = await request({ action: "credential.field.issue", id: service.id, field: field.name, operation, origin: window.origin });
-        const endpoint = new URL(permission.url);
-        const expected = document.querySelector('meta[name="openquantum-credential-origin"]')?.content;
-        if (endpoint.origin !== expected || endpoint.pathname !== "/credential-field" || endpoint.search || endpoint.hash) throw new Error("设置页已过期，请关闭后重新打开。");
-        const body = JSON.stringify(operation === "set" ? { value: input.value } : {});
+        const permission = await request({ action: "credential.field.prepare", id: service.id, field: field.name, operation });
+        const ciphertext = await sealCredentialField(permission, operation === "set" ? { value: input.value } : {});
         input.value = ""; drafts.delete(field.name);
         attempted = true;
-        const response = await fetch(endpoint.href, { method: "POST", credentials: "omit", redirect: "error", referrerPolicy: "no-referrer",
-          headers: { "Content-Type": "application/json", "X-OpenQuantum-Capability": permission.nonce }, body, signal: AbortSignal.timeout(15000) });
-        const result = await response.json();
-        if (!response.ok) { attempted = false; throw new Error(result.message); }
+        const result = await request({ action: "credential.field.commit", nonce: permission.nonce, ciphertext });
+        if (result.status !== 200) { attempted = result.status >= 500; offerFallback = ![400, 409].includes(result.status); throw new Error(result.message); }
         message = result.message;
         failures.delete(field.name);
       } catch (error) {
         failed = true;
-        if (attempted) failures.add(field.name); else failures.delete(field.name);
-        message = attempted ? "保存结果尚未确认，请先查看刷新后的状态；本次不会自动重试。若宿主限制本机连接，可使用独立凭据窗口。" : error.message;
+        if (offerFallback) failures.add(field.name); else failures.delete(field.name);
+        message = attempted ? "保存结果尚未确认，请先查看刷新后的状态；本次不会自动重试。也可使用独立凭据窗口。" : error.message;
       } finally {
         input.value = ""; drafts.delete(field.name); pending.delete(field.name);
         // A network error may arrive after the write. Read state, never retry it.

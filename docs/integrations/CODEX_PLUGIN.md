@@ -26,10 +26,11 @@ SDK workbench 和领域 Skill 支持通过宿主代码工具编写原生程序�
 
 `plugin.json` 使用 Agent Plugins 1.0，并保留 `.codex-plugin/plugin.json` 兼容入口。插件身份仍为
 `openquantum@personal`。左侧“…”菜单的全局入口由 `open_openquantum_settings` 提供，名称为
-“OpenQuantum 设置”；与插件设置入口共享 `ui://openquantum/settings/<HTML SHA-256>.html`。
-独立入口标识避免复用旧工作台路由，内容摘要让页面变化时使用新资源身份。服务端兼容旧 opener 和
-`ui://openquantum/workbench.html` 请求，但不再向菜单宣告旧工作台入口。品牌素材复用现有 OpenQuantum 标识。
-运行依赖只包括 MCP、UI bridge、JSON Schema、TOML/YAML 和系统凭据库，不包含 DSH、Codex CLI、Electron
+“OpenQuantum 设置”；与插件设置入口共享 `ui://openquantum/settings/<bundle SHA-256>.html`。
+资源摘要只标识页面包，排除进程专属的回环端口，允许宿主在另一个 MCP 进程读取。服务端将旧的
+`settings/<64位摘要>.html` 与 `ui://openquantum/workbench.html` 作为当前页面的兼容入口，其他 URI 仍拒绝。
+只宣告当前入口，品牌素材复用现有 OpenQuantum 标识。
+运行依赖只包括 MCP、UI bridge、JSON Schema、TOML/YAML、JWE 加密库和系统凭据库，不包含 DSH、Codex CLI、Electron
 或另一套聊天应用。配置和 Token 不进入发行 ZIP。
 
 页首的 GitHub Star 链接只打开 `https://github.com/xi-zhao/OpenQuantum`，由用户在 GitHub
@@ -72,10 +73,12 @@ Quantum Inspire 和 FieldQKit 的 17 个字段。
 - **新增 MCP**：支持本机 stdio 与 Streamable HTTP。地址不接受 URL 密码或查询参数中的 Token。
   HTTP 允许 HTTPS，回环地址允许本机 HTTP；认证支持 HTTP Bearer 或明确命名的 stdio 环境变量。
   新连接与新发现的工具默认关闭。测试连接执行真实握手和目录查询，不调用计算工具。
-- **服务密钥**：卡片通过仅绑定回环地址的端点直接写入系统凭据库。MCP 只签发绑定服务、字段、操作和
-  页面 Origin 的短时单次授权，不接收密钥值。CORS 仅允许该授权的明确来源，Host 严格检查；
-  当前回环端口写入资源 CSP 和 HTML 摘要，重启后页面资源身份变化。已有值不回显，不经过聊天、
-  MCP Tool 参数、设置 JSON 或日志。保存结果未知时先刷新状态，不自动重试；宿主限制本机连接时提供独立凭据窗口。
+- **服务密钥**：卡片通过宿主正式的 app-only Tool 通道保存。`credential.field.prepare` 返回绑定服务、字段和
+  操作的单次 nonce 与本进程公钥；页面使用 `jose` 的 JWE（RSA-OAEP-256 / A256GCM）加密新值，再通过
+  `credential.field.commit` 提交 nonce 和密文。密钥明文不进入 MCP 参数、聊天、配置 JSON 或日志；已有值不回显。
+  私钥只留在进程内存；nonce 在解密前消费，10 分钟失效，最多 32 个，禁止压缩、算法降级、重放与跨进程提交。
+  写入复用字段校验和锁内合并；结果未知时先刷新状态，不自动重试。WebCrypto 或宿主通道不可用时提供独立凭据窗口。
+  Codex 生产沙箱禁止页面直接请求 HTTP 回环服务，卡片不再依赖这条连接；旧回环端点仅保留给已有页面兼容。
 - **自定义连接 Token**：使用专用凭据窗口，带限时、一次性且绑定连接实例的访问标识。
   打开失败时显示可复制的短时本机地址；关闭连接后才能移除 Token。远程目录若回显此连接 Token，会拒绝持久化。
 - **科学状态**：调用成功或 Validator observations 不构成最终科学 Acceptance。插件没有 Harness Session
@@ -144,7 +147,7 @@ npm run plugin:install
 HTTP OAuth、分页 MCP 目录、跨电脑密钥同步不在此版本范围。用户需要逐项启用自定义工具。
 本地浏览器预览、协议握手、原生 CLI 安装检查、聊天旁 MCP 设置标签页和左侧菜单的全局入口
 是不同验收层级。安装候选版后需从左侧“…”→“OpenQuantum 设置”进入，确认服务概览、MCP、Skills、Tools、服务密钥五个标签及关键配置操作；
-聊天旁标签页显示新版不能证明全局入口已经更新。还需验证宿主允许页面连接回环地址；
-MCP Apps 的 CSP 声明本身不代表浏览器已经授予 Local Network Access。
+聊天旁标签页显示新版不能证明全局入口已经更新。卡片保存应核验宿主 WebCrypto 与 app-only Tool 通道；
+独立凭据窗口另行核验打开与保存。CSP 声明不能替代宿主内的实际交互检查。
 [历史验收记录](../releases/2026-10-11-plugin-settings.md)记录此前的已安装入口结果；
 [本轮服务设置验收](../releases/2026-10-13-codex-service-settings.md)记录候选版的本地验证范围。
