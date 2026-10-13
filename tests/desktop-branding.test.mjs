@@ -13,7 +13,7 @@ function fixture(platform) {
   const brand = { isEmpty: () => false, identity: "OpenQuantum" };
   const app = new EventEmitter();
   let dock = original;
-  app.dock = { getIcon: () => dock, setIcon: icon => { dock = icon; } };
+  app.dock = { setIcon: icon => { dock = icon; } };
   app.getAppPath = () => "/original-client";
   const makeWindow = () => {
     const window = new EventEmitter();
@@ -25,7 +25,7 @@ function fixture(platform) {
   };
   const first = makeWindow();
   const dispose = installDesktopIcon({ app, BrowserWindow: { getAllWindows: () => [first] },
-    nativeImage: { createFromPath: file => file.endsWith("app-icon.png") ? original : brand },
+    nativeImage: { createFromPath: file => /app-icon(?:-mac)?\.png$/.test(file) ? original : brand },
   }, platform);
   return { app, dock: () => dock, first, makeWindow, dispose, original, brand };
 }

@@ -64,7 +64,7 @@ Desktop 保留上游设置的布局、插件、Agent 预设和原生操作，不
 升级只迁移仍与安装记录一致的全局 Home patch，并在 `.openquantum-migrations` 保留原件；若其中的 OpenQuantum 配置已被手动修改，先停止迁移并提示合并配置。
 原生 Profile 修复可以按 manifest 重建链接，无需向上游 app 或其 `node_modules` 注入文件。
 Desktop 图标扩展只在 OpenQuantum 的 Desktop Profile 内加载，使用 Electron 公开的图标和窗口事件 API；不读取模型、凭据、会话或网络。
-切换 Profile 时清理事件监听并恢复先前的运行图标。它不改变原生设置布局或注册新的 Tool。
+切换 Profile 时清理事件监听并恢复上游默认的运行图标。它不改变原生设置布局或注册新的 Tool。
 
 工程检查覆盖安装、再次安装、配置保留、独立工作目录和捆绑运行环境；不运行外部模型或真实科研任务。
 该命令不宣称原生 UI 验收。发布前另需对原版客户端完成实际启动、设置、关键操作和重启检查。

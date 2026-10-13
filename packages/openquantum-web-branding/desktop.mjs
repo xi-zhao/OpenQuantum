@@ -11,9 +11,11 @@ const iconPath = fileURLToPath(new URL("assets/icon-512.png", import.meta.url));
 export function installDesktopIcon({ app, BrowserWindow, nativeImage }, platform = process.platform) {
   const icon = nativeImage.createFromPath(iconPath);
   if (icon.isEmpty()) throw new Error("OpenQuantum Desktop icon is missing");
-  const previousDockIcon = platform === "darwin" ? app.dock?.getIcon() : undefined;
-  const previousWindowIcon = platform === "win32"
-    ? nativeImage.createFromPath(path.join(app.getAppPath(), "build/app-icon.png")) : undefined;
+  // Electron exposes setIcon, but no Dock getIcon. Read the pinned client's
+  // default asset for disposal; never depend on a private Electron interface.
+  const originalIcon = nativeImage.createFromPath(path.join(app.getAppPath(), "build",
+    platform === "darwin" ? "app-icon-mac.png" : "app-icon.png"));
+  if (originalIcon.isEmpty()) throw new Error("Cannot read the original Desktop icon");
   const windows = new Map();
   const refresh = () => { if (platform === "darwin") app.dock?.setIcon(icon); };
   const brandWindow = (_event, window) => {
@@ -35,10 +37,10 @@ export function installDesktopIcon({ app, BrowserWindow, nativeImage }, platform
     for (const [window, closed] of windows) {
       window.removeListener("ready-to-show", refresh);
       window.removeListener("closed", closed);
-      if (!window.isDestroyed() && previousWindowIcon && !previousWindowIcon.isEmpty()) window.setIcon(previousWindowIcon);
+      if (!window.isDestroyed() && platform === "win32") window.setIcon(originalIcon);
     }
     windows.clear();
-    if (previousDockIcon && !previousDockIcon.isEmpty()) app.dock?.setIcon(previousDockIcon);
+    if (platform === "darwin") app.dock?.setIcon(originalIcon);
   };
 }
 
