@@ -15,7 +15,7 @@ Codex 插件在外层 Codex 对话中提供量子 Skill 和科学 Tool。OpenQua
 | `distributions/codex-plugin/` | 与 Desktop 一致的产品版本及插件运行依赖锁定 |
 
 构建从能力策略和真实 `tools/list` 生成目录、Skill 和完整输入合同，检查重复名称和策略漂移。
-当前产品版本统一为 **0.8.1**，Desktop、Codex 插件及安装器使用同一编号；插件包含 **133 个 Skill、71 个科学 Tool**。
+当前源码、Codex 插件及安装器的产品版本为 **0.8.2**；插件包含 **134 个 Skill、71 个科学 Tool**，新增 Pasqal 实验工作流。
 其中没有执行 Tool 的 Skill 明确提供方法解释与选型参考，不把知识目录数量等同于可执行计算数量。
 SDK workbench 和领域 Skill 支持通过宿主代码工具编写原生程序，随包携带 85 个 SDK 环境的导航、
 固定依赖、显式 setup 和源码资源；便捷 Tool 的预设案例不再限制原生 API 的使用。
@@ -57,8 +57,8 @@ setup 规则，插件安装不会批量下载数值环境；缺少依赖时应�
 
 ## 构建、检查与安装
 
-正式包见 [codex-v0.8.1 Release](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.1)。
-首次安装下载 `openquantum-0.8.1-codex-install.zip`，其中已包含安装器、锁文件与插件 ZIP；
+正式包见 [codex-v0.8.2 Release](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.2)。
+首次安装下载 `openquantum-0.8.2-codex-install.zip`，其中已包含安装器、锁文件与插件 ZIP；
 解压后执行 `npm ci --ignore-scripts` 和 `npm run plugin:install`。
 
 让 Codex Agent 代为安装时，使用[面向 Agent 的安装指南](CODEX_AGENT_INSTALL.md)。指南包含现成插件包与
@@ -80,7 +80,7 @@ Skill 关闭、其他 Skill 保留、缓存路径升级后的状态与重新开�
 可通过 `OPENQUANTUM_CODEX_CLI` 指定 CLI 路径。Keychain 集成测试另用
 `OPENQUANTUM_TEST_KEYCHAIN=1 npm run plugin:test`，只创建并清理随机测试服务条目。
 
-产物为 `dist/codex-plugin/openquantum-0.8.1-codex-plugin.zip`。构建不会安装到当前用户。明确安装时执行：
+产物为 `dist/codex-plugin/openquantum-0.8.2-codex-plugin.zip`。构建不会安装到当前用户。明确安装时执行：
 
 ```sh
 npm run plugin:install
@@ -92,10 +92,10 @@ npm run plugin:install
 安装器只接管自己管理的原 OpenQuantum 本地来源；其他来源冲突会明确报错。安装后按宿主提示重载。
 
 维护者运行 `npm run plugin:release` 生成独立插件 ZIP、完整安装包与 `SHA256SUMS`；要求干净的提交。
-完整安装包回归使用 `node scripts/verify-codex-release.mjs dist/codex-release/openquantum-0.8.1-codex-install.zip`。
+完整安装包回归使用 `node scripts/verify-codex-release.mjs dist/codex-release/openquantum-0.8.2-codex-install.zip`。
 使用 `npm run release:version -- X.Y.Z` 统一更新产品版本，`npm run release:check` 检查所有副本；
-构建会拒绝不一致的版本。同步发行在同一提交使用 `vX.Y.Z` 和 `codex-vX.Y.Z`，前缀仅区分渠道。
-Codex Release 保持 Desktop 的 `latest` 与更新清单不变。完整规则见[发布流程](../UPDATES.md#publishing-a-stable-update)。
+构建会拒绝不一致的版本。同步发行时，`vX.Y.Z` 和 `codex-vX.Y.Z` 指向同一提交。
+0.8.2 仅发布 Codex 插件，并将其设为 GitHub `latest`；本版不附带 Desktop 更新清单。完整规则见[发布流程](../UPDATES.md#publishing-a-stable-update)。
 
 开发预览使用 `npm run plugin:preview`。做交互测试时应设置独立 `CODEX_HOME` 和
 `OPENQUANTUM_PLUGIN_SETTINGS_HOME`，避免修改真实 Skill 开关。预览只监听 `127.0.0.1`，写请求需要访问标识与同源校验。

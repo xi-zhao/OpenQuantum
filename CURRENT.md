@@ -2,18 +2,25 @@
 
 量子依赖核验日期：2026-09-22；平台升级记录日期：2026-09-10；原模型验收交接记录日期：2026-09-05。此页只记录工作交接；架构以[文档总入口](docs/README.md)为准，执行事实以 Harness Session event log 为准，科学状态以 Acceptance Report 为准。
 
-## Pasqal 实验工作流与 Cloud SDK（2026-10-13，PR 修复已本地验证）
+## Codex 0.8.2 与分支保护（2026-10-13，发布准备）
+
+- `main` 已启用 GitHub 分支保护：必须经 PR、当前 7 项 GitHub Actions 检查必过、包含最新目标基线、管理员同样受限，禁止强推和删除。不额外要求固定数量的人工批准。
+- [PR #14](https://github.com/xi-zhao/OpenQuantum/pull/14) 已在独立审查与 7/7 检查通过后合并为 `3935b45a`，移除能力包工作流的路径过滤，确保文档 PR 也能产生全部必过检查。
+- 0.8.2 本轮只发布 Codex 插件，包含 134 个 Skill、71 个科学 Tool；[版本说明](docs/releases/codex-v0.8.2.md)列出安装与验证范围，最终发布提交、附件及验收以 Release 记录为准。
+- 旧 Desktop/源码 Release 页面及附件将在本轮发布时按请求下架，保留其 Git 标签、源码历史和旧 Codex Release。原版 DSH Desktop 能力包仍保留源码与 CI 构建路径，本轮不发布该渠道。
+
+## Pasqal 实验工作流与 Cloud SDK（2026-10-13，已合并 main）
 
 - `pasqal-experiments` 接入从实验想法到结果分析的七阶段流程；复用 `pulser-dynamics` 的 Pulser 1.9.1 环境，增加固定版 `pasqal-cloud==0.24.0` 完整原生 API，不新增 Runtime 或云 MCP。
 - 云辅助器支持设备快照、可审阅计划、批次创建/追加/关闭/取消、单次 HTTP 提交、未知结果恢复和原始数据采集；保留请求索引、失效点与科学未验状态。
 - 初次真实 Pulser 数值、Cloud SDK 传输夹具、Harness 会话执行/读回、Codex 包资源与离线流程验证通过；后续 GitHub 审查指出代码依赖与执行环境绑定缺口。范围和原始工件见 [Pasqal 集成记录](docs/integrations/PASQAL.md)。
 - 2026-10-13 在独立分支整合 `main@45461051`，保留 Desktop 交接记录；补齐 Skill 目录与数量断言，修复单文件代码绑定和计划环境核对。完整 `npm run check`、28 项 Python 回归、4 项 Pasqal/Harness 检查通过；独立审查无未解决 P1/P2，另行复跑 6 项关键回归通过。见[本轮修复验证](docs/integrations/evidence/pasqal-review-2026-10-13.json)。本轮验收时修复尚未推送，GitHub 检查需更新分支后重跑。
-- 任务分支 `c/pasqal-experiments` 已推送，实现提交 `37096a30` 已提交 [PR #13](https://github.com/xi-zhao/OpenQuantum/pull/13)，目标为 `main`；CI 与审阅状态以 PR 页面为准。未合并、发布或替换已安装产品。未调用真实 Cloud/QPU 或外部模型，`scientificValidation=not_evaluated`。
+- [PR #13](https://github.com/xi-zhao/OpenQuantum/pull/13) 已合并到 `main@046ac876`；合并提交的 [CI](https://github.com/xi-zhao/OpenQuantum/actions/runs/38324720753) 与 [能力包检查](https://github.com/xi-zhao/OpenQuantum/actions/runs/38324720702) 共 7/7 通过。0.8.2 的 Codex 发行内容与安装方式见[版本说明](docs/releases/codex-v0.8.2.md)，最终发布提交和附件以 Release 为准。未调用真实 Cloud/QPU 或外部模型，`scientificValidation=not_evaluated`。
 
 ## 原版第三方 Desktop（2026-10-12）
 
 - 后续桌面交付改为原版 `anywhere-labs/dsh-desktop` 客户端 + OpenQuantum 能力包；兼容基线仍为 Desktop `2.0.7` / Harness `0.1.5-rc.1`。
-- OpenQuantum 内容与 Codex 插件仍共用 `0.8.1` 产品版本，第三方客户端保留自己的版本、原生界面与更新渠道。此前已发布的私有 DMG/EXE 不改写。
+- OpenQuantum 内容与 Codex 插件仍共用 `0.8.1` 产品版本，第三方客户端保留自己的版本、原生界面与更新渠道。此前私有 DMG/EXE 的 Release 页面及附件按 0.8.2 发布清理范围下架，Git 标签与源码保留。
 - 保留品牌、量子组件、量子学习通与更新入口；移除 Desktop 中未配置的示例 Gateway 与默认模型，模型由用户在原生设置中添加。隐藏内测声明，简化两个量子模式的简介和设置页终端标签。
 - 空模型目录提示用户去原生设置添加模型；量子组件使用 Tools、MCP、Skills 名称，中文说明按用途和操作组织，未配置、未启动会话与读取失败分别显示，原始状态保留在折叠诊断中。
 - Desktop 扩展通过 `desktop` Profile bundle 启用，与依赖保持同一作用域；其他原生 Profile 可独立使用，用户 Profile 配置保持上游覆盖顺序。
