@@ -5,17 +5,24 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
+import { setImmediate } from "node:timers/promises";
 import * as branding from "../packages/openquantum-web-branding/desktop.mjs";
 import { pngIcon, macIcon, installDesktopBranding, writeDesktopLauncher } from "../scripts/lib/desktop-branding.mjs";
 
 test("public shell branding preserves native callbacks and restores the service after Profile disposal", async () => {
   const calls = [];
   const events = [];
+  const cleanupStarted = Promise.withResolvers();
+  const finishCleanup = Promise.withResolvers();
   class Runtime {
     #platform = "darwin";
     schedule(spec) {
       calls.push({ spec, platform: this.#platform });
-      return async () => { events.push("shell-disposed"); };
+      return async () => {
+        cleanupStarted.resolve();
+        await finishCleanup.promise;
+        events.push("shell-disposed");
+      };
     }
   }
   const runtime = new Runtime();
@@ -32,7 +39,14 @@ test("public shell branding preserves native callbacks and restores the service 
   await shell.await();
   assert.deepEqual(calls[0], { spec: { ...spec, iconPath: fileURLToPath(new URL("../packages/openquantum-web-branding/assets/icon-512.png", import.meta.url)) }, platform: "darwin" });
   assert.equal(spec.iconPath, "/upstream.png");
-  await icon.dispose();
+  let disposed = false;
+  const disposal = icon.dispose().then(() => { disposed = true; });
+  await cleanupStarted.promise;
+  await setImmediate();
+  assert.equal(disposed, false, "Profile disposal waits for native shell cleanup");
+  assert.deepEqual(events, []);
+  finishCleanup.resolve();
+  await disposal;
   assert.deepEqual(events, ["shell-disposed"]);
   assert.equal(runtime.schedule, originalSchedule);
   runtime.schedule(spec);

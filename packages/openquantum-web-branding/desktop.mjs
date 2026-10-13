@@ -14,7 +14,7 @@ export function installDesktopIcon(runtime) {
 
 export function apply(ctx) {
   ctx.effect(() => installDesktopIcon(ctx.get("desktopRuntime")), "OpenQuantum Desktop icon");
-  // The shell depends on this service: it mounts after decoration and disposes
-  // before the schedule method is restored when this Profile is unloaded.
+  // The shell mounts after decoration. Profile disposal waits for shell cleanup;
+  // restoring this method can run alongside cleanup of the existing shell.
   ctx.provide("openquantumDesktopIcon", true);
 }

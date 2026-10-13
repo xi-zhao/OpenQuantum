@@ -65,7 +65,7 @@ Desktop 保留上游设置的布局、插件、Agent 预设和原生操作，不
 升级只迁移仍与安装记录一致的全局 Home patch，并在 `.openquantum-migrations` 保留原件；若其中的 OpenQuantum 配置已被手动修改，先停止迁移并提示合并配置。
 原生 Profile 修复可以按 manifest 重建链接，无需向上游 app 或其 `node_modules` 注入文件。
 Desktop 图标扩展只在 OpenQuantum 的 Desktop Profile 内加载。它在原生 `DesktopRuntime.schedule` 接口中替换图标参数，其余设置、窗口和生命周期全部由原版 Desktop 处理；兼容独立 Host 进程，不直接导入 Electron。
-原生桌面通过 Cordis 依赖等待图标扩展就绪；Profile 卸载时先退出桌面，再恢复原接口，其他 Profile 继续使用原版图标。扩展不读取模型、凭据、会话或网络，也不改变原生设置布局或注册新的 Tool。
+原生桌面通过 Cordis 依赖等待图标扩展就绪；Profile 卸载会等待桌面清理完成，恢复原接口可与清理并行。已启动桌面的图标参数不受影响，后续其他 Profile 继续使用原版图标。扩展不读取模型、凭据、会话或网络，也不改变原生设置布局或注册新的 Tool。
 
 工程检查覆盖安装、再次安装、配置保留、独立工作目录和捆绑运行环境；不运行外部模型或真实科研任务。
 该命令不宣称原生 UI 验收。发布前另需对原版客户端完成实际启动、设置、关键操作和重启检查。
