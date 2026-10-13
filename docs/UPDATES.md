@@ -30,7 +30,7 @@ OpenQuantum content updates and original DSH Desktop updates are separate. OpenQ
 The OpenQuantum service only offers release notes and upgrade instructions; it does not download, install or restart the client.
 
 For an installed capability package, quit the Host, back up the OpenQuantum data directory, verify and extract the new capability archive, then run its installer. Keep the original DSH Desktop on the compatible version named in the release notes. See [installation and migration](DESKTOP_INSTALLERS.md).
-The old OpenQuantum DMG/EXE releases will be withdrawn as part of the 0.8.2 release cleanup. Their Git tags and source history remain available.
+Version 0.8.2 uses capability archives with the original DSH Desktop client. The old private OpenQuantum DMG/EXE packages are no longer the installation path; their Git tags and source history remain available.
 
 For a source installation:
 
@@ -55,11 +55,12 @@ carry the same version. Pinned third-party dependencies retain their own version
 The `vX.Y.Z` and `codex-vX.Y.Z` tags distinguish release channels, not product versions. Synchronized
 releases point both tags at the same reviewed commit. A product version does not require both channels to be published.
 
-Version 0.8.2 publishes only `codex-v0.8.2` and makes that Release the GitHub latest. It carries no
-`openquantum-update.json`, so Desktop/Web update discovery does not advertise a Codex bundle as a
-capability-package update. The old Desktop/source Release pages `v0.5.0`, `v0.5.1`, `v0.6.0`,
-`v0.7.0` and `v0.8.1` and their attachments will be withdrawn; Git tags, source history and previous
-`codex-v*` releases are retained. The steps below apply when both channels are published.
+Version 0.8.2 publishes both `v0.8.2` and `codex-v0.8.2` from reviewed commit
+`64004f9fcef58afa2a8a05d965eebcaa6c9477ab`. Documentation corrections after that commit do not change
+the release sources or packages. Once both releases are public, GitHub latest points to `v0.8.2`,
+which carries the capability archives and `openquantum-update.json`; the Codex Release is not latest.
+This keeps Desktop/Web update discovery on the capability-package channel. Git tags, source history
+and previous `codex-v*` releases are retained. The steps below apply when both channels are published.
 The shared release command and packaging guards currently accept plain stable `X.Y.Z` only,
 without prerelease suffixes or build metadata, matching the supported synchronized release pipeline.
 
