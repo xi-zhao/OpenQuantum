@@ -154,6 +154,8 @@ Skill 与 Tool 在概念和发行版 policy 中都相互独立：Skill-only、To
 - [Pasqal 实验工作流与 Cloud SDK](integrations/PASQAL.md)：复用 Pulser，覆盖实验规范、理想/含噪扫描、云提交恢复与原始采样分析。
 - [相近能力的选择](integrations/CAPABILITY_SELECTION.md)：算法示例与专业计算入口的选择，以及大型可选服务的工具范围。
 - [版本更新](UPDATES.md)：新版本提醒、源码升级、发布通道和维护流程。
+- [OpenQuantum 0.8.4 Desktop](releases/v0.8.4.md)：26 个新增 SDK、TensorCircuit-NG 迁移与 MQT Bench v2。
+- [Codex 插件 0.8.4](releases/codex-v0.8.4.md)：168 个 Skill、87 个科学 Tool 与完整量子组件设置。
 - [OpenQuantum 0.8.3 Desktop](releases/v0.8.3.md)：设置分类、搜索筛选与品牌图标。
 - [Codex 插件 0.8.3](releases/codex-v0.8.3.md)：共用设置分类、134 个 Skill 和 71 个科学 Tool。
 - [Codex 插件 0.8.2](releases/codex-v0.8.2.md)：Pasqal 实验工作流与计划、环境一致性检查。

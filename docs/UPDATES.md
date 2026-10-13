@@ -55,9 +55,9 @@ carry the same version. Pinned third-party dependencies retain their own version
 The `vX.Y.Z` and `codex-vX.Y.Z` tags distinguish release channels, not product versions. Synchronized
 releases point both tags at the same reviewed commit. A product version does not require both channels to be published.
 
-Version 0.8.3 uses both `v0.8.3` and `codex-v0.8.3` at the same reviewed commit.
+Version 0.8.4 uses both `v0.8.4` and `codex-v0.8.4` at the same reviewed commit.
 The exact source commit and package checksums are recorded in each Release's `release-validation.json`.
-Once both releases are public, GitHub latest points to `v0.8.3`,
+Once both releases are public, GitHub latest points to `v0.8.4`,
 which carries the capability archives and `openquantum-update.json`; the Codex Release is not latest.
 This keeps Desktop/Web update discovery on the capability-package channel. Git tags, source history
 and previous `codex-v*` releases are retained. The steps below apply when both channels are published.

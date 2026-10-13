@@ -15,15 +15,16 @@ Codex 插件在外层 Codex 对话中提供量子 Skill 和科学 Tool。OpenQua
 | `distributions/codex-plugin/` | 与 Desktop 一致的产品版本及插件运行依赖锁定 |
 
 构建从能力策略和真实 `tools/list` 生成目录、Skill 和完整输入合同，检查重复名称和策略漂移。
-已发布的 **0.8.3** Codex 插件包含 **134 个 Skill、71 个科学 Tool**，设置页提供用途分类、搜索和状态筛选。
-本轮设置页候选源码扩展为 **142 个 Skill、87 个科学 Tool**：原 71 个 Tool 的默认状态不变，
-新增 8 个凭据服务的 16 个 Tool 均默认关闭。候选源码和本机构建不代表已安装或已发布版本。
+0.8.4 Codex 插件包含 **168 个 Skill、87 个科学 Tool**，设置页提供用途分类、搜索和状态筛选。
+本轮新增 26 个原生 SDK Skill，并纳入已合并的设置内容一致与服务密钥改动；
+原 71 个 Tool 的默认状态不变，新增 8 个凭据服务的 16 个 Tool 均默认关闭。
+实际发布状态、源码提交和附件摘要以 Release 的 `release-validation.json` 为准。
 其中没有执行 Tool 的 Skill 明确提供方法解释与选型参考，不把知识目录数量等同于可执行计算数量。
-SDK workbench 和领域 Skill 支持通过宿主代码工具编写原生程序，随包携带 85 个 SDK 环境的导航、
+SDK workbench 和领域 Skill 支持通过宿主代码工具编写原生程序，随包携带 111 个 SDK/源码环境的导航、
 固定依赖、显式 setup 和源码资源；便捷 Tool 的预设案例不再限制原生 API 的使用。
 平台诊断、学习通和尚未适配的按需 MCP 连接不进入执行入口；设置目录保留它们的内容和未接入原因。
 新增云端与硬件服务不默认启用。
-完整范围与逐库工程证据见[原生 SDK 接入](FULL_SDK_ACCESS.md)；SDK 环境并非 85 个不同上游库。
+完整范围与逐库工程证据见[原生 SDK 接入](FULL_SDK_ACCESS.md)；SDK 环境并非 111 个不同上游库；本轮新增入口见[生态扩展](SDK_ECOSYSTEM_2026-10-14.md)。
 
 `plugin.json` 使用 Agent Plugins 1.0，并保留 `.codex-plugin/plugin.json` 兼容入口。插件身份仍为
 `openquantum@personal`。左侧“…”菜单的全局入口由 `open_openquantum_settings` 提供，名称为
@@ -48,7 +49,7 @@ Codex 适配层只补充宿主连接、可用范围、字段要求、默认开�
 Desktop 使用 Harness credential store；Codex 使用本机系统凭据库。两个入口不复制或自动迁移彼此的密钥。
 
 默认打开“运行状态”，标签顺序与 Desktop“量子组件”一致：运行状态、MCP、Skills、服务密钥。
-候选设置目录显示 Desktop 的全部 157 个 Skill 和 91 个 MCP；未适配条目在原位置标注原因并禁用操作。
+设置目录显示 Desktop 的全部 183 个 Skill 和 91 个 MCP；未适配条目在原位置标注原因并禁用操作。
 目录可见不表示当前宿主具有相同执行能力；真实开关和凭据状态仍来自当前宿主。
 
 “服务密钥”沿用 Desktop 双列卡片，窄窗口改为单列。每个字段单独显示名称、环境变量、
@@ -98,8 +99,8 @@ setup 规则，插件安装不会批量下载数值环境；缺少依赖时应�
 
 ## 构建、检查与安装
 
-正式包见 [codex-v0.8.3 Release](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.3)。
-首次安装下载 `openquantum-0.8.3-codex-install.zip`，其中已包含安装器、锁文件与插件 ZIP；
+正式包见 [codex-v0.8.4 Release](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.4)。
+首次安装下载 `openquantum-0.8.4-codex-install.zip`，其中已包含安装器、锁文件与插件 ZIP；
 解压后执行 `npm ci --ignore-scripts` 和 `npm run plugin:install`。
 
 让 Codex Agent 代为安装时，使用[面向 Agent 的安装指南](CODEX_AGENT_INSTALL.md)。指南包含现成插件包与
@@ -121,7 +122,7 @@ Skill 关闭、其他 Skill 保留、缓存路径升级后的状态与重新开�
 可通过 `OPENQUANTUM_CODEX_CLI` 指定 CLI 路径。Keychain 集成测试另用
 `OPENQUANTUM_TEST_KEYCHAIN=1 npm run plugin:test`，只创建并清理随机测试服务条目。
 
-产物为 `dist/codex-plugin/openquantum-0.8.3-codex-plugin.zip`。构建不会安装到当前用户。明确安装时执行：
+产物为 `dist/codex-plugin/openquantum-0.8.4-codex-plugin.zip`。构建不会安装到当前用户。明确安装时执行：
 
 ```sh
 npm run plugin:install
@@ -133,10 +134,10 @@ npm run plugin:install
 安装器只接管自己管理的原 OpenQuantum 本地来源；其他来源冲突会明确报错。安装后按宿主提示重载。
 
 维护者运行 `npm run plugin:release` 生成独立插件 ZIP、完整安装包与 `SHA256SUMS`；要求干净的提交。
-完整安装包回归使用 `node scripts/verify-codex-release.mjs dist/codex-release/openquantum-0.8.3-codex-install.zip`。
+完整安装包回归使用 `node scripts/verify-codex-release.mjs dist/codex-release/openquantum-0.8.4-codex-install.zip`。
 使用 `npm run release:version -- X.Y.Z` 统一更新产品版本，`npm run release:check` 检查所有副本；
 构建会拒绝不一致的版本。同步发行时，`vX.Y.Z` 和 `codex-vX.Y.Z` 指向同一提交。
-0.8.3 同时提供原版 DSH Desktop 的 OpenQuantum 能力包；两个渠道固定到同一提交。GitHub `latest` 与 Desktop 更新清单属于 `v0.8.3`，Codex 插件使用 `codex-v0.8.3`，不附带 Desktop 更新清单。完整规则见[发布流程](../UPDATES.md#publishing-a-stable-update)。
+0.8.4 同时提供原版 DSH Desktop 的 OpenQuantum 能力包；两个渠道固定到同一提交。GitHub `latest` 与 Desktop 更新清单属于 `v0.8.4`，Codex 插件使用 `codex-v0.8.4`，不附带 Desktop 更新清单。完整规则见[发布流程](../UPDATES.md#publishing-a-stable-update)。
 
 开发预览使用 `npm run plugin:preview`。做交互测试时应设置独立 `CODEX_HOME`、
 `OPENQUANTUM_PLUGIN_SETTINGS_HOME` 和随机的 `OPENQUANTUM_PLUGIN_CREDENTIAL_SERVICE`，隔离用户配置与系统凭据库命名空间。
