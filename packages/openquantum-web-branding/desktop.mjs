@@ -1,4 +1,3 @@
-import { createRequire } from "node:module";
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -57,8 +56,10 @@ export function installDesktopIcon({ app, BrowserWindow, nativeImage }, platform
   };
 }
 
-export function apply(ctx) {
+export async function apply(ctx) {
   if (!process.versions.electron) return;
-  const electron = createRequire(import.meta.url)("electron");
+  // The upstream Profile resolver redirects createRequire to npm packages.
+  // ESM keeps Electron's built-in module identity in the native main process.
+  const electron = await import("electron");
   ctx.effect(() => installDesktopIcon(electron), "OpenQuantum Desktop icon");
 }
