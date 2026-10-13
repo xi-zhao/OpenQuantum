@@ -287,6 +287,10 @@ function renderMcp(container) {
 }
 function render() {
   if (!snapshot) return;
+  const active = document.activeElement;
+  const focusedFilter = filterToolbar.contains(active) ? active : null;
+  const selection = focusedFilter && typeof focusedFilter.selectionStart === "number"
+    ? [focusedFilter.selectionStart, focusedFilter.selectionEnd, focusedFilter.selectionDirection] : null;
   // Keep the same filter controls alive while moving them into the Tools panel.
   // Returning them before replacing content also preserves their event handlers.
   $("#notice").before(filterToolbar);
@@ -324,9 +328,14 @@ function render() {
     empty.append(element("p", "没有匹配的能力"), button("清除筛选", () => { $("#search").value = ""; $("#category").value = "all"; $("#state").value = "all"; render(); }));
     content.append(empty);
   }
+  if (focusedFilter?.isConnected) {
+    focusedFilter.focus({ preventScroll: true });
+    if (selection) focusedFilter.setSelectionRange(...selection);
+  }
 }
 document.querySelectorAll("[data-tab]").forEach(node => node.onclick = () => setTab(node.dataset.tab));
-$("#search").oninput = render;
+$("#search").oninput = event => { if (!event.isComposing) render(); };
+$("#search").addEventListener("compositionend", render);
 $("#category").onchange = render;
 $("#state").onchange = render;
 $("#refresh").onclick = () => run({ action: "snapshot" });
