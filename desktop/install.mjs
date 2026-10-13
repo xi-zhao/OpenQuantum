@@ -1,5 +1,5 @@
 import { execFile } from "node:child_process";
-import { cp, lstat, mkdir, readFile, rename, rm, writeFile } from "node:fs/promises";
+import { cp, lstat, mkdir, readFile, readlink, rename, rm, symlink, writeFile } from "node:fs/promises";
 import { randomUUID } from "node:crypto";
 import { homedir } from "node:os";
 import path from "node:path";
@@ -13,7 +13,8 @@ const dataRoot = args[0] || (process.platform === "darwin" ? path.join(homedir()
 const manifest = JSON.parse(await readFile(path.join(source, "openquantum/distribution.json"), "utf8"));
 const projectRoot = path.join(dataRoot, "project");
 const { assertCompatibleHarnessHome } = await import(new URL("./openquantum/scripts/lib/harness-home-compatibility.mjs", import.meta.url));
-const { desktopPayloadIdentity } = await import(new URL("./openquantum/scripts/lib/desktop-distribution.mjs", import.meta.url));
+const { desktopPayloadIdentity, assertNoLinks } = await import(new URL("./openquantum/scripts/lib/desktop-distribution.mjs", import.meta.url));
+const { installDesktopBranding } = await import(new URL("./openquantum/scripts/lib/desktop-branding.mjs", import.meta.url));
 const identity = desktopPayloadIdentity(manifest);
 await assertCompatibleHarnessHome(path.join(projectRoot, ".openquantum/dsh"));
 const payloadRoot = path.join(dataRoot, "versions", identity);
@@ -42,6 +43,19 @@ const body = process.platform === "win32"
   ? `@echo off\r\n"${node}" "${path.join(projectRoot, "scripts/run-desktop.mjs")}"\r\n`
   : `#!/bin/sh\nexec ${quote(node)} ${quote(path.join(projectRoot, "scripts/run-desktop.mjs"))}\n`;
 await writeFile(launcher, body, { mode: 0o755 });
+const branding = await installDesktopBranding({ projectRoot, dataRoot, node, version: manifest.version });
+let launchEntry = branding.launcher;
+if (process.platform === "darwin" && !args.length) {
+  const applications = path.join(homedir(), "Applications");
+  await assertNoLinks(applications);
+  await mkdir(applications, { recursive: true });
+  const link = path.join(applications, "OpenQuantum.app");
+  const current = await lstat(link).catch(error => { if (error.code === "ENOENT") return null; throw error; });
+  if (current && (!current.isSymbolicLink() || await readlink(link) !== branding.launcher)) throw new Error(`Preserve the existing application before creating the OpenQuantum launcher: ${link}`);
+  if (!current) await symlink(branding.launcher, link);
+  launchEntry = link;
+}
 console.log(prepared.stdout.trim());
-console.log(`Installed OpenQuantum ${manifest.version}. Launch: ${launcher}`);
+console.log(`Installed OpenQuantum ${manifest.version}. Launch: ${launchEntry}`);
+console.log("OpenQuantum icon installed. Restart Desktop to update its running icon.");
 console.log(`Original DSH Desktop ${manifest.upstream.version}: https://github.com/anywhere-labs/dsh-desktop/releases/tag/v${manifest.upstream.version}`);

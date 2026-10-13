@@ -1,5 +1,13 @@
 # The original DSH Desktop owns its native interface and update feed.
 # OpenQuantum registers only /openquantum/api/updates for its capability package.
+- insert:
+    - id: openquantum-desktop-branding
+      name: '@openquantum/harness-web-branding/desktop'
+      inject: [desktopRuntime]
+
+- id: desktop-shell
+  inject: [openquantumDesktopIcon]
+
 - id: openquantum-web-branding
   config:
     minimalUi: true

@@ -15,11 +15,21 @@ const temporary = await mkdtemp(path.join(await realpath(tmpdir()), "oq-dsh-cont
 const dataRoot = path.join(temporary, "user data");
 const output = path.join(distribution, "validation");
 await mkdir(output, { recursive: true });
-const env = { ...process.env, PATH: process.platform === "win32" ? path.join(process.env.SystemRoot, "System32") : "/usr/bin:/bin:/usr/sbin:/sbin" };
+const env = { ...process.env, DSH_DESKTOP_EXECUTABLE: path.join(temporary, "missing-client"), PATH: process.platform === "win32" ? path.join(process.env.SystemRoot, "System32") : "/usr/bin:/bin:/usr/sbin:/sbin" };
 const execute = promisify(execFile);
 const install = () => execute(node, [path.join(content, "install.mjs"), dataRoot], { env, maxBuffer: 4 * 1024 * 1024 });
 await install();
 const projectRoot = path.join(dataRoot, "project");
+const branding = JSON.parse(await readFile(path.join(dataRoot, "desktop-branding.json"), "utf8"));
+assert.equal(branding.upstreamResourcesModified, false);
+assert.equal(branding.launcher, path.join(dataRoot, process.platform === "darwin" ? "OpenQuantum.app" : "OpenQuantum.lnk"));
+if (process.platform === "darwin") {
+  const plist = await readFile(path.join(branding.launcher, "Contents/Info.plist"), "utf8");
+  assert.match(plist, /CFBundleIconFile<\/key><string>OpenQuantum.icns/);
+} else {
+  const shortcut = await readFile(branding.launcher);
+  assert.ok(shortcut.length > 0);
+}
 const home = path.join(projectRoot, ".openquantum/dsh");
 const route = path.join(home, "profiles/model-routes.cordis.yml");
 const original = await readFile(route, "utf8");
@@ -45,7 +55,7 @@ const uv = path.join(path.dirname(runtime.nodeExecutable), process.platform === 
 await execute(uv, ["--version"], { env });
 // Import the installed OQ modules from an unrelated cwd, as Finder does.
 await execute(runtime.nodeExecutable, ["--input-type=module", "-e", `const { projectRoot } = await import(${JSON.stringify(pathToFileURL(path.join(home, "project-root.mjs")).href)}); if (projectRoot !== ${JSON.stringify(projectRoot)}) throw Error('wrong project'); await import(${JSON.stringify(pathToFileURL(path.join(home, ".agent-presets/openquantum/native-quantum-tools.mjs")).href)});`], { cwd: temporary, env });
-const report = { target, dataRoot, checks: ["installation", "repeat-install", "user-configuration-retained", "profile-bundle-and-dependencies", "persistent-node-and-uv", "independent-working-directory"],
+const report = { target, dataRoot, checks: ["installation", "brand-launcher", "repeat-install", "user-configuration-retained", "profile-bundle-and-dependencies", "persistent-node-and-uv", "independent-working-directory"],
   upstreamClient: "not-bundled", nativeUI: "not-tested-by-this-command", scientificValidation: "not_evaluated" };
 await writeFile(path.join(output, "content-install.json"), JSON.stringify(report, null, 2));
 console.log(JSON.stringify(report));
