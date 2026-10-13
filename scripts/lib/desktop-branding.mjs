@@ -108,7 +108,9 @@ export async function installDesktopBranding({ projectRoot, dataRoot, node, vers
     ].join("\n");
     try {
       const stagedShortcut = path.join(temporary, "OpenQuantum.lnk");
-      await execute("powershell.exe", ["-NoProfile", "-NonInteractive", "-EncodedCommand", Buffer.from(script, "utf16le").toString("base64")], {
+      // Finder/Explorer launches and isolated installs need no developer PATH.
+      const powershell = path.join(process.env.SystemRoot || process.env.WINDIR || "C:\\Windows", "System32/WindowsPowerShell/v1.0/powershell.exe");
+      await execute(powershell, ["-NoProfile", "-NonInteractive", "-EncodedCommand", Buffer.from(script, "utf16le").toString("base64")], {
         env: { ...process.env, OQ_ICON_SHORTCUT: stagedShortcut, OQ_ICON_NODE: node, OQ_ICON_SCRIPT: path.join(projectRoot, "scripts/run-desktop.mjs"), OQ_ICON_PROJECT: projectRoot, OQ_ICON_FILE: iconFile },
       });
       return await writeDesktopLauncher({ dataRoot, launcher: shortcut, files: {
