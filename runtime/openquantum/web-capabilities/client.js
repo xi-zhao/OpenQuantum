@@ -20,7 +20,9 @@ globalThis.__ModuleLoader__.load({
       .oq-runtime-summary{align-items:flex-start;background:var(--dsw-alias-bg-module-platform);border-radius:10px;display:flex;gap:12px;justify-content:space-between;margin-bottom:12px;padding:12px}.oq-runtime-summary strong{display:block;font-size:13px}.oq-runtime-summary p{color:var(--dsw-alias-label-tertiary);font-size:11px;line-height:18px;margin:3px 0 0}.oq-runtime-items{border-top:1px solid var(--dsw-alias-border-l2);margin-top:10px;padding-top:8px}.oq-runtime-items summary{cursor:pointer;color:var(--dsw-alias-label-secondary);font-size:11px}.oq-runtime-items code{color:var(--dsw-alias-label-tertiary);display:block;font-family:var(--ds-font-family-code);font-size:10px;line-height:17px;overflow-wrap:anywhere}.oq-runtime-limit{color:var(--dsw-alias-label-tertiary);font-size:10px;line-height:17px;margin:12px 0 0}
       .oq-channel-flow{align-items:center;display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}.oq-channel-node{background:var(--dsw-alias-bg-module-platform);border-radius:8px;color:var(--dsw-alias-label-secondary);font-size:11px;padding:7px 9px}.oq-channel-arrow{color:var(--dsw-alias-label-tertiary);font-size:11px}.oq-channel-commands{display:grid;gap:7px;margin-top:12px}.oq-channel-command{background:var(--dsw-alias-bg-module-platform);border-radius:8px;display:flex;flex-direction:column;gap:3px;padding:8px 10px}.oq-channel-command span{color:var(--dsw-alias-label-tertiary);font-size:10px}.oq-channel-command code{color:var(--dsw-alias-label-primary);font-family:var(--ds-font-family-code);font-size:11px;word-break:break-all}
       .oq-cap-code,.oq-cap-path,.oq-channel-command code,.oq-runtime-items code,.oq-cap-input,.oq-cap-textarea{direction:ltr;unicode-bidi:plaintext;text-align:start}
-      @media(max-width:700px){.oq-cap-grid,.oq-cap-form{grid-template-columns:1fr}.oq-cap-span{grid-column:auto}}
+      .oq-cap-filters{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}.oq-cap-filters input{flex:1 1 200px}.oq-cap-filters select{flex:0 1 auto;width:auto;max-width:100%}.oq-cap-filter-count{flex-basis:100%;font-size:11px;color:var(--dsw-alias-label-tertiary)}
+      .oq-cap-category{border:1px solid var(--dsw-alias-border-l2);border-radius:10px;margin:10px 0}.oq-cap-category>summary{padding:13px 15px;cursor:pointer;font-size:13px}.oq-cap-category>summary span{margin-inline-start:10px;font-size:11px;color:var(--dsw-alias-label-tertiary)}.oq-cap-category>.oq-cap-grid{padding:0 12px 12px}.oq-cap-details{margin:10px 0}.oq-cap-details>summary{font-size:11px;cursor:pointer;color:var(--dsw-alias-label-tertiary)}.oq-cap-details[open]>summary{margin-bottom:8px}
+      @media(max-width:700px){.oq-cap-grid,.oq-cap-form{grid-template-columns:1fr}.oq-cap-span{grid-column:auto}.oq-cap-category>summary span{display:block;margin-inline-start:0}}
     `;
     const styleId = "openquantum-capability-settings";
     if (typeof document !== "undefined" && document.querySelector(`style[data-plugin-css="${styleId}"]`) === null) {
@@ -142,6 +144,28 @@ globalThis.__ModuleLoader__.load({
         : "";
     }
 
+    function RuntimeItemList({ check, categories = [{ id: "other", title: "其他与自定义" }] }) {
+      const [query, setQuery] = React.useState("");
+      const words = query.trim().normalize("NFKC").toLowerCase().split(/\s+/);
+      const categoryOf = item => categories.some(group => group.id === item.category) ? item.category : "other";
+      const items = check.items.filter(item => {
+        const title = categories.find(group => group.id === categoryOf(item))?.title ?? "";
+        return words.every(word => `${item.id} ${item.label ?? ""} ${t(title)}`.normalize("NFKC").toLowerCase().includes(word));
+      });
+      const codes = values => values.map(item => h("code", { key: item.id }, item.label ? `${item.label} · ${item.id}` : item.id));
+      return h("details", { className: "oq-runtime-items" },
+        h("summary", null, t("查看已观测项目")),
+        h("input", { className: "oq-cap-input", type: "search", "aria-label": t("搜索名称或用途"), placeholder: t("搜索名称或用途"), value: query, onChange: event => setQuery(event.currentTarget.value) }),
+        h("p", { className: "oq-cap-meta", role: "status" }, t("显示 {p0} / {p1} 项", { p0: items.length, p1: check.items.length })),
+        check.id === "model-routes" ? codes(items) : categories.flatMap(group => {
+          const entries = items.filter(item => categoryOf(item) === group.id);
+          return entries.length ? [h("details", { className: "oq-cap-category", key: `${group.id}:${query}`, open: Boolean(query.trim()) },
+            h("summary", null, t(group.title), h("span", null, t("{p0} 项", { p0: entries.length }))), codes(entries))] : [];
+        }),
+        !items.length ? h("p", { className: "oq-cap-empty" }, t("没有匹配的能力")) : null,
+      );
+    }
+
     function RuntimeReadinessPanel({ snapshot, busy, error, onRefresh }) {
       if (!snapshot) {
         return h("div", null,
@@ -185,10 +209,7 @@ globalThis.__ModuleLoader__.load({
             check.state === "observed" || check.itemCount > 0
               ? h("p", { className: "oq-cap-meta" }, t("{p0} 项当前 Registry 证据{p1}", { p0: check.itemCount, p1: groups })) : null,
             reason ? h("p", { className: "oq-cap-meta" }, t("提示：{p0}", { p0: reason })) : null,
-            check.items.length ? h("details", { className: "oq-runtime-items" },
-              h("summary", null, t("查看已观测项目")),
-              check.items.map((item) => h("code", { key: item.id }, item.label ? `${item.label} · ${item.id}` : item.id)),
-            ) : null,
+            check.items.length ? h(RuntimeItemList, { check, categories: snapshot.categories }) : null,
           );
         })),
         h("details", { className: "oq-runtime-items" },
@@ -265,6 +286,10 @@ globalThis.__ModuleLoader__.load({
       const [error, setError] = React.useState(null);
       const [notice, setNotice] = React.useState(null);
       const [mcpDraft, setMcpDraft] = React.useState({ serverName: "", transport: "stdio", target: "", args: "", credentialRef: "" });
+      const [query, setQuery] = React.useState("");
+      const [category, setCategory] = React.useState("all");
+      const [enabledFilter, setEnabledFilter] = React.useState("all");
+      const [expandedGroups, setExpandedGroups] = React.useState({});
 
       const loadCredentials = React.useCallback(async (nextSnapshot) => {
         const refs = nextSnapshot.mcpCredentials.map((item) => item.ref);
@@ -343,6 +368,8 @@ globalThis.__ModuleLoader__.load({
             h("span", { className: "oq-cap-badge", "data-tone": tone }, label),
           ),
           h("p", { className: "oq-cap-desc" }, t(server.description)),
+          h("details", { className: "oq-cap-details" },
+          h("summary", null, t("连接详情与超时")),
           h("p", { className: "oq-cap-meta" }, t("独立 MCP Server 连接 · {p0} · {p1}{p2}", { p0: server.transport, p1: server.target, p2: server.packageVersion ? ` · ${server.packageVersion}` : "" })),
           h("p", { className: "oq-cap-meta" }, t("这里显示的是持久化连接配置，不代表 Server 已运行或 Tool 已进入 Registry；配置变更需重启后生效。")),
           h("form", { className: "oq-cap-form", key: server.toolCallTimeoutMs, onSubmit: (event) => {
@@ -356,6 +383,7 @@ globalThis.__ModuleLoader__.load({
               h("p", { className: "oq-cap-secret-help" }, t("长任务可增加等待时间，例如一小时填 3600000。")),
             ),
             h("div", { className: "oq-cap-span" }, h("button", { type: "submit", className: "oq-cap-button", disabled }, t("保存超时"))),
+          ),
           ),
           h("div", { className: "oq-cap-actions" },
             h("label", { className: "oq-cap-switch" },
@@ -404,6 +432,40 @@ globalThis.__ModuleLoader__.load({
       };
 
       const activeCards = tab === "mcp" ? mcpCards : tab === "skills" ? skillCards : credentialCards;
+      const catalogTab = tab === "mcp" || tab === "skills";
+      const entries = snapshot ? (tab === "mcp" ? snapshot.mcpServers : tab === "skills" ? snapshot.skills : []) : [];
+      const categories = snapshot?.categories ?? [{ id: "other", title: "其他与自定义" }];
+      const categoryOf = item => categories.some(value => value.id === item.category) ? item.category : "other";
+      const enabled = item => tab === "mcp" ? item.enabled : item.modelInvocable;
+      const words = query.trim().normalize("NFKC").toLowerCase().split(/\s+/);
+      const matches = item => {
+        const label = categories.find(value => value.id === categoryOf(item))?.title;
+        const text = [item.displayName, t(item.displayName ?? ""), item.name, item.serverName, item.description, t(item.description ?? ""), item.provider, t(label ?? ""), label].filter(Boolean).join(" ").normalize("NFKC").toLowerCase();
+        return words.every(word => text.includes(word)) && (category === "all" || categoryOf(item) === category)
+          && (enabledFilter === "all" || enabled(item) === (enabledFilter === "enabled"));
+      };
+      const matchingEntries = entries.filter(matches);
+      const groupedCards = categories.flatMap(group => {
+        const matching = entries.flatMap((item, index) => categoryOf(item) === group.id && matches(item) ? [index] : []);
+        if (!matching.length) return [];
+        const key = [tab, query.trim(), category, enabledFilter, group.id].join("|");
+        return [h("details", { className: "oq-cap-category", key,
+          open: expandedGroups[key] ?? Boolean(query.trim() || category !== "all" || enabledFilter !== "all"),
+          onToggle: event => {
+            const open = event.currentTarget.open;
+            setExpandedGroups(previous => previous[key] === open ? previous : { ...previous, [key]: open });
+          },
+        }, h("summary", null, t(group.title), h("span", null, tab === "skills" ? t("{p0} 项", { p0: matching.length }) : t("{p0} 项 · {p1} 项配置启用", { p0: matching.length, p1: matching.filter(index => enabled(entries[index])).length }))),
+        h("div", { className: "oq-cap-grid" }, matching.map(index => activeCards[index])))];
+      });
+      const filters = catalogTab && snapshot ? h("div", { className: "oq-cap-filters" },
+        h("input", { className: "oq-cap-input", type: "search", "aria-label": t("搜索名称或用途"), placeholder: t("搜索名称或用途"), value: query, onChange: event => setQuery(event.currentTarget.value) }),
+        h("select", { className: "oq-cap-select", "aria-label": t("按用途筛选"), value: category, onChange: event => setCategory(event.currentTarget.value) },
+          h("option", { value: "all" }, t("全部用途")), ...categories.filter(group => category === group.id || entries.some(item => categoryOf(item) === group.id)).map(group => h("option", { key: group.id, value: group.id }, `${t(group.title)} (${entries.filter(item => categoryOf(item) === group.id).length})`))),
+        h("select", { className: "oq-cap-select", "aria-label": t(tab === "skills" ? "全部状态" : "按启用状态筛选"), value: enabledFilter, onChange: event => setEnabledFilter(event.currentTarget.value) },
+          h("option", { value: "all" }, t("全部状态")), h("option", { value: "enabled" }, t(tab === "skills" ? "允许 Agent 自动加载" : "配置启用")), h("option", { value: "disabled" }, t(tab === "skills" ? "仅显式加载" : "配置关闭"))),
+        h("span", { className: "oq-cap-filter-count", role: "status", "aria-live": "polite" }, t("显示 {p0} / {p1} 项", { p0: matchingEntries.length, p1: entries.length })),
+      ) : null;
       const tabIntro = tab === "runtime"
         ? [t("当前运行状态"), t("来自当前 Harness Host 与已挂载 OpenQuantum Agent 的被动 Registry 证据；与持久化配置分开显示。")]
         : tab === "mcp"
@@ -419,9 +481,11 @@ globalThis.__ModuleLoader__.load({
           [["runtime", t("运行状态")], ["mcp", t("MCP Server 连接")], ["skills", t("Skill 指令")], ["credentials", t("安全凭据")]].map(([id, label]) => h("button", { key: id, type: "button", role: "tab", className: "oq-cap-tab", "aria-selected": tab === id, onClick: () => setTab(id) }, label)),
         ),
         h("div", { className: "oq-cap-tab-intro" }, h("strong", null, tabIntro[0]), h("span", null, tabIntro[1])),
+        filters,
         tab === "runtime"
           ? h(RuntimeReadinessPanel, { snapshot: readiness, busy: readinessBusy, error: readinessError, onRefresh: refreshReadiness })
           : !snapshot ? (error ? null : h("p", { className: "oq-cap-loading" }, t("正在读取 Harness 能力目录…")))
+          : catalogTab ? (groupedCards.length ? groupedCards : h("div", { className: "oq-cap-empty" }, t("没有匹配的能力"), h("button", { className: "oq-cap-button", type: "button", onClick: () => { setQuery(""); setCategory("all"); setEnabledFilter("all"); } }, t("清除筛选"))))
           : activeCards.length ? h("div", { className: "oq-cap-grid" }, activeCards) : h("p", { className: "oq-cap-empty" }, t("暂无能力配置。")),
         tab === "mcp" && snapshot ? h("details", { className: "oq-cap-group" },
           h("summary", null, t("注册已有 MCP Server")),
