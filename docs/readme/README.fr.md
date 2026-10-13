@@ -8,7 +8,9 @@ OpenQuantum rassemble outils quantiques, méthodes spécialisées et application
 
 **Posez vos questions, lancez des calculs et construisez de nouvelles capacités ensemble.**
 
-![OpenQuantum Desktop](../images/openquantum-desktop-20260919.jpg)
+**OpenQuantum 0.8.3 est disponible :** [Desktop](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.3) · [Plugin Codex](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.3). Les deux partagent la même version produit. Tools, MCP et Skills sont classés en huit catégories d’usage, avec recherche et filtres d’état. Les lanceurs Desktop utilisent l’icône OpenQuantum.
+
+![OpenQuantum Desktop](../images/openquantum-desktop-20261013.jpg)
 
 ## Fonctionnalités
 
@@ -16,7 +18,7 @@ Simulez des circuits avec Qiskit et TyxonQ, optimisez-les avec PyZX, explorez le
 
 Le code de `main` comprend aussi la découpe de portes et la reconstruction de valeurs moyennes avec QCut, l’optimisation de circuits avec Compact et le calcul d’états excités par VQD avec OpenQARP. Ces connexions sont activées par défaut, mais leurs dépendances doivent être préparées. Le QSVM à noyau angulaire de cqlib-qml et l’environnement de circuits FlagQuantum restent désactivés jusqu’à leur activation explicite. Consultez le [périmètre et les vérifications](../integrations/CANDIDATE_LIBRARIES.md).
 
-L’inventaire actuel comprend **156 Skills** (143 sélectionnables automatiquement et 13 index manuels), **91 connexions MCP** et **5 Tool quantiques natifs**. Leur disponibilité dépend des connexions activées et des environnements préparés. Consultez le [guide de sélection](../integrations/CAPABILITY_SELECTION.md).
+L’inventaire actuel comprend **157 Skills** (144 sélectionnables automatiquement et 13 index manuels), **91 connexions MCP** et **5 Tool quantiques natifs**. Leur disponibilité dépend des connexions activées et des environnements préparés. Consultez le [guide de sélection](../integrations/CAPABILITY_SELECTION.md).
 
 v0.8.1 donne accès aux API publiques natives de **85 environnements SDK ou sources**. L’agent peut écrire ses propres programmes, combiner les API et conserver les résultats complets, au-delà des cas prédéfinis des Tool. Préparez explicitement les dépendances pour chaque tâche. Les limites de plateforme, de compte, de licence et de backend optionnel restent applicables. Le [registre d’intégration](../integrations/FULL_SDK_ACCESS.md) précise les vérifications d’ingénierie. Aucune acceptation fondée sur de véritables tâches de recherche n’a été réalisée ; `scientificValidation=not_evaluated`.
 
@@ -42,9 +44,13 @@ Pour un usage local individuel, choisissez le programme d’installation ou l’
 
 ### Programme d’installation de bureau
 
-Les prochaines distributions utilisent le client original [anywhere-labs DSH Desktop 2.0.7](https://github.com/anywhere-labs/dsh-desktop/releases/tag/v2.0.7) et une archive de capacités OpenQuantum. Harness reste en `0.1.5-rc.1`. L’archive contient Node.js et uv ; lancez `install.command` sur Mac ou `install.cmd` sur Windows. La marque, les composants quantiques, Quantum Learning et les mises à jour restent disponibles, avec un minimum de changements de l’interface. Voir le [guide d’installation et de mise à niveau](../DESKTOP_INSTALLERS.md).
+OpenQuantum 0.8.3 utilise le client original [anywhere-labs DSH Desktop 2.0.7](https://github.com/anywhere-labs/dsh-desktop/releases/tag/v2.0.7) et une archive de capacités OpenQuantum. Harness reste en `0.1.5-rc.1`. L’archive contient Node.js et uv ; lancez `install.command` sur Mac ou `install.cmd` sur Windows. La marque, les composants quantiques, Quantum Learning et les mises à jour restent disponibles, avec un minimum de changements de l’interface. Voir le [guide d’installation et de mise à niveau](../DESKTOP_INSTALLERS.md).
 
-Les DMG/EXE v0.8.1 déjà publiés utilisent l’ancien client privé. Vérifiez les pièces jointes de la Release pour les nouvelles archives. OpenQuantum et son plugin Codex partagent la version produit ; Desktop conserve sa version amont. Les Skills, routes de modèles et paramètres MCP modifiés sont conservés. Les environnements de calcul et Quantum Learning gardent leurs étapes de préparation.
+Installez d’abord le client original DSH Desktop. Téléchargez l’archive Mac Apple Silicon, Mac Intel ou Windows x64 depuis la [Release 0.8.3](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.3) et vérifiez-la avec `SHA256SUMS` avant de l’extraire. L’installateur crée `OpenQuantum.app` sur Mac ou `OpenQuantum.lnk` sur Windows avec l’icône OpenQuantum. Le client original conserve son nom et sa version. Les mises à jour préservent les Skills, routes de modèles et paramètres MCP existants. Les environnements de calcul et Quantum Learning nécessitent la préparation documentée.
+
+### Codex
+
+Téléchargez l’[installateur complet 0.8.3](https://github.com/xi-zhao/OpenQuantum/releases/download/codex-v0.8.3/openquantum-0.8.3-codex-install.zip) et suivez le [guide d’installation](../integrations/CODEX_AGENT_INSTALL.md). Le plugin fournit 134 Skills et 71 Tools scientifiques dans les conversations Codex. Il nécessite un Codex compatible, Node.js 24 ou ultérieur et npm ; préparez les dépendances scientifiques selon vos besoins.
 
 ### Exécuter depuis les sources
 
@@ -63,7 +69,7 @@ Ouvrez le lien de connexion affiché dans le journal de démarrage. Après authe
 
 ### Configurer un modèle
 
-Dans Paramètres → Modèles, saisissez l’URL, le nom du modèle et la clé API d’un fournisseur compatible avec OpenAI-compatible Chat Completions. Choisissez l’Agent Preset OpenQuantum. Le modèle doit prendre en charge Tool Calling pour exécuter les outils. Les adresses .invalid fournies sont des exemples : remplacez-les par un service réel. Les identifiants du modèle sont distincts de ceux du cloud quantique.
+Dans Paramètres → Modèles, saisissez l’URL, le nom du modèle et la clé API d’un fournisseur compatible avec OpenAI-compatible Chat Completions. Choisissez l’Agent Preset OpenQuantum. Le modèle doit prendre en charge Tool Calling pour exécuter les outils. La liste des modèles est vide lors d’une nouvelle installation de Desktop. Ajoutez le service de votre choix. Les identifiants du modèle sont distincts de ceux du cloud quantique.
 
 L’exemple local de référence pour un Hamiltonien fixé à deux qubits fonctionne sans clé de modèle.
 

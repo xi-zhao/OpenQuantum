@@ -12,7 +12,9 @@ OpenQuantum is an open-source agent and application platform for quantum researc
 
 [Why OpenQuantum](#why-openquantum) · [Capabilities](#what-you-can-do) · [Quick start](#quick-start) · [Results](#use-and-inspect-results) · [Extend](#extend-the-platform) · [Roadmap](#roadmap-and-rsi) · [Contribute](#documentation-and-support) · [Open source](#license-and-acknowledgments)
 
-![OpenQuantum Desktop research workbench](../images/openquantum-desktop-20260919.jpg)
+**OpenQuantum 0.8.3 is available:** [Desktop](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.3) · [Codex plugin](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.3). Both use the same product version. Tools, MCP and Skills have eight use categories, search and status filters. Desktop launchers now use the OpenQuantum icon.
+
+![OpenQuantum Desktop research workbench](../images/openquantum-desktop-20261013.jpg)
 
 The research workbench is the platform's conversational and computational entry point. Quantum Learning is one integrated application, with its own classroom interface and data boundary.
 
@@ -71,9 +73,9 @@ The table describes source `main`. QCut, Compact and OpenQARP connections are en
 
 All **66 quantum-skills guides** have native Skill adaptations; **49 executable workflows** cover the **39 upstream algorithm modules** and additional methods from the guides. They use Qiskit, PennyLane, quimb, PySCF and NumPy/SciPy, with no proprietary UnitaryLab runtime dependency. Coverage describes workflows, not complete upstream Python API or backend compatibility. See the [per-method mapping and differences](../integrations/UNITARYLAB_OPEN_COVERAGE.md).
 
-The source inventory contains **156 Skills** (143 automatically selectable and 13 manual category indexes), **91 MCP connections** and **5 native quantum Tools**. Session availability depends on enabled connections and prepared environments. See the [capability catalog](../../README.md#能力接口目录) and [selection guide](../integrations/CAPABILITY_SELECTION.md).
+The source inventory contains **157 Skills** (144 automatically selectable and 13 manual category indexes), **91 MCP connections** and **5 native quantum Tools**. Session availability depends on enabled connections and prepared environments. See the [capability catalog](../../README.md#能力接口目录) and [selection guide](../integrations/CAPABILITY_SELECTION.md).
 
-v0.8.1 provides native public API access for **85 SDK/source environments**. Agents can write custom programs, combine APIs and save complete artifacts beyond the convenience tools’ preset cases. Prepare dependencies explicitly for each task; platform, account, license and optional-backend limits still apply. See the [full SDK integration record](../integrations/FULL_SDK_ACCESS.md) for engineering checks. Real research-task acceptance was not performed; `scientificValidation=not_evaluated`.
+Since v0.8.1, OpenQuantum provides native public API access for **85 SDK/source environments**. Agents can write custom programs, combine APIs and save complete artifacts beyond the convenience tools’ preset cases. Prepare dependencies explicitly for each task; platform, account, license and optional-backend limits still apply. See the [full SDK integration record](../integrations/FULL_SDK_ACCESS.md) for engineering checks. Real research-task acceptance was not performed; `scientificValidation=not_evaluated`.
 
 v0.6.0 brings together **52 SDK capability packages across three integration batches**: [17 vendor SDKs](../integrations/VENDOR_SDKS.md), [20 company and research-institution capabilities](../integrations/SDK_EXPANSION.md), and [15 network, control, optics and cloud interfaces](../integrations/SDK_GAPS.md). Each adapter exposes the documented actions, rather than the whole upstream API. Users configure accounts, credentials, service permissions and applicable licenses. New adapters retain L1 / `scientificValidation=not_evaluated`; local and protocol-fixture tests do not establish live cloud, QPU or scientific acceptance.
 
@@ -91,13 +93,17 @@ Course resources are still being organized; a complete curriculum and full accep
 
 ## Quick start
 
-OpenQuantum supports an upstream Desktop with a capability package and source builds for local, single-user use. The current source distribution model is described below.
+OpenQuantum supports an upstream Desktop with a capability package and source builds for local, single-user use. Choose Desktop, the Codex plugin or a source build below.
 
 ### Desktop installer
 
-Future desktop distributions use the original [anywhere-labs DSH Desktop 2.0.7](https://github.com/anywhere-labs/dsh-desktop/releases/tag/v2.0.7) with an OpenQuantum capability archive. Harness stays at `0.1.5-rc.1`. The archive includes Node.js and uv; install it using `install.command` on Mac or `install.cmd` on Windows. Branding, quantum components, Quantum Learning and OpenQuantum updates are retained with minimal changes to the upstream interface. Follow the [installation and upgrade guide](../DESKTOP_INSTALLERS.md).
+OpenQuantum 0.8.3 uses the original [anywhere-labs DSH Desktop 2.0.7](https://github.com/anywhere-labs/dsh-desktop/releases/tag/v2.0.7) with an OpenQuantum capability archive. Harness stays at `0.1.5-rc.1`. The archive includes Node.js and uv; install it using `install.command` on Mac or `install.cmd` on Windows. Branding, quantum components, Quantum Learning and OpenQuantum updates are retained with minimal changes to the upstream interface. Follow the [installation and upgrade guide](../DESKTOP_INSTALLERS.md).
 
-Previously published v0.8.1 DMG/EXE files use the earlier private-client format. New capability archives are available only when attached to an OpenQuantum Release. OpenQuantum and its Codex plugin keep the same product version; the original Desktop retains its own upstream version. Modified Skills, model routes and MCP configuration are preserved. Compute environments and Quantum Learning still have their documented setup requirements.
+Install the original DSH Desktop first. Download the Mac Apple Silicon, Mac Intel or Windows x64 capability archive from the [0.8.3 Release](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.3) and verify it against `SHA256SUMS` before extracting it. The installer creates an `OpenQuantum.app` on Mac or `OpenQuantum.lnk` on Windows with the OpenQuantum icon. The original Desktop keeps its upstream name and version. Upgrades preserve existing Skills, model routes and MCP settings; compute environments and Quantum Learning still require their documented preparation.
+
+### Codex
+
+[Download the 0.8.3 complete installer](https://github.com/xi-zhao/OpenQuantum/releases/download/codex-v0.8.3/openquantum-0.8.3-codex-install.zip) and follow the [installation guide](../integrations/CODEX_AGENT_INSTALL.md). The plugin includes 134 Skills and 71 scientific Tools, used through native Codex conversations. It requires a compatible Codex host, Node.js 24+ and npm; prepare scientific dependencies as needed.
 
 ### From source
 
@@ -128,7 +134,7 @@ When launched from the same source checkout, Web and Desktop share the same Harn
 
 Open **Settings → Models**. Add an OpenAI-compatible Chat Completions provider, enter its endpoint, model name and API key, and use the OpenQuantum agent preset. The model must support **Tool Calling** to execute quantum tools.
 
-The bundled public and private routes contain `.invalid` placeholder endpoints. Configure an actual service before using them. These are model credentials, separate from quantum cloud credentials. Existing secrets are not displayed in settings; configuration stores credential references.
+A fresh Desktop installation has an empty model list. Add your own service in settings. Model credentials are separate from quantum cloud credentials. Existing secrets are not displayed in settings; configuration stores credential references.
 
 No model key is needed for the fixed local reference example:
 

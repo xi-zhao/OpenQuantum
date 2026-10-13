@@ -24,6 +24,11 @@ OpenQuantum 有两个发行入口：**Desktop** 提供科研工作台和量子�
 
 直接在 Codex 中使用：[插件安装与使用](#codex-plugin)，包含可复制给 Codex 的安装指令。
 
+**当前版本 0.8.3：**[Desktop 下载与发布说明](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.3) · [Codex 插件下载与发布说明](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.3)。两者使用同一产品版本号。
+
+- **更容易找到能力：** Tools、MCP、Skills 按 8 类用途分组，支持搜索和状态筛选。
+- **统一品牌入口：** Mac 的 `OpenQuantum.app` 和 Windows 的 `OpenQuantum.lnk` 使用 OpenQuantum 图标；保留原版 DSH Desktop 界面、量子学习通和更新入口。
+
 <p align="center">
   <a href="#为什么选择-openquantum">为什么选择</a> ·
   <a href="#可以用它做什么">浏览能力</a> ·
@@ -37,9 +42,20 @@ OpenQuantum 有两个发行入口：**Desktop** 提供科研工作台和量子�
 </p>
 
 <p align="center">
-  <img src="./docs/images/openquantum-desktop-20260919.jpg" width="100%" alt="OpenQuantum Desktop 科研工作台：新会话、工作区与量子学习通入口" /><br />
-  <sub>在科研工作台提出问题，查看工具调用，再带着结果继续探索。</sub>
+  <img src="./docs/images/openquantum-desktop-20261013.jpg" width="100%" alt="原版 DSH Desktop 中的 OpenQuantum 工作台：品牌、新会话、量子学习通与自行添加模型的提示" /><br />
+  <sub>保留熟悉的原版 Desktop 界面；在设置中添加自己的模型服务，即可开始新会话。</sub>
 </p>
+
+<details>
+<summary><strong>查看 Tools、MCP、Skills 的分类设置</strong></summary>
+
+按用途展开所需分组，再用搜索或启用状态缩小范围。Tools 用于查看可调用的动作，MCP 用于管理服务连接，Skills 用于选择任务方法与指南。
+
+![Desktop 中按用途分组的 MCP 连接、搜索和状态筛选](./docs/images/openquantum-settings-categories-20261013.jpg)
+
+图为 2026-10-13 在原版客户端中验证分类功能时的实际界面，截图来源见[图片说明](docs/images/README.md)。配置启用不代表服务已经在线。
+
+</details>
 
 <a id="为什么做-openquantum"></a>
 
@@ -80,7 +96,7 @@ OpenQuantum 有两个发行入口：**Desktop** 提供科研工作台和量子�
 
 本地计算可以从无需量子云账户的任务开始。真实硬件和付费服务按需配置；各方法的输入范围、准备条件与验证状态分别保留在详细目录中。
 
-v0.8.1 为 **85 个 SDK/源码环境**提供完整原生 API 的使用路径。Agent 可编写自定义程序、组合公开 API，并保存完整结果；便捷 Tool 的预设案例不再限制研究程序。环境按需显式准备，平台、账户、许可和可选后端限制仍适用。逐库工程检查及其范围见[完整 SDK 接入记录](docs/integrations/FULL_SDK_ACCESS.md)；没有用真实科研任务做验收，科学状态仍为 `not_evaluated`。
+自 v0.8.1 起，OpenQuantum 为 **85 个 SDK/源码环境**提供完整原生 API 的使用路径。Agent 可编写自定义程序、组合公开 API，并保存完整结果；便捷 Tool 的预设案例不再限制研究程序。环境按需显式准备，平台、账户、许可和可选后端限制仍适用。逐库工程检查及其范围见[完整 SDK 接入记录](docs/integrations/FULL_SDK_ACCESS.md)；没有用真实科研任务做验收，科学状态仍为 `not_evaluated`。
 
 v0.6.0 汇集近期新增的国内外公司与机构 SDK：从可微分电路、容错资源估算，到光子计算、脉冲编译和量子网络。三批接入分别见[17 项厂商 SDK](docs/integrations/VENDOR_SDKS.md)、[20 项公司与机构能力](docs/integrations/SDK_EXPANSION.md)和[15 项网络、控制与云接口](docs/integrations/SDK_GAPS.md)，另含 [QuEra Bloqade Analog](docs/integrations/BLOQADE_ANALOG.md)。每项开放的动作以适配说明为准；账户、鉴权、服务权限与适用许可由用户配置。
 
@@ -241,12 +257,19 @@ OpenQuantum 支持桌面安装包和源码运行，适合本机单用户使用�
 安装一次 OpenQuantum 插件，即可同时注册 **Skills、本机 MCP 服务与科学 Tools，以及 OpenQuantum 设置页**。
 你继续在 Codex 原生聊天中提问、管理项目和查看结果；左侧设置页用于配置 OpenQuantum 的能力。
 
+<details>
+<summary>旧版 Codex 入口截图（0.7.5）</summary>
+
 <p align="center">
   <a href="./docs/images/openquantum-codex-settings-20261011.png"><img src="./docs/images/openquantum-codex-settings-20261011.png" width="100%" alt="Codex 内的 OpenQuantum 全局设置页：左侧应用入口、Skills 列表、MCP 连接和 Tools 标签" /></a><br />
   <sub>在 Codex 中管理 OpenQuantum 的 Skills、MCP 连接和 Tools（0.7.5 实际界面，点击查看大图）。</sub>
 </p>
 
-**让 Codex 帮你安装：**打开 Codex，新建聊天，把下面这段话复制给它：
+此图保留作入口参考；0.8.3 已加入分类、搜索与筛选，实际入口位置取决于 Codex 宿主版本。
+
+</details>
+
+**让 Codex 帮你安装：** 打开 Codex，新建聊天，把下面这段话复制给它：
 
 ```text
 请帮我安装 OpenQuantum Codex 插件 0.8.3。先阅读安装指南：
@@ -293,9 +316,17 @@ npm run plugin:install
 
 ### 桌面安装包
 
-后续发行采用 [DSH Desktop 2.0.7 原版客户端](https://github.com/anywhere-labs/dsh-desktop/releases/tag/v2.0.7)与独立 OpenQuantum 能力包。能力包保留完整 SDK 入口、量子 Skill、Tool 和配置，并包含 Node / uv。原生应用名称、界面和客户端更新由第三方维护。
+当前发行采用 [DSH Desktop 2.0.7 原版客户端](https://github.com/anywhere-labs/dsh-desktop/releases/tag/v2.0.7)与独立 OpenQuantum 能力包。能力包保留完整 SDK 入口、量子 Skill、Tool 和配置，并包含 Node / uv。安装器创建带有 OpenQuantum 图标的启动入口：Mac 为 `OpenQuantum.app`，Windows 为 `OpenQuantum.lnk`。原版客户端保留上游名称和版本。
 
-从 [OpenQuantum Desktop 0.8.3 Release](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.3) 选择 Mac Apple Silicon、Mac Intel 或 Windows x64 能力包，按同页 `SHA256SUMS` 核对后解压安装。完整步骤见[安装与迁移说明](docs/DESKTOP_INSTALLERS.md)。第三方客户端显示上游版本 `2.0.7`；OpenQuantum 能力包与 Codex 插件均为 `0.8.3`，Harness 保持 `0.1.5-rc.1`。旧私有 DMG/EXE 不再作为安装入口，计算环境、账户与许可继续按能力显式准备。
+先安装上述原版 DSH Desktop，再按平台选择能力包：
+
+| 平台 | OpenQuantum 0.8.3 下载 | 解压后运行 |
+| --- | --- | --- |
+| Mac Apple Silicon | [darwin-arm64 能力包](https://github.com/xi-zhao/OpenQuantum/releases/download/v0.8.3/OpenQuantum-0.8.3-DSH-darwin-arm64.tar.gz) | `install.command` |
+| Mac Intel | [darwin-x64 能力包](https://github.com/xi-zhao/OpenQuantum/releases/download/v0.8.3/OpenQuantum-0.8.3-DSH-darwin-x64.tar.gz) | `install.command` |
+| Windows x64 | [win32-x64 能力包](https://github.com/xi-zhao/OpenQuantum/releases/download/v0.8.3/OpenQuantum-0.8.3-DSH-win32-x64.tar.gz) | `install.cmd` |
+
+先按 [Release 中的 SHA256SUMS](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.3) 核对下载文件，再解压安装。升级保留已有配置；完整步骤见[安装与迁移说明](docs/DESKTOP_INSTALLERS.md)。OpenQuantum 能力包与 Codex 插件均为 `0.8.3`，Harness 保持 `0.1.5-rc.1`。计算环境、账户与许可继续按能力显式准备。
 
 ### 安装源码
 
@@ -344,10 +375,10 @@ npm run desktop -- --source
 
 Desktop 全新安装的模型列表为空。在「设置 → 模型」添加提供方，填写支持 OpenAI-compatible Chat Completions 协议的服务地址、模型名称和 API Key，保持 OpenQuantum 为默认 Agent Preset。**模型需要支持 Tool Calling，才能调用量子计算工具。** 这里配置的是模型服务，量子云凭据在对应后端中另行配置。
 
-内置 `openquantum-public` / `openquantum-private` 的默认地址均为 `.invalid` 占位地址，请替换为自己的服务。
-
 <details>
 <summary><strong>高级模型配置与命令行诊断</strong></summary>
+
+源码提供可选的 `openquantum-public` / `openquantum-private` 调试示例，其地址为 `.invalid` 占位值。这些示例不预填到 Desktop 的新安装模型列表中；只有使用下述源码诊断时，才需要配置对应服务地址与凭据。
 
 界面保存的模型路由覆盖写入 Git 忽略的 `$DSH_HOME/settings.yaml`；密钥保存在本地环境或 Harness 凭据库中，项目配置只保存凭据引用。若希望使用 `.env` 提供服务地址和密钥，macOS 终端执行 `cp .env.example .env`，Windows PowerShell 执行 `Copy-Item .env.example .env`，再按文件内注释填写。`.env` 不覆盖模型名称；服务使用其他模型名时，仍需在「设置 → 模型」中配置。
 
@@ -1149,7 +1180,7 @@ docs/                    架构、路线与生态文档
 
 [固定量子能力 Benchmark](benchmarks/quantum-capabilities/README.md)使用 [MQT Bench](https://github.com/munich-quantum-toolkit/bench) 的 3 个固定电路案例与 manifest 做开发回归，属于开发与 CI 证据，不是 Skill 或 MCP 服务。
 
-源码升级的固定版本、兼容性和验证记录见 [2026-09-22 量子库更新](docs/releases/2026-09-22-quantum-upstream-update.md)及 [2026-09-10 平台升级](docs/releases/2026-09-10-upstream-update.md)。应用安装包的变化另见[v0.8.1 发布说明](docs/releases/v0.8.1.md)。
+源码升级的固定版本、兼容性和验证记录见 [2026-09-22 量子库更新](docs/releases/2026-09-22-quantum-upstream-update.md)及 [2026-09-10 平台升级](docs/releases/2026-09-10-upstream-update.md)。应用安装包的变化另见[v0.8.3 发布说明](docs/releases/v0.8.3.md)。
 
 2026-09-24 的[算法适配](docs/integrations/UNITARYLAB_OPEN_ADAPTATION.md)、[本地互操作](docs/integrations/QUANTUM_INTEROP.md)和[治理证据](docs/integrations/evidence/extension-governance-2026-09-24.json)分别记录源码接入、实际 SDK 计算与 Harness 会话验证；这些记录不代表新安装包发布、外部模型或真实硬件验收。
 
