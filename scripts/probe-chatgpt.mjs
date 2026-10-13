@@ -23,7 +23,10 @@ export async function probeTransport(transport) {
     const resource = await client.readResource({ uri: opener._meta.ui.resourceUri });
     const html = resource.contents[0]?.text;
     if (!html || settingsResourceUri(html) !== opener._meta.ui.resourceUri ||
-        !["services", "skills", "connections", "tools"].every(tab => html.includes(`data-tab="${tab}"`))) throw new Error("Global entrypoint does not resolve to the current settings document");
+        !["services", "skills", "connections", "tools", "credentials"].every(tab => html.includes(`data-tab="${tab}"`))) throw new Error("Global entrypoint does not resolve to the current settings document");
+    const credentialOrigin = html.match(/name="openquantum-credential-origin" content="([^"]+)"/)?.[1];
+    if (!credentialOrigin || !/^http:\/\/127\.0\.0\.1:\d+$/.test(credentialOrigin) ||
+        JSON.stringify(resource.contents[0]._meta.ui.csp.connectDomains) !== JSON.stringify([credentialOrigin])) throw new Error("Credential origin is missing or does not match the resource CSP");
     if (!Array.isArray(settings.services) || !Array.isArray(settings.tools)) throw new Error("Missing service configuration inventory");
     const managed = settings.services.filter(service => service.supported);
     if (managed.some(service => service.enabled || service.tools.some(tool => tool.enabled)) ||
@@ -36,7 +39,7 @@ export async function probeTransport(transport) {
     return { version: client.getServerVersion().version, tools: settings.tools.length, enabledTools: tools.length - 2, skills: settings.skills.length,
       services: settings.services.length, configurableServices: managed.length, credentialedServicesDefaultOff: true,
       globalEntrypoint: opener.name, settingsResourceUri: opener._meta.ui.resourceUri,
-      settingsResource: true, referenceExecution: true, disabledToolRejected: true, hostPlacementVerified: false };
+      settingsResource: true, credentialOriginBound: true, referenceExecution: true, disabledToolRejected: true, hostPlacementVerified: false };
   } finally { await client.close(); }
 }
 

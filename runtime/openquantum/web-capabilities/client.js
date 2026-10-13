@@ -1,4 +1,4 @@
-import { credentialField, credentialFieldCss } from "../../../src/settings/credential-field.mjs";
+import { credentialCard, credentialCardCss } from "../../../src/settings/credential-card.mjs";
 
 globalThis.__ModuleLoader__.load({
   id: "@openquantum/harness-web-capabilities",
@@ -8,7 +8,6 @@ globalThis.__ModuleLoader__.load({
     const h = React.createElement;
 
     const css = `
-      ${credentialFieldCss}
       .oq-cap-root{width:100%;max-width:820px;color:var(--dsw-alias-label-primary);padding-bottom:28px}
       .oq-cap-card h3,.oq-cap-group h3{margin:0}
       .oq-cap-tabs{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}.oq-cap-tab{border:0;border-radius:18px;background:var(--dsw-alias-bg-module-platform);color:var(--dsw-alias-label-secondary);cursor:pointer;font:inherit;font-size:13px;padding:7px 13px}.oq-cap-tab[aria-selected=true]{background:var(--dsw-alias-label-primary);color:var(--dsw-alias-bg-layer-1)}
@@ -26,6 +25,7 @@ globalThis.__ModuleLoader__.load({
       .oq-cap-filters{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}.oq-cap-filters input{flex:1 1 200px}.oq-cap-filters select{flex:0 1 auto;width:auto;max-width:100%}.oq-cap-filter-count{flex-basis:100%;font-size:11px;color:var(--dsw-alias-label-tertiary)}
       .oq-cap-category{border:1px solid var(--dsw-alias-border-l2);border-radius:10px;margin:10px 0}.oq-cap-category>summary{padding:13px 15px;cursor:pointer;font-size:13px}.oq-cap-category>summary span{margin-inline-start:10px;font-size:11px;color:var(--dsw-alias-label-tertiary)}.oq-cap-category>.oq-cap-grid{padding:0 12px 12px}.oq-cap-details{margin:10px 0}.oq-cap-details>summary{font-size:11px;cursor:pointer;color:var(--dsw-alias-label-tertiary)}.oq-cap-details[open]>summary{margin-bottom:8px}
       @media(max-width:700px){.oq-cap-grid,.oq-cap-form{grid-template-columns:1fr}.oq-cap-span{grid-column:auto}.oq-cap-category>summary span{display:block;margin-inline-start:0}}
+      ${credentialCardCss}
     `;
     const styleId = "openquantum-capability-settings";
     if (typeof document !== "undefined" && document.querySelector(`style[data-plugin-css="${styleId}"]`) === null) {
@@ -255,29 +255,11 @@ globalThis.__ModuleLoader__.load({
         }
       };
       const locked = busy !== null || info?.writable === false;
-      return h("article", { className: "oq-cap-card oq-cap-credential" },
-        h("div", null,
-          h("div", { className: "oq-cap-card-head" },
-            h("div", { className: "oq-cap-title" }, h("h3", null, t(credential.displayName)), h("code", { className: "oq-cap-code" }, credential.ref)),
-            h("span", { className: "oq-cap-badge", "data-tone": info?.configured ? "ready" : "off" }, info?.configured ? t("已配置") : t("未配置")),
-          ),
-          h("p", { className: "oq-cap-desc" }, t(credential.description)),
-          h("p", { className: "oq-cap-meta" }, t("用于：{p0}", { p0: credential.serverNames.join(", ") || "自定义 MCP" })),
-          credential.documentationUrl ? h("a", { className: "oq-cap-link", href: credential.documentationUrl, target: "_blank", rel: "noreferrer" }, t("获取凭据")) : null,
-        ),
-        credentialField(h, {
-          id: `credential-${credential.ref}`, title: t("输入新值"), configured: info?.configured, value, disabled: locked,
-          onChange: event => setValue(event.currentTarget.value), t,
-          help: t("密钥由 Harness 凭据库保存；已有值不会回显、不会写入项目配置。"),
-          actions: [
-            requiredByEnabled ? h("p", { className: "oq-cap-secret-help" }, t("此凭据正被配置为启用的 MCP Server 必需使用；请先关闭对应连接配置再移除。")) : null,
-            h("div", { className: "oq-cap-actions" },
-              h("button", { type: "button", className: "oq-cap-button", "data-primary": "true", disabled: locked || value.trim() === "", onClick: save }, t("保存")),
-              info?.configured ? h("button", { type: "button", className: "oq-cap-button", "data-danger": "true", disabled: locked || requiredByEnabled, onClick: remove }, t("移除")) : null,
-            ),
-          ],
-        }),
-      );
+      return credentialCard(h, { credential, configured: info?.configured, value, disabled: locked,
+        removeBlocked: requiredByEnabled, onChange: event => setValue(event.currentTarget.value), onSave: save, onRemove: remove, t,
+        help: t("密钥由 Harness 凭据库保存；已有值不会回显、不会写入项目配置。"),
+        removalNote: t("此凭据正被配置为启用的 MCP Server 必需使用；请先关闭对应连接配置再移除。"),
+      });
     }
 
     function CapabilitySettingsSection({ credentialOperations, loopback }) {

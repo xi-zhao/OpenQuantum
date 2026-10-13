@@ -4,7 +4,7 @@ import { mcpCatalogEntry, mcpCredentialCatalogEntry } from "../server/project-se
 // availability, execution requirements and the reviewed environment allowlist.
 const field = (name, title, required = true, secret = true) => {
   const entry = mcpCredentialCatalogEntry(name);
-  return { name, title: title ?? entry.displayName, required, secret,
+  return { name, title: title ?? entry.displayName, displayName: entry.displayName, required, secret,
     description: entry.description.replaceAll("Harness 凭据库", "系统凭据库").replaceAll("Harness 安全凭据", "安全凭据"),
     documentationUrl: entry.documentationUrl };
 };

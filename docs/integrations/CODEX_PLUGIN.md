@@ -11,7 +11,7 @@ Codex 插件在外层 Codex 对话中提供量子 Skill 和科学 Tool。OpenQua
 | `src/capabilities/` | 原生科学 Tool 定义与实现；不注册宿主 Runtime |
 | `runtime/openquantum/agent-presets/openquantum/` | 将共享定义注册到 Harness，按 Harness 需要投影 schema |
 | `runtime/chatgpt/` | 将可适配能力投影为本机 MCP，提供设置资源；没有 Agent loop 或模型请求 |
-| `src/settings/codex/` | 设置 Application Interface、受控连接、系统凭据库和独立凭据窗口 |
+| `src/settings/codex/` | 设置 Application Interface、受控连接、系统凭据库、卡片内保存和备用凭据窗口 |
 | `distributions/codex-plugin/` | 与 Desktop 一致的产品版本及插件运行依赖锁定 |
 
 构建从能力策略和真实 `tools/list` 生成目录、Skill 和完整输入合同，检查重复名称和策略漂移。
@@ -32,20 +32,22 @@ SDK workbench 和领域 Skill 支持通过宿主代码工具编写原生程序�
 运行依赖只包括 MCP、UI bridge、JSON Schema、TOML/YAML 和系统凭据库，不包含 DSH、Codex CLI、Electron
 或另一套聊天应用。配置和 Token 不进入发行 ZIP。
 
-品牌介绍下的 GitHub Star 链接只打开 `https://github.com/xi-zhao/OpenQuantum`，由用户在 GitHub
+页首的 GitHub Star 链接只打开 `https://github.com/xi-zhao/OpenQuantum`，由用户在 GitHub
 仓库页面自己点击 Star。插件不申请 GitHub 授权、不显示设备授权码、不保存 GitHub Token，也不调用 Star API。
 宿主拒绝或打开失败时，设置页显示仓库地址，方便用户手动访问。
 
 ## 设置实际影响什么
 
 Desktop 与 Codex 共用 `project-settings-catalog.mjs` 的服务、凭据说明及官方链接，
-并共用 `credential-field.mjs` 的输入表单。Codex 适配层只补充可用范围、字段要求、默认开关和执行注入。
+并共用 `credential-card.mjs` 的完整服务密钥卡片及 `credential-field.mjs` 输入表单。
+Codex 适配层只补充宿主连接、可用范围、字段要求、默认开关和执行注入。
 Desktop 使用 Harness credential store；Codex 使用本机系统凭据库。两个入口不复制或自动迁移彼此的密钥。
 
-设置首页按“选择服务 → 配置账户 → 启用工具”组织。服务卡片先显示用途、缺失字段和下一步操作，
-环境变量名在“查看配置变量”中展开；搜索仍能按变量名定位。可直接配置的 8 个服务集中展示：
-Superstaq、Classiq、Q-CTRL、QCArchive、AQT、OQC Cloud、Quantum Inspire 和 FieldQKit。
-从同一卡片可以管理账户配置、服务开关和逐项工具开关。
+默认打开“服务密钥”：沿用 Desktop 双列卡片，窄窗口改为单列。每个字段单独显示名称、环境变量、
+配置状态、用途、获取凭据链接、输入框和保存按钮。共有 23 个独立字段，重复的 IBM Token 合并显示。
+搜索支持服务名称、用途和变量名。可直接配置 Superstaq、Classiq、Q-CTRL、QCArchive、AQT、OQC Cloud、
+Quantum Inspire 和 FieldQKit 的 17 个字段。
+“服务概览”保留配置完整性、服务开关和逐项工具开关，并可跳转至相关密钥卡片。
 
 另列 IBM Runtime、IBM Transpiler、Quantum Hardware、QPanda3 Runtime 和 Pasqal：
 前四项尚未适配当前插件的内置执行入口，页面展示认证要求与官方说明；Pasqal 已有 Skill，
@@ -55,8 +57,9 @@ Superstaq、Classiq、Q-CTRL、QCArchive、AQT、OQC Cloud、Quantum Inspire 和
   不因目录握手成功就声称账户认证成功或 SDK 已准备。无需账户的本地准备、模拟操作不读取凭据库。
 - **多字段配置**：QCArchive 地址必填，公开服务可匿名；私有服务用户名和密码需成对填写。
   OQC 地址可留空使用默认官方地址，填写时只接受官方域名与 HTTPS 默认端口。
-  每个服务的值作为一个记录保存在系统凭据库，空白输入保留旧值；勾选“移除此项”可单独清除。
-  页面只返回字段是否已保存，值不回显。移除前须关闭相应服务；保存后用“我已保存，刷新状态”读回。
+  每个服务的值作为一个记录保存在系统凭据库，单卡保存通过锁内合并保留其他字段。空白输入不可保存。
+  页面只返回字段是否已保存，值不回显，保存后自动刷新并清空输入。用户名和密码可以逐项保存，未配齐会显示缺失项。
+  移除前须关闭相应服务，并在卡片内点击“确认移除”；不会依赖宿主可能禁止的原生弹窗。
 - **执行注入**：只向对应服务注入受审计环境变量；构建和目录握手不携带凭据。
   新服务与其工具分别默认关闭，旧设置升级不会自动启用云功能。开启本地功能不要求填写远程 Token。
   保存与启用不调用厂商 API，实际远程操作仍按工具副作用和任务授权执行。
@@ -69,10 +72,12 @@ Superstaq、Classiq、Q-CTRL、QCArchive、AQT、OQC Cloud、Quantum Inspire 和
 - **新增 MCP**：支持本机 stdio 与 Streamable HTTP。地址不接受 URL 密码或查询参数中的 Token。
   HTTP 允许 HTTPS，回环地址允许本机 HTTP；认证支持 HTTP Bearer 或明确命名的 stdio 环境变量。
   新连接与新发现的工具默认关闭。测试连接执行真实握手和目录查询，不调用计算工具。
-- **Token**：设置页打开仅绑定回环地址的专用窗口，将值直接写入系统凭据库。已有值不回显，不经过聊天、
-  MCP Tool 参数、设置 JSON 或日志。窗口带限时、一次性的访问标识，并绑定连接实例；不提供明文回退。
-  宿主拒绝打开窗口时显示明确提示；卡片提供可复制的短时本机地址作为备用入口。
-  关闭连接后才能移除其 Token。远程工具目录若回显此连接的 Token，会被拒绝持久化。
+- **服务密钥**：卡片通过仅绑定回环地址的端点直接写入系统凭据库。MCP 只签发绑定服务、字段、操作和
+  页面 Origin 的短时单次授权，不接收密钥值。CORS 仅允许该授权的明确来源，Host 严格检查；
+  当前回环端口写入资源 CSP 和 HTML 摘要，重启后页面资源身份变化。已有值不回显，不经过聊天、
+  MCP Tool 参数、设置 JSON 或日志。保存结果未知时先刷新状态，不自动重试；宿主限制本机连接时提供独立凭据窗口。
+- **自定义连接 Token**：使用专用凭据窗口，带限时、一次性且绑定连接实例的访问标识。
+  打开失败时显示可复制的短时本机地址；关闭连接后才能移除 Token。远程目录若回显此连接 Token，会拒绝持久化。
 - **科学状态**：调用成功或 Validator observations 不构成最终科学 Acceptance。插件没有 Harness Session
   证据物化和 central Acceptance Builder 链；不能声称已经生成 Harness Acceptance Report。
 
@@ -138,7 +143,8 @@ npm run plugin:install
 
 HTTP OAuth、分页 MCP 目录、跨电脑密钥同步不在此版本范围。用户需要逐项启用自定义工具。
 本地浏览器预览、协议握手、原生 CLI 安装检查、聊天旁 MCP 设置标签页和左侧菜单的全局入口
-是不同验收层级。安装候选版后需从左侧“…”→“OpenQuantum 设置”进入，确认四个标签及关键配置操作；
-聊天旁标签页显示新版不能证明全局入口已经更新。本轮候选增加“服务配置”标签，验收需包含该页及三个原有标签。
+是不同验收层级。安装候选版后需从左侧“…”→“OpenQuantum 设置”进入，确认服务概览、MCP、Skills、Tools、服务密钥五个标签及关键配置操作；
+聊天旁标签页显示新版不能证明全局入口已经更新。还需验证宿主允许页面连接回环地址；
+MCP Apps 的 CSP 声明本身不代表浏览器已经授予 Local Network Access。
 [历史验收记录](../releases/2026-10-11-plugin-settings.md)记录此前的已安装入口结果；
 [本轮服务设置验收](../releases/2026-10-13-codex-service-settings.md)记录候选版的本地验证范围。

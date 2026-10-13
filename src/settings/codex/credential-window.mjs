@@ -4,17 +4,21 @@ import { credentialRef } from "./application.mjs";
 import { withLock } from "./storage.mjs";
 import { serviceById, serviceCredentialRef, serviceValues, validateServiceValues } from "./service-catalog.mjs";
 import { credentialHtml, credentialCss, credentialJs } from "./credential-ui.mjs";
+import { createCredentialBridge } from "./credential-bridge.mjs";
 
 export async function createCredentialWindow({ settings, credentials }) {
   const sessions = new Map();
   let origin;
+  const bridge = createCredentialBridge({ settings, credentials, sessions, getOrigin: () => origin });
   const server = createServer(async (request, response) => {
-    const reply = (status, value, type = "application/json") => {
+    const reply = (status, value, type = "application/json", headers = {}) => {
+      if (response.headersSent) return;
       response.writeHead(status, { "Content-Type": type, "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff", "Referrer-Policy": "no-referrer",
-        "Content-Security-Policy": "default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'" });
+        "Content-Security-Policy": "default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'", ...headers });
       response.end(type === "application/json" ? JSON.stringify(value) : value);
     };
     if (request.headers.host !== new URL(origin).host) return reply(403, { message: "无效请求" });
+    if (request.url === "/credential-field") return bridge.handle(request, reply);
     if (request.method === "GET") {
       if (request.url === "/credentials") return reply(200, credentialHtml, "text/html; charset=utf-8");
       if (request.url === "/credential.js") return reply(200, credentialJs, "text/javascript; charset=utf-8");
@@ -27,7 +31,7 @@ export async function createCredentialWindow({ settings, credentials }) {
       for await (const chunk of request) { body += chunk; if (Buffer.byteLength(body) > 16384) return reply(413, { message: "输入过大" }); }
       const input = JSON.parse(body);
       const session = sessions.get(input.nonce);
-      if (!session || session.expires < Date.now()) return reply(403, { message: "窗口已过期，请从 OpenQuantum 设置页重新打开" });
+      if (!session || session.kind === "field" || session.expires < Date.now()) return reply(403, { message: "窗口已过期，请从 OpenQuantum 设置页重新打开" });
       await withLock(settings.file, async () => {
       if (sessions.get(input.nonce) !== session) return reply(403, { message: "窗口已过期，请重新打开" });
       const { config } = await settings.read();
@@ -75,6 +79,7 @@ export async function createCredentialWindow({ settings, credentials }) {
   origin = `http://127.0.0.1:${server.address().port}`;
   return {
     origin,
+    issueField: input => bridge.issue(input),
     async openService(id) {
       const service = serviceById(id);
       if (!service?.supported || !settings.backend.providers.some(provider => provider.key === id)) throw new Error("此服务尚未接入插件凭据配置，请查看认证说明");

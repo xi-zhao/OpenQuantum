@@ -1,9 +1,11 @@
-import { App } from "@modelcontextprotocol/ext-apps";
+import { App, applyHostStyleVariables, applyDocumentTheme } from "@modelcontextprotocol/ext-apps";
 import { openHostLink } from "./open-link.mjs";
+import { credentialEntries, renderCredentialCards, clearCredentialDrafts } from "./credential-cards.mjs";
 import "./style.css";
 
 const $ = selector => document.querySelector(selector);
-let snapshot, tab = "services", busy = false, app;
+let snapshot, tab = "credentials", busy = false, app;
+let stateRequests = Promise.resolve();
 const connectionDraft = {};
 const expandedGroups = new Map();
 const preview = window.parent === window && ["127.0.0.1", "localhost", "[::1]"].includes(location.hostname) && location.hash.startsWith("#preview=");
@@ -22,15 +24,24 @@ async function request(input) {
   if (!value) throw new Error("宿主未返回设置数据，请检查插件版本");
   return value;
 }
+function updateSnapshot(input) {
+  // Credential cards can save independently. Serialize every state response,
+  // including commands and manual refresh, so an older read cannot win later.
+  const next = stateRequests.catch(() => {}).then(async () => {
+    snapshot = await request({ ...input, ...(snapshot && input.action !== "snapshot" ? { revision: snapshot.revision } : {}) });
+  });
+  stateRequests = next;
+  return next;
+}
 async function run(input) {
   if (busy) return;
   busy = true;
   notice(input.action === "connection.test" ? "正在连接 MCP 并读取工具清单…" : "正在更新设置…");
   document.querySelectorAll("button,input,select,textarea").forEach(node => node.disabled = true);
   try {
-    snapshot = await request({ ...input, ...(snapshot && input.action !== "snapshot" ? { revision: snapshot.revision } : {}) });
+    await updateSnapshot(input);
     if (input.action === "connection.add") for (const key of Object.keys(connectionDraft)) delete connectionDraft[key];
-    notice(input.action === "snapshot" ? snapshot.notice : "设置已保存。" + snapshot.notice);
+    notice(input.action === "snapshot" ? (tab === "credentials" ? "" : snapshot.notice) : "设置已保存。" + snapshot.notice);
   }
   catch (error) { notice(error.message, true); }
   finally { busy = false; document.querySelectorAll("button,input,select,textarea").forEach(node => node.disabled = false); render(); }
@@ -45,7 +56,8 @@ function categories() { return snapshot.categories ?? [{ id: "other", title: "�
 function categoryOf(item) { return categories().some(category => category.id === item.category) ? item.category : "other"; }
 function searchText(item) {
   return [item.title, item.id, item.description, item.provider, item.url, item.command,
-    ...(item.fields ?? []).flatMap(field => [field.name, field.title]),
+    ...(item.serverNames ?? []),
+    ...(item.fields ?? []).flatMap(field => [field.name, field.title, field.displayName]),
     ...(item.tools ?? []).flatMap(tool => typeof tool === "string" ? [tool] : [tool.name, tool.title, tool.description]),
     categories().find(value => value.id === categoryOf(item))?.title].filter(Boolean).join(" ").normalize("NFKC").toLowerCase();
 }
@@ -125,11 +137,14 @@ async function openCredential(id, container, service = false) {
   finally { busy = false; }
 }
 function setTab(value) {
+  if (tab === "credentials" && value !== tab) clearCredentialDrafts();
   tab = value;
   document.querySelectorAll("[data-tab]").forEach(node => { node.classList.toggle("active", node.dataset.tab === tab); node.setAttribute("aria-pressed", String(node.dataset.tab === tab)); });
   $("#state").value = "all"; $("#category").value = "all"; $("#search").value = "";
+  notice("");
   render();
 }
+function showCredentials(id) { setTab("credentials"); $("#search").value = id; render(); $("#toolbar").scrollIntoView({ block: "start" }); }
 function showService(id) { setTab("services"); $("#search").value = id; render(); $("#toolbar").scrollIntoView({ block: "start" }); }
 function serviceState(service) {
   if (!service.supported) return service.id === "pasqal_cloud" ? "通过 SDK 配置" : "尚未接入 Codex";
@@ -157,7 +172,7 @@ function renderServices(container) {
     }
     card.append(fields);
     const actions = element("div", undefined, "actions");
-    if (service.supported) actions.append(button(service.fields.some(field => field.configured) ? "管理账户配置" : "配置账户", () => openCredential(service.id, actions, true), "primary"));
+    if (service.supported) actions.append(button("配置服务密钥", () => showCredentials(service.id), "primary"));
     const docs = element("a", "如何获取凭据 ↗", "credential-link"); docs.href = service.documentationUrl; docs.target = "_blank"; docs.rel = "noopener noreferrer";
     docs.onclick = async event => { if (!preview) { event.preventDefault(); try { await openHostLink(app, docs.href); } catch { notice(`未能打开文档，请访问：${docs.href}`, true); } } };
     actions.append(docs); card.append(actions);
@@ -260,9 +275,19 @@ function renderConnections(container) {
 }
 function render() {
   if (!snapshot) return;
-  const items = tab === "services" ? snapshot.services ?? [] : tab === "skills" ? snapshot.skills : tab === "tools" ? snapshot.tools : [...snapshot.connections, ...snapshot.providers];
+  const descriptions = {
+    credentials: ["服务密钥", "管理工具服务需要的 API Key 或 Token。已有密钥不会显示；语言模型的密钥由 Codex 管理。"],
+    services: ["服务概览", "查看各项服务还缺哪些配置，并选择允许使用的研究工具。"],
+    connections: ["MCP 连接", "管理内置服务和自行添加的 MCP 连接。启用连接后，选择需要开放的工具。"],
+    skills: ["Skills", "按研究用途选择知识与工作流。关联工具需要在服务或 Tools 中启用。"],
+    tools: ["Tools", "选择允许 OpenQuantum 调用的工具，并查看各项操作的用途。"],
+  };
+  $("#page-title").textContent = descriptions[tab][0];
+  $("#page-description").textContent = descriptions[tab][1];
+  const items = tab === "credentials" ? credentialEntries(snapshot.services ?? []) : tab === "services" ? snapshot.services ?? [] : tab === "skills" ? snapshot.skills : tab === "tools" ? snapshot.tools : [...snapshot.connections, ...snapshot.providers];
   const states = [["all", "全部状态"], ["enabled", "配置启用"], ["disabled", "配置关闭"]];
   if (tab === "services") states.splice(1, 0, ["incomplete", "待配置"], ["configured", "配置已齐"], ["optional", "可选凭据"], ["unavailable", "凭据库不可用"], ["unsupported", "需要单独配置"]);
+  if (tab === "credentials") states.splice(1, 2, ["incomplete", "未配置"], ["configured", "已配置"], ["unavailable", "未读取"], ["unsupported", "需单独配置"]);
   const selectedState = $("#state").value;
   $("#state").replaceChildren(...states.map(([value, label]) => { const option = element("option", label); option.value = value; return option; }));
   $("#state").value = states.some(([value]) => value === selectedState) ? selectedState : "all";
@@ -277,6 +302,7 @@ function render() {
   $("#category").value = selected;
   $("#count").textContent = `显示 ${items.filter(item => matches(item)).length} / ${items.length} 项`;
   const services = snapshot.services ?? [];
+  $("#overview").hidden = tab !== "services";
   $("#overview").replaceChildren(...[
     ["服务目录", services.length, "all"],
     ["待配置", services.filter(item => item.configuration === "incomplete").length, "incomplete"],
@@ -287,7 +313,13 @@ function render() {
     node.append(element("strong", String(count)), element("span", label)); return node;
   }));
   const content = $("#content"); content.replaceChildren();
-  if (tab === "services") renderServices(content); else if (tab === "skills") renderSkills(content); else if (tab === "tools") renderTools(content); else renderConnections(content);
+  if (tab === "credentials") {
+    renderCredentialCards(content, items.filter(matches), {
+      request, notice, refresh: async () => { try { await updateSnapshot({ action: "snapshot" }); } finally { render(); } },
+      openLink: async url => { try { if (preview) window.open(url, "_blank", "noopener,noreferrer"); else await openHostLink(app, url); } catch { notice(`未能打开文档：${url}`, true); } },
+      fallback: (id, card) => openCredential(id, card, true),
+    });
+  } else if (tab === "services") renderServices(content); else if (tab === "skills") renderSkills(content); else if (tab === "tools") renderTools(content); else renderConnections(content);
   if (!items.some(item => matches(item))) {
     const empty = element("div", undefined, "empty");
     empty.append(element("p", "没有匹配的能力"), button("清除筛选", () => { $("#search").value = ""; $("#category").value = "all"; $("#state").value = "all"; render(); }));
@@ -310,6 +342,11 @@ githubLink.onclick = async event => {
   }
 };
 try {
-  if (!preview) { app = new App({ name: "OpenQuantum Settings", version: "__RELEASE_VERSION__" }); await app.connect(); }
+  if (!preview) {
+    app = new App({ name: "OpenQuantum Settings", version: "__RELEASE_VERSION__" });
+    const theme = context => { if (context?.theme) applyDocumentTheme(context.theme); if (context?.styles?.variables) applyHostStyleVariables(context.styles.variables); };
+    app.onhostcontextchanged = theme;
+    await app.connect(); theme(app.getHostContext());
+  }
   await run({ action: "snapshot" });
 } catch (error) { notice(error.message, true); }

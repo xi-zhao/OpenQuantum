@@ -6,10 +6,10 @@ import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import { RESOURCE_MIME_TYPE } from "@modelcontextprotocol/ext-apps/server";
 import { createMcpServer, OPENER, SETTINGS_TOOL } from "../runtime/chatgpt/server.mjs";
 
-async function connect(t, html) {
+async function connect(t, html, credentialWindow) {
   const snapshot = { skills: [], connections: [], tools: [], revision: "fixture" };
   const settings = { listeners: new Set(), snapshot: async () => snapshot, listTools: async () => [], enabled: async () => false };
-  const server = createMcpServer({ settings, html, release: { version: "0.7.5" } });
+  const server = createMcpServer({ settings, html, credentialWindow, release: { version: "0.7.5" } });
   const client = new Client({ name: "settings-entrypoint-test", version: "1" });
   const [a, b] = InMemoryTransport.createLinkedPair();
   await Promise.all([server.connect(a), client.connect(b)]);
@@ -40,7 +40,22 @@ test("the only global entry opens the same settings document as plugin settings"
   assert.equal(resource.text, html);
   assert.equal(resource.mimeType, RESOURCE_MIME_TYPE);
   assert.equal(resource._meta["openai/ui"].preferredDisplayMode, "fullscreen");
-  for (const tab of ["skills", "connections", "tools"]) assert.ok(resource.text.includes(`data-tab="${tab}"`));
+  for (const tab of ["skills", "connections", "tools", "credentials"]) assert.ok(resource.text.includes(`data-tab="${tab}"`));
+});
+
+test("loopback origin is bound to the document, CSP and resource identity across restarts", async t => {
+  const html = await fs.readFile(new URL("../runtime/chatgpt/ui/app.html", import.meta.url), "utf8");
+  const origins = ["http://127.0.0.1:12345", "http://127.0.0.1:12346"];
+  const uris = [];
+  for (const origin of origins) {
+    const client = await connect(t, html, { origin });
+    const [{ uri }] = (await client.listResources()).resources;
+    uris.push(uri);
+    const [resource] = (await client.readResource({ uri })).contents;
+    assert.ok(resource.text.includes(`name="openquantum-credential-origin" content="${origin}"`));
+    assert.deepEqual(resource._meta.ui.csp.connectDomains, [origin]);
+  }
+  assert.notEqual(...uris);
 });
 
 test("changed settings HTML gets a new resource identity and legacy requests return current settings", async t => {

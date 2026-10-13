@@ -12,8 +12,15 @@ export const SETTINGS_TOOL = "openquantum_settings";
 export function settingsResourceUri(html) {
   return `ui://openquantum/settings/${createHash("sha256").update(html).digest("hex")}.html`;
 }
+export function prepareSettingsDocument(html, origin) {
+  if (!origin) return html;
+  const url = new URL(origin);
+  if (url.origin !== origin || url.protocol !== "http:" || url.hostname !== "127.0.0.1") throw new Error("Invalid credential origin");
+  return html.replace("<!-- CREDENTIAL_ORIGIN -->", `<meta name="openquantum-credential-origin" content="${url.origin}">`);
+}
 export const ICON = `data:image/svg+xml;base64,${Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="24" cy="24" rx="21" ry="8" transform="rotate(45 24 24)"/><ellipse cx="24" cy="24" rx="21" ry="8" transform="rotate(-45 24 24)"/><circle cx="24" cy="24" r="3" fill="currentColor"/></svg>').toString("base64")}`;
-const schema = { type: "object", properties: { action: { type: "string", enum: ["snapshot", "skill.set", "tool.set", "provider.set", "connection.add", "connection.set", "connection.tool.set", "connection.remove", "connection.test", "credentials.open", "service.credentials.open"] },
+const schema = { type: "object", properties: { action: { type: "string", enum: ["snapshot", "skill.set", "tool.set", "provider.set", "connection.add", "connection.set", "connection.tool.set", "connection.remove", "connection.test", "credentials.open", "service.credentials.open", "credential.field.issue"] },
+  field: { type: "string", maxLength: 128 }, operation: { enum: ["set", "remove"] }, origin: { type: "string", maxLength: 2048 },
   revision: { type: "string", maxLength: 64 }, id: { type: "string", maxLength: 128 }, enabled: { type: "boolean" }, tool: { type: "string", maxLength: 128 },
   connection: { type: "object", additionalProperties: false, properties: { id: { type: "string", maxLength: 32 }, transport: { enum: ["stdio", "http"] }, url: { type: "string", maxLength: 2048 }, command: { type: "string", maxLength: 1024 }, args: { type: "array", maxItems: 32, items: { type: "string", maxLength: 2048 } }, tokenEnv: { type: "string", maxLength: 64 }, authentication: { enum: ["none", "token"] } }, required: ["id", "transport", "authentication"] },
 }, required: ["action"], additionalProperties: false };
@@ -22,6 +29,7 @@ export async function settingsRequest({ settings, connections, credentialWindow 
   if (!input || typeof input !== "object" || Array.isArray(input) || Object.keys(input).some(key => !Object.hasOwn(schema.properties, key))) throw new Error("设置字段无效");
   if (input.action === "credentials.open") return { url: await credentialWindow.open(input.id) };
   if (input.action === "service.credentials.open") return { url: await credentialWindow.openService(input.id) };
+  if (input.action === "credential.field.issue") return credentialWindow.issueField(input);
   if (input.action === "snapshot") return settings.snapshot();
   if (input.action === "connection.test") return connections.probe(input.id);
   return settings.command(input);
@@ -29,6 +37,7 @@ export async function settingsRequest({ settings, connections, credentialWindow 
 
 export function createMcpServer({ backend, settings, connections, credentialWindow, html, release }) {
   const context = { settings, connections, credentialWindow };
+  html = prepareSettingsDocument(html, credentialWindow?.origin);
   const uiUri = settingsResourceUri(html);
   const server = new Server({ name: "openquantum", version: release.version, icons: [{ src: ICON, mimeType: "image/svg+xml" }] }, {
     capabilities: { tools: { listChanged: true }, resources: {} },
@@ -52,7 +61,7 @@ export function createMcpServer({ backend, settings, connections, credentialWind
     // Advertise only the new entry so the global menu has one OpenQuantum item.
     if (params.uri !== uiUri && params.uri !== LEGACY_UI_URI) throw new Error("Unknown resource");
     return { contents: [{ uri: params.uri, mimeType: RESOURCE_MIME_TYPE, text: html, _meta: {
-      ui: { csp: { connectDomains: [], resourceDomains: [] }, prefersBorder: false },
+      ui: { csp: { connectDomains: credentialWindow?.origin ? [credentialWindow.origin] : [], resourceDomains: [] }, prefersBorder: false },
       "openai/ui": { preferredDisplayMode: "fullscreen", availableDisplayModes: ["fullscreen"] },
     } }] };
   });
