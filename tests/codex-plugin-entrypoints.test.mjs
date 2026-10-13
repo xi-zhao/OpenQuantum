@@ -1,10 +1,13 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import fs from "node:fs/promises";
+import { createHash } from "node:crypto";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import { RESOURCE_MIME_TYPE } from "@modelcontextprotocol/ext-apps/server";
-import { createMcpServer, OPENER, SETTINGS_TOOL } from "../runtime/chatgpt/server.mjs";
+import { createMcpServer, OPENER, SETTINGS_TOOL, settingsResourceUri, prepareSettingsDocument } from "../runtime/chatgpt/server.mjs";
+import { fixture } from "./fixtures/codex-settings.mjs";
+import { createCredentialWindow } from "../src/settings/codex/credential-window.mjs";
 
 async function connect(t, html, credentialWindow) {
   const snapshot = { skills: [], connections: [], tools: [], revision: "fixture" };
@@ -43,19 +46,21 @@ test("the only global entry opens the same settings document as plugin settings"
   for (const tab of ["skills", "connections", "tools", "credentials"]) assert.ok(resource.text.includes(`data-tab="${tab}"`));
 });
 
-test("loopback origin is bound to the document, CSP and resource identity across restarts", async t => {
+test("discovery and app sessions share a bundle URI but bind resources to the reading session", async t => {
   const html = await fs.readFile(new URL("../runtime/chatgpt/ui/app.html", import.meta.url), "utf8");
   const origins = ["http://127.0.0.1:12345", "http://127.0.0.1:12346"];
-  const uris = [];
-  for (const origin of origins) {
-    const client = await connect(t, html, { origin });
-    const [{ uri }] = (await client.listResources()).resources;
-    uris.push(uri);
+  const discovery = await connect(t, html, { origin: origins[0] });
+  const [{ uri }] = (await discovery.listResources()).resources;
+  const app = await connect(t, html, { origin: origins[1] });
+  assert.equal((await app.listResources()).resources[0].uri, uri);
+  for (const [client, origin] of [[discovery, origins[0]], [app, origins[1]]]) {
     const [resource] = (await client.readResource({ uri })).contents;
     assert.ok(resource.text.includes(`name="openquantum-credential-origin" content="${origin}"`));
     assert.deepEqual(resource._meta.ui.csp.connectDomains, [origin]);
+    assert.equal(settingsResourceUri(resource.text), uri);
   }
-  assert.notEqual(...uris);
+  assert.equal(uri, settingsResourceUri(html));
+  assert.equal(settingsResourceUri(prepareSettingsDocument(html, origins[0])), settingsResourceUri(prepareSettingsDocument(html, origins[1])));
 });
 
 test("changed settings HTML gets a new resource identity and legacy requests return current settings", async t => {
@@ -72,5 +77,44 @@ test("changed settings HTML gets a new resource identity and legacy requests ret
   assert.deepEqual(legacy, await current.callTool({ name: OPENER, arguments: {} }));
   const legacyResource = await current.readResource({ uri: "ui://openquantum/workbench.html" });
   assert.equal(legacyResource.contents[0].text, currentHtml);
-  await assert.rejects(current.readResource({ uri: "ui://openquantum/unknown.html" }), /Unknown resource/);
+  const previousUri = await uri(old);
+  const cached = (await current.readResource({ uri: previousUri })).contents[0];
+  assert.equal(cached.uri, previousUri);
+  assert.equal(cached.text, currentHtml);
+  // Include the exact URI reported by the installed host before this fix.
+  const brokenUri = "ui://openquantum/settings/e115081103faee51de9881ff92b97ccc1ba8ae34b0010031450e88b25e64905f.html";
+  assert.equal((await current.readResource({ uri: brokenUri })).contents[0].text, currentHtml);
+  for (const unknown of ["ui://openquantum/unknown.html", "ui://foreign/settings/" + "a".repeat(64) + ".html",
+    "ui://openquantum/settings/../credentials", "ui://openquantum/settings/short.html", previousUri + "?other=1", previousUri + "/extra"]) {
+    await assert.rejects(current.readResource({ uri: unknown }), /Unknown resource/);
+  }
+});
+
+test("a cached process-bound URI gets the current app's CSP and credential capability", async t => {
+  const html = "<html><!-- CREDENTIAL_ORIGIN -->settings</html>";
+  const sessions = [];
+  for (let i = 0; i < 2; i++) {
+    const f = await fixture(t);
+    f.backend.providers = [{ key: "fieldqkit", defaultEnabled: false }];
+    const window = await createCredentialWindow(f);
+    t.after(() => window.close());
+    sessions.push({ ...f, window, client: await connect(t, html, window) });
+  }
+  const [discovery, app] = sessions;
+  const oldHtml = prepareSettingsDocument(html, discovery.window.origin);
+  const cachedUri = `ui://openquantum/settings/${createHash("sha256").update(oldHtml).digest("hex")}.html`;
+  const [resource] = (await app.client.readResource({ uri: cachedUri })).contents;
+  assert.equal(resource.text, prepareSettingsDocument(html, app.window.origin));
+  assert.deepEqual(resource._meta.ui.csp.connectDomains, [app.window.origin]);
+  const result = await app.client.callTool({ name: SETTINGS_TOOL, arguments: {
+    action: "credential.field.issue", id: "fieldqkit", field: "QUAFU_API_TOKEN", operation: "set", origin: "null",
+  } });
+  const permission = result._meta.openquantumSettings;
+  assert.equal(new URL(permission.url).origin, app.window.origin);
+  const response = await fetch(permission.url, { method: "POST", headers: {
+    "content-type": "application/json", origin: "null", "x-openquantum-capability": permission.nonce,
+  }, body: JSON.stringify({ value: "synthetic-cross-process-only" }) });
+  assert.equal(response.status, 200);
+  assert.equal(app.secrets.size, 1);
+  assert.equal(discovery.secrets.size, 0);
 });

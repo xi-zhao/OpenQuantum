@@ -4,13 +4,15 @@ import { RESOURCE_MIME_TYPE } from "@modelcontextprotocol/ext-apps/server";
 import { createHash } from "node:crypto";
 
 const LEGACY_UI_URI = "ui://openquantum/workbench.html";
+const SETTINGS_UI_URI = /^ui:\/\/openquantum\/settings\/[a-f0-9]{64}\.html$/;
 const LEGACY_OPENER = "open_openquantum";
 export const OPENER = "open_openquantum_settings";
 export const SETTINGS_TOOL = "openquantum_settings";
-// Global apps retain their own page instances. Give settings a separate route,
-// and change the resource identity whenever the bundled document changes.
+// Discovery and app resources can use different MCP processes. Identify the
+// bundle, never its process-local credential port; each read binds its own CSP.
 export function settingsResourceUri(html) {
-  return `ui://openquantum/settings/${createHash("sha256").update(html).digest("hex")}.html`;
+  const bundle = html.replace(/<meta name="openquantum-credential-origin" content="http:\/\/127\.0\.0\.1:\d+">/, "<!-- CREDENTIAL_ORIGIN -->");
+  return `ui://openquantum/settings/${createHash("sha256").update(bundle).digest("hex")}.html`;
 }
 export function prepareSettingsDocument(html, origin) {
   if (!origin) return html;
@@ -57,9 +59,10 @@ export function createMcpServer({ backend, settings, connections, credentialWind
   ] }));
   server.setRequestHandler(ListResourcesRequestSchema, async () => ({ resources: [{ uri: uiUri, name: "OpenQuantum Settings", mimeType: RESOURCE_MIME_TYPE }] }));
   server.setRequestHandler(ReadResourceRequestSchema, async ({ params }) => {
-    // Serve the current document if an older client forwards a legacy read.
-    // Advertise only the new entry so the global menu has one OpenQuantum item.
-    if (params.uri !== uiUri && params.uri !== LEGACY_UI_URI) throw new Error("Unknown resource");
+    // Cached entrypoints from older installations still resolve to this bundle.
+    // Only the exact settings route family is an alias; never resolve file paths
+    // or take a credential origin from the requested URI.
+    if (!SETTINGS_UI_URI.test(params.uri) && params.uri !== LEGACY_UI_URI) throw new Error("Unknown resource");
     return { contents: [{ uri: params.uri, mimeType: RESOURCE_MIME_TYPE, text: html, _meta: {
       ui: { csp: { connectDomains: credentialWindow?.origin ? [credentialWindow.origin] : [], resourceDomains: [] }, prefersBorder: false },
       "openai/ui": { preferredDisplayMode: "fullscreen", availableDisplayModes: ["fullscreen"] },
