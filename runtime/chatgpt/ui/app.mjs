@@ -4,6 +4,7 @@ import "./style.css";
 
 const $ = selector => document.querySelector(selector);
 let snapshot, tab = "skills", busy = false, app;
+const expandedGroups = new Map();
 const preview = window.parent === window && ["127.0.0.1", "localhost", "[::1]"].includes(location.hostname) && location.hash.startsWith("#preview=");
 const previewToken = preview ? location.hash.slice(9) : null;
 if (preview) history.replaceState(null, "", location.pathname);
@@ -35,30 +36,56 @@ function switchFor(checked, label, action) {
   input.onchange = () => run({ ...action, enabled: input.checked }); node.append(input, element("span", checked ? "已启用" : "已关闭")); return node;
 }
 function button(text, action, className) { const node = element("button", text, className); node.type = "button"; node.onclick = action; return node; }
-function matches(item) { return `${item.title || ""} ${item.id} ${item.description || ""}`.toLowerCase().includes($("#search").value.toLowerCase()); }
+function categories() { return snapshot.categories ?? [{ id: "other", title: "其他与自定义" }]; }
+function categoryOf(item) { return categories().some(category => category.id === item.category) ? item.category : "other"; }
+function searchText(item) {
+  return [item.title, item.id, item.description, item.provider, item.url, item.command,
+    ...(item.tools ?? []).flatMap(tool => typeof tool === "string" ? [tool] : [tool.name, tool.title, tool.description]),
+    categories().find(value => value.id === categoryOf(item))?.title].filter(Boolean).join(" ").normalize("NFKC").toLowerCase();
+}
+function matches(item) {
+  const query = $("#search").value.trim().normalize("NFKC").toLowerCase();
+  const state = $("#state").value;
+  return query.split(/\s+/).every(word => searchText(item).includes(word))
+    && (state === "all" || item.enabled === (state === "enabled"))
+    && ($("#category").value === "all" || categoryOf(item) === $("#category").value);
+}
+function categoryGroups(container, items, renderItem, scope = tab) {
+  const filtered = items.filter(item => matches(item));
+  for (const category of categories()) {
+    const entries = filtered.filter(item => categoryOf(item) === category.id);
+    if (!entries.length) continue;
+    const group = element("details", undefined, "category-group");
+    const key = [scope, $("#search").value.trim(), $("#category").value, $("#state").value, category.id].join("|");
+    group.open = expandedGroups.get(key) ?? Boolean($("#search").value.trim() || $("#category").value !== "all" || $("#state").value !== "all");
+    group.ontoggle = () => { if (group.isConnected) expandedGroups.set(key, group.open); };
+    const summary = element("summary");
+    summary.append(element("strong", category.title), element("span", `${entries.length} 项 · ${entries.filter(item => item.enabled).length} 项配置启用`, "hint"));
+    const grid = element("div", undefined, "grid");
+    for (const item of entries) grid.append(renderItem(item));
+    group.append(summary, grid); container.append(group);
+  }
+  return filtered.length;
+}
 function renderSkills(container) {
-  const grid = element("div", undefined, "grid");
-  for (const skill of snapshot.skills.filter(matches)) {
+  categoryGroups(container, snapshot.skills, skill => {
     const card = element("article", undefined, "card"); const top = element("div", undefined, "card-top");
     top.append(element("h2", skill.title), switchFor(skill.enabled, `${skill.title} 启用`, { action: "skill.set", id: skill.id }));
     const unavailable = skill.tools.filter(name => { const tool = snapshot.tools.find(item => item.id === name); return !tool?.enabled || !snapshot.providers.find(item => item.id === tool.provider)?.enabled; });
     card.append(top, element("p", skill.description, "description"), element("span", skill.tools.length ? `${skill.tools.length} 个关联 Tool` : "知识与方法 Skill", "badge"));
     if (unavailable.length) card.append(element("p", `部分关联工具未启用：${unavailable.join("、")}`, "hint"));
-    grid.append(card);
-  }
-  container.append(grid); $("#count").textContent = `${snapshot.skills.filter(skill => skill.enabled).length} / ${snapshot.skills.length} 项启用`;
+    return card;
+  });
 }
 function renderTools(container) {
-  const grid = element("div", undefined, "grid");
-  for (const tool of snapshot.tools.filter(matches)) {
+  container.append(element("p", "内置工具按用途分组；新增 MCP 的工具在对应连接下管理。", "hint"));
+  categoryGroups(container, snapshot.tools, tool => {
     const card = element("article", undefined, "card"); const top = element("div", undefined, "card-top");
     top.append(element("h2", tool.title), switchFor(tool.enabled, `${tool.title} 启用`, { action: "tool.set", id: tool.id }));
     const provider = snapshot.providers.find(item => item.id === tool.provider);
     card.append(top, element("p", tool.description, "description"), element("span", provider?.enabled ? (tool.readOnly ? "只读计算或查询" : "可能产生写入") : "所属连接已关闭", `badge ${provider?.enabled ? "" : "warning"}`));
-    grid.append(card);
-  }
-  container.append(element("p", "内置工具在此勾选；新增 MCP 的工具在对应连接下勾选。关闭 Tool 会阻止新的调用。", "hint"), grid);
-  $("#count").textContent = `${snapshot.tools.filter(tool => tool.enabled).length} / ${snapshot.tools.length} 项配置启用`;
+    return card;
+  });
 }
 async function openCredential(id, container) {
   try {
@@ -115,9 +142,11 @@ function renderConnections(container) {
     run({ action: "connection.add", connection: { id: value.id, transport: value.transport, authentication: value.authentication,
       ...(value.transport === "http" ? { url: value.target } : { command: value.target, args: value.args ? value.args.split("\n").filter(Boolean) : [], ...(value.authentication === "token" ? { tokenEnv: value.tokenEnv } : {}) }) } });
   };
-  container.append(form, element("h2", "我的 MCP 连接", "section-title"));
-  if (!snapshot.connections.length) container.append(element("p", "还没有自定义连接。内置量子工具可直接使用。", "hint"));
-  for (const connection of snapshot.connections.filter(matches)) {
+  const add = element("details", undefined, "add-connection"); add.append(element("summary", "添加 MCP 连接"), form);
+  container.append(add);
+  if (snapshot.connections.some(connection => matches(connection))) container.append(element("h2", "我的 MCP 连接", "section-title"));
+  if (!snapshot.connections.length && !$("#search").value.trim() && $("#category").value === "all" && $("#state").value === "all") container.append(element("p", "还没有自定义连接。内置量子工具可直接使用。", "hint"));
+  categoryGroups(container, snapshot.connections, connection => {
     const card = element("article", undefined, "card connection"); const top = element("div", undefined, "card-top");
     top.append(element("h2", connection.id), switchFor(connection.enabled, `${connection.id} 启用`, { action: "connection.set", id: connection.id }));
     card.append(top, element("p", connection.url || connection.command, "description"), element("p", connection.status.message, "hint"));
@@ -126,26 +155,47 @@ function renderConnections(container) {
     actions.append(button("测试连接", () => run({ action: "connection.test", id: connection.id })));
     if (connection.authentication === "token") actions.append(button("配置 Token", () => openCredential(connection.id, actions)));
     actions.append(button("移除连接", () => run({ action: "connection.remove", id: connection.id }), "danger")); card.append(actions);
+    const toolList = element("details"); toolList.append(element("summary", `Tools（${connection.tools.length}）`));
+    toolList.open = Boolean($("#search").value.trim());
     for (const tool of connection.tools) {
       const row = element("div", undefined, "tool-row"); const info = element("div"); info.append(element("strong", tool.title || tool.name), element("p", tool.description, "hint"));
-      row.append(info, switchFor(tool.enabled, `${connection.id} ${tool.name} 启用`, { action: "connection.tool.set", id: connection.id, tool: tool.name })); card.append(row);
+      row.append(info, switchFor(tool.enabled, `${connection.id} ${tool.name} 启用`, { action: "connection.tool.set", id: connection.id, tool: tool.name })); toolList.append(row);
     }
-    container.append(card);
-  }
-  const builtins = element("details"); builtins.append(element("summary", `内置工具连接（${snapshot.providers.length}）`));
-  for (const provider of snapshot.providers) {
-    const row = element("div", undefined, "tool-row"); row.append(element("div", provider.title), switchFor(provider.enabled, `${provider.title} 启用`, { action: "provider.set", id: provider.id })); builtins.append(row);
-  }
-  container.append(builtins); $("#count").textContent = `${snapshot.connections.length} 个自定义连接`;
+    if (connection.tools.length) card.append(toolList);
+    return card;
+  }, "custom-connections");
+  if (snapshot.providers.some(provider => matches(provider))) container.append(element("h2", "内置工具服务", "section-title"));
+  categoryGroups(container, snapshot.providers, provider => {
+    const row = element("article", undefined, "card provider");
+    row.append(element("div", provider.title), switchFor(provider.enabled, `${provider.title} 启用`, { action: "provider.set", id: provider.id }));
+    return row;
+  }, "providers");
 }
 function render() {
   if (!snapshot) return;
+  const items = tab === "skills" ? snapshot.skills : tab === "tools" ? snapshot.tools : [...snapshot.connections, ...snapshot.providers];
+  const selected = $("#category").value || "all";
+  const all = element("option", "全部用途"); all.value = "all";
+  $("#category").replaceChildren(all);
+  for (const category of categories()) {
+    const total = items.filter(item => categoryOf(item) === category.id).length;
+    if (!total && selected !== category.id) continue;
+    const option = element("option", `${category.title}（${total}）`); option.value = category.id; $("#category").append(option);
+  }
+  $("#category").value = selected;
+  $("#count").textContent = `显示 ${items.filter(item => matches(item)).length} / ${items.length} 项`;
   const content = $("#content"); content.replaceChildren();
   if (tab === "skills") renderSkills(content); else if (tab === "tools") renderTools(content); else renderConnections(content);
-  if (!content.querySelector(".card")) content.append(element("p", "没有匹配的能力", "empty"));
+  if (!items.some(item => matches(item))) {
+    const empty = element("div", undefined, "empty");
+    empty.append(element("p", "没有匹配的能力"), button("清除筛选", () => { $("#search").value = ""; $("#category").value = "all"; $("#state").value = "all"; render(); }));
+    content.append(empty);
+  }
 }
-document.querySelectorAll("[data-tab]").forEach(node => node.onclick = () => { tab = node.dataset.tab; $("#search").value = ""; document.querySelectorAll("[data-tab]").forEach(button => button.classList.toggle("active", button === node)); render(); });
+document.querySelectorAll("[data-tab]").forEach(node => node.onclick = () => { tab = node.dataset.tab; document.querySelectorAll("[data-tab]").forEach(button => button.classList.toggle("active", button === node)); render(); });
 $("#search").oninput = render;
+$("#category").onchange = render;
+$("#state").onchange = render;
 $("#refresh").onclick = () => run({ action: "snapshot" });
 const githubLink = $("#github-link");
 githubLink.onclick = async event => {

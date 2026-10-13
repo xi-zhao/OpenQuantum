@@ -31,6 +31,26 @@ export async function fixture(t) {
   return { root, settings, options, backend, credentials, secrets, calls: () => calls };
 }
 
+test("Codex categories are presentation metadata and preserve configured states", async t => {
+  const f = await fixture(t);
+  const capability = f.backend.sourceCapabilities[0];
+  capability.id = "qec-memory-experiment";
+  capability.summary = "Short settings summary";
+  const before = await f.settings.snapshot();
+  assert.equal(before.skills[0].category, "qec");
+  assert.equal(before.tools[0].category, "qec");
+  assert.equal(before.providers[0].category, "qec");
+  assert.equal(before.skills[0].description, capability.summary);
+  await f.settings.command({ action: "tool.set", id: "calculate", enabled: false, revision: before.revision });
+  const after = await f.settings.snapshot();
+  assert.equal(after.tools[0].enabled, false);
+  assert.equal(after.skills[0].enabled, true);
+  assert.equal(after.providers[0].enabled, true);
+  assert.equal(after.tools[0].category, "qec");
+  assert.equal((await f.settings.snapshot()).revision, after.revision);
+  assert.equal(f.calls(), 0);
+});
+
 test("settings change the real MCP inventory and reject a stale cached Tool call", async t => {
   const f = await fixture(t);
   const connections = new Connections(f);

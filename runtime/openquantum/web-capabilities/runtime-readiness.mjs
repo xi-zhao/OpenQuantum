@@ -88,5 +88,5 @@ export async function dispatchRuntimeReadinessCommand(
     projectRoot,
     livePresetMounts: readLivePresetMounts,
   });
-  return createRuntimeReadinessReader({ observer })();
+  return createRuntimeReadinessReader({ observer, projectRoot })();
 }

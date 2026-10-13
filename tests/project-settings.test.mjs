@@ -52,6 +52,7 @@ test("project settings exposes safe Skill and MCP projections", async (t) => {
   assert.deepEqual(snapshot.skills, [
     {
       name: "demo-skill",
+      category: "other",
       displayName: "Demo Skill",
       description: "Demo scientific skill",
       version: "1.2.3",
@@ -65,6 +66,7 @@ test("project settings exposes safe Skill and MCP projections", async (t) => {
   assert.deepEqual(snapshot.mcpServers, [
     {
       serverName: "demo_quantum",
+      category: "other",
       displayName: "demo_quantum",
       description: "项目 Agent preset 声明的 Harness 原生 MCP 服务。",
       provider: "Project",

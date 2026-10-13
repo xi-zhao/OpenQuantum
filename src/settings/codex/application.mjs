@@ -3,6 +3,7 @@ import os from "node:os";
 import { randomUUID } from "node:crypto";
 import { parse, stringify } from "smol-toml";
 import { atomicWrite, digest, readOptional, withLock } from "./storage.mjs";
+import { CAPABILITY_CATEGORIES, capabilityCategory, providerCategory } from "../capability-categories.mjs";
 
 const NAME = /^[a-z][a-z0-9_-]{0,31}$/;
 const ENV = /^[A-Za-z_][A-Za-z0-9_]{0,63}$/;
@@ -57,19 +58,24 @@ export class Settings {
   skills(codex) {
     return this.backend.sourceCapabilities.filter(item => item.status === "available" && item.skill).map(item => {
       const override = codex.skills?.config?.findLast(value => skillSelector(value, item.id, this.skillRoot));
-      return { id: item.id, title: item.title, description: item.description, tools: item.tools, enabled: override?.enabled !== false };
+      return { id: item.id, title: item.title, description: item.summary ?? item.description, category: capabilityCategory(item.id), tools: item.tools, enabled: override?.enabled !== false };
     });
   }
   async snapshot() {
     const { config, codex, revision } = await this.read();
-    const providers = this.backend.providers.map(provider => ({ id: provider.key, title: provider.title || provider.key, enabled: !config.disabledProviders.includes(provider.key), bundled: true }));
+    const capabilities = this.backend.sourceCapabilities;
+    const providers = this.backend.providers.map(provider => {
+      const members = capabilities.filter(item => item.tools.some(name => this.backend.providerFor(name) === provider.key));
+      return { id: provider.key, title: provider.title || (members.length === 1 ? members[0].title : provider.kind === "native" ? "通用量子计算工具" : provider.key), category: providerCategory(members), enabled: !config.disabledProviders.includes(provider.key), bundled: true };
+    });
     const tools = this.backend.tools.map(tool => ({ id: tool.name, title: tool.title || tool.name, description: tool.description,
+      category: capabilityCategory(capabilities.find(item => item.tools.includes(tool.name))?.id),
       provider: this.backend.providerFor(tool.name), enabled: !config.disabledTools.includes(tool.name), readOnly: tool.annotations?.readOnlyHint === true }));
     const connections = await Promise.all(config.connections.map(async connection => ({ ...connection,
       credential: connection.authentication === "token" ? await this.credentials.describe(credentialRef(connection.id)) : { configured: false },
       status: this.statuses.get(connection.id) ?? { state: "not_checked", message: "尚未测试连接" },
     })));
-    return { revision, skills: this.skills(codex), providers, tools, connections,
+    return { revision, categories: CAPABILITY_CATEGORIES, skills: this.skills(codex), providers, tools, connections,
       notice: "Skill 开关保存在 Codex 用户配置；已有聊天可能需要重载。Tool 禁用立即阻止新的调用。", scope: "当前用户的 OpenQuantum 插件" };
   }
   async enabled(name) {
