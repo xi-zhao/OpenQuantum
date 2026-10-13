@@ -30,7 +30,7 @@ OpenQuantum content updates and original DSH Desktop updates are separate. OpenQ
 The OpenQuantum service only offers release notes and upgrade instructions; it does not download, install or restart the client.
 
 For an installed capability package, quit the Host, back up the OpenQuantum data directory, verify and extract the new capability archive, then run its installer. Keep the original DSH Desktop on the compatible version named in the release notes. See [installation and migration](DESKTOP_INSTALLERS.md).
-Version 0.8.2 uses capability archives with the original DSH Desktop client. The old private OpenQuantum DMG/EXE packages are no longer the installation path; their Git tags and source history remain available.
+Version 0.8.2 and later use capability archives with the original DSH Desktop client. The old private OpenQuantum DMG/EXE packages are no longer the installation path; their Git tags and source history remain available.
 
 For a source installation:
 
@@ -55,9 +55,9 @@ carry the same version. Pinned third-party dependencies retain their own version
 The `vX.Y.Z` and `codex-vX.Y.Z` tags distinguish release channels, not product versions. Synchronized
 releases point both tags at the same reviewed commit. A product version does not require both channels to be published.
 
-Version 0.8.2 publishes both `v0.8.2` and `codex-v0.8.2` from reviewed commit
-`64004f9fcef58afa2a8a05d965eebcaa6c9477ab`. Documentation corrections after that commit do not change
-the release sources or packages. Once both releases are public, GitHub latest points to `v0.8.2`,
+Version 0.8.3 uses both `v0.8.3` and `codex-v0.8.3` at the same reviewed commit.
+The exact source commit and package checksums are recorded in each Release's `release-validation.json`.
+Once both releases are public, GitHub latest points to `v0.8.3`,
 which carries the capability archives and `openquantum-update.json`; the Codex Release is not latest.
 This keeps Desktop/Web update discovery on the capability-package channel. Git tags, source history
 and previous `codex-v*` releases are retained. The steps below apply when both channels are published.

@@ -7,8 +7,8 @@ Windows 提供带 OpenQuantum 图标的启动快捷方式，并通过同一扩�
 
 当前兼容基线是 [DSH Desktop 2.0.7](https://github.com/anywhere-labs/dsh-desktop/releases/tag/v2.0.7)
 与 Harness `0.1.5-rc.1`。不要用上游 `latest` 链接自动替换固定版本；该链接可能指向 NEXT 渠道或不同 Harness family。
-OpenQuantum 能力包与 Codex 插件继续共用产品版本（当前源码 `0.8.2`）；第三方客户端显示其真实的上游版本 `2.0.7`。
-[OpenQuantum 0.8.2 Desktop Release](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.2) 提供 Mac Apple Silicon、Mac Intel 和 Windows x64 能力包；[同版本 Codex 插件](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.2) 单独安装。以下流程适用于能力包，旧私有 DMG/EXE 不再作为安装入口。
+OpenQuantum 能力包与 Codex 插件继续共用产品版本（当前源码 `0.8.3`）；第三方客户端显示其真实的上游版本 `2.0.7`。
+[OpenQuantum 0.8.3 Desktop Release](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.3) 提供 Mac Apple Silicon、Mac Intel 和 Windows x64 能力包；[同版本 Codex 插件](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.3) 单独安装。以下流程适用于能力包，旧私有 DMG/EXE 不再作为安装入口。
 
 ## 安装与启动
 

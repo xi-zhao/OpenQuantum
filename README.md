@@ -249,18 +249,18 @@ OpenQuantum 支持桌面安装包和源码运行，适合本机单用户使用�
 **让 Codex 帮你安装：**打开 Codex，新建聊天，把下面这段话复制给它：
 
 ```text
-请帮我安装 OpenQuantum Codex 插件 0.8.2。先阅读安装指南：
-https://github.com/xi-zhao/OpenQuantum/blob/codex-v0.8.2/docs/integrations/CODEX_AGENT_INSTALL.md
-从 https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.2 下载完整安装包与 SHA256SUMS，
+请帮我安装 OpenQuantum Codex 插件 0.8.3。先阅读安装指南：
+https://github.com/xi-zhao/OpenQuantum/blob/codex-v0.8.3/docs/integrations/CODEX_AGENT_INSTALL.md
+从 https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.3 下载完整安装包与 SHA256SUMS，
 核对摘要后，检查 Codex、Node.js 24+ 和 npm，使用包内安装器完成安装。
 请保留已有插件和用户配置，核对 Skills、MCP 工具和左侧全局“OpenQuantum 设置”入口。
 需要我重载应用时，告诉我具体操作。最后报告实际验证的结果，以及仍需准备的科学计算依赖。
 ```
 
-OpenQuantum Desktop 能力包、Codex 插件及安装器统一使用 **OpenQuantum 0.8.2**。本版 Codex 插件包含 134 个 Skill、71 个科学 Tool，新增 Pasqal 实验工作流；发行标签为 `codex-v0.8.2`。
+OpenQuantum Desktop 能力包、Codex 插件及安装器统一使用 **OpenQuantum 0.8.3**。本版 Codex 插件包含 134 个 Skill、71 个科学 Tool，设置页新增用途分类、搜索和状态筛选；发行标签为 `codex-v0.8.3`。
 
-**[下载 Codex 插件 0.8.2 完整安装包](https://github.com/xi-zhao/OpenQuantum/releases/download/codex-v0.8.2/openquantum-0.8.2-codex-install.zip)**
-（[发布说明与 SHA256SUMS](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.2)）。
+**[下载 Codex 插件 0.8.3 完整安装包](https://github.com/xi-zhao/OpenQuantum/releases/download/codex-v0.8.3/openquantum-0.8.3-codex-install.zip)**
+（[发布说明与 SHA256SUMS](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.3)）。
 安装包包含插件 ZIP、安装脚本和依赖锁文件，无需另行取得源码。需要支持插件及全局设置页的 Codex、
 Node.js 24+ 和 npm；由 Agent 按[安装指南](docs/integrations/CODEX_AGENT_INSTALL.md)检查并处理依赖。
 macOS 本机安装已验证，其他平台和宿主版本仍需检查兼容性。
@@ -295,7 +295,7 @@ npm run plugin:install
 
 后续发行采用 [DSH Desktop 2.0.7 原版客户端](https://github.com/anywhere-labs/dsh-desktop/releases/tag/v2.0.7)与独立 OpenQuantum 能力包。能力包保留完整 SDK 入口、量子 Skill、Tool 和配置，并包含 Node / uv。原生应用名称、界面和客户端更新由第三方维护。
 
-从 [OpenQuantum Desktop 0.8.2 Release](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.2) 选择 Mac Apple Silicon、Mac Intel 或 Windows x64 能力包，按同页 `SHA256SUMS` 核对后解压安装。完整步骤见[安装与迁移说明](docs/DESKTOP_INSTALLERS.md)。第三方客户端显示上游版本 `2.0.7`；OpenQuantum 能力包与 Codex 插件均为 `0.8.2`，Harness 保持 `0.1.5-rc.1`。旧私有 DMG/EXE 不再作为安装入口，计算环境、账户与许可继续按能力显式准备。
+从 [OpenQuantum Desktop 0.8.3 Release](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.3) 选择 Mac Apple Silicon、Mac Intel 或 Windows x64 能力包，按同页 `SHA256SUMS` 核对后解压安装。完整步骤见[安装与迁移说明](docs/DESKTOP_INSTALLERS.md)。第三方客户端显示上游版本 `2.0.7`；OpenQuantum 能力包与 Codex 插件均为 `0.8.3`，Harness 保持 `0.1.5-rc.1`。旧私有 DMG/EXE 不再作为安装入口，计算环境、账户与许可继续按能力显式准备。
 
 ### 安装源码
 

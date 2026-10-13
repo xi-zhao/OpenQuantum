@@ -2,6 +2,14 @@
 
 量子依赖核验日期：2026-09-22；平台升级记录日期：2026-09-10；原模型验收交接记录日期：2026-09-05。此页只记录工作交接；架构以[文档总入口](docs/README.md)为准，执行事实以 Harness Session event log 为准，科学状态以 Acceptance Report 为准。
 
+## OpenQuantum 0.8.3 发行入口（2026-10-13）
+
+- Desktop 能力包、Codex 插件及安装器统一为 `0.8.3`；本轮只更新发行版本与说明，依赖版本不变。
+- [Desktop 说明](docs/releases/v0.8.3.md)包含设置用途分类、搜索筛选和品牌启动图标；[Codex 说明](docs/releases/codex-v0.8.3.md)包含相同的设置分类。功能来源为已合并的 PR #17、#18。
+- `v0.8.3` 与 `codex-v0.8.3` 使用同一已审阅提交；正式源码、CI、附件摘要及实际发布状态以两个 Release 和各自的 `release-validation.json` 为准。Desktop Release 保留 `latest` 与稳定更新清单。
+- 本机 Finder 图标、Desktop 启动、原生重启和设置分类已有实际验证；164 个既有配置及 Skill 文件摘要未变。Dock 与 Windows 任务栏仍未完成视觉核验；跨平台工程检查不替代原生视觉验收。
+- 原版 DSH Desktop 保持 `2.0.7`，Harness 保持 `0.1.5-rc.1`；发布不替换本机已有安装，不使用真实科研任务验收，`scientificValidation=not_evaluated`。
+
 ## OpenQuantum 0.8.2 双渠道发行与分支保护（2026-10-13）
 
 - `main` 已启用 GitHub 分支保护：必须经 PR、当前 7 项 GitHub Actions 检查必过、包含最新目标基线、管理员同样受限，禁止强推和删除。不额外要求固定数量的人工批准。
