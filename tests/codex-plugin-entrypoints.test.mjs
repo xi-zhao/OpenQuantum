@@ -8,6 +8,7 @@ import { RESOURCE_MIME_TYPE } from "@modelcontextprotocol/ext-apps/server";
 import { createMcpServer, OPENER, SETTINGS_TOOL, settingsResourceUri, prepareSettingsDocument } from "../runtime/chatgpt/server.mjs";
 import { fixture } from "./fixtures/codex-settings.mjs";
 import { createCredentialWindow } from "../src/settings/codex/credential-window.mjs";
+import { componentNavigation } from "../scripts/lib/component-directory.mjs";
 
 async function connect(t, html, credentialWindow) {
   const snapshot = { skills: [], connections: [], tools: [], revision: "fixture" };
@@ -21,7 +22,7 @@ async function connect(t, html, credentialWindow) {
 }
 
 test("the only global entry opens the same settings document as plugin settings", async t => {
-  const html = await fs.readFile(new URL("../runtime/chatgpt/ui/app.html", import.meta.url), "utf8");
+  const html = (await fs.readFile(new URL("../runtime/chatgpt/ui/app.html", import.meta.url), "utf8")).replace("<!-- COMPONENT_TABS -->", componentNavigation());
   const client = await connect(t, html);
   const { tools } = await client.listTools();
   const global = tools.filter(tool => tool._meta?.["openai/ui"]?.entrypoints?.some(item => item.type === "global"));
@@ -43,7 +44,8 @@ test("the only global entry opens the same settings document as plugin settings"
   assert.equal(resource.text, html);
   assert.equal(resource.mimeType, RESOURCE_MIME_TYPE);
   assert.equal(resource._meta["openai/ui"].preferredDisplayMode, "fullscreen");
-  for (const tab of ["skills", "connections", "tools", "credentials"]) assert.ok(resource.text.includes(`data-tab="${tab}"`));
+  for (const tab of ["runtime", "mcp", "skills", "credentials"]) assert.ok(resource.text.includes(`data-tab="${tab}"`));
+  assert.equal((resource.text.match(/data-tab=/g) ?? []).length, 4);
 });
 
 test("discovery and app sessions share a bundle URI but bind resources to the reading session", async t => {

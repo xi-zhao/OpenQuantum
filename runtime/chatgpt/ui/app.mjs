@@ -1,13 +1,23 @@
 import { App, applyHostStyleVariables, applyDocumentTheme } from "@modelcontextprotocol/ext-apps";
 import { openHostLink } from "./open-link.mjs";
-import { credentialEntries, renderCredentialCards, clearCredentialDrafts } from "./credential-cards.mjs";
+import { credentialEntries, renderCredentialCards, clearCredentialDrafts, h } from "./credential-cards.mjs";
+import { COMPONENT_TABS, COMPONENT_INTROS, COMPONENT_CHECKS, componentCard, componentCardCss } from "../../../src/settings/component-view.mjs";
 import "./style.css";
 
 const $ = selector => document.querySelector(selector);
-let snapshot, tab = "credentials", busy = false, app;
+const filterToolbar = $("#toolbar");
+let snapshot, tab = "runtime", busy = false, app;
 let stateRequests = Promise.resolve();
 const connectionDraft = {};
 const expandedGroups = new Map();
+const componentStyle = document.createElement("style"); componentStyle.textContent = componentCardCss; document.head.append(componentStyle);
+function t(key, params) {
+  let value = snapshot?.components?.copy?.[key] ?? key;
+  for (const [name, replacement] of Object.entries(params ?? {})) value = value.replaceAll(`{${name}}`, replacement);
+  return value;
+}
+function skillEntries() { return snapshot.components?.skills ?? snapshot.skills; }
+function mcpEntries() { return snapshot.components?.mcpServers ?? snapshot.providers; }
 const preview = window.parent === window && ["127.0.0.1", "localhost", "[::1]"].includes(location.hostname) && location.hash.startsWith("#preview=");
 const previewToken = preview ? location.hash.slice(9) : null;
 if (preview) history.replaceState(null, "", location.pathname);
@@ -46,16 +56,17 @@ async function run(input) {
   catch (error) { notice(error.message, true); }
   finally { busy = false; document.querySelectorAll("button,input,select,textarea").forEach(node => node.disabled = false); render(); }
 }
-function switchFor(checked, label, action) {
+function switchFor(checked, label, action, { disabled = false, text } = {}) {
   const node = element("label", undefined, "switch");
   const input = element("input"); input.type = "checkbox"; input.checked = checked; input.setAttribute("aria-label", label);
-  input.onchange = () => run({ ...action, enabled: input.checked }); node.append(input, element("span", checked ? "已启用" : "已关闭")); return node;
+  input.disabled = disabled;
+  input.onchange = () => run({ ...action, enabled: input.checked }); node.append(input, element("span", text ?? (checked ? "配置启用" : "配置关闭"))); return node;
 }
 function button(text, action, className) { const node = element("button", text, className); node.type = "button"; node.onclick = action; return node; }
 function categories() { return snapshot.categories ?? [{ id: "other", title: "其他与自定义" }]; }
 function categoryOf(item) { return categories().some(category => category.id === item.category) ? item.category : "other"; }
 function searchText(item) {
-  return [item.title, item.id, item.description, item.provider, item.url, item.command,
+  return [item.title, t(item.title ?? ""), item.id, item.description, t(item.description ?? ""), item.provider, item.url, item.command,
     ...(item.serverNames ?? []),
     ...(item.fields ?? []).flatMap(field => [field.name, field.title, field.displayName]),
     ...(item.tools ?? []).flatMap(tool => typeof tool === "string" ? [tool] : [tool.name, tool.title, tool.description]),
@@ -65,7 +76,7 @@ function matches(item) {
   const query = $("#search").value.trim().normalize("NFKC").toLowerCase();
   const state = $("#state").value;
   return query.split(/\s+/).every(word => searchText(item).includes(word))
-    && (state === "all" || (["enabled", "disabled"].includes(state) ? item.enabled === (state === "enabled") : item.configuration === state))
+    && (state === "all" || (state === "unsupported" ? item.supported === false || item.configuration === "unsupported" : ["enabled", "disabled"].includes(state) ? item.enabled === (state === "enabled") : item.configuration === state))
     && ($("#category").value === "all" || categoryOf(item) === $("#category").value);
 }
 function categoryGroups(container, items, renderItem, scope = tab) {
@@ -75,30 +86,45 @@ function categoryGroups(container, items, renderItem, scope = tab) {
     if (!entries.length) continue;
     const group = element("details", undefined, "category-group");
     const key = [scope, $("#search").value.trim(), $("#category").value, $("#state").value, category.id].join("|");
-    group.open = expandedGroups.get(key) ?? Boolean(tab === "services" || $("#search").value.trim() || $("#category").value !== "all" || $("#state").value !== "all");
+    group.open = expandedGroups.get(key) ?? Boolean($("#search").value.trim() || $("#category").value !== "all" || $("#state").value !== "all");
     group.ontoggle = () => { if (group.isConnected) expandedGroups.set(key, group.open); };
     const summary = element("summary");
-    summary.append(element("strong", category.title), element("span", tab === "services" ? `${entries.length} 个服务` : `${entries.length} 项 · ${entries.filter(item => item.enabled).length} 项配置启用`, "hint"));
-    const grid = element("div", undefined, "grid");
+    summary.append(element("strong", t(category.title)), element("span", tab === "skills" ? `${entries.length} 项` : `${entries.length} 项 · ${entries.filter(item => item.enabled).length} 项配置启用`, "hint"));
+    const grid = element("div", undefined, "oq-cap-grid");
     for (const item of entries) grid.append(renderItem(item));
     group.append(summary, grid); container.append(group);
   }
   return filtered.length;
 }
 function renderSkills(container) {
-  categoryGroups(container, snapshot.skills, skill => {
-    const card = element("article", undefined, "card"); const top = element("div", undefined, "card-top");
-    top.append(element("h2", skill.title), switchFor(skill.enabled, `${skill.title} 启用`, { action: "skill.set", id: skill.id }));
-    const unavailable = skill.tools.filter(name => { const tool = snapshot.tools.find(item => item.id === name); return !tool?.enabled || !snapshot.providers.find(item => item.id === tool.provider)?.enabled; });
-    card.append(top, element("p", skill.description, "description"), element("span", skill.tools.length ? `${skill.tools.length} 个关联 Tool` : "知识与方法 Skill", "badge"));
-    if (unavailable.length) card.append(element("p", `部分关联工具未启用：${unavailable.join("、")}`, "hint"));
-    const service = snapshot.services?.find(service => service.capability === skill.id);
-    if (service) card.append(button("查看服务配置", () => showService(service.id), "text-button"));
-    return card;
+  categoryGroups(container, skillEntries(), skill => {
+    const supported = skill.supported !== false;
+    const actions = element("div", undefined, "oq-cap-actions");
+    actions.append(switchFor(skill.enabled, t("允许 Agent 自动加载"), { action: "skill.set", id: skill.id }, { disabled: !supported, text: t("允许 Agent 自动加载") }));
+    return componentCard(h, { title: skill.title, code: `Skill · /${skill.id}`, description: skill.description, t,
+      label: !supported ? "当前宿主未接入" : skill.enabled ? t("允许 Agent 自动加载") : "配置关闭",
+      meta: t("独立 Skill 指令 · {p0}", { p0: [skill.version, skill.maturity].filter(Boolean).join(" · ") || t("项目工作流") }),
+      note: skill.availabilityNote, actions,
+    });
   });
+  const add = element("details", undefined, "add-connection");
+  add.append(element("summary", t("添加现有 Skill")), element("p", "自定义 Skill 由 Codex 原生 Skills 设置管理。本页目录随 OpenQuantum 插件更新。", "hint"));
+  container.append(add);
 }
 function renderTools(container) {
   container.append(element("p", "内置工具按用途分组；新增 MCP 的工具在对应连接下管理。", "hint"));
+  const nativeProviders = snapshot.providers.filter(provider => provider.id.startsWith("native:"));
+  if (nativeProviders.length) {
+    const native = element("details", undefined, "technical-details");
+    native.open = expandedGroups.get("native-providers") ?? false;
+    native.ontoggle = () => { if (native.isConnected) expandedGroups.set("native-providers", native.open); };
+    native.append(element("summary", "原生工具服务开关"));
+    for (const provider of nativeProviders) {
+      const row = element("div", undefined, "tool-row");
+      row.append(element("strong", provider.title), switchFor(provider.enabled, `${provider.title} 启用`, { action: "provider.set", id: provider.id })); native.append(row);
+    }
+    container.append(native);
+  }
   categoryGroups(container, snapshot.tools, tool => {
     const card = element("article", undefined, "card"); const top = element("div", undefined, "card-top");
     top.append(element("h2", tool.title), switchFor(tool.enabled, `${tool.title} 启用`, { action: "tool.set", id: tool.id }));
@@ -138,78 +164,42 @@ async function openCredential(id, container, service = false) {
 }
 function setTab(value) {
   if (tab === "credentials" && value !== tab) clearCredentialDrafts();
+  if (!COMPONENT_TABS.some(([id]) => id === value)) return;
   tab = value;
-  document.querySelectorAll("[data-tab]").forEach(node => { node.classList.toggle("active", node.dataset.tab === tab); node.setAttribute("aria-pressed", String(node.dataset.tab === tab)); });
+  document.querySelectorAll("[data-tab]").forEach(node => { node.classList.toggle("active", node.dataset.tab === tab); node.setAttribute("aria-selected", String(node.dataset.tab === tab)); });
   $("#state").value = "all"; $("#category").value = "all"; $("#search").value = "";
   notice("");
   render();
 }
 function showCredentials(id) { setTab("credentials"); $("#search").value = id; render(); $("#toolbar").scrollIntoView({ block: "start" }); }
-function showService(id) { setTab("services"); $("#search").value = id; render(); $("#toolbar").scrollIntoView({ block: "start" }); }
-function serviceState(service) {
-  if (!service.supported) return service.id === "pasqal_cloud" ? "通过 SDK 配置" : "尚未接入 Codex";
-  if (service.configuration === "unavailable") return "凭据库不可用";
-  if (service.configuration === "incomplete") return `待配置 · 缺 ${service.missing.length} 项`;
-  return service.fields.some(field => field.configured) ? "配置已保存 · 认证未验证" : "凭据按需配置";
+function showService(id) { setTab("mcp"); $("#search").value = id; render(); $("#toolbar").scrollIntoView({ block: "start" }); }
+function renderRuntime(container) {
+  const summary = element("div", undefined, "runtime-summary");
+  summary.append(element("strong", "组件配置已读取"), element("p", "查看 OpenQuantum 在当前 Codex 中提供的组件；配置状态和实际运行分别显示。", "hint"));
+  container.append(summary);
+  const grid = element("div", undefined, "oq-cap-grid");
+  const skills = snapshot.skills.filter(skill => skill.enabled);
+  const tools = snapshot.tools.filter(tool => tool.enabled && snapshot.providers.some(provider => provider.id === tool.provider && provider.enabled));
+  const cards = [
+    ["model-routes", "由 Codex 管理", "用于理解需求和生成回答。模型与账户由 Codex 当前对话管理。", null],
+    ["skill-registry", `${skills.length} 项配置启用`, "帮助助手选择研究方法、安排计算步骤。当前聊天是否加载需在 Codex 中确认。", button("查看 Skills", () => setTab("skills"))],
+    ["tool-registry", `${tools.length} 项工具开放`, "供会话调用的计算与辅助工具。已列入插件工具目录，实际连接在使用时确认。", null],
+  ];
+  for (const [id, label, description, actions] of cards) grid.append(componentCard(h, { title: COMPONENT_CHECKS[id].title, label, description, actions, t }));
+  container.append(grid);
+  const toolsPanel = element("details", undefined, "runtime-tools");
+  const key = "runtime-tools";
+  toolsPanel.open = expandedGroups.get(key) ?? Boolean($("#search").value.trim() || $("#category").value !== "all" || $("#state").value !== "all");
+  toolsPanel.ontoggle = () => { if (toolsPanel.isConnected) expandedGroups.set(key, toolsPanel.open); };
+  toolsPanel.append(element("summary", "Tools · 查看与配置工具"));
+  toolsPanel.append(filterToolbar);
+  renderTools(toolsPanel); container.append(toolsPanel);
+  const diagnostic = element("details", undefined, "technical-details");
+  diagnostic.append(element("summary", t("诊断详情")), element("p", `读取时间：${new Date(snapshot.observedAt).toLocaleString()}。范围：当前用户的 OpenQuantum 插件。`, "hint"),
+    element("p", "Skills 显示持久化加载配置；Tools 显示插件开放的工具目录。Codex 模型、当前聊天加载状态、MCP 实际连通和账户认证均未在此测试。", "hint"));
+  container.append(diagnostic);
 }
-function renderServices(container) {
-  const steps = element("ol", undefined, "setup-steps");
-  for (const [title, note] of [["选择服务", "查看它能完成什么"], ["配置账户", "安全填写 Token 或账号"], ["启用工具", "选择允许使用的功能"]]) {
-    const step = element("li"); step.append(element("strong", title), element("span", note)); steps.append(step);
-  }
-  container.append(steps, element("p", "配置保存在本机。保存后不会自动验证账户或提交任务；无需账户的本地功能可以直接启用。", "hint"));
-  const renderService = service => {
-    const card = element("article", undefined, "card service"), top = element("div", undefined, "card-top");
-    top.append(element("h2", service.title));
-    if (service.supported) top.append(switchFor(service.enabled, `${service.title} 服务启用`, { action: "provider.set", id: service.id }));
-    card.append(top, element("p", service.description, "description"), element("span", serviceState(service), `badge ${service.configuration === "configured" ? "" : "warning"}`));
-    if (service.availabilityNote) card.append(element("p", service.availabilityNote, "hint"));
-    const fields = element("dl", undefined, "credential-fields");
-    for (const field of service.fields) {
-      const name = element("dt", field.title);
-      const status = !service.supported ? (field.required ? "需要配置" : "按需提供") : service.configuration === "unavailable" ? "未读取" : field.configured ? "已保存" : field.required || service.missing.includes(field.name) ? "未配置" : "可选";
-      fields.append(name, element("dd", status, field.configured ? "saved" : ""));
-    }
-    card.append(fields);
-    const actions = element("div", undefined, "actions");
-    if (service.supported) actions.append(button("配置服务密钥", () => showCredentials(service.id), "primary"));
-    const docs = element("a", "如何获取凭据 ↗", "credential-link"); docs.href = service.documentationUrl; docs.target = "_blank"; docs.rel = "noopener noreferrer";
-    docs.onclick = async event => { if (!preview) { event.preventDefault(); try { await openHostLink(app, docs.href); } catch { notice(`未能打开文档，请访问：${docs.href}`, true); } } };
-    actions.append(docs); card.append(actions);
-    if (service.supported) {
-      const details = element("details");
-      const key = `service-tools-${service.id}`;
-      details.open = expandedGroups.get(key) ?? false;
-      details.ontoggle = () => { if (details.isConnected) expandedGroups.set(key, details.open); };
-      details.append(element("summary", `选择要启用的工具 · ${service.tools.filter(tool => tool.enabled).length}/${service.tools.length} 已开启`));
-      details.append(element("p", "先打开服务开关，再选择所需功能。依赖环境未准备时，工具会提示安装步骤。", "hint"));
-      for (const tool of service.tools) {
-        const row = element("div", undefined, "tool-row"), info = element("div");
-        info.append(element("strong", tool.title));
-        const explanation = element("details");
-        explanation.append(element("summary", "查看工具说明"), element("p", tool.description, "hint"));
-        info.append(explanation);
-        row.append(info, switchFor(tool.enabled, `${tool.title} 启用`, { action: "tool.set", id: tool.id })); details.append(row);
-      }
-      card.append(details);
-    }
-    const technical = element("details", undefined, "technical-details");
-    technical.append(element("summary", "查看配置变量"));
-    for (const field of service.fields) {
-      const row = element("p", field.title + "：", "hint"); row.append(element("code", field.name)); technical.append(row);
-    }
-    card.append(technical);
-    return card;
-  };
-  for (const [supported, title, note] of [[true, "可在这里配置", "账户配置、服务开关和工具选择都在对应卡片中。"], [false, "需要单独配置", "以下服务使用外部连接或 SDK 认证，本页说明所需配置和当前支持范围。"]]) {
-    const services = (snapshot.services ?? []).filter(service => service.supported === supported && matches(service));
-    if (!services.length) continue;
-    container.append(element("h2", title, "section-title"), element("p", note, "hint"));
-    const grid = element("div", undefined, "grid services-grid");
-    services.forEach(service => grid.append(renderService(service))); container.append(grid);
-  }
-}
-function renderConnections(container) {
+function renderMcp(container) {
   const form = element("form", undefined, "card"); form.append(element("h2", "添加 MCP 连接"));
   const fields = element("div", undefined, "form-grid"); const inputs = {};
   const field = (name, title, kind, options) => {
@@ -241,9 +231,37 @@ function renderConnections(container) {
     run({ action: "connection.add", connection: { id: value.id, transport: value.transport, authentication: value.authentication,
       ...(value.transport === "http" ? { url: value.target } : { command: value.target, args: value.args ? value.args.split("\n").filter(Boolean) : [], ...(value.authentication === "token" ? { tokenEnv: value.tokenEnv } : {}) }) } });
   };
-  const add = element("details", undefined, "add-connection"); add.append(element("summary", "添加 MCP 连接"), form);
+  const add = element("details", undefined, "add-connection"); add.append(element("summary", t("注册已有 MCP Server")), form);
   add.open = Object.values(connectionDraft).some(Boolean);
-  container.append(add);
+  if (mcpEntries().some(server => matches(server))) container.append(element("h2", "MCP", "section-title"));
+  categoryGroups(container, mcpEntries(), server => {
+    const supported = server.supported !== false;
+    const label = !supported ? "当前宿主未接入" : server.requiredCredentialsMissing ? "需要凭据" : server.enabled ? t("连接配置启用") : t("连接配置关闭");
+    const details = element("details", undefined, "oq-cap-details");
+    details.append(element("summary", t("连接详情与超时")),
+      element("p", `${server.transport ?? "stdio"} · ${server.target ?? server.id}${server.packageVersion ? " · " + server.packageVersion : ""}`, "oq-cap-meta"));
+    if (supported) details.append(element("p", "单次调用超时：180000 毫秒。较长的自定义计算请使用宿主代码工具。", "oq-cap-meta"));
+    const actions = element("div", undefined, "oq-cap-actions");
+    actions.append(switchFor(server.enabled, t(server.title), { action: "provider.set", id: server.id }, { disabled: !supported }));
+    if (server.service) actions.append(button("服务密钥", () => showCredentials(server.service)));
+    if (server.sourceUrl) {
+      const source = element("a", t("源码"), "oq-cap-link"); source.href = server.sourceUrl; source.target = "_blank"; source.rel = "noopener noreferrer";
+      source.onclick = event => { if (!preview) { event.preventDefault(); void openHostLink(app, source.href).catch(() => notice(`未能打开源码：${source.href}`, true)); } }; actions.append(source);
+    }
+    if (server.tools?.length) {
+      const toolList = element("details", undefined, "oq-cap-details");
+      toolList.append(element("summary", `Tools（${server.tools.length}）`));
+      for (const tool of server.tools) {
+        const row = element("div", undefined, "tool-row"), info = element("div");
+        info.append(element("strong", tool.title), element("p", tool.description, "hint"));
+        row.append(info, switchFor(tool.enabled, `${tool.title} 启用`, { action: "tool.set", id: tool.id })); toolList.append(row);
+      }
+      details.append(toolList);
+    }
+    return componentCard(h, { title: server.title, code: `MCP Server · ${server.id} · ${server.provider ?? "OpenQuantum"}`, description: server.description, label, t,
+      note: server.availabilityNote, details, actions,
+    });
+  }, "builtin-mcp");
   if (snapshot.connections.some(connection => matches(connection))) container.append(element("h2", "我的 MCP 连接", "section-title"));
   if (!snapshot.connections.length && !$("#search").value.trim() && $("#category").value === "all" && $("#state").value === "all") container.append(element("p", "还没有自定义连接。内置量子工具可直接使用。", "hint"));
   categoryGroups(container, snapshot.connections, connection => {
@@ -264,29 +282,20 @@ function renderConnections(container) {
     if (connection.tools.length) card.append(toolList);
     return card;
   }, "custom-connections");
-  if (snapshot.providers.some(provider => matches(provider))) container.append(element("h2", "内置工具服务", "section-title"));
-  categoryGroups(container, snapshot.providers, provider => {
-    const row = element("article", undefined, "card provider");
-    const info = element("div", provider.title);
-    if (provider.service) info.append(button("配置服务与凭据", () => showService(provider.service), "text-button"));
-    row.append(info, switchFor(provider.enabled, `${provider.title} 启用`, { action: "provider.set", id: provider.id }));
-    return row;
-  }, "providers");
+  container.append(add);
 }
 function render() {
   if (!snapshot) return;
-  const descriptions = {
-    credentials: ["服务密钥", "管理工具服务需要的 API Key 或 Token。已有密钥不会显示；语言模型的密钥由 Codex 管理。"],
-    services: ["服务概览", "查看各项服务还缺哪些配置，并选择允许使用的研究工具。"],
-    connections: ["MCP 连接", "管理内置服务和自行添加的 MCP 连接。启用连接后，选择需要开放的工具。"],
-    skills: ["Skills", "按研究用途选择知识与工作流。关联工具需要在服务或 Tools 中启用。"],
-    tools: ["Tools", "选择允许 OpenQuantum 调用的工具，并查看各项操作的用途。"],
-  };
-  $("#page-title").textContent = descriptions[tab][0];
-  $("#page-description").textContent = descriptions[tab][1];
-  const items = tab === "credentials" ? credentialEntries(snapshot.services ?? []) : tab === "services" ? snapshot.services ?? [] : tab === "skills" ? snapshot.skills : tab === "tools" ? snapshot.tools : [...snapshot.connections, ...snapshot.providers];
+  // Keep the same filter controls alive while moving them into the Tools panel.
+  // Returning them before replacing content also preserves their event handlers.
+  $("#notice").before(filterToolbar);
+  const intro = COMPONENT_INTROS[tab];
+  $("#page-title").textContent = t(intro[0]);
+  $("#page-description").textContent = t(intro[1]) + (tab === "credentials" ? "语言模型的密钥由 Codex 管理。" : "");
+  $("#search").placeholder = tab === "credentials" ? "搜索服务、Token 名称或用途" : tab === "runtime" ? "搜索工具名称或用途" : t("搜索名称或用途");
+  const items = tab === "credentials" ? credentialEntries(snapshot.services ?? []) : tab === "skills" ? skillEntries() : tab === "runtime" ? snapshot.tools : [...snapshot.connections, ...mcpEntries()];
   const states = [["all", "全部状态"], ["enabled", "配置启用"], ["disabled", "配置关闭"]];
-  if (tab === "services") states.splice(1, 0, ["incomplete", "待配置"], ["configured", "配置已齐"], ["optional", "可选凭据"], ["unavailable", "凭据库不可用"], ["unsupported", "需要单独配置"]);
+  if (["skills", "mcp"].includes(tab)) states.push(["unsupported", "当前宿主未接入"]);
   if (tab === "credentials") states.splice(1, 2, ["incomplete", "未配置"], ["configured", "已配置"], ["unavailable", "未读取"], ["unsupported", "需单独配置"]);
   const selectedState = $("#state").value;
   $("#state").replaceChildren(...states.map(([value, label]) => { const option = element("option", label); option.value = value; return option; }));
@@ -297,21 +306,10 @@ function render() {
   for (const category of categories()) {
     const total = items.filter(item => categoryOf(item) === category.id).length;
     if (!total && selected !== category.id) continue;
-    const option = element("option", `${category.title}（${total}）`); option.value = category.id; $("#category").append(option);
+    const option = element("option", `${t(category.title)} (${total})`); option.value = category.id; $("#category").append(option);
   }
   $("#category").value = selected;
-  $("#count").textContent = `显示 ${items.filter(item => matches(item)).length} / ${items.length} 项`;
-  const services = snapshot.services ?? [];
-  $("#overview").hidden = tab !== "services";
-  $("#overview").replaceChildren(...[
-    ["服务目录", services.length, "all"],
-    ["待配置", services.filter(item => item.configuration === "incomplete").length, "incomplete"],
-    ["配置已齐", services.filter(item => item.configuration === "configured").length, "configured"],
-    ["需单独配置", services.filter(item => !item.supported).length, "unsupported"],
-  ].map(([label, count, state]) => {
-    const node = button("", () => { setTab("services"); $("#state").value = state; render(); }, "summary-card");
-    node.append(element("strong", String(count)), element("span", label)); return node;
-  }));
+  $("#count").textContent = `${t("显示 {p0} / {p1} 项", { p0: items.filter(item => matches(item)).length, p1: items.length })}`;
   const content = $("#content"); content.replaceChildren();
   if (tab === "credentials") {
     renderCredentialCards(content, items.filter(matches), {
@@ -319,7 +317,7 @@ function render() {
       openLink: async url => { try { if (preview) window.open(url, "_blank", "noopener,noreferrer"); else await openHostLink(app, url); } catch { notice(`未能打开文档：${url}`, true); } },
       fallback: (id, card) => openCredential(id, card, true),
     });
-  } else if (tab === "services") renderServices(content); else if (tab === "skills") renderSkills(content); else if (tab === "tools") renderTools(content); else renderConnections(content);
+  } else if (tab === "runtime") renderRuntime(content); else if (tab === "skills") renderSkills(content); else renderMcp(content);
   if (!items.some(item => matches(item))) {
     const empty = element("div", undefined, "empty");
     empty.append(element("p", "没有匹配的能力"), button("清除筛选", () => { $("#search").value = ""; $("#category").value = "all"; $("#state").value = "all"; render(); }));

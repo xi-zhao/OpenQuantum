@@ -1,4 +1,5 @@
 import { credentialCard, credentialCardCss } from "../../../src/settings/credential-card.mjs";
+import { COMPONENT_TABS, COMPONENT_INTROS, COMPONENT_CHECKS, componentCard, componentCardCss } from "../../../src/settings/component-view.mjs";
 
 globalThis.__ModuleLoader__.load({
   id: "@openquantum/harness-web-capabilities",
@@ -25,6 +26,7 @@ globalThis.__ModuleLoader__.load({
       .oq-cap-filters{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}.oq-cap-filters input{flex:1 1 200px}.oq-cap-filters select{flex:0 1 auto;width:auto;max-width:100%}.oq-cap-filter-count{flex-basis:100%;font-size:11px;color:var(--dsw-alias-label-tertiary)}
       .oq-cap-category{border:1px solid var(--dsw-alias-border-l2);border-radius:10px;margin:10px 0}.oq-cap-category>summary{padding:13px 15px;cursor:pointer;font-size:13px}.oq-cap-category>summary span{margin-inline-start:10px;font-size:11px;color:var(--dsw-alias-label-tertiary)}.oq-cap-category>.oq-cap-grid{padding:0 12px 12px}.oq-cap-details{margin:10px 0}.oq-cap-details>summary{font-size:11px;cursor:pointer;color:var(--dsw-alias-label-tertiary)}.oq-cap-details[open]>summary{margin-bottom:8px}
       @media(max-width:700px){.oq-cap-grid,.oq-cap-form{grid-template-columns:1fr}.oq-cap-span{grid-column:auto}.oq-cap-category>summary span{display:block;margin-inline-start:0}}
+      ${componentCardCss}
       ${credentialCardCss}
     `;
     const styleId = "openquantum-capability-settings";
@@ -91,20 +93,8 @@ globalThis.__ModuleLoader__.load({
       return server.enabled ? [t("连接配置启用"), "configured"] : [t("连接配置关闭"), "off"];
     }
 
-    const runtimeCheckCopy = () => ({
-      "model-routes": {
-        title: t("模型路由"),
-        description: t("当前 Host 已注册的模型 Adapter Route；不发送模型请求，也不检查 Endpoint 或鉴权。"),
-      },
-      "skill-registry": {
-        title: t("Skill 指令"),
-        description: t("当前已挂载 OpenQuantum Agent scope 中发现的 Skill；Snapshot 不返回或展示 Skill 正文。"),
-      },
-      "tool-registry": {
-        title: t("计算工具"),
-        description: t("当前 Agent scope 中可见的 Tool schema；Tool 已注册不等于 MCP Server 此刻在线。"),
-      },
-    });
+    const runtimeCheckCopy = () => Object.fromEntries(Object.entries(COMPONENT_CHECKS)
+      .map(([id, copy]) => [id, { title: t(copy.title), description: t(copy.description) }]));
 
     function expectedSetupState(check) {
       return check.state !== "failed" && check.reasonCodes.length > 0 &&
@@ -203,17 +193,11 @@ globalThis.__ModuleLoader__.load({
             ? t(" · {p0} 个 MCP Tool namespace", { p0: check.groups.length })
             : "";
           const reason = runtimeReason(check);
-          return h("article", { className: "oq-cap-card", key: check.id },
-            h("div", { className: "oq-cap-card-head" },
-              h("div", { className: "oq-cap-title" }, h("h3", null, copy.title)),
-              h("span", { className: "oq-cap-badge", "data-tone": tone }, label),
-            ),
-            h("p", { className: "oq-cap-desc" }, copy.description),
-            check.state === "observed" || check.itemCount > 0
-              ? h("p", { className: "oq-cap-meta" }, t("{p0} 项当前 Registry 证据{p1}", { p0: check.itemCount, p1: groups })) : null,
-            reason ? h("p", { className: "oq-cap-meta" }, t("提示：{p0}", { p0: reason })) : null,
-            check.items.length ? h(RuntimeItemList, { check, categories: snapshot.categories }) : null,
-          );
+          return componentCard(h, { key: check.id, title: copy.title, description: copy.description, label, tone,
+            meta: check.state === "observed" || check.itemCount > 0 ? t("{p0} 项当前 Registry 证据{p1}", { p0: check.itemCount, p1: groups }) : undefined,
+            note: reason ? t("提示：{p0}", { p0: reason }) : undefined,
+            details: check.items.length ? h(RuntimeItemList, { check, categories: snapshot.categories }) : null,
+          });
         })),
         h("details", { className: "oq-runtime-items" },
           h("summary", null, t("诊断详情")),
@@ -349,13 +333,8 @@ globalThis.__ModuleLoader__.load({
           server.setup?.status === "required" ||
           server.requiredCredentialRefs.some((ref) => !credentials[ref]?.configured)
         );
-        return h("article", { className: "oq-cap-card", key: server.serverName },
-          h("div", { className: "oq-cap-card-head" },
-            h("div", { className: "oq-cap-title" }, h("h3", null, t(server.displayName)), h("code", { className: "oq-cap-code" }, `MCP Server · ${server.serverName} · ${server.provider}`)),
-            h("span", { className: "oq-cap-badge", "data-tone": tone }, label),
-          ),
-          h("p", { className: "oq-cap-desc" }, t(server.description)),
-          h("details", { className: "oq-cap-details" },
+        return componentCard(h, { key: server.serverName, title: server.displayName, code: `MCP Server · ${server.serverName} · ${server.provider}`, description: server.description, label, tone, t,
+          details: h("details", { className: "oq-cap-details" },
           h("summary", null, t("连接详情与超时")),
           h("p", { className: "oq-cap-meta" }, t("独立 MCP Server 连接 · {p0} · {p1}{p2}", { p0: server.transport, p1: server.target, p2: server.packageVersion ? ` · ${server.packageVersion}` : "" })),
           h("p", { className: "oq-cap-meta" }, t("这里显示的是持久化连接配置，不代表 Server 已运行或 Tool 已进入 Registry；配置变更需重启后生效。")),
@@ -372,7 +351,7 @@ globalThis.__ModuleLoader__.load({
             h("div", { className: "oq-cap-span" }, h("button", { type: "submit", className: "oq-cap-button", disabled }, t("保存超时"))),
           ),
           ),
-          h("div", { className: "oq-cap-actions" },
+          actions: h("div", { className: "oq-cap-actions" },
             h("label", { className: "oq-cap-switch" },
               h("input", { type: "checkbox", checked: server.enabled, disabled: disabled || enableBlocked, title: enableBlocked ? label : undefined, onChange: (event) => runProject(`mcp:${server.serverName}`, { action: "mcp.update", serverName: server.serverName, revision: snapshot.mcpRevision, enabled: event.currentTarget.checked, toolCallTimeoutMs: server.toolCallTimeoutMs, reconnect: server.reconnect }, t("MCP Server 连接配置已保存；重启 OpenQuantum 后使用新配置。")) }),
               server.enabled ? t("配置启用") : t("配置关闭"),
@@ -380,21 +359,17 @@ globalThis.__ModuleLoader__.load({
             server.sourceUrl ? h("a", { className: "oq-cap-link", href: server.sourceUrl, target: "_blank", rel: "noreferrer" }, t("源码")) : null,
             server.managed ? h("button", { type: "button", className: "oq-cap-button", "data-danger": "true", disabled: disabled || server.enabled, onClick: () => runProject(`mcp:${server.serverName}`, { action: "mcp.remove", serverName: server.serverName, revision: snapshot.mcpRevision }, t("自定义 MCP Server 连接已移入安全回收流程。")) }, t("移除")) : null,
           ),
-        );
+        });
       }) : [];
 
-      const skillCards = snapshot ? snapshot.skills.map((skill) => h("article", { className: "oq-cap-card", key: skill.name },
-        h("div", { className: "oq-cap-card-head" },
-          h("div", { className: "oq-cap-title" }, h("h3", null, t(skill.displayName)), h("code", { className: "oq-cap-code" }, `Skill · /${skill.name}`)),
-          h("span", { className: "oq-cap-badge", "data-tone": skill.modelInvocable ? "configured" : "off" }, skill.modelInvocable ? t("允许 Agent 自动加载") : t("仅显式加载")),
-        ),
-        h("p", { className: "oq-cap-desc" }, t(skill.description)),
-        h("p", { className: "oq-cap-meta" }, t("独立 Skill 指令 · {p0}", { p0: [skill.version, skill.maturity].filter(Boolean).join(" · ") || t("项目工作流") })),
-        h("div", { className: "oq-cap-actions" },
+      const skillCards = snapshot ? snapshot.skills.map((skill) => componentCard(h, { key: skill.name, title: skill.displayName, code: `Skill · /${skill.name}`, description: skill.description, t,
+        label: skill.modelInvocable ? t("允许 Agent 自动加载") : t("仅显式加载"), tone: skill.modelInvocable ? "configured" : "off",
+        meta: t("独立 Skill 指令 · {p0}", { p0: [skill.version, skill.maturity].filter(Boolean).join(" · ") || t("项目工作流") }),
+        actions: h("div", { className: "oq-cap-actions" },
           h("label", { className: "oq-cap-switch" }, h("input", { type: "checkbox", checked: skill.modelInvocable, disabled, onChange: (event) => runProject(`skill:${skill.name}`, { action: "skill.update", name: skill.name, revision: skill.revision, modelInvocable: event.currentTarget.checked, userInvocable: skill.userInvocable }, t("Skill 加载策略已保存，新会话生效。")) }), t("允许 Agent 自动加载")),
           skill.managed ? h("button", { type: "button", className: "oq-cap-button", "data-danger": "true", disabled, onClick: () => runProject(`skill:${skill.name}`, { action: "skill.remove", name: skill.name, revision: skill.revision }, t("自定义 Skill 已移入项目回收目录。")) }, t("移除")) : null,
         ),
-      )) : [];
+      })) : [];
 
       const credentialCards = snapshot ? snapshot.mcpCredentials.map((credential) => h(CredentialCard, {
         key: credential.ref,
@@ -453,19 +428,13 @@ globalThis.__ModuleLoader__.load({
           h("option", { value: "all" }, t("全部状态")), h("option", { value: "enabled" }, t(tab === "skills" ? "允许 Agent 自动加载" : "配置启用")), h("option", { value: "disabled" }, t(tab === "skills" ? "仅显式加载" : "配置关闭"))),
         h("span", { className: "oq-cap-filter-count", role: "status", "aria-live": "polite" }, t("显示 {p0} / {p1} 项", { p0: matchingEntries.length, p1: entries.length })),
       ) : null;
-      const tabIntro = tab === "runtime"
-        ? [t("当前运行状态"), t("来自当前 Harness Host 与已挂载 OpenQuantum Agent 的被动 Registry 证据；与持久化配置分开显示。")]
-        : tab === "mcp"
-        ? [t("MCP Server 连接"), t("Harness MCP Client 独立连接和启停 Server，并把 MCP-exposed Tool 注册进 Tool Registry；它不加载 Skill。")]
-        : tab === "skills"
-        ? [t("Skill 指令"), t("由 Harness Skill Registry 独立发现；向 Agent 提供知识和工作流，但不执行 Tool、启动 MCP Server 或读取凭据。")]
-        : [t("安全凭据"), t("凭据按引用提供给受控 Tool Provider；Skill 无权读取密钥，页面也不会回显已有值。")];
+      const tabIntro = COMPONENT_INTROS[tab].map(key => t(key));
       return h("div", { className: "oq-cap-root" },
         tab !== "runtime" && !loopback ? h("p", { className: "oq-cap-error", role: "alert" }, t("远程浏览器只读；请在 Harness 本机打开设置后写入凭据或配置。")) : null,
         tab !== "runtime" && error ? h("p", { className: "oq-cap-error", role: "alert" }, error) : null,
         tab !== "runtime" && notice ? h("p", { className: "oq-cap-notice", role: "status" }, notice) : null,
         h("div", { className: "oq-cap-tabs", role: "tablist", "aria-label": t("能力分类") },
-          [["runtime", t("运行状态")], ["mcp", t("MCP Server 连接")], ["skills", t("Skill 指令")], ["credentials", t("安全凭据")]].map(([id, label]) => h("button", { key: id, type: "button", role: "tab", className: "oq-cap-tab", "aria-selected": tab === id, onClick: () => setTab(id) }, label)),
+          COMPONENT_TABS.map(([id, label]) => h("button", { key: id, type: "button", role: "tab", className: "oq-cap-tab", "aria-selected": tab === id, onClick: () => setTab(id) }, t(label))),
         ),
         h("div", { className: "oq-cap-tab-intro" }, h("strong", null, tabIntro[0]), h("span", null, tabIntro[1])),
         filters,

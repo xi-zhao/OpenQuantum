@@ -8,6 +8,7 @@ import { stringify } from "yaml";
 import { PROJECT_ROOT } from "../runtime/chatgpt/catalog.mjs";
 import { createBackend } from "../runtime/chatgpt/backend.mjs";
 import { readSdkLibraries } from "../src/lib/sdk-access.mjs";
+import { componentDirectory, componentNavigation } from "./lib/component-directory.mjs";
 
 export const digest = (data) => createHash("sha256").update(data).digest("hex");
 export const json = (value) => `${JSON.stringify(value, null, 2)}\n`;
@@ -75,10 +76,13 @@ export async function buildChatgpt({ root = PROJECT_ROOT, output = path.join(roo
       .replaceAll("__RELEASE_VERSION__", release.version).replaceAll("</script", "<\\/script");
     const styles = app.outputFiles.find((file) => file.path.endsWith(".css"))?.text ?? "";
     const template = await fs.readFile(path.join(uiRoot, "app.html"), "utf8");
-    await fs.writeFile(path.join(output, "app.html"), template.replaceAll("__RELEASE_VERSION__", release.version).replaceAll("__OQ_MARK__", mark).replace("/* APP_STYLES */", () => styles).replace("/* APP_SCRIPT */", () => script));
+    const directory = await componentDirectory(root);
+    const tabs = componentNavigation(directory.copy);
+    await fs.writeFile(path.join(output, "app.html"), template.replace("<!-- COMPONENT_TABS -->", () => tabs).replaceAll("__RELEASE_VERSION__", release.version).replaceAll("__OQ_MARK__", mark).replace("/* APP_STYLES */", () => styles).replace("/* APP_SCRIPT */", () => script));
     const contracts = { capabilities: backend.capabilities, tools: backend.tools };
     const contractDigest = digest(json(contracts));
     await fs.writeFile(path.join(output, "capabilities.json"), json(contracts));
+    await fs.writeFile(path.join(output, "components.json"), json(directory));
     await fs.writeFile(path.join(output, "release.json"), json({ ...release, contractDigest, sdk: { mcpApps: packageInfo.dependencies["@modelcontextprotocol/ext-apps"] } }));
     // Clear only this generated subtree so removed capabilities cannot leave stale Skills.
     await fs.rm(path.join(output, "skills"), { recursive: true, force: true });

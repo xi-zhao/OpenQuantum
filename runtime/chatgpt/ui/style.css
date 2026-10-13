@@ -86,7 +86,9 @@ footer { justify-content: space-between; border-top: 1px solid var(--line); font
 .technical-details code { font-size: 10px; overflow-wrap: anywhere; }.service .description { font-size: 13px; }
 .category-group { border: 1px solid var(--line); border-radius: 10px; background: var(--surface); margin: 10px 0; }
 .category-group>summary { display: list-item; padding: 15px 18px; font-size: 14px; color: inherit; }.category-group>summary .hint { margin-left: 12px; }
-.category-group>.grid { padding: 0 14px 14px; }.category-group[open]>summary { margin-bottom: 4px; }
+.category-group>.grid,.category-group>.oq-cap-grid { padding: 0 14px 14px; }.category-group[open]>summary { margin-bottom: 4px; }
+.runtime-summary{background:var(--raised);border-radius:10px;padding:12px;margin-bottom:12px;font-size:13px}
+.runtime-summary p{margin:3px 0 0}.runtime-tools>summary{font-size:13px;color:var(--text)}
 .provider { display: flex; gap: 12px; align-items: center; justify-content: space-between; font-size: 13px; }.provider>div { min-width: 0; overflow-wrap: anywhere; }
 .add-connection { margin-bottom: 24px; }.add-connection>summary { font-size: 13px; color: var(--accent); }.add-connection>.card { margin-top: 12px; }
 @media(max-width:700px) {

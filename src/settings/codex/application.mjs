@@ -38,8 +38,9 @@ export function validateConnection(input) {
 }
 
 export class Settings {
-  constructor({ backend, credentials, skillRoot, directory = path.join(os.homedir(), ".openquantum/plugins/codex"), codexHome = process.env.CODEX_HOME || path.join(os.homedir(), ".codex") }) {
-    Object.assign(this, { backend, credentials, skillRoot });
+  constructor({ backend, credentials, skillRoot, componentDirectory, directory = path.join(os.homedir(), ".openquantum/plugins/codex"), codexHome = process.env.CODEX_HOME || path.join(os.homedir(), ".codex") }) {
+    if (componentDirectory && (componentDirectory.schemaVersion !== 1 || !Array.isArray(componentDirectory.skills) || !Array.isArray(componentDirectory.mcpServers))) throw new Error("量子组件目录版本不受支持");
+    Object.assign(this, { backend, credentials, skillRoot, componentDirectory });
     this.file = path.join(directory, "settings.json");
     this.codexFile = path.join(codexHome, "config.toml");
     this.listeners = new Set();
@@ -89,7 +90,28 @@ export class Settings {
         configuration: !supported ? "unsupported" : unavailable ? "unavailable" : missing.length ? "incomplete" : Object.keys(values).length ? "configured" : "optional",
         missing, checked: false, tools: tools.filter(tool => tool.provider === service.id) };
     }));
-    return { revision, categories: CAPABILITY_CATEGORIES, skills: this.skills(codex), providers, tools, connections, services,
+    const skills = this.skills(codex);
+    const components = this.componentDirectory ? {
+      copy: this.componentDirectory.copy,
+      skills: this.componentDirectory.skills.map(item => {
+        const available = skills.find(skill => skill.id === item.name);
+        const capability = capabilities.find(capability => capability.id === item.name);
+        return { ...item, id: item.name, title: item.displayName, supported: Boolean(available), enabled: available?.enabled ?? false,
+          tools: available?.tools ?? [], availabilityNote: available ? null : capability?.reason ?? "此 Skill 使用 Desktop 工作流，当前 Codex 插件未提供。" };
+      }),
+      mcpServers: this.componentDirectory.mcpServers.map(item => {
+        const provider = providers.find(provider => provider.id === item.serverName);
+        const capability = capabilities.find(capability => capability.mcp?.some(server => server.name === item.serverName));
+        const service = services.find(service => service.id === item.serverName);
+        return { ...item, id: item.serverName, title: item.displayName, supported: Boolean(provider), enabled: provider?.enabled ?? false,
+          toolCallTimeoutMs: 180000, service: service?.id, configuration: service?.configuration,
+          requiredCredentialsMissing: service?.configuration === "incomplete",
+          tools: tools.filter(tool => tool.provider === item.serverName),
+          availabilityNote: provider ? null : capability?.reason ?? "此连接使用 Desktop 工作流，当前 Codex 插件未提供。" };
+      }),
+    } : undefined;
+    return { revision, categories: CAPABILITY_CATEGORIES, skills, providers, tools, connections, services, components,
+      observedAt: new Date().toISOString(),
       notice: "Skill 开关保存在 Codex 用户配置；已有聊天可能需要重载。Tool 禁用立即阻止新的调用。", scope: "当前用户的 OpenQuantum 插件" };
   }
   providerEnabled(config, id) {

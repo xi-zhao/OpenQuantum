@@ -13,19 +13,14 @@
       <div class="brand"><img src="__OQ_MARK__" alt=""><div><strong>OpenQuantum</strong><span>量子组件设置</span></div></div>
       <a id="github-link" class="github-link" href="https://github.com/xi-zhao/OpenQuantum" target="_blank" rel="noopener noreferrer" aria-label="在 GitHub 为 OpenQuantum 点 Star">☆ GitHub <span aria-hidden="true">↗</span></a>
     </header>
-    <nav aria-label="设置分类">
-      <button data-tab="services" aria-pressed="false">服务概览</button>
-      <button data-tab="connections" aria-pressed="false">MCP</button>
-      <button data-tab="skills" aria-pressed="false">Skills</button>
-      <button data-tab="tools" aria-pressed="false">Tools</button>
-      <button data-tab="credentials" class="active" aria-pressed="true">服务密钥</button>
+    <nav aria-label="能力分类" role="tablist">
+      <!-- COMPONENT_TABS -->
       <button id="refresh" class="refresh">刷新状态</button>
     </nav>
     <section class="intro">
-      <h1 id="page-title">服务密钥</h1>
-      <p id="page-description">管理工具服务需要的 API Key 或 Token。已有密钥不会显示；语言模型的密钥由 Codex 管理。</p>
+      <h1 id="page-title">组件状态</h1>
+      <p id="page-description">查看当前会话加载了哪些组件。</p>
     </section>
-    <section id="overview" aria-label="服务配置概览" hidden></section>
     <section id="toolbar">
       <input id="search" type="search" placeholder="搜索服务、Token 名称或用途" aria-label="搜索能力">
       <select id="category" aria-label="按用途筛选"><option value="all">全部用途</option></select>

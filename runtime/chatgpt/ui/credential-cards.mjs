@@ -8,10 +8,10 @@ const failures = new Set();
 export const clearCredentialDrafts = () => drafts.clear();
 window.addEventListener("pagehide", clearCredentialDrafts);
 
-function h(tag, props, ...children) {
+export function h(tag, props, ...children) {
   const node = document.createElement(tag);
   for (const [name, value] of Object.entries(props ?? {})) {
-    if (value === undefined || value === null) continue;
+    if (value === undefined || value === null || name === "key") continue;
     if (name.startsWith("on")) node.addEventListener(name === "onChange" ? "input" : name.slice(2).toLowerCase(), value);
     else if (name.startsWith("aria-") || name.startsWith("data-")) node.setAttribute(name, value);
     else node[{ autoComplete: "autocomplete", spellCheck: "spellcheck" }[name] ?? name] = value;
