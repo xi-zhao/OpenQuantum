@@ -440,7 +440,7 @@ globalThis.__ModuleLoader__.load({
       const words = query.trim().normalize("NFKC").toLowerCase().split(/\s+/);
       const matches = item => {
         const label = categories.find(value => value.id === categoryOf(item))?.title;
-        const text = [item.displayName, item.name, item.serverName, item.description, item.provider, t(label ?? ""), label].filter(Boolean).join(" ").normalize("NFKC").toLowerCase();
+        const text = [item.displayName, t(item.displayName ?? ""), item.name, item.serverName, item.description, t(item.description ?? ""), item.provider, t(label ?? ""), label].filter(Boolean).join(" ").normalize("NFKC").toLowerCase();
         return words.every(word => text.includes(word)) && (category === "all" || categoryOf(item) === category)
           && (enabledFilter === "all" || enabled(item) === (enabledFilter === "enabled"));
       };
@@ -455,15 +455,15 @@ globalThis.__ModuleLoader__.load({
             const open = event.currentTarget.open;
             setExpandedGroups(previous => previous[key] === open ? previous : { ...previous, [key]: open });
           },
-        }, h("summary", null, t(group.title), h("span", null, t("{p0} 项 · {p1} 项配置启用", { p0: matching.length, p1: matching.filter(index => enabled(entries[index])).length }))),
+        }, h("summary", null, t(group.title), h("span", null, tab === "skills" ? t("{p0} 项", { p0: matching.length }) : t("{p0} 项 · {p1} 项配置启用", { p0: matching.length, p1: matching.filter(index => enabled(entries[index])).length }))),
         h("div", { className: "oq-cap-grid" }, matching.map(index => activeCards[index])))];
       });
       const filters = catalogTab && snapshot ? h("div", { className: "oq-cap-filters" },
         h("input", { className: "oq-cap-input", type: "search", "aria-label": t("搜索名称或用途"), placeholder: t("搜索名称或用途"), value: query, onChange: event => setQuery(event.currentTarget.value) }),
         h("select", { className: "oq-cap-select", "aria-label": t("按用途筛选"), value: category, onChange: event => setCategory(event.currentTarget.value) },
           h("option", { value: "all" }, t("全部用途")), ...categories.filter(group => category === group.id || entries.some(item => categoryOf(item) === group.id)).map(group => h("option", { key: group.id, value: group.id }, `${t(group.title)} (${entries.filter(item => categoryOf(item) === group.id).length})`))),
-        h("select", { className: "oq-cap-select", "aria-label": t("按启用状态筛选"), value: enabledFilter, onChange: event => setEnabledFilter(event.currentTarget.value) },
-          h("option", { value: "all" }, t("全部状态")), h("option", { value: "enabled" }, t("配置启用")), h("option", { value: "disabled" }, t("配置关闭"))),
+        h("select", { className: "oq-cap-select", "aria-label": t(tab === "skills" ? "全部状态" : "按启用状态筛选"), value: enabledFilter, onChange: event => setEnabledFilter(event.currentTarget.value) },
+          h("option", { value: "all" }, t("全部状态")), h("option", { value: "enabled" }, t(tab === "skills" ? "允许 Agent 自动加载" : "配置启用")), h("option", { value: "disabled" }, t(tab === "skills" ? "仅显式加载" : "配置关闭"))),
         h("span", { className: "oq-cap-filter-count", role: "status", "aria-live": "polite" }, t("显示 {p0} / {p1} 项", { p0: matchingEntries.length, p1: entries.length })),
       ) : null;
       const tabIntro = tab === "runtime"

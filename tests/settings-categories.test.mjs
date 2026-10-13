@@ -57,10 +57,14 @@ test("runtime categories never add observations or change their states, and tole
 test("Desktop category search and status filters preserve all entries and never write settings", async () => {
   const servers = [
     { serverName: "circuit_local", displayName: "Circuit Service", category: "circuits", enabled: true },
-    { serverName: "noise_local", displayName: "Noise Service", category: "qec", enabled: false },
+    { serverName: "noise_local", displayName: "Noise Service", description: "误差缓解", category: "qec", enabled: false },
     { serverName: "custom_local", displayName: "Custom Service", category: "future-category", enabled: true },
   ].map(item => ({ ...item, toolCallTimeoutMs: 180000, requiredCredentialRefs: [] }));
-  const snapshot = { categories: CAPABILITY_CATEGORIES, mcpServers: servers, skills: [], mcpCredentials: [], mcpRevision: "original" };
+  const skills = [
+    { name: "manual-guide", displayName: "Manual guide", category: "reference", modelInvocable: false, userInvocable: true },
+    { name: "automatic-guide", displayName: "Automatic guide", category: "reference", modelInvocable: true, userInvocable: true },
+  ];
+  const snapshot = { categories: CAPABILITY_CATEGORIES, mcpServers: servers, skills, mcpCredentials: [], mcpRevision: "original" };
   const state = [snapshot, null, {}, "mcp"];
   let slot = 0, plugin, render;
   const react = {
@@ -77,7 +81,7 @@ test("Desktop category search and status filters preserve all entries and never 
     fetch: () => { assert.fail("Filtering must not request or mutate settings"); },
   });
   plugin.apply({
-    effect: register => register(), locale: { register: () => () => {}, bind: () => key => key },
+    effect: register => register(), locale: { register: () => () => {}, bind: () => key => ({ "误差缓解": "Error mitigation" })[key] ?? key },
     get: () => ({ isLoopback: true }), remote: { credentials: {} },
     slots: { inject: (_name, register) => register(), register: (entry, component) => { if (entry.id === "openquantum-capabilities") render = component; return () => {}; } },
   });
@@ -90,6 +94,8 @@ test("Desktop category search and status filters preserve all entries and never 
   filter("搜索名称或用途", "ＮＯＩＳＥ");
   assert.deepEqual(titles(), ["Noise Service"]);
   assert.ok(tree().find(node => node.props.className === "oq-cap-category").props.open);
+  filter("搜索名称或用途", "error mitigation");
+  assert.deepEqual(titles(), ["Noise Service"]);
   filter("按启用状态筛选", "enabled");
   assert.deepEqual(titles(), []);
   const clear = tree().find(node => node.type === "button" && node.children.includes("清除筛选"));
@@ -97,6 +103,16 @@ test("Desktop category search and status filters preserve all entries and never 
   assert.deepEqual(titles(), servers.map(item => item.displayName));
   filter("按用途筛选", "other");
   assert.deepEqual(titles(), ["Custom Service"]);
+  filter("按用途筛选", "all");
+  tree().find(node => node.props.role === "tab" && node.children.includes("Skill 指令")).props.onClick();
+  assert.deepEqual(titles(), ["Manual guide", "Automatic guide"]);
+  const options = tree().filter(node => node.type === "option").flatMap(node => node.children);
+  assert.ok(options.includes("仅显式加载"));
+  assert.ok(options.includes("允许 Agent 自动加载"));
+  assert.ok(!options.includes("配置关闭"));
+  filter("全部状态", "disabled");
+  assert.deepEqual(titles(), ["Manual guide"]);
+  assert.equal(skills[0].userInvocable, true);
   assert.deepEqual(servers.map(item => item.enabled), [true, false, true]);
   assert.equal(snapshot.mcpRevision, "original");
 });
