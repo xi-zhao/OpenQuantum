@@ -2,11 +2,20 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { randomUUID } from "node:crypto";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 import { OPENER, settingsResourceUri } from "../runtime/chatgpt/server.mjs";
+import { sealCredentialField } from "../src/settings/credential-seal.mjs";
 
-export async function probeTransport(transport) {
+function credentialOriginOf(resource) {
+  const origin = resource?.text?.match(/name="openquantum-credential-origin" content="([^"]+)"/)?.[1];
+  if (!origin || !/^http:\/\/127\.0\.0\.1:\d+$/.test(origin) ||
+      JSON.stringify(resource._meta?.ui?.csp?.connectDomains) !== JSON.stringify([origin])) throw new Error("Credential origin is missing or does not match the resource CSP");
+  return origin;
+}
+
+export async function probeTransport(transport, discoveredResource) {
   const client = new Client({ name: "openquantum-release-probe", version: "1.0.0" });
   transport.stderr?.resume();
   try {
@@ -19,18 +28,42 @@ export async function probeTransport(transport) {
     const result = await client.callTool({ name: opener.name, arguments: {} });
     const settings = result._meta?.openquantumSettings;
     if (result.isError || !Array.isArray(settings?.skills) || !Array.isArray(settings?.connections) || result.content.length) throw new Error("Invalid settings opener result");
-    const resource = await client.readResource({ uri: opener._meta.ui.resourceUri });
+    if (discoveredResource && discoveredResource.uri !== opener._meta.ui.resourceUri) throw new Error("Settings resource identity changed between MCP processes");
+    const resource = await client.readResource({ uri: discoveredResource?.uri ?? opener._meta.ui.resourceUri });
     const html = resource.contents[0]?.text;
     if (!html || settingsResourceUri(html) !== opener._meta.ui.resourceUri ||
-        !["skills", "connections", "tools"].every(tab => html.includes(`data-tab="${tab}"`))) throw new Error("Global entrypoint does not resolve to the current settings document");
+        !["runtime", "mcp", "skills", "credentials"].every(tab => html.includes(`data-tab="${tab}"`))) throw new Error("Global entrypoint does not resolve to the current settings document");
+    const credentialOrigin = credentialOriginOf(resource.contents[0]);
+    if (discoveredResource?.origin === credentialOrigin) throw new Error("Cross-process probe did not use independent credential listeners");
+    const permission = await client.callTool({ name: "openquantum_settings", arguments: {
+      action: "credential.field.issue", id: "fieldqkit", field: "QUAFU_API_TOKEN", operation: "set", origin: "null",
+    } });
+    if (permission.isError || new URL(permission._meta.openquantumSettings.url).origin !== credentialOrigin) throw new Error("Credential authorization does not match the app resource process");
+    const prepared = await client.callTool({ name: "openquantum_settings", arguments: {
+      action: "credential.field.prepare", id: "fieldqkit", field: "QUAFU_API_TOKEN", operation: "set",
+    } });
+    if (prepared.isError) throw new Error("Encrypted credential channel is unavailable");
+    const authorization = prepared._meta.openquantumSettings;
+    // An intentionally invalid empty value verifies decryption and field
+    // validation without creating a credential in the release probe.
+    const encryptedRequest = { name: "openquantum_settings", arguments: { action: "credential.field.commit", nonce: authorization.nonce,
+      ciphertext: await sealCredentialField(authorization, { value: "" }) } };
+    if ((await client.callTool(encryptedRequest))._meta?.openquantumSettings?.status !== 400 ||
+        (await client.callTool(encryptedRequest))._meta?.openquantumSettings?.status !== 403) throw new Error("Encrypted credential validation or replay protection failed");
+    if (!Array.isArray(settings.services) || !Array.isArray(settings.tools)) throw new Error("Missing service configuration inventory");
+    const managed = settings.services.filter(service => service.supported);
+    if (managed.some(service => service.enabled || service.tools.some(tool => tool.enabled)) ||
+        managed.some(service => service.tools.some(tool => tools.some(actual => actual.name === tool.id)))) throw new Error("New credentialed services must be opt-in");
     const reference = await client.callTool({ name: "quantum_practices", arguments: { action: "list", limit: 1 } });
     if (reference.isError) throw new Error("Reference tool failed");
     const disabled = await client.callTool({ name: "openquantum_settings", arguments: { action: "tool.set", id: "quantum_practices", enabled: false, revision: settings.revision } });
     if (disabled.isError || (await client.listTools()).tools.some(tool => tool.name === "quantum_practices")) throw new Error("Tool disable did not change inventory");
     if (!(await client.callTool({ name: "quantum_practices", arguments: { action: "list" } })).isError) throw new Error("Disabled Tool accepted a cached call");
-    return { version: client.getServerVersion().version, tools: tools.length - 2, skills: settings.skills.length,
+    return { version: client.getServerVersion().version, tools: settings.tools.length, enabledTools: tools.length - 2, skills: settings.skills.length,
+      services: settings.services.length, configurableServices: managed.length, credentialedServicesDefaultOff: true,
       globalEntrypoint: opener.name, settingsResourceUri: opener._meta.ui.resourceUri,
-      settingsResource: true, referenceExecution: true, disabledToolRejected: true, hostPlacementVerified: false };
+      settingsResource: true, crossProcessResource: Boolean(discoveredResource), credentialOriginBound: true,
+      credentialAuthorizationBound: true, encryptedCredentialTransport: true, referenceExecution: true, disabledToolRejected: true, hostPlacementVerified: false };
   } finally { await client.close(); }
 }
 
@@ -41,17 +74,30 @@ export async function probePlugin(directory) {
   if (server?.type !== "stdio") throw new Error("Expected a local stdio plugin");
   const temporary = await fs.mkdtemp(path.join(os.tmpdir(), "oq-plugin-probe-"));
   const expand = value => value.replaceAll("${PLUGIN_ROOT}", path.resolve(directory));
+  const discovery = new Client({ name: "openquantum-discovery-probe", version: "1.0.0" });
   try {
-    const result = await probeTransport(new StdioClientTransport({ ...server, command: process.execPath,
+    const credentialService = `org.openquantum.test.${randomUUID()}`;
+    const transport = () => new StdioClientTransport({ ...server, command: process.execPath,
       args: server.args.map(expand), cwd: expand(server.cwd), stderr: "pipe",
       env: { ...Object.fromEntries(Object.entries(server.env ?? {}).map(([key, value]) => [key, expand(value)])),
         PATH: `${path.dirname(process.execPath)}${path.delimiter}${process.env.PATH ?? ""}`, HOME: os.homedir(),
-        CODEX_HOME: path.join(temporary, "codex"), OPENQUANTUM_PLUGIN_SETTINGS_HOME: path.join(temporary, "settings") },
-    }));
+        CODEX_HOME: path.join(temporary, "codex"), OPENQUANTUM_PLUGIN_SETTINGS_HOME: path.join(temporary, "settings"),
+        OPENQUANTUM_PLUGIN_CREDENTIAL_SERVICE: credentialService },
+    });
+    // Codex discovers a global entry separately from the app's MCP session.
+    // Keep both listeners alive so the test cannot accidentally reuse a port.
+    const discoveryTransport = transport();
+    discoveryTransport.stderr?.resume();
+    await discovery.connect(discoveryTransport, { timeout: 60000 });
+    const entry = (await discovery.listTools()).tools.find(tool => tool.name === OPENER);
+    if (!entry) throw new Error("Missing discovery entrypoint");
+    const uri = entry._meta.ui.resourceUri;
+    const origin = credentialOriginOf((await discovery.readResource({ uri })).contents[0]);
+    const result = await probeTransport(transport(), { uri, origin });
     const release = JSON.parse(await fs.readFile(path.join(directory, "release.json"), "utf8"));
     if (result.version !== release.version || result.skills !== release.skills || result.tools !== release.tools) throw new Error("Release inventory does not match the packaged server");
-    return result;
-  } finally { await fs.rm(temporary, { recursive: true, force: true }); }
+    return { ...result, isolatedCredentials: true };
+  } finally { await discovery.close(); await fs.rm(temporary, { recursive: true, force: true }); }
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

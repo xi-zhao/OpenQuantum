@@ -2,6 +2,8 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { runInNewContext } from "node:vm";
+import { fileURLToPath } from "node:url";
+import { capabilityClientSource } from "../scripts/lib/build-capability-client.mjs";
 import { dictionariesFor } from "../runtime/openquantum/web-locales/catalog.mjs";
 import { DesktopPresetConflictError } from "../src/settings/server/desktop-preset.mjs";
 
@@ -296,14 +298,15 @@ test("client plugin contributes the native settings section and uses Harness cre
   assert.match(client, /openquantum-capabilities/);
   assert.match(client, /openquantum-channels/);
   assert.match(client, /\/openquantum\/api\/runtime-readiness/);
-  assert.match(client, /\["runtime", t\("运行状态"\)\]/);
+  assert.match(client, /COMPONENT_TABS\.map/);
   assert.match(client, /React\.useState\("runtime"\)/);
-  assert.match(client, /当前运行状态/);
+  const shared = await readFile(new URL("../src/settings/component-view.mjs", import.meta.url), "utf8");
+  assert.match(shared, /当前运行状态/);
   assert.doesNotMatch(client, /if \(!snapshot\) return/);
   assert.match(client, /if \(tab === "runtime" \|\| snapshot !== null\) return undefined/);
   assert.doesNotMatch(client, /状态依据：\$\{check\.reasonCodes/);
   assert.match(client, /不会启动 MCP Server、执行 Tool、调用模型、访问量子云或读取凭据/);
-  assert.match(client, /Tool 已注册不等于 MCP Server 此刻在线/);
+  assert.match(shared, /Tool 已注册不等于 MCP Server 此刻在线/);
   assert.match(client, /均为 not_checked/);
   assert.match(client, /\/openquantum\/api\/channels/);
   assert.match(client, /消息平台/);
@@ -315,8 +318,8 @@ test("client plugin contributes the native settings section and uses Harness cre
   assert.doesNotMatch(client, /connection\.api/);
   assert.match(client, /已有值不会回显/);
   assert.match(client, /requiredByEnabled/);
-  assert.match(client, /Harness MCP Client 独立连接和启停 Server/);
-  assert.match(client, /不执行 Tool、启动 MCP Server 或读取凭据/);
+  assert.match(shared, /Harness MCP Client 独立连接和启停 Server/);
+  assert.match(shared, /不执行 Tool、启动 MCP Server 或读取凭据/);
   assert.match(client, /不代表 Server 已运行或 Tool 已进入 Registry/);
   assert.match(client, /连接配置启用/);
   assert.match(client, /配置变更需重启后生效/);
@@ -335,7 +338,7 @@ test("client plugin contributes the native settings section and uses Harness cre
 });
 
 test("capability settings bind the current Remote credential contract without the removed connection.api", async () => {
-  const source = await readFile(new URL("../runtime/openquantum/web-capabilities/client.js", import.meta.url), "utf8");
+  const source = await capabilityClientSource(fileURLToPath(new URL("..", import.meta.url)));
   let plugin;
   runInNewContext(source, {
     __ModuleLoader__: { load: ({ factory }) => { plugin = factory(() => ({ createElement() {} })); } },
@@ -368,7 +371,7 @@ test("capability settings bind the current Remote credential contract without th
 });
 
 test("MCP settings form saves a user timeout and reflects the persisted value", async () => {
-  const source = await readFile(new URL("../runtime/openquantum/web-capabilities/client.js", import.meta.url), "utf8");
+  const source = await capabilityClientSource(fileURLToPath(new URL("..", import.meta.url)));
   const server = { serverName: "tenpy_local", enabled: true, toolCallTimeoutMs: 195000, reconnect: { enabled: true }, requiredCredentialRefs: [] };
   const snapshot = { mcpServers: [server], mcpCredentials: [], skills: [], mcpRevision: "before" };
   const state = [snapshot, null, {}, "mcp"];
@@ -434,7 +437,7 @@ test("MCP settings form saves a user timeout and reflects the persisted value", 
 });
 
 test("component status distinguishes first setup from errors and keeps diagnostics available", async () => {
-  const source = await readFile(new URL("../runtime/openquantum/web-capabilities/client.js", import.meta.url), "utf8");
+  const source = await capabilityClientSource(fileURLToPath(new URL("..", import.meta.url)));
   const dictionary = dictionariesFor("zh")["settings.openquantumCapabilities"];
   let plugin, render, snapshot, cursor = 0;
   const react = {

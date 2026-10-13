@@ -1,6 +1,6 @@
 import { createServer } from "node:http";
 import { randomBytes } from "node:crypto";
-import { settingsRequest } from "./server.mjs";
+import { settingsRequest, prepareSettingsDocument } from "./server.mjs";
 
 // Local preview is an explicit developer entry, never a public MCP deployment.
 export async function startPreview(context) {
@@ -9,7 +9,7 @@ export async function startPreview(context) {
   const server = createServer(async (request, response) => {
     const send = (status, body, type = "application/json") => { response.writeHead(status, { "content-type": type, "cache-control": "no-store", "x-content-type-options": "nosniff", "referrer-policy": "no-referrer" }); response.end(type === "application/json" ? JSON.stringify(body) : body); };
     if (request.headers.host !== new URL(origin).host) return send(403, { error: "Forbidden" });
-    if (request.method === "GET" && request.url === "/") return send(200, context.html, "text/html; charset=utf-8");
+    if (request.method === "GET" && request.url === "/") return send(200, prepareSettingsDocument(context.html, context.credentialWindow?.origin), "text/html; charset=utf-8");
     if (request.method !== "POST" || request.url !== "/settings" || request.headers.origin !== origin || request.headers.authorization !== `Bearer ${token}` || !request.headers["content-type"]?.startsWith("application/json")) return send(403, { error: "Forbidden" });
     try {
       let body = "";

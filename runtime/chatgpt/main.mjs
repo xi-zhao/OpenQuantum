@@ -14,8 +14,10 @@ const directory = path.join(PROJECT_ROOT, "dist/chatgpt");
 const backend = await createBackend();
 const release = JSON.parse(await fs.readFile(path.join(directory, "release.json"), "utf8"));
 const html = await fs.readFile(path.join(directory, "app.html"), "utf8");
-const credentials = new Credentials();
-const settings = new Settings({ backend, credentials, skillRoot: process.env.OPENQUANTUM_PLUGIN_ROOT ? path.join(process.env.OPENQUANTUM_PLUGIN_ROOT, "skills") : path.join(directory, "skills"),
+const componentDirectory = JSON.parse(await fs.readFile(path.join(directory, "components.json"), "utf8"));
+const credentials = new Credentials(process.env.OPENQUANTUM_PLUGIN_CREDENTIAL_SERVICE
+  ? { service: process.env.OPENQUANTUM_PLUGIN_CREDENTIAL_SERVICE } : {});
+const settings = new Settings({ backend, credentials, componentDirectory, skillRoot: process.env.OPENQUANTUM_PLUGIN_ROOT ? path.join(process.env.OPENQUANTUM_PLUGIN_ROOT, "skills") : path.join(directory, "skills"),
   ...(process.env.OPENQUANTUM_PLUGIN_SETTINGS_HOME ? { directory: process.env.OPENQUANTUM_PLUGIN_SETTINGS_HOME } : {}) });
 const connections = new Connections({ settings, credentials });
 const credentialWindow = await createCredentialWindow({ settings, credentials });

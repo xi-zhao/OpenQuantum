@@ -5,6 +5,7 @@ import path from "node:path";
 import { initProfile, PROFILE_TEMPLATES } from "@deepseek-ai/dsh-app-boot";
 import { buildLearningClient } from "./build-learning-client.mjs";
 import { buildLocaleClient } from "./build-locale-client.mjs";
+import { buildCapabilityClient } from "./build-capability-client.mjs";
 import { productUiOverlay } from "./product-ui-policy.mjs";
 import { assertCompatibleHarnessHome } from "./harness-home-compatibility.mjs";
 import { desktopPreset } from "./desktop-profile-config.mjs";
@@ -65,6 +66,7 @@ export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot, 
   }
   await buildLearningClient(projectRoot, path.join(result.learningTarget, "client.js"));
   await buildLocaleClient(projectRoot, path.join(result.localesTarget, "client.js"));
+  await buildCapabilityClient(projectRoot, path.join(result.capabilitiesTarget, "client.js"));
 
   if (desktop) {
     // One declarative bundle owns activation in the same Profile as its dependencies.

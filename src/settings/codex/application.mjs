@@ -4,6 +4,7 @@ import { randomUUID } from "node:crypto";
 import { parse, stringify } from "smol-toml";
 import { atomicWrite, digest, readOptional, withLock } from "./storage.mjs";
 import { CAPABILITY_CATEGORIES, capabilityCategory, providerCategory } from "../capability-categories.mjs";
+import { SERVICES, SERVICE_TOOL_TITLES, serviceById, serviceValues, missingFields } from "./service-catalog.mjs";
 
 const NAME = /^[a-z][a-z0-9_-]{0,31}$/;
 const ENV = /^[A-Za-z_][A-Za-z0-9_]{0,63}$/;
@@ -37,8 +38,9 @@ export function validateConnection(input) {
 }
 
 export class Settings {
-  constructor({ backend, credentials, skillRoot, directory = path.join(os.homedir(), ".openquantum/plugins/codex"), codexHome = process.env.CODEX_HOME || path.join(os.homedir(), ".codex") }) {
-    Object.assign(this, { backend, credentials, skillRoot });
+  constructor({ backend, credentials, skillRoot, componentDirectory, directory = path.join(os.homedir(), ".openquantum/plugins/codex"), codexHome = process.env.CODEX_HOME || path.join(os.homedir(), ".codex") }) {
+    if (componentDirectory && (componentDirectory.schemaVersion !== 1 || !Array.isArray(componentDirectory.skills) || !Array.isArray(componentDirectory.mcpServers))) throw new Error("量子组件目录版本不受支持");
+    Object.assign(this, { backend, credentials, skillRoot, componentDirectory });
     this.file = path.join(directory, "settings.json");
     this.codexFile = path.join(codexHome, "config.toml");
     this.listeners = new Set();
@@ -50,6 +52,9 @@ export class Settings {
     try { config = raw ? JSON.parse(raw) : fresh(); }
     catch { throw new Error("OpenQuantum 配置无法解析，请保留文件并检查升级说明"); }
     if (config.schemaVersion !== 1 || !Array.isArray(config.disabledTools) || !Array.isArray(config.disabledProviders) || !Array.isArray(config.connections)) throw new Error("设置版本不受支持，请保留文件并检查升级说明");
+    for (const key of ["enabledProviders", "enabledTools"]) {
+      if (config[key] !== undefined && (!Array.isArray(config[key]) || config[key].some(id => typeof id !== "string"))) throw new Error("设置启用清单无效");
+    }
     let codex;
     try { codex = codexRaw ? parse(codexRaw) : {}; }
     catch { throw new Error("Codex 配置无法解析，请修复用户配置后重试"); }
@@ -66,28 +71,72 @@ export class Settings {
     const capabilities = this.backend.sourceCapabilities;
     const providers = this.backend.providers.map(provider => {
       const members = capabilities.filter(item => item.tools.some(name => this.backend.providerFor(name) === provider.key));
-      return { id: provider.key, title: provider.title || (members.length === 1 ? members[0].title : provider.kind === "native" ? "通用量子计算工具" : provider.key), category: providerCategory(members), enabled: !config.disabledProviders.includes(provider.key), bundled: true };
+      return { id: provider.key, title: provider.title || (members.length === 1 ? members[0].title : provider.kind === "native" ? "通用量子计算工具" : provider.key), category: providerCategory(members), enabled: this.providerEnabled(config, provider.key), bundled: true, service: serviceById(provider.key)?.id };
     });
-    const tools = this.backend.tools.map(tool => ({ id: tool.name, title: tool.title || tool.name, description: tool.description,
+    const tools = this.backend.tools.map(tool => ({ id: tool.name, title: SERVICE_TOOL_TITLES[tool.name] || tool.title || tool.name, description: tool.description,
       category: capabilityCategory(capabilities.find(item => item.tools.includes(tool.name))?.id),
-      provider: this.backend.providerFor(tool.name), enabled: !config.disabledTools.includes(tool.name), readOnly: tool.annotations?.readOnlyHint === true }));
+      provider: this.backend.providerFor(tool.name), enabled: this.toolEnabled(config, tool.name), readOnly: tool.annotations?.readOnlyHint === true }));
     const connections = await Promise.all(config.connections.map(async connection => ({ ...connection,
-      credential: connection.authentication === "token" ? await this.credentials.describe(credentialRef(connection.id)) : { configured: false },
+      credential: connection.authentication === "token" ? await this.credentials.describe(credentialRef(connection.id)).catch(() => ({ configured: false, unavailable: true })) : { configured: false },
       status: this.statuses.get(connection.id) ?? { state: "not_checked", message: "尚未测试连接" },
     })));
-    return { revision, categories: CAPABILITY_CATEGORIES, skills: this.skills(codex), providers, tools, connections,
+    const services = await Promise.all(SERVICES.map(async service => {
+      const supported = service.supported === true && providers.some(provider => provider.id === service.id);
+      let values = {}, unavailable = false;
+      if (supported) try { values = await serviceValues(this.credentials, service); } catch { unavailable = true; }
+      const missing = missingFields(service, values);
+      return { ...service, supported, enabled: supported && this.providerEnabled(config, service.id),
+        fields: service.fields.map(field => ({ ...field, configured: Boolean(values[field.name]) })),
+        configuration: !supported ? "unsupported" : unavailable ? "unavailable" : missing.length ? "incomplete" : Object.keys(values).length ? "configured" : "optional",
+        missing, checked: false, tools: tools.filter(tool => tool.provider === service.id) };
+    }));
+    const skills = this.skills(codex);
+    const components = this.componentDirectory ? {
+      copy: this.componentDirectory.copy,
+      skills: this.componentDirectory.skills.map(item => {
+        const available = skills.find(skill => skill.id === item.name);
+        const capability = capabilities.find(capability => capability.id === item.name);
+        return { ...item, id: item.name, title: item.displayName, supported: Boolean(available), enabled: available?.enabled ?? false,
+          tools: available?.tools ?? [], availabilityNote: available ? null : capability?.reason ?? "此 Skill 使用 Desktop 工作流，当前 Codex 插件未提供。" };
+      }),
+      mcpServers: this.componentDirectory.mcpServers.map(item => {
+        const provider = providers.find(provider => provider.id === item.serverName);
+        const capability = capabilities.find(capability => capability.mcp?.some(server => server.name === item.serverName));
+        const service = services.find(service => service.id === item.serverName);
+        return { ...item, id: item.serverName, title: item.displayName, supported: Boolean(provider), enabled: provider?.enabled ?? false,
+          toolCallTimeoutMs: 180000, service: service?.id, configuration: service?.configuration,
+          requiredCredentialsMissing: service?.configuration === "incomplete",
+          tools: tools.filter(tool => tool.provider === item.serverName),
+          availabilityNote: provider ? null : capability?.reason ?? "此连接使用 Desktop 工作流，当前 Codex 插件未提供。" };
+      }),
+    } : undefined;
+    return { revision, categories: CAPABILITY_CATEGORIES, skills, providers, tools, connections, services, components,
+      observedAt: new Date().toISOString(),
       notice: "Skill 开关保存在 Codex 用户配置；已有聊天可能需要重载。Tool 禁用立即阻止新的调用。", scope: "当前用户的 OpenQuantum 插件" };
+  }
+  providerEnabled(config, id) {
+    const provider = this.backend.providers.find(provider => provider.key === id);
+    return Boolean(provider) && !config.disabledProviders.includes(id) && (provider.defaultEnabled !== false || config.enabledProviders?.includes(id) === true);
+  }
+  toolEnabled(config, id) {
+    const provider = this.backend.providers.find(provider => provider.key === this.backend.providerFor(id));
+    return !config.disabledTools.includes(id) && (provider?.defaultEnabled !== false || config.enabledTools?.includes(id) === true);
+  }
+  async providerEnvironment(name, args = {}) {
+    const service = serviceById(this.backend.providerFor(name));
+    if (service?.credentialFreeTools?.includes(name) || (name === "discover_fieldqkit_backends" && args.provider === "simulator")) return {};
+    return service?.supported ? serviceValues(this.credentials, service) : {};
   }
   async enabled(name) {
     const { config } = await this.read();
     const provider = this.backend.providerFor(name);
-    if (provider) return !config.disabledProviders.includes(provider) && !config.disabledTools.includes(name);
+    if (provider) return this.providerEnabled(config, provider) && this.toolEnabled(config, name);
     return config.connections.some(connection => connection.enabled && connection.tools.some(tool => externalToolName(connection.id, tool.name) === name && tool.enabled));
   }
   async listTools() {
     const { config } = await this.read();
     return [
-      ...this.backend.tools.filter(tool => !config.disabledTools.includes(tool.name) && !config.disabledProviders.includes(this.backend.providerFor(tool.name))),
+      ...this.backend.tools.filter(tool => this.toolEnabled(config, tool.name) && this.providerEnabled(config, this.backend.providerFor(tool.name))),
       ...config.connections.filter(connection => connection.enabled).flatMap(connection => connection.tools.filter(tool => tool.enabled).map(({ enabled: _enabled, ...tool }) => ({ ...tool, name: externalToolName(connection.id, tool.name) }))),
     ];
   }
@@ -114,9 +163,11 @@ export class Settings {
         }
         case "tool.set":
           if (!this.backend.tools.some(tool => tool.name === input.id)) throw new Error("未知内置 Tool");
+          config.enabledTools = toggle(config.enabledTools ?? [], input.id, !bool(input.enabled));
           config.disabledTools = toggle(config.disabledTools, input.id, bool(input.enabled)); break;
         case "provider.set":
           if (!this.backend.providers.some(provider => provider.key === input.id)) throw new Error("未知内置 MCP 连接");
+          config.enabledProviders = toggle(config.enabledProviders ?? [], input.id, !bool(input.enabled));
           config.disabledProviders = toggle(config.disabledProviders, input.id, bool(input.enabled)); break;
         case "connection.add": {
           const connection = validateConnection(input.connection);

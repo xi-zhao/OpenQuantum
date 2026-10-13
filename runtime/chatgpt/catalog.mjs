@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 import { parse } from "yaml";
 import { mcpCatalogEntry } from "../../src/settings/server/project-settings-catalog.mjs";
 import { readSdkLibraries } from "../../src/lib/sdk-access.mjs";
+import { serviceById } from "../../src/settings/codex/service-catalog.mjs";
 
 export const PROJECT_ROOT = fileURLToPath(new URL("../../", import.meta.url));
 export const PRESET_PATH = "src/capabilities";
@@ -14,7 +15,6 @@ const HOST_CODE_PROVIDERS = new Set(["@deepseek-ai/dsh-tool-bash", "@deepseek-ai
 const HOST_EXCLUSIONS = {
   "quantum-learning": "量子学习通属于 Desktop 发行版，不在 Codex 插件范围内。",
   "platform-diagnostics": "需要独立版宿主的文件系统、Shell 和事件日志。",
-  "fieldqkit-hardware": "需要显式配置本机设备与硬件凭据，当前插件未启用。",
 };
 const NATIVE_PRESENTATION = {
   "quantum-practices": { title: "量子算法参考", description: "查找量子算法的适用条件、方法比较和实验设计参考。" },
@@ -51,14 +51,16 @@ export async function readCapabilities(root = PROJECT_ROOT) {
     const hostTools = (entry.execution?.nativeTools ?? []).filter(tool => HOST_CODE_PROVIDERS.has(tool.providerPlugin));
     const native = (entry.execution?.nativeTools ?? []).filter(tool => !HOST_CODE_PROVIDERS.has(tool.providerPlugin));
     const mcp = entry.execution?.mcpServers ?? [];
+    const managed = mcp.length === 1 && serviceById(mcp[0].name)?.supported === true
+      && serviceById(mcp[0].name).capability === entry.id && mcp[0].source === "package";
     let reason = HOST_EXCLUSIONS[entry.id];
-    if (!reason && mcp.some((server) => server.source !== "package" || server.activation !== "always")) {
+    if (!reason && !managed && mcp.some((server) => server.source !== "package" || server.activation !== "always")) {
       reason = "外部或按需启用的 MCP 需要用户单独配置连接与授权，当前发行包未启用。";
     }
     if (!reason && native.some((tool) => !NATIVE_PROVIDERS.has(tool.providerPlugin))) {
       throw new Error(`Review the new native provider for ChatGPT: ${entry.id}`);
     }
-    if (!reason && [...native, ...mcp.flatMap((server) => server.tools)].some((tool) => tool.effect === "external-write")) {
+    if (!reason && !managed && [...native, ...mcp.flatMap((server) => server.tools)].some((tool) => tool.effect === "external-write")) {
       reason = "存在外部写入副作用，当前插件未提供相应的凭据与授权流程。";
     }
     let skill = null;
@@ -84,7 +86,7 @@ export async function readCapabilities(root = PROJECT_ROOT) {
     return {
       id: entry.id, title, description, summary: NATIVE_PRESENTATION[entry.id]?.description ?? presentation?.description ?? description,
       status: reason ? "unsupported" : "available", ...(reason ? { reason } : {}),
-      skill, native, mcp, sdkIds, hostTools, tools: [...native.map((tool) => tool.name), ...mcp.flatMap((server) => server.tools.map((tool) => tool.name))],
+      skill, native, mcp, sdkIds, hostTools, optIn: managed, tools: [...native.map((tool) => tool.name), ...mcp.flatMap((server) => server.tools.map((tool) => tool.name))],
     };
   }));
 }
@@ -102,6 +104,7 @@ export function providerGroups(capabilities) {
       if (providers.has(server.name)) throw new Error(`Duplicate MCP provider: ${server.name}`);
       providers.set(server.name, {
         key: server.name, kind: "mcp", entrypoint: server.entrypoint,
+        defaultEnabled: !capability.optIn,
         tools: server.tools.map((tool) => ({ ...tool, capabilityId: capability.id })),
       });
     }

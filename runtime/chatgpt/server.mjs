@@ -4,16 +4,26 @@ import { RESOURCE_MIME_TYPE } from "@modelcontextprotocol/ext-apps/server";
 import { createHash } from "node:crypto";
 
 const LEGACY_UI_URI = "ui://openquantum/workbench.html";
+const SETTINGS_UI_URI = /^ui:\/\/openquantum\/settings\/[a-f0-9]{64}\.html$/;
 const LEGACY_OPENER = "open_openquantum";
 export const OPENER = "open_openquantum_settings";
 export const SETTINGS_TOOL = "openquantum_settings";
-// Global apps retain their own page instances. Give settings a separate route,
-// and change the resource identity whenever the bundled document changes.
+// Discovery and app resources can use different MCP processes. Identify the
+// bundle, never its process-local credential port; each read binds its own CSP.
 export function settingsResourceUri(html) {
-  return `ui://openquantum/settings/${createHash("sha256").update(html).digest("hex")}.html`;
+  const bundle = html.replace(/<meta name="openquantum-credential-origin" content="http:\/\/127\.0\.0\.1:\d+">/, "<!-- CREDENTIAL_ORIGIN -->");
+  return `ui://openquantum/settings/${createHash("sha256").update(bundle).digest("hex")}.html`;
+}
+export function prepareSettingsDocument(html, origin) {
+  if (!origin) return html;
+  const url = new URL(origin);
+  if (url.origin !== origin || url.protocol !== "http:" || url.hostname !== "127.0.0.1") throw new Error("Invalid credential origin");
+  return html.replace("<!-- CREDENTIAL_ORIGIN -->", `<meta name="openquantum-credential-origin" content="${url.origin}">`);
 }
 export const ICON = `data:image/svg+xml;base64,${Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="24" cy="24" rx="21" ry="8" transform="rotate(45 24 24)"/><ellipse cx="24" cy="24" rx="21" ry="8" transform="rotate(-45 24 24)"/><circle cx="24" cy="24" r="3" fill="currentColor"/></svg>').toString("base64")}`;
-const schema = { type: "object", properties: { action: { type: "string", enum: ["snapshot", "skill.set", "tool.set", "provider.set", "connection.add", "connection.set", "connection.tool.set", "connection.remove", "connection.test", "credentials.open"] },
+const schema = { type: "object", properties: { action: { type: "string", enum: ["snapshot", "skill.set", "tool.set", "provider.set", "connection.add", "connection.set", "connection.tool.set", "connection.remove", "connection.test", "credentials.open", "service.credentials.open", "credential.field.issue", "credential.field.prepare", "credential.field.commit"] },
+  nonce: { type: "string", pattern: "^[a-f0-9]{64}$" }, ciphertext: { type: "string", maxLength: 32768 },
+  field: { type: "string", maxLength: 128 }, operation: { enum: ["set", "remove"] }, origin: { type: "string", maxLength: 2048 },
   revision: { type: "string", maxLength: 64 }, id: { type: "string", maxLength: 128 }, enabled: { type: "boolean" }, tool: { type: "string", maxLength: 128 },
   connection: { type: "object", additionalProperties: false, properties: { id: { type: "string", maxLength: 32 }, transport: { enum: ["stdio", "http"] }, url: { type: "string", maxLength: 2048 }, command: { type: "string", maxLength: 1024 }, args: { type: "array", maxItems: 32, items: { type: "string", maxLength: 2048 } }, tokenEnv: { type: "string", maxLength: 64 }, authentication: { enum: ["none", "token"] } }, required: ["id", "transport", "authentication"] },
 }, required: ["action"], additionalProperties: false };
@@ -21,6 +31,10 @@ const schema = { type: "object", properties: { action: { type: "string", enum: [
 export async function settingsRequest({ settings, connections, credentialWindow }, input) {
   if (!input || typeof input !== "object" || Array.isArray(input) || Object.keys(input).some(key => !Object.hasOwn(schema.properties, key))) throw new Error("设置字段无效");
   if (input.action === "credentials.open") return { url: await credentialWindow.open(input.id) };
+  if (input.action === "service.credentials.open") return { url: await credentialWindow.openService(input.id) };
+  if (input.action === "credential.field.issue") return credentialWindow.issueField(input);
+  if (input.action === "credential.field.prepare") return credentialWindow.prepareField(input);
+  if (input.action === "credential.field.commit") return credentialWindow.commitField(input);
   if (input.action === "snapshot") return settings.snapshot();
   if (input.action === "connection.test") return connections.probe(input.id);
   return settings.command(input);
@@ -28,6 +42,7 @@ export async function settingsRequest({ settings, connections, credentialWindow 
 
 export function createMcpServer({ backend, settings, connections, credentialWindow, html, release }) {
   const context = { settings, connections, credentialWindow };
+  html = prepareSettingsDocument(html, credentialWindow?.origin);
   const uiUri = settingsResourceUri(html);
   const server = new Server({ name: "openquantum", version: release.version, icons: [{ src: ICON, mimeType: "image/svg+xml" }] }, {
     capabilities: { tools: { listChanged: true }, resources: {} },
@@ -40,18 +55,19 @@ export function createMcpServer({ backend, settings, connections, credentialWind
     { name: OPENER, title: "OpenQuantum 设置", description: "Open settings for OpenQuantum Skills, MCP connections and Tools.", inputSchema: { type: "object", properties: {}, additionalProperties: false },
       annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }, icons: [{ src: ICON, mimeType: "image/svg+xml" }],
       _meta: { ui: { resourceUri: uiUri, visibility: ["app"] }, "openai/ui": { entrypoints: [{ type: "global" }, { type: "settings", searchTerms: ["quantum", "skills", "mcp"] }] } } },
-    { name: SETTINGS_TOOL, title: "OpenQuantum 能力设置", description: "Configure OpenQuantum capabilities from the settings UI. Never pass credentials in this tool.", inputSchema: schema,
+    { name: SETTINGS_TOOL, title: "OpenQuantum 能力设置", description: "Configure OpenQuantum capabilities from the settings UI. Never pass plaintext credentials in this tool.", inputSchema: schema,
       annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: true },
       _meta: { ui: { resourceUri: uiUri, visibility: ["app"] } } },
     ...await settings.listTools(),
   ] }));
   server.setRequestHandler(ListResourcesRequestSchema, async () => ({ resources: [{ uri: uiUri, name: "OpenQuantum Settings", mimeType: RESOURCE_MIME_TYPE }] }));
   server.setRequestHandler(ReadResourceRequestSchema, async ({ params }) => {
-    // Serve the current document if an older client forwards a legacy read.
-    // Advertise only the new entry so the global menu has one OpenQuantum item.
-    if (params.uri !== uiUri && params.uri !== LEGACY_UI_URI) throw new Error("Unknown resource");
+    // Cached entrypoints from older installations still resolve to this bundle.
+    // Only the exact settings route family is an alias; never resolve file paths
+    // or take a credential origin from the requested URI.
+    if (!SETTINGS_UI_URI.test(params.uri) && params.uri !== LEGACY_UI_URI) throw new Error("Unknown resource");
     return { contents: [{ uri: params.uri, mimeType: RESOURCE_MIME_TYPE, text: html, _meta: {
-      ui: { csp: { connectDomains: [], resourceDomains: [] }, prefersBorder: false },
+      ui: { csp: { connectDomains: credentialWindow?.origin ? [credentialWindow.origin] : [], resourceDomains: [] }, prefersBorder: false },
       "openai/ui": { preferredDisplayMode: "fullscreen", availableDisplayModes: ["fullscreen"] },
     } }] };
   });
@@ -62,7 +78,7 @@ export function createMcpServer({ backend, settings, connections, credentialWind
         return { content: [], _meta: { openquantumSettings: value } };
       }
       if (!await settings.enabled(params.name)) throw new Error("Tool 未启用或不可用，请在 OpenQuantum 设置中检查");
-      return backend.providerFor(params.name) ? await backend.call(params.name, params.arguments ?? {}, signal, () => settings.enabled(params.name)) : await connections.call(params.name, params.arguments ?? {}, signal);
+      return backend.providerFor(params.name) ? await backend.call(params.name, params.arguments ?? {}, signal, () => settings.enabled(params.name), await settings.providerEnvironment(params.name, params.arguments ?? {})) : await connections.call(params.name, params.arguments ?? {}, signal);
     } catch (error) { return { isError: true, content: [{ type: "text", text: error.message }] }; }
   });
   return server;
