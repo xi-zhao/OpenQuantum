@@ -1,0 +1,7 @@
+Matplotlib is building the font cache; this may take a moment.
+/Volumes/Elements/CodexWorkspaces/quantum-sdk-expansion-cache/envs/jaxquantum-modeling/lib/python3.12/site-packages/jaxquantum/core/visualization.py:44: SyntaxWarning: invalid escape sequence '\,'
+  :math:`[x,\,y] = i\\hbar` via :math:`\\hbar=2/g^2`.
+/Volumes/Elements/CodexWorkspaces/quantum-sdk-expansion-cache/envs/jaxquantum-modeling/lib/python3.12/site-packages/jaxquantum/core/visualization.py:218: SyntaxWarning: invalid escape sequence '\,'
+  :math:`[x,\,y] = i\\hbar` via :math:`\\hbar=2/g^2`.
+/Volumes/Elements/CodexWorkspaces/quantum-sdk-expansion-cache/envs/jaxquantum-modeling/lib/python3.12/site-packages/jaxquantum/core/visualization.py:279: SyntaxWarning: invalid escape sequence '\,'
+  :math:`[x,\,y] = i\\hbar` via :math:`\\hbar=2/g^2`.

@@ -35,3 +35,6 @@ Thumbs.db
 # Tool-local settings
 .claude/settings.local.json
 temp/
+
+# Retain the original logs referenced by versioned SDK verification receipts.
+!docs/integrations/evidence/sdk-ecosystem-2026-10-14/**/*.log

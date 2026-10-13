@@ -4,6 +4,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { createHash } from "node:crypto";
+import { execFileSync } from "node:child_process";
 import { readSdkLibraries } from "../src/lib/sdk-access.mjs";
 
 const root = path.resolve(fileURLToPath(new URL("../", import.meta.url)));
@@ -18,6 +19,7 @@ function contained(relative) {
 test("26 scoped API receipts are durable, match current locks and retain the science boundary", async () => {
   const report = JSON.parse(await fs.readFile(path.join(root, reportPath)));
   const cohort = (await readSdkLibraries(root)).filter(entry => entry.nativeOnly);
+  const tracked = new Set(execFileSync("git", ["ls-files", "-z", "--", "docs/integrations/evidence"], { cwd: root, encoding: "utf8" }).split("\0"));
   assert.deepEqual(report.libraries.map(entry => entry.id).sort(), cohort.map(entry => entry.id).sort());
   assert.equal(report.summary.passed, 26);
   assert.equal(report.summary.scientificValidation, "not_evaluated");
@@ -38,6 +40,7 @@ test("26 scoped API receipts are durable, match current locks and retain the sci
     for (const [name, digest] of Object.entries(entry.artifacts)) {
       assert.equal(path.basename(name), name);
       const file = path.join(directory, name);
+      assert.ok(tracked.has(`${entry.durableEvidenceDirectory}/${name}`), `Unversioned receipt artifact: ${entry.id}/${name}`);
       assert.ok((await fs.lstat(file)).isFile());
       assert.equal(hash(await fs.readFile(file)), digest, `${entry.id}/${name}`);
     }

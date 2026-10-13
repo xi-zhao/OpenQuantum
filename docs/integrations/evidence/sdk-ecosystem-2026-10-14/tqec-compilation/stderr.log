@@ -1,0 +1,7 @@
+Matplotlib is building the font cache; this may take a moment.
+/Volumes/Elements/CodexWorkspaces/quantum-sdk-expansion-cache/envs/tqec-compilation/lib/python3.12/site-packages/pyzx/rewrite_rules/fuse_FE_rules.py:30: SyntaxWarning: invalid escape sequence '\m'
+  Let :math:`C_1` and :math:`C_2` be two circuits with respective noise models :math:`\mathcal{F}_1` and :math:`\mathcal{F}_2`.
+/Volumes/Elements/CodexWorkspaces/quantum-sdk-expansion-cache/envs/tqec-compilation/lib/python3.12/site-packages/pyzx/generate.py:769: SyntaxWarning: invalid escape sequence '\s'
+  P(dq) = 1/\sqrt{2*pi*sigma^2} * exp{-(dq-1)^2/(2*sigma^2)}
+/Volumes/Elements/CodexWorkspaces/quantum-sdk-expansion-cache/envs/tqec-compilation/lib/python3.12/site-packages/pyzx/simulation/decompositions/magic_5.py:3: SyntaxWarning: invalid escape sequence '\o'
+  for a T^{\otimes n} state.
