@@ -1,7 +1,8 @@
 # Codex 服务设置候选验证（2026-10-13）
 
 本轮在 `c/codex-settings-complete` 实施，基线为 `origin/main@05944b3a1f5f528a82edbdea35f34530e822d977`。
-这是本地源码候选，尚未推送、合并、安装或发布；保留现有产品版本号，不覆盖已发布的 0.8.3。
+这是本地源码候选，尚未推送、合并或发布；保留现有产品版本号，不覆盖已发布的 0.8.3。
+用户随后授权更新本机 Codex 插件，安装结果见文末；现有 DSH Desktop 安装未变。
 
 ## 用户得到的行为
 
@@ -59,5 +60,20 @@ node scripts/probe-chatgpt.mjs dist/codex-plugin/openquantum
 原始日志与截图保留在任务工作树的 `.openquantum/codex-settings-evidence/`。
 
 没有使用真实账户或调用厂商 API，没有 QPU、外部模型或科学验收。
-浏览器预览与协议检查不替代已安装 Codex 的左侧全局入口验收；本轮没有更新用户现有 Codex 或 DSH Desktop 安装。
+浏览器预览与协议检查不替代已安装 Codex 的左侧全局入口验收。
 `scientificValidation=not_evaluated`。
+
+## 用户授权后的本机安装
+
+- 安装代码提交：`b4586dfb0c5d1d3e79e864d489ef4e4baffe621b`，构建时工作树干净。
+- 包 SHA-256：`3b45e10b09c7421636eb84b9b7592e4a11a4a5f64e720cc6278a77296dd6034e`。
+- 使用当前应用配套 CLI `0.162.0-alpha.17.2` 和既有安装器，将 `openquantum@personal` 更新到
+  `~/.local/share/openquantum/desktop/0.8.3-3b45e10b09c74216/`。旧安装目录仍保留。
+- 实际安装完成，读回 `installed=true`、`enabled=true`；Codex 缓存 `release.json` 与安装来源一致，
+  其余已安装插件的列表、来源及启用状态与更新前相同。
+- 新安装运行依赖及包内 stdio probe 通过，验证 142 个 Skill、87 个 Tool（默认 71 个）、13 项服务和 8 项可配置服务。
+  Probe 使用独立配置及随机 Keyring namespace，不写入用户服务账户。
+- 当前电脑控制工具禁止操作 Codex 原生窗口，已请用户从左侧菜单打开“OpenQuantum 设置”。
+  全局入口与其实际页面仍待核验，不能用安装成功代替这一结论。
+- 本次安装和读回记录位于 `.openquantum/codex-settings-evidence/install-results.txt`、
+  `install-readback.json`、`installed-before.json` 与 `installed-after.json`。
