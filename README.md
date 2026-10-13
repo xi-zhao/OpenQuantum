@@ -249,18 +249,18 @@ OpenQuantum 支持桌面安装包和源码运行，适合本机单用户使用�
 **让 Codex 帮你安装：**打开 Codex，新建聊天，把下面这段话复制给它：
 
 ```text
-请帮我安装 OpenQuantum Codex 插件 0.8.1。先阅读安装指南：
-https://github.com/xi-zhao/OpenQuantum/blob/codex-v0.8.1/docs/integrations/CODEX_AGENT_INSTALL.md
-从 https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.1 下载完整安装包与 SHA256SUMS，
+请帮我安装 OpenQuantum Codex 插件 0.8.2。先阅读安装指南：
+https://github.com/xi-zhao/OpenQuantum/blob/codex-v0.8.2/docs/integrations/CODEX_AGENT_INSTALL.md
+从 https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.2 下载完整安装包与 SHA256SUMS，
 核对摘要后，检查 Codex、Node.js 24+ 和 npm，使用包内安装器完成安装。
 请保留已有插件和用户配置，核对 Skills、MCP 工具和左侧全局“OpenQuantum 设置”入口。
 需要我重载应用时，告诉我具体操作。最后报告实际验证的结果，以及仍需准备的科学计算依赖。
 ```
 
-OpenQuantum 桌面能力包与 Codex 插件统一使用 **OpenQuantum 0.8.1**；之后同步更新只需记录一个产品版本号，渠道标签分别为 `v0.8.1` 和 `codex-v0.8.1`。
+OpenQuantum 源码、Codex 插件及安装器统一使用 **OpenQuantum 0.8.2**。本版 Codex 插件包含 134 个 Skill、71 个科学 Tool，新增 Pasqal 实验工作流；发行标签为 `codex-v0.8.2`。
 
-**[下载 Codex 插件 0.8.1 完整安装包](https://github.com/xi-zhao/OpenQuantum/releases/download/codex-v0.8.1/openquantum-0.8.1-codex-install.zip)**
-（[发布说明与 SHA256SUMS](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.1)）。
+**[下载 Codex 插件 0.8.2 完整安装包](https://github.com/xi-zhao/OpenQuantum/releases/download/codex-v0.8.2/openquantum-0.8.2-codex-install.zip)**
+（[发布说明与 SHA256SUMS](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.2)）。
 安装包包含插件 ZIP、安装脚本和依赖锁文件，无需另行取得源码。需要支持插件及全局设置页的 Codex、
 Node.js 24+ 和 npm；由 Agent 按[安装指南](docs/integrations/CODEX_AGENT_INSTALL.md)检查并处理依赖。
 macOS 本机安装已验证，其他平台和宿主版本仍需检查兼容性。

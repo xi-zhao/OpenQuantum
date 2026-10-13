@@ -153,6 +153,7 @@ Skill 与 Tool 在概念和发行版 policy 中都相互独立：Skill-only、To
 - [Pasqal 实验工作流与 Cloud SDK](integrations/PASQAL.md)：复用 Pulser，覆盖实验规范、理想/含噪扫描、云提交恢复与原始采样分析。
 - [相近能力的选择](integrations/CAPABILITY_SELECTION.md)：算法示例与专业计算入口的选择，以及大型可选服务的工具范围。
 - [版本更新](UPDATES.md)：新版本提醒、源码升级、发布通道和维护流程。
+- [Codex 插件 0.8.2](releases/codex-v0.8.2.md)：Pasqal 实验工作流、计划与环境一致性检查、134 个 Skill 和 71 个科学 Tool。
 - [v0.8.1 统一发行说明](releases/v0.8.1.md)：Desktop、Codex 插件和安装器共用产品版本及更新命令；发行渠道分别保留。
 - [v0.7.0 发行说明](releases/v0.7.0.md)：完整原生 SDK 接入、大结果交付、Desktop 安装升级及工程验证范围。
 - [Codex 插件 0.8.0](releases/codex-v0.8.0.md)：133 个 Skill、71 个科学 Tool、85 个 SDK 环境入口和独立安装包。

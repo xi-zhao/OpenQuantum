@@ -4,24 +4,24 @@
 插件，同时加载 Skills、本机 MCP 服务及科学 Tools、左侧全局“OpenQuantum 设置”入口。
 聊天、项目、线程、登录和模型继续使用 Codex；本次安装不启动 Desktop 或量子学习通。
 
-正式插件版本为 **0.8.1**，包含 **133 个 Skill、71 个科学 Tool**。数量按所安装包的 `release.json`
+正式插件版本为 **0.8.2**，包含 **134 个 Skill、71 个科学 Tool**。数量按所安装包的 `release.json`
 核对。macOS 本机安装已验证；其他操作系统、Codex 版本与全新机器仍需逐项验证。
 
 ## 1. 取得本次安装材料
 
-从 [Codex 插件 0.8.1 Release](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.1)
-下载 `openquantum-0.8.1-codex-install.zip` 和 `SHA256SUMS`。完整安装包已包含插件 ZIP、
+从 [Codex 插件 0.8.2 Release](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.2)
+下载 `openquantum-0.8.2-codex-install.zip` 和 `SHA256SUMS`。完整安装包已包含插件 ZIP、
 安装脚本与依赖锁文件，解压后无需克隆仓库或构建插件。
 
 先比较完整安装包的 SHA-256 与同一 Release 的 `SHA256SUMS`，一致后再解压。
 macOS/Linux 可用 `shasum -a 256 <文件>`，PowerShell 可用 `Get-FileHash <文件> -Algorithm SHA256`。
-GitHub Desktop 的 `releases/latest` 仍对应 Desktop；不要用它替代上面的独立插件发布页。
+使用带 `codex-v` 前缀的版本标签定位插件发行及其安装附件。
 
 解压目录应包含 `package.json`、`package-lock.json`、`scripts/install-codex-plugin.mjs`，以及
-`dist/codex-plugin/openquantum-0.8.1-codex-plugin.zip`。单独的 `codex-plugin.zip` 面向已有
+`dist/codex-plugin/openquantum-0.8.2-codex-plugin.zip`。单独的 `codex-plugin.zip` 面向已有
 安装器的使用者；首次安装优先下载 `codex-install.zip`。
 
-需要从源码构建时，在独立目录检出 `codex-v0.8.1` 标签，不要切换或重置用户正在开发的工作区。
+需要从源码构建时，在独立目录检出 `codex-v0.8.2` 标签，不要切换或重置用户正在开发的工作区。
 构建要求 Git checkout；没有 `.git` 的源码压缩包应搭配预构建插件 ZIP。
 
 不要用“复制 Skill 文件”或“仅添加一个 MCP 地址”代替完整插件安装，那样不能交付全部三个入口。
@@ -77,7 +77,7 @@ OPENQUANTUM_CODEX_CLI="$oq_codex_cli" npm run plugin:install
 
 ```sh
 npm ci
-oq_plugin_zip='/实际路径/openquantum-0.8.1-codex-plugin.zip'
+oq_plugin_zip='/实际路径/openquantum-0.8.2-codex-plugin.zip'
 OPENQUANTUM_CODEX_CLI="$oq_codex_cli" npm run plugin:install -- "$oq_plugin_zip"
 ```
 
@@ -143,9 +143,9 @@ OPENQUANTUM_CODEX_CLI="$oq_codex_cli" npm run plugin:install
 
 ## 可以直接交给 Codex 的话
 
-> 请帮我安装 OpenQuantum Codex 插件 0.8.1。先阅读
-> https://github.com/xi-zhao/OpenQuantum/blob/codex-v0.8.1/docs/integrations/CODEX_AGENT_INSTALL.md，
-> 从 https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.1 下载完整安装包与 SHA256SUMS，
+> 请帮我安装 OpenQuantum Codex 插件 0.8.2。先阅读
+> https://github.com/xi-zhao/OpenQuantum/blob/codex-v0.8.2/docs/integrations/CODEX_AGENT_INSTALL.md，
+> 从 https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.2 下载完整安装包与 SHA256SUMS，
 > 核对摘要后，检查 Codex、Node.js 24+ 与 npm，使用包内安装器完成安装。
 > 请保留已有插件和用户配置，核对 Skills、MCP 工具和左侧全局“OpenQuantum 设置”入口。
 > 需要我重载应用时，告诉我具体操作。最后说明已验证的结果和仍需准备的计算环境。

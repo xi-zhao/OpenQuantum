@@ -2,13 +2,13 @@
 
 量子依赖核验日期：2026-09-22；平台升级记录日期：2026-09-10；原模型验收交接记录日期：2026-09-05。此页只记录工作交接；架构以[文档总入口](docs/README.md)为准，执行事实以 Harness Session event log 为准，科学状态以 Acceptance Report 为准。
 
-## Pasqal 实验工作流与 Cloud SDK（2026-10-13，PR 修复已本地验证）
+## Pasqal 实验工作流与 Cloud SDK（2026-10-13，已合并 main）
 
 - `pasqal-experiments` 接入从实验想法到结果分析的七阶段流程；复用 `pulser-dynamics` 的 Pulser 1.9.1 环境，增加固定版 `pasqal-cloud==0.24.0` 完整原生 API，不新增 Runtime 或云 MCP。
 - 云辅助器支持设备快照、可审阅计划、批次创建/追加/关闭/取消、单次 HTTP 提交、未知结果恢复和原始数据采集；保留请求索引、失效点与科学未验状态。
 - 初次真实 Pulser 数值、Cloud SDK 传输夹具、Harness 会话执行/读回、Codex 包资源与离线流程验证通过；后续 GitHub 审查指出代码依赖与执行环境绑定缺口。范围和原始工件见 [Pasqal 集成记录](docs/integrations/PASQAL.md)。
 - 2026-10-13 在独立分支整合 `main@45461051`，保留 Desktop 交接记录；补齐 Skill 目录与数量断言，修复单文件代码绑定和计划环境核对。完整 `npm run check`、28 项 Python 回归、4 项 Pasqal/Harness 检查通过；独立审查无未解决 P1/P2，另行复跑 6 项关键回归通过。见[本轮修复验证](docs/integrations/evidence/pasqal-review-2026-10-13.json)。本轮验收时修复尚未推送，GitHub 检查需更新分支后重跑。
-- 任务分支 `c/pasqal-experiments` 已推送，实现提交 `37096a30` 已提交 [PR #13](https://github.com/xi-zhao/OpenQuantum/pull/13)，目标为 `main`；CI 与审阅状态以 PR 页面为准。未合并、发布或替换已安装产品。未调用真实 Cloud/QPU 或外部模型，`scientificValidation=not_evaluated`。
+- [PR #13](https://github.com/xi-zhao/OpenQuantum/pull/13) 已合并到 `main@046ac876`；合并提交的 [CI](https://github.com/xi-zhao/OpenQuantum/actions/runs/38324720753) 与 [能力包检查](https://github.com/xi-zhao/OpenQuantum/actions/runs/38324720702) 共 7/7 通过。0.8.2 的 Codex 发行内容与安装方式见[版本说明](docs/releases/codex-v0.8.2.md)，最终发布提交和附件以 Release 为准。未调用真实 Cloud/QPU 或外部模型，`scientificValidation=not_evaluated`。
 
 ## 原版第三方 Desktop（2026-10-12）
 
