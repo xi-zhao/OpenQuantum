@@ -1,31 +1,12 @@
 name: DSH capability packages
 
+# These checks are required for main, including documentation-only changes.
 on:
   workflow_dispatch:
   push:
     branches: [main, 'c/desktop-*']
-    paths:
-      - desktop/**
-      - scripts/**
-      - src/**
-      - runtime/**
-      - .agents/**
-      - packages/**
-      - package.json
-      - package-lock.json
-      - .github/workflows/desktop-installers.yml
   pull_request:
     branches: [main]
-    paths:
-      - desktop/**
-      - scripts/**
-      - src/**
-      - runtime/**
-      - .agents/**
-      - packages/**
-      - package.json
-      - package-lock.json
-      - .github/workflows/desktop-installers.yml
 
 permissions:
   contents: read
