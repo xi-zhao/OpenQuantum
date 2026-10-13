@@ -1,7 +1,9 @@
 # 原版 DSH Desktop 与 OpenQuantum 能力包
 
 后续桌面发行直接使用 [anywhere-labs/dsh-desktop](https://github.com/anywhere-labs/dsh-desktop) 的原版客户端。
-OpenQuantum 交付 Skill、Tool、设置扩展和配置，不再修改 Electron 应用、原生名称、图标、向导或客户端更新入口。
+OpenQuantum 交付 Skill、Tool、设置扩展和配置，保留原版界面、原生名称、向导与客户端更新入口，并使用 OpenQuantum 应用图标。
+macOS 安装器创建带品牌图标的 `OpenQuantum.app` 启动入口，运行中的 Dock 图标由 Desktop Profile 内的品牌扩展设置。
+Windows 提供带 OpenQuantum 图标的启动快捷方式，并通过同一扩展设置运行中的窗口与任务栏图标。原版 DSH Desktop 应用及其签名资源不改写。
 
 当前兼容基线是 [DSH Desktop 2.0.7](https://github.com/anywhere-labs/dsh-desktop/releases/tag/v2.0.7)
 与 Harness `0.1.5-rc.1`。不要用上游 `latest` 链接自动替换固定版本；该链接可能指向 NEXT 渠道或不同 Harness family。
@@ -13,13 +15,14 @@ OpenQuantum 能力包与 Codex 插件继续共用产品版本（当前源码 `0.
 1. 从上述上游 `v2.0.7` Release 安装原版 DSH Desktop。Mac 使用 universal DMG，Windows 使用 x64 Setup。
 2. 从 OpenQuantum 对应 Release 下载 `OpenQuantum-<version>-DSH-<platform>-<arch>.tar.gz`，按同页 `SHA256SUMS` 验证后解压。
 3. Mac 运行解压目录的 `install.command`；Windows 运行 `install.cmd`。能力包包含 Node、uv 与锁定的程序依赖。
-4. 打开安装器输出的 `OpenQuantum DSH.command` 或 `OpenQuantum DSH.cmd`。它启动原版 DSH Desktop 并传入 OpenQuantum Home。
+4. Mac 打开安装器输出的 `OpenQuantum.app`；Windows 打开 `OpenQuantum.lnk`。它们启动原版 DSH Desktop 并传入 OpenQuantum Home；也保留 `OpenQuantum DSH.command/.cmd` 命令行入口。Mac 启动入口可放入应用程序文件夹或拖入 Dock。
 5. 如果此前在 DSH Desktop 设置过数据目录，原生设置优先于启动环境。先退出客户端，在 DSH Desktop 的数据目录设置中选择本次安装的 `project/.openquantum/dsh`，再启动入口。
 
 默认安装目录：Mac 为 `~/Library/Application Support/OpenQuantum/`，Windows 为 `%APPDATA%\OpenQuantum\`。
 `project/` 是可写部署，`versions/` 保存安装依赖和运行环境，原版客户端继续使用自己的 `DSH Desktop` 原生设置目录。
 解压目录安装完成后可移走；不要删除 `versions/`。自定义目录可作为安装命令的唯一绝对路径参数。
 Windows 自定义客户端位置通过 `DSH_DESKTOP_EXECUTABLE` 指定原版 `DSH Desktop.exe`。
+安装后重启 Desktop，使 Dock／任务栏使用新图标。品牌启动入口依赖原版 DSH Desktop，安装客户端仍是第一步；上游客户端升级继续遵守上面的固定版本要求。
 
 安装不会覆盖已有模型 Route、凭据、自定义 Skill 或修改过的 MCP 配置。新默认配置存放在
 `.openquantum/distribution-defaults/` 或 Home 的 `.openquantum-defaults/` 供比较。更新前应退出相关 Host。
@@ -60,6 +63,8 @@ Desktop 保留上游设置的布局、插件、Agent 预设和原生操作，不
 扩展只在该 Profile 激活，新建和切换其他原生 Profile 不会加载这些依赖。用户的 Profile patch 保留原文，覆盖顺序沿用上游规则。
 升级只迁移仍与安装记录一致的全局 Home patch，并在 `.openquantum-migrations` 保留原件；若其中的 OpenQuantum 配置已被手动修改，先停止迁移并提示合并配置。
 原生 Profile 修复可以按 manifest 重建链接，无需向上游 app 或其 `node_modules` 注入文件。
+Desktop 图标扩展只在 OpenQuantum 的 Desktop Profile 内加载，使用 Electron 公开的图标和窗口事件 API；不读取模型、凭据、会话或网络。
+切换 Profile 时清理事件监听并恢复先前的运行图标。它不改变原生设置布局或注册新的 Tool。
 
 工程检查覆盖安装、再次安装、配置保留、独立工作目录和捆绑运行环境；不运行外部模型或真实科研任务。
 该命令不宣称原生 UI 验收。发布前另需对原版客户端完成实际启动、设置、关键操作和重启检查。

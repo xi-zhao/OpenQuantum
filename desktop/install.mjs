@@ -14,6 +14,7 @@ const manifest = JSON.parse(await readFile(path.join(source, "openquantum/distri
 const projectRoot = path.join(dataRoot, "project");
 const { assertCompatibleHarnessHome } = await import(new URL("./openquantum/scripts/lib/harness-home-compatibility.mjs", import.meta.url));
 const { desktopPayloadIdentity } = await import(new URL("./openquantum/scripts/lib/desktop-distribution.mjs", import.meta.url));
+const { installDesktopBranding } = await import(new URL("./openquantum/scripts/lib/desktop-branding.mjs", import.meta.url));
 const identity = desktopPayloadIdentity(manifest);
 await assertCompatibleHarnessHome(path.join(projectRoot, ".openquantum/dsh"));
 const payloadRoot = path.join(dataRoot, "versions", identity);
@@ -42,6 +43,9 @@ const body = process.platform === "win32"
   ? `@echo off\r\n"${node}" "${path.join(projectRoot, "scripts/run-desktop.mjs")}"\r\n`
   : `#!/bin/sh\nexec ${quote(node)} ${quote(path.join(projectRoot, "scripts/run-desktop.mjs"))}\n`;
 await writeFile(launcher, body, { mode: 0o755 });
+const branding = await installDesktopBranding({ projectRoot, dataRoot, node, version: manifest.version });
+await writeFile(path.join(dataRoot, "desktop-branding.json"), JSON.stringify(branding, null, 2));
 console.log(prepared.stdout.trim());
-console.log(`Installed OpenQuantum ${manifest.version}. Launch: ${launcher}`);
+console.log(`Installed OpenQuantum ${manifest.version}. Launch: ${branding.launcher}`);
+console.log("OpenQuantum icon installed. Restart Desktop to update its running icon.");
 console.log(`Original DSH Desktop ${manifest.upstream.version}: https://github.com/anywhere-labs/dsh-desktop/releases/tag/v${manifest.upstream.version}`);
