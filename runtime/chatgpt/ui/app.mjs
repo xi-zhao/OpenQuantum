@@ -3,7 +3,8 @@ import { openHostLink } from "./open-link.mjs";
 import "./style.css";
 
 const $ = selector => document.querySelector(selector);
-let snapshot, tab = "skills", busy = false, app;
+let snapshot, tab = "services", busy = false, app;
+const connectionDraft = {};
 const expandedGroups = new Map();
 const preview = window.parent === window && ["127.0.0.1", "localhost", "[::1]"].includes(location.hostname) && location.hash.startsWith("#preview=");
 const previewToken = preview ? location.hash.slice(9) : null;
@@ -26,7 +27,11 @@ async function run(input) {
   busy = true;
   notice(input.action === "connection.test" ? "正在连接 MCP 并读取工具清单…" : "正在更新设置…");
   document.querySelectorAll("button,input,select,textarea").forEach(node => node.disabled = true);
-  try { snapshot = await request({ ...input, ...(snapshot && input.action !== "snapshot" ? { revision: snapshot.revision } : {}) }); notice(snapshot.notice); }
+  try {
+    snapshot = await request({ ...input, ...(snapshot && input.action !== "snapshot" ? { revision: snapshot.revision } : {}) });
+    if (input.action === "connection.add") for (const key of Object.keys(connectionDraft)) delete connectionDraft[key];
+    notice(input.action === "snapshot" ? snapshot.notice : "设置已保存。" + snapshot.notice);
+  }
   catch (error) { notice(error.message, true); }
   finally { busy = false; document.querySelectorAll("button,input,select,textarea").forEach(node => node.disabled = false); render(); }
 }
@@ -40,6 +45,7 @@ function categories() { return snapshot.categories ?? [{ id: "other", title: "�
 function categoryOf(item) { return categories().some(category => category.id === item.category) ? item.category : "other"; }
 function searchText(item) {
   return [item.title, item.id, item.description, item.provider, item.url, item.command,
+    ...(item.fields ?? []).flatMap(field => [field.name, field.title]),
     ...(item.tools ?? []).flatMap(tool => typeof tool === "string" ? [tool] : [tool.name, tool.title, tool.description]),
     categories().find(value => value.id === categoryOf(item))?.title].filter(Boolean).join(" ").normalize("NFKC").toLowerCase();
 }
@@ -47,7 +53,7 @@ function matches(item) {
   const query = $("#search").value.trim().normalize("NFKC").toLowerCase();
   const state = $("#state").value;
   return query.split(/\s+/).every(word => searchText(item).includes(word))
-    && (state === "all" || item.enabled === (state === "enabled"))
+    && (state === "all" || (["enabled", "disabled"].includes(state) ? item.enabled === (state === "enabled") : item.configuration === state))
     && ($("#category").value === "all" || categoryOf(item) === $("#category").value);
 }
 function categoryGroups(container, items, renderItem, scope = tab) {
@@ -57,10 +63,10 @@ function categoryGroups(container, items, renderItem, scope = tab) {
     if (!entries.length) continue;
     const group = element("details", undefined, "category-group");
     const key = [scope, $("#search").value.trim(), $("#category").value, $("#state").value, category.id].join("|");
-    group.open = expandedGroups.get(key) ?? Boolean($("#search").value.trim() || $("#category").value !== "all" || $("#state").value !== "all");
+    group.open = expandedGroups.get(key) ?? Boolean(tab === "services" || $("#search").value.trim() || $("#category").value !== "all" || $("#state").value !== "all");
     group.ontoggle = () => { if (group.isConnected) expandedGroups.set(key, group.open); };
     const summary = element("summary");
-    summary.append(element("strong", category.title), element("span", `${entries.length} 项 · ${entries.filter(item => item.enabled).length} 项配置启用`, "hint"));
+    summary.append(element("strong", category.title), element("span", tab === "services" ? `${entries.length} 个服务` : `${entries.length} 项 · ${entries.filter(item => item.enabled).length} 项配置启用`, "hint"));
     const grid = element("div", undefined, "grid");
     for (const item of entries) grid.append(renderItem(item));
     group.append(summary, grid); container.append(group);
@@ -74,6 +80,8 @@ function renderSkills(container) {
     const unavailable = skill.tools.filter(name => { const tool = snapshot.tools.find(item => item.id === name); return !tool?.enabled || !snapshot.providers.find(item => item.id === tool.provider)?.enabled; });
     card.append(top, element("p", skill.description, "description"), element("span", skill.tools.length ? `${skill.tools.length} 个关联 Tool` : "知识与方法 Skill", "badge"));
     if (unavailable.length) card.append(element("p", `部分关联工具未启用：${unavailable.join("、")}`, "hint"));
+    const service = snapshot.services?.find(service => service.capability === skill.id);
+    if (service) card.append(button("查看服务配置", () => showService(service.id), "text-button"));
     return card;
   });
 }
@@ -84,19 +92,22 @@ function renderTools(container) {
     top.append(element("h2", tool.title), switchFor(tool.enabled, `${tool.title} 启用`, { action: "tool.set", id: tool.id }));
     const provider = snapshot.providers.find(item => item.id === tool.provider);
     card.append(top, element("p", tool.description, "description"), element("span", provider?.enabled ? (tool.readOnly ? "只读计算或查询" : "可能产生写入") : "所属连接已关闭", `badge ${provider?.enabled ? "" : "warning"}`));
+    if (provider?.service) card.append(button("查看服务配置", () => showService(provider.service), "text-button"));
     return card;
   });
 }
-async function openCredential(id, container) {
+async function openCredential(id, container, service = false) {
+  if (busy) return;
+  busy = true;
   try {
-    const { url } = await request({ action: "credentials.open", id });
+    const { url } = await request({ action: service ? "service.credentials.open" : "credentials.open", id });
     container.querySelector(".credential-window")?.remove();
     const panel = element("div", undefined, "credential-window");
     const link = element("a", "打开本机凭据窗口", "credential-link"); link.href = url; link.target = "_blank"; link.rel = "noopener noreferrer";
     const label = element("label", "窗口未打开时，复制本机地址到浏览器：");
     const address = element("input"); address.type = "text"; address.readOnly = true; address.value = url;
     address.setAttribute("aria-label", "本机凭据窗口地址"); address.onclick = () => address.select(); label.append(address);
-    panel.append(link, label, element("p", "地址短时有效，请勿发送到聊天中。保存后返回这里刷新状态或测试连接。", "hint"));
+    panel.append(link, label, element("p", "地址 10 分钟内有效。保存后返回这里刷新状态。", "hint"), button("我已保存，刷新状态", () => run({ action: "snapshot" })));
     container.append(panel);
     const open = async () => {
       try {
@@ -111,6 +122,77 @@ async function openCredential(id, container) {
       notice("请在本机凭据窗口保存；若没有弹出，请复制卡片中的地址到浏览器。");
     }
   } catch (error) { notice(error.message, true); }
+  finally { busy = false; }
+}
+function setTab(value) {
+  tab = value;
+  document.querySelectorAll("[data-tab]").forEach(node => { node.classList.toggle("active", node.dataset.tab === tab); node.setAttribute("aria-pressed", String(node.dataset.tab === tab)); });
+  $("#state").value = "all"; $("#category").value = "all"; $("#search").value = "";
+  render();
+}
+function showService(id) { setTab("services"); $("#search").value = id; render(); $("#toolbar").scrollIntoView({ block: "start" }); }
+function serviceState(service) {
+  if (!service.supported) return service.id === "pasqal_cloud" ? "通过 SDK 配置" : "尚未接入 Codex";
+  if (service.configuration === "unavailable") return "凭据库不可用";
+  if (service.configuration === "incomplete") return `待配置 · 缺 ${service.missing.length} 项`;
+  return service.fields.some(field => field.configured) ? "配置已保存 · 认证未验证" : "凭据按需配置";
+}
+function renderServices(container) {
+  const steps = element("ol", undefined, "setup-steps");
+  for (const [title, note] of [["选择服务", "查看它能完成什么"], ["配置账户", "安全填写 Token 或账号"], ["启用工具", "选择允许使用的功能"]]) {
+    const step = element("li"); step.append(element("strong", title), element("span", note)); steps.append(step);
+  }
+  container.append(steps, element("p", "配置保存在本机。保存后不会自动验证账户或提交任务；无需账户的本地功能可以直接启用。", "hint"));
+  const renderService = service => {
+    const card = element("article", undefined, "card service"), top = element("div", undefined, "card-top");
+    top.append(element("h2", service.title));
+    if (service.supported) top.append(switchFor(service.enabled, `${service.title} 服务启用`, { action: "provider.set", id: service.id }));
+    card.append(top, element("p", service.description, "description"), element("span", serviceState(service), `badge ${service.configuration === "configured" ? "" : "warning"}`));
+    if (service.availabilityNote) card.append(element("p", service.availabilityNote, "hint"));
+    const fields = element("dl", undefined, "credential-fields");
+    for (const field of service.fields) {
+      const name = element("dt", field.title);
+      const status = !service.supported ? (field.required ? "需要配置" : "按需提供") : service.configuration === "unavailable" ? "未读取" : field.configured ? "已保存" : field.required || service.missing.includes(field.name) ? "未配置" : "可选";
+      fields.append(name, element("dd", status, field.configured ? "saved" : ""));
+    }
+    card.append(fields);
+    const actions = element("div", undefined, "actions");
+    if (service.supported) actions.append(button(service.fields.some(field => field.configured) ? "管理账户配置" : "配置账户", () => openCredential(service.id, actions, true), "primary"));
+    const docs = element("a", "如何获取凭据 ↗", "credential-link"); docs.href = service.documentationUrl; docs.target = "_blank"; docs.rel = "noopener noreferrer";
+    docs.onclick = async event => { if (!preview) { event.preventDefault(); try { await openHostLink(app, docs.href); } catch { notice(`未能打开文档，请访问：${docs.href}`, true); } } };
+    actions.append(docs); card.append(actions);
+    if (service.supported) {
+      const details = element("details");
+      const key = `service-tools-${service.id}`;
+      details.open = expandedGroups.get(key) ?? false;
+      details.ontoggle = () => { if (details.isConnected) expandedGroups.set(key, details.open); };
+      details.append(element("summary", `选择要启用的工具 · ${service.tools.filter(tool => tool.enabled).length}/${service.tools.length} 已开启`));
+      details.append(element("p", "先打开服务开关，再选择所需功能。依赖环境未准备时，工具会提示安装步骤。", "hint"));
+      for (const tool of service.tools) {
+        const row = element("div", undefined, "tool-row"), info = element("div");
+        info.append(element("strong", tool.title));
+        const explanation = element("details");
+        explanation.append(element("summary", "查看工具说明"), element("p", tool.description, "hint"));
+        info.append(explanation);
+        row.append(info, switchFor(tool.enabled, `${tool.title} 启用`, { action: "tool.set", id: tool.id })); details.append(row);
+      }
+      card.append(details);
+    }
+    const technical = element("details", undefined, "technical-details");
+    technical.append(element("summary", "查看配置变量"));
+    for (const field of service.fields) {
+      const row = element("p", field.title + "：", "hint"); row.append(element("code", field.name)); technical.append(row);
+    }
+    card.append(technical);
+    return card;
+  };
+  for (const [supported, title, note] of [[true, "可在这里配置", "账户配置、服务开关和工具选择都在对应卡片中。"], [false, "需要单独配置", "以下服务使用外部连接或 SDK 认证，本页说明所需配置和当前支持范围。"]]) {
+    const services = (snapshot.services ?? []).filter(service => service.supported === supported && matches(service));
+    if (!services.length) continue;
+    container.append(element("h2", title, "section-title"), element("p", note, "hint"));
+    const grid = element("div", undefined, "grid services-grid");
+    services.forEach(service => grid.append(renderService(service))); container.append(grid);
+  }
 }
 function renderConnections(container) {
   const form = element("form", undefined, "card"); form.append(element("h2", "添加 MCP 连接"));
@@ -119,6 +201,8 @@ function renderConnections(container) {
     const label = element("label", title); const input = element(kind || "input"); input.name = name;
     if (options) for (const [value, title] of options) { const option = element("option", title); option.value = value; input.append(option); }
     if (name === "args") label.className = "wide";
+    if (connectionDraft[name] !== undefined) input.value = connectionDraft[name];
+    input.addEventListener("input", () => connectionDraft[name] = input.value);
     label.append(input); fields.append(label); inputs[name] = input; return input;
   };
   field("id", "连接名称（英文字母、数字或下划线）");
@@ -143,6 +227,7 @@ function renderConnections(container) {
       ...(value.transport === "http" ? { url: value.target } : { command: value.target, args: value.args ? value.args.split("\n").filter(Boolean) : [], ...(value.authentication === "token" ? { tokenEnv: value.tokenEnv } : {}) }) } });
   };
   const add = element("details", undefined, "add-connection"); add.append(element("summary", "添加 MCP 连接"), form);
+  add.open = Object.values(connectionDraft).some(Boolean);
   container.append(add);
   if (snapshot.connections.some(connection => matches(connection))) container.append(element("h2", "我的 MCP 连接", "section-title"));
   if (!snapshot.connections.length && !$("#search").value.trim() && $("#category").value === "all" && $("#state").value === "all") container.append(element("p", "还没有自定义连接。内置量子工具可直接使用。", "hint"));
@@ -150,7 +235,7 @@ function renderConnections(container) {
     const card = element("article", undefined, "card connection"); const top = element("div", undefined, "card-top");
     top.append(element("h2", connection.id), switchFor(connection.enabled, `${connection.id} 启用`, { action: "connection.set", id: connection.id }));
     card.append(top, element("p", connection.url || connection.command, "description"), element("p", connection.status.message, "hint"));
-    if (connection.authentication === "token") card.append(element("span", connection.credential.configured ? "Token 已配置" : "需要 Token", "badge"));
+    if (connection.authentication === "token") card.append(element("span", connection.credential.unavailable ? "凭据库不可用" : connection.credential.configured ? "Token 已配置" : "需要 Token", "badge"));
     const actions = element("div", undefined, "actions");
     actions.append(button("测试连接", () => run({ action: "connection.test", id: connection.id })));
     if (connection.authentication === "token") actions.append(button("配置 Token", () => openCredential(connection.id, actions)));
@@ -167,13 +252,20 @@ function renderConnections(container) {
   if (snapshot.providers.some(provider => matches(provider))) container.append(element("h2", "内置工具服务", "section-title"));
   categoryGroups(container, snapshot.providers, provider => {
     const row = element("article", undefined, "card provider");
-    row.append(element("div", provider.title), switchFor(provider.enabled, `${provider.title} 启用`, { action: "provider.set", id: provider.id }));
+    const info = element("div", provider.title);
+    if (provider.service) info.append(button("配置服务与凭据", () => showService(provider.service), "text-button"));
+    row.append(info, switchFor(provider.enabled, `${provider.title} 启用`, { action: "provider.set", id: provider.id }));
     return row;
   }, "providers");
 }
 function render() {
   if (!snapshot) return;
-  const items = tab === "skills" ? snapshot.skills : tab === "tools" ? snapshot.tools : [...snapshot.connections, ...snapshot.providers];
+  const items = tab === "services" ? snapshot.services ?? [] : tab === "skills" ? snapshot.skills : tab === "tools" ? snapshot.tools : [...snapshot.connections, ...snapshot.providers];
+  const states = [["all", "全部状态"], ["enabled", "配置启用"], ["disabled", "配置关闭"]];
+  if (tab === "services") states.splice(1, 0, ["incomplete", "待配置"], ["configured", "配置已齐"], ["optional", "可选凭据"], ["unavailable", "凭据库不可用"], ["unsupported", "需要单独配置"]);
+  const selectedState = $("#state").value;
+  $("#state").replaceChildren(...states.map(([value, label]) => { const option = element("option", label); option.value = value; return option; }));
+  $("#state").value = states.some(([value]) => value === selectedState) ? selectedState : "all";
   const selected = $("#category").value || "all";
   const all = element("option", "全部用途"); all.value = "all";
   $("#category").replaceChildren(all);
@@ -184,15 +276,25 @@ function render() {
   }
   $("#category").value = selected;
   $("#count").textContent = `显示 ${items.filter(item => matches(item)).length} / ${items.length} 项`;
+  const services = snapshot.services ?? [];
+  $("#overview").replaceChildren(...[
+    ["服务目录", services.length, "all"],
+    ["待配置", services.filter(item => item.configuration === "incomplete").length, "incomplete"],
+    ["配置已齐", services.filter(item => item.configuration === "configured").length, "configured"],
+    ["需单独配置", services.filter(item => !item.supported).length, "unsupported"],
+  ].map(([label, count, state]) => {
+    const node = button("", () => { setTab("services"); $("#state").value = state; render(); }, "summary-card");
+    node.append(element("strong", String(count)), element("span", label)); return node;
+  }));
   const content = $("#content"); content.replaceChildren();
-  if (tab === "skills") renderSkills(content); else if (tab === "tools") renderTools(content); else renderConnections(content);
+  if (tab === "services") renderServices(content); else if (tab === "skills") renderSkills(content); else if (tab === "tools") renderTools(content); else renderConnections(content);
   if (!items.some(item => matches(item))) {
     const empty = element("div", undefined, "empty");
     empty.append(element("p", "没有匹配的能力"), button("清除筛选", () => { $("#search").value = ""; $("#category").value = "all"; $("#state").value = "all"; render(); }));
     content.append(empty);
   }
 }
-document.querySelectorAll("[data-tab]").forEach(node => node.onclick = () => { tab = node.dataset.tab; document.querySelectorAll("[data-tab]").forEach(button => button.classList.toggle("active", button === node)); render(); });
+document.querySelectorAll("[data-tab]").forEach(node => node.onclick = () => setTab(node.dataset.tab));
 $("#search").oninput = render;
 $("#category").onchange = render;
 $("#state").onchange = render;

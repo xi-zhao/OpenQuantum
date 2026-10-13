@@ -3,6 +3,7 @@ import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js"
 import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
 import Ajv from "ajv";
 import { credentialRef, externalToolName } from "./application.mjs";
+import { redactToolResult } from "./redaction.mjs";
 
 const ajv = new Ajv({ strict: false, allErrors: true });
 const MAX_BYTES = 2 * 1024 * 1024;
@@ -81,11 +82,10 @@ export class Connections {
       const latest = (await this.settings.read()).config.connections.find(value => value.id === connection.id);
       if (latest?.instance !== connection.instance || !await this.settings.enabled(name)) throw new Error("Tool 已关闭或连接已替换");
       const result = await client.callTool({ name: tool.name, arguments: args }, undefined, { timeout: 180000, signal });
-      let encoded = JSON.stringify(result);
+      const encoded = JSON.stringify(result);
       if (Buffer.byteLength(encoded) > MAX_BYTES) throw new Error("Tool 输出超过限制");
-      if (token) encoded = encoded.replaceAll(JSON.stringify(token).slice(1,-1), "[redacted]");
       // Remote UI metadata cannot redirect the OpenQuantum settings surface.
-      const { content, structuredContent, isError } = JSON.parse(encoded);
+      const { content, structuredContent, isError } = redactToolResult(result, token ? [token] : []);
       return { content, ...(structuredContent ? { structuredContent } : {}), ...(isError ? { isError } : {}) };
     } catch { throw new Error("MCP Tool 执行失败、已取消或已停用；请检查连接状态"); }
     finally { await this.closeClient(client); }

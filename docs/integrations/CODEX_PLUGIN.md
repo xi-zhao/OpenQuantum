@@ -15,11 +15,13 @@ Codex 插件在外层 Codex 对话中提供量子 Skill 和科学 Tool。OpenQua
 | `distributions/codex-plugin/` | 与 Desktop 一致的产品版本及插件运行依赖锁定 |
 
 构建从能力策略和真实 `tools/list` 生成目录、Skill 和完整输入合同，检查重复名称和策略漂移。
-当前源码、Codex 插件及安装器的产品版本为 **0.8.3**；插件包含 **134 个 Skill、71 个科学 Tool**，设置页新增用途分类、搜索和状态筛选。
+已发布的 **0.8.3** Codex 插件包含 **134 个 Skill、71 个科学 Tool**，设置页提供用途分类、搜索和状态筛选。
+本轮设置页候选源码扩展为 **142 个 Skill、87 个科学 Tool**：原 71 个 Tool 的默认状态不变，
+新增 8 个凭据服务的 16 个 Tool 均默认关闭。候选源码和本机构建不代表已安装或已发布版本。
 其中没有执行 Tool 的 Skill 明确提供方法解释与选型参考，不把知识目录数量等同于可执行计算数量。
 SDK workbench 和领域 Skill 支持通过宿主代码工具编写原生程序，随包携带 85 个 SDK 环境的导航、
 固定依赖、显式 setup 和源码资源；便捷 Tool 的预设案例不再限制原生 API 的使用。
-平台诊断、学习通、真实硬件以及尚未适配的按需 MCP 连接不进入默认插件。
+平台诊断、学习通和尚未适配的按需 MCP 连接不进入插件；新增云端与硬件服务不默认启用。
 完整范围与逐库工程证据见[原生 SDK 接入](FULL_SDK_ACCESS.md)；SDK 环境并非 85 个不同上游库。
 
 `plugin.json` 使用 Agent Plugins 1.0，并保留 `.codex-plugin/plugin.json` 兼容入口。插件身份仍为
@@ -35,6 +37,29 @@ SDK workbench 和领域 Skill 支持通过宿主代码工具编写原生程序�
 宿主拒绝或打开失败时，设置页显示仓库地址，方便用户手动访问。
 
 ## 设置实际影响什么
+
+Desktop 与 Codex 共用 `project-settings-catalog.mjs` 的服务、凭据说明及官方链接，
+并共用 `credential-field.mjs` 的输入表单。Codex 适配层只补充可用范围、字段要求、默认开关和执行注入。
+Desktop 使用 Harness credential store；Codex 使用本机系统凭据库。两个入口不复制或自动迁移彼此的密钥。
+
+设置首页按“选择服务 → 配置账户 → 启用工具”组织。服务卡片先显示用途、缺失字段和下一步操作，
+环境变量名在“查看配置变量”中展开；搜索仍能按变量名定位。可直接配置的 8 个服务集中展示：
+Superstaq、Classiq、Q-CTRL、QCArchive、AQT、OQC Cloud、Quantum Inspire 和 FieldQKit。
+从同一卡片可以管理账户配置、服务开关和逐项工具开关。
+
+另列 IBM Runtime、IBM Transpiler、Quantum Hardware、QPanda3 Runtime 和 Pasqal：
+前四项尚未适配当前插件的内置执行入口，页面展示认证要求与官方说明；Pasqal 已有 Skill，
+但 SDK 从宿主进程环境读取认证，不读取本页系统凭据库。页面不提供无效的保存入口。
+
+- **凭据状态**：区分未配置、已保存但认证未验证、可选凭据、凭据库不可用和需单独配置。
+  不因目录握手成功就声称账户认证成功或 SDK 已准备。无需账户的本地准备、模拟操作不读取凭据库。
+- **多字段配置**：QCArchive 地址必填，公开服务可匿名；私有服务用户名和密码需成对填写。
+  OQC 地址可留空使用默认官方地址，填写时只接受官方域名与 HTTPS 默认端口。
+  每个服务的值作为一个记录保存在系统凭据库，空白输入保留旧值；勾选“移除此项”可单独清除。
+  页面只返回字段是否已保存，值不回显。移除前须关闭相应服务；保存后用“我已保存，刷新状态”读回。
+- **执行注入**：只向对应服务注入受审计环境变量；构建和目录握手不携带凭据。
+  新服务与其工具分别默认关闭，旧设置升级不会自动启用云功能。开启本地功能不要求填写远程 Token。
+  保存与启用不调用厂商 API，实际远程操作仍按工具副作用和任务授权执行。
 
 - **Skills**：使用原生 `skills.config` 的 `name="openquantum:<id>"` selector，仅变更本插件的 Skill。
   本机 Codex `0.162.0-alpha.17.2` 已验证此 selector 和升级后保留。更旧宿主应先运行宿主检查。
@@ -97,8 +122,9 @@ npm run plugin:install
 构建会拒绝不一致的版本。同步发行时，`vX.Y.Z` 和 `codex-vX.Y.Z` 指向同一提交。
 0.8.3 同时提供原版 DSH Desktop 的 OpenQuantum 能力包；两个渠道固定到同一提交。GitHub `latest` 与 Desktop 更新清单属于 `v0.8.3`，Codex 插件使用 `codex-v0.8.3`，不附带 Desktop 更新清单。完整规则见[发布流程](../UPDATES.md#publishing-a-stable-update)。
 
-开发预览使用 `npm run plugin:preview`。做交互测试时应设置独立 `CODEX_HOME` 和
-`OPENQUANTUM_PLUGIN_SETTINGS_HOME`，避免修改真实 Skill 开关。预览只监听 `127.0.0.1`，写请求需要访问标识与同源校验。
+开发预览使用 `npm run plugin:preview`。做交互测试时应设置独立 `CODEX_HOME`、
+`OPENQUANTUM_PLUGIN_SETTINGS_HOME` 和随机的 `OPENQUANTUM_PLUGIN_CREDENTIAL_SERVICE`，隔离用户配置与系统凭据库命名空间。
+`plugin:probe` 自动隔离这三项。预览只监听 `127.0.0.1`，写请求需要访问标识与同源校验。
 
 ## 当前限制与恢复
 
@@ -112,6 +138,7 @@ npm run plugin:install
 
 HTTP OAuth、分页 MCP 目录、跨电脑密钥同步不在此版本范围。用户需要逐项启用自定义工具。
 本地浏览器预览、协议握手、原生 CLI 安装检查、聊天旁 MCP 设置标签页和左侧菜单的全局入口
-是不同验收层级。必须从左侧“…”→“OpenQuantum 设置”进入，确认三个标签及关键配置操作；
-聊天旁标签页显示新版不能证明全局入口已经更新。
-[本轮验收记录](../releases/2026-10-11-plugin-settings.md)分别记录这些结果。
+是不同验收层级。安装候选版后需从左侧“…”→“OpenQuantum 设置”进入，确认四个标签及关键配置操作；
+聊天旁标签页显示新版不能证明全局入口已经更新。本轮候选增加“服务配置”标签，验收需包含该页及三个原有标签。
+[历史验收记录](../releases/2026-10-11-plugin-settings.md)记录此前的已安装入口结果；
+[本轮服务设置验收](../releases/2026-10-13-codex-service-settings.md)记录候选版的本地验证范围。

@@ -5,6 +5,7 @@ import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { runInNewContext } from "node:vm";
+import { capabilityClientSource } from "../scripts/lib/build-capability-client.mjs";
 import { parse } from "yaml";
 import { CAPABILITY_CATEGORIES, CAPABILITY_CATEGORY_IDS, capabilityCategory } from "../src/settings/capability-categories.mjs";
 import { readCapabilityCatalog } from "../src/settings/server/capability-catalog.mjs";
@@ -76,7 +77,7 @@ test("Desktop category search and status filters preserve all entries and never 
     },
     useCallback: callback => callback, useEffect() {},
   };
-  runInNewContext(await readFile(path.join(root, "runtime/openquantum/web-capabilities/client.js"), "utf8"), {
+  runInNewContext(await capabilityClientSource(root), {
     __ModuleLoader__: { load: ({ factory }) => { plugin = factory(() => react); } },
     fetch: () => { assert.fail("Filtering must not request or mutate settings"); },
   });

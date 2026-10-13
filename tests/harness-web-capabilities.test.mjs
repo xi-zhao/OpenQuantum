@@ -2,6 +2,8 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { runInNewContext } from "node:vm";
+import { fileURLToPath } from "node:url";
+import { capabilityClientSource } from "../scripts/lib/build-capability-client.mjs";
 import { dictionariesFor } from "../runtime/openquantum/web-locales/catalog.mjs";
 import { DesktopPresetConflictError } from "../src/settings/server/desktop-preset.mjs";
 
@@ -335,7 +337,7 @@ test("client plugin contributes the native settings section and uses Harness cre
 });
 
 test("capability settings bind the current Remote credential contract without the removed connection.api", async () => {
-  const source = await readFile(new URL("../runtime/openquantum/web-capabilities/client.js", import.meta.url), "utf8");
+  const source = await capabilityClientSource(fileURLToPath(new URL("..", import.meta.url)));
   let plugin;
   runInNewContext(source, {
     __ModuleLoader__: { load: ({ factory }) => { plugin = factory(() => ({ createElement() {} })); } },
@@ -368,7 +370,7 @@ test("capability settings bind the current Remote credential contract without th
 });
 
 test("MCP settings form saves a user timeout and reflects the persisted value", async () => {
-  const source = await readFile(new URL("../runtime/openquantum/web-capabilities/client.js", import.meta.url), "utf8");
+  const source = await capabilityClientSource(fileURLToPath(new URL("..", import.meta.url)));
   const server = { serverName: "tenpy_local", enabled: true, toolCallTimeoutMs: 195000, reconnect: { enabled: true }, requiredCredentialRefs: [] };
   const snapshot = { mcpServers: [server], mcpCredentials: [], skills: [], mcpRevision: "before" };
   const state = [snapshot, null, {}, "mcp"];
@@ -434,7 +436,7 @@ test("MCP settings form saves a user timeout and reflects the persisted value", 
 });
 
 test("component status distinguishes first setup from errors and keeps diagnostics available", async () => {
-  const source = await readFile(new URL("../runtime/openquantum/web-capabilities/client.js", import.meta.url), "utf8");
+  const source = await capabilityClientSource(fileURLToPath(new URL("..", import.meta.url)));
   const dictionary = dictionariesFor("zh")["settings.openquantumCapabilities"];
   let plugin, render, snapshot, cursor = 0;
   const react = {

@@ -2,6 +2,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { randomUUID } from "node:crypto";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 import { OPENER, settingsResourceUri } from "../runtime/chatgpt/server.mjs";
@@ -22,13 +23,18 @@ export async function probeTransport(transport) {
     const resource = await client.readResource({ uri: opener._meta.ui.resourceUri });
     const html = resource.contents[0]?.text;
     if (!html || settingsResourceUri(html) !== opener._meta.ui.resourceUri ||
-        !["skills", "connections", "tools"].every(tab => html.includes(`data-tab="${tab}"`))) throw new Error("Global entrypoint does not resolve to the current settings document");
+        !["services", "skills", "connections", "tools"].every(tab => html.includes(`data-tab="${tab}"`))) throw new Error("Global entrypoint does not resolve to the current settings document");
+    if (!Array.isArray(settings.services) || !Array.isArray(settings.tools)) throw new Error("Missing service configuration inventory");
+    const managed = settings.services.filter(service => service.supported);
+    if (managed.some(service => service.enabled || service.tools.some(tool => tool.enabled)) ||
+        managed.some(service => service.tools.some(tool => tools.some(actual => actual.name === tool.id)))) throw new Error("New credentialed services must be opt-in");
     const reference = await client.callTool({ name: "quantum_practices", arguments: { action: "list", limit: 1 } });
     if (reference.isError) throw new Error("Reference tool failed");
     const disabled = await client.callTool({ name: "openquantum_settings", arguments: { action: "tool.set", id: "quantum_practices", enabled: false, revision: settings.revision } });
     if (disabled.isError || (await client.listTools()).tools.some(tool => tool.name === "quantum_practices")) throw new Error("Tool disable did not change inventory");
     if (!(await client.callTool({ name: "quantum_practices", arguments: { action: "list" } })).isError) throw new Error("Disabled Tool accepted a cached call");
-    return { version: client.getServerVersion().version, tools: tools.length - 2, skills: settings.skills.length,
+    return { version: client.getServerVersion().version, tools: settings.tools.length, enabledTools: tools.length - 2, skills: settings.skills.length,
+      services: settings.services.length, configurableServices: managed.length, credentialedServicesDefaultOff: true,
       globalEntrypoint: opener.name, settingsResourceUri: opener._meta.ui.resourceUri,
       settingsResource: true, referenceExecution: true, disabledToolRejected: true, hostPlacementVerified: false };
   } finally { await client.close(); }
@@ -46,11 +52,12 @@ export async function probePlugin(directory) {
       args: server.args.map(expand), cwd: expand(server.cwd), stderr: "pipe",
       env: { ...Object.fromEntries(Object.entries(server.env ?? {}).map(([key, value]) => [key, expand(value)])),
         PATH: `${path.dirname(process.execPath)}${path.delimiter}${process.env.PATH ?? ""}`, HOME: os.homedir(),
-        CODEX_HOME: path.join(temporary, "codex"), OPENQUANTUM_PLUGIN_SETTINGS_HOME: path.join(temporary, "settings") },
+        CODEX_HOME: path.join(temporary, "codex"), OPENQUANTUM_PLUGIN_SETTINGS_HOME: path.join(temporary, "settings"),
+        OPENQUANTUM_PLUGIN_CREDENTIAL_SERVICE: `org.openquantum.test.${randomUUID()}` },
     }));
     const release = JSON.parse(await fs.readFile(path.join(directory, "release.json"), "utf8"));
     if (result.version !== release.version || result.skills !== release.skills || result.tools !== release.tools) throw new Error("Release inventory does not match the packaged server");
-    return result;
+    return { ...result, isolatedCredentials: true };
   } finally { await fs.rm(temporary, { recursive: true, force: true }); }
 }
 

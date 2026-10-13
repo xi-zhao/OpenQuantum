@@ -1,3 +1,5 @@
+import { credentialField, credentialFieldCss } from "../../../src/settings/credential-field.mjs";
+
 globalThis.__ModuleLoader__.load({
   id: "@openquantum/harness-web-capabilities",
   factory: (require) => {
@@ -6,6 +8,7 @@ globalThis.__ModuleLoader__.load({
     const h = React.createElement;
 
     const css = `
+      ${credentialFieldCss}
       .oq-cap-root{width:100%;max-width:820px;color:var(--dsw-alias-label-primary);padding-bottom:28px}
       .oq-cap-card h3,.oq-cap-group h3{margin:0}
       .oq-cap-tabs{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}.oq-cap-tab{border:0;border-radius:18px;background:var(--dsw-alias-bg-module-platform);color:var(--dsw-alias-label-secondary);cursor:pointer;font:inherit;font-size:13px;padding:7px 13px}.oq-cap-tab[aria-selected=true]{background:var(--dsw-alias-label-primary);color:var(--dsw-alias-bg-layer-1)}
@@ -262,16 +265,18 @@ globalThis.__ModuleLoader__.load({
           h("p", { className: "oq-cap-meta" }, t("用于：{p0}", { p0: credential.serverNames.join(", ") || "自定义 MCP" })),
           credential.documentationUrl ? h("a", { className: "oq-cap-link", href: credential.documentationUrl, target: "_blank", rel: "noreferrer" }, t("获取凭据")) : null,
         ),
-        h("div", { className: "oq-cap-field" },
-          h("label", { htmlFor: `credential-${credential.ref}` }, t("输入新值")),
-          h("input", { id: `credential-${credential.ref}`, className: "oq-cap-input", type: "password", autoComplete: "new-password", value, disabled: locked, placeholder: info?.configured ? t("输入新值以替换") : t("粘贴 API Key / Token"), onChange: (event) => setValue(event.currentTarget.value) }),
-          h("p", { className: "oq-cap-secret-help" }, t("密钥由 Harness 凭据库保存；已有值不会回显、不会写入项目配置。")),
-          requiredByEnabled ? h("p", { className: "oq-cap-secret-help" }, t("此凭据正被配置为启用的 MCP Server 必需使用；请先关闭对应连接配置再移除。")) : null,
-          h("div", { className: "oq-cap-actions" },
-            h("button", { type: "button", className: "oq-cap-button", "data-primary": "true", disabled: locked || value.trim() === "", onClick: save }, t("保存")),
-            info?.configured ? h("button", { type: "button", className: "oq-cap-button", "data-danger": "true", disabled: locked || requiredByEnabled, onClick: remove }, t("移除")) : null,
-          ),
-        ),
+        credentialField(h, {
+          id: `credential-${credential.ref}`, title: t("输入新值"), configured: info?.configured, value, disabled: locked,
+          onChange: event => setValue(event.currentTarget.value), t,
+          help: t("密钥由 Harness 凭据库保存；已有值不会回显、不会写入项目配置。"),
+          actions: [
+            requiredByEnabled ? h("p", { className: "oq-cap-secret-help" }, t("此凭据正被配置为启用的 MCP Server 必需使用；请先关闭对应连接配置再移除。")) : null,
+            h("div", { className: "oq-cap-actions" },
+              h("button", { type: "button", className: "oq-cap-button", "data-primary": "true", disabled: locked || value.trim() === "", onClick: save }, t("保存")),
+              info?.configured ? h("button", { type: "button", className: "oq-cap-button", "data-danger": "true", disabled: locked || requiredByEnabled, onClick: remove }, t("移除")) : null,
+            ),
+          ],
+        }),
       );
     }
 
