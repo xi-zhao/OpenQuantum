@@ -8,7 +8,9 @@
 
 **اطرح الأسئلة، وشغّل الحسابات، وشارك في بناء قدرات جديدة.**
 
-![OpenQuantum Desktop](../images/openquantum-desktop-20260919.jpg)
+**يتوفر OpenQuantum 0.8.3:** [Desktop](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.3) · [إضافة Codex](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.3). يستخدم الاثنان رقم إصدار المنتج نفسه. نُظّمت Tools وMCP وSkills في ثماني فئات حسب الاستخدام، مع البحث والتصفية حسب الحالة. تستخدم اختصارات Desktop أيقونة OpenQuantum.
+
+![OpenQuantum Desktop](../images/openquantum-desktop-20261013.jpg)
 
 ## القدرات المتاحة
 
@@ -42,9 +44,13 @@
 
 ### مثبّت تطبيق سطح المكتب
 
-ستستخدم التوزيعات القادمة النسخة الأصلية من [anywhere-labs DSH Desktop 2.0.7](https://github.com/anywhere-labs/dsh-desktop/releases/tag/v2.0.7) مع أرشيف قدرات OpenQuantum. يبقى Harness عند `0.1.5-rc.1`. يتضمن الأرشيف Node.js وuv؛ شغّل `install.command` على Mac أو `install.cmd` على Windows. تبقى الهوية ومكونات الكم وQuantum Learning ومدخل التحديث، مع أقل تغييرات ممكنة في الواجهة الأصلية. راجع [دليل التثبيت والترقية](../DESKTOP_INSTALLERS.md).
+يستخدم OpenQuantum 0.8.3 النسخة الأصلية من [anywhere-labs DSH Desktop 2.0.7](https://github.com/anywhere-labs/dsh-desktop/releases/tag/v2.0.7) مع أرشيف قدرات OpenQuantum. يبقى Harness عند `0.1.5-rc.1`. يتضمن الأرشيف Node.js وuv؛ شغّل `install.command` على Mac أو `install.cmd` على Windows. تبقى الهوية ومكونات الكم وQuantum Learning ومدخل التحديث، مع أقل تغييرات ممكنة في الواجهة الأصلية. راجع [دليل التثبيت والترقية](../DESKTOP_INSTALLERS.md).
 
-ملفات DMG/EXE المنشورة للإصدار v0.8.1 تستخدم العميل الخاص السابق. تحقق من مرفقات كل Release لتوفر الأرشيفات الجديدة. يشترك OpenQuantum وإضافة Codex في رقم إصدار المنتج، بينما يحتفظ Desktop برقم إصداره الأصلي. تُحفظ Skills ومسارات النماذج وإعدادات MCP المعدّلة. تظل بيئات الحساب وQuantum Learning بحاجة إلى خطوات الإعداد الموثقة.
+ثبّت أولًا عميل DSH Desktop الأصلي. نزّل أرشيف Mac Apple Silicon أو Mac Intel أو Windows x64 من [الإصدار 0.8.3](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.3)، وتحقق منه باستخدام `SHA256SUMS` قبل فك الضغط. ينشئ المثبّت `OpenQuantum.app` على Mac أو `OpenQuantum.lnk` على Windows بأيقونة OpenQuantum. يحتفظ العميل الأصلي باسمه ورقم إصداره. تحافظ التحديثات على Skills ومسارات النماذج وإعدادات MCP الحالية. تحتاج بيئات الحساب وQuantum Learning إلى خطوات الإعداد الموثقة.
+
+### Codex
+
+نزّل [حزمة التثبيت الكاملة 0.8.3](https://github.com/xi-zhao/OpenQuantum/releases/download/codex-v0.8.3/openquantum-0.8.3-codex-install.zip) واتبع [دليل التثبيت](../integrations/CODEX_AGENT_INSTALL.md). توفر الإضافة 134 Skill و71 Tool علمية ضمن محادثات Codex. يلزم إصدار متوافق من Codex وNode.js 24 أو أحدث وnpm؛ جهّز الاعتماديات العلمية حسب الحاجة.
 
 ### التشغيل من المصدر
 
@@ -63,7 +69,7 @@ npm run dev
 
 ### إعداد النموذج
 
-من الإعدادات → النماذج، أدخل عنوان مزود يدعم OpenAI-compatible Chat Completions واسم النموذج ومفتاح API، ثم اختر إعداد الوكيل OpenQuantum. يجب أن يدعم النموذج Tool Calling لتنفيذ الأدوات الكمومية. العناوين الافتراضية التي تنتهي بـ .invalid هي أمثلة؛ استبدلها بعناوين خدمة فعلية. بيانات اعتماد النموذج منفصلة عن بيانات اعتماد السحابة الكمومية.
+من الإعدادات → النماذج، أدخل عنوان مزود يدعم OpenAI-compatible Chat Completions واسم النموذج ومفتاح API، ثم اختر إعداد الوكيل OpenQuantum. يجب أن يدعم النموذج Tool Calling لتنفيذ الأدوات الكمومية. تكون قائمة النماذج فارغة عند تثبيت Desktop لأول مرة. أضف الخدمة التي تريد استخدامها بنفسك. بيانات اعتماد النموذج منفصلة عن بيانات اعتماد السحابة الكمومية.
 
 يمكن تشغيل المثال المرجعي المحلي لهاملتوني ثابت من كيوبتين دون مفتاح نموذج.
 

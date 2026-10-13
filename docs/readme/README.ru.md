@@ -8,7 +8,9 @@ OpenQuantum объединяет квантовые инструменты, сп
 
 **Задавайте вопросы, запускайте расчёты и вместе создавайте новые возможности.**
 
-![OpenQuantum Desktop](../images/openquantum-desktop-20260919.jpg)
+**Доступен OpenQuantum 0.8.3:** [Desktop](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.3) · [Плагин Codex](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.3). Оба выпуска используют одну версию продукта. Tools, MCP и Skills распределены по восьми категориям назначения; добавлены поиск и фильтры состояния. Ярлыки Desktop используют значок OpenQuantum.
+
+![OpenQuantum Desktop](../images/openquantum-desktop-20261013.jpg)
 
 ## Возможности
 
@@ -42,9 +44,13 @@ v0.6.0 объединяет **52 пакета возможностей SDK** и�
 
 ### Установщик настольного приложения
 
-Следующие выпуски используют оригинальный [anywhere-labs DSH Desktop 2.0.7](https://github.com/anywhere-labs/dsh-desktop/releases/tag/v2.0.7) и отдельный архив возможностей OpenQuantum. Harness остаётся на `0.1.5-rc.1`. В архив входят Node.js и uv; запустите `install.command` на Mac или `install.cmd` на Windows. Бренд, квантовые компоненты, Quantum Learning и обновления сохраняются с минимальными изменениями исходного интерфейса. См. [установку и обновление](../DESKTOP_INSTALLERS.md).
+OpenQuantum 0.8.3 использует оригинальный [anywhere-labs DSH Desktop 2.0.7](https://github.com/anywhere-labs/dsh-desktop/releases/tag/v2.0.7) и отдельный архив возможностей OpenQuantum. Harness остаётся на `0.1.5-rc.1`. В архив входят Node.js и uv; запустите `install.command` на Mac или `install.cmd` на Windows. Бренд, квантовые компоненты, Quantum Learning и обновления сохраняются с минимальными изменениями исходного интерфейса. См. [установку и обновление](../DESKTOP_INSTALLERS.md).
 
-Опубликованные DMG/EXE v0.8.1 используют прежний собственный клиент. Новые архивы доступны только как соответствующие вложения Release. OpenQuantum и плагин Codex имеют общую версию продукта; Desktop сохраняет версию upstream. Изменённые Skills, маршруты моделей и настройки MCP сохраняются. Подготовка вычислительных сред и Quantum Learning по-прежнему обязательна.
+Сначала установите оригинальный DSH Desktop. Скачайте архив для Mac Apple Silicon, Mac Intel или Windows x64 из [Release 0.8.3](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.3) и проверьте его по `SHA256SUMS` перед распаковкой. Установщик создаёт `OpenQuantum.app` на Mac или `OpenQuantum.lnk` на Windows со значком OpenQuantum. Оригинальный клиент сохраняет своё название и версию. Обновления сохраняют существующие Skills, маршруты моделей и настройки MCP. Вычислительные среды и Quantum Learning требуют подготовки по документации.
+
+### Codex
+
+Скачайте [полный установочный пакет 0.8.3](https://github.com/xi-zhao/OpenQuantum/releases/download/codex-v0.8.3/openquantum-0.8.3-codex-install.zip) и следуйте [инструкции](../integrations/CODEX_AGENT_INSTALL.md). Плагин предоставляет 134 Skills и 71 научный Tool в диалогах Codex. Нужны совместимый Codex, Node.js 24 или новее и npm; научные зависимости устанавливаются по мере необходимости.
 
 ### Запуск из исходного кода
 
@@ -63,7 +69,7 @@ npm run dev
 
 ### Настройка модели
 
-В разделе Настройки → Модели укажите URL провайдера OpenAI-compatible Chat Completions, название модели и ключ API. Выберите Agent Preset OpenQuantum. Для запуска инструментов модель должна поддерживать Tool Calling. Адреса .invalid в стандартных маршрутах — заглушки: замените их реальным сервисом. Учётные данные модели и квантового облака настраиваются отдельно.
+В разделе Настройки → Модели укажите URL провайдера OpenAI-compatible Chat Completions, название модели и ключ API. Выберите Agent Preset OpenQuantum. Для запуска инструментов модель должна поддерживать Tool Calling. После новой установки Desktop список моделей пуст. Добавьте нужный сервис самостоятельно. Учётные данные модели и квантового облака настраиваются отдельно.
 
 Локальный эталонный пример с фиксированным двухкубитным гамильтонианом работает без ключа модели.
 

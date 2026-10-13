@@ -8,7 +8,9 @@ OpenQuantum は、量子計算ツール、専門的な手法、アプリケー�
 
 **問いを立て、計算を動かし、新たな能力を共につくる。**
 
-![OpenQuantum Desktop](../images/openquantum-desktop-20260919.jpg)
+**OpenQuantum 0.8.3 公開：**[Desktop](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.3) · [Codex プラグイン](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.3)。両者の製品バージョンを統一しました。Tools・MCP・Skills を用途別の 8 分類で整理し、検索と状態フィルターを追加しました。Desktop の起動アイコンも OpenQuantum に統一しました。
+
+![OpenQuantum Desktop](../images/openquantum-desktop-20261013.jpg)
 
 ## できること
 
@@ -42,9 +44,13 @@ Pauli Hamiltonian の Trotter / qDrift シミュレーションに加え、[qBra
 
 ### デスクトップ版のインストール
 
-今後の配布では、原版 [anywhere-labs DSH Desktop 2.0.7](https://github.com/anywhere-labs/dsh-desktop/releases/tag/v2.0.7) と OpenQuantum 能力アーカイブを使用します。Harness は `0.1.5-rc.1` のままです。アーカイブは Node.js と uv を同梱し、Mac は `install.command`、Windows は `install.cmd` で導入します。ブランド、量子コンポーネント、Quantum Learning、更新入口を保ち、原版 UI の変更を最小限にします。[インストールと更新手順](../DESKTOP_INSTALLERS.md)を確認してください。
+OpenQuantum 0.8.3 では、原版 [anywhere-labs DSH Desktop 2.0.7](https://github.com/anywhere-labs/dsh-desktop/releases/tag/v2.0.7) と OpenQuantum 能力アーカイブを使用します。Harness は `0.1.5-rc.1` のままです。アーカイブは Node.js と uv を同梱し、Mac は `install.command`、Windows は `install.cmd` で導入します。ブランド、量子コンポーネント、Quantum Learning、更新入口を保ち、原版 UI の変更を最小限にします。[インストールと更新手順](../DESKTOP_INSTALLERS.md)を確認してください。
 
-公開済み v0.8.1 DMG/EXE は旧独自クライアントです。新しいアーカイブの有無は各 Release の添付ファイルで確認してください。OpenQuantum と Codex プラグインは製品バージョンを共有し、Desktop は上流のバージョンを維持します。変更済みの Skill、モデル経路、MCP 設定を保持します。計算環境と Quantum Learning は引き続き所定の準備が必要です。
+先に原版 DSH Desktop をインストールしてください。[0.8.3 Release](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.3) から Mac Apple Silicon、Mac Intel、Windows x64 用のアーカイブを選び、`SHA256SUMS` を確認してから展開してください。インストーラーは OpenQuantum アイコン付きの `OpenQuantum.app`（Mac）または `OpenQuantum.lnk`（Windows）を作成します。原版 Desktop の名前とバージョンは維持します。更新時は既存の Skill、モデル設定、MCP 設定を保持します。計算環境と Quantum Learning は所定の準備が必要です。
+
+### Codex
+
+[0.8.3 完全インストールパッケージ](https://github.com/xi-zhao/OpenQuantum/releases/download/codex-v0.8.3/openquantum-0.8.3-codex-install.zip)を取得し、[インストール手順](../integrations/CODEX_AGENT_INSTALL.md)に従ってください。134 個の Skill と 71 個の科学 Tool を Codex の会話で利用できます。対応する Codex、Node.js 24 以降、npm が必要です。科学計算の依存関係は必要に応じて準備します。
 
 ### ソースから起動
 
@@ -63,7 +69,7 @@ npm run dev
 
 ### モデルの設定
 
-「設定 → モデル」で OpenAI-compatible Chat Completions 対応プロバイダーの URL、モデル名、API キーを入力し、OpenQuantum の Agent Preset を選択します。量子ツールの実行には Tool Calling 対応モデルが必要です。標準ルートの .invalid アドレスはプレースホルダーなので、実際のサービスに変更してください。モデルの認証情報と量子クラウドの認証情報は別です。
+「設定 → モデル」で OpenAI-compatible Chat Completions 対応プロバイダーの URL、モデル名、API キーを入力し、OpenQuantum の Agent Preset を選択します。量子ツールの実行には Tool Calling 対応モデルが必要です。Desktop の新規インストール時はモデル一覧が空です。利用するサービスを自分で追加してください。モデルの認証情報と量子クラウドの認証情報は別です。
 
 モデルキーがなくても、固定された二量子ビット Hamiltonian のローカル参照例を実行できます。
 
