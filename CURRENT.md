@@ -2,12 +2,12 @@
 
 量子依赖核验日期：2026-09-22；平台升级记录日期：2026-09-10；原模型验收交接记录日期：2026-09-05。此页只记录工作交接；架构以[文档总入口](docs/README.md)为准，执行事实以 Harness Session event log 为准，科学状态以 Acceptance Report 为准。
 
-## Codex 0.8.2 与分支保护（2026-10-13）
+## Codex 0.8.2 与分支保护（2026-10-13，发布准备）
 
 - `main` 已启用 GitHub 分支保护：必须经 PR、当前 7 项 GitHub Actions 检查必过、包含最新目标基线、管理员同样受限，禁止强推和删除。不额外要求固定数量的人工批准。
 - [PR #14](https://github.com/xi-zhao/OpenQuantum/pull/14) 已在独立审查与 7/7 检查通过后合并为 `3935b45a`，移除能力包工作流的路径过滤，确保文档 PR 也能产生全部必过检查。
 - 0.8.2 本轮只发布 Codex 插件，包含 134 个 Skill、71 个科学 Tool；[版本说明](docs/releases/codex-v0.8.2.md)列出安装与验证范围，最终发布提交、附件及验收以 Release 记录为准。
-- 旧 Desktop/源码 Release 页面及附件按本轮请求下架，保留其 Git 标签、源码历史和旧 Codex Release。原版 DSH Desktop 能力包仍保留源码与 CI 构建路径，本轮不发布该渠道。
+- 旧 Desktop/源码 Release 页面及附件将在本轮发布时按请求下架，保留其 Git 标签、源码历史和旧 Codex Release。原版 DSH Desktop 能力包仍保留源码与 CI 构建路径，本轮不发布该渠道。
 
 ## Pasqal 实验工作流与 Cloud SDK（2026-10-13，已合并 main）
 

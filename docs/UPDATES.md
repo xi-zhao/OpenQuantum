@@ -30,7 +30,7 @@ OpenQuantum content updates and original DSH Desktop updates are separate. OpenQ
 The OpenQuantum service only offers release notes and upgrade instructions; it does not download, install or restart the client.
 
 For an installed capability package, quit the Host, back up the OpenQuantum data directory, verify and extract the new capability archive, then run its installer. Keep the original DSH Desktop on the compatible version named in the release notes. See [installation and migration](DESKTOP_INSTALLERS.md).
-The old OpenQuantum DMG/EXE releases are withdrawn as part of the 0.8.2 release cleanup. Their Git tags and source history remain available.
+The old OpenQuantum DMG/EXE releases will be withdrawn as part of the 0.8.2 release cleanup. Their Git tags and source history remain available.
 
 For a source installation:
 
@@ -58,7 +58,7 @@ releases point both tags at the same reviewed commit. A product version does not
 Version 0.8.2 publishes only `codex-v0.8.2` and makes that Release the GitHub latest. It carries no
 `openquantum-update.json`, so Desktop/Web update discovery does not advertise a Codex bundle as a
 capability-package update. The old Desktop/source Release pages `v0.5.0`, `v0.5.1`, `v0.6.0`,
-`v0.7.0` and `v0.8.1` and their attachments are withdrawn; Git tags, source history and previous
+`v0.7.0` and `v0.8.1` and their attachments will be withdrawn; Git tags, source history and previous
 `codex-v*` releases are retained. The steps below apply when both channels are published.
 The shared release command and packaging guards currently accept plain stable `X.Y.Z` only,
 without prerelease suffixes or build metadata, matching the supported synchronized release pipeline.

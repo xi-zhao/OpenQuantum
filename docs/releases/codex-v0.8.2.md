@@ -22,7 +22,7 @@ npm run plugin:install
 ## 发行范围与旧版本清理
 
 本版仅发布 Codex 插件，`codex-v0.8.2` 作为 GitHub `latest`，不附带 Desktop 更新清单或安装包。
-旧 Desktop/源码 Release `v0.5.0`、`v0.5.1`、`v0.6.0`、`v0.7.0`、`v0.8.1` 的页面和附件下架；Git 标签、源码历史和旧 `codex-v*` Release 保留。原版 DSH Desktop 能力包的源码与 CI 构建路径继续保留。
+旧 Desktop/源码 Release `v0.5.0`、`v0.5.1`、`v0.6.0`、`v0.7.0`、`v0.8.1` 的页面和附件将在本轮发布时下架；Git 标签、源码历史和旧 `codex-v*` Release 保留。原版 DSH Desktop 能力包的源码与 CI 构建路径继续保留。
 
 ## 验证与范围
 
