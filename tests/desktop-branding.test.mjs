@@ -1,12 +1,12 @@
 import assert from "node:assert/strict";
 import { EventEmitter } from "node:events";
-import { readFile, mkdtemp, realpath, rm } from "node:fs/promises";
+import { readFile, mkdtemp, realpath, rm, symlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 import { installDesktopIcon } from "../packages/openquantum-web-branding/desktop.mjs";
-import { pngIcon, macIcon, installDesktopBranding } from "../scripts/lib/desktop-branding.mjs";
+import { pngIcon, macIcon, installDesktopBranding, writeDesktopLauncher } from "../scripts/lib/desktop-branding.mjs";
 
 function fixture(platform) {
   const original = { isEmpty: () => false, identity: "original" };
@@ -93,4 +93,33 @@ test("Mac launcher uses the brand icon and bundled runtime across repeated insta
   assert.deepEqual(icon, macIcon(png));
   assert.equal(icon.subarray(8, 12).toString(), "ic09");
   assert.deepEqual(icon.subarray(16), png);
+});
+
+test("launcher upgrades reject modified files before any write and retain recoverable install ownership", async t => {
+  const dataRoot = await mkdtemp(path.join(await realpath(tmpdir()), "oq-owned-launcher-"));
+  t.after(() => rm(dataRoot, { recursive: true, force: true }));
+  const install = version => writeDesktopLauncher({ dataRoot, launcher: path.join(dataRoot, "OpenQuantum.lnk"), files: {
+    "OpenQuantum.ico": { content: `icon-${version}` }, "OpenQuantum.lnk": { content: `link-${version}` },
+  } });
+  await writeFile(path.join(dataRoot, "OpenQuantum.lnk"), "user shortcut");
+  await assert.rejects(install(1), /Preserve the existing/);
+  await assert.rejects(readFile(path.join(dataRoot, "OpenQuantum.ico")), { code: "ENOENT" });
+  await rm(path.join(dataRoot, "OpenQuantum.lnk"));
+  await install(1);
+  await install(2);
+  assert.equal(await readFile(path.join(dataRoot, "OpenQuantum.lnk"), "utf8"), "link-2");
+  await writeFile(path.join(dataRoot, "OpenQuantum.lnk"), "custom edited shortcut");
+  await assert.rejects(install(3), /Preserve the existing/);
+  assert.equal(await readFile(path.join(dataRoot, "OpenQuantum.ico"), "utf8"), "icon-2");
+});
+
+test("launcher receipt refuses symlinks before modifying other files", { skip: process.platform === "win32" }, async t => {
+  const dataRoot = await mkdtemp(path.join(await realpath(tmpdir()), "oq-linked-launcher-"));
+  t.after(() => rm(dataRoot, { recursive: true, force: true }));
+  const other = path.join(dataRoot, "user-file");
+  await writeFile(other, "user data");
+  await symlink(other, path.join(dataRoot, "desktop-branding.json"));
+  await assert.rejects(writeDesktopLauncher({ dataRoot, launcher: "test", files: { "OpenQuantum.ico": { content: "icon" } } }), /Refusing to write through a link/);
+  assert.equal(await readFile(other, "utf8"), "user data");
+  await assert.rejects(readFile(path.join(dataRoot, "OpenQuantum.ico")), { code: "ENOENT" });
 });

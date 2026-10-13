@@ -1,10 +1,43 @@
 import { execFile } from "node:child_process";
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, realpath, rename, rm, writeFile } from "node:fs/promises";
+import { randomUUID } from "node:crypto";
+import { tmpdir } from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
-import { assertNoLinks } from "./desktop-distribution.mjs";
+import { assertNoLinks, sha256 } from "./desktop-distribution.mjs";
 
 const execute = promisify(execFile);
+
+/** Validate every destination before updating any installer-owned launcher file. */
+export async function writeDesktopLauncher({ dataRoot, launcher, files }) {
+  const receipt = path.join(dataRoot, "desktop-branding.json");
+  await assertNoLinks(receipt);
+  const previous = await readFile(receipt, "utf8").then(JSON.parse).catch(error => { if (error.code === "ENOENT") return null; throw error; });
+  if (previous && previous.kind !== "openquantum-launcher") throw new Error("Unmanaged Desktop branding receipt");
+  const hashes = {};
+  for (const [relative, { content }] of Object.entries(files)) {
+    if (path.isAbsolute(relative) || relative.split(/[\\/]/).includes("..")) throw new Error("Invalid launcher path");
+    const target = path.join(dataRoot, relative);
+    await assertNoLinks(target);
+    const current = await readFile(target).catch(error => { if (error.code === "ENOENT") return null; throw error; });
+    hashes[relative] = sha256(content);
+    if (current && sha256(current) !== hashes[relative] && sha256(current) !== previous?.files?.[relative]) {
+      throw new Error(`Preserve the existing or modified Desktop launcher file before upgrading: ${target}`);
+    }
+  }
+  async function atomicWrite(target, content, mode) {
+    await mkdir(path.dirname(target), { recursive: true });
+    const temporary = `${target}.${randomUUID()}.tmp`;
+    try {
+      await writeFile(temporary, content, { mode });
+      await rename(temporary, target);
+    } finally { await rm(temporary, { force: true }); }
+  }
+  for (const [relative, { content, mode = 0o644 }] of Object.entries(files)) await atomicWrite(path.join(dataRoot, relative), content, mode);
+  const result = { kind: "openquantum-launcher", status: "installed", launcher, upstreamResourcesModified: false, files: hashes };
+  await atomicWrite(receipt, JSON.stringify(result, null, 2), 0o600);
+  return result;
+}
 
 /** PNG-backed ICO: keep the existing brand pixels, with no image dependency. */
 export function pngIcon(png) {
@@ -37,16 +70,9 @@ export function macIcon(png) {
 export async function installDesktopBranding({ projectRoot, dataRoot, node, version }) {
   if (process.platform === "darwin") {
     const application = path.join(dataRoot, "OpenQuantum.app");
-    const marker = path.join(application, "Contents/openquantum-launcher.json");
-    const files = ["Info.plist", "MacOS/OpenQuantum", "Resources/OpenQuantum.icns", "openquantum-launcher.json"];
-    for (const file of files) await assertNoLinks(path.join(application, "Contents", file));
-    const existing = await readFile(path.join(application, "Contents/Info.plist"), "utf8").catch(error => { if (error.code === "ENOENT") return null; throw error; });
-    if (existing && await readFile(marker, "utf8").then(JSON.parse).then(value => value.kind !== "openquantum-launcher").catch(() => true)) throw new Error("An unmanaged OpenQuantum.app blocks launcher installation");
     const escape = value => value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
     const quote = value => `'${value.replaceAll("'", "'\\''")}'`;
-    await mkdir(path.join(application, "Contents/MacOS"), { recursive: true });
-    await mkdir(path.join(application, "Contents/Resources"), { recursive: true });
-    await writeFile(path.join(application, "Contents/Info.plist"), `<?xml version="1.0" encoding="UTF-8"?>
+    const plist = `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0"><dict>
 <key>CFBundleName</key><string>OpenQuantum</string>
@@ -58,18 +84,17 @@ export async function installDesktopBranding({ projectRoot, dataRoot, node, vers
 <key>CFBundleShortVersionString</key><string>${escape(version)}</string>
 <key>CFBundleVersion</key><string>${escape(version)}</string>
 <key>LSUIElement</key><true/>
-</dict></plist>\n`);
-    await writeFile(path.join(application, "Contents/MacOS/OpenQuantum"), `#!/bin/sh\nexec ${quote(node)} ${quote(path.join(projectRoot, "scripts/run-desktop.mjs"))}\n`, { mode: 0o755 });
-    await writeFile(path.join(application, "Contents/Resources/OpenQuantum.icns"), macIcon(await readFile(path.join(projectRoot, "packages/openquantum-web-branding/assets/icon-512.png"))));
-    await writeFile(marker, JSON.stringify({ kind: "openquantum-launcher", version }));
-    return { status: "installed", launcher: application, upstreamResourcesModified: false };
+</dict></plist>\n`;
+    return writeDesktopLauncher({ dataRoot, launcher: application, files: {
+      "OpenQuantum.app/Contents/Info.plist": { content: plist },
+      "OpenQuantum.app/Contents/MacOS/OpenQuantum": { content: `#!/bin/sh\nexec ${quote(node)} ${quote(path.join(projectRoot, "scripts/run-desktop.mjs"))}\n`, mode: 0o755 },
+      "OpenQuantum.app/Contents/Resources/OpenQuantum.icns": { content: macIcon(await readFile(path.join(projectRoot, "packages/openquantum-web-branding/assets/icon-512.png"))) },
+    } });
   }
   if (process.platform === "win32") {
     const iconFile = path.join(dataRoot, "OpenQuantum.ico");
     const shortcut = path.join(dataRoot, "OpenQuantum.lnk");
-    await assertNoLinks(iconFile);
-    await assertNoLinks(shortcut);
-    await writeFile(iconFile, pngIcon(await readFile(path.join(projectRoot, "packages/openquantum-web-branding/assets/icon-192.png"))));
+    const temporary = await mkdtemp(path.join(await realpath(tmpdir()), "oq-launcher-"));
     const script = [
       '$ErrorActionPreference = "Stop"',
       '$link = (New-Object -ComObject WScript.Shell).CreateShortcut($env:OQ_ICON_SHORTCUT)',
@@ -81,10 +106,16 @@ export async function installDesktopBranding({ projectRoot, dataRoot, node, vers
       '$link.WindowStyle = 7',
       '$link.Save()',
     ].join("\n");
-    await execute("powershell.exe", ["-NoProfile", "-NonInteractive", "-EncodedCommand", Buffer.from(script, "utf16le").toString("base64")], {
-      env: { ...process.env, OQ_ICON_SHORTCUT: shortcut, OQ_ICON_NODE: node, OQ_ICON_SCRIPT: path.join(projectRoot, "scripts/run-desktop.mjs"), OQ_ICON_PROJECT: projectRoot, OQ_ICON_FILE: iconFile },
-    });
-    return { status: "installed", launcher: shortcut, upstreamResourcesModified: false };
+    try {
+      const stagedShortcut = path.join(temporary, "OpenQuantum.lnk");
+      await execute("powershell.exe", ["-NoProfile", "-NonInteractive", "-EncodedCommand", Buffer.from(script, "utf16le").toString("base64")], {
+        env: { ...process.env, OQ_ICON_SHORTCUT: stagedShortcut, OQ_ICON_NODE: node, OQ_ICON_SCRIPT: path.join(projectRoot, "scripts/run-desktop.mjs"), OQ_ICON_PROJECT: projectRoot, OQ_ICON_FILE: iconFile },
+      });
+      return await writeDesktopLauncher({ dataRoot, launcher: shortcut, files: {
+        "OpenQuantum.ico": { content: pngIcon(await readFile(path.join(projectRoot, "packages/openquantum-web-branding/assets/icon-192.png"))) },
+        "OpenQuantum.lnk": { content: await readFile(stagedShortcut) },
+      } });
+    } finally { await rm(temporary, { recursive: true, force: true }); }
   }
   throw new Error("Unsupported Desktop icon platform");
 }

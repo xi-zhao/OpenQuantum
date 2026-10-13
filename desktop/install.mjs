@@ -44,7 +44,6 @@ const body = process.platform === "win32"
   : `#!/bin/sh\nexec ${quote(node)} ${quote(path.join(projectRoot, "scripts/run-desktop.mjs"))}\n`;
 await writeFile(launcher, body, { mode: 0o755 });
 const branding = await installDesktopBranding({ projectRoot, dataRoot, node, version: manifest.version });
-await writeFile(path.join(dataRoot, "desktop-branding.json"), JSON.stringify(branding, null, 2));
 console.log(prepared.stdout.trim());
 console.log(`Installed OpenQuantum ${manifest.version}. Launch: ${branding.launcher}`);
 console.log("OpenQuantum icon installed. Restart Desktop to update its running icon.");
