@@ -192,8 +192,9 @@ function renderRuntime(container) {
   toolsPanel.open = expandedGroups.get(key) ?? Boolean($("#search").value.trim() || $("#category").value !== "all" || $("#state").value !== "all");
   toolsPanel.ontoggle = () => { if (toolsPanel.isConnected) expandedGroups.set(key, toolsPanel.open); };
   toolsPanel.append(element("summary", "Tools · 查看与配置工具"));
+  container.append(toolsPanel);
   toolsPanel.append(filterToolbar);
-  renderTools(toolsPanel); container.append(toolsPanel);
+  renderTools(toolsPanel);
   const diagnostic = element("details", undefined, "technical-details");
   diagnostic.append(element("summary", t("诊断详情")), element("p", `读取时间：${new Date(snapshot.observedAt).toLocaleString()}。范围：当前用户的 OpenQuantum 插件。`, "hint"),
     element("p", "Skills 显示持久化加载配置；Tools 显示插件开放的工具目录。Codex 模型、当前聊天加载状态、MCP 实际连通和账户认证均未在此测试。", "hint"));
