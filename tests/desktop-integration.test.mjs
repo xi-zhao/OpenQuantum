@@ -82,7 +82,8 @@ test("composes the Desktop shell around the OpenQuantum Harness home", { skip: !
   assert.equal(patchTarget, path.join(harnessHome, DESKTOP_PROFILE_PATCH));
   assert.equal(rows.get("desktop-shell")?.name, "dsh-plugin-desktop");
   assert.equal(rows.get("openquantum-desktop-branding")?.name, "@openquantum/harness-web-branding/desktop");
-  assert.deepEqual(rows.get("openquantum-desktop-branding")?.inject, ["desktopProfiles"]);
+  assert.deepEqual(rows.get("openquantum-desktop-branding")?.inject, ["desktopRuntime"]);
+  assert.deepEqual(rows.get("desktop-shell")?.inject, ["openquantumDesktopIcon"]);
   assert.equal(
     rows.get("openquantum-web-branding")?.name,
     "@openquantum/harness-web-branding",

@@ -1,76 +1,43 @@
 import assert from "node:assert/strict";
-import { EventEmitter } from "node:events";
+import { Context } from "@deepseek-ai/cordis";
 import { readFile, mkdtemp, realpath, rm, symlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
-import { desktopAssetRoot, installDesktopIcon } from "../packages/openquantum-web-branding/desktop.mjs";
+import * as branding from "../packages/openquantum-web-branding/desktop.mjs";
 import { pngIcon, macIcon, installDesktopBranding, writeDesktopLauncher } from "../scripts/lib/desktop-branding.mjs";
 
-function fixture(platform) {
-  const original = { isEmpty: () => false, identity: "original" };
-  const brand = { isEmpty: () => false, identity: "OpenQuantum" };
-  const app = new EventEmitter();
-  let dock = original;
-  app.dock = { setIcon: icon => { dock = icon; } };
-  app.getAppPath = () => "/original-client";
-  const makeWindow = () => {
-    const window = new EventEmitter();
-    window.icon = original;
-    window.setIcon = icon => { window.icon = icon; };
-    window.destroyed = false;
-    window.isDestroyed = () => window.destroyed;
-    return window;
-  };
-  const first = makeWindow();
-  const dispose = installDesktopIcon({ app, BrowserWindow: { getAllWindows: () => [first] },
-    nativeImage: { createFromPath: file => /app-icon(?:-mac)?\.png$/.test(file) ? original : brand },
-  }, platform);
-  return { app, dock: () => dock, first, makeWindow, dispose, original, brand };
-}
-
-test("Desktop icon follows recreated windows and releases its listeners on Profile changes", () => {
-  const f = fixture("darwin");
-  assert.equal(f.dock(), f.brand);
-  f.app.dock.setIcon(f.original);
-  const second = f.makeWindow();
-  f.app.emit("browser-window-created", null, second);
-  assert.equal(f.dock(), f.brand);
-  f.app.dock.setIcon(f.original);
-  second.emit("ready-to-show");
-  assert.equal(f.dock(), f.brand);
-  f.first.destroyed = true;
-  f.first.emit("closed");
-  assert.equal(f.first.listenerCount("ready-to-show"), 0);
-  f.dispose();
-  assert.equal(f.dock(), f.original);
-  assert.equal(f.app.listenerCount("browser-window-created"), 0);
-  assert.equal(second.listenerCount("ready-to-show"), 0);
-  assert.equal(second.listenerCount("closed"), 0);
-  f.app.emit("browser-window-created", null, f.makeWindow());
-  assert.equal(f.dock(), f.original);
-});
-
-test("Windows window icons apply to existing and new windows without touching the Dock", () => {
-  const f = fixture("win32");
-  assert.equal(f.first.icon, f.brand);
-  const second = f.makeWindow();
-  f.app.emit("browser-window-created", null, second);
-  assert.equal(second.icon, f.brand);
-  assert.equal(f.dock(), f.original);
-  f.dispose();
-  assert.equal(second.icon, f.original);
-});
-
-test("default icon restoration supports both packaged and verified upstream source entry points", async t => {
-  const root = await mkdtemp(path.join(await realpath(tmpdir()), "oq-source-icon-"));
-  t.after(() => rm(root, { recursive: true, force: true }));
-  assert.equal(desktopAssetRoot(path.join(root, "app.asar")), path.join(root, "app.asar"));
-  await writeFile(path.join(root, "package.json"), JSON.stringify({ name: "dsh-plugin-desktop" }));
-  assert.equal(desktopAssetRoot(path.join(root, "lib")), root);
-  await writeFile(path.join(root, "package.json"), JSON.stringify({ name: "unrelated-app" }));
-  assert.throws(() => desktopAssetRoot(path.join(root, "lib")), /Unexpected Desktop source package/);
+test("public shell branding preserves native callbacks and restores the service after Profile disposal", async () => {
+  const calls = [];
+  const events = [];
+  class Runtime {
+    #platform = "darwin";
+    schedule(spec) {
+      calls.push({ spec, platform: this.#platform });
+      return async () => { events.push("shell-disposed"); };
+    }
+  }
+  const runtime = new Runtime();
+  const originalSchedule = runtime.schedule;
+  const ctx = new Context();
+  ctx.provide("desktopRuntime", runtime);
+  const spec = Object.freeze({ iconPath: "/upstream.png", productName: "DSH Desktop", requestQuit: () => {}, readThemeSource: () => "system" });
+  const shell = ctx.plugin({ name: "shell-fixture", inject: ["desktopRuntime", "openquantumDesktopIcon"], apply(ctx) {
+    ctx.effect(() => ctx.get("desktopRuntime").schedule(spec));
+  } });
+  assert.equal(calls.length, 0, "shell waits until the icon provider is active");
+  const icon = ctx.plugin(branding);
+  await icon.await();
+  await shell.await();
+  assert.deepEqual(calls[0], { spec: { ...spec, iconPath: fileURLToPath(new URL("../packages/openquantum-web-branding/assets/icon-512.png", import.meta.url)) }, platform: "darwin" });
+  assert.equal(spec.iconPath, "/upstream.png");
+  await icon.dispose();
+  assert.deepEqual(events, ["shell-disposed"]);
+  assert.equal(runtime.schedule, originalSchedule);
+  runtime.schedule(spec);
+  assert.equal(calls[1].spec, spec, "next native Profile retains the upstream icon");
+  await shell.dispose();
 });
 
 test("Windows launcher embeds the existing OpenQuantum brand PNG unchanged", async () => {

@@ -3,7 +3,10 @@
 - insert:
     - id: openquantum-desktop-branding
       name: '@openquantum/harness-web-branding/desktop'
-      inject: [desktopProfiles]
+      inject: [desktopRuntime]
+
+- id: desktop-shell
+  inject: [openquantumDesktopIcon]
 
 - id: openquantum-web-branding
   config:
