@@ -47,8 +47,9 @@ Codex 设置读取该目录后叠加当前插件支持范围和原生 Skill 配�
 ZIP SHA-256 为 `e29c8f3467a7104360e82a0246845740e45f769299edb56cde822a7603d4c54f`。
 
 用户首次反馈仍显示旧界面；进程证据同时存在旧 `16224cc150c1a9db` 与新版后台，缓存 MCP 配置已指向新安装。
-因此尚未确认当前原生窗口已切换到最终四标签页面，不能把安装 probe 或浏览器截图写成原生侧边栏验收通过。
-本机进程链确认宿主为 `/Applications/ChatGPT.app`；需要完整退出并重开该应用，再从 Codex 侧边打开 OpenQuantum 设置。
+本机进程链确认宿主为 `/Applications/ChatGPT.app`，随后提示完整退出并重开该应用，再从 Codex 侧边打开 OpenQuantum 设置。
+2026-10-13 用户明确确认“现在正常了”，关闭原生侧边页显示验收项。该证据来自用户实际观察，
+不以安装 probe 或隔离浏览器截图代替；确认范围不扩展为原生密钥写入、账户认证或模型调用。
 
 原始记录位于本任务 `.openquantum/codex-settings-evidence/`：`parity-sealed-build.txt`、`parity-install.txt`、
 `parity-installed-readback.json`、`parity-regressions.txt`、`parity-final-affected-tests.txt`、
