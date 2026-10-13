@@ -18,7 +18,7 @@ Simula circuitos con Qiskit y TyxonQ; optimízalos con PyZX; explora computació
 
 El código de `main` también incluye corte de puertas y reconstrucción de valores esperados con QCut, optimización de circuitos con Compact y estados excitados mediante VQD con OpenQARP. Estas conexiones están activadas por defecto, pero requieren preparar sus dependencias. El QSVM con núcleo angular de cqlib-qml y el entorno de circuitos FlagQuantum están desactivados hasta que los habilites. Consulta el [alcance y la verificación](../integrations/CANDIDATE_LIBRARIES.md).
 
-El inventario actual contiene **156 Skills** (143 seleccionables automáticamente y 13 índices manuales), **91 conexiones MCP** y **5 Tool cuánticos nativos**. La disponibilidad depende de las conexiones activadas y los entornos preparados. Consulte la [guía de selección](../integrations/CAPABILITY_SELECTION.md).
+El inventario actual contiene **157 Skills** (144 seleccionables automáticamente y 13 índices manuales), **91 conexiones MCP** y **5 Tool cuánticos nativos**. La disponibilidad depende de las conexiones activadas y los entornos preparados. Consulte la [guía de selección](../integrations/CAPABILITY_SELECTION.md).
 
 v0.8.1 permite usar las API públicas nativas de **85 entornos SDK o de código fuente**. El agente puede escribir programas propios, combinar API y guardar resultados completos, sin limitarse a los casos predefinidos de los Tool. Prepare las dependencias de forma explícita para cada tarea. Se mantienen los requisitos de plataforma, cuenta, licencia y backend opcional. Consulte las comprobaciones de ingeniería en el [registro de integración](../integrations/FULL_SDK_ACCESS.md). No se realizó aceptación con tareas de investigación reales; `scientificValidation=not_evaluated`.
 

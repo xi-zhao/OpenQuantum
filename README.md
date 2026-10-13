@@ -26,8 +26,8 @@ OpenQuantum 有两个发行入口：**Desktop** 提供科研工作台和量子�
 
 **当前版本 0.8.3：**[Desktop 下载与发布说明](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.3) · [Codex 插件下载与发布说明](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.3)。两者使用同一产品版本号。
 
-- **更容易找到能力：**Tools、MCP、Skills 按 8 类用途分组，支持搜索和状态筛选。
-- **统一品牌入口：**Mac 的 `OpenQuantum.app` 和 Windows 的 `OpenQuantum.lnk` 使用 OpenQuantum 图标；保留原版 DSH Desktop 界面、量子学习通和更新入口。
+- **更容易找到能力：** Tools、MCP、Skills 按 8 类用途分组，支持搜索和状态筛选。
+- **统一品牌入口：** Mac 的 `OpenQuantum.app` 和 Windows 的 `OpenQuantum.lnk` 使用 OpenQuantum 图标；保留原版 DSH Desktop 界面、量子学习通和更新入口。
 
 <p align="center">
   <a href="#为什么选择-openquantum">为什么选择</a> ·
@@ -269,7 +269,7 @@ OpenQuantum 支持桌面安装包和源码运行，适合本机单用户使用�
 
 </details>
 
-**让 Codex 帮你安装：**打开 Codex，新建聊天，把下面这段话复制给它：
+**让 Codex 帮你安装：** 打开 Codex，新建聊天，把下面这段话复制给它：
 
 ```text
 请帮我安装 OpenQuantum Codex 插件 0.8.3。先阅读安装指南：

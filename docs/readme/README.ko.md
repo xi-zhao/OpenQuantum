@@ -18,7 +18,7 @@ Qiskit과 TyxonQ를 이용한 회로 시뮬레이션, PyZX 회로 최적화, Gra
 
 소스 `main`에는 QCut 게이트 분할과 기댓값 재구성, Compact 회로 최적화, OpenQARP VQD 들뜬상태 계산도 포함됩니다. 이 연결들은 기본으로 활성화되지만 의존성을 준비해야 합니다. cqlib-qml 각도 커널 QSVM과 FlagQuantum 회로 작업대는 기본으로 비활성화되어 필요할 때 켭니다. [적용 범위와 검증](../integrations/CANDIDATE_LIBRARIES.md)을 참고하세요.
 
-현재 소스에는 **156개 Skill**(자동 선택 143개, 수동 분류 색인 13개), **91개 MCP 연결**, **5개 네이티브 양자 Tool**이 있습니다. 세션에서 사용할 수 있는 기능은 활성 연결과 준비된 환경에 따라 달라집니다. [기능 선택 안내](../integrations/CAPABILITY_SELECTION.md)를 참조하세요.
+현재 소스에는 **157개 Skill**(자동 선택 144개, 수동 분류 색인 13개), **91개 MCP 연결**, **5개 네이티브 양자 Tool**이 있습니다. 세션에서 사용할 수 있는 기능은 활성 연결과 준비된 환경에 따라 달라집니다. [기능 선택 안내](../integrations/CAPABILITY_SELECTION.md)를 참조하세요.
 
 v0.8.1은 **85개 SDK/소스 환경**에서 네이티브 공개 API를 사용할 수 있는 경로를 제공합니다. 에이전트는 사용자 정의 프로그램을 작성하고 API를 조합하며 전체 결과물을 저장할 수 있습니다. 편의 Tool의 사전 설정 예제에 사용 범위를 한정하지 않습니다. 작업별로 의존성을 명시적으로 준비해야 하며 플랫폼, 계정, 라이선스 및 선택적 백엔드 제한은 유지됩니다. 공학 검증 범위는 [SDK 통합 기록](../integrations/FULL_SDK_ACCESS.md)을 참조하세요. 실제 연구 과제를 통한 인수 검증은 수행하지 않았으며 `scientificValidation=not_evaluated`입니다.
 
