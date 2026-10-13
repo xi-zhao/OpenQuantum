@@ -30,7 +30,7 @@ OpenQuantum content updates and original DSH Desktop updates are separate. OpenQ
 The OpenQuantum service only offers release notes and upgrade instructions; it does not download, install or restart the client.
 
 For an installed capability package, quit the Host, back up the OpenQuantum data directory, verify and extract the new capability archive, then run its installer. Keep the original DSH Desktop on the compatible version named in the release notes. See [installation and migration](DESKTOP_INSTALLERS.md).
-Previously published OpenQuantum DMG/EXE files are historical private-client builds, not the new distribution format.
+The old OpenQuantum DMG/EXE releases are withdrawn as part of the 0.8.2 release cleanup. Their Git tags and source history remain available.
 
 For a source installation:
 
@@ -53,7 +53,13 @@ Starting with 0.8.1, Desktop, the Codex plugin and its installer share one OpenQ
 The root `package.json` is authoritative; the two distribution manifests and all three lockfiles
 carry the same version. Pinned third-party dependencies retain their own version numbers.
 The `vX.Y.Z` and `codex-vX.Y.Z` tags distinguish release channels, not product versions. Synchronized
-releases point both tags at the same reviewed commit. Existing releases and tags remain unchanged.
+releases point both tags at the same reviewed commit. A product version does not require both channels to be published.
+
+Version 0.8.2 publishes only `codex-v0.8.2` and makes that Release the GitHub latest. It carries no
+`openquantum-update.json`, so Desktop/Web update discovery does not advertise a Codex bundle as a
+capability-package update. The old Desktop/source Release pages `v0.5.0`, `v0.5.1`, `v0.6.0`,
+`v0.7.0` and `v0.8.1` and their attachments are withdrawn; Git tags, source history and previous
+`codex-v*` releases are retained. The steps below apply when both channels are published.
 The shared release command and packaging guards currently accept plain stable `X.Y.Z` only,
 without prerelease suffixes or build metadata, matching the supported synchronized release pipeline.
 
@@ -81,8 +87,10 @@ without prerelease suffixes or build metadata, matching the supported synchroniz
    the job regenerates the same manifest from the tag and publication date; it does not create another release.
 6. From that same clean commit, build and verify the [Codex packages](integrations/CODEX_PLUGIN.md),
    then publish `codex-vX.Y.Z` with the shared release notes, checksums and its validation record.
-   Set the Codex Release to **not latest** so the Desktop update feed continues to resolve the Desktop
-   Release. Confirm both public packages report X.Y.Z and reference the same source commit.
+   When publishing both channels, set the Codex Release to **not latest** so the Desktop update feed
+   continues to resolve the Desktop Release. For a Codex-only release, mark that Release latest and
+   omit the Desktop update manifest. Confirm every published package reports X.Y.Z and references
+   the reviewed source commit.
 
 To inspect a manifest locally without publishing:
 

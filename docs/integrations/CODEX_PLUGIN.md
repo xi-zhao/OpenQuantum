@@ -94,8 +94,8 @@ npm run plugin:install
 维护者运行 `npm run plugin:release` 生成独立插件 ZIP、完整安装包与 `SHA256SUMS`；要求干净的提交。
 完整安装包回归使用 `node scripts/verify-codex-release.mjs dist/codex-release/openquantum-0.8.2-codex-install.zip`。
 使用 `npm run release:version -- X.Y.Z` 统一更新产品版本，`npm run release:check` 检查所有副本；
-构建会拒绝不一致的版本。同步发行在同一提交使用 `vX.Y.Z` 和 `codex-vX.Y.Z`，前缀仅区分渠道。
-Codex Release 保持 Desktop 的 `latest` 与更新清单不变。完整规则见[发布流程](../UPDATES.md#publishing-a-stable-update)。
+构建会拒绝不一致的版本。同步发行时，`vX.Y.Z` 和 `codex-vX.Y.Z` 指向同一提交。
+0.8.2 仅发布 Codex 插件，并将其设为 GitHub `latest`；本版不附带 Desktop 更新清单。完整规则见[发布流程](../UPDATES.md#publishing-a-stable-update)。
 
 开发预览使用 `npm run plugin:preview`。做交互测试时应设置独立 `CODEX_HOME` 和
 `OPENQUANTUM_PLUGIN_SETTINGS_HOME`，避免修改真实 Skill 开关。预览只监听 `127.0.0.1`，写请求需要访问标识与同源校验。

@@ -295,7 +295,7 @@ npm run plugin:install
 
 后续发行采用 [DSH Desktop 2.0.7 原版客户端](https://github.com/anywhere-labs/dsh-desktop/releases/tag/v2.0.7)与独立 OpenQuantum 能力包。能力包保留完整 SDK 入口、量子 Skill、Tool 和配置，并包含 Node / uv。原生应用名称、界面和客户端更新由第三方维护。
 
-请按[安装与迁移说明](docs/DESKTOP_INSTALLERS.md)选择原版客户端及对应能力包。已经发布的 [v0.8.1](docs/releases/v0.8.1.md) DMG/EXE 属于此前的私有客户端发行方式；新包是否已发布以 Release 的实际附件为准。第三方客户端显示上游版本 `2.0.7`，OpenQuantum 能力包与 Codex 插件仍按统一产品版本标记。计算环境、账户与许可继续按能力显式准备。
+请按[安装与迁移说明](docs/DESKTOP_INSTALLERS.md)选择原版客户端及对应能力包。0.8.2 本轮仅发布 Codex 插件，旧 Desktop/源码 Release 页面及附件已下架；历史标签与源码保留。能力包是否发布以 Release 的实际附件为准。第三方客户端显示上游版本 `2.0.7`，OpenQuantum 能力包与 Codex 插件仍按统一产品版本标记。计算环境、账户与许可继续按能力显式准备。
 
 ### 安装源码
 
