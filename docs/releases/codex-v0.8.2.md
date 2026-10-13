@@ -19,10 +19,11 @@ npm run plugin:install
 
 安装器保留 `openquantum@personal` 身份、其他插件及用户配置。安装后按 Codex 提示重载；依赖按具体量子任务显式准备。完整步骤见[Agent 安装指南](../integrations/CODEX_AGENT_INSTALL.md)。发布本身不会替换用户现有安装。
 
-## 发行范围与旧版本清理
+## 双渠道发行
 
-本版仅发布 Codex 插件，`codex-v0.8.2` 作为 GitHub `latest`，不附带 Desktop 更新清单或安装包。
-旧 Desktop/源码 Release `v0.5.0`、`v0.5.1`、`v0.6.0`、`v0.7.0`、`v0.8.1` 的页面和附件将在本轮发布时下架；Git 标签、源码历史和旧 `codex-v*` Release 保留。原版 DSH Desktop 能力包的源码与 CI 构建路径继续保留。
+Codex 插件与 [Desktop 能力包](v0.8.2.md) 共用 `0.8.2` 产品版本和源码提交 `64004f9fcef58afa2a8a05d965eebcaa6c9477ab`。本页只介绍 Codex 的安装方式；Desktop 使用原版 DSH 客户端及独立能力包。
+
+GitHub `latest` 与 `openquantum-update.json` 属于 `v0.8.2`；`codex-v0.8.2` 不附带 Desktop 更新清单，也不占用 Desktop 更新入口。旧私有 DMG/EXE 不再作为安装入口，Git 标签、源码历史和旧 Codex Release 保留。
 
 ## 验证与范围
 
