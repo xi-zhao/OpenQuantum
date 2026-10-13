@@ -21,7 +21,8 @@ Codex 插件在外层 Codex 对话中提供量子 Skill 和科学 Tool。OpenQua
 其中没有执行 Tool 的 Skill 明确提供方法解释与选型参考，不把知识目录数量等同于可执行计算数量。
 SDK workbench 和领域 Skill 支持通过宿主代码工具编写原生程序，随包携带 85 个 SDK 环境的导航、
 固定依赖、显式 setup 和源码资源；便捷 Tool 的预设案例不再限制原生 API 的使用。
-平台诊断、学习通和尚未适配的按需 MCP 连接不进入插件；新增云端与硬件服务不默认启用。
+平台诊断、学习通和尚未适配的按需 MCP 连接不进入执行入口；设置目录保留它们的内容和未接入原因。
+新增云端与硬件服务不默认启用。
 完整范围与逐库工程证据见[原生 SDK 接入](FULL_SDK_ACCESS.md)；SDK 环境并非 85 个不同上游库。
 
 `plugin.json` 使用 Agent Plugins 1.0，并保留 `.codex-plugin/plugin.json` 兼容入口。插件身份仍为
@@ -41,14 +42,21 @@ SDK workbench 和领域 Skill 支持通过宿主代码工具编写原生程序�
 
 Desktop 与 Codex 共用 `project-settings-catalog.mjs` 的服务、凭据说明及官方链接，
 并共用 `credential-card.mjs` 的完整服务密钥卡片及 `credential-field.mjs` 输入表单。
+`component-view.mjs` 统一四个标签、介绍、运行状态标题和组件卡片；Codex 构建期从 Desktop 的
+`readProjectSettings` 导出完整展示目录与同一份中文文案，不携带 Desktop Runtime 或用户状态。
 Codex 适配层只补充宿主连接、可用范围、字段要求、默认开关和执行注入。
 Desktop 使用 Harness credential store；Codex 使用本机系统凭据库。两个入口不复制或自动迁移彼此的密钥。
 
-默认打开“服务密钥”：沿用 Desktop 双列卡片，窄窗口改为单列。每个字段单独显示名称、环境变量、
+默认打开“运行状态”，标签顺序与 Desktop“量子组件”一致：运行状态、MCP、Skills、服务密钥。
+候选设置目录显示 Desktop 的全部 157 个 Skill 和 91 个 MCP；未适配条目在原位置标注原因并禁用操作。
+目录可见不表示当前宿主具有相同执行能力；真实开关和凭据状态仍来自当前宿主。
+
+“服务密钥”沿用 Desktop 双列卡片，窄窗口改为单列。每个字段单独显示名称、环境变量、
 配置状态、用途、获取凭据链接、输入框和保存按钮。共有 23 个独立字段，重复的 IBM Token 合并显示。
 搜索支持服务名称、用途和变量名。可直接配置 Superstaq、Classiq、Q-CTRL、QCArchive、AQT、OQC Cloud、
 Quantum Inspire 和 FieldQKit 的 17 个字段。
-“服务概览”保留配置完整性、服务开关和逐项工具开关，并可跳转至相关密钥卡片。
+服务开关、逐项工具开关和密钥跳转集中在对应 MCP 卡片。原生工具服务及全部 Tool 开关放在
+“运行状态 → Tools”中；搜索栏随工具详情展开，减少初始页面的操作负担。
 
 另列 IBM Runtime、IBM Transpiler、Quantum Hardware、QPanda3 Runtime 和 Pasqal：
 前四项尚未适配当前插件的内置执行入口，页面展示认证要求与官方说明；Pasqal 已有 Skill，
@@ -146,7 +154,7 @@ npm run plugin:install
 
 HTTP OAuth、分页 MCP 目录、跨电脑密钥同步不在此版本范围。用户需要逐项启用自定义工具。
 本地浏览器预览、协议握手、原生 CLI 安装检查、聊天旁 MCP 设置标签页和左侧菜单的全局入口
-是不同验收层级。安装候选版后需从左侧“…”→“OpenQuantum 设置”进入，确认服务概览、MCP、Skills、Tools、服务密钥五个标签及关键配置操作；
+是不同验收层级。安装候选版后需从左侧“…”→“OpenQuantum 设置”进入，确认运行状态、MCP、Skills、服务密钥四个标签及关键配置操作；
 聊天旁标签页显示新版不能证明全局入口已经更新。卡片保存应核验宿主 WebCrypto 与 app-only Tool 通道；
 独立凭据窗口另行核验打开与保存。CSP 声明不能替代宿主内的实际交互检查。
 [历史验收记录](../releases/2026-10-11-plugin-settings.md)记录此前的已安装入口结果；
