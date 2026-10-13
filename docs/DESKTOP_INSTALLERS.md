@@ -19,6 +19,7 @@ OpenQuantum 能力包与 Codex 插件继续共用产品版本（当前源码 `0.
 5. 如果此前在 DSH Desktop 设置过数据目录，原生设置优先于启动环境。先退出客户端，在 DSH Desktop 的数据目录设置中选择本次安装的 `project/.openquantum/dsh`，再启动入口。
 
 默认安装目录：Mac 为 `~/Library/Application Support/OpenQuantum/`，Windows 为 `%APPDATA%\OpenQuantum\`。
+Mac 默认安装还在 `~/Applications/OpenQuantum.app` 创建品牌启动入口，可直接打开或放入 Dock；已有的同名用户应用不会被替换。
 `project/` 是可写部署，`versions/` 保存安装依赖和运行环境，原版客户端继续使用自己的 `DSH Desktop` 原生设置目录。
 解压目录安装完成后可移走；不要删除 `versions/`。自定义目录可作为安装命令的唯一绝对路径参数。
 Windows 自定义客户端位置通过 `DSH_DESKTOP_EXECUTABLE` 指定原版 `DSH Desktop.exe`。

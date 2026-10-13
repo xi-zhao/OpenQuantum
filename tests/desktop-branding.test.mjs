@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
-import { installDesktopIcon } from "../packages/openquantum-web-branding/desktop.mjs";
+import { desktopAssetRoot, installDesktopIcon } from "../packages/openquantum-web-branding/desktop.mjs";
 import { pngIcon, macIcon, installDesktopBranding, writeDesktopLauncher } from "../scripts/lib/desktop-branding.mjs";
 
 function fixture(platform) {
@@ -61,6 +61,16 @@ test("Windows window icons apply to existing and new windows without touching th
   assert.equal(f.dock(), f.original);
   f.dispose();
   assert.equal(second.icon, f.original);
+});
+
+test("default icon restoration supports both packaged and verified upstream source entry points", async t => {
+  const root = await mkdtemp(path.join(await realpath(tmpdir()), "oq-source-icon-"));
+  t.after(() => rm(root, { recursive: true, force: true }));
+  assert.equal(desktopAssetRoot(path.join(root, "app.asar")), path.join(root, "app.asar"));
+  await writeFile(path.join(root, "package.json"), JSON.stringify({ name: "dsh-plugin-desktop" }));
+  assert.equal(desktopAssetRoot(path.join(root, "lib")), root);
+  await writeFile(path.join(root, "package.json"), JSON.stringify({ name: "unrelated-app" }));
+  assert.throws(() => desktopAssetRoot(path.join(root, "lib")), /Unexpected Desktop source package/);
 });
 
 test("Windows launcher embeds the existing OpenQuantum brand PNG unchanged", async () => {
