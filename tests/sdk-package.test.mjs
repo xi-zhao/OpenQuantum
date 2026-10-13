@@ -8,7 +8,8 @@ import { promisify } from "node:util";
 import { fileURLToPath } from "node:url";
 import { buildPlugin } from "../scripts/build-codex-plugin.mjs";
 import { readSdkLibraries } from "../src/lib/sdk-access.mjs";
-import { readCapabilities } from "../runtime/chatgpt/catalog.mjs";
+import { readCapabilities, providerGroups } from "../runtime/chatgpt/catalog.mjs";
+import { Settings } from "../src/settings/codex/application.mjs";
 import { locateSdkRuntime } from "../runtime/chatgpt/sdk-access.mjs";
 import { installedMcpServer } from "../scripts/install-codex-plugin.mjs";
 
@@ -44,12 +45,39 @@ test("SDK access survives archive, split installation and cached Skill relocatio
   assert.ok(discovery.some(entry => entry.id === "quantum-algorithms"));
   assert.ok(discovery.some(entry => entry.id === "netqasm-network"));
   const pluginCapabilities = await readCapabilities(runtime);
-  for (const capability of pluginCapabilities.filter(entry => ["fieldqkit-hardware", "oqc-cloud", "classiq-synthesis"].includes(entry.id))) assert.equal(capability.status, "unsupported", capability.id);
+  const optionalIds = ["fieldqkit-hardware", "oqc-cloud", "classiq-synthesis"];
+  for (const id of optionalIds) {
+    const capability = pluginCapabilities.find(entry => entry.id === id);
+    assert.equal(capability.status, "available", id);
+    assert.equal(capability.optIn, true, id);
+    await fs.access(path.join(cached, "skills", id, "SKILL.md"));
+  }
+  const providers = providerGroups(pluginCapabilities);
+  const { tools } = JSON.parse(await fs.readFile(path.join(runtime, "dist/chatgpt/capabilities.json"), "utf8"));
+  const settings = new Settings({
+    backend: { sourceCapabilities: pluginCapabilities, providers, tools,
+      providerFor: name => providers.find(provider => provider.tools.some(tool => tool.name === name))?.key },
+    credentials: { resolve: async () => null, describe: async () => ({ configured: false }) },
+    directory: path.join(directory, "isolated settings"), codexHome: path.join(directory, "isolated codex"), skillRoot: path.join(cached, "skills"),
+  });
+  const snapshot = await settings.snapshot();
+  const listed = await settings.listTools();
+  for (const id of optionalIds) {
+    const capability = pluginCapabilities.find(entry => entry.id === id);
+    const provider = providers.find(provider => provider.key === capability.mcp[0].name);
+    assert.equal(provider.defaultEnabled, false, id);
+    assert.equal(snapshot.providers.find(item => item.id === provider.key).enabled, false, id);
+    for (const name of capability.tools) {
+      assert.equal(snapshot.tools.find(tool => tool.id === name).enabled, false, name);
+      assert.ok(!listed.some(tool => tool.name === name), name);
+    }
+  }
   const algorithms = pluginCapabilities.find(entry => entry.id === "quantum-algorithms");
   assert.equal(algorithms.status, "available");
   assert.equal(algorithms.hostTools.length, 2);
   assert.deepEqual(algorithms.tools, []); // Host execution is not a new MCP Tool.
   const workbench = await fs.readFile(path.join(cached, "skills/quantum-sdk-workbench/SKILL.md"), "utf8");
   assert.match(workbench, /原生 SDK/);
-  await assert.rejects(fs.access(path.join(cached, "skills/oqc-cloud/SKILL.md")), { code: "ENOENT" });
+  assert.equal(pluginCapabilities.find(entry => entry.id === "netqasm-network").status, "unsupported");
+  await assert.rejects(fs.access(path.join(cached, "skills/netqasm-network/SKILL.md")), { code: "ENOENT" });
 });

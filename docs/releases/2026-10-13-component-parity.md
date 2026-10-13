@@ -3,7 +3,8 @@
 用户要求两个入口完整使用同一套内容，降低学习成本。本轮沿用 `c/codex-settings-complete`，实施基线为
 前次交付 `226e8a68`，集成目标仍为 `main@05944b3a1f5f528a82edbdea35f34530e822d977`。
 源码保存为 `af6f66fe`、`5381b0bc`、`005710500086ac53093134263482e088bf7a2a1e`。
-本轮更新本机插件，随后按用户请求推送到任务分支 `c/codex-settings-complete`；尚未合并或正式发行。
+本轮更新本机插件，随后按用户请求推送到任务分支 `c/codex-settings-complete`；集成状态以
+[PR #21](https://github.com/xi-zhao/OpenQuantum/pull/21) 为准，尚未正式发行。
 
 ## 用户得到的内容
 

@@ -3,7 +3,7 @@
 本轮在 `c/codex-settings-complete` 实施，基线为 `origin/main@05944b3a1f5f528a82edbdea35f34530e822d977`。
 用户要求直接复用其截图中的 Desktop“服务密钥”页，并授权更新本机已安装插件。
 最终代码提交为 `fb06c7f883d2478598cb503c067efc9bda42695e`，已在本机安装；与后续内容一致改动一并推送到
-任务分支 `c/codex-settings-complete`，尚未合并或发布。
+任务分支 `c/codex-settings-complete`，集成状态见 [PR #21](https://github.com/xi-zhao/OpenQuantum/pull/21)，尚未发布。
 沿用 0.8.3 产品版本号，但这不是已发布的 0.8.3 附件。现有 DSH Desktop 安装未变。
 
 ## 用户得到的行为
