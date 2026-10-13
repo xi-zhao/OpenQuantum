@@ -13,9 +13,9 @@
 
 ## 当前 Skill
 
-以下 157 个 Skill 随源码分发；它们与 MCP Server 不是一一对应关系，知识型 Skill 可以不绑定专用 Tool，
+以下 183 个 Skill 随源码分发；它们与 MCP Server 不是一一对应关系，知识型 Skill 可以不绑定专用 Tool，
 工作流也可以使用多个服务或进程内原生 Tool。连接默认配置与凭据条件见[项目首页](../../README.md#mcp-服务目录)。
-当前 144 项可由模型自动选择，13 个分类索引仅保留用户显式调用；名称和来源映射不变。
+当前 170 项可由模型自动选择，13 个分类索引仅保留用户显式调用；名称和来源映射不变。
 分批建议与兼容影响见[扩展治理清单](../../docs/architecture/EXTENSION_GOVERNANCE.md)。
 
 | Skill | 作用 | 依赖的执行模块 |
@@ -23,6 +23,32 @@
 | `platform-diagnostics` | UI、Harness、Skill 和 Model 四个职责面的平台诊断 | Harness Tool、诊断 Validator 与 eval evidence |
 | `quantum-sdk-advisor` | 量子软件栈选型 | 无强制 Tool Provider |
 | `quantum-sdk-workbench` | 固定依赖中的原生 SDK、自定义代码与复现工件 | 宿主已有 `bash` / `pwsh`；不新增任意代码 MCP |
+| `arc-rydberg` | 原子、能级、跃迁矩阵元、寿命、Stark 图与相互作用 | 宿主代码 Tool；显式准备 python 环境 |
+| `catalyst-compilation` | qjit、混合程序、QNode、控制流、编译配置与梯度 | 宿主代码 Tool；显式准备 python 环境 |
+| `jaxquantum-modeling` | JAX 算符、器件与 bosonic 模型、动力学、扫描与梯度 | 宿主代码 Tool；显式准备 python 环境 |
+| `josephson-circuits` | Josephson 元件、电路、频域谐波平衡、散射与噪声 | 宿主代码 Tool；显式准备 julia 环境 |
+| `monoprop-propagation` | Pauli/Majorana 算符、门生成元、传播、梯度与截断 | 宿主代码 Tool；显式准备 python 环境 |
+| `mqt-debugger` | OpenQASM 程序、单步仿真、断言、影响范围与错误诊断 | 宿主代码 Tool；显式准备 python 环境 |
+| `mqt-qecc` | CSS 码、容错态制备、色码与模拟信息解码 | 宿主代码 Tool；显式准备 python 环境 |
+| `openjij-optimization` | Ising/QUBO、SA/SQA sampler、退火 schedule 与 SampleSet | 宿主代码 Tool；显式准备 python 环境 |
+| `paulistrings-dynamics` | Pauli 字符串、Hamiltonian、算符传播与多体算法 | 宿主代码 Tool；显式准备 julia 环境 |
+| `pecos-qec` | 混合程序、量子后端、噪声、syndrome 与纠错协议 | 宿主代码 Tool；显式准备 python 环境 |
+| `piquasso-photonics` | Gaussian/Fock 态、光子程序、信道与测量 | 宿主代码 Tool；显式准备 python 环境 |
+| `pygsti-characterization` | Circuit、Model、DataSet、GST/RB/RPE 与拟合报告 | 宿主代码 Tool；显式准备 python 环境 |
+| `qdk-chemistry` | 分子结构、电子结构、活性空间、量子算法、后端与结果 | 宿主代码 Tool；显式准备 python 环境 |
+| `qiskit-machine-learning` | 量子核、QSVC/QSVR、QNN、梯度、训练与推断 | 宿主代码 Tool；显式准备 python 环境 |
+| `qlasskit-oracles` | 受支持 Python 子集、布尔表达式、量子 oracle 与多框架导出 | 宿主代码 Tool；显式准备 python 环境 |
+| `qsim-simulation` | Cirq 电路、QSimOptions、态矢量、采样与目标后端 | 宿主代码 Tool；显式准备 python 环境 |
+| `qsyn-compilation` | C++ 库、线路综合、ZX/张量变换、优化、验证与 CLI | 宿主代码 Tool；显式准备 native 环境 |
+| `quantumclifford-julia` | Pauli/稳定子、图态、Clifford 操作、测量与 Pauli frame | 宿主代码 Tool；显式准备 julia 环境 |
+| `quantumcontrol-julia` | 动力学、控制目标、脉冲、GRAPE/Krotov 与优化 | 宿主代码 Tool；显式准备 julia 环境 |
+| `quantumsavory-network` | 量子寄存器、器件状态、链路、网络协议与离散事件模拟 | 宿主代码 Tool；显式准备 julia 环境 |
+| `squlearn-learning` | 编码线路、observable、executor、量子核与 sklearn estimator | 宿主代码 Tool；显式准备 python 环境 |
+| `staq-compilation` | OpenQASM AST、综合、线路变换、优化与映射 | 宿主代码 Tool；显式准备 python 环境 |
+| `tesseract-decoding` | Stim DEM、syndrome、搜索式解码器与统计 | 宿主代码 Tool；显式准备 python 环境 |
+| `tqec-compilation` | BlockGraph、逻辑计算块、相关面与 Stim 线路生成 | 宿主代码 Tool；显式准备 python 环境 |
+| `tsim-sampling` | Clifford/非 Clifford 线路、噪声、detector 与 observable 采样 | 宿主代码 Tool；显式准备 python 环境 |
+| `yao-circuits` | 量子寄存器、block、电路、算符、参数与梯度 | 宿主代码 Tool；显式准备 julia 环境 |
 | `qiskit-circuit-workbench` | QASM/QPY 电路分析和转译工作流 | Qiskit MCP Server + Harness MCP Client |
 | `fieldqkit-hardware` | 国内量子云后端发现和凭据缺口解释 | FieldQKit 本地 MCP Server + Harness MCP Client；不改变云状态；显式准备 Python 环境，发现可能写 SDK 缓存 |
 | `qdmi-device` | 已配置驱动的设备、门集与耦合只读查询 | QDMI 本地 MCP Server + Harness MCP Client；默认关闭，需显式准备驱动 |

@@ -35,3 +35,7 @@ UV_PROJECT_ENVIRONMENT=.openquantum/python-envs/mqt-bench \
   uv run --project benchmarks/quantum-capabilities --python 3.12 \
   python benchmarks/quantum-capabilities/scripts/generate.py
 ```
+
+## v2 扩展语料
+
+[独立 v2 语料](corpora/v2/README.md)使用 MQT Bench 2.3.0，包含七类算法、三种规模的 21 例，记录参数、全局相位、摘要和导出读回检查。v1 的三例固定分母不变。

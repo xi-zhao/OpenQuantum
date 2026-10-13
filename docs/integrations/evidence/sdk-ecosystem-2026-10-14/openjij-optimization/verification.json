@@ -1,0 +1,17 @@
+{
+  "id": "openjij-optimization",
+  "dependencyLockSha256": "8b348aa9cb057bd60b2bc5165b3df5596642a580d88f609dee94bf42dcaf7229",
+  "sourceSha256": "b48243f8b00b2494b5ff326731faf9a0e3823020b3b3001b8337c407b5e7a45d",
+  "networkIsolation": "macOS sandbox-exec deny network*",
+  "scientificValidation": "not_evaluated",
+  "status": "passed",
+  "files": {
+    "attempt.json": "6fc305f23884a07332190b5bd1252829de673c6382607a0b4ba2ffc5aa965ce7",
+    "program.py": "b48243f8b00b2494b5ff326731faf9a0e3823020b3b3001b8337c407b5e7a45d",
+    "result.json": "68b33de5349b9ee126ae466f900303372520751d9d560114dab03e8c5900983c",
+    "runner.py": "a0fc307c398b014acf774d85f64cfb450988b7b72ea285429a70a4497c13cb94",
+    "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "versions.json": "c275abbbec51e537c897c178e3ce97f70f00f1c4bf68095b40b81906d5856314"
+  }
+}

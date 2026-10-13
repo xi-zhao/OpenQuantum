@@ -2,6 +2,13 @@
 
 量子依赖核验日期：2026-09-22；平台升级记录日期：2026-09-10；原模型验收交接记录日期：2026-09-05。此页只记录工作交接；架构以[文档总入口](docs/README.md)为准，执行事实以 Harness Session event log 为准，科学状态以 Acceptance Report 为准。
 
+## 原生 SDK 生态扩展（2026-10-14，源码候选）
+
+- 从本轮清单剔除旧运行栈的 QuCumber，增加 26 个原生 SDK/源码入口；既有 TensorCircuit 迁移到 TensorCircuit-NG，MQT Bench 单独增加 v2 的 21 例。
+- SDK 环境目录现为 111 项，源码 Skill 为 183 项；复用宿主代码工具，不增加科学 Tool 或 MCP 连接数量。
+- 版本、许可、源码与构建条件见[生态扩展记录](docs/integrations/SDK_ECOSYSTEM_2026-10-14.md)。26/26 个新增入口的实际 API 检查、全仓检查和打包回归通过，独立审查无未解决 P1/P2；[持久证据](docs/integrations/evidence/sdk-ecosystem-2026-10-14.json)保留版本、结果和摘要，科学状态仍为 `not_evaluated`。
+- 在 `origin/main@ac00ceba` 的隔离任务分支实施；本轮尚未推送、合并、安装为用户插件或发布。
+
 ## Codex 与 Desktop 量子组件内容一致（2026-10-13，本地）
 
 - 统一运行状态、MCP、Skills、服务密钥四个标签与共享卡片。Codex 目录完整展示 Desktop 的 157 个 Skill、91 个 MCP；未适配项目保留说明，操作不误启用。

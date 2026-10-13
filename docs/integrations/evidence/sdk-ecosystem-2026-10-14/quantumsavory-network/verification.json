@@ -1,0 +1,16 @@
+{
+  "id": "quantumsavory-network",
+  "dependencyLockSha256": "8904c5e8a489217e4119aab3fecf2f2687931d23a837a837266f4bf6876dfe3d",
+  "sourceSha256": "9f4d5f1562a92af960ef316148f7fb19322fb76500fda51e793843a7f8632abd",
+  "networkIsolation": "macOS sandbox-exec deny network*",
+  "scientificValidation": "not_evaluated",
+  "status": "passed",
+  "files": {
+    "attempt.json": "dad2e54216c6352a7cc9981cff0000952d22531e55b4ffd8c801352e2c4024c5",
+    "program.jl": "9f4d5f1562a92af960ef316148f7fb19322fb76500fda51e793843a7f8632abd",
+    "result.json": "3e148d76eede0890d217e4d497e82d18343571ac5bc37b18ffeb8a9f88e1f535",
+    "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "versions.json": "f10fbe7d6c566f41839ca778a1c738579e0e4b8d4c68c8a7fc7bdc4a20867f8e"
+  }
+}

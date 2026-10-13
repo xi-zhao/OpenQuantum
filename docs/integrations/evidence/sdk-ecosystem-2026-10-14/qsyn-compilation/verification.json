@@ -1,0 +1,19 @@
+{
+  "id": "qsyn-compilation",
+  "dependencyLockSha256": "3d7bc7e8b1f238f957f76ea6b7d0972f8816cd24af1f00966fd44f896137a8e5",
+  "sourceSha256": "001d08fb77a285d25b27abbc13e02a8d0fb0eec30d36c1690b63e2d65623a4c3",
+  "nativeExecutableSha256": "032776b40e6add1c3ff7a977cfbaa8c5797977fd9a45485b66fdf43240b310bb",
+  "networkIsolation": "macOS sandbox-exec deny network*",
+  "scientificValidation": "not_evaluated",
+  "status": "passed",
+  "files": {
+    "attempt.json": "6f28d152f3b3b520b428f2cfc8c0a68221a23107e0b6d6375b6b9bda27f9b702",
+    "empty.qsynrc": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "equivalence.json": "ee333218f1b0307a7cffe72bb8201fedc13d6695fcb76ab5892f5c10e3f6a0df",
+    "input.qasm": "d1186e6e6f2aa622b7b2726959053ad95849e1c98e4d9c9f654c3bbcab207587",
+    "program.qsyn": "001d08fb77a285d25b27abbc13e02a8d0fb0eec30d36c1690b63e2d65623a4c3",
+    "result.qasm": "f7fce74b6500bf445f4d3e0962f4dcf9211b12ec5c699b22e11c29a66b3964b9",
+    "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

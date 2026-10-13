@@ -1,0 +1,3 @@
+qcir read input.qasm
+qcir optimize
+qcir write result.qasm

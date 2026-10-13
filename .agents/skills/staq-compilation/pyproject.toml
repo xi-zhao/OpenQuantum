@@ -1,0 +1,8 @@
+[project]
+name = "openquantum-staq-compilation"
+version = "0.1.0"
+requires-python = ">=3.12,<3.13"
+dependencies = ["pystaq @ git+https://github.com/softwareQinc/staq.git@a2acd39e60ed0e5f1978fa530df7e1e0c7cedf7a"]
+
+[tool.uv]
+package = false

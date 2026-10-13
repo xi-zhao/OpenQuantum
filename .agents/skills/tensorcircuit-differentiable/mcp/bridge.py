@@ -1,4 +1,4 @@
-"""TensorCircuit exact contraction with JAX CPU reverse-mode derivatives."""
+"""TensorCircuit-NG exact contraction with JAX CPU reverse-mode derivatives."""
 from pathlib import Path
 import os
 import sys
@@ -41,7 +41,7 @@ def compute(value):
     means = expectations(parameters)
     jacobian = jax.jacrev(expectations)(parameters) if trainable else np.empty((len(means), 0))
     return format_result(value, circuit(parameters).state(), means, jacobian,
-                         "TensorCircuit contraction with JAX CPU complex128", "JAX reverse-mode autodifferentiation")
+                         "TensorCircuit-NG contraction with JAX CPU complex128", "JAX reverse-mode autodifferentiation")
 
 
 if __name__ == "__main__":

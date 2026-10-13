@@ -1,0 +1,8 @@
+[project]
+name = "openquantum-mqtbench-expanded-corpus"
+version = "2.0.0"
+requires-python = ">=3.12,<3.13"
+dependencies = ["mqt.bench==2.3.0"]
+
+[tool.uv]
+package = false

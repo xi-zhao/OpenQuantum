@@ -1,0 +1,17 @@
+{
+  "id": "squlearn-learning",
+  "dependencyLockSha256": "9ee2cc4f5a7fda7eca14dbbf42a0733de6bf97f6e83ffa47c45fb29c5a6cbfc2",
+  "sourceSha256": "9c411c3904f3e51adf684b0a4101e2eb62e498a2331da443170a116c1d97c9fe",
+  "networkIsolation": "macOS sandbox-exec deny network*",
+  "scientificValidation": "not_evaluated",
+  "status": "passed",
+  "files": {
+    "attempt.json": "6f71ee37d834741e0c92b53f97e05d2424042f6049462f9a9428620a57ae635a",
+    "program.py": "9c411c3904f3e51adf684b0a4101e2eb62e498a2331da443170a116c1d97c9fe",
+    "result.json": "7b28fae98dc1dae8915a26725b482483eadf11163efb462025ad080e95abf6d6",
+    "runner.py": "a0fc307c398b014acf774d85f64cfb450988b7b72ea285429a70a4497c13cb94",
+    "stderr.log": "156261139a330fc29ce1a090841ee61efb1aac46bc8e77f2730462b55557933e",
+    "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "versions.json": "9d82b2ef01fd2b3ec7d6adf8b69ca073e27a6fc6415c7aeb4726f80993493e2c"
+  }
+}

@@ -1,0 +1,8 @@
+[project]
+name = "openquantum-tqec-compilation"
+version = "0.1.0"
+requires-python = ">=3.12,<3.13"
+dependencies = ["tqec @ https://github.com/tqec/tqec/archive/2c4b8cf9d3f8f520571093c60d752af0ad46a745.tar.gz"]
+
+[tool.uv]
+package = false

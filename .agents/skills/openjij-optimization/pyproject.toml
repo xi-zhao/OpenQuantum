@@ -1,0 +1,8 @@
+[project]
+name = "openquantum-openjij-optimization"
+version = "0.1.0"
+requires-python = ">=3.12,<3.13"
+dependencies = ["openjij==0.12.2"]
+
+[tool.uv]
+package = false

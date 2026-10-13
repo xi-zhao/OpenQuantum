@@ -16,7 +16,7 @@ Harness MCP Client 将 Tool 注册进现有 Harness Runtime，不引入另一个
 | --- | --- | --- | --- | --- |
 | [Xanadu / pennylane](https://github.com/PennyLaneAI/pennylane) | 0.45.1 | [`pennylane-differentiable`](../../.agents/skills/pennylane-differentiable/SKILL.md) | 用户电路的概率、Pauli 期望值和参数梯度。 | 默认开启 |
 | [图灵量子 / deepquantum](https://github.com/TuringQ/deepquantum) | 4.5.0 | [`deepquantum-differentiable`](../../.agents/skills/deepquantum-differentiable/SKILL.md) | 基于 PyTorch 的电路概率、期望值和参数梯度。 | 默认开启 |
-| [腾讯量子实验室 / tensorcircuit](https://github.com/tencent-quantum-lab/tensorcircuit) | 0.12.0 | [`tensorcircuit-differentiable`](../../.agents/skills/tensorcircuit-differentiable/SKILL.md) | 张量网络电路的概率、期望值和参数梯度。 | 默认开启 |
+| [TensorCircuit-NG](https://github.com/tensorcircuit/tensorcircuit-ng) | 1.10.0 | [`tensorcircuit-differentiable`](../../.agents/skills/tensorcircuit-differentiable/SKILL.md) | 张量网络电路的概率、期望值和参数梯度。 | 默认开启 |
 | [华为 HiQ / MindSpore / mindquantum](https://gitee.com/mindspore/mindquantum) | 0.12.0 | [`mindquantum-differentiable`](../../.agents/skills/mindquantum-differentiable/SKILL.md) | 本地电路模拟、Pauli 期望值和参数梯度。 | 默认开启 |
 | [Quantinuum / pytket](https://github.com/Quantinuum/tket) | 2.18.4 | [`pytket-compilation`](../../.agents/skills/pytket-compilation/SKILL.md) | 本地电路优化、门数比较与 OpenQASM 导出。 | 默认开启 |
 | [D-Wave / dimod + dwave-samplers](https://github.com/dwavesystems/dwave-ocean-sdk) | 0.12.22 / 1.8.0 | [`ocean-optimization`](../../.agents/skills/ocean-optimization/SKILL.md) | 二值二次模型的本地穷举或模拟退火；不是量子退火硬件执行。 | 默认开启 |
@@ -52,7 +52,7 @@ npm run capability:vendor-sdks:live
 PennyLane/TensorCircuit 的既有算法示例环境继续保留；本轮增加的是结构化可微分 Tool。
 
 大多数环境使用 Python 3.12；MindQuantum 使用 3.11，SpinQit 和 QuTrunk 使用 3.10。
-Alice & Bob 独立保留上游要求的 Qiskit 1.x；TensorCircuit 固定 JAX 0.4.38 / NumPy 1.26.4。
+Alice & Bob 独立保留上游要求的 Qiskit 1.x；当前源码中的 TensorCircuit-NG 固定 JAX 0.7.1 / NumPy 2.3.5，迁移与验证范围见[生态扩展](SDK_ECOSYSTEM_2026-10-14.md)。
 SpinQit 固定 SciPy 1.14.1，macOS 加载桥只预加载官方 wheel 内的动态库，不改写其二进制。
 全部环境均有 `uv.lock`；复用与错误恢复见[环境说明](LOCAL_ENVIRONMENTS.md)。
 

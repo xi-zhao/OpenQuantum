@@ -1,0 +1,17 @@
+{
+  "id": "tsim-sampling",
+  "dependencyLockSha256": "4c2d9d8f75030be9c324992ef163561775b432af14cdc609cf828ce416c61d6f",
+  "sourceSha256": "2e09f3c7567f36a6d94e43bd8143749170494482e6edaaff474f96e323637343",
+  "networkIsolation": "macOS sandbox-exec deny network*",
+  "scientificValidation": "not_evaluated",
+  "status": "passed",
+  "files": {
+    "attempt.json": "21fcbcc5f246a979ced99d86839c1165deca5c9dd6f9fab75b4396f529f33933",
+    "program.py": "2e09f3c7567f36a6d94e43bd8143749170494482e6edaaff474f96e323637343",
+    "result.json": "3d36c0f8207dc975e19316f1adbb6cc5d9c440a52473448bd9029535db52d235",
+    "runner.py": "a0fc307c398b014acf774d85f64cfb450988b7b72ea285429a70a4497c13cb94",
+    "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "versions.json": "a355bd68fd620af71abbb8dee6352d76cb818d1e5ebf7451603e1b16f81d5695"
+  }
+}

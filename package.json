@@ -123,7 +123,8 @@
     "sdk:inventory": "node scripts/sdk-access.mjs inventory",
     "sdk:inventory:check": "node scripts/audit-sdk-integration.mjs --check",
     "sdk:guides:check": "node scripts/build-sdk-skills.mjs --check",
-    "sdk:test": "node --test tests/sdk-access.test.mjs tests/sdk-package.test.mjs"
+    "sdk:test": "node --test tests/sdk-access.test.mjs tests/sdk-package.test.mjs",
+    "sdk:ecosystem:test": "OPENQUANTUM_ECOSYSTEM_CHECKS=1 node --test --test-concurrency=1 tests/sdk-ecosystem-live.test.mjs"
   },
   "dependencies": {
     "@deepseek-ai/dsh": "0.1.5-rc.1",

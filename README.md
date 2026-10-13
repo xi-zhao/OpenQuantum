@@ -96,7 +96,7 @@ OpenQuantum 有两个发行入口：**Desktop** 提供科研工作台和量子�
 
 本地计算可以从无需量子云账户的任务开始。真实硬件和付费服务按需配置；各方法的输入范围、准备条件与验证状态分别保留在详细目录中。
 
-自 v0.8.1 起，OpenQuantum 为 **85 个 SDK/源码环境**提供完整原生 API 的使用路径。Agent 可编写自定义程序、组合公开 API，并保存完整结果；便捷 Tool 的预设案例不再限制研究程序。环境按需显式准备，平台、账户、许可和可选后端限制仍适用。逐库工程检查及其范围见[完整 SDK 接入记录](docs/integrations/FULL_SDK_ACCESS.md)；没有用真实科研任务做验收，科学状态仍为 `not_evaluated`。
+当前源码为 **111 个 SDK/源码环境**提供完整原生 API 的使用路径；其中 26 项来自本轮[生态扩展](docs/integrations/SDK_ECOSYSTEM_2026-10-14.md)，尚未发布。Agent 可编写自定义程序、组合公开 API，并保存完整结果；便捷 Tool 的预设案例不再限制研究程序。环境按需显式准备，平台、账户、许可和可选后端限制仍适用。逐库工程检查及其范围见[完整 SDK 接入记录](docs/integrations/FULL_SDK_ACCESS.md)；没有用真实科研任务做验收，科学状态仍为 `not_evaluated`。
 
 v0.6.0 汇集近期新增的国内外公司与机构 SDK：从可微分电路、容错资源估算，到光子计算、脉冲编译和量子网络。三批接入分别见[17 项厂商 SDK](docs/integrations/VENDOR_SDKS.md)、[20 项公司与机构能力](docs/integrations/SDK_EXPANSION.md)和[15 项网络、控制与云接口](docs/integrations/SDK_GAPS.md)，另含 [QuEra Bloqade Analog](docs/integrations/BLOQADE_ANALOG.md)。每项开放的动作以适配说明为准；账户、鉴权、服务权限与适用许可由用户配置。
 
@@ -280,7 +280,7 @@ https://github.com/xi-zhao/OpenQuantum/blob/codex-v0.8.3/docs/integrations/CODEX
 需要我重载应用时，告诉我具体操作。最后报告实际验证的结果，以及仍需准备的科学计算依赖。
 ```
 
-OpenQuantum Desktop 能力包、Codex 插件及安装器统一使用 **OpenQuantum 0.8.3**。本版 Codex 插件包含 134 个 Skill、71 个科学 Tool，设置页新增用途分类、搜索和状态筛选；发行标签为 `codex-v0.8.3`。
+OpenQuantum Desktop 能力包、Codex 插件及安装器统一使用 **OpenQuantum 0.8.3**。本版 Codex 插件包含 134 个 Skill、71 个科学 Tool，设置页新增用途分类、搜索和状态筛选；发行标签为 `codex-v0.8.3`。本轮源码候选新增 26 个原生 SDK Skill；已发布的 0.8.3 内容以 Release 为准。
 
 **[下载 Codex 插件 0.8.3 完整安装包](https://github.com/xi-zhao/OpenQuantum/releases/download/codex-v0.8.3/openquantum-0.8.3-codex-install.zip)**
 （[发布说明与 SHA256SUMS](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.3)）。
@@ -707,7 +707,7 @@ Harness 是通用 Agent Runtime，扩展通过 Cordis Plugin 装配。UI、模�
   <a href="#原生量子-tools">原生量子 Tools</a>
 </p>
 
-当前源码分发 **157 个内置 Skill、91 个 MCP 服务连接、5 个原生量子 Tool**。其中 66 个 Skill 来自 quantum-skills 的开源工作流适配，共用现有代码执行工具；其中 49 项提供可运行示例，覆盖 unitarylab_algorithms 的全部 39 个模块。84 个 MCP 服务使用 OpenQuantum 的本地桥接实现。Skill、Tool 和 MCP 连接分别统计。
+当前源码分发 **183 个内置 Skill、91 个 MCP 服务连接、5 个原生量子 Tool**。其中 66 个 Skill 来自 quantum-skills 的开源工作流适配，共用现有代码执行工具；其中 49 项提供可运行示例，覆盖 unitarylab_algorithms 的全部 39 个模块。84 个 MCP 服务使用 OpenQuantum 的本地桥接实现。Skill、Tool 和 MCP 连接分别统计。
 
 当前配置共包含 **282 个可配置 Tool 名称**：258 个由 MCP 服务提供，18 个为 Harness 通用工具，6 个为平台原生工具（上面的 5 个量子动作及 1 个教学生成动作）。这是配置全集；`bash` / `pwsh` 按平台互斥，连接开关、环境和工具范围也会影响实际可调用集合。既有能力的逐项决定见[治理记录](docs/architecture/EXTENSION_GOVERNANCE.md)，新增中性原子动力学见 [Bloqade Analog](docs/integrations/BLOQADE_ANALOG.md)。
 
@@ -718,9 +718,40 @@ Harness 是通用 Agent Runtime，扩展通过 Cordis Plugin 装配。UI、模�
 
 既有条目与治理情况见[治理清单](docs/architecture/EXTENSION_GOVERNANCE.md)；相近入口及大型可选服务的专业工具范围见[能力选择](docs/integrations/CAPABILITY_SELECTION.md)。
 
-这 157 个 Skill 覆盖方法选择、计算实验、结果解释和平台诊断。其中 144 项可由 Agent 自动选择，13 个分类索引保留为用户手动导航；原名称和手动调用均可继续使用。点击名称即可查看完整的 `SKILL.md`；所需工具与连接分别配置。新增算法工作流的参数、安装与开源替换差异见[运行说明](examples/quantum-algorithms/README.md)。
+这 183 个 Skill 覆盖方法选择、计算实验、结果解释和平台诊断。其中 170 项可由 Agent 自动选择，13 个分类索引保留为用户手动导航；原名称和手动调用均可继续使用。点击名称即可查看完整的 `SKILL.md`；所需工具与连接分别配置。新增算法工作流的参数、安装与开源替换差异见[运行说明](examples/quantum-algorithms/README.md)。
 
 下表按**研究方法与用途**介绍能力。各 Tool 提供的模型、参数和输入格式见[计算参数与运行方式](#计算参数与运行方式)。
+
+##### 本轮原生 SDK 扩展（源码候选）
+
+| Skill | 研究方法与用途 | 执行入口 |
+| --- | --- | --- |
+| [`arc-rydberg`](.agents/skills/arc-rydberg/SKILL.md) | 原子、能级、跃迁矩阵元、寿命、Stark 图与相互作用 | 宿主代码 Tool；显式准备原生 SDK |
+| [`catalyst-compilation`](.agents/skills/catalyst-compilation/SKILL.md) | qjit、混合程序、QNode、控制流、编译配置与梯度 | 宿主代码 Tool；显式准备原生 SDK |
+| [`jaxquantum-modeling`](.agents/skills/jaxquantum-modeling/SKILL.md) | JAX 算符、器件与 bosonic 模型、动力学、扫描与梯度 | 宿主代码 Tool；显式准备原生 SDK |
+| [`josephson-circuits`](.agents/skills/josephson-circuits/SKILL.md) | Josephson 元件、电路、频域谐波平衡、散射与噪声 | 宿主代码 Tool；显式准备原生 SDK |
+| [`monoprop-propagation`](.agents/skills/monoprop-propagation/SKILL.md) | Pauli/Majorana 算符、门生成元、传播、梯度与截断 | 宿主代码 Tool；显式准备原生 SDK |
+| [`mqt-debugger`](.agents/skills/mqt-debugger/SKILL.md) | OpenQASM 程序、单步仿真、断言、影响范围与错误诊断 | 宿主代码 Tool；显式准备原生 SDK |
+| [`mqt-qecc`](.agents/skills/mqt-qecc/SKILL.md) | CSS 码、容错态制备、色码与模拟信息解码 | 宿主代码 Tool；显式准备原生 SDK |
+| [`openjij-optimization`](.agents/skills/openjij-optimization/SKILL.md) | Ising/QUBO、SA/SQA sampler、退火 schedule 与 SampleSet | 宿主代码 Tool；显式准备原生 SDK |
+| [`paulistrings-dynamics`](.agents/skills/paulistrings-dynamics/SKILL.md) | Pauli 字符串、Hamiltonian、算符传播与多体算法 | 宿主代码 Tool；显式准备原生 SDK |
+| [`pecos-qec`](.agents/skills/pecos-qec/SKILL.md) | 混合程序、量子后端、噪声、syndrome 与纠错协议 | 宿主代码 Tool；显式准备原生 SDK |
+| [`piquasso-photonics`](.agents/skills/piquasso-photonics/SKILL.md) | Gaussian/Fock 态、光子程序、信道与测量 | 宿主代码 Tool；显式准备原生 SDK |
+| [`pygsti-characterization`](.agents/skills/pygsti-characterization/SKILL.md) | Circuit、Model、DataSet、GST/RB/RPE 与拟合报告 | 宿主代码 Tool；显式准备原生 SDK |
+| [`qdk-chemistry`](.agents/skills/qdk-chemistry/SKILL.md) | 分子结构、电子结构、活性空间、量子算法、后端与结果 | 宿主代码 Tool；显式准备原生 SDK |
+| [`qiskit-machine-learning`](.agents/skills/qiskit-machine-learning/SKILL.md) | 量子核、QSVC/QSVR、QNN、梯度、训练与推断 | 宿主代码 Tool；显式准备原生 SDK |
+| [`qlasskit-oracles`](.agents/skills/qlasskit-oracles/SKILL.md) | 受支持 Python 子集、布尔表达式、量子 oracle 与多框架导出 | 宿主代码 Tool；显式准备原生 SDK |
+| [`qsim-simulation`](.agents/skills/qsim-simulation/SKILL.md) | Cirq 电路、QSimOptions、态矢量、采样与目标后端 | 宿主代码 Tool；显式准备原生 SDK |
+| [`qsyn-compilation`](.agents/skills/qsyn-compilation/SKILL.md) | C++ 库、线路综合、ZX/张量变换、优化、验证与 CLI | 宿主代码 Tool；显式准备原生 SDK |
+| [`quantumclifford-julia`](.agents/skills/quantumclifford-julia/SKILL.md) | Pauli/稳定子、图态、Clifford 操作、测量与 Pauli frame | 宿主代码 Tool；显式准备原生 SDK |
+| [`quantumcontrol-julia`](.agents/skills/quantumcontrol-julia/SKILL.md) | 动力学、控制目标、脉冲、GRAPE/Krotov 与优化 | 宿主代码 Tool；显式准备原生 SDK |
+| [`quantumsavory-network`](.agents/skills/quantumsavory-network/SKILL.md) | 量子寄存器、器件状态、链路、网络协议与离散事件模拟 | 宿主代码 Tool；显式准备原生 SDK |
+| [`squlearn-learning`](.agents/skills/squlearn-learning/SKILL.md) | 编码线路、observable、executor、量子核与 sklearn estimator | 宿主代码 Tool；显式准备原生 SDK |
+| [`staq-compilation`](.agents/skills/staq-compilation/SKILL.md) | OpenQASM AST、综合、线路变换、优化与映射 | 宿主代码 Tool；显式准备原生 SDK |
+| [`tesseract-decoding`](.agents/skills/tesseract-decoding/SKILL.md) | Stim DEM、syndrome、搜索式解码器与统计 | 宿主代码 Tool；显式准备原生 SDK |
+| [`tqec-compilation`](.agents/skills/tqec-compilation/SKILL.md) | BlockGraph、逻辑计算块、相关面与 Stim 线路生成 | 宿主代码 Tool；显式准备原生 SDK |
+| [`tsim-sampling`](.agents/skills/tsim-sampling/SKILL.md) | Clifford/非 Clifford 线路、噪声、detector 与 observable 采样 | 宿主代码 Tool；显式准备原生 SDK |
+| [`yao-circuits`](.agents/skills/yao-circuits/SKILL.md) | 量子寄存器、block、电路、算符、参数与梯度 | 宿主代码 Tool；显式准备原生 SDK |
 
 ##### 电路构建、变换与仿真
 
@@ -1190,7 +1221,7 @@ docs/                    架构、路线与生态文档
 
 ### 可选上游 Skill
 
-[OriginQ 官方 `pyqpanda3` Skill](https://github.com/OriginQ/pyqpanda3-skill) 提供电路编程、算法模板、迁移与 QCloud 使用指导。它**不计入上面的 157 个内置 Skill，也不会在首次启动时自动安装**；运行 `npm run skill:qpanda:setup` 后，固定审阅版本才会进入项目 Skill 目录。安装这个 Skill 不会自动启用 `qpanda_runtime`，也不会赋予云任务权限。
+[OriginQ 官方 `pyqpanda3` Skill](https://github.com/OriginQ/pyqpanda3-skill) 提供电路编程、算法模板、迁移与 QCloud 使用指导。它**不计入上面的 183 个内置 Skill，也不会在首次启动时自动安装**；运行 `npm run skill:qpanda:setup` 后，固定审阅版本才会进入项目 Skill 目录。安装这个 Skill 不会自动启用 `qpanda_runtime`，也不会赋予云任务权限。
 
 ## 长期发展规划
 

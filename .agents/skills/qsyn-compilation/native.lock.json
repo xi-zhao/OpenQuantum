@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 1,
+  "sources": [
+    {
+      "name": "qsyn",
+      "repository": "https://github.com/DVLab-NTU/qsyn.git",
+      "revision": "b77187c87f0bddd69bc6c213700642ee6c423159"
+    },
+    {
+      "name": "xtl",
+      "repository": "https://github.com/xtensor-stack/xtl.git",
+      "tag": "0.8.0",
+      "revision": "ef84e9f27020ad54961c99acd293d80d4b775dd3"
+    },
+    {
+      "name": "xtensor",
+      "repository": "https://github.com/xtensor-stack/xtensor.git",
+      "tag": "0.26.0",
+      "revision": "f31d415a507b84d0097436a38293df3f56906ad1"
+    },
+    {
+      "name": "xtensor-blas",
+      "repository": "https://github.com/xtensor-stack/xtensor-blas.git",
+      "tag": "0.22.0",
+      "revision": "894ff33d05aeb5297d5d3fde8e7591613b824de0"
+    },
+    {
+      "name": "libfort",
+      "repository": "https://github.com/seleznevae/libfort.git",
+      "tag": "v0.4.2",
+      "revision": "b1c32b67511f4612996b287a1ef4a9df012521d2"
+    },
+    {
+      "name": "fmt",
+      "repository": "https://github.com/fmtlib/fmt.git",
+      "tag": "10.2.1",
+      "revision": "e69e5f977d458f2650bb346dadf2ad30c5320281"
+    },
+    {
+      "name": "spdlog",
+      "repository": "https://github.com/gabime/spdlog.git",
+      "tag": "v1.14.1",
+      "revision": "27cb4c76708608465c413f6d0e6b8d99a4d84302"
+    },
+    {
+      "name": "GSL",
+      "repository": "https://github.com/microsoft/GSL.git",
+      "tag": "v4.0.0",
+      "revision": "a3534567187d2edc428efd3f13466ff75fe5805c"
+    },
+    {
+      "name": "dynamic_bitset",
+      "repository": "https://github.com/pinam45/dynamic_bitset.git",
+      "tag": "v1.2.1",
+      "revision": "6d19b2da9b69b8c77d7b86b453c757cd5fa8711f"
+    },
+    {
+      "name": "json",
+      "repository": "https://github.com/nlohmann/json.git",
+      "tag": "v3.11.3",
+      "revision": "9cca280a4d0ccf0c08f47a99aa71d1b0e52f8d03"
+    },
+    {
+      "name": "cadical",
+      "repository": "https://github.com/DVLab-NTU/cadical.git",
+      "tag": "add-cmake-fetchcontent-support",
+      "revision": "e080cabf410067d551705bfcad28454859d8a062"
+    },
+    {
+      "name": "libabc",
+      "repository": "https://github.com/DVLab-NTU/abc.git",
+      "tag": "add-cmake-fetchcontent-support",
+      "revision": "c1674b5d7cae744e4e9ab706f6e23c203ba86869"
+    },
+    {
+      "name": "Catch2",
+      "repository": "https://github.com/catchorg/Catch2.git",
+      "tag": "v3.7.1",
+      "revision": "fa43b77429ba76c462b1898d6cd2f2d7a9416b14"
+    }
+  ],
+  "systemRequirements": [
+    "CMake >=3.29",
+    "C++20 compiler",
+    "BLAS and LAPACK"
+  ]
+}

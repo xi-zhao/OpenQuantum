@@ -1,0 +1,19 @@
+version = 1
+revision = 3
+requires-python = "==3.12.*"
+
+[[package]]
+name = "openquantum-staq-compilation"
+version = "0.1.0"
+source = { virtual = "." }
+dependencies = [
+    { name = "pystaq" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "pystaq", git = "https://github.com/softwareQinc/staq.git?rev=a2acd39e60ed0e5f1978fa530df7e1e0c7cedf7a" }]
+
+[[package]]
+name = "pystaq"
+version = "3.5"
+source = { git = "https://github.com/softwareQinc/staq.git?rev=a2acd39e60ed0e5f1978fa530df7e1e0c7cedf7a#a2acd39e60ed0e5f1978fa530df7e1e0c7cedf7a" }

@@ -106,7 +106,7 @@ preserving the applicable upstream terms and notices. Scope and verification: [V
 | --- | --- | --- | --- |
 | [pennylane](https://github.com/PennyLaneAI/pennylane) | 0.45.1 | Apache-2.0 | 用户电路的概率、Pauli 期望值和参数梯度。 |
 | [deepquantum](https://github.com/TuringQ/deepquantum) | 4.5.0 | Apache-2.0 | 基于 PyTorch 的电路概率、期望值和参数梯度。 |
-| [tensorcircuit](https://github.com/tencent-quantum-lab/tensorcircuit) | 0.12.0 | Apache-2.0 | 张量网络电路的概率、期望值和参数梯度。 |
+| [TensorCircuit-NG](https://github.com/tensorcircuit/tensorcircuit-ng) | 1.10.0 | Apache-2.0 | 张量网络电路的概率、期望值和参数梯度。 |
 | [mindquantum](https://gitee.com/mindspore/mindquantum) | 0.12.0 | Apache-2.0 | 本地电路模拟、Pauli 期望值和参数梯度。 |
 | [pytket](https://github.com/Quantinuum/tket) | 2.18.4 | Apache-2.0 | 本地电路优化、门数比较与 OpenQASM 导出。 |
 | [dimod + dwave-samplers](https://github.com/dwavesystems/dwave-ocean-sdk) | 0.12.22 / 1.8.0 | Apache-2.0 | 二值二次模型的本地穷举或模拟退火；不是量子退火硬件执行。 |
@@ -160,3 +160,38 @@ Classiq 1.29.1 includes an evaluation license with restrictions, including evalu
 Q-CTRL SDKs reference proprietary terms. Both are opt-in and excluded from the default bulk setup. Qrisp remains an independent process under its own terms.
 NetQASM carries an upstream patent/commercial-use notice; MIT source licensing alone does not resolve that notice. Optional SquidASM is pinned to 0.13.6,
 while its privately obtained NetSquid dependency stack is not represented as publicly locked or verified here.
+
+## 原生 SDK 生态扩展（源码候选）
+
+以下组件按独立锁或源码提交显式准备，保留上游许可证；本仓库不重新分发其构建二进制。版本、平台条件和源码摘要见[接入记录](docs/integrations/SDK_ECOSYSTEM_2026-10-14.md)。
+
+| 组件 | 许可证 | 使用方式 | 上游 |
+| --- | --- | --- | --- |
+| ARC Rydberg | BSD-3-Clause | 原生公开 API；隔离环境或固定源码构建 | [nikolasibalic/ARC-Alkali-Rydberg-Calculator](https://github.com/nikolasibalic/ARC-Alkali-Rydberg-Calculator) |
+| PennyLane Catalyst | Apache-2.0 | 原生公开 API；隔离环境或固定源码构建 | [PennyLaneAI/catalyst](https://github.com/PennyLaneAI/catalyst) |
+| jaxquantum | Apache-2.0 | 原生公开 API；隔离环境或固定源码构建 | [EQuS/jaxquantum](https://github.com/EQuS/jaxquantum) |
+| JosephsonCircuits.jl | MIT | 原生公开 API；隔离环境或固定源码构建 | [kpobrien/JosephsonCircuits.jl](https://github.com/kpobrien/JosephsonCircuits.jl) |
+| monoprop | Apache-2.0 | 原生公开 API；隔离环境或固定源码构建 | [Algorithmiq/monoprop](https://github.com/Algorithmiq/monoprop) |
+| MQT Debugger | MIT | 原生公开 API；隔离环境或固定源码构建 | [munich-quantum-toolkit/debugger](https://github.com/munich-quantum-toolkit/debugger) |
+| MQT QECC | MIT | 原生公开 API；隔离环境或固定源码构建 | [munich-quantum-toolkit/qecc](https://github.com/munich-quantum-toolkit/qecc) |
+| OpenJij | Apache-2.0 | 原生公开 API；隔离环境或固定源码构建 | [Jij-Inc/OpenJij](https://github.com/Jij-Inc/OpenJij) |
+| PauliStrings.jl | MIT | 原生公开 API；隔离环境或固定源码构建 | [nicolasloizeau/PauliStrings.jl](https://github.com/nicolasloizeau/PauliStrings.jl) |
+| PECOS | Apache-2.0 | 原生公开 API；隔离环境或固定源码构建 | [PECOS-packages/PECOS](https://github.com/PECOS-packages/PECOS) |
+| Piquasso | Apache-2.0 | 原生公开 API；隔离环境或固定源码构建 | [Budapest-Quantum-Computing-Group/piquasso](https://github.com/Budapest-Quantum-Computing-Group/piquasso) |
+| pyGSTi | Apache-2.0 | 原生公开 API；隔离环境或固定源码构建 | [sandialabs/pyGSTi](https://github.com/sandialabs/pyGSTi) |
+| QDK Chemistry | MIT | 原生公开 API；隔离环境或固定源码构建 | [microsoft/qdk-chemistry](https://github.com/microsoft/qdk-chemistry) |
+| Qiskit Machine Learning | Apache-2.0 | 原生公开 API；隔离环境或固定源码构建 | [qiskit-community/qiskit-machine-learning](https://github.com/qiskit-community/qiskit-machine-learning) |
+| Qlasskit | Apache-2.0 | 原生公开 API；隔离环境或固定源码构建 | [dakk/qlasskit](https://github.com/dakk/qlasskit) |
+| qsim | Apache-2.0 | 原生公开 API；隔离环境或固定源码构建 | [quantumlib/qsim](https://github.com/quantumlib/qsim) |
+| Qsyn | Apache-2.0 | 原生公开 API；隔离环境或固定源码构建 | [DVLab-NTU/qsyn](https://github.com/DVLab-NTU/qsyn) |
+| QuantumClifford.jl | MIT | 原生公开 API；隔离环境或固定源码构建 | [QuantumSavory/QuantumClifford.jl](https://github.com/QuantumSavory/QuantumClifford.jl) |
+| QuantumControl.jl | MIT code; documentation per-file | 原生公开 API；隔离环境或固定源码构建 | [JuliaQuantumControl/QuantumControl.jl](https://github.com/JuliaQuantumControl/QuantumControl.jl) |
+| QuantumSavory.jl | MIT | 原生公开 API；隔离环境或固定源码构建 | [QuantumSavory/QuantumSavory.jl](https://github.com/QuantumSavory/QuantumSavory.jl) |
+| sQUlearn | Apache-2.0 | 原生公开 API；隔离环境或固定源码构建 | [sQUlearn/squlearn](https://github.com/sQUlearn/squlearn) |
+| STAQ / pystaq | MIT | 原生公开 API；隔离环境或固定源码构建 | [softwareQinc/staq](https://github.com/softwareQinc/staq) |
+| Tesseract Decoder | Apache-2.0 | 原生公开 API；隔离环境或固定源码构建 | [quantumlib/tesseract-decoder](https://github.com/quantumlib/tesseract-decoder) |
+| TQEC | Apache-2.0 | 原生公开 API；隔离环境或固定源码构建 | [tqec/tqec](https://github.com/tqec/tqec) |
+| Tsim | Apache-2.0 | 原生公开 API；隔离环境或固定源码构建 | [QuEraComputing/tsim](https://github.com/QuEraComputing/tsim) |
+| Yao.jl | Apache-2.0 primary text; component review remains | 原生公开 API；隔离环境或固定源码构建 | [QuantumBFS/Yao.jl](https://github.com/QuantumBFS/Yao.jl) |
+
+Qsyn 构建中的 xtl、xtensor、xtensor-blas、libfort、fmt、spdlog、GSL、dynamic_bitset、nlohmann/json、CaDiCaL、ABC 与 Catch2 由独立 `native.lock.json` 固定，源码 checkout 保留原始许可证及子模块。本轮只携带依赖描述和安装器。

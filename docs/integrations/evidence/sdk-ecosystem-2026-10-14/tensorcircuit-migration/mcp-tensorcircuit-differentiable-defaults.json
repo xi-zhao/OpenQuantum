@@ -1,0 +1,96 @@
+{
+  "schemaVersion": "1.0",
+  "source": {
+    "name": "tensorcircuit-ng",
+    "version": "1.10.0",
+    "repository": "https://github.com/tensorcircuit/tensorcircuit-ng"
+  },
+  "input": {
+    "numQubits": 2,
+    "gates": [
+      {
+        "gate": "RY",
+        "targets": [
+          0
+        ],
+        "angle": 0.4
+      },
+      {
+        "gate": "CX",
+        "targets": [
+          0,
+          1
+        ]
+      }
+    ],
+    "observables": [
+      "ZI",
+      "IZ",
+      "XX"
+    ],
+    "trainableGateIndices": [
+      0
+    ],
+    "execution": {}
+  },
+  "inputSha256": "c41be1fe9e8966d53a1ae654a31fba9bb16d432bac5614c7ea424b7c391c5237",
+  "dependencyLockSha256": "ce543a7d59775c6a144b171c595a89aba5656fabd19d1834f26e78fce7109c89",
+  "result": {
+    "numQubits": 2,
+    "amplitudes": [
+      [
+        0.9800665778412416,
+        0
+      ],
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        0
+      ],
+      [
+        0.19866933079506122,
+        0
+      ]
+    ],
+    "probabilities": [
+      0.9605304970014426,
+      0,
+      0,
+      0.039469502998557456
+    ],
+    "stateNormSquared": 1,
+    "expectations": [
+      0.9210609940028851,
+      0.9210609940028851,
+      0.38941834230865047
+    ],
+    "jacobian": [
+      [
+        -0.38941834230865047
+      ],
+      [
+        -0.38941834230865047
+      ],
+      [
+        0.9210609940028851
+      ]
+    ],
+    "trainableGateIndices": [
+      0
+    ],
+    "bitOrder": "lexicographic bitstrings q0 q1 ...; q0 is the leftmost, most significant bit",
+    "angleUnit": "rad",
+    "backend": "TensorCircuit-NG contraction with JAX CPU complex128",
+    "gradientMethod": "JAX reverse-mode autodifferentiation"
+  },
+  "scientificValidation": "not_evaluated",
+  "limitations": [
+    "Ideal pure-state simulation from the all-zero state, with no noise or finite-shot sampling.",
+    "Each selected rotation angle is an independent parameter; no parameter sharing, optimization loop or hardware execution.",
+    "Probabilities and amplitudes are raw numerical outputs without clipping or renormalization; full state output grows as 2^numQubits.",
+    "This L1 execution does not establish scientific Acceptance or external-model validation."
+  ]
+}

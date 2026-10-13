@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "name": "qsyn",
+  "language": "c++",
+  "buildSystem": "cmake",
+  "minimumCmake": "3.29",
+  "standard": 20,
+  "target": "qsyn",
+  "executable": "qsyn",
+  "source": {
+    "repository": "https://github.com/DVLab-NTU/qsyn.git",
+    "revision": "b77187c87f0bddd69bc6c213700642ee6c423159"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "id": "mqt-debugger",
+  "dependencyLockSha256": "c0206031de4e455874c45960e265115fece8dc406455dae84ca284b6a76e3ed1",
+  "sourceSha256": "e6c605c1ff681944cf9319016ef13033980c7249cf633de9fad5e4bc88130e17",
+  "networkIsolation": "macOS sandbox-exec deny network*",
+  "scientificValidation": "not_evaluated",
+  "status": "passed",
+  "files": {
+    "attempt.json": "9fa0156290dfa51316298f9e5df51af77ee25bdbe45bc58946a1f24e75699df8",
+    "program.py": "e6c605c1ff681944cf9319016ef13033980c7249cf633de9fad5e4bc88130e17",
+    "program.qasm": "459156fdee4120f43bfd0da4721c6b226ddd8a9582dcf7a7f1a64298cb81ea26",
+    "result.json": "a7de1bda611cd55be68ced339732c751c74efb861d287c4fa25895b3566985ff",
+    "runner.py": "a0fc307c398b014acf774d85f64cfb450988b7b72ea285429a70a4497c13cb94",
+    "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "versions.json": "ec7ba29dd1c8ad0823a02feef36bb1cadfdcf152b81cbe583045d5f099bbbed2"
+  }
+}

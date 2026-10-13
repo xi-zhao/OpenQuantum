@@ -1,0 +1,17 @@
+{
+  "id": "qsim-simulation",
+  "dependencyLockSha256": "20016ec37245749802a9890aff4aaeaa1b89b3b7344e341c26c0a60d70c0c203",
+  "sourceSha256": "dbfaeb5d2958edde2c86339d2906cdb4c79f140225f0cccd2c60685278632b81",
+  "networkIsolation": "macOS sandbox-exec deny network*",
+  "scientificValidation": "not_evaluated",
+  "status": "passed",
+  "files": {
+    "attempt.json": "379620efa154ac93797a22beee8439ab63f2fcd7a7eefb1e7b577743295daf5a",
+    "program.py": "dbfaeb5d2958edde2c86339d2906cdb4c79f140225f0cccd2c60685278632b81",
+    "result.json": "7e37366a2dbf3b2720e769a9a02f3ba6eac8154bf121f2354a4f9e9c5f407d6e",
+    "runner.py": "a0fc307c398b014acf774d85f64cfb450988b7b72ea285429a70a4497c13cb94",
+    "stderr.log": "cace1071573ef725e762e8856427937617c8c67e5d0784c45c0e854e56a803a8",
+    "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "versions.json": "6613e7d79ce443869d6bbfb5ddf4451666ab029dfa3f31d1d079f0c4c5149953"
+  }
+}

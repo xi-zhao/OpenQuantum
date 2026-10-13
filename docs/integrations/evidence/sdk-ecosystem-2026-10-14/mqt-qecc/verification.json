@@ -1,0 +1,17 @@
+{
+  "id": "mqt-qecc",
+  "dependencyLockSha256": "7d6a9b9a17e638a52180d3ce6ad1d7b0b074c581c5ccc7db5f243f6d9a875586",
+  "sourceSha256": "4420abe195119061159f2c227b79b6713c93e43c88ad328ef646fff194210070",
+  "networkIsolation": "macOS sandbox-exec deny network*",
+  "scientificValidation": "not_evaluated",
+  "status": "passed",
+  "files": {
+    "attempt.json": "9a11cf75a098ad6c3416f76177dbcd2bca1b8693e620f9d91279cf472be9bbe2",
+    "program.py": "4420abe195119061159f2c227b79b6713c93e43c88ad328ef646fff194210070",
+    "result.json": "b101679416d16262f6631b8bad1a008e32796eaa0fd663c9af097d89608c19e3",
+    "runner.py": "a0fc307c398b014acf774d85f64cfb450988b7b72ea285429a70a4497c13cb94",
+    "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "versions.json": "0d44da88986e92fe368464b0d4b27a638e052c83d20cf7ccc597ddab3b7ef42d"
+  }
+}

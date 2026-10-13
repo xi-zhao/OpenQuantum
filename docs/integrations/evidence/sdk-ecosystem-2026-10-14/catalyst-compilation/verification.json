@@ -1,0 +1,17 @@
+{
+  "id": "catalyst-compilation",
+  "dependencyLockSha256": "42646b99e5f2c274b9581f2b8969969e90b92f7acdef06eeb6946f6ee4f3751f",
+  "sourceSha256": "18710c1e211c227cdcbfb997c8d019392707a27a33f85dbb2cf36e5d1b2cba15",
+  "networkIsolation": "macOS sandbox-exec deny network*",
+  "scientificValidation": "not_evaluated",
+  "status": "passed",
+  "files": {
+    "attempt.json": "8f8f2a7476ea26954e94449649f276d7ffc76d024b4bde7a1e6bc8b7934c64dd",
+    "program.py": "18710c1e211c227cdcbfb997c8d019392707a27a33f85dbb2cf36e5d1b2cba15",
+    "result.json": "790c052db0726b9d497555d6468346d88ca78d8442ba2f004caf13dd4de99f05",
+    "runner.py": "a0fc307c398b014acf774d85f64cfb450988b7b72ea285429a70a4497c13cb94",
+    "stderr.log": "6c3dd2ab77fd8c4539001bacbcc915e90e64f6e8c354361c9c628c1a2a61319e",
+    "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "versions.json": "6715370b470ccfa0e57dd3a72ffd5939dbdec799123b0d9ccc4ec9ee54c1f050"
+  }
+}

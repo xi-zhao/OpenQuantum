@@ -6,7 +6,7 @@ import path from "node:path";
 import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
-import { readSdkLibraries, sdkInventory, describeSdk, sdkCli } from "../src/lib/sdk-access.mjs";
+import { readSdkLibraries, sdkInventory, describeSdk, sdkCli, nativeSdkRoot, sdkSourceRoot } from "../src/lib/sdk-access.mjs";
 import { projectSkill } from "../scripts/build-chatgpt.mjs";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
@@ -100,6 +100,48 @@ test("full source SDK discovery rejects missing and modified source snapshots", 
   record.files = { "../outside.py": "never read" };
   await fs.writeFile(path.join(source, "openquantum-source.json"), JSON.stringify(record));
   assert.equal((await describeSdk(directory, "example", { environment: {} })).environmentState, "source_not_prepared");
+});
+
+test("native discovery never builds and rejects altered executables and escaping manifest paths", async t => {
+  const { directory } = await fixture(t);
+  const project = path.join(directory, ".agents/skills/example");
+  const catalog = path.join(directory, ".agents/sdk-libraries.json");
+  const library = { id: "example", language: "native", modules: [], nativeProject: { manifest: "native-project.json", lock: "native.lock.json" } };
+  await fs.writeFile(catalog, JSON.stringify({ schemaVersion: 1, libraries: [library] }));
+  await fs.writeFile(path.join(project, "native-project.json"), JSON.stringify({ schemaVersion: 1, executable: "example", target: "example" }));
+  await fs.writeFile(path.join(project, "native.lock.json"), JSON.stringify({ schemaVersion: 1, sources: [{ name: "example", repository: "https://github.com/example/source.git", revision: "a".repeat(40) }] }));
+  const environment = { OPENQUANTUM_NATIVE_SDK_ROOT: "native build with spaces", OPENQUANTUM_SDK_SOURCE_ROOT: "source cache", SECRET_FIXTURE: "never-export" };
+  const missing = await describeSdk(directory, "example", { environment });
+  assert.equal(missing.environmentState, "requires_native_build_check");
+  assert.equal(missing.nativeBuild.directory, nativeSdkRoot(directory, "example", environment));
+  assert.equal(sdkSourceRoot(directory, "example", environment), path.join(directory, "source cache/example"));
+  assert.doesNotMatch(JSON.stringify(missing), /never-export/);
+  await assert.rejects(fs.access(missing.nativeBuild.directory), { code: "ENOENT" });
+  const binary = Buffer.from("fixture executable, must never run");
+  await fs.mkdir(path.dirname(missing.run.command), { recursive: true });
+  await fs.writeFile(missing.run.command, binary, { mode: 0o755 });
+  const marker = path.join(missing.nativeBuild.directory, "openquantum-native.json");
+  await fs.writeFile(marker, JSON.stringify({ manifestSha256: missing.manifest.sha256, dependencyLockSha256: missing.lock.sha256, executableSha256: createHash("sha256").update(binary).digest("hex"), platform: process.platform, arch: process.arch }));
+  assert.equal((await describeSdk(directory, "example", { environment })).environmentState, "prepared");
+  assert.equal((await describeSdk(directory, "example", { environment })).nativeBuild.executableSha256, createHash("sha256").update(binary).digest("hex"));
+  await fs.appendFile(missing.run.command, "altered");
+  assert.equal((await describeSdk(directory, "example", { environment })).environmentState, "requires_native_build_check");
+  library.nativeProject.lock = "../outside.json";
+  await fs.writeFile(catalog, JSON.stringify({ schemaVersion: 1, libraries: [library] }));
+  await assert.rejects(readSdkLibraries(directory), /Invalid native project/);
+});
+
+test("Julia locator preserves explicit runtime and depot without importing or preparing the SDK", async t => {
+  const { directory } = await fixture(t);
+  const project = path.join(directory, ".agents/skills/example");
+  await fs.writeFile(path.join(directory, ".agents/sdk-libraries.json"), JSON.stringify({ schemaVersion: 1, libraries: [{ id: "example", language: "julia", modules: ["Example"], juliaVersion: "1.12.7" }] }));
+  await fs.writeFile(path.join(project, "Project.toml"), '[deps]\nExample = "11111111-1111-1111-1111-111111111111"\n');
+  await fs.writeFile(path.join(project, "Manifest.toml"), 'julia_version = "1.12.7"\n[[deps.Example]]\nversion = "1.0.0"\n');
+  const sdk = await describeSdk(directory, "example", { environment: { OPENQUANTUM_JULIA: "/runtime with spaces/julia", OPENQUANTUM_JULIA_DEPOT_PATH: "/separate depot:", SECRET_FIXTURE: "never-export" } });
+  assert.equal(sdk.environmentState, "requires_julia_check");
+  assert.equal(sdk.run.command, "/runtime with spaces/julia");
+  assert.deepEqual(sdk.run.environment, { JULIA_DEPOT_PATH: "/separate depot:" });
+  assert.doesNotMatch(JSON.stringify(sdk), /never-export/);
 });
 
 test("host Skill offers arbitrary SDK code without relaxing permissions or claiming scientific acceptance", () => {

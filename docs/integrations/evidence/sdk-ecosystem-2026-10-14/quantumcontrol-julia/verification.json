@@ -1,0 +1,16 @@
+{
+  "id": "quantumcontrol-julia",
+  "dependencyLockSha256": "c753720cf6c965ac04365791a6f369d0bc368491e888949cd4a8844dc8114761",
+  "sourceSha256": "3d85aefcd986620dfb045c7ecd4f962c408c283791c9960acbf6db9e0d085a15",
+  "networkIsolation": "macOS sandbox-exec deny network*",
+  "scientificValidation": "not_evaluated",
+  "status": "passed",
+  "files": {
+    "attempt.json": "a8e6c80ea585d674472a0e1107036bf68909c889d897aa9489517e898d8ac1bb",
+    "program.jl": "3d85aefcd986620dfb045c7ecd4f962c408c283791c9960acbf6db9e0d085a15",
+    "result.json": "2fa80b3c68d5f9757816a10a6a4916d2b3ee6d294b12f1787e4f63e92dd0deca",
+    "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "versions.json": "e153c749442389bf8e8b9c1e1285970e8962422fb61b30a303b2f64cfca7408a"
+  }
+}

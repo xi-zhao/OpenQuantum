@@ -1,0 +1,14 @@
+{
+  "status": "passed",
+  "legacyVersion": "0.12.0",
+  "ngVersion": "1.10.0",
+  "programSha256": "3b12d0b5ebf8af368f2f26999becd49cb6c3b8de9ec78491f691ccf7e59b3240",
+  "tolerance": 1e-10,
+  "maximumDifferences": {
+    "means": 0.0,
+    "gradients": 0.0,
+    "amplitudes": 0.0
+  },
+  "qiskitConversionVerified": true,
+  "scientificValidation": "not_evaluated"
+}

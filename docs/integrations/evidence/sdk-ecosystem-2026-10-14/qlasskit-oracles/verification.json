@@ -1,0 +1,18 @@
+{
+  "id": "qlasskit-oracles",
+  "dependencyLockSha256": "722ed31e1d3cd716e1d4f7a846761ab4cf24e5399ba39a0ec544a184a9b2f387",
+  "sourceSha256": "2d34d9f09f94cbdf1c7859ad6b2925b127ab7c8bdc60da61a243815c824f126d",
+  "networkIsolation": "macOS sandbox-exec deny network*",
+  "scientificValidation": "not_evaluated",
+  "status": "passed",
+  "files": {
+    "attempt.json": "6fa76dc59f33cc5973e2ed69d0eb90cd8c73936972ff09d53af9291de278b57f",
+    "program.py": "2d34d9f09f94cbdf1c7859ad6b2925b127ab7c8bdc60da61a243815c824f126d",
+    "program.qasm": "fce1ebb32da3f6ba527b79b7b6e753d23540cd398dfa2ac8ed57d45779144942",
+    "result.json": "fc73aa7dfe0752ead4666905ca52ff60c08914c43c9ec2d9bb5950305323c26f",
+    "runner.py": "a0fc307c398b014acf774d85f64cfb450988b7b72ea285429a70a4497c13cb94",
+    "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "versions.json": "750308177a37116bccb86a30676ead19105b86e602a5fb0c33621e3db69a43ce"
+  }
+}
