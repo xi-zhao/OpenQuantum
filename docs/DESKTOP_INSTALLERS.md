@@ -29,6 +29,12 @@ Windows 自定义客户端位置通过 `DSH_DESKTOP_EXECUTABLE` 指定原版 `DS
 `.openquantum/distribution-defaults/` 或 Home 的 `.openquantum-defaults/` 供比较。更新前应退出相关 Host。
 旧私有客户端安装迁移时，仅自动替换能与旧分发清单逐字节匹配的生成默认文件；用户修改继续保留。
 
+安装器按语义版本比较分发清单，在复制能力包、更新程序或启动入口前拒绝降级；同版本修复和升级仍可执行。
+版本缺失或无效时停止，不猜测版本顺序。安装过程不改写用户会话、凭据或自定义设置。
+已经安装的旧私有 `OpenQuantum Desktop.app` 自带旧安装器，不能自动获得此保护。
+完成迁移后应备份并停用这个旧入口；可将其原路径改为新版 `OpenQuantum.app` 的链接，使已有快捷入口继续指向新版。
+若旧入口曾把共用 `project/` 回写为旧版，需要重新安装对应能力包恢复程序与依赖；不要通过删除 Home 或数据目录处理。
+
 原版客户端保存数据目录后，也可以直接从 Finder 或开始菜单打开。安装器将项目 `.env` 中的两条模型
 `BASE_URL`、三个 Tool profile 与 `OPENQUANTUM_DISABLE_QISKIT_MCP` 固化为 Home 配置的默认值；启动环境仍优先。
 配置声明的 `apiKeyEnv`、`credentialEnv` 和 `optionalCredentialEnv` 引用若在项目 `.env` 有值，安装器通过
