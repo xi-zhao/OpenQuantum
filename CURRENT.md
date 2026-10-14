@@ -11,19 +11,19 @@
 - [Desktop v0.8.4](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.4)与 [Codex codex-v0.8.4](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.4) 已公开，两个标签均固定到上述发布提交；三平台能力包来自同一提交的验证产物，Codex 正式包的隔离完整安装和原生 Skill 开关、升级保留检查通过。
 - 范围见 [Desktop 说明](docs/releases/v0.8.4.md)与 [Codex 说明](docs/releases/codex-v0.8.4.md)，附件、下载与更新清单的实际验证结果以两个 Release 的 `release-validation.json` 为准。本轮发行不替换用户安装，不使用外部模型或 Cloud/QPU，科学状态仍为 `not_evaluated`。
 
-## Codex 与 Desktop 量子组件内容一致（2026-10-13，本地）
+## Codex 与 Desktop 量子组件内容一致（2026-10-13 验收，随 0.8.4 发行）
 
 - 统一运行状态、MCP、Skills、服务密钥四个标签与共享卡片。Codex 目录完整展示 Desktop 的 157 个 Skill、91 个 MCP；未适配项目保留说明，操作不误启用。
-- 服务与 Tool 控制仍有效，当前状态按各宿主读取，不复制用户配置或凭据。源码提交为 `af6f66fe`、`5381b0bc`、`00571050`，已推送到任务分支 `c/codex-settings-complete`；集成状态以 [PR #21](https://github.com/xi-zhao/OpenQuantum/pull/21) 为准，尚未发布。
+- 服务与 Tool 控制仍有效，当前状态按各宿主读取，不复制用户配置或凭据。源码提交为 `af6f66fe`、`5381b0bc`、`00571050`，已推送到任务分支 `c/codex-settings-complete`；[PR #21](https://github.com/xi-zhao/OpenQuantum/pull/21) 已合并为 `ac00ceba`，本功能随上述 0.8.4 双渠道发行公开。
 - 61 项相关回归及 10 项受影响入口/语言检查通过；浏览器实测覆盖开关、筛选、加密保存、连续输入和窄侧栏。用户随后确认原生侧边页“现在正常了”，显示验收项已关闭；该确认不扩展为原生密钥保存验收。详情见[内容一致验证记录](docs/releases/2026-10-13-component-parity.md)。
 
-## Codex 服务设置候选（2026-10-13，本地已安装、未发布）
+## Codex 服务设置（2026-10-13 验收，随 0.8.4 发行）
 
 - 按用户截图复用 Desktop 完整“服务密钥”卡片，默认显示双列布局、逐项用途和卡内保存；23 个独立字段中，8 个已接入服务的 17 项可配置。
 - 相关回归、隔离 Keyring 保存与重建读回、浏览器交互和打包 probe 通过，独立审查无阻断项。范围及限制见[候选验收](docs/releases/2026-10-13-codex-service-settings.md)。
 - 已按用户授权将本机 `openquantum@personal` 更新到 `fb06c7f8` 的干净构建；插件启用、缓存和实际 HTML 与包一致，其他插件未变。修复跨 MCP 进程读取资源失败；卡片改用 JWE 密文经 app-only Tool 通道保存，适配生产宿主的网络限制。
 - 用户已在最终安装后确认原生侧边入口显示服务密钥卡片。46/46 插件回归、隔离浏览器保存及 Keyring 检查通过；原生内嵌保存和宿主重启后的保存尚未验收，不能以本地预览代替。
-- 本候选与后续内容一致改动已一并推送到任务分支 `c/codex-settings-complete`，集成状态见 [PR #21](https://github.com/xi-zhao/OpenQuantum/pull/21)；尚未发布，现有 DSH Desktop 安装未变，未使用真实账户、厂商 API、外部模型或 QPU。
+- 本候选与后续内容一致改动已一并推送到任务分支 `c/codex-settings-complete`，[PR #21](https://github.com/xi-zhao/OpenQuantum/pull/21) 已合并为 `ac00ceba`，这两项设置功能随 0.8.4 双渠道发行公开；现有 DSH Desktop 安装未变，未使用真实账户、厂商 API、外部模型或 QPU。
 
 ## OpenQuantum 0.8.3 发行入口（2026-10-13）
 
