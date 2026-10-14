@@ -1,0 +1,17 @@
+{
+  "id": "arc-rydberg",
+  "dependencyLockSha256": "1494bd98cb91e9899439ed1f1dab2902404f068391ad789bb034f7a19d53ef1c",
+  "sourceSha256": "846c1663d74c65de198d1ac12e9107c82939f83eb9d0e945dd63bd505705163a",
+  "networkIsolation": "macOS sandbox-exec deny network*",
+  "scientificValidation": "not_evaluated",
+  "status": "passed",
+  "files": {
+    "attempt.json": "81dd2dfe4f3f4708b0ac0a210f71a70233e4839047acb34c8d985c13e3bcdaa0",
+    "program.py": "846c1663d74c65de198d1ac12e9107c82939f83eb9d0e945dd63bd505705163a",
+    "result.json": "4eb7bc2db16177d93b4d84a1110b73dcad893bdfb4efc50f39d78851de5ab522",
+    "runner.py": "a0fc307c398b014acf774d85f64cfb450988b7b72ea285429a70a4497c13cb94",
+    "stderr.log": "cace1071573ef725e762e8856427937617c8c67e5d0784c45c0e854e56a803a8",
+    "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "versions.json": "1db44f619ce5ac3a67a131b55e6fe0eed880def74b648f799ee099756005324c"
+  }
+}

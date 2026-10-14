@@ -1,0 +1,21 @@
+{
+  "id": "tqec-compilation",
+  "dependencyLockSha256": "ee38170f1649fd249540b8b801f884f58055896379a7cc591e0a18b82df087d4",
+  "sourceSha256": "cf7e9df5f8890547b6f66c075e6da58d974fe4a0962398ef2bff801d2d63ab7d",
+  "networkIsolation": "macOS sandbox-exec deny network*",
+  "scientificValidation": "not_evaluated",
+  "status": "passed",
+  "files": {
+    "attempt.json": "ce63a5c45b75ed607ae42490f2a7dc5de0c77b3a73d84b72d6313bccf85cf720",
+    "memory-X-1.stim": "c724546eb203176203a5be972388b719318828b0b113f50e044e5571f1d9e584",
+    "memory-X-2.stim": "e132289a3370cc1963137fca60632a3a150ef87ee6ed14ab7f6407b53d386c97",
+    "memory-Z-1.stim": "e74e6a4660819b51e1a5d9a29200151505aff0a6c00632a54e10a88593ae01b7",
+    "memory-Z-2.stim": "a780ccc1fc6078c2c0e4c13279d38189fb7d2a9d5f531c4fb398e7c170ae842d",
+    "program.py": "cf7e9df5f8890547b6f66c075e6da58d974fe4a0962398ef2bff801d2d63ab7d",
+    "result.json": "23b4578fb3a86108e60bed68ab57c067137c08d19d3ce13fbddd274d9e79ccf9",
+    "runner.py": "886f044a51f94ee08cbe47de0182294b7d01277db6bd1b7b4f0a1c9d214d1602",
+    "stderr.log": "66f137730b99c6ba9389ac03b82c0a5cb0b50d5dd339eebc1385ba9567f41d4b",
+    "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "versions.json": "9631fe09f3c9b06b91898935ebb01acf33bfc7505c43f4bb14d095f2ba65bb17"
+  }
+}

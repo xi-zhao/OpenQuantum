@@ -10,3 +10,61 @@
 
 # Preserve the audited Flow-VQE source bytes, including upstream whitespace.
 .agents/skills/flow-vqe/upstream/* -text whitespace=-blank-at-eol,-blank-at-eof
+
+# Preserve the exact upstream XYZ output and its recorded SHA-256.
+docs/integrations/evidence/sdk-ecosystem-2026-10-14/qdk-chemistry/molecule.xyz whitespace=-blank-at-eol
+
+# Keep this evidence cohort's hashed source and lock bytes identical on checkout.
+docs/integrations/evidence/sdk-ecosystem-2026-10-14/** -text
+.agents/skills/arc-rydberg/references/native-example.py text eol=lf
+.agents/skills/arc-rydberg/uv.lock text eol=lf
+.agents/skills/catalyst-compilation/references/native-example.py text eol=lf
+.agents/skills/catalyst-compilation/uv.lock text eol=lf
+.agents/skills/jaxquantum-modeling/references/native-example.py text eol=lf
+.agents/skills/jaxquantum-modeling/uv.lock text eol=lf
+.agents/skills/josephson-circuits/references/native-example.jl text eol=lf
+.agents/skills/josephson-circuits/Manifest.toml text eol=lf
+.agents/skills/monoprop-propagation/references/native-example.py text eol=lf
+.agents/skills/monoprop-propagation/uv.lock text eol=lf
+.agents/skills/mqt-debugger/references/native-example.py text eol=lf
+.agents/skills/mqt-debugger/uv.lock text eol=lf
+.agents/skills/mqt-qecc/references/native-example.py text eol=lf
+.agents/skills/mqt-qecc/uv.lock text eol=lf
+.agents/skills/openjij-optimization/references/native-example.py text eol=lf
+.agents/skills/openjij-optimization/uv.lock text eol=lf
+.agents/skills/paulistrings-dynamics/references/native-example.jl text eol=lf
+.agents/skills/paulistrings-dynamics/Manifest.toml text eol=lf
+.agents/skills/pecos-qec/references/native-example.py text eol=lf
+.agents/skills/pecos-qec/uv.lock text eol=lf
+.agents/skills/piquasso-photonics/references/native-example.py text eol=lf
+.agents/skills/piquasso-photonics/uv.lock text eol=lf
+.agents/skills/pygsti-characterization/references/native-example.py text eol=lf
+.agents/skills/pygsti-characterization/uv.lock text eol=lf
+.agents/skills/qdk-chemistry/references/native-example.py text eol=lf
+.agents/skills/qdk-chemistry/uv.lock text eol=lf
+.agents/skills/qiskit-machine-learning/references/native-example.py text eol=lf
+.agents/skills/qiskit-machine-learning/uv.lock text eol=lf
+.agents/skills/qlasskit-oracles/references/native-example.py text eol=lf
+.agents/skills/qlasskit-oracles/uv.lock text eol=lf
+.agents/skills/qsim-simulation/references/native-example.py text eol=lf
+.agents/skills/qsim-simulation/uv.lock text eol=lf
+.agents/skills/qsyn-compilation/references/native-example.qsyn text eol=lf
+.agents/skills/qsyn-compilation/native.lock.json text eol=lf
+.agents/skills/quantumclifford-julia/references/native-example.jl text eol=lf
+.agents/skills/quantumclifford-julia/Manifest.toml text eol=lf
+.agents/skills/quantumcontrol-julia/references/native-example.jl text eol=lf
+.agents/skills/quantumcontrol-julia/Manifest.toml text eol=lf
+.agents/skills/quantumsavory-network/references/native-example.jl text eol=lf
+.agents/skills/quantumsavory-network/Manifest.toml text eol=lf
+.agents/skills/squlearn-learning/references/native-example.py text eol=lf
+.agents/skills/squlearn-learning/uv.lock text eol=lf
+.agents/skills/staq-compilation/references/native-example.py text eol=lf
+.agents/skills/staq-compilation/uv.lock text eol=lf
+.agents/skills/tesseract-decoding/references/native-example.py text eol=lf
+.agents/skills/tesseract-decoding/uv.lock text eol=lf
+.agents/skills/tqec-compilation/references/native-example.py text eol=lf
+.agents/skills/tqec-compilation/uv.lock text eol=lf
+.agents/skills/tsim-sampling/references/native-example.py text eol=lf
+.agents/skills/tsim-sampling/uv.lock text eol=lf
+.agents/skills/yao-circuits/references/native-example.jl text eol=lf
+.agents/skills/yao-circuits/Manifest.toml text eol=lf

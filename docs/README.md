@@ -149,10 +149,13 @@ Skill 与 Tool 在概念和发行版 policy 中都相互独立：Skill-only、To
 - [桌面测试安装包](DESKTOP_INSTALLERS.md)：原版 DSH Desktop、OpenQuantum 能力包、数据保留与工程检查。
 - [部署与启动](DEPLOYMENT.md)：本地、Docker、模型配置和启动检查。
 - [本地计算环境准备](integrations/LOCAL_ENVIRONMENTS.md)：按能力显式准备固定依赖，已有环境原地核验与升级。
+- [原生 SDK 生态扩展](integrations/SDK_ECOSYSTEM_2026-10-14.md)：26 个维护中的 SDK/源码入口、TensorCircuit-NG 迁移与 MQT Bench v2；分列实际 API 与科学验收状态。
 - [完整 SDK 接入与逐库审计](integrations/FULL_SDK_ACCESS.md)：原生公开 API、环境定位、自定义程序、分批补齐与工程验证；便捷 Tool 的模型范围不再是 SDK 能力上限。
 - [Pasqal 实验工作流与 Cloud SDK](integrations/PASQAL.md)：复用 Pulser，覆盖实验规范、理想/含噪扫描、云提交恢复与原始采样分析。
 - [相近能力的选择](integrations/CAPABILITY_SELECTION.md)：算法示例与专业计算入口的选择，以及大型可选服务的工具范围。
 - [版本更新](UPDATES.md)：新版本提醒、源码升级、发布通道和维护流程。
+- [OpenQuantum 0.8.4 Desktop](releases/v0.8.4.md)：26 个新增 SDK、TensorCircuit-NG 迁移与 MQT Bench v2。
+- [Codex 插件 0.8.4](releases/codex-v0.8.4.md)：168 个 Skill、87 个科学 Tool 与完整量子组件设置。
 - [OpenQuantum 0.8.3 Desktop](releases/v0.8.3.md)：设置分类、搜索筛选与品牌图标。
 - [Codex 插件 0.8.3](releases/codex-v0.8.3.md)：共用设置分类、134 个 Skill 和 71 个科学 Tool。
 - [Codex 插件 0.8.2](releases/codex-v0.8.2.md)：Pasqal 实验工作流与计划、环境一致性检查。

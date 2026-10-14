@@ -2416,3 +2416,81 @@ packages:
         - tests/sdk-gaps-cloud-contracts.test.mjs
         - tests/sdk-gaps-cloud-live.test.mjs
         - tests/harness-sdk-gaps.test.mjs
+
+  - id: mqt-qecc
+    level: L0
+
+  - id: mqt-debugger
+    level: L0
+
+  - id: pygsti-characterization
+    level: L0
+
+  - id: qlasskit-oracles
+    level: L0
+
+  - id: tqec-compilation
+    level: L0
+
+  - id: tesseract-decoding
+    level: L0
+
+  - id: tsim-sampling
+    level: L0
+
+  - id: monoprop-propagation
+    level: L0
+
+  - id: piquasso-photonics
+    level: L0
+
+  - id: qiskit-machine-learning
+    level: L0
+
+  - id: squlearn-learning
+    level: L0
+
+  - id: openjij-optimization
+    level: L0
+
+  - id: arc-rydberg
+    level: L0
+
+  - id: qdk-chemistry
+    level: L0
+
+  - id: qsim-simulation
+    level: L0
+
+  - id: staq-compilation
+    level: L0
+
+  - id: catalyst-compilation
+    level: L0
+
+  - id: jaxquantum-modeling
+    level: L0
+
+  - id: pecos-qec
+    level: L0
+
+  - id: quantumcontrol-julia
+    level: L0
+
+  - id: quantumclifford-julia
+    level: L0
+
+  - id: quantumsavory-network
+    level: L0
+
+  - id: josephson-circuits
+    level: L0
+
+  - id: paulistrings-dynamics
+    level: L0
+
+  - id: yao-circuits
+    level: L0
+
+  - id: qsyn-compilation
+    level: L0

@@ -3,10 +3,31 @@ import test from "node:test";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { zipSync } from "fflate";
+import { parse } from "acorn";
 import { unpackPlugin, updateMarketplace, installedMcpServer } from "../scripts/install-codex-plugin.mjs";
 import { projectSkill } from "../scripts/build-chatgpt.mjs";
+import { installerFiles } from "../scripts/build-codex-release.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
+
+test("standalone installer includes its complete module graph and declares its runtime dependencies", async () => {
+  const files = await installerFiles(root, "fixture");
+  const manifest = JSON.parse(Buffer.from(files["fixture/package.json"]).toString("utf8"));
+  for (const [name, bytes] of Object.entries(files).filter(([name]) => name.endsWith(".mjs"))) {
+    const program = parse(Buffer.from(bytes).toString("utf8"), { ecmaVersion: "latest", sourceType: "module" });
+    for (const declaration of program.body.filter(node => node.source)) {
+      const specifier = declaration.source.value;
+      if (specifier.startsWith("node:")) continue;
+      if (specifier.startsWith(".")) {
+        const target = path.posix.normalize(path.posix.join(path.posix.dirname(name), specifier));
+        assert.ok(files[target], `${name} imports missing standalone file ${target}`);
+      } else {
+        const dependency = specifier.split("/").slice(0, specifier.startsWith("@") ? 2 : 1).join("/");
+        assert.ok(manifest.dependencies[dependency], `${name} imports undeclared installer dependency ${dependency}`);
+      }
+    }
+  }
+});
 test("installer updates only its owned OpenQuantum source and retains unrelated marketplace entries", () => {
   const home = "/fixture";
   const other = { name: "other", source: { source: "local", path: "./other" } };

@@ -1,0 +1,351 @@
+{
+  "schemaVersion": "1.0",
+  "id": "openquantum-mqtbench-corpus",
+  "version": "2.0.0",
+  "generator": {
+    "package": "mqt.bench",
+    "packageVersion": "2.3.0",
+    "pythonVersion": "3.12",
+    "level": "ALG",
+    "randomParameters": false,
+    "seed": 17,
+    "serialization": "OpenQASM 2"
+  },
+  "denominator": {
+    "caseCount": 21,
+    "caseIds": [
+      "ghz-3",
+      "ghz-5",
+      "ghz-7",
+      "qft-3",
+      "qft-5",
+      "qft-7",
+      "bv-3",
+      "bv-5",
+      "bv-7",
+      "wstate-3",
+      "wstate-5",
+      "wstate-7",
+      "dj-3",
+      "dj-5",
+      "dj-7",
+      "grover-3",
+      "grover-5",
+      "grover-7",
+      "qaoa-3",
+      "qaoa-5",
+      "qaoa-7"
+    ]
+  },
+  "cases": [
+    {
+      "id": "ghz-3",
+      "benchmark": "ghz",
+      "circuitSize": 3,
+      "fixture": "fixtures/ghz-3.qasm",
+      "sha256": "d18f465216bce7e46b26d3815472ea7e1bb8f9f2c323e060f25ae47c65a99193",
+      "expected": {
+        "qubits": 3,
+        "depth": 4,
+        "gates": 6
+      },
+      "globalPhase": 0.0,
+      "parameterAssignments": {}
+    },
+    {
+      "id": "ghz-5",
+      "benchmark": "ghz",
+      "circuitSize": 5,
+      "fixture": "fixtures/ghz-5.qasm",
+      "sha256": "448a2bd38e2bdaf2a84cc86543ace1871954d87fb3e8ef963dd3cc7462debc89",
+      "expected": {
+        "qubits": 5,
+        "depth": 6,
+        "gates": 10
+      },
+      "globalPhase": 0.0,
+      "parameterAssignments": {}
+    },
+    {
+      "id": "ghz-7",
+      "benchmark": "ghz",
+      "circuitSize": 7,
+      "fixture": "fixtures/ghz-7.qasm",
+      "sha256": "a2ef423a23064802be219d928ee1edd465895da42cbdd54763751c77ae0802af",
+      "expected": {
+        "qubits": 7,
+        "depth": 8,
+        "gates": 14
+      },
+      "globalPhase": 0.0,
+      "parameterAssignments": {}
+    },
+    {
+      "id": "qft-3",
+      "benchmark": "qft",
+      "circuitSize": 3,
+      "fixture": "fixtures/qft-3.qasm",
+      "sha256": "2635ac01aaef353dccc1138ff598e4a561b680ad5709678a942f65e1b99cd295",
+      "expected": {
+        "qubits": 3,
+        "depth": 2,
+        "gates": 4
+      },
+      "globalPhase": 0.0,
+      "parameterAssignments": {}
+    },
+    {
+      "id": "qft-5",
+      "benchmark": "qft",
+      "circuitSize": 5,
+      "fixture": "fixtures/qft-5.qasm",
+      "sha256": "858ec3cad1f46684248978d30ada9751ab56a38f92d9385908be446567d69b16",
+      "expected": {
+        "qubits": 5,
+        "depth": 2,
+        "gates": 6
+      },
+      "globalPhase": 0.0,
+      "parameterAssignments": {}
+    },
+    {
+      "id": "qft-7",
+      "benchmark": "qft",
+      "circuitSize": 7,
+      "fixture": "fixtures/qft-7.qasm",
+      "sha256": "7af151f3364031a0f73a9ae012ae47f7ecfc3098d5d79a3a263503bac5ee6dd9",
+      "expected": {
+        "qubits": 7,
+        "depth": 2,
+        "gates": 8
+      },
+      "globalPhase": 0.0,
+      "parameterAssignments": {}
+    },
+    {
+      "id": "bv-3",
+      "benchmark": "bv",
+      "circuitSize": 3,
+      "fixture": "fixtures/bv-3.qasm",
+      "sha256": "eec73adf11a78c936f8ad1ddece0726aa765f300cb2ba2991a6af4543c107718",
+      "expected": {
+        "qubits": 3,
+        "depth": 4,
+        "gates": 8
+      },
+      "globalPhase": 0.0,
+      "parameterAssignments": {}
+    },
+    {
+      "id": "bv-5",
+      "benchmark": "bv",
+      "circuitSize": 5,
+      "fixture": "fixtures/bv-5.qasm",
+      "sha256": "8cb172a20c9f20f30782f3f3e6d97d104c3da8e6ef35a3ff37f6469c7d68c02a",
+      "expected": {
+        "qubits": 5,
+        "depth": 5,
+        "gates": 15
+      },
+      "globalPhase": 0.0,
+      "parameterAssignments": {}
+    },
+    {
+      "id": "bv-7",
+      "benchmark": "bv",
+      "circuitSize": 7,
+      "fixture": "fixtures/bv-7.qasm",
+      "sha256": "1c3664596e4666acd3141ea15e39f351ad7d02233f2509b36475fba641353832",
+      "expected": {
+        "qubits": 7,
+        "depth": 6,
+        "gates": 22
+      },
+      "globalPhase": 0.0,
+      "parameterAssignments": {}
+    },
+    {
+      "id": "wstate-3",
+      "benchmark": "wstate",
+      "circuitSize": 3,
+      "fixture": "fixtures/wstate-3.qasm",
+      "sha256": "e2cc7598db324d620a65ea36872fab76d856a42a4a9f9ba04e8524616282945e",
+      "expected": {
+        "qubits": 3,
+        "depth": 7,
+        "gates": 12
+      },
+      "globalPhase": 0.0,
+      "parameterAssignments": {}
+    },
+    {
+      "id": "wstate-5",
+      "benchmark": "wstate",
+      "circuitSize": 5,
+      "fixture": "fixtures/wstate-5.qasm",
+      "sha256": "77ee663f279fa8ef1a7c7306f19975fb37f84e7dc41673a61e28ac25a2ddddbd",
+      "expected": {
+        "qubits": 5,
+        "depth": 11,
+        "gates": 22
+      },
+      "globalPhase": 0.0,
+      "parameterAssignments": {}
+    },
+    {
+      "id": "wstate-7",
+      "benchmark": "wstate",
+      "circuitSize": 7,
+      "fixture": "fixtures/wstate-7.qasm",
+      "sha256": "1a75cebfd20625bc2d3d613d29442b4ab39632831159cb70e9cbe22123015fd9",
+      "expected": {
+        "qubits": 7,
+        "depth": 15,
+        "gates": 32
+      },
+      "globalPhase": 0.0,
+      "parameterAssignments": {}
+    },
+    {
+      "id": "dj-3",
+      "benchmark": "dj",
+      "circuitSize": 3,
+      "fixture": "fixtures/dj-3.qasm",
+      "sha256": "950ba67d4b7230d935a76d96e861e62d18e9ec950ca5c9ebb354444a89690c1b",
+      "expected": {
+        "qubits": 3,
+        "depth": 5,
+        "gates": 9
+      },
+      "globalPhase": 0.0,
+      "parameterAssignments": {}
+    },
+    {
+      "id": "dj-5",
+      "benchmark": "dj",
+      "circuitSize": 5,
+      "fixture": "fixtures/dj-5.qasm",
+      "sha256": "1275c0199a5c51cca4212205efb97235e9cf5d85304903aee0decbf7a2d579e6",
+      "expected": {
+        "qubits": 5,
+        "depth": 5,
+        "gates": 15
+      },
+      "globalPhase": 0.0,
+      "parameterAssignments": {}
+    },
+    {
+      "id": "dj-7",
+      "benchmark": "dj",
+      "circuitSize": 7,
+      "fixture": "fixtures/dj-7.qasm",
+      "sha256": "9ef08b3a4b18b59332b52c0c9270d66599a20a51fcdbb04caeb4400f46c21438",
+      "expected": {
+        "qubits": 7,
+        "depth": 5,
+        "gates": 21
+      },
+      "globalPhase": 0.0,
+      "parameterAssignments": {}
+    },
+    {
+      "id": "grover-3",
+      "benchmark": "grover",
+      "circuitSize": 3,
+      "fixture": "fixtures/grover-3.qasm",
+      "sha256": "67ef355ef2aafa329d17512a3e584fd430b1da45600c48a728f54c698373438d",
+      "expected": {
+        "qubits": 3,
+        "depth": 3,
+        "gates": 7
+      },
+      "globalPhase": 0.0,
+      "parameterAssignments": {}
+    },
+    {
+      "id": "grover-5",
+      "benchmark": "grover",
+      "circuitSize": 5,
+      "fixture": "fixtures/grover-5.qasm",
+      "sha256": "6880869d374aba45722760d2a956fb93c872fce201fa76b0ee28df4439e77270",
+      "expected": {
+        "qubits": 5,
+        "depth": 5,
+        "gates": 13
+      },
+      "globalPhase": 0.0,
+      "parameterAssignments": {}
+    },
+    {
+      "id": "grover-7",
+      "benchmark": "grover",
+      "circuitSize": 7,
+      "fixture": "fixtures/grover-7.qasm",
+      "sha256": "2af0dc89068de29a8eda7b0037a6bbeb8bb34e2238270c1926d3e87f64902bda",
+      "expected": {
+        "qubits": 7,
+        "depth": 8,
+        "gates": 20
+      },
+      "globalPhase": 0.0,
+      "parameterAssignments": {}
+    },
+    {
+      "id": "qaoa-3",
+      "benchmark": "qaoa",
+      "circuitSize": 3,
+      "fixture": "fixtures/qaoa-3.qasm",
+      "sha256": "ae8553800e836737e2d4813ea3df7ae049c91fd17fdc9f859f4def99df007ca0",
+      "expected": {
+        "qubits": 3,
+        "depth": 7,
+        "gates": 13
+      },
+      "globalPhase": 0.0,
+      "parameterAssignments": {
+        "b[0]": 0.17,
+        "b[1]": 0.34,
+        "g[0]": 0.51,
+        "g[1]": 0.68
+      }
+    },
+    {
+      "id": "qaoa-5",
+      "benchmark": "qaoa",
+      "circuitSize": 5,
+      "fixture": "fixtures/qaoa-5.qasm",
+      "sha256": "5ccdac63ca0c955b6b259761fe379f3e64fcd4e9ef9e508f15e4563bcd815c68",
+      "expected": {
+        "qubits": 5,
+        "depth": 5,
+        "gates": 19
+      },
+      "globalPhase": 0.0,
+      "parameterAssignments": {
+        "b[0]": 0.17,
+        "b[1]": 0.34,
+        "g[0]": 0.51,
+        "g[1]": 0.68
+      }
+    },
+    {
+      "id": "qaoa-7",
+      "benchmark": "qaoa",
+      "circuitSize": 7,
+      "fixture": "fixtures/qaoa-7.qasm",
+      "sha256": "3968785df3b5d26ddc01d45331926c40a022f1a581119fe6964c6b81c9291c30",
+      "expected": {
+        "qubits": 7,
+        "depth": 13,
+        "gates": 41
+      },
+      "globalPhase": 0.0,
+      "parameterAssignments": {
+        "b[0]": 0.17,
+        "b[1]": 0.34,
+        "g[0]": 0.51,
+        "g[1]": 0.68
+      }
+    }
+  ]
+}

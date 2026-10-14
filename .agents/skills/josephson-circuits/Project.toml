@@ -1,0 +1,8 @@
+[deps]
+JSON3 = "0f8b85d8-7281-11e9-16c2-39a750bddbf1"
+JosephsonCircuits = "23a5dba6-321f-4fcf-be1e-689e290df087"
+
+[compat]
+JSON3 = "=1.14.3"
+JosephsonCircuits = "=0.5.4"
+julia = "=1.12.7"

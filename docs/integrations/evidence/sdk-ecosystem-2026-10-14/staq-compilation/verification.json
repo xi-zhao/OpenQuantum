@@ -1,0 +1,18 @@
+{
+  "id": "staq-compilation",
+  "dependencyLockSha256": "7c6c97baff46311381ecf5fa21dbd5213c980fa8a5f845579a957f4af428eacb",
+  "sourceSha256": "5868f140c9b4a6c6f85f6ea64e26fc173f263f8f2aa214bcab4f92e9cb80bc85",
+  "networkIsolation": "macOS sandbox-exec deny network*",
+  "scientificValidation": "not_evaluated",
+  "status": "passed",
+  "files": {
+    "attempt.json": "1958bcd14789906aa7c4e139574204e255d738e400a622c0f9bf8daf426470da",
+    "program.py": "5868f140c9b4a6c6f85f6ea64e26fc173f263f8f2aa214bcab4f92e9cb80bc85",
+    "result.json": "8019d63de9324cd3d395ef213a3d0427760ffe1078709281663cad700a17dbdf",
+    "result.qasm": "4c6fc18e3a9495d622770e07d484d6bf256c141d8c4eb880dd52c5e21c25b6df",
+    "runner.py": "a0fc307c398b014acf774d85f64cfb450988b7b72ea285429a70a4497c13cb94",
+    "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "versions.json": "774e4ab37d1a650e94f3c35a12e65a036e01b7639e0a6e962b66b7aad3d03b95"
+  }
+}

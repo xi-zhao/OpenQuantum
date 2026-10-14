@@ -31,7 +31,7 @@ export async function buildPlugin({ root = PROJECT_ROOT, output = path.join(root
   await copy("src/settings/credential-card.mjs");
   await copy("src/settings/credential-seal.mjs");
   await copy("src/settings/component-view.mjs");
-  const metadataFiles = ["src/settings/capability-categories.mjs", "src/settings/server/project-settings-catalog.mjs", "src/settings/server/quantum-hardware-mcp.mjs", "src/settings/server/qpanda-runtime-mcp.mjs", "src/settings/server/qpanda-skill.mjs", ".agents/sdk-libraries.json", "scripts/sdk-access.mjs", "scripts/setup-sdk.mjs", "scripts/setup-paper-tools.mjs", "scripts/setup-open-algorithm-examples.mjs", "scripts/setup-qdmi.mjs"];
+  const metadataFiles = ["src/settings/capability-categories.mjs", "src/settings/server/project-settings-catalog.mjs", "src/settings/server/quantum-hardware-mcp.mjs", "src/settings/server/qpanda-runtime-mcp.mjs", "src/settings/server/qpanda-skill.mjs", ".agents/sdk-libraries.json", "scripts/sdk-access.mjs", "scripts/setup-sdk.mjs", "scripts/setup-native-sdk.mjs", "scripts/setup-paper-tools.mjs", "scripts/setup-open-algorithm-examples.mjs", "scripts/setup-qdmi.mjs"];
   const files = git(root, ["ls-files", "--cached", "--others", "--exclude-standard", "-z"]).split("\0").filter(Boolean);
   for (const file of files) {
     const capability = file.match(/^\.agents\/skills\/([^/]+)\//)?.[1];

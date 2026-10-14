@@ -1,0 +1,17 @@
+{
+  "id": "monoprop-propagation",
+  "dependencyLockSha256": "977ad9ed3b670cfd231991cfc0f8a2bd67ef45f0423179f08d3dfade2ab38fe0",
+  "sourceSha256": "87499e728b7f5a910c39163675eae8cb51432a386867045ef539aead5a2436dc",
+  "networkIsolation": "macOS sandbox-exec deny network*",
+  "scientificValidation": "not_evaluated",
+  "status": "passed",
+  "files": {
+    "attempt.json": "b34328b8cfa2ad93bc572ec309c66df5de96cd857a31cfe2db44de0b7ea0bb9f",
+    "program.py": "87499e728b7f5a910c39163675eae8cb51432a386867045ef539aead5a2436dc",
+    "result.json": "2a79b4a60ce81b9516d3720156f62ed873231c7c1458041d31985c6691b0363a",
+    "runner.py": "a0fc307c398b014acf774d85f64cfb450988b7b72ea285429a70a4497c13cb94",
+    "stderr.log": "2ebd6138e142347f77ed59df8695b9311a600dd69de2fa08bd786807c99e6a99",
+    "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "versions.json": "3240450e8d533dbdba151511133e05d87529ccf84962d4e42cc932ca9efc169b"
+  }
+}

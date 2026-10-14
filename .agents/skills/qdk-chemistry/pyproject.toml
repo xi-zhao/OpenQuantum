@@ -1,0 +1,8 @@
+[project]
+name = "openquantum-qdk-chemistry"
+version = "0.1.0"
+requires-python = ">=3.12,<3.13"
+dependencies = ["qdk-chemistry[openfermion-extras,qiskit-extras,plugins]==2.2.1"]
+
+[tool.uv]
+package = false

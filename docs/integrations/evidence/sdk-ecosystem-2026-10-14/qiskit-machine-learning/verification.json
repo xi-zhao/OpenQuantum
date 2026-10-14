@@ -1,0 +1,17 @@
+{
+  "id": "qiskit-machine-learning",
+  "dependencyLockSha256": "baaee0be71d5f9ae05f3c2a953f06ca62c7a204b811dd6a5d497e8852a5cc7e6",
+  "sourceSha256": "ee22f4253c71cd4dd84d58695ad662614ed401b4981865e0bf9feaf027bb2375",
+  "networkIsolation": "macOS sandbox-exec deny network*",
+  "scientificValidation": "not_evaluated",
+  "status": "passed",
+  "files": {
+    "attempt.json": "79dfefbdef70fb9b8d3cbf5b5bc88d6e04a7ed0d9426f405a96c1069a7cf2d8e",
+    "program.py": "ee22f4253c71cd4dd84d58695ad662614ed401b4981865e0bf9feaf027bb2375",
+    "result.json": "9db45e93e02cafba44fe3de378b1cc4c46b2a4e630c887b2ba46046448a829a1",
+    "runner.py": "a0fc307c398b014acf774d85f64cfb450988b7b72ea285429a70a4497c13cb94",
+    "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "versions.json": "3595b10f62ccd89ad068ec5049448f5c00aa546f6b256cc382f799cf72a616d9"
+  }
+}

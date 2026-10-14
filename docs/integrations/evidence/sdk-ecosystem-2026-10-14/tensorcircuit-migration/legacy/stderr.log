@@ -1,0 +1,5 @@
+fail to load cloud provider module: tencent
+/Volumes/Elements/codex-task-cache/full-sdk-integration-20261012/python-envs/tensorcircuit-differentiable/lib/python3.12/site-packages/tensorcircuit/fgs.py:386: SyntaxWarning: invalid escape sequence '\d'
+  convention: (c, c^\dagger)
+/Volumes/Elements/codex-task-cache/full-sdk-integration-20261012/python-envs/tensorcircuit-differentiable/lib/python3.12/site-packages/tensorcircuit/fgs.py:401: SyntaxWarning: invalid escape sequence '\d'
+  convention: (c, c^\dagger)

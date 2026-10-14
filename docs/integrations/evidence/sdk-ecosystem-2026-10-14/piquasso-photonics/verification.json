@@ -1,0 +1,17 @@
+{
+  "id": "piquasso-photonics",
+  "dependencyLockSha256": "bc707685aa8db8aa351b2446956afde01a252ee7b4b8de249e740bbb21914088",
+  "sourceSha256": "10855cb876c4508592f15bc503bc9716a40fe3841cdb3cd2db4c0a672f00f953",
+  "networkIsolation": "macOS sandbox-exec deny network*",
+  "scientificValidation": "not_evaluated",
+  "status": "passed",
+  "files": {
+    "attempt.json": "9b8268f27631af349efb701239eba93368d1f767aac5314308e0c0b79e72205f",
+    "program.py": "10855cb876c4508592f15bc503bc9716a40fe3841cdb3cd2db4c0a672f00f953",
+    "result.json": "c2c6cee32f0386fa36c586d4833eb7aa8f05cb8524e2c955bad8038c2237992a",
+    "runner.py": "a0fc307c398b014acf774d85f64cfb450988b7b72ea285429a70a4497c13cb94",
+    "stderr.log": "724680438b0245925f10f6861e639499b496b7c1c8908471ad35f56c3d9aec6a",
+    "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "versions.json": "a04e3ecfce9e479b62c0dc76e8f28cf7bdaa520bf9ce295d3ed01cc12fe864eb"
+  }
+}

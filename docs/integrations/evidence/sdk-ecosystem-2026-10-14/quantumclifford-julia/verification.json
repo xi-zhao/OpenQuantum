@@ -1,0 +1,16 @@
+{
+  "id": "quantumclifford-julia",
+  "dependencyLockSha256": "910614d55e108a25fc1564a0b999edaa7e01d1777882b748a20ee9ff5a23f30a",
+  "sourceSha256": "d110241304e7a3fa2ec4d02d462b9602943990b24a8ba8dd077754265e120ffc",
+  "networkIsolation": "macOS sandbox-exec deny network*",
+  "scientificValidation": "not_evaluated",
+  "status": "passed",
+  "files": {
+    "attempt.json": "1248c0ef2f583dfa6585ccd49d4c3f970001255a493325a4a62f9ffa26ff68d4",
+    "program.jl": "d110241304e7a3fa2ec4d02d462b9602943990b24a8ba8dd077754265e120ffc",
+    "result.json": "91ff9cfcbfed8fb15b616fd7e451228f6f93d806e3c43620d166006a79226e01",
+    "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "versions.json": "d07621454b1bfe9cc672591e5d6f655c0d53fdc5514945c20b3c2cf7fe88df2b"
+  }
+}

@@ -1,0 +1,1 @@
+{"circuits": [{"basis": "X", "k": 1, "detectors": 24, "qubits": 25}, {"basis": "X", "k": 2, "detectors": 120, "qubits": 61}, {"basis": "Z", "k": 1, "detectors": 24, "qubits": 25}, {"basis": "Z", "k": 2, "detectors": 120, "qubits": 61}], "scientificValidation": "not_evaluated"}

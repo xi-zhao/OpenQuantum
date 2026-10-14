@@ -11,7 +11,8 @@
 - 源码/桌面版：从发行版根目录运行 `node scripts/sdk-access.mjs inspect <sdk-id>`。
 - Codex 插件：运行本 Skill 目录下 `scripts/sdk-access.mjs inspect <sdk-id>`。它读取插件自己的 MCP 配置以定位外置 runtime，适用于解压包和安装后的插件缓存；不要假设 runtime 位于当前研究项目或插件的 `server/`。
 - `list` 给出项目、库名、模块、任务对象与条件；`inventory` 给出依赖和锁定版本。命令返回 argv 数组，调用宿主工具时保留每个参数，路径含空格时正确引用；不要把 JSON 序列化当作 Shell 转义。
-- `inspect` 的 `setup` 是显式依赖准备，`run` 是解释器调用模板。确认 `environmentState=prepared` 后用用户脚本绝对路径替换占位符。Julia 还需核实版本与 `Pkg` 环境；QDMI 需检查构建输出和 ABI。
+- `inspect` 的 `setup` 是显式依赖准备，`run` 是解释器调用模板。确认 `environmentState=prepared` 后用用户脚本绝对路径替换占位符。Julia 还需核实固定版本与 `Pkg` 环境；QDMI 需检查构建输出和 ABI，其他原生入口返回构建后的可执行文件。
+- 可用 `OPENQUANTUM_JULIA` 指定解释器，`OPENQUANTUM_JULIA_DEPOT_PATH` 指定 Julia depot；定位器返回的 `run.environment` 与命令一起传给宿主工具。源码及原生构建缓存可用 `OPENQUANTUM_SDK_SOURCE_ROOT` 和 `OPENQUANTUM_NATIVE_SDK_ROOT` 外置。
 - 大型依赖下载受网络和缓存磁盘影响。显式 Python setup 可继承 `UV_CACHE_DIR`、`UV_CONCURRENT_DOWNLOADS`、`UV_HTTP_TIMEOUT`、`UV_HTTP_RETRIES` 与 `UV_LINK_MODE`；这些设置只影响准备过程，不改变依赖锁。失败后仍需成功完成 setup 才能标记 prepared。
 - 通用 Python setup 与算法环境 setup 在标记成功前检查 wheel 的原始 `RECORD` 所列文件是否存在、大小是否完整。磁盘写满后，即使 uv 的元数据检查成功，残缺文件仍会阻止标记；按同一锁与环境重装报告的依赖，再重新 setup。该检查不导入 SDK，也不证明 API 或数值行为正确。
 - 文档先查已安装模块的 docstring、`help()`、`inspect.signature()` 和包元数据中的官方文档。只读取相关模块，不递归导入全部子模块；导入也可能产生缓存或尝试连接外部服务。发现 API 与示例版本不符时修正任务代码，不能伪造兼容接口。

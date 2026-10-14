@@ -9,6 +9,22 @@ import { git } from "./build-chatgpt.mjs";
 const root = fileURLToPath(new URL("../", import.meta.url));
 const sha256 = bytes => createHash("sha256").update(bytes).digest("hex");
 
+// These files must work without any sibling repository source after extraction.
+export async function installerFiles(directory, prefix) {
+  const files = {};
+  const inputs = {
+    "package.json": "distributions/codex-installer/package.json",
+    "package-lock.json": "distributions/codex-installer/package-lock.json",
+    "README.md": "distributions/codex-installer/README.md",
+    "INSTALL.md": "docs/integrations/CODEX_AGENT_INSTALL.md",
+    "LICENSE": "LICENSE",
+    "THIRD_PARTY_NOTICES.md": "THIRD_PARTY_NOTICES.md",
+  };
+  for (const file of ["scripts/install-codex-plugin.mjs", "scripts/probe-chatgpt.mjs", "scripts/probe-codex-host.mjs", "runtime/chatgpt/server.mjs", "src/settings/credential-seal.mjs", "distributions/codex-plugin/package.json"]) inputs[file] = file;
+  for (const [target, source] of Object.entries(inputs)) files[`${prefix}/${target}`] = new Uint8Array(await fs.readFile(path.join(directory, source)));
+  return files;
+}
+
 export async function buildRelease({ directory = root } = {}) {
   if (git(directory, ["status", "--porcelain"])) throw new Error("Commit all release changes before building a public package");
   const installer = JSON.parse(await fs.readFile(path.join(directory, "distributions/codex-installer/package.json"), "utf8"));
@@ -20,17 +36,7 @@ export async function buildRelease({ directory = root } = {}) {
   const prefix = `openquantum-${plugin.version}-codex-install`;
   const pluginName = path.basename(built.zipPath);
   const pluginBytes = await fs.readFile(built.zipPath);
-  const files = {};
-  const inputs = {
-    "package.json": "distributions/codex-installer/package.json",
-    "package-lock.json": "distributions/codex-installer/package-lock.json",
-    "README.md": "distributions/codex-installer/README.md",
-    "INSTALL.md": "docs/integrations/CODEX_AGENT_INSTALL.md",
-    "LICENSE": "LICENSE",
-    "THIRD_PARTY_NOTICES.md": "THIRD_PARTY_NOTICES.md",
-  };
-  for (const file of ["scripts/install-codex-plugin.mjs", "scripts/probe-chatgpt.mjs", "scripts/probe-codex-host.mjs", "runtime/chatgpt/server.mjs", "distributions/codex-plugin/package.json"]) inputs[file] = file;
-  for (const [target, source] of Object.entries(inputs)) files[`${prefix}/${target}`] = new Uint8Array(await fs.readFile(path.join(directory, source)));
+  const files = await installerFiles(directory, prefix);
   files[`${prefix}/dist/codex-plugin/${pluginName}`] = new Uint8Array(pluginBytes);
   const installBytes = zipSync(files, { level: 6, mtime: new Date("2026-01-01T00:00:00Z") });
   const installName = `${prefix}.zip`;

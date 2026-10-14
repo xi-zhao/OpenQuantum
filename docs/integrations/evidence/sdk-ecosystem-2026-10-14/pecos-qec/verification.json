@@ -1,0 +1,18 @@
+{
+  "id": "pecos-qec",
+  "dependencyLockSha256": "97d90abb9d6055b5a091a5f569da7a1445a83ddd1be74b7fbec68a6f762e404c",
+  "sourceSha256": "ce6ef109e1c3206e63b73edaac0d6dca10031c643ccebcd768da9b0f45229fa2",
+  "networkIsolation": "macOS sandbox-exec deny network*",
+  "scientificValidation": "not_evaluated",
+  "status": "passed",
+  "files": {
+    "attempt.json": "22dcc7f6accd5af63f74cf51948c5b321a2ef4730bf0f6b7a217355f6d48ea97",
+    "program.py": "ce6ef109e1c3206e63b73edaac0d6dca10031c643ccebcd768da9b0f45229fa2",
+    "program.qasm": "4889e1ae7336a2bf7dfb6fbd1579feea0d0a4d657bd1c2f6c7bf845c225c837f",
+    "result.json": "0e2c0a6775b2f49010a81ceadff4ac5835e9beebc9ac7631e15dc9c80e7d448d",
+    "runner.py": "886f044a51f94ee08cbe47de0182294b7d01277db6bd1b7b4f0a1c9d214d1602",
+    "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "versions.json": "aade8c771a0e2ecee189262931c2d22ce788a8573de16db42b3c669e447cc1ee"
+  }
+}

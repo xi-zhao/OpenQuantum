@@ -142,7 +142,8 @@ def run_suite(skill_root):
     if evidence:
         directory = Path(evidence)
         directory.mkdir(parents=True, exist_ok=True)
-        payload = {"sdk": sdk, "version": importlib.metadata.version(sdk), "python": sys.version,
+        distribution = "tensorcircuit-ng" if sdk == "tensorcircuit" else sdk
+        payload = {"sdk": sdk, "distribution": distribution, "version": importlib.metadata.version(distribution), "python": sys.version,
                    "testsRun": result.testsRun, "failures": len(result.failures), "errors": len(result.errors),
                    "reference": "independent dense Pauli/gate algebra and exact parameter-shift derivative",
                    "tolerance": tolerance, "networkConnectBlocked": True, "cases": records}

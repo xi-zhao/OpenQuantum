@@ -9,6 +9,8 @@ const groups = [
     qcompute-simulation qibo-simulation braket-simulation quri-parts-estimation
     qdk-resource-estimation qualtran-resources mqt-ddsim mqt-qmap classiq-synthesis
     cudaq-simulation guppy-programs oqc-qat mimiq-simulation myqlm-simulation
+    mqt-debugger qlasskit-oracles qsim-simulation staq-compilation qsyn-compilation
+    catalyst-compilation yao-circuits
   `],
   ["algorithms", "算法与优化", `
     qpanda-qubo flow-vqe quantum-discrete-log quantum-shor quantum-simon
@@ -25,6 +27,7 @@ const groups = [
     quantum-guide-algorithms-state-preparation quantum-mottonen quantum-multiplexer
     quantum-superposition quantum-algorithms ocean-optimization kaiwu-qubo
     qrisp-arithmetic qcover-optimization
+    openjij-optimization
   `],
   ["simulation", "模拟与化学", `
     hamiltonian-simulation sqd-chemistry tjm-dynamics tenpy-ground-state
@@ -37,25 +40,32 @@ const groups = [
     quantum-advection quantum-heat-1d quantum-heat-2d quantum-mps
     bloqade-analog perceval-photonics pulser-dynamics lightworks-photonics
     openfermion-mapping pychemiq-chemistry mrmustard-optics
+    monoprop-propagation piquasso-photonics qdk-chemistry jaxquantum-modeling
+    paulistrings-dynamics
   `],
   ["qec", "纠错与噪声", `
     qec-memory-experiment mitiq-error-mitigation ldpc-decoding clifft-sampling
     deltakit-qec quantum-qldpc alicebob-cat-circuits
+    mqt-qecc tqec-compilation tesseract-decoding tsim-sampling pecos-qec
+    quantumclifford-julia
   `],
   ["learning", "量子机器学习", `
     quantum-guide-algorithms-quantum-machine-learning quantum-cvqnn quantum-qcbm
     quantum-vqc pennylane-differentiable deepquantum-differentiable
     tensorcircuit-differentiable mindquantum-differentiable vqnet-learning merlin-learning
+    qiskit-machine-learning squlearn-learning
   `],
   ["hardware", "硬件与实验", `
     qiskit-ibm-runtime qpanda-runtime quantum-hardware fieldqkit-hardware
     fatqat-workbench qmclaw-workbench qdmi-device pasqal-experiments ionq-programs
     qctrl-workbench qua-programs laboneq-control qblox-scheduling qililab-control
     aqt-workbench oqc-cloud quantuminspire-cloud
+    pygsti-characterization arc-rydberg josephson-circuits quantumcontrol-julia
   `],
   ["information", "量子信息与网络", `
     quantum-information-audit randomized-measurements paulie-algebra quantum-qfi
     quantum-pauli quairkit-information netqasm-network simqn-network
+    quantumsavory-network
   `],
   ["reference", "资料与辅助", `
     quantum-practices quantum-learning quantum-sdk-advisor platform-diagnostics

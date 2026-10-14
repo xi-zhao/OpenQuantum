@@ -1,0 +1,4 @@
+* SPICE Simulation
+R1 1 0 50.0
+L1 1 2 2300.0p
+C1 2 0 700.0f

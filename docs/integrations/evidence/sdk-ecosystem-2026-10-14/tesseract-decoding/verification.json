@@ -1,0 +1,18 @@
+{
+  "id": "tesseract-decoding",
+  "dependencyLockSha256": "ca1fe027ec3b9229197707e15805036c2061d02307bc0b1fa94462be9329768d",
+  "sourceSha256": "eb52f7c6652c1c0a4a72ada9ac362c5d118c8858e10619e02489b900b9d04d3c",
+  "networkIsolation": "macOS sandbox-exec deny network*",
+  "scientificValidation": "not_evaluated",
+  "status": "passed",
+  "files": {
+    "attempt.json": "d8139df4549811949003e7926440ea61dae5f3c1968ee03cae1af2db4a60f458",
+    "model.dem": "f2bcdda126323d805118705d1a35ddc954adf18426bac0fe2c0fb447e9b820a0",
+    "program.py": "eb52f7c6652c1c0a4a72ada9ac362c5d118c8858e10619e02489b900b9d04d3c",
+    "result.json": "62d704be378054ab3a2644fb7b8c522bc56dadcac0f0e53ae248bd0cc7d52a62",
+    "runner.py": "a0fc307c398b014acf774d85f64cfb450988b7b72ea285429a70a4497c13cb94",
+    "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "versions.json": "b4db8fb87445bf20eef38511c6715da880364255cf74fe73fbb52d7728fa11e7"
+  }
+}

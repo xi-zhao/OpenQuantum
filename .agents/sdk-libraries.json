@@ -27,6 +27,21 @@
       ]
     },
     {
+      "id": "arc-rydberg",
+      "title": "ARC Rydberg",
+      "language": "python",
+      "modules": [
+        "arc"
+      ],
+      "group": "physics",
+      "workflow": "原子、能级、跃迁矩阵元、寿命、Stark 图与相互作用",
+      "conditions": [
+        "记录原子物种、量子数、数据表、温度、截断与单位。能量 eV、矩阵元原子单位和 SI 的换算要按实际 API 核对。"
+      ],
+      "nativeOnly": true,
+      "pythonVersion": "3.12"
+    },
+    {
       "id": "bloqade-analog",
       "title": "Bloqade Analog",
       "language": "python",
@@ -51,6 +66,22 @@
       "conditions": [
         "本地程序构建与外部调用分开；账户、凭据、费用、设备操作和数据外发沿用宿主及用户授权。原生 SDK 访问不自动启用服务。"
       ]
+    },
+    {
+      "id": "catalyst-compilation",
+      "title": "PennyLane Catalyst",
+      "language": "python",
+      "modules": [
+        "catalyst",
+        "pennylane"
+      ],
+      "group": "compilers",
+      "workflow": "qjit、混合程序、QNode、控制流、编译配置与梯度",
+      "conditions": [
+        "固定兼容的 PennyLane/JAX/编译栈。区分首次编译与后续执行耗时，缓存与静态参数进入记录；experimental API 不承诺跨版本兼容。"
+      ],
+      "nativeOnly": true,
+      "pythonVersion": "3.12"
     },
     {
       "id": "classiq-synthesis",
@@ -276,6 +307,37 @@
       ]
     },
     {
+      "id": "jaxquantum-modeling",
+      "title": "jaxquantum",
+      "language": "python",
+      "modules": [
+        "jaxquantum"
+      ],
+      "group": "physics",
+      "workflow": "JAX 算符、器件与 bosonic 模型、动力学、扫描与梯度",
+      "conditions": [
+        "在建立数组前选择精度和 target，保留时间/频率/算符单位。具体器件类按固定版本核实；CPU、GPU/TPU 与硬件结果分开。"
+      ],
+      "nativeOnly": true,
+      "pythonVersion": "3.12"
+    },
+    {
+      "id": "josephson-circuits",
+      "title": "JosephsonCircuits.jl",
+      "language": "julia",
+      "modules": [
+        "JosephsonCircuits",
+        "JSON3"
+      ],
+      "group": "physics",
+      "workflow": "Josephson 元件、电路、频域谐波平衡、散射与噪声",
+      "conditions": [
+        "明确节点/端口、元件 SI 单位、Hz 与 rad/s、泵浦和谐波截断。检查线性极限及收敛，不将模型噪声效率当作测量。"
+      ],
+      "nativeOnly": true,
+      "juliaVersion": "1.12.7"
+    },
+    {
       "id": "kaiwu-qubo",
       "title": "Kaiwu Community",
       "language": "python",
@@ -373,6 +435,21 @@
       "conditions": []
     },
     {
+      "id": "monoprop-propagation",
+      "title": "monoprop",
+      "language": "python",
+      "modules": [
+        "monoprop"
+      ],
+      "group": "physics",
+      "workflow": "Pauli/Majorana 算符、门生成元、传播、梯度与截断",
+      "conditions": [
+        "明确生成元、指数符号、角度、算符次序与截断阈值。小系统核对精确矩阵并检查收敛；PyPI wheel 不含 MPI，多节点另备。"
+      ],
+      "nativeOnly": true,
+      "pythonVersion": "3.12"
+    },
+    {
       "id": "mqt-ddsim",
       "title": "MQT DDSIM",
       "language": "python",
@@ -382,6 +459,36 @@
       "group": "circuits",
       "workflow": "自定义电路、模拟后端、模拟选项与结果",
       "conditions": []
+    },
+    {
+      "id": "mqt-debugger",
+      "title": "MQT Debugger",
+      "language": "python",
+      "modules": [
+        "mqt.debugger"
+      ],
+      "group": "compilers",
+      "workflow": "OpenQASM 程序、单步仿真、断言、影响范围与错误诊断",
+      "conditions": [
+        "状态/纠缠/等式断言与候选错误原因分别解释，诊断提示不是唯一根因证明。DAP 或真实 QPU 检查需要相应入口和授权。"
+      ],
+      "nativeOnly": true,
+      "pythonVersion": "3.12"
+    },
+    {
+      "id": "mqt-qecc",
+      "title": "MQT QECC",
+      "language": "python",
+      "modules": [
+        "mqt.qecc"
+      ],
+      "group": "qec",
+      "workflow": "CSS 码、容错态制备、色码与模拟信息解码",
+      "conditions": [
+        "明确 Hx/Hz 的 GF(2) 约定、逻辑算符、故障模型与后选择。2.x 不包含旧 union-find 实现；qsample 是另备的可选组件。"
+      ],
+      "nativeOnly": true,
+      "pythonVersion": "3.12"
     },
     {
       "id": "mqt-qmap",
@@ -463,6 +570,21 @@
       "conditions": []
     },
     {
+      "id": "openjij-optimization",
+      "title": "OpenJij",
+      "language": "python",
+      "modules": [
+        "openjij"
+      ],
+      "group": "circuits",
+      "workflow": "Ising/QUBO、SA/SQA sampler、退火 schedule 与 SampleSet",
+      "conditions": [
+        "明确 Ising spin 与 QUBO bit 编码、能量 offset、schedule、Trotter 和采样预算。SA/SQA 是经典计算；旧 GPGPU 路径已不受支持。"
+      ],
+      "nativeOnly": true,
+      "pythonVersion": "3.12"
+    },
+    {
       "id": "openqarp-excited-states",
       "title": "OpenQARP",
       "language": "python",
@@ -537,6 +659,37 @@
       "conditions": []
     },
     {
+      "id": "paulistrings-dynamics",
+      "title": "PauliStrings.jl",
+      "language": "julia",
+      "modules": [
+        "PauliStrings",
+        "JSON3"
+      ],
+      "group": "physics",
+      "workflow": "Pauli 字符串、Hamiltonian、算符传播与多体算法",
+      "conditions": [
+        "明确算符系数/次序、归一化、时间步、截断和边界。小系统对照精确矩阵；压缩后的规模不代表准确性。"
+      ],
+      "nativeOnly": true,
+      "juliaVersion": "1.12.7"
+    },
+    {
+      "id": "pecos-qec",
+      "title": "PECOS",
+      "language": "python",
+      "modules": [
+        "pecos"
+      ],
+      "group": "qec",
+      "workflow": "混合程序、量子后端、噪声、syndrome 与纠错协议",
+      "conditions": [
+        "固定明确的开发版及 Guppy/HUGR/Rust 依赖。记录控制流、测量、噪声与逻辑输出；独立核对协议语义，GPU extras 另备。"
+      ],
+      "nativeOnly": true,
+      "pythonVersion": "3.12"
+    },
+    {
       "id": "pennylane-differentiable",
       "title": "PennyLane",
       "language": "python",
@@ -559,6 +712,21 @@
       "conditions": []
     },
     {
+      "id": "piquasso-photonics",
+      "title": "Piquasso",
+      "language": "python",
+      "modules": [
+        "piquasso"
+      ],
+      "group": "optics",
+      "workflow": "Gaussian/Fock 态、光子程序、信道与测量",
+      "conditions": [
+        "明确 hbar、quadrature 次序、Fock cutoff 和损耗约定。检查概率、密度矩阵和截断收敛；模拟值不作为硬件测量。"
+      ],
+      "nativeOnly": true,
+      "pythonVersion": "3.12"
+    },
+    {
       "id": "pulser-dynamics",
       "title": "Pulser / Pasqal Cloud",
       "language": "python",
@@ -569,7 +737,9 @@
       ],
       "group": "physics",
       "workflow": "Register、Device、Sequence、waveform、变量、噪声与模拟；Pasqal Cloud connections、backends、jobs、batches、workloads 与完整实验工作流",
-      "conditions": ["pasqal-experiments 复用此环境；云操作需项目、凭据和相应授权，本地运行不联网"]
+      "conditions": [
+        "pasqal-experiments 复用此环境；云操作需项目、凭据和相应授权，本地运行不联网"
+      ]
     },
     {
       "id": "pychemiq-chemistry",
@@ -581,6 +751,21 @@
       "group": "chemistry",
       "workflow": "分子、映射、ansatz、VQE 与化学计算接口",
       "conditions": []
+    },
+    {
+      "id": "pygsti-characterization",
+      "title": "pyGSTi",
+      "language": "python",
+      "modules": [
+        "pygsti"
+      ],
+      "group": "information",
+      "workflow": "Circuit、Model、DataSet、GST/RB/RPE 与拟合报告",
+      "conditions": [
+        "保留原始计数、SPAM、gauge、样本数、拟合诊断与不确定度。合成数据明确标记；拟合质量与实际硬件性能分开。"
+      ],
+      "nativeOnly": true,
+      "pythonVersion": "3.12"
     },
     {
       "id": "pyquil-simulation",
@@ -708,6 +893,21 @@
       "conditions": []
     },
     {
+      "id": "qdk-chemistry",
+      "title": "QDK Chemistry",
+      "language": "python",
+      "modules": [
+        "qdk_chemistry"
+      ],
+      "group": "chemistry",
+      "workflow": "分子结构、电子结构、活性空间、量子算法、后端与结果",
+      "conditions": [
+        "保留几何单位、基组、电荷、自旋、轨道与积分约定。插件及外部程序按实际安装核实；官方可选 MCP 不因 SDK 准备而启动。"
+      ],
+      "nativeOnly": true,
+      "pythonVersion": "3.12"
+    },
+    {
       "id": "qdk-resource-estimation",
       "title": "QDK",
       "language": "python",
@@ -767,6 +967,36 @@
       ]
     },
     {
+      "id": "qiskit-machine-learning",
+      "title": "Qiskit Machine Learning",
+      "language": "python",
+      "modules": [
+        "qiskit_machine_learning"
+      ],
+      "group": "learning",
+      "workflow": "量子核、QSVC/QSVR、QNN、梯度、训练与推断",
+      "conditions": [
+        "使用该版本的 primitives API。固定数据划分和 seed，保留训练与测试指标、shots 与优化器；训练成功不等于泛化有效。"
+      ],
+      "nativeOnly": true,
+      "pythonVersion": "3.12"
+    },
+    {
+      "id": "qlasskit-oracles",
+      "title": "Qlasskit",
+      "language": "python",
+      "modules": [
+        "qlasskit"
+      ],
+      "group": "compilers",
+      "workflow": "受支持 Python 子集、布尔表达式、量子 oracle 与多框架导出",
+      "conditions": [
+        "记录 Qint/Qfixed 等类型的位宽、溢出和输出编码，检查辅助位及反计算。它不编译任意 Python；小输入可枚举真值表核对。"
+      ],
+      "nativeOnly": true,
+      "pythonVersion": "3.12"
+    },
+    {
       "id": "qoolqit-workbench",
       "title": "QoolQit",
       "language": "python",
@@ -808,6 +1038,22 @@
       ]
     },
     {
+      "id": "qsim-simulation",
+      "title": "qsim",
+      "language": "python",
+      "modules": [
+        "qsimcirq",
+        "cirq"
+      ],
+      "group": "circuits",
+      "workflow": "Cirq 电路、QSimOptions、态矢量、采样与目标后端",
+      "conditions": [
+        "显式保留 qubit_order 与位串次序，原始振幅不裁剪或重新归一化。CPU、GPU 和性能收益分别核验，完整态输出有指数成本。"
+      ],
+      "nativeOnly": true,
+      "pythonVersion": "3.12"
+    },
+    {
       "id": "qsteed-compilation",
       "title": "QSteed / Quafu",
       "language": "python",
@@ -818,6 +1064,27 @@
       "group": "compilers",
       "workflow": "量子芯片模型、编译任务、pass 与用户电路",
       "conditions": []
+    },
+    {
+      "id": "qsyn-compilation",
+      "title": "Qsyn",
+      "language": "native",
+      "modules": [],
+      "group": "compilers",
+      "workflow": "C++ 库、线路综合、ZX/张量变换、优化、验证与 CLI",
+      "conditions": [
+        "使用完整固定源码与 C++20 构建。输入语言、门集、布局、全局相位和导出语义分别核对；编译成功不构成等价性证明。",
+        "Apple Silicon macOS 本轮验证使用 GCC 16.2.0；显式 setup 时用 CC/CXX 指定已安装编译器。Clang 22 与上游 fmt 10.2.1 组合已知构建失败，其他工具链须独立核验。"
+      ],
+      "nativeOnly": true,
+      "sourceProject": {
+        "repository": "https://github.com/DVLab-NTU/qsyn.git",
+        "revision": "b77187c87f0bddd69bc6c213700642ee6c423159"
+      },
+      "nativeProject": {
+        "manifest": "native-project.json",
+        "lock": "native.lock.json"
+      }
     },
     {
       "id": "qua-programs",
@@ -897,6 +1164,41 @@
       "conditions": []
     },
     {
+      "id": "quantumclifford-julia",
+      "title": "QuantumClifford.jl",
+      "language": "julia",
+      "modules": [
+        "QuantumClifford",
+        "JSON3"
+      ],
+      "group": "qec",
+      "workflow": "Pauli/稳定子、图态、Clifford 操作、测量与 Pauli frame",
+      "conditions": [
+        "明确 Pauli 相位、位序、稳定子独立性与测量语义。非 Clifford 方法按该版本实际 API 选择，不静默投影为 Clifford。"
+      ],
+      "nativeOnly": true,
+      "juliaVersion": "1.12.7"
+    },
+    {
+      "id": "quantumcontrol-julia",
+      "title": "QuantumControl.jl",
+      "language": "julia",
+      "modules": [
+        "QuantumControl",
+        "QuantumPropagators",
+        "GRAPE",
+        "Krotov",
+        "JSON3"
+      ],
+      "group": "physics",
+      "workflow": "动力学、控制目标、脉冲、GRAPE/Krotov 与优化",
+      "conditions": [
+        "保留时间网格、目标泛函、脉冲边界、传播器和梯度方法。独立复核传播、梯度与收敛，优化目标值不是硬件保真度。"
+      ],
+      "nativeOnly": true,
+      "juliaVersion": "1.12.7"
+    },
+    {
       "id": "quantuminspire-cloud",
       "title": "Quantum Inspire",
       "language": "python",
@@ -908,6 +1210,22 @@
       "conditions": [
         "本地程序构建与外部调用分开；账户、凭据、费用、设备操作和数据外发沿用宿主及用户授权。原生 SDK 访问不自动启用服务。"
       ]
+    },
+    {
+      "id": "quantumsavory-network",
+      "title": "QuantumSavory.jl",
+      "language": "julia",
+      "modules": [
+        "QuantumSavory",
+        "JSON3"
+      ],
+      "group": "network",
+      "workflow": "量子寄存器、器件状态、链路、网络协议与离散事件模拟",
+      "conditions": [
+        "保留时间单位、存储/链路噪声、协议、初态和 seed。库内事件是数值模型，不替代宿主 Session/Job 管理。"
+      ],
+      "nativeOnly": true,
+      "juliaVersion": "1.12.7"
     },
     {
       "id": "quri-parts-estimation",
@@ -981,6 +1299,40 @@
       "conditions": []
     },
     {
+      "id": "squlearn-learning",
+      "title": "sQUlearn",
+      "language": "python",
+      "modules": [
+        "squlearn"
+      ],
+      "group": "learning",
+      "workflow": "编码线路、observable、executor、量子核与 sklearn estimator",
+      "conditions": [
+        "明确本地 executor、编码参数、kernel regularization 和数据划分。账户、真实设备与外部服务保持独立授权；不自动选择云后端。"
+      ],
+      "nativeOnly": true,
+      "pythonVersion": "3.12"
+    },
+    {
+      "id": "staq-compilation",
+      "title": "STAQ / pystaq",
+      "language": "python",
+      "modules": [
+        "pystaq"
+      ],
+      "group": "compilers",
+      "workflow": "OpenQASM AST、综合、线路变换、优化与映射",
+      "conditions": [
+        "固定完整上游源码。语言版本、门集、物理/逻辑布局和全局相位分别保留；GMP 等可选原生组件以实际构建为准。"
+      ],
+      "nativeOnly": true,
+      "pythonVersion": "3.12",
+      "sourceProject": {
+        "repository": "https://github.com/softwareQinc/staq.git",
+        "revision": "a2acd39e60ed0e5f1978fa530df7e1e0c7cedf7a"
+      }
+    },
+    {
       "id": "superstaq-compilation",
       "title": "Qiskit Superstaq",
       "language": "python",
@@ -1017,7 +1369,7 @@
     },
     {
       "id": "tensorcircuit-differentiable",
-      "title": "TensorCircuit",
+      "title": "TensorCircuit-NG",
       "language": "python",
       "modules": [
         "tensorcircuit",
@@ -1030,8 +1382,23 @@
       "workflow": "自定义电路、张量网络、后端、vmap、梯度与优化",
       "conditions": [
         "显式选择 JAX 数值精度和 target；需要 float64 时在建立数组前启用 jax_enable_x64。CPU、GPU 选择按任务与已安装后端决定。",
-        "TensorCircuit 0.12 的转换接口使用 Qiskit 0.46.3，在独立环境内固定；JAX、Optax 和 Cirq 转换依赖已提供。TensorFlow、PyTorch、CuPy 和 GPU 是上游可选后端，需按目标另备兼容依赖；本机工程检查不覆盖这些后端。"
+        "TensorCircuit-NG 1.10.0、Qiskit 2.5.2、JAX 0.7.1 与 NumPy 2.3.5 在独立环境内固定；JAX、Optax 和 Cirq 转换依赖已提供。TensorFlow、PyTorch、CuPy 和 GPU 是上游可选后端，需按目标另备兼容依赖；本机工程检查不覆盖这些后端。"
       ]
+    },
+    {
+      "id": "tesseract-decoding",
+      "title": "Tesseract Decoder",
+      "language": "python",
+      "modules": [
+        "tesseract_decoder"
+      ],
+      "group": "qec",
+      "workflow": "Stim DEM、syndrome、搜索式解码器与统计",
+      "conditions": [
+        "本环境是明确固定的开发版。记录 beam、剪枝、搜索预算及 DEM 的概率/observable 语义；启发式结果不能默认视为最优解。"
+      ],
+      "nativeOnly": true,
+      "pythonVersion": "3.12"
     },
     {
       "id": "tjm-dynamics",
@@ -1043,6 +1410,40 @@
       "group": "physics",
       "workflow": "自定义 MPS/MPO、电路、噪声模型、时间演化与张量跳跃",
       "conditions": []
+    },
+    {
+      "id": "tqec-compilation",
+      "title": "TQEC",
+      "language": "python",
+      "modules": [
+        "tqec"
+      ],
+      "group": "qec",
+      "workflow": "BlockGraph、逻辑计算块、相关面与 Stim 线路生成",
+      "conditions": [
+        "上游不承诺向后兼容，因此固定源码 SHA。保留码距/尺度 k、噪声、detector 和 observable 映射；生成线路不等于完整逻辑协议已验收。"
+      ],
+      "nativeOnly": true,
+      "pythonVersion": "3.12",
+      "sourceProject": {
+        "repository": "https://github.com/tqec/tqec.git",
+        "revision": "2c4b8cf9d3f8f520571093c60d752af0ad46a745"
+      }
+    },
+    {
+      "id": "tsim-sampling",
+      "title": "Tsim",
+      "language": "python",
+      "modules": [
+        "tsim"
+      ],
+      "group": "qec",
+      "workflow": "Clifford/非 Clifford 线路、噪声、detector 与 observable 采样",
+      "conditions": [
+        "统一实际 detector/observable 值与参考样本 flips 的语义。发布包和上游 main 的功能分别核实；CPU/JAX 与 CUDA target 单独选择。"
+      ],
+      "nativeOnly": true,
+      "pythonVersion": "3.12"
     },
     {
       "id": "tyxonq-workbench",
@@ -1066,6 +1467,22 @@
       "workflow": "tensor、量子/经典层、模型、数据与优化器",
       "conditions": [],
       "bootstrap": "macOS 在导入前设置 wheel 与 Python 动态库路径并重启当前脚本一次"
+    },
+    {
+      "id": "yao-circuits",
+      "title": "Yao.jl",
+      "language": "julia",
+      "modules": [
+        "Yao",
+        "JSON3"
+      ],
+      "group": "circuits",
+      "workflow": "量子寄存器、block、电路、算符、参数与梯度",
+      "conditions": [
+        "保留 block 作用线、位序、参数和精度。测量、态矢量与梯度的语义分别核对；跨框架导出须保留映射。"
+      ],
+      "nativeOnly": true,
+      "juliaVersion": "1.12.7"
     }
   ]
 }
