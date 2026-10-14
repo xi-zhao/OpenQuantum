@@ -2,13 +2,14 @@
 
 量子依赖核验日期：2026-09-22；平台升级记录日期：2026-09-10；原模型验收交接记录日期：2026-09-05。此页只记录工作交接；架构以[文档总入口](docs/README.md)为准，执行事实以 Harness Session event log 为准，科学状态以 Acceptance Report 为准。
 
-## 原生 SDK 生态扩展与 0.8.4 发行准备（2026-10-14）
+## 原生 SDK 生态扩展与 0.8.4 发行（2026-10-14）
 
 - 从本轮清单剔除旧运行栈的 QuCumber，增加 26 个原生 SDK/源码入口；既有 TensorCircuit 迁移到 TensorCircuit-NG，MQT Bench 单独增加 v2 的 21 例。
 - SDK 环境目录现为 111 项，源码 Skill 为 183 项；复用宿主代码工具，不增加科学 Tool 或 MCP 连接数量。
 - 版本、许可、源码与构建条件见[生态扩展记录](docs/integrations/SDK_ECOSYSTEM_2026-10-14.md)。26/26 个新增入口的实际 API 检查、全仓检查和打包回归通过，独立审查无未解决 P1/P2；[持久证据](docs/integrations/evidence/sdk-ecosystem-2026-10-14.json)保留版本、结果和摘要，科学状态仍为 `not_evaluated`。
-- 在 `origin/main@ac00ceba` 的隔离任务分支实施；按用户授权准备推送、PR 合并与统一版本 `0.8.4` 的双渠道发行。Desktop 为 183 个源 Skill，Codex 为 168 个 Skill、87 个科学 Tool；新增凭据服务默认关闭。
-- [Desktop 说明](docs/releases/v0.8.4.md)与 [Codex 说明](docs/releases/codex-v0.8.4.md)记录范围；最终合并、附件与发布状态以 PR、两个 Release 及各自的 `release-validation.json` 为准。本轮发行不替换用户安装，不使用外部模型或 Cloud/QPU。
+- [PR #22](https://github.com/xi-zhao/OpenQuantum/pull/22) 已在当前提交 7/7 必过检查与独立复核通过后合并为 `589d44f722ab36441a14f98f1cac979f6b9ec8aa`；同一合并提交的 7/7 push 检查通过。Desktop 为 183 个源 Skill，Codex 为 168 个 Skill、87 个科学 Tool；新增凭据服务默认关闭。
+- [Desktop v0.8.4](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.4)与 [Codex codex-v0.8.4](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.4) 已公开，两个标签均固定到上述发布提交；三平台能力包来自同一提交的验证产物，Codex 正式包的隔离完整安装和原生 Skill 开关、升级保留检查通过。
+- 范围见 [Desktop 说明](docs/releases/v0.8.4.md)与 [Codex 说明](docs/releases/codex-v0.8.4.md)，附件、下载与更新清单的实际验证结果以两个 Release 的 `release-validation.json` 为准。本轮发行不替换用户安装，不使用外部模型或 Cloud/QPU，科学状态仍为 `not_evaluated`。
 
 ## Codex 与 Desktop 量子组件内容一致（2026-10-13，本地）
 
