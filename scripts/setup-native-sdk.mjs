@@ -4,6 +4,7 @@ import { createHash } from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { readSdkLibraries, nativeSdkRoot, sdkSourceRoot } from "../src/lib/sdk-access.mjs";
 import { prepareSdkSource, sourceCommand } from "../src/lib/sdk-source.mjs";
+import { nativeCmakeArguments, NATIVE_BUILD_CONFIGURATION } from "../src/lib/sdk-native-build.mjs";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const [id, ...extra] = process.argv.slice(2);
@@ -35,7 +36,8 @@ for (const source of lock.sources.filter(item => item !== main)) {
 // CMake upstream modifies two dependency inputs. Copy them into a fresh build,
 // retaining pristine reviewed checkouts and previous failure evidence.
 const build = await fs.mkdtemp(path.join(directory, "build-"));
-const configure = ["-S", sourceRoot, "-B", build, "-DCMAKE_BUILD_TYPE=Release", "-DFETCHCONTENT_FULLY_DISCONNECTED=ON", "-DCMAKE_POLICY_VERSION_MINIMUM=3.10"];
+const commands = nativeCmakeArguments(sourceRoot, build, manifest.target);
+const configure = commands.configure;
 for (const dependency of dependencyRecords) {
   const input = path.join(build, "inputs", dependency.name);
   await fs.cp(dependency.directory, input, { recursive: true, verbatimSymlinks: true, filter: file => path.basename(file) !== ".git" });
@@ -43,7 +45,7 @@ for (const dependency of dependencyRecords) {
 }
 const cmake = process.env.OPENQUANTUM_CMAKE || "cmake";
 sourceCommand(cmake, configure, root);
-sourceCommand(cmake, ["--build", build, "--target", manifest.target, "--parallel", "2"], root);
+sourceCommand(cmake, commands.build, root);
 const output = path.join(build, process.platform === "win32" ? `${manifest.executable}.exe` : manifest.executable);
 const binary = await fs.readFile(output);
 const bin = path.join(directory, "bin");
@@ -56,7 +58,7 @@ if (hash(await fs.readFile(path.join(project, entry.nativeProject.manifest))) !=
 const cache = await fs.readFile(path.join(build, "CMakeCache.txt"), "utf8");
 const compiler = cache.match(/^CMAKE_CXX_COMPILER:(?:FILEPATH|STRING)=(.+)$/m)?.[1];
 if (!compiler) throw new Error("Native build did not record its C++ compiler");
-const toolchain = { cmake: sourceCommand(cmake, ["--version"], root, { capture: true }), compiler, compilerVersion: sourceCommand(compiler, ["--version"], root, { capture: true }), cmakeCacheSha256: hash(cache) };
+const toolchain = { cmake: sourceCommand(cmake, ["--version"], root, { capture: true }), configuration: NATIVE_BUILD_CONFIGURATION, compiler, compilerVersion: sourceCommand(compiler, ["--version"], root, { capture: true }), cmakeCacheSha256: hash(cache) };
 const record = { schemaVersion: 1, manifestSha256: hash(manifestBytes), dependencyLockSha256: hash(lockBytes), executableSha256: hash(binary), platform: process.platform, arch: process.arch, toolchain, build, source: sourceRecord, dependencies: dependencyRecords };
 const pending = `${marker}.${process.pid}.tmp`;
 await fs.writeFile(pending, JSON.stringify(record, null, 2) + "\n");
