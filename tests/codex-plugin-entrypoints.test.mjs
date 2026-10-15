@@ -21,7 +21,7 @@ async function connect(t, html, credentialWindow) {
   return client;
 }
 
-test("the only global entry opens the same settings document as plugin settings", async t => {
+test("the only advertised entrypoint opens the existing settings document", async t => {
   const html = (await fs.readFile(new URL("../runtime/chatgpt/ui/app.html", import.meta.url), "utf8")).replace("<!-- COMPONENT_TABS -->", componentNavigation());
   const client = await connect(t, html);
   const { tools } = await client.listTools();
@@ -32,7 +32,7 @@ test("the only global entry opens the same settings document as plugin settings"
   assert.equal(entry.title, "OpenQuantum 设置");
   assert.deepEqual(entry.inputSchema, { type: "object", properties: {}, additionalProperties: false });
   assert.deepEqual(entry._meta.ui.visibility, ["app"]);
-  assert.ok(entry._meta["openai/ui"].entrypoints.some(item => item.type === "settings"));
+  assert.deepEqual(tools.flatMap(tool => tool._meta?.["openai/ui"]?.entrypoints ?? []), [{ type: "global" }]);
   const uri = entry._meta.ui.resourceUri;
   assert.match(uri, /^ui:\/\/openquantum\/settings\/[a-f0-9]{64}\.html$/);
   assert.equal(tools.find(tool => tool.name === SETTINGS_TOOL)._meta.ui.resourceUri, uri);
