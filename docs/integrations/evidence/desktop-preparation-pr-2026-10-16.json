@@ -1,0 +1,245 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-16T04:01:14.313198+00:00",
+  "baseRevision": "1f172ac37612c4a5ebade4264a5976f8eab4add2",
+  "codeRevision": "22054cabe9486dd802e205fd7951872c0a187c46",
+  "fullCheck": {
+    "command": "npm run check",
+    "status": "passed",
+    "coreRevision": "8a356b3f",
+    "subsequentChanges": "installation smoke assertions only; separately linted and executed",
+    "rootTests": {
+      "passed": 620,
+      "failed": 0,
+      "conditionalSkipped": 309
+    },
+    "contracts": {
+      "passed": 119,
+      "failed": 0
+    },
+    "groundState": {
+      "passed": 35,
+      "failed": 0
+    },
+    "capabilityContracts": {
+      "passed": 217,
+      "failed": 0,
+      "conditionalSkipped": 1
+    },
+    "benchmarkTests": {
+      "passed": 5,
+      "failed": 0
+    },
+    "localeTests": {
+      "passed": 6,
+      "failed": 0
+    }
+  },
+  "liveQiskit": {
+    "status": "passed",
+    "tests": 1,
+    "command": "OPENQUANTUM_DESKTOP_LIVE=1 node --test --test-name-pattern='real local preparation' tests/desktop-preparation.test.mjs",
+    "checks": [
+      "single-prepare-waits-until-ready",
+      "two-executions-same-agent",
+      "environment-reuse",
+      "policy-denial",
+      "resource-disposal"
+    ]
+  },
+  "independentReview": {
+    "initialRevision": "3f3d4ed2",
+    "fixedRevision": "8a356b3f",
+    "alsoReviewedRevision": "22054cabe9486dd802e205fd7951872c0a187c46",
+    "resolvedP2": [
+      "native-provider-prohibition-migration",
+      "custom-mcp-configuration-loss",
+      "close-before-resource-drain"
+    ],
+    "unresolvedP1P2": 0,
+    "focusedTests": {
+      "passed": 33,
+      "conditionalSkipped": 1
+    },
+    "additionalFixtures": [
+      "js-true-prohibition",
+      "js-false-not-prohibited",
+      "unknown-condition-rejected-without-state-writes"
+    ]
+  },
+  "package": {
+    "sourceRevision": "22054cabe9486dd802e205fd7951872c0a187c46",
+    "sourceDirty": false,
+    "verifiedFiles": 2651,
+    "target": "darwin-arm64"
+  },
+  "isolatedInstallation": {
+    "target": "darwin-arm64",
+    "checks": [
+      "installation",
+      "brand-launcher",
+      "repeat-install",
+      "user-configuration-retained",
+      "explicit-skill-tool-mcp-restrictions-retained",
+      "native-credentials-retained",
+      "profile-bundle-and-dependencies",
+      "persistent-node-and-uv",
+      "independent-working-directory"
+    ],
+    "upstreamClient": "not-bundled",
+    "nativeUI": "not-tested-by-this-command",
+    "scientificValidation": "not_evaluated"
+  },
+  "installedUserState": {
+    "codeRevision": "734554d2c7cb78ded1be2c8c57e3cfa9b9fab701",
+    "unchangedConfigurationFiles": 6,
+    "preservedDisabledProviders": 25,
+    "preservedDisabledTools": 0,
+    "preservedDisabledSkills": 0,
+    "originalDesktopUnchanged": true,
+    "realUserInstallationModifiedDuringPRPreparation": false
+  },
+  "nativeEvidenceBoundary": {
+    "acceptedRevision": "734554d2c7cb78ded1be2c8c57e3cfa9b9fab701",
+    "evidence": "desktop-preparation-wait-2026-10-16.json",
+    "sameRuntimeFileCount": 110,
+    "runtimeDifferences": [
+      "runtime/chatgpt/external/client.mjs",
+      "runtime/chatgpt/server.mjs",
+      "scripts/lib/desktop-preparation-migration.mjs",
+      "scripts/lib/desktop-profile-config.mjs",
+      "scripts/smoke-installed-desktop.mjs"
+    ],
+    "nativeWindowRerunForPR": false
+  },
+  "localArtifacts": {
+    "check-reviewed.log": {
+      "path": ".openquantum/desktop-pr-integration/check-reviewed.log",
+      "sha256": "cc246a4faa1a32e2536e70bf1cae7d7185c60fbbacdf279dcf6f87d9b8b65849"
+    },
+    "live-reviewed.log": {
+      "path": ".openquantum/desktop-pr-integration/live-reviewed.log",
+      "sha256": "0d1eff3bc827e3538501e2c6a2d95acd590e90518d8860b5c2ff31912e0f3f82"
+    },
+    "review-new-regressions.log": {
+      "path": ".openquantum/desktop-pr-integration/review-new-regressions.log",
+      "sha256": "10a8376fbb24aac447dbb714535b028de7b7533e65a15c00d51672dfdcdbd2fa"
+    },
+    "package-reviewed.log": {
+      "path": ".openquantum/desktop-pr-integration/package-reviewed.log",
+      "sha256": "a2f4a0bfdb93bedd9d97c934b2879b84aae76c1f828696f7201389cfbbc6bd2d"
+    },
+    "package-smoke-reviewed.log": {
+      "path": ".openquantum/desktop-pr-integration/package-smoke-reviewed.log",
+      "sha256": "56690fa54f2c247908f60d7a49d0214f151e3a37b690d29baa6a865c804f6dd8"
+    },
+    "package-verification-reviewed.json": {
+      "path": ".openquantum/desktop-pr-integration/package-verification-reviewed.json",
+      "sha256": "30728bfe1816802ecae75bc3788b099fe251644dcb33147e45d29e6a59994ed8"
+    },
+    "installed-preservation-final.json": {
+      "path": ".openquantum/desktop-pr-integration/installed-preservation-final.json",
+      "sha256": "68e2adc6f5a480c62ab690fa3690489acff443035697e626c15fbd6879c3bba8"
+    },
+    "check-clean-catalog.log": {
+      "path": ".openquantum/desktop-pr-integration/check-clean-catalog.log",
+      "sha256": "d6fb893c0d105d40e865c882662cd5d2959a9a010ba1da24d4676f5634c7cfd5"
+    },
+    "ci-regressions.log": {
+      "path": ".openquantum/desktop-pr-integration/ci-regressions.log",
+      "sha256": "0085e540f48ef55c4465b5fc57b17b74e51550162669e142c7c24cfef49e9c36"
+    },
+    "desktop-source-regressions.log": {
+      "path": ".openquantum/desktop-pr-integration/desktop-source-regressions.log",
+      "sha256": "085dc3fc8204720bb32e59664aed85fc6cf6269eb7fe5871aeb70500c77cb4ca"
+    },
+    "installed-preservation-ci-fixes.json": {
+      "path": ".openquantum/desktop-pr-integration/installed-preservation-ci-fixes.json",
+      "sha256": "89a94601157a6332a6a42faf69ae875c2ac0e1ff77c81c6d5d265875fa6e4ba7"
+    }
+  },
+  "scientificValidation": "not_evaluated",
+  "ci": "See current PR head checks; no merge or release performed",
+  "ciRepair": {
+    "failedHead": "b4d7562497bbecacd2fa927f90b4db67fa833afc",
+    "fixedCodeRevision": "563d019efc0177179e14caab9e09327495a37ff5",
+    "issues": [
+      "tests-required-unbuilt-shared-catalog",
+      "desktop-dependency-assertion-preceded-native-plugin",
+      "windows-checkout-changed-audited-metriq-snapshot"
+    ],
+    "cleanCatalogFullCheck": {
+      "status": "passed",
+      "rootPassed": 622,
+      "rootSkipped": 309,
+      "contractsPassed": 119,
+      "groundStatePassed": 35,
+      "capabilityContractsPassed": 218,
+      "capabilityContractsSkipped": 1,
+      "benchmarkPassed": 5,
+      "localePassed": 6
+    },
+    "desktopSourceIntegration": {
+      "passed": 3,
+      "skipped": 0,
+      "nativeUi": "not-tested-by-this-command"
+    },
+    "independentReview": {
+      "reviewedFiles": 6,
+      "unresolvedP1P2": 0,
+      "focusedPassed": 12,
+      "focusedSkipped": 0
+    },
+    "checkoutRegression": "git core.autocrlf=true cat-file --filters preserves original snapshot SHA-256",
+    "productionDiscovery": "no change to runtime bundle-only startup; build failures now name the provider",
+    "installedUserState": {
+      "unchangedConfigurationFiles": 6,
+      "preservedDisabledProviders": 25,
+      "originalDesktopUnchanged": true
+    },
+    "ci": "See current PR head; initial failed checks were not rerun without a source fix"
+  },
+  "mergeReviewRepair": {
+    "finding": "https://github.com/xi-zhao/OpenQuantum/pull/26#discussion_r4290825219",
+    "baseRevision": "6bc628d06f4709db6b8aaa7a1153a542c9f0a151",
+    "behavior": "Reversible migrated operation choices; preserve parent policy and shared-name scope; no installation or service startup",
+    "targetedTests": {
+      "passed": 34,
+      "failed": 0,
+      "skipped": 1,
+      "skipReason": "live Qiskit opt-in not enabled"
+    },
+    "codexRegression": {
+      "passed": 117,
+      "failed": 0,
+      "skipped": 7,
+      "skipReason": "live opt-in tests"
+    },
+    "independentReview": {
+      "p1": 0,
+      "p2": 0,
+      "additionalIsolatedChecks": 6,
+      "passed": 6
+    },
+    "browser": {
+      "surface": "Built shared settings UI with Desktop route and real Application Interface, isolated configuration",
+      "verified": [
+        "collapsed legacy choices",
+        "allow one operation",
+        "reload retains choice",
+        "deny again",
+        "other Tool and parent prohibitions preserved",
+        "no browser console errors"
+      ],
+      "screenshotSha256": "c471978e9b26a63c4ecd5bce653a81da46d8328764cb6dbd353665bdb19789a6",
+      "nativeInstalledWindowRetested": false
+    },
+    "localLogs": [
+      "operation-overrides-tests.log",
+      "operation-codex-regressions.log",
+      "operation-lint.log",
+      "operation-overrides-ui.png"
+    ],
+    "userInstallationModified": false
+  }
+}

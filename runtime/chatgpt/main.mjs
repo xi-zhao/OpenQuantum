@@ -33,6 +33,6 @@ if (process.argv.includes("--stdio")) {
   console.error(`OpenQuantum settings preview: ${preview.url}`);
 } else throw new Error("Use --stdio or --preview");
 let closing;
-const stop = () => closing ??= (async () => { backend.close(); await connections.close(); await close(); await credentialWindow.close(); })();
+const stop = () => closing ??= (async () => { await backend.close(); await connections.close(); await close(); await credentialWindow.close(); })();
 process.stdin.on("end", () => void stop());
 for (const signal of ["SIGINT", "SIGTERM"]) process.once(signal, () => void stop());

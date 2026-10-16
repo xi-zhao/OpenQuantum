@@ -1,0 +1,459 @@
+{
+  "schemaVersion": 1,
+  "server": "qiskit_ibm_transpiler",
+  "tools": [
+    {
+      "name": "setup_ibm_quantum_account_tool",
+      "description": "Set up IBM Quantum account with credentials. Call this before using other tools.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "default": "",
+            "type": "string",
+            "description": "IBM Quantum API token. If empty, uses QISKIT_IBM_TOKEN env var or saved credentials from ~/.qiskit/qiskit-ibm.json"
+          },
+          "channel": {
+            "default": "ibm_quantum_platform",
+            "type": "string",
+            "description": "Service channel, must be 'ibm_quantum_platform'"
+          }
+        },
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "ai_routing_tool",
+      "description": "Route a quantum circuit by inserting SWAP operations for backend compatibility. Use this FIRST before other synthesis tools.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "circuit": {
+            "type": "string",
+            "description": "Input quantum circuit as QASM 3.0 string or base64-encoded QPY"
+          },
+          "backend_name": {
+            "type": "string",
+            "description": "Target IBM Quantum backend (e.g., 'ibm_boston', 'ibm_fez')"
+          },
+          "optimization_level": {
+            "default": 1,
+            "enum": [
+              1,
+              2,
+              3
+            ],
+            "type": "integer",
+            "description": "1 (fastest, least optimization) to 3 (slowest, most optimization)"
+          },
+          "layout_mode": {
+            "default": "optimize",
+            "enum": [
+              "keep",
+              "improve",
+              "optimize"
+            ],
+            "type": "string",
+            "description": "'keep' (respect existing layout), 'improve' (refine initial guess), 'optimize' (best for general circuits)"
+          },
+          "optimization_preferences": {
+            "anyOf": [
+              {
+                "enum": [
+                  "n_cnots",
+                  "n_gates",
+                  "cnot_layers",
+                  "layers",
+                  "noise"
+                ],
+                "type": "string"
+              },
+              {
+                "items": {
+                  "enum": [
+                    "n_cnots",
+                    "n_gates",
+                    "cnot_layers",
+                    "layers",
+                    "noise"
+                  ],
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "What to minimize - 'n_cnots', 'n_gates', 'cnot_layers', 'layers', or 'noise'. Can be a list."
+          },
+          "local_mode": {
+            "default": true,
+            "type": "boolean",
+            "description": "True runs locally (recommended), False uses remote Qiskit Transpiler Service"
+          },
+          "coupling_map": {
+            "anyOf": [
+              {
+                "items": {
+                  "items": {
+                    "type": "integer"
+                  },
+                  "type": "array"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Optional list of qubit pairs representing the backend topology.\nIf provided, overrides the backend's coupling map. Useful for targeting a\nspecific subset of qubits."
+          },
+          "circuit_format": {
+            "default": "qasm3",
+            "enum": [
+              "qasm3",
+              "qpy",
+              "auto"
+            ],
+            "type": "string",
+            "description": "Format of the input circuit - 'qasm3' (default) or 'qpy' (base64-encoded QPY for full circuit fidelity)"
+          }
+        },
+        "required": [
+          "circuit",
+          "backend_name"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "ai_linear_function_synthesis_tool",
+      "description": "AI-powered synthesis for Linear Function circuits (CX and SWAP gate blocks, up to 9 qubits).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "circuit": {
+            "type": "string",
+            "description": "Input quantum circuit as QASM 3.0 string or base64-encoded QPY"
+          },
+          "backend_name": {
+            "type": "string",
+            "description": "Target IBM Quantum backend (e.g., 'ibm_boston', 'ibm_fez')"
+          },
+          "replace_only_if_better": {
+            "default": true,
+            "type": "boolean",
+            "description": "If True, only replaces sub-circuits when synthesis improves CNOT count"
+          },
+          "local_mode": {
+            "default": true,
+            "type": "boolean",
+            "description": "True runs locally (recommended), False uses remote Qiskit Transpiler Service"
+          },
+          "circuit_format": {
+            "default": "qasm3",
+            "enum": [
+              "qasm3",
+              "qpy",
+              "auto"
+            ],
+            "type": "string",
+            "description": "Format of the input circuit - 'qasm3' (default) or 'qpy' (base64-encoded QPY for full circuit fidelity)"
+          }
+        },
+        "required": [
+          "circuit",
+          "backend_name"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "ai_clifford_synthesis_tool",
+      "description": "AI-powered synthesis for Clifford circuits (H, S, and CX gate blocks, up to 9 qubits).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "circuit": {
+            "type": "string",
+            "description": "Input quantum circuit as QASM 3.0 string or base64-encoded QPY"
+          },
+          "backend_name": {
+            "type": "string",
+            "description": "Target IBM Quantum backend (e.g., 'ibm_boston', 'ibm_fez')"
+          },
+          "replace_only_if_better": {
+            "default": true,
+            "type": "boolean",
+            "description": "If True, only replaces sub-circuits when synthesis improves CNOT count"
+          },
+          "local_mode": {
+            "default": true,
+            "type": "boolean",
+            "description": "True runs locally (recommended), False uses remote Qiskit Transpiler Service"
+          },
+          "circuit_format": {
+            "default": "qasm3",
+            "enum": [
+              "qasm3",
+              "qpy",
+              "auto"
+            ],
+            "type": "string",
+            "description": "Format of the input circuit - 'qasm3' (default) or 'qpy' (base64-encoded QPY for full circuit fidelity)"
+          }
+        },
+        "required": [
+          "circuit",
+          "backend_name"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "ai_permutation_synthesis_tool",
+      "description": "AI-powered synthesis for Permutation circuits (SWAP gate blocks, supports 27, 33, and 65 qubit blocks).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "circuit": {
+            "type": "string",
+            "description": "Input quantum circuit as QASM 3.0 string or base64-encoded QPY"
+          },
+          "backend_name": {
+            "type": "string",
+            "description": "Target IBM Quantum backend (e.g., 'ibm_boston', 'ibm_fez')"
+          },
+          "replace_only_if_better": {
+            "default": true,
+            "type": "boolean",
+            "description": "If True, only replaces sub-circuits when synthesis improves CNOT count"
+          },
+          "local_mode": {
+            "default": true,
+            "type": "boolean",
+            "description": "True runs locally (recommended), False uses remote Qiskit Transpiler Service"
+          },
+          "circuit_format": {
+            "default": "qasm3",
+            "enum": [
+              "qasm3",
+              "qpy",
+              "auto"
+            ],
+            "type": "string",
+            "description": "Format of the input circuit - 'qasm3' (default) or 'qpy' (base64-encoded QPY for full circuit fidelity)"
+          }
+        },
+        "required": [
+          "circuit",
+          "backend_name"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "ai_pauli_network_synthesis_tool",
+      "description": "AI-powered synthesis for Pauli Network circuits (H, S, SX, CX, RX, RY, RZ gate blocks, up to 6 qubits).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "circuit": {
+            "type": "string",
+            "description": "Input quantum circuit as QASM 3.0 string or base64-encoded QPY"
+          },
+          "backend_name": {
+            "type": "string",
+            "description": "Target IBM Quantum backend (e.g., 'ibm_boston', 'ibm_fez')"
+          },
+          "replace_only_if_better": {
+            "default": true,
+            "type": "boolean",
+            "description": "If True, only replaces sub-circuits when synthesis improves CNOT count"
+          },
+          "local_mode": {
+            "default": true,
+            "type": "boolean",
+            "description": "True runs locally (recommended), False uses remote Qiskit Transpiler Service"
+          },
+          "circuit_format": {
+            "default": "qasm3",
+            "enum": [
+              "qasm3",
+              "qpy",
+              "auto"
+            ],
+            "type": "string",
+            "description": "Format of the input circuit - 'qasm3' (default) or 'qpy' (base64-encoded QPY for full circuit fidelity)"
+          }
+        },
+        "required": [
+          "circuit",
+          "backend_name"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "hybrid_ai_transpile_tool",
+      "description": "Transpile a circuit using a hybrid pass manager combining Qiskit heuristics with AI-powered passes.\n\nThis provides end-to-end transpilation that leverages both classical heuristic optimization\nand AI-based optimization for routing and synthesis in a single unified pipeline.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "circuit": {
+            "type": "string",
+            "description": "Input quantum circuit as QASM 3.0 string or base64-encoded QPY"
+          },
+          "backend_name": {
+            "type": "string",
+            "description": "Target IBM Quantum backend (e.g., 'ibm_boston', 'ibm_fez')"
+          },
+          "ai_optimization_level": {
+            "default": 3,
+            "enum": [
+              1,
+              2,
+              3
+            ],
+            "type": "integer",
+            "description": "Optimization level (1-3) for AI components. Higher = better results but slower."
+          },
+          "optimization_level": {
+            "default": 3,
+            "enum": [
+              1,
+              2,
+              3
+            ],
+            "type": "integer",
+            "description": "Optimization level (1-3) for heuristic components."
+          },
+          "ai_layout_mode": {
+            "default": "optimize",
+            "enum": [
+              "keep",
+              "improve",
+              "optimize"
+            ],
+            "type": "string",
+            "description": "Layout selection strategy:\n- 'keep': Respect existing layout (for specific qubit requirements)\n- 'improve': Use prior layout as starting point\n- 'optimize': Best for general circuits (default)\nNote: If initial_layout is provided with 'optimize', it automatically converts\nto 'improve' to leverage the user-provided layout."
+          },
+          "initial_layout": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "integer"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Optional list of physical qubit indices specifying where to place\nvirtual qubits. For example, [0, 1, 5, 6, 7] maps virtual qubit 0 to physical\nqubit 0, virtual qubit 1 to physical qubit 1, etc."
+          },
+          "coupling_map": {
+            "anyOf": [
+              {
+                "items": {
+                  "items": {
+                    "type": "integer"
+                  },
+                  "type": "array"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Optional list of qubit pairs representing the backend topology.\nIf provided, overrides the backend's coupling map. Useful for targeting a\nspecific subset of qubits."
+          },
+          "circuit_format": {
+            "default": "qasm3",
+            "enum": [
+              "qasm3",
+              "qpy",
+              "auto"
+            ],
+            "type": "string",
+            "description": "Format of the input circuit - 'qasm3' (default) or 'qpy' (base64-encoded QPY for full circuit fidelity)"
+          }
+        },
+        "required": [
+          "circuit",
+          "backend_name"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    }
+  ]
+}

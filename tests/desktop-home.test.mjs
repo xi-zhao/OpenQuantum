@@ -133,6 +133,12 @@ test("cold native configuration preserves endpoints and referenced credentials w
   const afterDeletion = await context.plugin(LocalCredentialProvider, { dshHome: home, watch: false });
   t.after(() => afterDeletion.dispose());
   assert.equal((await context.credentials.describe("OQ_TEST_API_KEY")).configured, false);
+  // The native adaptive provider references its shared service fields even
+  // though the old per-server MCP rows no longer appear in the active preset.
+  await writeFile(path.join(root, ".env"), "PASQAL_AUTH_TOKEN=pasqal-fixture\n");
+  const adaptive = "- id: openquantum-adaptive-capabilities\n  name: ./adaptive-capabilities.mjs\n";
+  assert.deepEqual(await persistDesktopCredentials(root, home, [adaptive]), ["PASQAL_AUTH_TOKEN"]);
+  assert.equal(desktopLaunchEnvironment(root, [adaptive], {}).PASQAL_AUTH_TOKEN, undefined);
 });
 
 test("custom worker PATH and native Home selection remain authoritative", async t => {

@@ -41,19 +41,21 @@ test("Codex reuses Desktop service presentation and covers every declared Deskto
     assert.equal(service.title, mcpCatalogEntry(config.serverName).displayName);
     for (const ref of Object.values({ ...config.credentialEnv, ...config.optionalCredentialEnv })) assert.ok(references.has(ref), ref);
     if (service.supported) assert.deepEqual(service.fields.map(field => field.name).sort(),
-      Object.keys({ ...config.credentialEnv, ...config.optionalCredentialEnv }).sort(), config.serverName);
+      Object.keys({ ...config.credentialEnv, ...config.optionalCredentialEnv }).map(name => name === "IBM_QUANTUM_TOKEN" ? "QISKIT_IBM_TOKEN" : name).sort(), config.serverName);
   }
 });
 
-test("credentialed capabilities are included, but old settings keep every new provider and Tool off", async t => {
+test("legacy opt-in absence becomes automatic selection while explicit prohibitions survive", async t => {
   const f = managedFixture(await fixture(t));
   await fs.mkdir(path.dirname(f.settings.file), { recursive: true });
   await fs.writeFile(f.settings.file, JSON.stringify({ schemaVersion: 1, connections: [], disabledProviders: [], disabledTools: [] }));
   const before = await f.settings.snapshot();
-  assert.equal(before.providers[0].enabled, false);
-  assert.equal(before.tools[0].enabled, false);
-  assert.deepEqual(await f.settings.listTools(), []);
+  assert.equal(before.providers[0].enabled, true);
+  assert.equal(before.tools[0].enabled, true);
+  assert.equal(await f.settings.enabled("calculate"), true);
   const command = async input => f.settings.command({ ...input, revision: (await f.settings.snapshot()).revision });
+  await command({ action: "tool.set", id: "calculate", enabled: false });
+  await command({ action: "provider.set", id: "qcarchive_data", enabled: false });
   await command({ action: "provider.set", id: "qcarchive_data", enabled: true });
   assert.equal(await f.settings.enabled("calculate"), false);
   await command({ action: "tool.set", id: "calculate", enabled: true });
@@ -61,12 +63,12 @@ test("credentialed capabilities are included, but old settings keep every new pr
   await command({ action: "provider.set", id: "qcarchive_data", enabled: false });
   assert.equal(await f.settings.enabled("calculate"), false);
   const capabilities = await readCapabilities();
-  for (const service of SERVICES.filter(service => service.supported)) {
+  for (const service of SERVICES.filter(service => service.supported && service.capability)) {
     const capability = capabilities.find(capability => capability.id === service.capability);
     assert.equal(capability.status, "available", service.id);
-    assert.equal(capability.optIn, true);
+    if (!service.consumer) assert.equal(capability.optIn, true);
   }
-  assert.equal(capabilities.find(capability => capability.id === "qiskit-ibm-runtime").status, "unsupported");
+  assert.equal(capabilities.find(capability => capability.id === "qiskit-ibm-runtime").status, "available");
 });
 
 test("service window saves, preserves, replaces and removes multi-field credentials without exposing values", async t => {
@@ -100,7 +102,7 @@ test("service window saves, preserves, replaces and removes multi-field credenti
   assert.doesNotMatch(file, /fixture-password|replacement-fixture|archive.example.test/);
 });
 
-test("service secrets reject foreign origins, unknown fields and removal while enabled", async t => {
+test("service secrets reject foreign origins and unknown fields; removing credentials preserves automatic use policy", async t => {
   const f = managedFixture(await fixture(t), "superstaq_cloud");
   const window = await createCredentialWindow(f); t.after(() => window.close());
   const url = new URL(await window.openService("superstaq_cloud"));
@@ -111,8 +113,8 @@ test("service secrets reject foreign origins, unknown fields and removal while e
   assert.equal(f.secrets.size, 0);
   assert.equal((await windowPost(window, "superstaq_cloud", { action: "set", values: { SUPERSTAQ_API_KEY: "fixture-only" } })).response.status, 200);
   await f.settings.command({ action: "provider.set", id: "superstaq_cloud", enabled: true, revision: (await f.settings.snapshot()).revision });
-  assert.equal((await windowPost(window, "superstaq_cloud", { action: "remove" })).response.status, 409);
-  assert.equal((await windowPost(window, "superstaq_cloud", { action: "set", values: {}, remove: ["SUPERSTAQ_API_KEY"] })).response.status, 409);
+  assert.equal((await windowPost(window, "superstaq_cloud", { action: "remove" })).response.status, 200);
+  assert.equal((await windowPost(window, "superstaq_cloud", { action: "set", values: {}, remove: ["SUPERSTAQ_API_KEY"] })).response.status, 200);
   await assert.rejects(window.openService("pasqal_cloud"), /尚未接入/);
 });
 
@@ -178,9 +180,9 @@ test("local service operations do not read or receive credentials even when the 
 });
 
 test("real provider handshakes require no credentials and FieldQKit receives only its saved service environment", { timeout: 120000 }, async t => {
-  const backend = await createBackend(); t.after(() => backend.close());
+  const backend = await createBackend({ discover: true }); t.after(() => backend.close());
   const f = await fixture(t); f.settings.backend = backend;
-  assert.equal((await f.settings.listTools()).length, backend.tools.length - backend.providers.filter(provider => provider.defaultEnabled === false).reduce((sum, provider) => sum + provider.tools.length, 0));
+  assert.equal((await f.settings.listTools()).length, backend.tools.length);
   const before = await backend.call("inspect_fieldqkit_setup", {});
   assert.equal(before.structuredContent.providers.find(provider => provider.id === "quafu").configured, false);
   const result = await backend.call("inspect_fieldqkit_setup", {}, undefined, async () => true,

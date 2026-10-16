@@ -98,7 +98,7 @@ export async function describeSdk(root, id, { environment = process.env } = {}) 
   let interpreter = null;
   let state = "not_checked";
   if (entry.language === "python") {
-    const directory = id === "quantum-algorithms" ? path.join(project, ".venv") : pythonEnvironmentRoot(root, id, environment);
+    const directory = id === "quantum-algorithms" && !environment.OPENQUANTUM_PYTHON_ENV_ROOT ? path.join(project, ".venv") : pythonEnvironmentRoot(root, id, environment);
     interpreter = path.join(directory, process.platform === "win32" ? "Scripts/python.exe" : "bin/python");
     state = await preparedState(interpreter, path.join(directory, "openquantum-lock.sha256"), entry.lock.sha256);
   } else if (entry.language === "julia") {
@@ -131,7 +131,7 @@ export async function describeSdk(root, id, { environment = process.env } = {}) 
   }
   let nativeDependency = null;
   if (id === "qpanda-qubo" && process.platform === "darwin") {
-    const directory = path.join(root, ".openquantum/sdk-native/qpanda-qubo");
+    const directory = nativeSdkRoot(root, "qpanda-qubo", environment);
     const record = await fs.readFile(path.join(directory, "native.json"), "utf8").then(JSON.parse).catch(error => { if (error.code === "ENOENT") return null; throw error; });
     const library = path.join(directory, "fmt/lib/libfmt.11.dylib");
     const bytes = await fs.readFile(library).catch(error => { if (error.code === "ENOENT") return null; throw error; });
@@ -150,18 +150,18 @@ export async function describeSdk(root, id, { environment = process.env } = {}) 
     documentation: entry.language === "python" ? entry.bootstrap
       ? { mode: "in-script-after-bootstrap", note: "Use help(module) and inspect.signature after prepare_sdk in the saved script; plain python -m pydoc bypasses required loader compatibility." }
       : { command: interpreter, args: ["-m", "pydoc", "<module-from-modules>"], note: "Read the installed version's public API; this may import the selected module." } : null,
-    source: entry.nativeProject ? sdkSourceRoot(root, id, environment) : entry.language === "native" ? path.join(root, ".openquantum/qdmi/source") : null,
+    source: entry.nativeProject ? sdkSourceRoot(root, id, environment) : entry.language === "native" ? path.join(environment.OPENQUANTUM_QDMI_HOME || path.join(root, ".openquantum/qdmi"), "source") : null,
     bootstrap: entry.bootstrap ? { path: path.join(root, "src/lib/sdk_bootstrap.py"), function: "prepare_sdk", argument: id, reason: entry.bootstrap } : null,
     readinessMeaning: "prepared verifies dependency markers and interpreter or native binary integrity, not API or scientific acceptance",
   };
 }
 
-export async function sdkCli(root, args) {
+export async function sdkCli(root, args, options) {
   if (!args.length || args[0] === "list") {
     if (args.length > 1) throw new Error("Use list, inventory, or inspect <sdk-id>");
     return readSdkLibraries(root);
   }
   if (args[0] === "inventory" && args.length === 1) return sdkInventory(root);
-  if (args[0] === "inspect" && args.length === 2) return describeSdk(root, args[1]);
+  if (args[0] === "inspect" && args.length === 2) return describeSdk(root, args[1], options);
   throw new Error("Use list, inventory, or inspect <sdk-id>");
 }

@@ -25,7 +25,7 @@ def verified_file(entry):
 
 
 def compute(v):
-    config_bytes = (ROOT / ".openquantum/qdmi/driver.json").read_bytes()
+    config_bytes = Path(os.environ.get("OPENQUANTUM_QDMI_CONFIG", str(ROOT / ".openquantum/qdmi/driver.json"))).read_bytes()
     config = json.loads(config_bytes)
     if config.get("interfaceVersion") != "1.3.3" or config.get("driverKind") not in ("example", "configured"):
         raise ValueError("Expected a reviewed QDMI 1.3.3 driver configuration")
@@ -33,7 +33,12 @@ def compute(v):
     for entry in config.get("deviceLibraries", []):
         verified_file(entry)
     if config.get("configuration"):
-        os.environ["QDMI_CONF"] = str(verified_file(config["configuration"]))
+        configuration_path = verified_file(config["configuration"])
+        os.environ["QDMI_CONF"] = str(configuration_path)
+        # The official example permits config files below its working directory.
+        # Keep its restriction intact when the managed environment lives elsewhere.
+        if config["driverKind"] == "example":
+            os.chdir(configuration_path.parent)
     library = C.CDLL(str(library_path))
     def bind(name, args, result=INT):
         try:

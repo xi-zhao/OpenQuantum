@@ -1,0 +1,420 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-16T00:09:59.892Z",
+  "codeRevision": "bf5c32c7283c9fa0d801fca663df7d941d17c257",
+  "implementationRevision": "393d6750735dfe9da8562bf3f7f71a29867b9934",
+  "scope": "Native DSH Desktop acceptance on macOS arm64; local Qiskit execution and credential UI/gating, no real Pasqal authentication or QPU",
+  "desktopVersion": "2.0.7",
+  "harnessVersion": "0.1.5-rc.1",
+  "model": {
+    "provider": "openquantum-public",
+    "selectedByUser": "deepseek-v4.1-flash",
+    "textHttpStatus": 200,
+    "automaticToolChoiceHttpStatus": 200,
+    "forcedNamedToolChoiceHttpStatus": 500,
+    "priorModel": "kimi-k2.7-code",
+    "priorModelAuthorizationHttpStatus": 403
+  },
+  "sessionId": "session-99b0e75e-9093-44eb-b91e-785fbc2c84c2",
+  "canonicalEventCount": 164,
+  "turns": [
+    {
+      "turn": 1,
+      "end": {
+        "kind": "completed"
+      },
+      "toolCalls": [
+        {
+          "seq": 24,
+          "name": "skill"
+        },
+        {
+          "seq": 29,
+          "name": "find_openquantum_skills",
+          "skillId": "qiskit-circuit-workbench"
+        },
+        {
+          "seq": 31,
+          "name": "find_openquantum_skills",
+          "skillId": "qiskit-circuit-workbench"
+        },
+        {
+          "seq": 36,
+          "name": "prepare_openquantum_skill",
+          "skillId": "qiskit-circuit-workbench"
+        },
+        {
+          "seq": 41,
+          "name": "find_openquantum_skills",
+          "skillId": "qiskit-circuit-workbench"
+        },
+        {
+          "seq": 46,
+          "name": "find_openquantum_skills",
+          "skillId": "qiskit-circuit-workbench"
+        },
+        {
+          "seq": 51,
+          "name": "find_openquantum_skills",
+          "skillId": "qiskit-circuit-workbench"
+        },
+        {
+          "seq": 59,
+          "name": "job_list"
+        },
+        {
+          "seq": 64,
+          "name": "find_openquantum_skills",
+          "skillId": "qiskit-circuit-workbench"
+        },
+        {
+          "seq": 69,
+          "name": "find_openquantum_skills",
+          "skillId": "qiskit-circuit-workbench"
+        },
+        {
+          "seq": 74,
+          "name": "find_openquantum_skills",
+          "skillId": "qiskit-circuit-workbench"
+        },
+        {
+          "seq": 79,
+          "name": "find_openquantum_skills",
+          "skillId": "qiskit-circuit-workbench"
+        },
+        {
+          "seq": 84,
+          "name": "find_openquantum_skills",
+          "skillId": "qiskit-circuit-workbench"
+        },
+        {
+          "seq": 89,
+          "name": "find_openquantum_skills",
+          "skillId": "qiskit-circuit-workbench"
+        },
+        {
+          "seq": 97,
+          "name": "run_qiskit_circuit",
+          "operation": "analyze_circuit_tool"
+        },
+        {
+          "seq": 102,
+          "name": "find_openquantum_skills",
+          "skillId": "qiskit-circuit-workbench"
+        },
+        {
+          "seq": 107,
+          "name": "run_qiskit_circuit",
+          "operation": "load_circuit_from_qasm_tool"
+        },
+        {
+          "seq": 112,
+          "name": "run_qiskit_circuit",
+          "operation": "analyze_circuit_tool"
+        }
+      ]
+    },
+    {
+      "turn": 2,
+      "end": {
+        "kind": "completed"
+      },
+      "toolCalls": [
+        {
+          "seq": 125,
+          "name": "run_qiskit_circuit",
+          "operation": "analyze_circuit_tool"
+        },
+        {
+          "seq": 127,
+          "name": "find_openquantum_skills",
+          "skillId": "pasqal-experiments"
+        }
+      ]
+    },
+    {
+      "turn": 3,
+      "end": {
+        "kind": "completed"
+      },
+      "toolCalls": [
+        {
+          "seq": 142,
+          "name": "run_qiskit_circuit",
+          "operation": "analyze_circuit_tool"
+        },
+        {
+          "seq": 144,
+          "name": "prepare_openquantum_skill",
+          "skillId": "pasqal-experiments"
+        }
+      ]
+    },
+    {
+      "turn": 4,
+      "end": {
+        "kind": "completed"
+      },
+      "toolCalls": [
+        {
+          "seq": 157,
+          "name": "prepare_openquantum_skill",
+          "skillId": "simqn-network"
+        }
+      ]
+    }
+  ],
+  "calculations": [
+    {
+      "seq": 113,
+      "num_qubits": 2,
+      "num_clbits": 0,
+      "depth": 2,
+      "size": 2,
+      "width": 2,
+      "operation_counts": {
+        "h": 1,
+        "cx": 1
+      },
+      "total_operations": 2
+    },
+    {
+      "seq": 126,
+      "num_qubits": 2,
+      "num_clbits": 0,
+      "depth": 2,
+      "size": 2,
+      "width": 2,
+      "operation_counts": {
+        "h": 1,
+        "cx": 1
+      },
+      "total_operations": 2
+    },
+    {
+      "seq": 143,
+      "num_qubits": 2,
+      "num_clbits": 0,
+      "depth": 2,
+      "size": 2,
+      "width": 2,
+      "operation_counts": {
+        "h": 1,
+        "cx": 1
+      },
+      "total_operations": 2
+    }
+  ],
+  "credentials": {
+    "missingPreparation": {
+      "seq": 145,
+      "state": "credentials_required",
+      "serviceId": "pasqal_cloud",
+      "fields": [
+        {
+          "name": "PASQAL_AUTH_TOKEN",
+          "title": "Access Token"
+        }
+      ],
+      "settingsPath": "/openquantum/settings#skill=pasqal-experiments"
+    },
+    "nativeFormSaved": true,
+    "fullApplicationRestartRetained": true,
+    "neededAccountShownAfterPrepare": true,
+    "temporaryTokenRemoved": true,
+    "modelCredentialRetained": true,
+    "restoredInitialPasqalState": true,
+    "recordedAt": "2026-10-16T00:05:04.461Z",
+    "realAccountAuthenticationVerified": false
+  },
+  "prohibition": {
+    "seq": 158,
+    "state": "blocked",
+    "blockedProviders": [
+      "simqn_local"
+    ],
+    "noExecution": true
+  },
+  "installation": {
+    "revision": "bf5c32c7283c9fa0d801fca663df7d941d17c257",
+    "files": 2671,
+    "sourceDirty": false,
+    "verified": true
+  },
+  "preservationAndIdleResources": {
+    "recordedAt": "2026-10-16T00:07:59.937Z",
+    "installedVersion": "0.8.4",
+    "sourceRevision": "bf5c32c7283c9fa0d801fca663df7d941d17c257",
+    "sourceDirty": false,
+    "changedCodeMatchesInstalled": true,
+    "disabledProvidersPreserved": 25,
+    "disabledToolsPreserved": true,
+    "disabledSkillsPreserved": true,
+    "originalDesktopApplicationUnchanged": true,
+    "originalApplicationHash": "3eeecb44b94fd36ca207a06927d257c6d90bc65e3bd817559d5eaceac121bf88",
+    "qiskitEnvironmentReady": true,
+    "installationJobId": "0a41c388-fd93-4110-b5a8-c26330e98a57",
+    "installationStartedAt": "2026-10-15T23:56:56.818Z",
+    "installationFinishedAt": "2026-10-15T23:57:08.709Z",
+    "leases": [],
+    "matchingServiceProcesses": [],
+    "desktopOpen": true
+  },
+  "resourcesAfterExit": {
+    "capturedAt": "2026-10-16T00:01:26.145Z",
+    "leases": [],
+    "jobStatus": "completed",
+    "ready": true,
+    "matchingServiceProcesses": []
+  },
+  "checks": {
+    "desktopAndSharedPreparation": {
+      "passed": 23,
+      "skipped": 1,
+      "failed": 0
+    },
+    "homeProfileEnvironmentCompatibility": {
+      "passed": 30,
+      "skipped": 0,
+      "failed": 0
+    },
+    "independentReview": {
+      "revision": "bf5c32c7283c9fa0d801fca663df7d941d17c257",
+      "reviewer": "optional_capability_audit",
+      "remainingP1P2": 0
+    },
+    "overlappingSuitesMustNotBeSummed": true
+  },
+  "knownLimitations": [
+    {
+      "id": "installation-status-polling",
+      "turn": 1,
+      "totalToolCalls": 18,
+      "discoveryCalls": 12,
+      "prematureExecutionRejectedAtSeq": 98,
+      "recoveredInSameTurn": true,
+      "installationDurationMs": 11891,
+      "description": "Agent repeatedly queried progress and tried execution before ready; runtime rejected it, then load and analysis succeeded. Polling UX remains to improve."
+    },
+    "Forced named tool_choice returned HTTP 500 at the current gateway; native auto tool choice worked.",
+    "Other operating systems, all SDK APIs and real cloud hardware were not exhaustively verified."
+  ],
+  "scientificValidation": "not_evaluated",
+  "artifacts": [
+    {
+      "file": ".openquantum/desktop-install-acceptance/native-session-events.json",
+      "bytes": 999866,
+      "sha256": "fd2051ab130fe84ba613e12d0f5cf91b25b892b0c549630fc1f1d53798a95900"
+    },
+    {
+      "file": ".openquantum/desktop-install-acceptance/native-current.json",
+      "bytes": 12085,
+      "sha256": "e0a863cb125144d44af9c7f524df11dbd35a76430607d43e8de956a4852c7964"
+    },
+    {
+      "file": ".openquantum/desktop-install-acceptance/before.json",
+      "bytes": 1133,
+      "sha256": "53edd1a4eef8b76ad1248460911b9dfb9c9a80a3e135589ac28113260683909f"
+    },
+    {
+      "file": ".openquantum/desktop-install-acceptance/backup.json",
+      "bytes": 164,
+      "sha256": "8b6423e7888be663cea7bb0d7536e36ad5453874c38407788946b6f89df59a02"
+    },
+    {
+      "file": ".openquantum/desktop-install-acceptance/installed.json",
+      "bytes": 330,
+      "sha256": "a4336a05f2fb290d01084e35010d14d4c32b87951f36f4dceaa44afae3cb2ac0"
+    },
+    {
+      "file": ".openquantum/desktop-install-acceptance/final-readback.json",
+      "bytes": 734,
+      "sha256": "574efdef8a263da40281294704203a81a27cf9312c2b7fa0a9b6273fe402d455"
+    },
+    {
+      "file": ".openquantum/desktop-install-acceptance/resources-after-close.json",
+      "bytes": 141,
+      "sha256": "40d2b58854d1d9daef28e5406cfba4806ea1f27f009aed3fcda7b31793afa0c3"
+    },
+    {
+      "file": ".openquantum/desktop-install-acceptance/credentials-before.json",
+      "bytes": 332,
+      "sha256": "ad74581aa9c9bb1aa425101a2b028bdf08eb14467554a851c0b6828c854072b1"
+    },
+    {
+      "file": ".openquantum/desktop-install-acceptance/credentials-restored.json",
+      "bytes": 152,
+      "sha256": "e54483c066aa7d8232f9978bff625bca0fb92f03aa9946d627ceef8e0146a485"
+    },
+    {
+      "file": ".openquantum/desktop-install-acceptance/model-catalog.json",
+      "bytes": 668,
+      "sha256": "1d3c749d132daba67f04de3b6aabfd63939aea219682da36131888781416aa05"
+    },
+    {
+      "file": ".openquantum/desktop-install-acceptance/model-probe.json",
+      "bytes": 320,
+      "sha256": "8acfe1ac3e0f459472d61d550e73bc12841228290f688adeaee4aa7f4e2f3ba8"
+    },
+    {
+      "file": ".openquantum/desktop-install-acceptance/model-auto-tools.json",
+      "bytes": 129,
+      "sha256": "5c265e501c094f10e99f521605f1b177bef6f3804a8a8cc89012b0edc0f3fd7f"
+    },
+    {
+      "file": ".openquantum/desktop-install-acceptance/package-fixed.json",
+      "bytes": 121,
+      "sha256": "d8a959f66cc4b67879b2fb5b47801ac1608ce84c433ae7a9ac257871fc6213b9"
+    },
+    {
+      "file": ".openquantum/desktop-install-acceptance/permission-tests.log",
+      "bytes": 2695,
+      "sha256": "ebd91dd91d4428884ff0fe7261412a417b5a63e7d40d49543be5a14d3998bd0c"
+    },
+    {
+      "file": ".openquantum/desktop-install-acceptance/compatibility-tests.log",
+      "bytes": 3242,
+      "sha256": "95a8c9d2b9d3853cb3e28d2a495c90820c9f74d7165f86de73d0d32438a71974"
+    },
+    {
+      "file": ".openquantum/desktop-install-acceptance/install-fixed.log",
+      "bytes": 390,
+      "sha256": "cc0b534574bc7bd27dac1cdffcfce37b1bf9c6aeccc36cd63cb5549c08acb3bf"
+    },
+    {
+      "file": ".openquantum/desktop-install-acceptance/electron-first-result.png",
+      "bytes": 425899,
+      "sha256": "83e2f68e23f6ed061ec2872e2e467851b9c673dd68cae0d9f1a566f8d919c5c7"
+    },
+    {
+      "file": ".openquantum/desktop-install-acceptance/electron-same-chat.png",
+      "bytes": 387011,
+      "sha256": "693b3abb73ef8497cf3fae875bdba78717b04b18a4a3867126b85a2c60443294"
+    },
+    {
+      "file": ".openquantum/desktop-install-acceptance/electron-pasqal-saved.png",
+      "bytes": 276142,
+      "sha256": "ed01530cb68747af587b2bb2f462616509c2b1b64c0e4b07f25c62ac61d8a075"
+    },
+    {
+      "file": ".openquantum/desktop-install-acceptance/electron-pasqal-reopened.png",
+      "bytes": 283921,
+      "sha256": "fe53bd08682b21f829f9595e060c0bd6c70e4ea56743785a4293c775ffcf0304"
+    },
+    {
+      "file": ".openquantum/desktop-install-acceptance/electron-pasqal-needed.png",
+      "bytes": 237308,
+      "sha256": "02b1d286bc15c51e5f7fd3b6ab98902db881b9c709fa882c1080124a7efea2d4"
+    },
+    {
+      "file": ".openquantum/desktop-install-acceptance/electron-resumed-same-chat.png",
+      "bytes": 373546,
+      "sha256": "2eab83d296aa7d95bc614a1b392800bed3edf8e729e3b4993ee3526d2b636038"
+    },
+    {
+      "file": ".openquantum/desktop-install-acceptance/electron-prohibition.png",
+      "bytes": 387793,
+      "sha256": "6f7c7125b766772ced1aff0828b58e24a95980ea514527dda9adae3d5c3cd8e5"
+    }
+  ]
+}

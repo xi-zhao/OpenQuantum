@@ -2,8 +2,9 @@ import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
 import Ajv from "ajv";
-import { credentialRef, externalToolName } from "./application.mjs";
+import { credentialRef, externalToolName, sameToolContract } from "./application.mjs";
 import { redactToolResult } from "./redaction.mjs";
+import { withLock } from "./storage.mjs";
 
 const ajv = new Ajv({ strict: false, allErrors: true });
 const MAX_BYTES = 2 * 1024 * 1024;
@@ -28,7 +29,13 @@ export class Connections {
     try { return await action(); } finally { this.active--; }
   }
   async connect(connection) {
-    const token = connection.authentication === "token" ? await this.credentials.resolve(credentialRef(connection.id)) : null;
+    // Capture the destination and its secret under the same lock used by edits
+    // and credential writes. An old probe must never read a replacement's Token.
+    const token = await withLock(this.settings.file, async () => {
+      const current = (await this.settings.read()).config.connections.find(value => value.id === connection.id);
+      if (!current || current.instance !== connection.instance) throw new Error("连接已替换，请重新测试");
+      return connection.authentication === "token" ? this.credentials.resolve(credentialRef(connection.id)) : null;
+    });
     if (connection.authentication === "token" && !token) throw new Error("此连接尚未配置 Token");
     let transport;
     if (connection.transport === "http") {
@@ -61,9 +68,10 @@ export class Connections {
       if (token && JSON.stringify(result).includes(JSON.stringify(token).slice(1, -1))) throw new Error("连接返回了无效的工具清单");
       const tools = connectionTools(result.tools);
       await this.settings.inventory(id, tools, before);
-      this.settings.statuses.set(id, { state: "connected", message: `已发现 ${tools.length} 个 Tool；新发现的 Tool 默认关闭`, checkedAt: new Date().toISOString() });
+      this.settings.statuses.set(id, { state: "connected", message: `已发现 ${tools.length} 个 Tool；新增或发生变化的 Tool 需重新启用`, checkedAt: new Date().toISOString() });
     } catch (error) {
-      this.settings.statuses.set(id, { state: "error", message: "连接测试失败，请检查地址、凭据和服务状态" });
+      const current = (await this.settings.read()).config.connections.find(value => value.id === id);
+      if (current?.instance === connection.instance) this.settings.statuses.set(id, { state: "error", message: "连接测试失败，请编辑连接或检查凭据和服务状态" });
       throw new Error(error.message.startsWith("此连接需要") ? error.message : "连接测试失败，请检查地址、凭据和服务状态");
     } finally { if (client) await this.closeClient(client); }
     return this.settings.snapshot();
@@ -78,16 +86,20 @@ export class Connections {
     const { client, token } = await this.connect(connection);
     try {
       signal?.throwIfAborted();
+      const inventory = await client.listTools({}, { timeout: 15000, signal });
+      if (inventory.nextCursor || (token && JSON.stringify(inventory).includes(JSON.stringify(token).slice(1, -1)))) throw new Error("Tool 合同无法确认");
+      const live = connectionTools(inventory.tools).find(value => value.name === tool.name);
+      if (!sameToolContract(tool, live)) throw new Error("Tool 合同已变化，请重新测试连接并启用");
       // A setting may have changed while the connection was starting.
       const latest = (await this.settings.read()).config.connections.find(value => value.id === connection.id);
-      if (latest?.instance !== connection.instance || !await this.settings.enabled(name)) throw new Error("Tool 已关闭或连接已替换");
+      if (latest?.instance !== connection.instance || !sameToolContract(tool, latest?.tools.find(value => value.name === tool.name)) || !await this.settings.enabled(name)) throw new Error("Tool 已关闭或连接已替换");
       const result = await client.callTool({ name: tool.name, arguments: args }, undefined, { timeout: 180000, signal });
       const encoded = JSON.stringify(result);
       if (Buffer.byteLength(encoded) > MAX_BYTES) throw new Error("Tool 输出超过限制");
       // Remote UI metadata cannot redirect the OpenQuantum settings surface.
       const { content, structuredContent, isError } = redactToolResult(result, token ? [token] : []);
       return { content, ...(structuredContent ? { structuredContent } : {}), ...(isError ? { isError } : {}) };
-    } catch { throw new Error("MCP Tool 执行失败、已取消或已停用；请检查连接状态"); }
+    } catch { throw new Error("MCP Tool 执行失败、已取消或配置已变化；请测试连接并确认 Tool 状态"); }
     finally { await this.closeClient(client); }
   }
   async close() { await Promise.allSettled([...this.clients].map(client => this.closeClient(client))); }

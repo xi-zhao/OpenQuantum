@@ -5,7 +5,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 const root = fileURLToPath(new URL("..", import.meta.url));
 if (!["darwin", "linux"].includes(process.platform)) throw new Error("The official example driver uses dlopen; setup currently supports macOS and Linux");
-const directory = path.join(root, ".openquantum/qdmi");
+const directory = process.env.OPENQUANTUM_QDMI_HOME || path.join(root, ".openquantum/qdmi");
 const source = path.join(directory, "source");
 const build = path.join(directory, "build");
 const commit = "18cfb67fd9042761d3005c2f8655751c1758f9c5";

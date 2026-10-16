@@ -1,5 +1,5 @@
 import { randomBytes } from "node:crypto";
-import { serviceById } from "./service-catalog.mjs";
+import { serviceSupported, serviceById } from "./service-catalog.mjs";
 import { writeCredentialField } from "./credential-field-write.mjs";
 
 function allowedOrigin(value) {
@@ -18,7 +18,7 @@ export function createCredentialBridge({ settings, credentials, sessions, getOri
   return {
     issue({ id, field, operation, origin }) {
       const service = serviceById(id);
-      if (!service?.supported || !settings.backend.providers.some(provider => provider.key === id) ||
+      if (!serviceSupported(service, settings.backend) ||
           !service.fields.some(item => item.name === field) || !["set", "remove"].includes(operation) || !allowedOrigin(origin)) {
         throw new Error("凭据配置请求无效");
       }

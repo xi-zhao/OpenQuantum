@@ -1,0 +1,242 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-16T00:49:56.333Z",
+  "codeRevision": "734554d2c7cb78ded1be2c8c57e3cfa9b9fab701",
+  "baselineRevision": "5a8a2806",
+  "scope": "Native DSH Desktop same-chat preparation wait, local execution and policy preservation on macOS arm64",
+  "desktopVersion": "2.0.7",
+  "harnessVersion": "0.1.5-rc.1",
+  "model": {
+    "provider": "openquantum-public",
+    "id": "deepseek-v4.1-flash",
+    "configurationUnchanged": true
+  },
+  "sessionId": "session-99b0e75e-9093-44eb-b91e-785fbc2c84c2",
+  "canonicalEventCount": 274,
+  "hostRestart": {
+    "staleHostPid": 36941,
+    "acceptedCandidateHostPid": 64757,
+    "reopenHostPid": 66079,
+    "nativeRestartConfirmationUsed": true,
+    "newSkillPreambleVerifiedAtSeq": 231,
+    "excludedOldHostTurn": 5,
+    "note": "Window reopening alone retained the old Host. Only turns 6 and 7 verify the new code; the original app binary is unchanged."
+  },
+  "preparation": {
+    "skillId": "quantum-circuit-verification",
+    "discoveryState": "environment_required",
+    "callSeq": 237,
+    "resultSeq": 238,
+    "state": "ready",
+    "durationMs": 9237,
+    "callsWhileWaiting": 0,
+    "executionCallSeq": 242,
+    "executionResultSeq": 243,
+    "executionAfterReady": true,
+    "executionText": "MQT QCEC 3.10.0 classified the circuits as equivalent. Scientific validation is observations_available, not final acceptance.",
+    "sameChatToolAvailable": true
+  },
+  "turns": [
+    {
+      "turn": 6,
+      "completed": true,
+      "endSeq": 248,
+      "calls": [
+        {
+          "seq": 230,
+          "name": "quantum-circuit-verification"
+        },
+        {
+          "seq": 232,
+          "name": "find_openquantum_skills",
+          "skillId": "quantum-circuit-verification",
+          "toolName": "verify_circuit_equivalence"
+        },
+        {
+          "seq": 237,
+          "name": "prepare_openquantum_skill",
+          "skillId": "quantum-circuit-verification",
+          "toolName": "verify_circuit_equivalence"
+        },
+        {
+          "seq": 242,
+          "name": "verify_circuit_equivalence",
+          "circuitAOpenQasm2": "OPENQASM 2.0;\ninclude \"qelib1.inc\";\nqreg q[2];\nh q[0];\nh q[0];\nt q[0];\nt q[0];\ncx q[0],q[1];\ncx q[0],q[1];\n",
+          "circuitBOpenQasm2": "OPENQASM 2.0;\ninclude \"qelib1.inc\";\nqreg q[2];\ns q[0];\n"
+        }
+      ]
+    },
+    {
+      "turn": 7,
+      "completed": true,
+      "endSeq": 273,
+      "calls": [
+        {
+          "seq": 257,
+          "name": "verify_circuit_equivalence",
+          "circuitAOpenQasm2": "OPENQASM 2.0;\ninclude \"qelib1.inc\";\nqreg q[2];\nh q[0];\nh q[0];\nt q[0];\nt q[0];\ncx q[0],q[1];\ncx q[0],q[1];\n",
+          "circuitBOpenQasm2": "OPENQASM 2.0;\ninclude \"qelib1.inc\";\nqreg q[2];\ns q[0];\n"
+        },
+        {
+          "seq": 262,
+          "name": "prepare_openquantum_skill",
+          "serviceId": "pasqal_cloud",
+          "skillId": "pasqal-experiments",
+          "toolName": "run_pasqal_workflow"
+        },
+        {
+          "seq": 267,
+          "name": "prepare_openquantum_skill",
+          "skillId": "simqn-network",
+          "toolName": "simulate_simqn_link"
+        }
+      ]
+    }
+  ],
+  "callCountObservation": {
+    "previousQiskitTurn": 1,
+    "previousTotalCalls": 18,
+    "previousDiscoveryCalls": 12,
+    "previousDiscoveryCallsAfterPreparation": 10,
+    "previousJobListCalls": 1,
+    "previousEarlyExecutionRejected": true,
+    "currentQcecTurn": 6,
+    "currentTotalCalls": 4,
+    "currentDiscoveryCalls": 1,
+    "currentDiscoveryCallsAfterPreparation": 0,
+    "currentJobListCalls": 0,
+    "currentEarlyExecution": false,
+    "exactTokenSavingsMeasured": false,
+    "note": "Different tasks and context lengths; call counts demonstrate the removed polling loop, not a controlled Token-percentage benchmark."
+  },
+  "reopened": {
+    "sameSession": true,
+    "executionResultSeq": 258,
+    "resultMatches": true,
+    "installationJobIdsUnchanged": true,
+    "credentialsResultSeq": 263,
+    "credentialsState": "credentials_required",
+    "credentialsSettingsPath": "/openquantum/settings#skill=pasqal-experiments",
+    "forbiddenResultSeq": 268,
+    "forbiddenState": "blocked",
+    "forbiddenProviders": [
+      "simqn_local"
+    ]
+  },
+  "preservation": {
+    "unchangedConfigurationFiles": 6,
+    "disabledProviderCount": 25,
+    "disabledToolsUnchanged": true,
+    "disabledSkillsUnchanged": true,
+    "qiskitInstallationUnchanged": true,
+    "originalDesktopUnchanged": true,
+    "backupAndRestoreReadbackVerified": true
+  },
+  "resources": {
+    "activeComputeProcessCount": 0,
+    "receipts": [
+      {
+        "id": "mcp-qiskit",
+        "jobId": "0a41c388-fd93-4110-b5a8-c26330e98a57",
+        "status": "completed",
+        "startedAt": "2026-10-15T23:56:56.818Z",
+        "finishedAt": "2026-10-15T23:57:08.709Z",
+        "ready": true,
+        "leaseCount": 0
+      },
+      {
+        "id": "pyzx-optimization",
+        "jobId": "ca874f9d-aa1f-48ac-b822-51a50dc9cdcf",
+        "status": "completed",
+        "startedAt": "2026-10-16T00:43:33.506Z",
+        "finishedAt": "2026-10-16T00:43:44.732Z",
+        "ready": true,
+        "leaseCount": 0
+      },
+      {
+        "id": "quantum-circuit-verification",
+        "jobId": "acb69122-8cac-4ece-8d8c-a0a6e17d03e5",
+        "status": "completed",
+        "startedAt": "2026-10-16T00:45:56.611Z",
+        "finishedAt": "2026-10-16T00:46:05.249Z",
+        "ready": true,
+        "leaseCount": 0
+      }
+    ]
+  },
+  "checks": {
+    "relevant": {
+      "passed": 46,
+      "failed": 0,
+      "conditionalLiveSkipped": 1
+    },
+    "separateRealQiskit": {
+      "passed": 1,
+      "failed": 0
+    },
+    "bundle": {
+      "sourceRevision": "734554d2c7cb78ded1be2c8c57e3cfa9b9fab701",
+      "sourceDirty": false,
+      "filesVerified": 2673,
+      "manifestSha256": "2aaa8a5c472b18ff99de6ea1837c4a1297eb6755e826c671fa61aeb0abc79b79"
+    },
+    "independentReview": {
+      "revision": "734554d2c7cb78ded1be2c8c57e3cfa9b9fab701",
+      "p1": 0,
+      "p2": 0,
+      "scope": "Diff and tests; cross-manager waiter cancellation and owner cancellation/child drain separately verified"
+    }
+  },
+  "scientificValidation": "not_evaluated",
+  "limitations": [
+    "QCEC classification is a Tool observation, not central scientific acceptance",
+    "Real Pasqal credentials, cloud devices, QPU, Windows and Intel Mac were not exercised",
+    "Initial turn 5 ran on the old in-memory Host and is excluded from acceptance"
+  ],
+  "artifacts": [
+    {
+      "file": ".openquantum/desktop-wait-acceptance/verified.log",
+      "sha256": "cc321594be0047e708918ec1b13149c4ed23889121df09ab117024b26acc660a"
+    },
+    {
+      "file": ".openquantum/desktop-wait-acceptance/live-final.log",
+      "sha256": "5dd1ebbb20185d01394cbd6fccd714351f14e7a3c5bb0e95abbff4b173ccd4ec"
+    },
+    {
+      "file": ".openquantum/desktop-wait-acceptance/package.log",
+      "sha256": "6714e64482808908b16f611c3804489b33c5fe5df39889fa49e4dd7d264566a9"
+    },
+    {
+      "file": ".openquantum/desktop-wait-acceptance/package-verification.json",
+      "sha256": "7cab985c07a51f0ea1d3a915390f32d76350c8cce1e093bbf9e20fd3c5da41b9"
+    },
+    {
+      "file": ".openquantum/desktop-wait-acceptance/install.log",
+      "sha256": "aa8f6d50e3e45dba1479c5e7329ccc238f9f5dd87207a13aa070e702f0aaef7f"
+    },
+    {
+      "file": ".openquantum/desktop-wait-acceptance/native-session-events.json",
+      "sha256": "fa004afbe70d6c3f8a6eb270902ec0b99e675e404f0e1a6c16816e160afe2e15"
+    },
+    {
+      "file": ".openquantum/desktop-wait-acceptance/old-host-attempt-events.json",
+      "sha256": "3c3d8a930e30e73e40bbf029ffc93643f2e10d4c04e6951997fbe1d6977f158b"
+    },
+    {
+      "file": ".openquantum/desktop-wait-acceptance/native-qcec.jpg",
+      "sha256": "4f6174fa63076f0a4d5a596afcc668d38a08a51308e3aff9407bfc43dc99df6d"
+    },
+    {
+      "file": ".openquantum/desktop-wait-acceptance/native-qcec-completed.jpg",
+      "sha256": "b5eac8e78fe3e046f3ab2e3fea9a43e7c9761b363a6add5a2ab2130818502cee"
+    },
+    {
+      "file": ".openquantum/desktop-wait-acceptance/native-reopened-completed.jpg",
+      "sha256": "d832ff7188132cd94f37c6e2792e55f5384d560f5873f29185eb7ea9f8ff1750"
+    },
+    {
+      "file": ".openquantum/desktop-wait-acceptance/final.json",
+      "sha256": "0a91b5f5999ce8d57ef551ec792a236e7a980a488e21e58a8469d797a514516a"
+    }
+  ]
+}

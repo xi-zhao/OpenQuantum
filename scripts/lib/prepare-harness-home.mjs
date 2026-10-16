@@ -8,6 +8,7 @@ import { buildLocaleClient } from "./build-locale-client.mjs";
 import { buildCapabilityClient } from "./build-capability-client.mjs";
 import { productUiOverlay } from "./product-ui-policy.mjs";
 import { assertCompatibleHarnessHome } from "./harness-home-compatibility.mjs";
+import { migrateDesktopPreparation } from "./desktop-preparation-migration.mjs";
 import { desktopPreset } from "./desktop-profile-config.mjs";
 import { writeManagedHomeFiles } from "./managed-home-files.mjs";
 import { desktopEnvironmentDefaults, persistDesktopCredentials } from "./desktop-environment.mjs";
@@ -16,6 +17,7 @@ import { desktopModelRoutes, desktopModelDefault, clearRemovedDesktopModelSelect
 import { DESKTOP_PROFILE_BUNDLE, DESKTOP_PROFILE_DIRECTORY, DESKTOP_PROFILE_PATCH, desktopHomePatchMigration, desktopProfileManifest } from "./desktop-profile-bundle.mjs";
 
 const extensions = {
+  capabilityHost: ["runtime/openquantum/capability-host", "harness-capability-host"],
   branding: ["packages/openquantum-web-branding", "harness-web-branding"],
   capabilities: ["runtime/openquantum/web-capabilities", "harness-web-capabilities"],
   learning: ["runtime/openquantum/web-learning", "harness-web-learning"],
@@ -49,6 +51,7 @@ export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot, 
   }
   await assertCompatibleHarnessHome(harnessHome);
   const migration = desktop ? await desktopHomePatchMigration(harnessHome, legacyHomeFiles) : new Map();
+  if (desktop) await migrateDesktopPreparation(projectRoot, harnessHome);
   const result = {};
   const marker = JSON.stringify({ projectRoot: path.resolve(projectRoot), nodeExecutable: process.execPath });
   await mkdir(path.join(projectRoot, ".openquantum"), { recursive: true });
@@ -117,7 +120,10 @@ export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot, 
       if (entry.isDirectory()) await presetFiles(filename, target);
       else if (entry.isFile()) {
         let content = await readFile(filename);
-        if (desktop && entry.name === "agent.cordis.yml") content = Buffer.from(desktopPreset(content.toString(), projectRoot));
+        if (desktop && entry.name === "agent.cordis.yml" && relative.endsWith("/openquantum")) {
+          const active = await readFile(path.join(harnessHome, target), "utf8").catch(error => { if (error.code === "ENOENT") return null; throw error; });
+          content = Buffer.from(desktopPreset(active ?? content.toString(), projectRoot, process.execPath, { onDemand: true }));
+        } else if (desktop && entry.name === "agent.cordis.yml") content = Buffer.from(desktopPreset(content.toString(), projectRoot, process.execPath, { onDemand: false }));
         files.set(target, content);
       }
     }

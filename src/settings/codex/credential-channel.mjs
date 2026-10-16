@@ -1,6 +1,6 @@
 import { randomBytes } from "node:crypto";
 import { generateKeyPair, exportJWK, compactDecrypt } from "jose";
-import { serviceById } from "./service-catalog.mjs";
+import { serviceSupported, serviceById } from "./service-catalog.mjs";
 import { writeCredentialField } from "./credential-field-write.mjs";
 
 const ALGORITHM = "RSA-OAEP-256", ENCRYPTION = "A256GCM";
@@ -12,7 +12,7 @@ export function createCredentialChannel(context) {
   return {
     async prepare({ id, field, operation }) {
       const service = serviceById(id);
-      if (closed || !service?.supported || !context.settings.backend.providers.some(provider => provider.key === id) ||
+      if (closed || !serviceSupported(service, context.settings.backend) ||
           !service.fields.some(item => item.name === field) || !["set", "remove"].includes(operation)) throw new Error("凭据配置请求无效");
       // One non-extractable private key per process, never persisted or returned.
       keyPair ??= generateKeyPair(ALGORITHM, { modulusLength: 2048 });

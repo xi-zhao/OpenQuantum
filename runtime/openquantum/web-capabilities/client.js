@@ -568,7 +568,7 @@ globalThis.__ModuleLoader__.load({
         label: () => t("nav"),
         locale: NS,
         inject: () => ({ credentialOperations, loopback: connection.isLoopback }),
-      }, CapabilitySettingsSection));
+      }, globalThis.document?.querySelector('meta[name="openquantum-on-demand"]') ? () => h("iframe", { title: "OpenQuantum 设置", src: "/openquantum/settings", style: { border: 0, width: "100%", height: "calc(100vh - 150px)", minHeight: 520 } }) : CapabilitySettingsSection));
       if (!globalThis.document?.querySelector('meta[name="openquantum-channels"][content="disabled"]')) ctx.slots.inject("settings.section", () => ctx.slots.register({
         name: "settings.section",
         id: "openquantum-channels",

@@ -170,7 +170,7 @@ export function createRuntimeReadinessHandler({
   });
 }
 
-export function apply(ctx, { channels = true } = {}) {
+export function apply(ctx, { channels = true, adaptive = false } = {}) {
   if (!channels) ctx.effect(() => ctx.webServer.tapIndex(html => html.replace("</head>", '<meta name="openquantum-channels" content="disabled" />\n</head>')), "openquantum: capability navigation");
   const capabilityHandler = createCapabilitySettingsHandler({
     dispatch: (projectRoot, command) =>
@@ -188,7 +188,7 @@ export function apply(ctx, { channels = true } = {}) {
       dispatchRuntimeReadinessCommand(projectRoot, command, { ctx }),
   });
   const routes = [
-    ["/openquantum/api/capabilities", capabilityHandler, "openquantum: capability settings API"],
+    ...(!adaptive ? [["/openquantum/api/capabilities", capabilityHandler, "openquantum: capability settings API"]] : []),
     ["/openquantum/api/channels", channelHandler, "openquantum: message channel settings API"],
     ["/openquantum/api/runtime-readiness", runtimeReadinessHandler, "openquantum: runtime readiness API"],
   ];

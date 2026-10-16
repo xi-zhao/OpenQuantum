@@ -53,7 +53,7 @@ export function defineScienceTool({ name, description, source, inputSchema, resu
   };
 }
 
-export async function serveScienceTool({ entrypoint, id, definition, definitions = [definition], runtime = "python", credentialEnvironment = [] }) {
+export async function serveScienceTool({ entrypoint, id, definition, definitions = [definition], runtime = "python", credentialEnvironment = [], launchFor }) {
   const skillRoot = fileURLToPath(new URL("..", entrypoint));
   const projectRoot = path.resolve(skillRoot, "../../..");
   const lockFile = runtime === "julia" ? "Manifest.toml" : "uv.lock";
@@ -72,6 +72,7 @@ export async function serveScienceTool({ entrypoint, id, definition, definitions
     MPLCONFIGDIR: path.join(projectRoot, ".openquantum/cache", `${id}-matplotlib`),
     PYTHONNOUSERSITE: "1", PYTHONDONTWRITEBYTECODE: "1", MPLBACKEND: "Agg",
     JULIA_NUM_PRECOMPILE_TASKS: "2", JULIA_PKG_PRECOMPILE_AUTO: "0",
+    ...(process.env.OPENQUANTUM_JULIA_DEPOT_PATH ? { JULIA_DEPOT_PATH: process.env.OPENQUANTUM_JULIA_DEPOT_PATH } : {}),
   });
   const server = new Server({ name: `openquantum-${id}`, version: "0.1.0" }, { capabilities: { tools: {} } });
   let active;
@@ -86,8 +87,8 @@ export async function serveScienceTool({ entrypoint, id, definition, definitions
       controller = new AbortController(); active = controller;
       const inputSha256 = sha256(JSON.stringify(input));
       const value = await runLocalJsonProcess({
-        ...(runtime === "julia" ? {
-          command: "julia", args: ["--startup-file=no", `--project=${skillRoot}`, path.join(skillRoot, "mcp/bridge.jl")],
+        ...(launchFor ? await launchFor({ skillRoot, id, dependencyLockSha256, tool: request.params.name }) : runtime === "julia" ? {
+          command: process.env.OPENQUANTUM_JULIA || "julia", args: ["--startup-file=no", `--project=${skillRoot}`, path.join(skillRoot, "mcp/bridge.jl")],
           notFoundMessage: "需要 Julia；请先运行 npm run capability:paper-tools:setup",
         } : await preparedPythonLaunch({ skillRoot, id, dependencyLockSha256 })),
         cwd: skillRoot, env: localComputeEnvironment(env, input.execution), input: { input, inputSha256, dependencyLockSha256, source: definition.source, ...(definitions.length > 1 ? { toolName: request.params.name } : {}) },

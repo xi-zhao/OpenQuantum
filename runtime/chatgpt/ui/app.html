@@ -10,18 +10,19 @@
 <body>
   <div id="app">
     <header>
-      <div class="brand"><img src="__OQ_MARK__" alt=""><div><strong>OpenQuantum</strong><span>量子组件设置</span></div></div>
+      <div class="brand"><img src="__OQ_MARK__" alt=""><div><strong>OpenQuantum</strong><span>Skill · Tool · MCP</span></div></div>
       <a id="github-link" class="github-link" href="https://github.com/xi-zhao/OpenQuantum" target="_blank" rel="noopener noreferrer" aria-label="在 GitHub 为 OpenQuantum 点 Star">☆ GitHub <span aria-hidden="true">↗</span></a>
     </header>
-    <nav aria-label="能力分类" role="tablist">
+    <nav aria-label="设置分类" role="tablist">
       <!-- COMPONENT_TABS -->
-      <button id="refresh" class="refresh">刷新状态</button>
+      <button id="advanced" aria-expanded="false">高级设置</button>
+      <button id="refresh" class="refresh" hidden>刷新状态</button>
     </nav>
     <section class="intro">
-      <h1 id="page-title">组件状态</h1>
-      <p id="page-description">查看当前会话加载了哪些组件。</p>
+      <h1 id="page-title">概览</h1>
+      <p id="page-description" hidden></p>
     </section>
-    <section id="toolbar">
+    <section id="toolbar" hidden>
       <input id="search" type="search" placeholder="搜索服务、Token 名称或用途" aria-label="搜索能力">
       <select id="category" aria-label="按用途筛选"><option value="all">全部用途</option></select>
       <select id="state" aria-label="按配置状态筛选"><option value="all">全部状态</option></select>

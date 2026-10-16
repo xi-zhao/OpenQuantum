@@ -1,0 +1,308 @@
+{
+  "schemaVersion": 1,
+  "server": "qiskit",
+  "tools": [
+    {
+      "name": "transpile_circuit_tool",
+      "description": "Transpile a quantum circuit using Qiskit's preset pass managers.\n\nTakes a quantum circuit and transpiles it to match target hardware\nconstraints while optimizing for depth and gate count.\n\nIMPORTANT: Optimization level 3 can be very slow for large circuits (100+ qubits\nor 1000+ gates). Consider using level 2 for faster results with good quality.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "circuit": {
+            "type": "string",
+            "description": "Quantum circuit as QASM3 string, base64-encoded QPY, or QASM2 string.\nMaximum supported: 100 qubits, 10000 gates.\nFor QASM2, set circuit_format=\"qasm3\" (it will auto-detect and parse QASM2)."
+          },
+          "optimization_level": {
+            "default": 2,
+            "type": "integer",
+            "description": "Optimization level (0-3):\n- 0: No optimization, just maps to basis gates (fastest)\n- 1: Light optimization (default mapping, simple optimizations)\n- 2: Medium optimization (noise-adaptive layout) [default, recommended]\n- 3: Heavy optimization (best results, can be very slow for large circuits)"
+          },
+          "basis_gates": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Target basis gates. Can be:\n- A list of gate names (e.g., [\"cx\", \"id\", \"rz\", \"sx\", \"x\"])\n- A preset name: \"ibm_default\", \"ibm_eagle\", \"ibm_heron\",\n  \"generic_clifford_t\", \"ion_trap\", \"superconducting\"\n- None for no basis gate restriction"
+          },
+          "coupling_map": {
+            "anyOf": [
+              {
+                "items": {
+                  "items": {
+                    "type": "integer"
+                  },
+                  "type": "array"
+                },
+                "type": "array"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Qubit connectivity. Can be:\n- A list of [control, target] pairs (e.g., [[0, 1], [1, 2]])\n- A topology name: \"linear\", \"ring\", \"grid\", \"full\"\n- None for all-to-all connectivity"
+          },
+          "initial_layout": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "integer"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Optional initial qubit layout as list of physical qubit indices.\nLength must match the number of qubits in the circuit."
+          },
+          "seed_transpiler": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Random seed for reproducibility"
+          },
+          "circuit_format": {
+            "default": "qasm3",
+            "enum": [
+              "qasm3",
+              "qpy",
+              "auto"
+            ],
+            "type": "string",
+            "description": "Format of the input circuit (\"qasm3\" or \"qpy\"). Defaults to \"qasm3\".\nWhen \"qasm3\" is specified, QASM2 is also accepted as a fallback."
+          }
+        },
+        "required": [
+          "circuit"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "analyze_circuit_tool",
+      "description": "Analyze a quantum circuit without transpiling it.\n\nProvides detailed information about circuit structure, gate counts,\nand metrics useful for understanding circuit complexity.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "circuit": {
+            "type": "string",
+            "description": "Quantum circuit as QASM3 string, base64-encoded QPY, or QASM2 string."
+          },
+          "circuit_format": {
+            "default": "qasm3",
+            "enum": [
+              "qasm3",
+              "qpy",
+              "auto"
+            ],
+            "type": "string",
+            "description": "Format of the input circuit (\"qasm3\" or \"qpy\"). Defaults to \"qasm3\".\nWhen \"qasm3\" is specified, QASM2 is also accepted as a fallback."
+          }
+        },
+        "required": [
+          "circuit"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "compare_optimization_levels_tool",
+      "description": "Compare transpilation results across all optimization levels (0-3).\n\nUseful for understanding the trade-off between compilation time\nand circuit quality for a specific circuit.\n\nWARNING: This runs transpilation 4 times. For large circuits, this can be slow.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "circuit": {
+            "type": "string",
+            "description": "Quantum circuit as QASM3 string, base64-encoded QPY, or QASM2 string."
+          },
+          "circuit_format": {
+            "default": "qasm3",
+            "enum": [
+              "qasm3",
+              "qpy",
+              "auto"
+            ],
+            "type": "string",
+            "description": "Format of the input circuit (\"qasm3\" or \"qpy\"). Defaults to \"qasm3\".\nWhen \"qasm3\" is specified, QASM2 is also accepted as a fallback."
+          }
+        },
+        "required": [
+          "circuit"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "convert_qpy_to_qasm3_tool",
+      "description": "Convert a QPY circuit to human-readable QASM3 format.\n\nUse this tool to view the contents of a QPY circuit output from other tools\n(like transpile_circuit) in a human-readable OpenQASM 3.0 format.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "circuit_qpy": {
+            "type": "string",
+            "description": "Base64-encoded QPY circuit string (from transpile_circuit output)"
+          }
+        },
+        "required": [
+          "circuit_qpy"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "convert_qasm3_to_qpy_tool",
+      "description": "Convert a QASM3 (or QASM2) circuit to base64-encoded QPY format.\n\nUse this tool to convert human-readable QASM circuits to QPY format,\nwhich preserves full circuit fidelity (exact parameters, metadata, custom gates).\nThe QPY output can then be used with other tools that accept QPY input.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "circuit_qasm": {
+            "type": "string",
+            "description": "OpenQASM 3.0 or 2.0 circuit string"
+          }
+        },
+        "required": [
+          "circuit_qasm"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "load_circuit_from_qasm_tool",
+      "description": "Load a quantum circuit from an OpenQASM 2.0 or 3.0 string.\n\nParses the QASM input, returns the circuit as base64-encoded QPY along with\nmetadata (qubit count, gate counts, depth) so you can reason about the circuit\nbefore deciding what to do next.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "qasm_string": {
+            "type": "string",
+            "description": "The OpenQASM source code (2.0 or 3.0)"
+          },
+          "qasm_version": {
+            "default": "auto",
+            "enum": [
+              "auto",
+              "2.0",
+              "3.0"
+            ],
+            "type": "string",
+            "description": "Which parser to use:\n- \"auto\" (default): Try QASM 3.0 first, fall back to QASM 2.0\n- \"3.0\": Only use the QASM 3.0 parser\n- \"2.0\": Only use the QASM 2.0 parser"
+          }
+        },
+        "required": [
+          "qasm_string"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "export_circuit_to_qasm_tool",
+      "description": "Export a Qiskit circuit to OpenQASM format.\n\nConverts a base64-encoded QPY circuit to human-readable OpenQASM text.\nSupports both QASM 3.0 and QASM 2.0 output. Note that some circuits with\nnon-standard gates may not be expressible in QASM 2.0.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "circuit_qpy": {
+            "type": "string",
+            "description": "Base64-encoded QPY circuit string (from other tool outputs)"
+          },
+          "qasm_version": {
+            "default": "3.0",
+            "enum": [
+              "2.0",
+              "3.0"
+            ],
+            "type": "string",
+            "description": "Target QASM version:\n- \"3.0\" (default): Export as OpenQASM 3.0\n- \"2.0\": Export as OpenQASM 2.0"
+          }
+        },
+        "required": [
+          "circuit_qpy"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    }
+  ]
+}

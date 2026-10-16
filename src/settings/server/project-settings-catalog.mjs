@@ -6,8 +6,8 @@ import { quantumHardwareMcpIntegration } from "./quantum-hardware-mcp.mjs";
 const QISKIT_MCP_SOURCE = "https://github.com/Qiskit/mcp-servers";
 const MCP_CATALOG = Object.freeze({
   simqn_local: Object.freeze({
-    "displayName": "SimQN network",
-    "description": "Simulate lossy quantum-link delivery and Werner-state fidelity with the SimQN discrete-event engine.",
+    "displayName": "SimQN 量子链路仿真",
+    "description": "模拟量子链路的传输损耗、送达率与 Werner 态保真度。",
     "provider": "qns / OpenQuantum",
     "sourceUrl": "https://github.com/QNLab-USTC/SimQN",
     "packageName": "qns",
@@ -24,8 +24,8 @@ const MCP_CATALOG = Object.freeze({
     "setup": null
   }),
   vqnet_local: Object.freeze({
-    "displayName": "VQNet learning",
-    "description": "Evaluate a VQNet quantum circuit and differentiate an observable on CPU.",
+    "displayName": "VQNet 电路梯度",
+    "description": "在 CPU 上计算参数化量子电路的可观测量期望值与梯度。",
     "provider": "pyvqnet / OpenQuantum",
     "sourceUrl": "https://vqnet20-tutorial.readthedocs.io/en/main/index.html",
     "packageName": "pyvqnet",
@@ -78,8 +78,8 @@ const MCP_CATALOG = Object.freeze({
     "setup": null
   }),
   mrmustard_local: Object.freeze({
-    "displayName": "MrMustard Optics",
-    "description": "Gaussian continuous-variable optics, moments and truncated Fock probabilities",
+    "displayName": "MrMustard 连续变量光学",
+    "description": "模拟高斯光学态与操作，计算矩和截断 Fock 概率。",
     "provider": "mrmustard / OpenQuantum",
     "sourceUrl": "https://github.com/XanaduAI/MrMustard",
     "packageName": "mrmustard",
@@ -96,8 +96,8 @@ const MCP_CATALOG = Object.freeze({
     "setup": null
   }),
   mimiq_local: Object.freeze({
-    "displayName": "MIMIQ Exaqt",
-    "description": "Local exact state-vector circuit simulation and seeded samples",
+    "displayName": "MIMIQ Exaqt 电路仿真",
+    "description": "使用本地 Exaqt 计算精确态矢量、测量概率与可复现采样。",
     "provider": "mimiq-exaqt / OpenQuantum",
     "sourceUrl": "https://docs.qperfect.io/exaqt-python/",
     "packageName": "mimiq-exaqt",
@@ -105,8 +105,8 @@ const MCP_CATALOG = Object.freeze({
     "setup": null
   }),
   myqlm_local: Object.freeze({
-    "displayName": "myQLM Simulation",
-    "description": "Local gate-model state-vector simulation using PyLinalg",
+    "displayName": "myQLM 电路仿真",
+    "description": "使用本地 PyLinalg 计算量子门电路的态矢量与测量概率。",
     "provider": "myqlm / OpenQuantum",
     "sourceUrl": "https://myqlm.github.io/",
     "packageName": "myqlm",
@@ -178,7 +178,7 @@ const MCP_CATALOG = Object.freeze({
   }),
   qrisp_local: Object.freeze({
     "displayName": "Qrisp 量子算术",
-    "description": "本地 QuantumFloat 无符号模加法；需考虑 EPL-2.0 许可。",
+    "description": "使用 QuantumFloat 执行无符号模加法，支持基态与叠加态输入。",
     "provider": "Eclipse / Fraunhofer / OpenQuantum",
     "sourceUrl": "https://github.com/eclipse-qrisp/Qrisp",
     "packageName": "qrisp",
@@ -241,7 +241,7 @@ const MCP_CATALOG = Object.freeze({
   }),
   mqt_ddsim_local: Object.freeze({
     "displayName": "MQT 决策图仿真",
-    "description": "使用决策图模拟电路，返回指定计算基态概率。",
+    "description": "使用决策图采样电路的末端测量，可选返回完整态矢量。",
     "provider": "TUM / MQT / OpenQuantum",
     "sourceUrl": "https://github.com/munich-quantum-toolkit/ddsim",
     "packageName": "mqt-ddsim",
@@ -303,8 +303,8 @@ const MCP_CATALOG = Object.freeze({
     "setup": null
   }),
   cudaq_local: Object.freeze({
-    "displayName": "CUDA-Q CPU 仿真",
-    "description": "固定 qpp-cpu 后端的精确概率与采样；Linux 或 Apple Silicon macOS。",
+    "displayName": "CUDA-Q CPU 电路仿真",
+    "description": "使用 qpp-cpu 后端计算量子电路的精确概率与采样结果。",
     "provider": "NVIDIA / OpenQuantum",
     "sourceUrl": "https://github.com/NVIDIA/cuda-quantum",
     "packageName": "cuda-quantum-cu13",
@@ -312,8 +312,8 @@ const MCP_CATALOG = Object.freeze({
     "setup": null
   }),
   netqasm_local: Object.freeze({
-    "displayName": "NetQASM / SquidASM 网络",
-    "description": "本地双节点 EPR 程序编译；仿真需用户自行准备有许可的 NetSquid 环境。",
+    "displayName": "NetQASM 量子网络程序",
+    "description": "编译双节点 EPR 程序；可选连接独立的 SquidASM / NetSquid 环境进行仿真。",
     "provider": "QuTech / OpenQuantum",
     "sourceUrl": "https://github.com/QuTech-Delft/squidasm",
     "packageName": "netqasm",
@@ -447,8 +447,8 @@ const MCP_CATALOG = Object.freeze({
     "setup": null
   }),
   qoolqit_local: Object.freeze({
-    "displayName": "QoolQit 模拟程序",
-    "description": "无量纲 Rydberg 程序编译与本地计算；需审阅上游定制许可证。",
+    "displayName": "QoolQit 中性原子编译与仿真",
+    "description": "编译无量纲 Rydberg 模拟程序，计算中性原子阵列的本地演化。",
     "provider": "Pasqal / OpenQuantum",
     "sourceUrl": "https://github.com/pasqal-io/qoolqit",
     "packageName": "qoolqit",
@@ -484,7 +484,7 @@ const MCP_CATALOG = Object.freeze({
   }),
   qdmi_local: Object.freeze({
     displayName: "QDMI 设备能力查询",
-    description: "按需启用；先准备受控驱动，再只读查询设备、门集与耦合关系。示例驱动不代表真机。",
+    description: "通过已审阅的驱动查询设备、门集与耦合关系；默认使用官方本地示例。",
     provider: "QDMI / OpenQuantum",
     sourceUrl: "https://github.com/Munich-Quantum-Software-Stack/QDMI",
     packageName: "QDMI",
@@ -565,17 +565,17 @@ const MCP_CATALOG = Object.freeze({
     setup: null,
   }),
   cqlib_kernel_local: Object.freeze({
-    displayName: "cqlib-qml · 角度编码核与 QSVM",
-    description: "角度编码核与 QSVM；默认关闭，本地运行，数值对照不等于科学验收。",
+    displayName: "CQLib 量子核分类",
+    description: "使用角度编码核训练 QSVM，并返回测试集预测与数值对照。",
     provider: "cqlib-qml / OpenQuantum",
     sourceUrl: "https://github.com/cq-lib/cqlib-qml",
     packageName: "cqlib",
-    packageVersion: "1.4.0b1@1d0a2c49",
+    packageVersion: "2.0.0b4 / cqlib-qml 0.1.0b3",
     setup: null,
   }),
   flagquantum: Object.freeze({
-    displayName: "FlagQuantum · 第二家量子 MCP 电路工作台",
-    description: "第二家量子 MCP 电路工作台；默认关闭，本地运行，数值对照不等于科学验收。",
+    displayName: "FlagQuantum 电路工作台",
+    description: "构建、转换与模拟量子电路，提供上游 FlagQuantum 的 17 项本地工具。",
     provider: "FlagQuantum / OpenQuantum",
     sourceUrl: "https://github.com/FlagQuantum/mcp-servers",
     packageName: "flagquantum-mcp-server",
@@ -751,9 +751,9 @@ const MCP_CATALOG = Object.freeze({
     setup: null,
   }),
   tyxonq_local: Object.freeze({
-    displayName: "TyxonQ Local",
+    displayName: "TyxonQ 电路与噪声仿真",
     description:
-      "本地电路与噪声仿真；首次调用会由 uv 准备固定的 TyxonQ Python 环境，不连接云端或真实量子硬件。",
+      "在本地模拟量子电路与噪声，计算精确概率或执行采样。",
     provider: "TyxonQ / OpenQuantum",
     sourceUrl: "https://github.com/QureGenAI-Biotech/TyxonQ",
     packageName: "tyxonq",

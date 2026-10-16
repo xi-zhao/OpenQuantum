@@ -8,7 +8,7 @@ import { spawnSync } from "node:child_process";
 // this installation only, without editing the wheel or the system Homebrew.
 if (process.platform !== "darwin") process.exit(0);
 const root = fileURLToPath(new URL("../../../../", import.meta.url));
-const directory = path.join(root, ".openquantum/sdk-native/qpanda-qubo");
+const directory = path.join(process.env.OPENQUANTUM_NATIVE_SDK_ROOT || path.join(root, ".openquantum/sdk-native"), "qpanda-qubo");
 const source = path.join(directory, "fmt-source");
 const prefix = path.join(directory, "fmt");
 const revision = "40626af88bd7df9a5fb80be7b25ac85b122d6c21";

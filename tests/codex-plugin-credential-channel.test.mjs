@@ -94,8 +94,8 @@ test("encrypted writes merge fields and remove only the scoped field under curre
   assert.deepEqual(await serviceValues(f.credentials, serviceById(target.id)), { TIANYAN_API_TOKEN: "neighbor" });
   const blocked = await envelope(f.channel, {}, { ...target, field: "TIANYAN_API_TOKEN", operation: "remove" });
   await f.settings.command({ action: "provider.set", id: target.id, enabled: true, revision: (await f.settings.snapshot()).revision });
-  assert.equal((await f.channel.commit(blocked)).status, 409);
-  assert.ok(await f.credentials.resolve(serviceCredentialRef(target.id)));
+  assert.equal((await f.channel.commit(blocked)).status, 200);
+  assert.equal(await f.credentials.resolve(serviceCredentialRef(target.id)), null);
 });
 
 test("Unicode bounds, malformed payloads and secret-bearing store errors are handled safely", async t => {

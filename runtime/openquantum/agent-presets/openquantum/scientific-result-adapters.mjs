@@ -469,5 +469,5 @@ const adapters = new Map([
 ]);
 
 export function scientificResultAdapter(toolName) {
-  return adapters.get(toolName);
+  return adapters.get(toolName === "audit_density_matrix" ? QUANTUM_INFORMATION_AUDIT_TOOL : toolName);
 }

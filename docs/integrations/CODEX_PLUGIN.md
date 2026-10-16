@@ -14,21 +14,25 @@ Codex 插件在外层 Codex 对话中提供量子 Skill 和科学 Tool。OpenQua
 | `src/settings/codex/` | 设置 Application Interface、受控连接、系统凭据库、卡片内保存和备用凭据窗口 |
 | `distributions/codex-plugin/` | 与 Desktop 一致的产品版本及插件运行依赖锁定 |
 
-构建从能力策略和真实 `tools/list` 生成目录、Skill 和完整输入合同，检查重复名称和策略漂移。
-0.8.4 Codex 插件包含 **168 个 Skill、87 个科学 Tool**，设置页提供用途分类、搜索和状态筛选。
-本轮新增 26 个原生 SDK Skill，并纳入已合并的设置内容一致与服务密钥改动；
-原 71 个 Tool 的默认状态不变，新增 8 个凭据服务的 16 个 Tool 均默认关闭。
+构建从能力策略和 `tools/list` 生成目录、Skill 和完整输入合同，检查重复名称和策略漂移。
+FlagQuantum 构建复用已审阅的固定版本 `upstream-tools.json`，无需为打包安装其 Python 环境；
+真实调用仍核对服务返回的完整 schema 和副作用声明，漂移时拒绝执行。
+已发布 0.8.4 包含 **168 个 Skill、87 个科学 Tool**；当前源码加入原先未接入的本地和外部 MCP、
+平台诊断与 SDK 选型入口。默认允许 Agent 按任务选择，保留明确禁用列表；旧 Codex 的默认关闭
+没有写入禁用列表，不视为用户禁止。允许使用不安装环境、不启动服务，也不授权任意云端操作。
+Desktop 的旧 preset 关闭状态则保守迁移为禁止，详见[Desktop 原生准备](DESKTOP_PREPARATION.md)。
 实际发布状态、源码提交和附件摘要以 Release 的 `release-validation.json` 为准。
 其中没有执行 Tool 的 Skill 明确提供方法解释与选型参考，不把知识目录数量等同于可执行计算数量。
 SDK workbench 和领域 Skill 支持通过宿主代码工具编写原生程序，随包携带 111 个 SDK/源码环境的导航、
 固定依赖、显式 setup 和源码资源；便捷 Tool 的预设案例不再限制原生 API 的使用。
-平台诊断、学习通和尚未适配的按需 MCP 连接不进入执行入口；设置目录保留它们的内容和未接入原因。
-新增云端与硬件服务不默认启用。
+平台诊断使用本机只读检查；学习通仍属于 Desktop。平台、驱动或许可条件按具体 SDK 检查，不能以目录可见代替环境就绪。
+云端请求与硬件操作仍遵守任务授权、Tool 副作用声明和宿主权限。
 完整范围与逐库工程证据见[原生 SDK 接入](FULL_SDK_ACCESS.md)；SDK 环境并非 111 个不同上游库；本轮新增入口见[生态扩展](SDK_ECOSYSTEM_2026-10-14.md)。
 
 `plugin.json` 使用 Agent Plugins 1.0，并保留 `.codex-plugin/plugin.json` 兼容入口。插件身份仍为
 `openquantum@personal`。左侧“…”菜单的全局入口由 `open_openquantum_settings` 提供，名称为
 “OpenQuantum 设置”；与插件设置入口共享 `ui://openquantum/settings/<bundle SHA-256>.html`。
+本次保留 main 的 `global` 与旧 `settings` 入口声明；入口协议清理不包含在 Desktop PR 中。
 资源摘要只标识页面包，排除进程专属的回环端口，允许宿主在另一个 MCP 进程读取。服务端将旧的
 `settings/<64位摘要>.html` 与 `ui://openquantum/workbench.html` 作为当前页面的兼容入口，其他 URI 仍拒绝。
 只宣告当前入口，品牌素材复用现有 OpenQuantum 标识。
@@ -42,41 +46,55 @@ SDK workbench 和领域 Skill 支持通过宿主代码工具编写原生程序�
 ## 设置实际影响什么
 
 Desktop 与 Codex 共用 `project-settings-catalog.mjs` 的服务、凭据说明及官方链接，
-并共用 `credential-card.mjs` 的完整服务密钥卡片及 `credential-field.mjs` 输入表单。
-`component-view.mjs` 统一四个标签、介绍、运行状态标题和组件卡片；Codex 构建期从 Desktop 的
+共享页面按服务组织凭据组，复用 `credential-card.mjs` 的样式及 `credential-field.mjs` 输入表单。
+`component-view.mjs` 复用组件卡片；Codex 构建期从 Desktop 的
 `readProjectSettings` 导出完整展示目录与同一份中文文案，不携带 Desktop Runtime 或用户状态。
 Codex 适配层只补充宿主连接、可用范围、字段要求、默认开关和执行注入。
 Desktop 使用 Harness credential store；Codex 使用本机系统凭据库。两个入口不复制或自动迁移彼此的密钥。
 
-默认打开“运行状态”，标签顺序与 Desktop“量子组件”一致：运行状态、MCP、Skills、服务密钥。
-设置目录显示 Desktop 的全部 183 个 Skill 和 91 个 MCP；未适配条目在原位置标注原因并禁用操作。
+默认打开只读“概览”，保留 README 的产品定位及 Skill、Tool、MCP 的简短说明。
+默认标签为概览、Skill、凭据；“高级设置”展开 Tool 和 MCP。
+设置目录显示全部 183 个 Skill 和 91 个 MCP，并补上 27 个没有对应 MCP 卡片的原生 SDK 环境入口，
+覆盖全部 111 个 SDK 环境。安装前展示具体平台、驱动和许可条件。
 目录可见不表示当前宿主具有相同执行能力；真实开关和凭据状态仍来自当前宿主。
 
-“服务密钥”沿用 Desktop 双列卡片，窄窗口改为单列。每个字段单独显示名称、环境变量、
-配置状态、用途、获取凭据链接、输入框和保存按钮。共有 23 个独立字段，重复的 IBM Token 合并显示。
-搜索支持服务名称、用途和变量名。可直接配置 Superstaq、Classiq、Q-CTRL、QCArchive、AQT、OQC Cloud、
-Quantum Inspire 和 FieldQKit 的 17 个字段。
-服务开关、逐项工具开关和密钥跳转集中在对应 MCP 卡片。原生工具服务及全部 Tool 开关放在
-“运行状态 → Tools”中；搜索栏随工具详情展开，减少初始页面的操作负担。
+Skill 默认显示“最近选择”，首次使用时提示在聊天中描述任务。可搜索全部目录或筛选已禁止、需要处理。
+卡片只显示名称、简短用途、“允许 Agent 选择”和一条准备状态；“关联配置”提供手动检查、修复、
+按需凭据及 Tool、MCP 使用限制。允许选择与环境安装分开保存，不自动恢复任何禁用。
+关系来自显式声明，支持一个 Skill 对应多个 Tool、多个 Skill 复用同一环境或 MCP。
+只复用环境不推导出 MCP 依赖；纯知识 Skill 显示“无需安装”，多环境 Skill 先选择再显示对应配置。
+源码 ID、完整 Tool 合同和修复操作收在详情中。
 
-另列 IBM Runtime、IBM Transpiler、Quantum Hardware、QPanda3 Runtime 和 Pasqal：
-前四项尚未适配当前插件的内置执行入口，页面展示认证要求与官方说明；Pasqal 已有 Skill，
-但 SDK 从宿主进程环境读取认证，不读取本页系统凭据库。页面不提供无效的保存入口。
+“凭据”默认显示当前任务需要填写或已有保存值的账户。全部目录按服务组织为 12 组、23 个独立字段；窄窗口为单列。
+QCArchive 地址、用户名与密码归为一组，OQC Token 与可选地址归为一组，Pasqal 的两种认证方式集中说明；
+重复的 IBM Token 只出现一次。FieldQKit 的七个平台归为一组，各平台 Token 独立可选。
+展开服务后逐项保存，必填、选填、待补全与已保存状态分别标明。环境变量收在字段详情中，
+搜索变量名仍显示所属服务的完整配置。可直接配置 Superstaq、Classiq、Q-CTRL、QCArchive、AQT、OQC Cloud、
+Quantum Inspire、FieldQKit、Pasqal、IBM Quantum、Quantum Hardware 与 QPanda Runtime。
+Skill 中的关联凭据、MCP 中的配置和“凭据”页共用同一份记录与保存通道，不复制密钥。
+“Tool”页汇总调用开关和准备状态，并可跳回对应 Skill 的运行准备；完整技术合同保留在详情。
+“MCP”页显示连接开关与已准备 Tool 数量，安装和凭据配置默认折叠。
+本地免凭据 Tool 与联网 Tool 分别判断状态，凭据保存不代表远端账户认证通过。
+
+IBM Runtime、IBM Transpiler 与 Quantum Hardware 共用 IBM 凭据字段；同一凭据不要求重复输入。
+Pasqal 可直接填写 Token 或用户名和密码，固定云端工作流从凭据库读取，本地模拟不需要凭据。
+固定入口与 SDK 定位器均遵守关联 Skill、Tool、MCP 禁用策略。
 
 - **凭据状态**：区分未配置、已保存但认证未验证、可选凭据、凭据库不可用和需单独配置。
   不因目录握手成功就声称账户认证成功或 SDK 已准备。无需账户的本地准备、模拟操作不读取凭据库。
 - **多字段配置**：QCArchive 地址必填，公开服务可匿名；私有服务用户名和密码需成对填写。
-  OQC 地址可留空使用默认官方地址，填写时只接受官方域名与 HTTPS 默认端口。
-  每个服务的值作为一个记录保存在系统凭据库，单卡保存通过锁内合并保留其他字段。空白输入不可保存。
+  OQC 未保存地址时使用默认官方地址；留空保留已有地址，移除后恢复默认。填写时只接受官方域名与 HTTPS 默认端口。
+  每个服务的值作为一个记录保存在系统凭据库，逐字段保存通过锁内合并保留其他字段。空白输入不可保存。
   页面只返回字段是否已保存，值不回显，保存后自动刷新并清空输入。用户名和密码可以逐项保存，未配齐会显示缺失项。
-  移除前须关闭相应服务，并在卡片内点击“确认移除”；不会依赖宿主可能禁止的原生弹窗。
+  移除在卡片内点击“确认移除”；不要求取消允许使用。后续需要认证的调用会提示补齐，使用限制不变。
 - **执行注入**：只向对应服务注入受审计环境变量；构建和目录握手不携带凭据。
-  新服务与其工具分别默认关闭，旧设置升级不会自动启用云功能。开启本地功能不要求填写远程 Token。
-  保存与启用不调用厂商 API，实际远程操作仍按工具副作用和任务授权执行。
+  默认允许按需选择，但不安装、不调用厂商 API。明确禁用在调用前重新检查，本地功能不要求远程 Token。
+  凭据只在本次选择的 Tool 或云端工作流需要时检查，保存不执行云端操作。
 
 - **Skills**：使用原生 `skills.config` 的 `name="openquantum:<id>"` selector，仅变更本插件的 Skill。
   本机 Codex `0.162.0-alpha.17.2` 已验证此 selector 和升级后保留。更旧宿主应先运行宿主检查。
-  按原生规则采用最后一个匹配项，因此在 Codex 原生设置中的后续改动也会正确显示；已有聊天可能需重载。
+  按原生规则采用最后一个匹配项；兼容同一插件缓存下旧版本的 path selector，保持禁用。
+  原生 Skill 简介的刷新由宿主管理；后端策略对后续准备和调用立即生效。
 - **内置工具连接和 Tool**：保存到用户的 `~/.openquantum/plugins/codex/settings.json`。
   禁用同时影响 `tools/list` 和调用入口；缓存中的旧调用也被拒绝，不只是隐藏卡片。已开始的调用不会被强制终止。
 - **新增 MCP**：支持本机 stdio 与 Streamable HTTP。地址不接受 URL 密码或查询参数中的 Token。
@@ -95,7 +113,38 @@ Quantum Inspire 和 FieldQKit 的 17 个字段。
 
 自定义连接单次目录查询 15 秒、调用 180 秒、结果 2 MiB；最多同时执行两个操作。
 内置工具使用同样的调用预算，支持 `execution` 时最多两个数值线程。需要独立 Python/SDK 的工具沿用显式
-setup 规则，插件安装不会批量下载数值环境；缺少依赖时应报告具体错误。
+setup 规则，插件安装不会批量下载数值环境。
+
+## 按需安装、配置与启动
+
+Agent 先根据原生 Skill 简介选择；完整指令按需要读取，`find_openquantum_skills` 可补充搜索并检查单项状态。
+发现与状态读取没有安装或服务启动副作用。只有执行确实需要时调用 `prepare_openquantum_skill`，
+明确选择一个 Tool 或 SDK；多目标 Skill 不会安装整个目录。纯知识 Skill 无需准备。
+准备入口复用已有环境，缺失时启动固定依赖安装；缺凭据返回所需字段与聚焦的同一设置表单，
+凭据明文不进入聊天。取消、失败或中断后需显式重试；已有安装的检查失败仍重试检查。
+Python 安装要求本机已有 `uv`，Julia 要求已有 Julia；许可环境和不支持的平台明确返回配置状态。
+
+允许的科学 Tool 在环境安装前就提供合同，因此首次准备完成可在同一聊天直接执行，
+不依赖跨进程 `tools/list_changed` 或重载。若跳过准备，科学 Tool 返回带下一步的文本错误，
+不把准备数据伪装成科学输出。运行时仍重新检查禁用，不能通过通用 SDK 工作台或 Pasqal 固定入口绕过。
+调用 Tool 才启动对应服务，完成后关闭。关闭 Skill 保留环境、凭据与独立的 MCP、Tool 选择。
+最近选择、准备结果及使用时间保存在 `activity.json`（最多 20 项），不保存任务文本或凭据。
+“需要处理”按当前环境与凭据状态判断，完成配置后不会继续显示旧的缺失提示。
+
+13 个新增本地服务均无必填 Token。QDMI 可选择已审阅的驱动清单；留空准备官方示例，返回模拟设备信息。
+NetQASM 默认只准备公开的程序编译环境；SquidASM / NetSquid 许可仿真使用用户另行准备的解释器。
+CUDA-Q 便捷 Tool 使用 CPU，无需 GPU。各卡片统一显示用途、平台条件、必要或可选配置及安装反馈。
+
+环境默认位于 `~/.openquantum/plugins/codex/environments/`，与插件版本目录分离，升级保留。
+安装与检查记录位于同一设置目录的 `installations/`；`OPENQUANTUM_PLUGIN_SETTINGS_HOME` 可指定整个目录。
+固定依赖、解释器、配置或关键文件改变后须重新检查；这不是科学结果验收。
+有限安装进程复用现有 SDK 安装器，退出或重开页面不丢失操作状态。取消会等待其拥有的子进程退出后才允许重试；
+异常退出可重新检查或安装。每个环境的安装、配置与插件 Tool 执行互斥，其他环境可独立工作。
+原生 SDK 经宿主代码工具执行时，执行与取消由当前宿主管理，不受插件的 Tool 租约管理。
+
+MCP 初始化和设置读取只加载构建清单与状态，不启动科学服务、不导入数值 SDK。
+实际调用才连接选中的服务，核对实时 Tool 合同，调用完成或取消后关闭连接。
+首次计算仍可能因 Python 模块导入或 JIT 编译耗时；该时间与设置页面加载分开记录。
 
 ## 构建、检查与安装
 
@@ -145,7 +194,7 @@ npm run plugin:install
 
 ## 当前限制与恢复
 
-当前 Desktop 没有可用的原生 config-write bridge/control socket。Skill 设置通过受控 TOML 写入，
+当前 Codex Desktop 没有可用的原生 config-write bridge/control socket。Skill 设置通过受控 TOML 写入，
 保留无关配置值；TOML 注释和排版会被重新序列化。每次修改前把原配置保存在同目录的
 `config.toml.openquantum-backup`，文件权限为 0600；该备份不得上传到报告、仓库或日志。
 写入用互斥锁、页面 revision 和替换前原文检查。自有进程崩溃后的锁可恢复。
@@ -155,7 +204,7 @@ npm run plugin:install
 
 HTTP OAuth、分页 MCP 目录、跨电脑密钥同步不在此版本范围。用户需要逐项启用自定义工具。
 本地浏览器预览、协议握手、原生 CLI 安装检查、聊天旁 MCP 设置标签页和左侧菜单的全局入口
-是不同验收层级。安装候选版后需从左侧“…”→“OpenQuantum 设置”进入，确认运行状态、MCP、Skills、服务密钥四个标签及关键配置操作；
+是不同验收层级。安装候选版后需从“OpenQuantum 设置”进入，确认概览、Skill、凭据及高级设置中的 Tool、MCP 和关键配置操作；
 聊天旁标签页显示新版不能证明全局入口已经更新。卡片保存应核验宿主 WebCrypto 与 app-only Tool 通道；
 独立凭据窗口另行核验打开与保存。CSP 声明不能替代宿主内的实际交互检查。
 [历史验收记录](../releases/2026-10-11-plugin-settings.md)记录此前的已安装入口结果；

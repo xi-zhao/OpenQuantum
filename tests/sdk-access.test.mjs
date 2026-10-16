@@ -70,6 +70,16 @@ test("SDK discovery is read-only and distinguishes missing, stale and prepared e
   await assert.rejects(sdkCli(directory, ["execute", "arbitrary.py"]), /Use list/);
 });
 
+test("algorithm SDK honors the persistent environment root while preserving source-checkout defaults", async t => {
+  const { directory } = await fixture(t);
+  const chosen = path.join(directory, "managed-envs");
+  const configured = await describeSdk(root, "quantum-algorithms", { environment: { OPENQUANTUM_PYTHON_ENV_ROOT: chosen } });
+  assert.equal(configured.run.command, path.join(chosen, "quantum-algorithms", process.platform === "win32" ? "Scripts/python.exe" : "bin/python"));
+  const legacy = await describeSdk(root, "quantum-algorithms", { environment: {} });
+  assert.equal(legacy.run.command, path.join(root, "examples/quantum-algorithms/.venv", process.platform === "win32" ? "Scripts/python.exe" : "bin/python"));
+  await assert.rejects(fs.access(chosen), { code: "ENOENT" });
+});
+
 test("catalog rejects duplicate and escaping IDs instead of turning them into executable paths", async t => {
   const { directory } = await fixture(t);
   const catalog = path.join(directory, ".agents/sdk-libraries.json");
@@ -149,7 +159,7 @@ test("host Skill offers arbitrary SDK code without relaxing permissions or claim
   assert.match(content, /自定义程序/);
   assert.match(content, /SDK.*公开 API/);
   assert.match(content, /不得因此缩小用户/);
-  assert.match(content, /不得绕过用户禁用/);
+  assert.match(content, /用户明确禁止的 Skill、Tool 或 MCP 不得恢复/);
   assert.match(content, /宿主若没有本机代码工具/);
   assert.match(content, /not_checked/);
   assert.doesNotMatch(content, /先缩小研究问题|不要.*借助 Shell 替代/);

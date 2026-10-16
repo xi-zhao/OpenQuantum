@@ -8,6 +8,9 @@
 *.bat text eol=crlf
 *.cmd text eol=crlf
 
+# The MCP adapter verifies this audited snapshot before exposing its Tools.
+src/metriq-data/upstream/snapshot.json -text
+
 # Preserve the audited Flow-VQE source bytes, including upstream whitespace.
 .agents/skills/flow-vqe/upstream/* -text whitespace=-blank-at-eol,-blank-at-eof
 

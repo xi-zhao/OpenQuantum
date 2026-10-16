@@ -8,9 +8,11 @@ import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprot
 import { runLocalJsonProcess } from "../../../../src/lib/local-json-process.mjs";
 import { sha256 } from "../../../../src/lib/bounded-science-mcp.mjs";
 import { definition } from "./contracts.mjs";
+import { pythonEnvironmentRoot } from "../../../../src/lib/prepared-python.mjs";
 const skillRoot = fileURLToPath(new URL("..", import.meta.url));
 const root = path.resolve(skillRoot, "../../..");
-const python = path.join(root, ".openquantum/python-envs/qdmi-device", process.platform === "win32" ? "Scripts/python.exe" : "bin/python");
+const python = path.join(pythonEnvironmentRoot(root, "qdmi-device"), process.platform === "win32" ? "Scripts/python.exe" : "bin/python");
+const driverConfiguration = process.env.OPENQUANTUM_QDMI_CONFIG || path.join(process.env.OPENQUANTUM_QDMI_HOME || path.join(root, ".openquantum/qdmi"), "driver.json");
 const lockHash = sha256(await readFile(path.join(skillRoot, "uv.lock")));
 const server = new Server({ name: "openquantum-qdmi-device", version: "0.1.0" }, { capabilities: { tools: {} } });
 let active;
@@ -20,12 +22,12 @@ server.setRequestHandler(CallToolRequestSchema, async (request, { signal }) => {
   try {
     const input = definition.normalize(request.params.name, request.params.arguments);
     if (active) throw new Error("QDMI query is busy");
-    try { await access(python); await access(path.join(root, ".openquantum/qdmi/driver.json")); }
+    try { await access(python); await access(driverConfiguration); }
     catch { throw new Error("QDMI is not configured; run npm run capability:qdmi:setup for the local example driver, or configure a reviewed QDMI client driver"); }
     controller = new AbortController(); active = controller;
     const inputSha256 = sha256(JSON.stringify(input));
     // Deliberately no user credentials, loader overrides or QDMI_CONF from the host environment.
-    const env = { PYTHONDONTWRITEBYTECODE: "1", PYTHONNOUSERSITE: "1",
+    const env = { PYTHONDONTWRITEBYTECODE: "1", PYTHONNOUSERSITE: "1", OPENQUANTUM_QDMI_CONFIG: driverConfiguration,
       ...Object.fromEntries(["PATH", "SYSTEMROOT", "WINDIR"].filter(key => process.env[key]).map(key => [key, process.env[key]])) };
     const output = await runLocalJsonProcess({
       command: python, args: [path.join(skillRoot, "mcp/bridge.py")], cwd: root, env,

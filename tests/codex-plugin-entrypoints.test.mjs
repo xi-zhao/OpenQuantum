@@ -44,8 +44,8 @@ test("the only global entry opens the same settings document as plugin settings"
   assert.equal(resource.text, html);
   assert.equal(resource.mimeType, RESOURCE_MIME_TYPE);
   assert.equal(resource._meta["openai/ui"].preferredDisplayMode, "fullscreen");
-  for (const tab of ["runtime", "mcp", "skills", "credentials"]) assert.ok(resource.text.includes(`data-tab="${tab}"`));
-  assert.equal((resource.text.match(/data-tab=/g) ?? []).length, 4);
+  for (const tab of ["runtime", "skills", "tools", "mcp", "credentials"]) assert.ok(resource.text.includes(`data-tab="${tab}"`));
+  assert.equal((resource.text.match(/data-tab=/g) ?? []).length, 5);
 });
 
 test("discovery and app sessions share a bundle URI but bind resources to the reading session", async t => {
