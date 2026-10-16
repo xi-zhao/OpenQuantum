@@ -189,7 +189,20 @@ function toolRow(tool, compact = false) {
   info.append(element("strong", tool.title), element("p", state.label, `hint ${state.key === "prepared" ? "prepared" : ""}`));
   if (!compact) row.append(info);
   row.append(switchFor(tool.enabled, `${tool.title} Tool`, action, { text: tool.enabled ? "允许按需使用" : "已禁止" }));
-  return row;
+  if (!tool.operationOverrides?.length) return row;
+  const group = element("div"); group.append(row);
+  const details = disclosure(`tool-overrides:${tool.id}`, `关联 Tool 使用限制（${tool.operationOverrides.length}）`);
+  details.append(element("p", "保留原有的单独选择。关联 Skill、Tool 和 MCP 的禁用仍然有效。", "hint"));
+  for (const operation of tool.operationOverrides) {
+    const control = element("div", undefined, "tool-row"), description = element("div");
+    description.append(element("code", operation.id), element("p", shortDescription(operation.description), "hint"));
+    if (operation.affectedProviders.length > 1) description.append(element("p", `同名 Tool 共用此选择：${operation.affectedProviders.join("、")}`, "hint"));
+    control.append(description, switchFor(operation.enabled, `${operation.id} 关联 Tool`,
+      { action: "tool.operation.set", id: tool.id, tool: operation.id }, { text: operation.enabled ? "允许按需使用" : "已禁止" }));
+    details.append(control);
+  }
+  group.append(details);
+  return group;
 }
 function providerControl(id) {
   const provider = snapshot.providers.find(item => item.id === id);

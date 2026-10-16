@@ -31,11 +31,12 @@ test("all seven upstream surfaces and both Skills have executable Codex projecti
 
 async function externalFixture(t, id) {
   const f = await fixture(t), entry = externalMcp(id);
-  Object.assign(f.backend, { root, providers: [{ key: id, environmentId: entry.environmentId, tools: [{ name: entry.toolName, capabilityId: entry.skillId }] }],
+  const contract = await externalContract(root, id);
+  Object.assign(f.backend, { root, providers: [{ key: id, environmentId: entry.environmentId, upstreamTools: contract.tools, tools: [{ name: entry.toolName, capabilityId: entry.skillId }] }],
     tools: [{ name: entry.toolName }], providerFor: () => id,
     sourceCapabilities: [{ id: entry.skillId, title: entry.title, status: "available", skill: "workflow", tools: [entry.toolName], sdkIds: [], mcp: [{ name: id }] }] });
   let starts = 0;
-  f.settings.environments = { status: async value => ({ id: value, ready: false, state: "not_installed", installation: "missing" }),
+  f.settings.environments = { snapshot: async () => [], status: async value => ({ id: value, ready: false, state: "not_installed", installation: "missing" }),
     start: async value => { assert.equal(value, entry.environmentId); starts++; } };
   return { ...f, entry, starts: () => starts };
 }
@@ -65,6 +66,36 @@ test("explicit legacy operation prohibitions prevent discovery and preparation",
   assert.equal((await inspectPreparation(f.settings, input)).operations.some(item => item.name === "analyze_circuit_tool"), false);
   assert.equal((await prepareSkill(f.settings, { ...input, operationName: "analyze_circuit_tool" })).state, "blocked");
   assert.equal(f.starts(), 0);
+});
+
+test("individual operation choices are bounded, reversible and take effect before execution", async t => {
+  const f = await externalFixture(t, "qiskit");
+  const operation = "analyze_circuit_tool";
+  const initial = { schemaVersion: 1, connections: [], disabledProviders: [], disabledTools: [operation, "unrelated_tool", "setup_ibm_quantum_account_tool"] };
+  await fs.mkdir(path.dirname(f.settings.file), { recursive: true });
+  await fs.writeFile(f.settings.file, JSON.stringify(initial));
+  const row = value => value.tools.find(item => item.id === f.entry.toolName).operationOverrides;
+  const snapshot = await f.settings.snapshot();
+  assert.deepEqual(row(snapshot).map(item => [item.id, item.enabled]), [[operation, false]]);
+  const change = { action: "tool.operation.set", id: f.entry.toolName, tool: operation, enabled: true, revision: snapshot.revision };
+  const before = await fs.readFile(f.settings.file, "utf8");
+  for (const input of [{ tool: "unknown" }, { tool: "setup_ibm_quantum_account_tool" }, { tool: "run_circuit" }, { id: "run_qiskit_gym" }, { enabled: "true" }, { revision: "stale" }]) {
+    await assert.rejects(f.settings.command({ ...change, ...input }));
+    assert.equal(await fs.readFile(f.settings.file, "utf8"), before);
+  }
+  const allowed = await f.settings.command(change);
+  assert.deepEqual(row(allowed).map(item => [item.id, item.enabled]), [[operation, true]]);
+  assert.deepEqual((await f.settings.read()).config.disabledTools, initial.disabledTools.slice(1));
+  const selection = { skillId: f.entry.skillId, toolName: f.entry.toolName, operationName: operation };
+  assert.equal((await inspectPreparation(f.settings, selection)).state, "environment_required");
+  const args = { operation, arguments: { circuit: 'OPENQASM 3.0; include "stdgates.inc"; qubit q;' } };
+  Object.assign(f.settings.environments, { status: async id => ({ id, ready: true, state: "ready" }), read: async () => ({}), values: () => ({}) });
+  assert.equal((await f.settings.callBuiltin(f.entry.toolName, args)).isError, undefined);
+  assert.equal(f.calls(), 1);
+  await f.settings.command({ ...change, enabled: false, revision: allowed.revision });
+  assert.equal((await f.settings.callBuiltin(f.entry.toolName, args)).isError, true);
+  assert.equal(f.calls(), 1, "a cached wrapper cannot execute a newly prohibited operation");
+  assert.equal(f.starts(), 0, "editing policy never prepares an environment");
 });
 
 test("unsupported upstream remote cancellation never installs, asks for a key or claims cancellation", async t => {

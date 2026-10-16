@@ -299,6 +299,35 @@ test("legacy Desktop Tool profiles retain deployment defaults, embedded fallback
     assert.ok(state.disabledTools.includes("submit_job"));
     assert.ok(state.disabledTools.includes("simulate_circuit_tool"));
     assert.equal(await fs.readFile(path.join(home, ".openquantum/capabilities/legacy-preset.yml"), "utf8"), preset);
+    if (index === 0) {
+      const directory = path.join(home, ".openquantum/capabilities");
+      const credentials = fixtureCredentials(); credentials.values.set("PASQAL_AUTH_TOKEN", "fixture-retained");
+      const app = await createDesktopApplication({ root, directory, credentials });
+      t.after(() => app.close());
+      const snapshot = await app.request({ action: "snapshot" });
+      const wrapper = snapshot.tools.find(tool => tool.id === "run_qiskit_gym");
+      assert.ok(wrapper.operationOverrides.some(tool => tool.id === "start_training_tool" && !tool.enabled));
+      const shared = "convert_qpy_to_qasm3_tool";
+      const owners = snapshot.tools.filter(tool => tool.operationOverrides.some(value => value.id === shared));
+      assert.deepEqual(owners.map(tool => tool.id).sort(), ["run_qiskit_circuit", "run_qiskit_gym"]);
+      assert.equal(owners[0].operationOverrides.find(tool => tool.id === shared).affectedProviders.length, 2);
+      const request = { action: "tool.operation.set", id: wrapper.id, tool: shared, enabled: true, revision: snapshot.revision };
+      const policy = await fs.readFile(app.settings.codexFile, "utf8");
+      await app.request(request);
+      const current = (await app.settings.read()).config;
+      assert.deepEqual(current.disabledTools, state.disabledTools.filter(name => name !== shared));
+      assert.deepEqual(current.disabledProviders, state.disabledProviders);
+      assert.deepEqual(current.connections, state.connections);
+      assert.equal(await fs.readFile(app.settings.codexFile, "utf8"), policy);
+      assert.equal(credentials.values.get("PASQAL_AUTH_TOKEN"), "fixture-retained");
+      const reopened = await createDesktopApplication({ root, directory, credentials });
+      t.after(() => reopened.close());
+      const restored = await reopened.request({ action: "snapshot" });
+      for (const owner of owners) assert.equal(restored.tools.find(tool => tool.id === owner.id).operationOverrides.find(tool => tool.id === shared).enabled, true);
+      await reopened.request({ ...request, enabled: false, revision: restored.revision });
+      assert.deepEqual((await app.settings.read()).config.disabledTools.toSorted(), state.disabledTools.toSorted());
+      await assert.rejects(fs.stat(path.join(directory, "installations")), { code: "ENOENT" });
+    }
   }
 });
 

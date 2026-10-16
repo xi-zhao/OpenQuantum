@@ -97,7 +97,7 @@ export async function createDesktopApplication({ root, directory, credentials: p
         await prepareSkill(settings, selection, lifetime.signal); return settings.snapshot();
       }
       if (input.action?.startsWith("environment.")) return settings.environmentCommand(input);
-      if (!["skill.set", "tool.set", "provider.set"].includes(input.action)) throw new Error("此操作由 Desktop 原生设置管理");
+      if (!["skill.set", "tool.set", "tool.operation.set", "provider.set"].includes(input.action)) throw new Error("此操作由 Desktop 原生设置管理");
       return settings.command(input);
     }); },
     closeAgent,

@@ -10,7 +10,7 @@ import { SERVICES, SERVICE_TOOL_TITLES, SERVICE_TOOL_SUMMARIES, serviceSupported
 import { Environments } from "./environments.mjs";
 import { skillRelations, toolCredential } from "./relations.mjs";
 import { executionPreparation, recentSkills, recordSkill } from "./preparation.mjs";
-import { externalMcp, operationCredential } from "../../../runtime/chatgpt/external/catalog.mjs";
+import { externalMcp, externalContract, ACCOUNT_OPERATIONS, operationCredential, operationPresentation } from "../../../runtime/chatgpt/external/catalog.mjs";
 
 const NAME = /^[a-z][a-z0-9_-]{0,31}$/;
 const ENV = /^[A-Za-z_][A-Za-z0-9_]{0,63}$/;
@@ -70,6 +70,24 @@ export class Settings {
       return { id: item.id, title: item.title, description: item.summary ?? item.description, category: capabilityCategory(item.id), tools: item.tools, enabled: this.skillPolicy.enabled(codex, item.id) };
     });
   }
+  async operationOverrides(config) {
+    const names = new Set([...config.disabledTools, ...(config.enabledTools ?? [])]);
+    if (!names.size) return [];
+    const groups = await Promise.all(this.backend.providers.filter(provider => externalMcp(provider.key)).map(async provider => {
+      const entry = externalMcp(provider.key);
+      if (!provider.upstreamTools?.some(tool => names.has(tool.name))) return [];
+      const contract = await externalContract(this.backend.root, provider.key);
+      return contract.tools.filter(tool => names.has(tool.name) && !ACCOUNT_OPERATIONS.has(tool.name)
+        && provider.upstreamTools.some(declared => declared.name === tool.name)).map(tool => ({
+        id: tool.name, wrapperId: entry.toolName, provider: provider.key,
+        description: operationPresentation(entry, tool).description, enabled: !config.disabledTools.includes(tool.name),
+        // Legacy policy is keyed by Tool name, including names shared by MCPs.
+        affectedProviders: this.backend.providers.filter(item =>
+          (externalMcp(item.key) ? item.upstreamTools : item.tools)?.some(value => value.name === tool.name)).map(item => item.key),
+      }));
+    }));
+    return groups.flat();
+  }
   async snapshot() {
     const { config, codex, revision } = await this.read();
     const capabilities = this.backend.sourceCapabilities;
@@ -82,6 +100,9 @@ export class Settings {
       environmentId: this.environmentFor(tool.name),
       category: capabilityCategory(this.capabilityFor(tool.name)?.id),
       provider: this.backend.providerFor(tool.name), enabled: this.toolEnabled(config, tool.name), readOnly: tool.annotations?.readOnlyHint === true }));
+    const overrides = await this.operationOverrides(config);
+    for (const tool of tools) tool.operationOverrides = overrides.filter(item => item.wrapperId === tool.id).map(item => ({ ...item,
+      affectedProviders: item.affectedProviders.map(id => providers.find(provider => provider.id === id)?.title ?? id) }));
     const connections = await Promise.all(config.connections.map(async connection => ({ ...connection,
       credential: connection.authentication === "token" ? await this.credentials.describe(credentialRef(connection.id)).catch(() => ({ configured: false, unavailable: true })) : { configured: false },
       status: this.statuses.get(connection.id) ?? { state: "not_checked", message: "尚未测试连接" },
@@ -250,6 +271,14 @@ export class Settings {
           if (!this.backend.tools.some(tool => tool.name === input.id)) throw new Error("未知内置 Tool");
           config.enabledTools = toggle(config.enabledTools ?? [], input.id, !bool(input.enabled));
           config.disabledTools = toggle(config.disabledTools, input.id, bool(input.enabled)); break;
+        case "tool.operation.set": {
+          const operation = (await this.operationOverrides(config)).find(item => item.wrapperId === input.id && item.id === input.tool);
+          if (!operation) throw new Error("未知或未单独设置的关联 Tool");
+          const enabled = bool(input.enabled);
+          config.disabledTools = toggle(config.disabledTools, operation.id, enabled);
+          config.enabledTools = toggle(config.enabledTools ?? [], operation.id, !enabled);
+          break;
+        }
         case "provider.set": {
           if (!this.backend.providers.some(provider => provider.key === input.id)) throw new Error("未知内置 MCP 连接");
           config.enabledProviders = toggle(config.enabledProviders ?? [], input.id, !bool(input.enabled));

@@ -198,5 +198,48 @@
       "originalDesktopUnchanged": true
     },
     "ci": "See current PR head; initial failed checks were not rerun without a source fix"
+  },
+  "mergeReviewRepair": {
+    "finding": "https://github.com/xi-zhao/OpenQuantum/pull/26#discussion_r4290825219",
+    "baseRevision": "6bc628d06f4709db6b8aaa7a1153a542c9f0a151",
+    "behavior": "Reversible migrated operation choices; preserve parent policy and shared-name scope; no installation or service startup",
+    "targetedTests": {
+      "passed": 34,
+      "failed": 0,
+      "skipped": 1,
+      "skipReason": "live Qiskit opt-in not enabled"
+    },
+    "codexRegression": {
+      "passed": 117,
+      "failed": 0,
+      "skipped": 7,
+      "skipReason": "live opt-in tests"
+    },
+    "independentReview": {
+      "p1": 0,
+      "p2": 0,
+      "additionalIsolatedChecks": 6,
+      "passed": 6
+    },
+    "browser": {
+      "surface": "Built shared settings UI with Desktop route and real Application Interface, isolated configuration",
+      "verified": [
+        "collapsed legacy choices",
+        "allow one operation",
+        "reload retains choice",
+        "deny again",
+        "other Tool and parent prohibitions preserved",
+        "no browser console errors"
+      ],
+      "screenshotSha256": "c471978e9b26a63c4ecd5bce653a81da46d8328764cb6dbd353665bdb19789a6",
+      "nativeInstalledWindowRetested": false
+    },
+    "localLogs": [
+      "operation-overrides-tests.log",
+      "operation-codex-regressions.log",
+      "operation-lint.log",
+      "operation-overrides-ui.png"
+    ],
+    "userInstallationModified": false
   }
 }

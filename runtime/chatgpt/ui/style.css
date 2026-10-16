@@ -69,7 +69,7 @@ label input, label select, label textarea { display: block; margin-top: 6px; }.w
 textarea { min-height: 74px; resize: vertical; }.primary { background: var(--text); border-color: var(--text); color: var(--surface); }
 details { margin-top: 15px; }summary { cursor: pointer; color: var(--muted); font-size: 12px; }
 .tool-row { display: flex; gap: 12px; align-items: flex-start; border-top: 1px solid var(--line); padding: 12px 0; }
-.tool-row>div { flex: 1; min-width: 0; }.tool-row strong { font-size: 12px; overflow-wrap: anywhere; }
+.tool-row>div { flex: 1; min-width: 0; }.tool-row strong, .tool-row code { font-size: 12px; overflow-wrap: anywhere; }
 .empty { padding: 36px; text-align: center; color: var(--muted); }
 footer { justify-content: space-between; border-top: 1px solid var(--line); font-size: 11px; color: var(--muted); margin-top: 32px; padding: 16px 0; }
 .credential-window { flex-basis: 100%; min-width: 0; }.credential-window label { display: block; font-size: 12px; margin-top: 8px; }
