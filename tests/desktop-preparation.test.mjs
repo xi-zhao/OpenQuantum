@@ -19,7 +19,7 @@ import { desktopPreset } from "../scripts/lib/desktop-profile-config.mjs";
 import { migrateDesktopPreparation } from "../scripts/lib/desktop-preparation-migration.mjs";
 import { writeCredentialField } from "../src/settings/codex/credential-field-write.mjs";
 import { runPasqalWorkflow } from "../src/settings/codex/pasqal-workflow.mjs";
-import { parse } from "yaml";
+import { parse, parseDocument } from "yaml";
 import { projectScientificToolResult } from "../runtime/openquantum/agent-presets/openquantum/scientific-result-protocol.mjs";
 import { withDesktopWorkflow } from "../src/settings/desktop/workflow.mjs";
 import { apply as additionalSkills } from "../runtime/openquantum/agent-presets/openquantum/additional-skills.mjs";
@@ -215,12 +215,63 @@ test("Desktop projection removes overlapping old MCP registrations and migration
   assert.ok(entries.some(row => row.id === "openquantum-adaptive-capabilities"));
   assert.ok(!entries.some(row => row.config?.serverName === "qiskit"));
   const active = path.join(home, ".agent-presets/openquantum/agent.cordis.yml"); await fs.mkdir(path.dirname(active), { recursive: true });
-  const before = "- id: user-plugin\n  name: ./user.mjs\n- id: mcp-qiskit\n  name: '@deepseek-ai/dsh-mcp-client'\n  disabled: true\n  config:\n    serverName: qiskit\n";
+  const legacy = parseDocument(original, { customTags: [{ tag: "tag:yaml.org,2002:js", resolve: value => value }] });
+  legacy.contents.items = legacy.contents.items.filter(row => row.get("config", true)?.get("serverName") === "qiskit");
+  legacy.contents.items[0].set("disabled", true);
+  const before = "- id: user-plugin\n  name: ./user.mjs\n" + legacy.toString();
   await fs.writeFile(active, before); await migrateDesktopPreparation(root, home);
   const state = JSON.parse(await fs.readFile(path.join(home, ".openquantum/capabilities/settings.json")));
   assert.ok(state.disabledProviders.includes("qiskit"));
   assert.match(await fs.readFile(active, "utf8"), /user-plugin/); assert.doesNotMatch(await fs.readFile(active, "utf8"), /serverName: qiskit/);
   assert.equal(await fs.readFile(path.join(home, ".openquantum/capabilities/legacy-preset.yml"), "utf8"), before);
+});
+
+test("legacy native Provider bans survive migration with the complete old MCP preset", async t => {
+  const original = await fs.readFile(path.join(root, "runtime/openquantum/agent-presets/openquantum/agent.cordis.yml"), "utf8");
+  const oldNode = path.join(os.tmpdir(), "old-openquantum-runtime", process.platform === "win32" ? "node.exe" : "node");
+  const deployed = desktopPreset(original, root, oldNode, { runtimeBin: path.dirname(oldNode) });
+  for (const [plugin, tool] of [["./native-quantum-tools.mjs", "solve_and_validate_ground_state"],
+    ["./quantum-practices-tools.mjs", "quantum_practices"], ["./metriq-data-tools.mjs", "metriq_benchmarks"]]) {
+    const document = parseDocument(deployed, { customTags: [{ tag: "tag:yaml.org,2002:js", resolve: value => value }] });
+    document.contents.items.find(row => row.get("name") === plugin).set("disabled", true);
+    const home = await fs.mkdtemp(path.join(os.tmpdir(), "oq-native-ban-migration-"));
+    t.after(() => fs.rm(home, { recursive: true, force: true }));
+    const active = path.join(home, ".agent-presets/openquantum/agent.cordis.yml");
+    await fs.mkdir(path.dirname(active), { recursive: true }); await fs.writeFile(active, document.toString());
+    await migrateDesktopPreparation(root, home);
+    const directory = path.join(home, ".openquantum/capabilities");
+    const settings = JSON.parse(await fs.readFile(path.join(directory, "settings.json")));
+    assert.ok(settings.disabledProviders.includes(`native:${plugin}`));
+    const app = await createDesktopApplication({ root, directory, credentials: fixtureCredentials() });
+    try {
+      assert.ok(app.settings.backend.tools.some(item => item.name === tool), tool);
+      assert.equal(await app.settings.enabled(tool), false, tool);
+    } finally { await app.close(); }
+  }
+});
+
+test("custom managed MCP configuration blocks migration before changing any user state", async t => {
+  const original = await fs.readFile(path.join(root, "runtime/openquantum/agent-presets/openquantum/agent.cordis.yml"), "utf8");
+  for (const [field, value] of [["command", "/custom/approved-python"], ["args", ["/custom/reviewed-server.py"]],
+    ["env", { RESEARCH_SETTING: "custom" }], ["credentialEnv", { TOKEN: "CUSTOM_TOKEN_REF" }], ["toolCallTimeoutMs", 12345], ["reconnect", undefined]]) {
+    const home = await fs.mkdtemp(path.join(os.tmpdir(), "oq-custom-mcp-migration-"));
+    t.after(() => fs.rm(home, { recursive: true, force: true }));
+    const document = parseDocument(original, { customTags: [{ tag: "tag:yaml.org,2002:js", resolve: item => item }] });
+    const row = document.contents.items.find(item => item.get("config", true)?.get("serverName") === "qiskit");
+    if (value === undefined) row.get("config", true).delete(field);
+    else row.get("config", true).set(field, document.createNode(value));
+    const before = document.toString(), active = path.join(home, ".agent-presets/openquantum/agent.cordis.yml");
+    await fs.mkdir(path.dirname(active), { recursive: true }); await fs.writeFile(active, before);
+    const directory = path.join(home, ".openquantum/capabilities");
+    await fs.mkdir(directory, { recursive: true });
+    const prior = { "settings.json": '{"schemaVersion":1,"disabledProviders":["simqn_local"],"disabledTools":[],"connections":[]}',
+      "skill-policy.json": '{"schemaVersion":1,"disabledSkills":["quantum-ground-state"]}' };
+    for (const [name, content] of Object.entries(prior)) await fs.writeFile(path.join(directory, name), content);
+    await assert.rejects(migrateDesktopPreparation(root, home), /自定义 MCP 或 Tool 参数.*未转换/, field);
+    assert.equal(await fs.readFile(active, "utf8"), before);
+    for (const [name, content] of Object.entries(prior)) assert.equal(await fs.readFile(path.join(directory, name), "utf8"), content);
+    await assert.rejects(fs.stat(path.join(directory, "migration.json")), { code: "ENOENT" });
+  }
 });
 
 test("legacy Desktop Tool profiles retain deployment defaults, embedded fallbacks and current overrides", async t => {
@@ -257,7 +308,11 @@ test("legacy Qiskit prohibition survives missing deployment defaults and honors 
   const project = path.join(directory, "project");
   await fs.mkdir(path.join(project, ".agents/skills"), { recursive: true });
   await fs.copyFile(path.join(root, ".agents/capability-packages.yml"), path.join(project, ".agents/capability-packages.yml"));
-  const source = ["qiskit", "qiskit_docs"].map(server => `- id: mcp-${server}\n  name: '@deepseek-ai/dsh-mcp-client'\n  disabled: !!js process.env.OPENQUANTUM_DISABLE_QISKIT_MCP === '1'\n  config:\n    serverName: ${server}\n`).join("");
+  const legacy = parseDocument(await fs.readFile(path.join(root, "runtime/openquantum/agent-presets/openquantum/agent.cordis.yml"), "utf8"), {
+    customTags: [{ tag: "tag:yaml.org,2002:js", resolve: value => value }],
+  });
+  legacy.contents.items = legacy.contents.items.filter(row => ["qiskit", "qiskit_docs"].includes(row.get("config", true)?.get("serverName")));
+  const source = legacy.toString();
   await fs.writeFile(path.join(project, ".env"), "OPENQUANTUM_DISABLE_QISKIT_MCP=1\n");
   const rendered = desktopPreset(source, project);
   for (const [index, preset, environment, banned] of [

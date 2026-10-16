@@ -98,7 +98,7 @@ export async function connectExternal(root, entry, values = {}, { signal, nodeEx
 
 export class ExternalSessions {
   constructor({ root, connect = connectExternal, idleMs = 30 * 60 * 1000, maxSessions = 4 }) {
-    Object.assign(this, { root, connect, idleMs, maxSessions }); this.sessions = new Map(); this.closed = false;
+    Object.assign(this, { root, connect, idleMs, maxSessions }); this.sessions = new Map(); this.closing = new Set(); this.closed = false;
     // Poll policy without waking the system credential store. Explicit settings
     // changes and the next operation also check credential generations.
     this.timer = setInterval(() => this.reconcile({ credentials: false }).catch(() => {}), 3000); this.timer.unref();
@@ -112,7 +112,8 @@ export class ExternalSessions {
       // releasing its lease, including cancellation during initialization.
       await session.opening?.catch(() => {});
       try { await session.close?.(); } finally { await session.lease?.release(); }
-    })();
+    })().finally(() => this.closing.delete(session.closing));
+    this.closing.add(session.closing);
     return session.closing;
   }
   async reconcile({ credentials = true } = {}) {
@@ -135,6 +136,8 @@ export class ExternalSessions {
     if (input.operation === "close_session") { await this.drop(session); return { content: [{ type: "text", text: entry.id === "qpanda_runtime"
       ? "本地 MCP 会话已关闭；已提交的云端任务没有取消，可能继续运行。" : "MCP 会话与计算进程已关闭" }] }; }
     const currentValues = await values();
+    // Validation, policy and credential reads can yield while the Agent closes.
+    if (this.closed) throw new Error("MCP 连接已关闭");
     if (session && (session.generation !== generation(entry, currentValues)
         || (session.authenticated && credentialGeneration(currentValues) !== session.authenticated))) {
       await this.drop(session); throw new Error("MCP 配置或凭据已变化；旧会话已关闭，请重新开始");
@@ -194,5 +197,13 @@ export class ExternalSessions {
     } catch (error) { await this.drop(session); throw error; }
     finally { session.busy = false; signal?.removeEventListener("abort", abort); }
   }
-  async close() { this.closed = true; clearInterval(this.timer); await Promise.all([...this.sessions.values()].map(session => this.drop(session))); }
+  close() {
+    this.closed = true; clearInterval(this.timer);
+    return this.closePromise ??= (async () => {
+      const active = [...this.sessions.values()].map(session => this.drop(session));
+      const settled = await Promise.allSettled([...active, ...this.closing]);
+      const failures = settled.filter(result => result.status === "rejected").map(result => result.reason);
+      if (failures.length) throw new AggregateError(failures, "MCP 连接回收失败");
+    })();
+  }
 }

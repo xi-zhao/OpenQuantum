@@ -68,6 +68,11 @@ Pasqal 的原生 `run_pasqal_workflow` 调用既有受控工作流；租约获�
 旧的受管 MCP rows 转为单个按需 Tool Provider；用户自建连接和其他插件保留。
 首次迁移保留现有关闭选择和精确 preset 备份。旧 `disabled: true` 无法可靠区分历史默认与用户操作，
 因此现有安装保守保留为禁止；全新安装使用自动选择默认值。旧配置中的 Qiskit 环境禁用标志同样保留。
+三个旧原生 Tool Provider 的关闭选择也迁入对应的 `native:<plugin>` 禁用项。
+迁移仅自动转换与受审阅模板一致的 MCP 和原生 Tool rows，以及生成器产生的路径投影。
+自定义 command、args、env、凭据引用、调用预算或未识别的禁用表达式会在写入配置前中止迁移，
+指出对应 row；原 preset、设置和禁用列表保持原样。先对照源码 preset 手动合并该项，再重试升级；
+不能用保留备份替代保留生效配置，也不自动恢复默认值。
 旧 `.env` 中对应凭据一次性纳入原生凭据存储；迁移后删除的值不会从 `.env` 再次恢复。
 
 `desktop:package` 包含原生 Host package、Preset、共享实现、设置页与带摘要的 Tool 目录。

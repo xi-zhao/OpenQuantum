@@ -198,6 +198,34 @@ test("disable, explicit close, expiry and contract drift reclaim sessions", asyn
   await assert.rejects(f.call("list_bindings_tool"), /合同/); assert.equal(f.leases(), 0);
 });
 
+test("Agent close waits for a policy cleanup already removed from the active sessions", async t => {
+  const gate = Promise.withResolvers(), started = Promise.withResolvers();
+  const f = await poolFixture(t, { connect: async () => ({ client: f.client, close: async () => {
+    started.resolve(); await gate.promise;
+  } }) });
+  await f.call("list_bindings_tool"); f.authorize(false);
+  const reconcile = f.pool.reconcile();
+  await started.promise;
+  assert.equal(f.pool.sessions.size, 0); assert.equal(f.leases(), 1);
+  let returned = false;
+  const closing = f.pool.close().then(() => { returned = true; });
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(returned, false, "removal from the catalog does not mean resource cleanup completed");
+  gate.resolve(); await Promise.all([closing, reconcile]);
+  assert.equal(f.leases(), 0);
+});
+
+test("Agent close prevents an operation awaiting credentials from opening a new session", async t => {
+  const gate = Promise.withResolvers(), started = Promise.withResolvers();
+  const f = await poolFixture(t);
+  const pending = f.pool.call(f.entry, { operation: "list_bindings_tool", arguments: {} }, {
+    ...f.options, values: async () => { started.resolve(); await gate.promise; return {}; },
+  });
+  await started.promise; await f.pool.close(); gate.resolve();
+  await assert.rejects(pending, /已关闭/);
+  assert.equal(f.pool.sessions.size, 0); assert.equal(f.leases(), 0); assert.equal(f.calls.length, 0);
+});
+
 test("invalid schemas and account/secret arguments fail before connection or credential reads", async () => {
   const entry = externalMcp("qpanda_runtime");
   await assert.rejects(validateExternal(root, entry, { operation: "setup_origin_quantum_account_tool", arguments: { api_key: "fixture" } }), /账户配置/);

@@ -3,11 +3,11 @@ import path from "node:path";
 import { parseDocument } from "yaml";
 import { atomicWrite, readOptional, withLock, digest } from "../../src/settings/codex/storage.mjs";
 import { profiles } from "../../runtime/openquantum/agent-presets/openquantum/optional-tool-profiles.mjs";
-import { desktopPreset } from "./desktop-profile-config.mjs";
+import { desktopPreset, desktopYamlOptions, nativeProviderNames } from "./desktop-profile-config.mjs";
 import { projectEnvironment } from "./desktop-environment.mjs";
 
 const rows = raw => {
-  const doc = parseDocument(raw, { customTags: [{ tag: "tag:yaml.org,2002:js", resolve: value => value }] });
+  const doc = parseDocument(raw, desktopYamlOptions);
   if (doc.errors.length || !Array.isArray(doc.toJSON())) throw new Error("Desktop 原有配置无法解析，未迁移");
   return doc.toJSON();
 };
@@ -49,6 +49,9 @@ export async function migrateDesktopPreparation(root, home) {
     const presetFile = path.join(home, relative);
     const raw = await readOptional(presetFile);
     const old = raw ? rows(raw) : [];
+    // Complete compatibility checks before writing any settings or migration marker.
+    const next = raw && !old.some(row => row.id === "openquantum-adaptive-capabilities")
+      ? desktopPreset(raw, root, process.execPath, { onDemand: true }) : null;
     const configFile = path.join(directory, "settings.json");
     const policyFile = path.join(directory, "skill-policy.json");
     await withLock(configFile, () => withLock(policyFile, async () => {
@@ -59,6 +62,7 @@ export async function migrateDesktopPreparation(root, home) {
       for (const row of old) {
         const conditionalBan = legacyQiskitBan(row.disabled, environment);
         if ((row.disabled === true || conditionalBan) && row.config?.serverName) config.disabledProviders.push(row.config.serverName);
+        if ((row.disabled === true || conditionalBan) && nativeProviderNames.has(row.name)) config.disabledProviders.push(`native:${row.name}`);
         if (row.id === "optional-tool-profiles") for (const [server, choices] of Object.entries(profiles)) {
           const selected = legacyProfile(row.config?.[server] ?? "full", server, environment);
           if (selected === "full") continue;
@@ -79,8 +83,7 @@ export async function migrateDesktopPreparation(root, home) {
       await atomicWrite(configFile, JSON.stringify(config, null, 2), { expected: configRaw });
       await atomicWrite(policyFile, JSON.stringify(policy, null, 2), { expected: policyRaw });
     }));
-    if (raw && !old.some(row => row.id === "openquantum-adaptive-capabilities")) {
-      const next = desktopPreset(raw, root, process.execPath, { onDemand: true });
+    if (next) {
       await atomicWrite(path.join(directory, "legacy-preset.yml"), raw);
       const stateFile = path.join(home, ".openquantum-home.json");
       await withLock(stateFile, async () => {
