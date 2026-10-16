@@ -34,18 +34,32 @@ Desktop 程序摘要均保持不变。PR 没有覆盖现有安装或迁移真实
 迁移检查在写入用户设置前完成。自定义 command、args、env、凭据引用、调用预算、删除的配置项
 或无法识别的禁用条件不会被默认值取代；会保留原文件、指出对应 row，并要求先核对再升级。
 
+## 干净环境与跨平台修复
+
+PR 首轮 CI 在 `b4d75624` 暴露三个此前本地检查未覆盖的问题，`563d019e` 已修复：
+
+- 并行测试前先从源码生成共享合同目录，消除对本地 `dist/chatgpt` 缓存的依赖。运行时仍只读已校验的目录，不会因此批量启动 MCP。
+- Desktop 源码安装检查核对七个具体扩展依赖，包含新增的 capability Host Plugin。
+- Windows 检出保持 Metriq 审计快照原始字节，防止 CRLF 转换使 MCP 在启动时校验失败；保留严格摘要检查。构建发现失败同时标出具体 Provider。
+
+独立复核上述六文件差异，未发现 P1/P2；12 项针对性测试全部通过。真实 Git Windows
+换行过滤已验证，Desktop 源码集成 3/3 通过且无跳过。移走旧共享合同产物后，完整检查再次通过。
+Windows 实际安装包与两平台 Desktop 启动结果仍以 PR 当前提交的 CI 为准。
+
 ## 本地检查
 
 | 检查 | 实际结果与边界 |
 | --- | --- |
-| `npm run check` | 修复后的运行时代码通过；根测试 620 通过、309 项依赖外部条件的测试跳过。其余合同、能力、语言、lint 与配置检查通过，详细分项见证据 JSON |
+| `npm run check` | 移走旧合同目录后重新构建并通过；根测试 622 通过、309 项依赖外部条件的测试跳过。其余合同、能力、语言、lint 与配置检查通过，详细分项见证据 JSON |
+| Desktop 源码集成 | 固定上游源码构建后的 `tests/desktop-integration.test.mjs`，3/3 通过，无跳过；确认扩展解析、重复准备保留覆盖设置、上游 Desktop 文件未修改 |
 | 真实 Qiskit | `OPENQUANTUM_DESKTOP_LIVE=1 node --test --test-name-pattern='real local preparation' tests/desktop-preparation.test.mjs`，1/1 通过；一次准备调用等待后，同一 Agent 执行两次、复用环境并验证禁用与回收 |
 | 清洁源码打包 | `22054cab`、Node 24.14.1、`desktop:package -- --dir`；macOS arm64 包中 2,651 个文件摘要通过，`sourceDirty=false` |
 | 隔离安装 | `desktop:package:smoke` 通过；重复安装保留模型路由、自建 Skill、Profile、三类显式禁用及原生凭据文件；从独立 cwd 加载成功 |
 | 本机保护 | 六份现有配置、25 项 MCP 禁用和原版 Desktop 摘要再次核对不变；本轮 PR 整理未覆盖用户安装 |
 
 完整命令、源码绑定、独立审查范围和本地原始日志摘要见[版本化证据](evidence/desktop-preparation-pr-2026-10-16.json)。
-原生窗口验收之后的运行时差异是 Codex 旧入口保留、迁移守卫、连接关闭修复及安装检查脚本；
+原生窗口验收之后的运行时差异是 Codex 旧入口保留、迁移守卫、连接关闭修复及安装检查脚本，
+另增加跨平台快照保留、构建错误定位和检查入口修复；
 不把原窗口证据写成这些新差异的现场重跑。新修复以回归、真实 SDK 与安装包检查验证。
 
 GitHub 的 macOS/Windows 源码安装、三平台能力包、quality 和 container-smoke 共七项必过检查，
