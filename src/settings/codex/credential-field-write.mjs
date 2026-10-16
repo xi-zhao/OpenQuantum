@@ -1,5 +1,5 @@
 import { withLock } from "./storage.mjs";
-import { serviceById, serviceCredentialRef, serviceValues, validateServiceValues } from "./service-catalog.mjs";
+import { serviceSupported, serviceById, serviceValues, saveServiceValues, validateServiceValues } from "./service-catalog.mjs";
 
 // Shared by the encrypted app channel and the legacy loopback form. Neither
 // transport owns field validation, read-modify-write or provider authorization.
@@ -10,10 +10,8 @@ export async function writeCredentialField({ settings, credentials }, session, i
   }
   return withLock(settings.file, async () => {
     if (session.expires < Date.now()) return { status: 403, message: "保存请求已过期，请重试" };
-    const { config } = await settings.read();
-    if (session.operation === "remove" && settings.providerEnabled(config, session.id)) return { status: 409, message: "请先关闭对应服务，再移除凭据" };
     const service = serviceById(session.id);
-    if (!service?.supported || !settings.backend.providers.some(provider => provider.key === service.id)) return { status: 409, message: "服务已变化，请刷新设置页" };
+    if (!serviceSupported(service, settings.backend)) return { status: 409, message: "服务已变化，请刷新设置页" };
     if (session.operation === "set") {
       try { validateServiceValues(service, { [session.field]: input.value }); }
       catch {
@@ -24,13 +22,15 @@ export async function writeCredentialField({ settings, credentials }, session, i
           : "请输入有效的新值，不能留空、换行或超过 4096 个字符。" };
       }
     }
-    const values = await serviceValues(credentials, service);
+    if (credentials.writeField) {
+      await credentials.writeField(session.field, session.operation === "set" ? input.value : null);
+      return { status: 200, configured: session.operation === "set", message: session.operation === "set" ? "已保存；下一次调用生效，账户认证尚未验证。" : "此项凭据已移除。" };
+    }
+    const values = await serviceValues(credentials, service, { ignoreShared: true });
     if (session.operation === "set") values[session.field] = input.value;
     else delete values[session.field];
     validateServiceValues(service, values);
-    const ref = serviceCredentialRef(service.id);
-    if (Object.keys(values).length) await credentials.set(ref, JSON.stringify(values));
-    else await credentials.remove(ref);
+    await saveServiceValues(credentials, service, values, { updateShared: session.field === "QISKIT_IBM_TOKEN" });
     return { status: 200, configured: session.operation === "set", message: session.operation === "set" ? "已保存到本机凭据库，账户认证尚未验证。" : "此项凭据已移除。" };
   });
 }

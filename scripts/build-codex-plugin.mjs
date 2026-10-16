@@ -36,7 +36,7 @@ export async function buildPlugin({ root = PROJECT_ROOT, output = path.join(root
   for (const file of files) {
     const capability = file.match(/^\.agents\/skills\/([^/]+)\//)?.[1];
     if (prefixes.some(prefix => file.startsWith(prefix)) || metadataFiles.includes(file) || owned.has(capability) || sdkIds.has(capability)) {
-      if (/(?:^|\/)(?:test|tests|evals|__pycache__|artifacts)\//.test(file) && !file.startsWith(".agents/skills/quantum-ground-state/")) continue;
+      if (/(?:^|\/)(?:test|tests|evals|__pycache__|artifacts)\//.test(file) && !file.startsWith(".agents/skills/quantum-ground-state/") && file !== ".agents/skills/platform-diagnostics/artifacts/diagnostic-report.schema.json") continue;
       if (/\.env(?:\.|$)|\.(?:key|pem)$/.test(file)) throw new Error("Credential-like source cannot be packaged");
       await copy(file);
     }

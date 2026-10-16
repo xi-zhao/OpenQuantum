@@ -27,6 +27,7 @@ flowchart TB
 
 Codex 的目录、打包和设置边界见 [Codex 插件](integrations/CODEX_PLUGIN.md)。下方 Harness Runtime、
 Agent Preset 和事件日志的详细结构描述 Desktop 发行版；Codex 插件不复制这些运行时对象。
+Desktop 的原生插件、共享准备流程和资源所有权见 [Desktop 按需准备](integrations/DESKTOP_PREPARATION.md)。
 
 OpenQuantum 的产品核心对象是 **Capability**：用户能够理解的一项有界量子科研能力。Capability 按实际需要
 组合 Skill、Tool Provider、科学验证和证据，不会自动创造新的 Runtime 对象。

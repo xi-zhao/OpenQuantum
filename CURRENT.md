@@ -2,6 +2,13 @@
 
 量子依赖核验日期：2026-09-22；平台升级记录日期：2026-09-10；原模型验收交接记录日期：2026-09-05。此页只记录工作交接；架构以[文档总入口](docs/README.md)为准，执行事实以 Harness Session event log 为准，科学状态以 Acceptance Report 为准。
 
+## Desktop 原生插件与安装等待（2026-10-16，PR 候选）
+
+- 从 `main@1f172ac3` 整理独立候选：DSH 原生 Skill Provider、Tool Provider 和 Host Plugin 复用 Codex 的准备、固定 SDK、凭据表单与按需连接实现；不新增 Runtime，不更新 DSH、模型路由或产品版本。
+- Agent 选择后仅准备所选 Tool 或 SDK；Desktop 原生准备 Tool 在一次调用内等待安装和检查完成，同一聊天即可执行，结束或取消时回收其拥有的资源。共享层同时更新 Codex 的设置与准备合同；Codex 旧入口清理和历史验收材料不纳入本次 PR。
+- 旧安装保留关闭选择、用户 Skill、连接、模型路由和凭据；新安装默认允许 Agent 选择。准备、执行与 SDK 入口均重查明确禁用，缺凭据返回受控表单。
+- 规则和验证入口见[原生插件说明](docs/integrations/DESKTOP_PREPARATION.md)。原版 Desktop 同聊、真实 Host 重启、缺凭据、禁用和配置保留的验收绑定原候选 `734554d2`，见[安装等待验收](docs/integrations/DESKTOP_PREPARATION_WAIT_2026-10-16.md)；新 PR 的整合、检查与差异见[PR 验证记录](docs/integrations/DESKTOP_PREPARATION_PR_2026-10-16.md)。这些记录不表示已合并或发布，科学状态仍为 `not_evaluated`。
+
 ## 原生 SDK 生态扩展与 0.8.4 发行（2026-10-14）
 
 - 从本轮清单剔除旧运行栈的 QuCumber，增加 26 个原生 SDK/源码入口；既有 TensorCircuit 迁移到 TensorCircuit-NG，MQT Bench 单独增加 v2 的 21 例。

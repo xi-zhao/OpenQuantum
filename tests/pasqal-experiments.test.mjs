@@ -23,7 +23,7 @@ test("Pasqal workflow shares the full Pulser/Cloud environment in Desktop and Co
   assert.ok(sdk.dependencies.includes("pasqal-cloud==0.24.0"));
   const generated = projectSkill(capability, { version: "test" });
   assert.match(generated, /pulser-dynamics/);
-  assert.match(generated, /不得绕过用户禁用/);
+  assert.match(generated, /用户明确禁止的 Skill、Tool 或 MCP 不得恢复，也不得改用原生代码绕过/);
   for (const stage of ["application-to-idea", "idea-to-spec", "spec-to-sequence", "validate-emu", "noise-emulate", "qpu-submit", "harvest-and-analyze"]) {
     assert.ok(capability.skill.includes(stage), stage);
   }

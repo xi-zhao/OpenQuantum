@@ -1,13 +1,31 @@
 import path from "node:path";
-import { existsSync } from "node:fs";
-import { isMap, isSeq, parseDocument, Scalar } from "yaml";
+import { existsSync, readFileSync } from "node:fs";
+import { isMap, isSeq, parse, parseDocument, Scalar } from "yaml";
 import { desktopEnvironmentDefaults } from "./desktop-environment.mjs";
 
-export function desktopPreset(source, projectRoot, nodeExecutable = process.execPath, { runtimeBin } = {}) {
+export function desktopPreset(source, projectRoot, nodeExecutable = process.execPath, { runtimeBin, onDemand = false } = {}) {
   const rendered = desktopEnvironmentDefaults(source, projectRoot).replaceAll("process.cwd()", `(${JSON.stringify(path.resolve(projectRoot))})`).replaceAll("process.execPath", `(${JSON.stringify(nodeExecutable)})`);
   const document = parseDocument(rendered, { customTags: [{ tag: "tag:yaml.org,2002:js", resolve: value => value }] });
   if (document.errors.length) throw new Error("Invalid OpenQuantum preset");
   if (!isSeq(document.contents)) throw new Error("Expected preset rows");
+  if (onDemand) {
+    const policy = parse(readFileSync(path.join(projectRoot, ".agents/capability-packages.yml"), "utf8"));
+    const managed = new Set(policy.packages.flatMap(item => (item.execution?.mcpServers ?? []).map(server => server.name)));
+    const native = new Set(["./native-quantum-tools.mjs", "./quantum-practices-tools.mjs", "./metriq-data-tools.mjs"]);
+    document.contents.items = document.contents.items.filter(row => {
+      if (!isMap(row)) return true;
+      if (row.get("id") === "openquantum-adaptive-capabilities") return false;
+      if (row.get("id") === "skill-filesystem") {
+        row.set("name", "./additional-skills.mjs");
+        row.set("inject", document.createNode(["skills", "openquantumCapabilities"]));
+      }
+      if (native.has(row.get("name"))) return false;
+      const config = row.get("config", true);
+      return !(isMap(config) && managed.has(config.get("serverName")));
+    });
+    document.contents.items.push(document.createNode({ id: "openquantum-adaptive-capabilities", name: "./adaptive-capabilities.mjs",
+      inject: ["tools", "skills", "openquantumCapabilities"] }));
+  }
   const bin = runtimeBin || path.dirname(nodeExecutable);
   const executable = name => {
     const filename = `${name}${process.platform === "win32" ? ".exe" : ""}`;

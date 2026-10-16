@@ -90,8 +90,8 @@ test("remove is operation-bound and checks the current service state under lock"
   const permission = issue(f.window, { operation: "remove" });
   assert.equal((await post(permission)).status, 400);
   await f.settings.command({ action: "provider.set", id, enabled: true, revision: (await f.settings.snapshot()).revision });
-  assert.equal((await post(issue(f.window, { operation: "remove" }), {})).status, 409);
-  assert.ok(await f.credentials.resolve(serviceCredentialRef(id)));
+  assert.equal((await post(issue(f.window, { operation: "remove" }), {})).status, 200);
+  assert.equal(await f.credentials.resolve(serviceCredentialRef(id)), null);
 });
 
 test("partial QCArchive saves show the missing pair and preserve the address and username", async t => {

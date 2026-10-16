@@ -1,4 +1,6 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
+import { mkdir } from "node:fs/promises";
 import { spawn } from "node:child_process";
 import { once } from "node:events";
 import { chmod, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
@@ -23,19 +25,23 @@ test("FlagQuantum launcher sanitizes credentials and freezes the isolated enviro
   const sandbox = await mkdtemp(path.join(tmpdir(), "oq-flag-contract-"));
   t.after(() => rm(sandbox, {recursive:true,force:true}));
   const observed = path.join(sandbox,"observed.json");
-  const uv = path.join(sandbox,"uv");
-  await writeFile(uv, `#!${process.execPath}\nrequire('node:fs').writeFileSync(${JSON.stringify(observed)},JSON.stringify({argv:process.argv,env:process.env}));\n`);
-  await chmod(uv,0o755);
-  const child = spawn(process.execPath,[entrypoint],{env:{...process.env,PATH:`${sandbox}${path.delimiter}${process.env.PATH}`,OPENAI_API_KEY:"secret-sentinel",IBM_QUANTUM_TOKEN:"secret-sentinel",OMP_NUM_THREADS:"7",MKL_NUM_THREADS:"4"},stdio:"ignore"});
+  const environment = path.join(sandbox,"flagquantum-workbench");
+  await mkdir(path.join(environment,"bin"),{recursive:true});
+  await writeFile(path.join(environment,"openquantum-lock.sha256"),createHash("sha256").update(await readFile(path.join(root,".agents/skills/flagquantum-workbench/uv.lock"))).digest("hex"));
+  const python = path.join(environment,"bin/python");
+  await writeFile(python, `#!${process.execPath}\nrequire('node:fs').writeFileSync(${JSON.stringify(observed)},JSON.stringify({argv:process.argv,env:process.env}));\n`);
+  await chmod(python,0o755);
+  const child = spawn(process.execPath,[entrypoint],{env:{...process.env,OPENQUANTUM_PYTHON_ENV_ROOT:sandbox,PATH:process.env.PATH,OPENAI_API_KEY:"secret-sentinel",IBM_QUANTUM_TOKEN:"secret-sentinel",OMP_NUM_THREADS:"7",MKL_NUM_THREADS:"4"},stdio:"ignore"});
   const [code] = await once(child,"exit"); assert.equal(code,0);
   const record=JSON.parse(await readFile(observed,"utf8"));
-  assert.ok(record.argv.includes("--frozen"));
-  assert.ok(record.argv.includes("flagquantum-mcp-server"));
+  assert.ok(record.argv.includes("-B"));
+  assert.ok(record.argv.some(arg => arg.includes("flagquantum-mcp-server")));
+  assert.ok(!record.argv.includes("--frozen"));
   assert.equal(record.env.OPENAI_API_KEY,undefined); assert.equal(record.env.IBM_QUANTUM_TOKEN,undefined);
   assert.equal(record.env.PYTHONNOUSERSITE,"1");
   assert.equal(record.env.OMP_NUM_THREADS,"7");
   assert.equal(record.env.MKL_NUM_THREADS,"4");
-  assert.equal(record.env.UV_PROJECT_ENVIRONMENT,path.join(root,".openquantum/python-envs/flagquantum-workbench"));
+  assert.equal(record.env.UV_PROJECT_ENVIRONMENT,undefined);
 });
 test("real FlagQuantum: upstream surface, Bell probabilities and structured errors", {skip:process.env.OPENQUANTUM_REAL_CANDIDATE_TOOLS!=="1",timeout:180000},async t=>{
   const client=new Client({name:"flagquantum-live-regression",version:"1"},{capabilities:{}});

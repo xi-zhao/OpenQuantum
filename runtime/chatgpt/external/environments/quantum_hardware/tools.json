@@ -1,0 +1,2167 @@
+{
+  "schemaVersion": 1,
+  "server": "quantum_hardware",
+  "tools": [
+    {
+      "name": "analyze_molecule",
+      "description": "\n    Work out what a molecule costs to simulate on a quantum computer.\n\n    Computes the qubit Hamiltonian from geometry, then reports how far\n    entanglement forging and Pauli grouping can cut the problem down.\n\n    Args:\n        atoms: geometry in Angstrom, e.g. \"H 0 0 0; H 0 0 0.74\"\n               (separate atoms with ';' or newlines)\n        n_electrons: total electrons, e.g. 2 for H2\n\n    Returns JSON with qubit counts before and after forging, the Schmidt\n    spectrum (which determines how much truncation is affordable), and the\n    number of measurement circuits needed per state preparation.\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "atoms": {
+            "title": "Atoms",
+            "type": "string"
+          },
+          "n_electrons": {
+            "title": "N Electrons",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "atoms",
+          "n_electrons"
+        ],
+        "title": "analyze_moleculeArguments"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "analyze_moleculeOutput"
+      }
+    },
+    {
+      "name": "plan_quantum_chemistry_run",
+      "description": "\n    Given a molecule and a budget, recommend how to actually run it.\n\n    Answers the practical question: what is the most accurate result I can buy\n    for this much money? Works through every Schmidt rank, applies the circuit\n    optimisations, and reports which options fit.\n\n    Args:\n        atoms: geometry in Angstrom, e.g. \"H 0 0 0; H 0 0 0.74\"\n        n_electrons: total electrons\n        budget_usd: available credits, in dollars. Required -- there is no\n            sensible default, and guessing one produces confident\n            recommendations the caller cannot actually afford.\n        price_per_circuit: hardware price per circuit. 25.79 is IonQ Forte's\n            measured per-circuit floor for shallow circuits; check current\n            rates rather than trusting this default.\n\n    Returns JSON with a ranked plan, the recommended option, and what error\n    mitigation to apply.\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "atoms": {
+            "title": "Atoms",
+            "type": "string"
+          },
+          "n_electrons": {
+            "title": "N Electrons",
+            "type": "integer"
+          },
+          "budget_usd": {
+            "title": "Budget Usd",
+            "type": "number"
+          },
+          "price_per_circuit": {
+            "default": 25.79,
+            "title": "Price Per Circuit",
+            "type": "number"
+          }
+        },
+        "required": [
+          "atoms",
+          "n_electrons",
+          "budget_usd"
+        ],
+        "title": "plan_quantum_chemistry_runArguments"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "plan_quantum_chemistry_runOutput"
+      }
+    },
+    {
+      "name": "recommend_error_mitigation",
+      "description": "\n    Recommend which error-mitigation techniques are worth applying.\n\n    Based on measured results from this project, including the ones that did\n    NOT work -- so you skip techniques that cost circuits and return nothing.\n\n    Args:\n        two_qubit_gates: two-qubit gate count in the circuit\n        two_qubit_error_rate: per-gate error, e.g. 0.002 for trapped ion,\n            0.03 for typical superconducting\n        readout_error_rate: measurement bit-flip probability (0 if unknown)\n        conserves_particle_number: True for chemistry circuits, where symmetry\n            verification is available\n\n    Returns JSON with ranked recommendations and expected circuit overhead.\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "two_qubit_gates": {
+            "title": "Two Qubit Gates",
+            "type": "integer"
+          },
+          "two_qubit_error_rate": {
+            "default": 0.002,
+            "title": "Two Qubit Error Rate",
+            "type": "number"
+          },
+          "readout_error_rate": {
+            "default": 0,
+            "title": "Readout Error Rate",
+            "type": "number"
+          },
+          "conserves_particle_number": {
+            "default": true,
+            "title": "Conserves Particle Number",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "two_qubit_gates"
+        ],
+        "title": "recommend_error_mitigationArguments"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "recommend_error_mitigationOutput"
+      }
+    },
+    {
+      "name": "estimate_circuit_error_ceiling",
+      "description": "\n    Bound the error on ANY observable before running the circuit.\n\n    One fidelity number bounds every measurement at once, so you can tell in\n    advance whether a run can possibly reach the accuracy you need -- without\n    simulating each observable separately.\n\n    Args:\n        two_qubit_gates: count of two-qubit gates\n        one_qubit_gates: count of one-qubit gates\n        two_qubit_error_rate: per-gate error (0.002 trapped ion, 0.03 typical\n            superconducting)\n        one_qubit_error_rate: per-gate error\n\n    Returns JSON with estimated fidelity and the resulting error ceiling.\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "two_qubit_gates": {
+            "title": "Two Qubit Gates",
+            "type": "integer"
+          },
+          "one_qubit_gates": {
+            "default": 0,
+            "title": "One Qubit Gates",
+            "type": "integer"
+          },
+          "two_qubit_error_rate": {
+            "default": 0.002,
+            "title": "Two Qubit Error Rate",
+            "type": "number"
+          },
+          "one_qubit_error_rate": {
+            "default": 0.00005,
+            "title": "One Qubit Error Rate",
+            "type": "number"
+          }
+        },
+        "required": [
+          "two_qubit_gates"
+        ],
+        "title": "estimate_circuit_error_ceilingArguments"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "estimate_circuit_error_ceilingOutput"
+      }
+    },
+    {
+      "name": "build_forged_circuits",
+      "description": "\n    Build the actual runnable circuits for a forged ground-state calculation.\n\n    Turns a molecule into OpenQASM you can submit. Every circuit is a real\n    entanglement-forging circuit acting on HALF the qubits the molecule would\n    otherwise need.\n\n    Use this when you want to inspect or submit the circuits yourself. Use\n    run_forged_energy to build, submit and collect in one step.\n\n    Args:\n        atoms: geometry in Angstrom, e.g. \"H 0 0 0; H 0 0 0.74\"\n        n_electrons: total electrons\n        schmidt_rank: how many Schmidt terms to keep. Higher is more accurate\n            but costs circuits quadratically -- check analyze_molecule for the\n            accuracy floor at each rank.\n        max_circuits: refuse to build more than this many (guards against\n            accidentally generating hundreds of hardware jobs).\n\n    Returns JSON with the QASM strings, circuit count, gate statistics, and a\n    local simulator self-check confirming the circuits reconstruct the right\n    energy before you spend any hardware time.\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "atoms": {
+            "title": "Atoms",
+            "type": "string"
+          },
+          "n_electrons": {
+            "title": "N Electrons",
+            "type": "integer"
+          },
+          "schmidt_rank": {
+            "default": 3,
+            "title": "Schmidt Rank",
+            "type": "integer"
+          },
+          "max_circuits": {
+            "default": 60,
+            "title": "Max Circuits",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "atoms",
+          "n_electrons"
+        ],
+        "title": "build_forged_circuitsArguments"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "build_forged_circuitsOutput"
+      }
+    },
+    {
+      "name": "run_forged_energy",
+      "description": "\n    Run a molecular ground-state calculation on real quantum hardware.\n\n    Builds the forged circuits, submits every one to the named device, and\n    returns the job IDs. Collect the energy afterwards with\n    collect_forged_energy once the jobs finish.\n\n    This submits REAL JOBS that consume queue time and, on paid hardware,\n    money. It refuses to run unless the circuits pass a local simulator\n    self-check first, and caps the number of jobs at max_circuits.\n\n    Args:\n        atoms: geometry in Angstrom, e.g. \"H 0 0 0; H 0 0 0.74\"\n        n_electrons: total electrons\n        device_name: target machine, e.g. \"ibm_fez\". Pick one with\n            compare_devices or queue_status.\n        schmidt_rank: Schmidt terms to keep. Rank 2 is exact for H2 and needs\n            only a handful of circuits -- a sensible first hardware run.\n        shots: shots per circuit (default 1024)\n        max_circuits: hard cap on submitted jobs (default 20). Raise it\n            deliberately, having checked the count with build_forged_circuits.\n\n    Returns JSON with the ordered job IDs and everything\n    collect_forged_energy needs.\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "atoms": {
+            "title": "Atoms",
+            "type": "string"
+          },
+          "n_electrons": {
+            "title": "N Electrons",
+            "type": "integer"
+          },
+          "device_name": {
+            "title": "Device Name",
+            "type": "string"
+          },
+          "schmidt_rank": {
+            "default": 2,
+            "title": "Schmidt Rank",
+            "type": "integer"
+          },
+          "shots": {
+            "default": 1024,
+            "title": "Shots",
+            "type": "integer"
+          },
+          "max_circuits": {
+            "default": 20,
+            "title": "Max Circuits",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "atoms",
+          "n_electrons",
+          "device_name"
+        ],
+        "title": "run_forged_energyArguments"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "run_forged_energyOutput"
+      }
+    },
+    {
+      "name": "collect_forged_energy",
+      "description": "\n    Turn finished quantum jobs back into a molecular energy.\n\n    Fetches the counts for each job and reconstructs the ground-state energy,\n    then compares it against the exact classical answer.\n\n    The job IDs must be in the SAME ORDER run_forged_energy returned them --\n    each one corresponds to a specific state preparation and measurement\n    basis, so reordering them scrambles the result.\n\n    Args:\n        atoms: same geometry used for the run\n        n_electrons: same electron count\n        job_ids: comma-separated job IDs, in submission order\n        schmidt_rank: same rank used for the run\n\n    Returns JSON with the measured energy, the exact reference, and the error\n    in kcal/mol (chemical accuracy is 1.0).\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "atoms": {
+            "title": "Atoms",
+            "type": "string"
+          },
+          "n_electrons": {
+            "title": "N Electrons",
+            "type": "integer"
+          },
+          "job_ids": {
+            "title": "Job Ids",
+            "type": "string"
+          },
+          "schmidt_rank": {
+            "default": 2,
+            "title": "Schmidt Rank",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "atoms",
+          "n_electrons",
+          "job_ids"
+        ],
+        "title": "collect_forged_energyArguments"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "collect_forged_energyOutput"
+      }
+    },
+    {
+      "name": "list_devices",
+      "description": "\n    List every IBM quantum computer this account can access.\n\n    Returns a JSON array sorted by qubit count (largest first).\n    Each entry includes: name, qubit count, operational status, queue depth.\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "title": "list_devicesArguments"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "list_devicesOutput"
+      }
+    },
+    {
+      "name": "get_device_details",
+      "description": "\n    Deep-dive into one IBM quantum computer.\n\n    Args:\n        device_name: Machine name, e.g. \"ibm_brisbane\" or \"ibm_sherbrooke\".\n                     Use list_devices first if you don't know the exact name.\n\n    Returns JSON with:\n      - Qubit count, status, queue depth\n      - Average / best / worst CX (2-qubit) gate error rates\n      - Average readout (measurement) error\n      - Average T1 and T2 coherence times in microseconds\n      - Timestamp of the last calibration run\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "device_name": {
+            "title": "Device Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "device_name"
+        ],
+        "title": "get_device_detailsArguments"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "get_device_detailsOutput"
+      }
+    },
+    {
+      "name": "best_qubits",
+      "description": "\n    Return the best n individual qubits on a device based on live calibration.\n\n    Useful for researchers who want to hand-pick qubits for a circuit rather\n    than letting the compiler choose automatically.\n\n    Args:\n        device_name: Machine name, e.g. \"ibm_fez\".\n        n:           How many qubits to return (default 5).\n\n    Scoring formula (lower = better):\n        score = readout_error + best_cx_error_for_this_qubit\n\n    Both metrics are in the same [0, 1] range so they contribute equally.\n    T1 / T2 coherence times are included as supplementary context.\n    Missing metrics are penalised with 1.0 (worst possible) so qubits with\n    incomplete calibration data sort to the bottom.\n\n    Actually searches for a CONNECTED subset of n qubits (not just the\n    top-n by score, which can land on scattered, unconnected qubits) —\n    fixed 2026-08-25 after a real user hit this directly: 8 top-scored\n    qubits with zero real connections between them, forcing a flood of\n    SWAP gates and producing a chemistry energy off by more than 1\n    Hartree. See connectivity.connected in the response — false means no\n    fully-connected set of this size existed and it fell back to\n    top-by-score, which is still worth checking before use.\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "device_name": {
+            "title": "Device Name",
+            "type": "string"
+          },
+          "n": {
+            "default": 5,
+            "title": "N",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "device_name"
+        ],
+        "title": "best_qubitsArguments"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "best_qubitsOutput"
+      }
+    },
+    {
+      "name": "compare_devices",
+      "description": "\n    Rank all accessible IBM quantum computers by a quality metric.\n\n    Args:\n        sort_by: Ranking criterion. Choose one of:\n                 \"cx_error\"  – lowest 2-qubit gate error (best quality) [default]\n                 \"queue\"     – shortest queue (fastest turnaround)\n                 \"qubits\"    – most qubits (largest machine)\n                 \"combined\"  – blended score: 70% quality + 30% availability\n\n    Returns a JSON object with the ranking and a note about what it means.\n    Only devices whose real status is \"active\" (not just \"operational\",\n    which alone isn't reliable enough — fixed 2026-08-25 after a real user\n    reported a top-ranked device sitting queued indefinitely) are ever\n    ranked; everything else is reported separately in unavailable_devices.\n\n    Note: fetching calibration data for every device takes ~10–30 seconds\n    because it makes one API call per device.\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "sort_by": {
+            "default": "cx_error",
+            "title": "Sort By",
+            "type": "string"
+          }
+        },
+        "title": "compare_devicesArguments"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "compare_devicesOutput"
+      }
+    },
+    {
+      "name": "queue_status",
+      "description": "\n    Snapshot of the job queue on every IBM quantum computer.\n\n    Useful when you want to submit a job and need to pick the machine\n    with the shortest wait.\n\n    Returns a JSON array sorted by pending_jobs (shortest queue first).\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "title": "queue_statusArguments"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "queue_statusOutput"
+      }
+    },
+    {
+      "name": "device_history",
+      "description": "\n    Return all saved snapshots for one quantum computer (IBM or IonQ) over the last N days.\n\n    Args:\n        device_name: Machine name, e.g. \"ibm_brisbane\" or \"qpu.forte-enterprise-1\". Must match exactly.\n        days:        How many days back to look (default 7).\n\n    Returns a JSON object with the device name and a list of snapshots in\n    chronological order. Each snapshot has the fields that were available\n    when it was recorded (error rates are NULL when the recording tool\n    didn't fetch calibration data).\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "device_name": {
+            "title": "Device Name",
+            "type": "string"
+          },
+          "days": {
+            "default": 7,
+            "title": "Days",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "device_name"
+        ],
+        "title": "device_historyArguments"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "device_historyOutput"
+      }
+    },
+    {
+      "name": "device_profile",
+      "description": "\n    Return the complete hardware profile for one quantum backend using the\n    most recent snapshot — including processor family, CLOPS benchmark,\n    gate duration, last calibration time, readout asymmetry, and job limits.\n\n    This surfaces the BackendV2 extended fields that device_history and\n    get_device_details do not expose.\n\n    Args:\n        device_name: Exact backend name, e.g. \"ibm_marrakesh\".\n\n    Returns a JSON object with every collected field for that device.\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "device_name": {
+            "title": "Device Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "device_name"
+        ],
+        "title": "device_profileArguments"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "device_profileOutput"
+      }
+    },
+    {
+      "name": "device_on_date",
+      "description": "\n    Historical stats for a device on a specific past date, from our snapshot DB.\n\n    Useful for reproducibility: if you ran an experiment on 2026-07-01, call\n    this tool with that date to see exactly what the hardware looked like —\n    queue depth, error rates — and include it in your methods section.\n\n    Args:\n        device_name: Machine name, e.g. \"ibm_fez\".\n        date:        Date in YYYY-MM-DD format, e.g. \"2026-06-10\".\n\n    Returns aggregated stats averaged across all snapshots taken that day\n    (snapshots are recorded every 6 hours by the background agent).\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "device_name": {
+            "title": "Device Name",
+            "type": "string"
+          },
+          "date": {
+            "title": "Date",
+            "type": "string"
+          }
+        },
+        "required": [
+          "device_name",
+          "date"
+        ],
+        "title": "device_on_dateArguments"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "device_on_dateOutput"
+      }
+    },
+    {
+      "name": "submit_job",
+      "description": "\n    Compile and submit a quantum circuit to an IBM quantum computer.\n\n    Args:\n        device_name:  Machine name, e.g. \"ibm_fez\". Use compare_devices or\n                      queue_status first to pick the best available machine.\n        qasm_string:  OpenQASM circuit source code.\n                      For QASM 2: must start with OPENQASM 2.0; include \"qelib1.inc\";\n                      For QASM 3: must start with OPENQASM 3.0;\n                      The circuit must include measurement gates.\n        shots:        How many times to run the circuit (default 1024, max 20000).\n                      More shots = more accurate probability estimates.\n        qasm_version: 2 (default) for OpenQASM 2.0, 3 for OpenQASM 3.0.\n        confirm_despite_drift_alert: must be True to submit anyway if this\n                      device had a real calibration alert (error spike,\n                      T1/T2 drop, or went offline) in the last 24 hours —\n                      checked automatically against the local snapshot\n                      history, no separate get_alerts call needed.\n\n    Returns JSON with:\n      - job_id   Save this — needed for job_status and job_results.\n      - status   Initial status (usually \"INITIALIZING\" or \"QUEUED\").\n      - device   Machine the job was sent to.\n      - shots    Number of shots requested.\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "device_name": {
+            "title": "Device Name",
+            "type": "string"
+          },
+          "qasm_string": {
+            "title": "Qasm String",
+            "type": "string"
+          },
+          "shots": {
+            "default": 1024,
+            "title": "Shots",
+            "type": "integer"
+          },
+          "qasm_version": {
+            "default": 2,
+            "title": "Qasm Version",
+            "type": "integer"
+          },
+          "confirm_despite_drift_alert": {
+            "default": false,
+            "title": "Confirm Despite Drift Alert",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "device_name",
+          "qasm_string"
+        ],
+        "title": "submit_jobArguments"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "submit_jobOutput"
+      }
+    },
+    {
+      "name": "job_status",
+      "description": "\n    Check the current status of a submitted quantum job.\n\n    Args:\n        job_id: The ID returned by submit_job.\n\n    Status values:\n      INITIALIZING  Just submitted, not yet in the queue.\n      QUEUED        Waiting in the machine's queue.\n      RUNNING       Actively executing on hardware right now.\n      DONE          Finished — call job_results to get counts.\n      ERROR         Failed — error_message field will explain why.\n      CANCELLED     Was cancelled before it ran.\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "job_id": {
+            "title": "Job Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "job_id"
+        ],
+        "title": "job_statusArguments"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "job_statusOutput"
+      }
+    },
+    {
+      "name": "job_results",
+      "description": "\n    Retrieve measurement counts from a completed quantum job.\n\n    Args:\n        job_id: The ID returned by submit_job.\n\n    Returns JSON with bit-string counts when the job is DONE.\n    If the job is still running or queued, returns current status instead.\n\n    Counts example:\n      {\"00\": 502, \"11\": 522}  ← a Bell state: roughly 50/50 between 00 and 11.\n\n    The bit-string length equals the number of measured qubits.\n    Each key is a measurement outcome; the value is how many shots produced it.\n    All values sum to the total number of shots.\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "job_id": {
+            "title": "Job Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "job_id"
+        ],
+        "title": "job_resultsArguments"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "job_resultsOutput"
+      }
+    },
+    {
+      "name": "cancel_job",
+      "description": "\n    Cancel a queued or running IBM quantum job.\n\n    Only jobs in QUEUED or RUNNING state can be cancelled. Jobs that are\n    already DONE, ERROR, or CANCELLED will return an error.\n\n    Args:\n        job_id: The ID returned by submit_job or list_jobs.\n\n    Returns JSON confirming the cancellation or explaining why it failed.\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "job_id": {
+            "title": "Job Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "job_id"
+        ],
+        "title": "cancel_jobArguments"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "cancel_jobOutput"
+      }
+    },
+    {
+      "name": "list_jobs",
+      "description": "\n    List your most recently submitted IBM quantum jobs.\n\n    Useful for finding job IDs you didn't save, or getting an overview of\n    what's in the queue right now.\n\n    Args:\n        limit: How many jobs to return, newest first (default 10, max 50).\n\n    Returns a JSON array of jobs, each with: job_id, status, backend, creation date.\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "limit": {
+            "default": 10,
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "title": "list_jobsArguments"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "list_jobsOutput"
+      }
+    },
+    {
+      "name": "run_grover",
+      "description": "\n    Build and run a Grover's search algorithm demo on real IBM hardware.\n\n    Grover's algorithm searches an unsorted list of 2^n states in O(sqrt(2^n))\n    steps — a quadratic speedup over classical search. This tool builds the\n    full circuit (oracle + diffusion operator), transpiles it, and submits it\n    to the least-busy backend.\n\n    Args:\n        n_qubits:     Number of qubits to use. Must be 2 or 3.\n                      Capped at 3 — deeper circuits lose coherence on current\n                      hardware and the result becomes dominated by noise.\n        target_state: Binary string marking the state to find, e.g. \"11\" or \"101\".\n                      Length must equal n_qubits. Grover's will amplify this state's\n                      probability so it appears far more often than the others.\n\n    Returns JSON with the job_id, backend chosen, circuit details, and what\n    fraction of shots to expect on the target state.\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "n_qubits": {
+            "title": "N Qubits",
+            "type": "integer"
+          },
+          "target_state": {
+            "title": "Target State",
+            "type": "string"
+          }
+        },
+        "required": [
+          "n_qubits",
+          "target_state"
+        ],
+        "title": "run_groverArguments"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "run_groverOutput"
+      }
+    },
+    {
+      "name": "run_vqe",
+      "description": "\n    Run the Variational Quantum Eigensolver (VQE) to find the ground state\n    energy of a molecule.\n\n    VQE is the core quantum chemistry algorithm. It finds the lowest energy\n    configuration of a molecule by iterating: prepare a quantum state →\n    measure its energy → classically adjust circuit parameters → repeat\n    until the energy converges.\n\n    This is the first step toward simulating receptor-ligand binding energies\n    for drug discovery research.\n\n    Args:\n        molecule:       Molecule to simulate. Currently supports \"H2\".\n                        H2 is the standard benchmark — ground state = -1.857275 Hartree.\n        backend_name:   \"simulator\" (free, runs locally) or an IBM backend name\n                        like \"ibm_fez\" (costs QPU minutes). Default: \"simulator\".\n        max_iterations: Max COBYLA optimizer iterations (default 150).\n                        More iterations = more accurate but slower.\n\n    Returns JSON with:\n      - molecule        Molecule simulated\n      - vqe_energy      Found ground state energy in Hartree\n      - exact_energy    Known exact value (for comparison)\n      - error_hartree   Absolute error\n      - error_mhartree  Error in milli-Hartree (chemical accuracy = < 1.6 mHa)\n      - converged       Whether optimizer converged\n      - iterations      Number of optimizer iterations used\n      - backend         Where it ran (simulator or IBM device)\n      - optimal_params  Best circuit parameters found\n      - job_id          IBM job ID (only when backend_name is a real device)\n      - note            Plain-English interpretation\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "molecule": {
+            "default": "H2",
+            "title": "Molecule",
+            "type": "string"
+          },
+          "backend_name": {
+            "default": "simulator",
+            "title": "Backend Name",
+            "type": "string"
+          },
+          "max_iterations": {
+            "default": 150,
+            "title": "Max Iterations",
+            "type": "integer"
+          }
+        },
+        "title": "run_vqeArguments"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "run_vqeOutput"
+      }
+    },
+    {
+      "name": "estimate_expectation",
+      "description": "\n    Run the Estimator primitive to compute the expectation value of one or\n    more observables for a parameterised quantum state.\n\n    Unlike submit_job (which counts measurement outcomes), the Estimator\n    computes <ψ|O|ψ> — the average value of an observable O. This is what\n    quantum chemistry and optimisation algorithms (VQE, QAOA) need.\n\n    Args:\n        device_name:  IBM backend to run on, e.g. \"ibm_fez\".\n        qasm_string:  Circuit that prepares the quantum state (no measurements\n                      needed — Estimator handles that internally).\n        observables:  Comma-separated Pauli strings, e.g. \"ZZ,XI,IZ\".\n                      Each string is a tensor product of single-qubit Paulis\n                      (I, X, Y, Z) — length must equal the number of qubits.\n        shots:        Shots per observable (default 1024, max 20000).\n        qasm_version: 2 (default) or 3.\n\n    Returns JSON with:\n      - job_id       Use job_status to track, job_results won't work — check\n                     status via job_status and retrieve via this tool's job_id.\n      - observables  List of Pauli strings submitted.\n      - device       Backend used.\n      - note         Explanation of expectation values.\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "device_name": {
+            "title": "Device Name",
+            "type": "string"
+          },
+          "qasm_string": {
+            "title": "Qasm String",
+            "type": "string"
+          },
+          "observables": {
+            "title": "Observables",
+            "type": "string"
+          },
+          "shots": {
+            "default": 1024,
+            "title": "Shots",
+            "type": "integer"
+          },
+          "qasm_version": {
+            "default": 2,
+            "title": "Qasm Version",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "device_name",
+          "qasm_string",
+          "observables"
+        ],
+        "title": "estimate_expectationArguments"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "estimate_expectationOutput"
+      }
+    },
+    {
+      "name": "circuit_report",
+      "description": "\n    Dry-run analysis of a circuit on a specific backend — no job submitted,\n    no queue time, instant results.\n\n    This is the \"look before you leap\" tool. Before waiting hours in a queue,\n    use circuit_report to see:\n      - How the compiler transforms your circuit (gate count, depth)\n      - Which physical qubits get assigned to your logical qubits\n      - The error rate on each assigned qubit pair\n      - An estimated fidelity — the probability your result is correct\n\n    Researchers use this to:\n      - Compare backends before committing to one\n      - Detect if the compiler is bloating their circuit\n      - Know in advance if today's calibration is good enough\n\n    Args:\n        device_name:  Backend to analyse against, e.g. \"ibm_fez\".\n        qasm_string:  Circuit in OpenQASM format (measurements optional).\n        qasm_version: 2 (default) or 3.\n\n    Returns JSON with:\n      - original_gates     Gate counts before transpilation\n      - transpiled_gates   Gate counts after IBM compiler (usually more gates)\n      - original_depth     Circuit depth before compilation\n      - transpiled_depth   Circuit depth after compilation\n      - qubit_mapping      Logical qubit → physical qubit assignment\n      - cx_error_per_pair  2-qubit gate error on each used qubit pair\n      - estimated_fidelity Probability the circuit produces the correct result\n      - verdict            Human-readable recommendation\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "device_name": {
+            "title": "Device Name",
+            "type": "string"
+          },
+          "qasm_string": {
+            "title": "Qasm String",
+            "type": "string"
+          },
+          "qasm_version": {
+            "default": 2,
+            "title": "Qasm Version",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "device_name",
+          "qasm_string"
+        ],
+        "title": "circuit_reportArguments"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "circuit_reportOutput"
+      }
+    },
+    {
+      "name": "debug_circuit",
+      "description": "\n    Analyse a quantum circuit for bugs and problems BEFORE submitting it.\n    No job is created. No queue time. Instant results.\n\n    Catches two classes of problems:\n\n    STATIC bugs (caught without connecting to IBM — always run):\n      - Circuit has zero gates (empty circuit)\n      - Gate applied to a qubit index that doesn't exist\n      - Measurements missing (you'll get no results)\n      - Classical register too small for the number of qubits measured\n      - Unentangled qubits (qubit prepared but never interacted with anything)\n      - Barrier-only circuit (circuit does nothing useful)\n\n    HARDWARE bugs (caught by checking the target backend — needs device_name):\n      - Circuit needs more qubits than the backend has\n      - Circuit depth exceeds the backend's T2 coherence time\n        (if circuit runs longer than T2, qubits decohere — results = garbage)\n      - Backend is offline or in maintenance\n\n    Each issue comes with:\n      - severity: ERROR (will definitely fail) | WARNING (may give bad results) | INFO\n      - plain-English explanation of what's wrong\n      - suggested fix\n\n    Args:\n        qasm_string:  Circuit in OpenQASM format.\n        device_name:  Optional — IBM backend to check hardware limits against.\n                      Leave blank for static analysis only.\n        qasm_version: 2 (default) or 3.\n\n    Returns JSON with:\n      - issues        List of {severity, check, message, fix}\n      - summary       One-line verdict\n      - safe_to_submit  True only if zero ERRORs found\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "qasm_string": {
+            "title": "Qasm String",
+            "type": "string"
+          },
+          "device_name": {
+            "default": "",
+            "title": "Device Name",
+            "type": "string"
+          },
+          "qasm_version": {
+            "default": 2,
+            "title": "Qasm Version",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "qasm_string"
+        ],
+        "title": "debug_circuitArguments"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "debug_circuitOutput"
+      }
+    },
+    {
+      "name": "ionq_devices",
+      "description": "\n    List all available IonQ quantum computers and simulators.\n\n    IonQ uses trapped-ion technology — a different physical approach from\n    IBM's superconducting qubits. Trapped-ion systems tend to have higher\n    gate fidelity but fewer qubits than IBM machines.\n\n    Returns a list of IonQ backends with qubit count and availability.\n    Requires IONQ_API_KEY in .env.\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "title": "ionq_devicesArguments"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "ionq_devicesOutput"
+      }
+    },
+    {
+      "name": "ionq_submit_job",
+      "description": "\n    Compile and submit one or more OpenQASM 2 circuits to IonQ as ONE job.\n\n    Multiple circuits share the per-job minimum charge — batch related\n    circuits together rather than submitting them one at a time.\n\n    SAFETY: before anything touches real hardware, every circuit is first\n    transpiled and run on the free ionq_simulator. If expected_amplification\n    is given and the simulated result misses it by more than\n    amplification_tolerance (relative), submission is REFUSED — same\n    self-check pattern used for qforge's build_forged_circuits. This catches\n    a bad translation (wrong angle units, endianness, optimization_level\n    rewriting the circuit) before it costs a dollar.\n\n    Real hardware (any non-simulator backend) additionally requires\n    confirm_real_hardware=True — a plain typo in backend_name should never\n    silently spend credits.\n\n    Args:\n        backend_name  : 'simulator', 'forte-1', or 'forte-enterprise-1'\n                        (also accepts the exact qiskit_ionq strings)\n        qasm_circuits : list of OpenQASM 2.0 circuit strings — even a single\n                        circuit must be passed as a one-element list\n        shots         : shots per circuit (default 1024)\n        optimization_level : transpiler level, default 1. IonQ's own SDK warns\n                        the qiskit default of 2 does aggressive re-synthesis\n                        that can rewrite a hand-designed circuit — don't raise\n                        this without a specific reason.\n        expected_marked_bitstrings : optional target bitstrings for the\n                        self-check (same convention as get_amplification).\n                        For ONE circuit: a flat list of bitstrings, e.g.\n                        [\"0001110\", \"0001111\"]. For a BATCH of N circuits:\n                        a list of N entries, one per circuit in the same\n                        order as qasm_circuits — each entry either a list\n                        of bitstrings for that circuit, or None to skip the\n                        check for that particular circuit.\n        expected_amplification    : optional predicted amplification each\n                        circuit should hit. For ONE circuit: a single number.\n                        For a BATCH: a list of N numbers/None, one per\n                        circuit, same order and same skip-with-None rule as\n                        expected_marked_bitstrings. Every circuit with both\n                        an expected_marked_bitstrings entry and an\n                        expected_amplification entry gets its own\n                        independent tolerance check — one bad circuit in a\n                        batch refuses the WHOLE submission, not just itself.\n        amplification_tolerance   : relative tolerance applied to every\n                        circuit's check (default 0.5 = simulated\n                        amplification must be within 50% of its own\n                        expected_amplification)\n        confirm_real_hardware : must be True to submit to actual QPU hardware.\n                        Not required for the simulator.\n        confirm_despite_drift_alert : must be True to submit to real hardware\n                        anyway if this exact backend had a real calibration\n                        alert (error spike, T1/T2 drop, or went offline) in\n                        the last 24 hours — checked automatically against\n                        the local snapshot history. Not checked for the\n                        simulator.\n\n    Returns job_id(s), self-check results, and whether this went to real\n    hardware or the free simulator.\n    Requires IONQ_API_KEY in .env.\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "backend_name": {
+            "title": "Backend Name",
+            "type": "string"
+          },
+          "qasm_circuits": {
+            "items": {},
+            "title": "Qasm Circuits",
+            "type": "array"
+          },
+          "shots": {
+            "default": 1024,
+            "title": "Shots",
+            "type": "integer"
+          },
+          "optimization_level": {
+            "default": 1,
+            "title": "Optimization Level",
+            "type": "integer"
+          },
+          "expected_marked_bitstrings": {
+            "anyOf": [
+              {
+                "items": {},
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Expected Marked Bitstrings"
+          },
+          "expected_amplification": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "items": {},
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Expected Amplification"
+          },
+          "amplification_tolerance": {
+            "default": 0.5,
+            "title": "Amplification Tolerance",
+            "type": "number"
+          },
+          "confirm_real_hardware": {
+            "default": false,
+            "title": "Confirm Real Hardware",
+            "type": "boolean"
+          },
+          "confirm_despite_drift_alert": {
+            "default": false,
+            "title": "Confirm Despite Drift Alert",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "backend_name",
+          "qasm_circuits"
+        ],
+        "title": "ionq_submit_jobArguments"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "ionq_submit_jobOutput"
+      }
+    },
+    {
+      "name": "ionq_job_status",
+      "description": "\n    Check the status of a submitted IonQ job.\n\n    Args:\n        job_id       : the job ID returned by ionq_submit_job\n        backend_name : the backend the job was submitted to (default: ionq_simulator)\n\n    Returns current status and job details.\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "job_id": {
+            "title": "Job Id",
+            "type": "string"
+          },
+          "backend_name": {
+            "default": "ionq_simulator",
+            "title": "Backend Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "job_id"
+        ],
+        "title": "ionq_job_statusArguments"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "ionq_job_statusOutput"
+      }
+    },
+    {
+      "name": "ionq_job_results",
+      "description": "\n    Retrieve measurement counts from a completed IonQ job.\n\n    Args:\n        job_id       : the job ID returned by ionq_submit_job\n        backend_name : the backend the job was submitted to (default: simulator)\n\n    Returns bit-string counts like {\"00\": 512, \"11\": 512}, and — always —\n    is_real_hardware: True/False. Check that field before treating a result\n    as a real hardware measurement. It is set from the backend name itself,\n    not inferred, so it can't be fooled by a lucky-looking result.\n\n    For a multi-circuit (batched) job, counts is a list, one entry per\n    circuit, in the same order they were submitted.\n\n    Job must be in DONE status — check with ionq_job_status() first.\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "job_id": {
+            "title": "Job Id",
+            "type": "string"
+          },
+          "backend_name": {
+            "default": "simulator",
+            "title": "Backend Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "job_id"
+        ],
+        "title": "ionq_job_resultsArguments"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "ionq_job_resultsOutput"
+      }
+    },
+    {
+      "name": "estimate_ionq_gates",
+      "description": "\n    Transpile a circuit against a REAL IonQ device's native gate target and\n    report the real gate count — GPI, GPI2, and ZZ — without submitting\n    anything.\n\n    Targets a specific device (default forte-1) rather than the generic\n    simulator, because Forte-class hardware's native two-qubit gate is ZZ(θ)\n    — Aria-only systems use Mølmer-Sørensen (MS) instead, and Aria is\n    retired. Transpiling against the generic simulator target silently picks\n    the wrong gate family (verified: it defaults to MS). Getting this wrong\n    means the gate count you see here isn't what actually runs.\n\n    Args:\n        qasm_string         : OpenQASM 2.0 circuit string\n        backend_name        : which device's native target to transpile\n                              against — 'forte-1' (default), 'forte-enterprise-1',\n                              or 'simulator' (gives MS-based counts, Aria-style —\n                              only useful if you specifically care about that)\n        optimization_level  : transpiler level, default 1 (IonQ recommends\n                              0-1; the qiskit default of 2 can rewrite the\n                              circuit more aggressively than intended)\n\n    Returns native gate counts, total 2-qubit gate count (the number that\n    matters most for cost and error), and estimated wall-clock time (2-qubit\n    gates run serially at roughly 100-200µs each on real hardware). Works\n    even while the target device shows \"unavailable\" — device configuration\n    is queryable independent of whether jobs can currently be submitted.\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "qasm_string": {
+            "title": "Qasm String",
+            "type": "string"
+          },
+          "backend_name": {
+            "default": "forte-1",
+            "title": "Backend Name",
+            "type": "string"
+          },
+          "optimization_level": {
+            "default": 1,
+            "title": "Optimization Level",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "qasm_string"
+        ],
+        "title": "estimate_ionq_gatesArguments"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "estimate_ionq_gatesOutput"
+      }
+    },
+    {
+      "name": "estimate_ionq_cost",
+      "description": "\n    Estimate the real dollar cost of submitting circuit(s) to IonQ, without\n    touching the API.\n\n    Verified directly against IonQ's own public resource estimator\n    (https://www.ionq.com/programs/research-credits/resource-estimator):\n    every circuit small enough to matter for this project's Singmaster's\n    work (up to 16 two-qubit gates on 7-24 qubits) sits exactly on the\n    $168.20-per-job floor. Above that floor, IonQ's exact pricing formula\n    isn't fully published — this tool gives you the guaranteed floor, and\n    an approximate estimate for anything larger, clearly labeled as such.\n\n    Multiple circuits in the SAME job (see ionq_submit_job's qasm_circuits\n    batching) share one $168.20 floor instead of paying it once each — this\n    is the main lever for saving credits.\n\n    Args:\n        qasm_circuits : list of OpenQASM 2.0 circuit strings — as if they\n                        were going to be submitted together as one batched job\n        shots         : shots per circuit (default 4096)\n\n    Returns per-circuit gate counts, whether the batch is expected to sit at\n    the floor, and the estimated total.\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "qasm_circuits": {
+            "items": {},
+            "title": "Qasm Circuits",
+            "type": "array"
+          },
+          "shots": {
+            "default": 4096,
+            "title": "Shots",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "qasm_circuits"
+        ],
+        "title": "estimate_ionq_costArguments"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "estimate_ionq_costOutput"
+      }
+    },
+    {
+      "name": "get_alerts",
+      "description": "\n    Return calibration drift alerts for any device (IBM or IonQ).\n\n    The snapshot agent (runs every 6 hours) compares each new snapshot\n    against the previous one. When a device's avg_cx_error or\n    avg_readout_error rises by more than 20%, or a device goes offline,\n    an alert is written to the database.\n\n    This is what Nikita's problem was — ibm_boston wasn't recalibrated\n    and nobody knew until jobs were stuck for 5 hours. This catches it\n    at the next snapshot automatically.\n\n    Args:\n        device_name : filter to one device (e.g. \"ibm_boston\" or \"qpu.forte-enterprise-1\") — leave empty for all\n        days        : how many days back to look (default 7)\n\n    Returns a list of alerts with device name, alert type, values, and timestamp.\n    Alert types:\n        cx_error_spike              — 2-qubit gate error rose >20%\n        readout_error_spike         — readout error rose >20%\n        went_offline                — device went from operational to offline\n        t1_drop                     — median T1 coherence dropped >20% (early warning)\n        t2_drop                     — median T2 coherence dropped >20% (early warning)\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "device_name": {
+            "default": "",
+            "title": "Device Name",
+            "type": "string"
+          },
+          "days": {
+            "default": 7,
+            "title": "Days",
+            "type": "integer"
+          }
+        },
+        "title": "get_alertsArguments"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "get_alertsOutput"
+      }
+    },
+    {
+      "name": "check_chip_identity",
+      "description": "\n    Check whether a device's real per-qubit fingerprint still matches what\n    it looked like `compare_days_back` days ago — a real check for silent\n    hardware swaps (the physical chip behind a device name changed) or\n    qubit relabeling (same chip, indices reassigned), neither of which any\n    public API states directly.\n\n    Uses per-qubit T1/T2/readout-error and per-pair gate-error patterns as\n    the fingerprint. NOTE: this is a real but WEAKER signal than the ideal\n    version — IBM does not expose per-qubit frequency (the fabrication-\n    locked, low-drift signal this class of check normally relies on) for\n    current-generation Heron devices, confirmed empty on ibm_fez.\n\n    The verdict is calibrated against REAL observed behavior, not a fixed\n    guess: 831 days of ibm_fez's own real history were sampled (2026-08-24)\n    to measure how much correlation naturally decays over different time\n    gaps on a chip that never changed identity. A single comparison point\n    is also genuinely noisy (confirmed empirically — occasional low\n    correlation even at short gaps, on real unchanged hardware), so this\n    averages 3 nearby reference points instead of one to cut that noise\n    down. Reference dates within 60 days of the device's online_date are\n    refused — real sampling found a correlation cliff there (bring-up-era\n    data isn't representative of steady-state operation, not a real\n    anomaly).\n\n    Requires per-qubit history collected via backfill_qubit_history.py —\n    returns an error if none exists yet for this device.\n\n    Args:\n        device_name: exact backend name, e.g. \"ibm_fez\"\n        compare_days_back: how far back to pull the reference fingerprint (default 90)\n\n    Returns JSON with:\n      - avg_raw_correlation: observed correlation, averaged across 3 nearby reference points\n      - expected_for_this_gap: {median, p10_floor} from real historical behavior at this gap\n      - verdict: \"consistent\", \"possible_relabeling\", \"possible_hardware_change\", or \"inconclusive\"\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "device_name": {
+            "title": "Device Name",
+            "type": "string"
+          },
+          "compare_days_back": {
+            "default": 90,
+            "title": "Compare Days Back",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "device_name"
+        ],
+        "title": "check_chip_identityArguments"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "check_chip_identityOutput"
+      }
+    },
+    {
+      "name": "start_repro_experiment",
+      "description": "\n    Submit the same circuit N times to measure reproducibility on real hardware.\n\n    NISQ hardware results vary between runs due to calibration drift and noise.\n    This tool submits identical circuits N times, storing each job ID so you\n    can later call repro_score() to compute the reproducibility score.\n\n    Args:\n        circuit      : OpenQASM 2.0 or 3.0 circuit string\n        backend_name : IBM device to run on (e.g. \"ibm_fez\")\n        n_runs       : how many times to run the same circuit (default 5)\n        shots        : shots per run (default 1024)\n\n    Returns an experiment_id. Use repro_score(experiment_id) after all\n    jobs complete to get the variance analysis and 0-1 reproducibility score.\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "circuit": {
+            "title": "Circuit",
+            "type": "string"
+          },
+          "backend_name": {
+            "title": "Backend Name",
+            "type": "string"
+          },
+          "n_runs": {
+            "default": 5,
+            "title": "N Runs",
+            "type": "integer"
+          },
+          "shots": {
+            "default": 1024,
+            "title": "Shots",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "circuit",
+          "backend_name"
+        ],
+        "title": "start_repro_experimentArguments"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "start_repro_experimentOutput"
+      }
+    },
+    {
+      "name": "repro_score",
+      "description": "\n    Compute the reproducibility score for a completed repeat experiment.\n\n    Fetches results for all runs in the experiment, computes:\n    - Mean output distribution across all runs\n    - KL-divergence of each run from the mean (variance signal)\n    - Reproducibility score 0.0 to 1.0 (1.0 = identical results every run)\n    - Flag if calibration epoch changed between any two runs\n\n    A score above 0.9 means your result is likely real signal.\n    A score below 0.7 means the result is probably noise-driven — rerun later.\n\n    Args:\n        experiment_id : the ID returned by start_repro_experiment()\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "experiment_id": {
+            "title": "Experiment Id",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "experiment_id"
+        ],
+        "title": "repro_scoreArguments"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "repro_scoreOutput"
+      }
+    },
+    {
+      "name": "job_analytics",
+      "description": "\n    Analyze all jobs submitted through this MCP server.\n\n    Returns a breakdown per tool showing:\n    - How many jobs were submitted\n    - Average circuit depth before and after transpilation\n    - Transpilation expansion ratio (how much the compiler inflated the circuit)\n    - Average shots requested\n\n    Useful for understanding how AI agents use quantum hardware over time.\n    This is the start of the agentic quantum workload study.\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "title": "job_analyticsArguments"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "job_analyticsOutput"
+      }
+    },
+    {
+      "name": "estimate_runtime",
+      "description": "\n    Estimate how many minutes a circuit will cost on an IBM device.\n\n    IBM Open Plan gives 180 minutes per year. This tool tells you how much\n    a specific circuit will cost BEFORE you submit — so you don't waste\n    your budget on the wrong backend or a busy queue.\n\n    Estimate includes:\n    - Queue wait time (based on current pending jobs × avg 30s per job)\n    - Execution time (based on transpiled circuit depth × shots)\n    - Total estimated cost in minutes\n\n    Args:\n        circuit      : OpenQASM 2.0 or 3.0 circuit string\n        backend_name : IBM device to estimate for (e.g. \"ibm_fez\")\n        shots        : number of shots (default 1024)\n\n    Returns estimated minutes broken down by queue wait vs execution.\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "circuit": {
+            "title": "Circuit",
+            "type": "string"
+          },
+          "backend_name": {
+            "title": "Backend Name",
+            "type": "string"
+          },
+          "shots": {
+            "default": 1024,
+            "title": "Shots",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "circuit",
+          "backend_name"
+        ],
+        "title": "estimate_runtimeArguments"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "estimate_runtimeOutput"
+      }
+    },
+    {
+      "name": "route_job",
+      "description": "\n    Recommend the best IBM device for your circuit based on cost and quality.\n\n    Checks all your accessible IBM devices and ranks them by:\n    1. Fits within max_minutes budget (queue + execution)\n    2. Lowest estimated total time\n    3. Lowest avg_cx_error (best fidelity)\n\n    This is credit-aware routing — it saves your IBM Open Plan minutes\n    for experiments that matter, not queue accidents.\n\n    Args:\n        circuit     : OpenQASM 2.0 or 3.0 circuit string\n        shots       : number of shots (default 1024)\n        max_minutes : reject devices that will cost more than this (default 10)\n\n    Returns ranked list of devices with cost estimate and recommendation.\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "circuit": {
+            "title": "Circuit",
+            "type": "string"
+          },
+          "shots": {
+            "default": 1024,
+            "title": "Shots",
+            "type": "integer"
+          },
+          "max_minutes": {
+            "default": 10,
+            "title": "Max Minutes",
+            "type": "number"
+          }
+        },
+        "required": [
+          "circuit"
+        ],
+        "title": "route_jobArguments"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "route_jobOutput"
+      }
+    },
+    {
+      "name": "check_routing_overhead",
+      "description": "\n    Predict routing overhead BEFORE submitting a circuit to IBM heavy-hex hardware.\n\n    IBM heavy-hex qubits allow max 3 direct connections each (degree ≤ 3).\n    If your circuit needs a qubit to talk to 4+ other qubits, the transpiler\n    must inject SWAP gates — each SWAP = 3 CX gates — causing gate count to\n    explode. We discovered this the hard way: 263 logical gates became 1,037\n    hardware gates because one qubit needed degree 4.\n\n    Args:\n        qubit_interactions: List of [qubit_a, qubit_b] pairs that need to\n            interact in your circuit. Example: [[0,1],[1,2],[0,3],[0,4]]\n            means qubit 0 talks to qubits 1, 3, and 4 (degree 3 — safe).\n        device_name: IBM backend to check against (default: ibm_marrakesh).\n\n    Returns:\n        Per-qubit degree, any degree violations, and an estimated gate inflation\n        factor. Degree ≤ 3 is safe. Degree 4 typically means ~4× gate inflation.\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "qubit_interactions": {
+            "items": {},
+            "title": "Qubit Interactions",
+            "type": "array"
+          },
+          "device_name": {
+            "default": "ibm_marrakesh",
+            "title": "Device Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "qubit_interactions"
+        ],
+        "title": "check_routing_overheadArguments"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "check_routing_overheadOutput"
+      }
+    },
+    {
+      "name": "encode_search_problem",
+      "description": "\n    Convert a Boolean search problem into an Ising Hamiltonian ready for LNAA\n    (Lattice-Native Amplitude Amplification) on IBM hardware.\n\n    We derived this approach from scratch in Phase 5 of the Singmaster project\n    after Grover's algorithm hit IBM heavy-hex routing limits. Instead of a\n    Boolean oracle, encode target states as the lowest-energy (ground) states\n    of a magnetic system. IBM's RZ + RZZ gates implement this natively — zero\n    routing overhead.\n\n    How the math works:\n        H = Σ h_i × Z_i + Σ J_ij × Z_i × Z_j\n        Z_i = -1 if qubit i is 1, +1 if qubit i is 0.\n        To reward qubit i = 1: set h_i = +1  (because h × (-1) = -1 = low energy)\n        To reward qubit i = 0: set h_i = -1  (because h × (+1) = -1 = low energy)\n        To penalise pairs i,j being equal: J_ij = +0.5 (coupling hint)\n\n    Args:\n        conditions: dict mapping qubit index (as string) to desired value.\n            Example: {\"1\": 1, \"2\": 1, \"3\": 1, \"4\": 0, \"5\": 0}\n            means we want q1=q2=q3=1 and q4=q5=0.\n        coupling_hints: optional list of [i, j] pairs to add mild coupling\n            between qubits (useful to break degeneracy between near-equal targets).\n            Example: [[0, 6]] adds J_06 coupling.\n        coupling_strength: J value for coupling hints (default 0.5 = mild penalty).\n\n    Returns:\n        h_i coefficients, J_ij couplings, ground state energy, and a QAOA\n        circuit recipe with suggested starting parameters.\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "conditions": {
+            "additionalProperties": true,
+            "title": "Conditions",
+            "type": "object"
+          },
+          "coupling_hints": {
+            "default": [],
+            "items": {},
+            "title": "Coupling Hints",
+            "type": "array"
+          },
+          "coupling_strength": {
+            "default": 0.5,
+            "title": "Coupling Strength",
+            "type": "number"
+          }
+        },
+        "required": [
+          "conditions"
+        ],
+        "title": "encode_search_problemArguments"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "encode_search_problemOutput"
+      }
+    },
+    {
+      "name": "estimate_hardware_gates",
+      "description": "\n    Predict how many hardware gates your circuit will have after IBM transpilation.\n\n    Learned from the Singmaster project: the same circuit can go from 263 logical\n    gates to 1,037 hardware gates (4× inflation) if even ONE qubit exceeds the\n    heavy-hex degree-3 limit. This tool lets you predict that before wasting\n    queue time.\n\n    The key variable is max_qubit_degree — the highest number of other qubits\n    that any single qubit in your circuit needs to interact with directly.\n    On IBM heavy-hex this limit is 3. Above 3, every excess connection requires\n    SWAP injection (each SWAP = 3 extra CX gates).\n\n    Args:\n        logical_gates:       Total gates in your circuit before transpilation.\n        max_qubit_degree:    The highest degree of any qubit in your circuit's\n                             interaction graph (use check_routing_overhead to find this).\n        two_qubit_fraction:  Fraction of logical gates that are 2-qubit gates\n                             (default 0.4 = 40%, typical for Grover-style circuits).\n\n    Returns:\n        Predicted hardware gate count, inflation factor, and whether you are\n        above or below the ~600-gate hardware noise floor on ibm_marrakesh.\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "logical_gates": {
+            "title": "Logical Gates",
+            "type": "integer"
+          },
+          "max_qubit_degree": {
+            "title": "Max Qubit Degree",
+            "type": "integer"
+          },
+          "two_qubit_fraction": {
+            "default": 0.4,
+            "title": "Two Qubit Fraction",
+            "type": "number"
+          }
+        },
+        "required": [
+          "logical_gates",
+          "max_qubit_degree"
+        ],
+        "title": "estimate_hardware_gatesArguments"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "estimate_hardware_gatesOutput"
+      }
+    },
+    {
+      "name": "get_amplification",
+      "description": "\n    Compute the amplification factor from a completed quantum search job.\n\n    Amplification = (fraction of shots on marked states) / (random baseline)\n    Random baseline = len(marked_bitstrings) / search_space_size\n\n    A value of 1.0 means no better than random. Above 1.0 means the quantum\n    search worked. In our Singmaster experiments: Phase 3v3 got 4.17×,\n    Phase 5 LNAA got 27.78×.\n\n    Args:\n        job_id:              Completed job's ID — IBM or IonQ, set `provider`\n                             to match.\n        marked_bitstrings:   List of bitstrings (as strings) representing your\n                             target states. Example: [\"0001110\", \"0001111\", \"1001110\"]\n                             These must match the submitting SDK's bit ordering\n                             (classical bit 0 = rightmost character) for BOTH\n                             IBM and IonQ — verified with the endianness canary.\n        search_space_size:   Total number of possible states. For n qubits: 2^n.\n                             For 7 qubits: 128. For 4 qubits: 16.\n        provider:            \"ibm\" (default) or \"ionq\". Must match where the\n                             job actually ran — this tool was previously\n                             hardcoded to IBM and would hard-error on any\n                             IonQ job ID.\n        ionq_backend_name:   only used when provider=\"ionq\" — the backend the\n                             job was submitted to (default: simulator).\n\n    Returns:\n        Amplification factor, shot breakdown per marked state, comparison to\n        the uniform random baseline, and is_real_hardware (IonQ only — IBM\n        jobs are always real hardware, this tool doesn't touch IBM's\n        simulator path).\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "job_id": {
+            "title": "Job Id",
+            "type": "string"
+          },
+          "marked_bitstrings": {
+            "items": {},
+            "title": "Marked Bitstrings",
+            "type": "array"
+          },
+          "search_space_size": {
+            "title": "Search Space Size",
+            "type": "integer"
+          },
+          "provider": {
+            "default": "ibm",
+            "title": "Provider",
+            "type": "string"
+          },
+          "ionq_backend_name": {
+            "default": "simulator",
+            "title": "Ionq Backend Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "job_id",
+          "marked_bitstrings",
+          "search_space_size"
+        ],
+        "title": "get_amplificationArguments"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "get_amplificationOutput"
+      }
+    },
+    {
+      "name": "discover_collision_candidates",
+      "description": "\n    Scout tool — runs BEFORE any circuit is built.\n\n    Classically filters ALL (k1,k2) column pairs in Pascal's Triangle,\n    finds which ones produce actual collisions in the given range, and\n    ranks them by hardware feasibility (qubit count, expected gate count,\n    Ising sparsity).\n\n    Use this to decide WHAT to search before spending QPU credits.\n\n    Args:\n      max_n              : search rows 0..max_n\n      max_k              : check column pairs k1,k2 up to max_k\n      target_multiplicity: 2 = 2-way collision, 4 = 4-way (Singmaster record)\n\n    Returns ranked list of candidate searches with hardware cost estimate.\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "max_n": {
+            "default": 100,
+            "title": "Max N",
+            "type": "integer"
+          },
+          "max_k": {
+            "default": 10,
+            "title": "Max K",
+            "type": "integer"
+          },
+          "target_multiplicity": {
+            "default": 2,
+            "title": "Target Multiplicity",
+            "type": "integer"
+          }
+        },
+        "title": "discover_collision_candidatesArguments"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "discover_collision_candidatesOutput"
+      }
+    },
+    {
+      "name": "encode_collision_problem",
+      "description": "\n    Find all pairs (n1, n2) where C(n1,k1) = C(n2,k2) classically,\n    then encode those collision pairs as Ising h_i coefficients ready\n    for run_search_experiment.\n\n    Why this matters:\n      Instead of telling LNAA \"look at row 14, 15, 78\", we tell it\n      \"find coordinate pairs that collide\" — and it discovers them.\n      That's the generalization from Phase 5.\n\n    Strategy:\n      - Represent n1 in binary as qubits q0..q(b1-1)\n      - Represent n2 in binary as qubits q(b1)..q(b1+b2-1)\n      - For each known collision pair (n1_sol, n2_sol), reward the\n        exact bit pattern with positive h_i (1 → reward, 0 → penalize)\n      - Multiple solutions share the same qubit register — LNAA\n        amplifies all ground states simultaneously.\n\n    Example:\n      k1=2, k2=3, max_n1=20, max_n2=15\n      → finds C(16,2)=C(10,3)=120\n      → encodes bit patterns of n1=16 and n2=10\n\n    Args:\n      k1      : column fixed for register 1 (e.g. 2 → triangular numbers)\n      k2      : column fixed for register 2 (e.g. 3 → tetrahedral numbers)\n      max_n1  : search n1 from k1 to max_n1\n      max_n2  : search n2 from k2 to max_n2\n\n    Returns JSON with:\n      - collisions        : list of (n1, n2, value) found\n      - num_qubits        : total qubits needed\n      - h_coeffs          : Ising h_i per qubit (pass to run_search_experiment)\n      - marked_states     : bit-strings of collision pairs (for get_amplification)\n      - run_search_params : ready-to-use kwargs for run_search_experiment\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "k1": {
+            "title": "K1",
+            "type": "integer"
+          },
+          "k2": {
+            "title": "K2",
+            "type": "integer"
+          },
+          "max_n1": {
+            "default": 50,
+            "title": "Max N1",
+            "type": "integer"
+          },
+          "max_n2": {
+            "default": 30,
+            "title": "Max N2",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "k1",
+          "k2"
+        ],
+        "title": "encode_collision_problemArguments"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "encode_collision_problemOutput"
+      }
+    },
+    {
+      "name": "run_search_experiment",
+      "description": "\n    Run a complete quantum search experiment end-to-end using one tool call.\n\n    DEFAULT: simulate_only=True — runs a FREE noiseless simulation first.\n    No QPU credits spent. Use this to validate your Hamiltonian, tune\n    gamma/beta parameters, and confirm amplification before touching hardware.\n\n    Only set simulate_only=False when simulation shows strong amplification\n    (>10×) and you are ready to submit to real IBM hardware.\n\n    What happens internally:\n\n    SIMULATE mode (simulate_only=True, FREE):\n      1. Derives Ising h_i and J_ij from your conditions\n      2. Builds LNAA circuit (RZ + RZZ + RX layers)\n      3. Runs noiseless Aer simulation — zero QPU cost\n      4. Returns amplification + suggestion (ready for hardware or tune more)\n\n    HARDWARE mode (simulate_only=False, uses QPU credits):\n      1-4. Same as above\n      5. Picks best IBM backend using live calibration data\n      6. Checks routing overhead\n      7. Transpiles at opt=2 seed=42\n      8. Submits job, polls, returns amplification\n\n    Args:\n        conditions:        Dict mapping qubit index (string) to target value (0 or 1).\n                           Example: {\"1\":1,\"2\":1,\"3\":1,\"4\":0,\"5\":0}\n        num_qubits:        Total number of qubits in the search register.\n        marked_rows:       Integer row numbers that are the correct answers.\n        shots:             Number of shots (default 4096).\n        p_layers:          LNAA layers — higher = more precise but deeper circuit (default 2).\n        gamma:             Phase angle for Ising oracle (default 2.589).\n        beta:              Mixing angle for RX layer (default 0.501).\n        coupling_hints:    Optional [i,j] pairs for J coupling between qubits.\n        coupling_strength: J value for coupling hints (default 0.5).\n        max_poll_seconds:  Hardware only — how long to wait before returning job_id (default 120s).\n        simulate_only:     True = free noiseless simulation with suggestion (DEFAULT).\n                           False = submit to real IBM hardware (costs QPU credits).\n\n    Returns:\n        Amplification factor, shot breakdown, Hamiltonian used, and a\n        recommendation on whether to submit to hardware or tune parameters first.\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "conditions": {
+            "additionalProperties": true,
+            "title": "Conditions",
+            "type": "object"
+          },
+          "num_qubits": {
+            "title": "Num Qubits",
+            "type": "integer"
+          },
+          "marked_rows": {
+            "items": {},
+            "title": "Marked Rows",
+            "type": "array"
+          },
+          "shots": {
+            "default": 4096,
+            "title": "Shots",
+            "type": "integer"
+          },
+          "p_layers": {
+            "default": 2,
+            "title": "P Layers",
+            "type": "integer"
+          },
+          "gamma": {
+            "default": 2.589,
+            "title": "Gamma",
+            "type": "number"
+          },
+          "beta": {
+            "default": 0.501,
+            "title": "Beta",
+            "type": "number"
+          },
+          "coupling_hints": {
+            "default": [],
+            "items": {},
+            "title": "Coupling Hints",
+            "type": "array"
+          },
+          "coupling_strength": {
+            "default": 0.5,
+            "title": "Coupling Strength",
+            "type": "number"
+          },
+          "max_poll_seconds": {
+            "default": 120,
+            "title": "Max Poll Seconds",
+            "type": "integer"
+          },
+          "simulate_only": {
+            "default": true,
+            "title": "Simulate Only",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "conditions",
+          "num_qubits",
+          "marked_rows"
+        ],
+        "title": "run_search_experimentArguments"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "run_search_experimentOutput"
+      }
+    },
+    {
+      "name": "encode_4way_collision",
+      "description": "\n    Step 4: Encode a known multi-way collision for simultaneous LNAA search.\n\n    Takes a value V and its known positions (from sieve_singmaster_space),\n    builds one LNAA rail per unique k-column, searches for all marked rows\n    simultaneously in ONE job.\n\n    In plain English:\n      sieve tells us: 3003 appears at rows 14(k=6), 15(k=5), 78(k=2).\n      This tool builds 3 parallel quantum searches — one per k-column —\n      and runs them all in ONE hardware submission.\n      Each rail independently finds its target row.\n      Together they prove the 4-way collision exists and is amplifiable.\n\n    This is the Step 4 generalization of Phase 5:\n      Phase 5: manually encoded 3 rows for 3003 in one 7-qubit circuit\n      Step 4:  automatically encodes N positions from sieve in N parallel rails\n\n    Args:\n      value     : the Pascal value to search for (e.g. 3003)\n      positions : list of [n, k] pairs from sieve output\n                  e.g. [[14,6],[15,5],[78,2]]\n      max_n     : max row to search per rail (determines qubit count)\n      simulate_only: True = free simulation, False = real hardware\n\n    Returns ready-to-run params + simulation/hardware results.\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "title": "Value",
+            "type": "integer"
+          },
+          "positions": {
+            "items": {},
+            "title": "Positions",
+            "type": "array"
+          },
+          "max_n": {
+            "default": 128,
+            "title": "Max N",
+            "type": "integer"
+          },
+          "p_layers": {
+            "default": 2,
+            "title": "P Layers",
+            "type": "integer"
+          },
+          "gamma": {
+            "default": 2.589,
+            "title": "Gamma",
+            "type": "number"
+          },
+          "beta": {
+            "default": 0.501,
+            "title": "Beta",
+            "type": "number"
+          },
+          "shots": {
+            "default": 4096,
+            "title": "Shots",
+            "type": "integer"
+          },
+          "simulate_only": {
+            "default": true,
+            "title": "Simulate Only",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "value",
+          "positions"
+        ],
+        "title": "encode_4way_collisionArguments"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "encode_4way_collisionOutput"
+      }
+    },
+    {
+      "name": "equality_oracle_search",
+      "description": "\n    Find C(n1,k1) = C(n2,k2) without being told which rows to look for.\n\n    Honest framing: the quantum circuit amplifies toward a Lucas mod-2\n    PARITY match, which is a weak filter (roughly half of random pairs\n    satisfy it by chance) — it is not proof of equality. The actual\n    equality check is classical: every measured bitstring is verified\n    with exact comb() arithmetic in post-processing. The QPU's real job\n    here is candidate narrowing via amplification, not final verification.\n\n    Difference from encode_4way_collision:\n\n    encode_4way_collision:\n      Input the answer (e.g. 3003 at rows 14,15,78) → circuit prepares and\n      confirms that known state. Needs the answer before it can run.\n\n    This tool:\n      Input only the two columns k1, k2 — not the answer.\n      Two qubit registers in superposition — one per column.\n      Cross-register RZZ gates encode the Lucas mod-2 equality oracle:\n        \"mark any (n1, n2) where C(n1,k1) and C(n2,k2) have the same parity.\"\n      LNAA amplifies pairs matching that parity condition — a real but\n      weak filter (~50% of random pairs pass it by chance). The QPU\n      narrows the candidate set; classical comb() in post-processing\n      determines which amplified candidates are true equalities.\n\n    Lucas mod-2 oracle (why it's cheap):\n      By Lucas' theorem, C(n,k) mod 2 = 1 iff every 1-bit of k is also a 1-bit of n.\n      This is digit-local — depends only on a few bits of n. Perfect for RZZ/RZ gates.\n      Example: k=2 (binary 10) → C(n,2) is odd iff bit-1 of n is 1.\n               k=5 (binary 101) → C(n,5) is odd iff bits 0 AND 2 of n are both 1.\n      Equality oracle: are the active-bit patterns of n1 and n2 consistent?\n      Encoded as cross-register RZZ between the active bit positions.\n\n    Circuit structure (total = 2*n_bits qubits):\n      Register 1 (qubits 0..n_bits-1):   row n1 for column k1\n      Register 2 (qubits n_bits..2n-1):  row n2 for column k2\n      For each LNAA layer:\n        - RZ on active bits of each register (single-register terms)\n        - RZZ between active bit pairs across registers (equality coupling)\n        - RX mixing on all qubits\n\n    Post-processing:\n      For each measured peak (n1, n2), compute C(n1,k1) and C(n2,k2) exactly.\n      Report pairs where they are truly equal — those are real collisions.\n\n    Args:\n      k1, k2     : the two Pascal columns to search (e.g. k1=2, k2=5)\n      n_bits     : qubits per register (6 bits = rows 0..63, 8 bits = 0..255)\n      simulate_only: True = free, False = real IBM QPU\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "k1": {
+            "default": 2,
+            "title": "K1",
+            "type": "integer"
+          },
+          "k2": {
+            "default": 5,
+            "title": "K2",
+            "type": "integer"
+          },
+          "n_bits": {
+            "default": 6,
+            "title": "N Bits",
+            "type": "integer"
+          },
+          "p_layers": {
+            "default": 3,
+            "title": "P Layers",
+            "type": "integer"
+          },
+          "gamma": {
+            "default": 1,
+            "title": "Gamma",
+            "type": "number"
+          },
+          "beta": {
+            "default": 0.8,
+            "title": "Beta",
+            "type": "number"
+          },
+          "shots": {
+            "default": 4096,
+            "title": "Shots",
+            "type": "integer"
+          },
+          "simulate_only": {
+            "default": true,
+            "title": "Simulate Only",
+            "type": "boolean"
+          },
+          "backend_name": {
+            "default": "",
+            "title": "Backend Name",
+            "type": "string"
+          }
+        },
+        "title": "equality_oracle_searchArguments"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "equality_oracle_searchOutput"
+      }
+    },
+    {
+      "name": "find_collision_candidates",
+      "description": "\n    Step 1: Curve-intersection classical search for Singmaster candidates.\n\n    Instead of scanning every row (brute-force sieve), anchors on the\n    smallest target column and uses integer root-finding to jump directly\n    to candidate rows in other columns. No scanning needed.\n\n    In plain English:\n      Old way: check row 1, row 2, row 3 ... row 50000 — one by one.\n      New way: for each n in anchor column, compute N=C(n,k). Then solve\n               \"what n gives C(n,k2)=N?\" using algebra — jump straight there.\n      Like sudoku: use the rules to skip impossible positions entirely.\n\n    Applies three Einstein constraints automatically:\n      1. Solved pair elimination — (2,3),(2,4),(2,5),(2,6),(3,4) etc. are\n         fully solved in math literature. Flags if your combo is all-solved.\n      2. 2022 theorem — 9+ candidates only exist at small k. Warns if k>15.\n      3. Integer root-finding — k=2 uses exact closed form; k>=3 uses\n         Newton's method from (N*k!)^(1/k) estimate.\n\n    Args:\n      columns     : k-column values to search simultaneously\n                    e.g. [5,6,7,8] or [2,7,9] — avoid all-solved combos\n      search_depth: rows to scan in the anchor (smallest) column\n      min_columns : columns that must match for a candidate to be reported\n\n    Each candidate with 3 non-trivial columns = 8 total appearances (=3003).\n    Needs 4 non-trivial columns = 10 total = new world record.\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "columns": {
+            "default": [
+              5,
+              6,
+              7,
+              8
+            ],
+            "items": {},
+            "title": "Columns",
+            "type": "array"
+          },
+          "search_depth": {
+            "default": 100000,
+            "title": "Search Depth",
+            "type": "integer"
+          },
+          "min_columns": {
+            "default": 3,
+            "title": "Min Columns",
+            "type": "integer"
+          }
+        },
+        "title": "find_collision_candidatesArguments"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "find_collision_candidatesOutput"
+      }
+    },
+    {
+      "name": "sieve_singmaster_space",
+      "description": "\n    Classical sieve for Singmaster's Conjecture — runs BEFORE any QPU job.\n\n    Finds candidate positions in Pascal's Triangle where the same value\n    appears multiple times. Uses Lucas' Theorem to eliminate 98%+ of\n    the search space before any quantum circuit is built.\n\n    In plain English:\n      Instead of asking the quantum computer to search a billion positions,\n      we first eliminate all positions that CANNOT be part of a collision\n      using pure math. Only the survivors go to quantum hardware.\n      This saves QPU credits and finds better candidates.\n\n    Lucas' Theorem (the sieve):\n      C(n,k) mod p is zero if any digit of k in base-p is larger than\n      the corresponding digit of n. This lets us quickly compare two\n      positions without computing the full binomial coefficient.\n      If C(n1,k1) != C(n2,k2) mod p for ANY small prime p,\n      they CANNOT be equal — eliminated instantly.\n\n    Args:\n      max_n              : search rows 0..max_n (default 500)\n      max_k              : search columns 0..max_k (default 50)\n      target_multiplicity: how many positions must share same value\n                           2=2-way, 4=4-way, 5=9+appearances (default 4)\n      use_lucas_filter   : apply Lucas mod-prime filter first (default True)\n\n    Returns:\n      - candidates: positions grouped by value, sorted by multiplicity\n      - best_target: highest-multiplicity group found\n      - quantum_ready: True if a group meets target_multiplicity\n      - next_step: what to run next\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "max_n": {
+            "default": 500,
+            "title": "Max N",
+            "type": "integer"
+          },
+          "max_k": {
+            "default": 50,
+            "title": "Max K",
+            "type": "integer"
+          },
+          "target_multiplicity": {
+            "default": 4,
+            "title": "Target Multiplicity",
+            "type": "integer"
+          },
+          "use_lucas_filter": {
+            "default": true,
+            "title": "Use Lucas Filter",
+            "type": "boolean"
+          }
+        },
+        "title": "sieve_singmaster_spaceArguments"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "sieve_singmaster_spaceOutput"
+      }
+    },
+    {
+      "name": "run_parallel_collision_search",
+      "description": "\n    Parallel rails — ONE job, MULTIPLE collision searches simultaneously.\n\n    Instead of one 9-qubit search, tiles multiple independent LNAA rings\n    on ibm_marrakesh (156 qubits). Each ring searches a different (k1,k2)\n    column pair. No cross-talk between rings. One submission.\n\n    Why this matters:\n      ibm_marrakesh has 156 qubits. Our basic search uses 9.\n      We can run ~10 independent searches in one job for the same cost.\n\n    Args:\n      k_pairs    : list of [k1,k2] pairs, e.g. [[2,3],[3,4],[4,5]]\n      max_n      : search rows 0..max_n for each pair\n      shots      : total shots (split across rails in simulation)\n      simulate_only: True = free simulation, False = real hardware\n\n    Returns amplification for each rail and combined best result.\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "k_pairs": {
+            "items": {},
+            "title": "K Pairs",
+            "type": "array"
+          },
+          "max_n": {
+            "default": 20,
+            "title": "Max N",
+            "type": "integer"
+          },
+          "shots": {
+            "default": 4096,
+            "title": "Shots",
+            "type": "integer"
+          },
+          "p_layers": {
+            "default": 2,
+            "title": "P Layers",
+            "type": "integer"
+          },
+          "gamma": {
+            "default": 2.589,
+            "title": "Gamma",
+            "type": "number"
+          },
+          "beta": {
+            "default": 0.501,
+            "title": "Beta",
+            "type": "number"
+          },
+          "simulate_only": {
+            "default": true,
+            "title": "Simulate Only",
+            "type": "boolean"
+          },
+          "backend_name": {
+            "default": "",
+            "title": "Backend Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "k_pairs"
+        ],
+        "title": "run_parallel_collision_searchArguments"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "run_parallel_collision_searchOutput"
+      }
+    },
+    {
+      "name": "certify_ising_gate_optimality",
+      "description": "\n    Prove the minimum number of native two-qubit gates required to implement\n    an Ising-Hamiltonian phase layer (the LNAA/QAOA-style oracle used\n    throughout this project's Singmaster's work) — not an estimate, a proof.\n\n    THE ARGUMENT (why this is provable, not a heuristic):\n    An Ising Hamiltonian H = sum(h_i Z_i) + sum(J_ij Z_i Z_j) is entirely\n    diagonal — every term is built from Z operators only, so ALL terms\n    commute with each other. That means exp(-i*gamma*H) factors EXACTLY\n    (zero Trotter error, any term order) into a product of per-term\n    exponentials. Two consequences, both provable:\n      1. Two qubits i,j can only become Z-Z correlated in this evolution if\n         at least one gate directly couples them — a genuine two-qubit\n         interaction cannot be synthesized from single-qubit gates alone.\n         So each nonzero J_ij pair needs >= 1 two-qubit gate. This is a\n         real lower bound, not a guess.\n      2. IonQ's native ZZ(theta) gate implements exp(-i*theta/2 * Z_i Z_j)\n         directly, for ANY continuous theta, in exactly one gate. So each\n         pair also needs <= 1 two-qubit gate — one gate is always sufficient.\n    Together: the true minimum is EXACTLY the number of qubit pairs with\n    nonzero net coupling, after merging duplicate entries for the same pair\n    (J_ij and J_ji, or repeated terms, combine by simple addition — ZZ(a)\n    followed by ZZ(b) on the same pair equals ZZ(a+b) exactly, since they\n    commute and share a generator).\n\n    This does NOT apply to circuits with non-commuting terms (X or Y\n    couplings, genuine Trotter error) — only to pure Ising (Z/ZZ) phase\n    layers, which is exactly what encode_4way_collision, the E1 entangling\n    circuits, and every LNAA-family tool in this project builds.\n\n    Args:\n        h_coeffs    : {qubit_index: coefficient} — local Z field terms\n        j_couplings : {\"i,j\": coefficient} — pairwise ZZ coupling terms.\n                     Keys as \"i,j\" strings (JSON can't use tuple keys).\n        p_layers    : number of repeated QAOA-style layers (phase+mixing).\n                     Layers are separated by a mixing (RX) layer that does\n                     NOT commute with the phase layer, so couplings CANNOT\n                     merge across layers — each layer needs its own full set.\n        actual_two_qubit_gate_count : optional — the real 2-qubit gate count\n                     from an actual compiled circuit (e.g. from\n                     estimate_ionq_gates), to check against the proven\n                     minimum and report the gap.\n\n    Returns the proven minimum, the proof steps, and — if provided — how the\n    actual circuit compares.\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "h_coeffs": {
+            "additionalProperties": true,
+            "title": "H Coeffs",
+            "type": "object"
+          },
+          "j_couplings": {
+            "additionalProperties": true,
+            "title": "J Couplings",
+            "type": "object"
+          },
+          "p_layers": {
+            "default": 1,
+            "title": "P Layers",
+            "type": "integer"
+          },
+          "actual_two_qubit_gate_count": {
+            "default": null,
+            "title": "Actual Two Qubit Gate Count",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "h_coeffs",
+          "j_couplings"
+        ],
+        "title": "certify_ising_gate_optimalityArguments"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "certify_ising_gate_optimalityOutput"
+      }
+    },
+    {
+      "name": "verify_stabilizer_circuit",
+      "description": "\n    Checkable-structure verification, generalized: if a circuit is built\n    entirely from Clifford gates (H, S, CX, CZ, X, Y, Z, SWAP, ...) plus\n    measurements, its exact measurement distribution is computable via the\n    stabilizer tableau (Gottesman-Knill theorem) -- not simulated, not\n    estimated, exact, and polynomial-time regardless of qubit count.\n\n    Honestly reports inapplicable, not a guess, if the circuit contains\n    any non-Clifford gate (e.g. an arbitrary-angle RZ/RZZ/RX) -- those\n    still need a real simulation or real hardware run instead.\n\n    Args:\n        qasm_string : OpenQASM 2.0 circuit string\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "qasm_string": {
+            "title": "Qasm String",
+            "type": "string"
+          }
+        },
+        "required": [
+          "qasm_string"
+        ],
+        "title": "verify_stabilizer_circuitArguments"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "verify_stabilizer_circuitOutput"
+      }
+    },
+    {
+      "name": "verify_stabilizer_hardware_result",
+      "description": "\n    Verify real hardware measurement counts against a Clifford circuit's\n    EXACT stabilizer prediction -- reports a real fidelity lower bound\n    (fraction of shots landing on an outcome that's actually possible\n    under the ideal case) at any qubit count, no simulation required.\n\n    Args:\n        qasm_string : OpenQASM 2.0 circuit string (Clifford gates only)\n        hw_counts   : real measurement counts, e.g. {\"000\": 480, \"111\": 470, \"010\": 30}\n    ",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "qasm_string": {
+            "title": "Qasm String",
+            "type": "string"
+          },
+          "hw_counts": {
+            "additionalProperties": true,
+            "title": "Hw Counts",
+            "type": "object"
+          }
+        },
+        "required": [
+          "qasm_string",
+          "hw_counts"
+        ],
+        "title": "verify_stabilizer_hardware_resultArguments"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "verify_stabilizer_hardware_resultOutput"
+      }
+    }
+  ]
+}

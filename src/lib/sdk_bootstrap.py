@@ -37,7 +37,7 @@ def prepare_sdk(capability_id, *, data_directory=None):
             os.execve(sys.executable, [sys.executable, "-B", *sys.argv], {**os.environ, "DYLD_LIBRARY_PATH": libraries})
     elif capability_id == "flow-vqe":
         root = Path(__file__).resolve().parents[2]
-        source = root / ".openquantum/sdk-sources/flow-vqe"
+        source = Path(os.environ.get("OPENQUANTUM_SDK_SOURCE_ROOT", root / ".openquantum/sdk-sources")) / "flow-vqe"
         record = json.loads((source / "openquantum-source.json").read_text())
         if record["revision"] != "f7642afa330e5108ea5738d42fe80b551363733c":
             raise RuntimeError("Flow-VQE source revision differs from the reviewed snapshot")
@@ -48,7 +48,7 @@ def prepare_sdk(capability_id, *, data_directory=None):
         sys.path.insert(0, str(source))
     elif capability_id == "qpanda-qubo" and sys.platform == "darwin":
         root = Path(__file__).resolve().parents[2]
-        directory = root / ".openquantum/sdk-native/qpanda-qubo"
+        directory = Path(os.environ.get("OPENQUANTUM_NATIVE_SDK_ROOT", root / ".openquantum/sdk-native")) / "qpanda-qubo"
         record = json.loads((directory / "native.json").read_text())
         library = directory / "fmt/lib/libfmt.11.dylib"
         if record["revision"] != "40626af88bd7df9a5fb80be7b25ac85b122d6c21" or hashlib.sha256(library.read_bytes()).hexdigest() != record["sha256"]:

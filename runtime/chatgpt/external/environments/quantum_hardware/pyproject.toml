@@ -1,0 +1,22 @@
+[project]
+name = "openquantum-mcp-quantum-hardware"
+version = "0.1.0"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+  "mcp==1.27.2",
+  "qiskit>=1.0.0",
+  "qiskit-aer>=0.14.0",
+  "qiskit-ibm-runtime>=0.20.0",
+  "qiskit-qasm3-import>=0.6.0",
+  "qiskit-ionq>=0.5.0",
+  "python-dotenv>=1.0.0",
+  "matplotlib>=3.7.0",
+  "boto3>=1.28.0",
+  "fastapi>=0.115.0",
+  "uvicorn>=0.30.0",
+  "scipy>=1.11.0",
+  "qiskit-nature>=0.7.0"
+]
+
+[tool.uv]
+package = false

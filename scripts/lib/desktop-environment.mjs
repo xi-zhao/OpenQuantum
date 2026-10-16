@@ -8,6 +8,7 @@ import { Context } from "@deepseek-ai/cordis";
 import { LocalCredentialProvider } from "@deepseek-ai/dsh-credentials-local";
 import { credentialRef } from "@deepseek-ai/dsh-credentials";
 import { createLaunchEnvironmentSnapshot } from "@deepseek-ai/dsh-launch-environment";
+import { SERVICES } from "../../src/settings/codex/service-catalog.mjs";
 
 const publicNames = [
   "OPENQUANTUM_PUBLIC_BASE_URL", "OPENQUANTUM_PRIVATE_BASE_URL",
@@ -55,6 +56,9 @@ export function desktopCredentialReferences(sources) {
   const references = new Set();
   function visit(value) {
     if (!value || typeof value !== "object") return;
+    if (value.id === "openquantum-adaptive-capabilities") {
+      for (const service of SERVICES) for (const field of service.fields) references.add(credentialRef(field.name));
+    }
     for (const [key, child] of Object.entries(value)) {
       if (key === "apiKeyEnv" && typeof child === "string") references.add(credentialRef(child));
       else if (["credentialEnv", "optionalCredentialEnv"].includes(key) && child && typeof child === "object") {

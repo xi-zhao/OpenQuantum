@@ -21,6 +21,10 @@ if (args[0] === "--version") {
   const source = args[0] === "--source";
   if (!source && !existsSync(native)) throw new Error(`Install the original DSH Desktop ${DESKTOP_SOURCE.version}: https://github.com/anywhere-labs/dsh-desktop/releases/tag/v${DESKTOP_SOURCE.version}`);
   if (!source) await verifyNativeDesktop(native);
+  if (!existsSync(path.join(projectRoot, "dist/chatgpt/app.html")) || !existsSync(path.join(projectRoot, "dist/chatgpt/capabilities.json"))) {
+    const { buildChatgpt } = await import("./build-chatgpt.mjs");
+    await buildChatgpt({ root: projectRoot });
+  }
   const executable = source ? process.execPath : native;
   const argv = source ? [path.join(await requireDesktopBuild(projectRoot), "lib/bin.js")] : [];
   const inherited = { ...process.env };

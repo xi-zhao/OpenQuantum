@@ -1,6 +1,9 @@
 # The original DSH Desktop owns its native interface and update feed.
 # OpenQuantum registers only /openquantum/api/updates for its capability package.
 - insert:
+    - id: openquantum-capability-host
+      name: '@openquantum/harness-capability-host'
+      inject: [credentials, webServer]
     - id: openquantum-desktop-branding
       name: '@openquantum/harness-web-branding/desktop'
       inject: [desktopRuntime]
@@ -15,3 +18,4 @@
 - id: openquantum-web-capabilities
   config:
     channels: false
+    adaptive: true

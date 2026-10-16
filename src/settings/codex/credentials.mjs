@@ -1,6 +1,6 @@
 import { AsyncEntry } from "@napi-rs/keyring";
 
-// The UI can only describe/write/delete. Secret resolution stays in the MCP client.
+// The UI can only describe/write/delete. Secret resolution stays in reviewed execution adapters.
 export class Credentials {
   constructor({ service = "org.openquantum.codex-plugin", entry = (ref) => new AsyncEntry(service, ref) } = {}) { this.entry = entry; }
   async resolve(ref) {

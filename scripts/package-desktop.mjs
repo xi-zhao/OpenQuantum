@@ -1,3 +1,4 @@
+import { buildChatgpt } from "./build-chatgpt.mjs";
 import { execFile, spawn } from "node:child_process";
 import { createReadStream } from "node:fs";
 import { createHash } from "node:crypto";
@@ -47,8 +48,10 @@ await rm(stage, { recursive: true, force: true });
 await mkdir(payload, { recursive: true });
 const exec = promisify(execFile);
 const { stdout } = await exec("git", ["ls-files", "-z", "--", ".agents", "runtime", "src", "scripts", "packages", "docs", "public", "examples/quantum-algorithms", "package.json", "package-lock.json", "LICENSE", "THIRD_PARTY_NOTICES.md"], { cwd: root, maxBuffer: 8 * 1024 * 1024 });
+await buildChatgpt({ root });
 const records = {};
-for (const filename of [...new Set(stdout.split("\0").filter(Boolean))].sort()) {
+const sharedArtifacts = ["app.html", "capabilities.json", "components.json", "release.json", "THIRD_PARTY_NOTICES.txt"].map(name => `dist/chatgpt/${name}`);
+for (const filename of [...new Set([...stdout.split("\0").filter(Boolean), ...sharedArtifacts])].sort()) {
   if (/(^|\/)(\.env[^/]*|node_modules|\.openquantum|__pycache__)(\/|$)/.test(filename)) continue;
   const source = path.join(root, filename);
   const info = await lstat(source).catch(error => { if (error.code === "ENOENT") return null; throw error; });

@@ -23,6 +23,7 @@ export async function desktopPresetProjection(projectRoot, home = process.env.DS
   if (!marker || !state || await realpath(marker.projectRoot) !== await realpath(projectRoot)) return null;
   const relative = ".agent-presets/openquantum/agent.cordis.yml";
   const current = await readFile(path.join(home, relative));
+  if (current.toString().includes("id: openquantum-adaptive-capabilities")) throw new Error("请在新版 OpenQuantum 设置修改使用策略；旧启动清单不再控制能力准备");
   if (sha256(current) !== state.files[relative]) throw new DesktopPresetConflictError();
   return async () => {
     const source = await readFile(path.join(projectRoot, "runtime/openquantum/agent-presets/openquantum/agent.cordis.yml"), "utf8");

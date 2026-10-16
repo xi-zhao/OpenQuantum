@@ -51,7 +51,7 @@ p { margin: 8px 0; }.intro p { color: var(--muted); margin: 0; font-size: 13px; 
 #toolbar select { width: auto; max-width: 100%; flex: 0 1 auto; }
 #count { font-size: 12px; color: var(--muted); white-space: nowrap; }
 input:not([type=checkbox]), select, textarea { width: 100%; background: var(--surface); color: inherit; border: 1px solid var(--line); border-radius: 8px; padding: 9px 12px; min-width: 0; }
-input:focus, select:focus, textarea:focus, button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+input:focus, select:focus, textarea:focus, button:focus-visible, a:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 14px; }
 .card { padding: 20px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); min-width: 0; }
 .card h2 { font-size: 15px; margin: 0; overflow-wrap: anywhere; }
@@ -74,6 +74,16 @@ details { margin-top: 15px; }summary { cursor: pointer; color: var(--muted); fon
 footer { justify-content: space-between; border-top: 1px solid var(--line); font-size: 11px; color: var(--muted); margin-top: 32px; padding: 16px 0; }
 .credential-window { flex-basis: 100%; min-width: 0; }.credential-window label { display: block; font-size: 12px; margin-top: 8px; }
 .credential-link { font-size: 12px; color: var(--accent); }
+.oq-service-grid { align-items: start; }
+.oq-service-grid .oq-service-credential { gap: 10px; }
+.oq-service-grid .oq-service-credential .oq-cap-desc { margin: 0; }
+.oq-service-fields > summary { cursor: pointer; font-size: 12px; color: var(--accent); padding: 8px 0; }
+.oq-service-fields fieldset { min-width: 0; margin: 0; padding: 0; border: 0; }
+.oq-service-field { display: grid; gap: 8px; border-top: 1px solid var(--line); margin-top: 14px; padding-top: 14px; }
+.oq-service-field-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 13px; }
+.oq-service-field-heading > span:first-child { min-width: 0; overflow-wrap: anywhere; }
+.oq-service-field .oq-cap-field > label, .oq-visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+.oq-service-credential .oq-service-field .oq-cap-actions { margin-top: 0; }
 #overview { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; margin: 8px 0 16px; }
 .summary-card { text-align: left; padding: 10px 14px; border-radius: 10px; }.summary-card strong { display: block; font-size: 20px; line-height: 1.2; }.summary-card span { font-size: 12px; color: var(--muted); }
 .credential-fields { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 12px; margin: 18px 0; }
@@ -91,6 +101,23 @@ footer { justify-content: space-between; border-top: 1px solid var(--line); font
 .runtime-summary p{margin:3px 0 0}.runtime-tools>summary{font-size:13px;color:var(--text)}
 .provider { display: flex; gap: 12px; align-items: center; justify-content: space-between; font-size: 13px; }.provider>div { min-width: 0; overflow-wrap: anywhere; }
 .add-connection { margin-bottom: 24px; }.add-connection>summary { font-size: 13px; color: var(--accent); }.add-connection>.card { margin-top: 12px; }
+.installation-guide { padding: 12px 16px; border-left: 3px solid var(--accent); background: var(--raised); border-radius: 8px; margin: 12px 0 20px; }
+.installation-guide strong { font-size: 13px; }.installation-guide p { margin-bottom: 0; }
+.environment-panel { margin-top: 12px; border-top: 1px solid var(--line); padding-top: 6px; }
+.environment-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
+.environment-actions button, .environment-panel button { font-size: 12px; }
+.environment-progress { display: flex; align-items: center; gap: 8px; color: var(--accent); font-size: 12px; }
+.progress-dot { width: 7px; height: 7px; background: currentColor; border-radius: 50%; animation: working 1.6s ease-in-out infinite; }
+@keyframes working { 50% { opacity: .35; } }
+@media(prefers-reduced-motion:reduce) { .progress-dot { animation: none; } }
+.environment-error { color: var(--danger); font-size: 12px; overflow-wrap: anywhere; }
+.environment-configuration label { display: block; margin: 12px 0; font-size: 12px; }
+.environment-configuration label .hint { display: block; margin-top: 6px; }
+.environment-config-summary { color: var(--muted); font-size: 11px; margin: 8px 0 0; }
+.environment-maintenance { margin-top: 8px; }
+.runtime-summary button { margin-top: 10px; font-size: 12px; }
+.oq-cap-card .oq-cap-actions { border-top: 1px solid var(--line); padding-top: 12px; justify-content: space-between; }
+.oq-cap-card .oq-cap-badge { white-space: normal; flex-shrink: 0; max-width: 45%; text-align: right; }
 @media(max-width:700px) {
   #app { padding: 18px; }.grid, .form-grid { grid-template-columns: 1fr; }.card { padding: 16px; }
   header { margin-bottom: 18px; }nav { gap: 6px; }nav button { padding: 8px 11px; border-radius: 12px; }nav .refresh { margin-left: 0; }
@@ -99,3 +126,55 @@ footer { justify-content: space-between; border-top: 1px solid var(--line); font
   .service .tool-row { flex-wrap: wrap; }.card-top { align-items: flex-start; flex-wrap: wrap; }
   .category-group>summary .hint { display: block; margin-left: 0; }
 }
+/* Keep the first view brief; setup stays beside the selected Skill. */
+.overview-introduction { padding: 22px 0 26px; }
+.overview-positioning { margin: 0 0 6px; color: var(--muted); font-size: 12px; }
+.overview-introduction h2 { margin: 0 0 12px; font-size: clamp(23px, 3vw, 30px); line-height: 1.4; letter-spacing: -.5px; }
+.overview-description { margin: 0; max-width: 40em; color: var(--muted); font-size: 13px; line-height: 1.8; }
+.overview-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 6px 0 12px; }
+.overview-heading h2 { margin: 0; font-size: 13px; font-weight: 600; }
+.overview-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-bottom: 12px; }
+.overview-card { display: grid; gap: 12px; padding: 18px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); min-width: 0; }
+.overview-card h3 { margin: 0; font-size: 13px; font-weight: 600; }
+.overview-metric { display: flex; align-items: baseline; gap: 8px; }
+.overview-metric strong { font-size: 28px; line-height: 1.2; font-variant-numeric: tabular-nums; }
+.overview-metric span { color: var(--muted); font-size: 12px; }
+.overview-card p { margin: 0; }
+.overview-context { margin-top: 20px; }
+.preparation-summary { font-size: 12px; color: var(--muted); margin: 12px 0 4px; }
+.setup-details { border-top: 1px solid var(--line); padding-top: 12px; }
+.setup-details > summary { color: var(--accent); font-size: 13px; }
+.setup-details h4 { margin: 16px 0 4px; font-size: 12px; }
+.setup-details .environment-panel { border: 0; padding-top: 0; }
+.setup-details .oq-service-grid { grid-template-columns: minmax(0, 1fr); margin-top: 14px; }
+.setup-details .oq-service-credential { padding: 12px; }
+.setup-details .oq-service-credential > .oq-cap-desc { display: none; }
+.environment-choice { display: block; font-size: 12px; margin: 14px 0; }
+.provider-control { display: flex; flex: 1; justify-content: space-between; align-items: center; gap: 12px; font-size: 12px; padding: 8px 0; }
+.prepared { color: var(--success); }
+.saved-choice { margin: 8px 0; font-size: 12px; }
+.saved-choice .switch { margin-top: 10px; white-space: normal; }
+.oq-cap-grid > .oq-cap-card:only-child { grid-column: 1 / -1; }
+.setup-details .tool-row { align-items: center; }
+.oq-cap-card .technical-details > summary { font-size: 11px; }
+.oq-cap-card .technical-details code { display: block; margin-top: 8px; }
+@media(max-width:700px) {
+  .overview-grid { grid-template-columns: 1fr; }
+  .overview-card { grid-template-columns: 1fr auto; align-items: center; }
+  .overview-card .hint { grid-column: 1 / -1; }
+  .tool-row { flex-wrap: wrap; }
+  .tool-row > div { flex-basis: 100%; }
+  .provider-control { flex-wrap: wrap; }
+}
+
+/* The account header is the disclosure target, including title and status. */
+.oq-service-fields { margin: 0; width: 100%; }
+.oq-service-fields > .oq-credential-heading { display: grid; gap: 8px; padding: 0; color: var(--text); list-style: none; }
+.oq-credential-heading::-webkit-details-marker { display: none; }
+.oq-credential-heading strong { font-size: 14px; }
+.oq-credential-heading .oq-cap-desc { color: var(--muted); font-size: 12px; }
+.oq-credential-affordance { color: var(--accent); font-size: 12px; }
+.oq-credential-affordance::before { content: "▸ "; }
+.oq-service-fields[open] .oq-credential-affordance::before { content: "▾ "; }
+.oq-credential-heading:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; border-radius: 3px; }
+.relation-summary { font-size: 11px; color: var(--muted); overflow-wrap: anywhere; margin: 4px 0; }

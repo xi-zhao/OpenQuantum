@@ -36,16 +36,32 @@ test("SDK access survives archive, split installation and cached Skill relocatio
   await fs.cp(pluginRoot, cached, { recursive: true });
   assert.equal(await locateSdkRuntime(cached), runtime);
   const script = path.join(cached, "skills/tenpy-ground-state/scripts/sdk-access.mjs");
-  const { stdout } = await run(process.execPath, [script, "inspect", "tenpy-ground-state"], { cwd: directory });
+  const environment = { ...process.env, OPENQUANTUM_PLUGIN_SETTINGS_HOME: path.join(directory, "isolated settings") };
+  const { stdout } = await run(process.execPath, [script, "inspect", "tenpy-ground-state"], { cwd: directory, env: environment });
   const result = JSON.parse(stdout);
   assert.equal(result.project, path.join(runtime, ".agents/skills/tenpy-ground-state"));
-  assert.equal(result.setup.args[0], path.join(runtime, "scripts/setup-sdk.mjs"));
+  assert.equal(result.setup.tool, "prepare_openquantum_skill");
+  assert.equal(result.setup.sdkId, "tenpy-ground-state");
+  assert.equal(result.run.command, path.join(environment.OPENQUANTUM_PLUGIN_SETTINGS_HOME, "environments/python/tenpy-ground-state", process.platform === "win32" ? "Scripts/python.exe" : "bin/python"));
+  assert.equal(result.dashboard.state, "not_installed");
   assert.equal(result.environmentState, "not_prepared");
-  const discovery = JSON.parse((await run(process.execPath, [path.join(cached, "skills/quantum-sdk-workbench/scripts/sdk-access.mjs"), "list"])).stdout);
+  const discovery = JSON.parse((await run(process.execPath, [path.join(cached, "skills/quantum-sdk-workbench/scripts/sdk-access.mjs"), "list"], { env: environment })).stdout);
   assert.ok(discovery.some(entry => entry.id === "quantum-algorithms"));
   assert.ok(discovery.some(entry => entry.id === "netqasm-network"));
+  const pasqalScript = path.join(cached, "skills/pasqal-experiments/scripts/pasqal-cloud.mjs");
+  await fs.access(pasqalScript);
+  const pasqalSkill = await fs.readFile(path.join(cached, "skills/pasqal-experiments/SKILL.md"), "utf8");
+  assert.match(pasqalSkill, /scripts\/pasqal-cloud.mjs/);
+  for (const args of [["prepare"], ["-c", "arbitrary.py"], ["cancel", "--receipt", "receipt.json"]]) {
+    await assert.rejects(run(process.execPath, [pasqalScript, ...args], { cwd: directory, env: { ...environment,
+      CODEX_HOME: path.join(directory, "isolated codex"), OPENQUANTUM_PLUGIN_CREDENTIAL_SERVICE: "org.openquantum.invalid-never-read" } }), error => {
+      assert.match(error.stderr, /仅支持|必要参数或明确确认/);
+      assert.doesNotMatch(error.stderr, /ERR_MODULE_NOT_FOUND|系统凭据库|arbitrary.py/);
+      return true;
+    });
+  }
   const pluginCapabilities = await readCapabilities(runtime);
-  const optionalIds = ["fieldqkit-hardware", "oqc-cloud", "classiq-synthesis"];
+  const optionalIds = ["fieldqkit-hardware", "oqc-cloud", "classiq-synthesis", "netqasm-network"];
   for (const id of optionalIds) {
     const capability = pluginCapabilities.find(entry => entry.id === id);
     assert.equal(capability.status, "available", id);
@@ -66,10 +82,10 @@ test("SDK access survives archive, split installation and cached Skill relocatio
     const capability = pluginCapabilities.find(entry => entry.id === id);
     const provider = providers.find(provider => provider.key === capability.mcp[0].name);
     assert.equal(provider.defaultEnabled, false, id);
-    assert.equal(snapshot.providers.find(item => item.id === provider.key).enabled, false, id);
+    assert.equal(snapshot.providers.find(item => item.id === provider.key).enabled, true, id);
     for (const name of capability.tools) {
-      assert.equal(snapshot.tools.find(tool => tool.id === name).enabled, false, name);
-      assert.ok(!listed.some(tool => tool.name === name), name);
+      assert.equal(snapshot.tools.find(tool => tool.id === name).enabled, true, name);
+      assert.ok(listed.some(tool => tool.name === name), name);
     }
   }
   const algorithms = pluginCapabilities.find(entry => entry.id === "quantum-algorithms");
@@ -78,6 +94,5 @@ test("SDK access survives archive, split installation and cached Skill relocatio
   assert.deepEqual(algorithms.tools, []); // Host execution is not a new MCP Tool.
   const workbench = await fs.readFile(path.join(cached, "skills/quantum-sdk-workbench/SKILL.md"), "utf8");
   assert.match(workbench, /原生 SDK/);
-  assert.equal(pluginCapabilities.find(entry => entry.id === "netqasm-network").status, "unsupported");
-  await assert.rejects(fs.access(path.join(cached, "skills/netqasm-network/SKILL.md")), { code: "ENOENT" });
+  await fs.access(path.join(cached, "skills/netqasm-network/SKILL.md"));
 });

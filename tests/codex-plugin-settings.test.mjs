@@ -141,3 +141,66 @@ test("settings recover a lock whose owning process no longer exists", async t =>
   assert.equal(ran, true);
   await assert.rejects(fs.stat(`${f.settings.file}.openquantum.lock`), { code: "ENOENT" });
 });
+
+test("editing a connection invalidates discovery and old credential windows without forwarding its Token", async t => {
+  const f = await fixture(t);
+  const command = async input => f.settings.command({ ...input, revision: (await f.settings.snapshot()).revision });
+  const connection = { id: "editable", transport: "http", authentication: "token", url: "https://first.example/mcp" };
+  await command({ action: "connection.add", connection });
+  await f.credentials.set(credentialRef(connection.id), "fixture-only-edit-token");
+  await command({ action: "connection.set", id: connection.id, enabled: true });
+  const original = (await f.settings.read()).config.connections[0];
+  const before = JSON.stringify({ ...original, tools: [] });
+  await f.settings.inventory(connection.id, [{ name: "query", inputSchema: { type: "object" } }], before);
+  await command({ action: "connection.tool.set", id: connection.id, tool: "query", enabled: true });
+  const unchanged = (await f.settings.read()).config.connections[0];
+  await command({ action: "connection.update", id: connection.id, connection });
+  assert.deepEqual((await f.settings.read()).config.connections[0], unchanged);
+  const window = await createCredentialWindow(f); t.after(() => window.close());
+  const oldUrl = new URL(await window.open(connection.id));
+  const next = { ...connection, url: "https://second.example/mcp" };
+  await assert.rejects(() => command({ action: "connection.update", id: connection.id, connection: next }), /确认/);
+  assert.deepEqual((await f.settings.read()).config.connections[0], unchanged);
+  await assert.rejects(() => command({ action: "connection.update", id: connection.id, connection: { ...next, id: "renamed" } }), /名称/);
+  const remove = f.credentials.remove;
+  f.credentials.remove = async () => { throw new Error("fixture credential unavailable"); };
+  await assert.rejects(() => command({ action: "connection.update", id: connection.id, connection: next, resetCredential: true }), /unavailable/);
+  assert.deepEqual((await f.settings.read()).config.connections[0], unchanged);
+  f.credentials.remove = remove;
+  await command({ action: "connection.update", id: connection.id, connection: next, resetCredential: true });
+  const edited = (await new Settings(f.options).read()).config.connections[0];
+  assert.equal(edited.url, next.url);
+  assert.equal(edited.enabled, false);
+  assert.deepEqual(edited.tools, []);
+  assert.notEqual(edited.instance, unchanged.instance);
+  assert.equal(await f.credentials.resolve(credentialRef(connection.id)), null);
+  await assert.rejects(() => f.settings.inventory(connection.id, [], before), /配置已变化/);
+  const response = await fetch(`${oldUrl.origin}/credential`, { method: "POST", headers: { "content-type": "application/json", origin: oldUrl.origin }, body: JSON.stringify({ nonce: oldUrl.hash.slice(1), action: "set", value: "fixture-only-stale-token" }) });
+  assert.equal(response.status, 409);
+  assert.equal(f.secrets.size, 0);
+});
+
+test("rediscovery preserves unchanged Tool choices and disables changed contracts", async t => {
+  const f = await fixture(t);
+  const command = async input => f.settings.command({ ...input, revision: (await f.settings.read()).revision });
+  await command({ action: "connection.add", connection: { id: "evolving", transport: "http", authentication: "none", url: "https://fixture.example/mcp" } });
+  const tool = { name: "query", description: "A bounded query", inputSchema: { type: "object", properties: { n: { type: "number" } } }, annotations: { readOnlyHint: true, destructiveHint: false } };
+  const discover = async tools => {
+    const current = (await f.settings.read()).config.connections[0];
+    await f.settings.inventory("evolving", tools, JSON.stringify({ ...current, tools: [] }));
+    return (await f.settings.read()).config.connections[0].tools;
+  };
+  await discover([tool]);
+  await command({ action: "connection.tool.set", id: "evolving", tool: "query", enabled: true });
+  assert.equal((await discover([structuredClone(tool)]))[0].enabled, true);
+  for (const changed of [
+    { ...tool, inputSchema: { type: "object", properties: { n: { type: "string" } } } },
+    { ...tool, outputSchema: { type: "object" } },
+    { ...tool, annotations: { readOnlyHint: false, destructiveHint: true } },
+    { ...tool, description: "A changed action" },
+  ]) {
+    assert.equal((await discover([changed]))[0].enabled, false);
+    await discover([tool]);
+    await command({ action: "connection.tool.set", id: "evolving", tool: "query", enabled: true });
+  }
+});

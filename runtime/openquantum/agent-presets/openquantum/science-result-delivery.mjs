@@ -21,7 +21,7 @@ if (policy.errors.length) throw policy.errors[0];
 const eligibleTools = new Set(policy.toJS({ maxAliasCount: 20 }).packages.flatMap(capability =>
   (capability.execution?.mcpServers ?? []).filter(server => server.source === "package").flatMap(server =>
     server.tools.filter(tool => ["workspace-write", "external-write"].includes(tool.effect))
-      .map(tool => `mcp__${server.name}__${tool.name}`))));
+      .flatMap(tool => [`mcp__${server.name}__${tool.name}`, tool.name]))));
 
 async function saveResult(ctx, exec, value) {
   const session = exec.agent.session;

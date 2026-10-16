@@ -2,7 +2,7 @@ import { createServer } from "node:http";
 import { randomBytes } from "node:crypto";
 import { credentialRef } from "./application.mjs";
 import { withLock } from "./storage.mjs";
-import { serviceById, serviceCredentialRef, serviceValues, validateServiceValues } from "./service-catalog.mjs";
+import { serviceSupported, serviceById, serviceValues, saveServiceValues, validateServiceValues } from "./service-catalog.mjs";
 import { credentialHtml, credentialCss, credentialJs } from "./credential-ui.mjs";
 import { createCredentialBridge } from "./credential-bridge.mjs";
 import { createCredentialChannel } from "./credential-channel.mjs";
@@ -39,15 +39,11 @@ export async function createCredentialWindow({ settings, credentials }) {
       const { config } = await settings.read();
       if (session.service) {
         const service = serviceById(session.id);
-        if (!service?.supported || !settings.backend.providers.some(provider => provider.key === service.id)) return reply(409, { message: "服务不可用，请刷新设置页" });
+        if (!serviceSupported(service, settings.backend)) return reply(409, { message: "服务不可用，请刷新设置页" });
         const values = await serviceValues(credentials, service);
-        const enabled = settings.providerEnabled(config, service.id);
-        if (request.url === "/credential-info") return reply(200, { service: true, connection: service.title + " · " + service.description, canRemove: !enabled,
+        if (request.url === "/credential-info") return reply(200, { service: true, connection: service.title + " · " + service.description, canRemove: true,
           fields: service.fields.map(field => ({ ...field, configured: Boolean(values[field.name]) })) });
         if (!["set", "remove"].includes(input.action)) return reply(400, { message: "无效操作" });
-        if (input.action === "remove" || input.remove?.length) {
-          if (enabled) return reply(409, { message: "请先关闭服务再移除凭据" });
-        }
         if (input.action === "set") {
           validateServiceValues(service, input.values);
           if (input.remove !== undefined && (!Array.isArray(input.remove) || input.remove.some(name => !service.fields.some(field => field.name === name)))) return reply(400, { message: "移除字段无效" });
@@ -56,9 +52,7 @@ export async function createCredentialWindow({ settings, credentials }) {
           validateServiceValues(service, values);
         }
         sessions.delete(input.nonce);
-        const ref = serviceCredentialRef(service.id);
-        if (input.action === "remove" || !Object.keys(values).length) await credentials.remove(ref);
-        else await credentials.set(ref, JSON.stringify(values));
+        await saveServiceValues(credentials, service, input.action === "remove" ? {} : values);
         return reply(200, { message: input.action === "set" ? "配置已保存，账户认证尚未验证。返回设置页可查看各字段状态。" : "凭据已移除，可以关闭此窗口。" });
       }
       const connection = config.connections.find(value => value.id === session.id);
@@ -86,7 +80,7 @@ export async function createCredentialWindow({ settings, credentials }) {
     commitField: input => channel.commit(input),
     async openService(id) {
       const service = serviceById(id);
-      if (!service?.supported || !settings.backend.providers.some(provider => provider.key === id)) throw new Error("此服务尚未接入插件凭据配置，请查看认证说明");
+      if (!serviceSupported(service, settings.backend)) throw new Error("此服务尚未接入插件凭据配置，请查看认证说明");
       for (const [key, value] of sessions) if (value.expires < Date.now()) sessions.delete(key);
       if (sessions.size >= 32) throw new Error("凭据窗口数量已达上限");
       const nonce = randomBytes(32).toString("hex");

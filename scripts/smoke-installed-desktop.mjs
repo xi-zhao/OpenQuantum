@@ -45,7 +45,7 @@ assert.match(await readFile(route, "utf8"), /retained user route preference/);
 assert.match(await readFile(customSkill, "utf8"), /Retain this user Skill/);
 assert.equal(await readFile(userPatch, "utf8"), profilePatch);
 const profile = JSON.parse(await readFile(path.join(home, "profiles/desktop/package.json")));
-assert.equal(Object.keys(profile.dependencies).filter(name => name.startsWith("@openquantum/")).length, 6);
+assert.equal(Object.keys(profile.dependencies).filter(name => name.startsWith("@openquantum/")).length, 7);
 assert.equal(profile.dsh.profile.bundles.filter(name => name === "@openquantum/harness-desktop-profile").length, 1);
 const preset = await readFile(path.join(home, ".agent-presets/openquantum/agent.cordis.yml"), "utf8");
 assert.doesNotMatch(preset, /process\.cwd\(\)|process\.execPath/);

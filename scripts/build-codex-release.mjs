@@ -20,7 +20,7 @@ export async function installerFiles(directory, prefix) {
     "LICENSE": "LICENSE",
     "THIRD_PARTY_NOTICES.md": "THIRD_PARTY_NOTICES.md",
   };
-  for (const file of ["scripts/install-codex-plugin.mjs", "scripts/probe-chatgpt.mjs", "scripts/probe-codex-host.mjs", "runtime/chatgpt/server.mjs", "src/settings/credential-seal.mjs", "distributions/codex-plugin/package.json"]) inputs[file] = file;
+  for (const file of ["scripts/install-codex-plugin.mjs", "scripts/probe-chatgpt.mjs", "scripts/probe-codex-host.mjs", "runtime/chatgpt/settings-resource.mjs", "src/settings/credential-seal.mjs", "distributions/codex-plugin/package.json"]) inputs[file] = file;
   for (const [target, source] of Object.entries(inputs)) files[`${prefix}/${target}`] = new Uint8Array(await fs.readFile(path.join(directory, source)));
   return files;
 }

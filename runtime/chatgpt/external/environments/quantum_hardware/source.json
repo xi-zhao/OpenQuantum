@@ -1,0 +1,23 @@
+{
+  "url": "https://codeload.github.com/Lokesh-2025/quantum-hardware-mcp/tar.gz/55dd9a7bcee32a2a99654db6816dad705c0b6f62",
+  "sha256": "400c1403582cf96994fbf2821a00ef7bee870aa1b0c09535d7e9f3c57091f740",
+  "prefix": "quantum-hardware-mcp-55dd9a7bcee32a2a99654db6816dad705c0b6f62",
+  "files": {
+    "server.py": "0fb7d007ca76a9187687c447a9875b46629ce2b86e474ae59297d5414b39ce6d",
+    "snapshot.py": "94f46089ad7bc0a00587f52c5f966e60945761516701bdcca8bf839ff1af086f",
+    "mcp_app.py": "ff7c471417269747e2468ed9be801bf1de81e56b60eab0445936aa92caf6cafa",
+    "tools_chemistry.py": "c13b899f01a13a9ebdadb20aed066eb11029da6130edbf8d65487c1d678e4648",
+    "turso_db.py": "ba396b8af0f89d7aef038dcbad3e742865aaab2c22931194bc0ad0534b9b1b5b",
+    "LICENSE": "6b1b08bda1cbeb0e91adb5b5e5ee9011ac9bd13e138148ef9f584625b53b8e0b",
+    "requirements.txt": "a604850bda8e5beb9e8fc968bad4345c7bd1b31c2901e8ef202067a405d6a4a6",
+    "qforge/__init__.py": "7b0551e9b6107b4c6c74fb29d131125c25357a35fb7f4107cf8fb42632096e28",
+    "qforge/chemistry.py": "1f3f603bf50e2df52547dd90aac3b30f008f3fbad2aaa1178a3e152ff543a79a",
+    "qforge/diagnostics.py": "09719c5f3a8d9d6a318e4117d2b15054e27d463c98a8e0c0cb26af0449f18c4d",
+    "qforge/experiment.py": "3cfadc49722c4b50758355a7b3790150d29a6918dc9fa9be028f5048091abd69",
+    "qforge/forging.py": "4cd7652ff7513b482074f8e8a373a74de5226f2f82c0a1fff52689649d02cc44",
+    "qforge/fragmentation.py": "eb0fa9d773f9467bf835a0d810acef019483993a82505543e15659b7660383c5",
+    "qforge/grouping.py": "cf023d1dd71f614987b80aac6c96c1f1161d551e745304b61b27232cd85a91f6",
+    "qforge/integrals.py": "efe8b782882156793a421b8b1bb0698e09485ba7446798ef6b024b02d35608ba",
+    "qforge/mitigation.py": "565536982f857d93a2b1ce61211e2c5ecb8403e2903ea9f40ba0a6bac2a4f787"
+  }
+}

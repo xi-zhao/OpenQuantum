@@ -1,0 +1,671 @@
+{
+  "schemaVersion": 1,
+  "server": "qiskit_ibm_runtime",
+  "tools": [
+    {
+      "name": "setup_ibm_quantum_account_tool",
+      "description": "Set up IBM Quantum account with credentials.\n\nIf token is not provided, will attempt to use QISKIT_IBM_TOKEN environment variable\nor saved credentials from ~/.qiskit/qiskit-ibm.json",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "default": "",
+            "type": "string"
+          },
+          "channel": {
+            "default": "ibm_quantum_platform",
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "list_backends_tool",
+      "description": "List available IBM Quantum backends.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "least_busy_backend_tool",
+      "description": "Find the least busy operational backend.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "get_backend_properties_tool",
+      "description": "Get detailed properties of a specific backend.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "backend_name": {
+            "type": "string",
+            "description": "Name of the backend (e.g., 'ibm_brisbane')"
+          }
+        },
+        "required": [
+          "backend_name"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "get_backend_calibration_tool",
+      "description": "Get calibration data for a backend including T1, T2 times and error rates.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "backend_name": {
+            "type": "string",
+            "description": "Name of the backend (e.g., 'ibm_brisbane')"
+          },
+          "qubit_indices": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "integer"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Optional list of specific qubit indices to get data for.\n          If not provided, returns data for the first 10 qubits."
+          }
+        },
+        "required": [
+          "backend_name"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "get_coupling_map_tool",
+      "description": "Get the coupling map (qubit connectivity) for an IBM Quantum backend.\n\nSupports both real backends (requires credentials) and fake backends (no credentials).\nUse 'fake_' prefix for offline testing without IBM Quantum credentials.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "backend_name": {
+            "type": "string",
+            "description": "Name of the backend. Examples:\n- Real backends: 'ibm_brisbane', 'ibm_fez' (requires credentials)\n- Fake backends: 'fake_brisbane', 'fake_sherbrooke' (no credentials needed)"
+          }
+        },
+        "required": [
+          "backend_name"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "find_optimal_qubit_chains_tool",
+      "description": "Find optimal linear qubit chains for quantum experiments.\n\nAlgorithmically identifies the best qubit chains based on coupling map\nconnectivity and calibration data. Essential for experiments requiring\nlinear qubit arrangements (e.g., variational algorithms, error correction).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "backend_name": {
+            "type": "string",
+            "description": "Name of the backend (e.g., 'ibm_brisbane')"
+          },
+          "chain_length": {
+            "default": 5,
+            "type": "integer",
+            "description": "Number of qubits in the chain (default: 5, range: 2-20)"
+          },
+          "num_results": {
+            "default": 5,
+            "type": "integer",
+            "description": "Number of top chains to return (default: 5, max: 20)"
+          },
+          "metric": {
+            "default": "two_qubit_error",
+            "enum": [
+              "two_qubit_error",
+              "readout_error",
+              "combined"
+            ],
+            "type": "string",
+            "description": "Scoring metric to optimize:\n- \"two_qubit_error\": Minimize sum of CX/ECR gate errors (default)\n- \"readout_error\": Minimize sum of measurement errors\n- \"combined\": Weighted combination of gate errors, readout, and coherence"
+          }
+        },
+        "required": [
+          "backend_name"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "find_optimal_qv_qubits_tool",
+      "description": "Find optimal qubit subgraphs for Quantum Volume experiments.\n\nUnlike linear chains, Quantum Volume benefits from densely connected qubit sets\nwhere qubits can interact with minimal SWAP operations. This tool finds\nconnected subgraphs and ranks them by connectivity and calibration quality.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "backend_name": {
+            "type": "string",
+            "description": "Name of the backend (e.g., 'ibm_brisbane')"
+          },
+          "num_qubits": {
+            "default": 5,
+            "type": "integer",
+            "description": "Number of qubits in the subgraph (default: 5, range: 2-10)"
+          },
+          "num_results": {
+            "default": 5,
+            "type": "integer",
+            "description": "Number of top subgraphs to return (default: 5, max: 20)"
+          },
+          "metric": {
+            "default": "qv_optimized",
+            "enum": [
+              "qv_optimized",
+              "connectivity",
+              "gate_error"
+            ],
+            "type": "string",
+            "description": "Scoring metric to optimize:\n- \"qv_optimized\": Balanced scoring for QV (connectivity + errors + coherence)\n- \"connectivity\": Maximize internal edges and minimize path lengths\n- \"gate_error\": Minimize total two-qubit gate errors on internal edges"
+          }
+        },
+        "required": [
+          "backend_name"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "list_my_jobs_tool",
+      "description": "List user's recent jobs.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "limit": {
+            "default": 10,
+            "type": "integer"
+          }
+        },
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "get_job_status_tool",
+      "description": "Get status of a specific job.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "job_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "job_id"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "get_job_results_tool",
+      "description": "Get measurement results from a completed quantum job.\n\nRetrieves the measurement outcomes (counts) from a job that has finished\nexecution. The job must be in DONE status to retrieve results.\n\nUse this tool after a job submitted with run_sampler_tool has completed.\nFirst check the job status with get_job_status_tool, then retrieve results\nwhen the job status is DONE.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "job_id": {
+            "type": "string",
+            "description": "ID of the completed job (returned by run_sampler_tool)"
+          }
+        },
+        "required": [
+          "job_id"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "cancel_job_tool",
+      "description": "Cancel a specific job.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "job_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "job_id"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "run_estimator_tool",
+      "description": "Run a quantum circuit using the Qiskit Runtime EstimatorV2 primitive.\n\nThe Estimator primitive computes expectation values of observables for quantum circuits.\nThis is essential for variational quantum algorithms (VQE, QAOA), quantum chemistry\nsimulations, and any application requiring expectation value estimation.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "circuit": {
+            "type": "string",
+            "description": "The quantum circuit to execute. Accepts multiple formats:\n    - OpenQASM 3.0 string (recommended):\n      ```\n      OPENQASM 3.0;\n      include \"stdgates.inc\";\n      qubit[2] q;\n      h q[0];\n      cx q[0], q[1];\n      ```\n    - OpenQASM 2.0 string (legacy, auto-detected)\n    - Base64-encoded QPY binary (for tool chaining with transpiler output)\n    The circuit can be parameterized (use parameter_values to bind)."
+          },
+          "observables": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "items": {
+                  "maxItems": 2,
+                  "minItems": 2,
+                  "prefixItems": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "number"
+                    }
+                  ],
+                  "type": "array"
+                },
+                "type": "array"
+              }
+            ],
+            "description": "Observable(s) to measure expectation values. Accepts:\n        - Single Pauli string: \"IIXY\" (identity on qubits 0,1; X on 2; Y on 3)\n        - List of Pauli strings: [\"IIXY\", \"ZZII\", \"XXYY\"]\n        - Weighted Hamiltonian as list of (Pauli, coefficient) tuples:\n          [(\"IIXY\", 0.5), (\"ZZII\", -0.3), (\"XXYY\", 0.2)]\n        Pauli strings use: I (identity), X, Y, Z for each qubit position."
+          },
+          "parameter_values": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "number"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Values for parameterized circuits. If the circuit has parameters\n             (e.g., rotation angles), provide a list of float values in the\n             same order as circuit.parameters. Optional if circuit has no parameters."
+          },
+          "backend_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Name of the IBM Quantum backend (e.g., 'ibm_brisbane').\n         If not provided, uses the least busy operational backend."
+          },
+          "circuit_format": {
+            "default": "auto",
+            "enum": [
+              "qasm3",
+              "qpy",
+              "auto"
+            ],
+            "type": "string",
+            "description": "Format of the circuit input. Options:\n           - \"auto\" (default): Automatically detect format\n           - \"qasm3\": OpenQASM 3.0/2.0 text format\n           - \"qpy\": Base64-encoded QPY binary format"
+          },
+          "optimization_level": {
+            "default": 1,
+            "type": "integer",
+            "description": "Qiskit transpilation optimization level (0-3). Default is 1.\n               Higher levels may produce better circuits but take longer.\n               - 0: No optimization\n               - 1: Light optimization (default, good balance)\n               - 2: Heavy optimization\n               - 3: Highest optimization (slowest)"
+          },
+          "resilience_level": {
+            "default": 1,
+            "type": "integer",
+            "description": "Error mitigation resilience level (0-2). Default is 1.\n             - 0: No error mitigation\n             - 1: Light error mitigation (default, recommended)\n             - 2: Heavy error mitigation (slower but more accurate)"
+          },
+          "zne_mitigation": {
+            "default": true,
+            "type": "boolean",
+            "description": "Enable Zero Noise Extrapolation (ZNE). Default is True.\n           ZNE extrapolates results to the zero-noise limit for better accuracy."
+          },
+          "zne_noise_factors": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "number"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Noise amplification factors for ZNE. Default is (1, 1.5, 2).\n              Only used if zne_mitigation is True."
+          }
+        },
+        "required": [
+          "circuit",
+          "observables"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "delete_saved_account_tool",
+      "description": "Delete a saved IBM Quantum account from disk.\n\nWARNING: This permanently removes credentials from ~/.qiskit/qiskit-ibm.json.\nThe operation cannot be undone. Use list_saved_accounts_tool() first to verify\nthe account name before deletion.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "account_name": {
+            "type": "string",
+            "description": "Name of the saved account to delete (e.g., 'ibm_quantum_platform').\n          Use list_saved_accounts_tool() to find available names."
+          }
+        },
+        "required": [
+          "account_name"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "list_saved_accounts_tool",
+      "description": "List all IBM Quantum accounts saved on disk.\n\nReturns account information from ~/.qiskit/qiskit-ibm.json including account names\nand channels. Useful for checking available accounts before initializing the service\nor before deleting an account. Tokens are masked for security.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "active_account_info_tool",
+      "description": "Get information about the currently active IBM Quantum account.\n\nReturns details about the account being used in the current session, including\nchannel, instance, and name. This is the account used for all quantum operations.\nTokens are masked for security.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "active_instance_info_tool",
+      "description": "Get the Cloud Resource Name (CRN) of the currently active instance.\n\nReturns the instance identifier determining which quantum backends and resources\nare accessible. Important for users with access to multiple instances.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "available_instances_tool",
+      "description": "List all IBM Quantum instances available to the active account.\n\nReturns information about all instances (organizations, projects, or service plans)\nthe user has access to, including CRN, plan type, and name. Each instance provides\naccess to different quantum backends with different quotas.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "usage_info_tool",
+      "description": "Get usage statistics and quota information for the active instance.\n\nReturns detailed metrics including job counts, quantum runtime consumption,\nquota limits, and billing period information. Useful for monitoring resource\nutilization and planning job submissions.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "run_sampler_tool",
+      "description": "Run a quantum circuit using the Qiskit Runtime SamplerV2 primitive.\n\nThe Sampler primitive executes quantum circuits and returns measurement outcome\nsamples. This is the primary way to run quantum circuits on IBM Quantum hardware.\n\nError Mitigation (enabled by default):\n    - Dynamical Decoupling: Suppresses decoherence during idle periods\n    - Twirling: Randomizes errors into stochastic noise for better results",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "circuit": {
+            "type": "string",
+            "description": "The quantum circuit to execute. Accepts multiple formats:\n    - OpenQASM 3.0 string (recommended):\n      ```\n      OPENQASM 3.0;\n      include \"stdgates.inc\";\n      qubit[2] q;\n      bit[2] c;\n      h q[0];\n      cx q[0], q[1];\n      c = measure q;\n      ```\n    - OpenQASM 2.0 string (legacy, auto-detected)\n    - Base64-encoded QPY binary (for tool chaining with transpiler output)\n    Must include measurement operations to produce results."
+          },
+          "backend_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Name of the IBM Quantum backend (e.g., 'ibm_brisbane').\n         If not provided, uses the least busy operational backend."
+          },
+          "shots": {
+            "default": 4096,
+            "type": "integer",
+            "description": "Number of measurement shots (repetitions). Default is 4096.\n   Higher values give more statistical accuracy."
+          },
+          "circuit_format": {
+            "default": "auto",
+            "enum": [
+              "qasm3",
+              "qpy",
+              "auto"
+            ],
+            "type": "string",
+            "description": "Format of the circuit input. Options:\n           - \"auto\" (default): Automatically detect format\n           - \"qasm3\": OpenQASM 3.0/2.0 text format\n           - \"qpy\": Base64-encoded QPY binary format"
+          },
+          "dynamical_decoupling": {
+            "default": true,
+            "type": "boolean",
+            "description": "Enable dynamical decoupling to suppress decoherence\n                 during idle periods. Default is True (recommended)."
+          },
+          "dd_sequence": {
+            "default": "XY4",
+            "enum": [
+              "XX",
+              "XpXm",
+              "XY4"
+            ],
+            "type": "string",
+            "description": "Dynamical decoupling pulse sequence. Options:\n        - \"XX\": Basic X-X sequence\n        - \"XpXm\": X+/X- sequence\n        - \"XY4\": 4-pulse XY sequence (default, most robust)"
+          },
+          "twirling": {
+            "default": true,
+            "type": "boolean",
+            "description": "Enable Pauli twirling on 2-qubit gates to convert coherent\n     errors into stochastic noise. Default is True (recommended)."
+          },
+          "measure_twirling": {
+            "default": true,
+            "type": "boolean",
+            "description": "Enable twirling on measurements for readout error\n             mitigation. Default is True (recommended)."
+          }
+        },
+        "required": [
+          "circuit"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    }
+  ]
+}

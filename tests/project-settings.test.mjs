@@ -521,7 +521,7 @@ test("repository preset exposes reviewed quantum MCPs with safe defaults", async
     assert.deepEqual(byName.get(server)?.credentialRefs, []);
   }
   assert.equal(byName.get("tyxonq_local")?.enabled, false);
-  assert.equal(byName.get("tyxonq_local")?.displayName, "TyxonQ Local");
+  assert.equal(byName.get("tyxonq_local")?.displayName, "TyxonQ 电路与噪声仿真");
   assert.equal(byName.get("tyxonq_local")?.packageVersion, "1.3.0");
   assert.equal(byName.get("tyxonq_local")?.provider, "TyxonQ / OpenQuantum");
   assert.deepEqual(byName.get("tyxonq_local")?.credentialRefs, []);

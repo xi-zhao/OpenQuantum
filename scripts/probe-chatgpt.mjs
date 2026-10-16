@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import { randomUUID } from "node:crypto";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
-import { OPENER, settingsResourceUri } from "../runtime/chatgpt/server.mjs";
+import { OPENER, settingsResourceUri } from "../runtime/chatgpt/settings-resource.mjs";
 import { sealCredentialField } from "../src/settings/credential-seal.mjs";
 
 function credentialOriginOf(resource) {
@@ -52,15 +52,15 @@ export async function probeTransport(transport, discoveredResource) {
         (await client.callTool(encryptedRequest))._meta?.openquantumSettings?.status !== 403) throw new Error("Encrypted credential validation or replay protection failed");
     if (!Array.isArray(settings.services) || !Array.isArray(settings.tools)) throw new Error("Missing service configuration inventory");
     const managed = settings.services.filter(service => service.supported);
-    if (managed.some(service => service.enabled || service.tools.some(tool => tool.enabled)) ||
-        managed.some(service => service.tools.some(tool => tools.some(actual => actual.name === tool.id)))) throw new Error("New credentialed services must be opt-in");
+    if (managed.some(service => service.tools.some(tool => !tool.enabled || !tools.some(actual => actual.name === tool.id)))) throw new Error("Allowed Tools must be discoverable before credentials or installation");
+    if (!tools.some(tool => tool.name === "find_openquantum_skills") || !tools.some(tool => tool.name === "prepare_openquantum_skill")) throw new Error("Missing Agent preparation interface");
     const reference = await client.callTool({ name: "quantum_practices", arguments: { action: "list", limit: 1 } });
     if (reference.isError) throw new Error("Reference tool failed");
     const disabled = await client.callTool({ name: "openquantum_settings", arguments: { action: "tool.set", id: "quantum_practices", enabled: false, revision: settings.revision } });
     if (disabled.isError || (await client.listTools()).tools.some(tool => tool.name === "quantum_practices")) throw new Error("Tool disable did not change inventory");
     if (!(await client.callTool({ name: "quantum_practices", arguments: { action: "list" } })).isError) throw new Error("Disabled Tool accepted a cached call");
-    return { version: client.getServerVersion().version, tools: settings.tools.length, enabledTools: tools.length - 2, skills: settings.skills.length,
-      services: settings.services.length, configurableServices: managed.length, credentialedServicesDefaultOff: true,
+    return { version: client.getServerVersion().version, tools: settings.tools.length, enabledTools: settings.tools.filter(tool => tool.enabled).length, skills: settings.skills.length,
+      services: settings.services.length, configurableServices: managed.length, automaticSelection: true, credentialValuesNeverListed: true,
       globalEntrypoint: opener.name, settingsResourceUri: opener._meta.ui.resourceUri,
       settingsResource: true, crossProcessResource: Boolean(discoveredResource), credentialOriginBound: true,
       credentialAuthorizationBound: true, encryptedCredentialTransport: true, referenceExecution: true, disabledToolRejected: true, hostPlacementVerified: false };
