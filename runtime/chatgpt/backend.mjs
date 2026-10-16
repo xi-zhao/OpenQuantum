@@ -121,6 +121,9 @@ export async function createBackend({ root = PROJECT_ROOT, discover = false, nod
         tools.push(tool);
         routes.set(tool.name, { provider, validate: ajv.compile(tool.inputSchema), capabilityId: declared.capabilityId, contracts: actual });
       }
+    } catch (error) {
+      if (discover) throw new Error(`Provider discovery failed: ${provider.key}`, { cause: error });
+      throw error;
     } finally {
       await client?.close();
     }

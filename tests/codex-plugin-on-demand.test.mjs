@@ -45,7 +45,7 @@ async function fixture(t) {
   };
   await write(catalog);
   events.length = 0;
-  return { root, events, overrides, catalog, write, backend: () => createBackend({ root, connect }) };
+  return { root, events, overrides, catalog, write, backend: (options = {}) => createBackend({ root, connect, ...options }) };
 }
 
 test("startup lists the full bundled catalog without starting any provider; calls start and close only the selected one", async t => {
@@ -98,6 +98,18 @@ test("a broken optional provider does not prevent discovery or another provider'
   await assert.rejects(backend.call("beta", { value: 1 }), /fixture unavailable/);
   await backend.call("alpha", { value: 2 });
   assert.equal(f.events.filter(event => event === "call:alpha").length, 1);
+});
+
+test("build discovery identifies a failed provider and closes the preceding connection", async t => {
+  const f = await fixture(t);
+  const failure = new Error("fixture connection closed");
+  f.overrides.connect = async name => { if (name === "beta") throw failure; };
+  await assert.rejects(f.backend({ discover: true }), error => {
+    assert.match(error.message, /Provider discovery failed: native:\.\/metriq-data-tools\.mjs/);
+    assert.equal(error.cause, failure);
+    return true;
+  });
+  assert.deepEqual(f.events, ["connect:alpha", "close:alpha", "connect:beta"]);
 });
 
 test("cancellation or disable during handshake prevents execution and frees call capacity", async t => {
