@@ -1,0 +1,147 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-16T04:01:14.313198+00:00",
+  "baseRevision": "1f172ac37612c4a5ebade4264a5976f8eab4add2",
+  "codeRevision": "22054cabe9486dd802e205fd7951872c0a187c46",
+  "fullCheck": {
+    "command": "npm run check",
+    "status": "passed",
+    "coreRevision": "8a356b3f",
+    "subsequentChanges": "installation smoke assertions only; separately linted and executed",
+    "rootTests": {
+      "passed": 620,
+      "failed": 0,
+      "conditionalSkipped": 309
+    },
+    "contracts": {
+      "passed": 119,
+      "failed": 0
+    },
+    "groundState": {
+      "passed": 35,
+      "failed": 0
+    },
+    "capabilityContracts": {
+      "passed": 217,
+      "failed": 0,
+      "conditionalSkipped": 1
+    },
+    "benchmarkTests": {
+      "passed": 5,
+      "failed": 0
+    },
+    "localeTests": {
+      "passed": 6,
+      "failed": 0
+    }
+  },
+  "liveQiskit": {
+    "status": "passed",
+    "tests": 1,
+    "command": "OPENQUANTUM_DESKTOP_LIVE=1 node --test --test-name-pattern='real local preparation' tests/desktop-preparation.test.mjs",
+    "checks": [
+      "single-prepare-waits-until-ready",
+      "two-executions-same-agent",
+      "environment-reuse",
+      "policy-denial",
+      "resource-disposal"
+    ]
+  },
+  "independentReview": {
+    "initialRevision": "3f3d4ed2",
+    "fixedRevision": "8a356b3f",
+    "alsoReviewedRevision": "22054cabe9486dd802e205fd7951872c0a187c46",
+    "resolvedP2": [
+      "native-provider-prohibition-migration",
+      "custom-mcp-configuration-loss",
+      "close-before-resource-drain"
+    ],
+    "unresolvedP1P2": 0,
+    "focusedTests": {
+      "passed": 33,
+      "conditionalSkipped": 1
+    },
+    "additionalFixtures": [
+      "js-true-prohibition",
+      "js-false-not-prohibited",
+      "unknown-condition-rejected-without-state-writes"
+    ]
+  },
+  "package": {
+    "sourceRevision": "22054cabe9486dd802e205fd7951872c0a187c46",
+    "sourceDirty": false,
+    "verifiedFiles": 2651,
+    "target": "darwin-arm64"
+  },
+  "isolatedInstallation": {
+    "target": "darwin-arm64",
+    "checks": [
+      "installation",
+      "brand-launcher",
+      "repeat-install",
+      "user-configuration-retained",
+      "explicit-skill-tool-mcp-restrictions-retained",
+      "native-credentials-retained",
+      "profile-bundle-and-dependencies",
+      "persistent-node-and-uv",
+      "independent-working-directory"
+    ],
+    "upstreamClient": "not-bundled",
+    "nativeUI": "not-tested-by-this-command",
+    "scientificValidation": "not_evaluated"
+  },
+  "installedUserState": {
+    "codeRevision": "734554d2c7cb78ded1be2c8c57e3cfa9b9fab701",
+    "unchangedConfigurationFiles": 6,
+    "preservedDisabledProviders": 25,
+    "preservedDisabledTools": 0,
+    "preservedDisabledSkills": 0,
+    "originalDesktopUnchanged": true,
+    "realUserInstallationModifiedDuringPRPreparation": false
+  },
+  "nativeEvidenceBoundary": {
+    "acceptedRevision": "734554d2c7cb78ded1be2c8c57e3cfa9b9fab701",
+    "evidence": "desktop-preparation-wait-2026-10-16.json",
+    "sameRuntimeFileCount": 110,
+    "runtimeDifferences": [
+      "runtime/chatgpt/external/client.mjs",
+      "runtime/chatgpt/server.mjs",
+      "scripts/lib/desktop-preparation-migration.mjs",
+      "scripts/lib/desktop-profile-config.mjs",
+      "scripts/smoke-installed-desktop.mjs"
+    ],
+    "nativeWindowRerunForPR": false
+  },
+  "localArtifacts": {
+    "check-reviewed.log": {
+      "path": ".openquantum/desktop-pr-integration/check-reviewed.log",
+      "sha256": "cc246a4faa1a32e2536e70bf1cae7d7185c60fbbacdf279dcf6f87d9b8b65849"
+    },
+    "live-reviewed.log": {
+      "path": ".openquantum/desktop-pr-integration/live-reviewed.log",
+      "sha256": "0d1eff3bc827e3538501e2c6a2d95acd590e90518d8860b5c2ff31912e0f3f82"
+    },
+    "review-new-regressions.log": {
+      "path": ".openquantum/desktop-pr-integration/review-new-regressions.log",
+      "sha256": "10a8376fbb24aac447dbb714535b028de7b7533e65a15c00d51672dfdcdbd2fa"
+    },
+    "package-reviewed.log": {
+      "path": ".openquantum/desktop-pr-integration/package-reviewed.log",
+      "sha256": "a2f4a0bfdb93bedd9d97c934b2879b84aae76c1f828696f7201389cfbbc6bd2d"
+    },
+    "package-smoke-reviewed.log": {
+      "path": ".openquantum/desktop-pr-integration/package-smoke-reviewed.log",
+      "sha256": "56690fa54f2c247908f60d7a49d0214f151e3a37b690d29baa6a865c804f6dd8"
+    },
+    "package-verification-reviewed.json": {
+      "path": ".openquantum/desktop-pr-integration/package-verification-reviewed.json",
+      "sha256": "30728bfe1816802ecae75bc3788b099fe251644dcb33147e45d29e6a59994ed8"
+    },
+    "installed-preservation-final.json": {
+      "path": ".openquantum/desktop-pr-integration/installed-preservation-final.json",
+      "sha256": "68e2adc6f5a480c62ab690fa3690489acff443035697e626c15fbd6879c3bba8"
+    }
+  },
+  "scientificValidation": "not_evaluated",
+  "ci": "See current PR head checks; no merge or release performed"
+}
