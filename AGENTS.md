@@ -169,4 +169,4 @@ Model Adapter、Host 或 Client Plugin 角色和 scope；上下文已明确时�
 
 ### Domain docs
 
-采用 single-context：根目录 `GLOSSARY.md` 与 `docs/adr/`，按相关任务需要逐步建立；现有架构文档仍为权威。见 [领域文档规则](docs/agents/domain.md)。
+采用 single-context：复用根目录 `CONTEXT.md` 作为唯一术语表，ADR 沿用 `docs/architecture/ADR-*.md`。工程技能模板中的 `GLOSSARY.md` 与 `docs/adr/` 分别映射到这两处。见 [领域文档规则](docs/agents/domain.md)。
