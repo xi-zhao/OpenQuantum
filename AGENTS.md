@@ -154,3 +154,19 @@ Model Adapter、Host 或 Client Plugin 角色和 scope；上下文已明确时�
 - 相关检查通过且已授权目标完成后收口；只有新改动、失败或未解决风险才扩大或重复验证。
   失败时先判断与本次改动的关系：修复授权范围内的问题；无关失败或外部条件受阻则如实报告影响和未验证项，
   不擅自扩修，也不将未通过写成通过。
+
+## Agent skills
+
+以下约定供维护本仓库的工程技能使用；现有任务范围、授权与科学验收规则继续适用。
+
+### Issue tracker
+
+工单和需求规格使用 GitHub Issues：`xi-zhao/OpenQuantum`。见 [工单约定](docs/agents/issue-tracker.md)。
+
+### Triage labels
+
+使用五个默认角色标签：`needs-triage`、`needs-info`、`ready-for-agent`、`ready-for-human`、`wontfix`。见 [标签映射](docs/agents/triage-labels.md)。
+
+### Domain docs
+
+采用 single-context：根目录 `GLOSSARY.md` 与 `docs/adr/`，按相关任务需要逐步建立；现有架构文档仍为权威。见 [领域文档规则](docs/agents/domain.md)。
