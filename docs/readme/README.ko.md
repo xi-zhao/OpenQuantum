@@ -1,12 +1,14 @@
 <h1 align="center"><img src="../../packages/openquantum-web-branding/assets/lockup.svg" width="430" alt="OpenQuantum" /></h1>
 
-<p align="center"><strong>양자 아이디어를 실행으로.</strong><br /><sub>오픈 소스 양자 Agent 및 애플리케이션 플랫폼</sub></p>
+<p align="center"><strong>AI로 연구하려면, 먼저 OpenQuantum을 설치하세요.</strong><br /><sub>오픈 소스 양자 Agent 및 애플리케이션 플랫폼</sub></p>
 
 <p align="center"><a href="../../README.md">简体中文</a> · <a href="./README.en.md">English</a> · <a href="./README.ja.md">日本語</a> · <a href="./README.ko.md">한국어</a> · <a href="./README.es.md">Español</a> · <a href="./README.fr.md">Français</a> · <a href="./README.de.md">Deutsch</a> · <a href="./README.pt.md">Português</a> · <a href="./README.ru.md">Русский</a> · <a href="./README.ar.md">العربية</a></p>
 
-OpenQuantum은 양자 도구, 전문 연구 방법, 애플리케이션을 하나의 플랫폼에 모읍니다. AI Agent에 계산을 요청하고, 통합 앱을 사용하거나, 자신의 알고리즘과 서비스를 추가할 수 있습니다. 모델 서비스와 계산 백엔드는 서로 독립적으로 설정합니다.
+OpenQuantum은 구체적인 연구 과제에 AI를 활용하도록 돕는 오픈 소스 양자 Agent 및 애플리케이션 플랫폼입니다. 지원되는 회로 시뮬레이션, 바닥상태 계산, 동역학 분석부터 시작해 전문 도구로 계산하고 결과를 확인할 수 있습니다. 통합 앱을 사용하거나 자신의 연구 방법을 추가할 수도 있으며, 모델 서비스와 계산 백엔드는 서로 독립적으로 설정합니다.
 
-**질문을 던지고, 계산을 실행하고, 새로운 기능을 함께 만듭니다.**
+**먼저 한 과제를 완수하고, 그 방법을 자신의 연구 질문에 적용하세요.** 예제를 실행하고 입력을 바꾸며 결과를 확인하세요. 코드, 매개변수, 출력을 남겨 다음 연구에 활용할 수 있습니다.
+
+**[Codex 플러그인 설치](../integrations/CODEX_AGENT_INSTALL.md)** · [Desktop 설치](../DESKTOP_INSTALLERS.md)
 
 **OpenQuantum 0.8.3 출시:** [Desktop](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.3) · [Codex 플러그인](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.3). 두 배포판은 같은 제품 버전을 사용합니다. Tools, MCP, Skills를 용도별 8개 범주로 분류하고 검색과 상태 필터를 추가했습니다. Desktop 실행 아이콘도 OpenQuantum으로 통일했습니다.
 

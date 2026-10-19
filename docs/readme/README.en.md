@@ -2,13 +2,17 @@
   <img src="../../packages/openquantum-web-branding/assets/lockup.svg" width="430" alt="OpenQuantum" />
 </h1>
 
-<p align="center"><strong>Put your quantum ideas to work.</strong><br /><sub>An open-source quantum agent and application platform</sub></p>
+<p align="center"><strong>Use AI for research. Install OpenQuantum first.</strong><br /><sub>Start with a quantum problem and put specialist methods and computing tools to work with AI</sub></p>
 
 <p align="center"><a href="../../README.md">简体中文</a> · <a href="./README.en.md">English</a> · <a href="./README.ja.md">日本語</a> · <a href="./README.ko.md">한국어</a> · <a href="./README.es.md">Español</a> · <a href="./README.fr.md">Français</a> · <a href="./README.de.md">Deutsch</a> · <a href="./README.pt.md">Português</a> · <a href="./README.ru.md">Русский</a> · <a href="./README.ar.md">العربية</a></p>
 
-OpenQuantum is an open-source agent and application platform for quantum research, experiments and teaching. Use natural language to select methods, run specialist software and inspect results; run algorithm examples directly, open Quantum Learning, or contribute your own methods and applications.
+OpenQuantum is an open-source quantum agent and application platform that helps you use AI for concrete research tasks. Start with a research question, a paper's method or an existing program. Ask the agent to write and run calculations with specialist software, inspect the outputs, then adjust inputs or compare methods.
 
-**Ask questions, run calculations and build capabilities together.** Start with a supported task, inspect the tool results, and contribute methods or applications that others can use.
+**Complete one task, then bring the method to your own question.** Start with a supported circuit simulation, ground-state calculation or dynamics analysis. Run an example, change its inputs and inspect the results. Keep code, parameters and outputs for your next investigation.
+
+Choose between two installation options that share the same domain capabilities: the **[Codex plugin](../integrations/CODEX_PLUGIN.md)** brings quantum Skills and scientific Tools into native Codex conversations, with a side panel for capability switches, MCP connections and tokens; **Desktop** includes the research workbench and the separate Quantum Learning application, with model services you configure yourself.
+
+**[Install the Codex plugin](#codex)** · [Install Desktop](#desktop-installer) · [See calculations and results](#use-and-inspect-results)
 
 [Why OpenQuantum](#why-openquantum) · [Capabilities](#what-you-can-do) · [Quick start](#quick-start) · [Results](#use-and-inspect-results) · [Extend](#extend-the-platform) · [Roadmap](#roadmap-and-rsi) · [Contribute](#documentation-and-support) · [Open source](#license-and-acknowledgments)
 
@@ -20,9 +24,7 @@ The research workbench is the platform's conversational and computational entry 
 
 ## Why OpenQuantum
 
-**People, AI and an open ecosystem can build quantum capabilities together.**
-
-OpenQuantum builds on the quantum software ecosystem to make specialist capabilities easier to use, combine and extend. It connects domain methods, agent execution and open tools to concrete tasks. Local calculations, teaching experiments and method validation have practical value today, without depending on a QPU demonstrating an advantage.
+For your first attempt at AI-assisted research, start with an existing example. If you already have a quantum model or program, change inputs, compare methods and inspect the outputs. OpenQuantum brings specialist software and research methods into your agent workflow, helping you work from concrete questions and keep material for review and reuse. Local calculations, teaching experiments and method validation have practical value today, without depending on a QPU demonstrating an advantage.
 
 ### Start with a question, use specialist tools
 
