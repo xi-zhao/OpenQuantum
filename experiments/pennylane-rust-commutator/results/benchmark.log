@@ -1,0 +1,9 @@
+{"case": "one-qubit", "pennylane_ms": 0.0013590918742343813, "rust_total_ms": 0.003714781328847771, "speedup": 0.3658605322687826, "output_terms": 1}
+{"case": "small-4q", "pennylane_ms": 0.30199072222222223, "rust_total_ms": 0.15605834285714287, "speedup": 1.9351142444122138, "output_terms": 110}
+{"case": "dense-16q-64", "pennylane_ms": 10.191042000000001, "rust_total_ms": 5.731542, "speedup": 1.7780628668515386, "output_terms": 2063}
+{"case": "dense-16q-128", "pennylane_ms": 40.388833, "rust_total_ms": 22.259, "speedup": 1.8144944966081133, "output_terms": 8298}
+{"case": "dense-16q-256", "pennylane_ms": 162.220167, "rust_total_ms": 89.940292, "speedup": 1.803642876765399, "output_terms": 32687}
+{"case": "dense-32q-256", "pennylane_ms": 290.283625, "rust_total_ms": 183.2345, "speedup": 1.5842192654767524, "output_terms": 32777}
+{"case": "local-32q-pool512", "pennylane_ms": 30.62125, "rust_total_ms": 6.018459, "speedup": 5.087888776844704, "output_terms": 4325}
+{"case": "sparse-64q-256", "pennylane_ms": 36.7445, "rust_total_ms": 11.173874999999999, "speedup": 3.288429483952523, "output_terms": 5888}
+{"case": "commuting-32q-256", "pennylane_ms": 30.489333000000002, "rust_total_ms": 0.47195833333333337, "speedup": 64.60174732938995, "output_terms": 0}

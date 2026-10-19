@@ -1,0 +1,269 @@
+{
+  "id": "pennylane-differentiable",
+  "title": "PennyLane",
+  "language": "python",
+  "modules": [
+    "pennylane"
+  ],
+  "group": "learning",
+  "workflow": "QNode、自定义电路、算符、测量、设备、梯度、变换与混合优化",
+  "conditions": [],
+  "project": "/Users/xizhao/.local/share/openquantum/desktop/0.8.4-6898f8cd5984151c/runtime/.agents/skills/pennylane-differentiable",
+  "manifest": {
+    "path": ".agents/skills/pennylane-differentiable/pyproject.toml",
+    "sha256": "a54094fb1d25e57d44bdc7f26cb27f7955ade712b4159eb438e82914287cbe64"
+  },
+  "lock": {
+    "path": ".agents/skills/pennylane-differentiable/uv.lock",
+    "sha256": "35ab949679c7eac7e5900385c78d51f76330b1597a65d7800b908ba3d531fdad"
+  },
+  "requiresPython": ">=3.12,<3.13",
+  "dependencies": [
+    "pennylane==0.45.1"
+  ],
+  "dependencyGroups": {},
+  "lockedPackages": [
+    {
+      "name": "appdirs",
+      "version": "1.4.4",
+      "source": {
+        "registry": "https://pypi.org/simple"
+      }
+    },
+    {
+      "name": "autograd",
+      "version": "1.8.0",
+      "source": {
+        "registry": "https://pypi.org/simple"
+      }
+    },
+    {
+      "name": "autoray",
+      "version": "0.8.4",
+      "source": {
+        "registry": "https://pypi.org/simple"
+      }
+    },
+    {
+      "name": "cachetools",
+      "version": "7.2.0",
+      "source": {
+        "registry": "https://pypi.org/simple"
+      }
+    },
+    {
+      "name": "certifi",
+      "version": "2026.7.22",
+      "source": {
+        "registry": "https://pypi.org/simple"
+      }
+    },
+    {
+      "name": "charset-normalizer",
+      "version": "3.5.1",
+      "source": {
+        "registry": "https://pypi.org/simple"
+      }
+    },
+    {
+      "name": "diastatic-malt",
+      "version": "2.15.3",
+      "source": {
+        "registry": "https://pypi.org/simple"
+      }
+    },
+    {
+      "name": "gast",
+      "version": "0.7.0",
+      "source": {
+        "registry": "https://pypi.org/simple"
+      }
+    },
+    {
+      "name": "idna",
+      "version": "3.20",
+      "source": {
+        "registry": "https://pypi.org/simple"
+      }
+    },
+    {
+      "name": "networkx",
+      "version": "3.7",
+      "source": {
+        "registry": "https://pypi.org/simple"
+      }
+    },
+    {
+      "name": "numpy",
+      "version": "2.5.3",
+      "source": {
+        "registry": "https://pypi.org/simple"
+      }
+    },
+    {
+      "name": "openquantum-pennylane-differentiable",
+      "version": "0.1.0",
+      "source": {
+        "virtual": "."
+      }
+    },
+    {
+      "name": "packaging",
+      "version": "26.3",
+      "source": {
+        "registry": "https://pypi.org/simple"
+      }
+    },
+    {
+      "name": "pennylane",
+      "version": "0.45.1",
+      "source": {
+        "registry": "https://pypi.org/simple"
+      }
+    },
+    {
+      "name": "pennylane-lightning",
+      "version": "0.45.0",
+      "source": {
+        "registry": "https://pypi.org/simple"
+      }
+    },
+    {
+      "name": "requests",
+      "version": "2.34.2",
+      "source": {
+        "registry": "https://pypi.org/simple"
+      }
+    },
+    {
+      "name": "rustworkx",
+      "version": "0.18.1",
+      "source": {
+        "registry": "https://pypi.org/simple"
+      }
+    },
+    {
+      "name": "scipy",
+      "version": "1.18.1",
+      "source": {
+        "registry": "https://pypi.org/simple"
+      }
+    },
+    {
+      "name": "scipy-openblas32",
+      "version": "0.3.34.237.0",
+      "source": {
+        "registry": "https://pypi.org/simple"
+      }
+    },
+    {
+      "name": "termcolor",
+      "version": "3.3.0",
+      "source": {
+        "registry": "https://pypi.org/simple"
+      }
+    },
+    {
+      "name": "tomlkit",
+      "version": "0.15.1",
+      "source": {
+        "registry": "https://pypi.org/simple"
+      }
+    },
+    {
+      "name": "typing-extensions",
+      "version": "4.16.0",
+      "source": {
+        "registry": "https://pypi.org/simple"
+      }
+    },
+    {
+      "name": "urllib3",
+      "version": "2.8.0",
+      "source": {
+        "registry": "https://pypi.org/simple"
+      }
+    }
+  ],
+  "convenienceTools": [
+    "differentiate_pennylane_circuit"
+  ],
+  "hostWorkflow": "quantum-sdk-workbench",
+  "providers": [
+    {
+      "name": "pennylane_local",
+      "activation": "always"
+    }
+  ],
+  "apiAccess": "host-code",
+  "executionVerified": "not_checked",
+  "scientificValidation": "not_evaluated",
+  "environmentState": "prepared",
+  "setup": {
+    "tool": "prepare_openquantum_skill",
+    "sdkId": "pennylane-differentiable",
+    "effect": "workspace-write-and-download",
+    "note": "执行需要时准备；检查与定位本身不安装。"
+  },
+  "run": {
+    "command": "/Users/xizhao/.openquantum/plugins/codex/environments/python/pennylane-differentiable/bin/python",
+    "args": [
+      "-B",
+      "<absolute-script.py>"
+    ],
+    "cwd": "<user-workspace>",
+    "effect": "depends-on-script",
+    "resourceLimits": "host-and-user-budget",
+    "environment": {
+      "OPENQUANTUM_PYTHON_ENV_ROOT": "/Users/xizhao/.openquantum/plugins/codex/environments/python",
+      "OPENQUANTUM_NATIVE_SDK_ROOT": "/Users/xizhao/.openquantum/plugins/codex/environments/native",
+      "OPENQUANTUM_SDK_SOURCE_ROOT": "/Users/xizhao/.openquantum/plugins/codex/environments/sources",
+      "OPENQUANTUM_QDMI_HOME": "/Users/xizhao/.openquantum/plugins/codex/environments/qdmi",
+      "OPENQUANTUM_JULIA_DEPOT_PATH": "/Users/xizhao/.openquantum/plugins/codex/environments/julia"
+    }
+  },
+  "documentation": {
+    "command": "/Users/xizhao/.openquantum/plugins/codex/environments/python/pennylane-differentiable/bin/python",
+    "args": [
+      "-m",
+      "pydoc",
+      "<module-from-modules>"
+    ],
+    "note": "Read the installed version's public API; this may import the selected module."
+  },
+  "source": null,
+  "bootstrap": null,
+  "readinessMeaning": "prepared verifies dependency markers and interpreter or native binary integrity, not API or scientific acceptance",
+  "dashboard": {
+    "id": "pennylane-differentiable",
+    "title": "PennyLane",
+    "state": "ready",
+    "requirements": {
+      "supported": true,
+      "note": "运行环境独立安装；账户要求见对应服务的配置说明。",
+      "fields": [],
+      "prerequisite": "安装前需准备本机 uv；安装器会准备对应的固定 Python 版本。"
+    },
+    "configuration": {},
+    "configurationRevision": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+    "fingerprint": "75292ae90a7fbc068aaa4191b01f0226e7de07e90ad3449e2c04b3f603cce937",
+    "ready": true,
+    "checkedAt": "2026-10-19T23:30:24.361Z",
+    "checks": [
+      "固定依赖与模块加载已检查；实际计算结果需在调用后确认"
+    ],
+    "optionalSimulation": false,
+    "installation": "present",
+    "job": {
+      "id": "b6000406-8e0b-4ccc-85e2-b843e8e60be9",
+      "operation": "install",
+      "status": "completed",
+      "phase": "环境检查完成",
+      "startedAt": "2026-10-19T23:30:09.523Z",
+      "finishedAt": "2026-10-19T23:30:24.363Z",
+      "message": "运行环境已准备；使用限制保持不变。",
+      "synced": true
+    },
+    "conditions": []
+  }
+}
