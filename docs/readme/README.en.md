@@ -28,6 +28,12 @@ The research workbench is the platform's conversational and computational entry 
 
 For your first attempt at AI-assisted research, start with an existing example. If you already have a quantum model or program, change inputs, compare methods and inspect the outputs. OpenQuantum brings specialist software and research methods into your agent workflow, helping you work from concrete questions and keep material for review and reuse. Local calculations, teaching experiments and method validation have practical value today, without depending on a QPU demonstrating an advantage.
 
+### Improve open-source tools for research with AI
+
+We work with open-source tools including Qiskit, PennyLane, PyZX, TeNPy and Stim / PyMatching, improving environment preparation, agent access, research workflows and result checks. Installing OpenQuantum lets you reuse this work, so AI can start with specialist methods and runnable programs, then adapt, compare and optimize them for your question.
+
+This work connects method selection, program execution, comparisons and result checks, reducing repeated setup of tools and workflows. Performance improvements also come with measured evidence: the [PennyLane case](#pennylane-rust-case) reduced a research calculation's complete call from **30.62 ms to 6.02 ms, a 5.09× speedup**, with result checks and reproduction records.
+
 ### Start with a question, use specialist tools
 
 **Turn a research question into exploration.** You can begin a supported task without first learning every SDK: Skills supply methods, the agent calls specialist Tools, and the workbench records inputs and results. We aim to reduce repeated setup, interface learning and workflow construction so learners can experiment and researchers can spend more time forming hypotheses, designing comparisons and judging results. These judgments remain yours.
