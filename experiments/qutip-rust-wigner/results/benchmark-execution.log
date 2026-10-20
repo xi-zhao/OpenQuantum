@@ -1,0 +1,5 @@
+tiny: QuTiP 0.0645 -> Rust 0.0105 ms; 6.120x; fastest accurate QuTiP qutip_clenshaw
+small: QuTiP 1.8177 -> Rust 0.2396 ms; 7.587x; fastest accurate QuTiP qutip_clenshaw
+medium: QuTiP 19.1513 -> Rust 3.2149 ms; 5.957x; fastest accurate QuTiP qutip_clenshaw
+representative: QuTiP 171.7721 -> Rust 30.1832 ms; 5.691x; fastest accurate QuTiP qutip_clenshaw
+Saved 144 raw samples; each sample's final complete output checked and hashed.

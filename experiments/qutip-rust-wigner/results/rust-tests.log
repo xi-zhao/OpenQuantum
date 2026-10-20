@@ -1,0 +1,19 @@
+   Compiling pyo3-ffi v0.29.0
+   Compiling pyo3 v0.29.0
+   Compiling openquantum-qutip-wigner-case v0.1.0 (/Volumes/Elements/CodexWorkspaces/managed-worktrees/qutip-rust-case/openQuantum/experiments/qutip-rust-wigner)
+    Finished `release` profile [optimized] target(s) in 5.60s
+     Running unittests rust/lib.rs (target/release/deps/qutip_wigner_rust-e4f698a5165cfd8d)
+
+running 3 tests
+test tests::imaginary_coherence_has_correct_orientation ... ok
+test tests::vacuum_and_one_photon_match_closed_forms ... ok
+test tests::tiled_grid_matches_scalar_including_partial_tile ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests qutip_wigner_rust
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

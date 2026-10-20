@@ -1,0 +1,111 @@
+{
+  "created_at_utc": "2026-10-20T02:55:52.226240+00:00",
+  "repository": "https://github.com/xi-zhao/OpenQuantum",
+  "baseline_commit": "ce5bf3cb53203cadde30ed725fc2216e66c2f5cf",
+  "branch": "c/qutip-rust-wigner",
+  "openquantum": {
+    "version": "0.8.4",
+    "skill": "quantum-sdk-workbench",
+    "sdk": "fatqat-workbench",
+    "manifest": {
+      "path": ".agents/skills/fatqat-workbench/pyproject.toml",
+      "sha256": "bbdfe05624325591e169a8a3b9ec5c4fd7499a3feb1181b21ffd1b42a3069970"
+    },
+    "lock": {
+      "path": ".agents/skills/fatqat-workbench/uv.lock",
+      "sha256": "81585c30cfe2a31228c9f17ada446b3fc190e2d05be69a2cb3efa82c43b5bff8"
+    },
+    "preparation_receipt": "results/openquantum-preparation.json",
+    "locator_receipt": "results/openquantum-sdk.json",
+    "upstream_libraries_modified": false,
+    "model_api_calls": false,
+    "qpu_or_cloud_calls": false
+  },
+  "upstream": {
+    "package": "qutip",
+    "version": "5.3.1",
+    "wigner_py_sha256": "5095207d57d0532199775e1adc802ad4b0ea229027d77a79fc15e8d959fbb99d",
+    "url": "https://qutip.readthedocs.io/en/stable/_modules/qutip/wigner.html",
+    "license": "BSD-3-Clause",
+    "notice": "NOTICE.md",
+    "full_license": "LICENSE.txt"
+  },
+  "measurement": {
+    "rounds": 9,
+    "warmups": 2,
+    "raw_rows": 144,
+    "includes": "state conversion, contract checks, recurrence preparation, FFI, writable complete output",
+    "excludes": "setup, compilation, input generation, result checks",
+    "compiler_environment": {
+      "RUSTFLAGS": null,
+      "CARGO_ENCODED_RUSTFLAGS": null
+    },
+    "recorded_source_binding": "All measured and validated source digests match current files; make_report.py was added for presentation after measurement and is recorded separately."
+  },
+  "extension": {
+    "sha256": "ba06ad316a024dbfb70bbf740f8f17b92fed419989f63a9f0ce7e5f01b507f5c",
+    "included_in_git": false,
+    "rebuild": "python build.py with the prepared SDK interpreter; cargo build --release --locked"
+  },
+  "review": "results/review.md",
+  "scientific_acceptance": "not_evaluated_by_central_Acceptance_Builder",
+  "current_scientific_sources_sha256": {
+    "case.py": "be983d1354623a32c98d65244318abfdb4dc8612bd9539da1722c896996574a7",
+    "workloads.py": "7de104cb6a75b9d864deac8da385dfc5d6e75a5f8c6078ef800000b10ca0248e",
+    "common.py": "6cef5808a973120110591a7f913b9f57b337fd8bb08da7ab5853478b56c892a3",
+    "validate.py": "8602592f0188f2d3f60108dae0e1c9a2334a395d94b8e346a28105d1a3d04a77",
+    "benchmark.py": "5f6e7334cfda8862cc75a79d7ee60449394e9347f478e1a9ce1ca96a5c5af522",
+    "plan.json": "a1427ddf38d2e224ab7d77e6ec2fdcfec22548de22a77243ee0b4db6341688d5",
+    "Cargo.toml": "d0e59514e14d452b4c5ccedd1268ae6f895cae15351756c1f7af9ab696405ee2",
+    "Cargo.lock": "1f087481ea7a6c3fc11489b744b93ee7b9774959694d90bf429a2890bd249c3d",
+    "build.rs": "c609c2f1a8594abf959388e559d76241e51b0216faa7b37f529255eb1fc2c5eb",
+    "rust/lib.rs": "f6da483144d796d475bfcec24e89e7feaedd457598a5d273fe63b334fdec5e66"
+  },
+  "files_sha256": {
+    ".gitignore": "9ca6802b545bc711979bfa233936362b8fcdb88c967b5b33a38248af1326644f",
+    "Cargo.lock": "1f087481ea7a6c3fc11489b744b93ee7b9774959694d90bf429a2890bd249c3d",
+    "Cargo.toml": "d0e59514e14d452b4c5ccedd1268ae6f895cae15351756c1f7af9ab696405ee2",
+    "LICENSE.txt": "7bb5cf18e69c6321d9283f5fa390480417466d03344bf30190ef15303eb8fd39",
+    "NOTICE.md": "48bbf5f69a323ac34264e41ca370f61740817a3d01c55bd57403f2ad086f1ef5",
+    "README.md": "3da9aa65463c772cf38b2de96ed7c97d19346e7aabf46a910353363d6135e7b8",
+    "benchmark.py": "5f6e7334cfda8862cc75a79d7ee60449394e9347f478e1a9ce1ca96a5c5af522",
+    "build.py": "f4a3f8ed8cdb1d7bc45b070ebf35015b131d6f25cbcbdfdb6158b2a0335b128d",
+    "build.rs": "c609c2f1a8594abf959388e559d76241e51b0216faa7b37f529255eb1fc2c5eb",
+    "case.py": "be983d1354623a32c98d65244318abfdb4dc8612bd9539da1722c896996574a7",
+    "common.py": "6cef5808a973120110591a7f913b9f57b337fd8bb08da7ab5853478b56c892a3",
+    "make_report.py": "d7e1fa081fee7e33383fe91c6d70f30b66c949dcad2dba3daf9eb481f102b8a4",
+    "plan.json": "a1427ddf38d2e224ab7d77e6ec2fdcfec22548de22a77243ee0b4db6341688d5",
+    "probe.py": "f07bfe11387af635a9b116e7a0b53bfbc3654d214ce0b507be719480953d7d9c",
+    "reproduce.py": "0572da529610912bf7f14885be44118ef670c7bedc2600fba9c05ce225dc0199",
+    "results/benchmark-execution.log": "a220f09c1c0dfda50efb1b740229f4afc897b3cdc48a455cbbf242954c40bf3c",
+    "results/benchmark.json": "ac6873253e9c7e60e2f57a4c22b52afeb8339d267bc4d8639cbe3bdc9207baaa",
+    "results/build-execution.log": "ad0193dcb64af03f9654839f53f2a76ac20321d4023ada5d23525b0cf38d094c",
+    "results/build.json": "f15dcaea3c1264e34991f5cfdb5c7aa18389cc8006b16dfc32e828139947a587",
+    "results/build.log": "4915839896706ca5a47fe84fd32c83590f394b3c0e75f31c50f963ac1595a0b4",
+    "results/exploration.json": "6867a5f7c9dfd2ccbc8c03d6f0b84fe4c38e3311d8c104aa96166ef2102b26f9",
+    "results/first-probe-execution.log": "67e48ea818bfd56fe6963b0a2dd19f49e8e15d27e44be6a5ff91ca7985311f81",
+    "results/medium-inputs-outputs.npz": "bcf08bf830b31f7f03e8c8905d1d54bf883cd36967b12c7f565d58d56768ba5c",
+    "results/openquantum-preparation.json": "8af4eb901b7376f4f5f77790550b436addc3057ffb2aa5169e33ef1e9367af75",
+    "results/openquantum-sdk.json": "5c7e59eec56d7ff1bf769833c0989df38e3c533f06b781ad81c1cbabca4a640e",
+    "results/probe-execution.log": "015291ab35b5789001bb43280e883af7d62f4d75f8293996b63eff750634bb10",
+    "results/raw-timings.csv": "b951712547f4bdddb96e94653f0d48f9ecf6e1c1f3c1c908ff8632286df9880a",
+    "results/report.html": "991ab11fc149240b7c5cbbc63574487b48ac017f9aeb514e91fee1eebfdc7e2a",
+    "results/representative-inputs-outputs.npz": "6e8292570f1da6c4a6b0d8bf1b2a7aa5a7c3f80f132678caddbec1195cfbeba7",
+    "results/review.md": "4bb252e3b14763d631c30640bfdae5a9fecc3edf5ba1ad8bb10150556bfcb9c0",
+    "results/rust-tests.log": "ee255b2c19e0d7d01a097331417b347c68f210935b266a5e7d00795ecd51cf5a",
+    "results/scalar-rust-build.json": "c64a033d438385574e7a7e5d362d94d38be41610e0c430360067d59ef20b8e5e",
+    "results/scalar-rust-probe.json": "6867a5f7c9dfd2ccbc8c03d6f0b84fe4c38e3311d8c104aa96166ef2102b26f9",
+    "results/small-inputs-outputs.npz": "78cdc81c6ebe96c6bdaf0e5d977aded09d1325e243251b759e3b0e0f754374f3",
+    "results/summary.json": "a3b315e771103df017aa82c287a30a04f0166961247a57485270f9107cb82ce0",
+    "results/timings.png": "e160f7d2afe37513ef867fdad55843b558c9e59a757e96ca568600c99e8fce6d",
+    "results/timings.svg": "fd7586e5571052a83eae7595ec61b6df03bbda5beed64084db18605f6a458f2f",
+    "results/tiny-inputs-outputs.npz": "ca6a80d59dd81e491bd76ecb2356e2622b20c235113dbe317e7296753ed2647f",
+    "results/validate-execution.log": "4a53612459730f754b09fea1747facd5bb27d0ae98e3eed31fff6366b7bc37ac",
+    "results/validation.json": "fb2f1468b56a0ee525cdbb4a40d3a1015da956fdf4501b0627501710244880af",
+    "results/wigner-comparison.png": "b33a32726b31a9a13ddc9fad7d3a08780e8563a169b35e54e692756006c590f7",
+    "rust/lib.rs": "f6da483144d796d475bfcec24e89e7feaedd457598a5d273fe63b334fdec5e66",
+    "validate.py": "8602592f0188f2d3f60108dae0e1c9a2334a395d94b8e346a28105d1a3d04a77",
+    "workloads.py": "7de104cb6a75b9d864deac8da385dfc5d6e75a5f8c6078ef800000b10ca0248e"
+  },
+  "inventory_note": "Experiment-relative paths. Excludes generated native binary, Cargo target cache and this manifest to avoid circular hashes."
+}

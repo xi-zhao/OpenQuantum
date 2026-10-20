@@ -1,0 +1,4 @@
+   Compiling pyo3-ffi v0.29.0
+   Compiling pyo3 v0.29.0
+   Compiling openquantum-qutip-wigner-case v0.1.0 (/Volumes/Elements/CodexWorkspaces/managed-worktrees/qutip-rust-case/openQuantum/experiments/qutip-rust-wigner)
+    Finished `release` profile [optimized] target(s) in 3.39s

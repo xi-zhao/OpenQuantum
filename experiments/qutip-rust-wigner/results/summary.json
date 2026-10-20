@@ -1,0 +1,17 @@
+{
+  "hardware": "Apple M4",
+  "baseline_ms": 171.772125,
+  "rust_ms": 30.183249999999997,
+  "speedup": 5.690975126932984,
+  "checks": 272,
+  "max_default_error": 6.522560269672795e-16,
+  "max_independent_error": 6.328271240363392e-15,
+  "raw_samples": 144,
+  "task": {
+    "dimension": 64,
+    "nx": 201,
+    "ny": 201,
+    "rank": 4,
+    "g": 1.4142135623730951
+  }
+}
