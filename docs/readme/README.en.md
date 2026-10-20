@@ -14,7 +14,9 @@ Choose between two installation options that share the same domain capabilities:
 
 **[Install the Codex plugin](#codex)** · [Install Desktop](#desktop-installer) · [See calculations and results](#use-and-inspect-results)
 
-[Why OpenQuantum](#why-openquantum) · [Capabilities](#what-you-can-do) · [Quick start](#quick-start) · [Results](#use-and-inspect-results) · [Extend](#extend-the-platform) · [Roadmap](#roadmap-and-rsi) · [Contribute](#documentation-and-support) · [Open source](#license-and-acknowledgments)
+**Start with a measured case:** [Use OpenQuantum to develop and verify a Rust optimization for PennyLane](#pennylane-rust-case), with a **5.09× speedup for the complete call** on the representative task.
+
+[Why OpenQuantum](#why-openquantum) · [PennyLane case](#pennylane-rust-case) · [Capabilities](#what-you-can-do) · [Quick start](#quick-start) · [Results](#use-and-inspect-results) · [Extend](#extend-the-platform) · [Roadmap](#roadmap-and-rsi) · [Contribute](#documentation-and-support) · [Open source](#license-and-acknowledgments)
 
 **OpenQuantum 0.8.3 is available:** [Desktop](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.3) · [Codex plugin](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.3). Both use the same product version. Tools, MCP and Skills have eight use categories, search and status filters. Desktop launchers now use the OpenQuantum icon.
 
@@ -43,6 +45,50 @@ For your first attempt at AI-assisted research, start with an existing example. 
 **Keep choice with users and contributors.** Open implementations and extension interfaces let you inspect, modify and maintain your own combination. Model services and computing backends are configured separately, so applications need not be tied to one model or device. Upstream authors, licenses and contributions remain visible; users decide whether to share research data. Our goal is to preserve professional methods that remain useful as models, computing resources and research directions change.
 
 An investigation that becomes possible, a method applied to a new problem, or a contributor creating an application are all forms of value we want to accumulate. The next step is to make that experience improve the [capabilities used in the next round of research](#research-that-improves-how-research-is-done).
+
+<a id="pennylane-rust-case"></a>
+
+## Measured case: optimize a PennyLane calculation with OpenQuantum
+
+**Define the task, write Rust, measure performance and check the results.** On 2026-10-20, we used OpenQuantum 0.8.4 within Codex to optimize a PennyLane operator calculation. The representative task's complete call fell from **30.62 ms to 6.02 ms, a 5.09× speedup**. The case preserves its source, inputs, outputs and raw timings.
+
+### How OpenQuantum was used
+
+1. **Prepare specialist software.** The agent read OpenQuantum's PennyLane Skill and used OpenQuantum's capability discovery and preparation interfaces to prepare the selected PennyLane 0.45.1 native SDK. The Skill's locator supplied the actual interpreter and environment.
+2. **Establish comparable baselines.** We called PennyLane's own `PauliSentence.commutator()`, fixed the random seed and nine input families, and added a Python control with the same bitmask algorithm to separate representation improvements from Rust implementation gains.
+3. **Implement and run the optimization.** The agent represented Pauli operators with bitmasks, wrote the commutator kernel in Rust and connected it to Python with PyO3. Codex's code tools built, checked and timed the prototype. Inputs and return values remained PennyLane `PauliSentence` objects.
+4. **Check and preserve the evidence.** We compared Rust outputs term by term with PennyLane reference outputs, checked the mathematics using independently constructed matrices, and saved the reproduction scripts, full inputs and outputs, raw samples and independent review.
+
+OpenQuantum supplied domain workflow guidance and controlled SDK preparation; the agent and host code tools performed the development and experiment. See the [case documentation](../../experiments/pennylane-rust-commutator/README.md#openquantum-实际路径与复跑) for preparation receipts and the actual execution path.
+
+### Measured speedup
+
+The representative task computes one commutator between a **32-qubit local Hamiltonian with 125 terms** and **one sum of 512 two-body terms**. On an Apple M4, using PennyLane 0.45.1 and single-thread settings, the medians of nine interleaved warm rounds were:
+
+| Implementation | Complete call | Speedup over PennyLane |
+| --- | ---: | ---: |
+| Native PennyLane | 30.62 ms | 1.00× |
+| Bitmask Python control | 9.50 ms | 3.22× |
+| Bitmask Rust | **6.02 ms** | **5.09×** |
+
+The complete call includes input conversion, the language boundary, computation and output object reconstruction. SDK preparation and compilation are excluded. Representation improvements account for part of the gain: Rust's complete call was a further **1.58× faster** than the matched Python control. With the same pre-encoded inputs, the Rust computation kernel was **19.72× faster**.
+
+### Result checks
+
+- **Independent matrices:** exhaustive checks of all **4,368 pairs of 1–3-qubit Pauli words** agreed exactly. Across 40 random complex-coefficient operator pairs, the maximum matrix absolute error was **1.42×10⁻¹⁴**.
+- **Term-by-term benchmark outputs:** Rust and PennyLane reference Pauli terms and coefficients agreed exactly for all nine benchmark inputs. The complete inputs and both sets of outputs are retained for replay.
+- **Independent review:** the reviewer checked phases, complex coefficients, the 64-qubit boundary, all **405 raw timing samples** and their statistics, and found no unresolved substantive mathematical or timing issue.
+
+This prototype supports fixed binary64 real or complex coefficients on at most 64 qubits, without automatic differentiation or broadcasting. Tiny tasks can be slower; commuting inputs with zero output show larger gains. The 5.09× result applies to the specified task and does not establish a speedup for PennyLane as a whole or a complete VQE workflow.
+
+<details>
+<summary><strong>View all nine measured input families</strong></summary>
+
+![Complete-call timings and speedups for PennyLane, bitmask Python and Rust across all input families](../../experiments/pennylane-rust-commutator/results/timings.png)
+
+</details>
+
+[Source and reproduction steps](../../experiments/pennylane-rust-commutator/README.md) · [Raw timings](../../experiments/pennylane-rust-commutator/results/raw-timings.csv) · [Numerical checks](../../experiments/pennylane-rust-commutator/results/validation.json) · [Independent review](../../experiments/pennylane-rust-commutator/results/review.md)
 
 ## What you can do
 

@@ -23,6 +23,8 @@ OpenQuantum 是一个开源量子 Agent 与应用平台，帮助你把 AI 用到
 
 **[安装 Codex 插件](#codex-plugin)**　·　[安装 Desktop](#快速开始)　·　[先看计算与结果](#使用与结果)
 
+**先看一个实测案例：**[用 OpenQuantum 完成 PennyLane 的 Rust 优化与结果核对](#pennylane-rust-case)，代表任务完整调用提速 **5.09 倍**。
+
 **当前版本 0.8.4：**[Desktop 下载与发布说明](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.4) · [Codex 插件下载与发布说明](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.4)。两者使用同一产品版本号。
 
 - **更容易找到能力：** Tools、MCP、Skills 按 8 类用途分组，支持搜索和状态筛选。
@@ -30,6 +32,7 @@ OpenQuantum 是一个开源量子 Agent 与应用平台，帮助你把 AI 用到
 
 <p align="center">
   <a href="#为什么选择-openquantum">为什么选择</a> ·
+  <a href="#pennylane-rust-case">PennyLane 实测</a> ·
   <a href="#可以用它做什么">浏览能力</a> ·
   <a href="#codex-plugin">Codex 插件</a> ·
   <a href="#快速开始">开始使用</a> ·
@@ -107,6 +110,50 @@ Agent 可以帮你阅读材料、编写程序和调用工具。安装 OpenQuantu
 这些积累也为[下一轮研究能力的改进](#rsi)提供基础，相关方向与进度在长期规划中说明。
 
 **[先运行一个任务](#快速开始)**　·　[把你的能力接进来](#把你的量子能力接进来)
+
+<a id="pennylane-rust-case"></a>
+
+## 实测案例：用 OpenQuantum 优化 PennyLane 计算
+
+**从提出优化任务，到编写 Rust、测量速度，再到核对结果。** 2026-10-20，我们在 Codex 中结合 OpenQuantum 0.8.4 完成了一次 PennyLane 算符计算优化：代表任务的完整调用从 **30.62 ms 降到 6.02 ms，提速 5.09 倍**。源码、输入、输出和原始计时均随案例保存。
+
+### 用 OpenQuantum 怎么完成
+
+1. **准备专业软件。** Agent 读取 OpenQuantum 的 PennyLane Skill，并通过 OpenQuantum 的能力发现与准备接口，准备本任务所需的 PennyLane 0.45.1 原生 SDK；Skill 的定位器提供实际解释器与环境。
+2. **建立可比较的基线。** 直接调用 PennyLane 自带的 `PauliSentence.commutator()`，固定随机种子和 9 类输入，并增加采用相同位编码算法的 Python 对照，区分数据表示优化与 Rust 实现的收益。
+3. **实现并运行优化。** Agent 用位掩码表示 Pauli 算符，编写 Rust 对易子内核，通过 PyO3 连接 Python。由 Codex 的代码工具完成构建、核验和计时，输入与返回值仍为 PennyLane 的 `PauliSentence`。
+4. **核对并留下证据。** 将 Rust 输出与 PennyLane 参考输出逐项比较，再用独立构造的矩阵检查数学结果；保存复跑程序、完整输入输出、原始样本与独立审阅记录。
+
+OpenQuantum 提供领域工作方法和受控的 SDK 准备路径，Agent 与宿主代码工具执行本次开发和实验。具体准备回执与执行路径见[案例说明](experiments/pennylane-rust-commutator/README.md#openquantum-实际路径与复跑)。
+
+### 实际提速多少
+
+代表任务计算一个 **32 量子位、125 项局域 Hamiltonian** 与一个 **512 项二体算符和**的单个对易子。Apple M4、PennyLane 0.45.1、单线程设定下，9 轮交错热运行的中位数为：
+
+| 实现 | 完整调用耗时 | 相对 PennyLane 的加速 |
+| --- | ---: | ---: |
+| PennyLane 原生 | 30.62 ms | 1.00× |
+| 位编码 Python 对照 | 9.50 ms | 3.22× |
+| 位编码 Rust | **6.02 ms** | **5.09×** |
+
+完整调用包含输入转换、跨语言调用、计算与返回对象重建，不包含 SDK 准备和编译。数据表示优化贡献了一部分收益；Rust 相对同位编码 Python 的完整调用进一步快 **1.58 倍**，相同预编码输入下的计算内核快 **19.72 倍**。
+
+### 结果怎么核对
+
+- **独立矩阵检查：** 穷举 1–3 量子位全部 **4,368 对 Pauli 单项**，结果精确一致；40 组随机复系数算符和的最大矩阵绝对误差为 **1.42×10⁻¹⁴**。
+- **基准输出逐项比较：** 全部 9 组基准的 Rust 输出与 PennyLane 参考输出的 Pauli 项和系数精确一致，完整输入与双方输出均可重读。
+- **独立审阅：** 复查相位、复系数、64 量子位边界、全部 **405 条原始计时**及统计结果，未发现未解决的实质数学或计时问题。
+
+本原型处理最多 64 量子位的固定 binary64 实数/复数系数，不支持自动微分或广播。小任务可能更慢，全可交换的零输出场景收益更大；本次 5.09 倍适用于上述任务，不能外推为 PennyLane 整体或完整 VQE 的提速。
+
+<details>
+<summary><strong>查看全部 9 类输入的实测图表</strong></summary>
+
+![PennyLane、位编码 Python 与 Rust 完整调用的全部场景耗时和加速比](experiments/pennylane-rust-commutator/results/timings.png)
+
+</details>
+
+[源码与复跑步骤](experiments/pennylane-rust-commutator/README.md) · [原始计时](experiments/pennylane-rust-commutator/results/raw-timings.csv) · [数值核对记录](experiments/pennylane-rust-commutator/results/validation.json) · [独立审阅](experiments/pennylane-rust-commutator/results/review.md)
 
 <a id="openquantum-的核心能力"></a>
 <a id="已集成的量子工具与能力"></a>
