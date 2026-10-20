@@ -92,7 +92,7 @@
     "results/report.html": "991ab11fc149240b7c5cbbc63574487b48ac017f9aeb514e91fee1eebfdc7e2a",
     "results/representative-inputs-outputs.npz": "6e8292570f1da6c4a6b0d8bf1b2a7aa5a7c3f80f132678caddbec1195cfbeba7",
     "results/review.md": "4bb252e3b14763d631c30640bfdae5a9fecc3edf5ba1ad8bb10150556bfcb9c0",
-    "results/rust-tests.log": "ee255b2c19e0d7d01a097331417b347c68f210935b266a5e7d00795ecd51cf5a",
+    "results/rust-tests.log": "f7cf0eff39fc057046e9d2884ea3c3267e16d190b1c5ef8667d9490f451b9b5a",
     "results/scalar-rust-build.json": "c64a033d438385574e7a7e5d362d94d38be41610e0c430360067d59ef20b8e5e",
     "results/scalar-rust-probe.json": "6867a5f7c9dfd2ccbc8c03d6f0b84fe4c38e3311d8c104aa96166ef2102b26f9",
     "results/small-inputs-outputs.npz": "78cdc81c6ebe96c6bdaf0e5d977aded09d1325e243251b759e3b0e0f754374f3",
@@ -107,5 +107,6 @@
     "validate.py": "8602592f0188f2d3f60108dae0e1c9a2334a395d94b8e346a28105d1a3d04a77",
     "workloads.py": "7de104cb6a75b9d864deac8da385dfc5d6e75a5f8c6078ef800000b10ca0248e"
   },
-  "inventory_note": "Experiment-relative paths. Excludes generated native binary, Cargo target cache and this manifest to avoid circular hashes."
+  "inventory_note": "Experiment-relative paths. Excludes generated native binary, Cargo target cache and this manifest to avoid circular hashes.",
+  "text_log_normalization": "Only the generated Rust test log trailing blank line was normalized; test output, results and scientific sources are unchanged."
 }
