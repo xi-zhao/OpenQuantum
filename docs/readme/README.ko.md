@@ -1,10 +1,10 @@
 <h1 align="center"><img src="../../packages/openquantum-web-branding/assets/lockup.svg" width="430" alt="OpenQuantum" /></h1>
 
-<p align="center"><strong>AI 연구, OpenQuantum 하나면 충분합니다.</strong><br /><sub>오픈 소스 양자 Agent 및 애플리케이션 플랫폼</sub></p>
+<p align="center"><strong>OpenQuantum — 함께 만드는 신뢰할 수 있는 양자 연구 AI.</strong><br /><sub>양자 연구의 전문 지식을 하나의 OpenQuantum에</sub></p>
 
 <p align="center"><a href="../../README.md">简体中文</a> · <a href="./README.en.md">English</a> · <a href="./README.ja.md">日本語</a> · <a href="./README.ko.md">한국어</a> · <a href="./README.es.md">Español</a> · <a href="./README.fr.md">Français</a> · <a href="./README.de.md">Deutsch</a> · <a href="./README.pt.md">Português</a> · <a href="./README.ru.md">Русский</a> · <a href="./README.ar.md">العربية</a></p>
 
-OpenQuantum은 구체적인 연구 과제에 AI를 활용하도록 돕는 오픈 소스 양자 Agent 및 애플리케이션 플랫폼입니다. 지원되는 회로 시뮬레이션, 바닥상태 계산, 동역학 분석부터 시작해 전문 도구로 계산하고 결과를 확인할 수 있습니다. 통합 앱을 사용하거나 자신의 연구 방법을 추가할 수도 있으며, 모델 서비스와 계산 백엔드는 서로 독립적으로 설정합니다.
+OpenQuantum은 오픈 소스로 공개되고 공동 개발에 열려 있는 양자 연구 AI 플랫폼입니다. 커뮤니티의 우수한 소프트웨어, 알고리즘과 공개 연구 성과를 연결하여 AI가 연구 문제를 분석하고, 방법을 선택하고, 계산을 실행하고, 결과를 확인하도록 돕습니다. 축적된 전문 지식을 실제 연구 역량으로 이어 줍니다.
 
 **먼저 한 과제를 완수하고, 그 방법을 자신의 연구 질문에 적용하세요.** 예제를 실행하고 입력을 바꾸며 결과를 확인하세요. 코드, 매개변수, 출력을 남겨 다음 연구에 활용할 수 있습니다.
 
@@ -34,11 +34,11 @@ Pauli Hamiltonian의 Trotter / qDrift 시뮬레이션과 함께 [qBraid Qiskit/C
 
 ## OpenQuantum을 선택하는 이유
 
-**질문에서 계산으로.** 지원되는 작업을 자연어로 요청하면 Agent가 전문 도구를 호출합니다. 입력, 물리적 가정, 결과에 대한 판단은 사용자가 맡습니다.
+**폭넓은 전문 분야.** 양자 알고리즘과 회로 시뮬레이션부터 양자 화학, 다체 계산, 양자 오류 정정까지 도구와 방법을 연결합니다. 도구를 준비하는 시간을 줄이고 연구 문제를 탐구하는 데 집중할 수 있습니다.
 
-**한 번의 연구를 다음 연구의 출발점으로.** 작업 공간에 도구 입력과 결과를 남기고 조건을 바꾸며 탐구를 이어갈 수 있습니다. 과학적 검증은 각 기능의 지원 범위에 따릅니다.
+**실측으로 확인한 속도 향상.** [PennyLane Pauli 교환자 계산](../../README.md#pennylane-rust-case)과 [QuTiP Wigner 함수 계산](../../README.md#qutip-rust-case)의 최적화 사례에서 대표 과제의 전체 호출 속도가 각각 **5.09배**, **5.69배** 향상되었습니다. 입출력 변환을 포함해 측정했으며, 원래 라이브러리 및 독립적인 참조 계산과 결과를 대조했습니다.
 
-**내 방법을 다른 사람도 쓰는 기능으로.** Skill, 계산 도구, 교육 자료와 앱을 추가할 수 있습니다. 모델과 계산 백엔드는 따로 설정하며, 원본 프로젝트의 저자와 라이선스를 존중합니다.
+**공동 개발로 확장되는 연구 역량.** 가치 있는 오픈 소스 프로젝트와 논문의 방법을 지속적으로 도입하고, 호환성 조정, 통합, 최적화와 검증을 이어 갑니다. 누구나 질문, 코드, 도구, 연구 방법과 재현 사례를 공유하며 참여할 수 있습니다.
 
 ## 빠른 시작
 
@@ -120,6 +120,8 @@ npm run learning:ui:setup
 ## 문서와 기여
 
 Skill은 지식과 절차를 제공하고 Tool Provider는 실행 가능한 도구를 등록합니다. 과학적 검증이 필요한 기능은 독립 Validator와 증거에 기반한 Acceptance를 사용합니다. OpenQuantum은 DeepSeek Harness의 실행 기반을 재사용합니다. 자세한 사용법과 확장 안내는 영어판과 중국어판을 참고하세요.
+
+신뢰할 수 있는 양자 연구 AI를 함께 만들어 갑니다. 문제 제보, 코드와 도구 기여, 연구 방법과 재현 사례 공유 등 누구나 참여할 수 있습니다.
 
 [English](./README.en.md) · [中文](../../README.md) · [Documentation](../README.md) · [Contributing](../../CONTRIBUTING.md) · [Issues](https://github.com/xi-zhao/openQuantum/issues)
 

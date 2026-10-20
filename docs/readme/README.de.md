@@ -1,10 +1,10 @@
 <h1 align="center"><img src="../../packages/openquantum-web-branding/assets/lockup.svg" width="430" alt="OpenQuantum" /></h1>
 
-<p align="center"><strong>Für Forschung mit KI reicht OpenQuantum.</strong><br /><sub>Eine offene Plattform für Quanten-Agenten und Anwendungen</sub></p>
+<p align="center"><strong>OpenQuantum — Gemeinsam vertrauenswürdige KI für die Quantenforschung entwickeln.</strong><br /><sub>Das Fachwissen der Quantenforschung, vereint in OpenQuantum</sub></p>
 
 <p align="center"><a href="../../README.md">简体中文</a> · <a href="./README.en.md">English</a> · <a href="./README.ja.md">日本語</a> · <a href="./README.ko.md">한국어</a> · <a href="./README.es.md">Español</a> · <a href="./README.fr.md">Français</a> · <a href="./README.de.md">Deutsch</a> · <a href="./README.pt.md">Português</a> · <a href="./README.ru.md">Русский</a> · <a href="./README.ar.md">العربية</a></p>
 
-OpenQuantum ist eine Open-Source-Plattform für Quanten-Agenten und Anwendungen, die Sie beim Einsatz von KI für konkrete Forschungsaufgaben unterstützt. Beginnen Sie mit einer unterstützten Schaltungssimulation, Grundzustandsberechnung oder Dynamikanalyse, nutzen Sie Fachwerkzeuge und prüfen Sie die Ergebnisse. Sie können auch integrierte Anwendungen nutzen oder eigene Methoden hinzufügen. Modelldienste und Rechenressourcen werden unabhängig voneinander konfiguriert.
+OpenQuantum ist eine Open-Source-KI-Plattform für die Quantenforschung, offen für gemeinsame Weiterentwicklung. Sie verbindet Software, Algorithmen und veröffentlichte Forschung aus der Community, damit KI bei der Analyse Ihrer Fragen, der Methodenwahl, der Ausführung von Berechnungen und der Prüfung von Ergebnissen helfen kann. So wird gemeinsames Fachwissen praktisch nutzbar.
 
 **Schließen Sie eine Aufgabe ab und wenden Sie die Methode dann auf Ihre eigene Frage an.** Führen Sie ein Beispiel aus, ändern Sie Eingaben und prüfen Sie Ergebnisse. Bewahren Sie Code, Parameter und Ausgaben für Ihre nächste Untersuchung auf.
 
@@ -34,11 +34,11 @@ Jede Integration hat eigene Abhängigkeiten und einen begrenzten wissenschaftlic
 
 ## Warum OpenQuantum
 
-**Von der Frage zur Berechnung.** Beschreiben Sie eine unterstützte Aufgabe in natürlicher Sprache; der Agent ruft die passenden Fachwerkzeuge auf. Sie bestimmen Eingaben und physikalische Annahmen und beurteilen die Ergebnisse.
+**Breite fachliche Abdeckung.** Von Quantenalgorithmen und Schaltungssimulation bis zu Quantenchemie, Vielteilchenrechnungen und Fehlerkorrektur verbindet OpenQuantum Werkzeuge und Methoden. Verbringen Sie weniger Zeit mit der Vorbereitung und mehr mit Ihren Forschungsfragen.
 
-**Jede Untersuchung als Ausgangspunkt.** Der Arbeitsbereich hält Werkzeugeingaben und Ergebnisse fest, sodass Sie mit anderen Parametern weiterarbeiten können. Wissenschaftliche Prüfungen richten sich nach dem Umfang der jeweiligen Fähigkeit.
+**Mehr Tempo, durch Messungen belegt.** Bei der Optimierung einer [Pauli-Kommutatorberechnung mit PennyLane](../../README.md#pennylane-rust-case) und einer [Wigner-Funktion mit QuTiP](../../README.md#qutip-rust-case) waren die vollständigen Aufrufe der repräsentativen Aufgaben **5.09×** beziehungsweise **5.69×** schneller. Die Messungen enthalten die Ein- und Ausgabekonvertierung; die Ergebnisse wurden mit den ursprünglichen Bibliotheken und unabhängigen Referenzrechnungen verglichen.
 
-**Eigene Methoden für andere nutzbar machen.** Sie können Skills, Rechenwerkzeuge, Lehrmaterialien und Anwendungen ergänzen. Modelle und Rechenressourcen werden getrennt konfiguriert; Urheberschaft und Lizenzen der eingebundenen Projekte bleiben sichtbar.
+**Gemeinsame Weiterentwicklung.** Wertvolle Open-Source-Projekte und veröffentlichte Methoden werden fortlaufend eingebunden, angepasst, optimiert und geprüft. Alle können Fragen, Code, Werkzeuge, Methoden und Reproduktionsbeispiele beitragen.
 
 ## Schnellstart
 
@@ -120,6 +120,8 @@ Unter Einstellungen → Allgemein → Sprache stehen vereinfachtes Chinesisch, E
 ## Dokumentation und Mitarbeit
 
 Skills liefern Wissen und Abläufe; Tool Providers registrieren ausführbare Werkzeuge. Wissenschaftlich zu prüfende Fähigkeiten nutzen unabhängige Validatoren und Nachweise zur Bestimmung der Akzeptanz. OpenQuantum verwendet die Laufzeit von DeepSeek Harness. Die englische und chinesische Ausgabe enthalten ausführliche Nutzungs- und Erweiterungsanleitungen.
+
+Entwickeln wir gemeinsam vertrauenswürdige KI für die Quantenforschung. Alle können Probleme melden, Code oder Werkzeuge beitragen sowie Methoden und Reproduktionsbeispiele teilen.
 
 [English](./README.en.md) · [中文](../../README.md) · [Documentation](../README.md) · [Contributing](../../CONTRIBUTING.md) · [Issues](https://github.com/xi-zhao/openQuantum/issues)
 

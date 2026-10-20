@@ -5,8 +5,8 @@
 <p align="center"><a href="./README.md">简体中文</a> · <a href="./docs/readme/README.en.md">English</a> · <a href="./docs/readme/README.ja.md">日本語</a> · <a href="./docs/readme/README.ko.md">한국어</a> · <a href="./docs/readme/README.es.md">Español</a> · <a href="./docs/readme/README.fr.md">Français</a> · <a href="./docs/readme/README.de.md">Deutsch</a> · <a href="./docs/readme/README.pt.md">Português</a> · <a href="./docs/readme/README.ru.md">Русский</a> · <a href="./docs/readme/README.ar.md">العربية</a></p>
 
 <p align="center">
-  <strong>用 AI 做科研，OpenQuantum 就够了。</strong><br />
-  <sub>从量子问题出发，让 AI 用上专业方法与计算工具</sub>
+  <strong>OpenQuantum，共建可信的量子科研智能。</strong><br />
+  <sub>把量子科研的专业积累，汇聚到一个 OpenQuantum</sub>
 </p>
 
 <p align="center">
@@ -15,15 +15,15 @@
   <img src="https://img.shields.io/badge/Node.js-24%2B-3c873a.svg" alt="Node.js 24 or newer" />
 </p>
 
-OpenQuantum 是一个开源量子 Agent 与应用平台，帮助你把 AI 用到具体的科研任务中。带着研究问题、论文方法或已有程序开始，让 Agent 编写程序、调用专业软件完成计算，查看结果，再调整输入或比较方法。
+OpenQuantum 是开源开放的量子科研 AI 平台，连接开源社区的优秀软件、算法与公开研究成果，让 AI 围绕你的研究问题开展分析、选择方法、执行计算并核对结果，把专业积累转化为实际的科研能力。
 
-**先完成一个任务，再把方法用到自己的问题上。** 从已支持的量子电路模拟、基态求解或动力学分析起步，运行示例、修改输入、检查结果。保留程序、参数与计算结果，让下一次研究有据可循。
+从一个研究问题、一篇论文或一段现有程序出发，让 AI 参与科研探索。保留程序、参数与核对记录，让一次研究成为下一次的起点。
 
 选择适合你的安装入口，两者复用同一份领域能力：**[Codex 插件](docs/integrations/CODEX_PLUGIN.md)** 将量子 Skill 与科学 Tool 接入 Codex 原生对话，侧边入口用于管理能力开关、MCP 连接和 Token；**Desktop** 包含科研工作台与独立的量子学习通应用，模型服务可自行配置。
 
 **[安装 Codex 插件](#codex-plugin)**　·　[安装 Desktop](#快速开始)　·　[先看计算与结果](#使用与结果)
 
-**先看一个实测案例：**[用 OpenQuantum 优化 PennyLane 并核对结果](#pennylane-rust-case)，代表任务完整调用提速 **5.09 倍**。
+**先看实测案例：**[PennyLane Pauli 对易子计算](#pennylane-rust-case)完整调用提速 **5.09 倍**；[QuTiP Wigner 函数计算](#qutip-rust-case)完整调用提速 **5.69 倍**，均保留性能对照、结果核对与复跑记录。
 
 **当前版本 0.8.4：**[Desktop 下载与发布说明](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.4) · [Codex 插件下载与发布说明](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.4)。两者使用同一产品版本号。
 
@@ -32,7 +32,7 @@ OpenQuantum 是一个开源量子 Agent 与应用平台，帮助你把 AI 用到
 
 <p align="center">
   <a href="#为什么选择-openquantum">为什么选择</a> ·
-  <a href="#pennylane-rust-case">PennyLane 实测</a> ·
+  <a href="#optimization-cases">优化实测</a> ·
   <a href="#可以用它做什么">浏览能力</a> ·
   <a href="#codex-plugin">Codex 插件</a> ·
   <a href="#快速开始">开始使用</a> ·
@@ -63,13 +63,17 @@ OpenQuantum 是一个开源量子 Agent 与应用平台，帮助你把 AI 用到
 
 ## 为什么选择 OpenQuantum
 
-第一次用 AI 做科研，可以从一个已有示例开始；已经有自己的量子模型或程序，可以继续改输入、换方法、做对照。OpenQuantum 将专业软件与研究方法接入 Agent，帮助你围绕具体问题开展计算、核对结果，并留下可供复查与复用的工作材料。
+### 覆盖广，让研究思路有路可走
 
-### 持续优化开源工具，让 AI 更好地做科研
+从量子算法与线路模拟，到量子化学、多体计算和量子纠错，持续拓展专业方向，打通工具与方法之间的衔接。让研究者少花时间准备工具，多花时间探索问题。Qiskit、PennyLane、QuTiP、PyZX、TeNPy、Stim / PyMatching 等社区项目，为这些研究方向提供专业积累。
 
-我们围绕 Qiskit、PennyLane、PyZX、TeNPy、Stim / PyMatching 等开源工具，持续优化环境准备、Agent 调用、科研工作流程和结果核对。安装 OpenQuantum，可以复用这些已经完成的工作，让 AI 从专业方法和可运行程序起步，围绕你的问题继续修改、比较与优化。
+### 计算快，让更多想法得到验证
 
-这些工作把方法选择、程序运行、方案比较和结果检查连接起来，减少每次从头准备工具与流程的重复劳动。计算效率的优化也保留实测依据：[PennyLane 案例](#pennylane-rust-case)完成了一项科研计算的优化，完整调用从 **30.62 ms 降到 6.02 ms，提速 5.09 倍**，并交付了结果核对与复跑记录。
+持续优化关键计算环节，缩短等待，支持更多比较与尝试。在专项优化案例中，[PennyLane Pauli 对易子计算](#pennylane-rust-case)与 [QuTiP Wigner 函数计算](#qutip-rust-case)的完整调用，分别实现了 **5.09 倍**和 **5.69 倍**加速，结果均经过原库对照与独立参考计算核对。
+
+### 开放共建，让科研能力不断向前
+
+持续引入有价值的开源项目与论文方法，在适配、优化和实际使用中共同改进。OpenQuantum 围绕这些成果建设 Agent 工作流、计算接口与验证记录，让新的工具、方法与经验成为平台继续生长的力量。欢迎所有人[参与建设](#一起建设-openquantum)，一起把社区的专业积累建设成研究者用得上、能检验、愿意信赖的量子科研智能。
 
 <a id="从问题出发调用专业能力"></a>
 <a id="对不同的工作解决不同的难点"></a>
@@ -117,6 +121,7 @@ Agent 可以帮你阅读材料、编写程序和调用工具。安装 OpenQuantu
 
 **[先运行一个任务](#快速开始)**　·　[把你的能力接进来](#把你的量子能力接进来)
 
+<a id="optimization-cases"></a>
 <a id="pennylane-rust-case"></a>
 
 ## 实测案例：优化 PennyLane，提速 5.09 倍
@@ -135,6 +140,23 @@ Agent 可以帮你阅读材料、编写程序和调用工具。安装 OpenQuantu
 5.09 倍是上述计算任务的实测收益。完整测试结果、方法与适用范围见案例报告。
 
 [查看完整案例与复跑步骤](experiments/pennylane-rust-commutator/README.md) · [原始计时](experiments/pennylane-rust-commutator/results/raw-timings.csv) · [结果核对](experiments/pennylane-rust-commutator/results/validation.json) · [独立审阅](experiments/pennylane-rust-commutator/results/review.md)
+
+<a id="qutip-rust-case"></a>
+
+## 实测案例：优化 QuTiP，提速 5.69 倍
+
+**把专业方法变成更高效、可核对的科研计算。** 在 Codex 中结合 OpenQuantum 0.8.4，优化 QuTiP Wigner 函数计算，交付可运行程序、完整相空间输出、性能对照与独立核验记录。
+
+| 计算方式 | 完整调用耗时 |
+| --- | ---: |
+| QuTiP 默认方法 | 171.77 ms |
+| 优化后 | **30.18 ms** |
+
+**完整调用提速 5.69 倍。** 本次任务是在 **64 维单模 Fock 空间、201×201 相空间网格**上计算密度矩阵的 Wigner 函数。数据来自 Apple M4、QuTiP 5.3.1、单线程设定下 9 轮交错热运行的中位数，包含输入读取、转换、检查与完整双精度输出；环境准备、编译和结果核验在计时之外。
+
+**272 项结果检查通过。** 四个规模的完整输出与 QuTiP 默认结果最大绝对差为 **6.52×10⁻¹⁶**；与独立 Laguerre 多项式求和及解析公式的最大绝对差为 **6.33×10⁻¹⁵**。检查覆盖随机复密度矩阵、真空与 Fock 态、带复相干的叠加态及输入拒绝情形，全部 **144 条原始计时**与完整输入输出均已保存，并经过独立审阅。
+
+[查看完整案例与复跑步骤](experiments/qutip-rust-wigner/README.md) · [原始计时](experiments/qutip-rust-wigner/results/raw-timings.csv) · [结果核对](experiments/qutip-rust-wigner/results/validation.json) · [独立审阅](experiments/qutip-rust-wigner/results/review.md)
 
 <a id="openquantum-的核心能力"></a>
 <a id="已集成的量子工具与能力"></a>
@@ -1333,7 +1355,7 @@ OpenQuantum 希望为这条探索提供量子专业工作环境：可执行的�
 
 ## 一起建设 OpenQuantum
 
-**把你擅长的一件事，变成更多人可以使用的能力。** 一个可复算的研究案例、一份经过检查的负结果、一项减少重复配置的修复，或一个让学习者动手的实验，都可以成为下一项工作的起点。
+**欢迎所有人参与，共建可信的量子科研智能。** 提出问题、贡献代码、接入工具、分享方法与复现案例，一起让社区的专业积累惠及更多研究者。一个可复算的研究案例、一份经过检查的负结果、一项减少重复配置的修复，或一个让学习者动手的实验，都可以成为下一项工作的起点。
 
 | 你想参与什么 | 从这里开始 |
 | --- | --- |
