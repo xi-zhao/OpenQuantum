@@ -1,12 +1,14 @@
 <h1 align="center"><img src="../../packages/openquantum-web-branding/assets/lockup.svg" width="430" alt="OpenQuantum" /></h1>
 
-<p align="center"><strong>Mettez vos idées quantiques en action.</strong><br /><sub>Une plateforme ouverte d’agents et d’applications quantiques</sub></p>
+<p align="center"><strong>Pour faire de la recherche avec l’IA, OpenQuantum suffit.</strong><br /><sub>Une plateforme ouverte d’agents et d’applications quantiques</sub></p>
 
 <p align="center"><a href="../../README.md">简体中文</a> · <a href="./README.en.md">English</a> · <a href="./README.ja.md">日本語</a> · <a href="./README.ko.md">한국어</a> · <a href="./README.es.md">Español</a> · <a href="./README.fr.md">Français</a> · <a href="./README.de.md">Deutsch</a> · <a href="./README.pt.md">Português</a> · <a href="./README.ru.md">Русский</a> · <a href="./README.ar.md">العربية</a></p>
 
-OpenQuantum rassemble outils quantiques, méthodes spécialisées et applications complètes. Vous pouvez confier un calcul à un agent d’IA, utiliser une application intégrée ou ajouter vos propres algorithmes et services. Les services de modèles et les ressources de calcul se configurent séparément.
+OpenQuantum est une plateforme open source d’agents et d’applications quantiques qui vous aide à utiliser l’IA pour des tâches de recherche concrètes. Commencez par une simulation de circuits, un calcul d’état fondamental ou une analyse de dynamique dans le périmètre pris en charge ; utilisez des outils spécialisés et examinez les résultats. Vous pouvez aussi utiliser les applications intégrées ou ajouter vos propres méthodes. Les services de modèles et les ressources de calcul se configurent séparément.
 
-**Posez vos questions, lancez des calculs et construisez de nouvelles capacités ensemble.**
+**Menez une tâche à bien, puis appliquez la méthode à votre propre question.** Exécutez un exemple, modifiez ses entrées et examinez les résultats. Conservez le code, les paramètres et les sorties pour votre prochaine recherche.
+
+**[Installer le plugin Codex](../integrations/CODEX_AGENT_INSTALL.md)** · [Installer Desktop](../DESKTOP_INSTALLERS.md)
 
 **OpenQuantum 0.8.3 est disponible :** [Desktop](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.3) · [Plugin Codex](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.3). Les deux partagent la même version produit. Tools, MCP et Skills sont classés en huit catégories d’usage, avec recherche et filtres d’état. Les lanceurs Desktop utilisent l’icône OpenQuantum.
 

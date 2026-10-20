@@ -1,12 +1,14 @@
 <h1 align="center"><img src="../../packages/openquantum-web-branding/assets/lockup.svg" width="430" alt="OpenQuantum" /></h1>
 
-<p align="center"><strong>حوّل أفكارك الكمومية إلى عمل.</strong><br /><sub>منصة مفتوحة المصدر للوكلاء والتطبيقات الكمومية</sub></p>
+<p align="center"><strong>للبحث العلمي بمساعدة الذكاء الاصطناعي، يكفيك OpenQuantum.</strong><br /><sub>منصة مفتوحة المصدر للوكلاء والتطبيقات الكمومية</sub></p>
 
 <p align="center"><a href="../../README.md">简体中文</a> · <a href="./README.en.md">English</a> · <a href="./README.ja.md">日本語</a> · <a href="./README.ko.md">한국어</a> · <a href="./README.es.md">Español</a> · <a href="./README.fr.md">Français</a> · <a href="./README.de.md">Deutsch</a> · <a href="./README.pt.md">Português</a> · <a href="./README.ru.md">Русский</a> · <a href="./README.ar.md">العربية</a></p>
 
-تجمع OpenQuantum أدوات الحوسبة الكمومية والأساليب المتخصصة والتطبيقات في منصة واحدة. يمكنك طلب إجراء حسابات من وكيل ذكاء اصطناعي، أو استخدام تطبيق متكامل، أو إضافة خوارزمياتك وخدماتك. تُضبط خدمات النماذج وموارد الحوسبة بصورة مستقلة.
+OpenQuantum منصة مفتوحة المصدر للوكلاء والتطبيقات الكمومية تساعدك على استخدام الذكاء الاصطناعي في مهام بحثية محددة. ابدأ بمحاكاة الدوائر أو حساب الحالة الأساسية أو تحليل الديناميكيات ضمن النطاق المدعوم، واستخدم الأدوات المتخصصة وافحص النتائج. يمكنك أيضًا استخدام التطبيقات المتكاملة أو إضافة أساليبك الخاصة. تُضبط خدمات النماذج وموارد الحوسبة بصورة مستقلة.
 
-**اطرح الأسئلة، وشغّل الحسابات، وشارك في بناء قدرات جديدة.**
+**أنجز مهمة واحدة، ثم طبّق الأسلوب على سؤالك البحثي.** شغّل مثالًا، وغيّر مدخلاته، وافحص النتائج. احتفظ بالشيفرة والمعلمات والمخرجات للاستفادة منها في البحث التالي.
+
+**[تثبيت إضافة Codex](../integrations/CODEX_AGENT_INSTALL.md)** · [تثبيت Desktop](../DESKTOP_INSTALLERS.md)
 
 **يتوفر OpenQuantum 0.8.3:** [Desktop](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.3) · [إضافة Codex](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.3). يستخدم الاثنان رقم إصدار المنتج نفسه. نُظّمت Tools وMCP وSkills في ثماني فئات حسب الاستخدام، مع البحث والتصفية حسب الحالة. تستخدم اختصارات Desktop أيقونة OpenQuantum.
 

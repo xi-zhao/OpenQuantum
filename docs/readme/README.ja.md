@@ -1,12 +1,14 @@
 <h1 align="center"><img src="../../packages/openquantum-web-branding/assets/lockup.svg" width="430" alt="OpenQuantum" /></h1>
 
-<p align="center"><strong>量子のアイデアを、動くかたちに。</strong><br /><sub>量子技術のためのオープンソース Agent・アプリケーションプラットフォーム</sub></p>
+<p align="center"><strong>AI で研究するなら、OpenQuantum ひとつで。</strong><br /><sub>量子技術のためのオープンソース Agent・アプリケーションプラットフォーム</sub></p>
 
 <p align="center"><a href="../../README.md">简体中文</a> · <a href="./README.en.md">English</a> · <a href="./README.ja.md">日本語</a> · <a href="./README.ko.md">한국어</a> · <a href="./README.es.md">Español</a> · <a href="./README.fr.md">Français</a> · <a href="./README.de.md">Deutsch</a> · <a href="./README.pt.md">Português</a> · <a href="./README.ru.md">Русский</a> · <a href="./README.ar.md">العربية</a></p>
 
-OpenQuantum は、量子計算ツール、専門的な手法、アプリケーションを一つのプラットフォームに集約します。AI Agent に計算を依頼したり、統合アプリケーションを使ったり、自分のアルゴリズムやサービスを追加したりできます。モデルサービスと計算バックエンドは独立して設定します。
+OpenQuantum は、AI を具体的な研究課題に活用するための、量子分野のオープンソース Agent・アプリケーションプラットフォームです。対応する回路シミュレーション、基底状態計算、ダイナミクス解析から始め、専門ツールで計算し、結果を確認できます。統合アプリケーションの利用や独自の手法の追加もでき、モデルサービスと計算バックエンドは独立して設定します。
 
-**問いを立て、計算を動かし、新たな能力を共につくる。**
+**まず一つのタスクを完了し、その手法を自分の問いへ。** 例を実行し、入力を変え、結果を確認します。プログラム、パラメーター、出力を残して、次の研究に活用できます。
+
+**[Codex プラグインをインストール](../integrations/CODEX_AGENT_INSTALL.md)** · [Desktop をインストール](../DESKTOP_INSTALLERS.md)
 
 **OpenQuantum 0.8.3 公開：**[Desktop](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.3) · [Codex プラグイン](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.3)。両者の製品バージョンを統一しました。Tools・MCP・Skills を用途別の 8 分類で整理し、検索と状態フィルターを追加しました。Desktop の起動アイコンも OpenQuantum に統一しました。
 

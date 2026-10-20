@@ -1,0 +1,18 @@
+{
+  "seed": 20261020,
+  "repeats": 9,
+  "warmups": 2,
+  "scope": "fixed finite complex coefficients, at most 64 wires, no coefficient truncation",
+  "primary_metric": "PauliSentence to PauliSentence warm wall-clock time including both conversions and result construction",
+  "cases": [
+    {"id": "one-qubit", "kind": "one", "qubits": 1, "left_terms": 1, "right_terms": 1},
+    {"id": "small-4q", "kind": "dense", "qubits": 4, "left_terms": 16, "right_terms": 16},
+    {"id": "dense-16q-64", "kind": "dense", "qubits": 16, "left_terms": 64, "right_terms": 64},
+    {"id": "dense-16q-128", "kind": "dense", "qubits": 16, "left_terms": 128, "right_terms": 128},
+    {"id": "dense-16q-256", "kind": "dense", "qubits": 16, "left_terms": 256, "right_terms": 256},
+    {"id": "dense-32q-256", "kind": "dense", "qubits": 32, "left_terms": 256, "right_terms": 256},
+    {"id": "local-32q-pool512", "kind": "local", "qubits": 32, "left_terms": 125, "right_terms": 512},
+    {"id": "sparse-64q-256", "kind": "sparse", "qubits": 64, "left_terms": 256, "right_terms": 256},
+    {"id": "commuting-32q-256", "kind": "commuting", "qubits": 32, "left_terms": 256, "right_terms": 256}
+  ]
+}

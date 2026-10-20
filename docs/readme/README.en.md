@@ -2,15 +2,21 @@
   <img src="../../packages/openquantum-web-branding/assets/lockup.svg" width="430" alt="OpenQuantum" />
 </h1>
 
-<p align="center"><strong>Put your quantum ideas to work.</strong><br /><sub>An open-source quantum agent and application platform</sub></p>
+<p align="center"><strong>For AI-assisted research, OpenQuantum is all you need.</strong><br /><sub>Start with a quantum problem and put specialist methods and computing tools to work with AI</sub></p>
 
 <p align="center"><a href="../../README.md">简体中文</a> · <a href="./README.en.md">English</a> · <a href="./README.ja.md">日本語</a> · <a href="./README.ko.md">한국어</a> · <a href="./README.es.md">Español</a> · <a href="./README.fr.md">Français</a> · <a href="./README.de.md">Deutsch</a> · <a href="./README.pt.md">Português</a> · <a href="./README.ru.md">Русский</a> · <a href="./README.ar.md">العربية</a></p>
 
-OpenQuantum is an open-source agent and application platform for quantum research, experiments and teaching. Use natural language to select methods, run specialist software and inspect results; run algorithm examples directly, open Quantum Learning, or contribute your own methods and applications.
+OpenQuantum is an open-source quantum agent and application platform that helps you use AI for concrete research tasks. Start with a research question, a paper's method or an existing program. Ask the agent to write and run calculations with specialist software, inspect the outputs, then adjust inputs or compare methods.
 
-**Ask questions, run calculations and build capabilities together.** Start with a supported task, inspect the tool results, and contribute methods or applications that others can use.
+**Complete one task, then bring the method to your own question.** Start with a supported circuit simulation, ground-state calculation or dynamics analysis. Run an example, change its inputs and inspect the results. Keep code, parameters and outputs for your next investigation.
 
-[Why OpenQuantum](#why-openquantum) · [Capabilities](#what-you-can-do) · [Quick start](#quick-start) · [Results](#use-and-inspect-results) · [Extend](#extend-the-platform) · [Roadmap](#roadmap-and-rsi) · [Contribute](#documentation-and-support) · [Open source](#license-and-acknowledgments)
+Choose between two installation options that share the same domain capabilities: the **[Codex plugin](../integrations/CODEX_PLUGIN.md)** brings quantum Skills and scientific Tools into native Codex conversations, with a side panel for capability switches, MCP connections and tokens; **Desktop** includes the research workbench and the separate Quantum Learning application, with model services you configure yourself.
+
+**[Install the Codex plugin](#codex)** · [Install Desktop](#desktop-installer) · [See calculations and results](#use-and-inspect-results)
+
+**Start with a measured case:** [Use OpenQuantum to optimize a PennyLane calculation and check the results](#pennylane-rust-case), with a **5.09× speedup for the complete call** on the representative task.
+
+[Why OpenQuantum](#why-openquantum) · [PennyLane case](#pennylane-rust-case) · [Capabilities](#what-you-can-do) · [Quick start](#quick-start) · [Results](#use-and-inspect-results) · [Extend](#extend-the-platform) · [Roadmap](#roadmap-and-rsi) · [Contribute](#documentation-and-support) · [Open source](#license-and-acknowledgments)
 
 **OpenQuantum 0.8.3 is available:** [Desktop](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.3) · [Codex plugin](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.3). Both use the same product version. Tools, MCP and Skills have eight use categories, search and status filters. Desktop launchers now use the OpenQuantum icon.
 
@@ -20,9 +26,13 @@ The research workbench is the platform's conversational and computational entry 
 
 ## Why OpenQuantum
 
-**People, AI and an open ecosystem can build quantum capabilities together.**
+For your first attempt at AI-assisted research, start with an existing example. If you already have a quantum model or program, change inputs, compare methods and inspect the outputs. OpenQuantum brings specialist software and research methods into your agent workflow, helping you work from concrete questions and keep material for review and reuse. Local calculations, teaching experiments and method validation have practical value today, without depending on a QPU demonstrating an advantage.
 
-OpenQuantum builds on the quantum software ecosystem to make specialist capabilities easier to use, combine and extend. It connects domain methods, agent execution and open tools to concrete tasks. Local calculations, teaching experiments and method validation have practical value today, without depending on a QPU demonstrating an advantage.
+### Improve open-source tools for research with AI
+
+We work with open-source tools including Qiskit, PennyLane, PyZX, TeNPy and Stim / PyMatching, improving environment preparation, agent access, research workflows and result checks. Installing OpenQuantum lets you reuse this work, so AI can start with specialist methods and runnable programs, then adapt, compare and optimize them for your question.
+
+This work connects method selection, program execution, comparisons and result checks, reducing repeated setup of tools and workflows. Performance improvements also come with measured evidence: the [PennyLane case](#pennylane-rust-case) reduced a research calculation's complete call from **30.62 ms to 6.02 ms, a 5.09× speedup**, with result checks and reproduction records.
 
 ### Start with a question, use specialist tools
 
@@ -41,6 +51,25 @@ OpenQuantum builds on the quantum software ecosystem to make specialist capabili
 **Keep choice with users and contributors.** Open implementations and extension interfaces let you inspect, modify and maintain your own combination. Model services and computing backends are configured separately, so applications need not be tied to one model or device. Upstream authors, licenses and contributions remain visible; users decide whether to share research data. Our goal is to preserve professional methods that remain useful as models, computing resources and research directions change.
 
 An investigation that becomes possible, a method applied to a new problem, or a contributor creating an application are all forms of value we want to accumulate. The next step is to make that experience improve the [capabilities used in the next round of research](#research-that-improves-how-research-is-done).
+
+<a id="pennylane-rust-case"></a>
+
+## Measured case: a 5.09× faster PennyLane calculation
+
+**Set a research task and get a runnable result you can check.** We gave OpenQuantum a task: optimize a PennyLane research calculation, measure the actual speedup and verify the results. On 2026-10-20, we completed the experiment using OpenQuantum 0.8.4 within Codex, producing an optimized program, a performance comparison, correctness checks and records for reproduction.
+
+| Calculation | Complete call |
+| --- | ---: |
+| Native PennyLane | 30.62 ms |
+| Optimized | **6.02 ms** |
+
+**A 5.09× speedup for the complete call.** The measured task was one Pauli commutator calculation for a 32-qubit local model. These are medians of nine warm rounds on an Apple M4 with PennyLane 0.45.1. Timings include input and output conversion; environment preparation and compilation are excluded.
+
+**The results were checked too.** Outputs for all nine benchmark inputs agreed exactly, term by term, with PennyLane references. Independent matrices checked all **4,368 pairs of 1–3-qubit Pauli words**, plus 40 random complex-coefficient operator pairs, with a maximum matrix absolute error of **1.42×10⁻¹⁴**. The calculations and timings underwent independent review. All **405 raw timing samples** and the complete inputs and outputs are retained.
+
+The 5.09× result applies to the specified calculation. The case report provides all measured results, methods and supported scope.
+
+[Full case and reproduction steps](../../experiments/pennylane-rust-commutator/README.md) · [Raw timings](../../experiments/pennylane-rust-commutator/results/raw-timings.csv) · [Result checks](../../experiments/pennylane-rust-commutator/results/validation.json) · [Independent review](../../experiments/pennylane-rust-commutator/results/review.md)
 
 ## What you can do
 

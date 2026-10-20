@@ -13,7 +13,11 @@ Use [the interface-language guide](../../runtime/openquantum/web-locales/README.
 
 ## Brand and reading order
 
-Keep the category explicit: OpenQuantum is an open-source quantum agent and application platform. The Chinese lead is “让量子想法运行起来”; the English adaptation is “Put your quantum ideas to work.” The existing “量子计算，就在指尖” remains the closing signature. Translate the intent naturally without changing product or upstream names.
+Keep the category explicit: OpenQuantum is an open-source quantum agent and application platform. The Chinese lead is “用 AI 做科研，OpenQuantum 就够了。”; the English adaptation is “For AI-assisted research, OpenQuantum is all you need.” The existing “量子计算，就在指尖” remains the closing signature. Translate the intent naturally without changing product or upstream names.
+
+Introduce the product through a concrete research task and a clear installation entry. Address both a first attempt at AI-assisted research and further work with an existing model or program. Use supported quantum tasks to make the broader AI-research positioning concrete; keep dependency preparation, model setup and scientific acceptance conditions explicit in their existing sections.
+
+Present promotional cases through the research task, delivered work, measured benefit and result checks. Keep implementation details in the linked case report. Keep measurement scope and evidence links alongside numerical claims.
 
 Explain value through supported actions: start from a question and use specialist tools; preserve results and methods for further work; contribute capabilities that others can use. Support these themes with examples and recorded evidence. Avoid unsupported uniqueness, speed, quantum-advantage or user-adoption claims. RSI remains a long-term research direction whose proposed loop is not implemented.
 

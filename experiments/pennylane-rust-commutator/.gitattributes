@@ -1,0 +1,2 @@
+# Preserve the original CSV byte hashes recorded in provenance.json.
+results/**/*.csv -text whitespace=cr-at-eol
