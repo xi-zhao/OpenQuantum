@@ -23,10 +23,15 @@ LABELS = {
 }
 
 
+def machine_label(data):
+    return str(data.get("cpu") or data.get("platform") or "Hardware not recorded")
+
+
 def main():
     data = json.loads((OUT / "benchmark.json").read_text())
     validation = json.loads((OUT / "validation.json").read_text())
     rows = data["cases"]
+    machine = machine_label(data)
     local = next(row for row in rows if row["kind"] == "local")
     def ms(row, name):
         return row["timings"][name]["median_seconds"] * 1000
@@ -61,7 +66,7 @@ def main():
     right.grid(axis="x", alpha=0.17)
     right.set_axisbelow(True)
     figure.suptitle("OpenQuantum case: a Rust implementation of PennyLane Pauli commutators", x=0.02, ha="left", fontsize=15, fontweight="bold")
-    figure.text(0.02, 0.025, "Apple M4 | fixed binary64 coefficients | 9 interleaved rounds | bars: medians, whiskers: IQR | grey case has zero output", fontsize=9, color="#586476")
+    figure.text(0.02, 0.025, f"{machine} | fixed binary64 coefficients | 9 interleaved rounds | bars: medians, whiskers: IQR | grey case has zero output", fontsize=9, color="#586476")
     figure.tight_layout(rect=[0, 0.06, 1, 0.94])
     figure.savefig(OUT / "timings.png", dpi=170)
     figure.savefig(OUT / "timings.svg")
@@ -71,7 +76,8 @@ def main():
     table_header = "| 场景 | PennyLane / ms | 位编码 Python / ms | Rust 完整调用 / ms | 完整调用加速 | 非零输出项 |\n| --- | ---: | ---: | ---: | ---: | ---: |\n"
     table_rows = [f"| {LABELS[row['id']][0]} | {ms(row,'pennylane'):.6f} | {ms(row,'python_end_to_end'):.6f} | {ms(row,'rust_end_to_end'):.6f} | {row['end_to_end_speedup']:.2f}× | {row['output_terms']} |" for row in rows]
     headline = f"{ms(local,'pennylane'):.2f} ms → {ms(local,'rust_end_to_end'):.2f} ms，{local['end_to_end_speedup']:.2f}×"
-    intro = f"本机 Apple M4 上，PennyLane 0.45.1 的代表案例为 **{headline}**。该任务计算一个 32 量子位、125 项局域 Hamiltonian 与一个含 512 项的二体算符和的**单个对易子**。时间包含从 PennyLane 对象转入 Rust、计算、返回及重建 PennyLane 对象。"
+    intro = f"实测硬件 {machine} 上，PennyLane 0.45.1 的代表案例为 **{headline}**。该任务计算一个 32 量子位、125 项局域 Hamiltonian 与一个含 512 项的二体算符和的**单个对易子**。时间包含从 PennyLane 对象转入 Rust、计算、返回及重建 PennyLane 对象。"
+    readme_intro = intro.replace(machine, html.escape(machine), 1)
     explanation = f"位编码 Python 的完整调用为 {ms(local,'python_end_to_end'):.2f} ms，Rust 为 {ms(local,'rust_end_to_end'):.2f} ms，后一步的收益为 {ms(local,'python_end_to_end')/ms(local,'rust_end_to_end'):.2f}×。同为预编码输入时，Python 内核 {ms(local,'python_mask_kernel'):.3f} ms，Rust 内核 {ms(local,'rust_kernel'):.3f} ms，约 {local['matched_mask_kernel_speedup']:.2f}×。整体加速同时包含数据表示与执行实现的变化，不能全部归因于 Rust 语言。"
     scope = "本原型只处理固定、有限的 binary64 实数/复数系数，最多 64 个可映射 wire，返回 PauliSentence；不做近似截断，只移除精确零项。拒绝自动微分量、广播数组、非有限系数、超出支持精度的系数和结果溢出。它是一个算符代数子任务，不是 PennyLane 整体、完整 VQE/ADAPT 或量子模拟器的性能测试。"
     correctness = f"独立 Kronecker 矩阵穷举覆盖 1–3 位全部 {validation['exhaustive_word_pairs']:,} 对 Pauli 单项，结果精确一致。40 组随机复系数算符和同时比较全部 Pauli 系数与独立矩阵，最大矩阵绝对误差 {validation['worst_independent_matrix_error']:.3g}。另外覆盖相消、极小非零系数、混合 wire 标签、实际 64-wire 往返、65-wire 拒绝和非有限结果拒绝；共 {len(validation['checks'])} 条验证记录。9 个计时场景中的四种对照实现也逐项核对，全部通过。"
@@ -92,7 +98,7 @@ python3 reproduce.py --locator "$LOCATOR" --node "$NODE" --steps build validate 
 
 ## 实测结论
 
-{intro}
+{readme_intro}
 
 {explanation}
 
@@ -160,7 +166,8 @@ PennyLane 基线直接调用其优化的 `PauliSentence.commutator()`，不使�
         return '<p>'+html.escape(text).replace('**','')+'</p>'
     page = '''<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>OpenQuantum × PennyLane 实测</title><style>
 body{margin:0;background:#f4f7fa;color:#182638;font:16px/1.75 -apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif}main{max-width:1160px;margin:auto;padding:48px 28px}header{padding:30px 0}small{color:#627186}h1{font-size:36px;line-height:1.25;letter-spacing:-1px}h2{margin-top:42px;font-size:23px}.hero{font-size:42px;font-weight:700;color:#087b6c;margin:12px 0}.card{background:white;padding:26px 30px;border-radius:16px;border:1px solid #e0e7ee;margin:22px 0}img{display:block;width:100%;height:auto}table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}th,td{padding:12px 9px;text-align:right;border-bottom:1px solid #e3e9ef;font-size:14px}th:first-child,td:first-child{text-align:left}th{color:#53667b}.special{background:#f0f2f5}.slower{background:#fff4e2}.table{overflow-x:auto}a{color:#176fa5}code{background:#edf2f7;padding:2px 5px;border-radius:4px}footer{font-size:13px;color:#64748b;margin-top:45px}@media(max-width:650px){main{padding:24px 16px}h1{font-size:28px}.hero{font-size:30px}.card{padding:16px}table{min-width:900px}}
-</style><main><header><small>OPENQUANTUM · 可复核计算案例 · 2026-10-20 · Apple M4</small><h1>用 Rust 改进 PennyLane 的 Pauli 对易子计算</h1>'''
+</style><main><header><small>OPENQUANTUM · 可复核计算案例 · 2026-10-20 · '''
+    page += html.escape(machine)+'</small><h1>用 Rust 改进 PennyLane 的 Pauli 对易子计算</h1>'
     page += '<div class="hero">'+html.escape(headline)+'</div>'+paragraph(intro)+paragraph(explanation)+'</header>'
     page += '<section class="card"><h2>全部预定义场景</h2><img src="timings.svg" alt="PennyLane、位编码Python与Rust完整调用耗时"><div class="table"><table><thead><tr>'+''.join('<th>'+cell+'</th>' for cell in header_cells)+'</tr></thead><tbody>'+''.join(html_rows)+'</tbody></table></div>'+paragraph(warning)+'</section>'
     page += '<section class="card"><h2>结果核对</h2>'+paragraph(correctness)+'<h2>测量方法</h2>'+paragraph(method)+'</section>'

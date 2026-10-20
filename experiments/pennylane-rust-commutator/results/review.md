@@ -24,3 +24,12 @@
 - `rust/lib.rs`: `b6139997f6554a15f34974bf74402a5eef490731b9eb25242f3c9ecfd7fb6b0c`
 - `plan.json`: `57e47b54ca5ded0c12c15d32418a63b8dc5cd5313bc3d77228ba59b7a3346687`
 - `pauli_rust.cpython-312-darwin.so`: `ea1dc9115c27db639068821d4f0ff59adac8f9d56b567ec65b56720e7bd92e7e`
+
+## PR #28 报告硬件标签复核
+
+GitHub 审查提出的 P2 已修复：报告从 benchmark.json 的 cpu 字段读取硬件名称，缺失时回退到 platform，再回退到明确的未记录说明。动态标签覆盖 README、HTML、SVG 和 PNG；Markdown 与 HTML 分别转义，避免硬件名称中的尖括号隐藏内容。
+
+同一独立审阅者复查修复并独立运行替代硬件输出回归，2/2 测试通过，无未解决阻断项。科学内核、固定输入与原始计时摘要未变，未重跑性能基准。原有实测图表仍显示记录中的 Apple M4。
+
+- `report.py`: `f6ff169b064930e67cc4d045f4e585ff3c13edaeabbd45c823ba2d3ecc01af43`
+- `test_report.py`: `34fce1d802f94d3508fd91ca12404dd1748081f37d97120a5f61c2a7595a3e01`

@@ -18,7 +18,7 @@
     "export_outputs.py": "6a853fd507c472e386bbc6825c71619a56058a2edd08331e2535ea0ba74f68bd",
     "validate.py": "8f106c2dfa9d9973d95d77927872f32cd74155112f3726c084c29e64a6a07743",
     "case.py": "e4905f32cb9924eb4d53f440c7a4ecfca5053b8fb495a9202d6a00de60d176c7",
-    "report.py": "32917eab067da0b488688fdafe7d6ad003c8352fecca4ef9d001b4faa53d092e",
+    "report.py": "f6ff169b064930e67cc4d045f4e585ff3c13edaeabbd45c823ba2d3ecc01af43",
     "rust/lib.rs": "b6139997f6554a15f34974bf74402a5eef490731b9eb25242f3c9ecfd7fb6b0c",
     "plan.json": "57e47b54ca5ded0c12c15d32418a63b8dc5cd5313bc3d77228ba59b7a3346687",
     "Cargo.toml": "0012078ef69d0a50e2422f54dac08a18dc8f33861383d39d4e6fd361b0518917",
@@ -26,7 +26,8 @@
     "build.rs": "c609c2f1a8594abf959388e559d76241e51b0216faa7b37f529255eb1fc2c5eb",
     "pauli_rust.cpython-312-darwin.so": "ea1dc9115c27db639068821d4f0ff59adac8f9d56b567ec65b56720e7bd92e7e",
     ".gitignore": "86ef2b3f18df543903ca2bf69ad9b8b008c68c4a8400d4540c2e3181fce703c2",
-    ".gitattributes": "b09a4d4bbcf5bb94aa9daf0e7404d3a2cfe56cbaa15361644970bf593197d3b4"
+    ".gitattributes": "b09a4d4bbcf5bb94aa9daf0e7404d3a2cfe56cbaa15361644970bf593197d3b4",
+    "test_report.py": "34fce1d802f94d3508fd91ca12404dd1748081f37d97120a5f61c2a7595a3e01"
   },
   "result_sha256": {
     "results/benchmark.json": "df203869e17f04ea65d3701d97272b9f6a08bdc058278ba67e6d85486b37a526",
@@ -49,8 +50,8 @@
     "results/plotting.json": "d81726df9ee0b2e07f172cb3fd2a9dc48906f55562a7ec36d417640c774e3b59",
     "results/raw-timings.csv": "5594b4df4354cfa2a27e1f156ceca2302044fb9267d2d81acbc875f58ffe9d46",
     "results/reference-outputs.npz": "481d07605463b55329f3deb56e20e35efc2089c7ce29fc6fa7ccb1871302b440",
-    "results/report.html": "abb21aad4f8905ae45039072b6f9fc946485ba86af2801128b959069bbe790a3",
-    "results/review.md": "c983a14f180fd9ffb695b278eb09d976145d89fe04b0a082b9dc1d898973deb7",
+    "results/report.html": "9573e22c02da536a275a4f2fd60d5c5cfd36ca3a094a687c3c3cc821c0d1dc74",
+    "results/review.md": "70fdf2c22310a2961924c84fcb0f8115ccff274bd570045270624ba7b81501be",
     "results/rust-outputs.npz": "481d07605463b55329f3deb56e20e35efc2089c7ce29fc6fa7ccb1871302b440",
     "results/rust-tests.log": "26af1117fdae187dde57027a6a5cda269b97dcd72d5470ef6357e684629bbc83",
     "results/timings.png": "7581ed923dd533709ed53dedaf547eb1aaa63b391bdf992d4f8e5ea217943328",
@@ -63,6 +64,6 @@
   "external_model_requests": false,
   "qpu_or_paid_services": false,
   "scientific_acceptance": "not_evaluated_by_central_Acceptance_Builder",
-  "readme_sha256": "29cf0748179045ec15a1f29c904c7deb483abd1ca4ec101e7a5d914cb9381060",
-  "post_measurement_changes": "Output replay checks complete ordered case IDs; reporting and replay helpers updated. Measured core sources and compiled extension match independent-review hashes. SVG whitespace and Cargo manifest EOF normalized; CSV bytes preserved by local attributes. No computation or timing changes."
+  "readme_sha256": "f51eb4b66a6bd4857033521bf58496db024ccafeb6190ee11a15bd08a5746326",
+  "post_measurement_changes": "Output replay checks complete ordered case IDs; reporting and replay helpers updated. Measured core sources and compiled extension match independent-review hashes. SVG whitespace and Cargo manifest EOF normalized; CSV bytes preserved by local attributes. No computation or timing changes. PR review P2: derive report hardware labels from recorded benchmark cpu/platform metadata; alternative-hardware artifact regression checks pass. Scientific kernel and timing data unchanged."
 }
