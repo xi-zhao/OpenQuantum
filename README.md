@@ -5,8 +5,8 @@
 <p align="center"><a href="./README.md">简体中文</a> · <a href="./docs/readme/README.en.md">English</a> · <a href="./docs/readme/README.ja.md">日本語</a> · <a href="./docs/readme/README.ko.md">한국어</a> · <a href="./docs/readme/README.es.md">Español</a> · <a href="./docs/readme/README.fr.md">Français</a> · <a href="./docs/readme/README.de.md">Deutsch</a> · <a href="./docs/readme/README.pt.md">Português</a> · <a href="./docs/readme/README.ru.md">Русский</a> · <a href="./docs/readme/README.ar.md">العربية</a></p>
 
 <p align="center">
-  <strong>让量子想法运行起来。</strong><br />
-  <sub>开源量子 Agent 与应用平台</sub>
+  <strong>用 AI 做科研，OpenQuantum 就够了。</strong><br />
+  <sub>从量子问题出发，让 AI 用上专业方法与计算工具</sub>
 </p>
 
 <p align="center">
@@ -15,13 +15,15 @@
   <img src="https://img.shields.io/badge/Node.js-24%2B-3c873a.svg" alt="Node.js 24 or newer" />
 </p>
 
-OpenQuantum 是 Agent 时代的开源量子 Agent 与应用平台。我们汇聚广泛的专业软件与研究方法，让人与 Agent 能够使用、组合和继续建设量子能力。
+OpenQuantum 是一个开源量子 Agent 与应用平台，帮助你把 AI 用到具体的科研任务中。带着研究问题、论文方法或已有程序开始，让 Agent 编写程序、调用专业软件完成计算，查看结果，再调整输入或比较方法。
 
-**把想法带进计算，把成果留给下一次探索。** 从已接入的方法与软件起步，试验一种算法，比较两条计算路线，或把量子能力接入自己的 Agent 与应用。每次探索留下的程序与结果，也可以成为下一次工作的起点。
+**先完成一个任务，再把方法用到自己的问题上。** 从已支持的量子电路模拟、基态求解或动力学分析起步，运行示例、修改输入、检查结果。保留程序、参数与计算结果，让下一次研究有据可循。
 
-OpenQuantum 提供两个发行入口，复用同一份领域能力：**Desktop** 包含科研工作台与独立的量子学习通应用；**[Codex 插件](docs/integrations/CODEX_PLUGIN.md)** 将量子 Skill 与科学 Tool 接入 Codex 原生对话，侧边入口用于管理能力开关、MCP 连接和 Token。
+选择适合你的安装入口，两者复用同一份领域能力：**[Codex 插件](docs/integrations/CODEX_PLUGIN.md)** 将量子 Skill 与科学 Tool 接入 Codex 原生对话，侧边入口用于管理能力开关、MCP 连接和 Token；**Desktop** 包含科研工作台与独立的量子学习通应用，模型服务可自行配置。
 
-直接在 Codex 中使用：[插件安装与使用](#codex-plugin)，包含可复制给 Codex 的安装指令。
+**[安装 Codex 插件](#codex-plugin)**　·　[安装 Desktop](#快速开始)　·　[先看计算与结果](#使用与结果)
+
+**先看一个实测案例：**[用 OpenQuantum 优化 PennyLane 并核对结果](#pennylane-rust-case)，代表任务完整调用提速 **5.09 倍**。
 
 **当前版本 0.8.4：**[Desktop 下载与发布说明](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.4) · [Codex 插件下载与发布说明](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.4)。两者使用同一产品版本号。
 
@@ -30,6 +32,7 @@ OpenQuantum 提供两个发行入口，复用同一份领域能力：**Desktop**
 
 <p align="center">
   <a href="#为什么选择-openquantum">为什么选择</a> ·
+  <a href="#pennylane-rust-case">PennyLane 实测</a> ·
   <a href="#可以用它做什么">浏览能力</a> ·
   <a href="#codex-plugin">Codex 插件</a> ·
   <a href="#快速开始">开始使用</a> ·
@@ -60,7 +63,13 @@ OpenQuantum 提供两个发行入口，复用同一份领域能力：**Desktop**
 
 ## 为什么选择 OpenQuantum
 
-读到一篇论文，想把方法用到自己的模型上；写好一个量子程序，想比较优化前后的结果；准备一堂课，想让学生亲手跑一个算法。从这些想法到实际计算，中间还有方法选择、软件调用、结果核对与后续复用。OpenQuantum 让你从已接入的方法与工具开始，围绕自己的问题展开计算与对照。
+第一次用 AI 做科研，可以从一个已有示例开始；已经有自己的量子模型或程序，可以继续改输入、换方法、做对照。OpenQuantum 将专业软件与研究方法接入 Agent，帮助你围绕具体问题开展计算、核对结果，并留下可供复查与复用的工作材料。
+
+### 持续优化开源工具，让 AI 更好地做科研
+
+我们围绕 Qiskit、PennyLane、PyZX、TeNPy、Stim / PyMatching 等开源工具，持续优化环境准备、Agent 调用、科研工作流程和结果核对。安装 OpenQuantum，可以复用这些已经完成的工作，让 AI 从专业方法和可运行程序起步，围绕你的问题继续修改、比较与优化。
+
+这些工作把方法选择、程序运行、方案比较和结果检查连接起来，减少每次从头准备工具与流程的重复劳动。计算效率的优化也保留实测依据：[PennyLane 案例](#pennylane-rust-case)完成了一项科研计算的优化，完整调用从 **30.62 ms 降到 6.02 ms，提速 5.09 倍**，并交付了结果核对与复跑记录。
 
 <a id="从问题出发调用专业能力"></a>
 <a id="对不同的工作解决不同的难点"></a>
@@ -92,10 +101,11 @@ OpenQuantum 汇聚算法、编译、仿真、量子信息、化学与多体、�
 
 <a id="让一次研究成为下一次的起点"></a>
 <a id="agent-时代让专业能力进入工作并持续积累"></a>
+<a id="agent-时代让想法接上专业能力"></a>
 
-### Agent 时代：让想法接上专业能力
+### 让 AI 用上专业科研能力
 
-Agent 可以帮你阅读材料、编写程序和调用工具。OpenQuantum 为这些工作补上量子领域的方法与计算能力，让专业软件进入你使用的 Agent 宿主。Skill 说明方法与步骤，Tool 执行具体动作，原生 SDK 也可通过宿主代码工具使用。
+Agent 可以帮你阅读材料、编写程序和调用工具。安装 OpenQuantum 后，你可以围绕已支持的任务，按需要准备依赖和服务配置，让 AI 用上量子领域的方法与计算能力。Skill 说明方法与步骤，Tool 执行具体动作，原生 SDK 也可通过宿主代码工具使用。
 
 记录程序、结果与适用的检查，让后续工作有据可循。有依据的负结果也值得保留，帮助判断方法何时适用、何时需要换一条路线。程序故障与科学结果要分别看待；相关记录可以用于[复核与复用](#执行记录与科学验收)，科学判断仍由使用者负责。
 
@@ -106,6 +116,25 @@ Agent 可以帮你阅读材料、编写程序和调用工具。OpenQuantum 为�
 这些积累也为[下一轮研究能力的改进](#rsi)提供基础，相关方向与进度在长期规划中说明。
 
 **[先运行一个任务](#快速开始)**　·　[把你的能力接进来](#把你的量子能力接进来)
+
+<a id="pennylane-rust-case"></a>
+
+## 实测案例：优化 PennyLane，提速 5.09 倍
+
+**提出科研任务，拿到可运行、可核对的成果。** 我们给 OpenQuantum 一个任务：优化一项 PennyLane 科研计算，测清实际提速，并核对结果。2026-10-20，在 Codex 中结合 OpenQuantum 0.8.4 完成实验，交付了优化后的程序、性能对照、正确性核验和可复跑的记录。
+
+| 计算方式 | 完整调用耗时 |
+| --- | ---: |
+| PennyLane 原生 | 30.62 ms |
+| 优化后 | **6.02 ms** |
+
+**完整调用提速 5.09 倍。** 本次测量对象是 32 量子位局域模型中的一个 Pauli 对易子计算。数据来自 Apple M4、PennyLane 0.45.1 上 9 轮热运行的中位数，包含输入输出转换，不含环境准备和编译。
+
+**结果也经过核对。** 全部 9 组基准输出与 PennyLane 参考输出逐项精确一致；另以独立矩阵穷举检查 **4,368 对 Pauli 单项**，并检查 40 组随机复系数算符和，最大矩阵绝对误差为 **1.42×10⁻¹⁴**。计算与计时经过独立审阅，全部 **405 条原始计时**及完整输入输出均已保存。
+
+5.09 倍是上述计算任务的实测收益。完整测试结果、方法与适用范围见案例报告。
+
+[查看完整案例与复跑步骤](experiments/pennylane-rust-commutator/README.md) · [原始计时](experiments/pennylane-rust-commutator/results/raw-timings.csv) · [结果核对](experiments/pennylane-rust-commutator/results/validation.json) · [独立审阅](experiments/pennylane-rust-commutator/results/review.md)
 
 <a id="openquantum-的核心能力"></a>
 <a id="已集成的量子工具与能力"></a>

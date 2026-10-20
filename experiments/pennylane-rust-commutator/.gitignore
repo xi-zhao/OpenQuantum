@@ -1,0 +1,8 @@
+/target/
+/*.so
+/*.pyd
+/__pycache__/
+
+# Retain this experiment's inputs, raw measurements, outputs and receipts.
+!/results/
+!/results/**

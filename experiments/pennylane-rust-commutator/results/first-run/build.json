@@ -1,0 +1,14 @@
+{
+  "build_seconds": 12.054559624986723,
+  "python": "/Users/xizhao/.openquantum/plugins/codex/environments/python/pennylane-differentiable/bin/python",
+  "command": [
+    "cargo",
+    "build",
+    "--release",
+    "--locked"
+  ],
+  "build_jobs": 2,
+  "extension": "pauli_rust.cpython-312-darwin.so",
+  "profile": "release",
+  "rustc": "rustc 1.94.1 (e408947bf 2026-03-25) (Homebrew)"
+}

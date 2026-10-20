@@ -1,0 +1,15 @@
+   Compiling target-lexicon v0.13.5
+   Compiling proc-macro2 v1.0.106
+   Compiling pyo3-build-config v0.29.0
+   Compiling quote v1.0.46
+   Compiling unicode-ident v1.0.24
+   Compiling pyo3-ffi v0.29.0
+   Compiling libc v0.2.186
+   Compiling syn v2.0.118
+   Compiling pyo3 v0.29.0
+   Compiling heck v0.5.0
+   Compiling pyo3-macros-backend v0.29.0
+   Compiling openquantum-pauli-case v0.1.0 (/Volumes/Elements/CodexWorkspaces/managed-worktrees/pennylane-rust-case/openQuantum/experiments/pennylane-rust-commutator)
+   Compiling once_cell v1.21.4
+   Compiling pyo3-macros v0.29.0
+    Finished `release` profile [optimized] target(s) in 12.01s
