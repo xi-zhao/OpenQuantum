@@ -10,7 +10,7 @@ OpenQuantum은 오픈 소스로 공개되고 공동 개발에 열려 있는 양�
 
 **[Codex 플러그인 설치](../integrations/CODEX_AGENT_INSTALL.md)** · [Desktop 설치](../DESKTOP_INSTALLERS.md)
 
-**OpenQuantum 0.8.3 출시:** [Desktop](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.3) · [Codex 플러그인](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.3). 두 배포판은 같은 제품 버전을 사용합니다. Tools, MCP, Skills를 용도별 8개 범주로 분류하고 검색과 상태 필터를 추가했습니다. Desktop 실행 아이콘도 OpenQuantum으로 통일했습니다.
+**OpenQuantum 0.8.4 출시:** [Desktop](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.4) · [Codex 플러그인](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.4). 두 배포판은 같은 제품 버전을 사용합니다. Tools, MCP, Skills를 용도별 8개 범주로 분류하고 검색과 상태 필터를 추가했습니다. Desktop 실행 아이콘도 OpenQuantum으로 통일했습니다.
 
 ![OpenQuantum Desktop](../images/openquantum-desktop-20261013.jpg)
 
@@ -20,9 +20,9 @@ Qiskit과 TyxonQ를 이용한 회로 시뮬레이션, PyZX 회로 최적화, Gra
 
 소스 `main`에는 QCut 게이트 분할과 기댓값 재구성, Compact 회로 최적화, OpenQARP VQD 들뜬상태 계산도 포함됩니다. 이 연결들은 기본으로 활성화되지만 의존성을 준비해야 합니다. cqlib-qml 각도 커널 QSVM과 FlagQuantum 회로 작업대는 기본으로 비활성화되어 필요할 때 켭니다. [적용 범위와 검증](../integrations/CANDIDATE_LIBRARIES.md)을 참고하세요.
 
-현재 소스에는 **157개 Skill**(자동 선택 144개, 수동 분류 색인 13개), **91개 MCP 연결**, **5개 네이티브 양자 Tool**이 있습니다. 세션에서 사용할 수 있는 기능은 활성 연결과 준비된 환경에 따라 달라집니다. [기능 선택 안내](../integrations/CAPABILITY_SELECTION.md)를 참조하세요.
+현재 소스에는 **183개 Skill**(자동 선택 170개, 수동 분류 색인 13개), **91개 MCP 연결**, **5개 네이티브 양자 Tool**이 있습니다. 세션에서 사용할 수 있는 기능은 활성 연결과 준비된 환경에 따라 달라집니다. [기능 선택 안내](../integrations/CAPABILITY_SELECTION.md)를 참조하세요.
 
-v0.8.1은 **85개 SDK/소스 환경**에서 네이티브 공개 API를 사용할 수 있는 경로를 제공합니다. 에이전트는 사용자 정의 프로그램을 작성하고 API를 조합하며 전체 결과물을 저장할 수 있습니다. 편의 Tool의 사전 설정 예제에 사용 범위를 한정하지 않습니다. 작업별로 의존성을 명시적으로 준비해야 하며 플랫폼, 계정, 라이선스 및 선택적 백엔드 제한은 유지됩니다. 공학 검증 범위는 [SDK 통합 기록](../integrations/FULL_SDK_ACCESS.md)을 참조하세요. 실제 연구 과제를 통한 인수 검증은 수행하지 않았으며 `scientificValidation=not_evaluated`입니다.
+v0.8.4은 **111개 SDK/소스 환경**에서 네이티브 공개 API를 사용할 수 있는 경로를 제공합니다. 에이전트는 사용자 정의 프로그램을 작성하고 API를 조합하며 전체 결과물을 저장할 수 있습니다. 편의 Tool의 사전 설정 예제에 사용 범위를 한정하지 않습니다. 작업별로 의존성을 명시적으로 준비해야 하며 플랫폼, 계정, 라이선스 및 선택적 백엔드 제한은 유지됩니다. 공학 검증 범위는 [SDK 통합 기록](../integrations/FULL_SDK_ACCESS.md)을 참조하세요. 실제 연구 과제를 통한 인수 검증은 수행하지 않았으며 `scientificValidation=not_evaluated`입니다.
 
 v0.6.0은 [기업 SDK 17개](../integrations/VENDOR_SDKS.md), [기업·연구기관 기능 20개](../integrations/SDK_EXPANSION.md), [네트워크·제어·광학·클라우드 기능 15개](../integrations/SDK_GAPS.md)로 구성된 세 차례 통합의 **SDK 기능 패키지 52개**를 모았습니다. 미분 가능한 회로, 자원 추정, 화학 연산자, 광자 계산, 펄스 컴파일과 양자 네트워크를 다루며, [Bloqade Analog](../integrations/BLOQADE_ANALOG.md)의 로컬 원자 배열 계산도 추가됩니다. 각 어댑터는 문서에 명시된 동작을 제공하고 계정, 인증, 권한과 라이선스는 사용자가 설정합니다. 로컬 검증은 실제 클라우드 연결, QPU 또는 과학적 승인 검증을 뜻하지 않습니다.
 
@@ -46,13 +46,13 @@ Pauli Hamiltonian의 Trotter / qDrift 시뮬레이션과 함께 [qBraid Qiskit/C
 
 ### 데스크톱 설치 파일
 
-OpenQuantum 0.8.3은 원본 [anywhere-labs DSH Desktop 2.0.7](https://github.com/anywhere-labs/dsh-desktop/releases/tag/v2.0.7)과 OpenQuantum 기능 압축 파일을 사용합니다. Harness는 `0.1.5-rc.1`로 유지합니다. Node.js와 uv가 포함되며 Mac에서는 `install.command`, Windows에서는 `install.cmd`를 실행하세요. 브랜드, 양자 구성 요소, Quantum Learning, 업데이트 메뉴를 유지하고 원본 UI 변경을 최소화합니다. [설치 및 업데이트 안내](../DESKTOP_INSTALLERS.md)를 확인하세요.
+OpenQuantum 0.8.4은 원본 [anywhere-labs DSH Desktop 2.0.7](https://github.com/anywhere-labs/dsh-desktop/releases/tag/v2.0.7)과 OpenQuantum 기능 압축 파일을 사용합니다. Harness는 `0.1.5-rc.1`로 유지합니다. Node.js와 uv가 포함되며 Mac에서는 `install.command`, Windows에서는 `install.cmd`를 실행하세요. 브랜드, 양자 구성 요소, Quantum Learning, 업데이트 메뉴를 유지하고 원본 UI 변경을 최소화합니다. [설치 및 업데이트 안내](../DESKTOP_INSTALLERS.md)를 확인하세요.
 
-먼저 원본 DSH Desktop을 설치하세요. [0.8.3 Release](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.3)에서 Mac Apple Silicon, Mac Intel 또는 Windows x64 압축 파일을 선택하고 `SHA256SUMS`로 확인한 뒤 압축을 푸세요. 설치기는 OpenQuantum 아이콘을 사용하는 Mac용 `OpenQuantum.app` 또는 Windows용 `OpenQuantum.lnk`를 만듭니다. 원본 Desktop의 이름과 버전은 유지합니다. 업데이트 시 기존 Skill, 모델 설정, MCP 설정을 보존합니다. 계산 환경과 Quantum Learning은 문서에 따른 준비가 필요합니다.
+먼저 원본 DSH Desktop을 설치하세요. [0.8.4 Release](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.4)에서 Mac Apple Silicon, Mac Intel 또는 Windows x64 압축 파일을 선택하고 `SHA256SUMS`로 확인한 뒤 압축을 푸세요. 설치기는 OpenQuantum 아이콘을 사용하는 Mac용 `OpenQuantum.app` 또는 Windows용 `OpenQuantum.lnk`를 만듭니다. 원본 Desktop의 이름과 버전은 유지합니다. 업데이트 시 기존 Skill, 모델 설정, MCP 설정을 보존합니다. 계산 환경과 Quantum Learning은 문서에 따른 준비가 필요합니다.
 
 ### Codex
 
-[0.8.3 전체 설치 패키지](https://github.com/xi-zhao/OpenQuantum/releases/download/codex-v0.8.3/openquantum-0.8.3-codex-install.zip)를 받고 [설치 안내](../integrations/CODEX_AGENT_INSTALL.md)를 따르세요. Codex 대화에서 134개 Skill과 71개 과학 Tool을 사용할 수 있습니다. 호환되는 Codex, Node.js 24 이상, npm이 필요하며 과학 계산 의존성은 필요에 따라 준비합니다.
+[0.8.4 전체 설치 패키지](https://github.com/xi-zhao/OpenQuantum/releases/download/codex-v0.8.4/openquantum-0.8.4-codex-install.zip)를 받고 [설치 안내](../integrations/CODEX_AGENT_INSTALL.md)를 따르세요. Codex 대화에서 168개 Skill과 87개 과학 Tool을 사용할 수 있습니다. 호환되는 Codex, Node.js 24 이상, npm이 필요하며 과학 계산 의존성은 필요에 따라 준비합니다.
 
 ### 소스로 실행
 

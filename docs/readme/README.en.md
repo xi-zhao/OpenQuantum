@@ -12,13 +12,13 @@ Start with a research question, a paper or an existing program, and bring AI int
 
 Choose between two installation options that share the same domain capabilities: the **[Codex plugin](../integrations/CODEX_PLUGIN.md)** brings quantum Skills and scientific Tools into native Codex conversations, with a side panel for capability switches, MCP connections and tokens; **Desktop** includes the research workbench and the separate Quantum Learning application, with model services you configure yourself.
 
-**[Install the Codex plugin](#codex)** · [Install Desktop](#desktop-installer) · [See calculations and results](#use-and-inspect-results)
+**[Install the Codex plugin](#codex)** · [Install Desktop](#desktop-installer) · [See calculations and results](#use-and-inspect-results) · [Visit the website](https://xi-zhao.github.io/OpenQuantum/)
 
 **See the measured cases:** a **5.09× complete-call speedup** for a [PennyLane Pauli commutator](#pennylane-rust-case) and **5.69×** for a [QuTiP Wigner-function calculation](#qutip-rust-case), with performance comparisons, result checks and reproduction records.
 
 [Why OpenQuantum](#why-openquantum) · [Measured optimizations](#optimization-cases) · [Capabilities](#what-you-can-do) · [Quick start](#quick-start) · [Results](#use-and-inspect-results) · [Extend](#extend-the-platform) · [Roadmap](#roadmap-and-rsi) · [Contribute](#documentation-and-support) · [Open source](#license-and-acknowledgments)
 
-**OpenQuantum 0.8.3 is available:** [Desktop](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.3) · [Codex plugin](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.3). Both use the same product version. Tools, MCP and Skills have eight use categories, search and status filters. Desktop launchers now use the OpenQuantum icon.
+**OpenQuantum 0.8.4 is available:** [Desktop](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.4) · [Codex plugin](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.4). Both use the same product version. Tools, MCP and Skills have eight use categories, search and status filters. Desktop launchers now use the OpenQuantum icon.
 
 ![OpenQuantum Desktop research workbench](../images/openquantum-desktop-20261013.jpg)
 
@@ -124,9 +124,9 @@ The table describes source `main`. QCut, Compact and OpenQARP connections are en
 
 All **66 quantum-skills guides** have native Skill adaptations; **49 executable workflows** cover the **39 upstream algorithm modules** and additional methods from the guides. They use Qiskit, PennyLane, quimb, PySCF and NumPy/SciPy, with no proprietary UnitaryLab runtime dependency. Coverage describes workflows, not complete upstream Python API or backend compatibility. See the [per-method mapping and differences](../integrations/UNITARYLAB_OPEN_COVERAGE.md).
 
-The source inventory contains **157 Skills** (144 automatically selectable and 13 manual category indexes), **91 MCP connections** and **5 native quantum Tools**. Session availability depends on enabled connections and prepared environments. See the [capability catalog](../../README.md#能力接口目录) and [selection guide](../integrations/CAPABILITY_SELECTION.md).
+The source inventory contains **183 Skills** (170 automatically selectable and 13 manual category indexes), **91 MCP connections** and **5 native quantum Tools**. Session availability depends on enabled connections and prepared environments. See the [capability catalog](../../README.md#能力接口目录) and [selection guide](../integrations/CAPABILITY_SELECTION.md).
 
-Since v0.8.1, OpenQuantum provides native public API access for **85 SDK/source environments**. Agents can write custom programs, combine APIs and save complete artifacts beyond the convenience tools’ preset cases. Prepare dependencies explicitly for each task; platform, account, license and optional-backend limits still apply. See the [full SDK integration record](../integrations/FULL_SDK_ACCESS.md) for engineering checks. Real research-task acceptance was not performed; `scientificValidation=not_evaluated`.
+OpenQuantum 0.8.4 provides native public API access for **111 SDK/source environments**. Agents can write custom programs, combine APIs and save complete artifacts beyond the convenience tools’ preset cases. Prepare dependencies explicitly for each task; platform, account, license and optional-backend limits still apply. See the [full SDK integration record](../integrations/FULL_SDK_ACCESS.md) for engineering checks. Real research-task acceptance was not performed; `scientificValidation=not_evaluated`.
 
 v0.6.0 brings together **52 SDK capability packages across three integration batches**: [17 vendor SDKs](../integrations/VENDOR_SDKS.md), [20 company and research-institution capabilities](../integrations/SDK_EXPANSION.md), and [15 network, control, optics and cloud interfaces](../integrations/SDK_GAPS.md). Each adapter exposes the documented actions, rather than the whole upstream API. Users configure accounts, credentials, service permissions and applicable licenses. New adapters retain L1 / `scientificValidation=not_evaluated`; local and protocol-fixture tests do not establish live cloud, QPU or scientific acceptance.
 
@@ -148,13 +148,13 @@ OpenQuantum supports an upstream Desktop with a capability package and source bu
 
 ### Desktop installer
 
-OpenQuantum 0.8.3 uses the original [anywhere-labs DSH Desktop 2.0.7](https://github.com/anywhere-labs/dsh-desktop/releases/tag/v2.0.7) with an OpenQuantum capability archive. Harness stays at `0.1.5-rc.1`. The archive includes Node.js and uv; install it using `install.command` on Mac or `install.cmd` on Windows. Branding, quantum components, Quantum Learning and OpenQuantum updates are retained with minimal changes to the upstream interface. Follow the [installation and upgrade guide](../DESKTOP_INSTALLERS.md).
+OpenQuantum 0.8.4 uses the original [anywhere-labs DSH Desktop 2.0.7](https://github.com/anywhere-labs/dsh-desktop/releases/tag/v2.0.7) with an OpenQuantum capability archive. Harness stays at `0.1.5-rc.1`. The archive includes Node.js and uv; install it using `install.command` on Mac or `install.cmd` on Windows. Branding, quantum components, Quantum Learning and OpenQuantum updates are retained with minimal changes to the upstream interface. Follow the [installation and upgrade guide](../DESKTOP_INSTALLERS.md).
 
-Install the original DSH Desktop first. Download the Mac Apple Silicon, Mac Intel or Windows x64 capability archive from the [0.8.3 Release](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.3) and verify it against `SHA256SUMS` before extracting it. The installer creates an `OpenQuantum.app` on Mac or `OpenQuantum.lnk` on Windows with the OpenQuantum icon. The original Desktop keeps its upstream name and version. Upgrades preserve existing Skills, model routes and MCP settings; compute environments and Quantum Learning still require their documented preparation.
+Install the original DSH Desktop first. Download the Mac Apple Silicon, Mac Intel or Windows x64 capability archive from the [0.8.4 Release](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.4) and verify it against `SHA256SUMS` before extracting it. The installer creates an `OpenQuantum.app` on Mac or `OpenQuantum.lnk` on Windows with the OpenQuantum icon. The original Desktop keeps its upstream name and version. Upgrades preserve existing Skills, model routes and MCP settings; compute environments and Quantum Learning still require their documented preparation.
 
 ### Codex
 
-[Download the 0.8.3 complete installer](https://github.com/xi-zhao/OpenQuantum/releases/download/codex-v0.8.3/openquantum-0.8.3-codex-install.zip) and follow the [installation guide](../integrations/CODEX_AGENT_INSTALL.md). The plugin includes 134 Skills and 71 scientific Tools, used through native Codex conversations. It requires a compatible Codex host, Node.js 24+ and npm; prepare scientific dependencies as needed.
+[Download the 0.8.4 complete installer](https://github.com/xi-zhao/OpenQuantum/releases/download/codex-v0.8.4/openquantum-0.8.4-codex-install.zip) and follow the [installation guide](../integrations/CODEX_AGENT_INSTALL.md). The plugin includes 168 Skills and 87 scientific Tools, used through native Codex conversations. It requires a compatible Codex host, Node.js 24+ and npm; prepare scientific dependencies as needed.
 
 ### From source
 

@@ -10,7 +10,7 @@ OpenQuantum は、オープンソースで共同開発に開かれた量子研�
 
 **[Codex プラグインをインストール](../integrations/CODEX_AGENT_INSTALL.md)** · [Desktop をインストール](../DESKTOP_INSTALLERS.md)
 
-**OpenQuantum 0.8.3 公開：**[Desktop](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.3) · [Codex プラグイン](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.3)。両者の製品バージョンを統一しました。Tools・MCP・Skills を用途別の 8 分類で整理し、検索と状態フィルターを追加しました。Desktop の起動アイコンも OpenQuantum に統一しました。
+**OpenQuantum 0.8.4 公開：**[Desktop](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.4) · [Codex プラグイン](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.4)。両者の製品バージョンを統一しました。Tools・MCP・Skills を用途別の 8 分類で整理し、検索と状態フィルターを追加しました。Desktop の起動アイコンも OpenQuantum に統一しました。
 
 ![OpenQuantum Desktop](../images/openquantum-desktop-20261013.jpg)
 
@@ -20,9 +20,9 @@ Qiskit・TyxonQ による回路シミュレーション、PyZX による回路�
 
 ソースの `main` には、QCut のゲート切断と期待値再構成、Compact の回路最適化、OpenQARP の VQD 励起状態計算も含まれます。これらの接続は標準で有効ですが、依存関係の準備が必要です。cqlib-qml の角度カーネル QSVM と FlagQuantum 回路ワークベンチは標準では無効で、必要に応じて有効化します。[適用範囲と検証](../integrations/CANDIDATE_LIBRARIES.md)をご覧ください。
 
-現在のソースには **157 個の Skill**（自動選択 144、手動の分類索引 13）、**91 個の MCP 接続**、**5 個のネイティブ量子 Tool**があります。セッションで利用できる機能は、有効な接続と準備済み環境に依存します。[能力の選択](../integrations/CAPABILITY_SELECTION.md)を参照してください。
+現在のソースには **183 個の Skill**（自動選択 170、手動の分類索引 13）、**91 個の MCP 接続**、**5 個のネイティブ量子 Tool**があります。セッションで利用できる機能は、有効な接続と準備済み環境に依存します。[能力の選択](../integrations/CAPABILITY_SELECTION.md)を参照してください。
 
-v0.8.1 は **85 の SDK・ソース環境**でネイティブ公開 API を利用する経路を提供します。エージェントは独自のプログラムを作成し、API を組み合わせ、完全な成果物を保存できます。便宜的な Tool の既定例に用途を限定しません。依存関係はタスクごとに明示的に準備します。プラットフォーム、アカウント、ライセンス、任意バックエンドの制約は残ります。[SDK 統合記録](../integrations/FULL_SDK_ACCESS.md)に工程検証の範囲を示します。実際の研究課題による受入れは未実施で、`scientificValidation=not_evaluated` です。
+v0.8.4 は **111 の SDK・ソース環境**でネイティブ公開 API を利用する経路を提供します。エージェントは独自のプログラムを作成し、API を組み合わせ、完全な成果物を保存できます。便宜的な Tool の既定例に用途を限定しません。依存関係はタスクごとに明示的に準備します。プラットフォーム、アカウント、ライセンス、任意バックエンドの制約は残ります。[SDK 統合記録](../integrations/FULL_SDK_ACCESS.md)に工程検証の範囲を示します。実際の研究課題による受入れは未実施で、`scientificValidation=not_evaluated` です。
 
 v0.6.0 は、[各社 SDK 17 件](../integrations/VENDOR_SDKS.md)、[企業・研究機関の能力 20 件](../integrations/SDK_EXPANSION.md)、[ネットワーク・制御・光学・クラウドの 15 件](../integrations/SDK_GAPS.md)という 3 回の統合で追加した **52 個の SDK 能力パッケージ**をまとめます。微分可能回路、資源見積もり、化学演算子、光子計算、パルスコンパイル、量子ネットワークを扱い、[Bloqade Analog](../integrations/BLOQADE_ANALOG.md) による原子配列のローカル計算も加わります。公開する操作は各説明の範囲に限られ、アカウント、認証、権限、ライセンスは利用者が設定します。ローカル検証はクラウド接続、QPU、科学的受入れの検証を意味しません。
 
@@ -46,13 +46,13 @@ Pauli Hamiltonian の Trotter / qDrift シミュレーションに加え、[qBra
 
 ### デスクトップ版のインストール
 
-OpenQuantum 0.8.3 では、原版 [anywhere-labs DSH Desktop 2.0.7](https://github.com/anywhere-labs/dsh-desktop/releases/tag/v2.0.7) と OpenQuantum 能力アーカイブを使用します。Harness は `0.1.5-rc.1` のままです。アーカイブは Node.js と uv を同梱し、Mac は `install.command`、Windows は `install.cmd` で導入します。ブランド、量子コンポーネント、Quantum Learning、更新入口を保ち、原版 UI の変更を最小限にします。[インストールと更新手順](../DESKTOP_INSTALLERS.md)を確認してください。
+OpenQuantum 0.8.4 では、原版 [anywhere-labs DSH Desktop 2.0.7](https://github.com/anywhere-labs/dsh-desktop/releases/tag/v2.0.7) と OpenQuantum 能力アーカイブを使用します。Harness は `0.1.5-rc.1` のままです。アーカイブは Node.js と uv を同梱し、Mac は `install.command`、Windows は `install.cmd` で導入します。ブランド、量子コンポーネント、Quantum Learning、更新入口を保ち、原版 UI の変更を最小限にします。[インストールと更新手順](../DESKTOP_INSTALLERS.md)を確認してください。
 
-先に原版 DSH Desktop をインストールしてください。[0.8.3 Release](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.3) から Mac Apple Silicon、Mac Intel、Windows x64 用のアーカイブを選び、`SHA256SUMS` を確認してから展開してください。インストーラーは OpenQuantum アイコン付きの `OpenQuantum.app`（Mac）または `OpenQuantum.lnk`（Windows）を作成します。原版 Desktop の名前とバージョンは維持します。更新時は既存の Skill、モデル設定、MCP 設定を保持します。計算環境と Quantum Learning は所定の準備が必要です。
+先に原版 DSH Desktop をインストールしてください。[0.8.4 Release](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.4) から Mac Apple Silicon、Mac Intel、Windows x64 用のアーカイブを選び、`SHA256SUMS` を確認してから展開してください。インストーラーは OpenQuantum アイコン付きの `OpenQuantum.app`（Mac）または `OpenQuantum.lnk`（Windows）を作成します。原版 Desktop の名前とバージョンは維持します。更新時は既存の Skill、モデル設定、MCP 設定を保持します。計算環境と Quantum Learning は所定の準備が必要です。
 
 ### Codex
 
-[0.8.3 完全インストールパッケージ](https://github.com/xi-zhao/OpenQuantum/releases/download/codex-v0.8.3/openquantum-0.8.3-codex-install.zip)を取得し、[インストール手順](../integrations/CODEX_AGENT_INSTALL.md)に従ってください。134 個の Skill と 71 個の科学 Tool を Codex の会話で利用できます。対応する Codex、Node.js 24 以降、npm が必要です。科学計算の依存関係は必要に応じて準備します。
+[0.8.4 完全インストールパッケージ](https://github.com/xi-zhao/OpenQuantum/releases/download/codex-v0.8.4/openquantum-0.8.4-codex-install.zip)を取得し、[インストール手順](../integrations/CODEX_AGENT_INSTALL.md)に従ってください。168 個の Skill と 87 個の科学 Tool を Codex の会話で利用できます。対応する Codex、Node.js 24 以降、npm が必要です。科学計算の依存関係は必要に応じて準備します。
 
 ### ソースから起動
 

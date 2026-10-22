@@ -6,6 +6,15 @@
   <meta name="description" content="OpenQuantum，共建可信的量子科研智能。连接开源社区的优秀软件、算法与公开研究，让 AI 围绕研究问题选择方法、执行计算并核对结果。">
   <meta name="theme-color" content="#ffffff">
   <title>OpenQuantum · 共建可信的量子科研智能</title>
+  <link rel="canonical" href="https://xi-zhao.github.io/OpenQuantum/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="OpenQuantum">
+  <meta property="og:title" content="OpenQuantum · 共建可信的量子科研智能">
+  <meta property="og:description" content="开源开放的量子科研 AI 平台：汇聚社区软件与方法，让 AI 选择方法、执行计算并核对结果。">
+  <meta property="og:url" content="https://xi-zhao.github.io/OpenQuantum/">
+  <meta property="og:image" content="https://xi-zhao.github.io/OpenQuantum/assets/quantum-field-v3.png">
+  <meta property="og:image:alt" content="浅蓝色量子波场的概念视觉">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="./assets/mark.svg" type="image/svg+xml">
   <link rel="preload" href="./assets/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="./assets/quantum-field-v3.png" as="image" fetchpriority="high">
@@ -50,6 +59,11 @@
         <h1 id="hero-title">共建可信的<br>量子科研智能</h1>
         <p class="hero-description">开源开放的量子科研 AI 平台，汇聚社区的优秀软件与方法，推进可核对的研究。</p>
         <a class="button" href="#start">开始使用 <span aria-hidden="true">↗</span></a>
+        <ul class="hero-facts" aria-label="当前源码规模">
+          <li><strong>183</strong> 个内置 Skill</li>
+          <li><strong>91</strong> 个 MCP 服务连接</li>
+          <li>开源 · MIT 许可</li>
+        </ul>
         <p class="hero-note">把量子科研的专业积累，汇聚到一个 OpenQuantum。</p>
       </div>
       <a class="hero-next" href="#capabilities">探索科研能力 <span aria-hidden="true">↓</span></a>
@@ -231,6 +245,16 @@
             <h3>Codex 插件</h3>
             <p>在 Codex 原生对话中使用量子科研能力。</p>
             <a class="button" href="https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.4">安装 Codex 插件</a>
+            <p class="prompt-label" id="codex-prompt-label">也可以把这段话发给 Codex，让它帮你安装：</p>
+            <div class="prompt-box">
+              <pre id="codex-prompt" aria-labelledby="codex-prompt-label" tabindex="0"><code>请帮我安装 OpenQuantum Codex 插件 0.8.4。先阅读安装指南：
+https://github.com/xi-zhao/OpenQuantum/blob/codex-v0.8.4/docs/integrations/CODEX_AGENT_INSTALL.md
+从 https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.4 下载完整安装包与 SHA256SUMS，
+核对摘要后，检查 Codex、Node.js 24+ 和 npm，使用包内安装器完成安装。
+请保留已有插件和用户配置，核对 Skills、MCP 工具和左侧全局“OpenQuantum 设置”入口。
+需要我重载应用时，告诉我具体操作。最后报告实际验证的结果，以及仍需准备的科学计算依赖。</code></pre>
+              <button type="button" class="copy-button" data-copy="codex-prompt" hidden>复制安装请求</button>
+            </div>
           </div>
           <div class="install-option">
             <h3>Desktop</h3>

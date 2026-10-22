@@ -95,3 +95,14 @@ test("presentation charts retain the complete-call medians, quartiles and all me
   assert.deepEqual(wigner.shape, [201, 201]);
   assert.ok(wigner.max_absolute_difference <= 1e-12);
 });
+
+test("homepage install request and capability counts stay aligned with the README", async () => {
+  const readme = await readFile(path.join(root, "README.md"), "utf8");
+  const request = readme.match(/\*\*让 Codex 帮你安装：\*\*[\s\S]*?```text\n([\s\S]+?)\n```/)[1];
+  const shown = html.match(/<pre id="codex-prompt"[^>]*><code>([\s\S]+?)<\/code><\/pre>/)[1];
+  assert.equal(shown, request);
+  // README counts are themselves checked against the source inventory by the catalog test.
+  const [, skills, servers] = readme.match(/当前源码分发 \*\*(\d+) 个内置 Skill、(\d+) 个 MCP 服务连接/);
+  assert.ok(html.includes(`<strong>${skills}</strong> 个内置 Skill`));
+  assert.ok(html.includes(`<strong>${servers}</strong> 个 MCP 服务连接`));
+});
