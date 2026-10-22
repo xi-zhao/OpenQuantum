@@ -21,7 +21,7 @@ OpenQuantum 是开源开放的量子科研 AI 平台，连接开源社区的优�
 
 选择适合你的安装入口，两者复用同一份领域能力：**[Codex 插件](docs/integrations/CODEX_PLUGIN.md)** 将量子 Skill 与科学 Tool 接入 Codex 原生对话，侧边入口用于管理能力开关、MCP 连接和 Token；**Desktop** 包含科研工作台与独立的量子学习通应用，模型服务可自行配置。
 
-**[安装 Codex 插件](#codex-plugin)**　·　[安装 Desktop](#快速开始)　·　[先看计算与结果](#使用与结果)
+**[安装 Codex 插件](#codex-plugin)**　·　[安装 Desktop](#桌面安装包)　·　[先看计算与结果](#使用与结果)　·　[访问官网](https://xi-zhao.github.io/OpenQuantum/)
 
 **先看实测案例：**[PennyLane Pauli 对易子计算](#pennylane-rust-case)完整调用提速 **5.09 倍**；[QuTiP Wigner 函数计算](#qutip-rust-case)完整调用提速 **5.69 倍**，均保留性能对照、结果核对与复跑记录。
 

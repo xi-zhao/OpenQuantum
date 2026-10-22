@@ -72,6 +72,8 @@ sup { font-size: var(--small); }
 .hero h1 { font-size: var(--display); font-weight: 450; line-height: 1.25; }
 .hero-description { max-width: 490px; margin: 28px auto 0; font-size: 18px; line-height: 1.85; color: #3f5264; text-wrap: balance; }
 .hero .button { margin-top: 28px; }
+.hero-facts { display: flex; flex-wrap: wrap; justify-content: center; align-items: baseline; gap: 8px 28px; margin: 28px auto 0; padding: 0; list-style: none; font-size: var(--small); color: #3f5264; }
+.hero-facts strong { font-size: 18px; font-weight: 500; color: var(--ink); font-variant-numeric: tabular-nums; margin-right: 2px; }
 .hero-note { max-width: 60ch; margin: 24px auto 0; font-size: 16px; color: #3f5264; }
 .hero-figure { position: absolute; inset: 0; overflow: hidden; }
 .hero-field { position: absolute; inset: -8px; transition: transform 1600ms var(--ease); }
@@ -153,6 +155,11 @@ figcaption { font-size: var(--small); line-height: 1.65; margin-top: 14px; color
 .install-option p { margin-block: 10px 20px; color: var(--muted); font-size: 16px; }
 .install-option .text-link { font-size: 16px; }
 .install-option .text-link + .text-link { margin-left: 24px; }
+.prompt-label { margin-top: 24px; }
+.prompt-box { position: relative; margin-top: 4px; background: var(--white); border-radius: 16px; }
+.prompt-box pre { margin: 0; padding: 18px 20px 56px; max-height: 220px; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; text-align: left; font: 13px/1.7 ui-monospace, "SF Mono", Menlo, monospace; color: var(--ink); }
+.copy-button { position: absolute; right: 12px; bottom: 12px; min-height: 36px; padding: 6px 16px; border: 0; border-radius: 100px; background: var(--accent-soft); color: var(--ink); font-size: var(--small); transition: background-color 240ms var(--ease); }
+.copy-button[data-state="done"] { background: var(--accent); color: var(--white); }
 .site-footer { padding-block: 40px 32px; }
 .footer-top { display: flex; justify-content: space-between; gap: var(--gap); align-items: center; color: var(--muted); font-size: var(--small); }
 .footer-top > div { display: flex; gap: 24px; align-items: center; flex-wrap: wrap; }
@@ -164,6 +171,7 @@ figcaption { font-size: var(--small); line-height: 1.65; margin-top: 14px; color
   .button:hover { transform: translateY(-2px); background: #304357; color: var(--white); }
   .button:hover span { transform: translate(2px, -2px); }
   .nav-action:hover { background: var(--accent-soft); }
+  .copy-button:hover { background: #c4e3ef; }
   .case-switch button:hover { transform: translateY(-1px); }
   .project-column > a:hover { transform: translateX(3px); }
 }
@@ -272,6 +280,7 @@ figcaption { font-size: var(--small); line-height: 1.65; margin-top: 14px; color
   .start-options { grid-template-columns: 1fr; gap: 28px; max-width: 100%; }
   .start-options > p { font-size: var(--body); }
   .install-option { text-align: center; }
+  .hero-facts { gap: 6px 18px; margin-top: 24px; }
   .footer-top > div { gap: 20px; }
 }
 

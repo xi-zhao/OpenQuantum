@@ -10,7 +10,7 @@ O OpenQuantum é uma plataforma de IA para pesquisa quântica, de código aberto
 
 **[Instalar o plugin Codex](../integrations/CODEX_AGENT_INSTALL.md)** · [Instalar Desktop](../DESKTOP_INSTALLERS.md)
 
-**OpenQuantum 0.8.3 disponível:** [Desktop](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.3) · [Plugin Codex](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.3). Ambos usam a mesma versão do produto. Tools, MCP e Skills estão organizados em oito categorias de uso, com busca e filtros de estado. Os atalhos de Desktop usam o ícone OpenQuantum.
+**OpenQuantum 0.8.4 disponível:** [Desktop](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.4) · [Plugin Codex](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.4). Ambos usam a mesma versão do produto. Tools, MCP e Skills estão organizados em oito categorias de uso, com busca e filtros de estado. Os atalhos de Desktop usam o ícone OpenQuantum.
 
 ![OpenQuantum Desktop](../images/openquantum-desktop-20261013.jpg)
 
@@ -20,9 +20,9 @@ Simule circuitos com Qiskit e TyxonQ; otimize-os com PyZX; explore computação 
 
 O código de `main` também inclui corte de portas e reconstrução de valores esperados com QCut, otimização de circuitos com Compact e estados excitados por VQD com OpenQARP. Essas conexões são ativadas por padrão, mas suas dependências precisam ser preparadas. O QSVM com kernel angular do cqlib-qml e o ambiente de circuitos FlagQuantum ficam desativados até serem habilitados. Consulte o [escopo e a verificação](../integrations/CANDIDATE_LIBRARIES.md).
 
-O inventário atual contém **157 Skills** (144 selecionáveis automaticamente e 13 índices manuais), **91 conexões MCP** e **5 Tool quânticos nativos**. A disponibilidade depende das conexões ativadas e dos ambientes preparados. Consulte o [guia de seleção](../integrations/CAPABILITY_SELECTION.md).
+O inventário atual contém **183 Skills** (170 selecionáveis automaticamente e 13 índices manuais), **91 conexões MCP** e **5 Tool quânticos nativos**. A disponibilidade depende das conexões ativadas e dos ambientes preparados. Consulte o [guia de seleção](../integrations/CAPABILITY_SELECTION.md).
 
-A v0.8.1 permite usar as APIs públicas nativas de **85 ambientes SDK ou de código-fonte**. O agente pode escrever programas próprios, combinar APIs e salvar resultados completos, além dos casos predefinidos dos Tool. Prepare explicitamente as dependências para cada tarefa. Permanecem as restrições de plataforma, conta, licença e backend opcional. Consulte as verificações de engenharia no [registro de integração](../integrations/FULL_SDK_ACCESS.md). Não houve aceitação com tarefas reais de pesquisa; `scientificValidation=not_evaluated`.
+A v0.8.4 permite usar as APIs públicas nativas de **111 ambientes SDK ou de código-fonte**. O agente pode escrever programas próprios, combinar APIs e salvar resultados completos, além dos casos predefinidos dos Tool. Prepare explicitamente as dependências para cada tarefa. Permanecem as restrições de plataforma, conta, licença e backend opcional. Consulte as verificações de engenharia no [registro de integração](../integrations/FULL_SDK_ACCESS.md). Não houve aceitação com tarefas reais de pesquisa; `scientificValidation=not_evaluated`.
 
 A v0.6.0 reúne **52 pacotes de capacidades SDK** de três grupos: [17 SDKs de fornecedores](../integrations/VENDOR_SDKS.md), [20 capacidades de empresas e instituições](../integrations/SDK_EXPANSION.md) e [15 interfaces de redes, controle, óptica e nuvem](../integrations/SDK_GAPS.md). Abrangem circuitos diferenciáveis, estimativa de recursos, operadores químicos, fotônica, compilação de pulsos e redes quânticas; [Bloqade Analog](../integrations/BLOQADE_ANALOG.md) acrescenta simulação local de arranjos atômicos. Cada adaptador expõe as operações documentadas. O usuário configura contas, credenciais, permissões e licenças. A verificação local não valida conexões reais à nuvem, QPU nem aceitação científica.
 
@@ -46,13 +46,13 @@ Para uso local individual, escolha o instalador de desktop ou a execução a par
 
 ### Instalador para desktop
 
-OpenQuantum 0.8.3 usa o cliente original [anywhere-labs DSH Desktop 2.0.7](https://github.com/anywhere-labs/dsh-desktop/releases/tag/v2.0.7) com um arquivo de capacidades OpenQuantum. Harness permanece em `0.1.5-rc.1`. O arquivo inclui Node.js e uv; execute `install.command` no Mac ou `install.cmd` no Windows. A marca, os componentes quânticos, Quantum Learning e as atualizações são mantidos com poucas alterações na interface original. Veja o [guia de instalação e atualização](../DESKTOP_INSTALLERS.md).
+OpenQuantum 0.8.4 usa o cliente original [anywhere-labs DSH Desktop 2.0.7](https://github.com/anywhere-labs/dsh-desktop/releases/tag/v2.0.7) com um arquivo de capacidades OpenQuantum. Harness permanece em `0.1.5-rc.1`. O arquivo inclui Node.js e uv; execute `install.command` no Mac ou `install.cmd` no Windows. A marca, os componentes quânticos, Quantum Learning e as atualizações são mantidos com poucas alterações na interface original. Veja o [guia de instalação e atualização](../DESKTOP_INSTALLERS.md).
 
-Instale primeiro o cliente original DSH Desktop. Baixe o arquivo para Mac Apple Silicon, Mac Intel ou Windows x64 na [Release 0.8.3](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.3) e confira-o com `SHA256SUMS` antes de extrair. O instalador cria `OpenQuantum.app` no Mac ou `OpenQuantum.lnk` no Windows com o ícone OpenQuantum. O cliente original mantém seu nome e sua versão. As atualizações preservam as Skills, rotas de modelos e configurações MCP existentes. Os ambientes de cálculo e Quantum Learning exigem a preparação documentada.
+Instale primeiro o cliente original DSH Desktop. Baixe o arquivo para Mac Apple Silicon, Mac Intel ou Windows x64 na [Release 0.8.4](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.4) e confira-o com `SHA256SUMS` antes de extrair. O instalador cria `OpenQuantum.app` no Mac ou `OpenQuantum.lnk` no Windows com o ícone OpenQuantum. O cliente original mantém seu nome e sua versão. As atualizações preservam as Skills, rotas de modelos e configurações MCP existentes. Os ambientes de cálculo e Quantum Learning exigem a preparação documentada.
 
 ### Codex
 
-Baixe o [instalador completo 0.8.3](https://github.com/xi-zhao/OpenQuantum/releases/download/codex-v0.8.3/openquantum-0.8.3-codex-install.zip) e siga o [guia de instalação](../integrations/CODEX_AGENT_INSTALL.md). O plugin oferece 134 Skills e 71 Tools científicas nas conversas do Codex. Requer Codex compatível, Node.js 24 ou superior e npm; prepare as dependências científicas conforme necessário.
+Baixe o [instalador completo 0.8.4](https://github.com/xi-zhao/OpenQuantum/releases/download/codex-v0.8.4/openquantum-0.8.4-codex-install.zip) e siga o [guia de instalação](../integrations/CODEX_AGENT_INSTALL.md). O plugin oferece 168 Skills e 87 Tools científicas nas conversas do Codex. Requer Codex compatível, Node.js 24 ou superior e npm; prepare as dependências científicas conforme necessário.
 
 ### Executar a partir do código-fonte
 

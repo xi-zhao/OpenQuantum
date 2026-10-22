@@ -10,7 +10,7 @@ OpenQuantum منصة ذكاء اصطناعي للبحث الكمي، مفتوح�
 
 **[تثبيت إضافة Codex](../integrations/CODEX_AGENT_INSTALL.md)** · [تثبيت Desktop](../DESKTOP_INSTALLERS.md)
 
-**يتوفر OpenQuantum 0.8.3:** [Desktop](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.3) · [إضافة Codex](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.3). يستخدم الاثنان رقم إصدار المنتج نفسه. نُظّمت Tools وMCP وSkills في ثماني فئات حسب الاستخدام، مع البحث والتصفية حسب الحالة. تستخدم اختصارات Desktop أيقونة OpenQuantum.
+**يتوفر OpenQuantum 0.8.4:** [Desktop](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.4) · [إضافة Codex](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.4). يستخدم الاثنان رقم إصدار المنتج نفسه. نُظّمت Tools وMCP وSkills في ثماني فئات حسب الاستخدام، مع البحث والتصفية حسب الحالة. تستخدم اختصارات Desktop أيقونة OpenQuantum.
 
 ![OpenQuantum Desktop](../images/openquantum-desktop-20261013.jpg)
 
@@ -20,9 +20,9 @@ OpenQuantum منصة ذكاء اصطناعي للبحث الكمي، مفتوح�
 
 يتضمن مصدر `main` أيضًا تقطيع الدارات عند البوابات وإعادة بناء قيم التوقع باستخدام QCut، وتحسين الدارات باستخدام Compact، وحساب الحالات المثارة بطريقة VQD باستخدام OpenQARP. هذه الاتصالات مفعّلة افتراضيًا، لكن يجب تجهيز اعتمادياتها. أما QSVM بنواة زاوية من cqlib-qml وبيئة الدارات FlagQuantum فهما معطّلان افتراضيًا ويُفعّلان عند الحاجة. راجع [النطاق والتحقق](../integrations/CANDIDATE_LIBRARIES.md).
 
-يتضمن المصدر الحالي **157 من Skills**: منها 144 قابلة للاختيار تلقائيًا و13 فهرسًا يدويًا، إلى جانب **91 اتصال MCP** و**5 أدوات كمومية أصلية من نوع Tool**. يعتمد التوفر على الاتصالات المفعّلة والبيئات المعدّة. راجع [دليل الاختيار](../integrations/CAPABILITY_SELECTION.md).
+يتضمن المصدر الحالي **183 من Skills**: منها 170 قابلة للاختيار تلقائيًا و13 فهرسًا يدويًا، إلى جانب **91 اتصال MCP** و**5 أدوات كمومية أصلية من نوع Tool**. يعتمد التوفر على الاتصالات المفعّلة والبيئات المعدّة. راجع [دليل الاختيار](../integrations/CAPABILITY_SELECTION.md).
 
-يتيح v0.8.1 استخدام واجهات API العامة الأصلية في **85 بيئة SDK أو شيفرة مصدرية**. يستطيع الوكيل كتابة برامج مخصصة ودمج الواجهات وحفظ النتائج كاملة، دون الاقتصار على أمثلة Tool المحددة مسبقًا. يجب إعداد التبعيات صراحةً لكل مهمة. تظل قيود المنصة والحساب والترخيص والواجهات الخلفية الاختيارية سارية. يوضح [سجل التكامل](../integrations/FULL_SDK_ACCESS.md) نطاق الفحوص الهندسية. لم يُجرَ قبول باستخدام مهام بحثية حقيقية؛ `scientificValidation=not_evaluated`.
+يتيح v0.8.4 استخدام واجهات API العامة الأصلية في **111 بيئة SDK أو شيفرة مصدرية**. يستطيع الوكيل كتابة برامج مخصصة ودمج الواجهات وحفظ النتائج كاملة، دون الاقتصار على أمثلة Tool المحددة مسبقًا. يجب إعداد التبعيات صراحةً لكل مهمة. تظل قيود المنصة والحساب والترخيص والواجهات الخلفية الاختيارية سارية. يوضح [سجل التكامل](../integrations/FULL_SDK_ACCESS.md) نطاق الفحوص الهندسية. لم يُجرَ قبول باستخدام مهام بحثية حقيقية؛ `scientificValidation=not_evaluated`.
 
 يجمع v0.6.0 **52 حزمة قدرات SDK** من ثلاث دفعات: [17 SDK للمورّدين](../integrations/VENDOR_SDKS.md)، و[20 قدرة للشركات والمؤسسات البحثية](../integrations/SDK_EXPANSION.md)، و[15 واجهة للشبكات والتحكم والبصريات والسحابة](../integrations/SDK_GAPS.md). تشمل الدوائر القابلة للتفاضل وتقدير الموارد والمؤثرات الكيميائية والفوتونيات وترجمة النبضات والشبكات الكمومية، ويضيف [Bloqade Analog](../integrations/BLOQADE_ANALOG.md) محاكاة محلية لمصفوفات الذرات. يتيح كل محوّل العمليات الموثقة فقط. يضبط المستخدم الحسابات وبيانات الاعتماد والصلاحيات والتراخيص. لا تثبت الاختبارات المحلية اتصالًا فعليًا بالسحابة أو تشغيل QPU أو القبول العلمي.
 
@@ -46,13 +46,13 @@ OpenQuantum منصة ذكاء اصطناعي للبحث الكمي، مفتوح�
 
 ### مثبّت تطبيق سطح المكتب
 
-يستخدم OpenQuantum 0.8.3 النسخة الأصلية من [anywhere-labs DSH Desktop 2.0.7](https://github.com/anywhere-labs/dsh-desktop/releases/tag/v2.0.7) مع أرشيف قدرات OpenQuantum. يبقى Harness عند `0.1.5-rc.1`. يتضمن الأرشيف Node.js وuv؛ شغّل `install.command` على Mac أو `install.cmd` على Windows. تبقى الهوية ومكونات الكم وQuantum Learning ومدخل التحديث، مع أقل تغييرات ممكنة في الواجهة الأصلية. راجع [دليل التثبيت والترقية](../DESKTOP_INSTALLERS.md).
+يستخدم OpenQuantum 0.8.4 النسخة الأصلية من [anywhere-labs DSH Desktop 2.0.7](https://github.com/anywhere-labs/dsh-desktop/releases/tag/v2.0.7) مع أرشيف قدرات OpenQuantum. يبقى Harness عند `0.1.5-rc.1`. يتضمن الأرشيف Node.js وuv؛ شغّل `install.command` على Mac أو `install.cmd` على Windows. تبقى الهوية ومكونات الكم وQuantum Learning ومدخل التحديث، مع أقل تغييرات ممكنة في الواجهة الأصلية. راجع [دليل التثبيت والترقية](../DESKTOP_INSTALLERS.md).
 
-ثبّت أولًا عميل DSH Desktop الأصلي. نزّل أرشيف Mac Apple Silicon أو Mac Intel أو Windows x64 من [الإصدار 0.8.3](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.3)، وتحقق منه باستخدام `SHA256SUMS` قبل فك الضغط. ينشئ المثبّت `OpenQuantum.app` على Mac أو `OpenQuantum.lnk` على Windows بأيقونة OpenQuantum. يحتفظ العميل الأصلي باسمه ورقم إصداره. تحافظ التحديثات على Skills ومسارات النماذج وإعدادات MCP الحالية. تحتاج بيئات الحساب وQuantum Learning إلى خطوات الإعداد الموثقة.
+ثبّت أولًا عميل DSH Desktop الأصلي. نزّل أرشيف Mac Apple Silicon أو Mac Intel أو Windows x64 من [الإصدار 0.8.4](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.4)، وتحقق منه باستخدام `SHA256SUMS` قبل فك الضغط. ينشئ المثبّت `OpenQuantum.app` على Mac أو `OpenQuantum.lnk` على Windows بأيقونة OpenQuantum. يحتفظ العميل الأصلي باسمه ورقم إصداره. تحافظ التحديثات على Skills ومسارات النماذج وإعدادات MCP الحالية. تحتاج بيئات الحساب وQuantum Learning إلى خطوات الإعداد الموثقة.
 
 ### Codex
 
-نزّل [حزمة التثبيت الكاملة 0.8.3](https://github.com/xi-zhao/OpenQuantum/releases/download/codex-v0.8.3/openquantum-0.8.3-codex-install.zip) واتبع [دليل التثبيت](../integrations/CODEX_AGENT_INSTALL.md). توفر الإضافة 134 Skill و71 Tool علمية ضمن محادثات Codex. يلزم إصدار متوافق من Codex وNode.js 24 أو أحدث وnpm؛ جهّز الاعتماديات العلمية حسب الحاجة.
+نزّل [حزمة التثبيت الكاملة 0.8.4](https://github.com/xi-zhao/OpenQuantum/releases/download/codex-v0.8.4/openquantum-0.8.4-codex-install.zip) واتبع [دليل التثبيت](../integrations/CODEX_AGENT_INSTALL.md). توفر الإضافة 168 Skill و87 Tool علمية ضمن محادثات Codex. يلزم إصدار متوافق من Codex وNode.js 24 أو أحدث وnpm؛ جهّز الاعتماديات العلمية حسب الحاجة.
 
 ### التشغيل من المصدر
 

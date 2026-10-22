@@ -30,6 +30,30 @@ if (caseGroup && switches.length === panels.length && panels.length > 1) {
   }
 }
 
+// Copy buttons are progressive: without script or clipboard access the text stays selectable.
+for (const button of document.querySelectorAll("[data-copy]")) {
+  const source = document.getElementById(button.dataset.copy);
+  if (!source) continue;
+  const label = button.textContent;
+  button.hidden = false;
+  button.addEventListener("click", async () => {
+    let copied = false;
+    try {
+      await navigator.clipboard.writeText(source.textContent.trim());
+      copied = true;
+    } catch {
+      const range = document.createRange();
+      range.selectNodeContents(source);
+      getSelection().removeAllRanges();
+      getSelection().addRange(range);
+    }
+    button.dataset.state = copied ? "done" : "selected";
+    button.textContent = copied ? "已复制" : "已选中，请手动复制";
+    status.textContent = button.textContent;
+    setTimeout(() => { button.textContent = label; delete button.dataset.state; }, 2400);
+  });
+}
+
 const menu = document.querySelector(".mobile-menu");
 menu?.querySelectorAll("a").forEach((link) => {
   link.addEventListener("click", () => { menu.open = false; });
