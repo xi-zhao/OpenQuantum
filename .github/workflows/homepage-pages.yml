@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - main
-      # Temporary bootstrap: removed after the first verified deployment.
-      - c/trusted-quantum-homepage
     paths:
       - "site/**"
       - "scripts/*homepage*"
@@ -56,7 +54,7 @@ jobs:
 
   deploy:
     name: Publish homepage
-    if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/c/trusted-quantum-homepage')
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
     needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 10

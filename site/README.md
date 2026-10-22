@@ -26,12 +26,14 @@ npm run homepage:build
 仓库 Pages 的发布源设为 **GitHub Actions**。[首页工作流](../.github/workflows/homepage-pages.yml) 使用 Node.js 24 和 GitHub 官方 Pages actions：
 
 - Pull request 只构建和检查页面，不发布。
-- 首页相关改动进入 `main` 后自动发布，也可从主分支手动运行工作流。
+- 本工作流合入 `main` 后，首页相关改动自动发布，也可从主分支手动运行工作流。
 - 构建只调用已有的首页测试与原生 Node.js 文件操作，不安装科研工作台依赖。
 - 仅上传 `dist/homepage/`；科研后端、环境配置和凭据不进入发布目录。
 - 页面与资源使用相对路径，兼容 `/OpenQuantum/` 子路径；不需要自定义域名。
 
-首次发布直接从已验证的首页任务分支启动；上线核验后移除该分支的自动发布入口，保留主分支发布规则。此次上线不合并尚在审查中的依赖 PR。
+首次发布已通过[官方 Pages 工作流](https://github.com/xi-zhao/OpenQuantum/actions/runs/39730513624)完成，源版本为 `ceacc4096dee24d9f06eb971efab0083937525c9`。线上首页与 12 个页面、脚本、字体和图片文件均返回 200，文件内容与本地构建逐字节一致。
+
+首发用的任务分支入口及临时部署权限已移除，发布环境只允许 `main`。首次上线保留了依赖 PR 的审查状态；持续自动发布在首页 PR 合入主分支后生效。
 
 ## 内容与交互
 
