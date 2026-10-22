@@ -64,7 +64,7 @@
 python3 experiments/qutip-rust-wigner/reproduce.py --node "$NODE" --locator "$LOCATOR"
 ```
 
-LOCATOR 指向已安装 quantum-sdk-workbench/scripts/sdk-access.mjs；NODE 为可用 Node.js。需要本机 Cargo/Rust，构建使用 Cargo.lock 与 release profile。运行器检查准备状态，使用 SDK 返回的解释器与 environment；计算阶段不安装依赖。`--phase validate --output /path/to/checks` 可只做数值核验并写到独立目录；正式复跑默认更新本案例 results。绘图由同一已准备 SDK 的 Python 执行 `make_report.py`，只读取保存数据。
+LOCATOR 指向已安装 quantum-sdk-workbench/scripts/sdk-access.mjs；NODE 为可用 Node.js。需要本机 Cargo/Rust，构建使用 Cargo.lock 与 release profile。运行器检查准备状态，使用 SDK 返回的解释器与 environment；计算阶段不安装依赖。`--phase validate --output /path/to/checks` 可只做数值核验并写到独立目录；默认 `--phase all` 依次构建、核验、计时并生成报告，更新本案例 results 与 README；`--output /path/to/run` 将构建日志、数值、计时、图表及 README 全部保存到指定目录，不改写已提交的案例证据。`--phase report --output /path/to/run` 可使用同一已准备 SDK 从该目录保存的数据重新生成报告。
 
 ## 方法与适用范围
 
