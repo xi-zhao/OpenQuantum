@@ -16,6 +16,8 @@
     "node": ">=24"
   },
   "scripts": {
+    "homepage:build": "node scripts/build-homepage.mjs",
+    "homepage:dev": "node scripts/preview-homepage.mjs",
     "learning:ui:setup": "node scripts/setup-openmaic-ui.mjs",
     "dev": "node scripts/run-harness.mjs --port 3000 --trusted-host localhost:3000",
     "desktop": "node scripts/run-desktop.mjs",
