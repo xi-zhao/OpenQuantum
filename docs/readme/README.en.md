@@ -32,7 +32,7 @@ From quantum algorithms and circuit simulation to quantum chemistry, many-body c
 
 ### Faster calculations let you test more ideas
 
-We optimize key computational steps to reduce waiting and make room for more comparisons and experiments. In dedicated optimization cases, a [PennyLane Pauli commutator](#pennylane-rust-case) and a [QuTiP Wigner-function calculation](#qutip-rust-case) achieved complete-call speedups of **5.09×** and **5.69×**, respectively. Both were checked against the original libraries and independent reference calculations.
+We optimize key computational steps to reduce waiting and make room for more comparisons and experiments. In targeted optimization cases, a [PennyLane Pauli commutator](#pennylane-rust-case) and a [QuTiP Wigner-function calculation](#qutip-rust-case) achieved complete-call speedups of **5.09×** and **5.69×**, respectively. Both were checked against the original libraries and independent reference calculations.
 
 ### Open collaboration keeps research capabilities growing
 
@@ -61,12 +61,12 @@ An investigation that becomes possible, a method applied to a new problem, or a 
 
 ## Measured case: a 5.09× faster PennyLane calculation
 
-**Set a research task and get a runnable result you can check.** We gave OpenQuantum a task: optimize a PennyLane research calculation, measure the actual speedup and verify the results. On 2026-10-20, we completed the experiment using OpenQuantum 0.8.4 within Codex, producing an optimized program, a performance comparison, correctness checks and records for reproduction.
+**Set a research task and get a runnable result you can check.** We gave OpenQuantum a task: apply targeted optimization to a PennyLane research calculation, measure the actual speedup and verify the results. On 2026-10-20, we completed the experiment using OpenQuantum 0.8.4 within Codex, producing an optimized program, a performance comparison, correctness checks and records for reproduction.
 
 | Calculation | Complete call |
 | --- | ---: |
 | Native PennyLane | 30.62 ms |
-| Optimized | **6.02 ms** |
+| After OpenQuantum optimization | **6.02 ms** |
 
 **A 5.09× speedup for the complete call.** The measured task was one Pauli commutator calculation for a 32-qubit local model. These are medians of nine warm rounds on an Apple M4 with PennyLane 0.45.1. Timings include input and output conversion; environment preparation and compilation are excluded.
 
@@ -80,12 +80,12 @@ The 5.09× result applies to the specified calculation. The case report provides
 
 ## Measured case: a 5.69× faster QuTiP calculation
 
-**Turn a specialist method into a faster calculation you can check.** Using OpenQuantum 0.8.4 within Codex, we optimized a QuTiP Wigner-function calculation and retained the runnable program, complete phase-space outputs, performance comparisons and independent checks.
+**Turn a specialist method into a faster calculation you can check.** Using OpenQuantum 0.8.4 within Codex, we applied targeted optimization to a QuTiP Wigner-function calculation and retained the runnable program, complete phase-space outputs, performance comparisons and independent checks.
 
 | Calculation | Complete call |
 | --- | ---: |
 | Default QuTiP method | 171.77 ms |
-| Optimized | **30.18 ms** |
+| After OpenQuantum optimization | **30.18 ms** |
 
 **A 5.69× speedup for the complete call.** The task computes a density matrix's Wigner function in a **64-dimensional single-mode Fock space on a 201×201 phase-space grid**. Timings are medians of nine interleaved warm rounds on an Apple M4 with QuTiP 5.3.1 and single-thread settings. They include input reading, conversion, validation and complete double-precision output; setup, compilation and result checks are outside the timed region.
 

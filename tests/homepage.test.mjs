@@ -1,4 +1,5 @@
 import test from "node:test";
+import { createHash } from "node:crypto";
 import assert from "node:assert/strict";
 import { readFile, access } from "node:fs/promises";
 import path from "node:path";
@@ -58,4 +59,34 @@ test("portable output contains every referenced asset, intact original evidence 
   for (const item of manifest.assets) {
     assert.deepEqual(await readFile(path.join(root, item.source)), await readFile(path.join(output, item.destination)), item.source);
   }
+});
+
+
+test("presentation charts retain the complete-call medians, quartiles and all measured inputs", async () => {
+  const charts = await json("site/assets/benchmark-charts.json");
+  for (const [asset, source, methods] of [
+    ["qutip-timings.svg", "experiments/qutip-rust-wigner/results/benchmark.json", ["qutip_clenshaw", "rust_clenshaw"]],
+    ["pennylane-timings.svg", "experiments/pennylane-rust-commutator/results/benchmark.json", ["pennylane", "rust_end_to_end"]],
+  ]) {
+    const plot = charts.plots.find((item) => item.asset === asset);
+    const measured = await json(source);
+    assert.deepEqual(plot.cases, measured.cases.map((item) => item.id));
+    for (const [index, method] of methods.entries()) {
+      for (const field of ["median", "q25", "q75"]) {
+        assert.deepEqual(plot.series[index][`${field}_ms`], measured.cases.map((item) => item.timings[method][`${field}_seconds`] * 1000));
+      }
+    }
+  }
+  for (const plot of charts.plots) {
+    for (const input of plot.inputs) {
+      const bytes = await readFile(path.join(root, input.path));
+      assert.equal(createHash("sha256").update(bytes).digest("hex"), input.sha256);
+    }
+    const svg = await readFile(path.join(root, "site/assets", plot.asset), "utf8");
+    assert.doesNotMatch(svg, /\bRust\b/i);
+    assert.ok(svg.includes("OpenQuantum"));
+  }
+  const wigner = charts.plots.find((item) => item.asset === "wigner-comparison.svg");
+  assert.deepEqual(wigner.shape, [201, 201]);
+  assert.ok(wigner.max_absolute_difference <= 1e-12);
 });

@@ -1,4 +1,4 @@
-import { copyFile, mkdir, writeFile } from "node:fs/promises";
+import { copyFile, mkdir, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -15,11 +15,15 @@ export async function buildHomepage() {
     ["public/openquantum/fonts/inter-latin.woff2", "assets/inter-latin.woff2"],
     ["docs/images/openquantum-desktop-20261013.jpg", "assets/desktop.jpg"],
     ["docs/images/openquantum-settings-categories-20261013.jpg", "assets/settings.jpg"],
-    ["experiments/qutip-rust-wigner/results/wigner-comparison.png", "assets/wigner-comparison.png"],
-    ["experiments/qutip-rust-wigner/results/timings.png", "assets/qutip-timings.png"],
-    ["experiments/pennylane-rust-commutator/results/timings.png", "assets/pennylane-timings.png"],
+    ["site/assets/wigner-comparison.svg", "assets/wigner-comparison.svg"],
+    ["site/assets/qutip-timings.svg", "assets/qutip-timings.svg"],
+    ["site/assets/pennylane-timings.svg", "assets/pennylane-timings.svg"],
+    ["site/assets/benchmark-charts.json", "assets/benchmark-charts.json"],
   ]);
   await mkdir(path.join(outputRoot, "assets"), { recursive: true });
+  // Retire the previous presentation files when rebuilding an existing export.
+  await Promise.all(["wigner-comparison.png", "qutip-timings.png", "pennylane-timings.png"]
+    .map((name) => rm(path.join(outputRoot, "assets", name), { force: true })));
   await Promise.all([...files].map(([source, destination]) =>
     copyFile(path.join(projectRoot, source), path.join(outputRoot, destination))));
   await writeFile(path.join(outputRoot, "provenance.json"), `${JSON.stringify({
