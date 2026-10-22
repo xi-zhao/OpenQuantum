@@ -52,7 +52,7 @@ function move(element, frames, options) {
 
 if (!reduceMotion.matches && "IntersectionObserver" in window) {
   const entranceTargets = document.querySelectorAll(
-    ".hero h1, .hero-description, .hero .button, .hero-note, .hero-caption, " +
+    ".hero h1, .hero-description, .hero .button, .hero-note, .hero-next, " +
     ".intro-statement > *, .index-intro, .project-column, .index-note, " +
     ".section-opening > *, .case-switch, .benchmark-numbers, .case-result, .result-figure, " +
     ".workspace-heading > *, .workspace-story > div, .workspace-panel figure, " +
@@ -71,22 +71,22 @@ if (!reduceMotion.matches && "IntersectionObserver" in window) {
   }, { threshold: .08 });
   entranceTargets.forEach((element) => observer.observe(element));
 
-  const object = document.querySelector(".quantum-object");
+  const field = document.querySelector(".hero-field");
   const hero = document.querySelector(".hero");
-  move(object?.querySelector("img"), [
-    { transform: "translateY(4px) rotate(-.35deg)" },
-    { transform: "translateY(-5px) rotate(.35deg)" },
-  ], { duration: 9000, iterations: Infinity, direction: "alternate", easing: "ease-in-out" });
+  move(field?.querySelector("img"), [
+    { transform: "scale(1.03) translateX(-.4%)" },
+    { transform: "scale(1.06) translateX(.4%)" },
+  ], { duration: 14000, iterations: Infinity, direction: "alternate", easing: "ease-in-out" });
 
-  if (object && hero && window.matchMedia("(hover: hover)").matches) {
+  if (field && hero && window.matchMedia("(hover: hover)").matches) {
     hero.addEventListener("pointermove", (event) => {
       if (reduceMotion.matches) return;
       const bounds = hero.getBoundingClientRect();
       const x = Math.max(-1, Math.min(1, (event.clientX - bounds.left) / bounds.width * 2 - 1));
       const y = Math.max(-1, Math.min(1, (event.clientY - bounds.top) / bounds.height * 2 - 1));
-      object.style.transform = `rotateX(${-y * 1.2}deg) rotateY(${x * 2}deg)`;
+      field.style.transform = `translate3d(${x * 4}px, ${y * 3}px, 0)`;
     });
-    hero.addEventListener("pointerleave", () => { object.style.transform = ""; });
+    hero.addEventListener("pointerleave", () => { field.style.transform = ""; });
   }
 
   reduceMotion.addEventListener("change", () => {
@@ -94,6 +94,6 @@ if (!reduceMotion.matches && "IntersectionObserver" in window) {
     observer.disconnect();
     for (const animation of moving) animation.cancel();
     moving.clear();
-    if (object) object.style.transform = "";
+    if (field) field.style.transform = "";
   });
 }

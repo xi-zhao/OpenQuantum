@@ -4,7 +4,7 @@
 
 视觉方向、素材说明与最终浏览器核验见[首页设计与核验](DESIGN.md)。
 
-使用原生 HTML、CSS 和浏览器 ESM，复用项目的 Logo、字体、实际界面和计算记录。首屏新增银白量子态几何的概念视觉，深海军蓝与冷青色细节贯穿页面。构建不安装依赖、不连接模型或量子云。
+以 [Google DeepMind 官网](https://deepmind.google/) 为整页视觉主参考，使用连续浅色画布、统一的文字与留白、浅蓝量子波场和清楚的内容分组。使用原生 HTML、CSS 和浏览器 ESM，复用项目 Logo、字体、实际界面和计算记录。构建不安装依赖、不连接模型或量子云。
 
 ```bash
 npm run homepage:dev
@@ -21,8 +21,8 @@ npm run homepage:build
 
 ## 内容与交互
 
-- 首页用银白量子态几何表现连接与相干的视觉概念，提供微幅视差与缓慢运动；图注明确标注“概念视觉”。
-- 社区项目按研究方向列出，名称直接链接原项目；能力目录链接 OpenQuantum README。
+- 首页以融入画面的浅蓝量子波场表现连接与相干的视觉概念，提供微幅视差与缓慢运动；图注明确标注“概念视觉”。
+- 社区项目按研究方向分组，名称直接链接原项目；能力目录链接 OpenQuantum README。内容依次展示科研能力、实际工作台、优化实测、开放共建与安装入口。
 - QuTiP / PennyLane 选择器同步显示完整调用计时、输入条件、结果核对及固定版本复跑报告。没有 JavaScript 时，两份案例完整显示。
 - 原生折叠面板提供详细计时条件。完整计算图和界面截图均可点击查看。
 - 手机目录支持原生展开、选择后关闭与 Escape 关闭。动效遵循系统的减少动态效果设置；动画和观察器失败时正文保持可读。
@@ -48,7 +48,7 @@ npm run homepage:build
 | 页面素材 | 源文件 / 说明 |
 | --- | --- |
 | OQ 标志 | [`mark.svg`](../packages/openquantum-web-branding/assets/mark.svg)，现有 OpenQuantum 标志 |
-| 首屏概念视觉 | [`quantum-state-v2.png`](assets/quantum-state-v2.png)，使用内置 `image_gen` 生成并保留透明通道；[完整提示词](assets/quantum-state-v2.prompt.txt) |
+| 首屏概念视觉 | [`quantum-field-v3.png`](assets/quantum-field-v3.png)，使用内置 `image_gen` 生成的浅蓝量子波场；[完整提示词](assets/quantum-field-v3.prompt.txt) |
 | 科研工作台、分类设置 | [`docs/images/README.md`](../docs/images/README.md)，2026-10-13 实际原生界面 |
 | Wigner 对照、QuTiP 计时 | [`QuTiP 实验`](../experiments/qutip-rust-wigner/README.md)，包含输入、原库/Rust/独立结果与误差 |
 | PennyLane 计时 | [`PennyLane 实验`](../experiments/pennylane-rust-commutator/README.md)，包含全部九个输入规模 |

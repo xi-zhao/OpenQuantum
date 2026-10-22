@@ -1,77 +1,84 @@
 # 首页设计与核验
 
-## 定位与视觉方向
+## 定位与主参考
 
-**OpenQuantum，共建可信的量子科研智能。** 主行动是开始使用，内容依次说明专业覆盖、专项优化、可核对的工作过程与开放共建。
+**OpenQuantum，共建可信的量子科研智能。把量子科研的专业积累，汇聚到一个 OpenQuantum。**
 
-本轮按「科技范、量子感、精致」重新调整视觉。使用 taste skill 2.1.4 的 **The quiet instrument**，seed **240589583**，保留精密、安静的表达，采用宽幅文字与量子态几何并置的首屏。
-方向候选为 Dense tiles、Type-only statement、The quiet instrument；选择后者，因为它能承载专业内容，同时留出图形与文字的呼吸空间。
-按真实产品内容调整蓝图：中置导航改为清楚的页顶导航，窄栏改为适合科学对照的宽幅布局，虚构应用状态改为真实界面截图与两份专项实测。
+本轮由用户明确选择 [Google DeepMind 官网](https://deepmind.google/) 作为整页主参考，替代此前独立量子雕塑与深浅色段落交替的构图。不重新抽取随机方向，也不使用旧 seed 描述这一版。
+2026-10-22 已实际查看其首屏、产品展示与科研内容区。本页参考它的连续浅色画布、居中品牌宣言、清楚的模块层级和统一留白；OpenQuantum 继续使用自己的品牌、文案、界面和科研证据。
 
-一句话概念：用有秩序的量子态几何，把社区的专业积累、计算与可核对的结果连接起来。
+一句话概念：量子波场中的共同空间，把社区的方法、研究工作台与可核对的结果连接为一个开放平台。
 
-上一版的大块青色与巨型 Q 裁切改为深海军蓝、银白材质和少量冷青色。1440px 首屏标题由 84.1px / 600 字重调整为 66.2px / 400；加宽页面边距，简化按钮，真实产品画面恢复完整矩形展示。
-平板收回图形负边距，手机缩小概念图并压缩首屏间距，使完整图形及图注进入首屏。手机案例标题保留 20px，避免被读成细小标签。
+## 整页的统一方式
+
+- 页顶导航、正文、共建邀请与页尾使用同一白色画布；浅灰模块承担内容分组，量子蓝集中于首屏。
+- 首屏标题居中，浅蓝量子波场融入整个画面，不再把单独的金属球体当作展示物。
+- 共享文字尺度、页面边距与圆角；1440px 正文左右各 72px，正文不超过 60ch。
+- 科研能力之后先展示真实工作台，再进入实测成果，随后是开放共建与两种安装入口。
+- 专业项目按研究方向分组并链接原项目；OpenQuantum 的筛选、适配、整合、优化与核对工作在正文直接说明。
+- 实测模块将完整调用计时、提速和原始结果并排呈现，详细条件可以展开。手机按阅读顺序重排，保留完整证据入口。
+- 两种安装入口收在一个浅灰行动区域，页尾沿用相同的品牌与文字比例。
+
+三轮调整记录位于 `.taste-skill/deepmind-round-1-critique.md`、`.taste-skill/deepmind-round-2-critique.md` 与本页最终审视。之前的页面截图保存在 `.taste-skill/deepmind-before/`。
 
 ## 交互与素材
 
-主要交互是 QuTiP / PennyLane 实测选择器：同时切换计时、速度比、输入条件、核对结论、真实图像与固定版本报告。初始展示 QuTiP；无脚本时显示两个完整案例。
+主要交互是 QuTiP / PennyLane 实测选择器：同步切换原库与 Rust 完整调用计时、提速、输入条件、核对结论和固定版本报告。无脚本时，两份案例都显示。
 
-首屏概念图采用内置 **image_gen** 生成，保存为 [site/assets/quantum-state-v2.png](assets/quantum-state-v2.png)，1254 × 1254、透明背景。完整生成提示词保存在 [site/assets/quantum-state-v2.prompt.txt](assets/quantum-state-v2.prompt.txt)。
-银白与石英质感的球面轨道、波面和冷青色路径表达量子态几何；图注写明「概念视觉」。这幅图不承担硬件、实验结果或在线运行状态的证明。
+首屏概念图使用内置 **image_gen** 生成，保存为 [site/assets/quantum-field-v3.png](assets/quantum-field-v3.png)，1672 × 941、不透明背景。完整提示词与生成方式保存为 [site/assets/quantum-field-v3.prompt.txt](assets/quantum-field-v3.prompt.txt)。
+它是量子波场的视觉概念，图注明确写为「概念视觉」，科研证据由下方原始结果和复跑报告提供。
 
-其余资源来自项目既有工作：OpenQuantum OQ 标志；2026-10-13 的实际工作台和能力设置；QuTiP Wigner 原库、Rust 和逐点误差图；QuTiP 与 PennyLane 计时图。
-来源逐项见 [README](README.md#资源来源)，构建保留 `provenance.json`。生成素材与既有图片均按源文件原字节复制；社区项目链接原项目，页脚链接开源和组件许可。
+其余资源沿用项目已有工作：OpenQuantum OQ 标志和 Inter 字体、2026-10-13 实际工作台与能力设置、QuTiP Wigner 结果及逐点误差图、QuTiP 和 PennyLane 原始计时图。
+来源见 [README](README.md#资源来源)；所有导出图片按源文件原字节复制，`provenance.json` 记录源文件与固定案例版本。
 
-概念图有缓慢的小幅浮动与指针视差，内容分层进入，案例切换提供短促反馈。减少动态效果时停止 CSS 与进行中的脚本动画，复位视差，保留完整内容。
-仓库没有适合本页的真实操作录屏，因此保留 inspector 的一项 `no-footage` 提醒；概念运动与真实结果图足以支撑当前内容，不补无关硬件视频。
+波场有缓慢的平移缩放和轻微指针视差，内容分层进入，按钮和案例切换提供短促反馈。减少动态效果时取消 CSS 与脚本动画并复位视差。
+当前没有适合本页的真实科研操作录屏，保留 inspector 的 `no-footage` 提醒。现有动效只呈现概念与交互反馈，真实计算由案例证据展示。
 
 ## 最终核验
 
-2026-10-22，本地 Chrome inspector 与 IAB 交互核验。页面不请求外部模型或量子云。
+2026-10-22，本地 Chrome inspector 与 IAB 操作核验。最终截图及报告位于 `.taste-skill/deepmind-final/`，已逐张查看全部三个尺寸的 fold 与 page 截图。
 
-| 视口 | 结果 | 标题最长 | 检测到的动态元素 | 页面控制台错误 | 左右边距 |
-| --- | --- | --- | ---: | ---: | --- |
-| 1440 × 900 | 0 FAIL | 2 行 | 32 | 0 | 79px / 79px |
-| 768 × 1024 | 0 FAIL | 2 行 | 28 | 0 | 28px / 28px |
-| 390 × 844 | 0 FAIL | 2 行 | 32 | 0 | 24px / 24px |
+| 视口 | 标题最长 | 检测到的动态元素 | 左右边距 | 横向溢出 | 页面控制台错误 |
+| --- | --- | ---: | --- | ---: | ---: |
+| 1440 × 900 | 2 行 | 31 | 72px / 72px | 0 | 0 |
+| 768 × 1024 | 2 行 | 28 | 28px / 28px | 0 | 0 |
+| 390 × 844 | 2 行 | 31 | 24px / 24px | 0 | 0 |
 
-最终 fold 与 page 截图均逐张查看，记录位于 `.taste-skill/refinement-final/`。inspector 共 0 FAIL、1 WARN（上述无操作视频提醒）。
-source lint 为 0 FAIL、2 WARN：两项 Inter `default-font` 提醒来自沿用既有品牌字体的明确选择。
+inspector：**0 FAIL、1 WARN**，只保留上述无操作视频提醒。桌面页面约 4.9 屏，正文使用 6 个共享字号。
+source lint：0 FAIL、2 WARN，均为沿用项目 Inter 字体的 `default-font` 提醒。
 
-实际浏览器操作通过：
+实际操作通过：
 
-- QuTiP / PennyLane 切换，同步显示 5.69× / 5.09× 及对应完整调用计时；Enter 可操作案例按钮。
-- 计时条件展开后，展示输入、版本、预热次数、计时范围与固定规模限制。
-- 390px 目录展开、跳转后收起；Escape 关闭并返回目录焦点。
-- 指针进入概念图会改变小幅视差角度；切换减少动态效果后，0 个运行中动画、视差复位且无横向溢出。
-- 关闭 JavaScript 并刷新，两份案例均完整显示，安装和报告保留普通链接。
-- 核验后恢复正常脚本、媒体偏好与原视口，并保留首页预览。
+- 手机目录展开，跳转到优化实测后自动收起；Escape 关闭并返回目录焦点。
+- Enter 切换 PennyLane，显示 30.62 ms → 6.02 ms、5.09× 及 9 个基准输入的核对范围。
+- 展开计时条件，显示原版本、输入、预热、完整调用范围和专项限制；切回 QuTiP 显示 171.77 ms → 30.18 ms、5.69×。
+- 指针进入首屏，波场产生小幅位移；启用减少动态效果后运行中动画为 0、视差复位且无横向溢出。
+- 关闭 JavaScript 并刷新，两份案例及普通安装、报告链接仍完整显示。
+- 核验后恢复脚本、媒体偏好与原视口，保留正常首页预览。
 
-3 项自动检查通过：QuTiP 文案与原始测量一致；PennyLane 使用完整调用而非孤立内核计时；静态资源、图片原字节与锚点完整。相关 JavaScript 通过 ESLint，`git diff --check` 通过。
-预览服务此前核验：首页与资源分别返回 200；工作区 `.env` 为 404，目录穿越为 403，POST 为 405。服务实现本轮未改动。
-安装入口指向已核验存在的 `v0.8.4` 与 `codex-v0.8.4` 正式 Release。
+3 项自动检查通过：两份案例的显示值与固定原始数据一致、PennyLane 使用完整调用计时、静态资源与图片原字节及锚点完整。相关 JavaScript 通过 ESLint，`git diff --check` 通过。
+页面不请求外部模型或量子云，未新增生产依赖；安装入口继续指向已核验存在的 `v0.8.4` 与 `codex-v0.8.4` 正式 Release。科学数据与原始界面没有重绘。
 
 ## 最终图片审视
 
-ROUND 2
+ROUND 3
 
-Seen in one second: 深海军蓝上的银白量子态几何，清晰而克制的品牌宣言。
+Seen in one second: 开阔的浅蓝量子波场中，一句清楚的 OpenQuantum 品牌宣言。
 
-Idea (one sentence): 精密的共同几何连接社区专业积累与可核对的研究过程。
+Idea (one sentence): 让社区专业积累、实际工作台与可核对的成果，在同一个开放的科研空间中相连。
 
-Live thing: 选择 QuTiP 或 PennyLane 查看专项实测，首屏几何随指针轻微变化。
+Live thing: 两份真实案例可切换、展开条件与查看原图，首屏波场随指针轻微移动。
 
-Layout words by section: hero=scientific-object-and-type / capabilities=editorial-index / benchmark=comparison / workspace=actual-interface / community=invitation / start=quiet-dark-close / footer=wordmark
+Layout words by section: hero=atmospheric-statement / capabilities=grouped-project-index / workspace=paired-product-media / benchmark=evidence-comparison / community=invitation / start=shared-action-field / footer=brand-and-links
 
-Scores: design 8.1 · usability 8.2 · creativity 7.6 · content 8.7 → overall 8.1
+Scores: design 8.1 · usability 8.3 · creativity 7.0 · content 8.7 → overall 8.0
 
-Caps applied: none。
+Caps applied: creativity capped at 7 for adapting an explicitly selected reference framework; no unresolved inspector FAIL。
 
 Top three remaining limits, with screenshot and response:
 
-1. mobile-page-01：科学对照图缩小后不适合逐字阅读。保留普通图片链接以查看完整原图，正文写清最大误差和核对范围。
-2. desktop-page-02：现有真实工作台画面处于新会话状态，不能充分展示一项研究的完整过程。当前保留原图与日期，后续可换为经验证的真实科研录屏。
-3. desktop-fold：首屏概念图传递量子气质，无法证明执行能力。图注明确概念性质；紧接的实测区承担输入、计时、结果与复跑证据。
+1. mobile-page-01：完整科学图在手机上仍不适合逐字阅读。保留点击原图与复跑报告，正文独立给出计时、输入与核对数字。
+2. desktop-page-01：真实工作台截图是新会话状态，未展示完整研究过程。当前保留实际截图与日期，后续可换成经验证的科研操作录屏。
+3. desktop-fold：概念波场表达量子气质，不承担执行能力的证明。图注明确概念性质，工作台与固定版本实测提供产品和计算证据。
 
-当前页面的阅读、入口、结果核对与响应式交互已完成核验；以上保留为素材表达力的后续改进空间。
+本轮完成整页视觉与阅读关系的统一；后续最有价值的素材改进是一段真实研究过程，而不是继续增加装饰。
