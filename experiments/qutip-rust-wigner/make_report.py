@@ -1,4 +1,5 @@
 """Render saved measurements and full Wigner grids, without rerunning computation."""
+import argparse
 import html
 import json
 from pathlib import Path
@@ -9,14 +10,16 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 ROOT = Path(__file__).resolve().parent
-OUT = ROOT / "results"
 LABELS = {"qutip_clenshaw": "QuTiP default Clenshaw", "qutip_iterative": "QuTiP iterative",
           "qutip_laguerre": "QuTiP Laguerre", "rust_clenshaw": "Rust Clenshaw port"}
 
 
 def main():
-    benchmark = json.loads((OUT / "benchmark.json").read_text())
-    validation = json.loads((OUT / "validation.json").read_text())
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--output", type=Path, default=ROOT / "results")
+    output = parser.parse_args().output.resolve()
+    benchmark = json.loads((output / "benchmark.json").read_text())
+    validation = json.loads((output / "validation.json").read_text())
     machine = benchmark.get("cpu") or benchmark.get("platform") or "Hardware not recorded"
     cases = benchmark["cases"]
     representative = next(row for row in cases if row["id"] == "representative")
@@ -45,9 +48,9 @@ def main():
     figure.text(0.015, 0.015, f"{machine} | 9 interleaved warm rounds | medians and IQR | complete float64 outputs", fontsize=9)
     figure.tight_layout(rect=[0, 0.06, 1, 1])
     for extension in ["png", "svg"]:
-        figure.savefig(OUT / ("timings."+extension), dpi=170)
+        figure.savefig(output / ("timings."+extension), dpi=170)
     plt.close(figure)
-    with np.load(OUT / "representative-inputs-outputs.npz") as data:
+    with np.load(output / "representative-inputs-outputs.npz") as data:
         first, second = data["qutip_clenshaw"], data["rust_clenshaw"]
         error = np.abs(first-second)
         extent = [data["x"][0], data["x"][-1], data["y"][0], data["y"][-1]]
@@ -61,9 +64,9 @@ def main():
     axes[2].set(title=f"Absolute difference (max {error.max():.2e})", xlabel="x", ylabel="y")
     figure.colorbar(im, ax=axes[2], shrink=0.8)
     figure.suptitle(f'N={representative["dimension"]}, complete {representative["nx"]} x {representative["ny"]} phase-space grid')
-    figure.savefig(OUT / "wigner-comparison.png", dpi=170)
+    figure.savefig(output / "wigner-comparison.png", dpi=170)
     plt.close(figure)
-    svg = OUT / "timings.svg"
+    svg = output / "timings.svg"
     svg.write_text("\n".join(line.rstrip() for line in svg.read_text().splitlines())+"\n")
     body = f'''# 用 OpenQuantum 将 QuTiP Wigner 计算移植到 Rust
 
@@ -131,7 +134,7 @@ def main():
 python3 experiments/qutip-rust-wigner/reproduce.py --node "$NODE" --locator "$LOCATOR"
 ```
 
-LOCATOR 指向已安装 quantum-sdk-workbench/scripts/sdk-access.mjs；NODE 为可用 Node.js。需要本机 Cargo/Rust，构建使用 Cargo.lock 与 release profile。运行器检查准备状态，使用 SDK 返回的解释器与 environment；计算阶段不安装依赖。`--phase validate --output /path/to/checks` 可只做数值核验并写到独立目录；正式复跑默认更新本案例 results。绘图由同一已准备 SDK 的 Python 执行 `make_report.py`，只读取保存数据。
+LOCATOR 指向已安装 quantum-sdk-workbench/scripts/sdk-access.mjs；NODE 为可用 Node.js。需要本机 Cargo/Rust，构建使用 Cargo.lock 与 release profile。运行器检查准备状态，使用 SDK 返回的解释器与 environment；计算阶段不安装依赖。`--phase validate --output /path/to/checks` 可只做数值核验并写到独立目录；默认 `--phase all` 依次构建、核验、计时并生成报告，更新本案例 results 与 README；`--output /path/to/run` 将构建日志、数值、计时、图表及 README 全部保存到指定目录，不改写已提交的案例证据。`--phase report --output /path/to/run` 可使用同一已准备 SDK 从该目录保存的数据重新生成报告。
 
 ## 方法与适用范围
 
@@ -147,10 +150,23 @@ Rust 移植 QuTiP 的 Clenshaw 递推，按短网格块计算并复用每次调�
 - [QuTiP Wigner 官方源码](https://qutip.readthedocs.io/en/stable/_modules/qutip/wigner.html) · [PyO3](https://github.com/PyO3/pyo3)。
 - Rust 递推移植遵守 QuTiP BSD-3-Clause，完整许可与来源见 [LICENSE.txt](LICENSE.txt)、[NOTICE.md](NOTICE.md)；不是 QuTiP 官方发行或背书。
 '''
-    (ROOT / "README.md").write_text(body)
-    page = f'''<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>QuTiP Rust Wigner 实测</title><style>body{{font:17px/1.8 -apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;background:#f1f6fa;color:#182637;margin:0}}main{{max-width:1080px;margin:auto;padding:36px 24px}}section{{background:white;padding:24px;border-radius:16px;margin:20px 0;border:1px solid #dce6ef}}strong{{color:#087f6c;font-size:42px}}img{{width:100%;height:auto}}a{{color:#12638b}}</style><main><small>OPENQUANTUM · {html.escape(machine)}</small><h1>把 QuTiP Wigner 计算移植到 Rust</h1><section><strong>{speedup:.2f}×</strong><p>完整调用 {baseline:.3f} → {rust:.3f} ms，{representative["dimension"]} 维密度矩阵、{representative["nx"]}×{representative["ny"]} 网格。</p><p>9 轮热运行中位数，包含输入检查、转换与完整输出。不是整个 QuTiP 的提速。</p></section><section><img src="timings.svg" alt="原版与Rust完整调用耗时及四分位区间"></section><section><h2>完整输出逐点核对</h2><p>{nchecks} 项主核验通过。Rust 对默认输出最大误差 {max_default:.3g}。</p><img src="wigner-comparison.png" alt="原版和Rust的完整Wigner图及绝对误差"></section><section><a href="../README.md">完整案例、其他方法对照与复跑步骤</a> · <a href="review.md">独立审阅</a> · <a href="provenance.json">证据摘要</a></section></main></html>'''
-    (OUT / "report.html").write_text(page)
-    (OUT / "summary.json").write_text(json.dumps({"hardware": machine, "baseline_ms": baseline, "rust_ms": rust,
+    if output == ROOT / "results":
+        (ROOT / "README.md").write_text(body)
+        readme_href = "../README.md"
+        review_href, provenance_href = "review.md", "provenance.json"
+    else:
+        original = "https://github.com/xi-zhao/OpenQuantum/blob/9fa53e6523dee2c81380483b1aedb19819f218ac/experiments/qutip-rust-wigner"
+        readme = body.replace("(results/", "(")
+        for name in ("review.md", "provenance.json", "LICENSE.txt", "NOTICE.md"):
+            source = "results/" + name if name in ("review.md", "provenance.json") else name
+            readme = readme.replace("(" + name + ")", "(" + original + "/" + source + ")")
+        readme += "\n本目录保存本次复跑结果；独立审阅和源码摘要链接对应原始案例。\n"
+        (output / "README.md").write_text(readme)
+        readme_href = "README.md"
+        review_href, provenance_href = original + "/results/review.md", original + "/results/provenance.json"
+    page = f'''<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>QuTiP Rust Wigner 实测</title><style>body{{font:17px/1.8 -apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;background:#f1f6fa;color:#182637;margin:0}}main{{max-width:1080px;margin:auto;padding:36px 24px}}section{{background:white;padding:24px;border-radius:16px;margin:20px 0;border:1px solid #dce6ef}}strong{{color:#087f6c;font-size:42px}}img{{width:100%;height:auto}}a{{color:#12638b}}</style><main><small>OPENQUANTUM · {html.escape(machine)}</small><h1>把 QuTiP Wigner 计算移植到 Rust</h1><section><strong>{speedup:.2f}×</strong><p>完整调用 {baseline:.3f} → {rust:.3f} ms，{representative["dimension"]} 维密度矩阵、{representative["nx"]}×{representative["ny"]} 网格。</p><p>9 轮热运行中位数，包含输入检查、转换与完整输出。不是整个 QuTiP 的提速。</p></section><section><img src="timings.svg" alt="原版与Rust完整调用耗时及四分位区间"></section><section><h2>完整输出逐点核对</h2><p>{nchecks} 项主核验通过。Rust 对默认输出最大误差 {max_default:.3g}。</p><img src="wigner-comparison.png" alt="原版和Rust的完整Wigner图及绝对误差"></section><section><a href="{readme_href}">完整案例、其他方法对照与复跑步骤</a> · <a href="{review_href}">原始案例独立审阅</a> · <a href="{provenance_href}">原始案例证据摘要</a></section></main></html>'''
+    (output / "report.html").write_text(page)
+    (output / "summary.json").write_text(json.dumps({"hardware": machine, "baseline_ms": baseline, "rust_ms": rust,
         "speedup": speedup, "checks": nchecks, "max_default_error": max_default, "max_independent_error": max_independent,
         "raw_samples": benchmark["raw_samples"], "task": {k: representative[k] for k in ["dimension", "nx", "ny", "rank", "g"]}}, indent=2)+"\n")
     print(f"Rendered Rust case: {baseline:.3f} -> {rust:.3f} ms, {speedup:.3f}x.")

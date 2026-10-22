@@ -13,7 +13,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--locator", type=Path, required=True)
     parser.add_argument("--node", default=shutil.which("node"))
-    parser.add_argument("--phase", choices=["all", "build", "probe", "validate", "benchmark"], default="all")
+    parser.add_argument("--phase", choices=["all", "build", "probe", "validate", "benchmark", "report"], default="all")
     parser.add_argument("--output", type=Path, default=ROOT / "results")
     args = parser.parse_args()
     sdk = json.loads(subprocess.check_output([args.node, str(args.locator), "inspect", "fatqat-workbench"], text=True))
@@ -23,11 +23,10 @@ def main():
     output.mkdir(parents=True, exist_ok=True)
     (output / "openquantum-sdk.json").write_text(json.dumps(sdk, indent=2)+"\n")
     environment = {**os.environ, **sdk["run"]["environment"], "OMP_NUM_THREADS": "1", "OPENBLAS_NUM_THREADS": "1", "MKL_NUM_THREADS": "1"}
-    phases = ["build", "validate", "benchmark"] if args.phase == "all" else [args.phase]
+    phases = ["build", "validate", "benchmark", "report"] if args.phase == "all" else [args.phase]
     for phase in phases:
-        command = [sdk["run"]["command"], "-B", str(ROOT / (phase+".py"))]
-        if phase != "build":
-            command += ["--output", str(output)]
+        script = "make_report.py" if phase == "report" else phase+".py"
+        command = [sdk["run"]["command"], "-B", str(ROOT / script), "--output", str(output)]
         with (output / (phase+"-execution.log")).open("w") as log:
             process = subprocess.Popen(command, cwd=ROOT, env=environment, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
             try:
