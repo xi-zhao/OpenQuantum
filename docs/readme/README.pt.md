@@ -14,21 +14,21 @@ O OpenQuantum é uma plataforma de IA para pesquisa quântica, de código aberto
 
 Parta de uma pergunta de pesquisa, de um artigo ou de um programa existente e traga a IA para a investigação. Programas, parâmetros e verificações ficam registrados, de modo que uma investigação se torna o ponto de partida da seguinte.
 
-Escolha a porta de entrada que melhor lhe convém; ambas compartilham as mesmas capacidades de domínio. O **[plugin Codex](../integrations/CODEX_PLUGIN.md)** leva Skills quânticas e Tools científicas às conversas nativas do Codex, com uma página de configurações para ativar capacidades, conexões MCP e tokens. O **Desktop** inclui o ambiente de trabalho de pesquisa e a aplicação independente Quantum Learning, com serviços de modelo que você mesmo configura.
+Escolha a porta de entrada que melhor lhe convém; ambas compartilham os mesmos recursos de domínio. O **[plugin Codex](../integrations/CODEX_PLUGIN.md)** leva Skills quânticas e Tools científicas às conversas nativas do Codex, com uma página de configurações para ativar recursos, conexões MCP e tokens. O **Desktop** inclui o ambiente de trabalho de pesquisa e a aplicação independente Quantum Learning, com serviços de modelo que você mesmo configura.
 
 **[Instalar o plugin Codex](#codex)** · [Instalar Desktop](#desktop-installer) · [Ver cálculos e resultados](#use-and-inspect-results) · [Visitar o site](https://xi-zhao.github.io/OpenQuantum/)
 
-**Comece pelos casos medidos:** um [comutador de Pauli no PennyLane](#pennylane-rust-case) fica **5.09×** mais rápido como chamada completa, e um [cálculo da função de Wigner no QuTiP](#qutip-rust-case) fica **5.69×** mais rápido. Ambos preservam comparações de desempenho, verificações de resultados e registros de reprodução.
+**Comece pelos casos medidos:** um [comutador de Pauli no PennyLane](#pennylane-rust-case) fica **5,09×** mais rápido como chamada completa, e um [cálculo da função de Wigner no QuTiP](#qutip-rust-case) fica **5,69×** mais rápido. Ambos preservam comparações de desempenho, verificações de resultados e registros de reprodução.
 
 **Versão atual 0.8.4:** [download e notas de versão do Desktop](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.4) · [download e notas de versão do plugin Codex](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.4). Ambos usam a mesma versão do produto.
 
-- **Capacidades mais fáceis de encontrar:** Tools, MCP e Skills estão agrupados em oito categorias de uso, com busca e filtros de estado.
+- **Recursos mais fáceis de encontrar:** Tools, MCP e Skills estão agrupados em oito categorias de uso, com busca e filtros de estado.
 - **Uma única entrada de marca:** `OpenQuantum.app` no Mac e `OpenQuantum.lnk` no Windows usam o ícone OpenQuantum, mantendo a interface original do DSH Desktop, o Quantum Learning e a entrada de atualizações.
 
 <p align="center">
   <a href="#why-openquantum">Por que OpenQuantum</a> ·
   <a href="#optimization-cases">Otimizações medidas</a> ·
-  <a href="#what-you-can-do">Capacidades</a> ·
+  <a href="#what-you-can-do">Recursos</a> ·
   <a href="#codex">Plugin Codex</a> ·
   <a href="#quick-start">Início rápido</a> ·
   <a href="#use-and-inspect-results">Resultados</a> ·
@@ -64,7 +64,7 @@ De algoritmos quânticos e simulação de circuitos à química quântica, cálc
 
 ### Cálculos mais rápidos permitem testar mais ideias
 
-Seguimos otimizando etapas computacionais-chave para reduzir a espera e abrir espaço para mais comparações. Em casos de otimização direcionada, as chamadas completas de um [comutador de Pauli no PennyLane](#pennylane-rust-case) e de uma [função de Wigner no QuTiP](#qutip-rust-case) ficaram **5.09×** e **5.69×** mais rápidas. Ambos os resultados foram conferidos com a biblioteca original e com cálculos de referência independentes.
+Seguimos otimizando etapas computacionais-chave para reduzir a espera e abrir espaço para mais comparações. Em casos de otimização direcionada, as chamadas completas de um [comutador de Pauli no PennyLane](#pennylane-rust-case) e de uma [função de Wigner no QuTiP](#qutip-rust-case) ficaram **5,09×** e **5,69×** mais rápidas. Ambos os resultados foram conferidos com a biblioteca original e com cálculos de referência independentes.
 
 ### Colaboração aberta mantém as capacidades de pesquisa em crescimento
 
@@ -81,13 +81,13 @@ Continuamos incorporando projetos de código aberto valiosos e métodos publicad
 | **Aprender fazendo** | Você entende os conceitos, mas ainda não sabe como executar um algoritmo, alterar entradas e interpretar resultados. | Execute exemplos, altere parâmetros e use guias e resultados de referência disponíveis para entender por que um método se aplica e onde ele deixa de valer. Veja os [exemplos de algoritmos](#algorithm-learning-and-method-comparison). |
 | **Software de pesquisa e ecossistemas** | Você tem um método publicado, código de pesquisa ou um SDK e precisa de fluxos de trabalho, interfaces e exemplos para que outros o usem. | Escreva o método como uma Skill, conecte ações executáveis como Tools ou integre uma aplicação completa, preservando fontes e créditos. Veja [estender a plataforma](#extend-the-platform). |
 
-### Código aberto: a capacidade fica em suas mãos
+### Código aberto: o controle fica em suas mãos
 
 Você pode ler o código da plataforma e das integrações, ver de onde vem cada método e modificar, implantar e manter sua própria combinação de acordo com as licenças aplicáveis. Serviços de modelo e backends de cálculo são escolhidos separadamente, e você decide se compartilha dados de pesquisa. Autores, licenças e créditos de contribuição permanecem visíveis, para que o trabalho existente siga adiante com o projeto.
 
 ### Abrangente: mais métodos para uma mesma pergunta
 
-O OpenQuantum reúne software e métodos de pesquisa para algoritmos, compilação, simulação, informação quântica, química e física de muitos corpos, otimização, correção de erros, dinâmica, controle e redes. De guias e exemplos abertos a SDKs nativos e Tools de cálculo, você pode escolher o que uma tarefa exige ou combinar ferramentas em novas comparações. Entradas, preparação e escopo suportado estão listados no [catálogo de capacidades](#what-you-can-do).
+O OpenQuantum reúne software e métodos de pesquisa para algoritmos, compilação, simulação, informação quântica, química e física de muitos corpos, otimização, correção de erros, dinâmica, controle e redes. De guias e exemplos abertos a SDKs nativos e Tools de cálculo, você pode escolher o que uma tarefa exige ou combinar ferramentas em novas comparações. Entradas, preparação e escopo suportado estão listados no [catálogo de recursos](#what-you-can-do).
 
 Por exemplo, otimize um circuito com PyZX, verifique a equivalência com QCEC e estude seu comportamento ruidoso com um simulador de ruído para perguntar se um circuito mais simples também tem melhor desempenho. Combinar ferramentas ainda exige alinhar modelos, unidades, ordem de bits e orçamentos; veja o escopo atual no [guia de cálculo](../integrations/SCALABLE_BRIDGES.md).
 
@@ -99,46 +99,46 @@ Agentes podem ler material, escrever programas e chamar ferramentas. Com o OpenQ
 
 Programas, resultados e verificações aplicáveis ficam registrados, de modo que o trabalho seguinte tenha uma base. Resultados negativos bem fundamentados também valem a pena guardar: mostram quando um método se aplica e quando é melhor seguir outro caminho. Falhas de programa e resultados científicos são desfechos distintos; os registros apoiam a [revisão e a reutilização](#execution-records-and-scientific-acceptance), enquanto o julgamento científico continua com o usuário.
 
-**Transformar bibliotecas de código aberto e métodos publicados em capacidades utilizáveis por agentes é o trabalho contínuo por trás da plataforma.** Organizamos métodos, escrevemos fluxos de trabalho, conectamos software e preservamos fontes e condições de uso. Você pode trazer seus próprios métodos, programas ou aplicações completas, para que um único desenvolvimento se torne ponto de partida para muitas pessoas.
+**Transformar bibliotecas de código aberto e métodos publicados em recursos utilizáveis por agentes é o trabalho contínuo por trás da plataforma.** Organizamos métodos, escrevemos fluxos de trabalho, conectamos software e preservamos fontes e condições de uso. Você pode trazer seus próprios métodos, programas ou aplicações completas, para que um único desenvolvimento se torne ponto de partida para muitas pessoas.
 
 Esse trabalho acumulado também prepara o terreno para [aprimorar a próxima rodada de capacidades de pesquisa](#research-that-improves-how-research-is-done), descrita no roteiro de longo prazo.
 
-**[Executar uma primeira tarefa](#quick-start)** · [Trazer sua capacidade](#extend-the-platform)
+**[Executar uma primeira tarefa](#quick-start)** · [Trazer seus métodos](#extend-the-platform)
 
 <a id="optimization-cases"></a>
 <a id="pennylane-rust-case"></a>
 
-## Caso medido: um cálculo do PennyLane 5.09× mais rápido
+## Caso medido: um cálculo do PennyLane 5,09× mais rápido
 
-**Defina uma tarefa de pesquisa e receba um resultado executável que você pode verificar.** Demos ao OpenQuantum uma tarefa: aplicar uma otimização direcionada a um cálculo de pesquisa do PennyLane, medir o ganho real de velocidade e verificar os resultados. Em 2026-10-20, o experimento foi concluído no Codex com o OpenQuantum 0.8.4, entregando um programa otimizado, uma comparação de desempenho, verificações de correção e registros de reprodução.
+**Defina uma tarefa de pesquisa e receba um resultado executável que você pode verificar.** Demos ao OpenQuantum uma tarefa: aplicar uma otimização direcionada a um cálculo de pesquisa do PennyLane, medir o ganho real de velocidade e verificar os resultados. Em 2026-10-20, o experimento foi concluído no Codex com o OpenQuantum 0.8.4, gerando um programa otimizado, uma comparação de desempenho, verificações de correção e registros de reprodução.
 
 | Cálculo | Chamada completa |
 | --- | ---: |
-| PennyLane nativo | 30.62 ms |
-| Após a otimização do OpenQuantum | **6.02 ms** |
+| PennyLane nativo | 30,62 ms |
+| Após a otimização do OpenQuantum | **6,02 ms** |
 
-**Uma aceleração de 5.09× na chamada completa.** A tarefa medida é um cálculo de comutador de Pauli em um modelo local de 32 qubits. Os tempos são medianas de nove rodadas aquecidas em um Apple M4 com PennyLane 0.45.1. Incluem a conversão de entradas e saídas e excluem a preparação do ambiente e a compilação.
+**Uma aceleração de 5,09× na chamada completa.** A tarefa medida é um cálculo de comutador de Pauli em um modelo local de 32 qubits. Os tempos são medianas de nove rodadas aquecidas em um Apple M4 com PennyLane 0.45.1. Incluem a conversão de entradas e saídas e excluem a preparação do ambiente e a compilação.
 
-**Os resultados também foram verificados.** As saídas das nove entradas de benchmark coincidem exatamente, termo a termo, com as saídas de referência do PennyLane. Matrizes exaustivas independentes verificaram **4,368 pares de palavras de Pauli** e 40 somas aleatórias de operadores com coeficientes complexos, com erro absoluto máximo de matriz de **1.42×10⁻¹⁴**. Cálculos e tempos foram revisados de forma independente, e todas as **405 amostras brutas de tempo** e as entradas e saídas completas foram preservadas.
+**Os resultados também foram verificados.** As saídas das nove entradas de benchmark coincidem exatamente, termo a termo, com as saídas de referência do PennyLane. Matrizes exaustivas independentes verificaram **4.368 pares de strings de Pauli** e 40 somas aleatórias de operadores com coeficientes complexos, com erro absoluto máximo de matriz de **1,42 · 10⁻¹⁴**. Cálculos e tempos foram revisados de forma independente, e todas as **405 amostras brutas de tempo** e as entradas e saídas completas foram preservadas.
 
-O valor de 5.09× é o ganho medido para este cálculo. O relatório do caso apresenta todos os resultados, métodos e o escopo suportado.
+O valor de 5,09× é o ganho medido para este cálculo. O relatório do caso apresenta todos os resultados, métodos e o escopo suportado.
 
 [Caso completo e passos de reprodução](../../experiments/pennylane-rust-commutator/README.md) · [Tempos brutos](../../experiments/pennylane-rust-commutator/results/raw-timings.csv) · [Verificações de resultados](../../experiments/pennylane-rust-commutator/results/validation.json) · [Revisão independente](../../experiments/pennylane-rust-commutator/results/review.md)
 
 <a id="qutip-rust-case"></a>
 
-## Caso medido: um cálculo do QuTiP 5.69× mais rápido
+## Caso medido: um cálculo do QuTiP 5,69× mais rápido
 
-**Transforme um método especializado em um cálculo mais rápido e verificável.** No Codex, com o OpenQuantum 0.8.4, aplicamos uma otimização direcionada ao cálculo da função de Wigner do QuTiP e entregamos um programa executável, a saída completa no espaço de fase, uma comparação de desempenho e verificações independentes.
+**Transforme um método especializado em um cálculo mais rápido e verificável.** No Codex, com o OpenQuantum 0.8.4, aplicamos uma otimização direcionada ao cálculo da função de Wigner do QuTiP e produzimos um programa executável, a saída completa no espaço de fase, uma comparação de desempenho e verificações independentes.
 
 | Cálculo | Chamada completa |
 | --- | ---: |
-| Método padrão do QuTiP | 171.77 ms |
-| Após a otimização do OpenQuantum | **30.18 ms** |
+| Método padrão do QuTiP | 171,77 ms |
+| Após a otimização do OpenQuantum | **30,18 ms** |
 
-**Uma aceleração de 5.69× na chamada completa.** A tarefa calcula a função de Wigner de uma matriz densidade em um **espaço de Fock de modo único com dimensão 64, numa grade de espaço de fase de 201×201**. Os tempos são medianas de nove rodadas aquecidas intercaladas em um Apple M4 com QuTiP 5.3.1 e configuração de thread única. Incluem leitura das entradas, conversão, validação e a saída completa em dupla precisão; a preparação do ambiente, a compilação e as verificações de resultados ficam fora da região cronometrada.
+**Uma aceleração de 5,69× na chamada completa.** A tarefa calcula a função de Wigner de uma matriz densidade em um **espaço de Fock de modo único com dimensão 64, numa grade de espaço de fase de 201×201**. Os tempos são medianas de nove rodadas aquecidas intercaladas em um Apple M4 com QuTiP 5.3.1 e configuração de thread única. Incluem leitura das entradas, conversão, validação e a saída completa em dupla precisão; a preparação do ambiente, a compilação e as verificações de resultados ficam fora da região cronometrada.
 
-**Todas as 272 verificações de resultados passaram.** Em quatro tamanhos, a diferença absoluta máxima em relação à saída padrão do QuTiP é **6.52×10⁻¹⁶**, e em relação a somas independentes de polinômios de Laguerre e fórmulas analíticas, **6.33×10⁻¹⁵**. As verificações cobrem matrizes densidade complexas aleatórias, estados de vácuo e de Fock, superposições com coerências complexas e entradas rejeitadas. Todas as **144 amostras brutas de tempo** e as entradas e saídas completas foram preservadas e revisadas de forma independente.
+**Todas as 272 verificações de resultados passaram.** Em quatro tamanhos, a diferença absoluta máxima em relação à saída padrão do QuTiP é **6,52 · 10⁻¹⁶**, e em relação a somas independentes de polinômios de Laguerre e fórmulas analíticas, **6,33 · 10⁻¹⁵**. As verificações cobrem matrizes densidade complexas aleatórias, estados de vácuo e de Fock, superposições com coerências complexas e entradas rejeitadas. Todas as **144 amostras brutas de tempo** e as entradas e saídas completas foram preservadas e revisadas de forma independente.
 
 [Caso completo e passos de reprodução](../../experiments/qutip-rust-wigner/README.md) · [Tempos brutos](../../experiments/qutip-rust-wigner/results/raw-timings.csv) · [Verificações de resultados](../../experiments/qutip-rust-wigner/results/validation.json) · [Revisão independente](../../experiments/qutip-rust-wigner/results/review.md)
 
@@ -154,9 +154,9 @@ Cálculos locais podem começar sem conta em nuvem quântica. Hardware real e se
 
 O código-fonte atual oferece caminhos completos de API nativa para **111 ambientes SDK ou de código-fonte**, 26 deles vindos da mais recente [expansão do ecossistema](../integrations/SDK_ECOSYSTEM_2026-10-14.md), entregue com a 0.8.4. Os agentes podem escrever programas próprios, combinar APIs públicas e salvar resultados completos, indo além dos casos predefinidos das Tools de conveniência.
 
-Cada ambiente é preparado explicitamente por tarefa, e continuam valendo os limites de plataforma, conta, licença e backend opcional. As verificações de engenharia por biblioteca estão no [registro completo de acesso aos SDKs](../integrations/FULL_SDK_ACCESS.md); esses ambientes não passaram por aceitação em tarefas reais de pesquisa, e seu estado científico permanece `not_evaluated`.
+Cada ambiente é preparado explicitamente por tarefa, e continuam valendo os limites de plataforma, conta, licença e backend opcional. As verificações de engenharia por biblioteca estão no [registro completo de acesso aos SDKs](../integrations/FULL_SDK_ACCESS.md); esses ambientes ainda não passaram por aceitação científica (a constatação, com base em verificações independentes e rastreabilidade completa das fontes, de que um resultado é cientificamente confiável) em tarefas reais de pesquisa, e seu estado científico permanece `not_evaluated`.
 
-Os SDKs de empresas e instituições integrados na v0.6.0 abrangem circuitos diferenciáveis, estimativa de recursos para computação tolerante a falhas, fotônica, compilação de pulsos e redes quânticas. Os três lotes são [17 SDKs de fornecedores](../integrations/VENDOR_SDKS.md), [20 capacidades de empresas e instituições](../integrations/SDK_EXPANSION.md) e [15 interfaces de redes, controle e nuvem](../integrations/SDK_GAPS.md), além do [QuEra Bloqade Analog](../integrations/BLOQADE_ANALOG.md). Cada adaptador expõe apenas suas ações documentadas; os usuários configuram contas, credenciais, permissões de serviço e licenças aplicáveis.
+Os SDKs de empresas e instituições integrados na v0.6.0 abrangem circuitos diferenciáveis, estimativa de recursos para computação tolerante a falhas, fotônica, compilação de pulsos e redes quânticas. Os três lotes são [17 SDKs de fornecedores](../integrations/VENDOR_SDKS.md), [20 recursos de empresas e instituições](../integrations/SDK_EXPANSION.md) e [15 interfaces de redes, controle e nuvem](../integrations/SDK_GAPS.md), além do [QuEra Bloqade Analog](../integrations/BLOQADE_ANALOG.md). Cada adaptador expõe apenas suas ações documentadas; os usuários configuram contas, credenciais, permissões de serviço e licenças aplicáveis.
 
 <a id="algorithm-learning-and-method-comparison"></a>
 
@@ -279,7 +279,7 @@ As tarefas de ensino do modo Pro usam as ferramentas e os registros próprios da
 
 ### Desktop, mensagens e idiomas
 
-**Desktop.** O desktop do OpenQuantum oferece janela nativa, bandeja do sistema, terminal e notificações, e reutiliza os modelos, as Skills quânticas, as ferramentas de cálculo e os registros de execução do ambiente de trabalho. Usa o DSH Desktop original, de terceiros, com um pacote de capacidades OpenQuantum entregue separadamente, no Mac (Apple Silicon / Intel), no Windows e a partir do código-fonte. [Instalar Desktop](#desktop-installer) · [Compilar o Desktop a partir do código-fonte](#desktop-from-source).
+**Desktop.** O desktop do OpenQuantum oferece janela nativa, bandeja do sistema, terminal e notificações, e reutiliza os modelos, as Skills quânticas, as ferramentas de cálculo e os registros de execução do ambiente de trabalho. Usa o DSH Desktop original, de terceiros, com um pacote de recursos OpenQuantum entregue separadamente, no Mac (Apple Silicon / Intel), no Windows e a partir do código-fonte. [Instalar Desktop](#desktop-installer) · [Compilar o Desktop a partir do código-fonte](#desktop-from-source).
 
 **Mensagens.** Com o CC Connect, você pode iniciar tarefas pelo WeChat, Feishu, DingTalk, Slack, Telegram, Discord e outros canais, reutilizando as Skills, Tools e registros de execução do ambiente de trabalho. [Configurar canais de mensagens](#messaging-channels).
 
@@ -298,13 +298,13 @@ O idioma da interface não reescreve conversas existentes, materiais de curso, S
 
 ## Início rápido
 
-Escolha uma porta de entrada: instalar o plugin no Codex, usar o cliente Desktop com seu pacote de capacidades ou executar o ambiente de trabalho a partir do código-fonte. O Desktop e o ambiente de trabalho a partir do código-fonte destinam-se a uso local por um único usuário; escolha o código-fonte para desenvolver ou para usar capacidades de `main`.
+Escolha uma porta de entrada: instalar o plugin no Codex, usar o cliente Desktop com seu pacote de recursos ou executar o ambiente de trabalho a partir do código-fonte. O Desktop e o ambiente de trabalho a partir do código-fonte destinam-se a uso local por um único usuário; escolha o código-fonte para desenvolver ou para usar recursos de `main`.
 
 <a id="codex"></a>
 
 ### Plugin Codex: instalar e usar
 
-Instalar o plugin OpenQuantum uma única vez registra, em conjunto, **Skills, serviços MCP locais, Tools científicas e a página de configurações do OpenQuantum**. Você continua fazendo perguntas, gerenciando projetos e lendo resultados nas conversas nativas do Codex; a página de configurações ajusta as capacidades do OpenQuantum.
+Instalar o plugin OpenQuantum uma única vez registra, em conjunto, **Skills, serviços MCP locais, Tools científicas e a página de configurações do OpenQuantum**. Você continua fazendo perguntas, gerenciando projetos e lendo resultados nas conversas nativas do Codex; a página de configurações ajusta os recursos do OpenQuantum.
 
 **Deixe o Codex instalá-lo para você:** abra o Codex, inicie uma nova conversa e cole o pedido abaixo.
 
@@ -317,7 +317,7 @@ Keep existing plugins and user settings, and check the Skills, MCP tools and the
 Tell me exactly what to do if the app needs reloading. Finally, report what was actually verified and which scientific dependencies still need preparation.
 ```
 
-O pacote de capacidades do Desktop, o plugin Codex e o instalador usam todos o **OpenQuantum 0.8.4**. Este plugin inclui 168 Skills e 87 Tools científicas, acrescenta 26 Skills de SDK nativos e unifica as abas Status, MCP, Skills e Service keys; as 16 novas Tools de serviço que dependem de credenciais ficam desativadas por padrão. A tag da versão é `codex-v0.8.4`; anexos e escopo de verificação são os informados na Release.
+O pacote de recursos do Desktop, o plugin Codex e o instalador usam todos o **OpenQuantum 0.8.4**. Este plugin inclui 168 Skills e 87 Tools científicas, acrescenta 26 Skills de SDK nativos e unifica as abas Status, MCP, Skills e Service keys; as 16 novas Tools de serviço que dependem de credenciais ficam desativadas por padrão. A tag da versão é `codex-v0.8.4`; anexos e escopo de verificação são os informados na Release.
 
 **[Baixar o instalador completo do plugin Codex 0.8.4](https://github.com/xi-zhao/OpenQuantum/releases/download/codex-v0.8.4/openquantum-0.8.4-codex-install.zip)** ([notas de versão e SHA256SUMS](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.4)).
 
@@ -327,9 +327,9 @@ O instalador contém o ZIP do plugin, o script de instalação e o lockfile de d
 
 1. Recarregue o Codex quando solicitado e abra uma nova conversa para que as novas Skills e ferramentas sejam carregadas.
 2. Pergunte diretamente na conversa, por exemplo: "Use o OpenQuantum para encontrar métodos de correção quântica de erros e recomendar um primeiro experimento."
-3. Abra **"…" → "OpenQuantum settings"** e gerencie as capacidades nas abas **Status / MCP / Skills / Service keys**; os interruptores das Tools ficam em **Status → Tools**. Os serviços integrados já vêm configurados com o plugin; para adicionar seu próprio servidor MCP, informe os dados de conexão e salve os tokens pelo diálogo de credenciais dedicado.
+3. Abra **"…" → "OpenQuantum settings"** e gerencie os recursos nas abas **Status / MCP / Skills / Service keys**; os interruptores das Tools ficam em **Status → Tools**. Os serviços integrados já vêm configurados com o plugin; para adicionar seu próprio servidor MCP, informe os dados de conexão e salve os tokens pelo diálogo de credenciais dedicado.
 
-O plugin instala o código das capacidades e os pontos de configuração; alguns cálculos ainda exigem Python, SDKs quânticos ou contas de terceiros preparados conforme a necessidade. Veja o [guia do plugin](../integrations/CODEX_PLUGIN.md).
+O plugin instala o código dos recursos e os pontos de configuração; alguns cálculos ainda exigem Python, SDKs quânticos ou contas de terceiros preparados conforme a necessidade. Veja o [guia do plugin](../integrations/CODEX_PLUGIN.md).
 
 <details>
 <summary><strong>Instalação manual (opcional)</strong></summary>
@@ -349,9 +349,9 @@ Se o instalador não encontrar a CLI do aplicativo Codex atual, defina `OPENQUAN
 
 ### Instalador do Desktop
 
-A versão atual do desktop combina o [cliente original DSH Desktop 2.0.7](https://github.com/anywhere-labs/dsh-desktop/releases/tag/v2.0.7) com um pacote de capacidades OpenQuantum separado. O cliente original mantém o nome e a versão do projeto de origem; o pacote de capacidades inclui Node / uv e fornece os pontos de entrada completos dos SDKs, as Skills quânticas, as Tools e a configuração. O instalador cria um atalho com o ícone OpenQuantum (`OpenQuantum.app` no Mac, `OpenQuantum.lnk` no Windows).
+A versão atual do desktop combina o [cliente original DSH Desktop 2.0.7](https://github.com/anywhere-labs/dsh-desktop/releases/tag/v2.0.7) com um pacote de recursos OpenQuantum separado. O cliente original mantém o nome e a versão do projeto de origem; o pacote de recursos inclui Node / uv e fornece o acesso completo aos SDKs, as Skills quânticas, as Tools e a configuração. O instalador cria um atalho com o ícone OpenQuantum (`OpenQuantum.app` no Mac, `OpenQuantum.lnk` no Windows).
 
-Instale primeiro o DSH Desktop original e depois escolha o pacote de capacidades para sua plataforma:
+Instale primeiro o DSH Desktop original e depois escolha o pacote de recursos para sua plataforma:
 
 | Plataforma | Download do OpenQuantum 0.8.4 | Executar após extrair |
 | --- | --- | --- |
@@ -359,11 +359,11 @@ Instale primeiro o DSH Desktop original e depois escolha o pacote de capacidades
 | Mac Intel | [pacote darwin-x64](https://github.com/xi-zhao/OpenQuantum/releases/download/v0.8.4/OpenQuantum-0.8.4-DSH-darwin-x64.tar.gz) | `install.command` |
 | Windows x64 | [pacote win32-x64](https://github.com/xi-zhao/OpenQuantum/releases/download/v0.8.4/OpenQuantum-0.8.4-DSH-win32-x64.tar.gz) | `install.cmd` |
 
-Confira o download com o [SHA256SUMS da Release](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.4) antes de extrair. As atualizações preservam as configurações existentes; veja o [guia de instalação e migração](../DESKTOP_INSTALLERS.md). O pacote de capacidades e o plugin Codex estão ambos na `0.8.4`, e o Harness permanece em `0.1.5-rc.1`. Ambientes de cálculo, contas e licenças continuam sendo preparados por capacidade.
+Confira o download com o [SHA256SUMS da Release](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.4) antes de extrair. As atualizações preservam as configurações existentes; veja o [guia de instalação e migração](../DESKTOP_INSTALLERS.md). O pacote de recursos e o plugin Codex estão ambos na `0.8.4`, e o Harness permanece em `0.1.5-rc.1`. Ambientes de cálculo, contas e licenças continuam sendo preparados por recurso.
 
 ### Instalar a partir do código-fonte
 
-Prepare Git e Node.js 24; as ferramentas quânticas em Python também precisam de [uv / uvx](https://docs.astral.sh/uv/getting-started/installation/). Outras dependências variam conforme a capacidade, por exemplo Julia 1.12.7 para RandomMeas.
+Prepare Git e Node.js 24; as ferramentas quânticas em Python também precisam de [uv / uvx](https://docs.astral.sh/uv/getting-started/installation/). Outras dependências variam conforme o recurso, por exemplo Julia 1.12.7 para RandomMeas.
 
 ```bash
 git clone https://github.com/xi-zhao/openQuantum.git
@@ -371,11 +371,11 @@ cd openQuantum
 npm ci
 ```
 
-Sem chave de modelo, você já pode executar o [exemplo local fixo](#no-model-key-needed-recompute-a-fixed-case). Para iniciar tarefas pelo agente, escolha uma entrada do ambiente de trabalho e configure um modelo.
+Sem chave de modelo, você já pode executar o [exemplo local fixo](#no-model-key-needed-recompute-a-fixed-case). Para iniciar tarefas pelo agente, escolha uma forma de iniciar o ambiente de trabalho e configure um modelo.
 
-### Escolher a entrada do ambiente de trabalho
+### Escolher como iniciar o ambiente de trabalho
 
-Web e Desktop iniciados a partir da mesma cópia do código-fonte compartilham as mesmas configurações de modelo, capacidades quânticas e registros de execução em `.openquantum/dsh`. Encerre a entrada em execução antes de trocar.
+Web e Desktop iniciados a partir da mesma cópia do código-fonte compartilham as mesmas configurações de modelo, recursos quânticos e registros de execução em `.openquantum/dsh`. Encerre a entrada em execução antes de trocar.
 
 **Ambiente de trabalho Web**
 
@@ -399,7 +399,7 @@ npm run desktop:verify-install
 npm run desktop -- --source
 ```
 
-`desktop:setup` compila o código-fonte original fixado, baixa o Electron e compila os módulos nativos sem modificar interfaces ou recursos de terceiros. Use o comando de inicialização do repositório para que as configurações de modelo e de capacidades quânticas sejam carregadas. Os requisitos de plataforma estão em [implantação](../DEPLOYMENT.md).
+`desktop:setup` compila o código-fonte original fixado, baixa o Electron e compila os módulos nativos sem modificar interfaces ou recursos de terceiros. Use o comando de inicialização do repositório para que as configurações de modelo e de recursos quânticos sejam carregadas. Os requisitos de plataforma estão em [implantação](../DEPLOYMENT.md).
 
 </details>
 
@@ -426,15 +426,15 @@ npm run models:probe -- --provider openquantum-public
 
 ### Preparar os ambientes de cálculo por tarefa
 
-As ferramentas de cálculo locais em Python usam dependências fixadas e preparadas explicitamente. Após `npm ci`, execute na raiz do repositório o comando de preparação da capacidade de que precisa. A preparação pode baixar e compilar; as chamadas de cálculo não instalam mais dependências automaticamente.
+As ferramentas de cálculo locais em Python usam dependências fixadas e preparadas explicitamente. Após `npm ci`, execute na raiz do repositório o comando de preparação do recurso de que precisa. A preparação pode baixar e compilar; as chamadas de cálculo não instalam mais dependências automaticamente.
 
-| O que preparar | Comando ou ponto de entrada |
+| O que preparar | Comando ou local |
 | --- | --- |
 | O primeiro experimento com estado de Bell | `node scripts/setup-paper-tools.mjs fatqat-workbench` |
 | Interação estática de um par de átomos de Rb | `npm run capability:pairinteraction:setup`; [governança de modelos e versões](../integrations/PAIRINTERACTION.md) |
 | Simulação hamiltoniana Trotter / qDrift | `npm run capability:hamiltonian:setup` |
 | Amostragem Clifft e conversão de circuitos com qBraid | `npm run capability:interop:setup` |
-| Qualquer outra capacidade em Python | `node scripts/setup-paper-tools.mjs <capability-id>`, por exemplo `qec-memory-experiment`; cada Skill indica o próprio comando |
+| Qualquer outro recurso em Python | `node scripts/setup-paper-tools.mjs <capability-id>`, por exemplo `qec-memory-experiment`; cada Skill indica o próprio comando |
 | Exemplos de algoritmos | Comece pelo [ambiente mínimo](#run-an-algorithm-example-directly) e acrescente os grupos de gradientes, PennyLane, tensores ou química conforme necessário |
 
 Preparação de ambiente, ativação de conexões e configuração de modelo são etapas independentes. Mesmo uma conexão ativada por padrão precisa ter suas dependências preparadas antes do primeiro uso; se um ambiente estiver faltando ou seu lockfile tiver mudado, a Tool retorna o comando exato de preparação. Julia, drivers QDMI e serviços MCP de origem seguem seus próprios guias; veja [ambientes locais](../integrations/LOCAL_ENVIRONMENTS.md).
@@ -453,9 +453,9 @@ npm run demo:quantum-ground-state
 
 <table>
   <tr>
-    <td align="center"><strong>-1.85727503 Ha</strong><br /><sub>Energia VQE</sub></td>
-    <td align="center"><strong>-1.85727503 Ha</strong><br /><sub>Referência exata independente</sub></td>
-    <td align="center"><strong>4.44 × 10⁻¹⁶ Ha</strong><br /><sub>Diferença de energia</sub></td>
+    <td align="center"><strong>−1,85727503 Ha</strong><br /><sub>Energia VQE</sub></td>
+    <td align="center"><strong>−1,85727503 Ha</strong><br /><sub>Referência exata independente</sub></td>
+    <td align="center"><strong>4,44 · 10⁻¹⁶ Ha</strong><br /><sub>Diferença de energia</sub></td>
     <td align="center"><strong>15 aprovadas</strong><br /><sub>Verificações de cálculo locais</sub></td>
   </tr>
 </table>
@@ -517,11 +517,11 @@ Passe seus próprios parâmetros como arquivo JSON com `--input` e salve os resu
 
 ### Atualizar uma instalação existente a partir do código-fonte
 
-Atualize o código-fonte e as dependências do projeto seguindo o [guia de atualização](../UPDATES.md) e, em seguida, execute novamente, uma vez, o comando de preparação de cada capacidade que você usa. As pontes Python verificam e sincronizam as dependências fixadas nos diretórios de ambiente existentes, então nada precisa ser apagado; nos exemplos de algoritmos, é possível continuar acrescentando grupos.
+Atualize o código-fonte e as dependências do projeto seguindo o [guia de atualização](../UPDATES.md) e, em seguida, execute novamente, uma vez, o comando de preparação de cada recurso que você usa. As pontes Python verificam e sincronizam as dependências fixadas nos diretórios de ambiente existentes, então nada precisa ser apagado; nos exemplos de algoritmos, é possível continuar acrescentando grupos.
 
-Reinicie o ambiente de trabalho e abra uma nova sessão. Os nomes e parâmetros das Skills e Tools existentes continuam válidos; os 13 índices de categoria ainda podem ser chamados manualmente, enquanto as tarefas automáticas escolhem `quantum-algorithms` ou um método específico. Para restaurar o conjunto completo de ferramentas de um serviço opcional, use o perfil padrão `full`; veja [seleção de capacidades e compatibilidade](../integrations/CAPABILITY_SELECTION.md).
+Reinicie o ambiente de trabalho e abra uma nova sessão. Os nomes e parâmetros das Skills e Tools existentes continuam válidos; os 13 índices de categoria ainda podem ser chamados manualmente, enquanto as tarefas automáticas escolhem `quantum-algorithms` ou um método específico. Para restaurar o conjunto completo de ferramentas de um serviço opcional, use o perfil padrão `full`; veja [seleção de recursos e compatibilidade](../integrations/CAPABILITY_SELECTION.md).
 
-### Pontos de entrada opcionais
+### Recursos opcionais
 
 <a id="set-up-quantum-learning"></a>
 
@@ -565,9 +565,9 @@ Depois que uma tarefa é executada, você pode escolher outros backends, alterar
 
 <a id="choose-the-right-entry-point"></a>
 
-### Escolher o ponto de entrada certo
+### Escolher a ferramenta certa
 
-Use os [exemplos executáveis](#algorithm-learning-and-method-comparison) ao aprender ou modificar um algoritmo, e as ferramentas especializadas quando precisar de um contrato de entrada/saída definido. Pontos de entrada sobrepostos para Trotter / qDrift, VQD, Qiskit e solucionadores de autovalores têm um [guia de seleção comum](../integrations/CAPABILITY_SELECTION.md); os nomes originais são mantidos, e implementações com hipóteses físicas ou métodos numéricos diferentes continuam separadas.
+Use os [exemplos executáveis](#algorithm-learning-and-method-comparison) ao aprender ou modificar um algoritmo, e as ferramentas especializadas quando precisar de um contrato de entrada/saída definido. Ferramentas sobrepostas para Trotter / qDrift, VQD, Qiskit e solucionadores de autovalores têm um [guia de seleção comum](../integrations/CAPABILITY_SELECTION.md); os nomes originais são mantidos, e implementações com hipóteses físicas ou métodos numéricos diferentes continuam separadas.
 
 Qiskit Gym, Quantum Hardware e FlagQuantum ficam desativados por padrão. Quando precisar deles, configure um perfil de ferramentas menor para treinamento, consulta de dispositivos, compilação ou simulação; sem escolha, aplica-se o perfil `full`, compatível com versões anteriores. As Tools que podem ser chamadas numa sessão dependem das conexões ativadas, do registro efetivo e do perfil selecionado.
 
@@ -579,7 +579,7 @@ Cálculos numéricos locais não precisam de conta em nuvem quântica. Para usar
 
 Para hardware real, prepare credenciais, permissões e cota para o serviço de destino. **Descoberta de dispositivos, envio de jobs reais e simulação local têm, cada um, seu próprio escopo.** Uma configuração não significa que o serviço esteja online; consulte o registro da execução real para saber se um job foi bem-sucedido.
 
-| Backend | Capacidade atual | Credenciais ou condições |
+| Backend | Recursos atuais | Credenciais ou condições |
 | --- | --- | --- |
 | Cálculo local | Simulação de circuitos e de ruído, referências de estado fundamental, auditorias de estados, amostragem de correção de erros, otimização e simulação de experimentos, cada uma com sua própria faixa de entradas | Sem credenciais de nuvem; prepare as dependências fixadas antes de calcular |
 | IBM Quantum | Runtime, AI Transpiler, consultas de hardware; envio e cancelamento opcionais de jobs reais | `QISKIT_IBM_TOKEN`; as conexões de MCP Server para jobs são opcionais e ativadas pelo usuário |
@@ -588,7 +588,7 @@ Para hardware real, prepare credenciais, permissões e cota para o serviço de d
 | Nuvens Quafu, Tianyan, Guodun, Tencent e LogicalQubit | Verificação de credenciais, descoberta de backends, filtragem de qubits, resumos de topologia e calibração | Token de API de cada serviço; somente leitura |
 | FieldQuantum | Descoberta de backends de simulador em nuvem | `FIELDQUANTUM_API_TOKEN`; somente leitura |
 
-Jobs de hardware e serviços pagos são ativados conforme a necessidade. A descoberta somente leitura permite conhecer dispositivos, topologia e calibração antes de decidir executar jobs reais. "Somente leitura" significa que o estado da nuvem remota ou da QPU não é alterado; as pontes Python locais mantêm seu contrato `workspace-write`, pois caches de SDK e a materialização de resultados podem gravar no espaço de trabalho local.
+Jobs de hardware e serviços pagos são ativados conforme a necessidade. A descoberta somente leitura permite conhecer dispositivos, topologia e calibração antes de decidir executar jobs reais. "Somente leitura" significa que o estado da nuvem remota ou da QPU não é alterado; as pontes Python locais mantêm seu contrato `workspace-write`, pois caches de SDK e a gravação de arquivos de resultado podem gravar no espaço de trabalho local.
 
 ### Parâmetros de cálculo
 
@@ -604,18 +604,18 @@ Mais tarefas prontas para copiar, sobre circuitos, estados fundamentais, ruído,
 
 O ambiente de trabalho salva o pedido, as chamadas de ferramentas e os resultados retornados de cada tarefa, para que você possa revisar o processo e continuar perguntando. Ajuste parâmetros, escolha outro backend conectado ou transforme etapas de pesquisa recorrentes numa Skill para tarefas futuras.
 
-Nas capacidades suportadas, os resultados vêm acompanhados de referências exatas, verificações independentes ou informações de erro estatístico. A resolução de estados fundamentais e as auditorias de informação quântica oferecem ainda um fluxo completo de aceitação científica, que liga entradas, arquivos de resultado e proveniência da sessão para revisão.
+Nos recursos suportados, os resultados vêm acompanhados de referências exatas, verificações independentes ou informações de erro estatístico. A resolução de estados fundamentais e as auditorias de informação quântica oferecem ainda um fluxo completo de aceitação científica, que liga entradas, arquivos de resultado e proveniência da sessão para revisão.
 
 <details>
 <summary><strong>Registros de execução e aceitação científica em detalhe</strong></summary>
 
 O ambiente de trabalho de pesquisa registra os pedidos de tarefa, o carregamento de Skills, as chamadas de ferramentas, o estado de permissões e os resultados retornados. "Ativado" nas configurações é apenas uma política de configuração; se uma ferramenta pode ser chamada e um serviço está acessível é algo que só as evidências de execução mostram.
 
-A conclusão da execução e a aceitação científica aparecem como estados distintos. Capacidades com fluxo de aceitação completo ligam entradas, arquivos de resultado, verificações independentes e registros de sessão num relatório de aceitação que lista os itens aprovados, reprovados e não verificados; as demais ferramentas informam resultados numéricos e o estado das verificações dentro do próprio escopo.
+A conclusão da execução e a aceitação científica aparecem como estados distintos. Recursos com fluxo de aceitação completo ligam entradas, arquivos de resultado, verificações independentes e registros de sessão num relatório de aceitação que lista os itens aprovados, reprovados e não verificados; as demais ferramentas informam resultados numéricos e o estado das verificações dentro do próprio escopo.
 
-![Dos resultados, materialização de evidências e verificações independentes até a aceitação científica que combina regras e proveniência](../images/openquantum-evidence-flow.png)
+![Dos resultados, geração e armazenamento de evidências e verificações independentes até a aceitação científica que combina regras e proveniência](../images/openquantum-evidence-flow.png)
 
-O diagrama mostra como as capacidades com aceitação completa formam evidências; [veja a fonte editável](../architecture/openquantum-evidence-flow.html). A resolução delimitada de estados fundamentais e as auditorias de informação quântica oferecem o fluxo completo; QUBO, equivalência de circuitos e experimentos de memória de correção de erros informam resultados e verificações segundo suas próprias regras. As evidências estão nas [declarações de capacidades](../../.agents/capability-packages.yml), na [auditoria de arquitetura](../architecture/ARCHITECTURE_AUDIT.md) e no [benchmark fixo de capacidades quânticas](../../benchmarks/quantum-capabilities/README.md).
+O diagrama mostra como os recursos com aceitação completa formam evidências; [veja a fonte editável](../architecture/openquantum-evidence-flow.html). A resolução delimitada de estados fundamentais e as auditorias de informação quântica oferecem o fluxo completo; QUBO, equivalência de circuitos e experimentos de memória de correção de erros informam resultados e verificações segundo suas próprias regras. As evidências estão nas [declarações de recursos](../../.agents/capability-packages.yml), na [auditoria de arquitetura](../architecture/ARCHITECTURE_AUDIT.md) e no [benchmark fixo de recursos quânticos](../../benchmarks/quantum-capabilities/README.md).
 
 </details>
 
@@ -632,16 +632,16 @@ O diagrama mostra como as capacidades com aceitação completa formam evidência
 
 ## Estender a plataforma
 
-**Transforme seu software quântico numa capacidade que agentes podem usar e leve aplicações completas para uma plataforma aberta.** Os caminhos de extensão do OpenQuantum prontos para agentes são: descrever métodos de trabalho numa Skill; conectar programas de cálculo como Tools nativas ou por meio de um MCP Server; e, quando forem necessárias verificações científicas independentes, acrescentar um Validator e seu fluxo de evidências. Aplicações completas são integradas segundo seus próprios limites de negócio e de dados, em vez de serem fragmentadas em Tools isoladas.
+**Transforme seu software quântico num recurso que agentes podem usar e leve aplicações completas para uma plataforma aberta.** Os caminhos de extensão do OpenQuantum prontos para agentes são: descrever métodos de trabalho numa Skill; conectar programas de cálculo como Tools nativas ou por meio de um MCP Server; e, quando forem necessárias verificações científicas independentes, acrescentar um Validator e seu fluxo de evidências. Aplicações completas são integradas segundo seus próprios limites de negócio e de dados, em vez de serem fragmentadas em Tools isoladas.
 
-As capacidades de domínio do OpenQuantum rodam sobre o DeepSeek Harness, que cuida da execução geral de agentes, do agendamento de ferramentas, das conexões com modelos e dos registros de execução. Não se introduz um segundo runtime de agentes. Parta da tarefa que os usuários precisam resolver e então escolha a extensão:
+Os recursos de domínio do OpenQuantum rodam sobre o DeepSeek Harness, que cuida da execução geral de agentes, do agendamento de ferramentas, das conexões com modelos e dos registros de execução. Não se introduz um segundo runtime de agentes. Parta da tarefa que os usuários precisam resolver e então escolha a extensão:
 
 | O que acrescentar | Onde fica |
 | --- | --- |
 | Conhecimento de domínio, etapas, escolha de ferramentas e interpretação de resultados | Uma Skill, que pode reutilizar Tools gerais ou quânticas existentes |
 | Um cálculo, consulta ou operação estável | Uma Tool, registrada por um Tool Provider nativo ou pelo Harness MCP Client |
 | Uma aplicação quântica ou produto de ensino com interface e fluxo de trabalho próprios | Integração segundo o limite da aplicação, mantendo suas responsabilidades de negócio, dados, permissões e backend; o Quantum Learning é o exemplo existente |
-| Verificação e aceitação científicas independentes | Um Validator; para a aceitação final, acrescente um Acceptance Profile, a materialização de evidências e o Acceptance Builder central |
+| Verificação e aceitação científicas independentes | Um Validator; para a aceitação final, acrescente um Acceptance Profile, a geração e armazenamento de evidências e o Acceptance Builder central |
 
 As Skills, pontes e Tools nativas existentes servem de referência. Leia primeiro a [entrada de documentação e arquitetura](../README.md) e, conforme necessário, o [guia de contribuição](../../CONTRIBUTING.md), o [modelo de extensão](../architecture/EXTENSION_MODEL.md) e o [mapa de módulos](../architecture/MODULES.md).
 
@@ -705,7 +705,7 @@ A [Skill oficial `pyqpanda3` da OriginQ](https://github.com/OriginQ/pyqpanda3-sk
 
 ## Roteiro e RSI
 
-**De usar capacidades existentes a criar novas, em conjunto.** Seguiremos construindo uma plataforma aberta de agentes e aplicações quânticas, em que métodos especializados, recursos computacionais, aplicações completas, instrumentos de laboratório e recursos de aprendizagem tenham cada um sua porta de entrada e trabalhem juntos dentro do próprio escopo. Estas são direções de longo prazo, não uma lista de entregas; as capacidades chegam por meio de integração e verificação individuais.
+**De usar recursos existentes a criar novos, em conjunto.** Seguiremos construindo uma plataforma aberta de agentes e aplicações quânticas, em que métodos especializados, recursos computacionais, aplicações completas, instrumentos de laboratório e recursos de aprendizagem tenham cada um sua porta de entrada e trabalhem juntos dentro do próprio escopo. Estas são direções de longo prazo, não uma lista de entregas; os recursos chegam por meio de integração e verificação individuais.
 
 ### Fundamentos da plataforma
 
@@ -744,7 +744,7 @@ As interfaces de instrumentos se inspirarão em explorações como o [Model Hard
 | Nível | Mudança que queremos acumular |
 | --- | --- |
 | Entre tarefas | Transformar a experiência autorizada com tarefas em métodos, casos e limites de falha reutilizáveis, e não apenas em históricos de conversa. |
-| Aprimoramento de capacidades | Propor mudanças na escolha de métodos, na implementação de ferramentas ou no fluxo de trabalho e testar, em tarefas novas, se a qualidade, a confiabilidade ou o custo melhoram. |
+| Aprimoramento de recursos | Propor mudanças na escolha de métodos, na implementação de ferramentas ou no fluxo de trabalho e testar, em tarefas novas, se a qualidade, a confiabilidade ou o custo melhoram. |
 | Autoaperfeiçoamento recursivo | Aprimorar os métodos que produzem aprimoramentos, como o desenho de experimentos, a busca de candidatos e a verificação independente, e testar se a rodada seguinte se torna mais eficiente. |
 
 O ciclo imaginado é **tarefa real → aprimoramento candidato → verificações independentes e comparações em tarefas novas → atualização de versão autorizada → rodada seguinte de pesquisa.**
@@ -753,7 +753,7 @@ Por exemplo, uma tarefa de circuitos poderia gerar não só um circuito otimizad
 
 Um aprimoramento deve ser comparado com uma versão que não o herdou, informando o modelo de base, a participação humana e o custo total de aprimoramento e de uso em condições comparáveis, e verificando regressões. Um sistema candidato não pode afrouxar as próprias regras de aceitação, apagar evidências de falha nem ampliar as próprias permissões; avaliação independente, autorização do usuário, limites de dados e possibilidade de reversão são condições para aceitar uma mudança. Contribuições da comunidade e orientação humana fazem parte do processo e não devem ser todas creditadas ao progresso autônomo da IA.
 
-O OpenQuantum pretende oferecer um ambiente de trabalho quântico para essa exploração: ferramentas executáveis, métodos reutilizáveis, resultados verificáveis e interfaces abertas para outros agentes de pesquisa, sem construir um novo runtime geral de agentes nem treinar um novo modelo de base. A colaboração com CyberEinstein, PRAgent e RunThePaper é uma possibilidade futura, não um ciclo automático já existente entre projetos. Se IA e capacidades quânticas se reforçam mutuamente é algo a ser testado em tarefas concretas, contabilizando custos de preparação, medição, correção de erros e transferência de dados; não supomos que a computação quântica acelere o treinamento de modelos de base nem que permita autoaperfeiçoamento ilimitado.
+O OpenQuantum pretende oferecer um ambiente de trabalho quântico para essa exploração: ferramentas executáveis, métodos reutilizáveis, resultados verificáveis e interfaces abertas para outros agentes de pesquisa, sem construir um novo runtime geral de agentes nem treinar um novo modelo de base. A colaboração com CyberEinstein, PRAgent e RunThePaper é uma possibilidade futura, não um ciclo automático já existente entre projetos. Se IA e computação quântica se reforçam mutuamente é algo a ser testado em tarefas concretas, contabilizando custos de preparação, medição, correção de erros e transferência de dados; não supomos que a computação quântica acelere o treinamento de modelos de base nem que permita autoaperfeiçoamento ilimitado.
 
 **O que queremos, em última instância: que uma investigação produza um resultado novo e deixe capacidades que ajudem a seguinte a ter sucesso.**
 
@@ -765,7 +765,7 @@ O OpenQuantum pretende oferecer um ambiente de trabalho quântico para essa expl
 
 | O que você quer fazer | Comece por aqui |
 | --- | --- |
-| Usar a plataforma e entender suas capacidades | [Índice da documentação](../README.md), [implantação](../DEPLOYMENT.md), [solução de problemas](../TROUBLESHOOTING.md) |
+| Usar a plataforma e entender seus recursos | [Índice da documentação](../README.md), [implantação](../DEPLOYMENT.md), [solução de problemas](../TROUBLESHOOTING.md) |
 | Contribuir com Skills, ferramentas e verificações científicas | [Estender a plataforma](#extend-the-platform), [guia de contribuição](../../CONTRIBUTING.md) |
 | Integrar aplicações, criar cursos e experimentos | [Aplicações práticas](#quantum-applications-for-practical-problems), [Quantum Learning](#quantum-learning) |
 | Relatar problemas ou conhecer a história do projeto | [GitHub Issues](https://github.com/xi-zhao/OpenQuantum/issues), [história do projeto (em chinês)](../communications/openquantum-wechat-launch.md) |
@@ -782,7 +782,7 @@ Os documentos técnicos detalhados estão principalmente em chinês, e o README 
 
 ## Licença e agradecimentos
 
-As capacidades quânticas do OpenQuantum se apoiam na ciência aberta e no software de código aberto. Mantemos Skills de domínio, pontes MCP, Tools nativas e as verificações científicas aplicáveis; as bibliotecas de algoritmos subjacentes, os serviços externos e as bases das aplicações mantêm seus próprios autores, nomes de projeto e licenças.
+Os recursos quânticos do OpenQuantum se apoiam na ciência aberta e no software de código aberto. Mantemos Skills de domínio, pontes MCP, Tools nativas e as verificações científicas aplicáveis; as bibliotecas de algoritmos subjacentes, os serviços externos e as bases das aplicações mantêm seus próprios autores, nomes de projeto e licenças.
 
 | Projeto usado ou adaptado | Papel no OpenQuantum |
 | --- | --- |
@@ -791,6 +791,6 @@ As capacidades quânticas do OpenQuantum se apoiam na ciência aberta e no softw
 | [CC Connect](../integrations/CC_CONNECT.md) | Ponte de mensagens que traz pedidos do WeChat, Feishu e outros canais para o ambiente de trabalho |
 | [OpenMAIC](https://github.com/THU-MAIC/OpenMAIC) | Base de ensino do Quantum Learning, mantendo sua interface completa, servidor e fluxos de ensino, com nome, tema e conexão de modelos do OpenQuantum |
 
-Os projetos de cálculo, dispositivos e referência por trás de cada capacidade, e a forma como cada um foi adaptado, estão listados no [README em chinês](../../README.md#开源生态与致谢).
+Os projetos de cálculo, dispositivos e referência por trás de cada recurso, e a forma como cada um foi adaptado, estão listados no [README em chinês](../../README.md#开源生态与致谢).
 
-O código próprio do OpenQuantum está sob a [Licença MIT](../../LICENSE), exceto os diretórios com licença própria. O [diretório da capacidade de mitigação de erros Mitiq](../../.agents/skills/mitiq-error-mitigation/) é GPL-3.0-only, e o [snapshot de dados públicos do Metriq](../../src/metriq-data/upstream/) é CC-BY-4.0, cada um com seus próprios LICENSE e NOTICE. DeepSeek Harness, DSH Desktop, OpenMAIC, FatQat, Qiskit MCP Servers, FieldQKit, Quantum Hardware MCP e outros componentes de terceiros mantêm suas próprias licenças; consulte [THIRD_PARTY_NOTICES.md](../../THIRD_PARTY_NOTICES.md) antes de redistribuir ou ativar uma integração opcional. As fontes das capturas de tela e dos diagramas estão nas [notas das imagens](../images/README.md).
+O código próprio do OpenQuantum está sob a [Licença MIT](../../LICENSE), exceto os diretórios com licença própria. O [diretório do recurso de mitigação de erros Mitiq](../../.agents/skills/mitiq-error-mitigation/) é GPL-3.0-only, e o [snapshot de dados públicos do Metriq](../../src/metriq-data/upstream/) é CC-BY-4.0, cada um com seus próprios LICENSE e NOTICE. DeepSeek Harness, DSH Desktop, OpenMAIC, FatQat, Qiskit MCP Servers, FieldQKit, Quantum Hardware MCP e outros componentes de terceiros mantêm suas próprias licenças; consulte [THIRD_PARTY_NOTICES.md](../../THIRD_PARTY_NOTICES.md) antes de redistribuir ou ativar uma integração opcional. As fontes das capturas de tela e dos diagramas estão nas [notas das imagens](../images/README.md).
