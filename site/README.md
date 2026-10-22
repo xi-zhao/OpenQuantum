@@ -19,6 +19,20 @@ npm run homepage:build
 构建产物为 `dist/homepage/`，包含页面、样式、交互、所需本地资源与 `provenance.json`，可整体交付静态托管。
 预览服务仅监听本机，提供这个构建目录。科研工作台继续由原有 `npm run dev` 启动。
 
+## GitHub Pages 发布
+
+正式网址使用 GitHub Pages 的仓库子路径：[`https://xi-zhao.github.io/OpenQuantum/`](https://xi-zhao.github.io/OpenQuantum/)。
+
+仓库 Pages 的发布源设为 **GitHub Actions**。[首页工作流](../.github/workflows/homepage-pages.yml) 使用 Node.js 24 和 GitHub 官方 Pages actions：
+
+- Pull request 只构建和检查页面，不发布。
+- 首页相关改动进入 `main` 后自动发布，也可从主分支手动运行工作流。
+- 构建只调用已有的首页测试与原生 Node.js 文件操作，不安装科研工作台依赖。
+- 仅上传 `dist/homepage/`；科研后端、环境配置和凭据不进入发布目录。
+- 页面与资源使用相对路径，兼容 `/OpenQuantum/` 子路径；不需要自定义域名。
+
+首次发布直接从已验证的首页任务分支启动；上线核验后移除该分支的自动发布入口，保留主分支发布规则。此次上线不合并尚在审查中的依赖 PR。
+
 ## 内容与交互
 
 - 首页以融入画面的浅蓝量子波场表现连接与相干的视觉概念，提供微幅视差与缓慢运动；图注明确标注“概念视觉”。
