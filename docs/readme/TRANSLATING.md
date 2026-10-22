@@ -1,6 +1,6 @@
 # Maintaining translated READMEs
 
-The root `README.md` is the detailed Chinese entry point. `README.en.md` is the detailed English edition. The other eight editions provide localized introductions, startup instructions, model configuration, Desktop, Quantum Learning and contribution guidance, with links to the detailed documentation.
+The root `README.md` is the detailed Chinese entry point. `README.en.md` is the detailed English edition. The other eight editions are full translations of the English edition: they keep its sections, tables, numbers, limits and in-page anchor ids (explicit `<a id>` tags before translated headings), and link to the Chinese README for complete catalogs.
 
 When changing an installation command, requirement, product name or supported feature:
 
@@ -21,7 +21,7 @@ Present promotional cases through the research task, delivered work, measured be
 
 Explain value through supported actions: start from a question and use specialist tools; preserve results and methods for further work; contribute capabilities that others can use. Support these themes with examples and recorded evidence. Avoid unsupported uniqueness, speed, quantum-advantage or user-adoption claims. RSI remains a long-term research direction whose proposed loop is not implemented.
 
-The detailed editions follow value → capabilities and applications → startup → results → development → roadmap → contribution → open-source acknowledgments. Compact editions may combine sections while retaining the same core claims and limitations. Keep first-run instructions together. Show core tasks, application features and product screenshots directly; use one level of expansion for setup details, technical catalogs and verification procedures. Catalogs stay complete and grouped by purpose; source, activation policy and permissions remain separate fields. Add new entries to an existing group whenever appropriate.
+The detailed editions follow value → capabilities and applications → startup → results → development → roadmap → contribution → open-source acknowledgments. Keep first-run instructions together. Show core tasks, application features and product screenshots directly; use one level of expansion for setup details, technical catalogs and verification procedures. Catalogs stay complete and grouped by purpose; source, activation policy and permissions remain separate fields. Add new entries to an existing group whenever appropriate.
 
 Grouping must preserve the substance of the value arguments and every distinct roadmap track, including its rationale and scope. Put the full explanation under its theme rather than replacing it with a short aggregate row. Do not use catalog completeness alone as evidence that a README rewrite preserves the product story.
 
