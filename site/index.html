@@ -145,7 +145,7 @@
           </div>
           <figure class="result-figure">
             <a href="./assets/wigner-comparison.svg" aria-label="查看完整 QuTiP 与 OpenQuantum 优化后的 Wigner 结果及逐点误差图">
-              <img src="./assets/wigner-comparison.svg" width="2040" height="646" alt="左为 QuTiP 默认 Wigner 结果，中为优化后结果，右为逐点绝对差，最大约 6.52 乘 10 的负 16 次方" loading="lazy">
+              <img src="./assets/wigner-comparison.svg" width="2040" height="670" alt="左为 QuTiP 默认 Wigner 结果，中为优化后结果，右为逐点绝对差，最大约 6.52 乘 10 的负 16 次方" loading="lazy">
             </a>
             <figcaption>原库结果、优化后结果与逐点绝对差，完整网格对照。</figcaption>
           </figure>
@@ -157,7 +157,7 @@
         <details class="case-conditions">
           <summary>查看计时与核对条件</summary>
           <p>Apple M4，QuTiP 5.3.1；64 维、rank-4 单模密度矩阵，201 × 201 网格。单线程设定，2 次预热，9 轮交错热运行中位数。包含输入读取、转换、检查与完整输出构造；不含准备、编译、输入生成及结果核对。提速仅对应此项固定输入计算。</p>
-          <figure><img src="./assets/qutip-timings.svg" width="1700" height="901" alt="QuTiP 四个预定规模的完整调用计时与四分位区间" loading="lazy"><figcaption>全部预定规模的计时与区间，详见复跑报告。</figcaption></figure>
+          <figure><img src="./assets/qutip-timings.svg" width="1700" height="906" alt="QuTiP 四个预定规模的完整调用计时与四分位区间" loading="lazy"><figcaption>全部预定规模的计时与区间，详见复跑报告。</figcaption></figure>
         </details>
         <div class="case-links">
           <a class="text-link" href="https://github.com/xi-zhao/OpenQuantum/tree/9fa53e6523dee2c81380483b1aedb19819f218ac/experiments/qutip-rust-wigner">核对与复跑</a>

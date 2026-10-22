@@ -87,6 +87,11 @@ test("presentation charts retain the complete-call medians, quartiles and all me
     assert.ok(svg.includes("OpenQuantum"));
   }
   const wigner = charts.plots.find((item) => item.asset === "wigner-comparison.svg");
+  const wignerSvg = await readFile(path.join(root, "site/assets/wigner-comparison.svg"), "utf8");
+  const height = Number(wignerSvg.match(/viewBox="0 0 [\d.]+ ([\d.]+)"/)[1]);
+  const axisLabels = [...wignerSvg.matchAll(/<text[^>]+y="([\d.]+)"[^>]*>x<\/text>/g)];
+  assert.equal(axisLabels.length, 3);
+  assert.ok(axisLabels.every((match) => Number(match[1]) < height - 2));
   assert.deepEqual(wigner.shape, [201, 201]);
   assert.ok(wigner.max_absolute_difference <= 1e-12);
 });

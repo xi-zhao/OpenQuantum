@@ -19,7 +19,9 @@ def source_record(path):
 
 
 def save(figure, name):
-    figure.savefig(OUT / name, metadata={"Date": None})
+    figure.savefig(OUT / name, bbox_inches="tight", pad_inches=0.08, metadata={"Date": None})
+    destination = OUT / name
+    destination.write_text("\n".join(line.rstrip() for line in destination.read_text().splitlines()) + "\n")
     plt.close(figure)
 
 
