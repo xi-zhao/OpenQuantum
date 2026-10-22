@@ -10,6 +10,8 @@ on:
       - "tests/homepage.test.mjs"
       - "packages/openquantum-web-branding/assets/**"
       - "public/openquantum/fonts/**"
+      - "docs/images/openquantum-desktop-20261013.jpg"
+      - "docs/images/openquantum-settings-categories-20261013.jpg"
       - "experiments/qutip-rust-wigner/**"
       - "experiments/pennylane-rust-commutator/**"
       - ".github/workflows/homepage-pages.yml"
@@ -20,6 +22,8 @@ on:
       - "tests/homepage.test.mjs"
       - "packages/openquantum-web-branding/assets/**"
       - "public/openquantum/fonts/**"
+      - "docs/images/openquantum-desktop-20261013.jpg"
+      - "docs/images/openquantum-settings-categories-20261013.jpg"
       - "experiments/qutip-rust-wigner/**"
       - "experiments/pennylane-rust-commutator/**"
       - ".github/workflows/homepage-pages.yml"
@@ -27,6 +31,10 @@ on:
 
 permissions:
   contents: read
+
+concurrency:
+  group: ${{ github.event_name == 'pull_request' && format('homepage-pr-{0}', github.event.pull_request.number) || 'github-pages' }}
+  cancel-in-progress: false
 
 jobs:
   build:
@@ -65,9 +73,6 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    concurrency:
-      group: github-pages
-      cancel-in-progress: false
     steps:
       - name: Configure Pages
         uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6
