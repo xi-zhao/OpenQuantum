@@ -59,6 +59,11 @@ source lint：0 FAIL、2 WARN，均为沿用项目 Inter 字体的 `default-font
 3 项自动检查通过：两份案例的显示值与固定原始数据一致、PennyLane 使用完整调用计时、静态资源与图片原字节及锚点完整。相关 JavaScript 通过 ESLint，`git diff --check` 通过。
 页面不请求外部模型或量子云，未新增生产依赖；安装入口继续指向已核验存在的 `v0.8.4` 与 `codex-v0.8.4` 正式 Release。科学数据与原始界面没有重绘。
 
+### GitHub Pages 线上核验
+
+2026-10-22，已发布至 [OpenQuantum 官网](https://xi-zhao.github.io/OpenQuantum/)，[发布工作流](https://github.com/xi-zhao/OpenQuantum/actions/runs/39730513624)成功。12 个发布文件全部返回 200，内容与本地构建逐字节一致，模块脚本的 Content-Type 为 `text/javascript`。
+线上再次检查全部三个尺寸：0 FAIL、0 页面控制台错误、0 横向溢出；仍仅保留缺少操作录屏的提醒。实际浏览器已完成 PennyLane 案例切换、手机目录展开及跳转收起，资源与锚点保持在 `/OpenQuantum/` 子路径。线上截图和检查记录保存在 `.taste-skill/pages-live/` 与 `.taste-skill/pages-live-check.json`。
+
 ## 最终图片审视
 
 ROUND 3
