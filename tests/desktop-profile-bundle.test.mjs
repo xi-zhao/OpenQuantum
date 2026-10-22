@@ -3,7 +3,7 @@ import { mkdir, mkdtemp, readFile, realpath, rm, writeFile } from "node:fs/promi
 import { tmpdir } from "node:os";
 import path from "node:path";
 import test from "node:test";
-import { DESKTOP_PROFILE_BUNDLE, DESKTOP_PROFILE_PATCH, desktopHomePatchMigration, desktopProfileManifest } from "../scripts/lib/desktop-profile-bundle.mjs";
+import { DESKTOP_MODEL_ROUTES, DESKTOP_PROFILE_BUNDLE, DESKTOP_PROFILE_DEFAULTS, DESKTOP_PROFILE_PATCH, desktopHomePatchMigration, desktopProfileManifest } from "../scripts/lib/desktop-profile-bundle.mjs";
 import { sha256 } from "../scripts/lib/desktop-distribution.mjs";
 import { writeManagedHomeFiles } from "../scripts/lib/managed-home-files.mjs";
 import { prepareOpenQuantumHarnessHome } from "../scripts/lib/prepare-harness-home.mjs";
@@ -65,17 +65,19 @@ test("preserves custom Home overrides and rejects edited OpenQuantum activation 
 test("respects user Profile defaults after the bundle when clearing removed model selections", async t => {
   const home = await isolatedHome(t);
   const profile = path.join(home, "profiles/desktop/cordis.patch.yml");
-  const bundle = path.join(home, DESKTOP_PROFILE_PATCH);
+  const defaults = path.join(home, DESKTOP_PROFILE_DEFAULTS);
   await mkdir(path.dirname(profile), { recursive: true });
-  await mkdir(path.dirname(bundle), { recursive: true });
-  await writeFile(path.join(home, "profiles/model-routes.cordis.yml"), '- id: openquantum-llm-pi-ai\n  config:\n    providers: {}\n');
-  await writeFile(bundle, '- id: agent-default-model\n  config:\n    provider: openquantum-public\n    model: old-example\n');
-  await writeFile(profile, '- id: agent-default-model\n  config:\n    provider: user-local\n    model: user-model\n');
+  await mkdir(path.dirname(defaults), { recursive: true });
+  await writeFile(path.join(home, DESKTOP_MODEL_ROUTES), '- id: llm-pi-ai\n  config:\n    providers: {}\n');
+  await writeFile(defaults, '- id: agent-default-model\n  config:\n    provider: openquantum-public\n    model: old-example\n');
+  const user = '- id: agent-default-model\n  config:\n    provider: user-local\n    model: user-model\n';
+  await writeFile(profile, user);
   await clearRemovedDesktopModelSelection(home, ["openquantum-public"]);
-  await assert.rejects(readFile(path.join(home, "settings.yaml")), { code: "ENOENT" });
+  assert.equal(await readFile(profile, "utf8"), user);
   await rm(profile);
   await clearRemovedDesktopModelSelection(home, ["openquantum-public"]);
-  const settings = await readFile(path.join(home, "settings.yaml"), "utf8");
-  assert.match(settings, /provider: ""/);
-  assert.match(settings, /model: ""/);
+  const saved = await readFile(profile, "utf8");
+  assert.match(saved, /provider: ""/);
+  assert.match(saved, /model: ""/);
+  await assert.rejects(readFile(path.join(home, "settings.yaml")), { code: "ENOENT" });
 });

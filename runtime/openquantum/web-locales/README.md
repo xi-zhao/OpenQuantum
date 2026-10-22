@@ -10,7 +10,7 @@ The pinned Desktop's web settings share these dictionaries. Its operating-system
 
 ## Catalog maintenance
 
-- `harness-source.json` records the source key contracts of Harness `0.1.5-rc.1` and Desktop `2.0.7` (`5184a2ab7ab197e7405c1053feb324003409a142`). Retain namespace ownership when upgrading.
+- `harness-source.json` records the source key contracts of Harness `0.2.1-rc.2` and Desktop `2.0.18` (`6a63b9730b82cf4e858b9a11ac9783da9a5a0c3a`). Retain namespace ownership when upgrading.
 - `openquantum-source.json` owns capability settings, messaging channels and the learning launcher. Chinese source phrases remain stable keys for existing settings copy.
 - `locales/*.json` contains deduplicated translations keyed by English source text. The first edition reuses matching OpenMAIC strings and includes drafts produced with local Argos Translate models; these translations have not received a complete native-speaker review.
 - `reviewed.json` overrides frequent navigation, settings, learning labels and full-access confirmation copy. Review terminology and sentence meaning as well as syntax when changing translations. The homepage taglines live with the canonical brand identity.

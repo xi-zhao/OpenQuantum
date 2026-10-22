@@ -454,7 +454,7 @@ npm run desktop -- --source
 
 源码提供可选的 `openquantum-public` / `openquantum-private` 调试示例，其地址为 `.invalid` 占位值。这些示例不预填到 Desktop 的新安装模型列表中；只有使用下述源码诊断时，才需要配置对应服务地址与凭据。
 
-界面保存的模型路由覆盖会写入 Git 忽略的 `$DSH_HOME/settings.yaml`；密钥保存在本地环境或 Harness 凭据库中，项目配置仅记录凭据引用。若使用 `.env` 提供服务地址和密钥，可在 macOS 终端执行 `cp .env.example .env`，Windows PowerShell 执行 `Copy-Item .env.example .env`，再按文件内注释填写。`.env` 不会覆盖模型名称；若服务使用其他模型名，仍需在「设置 → 模型」中配置。
+界面保存的模型路由覆盖会写入 Git 忽略的 `$DSH_HOME/profiles/<web|desktop|acp>/cordis.patch.yml`（各入口独立保存；旧版 `settings.yaml` 中的模型设置会在首次启动时迁入并备份）；密钥保存在本地环境或 Harness 凭据库中，项目配置仅记录凭据引用。若使用 `.env` 提供服务地址和密钥，可在 macOS 终端执行 `cp .env.example .env`，Windows PowerShell 执行 `Copy-Item .env.example .env`，再按文件内注释填写。`.env` 不会覆盖模型名称；若服务使用其他模型名，仍需在「设置 → 模型」中配置。
 
 以下命令检查 `.env` 或环境变量中的 public 路由，以及脚本固定的 `kimi-k2.7-code`、`glm5.2` 两个模型名，分别验证文本生成和 Tool Calling。它不会读取界面保存的路由覆盖；服务提供这些模型时可使用，其他模型请通过上面的工作台任务验证。
 

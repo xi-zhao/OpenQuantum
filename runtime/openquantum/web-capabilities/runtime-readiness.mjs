@@ -1,4 +1,3 @@
-import { createRequire } from "node:module";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 
@@ -22,11 +21,24 @@ async function applicationModule(projectRoot) {
   );
 }
 
-async function presetMountReader(projectRoot) {
-  const projectRequire = createRequire(path.join(projectRoot, "package.json"));
-  const entrypoint = projectRequire.resolve("@deepseek-ai/dsh-agent-presets");
-  const presets = await import(pathToFileURL(entrypoint).href);
-  return presets.livePresetMounts;
+// DSH 0.2 mounts each declared preset eagerly at registration. Read only the
+// retained generations; never acquire a lease or mount a preset from here.
+function registryPresetMounts(ctx) {
+  return () => {
+    const registry = typeof ctx.get === "function" ? ctx.get("agentPresets") : ctx.agentPresets;
+    // No registry yet means no preset generation exists to observe.
+    if (registry === undefined) return [];
+    if (!(registry.generations instanceof Map)) {
+      throw new TypeError("Agent preset registry shape is not supported");
+    }
+    return [...registry.generations.values()]
+      .filter((generation) => generation?.retired !== true)
+      .map((generation) => ({
+        presetId: generation.mount?.presetId,
+        key: generation.key,
+        fiber: generation.mount?.fiber,
+      }));
+  };
 }
 
 function belongsToRuntime(mount, rootContext) {
@@ -78,15 +90,11 @@ export async function dispatchRuntimeReadinessCommand(
   { ctx, livePresetMounts } = {},
 ) {
   validateSnapshotCommand(command);
-  const [{ createRuntimeReadinessReader }, readLivePresetMounts] =
-    await Promise.all([
-      applicationModule(projectRoot),
-      livePresetMounts ?? presetMountReader(projectRoot),
-    ]);
+  const { createRuntimeReadinessReader } = await applicationModule(projectRoot);
   const observer = createHarnessRuntimeObserver({
     ctx,
     projectRoot,
-    livePresetMounts: readLivePresetMounts,
+    livePresetMounts: livePresetMounts ?? registryPresetMounts(ctx),
   });
   return createRuntimeReadinessReader({ observer, projectRoot })();
 }

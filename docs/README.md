@@ -131,8 +131,9 @@ Skill 与 Tool 在概念和发行版 policy 中都相互独立：Skill-only、To
 | --- | --- | --- |
 | Desktop、Codex 插件和安装器的统一产品版本 | 根 `package.json`；通过 `npm run release:version -- X.Y.Z` 更新各包与锁文件 | `npm run release:check`、CI 和打包入口 |
 | 静态模型 Provider catalog | `runtime/openquantum/model-routes.cordis.yml` | Web/Desktop/ACP 组合一致性测试 + model probe |
-| 用户模型 Route 覆盖 | Git 忽略的 `$DSH_HOME/settings.yaml` | Web 设置测试 + ACP 本地模型回路测试 |
-| Deployment 默认模型、Agent Preset 与 Host 扩展 | `runtime/openquantum/cordis.patch.yml` | `npm run harness:config`、`npm run desktop:check` |
+| 用户模型 Route 覆盖 | Git 忽略的 `$DSH_HOME/profiles/<profile>/cordis.patch.yml`（旧 `settings.yaml` 一次性迁入） | Web 设置测试 + ACP 本地模型回路测试 |
+| Deployment 默认模型与默认 Agent Preset | `runtime/openquantum/profile-defaults.cordis.yml`（profile bundle，低于原生设置） | Web/ACP 组合一致性测试 |
+| Deployment Host 扩展与 Agent Preset 声明 | `runtime/openquantum/cordis.patch.yml` | `npm run harness:config`、`npm run desktop:check` |
 | OpenQuantum Agent 的 Skill/Tool Provider 组合 | `runtime/openquantum/agent-presets/openquantum/agent.cordis.yml` | Harness Registry 集成测试 |
 | 发行版 Capability 与 L0–L3 证据引用 | `.agents/capability-packages.yml` | `npm run capability:conformance` |
 | Skill 指令与领域资源 | `.agents/skills/<id>/` | Skill discovery、capability test |

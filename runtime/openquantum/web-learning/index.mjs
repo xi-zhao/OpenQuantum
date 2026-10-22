@@ -42,7 +42,7 @@ export function apply(ctx) {
     .then((module) => module.createLearningUiService(openQuantumProjectRoot, { llm: ctx.llm, selection: () => ctx.agentDefaultModel.currentSelection(), attachments: ctx.attachments }));
   ctx.effect(() => () => { void ui.then((service) => service.dispose()); }, "openquantum: OpenMAIC UI lifecycle");
   ctx.effect(() => ctx.webServer.register({
-    path: "/openquantum/api/learning", exact: true,
+    kind: "exact", path: "/openquantum/api/learning",
     handler: createLearningHandler({
       dispatch: async (command) => (await application).dispatch(command),
       openUi: async (origin) => (await ui).open(origin),

@@ -126,17 +126,17 @@ test("rejects manifest escapes and writes through directory links", async (t) =>
   await assert.rejects(readFile(path.join(outside, "main.mjs")), { code: "ENOENT" });
 });
 
-test("rejects a V4 Home before changing any installed program", async (t) => {
+test("rejects a V5 Home before changing any installed program", async (t) => {
   const f = await fixture(t);
   await f.release("1", { "src/main.mjs": "old" });
   await f.install();
   const logs = path.join(f.projectRoot, ".openquantum/dsh/sessions/new-session");
   await mkdir(logs, { recursive: true });
-  await writeFile(path.join(logs, "log.v4.jsonl"), "newer session format");
+  await writeFile(path.join(logs, "log.v5.jsonl"), "newer session format");
   await f.release("2", { "src/main.mjs": "new" });
-  await assert.rejects(f.install(), /V4 sessions/);
+  await assert.rejects(f.install(), /V5 sessions/);
   assert.equal(await readFile(path.join(f.projectRoot, "src/main.mjs"), "utf8"), "old");
-  assert.equal(await readFile(path.join(logs, "log.v4.jsonl"), "utf8"), "newer session format");
+  assert.equal(await readFile(path.join(logs, "log.v5.jsonl"), "utf8"), "newer session format");
 });
 
 test("preserves modified provider routes through capability package updates", async (t) => {

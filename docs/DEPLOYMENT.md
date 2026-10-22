@@ -66,9 +66,9 @@ npm run desktop
 设置、Skill、MCP 与 Validator；Desktop 只增加窗口、托盘、终端和原生通知。
 
 Web 和 Desktop 共用 `.openquantum/dsh`。两种启动方式用于访问同一份本地配置和 Session 状态，不应同时
-运行；从 Web 切换到 Desktop 前先停止 `npm run dev`。当前固定 Desktop `2.0.7` 源码提交 `5184a2ab7ab1`，与项目的
-Harness `0.1.5-rc.1` 同族。源码构建尚不是上游正式发行包；版本、兼容性检查与恢复路径见
-[2026-09-10 升级记录](releases/2026-09-10-upstream-update.md)。
+运行；从 Web 切换到 Desktop 前先停止 `npm run dev`。当前固定 Desktop `2.0.18` 源码提交 `6a63b9730b82`，与项目的
+Harness `0.2.1-rc.2` 同族。源码构建尚不是上游正式发行包；版本、兼容性检查与迁移说明见
+[Harness 0.2.1 升级记录](releases/2026-10-23-harness-0.2.1.md)。
 
 不要全局安装或直接 `npx dsh-plugin-desktop`：那条上游命令使用默认 DSH Home，不会自动组合 OpenQuantum
 preset、Skill、MCP 与 Validator。OpenQuantum 品牌 `.dmg` / `.exe` 安装包尚未发布。

@@ -14,7 +14,7 @@ import {
 import { DESKTOP_SOURCE, desktopPackageDirectory } from "../scripts/lib/desktop-source.mjs";
 
 import { prepareOpenQuantumHarnessHome } from "../scripts/lib/prepare-harness-home.mjs";
-import { DESKTOP_PROFILE_BUNDLE, DESKTOP_PROFILE_PATCH } from "../scripts/lib/desktop-profile-bundle.mjs";
+import { DESKTOP_MODEL_ROUTES, DESKTOP_PROFILE_BUNDLE, DESKTOP_PROFILE_PATCH } from "../scripts/lib/desktop-profile-bundle.mjs";
 
 const projectRoot = fileURLToPath(new URL("..", import.meta.url));
 
@@ -92,36 +92,26 @@ test("composes the Desktop shell around the OpenQuantum Harness home", { skip: !
     rows.get("openquantum-web-capabilities")?.name,
     "@openquantum/harness-web-capabilities",
   );
-  assert.equal(rows.get("agent-presets")?.config?.default, "openquantum");
+  assert.equal(rows.get("agent-preset-registry")?.config?.default, "openquantum");
+  assert.equal(rows.get("openquantum-presets")?.name, "@deepseek-ai/cordis-plugin-include");
   assert.equal(rows.get("openquantum-web-branding")?.config?.minimalUi, true);
   assert.equal(rows.get("openquantum-web-capabilities")?.config?.channels, false);
   assert.equal(rows.get("llm-deepseek")?.disabled, true);
-  assert.equal(rows.get("llm-pi-ai")?.disabled, true);
   assert.notEqual(rows.get("desktop-updates")?.disabled, true, "upstream owns native updates");
   assert.equal(rows.get("openquantum-web-updates")?.name, "@openquantum/harness-web-updates");
-  assert.equal(
-    rows.get("openquantum-model-routes")?.name,
-    "@deepseek-ai/cordis-plugin-include",
-  );
-  assert.equal(
-    path.resolve(
-      path.dirname(prepared.rootConfig),
-      rows.get("openquantum-model-routes")?.config?.path,
-    ),
-    modelRoutesTarget,
-  );
+  assert.equal(rows.has("openquantum-model-routes"), false);
+  assert.equal(modelRoutesTarget, path.join(harnessHome, DESKTOP_MODEL_ROUTES));
 
+  // Desktop routes come from the OpenQuantum profile bundle, below native settings.
   const modelRouteRows = loadOverlayPatches(
     "openquantum-desktop-integration",
     modelRoutesTarget,
   );
   assert.equal(modelRouteRows.length, 1);
-  assert.equal(modelRouteRows[0]?.id, "openquantum-llm-pi-ai");
-  assert.equal(
-    modelRouteRows[0]?.name,
-    "@deepseek-ai/dsh-llm-pi-ai",
-  );
+  assert.equal(modelRouteRows[0]?.id, "llm-pi-ai");
+  assert.equal(modelRouteRows[0]?.name, "@deepseek-ai/dsh-llm-pi-ai");
   assert.deepEqual(modelRouteRows[0]?.config?.providers, {});
+  assert.equal(rows.get("llm-pi-ai")?.name, "@deepseek-ai/dsh-llm-pi-ai");
   assert.equal(rows.get("agent-default-model")?.config?.provider, "");
   assert.equal(rows.get("agent-default-model")?.config?.model, "");
 

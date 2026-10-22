@@ -141,7 +141,9 @@ test("Harness discovers the Hamiltonian Skill, runs both open formulas and rerea
     const result = events.find(event => event.type === "tool/result" && JSON.stringify(event).includes(call.id));
     assert.ok(called, `${call.id}: missing persisted call`);
     assert.ok(result, `${call.id}: missing persisted result`);
-    const block = result.data.message.content.find(item => item.type === "tool-result");
+    // Session V4 persists each Tool result as one role "tool" message.
+    const block = result.data.message;
+    assert.equal(block.role, "tool");
     const content = block.content.map(item => item.text ?? "").join("\n");
     if (call.id === "hamiltonian-invalid") {
       assert.equal(block.isError, true);
@@ -163,7 +165,7 @@ test("Harness discovers the Hamiltonian Skill, runs both open formulas and rerea
   const target = path.join(root, ".openquantum/hamiltonian-evidence/harness-session.json");
   await mkdir(path.dirname(target), { recursive: true });
   await writeFile(target, JSON.stringify({
-    verifiedAt: new Date().toISOString(), harness: "0.1.5-rc.1",
+    verifiedAt: new Date().toISOString(), harness: "0.2.1-rc.2",
     model: "local protocol fixture", externalModelTested: false,
     source: definition.source, sessionId, events: evidence,
   }, null, 2) + "\n");

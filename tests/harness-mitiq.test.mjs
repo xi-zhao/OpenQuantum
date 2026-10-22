@@ -101,7 +101,9 @@ test("Harness loads the Mitiq Skill, runs all four real methods and rereads thei
     assert.match(serialized, /not_evaluated/);
     assert.match(serialized, /dependencyLockSha256/);
     assert.doesNotMatch(serialized, /"isError":true/);
-    const block = result.data.message.content.find(item => item.type === "tool-result");
+    // Session V4 persists each Tool result as one role "tool" message.
+    const block = result.data.message;
+    assert.equal(block.role, "tool");
     assert.equal(block.isError, false);
     const output = JSON.parse(block.content.find(item => item.type === "text").text);
     const { definition } = await import(`../.agents/skills/${capability.id}/mcp/contracts.mjs`);

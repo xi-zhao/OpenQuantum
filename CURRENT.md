@@ -2,6 +2,11 @@
 
 量子依赖核验日期：2026-09-22；平台升级记录日期：2026-09-10；原模型验收交接记录日期：2026-09-05。此页只记录工作交接；架构以[文档总入口](docs/README.md)为准，执行事实以 Harness Session event log 为准，科学状态以 Acceptance Report 为准。
 
+## Harness 0.2.1-rc.2 迁移（2026-10-23，任务分支 `c/harness-0.2.1`）
+
+- 从 `main@f5e84adc` 重做，Harness `0.2.1-rc.2` / Desktop `2.0.18`；适配与验证见[升级记录](docs/releases/2026-10-23-harness-0.2.1.md)。未推送、未合并。
+- 阻塞项：8 种界面语言缺约 1219 条上游新文案的翻译，`locales:check` 不通过；Desktop 构建与 GUI 未验证。
+
 ## Desktop 原生插件与安装等待（2026-10-16，PR 候选）
 
 - 从 `main@1f172ac3` 整理独立候选：DSH 原生 Skill Provider、Tool Provider 和 Host Plugin 复用 Codex 的准备、固定 SDK、凭据表单与按需连接实现；不新增 Runtime，不更新 DSH、模型路由或产品版本。

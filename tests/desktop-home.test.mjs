@@ -14,6 +14,7 @@ import { loadOverlayPatches } from "@deepseek-ai/dsh-app-boot";
 import { interpolate } from "@deepseek-ai/cordis-plugin-loader";
 import { prepareOpenQuantumHarnessHome } from "../scripts/lib/prepare-harness-home.mjs";
 import { desktopModelRoutes, desktopModelDefault, clearRemovedDesktopModelSelection } from "../scripts/lib/desktop-model-routes.mjs";
+import { DESKTOP_MODEL_ROUTES, DESKTOP_PROFILE_DIRECTORY } from "../scripts/lib/desktop-profile-bundle.mjs";
 import { parseEnv } from "node:util";
 
 test("Desktop drops unconfigured example models while preserving explicit routes and native settings", async t => {
@@ -35,24 +36,37 @@ test("Desktop drops unconfigured example models while preserving explicit routes
   await writeFile(path.join(home, ".env"), "OPENQUANTUM_PUBLIC_API_KEY=fixture-home-credential\n");
   assert.deepEqual((await desktopModelRoutes(source, root, home, exampleEnv)).removed, ["openquantum-private"]);
   await rm(path.join(home, ".env"));
-  const deployment = await readFile(new URL("../runtime/openquantum/cordis.patch.yml", import.meta.url), "utf8");
+  const deployment = await readFile(new URL("../runtime/openquantum/profile-defaults.cordis.yml", import.meta.url), "utf8");
   assert.match(desktopModelDefault(deployment, empty.content, empty.removed), /provider: ""/);
   assert.match(desktopModelDefault(deployment, source, empty.removed), /provider: openquantum-public/);
   const customDefault = deployment.replace("provider: openquantum-public", "provider: user-local").replace("model: kimi-k2.7-code", "model: user-model");
   assert.match(desktopModelDefault(customDefault, empty.content, empty.removed), /provider: user-local\n\s+model: user-model/);
-  await writeFile(path.join(home, "profiles/model-routes.cordis.yml"), empty.content);
-  await mkdir(path.join(home, "profiles/desktop"));
-  await writeFile(path.join(home, "profiles/desktop/cordis.patch.yml"), '- id: agent-default-model\n  config:\n    provider: openquantum-public\n    model: kimi-k2.7-code\n');
-  await writeFile(path.join(home, "cordis.patch.yml"), '- id: agent-default-model\n  name: "@deepseek-ai/dsh-agent-default-model"\n  config:\n    provider: user-local\n    model: user-model\n');
+  const profilePatch = path.join(home, "profiles/desktop/cordis.patch.yml");
+  await mkdir(path.join(home, DESKTOP_PROFILE_DIRECTORY), { recursive: true });
+  await writeFile(path.join(home, DESKTOP_MODEL_ROUTES), empty.content);
+  await mkdir(path.dirname(profilePatch), { recursive: true });
+  // A Home-level selection is user-owned and outranks the profile; never edit it.
+  await writeFile(profilePatch, '- id: agent-default-model\n  config:\n    provider: openquantum-public\n    model: kimi-k2.7-code\n');
+  const homeSelection = '- id: agent-default-model\n  name: "@deepseek-ai/dsh-agent-default-model"\n  config:\n    provider: user-local\n    model: user-model\n';
+  await writeFile(path.join(home, "cordis.patch.yml"), homeSelection);
   await clearRemovedDesktopModelSelection(home, empty.removed);
-  await assert.rejects(readFile(path.join(home, "settings.yaml")), { code: "ENOENT" });
-  await rm(path.join(home, "profiles/desktop/cordis.patch.yml"));
-  for (const source of ["", "# custom empty Home patch\n", "null\n"]) {
-    await writeFile(path.join(home, "cordis.patch.yml"), source);
+  assert.match(await readFile(profilePatch, "utf8"), /provider: openquantum-public/);
+  assert.equal(await readFile(path.join(home, "cordis.patch.yml"), "utf8"), homeSelection);
+  // An empty Home patch is no layer: the profile selection of a removed route is cleared.
+  for (const homeSource of ["", "# custom empty Home patch\n", "null\n"]) {
+    await writeFile(profilePatch, '# user note\n- id: agent-default-model\n  config:\n    provider: openquantum-public\n    model: kimi-k2.7-code\n');
+    await writeFile(path.join(home, "cordis.patch.yml"), homeSource);
     await clearRemovedDesktopModelSelection(home, empty.removed);
-    await assert.rejects(readFile(path.join(home, "settings.yaml")), { code: "ENOENT" });
+    const cleared = await readFile(profilePatch, "utf8");
+    assert.match(cleared, /provider: ""/);
+    assert.match(cleared, /# user note/);
   }
   await rm(path.join(home, "cordis.patch.yml"));
+  await writeFile(profilePatch, '- id: agent-default-model\n  config:\n    provider: user-local\n    model: user-model\n');
+  await clearRemovedDesktopModelSelection(home, empty.removed);
+  assert.match(await readFile(profilePatch, "utf8"), /provider: user-local/);
+  await rm(profilePatch);
+  // A legacy settings.yaml not yet imported by DSH still carries the selection.
   await writeFile(path.join(home, "settings.yaml"), 'agent-default-model:\n  provider: openquantum-public\n  model: glm5.2\nui-onboarding:\n  accepted: true\n');
   await clearRemovedDesktopModelSelection(home, empty.removed);
   const saved = await readFile(path.join(home, "settings.yaml"), "utf8");
@@ -158,8 +172,8 @@ test("custom worker PATH and native Home selection remain authoritative", async 
   await writeFile(path.join(userData, "data-directory/state.json"), JSON.stringify({ version: 1, activeHome: home }));
   await assertSelectedDesktopHome(home, userData);
   await assert.rejects(assertSelectedDesktopHome(path.join(root, "other"), userData), /different saved data directory/);
-  await writeFile(path.join(home, "log.v4.jsonl"), "");
-  await assert.rejects(assertSelectedDesktopHome(home, userData), /V4|v4|newer|0\.2/);
+  await writeFile(path.join(home, "log.v5.jsonl"), "");
+  await assert.rejects(assertSelectedDesktopHome(home, userData), /V5|v5|newer|0\.2/);
 });
 
 test("legacy Home defaults migrate even after the old private application is removed", async t => {
@@ -173,7 +187,7 @@ test("legacy Home defaults migrate even after the old private application is rem
   await mkdir(path.join(payload, "node_modules/@deepseek-ai/dsh-web-app"), { recursive: true });
   const patch = "- id: agent-presets\n  config: { default: openquantum }\n";
   const desktop = "- id: desktop-updates\n  disabled: true\n";
-  const upstream = { harnessVersion: "0.1.5-rc.1" };
+  const upstream = { harnessVersion: "0.2.1-rc.2" };
   await writeFile(path.join(payload, "distribution.json"), JSON.stringify({ upstream }));
   await writeFile(path.join(payload, "node_modules/@deepseek-ai/dsh-web-app/cordis.patch.yml"), "- insert:\n    - id: ui-settings-account\n");
   await symlink(path.join(root, "removed-private-app", "node_modules"), path.join(project, "node_modules"), process.platform === "win32" ? "junction" : "dir");
