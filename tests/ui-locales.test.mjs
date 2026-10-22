@@ -58,13 +58,24 @@ test("all ten language catalogs preserve source keys and interpolation parameter
       assert.deepEqual(Object.keys(dictionary).sort(), Object.keys(source).sort(), `${id}/${namespace} key coverage`);
       for (const [key, value] of Object.entries(dictionary)) {
         assert.equal(typeof value, "string");
-        assert.ok(value.length > 0 || key === "hero.preview", `${id}/${namespace}/${key} is empty`);
+        // Upstream may intentionally leave an English fragment empty (e.g. a shared prefix).
+        assert.ok(value.length > 0 || key === "hero.preview" || source[key] === "", `${id}/${namespace}/${key} is empty`);
         assert.deepEqual(placeholders(value), placeholders(source[key]), `${id}/${namespace}/${key} parameters`);
         if (!["zh", "en"].includes(id) && !["hero.headline", "hero.preview"].includes(key)) {
           assert.ok(Object.hasOwn(translations[id], source[key]), `${id}: missing translation for ${source[key]}`);
         }
       }
     }
+  }
+});
+
+test("unreviewed machine drafts stay listed and present in every translated catalog", async () => {
+  const drafts = JSON.parse(await readFile(new URL("../runtime/openquantum/web-locales/machine-drafts.json", import.meta.url), "utf8"));
+  assert.equal(drafts.status, "unreviewed");
+  const english = new Set(Object.values(sources).flatMap((entry) => Object.values(entry.en ?? {})));
+  for (const phrase of drafts.phrases) {
+    assert.ok(english.has(phrase), `stale draft entry: ${phrase}`);
+    for (const id of drafts.languages) assert.ok(Object.hasOwn(translations[id], phrase), `${id}: draft missing for ${phrase}`);
   }
 });
 

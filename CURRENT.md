@@ -5,7 +5,7 @@
 ## Harness 0.2.1-rc.2 迁移（2026-10-23，任务分支 `c/harness-0.2.1`）
 
 - 从 `main@f5e84adc` 重做，Harness `0.2.1-rc.2` / Desktop `2.0.18`；适配与验证见[升级记录](docs/releases/2026-10-23-harness-0.2.1.md)。未推送、未合并。
-- 阻塞项：8 种界面语言缺约 1219 条上游新文案的翻译，`locales:check` 不通过；Desktop 构建与 GUI 未验证。
+- 8 种界面语言的 1219 条上游新文案为未审阅机器草稿（`web-locales/machine-drafts.json`），发布前需审阅；Desktop 构建与 GUI 未验证。
 
 ## Desktop 原生插件与安装等待（2026-10-16，PR 候选）
 

@@ -13,6 +13,7 @@ The pinned Desktop's web settings share these dictionaries. Its operating-system
 - `harness-source.json` records the source key contracts of Harness `0.2.1-rc.2` and Desktop `2.0.18` (`6a63b9730b82cf4e858b9a11ac9783da9a5a0c3a`). Retain namespace ownership when upgrading.
 - `openquantum-source.json` owns capability settings, messaging channels and the learning launcher. Chinese source phrases remain stable keys for existing settings copy.
 - `locales/*.json` contains deduplicated translations keyed by English source text. The first edition reuses matching OpenMAIC strings and includes drafts produced with local Argos Translate models; these translations have not received a complete native-speaker review.
+- `machine-drafts.json` lists the 1219 phrases added for Harness `0.2.1-rc.2` / Desktop `2.0.18`. Their translations in all eight `locales/*.json` were produced locally with Argos Translate 1.9.6 and are **unreviewed**; short labels in particular can carry the wrong meaning. Remove a phrase from this list once its translations are reviewed, or move a corrected wording into `reviewed.json`.
 - `reviewed.json` overrides frequent navigation, settings, learning labels and full-access confirmation copy. Review terminology and sentence meaning as well as syntax when changing translations. The homepage taglines live with the canonical brand identity.
 - `licenses/` retains upstream MIT notices for reused source dictionaries and translations. Translation models and the local translation environment are not distributed and are not runtime dependencies.
 
