@@ -23,12 +23,12 @@
 
 ## 交互与素材
 
-主要交互是 QuTiP / PennyLane 实测选择器：同步切换原库与 Rust 完整调用计时、提速、输入条件、核对结论和固定版本报告。无脚本时，两份案例都显示。
+主要交互是 QuTiP / PennyLane 实测选择器：同步切换原库与 OpenQuantum 优化后完整调用计时、提速、输入条件、核对结论和固定版本报告。无脚本时，两份案例都显示。
 
 首屏概念图使用内置 **image_gen** 生成，保存为 [site/assets/quantum-field-v3.png](assets/quantum-field-v3.png)，1672 × 941、不透明背景。完整提示词与生成方式保存为 [site/assets/quantum-field-v3.prompt.txt](assets/quantum-field-v3.prompt.txt)。
 它是量子波场的视觉概念，图注明确写为「概念视觉」，科研证据由下方原始结果和复跑报告提供。
 
-其余资源沿用项目已有工作：OpenQuantum OQ 标志和 Inter 字体、2026-10-13 实际工作台与能力设置、QuTiP Wigner 结果及逐点误差图、QuTiP 和 PennyLane 原始计时图。
+其余资源沿用项目已有工作：OpenQuantum OQ 标志和 Inter 字体、2026-10-13 实际工作台与能力设置、QuTiP Wigner 结果及逐点误差图、根据 QuTiP 和 PennyLane 已保存计时生成的展示图。
 来源见 [README](README.md#资源来源)；所有导出图片按源文件原字节复制，`provenance.json` 记录源文件与固定案例版本。
 
 波场有缓慢的平移缩放和轻微指针视差，内容分层进入，按钮和案例切换提供短促反馈。减少动态效果时取消 CSS 与脚本动画并复位视差。
@@ -57,7 +57,7 @@ source lint：0 FAIL、2 WARN，均为沿用项目 Inter 字体的 `default-font
 - 核验后恢复脚本、媒体偏好与原视口，保留正常首页预览。
 
 3 项自动检查通过：两份案例的显示值与固定原始数据一致、PennyLane 使用完整调用计时、静态资源与图片原字节及锚点完整。相关 JavaScript 通过 ESLint，`git diff --check` 通过。
-页面不请求外部模型或量子云，未新增生产依赖；安装入口继续指向已核验存在的 `v0.8.4` 与 `codex-v0.8.4` 正式 Release。科学数据与原始界面没有重绘。
+页面不请求外部模型或量子云，未新增生产依赖；安装入口继续指向已核验存在的 `v0.8.4` 与 `codex-v0.8.4` 正式 Release。原始科学数据与界面素材保持不变。
 
 ### GitHub Pages 线上核验
 

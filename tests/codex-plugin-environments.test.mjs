@@ -282,6 +282,11 @@ test("provider enablement persists independently of install; calls acquire and r
 
 test("setup reaps descendants holding output pipes when the direct child has already exited", { skip: process.platform === "win32", timeout: 5000 }, async () => {
   const output = await runSetupCommand(process.execPath, ["-e", `const {spawn}=require('node:child_process'); const child=spawn(process.execPath,['-e','setInterval(()=>{},1000)'],{stdio:'inherit'}); console.log(child.pid); child.unref();`], { capture: true, timeoutMs: 2000 });
+  // Pipe closure can arrive before the OS finishes reaping the killed descendant.
+  await waitFor(() => {
+    try { process.kill(Number(output), 0); return false; }
+    catch (error) { if (error.code !== "ESRCH") throw error; return true; }
+  }, Boolean, 2000);
   assert.throws(() => process.kill(Number(output), 0), { code: "ESRCH" });
 });
 

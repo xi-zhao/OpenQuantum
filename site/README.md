@@ -61,14 +61,14 @@ npm run homepage:build
 
 ## 资源来源
 
-构建脚本复制所需文件，保留原始字节，不重绘科研结果或修改界面文字：
+构建脚本复制所需素材。实测展示图由已保存的数组和计时数据生成，统一使用原库与 OpenQuantum 优化后的标签，保留完整调用数据与数值结果。生成脚本为 `scripts/render-homepage-benchmarks.py`，逐图数据和输入摘要见 `site/assets/benchmark-charts.json`：
 
 | 页面素材 | 源文件 / 说明 |
 | --- | --- |
 | OQ 标志 | [`mark.svg`](../packages/openquantum-web-branding/assets/mark.svg)，现有 OpenQuantum 标志 |
 | 首屏概念视觉 | [`quantum-field-v3.png`](assets/quantum-field-v3.png)，使用内置 `image_gen` 生成的浅蓝量子波场；[完整提示词](assets/quantum-field-v3.prompt.txt) |
 | 科研工作台、分类设置 | [`docs/images/README.md`](../docs/images/README.md)，2026-10-13 实际原生界面 |
-| Wigner 对照、QuTiP 计时 | [`QuTiP 实验`](../experiments/qutip-rust-wigner/README.md)，包含输入、原库/Rust/独立结果与误差 |
+| Wigner 对照、QuTiP 计时 | [`QuTiP 实验`](../experiments/qutip-rust-wigner/README.md)，包含输入、原库、优化后与独立结果及误差 |
 | PennyLane 计时 | [`PennyLane 实验`](../experiments/pennylane-rust-commutator/README.md)，包含全部九个输入规模 |
 | 拉丁字体 | 既有 `public/openquantum/fonts/inter-latin.woff2`；中文使用系统无衬线字体 |
 
@@ -82,3 +82,5 @@ node --test tests/homepage.test.mjs
 
 检查页面数值与两份独立原始数据的一致性，以及可交付静态目录的资源和锚点完整性。
 浏览器另外检查 1440、768、390px 的版式、案例切换、折叠条件、手机目录、键盘、减少动态效果与无脚本回退。
+
+宣传案例统一表述为针对性优化，介绍完整调用提速、输入范围与结果核对。使用已准备的 QuTiP SDK Python 运行 `scripts/render-homepage-benchmarks.py` 可更新展示图；发布构建仅复制静态图，不安装绘图库。
