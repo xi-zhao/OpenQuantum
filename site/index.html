@@ -4,10 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="OpenQuantum，共建可信的量子科研智能。连接开源社区的优秀软件、算法与公开研究，让 AI 围绕研究问题选择方法、执行计算并核对结果。">
-  <meta name="theme-color" content="#061f38">
+  <meta name="theme-color" content="#08121d">
   <title>OpenQuantum · 共建可信的量子科研智能</title>
   <link rel="icon" href="./assets/mark.svg" type="image/svg+xml">
   <link rel="preload" href="./assets/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="./assets/quantum-state-v2.png" as="image" fetchpriority="high">
   <link rel="stylesheet" href="./style.css">
   <script type="module" src="./main.mjs"></script>
 </head>
@@ -15,7 +16,7 @@
   <a class="skip-link" href="#main">跳到正文</a>
   <header class="site-header frame">
     <a class="brand" href="#" aria-label="OpenQuantum 首页">
-      <img src="./assets/mark.svg" width="40" height="40" alt="">
+      <img src="./assets/mark-inverse.svg" width="40" height="40" alt="">
       <span>OpenQuantum</span>
     </a>
     <nav class="desktop-nav" aria-label="主导航">
@@ -40,22 +41,19 @@
     <section class="hero frame" aria-labelledby="hero-title">
       <div class="hero-copy">
         <h1 id="hero-title">共建可信的<br>量子科研智能</h1>
-        <p class="hero-description">OpenQuantum 是开源开放的量子科研 AI 平台，把专业积累汇聚成可执行、可核对的研究。</p>
+        <p class="hero-description">开源开放的量子科研 AI 平台，汇聚社区的优秀软件与方法，推进可核对的研究。</p>
         <a class="button" href="#start">开始使用 <span aria-hidden="true">↗</span></a>
         <p class="hero-note">把量子科研的专业积累，<br>汇聚到一个 OpenQuantum。</p>
       </div>
       <figure class="hero-figure">
-        <div class="orbital-q" aria-hidden="true">
-          <div class="orbit-window">
-            <div class="phase-crop">
-              <img src="./assets/wigner-comparison.png" width="2040" height="646" alt="" fetchpriority="high">
-            </div>
+        <div class="quantum-visual">
+          <div class="quantum-object">
+            <img src="./assets/quantum-state-v2.png" width="1254" height="1254" alt="量子态几何的概念视觉：银白色轨道围绕透明球面，内部是一条冷青色相位轨迹" fetchpriority="high">
           </div>
         </div>
         <figcaption class="hero-caption">
-          <p>真实计算，成为共同的起点。</p>
-          <a href="#benchmarks">QuTiP Wigner · 完整调用提速 5.69 倍</a>
-          <span>图为 Rust 结果局部，查看完整对照与实测条件。</span>
+          <span>量子态几何 · 概念视觉</span>
+          <a href="#benchmarks">走进真实计算与实测结果</a>
         </figcaption>
       </figure>
     </section>
@@ -119,8 +117,8 @@
           <div class="speedup"><strong>5.69×</strong><span>完整调用提速</span></div>
         </div>
         <div class="time-bars" aria-label="相同比例的耗时对照：QuTiP 171.77 毫秒，Rust 30.18 毫秒">
-          <div class="time-bar baseline"><span>原库</span></div>
-          <div class="time-bar optimized" style="--ratio: 0.1757168"><span>Rust</span></div>
+          <div class="time-bar baseline"></div>
+          <div class="time-bar optimized" style="--ratio: 0.1757168"></div>
         </div>
         <p class="input-scope">64 维单模 Fock 空间 · 201 × 201 网格 · Apple M4</p>
         <div class="case-result">
@@ -157,8 +155,8 @@
           <div class="speedup"><strong>5.09×</strong><span>完整调用提速</span></div>
         </div>
         <div class="time-bars" aria-label="相同比例的耗时对照：PennyLane 30.62 毫秒，Rust 6.02 毫秒">
-          <div class="time-bar baseline"><span>原库</span></div>
-          <div class="time-bar optimized" style="--ratio: 0.1965451"><span>Rust</span></div>
+          <div class="time-bar baseline"></div>
+          <div class="time-bar optimized" style="--ratio: 0.1965451"></div>
         </div>
         <p class="input-scope">32 量子位 · 125 项 Hamiltonian × 512 项算符池 · Apple M4</p>
         <div class="case-result">

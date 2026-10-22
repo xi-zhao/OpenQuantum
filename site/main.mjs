@@ -14,7 +14,7 @@ function selectCase(id, announce = true) {
   if (announce) {
     status.textContent = `已显示 ${panel.querySelector("h3").textContent} 实测。`;
     if (!reduceMotion.matches && panel.animate) {
-      panel.animate([
+      move(panel, [
         { opacity: .3, transform: "translateY(12px)" },
         { opacity: 1, transform: "translateY(0)" },
       ], { duration: 420, easing: "cubic-bezier(.22, 1, .36, 1)" });
@@ -71,21 +71,29 @@ if (!reduceMotion.matches && "IntersectionObserver" in window) {
   }, { threshold: .08 });
   entranceTargets.forEach((element) => observer.observe(element));
 
-  move(document.querySelector(".orbit-window"), [
-    { clipPath: "inset(100% 0 0 0)" },
-    { clipPath: "inset(0 0 0 0)" },
-  ], { duration: 1100, easing: "cubic-bezier(.76, 0, .24, 1)" });
-  move(document.querySelector(".phase-crop"), [
-    { transform: "scale(1.08)" }, { transform: "scale(1)" },
-  ], { duration: 1500, easing: "cubic-bezier(.22, 1, .36, 1)" });
-  move(document.querySelector(".phase-crop img"), [
-    { transform: "scale(1)" }, { transform: "scale(1.035)" },
-  ], { duration: 10000, iterations: Infinity, direction: "alternate", easing: "ease-in-out" });
+  const object = document.querySelector(".quantum-object");
+  const hero = document.querySelector(".hero");
+  move(object?.querySelector("img"), [
+    { transform: "translateY(4px) rotate(-.35deg)" },
+    { transform: "translateY(-5px) rotate(.35deg)" },
+  ], { duration: 9000, iterations: Infinity, direction: "alternate", easing: "ease-in-out" });
+
+  if (object && hero && window.matchMedia("(hover: hover)").matches) {
+    hero.addEventListener("pointermove", (event) => {
+      if (reduceMotion.matches) return;
+      const bounds = hero.getBoundingClientRect();
+      const x = Math.max(-1, Math.min(1, (event.clientX - bounds.left) / bounds.width * 2 - 1));
+      const y = Math.max(-1, Math.min(1, (event.clientY - bounds.top) / bounds.height * 2 - 1));
+      object.style.transform = `rotateX(${-y * 1.2}deg) rotateY(${x * 2}deg)`;
+    });
+    hero.addEventListener("pointerleave", () => { object.style.transform = ""; });
+  }
 
   reduceMotion.addEventListener("change", () => {
     if (!reduceMotion.matches) return;
     observer.disconnect();
     for (const animation of moving) animation.cancel();
     moving.clear();
+    if (object) object.style.transform = "";
   });
 }

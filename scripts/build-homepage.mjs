@@ -11,6 +11,8 @@ export async function buildHomepage() {
     ["site/style.css", "style.css"],
     ["site/main.mjs", "main.mjs"],
     ["packages/openquantum-web-branding/assets/mark.svg", "assets/mark.svg"],
+    ["packages/openquantum-web-branding/assets/mark-inverse.svg", "assets/mark-inverse.svg"],
+    ["site/assets/quantum-state-v2.png", "assets/quantum-state-v2.png"],
     ["public/openquantum/fonts/inter-latin.woff2", "assets/inter-latin.woff2"],
     ["docs/images/openquantum-desktop-20261013.jpg", "assets/desktop.jpg"],
     ["docs/images/openquantum-settings-categories-20261013.jpg", "assets/settings.jpg"],
@@ -24,6 +26,12 @@ export async function buildHomepage() {
   await writeFile(path.join(outputRoot, "provenance.json"), `${JSON.stringify({
     subject: "OpenQuantum product homepage",
     benchmarkSourceCommit: "9fa53e6523dee2c81380483b1aedb19819f218ac",
+    conceptualHero: {
+      asset: "assets/quantum-state-v2.png",
+      kind: "generated quantum-state geometry concept illustration",
+      tool: "built-in image_gen",
+      promptSource: "site/assets/quantum-state-v2.prompt.txt",
+    },
     assets: [...files].filter(([, destination]) => destination.startsWith("assets/"))
       .map(([source, destination]) => ({ source, destination })),
   }, null, 2)}\n`);
