@@ -1,0 +1,441 @@
+{
+  "measured_at_utc": "2026-10-20T02:47:42.504047+00:00",
+  "cpu": "Apple M4",
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "interpreter": "/Users/xizhao/.openquantum/plugins/codex/environments/python/fatqat-workbench/bin/python",
+  "python": "3.12.13 (main, Mar 20 2026, 00:20:20) [Clang 22.1.1 ]",
+  "versions": {
+    "qutip": "5.3.1",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1"
+  },
+  "thread_environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "sources_sha256": {
+    "benchmark.py": "5f6e7334cfda8862cc75a79d7ee60449394e9347f478e1a9ce1ca96a5c5af522",
+    "build.py": "f4a3f8ed8cdb1d7bc45b070ebf35015b131d6f25cbcbdfdb6158b2a0335b128d",
+    "case.py": "be983d1354623a32c98d65244318abfdb4dc8612bd9539da1722c896996574a7",
+    "common.py": "6cef5808a973120110591a7f913b9f57b337fd8bb08da7ab5853478b56c892a3",
+    "probe.py": "f07bfe11387af635a9b116e7a0b53bfbc3654d214ce0b507be719480953d7d9c",
+    "reproduce.py": "0572da529610912bf7f14885be44118ef670c7bedc2600fba9c05ce225dc0199",
+    "validate.py": "8602592f0188f2d3f60108dae0e1c9a2334a395d94b8e346a28105d1a3d04a77",
+    "workloads.py": "7de104cb6a75b9d864deac8da385dfc5d6e75a5f8c6078ef800000b10ca0248e",
+    "plan.json": "a1427ddf38d2e224ab7d77e6ec2fdcfec22548de22a77243ee0b4db6341688d5",
+    "Cargo.toml": "d0e59514e14d452b4c5ccedd1268ae6f895cae15351756c1f7af9ab696405ee2",
+    "Cargo.lock": "1f087481ea7a6c3fc11489b744b93ee7b9774959694d90bf429a2890bd249c3d",
+    "build.rs": "c609c2f1a8594abf959388e559d76241e51b0216faa7b37f529255eb1fc2c5eb",
+    "rust/lib.rs": "f6da483144d796d475bfcec24e89e7feaedd457598a5d273fe63b334fdec5e66"
+  },
+  "plan": {
+    "seed": 20261020,
+    "warmups": 2,
+    "repeats": 9,
+    "target_sample_seconds": 0.01,
+    "max_calls_per_sample": 512,
+    "method_order": [
+      "qutip_clenshaw",
+      "qutip_iterative",
+      "qutip_laguerre",
+      "rust_clenshaw"
+    ],
+    "cases": [
+      {
+        "id": "tiny",
+        "dimension": 4,
+        "nx": 31,
+        "ny": 33,
+        "rank": 3,
+        "g": 1.4142135623730951
+      },
+      {
+        "id": "small",
+        "dimension": 16,
+        "nx": 65,
+        "ny": 67,
+        "rank": 4,
+        "g": 1.4142135623730951
+      },
+      {
+        "id": "medium",
+        "dimension": 32,
+        "nx": 129,
+        "ny": 131,
+        "rank": 4,
+        "g": 1.4142135623730951
+      },
+      {
+        "id": "representative",
+        "dimension": 64,
+        "nx": 201,
+        "ny": 201,
+        "rank": 4,
+        "g": 1.4142135623730951
+      }
+    ],
+    "frozen_at_utc": "2026-10-20T02:46:12.737711+00:00",
+    "accuracy": {
+      "atol": 1e-12,
+      "rtol": 1e-12,
+      "iterative_failures": "reported, not treated as accurate baselines"
+    },
+    "scope": "single-mode finite Fock basis, offset=0, complete writable W[y,x], binary64, no clipping, no threads, no fast-math"
+  },
+  "scientific_acceptance": "not_evaluated_by_central_Acceptance_Builder",
+  "cases": [
+    {
+      "id": "tiny",
+      "dimension": 4,
+      "nx": 31,
+      "ny": 33,
+      "rank": 3,
+      "g": 1.4142135623730951,
+      "timings": {
+        "qutip_clenshaw": {
+          "median_seconds": 6.451358865248227e-05,
+          "q25_seconds": 6.35531914893617e-05,
+          "q75_seconds": 6.577452482269504e-05,
+          "samples_seconds": [
+            6.451358865248227e-05,
+            6.371660283687943e-05,
+            6.273078723404255e-05,
+            6.577452482269504e-05,
+            6.562381560283689e-05,
+            6.35531914893617e-05,
+            6.277836879432624e-05,
+            6.654964539007092e-05,
+            6.687617730496454e-05
+          ],
+          "calls_per_sample": 141
+        },
+        "qutip_iterative": {
+          "median_seconds": 0.0001046456105263158,
+          "q25_seconds": 0.00010251184210526316,
+          "q75_seconds": 0.00010546973684210526,
+          "samples_seconds": [
+            0.0001046456105263158,
+            0.00010217894736842105,
+            0.00010251184210526316,
+            0.00010823157894736841,
+            0.00010659605263157895,
+            0.00010411096842105264,
+            0.00010486842105263158,
+            0.00010175307368421053,
+            0.00010546973684210526
+          ],
+          "calls_per_sample": 95
+        },
+        "qutip_laguerre": {
+          "median_seconds": 0.00043115970833333336,
+          "q25_seconds": 0.0004213663333333334,
+          "q75_seconds": 0.00043241495833333337,
+          "samples_seconds": [
+            0.0004334739583333333,
+            0.000417173625,
+            0.0004213663333333334,
+            0.00042128991666666666,
+            0.00043241495833333337,
+            0.0004271649166666667,
+            0.00043765279166666665,
+            0.00043121525,
+            0.00043115970833333336
+          ],
+          "calls_per_sample": 24
+        },
+        "rust_clenshaw": {
+          "median_seconds": 1.05415859375e-05,
+          "q25_seconds": 1.045987890625e-05,
+          "q75_seconds": 1.0894205078125e-05,
+          "samples_seconds": [
+            1.045987890625e-05,
+            1.05415859375e-05,
+            1.045320703125e-05,
+            1.0424154296875e-05,
+            1.1189208984375e-05,
+            1.0493244140625e-05,
+            1.145654296875e-05,
+            1.0894205078125e-05,
+            1.086246875e-05
+          ],
+          "calls_per_sample": 512
+        }
+      },
+      "method_accuracy_passed": {
+        "qutip_clenshaw": true,
+        "qutip_iterative": true,
+        "qutip_laguerre": true,
+        "rust_clenshaw": true
+      },
+      "speedup_vs_default": 6.119912984154076,
+      "fastest_accurate_qutip": "qutip_clenshaw",
+      "speedup_vs_fastest_accurate_qutip": 6.119912984154076
+    },
+    {
+      "id": "small",
+      "dimension": 16,
+      "nx": 65,
+      "ny": 67,
+      "rank": 4,
+      "g": 1.4142135623730951,
+      "timings": {
+        "qutip_clenshaw": {
+          "median_seconds": 0.0018177291666666665,
+          "q25_seconds": 0.0017849236666666669,
+          "q75_seconds": 0.0018275068333333333,
+          "samples_seconds": [
+            0.0017469931666666669,
+            0.0017807291666666666,
+            0.0017849236666666669,
+            0.0018275068333333333,
+            0.001820014,
+            0.0018379166666666667,
+            0.001862736,
+            0.0018151596666666665,
+            0.0018177291666666665
+          ],
+          "calls_per_sample": 6
+        },
+        "qutip_iterative": {
+          "median_seconds": 0.00326811475,
+          "q25_seconds": 0.003241302,
+          "q75_seconds": 0.00328177075,
+          "samples_seconds": [
+            0.00328177075,
+            0.00324447925,
+            0.0032761355,
+            0.00319882275,
+            0.003241302,
+            0.003313052,
+            0.00326811475,
+            0.0031518125,
+            0.00332715625
+          ],
+          "calls_per_sample": 4
+        },
+        "qutip_laguerre": {
+          "median_seconds": 0.015341375,
+          "q25_seconds": 0.015322542,
+          "q75_seconds": 0.015412958,
+          "samples_seconds": [
+            0.015068541,
+            0.015358625,
+            0.015322542,
+            0.015412958,
+            0.015438167,
+            0.015341375,
+            0.015445666,
+            0.015338583,
+            0.015018125
+          ],
+          "calls_per_sample": 1
+        },
+        "rust_clenshaw": {
+          "median_seconds": 0.0002395994318181818,
+          "q25_seconds": 0.00023861647727272726,
+          "q75_seconds": 0.0002403721590909091,
+          "samples_seconds": [
+            0.00023991856818181818,
+            0.00023861647727272726,
+            0.0002395994318181818,
+            0.0002493143863636364,
+            0.00023841004545454544,
+            0.00023787025000000003,
+            0.0002403721590909091,
+            0.0002432244318181818,
+            0.00023959186363636364
+          ],
+          "calls_per_sample": 44
+        }
+      },
+      "method_accuracy_passed": {
+        "qutip_clenshaw": true,
+        "qutip_iterative": true,
+        "qutip_laguerre": true,
+        "rust_clenshaw": true
+      },
+      "speedup_vs_default": 7.586533711173558,
+      "fastest_accurate_qutip": "qutip_clenshaw",
+      "speedup_vs_fastest_accurate_qutip": 7.586533711173558
+    },
+    {
+      "id": "medium",
+      "dimension": 32,
+      "nx": 129,
+      "ny": 131,
+      "rank": 4,
+      "g": 1.4142135623730951,
+      "timings": {
+        "qutip_clenshaw": {
+          "median_seconds": 0.019151333,
+          "q25_seconds": 0.019062125,
+          "q75_seconds": 0.0192975,
+          "samples_seconds": [
+            0.019062125,
+            0.019134208,
+            0.0192975,
+            0.019151333,
+            0.018944709,
+            0.01902025,
+            0.019262334,
+            0.019402166,
+            0.019308167
+          ],
+          "calls_per_sample": 1
+        },
+        "qutip_iterative": {
+          "median_seconds": 0.034567625,
+          "q25_seconds": 0.034477875,
+          "q75_seconds": 0.035068875,
+          "samples_seconds": [
+            0.0344635,
+            0.035068875,
+            0.03455225,
+            0.035149584,
+            0.034363625,
+            0.034477875,
+            0.034567625,
+            0.03497075,
+            0.035619125
+          ],
+          "calls_per_sample": 1
+        },
+        "qutip_laguerre": {
+          "median_seconds": 0.242738083,
+          "q25_seconds": 0.241570791,
+          "q75_seconds": 0.243518292,
+          "samples_seconds": [
+            0.246965084,
+            0.241710459,
+            0.243518292,
+            0.241570791,
+            0.242738083,
+            0.24136975,
+            0.241453208,
+            0.243438875,
+            0.245011917
+          ],
+          "calls_per_sample": 1
+        },
+        "rust_clenshaw": {
+          "median_seconds": 0.0032149375,
+          "q25_seconds": 0.003211875,
+          "q75_seconds": 0.00323788525,
+          "samples_seconds": [
+            0.0032627395,
+            0.0032149375,
+            0.00320757275,
+            0.00321221875,
+            0.003263625,
+            0.00323175,
+            0.003211875,
+            0.00321085425,
+            0.00323788525
+          ],
+          "calls_per_sample": 4
+        }
+      },
+      "method_accuracy_passed": {
+        "qutip_clenshaw": true,
+        "qutip_iterative": false,
+        "qutip_laguerre": true,
+        "rust_clenshaw": true
+      },
+      "speedup_vs_default": 5.956984544800638,
+      "fastest_accurate_qutip": "qutip_clenshaw",
+      "speedup_vs_fastest_accurate_qutip": 5.956984544800638
+    },
+    {
+      "id": "representative",
+      "dimension": 64,
+      "nx": 201,
+      "ny": 201,
+      "rank": 4,
+      "g": 1.4142135623730951,
+      "timings": {
+        "qutip_clenshaw": {
+          "median_seconds": 0.171772125,
+          "q25_seconds": 0.171383417,
+          "q75_seconds": 0.172421916,
+          "samples_seconds": [
+            0.172023042,
+            0.169484708,
+            0.172421916,
+            0.171772125,
+            0.171383417,
+            0.17158275,
+            0.185789666,
+            0.174345292,
+            0.171366125
+          ],
+          "calls_per_sample": 1
+        },
+        "qutip_iterative": {
+          "median_seconds": 0.33241875,
+          "q25_seconds": 0.32983725,
+          "q75_seconds": 0.3371605,
+          "samples_seconds": [
+            0.32983725,
+            0.325101,
+            0.333591875,
+            0.331448125,
+            0.324624833,
+            0.33241875,
+            0.342422042,
+            0.344999042,
+            0.3371605
+          ],
+          "calls_per_sample": 1
+        },
+        "qutip_laguerre": {
+          "median_seconds": 3.982232042,
+          "q25_seconds": 3.976434541,
+          "q75_seconds": 3.998818334,
+          "samples_seconds": [
+            3.956654709,
+            3.943976334,
+            4.157343334,
+            3.990103333,
+            3.976434541,
+            3.980385208,
+            3.982232042,
+            3.998818334,
+            4.038177709
+          ],
+          "calls_per_sample": 1
+        },
+        "rust_clenshaw": {
+          "median_seconds": 0.03018325,
+          "q25_seconds": 0.030109375,
+          "q75_seconds": 0.0302285,
+          "samples_seconds": [
+            0.030227667,
+            0.03018325,
+            0.030566208,
+            0.0301075,
+            0.02985275,
+            0.0302285,
+            0.030369542,
+            0.030109375,
+            0.030120208
+          ],
+          "calls_per_sample": 1
+        }
+      },
+      "method_accuracy_passed": {
+        "qutip_clenshaw": true,
+        "qutip_iterative": false,
+        "qutip_laguerre": true,
+        "rust_clenshaw": true
+      },
+      "speedup_vs_default": 5.690975126932985,
+      "fastest_accurate_qutip": "qutip_clenshaw",
+      "speedup_vs_fastest_accurate_qutip": 5.690975126932985
+    }
+  ],
+  "raw_samples": 144,
+  "raw_csv_sha256": "b951712547f4bdddb96e94653f0d48f9ecf6e1c1f3c1c908ff8632286df9880a",
+  "extension_sha256": "ba06ad316a024dbfb70bbf740f8f17b92fed419989f63a9f0ce7e5f01b507f5c",
+  "timing_scope": "Qobj and coordinates to complete writable float64 W[y,x], including validation, conversion, coefficient preparation, FFI and output construction; setup/compilation/input generation/result checking excluded"
+}

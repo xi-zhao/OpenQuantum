@@ -1,10 +1,10 @@
 <h1 align="center"><img src="../../packages/openquantum-web-branding/assets/lockup.svg" width="430" alt="OpenQuantum" /></h1>
 
-<p align="center"><strong>AI で研究するなら、OpenQuantum ひとつで。</strong><br /><sub>量子技術のためのオープンソース Agent・アプリケーションプラットフォーム</sub></p>
+<p align="center"><strong>OpenQuantum — 信頼できる量子研究 AI を、ともに育てる。</strong><br /><sub>量子研究の専門知を、一つの OpenQuantum に</sub></p>
 
 <p align="center"><a href="../../README.md">简体中文</a> · <a href="./README.en.md">English</a> · <a href="./README.ja.md">日本語</a> · <a href="./README.ko.md">한국어</a> · <a href="./README.es.md">Español</a> · <a href="./README.fr.md">Français</a> · <a href="./README.de.md">Deutsch</a> · <a href="./README.pt.md">Português</a> · <a href="./README.ru.md">Русский</a> · <a href="./README.ar.md">العربية</a></p>
 
-OpenQuantum は、AI を具体的な研究課題に活用するための、量子分野のオープンソース Agent・アプリケーションプラットフォームです。対応する回路シミュレーション、基底状態計算、ダイナミクス解析から始め、専門ツールで計算し、結果を確認できます。統合アプリケーションの利用や独自の手法の追加もでき、モデルサービスと計算バックエンドは独立して設定します。
+OpenQuantum は、オープンソースで共同開発に開かれた量子研究 AI プラットフォームです。コミュニティの優れたソフトウェア、アルゴリズム、公開研究成果をつなぎ、AI による問題の分析、手法の選択、計算の実行、結果の確認を支援します。専門知を、実際の研究に使える力へとつなげます。
 
 **まず一つのタスクを完了し、その手法を自分の問いへ。** 例を実行し、入力を変え、結果を確認します。プログラム、パラメーター、出力を残して、次の研究に活用できます。
 
@@ -34,11 +34,11 @@ Pauli Hamiltonian の Trotter / qDrift シミュレーションに加え、[qBra
 
 ## OpenQuantum を選ぶ理由
 
-**問いから計算へ。** 対応するタスクを自然言語で伝え、Agent が専門ツールを呼び出します。入力、物理的な仮定、結果の判断は利用者が担います。
+**幅広い専門領域。** 量子アルゴリズム、回路シミュレーション、量子化学、多体系計算、量子誤り訂正をカバーし、ツールと手法をつなぎます。準備にかける時間を減らし、研究課題の探索に集中できます。
 
-**一度の研究を、次の出発点に。** ワークベンチにはツールの入力と結果が残り、条件を変えて検討を続けられます。科学的な検証は各機能の対応範囲に従います。
+**実測で示す高速化。** [PennyLane の Pauli 交換子計算](../../README.md#pennylane-rust-case)と [QuTiP の Wigner 関数計算](../../README.md#qutip-rust-case)の最適化事例では、代表タスクの呼び出し全体がそれぞれ **5.09 倍**、**5.69 倍**高速化しました。入出力変換を含めて計測し、元のライブラリと独立した参照計算で結果を確認しています。
 
-**自分の方法を、他の人も使える能力に。** Skill、計算ツール、教材、アプリケーションを追加できます。モデルと計算バックエンドは独立して設定し、上流プロジェクトの著者とライセンスを尊重します。
+**共同開発で広がる研究能力。** 価値あるオープンソースプロジェクトと論文の手法を継続的に取り入れ、適合、統合、最適化、検証を進めます。質問、コード、ツール、研究手法、再現事例の共有を通じて、誰もが参加できます。
 
 ## クイックスタート
 
@@ -120,6 +120,8 @@ npm run learning:ui:setup
 ## ドキュメントと貢献
 
 Skill は知識と手順、Tool Provider は実行可能なツールを提供します。科学的検証が必要な機能は独立した Validator と証拠に基づく Acceptance を利用します。OpenQuantum は DeepSeek Harness の実行基盤を再利用します。詳細な利用・拡張手順は英語版と中国語版をご覧ください。
+
+信頼できる量子研究 AI を、ともに育てましょう。問題の報告、コードやツールの追加、研究手法や再現事例の共有など、どなたでも参加できます。
 
 [English](./README.en.md) · [中文](../../README.md) · [Documentation](../README.md) · [Contributing](../../CONTRIBUTING.md) · [Issues](https://github.com/xi-zhao/openQuantum/issues)
 

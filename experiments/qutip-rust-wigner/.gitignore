@@ -1,0 +1,6 @@
+/target/
+/*.so
+/*.pyd
+/__pycache__/
+!/results/
+!/results/**

@@ -1,0 +1,552 @@
+{
+  "runtime": "/Users/xizhao/.local/share/openquantum/desktop/0.8.4-6898f8cd5984151c/runtime",
+  "pluginRoot": "/Users/xizhao/.codex/plugins/cache/personal/openquantum/0.8.4",
+  "selection": {
+    "skillId": "quantum-sdk-workbench",
+    "sdkId": "fatqat-workbench",
+    "task": {
+      "summary": "Port QuTiP Wigner computation to Rust and measure complete-call performance",
+      "reason": "The user explicitly requested a Rust optimization case using QuTiP",
+      "inputs": [
+        "complex quantum states",
+        "Wigner phase-space grids",
+        "runtime comparisons",
+        "independent numerical checks"
+      ]
+    }
+  },
+  "records": [
+    {
+      "operation": "tools/list",
+      "time": "2026-10-20T02:35:55.370Z",
+      "selectedTools": [
+        {
+          "name": "find_openquantum_skills",
+          "title": "选择 OpenQuantum Skill",
+          "description": "Find relevant quantum Skills by task, or inspect one Skill and its selected Tool/SDK preparation. Read-only; no installation or service startup. Forbidden Skills are excluded from search.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "query": {
+                "type": "string",
+                "maxLength": 240
+              },
+              "task": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "summary"
+                ],
+                "description": "Brief context from the current user request for the preparation panel. No credentials, file contents or absolute paths. Never infer a chat ID. Not saved in recent activity.",
+                "properties": {
+                  "summary": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 240
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 240,
+                    "description": "Why this method or environment is needed for this task."
+                  },
+                  "inputs": {
+                    "type": "array",
+                    "maxItems": 4,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 120
+                    },
+                    "description": "Short input labels or file basenames only."
+                  },
+                  "parameters": {
+                    "type": "array",
+                    "maxItems": 4,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 120
+                    },
+                    "description": "Key task conditions such as qubit count, accuracy or local-only constraint. No full data or credentials."
+                  },
+                  "executionLocation": {
+                    "enum": [
+                      "local",
+                      "cloud",
+                      "mixed",
+                      "undecided"
+                    ],
+                    "description": "Location selected for this task. Use undecided unless established from the actual execution route."
+                  }
+                }
+              },
+              "skillId": {
+                "type": "string",
+                "maxLength": 128
+              },
+              "toolName": {
+                "type": "string",
+                "maxLength": 128,
+                "description": "Choose one declared Tool. Omit for a knowledge-only Skill."
+              },
+              "sdkId": {
+                "type": "string",
+                "maxLength": 128,
+                "description": "Choose one declared SDK for a custom program instead of a scientific Tool."
+              },
+              "serviceId": {
+                "type": "string",
+                "maxLength": 128,
+                "description": "Only for a task that needs this Skill's cloud credentials, e.g. pasqal_cloud. Never pass credentials."
+              },
+              "credentialField": {
+                "type": "string",
+                "maxLength": 128,
+                "description": "Optional field NAME returned by a preparation_required result for the chosen platform. Never pass its value."
+              },
+              "operationName": {
+                "type": "string",
+                "maxLength": 128,
+                "description": "For an integrated external MCP Tool, select an operation to inspect its exact input schema and preparation requirements."
+              },
+              "operationArguments": {
+                "type": "object",
+                "description": "Optional operation arguments to validate before preparation. Never include credentials. Not saved in recent activity."
+              }
+            },
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "prepare_openquantum_skill",
+          "title": "准备所选 Skill",
+          "description": "Prepare exactly one selected Skill's Tool or SDK for an actual task. Downloads and installs pinned dependencies only when missing; reuses existing environments. No scientific execution or policy changes. Include a concise task summary, input labels and selection reason from the current request in task so the preparation panel can explain its purpose. Missing credentials open the configuration form. After a failed/cancelled job, retry:true explicitly retries; inspect progress with find_openquantum_skills.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "task": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "summary"
+                ],
+                "description": "Brief context from the current user request for the preparation panel. No credentials, file contents or absolute paths. Never infer a chat ID. Not saved in recent activity.",
+                "properties": {
+                  "summary": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 240
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 240,
+                    "description": "Why this method or environment is needed for this task."
+                  },
+                  "inputs": {
+                    "type": "array",
+                    "maxItems": 4,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 120
+                    },
+                    "description": "Short input labels or file basenames only."
+                  },
+                  "parameters": {
+                    "type": "array",
+                    "maxItems": 4,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 120
+                    },
+                    "description": "Key task conditions such as qubit count, accuracy or local-only constraint. No full data or credentials."
+                  },
+                  "executionLocation": {
+                    "enum": [
+                      "local",
+                      "cloud",
+                      "mixed",
+                      "undecided"
+                    ],
+                    "description": "Location selected for this task. Use undecided unless established from the actual execution route."
+                  }
+                }
+              },
+              "skillId": {
+                "type": "string",
+                "maxLength": 128
+              },
+              "toolName": {
+                "type": "string",
+                "maxLength": 128,
+                "description": "Choose one declared Tool. Omit for a knowledge-only Skill."
+              },
+              "sdkId": {
+                "type": "string",
+                "maxLength": 128,
+                "description": "Choose one declared SDK for a custom program instead of a scientific Tool."
+              },
+              "serviceId": {
+                "type": "string",
+                "maxLength": 128,
+                "description": "Only for a task that needs this Skill's cloud credentials, e.g. pasqal_cloud. Never pass credentials."
+              },
+              "credentialField": {
+                "type": "string",
+                "maxLength": 128,
+                "description": "Optional field NAME returned by a preparation_required result for the chosen platform. Never pass its value."
+              },
+              "operationName": {
+                "type": "string",
+                "maxLength": 128,
+                "description": "For an integrated external MCP Tool, select an operation to inspect its exact input schema and preparation requirements."
+              },
+              "operationArguments": {
+                "type": "object",
+                "description": "Optional operation arguments to validate before preparation. Never include credentials. Not saved in recent activity."
+              },
+              "retry": {
+                "type": "boolean",
+                "default": false
+              }
+            },
+            "required": [
+              "skillId"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": true
+          },
+          "_meta": {
+            "ui": {
+              "resourceUri": "ui://openquantum/settings/5e68edcc90e22abc9facc3ed0659321211fd790271511dbc7ed87e3062008562.html",
+              "visibility": [
+                "model",
+                "app"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "operation": "find_openquantum_skills",
+      "time": "2026-10-20T02:35:55.388Z",
+      "value": {
+        "skillId": "quantum-sdk-workbench",
+        "title": "原生 SDK 工作台",
+        "description": "使用 OpenQuantum 已固定依赖的完整原生 SDK 编写、运行和复现用户自定义的量子研究程序。覆盖电路、动力学、张量网络、化学、纠错、编译、光学、优化及云硬件 SDK；不受预设案例、便捷 Tool 的模型、门集或参数 schema 限制。适用于已有 Tool 表达不了的模型、算法、数据、批处理、梯度或后端。通过宿主已有文件与代码执行 Tool 工作，不启动第二套 Agent Runtime。 可经宿主代码工具使用锁定环境中的原生 SDK 公开 API，自定义任务不限于",
+        "policy": "auto",
+        "tools": [
+          "run_ibm_quantum",
+          "run_ibm_transpiler",
+          "run_qiskit_gym",
+          "run_quantum_hardware",
+          "run_qpanda_runtime"
+        ],
+        "sdkIds": [
+          "alicebob-cat-circuits",
+          "aqt-workbench",
+          "arc-rydberg",
+          "bloqade-analog",
+          "braket-simulation",
+          "catalyst-compilation",
+          "classiq-synthesis",
+          "clifft-sampling",
+          "compact-optimization",
+          "cqlib-kernel",
+          "cudaq-simulation",
+          "deepquantum-differentiable",
+          "deltakit-qec",
+          "dynamiqs-dynamics",
+          "fatqat-workbench",
+          "fieldqkit-hardware",
+          "flagquantum-workbench",
+          "flow-vqe",
+          "graphix-mbqc",
+          "guppy-programs",
+          "hamiltonian-simulation",
+          "ionq-programs",
+          "iqm-circuit-workbench",
+          "jaxquantum-modeling",
+          "josephson-circuits",
+          "kaiwu-qubo",
+          "laboneq-control",
+          "ldpc-decoding",
+          "lightworks-photonics",
+          "merlin-learning",
+          "mimiq-simulation",
+          "mindquantum-differentiable",
+          "mitiq-error-mitigation",
+          "monoprop-propagation",
+          "mqt-ddsim",
+          "mqt-debugger",
+          "mqt-qecc",
+          "mqt-qmap",
+          "mrmustard-optics",
+          "myqlm-simulation",
+          "netqasm-network",
+          "ocean-optimization",
+          "openfermion-mapping",
+          "openjij-optimization",
+          "openqarp-excited-states",
+          "oqc-cloud",
+          "oqc-qat",
+          "oqupy-dynamics",
+          "pairinteraction-rydberg",
+          "paulie-algebra",
+          "paulistrings-dynamics",
+          "pecos-qec",
+          "pennylane-differentiable",
+          "perceval-photonics",
+          "piquasso-photonics",
+          "pulser-dynamics",
+          "pychemiq-chemistry",
+          "pygsti-characterization",
+          "pyquil-simulation",
+          "pytket-compilation",
+          "pyzx-optimization",
+          "qblox-scheduling",
+          "qbraid-conversion",
+          "qcarchive-query",
+          "qcompute-simulation",
+          "qcover-optimization",
+          "qctrl-workbench",
+          "qcut-knitting",
+          "qdk-chemistry",
+          "qdk-resource-estimation",
+          "qdmi-device",
+          "qec-memory-experiment",
+          "qibo-simulation",
+          "qililab-control",
+          "qiskit-machine-learning",
+          "qlasskit-oracles",
+          "qoolqit-workbench",
+          "qpanda-qubo",
+          "qrisp-arithmetic",
+          "qsim-simulation",
+          "qsteed-compilation",
+          "qsyn-compilation",
+          "qua-programs",
+          "quairkit-information",
+          "qualtran-resources",
+          "quantum-algorithms",
+          "quantum-circuit-verification",
+          "quantum-information-audit",
+          "quantumclifford-julia",
+          "quantumcontrol-julia",
+          "quantuminspire-cloud",
+          "quantumsavory-network",
+          "quri-parts-estimation",
+          "qutrunk-simulation",
+          "randomized-measurements",
+          "simqn-network",
+          "spinqit-simulation",
+          "sqd-chemistry",
+          "squlearn-learning",
+          "staq-compilation",
+          "superstaq-compilation",
+          "symmer-tapering",
+          "tenpy-ground-state",
+          "tensorcircuit-differentiable",
+          "tesseract-decoding",
+          "tjm-dynamics",
+          "tqec-compilation",
+          "tsim-sampling",
+          "tyxonq-workbench",
+          "vqnet-learning",
+          "yao-circuits"
+        ],
+        "state": "ready",
+        "selection": {
+          "skillId": "quantum-sdk-workbench",
+          "sdkId": "fatqat-workbench"
+        },
+        "environment": {
+          "id": "fatqat-workbench",
+          "title": "FatQat / QuTiP",
+          "state": "ready",
+          "installation": "present",
+          "ready": true,
+          "job": {
+            "id": "ae17252f-bdbb-4a13-9847-6a7d922345fc",
+            "operation": "install",
+            "status": "completed",
+            "phase": "环境检查完成",
+            "startedAt": "2026-10-20T01:59:26.715Z",
+            "finishedAt": "2026-10-20T01:59:53.608Z",
+            "message": "运行环境已准备；使用限制保持不变。",
+            "synced": true
+          }
+        },
+        "next": "Use this Skill's scripts/sdk-access.mjs inspect to locate the prepared interpreter, then run the program with the host code Tool."
+      }
+    },
+    {
+      "operation": "prepare_openquantum_skill",
+      "time": "2026-10-20T02:35:55.456Z",
+      "value": {
+        "skillId": "quantum-sdk-workbench",
+        "title": "原生 SDK 工作台",
+        "description": "使用 OpenQuantum 已固定依赖的完整原生 SDK 编写、运行和复现用户自定义的量子研究程序。覆盖电路、动力学、张量网络、化学、纠错、编译、光学、优化及云硬件 SDK；不受预设案例、便捷 Tool 的模型、门集或参数 schema 限制。适用于已有 Tool 表达不了的模型、算法、数据、批处理、梯度或后端。通过宿主已有文件与代码执行 Tool 工作，不启动第二套 Agent Runtime。 可经宿主代码工具使用锁定环境中的原生 SDK 公开 API，自定义任务不限于",
+        "policy": "auto",
+        "tools": [
+          "run_ibm_quantum",
+          "run_ibm_transpiler",
+          "run_qiskit_gym",
+          "run_quantum_hardware",
+          "run_qpanda_runtime"
+        ],
+        "sdkIds": [
+          "alicebob-cat-circuits",
+          "aqt-workbench",
+          "arc-rydberg",
+          "bloqade-analog",
+          "braket-simulation",
+          "catalyst-compilation",
+          "classiq-synthesis",
+          "clifft-sampling",
+          "compact-optimization",
+          "cqlib-kernel",
+          "cudaq-simulation",
+          "deepquantum-differentiable",
+          "deltakit-qec",
+          "dynamiqs-dynamics",
+          "fatqat-workbench",
+          "fieldqkit-hardware",
+          "flagquantum-workbench",
+          "flow-vqe",
+          "graphix-mbqc",
+          "guppy-programs",
+          "hamiltonian-simulation",
+          "ionq-programs",
+          "iqm-circuit-workbench",
+          "jaxquantum-modeling",
+          "josephson-circuits",
+          "kaiwu-qubo",
+          "laboneq-control",
+          "ldpc-decoding",
+          "lightworks-photonics",
+          "merlin-learning",
+          "mimiq-simulation",
+          "mindquantum-differentiable",
+          "mitiq-error-mitigation",
+          "monoprop-propagation",
+          "mqt-ddsim",
+          "mqt-debugger",
+          "mqt-qecc",
+          "mqt-qmap",
+          "mrmustard-optics",
+          "myqlm-simulation",
+          "netqasm-network",
+          "ocean-optimization",
+          "openfermion-mapping",
+          "openjij-optimization",
+          "openqarp-excited-states",
+          "oqc-cloud",
+          "oqc-qat",
+          "oqupy-dynamics",
+          "pairinteraction-rydberg",
+          "paulie-algebra",
+          "paulistrings-dynamics",
+          "pecos-qec",
+          "pennylane-differentiable",
+          "perceval-photonics",
+          "piquasso-photonics",
+          "pulser-dynamics",
+          "pychemiq-chemistry",
+          "pygsti-characterization",
+          "pyquil-simulation",
+          "pytket-compilation",
+          "pyzx-optimization",
+          "qblox-scheduling",
+          "qbraid-conversion",
+          "qcarchive-query",
+          "qcompute-simulation",
+          "qcover-optimization",
+          "qctrl-workbench",
+          "qcut-knitting",
+          "qdk-chemistry",
+          "qdk-resource-estimation",
+          "qdmi-device",
+          "qec-memory-experiment",
+          "qibo-simulation",
+          "qililab-control",
+          "qiskit-machine-learning",
+          "qlasskit-oracles",
+          "qoolqit-workbench",
+          "qpanda-qubo",
+          "qrisp-arithmetic",
+          "qsim-simulation",
+          "qsteed-compilation",
+          "qsyn-compilation",
+          "qua-programs",
+          "quairkit-information",
+          "qualtran-resources",
+          "quantum-algorithms",
+          "quantum-circuit-verification",
+          "quantum-information-audit",
+          "quantumclifford-julia",
+          "quantumcontrol-julia",
+          "quantuminspire-cloud",
+          "quantumsavory-network",
+          "quri-parts-estimation",
+          "qutrunk-simulation",
+          "randomized-measurements",
+          "simqn-network",
+          "spinqit-simulation",
+          "sqd-chemistry",
+          "squlearn-learning",
+          "staq-compilation",
+          "superstaq-compilation",
+          "symmer-tapering",
+          "tenpy-ground-state",
+          "tensorcircuit-differentiable",
+          "tesseract-decoding",
+          "tjm-dynamics",
+          "tqec-compilation",
+          "tsim-sampling",
+          "tyxonq-workbench",
+          "vqnet-learning",
+          "yao-circuits"
+        ],
+        "state": "ready",
+        "selection": {
+          "skillId": "quantum-sdk-workbench",
+          "sdkId": "fatqat-workbench"
+        },
+        "environment": {
+          "id": "fatqat-workbench",
+          "title": "FatQat / QuTiP",
+          "state": "ready",
+          "installation": "present",
+          "ready": true,
+          "job": {
+            "id": "ae17252f-bdbb-4a13-9847-6a7d922345fc",
+            "operation": "install",
+            "status": "completed",
+            "phase": "环境检查完成",
+            "startedAt": "2026-10-20T01:59:26.715Z",
+            "finishedAt": "2026-10-20T01:59:53.608Z",
+            "message": "运行环境已准备；使用限制保持不变。",
+            "synced": true
+          }
+        },
+        "next": "Use this Skill's scripts/sdk-access.mjs inspect to locate the prepared interpreter, then run the program with the host code Tool."
+      }
+    }
+  ]
+}

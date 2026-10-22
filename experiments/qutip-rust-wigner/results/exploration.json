@@ -1,0 +1,93 @@
+{
+  "purpose": "exploration_only_not_formal_samples",
+  "records": [
+    {
+      "case": {
+        "id": "tiny",
+        "dimension": 4,
+        "nx": 31,
+        "ny": 33,
+        "rank": 3,
+        "g": 1.4142135623730951
+      },
+      "seconds": {
+        "qutip_clenshaw": 0.00018137507140636444,
+        "qutip_iterative": 0.00013399997260421515,
+        "qutip_laguerre": 0.002091582980938256,
+        "rust_clenshaw": 3.166601527482271e-05
+      },
+      "errors": {
+        "qutip_clenshaw": 0.0,
+        "qutip_iterative": 1.1102230246251565e-16,
+        "qutip_laguerre": 5.551115123125783e-17,
+        "rust_clenshaw": 9.71445146547012e-17
+      }
+    },
+    {
+      "case": {
+        "id": "small",
+        "dimension": 16,
+        "nx": 65,
+        "ny": 67,
+        "rank": 4,
+        "g": 1.4142135623730951
+      },
+      "seconds": {
+        "qutip_clenshaw": 0.0018772080074995756,
+        "qutip_iterative": 0.003586707985959947,
+        "qutip_laguerre": 0.016138416016474366,
+        "rust_clenshaw": 0.00032662495505064726
+      },
+      "errors": {
+        "qutip_clenshaw": 0.0,
+        "qutip_iterative": 1.966525900454208e-15,
+        "qutip_laguerre": 1.942890293094024e-16,
+        "rust_clenshaw": 1.942890293094024e-16
+      }
+    },
+    {
+      "case": {
+        "id": "medium",
+        "dimension": 32,
+        "nx": 129,
+        "ny": 131,
+        "rank": 4,
+        "g": 1.4142135623730951
+      },
+      "seconds": {
+        "qutip_clenshaw": 0.020743667031638324,
+        "qutip_iterative": 0.03581779100932181,
+        "qutip_laguerre": 0.23981299996376038,
+        "rust_clenshaw": 0.005384083022363484
+      },
+      "errors": {
+        "qutip_clenshaw": 0.0,
+        "qutip_iterative": 8.573877718909273e-12,
+        "qutip_laguerre": 3.608224830031759e-16,
+        "rust_clenshaw": 3.7470027081099033e-16
+      }
+    },
+    {
+      "case": {
+        "id": "representative",
+        "dimension": 64,
+        "nx": 201,
+        "ny": 201,
+        "rank": 4,
+        "g": 1.4142135623730951
+      },
+      "seconds": {
+        "qutip_clenshaw": 0.17111729108728468,
+        "qutip_iterative": 0.3299396669026464,
+        "qutip_laguerre": 3.8919363329187036,
+        "rust_clenshaw": 0.06821104197297245
+      },
+      "errors": {
+        "qutip_clenshaw": 0.0,
+        "qutip_iterative": 0.00040001349695676595,
+        "qutip_laguerre": 1.4849232954361469e-15,
+        "rust_clenshaw": 6.522560269672795e-16
+      }
+    }
+  ]
+}

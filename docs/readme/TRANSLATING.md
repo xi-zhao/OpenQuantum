@@ -13,9 +13,9 @@ Use [the interface-language guide](../../runtime/openquantum/web-locales/README.
 
 ## Brand and reading order
 
-Keep the category explicit: OpenQuantum is an open-source quantum agent and application platform. The Chinese lead is “用 AI 做科研，OpenQuantum 就够了。”; the English adaptation is “For AI-assisted research, OpenQuantum is all you need.” The existing “量子计算，就在指尖” remains the closing signature. Translate the intent naturally without changing product or upstream names.
+Keep the category explicit: OpenQuantum is an open-source AI platform for quantum research, open to collaboration. The Chinese lead is “OpenQuantum，共建可信的量子科研智能。”; the English adaptation is “OpenQuantum — Building trustworthy AI for quantum research, together.” The supporting line is “把量子科研的专业积累，汇聚到一个 OpenQuantum”. Translate the intent naturally without changing product or upstream names. The existing “量子计算，就在指尖” remains the closing signature.
 
-Introduce the product through a concrete research task and a clear installation entry. Address both a first attempt at AI-assisted research and further work with an existing model or program. Use supported quantum tasks to make the broader AI-research positioning concrete; keep dependency preparation, model setup and scientific acceptance conditions explicit in their existing sections.
+Introduce OpenQuantum through its research value: broad specialist coverage, measured performance improvements and open collaboration. Explain the community's software, algorithms and published methods alongside OpenQuantum's integration, adaptation, optimization and verification work. Use a confident brand voice; invite participation without a founder biography or defensive declarations about attribution. Present trustworthiness through inspectable methods, calculations and result checks. Keep dependency preparation, model setup and scientific acceptance conditions explicit in their existing sections.
 
 Present promotional cases through the research task, delivered work, measured benefit and result checks. Keep implementation details in the linked case report. Keep measurement scope and evidence links alongside numerical claims.
 

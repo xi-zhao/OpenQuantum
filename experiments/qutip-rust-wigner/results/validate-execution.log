@@ -1,0 +1,3 @@
+Passed 272 checks; preserved 4 complete input/output grids.
+Alternative-method accuracy failure: {'case': 'medium', 'method': 'qutip_iterative', 'independent_max_error': 8.573905474484889e-12, 'accuracy_passed': False}
+Alternative-method accuracy failure: {'case': 'representative', 'method': 'qutip_iterative', 'independent_max_error': 0.00040001349695675164, 'accuracy_passed': False}

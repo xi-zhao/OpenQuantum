@@ -1,10 +1,10 @@
 <h1 align="center"><img src="../../packages/openquantum-web-branding/assets/lockup.svg" width="430" alt="OpenQuantum" /></h1>
 
-<p align="center"><strong>Pour faire de la recherche avec l’IA, OpenQuantum suffit.</strong><br /><sub>Une plateforme ouverte d’agents et d’applications quantiques</sub></p>
+<p align="center"><strong>OpenQuantum — Construisons ensemble une IA de confiance pour la recherche quantique.</strong><br /><sub>L’expertise de la recherche quantique réunie dans OpenQuantum</sub></p>
 
 <p align="center"><a href="../../README.md">简体中文</a> · <a href="./README.en.md">English</a> · <a href="./README.ja.md">日本語</a> · <a href="./README.ko.md">한국어</a> · <a href="./README.es.md">Español</a> · <a href="./README.fr.md">Français</a> · <a href="./README.de.md">Deutsch</a> · <a href="./README.pt.md">Português</a> · <a href="./README.ru.md">Русский</a> · <a href="./README.ar.md">العربية</a></p>
 
-OpenQuantum est une plateforme open source d’agents et d’applications quantiques qui vous aide à utiliser l’IA pour des tâches de recherche concrètes. Commencez par une simulation de circuits, un calcul d’état fondamental ou une analyse de dynamique dans le périmètre pris en charge ; utilisez des outils spécialisés et examinez les résultats. Vous pouvez aussi utiliser les applications intégrées ou ajouter vos propres méthodes. Les services de modèles et les ressources de calcul se configurent séparément.
+OpenQuantum est une plateforme d’IA pour la recherche quantique, open source et ouverte à la collaboration. Elle rassemble les logiciels, les algorithmes et les travaux publiés par la communauté pour aider l’IA à analyser vos questions, choisir des méthodes, exécuter des calculs et vérifier les résultats. Elle transforme l’expertise partagée en capacités de recherche concrètes.
 
 **Menez une tâche à bien, puis appliquez la méthode à votre propre question.** Exécutez un exemple, modifiez ses entrées et examinez les résultats. Conservez le code, les paramètres et les sorties pour votre prochaine recherche.
 
@@ -34,11 +34,11 @@ Chaque intégration possède ses dépendances et son domaine de validité scient
 
 ## Pourquoi choisir OpenQuantum
 
-**De la question au calcul.** Décrivez une tâche prise en charge en langage naturel : l’agent appelle les outils spécialisés. Vous définissez les données et les hypothèses physiques, puis jugez les résultats.
+**Une large couverture scientifique.** Des algorithmes et de la simulation de circuits à la chimie quantique, aux calculs à N corps et à la correction d’erreurs, OpenQuantum relie outils et méthodes. Consacrez moins de temps à les préparer et davantage à explorer vos questions.
 
-**Chaque recherche prépare la suivante.** L’espace de travail conserve les entrées et les résultats des outils pour poursuivre avec d’autres paramètres. La validation scientifique dépend du périmètre de chaque capacité.
+**Des gains de vitesse mesurés.** Dans les cas d’optimisation d’un [commutateur de Pauli avec PennyLane](../../README.md#pennylane-rust-case) et d’une [fonction de Wigner avec QuTiP](../../README.md#qutip-rust-case), les appels complets des tâches représentatives sont respectivement **5.09×** et **5.69×** plus rapides. Les mesures incluent la conversion des entrées et sorties ; les résultats ont été comparés aux bibliothèques d’origine et à des calculs de référence indépendants.
 
-**Des méthodes que d’autres peuvent utiliser.** Ajoutez des Skills, des outils de calcul, des ressources pédagogiques ou des applications. Les modèles et les ressources de calcul se configurent séparément ; les auteurs et les licences des projets d’origine restent identifiés.
+**Des capacités enrichies ensemble.** Nous intégrons continuellement des projets open source et des méthodes publiées, avec un travail d’adaptation, d’intégration, d’optimisation et de vérification. Chacun peut contribuer par des questions, du code, des outils, des méthodes et des cas de reproduction.
 
 ## Démarrage rapide
 
@@ -120,6 +120,8 @@ Dans Paramètres → Général → Langue, choisissez le chinois simplifié, l�
 ## Documentation et contributions
 
 Les Skills fournissent les connaissances et procédures ; les Tool Providers enregistrent les outils exécutables. Les capacités nécessitant une vérification scientifique utilisent un Validator indépendant et des preuves pour déterminer leur acceptation. OpenQuantum réutilise l’environnement d’exécution de DeepSeek Harness. Les éditions anglaise et chinoise détaillent l’utilisation et l’extension de la plateforme.
+
+Construisons ensemble une IA de confiance pour la recherche quantique. Chacun peut signaler un problème, contribuer du code ou des outils, et partager des méthodes ou des cas de reproduction.
 
 [English](./README.en.md) · [中文](../../README.md) · [Documentation](../README.md) · [Contributing](../../CONTRIBUTING.md) · [Issues](https://github.com/xi-zhao/openQuantum/issues)
 
