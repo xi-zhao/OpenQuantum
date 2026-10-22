@@ -29,6 +29,7 @@ build/
 Thumbs.db
 .idea/
 .vscode/
+.taste-skill/
 *.swp
 *.swo
 
