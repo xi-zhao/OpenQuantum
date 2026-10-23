@@ -52,7 +52,7 @@ export function createMcpServer({ backend, settings, connections, credentialWind
   server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools: [
     { name: OPENER, title: "OpenQuantum 设置", description: "Open settings for OpenQuantum Skills, MCP connections and Tools.", inputSchema: { type: "object", properties: {}, additionalProperties: false },
       annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }, icons: [{ src: ICON, mimeType: "image/svg+xml" }],
-      _meta: { ui: { resourceUri: uiUri, visibility: ["app"] }, "openai/ui": { entrypoints: [{ type: "global" }, { type: "settings", searchTerms: ["quantum", "skills", "mcp"] }] } } },
+      _meta: { ui: { resourceUri: uiUri, visibility: ["app"] }, "openai/ui": { entrypoints: [{ type: "global" }] } } },
     { name: SETTINGS_TOOL, title: "OpenQuantum 能力设置", description: "Configure OpenQuantum capabilities from the settings UI. Never pass plaintext credentials in this tool.", inputSchema: schema,
       annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: true },
       _meta: { ui: { resourceUri: uiUri, visibility: ["app"] } } },
