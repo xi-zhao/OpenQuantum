@@ -93,8 +93,12 @@ test("credential window requires a one-use capability and same-origin POST; secr
   const post = (origin, args) => fetch(`${url.origin}/credential`, { method: "POST", headers: { "content-type": "application/json", origin }, body: JSON.stringify(args) });
   assert.equal((await post("https://evil.invalid", { nonce, action: "set", value })).status, 403);
   assert.equal((await post(url.origin, { nonce: "wrong", action: "set", value })).status, 403);
+  const info = () => fetch(`${url.origin}/credential-info`, { method: "POST", headers: { "content-type": "application/json", origin: url.origin }, body: JSON.stringify({ nonce }) });
+  assert.equal((await info()).status, 200);
+  assert.equal((await info()).status, 200);
   const saved = await post(url.origin, { nonce, action: "set", value }); assert.equal(saved.status, 200); assert.ok(!(await saved.text()).includes(value));
   assert.equal((await post(url.origin, { nonce, action: "set", value })).status, 403);
+  assert.equal((await info()).status, 403);
   assert.equal(await f.credentials.resolve(credentialRef("remote")), value);
   assert.ok(!JSON.stringify(await f.settings.snapshot()).includes(value));
   assert.ok(!(await fs.readFile(f.settings.file, "utf8")).includes(value));
@@ -110,6 +114,37 @@ test("malformed host configuration and symlinked settings fail without returning
   await fs.writeFile(f.settings.codexFile, ""); await fs.mkdir(path.dirname(f.settings.file), { recursive: true });
   await fs.symlink(f.settings.codexFile, f.settings.file);
   await assert.rejects(() => f.settings.snapshot(), /普通文件/);
+});
+
+test("closing the credential window prevents new authorization requests", async t => {
+  const f = await fixture(t);
+  f.backend.providers = [{ key: "fieldqkit" }];
+  await f.settings.command({ action: "connection.add", connection: { id: "remote", transport: "http", url: "https://example.com/mcp", authentication: "token" }, revision: (await f.settings.read()).revision });
+  const window = await createCredentialWindow(f);
+  await window.close();
+  await assert.rejects(window.open("remote"));
+  await assert.rejects(window.openService("fieldqkit"));
+  assert.throws(() => window.issueField({ id: "fieldqkit", field: "QUAFU_API_TOKEN", operation: "set", origin: "https://plugin.example.test" }));
+  assert.equal(f.secrets.size, 0);
+});
+
+test("a credential window cannot save after its permission expires during validation", async t => {
+  const f = await fixture(t);
+  await f.settings.command({ action: "connection.add", connection: { id: "remote", transport: "http", url: "https://example.com/mcp", authentication: "token" }, revision: (await f.settings.read()).revision });
+  const window = await createCredentialWindow(f); t.after(() => window.close());
+  const url = new URL(await window.open("remote"));
+  t.mock.timers.enable({ apis: ["Date"], now: Date.now() });
+  const entered = Promise.withResolvers(), release = Promise.withResolvers();
+  const read = f.settings.read.bind(f.settings);
+  f.settings.read = async () => { const state = await read(); entered.resolve(); await release.promise; return state; };
+  t.after(() => release.resolve());
+  const saving = fetch(`${url.origin}/credential`, { method: "POST", headers: { "content-type": "application/json", origin: url.origin },
+    body: JSON.stringify({ nonce: url.hash.slice(1), action: "set", value: "expired-fixture-only" }) });
+  await entered.promise;
+  t.mock.timers.tick(10 * 60 * 1000 + 1);
+  release.resolve();
+  assert.equal((await saving).status, 403);
+  assert.equal(f.secrets.size, 0);
 });
 
 test("external Tool identities do not collide across connection and Tool delimiters", () => {
