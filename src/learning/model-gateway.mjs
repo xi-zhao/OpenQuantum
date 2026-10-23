@@ -86,15 +86,22 @@ export async function createModelGateway({ llm, selection, attachments, record =
       const options = await modelRequest(body, route, attachments);
       const streamed = body.stream === true;
       const created = Math.floor(started / 1000);
+      const frame = (delta, reason = null, extra = {}) => `data: ${JSON.stringify({ id, object: "chat.completion.chunk", created, model: GATEWAY_MODEL, choices: [{ index: 0, delta, finish_reason: reason }], ...extra })}\n\n`;
       const write = (delta, reason = null, extra = {}) => {
-        if (streamed && !res.destroyed) res.write(`data: ${JSON.stringify({ id, object: "chat.completion.chunk", created, model: GATEWAY_MODEL, choices: [{ index: 0, delta, finish_reason: reason }], ...extra })}\n\n`);
+        if (!streamed || res.destroyed) return;
+        // Until useful output arrives, preserve failures as HTTP errors.
+        // Role markers, empty deltas and usage alone do not start a response.
+        if (!res.headersSent) {
+          res.writeHead(200, { "content-type": "text/event-stream", "cache-control": "no-store", "x-accel-buffering": "no" });
+          res.write(frame({ role: "assistant" }));
+        }
+        res.write(frame(delta, reason, extra));
       };
-      if (streamed) { res.writeHead(200, { "content-type": "text/event-stream", "cache-control": "no-store", "x-accel-buffering": "no" }); write({ role: "assistant" }); }
       let text = "", reasoning = ""; const calls = new Map();
       for await (const chunk of llm.stream({ ...options, signal })) {
         signal.throwIfAborted();
-        if (chunk.type === "text-delta") { text += chunk.text; write({ content: chunk.text }); }
-        else if (chunk.type === "reasoning-delta") { reasoning += chunk.text; write({ reasoning_content: chunk.text }); }
+        if (chunk.type === "text-delta") { text += chunk.text; if (chunk.text) write({ content: chunk.text }); }
+        else if (chunk.type === "reasoning-delta") { reasoning += chunk.text; if (chunk.text) write({ reasoning_content: chunk.text }); }
         else if (chunk.type === "tool-call-delta") {
           let call = calls.get(chunk.index);
           const first = !call;
@@ -122,7 +129,7 @@ export async function createModelGateway({ llm, selection, attachments, record =
       const invalid = error instanceof RequestError || error instanceof SyntaxError;
       const message = error instanceof RequestError ? error.message : error instanceof SyntaxError ? "无效的模型请求正文。" : failureCode === "TIMEOUT" ? "OpenQuantum 当前模型连接超时，请检查模型设置后重试。" : "OpenQuantum 当前模型连接未完成，请检查模型设置后重试。";
       const value = failure(message);
-      if (!res.headersSent) json(res, invalid ? 400 : 502, value);
+      if (!res.destroyed && !res.headersSent) json(res, invalid ? 400 : 502, value);
       else if (!res.destroyed) res.end(`data: ${JSON.stringify(value)}\n\ndata: [DONE]\n\n`);
     } finally {
       controllers.delete(controller); res.removeListener("close", abort);

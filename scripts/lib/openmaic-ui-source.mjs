@@ -19,6 +19,22 @@ const patches = {
     ['"react-dom": "19.2.3"', '"react-dom": "19.3.0"'],
     ['"katex": "^0.16.33"', '"katex": "0.18.7"'],
   ],
+  "app/api/generate/scene-outlines-stream/route.ts": [
+    ["const textStream = streamLLM(", "const fullStream = streamLLM("],
+    [").textStream;", ").fullStream;"],
+    ["for await (const chunk of textStream)", "for await (const part of fullStream)"],
+    ["                fullText += chunk;", `                // textStream omits SDK error events. A failed request must
+                // not finalize the successfully parsed prefix of its output.
+                if (part.type === 'error') throw part.error;
+                if (part.type !== 'text-delta') continue;
+                const chunk = part.text;
+                fullText += chunk;`],
+    ["              lastError = error instanceof Error ? error.message : String(error);", `              parsedOutlines = [];
+              languageDirective = null;
+              courseTitle = null;
+              lastError = error && typeof error === 'object' && 'message' in error && typeof error.message === 'string'
+                ? error.message : String(error);`],
+  ],
   "instrumentation.ts": [],
   "app/page.tsx": [
     ["'use client';", "'use client';\n\nimport { LearningWordmark } from '@/components/openquantum-wordmark';"],
@@ -155,6 +171,15 @@ export const supportedLocales = languages.map(({ learningLocale }) => {
   ],
 };
 
+export function patchOpenMaicUiSource(name, original) {
+  let expected = original;
+  for (const [before, after] of patches[name] || []) {
+    if (expected.split(before).length !== 2) throw new Error(`OpenMAIC patch no longer matches ${name}`);
+    expected = expected.replace(before, after);
+  }
+  return expected;
+}
+
 export async function applyOpenMaicUiOverlay(root) {
   const directory = sourceDirectory(root);
   const { stdout } = await run("git", ["rev-parse", "HEAD"], { cwd: directory });
@@ -168,13 +193,9 @@ export async function applyOpenMaicUiOverlay(root) {
   const localizedFiles = new Set(["lib/i18n/workbench.ts", ...localePaths.trim().split("\n").filter((name) => name.endsWith(".json"))]);
   const appearanceFiles = new Set(["app/generation-preview/page.tsx", "components/edit/EditShell/EditShell.tsx", "components/edit/PlaybackChromeRoot.tsx"]);
   const files = { ...Object.fromEntries([...localizedFiles, ...appearanceFiles].map((name) => [name, []])), ...patches };
-  for (const [name, replacements] of Object.entries(files)) {
+  for (const name of Object.keys(files)) {
     const { stdout: original } = await run("git", ["show", `${OPENMAIC_REVISION}:${name}`], { cwd: directory, maxBuffer: 2 * 1024 * 1024 });
-    let expected = original;
-    for (const [before, after] of replacements) {
-      if (expected.split(before).length !== 2) throw new Error(`OpenMAIC patch no longer matches ${name}`);
-      expected = expected.replace(before, after);
-    }
+    let expected = patchOpenMaicUiSource(name, original);
     if (name === "pnpm-lock.yaml") expected = await readFile(path.join(root, "runtime/openquantum/openmaic-ui/pnpm-lock.yaml"), "utf8");
     if (localizedFiles.has(name)) {
       expected = expected.replaceAll("OpenMAIC", /\/zh[-.]|\/zh-CN\./.test(name) ? "量子学习通" : "Quantum Learning");
