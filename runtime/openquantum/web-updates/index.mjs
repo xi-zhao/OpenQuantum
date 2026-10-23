@@ -3,8 +3,10 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 
+const { capabilityRequestBoundary } = await import(pathToFileURL(path.join(openQuantumProjectRoot, "runtime/openquantum/web-capabilities/index.mjs")).href);
+
 export const name = "openquantum-web-updates";
-export const inject = ["webServer"];
+export const inject = ["webServer", "connection"];
 export const UPDATE_PATH = "/openquantum/api/updates";
 const MAX_COMMAND_BYTES = 1024;
 
@@ -13,19 +15,13 @@ function json(response, status, value) {
   response.end(JSON.stringify(value));
 }
 
-export function createUpdateHandler(service, { trustedHost } = {}) {
+export function createUpdateHandler(service, { trustedHost, requestRejection } = {}) {
   return async (request, response) => {
-    if (request.method !== "POST") return json(response, 405, { error: "method_not_allowed" });
-    const { host, origin, "sec-fetch-site": site } = request.headers;
-    try {
-      if (typeof host !== "string" || typeof origin !== "string" || site && site !== "same-origin") throw new Error();
-      const parsed = new URL(origin);
-      const loopback = /^(?:localhost|127(?:\.\d{1,3}){3}|\[::1\])(?::\d{1,5})?$/i.test(host);
-      if ((!loopback && host.toLowerCase() !== trustedHost?.toLowerCase())
-        || !["http:", "https:"].includes(parsed.protocol) || parsed.host.toLowerCase() !== host.toLowerCase()) throw new Error();
-    } catch { return json(response, 403, { error: "forbidden" }); }
-    if (request.headers["content-type"]?.split(";", 1)[0].trim().toLowerCase() !== "application/json") return json(response, 415, { error: "json_required" });
-    if (Number(request.headers["content-length"]) > MAX_COMMAND_BYTES) return json(response, 413, { error: "request_too_large" });
+    const rejected = capabilityRequestBoundary(request, {
+      surface: "Release updates", maxBytes: MAX_COMMAND_BYTES,
+      requestRejection, trustedHost,
+    });
+    if (rejected) return json(response, rejected.status, { error: rejected.error });
     const chunks = [];
     let size = 0;
     try {
@@ -43,6 +39,7 @@ export function createUpdateHandler(service, { trustedHost } = {}) {
 }
 
 export function apply(ctx) {
+  const requestRejection = (request) => ctx.connection.requestRejection(request);
   ctx.effect(async () => {
     const root = openQuantumProjectRoot;
     const { version } = JSON.parse(await readFile(path.join(root, "package.json"), "utf8"));
@@ -54,7 +51,7 @@ export function apply(ctx) {
       automatic: process.env.OPENQUANTUM_UPDATE_CHECK !== "0",
     });
     const unregister = [
-      ctx.webServer.register({ kind: "exact", path: UPDATE_PATH, handler: createUpdateHandler(service, { trustedHost: process.env.OPENQUANTUM_TRUSTED_HOST }) }),
+      ctx.webServer.register({ kind: "exact", path: UPDATE_PATH, handler: createUpdateHandler(service, { trustedHost: process.env.OPENQUANTUM_TRUSTED_HOST, requestRejection }) }),
     ];
     service.start();
     return async () => { for (const dispose of unregister) dispose(); await service.dispose(); };

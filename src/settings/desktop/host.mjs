@@ -21,6 +21,7 @@ export async function apply(ctx, { root, nodeExecutable, directory = path.join(p
     response.end(html);
   } }));
   ctx.effect(() => ctx.webServer.register({ kind: "exact", path: "/openquantum/api/preparation", handler: createCapabilitySettingsHandler({
+    requestRejection: (request) => ctx.connection.requestRejection(request),
     projectRoot: root, surface: "OpenQuantum settings", dispatch: (_root, command) => application.request(command),
   }) }));
 }

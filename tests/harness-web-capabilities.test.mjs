@@ -19,8 +19,11 @@ const SAME_ORIGIN_HEADERS = {
   "content-type": "application/json",
   host: "127.0.0.1:3000",
   origin: "http://127.0.0.1:3000",
+  cookie: "fixture-only",
   "sec-fetch-site": "same-origin",
 };
+
+const requestRejection = (request) => request.headers.cookie === "fixture-only" ? undefined : 401;
 
 function request(body, overrides = {}) {
   return {
@@ -50,14 +53,14 @@ function response() {
 test("returns actionable Desktop conflicts while masking unknown failures", async t => {
   for (const projectSaved of [false, true]) {
     const failure = new DesktopPresetConflictError(projectSaved);
-    const handler = createCapabilitySettingsHandler({ dispatch: async () => { throw failure; } });
+    const handler = createCapabilitySettingsHandler({ requestRejection, dispatch: async () => { throw failure; } });
     const reply = response();
     await handler(request({ action: "mcp.update" }), reply);
     assert.equal(reply.result.status, 409);
     assert.deepEqual(JSON.parse(reply.result.body), { error: failure.message, code: "DESKTOP_PRESET_CONFLICT", projectSaved });
   }
   t.mock.method(console, "error", () => {});
-  const handler = createCapabilitySettingsHandler({ dispatch: async () => { throw new Error("private internal detail"); } });
+  const handler = createCapabilitySettingsHandler({ requestRejection, dispatch: async () => { throw new Error("private internal detail"); } });
   const reply = response();
   await handler(request({ action: "mcp.update" }), reply);
   assert.equal(reply.result.status, 500);
@@ -72,6 +75,7 @@ test("registers Harness-native routes and wires credentials into capability comm
   const root = {};
   apply({
     root,
+    connection: { requestRejection },
     credentials: {
       async describe(ref) {
         described.push(ref);
@@ -176,6 +180,25 @@ test("registers Harness-native routes and wires credentials into capability comm
   );
 });
 
+test("adaptive Desktop settings retain navigation policy and authenticate remaining routes", async () => {
+  const routes = [], transforms = [];
+  apply({
+    connection: { requestRejection },
+    webServer: {
+      register(route) { routes.push(route); return () => {}; },
+      tapIndex(transform) { transforms.push(transform); return () => {}; },
+    },
+    effect(register) { register(); },
+  }, { channels: false, adaptive: true });
+  assert.deepEqual(routes.map(route => route.path), ["/openquantum/api/channels", "/openquantum/api/runtime-readiness"]);
+  assert.match(transforms[0]("<html><head></head></html>"), /name="openquantum-channels" content="disabled"/);
+  for (const route of routes) {
+    const reply = response();
+    await route.handler(request({ action: "snapshot" }, { headers: { ...SAME_ORIGIN_HEADERS, cookie: undefined } }), reply);
+    assert.equal(reply.result.status, 401);
+  }
+});
+
 test("message-channel dispatcher exposes a bounded CC Connect Interface", async () => {
   const snapshot = await dispatchMessageChannelCommand(process.cwd(), {
     action: "snapshot",
@@ -218,6 +241,7 @@ test("capability settings boundary rejects cross-site and non-JSON requests", ()
 test("capability handler returns only its injected project projection", async () => {
   const observed = [];
   const handler = createCapabilitySettingsHandler({
+    requestRejection,
     projectRoot: "/safe/project",
     async dispatch(root, command) {
       observed.push({ root, command });
@@ -248,6 +272,7 @@ test("capability handler returns only its injected project projection", async ()
 test("runtime readiness handler delegates only the bounded snapshot command", async () => {
   const observed = [];
   const handler = createRuntimeReadinessHandler({
+    requestRejection,
     projectRoot: "/safe/project",
     async dispatch(root, command) {
       observed.push({ root, command });

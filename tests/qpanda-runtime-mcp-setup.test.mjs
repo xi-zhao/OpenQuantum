@@ -87,3 +87,67 @@ test("qpanda runtime MCP setup never overwrites an unverified existing checkout"
     "unreviewed\n",
   );
 });
+
+async function installedFixture(t) {
+  const root = await mkdtemp(path.join(os.tmpdir(), "openquantum-source-integrity-"));
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const source = path.join(root, "source");
+  const project = path.join(root, "project");
+  await mkdir(source);
+  await mkdir(project);
+  await git(source, "init", "--quiet");
+  for (const file of REQUIRED_FILES) {
+    await mkdir(path.dirname(path.join(source, file)), { recursive: true });
+    await writeFile(path.join(source, file), `${file}\n`);
+  }
+  await git(source, "add", ".");
+  await git(source, "-c", "user.name=OpenQuantum Test", "-c", "user.email=test@openquantum.local", "commit", "--quiet", "-m", "reviewed fixture");
+  const revision = await git(source, "rev-parse", "HEAD");
+  const installed = await installQpandaRuntimeMcp(project, { source, revision });
+  return { project, source, revision, target: installed.target };
+}
+
+for (const file of ["src/qpanda3_runtime_mcp_server/server.py", "pyproject.toml"]) {
+  test("qpanda runtime MCP rejects altered " + file + " without overwriting it", async (t) => {
+    const f = await installedFixture(t);
+    const targetFile = path.join(f.target, file);
+    const changed = (await readFile(targetFile, "utf8")) + "# unreviewed local change\n";
+    await writeFile(targetFile, changed);
+    const markerPath = path.join(f.target, ".openquantum-source.json");
+    const marker = await readFile(markerPath, "utf8");
+    await assert.rejects(inspectQpandaRuntimeMcp(f.project, f));
+    for (const flag of ["assume-unchanged", "skip-worktree"]) {
+      await git(f.target, "update-index", `--${flag}`, file);
+      await assert.rejects(inspectQpandaRuntimeMcp(f.project, f), `${flag} cannot attest changed source bytes`);
+      await git(f.target, "update-index", `--no-${flag}`, file);
+    }
+    await git(f.target, "add", file);
+    await assert.rejects(inspectQpandaRuntimeMcp(f.project, f), "staging the alteration does not restore a pinned checkout");
+    await assert.rejects(installQpandaRuntimeMcp(f.project, { ...f, runGit: () => assert.fail("rejected installations must not fetch") }), /not the pinned installation/);
+    assert.equal(await readFile(targetFile, "utf8"), changed);
+    assert.equal(await readFile(markerPath, "utf8"), marker);
+  });
+}
+
+test("qpanda runtime MCP rejects a clean checkout at another HEAD despite its old marker", async (t) => {
+  const f = await installedFixture(t);
+  const file = path.join(f.target, "pyproject.toml");
+  await writeFile(file, "# different committed version\n");
+  await git(f.target, "add", "pyproject.toml");
+  await git(f.target, "-c", "user.name=OpenQuantum Test", "-c", "user.email=test@openquantum.local", "commit", "--quiet", "-m", "unreviewed revision");
+  const changedHead = await git(f.target, "rev-parse", "HEAD");
+  assert.notEqual(changedHead, f.revision);
+  await assert.rejects(inspectQpandaRuntimeMcp(f.project, f));
+  await assert.rejects(installQpandaRuntimeMcp(f.project, { ...f, runGit: () => assert.fail("rejected installations must not fetch") }), /not the pinned installation/);
+  assert.equal(await git(f.target, "rev-parse", "HEAD"), changedHead);
+  assert.equal(await readFile(file, "utf8"), "# different committed version\n");
+});
+
+test("qpanda runtime MCP rejects a forged source marker without a Git checkout", async (t) => {
+  const f = await installedFixture(t);
+  await rm(path.join(f.target, ".git"), { recursive: true, force: true });
+  const sourceBefore = await readFile(path.join(f.target, "src/qpanda3_runtime_mcp_server/server.py"), "utf8");
+  await assert.rejects(inspectQpandaRuntimeMcp(f.project, f));
+  await assert.rejects(installQpandaRuntimeMcp(f.project, { ...f, runGit: () => assert.fail("forged installations must not fetch") }), /not the pinned installation/);
+  assert.equal(await readFile(path.join(f.target, "src/qpanda3_runtime_mcp_server/server.py"), "utf8"), sourceBefore);
+});

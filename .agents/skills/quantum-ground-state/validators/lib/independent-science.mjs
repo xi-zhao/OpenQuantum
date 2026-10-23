@@ -401,13 +401,10 @@ export function rerunOptimizerIndependently(terms, options) {
 
   const uniqueCoarsePointCount = options.coarsePoints - 1;
   const step = TWO_PI / uniqueCoarsePointCount;
-  const coarseAngles = Array.from(
-    { length: uniqueCoarsePointCount },
-    (_, index) => -Math.PI + index * step,
-  );
   const coarseEnergies = [];
-  for (const coarseAngle of coarseAngles) {
-    const value = evaluate(coarseAngle, "coarse");
+  // Replay the requested prefix independently without materializing unused nodes.
+  for (let index = 0; index < uniqueCoarsePointCount && trace.length < options.maxEvaluations; index += 1) {
+    const value = evaluate(-Math.PI + index * step, "coarse");
     if (value === undefined) break;
     coarseEnergies.push(value);
   }
@@ -429,10 +426,10 @@ export function rerunOptimizerIndependently(terms, options) {
   }
   const leftIndex = (bestIndex - 1 + uniqueCoarsePointCount) % uniqueCoarsePointCount;
   const rightIndex = (bestIndex + 1) % uniqueCoarsePointCount;
-  const centre = coarseAngles[bestIndex];
-  let leftDelta = coarseAngles[leftIndex] - centre;
+  const centre = -Math.PI + bestIndex * step;
+  let leftDelta = -Math.PI + leftIndex * step - centre;
   if (leftDelta >= 0) leftDelta -= TWO_PI;
-  let rightDelta = coarseAngles[rightIndex] - centre;
+  let rightDelta = -Math.PI + rightIndex * step - centre;
   if (rightDelta <= 0) rightDelta += TWO_PI;
   let left = centre + leftDelta;
   let right = centre + rightDelta;

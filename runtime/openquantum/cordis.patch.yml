@@ -45,10 +45,10 @@
       inject: [webServer]
     - id: openquantum-web-capabilities
       name: '@openquantum/harness-web-capabilities'
-      inject: [webServer, credentials, skills, tools, llm]
+      inject: [webServer, connection, credentials, skills, tools, llm]
     - id: openquantum-web-learning
       name: '@openquantum/harness-web-learning'
-      inject: [webServer, llm, agentDefaultModel, attachments]
+      inject: [webServer, connection, llm, agentDefaultModel, attachments]
     - id: openquantum-web-updates
       name: '@openquantum/harness-web-updates'
-      inject: [webServer]
+      inject: [webServer, connection]

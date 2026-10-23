@@ -219,7 +219,7 @@ async function invoke(handler, request) {
 
 test("bounded routes reject cross-origin, oversized and arbitrary commands before dispatch", async (t) => {
   const f = await fixture(t);
-  const handler = createUpdateHandler(f.service);
+  const handler = createUpdateHandler(f.service, { requestRejection: () => undefined });
   const cases = [
     [commandRequest({}, {}, "GET"), 405], [commandRequest({}, { origin: "https://evil.example" }), 403],
     [commandRequest({}, { "sec-fetch-site": "cross-site" }), 403], [commandRequest({}, { "content-type": "text/plain" }), 415],

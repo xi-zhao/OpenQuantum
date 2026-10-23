@@ -824,6 +824,7 @@ const MCP_CATALOG = Object.freeze({
     packageName: "quantum-hardware-mcp",
     packageVersion: quantumHardwareMcpIntegration.revision.slice(0, 12),
     setup: Object.freeze({
+      integration: quantumHardwareMcpIntegration,
       entry: quantumHardwareMcpIntegration.entry,
       requiredFiles: quantumHardwareMcpIntegration.requiredFiles.map(
         (fileName) =>
@@ -844,6 +845,7 @@ const MCP_CATALOG = Object.freeze({
     packageName: "qpanda3-runtime-mcp-server",
     packageVersion: qpandaRuntimeMcpIntegration.revision.slice(0, 12),
     setup: Object.freeze({
+      integration: qpandaRuntimeMcpIntegration,
       entry: qpandaRuntimeMcpIntegration.entry,
       requiredFiles: qpandaRuntimeMcpIntegration.requiredFiles.map((fileName) =>
         path.join(qpandaRuntimeMcpIntegration.relativeRoot, fileName),

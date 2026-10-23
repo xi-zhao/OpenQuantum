@@ -8,6 +8,7 @@
   "properties": {
     "schemaVersion": { "const": "1.0" },
     "packageVersion": { "type": "string" },
+    "requestDigestVersion": { "const": "binary64-v1" },
     "requestDigest": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
     "state": {
       "type": "object",
