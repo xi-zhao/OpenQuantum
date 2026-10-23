@@ -38,6 +38,18 @@ test("brands the official Harness index without replacing its application shell"
   assert.equal(brandHarnessIndex(branded), branded);
 });
 
+test("narrow settings keep native navigation and give translated content its own row", async () => {
+  const branded = brandHarnessIndex(HARNESS_INDEX);
+  const native = await readFile(new URL("../node_modules/@deepseek-ai/dsh-client-ui-settings-general/lib/client.js", import.meta.url), "utf8");
+  assert.match(native, /"data-shortcut-modal": "settings"/);
+  assert.match(native, /renderSlot\("settings\.general\.item"/);
+  assert.match(branded, /@media \(max-width: 600px\)/);
+  assert.match(branded, /\[role="dialog"\]\[data-shortcut-modal="settings"\] \{\s*flex-direction: column;/);
+  assert.match(branded, /\[data-shortcut-modal="settings"\] > nav > div:last-child \{\s*flex-direction: row;/);
+  assert.match(branded, /\[data-slot="settings\.general\.item"\] > div:has\(> span > button\[aria-haspopup="menu"\]\)/);
+  assert.doesNotMatch(branded, /VOzbGW_|hVGvvW_/, "do not couple the adaptation to generated CSS class hashes");
+});
+
 test("registers one canonical brand across the Harness Web surfaces", async () => {
   let transform;
   const routes = [];

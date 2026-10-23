@@ -189,6 +189,40 @@ const BRAND_STYLES = `
     line-height: 24px;
     white-space: nowrap;
   }
+
+  /* Keep the native settings shell usable with long translations on phones. */
+  @media (max-width: 600px) {
+    [role="dialog"][data-shortcut-modal="settings"] {
+      flex-direction: column;
+      width: calc(100vw - 24px);
+      max-width: calc(100vw - 24px);
+    }
+
+    [role="dialog"][data-shortcut-modal="settings"] > nav {
+      width: 100%;
+      gap: 8px;
+      padding-block: 12px 0;
+    }
+
+    [role="dialog"][data-shortcut-modal="settings"] > nav > div:last-child {
+      flex-direction: row;
+      overflow-x: auto;
+    }
+
+    [role="dialog"][data-shortcut-modal="settings"] > nav button {
+      flex-shrink: 0;
+    }
+
+    [role="dialog"][data-shortcut-modal="settings"] > nav + div {
+      min-height: 0;
+    }
+
+    [data-shortcut-modal="settings"] [data-slot="settings.general.item"] > div:has(> span > button[aria-haspopup="menu"]) {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 10px;
+    }
+  }
 </style>`;
 
 /**

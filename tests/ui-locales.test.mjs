@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { access, readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
@@ -69,13 +70,50 @@ test("all ten language catalogs preserve source keys and interpolation parameter
   }
 });
 
-test("unreviewed machine drafts stay listed and present in every translated catalog", async () => {
-  const drafts = JSON.parse(await readFile(new URL("../runtime/openquantum/web-locales/machine-drafts.json", import.meta.url), "utf8"));
-  assert.equal(drafts.status, "unreviewed");
+test("sequential AI review is bound to the source and all eight translated phrase sets", async () => {
+  const root = new URL("../runtime/openquantum/web-locales/", import.meta.url);
+  const review = JSON.parse(await readFile(new URL("translation-review.json", root), "utf8"));
+  const digest = (value) => createHash("sha256").update(value).digest("hex");
+  assert.equal(review.status, "ai-reviewed");
+  assert.equal(review.humanNativeReview, false);
+  assert.equal(review.method, "sequential retranslation and semantic review; no subagents or external translation provider");
+  assert.equal(review.initialDraft.phraseCount, 1219);
+  assert.equal(review.phrases.length, 1278);
+  assert.equal(new Set(review.phrases).size, review.phrases.length);
+  assert.equal(review.sourceSha256, digest(await readFile(new URL("harness-source.json", root))));
+  assert.deepEqual(review.languages, languages.filter(({ id }) => !["zh", "en"].includes(id)).map(({ id }) => id));
   const english = new Set(Object.values(sources).flatMap((entry) => Object.values(entry.en ?? {})));
-  for (const phrase of drafts.phrases) {
-    assert.ok(english.has(phrase), `stale draft entry: ${phrase}`);
-    for (const id of drafts.languages) assert.ok(Object.hasOwn(translations[id], phrase), `${id}: draft missing for ${phrase}`);
+  for (const phrase of review.phrases) {
+    assert.ok(english.has(phrase), `stale review entry: ${phrase}`);
+    for (const id of review.languages) assert.ok(Object.hasOwn(translations[id], phrase), `${id}: reviewed translation missing for ${phrase}`);
+  }
+  for (const id of review.languages) {
+    const entries = review.phrases.map((phrase) => [phrase, translations[id][phrase]]);
+    assert.equal(review.translationSha256[id], digest(JSON.stringify(entries)), `${id}: wording changed since review; re-review and update the digest`);
+  }
+});
+
+test("translated actions retain their meaning and date formatters use regional locales", () => {
+  const actions = {
+    ja: ["サインアウト", "ピン留めを解除"],
+    ko: ["로그아웃", "고정 해제"],
+    es: ["Cerrar sesión", "Desfijar"],
+    fr: ["Se déconnecter", "Désépingler"],
+    de: ["Abmelden", "Nicht mehr anheften"],
+    pt: ["Sair da conta", "Desafixar"],
+    ru: ["Выйти из аккаунта", "Открепить"],
+    ar: ["تسجيل الخروج", "إلغاء التثبيت"],
+  };
+  for (const { id, learningLocale } of languages.filter(({ id }) => actions[id])) {
+    const dict = dictionariesFor(id);
+    assert.equal(dict["settings.account"].signOut, actions[id][0]);
+    assert.equal(dict.workspace["actions.unpin"], actions[id][1]);
+    for (const namespace of ["schedule.catalog", "schedule.manager"]) {
+      assert.equal(dict[namespace]["time.locale"], learningLocale);
+      assert.doesNotThrow(() => new Intl.DateTimeFormat(dict[namespace]["time.locale"]).format(0));
+    }
+    const help = translations[id]["Unable to create default workspace. Use Choose workspace to select a folder."];
+    assert.ok(help.includes(dict.conversation["hero.chooseWorkspace"]), `${id}: workspace help must match the visible label`);
   }
 });
 
