@@ -18,6 +18,7 @@ import { parseDocument } from "yaml";
 
 import { readDeclaredNativeToolContracts } from "../scripts/lib/capability-tool-contract.mjs";
 import { prepareOpenQuantumHarnessHome } from "../scripts/lib/prepare-harness-home.mjs";
+import { createRuntimeReadinessReader } from "../src/readiness/server/runtime-readiness.mjs";
 
 const projectRoot = fileURLToPath(new URL("..", import.meta.url));
 const harnessBin = path.join(
@@ -130,6 +131,50 @@ async function waitForValue(probe, { timeoutMs, description, diagnostics }) {
   const cause = lastError instanceof Error ? ` Last error: ${lastError.message}` : "";
   throw new Error(`${description} timed out.${cause}\n${diagnostics()}`);
 }
+
+async function observedReadiness(probe, { timeoutMs = 10_000, diagnostics }) {
+  let snapshot;
+  // A passive snapshot may time out while local providers discover their catalog.
+  // Require a complete later observation; never count the partial one as ready.
+  return waitForValue(async () => {
+    snapshot = await probe();
+    return snapshot.status === "observed" ? snapshot : undefined;
+  }, {
+    timeoutMs,
+    description: "Complete runtime registry observation",
+    diagnostics: () => `${diagnostics()}\nReadiness: ${JSON.stringify({
+      status: snapshot?.status,
+      preset: snapshot?.preset,
+      checks: snapshot?.checks.map(({ id, state, reasonCodes }) => ({ id, state, reasonCodes })),
+    })}`,
+  });
+}
+
+test("readiness integration waits for bounded discovery to recover, but never accepts a persistent failure", async () => {
+  let attempts = 0;
+  const read = createRuntimeReadinessReader({
+    observer: {
+      listActivePresetScopes: () => ["fixture"],
+      listModelRoutes: () => [{ id: "fixture" }],
+      listTools: () => [{ name: "fixture" }],
+      listSkills(scope, { signal }) {
+        assert.equal(scope, "fixture");
+        attempts++;
+        if (attempts === 1) return new Promise((resolve) => signal.addEventListener("abort", resolve, { once: true }));
+        return { complete: true, skills: [{ name: "fixture" }] };
+      },
+    },
+    timeoutMs: 5,
+  });
+  const snapshot = await observedReadiness(read, { timeoutMs: 1000, diagnostics: () => "fixture" });
+  assert.equal(snapshot.status, "observed");
+  assert.equal(attempts, 2);
+  await assert.rejects(observedReadiness(async () => ({
+    status: "partial",
+    preset: { state: "observed" },
+    checks: [{ id: "skill-registry", state: "failed", reasonCodes: ["SKILL_REGISTRY_TIMEOUT"] }],
+  }), { timeoutMs: 20, diagnostics: () => "fixture" }), /SKILL_REGISTRY_TIMEOUT/);
+});
 
 test(
   "Harness preset shares quantum Skills and registered Tools across two Sessions",
@@ -303,7 +348,7 @@ test(
       }
 
       if (index === 0) {
-        const readiness = await runtimeReadiness();
+        const readiness = await observedReadiness(runtimeReadiness, { diagnostics });
         assert.equal(readiness.mode, "passive");
         assert.equal(readiness.status, "observed", diagnostics());
         assert.equal(readiness.preset.id, "openquantum");
