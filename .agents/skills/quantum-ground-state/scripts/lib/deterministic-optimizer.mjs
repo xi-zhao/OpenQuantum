@@ -61,13 +61,11 @@ export function minimizePeriodicAngle(energyAtTheta, options) {
 
   const lowerBound = -Math.PI;
   const coarseStep = TWO_PI / uniqueCoarsePointCount;
-  const coarseAngles = Array.from(
-    { length: uniqueCoarsePointCount },
-    (_, index) => lowerBound + index * coarseStep,
-  );
+  const coarseAngleAt = (index) => lowerBound + index * coarseStep;
   const coarseEnergies = [];
-  for (const coarseAngle of coarseAngles) {
-    const energy = evaluate(coarseAngle, "coarse");
+  // Generate only evaluated nodes; a small budget must not allocate the full grid.
+  for (let index = 0; index < Math.min(uniqueCoarsePointCount, maxEvaluations); index += 1) {
+    const energy = evaluate(coarseAngleAt(index), "coarse");
     if (energy === undefined) {
       break;
     }
@@ -95,9 +93,9 @@ export function minimizePeriodicAngle(energyAtTheta, options) {
   const leftNeighbourIndex =
     (bestCoarseIndex - 1 + uniqueCoarsePointCount) % uniqueCoarsePointCount;
   const rightNeighbourIndex = (bestCoarseIndex + 1) % uniqueCoarsePointCount;
-  const centre = coarseAngles[bestCoarseIndex];
-  let left = unwrapNeighbour(coarseAngles[leftNeighbourIndex], centre, -1);
-  let right = unwrapNeighbour(coarseAngles[rightNeighbourIndex], centre, 1);
+  const centre = coarseAngleAt(bestCoarseIndex);
+  let left = unwrapNeighbour(coarseAngleAt(leftNeighbourIndex), centre, -1);
+  let right = unwrapNeighbour(coarseAngleAt(rightNeighbourIndex), centre, 1);
   let innerLeft = right - GOLDEN_RATIO_CONJUGATE * (right - left);
   let innerRight = left + GOLDEN_RATIO_CONJUGATE * (right - left);
   let innerLeftEnergy = evaluate(innerLeft, "refine");

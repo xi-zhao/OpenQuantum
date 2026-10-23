@@ -102,6 +102,27 @@ export function requestDigest(request) {
   return createHash("sha256").update(canonical).digest("hex");
 }
 
+export const REQUEST_DIGEST_VERSION = "binary64-v1";
+
+export function binary64RequestDigest(request) {
+  function encode(value) {
+    if (Array.isArray(value)) return value.map(encode);
+    if (isRecord(value)) {
+      return Object.fromEntries(Object.keys(value).sort().map((key) => [key, encode(value[key])]));
+    }
+    if (typeof value !== "number" || !Number.isFinite(value)) {
+      throw new TypeError("Request digest requires finite numeric request values");
+    }
+    const bytes = Buffer.alloc(8);
+    bytes.writeDoubleBE(value === 0 ? 0 : value);
+    return { $binary64: bytes.toString("hex") };
+  }
+  return createHash("sha256")
+    .update("openquantum-density-matrix-request:binary64-v1\n", "ascii")
+    .update(JSON.stringify(encode(request)), "ascii")
+    .digest("hex");
+}
+
 function complex(real = 0, imag = 0) {
   return { real, imag };
 }

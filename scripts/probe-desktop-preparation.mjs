@@ -22,7 +22,7 @@ await prepareOpenQuantumHarnessHome({ projectRoot: root, harnessHome: home, prof
 // capability plugins in an isolated supported Web Host; keep the Electron
 // composition and native-window acceptance as distinct evidence.
 await fs.writeFile(path.join(home, ".agent-presets/openquantum/agent.cordis.yml"), desktopPreset(await fs.readFile(path.join(root, "runtime/openquantum/agent-presets/openquantum/agent.cordis.yml"), "utf8"), root, process.execPath, { onDemand: true }));
-await fs.appendFile(path.join(home, "cordis.patch.yml"), "\n- insert:\n    - id: openquantum-capability-host\n      name: '@openquantum/harness-capability-host'\n      inject: [credentials, webServer]\n- id: openquantum-web-capabilities\n  config:\n    channels: false\n    adaptive: true\n");
+await fs.appendFile(path.join(home, "cordis.patch.yml"), "\n- insert:\n    - id: openquantum-capability-host\n      name: '@openquantum/harness-capability-host'\n      inject: [credentials, webServer, connection]\n- id: openquantum-web-capabilities\n  config:\n    channels: false\n    adaptive: true\n");
 const temporaryServer = createServer(); temporaryServer.listen(0, "127.0.0.1"); await once(temporaryServer, "listening");
 const port = temporaryServer.address().port; await new Promise(resolve => temporaryServer.close(resolve));
 const base = `http://127.0.0.1:${port}`;

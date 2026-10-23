@@ -3,7 +3,7 @@
 - insert:
     - id: openquantum-capability-host
       name: '@openquantum/harness-capability-host'
-      inject: [credentials, webServer]
+      inject: [credentials, webServer, connection]
     - id: openquantum-desktop-branding
       name: '@openquantum/harness-web-branding/desktop'
       inject: [desktopRuntime]

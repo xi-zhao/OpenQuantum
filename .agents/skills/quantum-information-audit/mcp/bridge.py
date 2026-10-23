@@ -2,12 +2,13 @@
 
 from __future__ import annotations
 
-import hashlib
 import json
 import math
 import sys
 from importlib.metadata import version
 from typing import Any
+
+from request_digest import REQUEST_DIGEST_VERSION, canonical_digest
 
 import numpy as np
 from toqito.matrix_ops import partial_transpose
@@ -22,8 +23,7 @@ def finite_number(value: Any, field: str) -> int | float:
     number = float(value)
     if not math.isfinite(number):
         raise ValueError(f"{field} must be finite")
-    # Preserve JSON integer/float spelling so the cross-language canonical
-    # digest is identical to JSON.stringify after the JS boundary check.
+    # Preserve the accepted value; the versioned digest encodes binary64 bits.
     return 0 if number == 0 else value
 
 
@@ -82,11 +82,6 @@ def hermiticity_residual(value: np.ndarray) -> float:
     return float(np.max(np.abs(value - value.conj().T)))
 
 
-def canonical_digest(request: dict[str, Any]) -> str:
-    encoded = json.dumps(request, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf8")
-    return hashlib.sha256(encoded).hexdigest()
-
-
 def audit_payload(request: dict[str, Any]) -> dict[str, Any]:
     rho = np.asarray(request["matrixReal"], dtype=float) + 1j * np.asarray(request["matrixImag"], dtype=float)
     hermitian_part = (rho + rho.conj().T) / 2
@@ -101,6 +96,7 @@ def audit_payload(request: dict[str, Any]) -> dict[str, Any]:
     return {
         "schemaVersion": "1.0",
         "packageVersion": version("toqito"),
+        "requestDigestVersion": REQUEST_DIGEST_VERSION,
         "requestDigest": canonical_digest(request),
         "state": {
             "dimension": int(rho.shape[0]),

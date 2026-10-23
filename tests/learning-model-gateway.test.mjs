@@ -78,3 +78,37 @@ test("closing an upstream request cancels its actual Harness model stream", asyn
     assert.equal(await Promise.race([ended, new Promise((resolve) => setTimeout(() => resolve(false), 1500))]), true);
   } finally { gateway.dispose(); }
 });
+
+test("empty deltas and usage leave startup failures as HTTP errors", async () => {
+  const gateway = await createModelGateway({ selection: () => selection, llm: { async *stream() {
+    yield { type: "text-delta", text: "" };
+    yield { type: "reasoning-delta", text: "" };
+    yield { type: "usage", usage: { inputTokens: 3, outputTokens: 0 } };
+    yield { type: "finish", reason: { kind: "error" } };
+  } } });
+  try {
+    const response = await fetch(`${gateway.url}/chat/completions`, { method: "POST", headers: { "content-type": "application/json", authorization: `Bearer ${gateway.token}` }, body: JSON.stringify({ ...body, stream: true }) });
+    assert.equal(response.status, 502);
+    assert.match(response.headers.get("content-type"), /application\/json/);
+    assert.equal((await response.json()).error.code, "model_request_failed");
+  } finally { gateway.dispose(); }
+});
+
+test("cancelling before the first output byte aborts the actual model request", async () => {
+  const entered = Promise.withResolvers(), ended = Promise.withResolvers();
+  const gateway = await createModelGateway({ selection: () => selection, llm: { async *stream({ signal }) {
+    const cancelled = new Promise((resolve) => signal.addEventListener("abort", resolve, { once: true }));
+    entered.resolve();
+    await cancelled;
+    ended.resolve(signal.aborted);
+    yield { type: "finish", reason: { kind: "error" } };
+  } } });
+  const controller = new AbortController();
+  try {
+    const request = fetch(`${gateway.url}/chat/completions`, { method: "POST", signal: controller.signal, headers: { "content-type": "application/json", authorization: `Bearer ${gateway.token}` }, body: JSON.stringify({ ...body, stream: true }) });
+    await entered.promise;
+    controller.abort();
+    await assert.rejects(request, (error) => error.name === "AbortError");
+    assert.equal(await Promise.race([ended.promise, new Promise((resolve) => setTimeout(() => resolve(false), 1500))]), true);
+  } finally { controller.abort(); gateway.dispose(); }
+});

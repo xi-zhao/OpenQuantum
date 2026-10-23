@@ -231,6 +231,7 @@ test(
           headers: {
             "content-type": "application/json",
             origin: baseUrl,
+            cookie,
           },
           body: JSON.stringify({ action: "snapshot" }),
           signal: AbortSignal.timeout(5_000),

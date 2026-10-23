@@ -12,7 +12,7 @@ const SETTINGS_MODULE = "src/settings/server/project-settings.mjs";
 const CHANNELS_MODULE = "src/channels/cc-connect.mjs";
 
 export const name = "openquantum-web-capabilities";
-export const inject = ["webServer", "credentials", "skills", "tools", "llm"];
+export const inject = ["webServer", "connection", "credentials", "skills", "tools", "llm"];
 
 function json(response, status, value) {
   const body = `${JSON.stringify(value)}\n`;
@@ -26,7 +26,7 @@ function json(response, status, value) {
 
 export function capabilityRequestBoundary(
   request,
-  { surface = "Capability settings", maxBytes = MAX_REQUEST_BYTES } = {},
+  { surface = "Capability settings", maxBytes = MAX_REQUEST_BYTES, requestRejection, trustedHost = process.env.OPENQUANTUM_TRUSTED_HOST } = {},
 ) {
   if (request.method !== "POST") {
     return { status: 405, error: `${surface} require POST` };
@@ -43,7 +43,7 @@ export function capabilityRequestBoundary(
   const fetchSite = request.headers["sec-fetch-site"];
   if (
     typeof host !== "string" ||
-    typeof originValue !== "string" ||
+    (typeof originValue !== "string" && !(originValue === undefined && fetchSite === undefined && LOOPBACK_HOST.test(host))) ||
     (fetchSite !== undefined && fetchSite !== "same-origin")
   ) {
     return {
@@ -51,20 +51,27 @@ export function capabilityRequestBoundary(
       error: `${surface} require a same-origin browser request`,
     };
   }
-  const trustedPublicHost = process.env.OPENQUANTUM_TRUSTED_HOST?.toLowerCase();
+  const trustedPublicHost = trustedHost?.toLowerCase();
   if (!LOOPBACK_HOST.test(host) && host.toLowerCase() !== trustedPublicHost) {
     return { status: 403, error: `${surface} host is not trusted` };
   }
   try {
-    const origin = new URL(originValue);
-    if (
+    const origin = originValue === undefined ? null : new URL(originValue);
+    if (origin && (
       !["http:", "https:"].includes(origin.protocol) ||
       origin.host.toLowerCase() !== host.toLowerCase()
-    ) {
+    )) {
       throw new Error("origin mismatch");
     }
   } catch {
     return { status: 403, error: `${surface} origin is not trusted` };
+  }
+  // Host/Origin headers are only a CSRF fence. Harness owns authentication,
+  // including native Desktop forwarding without browser Origin headers.
+  if (typeof requestRejection !== "function") return { status: 401, error: `${surface} require Harness authentication` };
+  const rejection = requestRejection(request);
+  if (rejection !== undefined) {
+    return { status: rejection === 403 ? 403 : 401, error: `${surface} request is not authenticated or trusted` };
   }
   const declaredLength = Number(request.headers["content-length"]);
   if (Number.isFinite(declaredLength) && declaredLength > maxBytes) {
@@ -122,9 +129,10 @@ export function createCapabilitySettingsHandler({
   dispatch = dispatchCapabilityCommand,
   surface = "Capability settings",
   failureMessage = "能力设置暂时不可用",
+  requestRejection,
 } = {}) {
   return async (request, response) => {
-    const boundary = capabilityRequestBoundary(request, { surface });
+    const boundary = capabilityRequestBoundary(request, { surface, requestRejection });
     if (boundary !== null) {
       json(response, boundary.status, { error: boundary.error });
       return;
@@ -158,6 +166,7 @@ export function createCapabilitySettingsHandler({
 export function createRuntimeReadinessHandler({
   projectRoot = openQuantumProjectRoot,
   dispatch,
+  requestRejection,
 } = {}) {
   if (typeof dispatch !== "function") {
     throw new TypeError("Runtime readiness handler requires dispatch()");
@@ -165,25 +174,30 @@ export function createRuntimeReadinessHandler({
   return createCapabilitySettingsHandler({
     projectRoot,
     dispatch,
+    requestRejection,
     surface: "Runtime readiness",
     failureMessage: "运行状态暂时不可用",
   });
 }
 
 export function apply(ctx, { channels = true, adaptive = false } = {}) {
+  const requestRejection = (request) => ctx.connection.requestRejection(request);
   if (!channels) ctx.effect(() => ctx.webServer.tapIndex(html => html.replace("</head>", '<meta name="openquantum-channels" content="disabled" />\n</head>')), "openquantum: capability navigation");
   const capabilityHandler = createCapabilitySettingsHandler({
+    requestRejection,
     dispatch: (projectRoot, command) =>
       dispatchCapabilityCommand(projectRoot, command, {
         credentials: ctx.credentials,
       }),
   });
   const channelHandler = createCapabilitySettingsHandler({
+    requestRejection,
     dispatch: dispatchMessageChannelCommand,
     surface: "Message channel settings",
     failureMessage: "消息渠道设置暂时不可用",
   });
   const runtimeReadinessHandler = createRuntimeReadinessHandler({
+    requestRejection,
     dispatch: (projectRoot, command) =>
       dispatchRuntimeReadinessCommand(projectRoot, command, { ctx }),
   });

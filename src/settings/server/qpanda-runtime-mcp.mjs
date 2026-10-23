@@ -1,4 +1,5 @@
 export const qpandaRuntimeMcpIntegration = Object.freeze({
+  reviewServerName: "qpanda_runtime",
   sourceUrl: "https://github.com/OriginQ/qpanda3-runtime-mcp-server",
   revision: "4a06035afa415ed8dc9d571869cb5ca60ed1bcb1",
   relativeRoot: ".openquantum/external/qpanda3-runtime-mcp",

@@ -341,13 +341,17 @@ test("hardware MCP setup state is bound to the reviewed local source", async (t)
     })}\n`,
   );
 
-  const ready = await readProjectSettings(root);
-  assert.equal(
-    ready.mcpServers.find(
-      (server) => server.serverName === "quantum_hardware",
-    )?.setup?.status,
-    "ready",
+  const forged = await readProjectSettings(root);
+  const forgedServer = forged.mcpServers.find(
+    (server) => server.serverName === "quantum_hardware",
   );
+  assert.equal(forgedServer?.setup?.status, "required", "a source marker cannot attest arbitrary file contents");
+  const beforeEnable = await readFile(configPath, "utf8");
+  await assert.rejects(executeProjectSettingsCommand(root, {
+    action: "mcp.update", serverName: "quantum_hardware", revision: forged.mcpRevision,
+    enabled: true, toolCallTimeoutMs: forgedServer.toolCallTimeoutMs, reconnect: forgedServer.reconnect,
+  }, { credentials: { async describe() { return { configured: true, writable: true }; } } }), /固定版本源码尚未就绪/);
+  assert.equal(await readFile(configPath, "utf8"), beforeEnable, "a rejected enable leaves the saved configuration unchanged");
 });
 
 test("custom stdio MCP is registered disabled with a dynamic credential and can be removed", async (t) => {

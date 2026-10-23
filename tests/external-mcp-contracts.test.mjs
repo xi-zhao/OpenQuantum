@@ -41,6 +41,7 @@ test("every opt-in external MCP contract matches reviewed Tools, effects and dep
     } else {
       assert.equal(evidence.pin.kind, "git");
       const source = gitSources[server.name];
+      assert.equal(source.reviewServerName, server.name, "production MCP setup must require its reviewed source bytes");
       assert.equal(source.revision, evidence.pin.revision);
       assert.equal(entry.config.command, "uv");
       assert.equal(entry.config.cwd, `process.cwd() + '/${source.relativeRoot}'`);
@@ -72,4 +73,23 @@ test("source review checks fail closed for tampering, missing files and unsafe r
   }
   await fs.symlink("server.py", path.join(root, "linked.py"));
   assert.equal(inspectReviewedMcpSource({ ...record, files: [{ ...record.files[0], path: "linked.py" }] }, root).status, "fail");
+});
+
+
+test("source review rejects duplicate references and linked ancestors inside the source root", async (t) => {
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), "openquantum-source-ancestors-"));
+  t.after(() => fs.rm(root, { recursive: true, force: true }));
+  const source = "# exact reviewed source bytes\n";
+  await fs.mkdir(path.join(root, "actual"));
+  await fs.writeFile(path.join(root, "actual/server.py"), source);
+  const entry = { path: "actual/server.py", sha256: createHash("sha256").update(source).digest("hex") };
+  const record = { serverName: "fixture", files: [entry] };
+  assert.equal(inspectReviewedMcpSource(record, root).status, "pass");
+  const duplicate = inspectReviewedMcpSource({ ...record, files: [entry, entry] }, root);
+  assert.equal(duplicate.status, "fail");
+  assert.match(duplicate.issues.join("\n"), /duplicate/);
+  await fs.symlink(path.join(root, "actual"), path.join(root, "alias"), process.platform === "win32" ? "junction" : "dir");
+  const linked = inspectReviewedMcpSource({ ...record, files: [{ ...entry, path: "alias/server.py" }] }, root);
+  assert.equal(linked.status, "fail", "an in-root directory symlink is not a reviewed regular path");
+  assert.equal(linked.runtimeExecuted, false);
 });

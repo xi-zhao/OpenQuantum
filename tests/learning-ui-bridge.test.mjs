@@ -58,7 +58,7 @@ test("two existing material directories are preserved instead of overwriting eit
 
 test("opening the original UI crosses the existing Host request boundary", async () => {
   let started;
-  const handler = createLearningHandler({ dispatch: () => assert.fail("not a classroom mutation"), openUi: (origin) => { started = origin; return { url: "http://localhost:3037/" }; } });
+  const handler = createLearningHandler({ requestRejection: () => undefined, dispatch: () => assert.fail("not a classroom mutation"), openUi: (origin) => { started = origin; return { url: "http://localhost:3037/" }; } });
   async function request(origin) {
     const req = Readable.from([Buffer.from(JSON.stringify({ action: "open-ui" }))]);
     req.method = "POST"; req.headers = { host: "localhost:3000", origin, "content-type": "application/json" };
