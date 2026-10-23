@@ -1,4 +1,4 @@
-import { mkdir, readFile } from "node:fs/promises";
+import { lstat, mkdir, readFile, writeFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import path from "node:path";
 import { isMap, isSeq, parseDocument } from "yaml";
@@ -8,7 +8,33 @@ import { writeFileAtomic } from "@deepseek-ai/dsh-atomic-write";
 import { LocalCredentialProvider } from "@deepseek-ai/dsh-credentials-local";
 import { createLaunchEnvironmentSnapshot } from "@deepseek-ai/dsh-launch-environment";
 import { projectEnvironment } from "./desktop-environment.mjs";
-import { DESKTOP_MODEL_ROUTES, DESKTOP_PROFILE_DEFAULTS, DESKTOP_PROFILE_PATCH } from "./desktop-profile-bundle.mjs";
+import { DESKTOP_MODEL_ROUTES, LEGACY_DESKTOP_MODEL_ROUTES, DESKTOP_PROFILE_DEFAULTS, DESKTOP_PROFILE_PATCH } from "./desktop-profile-bundle.mjs";
+
+import { assertNoLinks, sha256 } from "./desktop-distribution.mjs";
+
+/** Carry a user-edited pre-0.2 route catalog into the bundle once; untouched defaults are simply replaced. */
+export async function adoptLegacyDesktopRoutes(harnessHome, legacyHomeFiles) {
+  const legacyPath = path.join(harnessHome, LEGACY_DESKTOP_MODEL_ROUTES);
+  const target = path.join(harnessHome, DESKTOP_MODEL_ROUTES);
+  await assertNoLinks(legacyPath);
+  await assertNoLinks(target);
+  const legacy = await readFile(legacyPath).catch(error => { if (error.code === "ENOENT") return null; throw error; });
+  if (!legacy || await lstat(target).catch(() => null)) return;
+  const stateFile = path.join(harnessHome, ".openquantum-home.json");
+  await assertNoLinks(stateFile);
+  const state = await readFile(stateFile, "utf8").then(JSON.parse).catch(error => { if (error.code === "ENOENT") return { files: legacyHomeFiles }; throw error; });
+  const recorded = state.files?.[LEGACY_DESKTOP_MODEL_ROUTES];
+  if (recorded && sha256(legacy) === recorded) return;
+  const routes = document(legacy.toString("utf8"));
+  if (!isSeq(routes.contents) || routes.contents.items.some(row => !isMap(row))) throw new Error("Desktop model routes must be a YAML sequence of plugin rows");
+  const oldRows = routes.contents.items.filter(row => row.get("id") === "openquantum-llm-pi-ai");
+  const nativeRows = routes.contents.items.filter(row => row.get("id") === "llm-pi-ai");
+  if (oldRows.length > 1 || nativeRows.length > 1 || (oldRows.length && nativeRows.length)) throw new Error("Desktop model route migration is ambiguous; reconcile the llm-pi-ai rows before launching");
+  // Rename only the owned row, not provider names, expressions or credential refs.
+  if (oldRows.length) oldRows[0].set("id", "llm-pi-ai");
+  await mkdir(path.dirname(target), { recursive: true });
+  await writeFile(target, oldRows.length ? routes.toString({ lineWidth: 0 }) : legacy, { mode: 0o600, flag: "wx" });
+}
 
 // Semantic fingerprints of the shipped 0.8.1 example providers. Comparing the
 // whole object preserves partial user edits to models, names or credential refs.

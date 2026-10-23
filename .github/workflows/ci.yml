@@ -89,7 +89,10 @@ jobs:
           trap cleanup EXIT
 
           for attempt in $(seq 1 90); do
-            if [ "$(docker inspect --format '{{.State.Health.Status}}' openquantum-ci)" = "healthy" ]; then
+            # HTTP health confirms the listener, not the 0.2 loader's startup audit.
+            # Wait for its authenticated URL too; never print the token here.
+            if [ "$(docker inspect --format '{{.State.Health.Status}}' openquantum-ci)" = "healthy" ] &&
+              docker logs openquantum-ci 2>&1 | grep -E 'https?://[^[:space:]]+/\?token=[A-Za-z0-9_-]+' > /dev/null; then
               break
             fi
             if [ "$(docker inspect --format '{{.State.Running}}' openquantum-ci)" != "true" ]; then

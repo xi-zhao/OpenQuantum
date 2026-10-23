@@ -12,9 +12,9 @@ import { migrateDesktopPreparation } from "./desktop-preparation-migration.mjs";
 import { desktopPreset } from "./desktop-profile-config.mjs";
 import { writeManagedHomeFiles } from "./managed-home-files.mjs";
 import { desktopEnvironmentDefaults, persistDesktopCredentials } from "./desktop-environment.mjs";
-import { assertNoLinks, sha256 } from "./desktop-distribution.mjs";
-import { desktopModelRoutes, desktopModelDefault, clearRemovedDesktopModelSelection } from "./desktop-model-routes.mjs";
-import { DESKTOP_BUNDLE_PATCHES, DESKTOP_MODEL_ROUTES, LEGACY_DESKTOP_MODEL_ROUTES, DESKTOP_PROFILE_BUNDLE, DESKTOP_PROFILE_DEFAULTS, DESKTOP_PROFILE_DIRECTORY, DESKTOP_PROFILE_PATCH, desktopHomePatchMigration, desktopProfileManifest } from "./desktop-profile-bundle.mjs";
+import { assertNoLinks } from "./desktop-distribution.mjs";
+import { adoptLegacyDesktopRoutes, desktopModelRoutes, desktopModelDefault, clearRemovedDesktopModelSelection } from "./desktop-model-routes.mjs";
+import { DESKTOP_BUNDLE_PATCHES, DESKTOP_MODEL_ROUTES, DESKTOP_PROFILE_BUNDLE, DESKTOP_PROFILE_DEFAULTS, DESKTOP_PROFILE_DIRECTORY, DESKTOP_PROFILE_PATCH, desktopHomePatchMigration, desktopProfileManifest } from "./desktop-profile-bundle.mjs";
 import { MODEL_ROUTES_BUNDLE, bundleRows, migrateLegacyModelSettings, prepareModelProfiles, presetDeclarations } from "./prepare-model-profiles.mjs";
 
 const extensions = {
@@ -25,21 +25,6 @@ const extensions = {
   locales: ["runtime/openquantum/web-locales", "harness-web-locales"],
   updates: ["runtime/openquantum/web-updates", "harness-web-updates"],
 };
-
-/** Carry a user-edited pre-0.2 route catalog into the bundle once; untouched defaults are simply replaced. */
-async function adoptLegacyDesktopRoutes(harnessHome, legacyHomeFiles) {
-  const legacyPath = path.join(harnessHome, LEGACY_DESKTOP_MODEL_ROUTES);
-  const target = path.join(harnessHome, DESKTOP_MODEL_ROUTES);
-  await assertNoLinks(legacyPath);
-  const legacy = await readFile(legacyPath).catch(error => { if (error.code === "ENOENT") return null; throw error; });
-  if (!legacy || await lstat(target).catch(() => null)) return;
-  const stateFile = path.join(harnessHome, ".openquantum-home.json");
-  const state = await readFile(stateFile, "utf8").then(JSON.parse).catch(error => { if (error.code === "ENOENT") return { files: legacyHomeFiles }; throw error; });
-  const recorded = state.files?.[LEGACY_DESKTOP_MODEL_ROUTES];
-  if (recorded && sha256(legacy) === recorded) return;
-  await mkdir(path.dirname(target), { recursive: true });
-  await writeFile(target, legacy, { mode: 0o600, flag: "wx" });
-}
 
 /** The upstream runtime owns its Profile; OpenQuantum contributes dependencies and patches. */
 export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot, profileName = "web", legacyHomeFiles = {} }) {
