@@ -37,6 +37,26 @@ const patches = {
   ],
   "instrumentation.ts": [],
   "app/page.tsx": [
+    ["import { useImportPptx } from '@/lib/import/use-import-pptx';", "import { useImportPptx } from '@/lib/import/use-import-pptx';\nimport { embedPptxMedia, savePptxClassroom } from '@/lib/import/openquantum-pptx-classroom';"],
+    ["// PPTX import is still scaffolding: `useImportPptx` has no `onImported` consumer\n// yet, so the flow only logs the parsed slides. Hide the entry point behind a\n// flag until it's wired end-to-end, so the UI doesn't expose a no-op button.", "// PPTX imports persist complete classroom documents before reporting success."],
+    ["  const handleImportSuccess = async (importedStageId: string) => {\n    const folderId = importFolderRef.current;\n    importFolderRef.current = undefined;", "  const pptxImportFolderRef = useRef<string | undefined>(undefined);\n  const handleImportSuccess = async (importedStageId: string, folderId?: string) => {"],
+    ["useImportClassroom(handleImportSuccess)", `useImportClassroom((id) => {
+    const folderId = importFolderRef.current;
+    importFolderRef.current = undefined;
+    return handleImportSuccess(id, folderId);
+  })`],
+    ["  } = useImportPptx();", `  } = useImportPptx({
+    upload: embedPptxMedia,
+    onImported: async (slides, filename) => {
+      const id = await savePptxClassroom(slides, filename, (index) => t('import.pptxPage', { index }));
+      await handleImportSuccess(id, pptxImportFolderRef.current);
+    },
+  });
+  const triggerPptxImport = () => {
+    pptxImportFolderRef.current = currentFolderId;
+    triggerPptxFileSelect();
+  };`],
+    ["onClick={triggerPptxFileSelect}", "onClick={triggerPptxImport}"],
     ["'use client';", "'use client';\n\nimport { LearningWordmark } from '@/components/openquantum-wordmark';"],
     ["const log = createLogger('Home');", "import { syncQuantumLibrary } from '@/components/openquantum-bridge';\n\nconst log = createLogger('Home');"],
     ["void Promise.all([loadClassrooms(), loadFolders()]).finally(() => setHydrated(true));", "void syncQuantumLibrary().catch((error) => toast.error(error.message)).then(() => Promise.all([loadClassrooms(), loadFolders()])).finally(() => setHydrated(true));"],
@@ -49,6 +69,21 @@ const patches = {
     ['<div className="w-[1px] h-4 bg-gray-200 dark:bg-gray-700" />\n\n        {/* Settings Button */}', '<div data-oq-theme-selector className="w-[1px] h-4 bg-gray-200 dark:bg-gray-700" />\n\n        {/* Settings Button */}'],
     ['className="absolute inset-0 overflow-hidden pointer-events-none"', 'className="oq-learning-atmosphere absolute inset-0 overflow-hidden pointer-events-none"'],
     ['className="text-sm text-muted-foreground/60 mb-8"', 'className="oq-learning-slogan text-sm text-muted-foreground/60 mb-8"'],
+  ],
+  "lib/import/use-import-pptx.ts": [
+    ["   * Until a caller wires this, the hook just logs the slides for inspection.", "   * Await the consumer's durable save before reporting success."],
+    ["onImported?: (slides: Slide[]) => void;", "onImported?: (slides: Slide[], filename: string) => void | Promise<void>;"],
+    ["      try {\n        // Static URL", "      let saving = false;\n      try {\n        if (!onImported) throw new Error('PPTX import has no persistence consumer.');\n        // Static URL"],
+    ["        onImported?.(slides);", "        if (!slides.length) throw new Error('PPTX contains no slides.');\n        saving = true;\n        toast.loading(t('import.writingCourse'), { id: toastId });\n        await onImported(slides, file.name);"],
+    ["t(notDeployed ? 'import.error.parserUnavailable' : 'import.error.invalidPptx')", "t(notDeployed ? 'import.error.parserUnavailable' : saving ? 'import.error.savePptx' : 'import.error.invalidPptx')"],
+  ],
+  "lib/i18n/locales/zh-CN.json": [
+    ['"pptxSuccess": "PPTX 解析成功（共 {{count}} 页，输出已打印到控制台）",', '"pptxSuccess": "PPTX 已导入并保存（共 {{count}} 页）",\n    "pptxPage": "第 {{index}} 页",'],
+    ['"invalidPptx": "PPTX 解析失败，请检查文件是否有效。",', '"invalidPptx": "PPTX 解析失败，请检查文件是否有效。",\n      "savePptx": "PPTX 未能保存为课程，请检查存储连接后重新导入。",'],
+  ],
+  "lib/i18n/locales/en-US.json": [
+    ['"pptxSuccess": "PPTX parsed successfully ({{count}} slides, output logged to console)",', '"pptxSuccess": "PPTX imported and saved ({{count}} slides)",\n    "pptxPage": "Page {{index}}",'],
+    ['"invalidPptx": "Failed to parse PPTX. Please check the file is valid.",', '"invalidPptx": "Failed to parse PPTX. Please check the file is valid.",\n      "savePptx": "Could not save the PPTX as a classroom. Check the storage connection and import again.",'],
   ],
   "app/layout.tsx": [
     ["title: 'OpenMAIC'", "title: 'Quantum Learning · OpenQuantum'"],
@@ -223,6 +258,7 @@ export async function applyOpenMaicUiOverlay(root) {
     writes.push([name, expected]);
   }
   writes.push(["components/openquantum-bridge.tsx", await readFile(path.join(root, "runtime/openquantum/openmaic-ui/bridge.tsx"), "utf8")]);
+  writes.push(["lib/import/openquantum-pptx-classroom.ts", await readFile(path.join(root, "runtime/openquantum/openmaic-ui/pptx-classroom.ts"), "utf8")]);
   writes.push(["components/openquantum-wordmark.tsx", await readFile(path.join(root, "runtime/openquantum/openmaic-ui/wordmark.tsx"), "utf8")]);
   writes.push(["components/openquantum-use-host-theme.ts", await readFile(path.join(root, "runtime/openquantum/openmaic-ui/use-host-theme.ts"), "utf8")]);
   writes.push(["components/openquantum-use-host-locale.ts", await readFile(path.join(root, "runtime/openquantum/openmaic-ui/use-host-locale.ts"), "utf8")]);
