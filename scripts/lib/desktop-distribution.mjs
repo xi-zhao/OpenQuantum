@@ -2,6 +2,7 @@ import { createHash, randomUUID } from "node:crypto";
 import { lstat, mkdir, readFile, rename, rm, symlink, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { assertCompatibleHarnessHome } from "./harness-home-compatibility.mjs";
+import { compareVersions, parseVersion } from "../../src/updates/release.mjs";
 
 const STATE = ".openquantum/desktop-distribution.json";
 export const sha256 = (data) => createHash("sha256").update(data).digest("hex");
@@ -63,7 +64,7 @@ function editable(filename) {
 }
 
 function validateManifest(manifest) {
-  if (manifest.schemaVersion !== 1 || typeof manifest.version !== "string"
+  if (manifest.schemaVersion !== 1 || !parseVersion(manifest.version)
     || !manifest.files || typeof manifest.files !== "object" || Array.isArray(manifest.files)) {
     throw new Error("Unsupported Desktop distribution manifest");
   }
@@ -75,18 +76,29 @@ function validateManifest(manifest) {
   }
 }
 
+/** Also used before staging a package; repeat immediately before project writes. */
+export async function assertDesktopUpgrade(projectRoot, version) {
+  if (!parseVersion(version)) throw new Error("Unsupported Desktop distribution version");
+  const statePath = path.join(projectRoot, STATE);
+  await assertNoLinks(statePath);
+  const previous = await readFile(statePath, "utf8").then(JSON.parse).catch((error) => {
+    if (error.code === "ENOENT") return { schemaVersion: 1, version, files: {} };
+    throw error;
+  });
+  validateManifest(previous);
+  if (compareVersions(version, previous.version) < 0) {
+    throw new Error(`Refusing to downgrade OpenQuantum from ${previous.version} to ${version}; existing programs, dependencies and data were not changed`);
+  }
+  return previous;
+}
+
 /** Refresh only distributed files; preserve sessions, credentials and user extensions. */
 export async function installDesktopDistribution({ payload, projectRoot }) {
   await assertCompatibleHarnessHome(path.join(projectRoot, ".openquantum/dsh"));
   const next = JSON.parse(await readFile(path.join(payload, "distribution.json"), "utf8"));
   validateManifest(next);
+  const previous = await assertDesktopUpgrade(projectRoot, next.version);
   const statePath = path.join(projectRoot, STATE);
-  await assertNoLinks(statePath);
-  const previous = await readFile(statePath, "utf8").then(JSON.parse).catch((error) => {
-    if (error.code === "ENOENT") return { schemaVersion: 1, version: "", files: {} };
-    throw error;
-  });
-  validateManifest(previous);
   const changes = [];
   const preserved = [];
   // Validate the entire payload and update plan before touching an existing install.

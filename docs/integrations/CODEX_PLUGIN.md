@@ -31,8 +31,10 @@ SDK workbench 和领域 Skill 支持通过宿主代码工具编写原生程序�
 
 `plugin.json` 使用 Agent Plugins 1.0，并保留 `.codex-plugin/plugin.json` 兼容入口。插件身份仍为
 `openquantum@personal`。左侧“…”菜单的全局入口由 `open_openquantum_settings` 提供，名称为
-“OpenQuantum 设置”；与插件设置入口共享 `ui://openquantum/settings/<bundle SHA-256>.html`。
-本次保留 main 的 `global` 与旧 `settings` 入口声明；入口协议清理不包含在 Desktop PR 中。
+“OpenQuantum 设置”，打开现有的 `ui://openquantum/settings/<bundle SHA-256>.html` 自定义设置页。
+仅声明 `global` 入口；按 [OpenAI MCP Extensions 0.2.0](https://github.com/openai/mcp-extensions/blob/0d606217705e0e71eb21fff009619b67b80611dc/CHANGELOG.md)
+移除的旧 `type: "settings"` 入口不再声明。宿主插件详情页中的原生设置使用独立的 `openai/settings`
+协议；当前自定义设置页不依赖它，分类、搜索、能力开关与凭据卡片保持原有交互。
 资源摘要只标识页面包，排除进程专属的回环端口，允许宿主在另一个 MCP 进程读取。服务端将旧的
 `settings/<64位摘要>.html` 与 `ui://openquantum/workbench.html` 作为当前页面的兼容入口，其他 URI 仍拒绝。
 只宣告当前入口，品牌素材复用现有 OpenQuantum 标识。
@@ -114,6 +116,11 @@ Pasqal 可直接填写 Token 或用户名和密码，固定云端工作流从凭
 自定义连接单次目录查询 15 秒、调用 180 秒、结果 2 MiB；最多同时执行两个操作。
 内置工具使用同样的调用预算，支持 `execution` 时最多两个数值线程。需要独立 Python/SDK 的工具沿用显式
 setup 规则，插件安装不会批量下载数值环境。
+
+凭据入口共享 [`createCredentialRequests`](../../src/settings/codex/credential-requests.mjs) 管理临时授权：
+签发、按作用域读取、同步消费、过期回收和关闭失效。加密通道独立持有一组请求；独立窗口与兼容回环表单
+共用另一组，每组最多 32 个。模块只保存授权元数据，不保存密钥；JWE、HTTP 校验和凭据写入仍由各自模块负责。
+独立窗口查看字段状态不会消费授权，实际保存前重新检查有效期；窗口关闭后不能再次签发授权。
 
 ## 按需安装、配置与启动
 

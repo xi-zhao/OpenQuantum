@@ -6,6 +6,7 @@ import { randomUUID } from "node:crypto";
 import { fixture } from "./fixtures/codex-settings.mjs";
 import { createCredentialWindow } from "../src/settings/codex/credential-window.mjs";
 import { createCredentialBridge } from "../src/settings/codex/credential-bridge.mjs";
+import { createCredentialRequests } from "../src/settings/codex/credential-requests.mjs";
 import { serviceCredentialRef, serviceValues, serviceById } from "../src/settings/codex/service-catalog.mjs";
 import { settingsRequest } from "../runtime/chatgpt/server.mjs";
 import { withLock } from "../src/settings/codex/storage.mjs";
@@ -119,10 +120,10 @@ test("failures redact store errors, do not replay writes, and reject oversized i
 });
 
 test("expired requests cannot write after waiting for another settings writer", async t => {
-  const f = await setup(t), sessions = new Map();
-  const bridge = createCredentialBridge({ ...f, sessions, getOrigin: () => f.window.origin });
+  t.mock.timers.enable({ apis: ["Date"], now: Date.now() });
+  const f = await setup(t), requests = createCredentialRequests();
+  const bridge = createCredentialBridge({ ...f, requests, getOrigin: () => f.window.origin });
   const permission = bridge.issue({ id, field, origin, operation: "set" });
-  const session = sessions.get(permission.nonce);
   let entered, release;
   const ready = new Promise(resolve => { entered = resolve; });
   const held = withLock(f.settings.file, async () => { entered(); await new Promise(resolve => { release = resolve; }); });
@@ -131,13 +132,13 @@ test("expired requests cannot write after waiting for another settings writer", 
   request.method = "POST"; request.headers = { origin, "content-type": "application/json", "x-openquantum-capability": permission.nonce };
   let response;
   const pending = bridge.handle(request, (status, body) => { response = { status, body }; });
-  assert.equal(sessions.size, 0, "consumed synchronously before reading body");
-  session.expires = Date.now() - 1;
+  let replay;
+  await bridge.handle(request, status => { replay = status; });
+  assert.equal(replay, 403, "consumed synchronously before reading body");
+  t.mock.timers.tick(10 * 60 * 1000 + 1);
   release(); await held; await pending;
   assert.equal(response.status, 403);
   assert.equal(f.secrets.size, 0);
-  for (let i = 0; i < 32; i++) bridge.issue({ id, field, origin, operation: "set" });
-  assert.throws(() => bridge.issue({ id, field, origin, operation: "set" }), /过多/);
 });
 
 test("inline writes survive a store adapter restart in an isolated native Keyring namespace", { skip: process.env.OPENQUANTUM_TEST_KEYCHAIN !== "1" }, async t => {

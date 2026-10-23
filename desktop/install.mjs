@@ -13,9 +13,10 @@ const dataRoot = args[0] || (process.platform === "darwin" ? path.join(homedir()
 const manifest = JSON.parse(await readFile(path.join(source, "openquantum/distribution.json"), "utf8"));
 const projectRoot = path.join(dataRoot, "project");
 const { assertCompatibleHarnessHome } = await import(new URL("./openquantum/scripts/lib/harness-home-compatibility.mjs", import.meta.url));
-const { desktopPayloadIdentity, assertNoLinks } = await import(new URL("./openquantum/scripts/lib/desktop-distribution.mjs", import.meta.url));
+const { desktopPayloadIdentity, assertNoLinks, assertDesktopUpgrade } = await import(new URL("./openquantum/scripts/lib/desktop-distribution.mjs", import.meta.url));
 const { installDesktopBranding } = await import(new URL("./openquantum/scripts/lib/desktop-branding.mjs", import.meta.url));
 const identity = desktopPayloadIdentity(manifest);
+await assertDesktopUpgrade(projectRoot, manifest.version);
 await assertCompatibleHarnessHome(path.join(projectRoot, ".openquantum/dsh"));
 const payloadRoot = path.join(dataRoot, "versions", identity);
 const staging = `${payloadRoot}.${randomUUID()}.tmp`;

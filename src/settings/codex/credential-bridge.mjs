@@ -1,4 +1,3 @@
-import { randomBytes } from "node:crypto";
 import { serviceSupported, serviceById } from "./service-catalog.mjs";
 import { writeCredentialField } from "./credential-field-write.mjs";
 
@@ -14,7 +13,7 @@ function allowedOrigin(value) {
   } catch { return false; }
 }
 
-export function createCredentialBridge({ settings, credentials, sessions, getOrigin }) {
+export function createCredentialBridge({ settings, credentials, requests, getOrigin }) {
   return {
     issue({ id, field, operation, origin }) {
       const service = serviceById(id);
@@ -22,10 +21,7 @@ export function createCredentialBridge({ settings, credentials, sessions, getOri
           !service.fields.some(item => item.name === field) || !["set", "remove"].includes(operation) || !allowedOrigin(origin)) {
         throw new Error("凭据配置请求无效");
       }
-      for (const [key, value] of sessions) if (value.expires < Date.now()) sessions.delete(key);
-      if (sessions.size >= 32) throw new Error("凭据请求过多，请稍后重试");
-      const nonce = randomBytes(32).toString("hex");
-      sessions.set(nonce, { kind: "field", id, field, operation, origin, expires: Date.now() + 10 * 60 * 1000 });
+      const nonce = requests.issue({ kind: "field", id, field, operation, origin });
       return { url: `${getOrigin()}/credential-field`, nonce };
     },
     async handle(request, reply) {
@@ -34,7 +30,7 @@ export function createCredentialBridge({ settings, credentials, sessions, getOri
       if (!allowedOrigin(origin)) return reply(403, { message: "无效来源" });
       if (request.method === "OPTIONS") {
         const headers = (request.headers["access-control-request-headers"] ?? "").split(",").map(value => value.trim().toLowerCase());
-        if (![...sessions.values()].some(session => session.kind === "field" && session.origin === origin && session.expires >= Date.now()) ||
+        if (!requests.has({ kind: "field", origin }) ||
             request.headers["access-control-request-method"] !== "POST" || !headers.includes("x-openquantum-capability") ||
             headers.some(value => !["content-type", "x-openquantum-capability"].includes(value))) return reply(403, { message: "无效请求" });
         return reply(204, "", "text/plain", { ...cors, "Access-Control-Allow-Methods": "POST",
@@ -42,14 +38,13 @@ export function createCredentialBridge({ settings, credentials, sessions, getOri
           ...(request.headers["access-control-request-private-network"] === "true" ? { "Access-Control-Allow-Private-Network": "true" } : {}) });
       }
       const nonce = request.headers["x-openquantum-capability"];
-      const session = sessions.get(nonce);
-      if (request.method !== "POST" || !request.headers["content-type"]?.startsWith("application/json") ||
-          !session || session.kind !== "field" || session.expires < Date.now() || session.origin !== origin) {
+      if (request.method !== "POST" || !request.headers["content-type"]?.startsWith("application/json")) {
         return reply(403, { message: "保存请求已失效，请重试" });
       }
       // Consume before any await, including body streaming. Parallel replay and
       // failed writes cannot reuse this permission. No cookies or secret in URLs.
-      sessions.delete(nonce);
+      const session = requests.consume(nonce, { kind: "field", origin });
+      if (!session) return reply(403, { message: "保存请求已失效，请重试" });
       const respond = (status, data) => reply(status, data, "application/json", cors);
       try {
         let body = "";

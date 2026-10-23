@@ -19,21 +19,21 @@ OpenQuantum ist eine Open-Source-KI-Plattform für die Quantenforschung, offen f
 
 Beginnen Sie mit einer Forschungsfrage, einem Paper oder einem vorhandenen Programm und beziehen Sie KI in die Untersuchung ein. Programme, Parameter und Prüfungen bleiben erhalten, sodass jede Untersuchung zum Ausgangspunkt der nächsten wird.
 
-Wählen Sie den Einstieg, der zu Ihnen passt; beide nutzen dieselben Fachfähigkeiten. Das **[Codex-Plugin](../integrations/CODEX_PLUGIN.md)** bringt Quanten-Skills und wissenschaftliche Tools in native Codex-Unterhaltungen, mit einer Einstellungsseite für Fähigkeitsschalter, MCP-Verbindungen und Tokens. **Desktop** enthält die Forschungsumgebung und die separate Anwendung Quantum Learning; die Modelldienste konfigurieren Sie selbst.
+Wählen Sie den Zugang, der zu Ihnen passt; beide nutzen dieselben Fachfunktionen. Das **[Codex-Plugin](../integrations/CODEX_PLUGIN.md)** bringt Quanten-Skills und wissenschaftliche Tools in native Codex-Unterhaltungen, mit einer Einstellungsseite für Funktionsschalter, MCP-Verbindungen und Tokens. **Desktop** enthält die Forschungs-Workbench und die separate Anwendung Quantum Learning; die Modelldienste konfigurieren Sie selbst.
 
 **[Codex-Plugin installieren](#codex)** · [Desktop installieren](#desktop-installer) · [Berechnungen und Ergebnisse ansehen](#use-and-inspect-results) · [Website besuchen](https://xi-zhao.github.io/OpenQuantum/)
 
-**Beginnen Sie mit den gemessenen Fällen:** Ein [Pauli-Kommutator mit PennyLane](#pennylane-rust-case) läuft als vollständiger Aufruf **5.09×** schneller, eine [Wigner-Funktion mit QuTiP](#qutip-rust-case) **5.69×** schneller. Für beide liegen Leistungsvergleiche, Ergebnisprüfungen und Reproduktionsprotokolle vor.
+**Beginnen Sie mit den gemessenen Fällen:** Ein [Pauli-Kommutator mit PennyLane](#pennylane-rust-case) läuft als vollständiger Aufruf **5,09×** schneller, eine [Wigner-Funktion mit QuTiP](#qutip-rust-case) **5,69×** schneller. Für beide liegen Leistungsvergleiche, Ergebnisprüfungen und Reproduktionsprotokolle vor.
 
 **Aktuelle Version 0.8.4:** [Desktop-Download und Versionshinweise](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.4) · [Codex-Plugin-Download und Versionshinweise](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.4). Beide haben dieselbe Produktversion.
 
-- **Fähigkeiten leichter finden:** Tools, MCP und Skills sind in acht Nutzungskategorien gegliedert, mit Suche und Statusfiltern.
-- **Ein Einstieg mit eigener Marke:** `OpenQuantum.app` auf dem Mac und `OpenQuantum.lnk` unter Windows tragen das OpenQuantum-Symbol; die ursprüngliche Oberfläche von DSH Desktop, Quantum Learning und der Update-Einstieg bleiben erhalten.
+- **Funktionen leichter finden:** Tools, MCP und Skills sind in acht Nutzungskategorien gegliedert, mit Suche und Statusfiltern.
+- **Ein Startsymbol mit eigener Marke:** `OpenQuantum.app` auf dem Mac und `OpenQuantum.lnk` unter Windows tragen das OpenQuantum-Symbol; die ursprüngliche Oberfläche von DSH Desktop, Quantum Learning und die Update-Funktion bleiben erhalten.
 
 <p align="center">
   <a href="#why-openquantum">Warum OpenQuantum</a> ·
   <a href="#optimization-cases">Gemessene Optimierungen</a> ·
-  <a href="#what-you-can-do">Fähigkeiten</a> ·
+  <a href="#what-you-can-do">Funktionen</a> ·
   <a href="#codex">Codex-Plugin</a> ·
   <a href="#quick-start">Schnellstart</a> ·
   <a href="#use-and-inspect-results">Ergebnisse</a> ·
@@ -44,7 +44,7 @@ Wählen Sie den Einstieg, der zu Ihnen passt; beide nutzen dieselben Fachfähigk
 </p>
 
 <p align="center">
-  <img src="../images/openquantum-desktop-20261013.jpg" width="100%" alt="OpenQuantum-Arbeitsbereich im originalen DSH Desktop: Marke, neue Sitzung, Quantum Learning und Hinweis zum Hinzufügen eines eigenen Modells" /><br />
+  <img src="../images/openquantum-desktop-20261013.jpg" width="100%" alt="OpenQuantum-Workbench im originalen DSH Desktop: Marke, neue Sitzung, Quantum Learning und Hinweis zum Hinzufügen eines eigenen Modells" /><br />
   <sub>Die vertraute Originaloberfläche von Desktop. Fügen Sie in den Einstellungen Ihren eigenen Modelldienst hinzu, um eine neue Sitzung zu starten.</sub>
 </p>
 
@@ -69,7 +69,7 @@ Von Quantenalgorithmen und Schaltungssimulation bis zu Quantenchemie, Vielteilch
 
 ### Schnellere Berechnungen lassen mehr Ideen zu
 
-Wir optimieren fortlaufend zentrale Rechenschritte, um Wartezeiten zu verkürzen und Raum für mehr Vergleiche zu schaffen. In gezielten Optimierungsfällen wurden die vollständigen Aufrufe für einen [Pauli-Kommutator mit PennyLane](#pennylane-rust-case) und eine [Wigner-Funktion mit QuTiP](#qutip-rust-case) **5.09×** beziehungsweise **5.69×** schneller. Beide Ergebnisse wurden mit der ursprünglichen Bibliothek und unabhängigen Referenzrechnungen verglichen.
+Wir optimieren fortlaufend zentrale Rechenschritte, um Wartezeiten zu verkürzen und Raum für mehr Vergleiche zu schaffen. In gezielten Optimierungsfällen wurden die vollständigen Aufrufe für einen [Pauli-Kommutator mit PennyLane](#pennylane-rust-case) und eine [Wigner-Funktion mit QuTiP](#qutip-rust-case) **5,09×** beziehungsweise **5,69×** schneller. Beide Ergebnisse wurden mit der ursprünglichen Bibliothek und unabhängigen Referenzrechnungen verglichen.
 
 ### Offene Zusammenarbeit lässt Forschungsfähigkeiten wachsen
 
@@ -86,13 +86,13 @@ Wir binden fortlaufend wertvolle Open-Source-Projekte und veröffentlichte Metho
 | **Lernen durch Ausprobieren** | Sie verstehen die Konzepte, wissen aber noch nicht, wie man einen Algorithmus ausführt, Eingaben ändert und Ergebnisse deutet. | Führen Sie Beispiele aus, ändern Sie Parameter und nutzen Sie Anleitungen und verfügbare Referenzergebnisse, um zu sehen, warum eine Methode greift und wo sie an Grenzen stößt. Siehe [Algorithmusbeispiele](#algorithm-learning-and-method-comparison). |
 | **Forschungssoftware und Ökosysteme** | Sie haben eine veröffentlichte Methode, Forschungscode oder ein SDK und brauchen Workflows, Schnittstellen und Beispiele, damit andere es nutzen können. | Beschreiben Sie die Methode als Skill, binden Sie ausführbare Aktionen als Tools an oder integrieren Sie eine vollständige Anwendung, mit erhaltenen Quellen und Urheberangaben. Siehe [Plattform erweitern](#extend-the-platform). |
 
-### Open Source: Die Fähigkeit bleibt in Ihrer Hand
+### Open Source: Die Kontrolle bleibt in Ihrer Hand
 
 Sie können den Code der Plattform und der Integrationen lesen, nachvollziehen, woher jede Methode stammt, und Ihre eigene Kombination unter den geltenden Lizenzen ändern, bereitstellen und pflegen. Modelldienste und Rechen-Backends wählen Sie getrennt, und Sie entscheiden, ob Sie Forschungsdaten teilen. Autorinnen und Autoren, Lizenzen und Beiträge bleiben sichtbar, sodass bestehende Arbeit mit dem Projekt weiterlebt.
 
 ### Umfassend: mehr Methoden für eine Frage
 
-OpenQuantum vereint Software und Forschungsmethoden für Algorithmen, Kompilierung, Simulation, Quanteninformation, Chemie und Vielteilchenphysik, Optimierung, Fehlerkorrektur, Dynamik, Steuerung und Netzwerke. Von Anleitungen und offenen Beispielen bis zu nativen SDKs und Rechen-Tools wählen Sie, was eine Aufgabe braucht, oder kombinieren Werkzeuge zu neuen Vergleichen. Eingaben, Vorbereitung und unterstützter Umfang stehen im [Fähigkeitskatalog](#what-you-can-do).
+OpenQuantum vereint Software und Forschungsmethoden für Algorithmen, Kompilierung, Simulation, Quanteninformation, Chemie und Vielteilchenphysik, Optimierung, Fehlerkorrektur, Dynamik, Steuerung und Netzwerke. Von Anleitungen und offenen Beispielen bis zu nativen SDKs und Rechen-Tools wählen Sie, was eine Aufgabe braucht, oder kombinieren Werkzeuge zu neuen Vergleichen. Eingaben, Vorbereitung und unterstützter Umfang stehen im [Funktionskatalog](#what-you-can-do).
 
 Optimieren Sie zum Beispiel eine Schaltung mit PyZX, prüfen Sie die Äquivalenz mit QCEC und untersuchen Sie ihr Verhalten unter Rauschen mit einem Rauschsimulator, um zu klären, ob eine einfachere Schaltung auch besser abschneidet. Auch kombinierte Werkzeuge erfordern abgestimmte Modelle, Einheiten, Bitreihenfolgen und Budgets; den aktuellen Umfang beschreibt der [Rechenleitfaden](../integrations/SCALABLE_BRIDGES.md).
 
@@ -108,42 +108,42 @@ Programme, Ergebnisse und zutreffende Prüfungen werden protokolliert, sodass sp
 
 Diese gesammelte Arbeit legt auch die Grundlage dafür, [die nächste Generation von Forschungsfähigkeiten zu verbessern](#research-that-improves-how-research-is-done), wie in der langfristigen Roadmap beschrieben.
 
-**[Erste Aufgabe ausführen](#quick-start)** · [Eigene Fähigkeit einbringen](#extend-the-platform)
+**[Erste Aufgabe ausführen](#quick-start)** · [Eigene Methoden einbringen](#extend-the-platform)
 
 <a id="optimization-cases"></a>
 <a id="pennylane-rust-case"></a>
 
-## Gemessener Fall: eine 5.09× schnellere PennyLane-Berechnung
+## Gemessener Fall: eine 5,09× schnellere PennyLane-Berechnung
 
 **Eine Forschungsaufgabe stellen und ein lauffähiges, prüfbares Ergebnis erhalten.** Wir haben OpenQuantum eine Aufgabe gegeben: eine Forschungsberechnung in PennyLane gezielt optimieren, die tatsächliche Beschleunigung messen und die Ergebnisse prüfen. Am 2026-10-20 wurde das Experiment in Codex mit OpenQuantum 0.8.4 abgeschlossen; geliefert wurden ein optimiertes Programm, ein Leistungsvergleich, Korrektheitsprüfungen und Reproduktionsprotokolle.
 
 | Berechnung | Vollständiger Aufruf |
 | --- | ---: |
-| Natives PennyLane | 30.62 ms |
-| Nach der Optimierung durch OpenQuantum | **6.02 ms** |
+| Natives PennyLane | 30,62 ms |
+| Nach der Optimierung durch OpenQuantum | **6,02 ms** |
 
-**5.09× schneller im vollständigen Aufruf.** Gemessen wurde eine Pauli-Kommutatorberechnung in einem lokalen Modell mit 32 Qubits. Die Zeiten sind Mediane aus neun Warmläufen auf einem Apple M4 mit PennyLane 0.45.1. Sie enthalten die Ein- und Ausgabekonvertierung, nicht aber Umgebungsvorbereitung und Kompilierung.
+**5,09× schneller im vollständigen Aufruf.** Gemessen wurde eine Pauli-Kommutatorberechnung in einem lokalen Modell mit 32 Qubits. Die Zeiten sind Mediane aus neun Warmläufen auf einem Apple M4 mit PennyLane 0.45.1. Sie enthalten die Ein- und Ausgabekonvertierung, nicht aber Umgebungsvorbereitung und Kompilierung.
 
-**Auch die Ergebnisse wurden geprüft.** Die Ausgaben für alle neun Benchmark-Eingaben stimmen Term für Term exakt mit den Referenzausgaben von PennyLane überein. Unabhängige vollständige Matrixrechnungen prüften **4,368 Paare von Pauli-Wörtern** und 40 zufällige Operatorsummen mit komplexen Koeffizienten; der maximale absolute Matrixfehler beträgt **1.42×10⁻¹⁴**. Berechnungen und Zeitmessungen wurden unabhängig begutachtet; alle **405 rohen Zeitmessungen** sowie vollständige Ein- und Ausgaben sind archiviert.
+**Auch die Ergebnisse wurden geprüft.** Die Ausgaben für alle neun Benchmark-Eingaben stimmen Term für Term exakt mit den Referenzausgaben von PennyLane überein. Unabhängige vollständige Matrixrechnungen prüften **4368 Paare von Pauli-Strings** und 40 zufällige Operatorsummen mit komplexen Koeffizienten; der maximale absolute Matrixfehler beträgt **1,42 · 10⁻¹⁴**. Berechnungen und Zeitmessungen wurden unabhängig begutachtet; alle **405 rohen Zeitmessungen** sowie vollständige Ein- und Ausgaben sind archiviert.
 
-Der Wert 5.09× ist der für diese Berechnung gemessene Gewinn. Der Fallbericht enthält alle Ergebnisse, Methoden und den unterstützten Umfang.
+Der Wert 5,09× ist der für diese Berechnung gemessene Gewinn. Der Fallbericht enthält alle Ergebnisse, Methoden und den unterstützten Umfang.
 
 [Vollständiger Fall und Reproduktionsschritte](../../experiments/pennylane-rust-commutator/README.md) · [Rohe Zeitmessungen](../../experiments/pennylane-rust-commutator/results/raw-timings.csv) · [Ergebnisprüfungen](../../experiments/pennylane-rust-commutator/results/validation.json) · [Unabhängige Begutachtung](../../experiments/pennylane-rust-commutator/results/review.md)
 
 <a id="qutip-rust-case"></a>
 
-## Gemessener Fall: eine 5.69× schnellere QuTiP-Berechnung
+## Gemessener Fall: eine 5,69× schnellere QuTiP-Berechnung
 
 **Eine Fachmethode in eine schnellere, prüfbare Berechnung verwandeln.** In Codex mit OpenQuantum 0.8.4 haben wir die Wigner-Funktionsberechnung von QuTiP gezielt optimiert und ein lauffähiges Programm, die vollständige Phasenraumausgabe, einen Leistungsvergleich und unabhängige Prüfungen geliefert.
 
 | Berechnung | Vollständiger Aufruf |
 | --- | ---: |
-| Standardmethode von QuTiP | 171.77 ms |
-| Nach der Optimierung durch OpenQuantum | **30.18 ms** |
+| Standardmethode von QuTiP | 171,77 ms |
+| Nach der Optimierung durch OpenQuantum | **30,18 ms** |
 
-**5.69× schneller im vollständigen Aufruf.** Die Aufgabe berechnet die Wigner-Funktion einer Dichtematrix in einem **64-dimensionalen Fock-Raum einer einzelnen Mode auf einem Phasenraumgitter von 201×201 Punkten**. Die Zeiten sind Mediane aus neun verschachtelten Warmläufen auf einem Apple M4 mit QuTiP 5.3.1 und Einzelthread-Einstellungen. Sie umfassen Einlesen, Konvertierung und Validierung der Eingabe sowie die vollständige Ausgabe in doppelter Genauigkeit; Umgebungsvorbereitung, Kompilierung und Ergebnisprüfungen liegen außerhalb der Messung.
+**5,69× schneller im vollständigen Aufruf.** Die Aufgabe berechnet die Wigner-Funktion einer Dichtematrix in einem **64-dimensionalen Fock-Raum einer einzelnen Mode auf einem Phasenraumgitter von 201×201 Punkten**. Die Zeiten sind Mediane aus neun verschachtelten Warmläufen auf einem Apple M4 mit QuTiP 5.3.1 und Einzelthread-Einstellungen. Sie umfassen Einlesen, Konvertierung und Validierung der Eingabe sowie die vollständige Ausgabe in doppelter Genauigkeit; Umgebungsvorbereitung, Kompilierung und Ergebnisprüfungen liegen außerhalb der Messung.
 
-**Alle 272 Ergebnisprüfungen bestanden.** Über vier Größen beträgt die maximale absolute Abweichung von der Standardausgabe von QuTiP **6.52×10⁻¹⁶**, von unabhängigen Laguerre-Polynomsummen und analytischen Formeln **6.33×10⁻¹⁵**. Die Prüfungen umfassen zufällige komplexe Dichtematrizen, Vakuum- und Fock-Zustände, Superpositionen mit komplexen Kohärenzen sowie abgelehnte Eingaben. Alle **144 rohen Zeitmessungen** sowie vollständige Ein- und Ausgaben sind archiviert und wurden unabhängig begutachtet.
+**Alle 272 Ergebnisprüfungen bestanden.** Über vier Größen beträgt die maximale absolute Abweichung von der Standardausgabe von QuTiP **6,52 · 10⁻¹⁶**, von unabhängigen Laguerre-Polynomsummen und analytischen Formeln **6,33 · 10⁻¹⁵**. Die Prüfungen umfassen zufällige komplexe Dichtematrizen, Vakuum- und Fock-Zustände, Superpositionen mit komplexen Kohärenzen sowie abgelehnte Eingaben. Alle **144 rohen Zeitmessungen** sowie vollständige Ein- und Ausgaben sind archiviert und wurden unabhängig begutachtet.
 
 [Vollständiger Fall und Reproduktionsschritte](../../experiments/qutip-rust-wigner/README.md) · [Rohe Zeitmessungen](../../experiments/qutip-rust-wigner/results/raw-timings.csv) · [Ergebnisprüfungen](../../experiments/qutip-rust-wigner/results/validation.json) · [Unabhängige Begutachtung](../../experiments/qutip-rust-wigner/results/review.md)
 
@@ -151,17 +151,17 @@ Der Wert 5.09× ist der für diese Berechnung gemessene Gewinn. Der Fallbericht 
 
 ## Was Sie tun können
 
-Wählen Sie ein Gebiet und nennen Sie dem Arbeitsbereich Ihre Frage, Ihre Eingaben und die Ergebnisse, die geprüft werden sollen. Der OpenQuantum-Agent folgt der Methode im passenden Skill und ruft das zugehörige Tool zur Berechnung auf; Quantum Learning bietet eine eigene Lernoberfläche.
+Wählen Sie ein Gebiet und nennen Sie der Workbench Ihre Frage, Ihre Eingaben und die Ergebnisse, die geprüft werden sollen. Der OpenQuantum-Agent folgt der Methode im passenden Skill und ruft das zugehörige Tool zur Berechnung auf; Quantum Learning bietet eine eigene Lernoberfläche.
 
 [Algorithmen](#algorithm-learning-and-method-comparison) · [Schaltungen und Quanteninformation](#circuits-and-quantum-information) · [Grundzustände, Chemie und Optimierung](#ground-states-chemistry-and-optimization) · [Fehlerminderung und -korrektur](#error-mitigation-and-error-correction) · [Hamilton-Simulation und offene Systeme](#hamiltonian-simulation-and-open-systems) · [Experimente und Hardware](#experiment-simulation-and-hardware) · [Photonik und Netzwerke](#photonics-and-quantum-networks) · [Referenzmaterial](#reference-material-and-selection) · [Quantum Learning](#quantum-learning)
 
 Lokale Berechnungen funktionieren ohne Konto bei einer Quantencloud. Echte Hardware und kostenpflichtige Dienste werden bei Bedarf eingerichtet; Eingabebereich, Vorbereitung und Prüfstatus jeder Methode stehen im ausführlichen Katalog.
 
-Der aktuelle Quellcode bietet vollständige Zugänge zu nativen APIs in **111 SDK- und Quellcodeumgebungen**, davon 26 aus der jüngsten, mit 0.8.4 ausgelieferten [Ökosystem-Erweiterung](../integrations/SDK_ECOSYSTEM_2026-10-14.md). Agenten können eigene Programme schreiben, öffentliche APIs kombinieren und vollständige Ergebnisse speichern – über die vorgegebenen Fälle der Komfort-Tools hinaus.
+Der aktuelle Quellcode bietet vollständige Zugänge zu nativen APIs in **111 SDK- und Quellcodeumgebungen**, davon 26 aus der jüngsten, mit 0.8.4 ausgelieferten [Ökosystem-Erweiterung](../integrations/SDK_ECOSYSTEM_2026-10-14.md). Agenten können eigene Programme schreiben, öffentliche APIs kombinieren und vollständige Ergebnisse speichern – über die vorgegebenen Fälle der vorkonfigurierten Tools hinaus.
 
-Jede Umgebung wird pro Aufgabe ausdrücklich vorbereitet; Grenzen von Plattformen, Konten, Lizenzen und optionalen Backends gelten weiterhin. Technische Prüfungen je Bibliothek stehen im [Protokoll zum vollständigen SDK-Zugang](../integrations/FULL_SDK_ACCESS.md); diese Umgebungen wurden nicht anhand realer Forschungsaufgaben abgenommen, ihr wissenschaftlicher Status bleibt `not_evaluated`.
+Jede Umgebung wird pro Aufgabe ausdrücklich vorbereitet; Grenzen von Plattformen, Konten, Lizenzen und optionalen Backends gelten weiterhin. Technische Prüfungen je Bibliothek stehen im [Protokoll zum vollständigen SDK-Zugang](../integrations/FULL_SDK_ACCESS.md); diese Umgebungen haben an realen Forschungsaufgaben noch keine wissenschaftliche Abnahme durchlaufen (die Feststellung, dass ein Ergebnis anhand unabhängiger Prüfungen und lückenloser Herkunftsnachweise wissenschaftlich belastbar ist), ihr wissenschaftlicher Status bleibt `not_evaluated`.
 
-Die in v0.6.0 integrierten SDKs von Unternehmen und Forschungseinrichtungen umfassen differenzierbare Schaltungen, Ressourcenschätzung für Fehlertoleranz, Photonik, Pulskompilierung und Quantennetzwerke. Die drei Gruppen sind [17 Anbieter-SDKs](../integrations/VENDOR_SDKS.md), [20 Fähigkeiten von Unternehmen und Forschungseinrichtungen](../integrations/SDK_EXPANSION.md) und [15 Schnittstellen für Netzwerke, Steuerung und Cloud](../integrations/SDK_GAPS.md), dazu [QuEra Bloqade Analog](../integrations/BLOQADE_ANALOG.md). Jeder Adapter bietet nur seine dokumentierten Aktionen; Konten, Zugangsdaten, Dienstberechtigungen und Lizenzen richten Nutzerinnen und Nutzer selbst ein.
+Die in v0.6.0 integrierten SDKs von Unternehmen und Forschungseinrichtungen umfassen differenzierbare Schaltungen, Ressourcenschätzung für Fehlertoleranz, Photonik, Pulskompilierung und Quantennetzwerke. Die drei Gruppen sind [17 Anbieter-SDKs](../integrations/VENDOR_SDKS.md), [20 Funktionen von Unternehmen und Forschungseinrichtungen](../integrations/SDK_EXPANSION.md) und [15 Schnittstellen für Netzwerke, Steuerung und Cloud](../integrations/SDK_GAPS.md), dazu [QuEra Bloqade Analog](../integrations/BLOQADE_ANALOG.md). Jeder Adapter bietet nur seine dokumentierten Aktionen; Konten, Zugangsdaten, Dienstberechtigungen und Lizenzen richten Nutzende selbst ein.
 
 <a id="algorithm-learning-and-method-comparison"></a>
 
@@ -171,7 +171,7 @@ Beginnen Sie mit lauffähigen Algorithmusbeispielen, ändern Sie Eingaben und pr
 
 | Richtung | Lauffähige Methoden und Beispiele |
 | --- | --- |
-| Grundlagen und Suche | QFT, QPE, Hadamard-Test, Amplitudenverstärkung und -schätzung, Grover, Shor, Simon, diskreter Logarithmus und Graphenwalks |
+| Grundlagen und Suche | QFT, QPE, Hadamard-Test, Amplitudenverstärkung und -schätzung, Grover, Shor, Simon, diskreter Logarithmus und Quantenirrfahrten auf Graphen |
 | Lineare Systeme und Matrixmethoden | HHL, VQLS, lineares Lösen mit QSVT, adiabatisches Lösen, LCU und QSP, mit klassischen Eigenlöser-Referenzen |
 | Hamilton-Simulation | Trotter–Suzuki, qDrift, QSP, Taylor-LCU und ein Cartan-Beispiel mit offengelegten Ersetzungen |
 | Variationelles Rechnen und maschinelles Lernen | VQE, VQD, QAOA, VQC, QCBM, CVQNN, Gradienten und Quanten-Fisher-Information |
@@ -196,8 +196,8 @@ Die Adaption bewahrt Upstream-Quellen und -Lizenzen und benötigt keine propriet
 | Fehlertolerante Ressourcen | Physikalische Ressourcenschätzungen mit Microsoft QDK, Gatterressourcen für ein gegebenes Bloq mit Qualtran | Qubits, Laufzeit oder Gatterzahlen mit Hardware- und Zerlegungsannahmen |
 | Interoperabilität Qiskit / Cirq | Unterstützte unitäre Schaltungen über einen festen OpenQASM-2-Pfad mit qBraid konvertieren | Konvertierte Schaltung mit erhaltener Qubit-Nummerierung und ungenutzten Qubits; optionaler Vergleich der vollständigen Unitären |
 | Schaltungsoptimierung und messbasiertes Rechnen | ZX-Umschreiben und -Extraktion mit PyZX; Umwandlung und Simulation von MBQC-Mustern mit Graphix | Schaltungen und Gatterzahlen vorher und nachher, Ressourcengraphen und Messmuster; optionaler unabhängiger Vergleich |
-| Schaltungsoptimierung und -zerschneidung | Gattersequenzen mit Compact optimieren; Schaltungen mit QCut zerschneiden und Erwartungswerte rekonstruieren | Schaltungen vorher und nachher mit unabhängiger Äquivalenzprüfung; Zerschneidungsaufwand, tatsächliche Stichproben und optionale unzerschnittene Referenz |
-| Verrauschtes Clifford+T-Sampling | T-Gatter-Interferenz und Rauschen mit Clifft untersuchen oder unterstützte Schaltungen im Stim-Format abtasten | Endgültige Bitstring-Häufigkeiten und optionale Dichtematrix-Referenz; Messungen während der Schaltung und rohe Detektor- / Observablen-Paritäten |
+| Schaltungsoptimierung und Circuit Cutting | Gattersequenzen mit Compact optimieren; Schaltungen mit QCut aufteilen und Erwartungswerte rekonstruieren | Schaltungen vorher und nachher mit unabhängiger Äquivalenzprüfung; Aufwand des Circuit Cutting, tatsächliche Stichproben und optionale unzerschnittene Referenz |
+| Verrauschtes Clifford+T-Sampling | T-Gatter-Interferenz und Rauschen mit Clifft untersuchen oder unterstützte Schaltungen im Stim-Format samplen | Endgültige Bitstring-Häufigkeiten und optionale Dichtematrix-Referenz; Messungen während der Schaltung und rohe Detektor- / Observablen-Paritäten |
 | Zustände und Messung | Dichtematrizen und Verschränkungsmaße prüfen; lokale randomisierte Messungen an bekannten Produkt- / GHZ-Zuständen simulieren | Zustandsmaße mit unabhängigen Prüfungen; Schätzungen der Subsystem-Reinheit mit Fehler aus endlicher Stichprobe |
 
 <a id="ground-states-chemistry-and-optimization"></a>
@@ -221,7 +221,7 @@ Die Adaption bewahrt Upstream-Quellen und -Lizenzen und benötigt keine propriet
 | Richtung | Aufgaben, die Sie starten können | Ergebnisse, die Sie prüfen können |
 | --- | --- | --- |
 | Fehlerminderung | ZNE, REM, PEC oder CDR mit Mitiq ausführen und rohe mit geminderten Ergebnissen bei gleichem Stichprobenbudget vergleichen | Ideale Referenz, empirischer Bias, Varianz und RMSE sowie Kalibrierungs-, Trainings- und Stichprobenaufwand |
-| Quantenfehlerkorrektur | Speicherexperimente mit Oberflächencodes mit Stim / PyMatching ausführen, rechteckige Patches mit Deltakit aufbauen oder mit BP+LSD decodieren | Tatsächliche verrauschte Schaltungen, logische Fehlerraten und Intervalle bei festen Shots; Syndrom-Konsistenzprüfungen für LSD |
+| Quantenfehlerkorrektur | Memory-Experimente mit Surface Codes mit Stim / PyMatching ausführen, rechteckige Patches mit Deltakit aufbauen oder mit BP+LSD decodieren | Tatsächliche verrauschte Schaltungen, logische Fehlerraten und Intervalle bei festen Shots; Syndrom-Konsistenzprüfungen für LSD |
 
 <a id="hamiltonian-simulation-and-open-systems"></a>
 
@@ -268,13 +268,13 @@ Materialien, Kursunterlagen und Unterricht an einem Ort: Lernende arbeiten prakt
 | Lernen und Lehren | Verfügbare Funktionen |
 | --- | --- |
 | Materialien vorbereiten | Startseite, Kursbibliothek, Anhänge, Kursimport und PPTX-Import |
-| Kurse erstellen | Kursvorschau, Editor für Kursunterlagen und Pro-Arbeitsbereich |
+| Kurse erstellen | Kursvorschau, Editor für Kursunterlagen und Pro-Workbench |
 | Im Unterricht lernen | Folien, Quizze, interaktive Fragen und Antworten sowie projektbasiertes Lernen |
 | Weiterlernen | Lokale Kurse, Aufgaben, Materialien und serverseitige Lernprotokolle, mit Migration aus früheren Unterrichtsräumen |
 
 Ziel ist eine Abdeckung von schulischen Grundlagen bis zur aktuellen Forschung, gegliedert in Einsteiger-, Fortgeschrittenen- und Expertenstufen, mit Lernen über Stufen hinweg. Öffentliche Ressourcen werden noch aufbereitet; das vollständige Curriculum ist noch nicht erstellt oder veröffentlicht. Zusammenbau, Start und lokale Speicherung der Anwendung sind geprüft; echter Online-Kursaufbau mit KI, Fragen und Antworten sowie Bearbeitung warten noch auf die vollständige Abnahme.
 
-Pro-Lehraufgaben verwenden die eigenen Werkzeuge und Protokolle der Upstream-Anwendung und sind noch nicht mit den Quantenwerkzeugen des Arbeitsbereichs verbunden. Optionale Medien-, Sprach- und Suchfunktionen benötigen eigene Dienste. Installation, Sicherung, Migration und Prüfung beschreibt der [Integrationsleitfaden für Quantum Learning](../integrations/OPENMAIC.md).
+Pro-Lehraufgaben verwenden die eigenen Werkzeuge und Protokolle der Upstream-Anwendung und sind noch nicht mit den Quantenwerkzeugen der Workbench verbunden. Optionale Medien-, Sprach- und Suchfunktionen benötigen eigene Dienste. Installation, Sicherung, Migration und Prüfung beschreibt der [Integrationsleitfaden für Quantum Learning](../integrations/OPENMAIC.md).
 
 <p align="center">
   <img src="../images/openquantum-learning-20260912.jpg" width="100%" alt="Quantum Learning: Kursmaterialien, Unterrichtsräume und Bearbeitung von Kursunterlagen" />
@@ -284,9 +284,9 @@ Pro-Lehraufgaben verwenden die eigenen Werkzeuge und Protokolle der Upstream-Anw
 
 ### Desktop, Messaging und Sprachen
 
-**Desktop.** Der OpenQuantum-Desktop bietet ein natives Fenster, Systemleiste, Terminal und Benachrichtigungen und nutzt Modelle, Quanten-Skills, Rechenwerkzeuge und Ausführungsprotokolle des Arbeitsbereichs mit. Er verwendet das originale DSH Desktop eines Drittanbieters mit einem separat ausgelieferten OpenQuantum-Fähigkeitspaket, auf dem Mac (Apple Silicon / Intel), unter Windows und aus dem Quellcode. [Desktop installieren](#desktop-installer) · [Desktop aus dem Quellcode bauen](#desktop-from-source).
+**Desktop.** Der OpenQuantum-Desktop bietet ein natives Fenster, Systemleiste, Terminal und Benachrichtigungen und nutzt Modelle, Quanten-Skills, Rechenwerkzeuge und Ausführungsprotokolle der Workbench mit. Er verwendet das originale DSH Desktop eines Drittanbieters mit einem separat ausgelieferten OpenQuantum-Funktionspaket, auf dem Mac (Apple Silicon / Intel), unter Windows und aus dem Quellcode. [Desktop installieren](#desktop-installer) · [Desktop aus dem Quellcode bauen](#desktop-from-source).
 
-**Messaging.** Über CC Connect können Sie Aufgaben aus WeChat, Feishu, DingTalk, Slack, Telegram, Discord und weiteren Kanälen starten und dabei Skills, Tools und Ausführungsprotokolle des Arbeitsbereichs nutzen. [Messaging-Kanäle einrichten](#messaging-channels).
+**Messaging.** Über CC Connect können Sie Aufgaben aus WeChat, Feishu, DingTalk, Slack, Telegram, Discord und weiteren Kanälen starten und dabei Skills, Tools und Ausführungsprotokolle der Workbench nutzen. [Messaging-Kanäle einrichten](#messaging-channels).
 
 <p align="center">
   <img src="../images/openquantum-wechat-chat.jpg" width="380" alt="Bestehende Demo eines Chats mit OpenQuantum über WeChat ClawBot" /><br />
@@ -303,13 +303,13 @@ Die Oberflächensprache übersetzt keine bestehenden Unterhaltungen, Kursmateria
 
 ## Schnellstart
 
-Wählen Sie einen Einstieg: das Plugin in Codex installieren, den Desktop-Client mit seinem Fähigkeitspaket nutzen oder den Arbeitsbereich aus dem Quellcode starten. Desktop und der Arbeitsbereich aus dem Quellcode sind für die lokale Nutzung durch eine einzelne Person gedacht; wählen Sie den Quellcode für Entwicklung oder für Fähigkeiten auf `main`.
+Wählen Sie einen Zugang: das Plugin in Codex installieren, den Desktop-Client mit seinem Funktionspaket nutzen oder die Workbench aus dem Quellcode starten. Desktop und die Workbench aus dem Quellcode sind für die lokale Nutzung durch eine einzelne Person gedacht; wählen Sie den Quellcode für Entwicklung oder für Funktionen auf `main`.
 
 <a id="codex"></a>
 
 ### Codex-Plugin: installieren und nutzen
 
-Eine einmalige Installation des OpenQuantum-Plugins registriert **Skills, lokale MCP-Dienste, wissenschaftliche Tools und die OpenQuantum-Einstellungsseite** gemeinsam. Sie stellen weiterhin Fragen, verwalten Projekte und lesen Ergebnisse in nativen Codex-Chats; über die Einstellungsseite konfigurieren Sie die Fähigkeiten von OpenQuantum.
+Eine einmalige Installation des OpenQuantum-Plugins registriert **Skills, lokale MCP-Dienste, wissenschaftliche Tools und die OpenQuantum-Einstellungsseite** gemeinsam. Sie stellen weiterhin Fragen, verwalten Projekte und lesen Ergebnisse in nativen Codex-Chats; über die Einstellungsseite konfigurieren Sie die Funktionen von OpenQuantum.
 
 **Lassen Sie Codex die Installation übernehmen:** Öffnen Sie Codex, starten Sie einen neuen Chat und fügen Sie die folgende Anfrage ein.
 
@@ -322,7 +322,7 @@ Keep existing plugins and user settings, and check the Skills, MCP tools and the
 Tell me exactly what to do if the app needs reloading. Finally, report what was actually verified and which scientific dependencies still need preparation.
 ```
 
-Das Desktop-Fähigkeitspaket, das Codex-Plugin und das Installationsprogramm verwenden alle **OpenQuantum 0.8.4**. Dieses Plugin enthält 168 Skills und 87 wissenschaftliche Tools, ergänzt 26 Skills für native SDKs und vereinheitlicht die Reiter Status, MCP, Skills und Dienstschlüssel; die 16 neuen Dienst-Tools mit Zugangsdaten sind standardmäßig deaktiviert. Das Release-Tag ist `codex-v0.8.4`; Anhänge und Prüfumfang sind im Release angegeben.
+Das Desktop-Funktionspaket, das Codex-Plugin und das Installationsprogramm verwenden alle **OpenQuantum 0.8.4**. Dieses Plugin enthält 168 Skills und 87 wissenschaftliche Tools, ergänzt 26 Skills für native SDKs und vereinheitlicht die Reiter Status, MCP, Skills und Service keys (Dienstschlüssel); die 16 neuen Dienst-Tools mit Zugangsdaten sind standardmäßig deaktiviert. Das Release-Tag ist `codex-v0.8.4`; Anhänge und Prüfumfang sind im Release angegeben.
 
 **[Vollständiges Installationspaket für das Codex-Plugin 0.8.4 herunterladen](https://github.com/xi-zhao/OpenQuantum/releases/download/codex-v0.8.4/openquantum-0.8.4-codex-install.zip)** ([Versionshinweise und SHA256SUMS](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.4)).
 
@@ -332,9 +332,9 @@ Das Paket enthält das Plugin-ZIP, ein Installationsskript und die Lockdatei der
 
 1. Laden Sie Codex bei Aufforderung neu und öffnen Sie dann einen neuen Chat, damit die neuen Skills und Werkzeuge geladen werden.
 2. Fragen Sie direkt im Chat, zum Beispiel: „Finde mit OpenQuantum Methoden der Quantenfehlerkorrektur und empfiehl ein erstes Experiment.“
-3. Öffnen Sie **„…“ → „OpenQuantum settings“** und verwalten Sie die Fähigkeiten in den Reitern **Status / MCP / Skills / Service keys**; Tool-Schalter finden Sie unter **Status → Tools**. Integrierte Dienste sind mit dem Plugin vorkonfiguriert; um einen eigenen MCP-Server hinzuzufügen, geben Sie dessen Verbindungsdaten ein und speichern Tokens über den eigenen Dialog für Zugangsdaten.
+3. Öffnen Sie **„…“ → „OpenQuantum settings“** und verwalten Sie die Funktionen in den Reitern **Status / MCP / Skills / Service keys**; Tool-Schalter finden Sie unter **Status → Tools**. Integrierte Dienste sind mit dem Plugin vorkonfiguriert; um einen eigenen MCP-Server hinzuzufügen, geben Sie dessen Verbindungsdaten ein und speichern Tokens über den eigenen Dialog für Zugangsdaten.
 
-Das Plugin installiert Fähigkeitscode und Konfigurationseinstiege; manche Berechnungen benötigen weiterhin Python, Quanten-SDKs oder Drittanbieterkonten, die bei Bedarf vorbereitet werden. Siehe den [Plugin-Leitfaden](../integrations/CODEX_PLUGIN.md).
+Das Plugin installiert den Funktionscode und die Einstellungsseite; manche Berechnungen benötigen weiterhin Python, Quanten-SDKs oder Drittanbieterkonten, die bei Bedarf vorbereitet werden. Siehe den [Plugin-Leitfaden](../integrations/CODEX_PLUGIN.md).
 
 <details>
 <summary><strong>Manuelle Installation (optional)</strong></summary>
@@ -354,9 +354,9 @@ Findet das Installationsprogramm die CLI der aktuellen Codex-App nicht, setzen S
 
 ### Desktop-Installationspaket
 
-Die aktuelle Desktop-Version kombiniert den [originalen Client DSH Desktop 2.0.7](https://github.com/anywhere-labs/dsh-desktop/releases/tag/v2.0.7) mit einem separaten OpenQuantum-Fähigkeitspaket. Der Originalclient behält Upstream-Namen und -Version; das Fähigkeitspaket bündelt Node / uv und liefert die vollständigen SDK-Einstiege, Quanten-Skills, Tools und Konfiguration. Das Installationsprogramm legt einen Starter mit dem OpenQuantum-Symbol an (`OpenQuantum.app` auf dem Mac, `OpenQuantum.lnk` unter Windows).
+Die aktuelle Desktop-Version kombiniert den [originalen Client DSH Desktop 2.0.7](https://github.com/anywhere-labs/dsh-desktop/releases/tag/v2.0.7) mit einem separaten OpenQuantum-Funktionspaket. Der Originalclient behält Upstream-Namen und -Version; das Funktionspaket bündelt Node / uv und liefert die vollständigen SDK-Zugänge, Quanten-Skills, Tools und Konfiguration. Das Installationsprogramm legt einen Starter mit dem OpenQuantum-Symbol an (`OpenQuantum.app` auf dem Mac, `OpenQuantum.lnk` unter Windows).
 
-Installieren Sie zuerst das originale DSH Desktop und wählen Sie dann das Fähigkeitspaket für Ihre Plattform:
+Installieren Sie zuerst das originale DSH Desktop und wählen Sie dann das Funktionspaket für Ihre Plattform:
 
 | Plattform | Download OpenQuantum 0.8.4 | Nach dem Entpacken ausführen |
 | --- | --- | --- |
@@ -364,11 +364,11 @@ Installieren Sie zuerst das originale DSH Desktop und wählen Sie dann das Fähi
 | Mac Intel | [darwin-x64-Paket](https://github.com/xi-zhao/OpenQuantum/releases/download/v0.8.4/OpenQuantum-0.8.4-DSH-darwin-x64.tar.gz) | `install.command` |
 | Windows x64 | [win32-x64-Paket](https://github.com/xi-zhao/OpenQuantum/releases/download/v0.8.4/OpenQuantum-0.8.4-DSH-win32-x64.tar.gz) | `install.cmd` |
 
-Prüfen Sie den Download vor dem Entpacken anhand der [SHA256SUMS im Release](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.4). Upgrades erhalten bestehende Einstellungen; siehe den [Leitfaden zu Installation und Migration](../DESKTOP_INSTALLERS.md). Fähigkeitspaket und Codex-Plugin haben beide die Version `0.8.4`, Harness bleibt bei `0.1.5-rc.1`. Rechenumgebungen, Konten und Lizenzen werden weiterhin je Fähigkeit vorbereitet.
+Prüfen Sie den Download vor dem Entpacken anhand der [SHA256SUMS im Release](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.4). Upgrades erhalten bestehende Einstellungen; siehe den [Leitfaden zu Installation und Migration](../DESKTOP_INSTALLERS.md). Funktionspaket und Codex-Plugin haben beide die Version `0.8.4`, Harness bleibt bei `0.1.5-rc.1`. Rechenumgebungen, Konten und Lizenzen werden weiterhin je Funktion vorbereitet.
 
 ### Installation aus dem Quellcode
 
-Bereiten Sie Git und Node.js 24 vor; Python-Quantenwerkzeuge benötigen zusätzlich [uv / uvx](https://docs.astral.sh/uv/getting-started/installation/). Weitere Abhängigkeiten hängen von der Fähigkeit ab, zum Beispiel Julia 1.12.7 für RandomMeas.
+Bereiten Sie Git und Node.js 24 vor; Python-Quantenwerkzeuge benötigen zusätzlich [uv / uvx](https://docs.astral.sh/uv/getting-started/installation/). Weitere Abhängigkeiten hängen von der Funktion ab, zum Beispiel Julia 1.12.7 für RandomMeas.
 
 ```bash
 git clone https://github.com/xi-zhao/openQuantum.git
@@ -376,19 +376,19 @@ cd openQuantum
 npm ci
 ```
 
-Ohne Modellschlüssel können Sie bereits das [feste lokale Beispiel](#no-model-key-needed-recompute-a-fixed-case) ausführen. Um Aufgaben über den Agenten zu starten, wählen Sie einen Einstieg in den Arbeitsbereich und konfigurieren ein Modell.
+Ohne Modellschlüssel können Sie bereits das [feste lokale Beispiel](#no-model-key-needed-recompute-a-fixed-case) ausführen. Um Aufgaben über den Agenten zu starten, wählen Sie eine Startoption für die Workbench und konfigurieren ein Modell.
 
-### Einstieg in den Arbeitsbereich wählen
+### Startoption für die Workbench wählen
 
-Web und Desktop, die aus derselben Quellcode-Arbeitskopie gestartet werden, teilen Modelleinstellungen, Quantenfähigkeiten und Ausführungsprotokolle in `.openquantum/dsh`. Beenden Sie den laufenden Einstieg, bevor Sie wechseln.
+Web und Desktop, die aus derselben Quellcode-Arbeitskopie gestartet werden, teilen Modelleinstellungen, Quantenfunktionen und Ausführungsprotokolle in `.openquantum/dsh`. Beenden Sie die laufende Workbench, bevor Sie wechseln.
 
-**Web-Arbeitsbereich**
+**Web-Workbench**
 
 ```bash
 npm run dev
 ```
 
-Öffnen Sie die Adresse mit dem Anmeldetoken, die der Starter ausgibt; nach der Authentifizierung ist der Arbeitsbereich unter <http://127.0.0.1:3000> erreichbar.
+Öffnen Sie die Adresse mit dem Anmeldetoken, die der Starter ausgibt; nach der Authentifizierung ist die Workbench unter <http://127.0.0.1:3000> erreichbar.
 
 <a id="desktop"></a>
 <a id="desktop-from-source"></a>
@@ -421,7 +421,7 @@ Der Quellcode enthält optionale Debugging-Beispiele `openquantum-public` / `ope
 
 In der Oberfläche gespeicherte Routen-Überschreibungen werden in die von Git ignorierte Datei `$DSH_HOME/settings.yaml` geschrieben; Schlüssel bleiben in der lokalen Umgebung oder im Harness-Credential-Store, und die Projektkonfiguration enthält nur Verweise auf Zugangsdaten. Um `.env` zu nutzen, führen Sie auf macOS `cp .env.example .env` oder in Windows PowerShell `Copy-Item .env.example .env` aus und füllen die Datei gemäß den Kommentaren aus. `.env` überschreibt keine Modellnamen; weitere Modellnamen konfigurieren Sie unter **Einstellungen → Modelle**.
 
-Der folgende Befehl prüft die öffentliche Route aus `.env` oder Umgebungsvariablen mit den im Skript festgelegten Modellnamen `kimi-k2.7-code` und `glm5.2` und testet Textgenerierung und Tool Calling. In der Oberfläche gespeicherte Routen-Überschreibungen liest er nicht; andere Modelle prüfen Sie mit der Arbeitsbereichsaufgabe weiter unten.
+Der folgende Befehl prüft die öffentliche Route aus `.env` oder Umgebungsvariablen mit den im Skript festgelegten Modellnamen `kimi-k2.7-code` und `glm5.2` und testet Textgenerierung und Tool Calling. In der Oberfläche gespeicherte Routen-Überschreibungen liest er nicht; andere Modelle prüfen Sie mit der Workbench-Aufgabe weiter unten.
 
 ```bash
 npm run models:probe -- --provider openquantum-public
@@ -431,15 +431,15 @@ npm run models:probe -- --provider openquantum-public
 
 ### Rechenumgebungen je Aufgabe vorbereiten
 
-Lokale Python-Rechenwerkzeuge verwenden ausdrücklich vorbereitete, festgelegte Abhängigkeiten. Führen Sie nach `npm ci` im Repository-Hauptverzeichnis den Vorbereitungsbefehl für die benötigte Fähigkeit aus. Die Vorbereitung kann herunterladen und bauen; Rechenaufrufe installieren Abhängigkeiten nicht mehr automatisch.
+Lokale Python-Rechenwerkzeuge verwenden ausdrücklich vorbereitete, festgelegte Abhängigkeiten. Führen Sie nach `npm ci` im Repository-Hauptverzeichnis den Vorbereitungsbefehl für die benötigte Funktion aus. Die Vorbereitung kann herunterladen und bauen; Rechenaufrufe installieren Abhängigkeiten nicht mehr automatisch.
 
-| Was vorzubereiten ist | Befehl oder Einstieg |
+| Was vorzubereiten ist | Befehl oder Ort |
 | --- | --- |
 | Das erste Bell-Zustand-Experiment | `node scripts/setup-paper-tools.mjs fatqat-workbench` |
 | Statische Wechselwirkung eines Rb-Atompaars | `npm run capability:pairinteraction:setup`; [Modell- und Versionsverwaltung](../integrations/PAIRINTERACTION.md) |
 | Hamilton-Simulation mit Trotter / qDrift | `npm run capability:hamiltonian:setup` |
 | Clifft-Sampling und Schaltungskonvertierung mit qBraid | `npm run capability:interop:setup` |
-| Jede andere Python-Fähigkeit | `node scripts/setup-paper-tools.mjs <capability-id>`, zum Beispiel `qec-memory-experiment`; jeder Skill nennt seinen eigenen Befehl |
+| Jede andere Python-Funktion | `node scripts/setup-paper-tools.mjs <capability-id>`, zum Beispiel `qec-memory-experiment`; jeder Skill nennt seinen eigenen Befehl |
 | Algorithmusbeispiele | Mit der [minimalen Umgebung](#run-an-algorithm-example-directly) beginnen und bei Bedarf die Gruppen Gradienten, PennyLane, Tensor oder Chemie ergänzen |
 
 Umgebungsvorbereitung, Aktivierung von Verbindungen und Modellkonfiguration sind unabhängige Schritte. Auch eine standardmäßig aktivierte Verbindung braucht vor der ersten Nutzung vorbereitete Abhängigkeiten; fehlt eine Umgebung oder hat sich ihre Lockdatei geändert, gibt das Tool den genauen Vorbereitungsbefehl zurück. Julia, QDMI-Treiber und Upstream-MCP-Dienste folgen ihren eigenen Anleitungen; siehe [lokale Umgebungen](../integrations/LOCAL_ENVIRONMENTS.md).
@@ -458,9 +458,9 @@ npm run demo:quantum-ground-state
 
 <table>
   <tr>
-    <td align="center"><strong>-1.85727503 Ha</strong><br /><sub>VQE-Energie</sub></td>
-    <td align="center"><strong>-1.85727503 Ha</strong><br /><sub>Unabhängige exakte Referenz</sub></td>
-    <td align="center"><strong>4.44 × 10⁻¹⁶ Ha</strong><br /><sub>Energiedifferenz</sub></td>
+    <td align="center"><strong>−1,85727503 Ha</strong><br /><sub>VQE-Energie</sub></td>
+    <td align="center"><strong>−1,85727503 Ha</strong><br /><sub>Unabhängige exakte Referenz</sub></td>
+    <td align="center"><strong>4,44 · 10⁻¹⁶ Ha</strong><br /><sub>Energiedifferenz</sub></td>
     <td align="center"><strong>15 bestanden</strong><br /><sub>Lokale Rechenprüfungen</sub></td>
   </tr>
 </table>
@@ -478,13 +478,13 @@ Eine vollständige wissenschaftliche Abnahme erfordert zusätzlich, die Aufgabe 
 
 <a id="let-the-agent-run-a-task-prepare-and-sample-a-bell-state"></a>
 
-#### Den Agenten eine Aufgabe ausführen lassen: einen Bell-Zustand präparieren und abtasten
+#### Den Agenten eine Aufgabe ausführen lassen: einen Bell-Zustand präparieren und samplen
 
 Nachdem Sie ein Modell konfiguriert und FatQat mit `node scripts/setup-paper-tools.mjs fatqat-workbench` vorbereitet haben, starten Sie eine neue Sitzung und senden:
 
 > Beginne mit FatQat im Nullzustand zweier Qubits, wende H auf q0 an und anschließend CX mit q0 als Kontroll- und q1 als Zielqubit. Gib die exakten rauschfreien Wahrscheinlichkeiten zurück und vergleiche sie mit 1024 Messungen bei seed=7.
 
-Der Agent kann das Schaltungswerkzeug von FatQat aufrufen, und der Arbeitsbereich bewahrt Werkzeugeingabe und Rückgabe. Prüfen Sie die exakten Wahrscheinlichkeiten und Häufigkeiten und fragen Sie dann nach:
+Der Agent kann das Schaltungswerkzeug von FatQat aufrufen, und die Workbench bewahrt Werkzeugeingabe und Rückgabe. Prüfen Sie die exakten Wahrscheinlichkeiten und Häufigkeiten und fragen Sie dann nach:
 
 > Behalte Schaltung und Seed bei, setze die Zahl der Messungen auf 8192 und vergleiche, wie weit die Häufigkeiten beider Läufe von den exakten Wahrscheinlichkeiten abweichen.
 
@@ -522,11 +522,11 @@ Für QSP/QSVT und ähnliche Methoden führen Sie `npm run capability:algorithms:
 
 ### Eine bestehende Quellcode-Installation aktualisieren
 
-Aktualisieren Sie Quellcode und Projektabhängigkeiten gemäß der [Update-Anleitung](../UPDATES.md) und führen Sie anschließend für jede genutzte Fähigkeit den Vorbereitungsbefehl einmal erneut aus. Python-Brücken prüfen und synchronisieren festgelegte Abhängigkeiten in ihren bestehenden Umgebungsverzeichnissen, sodass nichts gelöscht werden muss; bei Algorithmusbeispielen lassen sich weiter Gruppen ergänzen.
+Aktualisieren Sie Quellcode und Projektabhängigkeiten gemäß der [Update-Anleitung](../UPDATES.md) und führen Sie anschließend für jede genutzte Funktion den Vorbereitungsbefehl einmal erneut aus. Python-Brücken prüfen und synchronisieren festgelegte Abhängigkeiten in ihren bestehenden Umgebungsverzeichnissen, sodass nichts gelöscht werden muss; bei Algorithmusbeispielen lassen sich weiter Gruppen ergänzen.
 
-Starten Sie den Arbeitsbereich neu und öffnen Sie eine neue Sitzung. Bestehende Namen und Parameter von Skills und Tools bleiben gültig; die 13 Kategorieindizes lassen sich weiterhin manuell aufrufen, während automatische Aufgaben `quantum-algorithms` oder eine bestimmte Methode wählen. Um den vollen Werkzeugumfang eines optionalen Dienstes wiederherzustellen, verwenden Sie das Standardprofil `full`; siehe [Fähigkeitsauswahl und Kompatibilität](../integrations/CAPABILITY_SELECTION.md).
+Starten Sie die Workbench neu und öffnen Sie eine neue Sitzung. Bestehende Namen und Parameter von Skills und Tools bleiben gültig; die 13 Kategorieindizes lassen sich weiterhin manuell aufrufen, während automatische Aufgaben `quantum-algorithms` oder eine bestimmte Methode wählen. Um den vollen Werkzeugumfang eines optionalen Dienstes wiederherzustellen, verwenden Sie das Standardprofil `full`; siehe [Funktionsauswahl und Kompatibilität](../integrations/CAPABILITY_SELECTION.md).
 
-### Optionale Einstiege
+### Optionale Funktionen
 
 <a id="set-up-quantum-learning"></a>
 
@@ -570,9 +570,9 @@ Sobald eine Aufgabe läuft, können Sie andere Backends wählen, die Problemgrö
 
 <a id="choose-the-right-entry-point"></a>
 
-### Den passenden Einstieg wählen
+### Den passenden Weg wählen
 
-Nutzen Sie [lauffähige Beispiele](#algorithm-learning-and-method-comparison), wenn Sie einen Algorithmus lernen oder verändern, und Fachwerkzeuge, wenn Sie einen definierten Ein-/Ausgabevertrag brauchen. Für sich überschneidende Einstiege bei Trotter / qDrift, VQD, Qiskit und Eigenlösern gibt es einen [gemeinsamen Auswahlleitfaden](../integrations/CAPABILITY_SELECTION.md); die ursprünglichen Namen bleiben erhalten, und Implementierungen mit unterschiedlichen physikalischen Annahmen oder numerischen Methoden bleiben getrennt.
+Nutzen Sie [lauffähige Beispiele](#algorithm-learning-and-method-comparison), wenn Sie einen Algorithmus lernen oder verändern, und Fachwerkzeuge, wenn Sie einen definierten Ein-/Ausgabevertrag brauchen. Für sich überschneidende Werkzeuge bei Trotter / qDrift, VQD, Qiskit und Eigenlösern gibt es einen [gemeinsamen Auswahlleitfaden](../integrations/CAPABILITY_SELECTION.md); die ursprünglichen Namen bleiben erhalten, und Implementierungen mit unterschiedlichen physikalischen Annahmen oder numerischen Methoden bleiben getrennt.
 
 Qiskit Gym, Quantum Hardware und FlagQuantum sind standardmäßig deaktiviert. Wenn Sie sie brauchen, konfigurieren Sie ein kleineres Werkzeugprofil für Training, Geräteabfragen, Kompilierung oder Simulation; ohne Auswahl gilt das abwärtskompatible Profil `full`. Welche Tools in einer Sitzung aufrufbar sind, hängt von aktivierten Verbindungen, der tatsächlichen Registrierung und dem gewählten Profil ab.
 
@@ -580,11 +580,11 @@ Qiskit Gym, Quantum Hardware und FlagQuantum sind standardmäßig deaktiviert. W
 
 ### Lokales Rechnen und Quantenclouds
 
-Lokale numerische Berechnungen brauchen kein Quantencloud-Konto. Um andere Werkzeuge zu nutzen, konfigurieren Sie die Verbindung unter **Einstellungen → Quantenkomponenten → MCP-Server-Verbindungen**, starten den Arbeitsbereich neu und nennen das Backend in der Aufgabe. Die Standardschalter listet der [MCP-Dienstkatalog](../../README.md#mcp-服务目录) in der chinesischen README.
+Lokale numerische Berechnungen brauchen kein Quantencloud-Konto. Um andere Werkzeuge zu nutzen, konfigurieren Sie die Verbindung unter **Einstellungen → Quantenkomponenten → MCP-Server-Verbindungen**, starten die Workbench neu und nennen das Backend in der Aufgabe. Die Standardschalter listet der [MCP-Dienstkatalog](../../README.md#mcp-服务目录) in der chinesischen README.
 
 Für echte Hardware bereiten Sie Zugangsdaten, Berechtigungen und Kontingent für den Zieldienst vor. **Gerätesuche, echte Job-Einreichung und lokale Simulation haben jeweils einen eigenen Umfang.** Eine Konfiguration bedeutet nicht, dass der Dienst online ist; ob ein Job erfolgreich war, zeigt das tatsächliche Laufprotokoll.
 
-| Backend | Aktuelle Fähigkeit | Zugangsdaten oder Bedingungen |
+| Backend | Aktueller Funktionsumfang | Zugangsdaten oder Bedingungen |
 | --- | --- | --- |
 | Lokales Rechnen | Schaltungs- und Rauschsimulation, Grundzustandsreferenzen, Zustandsprüfungen, Sampling zur Fehlerkorrektur, Optimierung und Experimentsimulation, jeweils mit eigenem Eingabebereich | Keine Cloud-Zugangsdaten; festgelegte Abhängigkeiten vor dem Rechnen vorbereiten |
 | IBM Quantum | Runtime, AI Transpiler, Hardwareabfragen; optional echte Job-Einreichung und -Abbruch | `QISKIT_IBM_TOKEN`; MCP-Server-Verbindungen für Jobs sind Opt-in |
@@ -593,7 +593,7 @@ Für echte Hardware bereiten Sie Zugangsdaten, Berechtigungen und Kontingent fü
 | Clouds von Quafu, Tianyan, Guodun, Tencent und LogicalQubit | Prüfung von Zugangsdaten, Backend-Suche, Qubit-Filterung, Zusammenfassungen von Topologie und Kalibrierung | API-Token des jeweiligen Dienstes; schreibgeschützt |
 | FieldQuantum | Suche nach Cloud-Simulator-Backends | `FIELDQUANTUM_API_TOKEN`; schreibgeschützt |
 
-Hardware-Jobs und kostenpflichtige Dienste werden bei Bedarf aktiviert. Die schreibgeschützte Suche lässt Sie Geräte, Topologie und Kalibrierung kennenlernen, bevor Sie über echte Jobs entscheiden. „Schreibgeschützt“ bedeutet, dass der Zustand der entfernten Cloud oder QPU nicht verändert wird; lokale Python-Brücken behalten dennoch ihren `workspace-write`-Vertrag, weil SDK-Caches und die Materialisierung von Ergebnissen in den lokalen Arbeitsbereich schreiben können.
+Hardware-Jobs und kostenpflichtige Dienste werden bei Bedarf aktiviert. Die schreibgeschützte Suche lässt Sie Geräte, Topologie und Kalibrierung kennenlernen, bevor Sie über echte Jobs entscheiden. „Schreibgeschützt“ bedeutet, dass der Zustand der entfernten Cloud oder QPU nicht verändert wird; lokale Python-Brücken behalten dennoch ihren `workspace-write`-Vertrag, weil SDK-Caches und Ergebnisdateien in das lokale Arbeitsverzeichnis geschrieben werden können.
 
 ### Rechenparameter
 
@@ -607,20 +607,20 @@ Weitere kopierbare Aufgaben zu Schaltungen, Grundzuständen, Rauschen, Dynamik u
 
 ### Methoden und Ergebnisse, die Sie weiter nutzen können
 
-Der Arbeitsbereich speichert für jede Aufgabe Anfrage, Werkzeugaufrufe und Rückgaben, sodass Sie den Ablauf nachvollziehen und weiterfragen können. Passen Sie Parameter an, wählen Sie ein anderes verbundenes Backend oder machen Sie häufige Forschungsschritte zu einem Skill für spätere Aufgaben.
+Die Workbench speichert für jede Aufgabe Anfrage, Werkzeugaufrufe und Rückgaben, sodass Sie den Ablauf nachvollziehen und weiterfragen können. Passen Sie Parameter an, wählen Sie ein anderes verbundenes Backend oder machen Sie häufige Forschungsschritte zu einem Skill für spätere Aufgaben.
 
-Bei unterstützten Fähigkeiten werden Ergebnisse mit exakten Referenzen, unabhängigen Prüfungen oder Angaben zum statistischen Fehler geliefert. Grundzustandsberechnungen und Prüfungen der Quanteninformation bieten zusätzlich einen vollständigen Ablauf zur wissenschaftlichen Abnahme, der Eingaben, Ergebnisdateien und Sitzungsherkunft zur Prüfung verknüpft.
+Bei unterstützten Funktionen werden Ergebnisse mit exakten Referenzen, unabhängigen Prüfungen oder Angaben zum statistischen Fehler geliefert. Grundzustandsberechnungen und Prüfungen der Quanteninformation bieten zusätzlich einen vollständigen Ablauf zur wissenschaftlichen Abnahme, der Eingaben, Ergebnisdateien und Sitzungsherkunft zur Prüfung verknüpft.
 
 <details>
 <summary><strong>Ausführungsprotokolle und wissenschaftliche Abnahme im Detail</strong></summary>
 
 Der Forschungsarbeitsbereich protokolliert Aufgabenanfragen, das Laden von Skills, Werkzeugaufrufe, Berechtigungsstatus und Rückgaben. „Aktiviert“ in den Einstellungen ist nur eine Konfigurationsrichtlinie; ob ein Werkzeug aufrufbar und ein Dienst erreichbar ist, zeigen die Laufbelege.
 
-Abschluss eines Laufs und wissenschaftliche Abnahme werden als getrennte Zustände angezeigt. Fähigkeiten mit vollständigem Abnahmeablauf verknüpfen Eingaben, Ergebnisdateien, unabhängige Prüfungen und Sitzungsprotokolle zu einem Abnahmebericht, der bestandene, nicht bestandene und nicht geprüfte Punkte auflistet; andere Werkzeuge melden numerische Ergebnisse und Prüfstatus im eigenen Rahmen.
+Abschluss eines Laufs und wissenschaftliche Abnahme werden als getrennte Zustände angezeigt. Funktionen mit vollständigem Abnahmeablauf verknüpfen Eingaben, Ergebnisdateien, unabhängige Prüfungen und Sitzungsprotokolle zu einem Abnahmebericht, der bestandene, nicht bestandene und nicht geprüfte Punkte auflistet; andere Werkzeuge melden numerische Ergebnisse und Prüfstatus im eigenen Rahmen.
 
 ![Von Ergebnissen über Materialisierung von Belegen und unabhängige Prüfungen zur wissenschaftlichen Abnahme aus Regeln und Herkunft](../images/openquantum-evidence-flow.png)
 
-Das Diagramm zeigt, wie Fähigkeiten mit vollständiger Abnahme Belege bilden; [siehe die bearbeitbare Quelle](../architecture/openquantum-evidence-flow.html). Begrenzte Grundzustandsberechnungen und Prüfungen der Quanteninformation bieten den vollständigen Ablauf; QUBO, Schaltungsäquivalenz und Speicherexperimente zur Fehlerkorrektur melden Ergebnisse und Prüfungen nach eigenen Regeln. Belege finden Sie in den [Fähigkeitsdeklarationen](../../.agents/capability-packages.yml), dem [Architektur-Audit](../architecture/ARCHITECTURE_AUDIT.md) und dem [festen Benchmark der Quantenfähigkeiten](../../benchmarks/quantum-capabilities/README.md).
+Das Diagramm zeigt, wie Funktionen mit vollständiger Abnahme Belege bilden; [siehe die bearbeitbare Quelle](../architecture/openquantum-evidence-flow.html). Begrenzte Grundzustandsberechnungen und Prüfungen der Quanteninformation bieten den vollständigen Ablauf; QUBO, Schaltungsäquivalenz und Speicherexperimente zur Fehlerkorrektur melden Ergebnisse und Prüfungen nach eigenen Regeln. Belege finden Sie in den [Funktionsdeklarationen](../../.agents/capability-packages.yml), dem [Architektur-Audit](../architecture/ARCHITECTURE_AUDIT.md) und dem [festen Benchmark der Quantenfunktionen](../../benchmarks/quantum-capabilities/README.md).
 
 </details>
 
@@ -637,9 +637,9 @@ Das Diagramm zeigt, wie Fähigkeiten mit vollständiger Abnahme Belege bilden; [
 
 ## Die Plattform erweitern
 
-**Machen Sie Ihre Quantensoftware zu einer Fähigkeit, die Agenten nutzen können, und bringen Sie vollständige Anwendungen auf eine offene Plattform.** Die agentenfähigen Erweiterungswege von OpenQuantum sind: Arbeitsmethoden in einem Skill beschreiben; Rechenprogramme als native Tools oder über einen MCP Server anbinden; und, wo unabhängige wissenschaftliche Prüfungen nötig sind, einen Validator mit seinem Belegfluss ergänzen. Vollständige Anwendungen werden entlang ihrer eigenen Geschäfts- und Datengrenzen integriert, statt in einzelne Tools zerlegt zu werden.
+**Machen Sie Ihre Quantensoftware zu einer Funktion, die Agenten nutzen können, und bringen Sie vollständige Anwendungen auf eine offene Plattform.** Die agentenfähigen Erweiterungswege von OpenQuantum sind: Arbeitsmethoden in einem Skill beschreiben; Rechenprogramme als native Tools oder über einen MCP Server anbinden; und, wo unabhängige wissenschaftliche Prüfungen nötig sind, einen Validator mit seinem Belegfluss ergänzen. Vollständige Anwendungen werden entlang ihrer eigenen Geschäfts- und Datengrenzen integriert, statt in einzelne Tools zerlegt zu werden.
 
-Die Fachfähigkeiten von OpenQuantum laufen auf DeepSeek Harness, das allgemeine Agentenausführung, Werkzeugplanung, Modellverbindungen und Ausführungsprotokolle übernimmt. Eine zweite Agentenlaufzeit wird nicht eingeführt. Gehen Sie von der Aufgabe aus, die Nutzer lösen müssen, und wählen Sie dann die Erweiterung:
+Die Fachfunktionen von OpenQuantum laufen auf DeepSeek Harness, das allgemeine Agentenausführung, Werkzeugplanung, Modellverbindungen und Ausführungsprotokolle übernimmt. Eine zweite Agentenlaufzeit wird nicht eingeführt. Gehen Sie von der Aufgabe aus, die Nutzende lösen müssen, und wählen Sie dann die Erweiterung:
 
 | Was hinzukommen soll | Wohin es gehört |
 | --- | --- |
@@ -648,22 +648,22 @@ Die Fachfähigkeiten von OpenQuantum laufen auf DeepSeek Harness, das allgemeine
 | Eine Quantenanwendung oder ein Lehrprodukt mit eigener Oberfläche und eigenem Ablauf | Integration entlang der Anwendungsgrenze, unter Wahrung ihrer Zuständigkeiten für Geschäftslogik, Daten, Berechtigungen und Backends; Quantum Learning ist das vorhandene Beispiel |
 | Unabhängige wissenschaftliche Prüfung und Abnahme | Ein Validator; für die endgültige Abnahme zusätzlich ein Acceptance Profile, die Materialisierung von Belegen und der zentrale Acceptance Builder |
 
-Vorhandene Skills, Brücken und native Tools dienen als Referenz. Lesen Sie zuerst den [Einstieg in Dokumentation und Architektur](../README.md), dann nach Bedarf den [Beitragsleitfaden](../../CONTRIBUTING.md), das [Erweiterungsmodell](../architecture/EXTENSION_MODEL.md) und die [Modulübersicht](../architecture/MODULES.md).
+Vorhandene Skills, Brücken und native Tools dienen als Referenz. Lesen Sie zuerst den [Überblick über Dokumentation und Architektur](../README.md), dann nach Bedarf den [Beitragsleitfaden](../../CONTRIBUTING.md), das [Erweiterungsmodell](../architecture/EXTENSION_MODEL.md) und die [Modulübersicht](../architecture/MODULES.md).
 
 <a id="quantum-applications-for-practical-problems"></a>
 
 ### Quantenanwendungen für praktische Probleme
 
-OpenQuantum integriert nicht nur SDKs, Algorithmen und Rechendienste, sondern auch vollständige Anwendungen für bestimmte Nutzergruppen und Probleme. Eine Anwendung kann ihre eigene Oberfläche, ihren Ablauf, ihre Datenverwaltung und Ergebnisdarstellung behalten und sich über ausdrückliche Ausführungsschnittstellen mit Agenten verbinden, wo Zusammenarbeit sinnvoll ist.
+OpenQuantum integriert nicht nur SDKs, Algorithmen und Rechendienste, sondern auch vollständige Anwendungen für bestimmte Zielgruppen und Probleme. Eine Anwendung kann ihre eigene Oberfläche, ihren Ablauf, ihre Datenverwaltung und Ergebnisdarstellung behalten und sich über ausdrückliche Ausführungsschnittstellen mit Agenten verbinden, wo Zusammenarbeit sinnvoll ist.
 
-Künftige Anwendungen könnten etwa Planungsoptimierung oder Molekül- und Materialberechnungen abdecken: Nutzer reichen ein reales Problem ein, prüfen die Eingabebedingungen und lesen Ergebnisse samt Geltungsbereich, statt einen Ablauf aus einzelnen Algorithmen zusammenzusetzen. Das sind Richtungen, keine Liste gelieferter Anwendungen. [Quantum Learning](#quantum-learning) ist die vorhandene Integration einer vollständigen Anwendung; bei anderen müssen Datenberechtigungen, Backends, Kosten und Prüfumfang im Einzelfall geklärt werden. Ob eine Anwendung eine echte QPU nutzt oder klassische Methoden übertrifft, entscheiden ihre eigenen Laufprotokolle und Vergleiche.
+Künftige Anwendungen könnten etwa Planungsoptimierung oder Molekül- und Materialberechnungen abdecken: Nutzende reichen ein reales Problem ein, prüfen die Eingabebedingungen und lesen Ergebnisse samt Geltungsbereich, statt einen Ablauf aus einzelnen Algorithmen zusammenzusetzen. Das sind Richtungen, keine Liste gelieferter Anwendungen. [Quantum Learning](#quantum-learning) ist die vorhandene Integration einer vollständigen Anwendung; bei anderen müssen Datenberechtigungen, Backends, Kosten und Prüfumfang im Einzelfall geklärt werden. Ob eine Anwendung eine echte QPU nutzt oder klassische Methoden übertrifft, entscheiden ihre eigenen Laufprotokolle und Vergleiche.
 
 <details>
 <summary><strong>Architektur und Zuständigkeiten</strong></summary>
 
 ![OpenQuantum-Architektur: Forschungseinstiege erreichen Harness; der Agent liest Skills, nutzt Werkzeuge über native Tool Provider oder den Harness MCP Client und verbindet Modelldienste und das Ausführungsprotokoll](../images/openquantum-platform-overview.png)
 
-Das Diagramm zeigt die zentralen Aufrufbeziehungen des Arbeitsbereichs; [siehe die bearbeitbare Quelle](../architecture/openquantum-platform-overview.html).
+Das Diagramm zeigt die zentralen Aufrufbeziehungen der Workbench; [siehe die bearbeitbare Quelle](../architecture/openquantum-platform-overview.html).
 
 - Ein **Skill** liefert Wissen und Workflow-Anweisungen; er führt keinen Code aus und hält keine Zugangsdaten.
 - Ein **Tool Provider** registriert ausführbare Werkzeuge, nativ im Prozess oder über den Harness MCP Client für einen MCP Server.
@@ -710,7 +710,7 @@ Der [offizielle `pyqpanda3`-Skill von OriginQ](https://github.com/OriginQ/pyqpan
 
 ## Roadmap und RSI
 
-**Von der Nutzung vorhandener Fähigkeiten zur gemeinsamen Schaffung neuer.** Wir bauen weiter an einer offenen Agenten- und Anwendungsplattform für Quantentechnologie, auf der Fachmethoden, Rechenressourcen, vollständige Anwendungen, Laborinstrumente und Lernressourcen jeweils einen Einstieg haben und innerhalb ihres Rahmens zusammenwirken. Das sind langfristige Richtungen, keine Lieferliste; Fähigkeiten kommen durch einzelne Integration und Prüfung hinzu.
+**Von der Nutzung vorhandener Funktionen zur gemeinsamen Entwicklung neuer.** Wir bauen weiter an einer offenen Agenten- und Anwendungsplattform für Quantentechnologie, auf der Fachmethoden, Rechenressourcen, vollständige Anwendungen, Laborinstrumente und Lernressourcen jeweils einen eigenen Zugang haben und innerhalb ihres Rahmens zusammenwirken. Das sind langfristige Richtungen, keine Lieferliste; Funktionen kommen durch einzelne Integration und Prüfung hinzu.
 
 ### Grundlagen der Plattform
 
@@ -726,13 +726,13 @@ Der [offizielle `pyqpanda3`-Skill von OriginQ](https://github.com/OriginQ/pyqpan
 | Langfristiger Strang | Woran wir weiter arbeiten |
 | --- | --- |
 | **4 · Mehr hochwertige Kurse** | Eine Wissenslandkarte von den Grundlagen bis zur Forschungsfront aufbauen, mit Kursen für Einsteiger, Fortgeschrittene und Experten, Lernen über Stufen hinweg nach Vorwissen und Interesse sowie verbundener Erklärung, praktischen Experimenten und Leistungsüberprüfung. |
-| **5 · Quantenanwendungen für praktische Probleme** | Vollständige Anwendungen rund um bestimmte Probleme integrieren oder gemeinsam entwickeln, mit Problemeingabe, Rechenablauf und Ergebnisdarstellung, damit Nutzer die zugrunde liegenden Werkzeuge nicht selbst zusammensetzen müssen. Backends, Kosten, Umfang und Prüfergebnisse jeder Anwendung dokumentieren. |
+| **5 · Quantenanwendungen für praktische Probleme** | Vollständige Anwendungen rund um bestimmte Probleme integrieren oder gemeinsam entwickeln, mit Problemeingabe, Rechenablauf und Ergebnisdarstellung, damit Nutzende die zugrunde liegenden Werkzeuge nicht selbst zusammensetzen müssen. Backends, Kosten, Umfang und Prüfergebnisse jeder Anwendung dokumentieren. |
 
 ### Personalisierung und Verbesserung
 
 | Langfristiger Strang | Woran wir weiter arbeiten |
 | --- | --- |
-| **6 · Proaktive, persönliche Unterstützung** | Hintergrund, Interessen und Ziele jeder Person aus Lernen und Forschung verstehen, vorschlagen, was als Nächstes zu lernen oder welche Methode zu nutzen ist, und fehlende Voraussetzungen ergänzen, sodass sich Kurse und Werkzeuge an die Person anpassen. Nutzer bestimmen, welche Protokolle verwendet werden, wo sie gespeichert sind und wie sich dies abschalten lässt. |
+| **6 · Proaktive, persönliche Unterstützung** | Hintergrund, Interessen und Ziele jeder Person aus Lernen und Forschung verstehen, vorschlagen, was als Nächstes zu lernen oder welche Methode zu nutzen ist, und fehlende Voraussetzungen ergänzen, sodass sich Kurse und Werkzeuge an die Person anpassen. Nutzende bestimmen, welche Protokolle verwendet werden, wo sie gespeichert sind und wie sich dies abschalten lässt. |
 | **7 · Forschungsfähigkeiten, die sich stetig verbessern** | Den Weg von Aufgabenerfahrung zu verbesserten Methoden und Werkzeugen und weiter zur Verbesserung des Forschungsprozesses selbst erkunden. Verbesserungen mit Vergleichen auf neuen Aufgaben, unabhängigen Prüfungen, Gesamtkosten und zurücksetzbaren Versionen testen, wie in der folgenden RSI-Richtung beschrieben. |
 
 Die Instrumentenschnittstellen orientieren sich an Erkundungen wie Anthropics [Model Hardware Standard (MHS)](https://www.anthropic.com/news/model-hardware-standard-research-preview) und beginnen mit simulierten Geräten und gemeinsamen Experimenten; Echtzeitsteuerung und Geräteeinschränkungen bleiben bei den zuständigen Treibern und Steuerungssystemen.
@@ -749,7 +749,7 @@ Die Instrumentenschnittstellen orientieren sich an Erkundungen wie Anthropics [M
 | Ebene | Veränderung, die wir ansammeln möchten |
 | --- | --- |
 | Über Aufgaben hinweg | Autorisierte Aufgabenerfahrung in wiederverwendbare Methoden, Fälle und Fehlergrenzen verwandeln, nicht nur in Chatprotokolle. |
-| Verbesserung von Fähigkeiten | Änderungen an Methodenwahl, Werkzeugimplementierung oder Workflow vorschlagen und auf neuen Aufgaben testen, ob Qualität, Zuverlässigkeit oder Kosten besser werden. |
+| Verbesserung von Funktionen | Änderungen an Methodenwahl, Werkzeugimplementierung oder Workflow vorschlagen und auf neuen Aufgaben testen, ob Qualität, Zuverlässigkeit oder Kosten besser werden. |
 | Rekursive Selbstverbesserung | Die Methoden verbessern, die Verbesserungen hervorbringen, etwa Experimentdesign, Kandidatensuche und unabhängige Prüfung, und testen, ob die nächste Runde effizienter wird. |
 
 Der angedachte Kreislauf lautet **reale Aufgabe → Verbesserungskandidat → unabhängige Prüfungen und Vergleiche auf neuen Aufgaben → autorisierte Versionsaktualisierung → nächste Forschungsrunde.**
@@ -758,9 +758,9 @@ So könnte eine Schaltungsaufgabe nicht nur eine optimierte Schaltung liefern, s
 
 Eine Verbesserung muss mit einer Version verglichen werden, die sie nicht geerbt hat; dabei sind Basismodell, menschliche Beteiligung sowie gesamter Verbesserungs- und Nutzungsaufwand unter vergleichbaren Bedingungen anzugeben und Regressionen zu prüfen. Ein Kandidatensystem darf seine eigenen Abnahmeregeln nicht lockern, Fehlerbelege nicht löschen und seine Berechtigungen nicht erweitern; unabhängige Bewertung, Nutzerfreigabe, Datengrenzen und Rücksetzbarkeit sind Bedingungen für die Annahme einer Änderung. Beiträge der Community und menschliche Anleitung wirken mit und sollten nicht pauschal dem autonomen Fortschritt der KI zugeschrieben werden.
 
-OpenQuantum möchte für diese Erkundung eine Arbeitsumgebung für Quantenforschung bereitstellen: ausführbare Werkzeuge, wiederverwendbare Methoden, prüfbare Ergebnisse und offene Schnittstellen für andere Forschungsagenten – ohne eine neue allgemeine Agentenlaufzeit zu bauen oder ein neues Basismodell zu trainieren. Eine Zusammenarbeit mit CyberEinstein, PRAgent und RunThePaper ist eine Möglichkeit für später, kein bestehender automatischer Kreislauf über Projekte hinweg. Ob sich KI- und Quantenfähigkeiten gegenseitig verstärken, muss an konkreten Aufgaben getestet werden, unter Einrechnung der Kosten für Präparation, Messung, Fehlerkorrektur und Datenübertragung; wir nehmen nicht an, dass Quantencomputing das Training von Basismodellen beschleunigt oder unbegrenzte Selbstverbesserung ermöglicht.
+OpenQuantum möchte für diese Erkundung eine Arbeitsumgebung für Quantenforschung bereitstellen: ausführbare Werkzeuge, wiederverwendbare Methoden, prüfbare Ergebnisse und offene Schnittstellen für andere Forschungsagenten – ohne eine neue allgemeine Agentenlaufzeit zu bauen oder ein neues Basismodell zu trainieren. Eine Zusammenarbeit mit CyberEinstein, PRAgent und RunThePaper ist eine Möglichkeit für später, kein bestehender automatischer Kreislauf über Projekte hinweg. Ob sich KI- und Quantenfunktionen gegenseitig verstärken, muss an konkreten Aufgaben getestet werden, unter Einrechnung der Kosten für Präparation, Messung, Fehlerkorrektur und Datenübertragung; wir nehmen nicht an, dass Quantencomputing das Training von Basismodellen beschleunigt oder unbegrenzte Selbstverbesserung ermöglicht.
 
-**Was wir letztlich wollen: Eine Untersuchung bringt ein neues Ergebnis hervor und hinterlässt Fähigkeiten, die der nächsten zum Erfolg verhelfen.**
+**Was wir letztlich wollen: Eine Untersuchung bringt ein neues Ergebnis hervor und hinterlässt Werkzeuge und Methoden, die der nächsten zum Erfolg verhelfen.**
 
 <a id="documentation-and-support"></a>
 
@@ -770,7 +770,7 @@ OpenQuantum möchte für diese Erkundung eine Arbeitsumgebung für Quantenforsch
 
 | Was Sie vorhaben | Hier beginnen |
 | --- | --- |
-| Die Plattform nutzen und ihre Fähigkeiten verstehen | [Dokumentationsindex](../README.md), [Bereitstellung](../DEPLOYMENT.md), [Fehlerbehebung](../TROUBLESHOOTING.md) |
+| Die Plattform nutzen und ihre Funktionen verstehen | [Dokumentationsindex](../README.md), [Bereitstellung](../DEPLOYMENT.md), [Fehlerbehebung](../TROUBLESHOOTING.md) |
 | Skills, Werkzeuge und wissenschaftliche Prüfungen beitragen | [Plattform erweitern](#extend-the-platform), [Beitragsleitfaden](../../CONTRIBUTING.md) |
 | Anwendungen integrieren, Kurse und Experimente erstellen | [Praktische Anwendungen](#quantum-applications-for-practical-problems), [Quantum Learning](#quantum-learning) |
 | Probleme melden oder den Projekthintergrund kennenlernen | [GitHub Issues](https://github.com/xi-zhao/OpenQuantum/issues), [Projektgeschichte (Chinesisch)](../communications/openquantum-wechat-launch.md) |
@@ -787,15 +787,15 @@ Ausführliche technische Dokumente liegen überwiegend auf Chinesisch vor; die a
 
 ## Lizenz und Danksagung
 
-Die Quantenfähigkeiten von OpenQuantum bauen auf offener Wissenschaft und Open-Source-Software auf. Wir pflegen Fach-Skills, MCP-Brücken, native Tools und zutreffende wissenschaftliche Prüfungen; zugrunde liegende Algorithmenbibliotheken, externe Dienste und Anwendungsgrundlagen behalten ihre eigenen Urheber, Projektnamen und Lizenzen.
+Die Quantenfunktionen von OpenQuantum bauen auf offener Wissenschaft und Open-Source-Software auf. Wir pflegen Fach-Skills, MCP-Brücken, native Tools und zutreffende wissenschaftliche Prüfungen; zugrunde liegende Algorithmenbibliotheken, externe Dienste und Anwendungsgrundlagen behalten ihre eigenen Urheber, Projektnamen und Lizenzen.
 
 | Genutztes oder adaptiertes Projekt | Rolle in OpenQuantum |
 | --- | --- |
 | [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) | Agentenlaufzeit und native Web UI des Forschungsarbeitsbereichs: Sitzungen, Modellaufrufe, Werkzeugplanung und Ausführungsprotokolle |
-| [DSH Desktop](https://github.com/anywhere-labs/dsh-desktop) | Grundlage des Desktop-Clients; OpenQuantum passt Marke und Startkonfiguration an und nutzt den Arbeitsbereich mit |
-| [CC Connect](../integrations/CC_CONNECT.md) | Messaging-Brücke, die Anfragen aus WeChat, Feishu und weiteren Kanälen in den Arbeitsbereich bringt |
+| [DSH Desktop](https://github.com/anywhere-labs/dsh-desktop) | Grundlage des Desktop-Clients; OpenQuantum passt Marke und Startkonfiguration an und nutzt die Workbench mit |
+| [CC Connect](../integrations/CC_CONNECT.md) | Messaging-Brücke, die Anfragen aus WeChat, Feishu und weiteren Kanälen in die Workbench bringt |
 | [OpenMAIC](https://github.com/THU-MAIC/OpenMAIC) | Lehrgrundlage von Quantum Learning, mit vollständiger Oberfläche, Server und Lehrabläufen, ergänzt um OpenQuantum-Namen, -Design und -Modellanbindung |
 
-Die Rechen-, Geräte- und Referenzprojekte hinter jeder Fähigkeit und die Art ihrer Adaption sind in der [chinesischen README](../../README.md#开源生态与致谢) aufgeführt.
+Die Rechen-, Geräte- und Referenzprojekte hinter jeder Funktion und die Art ihrer Adaption sind in der [chinesischen README](../../README.md#开源生态与致谢) aufgeführt.
 
-Der eigene Code von OpenQuantum steht unter der [MIT-Lizenz](../../LICENSE), mit Ausnahme separat lizenzierter Verzeichnisse. Das [Fähigkeitsverzeichnis zur Fehlerminderung mit Mitiq](../../.agents/skills/mitiq-error-mitigation/) steht unter GPL-3.0-only, der [öffentliche Daten-Snapshot von Metriq](../../src/metriq-data/upstream/) unter CC-BY-4.0, jeweils mit eigener LICENSE und NOTICE. DeepSeek Harness, DSH Desktop, OpenMAIC, FatQat, Qiskit MCP Servers, FieldQKit, Quantum Hardware MCP und weitere Drittkomponenten behalten ihre eigenen Lizenzen; lesen Sie [THIRD_PARTY_NOTICES.md](../../THIRD_PARTY_NOTICES.md), bevor Sie weiterverteilen oder eine optionale Integration aktivieren. Quellen von Screenshots und Diagrammen stehen in den [Bildhinweisen](../images/README.md).
+Der eigene Code von OpenQuantum steht unter der [MIT-Lizenz](../../LICENSE), mit Ausnahme separat lizenzierter Verzeichnisse. Das [Funktionsverzeichnis zur Fehlerminderung mit Mitiq](../../.agents/skills/mitiq-error-mitigation/) steht unter GPL-3.0-only, der [öffentliche Daten-Snapshot von Metriq](../../src/metriq-data/upstream/) unter CC-BY-4.0, jeweils mit eigener LICENSE und NOTICE. DeepSeek Harness, DSH Desktop, OpenMAIC, FatQat, Qiskit MCP Servers, FieldQKit, Quantum Hardware MCP und weitere Drittkomponenten behalten ihre eigenen Lizenzen; lesen Sie [THIRD_PARTY_NOTICES.md](../../THIRD_PARTY_NOTICES.md), bevor Sie weiterverteilen oder eine optionale Integration aktivieren. Quellen von Screenshots und Diagrammen stehen in den [Bildhinweisen](../images/README.md).
