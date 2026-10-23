@@ -219,7 +219,7 @@ async function invoke(handler, request) {
 
 test("bounded routes reject cross-origin, oversized and arbitrary commands before dispatch", async (t) => {
   const f = await fixture(t);
-  const handler = createUpdateHandler(f.service);
+  const handler = createUpdateHandler(f.service, { requestRejection: () => undefined });
   const cases = [
     [commandRequest({}, {}, "GET"), 405], [commandRequest({}, { origin: "https://evil.example" }), 403],
     [commandRequest({}, { "sec-fetch-site": "cross-site" }), 403], [commandRequest({}, { "content-type": "text/plain" }), 415],
@@ -235,7 +235,7 @@ test("bounded routes reject cross-origin, oversized and arbitrary commands befor
 
 test("Desktop's exact empty request checks OpenQuantum and preserves its public acknowledgement", async (t) => {
   const f = await fixture(t);
-  const handler = createUpdateHandler(f.service, { desktop: true });
+  const handler = createUpdateHandler(f.service, { desktop: true, requestRejection: () => undefined });
   const result = await invoke(handler, commandRequest());
   assert.deepEqual(result.body, { accepted: true });
   assert.equal(f.service.snapshot().desktopCheck, 1);

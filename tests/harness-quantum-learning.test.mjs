@@ -76,7 +76,7 @@ test("native UI/API → Harness Session → OpenMAIC SDK → saved classroom and
     return result.value;
   }
   async function command(value) {
-    const response = await fetch(`${base}/openquantum/api/learning`, { method: "POST", headers: { "content-type": "application/json", origin: base }, body: JSON.stringify(value) });
+    const response = await fetch(`${base}/openquantum/api/learning`, { method: "POST", headers: { "content-type": "application/json", origin: base, cookie }, body: JSON.stringify(value) });
     assert.equal(response.status, 200, redactHarnessLaunchTokens(logs)); return response.json();
   }
   await waitFor(() => rpc("session/modelCatalog"), "Harness startup");

@@ -15,8 +15,11 @@ const SAME_ORIGIN_HEADERS = {
   "content-type": "application/json",
   host: "127.0.0.1:3000",
   origin: "http://127.0.0.1:3000",
+  cookie: "fixture-only",
   "sec-fetch-site": "same-origin",
 };
+
+const requestRejection = (request) => request.headers.cookie === "fixture-only" ? undefined : 401;
 
 function request(body, overrides = {}) {
   return {
@@ -51,6 +54,7 @@ test("registers Harness-native routes and wires credentials into capability comm
   const root = {};
   apply({
     root,
+    connection: { requestRejection },
     credentials: {
       async describe(ref) {
         described.push(ref);
@@ -197,6 +201,7 @@ test("capability settings boundary rejects cross-site and non-JSON requests", ()
 test("capability handler returns only its injected project projection", async () => {
   const observed = [];
   const handler = createCapabilitySettingsHandler({
+    requestRejection,
     projectRoot: "/safe/project",
     async dispatch(root, command) {
       observed.push({ root, command });
@@ -227,6 +232,7 @@ test("capability handler returns only its injected project projection", async ()
 test("runtime readiness handler delegates only the bounded snapshot command", async () => {
   const observed = [];
   const handler = createRuntimeReadinessHandler({
+    requestRejection,
     projectRoot: "/safe/project",
     async dispatch(root, command) {
       observed.push({ root, command });

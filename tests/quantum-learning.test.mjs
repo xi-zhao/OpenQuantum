@@ -126,7 +126,7 @@ test("a failed generation cannot spend another SDK budget in the same Harness tu
 
 test("host route rejects foreign origins and oversized bodies without touching the application", async () => {
   let called = 0;
-  const handler = createLearningHandler({ dispatch: async () => { called++; return {}; } });
+  const handler = createLearningHandler({ requestRejection: () => undefined, dispatch: async () => { called++; return {}; } });
   const headers = { host: "localhost:3000", origin: "http://localhost:3000", "content-type": "application/json" };
   const invoke = async (overrides, body = "{}") => {
     const req = { method: "POST", headers: { ...headers, ...overrides }, async *[Symbol.asyncIterator]() { yield Buffer.from(body); } };
