@@ -1,0 +1,4 @@
+interface:
+  display_name: "Quantum Inspire 查询"
+  short_description: "通过官方 SDK 分页查询设备与既有任务状态。"
+  default_prompt: "使用 $quantuminspire-cloud 完成用户指定的有界任务，并说明实际验证范围。"

@@ -5,6 +5,21 @@ description: 使用 OpenQuantum 通过 Harness MCP Client 注册的 QPanda QUBO 
 
 # QPanda QUBO Workbench
 
+<!-- BEGIN NATIVE SDK ACCESS -->
+## 原生 SDK 路径
+
+本能力同时支持 **QPanda Algorithm 的原生公开 API**。用户需要 QUBO 建模、约束、算法与上游优化模块 时，由 Agent 在固定依赖环境中编写和运行任务代码，不限于下文便捷 Tool 的预设模型。
+
+使用 `node scripts/sdk-access.mjs inspect qpanda-qubo` 定位环境，按[完整 SDK 工作流](../quantum-sdk-workbench/references/workflow.md)执行。模块导航：`pyqpanda_alg`；导航不是 API 白名单。
+
+macOS 的完整 SDK setup 需要 Git、CMake 和 C++ 编译器，以固定 fmt 11.2.0 源码构建隔离动态库；其余上游 wheel 的系统依赖仍按平台核验，不修改 Homebrew 或裁剪算法模块。
+
+原生程序导入库前，按环境定位器的 `bootstrap` 执行启动兼容处理：macOS 从独立目录加载固定 fmt 11 ABI，保留 pyqpanda_alg 顶层完整导入。这不限制公开 API，也不替换数值算法。
+
+下文关于模型、门集、输入与预算的限制描述便捷 Tool 的合同；原生 SDK 另受上游版本、可选依赖、宿主资源与用户授权约束。已禁用或被拒绝的动作不能借代码路径绕过。执行状态和科研验收分别报告。
+<!-- END NATIVE SDK ACCESS -->
+
+
 ## 工作边界
 
 这个 Skill 负责组织 QUBO 求解工作流，真正的计算由 `qpanda_qubo` MCP Server 暴露并经 Harness MCP Client 注册的 Tool 完成，

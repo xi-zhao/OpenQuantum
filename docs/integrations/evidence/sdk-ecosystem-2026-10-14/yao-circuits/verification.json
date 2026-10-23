@@ -1,0 +1,16 @@
+{
+  "id": "yao-circuits",
+  "dependencyLockSha256": "1cafc8f91c5c23ce778704cac58801fe0e3cfd53a0577f29f3e38b100cc52a1e",
+  "sourceSha256": "a8b81b9e4227af95d2ae1baf39c9335e76153455396ffad3aa683e5c95cb0539",
+  "networkIsolation": "macOS sandbox-exec deny network*",
+  "scientificValidation": "not_evaluated",
+  "status": "passed",
+  "files": {
+    "attempt.json": "6265381fa6ff7d655a6e91f3845963fc1ead9292561b9538141b8cf50dbbb204",
+    "program.jl": "a8b81b9e4227af95d2ae1baf39c9335e76153455396ffad3aa683e5c95cb0539",
+    "result.json": "9db4d2dc129c45429ebe92d5c854b84db0666ee90cfe8a72b624e5a8fea0be40",
+    "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "versions.json": "88b290eebba1793357794a747190e0f2d58e9dcf0d357fb400cd6246d3281865"
+  }
+}

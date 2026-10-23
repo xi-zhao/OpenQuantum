@@ -36,7 +36,12 @@ Model 等要求描述 OpenQuantum 产品架构，不要求仓库维护任务都�
 
 ## 产品与架构基线
 
-OpenQuantum 是一个科研 Agent 操作平台。DeepSeek Harness 负责通用 Agent Runtime，量子计算、
+OpenQuantum 以共享 Skill、Tool implementation 和科学合同为核心，有两个发行入口：Desktop 与 Codex 插件。
+Desktop 保留量子学习通，由 DeepSeek Harness 负责通用 Agent Runtime；Codex 插件使用外层 Codex 的聊天、
+项目、线程、登录和模型，侧边页只配置本插件的 Skill、MCP 连接与 Tool，不携带第二个 app-server 或学习通。
+Codex 打包与设置合同见 `docs/integrations/CODEX_PLUGIN.md`；以下 Harness/Cordis 生命周期规则适用于 Desktop。
+
+Desktop 中，量子计算、
 性质预测、案例咨询和通用问答等产品能力由 Agent Preset 组合独立的 Harness Skill 与 Tool Provider；
 Tool 可以由原生 Tool Plugin 注册，或由 MCP Server 暴露后经 Harness MCP Client 注册，必要时再调用
 OpenQuantum Scientific Validator。只有 Tool hook 等 Agent 生命周期行为才在同一 Preset 组合受信任的
@@ -116,6 +121,10 @@ Model Adapter、Host 或 Client Plugin 角色和 scope；上下文已明确时�
 
 ## 代码位置
 
+- `src/capabilities`：与宿主无关的原生 Tool 定义与计算，Harness 和 Codex 适配器共同引用。
+- `runtime/chatgpt`：Codex 本机 MCP 与设置页适配器；不拥有聊天、模型、项目或科研 Acceptance。
+- `src/settings/codex`：本插件的设置、MCP 连接与系统凭据窗口；不得修改其他插件的开关。
+- `distributions/codex-plugin`：插件的最小运行依赖；产品版本与 Desktop、安装器一致，以根 `package.json` 为准。
 - `runtime/openquantum`：Harness patch、preset、模型 route、品牌和原生 Client Plugin。
 - `src/settings/server`：项目 Skill、MCP Server 连接与凭据引用的受控设置实现。
 - `.agents/skills`：Harness 原生 Skill 指令，以及为维护 locality 可选共置的领域资源；连接 MCP Server 的
@@ -131,7 +140,9 @@ Model Adapter、Host 或 Client Plugin 角色和 scope；上下文已明确时�
 - `npm run harness:config`：展开并检查 Harness 组合配置。
 - `npm run models:probe -- --provider openquantum-public`：验证模型目录、文本生成和工具调用。
 - `npm run capability:diagnostics:test`：验证平台诊断能力包和评分规则。
-- `npm run check`：运行 lint、能力声明一致性检查、平台/科学测试并验证 Harness 组合配置。
+- `npm run release:version -- X.Y.Z`：统一更新 Desktop、Codex 插件、安装器及三份锁文件的产品版本；依赖版本不变。
+- `npm run release:check`：检查所有产品版本副本一致；同步发行使用同一提交的 `vX.Y.Z` 与 `codex-vX.Y.Z` 标签。
+- `npm run check`：运行版本一致性、lint、能力声明一致性检查、平台/科学测试并验证 Harness 组合配置。
 
 ## 实现规则
 
@@ -143,3 +154,19 @@ Model Adapter、Host 或 Client Plugin 角色和 scope；上下文已明确时�
 - 相关检查通过且已授权目标完成后收口；只有新改动、失败或未解决风险才扩大或重复验证。
   失败时先判断与本次改动的关系：修复授权范围内的问题；无关失败或外部条件受阻则如实报告影响和未验证项，
   不擅自扩修，也不将未通过写成通过。
+
+## Agent skills
+
+以下约定供维护本仓库的工程技能使用；现有任务范围、授权与科学验收规则继续适用。
+
+### Issue tracker
+
+工单和需求规格使用 GitHub Issues：`xi-zhao/OpenQuantum`。见 [工单约定](docs/agents/issue-tracker.md)。
+
+### Triage labels
+
+使用五个默认角色标签：`needs-triage`、`needs-info`、`ready-for-agent`、`ready-for-human`、`wontfix`。见 [标签映射](docs/agents/triage-labels.md)。
+
+### Domain docs
+
+采用 single-context：复用根目录 `CONTEXT.md` 作为唯一术语表，ADR 沿用 `docs/architecture/ADR-*.md`。工程技能模板中的 `GLOSSARY.md` 与 `docs/adr/` 分别映射到这两处。见 [领域文档规则](docs/agents/domain.md)。

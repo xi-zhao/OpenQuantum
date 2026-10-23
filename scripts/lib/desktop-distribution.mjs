@@ -1,9 +1,21 @@
 import { createHash, randomUUID } from "node:crypto";
 import { lstat, mkdir, readFile, rename, rm, symlink, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { assertCompatibleHarnessHome } from "./harness-home-compatibility.mjs";
+import { compareVersions, parseVersion } from "../../src/updates/release.mjs";
 
 const STATE = ".openquantum/desktop-distribution.json";
 export const sha256 = (data) => createHash("sha256").update(data).digest("hex");
+
+export function desktopPayloadIdentity(manifest, { platform = process.platform, arch = process.arch } = {}) {
+  if (manifest.kind !== "dsh-capability-package" || manifest.target !== `${platform}-${arch}`
+    || !["darwin-arm64", "darwin-x64", "win32-x64"].includes(manifest.target)
+    || !/^[a-f0-9]{64}$/.test(manifest.runtimeLockSha256)
+    || !/^\d+\.\d+\.\d+(?:-[A-Za-z0-9.-]+)?$/.test(manifest.version)) {
+    throw new Error("Incompatible or invalid Desktop capability package; use the package for this platform and architecture");
+  }
+  return `${manifest.version}-${sha256(JSON.stringify(manifest)).slice(0, 16)}`;
+}
 
 function relativeFile(filename) {
   if (typeof filename !== "string" || !filename || filename.includes("\\")
@@ -23,7 +35,7 @@ async function statOrNull(filename) {
 
 // Reject links in every writable path, including ancestors of the project.
 // Installer-created node_modules is handled separately and never traversed.
-async function assertNoLinks(filename) {
+export async function assertNoLinks(filename) {
   const absolute = path.resolve(filename);
   const parts = absolute.slice(path.parse(absolute).root.length).split(path.sep);
   let current = path.parse(absolute).root;
@@ -46,11 +58,13 @@ async function atomicWrite(filename, content, mode = 0o600) {
 
 function editable(filename) {
   return filename.startsWith(".agents/skills/")
-    || filename === "runtime/openquantum/agent-presets/openquantum/agent.cordis.yml";
+    || filename === "runtime/openquantum/model-routes.cordis.yml"
+    || filename === "runtime/openquantum/cordis.patch.yml"
+    || /^runtime\/openquantum\/agent-presets\/[^/]+\/agent\.cordis\.yml$/.test(filename);
 }
 
 function validateManifest(manifest) {
-  if (manifest.schemaVersion !== 1 || typeof manifest.version !== "string"
+  if (manifest.schemaVersion !== 1 || !parseVersion(manifest.version)
     || !manifest.files || typeof manifest.files !== "object" || Array.isArray(manifest.files)) {
     throw new Error("Unsupported Desktop distribution manifest");
   }
@@ -62,17 +76,29 @@ function validateManifest(manifest) {
   }
 }
 
-/** Refresh only distributed files; preserve sessions, credentials and user extensions. */
-export async function installDesktopDistribution({ payload, projectRoot }) {
-  const next = JSON.parse(await readFile(path.join(payload, "distribution.json"), "utf8"));
-  validateManifest(next);
+/** Also used before staging a package; repeat immediately before project writes. */
+export async function assertDesktopUpgrade(projectRoot, version) {
+  if (!parseVersion(version)) throw new Error("Unsupported Desktop distribution version");
   const statePath = path.join(projectRoot, STATE);
   await assertNoLinks(statePath);
   const previous = await readFile(statePath, "utf8").then(JSON.parse).catch((error) => {
-    if (error.code === "ENOENT") return { schemaVersion: 1, version: "", files: {} };
+    if (error.code === "ENOENT") return { schemaVersion: 1, version, files: {} };
     throw error;
   });
   validateManifest(previous);
+  if (compareVersions(version, previous.version) < 0) {
+    throw new Error(`Refusing to downgrade OpenQuantum from ${previous.version} to ${version}; existing programs, dependencies and data were not changed`);
+  }
+  return previous;
+}
+
+/** Refresh only distributed files; preserve sessions, credentials and user extensions. */
+export async function installDesktopDistribution({ payload, projectRoot }) {
+  await assertCompatibleHarnessHome(path.join(projectRoot, ".openquantum/dsh"));
+  const next = JSON.parse(await readFile(path.join(payload, "distribution.json"), "utf8"));
+  validateManifest(next);
+  const previous = await assertDesktopUpgrade(projectRoot, next.version);
+  const statePath = path.join(projectRoot, STATE);
   const changes = [];
   const preserved = [];
   // Validate the entire payload and update plan before touching an existing install.

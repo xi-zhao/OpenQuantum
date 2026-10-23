@@ -10,6 +10,7 @@
   "files": [
     "assets",
     "client.js",
+    "desktop.mjs",
     "cordis.patch.yml",
     "identity.mjs",
     "index.mjs",
@@ -18,6 +19,7 @@
   "exports": {
     ".": "./index.mjs",
     "./client": "./client.js",
+    "./desktop": "./desktop.mjs",
     "./package.json": "./package.json"
   },
   "dsh": {

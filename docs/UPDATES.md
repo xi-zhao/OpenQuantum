@@ -1,9 +1,9 @@
 # OpenQuantum updates
 
 **Settings → Updates** shows the installed OpenQuantum version, last check and release notes.
-The sidebar update button also opens this view. Reminders offer **Remind me tomorrow** and
+The OpenQuantum sidebar update button also opens this view. Reminders offer **Remind me tomorrow** and
 **Skip this version** in the workbench's selected language. The Desktop title-bar **Check for updates**
-command uses the same service. Settings identifies the OpenQuantum product version separately from
+command checks the original DSH Desktop client through its upstream service. Settings identifies the OpenQuantum product version separately from
 the pinned Desktop dependency.
 
 ## Discovery and reminders
@@ -26,16 +26,11 @@ from a confirmed current version; the timestamp remains visible.
 
 ## Upgrading
 
-This edition provides discovery and reminders. Starting with v0.5.1, releases include native Mac
-and Windows installers; the current installers are unsigned test builds. The update service does
-not download, install or restart applications. **View release notes** and **Upgrade guide** link to
-the selected release, keeping instructions tied to the version being offered.
+OpenQuantum content updates and original DSH Desktop updates are separate. OpenQuantum capability packages and the Codex plugin share one product version; the original client retains its upstream version.
+The OpenQuantum service only offers release notes and upgrade instructions; it does not download, install or restart the client.
 
-For an installed Desktop application, finish active tasks, quit the app and back up its
-[data directory](DESKTOP_INSTALLERS.md#数据与升级). Download the installer for your platform from the
-selected release, check it against the attached `SHA256SUMS`, then replace the application using the
-DMG or Windows installer. User data is stored separately. A source installation is not automatically
-migrated into the installer data directory.
+For an installed capability package, quit the Host, back up the OpenQuantum data directory, verify and extract the new capability archive, then run its installer. Keep the original DSH Desktop on the compatible version named in the release notes. See [installation and migration](DESKTOP_INSTALLERS.md).
+Version 0.8.2 and later use capability archives with the original DSH Desktop client. The old private OpenQuantum DMG/EXE packages are no longer the installation path; their Git tags and source history remain available.
 
 For a source installation:
 
@@ -54,24 +49,54 @@ Switching between Web and Desktop continues to require stopping the other entry 
 
 ## Publishing a stable update
 
-1. Bump the OpenQuantum version in `package.json` and `package-lock.json`, review dependency compatibility
-   and migration notes, then merge the reviewed release change.
-2. Wait for CI and all three `Desktop test installers` jobs at that exact commit to pass. Download
-   their installer and `SHA256SUMS` artifacts; verify each hash and combine the three checksum lines
-   into one `SHA256SUMS`. Preserve the installer filenames, versions and bytes.
+Starting with 0.8.1, Desktop, the Codex plugin and its installer share one OpenQuantum product version.
+The root `package.json` is authoritative; the two distribution manifests and all three lockfiles
+carry the same version. Pinned third-party dependencies retain their own version numbers.
+The `vX.Y.Z` and `codex-vX.Y.Z` tags distinguish release channels, not product versions. Synchronized
+releases point both tags at the same reviewed commit. A product version does not require both channels to be published.
+
+Version 0.8.4 uses both `v0.8.4` and `codex-v0.8.4` at the same reviewed commit.
+The exact source commit and package checksums are recorded in each Release's `release-validation.json`.
+Once both releases are public, GitHub latest points to `v0.8.4`,
+which carries the capability archives and `openquantum-update.json`; the Codex Release is not latest.
+This keeps Desktop/Web update discovery on the capability-package channel. Git tags, source history
+and previous `codex-v*` releases are retained. The steps below apply when both channels are published.
+The shared release command and packaging guards currently accept plain stable `X.Y.Z` only,
+without prerelease suffixes or build metadata, matching the supported synchronized release pipeline.
+
+1. Run `npm run release:version -- X.Y.Z` to update all six manifests/lockfiles together, then update
+   the shared release notes and current download links. Review dependency compatibility and migration
+   notes, run `npm run release:check`, and merge the reviewed change. `npm run check` and both package
+   builders reject mismatched product versions. The version command does not change dependencies.
+2. Wait for CI and all three `DSH capability packages` jobs at that exact commit to pass. Download
+   their capability archives and `SHA256SUMS` artifacts; verify each hash and combine the three checksum lines
+   into one `SHA256SUMS`. Preserve the archive filenames, versions and bytes.
 3. Create the matching `vX.Y.Z` tag at that commit. Prepare a draft Release with user-facing notes,
-   all three installers and the combined checksum file, verify the uploaded assets, then publish it
-   as a non-prerelease. Identify unsigned test builds explicitly; publishing is not code signing.
+   all three capability archives and the combined checksum file, verify the uploaded assets, then publish it
+   as a non-prerelease. Link the compatible original upstream client; do not relabel its version or signature.
+
+   If local large-file transfers are unreliable, manually run `release-artifacts.yml` with the tag,
+   successful push CI run ID and successful push installer run ID. It requires the same source commit,
+   an existing draft Release, all seven successful jobs and the three exact capability-archive checksums. It
+   uploads from GitHub runners, preserves matching existing assets and rejects mismatches. Upload the
+   combined `SHA256SUMS` and any validation records separately, then verify all remote assets before
+   publishing. This workflow does not create a Release, publish it or change `latest`.
 4. `release-updates.yml` runs the same quality, macOS/Windows Desktop installation and container gates
    as CI against the release revision. Only after all gates pass does it attach `openquantum-update.json`.
    Ordinary pushes, draft releases and prereleases do not publish this stable update asset.
-5. Verify the asset and a client check. Mark the intended release as latest on GitHub. Re-running the
-   job regenerates the same manifest from the tag and publication date; it does not create another release.
+5. Verify the asset and a client check. Mark the intended Desktop release as latest on GitHub. Re-running
+   the job regenerates the same manifest from the tag and publication date; it does not create another release.
+6. From that same clean commit, build and verify the [Codex packages](integrations/CODEX_PLUGIN.md),
+   then publish `codex-vX.Y.Z` with the shared release notes, checksums and its validation record.
+   When publishing both channels, set the Codex Release to **not latest** so the Desktop update feed
+   continues to resolve the Desktop Release. For a Codex-only release, mark that Release latest and
+   omit the Desktop update manifest. Confirm every published package reports X.Y.Z and references
+   the reviewed source commit.
 
 To inspect a manifest locally without publishing:
 
 ```bash
-node scripts/build-update-manifest.mjs --tag v0.5.0 --published-at 2026-09-20T00:00:00Z --output .openquantum/release/openquantum-update.json
+node scripts/build-update-manifest.mjs --tag v0.6.0 --published-at 2026-09-29T00:00:00Z --output .openquantum/release/openquantum-update.json
 ```
 
 Use the actual version and publication date. The generator rejects mismatched tags and prerelease
@@ -88,13 +113,8 @@ verified, signed installers; an entry alone cannot enable installation.
   Session, installer or restart operations.
 - `runtime/openquantum/web-updates`: deployment-scoped Host routes and a Harness Client Plugin using
   the existing settings and sidebar slots. Browsers call only same-origin bounded routes.
-- The deployment disables the upstream `desktop-updates` plugin, whose feed distributes DSH installers.
-  Its public `/api/desktop/updates/check` route becomes a tested adapter into the OpenQuantum service,
-  retaining the pinned Desktop's `{accepted:true}` contract. No private Electron-runtime access or
-  upstream edits are needed. Recheck this public contract when upgrading Desktop.
+- The original `desktop-updates` plugin and `/api/desktop/updates/check` route remain owned by DSH Desktop. OpenQuantum registers only `/openquantum/api/updates`; neither update channel impersonates the other.
 - Copy uses `settings.openquantumUpdates` in the existing ten-language catalog and language preference.
 
 Run `node --test tests/updates.test.mjs tests/update-client.test.mjs tests/desktop-integration.test.mjs`
-and `npm run locales:check`. CI includes these through its normal test entry point. Future native
-installation must add signed packaging, artifact verification and data migration tests, and wait
-for the user's restart choice after active tasks finish.
+and `npm run locales:check`. CI includes these through its normal test entry point. Capability installation checks must cover archive verification, configuration retention and the pinned original client. Native UI checks remain separate from content-install tests.

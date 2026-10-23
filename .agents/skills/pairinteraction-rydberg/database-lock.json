@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "1.0",
+  "repository": "https://github.com/pairinteraction/database-sqdt",
+  "release": "v2.0",
+  "archives": [
+    {
+      "name": "Rb_v2.0",
+      "url": "https://github.com/pairinteraction/database-sqdt/releases/download/v2.0/Rb_v2.0.zip",
+      "sha256": "36c67df9243d9006c4de3b5052a4353ac9081887f8ae7be16749963925ae1418",
+      "files": {
+        "Rb_v2.0/matrix_elements_o.parquet": "de7b4f683476b30a6266bf3ad036d81ed84c4713644b3dd9ae1ca9e49170c2ef",
+        "Rb_v2.0/matrix_elements_q.parquet": "33862f8ad30eed72bf61f379b388c451d1390c836a65415269e059d58f6e18bd",
+        "Rb_v2.0/matrix_elements_q0.parquet": "1d56f8c1a2274a1b704442e37fbc3bf451155797e0f0c098832c08146d87229b",
+        "Rb_v2.0/states.parquet": "c4c5f2f7a41d66fa38d9b681d141145e5bd47f4aad4fb5c83f7272efbcb1c159",
+        "Rb_v2.0/matrix_elements_d.parquet": "32d488b6106209acd3abb38ae89a2e2637415335401b6f061b0c3b1d482fc588",
+        "Rb_v2.0/matrix_elements_mu.parquet": "4e1a866455c845a43e59b04f1d20b1b266368be97a3a021e6af08ef0d8da9741"
+      }
+    },
+    {
+      "name": "misc_v2.0",
+      "url": "https://github.com/pairinteraction/database-sqdt/releases/download/v2.0/misc_v2.0.zip",
+      "sha256": "765d33570cbf1ffe00b4e0a65a85c0bba0325faad5f08855862549fc1296cd8d",
+      "files": {
+        "misc_v2.0/wigner.parquet": "2e32e70e39d9ef2b08b8bf8ef6d88309ddca3c9fc1e882cf5a199726d9449b2d"
+      }
+    }
+  ]
+}

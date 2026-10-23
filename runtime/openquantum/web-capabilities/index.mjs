@@ -1,3 +1,4 @@
+import { projectRoot as openQuantumProjectRoot } from "../project-root.mjs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 
@@ -124,7 +125,7 @@ export async function dispatchMessageChannelCommand(projectRoot, command) {
 }
 
 export function createCapabilitySettingsHandler({
-  projectRoot = process.cwd(),
+  projectRoot = openQuantumProjectRoot,
   dispatch = dispatchCapabilityCommand,
   surface = "Capability settings",
   failureMessage = "能力设置暂时不可用",
@@ -148,6 +149,10 @@ export function createCapabilitySettingsHandler({
         json(response, 409, { error: error.message });
         return;
       }
+      if (error?.name === "DesktopPresetConflictError") {
+        json(response, 409, { error: error.message, code: "DESKTOP_PRESET_CONFLICT", projectSaved: error.projectSaved === true });
+        return;
+      }
       if (error instanceof SyntaxError || error instanceof TypeError) {
         json(response, 400, { error: error.message });
         return;
@@ -159,7 +164,7 @@ export function createCapabilitySettingsHandler({
 }
 
 export function createRuntimeReadinessHandler({
-  projectRoot = process.cwd(),
+  projectRoot = openQuantumProjectRoot,
   dispatch,
   requestRejection,
 } = {}) {
@@ -175,8 +180,9 @@ export function createRuntimeReadinessHandler({
   });
 }
 
-export function apply(ctx) {
+export function apply(ctx, { channels = true, adaptive = false } = {}) {
   const requestRejection = (request) => ctx.connection.requestRejection(request);
+  if (!channels) ctx.effect(() => ctx.webServer.tapIndex(html => html.replace("</head>", '<meta name="openquantum-channels" content="disabled" />\n</head>')), "openquantum: capability navigation");
   const capabilityHandler = createCapabilitySettingsHandler({
     requestRejection,
     dispatch: (projectRoot, command) =>
@@ -196,7 +202,7 @@ export function apply(ctx) {
       dispatchRuntimeReadinessCommand(projectRoot, command, { ctx }),
   });
   const routes = [
-    ["/openquantum/api/capabilities", capabilityHandler, "openquantum: capability settings API"],
+    ...(!adaptive ? [["/openquantum/api/capabilities", capabilityHandler, "openquantum: capability settings API"]] : []),
     ["/openquantum/api/channels", channelHandler, "openquantum: message channel settings API"],
     ["/openquantum/api/runtime-readiness", runtimeReadinessHandler, "openquantum: runtime readiness API"],
   ];

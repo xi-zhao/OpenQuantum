@@ -1,0 +1,8 @@
+[project]
+name = "openquantum-qrisp-arithmetic"
+version = "0.1.0"
+requires-python = ">=3.12,<3.13"
+dependencies = ["qrisp==0.9.9"]
+
+[tool.uv]
+package = false

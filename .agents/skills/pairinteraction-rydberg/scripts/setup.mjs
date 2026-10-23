@@ -1,0 +1,30 @@
+import { spawnSync } from "node:child_process";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
+import { createHash } from "node:crypto";
+import { pythonEnvironmentRoot } from "../../../../src/lib/prepared-python.mjs";
+import { assertInstalledPythonFiles } from "../../../../src/lib/installed-python.mjs";
+
+const skillRoot = fileURLToPath(new URL("..", import.meta.url));
+const root = path.resolve(skillRoot, "../../..");
+const environment = pythonEnvironmentRoot(root, "pairinteraction-rydberg");
+const marker = path.join(environment, "openquantum-lock.sha256");
+const lock = path.join(skillRoot, "uv.lock");
+const digest = () => createHash("sha256").update(readFileSync(lock)).digest("hex");
+const before = digest();
+const allow = ["HOME", "PATH", "HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY", "NO_PROXY", "SSL_CERT_FILE", "SSL_CERT_DIR", "UV_CACHE_DIR", "UV_PYTHON_INSTALL_DIR", "SYSTEMROOT", "TEMP", "TMP", "TMPDIR", "WINDIR"];
+const env = { ...Object.fromEntries(allow.filter(key => process.env[key]).map(key => [key, process.env[key]])), UV_PROJECT_ENVIRONMENT: environment };
+const run = (command, args) => {
+  const result = spawnSync(command, args, { cwd: root, env, stdio: "inherit", timeout: 900000 });
+  if (result.error || result.status !== 0) throw new Error(`PairInteraction setup failed: ${result.error?.message ?? result.status}`);
+};
+rmSync(marker, { force: true });
+run("uv", ["sync", "--frozen", "--no-dev", "--project", skillRoot, "--python", "3.12"]);
+if (digest() !== before) throw new Error("PairInteraction dependency lock changed during setup");
+const python = path.join(environment, process.platform === "win32" ? "Scripts/python.exe" : "bin/python");
+assertInstalledPythonFiles(python, { cwd: root, env });
+run(python, [path.join(skillRoot, "scripts/setup_database.py")]);
+const pending = `${marker}.${process.pid}.tmp`;
+writeFileSync(pending, before + "\n");
+renameSync(pending, marker);

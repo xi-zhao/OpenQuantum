@@ -1,0 +1,946 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-12T02:13:07.752Z",
+  "purpose": "Engineering validation only; no research acceptance.",
+  "baseline": {
+    "priorImplementation": "5ce3b3ec503c1478bf38a4cf9903dbd1b78a3916",
+    "targetMain": "95bde719662b0510b74e369efd75fa04b96daed8",
+    "branch": "c/full-sdk-integration"
+  },
+  "checks": [
+    {
+      "command": "npm run check",
+      "exitCode": 0,
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/check-final.log",
+        "bytes": 126779,
+        "sha256": "a3586a3153245118407a23cc1ba1be7a29c8cd43346ce3352110f8c320336037"
+      },
+      "scope": "Default checks; skipped optional native/live checks are not counted as executed."
+    },
+    {
+      "command": "node --test tests/prepared-python.test.mjs tests/sdk-engineering-evidence.test.mjs",
+      "exitCode": 0,
+      "passed": 9,
+      "skipped": 0,
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/infrastructure-final.log",
+        "bytes": 1097,
+        "sha256": "04af2954f7bf6d465b56ce7d234ade604d7f46670595e6e7554ebb09fd14e138"
+      }
+    },
+    {
+      "command": "OPENQUANTUM_NATIVE_SDK_CHECKS=1 node --test --test-name-pattern=\"native SDK network isolation\" tests/sdk-native-remaining.test.mjs",
+      "exitCode": 0,
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/network-boundary.log",
+        "bytes": 194,
+        "sha256": "69a4ef306af56ad4fb4a8e25420e88da7f32290b4c9662cd97c06f32aaebadf8"
+      }
+    },
+    {
+      "command": "node scripts/sdk-engineering-evidence.mjs .openquantum/sdk-checks/remaining docs/integrations/evidence/full-sdk-engineering-2026-10-12.json --require-complete",
+      "exitCode": 0,
+      "report": {
+        "path": "docs/integrations/evidence/full-sdk-engineering-2026-10-12.json",
+        "bytes": 355096,
+        "sha256": "5de98e7b19d82ae89779d2179b247a5722761442ce178be0ce5fd6d370f6e1b4"
+      },
+      "summary": {
+        "expected": 72,
+        "passed": 72,
+        "unresolved": []
+      }
+    }
+  ],
+  "sourceFiles": [
+    {
+      "path": ".agents/sdk-libraries.json",
+      "bytes": 33432,
+      "sha256": "53b213d1eebe6d07cc2ec55a1769e47cabf49e36a1ed92d0b14fd279f9d5cc5e"
+    },
+    {
+      "path": ".agents/skills/quantum-circuit-verification/pyproject.toml",
+      "bytes": 179,
+      "sha256": "57b395d74ebe4c9510052941b87e04f4423cda4bc4f659c1082eee74d339900a"
+    },
+    {
+      "path": ".agents/skills/quantum-circuit-verification/uv.lock",
+      "bytes": 70027,
+      "sha256": "3a3f718e08ffd6ee7b0f44c1cb465f6ee6eb3b3093a01c26509729a2fbed6954"
+    },
+    {
+      "path": ".agents/skills/tensorcircuit-differentiable/pyproject.toml",
+      "bytes": 283,
+      "sha256": "910b078558fbc5ba2c07a5260ae979473121f9780a63a3732211c0546a2ee0bd"
+    },
+    {
+      "path": ".agents/skills/tensorcircuit-differentiable/uv.lock",
+      "bytes": 73285,
+      "sha256": "21a2f94069f2207bcd6f830232d93117633d3c62fc89a9bb597e241504794648"
+    },
+    {
+      "path": "scripts/sdk-engineering-evidence.mjs",
+      "bytes": 9553,
+      "sha256": "1e6d39047a57f04e463486b497c0ee6d3b61baba0162acf124c7c803ccfa1956"
+    },
+    {
+      "path": "src/lib/check_python_install.py",
+      "bytes": 3594,
+      "sha256": "fd37b4d5d078856af1d9d4375121cb7cfd205ef80b7bd68c69a7fa5b3e6b689c"
+    },
+    {
+      "path": "tests/fixtures/sdk-engineering-process.mjs",
+      "bytes": 810,
+      "sha256": "f4c69f48d03832314adcf2dcf4586fd617fdaf5f79618b4dea77071aa3697e72"
+    },
+    {
+      "path": "tests/fixtures/sdk-native-circuits.mjs",
+      "bytes": 19414,
+      "sha256": "bf909c829d70325b89022239a0f228578297154fdb6e4b5f8122ec73cbc35b8a"
+    },
+    {
+      "path": "tests/fixtures/sdk-native-physics.mjs",
+      "bytes": 15471,
+      "sha256": "39bee2a084f582bd2a5de9d6f51e305f00d5c1d9ccd874a387dc5ff5bb21cc9d"
+    },
+    {
+      "path": "tests/fixtures/sdk-native-qdmi.c",
+      "bytes": 1857,
+      "sha256": "7dbad4f8ddfc698664e3162ed1b1c1640f022e7d19f19cf496858b31c7e9b6da"
+    },
+    {
+      "path": "tests/fixtures/sdk-native-randommeas.jl",
+      "bytes": 1305,
+      "sha256": "5e29c5bc073c73ba6eb25a24a0eaa3e89ab5c9962fe4d3efc36b599596b6a477"
+    },
+    {
+      "path": "tests/fixtures/sdk-native-services.mjs",
+      "bytes": 10741,
+      "sha256": "f689fc30498add8a8301135687fee164425ef303269a3e697c53b4a8ed12afb9"
+    },
+    {
+      "path": "tests/prepared-python.test.mjs",
+      "bytes": 12679,
+      "sha256": "191088b3e32fcd5d241251deed5ec4ea6a703f6970a5650af4ab36f98bfbb01d"
+    },
+    {
+      "path": "tests/sdk-engineering-evidence.test.mjs",
+      "bytes": 6192,
+      "sha256": "c29c1aba9dd6ef90b9908d2408b0a2316985ddd578dd578e61feacf910951352"
+    },
+    {
+      "path": "tests/sdk-native-platforms.test.mjs",
+      "bytes": 7661,
+      "sha256": "19ac5a1fec682cc197e076b866cc320c61674df2556e242b7c9747346752bb63"
+    },
+    {
+      "path": "tests/sdk-native-remaining.test.mjs",
+      "bytes": 8537,
+      "sha256": "13322c4a56a50b4533278614760653286058bc03ac35678e274b1cb8db162a65"
+    }
+  ],
+  "preparation": [
+    {
+      "id": "alicebob-cat-circuits",
+      "code": 0,
+      "startedAt": "2026-10-12T01:12:23.618Z",
+      "finishedAt": "2026-10-12T01:12:58.162Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-alicebob-cat-circuits.log",
+        "bytes": 1736,
+        "sha256": "96bca1b0a8ccf40ac45de7ea2300b43bfe83cd3b1c0b06b8e2b49b78b0e91f96"
+      }
+    },
+    {
+      "id": "aqt-workbench",
+      "code": 0,
+      "startedAt": "2026-10-12T01:53:22.151Z",
+      "finishedAt": "2026-10-12T01:53:28.005Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-aqt-workbench.log",
+        "bytes": 1412,
+        "sha256": "ad1e2e68259cc126b417afce7cab99a53b3a9ec8f8f93920d2bfde7c53b79869"
+      }
+    },
+    {
+      "id": "bloqade-analog",
+      "code": 0,
+      "startedAt": "2026-10-12T01:37:20.600Z",
+      "finishedAt": "2026-10-12T01:37:46.667Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-bloqade-analog.log",
+        "bytes": 1818,
+        "sha256": "7aa5a40a3a36984afb72a88c4b4b0c1ca2c4514fc168c190f36d77c7182ff077"
+      }
+    },
+    {
+      "id": "braket-simulation",
+      "code": 0,
+      "startedAt": "2026-10-12T01:53:28.006Z",
+      "finishedAt": "2026-10-12T01:53:36.392Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-braket-simulation.log",
+        "bytes": 1003,
+        "sha256": "41e939b43ff94a2dcba35d8c7bebf13c4e8b23e324a5270eeee6125008b587fe"
+      }
+    },
+    {
+      "id": "classiq-synthesis",
+      "code": 0,
+      "startedAt": "2026-10-12T01:53:36.394Z",
+      "finishedAt": "2026-10-12T01:54:59.012Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-classiq-synthesis.log",
+        "bytes": 1748,
+        "sha256": "ab65ef8b012fc9c190ccf1244457e7dc2b0cf46e819b645d5818e0c3ee1ec8b8"
+      }
+    },
+    {
+      "id": "clifft-sampling",
+      "code": 0,
+      "startedAt": "2026-10-12T01:37:46.668Z",
+      "finishedAt": "2026-10-12T01:37:55.530Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-clifft-sampling.log",
+        "bytes": 349,
+        "sha256": "689b1dc2dfea1cb2a46a76b2c32508904fd4243a26939f86ff81e63f26c1b414"
+      }
+    },
+    {
+      "id": "compact-optimization",
+      "code": 0,
+      "startedAt": "2026-10-12T01:12:23.625Z",
+      "finishedAt": "2026-10-12T01:12:30.428Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-compact-optimization.log",
+        "bytes": 556,
+        "sha256": "db980b7f30f9638f7455510487c668676c48a39ab39afd01df0f4f22cc95f9a3"
+      }
+    },
+    {
+      "id": "cudaq-simulation",
+      "code": 0,
+      "startedAt": "2026-10-12T02:05:50.426Z",
+      "finishedAt": "2026-10-12T02:05:52.780Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-cudaq-simulation.log",
+        "bytes": 2496,
+        "sha256": "8b6bbc190123a8542f374b54774547b219093c9f76abe570088104b3744715b4"
+      }
+    },
+    {
+      "id": "deepquantum-differentiable",
+      "code": 0,
+      "startedAt": "2026-10-12T01:12:30.429Z",
+      "finishedAt": "2026-10-12T01:17:05.877Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-deepquantum-differentiable.log",
+        "bytes": 1380,
+        "sha256": "a09a458ac052744b6f82803bec167a1e0b5cb2c337c7805d4150d2c9122255f4"
+      }
+    },
+    {
+      "id": "deltakit-qec",
+      "code": 0,
+      "startedAt": "2026-10-12T01:37:55.530Z",
+      "finishedAt": "2026-10-12T01:38:16.898Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-deltakit-qec.log",
+        "bytes": 2516,
+        "sha256": "98df0fda7a979ef927e4550c5e44c210699ba5c97176a3b816960bca50987d13"
+      }
+    },
+    {
+      "id": "fieldqkit-hardware",
+      "code": 0,
+      "startedAt": "2026-10-12T01:54:59.013Z",
+      "finishedAt": "2026-10-12T01:55:32.371Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-fieldqkit-hardware.log",
+        "bytes": 1233,
+        "sha256": "b572dff028625382f6bb67e9c1d49e2df9cb644f3e9c26c645556c522445491e"
+      }
+    },
+    {
+      "id": "flagquantum-workbench",
+      "code": 0,
+      "startedAt": "2026-10-12T01:35:29.932Z",
+      "finishedAt": "2026-10-12T01:35:38.697Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-flagquantum-workbench.log",
+        "bytes": 5012,
+        "sha256": "83ca43882af52848801fd8f158fd594918b63ebbbc3880a11a4dca789beb02a4"
+      }
+    },
+    {
+      "id": "graphix-mbqc",
+      "code": 0,
+      "startedAt": "2026-10-12T01:17:05.878Z",
+      "finishedAt": "2026-10-12T01:17:34.556Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-graphix-mbqc.log",
+        "bytes": 1019,
+        "sha256": "3f5458c5dd2cf115a155b82f61d4b2c0748d92a8536e3df71b6d9bce92ea1fdc"
+      }
+    },
+    {
+      "id": "guppy-programs",
+      "code": 0,
+      "startedAt": "2026-10-12T01:35:35.934Z",
+      "finishedAt": "2026-10-12T01:35:41.649Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-guppy-programs.log",
+        "bytes": 4371,
+        "sha256": "0061485f67c00497ab1857b1a3c280e0fc09ccd367d848ea3a147741ed40874e"
+      }
+    },
+    {
+      "id": "hamiltonian-simulation",
+      "code": 0,
+      "startedAt": "2026-10-12T01:26:02.929Z",
+      "finishedAt": "2026-10-12T01:26:04.186Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-hamiltonian-simulation.log",
+        "bytes": 420,
+        "sha256": "a36f8b9aa59dfa4af78f30eb01be014864f9515466f5019a2d0d64fc2fa559af"
+      }
+    },
+    {
+      "id": "ionq-programs",
+      "code": 0,
+      "startedAt": "2026-10-12T01:55:32.373Z",
+      "finishedAt": "2026-10-12T01:55:34.727Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-ionq-programs.log",
+        "bytes": 645,
+        "sha256": "e1091742bb9807858aadf5f260442ad0b0f077c2cb4b58e2cd838a76d85c1f9d"
+      }
+    },
+    {
+      "id": "iqm-circuit-workbench",
+      "code": 0,
+      "startedAt": "2026-10-12T01:55:34.729Z",
+      "finishedAt": "2026-10-12T01:55:43.866Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-iqm-circuit-workbench.log",
+        "bytes": 1887,
+        "sha256": "446fc6c9d183f5b619d134adb7fd5a953516db9733b33d39ee974fc015021512"
+      }
+    },
+    {
+      "id": "kaiwu-qubo",
+      "code": 0,
+      "startedAt": "2026-10-12T01:26:02.961Z",
+      "finishedAt": "2026-10-12T01:26:09.161Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-kaiwu-qubo.log",
+        "bytes": 475,
+        "sha256": "37b8b369e10507838f7a95d257f24c277a89881ba4eba42a032bdeb86e7b5952"
+      }
+    },
+    {
+      "id": "laboneq-control",
+      "code": 0,
+      "startedAt": "2026-10-12T01:55:43.867Z",
+      "finishedAt": "2026-10-12T01:56:49.454Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-laboneq-control.log",
+        "bytes": 2313,
+        "sha256": "f1f5cf88ffe0da2cb2b0ae4fb348e3a3b676e3a93e915bce292bf87c5297bcab"
+      }
+    },
+    {
+      "id": "ldpc-decoding",
+      "code": 0,
+      "startedAt": "2026-10-12T01:38:16.899Z",
+      "finishedAt": "2026-10-12T01:38:25.307Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-ldpc-decoding.log",
+        "bytes": 812,
+        "sha256": "37eee10101289d30d90ddcf6465f1c2321754329c862b81f5633c6ee0fc68719"
+      }
+    },
+    {
+      "id": "lightworks-photonics",
+      "code": 0,
+      "startedAt": "2026-10-12T01:38:25.307Z",
+      "finishedAt": "2026-10-12T01:39:10.996Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-lightworks-photonics.log",
+        "bytes": 1489,
+        "sha256": "7d0b782ded894f4fc385b26b5bfc8852c3a3d033b254620a2626525d9fe792d5"
+      }
+    },
+    {
+      "id": "merlin-learning",
+      "code": 0,
+      "startedAt": "2026-10-12T01:44:20.229Z",
+      "finishedAt": "2026-10-12T01:44:28.540Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-merlin-learning.log",
+        "bytes": 2635,
+        "sha256": "f82e69879f16ebcaf926e881315466ef7a0ecab5c32c54b73fd53dd4edfa7cf0"
+      }
+    },
+    {
+      "id": "mimiq-simulation",
+      "code": 0,
+      "startedAt": "2026-10-12T01:26:04.186Z",
+      "finishedAt": "2026-10-12T01:26:34.478Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-mimiq-simulation.log",
+        "bytes": 1043,
+        "sha256": "604e3cf5170da3e9642ffcc7c71f2151ed7f51b99e16a292ae2d36b2289322bc"
+      }
+    },
+    {
+      "id": "mindquantum-differentiable",
+      "code": 0,
+      "startedAt": "2026-10-12T01:26:09.161Z",
+      "finishedAt": "2026-10-12T01:28:41.435Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-mindquantum-differentiable.log",
+        "bytes": 1124,
+        "sha256": "6c734931c92bcb3cb63f7b18ec38acdb8d45a64dbaba1991c8028764fd8772c2"
+      }
+    },
+    {
+      "id": "mitiq-error-mitigation",
+      "code": 0,
+      "startedAt": "2026-10-12T01:43:50.896Z",
+      "finishedAt": "2026-10-12T01:44:08.699Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-mitiq-error-mitigation.log",
+        "bytes": 824,
+        "sha256": "ad74ef152aae57329ad78040935bff4922f5090bef14b9c3088c4c46de5d1542"
+      }
+    },
+    {
+      "id": "mqt-ddsim",
+      "code": 0,
+      "startedAt": "2026-10-12T01:26:34.478Z",
+      "finishedAt": "2026-10-12T01:26:37.743Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-mqt-ddsim.log",
+        "bytes": 626,
+        "sha256": "cbc85fc9f1a2bc2b95441f39d64889417760a1edd5ebe560d515ad629b16798f"
+      }
+    },
+    {
+      "id": "mqt-qmap",
+      "code": 0,
+      "startedAt": "2026-10-12T01:26:37.744Z",
+      "finishedAt": "2026-10-12T01:27:03.796Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-mqt-qmap.log",
+        "bytes": 830,
+        "sha256": "5a3afcfd2ce3b6b6af34f1e5acd4ee25f68c5952e898c23a42d1fee93d83f244"
+      }
+    },
+    {
+      "id": "mrmustard-optics",
+      "code": 0,
+      "startedAt": "2026-10-12T01:59:03.456Z",
+      "finishedAt": "2026-10-12T02:03:56.790Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-mrmustard-optics.log",
+        "bytes": 4506,
+        "sha256": "b081362efc6a93f513f54620380823783c100f56c64525a79d8b29b57b90654c"
+      }
+    },
+    {
+      "id": "myqlm-simulation",
+      "code": 0,
+      "startedAt": "2026-10-12T01:27:03.797Z",
+      "finishedAt": "2026-10-12T01:31:18.354Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-myqlm-simulation.log",
+        "bytes": 2729,
+        "sha256": "79b1199c766cc899036b1e0e8e9dca7e436e6cb265fc5b9dcba62a44c971b42e"
+      }
+    },
+    {
+      "id": "netqasm-network",
+      "code": 0,
+      "startedAt": "2026-10-12T01:44:08.700Z",
+      "finishedAt": "2026-10-12T01:44:20.537Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-netqasm-network.log",
+        "bytes": 455,
+        "sha256": "3f45c888c671482e027929ec48ec323aa83d722508e0966e995db5cef42c86e8"
+      }
+    },
+    {
+      "id": "openfermion-mapping",
+      "code": 0,
+      "startedAt": "2026-10-12T01:44:20.539Z",
+      "finishedAt": "2026-10-12T01:45:07.947Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-openfermion-mapping.log",
+        "bytes": 1013,
+        "sha256": "01350bb34898e06c75bbffa382d4fd6705220ecb89973e726c7c741327a99ded"
+      }
+    },
+    {
+      "id": "openqarp-excited-states",
+      "code": 0,
+      "startedAt": "2026-10-12T01:28:41.436Z",
+      "finishedAt": "2026-10-12T01:28:48.287Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-openqarp-excited-states.log",
+        "bytes": 1014,
+        "sha256": "83a647c50366e4017cf45ff145ecf5a71e71d28d3e27c35718551991bd824ad5"
+      }
+    },
+    {
+      "id": "oqc-cloud",
+      "code": 0,
+      "startedAt": "2026-10-12T01:56:49.455Z",
+      "finishedAt": "2026-10-12T01:56:51.243Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-oqc-cloud.log",
+        "bytes": 517,
+        "sha256": "36148913e75418ad411fc50d4407fa0b1d2dc7581dc672d667a15bc12e383938"
+      }
+    },
+    {
+      "id": "oqc-qat",
+      "code": 0,
+      "startedAt": "2026-10-12T01:36:26.556Z",
+      "finishedAt": "2026-10-12T01:36:29.065Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-oqc-qat.log",
+        "bytes": 5916,
+        "sha256": "94b0b1d3042654c34ba9a142fb57f31e1d8174fbfe6ad80ea637759b2ef11f4c"
+      }
+    },
+    {
+      "id": "pairinteraction-rydberg",
+      "code": 0,
+      "startedAt": "2026-10-12T02:10:16.892Z",
+      "finishedAt": "2026-10-12T02:10:18.376Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-pairinteraction-rydberg.log",
+        "bytes": 9596,
+        "sha256": "3106b7d7356606af37a6c3cf9ec75ac51d8aaa754e2ccab42ff913c4b3b1f7f4"
+      }
+    },
+    {
+      "id": "paulie-algebra",
+      "code": 0,
+      "startedAt": "2026-10-12T01:47:33.771Z",
+      "finishedAt": "2026-10-12T01:47:39.052Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-paulie-algebra.log",
+        "bytes": 689,
+        "sha256": "eb4be7317097f95c45babda05ba787587edcad4a4d14fccb05a5edb8aafdabb7"
+      }
+    },
+    {
+      "id": "pennylane-differentiable",
+      "code": 0,
+      "startedAt": "2026-10-12T01:31:18.355Z",
+      "finishedAt": "2026-10-12T01:31:55.754Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-pennylane-differentiable.log",
+        "bytes": 941,
+        "sha256": "176c8ebc73bb7b6435488732b7dff42157069723fd18adc148e69bd2bb91b3e2"
+      }
+    },
+    {
+      "id": "perceval-photonics",
+      "code": 0,
+      "startedAt": "2026-10-12T01:47:33.840Z",
+      "finishedAt": "2026-10-12T01:47:39.538Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-perceval-photonics.log",
+        "bytes": 947,
+        "sha256": "a19c06948142d011d2dca0665189f2d0f0fde9e4742a25c9d3fbb34f92f24abd"
+      }
+    },
+    {
+      "id": "pulser-dynamics",
+      "code": 0,
+      "startedAt": "2026-10-12T01:47:39.053Z",
+      "finishedAt": "2026-10-12T01:47:41.386Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-pulser-dynamics.log",
+        "bytes": 757,
+        "sha256": "7757e8c1cdf31a23b412c91f9e4944846a3389fc28185630db7108e1446eb7b4"
+      }
+    },
+    {
+      "id": "pychemiq-chemistry",
+      "code": 0,
+      "startedAt": "2026-10-12T01:52:33.858Z",
+      "finishedAt": "2026-10-12T01:52:36.244Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-pychemiq-chemistry.log",
+        "bytes": 1728,
+        "sha256": "9cf3b14b42073d341d1ba35b7663db224b3815fd2f890d930cbc8455cea0f535"
+      }
+    },
+    {
+      "id": "pyquil-simulation",
+      "code": 0,
+      "startedAt": "2026-10-12T01:31:55.755Z",
+      "finishedAt": "2026-10-12T01:33:21.345Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-pyquil-simulation.log",
+        "bytes": 1200,
+        "sha256": "3f9a18ed7a049f2037560ee9cd6a381a2a07e4ebc0858f9975cb8dd087c233b7"
+      }
+    },
+    {
+      "id": "pytket-compilation",
+      "code": 0,
+      "startedAt": "2026-10-12T01:33:21.346Z",
+      "finishedAt": "2026-10-12T01:33:23.534Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-pytket-compilation.log",
+        "bytes": 518,
+        "sha256": "9172d3a2cf12330603118099183adfbda257e46c1b8be85f7e890ecf9028605a"
+      }
+    },
+    {
+      "id": "pyzx-optimization",
+      "code": 0,
+      "startedAt": "2026-10-12T01:33:23.535Z",
+      "finishedAt": "2026-10-12T01:33:35.357Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-pyzx-optimization.log",
+        "bytes": 849,
+        "sha256": "b1179cc1ba45564829b84a81a5308e93f08873f080d23862bf4f0f02b8705f1b"
+      }
+    },
+    {
+      "id": "qblox-scheduling",
+      "code": 0,
+      "startedAt": "2026-10-12T01:56:51.244Z",
+      "finishedAt": "2026-10-12T01:57:08.506Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-qblox-scheduling.log",
+        "bytes": 3146,
+        "sha256": "7e6db69b9ae3073f675345a9f6637baafc0e816749ad73ee87d945265c02a768"
+      }
+    },
+    {
+      "id": "qbraid-conversion",
+      "code": 0,
+      "startedAt": "2026-10-12T01:33:35.358Z",
+      "finishedAt": "2026-10-12T01:34:15.082Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-qbraid-conversion.log",
+        "bytes": 1254,
+        "sha256": "2a38c74f1118cb637b3295dca2aa1781c1c4b754cd6646e00e9b9e03812f39af"
+      }
+    },
+    {
+      "id": "qcarchive-query",
+      "code": 0,
+      "startedAt": "2026-10-12T01:57:08.506Z",
+      "finishedAt": "2026-10-12T01:57:11.833Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-qcarchive-query.log",
+        "bytes": 972,
+        "sha256": "1ec780be96fa00edaa34aa11fc2846e3ad770ff18e9dcd50dfd6ee7b954da8e8"
+      }
+    },
+    {
+      "id": "qcompute-simulation",
+      "code": 0,
+      "startedAt": "2026-10-12T01:34:15.084Z",
+      "finishedAt": "2026-10-12T01:36:01.415Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-qcompute-simulation.log",
+        "bytes": 1481,
+        "sha256": "6447bf876164208f13e3c64cf306ae747711fc65627d92eb5d2e857118ebef17"
+      }
+    },
+    {
+      "id": "qctrl-workbench",
+      "code": 0,
+      "startedAt": "2026-10-12T01:57:11.834Z",
+      "finishedAt": "2026-10-12T01:57:29.907Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-qctrl-workbench.log",
+        "bytes": 1327,
+        "sha256": "aa90f1358cfeaf2675af276cd0ebea321d4de383244e97209d0a4a9708feb19e"
+      }
+    },
+    {
+      "id": "qcut-knitting",
+      "code": 0,
+      "startedAt": "2026-10-12T01:34:27.006Z",
+      "finishedAt": "2026-10-12T01:34:37.832Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-qcut-knitting.log",
+        "bytes": 1252,
+        "sha256": "5d6565b9992f66eb2706f3fb399eb228b7b48abb3c2f3a099d4d582df2f15f31"
+      }
+    },
+    {
+      "id": "qdk-resource-estimation",
+      "code": 0,
+      "startedAt": "2026-10-12T01:47:41.387Z",
+      "finishedAt": "2026-10-12T01:48:11.041Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-qdk-resource-estimation.log",
+        "bytes": 469,
+        "sha256": "8934a40c199214b5a00b733d2652ffdcc4cd37abb3510b006be94c2a909710d8"
+      }
+    },
+    {
+      "id": "qdmi-device",
+      "code": 0,
+      "startedAt": "2026-10-12T01:57:29.909Z",
+      "finishedAt": "2026-10-12T01:58:18.794Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-qdmi-device.log",
+        "bytes": 704,
+        "sha256": "6add7839b7ea38ec2d5fdc64761ffbec7deaa50cc0ce1b7fb6878f1263d25bab"
+      }
+    },
+    {
+      "id": "qibo-simulation",
+      "code": 0,
+      "startedAt": "2026-10-12T01:34:37.832Z",
+      "finishedAt": "2026-10-12T01:34:49.862Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-qibo-simulation.log",
+        "bytes": 776,
+        "sha256": "bae11c0fbd8d8a556903e4bb4bcd6026c65c8f82b42ca92b38bf1b877cec0bc7"
+      }
+    },
+    {
+      "id": "qililab-control",
+      "code": 0,
+      "startedAt": "2026-10-12T01:58:18.795Z",
+      "finishedAt": "2026-10-12T01:59:50.812Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-qililab-control.log",
+        "bytes": 3613,
+        "sha256": "38ea9ad40b3da5499699c195f369e6171d012333b6a0a5f4c2427afada12698a"
+      }
+    },
+    {
+      "id": "qoolqit-workbench",
+      "code": 0,
+      "startedAt": "2026-10-12T01:58:00.028Z",
+      "finishedAt": "2026-10-12T01:58:07.927Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-qoolqit-workbench.log",
+        "bytes": 2658,
+        "sha256": "63c4b1f3f6a02a0136e3a67aee726f9e385d73ed760f5362d28df2dfb142b890"
+      }
+    },
+    {
+      "id": "qrisp-arithmetic",
+      "code": 0,
+      "startedAt": "2026-10-12T01:34:49.862Z",
+      "finishedAt": "2026-10-12T01:37:20.599Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-qrisp-arithmetic.log",
+        "bytes": 1062,
+        "sha256": "e58785baab792082c7240dc45b2e3c33a8ae0706b27a0088bffaae9d3a7e7541"
+      }
+    },
+    {
+      "id": "qsteed-compilation",
+      "code": 0,
+      "startedAt": "2026-10-12T01:36:01.416Z",
+      "finishedAt": "2026-10-12T01:36:13.870Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-qsteed-compilation.log",
+        "bytes": 1558,
+        "sha256": "91b844841f244e32991f1fd0295d1eba47ca8eef0098bf5a81093e81a931f180"
+      }
+    },
+    {
+      "id": "qua-programs",
+      "code": 0,
+      "startedAt": "2026-10-12T01:59:50.813Z",
+      "finishedAt": "2026-10-12T02:00:18.252Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-qua-programs.log",
+        "bytes": 943,
+        "sha256": "1a80c7833e5b904fec3a20c7f84db6af3b4a80fab6ff5d00fa40c1f5fb678164"
+      }
+    },
+    {
+      "id": "quairkit-information",
+      "code": 0,
+      "startedAt": "2026-10-12T01:50:34.386Z",
+      "finishedAt": "2026-10-12T01:51:15.208Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-quairkit-information.log",
+        "bytes": 2012,
+        "sha256": "216ae9f599e9286a8a52fd747435ef82f3340a1664622988a29afcbc4203002b"
+      }
+    },
+    {
+      "id": "qualtran-resources",
+      "code": 0,
+      "startedAt": "2026-10-12T01:50:34.390Z",
+      "finishedAt": "2026-10-12T01:52:10.299Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-qualtran-resources.log",
+        "bytes": 4101,
+        "sha256": "6c4b650b4a5b9ae992e07a4afa91570f4eec5ba2dcedf62aa4c8b41b76253aae"
+      }
+    },
+    {
+      "id": "quantum-circuit-verification",
+      "code": 0,
+      "startedAt": "2026-10-12T01:41:45.757Z",
+      "finishedAt": "2026-10-12T01:41:51.399Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-quantum-circuit-verification.log",
+        "bytes": 844,
+        "sha256": "b2869baee7d51a46c07e711ab5d796f50c7605e61941d73e9a90e2009de7be00"
+      }
+    },
+    {
+      "id": "quantum-information-audit",
+      "code": 0,
+      "startedAt": "2026-10-12T01:51:15.210Z",
+      "finishedAt": "2026-10-12T01:51:49.153Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-quantum-information-audit.log",
+        "bytes": 1038,
+        "sha256": "d2020fed72259120a28e2c2b794a4d5716ed443c524562fa3670689c93de3f84"
+      }
+    },
+    {
+      "id": "quantuminspire-cloud",
+      "code": 0,
+      "startedAt": "2026-10-12T02:00:18.252Z",
+      "finishedAt": "2026-10-12T02:00:28.302Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-quantuminspire-cloud.log",
+        "bytes": 1156,
+        "sha256": "8326db62c947943db2e898354c9a7ff5107d471f4fdb468e9c0e385593a11f3d"
+      }
+    },
+    {
+      "id": "quri-parts-estimation",
+      "code": 0,
+      "startedAt": "2026-10-12T01:36:20.994Z",
+      "finishedAt": "2026-10-12T01:36:24.834Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-quri-parts-estimation.log",
+        "bytes": 1142,
+        "sha256": "04817dc182664cb8e4f2815a6bd71225c90d95d7e82a05a6d2fc1d29f969961f"
+      }
+    },
+    {
+      "id": "qutrunk-simulation",
+      "code": 0,
+      "startedAt": "2026-10-12T01:36:24.834Z",
+      "finishedAt": "2026-10-12T01:36:36.935Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-qutrunk-simulation.log",
+        "bytes": 704,
+        "sha256": "69a024461fb1ea104ba17f8949743d2298e326ff26953a8660809b0793f2c29a"
+      }
+    },
+    {
+      "id": "randomized-measurements",
+      "code": 0,
+      "startedAt": "2026-10-12T02:00:24.449Z",
+      "finishedAt": "2026-10-12T02:00:32.070Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-randomized-measurements.log",
+        "bytes": 731,
+        "sha256": "1229ccd9f76cc19c7b2205886f4ed53843f4df833e38801f2e3456287a3bcf96"
+      }
+    },
+    {
+      "id": "simqn-network",
+      "code": 0,
+      "startedAt": "2026-10-12T01:51:49.156Z",
+      "finishedAt": "2026-10-12T01:51:54.464Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-simqn-network.log",
+        "bytes": 389,
+        "sha256": "81b0ab583f0696af7f18158d92083307ef129a1f919255e1d8bc7d354708e878"
+      }
+    },
+    {
+      "id": "sqd-chemistry",
+      "code": 0,
+      "startedAt": "2026-10-12T01:51:54.467Z",
+      "finishedAt": "2026-10-12T01:53:10.697Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-sqd-chemistry.log",
+        "bytes": 708,
+        "sha256": "01682ea96086f892e098e870a6d045a1f0b19cf91215ebf8747f1bf71d971419"
+      }
+    },
+    {
+      "id": "superstaq-compilation",
+      "code": 0,
+      "startedAt": "2026-10-12T02:00:28.302Z",
+      "finishedAt": "2026-10-12T02:00:33.553Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-superstaq-compilation.log",
+        "bytes": 774,
+        "sha256": "e820d65403fb06f9480e6fe8e3972b89e6e5f4d2c9d5209d50be81e645a4e55c"
+      }
+    },
+    {
+      "id": "symmer-tapering",
+      "code": 0,
+      "startedAt": "2026-10-12T02:06:50.965Z",
+      "finishedAt": "2026-10-12T02:07:22.533Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-symmer-tapering.log",
+        "bytes": 10374,
+        "sha256": "ba1c9edcc1c06da02424db8ca82704ad749c8e7642d4bc1becade569560e8d32"
+      }
+    },
+    {
+      "id": "tensorcircuit-differentiable",
+      "code": 0,
+      "startedAt": "2026-10-12T01:47:08.459Z",
+      "finishedAt": "2026-10-12T01:47:14.097Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-tensorcircuit-differentiable.log",
+        "bytes": 1853,
+        "sha256": "00f467273e84e3eb750c5e1a8049746fc8bfb9ebf1d5d91514a556b30470bce6"
+      }
+    },
+    {
+      "id": "tjm-dynamics",
+      "code": 0,
+      "startedAt": "2026-10-12T01:53:10.699Z",
+      "finishedAt": "2026-10-12T01:53:22.150Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-tjm-dynamics.log",
+        "bytes": 561,
+        "sha256": "8434638d53a141a70b86fde88af5d7f05d72945e268ae8bf0e7f7c0e287ad372"
+      }
+    },
+    {
+      "id": "tyxonq-workbench",
+      "code": 0,
+      "startedAt": "2026-10-12T01:44:30.063Z",
+      "finishedAt": "2026-10-12T01:49:03.342Z",
+      "log": {
+        "path": ".openquantum/sdk-checks/remaining/setup-tyxonq-workbench.log",
+        "bytes": 3677,
+        "sha256": "eee5ac558327b3995b7cb6c34d715621394206127883152ad6a912feaa0fa51b"
+      }
+    }
+  ],
+  "scientificValidation": "not_evaluated",
+  "excluded": [
+    "real research-task acceptance",
+    "authenticated cloud operations",
+    "QPU or laboratory hardware",
+    "GPU",
+    "other operating systems",
+    "real-model-driven host session and UI acceptance"
+  ]
+}

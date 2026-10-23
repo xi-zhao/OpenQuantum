@@ -1,0 +1,10 @@
+using QuantumSavory, JSON3
+left, right = Register(1), Register(1)
+bell = (Z1 ⊗ Z1 + Z2 ⊗ Z2) / sqrt(2.0)
+initialize!((left[1], right[1]), bell)
+zz = real(observable((left[1], right[1]), Z ⊗ Z))
+@assert isapprox(zz, 1.0; atol=1e-10)
+apply!(left[1], X)
+changed = real(observable((left[1], right[1]), Z ⊗ Z))
+@assert isapprox(changed, -1.0; atol=1e-10)
+write("result.json", JSON3.write((before=zz, after=changed, scientificValidation="not_evaluated")))

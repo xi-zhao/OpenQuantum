@@ -1,0 +1,20 @@
+[package]
+name = "openquantum-pauli-case"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+
+[lib]
+name = "pauli_rust"
+path = "rust/lib.rs"
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+pyo3 = { version = "=0.29.0", features = ["abi3-py312"] }
+
+[build-dependencies]
+pyo3-build-config = "=0.29.0"
+
+[profile.release]
+lto = "thin"
+codegen-units = 1

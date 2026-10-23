@@ -1,0 +1,20 @@
+{
+  "name": "openquantum-codex-installer",
+  "version": "0.8.4",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "description": "Installer for the OpenQuantum Codex plugin release",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "plugin:install": "node scripts/install-codex-plugin.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/ext-apps": "1.7.5",
+    "@modelcontextprotocol/sdk": "1.32.1",
+    "fflate": "0.8.3",
+    "jose": "6.2.12"
+  }
+}

@@ -1,0 +1,10 @@
+[project]
+name = "openquantum-mcp-qiskit"
+version = "0.1.0"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+  "qiskit-mcp-server==0.3.1"
+]
+
+[tool.uv]
+package = false

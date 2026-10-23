@@ -1,0 +1,627 @@
+{
+  "schemaVersion": "1.0",
+  "verifiedAt": "2026-10-09T00:27:47.579700+00:00",
+  "integrationLevel": "L1",
+  "scientificValidation": "not_evaluated",
+  "environment": {
+    "system": "Darwin",
+    "machine": "arm64",
+    "python": "3.12.13",
+    "packages": {
+      "pairinteraction": "2.7.0",
+      "numpy": "2.3.5",
+      "scipy": "1.18.1"
+    }
+  },
+  "versions": {
+    "pairinteraction": "2.7.0",
+    "dependencyLockSha256": "585467d5d936e8d82afae2c2649fec93a53aa4df17beb382d463ed906efc2a3a",
+    "databaseRelease": "v2.0",
+    "databaseLockSha256": "28085e8e83d27953fac022577c5ea0b066f4e0ea91d26a2f57c5e607330c7a0c",
+    "fatqatRevision": "39b75e30ae50ddb4a8c7b840847edce678aa814c",
+    "fatqatChanged": false
+  },
+  "checks": {
+    "pairinteractionContractTests": 3,
+    "fatqatContractTests": 6,
+    "realNumericAndIntegrityNodeTests": 2,
+    "analyticAndDatabasePythonTests": 5,
+    "harnessTests": 1,
+    "catalogPolicyAndSettingsTests": 61,
+    "allListedTestsPassed": true,
+    "focusedEslint": "passed",
+    "harnessConfigExpansion": "passed",
+    "setupIdempotence": "passed"
+  },
+  "cases": [
+    {
+      "label": "ss",
+      "input": {
+        "channel": "ss",
+        "nS": 60,
+        "magneticFieldG": 20,
+        "distancesUm": [
+          8,
+          12,
+          16
+        ],
+        "deltaN": 2,
+        "energyWindowGHz": 10
+      },
+      "inputSha256": "929a464c611cd77593a4d3c35681948ebbe1bb64d7e3ff9aa63717d66ca96063",
+      "model": {
+        "species": "Rb",
+        "targetStates": [
+          "|Rb:60,S_1/2,1/2⟩; |Rb:60,S_1/2,1/2⟩"
+        ],
+        "frequencyConvention": "H/h in MHz; ordinary frequency, not angular frequency",
+        "energyReferenceMHz": 2018023899.2266927,
+        "pairBasisSize": 43,
+        "atomBasisSize": 40,
+        "lMax": 1,
+        "totalM": 1,
+        "perturbationOrder": 2,
+        "interaction": "electric dipole-dipole; R parallel B along z; diamagnetism disabled",
+        "targetBasisWeights": [
+          0.9999999999999982
+        ]
+      },
+      "points": [
+        {
+          "distanceUm": 8,
+          "effectiveHamiltonianMHz": [
+            [
+              0.5294108390808105
+            ]
+          ],
+          "effectiveEigenvaluesMHz": [
+            0.5294108390808105
+          ],
+          "exactEigenvaluesMHz": [
+            0.529294490814209
+          ],
+          "exactTargetWeights": [
+            0.9996331789738008
+          ],
+          "secondOrderShiftsMHz": [
+            0.5294114097437477
+          ],
+          "exchangeMHz": 0,
+          "hermiticityErrorMHz": 0,
+          "referenceDifferenceMHz": 5.706629371271532e-07,
+          "diagonalizationDifferenceMHz": 3.4962522477144375e-07,
+          "effectiveSpectrumDeviationMHz": 0.0001163482666015625,
+          "maxCouplingToGapRatio": 0.009027866913290113,
+          "minCoupledGapMHz": 1243.767807483673,
+          "perturbationStatus": "within_screen"
+        },
+        {
+          "distanceUm": 12,
+          "effectiveHamiltonianMHz": [
+            [
+              0.046477317810058594
+            ]
+          ],
+          "effectiveEigenvaluesMHz": [
+            0.046477317810058594
+          ],
+          "exactEigenvaluesMHz": [
+            0.04647660255432129
+          ],
+          "exactTargetWeights": [
+            0.9999677750864884
+          ],
+          "secondOrderShiftsMHz": [
+            0.04647781923676249
+          ],
+          "exchangeMHz": 0,
+          "hermiticityErrorMHz": 0,
+          "referenceDifferenceMHz": 5.014267038944142e-07,
+          "diagonalizationDifferenceMHz": 3.1550280255032703e-07,
+          "effectiveSpectrumDeviationMHz": 7.152557373046875e-07,
+          "maxCouplingToGapRatio": 0.0026749235298637376,
+          "minCoupledGapMHz": 1243.767807483673,
+          "perturbationStatus": "within_screen"
+        },
+        {
+          "distanceUm": 16,
+          "effectiveHamiltonianMHz": [
+            [
+              0.00827169418334961
+            ]
+          ],
+          "effectiveEigenvaluesMHz": [
+            0.00827169418334961
+          ],
+          "exactEigenvaluesMHz": [
+            0.008271932601928711
+          ],
+          "exactTargetWeights": [
+            0.9999942643597403
+          ],
+          "secondOrderShiftsMHz": [
+            0.008272053277246057
+          ],
+          "exchangeMHz": 0,
+          "hermiticityErrorMHz": 0,
+          "referenceDifferenceMHz": 3.590938964480317e-07,
+          "diagonalizationDifferenceMHz": 3.0156661523506045e-07,
+          "effectiveSpectrumDeviationMHz": 2.384185791015625e-07,
+          "maxCouplingToGapRatio": 0.001128483364161264,
+          "minCoupledGapMHz": 1243.767807483673,
+          "perturbationStatus": "within_screen"
+        }
+      ],
+      "rawResultSha256": "2f4d47da57fe83e20569723939a4fb957a3291eb53060c7b416b5ca463cfa5f3"
+    },
+    {
+      "label": "sp-exchange",
+      "input": {
+        "channel": "sp_exchange",
+        "nP": 60,
+        "nS": 60,
+        "magneticFieldG": 20,
+        "distancesUm": [
+          8,
+          12,
+          16
+        ],
+        "deltaN": 2,
+        "energyWindowGHz": 10
+      },
+      "inputSha256": "fbe9121b23753f4364d9fb1e533b820c6b838830cd3095afc4fc77422781adae",
+      "model": {
+        "species": "Rb",
+        "targetStates": [
+          "|Rb:60,S_1/2,1/2⟩; |Rb:60,P_3/2,1/2⟩",
+          "|Rb:60,P_3/2,1/2⟩; |Rb:60,S_1/2,1/2⟩"
+        ],
+        "frequencyConvention": "H/h in MHz; ordinary frequency, not angular frequency",
+        "energyReferenceMHz": 2018041177.6697674,
+        "pairBasisSize": 146,
+        "atomBasisSize": 90,
+        "lMax": 2,
+        "totalM": 1,
+        "perturbationOrder": 2,
+        "interaction": "electric dipole-dipole; R parallel B along z; diamagnetism disabled",
+        "targetBasisWeights": [
+          0.9992107180094635,
+          0.9992107180094635
+        ]
+      },
+      "points": [
+        {
+          "distanceUm": 8,
+          "effectiveHamiltonianMHz": [
+            [
+              1.581312894821167,
+              -11.946794640789333
+            ],
+            [
+              -11.946794640789333,
+              1.581312894821167
+            ]
+          ],
+          "effectiveEigenvaluesMHz": [
+            -10.365481745968166,
+            13.5281075356105
+          ],
+          "exactEigenvaluesMHz": [
+            -9.115157842636108,
+            13.016507863998413
+          ],
+          "exactTargetWeights": [
+            0.7988090114606003,
+            0.97862843699289
+          ],
+          "secondOrderShiftsMHz": [
+            1.5813130454467872,
+            1.5813130454467874
+          ],
+          "exchangeMHz": -11.946794640789335,
+          "hermiticityErrorMHz": 0,
+          "referenceDifferenceMHz": 1.5062562042089667e-07,
+          "diagonalizationDifferenceMHz": 2.9730654205195606e-07,
+          "effectiveSpectrumDeviationMHz": 1.250323903332058,
+          "maxCouplingToGapRatio": 0.25012993625668983,
+          "minCoupledGapMHz": 19.07656455039978,
+          "perturbationStatus": "outside_screen"
+        },
+        {
+          "distanceUm": 12,
+          "effectiveHamiltonianMHz": [
+            [
+              0.1388256549835205,
+              -3.5397910046783214
+            ],
+            [
+              -3.5397910046783214,
+              0.1388256549835205
+            ]
+          ],
+          "effectiveEigenvaluesMHz": [
+            -3.4009653496948005,
+            3.678616659661842
+          ],
+          "exactEigenvaluesMHz": [
+            -3.376558542251587,
+            3.660640001296997
+          ],
+          "exactTargetWeights": [
+            0.9917833138675433,
+            0.99615340033704
+          ],
+          "secondOrderShiftsMHz": [
+            0.13882583663730366,
+            0.13882583663730366
+          ],
+          "exchangeMHz": -3.539791004678322,
+          "hermiticityErrorMHz": 0,
+          "referenceDifferenceMHz": 1.8165378315448955e-07,
+          "diagonalizationDifferenceMHz": 3.064697011723183e-07,
+          "effectiveSpectrumDeviationMHz": 0.024406807443213552,
+          "maxCouplingToGapRatio": 0.07411257370568587,
+          "minCoupledGapMHz": 19.07656455039978,
+          "perturbationStatus": "within_screen"
+        },
+        {
+          "distanceUm": 16,
+          "effectiveHamiltonianMHz": [
+            [
+              0.024707794189453125,
+              -1.4933493300986667
+            ],
+            [
+              -1.4933493300986667,
+              0.024707794189453125
+            ]
+          ],
+          "effectiveEigenvaluesMHz": [
+            -1.4686415359092133,
+            1.5180571242881198
+          ],
+          "exactEigenvaluesMHz": [
+            -1.4669692516326904,
+            1.5165886878967285
+          ],
+          "exactTargetWeights": [
+            0.9988394087865228,
+            0.9991589317780718
+          ],
+          "secondOrderShiftsMHz": [
+            0.02470801633510605,
+            0.024708016335106053
+          ],
+          "exchangeMHz": -1.4933493300986669,
+          "hermiticityErrorMHz": 0,
+          "referenceDifferenceMHz": 2.2214565292832944e-07,
+          "diagonalizationDifferenceMHz": 3.13855821332254e-07,
+          "effectiveSpectrumDeviationMHz": 0.001672284276522884,
+          "maxCouplingToGapRatio": 0.03126624203208623,
+          "minCoupledGapMHz": 19.07656455039978,
+          "perturbationStatus": "within_screen"
+        }
+      ],
+      "rawResultSha256": "7faef86880cd62de77063faffe7565f346c198751c7dae35daeedd8c365d4189"
+    },
+    {
+      "label": "ss-expanded",
+      "input": {
+        "deltaN": 3,
+        "energyWindowGHz": 25,
+        "channel": "ss",
+        "nS": 60,
+        "magneticFieldG": 20,
+        "distancesUm": [
+          8,
+          12,
+          16
+        ]
+      },
+      "inputSha256": "15b887921377193561182736a54e7381a8b7fa3f7a2a675ae6c92275d1024206",
+      "model": {
+        "species": "Rb",
+        "targetStates": [
+          "|Rb:60,S_1/2,1/2⟩; |Rb:60,S_1/2,1/2⟩"
+        ],
+        "frequencyConvention": "H/h in MHz; ordinary frequency, not angular frequency",
+        "energyReferenceMHz": 2018023899.2266927,
+        "pairBasisSize": 139,
+        "atomBasisSize": 56,
+        "lMax": 1,
+        "totalM": 1,
+        "perturbationOrder": 2,
+        "interaction": "electric dipole-dipole; R parallel B along z; diamagnetism disabled",
+        "targetBasisWeights": [
+          1
+        ]
+      },
+      "points": [
+        {
+          "distanceUm": 8,
+          "effectiveHamiltonianMHz": [
+            [
+              0.5294113159179688
+            ]
+          ],
+          "effectiveEigenvaluesMHz": [
+            0.5294113159179688
+          ],
+          "exactEigenvaluesMHz": [
+            0.5292947292327881
+          ],
+          "exactTargetWeights": [
+            0.9996331788388215
+          ],
+          "secondOrderShiftsMHz": [
+            0.5294118974438329
+          ],
+          "exchangeMHz": 0,
+          "hermiticityErrorMHz": 0,
+          "referenceDifferenceMHz": 5.815258641295173e-07,
+          "diagonalizationDifferenceMHz": 3.848217602353543e-07,
+          "effectiveSpectrumDeviationMHz": 0.00011658668518066406,
+          "maxCouplingToGapRatio": 0.00902786816115775,
+          "minCoupledGapMHz": 1243.767807483673,
+          "perturbationStatus": "within_screen"
+        },
+        {
+          "distanceUm": 12,
+          "effectiveHamiltonianMHz": [
+            [
+              0.046477317810058594
+            ]
+          ],
+          "effectiveEigenvaluesMHz": [
+            0.046477317810058594
+          ],
+          "exactEigenvaluesMHz": [
+            0.04647660255432129
+          ],
+          "exactTargetWeights": [
+            0.9999677750746672
+          ],
+          "secondOrderShiftsMHz": [
+            0.04647786205268217
+          ],
+          "exchangeMHz": 0,
+          "hermiticityErrorMHz": 0,
+          "referenceDifferenceMHz": 5.442426235791054e-07,
+          "diagonalizationDifferenceMHz": 3.583190846256912e-07,
+          "effectiveSpectrumDeviationMHz": 7.152557373046875e-07,
+          "maxCouplingToGapRatio": 0.002674923899602297,
+          "minCoupledGapMHz": 1243.767807483673,
+          "perturbationStatus": "within_screen"
+        },
+        {
+          "distanceUm": 16,
+          "effectiveHamiltonianMHz": [
+            [
+              0.00827169418334961
+            ]
+          ],
+          "effectiveEigenvaluesMHz": [
+            0.00827169418334961
+          ],
+          "exactEigenvaluesMHz": [
+            0.008271932601928711
+          ],
+          "exactTargetWeights": [
+            0.9999942643576373
+          ],
+          "secondOrderShiftsMHz": [
+            0.008272060897559889
+          ],
+          "exchangeMHz": 0,
+          "hermiticityErrorMHz": 0,
+          "referenceDifferenceMHz": 3.6671421027936746e-07,
+          "diagonalizationDifferenceMHz": 3.3354990591760725e-07,
+          "effectiveSpectrumDeviationMHz": 2.384185791015625e-07,
+          "maxCouplingToGapRatio": 0.0011284835201447187,
+          "minCoupledGapMHz": 1243.767807483673,
+          "perturbationStatus": "within_screen"
+        }
+      ],
+      "rawResultSha256": "e16eee9bcf84bbe64cdc5969b89fd6ac4dc9f3e4b21e88dc0f2566a55a474d57"
+    },
+    {
+      "label": "sp-expanded",
+      "input": {
+        "channel": "sp_exchange",
+        "nP": 60,
+        "deltaN": 3,
+        "energyWindowGHz": 25,
+        "nS": 60,
+        "magneticFieldG": 20,
+        "distancesUm": [
+          8,
+          12,
+          16
+        ]
+      },
+      "inputSha256": "02f064bbdd4848c0f6478ae3b84b86fb2d633508be11751f4c46bb03801db8bd",
+      "model": {
+        "species": "Rb",
+        "targetStates": [
+          "|Rb:60,S_1/2,1/2⟩; |Rb:60,P_3/2,1/2⟩",
+          "|Rb:60,P_3/2,1/2⟩; |Rb:60,S_1/2,1/2⟩"
+        ],
+        "frequencyConvention": "H/h in MHz; ordinary frequency, not angular frequency",
+        "energyReferenceMHz": 2018041177.6697674,
+        "pairBasisSize": 451,
+        "atomBasisSize": 126,
+        "lMax": 2,
+        "totalM": 1,
+        "perturbationOrder": 2,
+        "interaction": "electric dipole-dipole; R parallel B along z; diamagnetism disabled",
+        "targetBasisWeights": [
+          0.9992107180088364,
+          0.9992107180088364
+        ]
+      },
+      "points": [
+        {
+          "distanceUm": 8,
+          "effectiveHamiltonianMHz": [
+            [
+              1.5813219547271729,
+              -11.94679705967202
+            ],
+            [
+              -11.94679705967202,
+              1.5813219547271729
+            ]
+          ],
+          "effectiveEigenvaluesMHz": [
+            -10.365475104944847,
+            13.528119014399193
+          ],
+          "exactEigenvaluesMHz": [
+            -9.115152597427368,
+            13.016531705856323
+          ],
+          "exactTargetWeights": [
+            0.7988086441587225,
+            0.9786284108671987
+          ],
+          "secondOrderShiftsMHz": [
+            1.5813223141760904,
+            1.5813223141760906
+          ],
+          "exchangeMHz": -11.94679705967202,
+          "hermiticityErrorMHz": 0,
+          "referenceDifferenceMHz": 3.594489177416449e-07,
+          "diagonalizationDifferenceMHz": 3.5443554224912077e-07,
+          "effectiveSpectrumDeviationMHz": 1.2503225075174793,
+          "maxCouplingToGapRatio": 0.2501299691708712,
+          "minCoupledGapMHz": 19.07656455039978,
+          "perturbationStatus": "outside_screen"
+        },
+        {
+          "distanceUm": 12,
+          "effectiveHamiltonianMHz": [
+            [
+              0.1388263702392578,
+              -3.539791721384302
+            ],
+            [
+              -3.539791721384302,
+              0.1388263702392578
+            ]
+          ],
+          "effectiveEigenvaluesMHz": [
+            -3.4009653511450444,
+            3.67861809162356
+          ],
+          "exactEigenvaluesMHz": [
+            -3.376558542251587,
+            3.660641670227051
+          ],
+          "exactTargetWeights": [
+            0.9917833096742684,
+            0.9961533991033237
+          ],
+          "secondOrderShiftsMHz": [
+            0.13882665035290775,
+            0.13882665035290778
+          ],
+          "exchangeMHz": -3.5397917213843026,
+          "hermiticityErrorMHz": 0,
+          "referenceDifferenceMHz": 2.8011364996971544e-07,
+          "diagonalizationDifferenceMHz": 3.889945219270885e-07,
+          "effectiveSpectrumDeviationMHz": 0.024406808893457477,
+          "maxCouplingToGapRatio": 0.0741125834580359,
+          "minCoupledGapMHz": 19.07656455039978,
+          "perturbationStatus": "within_screen"
+        },
+        {
+          "distanceUm": 16,
+          "effectiveHamiltonianMHz": [
+            [
+              0.024707794189453125,
+              -1.4933496324590025
+            ],
+            [
+              -1.4933496324590025,
+              0.024707794189453125
+            ]
+          ],
+          "effectiveEigenvaluesMHz": [
+            -1.4686418382695494,
+            1.5180574266484557
+          ],
+          "exactEigenvaluesMHz": [
+            -1.4669692516326904,
+            1.516589641571045
+          ],
+          "exactTargetWeights": [
+            0.9988394083922759,
+            0.9991589315528602
+          ],
+          "secondOrderShiftsMHz": [
+            0.024708161159001412,
+            0.024708161159001416
+          ],
+          "exchangeMHz": -1.4933496324590025,
+          "hermiticityErrorMHz": 0,
+          "referenceDifferenceMHz": 3.6696954829051887e-07,
+          "diagonalizationDifferenceMHz": 3.6612595977203455e-07,
+          "effectiveSpectrumDeviationMHz": 0.001672586636858986,
+          "maxCouplingToGapRatio": 0.0312662461463589,
+          "minCoupledGapMHz": 19.07656455039978,
+          "perturbationStatus": "within_screen"
+        }
+      ],
+      "rawResultSha256": "e01724ef628f2a6da2630ba4624c7196f4f7e801c48a866c03cc4f7497ed5f0b"
+    }
+  ],
+  "basisComparison": {
+    "status": "observed_changes_only",
+    "scientificValidation": "not_evaluated",
+    "comparison": [
+      {
+        "channel": "ss",
+        "baseBasis": 43,
+        "expandedBasis": 139,
+        "shiftChangeMHzAt8um": 4.877000852054891e-07
+      },
+      {
+        "channel": "sp_exchange",
+        "baseBasis": 146,
+        "expandedBasis": 451,
+        "shiftChangeMHzAt8um": 9.268729303180123e-06
+      }
+    ]
+  },
+  "harness": {
+    "testStatus": "passed",
+    "model": "local protocol fixture",
+    "externalModelTested": false,
+    "sessionId": "session-pairinteraction-118c0da4-ff1b-424d-a7fa-8c42224fe6a0",
+    "rawSessionSha256": "790a14eafb9387ed1c8437018c3dbec1ea58486137a2e7d7b9c9ffcdad3d48f4",
+    "eventCount": 30
+  },
+  "sourceFiles": {
+    ".agents/skills/pairinteraction-rydberg/SKILL.md": "59743387adfdebf69e90fe39d0b044515b7bd2063e6d17a6091f6b1b9afb194d",
+    ".agents/skills/pairinteraction-rydberg/database-lock.json": "28085e8e83d27953fac022577c5ea0b066f4e0ea91d26a2f57c5e607330c7a0c",
+    ".agents/skills/pairinteraction-rydberg/mcp/bridge.py": "f2a311ea52cddcb9e4b1308a7a19f6d154ab7a1086642a8e2881446eea280dd3",
+    ".agents/skills/pairinteraction-rydberg/mcp/contracts.mjs": "19308acfcda3b07af463614c63231e2cb91fc8e2925fe65bcd8037dc8198598b",
+    ".agents/skills/pairinteraction-rydberg/mcp/database.py": "4420f12b73a5abae85ab1866db1be1fb200549ffb24e10eec1d2153abb2e6345",
+    ".agents/skills/pairinteraction-rydberg/mcp/reference.py": "98895cb555c5b7ca5dbb4dfe764a7bc3d14e437402a8935fd2b9e1a7d738c246",
+    ".agents/skills/pairinteraction-rydberg/mcp/server.mjs": "03c6ab8868476f77d45997d4e468aebf2fd74c08591d99c8ce49025a88cd35b2",
+    ".agents/skills/pairinteraction-rydberg/pyproject.toml": "e4addb622196a7156bda1ef44d88cf8156b370a04978a3e485f23a49f29f7eeb",
+    ".agents/skills/pairinteraction-rydberg/scripts/setup.mjs": "8382669e3d0ccb790d82450772fb0354fcb97498ed61e05690960f5ec5e0967f",
+    ".agents/skills/pairinteraction-rydberg/scripts/setup_database.py": "18b257be310144c41bbd16e5be9f3e784dcd8b824330fd3f387faf2ee5b236f4",
+    ".agents/skills/pairinteraction-rydberg/test/science_test.py": "e683f07bd68c65be7bc5bad9e739f2b64a83e8a13882cd527220c7ac45d83f66",
+    ".agents/skills/pairinteraction-rydberg/uv.lock": "585467d5d936e8d82afae2c2649fec93a53aa4df17beb382d463ed906efc2a3a"
+  },
+  "limitations": [
+    "Numerical references share PairInteraction atomic data.",
+    "Limited truncation comparisons do not prove basis convergence.",
+    "Paper validation cases and independent domain review have not been completed.",
+    "No central scientific Acceptance, external model, hardware, Windows or Linux run.",
+    "Implemented and tested in an isolated local worktree; no deployment or push."
+  ],
+  "implementationCommit": "3e599d8c",
+  "harnessRuntimeVersion": "0.2.0-rc.2"
+}

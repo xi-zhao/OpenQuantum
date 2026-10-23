@@ -1,3 +1,6 @@
+import { capabilityCategory } from "../../settings/capability-categories.mjs";
+import { readCapabilityCatalog } from "../../settings/server/capability-catalog.mjs";
+
 const DEFAULT_PRESET_ID = "openquantum";
 const DEFAULT_TIMEOUT_MS = 1_500;
 
@@ -324,6 +327,7 @@ function overallStatus(preset, checks) {
  */
 export function createRuntimeReadinessReader({
   observer,
+  projectRoot,
   presetId = DEFAULT_PRESET_ID,
   timeoutMs = DEFAULT_TIMEOUT_MS,
   now = () => new Date(),
@@ -339,9 +343,11 @@ export function createRuntimeReadinessReader({
   }
 
   return async function readRuntimeReadiness() {
-    const [modelCheck, presetObservation] = await Promise.all([
+    const [modelCheck, presetObservation, catalog] = await Promise.all([
       observeModelRoutes(observer, boundedTimeoutMs),
       observePreset(observer, boundedPresetId, boundedTimeoutMs),
+      // Categorization is optional presentation metadata, never observation evidence.
+      projectRoot ? readCapabilityCatalog(projectRoot).catch(() => undefined) : undefined,
     ]);
     const observedAt = now();
     if (!(observedAt instanceof Date) || Number.isNaN(observedAt.valueOf())) {
@@ -354,7 +360,13 @@ export function createRuntimeReadinessReader({
       mode: "passive",
       status: overallStatus(presetObservation.preset, checks),
       preset: presetObservation.preset,
-      checks,
+      ...(catalog ? { categories: catalog.categories } : {}),
+      checks: catalog ? checks.map(check => check.id === "model-routes" ? check : {
+        ...check,
+        items: check.items.map(item => ({ ...item, category: check.id === "skill-registry"
+          ? capabilityCategory(item.id)
+          : catalog.tools[item.id] ?? (item.id.startsWith("mcp__") ? catalog.servers[item.id.split("__")[1]] : undefined) ?? "other" })),
+      }) : checks,
       limitations: [...LIMITATIONS],
     };
   };

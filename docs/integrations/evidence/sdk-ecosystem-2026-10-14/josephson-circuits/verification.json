@@ -1,0 +1,17 @@
+{
+  "id": "josephson-circuits",
+  "dependencyLockSha256": "4d6f939199d68fd4769af3a77059146ef698bf4f29bb62b03cb66e233aa554a3",
+  "sourceSha256": "008b4e542207c52ef7f236199add18d9c404a128fda5f9a0482f53a8da2917fa",
+  "networkIsolation": "macOS sandbox-exec deny network*",
+  "scientificValidation": "not_evaluated",
+  "status": "passed",
+  "files": {
+    "attempt.json": "24fdd0ecb123fb00c6ddbea18ac1cc9e73dc8f514e7bf074cd6f80e68e495c8d",
+    "netlist.cir": "e1c0a4c5630a212e43ab630b35b882ea5e4b456ec46e3bc2e1951f82b124a4b2",
+    "program.jl": "008b4e542207c52ef7f236199add18d9c404a128fda5f9a0482f53a8da2917fa",
+    "result.json": "f170d9af768b1e100d455f0eb3a24bb95d9df9af05f53146a25902e5db19e3c1",
+    "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "versions.json": "5588c080e135a7a51467c7c46345ca5be93a13b992d7810450afd7a596d6b002"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "id": "pygsti-characterization",
+  "dependencyLockSha256": "16716cf80cc98c3f4bffb78f0ec52c464f98bf1f8411b6a21eb7c886385ab017",
+  "sourceSha256": "f4235b9a9682445a068924c06d942356796150846365c4f00e5a30ed2196f86f",
+  "networkIsolation": "macOS sandbox-exec deny network*",
+  "scientificValidation": "not_evaluated",
+  "status": "passed",
+  "files": {
+    "attempt.json": "5d5137d6598fd2499660933715e899caf6e3081bb9d79f70f73c4a2917b6db7c",
+    "program.py": "f4235b9a9682445a068924c06d942356796150846365c4f00e5a30ed2196f86f",
+    "result.json": "8cfe66dcf32c1a5e3674e394bc0bbf40b185984f2a057e538622261bc7e422e2",
+    "runner.py": "a0fc307c398b014acf774d85f64cfb450988b7b72ea285429a70a4497c13cb94",
+    "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "versions.json": "819c06b61a6e5a3efb557b11556a33df9122b1e67df57805875d4e833f57e7fb"
+  }
+}

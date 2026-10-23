@@ -1,0 +1,1 @@
+{"build_seconds": 3.4154994160635397, "python": "/Users/xizhao/.openquantum/plugins/codex/environments/python/fatqat-workbench/bin/python", "command": ["cargo", "build", "--release", "--locked"], "build_jobs": 2, "extension": "qutip_wigner_rust.cpython-312-darwin.so", "profile": "release", "rustc": "rustc 1.94.1 (e408947bf 2026-03-25) (Homebrew)"}

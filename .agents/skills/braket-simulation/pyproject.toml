@@ -1,0 +1,8 @@
+[project]
+name = "openquantum-braket-simulation"
+version = "0.1.0"
+requires-python = ">=3.12,<3.13"
+dependencies = ["amazon-braket-sdk==1.127.2"]
+
+[tool.uv]
+package = false

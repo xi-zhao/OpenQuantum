@@ -5,6 +5,17 @@ description: 用固定 Clifft 对 Clifford+T 电路做带噪采样或 Stim 格�
 
 # Clifft 近 Clifford 采样
 
+<!-- BEGIN NATIVE SDK ACCESS -->
+## 原生 SDK 路径
+
+本能力同时支持 **Clifft / Stim 的原生公开 API**。用户需要 自定义电路、噪声模型、测量与采样程序 时，由 Agent 在固定依赖环境中编写和运行任务代码，不限于下文便捷 Tool 的预设模型。
+
+使用 `node scripts/sdk-access.mjs inspect clifft-sampling` 定位环境，按[完整 SDK 工作流](../quantum-sdk-workbench/references/workflow.md)执行。模块导航：`clifft`、`stim`；导航不是 API 白名单。
+
+下文关于模型、门集、输入与预算的限制描述便捷 Tool 的合同；原生 SDK 另受上游版本、可选依赖、宿主资源与用户授权约束。已禁用或被拒绝的动作不能借代码路径绕过。执行状态和科研验收分别报告。
+<!-- END NATIVE SDK ACCESS -->
+
+
 结构化最终测量调用 Harness 注册的 `clifft_local.sample_clifft_circuit`。用于 T 门干涉、Clifford+T 电路和门后去极化噪声实验。
 
 - 提交结构化 `gates`，仅支持 H、S、T、X、Y、Z、CX、CZ；CX/CZ 的 targets 顺序为控制位、目标位。量子位数、门数和 shots 由输入决定。maxActiveWidth 默认为 null；只有用户显式设置该预算时才按实际 peakActiveWidth 检查。

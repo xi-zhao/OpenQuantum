@@ -1,3 +1,4 @@
+import { projectRoot as openQuantumProjectRoot } from "../../project-root.mjs";
 import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
@@ -6,7 +7,7 @@ import { pathToFileURL } from "node:url";
 // Agent presets are copied into DSH_HOME before loading. Project-owned
 // scientific modules therefore resolve from Harness's configured process cwd,
 // never from this copied preset file's physical location.
-const repositoryRoot = process.cwd();
+const repositoryRoot = openQuantumProjectRoot;
 const capabilityPromises = new Map();
 let contractsPromise;
 

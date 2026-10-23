@@ -1,0 +1,1355 @@
+{
+  "schemaVersion": 1,
+  "server": "qiskit_gym",
+  "tools": [
+    {
+      "name": "create_permutation_env_tool",
+      "description": "Create a PermutationGym environment for learning qubit routing with SWAP gates.\n\nUse this to create an RL environment that learns to implement arbitrary qubit\npermutations using minimal SWAP gates on constrained coupling maps.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "coupling_map": {
+            "anyOf": [
+              {
+                "items": {
+                  "items": {
+                    "type": "integer"
+                  },
+                  "type": "array"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Custom coupling map as list of [qubit1, qubit2] edges.\nExample: [[0,1], [1,2], [2,3]] for a linear chain."
+          },
+          "preset": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Hardware preset name (use instead of coupling_map).\nOptions: \"ibm_heron_r1\", \"ibm_heron_r2\", \"ibm_nighthawk\",\n        \"grid_3x3\", \"grid_5x5\", \"linear_5\", \"linear_10\""
+          }
+        },
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "create_linear_function_env_tool",
+      "description": "Create a LinearFunctionGym environment for learning CNOT synthesis.\n\nThe environment learns to decompose linear Boolean functions into efficient\nquantum circuits using CNOT gates.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "coupling_map": {
+            "anyOf": [
+              {
+                "items": {
+                  "items": {
+                    "type": "integer"
+                  },
+                  "type": "array"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Custom coupling map as list of [qubit1, qubit2] edges."
+          },
+          "preset": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Hardware preset name (e.g., \"ibm_nighthawk\", \"grid_3x3\")"
+          },
+          "basis_gates": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Optional list of basis gates (default: [\"cx\"])"
+          }
+        },
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "create_clifford_env_tool",
+      "description": "Create a CliffordGym environment for learning Clifford circuit synthesis.\n\nThe environment learns to synthesize optimal implementations of Clifford\ngroup elements using a customizable gate set.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "num_qubits": {
+            "type": "integer",
+            "description": "Number of qubits for the environment"
+          },
+          "coupling_map": {
+            "anyOf": [
+              {
+                "items": {
+                  "items": {
+                    "type": "integer"
+                  },
+                  "type": "array"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Custom coupling map (optional)"
+          },
+          "preset": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Hardware preset name (optional)"
+          },
+          "gateset": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "additionalProperties": true,
+                      "type": "object"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Custom gate set. Can be:\n- List of gate names: [\"H\", \"S\", \"CX\"] (applied to all qubits/edges)\n- List of dicts: [{\"gate\": \"H\", \"qubits\": [0]}, {\"gate\": \"CX\", \"qubits\": [0, 1]}]"
+          }
+        },
+        "required": [
+          "num_qubits"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "list_environments_tool",
+      "description": "List all active RL environments.\n\nReturns:\n    Dict with list of environments and their info.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "get_environment_info_tool",
+      "description": "Get detailed information about a specific environment.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "env_id": {
+            "type": "string",
+            "description": "Environment ID"
+          }
+        },
+        "required": [
+          "env_id"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "delete_environment_tool",
+      "description": "Delete an environment.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "env_id": {
+            "type": "string",
+            "description": "Environment ID to delete"
+          }
+        },
+        "required": [
+          "env_id"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "start_training_tool",
+      "description": "Start training an RL agent on a created environment.\n\nThis initiates training that learns to synthesize optimal circuits.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "env_id": {
+            "type": "string",
+            "description": "Environment ID from create_*_env_tool"
+          },
+          "algorithm": {
+            "default": "ppo",
+            "enum": [
+              "ppo",
+              "alphazero"
+            ],
+            "type": "string",
+            "description": "RL algorithm to use:\n- \"ppo\": Proximal Policy Optimization (recommended, faster)\n- \"alphazero\": AlphaZero-style MCTS (better for complex problems)"
+          },
+          "policy": {
+            "default": "basic",
+            "enum": [
+              "basic",
+              "conv1d"
+            ],
+            "type": "string",
+            "description": "Neural network policy architecture:\n- \"basic\": Simple feedforward network (faster, good for small problems)\n- \"conv1d\": 1D convolutional network (better for larger problems)"
+          },
+          "num_iterations": {
+            "default": 100,
+            "type": "integer",
+            "description": "Number of training iterations. Default: 100"
+          },
+          "tensorboard_experiment": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Name for TensorBoard logging (optional)"
+          },
+          "background": {
+            "default": false,
+            "type": "boolean",
+            "description": "If True, run training in background and return immediately.\nUse get_training_status_tool to poll progress, or wait_for_training_tool\nto block until done. Default: False (synchronous)."
+          }
+        },
+        "required": [
+          "env_id"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "batch_train_environments_tool",
+      "description": "Train multiple environments in sequence.\n\nUseful for training models across multiple topologies or subtopologies\nextracted from hardware.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "env_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "description": "List of environment IDs to train"
+          },
+          "algorithm": {
+            "default": "ppo",
+            "enum": [
+              "ppo",
+              "alphazero"
+            ],
+            "type": "string",
+            "description": "RL algorithm to use"
+          },
+          "policy": {
+            "default": "basic",
+            "enum": [
+              "basic",
+              "conv1d"
+            ],
+            "type": "string",
+            "description": "Neural network policy architecture"
+          },
+          "num_iterations": {
+            "default": 100,
+            "type": "integer",
+            "description": "Number of iterations per environment"
+          },
+          "tensorboard_prefix": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Prefix for TensorBoard experiment names"
+          },
+          "background": {
+            "default": false,
+            "type": "boolean",
+            "description": "If True, start all training in background and return immediately.\nUse get_training_status_tool or wait_for_training_tool to monitor."
+          }
+        },
+        "required": [
+          "env_ids"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "get_training_status_tool",
+      "description": "Get the status and metrics of a training session.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "session_id": {
+            "type": "string",
+            "description": "Training session ID"
+          }
+        },
+        "required": [
+          "session_id"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "get_training_metrics_tool",
+      "description": "Get detailed training metrics from TensorBoard logs.\n\nReturns the progression of difficulty, success rate, and reward\nthroughout training. Use this after training completes to understand\nhow well the model trained and what difficulty level it reached.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "session_id": {
+            "type": "string",
+            "description": "Training session ID"
+          }
+        },
+        "required": [
+          "session_id"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "wait_for_training_tool",
+      "description": "Wait for a background training session to complete.\n\nBlocks until training completes, fails, or times out. Use this after\nstarting training with background=True.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "session_id": {
+            "type": "string",
+            "description": "Training session ID to wait for"
+          },
+          "timeout": {
+            "default": 600,
+            "type": "integer",
+            "description": "Maximum time to wait in seconds (default: 600 = 10 minutes)"
+          }
+        },
+        "required": [
+          "session_id"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "stop_training_tool",
+      "description": "Stop a training session.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "session_id": {
+            "type": "string",
+            "description": "Training session ID to stop"
+          }
+        },
+        "required": [
+          "session_id"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "list_training_sessions_tool",
+      "description": "List all training sessions.\n\nReturns:\n    Dict with list of training sessions.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "list_tensorboard_experiments_tool",
+      "description": "List available TensorBoard experiments from past training runs.\n\nReturns a list of experiment names that can be used with\nget_tensorboard_metrics_tool to view historical training metrics.\n\nReturns:\n    Dict with list of experiment names (newest first).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "get_tensorboard_metrics_tool",
+      "description": "Get training metrics from TensorBoard logs for historical runs.\n\nUse this to read metrics from past training runs that are no longer\nin the active session list. Use list_tensorboard_experiments_tool to\nsee available experiments.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "experiment_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Name of the TensorBoard experiment\n(e.g., \"linear_function_train_0001_abc123\")."
+          },
+          "tensorboard_path": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Direct path to TensorBoard logs (alternative to name)."
+          }
+        },
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "start_tensorboard_tool",
+      "description": "Start TensorBoard to visualize training metrics.\n\nLaunches TensorBoard as a background process using the configured\nQISKIT_GYM_TENSORBOARD_DIR as the log directory.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "port": {
+            "default": 6006,
+            "type": "integer",
+            "description": "The port to run TensorBoard on (default: 6006)"
+          }
+        },
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "stop_tensorboard_tool",
+      "description": "Stop the running TensorBoard process.\n\nTerminates the TensorBoard process that was started with start_tensorboard_tool.\n\nReturns:\n    Dict with status message indicating whether TensorBoard was stopped.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "get_tensorboard_status_tool",
+      "description": "Check the status of the TensorBoard process.\n\nReturns whether TensorBoard is running and on which port.\n\nReturns:\n    Dict with running status, port, and URL if running.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "synthesize_permutation_tool",
+      "description": "Synthesize an optimal quantum circuit for a qubit permutation.\n\nUses a trained PermutationGym model to find an optimal SWAP gate sequence\nthat implements the desired qubit permutation on the coupling map.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "model_id": {
+            "type": "string",
+            "description": "ID of a loaded PermutationGym model"
+          },
+          "permutation": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "description": "Target permutation as list of qubit indices.\nExample: [2, 0, 1] means qubit 0 -> position 2, qubit 1 -> position 0"
+          },
+          "num_searches": {
+            "default": 1000,
+            "type": "integer",
+            "description": "Number of search attempts. Higher = better results. Max: 10000"
+          },
+          "deterministic": {
+            "default": false,
+            "type": "boolean",
+            "description": "If True, use deterministic action selection"
+          }
+        },
+        "required": [
+          "model_id",
+          "permutation"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "synthesize_linear_function_tool",
+      "description": "Synthesize an optimal quantum circuit for a linear Boolean function.\n\nUses a trained LinearFunctionGym model to find an optimal CNOT circuit.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "model_id": {
+            "type": "string",
+            "description": "ID of a loaded LinearFunctionGym model"
+          },
+          "linear_function": {
+            "items": {
+              "items": {
+                "type": "integer"
+              },
+              "type": "array"
+            },
+            "type": "array",
+            "description": "NxN binary matrix representing the linear function.\nEntry [i][j]=1 means output i depends on input j (XOR)."
+          },
+          "num_searches": {
+            "default": 1000,
+            "type": "integer",
+            "description": "Number of search attempts. Max: 10000"
+          },
+          "deterministic": {
+            "default": false,
+            "type": "boolean",
+            "description": "If True, use deterministic action selection"
+          }
+        },
+        "required": [
+          "model_id",
+          "linear_function"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "synthesize_clifford_tool",
+      "description": "Synthesize an optimal quantum circuit for a Clifford operation.\n\nUses a trained CliffordGym model to find an optimal Clifford implementation.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "model_id": {
+            "type": "string",
+            "description": "ID of a loaded CliffordGym model"
+          },
+          "clifford_tableau": {
+            "anyOf": [
+              {
+                "items": {
+                  "items": {
+                    "type": "integer"
+                  },
+                  "type": "array"
+                },
+                "type": "array"
+              },
+              {
+                "additionalProperties": true,
+                "type": "object"
+              }
+            ],
+            "description": "Clifford tableau in standard (2N+1 x 2N) format,\nor dict with \"destab\" and \"stab\" matrices."
+          },
+          "num_searches": {
+            "default": 1000,
+            "type": "integer",
+            "description": "Number of search attempts. Max: 10000"
+          },
+          "deterministic": {
+            "default": false,
+            "type": "boolean",
+            "description": "If True, use deterministic action selection"
+          }
+        },
+        "required": [
+          "model_id",
+          "clifford_tableau"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "save_model_tool",
+      "description": "Save a trained model to disk.\n\nSave by session_id (from just-completed training) or model_id (loaded model).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "session_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Training session ID (from start_training result)"
+          },
+          "model_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Model ID (alternative to session_id)"
+          },
+          "model_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Name to save as (defaults to auto-generated)"
+          }
+        },
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "load_model_tool",
+      "description": "Load a saved model from disk.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "model_name": {
+            "type": "string",
+            "description": "Name of the model to load"
+          }
+        },
+        "required": [
+          "model_name"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "list_saved_models_tool",
+      "description": "List all models saved to disk.\n\nReturns:\n    Dict with list of saved models.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "list_loaded_models_tool",
+      "description": "List all models currently loaded in memory.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "filter_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Optional filter by env_type or model name prefix"
+          }
+        },
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "delete_model_tool",
+      "description": "Delete a model.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "model_name": {
+            "type": "string",
+            "description": "Name of the model to delete"
+          },
+          "delete_files": {
+            "default": false,
+            "type": "boolean",
+            "description": "If True, also delete saved files from disk"
+          }
+        },
+        "required": [
+          "model_name"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "get_model_info_tool",
+      "description": "Get detailed information about a model.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "model_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Model ID (for loaded models)"
+          },
+          "model_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Model name (can also check saved models on disk)"
+          }
+        },
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "create_coupling_map_tool",
+      "description": "Create a custom coupling map.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "edges": {
+            "anyOf": [
+              {
+                "items": {
+                  "items": {
+                    "type": "integer"
+                  },
+                  "type": "array"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Custom edges as [[q1, q2], ...] (mutually exclusive with topology)"
+          },
+          "topology": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Topology type (\"grid\", \"line\") (mutually exclusive with edges)"
+          },
+          "num_qubits": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Number of qubits (for line topology)"
+          },
+          "rows": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Number of rows (for grid topology)"
+          },
+          "cols": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Number of columns (for grid topology)"
+          },
+          "bidirectional": {
+            "default": true,
+            "type": "boolean",
+            "description": "Whether edges are bidirectional (default: True)"
+          }
+        },
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "extract_subtopologies_tool",
+      "description": "Extract connected subtopologies of N qubits from a hardware preset.\n\nUse this to find all unique connected subgraphs of a specified size from a\nlarger coupling map. Essential for training RL models on subtopologies of\nreal quantum hardware like IBM Nighthawk.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "preset": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Hardware preset name (e.g., \"ibm_nighthawk\", \"ibm_heron_r1\")"
+          },
+          "edges": {
+            "anyOf": [
+              {
+                "items": {
+                  "items": {
+                    "type": "integer"
+                  },
+                  "type": "array"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Custom coupling map edges (alternative to preset)"
+          },
+          "num_qubits": {
+            "default": 4,
+            "type": "integer",
+            "description": "Number of qubits for subtopologies (default: 4)"
+          },
+          "max_subtopologies": {
+            "default": 50,
+            "type": "integer",
+            "description": "Maximum number of subtopologies to return (default: 50)"
+          }
+        },
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "list_subtopology_shapes_tool",
+      "description": "List available subtopology shapes for a given hardware and qubit count.\n\nSummarizes the types of subtopologies available (line, grid, star, etc.)\nwithout returning all edges.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "preset": {
+            "type": "string",
+            "description": "Hardware preset name"
+          },
+          "num_qubits": {
+            "type": "integer",
+            "description": "Number of qubits for subtopologies"
+          }
+        },
+        "required": [
+          "preset",
+          "num_qubits"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "get_fake_backend_coupling_map_tool",
+      "description": "Get the exact coupling map from a fake IBM backend (no credentials needed).\n\nUse this to get exact IBM Quantum hardware topologies without needing\nIBM Quantum credentials. This is the recommended way to get accurate\ntopologies for offline development.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "backend_name": {
+            "type": "string",
+            "description": "Backend name (e.g., \"ibm_fez\", \"ibm_brisbane\", \"ibm_boston\",\n\"ibm_sherbrooke\"). Use list_available_fake_backends to see all options."
+          }
+        },
+        "required": [
+          "backend_name"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "list_available_fake_backends_tool",
+      "description": "List all available fake backends for offline topology access.\n\nReturns a list of IBM Quantum backends that have fake versions available\nin qiskit-ibm-runtime. These provide exact coupling maps without needing\nIBM Quantum credentials.\n\nReturns:\n    Dict with list of backends, their qubit counts, and usage instructions.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "generate_random_permutation_tool",
+      "description": "Generate a random permutation for testing synthesis.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "num_qubits": {
+            "type": "integer",
+            "description": "Number of qubits"
+          }
+        },
+        "required": [
+          "num_qubits"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "generate_random_linear_function_tool",
+      "description": "Generate a random invertible linear function for testing.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "num_qubits": {
+            "type": "integer",
+            "description": "Number of qubits"
+          }
+        },
+        "required": [
+          "num_qubits"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "generate_random_clifford_tool",
+      "description": "Generate a random Clifford element for testing.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "num_qubits": {
+            "type": "integer",
+            "description": "Number of qubits"
+          }
+        },
+        "required": [
+          "num_qubits"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "convert_qpy_to_qasm3_tool",
+      "description": "Convert a QPY circuit to human-readable QASM3 format.\n\nUse this tool to view the contents of a QPY circuit output from synthesis\ntools (like synthesize_permutation, synthesize_linear_function, synthesize_clifford)\nin a human-readable OpenQASM 3.0 format.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "circuit_qpy": {
+            "type": "string",
+            "description": "Base64-encoded QPY circuit string (from synthesis output)"
+          }
+        },
+        "required": [
+          "circuit_qpy"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "convert_qasm3_to_qpy_tool",
+      "description": "Convert a QASM3 (or QASM2) circuit to base64-encoded QPY format.\n\nUse this tool to convert human-readable QASM circuits to QPY format,\nwhich preserves full circuit fidelity. The QPY output can be used with\nsynthesis tools that may require circuit input.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "circuit_qasm": {
+            "type": "string",
+            "description": "OpenQASM 3.0 or 2.0 circuit string"
+          }
+        },
+        "required": [
+          "circuit_qasm"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    }
+  ]
+}

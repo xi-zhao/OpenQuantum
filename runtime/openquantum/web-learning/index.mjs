@@ -1,6 +1,7 @@
+import { projectRoot as openQuantumProjectRoot } from "../project-root.mjs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
-const { capabilityRequestBoundary } = await import(pathToFileURL(path.join(process.cwd(), "runtime/openquantum/web-capabilities/index.mjs")).href);
+const { capabilityRequestBoundary } = await import(pathToFileURL(path.join(openQuantumProjectRoot, "runtime/openquantum/web-capabilities/index.mjs")).href);
 
 export const inject = ["webServer", "connection", "llm", "agentDefaultModel", "attachments"];
 const MAX_BYTES = 128 * 1024;
@@ -35,10 +36,10 @@ export function createLearningHandler({ dispatch, openUi, requestRejection }) {
 }
 
 export function apply(ctx) {
-  const application = import(pathToFileURL(path.join(process.cwd(), "src/learning/application.mjs")).href)
-    .then((module) => module.learningApplication(process.cwd()));
-  const ui = import(pathToFileURL(path.join(process.cwd(), "src/learning/ui-service.mjs")).href)
-    .then((module) => module.createLearningUiService(process.cwd(), { llm: ctx.llm, selection: () => ctx.agentDefaultModel.currentSelection(), attachments: ctx.attachments }));
+  const application = import(pathToFileURL(path.join(openQuantumProjectRoot, "src/learning/application.mjs")).href)
+    .then((module) => module.learningApplication(openQuantumProjectRoot));
+  const ui = import(pathToFileURL(path.join(openQuantumProjectRoot, "src/learning/ui-service.mjs")).href)
+    .then((module) => module.createLearningUiService(openQuantumProjectRoot, { llm: ctx.llm, selection: () => ctx.agentDefaultModel.currentSelection(), attachments: ctx.attachments }));
   ctx.effect(() => () => { void ui.then((service) => service.dispose()); }, "openquantum: OpenMAIC UI lifecycle");
   ctx.effect(() => ctx.webServer.register({
     path: "/openquantum/api/learning", exact: true,

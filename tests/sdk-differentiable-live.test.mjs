@@ -27,7 +27,8 @@ for (const descriptor of DIFFERENTIABLE_TOOLS) {
     const { definition } = await import(`../.agents/skills/${descriptor.id}/mcp/contracts.mjs`);
     const client = new Client({ name: "differentiable-live-verification", version: "1" }, { capabilities: {} });
     t.after(() => client.close());
-    await client.connect(new StdioClientTransport({ command: process.execPath, args: [path.join(root, ".agents/skills", descriptor.id, "mcp/server.mjs")] }));
+    await client.connect(new StdioClientTransport({ command: process.execPath, args: [path.join(root, ".agents/skills", descriptor.id, "mcp/server.mjs")],
+      env: process.env.OPENQUANTUM_PYTHON_ENV_ROOT ? { OPENQUANTUM_PYTHON_ENV_ROOT: process.env.OPENQUANTUM_PYTHON_ENV_ROOT } : {} }));
     const tools = (await client.listTools()).tools;
     assert.deepEqual(tools.map(tool => tool.name), [descriptor.tool]);
     await mkdir(evidence, { recursive: true });

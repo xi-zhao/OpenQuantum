@@ -1,0 +1,590 @@
+{
+  "schemaVersion": 1,
+  "server": "qpanda_runtime",
+  "tools": [
+    {
+      "name": "setup_origin_quantum_account_tool",
+      "description": "Configure Origin Quantum qcloud account authentication.\n\nSet up credentials to access Origin Quantum computing services.\nYou can provide credentials directly, via a config file, or through\nenvironment variables.\n\nArgs:\n    api_key: API key for authentication. If not provided, reads from\n        QPANDA3_API_KEY environment variable.\n    channel: Channel type - always \"qcloud\".\n    config_path: Path to config.yml file containing api_key.\n\nReturns:\n    Setup status and account information including:\n    - status: \"success\" or \"error\"\n    - message: Status description\n    - channel: The channel being used\n    - available_devices: Number of accessible QPU devices\n\nExample:\n    # Using direct credentials\n    setup_origin_quantum_account_tool(api_key=\"your_api_key\")\n\n    # Using config file\n    setup_origin_quantum_account_tool(config_path=\"./config.yml\")",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "api_key": {
+            "default": "",
+            "type": "string"
+          },
+          "channel": {
+            "default": "qcloud",
+            "type": "string"
+          },
+          "config_path": {
+            "default": "",
+            "type": "string"
+          }
+        }
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "_fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "list_saved_accounts_tool",
+      "description": "List saved account information.\n\nReturns information about the current session's authentication status.\nQPanda3 Runtime uses session-based authentication rather than\npersistent account storage.\n\nReturns:\n    Dictionary containing:\n    - status: \"success\" or \"error\"\n    - accounts: List of account information\n    - message: Status description",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "_fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "active_account_info_tool",
+      "description": "Get information about the currently active account.\n\nReturns details about the account being used in the current session,\nincluding channel type and connection status.\n\nReturns:\n    Dictionary containing:\n    - status: \"success\" or \"error\"\n    - account: Account details including channel and connection status",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "_fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "list_qpu_devices_tool",
+      "description": "List all available QPU (Quantum Processing Unit) devices.\n\nRetrieves a list of all quantum computing devices accessible through\nthe current account.\n\nReturns:\n    Dictionary containing:\n    - status: \"success\" or \"error\"\n    - devices: List of devices, each with:\n        - id: Device identifier\n        - name: Device name\n        - num_qubits: Number of qubits\n        - operational: Whether device is operational\n    - total_devices: Total count of available devices\n\nExample:\n    devices = list_qpu_devices_tool()\n    # Use devices[\"devices\"][0][\"id\"] to get device ID for other tools",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "_fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "get_qpu_properties_tool",
+      "description": "Get detailed properties of a specific QPU device.\n\nRetrieve comprehensive information about a quantum computing device\nincluding its capabilities and current status.\n\nArgs:\n    device_id: The ID of the quantum device (e.g., '20').\n        Use list_qpu_devices_tool to find available device IDs.\n\nReturns:\n    Dictionary containing:\n    - status: \"success\" or \"error\"\n    - device_id: The requested device ID\n    - num_qubits: Number of qubits on the device\n    - topology: Qubit connectivity information\n    - basis_gates: Native gates supported by the device\n    - operational: Current operational status\n\nExample:\n    props = get_qpu_properties_tool(\"20\")\n    print(f\"Device has {props['num_qubits']} qubits\")",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "device_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "device_id"
+        ]
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "_fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "sample_tool",
+      "description": "Execute quantum circuit sampling task.\n\nSubmit a quantum circuit for sampling on a QPU device. Sampling executes\nthe circuit multiple times and returns the measurement outcome distribution.\n\nArgs:\n    circuit: Quantum circuit(s) to execute. Accepts:\n        - Single circuit as string (QProg/QCircuit/OriginIR format)\n        - List of circuits for batch execution\n        - OriginIR example:\n          ```\n          QINIT 2\n          CREG 2\n          H q[0]\n          CNOT q[0],q[1]\n          MEASURE q[0],c[0]\n          MEASURE q[1],c[1]\n          ```\n    device_id: Target device ID (e.g., '20').\n        Use list_qpu_devices_tool to find available devices.\n    shots: Number of sampling shots (default: 1000).\n        Higher values give more statistical accuracy.\n    measure_qubits: Qubit indices to measure (optional).\n        If not specified, uses measurement operations in the circuit.\n\nReturns:\n    Dictionary containing:\n    - status: \"success\" or \"error\"\n    - task_id: ID for tracking the task\n    - device_id: Target device\n    - shots: Number of shots requested\n    - message: Status message\n    - note: Instructions for retrieving results\n\nExample:\n    # Submit a Bell state circuit for sampling\n    result = sample_tool(\n        circuit=\"QINIT 2\\nCREG 2\\nH q[0]\\nCNOT q[0],q[1]\\nMEASURE q[0],c[0]\\nMEASURE q[1],c[1]\",\n        device_id=\"20\",\n        shots=1000\n    )\n    task_id = result[\"task_id\"]\n\nNote:\n    Use get_task_status_tool to check progress and get_task_results_tool\n    to retrieve results after the task completes.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "circuit": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            ]
+          },
+          "device_id": {
+            "type": "string"
+          },
+          "shots": {
+            "default": 1000,
+            "type": "integer"
+          },
+          "measure_qubits": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "integer"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          }
+        },
+        "required": [
+          "circuit",
+          "device_id"
+        ]
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "_fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "estimate_tool",
+      "description": "Execute expectation estimation task.\n\nSubmit a quantum circuit for expectation value estimation. This computes\nthe expectation value ⟨ψ|O|ψ⟩ where |ψ⟩ is the quantum state produced by\nthe circuit and O is the observable.\n\nArgs:\n    circuit: Quantum circuit(s) to execute. Accepts:\n        - Single circuit as string (QProg/QCircuit/OriginIR format)\n        - List of circuits for batch execution\n        - Note: Circuit should NOT contain measurement operations\n    observable: Observable to measure. Accepts:\n        - Dict format: {\"Z0 Z1\": 0.5, \"X0\": -0.3}\n        - Pauli operator string: \"IIXY\"\n    device_id: Target device ID (e.g., '20').\n\nReturns:\n    Dictionary containing:\n    - status: \"success\" or \"error\"\n    - task_id: ID for tracking the task\n    - device_id: Target device\n    - message: Status message\n    - note: Instructions for retrieving results\n\nExample:\n    # Estimate expectation value of Z0*Z1\n    result = estimate_tool(\n        circuit=\"QINIT 2\\nCREG 2\\nH q[0]\\nCNOT q[0],q[1]\",\n        observable=\"Z0 Z1\",\n        device_id=\"20\"\n    )\n\nNote:\n    Use get_task_status_tool to check progress and get_task_results_tool\n    to retrieve results after the task completes.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "circuit": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            ]
+          },
+          "observable": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "additionalProperties": true,
+                "type": "object"
+              }
+            ]
+          },
+          "device_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "circuit",
+          "observable",
+          "device_id"
+        ]
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "_fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "get_task_status_tool",
+      "description": "Get the execution status of a task.\n\nCheck the current status of a submitted quantum computing task.\n\nArgs:\n    task_id: The ID of the task (returned by sample_tool or estimate_tool).\n\nReturns:\n    Dictionary containing:\n    - status: \"success\" or \"error\"\n    - task_id: The task ID\n    - task_status: One of:\n        - \"PENDING\": Waiting to execute\n        - \"RUNNING\": Currently executing\n        - \"DONE\": Completed successfully\n        - \"FAILED\": Execution failed\n        - \"CANCELLED\": Cancelled by user\n    - progress: Execution progress (if available)\n    - error_message: Error description (if failed)\n\nExample:\n    status = get_task_status_tool(\"task_12345\")\n    if status[\"task_status\"] == \"DONE\":\n        results = get_task_results_tool(\"task_12345\")",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "task_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "task_id"
+        ]
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "_fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "get_task_results_tool",
+      "description": "Get the computation results of a completed task.\n\nRetrieve the results from a completed quantum computing task. The task\nmust be in DONE status to retrieve results.\n\nArgs:\n    task_id: The ID of the completed task.\n\nReturns:\n    For sampling tasks:\n    - status: \"success\", \"pending\", or \"error\"\n    - task_id: The task ID\n    - task_status: Current status\n    - results: List of measurement outcomes, each containing:\n        - key: List of measurement outcomes (hex format, e.g., \"0x0\", \"0x3\")\n        - value: Corresponding probabilities or counts\n    - message: Status message\n\n    For estimation tasks:\n    - status: \"success\", \"pending\", or \"error\"\n    - task_id: The task ID\n    - task_status: Current status\n    - results: Expectation value(s)\n    - message: Status message\n\nExample:\n    # First check status\n    status = get_task_status_tool(\"task_12345\")\n    if status[\"task_status\"] == \"DONE\":\n        # Then get results\n        results = get_task_results_tool(\"task_12345\")\n        print(f\"Measurement outcomes: {results['results']}\")",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "task_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "task_id"
+        ]
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "_fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "cancel_task_tool",
+      "description": "Cancel a running or pending task.\n\nRequest cancellation of a submitted task. This is only effective\nif the task has not yet completed.\n\nArgs:\n    task_id: The ID of the task to cancel.\n\nReturns:\n    Dictionary containing:\n    - status: \"success\" or \"error\"\n    - task_id: The task ID\n    - message: Cancellation status\n\nExample:\n    cancel_task_tool(\"task_12345\")",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "task_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "task_id"
+        ]
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "_fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "list_my_tasks_tool",
+      "description": "List user's recent tasks.\n\nRetrieve a list of recently submitted quantum computing tasks.\n\nArgs:\n    limit: Maximum number of tasks to return (default: 10).\n\nReturns:\n    Dictionary containing:\n    - status: \"success\" or \"error\"\n    - tasks: List of task information, each containing:\n        - task_id: Task identifier\n        - status: Current task status\n        - creation_date: When task was created\n        - backend: Target device\n    - total_tasks: Total number of tasks returned\n\nExample:\n    tasks = list_my_tasks_tool(limit=5)\n    for task in tasks[\"tasks\"]:\n        print(f\"{task['task_id']}: {task['status']}\")",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "limit": {
+            "default": 10,
+            "type": "integer"
+          }
+        }
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "_fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "create_circuit_observable_binding_tool",
+      "description": "Create a CircuitObservableBinding for multi-objective quantum decision making.\n\nThis creates a program set that manages multiple quantum circuits and multiple\nobservables for multi-target decision paradigms. This is useful for quantum\nmulti-objective decision scenarios where you need to evaluate multiple strategies\n(circuits) against multiple objective dimensions (observables).\n\nArgs:\n    circuits: List of quantum circuits in QProg/QCircuit/OriginIR format.\n        Each circuit represents a different strategy to evaluate.\n    observables: List of observables (Hamiltonians). Each observable represents\n        a different objective dimension to measure.\n        Supports dict format: {\"Z0 Z1\": 0.5, \"X0\": -0.3}\n\nReturns:\n    Dictionary containing:\n    - status: \"success\" or \"error\"\n    - binding_id: Unique ID for referencing this binding (use with add_product_rule_tool,\n      add_zip_rule_tool, and estimate_with_binding_tool)\n    - num_circuits: Number of circuits in the binding\n    - num_observables: Number of observables in the binding\n    - message: Status description\n\nExample:\n    # Create binding with 3 circuits and 2 observables\n    binding = create_circuit_observable_binding_tool(\n        circuits=[\n            \"QINIT 2\\nCREG 2\\nH q[0]\\nCNOT q[0],q[1]\",\n            \"QINIT 2\\nCREG 2\\nX q[0]\\nCNOT q[0],q[1]\",\n            \"QINIT 2\\nCREG 2\\nZ q[0]\\nSWAP q[0],q[1]\"\n        ],\n        observables=[\n            {\"Z0 Z1\": 1.0},\n            {\"X0\": 0.5}\n        ]\n    )\n    binding_id = binding[\"binding_id\"]\n\nNote:\n    After creating a binding, use add_product_rule_tool or add_zip_rule_tool\n    to define the combinations, then use estimate_with_binding_tool to submit.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "circuits": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "observables": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "additionalProperties": true,
+                  "type": "object"
+                }
+              ]
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "circuits",
+          "observables"
+        ]
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "_fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "add_product_rule_tool",
+      "description": "Add product (Cartesian product) rule to CircuitObservableBinding.\n\nThis generates all combinations of the specified circuits with the specified\nobservables. This is analogous to Python's itertools.product function.\n\nFor example, if circuit_indices=[0,1,2] and observable_indices=[0,1],\nit generates combinations: (0,0), (0,1), (1,0), (1,1), (2,0), (2,1).\n\nArgs:\n    binding_id: The ID returned by create_circuit_observable_binding_tool.\n    circuit_indices: List of circuit indices to include in the product.\n    observable_indices: List of observable indices to include in the product.\n\nReturns:\n    Dictionary containing:\n    - status: \"success\" or \"error\"\n    - binding_id: The binding ID\n    - combinations_added: Number of combinations added\n    - message: Status description\n\nExample:\n    # Add all combinations of 3 circuits with 2 observables (6 total)\n    result = add_product_rule_tool(\n        binding_id=\"your_binding_id\",\n        circuit_indices=[0, 1, 2],\n        observable_indices=[0, 1]\n    )\n    # This adds combinations: (0,0), (0,1), (1,0), (1,1), (2,0), (2,1)",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "binding_id": {
+            "type": "string"
+          },
+          "circuit_indices": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array"
+          },
+          "observable_indices": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "binding_id",
+          "circuit_indices",
+          "observable_indices"
+        ]
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "_fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "add_zip_rule_tool",
+      "description": "Add zip (one-to-one) rule to CircuitObservableBinding.\n\nThis generates one-to-one pairs of circuits and observables.\nThis is analogous to Python's zip function.\n\nFor example, if circuit_indices=[0,2] and observable_indices=[1,0],\nit generates combinations: (0,1), (2,0).\n\nArgs:\n    binding_id: The ID returned by create_circuit_observable_binding_tool.\n    circuit_indices: List of circuit indices (must match length of observable_indices).\n    observable_indices: List of observable indices (must match length of circuit_indices).\n\nReturns:\n    Dictionary containing:\n    - status: \"success\" or \"error\"\n    - binding_id: The binding ID\n    - combinations_added: Number of combinations added\n    - message: Status description\n\nExample:\n    # Add specific circuit-observable pairs\n    result = add_zip_rule_tool(\n        binding_id=\"your_binding_id\",\n        circuit_indices=[0, 2],\n        observable_indices=[1, 0]\n    )\n    # This adds 2 combinations: (circuit_0, observable_1), (circuit_2, observable_0)",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "binding_id": {
+            "type": "string"
+          },
+          "circuit_indices": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array"
+          },
+          "observable_indices": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "binding_id",
+          "circuit_indices",
+          "observable_indices"
+        ]
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "_fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "estimate_with_binding_tool",
+      "description": "Execute expectation estimation using CircuitObservableBinding.\n\nSubmit a multi-objective expectation estimation task using the previously\ncreated CircuitObservableBinding with its product/zip rules defined.\n\nArgs:\n    binding_id: The ID returned by create_circuit_observable_binding_tool.\n    device_id: Target device ID (e.g., '20').\n\nReturns:\n    Dictionary containing:\n    - status: \"success\" or \"error\"\n    - task_id: ID for tracking the task\n    - binding_id: The binding ID used\n    - device_id: Target device\n    - message: Status message\n    - note: Instructions for retrieving results\n\nExample:\n    # After creating binding and adding rules\n    result = estimate_with_binding_tool(\n        binding_id=\"your_binding_id\",\n        device_id=\"20\"\n    )\n    task_id = result[\"task_id\"]\n\nNote:\n    Use get_task_status_tool and get_task_results_tool to check progress\n    and retrieve results.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "binding_id": {
+            "type": "string"
+          },
+          "device_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "binding_id",
+          "device_id"
+        ]
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "_fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "list_bindings_tool",
+      "description": "List all stored CircuitObservableBinding objects.\n\nReturns a list of all bindings created in the current session.\n\nReturns:\n    Dictionary containing:\n    - status: \"success\" or \"error\"\n    - bindings: List of binding information\n    - total_bindings: Total count of bindings",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "_fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "delete_binding_tool",
+      "description": "Delete a stored CircuitObservableBinding object.\n\nRemove a binding from the session storage.\n\nArgs:\n    binding_id: The ID of the binding to delete.\n\nReturns:\n    Dictionary containing:\n    - status: \"success\" or \"error\"\n    - message: Status description",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "binding_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "binding_id"
+        ]
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "_fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "batch_sample_tool",
+      "description": "Execute batch quantum circuit sampling task.\n\nSubmit multiple quantum circuits for sampling in a single batch.\nThis is more efficient than submitting circuits one by one.\n\nArgs:\n    circuits: List of quantum circuits in QProg/QCircuit/OriginIR format.\n    device_id: Target device ID (e.g., '20').\n    shots: Number of sampling shots per circuit (default: 1000).\n    measure_qubits: Qubit indices to measure (optional).\n        If not specified, uses measurement operations in the circuits.\n\nReturns:\n    Dictionary containing:\n    - status: \"success\" or \"error\"\n    - task_id: ID for tracking the task\n    - device_id: Target device\n    - num_circuits: Number of circuits in the batch\n    - shots: Number of shots per circuit\n    - message: Status message\n\nExample:\n    result = batch_sample_tool(\n        circuits=[\n            \"QINIT 2\\nCREG 2\\nH q[0]\\nCNOT q[0],q[1]\\nMEASURE q[0],c[0]\\nMEASURE q[1],c[1]\",\n            \"QINIT 2\\nCREG 2\\nX q[0]\\nCNOT q[0],q[1]\\nMEASURE q[0],c[0]\\nMEASURE q[1],c[1]\"\n        ],\n        device_id=\"20\",\n        shots=1000\n    )\n\nNote:\n    Use get_task_status_tool and get_task_results_tool to check progress\n    and retrieve results.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "circuits": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "device_id": {
+            "type": "string"
+          },
+          "shots": {
+            "default": 1000,
+            "type": "integer"
+          },
+          "measure_qubits": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "integer"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          }
+        },
+        "required": [
+          "circuits",
+          "device_id"
+        ]
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "_fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "batch_estimate_tool",
+      "description": "Execute batch expectation estimation with a single observable.\n\nSubmit multiple quantum circuits for expectation value estimation with\na single observable. This is the \"n circuits + 1 observable\" pattern,\nuseful for comparing different circuit strategies against the same metric.\n\nArgs:\n    circuits: List of quantum circuits in QProg/QCircuit/OriginIR format.\n        Note: Circuits should NOT contain measurement operations.\n    observable: Observable to measure for all circuits. Supports:\n        - Dict format: {\"Z0 Z1\": 0.5, \"X0\": -0.3}\n    device_id: Target device ID (e.g., '20').\n\nReturns:\n    Dictionary containing:\n    - status: \"success\" or \"error\"\n    - task_id: ID for tracking the task\n    - device_id: Target device\n    - num_circuits: Number of circuits in the batch\n    - message: Status message\n\nExample:\n    result = batch_estimate_tool(\n        circuits=[\n            \"QINIT 2\\nCREG 2\\nH q[0]\\nCNOT q[0],q[1]\",\n            \"QINIT 2\\nCREG 2\\nX q[0]\\nCNOT q[0],q[1]\"\n        ],\n        observable={\"Z0 Z1\": 1.0},\n        device_id=\"20\"\n    )\n\nNote:\n    Use get_task_status_tool and get_task_results_tool to check progress\n    and retrieve results.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "circuits": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "observable": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "additionalProperties": true,
+                "type": "object"
+              }
+            ]
+          },
+          "device_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "circuits",
+          "observable",
+          "device_id"
+        ]
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "_fastmcp": {
+          "tags": []
+        }
+      }
+    }
+  ]
+}

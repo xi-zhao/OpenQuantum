@@ -1,0 +1,12 @@
+[project]
+name = "openquantum-mcp-qiskit-ibm-transpiler"
+version = "0.1.0"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+  "qiskit-ibm-transpiler-mcp-server==0.4.1",
+  "qiskit-mcp-server==0.3.1",
+  "qiskit==2.3.1"
+]
+
+[tool.uv]
+package = false

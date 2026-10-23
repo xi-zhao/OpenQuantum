@@ -1,5 +1,10 @@
 # Third-party notices
 
+Pasqal agent-marketplace 的实验方法与三个研究示例固定于 `2b0353d83e65ce4cc44c9bfa7e7dfe2549201bb1`，
+采用 Apache-2.0；许可证、逐文件来源及 OpenQuantum 适配说明见
+[Pasqal NOTICE](.agents/skills/pasqal-experiments/NOTICE.md)。`pasqal-cloud==0.24.0`（Apache-2.0）
+由已有 Pulser 环境安装。未默认分发或安装独立许可的本地 emu-mps。
+
 除明确单独许可的目录外，OpenQuantum 自有代码采用仓库根目录中的 [MIT License](LICENSE)。Mitiq 能力目录采用 GPL-3.0-only，见下方说明。根目录许可证不替代第三方项目的许可证，也不把第三方代码重新许可为 OpenQuantum 的代码。
 
 下表记录 OpenQuantum 当前明确接入或直接依赖的主要上游组件。各组件仍由原作者持有版权，并继续遵循其原始许可证。
@@ -29,12 +34,14 @@
 | Flow-VQE | MIT | 引入固定 `f7642afa330e5108ea5738d42fe80b551363733c` 的三份未修改 Python 源文件及原始 [MIT License](.agents/skills/flow-vqe/upstream/LICENSE)，逐文件来源与 SHA-256 见同目录 provenance.json；仅调用单上下文训练函数 | [olsson-group/Flow-VQE](https://github.com/olsson-group/Flow-VQE) |
 | TeNPy | Apache-2.0 | 固定 `physics-tenpy==1.1.1`，隔离环境调用有限 XYZ 链 DMRG；采用当前版本许可证 | [tenpy/tenpy](https://github.com/tenpy/tenpy) |
 | FatQat | Apache-2.0 | 固定 `0.1.0a1` / 源码提交 `39b75e30ae50ddb4a8c7b840847edce678aa814c`，隔离 Python 环境调用有界电路、噪声及超导量子比特／原子阵列模拟；许可全文随依赖包保留，不在本仓库重新分发上游源码 | [spaceqat/fatqat](https://github.com/spaceqat/fatqat/tree/39b75e30ae50ddb4a8c7b840847edce678aa814c) |
+| PairInteraction | LGPL-3.0-or-later | 固定 PyPI 2.7.0，独立环境调用两原子静态计算；未复制上游源码，许可及二进制依赖声明随安装包保留 | [pairinteraction/pairinteraction](https://github.com/pairinteraction/pairinteraction/blob/v2.7.0/LICENSE.txt) |
+| PairInteraction SQDT 数据库 | MIT | 显式下载 v2.0 的 Rb 和公共 Wigner 表，固定压缩包及数据文件 SHA-256；仓库不重新分发数据 | [pairinteraction/database-sqdt](https://github.com/pairinteraction/database-sqdt/blob/main/LICENSE.txt) |
 | DeepSeek Harness | MIT | 作为 Agent Runtime 和 Web UI 基础，DSH 直接依赖统一固定为 `0.1.5-rc.1`；OpenQuantum 使用 Cordis patch、preset 与公开接口扩展，不修改 `node_modules`；语言包保留固定版本的界面词条及 MIT 声明 | [deepseek-ai/deepseek-harness](https://github.com/deepseek-ai/deepseek-harness) |
 | DSH Desktop | MIT | 固定源码 `5184a2ab7ab197e7405c1053feb324003409a142`（版本 `2.0.7`，尚未发布的源码构建），配套 Harness `0.1.5-rc.1` 和上游锁定的 Electron `43.3.0`；构建在忽略目录中，使用公开启动器承载同一个 Harness Web UI 和 Home patch，除语言包中的界面词条外不重新分发上游源码，词条的 MIT 声明保存在 `runtime/openquantum/web-locales/licenses/` | [anywhere-labs/dsh-desktop](https://github.com/anywhere-labs/dsh-desktop) |
 | OpenMAIC | MIT | 固定源码提交 `29735f10d0081859ac3db1a50a0cc92f46436004`（`v1.0.1` 后的修复），下载到忽略目录 `.openquantum/external/openmaic`，用于量子学习通的原版课堂与编辑应用，并做入口、模型连接和界面适配；保留上游版权与 LICENSE，除语言包复用的通用译文外不在本仓库重新分发上游源码，译文的 MIT 声明保存在 `runtime/openquantum/web-locales/licenses/` | [THU-MAIC/OpenMAIC](https://github.com/THU-MAIC/OpenMAIC/tree/29735f10d0081859ac3db1a50a0cc92f46436004) |
 | CC Connect | MIT | 固定 npm `1.5.1-beta.1`，作为可选的消息平台桥；通过 ACP 启动 Harness Agent，不复制上游源码，也不把平台凭据写入仓库 | [chenhg5/cc-connect](https://github.com/chenhg5/cc-connect) |
 | Agent Client Protocol TypeScript SDK | Apache-2.0 | 项目直接开发依赖固定为 `1.4.0`，仅用于验证 OpenQuantum ACP 入口与 Harness 的真实 stdio 握手；Harness `0.1.5-rc.1` 的正式 ACP 入口同样使用 `1.4.0` | [agentclientprotocol/typescript-sdk](https://github.com/agentclientprotocol/typescript-sdk) |
-| Qiskit MCP Servers | Apache-2.0 | 通过 `uvx` 使用 Circuits `0.3.1`、Docs `0.3.0`、IBM Runtime `0.6.1`、IBM Transpiler `0.4.1` 与 Gym `0.4.1`；上游实现没有复制进本仓库 | [Qiskit/mcp-servers](https://github.com/Qiskit/mcp-servers) |
+| Qiskit MCP Servers | Apache-2.0 | 固定 Circuits `0.3.1`、Docs `0.3.0`、IBM Runtime `0.6.1`、IBM Transpiler `0.4.1` 与 Gym `0.4.1`。Desktop 与 Codex 共用独立锁定环境，按需安装、调用时启动。适配器保留实际 Tool 合同及对应 LICENSE，见 `runtime/chatgpt/external/environments/`；上游执行源码由包管理器取得 | [Qiskit/mcp-servers](https://github.com/Qiskit/mcp-servers) |
 | FieldQKit | Apache-2.0 | 使用 `0.1.2` 的固定上游提交 `3ef2493d3f840b6a924af66a0c3f1b79cfce3fa0`；OpenQuantum 维护独立的只读 MCP 桥接与 Skill，上游源码没有复制进本仓库 | [FieldQuantum/fieldqkit](https://github.com/FieldQuantum/fieldqkit) |
 | TyxonQ | Apache-2.0 | 通过 `uv` 按需使用 PyPI `tyxonq==1.3.0`；OpenQuantum 维护独立的有界本地仿真 MCP 与 Skill，不复制上游源码，也不开放上游云端任务接口 | [QureGenAI-Biotech/TyxonQ](https://github.com/QureGenAI-Biotech/TyxonQ) |
 | QMClaw | MIT | 审阅并固定上游提交 `18d7fa1594949a1203fca4866e651641bbde021f` 的实验目录与调校工作流；OpenQuantum 维护独立的 13 类有界本地模拟 MCP Server 与 Skill，不复制或运行上游 Agentic Workflow、LabRAD/lqms、job runner 或 `mcp_tools_new.py` | [QMC-AI/QMClaw](https://github.com/QMC-AI/QMClaw) |
@@ -43,11 +50,12 @@
 | MQT QCEC | MIT | 通过 `uv` 按需使用 PyPI `mqt.qcec==3.10.0`；OpenQuantum 维护只接受有界、无测量 OpenQASM 2 文本的本地等价性 MCP，不复制上游源码 | [munich-quantum-toolkit/qcec](https://github.com/munich-quantum-toolkit/qcec) |
 | Stim | Apache-2.0 | 通过 `uv` 按需使用 PyPI `stim==1.16.0` 生成和采样有界 rotated surface-code memory 电路及 detector error model；不接受任意 Stim 文件或硬件任务 | [quantumlib/Stim](https://github.com/quantumlib/Stim) |
 | PyMatching | Apache-2.0 | 通过 `uv` 按需使用 PyPI `pymatching==2.4.0` 对 Stim 产生的 detector error model 执行本地 MWPM 解码；不连接云端或真实硬件 | [oscarhiggott/PyMatching](https://github.com/oscarhiggott/PyMatching) |
-| Quantum Hardware MCP | MIT | 安装命令把审阅提交 `55dd9a7bcee32a2a99654db6816dad705c0b6f62` 检出到被 Git 忽略的 `.openquantum` 目录；该固定点增加可选 Turso 查询及本地 SQLite 回退；已重审 53 个 Tool、依赖和许可证，默认关闭，未启用云数据库或真机提交；OpenQuantum 不在本仓库重新分发上游源码 | [Lokesh-2025/quantum-hardware-mcp](https://github.com/Lokesh-2025/quantum-hardware-mcp) |
-| QPanda3 Runtime MCP | Apache-2.0 | 安装命令把固定提交 `4a06035afa415ed8dc9d571869cb5ca60ed1bcb1` 检出到被 Git 忽略的 `.openquantum` 目录，由 `uv` 按 `pyproject.toml` 构建隔离环境（会引入 `pyqpanda3` 原生 wheel）；默认关闭，仅在配置 `QPANDA3_API_KEY` 后手动开启，OpenQuantum 不在本仓库重新分发上游源码 | [OriginQ/qpanda3-runtime-mcp-server](https://github.com/OriginQ/qpanda3-runtime-mcp-server) |
+| Quantum Hardware MCP | MIT | 固定审阅提交 `55dd9a7bcee32a2a99654db6816dad705c0b6f62`，53 项上游操作。Desktop 与 Codex 按任务准备锁定环境、校验 16 份所需源码摘要、使用本地 SQLite，并修复上游初始化与化学回调接线。Tool 合同及 LICENSE 随适配器分发，执行源码下载到用户环境；云端凭据仅在相应操作需要时读取 | [Lokesh-2025/quantum-hardware-mcp](https://github.com/Lokesh-2025/quantum-hardware-mcp) |
+| QPanda3 Runtime MCP | Apache-2.0 | 固定提交 `4a06035afa415ed8dc9d571869cb5ca60ed1bcb1`，由 `uv` 构建隔离环境（含 `pyqpanda3` 原生 wheel）。Desktop 与 Codex 按需准备，本地绑定不需要账户，云端调用经凭据库认证。适配器为 `qpanda3-runtime==1.0.2` 恢复 TLS 校验，转换 JSON 观测量、验证绑定索引并修正失败/取消任务状态；任务列表仅含当前会话已知任务。固定 SDK 缺少的远端取消操作明确拒绝。Tool 合同及 LICENSE 随包分发，执行源码由安装器取得 | [OriginQ/qpanda3-runtime-mcp-server](https://github.com/OriginQ/qpanda3-runtime-mcp-server) |
 | PyQPanda3 Skill | Apache-2.0 | 安装命令把固定提交 `130a7237628096526afcc14ddd67c0ded45ee01d` 检出到被 Git 忽略的 `.agents/skills/pyqpanda3` 目录，作为官方 Agent Skill 原样挂载；默认不随仓库分发，OpenQuantum 不在本仓库重新分发上游源码 | [OriginQ/pyqpanda3-skill](https://github.com/OriginQ/pyqpanda3-skill) |
 | pyqpanda-algorithm | Apache-2.0 | 通过 `uv` 按需使用 PyPI `pyqpanda_alg==2.0.0`（会引入 `pyqpanda3` 原生 wheel）；OpenQuantum 维护独立的有界本地 QUBO 求解 MCP 与 Skill，只在 CPU 模拟器调用上游 QUBO 算法，不复制上游源码，也不开放上游云端任务接口 | [OriginQ/pyqpanda-algorithm](https://github.com/OriginQ/pyqpanda-algorithm) |
 | Model Context Protocol TypeScript SDK | MIT | 作为本地 MCP 服务和测试的直接 npm 依赖，固定为 `1.30.0` | [modelcontextprotocol/typescript-sdk](https://github.com/modelcontextprotocol/typescript-sdk) |
+| jose | MIT | 固定为 `6.2.12`；Codex 设置使用 JWE 加密凭据，浏览器构建附带上游许可证文本 | [panva/jose](https://github.com/panva/jose) |
 
 仓库中的 OpenQuantum 自研桥接、配置、Skill 和 Validator 受根目录 MIT License 约束。它们调用或编排某个上游项目，并不改变上游项目的许可证。
 
@@ -98,7 +106,7 @@ preserving the applicable upstream terms and notices. Scope and verification: [V
 | --- | --- | --- | --- |
 | [pennylane](https://github.com/PennyLaneAI/pennylane) | 0.45.1 | Apache-2.0 | 用户电路的概率、Pauli 期望值和参数梯度。 |
 | [deepquantum](https://github.com/TuringQ/deepquantum) | 4.5.0 | Apache-2.0 | 基于 PyTorch 的电路概率、期望值和参数梯度。 |
-| [tensorcircuit](https://github.com/tencent-quantum-lab/tensorcircuit) | 0.12.0 | Apache-2.0 | 张量网络电路的概率、期望值和参数梯度。 |
+| [TensorCircuit-NG](https://github.com/tensorcircuit/tensorcircuit-ng) | 1.10.0 | Apache-2.0 | 张量网络电路的概率、期望值和参数梯度。 |
 | [mindquantum](https://gitee.com/mindspore/mindquantum) | 0.12.0 | Apache-2.0 | 本地电路模拟、Pauli 期望值和参数梯度。 |
 | [pytket](https://github.com/Quantinuum/tket) | 2.18.4 | Apache-2.0 | 本地电路优化、门数比较与 OpenQASM 导出。 |
 | [dimod + dwave-samplers](https://github.com/dwavesystems/dwave-ocean-sdk) | 0.12.22 / 1.8.0 | Apache-2.0 | 二值二次模型的本地穷举或模拟退火；不是量子退火硬件执行。 |
@@ -118,3 +126,72 @@ QoolQit is opt-in and must not be described as standard MIT: its additional pate
 to internal research and academic use. This record does not establish permission for every commercial use.
 Perceval's MIT terms include the Exqalibur binding combination exception; installing either does not
 replace the other component's terms. Source URLs and lock hashes are retained in the integration evidence.
+
+## Company and institution SDK expansion (2026-09-28)
+
+The repository distributes OpenQuantum adapters, instructions and dependency metadata only. Upstream SDKs retain their licenses;
+installed environments, proprietary packages and NetSquid binaries are not redistributed. Users obtain credentials and any required rights.
+[Integration scope and verification](docs/integrations/SDK_EXPANSION.md) distinguishes compilation, simulation and authenticated services.
+
+| Upstream | Pinned dependency | License / separate conditions |
+| --- | --- | --- |
+| [BAQIS](https://github.com/BAQIS-Quantum/qsteed) | qsteed==0.2.3 | Apache-2.0 |
+| [QuAIR](https://github.com/QuAIR/QuAIRKit) | quairkit==0.5.1 | Apache-2.0 |
+| [Baidu](https://github.com/baidu/QCompute) | QCompute==3.3.5 | Apache-2.0 |
+| [Qibo / TII / INFN](https://github.com/qiboteam/qibo) | qibo==0.3.5 | Apache-2.0 |
+| [Eclipse / Fraunhofer](https://github.com/eclipse-qrisp/Qrisp) | qrisp==0.9.9 | EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0 |
+| [Aegiq](https://github.com/Aegiq/lightworks) | lightworks==2.3.5 | Apache-2.0 |
+| [Amazon](https://github.com/amazon-braket/amazon-braket-sdk-python) | amazon-braket-sdk==1.127.2 | Apache-2.0 |
+| [QunaSys](https://github.com/QunaSys/quri-sdk) | quri-parts[qulacs]==0.27.0 | Apache-2.0 (QURI Parts); MIT (Qulacs) |
+| [Microsoft](https://github.com/microsoft/qdk) | qdk[qre]==1.32.3 | MIT |
+| [Google Quantum AI](https://github.com/quantumlib/Qualtran) | qualtran==0.7.0 | Apache-2.0 |
+| [Google Quantum AI](https://github.com/quantumlib/OpenFermion) | openfermion==1.8.1 | Apache-2.0 |
+| [TUM / MQT](https://github.com/munich-quantum-toolkit/ddsim) | mqt-ddsim==2.6.0 | MIT |
+| [TUM / MQT](https://github.com/munich-quantum-toolkit/qmap) | mqt-qmap==3.10.0 | MIT |
+| [Classiq](https://docs.classiq.io/) | classiq==1.29.1 | Classiq proprietary evaluation license (wheel LICENSE.txt); no bundled SDK redistribution |
+| [Q-CTRL](https://docs.q-ctrl.com/) | boulder-opal==6.1.0 / fire-opal==12.3.0 | Proprietary Q-CTRL Terms of Service https://q-ctrl.com/terms |
+| [Quantum Machines](https://github.com/qm-labs/qm-qua-sdk-public) | qm-qua==1.4.1 | BSD-3-Clause |
+| [Zurich Instruments](https://github.com/zhinst/laboneq) | laboneq==26.7.0 | Apache-2.0 |
+| [MolSSI](https://github.com/MolSSI/QCFractal) | qcportal==0.70 | BSD-3-Clause |
+| [NVIDIA](https://github.com/NVIDIA/cuda-quantum) | cuda-quantum-cu13==0.16.0 | Apache-2.0 |
+| [QuTech](https://github.com/QuTech-Delft/squidasm) | netqasm==2.0.0 | MIT with upstream patent notice; optional NetSquid separately licensed |
+
+Classiq 1.29.1 includes an evaluation license with restrictions, including evaluation duration, redistribution and disclosure of testing results.
+Q-CTRL SDKs reference proprietary terms. Both are opt-in and excluded from the default bulk setup. Qrisp remains an independent process under its own terms.
+NetQASM carries an upstream patent/commercial-use notice; MIT source licensing alone does not resolve that notice. Optional SquidASM is pinned to 0.13.6,
+while its privately obtained NetSquid dependency stack is not represented as publicly locked or verified here.
+
+## 原生 SDK 生态扩展（源码候选）
+
+以下组件按独立锁或源码提交显式准备，保留上游许可证；本仓库不重新分发其构建二进制。版本、平台条件和源码摘要见[接入记录](docs/integrations/SDK_ECOSYSTEM_2026-10-14.md)。
+
+| 组件 | 许可证 | 使用方式 | 上游 |
+| --- | --- | --- | --- |
+| ARC Rydberg | BSD-3-Clause | 原生公开 API；隔离环境或固定源码构建 | [nikolasibalic/ARC-Alkali-Rydberg-Calculator](https://github.com/nikolasibalic/ARC-Alkali-Rydberg-Calculator) |
+| PennyLane Catalyst | Apache-2.0 | 原生公开 API；隔离环境或固定源码构建 | [PennyLaneAI/catalyst](https://github.com/PennyLaneAI/catalyst) |
+| jaxquantum | Apache-2.0 | 原生公开 API；隔离环境或固定源码构建 | [EQuS/jaxquantum](https://github.com/EQuS/jaxquantum) |
+| JosephsonCircuits.jl | MIT | 原生公开 API；隔离环境或固定源码构建 | [kpobrien/JosephsonCircuits.jl](https://github.com/kpobrien/JosephsonCircuits.jl) |
+| monoprop | Apache-2.0 | 原生公开 API；隔离环境或固定源码构建 | [Algorithmiq/monoprop](https://github.com/Algorithmiq/monoprop) |
+| MQT Debugger | MIT | 原生公开 API；隔离环境或固定源码构建 | [munich-quantum-toolkit/debugger](https://github.com/munich-quantum-toolkit/debugger) |
+| MQT QECC | MIT | 原生公开 API；隔离环境或固定源码构建 | [munich-quantum-toolkit/qecc](https://github.com/munich-quantum-toolkit/qecc) |
+| OpenJij | Apache-2.0 | 原生公开 API；隔离环境或固定源码构建 | [Jij-Inc/OpenJij](https://github.com/Jij-Inc/OpenJij) |
+| PauliStrings.jl | MIT | 原生公开 API；隔离环境或固定源码构建 | [nicolasloizeau/PauliStrings.jl](https://github.com/nicolasloizeau/PauliStrings.jl) |
+| PECOS | Apache-2.0 | 原生公开 API；隔离环境或固定源码构建 | [PECOS-packages/PECOS](https://github.com/PECOS-packages/PECOS) |
+| Piquasso | Apache-2.0 | 原生公开 API；隔离环境或固定源码构建 | [Budapest-Quantum-Computing-Group/piquasso](https://github.com/Budapest-Quantum-Computing-Group/piquasso) |
+| pyGSTi | Apache-2.0 | 原生公开 API；隔离环境或固定源码构建 | [sandialabs/pyGSTi](https://github.com/sandialabs/pyGSTi) |
+| QDK Chemistry | MIT | 原生公开 API；隔离环境或固定源码构建 | [microsoft/qdk-chemistry](https://github.com/microsoft/qdk-chemistry) |
+| Qiskit Machine Learning | Apache-2.0 | 原生公开 API；隔离环境或固定源码构建 | [qiskit-community/qiskit-machine-learning](https://github.com/qiskit-community/qiskit-machine-learning) |
+| Qlasskit | Apache-2.0 | 原生公开 API；隔离环境或固定源码构建 | [dakk/qlasskit](https://github.com/dakk/qlasskit) |
+| qsim | Apache-2.0 | 原生公开 API；隔离环境或固定源码构建 | [quantumlib/qsim](https://github.com/quantumlib/qsim) |
+| Qsyn | Apache-2.0 | 原生公开 API；隔离环境或固定源码构建 | [DVLab-NTU/qsyn](https://github.com/DVLab-NTU/qsyn) |
+| QuantumClifford.jl | MIT | 原生公开 API；隔离环境或固定源码构建 | [QuantumSavory/QuantumClifford.jl](https://github.com/QuantumSavory/QuantumClifford.jl) |
+| QuantumControl.jl | MIT code; documentation per-file | 原生公开 API；隔离环境或固定源码构建 | [JuliaQuantumControl/QuantumControl.jl](https://github.com/JuliaQuantumControl/QuantumControl.jl) |
+| QuantumSavory.jl | MIT | 原生公开 API；隔离环境或固定源码构建 | [QuantumSavory/QuantumSavory.jl](https://github.com/QuantumSavory/QuantumSavory.jl) |
+| sQUlearn | Apache-2.0 | 原生公开 API；隔离环境或固定源码构建 | [sQUlearn/squlearn](https://github.com/sQUlearn/squlearn) |
+| STAQ / pystaq | MIT | 原生公开 API；隔离环境或固定源码构建 | [softwareQinc/staq](https://github.com/softwareQinc/staq) |
+| Tesseract Decoder | Apache-2.0 | 原生公开 API；隔离环境或固定源码构建 | [quantumlib/tesseract-decoder](https://github.com/quantumlib/tesseract-decoder) |
+| TQEC | Apache-2.0 | 原生公开 API；隔离环境或固定源码构建 | [tqec/tqec](https://github.com/tqec/tqec) |
+| Tsim | Apache-2.0 | 原生公开 API；隔离环境或固定源码构建 | [QuEraComputing/tsim](https://github.com/QuEraComputing/tsim) |
+| Yao.jl | Apache-2.0 primary text; component review remains | 原生公开 API；隔离环境或固定源码构建 | [QuantumBFS/Yao.jl](https://github.com/QuantumBFS/Yao.jl) |
+
+Qsyn 构建中的 xtl、xtensor、xtensor-blas、libfort、fmt、spdlog、GSL、dynamic_bitset、nlohmann/json、CaDiCaL、ABC 与 Catch2 由独立 `native.lock.json` 固定，源码 checkout 保留原始许可证及子模块。本轮只携带依赖描述和安装器。

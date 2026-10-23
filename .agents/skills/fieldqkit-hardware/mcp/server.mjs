@@ -194,7 +194,7 @@ function discoveryRequest(argumentsValue) {
   };
 }
 
-async function discover(argumentsValue) {
+async function discover(argumentsValue, signal) {
   const request = discoveryRequest(argumentsValue);
   const provider = PROVIDERS.find((candidate) => candidate.id === request.provider);
   if (
@@ -220,6 +220,7 @@ async function discover(argumentsValue) {
       {
         timeout: 150_000,
         maxBuffer: 2 * 1024 * 1024,
+        signal,
         env,
       },
     ));
@@ -254,7 +255,7 @@ const server = new Server(
 );
 
 server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools: [...TOOLS] }));
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
+server.setRequestHandler(CallToolRequestSchema, async (request, { signal }) => {
   try {
     switch (request.params.name) {
       case "inspect_fieldqkit_setup": {
@@ -265,7 +266,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         );
       }
       case "discover_fieldqkit_backends":
-        return await discover(request.params.arguments);
+        return await discover(request.params.arguments, signal);
       default:
         return errorResult(new Error(`Unknown tool: ${request.params.name}`));
     }

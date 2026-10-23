@@ -172,6 +172,7 @@ test("QMClaw native Tools expose catalog plus bounded local simulation", async (
 test("native provider has no process, network, credential or file-system escape hatch", () => {
   const sources = [
     "runtime/openquantum/agent-presets/openquantum/native-quantum-tools.mjs",
+    "src/capabilities/native-quantum-tools.mjs",
     ...fs
       .readdirSync(
         path.join(projectRoot, ".agents/skills/qmclaw-workbench/core"),

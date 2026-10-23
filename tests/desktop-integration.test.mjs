@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdtemp, readFile, readdir, realpath, rm } from "node:fs/promises";
+import { mkdtemp, realpath, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import test from "node:test";
@@ -12,9 +12,9 @@ import {
   loadOverlayPatches,
 } from "@deepseek-ai/dsh-app-boot";
 import { DESKTOP_SOURCE, desktopPackageDirectory } from "../scripts/lib/desktop-source.mjs";
-import { brandDesktopJavaScript, prepareOpenQuantumDesktop } from "../scripts/lib/desktop-branding.mjs";
 
 import { prepareOpenQuantumHarnessHome } from "../scripts/lib/prepare-harness-home.mjs";
+import { DESKTOP_PROFILE_BUNDLE, DESKTOP_PROFILE_PATCH } from "../scripts/lib/desktop-profile-bundle.mjs";
 
 const projectRoot = fileURLToPath(new URL("..", import.meta.url));
 
@@ -37,16 +37,21 @@ test("pins a Desktop source build for the same Harness family", async () => {
 });
 
 test("composes the Desktop shell around the OpenQuantum Harness home", { skip: !desktopBuilt }, async (t) => {
-  const brandedRoot = await prepareOpenQuantumDesktop(projectRoot);
-  const { prepareDesktopProfile } = await import(pathToFileURL(path.join(brandedRoot, "lib/profile.js")));
+  const { prepareDesktopProfile } = await import(pathToFileURL(path.join(desktopRoot, "lib/profile.js")));
+  const { createDesktopWebProfile } = await import(pathToFileURL(path.join(desktopRoot, "lib/profile-manager.js")));
+  const { installProfilePackageResolver } = await import(pathToFileURL(path.join(desktopRoot, "lib/module-resolution.js")));
   const desktopManifest = JSON.parse(await readFile(path.join(desktopRoot, "package.json"), "utf8"));
   assert.equal(desktopManifest.version, DESKTOP_SOURCE.version);
   assert.equal(desktopManifest.dependencies["@deepseek-ai/dsh"], DESKTOP_SOURCE.harnessVersion);
   const sandboxRoot = await mkdtemp(
-    path.join(tmpdir(), "openquantum-desktop-integration-"),
+    path.join(await realpath(tmpdir()), "openquantum-desktop-integration-"),
   );
   const harnessHome = path.join(sandboxRoot, "dsh");
   t.after(() => rm(sandboxRoot, { recursive: true, force: true }));
+  createDesktopWebProfile(harnessHome, "existing");
+  const nativePatchFile = path.join(harnessHome, "profiles/existing/cordis.patch.yml");
+  const nativePatch = '# native user preference\n- id: agent-default-model\n  config:\n    provider: user-local\n    model: user-model\n';
+  await writeFile(nativePatchFile, nativePatch);
 
   const { modelRoutesTarget, patchTarget } = await prepareOpenQuantumHarnessHome({
     harnessHome,
@@ -58,17 +63,27 @@ test("composes the Desktop shell around the OpenQuantum Harness home", { skip: !
     harnessHome,
     process.platform,
   );
-  for (const name of ["harness-web-branding", "harness-web-capabilities", "harness-web-learning", "harness-web-locales", "harness-web-updates"]) {
+  for (const name of ["harness-capability-host", "harness-web-branding", "harness-web-capabilities", "harness-web-learning", "harness-web-locales", "harness-web-updates", "harness-desktop-profile"]) {
     const manifest = findPackageJSON(`@openquantum/${name}`, pathToFileURL(path.join(harnessHome, "profiles/desktop/package.json")));
-    assert.equal(manifest, path.join(harnessHome, "profiles/desktop/node_modules/@openquantum", name, "package.json"));
+    assert.ok(manifest.endsWith(path.join(name, "package.json")));
   }
+  const desktopPackageUrl = pathToFileURL(path.join(harnessHome, "profiles/desktop/package.json"));
+  const disposeResolver = installProfilePackageResolver(desktopPackageUrl.href);
+  try {
+    for (const name of ["branding", "capabilities", "learning", "locales", "updates"]) {
+      assert.ok(createRequire(desktopPackageUrl).resolve(`@openquantum/harness-web-${name}/package.json`).endsWith("package.json"));
+    }
+  } finally { disposeResolver(); }
   const rows = new Map();
   for (const row of composeEntries([prepared.patches])) {
     if (typeof row.id === "string") rows.set(row.id, row);
   }
 
-  assert.equal(path.dirname(patchTarget), harnessHome);
+  assert.equal(patchTarget, path.join(harnessHome, DESKTOP_PROFILE_PATCH));
   assert.equal(rows.get("desktop-shell")?.name, "dsh-plugin-desktop");
+  assert.equal(rows.get("openquantum-desktop-branding")?.name, "@openquantum/harness-web-branding/desktop");
+  assert.deepEqual(rows.get("openquantum-desktop-branding")?.inject, ["desktopRuntime"]);
+  assert.deepEqual(rows.get("desktop-shell")?.inject, ["openquantumDesktopIcon"]);
   assert.equal(
     rows.get("openquantum-web-branding")?.name,
     "@openquantum/harness-web-branding",
@@ -78,9 +93,11 @@ test("composes the Desktop shell around the OpenQuantum Harness home", { skip: !
     "@openquantum/harness-web-capabilities",
   );
   assert.equal(rows.get("agent-presets")?.config?.default, "openquantum");
+  assert.equal(rows.get("openquantum-web-branding")?.config?.minimalUi, true);
+  assert.equal(rows.get("openquantum-web-capabilities")?.config?.channels, false);
   assert.equal(rows.get("llm-deepseek")?.disabled, true);
   assert.equal(rows.get("llm-pi-ai")?.disabled, true);
-  assert.equal(rows.get("desktop-updates")?.disabled, true, "the OpenQuantum deployment cannot offer upstream DSH installers");
+  assert.notEqual(rows.get("desktop-updates")?.disabled, true, "upstream owns native updates");
   assert.equal(rows.get("openquantum-web-updates")?.name, "@openquantum/harness-web-updates");
   assert.equal(
     rows.get("openquantum-model-routes")?.name,
@@ -104,55 +121,49 @@ test("composes the Desktop shell around the OpenQuantum Harness home", { skip: !
     modelRouteRows[0]?.name,
     "@deepseek-ai/dsh-llm-pi-ai",
   );
-  assert.equal(
-    modelRouteRows[0]?.config?.providers?.["openquantum-public"]
-      ?.displayName,
-    "OpenQuantum Public Gateway",
-  );
+  assert.deepEqual(modelRouteRows[0]?.config?.providers, {});
+  assert.equal(rows.get("agent-default-model")?.config?.provider, "");
+  assert.equal(rows.get("agent-default-model")?.config?.model, "");
+
+  createDesktopWebProfile(harnessHome, "fresh");
+  for (const name of ["existing", "fresh"]) {
+    const native = prepareDesktopProfile("1", harnessHome, process.platform, name);
+    const entries = composeEntries([native.patches]);
+    assert.ok(entries.some(row => row.id === "desktop-shell"));
+    assert.ok(!entries.some(row => row.name?.startsWith("@openquantum/")), "native Profiles do not load unavailable OpenQuantum packages");
+    assert.ok(!entries.some(row => row.id?.startsWith("openquantum-")), "native Profiles do not inherit OpenQuantum routes or settings");
+    const manifest = JSON.parse(await readFile(path.join(harnessHome, "profiles", name, "package.json")));
+    assert.ok(!manifest.dsh.profile.bundles.includes(DESKTOP_PROFILE_BUNDLE));
+    if (name === "existing") {
+      assert.equal(await readFile(nativePatchFile, "utf8"), nativePatch);
+      assert.equal(entries.find(row => row.id === "agent-default-model")?.config?.provider, "user-local");
+    }
+  }
 });
 
-test("prepares native OQ assets while retaining the pinned upstream package and dependencies", { skip: !desktopBuilt }, async () => {
+test("registers extensions without changing upstream Desktop files", { skip: !desktopBuilt }, async (t) => {
   const original = new Map();
   for (const file of await readdir(path.join(desktopRoot, "lib"))) {
-    if (file.endsWith(".js")) original.set(path.join("lib", file), await readFile(path.join(desktopRoot, "lib", file), "utf8"));
+    if (file.endsWith(".js")) original.set(file, await readFile(path.join(desktopRoot, "lib", file)));
   }
-  const brandedRoot = await prepareOpenQuantumDesktop(projectRoot);
-  assert.equal(await prepareOpenQuantumDesktop(projectRoot), brandedRoot);
-  assert.notEqual(await realpath(brandedRoot), await realpath(desktopRoot));
-  assert.deepEqual(await readFile(path.join(brandedRoot, "package.json")), await readFile(path.join(desktopRoot, "package.json")));
-  assert.equal(await realpath(path.join(brandedRoot, "node_modules")), await realpath(path.join(desktopRoot, "node_modules")));
-  const changes = brandDesktopJavaScript(original);
-  assert.equal(changes.size, 6);
-  assert.doesNotMatch(changes.get(path.join("lib", "main.js")), /(?:title|welcomeTitle): "[^"\n]*DSH Desktop/);
-  assert.ok([...changes.values()].some((source) => source.includes('return preference === "zh" ? "zh" : preference ? "en" : void 0;')));
-  for (const filename of ["setup-wizard.html", "recovery.html", "desktop-dialog.html"]) {
-    const nativePage = await readFile(path.join(brandedRoot, "lib/native-ui", filename), "utf8");
-    assert.doesNotMatch(nativePage, /DSH Desktop/);
-    assert.match(nativePage, /OpenQuantum Desktop/);
-  }
-  for (const [file, source] of original) {
-    assert.equal(await readFile(path.join(desktopRoot, file), "utf8"), source, "upstream must stay unchanged");
-    assert.equal(await readFile(path.join(brandedRoot, file), "utf8"), changes.get(file) ?? source);
-  }
-
-  const sharp = createRequire(path.join(desktopRoot, "package.json"))("sharp");
-  const appIcon = sharp(path.join(brandedRoot, "build/app-icon-mac.png"));
-  const metadata = await appIcon.metadata();
-  assert.equal(metadata.width, 1024);
-  assert.equal(metadata.height, 1024);
-  const { data: corner } = await appIcon.extract({ left: 0, top: 0, width: 100, height: 100 }).raw().toBuffer({ resolveWithObject: true });
-  assert.ok(corner.every((value, index) => index % 4 !== 3 || value === 0), "macOS icon safe area stays transparent");
-  for (const [filename, size] of [["tray-iconTemplate.png", 16], ["tray-iconTemplate@2x.png", 32]]) {
-    const { data, info } = await sharp(path.join(brandedRoot, "build", filename)).raw().toBuffer({ resolveWithObject: true });
-    assert.equal(info.width, size);
-    assert.equal(info.height, size);
-    assert.equal(info.channels, 4);
-    assert.ok(data.every((value, index) => index % 4 === 3 || value === 0), "template RGB must be black");
-    const alpha = data.filter((value, index) => index % 4 === 3);
-    assert.ok(alpha.some((value) => value > 0), "tray mark is visible");
-    assert.ok(alpha.some((value) => value === 0), "tray background is transparent");
-  }
-  const changedUpstream = new Map(original);
-  for (const [file, source] of changedUpstream) changedUpstream.set(file, source.replace('windowTitle: "DeepSeek Harness Desktop"', 'windowTitle: "New upstream title"'));
-  assert.throws(() => brandDesktopJavaScript(changedUpstream), /window title matched 0 times/);
+  const home = await mkdtemp(path.join(await realpath(tmpdir()), "oq-unmodified-desktop-"));
+  t.after(() => rm(home, { recursive: true, force: true }));
+  await prepareOpenQuantumHarnessHome({ harnessHome: home, projectRoot, profileName: "desktop" });
+  const userPatch = '# User overrides stay after the OpenQuantum bundle.\n- id: openquantum-web-branding\n  config:\n    minimalUi: false\n';
+  const userPatchFile = path.join(home, "profiles/desktop/cordis.patch.yml");
+  await writeFile(userPatchFile, userPatch);
+  await prepareOpenQuantumHarnessHome({ harnessHome: home, projectRoot, profileName: "desktop" });
+  const manifest = JSON.parse(await readFile(path.join(home, "profiles/desktop/package.json")));
+  assert.deepEqual(Object.keys(manifest.dependencies).filter(name => name.startsWith("@openquantum/")).sort(), [
+    "@openquantum/harness-capability-host", "@openquantum/harness-desktop-profile",
+    "@openquantum/harness-web-branding", "@openquantum/harness-web-capabilities",
+    "@openquantum/harness-web-learning", "@openquantum/harness-web-locales", "@openquantum/harness-web-updates",
+  ].sort());
+  assert.equal(manifest.dsh.profile.bundles.filter(name => name === DESKTOP_PROFILE_BUNDLE).length, 1);
+  assert.ok(!manifest.dsh.profile.bundles.includes("@openquantum/harness-web-branding"));
+  assert.equal(await readFile(userPatchFile, "utf8"), userPatch);
+  const { prepareDesktopProfile } = await import(pathToFileURL(path.join(desktopRoot, "lib/profile.js")));
+  const entries = composeEntries([prepareDesktopProfile("1", home, process.platform).patches]);
+  assert.equal(entries.find(row => row.id === "openquantum-web-branding")?.config?.minimalUi, false);
+  for (const [file, content] of original) assert.deepEqual(await readFile(path.join(desktopRoot, "lib", file)), content);
 });

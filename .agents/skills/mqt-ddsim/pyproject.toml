@@ -1,0 +1,8 @@
+[project]
+name = "openquantum-mqt-ddsim"
+version = "0.1.0"
+requires-python = ">=3.12,<3.13"
+dependencies = ["mqt-ddsim==2.6.0"]
+
+[tool.uv]
+package = false

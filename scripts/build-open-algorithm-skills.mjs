@@ -1,10 +1,13 @@
 import assert from "node:assert/strict";
 import { readFile, mkdir, writeFile } from "node:fs/promises";
+import { readSdkLibraries } from "../src/lib/sdk-access.mjs";
+import { upsertSdkSection } from "../src/lib/sdk-skill.mjs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const manifest = JSON.parse(await readFile(path.join(root, "examples/quantum-algorithms/coverage.json"), "utf8"));
+const sdkLibrary = (await readSdkLibraries(root)).find((entry) => entry.id === "quantum-algorithms");
 const reference = JSON.parse(await readFile(path.join(root, "src/quantum-practices/upstream/source.json"), "utf8"));
 const check = process.argv.includes("--check");
 assert.equal(manifest.guides.length, 66);
@@ -61,12 +64,13 @@ function render(row) {
     body += `\n全量条目见[覆盖表](../../../docs/integrations/UNITARYLAB_OPEN_COVERAGE.md)。如果用户描述跨领域，按实际依赖组合相关叶子 Skill；不要要求用户先阅读整条目录链。\n\n`;
   }
   body += `## 来源与边界\n\n上游 MIT 指南：[${row.guideId}](${manifest.skillsSource.repository}/blob/${manifest.skillsSource.commit}/${row.guidePath})。原文作为参考保存在固定检索库，本文件将执行路线改为开源 SDK。来源摘要和算法模块对应关系见[coverage.json](../../../examples/quantum-algorithms/coverage.json)，许可证与改动说明见[NOTICE](../../../examples/quantum-algorithms/NOTICE)。\n`;
+  body += `\n## 自定义 SDK 程序\n\n示例用于解释和接口核验，不是可执行任务的边界。用户需要其他模型、数据、算法步骤、梯度或后端时，按[原生 SDK 工作台](../quantum-sdk-workbench/SKILL.md)在固定环境中编写并执行自定义代码；由 Agent 完成程序与工件交付。使用 \`quantum-algorithms\` 环境定位相关 SDK，保留本算法的数学假设与数值误差说明。\n`;
   return body;
 }
 
 for (const row of manifest.guides) {
   const target = path.join(root, ".agents/skills", row.skill, "SKILL.md");
-  const content = render(row);
+  const content = row.skill === "quantum-algorithms" ? upsertSdkSection(render(row), sdkLibrary) : render(row);
   if (check) assert.equal(await readFile(target, "utf8"), content, `Outdated Skill: ${row.skill}`);
   else {
     await mkdir(path.dirname(target), { recursive: true });

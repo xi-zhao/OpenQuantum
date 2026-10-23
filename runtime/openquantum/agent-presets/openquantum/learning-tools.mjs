@@ -1,9 +1,10 @@
+import { projectRoot as openQuantumProjectRoot } from "../../project-root.mjs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { createUserMessage } from "@deepseek-ai/dsh-llm";
 
 const { learningApplication, requireCourseId } = await import(
-  pathToFileURL(path.join(process.cwd(), "src/learning/application.mjs")).href
+  pathToFileURL(path.join(openQuantumProjectRoot, "src/learning/application.mjs")).href
 );
 
 export const inject = ["tools", "llm"];
@@ -49,7 +50,7 @@ export function createHarnessAiCall({ llm, agent, signal }) {
   };
 }
 
-export function classroomTool({ llm, application = learningApplication(process.cwd()) }) {
+export function classroomTool({ llm, application = learningApplication(openQuantumProjectRoot) }) {
   const failedAttempts = new WeakMap();
   return {
     name: "generate_quantum_classroom",

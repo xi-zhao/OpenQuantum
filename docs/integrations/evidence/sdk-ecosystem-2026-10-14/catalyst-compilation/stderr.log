@@ -1,0 +1,2 @@
+ld: warning: object file (/private/tmp/programn6x36hfm/program.o) was built for newer 'macOS' version (28.0) than being linked (27.0)
+ld: warning: object file (/private/tmp/deriv_programjqiqyd1_/deriv_program.o) was built for newer 'macOS' version (28.0) than being linked (27.0)

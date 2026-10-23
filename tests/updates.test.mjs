@@ -233,16 +233,6 @@ test("bounded routes reject cross-origin, oversized and arbitrary commands befor
   assert.equal(good.headers["cache-control"], "no-store");
 });
 
-test("Desktop's exact empty request checks OpenQuantum and preserves its public acknowledgement", async (t) => {
-  const f = await fixture(t);
-  const handler = createUpdateHandler(f.service, { desktop: true, requestRejection: () => undefined });
-  const result = await invoke(handler, commandRequest());
-  assert.deepEqual(result.body, { accepted: true });
-  assert.equal(f.service.snapshot().desktopCheck, 1);
-  assert.equal(f.service.snapshot().release.version, "0.5.0");
-  assert.equal((await invoke(handler, commandRequest({ action: "check" }))).status, 400);
-  assert.equal((await invoke(handler, commandRequest({}, { host: "example.org", origin: "https://example.org" }))).status, 403);
-});
 
 test("release publication reuses all CI gates and only uploads a matching stable manifest", async () => {
   const workflow = parse(await readFile(new URL("../.github/workflows/release-updates.yml", import.meta.url), "utf8"));

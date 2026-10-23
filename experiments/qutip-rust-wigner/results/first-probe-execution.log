@@ -1,0 +1,11 @@
+tiny {'qutip_clenshaw': 0.0004769170191138983, 'qutip_iterative': 0.0003897910937666893, 'qutip_laguerre': 0.009846249944530427, 'rust_clenshaw': 0.00011370901484042406} max error 1.1102230246251565e-16
+small {'qutip_clenshaw': 0.004661999992094934, 'qutip_iterative': 0.006012665922753513, 'qutip_laguerre': 0.02015408396255225, 'rust_clenshaw': 0.0004462089855223894} max error 1.966525900454208e-15
+Traceback (most recent call last):
+  File "/Volumes/Elements/CodexWorkspaces/managed-worktrees/qutip-rust-case/openQuantum/experiments/qutip-rust-wigner/probe.py", line 30, in <module>
+    main()
+  File "/Volumes/Elements/CodexWorkspaces/managed-worktrees/qutip-rust-case/openQuantum/experiments/qutip-rust-wigner/probe.py", line 23, in main
+    row["errors"] = {name: close_check(out, outputs["qutip_clenshaw"]) for name, out in outputs.items()}
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Volumes/Elements/CodexWorkspaces/managed-worktrees/qutip-rust-case/openQuantum/experiments/qutip-rust-wigner/common.py", line 105, in close_check
+    raise AssertionError(f"Numerical mismatch: {error}")
+AssertionError: Numerical mismatch: 8.573877718909273e-12

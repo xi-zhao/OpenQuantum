@@ -1,0 +1,8 @@
+[project]
+name = "openquantum-mqt-qmap"
+version = "0.1.0"
+requires-python = ">=3.12,<3.13"
+dependencies = ["mqt-qmap==3.10.0"]
+
+[tool.uv]
+package = false

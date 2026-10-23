@@ -1,8 +1,8 @@
 {
   "name": "openquantum",
-  "version": "0.5.1",
+  "version": "0.8.4",
   "private": true,
-  "description": "A DeepSeek Harness distribution for open quantum research",
+  "description": "Quantum research Skills and Tools for DeepSeek Harness Desktop and Codex",
   "author": "OpenQuantum contributors",
   "license": "MIT",
   "keywords": [
@@ -16,6 +16,8 @@
     "node": ">=24"
   },
   "scripts": {
+    "homepage:build": "node scripts/build-homepage.mjs",
+    "homepage:dev": "node scripts/preview-homepage.mjs",
     "learning:ui:setup": "node scripts/setup-openmaic-ui.mjs",
     "dev": "node scripts/run-harness.mjs --port 3000 --trusted-host localhost:3000",
     "desktop": "node scripts/run-desktop.mjs",
@@ -58,6 +60,9 @@
     "capability:unitary:test": "node --test tests/unitary-tools-contracts.test.mjs tests/metriq-data.test.mjs",
     "capability:unitary:live": "OPENQUANTUM_REAL_UNITARY_TOOLS=1 node --test --test-concurrency=1 tests/unitary-tools-live.test.mjs tests/harness-unitary-tools.test.mjs",
     "capability:paper-tools:setup": "node scripts/setup-paper-tools.mjs",
+    "capability:pairinteraction:setup": "node .agents/skills/pairinteraction-rydberg/scripts/setup.mjs",
+    "capability:pairinteraction:test": "node --test tests/pairinteraction-contracts.test.mjs",
+    "capability:pairinteraction:live": "OPENQUANTUM_REAL_PAIRINTERACTION=1 node --test --test-concurrency=1 tests/pairinteraction-live.test.mjs tests/harness-pairinteraction.test.mjs",
     "capability:mitiq:setup": "node scripts/setup-paper-tools.mjs mitiq-error-mitigation",
     "capability:mitiq:test": "node --test tests/mitiq-contracts.test.mjs",
     "capability:mitiq:live": "OPENQUANTUM_REAL_MITIQ=1 node --test --test-concurrency=1 tests/mitiq-live.test.mjs tests/harness-mitiq.test.mjs",
@@ -69,13 +74,15 @@
     "capability:quantum-circuit-verification:test": "node --test .agents/skills/quantum-circuit-verification/test/*.test.mjs",
     "capability:qec-memory-experiment:test": "node --test .agents/skills/qec-memory-experiment/test/*.test.mjs",
     "benchmark:quantum-capabilities:test": "node --test benchmarks/quantum-capabilities/test/*.test.mjs",
-    "test:p1": "node --test --test-concurrency=2 tests/*.test.mjs && npm run test:contracts && npm run capability:diagnostics:test && npm run capability:quantum-ground-state:test && npm run capability:contracts:test && npm run benchmark:quantum-capabilities:test",
+    "test:p1": "node scripts/build-chatgpt.mjs && node --test --test-concurrency=2 tests/*.test.mjs && npm run test:contracts && npm run capability:diagnostics:test && npm run capability:quantum-ground-state:test && npm run capability:contracts:test && npm run benchmark:quantum-capabilities:test",
     "capability:diagnostics:test": "node .agents/skills/platform-diagnostics/evals/run-evals.mjs",
     "start": "node scripts/run-harness.mjs --port 3000 --trusted-host localhost:3000",
     "lint": "eslint .",
     "locales:check": "node scripts/sync-ui-locales.mjs --check && node --test tests/ui-locales.test.mjs",
     "locales:sync": "node scripts/sync-ui-locales.mjs --write",
-    "check": "npm run lint && npm run locales:check && npm run capability:conformance && npm run test:p1 && npm run harness:config",
+    "check": "npm run release:check && npm run lint && npm run locales:check && npm run capability:conformance && npm run sdk:guides:check && npm run sdk:inventory:check && npm run test:p1 && npm run harness:config",
+    "release:version": "node scripts/release-version.mjs",
+    "release:check": "node scripts/release-version.mjs --check",
     "desktop:setup": "node scripts/setup-desktop.mjs",
     "test:quantum-upgrade:live": "node --test tests/quantum-upgrade-live.test.mjs",
     "capability:candidates:setup": "node scripts/setup-paper-tools.mjs qcut-knitting compact-optimization openqarp-excited-states cqlib-kernel flagquantum-workbench",
@@ -100,7 +107,26 @@
     "capability:bloqade:live": "OPENQUANTUM_REAL_BLOQADE=1 node --test --test-concurrency=1 tests/bloqade-live.test.mjs tests/harness-bloqade.test.mjs",
     "capability:vendor-sdks:setup": "node scripts/setup-paper-tools.mjs pennylane-differentiable deepquantum-differentiable tensorcircuit-differentiable mindquantum-differentiable pytket-compilation ocean-optimization kaiwu-qubo pyquil-simulation spinqit-simulation qutrunk-simulation perceval-photonics iqm-circuit-workbench alicebob-cat-circuits pulser-dynamics qoolqit-workbench ionq-programs superstaq-compilation",
     "capability:vendor-sdks:test": "node --test tests/sdk-differentiable-contracts.test.mjs tests/sdk-compilers-contracts.test.mjs tests/sdk-devices-contracts.test.mjs tests/sdk-cloud-contracts.test.mjs",
-    "capability:vendor-sdks:live": "OPENQUANTUM_REAL_DIFFERENTIABLE=1 OPENQUANTUM_REAL_SDK_COMPILERS=1 OPENQUANTUM_REAL_SDK_DEVICES=1 OPENQUANTUM_REAL_SDK_CLOUD=1 OPENQUANTUM_REAL_VENDOR_SDKS=1 node --test --test-concurrency=1 tests/sdk-differentiable-live.test.mjs tests/sdk-compilers-live.test.mjs tests/sdk-devices-live.test.mjs tests/sdk-cloud-live.test.mjs tests/harness-vendor-sdks.test.mjs"
+    "capability:vendor-sdks:live": "OPENQUANTUM_REAL_DIFFERENTIABLE=1 OPENQUANTUM_REAL_SDK_COMPILERS=1 OPENQUANTUM_REAL_SDK_DEVICES=1 OPENQUANTUM_REAL_SDK_CLOUD=1 OPENQUANTUM_REAL_VENDOR_SDKS=1 node --test --test-concurrency=1 tests/sdk-differentiable-live.test.mjs tests/sdk-compilers-live.test.mjs tests/sdk-devices-live.test.mjs tests/sdk-cloud-live.test.mjs tests/harness-vendor-sdks.test.mjs",
+    "capability:sdk-expansion:setup": "node scripts/setup-paper-tools.mjs qsteed-compilation quairkit-information qcompute-simulation qibo-simulation lightworks-photonics braket-simulation quri-parts-estimation qdk-resource-estimation qualtran-resources openfermion-mapping mqt-ddsim mqt-qmap qua-programs laboneq-control",
+    "capability:sdk-expansion:test": "node --test tests/sdk-expansion-circuits-contracts.test.mjs tests/sdk-expansion-resources-contracts.test.mjs tests/sdk-expansion-cloud-control-contracts.test.mjs tests/sdk-expansion-io-contracts.test.mjs",
+    "capability:sdk-expansion:live": "OPENQUANTUM_REAL_SDK_EXPANSION_CIRCUITS=1 OPENQUANTUM_REAL_SDK_EXPANSION_RESOURCES=1 OPENQUANTUM_REAL_SDK_EXPANSION_CLOUD_CONTROL=1 OPENQUANTUM_REAL_SDK_EXPANSION_IO=1 OPENQUANTUM_REAL_SDK_EXPANSION=1 node --test --test-concurrency=1 tests/sdk-expansion-circuits-live.test.mjs tests/sdk-expansion-resources-live.test.mjs tests/sdk-expansion-cloud-control-live.test.mjs tests/sdk-expansion-io-live.test.mjs tests/harness-sdk-expansion.test.mjs",
+    "capability:sdk-gaps:setup": "node scripts/setup-paper-tools.mjs qcover-optimization pychemiq-chemistry qblox-scheduling qililab-control guppy-programs oqc-qat merlin-learning",
+    "capability:sdk-gaps:test": "node --test tests/sdk-gaps-domestic-contracts.test.mjs tests/sdk-gaps-control-contracts.test.mjs tests/sdk-gaps-simulation-contracts.test.mjs tests/sdk-gaps-cloud-contracts.test.mjs",
+    "capability:sdk-gaps:live": "OPENQUANTUM_REAL_SDK_GAPS_DOMESTIC=1 OPENQUANTUM_REAL_SDK_GAPS_CONTROL=1 OPENQUANTUM_REAL_SDK_GAPS_SIMULATION=1 OPENQUANTUM_REAL_SDK_GAPS_CLOUD=1 OPENQUANTUM_REAL_SDK_GAPS=1 node --test --test-concurrency=1 tests/sdk-gaps-domestic-live.test.mjs tests/sdk-gaps-control-live.test.mjs tests/sdk-gaps-simulation-live.test.mjs tests/sdk-gaps-cloud-live.test.mjs tests/harness-sdk-gaps.test.mjs",
+    "plugin:build": "node scripts/build-codex-plugin.mjs",
+    "plugin:release": "node scripts/build-codex-release.mjs",
+    "plugin:preview": "node runtime/chatgpt/main.mjs --preview",
+    "plugin:test": "node scripts/build-chatgpt.mjs && node --test tests/codex-plugin-*.test.mjs",
+    "plugin:install": "node scripts/install-codex-plugin.mjs",
+    "plugin:probe": "node scripts/probe-chatgpt.mjs dist/codex-plugin/openquantum",
+    "plugin:host-check": "node scripts/verify-codex-plugin-host.mjs",
+    "sdk:list": "node scripts/sdk-access.mjs list",
+    "sdk:inventory": "node scripts/sdk-access.mjs inventory",
+    "sdk:inventory:check": "node scripts/audit-sdk-integration.mjs --check",
+    "sdk:guides:check": "node scripts/build-sdk-skills.mjs --check",
+    "sdk:test": "node --test tests/sdk-access.test.mjs tests/sdk-package.test.mjs",
+    "sdk:ecosystem:test": "OPENQUANTUM_ECOSYSTEM_CHECKS=1 node --test --test-concurrency=1 tests/sdk-ecosystem-live.test.mjs"
   },
   "dependencies": {
     "@deepseek-ai/dsh": "0.1.5-rc.1",
@@ -111,7 +137,7 @@
     "@deepseek-ai/dsh-cordis-host-runner": "0.1.5-rc.1",
     "@deepseek-ai/dsh-credentials": "0.1.5-rc.1",
     "@deepseek-ai/dsh-mcp-client": "0.1.5-rc.1",
-    "@modelcontextprotocol/sdk": "1.30.0",
+    "@modelcontextprotocol/sdk": "1.32.1",
     "@openmaic/dsl": "0.11.1",
     "@openmaic/generation": "0.3.6",
     "ajv": "8.20.0",
@@ -120,9 +146,14 @@
     "esbuild": "0.28.2",
     "katex": "0.18.7",
     "pnpm": "11.26.0",
-    "sanitize-html": "2.17.7",
+    "sanitize-html": "2.18.1",
     "ws": "8.21.3",
-    "yaml": "2.9.0"
+    "yaml": "2.9.0",
+    "@modelcontextprotocol/ext-apps": "1.7.5",
+    "@napi-rs/keyring": "2.1.1",
+    "smol-toml": "1.9.1",
+    "fflate": "0.8.3",
+    "jose": "6.2.12"
   },
   "devDependencies": {
     "@agentclientprotocol/sdk": "1.4.0",
@@ -132,6 +163,9 @@
     "globals": "17.12.0"
   },
   "overrides": {
-    "pnpm": "11.26.0"
+    "pnpm": "11.26.0",
+    "@openmaic/generation": {
+      "katex": "$katex"
+    }
   }
 }

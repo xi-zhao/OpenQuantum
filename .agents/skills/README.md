@@ -13,15 +13,42 @@
 
 ## 当前 Skill
 
-以下 119 个 Skill 随源码分发；它们与 MCP Server 不是一一对应关系，知识型 Skill 可以不绑定专用 Tool，
+以下 183 个 Skill 随源码分发；它们与 MCP Server 不是一一对应关系，知识型 Skill 可以不绑定专用 Tool，
 工作流也可以使用多个服务或进程内原生 Tool。连接默认配置与凭据条件见[项目首页](../../README.md#mcp-服务目录)。
-当前 106 项可由模型自动选择，13 个分类索引仅保留用户显式调用；名称和来源映射不变。
+当前 170 项可由模型自动选择，13 个分类索引仅保留用户显式调用；名称和来源映射不变。
 分批建议与兼容影响见[扩展治理清单](../../docs/architecture/EXTENSION_GOVERNANCE.md)。
 
 | Skill | 作用 | 依赖的执行模块 |
 | --- | --- | --- |
 | `platform-diagnostics` | UI、Harness、Skill 和 Model 四个职责面的平台诊断 | Harness Tool、诊断 Validator 与 eval evidence |
 | `quantum-sdk-advisor` | 量子软件栈选型 | 无强制 Tool Provider |
+| `quantum-sdk-workbench` | 固定依赖中的原生 SDK、自定义代码与复现工件 | 宿主已有 `bash` / `pwsh`；不新增任意代码 MCP |
+| `arc-rydberg` | 原子、能级、跃迁矩阵元、寿命、Stark 图与相互作用 | 宿主代码 Tool；显式准备 python 环境 |
+| `catalyst-compilation` | qjit、混合程序、QNode、控制流、编译配置与梯度 | 宿主代码 Tool；显式准备 python 环境 |
+| `jaxquantum-modeling` | JAX 算符、器件与 bosonic 模型、动力学、扫描与梯度 | 宿主代码 Tool；显式准备 python 环境 |
+| `josephson-circuits` | Josephson 元件、电路、频域谐波平衡、散射与噪声 | 宿主代码 Tool；显式准备 julia 环境 |
+| `monoprop-propagation` | Pauli/Majorana 算符、门生成元、传播、梯度与截断 | 宿主代码 Tool；显式准备 python 环境 |
+| `mqt-debugger` | OpenQASM 程序、单步仿真、断言、影响范围与错误诊断 | 宿主代码 Tool；显式准备 python 环境 |
+| `mqt-qecc` | CSS 码、容错态制备、色码与模拟信息解码 | 宿主代码 Tool；显式准备 python 环境 |
+| `openjij-optimization` | Ising/QUBO、SA/SQA sampler、退火 schedule 与 SampleSet | 宿主代码 Tool；显式准备 python 环境 |
+| `paulistrings-dynamics` | Pauli 字符串、Hamiltonian、算符传播与多体算法 | 宿主代码 Tool；显式准备 julia 环境 |
+| `pecos-qec` | 混合程序、量子后端、噪声、syndrome 与纠错协议 | 宿主代码 Tool；显式准备 python 环境 |
+| `piquasso-photonics` | Gaussian/Fock 态、光子程序、信道与测量 | 宿主代码 Tool；显式准备 python 环境 |
+| `pygsti-characterization` | Circuit、Model、DataSet、GST/RB/RPE 与拟合报告 | 宿主代码 Tool；显式准备 python 环境 |
+| `qdk-chemistry` | 分子结构、电子结构、活性空间、量子算法、后端与结果 | 宿主代码 Tool；显式准备 python 环境 |
+| `qiskit-machine-learning` | 量子核、QSVC/QSVR、QNN、梯度、训练与推断 | 宿主代码 Tool；显式准备 python 环境 |
+| `qlasskit-oracles` | 受支持 Python 子集、布尔表达式、量子 oracle 与多框架导出 | 宿主代码 Tool；显式准备 python 环境 |
+| `qsim-simulation` | Cirq 电路、QSimOptions、态矢量、采样与目标后端 | 宿主代码 Tool；显式准备 python 环境 |
+| `qsyn-compilation` | C++ 库、线路综合、ZX/张量变换、优化、验证与 CLI | 宿主代码 Tool；显式准备 native 环境 |
+| `quantumclifford-julia` | Pauli/稳定子、图态、Clifford 操作、测量与 Pauli frame | 宿主代码 Tool；显式准备 julia 环境 |
+| `quantumcontrol-julia` | 动力学、控制目标、脉冲、GRAPE/Krotov 与优化 | 宿主代码 Tool；显式准备 julia 环境 |
+| `quantumsavory-network` | 量子寄存器、器件状态、链路、网络协议与离散事件模拟 | 宿主代码 Tool；显式准备 julia 环境 |
+| `squlearn-learning` | 编码线路、observable、executor、量子核与 sklearn estimator | 宿主代码 Tool；显式准备 python 环境 |
+| `staq-compilation` | OpenQASM AST、综合、线路变换、优化与映射 | 宿主代码 Tool；显式准备 python 环境 |
+| `tesseract-decoding` | Stim DEM、syndrome、搜索式解码器与统计 | 宿主代码 Tool；显式准备 python 环境 |
+| `tqec-compilation` | BlockGraph、逻辑计算块、相关面与 Stim 线路生成 | 宿主代码 Tool；显式准备 python 环境 |
+| `tsim-sampling` | Clifford/非 Clifford 线路、噪声、detector 与 observable 采样 | 宿主代码 Tool；显式准备 python 环境 |
+| `yao-circuits` | 量子寄存器、block、电路、算符、参数与梯度 | 宿主代码 Tool；显式准备 julia 环境 |
 | `qiskit-circuit-workbench` | QASM/QPY 电路分析和转译工作流 | Qiskit MCP Server + Harness MCP Client |
 | `fieldqkit-hardware` | 国内量子云后端发现和凭据缺口解释 | FieldQKit 本地 MCP Server + Harness MCP Client；不改变云状态；显式准备 Python 环境，发现可能写 SDK 缓存 |
 | `qdmi-device` | 已配置驱动的设备、门集与耦合只读查询 | QDMI 本地 MCP Server + Harness MCP Client；默认关闭，需显式准备驱动 |
@@ -30,6 +57,7 @@
 | `qec-memory-experiment` | surface-code memory 采样与 MWPM 解码 | Stim/PyMatching 本地 MCP Server + Harness MCP Client |
 | `tyxonq-workbench` | TyxonQ 电路与噪声仿真工作流 | TyxonQ 本地 MCP Server + Harness MCP Client；默认关闭 |
 | `fatqat-workbench` | 电路与硬件约束、transmon 泄漏和里德堡动力学实验 | FatQat 本地 MCP Server + Harness MCP Client；返回数据、图表与物理单位 |
+| `pairinteraction-rydberg` | Rb 原子对势能、S–P 交换与二阶有效哈密顿量 | PairInteraction 独立本地 MCP Server + Harness MCP Client；固定软件和原子数据，显式 setup |
 | `bloqade-analog` | 二维 Rydberg 阵列、时变全局脉冲与本地态演化 | `bloqade_local` MCP Server + Harness MCP Client |
 | `mitiq-error-mitigation` | ZNE、REM、PEC、CDR 的本地噪声实验及相同采样预算统计 | Mitiq 本地 MCP Server + Harness MCP Client；能力目录 GPL-3.0-only |
 | `dynamiqs-dynamics` | 单量子位动力学、批量扫描、梯度与独立参照 | Dynamiqs 本地 MCP Server + Harness MCP Client |
@@ -158,6 +186,52 @@
 | [`iqm-circuit-workbench`](iqm-circuit-workbench/SKILL.md) | IQM 原生门转译与本地模拟，不连接真实设备。 | `iqm_local` |
 | [`alicebob-cat-circuits`](alicebob-cat-circuits/SKILL.md) | 官方本地猫态量子比特模型与电路仿真。 | `alicebob_local` |
 | [`pulser-dynamics`](pulser-dynamics/SKILL.md) | Pasqal 全局脉冲、Rydberg 阵列与本地动力学。 | `pulser_local` |
+| [`pasqal-experiments`](pasqal-experiments/SKILL.md) | Pasqal 实验规范、理想/含噪仿真、云批次恢复与采样分析。 | 宿主代码 Tool；共享 `pulser-dynamics` SDK 环境 |
 | [`qoolqit-workbench`](qoolqit-workbench/SKILL.md) | 无量纲 Rydberg 程序编译与本地计算；需审阅上游定制许可证。 | `qoolqit_local` |
 | [`ionq-programs`](ionq-programs/SKILL.md) | 使用官方 SDK 将结构化电路转换为 IonQ QIS 程序；不提交云任务。 | `ionq_local` |
 | [`superstaq-compilation`](superstaq-compilation/SKILL.md) | 本地程序序列化和可选远程编译；远程操作外发电路，需要账户，不执行 QPU 任务。 | `superstaq_cloud` |
+
+### 公司与机构 SDK 补充（2026-09-28）
+
+| Skill | 作用 | 依赖的执行模块 |
+| --- | --- | --- |
+| [`qsteed-compilation`](qsteed-compilation/SKILL.md) | PyQuafu 电路编译到指定门集，保留全局相位与线路，不连接资源数据库。 | `qsteed_local` |
+| [`quairkit-information`](quairkit-information/SKILL.md) | CPU 密度矩阵电路与去极化、振幅阻尼、相位阻尼通道。 | `quairkit_local` |
+| [`qcompute-simulation`](qcompute-simulation/SKILL.md) | 使用百度 QCompute 本地模拟器计算电路概率。 | `qcompute_local` |
+| [`qibo-simulation`](qibo-simulation/SKILL.md) | 使用明确选定的 NumPy CPU 后端计算态矢量。 | `qibo_local` |
+| [`qrisp-arithmetic`](qrisp-arithmetic/SKILL.md) | 本地 QuantumFloat 无符号模加法；需考虑 EPL-2.0 许可。 | `qrisp_local` |
+| [`lightworks-photonics`](lightworks-photonics/SKILL.md) | 本地线性光学网络与 Fock 输入的输出概率。 | `lightworks_local` |
+| [`braket-simulation`](braket-simulation/SKILL.md) | 显式 LocalSimulator 电路振幅与概率，不创建 AWS 云任务。 | `braket_local` |
+| [`quri-parts-estimation`](quri-parts-estimation/SKILL.md) | QURI Parts 电路与 Qulacs 本地 Pauli 期望值。 | `quri_parts_local` |
+| [`qdk-resource-estimation`](qdk-resource-estimation/SKILL.md) | 由电路和硬件假设估算物理量子位与运行时间。 | `qdk_local` |
+| [`qualtran-resources`](qualtran-resources/SKILL.md) | 算术 Bloq 的容错门资源；实验性 API，保留计数假设。 | `qualtran_local` |
+| [`openfermion-mapping`](openfermion-mapping/SKILL.md) | 结构化费米算符到 Jordan-Wigner 或 Bravyi-Kitaev Pauli 项。 | `openfermion_local` |
+| [`mqt-ddsim`](mqt-ddsim/SKILL.md) | 使用决策图模拟电路，返回指定计算基态概率。 | `mqt_ddsim_local` |
+| [`mqt-qmap`](mqt-qmap/SKILL.md) | 将电路映射到耦合图，返回物理线路及逻辑输入、输出映射。 | `mqt_qmap_local` |
+| [`classiq-synthesis`](classiq-synthesis/SKILL.md) | 本地模型准备及可选云端综合；用户自行配置 Token 和服务权限。 | `classiq_cloud` |
+| [`qctrl-workbench`](qctrl-workbench/SKILL.md) | 本地 Boulder Opal 控制图与已有 Boulder/Fire Opal 作业状态查询。 | `qctrl_cloud` |
+| [`qua-programs`](qua-programs/SKILL.md) | 本地生成 OPX 脉冲程序与配置，不连接 QOP 服务。 | `qua_local` |
+| [`laboneq-control`](laboneq-control/SKILL.md) | 离线脉冲编译与 HDAWG 输出波形仿真，不执行设备程序。 | `laboneq_local` |
+| [`qcarchive-query`](qcarchive-query/SKILL.md) | 只读查询既有单点记录，返回分子、原子单位能量和计算来源。 | `qcarchive_data` |
+| [`cudaq-simulation`](cudaq-simulation/SKILL.md) | 固定 qpp-cpu 后端的精确概率与采样；Linux 或 Apple Silicon macOS。 | `cudaq_local` |
+| [`netqasm-network`](netqasm-network/SKILL.md) | 本地双节点 EPR 程序编译；仿真需用户自行准备有许可的 NetSquid 环境。 | `netqasm_local` |
+
+### 网络、控制、光学与云 SDK 补充（2026-09-28）
+
+| Skill | 作用 | 依赖的执行模块 |
+| --- | --- | --- |
+| [`simqn-network`](simqn-network/SKILL.md) | SimQN 单链路的离散事件、随机损失与 Werner 衰减。 | `simqn_local` MCP Server + Harness MCP Client |
+| [`qcover-optimization`](qcover-optimization/SKILL.md) | Qcover 按图分解评估给定 QAOA 参数的能量与相关量。 | `qcover_local` MCP Server + Harness MCP Client |
+| [`vqnet-learning`](vqnet-learning/SKILL.md) | VQNet CPU 电路期望、概率与每个旋转参数的自动微分。 | `vqnet_local` MCP Server + Harness MCP Client |
+| [`pychemiq-chemistry`](pychemiq-chemistry/SKILL.md) | pyChemiQ 费米算符到 Jordan–Wigner Pauli 项，保留微小系数。 | `pychemiq_local` MCP Server + Harness MCP Client |
+| [`qblox-scheduling`](qblox-scheduling/SKILL.md) | Qblox 方波排程和波形采样，不连接 HardwareAgent。 | `qblox_local` MCP Server + Harness MCP Client |
+| [`qililab-control`](qililab-control/SKILL.md) | Qililab 将 I/Q 方波离线编译到 Qblox Q1ASM。 | `qililab_local` MCP Server + Harness MCP Client |
+| [`guppy-programs`](guppy-programs/SKILL.md) | Guppy/Selene 的中途测量、复位和经典条件反馈仿真。 | `guppy_local` MCP Server + Harness MCP Client |
+| [`oqc-qat`](oqc-qat/SKILL.md) | QAT 脉冲时序与复基带波形，不执行后端测量。 | `qat_local` MCP Server + Harness MCP Client |
+| [`mrmustard-optics`](mrmustard-optics/SKILL.md) | MrMustard 高斯光学矩和截断 Fock 概率；上游已归档。 | `mrmustard_local` MCP Server + Harness MCP Client |
+| [`merlin-learning`](merlin-learning/SKILL.md) | MerLin 完整 Fock 概率、批量推断与相移梯度。 | `merlin_local` MCP Server + Harness MCP Client |
+| [`mimiq-simulation`](mimiq-simulation/SKILL.md) | MIMIQ Exaqt 本地态矢量和种子采样。 | `mimiq_local` MCP Server + Harness MCP Client |
+| [`myqlm-simulation`](myqlm-simulation/SKILL.md) | myQLM PyLinalg 本地理想电路仿真。 | `myqlm_local` MCP Server + Harness MCP Client |
+| [`aqt-workbench`](aqt-workbench/SKILL.md) | AQT 原生门编译、离线采样与可选设备查询。 | `aqt_local` MCP Server + Harness MCP Client |
+| [`oqc-cloud`](oqc-cloud/SKILL.md) | OQC 本地任务准备、查询及显式单次云提交。 | `oqc_cloud` MCP Server + Harness MCP Client |
+| [`quantuminspire-cloud`](quantuminspire-cloud/SKILL.md) | Quantum Inspire 分页设备类型与既有任务状态查询。 | `quantuminspire_cloud` MCP Server + Harness MCP Client |

@@ -1,0 +1,17 @@
+{
+  "id": "jaxquantum-modeling",
+  "dependencyLockSha256": "a1da8d658df96a400fae2d9c76e0ae94a6238391e7efc5201075891bd3a84af9",
+  "sourceSha256": "692d4d836913e2ee4438049a2c95a93b3830708ea360de4aa835429c5e4f0c3e",
+  "networkIsolation": "macOS sandbox-exec deny network*",
+  "scientificValidation": "not_evaluated",
+  "status": "passed",
+  "files": {
+    "attempt.json": "b9b643011cbbf58f10675d73140654d9dbab69639718fe4504ab54e3b3a6bc87",
+    "program.py": "692d4d836913e2ee4438049a2c95a93b3830708ea360de4aa835429c5e4f0c3e",
+    "result.json": "43c428a2a15ba66ada2e0d4c456f6c4ee3bbf1d1ff58b74d8c05082359874119",
+    "runner.py": "a0fc307c398b014acf774d85f64cfb450988b7b72ea285429a70a4497c13cb94",
+    "stderr.log": "3e465b324bb55b270f29bcb3110ae1e76c4e23961d83974e6553c99e2696b321",
+    "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "versions.json": "7d985f1c1b535b056222a0df17a3c79054a62286a98daf68b6e3962914df22cf"
+  }
+}

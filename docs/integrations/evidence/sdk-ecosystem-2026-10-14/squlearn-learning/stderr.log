@@ -1,0 +1,4 @@
+/Volumes/Elements/CodexWorkspaces/quantum-sdk-expansion-cache/envs/squlearn-learning/lib/python3.12/site-packages/squlearn/kernel/lowlevel_kernel/regularization.py:16: SyntaxWarning: invalid escape sequence '\l'
+  D'_{ij} = \text{max}\lbrace D_{ij},0 \rbrace
+/Volumes/Elements/CodexWorkspaces/quantum-sdk-expansion-cache/envs/squlearn-learning/lib/python3.12/site-packages/squlearn/kernel/lowlevel_kernel/regularization.py:36: SyntaxWarning: invalid escape sequence '\s'
+  :math:`\sigma_{min}` if it is negative, by subtracting it from all eigenvalues or

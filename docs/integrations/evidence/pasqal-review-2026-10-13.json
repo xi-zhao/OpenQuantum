@@ -1,0 +1,129 @@
+{
+  "schemaVersion": 1,
+  "verifiedAt": "2026-10-12T16:23:33.063488+00:00",
+  "scope": "PR #13 conflict resolution, CI catalog failures, reviewed source and environment binding",
+  "targetBase": "45461051fa8a794931cbf00a4aa34e440bb0f67e",
+  "previousPrHead": "cceedaa66b831d41d3f1942a2d24aaab484f43ab",
+  "integrationCommit": "5b51a01f6dc4c482a96522a3b2578cca2abd1c0f",
+  "binding": "Tests and review bind the source hashes below; the enclosing fix commit contains the final documentation and evidence.",
+  "platform": {
+    "system": "Darwin",
+    "machine": "arm64",
+    "python": "3.12.13",
+    "node": "v24.19.0"
+  },
+  "packages": {
+    "pulser-core": "1.9.1",
+    "pulser-simulation": "1.9.1",
+    "pasqal-cloud": "0.24.0",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "qutip": "5.3.1"
+  },
+  "dependencyLockSha256": "e70871694651b4582c5e0fa2226504d9c03b20699d7ebe6fdf861a487fc3f0d2",
+  "scientificValidation": "not_evaluated",
+  "checks": {
+    "quality": {
+      "command": "npm run check",
+      "exitCode": 0,
+      "platformTests": {
+        "pass": 477,
+        "fail": 0,
+        "skip": 276
+      },
+      "scientificContracts": {
+        "pass": 119,
+        "fail": 0,
+        "skip": 0
+      },
+      "groundState": {
+        "pass": 35,
+        "fail": 0,
+        "skip": 0
+      },
+      "capabilityContracts": {
+        "pass": 217,
+        "fail": 0,
+        "skip": 1
+      },
+      "benchmark": {
+        "pass": 3,
+        "fail": 0,
+        "skip": 0
+      },
+      "notes": "Skip counts are explicit opt-in SDK/hardware cases; these do not establish scientific acceptance."
+    },
+    "pasqalAndHarness": {
+      "command": "OPENQUANTUM_REAL_PASQAL=1 node --test --test-concurrency=1 tests/pasqal-experiments.test.mjs tests/harness-pasqal.test.mjs",
+      "pass": 4,
+      "fail": 0,
+      "skip": 0,
+      "pythonSubtests": {
+        "pass": 28,
+        "fail": 0,
+        "skip": 0
+      },
+      "transport": "real SDK with HTTP fixtures; Python sockets disabled",
+      "model": "local protocol fixture"
+    },
+    "upstreamExamples": {
+      "atoms": [
+        25,
+        49,
+        56
+      ],
+      "scope": "original-size sequence construction; 56 atoms use explicit MockDevice; no full-size numerical solution"
+    },
+    "codexPackage": {
+      "command": "node scripts/build-codex-plugin.mjs",
+      "exitCode": 0,
+      "version": "0.8.1",
+      "sourceState": "integration commit plus task changes; verification build only",
+      "skills": 134,
+      "tools": 71,
+      "zipSha256": "1d9f7266f00c17b125c2afba6b646c1e719eb32d780f0c805ed0624eba460dc5",
+      "packagedWorkflowSourceMatches": true
+    }
+  },
+  "independentReview": {
+    "reviewer": "independent subagent /root/pasqal_review",
+    "decision": "no blocking P1/P2 in reviewed diff",
+    "independentlyRerunTests": 6,
+    "failed": 0,
+    "reviewedWorkflowSha256": "40eca74743864d06d0182312eea12748c104ec14b5846a78cba05bb0f3e886e4"
+  },
+  "deliveryAtVerification": {
+    "pushed": false,
+    "prUpdated": false,
+    "merged": false,
+    "released": false
+  },
+  "notVerified": [
+    "live Cloud EMU/QPU",
+    "external models",
+    "native installed product",
+    "other operating systems",
+    "GitHub CI for the fix"
+  ],
+  "sourceSha256": {
+    ".agents/skills/pasqal-experiments/scripts/workflow.py": "40eca74743864d06d0182312eea12748c104ec14b5846a78cba05bb0f3e886e4",
+    ".agents/skills/pasqal-experiments/test/workflow_test.py": "4bdfd9e2a343abb464718f1ab6d31d161b3f79f48606aa3b18014302a262d06d",
+    ".agents/skills/pasqal-experiments/SKILL.md": "04435df9f043cd9a42f5a492a81ab97d8523e08627224702e7f2a6293dae1881",
+    ".agents/skills/pasqal-experiments/references/execution.md": "daac822837d0d538f6ad972c9626a610583729eb39916b8221ec1dd6bcc7c5a8",
+    ".agents/skills/README.md": "e64858d6733cc83a7431a29b74ae9aa269a4dbbcb3617ae10218aa599736e822",
+    "README.md": "5f0855863a1541c3d82e7b0162a7712f970fa0018cb1c0fecafbb01cf0c2351b",
+    "tests/capability-package-audit.test.mjs": "4fe5a3b67bd2b61d932d615800aabf01c23795f477a39b018ef29ea50933d588",
+    "CURRENT.md": "e47028d8a2195fad008d9efa100823b23e0f0d5ff19cbddff51871512d0f478a",
+    "docs/integrations/PASQAL.md": "3f8eb4e56540a45eed493eb2a7dc9b23ec51f8ef27db54d9b2165f3923ab50a3"
+  },
+  "archive": {
+    "file": "pasqal-review-2026-10-13.tar.gz",
+    "sha256": "fc6600aa8f5658a3e700b1d6870f8ee1f2bbdff61343995e92ca19ca059d456f",
+    "files": {
+      "quality-tests.log": "4160104cbc8482be7450ed6023ff77a27e6282971441775c6a09029b96684b50",
+      "pasqal-harness.log": "178e142aaa86e87c29e072ecfcdcee253d4e750d614b038bd18feae677277f76",
+      "python-tests.log": "6b7816c40345ce9af366d34d49e1f395767c3d88d24a011d1a36e45fd8231061",
+      "independent-review.txt": "7c014ba47885c9bff7d6b318e56fd7ee7dfcb6aeca9dc967b6f92f39f9eea629"
+    }
+  }
+}

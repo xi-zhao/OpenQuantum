@@ -3,10 +3,10 @@ import { differentiableCircuitDefinition } from "../../../../src/lib/sdk-differe
 export const definition = differentiableCircuitDefinition({
   "name": "differentiate_tensorcircuit_circuit",
   "source": {
-    "name": "tensorcircuit",
-    "version": "0.12.0",
-    "repository": "https://github.com/tencent-quantum-lab/tensorcircuit"
+    "name": "tensorcircuit-ng",
+    "version": "1.10.0",
+    "repository": "https://github.com/tensorcircuit/tensorcircuit-ng"
   },
-  "backend": "TensorCircuit contraction with JAX CPU complex128",
+  "backend": "TensorCircuit-NG contraction with JAX CPU complex128",
   "gradientMethod": "JAX reverse-mode autodifferentiation"
 });

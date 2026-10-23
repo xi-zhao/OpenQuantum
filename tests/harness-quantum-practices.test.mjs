@@ -41,7 +41,6 @@ test("Harness invokes reference retrieval, persists sources and returns invalid-
     { id: "practice-heat", input: { action: "get", query: "一维热方程的假设" } },
     { id: "practice-invalid", input: { action: "get", id: "../../.env" } },
   ];
-  let dispatched = false;
   let registeredTool;
   let child;
   const deliveredResults = [];
@@ -51,11 +50,13 @@ test("Harness invokes reference retrieval, persists sources and returns invalid-
     const body = JSON.parse(Buffer.concat(chunks).toString());
     registeredTool ??= body.tools?.find(tool => tool.function?.name === "quantum_practices");
     deliveredResults.push(...(body.messages ?? []).filter(message => message.role === "tool"));
-    const initial = !dispatched;
-    dispatched = true;
+    // Auxiliary requests, including session titles, must not consume the Tool cases.
+    const completed = new Set((body.messages ?? []).filter(message => message.role === "tool").map(message => message.tool_call_id));
+    const pending = fixtureCalls.filter(call => !completed.has(call.id));
+    const initial = pending.length > 0 && body.tools?.some(tool => tool.function?.name === "quantum_practices");
     const delta = initial ? {
       role: "assistant",
-      tool_calls: fixtureCalls.map((call, index) => ({
+      tool_calls: pending.map((call, index) => ({
         index, id: call.id, type: "function",
         function: { name: "quantum_practices", arguments: JSON.stringify(call.input) },
       })),
@@ -82,6 +83,12 @@ test("Harness invokes reference retrieval, persists sources and returns invalid-
     await rm(sandbox, { recursive: true, force: true });
   });
   const modelPort = await listen(model);
+  const titleProbe = await fetch(`http://127.0.0.1:${modelPort}/v1/chat/completions`, {
+    method: "POST", headers: { "content-type": "application/json" },
+    body: JSON.stringify({ model: "fixture", messages: [{ role: "user", content: "Name this session." }] }),
+  });
+  assert.equal(titleProbe.status, 200);
+  assert.doesNotMatch(await titleProbe.text(), /"tool_calls":\[/, "an auxiliary request must not dispatch or consume Tool cases");
   const reserved = createServer();
   const port = await listen(reserved);
   await new Promise(resolve => reserved.close(resolve));

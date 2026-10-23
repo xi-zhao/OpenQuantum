@@ -9,7 +9,7 @@
 | 门切割与期望值重建 | QCut 2.2.0；Qiskit 2.5.2；cutting addon 0.10.0 | 开启 | `qcut_local` → `knit_qcut_circuit` |
 | 线路优化 | compactq 0.2.3；Qiskit 2.5.2 | 开启 | `compact_local` → `optimize_compact_circuit` |
 | VQD 激发态 | OpenQARP 0.1.0 | 开启 | `openqarp_local` → `solve_openqarp_vqd` |
-| angle 核与 QSVM | cqlib-qml `b3aeb784cf50150f7bb39c86a3a16e397d52ea50` 五文件适配；Rust cqlib `1d0a2c49ac32712d995f46147dfc5e3c4f4ac8e6`（1.4.0b1） | 按需启用 | `cqlib_kernel_local` → `fit_cqlib_angle_kernel` |
+| angle 核与 QSVM | cqlib-qml `b3aeb784cf50150f7bb39c86a3a16e397d52ea50` 五文件便捷 Tool 适配；Rust cqlib `759a7bbef4d47af70fe7e0455876b633080257a4`（2.0.0b4） | 按需启用 | `cqlib_kernel_local` → `fit_cqlib_angle_kernel` |
 | 第二家量子 MCP | flagquantum-mcp-server 0.3.0；flagquantum 0.2.0 | 按需启用 | `flagquantum`，17 个原生上游 Tool |
 
 所有依赖在各能力的 `uv.lock` 固定。四个适配 Tool 始终返回 `scientificValidation=not_evaluated`；
@@ -19,7 +19,9 @@ FlagQuantum 原生结果的 `status=success` / `accuracy.metric=not_measured` �
 
 ## 安装与运行
 
-需要 Node 24+、uv 和 Python 3.12。cqlib 可选能力首次从固定源码编译，需要 Rust ≥1.89 与本机编译工具；
+2026-10-12 起，CQLib 环境同时安装完整 `cqlib-qml`（固定 `4576a575727b93fd300dbee6dc4cb7ab2a93dac1`），原生 API 不使用上述五文件适配。该版本已迁移至 CQLib 2.0 API；旧版 QML 与 1.4.0b1 的完整梯度接口存在冲突。旧 Tool 的输入输出合同保留，版本化旧证据仍描述当时的依赖。当前原生接入与工程状态见[完整 SDK 接入](FULL_SDK_ACCESS.md)。
+
+需要 Node 24+、uv 和 Python 3.12。cqlib 可选能力首次从固定源码编译，需要 Rust 与本机编译工具，具体版本要求以固定源码为准；
 Rust cache 位于 `.openquantum/cargo-cache`。FlagQuantum 的 PyTorch 依赖较大，因此默认关闭。
 
 ```bash

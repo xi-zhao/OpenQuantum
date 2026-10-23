@@ -1,0 +1,166 @@
+{
+  "schemaVersion": "1.0",
+  "verifiedAt": "2026-10-09T00:42:35.749547+00:00",
+  "integrationBase": "0e8221adc22a2a30c0acb594330dd81cd55b063d",
+  "originalImplementationCommit": "3e599d8c",
+  "harnessRuntimeVersion": "0.1.5-rc.1",
+  "pairinteractionVersion": "2.7.0",
+  "scientificValidation": "not_evaluated",
+  "changes": [
+    "Integrated only the PairInteraction capability on current origin/main.",
+    "Uses the shared prepared-environment lock attestation and execution resource policy.",
+    "Preserves FatQat code, dependency lock, current Harness version and model routes.",
+    "MCP client timeout follows the existing main preset convention; worker execution limits remain configurable."
+  ],
+  "verification": {
+    "focusedTestsPassed": 70,
+    "realNumericAndIntegrityTestsPassed": 2,
+    "realHarnessTestPassed": true,
+    "pairinteractionContractTestsPassed": 3,
+    "completeNpmRunCheckExitCode": 0,
+    "completeCheckNodePhases": [
+      {
+        "tests": 6,
+        "pass": 6,
+        "fail": 0,
+        "skipped": 0
+      },
+      {
+        "tests": 583,
+        "pass": 397,
+        "fail": 0,
+        "skipped": 186
+      },
+      {
+        "tests": 119,
+        "pass": 119,
+        "fail": 0,
+        "skipped": 0
+      },
+      {
+        "tests": 35,
+        "pass": 35,
+        "fail": 0,
+        "skipped": 0
+      },
+      {
+        "tests": 218,
+        "pass": 217,
+        "fail": 0,
+        "skipped": 1
+      },
+      {
+        "tests": 3,
+        "pass": 3,
+        "fail": 0,
+        "skipped": 0
+      }
+    ],
+    "externalModelTested": false,
+    "scientificAcceptance": "not_evaluated"
+  },
+  "harness": {
+    "testStatus": "passed",
+    "model": "local protocol fixture",
+    "sessionId": "session-pairinteraction-ac4a3764-10f3-4fc1-a6f4-aeef0228beaa",
+    "rawSessionSha256": "c0b75a2784763b13058524fcec9e6d5cd7af34508f9732f7f0b8ec88ee01f183"
+  },
+  "numericRuns": [
+    {
+      "label": "ss",
+      "input": {
+        "channel": "ss",
+        "nS": 60,
+        "magneticFieldG": 20,
+        "distancesUm": [
+          8,
+          12,
+          16
+        ],
+        "deltaN": 2,
+        "energyWindowGHz": 10,
+        "execution": {}
+      },
+      "rawSha256": "0ed8a60e2a8780d8f3d23335e4401125cf9e41ba5c337ac408376820c869d3c6"
+    },
+    {
+      "label": "sp-exchange",
+      "input": {
+        "channel": "sp_exchange",
+        "nP": 60,
+        "nS": 60,
+        "magneticFieldG": 20,
+        "distancesUm": [
+          8,
+          12,
+          16
+        ],
+        "deltaN": 2,
+        "energyWindowGHz": 10,
+        "execution": {}
+      },
+      "rawSha256": "90d0e3e9491f662f7230650b6b589201565eedc4f3b2ca6e91633d47a70e9eea"
+    },
+    {
+      "label": "ss-expanded",
+      "input": {
+        "deltaN": 3,
+        "energyWindowGHz": 25,
+        "channel": "ss",
+        "nS": 60,
+        "magneticFieldG": 20,
+        "distancesUm": [
+          8,
+          12,
+          16
+        ],
+        "execution": {}
+      },
+      "rawSha256": "2c3f1e43afc483a8818cc13714f27c45f3e2e9440ee2cd1e544ecc9c38de3a93"
+    },
+    {
+      "label": "sp-expanded",
+      "input": {
+        "channel": "sp_exchange",
+        "nP": 60,
+        "deltaN": 3,
+        "energyWindowGHz": 25,
+        "nS": 60,
+        "magneticFieldG": 20,
+        "distancesUm": [
+          8,
+          12,
+          16
+        ],
+        "execution": {}
+      },
+      "rawSha256": "c33622138e1efd7674132c5617e367cb10543b409563b0bbfa72877e59ed0b2e"
+    }
+  ],
+  "sourceFiles": {
+    ".agents/skills/pairinteraction-rydberg/database-lock.json": "28085e8e83d27953fac022577c5ea0b066f4e0ea91d26a2f57c5e607330c7a0c",
+    ".agents/skills/pairinteraction-rydberg/mcp/bridge.py": "f2a311ea52cddcb9e4b1308a7a19f6d154ab7a1086642a8e2881446eea280dd3",
+    ".agents/skills/pairinteraction-rydberg/mcp/contracts.mjs": "19308acfcda3b07af463614c63231e2cb91fc8e2925fe65bcd8037dc8198598b",
+    ".agents/skills/pairinteraction-rydberg/mcp/database.py": "4420f12b73a5abae85ab1866db1be1fb200549ffb24e10eec1d2153abb2e6345",
+    ".agents/skills/pairinteraction-rydberg/mcp/reference.py": "98895cb555c5b7ca5dbb4dfe764a7bc3d14e437402a8935fd2b9e1a7d738c246",
+    ".agents/skills/pairinteraction-rydberg/mcp/server.mjs": "541b9f9f7ba31f8aea96fb4ed6f9f98f480d16f81a18c3f4c8811c699db3aa0f",
+    ".agents/skills/pairinteraction-rydberg/scripts/setup.mjs": "b9ea6d1abd3db93f5fe78a95552dcee2c790c1bb5f84410acea27b49fb74c171",
+    ".agents/skills/pairinteraction-rydberg/scripts/setup_database.py": "18b257be310144c41bbd16e5be9f3e784dcd8b824330fd3f387faf2ee5b236f4",
+    ".agents/skills/pairinteraction-rydberg/test/science_test.py": "e683f07bd68c65be7bc5bad9e739f2b64a83e8a13882cd527220c7ac45d83f66",
+    ".agents/skills/pairinteraction-rydberg/uv.lock": "585467d5d936e8d82afae2c2649fec93a53aa4df17beb382d463ed906efc2a3a",
+    "scripts/setup-paper-tools.mjs": "e1bca2da22b9c6de7b7c64ed50a6168702e802bce0f4d0887fc368999ebee2cf",
+    "tests/harness-pairinteraction.test.mjs": "1c09aeb6f7225793c3fdc717751d463e374de186ae5fc1f7b55a924830c0f208",
+    "tests/pairinteraction-contracts.test.mjs": "28f136e0db7f9c9122a37496f90a4c54e502db4b8cf014b4526e91c585bb38db"
+  },
+  "logHashes": {
+    "main-check.log": "2e2232144dde14cd54a1950b6f36c498accbb0b84aabe3414ec7492507e112c1",
+    "main-focused.log": "8916222b40d4edca93a3253c23f8e5d8844822ccaa7ceac0ddfe859ec077dc43",
+    "main-harness.log": "3d99f90a895bcc297462ec7f934ff819f0d27e68e00dd1ed93f89ec0494f6bac",
+    "main-pairinteraction-contract.log": "4a984a907cfeaf44982f0da0c11b02223ea0f57bd2c3792b2b00a9b89ad2a22f"
+  },
+  "limits": [
+    "Existing source verification record covers the earlier Harness 0.2.0-rc.2 working branch. This record verifies public main on Harness 0.1.5-rc.1.",
+    "Default optional live-test skips remain skips; PairInteraction live tests were run separately.",
+    "No paper-wide reproduction, independent domain review or scientific Acceptance."
+  ]
+}

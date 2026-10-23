@@ -3,9 +3,11 @@ name = "openquantum-cqlib-kernel-bridge"
 version = "0.1.0"
 requires-python = ">=3.12,<3.13"
 dependencies = [
-  "cqlib @ git+https://github.com/cq-lib/cqlib.git@1d0a2c49ac32712d995f46147dfc5e3c4f4ac8e6#subdirectory=crates/binding-python",
+  "cqlib @ git+https://github.com/cq-lib/cqlib.git@759a7bbef4d47af70fe7e0455876b633080257a4#subdirectory=crates/binding-python",
   "numpy==2.4.6",
   "scikit-learn==1.9.1",
+  "cqlib-qml @ git+https://github.com/cq-lib/cqlib-qml.git@4576a575727b93fd300dbee6dc4cb7ab2a93dac1",
+  "torch==2.11.0", "torchvision==0.26.0",
 ]
 
 [tool.uv]

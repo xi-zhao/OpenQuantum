@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- CREDENTIAL_ORIGIN -->
+  <title>OpenQuantum · 设置</title>
+  <style>/* APP_STYLES */</style>
+</head>
+<body>
+  <div id="app">
+    <header>
+      <div class="brand"><img src="__OQ_MARK__" alt=""><div><strong>OpenQuantum</strong><span>Skill · Tool · MCP</span></div></div>
+      <a id="github-link" class="github-link" href="https://github.com/xi-zhao/OpenQuantum" target="_blank" rel="noopener noreferrer" aria-label="在 GitHub 为 OpenQuantum 点 Star">☆ GitHub <span aria-hidden="true">↗</span></a>
+    </header>
+    <nav aria-label="设置分类" role="tablist">
+      <!-- COMPONENT_TABS -->
+      <button id="advanced" aria-expanded="false">高级设置</button>
+      <button id="refresh" class="refresh" hidden>刷新状态</button>
+    </nav>
+    <section class="intro">
+      <h1 id="page-title">概览</h1>
+      <p id="page-description" hidden></p>
+    </section>
+    <section id="toolbar" hidden>
+      <input id="search" type="search" placeholder="搜索服务、Token 名称或用途" aria-label="搜索能力">
+      <select id="category" aria-label="按用途筛选"><option value="all">全部用途</option></select>
+      <select id="state" aria-label="按配置状态筛选"><option value="all">全部状态</option></select>
+      <span id="count" role="status" aria-live="polite"></span>
+    </section>
+    <div id="notice" role="status" aria-live="polite">正在连接插件…</div>
+    <main id="content"></main>
+    <footer><span>当前用户 · 仅管理 OpenQuantum</span><span>__RELEASE_VERSION__</span></footer>
+  </div>
+  <script type="module">/* APP_SCRIPT */</script>
+</body>
+</html>

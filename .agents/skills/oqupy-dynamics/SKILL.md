@@ -5,6 +5,17 @@ description: 使用 OQuPy TEMPO 求解Ohmic spin-boson 非马尔可夫动力学�
 
 # OQuPy 环境记忆动力学
 
+<!-- BEGIN NATIVE SDK ACCESS -->
+## 原生 SDK 路径
+
+本能力同时支持 **OQuPy 的原生公开 API**。用户需要 自定义 System、Bath、相关函数、TEMPO、process tensor 与控制 时，由 Agent 在固定依赖环境中编写和运行任务代码，不限于下文便捷 Tool 的预设模型。
+
+使用 `node scripts/sdk-access.mjs inspect oqupy-dynamics` 定位环境，按[完整 SDK 工作流](../quantum-sdk-workbench/references/workflow.md)执行。模块导航：`oqupy`；导航不是 API 白名单。
+
+下文关于模型、门集、输入与预算的限制描述便捷 Tool 的合同；原生 SDK 另受上游版本、可选依赖、宿主资源与用户授权约束。已禁用或被拒绝的动作不能借代码路径绕过。执行状态和科研验收分别报告。
+<!-- END NATIVE SDK ACCESS -->
+
+
 调用 Harness 注册的 `oqupy_local.simulate_oqupy_spin_boson`。用于需要环境记忆的两能级模型；纯 Markovian Lindblad 参数扫描可使用 Dynamiqs。
 
 模型为 `H=(tunneling X+bias Z)/2`，系统与环境的耦合算符为 `Z/2`，`J(w)=2 alpha w exp(-w/cutoff)`，`hbar=kB=1`。初态是用户所选计算基态/激发态/plus 与热 Gaussian bath 的因子化状态；这些标签不是相互作用系统的平衡态。

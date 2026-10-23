@@ -17,13 +17,13 @@ function readJson(filePath) {
   return JSON.parse(fs.readFileSync(filePath, "utf8"));
 }
 
-export function validateCorpus(root = benchmarkRoot) {
+export function validateCorpus(root = benchmarkRoot, { version = "1.0.0", packageVersion = "2.2.3" } = {}) {
   const manifest = readJson(path.join(root, "manifest.json"));
   invariant(manifest.schemaVersion === "1.0", "unsupported corpus schemaVersion");
   invariant(manifest.id === "openquantum-mqtbench-corpus", "unexpected corpus id");
-  invariant(manifest.version === "1.0.0", "unexpected corpus version");
+  invariant(manifest.version === version, "unexpected corpus version");
   invariant(manifest.generator?.package === "mqt.bench", "unexpected generator package");
-  invariant(manifest.generator?.packageVersion === "2.2.3", "generator version must stay pinned");
+  invariant(manifest.generator?.packageVersion === packageVersion, "generator version must stay pinned");
   invariant(manifest.generator?.pythonVersion === "3.12", "Python version must stay pinned");
   invariant(manifest.generator?.level === "ALG", "benchmark level must stay ALG");
   invariant(manifest.generator?.randomParameters === false, "random parameters must stay disabled");
@@ -70,9 +70,9 @@ export function validateCorpus(root = benchmarkRoot) {
     const qasm = fs.readFileSync(path.join(root, definition.fixture), "utf8");
     invariant(qasm.endsWith("\n"), `${definition.id}: fixture must have one canonical trailing newline`);
     invariant(qasm.startsWith("OPENQASM 2.0;\n"), `${definition.id}: fixture is not OpenQASM 2`);
-    const qreg = qasm.match(/^qreg\s+[A-Za-z_][A-Za-z0-9_]*\[(\d+)\];$/m);
-    invariant(qreg, `${definition.id}: qreg declaration is missing`);
-    invariant(Number(qreg[1]) === definition.expected.qubits, `${definition.id}: qubit count differs`);
+    const qregs = [...qasm.matchAll(/^qreg\s+[A-Za-z_][A-Za-z0-9_]*\[(\d+)\];$/gm)];
+    invariant(qregs.length > 0, `${definition.id}: qreg declaration is missing`);
+    invariant(qregs.reduce((sum, register) => sum + Number(register[1]), 0) === definition.expected.qubits, `${definition.id}: qubit count differs`);
     const sha256 = createHash("sha256").update(qasm).digest("hex");
     invariant(sha256 === definition.sha256, `${definition.id}: fixture digest differs`);
     return { id: definition.id, sha256, status: "pass" };

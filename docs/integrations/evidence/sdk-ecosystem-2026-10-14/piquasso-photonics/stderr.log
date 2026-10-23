@@ -1,0 +1,2 @@
+/Users/xizhao/.codex/visualizations/2026/10/13/01a135c9-9a23-7410-ad1f-e51d874ec4a9/quantum-integration-review/implementation/api-checks/piquasso-photonics-K0vexc/program.py:5: DeprecationWarning: `pq.StateVector` is deprecated and will be removed in a future release. Use `pq.NumberState` or `pq.FockStateVector` instead.
+  pq.Q() | pq.StateVector([1, 1])

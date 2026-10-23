@@ -1,0 +1,116 @@
+{
+  "schemaVersion": 1,
+  "server": "qiskit_docs",
+  "tools": [
+    {
+      "name": "search_docs_tool",
+      "description": "Search across the entire Qiskit documentation for relevant content.\n\nUse this as the primary entry point to discover documentation pages. Returns\na small set of ranked results, each with a short query-centered snippet plus\nits title, URL, and section. This keeps the response compact for repeated use\ninside an agent. To read a page in full, pass a result's URL to get_page_tool.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Search query string (e.g., 'error mitigation', 'QuantumCircuit',\n'transpiler optimization'). More specific queries yield better results."
+          },
+          "scope": {
+            "default": "all",
+            "type": "string",
+            "description": "Search scope filter (case-sensitive). Valid values:\n'all' — Search everything (default)\n'documentation' — Guides and general docs\n'api' — API reference pages only\n'learning' — Learning resources and tutorials\n'tutorials' — Tutorial content only"
+          },
+          "top_k": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Maximum number of results to return. Left unset, snippet mode\nreturns up to 5 and full mode returns every match. An explicit\nvalue is capped at 10 in snippet mode; full mode honors it as-is."
+          },
+          "detail": {
+            "default": "snippet",
+            "type": "string",
+            "description": "Per-result content level. 'snippet' (default) returns a short\nexcerpt, a trimmed field set, and a small ranked subset; 'full'\nrestores the original behavior — every match by default, each with\nits full page body as 'text' and all original fields (backwards\ncompatible) — heavier, so prefer get_page_tool for a single page."
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "get_page_tool",
+      "description": "Fetch a Qiskit documentation page and return its content as markdown.\n\nAccepts any URL from the Qiskit documentation site. Use search_docs_tool\nfirst to find the right page, or use URLs from the resource lists.\n\nReturns documentation in markdown format with pagination support.\nDefault max_length is 20000 chars. Set max_length=0 for unlimited.\nUse offset to retrieve subsequent pages when has_more is true.\n\nThis tool can fetch ANY page in the Qiskit documentation, including:\n- SDK module API references (e.g., 'api/qiskit/circuit')\n- Individual class pages (e.g., 'api/qiskit/qiskit.circuit.QuantumCircuit')\n- Addon documentation (e.g., 'api/qiskit-addon-sqd')\n- Implementation guides (e.g., 'guides/transpile')\n- Any other documentation page",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "Documentation page URL. Accepts:\n- Full URL: 'https://quantum.cloud.ibm.com/docs/guides/transpile'\n- Relative path: 'guides/transpile', 'api/qiskit/circuit'"
+          },
+          "max_length": {
+            "default": 20000,
+            "type": "integer",
+            "description": "Maximum characters to return (default: 20000, 0 for unlimited)"
+          },
+          "offset": {
+            "default": 0,
+            "type": "integer",
+            "description": "Character offset for pagination (default: 0)"
+          }
+        },
+        "required": [
+          "url"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "lookup_error_code_tool",
+      "description": "Look up a Qiskit or IBM Quantum error code to get its description and solution.\n\nUse this when a user encounters a numeric error code from Qiskit or\nIBM Quantum services. Returns the error message and suggested fix.\nRead the qiskit-docs://error-codes resource for error code categories.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "4-digit numeric error code as a string (e.g., '1002', '7001').\nMust be exactly 4 digits."
+          }
+        },
+        "required": [
+          "code"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    }
+  ]
+}

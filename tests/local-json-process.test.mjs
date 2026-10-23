@@ -7,6 +7,31 @@ import test from "node:test";
 
 import { runLocalJsonProcess } from "../src/lib/local-json-process.mjs";
 
+test("overlapping environment values cannot expose a credential suffix", async () => {
+  await assert.rejects(runLocalJsonProcess({
+    command: process.execPath,
+    args: ["-e", "process.stdin.resume();process.stdin.on('end',()=>{process.stderr.write('C:/Users/alpha-secret-suffix');process.exit(2);});"],
+    cwd: process.cwd(), env: { FIXTURE_PATH: "C:/Users/alpha", QCPORTAL_PASSWORD: "alpha-secret-suffix" }, input: {},
+    timeoutMs: 5000, maxOutputBytes: 10000, label: "overlapping password fixture",
+  }), error => {
+    assert.equal(error.message, "[REDACTED]");
+    return true;
+  });
+});
+
+test("short user passwords are also redacted from SDK errors", async () => {
+  await assert.rejects(runLocalJsonProcess({
+    command: process.execPath,
+    args: ["-e", "process.stdin.resume();process.stdin.on('end',()=>{process.stderr.write('login '+process.env.QCPORTAL_PASSWORD+' failed');process.exit(2);});"],
+    cwd: process.cwd(), env: { QCPORTAL_PASSWORD: "9x" }, input: {},
+    timeoutMs: 5000, maxOutputBytes: 10000, label: "short password fixture",
+  }), error => {
+    assert.doesNotMatch(error.message, /9x/);
+    assert.match(error.message, /\[REDACTED\]/);
+    return true;
+  });
+});
+
 test("worker errors redact credentials before truncating long stderr", async () => {
   const syntheticKey = "test-only-boundary-credential";
   await assert.rejects(runLocalJsonProcess({

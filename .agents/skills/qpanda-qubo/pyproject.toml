@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "Pinned Python environment for the OpenQuantum QPanda QUBO MCP bridge"
 requires-python = ">=3.11,<3.14"
 dependencies = [
-  "pyqpanda_alg==2.0.0",
+  "pyqpanda_alg==2.0.0", "pandas==2.3.3", "scikit-learn==1.9.1",
 ]
 
 [tool.uv]

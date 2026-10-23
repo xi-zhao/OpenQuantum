@@ -52,6 +52,7 @@ test("project settings exposes safe Skill and MCP projections", async (t) => {
   assert.deepEqual(snapshot.skills, [
     {
       name: "demo-skill",
+      category: "other",
       displayName: "Demo Skill",
       description: "Demo scientific skill",
       version: "1.2.3",
@@ -65,6 +66,7 @@ test("project settings exposes safe Skill and MCP projections", async (t) => {
   assert.deepEqual(snapshot.mcpServers, [
     {
       serverName: "demo_quantum",
+      category: "other",
       displayName: "demo_quantum",
       description: "项目 Agent preset 声明的 Harness 原生 MCP 服务。",
       provider: "Project",
@@ -509,6 +511,7 @@ test("repository preset exposes reviewed quantum MCPs with safe defaults", async
   assert.deepEqual(byName.get("fatqat_local")?.credentialRefs, []);
   for (const [server, displayName, packageVersion] of [
     ["mitiq_local", "Mitiq 误差缓解", "1.1.0"],
+    ["pairinteraction_local", "PairInteraction 原子对相互作用", "2.7.0"],
     ["sqd_local", "SQD 量子化学", "0.13.1"],
     ["tjm_local", "TJM 开放系统动力学", "0.6.0"],
     ["ldpc_local", "LSD 纠错解码", "2.4.1"],
@@ -522,7 +525,7 @@ test("repository preset exposes reviewed quantum MCPs with safe defaults", async
     assert.deepEqual(byName.get(server)?.credentialRefs, []);
   }
   assert.equal(byName.get("tyxonq_local")?.enabled, false);
-  assert.equal(byName.get("tyxonq_local")?.displayName, "TyxonQ Local");
+  assert.equal(byName.get("tyxonq_local")?.displayName, "TyxonQ 电路与噪声仿真");
   assert.equal(byName.get("tyxonq_local")?.packageVersion, "1.3.0");
   assert.equal(byName.get("tyxonq_local")?.provider, "TyxonQ / OpenQuantum");
   assert.deepEqual(byName.get("tyxonq_local")?.credentialRefs, []);
@@ -622,4 +625,23 @@ test("mounted upstream pyqpanda3 skill loads under its upstream name", async (t)
   assert.ok(skill, "pyqpanda3 skill should be projected");
   assert.equal(skill.managed, false);
   assert.match(skill.description, /pyqpanda3 programming/);
+});
+
+test("a Desktop MCP settings command updates the active preset for native restart", async t => {
+  const { realpath } = await import("node:fs/promises");
+  const { writeManagedHomeFiles } = await import("../scripts/lib/managed-home-files.mjs");
+  const { desktopPreset } = await import("../scripts/lib/desktop-profile-config.mjs");
+  const root = await realpath(await fixture(t));
+  const home = path.join(root, "desktop-home");
+  const relative = ".agent-presets/openquantum/agent.cordis.yml";
+  const source = await readFile(path.join(root, "runtime/openquantum/agent-presets/openquantum/agent.cordis.yml"), "utf8");
+  await writeManagedHomeFiles(home, new Map([[relative, desktopPreset(source, root)]]));
+  await writeFile(path.join(home, "openquantum-project.json"), JSON.stringify({ projectRoot: root, nodeExecutable: process.execPath }));
+  const previous = process.env.DSH_HOME;
+  process.env.DSH_HOME = home;
+  t.after(() => { if (previous === undefined) delete process.env.DSH_HOME; else process.env.DSH_HOME = previous; });
+  const before = await readProjectSettings(root);
+  await executeProjectSettingsCommand(root, { action: "mcp.update", serverName: "demo_quantum", revision: before.mcpRevision,
+    enabled: false, toolCallTimeoutMs: 60000, reconnect: { enabled: true, initialDelayMs: 500, maxDelayMs: 30000, maxAttempts: 10 } });
+  assert.match(await readFile(path.join(home, relative), "utf8"), /disabled: true/);
 });

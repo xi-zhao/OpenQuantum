@@ -47,7 +47,7 @@ for (const c of INTEROP_TOOLS) {
       await cp(path.join(root, ".agents/skills/qdmi-device"), path.join(project, ".agents/skills/qdmi-device"), { recursive: true });
       await cp(path.join(root, "src/lib"), path.join(project, "src/lib"), { recursive: true });
       await symlink(path.join(root, "node_modules"), path.join(project, "node_modules"), "dir");
-      executable = path.join(project, ".openquantum/python-envs/qdmi-device", process.platform === "win32" ? "Scripts/python.exe" : "bin/python");
+      executable = path.join(sandbox, "python-envs/qdmi-device", process.platform === "win32" ? "Scripts/python.exe" : "bin/python");
     }
     const client = new Client({ name: "interop-contract", version: "1" }, { capabilities: {} });
     t.after(async () => { await client.close(); await rm(sandbox, { recursive: true, force: true }); });

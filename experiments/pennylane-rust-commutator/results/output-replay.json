@@ -1,0 +1,95 @@
+{
+  "status": "passed",
+  "cases": [
+    {
+      "case": "one-qubit",
+      "input_sha256": "8cc0a26710f08dff41c58a596d6531f68dc7e93a07a73c8fad9405e6bafd323c",
+      "passed": true,
+      "keys_compared": 1,
+      "violations": 0,
+      "max_absolute_error": 0.0,
+      "atol": 1e-11,
+      "rtol": 1e-12
+    },
+    {
+      "case": "small-4q",
+      "input_sha256": "4d07b52da21f0f039014ee46e383e65be87577a1392097145a09497d9c7ad6f2",
+      "passed": true,
+      "keys_compared": 110,
+      "violations": 0,
+      "max_absolute_error": 0.0,
+      "atol": 1e-11,
+      "rtol": 1e-12
+    },
+    {
+      "case": "dense-16q-64",
+      "input_sha256": "ee0b9dda8d9ce176aecb45a8d63b305f6f06bf00869936b037dcc88e68fdfa9a",
+      "passed": true,
+      "keys_compared": 2063,
+      "violations": 0,
+      "max_absolute_error": 0.0,
+      "atol": 1e-11,
+      "rtol": 1e-12
+    },
+    {
+      "case": "dense-16q-128",
+      "input_sha256": "3d5a8e4f8ee49aa8c92bc68dff21a3cc297dd36e3816c96ef08c9add3ea6b6c4",
+      "passed": true,
+      "keys_compared": 8298,
+      "violations": 0,
+      "max_absolute_error": 0.0,
+      "atol": 1e-11,
+      "rtol": 1e-12
+    },
+    {
+      "case": "dense-16q-256",
+      "input_sha256": "57de4dec933adb1243afd9fa6f6bd40762f98d481b92e120bf19aed4bc006602",
+      "passed": true,
+      "keys_compared": 32687,
+      "violations": 0,
+      "max_absolute_error": 0.0,
+      "atol": 1e-11,
+      "rtol": 1e-12
+    },
+    {
+      "case": "dense-32q-256",
+      "input_sha256": "08ed91a167e984ee956366617bd3e40dc0a0182ced6c654be0b4b473268f91db",
+      "passed": true,
+      "keys_compared": 32777,
+      "violations": 0,
+      "max_absolute_error": 0.0,
+      "atol": 1e-11,
+      "rtol": 1e-12
+    },
+    {
+      "case": "local-32q-pool512",
+      "input_sha256": "47f56117095597a5d52033dbaa053fe0f546743f0bbb70d11e66b9f725c04ceb",
+      "passed": true,
+      "keys_compared": 4325,
+      "violations": 0,
+      "max_absolute_error": 0.0,
+      "atol": 1e-11,
+      "rtol": 1e-12
+    },
+    {
+      "case": "sparse-64q-256",
+      "input_sha256": "c996a11b1a67327f39838bed9aa2a87d635e7eec3e42041d3d3ec546171b70bd",
+      "passed": true,
+      "keys_compared": 5888,
+      "violations": 0,
+      "max_absolute_error": 0.0,
+      "atol": 1e-11,
+      "rtol": 1e-12
+    },
+    {
+      "case": "commuting-32q-256",
+      "input_sha256": "511d6398ef0fe39015cf67cf01ef949c4b0f6eaa59ab62e42586b086ab99e823",
+      "passed": true,
+      "keys_compared": 0,
+      "violations": 0,
+      "max_absolute_error": 0.0,
+      "atol": 1e-11,
+      "rtol": 1e-12
+    }
+  ]
+}

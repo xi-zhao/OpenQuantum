@@ -1,3 +1,4 @@
+import { desktopPresetProjection } from "./desktop-preset.mjs";
 import { createHash, randomUUID } from "node:crypto";
 import {
   chmod,
@@ -14,6 +15,8 @@ import path from "node:path";
 
 import { withFileLock } from "@deepseek-ai/dsh-atomic-write";
 import { parse, parseDocument } from "yaml";
+import { capabilityCategory } from "../capability-categories.mjs";
+import { readCapabilityCatalog } from "./capability-catalog.mjs";
 
 import {
   mcpCatalogEntry,
@@ -443,13 +446,15 @@ async function readSkills(projectRoot) {
 }
 
 export async function readProjectSettings(projectRoot) {
-  const [skills, mcp] = await Promise.all([
+  const [skills, mcp, catalog] = await Promise.all([
     readSkills(projectRoot),
     readMcp(projectRoot),
+    readCapabilityCatalog(projectRoot),
   ]);
   return {
-    skills,
-    mcpServers: mcp.mcpServers,
+    categories: catalog.categories,
+    skills: skills.map(skill => ({ ...skill, category: capabilityCategory(skill.name) })),
+    mcpServers: mcp.mcpServers.map(server => ({ ...server, category: catalog.servers[server.serverName] ?? "other" })),
     mcpCredentials: mcp.mcpCredentials,
     mcpRevision: mcp.revision,
   };
@@ -785,6 +790,9 @@ export async function executeProjectSettingsCommand(
   // moves. Re-read and check revisions inside it, before any write or removal.
   return withFileLock(lockTarget, async () => {
     await assertMcpEnableAllowed(root, command, credentials);
-    return mutate(root, command);
+    const synchronize = command.action.startsWith("mcp.") ? await desktopPresetProjection(root) : null;
+    const result = await mutate(root, command);
+    if (synchronize) await synchronize();
+    return result;
   });
 }

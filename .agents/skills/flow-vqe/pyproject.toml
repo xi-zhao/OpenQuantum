@@ -2,7 +2,13 @@
 name = "openquantum-flow-vqe-bridge"
 version = "0.1.0"
 requires-python = ">=3.12,<3.13"
-dependencies = ["torch==2.6.0","zuko==1.4.0","numpy==1.26.4"]
+dependencies = [
+  "torch==2.6.0", "torchaudio==2.6.0", "torchvision==0.21.0", "zuko==1.4.0", "numpy==1.26.4",
+  "pennylane==0.40.0", "pennylane-lightning==0.40.0", "autoray==0.7.2", "scipy==1.17.1",
+  "matplotlib==3.10.1", "h5py==3.13.0", "pandas==2.2.3", "pyscf==2.8.0",
+  "openfermion==1.7.0", "openfermionpyscf==0.5", "tqdm==4.67.1", "seaborn==0.13.2",
+  "basis-set-exchange",
+]
 
 [tool.uv]
 package = false

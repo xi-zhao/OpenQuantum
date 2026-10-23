@@ -5,6 +5,19 @@ description: 用 Pasqal Pulser 的真实序列和 QuTiP 在本地模拟二维 Ry
 
 # Pulser Rydberg 动力学
 
+<!-- BEGIN NATIVE SDK ACCESS -->
+## 原生 SDK 路径
+
+本能力同时支持 **Pulser / Pasqal Cloud 的原生公开 API**。用户需要 Register、Device、Sequence、waveform、变量、噪声与模拟；Pasqal Cloud connections、backends、jobs、batches、workloads 与完整实验工作流 时，由 Agent 在固定依赖环境中编写和运行任务代码，不限于下文便捷 Tool 的预设模型。
+
+使用 `node scripts/sdk-access.mjs inspect pulser-dynamics` 定位环境，按[完整 SDK 工作流](../quantum-sdk-workbench/references/workflow.md)执行。模块导航：`pulser`、`pulser_simulation`、`pasqal_cloud`；导航不是 API 白名单。
+
+pasqal-experiments 复用此环境；云操作需项目、凭据和相应授权，本地运行不联网
+
+下文关于模型、门集、输入与预算的限制描述便捷 Tool 的合同；原生 SDK 另受上游版本、可选依赖、宿主资源与用户授权约束。已禁用或被拒绝的动作不能借代码路径绕过。执行状态和科研验收分别报告。
+<!-- END NATIVE SDK ACCESS -->
+
+
 适用于已用物理单位定义的全局脉冲。Agent 经 Harness 调用 `pulser_local` 的 `simulate_pulser_rydberg`；无量纲程序应选择 QoolQit。
 
 - `atomPositionsUm` 按输入顺序给出不同的二维位置，单位 µm。固定 Rb70S，实际 C6 随结果返回。
@@ -18,3 +31,6 @@ description: 用 Pasqal Pulser 的真实序列和 QuTiP 在本地模拟二维 Ry
 - 当前 L1，`scientificValidation=not_evaluated`；成功仿真和解析对照不是科学 Acceptance。无云/QPU 请求。
 
 [上游与许可说明](references/UPSTREAM.md)。
+
+完整实验设计、任意序列、理想/含噪扫描和 Cloud EMU/QPU 生命周期使用 [Pasqal 实验工作流](../pasqal-experiments/SKILL.md)。
+Cloud SDK 与本能力共用固定环境；上述便捷 Tool 保持本地仿真合同，安装 SDK 不会自动发出云请求。

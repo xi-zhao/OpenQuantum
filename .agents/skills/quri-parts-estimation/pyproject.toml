@@ -1,0 +1,8 @@
+[project]
+name = "openquantum-quri-parts-estimation"
+version = "0.1.0"
+requires-python = ">=3.12,<3.13"
+dependencies = ["quri-parts[qulacs]==0.27.0", "qulacs==0.6.14"]
+
+[tool.uv]
+package = false

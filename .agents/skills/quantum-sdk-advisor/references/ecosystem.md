@@ -9,8 +9,8 @@
 | 二量子位固定扇区 VQE 基态 | `quantum-ground-state` | 有确定性 solver、独立 reference、Validator 和 eval | 已集成并科学验收 |
 | 用户电路的可微分观测 | PennyLane / DeepQuantum / TensorCircuit / MindQuantum | Pauli 期望与所选旋转角 Jacobian | 已接入四个独立本地 MCP Tool；完整模型训练仍由工作流组织 |
 | Google 风格 NISQ、电路噪声和底层编译 | Cirq | 原生噪声模型、设备与门级控制 | 可适配，尚未集成 MCP |
-| 容错量子资源估算和 Q# | Microsoft QDK / Q# | Q# 编译器、资源估算器和 Katas | 可适配，尚未集成 MCP |
-| 稳定子电路与 QEC 解码 | Stim + PyMatching | 高性能稳定子模拟与 MWPM 解码 | 优先候选，需共同 Validator |
+| 容错量子资源估算和 Q# | Microsoft QDK / Q# | 编译与资源模型 | 已接入 qdk-resource-estimation 的有界资源估算；不代表全部 Q# 工作流 |
+| 稳定子电路与 QEC 解码 | Stim + PyMatching | 稳定子模拟与 MWPM 解码 | 已接入 qec-memory-experiment 的表面码存储实验；按其 Acceptance 边界解释 |
 | 分子积分与电子结构 Hamiltonian | PySCF + Qiskit Nature | 经典量化学与量子映射边界清楚 | 优先候选，需固定依赖与 provenance |
 | 误差缓解 | Mitiq | 多框架误差缓解工具集 | 已接入 ZNE/REM/PEC/CDR 的有界本地实验；能力目录 GPL-3.0-only，其他后端尚未开放 |
 | 耗散动力学扫描与局部梯度 | Dynamiqs | JAX 批量计算与自动微分 | 已接入 CPU 单量子位模型及独立积分/有限差分参考 |
@@ -20,8 +20,8 @@
 | C ABI 设备能力发现 | QDMI | 设备契约与驱动分离 | 已接入 1.3.3 只读查询，默认关闭；示例驱动已验证，真实厂商驱动需配置 |
 | 矩形纠错存储电路构建 | Deltakit | 显式码片、QPU 噪声模型和电路生成 | 已接入 rotated planar-code 与 ToyNoise、Stim/PyMatching；无云任务 |
 | 公开设备基准查证 | Metriq data | 保留基准参数、指标与出处 | 已接入固定历史快照的原生只读 Tool；不能作为实时设备排名 |
-| AWS 设备和算法样例 | Amazon Braket | 官方 SDK、算法库和多硬件入口 | 云端候选，默认关闭 |
-| GPU/HPC 混合量子工作流 | CUDA-Q | C++/Python 与 NVIDIA 加速生态 | 重型候选，不进入默认安装 |
+| AWS 风格电路和算法样例 | Amazon Braket | 官方 SDK 与 LocalSimulator | 已接入本地模拟，未开放 AWS 云任务 |
+| CPU 电路模拟与 CUDA-Q 原型 | CUDA-Q | NVIDIA 生态与显式 qpp-cpu 后端 | 已接入按需 CPU 模拟；不隐式启用 GPU 或远程 target |
 
 ## 选型细节
 
@@ -73,7 +73,10 @@ QEC Skill：Stim 产生 syndrome/detector 事实，PyMatching 解码，独立 Va
 
 ### Amazon Braket 与 CUDA-Q
 
-两者都属于有价值但不应默认安装的执行后端。Braket 涉及云账户、区域、设备费用和任务提交；CUDA-Q
-涉及较重的本地/HPC 依赖。只有出现真实项目需求时再增加 MCP，且默认关闭。
+Braket 已接入显式 LocalSimulator，不创建 AWS 云任务。CUDA-Q 已接入 qpp-cpu 本地后端，因原生依赖与平台
+限制保持按需安装、默认关闭；没有开放 GPU 或远程 target。具体版本与范围以公司与机构补充表为准。
 官方来源：[Amazon Braket Algorithm Library](https://github.com/amazon-braket/amazon-braket-algorithm-library)、
 [CUDA-Q](https://github.com/NVIDIA/cuda-quantum)。
+
+后续已接入范围以[公司与机构补充](../../../../docs/integrations/SDK_EXPANSION.md)和
+[网络、控制、光学与云接口补充](../../../../docs/integrations/SDK_GAPS.md)为准；其中注明固定版本、实际动作与按需启用策略。

@@ -1,0 +1,10 @@
+[project]
+name = "openquantum-mcp-qpanda-runtime"
+version = "0.1.0"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+  "qpanda3-runtime-mcp-server @ https://github.com/OriginQ/qpanda3-runtime-mcp-server/archive/4a06035afa415ed8dc9d571869cb5ca60ed1bcb1.tar.gz"
+]
+
+[tool.uv]
+package = false

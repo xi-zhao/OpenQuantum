@@ -1,0 +1,250 @@
+{
+  "id": "fatqat-workbench",
+  "title": "FatQat / QuTiP",
+  "language": "python",
+  "modules": [
+    "fatqat",
+    "qutip"
+  ],
+  "group": "physics",
+  "workflow": "\u91cf\u5b50\u7cfb\u7edf\u3001\u539f\u751f\u95e8\u3001\u4efb\u610f Qobj\u3001Hamiltonian\u3001\u65f6\u53d8\u9a71\u52a8\u3001\u8017\u6563\u4e0e\u89c2\u6d4b\u91cf",
+  "conditions": [],
+  "project": "/Users/xizhao/.local/share/openquantum/desktop/0.8.4-6898f8cd5984151c/runtime/.agents/skills/fatqat-workbench",
+  "manifest": {
+    "path": ".agents/skills/fatqat-workbench/pyproject.toml",
+    "sha256": "bbdfe05624325591e169a8a3b9ec5c4fd7499a3feb1181b21ffd1b42a3069970"
+  },
+  "lock": {
+    "path": ".agents/skills/fatqat-workbench/uv.lock",
+    "sha256": "81585c30cfe2a31228c9f17ada446b3fc190e2d05be69a2cb3efa82c43b5bff8"
+  },
+  "requiresPython": ">=3.12,<3.13",
+  "dependencies": [
+    "fatqat @ git+https://github.com/spaceqat/fatqat.git@39b75e30ae50ddb4a8c7b840847edce678aa814c"
+  ],
+  "dependencyGroups": {},
+  "lockedPackages": [
+    {
+      "name": "cloudpickle",
+      "version": "3.1.2",
+      "source": {
+        "registry": "https://pypi.org/simple"
+      }
+    },
+    {
+      "name": "contourpy",
+      "version": "1.3.3",
+      "source": {
+        "registry": "https://pypi.org/simple"
+      }
+    },
+    {
+      "name": "cycler",
+      "version": "0.12.1",
+      "source": {
+        "registry": "https://pypi.org/simple"
+      }
+    },
+    {
+      "name": "fatqat",
+      "version": "0.1.0a1",
+      "source": {
+        "git": "https://github.com/spaceqat/fatqat.git?rev=39b75e30ae50ddb4a8c7b840847edce678aa814c#39b75e30ae50ddb4a8c7b840847edce678aa814c"
+      }
+    },
+    {
+      "name": "fonttools",
+      "version": "4.65.0",
+      "source": {
+        "registry": "https://pypi.org/simple"
+      }
+    },
+    {
+      "name": "kiwisolver",
+      "version": "1.5.1",
+      "source": {
+        "registry": "https://pypi.org/simple"
+      }
+    },
+    {
+      "name": "llvmlite",
+      "version": "0.49.0",
+      "source": {
+        "registry": "https://pypi.org/simple"
+      }
+    },
+    {
+      "name": "loky",
+      "version": "3.6.0",
+      "source": {
+        "registry": "https://pypi.org/simple"
+      }
+    },
+    {
+      "name": "matplotlib",
+      "version": "3.11.1",
+      "source": {
+        "registry": "https://pypi.org/simple"
+      }
+    },
+    {
+      "name": "numba",
+      "version": "0.67.0",
+      "source": {
+        "registry": "https://pypi.org/simple"
+      }
+    },
+    {
+      "name": "numpy",
+      "version": "2.5.3",
+      "source": {
+        "registry": "https://pypi.org/simple"
+      }
+    },
+    {
+      "name": "openquantum-fatqat-bridge",
+      "version": "0.1.0",
+      "source": {
+        "virtual": "."
+      }
+    },
+    {
+      "name": "packaging",
+      "version": "26.3",
+      "source": {
+        "registry": "https://pypi.org/simple"
+      }
+    },
+    {
+      "name": "pillow",
+      "version": "12.3.0",
+      "source": {
+        "registry": "https://pypi.org/simple"
+      }
+    },
+    {
+      "name": "pyparsing",
+      "version": "3.3.2",
+      "source": {
+        "registry": "https://pypi.org/simple"
+      }
+    },
+    {
+      "name": "python-dateutil",
+      "version": "2.9.0.post0",
+      "source": {
+        "registry": "https://pypi.org/simple"
+      }
+    },
+    {
+      "name": "qutip",
+      "version": "5.3.1",
+      "source": {
+        "registry": "https://pypi.org/simple"
+      }
+    },
+    {
+      "name": "qutip-qip",
+      "version": "0.4.2",
+      "source": {
+        "registry": "https://pypi.org/simple"
+      }
+    },
+    {
+      "name": "scipy",
+      "version": "1.18.1",
+      "source": {
+        "registry": "https://pypi.org/simple"
+      }
+    },
+    {
+      "name": "six",
+      "version": "1.17.0",
+      "source": {
+        "registry": "https://pypi.org/simple"
+      }
+    }
+  ],
+  "convenienceTools": [
+    "simulate_fatqat_circuit",
+    "simulate_fatqat_dynamics"
+  ],
+  "hostWorkflow": "quantum-sdk-workbench",
+  "providers": [
+    {
+      "name": "fatqat_local",
+      "activation": "always"
+    }
+  ],
+  "apiAccess": "host-code",
+  "executionVerified": "not_checked",
+  "scientificValidation": "not_evaluated",
+  "environmentState": "prepared",
+  "setup": {
+    "tool": "prepare_openquantum_skill",
+    "sdkId": "fatqat-workbench",
+    "effect": "workspace-write-and-download",
+    "note": "\u6267\u884c\u9700\u8981\u65f6\u51c6\u5907\uff1b\u68c0\u67e5\u4e0e\u5b9a\u4f4d\u672c\u8eab\u4e0d\u5b89\u88c5\u3002"
+  },
+  "run": {
+    "command": "/Users/xizhao/.openquantum/plugins/codex/environments/python/fatqat-workbench/bin/python",
+    "args": [
+      "-B",
+      "<absolute-script.py>"
+    ],
+    "cwd": "<user-workspace>",
+    "effect": "depends-on-script",
+    "resourceLimits": "host-and-user-budget",
+    "environment": {
+      "OPENQUANTUM_PYTHON_ENV_ROOT": "/Users/xizhao/.openquantum/plugins/codex/environments/python",
+      "OPENQUANTUM_NATIVE_SDK_ROOT": "/Users/xizhao/.openquantum/plugins/codex/environments/native",
+      "OPENQUANTUM_SDK_SOURCE_ROOT": "/Users/xizhao/.openquantum/plugins/codex/environments/sources",
+      "OPENQUANTUM_QDMI_HOME": "/Users/xizhao/.openquantum/plugins/codex/environments/qdmi",
+      "OPENQUANTUM_JULIA_DEPOT_PATH": "/Users/xizhao/.openquantum/plugins/codex/environments/julia"
+    }
+  },
+  "documentation": {
+    "command": "/Users/xizhao/.openquantum/plugins/codex/environments/python/fatqat-workbench/bin/python",
+    "args": [
+      "-m",
+      "pydoc",
+      "<module-from-modules>"
+    ],
+    "note": "Read the installed version's public API; this may import the selected module."
+  },
+  "source": null,
+  "bootstrap": null,
+  "readinessMeaning": "prepared verifies dependency markers and interpreter or native binary integrity, not API or scientific acceptance",
+  "dashboard": {
+    "id": "fatqat-workbench",
+    "title": "FatQat / QuTiP",
+    "state": "ready",
+    "requirements": {
+      "supported": true,
+      "note": "\u8fd0\u884c\u73af\u5883\u72ec\u7acb\u5b89\u88c5\uff1b\u8d26\u6237\u8981\u6c42\u89c1\u5bf9\u5e94\u670d\u52a1\u7684\u914d\u7f6e\u8bf4\u660e\u3002",
+      "fields": [],
+      "prerequisite": "\u5b89\u88c5\u524d\u9700\u51c6\u5907\u672c\u673a uv\uff1b\u5b89\u88c5\u5668\u4f1a\u51c6\u5907\u5bf9\u5e94\u7684\u56fa\u5b9a Python \u7248\u672c\u3002"
+    },
+    "configuration": {},
+    "configurationRevision": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+    "fingerprint": "92280004c4862a8a93e976b58594428e548fe7dbaf06f7cc374a20381474b8c1",
+    "ready": true,
+    "checkedAt": "2026-10-20T01:59:53.606Z",
+    "checks": [
+      "\u56fa\u5b9a\u4f9d\u8d56\u4e0e\u6a21\u5757\u52a0\u8f7d\u5df2\u68c0\u67e5\uff1b\u5b9e\u9645\u8ba1\u7b97\u7ed3\u679c\u9700\u5728\u8c03\u7528\u540e\u786e\u8ba4"
+    ],
+    "optionalSimulation": false,
+    "installation": "present",
+    "job": {
+      "id": "ae17252f-bdbb-4a13-9847-6a7d922345fc",
+      "operation": "install",
+      "status": "completed",
+      "phase": "\u73af\u5883\u68c0\u67e5\u5b8c\u6210",
+      "startedAt": "2026-10-20T01:59:26.715Z",
+      "finishedAt": "2026-10-20T01:59:53.608Z",
+      "message": "\u8fd0\u884c\u73af\u5883\u5df2\u51c6\u5907\uff1b\u4f7f\u7528\u9650\u5236\u4fdd\u6301\u4e0d\u53d8\u3002",
+      "synced": true
+    },
+    "conditions": []
+  }
+}

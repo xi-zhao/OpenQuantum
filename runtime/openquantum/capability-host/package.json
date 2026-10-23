@@ -1,0 +1,9 @@
+{
+  "name": "@openquantum/harness-capability-host",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": "./index.mjs",
+  "main": "index.mjs",
+  "license": "MIT"
+}

@@ -1,146 +1,123 @@
-import { createHash } from "node:crypto";
-import { createRequire } from "node:module";
-import { cp, mkdir, mkdtemp, readFile, readdir, realpath, rename, rm, symlink, writeFile } from "node:fs/promises";
+import { execFile } from "node:child_process";
+import { mkdir, mkdtemp, readFile, realpath, rename, rm, writeFile } from "node:fs/promises";
+import { randomUUID } from "node:crypto";
+import { tmpdir } from "node:os";
 import path from "node:path";
+import { promisify } from "node:util";
+import { assertNoLinks, sha256 } from "./desktop-distribution.mjs";
 
-import { DESKTOP_SOURCE, requireDesktopBuild } from "./desktop-source.mjs";
+const execute = promisify(execFile);
 
-const PRODUCT_NAME = "OpenQuantum Desktop";
-const PACKAGE_FILES = ["package.json", "cordis.patch.yml", "lib", "LICENSE", "THIRD_PARTY_NOTICES.md"];
-
-// The pinned Desktop has no public native-branding configuration. Adapt only
-// its presentation in a separate local package; never edit the upstream tree or
-// access desktopRuntime from an OpenQuantum plugin. Missing matches fail closed.
-const PRESENTATION_PATCHES = [
-  ["product name", /const DESKTOP_PRODUCT_NAME = DESKTOP_PRODUCT_IDENTITY\.productName;/g,
-    `const DESKTOP_PRODUCT_NAME = ${JSON.stringify(PRODUCT_NAME)};`],
-  ["window title", /windowTitle: "DeepSeek Harness Desktop"/g,
-    `windowTitle: ${JSON.stringify(PRODUCT_NAME)}`],
-  ["frame title", /(className: "dshDesktopFrameProduct",\s*children: )"DSH Desktop"/g,
-    `$1${JSON.stringify(PRODUCT_NAME)}`],
-  // Preserve the existing native settings/logs directory (including an explicit
-  // app.setPath override) before changing Electron's visible application name.
-  ["native data location", /app\.setName\(PRODUCT_NAME\);/g,
-    'app.setName("DSH Desktop");\n\tapp.setPath("userData", app.getPath("userData"));\n\tapp.setName(PRODUCT_NAME);'],
-  // The pinned OS dialogs ship only English/Chinese. Respect an explicit
-  // non-Chinese UI choice with English fallback instead of the OS's Chinese.
-  ["native locale fallback", /return preference === "zh" \|\| preference === "en" \? preference : void 0;/g,
-    'return preference === "zh" ? "zh" : preference ? "en" : void 0;'],
-  ["native presentation copy", /((?:title|welcomeTitle|presentationBody|communityMarketBody|successBody|startUsing): ")([^"\n]*DSH Desktop[^"\n]*)"/g,
-    (_, prefix, text) => `${prefix}${text.replaceAll("DSH Desktop", PRODUCT_NAME)}"`, 23],
-];
-
-async function filesUnder(root, relative) {
-  if (relative !== "lib" && !relative.startsWith(`lib${path.sep}`)) return [relative];
-  const result = [];
-  for (const entry of await readdir(path.join(root, relative), { withFileTypes: true })) {
-    const filename = path.join(relative, entry.name);
-    if (entry.isDirectory()) result.push(...await filesUnder(root, filename));
-    else if (entry.isFile()) result.push(filename);
-    else throw new Error(`Unexpected Desktop runtime link: ${filename}`);
-  }
-  return result.sort();
-}
-
-/** Apply the bounded visual changes, rejecting a changed upstream contract. */
-export function brandDesktopJavaScript(files) {
-  const counts = PRESENTATION_PATCHES.map(() => 0);
-  const result = new Map();
-  for (const [filename, source] of files) {
-    let branded = source;
-    PRESENTATION_PATCHES.forEach(([, pattern, replacement], index) => {
-      counts[index] += [...source.matchAll(pattern)].length;
-      branded = branded.replace(pattern, replacement);
-    });
-    if (branded !== source) {
-      // The upstream source map no longer describes this adapted file.
-      result.set(filename, branded.replace(/^\/\/# sourceMappingURL=.*$/gm, ""));
+/** Validate every destination before updating any installer-owned launcher file. */
+export async function writeDesktopLauncher({ dataRoot, launcher, files }) {
+  const receipt = path.join(dataRoot, "desktop-branding.json");
+  await assertNoLinks(receipt);
+  const previous = await readFile(receipt, "utf8").then(JSON.parse).catch(error => { if (error.code === "ENOENT") return null; throw error; });
+  if (previous && previous.kind !== "openquantum-launcher") throw new Error("Unmanaged Desktop branding receipt");
+  const hashes = {};
+  for (const [relative, { content }] of Object.entries(files)) {
+    if (path.isAbsolute(relative) || relative.split(/[\\/]/).includes("..")) throw new Error("Invalid launcher path");
+    const target = path.join(dataRoot, relative);
+    await assertNoLinks(target);
+    const current = await readFile(target).catch(error => { if (error.code === "ENOENT") return null; throw error; });
+    hashes[relative] = sha256(content);
+    if (current && sha256(current) !== hashes[relative] && sha256(current) !== previous?.files?.[relative]) {
+      throw new Error(`Preserve the existing or modified Desktop launcher file before upgrading: ${target}`);
     }
   }
-  counts.forEach((count, index) => {
-    const expected = PRESENTATION_PATCHES[index][3] ?? 1;
-    if (count !== expected) throw new Error(`Desktop branding contract changed: ${PRESENTATION_PATCHES[index][0]} matched ${count} times; expected ${expected}.`);
-  });
+  async function atomicWrite(target, content, mode) {
+    await mkdir(path.dirname(target), { recursive: true });
+    const temporary = `${target}.${randomUUID()}.tmp`;
+    try {
+      await writeFile(temporary, content, { mode });
+      await rename(temporary, target);
+    } finally { await rm(temporary, { force: true }); }
+  }
+  for (const [relative, { content, mode = 0o644 }] of Object.entries(files)) await atomicWrite(path.join(dataRoot, relative), content, mode);
+  const result = { kind: "openquantum-launcher", status: "installed", launcher, upstreamResourcesModified: false, files: hashes };
+  await atomicWrite(receipt, JSON.stringify(result, null, 2), 0o600);
   return result;
 }
 
-async function renderIcons(upstreamRoot, directory, mark) {
-  const require = createRequire(path.join(upstreamRoot, "package.json"));
-  const sharp = require("sharp");
-  await mkdir(directory);
-  // Reuse the canonical OQ artwork; the native macOS canvas includes the same
-  // 100 px safe area as upstream. Rasterization is part of preparing app assets.
-  const artwork = mark.replace(/<svg\b/, '<svg x="150" y="150" width="724" height="724"');
-  const appSvg = Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024"><rect x="100" y="100" width="824" height="824" rx="184" fill="#f7fbff"/>${artwork}</svg>`);
-  await sharp(appSvg).png().toFile(path.join(directory, "app-icon-mac.png"));
-  await sharp(Buffer.from(mark)).resize(512, 512).png().toFile(path.join(directory, "app-icon.png"));
-  await writeFile(path.join(directory, "tray-icon.svg"), mark);
-  const monochrome = mark.replace(/url\(#oq-[a-z]+\)/g, "#000000");
-  const variants = [
-    ["tray-iconTemplate.png", 16, monochrome],
-    ["tray-iconTemplate@2x.png", 32, monochrome],
-    ["tray-icon-blue.png", 16, mark],
-    ["tray-icon-blue@1.25x.png", 20, mark],
-    ["tray-icon-blue@1.5x.png", 24, mark],
-    ["tray-icon-blue@2x.png", 32, mark],
-  ];
-  for (const [filename, size, svg] of variants) {
-    await sharp(Buffer.from(svg)).resize(size, size).png().toFile(path.join(directory, filename));
-  }
+/** PNG-backed ICO: keep the existing brand pixels, with no image dependency. */
+export function pngIcon(png) {
+  if (!png.subarray(0, 8).equals(Buffer.from("89504e470d0a1a0a", "hex")) || png.length < 24) throw new Error("Invalid brand PNG");
+  const width = png.readUInt32BE(16), height = png.readUInt32BE(20);
+  if (width !== height || width < 1 || width > 256) throw new Error("Windows icon must be a square PNG up to 256 pixels");
+  const header = Buffer.alloc(22);
+  header.writeUInt16LE(1, 2);
+  header.writeUInt16LE(1, 4);
+  header[6] = header[7] = width === 256 ? 0 : width;
+  header.writeUInt16LE(1, 10);
+  header.writeUInt16LE(32, 12);
+  header.writeUInt32LE(png.length, 14);
+  header.writeUInt32LE(header.length, 18);
+  return Buffer.concat([header, png]);
 }
 
-/** Prepare a reproducible native presentation package without changing upstream. */
-export async function prepareOpenQuantumDesktop(projectRoot) {
-  const upstreamRoot = await realpath(await requireDesktopBuild(projectRoot));
-  const mark = await readFile(path.join(projectRoot, "packages/openquantum-web-branding/assets/mark.svg"), "utf8");
-  const files = (await Promise.all(PACKAGE_FILES.map((entry) => filesUnder(upstreamRoot, entry)))).flat().sort();
-  const hash = createHash("sha256").update(JSON.stringify(DESKTOP_SOURCE)).update(upstreamRoot).update(mark);
-  hash.update(await readFile(new URL(import.meta.url)));
-  const scripts = new Map();
-  for (const filename of files) {
-    const source = await readFile(path.join(upstreamRoot, filename));
-    hash.update(filename.replaceAll(path.sep, "/")).update("\0").update(source);
-    if (path.dirname(filename) === "lib" && filename.endsWith(".js")) scripts.set(filename, source.toString("utf8"));
+export function macIcon(png) {
+  if (!png.subarray(0, 8).equals(Buffer.from("89504e470d0a1a0a", "hex")) || png.length < 24
+    || png.readUInt32BE(16) !== 512 || png.readUInt32BE(20) !== 512) throw new Error("Mac icon requires the 512 pixel brand PNG");
+  const header = Buffer.alloc(16);
+  header.write("icns");
+  header.writeUInt32BE(png.length + 16, 4);
+  header.write("ic09", 8);
+  header.writeUInt32BE(png.length + 8, 12);
+  return Buffer.concat([header, png]);
+}
+
+/** A branded launch entry keeps upstream signed application resources intact. */
+export async function installDesktopBranding({ projectRoot, dataRoot, node, version }) {
+  if (process.platform === "darwin") {
+    const application = path.join(dataRoot, "OpenQuantum.app");
+    const escape = value => value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
+    const quote = value => `'${value.replaceAll("'", "'\\''")}'`;
+    const plist = `<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict>
+<key>CFBundleName</key><string>OpenQuantum</string>
+<key>CFBundleDisplayName</key><string>OpenQuantum</string>
+<key>CFBundleIdentifier</key><string>org.openquantum.desktop.launcher</string>
+<key>CFBundlePackageType</key><string>APPL</string>
+<key>CFBundleExecutable</key><string>OpenQuantum</string>
+<key>CFBundleIconFile</key><string>OpenQuantum.icns</string>
+<key>CFBundleShortVersionString</key><string>${escape(version)}</string>
+<key>CFBundleVersion</key><string>${escape(version)}</string>
+<key>LSUIElement</key><true/>
+</dict></plist>\n`;
+    return writeDesktopLauncher({ dataRoot, launcher: application, files: {
+      "OpenQuantum.app/Contents/Info.plist": { content: plist },
+      "OpenQuantum.app/Contents/MacOS/OpenQuantum": { content: `#!/bin/sh\nexec ${quote(node)} ${quote(path.join(projectRoot, "scripts/run-desktop.mjs"))}\n`, mode: 0o755 },
+      "OpenQuantum.app/Contents/Resources/OpenQuantum.icns": { content: macIcon(await readFile(path.join(projectRoot, "packages/openquantum-web-branding/assets/icon-512.png"))) },
+    } });
   }
-  const patched = brandDesktopJavaScript(scripts);
-  for (const filename of files) {
-    if (!filename.replaceAll(path.sep, "/").startsWith("lib/native-ui/") || !/\.(js|html)$/.test(filename)) continue;
-    const source = await readFile(path.join(upstreamRoot, filename), "utf8");
-    const branded = source.replaceAll("DSH Desktop", PRODUCT_NAME).replaceAll("DeepSeek Harness Desktop", PRODUCT_NAME);
-    if (branded !== source) patched.set(filename, branded.replace(/^\/\/# sourceMappingURL=.*$/gm, ""));
-  }
-  const digest = hash.digest("hex");
-  const root = path.join(projectRoot, ".openquantum/desktop");
-  const target = path.join(root, digest.slice(0, 20));
-  const markerPath = path.join(target, ".openquantum-branding.json");
-  try {
-    if (JSON.parse(await readFile(markerPath, "utf8")).digest === digest) return target;
-  } catch (error) {
-    if (error.code !== "ENOENT") throw error;
-  }
-  await mkdir(root, { recursive: true });
-  const staging = await mkdtemp(path.join(root, ".preparing-"));
-  try {
-    for (const entry of PACKAGE_FILES) await cp(path.join(upstreamRoot, entry), path.join(staging, entry), { recursive: true });
-    for (const [filename, source] of patched) {
-      await writeFile(path.join(staging, filename), source);
-      await rm(path.join(staging, `${filename}.map`), { force: true });
-    }
-    await renderIcons(upstreamRoot, path.join(staging, "build"), mark);
-    await symlink(path.join(upstreamRoot, "node_modules"), path.join(staging, "node_modules"), process.platform === "win32" ? "junction" : "dir");
-    await writeFile(path.join(staging, ".openquantum-branding.json"), JSON.stringify({
-      digest, upstream: DESKTOP_SOURCE, productName: PRODUCT_NAME,
-      patchedFiles: [...patched.keys()], artwork: "packages/openquantum-web-branding/assets/mark.svg",
-    }, null, 2));
+  if (process.platform === "win32") {
+    const iconFile = path.join(dataRoot, "OpenQuantum.ico");
+    const shortcut = path.join(dataRoot, "OpenQuantum.lnk");
+    const temporary = await mkdtemp(path.join(await realpath(tmpdir()), "oq-launcher-"));
+    const script = [
+      '$ErrorActionPreference = "Stop"',
+      '$link = (New-Object -ComObject WScript.Shell).CreateShortcut($env:OQ_ICON_SHORTCUT)',
+      '$link.TargetPath = $env:OQ_ICON_NODE',
+      '$link.Arguments = \'"\' + $env:OQ_ICON_SCRIPT + \'"\'',
+      '$link.WorkingDirectory = $env:OQ_ICON_PROJECT',
+      '$link.IconLocation = $env:OQ_ICON_FILE + ",0"',
+      '$link.Description = "OpenQuantum"',
+      '$link.WindowStyle = 7',
+      '$link.Save()',
+    ].join("\n");
     try {
-      await rename(staging, target);
-    } catch (error) {
-      // Another launcher can finish the identical immutable package first.
-      if (!["EEXIST", "ENOTEMPTY"].includes(error.code)
-        || JSON.parse(await readFile(markerPath, "utf8")).digest !== digest) throw error;
-    }
-  } finally {
-    await rm(staging, { recursive: true, force: true });
+      const stagedShortcut = path.join(temporary, "OpenQuantum.lnk");
+      // Finder/Explorer launches and isolated installs need no developer PATH.
+      const powershell = path.join(process.env.SystemRoot || process.env.WINDIR || "C:\\Windows", "System32/WindowsPowerShell/v1.0/powershell.exe");
+      await execute(powershell, ["-NoProfile", "-NonInteractive", "-EncodedCommand", Buffer.from(script, "utf16le").toString("base64")], {
+        env: { ...process.env, OQ_ICON_SHORTCUT: stagedShortcut, OQ_ICON_NODE: node, OQ_ICON_SCRIPT: path.join(projectRoot, "scripts/run-desktop.mjs"), OQ_ICON_PROJECT: projectRoot, OQ_ICON_FILE: iconFile },
+      });
+      return await writeDesktopLauncher({ dataRoot, launcher: shortcut, files: {
+        "OpenQuantum.ico": { content: pngIcon(await readFile(path.join(projectRoot, "packages/openquantum-web-branding/assets/icon-192.png"))) },
+        "OpenQuantum.lnk": { content: await readFile(stagedShortcut) },
+      } });
+    } finally { await rm(temporary, { recursive: true, force: true }); }
   }
-  return target;
+  throw new Error("Unsupported Desktop icon platform");
 }

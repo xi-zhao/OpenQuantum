@@ -1,12 +1,20 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
+import { execFileSync } from "node:child_process";
 import test from "node:test";
 import { queryMetriqData, SOURCE } from "../src/metriq-data/index.mjs";
 import { toolDefinitions } from "../runtime/openquantum/agent-presets/openquantum/metriq-data-tools.mjs";
 import { readDeclaredNativeToolContracts } from "../scripts/lib/capability-tool-contract.mjs";
 
 const query = input => JSON.parse(queryMetriqData(input));
+test("Windows Git checkout preserves the MCP snapshot's audited bytes", () => {
+  const bytes = execFileSync("git", ["-c", "core.autocrlf=true", "cat-file", "--filters", "HEAD:src/metriq-data/upstream/snapshot.json"], {
+    cwd: new URL("..", import.meta.url), maxBuffer: 16 * 1024 * 1024,
+  });
+  assert.equal(createHash("sha256").update(bytes).digest("hex"), SOURCE.snapshotSha256);
+});
+
 test("Metriq source inventory, attribution and identical-record deduplication remain auditable", () => {
   assert.equal(SOURCE.commit, "6730f78b135a9af67691a0ef4fbea041978056c5");
   assert.equal(SOURCE.files.length, 331);

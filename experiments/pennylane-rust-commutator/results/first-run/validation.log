@@ -1,0 +1,1 @@
+{"status": "passed", "pennylane": "0.45.1", "exhaustive_word_pairs": 4368, "random_complex_pairs": 40, "worst_independent_matrix_error": 1.4210854715202004e-14, "source_sha256": "71d1c99404fb81d36f4ecfa0d24aca34d3a285d846277a9305fc47aaee30e5d8", "scientific_acceptance": "not_evaluated_by_central_Acceptance_Builder"}

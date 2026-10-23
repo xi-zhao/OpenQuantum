@@ -1,0 +1,16 @@
+{
+  "id": "paulistrings-dynamics",
+  "dependencyLockSha256": "51833693d708cfca531a59c632267bb97fe493eb92fabe406848c34e5520d627",
+  "sourceSha256": "7ad81a2b5f7832e232c398ce027123ad64c61ed35ac8422634bc3bd80da5ad5a",
+  "networkIsolation": "macOS sandbox-exec deny network*",
+  "scientificValidation": "not_evaluated",
+  "status": "passed",
+  "files": {
+    "attempt.json": "b80380cf04565664eca49772d4d89660e386597d4281f1fcc4910aca9b3cb444",
+    "program.jl": "7ad81a2b5f7832e232c398ce027123ad64c61ed35ac8422634bc3bd80da5ad5a",
+    "result.json": "56bfe8635577bb3e40159938dec98696178e011af50560b7072a6b198061eb9e",
+    "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "versions.json": "a59ac076b778c5a0ecee28cccf3cc912fda02f4710e097b7f28993212b18420d"
+  }
+}

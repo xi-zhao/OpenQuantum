@@ -1,0 +1,877 @@
+{
+  "schemaVersion": "1.0",
+  "verifiedAt": "2026-09-28T06:03:06.937213+00:00",
+  "baseCommit": "15104b079e833f9928bf2b42db6f956fcdb8689a",
+  "platform": {
+    "system": "Darwin",
+    "machine": "arm64"
+  },
+  "scope": "15 SDK capability slices and user-managed credential references; local source integration verification",
+  "scientificValidation": "not_evaluated",
+  "newInventory": {
+    "skills": 15,
+    "mcpConnections": 15,
+    "tools": 18,
+    "defaultOn": 7,
+    "optIn": 8
+  },
+  "sourceInventory": {
+    "skills": 154,
+    "automaticallySelectableSkills": 141,
+    "manualSkillIndexes": 13,
+    "mcpConnections": 90,
+    "defaultOnMcp": 65,
+    "optInMcp": 25,
+    "configuredTools": 281,
+    "mcpTools": 257,
+    "harnessGeneralTools": 18,
+    "nativeTools": 6,
+    "localBridges": 83,
+    "policySummary": {
+      "packageCount": 162,
+      "levelCounts": {
+        "L0": 66,
+        "L1": 93,
+        "L2": 1,
+        "L3": 2
+      },
+      "issueCount": 0
+    },
+    "directUpstreamServices": 7
+  },
+  "capabilities": [
+    {
+      "id": "simqn-network",
+      "server": "simqn_local",
+      "tools": [
+        {
+          "name": "simulate_simqn_link",
+          "effect": "workspace-write"
+        }
+      ],
+      "python": "3.12",
+      "sourceUrl": "https://github.com/QNLab-USTC/SimQN",
+      "packageName": "qns",
+      "version": "0.2.3",
+      "displayName": "SimQN network",
+      "description": "Simulate lossy quantum-link delivery and Werner-state fidelity with the SimQN discrete-event engine.",
+      "optIn": true,
+      "verification": "real-sdk-and-mcp-passed",
+      "scientificValidation": "not_evaluated",
+      "evidenceDirectory": ".openquantum/sdk-gaps-evidence/domestic",
+      "credentialEnvironment": [],
+      "group": "domestic",
+      "declaredDependencies": [
+        "qns==0.2.3"
+      ],
+      "installed": {
+        "python": "3.12.13",
+        "packages": {
+          "qns": "0.2.3"
+        },
+        "preparedLockVerified": true
+      },
+      "sourceSha256": {
+        ".agents/skills/simqn-network/SKILL.md": "ff0724cd83d02d9bda3bf49f009e89c768ce4cdb4058b3ccbd230ac7fe79ff46",
+        ".agents/skills/simqn-network/mcp/bridge.py": "c7bec0387718c1825656fd578131f1c3a1080e2345d48f3153401603fa872a4b",
+        ".agents/skills/simqn-network/mcp/contracts.mjs": "f36c6137750795930332133a3dde0b43014b975a5e33c5a9a8838eea35411ee9",
+        ".agents/skills/simqn-network/mcp/server.mjs": "69f7902c58eb3c6df05489e7409fa4914bdecf43ffcd2aea2815656fef2a05db",
+        ".agents/skills/simqn-network/pyproject.toml": "2e950004b2865ab1dfbe680d685b7a5f124cb9abf0bd63b590111e9e0bf48f05",
+        ".agents/skills/simqn-network/test/science_test.py": "057ad8f4efc495c9876ceeff4d766d6dfca7735e6b36c290940af2590494c7ca",
+        ".agents/skills/simqn-network/uv.lock": "b1703d3ed5099cc784d53520b3ef8df252fadbb272731bb43222627295c1204c"
+      }
+    },
+    {
+      "id": "qcover-optimization",
+      "server": "qcover_local",
+      "tools": [
+        {
+          "name": "evaluate_qcover_qaoa",
+          "effect": "workspace-write"
+        }
+      ],
+      "python": "3.10",
+      "sourceUrl": "https://github.com/BAQIS-Quantum/Qcover",
+      "packageName": "Qcover",
+      "version": "2.6.0",
+      "displayName": "Qcover QAOA",
+      "description": "Evaluate an Ising graph QAOA energy using Qcover graph decomposition and Qulacs.",
+      "optIn": false,
+      "verification": "real-sdk-and-mcp-passed",
+      "scientificValidation": "not_evaluated",
+      "evidenceDirectory": ".openquantum/sdk-gaps-evidence/domestic",
+      "credentialEnvironment": [],
+      "group": "domestic",
+      "declaredDependencies": [
+        "Qcover==2.6.0",
+        "qiskit==0.45.3",
+        "qiskit-aer==0.13.3",
+        "cirq==1.3.0",
+        "quimb==1.8.4",
+        "projectq==0.8.0",
+        "networkx==2.8.8",
+        "numpy==1.26.4",
+        "scipy==1.12.0"
+      ],
+      "installed": {
+        "python": "3.10.20",
+        "packages": {
+          "Qcover": "2.6.0",
+          "qiskit": "0.45.3",
+          "qiskit-aer": "0.13.3",
+          "cirq": "1.3.0",
+          "quimb": "1.8.4",
+          "projectq": "0.8.0",
+          "networkx": "2.8.8",
+          "numpy": "1.26.4",
+          "scipy": "1.12.0"
+        },
+        "preparedLockVerified": true
+      },
+      "sourceSha256": {
+        ".agents/skills/qcover-optimization/SKILL.md": "a2ce505ed8c09ffb8583e06f374ea7f2deb0fa5331814539815d6b61166365cd",
+        ".agents/skills/qcover-optimization/mcp/bridge.py": "8057ec6a1339757870ff0193a7648af5c0b06f5d18f44e3c7f78551df9a01ece",
+        ".agents/skills/qcover-optimization/mcp/contracts.mjs": "4b28b9a2678da6c0d104ed92f14e2f21742820b17b77d2d74ca854e76d8367da",
+        ".agents/skills/qcover-optimization/mcp/server.mjs": "e3b18a784f518a612da6f929cc27cc0182b6a60be8594788df6ab81215e35a33",
+        ".agents/skills/qcover-optimization/pyproject.toml": "25c3bac8869c40cf6160037db68f886c82f2e6c8830d2d2f6bfe40ba6fb68a44",
+        ".agents/skills/qcover-optimization/test/science_test.py": "6c389ac2e3c68fe13049d134df23c7f408edd315811f7cc9ede39eecc6b3f5d0",
+        ".agents/skills/qcover-optimization/uv.lock": "b7506c6c82865ab6c030c535d0ac5ff8e0f7e199fdff0d5b17244c41b0881d3b"
+      }
+    },
+    {
+      "id": "vqnet-learning",
+      "server": "vqnet_local",
+      "tools": [
+        {
+          "name": "differentiate_vqnet_circuit",
+          "effect": "workspace-write"
+        }
+      ],
+      "python": "3.12",
+      "sourceUrl": "https://vqnet20-tutorial.readthedocs.io/en/main/index.html",
+      "packageName": "pyvqnet",
+      "version": "2.18.1",
+      "displayName": "VQNet learning",
+      "description": "Evaluate a VQNet quantum circuit and differentiate an observable on CPU.",
+      "optIn": true,
+      "verification": "real-sdk-and-mcp-passed",
+      "scientificValidation": "not_evaluated",
+      "evidenceDirectory": ".openquantum/sdk-gaps-evidence/domestic",
+      "credentialEnvironment": [],
+      "group": "domestic",
+      "declaredDependencies": [
+        "pyvqnet==2.18.1",
+        "numpy==1.26.4"
+      ],
+      "installed": {
+        "python": "3.12.13",
+        "packages": {
+          "pyvqnet": "2.18.1",
+          "numpy": "1.26.4"
+        },
+        "preparedLockVerified": true
+      },
+      "sourceSha256": {
+        ".agents/skills/vqnet-learning/SKILL.md": "2edd6c3623923e0d79057f9bf37e38eed201c4f180dd6409ba917020ae988f63",
+        ".agents/skills/vqnet-learning/mcp/bridge.py": "62603019df221d3081b1cbeb32fdf4cc407a00709161b27656ea98a4ac9e3009",
+        ".agents/skills/vqnet-learning/mcp/contracts.mjs": "f62b38da7f7a646e3957ce503b4c82b47b35d1749e6c52eda47bd94cf36a5760",
+        ".agents/skills/vqnet-learning/mcp/server.mjs": "3829f7d6a51dcb7157c3a795dd667911d4d54df3c3c4da83bfb625bd498d8986",
+        ".agents/skills/vqnet-learning/pyproject.toml": "442a5c51f29e89958fab1e66d54422e8e3a0905d72dcd4705eca89393bc22851",
+        ".agents/skills/vqnet-learning/test/science_test.py": "a5e21ca5204ab0082d655a91cfe2a5dd262ce11fcb35709fd91178acf75e8fe4",
+        ".agents/skills/vqnet-learning/uv.lock": "528a4844c3ec39de0ca4aae9dd59a5e0fe0114b7495e3fb6cb02e0291e1f41cd"
+      }
+    },
+    {
+      "id": "pychemiq-chemistry",
+      "server": "pychemiq_local",
+      "tools": [
+        {
+          "name": "map_pychemiq_fermions",
+          "effect": "workspace-write"
+        }
+      ],
+      "python": "3.10",
+      "sourceUrl": "https://github.com/OriginQ/pyChemiQ",
+      "packageName": "pychemiq",
+      "version": "1.1.4",
+      "displayName": "pyChemiQ chemistry",
+      "description": "Map structured fermionic operators to qubit Pauli operators using pyChemiQ.",
+      "optIn": false,
+      "verification": "real-sdk-and-mcp-passed",
+      "scientificValidation": "not_evaluated",
+      "evidenceDirectory": ".openquantum/sdk-gaps-evidence/domestic",
+      "credentialEnvironment": [],
+      "group": "domestic",
+      "declaredDependencies": [
+        "pychemiq==1.1.4",
+        "numpy==1.26.4"
+      ],
+      "installed": {
+        "python": "3.10.20",
+        "packages": {
+          "pychemiq": "1.1.4",
+          "numpy": "1.26.4"
+        },
+        "preparedLockVerified": true
+      },
+      "sourceSha256": {
+        ".agents/skills/pychemiq-chemistry/SKILL.md": "300f734884bc1afc334fa745d7a45434a29b29429bb0f01bcba14e11bb55a766",
+        ".agents/skills/pychemiq-chemistry/mcp/bridge.py": "0ab28732248cc8ef5fcabe2c1bc93ef4375f1a9108855b0089e5b927f2a1b9cc",
+        ".agents/skills/pychemiq-chemistry/mcp/contracts.mjs": "bbac217d9e256f1c0c9c6cc714b8bb3712b24a316bdc5960f79cb4b82aea307f",
+        ".agents/skills/pychemiq-chemistry/mcp/server.mjs": "cf0483bc41c8aed08f8b7a04c7b2777da351f15f6ff7a3c6cda36776a6604060",
+        ".agents/skills/pychemiq-chemistry/pyproject.toml": "fed85e60da8477e38d835fdc67b54c97feb5993e9dc2020af8fdf7bf1a99e998",
+        ".agents/skills/pychemiq-chemistry/test/science_test.py": "cb5e58226ca1672c89fa6443c350d6f7e3f09441cb46805ac100fff12bb8ffa3",
+        ".agents/skills/pychemiq-chemistry/uv.lock": "4a021d001c7d38167dbdaa1d796d51ce162a071394d36c16e9bcfe44ab6b5e2b"
+      }
+    },
+    {
+      "id": "qblox-scheduling",
+      "server": "qblox_local",
+      "tools": [
+        {
+          "name": "schedule_qblox_pulses",
+          "effect": "workspace-write"
+        }
+      ],
+      "python": "3.12",
+      "sourceUrl": "https://docs.qblox.com/en/main/products/qblox_scheduler/index.html",
+      "packageName": "qblox-scheduler",
+      "version": "1.0.0b8",
+      "displayName": "Qblox Scheduler",
+      "description": "Qblox pulse schedule timing and waveform samples",
+      "optIn": false,
+      "group": "control",
+      "declaredDependencies": [
+        "qblox-scheduler==1.0.0b8"
+      ],
+      "installed": {
+        "python": "3.12.13",
+        "packages": {
+          "qblox-scheduler": "1.0.0b8"
+        },
+        "preparedLockVerified": true
+      },
+      "sourceSha256": {
+        ".agents/skills/qblox-scheduling/SKILL.md": "265af49b607aa4eed98fe86150faffd3b64d8e82c81edfe772e7cad09e03a14a",
+        ".agents/skills/qblox-scheduling/mcp/bridge.py": "c05ab54638a05f0270d8e7276d918167b5d556938c80e5adb47d29f520c6c453",
+        ".agents/skills/qblox-scheduling/mcp/contracts.mjs": "f1a768cfa1db7770ddc1b923bc6a8b506e8d1b43e16a2d0a4194ad697cd84765",
+        ".agents/skills/qblox-scheduling/mcp/server.mjs": "0e790f7e393fe6c96957238c3b407fb91e037e4e1491ceb8445559cc65f3b791",
+        ".agents/skills/qblox-scheduling/pyproject.toml": "fa2f7c4a042975396de85631bea3b1b4746ea65b5b44fa702436a1505708af20",
+        ".agents/skills/qblox-scheduling/test/science_test.py": "851d3655203aa33b44121e3931166e502053764c4eff99d8e65c9f4b2792e060",
+        ".agents/skills/qblox-scheduling/uv.lock": "01ad3726194feb96a8ade0f69237912eebf2141603e7ca6ebcfa1b64bb8cbb36"
+      }
+    },
+    {
+      "id": "qililab-control",
+      "server": "qililab_local",
+      "tools": [
+        {
+          "name": "compile_qililab_pulses",
+          "effect": "workspace-write"
+        }
+      ],
+      "python": "3.12",
+      "sourceUrl": "https://github.com/qilimanjaro-tech/qililab",
+      "packageName": "qililab",
+      "version": "0.33.3",
+      "displayName": "Qililab",
+      "description": "Qililab offline pulse compilation to Qblox sequencer programs",
+      "optIn": false,
+      "group": "control",
+      "declaredDependencies": [
+        "qililab==0.33.3"
+      ],
+      "installed": {
+        "python": "3.12.13",
+        "packages": {
+          "qililab": "0.33.3"
+        },
+        "preparedLockVerified": true
+      },
+      "sourceSha256": {
+        ".agents/skills/qililab-control/SKILL.md": "501487b3737dc21aeb0b15dd7b62338ff81233a19709f16cdd0bdb10c0047a79",
+        ".agents/skills/qililab-control/mcp/bridge.py": "c80733d5407063d92c826077f8c0e2d0f074740b751f6e907c898eefbda9ee46",
+        ".agents/skills/qililab-control/mcp/contracts.mjs": "1408fbb6a42a0d41d14f1112515b2e4e5b692176e0958f45048d103b83d28e1b",
+        ".agents/skills/qililab-control/mcp/server.mjs": "3f62379e71b3f294e74b97543093680912668bc755ec81ff90c9f20a3171ca40",
+        ".agents/skills/qililab-control/pyproject.toml": "a73191aada8db11b05b535547774d24157701272170456edecda28bd5444c9c2",
+        ".agents/skills/qililab-control/test/science_test.py": "dd50c13d503d1cd5419876e32c6e5f3c888ed4f576f291439a86ccc311547bec",
+        ".agents/skills/qililab-control/uv.lock": "916dc0a943e8d10fea309af765704c4333a4ec4b2cbe09d7fcee8846777d6d03"
+      }
+    },
+    {
+      "id": "guppy-programs",
+      "server": "guppy_local",
+      "tools": [
+        {
+          "name": "simulate_guppy_feedback",
+          "effect": "workspace-write"
+        }
+      ],
+      "python": "3.12",
+      "sourceUrl": "https://github.com/Quantinuum/guppylang",
+      "packageName": "guppylang",
+      "version": "1.1.1",
+      "displayName": "Guppy and Selene",
+      "description": "Compile and emulate structured quantum programs with classical measurement feedback",
+      "optIn": false,
+      "group": "control",
+      "declaredDependencies": [
+        "guppylang==1.1.1",
+        "selene-sim==0.3.2"
+      ],
+      "installed": {
+        "python": "3.12.13",
+        "packages": {
+          "guppylang": "1.1.1",
+          "selene-sim": "0.3.2"
+        },
+        "preparedLockVerified": true
+      },
+      "sourceSha256": {
+        ".agents/skills/guppy-programs/SKILL.md": "b1e186acaa89d484d6eea4770f247f58eca903527d772f185c7d0693ae81c387",
+        ".agents/skills/guppy-programs/mcp/bridge.py": "7cba1cbe9fdda349242c3eb1852f24465b7969b5d14fcc4df5f57f05011cd3d8",
+        ".agents/skills/guppy-programs/mcp/contracts.mjs": "1cc743a26fc07d0d6e08b3f95e32fdf25c971775620275b2e0aa5c1ed6f6a341",
+        ".agents/skills/guppy-programs/mcp/server.mjs": "7643441f56ca607c1cb474bdd5d70f381b74f1cbc3e7c2276b0a126a8322dc9d",
+        ".agents/skills/guppy-programs/pyproject.toml": "fbb59f13ad86279b4bc8c1e4f988d6046f25174d902b5f77232f868be22f184e",
+        ".agents/skills/guppy-programs/test/science_test.py": "a3585f4836a3d7a46fbbae1c67b312382ed5ec837b33819a8f788f5701844626",
+        ".agents/skills/guppy-programs/uv.lock": "4253407a5220693f6b8e0ae638ce86fd43190a8fd1c9419e3d5b24e519b390db"
+      }
+    },
+    {
+      "id": "oqc-qat",
+      "server": "qat_local",
+      "tools": [
+        {
+          "name": "compile_oqc_qat_pulses",
+          "effect": "workspace-write"
+        }
+      ],
+      "python": "3.12",
+      "sourceUrl": "https://github.com/oqc-community/qat",
+      "packageName": "qat-compiler",
+      "version": "3.5.0",
+      "displayName": "OQC QAT",
+      "description": "OQC QAT offline pulse compilation and echo waveform buffers",
+      "optIn": false,
+      "group": "control",
+      "declaredDependencies": [
+        "qat-compiler==3.5.0"
+      ],
+      "installed": {
+        "python": "3.12.13",
+        "packages": {
+          "qat-compiler": "3.5.0"
+        },
+        "preparedLockVerified": true
+      },
+      "sourceSha256": {
+        ".agents/skills/oqc-qat/SKILL.md": "57de478d469e28d7d3b0c7fbdd6325c3a8685e4f80351dd03578108898ac5ad3",
+        ".agents/skills/oqc-qat/mcp/bridge.py": "e6bb60e1dd13398c6172d4fb45facfc6b3d289e3d50902890ca15295778ee50e",
+        ".agents/skills/oqc-qat/mcp/contracts.mjs": "4ce40e963f5a4f5ebb59f2f80179cd04c435588e874d0e2743e6c569ec53f6cc",
+        ".agents/skills/oqc-qat/mcp/server.mjs": "6053fc612a9cdc958bf71f0e37e85cd47d8aee9d928c3cfe213f4816e4918224",
+        ".agents/skills/oqc-qat/pyproject.toml": "829fa6d4e8422e106ced2ff8a43793f3dbf3bae82fdc0c5bccdf7e5505a413e3",
+        ".agents/skills/oqc-qat/test/science_test.py": "423c86676aeff9333b91ddf94a02077f9df407f8c4309eb01c0df652124c1e97",
+        ".agents/skills/oqc-qat/uv.lock": "da5ff4088e3093a7fe3a1f8d61e27f7ecd9a25a0453f6b52578bcd485324b347"
+      }
+    },
+    {
+      "id": "mrmustard-optics",
+      "server": "mrmustard_local",
+      "python": "3.11",
+      "sourceUrl": "https://github.com/XanaduAI/MrMustard",
+      "packageName": "mrmustard",
+      "version": "0.7.3",
+      "displayName": "MrMustard Optics",
+      "description": "Gaussian continuous-variable optics, moments and truncated Fock probabilities",
+      "optIn": true,
+      "tools": [
+        {
+          "name": "simulate_mrmustard_optics",
+          "effect": "workspace-write"
+        }
+      ],
+      "group": "simulation",
+      "declaredDependencies": [
+        "mrmustard==0.7.3",
+        "tensorflow==2.15.0"
+      ],
+      "installed": {
+        "python": "3.11.15",
+        "packages": {
+          "mrmustard": "0.7.3",
+          "tensorflow": "2.15.0"
+        },
+        "preparedLockVerified": true
+      },
+      "sourceSha256": {
+        ".agents/skills/mrmustard-optics/SKILL.md": "5bb60ba103eea5d84f319181f0145a5e0f78dcd62243f5d7f79a1c117833fe75",
+        ".agents/skills/mrmustard-optics/mcp/bridge.py": "6cd78d41835a8f389a2196b82aace37b2f7b4876b112a9115b9e4f9fe18d0bf3",
+        ".agents/skills/mrmustard-optics/mcp/contracts.mjs": "fab308fd1d5a25571ddbc28c7be0a18b3d52c42d82262b88bdf80bbdd2a92adc",
+        ".agents/skills/mrmustard-optics/mcp/server.mjs": "134b3e5a856cb7c93950c8d5b4cf966246f96f25a99353d7dc79a23882594e86",
+        ".agents/skills/mrmustard-optics/pyproject.toml": "033af9368d5a9cab8a3c74505760f43f456835eba9396a19d6f68e2122b473c8",
+        ".agents/skills/mrmustard-optics/test/science_test.py": "7f6ec240cb63644f269758811511d53462ab2360b9b0b76e8d8cbc0af7fa9bba",
+        ".agents/skills/mrmustard-optics/uv.lock": "4bcf737b9a50c05b8c216c408eb3f29b12e5c7d8dec0e4f9c555e22209673251"
+      }
+    },
+    {
+      "id": "merlin-learning",
+      "server": "merlin_local",
+      "python": "3.12",
+      "sourceUrl": "https://github.com/merlinquantum/merlin",
+      "packageName": "merlinquantum",
+      "version": "0.4.1",
+      "displayName": "MerLin Learning",
+      "description": "Local photonic quantum-layer probabilities and gradients",
+      "optIn": false,
+      "tools": [
+        {
+          "name": "evaluate_merlin_layer",
+          "effect": "workspace-write"
+        }
+      ],
+      "group": "simulation",
+      "declaredDependencies": [
+        "merlinquantum==0.4.1",
+        "perceval-quandela==1.2.1"
+      ],
+      "installed": {
+        "python": "3.12.13",
+        "packages": {
+          "merlinquantum": "0.4.1",
+          "perceval-quandela": "1.2.1"
+        },
+        "preparedLockVerified": true
+      },
+      "sourceSha256": {
+        ".agents/skills/merlin-learning/SKILL.md": "99ea8d2dcb642ce609c1f74134653dcf4b3551d240441e01b5a039b6ee3002a9",
+        ".agents/skills/merlin-learning/mcp/bridge.py": "44b7209a8723d80408a25e82336863f4acc69a6409f9cb187c3345cceb2b1c6b",
+        ".agents/skills/merlin-learning/mcp/contracts.mjs": "eda5769ec63158d669cef46f72f1806ec459376498730b711e2830c48c78dafd",
+        ".agents/skills/merlin-learning/mcp/server.mjs": "f0b396f85906d49dfc43f9795539485e7eee36610104f1e26f512265cf32a82f",
+        ".agents/skills/merlin-learning/pyproject.toml": "e3e7ba89d716bf5de4fda69e89d9e4103eeb8fac8911d7be2340d059e8db1134",
+        ".agents/skills/merlin-learning/test/science_test.py": "961701b79ea84babc7903059083e72e70c1523a37bdc9b0e9764a7a3bc987f03",
+        ".agents/skills/merlin-learning/uv.lock": "54a2b505bf16fba2c433444de58e9b363c3866cbdfdf4a05108a8f6898486338"
+      }
+    },
+    {
+      "id": "mimiq-simulation",
+      "server": "mimiq_local",
+      "python": "3.12",
+      "sourceUrl": "https://docs.qperfect.io/exaqt-python/",
+      "packageName": "mimiq-exaqt",
+      "version": "0.3.0",
+      "displayName": "MIMIQ Exaqt",
+      "description": "Local exact state-vector circuit simulation and seeded samples",
+      "optIn": true,
+      "tools": [
+        {
+          "name": "simulate_mimiq_circuit",
+          "effect": "workspace-write"
+        }
+      ],
+      "group": "simulation",
+      "declaredDependencies": [
+        "mimiq-exaqt==0.3.0",
+        "mimiqcircuits==0.28.0"
+      ],
+      "installed": {
+        "python": "3.12.13",
+        "packages": {
+          "mimiq-exaqt": "0.3.0",
+          "mimiqcircuits": "0.28.0"
+        },
+        "preparedLockVerified": true
+      },
+      "sourceSha256": {
+        ".agents/skills/mimiq-simulation/SKILL.md": "e469cefeb6696af1aaaa13fe74b3cc33dd7b78e61a47cc777788ec7708d907fa",
+        ".agents/skills/mimiq-simulation/mcp/bridge.py": "1767c903b6480ffc34c13708a0b1811fe6cf730bc8d2141c063f29abb5b1ca46",
+        ".agents/skills/mimiq-simulation/mcp/contracts.mjs": "bd8c10e88061fcc2abc868e478351630fc673fc069ad3af50252ec85b84651b8",
+        ".agents/skills/mimiq-simulation/mcp/server.mjs": "45063e2a1d9faac0ab99063fb5a6d5e4bbd3728bdd7820cd43c3d33b74b02313",
+        ".agents/skills/mimiq-simulation/pyproject.toml": "1e2bda05cae2d20e46fbd8d01140c9cd28784bbc32a9b26c67f7155cc73cc183",
+        ".agents/skills/mimiq-simulation/test/science_test.py": "770396e34e2ab148a6b1d1b13202eafe2dc9b7e637ab6cdb421737493b729834",
+        ".agents/skills/mimiq-simulation/uv.lock": "18884f1cfee2794e954ecbe47c633955b23a43f570c19687572f0b6b9502b330"
+      }
+    },
+    {
+      "id": "myqlm-simulation",
+      "server": "myqlm_local",
+      "python": "3.12",
+      "sourceUrl": "https://myqlm.github.io/",
+      "packageName": "myqlm",
+      "version": "1.13.7",
+      "displayName": "myQLM Simulation",
+      "description": "Local gate-model state-vector simulation using PyLinalg",
+      "optIn": true,
+      "tools": [
+        {
+          "name": "simulate_myqlm_circuit",
+          "effect": "workspace-write"
+        }
+      ],
+      "group": "simulation",
+      "declaredDependencies": [
+        "myqlm==1.13.7"
+      ],
+      "installed": {
+        "python": "3.12.13",
+        "packages": {
+          "myqlm": "1.13.7"
+        },
+        "preparedLockVerified": true
+      },
+      "sourceSha256": {
+        ".agents/skills/myqlm-simulation/SKILL.md": "c6cebe14b7dbe5461b2ecedd958f086b0324f9d267c5812f356f49a753994d48",
+        ".agents/skills/myqlm-simulation/mcp/bridge.py": "f33e2511bcb5b0cc7a14dabf238e070b788739ab086a3fdd7e49e6c4c2cf7404",
+        ".agents/skills/myqlm-simulation/mcp/contracts.mjs": "38ca5a41cc32510e618a50d6c2fd5ef26376075eb048d29c41044a78459fcd53",
+        ".agents/skills/myqlm-simulation/mcp/server.mjs": "dd79d5274731afa49483ebf0d13f639d04719729cdfaf7c28444f95727dcc18f",
+        ".agents/skills/myqlm-simulation/pyproject.toml": "e191f9abd78156cb75d13f7dbb160e6c1593d3dfebede2eb9c3287f770b07aa8",
+        ".agents/skills/myqlm-simulation/test/science_test.py": "a0fbe81421917ea8ed0cda98777b288fc5b9cbf4a4712baf30ee222cd9dfdc68",
+        ".agents/skills/myqlm-simulation/uv.lock": "d2408269bc962e89892ec0e426939f5cd1f1993dc562c3b7ca9c38090150ced0"
+      }
+    },
+    {
+      "id": "aqt-workbench",
+      "server": "aqt_local",
+      "tools": [
+        {
+          "name": "simulate_aqt_circuit",
+          "effect": "workspace-write"
+        },
+        {
+          "name": "list_aqt_devices",
+          "effect": "workspace-write"
+        }
+      ],
+      "python": "3.12",
+      "sourceUrl": "https://github.com/qiskit-community/qiskit-aqt-provider",
+      "packageName": "qiskit-aqt-provider",
+      "version": "1.15.0",
+      "displayName": "AQT 电路与设备",
+      "description": "官方离子阱后端本地编译与仿真，以及用户鉴权后的设备查询。",
+      "optIn": true,
+      "credentialEnvironment": [
+        "AQT_API_TOKEN"
+      ],
+      "group": "cloud",
+      "declaredDependencies": [
+        "qiskit-aqt-provider==1.15.0"
+      ],
+      "installed": {
+        "python": "3.12.13",
+        "packages": {
+          "qiskit-aqt-provider": "1.15.0"
+        },
+        "preparedLockVerified": true
+      },
+      "sourceSha256": {
+        ".agents/skills/aqt-workbench/SKILL.md": "bf5cd063213e393eaaff811af91ff0658cf4aed43dd9e29c5028e398b466c8a2",
+        ".agents/skills/aqt-workbench/agents/openai.yaml": "23c8016147170e68d4ccdb04c31c36036d0012f22b09f4d0669f16a8074a88d3",
+        ".agents/skills/aqt-workbench/mcp/bridge.py": "e0420b9fcd974bd357c44d8bbe63815b19afeffe36b40962a558558bb5fd1f16",
+        ".agents/skills/aqt-workbench/mcp/contracts.mjs": "9318476102b1d47e7edc6098ea610714c53dd2932257326f63d369a1ae11fa53",
+        ".agents/skills/aqt-workbench/mcp/server.mjs": "7fdebbe4cf46021ea5ce0a1022c806595034bd1e3029d2eb52d75f76cce8d702",
+        ".agents/skills/aqt-workbench/pyproject.toml": "361f079af2d84cdd439ee0b8520a9b8f09f0b4bb20e0035b3987ca6849c1900a",
+        ".agents/skills/aqt-workbench/uv.lock": "1d908bc32fb79e0ef0a3006cb8169a50c39fb33369de8feb4ff99a6f45c9366f"
+      }
+    },
+    {
+      "id": "oqc-cloud",
+      "server": "oqc_cloud",
+      "tools": [
+        {
+          "name": "prepare_oqc_task",
+          "effect": "workspace-write"
+        },
+        {
+          "name": "query_oqc_service",
+          "effect": "workspace-write"
+        },
+        {
+          "name": "submit_oqc_task",
+          "effect": "external-write"
+        }
+      ],
+      "python": "3.12",
+      "sourceUrl": "https://docs.oqc.app/",
+      "packageName": "oqc-qcaas-client",
+      "version": "3.23.0",
+      "displayName": "OQC 云任务",
+      "description": "本地准备任务、查询设备与状态，以及显式提交一次云任务。",
+      "optIn": true,
+      "credentialEnvironment": [
+        "OQC_API_TOKEN",
+        "OQC_API_ENDPOINT"
+      ],
+      "group": "cloud",
+      "declaredDependencies": [
+        "oqc-qcaas-client==3.23.0"
+      ],
+      "installed": {
+        "python": "3.12.13",
+        "packages": {
+          "oqc-qcaas-client": "3.23.0"
+        },
+        "preparedLockVerified": true
+      },
+      "sourceSha256": {
+        ".agents/skills/oqc-cloud/SKILL.md": "78e04954659ac96973a56f90bb85e31a3757551f1d6c7371ad860aafcb67fb80",
+        ".agents/skills/oqc-cloud/agents/openai.yaml": "9923d2c2f9a8b4f16592091393e6052834f6e479420c6124c0778e0346a091cf",
+        ".agents/skills/oqc-cloud/mcp/bridge.py": "9c410c34ea2229a61d0eb62acd81698f75599e3595dee311700175985e411a79",
+        ".agents/skills/oqc-cloud/mcp/contracts.mjs": "0bcfb36f223680a340a1b938a5d1991de88361b577fc78166e32a3f34686fec4",
+        ".agents/skills/oqc-cloud/mcp/server.mjs": "ae327cff8823b6a6deda49cec97e80693332c1f9d86c59aabbaa3ce6208a7ef1",
+        ".agents/skills/oqc-cloud/pyproject.toml": "3d918c2b50194bcbfdc99b008f5d3557306698bc2f1e5bbd22bf1ee5c0ca0e7b",
+        ".agents/skills/oqc-cloud/uv.lock": "62ae35e5e164d9d0e0356de98c91b8654045787ba3136b5c73cfc64cdab2f768"
+      }
+    },
+    {
+      "id": "quantuminspire-cloud",
+      "server": "quantuminspire_cloud",
+      "tools": [
+        {
+          "name": "query_quantum_inspire",
+          "effect": "workspace-write"
+        }
+      ],
+      "python": "3.12",
+      "sourceUrl": "https://github.com/QuTech-Delft/quantuminspire",
+      "packageName": "quantuminspire",
+      "version": "4.1.0",
+      "displayName": "Quantum Inspire 查询",
+      "description": "通过官方 SDK 分页查询设备与既有任务状态。",
+      "optIn": true,
+      "credentialEnvironment": [
+        "QUANTUMINSPIRE_API_TOKEN"
+      ],
+      "group": "cloud",
+      "declaredDependencies": [
+        "quantuminspire==4.1.0"
+      ],
+      "installed": {
+        "python": "3.12.13",
+        "packages": {
+          "quantuminspire": "4.1.0"
+        },
+        "preparedLockVerified": true
+      },
+      "sourceSha256": {
+        ".agents/skills/quantuminspire-cloud/SKILL.md": "46cf4e0feca51514c1ee864a2fa2f2808f3c6a5fe307d3497354058658c42f5d",
+        ".agents/skills/quantuminspire-cloud/agents/openai.yaml": "9104d0e351694e3f378c01e2d1d699f1b19cb07160d7079dc5537fcb89c74c88",
+        ".agents/skills/quantuminspire-cloud/mcp/bridge.py": "070e022edc33e542124073391e7b3d5047a598273691727c4887e591cc32fe96",
+        ".agents/skills/quantuminspire-cloud/mcp/contracts.mjs": "5c2ce0eb640abfa507915e0447f630f255b00f62e9c43f8552bb416be4bccc9d",
+        ".agents/skills/quantuminspire-cloud/mcp/server.mjs": "95d02f17ba3fe5448f95599418441ab51a10c13bc7fec4222672c3a92730c282",
+        ".agents/skills/quantuminspire-cloud/pyproject.toml": "a0a1a64b39370b80c1be1c432ae2e290081ca990e10ef1657283c92d2804b525",
+        ".agents/skills/quantuminspire-cloud/uv.lock": "6a3d6ea5258a9d74e252c1982762e4501c6ecee123bbede75a44d43406eef945"
+      }
+    }
+  ],
+  "verification": {
+    "contracts": {
+      "status": "passed",
+      "tests": 26,
+      "command": "npm run capability:sdk-gaps:test",
+      "note": "Four groups also run by full check; actual MCP with protocol worker fixtures."
+    },
+    "realSdkAndMcp": {
+      "status": "passed",
+      "tests": 30,
+      "groups": {
+        "domestic": 8,
+        "control": 8,
+        "simulation": 8,
+        "cloud": 6
+      },
+      "note": "Each group explicitly opted into real SDK tests. pyChemiQ retested after cutoff correction. Numerical workers deny socket connections; cloud SDK HTTP transports use fixtures."
+    },
+    "harness": {
+      "status": "passed",
+      "tests": 1,
+      "model": "local protocol fixture",
+      "externalModelTested": false,
+      "sessionId": "session-sdk-gaps-7e3758f6-f074-42ae-925a-720eda590415",
+      "toolCalls": {
+        "success": 14,
+        "expectedFailure": 5
+      },
+      "logSha256": "334f93fa0f7f6abc301bf016938eee440f7ae3400112fc0e1c0401e2fcd7a167"
+    },
+    "fullCheck": {
+      "status": "passed",
+      "command": "npm run check",
+      "exitCode": 0,
+      "logSha256": "51305beab090466c3ffd2dc498f187d11c772b35d5393ebe0f269250d2f8034f",
+      "reportedNodePassCounts": [
+        6,
+        394,
+        119,
+        35,
+        214,
+        3
+      ],
+      "reportedNodeSkipCounts": [
+        0,
+        183,
+        0,
+        0,
+        1,
+        0
+      ],
+      "note": "Default checks skip opt-in live/remote suites; the 31 new real SDK/MCP/Harness checks were explicitly enabled in separate runs. Counts from different stages may overlap."
+    },
+    "catalogCorrection": {
+      "status": "passed",
+      "tests": 12,
+      "detail": "README catalogs and default contract list updated after initial full check identified stale inventories."
+    },
+    "finalCatalogAndCloudContract": {
+      "status": "passed",
+      "tests": 16,
+      "logSha256": "259f4d13fade22fbb0ee4cbcc5e83034178c18082b0d80b481941d9a133e7642"
+    },
+    "finalLocaleConsistency": {
+      "status": "passed",
+      "tests": 6,
+      "logSha256": "a72cb09b2b7fc7dbf46babc32f757b0dd0c40164852007610886d350e53550e1"
+    }
+  },
+  "independentReview": {
+    "domestic": {
+      "reviewer": "sdk_gaps_simulation",
+      "status": "passed after repair",
+      "finding": "pyChemiQ default 1e-6 pruning silently discarded allowed small coefficients. Repaired with SDK unit-ladder JW plus zero-threshold native Pauli algebra and stable coalescing.",
+      "additionalChecks": {
+        "randomTinyComplexWords": 60,
+        "normalizedMatrixMaxError": 1.77e-16,
+        "longNumberProducts": "(n0)^40, coefficients 1e-6 through 1e-300",
+        "cancellation": "1e10 + 1e-10 - 1e10 preserved",
+        "unrepresentableUnderflow": "5e-324 number operator fails explicitly"
+      }
+    },
+    "control": {
+      "reviewer": "sdk_gaps_domestic",
+      "status": "passed",
+      "additionalChecks": "QAT 1..128 ns pulses/waits, 256 segments; Guppy phase and multiple-measurement feedback"
+    },
+    "simulation": {
+      "reviewer": "sdk_gaps_control",
+      "status": "passed",
+      "additionalChecks": "MrMustard reverse nonadjacent beam splitter and MerLin dark target gradients; upstream archive/platform/license boundaries"
+    },
+    "cloud": {
+      "reviewer": "sdk_gaps_simulation",
+      "status": "passed",
+      "scope": "SDK calls, credential references, official endpoints, single-write/no-retry, sanitized failures, fixture-vs-live claims"
+    },
+    "registration": {
+      "reviewer": "sdk_gaps_control",
+      "status": "passed",
+      "scope": "All 15 capability/preset/catalog entries, 18 Tool contracts, defaults, credentials, Python ABI and setup"
+    }
+  },
+  "limitations": [
+    "Actual execution checked on macOS arm64 only.",
+    "No real cloud accounts, cloud submission, QPU, instruments, external model or final scientific acceptance tested.",
+    "MrMustard upstream archived: optional fixed compatibility adapter. Qblox Scheduler pinned prerelease.",
+    "Credentials and applicable SDK/service license permissions remain user-managed.",
+    "Exaqt native wheels support macOS arm64, Linux x64 glibc >= 2.34 and Windows x64 only."
+  ],
+  "evidenceFiles": {
+    ".openquantum/sdk-gaps-evidence/cloud/aqt-workbench-sdk.txt": "1b0b647cae46a63a1e3c5c90a400a9bbe9e403e2f510f30020925f1f07f7b7b0",
+    ".openquantum/sdk-gaps-evidence/cloud/mcp-list_aqt_devices.json": "06e09bc9cac4946c1c47d75a3633783118b342d413e95426a7c61e64d34803b2",
+    ".openquantum/sdk-gaps-evidence/cloud/mcp-prepare_oqc_task.json": "9f9152d910d84a6fb9bdd2a85e50d3d7dbe8a2c7eca946c33613a87e5e59e11b",
+    ".openquantum/sdk-gaps-evidence/cloud/mcp-query_oqc_service.json": "60c478002ee476e286e07484c3dfd6d98b56350aaa9349748c2b7a0a9dc253a0",
+    ".openquantum/sdk-gaps-evidence/cloud/mcp-query_quantum_inspire.json": "16b99c3b02d1d94bc72da6c33891233671309e4aa3c8ff35939bacfa387e6641",
+    ".openquantum/sdk-gaps-evidence/cloud/mcp-simulate_aqt_circuit.json": "5049da97dd4e323fbc933663bfad52a66ea76f236e91eef538b3bc91751dfaa0",
+    ".openquantum/sdk-gaps-evidence/cloud/mcp-submit_oqc_task.json": "60c478002ee476e286e07484c3dfd6d98b56350aaa9349748c2b7a0a9dc253a0",
+    ".openquantum/sdk-gaps-evidence/cloud/oqc-cloud-sdk.txt": "485b0e4e09c491b073a2f146dab0194346159df06ae38417bdb06283c2c98b0f",
+    ".openquantum/sdk-gaps-evidence/cloud/quantuminspire-cloud-sdk.txt": "bb1f07319919d652282db4c60c307b3fe3fdbe3e0ec264d4693a0144838d4896",
+    ".openquantum/sdk-gaps-evidence/control/guppy-programs-science.txt": "0e0e21181761af6a57cd1b327454fb13dbbe087646b08f31f45ca6e436741eba",
+    ".openquantum/sdk-gaps-evidence/control/mcp-guppy-programs-defaults.json": "746bca6fbfc79db7e6e8c2e6c817acb48f4522ab3d83429561cfbfc1872e5ec5",
+    ".openquantum/sdk-gaps-evidence/control/mcp-guppy-programs-explicit.json": "05e7632673b5335cb0b0777af1fcef9845a56a1b47ec6b84d9f10d2fd59caa8a",
+    ".openquantum/sdk-gaps-evidence/control/mcp-oqc-qat-defaults.json": "b516526cf5cc485dcdcfdefc6aac1a5cf326dccbf742049e192c6af0c07df0bf",
+    ".openquantum/sdk-gaps-evidence/control/mcp-oqc-qat-explicit.json": "a1ed20114ddcb61ddf5ef8281b246695aae4597f9707456a49ecedc8520a897d",
+    ".openquantum/sdk-gaps-evidence/control/mcp-qblox-scheduling-defaults.json": "e5cb4695640393dfa57aa3241bff2262a5eaf29abd511a7736ae4804758aeb14",
+    ".openquantum/sdk-gaps-evidence/control/mcp-qblox-scheduling-explicit.json": "5c3f4eb652276752a971c5464d9320a6f5da603675bc0aebe4b80a76b44f749d",
+    ".openquantum/sdk-gaps-evidence/control/mcp-qililab-control-defaults.json": "4ebb9d70237a588c66b5a21b2352c69aab0ab7b2e08772c2c5e26bf59b182366",
+    ".openquantum/sdk-gaps-evidence/control/mcp-qililab-control-explicit.json": "a4308dc2e9e5c3a208b72330b3bde58b86f9641f32f45cdf511e4df4989d696a",
+    ".openquantum/sdk-gaps-evidence/control/oqc-qat-science.txt": "7f9ea1636d511a0139471a89c16a9ad81fdfa23f33748209a5d843b2706110af",
+    ".openquantum/sdk-gaps-evidence/control/qblox-scheduling-science.txt": "d5d580c33c5d8f36ff4e2b014ad52f151a7cd883257e8dd970ff6c9d12cd4a75",
+    ".openquantum/sdk-gaps-evidence/control/qililab-control-science.txt": "24b7992cfbd36400be32d03a47d6e1c3900c234136c9a9969ae1d4e46ce891b6",
+    ".openquantum/sdk-gaps-evidence/domestic/mcp-pychemiq-chemistry-defaults.json": "89d48b9f3c50ee4d4e5f44a839ea26926e0d1189deeb4194447be6808ca5def1",
+    ".openquantum/sdk-gaps-evidence/domestic/mcp-pychemiq-chemistry-example.json": "3a36f4fd7409e18ed3b91f66c0cbdbf3139fc56b08df524439036ac48a5b14a5",
+    ".openquantum/sdk-gaps-evidence/domestic/mcp-qcover-optimization-defaults.json": "740129463e9a8e05beca868896c21c5d7d8b26115245b6103db074dec9b27ef5",
+    ".openquantum/sdk-gaps-evidence/domestic/mcp-qcover-optimization-example.json": "65aad9343e0be181e8b01338e80c1981463b8d5ddd659b99a3049000447b5856",
+    ".openquantum/sdk-gaps-evidence/domestic/mcp-simqn-network-defaults.json": "1c5b5808f2e62247045512d63fd4678a4acf5f4770cc62dc6443f9baa6026616",
+    ".openquantum/sdk-gaps-evidence/domestic/mcp-simqn-network-example.json": "1de06d2355276c31f5d328a31ee44950412763c63412fa513f2787a656e8bf18",
+    ".openquantum/sdk-gaps-evidence/domestic/mcp-vqnet-learning-defaults.json": "53e87767905aba6c44fdae16f070465e9a4c6f4a3adb7bd5e7f09ce2fc7a14f3",
+    ".openquantum/sdk-gaps-evidence/domestic/mcp-vqnet-learning-example.json": "950cf431623c8070f98abff820b975d9b22955aa491ba89dc110a23b7a51ce4f",
+    ".openquantum/sdk-gaps-evidence/domestic/pychemiq-chemistry-science.json": "cac99ca5bf2e316e4a27bcb22ef758630d76b1130dfa84563a9aa91f7c01ad28",
+    ".openquantum/sdk-gaps-evidence/domestic/qcover-optimization-science.json": "0586ad0ced4d6a916834a28409e61de697620e57afa9eeec15c46b4dcc7afb7d",
+    ".openquantum/sdk-gaps-evidence/domestic/simqn-network-science.json": "d44590c164e81d43875471b04257e6c38beaa8d25aa5d6143d5818e684144bfb",
+    ".openquantum/sdk-gaps-evidence/domestic/vqnet-learning-science.json": "ff18d19d68dbedc4892dcbc88f40f07b8def297fe7c02dc965805710705457b5",
+    ".openquantum/sdk-gaps-evidence/harness/harness-session.json": "334f93fa0f7f6abc301bf016938eee440f7ae3400112fc0e1c0401e2fcd7a167",
+    ".openquantum/sdk-gaps-evidence/simulation/mcp-merlin-learning-defaults.json": "b003c1f5a2689f3b5b3f38267cad064c022a53c3e77b2c4618b87d9dec410588",
+    ".openquantum/sdk-gaps-evidence/simulation/mcp-merlin-learning-example.json": "e29659b4a0196ccf0628604b4c51f1ab2eef764c686ea5888ebd3ed8780a9599",
+    ".openquantum/sdk-gaps-evidence/simulation/mcp-mimiq-simulation-defaults.json": "31d577d4e4f95d22cc5dbfe8b601940ba437cd4106a7ef24d4b694ce844b278a",
+    ".openquantum/sdk-gaps-evidence/simulation/mcp-mimiq-simulation-example.json": "128815cee2f30f4294f163c3ce56edf225d174168c89e573329cf58a81b5dd14",
+    ".openquantum/sdk-gaps-evidence/simulation/mcp-mrmustard-optics-defaults.json": "5f4ccf53bd50bcf24135ec642e4d658f6a05b51b527ed86c36beeed15745ab02",
+    ".openquantum/sdk-gaps-evidence/simulation/mcp-mrmustard-optics-example.json": "4e28ecd1892c3bcdb404ea30312cb42ee4ff87dc765b61a730d273b23c7600b0",
+    ".openquantum/sdk-gaps-evidence/simulation/mcp-myqlm-simulation-defaults.json": "4e4bfb4f70207ac3521033b91293d3e98faded0903f8677d9f7fa224fe9f01cc",
+    ".openquantum/sdk-gaps-evidence/simulation/mcp-myqlm-simulation-example.json": "fba6b86594f1474f705bc6fc0305283abfed45e03ab0b9c79065e26a545cf568",
+    ".openquantum/sdk-gaps-evidence/simulation/merlin-learning.json": "be4b5a16f993bb2b2329f2498ce875cf1fafc810d8459c1bff090db3e0c14383",
+    ".openquantum/sdk-gaps-evidence/simulation/mimiq-simulation.json": "caf8bac8c1116bb643b5c47bda8d6345b96389a6d735ff0a92630cff7504d5c5",
+    ".openquantum/sdk-gaps-evidence/simulation/mrmustard-optics.json": "a624dd500bc1cd713950abe76373a7d4593f6a42e381606ea2bd65f56d7f615e",
+    ".openquantum/sdk-gaps-evidence/simulation/myqlm-simulation.json": "a98b406c44683031630665780f5cadaf034453dc94f53f7bc6e3b09945fb6ec1",
+    ".openquantum/sdk-gaps-evidence/full-check-first.log": "3caeec1700007da1ead49d16484e402393f3b40a21cc3fd3be69085cfb2f1b28",
+    ".openquantum/sdk-gaps-evidence/cloud-test.log": "dc48aca4dddc8ff039ddc132d1c885325b543d49ee492c0049e5db2bd8e5bf94",
+    ".openquantum/sdk-gaps-evidence/harness-test.log": "64ff1e55c49f7a80dc95b07c8175942ccb29c794391e4ff06f5c2682a7e4f1bd",
+    ".openquantum/sdk-gaps-evidence/final-catalog-cloud.log": "259f4d13fade22fbb0ee4cbcc5e83034178c18082b0d80b481941d9a133e7642",
+    ".openquantum/sdk-gaps-evidence/final-locales.log": "a72cb09b2b7fc7dbf46babc32f757b0dd0c40164852007610886d350e53550e1",
+    ".openquantum/sdk-gaps-evidence/full-check.log": "51305beab090466c3ffd2dc498f187d11c772b35d5393ebe0f269250d2f8034f"
+  },
+  "integrationSourceSha256": {
+    ".agents/capability-packages.yml": "62ca73fd7a49d239c6b23ae8d7e474db531ee2441ea1099e48ad6d166dbbfc03",
+    "runtime/openquantum/agent-presets/openquantum/agent.cordis.yml": "225900852315a715609dbd802949e78e5b85cc69f44486ff582c38fc3d3f4ae4",
+    "src/settings/server/project-settings-catalog.mjs": "a3509e881d3a1d5a9267f005614b6d6cfc484d3a6121411a7c627a37640990bd",
+    "scripts/setup-paper-tools.mjs": "70942ef808daf4507baca5b54dc5e58598ee877a2f73d58ebea016386da63acf",
+    "package.json": "d365917c325259b5b34f591e81ca3227bf9e22b43f55977e57d99f3a1cf9d611",
+    "tests/capability-package-audit.test.mjs": "78e538001a439de281fb4afb26946471548cd4c476403a4186f7b09cb325b6dd",
+    "tests/capability-tool-contract.test.mjs": "c17ca37991d7d1fbf224554411d17efba9863d20e84cf708bcb554300540bafb",
+    "tests/harness-sdk-gaps.test.mjs": "55a923195ae6ee92a406c86d1245528b7bd019d1c8956e7760164e963740fb39",
+    "tests/sdk-gaps-cloud-contracts.test.mjs": "3e7b4c8077b2ac87c55d30c6ff4263a9ec7a4d5aecc1def7d2de924bae8ee6d1",
+    "tests/sdk-gaps-cloud-live.test.mjs": "d10eed80e8ca860e894c6c46e8d561b0e70ba0e35b50d2f83683cd5f9f37b2b0",
+    "tests/sdk-gaps-control-contracts.test.mjs": "59889621adf54af78a990da49e6fa33754080d73105017e3d9a201b7797d7baa",
+    "tests/sdk-gaps-control-live.test.mjs": "a06b353b0f015ce415282c3c03fc78c2ed0e0e7990c18cb132d20ec3e6ae3235",
+    "tests/sdk-gaps-domestic-contracts.test.mjs": "1899a8afecd4a80c5e347e28fde695449109e086557ab4ee28e14385fdd3955a",
+    "tests/sdk-gaps-domestic-live.test.mjs": "afce3f79b60328defc171b31594ba50ce8ba3b0102d314e45ad1cfe37f34e366",
+    "tests/sdk-gaps-simulation-contracts.test.mjs": "de88ee6860b99d5d6ee7b5b64705735fbe80bd219dc515738726d512045e44f7",
+    "tests/sdk-gaps-simulation-live.test.mjs": "f41b38316aff539b7dac944eea137338a232af82175ce5c8cd84f163f14f818e",
+    "tests/fixtures/sdk-gaps-cloud.mjs": "68cb279fb33581fde6d4877151225408f1b883807024de67fad8068c191b60f6",
+    "tests/fixtures/sdk-gaps-control.mjs": "5c3d1dc02d7244bcc08cf3b1a952dfb908c2c817bd0e8b5d73beed821b07cba1",
+    "tests/fixtures/sdk-gaps-domestic.mjs": "7d0713bd3d71e38dd72352fea9f0237ec5185b9c1ababe745f051d06cdf77399",
+    "tests/fixtures/sdk-gaps-simulation.mjs": "d04b3c87080f5e116543c5e7612c688eaf06a832d669d1f1254384293ab8ae83",
+    "tests/fixtures/sdk_gaps_cloud_science.py": "a2c4713501af143bdbce88e883183d67fb0c1b0d38f7c7948ac0f0edf3601680",
+    "tests/fixtures/sdk_gaps_domestic_science.py": "15da40d00c5a2975e5e717b864f93dc31602de354e96ad8318f594470d89770d",
+    "tests/fixtures/sdk_gaps_simulation_science.py": "287c5a302a95b225464b3576c6f458a39f526b44d1bcc151fa82091f47a14d4f"
+  },
+  "documentationSha256": {
+    "CURRENT.md": "627388d184e934d219e6d70b444c1513dde7f253597eb67613e8aee9c116dccd",
+    "README.md": "c4dd72ba018755ad3bf7cb67fe61ef7bf60a401a8ec7ebecfce71d96046f244b",
+    ".agents/skills/README.md": "99e3b4cad989e11b8a572ffc28d9e2286681c849f9a16c9fe7395d693c1b260d",
+    "docs/README.md": "eaea6397c521302c6da91552fd0a8eccfc419dc8e847fe06bf95e8f50ad186ee",
+    "docs/integrations/CAPABILITY_SELECTION.md": "ec0412f8902351c544c301da1f4ad6cfbaa5c26330065bc409ae58ed80befab3",
+    ".agents/skills/quantum-sdk-advisor/SKILL.md": "f749b85e814b51bbd49fff7130ffb4e9ae8e7f06c9e68512a55a792dbbf78ab2",
+    ".agents/skills/quantum-sdk-advisor/references/ecosystem.md": "c55da32402c0547d662cee2b2329956cd6420fc63351cf245feed0475b77e9df",
+    "docs/integrations/SDK_GAPS.md": "72f91289810d1d5602e0a16f8b0856d8feae7c596fdd9bc406c70a1f74b499f8",
+    "docs/integrations/SDK_GAPS_CLOUD.md": "7b32f39d84e181f95c23465e800502da8fef84e942782d1e7d66989c73d5b918",
+    "docs/integrations/SDK_GAPS_CONTROL.md": "1ec2b6f989341e8f0fc06f5d6d27a6f2a226a9fe720c9c60b75b7875b11b0da4",
+    "docs/integrations/SDK_GAPS_DOMESTIC.md": "1bdcc74e1fb0bc8dec4b14f72c0cd0ee97e88d0e13fc5f1b42db3022e214075e",
+    "docs/integrations/SDK_GAPS_SIMULATION.md": "82026bdf911fe3ed57957d201e4914be794923db4e7aa876d79067bf616ebed4",
+    "docs/readme/README.ar.md": "9ed58b14fc152dd0d49ba295aaca28dd9d7be92ea4c814c67e4486ba01b4edf0",
+    "docs/readme/README.de.md": "7df57a531a297942db34133f363a7fe20c2607e0a596004832d08759ed771288",
+    "docs/readme/README.en.md": "969341f3a88b0cb45a6edd669ce67c61eacba19710c31e471f5fe4189f3d54a8",
+    "docs/readme/README.es.md": "a688f04165d745b0494b7075ff9253d7628d0a3a6b382d580a6762270c1d2013",
+    "docs/readme/README.fr.md": "0738c9edfbb03ca9e6915aa40f08b0a43da5f1c775b631bcf2068c8a5d65d78c",
+    "docs/readme/README.ja.md": "9e335f4ade788bf8e7c71decdc6c417c499152799388d8ee6287447b2bb155ee",
+    "docs/readme/README.ko.md": "1b5dbbf33094e68ff3773aadbe3752d4db46d64ce8137cd3604fa954d0e1613f",
+    "docs/readme/README.pt.md": "0d3f0d74d685d0b7a0fa504533ae63a52df627cd2d6695f717888620619c3dfa",
+    "docs/readme/README.ru.md": "6f6148518b9f76c11d59b1cf6b796e4d151071c91bb79961240cf116ad559d42"
+  }
+}

@@ -210,6 +210,10 @@ Harness MCP Client 负责 MCP Server 进程、重连、Tool Registry 注册和�
 当前 QGS 与 QI 两条 L3 纵切拆成四个深模块：其中 `scientific-result-projection.mjs`
 是拥有 hook 的可信 Host Plugin，Adapter Registry 只是该 Plugin 的内部 Interface。
 
+共享科学 envelope 的大型 L1 输出另由 `science-result-delivery.mjs` 在有效 Session 沙箱内保存完整 JSON，
+读回一致后才用有界摘要替换展示文本；小结果、MCP 合同和执行期 canonical value 不变。
+这项[数据交付](docs/integrations/SCIENCE_RESULT_DELIVERY.md)不调用 Validator，也不推导 Acceptance。
+
 - `scientific-result-protocol.mjs`：可在 Host/UI 两侧重放的有界协议；
 - `scientific-result-materializer.mjs`：Harness workspace 路径约束、物化、真实字节重读与中央合同编排；
 - `scientific-result-adapters.mjs`：显式登记 Tool、领域投影、Artifact 类型和 capability Validator；

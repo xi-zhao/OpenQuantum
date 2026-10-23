@@ -1,109 +1,80 @@
-# OpenQuantum 桌面测试安装包
+# 原版 DSH Desktop 与 OpenQuantum 能力包
 
-安装包把 OpenQuantum 工作台、固定版本的 Desktop / Harness、Node.js 和 uv / uvx 一起交付。
-打开工作台和运行内置本地工具不需要先安装 Node、npm、Corepack 或 C++ 编译器。
-通过 Agent 调用模型仍需在设置中配置自己的模型服务。
+后续桌面发行直接使用 [anywhere-labs/dsh-desktop](https://github.com/anywhere-labs/dsh-desktop) 的原版客户端。
+OpenQuantum 交付 Skill、Tool、设置扩展和配置，保留原版界面、原生名称、向导与客户端更新入口，并使用 OpenQuantum 应用图标。
+macOS 安装器创建带品牌图标的 `OpenQuantum.app` 启动入口，运行中的 Dock 图标由 Desktop Profile 内的品牌扩展设置。
+Windows 提供带 OpenQuantum 图标的启动快捷方式，并通过同一扩展设置运行中的窗口与任务栏图标。原版 DSH Desktop 应用及其签名资源不改写。
 
-当前提供的是**未签名的测试构建**，不代表已经完成 Apple 签名、公证或 Windows 签名。
-首次启动可能需要在操作系统的安全提示中确认该应用。正式发布仍以 GitHub Release 的实际附件为准。
+当前兼容基线是 [DSH Desktop 2.0.7](https://github.com/anywhere-labs/dsh-desktop/releases/tag/v2.0.7)
+与 Harness `0.1.5-rc.1`。不要用上游 `latest` 链接自动替换固定版本；该链接可能指向 NEXT 渠道或不同 Harness family。
+OpenQuantum 能力包与 Codex 插件继续共用产品版本（当前源码 `0.8.4`）；第三方客户端显示其真实的上游版本 `2.0.7`。
+[OpenQuantum 0.8.4 Desktop Release](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.4) 提供 Mac Apple Silicon、Mac Intel 和 Windows x64 能力包；[同版本 Codex 插件](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.4) 单独安装。以下流程适用于能力包，旧私有 DMG/EXE 不再作为安装入口。
 
-2026-09-20 [三平台原生 CI 验证](https://github.com/xi-zhao/OpenQuantum/actions/runs/35507856665)通过：
-Apple Silicon 和 Intel Mac 的 DMG 完成介质校验与复制安装，Windows EXE 完成校验与静默安装；
-三个平台均通过两次真实工作台启动、自定义配置与 Skill 保留、内置运行环境和本地计算检查。
-Apple Silicon 还完成本地安装与首次设置向导的 UI 检查。
+## 安装与启动
 
-## 下载、安装与首次启动
+1. 从上述上游 `v2.0.7` Release 安装原版 DSH Desktop。Mac 使用 universal DMG，Windows 使用 x64 Setup。
+2. 从 OpenQuantum 对应 Release 下载 `OpenQuantum-<version>-DSH-<platform>-<arch>.tar.gz`，按同页 `SHA256SUMS` 验证后解压。
+3. Mac 运行解压目录的 `install.command`；Windows 运行 `install.cmd`。能力包包含 Node、uv 与锁定的程序依赖。
+4. Mac 打开安装器输出的 `OpenQuantum.app`；Windows 打开 `OpenQuantum.lnk`。它们启动原版 DSH Desktop 并传入 OpenQuantum Home；也保留 `OpenQuantum DSH.command/.cmd` 命令行入口。Mac 启动入口可放入应用程序文件夹或拖入 Dock。
+5. 如果此前在 DSH Desktop 设置过数据目录，原生设置优先于启动环境。先退出客户端，在 DSH Desktop 的数据目录设置中选择本次安装的 `project/.openquantum/dsh`，再启动入口。
 
-从 [GitHub Release](https://github.com/xi-zhao/OpenQuantum/releases/latest) 下载对应系统的附件。
-首次提供三平台安装文件的版本为 [v0.5.1](releases/v0.5.1.md)；只发布实际构建、安装验证成功的文件：
+默认安装目录：Mac 为 `~/Library/Application Support/OpenQuantum/`，Windows 为 `%APPDATA%\OpenQuantum\`。
+Mac 默认安装还在 `~/Applications/OpenQuantum.app` 创建品牌启动入口，可直接打开或放入 Dock；已有的同名用户应用不会被替换。
+`project/` 是可写部署，`versions/` 保存安装依赖和运行环境，原版客户端继续使用自己的 `DSH Desktop` 原生设置目录。
+解压目录安装完成后可移走；不要删除 `versions/`。自定义目录可作为安装命令的唯一绝对路径参数。
+Windows 自定义客户端位置通过 `DSH_DESKTOP_EXECUTABLE` 指定原版 `DSH Desktop.exe`。
+安装后重启 Desktop，使 Dock／任务栏使用新图标。品牌启动入口依赖原版 DSH Desktop，安装客户端仍是第一步；上游客户端升级继续遵守上面的固定版本要求。
 
-| 系统 | 安装文件 | 安装方式 |
-| --- | --- | --- |
-| macOS，Apple Silicon | `OpenQuantum-<version>-macOS-arm64.dmg` | 打开磁盘映像，将 OpenQuantum Desktop 拖到 Applications，再从 Applications 启动 |
-| macOS，Intel | `OpenQuantum-<version>-macOS-x64.dmg` | 同上 |
-| Windows，64 位 | `OpenQuantum-<version>-Windows-x64-Setup.exe` | 运行安装向导，选择安装位置，再从开始菜单启动 |
+安装不会覆盖已有模型 Route、凭据、自定义 Skill 或修改过的 MCP 配置。新默认配置存放在
+`.openquantum/distribution-defaults/` 或 Home 的 `.openquantum-defaults/` 供比较。更新前应退出相关 Host。
+旧私有客户端安装迁移时，仅自动替换能与旧分发清单逐字节匹配的生成默认文件；用户修改继续保留。
 
-每次构建同时生成 `SHA256SUMS`。GitHub Actions 的测试附件保留 14 天；公开版本应上传到对应 Release，
-不能把短期 CI 附件链接写成长期下载入口。
+安装器按语义版本比较分发清单，在复制能力包、更新程序或启动入口前拒绝降级；同版本修复和升级仍可执行。
+版本缺失或无效时停止，不猜测版本顺序。安装过程不改写用户会话、凭据或自定义设置。
+已经安装的旧私有 `OpenQuantum Desktop.app` 自带旧安装器，不能自动获得此保护。
+完成迁移后应备份并停用这个旧入口；可将其原路径改为新版 `OpenQuantum.app` 的链接，使已有快捷入口继续指向新版。
+若旧入口曾把共用 `project/` 回写为旧版，需要重新安装对应能力包恢复程序与依赖；不要通过删除 Home 或数据目录处理。
 
-首次打开会显示 OpenQuantum Desktop 设置向导，可以使用默认的兼容模式和仅本机访问。
-进入工作台后选择工作区，再在模型设置中添加服务。未配置模型时仍可使用不依赖模型的内置计算工具。
+原版客户端保存数据目录后，也可以直接从 Finder 或开始菜单打开。安装器将项目 `.env` 中的两条模型
+`BASE_URL`、三个 Tool profile 与 `OPENQUANTUM_DISABLE_QISKIT_MCP` 固化为 Home 配置的默认值；启动环境仍优先。
+配置声明的 `apiKeyEnv`、`credentialEnv` 和 `optionalCredentialEnv` 引用若在项目 `.env` 有值，安装器通过
+DSH 的凭据服务写入原生存储（macOS 为 `0600`），已有原生凭据不覆盖，密钥不进入配置或安装报告。
+之后请在原生设置中管理凭据。启动入口不再将这些旧 `.env` 凭据注入进程，原生设置中的更换和删除会继续生效；显式 shell 环境仍优先。修改上述 `.env` 默认值后需重新运行安装器或启动入口；独立修改过的 Home 配置需自行比较合并。
+其他自定义进程环境（例如 Python 环境目录、计算资源限制）仍使用 `OpenQuantum DSH.command/.cmd` 启动入口加载，
+不声称原版 Finder 启动会读取整个项目 `.env`。
 
-Python 计算组件按各自的固定依赖首次准备，可能需要网络。Julia、Git 依赖的可选组件，以及
-[量子学习通原版界面](integrations/OPENMAIC.md)仍有各自的准备步骤；本安装包不会把这些步骤宣称为已经完成。
+Harness 0.2 的 V4 会话不能交给此版本改写。安装与准备会拒绝 V4 Home；使用单独兼容 Home，并保留原目录。
+这不提供 V4 → V3 会话转换。旧源码 Home 没有分发清单时，无法证明的旧程序副本或仍引用进程目录的 preset 会阻止启动；先备份并比较 Home 的 `.openquantum-defaults/`，或选择新的兼容 Home。既有 SDK 的显式安装、账户、平台与许可要求仍见[环境说明](integrations/LOCAL_ENVIRONMENTS.md)。
+量子库原生 API 入口和完整接入范围见[完整接入记录](integrations/FULL_SDK_ACCESS.md)。
 
-## 数据与升级
-
-| 系统 | 默认数据目录 |
-| --- | --- |
-| macOS | `~/Library/Application Support/OpenQuantum/` |
-| Windows | `%APPDATA%\OpenQuantum\` |
-
-目录内 `native/` 保存窗口设置、诊断和首次设置记录，`project/` 保存可写的 OpenQuantum 部署。
-`project/.openquantum/` 保存 Harness 会话、配置和计算组件缓存；`project/.agents/skills/` 包含内置和用户添加的 Skill。
-测试和迁移可以通过 `OPENQUANTUM_DESKTOP_DATA_DIR` 明确指定另一个目录。
-
-安装版使用独立的数据目录，不会自动搬动源码版的 `.openquantum/dsh` 或原 DSH Desktop 的数据。
-覆盖安装、正常卸载不会主动删除上述 OpenQuantum 数据目录。备份时先退出应用，再复制整个目录；
-不要只复制安装目录。
-
-应用启动时按上一次分发清单更新程序文件：
-
-- 未修改的内置文件随安装包更新；会话、凭据、缓存和自定义文件保留。
-- 用户改过的 Skill 和 MCP 配置保留。若新版同时改变了对应默认文件，新默认内容另存到
-  `project/.openquantum/distribution-defaults/`，供明确比较后采用。
-- 从设置中删除的内置 Skill 不会在每次启动时被重新创建。
-- 对损坏的安装内容、越界路径和改过的程序代码，准备过程先检查并停止，不覆盖已有内容。
-  更新中断后再次启动可以继续准备；这不是版本回滚或后台自动安装机制。
-
-当前[版本提醒](UPDATES.md)负责发现新版本并打开发布页；用户下载并覆盖安装新版本。
-
-## 构建与验证
-
-在与目标架构相同的原生系统上运行。构建机器需要锁定的 Node.js 24.14.1、npm、Git、Corepack 和 C++ 工具链。
-这些是开发依赖，不是打开已生成安装包的前置条件。
+## 开发与工程验证
 
 ```sh
 npm ci
-npm run desktop:setup
+npm run desktop:setup          # 可选：构建固定上游源码，内容不作修改
+npm run desktop -- --source   # 开发用的原版源码入口
 npm run desktop:package:check
-npm run desktop:package
+npm run desktop:package       # 只构建 OpenQuantum 能力包
 npm run desktop:package:smoke
 ```
 
-`desktop:package -- --dir` 只生成应用目录，便于排查；正常命令生成 DMG 或 NSIS 安装包。
-安装包在 `.openquantum/distributions/<platform>-<arch>/artifacts/`，目录模式输出到同级 `directory/`，
-不会覆盖已有安装包。验证报告在同级 `validation/`。目录模式也保留最终可执行文件和 Electron fuse 检查。
-可以把从安装介质复制出来的应用路径传给验证命令：
+打包需要与目标架构相同的原生 runner、Node `24.14.1` 和 npm；输出在
+`.openquantum/distributions/<platform>-<arch>/artifacts/`。`--dir` 仅准备 `content/`，不生成压缩包。
+Desktop 保留上游设置的布局、插件、Agent 预设和原生操作，不自动展开提供方设置。OpenQuantum 仅增加品牌、量子组件、量子学习通和更新入口；额外消息渠道设置不在 Desktop 注册，内测声明通过原生 onboarding Slot 隐藏。终端入口使用「打开终端」标签，两个量子模式的简介只说明用户用途。
 
-```sh
-npm run desktop:package:smoke -- "/path/to/OpenQuantum Desktop.app"
-```
+全新安装不预置 OpenQuantum Gateway 或 Kimi、GLM 等模型；用户在原生模型设置中添加提供方。更新时只移除仍使用示例地址且没有端点、凭据或原生设置的占位路由，并清除指向它们的默认模型选择。已配置的路由以及用户单独修改过的 Home 配置继续保留。
 
-Windows 传入安装后的 `OpenQuantum Desktop.exe`；目录模式传入 `directory/` 下实际生成的应用路径。
-验证使用独立临时用户目录和仅包含系统命令的初始 PATH，
-检查内置 Node / uv、两次真实 Host / renderer 健康启动、自定义配置和 Skill 保留，以及固定本地量子工具。
-自动检查使用“已跳过首次设置”的测试状态，**首次向导和安装器交互仍需另做人工 UI 验证**。
-测试数据位置会输出到日志，供故障复现；不读取现有用户数据，不调用外部模型或真实硬件。
+模型目录为空时，原生输入区显示「请在设置 → 模型中添加模型」。配置后恢复原版模型选择器；读取失败时保留原版错误处理，不改写历史会话的模型选择。量子组件使用 Tools、MCP、Skills 名称，中文说明分别解释工具、服务连接和任务指导的用途；首次配置或等待会话时显示下一步操作，读取超时等异常仍明确显示。技术状态与检查边界保留在折叠的「诊断详情」中，已加载不等于连接或科学验收通过。
 
-[Desktop test installers 工作流](../.github/workflows/desktop-installers.yml)在原生 Apple Silicon、Intel Mac、
-Windows 运行这些命令，并在 macOS 从 DMG 复制应用、在 Windows 执行静默安装后，检查实际安装的应用。
-只有完成 smoke 检查的任务才上传安装文件，失败任务保留诊断证据。
-该工作流不创建 Release，也不修改正式更新清单。
+五个 OpenQuantum Web 包和一个声明配置的 bundle 通过 `desktop` Profile 的正式 `link:` 依赖注册。
+扩展只在该 Profile 激活，新建和切换其他原生 Profile 不会加载这些依赖。用户的 Profile patch 保留原文，覆盖顺序沿用上游规则。
+升级只迁移仍与安装记录一致的全局 Home patch，并在 `.openquantum-migrations` 保留原件；若其中的 OpenQuantum 配置已被手动修改，先停止迁移并提示合并配置。
+原生 Profile 修复可以按 manifest 重建链接，无需向上游 app 或其 `node_modules` 注入文件。
+Desktop 图标扩展只在 OpenQuantum 的 Desktop Profile 内加载。它在原生 `DesktopRuntime.schedule` 接口中替换图标参数，其余设置、窗口和生命周期全部由原版 Desktop 处理；兼容独立 Host 进程，不直接导入 Electron。
+原生桌面通过 Cordis 依赖等待图标扩展就绪；Profile 卸载会等待桌面清理完成，恢复原接口可与清理并行。已启动桌面的图标参数不受影响，后续其他 Profile 继续使用原版图标。扩展不读取模型、凭据、会话或网络，也不改变原生设置布局或注册新的 Tool。
 
-## 维护约定
-
-- `scripts/lib/desktop-source.mjs` 固定 Desktop commit 与 Harness family；`desktop/runtime-lock.json`
-  固定 Node / uv 版本、官方归档地址及 SHA-256，缓存复用也验证归档校验值。
-- `scripts/lib/desktop-branding.mjs` 在独立副本应用品牌适配，包括首次设置和恢复界面。
-  安装脚本在副本中明确适配应用 ID 和内置运行环境的 PATH；上游匹配数量变化会令构建失败。
-- Desktop 的生产依赖使用固定打包器的遍历能力物化，保留可选原生模块和嵌套依赖。
-  OpenQuantum 的五个 Host / Client 包进入应用自身的依赖目录，避免首次 Profile 初始化移走它们。
-- OpenQuantum 的 Node 工具依赖按 `package-lock.json` 单独准备并随包携带，保持 Electron 原生模块与
-  独立 Node worker 的边界。程序包只收录指定的 Git 跟踪路径，不包含 `.env`、本地 Harness home 或实验输出。
-- 打包继承上游的 ASAR / 原生模块 / CLI 和 Electron fuse 检查，并增加 OpenQuantum 实际工作台与工具检查。
-  原生依赖缓存以平台、架构、npm 锁文件摘要及 Node ABI 区分。
-- 后续签名构建使用 `npm run desktop:package -- --signed`，要求签名成功；macOS 同时要求公证。
-  通过系统证书存储和受保护的 CI Secrets 配置凭据。未签名模式关闭自动证书选择，避免误用本机证书。
-
-安装包只是现有 Harness Host Adapter 的分发方式，没有增加独立的 Agent Runtime。
+工程检查覆盖安装、再次安装、配置保留、独立工作目录和捆绑运行环境；不运行外部模型或真实科研任务。
+该命令不宣称原生 UI 验收。发布前另需对原版客户端完成实际启动、设置、关键操作和重启检查。
+[能力包 CI](../.github/workflows/desktop-installers.yml)覆盖三个原生构建目标，
+[发布附件流程](../.github/workflows/release-artifacts.yml)只接受同一提交通过 CI 的能力包。
+第三方应用更新由 DSH Desktop 负责；OpenQuantum 内容更新使用[自身的版本提醒](UPDATES.md)。
