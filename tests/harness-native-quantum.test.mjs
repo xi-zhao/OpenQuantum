@@ -247,8 +247,8 @@ test(
       if (method === "session/page") { const snapshot = await harnessSessionSnapshot(baseUrl, cookie, payload.sessionId, payload.maxMessages); return { ok: true, value: { events: snapshot.records } }; }
       if (method === "session/prompt") payload = { requestId: crypto.randomUUID(), ...payload };
       const rpcId = `test-${method}-${crypto.randomUUID()}`;
-      // Session creation initializes every enabled MCP client on a cold CI runner.
-      const timeoutMs = INCLUDE_IBM_RUNTIME_MCP ? 90_000 : method === "session/create" ? 30_000 : 5_000;
+      // Cold CI runners initialize MCP clients and discover the full Skill catalog.
+      const timeoutMs = INCLUDE_IBM_RUNTIME_MCP ? 90_000 : ["session/create", "skills/list"].includes(method) ? 30_000 : 5_000;
       const response = await fetch(`${baseUrl}/api/${method}`, {
         method: "POST",
         headers: { "content-type": "application/json", cookie },
