@@ -1,13 +1,13 @@
-import { randomBytes } from "node:crypto";
 import { generateKeyPair, exportJWK, compactDecrypt } from "jose";
 import { serviceSupported, serviceById } from "./service-catalog.mjs";
 import { writeCredentialField } from "./credential-field-write.mjs";
+import { createCredentialRequests } from "./credential-requests.mjs";
 
 const ALGORITHM = "RSA-OAEP-256", ENCRYPTION = "A256GCM";
 const invalid = () => ({ status: 403, message: "保存请求已失效，请先检查刷新后的状态，再重新填写。" });
 
 export function createCredentialChannel(context) {
-  const sessions = new Map();
+  const requests = createCredentialRequests();
   let keyPair, closed = false;
   return {
     async prepare({ id, field, operation }) {
@@ -20,18 +20,13 @@ export function createCredentialChannel(context) {
       try { publicKey = await exportJWK((await keyPair).publicKey); }
       catch { throw new Error("安全保存暂时不可用，请使用独立凭据窗口。"); }
       if (closed) throw new Error("设置页已过期，请重新打开。");
-      for (const [key, session] of sessions) if (session.expires < Date.now()) sessions.delete(key);
-      if (sessions.size >= 32) throw new Error("凭据请求过多，请稍后重试");
-      const nonce = randomBytes(32).toString("hex");
-      sessions.set(nonce, { id, field, operation, expires: Date.now() + 10 * 60 * 1000 });
+      const nonce = requests.issue({ id, field, operation });
       return { nonce, publicKey, algorithm: ALGORITHM, encryption: ENCRYPTION };
     },
     async commit({ nonce, ciphertext }) {
-      const session = sessions.get(nonce);
-      if (closed || !session) return invalid();
       // Consume before decrypting or acquiring the write lock, including failure.
-      sessions.delete(nonce);
-      if (session.expires < Date.now() || typeof ciphertext !== "string" || ciphertext.length > 32768) return invalid();
+      const session = requests.consume(nonce);
+      if (!session || typeof ciphertext !== "string" || ciphertext.length > 32768) return invalid();
       let input;
       try {
         const { plaintext, protectedHeader } = await compactDecrypt(ciphertext, (await keyPair).privateKey, {
@@ -48,6 +43,6 @@ export function createCredentialChannel(context) {
         return result;
       } catch { return { status: 500, message: "保存结果尚未确认，请刷新状态，并检查系统凭据库权限。" }; }
     },
-    close() { closed = true; sessions.clear(); keyPair = undefined; },
+    close() { closed = true; requests.close(); keyPair = undefined; },
   };
 }
