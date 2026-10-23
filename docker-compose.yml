@@ -3,7 +3,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: openquantum:0.4.0
+    # Locally built image; the product version lives in package.json, not here.
+    image: openquantum:local
     restart: unless-stopped
     network_mode: host
     env_file:

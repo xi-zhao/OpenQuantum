@@ -14,16 +14,16 @@ OpenQuantum은 오픈 소스로 공개되고 공동 개발에 열려 있는 양�
 
 연구 질문, 논문 또는 기존 프로그램에서 출발해 AI와 함께 탐구하세요. 프로그램, 매개변수와 검증 내용이 보존되므로 한 번의 탐구가 다음 탐구의 출발점이 됩니다.
 
-자신에게 맞는 진입점을 고르세요. 두 진입점은 같은 도메인 기능을 공유합니다. **[Codex 플러그인](../integrations/CODEX_PLUGIN.md)** 은 양자 Skill과 과학 Tool을 Codex 기본 대화로 가져오며, 기능 스위치·MCP 연결·토큰을 관리하는 설정 페이지를 제공합니다. **Desktop**에는 연구 작업대와 별도의 Quantum Learning 앱이 포함되며, 모델 서비스는 직접 설정합니다.
+자신에게 맞는 사용 방법을 고르세요. 두 방법은 같은 도메인 기능을 공유합니다. **[Codex 플러그인](../integrations/CODEX_PLUGIN.md)** 은 양자 Skill과 과학 Tool을 Codex 기본 대화로 가져오며, 기능 스위치·MCP 연결·토큰을 관리하는 설정 페이지를 제공합니다. **Desktop**에는 연구 워크벤치와 별도의 Quantum Learning 앱이 포함되며, 모델 서비스는 직접 설정합니다.
 
 **[Codex 플러그인 설치](#codex)** · [Desktop 설치](#desktop-installer) · [계산과 결과 보기](#use-and-inspect-results) · [웹사이트 방문](https://xi-zhao.github.io/OpenQuantum/)
 
-**실측 사례부터 살펴보세요.** [PennyLane Pauli 교환자](#pennylane-rust-case) 계산은 전체 호출 기준 **5.09배**, [QuTiP Wigner 함수 계산](#qutip-rust-case)은 **5.69배** 빨라졌습니다. 두 사례 모두 성능 비교, 결과 검증과 재현 기록을 보존합니다.
+**실측 사례부터 살펴보세요.** [PennyLane Pauli 교환자](#pennylane-rust-case) 계산은 전체 호출 기준 **5.09배**, [QuTiP Wigner 함수 계산](#qutip-rust-case)은 **5.69배** 빨라졌습니다. 두 사례 모두 성능 비교, 결과 검증과 재현 기록을 보관합니다.
 
 **현재 버전 0.8.4:** [Desktop 다운로드와 릴리스 노트](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.4) · [Codex 플러그인 다운로드와 릴리스 노트](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.4). 두 배포판은 같은 제품 버전을 사용합니다.
 
 - **더 쉬워진 기능 찾기:** Tools, MCP, Skills를 용도별 8개 범주로 분류하고 검색과 상태 필터를 추가했습니다.
-- **하나의 브랜드 진입점:** Mac의 `OpenQuantum.app`과 Windows의 `OpenQuantum.lnk`는 OpenQuantum 아이콘을 사용하며, 원본 DSH Desktop 인터페이스, Quantum Learning과 업데이트 메뉴는 그대로 유지합니다.
+- **하나의 브랜드 실행 아이콘:** Mac의 `OpenQuantum.app`과 Windows의 `OpenQuantum.lnk`는 OpenQuantum 아이콘을 사용하며, 공식 DSH Desktop 인터페이스, Quantum Learning과 업데이트 메뉴는 그대로 유지합니다.
 
 <p align="center">
   <a href="#why-openquantum">OpenQuantum을 선택하는 이유</a> ·
@@ -39,8 +39,8 @@ OpenQuantum은 오픈 소스로 공개되고 공동 개발에 열려 있는 양�
 </p>
 
 <p align="center">
-  <img src="../images/openquantum-desktop-20261013.jpg" width="100%" alt="원본 DSH Desktop에서 실행한 OpenQuantum 작업대: 브랜드, 새 세션, Quantum Learning과 직접 모델을 추가하라는 안내" /><br />
-  <sub>익숙한 원본 Desktop 인터페이스입니다. 설정에서 사용할 모델 서비스를 추가하면 새 세션을 시작할 수 있습니다.</sub>
+  <img src="../images/openquantum-desktop-20261013.jpg" width="100%" alt="공식 DSH Desktop에서 실행한 OpenQuantum 워크벤치: 브랜드, 새 세션, Quantum Learning과 직접 모델을 추가하라는 안내" /><br />
+  <sub>익숙한 공식 Desktop 인터페이스입니다. 설정에서 사용할 모델 서비스를 추가하면 새 세션을 시작할 수 있습니다.</sub>
 </p>
 
 <details>
@@ -50,7 +50,7 @@ OpenQuantum은 오픈 소스로 공개되고 공동 개발에 열려 있는 양�
 
 ![Desktop에서 용도별로 분류되고 검색·상태 필터가 적용된 MCP 연결](../images/openquantum-settings-categories-20261013.jpg)
 
-이 스크린숏은 2026-10-13 원본 클라이언트에서 범주를 검증하며 촬영했습니다. [이미지 설명](../images/README.md)을 참고하세요. 설정이 활성화되어 있다고 해서 서비스가 온라인이라는 뜻은 아닙니다.
+이 스크린숏은 2026-10-13 공식 클라이언트에서 범주를 검증하며 촬영했습니다. [이미지 설명](../images/README.md)을 참고하세요. 설정이 활성화되어 있다고 해서 서비스가 온라인이라는 뜻은 아닙니다.
 
 </details>
 
@@ -74,12 +74,12 @@ OpenQuantum은 오픈 소스로 공개되고 공동 개발에 열려 있는 양�
 
 | 하는 일 | 어려운 점 | OpenQuantum이 더하는 것 |
 | --- | --- | --- |
-| **연구와 알고리즘 개발** | 새 아이디어를 시험하려면 방법을 다시 구현하고, 기준선을 찾고, 결과를 반복해서 확인해야 하는 경우가 많습니다. | 알고리즘 예제와 전문 SDK에서 출발해 입력을 바꾸고 비교를 구성하며, 지원되는 독립 검증을 사용하고 재사용 가능한 프로그램과 결과를 보존합니다. [결과](#use-and-inspect-results)를 참고하세요. |
+| **연구와 알고리즘 개발** | 새 아이디어를 시험하려면 방법을 다시 구현하고, 기준선을 찾고, 결과를 반복해서 확인해야 하는 경우가 많습니다. | 알고리즘 예제와 전문 SDK에서 출발해 입력을 바꾸고 비교를 구성하며, 지원되는 독립 검증을 사용하고 재사용 가능한 프로그램과 결과를 보관합니다. [결과](#use-and-inspect-results)를 참고하세요. |
 | **애플리케이션과 에이전트 개발** | 기존 애플리케이션에 양자 계산을 넣고 싶지만 전문적인 방법과 사용할 수 있는 호출 경로가 없습니다. | 기존 Skill, Tool과 네이티브 SDK를 연결해, 애플리케이션이 자체 인터페이스와 워크플로를 유지하면서 전문 소프트웨어를 사용하게 합니다. [플랫폼 확장](#extend-the-platform)을 참고하세요. |
 | **산업 R&D와 기술 평가** | 응용 방향은 있지만 방법 선택, 자원 추정, 로드맵 수립에 필요한 근거가 필요합니다. | 지원되는 과제에서 첫 비교를 실행하고 방법의 조건, 자원 가정과 결과 출처를 확인합니다. [참고 자료와 선택](#reference-material-and-selection)을 참고하세요. |
 | **교육과 강의 설계** | 자료, 실험, 슬라이드가 흩어져 있으면 추상적인 개념을 실습 강의로 만들기 어렵습니다. | 공개 예제로 실험을 설계하고 Quantum Learning으로 자료와 강의 자료를 정리합니다. 기능과 강의 진행 상황은 [Quantum Learning](#quantum-learning)을 참고하세요. |
 | **직접 해 보며 배우기** | 개념은 알지만 알고리즘을 실행하고, 입력을 바꾸고, 결과를 해석하는 방법은 아직 익숙하지 않습니다. | 예제를 실행하고 매개변수를 바꾸며, 가이드와 사용 가능한 참조 결과로 방법이 왜 적용되고 어디서 한계에 이르는지 확인합니다. [알고리즘 예제](#algorithm-learning-and-method-comparison)를 참고하세요. |
-| **연구 소프트웨어와 생태계** | 공개된 방법, 연구 코드 또는 SDK가 있지만 다른 사람이 쓸 수 있도록 워크플로, 인터페이스와 예제가 필요합니다. | 방법을 Skill로 작성하거나 실행 가능한 동작을 Tool로 연결하거나 완전한 애플리케이션을 통합하며, 출처와 기여 표시를 보존합니다. [플랫폼 확장](#extend-the-platform)을 참고하세요. |
+| **연구 소프트웨어와 생태계** | 공개된 방법, 연구 코드 또는 SDK가 있지만 다른 사람이 쓸 수 있도록 워크플로, 인터페이스와 예제가 필요합니다. | 방법을 Skill로 작성하거나 실행 가능한 동작을 Tool로 연결하거나 완전한 애플리케이션을 통합하며, 출처와 기여 표시를 보관합니다. [플랫폼 확장](#extend-the-platform)을 참고하세요. |
 
 ### 오픈 소스: 역량을 직접 손에 쥐세요
 
@@ -99,7 +99,7 @@ OpenQuantum은 알고리즘, 컴파일, 시뮬레이션, 양자 정보, 화학�
 
 프로그램, 결과와 적용 가능한 검증이 기록되므로 이후 작업이 그 위에 쌓일 수 있습니다. 근거가 충분한 부정적 결과도 보존할 가치가 있습니다. 어떤 방법이 언제 적용되고 언제 다른 경로를 택해야 하는지 보여 주기 때문입니다. 프로그램 실패와 과학적 결과는 서로 다른 결과이며, 기록은 [검토와 재사용](#execution-records-and-scientific-acceptance)을 돕지만 과학적 판단은 사용자의 몫입니다.
 
-**오픈 소스 라이브러리와 공개된 방법을 에이전트가 쓸 수 있는 기능으로 바꾸는 일이 이 플랫폼을 떠받치는 지속적인 작업입니다.** 방법을 정리하고, 워크플로를 작성하고, 소프트웨어를 연결하며, 출처와 사용 조건을 보존합니다. 자신의 방법, 프로그램 또는 완전한 애플리케이션을 가져올 수도 있어, 한 번의 개발이 많은 사람의 출발점이 됩니다.
+**오픈 소스 라이브러리와 공개된 방법을 에이전트가 쓸 수 있는 기능으로 바꾸는 일이 이 플랫폼을 떠받치는 지속적인 작업입니다.** 방법을 정리하고, 워크플로를 작성하고, 소프트웨어를 연결하며, 출처와 사용 조건을 보관합니다. 자신의 방법, 프로그램 또는 완전한 애플리케이션을 가져올 수도 있어, 한 번의 개발이 많은 사람의 출발점이 됩니다.
 
 이렇게 쌓인 작업은 장기 로드맵에서 설명하는 [다음 단계 연구 역량의 개선](#research-that-improves-how-research-is-done)을 위한 토대이기도 합니다.
 
@@ -119,7 +119,7 @@ OpenQuantum은 알고리즘, 컴파일, 시뮬레이션, 양자 정보, 화학�
 
 **전체 호출 기준 5.09배 속도 향상.** 측정한 과제는 32큐비트 국소 모델에서의 Pauli 교환자 계산 1회입니다. 시간은 Apple M4, PennyLane 0.45.1에서 예열 후 9회 측정의 중앙값입니다. 입출력 변환을 포함하며 환경 준비와 컴파일은 제외했습니다.
 
-**결과도 함께 검증했습니다.** 벤치마크 입력 9개 모두에서 출력이 PennyLane 참조 출력과 항 단위로 정확히 일치합니다. 독립적인 전수 행렬 계산으로 **Pauli 단어 쌍 4,368개**와 무작위 복소 계수 연산자 합 40개를 확인했으며, 최대 행렬 절대 오차는 **1.42×10⁻¹⁴**입니다. 계산과 시간 측정은 독립적으로 검토했고, **원시 시간 표본 405개** 전체와 완전한 입출력을 보존했습니다.
+**결과도 함께 검증했습니다.** 벤치마크 입력 9개 모두에서 출력이 PennyLane 참조 출력과 항 단위로 정확히 일치합니다. 독립적인 전수 행렬 계산으로 **Pauli 문자열 쌍 4,368개**와 무작위 복소 계수 연산자 합 40개를 확인했으며, 최대 행렬 절대 오차는 **1.42×10⁻¹⁴**입니다. 계산과 시간 측정은 독립적으로 검토했고, **원시 시간 표본 405개** 전체와 완전한 입출력을 보존했습니다.
 
 5.09배는 이 계산에서 측정한 향상치입니다. 사례 보고서에 전체 결과, 방법과 지원 범위가 있습니다.
 
@@ -146,7 +146,7 @@ OpenQuantum은 알고리즘, 컴파일, 시뮬레이션, 양자 정보, 화학�
 
 ## 할 수 있는 일
 
-분야를 고르고 작업대에 질문, 입력, 그리고 확인하고 싶은 결과를 알려 주세요. OpenQuantum 에이전트는 해당 Skill의 방법을 따르고 알맞은 Tool을 호출해 계산합니다. Quantum Learning은 별도의 교육용 인터페이스를 제공합니다.
+분야를 고르고 워크벤치에 질문, 입력, 그리고 확인하고 싶은 결과를 알려 주세요. OpenQuantum 에이전트는 해당 Skill의 방법을 따르고 알맞은 Tool을 호출해 계산합니다. Quantum Learning은 별도의 교육용 인터페이스를 제공합니다.
 
 [알고리즘](#algorithm-learning-and-method-comparison) · [회로와 양자 정보](#circuits-and-quantum-information) · [바닥상태, 화학과 최적화](#ground-states-chemistry-and-optimization) · [오류 완화와 정정](#error-mitigation-and-error-correction) · [Hamiltonian 시뮬레이션과 열린 계](#hamiltonian-simulation-and-open-systems) · [실험과 하드웨어](#experiment-simulation-and-hardware) · [광자와 네트워크](#photonics-and-quantum-networks) · [참고 자료](#reference-material-and-selection) · [Quantum Learning](#quantum-learning)
 
@@ -154,7 +154,7 @@ OpenQuantum은 알고리즘, 컴파일, 시뮬레이션, 양자 정보, 화학�
 
 현재 소스는 **111개 SDK/소스 환경**에 대해 네이티브 API 전체 경로를 제공하며, 그중 26개는 0.8.4과 함께 배포된 최신 [생태계 확장](../integrations/SDK_ECOSYSTEM_2026-10-14.md)에서 왔습니다. 에이전트는 사용자 정의 프로그램을 작성하고, 공개 API를 조합하며, 완전한 결과를 저장할 수 있어 편의 Tool의 사전 설정 사례를 넘어설 수 있습니다.
 
-각 환경은 과제별로 명시적으로 준비하며, 플랫폼, 계정, 라이선스와 선택적 백엔드 제한은 그대로 적용됩니다. 라이브러리별 공학 검증은 [전체 SDK 접근 기록](../integrations/FULL_SDK_ACCESS.md)에 있습니다. 이 환경들은 실제 연구 과제에서 승인 검증을 받지 않았으며, 과학적 상태는 여전히 `not_evaluated`입니다.
+각 환경은 과제별로 명시적으로 준비하며, 플랫폼, 계정, 라이선스와 선택적 백엔드 제한은 그대로 적용됩니다. 라이브러리별 공학 검증은 [전체 SDK 접근 기록](../integrations/FULL_SDK_ACCESS.md)에 있습니다. 이 환경들은 실제 연구 과제에서 과학적 승인(독립 검증과 완전한 출처 추적을 근거로 결과가 과학적으로 신뢰할 만하다고 판정하는 것)을 받지 않았으며, 과학적 상태는 여전히 `not_evaluated`입니다.
 
 v0.6.0에서 통합한 기업과 연구기관의 SDK는 미분 가능한 회로, 결함 허용 자원 추정, 광자 계산, 펄스 컴파일과 양자 네트워크를 다룹니다. 세 차례 통합은 [기업 SDK 17개](../integrations/VENDOR_SDKS.md), [기업·연구기관 기능 20개](../integrations/SDK_EXPANSION.md), [네트워크·제어·클라우드 인터페이스 15개](../integrations/SDK_GAPS.md)이며, [QuEra Bloqade Analog](../integrations/BLOQADE_ANALOG.md)가 더해집니다. 각 어댑터는 문서에 명시된 동작만 노출하며, 계정, 인증 정보, 서비스 권한과 적용되는 라이선스는 사용자가 설정합니다.
 
@@ -263,13 +263,13 @@ v0.6.0에서 통합한 기업과 연구기관의 SDK는 미분 가능한 회로,
 | 학습과 교육 | 사용할 수 있는 기능 |
 | --- | --- |
 | 자료 준비 | 홈 화면, 강의 라이브러리, 첨부 파일, 강의 가져오기와 PPTX 가져오기 |
-| 강의 구성 | 강의 미리보기, 강의 자료 편집기와 Pro 작업대 |
+| 강의 구성 | 강의 미리보기, 강의 자료 편집기와 Pro 워크벤치 |
 | 수업에서 배우기 | 슬라이드, 퀴즈, 대화형 질의응답과 프로젝트 기반 학습 |
 | 계속 배우기 | 로컬 강의, 과제, 자료와 서버 측 학습 기록, 이전 교실에서의 이전 지원 |
 
 목표는 중등 수준의 기초부터 최전선 연구까지 다루는 것으로, 입문·중급·고급 단계로 구성하고 단계를 넘나드는 학습을 지원합니다. 공개 자료는 아직 정리 중이며 전체 교육과정은 아직 제작·공개되지 않았습니다. 앱 조립, 실행과 로컬 저장은 검증했지만, 실제 온라인 AI 강의 구성, 질의응답과 편집은 아직 전체 승인 검증을 기다리고 있습니다.
 
-Pro 교육 과제는 원본 애플리케이션 자체의 도구와 기록을 사용하며 아직 작업대의 양자 도구와 연결되어 있지 않습니다. 선택적인 미디어, 음성과 검색 기능은 각각 별도의 서비스가 필요합니다. 설치, 백업, 이전과 검증은 [Quantum Learning 통합 가이드](../integrations/OPENMAIC.md)에 설명되어 있습니다.
+Pro 교육 과제는 원본 애플리케이션 자체의 도구와 기록을 사용하며 아직 워크벤치의 양자 도구와 연결되어 있지 않습니다. 선택적인 미디어, 음성과 검색 기능은 각각 별도의 서비스가 필요합니다. 설치, 백업, 이전과 검증은 [Quantum Learning 통합 가이드](../integrations/OPENMAIC.md)에 설명되어 있습니다.
 
 <p align="center">
   <img src="../images/openquantum-learning-20260912.jpg" width="100%" alt="Quantum Learning: 강의 자료, 교실과 강의 자료 편집" />
@@ -279,9 +279,9 @@ Pro 교육 과제는 원본 애플리케이션 자체의 도구와 기록을 사
 
 ### Desktop, 메신저와 언어
 
-**Desktop.** OpenQuantum 데스크톱은 네이티브 창, 시스템 트레이, 터미널과 알림을 제공하며, 작업대의 모델, 양자 Skill, 계산 도구와 실행 기록을 재사용합니다. 서드파티 원본 DSH Desktop과 별도로 제공되는 OpenQuantum 기능 패키지를 사용하며, Mac(Apple Silicon / Intel), Windows와 소스 실행을 지원합니다. [Desktop 설치](#desktop-installer) · [소스에서 Desktop 빌드](#desktop-from-source).
+**Desktop.** OpenQuantum 데스크톱은 네이티브 창, 시스템 트레이, 터미널과 알림을 제공하며, 워크벤치의 모델, 양자 Skill, 계산 도구와 실행 기록을 재사용합니다. 서드파티 공식 DSH Desktop과 별도로 제공되는 OpenQuantum 기능 패키지를 사용하며, Mac(Apple Silicon / Intel), Windows와 소스 실행을 지원합니다. [Desktop 설치](#desktop-installer) · [소스에서 Desktop 빌드](#desktop-from-source).
 
-**메신저.** CC Connect를 통해 WeChat, Feishu, DingTalk, Slack, Telegram, Discord 등의 채널에서 과제를 시작할 수 있으며, 작업대의 Skill, Tool과 실행 기록을 재사용합니다. [메신저 채널 설정](#messaging-channels).
+**메신저.** CC Connect를 통해 WeChat, Feishu, DingTalk, Slack, Telegram, Discord 등의 채널에서 과제를 시작할 수 있으며, 워크벤치의 Skill, Tool과 실행 기록을 재사용합니다. [메신저 채널 설정](#messaging-channels).
 
 <p align="center">
   <img src="../images/openquantum-wechat-chat.jpg" width="380" alt="WeChat ClawBot으로 OpenQuantum과 대화하는 기존 데모" /><br />
@@ -298,7 +298,7 @@ Pro 교육 과제는 원본 애플리케이션 자체의 도구와 기록을 사
 
 ## 빠른 시작
 
-진입점을 하나 고르세요. Codex에 플러그인을 설치하거나, 기능 패키지와 함께 Desktop 클라이언트를 사용하거나, 소스에서 작업대를 실행할 수 있습니다. Desktop과 소스 작업대는 로컬 단일 사용자용입니다. 개발하거나 `main`의 기능을 사용하려면 소스를 선택하세요.
+사용 방법을 하나 고르세요. Codex에 플러그인을 설치하거나, 기능 패키지와 함께 Desktop 클라이언트를 사용하거나, 소스에서 워크벤치를 실행할 수 있습니다. Desktop과 소스 워크벤치는 로컬 단일 사용자용입니다. 개발하거나 `main`의 기능을 사용하려면 소스를 선택하세요.
 
 <a id="codex"></a>
 
@@ -329,7 +329,7 @@ Desktop 기능 패키지, Codex 플러그인과 설치 패키지는 모두 **Ope
 2. 대화에서 바로 요청하세요. 예: "OpenQuantum으로 양자 오류 정정 방법을 찾아보고 첫 실험을 추천해 줘."
 3. **"…" → "OpenQuantum settings"** 를 열고 **Status / MCP / Skills / Service keys** 탭에서 기능을 관리하세요. Tool 스위치는 **Status → Tools**에 있습니다. 내장 서비스는 플러그인과 함께 구성되어 있습니다. 자신의 MCP 서버를 추가하려면 연결 정보를 입력하고 전용 인증 정보 대화상자로 토큰을 저장하세요.
 
-플러그인은 기능 코드와 구성 진입점을 설치합니다. 일부 계산은 여전히 Python, 양자 SDK 또는 서드파티 계정을 필요할 때 준비해야 합니다. [플러그인 가이드](../integrations/CODEX_PLUGIN.md)를 참고하세요.
+플러그인은 기능 코드와 설정 페이지를 설치합니다. 일부 계산은 여전히 Python, 양자 SDK 또는 서드파티 계정을 필요할 때 준비해야 합니다. [플러그인 가이드](../integrations/CODEX_PLUGIN.md)를 참고하세요.
 
 <details>
 <summary><strong>수동 설치(선택)</strong></summary>
@@ -349,9 +349,9 @@ npm run plugin:install
 
 ### Desktop 설치 파일
 
-현재 데스크톱 릴리스는 [원본 DSH Desktop 2.0.7 클라이언트](https://github.com/anywhere-labs/dsh-desktop/releases/tag/v2.0.7)와 별도의 OpenQuantum 기능 패키지를 결합합니다. 원본 클라이언트는 원래 이름과 버전을 유지하며, 기능 패키지는 Node / uv를 포함하고 전체 SDK 진입점, 양자 Skill, Tool과 구성을 제공합니다. 설치 프로그램은 OpenQuantum 아이콘을 사용하는 실행 아이콘(Mac은 `OpenQuantum.app`, Windows는 `OpenQuantum.lnk`)을 만듭니다.
+현재 데스크톱 릴리스는 [공식 DSH Desktop 2.0.7 클라이언트](https://github.com/anywhere-labs/dsh-desktop/releases/tag/v2.0.7)와 별도의 OpenQuantum 기능 패키지를 결합합니다. 공식 클라이언트는 원래 이름과 버전을 유지하며, 기능 패키지는 Node / uv를 포함하고 전체 SDK 접근, 양자 Skill, Tool과 구성을 제공합니다. 설치 프로그램은 OpenQuantum 아이콘을 사용하는 실행 아이콘(Mac은 `OpenQuantum.app`, Windows는 `OpenQuantum.lnk`)을 만듭니다.
 
-먼저 원본 DSH Desktop을 설치한 뒤 플랫폼에 맞는 기능 패키지를 선택하세요.
+먼저 공식 DSH Desktop을 설치한 뒤 플랫폼에 맞는 기능 패키지를 선택하세요.
 
 | 플랫폼 | OpenQuantum 0.8.4 다운로드 | 압축을 푼 뒤 실행 |
 | --- | --- | --- |
@@ -371,19 +371,19 @@ cd openQuantum
 npm ci
 ```
 
-모델 키가 없어도 [고정된 로컬 예제](#no-model-key-needed-recompute-a-fixed-case)를 바로 실행할 수 있습니다. 에이전트로 과제를 시작하려면 작업대 진입점을 고르고 모델을 설정하세요.
+모델 키가 없어도 [고정된 로컬 예제](#no-model-key-needed-recompute-a-fixed-case)를 바로 실행할 수 있습니다. 에이전트로 과제를 시작하려면 워크벤치 실행 방식을 고르고 모델을 설정하세요.
 
-### 작업대 진입점 선택
+### 워크벤치 실행 방식 선택
 
-같은 소스 체크아웃에서 실행한 Web과 Desktop은 `.openquantum/dsh`에 있는 모델 설정, 양자 기능과 실행 기록을 공유합니다. 전환하기 전에 실행 중인 진입점을 종료하세요.
+같은 소스 체크아웃에서 실행한 Web과 Desktop은 `.openquantum/dsh`에 있는 모델 설정, 양자 기능과 실행 기록을 공유합니다. 전환하기 전에 실행 중인 워크벤치를 종료하세요.
 
-**Web 작업대**
+**Web 워크벤치**
 
 ```bash
 npm run dev
 ```
 
-실행기가 출력한 로그인 토큰이 포함된 주소를 여세요. 인증 후 작업대는 <http://127.0.0.1:3000>에서 열립니다.
+실행기가 출력한 로그인 토큰이 포함된 주소를 여세요. 인증 후 워크벤치는 <http://127.0.0.1:3000>에서 열립니다.
 
 <a id="desktop"></a>
 <a id="desktop-from-source"></a>
@@ -416,7 +416,7 @@ Desktop을 새로 설치하면 모델 목록은 비어 있습니다. **설정 �
 
 인터페이스에서 저장한 경로 재정의는 Git이 무시하는 `$DSH_HOME/settings.yaml`에 기록됩니다. 키는 로컬 환경이나 Harness 인증 정보 저장소에 두며, 프로젝트 구성에는 인증 정보 참조만 기록됩니다. `.env`를 사용하려면 macOS에서는 `cp .env.example .env`, Windows PowerShell에서는 `Copy-Item .env.example .env`를 실행하고 주석에 따라 채우세요. `.env`는 모델 이름을 재정의하지 않습니다. 다른 모델 이름은 **설정 → 모델**에서 구성하세요.
 
-아래 명령은 `.env` 또는 환경 변수의 public 경로를 스크립트에 고정된 `kimi-k2.7-code`와 `glm5.2` 모델 이름으로 확인하며, 텍스트 생성과 Tool Calling을 테스트합니다. 인터페이스에서 저장한 경로 재정의는 읽지 않으므로 다른 모델은 아래의 작업대 과제로 검증하세요.
+아래 명령은 `.env` 또는 환경 변수의 public 경로를 스크립트에 고정된 `kimi-k2.7-code`와 `glm5.2` 모델 이름으로 확인하며, 텍스트 생성과 Tool Calling을 테스트합니다. 인터페이스에서 저장한 경로 재정의는 읽지 않으므로 다른 모델은 아래의 워크벤치 과제로 검증하세요.
 
 ```bash
 npm run models:probe -- --provider openquantum-public
@@ -428,7 +428,7 @@ npm run models:probe -- --provider openquantum-public
 
 로컬 Python 계산 도구는 명시적으로 준비한, 버전이 고정된 의존성을 사용합니다. `npm ci` 후 저장소 루트에서 필요한 기능의 준비 명령을 실행하세요. 준비 단계에서는 다운로드와 빌드가 일어날 수 있으며, 계산 호출은 더 이상 의존성을 자동으로 설치하지 않습니다.
 
-| 준비할 대상 | 명령 또는 진입점 |
+| 준비할 대상 | 명령 또는 위치 |
 | --- | --- |
 | 첫 Bell 상태 실험 | `node scripts/setup-paper-tools.mjs fatqat-workbench` |
 | Rb 원자 쌍의 정적 상호작용 | `npm run capability:pairinteraction:setup`; [모델과 버전 관리](../integrations/PAIRINTERACTION.md) |
@@ -467,7 +467,7 @@ npm run demo:quantum-ground-state
 
 이 기록에서는 로컬 계산 검사 15개가 통과했고 세션 출처 검사 1개는 실행되지 않았으므로, 완전한 과학적 승인 결론은 없습니다. 에너지 차이는 이 수치 사례에서 정확 참조값과 일치함을 보여 주며, 과학적 범위는 주어진 Hamiltonian과 입자수 섹터로 한정됩니다.
 
-완전한 과학적 승인을 위해서는 Harness를 통해 과제를 실행하고, 결과 파일과 세션 출처를 저장하며, 다시 읽을 수 있는 승인 보고서를 만들어야 합니다. 모델 설정 후의 검증 진입점은 [개발과 검증](#development-and-verification)에 있습니다.
+완전한 과학적 승인을 위해서는 Harness를 통해 과제를 실행하고, 결과 파일과 세션 출처를 저장하며, 다시 읽을 수 있는 승인 보고서를 만들어야 합니다. 모델 설정 후의 검증 방법은 [개발과 검증](#development-and-verification)에 있습니다.
 
 </details>
 
@@ -479,7 +479,7 @@ npm run demo:quantum-ground-state
 
 > FatQat으로 두 큐비트의 영 상태에서 시작해 q0에 H를 적용한 다음, q0를 제어, q1을 표적으로 CX를 적용하세요. 잡음 없는 정확한 확률을 반환하고 seed=7로 1024회 샘플링한 결과와 비교하세요.
 
-에이전트는 FatQat의 회로 도구를 호출할 수 있고, 작업대는 도구 입력과 반환 결과를 보존합니다. 정확한 확률과 표본 빈도를 확인한 뒤 이어서 요청하세요.
+에이전트는 FatQat의 회로 도구를 호출할 수 있고, 워크벤치는 도구 입력과 반환 결과를 보관합니다. 정확한 확률과 표본 빈도를 확인한 뒤 이어서 요청하세요.
 
 > 회로와 seed는 그대로 두고 샘플 수를 8192로 바꾼 뒤, 두 실행의 빈도가 정확한 확률에서 얼마나 떨어져 있는지 비교하세요.
 
@@ -519,9 +519,9 @@ QSP/QSVT 같은 방법에는 `npm run capability:algorithms:setup -- --group pen
 
 [업데이트 안내](../UPDATES.md)에 따라 소스와 프로젝트 의존성을 업데이트한 뒤, 사용하는 기능마다 준비 명령을 한 번씩 다시 실행하세요. Python 브리지는 기존 환경 디렉터리에서 고정된 의존성을 확인하고 동기화하므로 아무것도 삭제할 필요가 없습니다. 알고리즘 예제는 계속 그룹을 추가할 수 있습니다.
 
-작업대를 재시작하고 새 세션을 시작하세요. 기존 Skill과 Tool의 이름과 매개변수는 그대로 유효합니다. 13개 범주 색인은 여전히 수동으로 호출할 수 있고, 자동 과제는 `quantum-algorithms` 또는 특정 방법을 선택합니다. 선택적 서비스의 전체 도구 범위를 되돌리려면 기본 `full` 프로필을 사용하세요. [기능 선택과 호환성](../integrations/CAPABILITY_SELECTION.md)을 참고하세요.
+워크벤치를 재시작하고 새 세션을 시작하세요. 기존 Skill과 Tool의 이름과 매개변수는 그대로 유효합니다. 13개 범주 색인은 여전히 수동으로 호출할 수 있고, 자동 과제는 `quantum-algorithms` 또는 특정 방법을 선택합니다. 선택적 서비스의 전체 도구 범위를 되돌리려면 기본 `full` 프로필을 사용하세요. [기능 선택과 호환성](../integrations/CAPABILITY_SELECTION.md)을 참고하세요.
 
-### 선택적 진입점
+### 선택 기능
 
 <a id="set-up-quantum-learning"></a>
 
@@ -565,9 +565,9 @@ npm run cc-connect:start
 
 <a id="choose-the-right-entry-point"></a>
 
-### 알맞은 진입점 고르기
+### 알맞은 도구 고르기
 
-알고리즘을 배우거나 수정할 때는 [실행 가능한 예제](#algorithm-learning-and-method-comparison)를, 입출력 계약이 정해진 작업이 필요할 때는 전문 도구를 사용하세요. Trotter / qDrift, VQD, Qiskit과 고유값 풀이처럼 진입점이 겹치는 경우에는 [공통 선택 가이드](../integrations/CAPABILITY_SELECTION.md)가 있습니다. 원래 이름은 유지하며, 물리적 가정이나 수치 방법이 다른 구현은 별도로 둡니다.
+알고리즘을 배우거나 수정할 때는 [실행 가능한 예제](#algorithm-learning-and-method-comparison)를, 입출력 계약이 정해진 작업이 필요할 때는 전문 도구를 사용하세요. Trotter / qDrift, VQD, Qiskit과 고유값 풀이처럼 기능이 겹치는 경우에는 [공통 선택 가이드](../integrations/CAPABILITY_SELECTION.md)가 있습니다. 원래 이름은 유지하며, 물리적 가정이나 수치 방법이 다른 구현은 별도로 둡니다.
 
 Qiskit Gym, Quantum Hardware와 FlagQuantum은 기본으로 꺼져 있습니다. 필요할 때 학습, 장치 조회, 컴파일 또는 시뮬레이션용의 더 작은 도구 프로필을 설정하세요. 선택하지 않으면 하위 호환되는 `full` 프로필이 적용됩니다. 세션에서 호출할 수 있는 Tool은 활성화된 연결, 실제 등록 상태와 선택한 프로필에 따라 달라집니다.
 
@@ -575,7 +575,7 @@ Qiskit Gym, Quantum Hardware와 FlagQuantum은 기본으로 꺼져 있습니다.
 
 ### 로컬 계산과 양자 클라우드
 
-로컬 수치 계산에는 양자 클라우드 계정이 필요하지 않습니다. 다른 도구를 사용하려면 **설정 → 양자 구성 요소 → MCP Server 연결**에서 연결을 설정하고, 작업대를 재시작한 뒤 과제에서 백엔드를 지정하세요. 기본 스위치는 [MCP 서비스 카탈로그](../../README.md#mcp-服务目录)에 정리되어 있습니다.
+로컬 수치 계산에는 양자 클라우드 계정이 필요하지 않습니다. 다른 도구를 사용하려면 **설정 → 양자 구성 요소 → MCP Server 연결**에서 연결을 설정하고, 워크벤치를 재시작한 뒤 과제에서 백엔드를 지정하세요. 기본 스위치는 [MCP 서비스 카탈로그](../../README.md#mcp-服务目录)에 정리되어 있습니다.
 
 실제 하드웨어를 사용하려면 대상 서비스의 인증 정보, 권한과 할당량을 준비하세요. **장치 탐색, 실제 작업 제출과 로컬 시뮬레이션은 각각 범위가 다릅니다.** 구성이 있다고 해서 서비스가 온라인이라는 뜻은 아니므로, 작업 성공 여부는 실제 실행 기록으로 확인하세요.
 
@@ -588,7 +588,7 @@ Qiskit Gym, Quantum Hardware와 FlagQuantum은 기본으로 꺼져 있습니다.
 | Quafu, Tianyan, Guodun, Tencent, LogicalQubit 클라우드 | 인증 정보 확인, 백엔드 탐색, 큐비트 필터링, 토폴로지와 보정 요약 | 각 서비스의 API 토큰; 읽기 전용 |
 | FieldQuantum | 클라우드 시뮬레이터 백엔드 탐색 | `FIELDQUANTUM_API_TOKEN`; 읽기 전용 |
 
-하드웨어 작업과 유료 서비스는 필요할 때 활성화합니다. 읽기 전용 탐색으로 장치, 토폴로지와 보정 정보를 먼저 파악한 뒤 실제 작업을 실행할지 결정할 수 있습니다. "읽기 전용"은 원격 클라우드나 QPU의 상태를 바꾸지 않는다는 뜻입니다. SDK 캐시와 결과 물질화가 로컬 작업 공간에 쓸 수 있으므로 로컬 Python 브리지는 여전히 `workspace-write` 계약을 유지합니다.
+하드웨어 작업과 유료 서비스는 필요할 때 활성화합니다. 읽기 전용 탐색으로 장치, 토폴로지와 보정 정보를 먼저 파악한 뒤 실제 작업을 실행할지 결정할 수 있습니다. "읽기 전용"은 원격 클라우드나 QPU의 상태를 바꾸지 않는다는 뜻입니다. SDK 캐시와 결과 파일이 로컬 작업 디렉터리에 기록될 수 있으므로 로컬 Python 브리지는 여전히 `workspace-write` 계약을 유지합니다.
 
 ### 계산 매개변수
 
@@ -602,18 +602,18 @@ Qiskit Gym, Quantum Hardware와 FlagQuantum은 기본으로 꺼져 있습니다.
 
 ### 계속 활용할 수 있는 방법과 결과
 
-작업대는 과제마다 요청, 도구 호출과 반환 결과를 저장하므로 과정을 되짚어 보고 이어서 질문할 수 있습니다. 매개변수를 조정하거나, 연결된 다른 백엔드를 고르거나, 자주 쓰는 연구 절차를 Skill로 만들어 이후 과제에 활용하세요.
+워크벤치는 과제마다 요청, 도구 호출과 반환 결과를 저장하므로 과정을 되짚어 보고 이어서 질문할 수 있습니다. 매개변수를 조정하거나, 연결된 다른 백엔드를 고르거나, 자주 쓰는 연구 절차를 Skill로 만들어 이후 과제에 활용하세요.
 
 지원되는 기능에서는 결과에 정확한 참조값, 독립 검증 또는 통계적 오차 정보가 함께 제공됩니다. 바닥상태 풀이와 양자 정보 감사는 입력, 결과 파일과 세션 출처를 연결해 검토할 수 있는 완전한 과학적 승인 흐름도 제공합니다.
 
 <details>
 <summary><strong>실행 기록과 과학적 승인 자세히 보기</strong></summary>
 
-연구 작업대는 과제 요청, Skill 로딩, 도구 호출, 권한 상태와 반환 결과를 기록합니다. 설정에서의 "활성화"는 구성 정책일 뿐이며, 도구를 실제로 호출할 수 있는지와 서비스에 연결되는지는 실행 증거로 드러납니다.
+연구 워크벤치는 과제 요청, Skill 로딩, 도구 호출, 권한 상태와 반환 결과를 기록합니다. 설정에서의 "활성화"는 구성 정책일 뿐이며, 도구를 실제로 호출할 수 있는지와 서비스에 연결되는지는 실행 증거로 드러납니다.
 
 실행 완료와 과학적 승인은 별개의 상태로 표시됩니다. 완전한 승인 흐름을 갖춘 기능은 입력, 결과 파일, 독립 검증과 세션 기록을 연결해 통과, 실패, 미검사 항목을 나열한 승인 보고서를 만듭니다. 그 밖의 도구는 자체 범위 안에서 수치 결과와 검사 상태를 보고합니다.
 
-![결과, 증거 물질화와 독립 검증에서 규칙과 출처를 결합한 과학적 승인으로 이어지는 흐름](../images/openquantum-evidence-flow.png)
+![결과, 증거 생성 및 저장와 독립 검증에서 규칙과 출처를 결합한 과학적 승인으로 이어지는 흐름](../images/openquantum-evidence-flow.png)
 
 이 그림은 완전한 승인 흐름을 갖춘 기능이 증거를 형성하는 방식을 보여 줍니다. [편집 가능한 원본 보기](../architecture/openquantum-evidence-flow.html). 범위가 정해진 바닥상태 풀이와 양자 정보 감사는 완전한 흐름을 제공하며, QUBO, 회로 등가성과 오류 정정 메모리 실험은 각자의 규칙에 따라 결과와 검사를 보고합니다. 근거는 [기능 선언](../../.agents/capability-packages.yml), [아키텍처 감사](../architecture/ARCHITECTURE_AUDIT.md)와 [고정 양자 기능 벤치마크](../../benchmarks/quantum-capabilities/README.md)에 있습니다.
 
@@ -641,9 +641,9 @@ OpenQuantum의 도메인 기능은 DeepSeek Harness 위에서 실행되며, Harn
 | 도메인 지식, 절차, 도구 선택과 결과 해석 | Skill; 기존 범용 Tool이나 양자 Tool을 재사용 가능 |
 | 안정적인 계산, 조회 또는 작업 | Tool; 네이티브 Tool Provider 또는 Harness MCP Client가 등록 |
 | 자체 인터페이스와 워크플로를 가진 양자 애플리케이션이나 교육 제품 | 애플리케이션 경계를 따라 통합하며 업무, 데이터, 권한과 백엔드 책임을 유지; Quantum Learning이 기존 사례 |
-| 독립적인 과학 검사와 승인 | Validator; 최종 승인이 필요하면 Acceptance Profile, 증거 물질화와 central Acceptance Builder 추가 |
+| 독립적인 과학 검사와 승인 | Validator; 최종 승인이 필요하면 Acceptance Profile, 증거 생성 및 저장와 central Acceptance Builder 추가 |
 
-기존 Skill, 브리지와 네이티브 Tool을 참고 예시로 활용하세요. 먼저 [문서와 아키텍처 입구](../README.md)를 읽고, 필요에 따라 [기여 가이드](../../CONTRIBUTING.md), [확장 모델](../architecture/EXTENSION_MODEL.md)과 [모듈 지도](../architecture/MODULES.md)를 참고하세요.
+기존 Skill, 브리지와 네이티브 Tool을 참고 예시로 활용하세요. 먼저 [문서와 아키텍처 안내](../README.md)를 읽고, 필요에 따라 [기여 가이드](../../CONTRIBUTING.md), [확장 모델](../architecture/EXTENSION_MODEL.md)과 [모듈 지도](../architecture/MODULES.md)를 참고하세요.
 
 <a id="quantum-applications-for-practical-problems"></a>
 
@@ -656,9 +656,9 @@ OpenQuantum은 SDK, 알고리즘과 계산 서비스뿐 아니라 정해진 사�
 <details>
 <summary><strong>아키텍처와 책임</strong></summary>
 
-![OpenQuantum 아키텍처: 연구 진입점이 Harness에 도달하고, 에이전트가 Skill을 읽고, 네이티브 Tool Provider 또는 Harness MCP Client를 통해 도구를 사용하며, 모델 서비스와 실행 로그에 연결됨](../images/openquantum-platform-overview.png)
+![OpenQuantum 아키텍처: 연구 요청이 Harness에 도달하고, 에이전트가 Skill을 읽고, 네이티브 Tool Provider 또는 Harness MCP Client를 통해 도구를 사용하며, 모델 서비스와 실행 로그에 연결됨](../images/openquantum-platform-overview.png)
 
-이 그림은 작업대의 핵심 호출 관계를 보여 줍니다. [편집 가능한 원본 보기](../architecture/openquantum-platform-overview.html).
+이 그림은 워크벤치의 핵심 호출 관계를 보여 줍니다. [편집 가능한 원본 보기](../architecture/openquantum-platform-overview.html).
 
 - **Skill**은 지식과 워크플로 지침을 제공하며, 코드를 실행하거나 인증 정보를 보유하지 않습니다.
 - **Tool Provider**는 실행 가능한 도구를 등록합니다. 프로세스 내 네이티브 방식이거나, MCP Server의 경우 Harness MCP Client를 통합니다.
@@ -705,7 +705,7 @@ npm run e2e:quantum-harness -- --provider openquantum-public
 
 ## 로드맵과 RSI
 
-**기존 역량을 사용하는 데서 새로운 역량을 함께 만드는 데로.** 전문적인 방법, 계산 자원, 완전한 애플리케이션, 실험실 장비와 학습 자원이 각자의 진입점을 갖고 정해진 범위 안에서 함께 작동하는 열린 양자 에이전트·애플리케이션 플랫폼을 계속 만들어 가겠습니다. 이는 장기적인 방향이지 제공 목록이 아니며, 각 기능은 개별 통합과 검증을 거쳐 도입됩니다.
+**기존 역량을 사용하는 데서 새로운 역량을 함께 만드는 데로.** 전문적인 방법, 계산 자원, 완전한 애플리케이션, 실험실 장비와 학습 자원이 각자의 연결 방식을 갖고 정해진 범위 안에서 함께 작동하는 열린 양자 에이전트·애플리케이션 플랫폼을 계속 만들어 가겠습니다. 이는 장기적인 방향이지 제공 목록이 아니며, 각 기능은 개별 통합과 검증을 거쳐 도입됩니다.
 
 ### 플랫폼 기반
 
@@ -774,7 +774,7 @@ OpenQuantum은 이 탐구를 위한 양자 작업 환경, 즉 실행 가능한 �
 
 자세한 기술 문서는 주로 중국어로 작성되어 있으며, 영어판도 함께 참고할 수 있습니다. 이 번역에 대한 수정 제안을 환영합니다.
 
-**[양자 탐구 시작하기](#quick-start)** · [나의 방법과 애플리케이션 가져오기](#extend-the-platform)
+**[양자 탐구 시작하기](#quick-start)** · [자신의 방법과 애플리케이션 가져오기](#extend-the-platform)
 
 **OpenQuantum · 손끝에서 만나는 양자 계산.**
 
@@ -786,9 +786,9 @@ OpenQuantum의 양자 기능은 열린 과학과 오픈 소스 소프트웨어 �
 
 | 사용하거나 이식한 프로젝트 | OpenQuantum에서의 역할 |
 | --- | --- |
-| [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) | 연구 작업대의 에이전트 런타임과 네이티브 Web UI: 세션, 모델 호출, 도구 스케줄링과 실행 기록 |
-| [DSH Desktop](https://github.com/anywhere-labs/dsh-desktop) | 데스크톱 클라이언트 기반; OpenQuantum은 브랜드와 실행 구성을 조정하고 작업대를 재사용 |
-| [CC Connect](../integrations/CC_CONNECT.md) | WeChat, Feishu 등 채널의 요청을 작업대로 가져오는 메신저 브리지 |
+| [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) | 연구 워크벤치의 에이전트 런타임과 네이티브 Web UI: 세션, 모델 호출, 도구 스케줄링과 실행 기록 |
+| [DSH Desktop](https://github.com/anywhere-labs/dsh-desktop) | 데스크톱 클라이언트 기반; OpenQuantum은 브랜드와 실행 구성을 조정하고 워크벤치를 재사용 |
+| [CC Connect](../integrations/CC_CONNECT.md) | WeChat, Feishu 등 채널의 요청을 워크벤치로 가져오는 메신저 브리지 |
 | [OpenMAIC](https://github.com/THU-MAIC/OpenMAIC) | Quantum Learning의 교육 기반; 전체 인터페이스, 서버와 교육 워크플로를 유지하고 OpenQuantum 이름, 테마와 모델 연결을 적용 |
 
 각 기능을 뒷받침하는 계산, 장치와 참고 자료 프로젝트, 그리고 각각의 이식 방식은 [중국어 README](../../README.md#开源生态与致谢)에 정리되어 있습니다.

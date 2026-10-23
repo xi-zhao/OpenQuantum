@@ -1,16 +1,16 @@
 import { createServer } from "node:http";
-import { randomBytes } from "node:crypto";
 import { credentialRef } from "./application.mjs";
 import { withLock } from "./storage.mjs";
 import { serviceSupported, serviceById, serviceValues, saveServiceValues, validateServiceValues } from "./service-catalog.mjs";
 import { credentialHtml, credentialCss, credentialJs } from "./credential-ui.mjs";
 import { createCredentialBridge } from "./credential-bridge.mjs";
 import { createCredentialChannel } from "./credential-channel.mjs";
+import { createCredentialRequests } from "./credential-requests.mjs";
 
 export async function createCredentialWindow({ settings, credentials }) {
-  const sessions = new Map();
+  const requests = createCredentialRequests();
   let origin;
-  const bridge = createCredentialBridge({ settings, credentials, sessions, getOrigin: () => origin });
+  const bridge = createCredentialBridge({ settings, credentials, requests, getOrigin: () => origin });
   const channel = createCredentialChannel({ settings, credentials });
   const server = createServer(async (request, response) => {
     const reply = (status, value, type = "application/json", headers = {}) => {
@@ -32,10 +32,10 @@ export async function createCredentialWindow({ settings, credentials }) {
       let body = "";
       for await (const chunk of request) { body += chunk; if (Buffer.byteLength(body) > 16384) return reply(413, { message: "输入过大" }); }
       const input = JSON.parse(body);
-      const session = sessions.get(input.nonce);
-      if (!session || session.kind === "field" || session.expires < Date.now()) return reply(403, { message: "窗口已过期，请从 OpenQuantum 设置页重新打开" });
+      const session = requests.peek(input.nonce, { kind: "window" });
+      if (!session) return reply(403, { message: "窗口已过期，请从 OpenQuantum 设置页重新打开" });
       await withLock(settings.file, async () => {
-      if (sessions.get(input.nonce) !== session) return reply(403, { message: "窗口已过期，请重新打开" });
+      if (requests.peek(input.nonce, { kind: "window" }) !== session) return reply(403, { message: "窗口已过期，请重新打开" });
       const { config } = await settings.read();
       if (session.service) {
         const service = serviceById(session.id);
@@ -51,7 +51,7 @@ export async function createCredentialWindow({ settings, credentials }) {
           for (const name of input.remove ?? []) delete values[name];
           validateServiceValues(service, values);
         }
-        sessions.delete(input.nonce);
+        if (!requests.consume(input.nonce, { kind: "window" })) return reply(403, { message: "窗口已过期，请重新打开" });
         await saveServiceValues(credentials, service, input.action === "remove" ? {} : values);
         return reply(200, { message: input.action === "set" ? "配置已保存，账户认证尚未验证。返回设置页可查看各字段状态。" : "凭据已移除，可以关闭此窗口。" });
       }
@@ -61,7 +61,7 @@ export async function createCredentialWindow({ settings, credentials }) {
       if (input.action === "remove" && connection.enabled) return reply(409, { message: "请先关闭连接再移除 Token" });
       if (!["set", "remove"].includes(input.action)) return reply(400, { message: "无效操作" });
       // Single-use capability; neither raw credentials nor exceptions cross MCP.
-      sessions.delete(input.nonce);
+      if (!requests.consume(input.nonce, { kind: "window" })) return reply(403, { message: "窗口已过期，请重新打开" });
       if (input.action === "set") await credentials.set(credentialRef(session.id), input.value);
       else await credentials.remove(credentialRef(session.id));
       settings.statuses.delete(session.id);
@@ -81,22 +81,16 @@ export async function createCredentialWindow({ settings, credentials }) {
     async openService(id) {
       const service = serviceById(id);
       if (!serviceSupported(service, settings.backend)) throw new Error("此服务尚未接入插件凭据配置，请查看认证说明");
-      for (const [key, value] of sessions) if (value.expires < Date.now()) sessions.delete(key);
-      if (sessions.size >= 32) throw new Error("凭据窗口数量已达上限");
-      const nonce = randomBytes(32).toString("hex");
-      sessions.set(nonce, { id, service: true, expires: Date.now() + 10 * 60 * 1000 });
+      const nonce = requests.issue({ kind: "window", id, service: true });
       return `${origin}/credentials#${nonce}`;
     },
     async open(id) {
       const { config } = await settings.read();
       const connection = config.connections.find(value => value.id === id && value.authentication === "token");
       if (!connection) throw new Error("连接不需要 Token 或不存在");
-      for (const [key, value] of sessions) if (value.expires < Date.now()) sessions.delete(key);
-      if (sessions.size >= 32) throw new Error("凭据窗口数量已达上限");
-      const nonce = randomBytes(32).toString("hex");
-      sessions.set(nonce, { id, instance: connection.instance, expires: Date.now() + 10 * 60 * 1000 });
+      const nonce = requests.issue({ kind: "window", id, instance: connection.instance });
       return `${origin}/credentials#${nonce}`;
     },
-    close() { sessions.clear(); channel.close(); server.closeAllConnections(); return new Promise(resolve => server.close(resolve)); },
+    close() { requests.close(); channel.close(); server.closeAllConnections(); return new Promise(resolve => server.close(resolve)); },
   };
 }

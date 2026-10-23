@@ -169,6 +169,9 @@
     },
     "@deepseek-ai/libreoffice-kit": {
       "fflate": "$fflate"
+    },
+    "@openmaic/generation": {
+      "katex": "$katex"
     }
   }
 }
