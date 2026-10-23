@@ -10,6 +10,20 @@ import { installerFiles } from "../scripts/build-codex-release.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 
+test("Codex runtime and installer pin the same shared dependencies as the tested root", async () => {
+  const read = async file => JSON.parse(await fs.readFile(path.join(root, file), "utf8"));
+  const source = await read("package.json");
+  for (const distribution of ["codex-plugin", "codex-installer"]) {
+    const manifest = await read(`distributions/${distribution}/package.json`);
+    const lock = await read(`distributions/${distribution}/package-lock.json`);
+    assert.deepEqual(lock.packages[""].dependencies, manifest.dependencies);
+    for (const [name, version] of Object.entries(manifest.dependencies)) {
+      assert.equal(version, source.dependencies[name], `${distribution}: ${name} must match the tested root dependency`);
+      assert.equal(lock.packages[`node_modules/${name}`].version, version, `${distribution}: ${name} lock must match its manifest`);
+    }
+  }
+});
+
 test("standalone installer includes its complete module graph and declares its runtime dependencies", async () => {
   const files = await installerFiles(root, "fixture");
   const manifest = JSON.parse(Buffer.from(files["fixture/package.json"]).toString("utf8"));
