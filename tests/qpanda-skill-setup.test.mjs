@@ -12,6 +12,8 @@ import {
   QPANDA_SKILL_RELATIVE_ROOT,
 } from "../scripts/setup-qpanda-skill.mjs";
 
+import { installPinnedSource, inspectPinnedSource } from "../scripts/lib/install-pinned-source.mjs";
+
 const exec = promisify(execFile);
 
 async function git(cwd, ...args) {
@@ -76,4 +78,28 @@ test("qpanda skill setup never overwrites an unverified existing checkout", asyn
     /is not the pinned installation/,
   );
   assert.equal(await readFile(path.join(target, "SKILL.md"), "utf8"), "unreviewed\n");
+});
+
+
+test("generic pinned Skill defaults remain usable without an MCP review declaration", async (t) => {
+  const root = await mkdtemp(path.join(os.tmpdir(), "openquantum-generic-skill-"));
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const source = path.join(root, "source");
+  const project = path.join(root, "project");
+  await mkdir(source);
+  await mkdir(project);
+  await git(source, "init", "--quiet");
+  await writeFile(path.join(source, "SKILL.md"), "# A pinned offline Skill fixture\n");
+  await git(source, "add", "SKILL.md");
+  await git(source, "-c", "user.name=OpenQuantum Test", "-c", "user.email=test@openquantum.local", "commit", "--quiet", "-m", "generic Skill fixture");
+  const integration = {
+    sourceUrl: source, revision: await git(source, "rev-parse", "HEAD"),
+    relativeRoot: ".openquantum/external/generic-skill", requiredFiles: ["SKILL.md"],
+  };
+  assert.equal((await installPinnedSource(project, integration)).status, "installed");
+  assert.equal((await installPinnedSource(project, integration)).status, "ready");
+  assert.equal((await inspectPinnedSource(project, integration)).revision, integration.revision);
+  await assert.rejects(inspectPinnedSource(project, {
+    ...integration, reviewServerName: "fixture-without-a-source-review",
+  }), /missing its source review/, "a declared MCP review cannot silently fall back to a Git-only check");
 });

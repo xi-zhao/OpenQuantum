@@ -20,6 +20,8 @@ import {
   mcpCredentialCatalogEntry,
 } from "./project-settings-catalog.mjs";
 
+import { inspectPinnedSource } from "./pinned-source.mjs";
+
 const SKILL_NAME = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const SERVER_NAME = /^[A-Za-z0-9_-]{1,32}$/;
 const CREDENTIAL_REF = /^[A-Za-z_][A-Za-z0-9_]*$/;
@@ -159,16 +161,8 @@ async function mcpSetupView(projectRoot, setup) {
     for (const requiredFile of setup.requiredFiles ?? [setup.entry]) {
       await containedFile(projectRoot, requiredFile);
     }
-    const markerPath = await containedFile(projectRoot, setup.marker);
-    const marker = JSON.parse(await readFile(markerPath, "utf8"));
-    if (
-      !isRecord(marker) ||
-      marker.schemaVersion !== "1.0" ||
-      marker.source !== setup.source ||
-      marker.revision !== setup.revision
-    ) {
-      throw new TypeError("本地 MCP 源码标记与项目固定版本不一致");
-    }
+    await containedFile(projectRoot, setup.marker);
+    await inspectPinnedSource(projectRoot, setup.integration);
     return {
       status: "ready",
       message: "本地固定版本源码已就绪。首次启动会由 uv 创建隔离环境并安装上游依赖。",
@@ -180,7 +174,7 @@ async function mcpSetupView(projectRoot, setup) {
       status: "required",
       message: missing
         ? "尚未安装本地源码；安装完成前不能启用此 MCP。"
-        : "本地源码不完整或版本标记不匹配；为避免执行未审阅代码，此 MCP 已阻止启用。",
+        : "本地源码不完整或与已审阅的固定版本不一致；为避免执行未审阅代码，此 MCP 已阻止启用。",
       command: setup.command,
     };
   }

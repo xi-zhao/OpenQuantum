@@ -15,10 +15,17 @@
  */
 
 import { spawn } from "node:child_process";
-import { lstat, mkdir, mkdtemp, readFile, rename, rm, writeFile } from "node:fs/promises";
+import { lstat, mkdir, mkdtemp, rename, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 
-export const SOURCE_MARKER = ".openquantum-source.json";
+import {
+  SOURCE_MARKER,
+  assertRegularSourceFile,
+  inspectPinnedSource,
+  inspectPinnedSourceDirectory,
+} from "../../src/settings/server/pinned-source.mjs";
+
+export { SOURCE_MARKER, inspectPinnedSource };
 
 function run(command, args, cwd) {
   return new Promise((resolve, reject) => {
@@ -44,39 +51,6 @@ function run(command, args, cwd) {
       );
     });
   });
-}
-
-async function assertRegularFile(filePath) {
-  const info = await lstat(filePath);
-  if (!info.isFile() || info.isSymbolicLink()) {
-    throw new Error(`${filePath} must be a regular file`);
-  }
-}
-
-export async function inspectPinnedSource(
-  root,
-  integration,
-  { source = integration.sourceUrl, revision = integration.revision } = {},
-) {
-  const target = path.join(root, integration.relativeRoot);
-  const info = await lstat(target);
-  if (!info.isDirectory() || info.isSymbolicLink()) {
-    throw new Error(`${target} must be a regular directory`);
-  }
-  for (const relativeFile of integration.requiredFiles) {
-    await assertRegularFile(path.join(target, relativeFile));
-  }
-  const markerPath = path.join(target, SOURCE_MARKER);
-  await assertRegularFile(markerPath);
-  const marker = JSON.parse(await readFile(markerPath, "utf8"));
-  if (
-    marker?.schemaVersion !== "1.0" ||
-    marker.source !== source ||
-    marker.revision !== revision
-  ) {
-    throw new Error(`${integration.relativeRoot} source marker does not match the pinned release`);
-  }
-  return { target, source, revision };
 }
 
 export async function installPinnedSource(
@@ -120,13 +94,14 @@ export async function installPinnedSource(
       throw new Error(`Fetched ${actualRevision}; expected ${revision}`);
     }
     for (const relativeFile of integration.requiredFiles) {
-      await assertRegularFile(path.join(temporary, relativeFile));
+      await assertRegularSourceFile(temporary, relativeFile);
     }
     await writeFile(
       path.join(temporary, SOURCE_MARKER),
       `${JSON.stringify({ schemaVersion: "1.0", source, revision }, null, 2)}\n`,
       { flag: "wx", mode: 0o600 },
     );
+    await inspectPinnedSourceDirectory(temporary, integration, { source, revision });
     await rename(temporary, target);
   } catch (error) {
     await rm(temporary, { recursive: true, force: true });
