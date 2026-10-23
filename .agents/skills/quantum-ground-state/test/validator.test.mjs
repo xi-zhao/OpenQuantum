@@ -201,6 +201,42 @@ test("validator emits only profile-bound observations for a valid result", () =>
   assert.doesNotMatch(JSON.stringify(output), /(?:NaN|Infinity)/);
 });
 
+test("large coarse grids stay within a small evaluation budget in both numerical implementations", () => {
+  const request = clone(protocolFixture);
+  request.method.optimizer.coarsePoints = 20_000_001;
+  request.method.optimizer.maxEvaluations = 8;
+  const code = `
+    import { solveGroundState } from ${JSON.stringify(new URL("../scripts/solve.mjs", import.meta.url).href)};
+    import { validateGroundStateComputation } from ${JSON.stringify(new URL("../validators/validate-result.mjs", import.meta.url).href)};
+    const request = ${JSON.stringify(request)};
+    const facts = solveGroundState(request);
+    const validation = validateGroundStateComputation({
+      profile: ${JSON.stringify(readJson("acceptance-profiles/supplied-pauli-statevector-v1.1.json"))},
+      request,
+      facts,
+    });
+    console.log(JSON.stringify({ result: facts.groundStateResult, trace: facts.convergenceTrace, validation }));
+  `;
+  // A regression must fail inside a disposable process, never exhaust the test runner.
+  const child = spawnSync(process.execPath, ["--max-old-space-size=32", "--input-type=module", "-e", code], {
+    encoding: "utf8",
+    timeout: 10000,
+    maxBuffer: 1024 * 1024,
+  });
+  assert.equal(child.status, 0, child.error?.message ?? child.stderr);
+  const { result, trace, validation } = JSON.parse(child.stdout);
+  assert.equal(result.evaluationCount, 8);
+  assert.equal(result.terminationReason, "evaluation-budget");
+  assert.equal(trace.coarsePointsEvaluated, 8);
+  assert.equal(trace.refinementEvaluations, 0);
+  assert.equal(trace.finalBracketWidthRadians, null);
+  assert.equal(observation(validation, "request.scope").status, "pass");
+  assert.equal(observation(validation, "optimizer.trace-replayed").status, "pass");
+  assert.equal(observation(validation, "resources.within-budget").status, "pass");
+  assert.equal(observation(validation, "vqe.converged").status, "fail");
+  assert.equal(observation(validation, "provenance.complete").status, "not_checked");
+});
+
 test("validator keeps truthful low-budget facts separate from convergence", () => {
   const request = clone(protocolFixture);
   request.method.optimizer.maxEvaluations = 32;
