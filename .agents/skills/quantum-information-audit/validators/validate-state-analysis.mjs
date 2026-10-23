@@ -7,7 +7,9 @@ import { isDeepStrictEqual } from "node:util";
 
 import {
   REPLAY_TOLERANCE,
+  REQUEST_DIGEST_VERSION,
   STRUCTURAL_TOLERANCE,
+  binary64RequestDigest,
   complexDistance,
   computeReferenceAnalysis,
   normalizeAuditRequest,
@@ -71,7 +73,12 @@ export function validateStateAnalysis({ request: requestValue, analysis }) {
   const transposeSubsystemsMatch =
     JSON.stringify(transpose.subsystems) ===
     JSON.stringify(reference.partialTranspose.subsystems);
-  const digestMatches = analysis?.requestDigest === reference.requestDigest;
+  // Unversioned artifacts retain the original digest rule; never repair a
+  // worker digest or try a second encoding after a mismatch.
+  const digestVersion = analysis?.requestDigestVersion;
+  const expectedDigest = digestVersion === undefined ? reference.requestDigest
+    : digestVersion === REQUEST_DIGEST_VERSION ? binary64RequestDigest(request) : undefined;
+  const digestMatches = expectedDigest !== undefined && analysis?.requestDigest === expectedDigest;
   const toqitoDensityMatches = state.toqitoDensity === reference.state.densityByReplayedCriteria;
   const observations = [
     observation("request.scope", "pass", 0, 0, "Request is inside the bounded multipartite density-matrix audit scope."),
