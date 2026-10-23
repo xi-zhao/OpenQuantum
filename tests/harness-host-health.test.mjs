@@ -87,7 +87,7 @@ test("health check exits nonzero when the server is unavailable", async () => {
   assert.equal(result.stderr.trim(), "Harness HTTP health check failed");
 });
 
-test("real Harness passes anonymous health and authenticated page/RPC probes", { timeout: 60_000 }, async (t) => {
+test("real production Harness passes anonymous health and authenticated page/RPC probes", { timeout: 60_000 }, async (t) => {
   const sandbox = await mkdtemp(path.join(tmpdir(), "oq-host-health-"));
   let child;
   t.after(async () => {
@@ -114,6 +114,7 @@ test("real Harness passes anonymous health and authenticated page/RPC probes", {
   ], {
     env: {
       ...process.env,
+      NODE_ENV: "production",
       DSH_HOME: path.join(sandbox, "dsh"),
       DSH_TELEMETRY_MODE: "DISABLED",
       DSH_TELEMETRY_DISABLED: "1",

@@ -5,9 +5,9 @@ import path from "node:path";
 
 export const DESKTOP_SOURCE = Object.freeze({
   repository: "https://github.com/anywhere-labs/dsh-desktop.git",
-  revision: "5184a2ab7ab197e7405c1053feb324003409a142",
-  version: "2.0.7",
-  harnessVersion: "0.1.5-rc.1",
+  revision: "6a63b9730b82cf4e858b9a11ac9783da9a5a0c3a",
+  version: "2.0.18",
+  harnessVersion: "0.2.1-rc.2",
 });
 
 export function desktopSourceDirectory(projectRoot) {

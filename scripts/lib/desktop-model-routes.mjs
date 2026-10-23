@@ -1,15 +1,40 @@
-import { readFile } from "node:fs/promises";
+import { lstat, mkdir, readFile, writeFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import path from "node:path";
-import { parseDocument } from "yaml";
+import { isMap, isSeq, parseDocument } from "yaml";
 import { composeEntries, loadOptionalPatches } from "@deepseek-ai/dsh-app-boot";
 import { Context } from "@deepseek-ai/cordis";
+import { writeFileAtomic } from "@deepseek-ai/dsh-atomic-write";
 import { LocalCredentialProvider } from "@deepseek-ai/dsh-credentials-local";
-import { FileSettingsProvider } from "@deepseek-ai/dsh-settings-file";
-import { AgentDefaultModelConfig } from "@deepseek-ai/dsh-agent-default-model";
 import { createLaunchEnvironmentSnapshot } from "@deepseek-ai/dsh-launch-environment";
 import { projectEnvironment } from "./desktop-environment.mjs";
-import { DESKTOP_PROFILE_PATCH } from "./desktop-profile-bundle.mjs";
+import { DESKTOP_MODEL_ROUTES, LEGACY_DESKTOP_MODEL_ROUTES, DESKTOP_PROFILE_DEFAULTS, DESKTOP_PROFILE_PATCH } from "./desktop-profile-bundle.mjs";
+
+import { assertNoLinks, sha256 } from "./desktop-distribution.mjs";
+
+/** Carry a user-edited pre-0.2 route catalog into the bundle once; untouched defaults are simply replaced. */
+export async function adoptLegacyDesktopRoutes(harnessHome, legacyHomeFiles) {
+  const legacyPath = path.join(harnessHome, LEGACY_DESKTOP_MODEL_ROUTES);
+  const target = path.join(harnessHome, DESKTOP_MODEL_ROUTES);
+  await assertNoLinks(legacyPath);
+  await assertNoLinks(target);
+  const legacy = await readFile(legacyPath).catch(error => { if (error.code === "ENOENT") return null; throw error; });
+  if (!legacy || await lstat(target).catch(() => null)) return;
+  const stateFile = path.join(harnessHome, ".openquantum-home.json");
+  await assertNoLinks(stateFile);
+  const state = await readFile(stateFile, "utf8").then(JSON.parse).catch(error => { if (error.code === "ENOENT") return { files: legacyHomeFiles }; throw error; });
+  const recorded = state.files?.[LEGACY_DESKTOP_MODEL_ROUTES];
+  if (recorded && sha256(legacy) === recorded) return;
+  const routes = document(legacy.toString("utf8"));
+  if (!isSeq(routes.contents) || routes.contents.items.some(row => !isMap(row))) throw new Error("Desktop model routes must be a YAML sequence of plugin rows");
+  const oldRows = routes.contents.items.filter(row => row.get("id") === "openquantum-llm-pi-ai");
+  const nativeRows = routes.contents.items.filter(row => row.get("id") === "llm-pi-ai");
+  if (oldRows.length > 1 || nativeRows.length > 1 || (oldRows.length && nativeRows.length)) throw new Error("Desktop model route migration is ambiguous; reconcile the llm-pi-ai rows before launching");
+  // Rename only the owned row, not provider names, expressions or credential refs.
+  if (oldRows.length) oldRows[0].set("id", "llm-pi-ai");
+  await mkdir(path.dirname(target), { recursive: true });
+  await writeFile(target, oldRows.length ? routes.toString({ lineWidth: 0 }) : legacy, { mode: 0o600, flag: "wx" });
+}
 
 // Semantic fingerprints of the shipped 0.8.1 example providers. Comparing the
 // whole object preserves partial user edits to models, names or credential refs.
@@ -33,7 +58,7 @@ function document(source) {
 // credential references remain owned by the user, including incomplete edits.
 export async function desktopModelRoutes(source, projectRoot, harnessHome, inherited = process.env) {
   const routes = document(source);
-  const rowIndex = routes.contents.items.findIndex(row => row.get("id") === "openquantum-llm-pi-ai");
+  const rowIndex = routes.contents.items.findIndex(row => row.get("id") === "llm-pi-ai");
   if (rowIndex < 0) return { content: source, removed: [] };
   const settings = await readFile(path.join(harnessHome, "settings.yaml"), "utf8").then(text => document(text).toJS() ?? {}).catch(error => { if (error.code === "ENOENT") return {}; throw error; });
   const environments = [projectEnvironment(harnessHome), projectEnvironment(projectRoot), inherited];
@@ -59,7 +84,7 @@ export async function desktopModelRoutes(source, projectRoot, harnessHome, inher
 }
 
 function providers(source) {
-  return document(source).toJS()?.find(row => row.id === "openquantum-llm-pi-ai")?.config?.providers ?? {};
+  return document(source).toJS()?.find(row => row.id === "llm-pi-ai")?.config?.providers ?? {};
 }
 
 export function desktopModelDefault(source, activeRoutes, removed) {
@@ -75,28 +100,52 @@ export function desktopModelDefault(source, activeRoutes, removed) {
   return patch.toString({ lineWidth: 0 });
 }
 
+const SELECTION_ID = "agent-default-model";
+
+async function optionalText(filename) {
+  return readFile(filename, "utf8").catch(error => { if (error.code === "ENOENT") return null; throw error; });
+}
+
+/** Clear a saved default that still names a removed example route.
+ * DSH 0.2 saves Settings into the profile patch; an unimported legacy
+ * settings.yaml section is still honored before the official importer runs.
+ * Home-level patches are user-owned and outrank this, so they are never edited.
+ */
 export async function clearRemovedDesktopModelSelection(harnessHome, removed) {
   if (!removed.length) return;
-  const active = providers(await readFile(path.join(harnessHome, "profiles/model-routes.cordis.yml"), "utf8"));
+  const active = providers(await readFile(path.join(harnessHome, DESKTOP_MODEL_ROUTES), "utf8"));
   const homePatch = path.join(harnessHome, "cordis.patch.yml");
-  const homeSource = await readFile(homePatch, "utf8").catch(error => { if (error.code === "ENOENT") return ""; throw error; });
-  // DSH Desktop 2.0.7 treats an empty machine patch as no layer, and applies
-  // that layer after the Profile. Keep both its ordering and identity checks.
-  const entries = composeEntries([
-    [{ insert: [{ id: "agent-default-model", name: "@deepseek-ai/dsh-agent-default-model", config: { provider: "", model: "" } }] }],
+  const homeSource = await optionalText(homePatch) ?? "";
+  const profilePatch = path.join(harnessHome, "profiles/desktop/cordis.patch.yml");
+  const legacyPath = path.join(harnessHome, "settings.yaml");
+  const legacySource = await optionalText(legacyPath);
+  const legacy = legacySource == null ? null : document(legacySource);
+  const layers = [
+    [{ insert: [{ id: SELECTION_ID, name: "@deepseek-ai/dsh-agent-default-model", config: { provider: "", model: "" } }] }],
+    loadOptionalPatches("OpenQuantum", path.join(harnessHome, DESKTOP_PROFILE_DEFAULTS)) ?? [],
     loadOptionalPatches("OpenQuantum", path.join(harnessHome, DESKTOP_PROFILE_PATCH)) ?? [],
-    loadOptionalPatches("OpenQuantum", path.join(harnessHome, "profiles/desktop/cordis.patch.yml")) ?? [],
-    document(homeSource).toJS() == null ? [] : loadOptionalPatches("OpenQuantum", homePatch),
-  ]);
-  const defaults = entries.find(row => row.id === "agent-default-model")?.config;
-  const base = removed.includes(defaults?.provider) && typeof defaults?.model === "string" ? defaults : { provider: "", model: "" };
-  const context = new Context();
-  const settings = await context.plugin(FileSettingsProvider, { dshHome: harnessHome, watch: false });
-  const selection = await context.plugin(AgentDefaultModelConfig, base);
-  try {
-    const current = context.agentDefaultModel.currentSelection();
-    if (removed.includes(current.provider) && !Object.hasOwn(active, current.provider)) {
-      await context.agentDefaultModel.saveSelection({ provider: "", model: "" });
-    }
-  } finally { await selection.dispose(); await settings.dispose(); }
+    loadOptionalPatches("OpenQuantum", profilePatch) ?? [],
+  ];
+  const legacySelection = legacy?.toJS()?.[SELECTION_ID];
+  if (legacySelection && typeof legacySelection === "object") layers.push([{ id: SELECTION_ID, config: legacySelection }]);
+  if (document(homeSource).toJS() != null) layers.push(loadOptionalPatches("OpenQuantum", homePatch));
+  const current = composeEntries(layers).find(row => row.id === SELECTION_ID)?.config ?? {};
+  if (!removed.includes(current.provider) || Object.hasOwn(active, current.provider)) return;
+  const homeRows = document(homeSource).toJS();
+  if (Array.isArray(homeRows) && homeRows.some(row => row?.id === SELECTION_ID && row.config)) return;
+  const cleared = { provider: "", model: "" };
+  if (legacySelection && typeof legacySelection === "object") {
+    legacy.set(SELECTION_ID, legacy.createNode(cleared));
+    await writeFileAtomic(legacyPath, legacy.toString({ lineWidth: 0 }), { mode: 0o600 });
+    return;
+  }
+  const profileSource = await optionalText(profilePatch);
+  const profile = document(profileSource ?? "[]\n");
+  if (!isSeq(profile.contents)) throw new Error("Desktop profile patch must be a YAML sequence");
+  profile.contents.flow = false;
+  const index = profile.contents.items.findLastIndex(row => isMap(row) && row.get("id") === SELECTION_ID && !row.has("insert"));
+  if (index < 0) profile.add(profile.createNode({ id: SELECTION_ID, config: cleared }));
+  else profile.setIn([index, "config"], profile.createNode(cleared));
+  await mkdir(path.dirname(profilePatch), { recursive: true });
+  await writeFileAtomic(profilePatch, profile.toString({ lineWidth: 0 }), { mode: 0o600 });
 }

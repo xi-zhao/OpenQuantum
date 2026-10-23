@@ -2,7 +2,7 @@
  * The official ACP bundle can accept stdio while sibling Includes are still
  * loading. This Host readiness service performs no model/network request.
  */
-export const inject = ["llm"];
+export const inject = ["llm", "loader"];
 
 export async function apply(ctx, { provider }) {
   await new Promise((resolve, reject) => {
@@ -22,5 +22,28 @@ export async function apply(ctx, { provider }) {
     ctx.effect(() => () => finish(new Error("OpenQuantum ACP startup was disposed")));
     check();
   });
+  // A top-level model adapter can mount before the nested Tool providers.
+  // Wait for this composition only: waiting for the entire Loader would also
+  // include ACP itself, which is waiting for the readiness service below.
+  let timeout;
+  let stopped = false;
+  await Promise.race([
+    (async () => {
+      let entry;
+      while (!(entry = [...ctx.loader.entries()].find((candidate) => candidate.options.id === "openquantum-agent-extensions"))?.subtree) {
+        if (stopped) return;
+        await new Promise((resolve) => setTimeout(resolve, 20));
+      }
+      await entry.fiber?.await();
+      await entry.subtree.await();
+      const failed = [...entry.subtree.entries()].find((candidate) =>
+        !candidate.disabled && typeof candidate.options.name === "string" && candidate.fiber?.state !== 2,
+      );
+      if (failed) throw new Error(`OpenQuantum ACP Tool provider did not start: ${failed.options.id}`);
+    })(),
+    new Promise((_, reject) => {
+      timeout = setTimeout(() => reject(new Error("OpenQuantum ACP Tool composition did not become ready")), 30_000);
+    }),
+  ]).finally(() => { stopped = true; clearTimeout(timeout); });
   ctx.provide("openquantumAcpModelReady", { provider });
 }

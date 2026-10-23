@@ -20,9 +20,10 @@ OpenQuantum 把 Web 与 Desktop 建模为同一个 Harness 产品组合的两个
 
 ```text
 OpenQuantum Harness Home
-  ├── cordis.patch.yml        默认模型/preset、品牌与设置扩展
-  ├── profiles/model-routes.cordis.yml  静态 Provider catalog
-  ├── settings.yaml           用户 Route 覆盖（Git 忽略）
+  ├── cordis.patch.yml        Preset 声明、品牌与设置扩展
+  ├── profiles/<profile>/     原生 profile；bundle 层提供静态 Provider catalog 与默认值，
+  │                           cordis.patch.yml 保存用户 Route 覆盖（Git 忽略）
+  ├── profiles/.agent-presets/presets.cordis.yml  dsh-agent-preset 声明
   ├── .agent-presets/         OpenQuantum Agent 组合
   └── Session / credentials   Harness 权威状态
            ▲

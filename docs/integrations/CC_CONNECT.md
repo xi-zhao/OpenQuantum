@@ -12,8 +12,9 @@
 
 这条边界意味着：从消息平台发来的请求与 Web 工作台使用同一套量子能力配置。设置中心启用或关闭的是
 Harness MCP Client 连接；它仍由 Agent Preset 管理。CC Connect 不直接加载 Skill，也不直接调用 MCP-exposed Tool。
-Web、Desktop 和 ACP 还共用 `model-routes.cordis.yml` 的静态 Provider catalog，以及同一个 DSH Home 中
-Git 忽略的 `settings.yaml` 用户覆盖。因此在“设置 → 模型”保存的 Endpoint 等 Route 配置会进入消息入口；
+Web、Desktop 和 ACP 还共用 `model-routes.cordis.yml` 的静态 Provider catalog。Harness 0.2.1 起各 profile 独立保存
+用户覆盖（`profiles/<profile>/cordis.patch.yml`）；旧 `settings.yaml` 的模型覆盖会一次性迁入 Web 与 ACP，此后在 Web
+“设置 → 模型”的修改不再自动同步到消息入口，需要在 ACP profile 中单独调整；
 真实 API Key 仍只来自环境变量或 Harness credential store，不进入这些文件或 Git。
 
 ## 第一次使用
@@ -78,7 +79,7 @@ OpenQuantum 的“设置 → 消息渠道”只展示这条连接的产品状态
 
 ## 能力与限制
 
-- `cc-connect` 固定为 `1.5.1-beta.1`，DeepSeek Harness ACP 入口固定为 `0.1.5-rc.1`；开发期使用固定的 ACP TypeScript SDK `1.4.0` 复核真实 stdio 握手，任一方升级时都要重跑该测试。
+- `cc-connect` 固定为 `1.5.1-beta.1`，DeepSeek Harness ACP 入口固定为 `0.2.1-rc.2`；开发期使用固定的 ACP TypeScript SDK `1.4.0` 复核真实 stdio 握手，任一方升级时都要重跑该测试。
 - ACP 入口创建独立 Harness Session，执行事实写入 `.openquantum/cc-connect/sessions`，不与 Web Host 的 JSONL writer 混用。
 - CC Connect 可以转发文本、权限选择和已提交的 Agent 回复；更完整的工具轨迹仍以 Harness Session 记录为准。
 - 真实量子硬件、付费云任务和需要凭据的 MCP Server 连接继续遵循设置中心的默认关闭与显式启用规则。

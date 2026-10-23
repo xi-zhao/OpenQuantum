@@ -31,7 +31,7 @@ if (process.platform === "darwin") {
   assert.ok(shortcut.length > 0);
 }
 const home = path.join(projectRoot, ".openquantum/dsh");
-const route = path.join(home, "profiles/model-routes.cordis.yml");
+const route = path.join(home, ".openquantum-extensions/harness-desktop-profile/model-routes.cordis.yml");
 const original = await readFile(route, "utf8");
 await writeFile(route, original + "\n# retained user route preference\n");
 const customSkill = path.join(projectRoot, ".agents/skills/smoke-retention/SKILL.md");

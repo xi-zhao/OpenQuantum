@@ -6,6 +6,12 @@ import { assertNoLinks, sha256 } from "./desktop-distribution.mjs";
 export const DESKTOP_PROFILE_BUNDLE = "@openquantum/harness-desktop-profile";
 export const DESKTOP_PROFILE_DIRECTORY = ".openquantum-extensions/harness-desktop-profile";
 export const DESKTOP_PROFILE_PATCH = `${DESKTOP_PROFILE_DIRECTORY}/cordis.patch.yml`;
+export const DESKTOP_PROFILE_DEFAULTS = `${DESKTOP_PROFILE_DIRECTORY}/profile-defaults.cordis.yml`;
+// Bundle patch paths join lexically from the linked package, so every layer
+// lives inside the bundle. The route catalog stays a managed, editable file.
+export const DESKTOP_MODEL_ROUTES = `${DESKTOP_PROFILE_DIRECTORY}/model-routes.cordis.yml`;
+export const LEGACY_DESKTOP_MODEL_ROUTES = "profiles/model-routes.cordis.yml";
+export const DESKTOP_BUNDLE_PATCHES = ["./model-routes.cordis.yml", "./profile-defaults.cordis.yml", "./cordis.patch.yml"];
 
 export function desktopProfileManifest(manifest) {
   const next = structuredClone(manifest);

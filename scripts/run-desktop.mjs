@@ -8,6 +8,7 @@ import { DESKTOP_SOURCE, requireDesktopBuild } from "./lib/desktop-source.mjs";
 import { assertSelectedDesktopHome, verifyNativeDesktop } from "./lib/native-desktop.mjs";
 import { loadProjectEnv } from "./lib/load-project-env.mjs";
 import { desktopLaunchEnvironment } from "./lib/desktop-environment.mjs";
+import { DESKTOP_MODEL_ROUTES } from "./lib/desktop-profile-bundle.mjs";
 
 const projectRoot = fileURLToPath(new URL("..", import.meta.url));
 const args = process.argv.slice(2);
@@ -16,7 +17,7 @@ const native = process.env.DSH_DESKTOP_EXECUTABLE || (process.platform === "darw
 if (args[0] === "--version") {
   console.log(`OpenQuantum capability package; compatible original DSH Desktop ${DESKTOP_SOURCE.version}, Harness ${DESKTOP_SOURCE.harnessVersion}`);
 } else if (args[0] === "--help") {
-  console.log("Install the original DSH Desktop 2.0.7, then run npm run desktop. Set DSH_DESKTOP_EXECUTABLE for a custom installation. --source uses the unmodified pinned source build.");
+  console.log(`Install the original DSH Desktop ${DESKTOP_SOURCE.version}, then run npm run desktop. Set DSH_DESKTOP_EXECUTABLE for a custom installation. --source uses the unmodified pinned source build.`);
 } else {
   const source = args[0] === "--source";
   if (!source && !existsSync(native)) throw new Error(`Install the original DSH Desktop ${DESKTOP_SOURCE.version}: https://github.com/anywhere-labs/dsh-desktop/releases/tag/v${DESKTOP_SOURCE.version}`);
@@ -33,7 +34,7 @@ if (args[0] === "--version") {
   await assertSelectedDesktopHome(harnessHome);
   await prepareOpenQuantumHarnessHome({ harnessHome, projectRoot, profileName: "desktop" });
   const environment = desktopLaunchEnvironment(projectRoot, await Promise.all([
-    readFile(path.join(harnessHome, "profiles/model-routes.cordis.yml"), "utf8"),
+    readFile(path.join(harnessHome, DESKTOP_MODEL_ROUTES), "utf8"),
     readFile(path.join(harnessHome, ".agent-presets/openquantum/agent.cordis.yml"), "utf8"),
   ]), inherited);
   const child = spawn(executable, argv, { cwd: harnessHome, stdio: "inherit", env: {

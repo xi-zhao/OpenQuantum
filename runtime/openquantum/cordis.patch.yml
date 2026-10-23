@@ -1,24 +1,24 @@
 # OpenQuantum deployment composition for DeepSeek Harness.
 # Secrets stay behind apiKeyEnv references and are resolved per request.
-
-- id: agent-default-model
-  config:
-    provider: openquantum-public
-    model: kimi-k2.7-code
-
-# Product sessions default to the deployment-owned OpenQuantum composition.
-- id: agent-presets
-  config:
-    default: openquantum
+# Model routes and the default model/preset live in the OpenQuantum profile
+# bundle below each profile's native settings layer, so Settings stays editable.
 
 # This deployment exposes only routes explicitly owned by OpenQuantum.
 - id: llm-deepseek
   disabled: true
 
-# The base profile mounts a dormant pi-ai adapter. OpenQuantum replaces it
-# with one shared static catalog so Web, Desktop and automation Hosts cannot
-# activate two adapters for the same provider route.
-- id: llm-pi-ai
+- id: llm-deepseek-account
+  disabled: true
+
+# Keep the distribution's existing local-data policy across upstream defaults.
+- id: session-log-deepseek
+  config:
+    enabled: false
+
+- id: product-analytics
+  disabled: true
+
+- id: desktop-product-telemetry
   disabled: true
 
 # Presets own their Skill sources. Disabling the host provider prevents personal
@@ -30,6 +30,13 @@
 # identity through its index transform and native brand slots. OpenQuantum does not
 # carry a fork of the Harness React frontend.
 - insert:
+    # DSH 0.2 registers explicit preset declarations instead of scanning folders.
+    # The declaration file lives in the profiles tree so official packages
+    # resolve from the active Host dependency graph.
+    - id: openquantum-presets
+      name: '@deepseek-ai/cordis-plugin-include'
+      config:
+        path: ../.agent-presets/presets.cordis.yml
     - id: openquantum-web-locales
       name: '@openquantum/harness-web-locales'
       inject: [webServer]
@@ -45,12 +52,3 @@
     - id: openquantum-web-updates
       name: '@openquantum/harness-web-updates'
       inject: [webServer, connection]
-
-# Profile roots live at $DSH_HOME/profiles/<profile>/cordis.yml; the fragment
-# is materialized beside them so its plugins resolve through the profile's
-# shared dependency root.
-- insert:
-    - id: openquantum-model-routes
-      name: '@deepseek-ai/cordis-plugin-include'
-      config:
-        path: ../model-routes.cordis.yml

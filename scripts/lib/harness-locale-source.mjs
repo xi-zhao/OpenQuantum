@@ -46,6 +46,14 @@ function staticSource(source) {
       return Object.fromEntries(entries);
     }
     if (node.type === "MemberExpression") return resolve(node.object)[node.computed ? resolve(node.property) : node.property.name];
+    // Upstream writes multi-line copy as a literal array joined with a literal separator.
+    if (node.type === "CallExpression" && node.callee.type === "MemberExpression" && !node.callee.computed
+      && node.callee.property.name === "join" && node.callee.object.type === "ArrayExpression" && node.arguments.length <= 1) {
+      const parts = resolve(node.callee.object);
+      const separator = node.arguments.length ? resolve(node.arguments[0]) : ",";
+      if (typeof separator !== "string" || parts.some((part) => typeof part !== "string")) throw new Error("Unsupported locale join");
+      return parts.join(separator);
+    }
     throw new Error(`Unsupported locale expression: ${node.type}${node.name ? ` ${node.name}` : ""}`);
   }
   return { root, calls, scopes, literal };
