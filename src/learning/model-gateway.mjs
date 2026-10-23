@@ -8,6 +8,11 @@ class RequestError extends TypeError {}
 const json = (res, status, value) => { res.writeHead(status, { "content-type": "application/json", "cache-control": "no-store" }); res.end(JSON.stringify(value)); };
 const failure = (message, code = "model_request_failed") => ({ error: { message, type: "api_error", code } });
 
+async function modelCapabilities(llm, route, signal) {
+  const info = await llm.resolveModelInfo?.(route.provider, route.model, AbortSignal.any([signal, AbortSignal.timeout(5000)]));
+  return Array.isArray(info?.inputModalities) ? { vision: info.inputModalities.includes("image") } : {};
+}
+
 /** Translate the upstream application protocol, without owning an agent loop. */
 export async function modelRequest(body, selection, attachments) {
   if (body?.model !== GATEWAY_MODEL || !Array.isArray(body.messages) || body.messages.length === 0 || body.messages.length > 2000) throw new RequestError("无效的课堂模型请求。");
@@ -69,8 +74,8 @@ export async function createModelGateway({ llm, selection, attachments, record =
   const server = createServer(async (req, res) => {
     const expected = Buffer.from(`Bearer ${token}`), actual = Buffer.from(req.headers.authorization || "");
     if (req.headers.origin || !["127.0.0.1", "::ffff:127.0.0.1"].includes(req.socket.remoteAddress) || actual.length !== expected.length || !timingSafeEqual(actual, expected)) { json(res, 403, failure("Forbidden", "forbidden")); return; }
-    if (req.url === "/v1/models" && req.method === "GET") { json(res, 200, { object: "list", data: [{ id: GATEWAY_MODEL, object: "model", owned_by: "OpenQuantum" }] }); return; }
-    if (req.url !== "/v1/chat/completions" || req.method !== "POST") { json(res, 404, failure("Unknown model endpoint", "not_found")); return; }
+    const metadata = req.url === "/v1/models" && req.method === "GET";
+    if (!metadata && (req.url !== "/v1/chat/completions" || req.method !== "POST")) { json(res, 404, failure("Unknown model endpoint", "not_found")); return; }
     if (controllers.size >= 6) { json(res, 429, failure("课堂模型请求正在排队，请稍后重试。", "busy")); return; }
     const controller = new AbortController(); controllers.add(controller);
     const signal = AbortSignal.any([controller.signal, AbortSignal.timeout(600_000)]);
@@ -79,10 +84,24 @@ export async function createModelGateway({ llm, selection, attachments, record =
     const id = `chatcmpl-${randomUUID()}`, started = Date.now();
     let route, usage, failureCode, finish = "error";
     try {
+      if (metadata) {
+        route = selection();
+        const capabilities = await modelCapabilities(llm, route, signal);
+        if (!res.destroyed) json(res, 200, { object: "list", data: [{ id: GATEWAY_MODEL, object: "model", owned_by: "OpenQuantum", capabilities }] });
+        return;
+      }
       let bytes = 0; const chunks = [];
       for await (const chunk of req) { bytes += chunk.length; if (bytes > MAX_BYTES) throw new RequestError("课堂模型请求超过 32 MB。"); chunks.push(chunk); }
       route = selection();
       const body = JSON.parse(Buffer.concat(chunks).toString("utf8"));
+      // Recheck the captured route before materializing images: the selected
+      // model may have changed since OpenMAIC resolved its prompt capabilities.
+      if (Array.isArray(body?.messages) && body.messages.some((message) => Array.isArray(message?.content) && message.content.some((part) => part?.type === "image_url"))) {
+        const capabilities = await modelCapabilities(llm, route, signal);
+        if (capabilities.vision !== true) throw new RequestError(capabilities.vision === false
+          ? "OpenQuantum 当前模型不支持图片输入，请选择支持图片的模型后重试。"
+          : "无法确认 OpenQuantum 当前模型支持图片输入，请检查模型能力设置后重试。");
+      }
       const options = await modelRequest(body, route, attachments);
       const streamed = body.stream === true;
       const created = Math.floor(started / 1000);
@@ -134,7 +153,7 @@ export async function createModelGateway({ llm, selection, attachments, record =
     } finally {
       controllers.delete(controller); res.removeListener("close", abort);
       // Metadata only: no prompts, material, provider URL, credentials or raw errors.
-      await record({ id, at: new Date(started).toISOString(), provider: route?.provider, model: route?.model, finish, failureCode, durationMs: Date.now() - started, usage }).catch(() => {});
+      if (!metadata) await record({ id, at: new Date(started).toISOString(), provider: route?.provider, model: route?.model, finish, failureCode, durationMs: Date.now() - started, usage }).catch(() => {});
     }
   });
   server.requestTimeout = 600_000;

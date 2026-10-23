@@ -180,6 +180,12 @@ export const supportedLocales = languages.map(({ learningLocale }) => {
     models: [{ id: 'harness-default', name: 'OpenQuantum' }],
   },`],
   ],
+  "lib/server/resolve-model.ts": [
+    ["import type { NextRequest } from 'next/server';", "import type { NextRequest } from 'next/server';\nimport { resolveOpenQuantumModelInfo, assertOpenQuantumMaterialSupport } from '@/lib/server/openquantum-model-info';"],
+    ["  const { model, modelInfo } = getModel({", "  const { model, modelInfo: catalogModelInfo } = getModel({"],
+    ["  // Thinking arbitration mirrors model routing", "  const modelInfo = await resolveOpenQuantumModelInfo(providerId, modelId, catalogModelInfo);\n\n  // Thinking arbitration mirrors model routing"],
+    ["  return resolveModelFromHeaders(req, stage, getThinkingConfigFromBody(body));", "  const resolved = await resolveModelFromHeaders(req, stage, getThinkingConfigFromBody(body));\n  assertOpenQuantumMaterialSupport(resolved, body);\n  return resolved;"],
+  ],
   "lib/server/provider-config.ts": [
     ["  return {\n    providers,\n    tts:", `  if (process.env.OPENQUANTUM_MODEL_GATEWAY_URL && process.env.OPENQUANTUM_MODEL_GATEWAY_TOKEN) {
     providers['custom-openquantum'] = {
@@ -258,6 +264,7 @@ export async function applyOpenMaicUiOverlay(root) {
     writes.push([name, expected]);
   }
   writes.push(["components/openquantum-bridge.tsx", await readFile(path.join(root, "runtime/openquantum/openmaic-ui/bridge.tsx"), "utf8")]);
+  writes.push(["lib/server/openquantum-model-info.ts", await readFile(path.join(root, "runtime/openquantum/openmaic-ui/model-info.ts"), "utf8")]);
   writes.push(["lib/import/openquantum-pptx-classroom.ts", await readFile(path.join(root, "runtime/openquantum/openmaic-ui/pptx-classroom.ts"), "utf8")]);
   writes.push(["components/openquantum-wordmark.tsx", await readFile(path.join(root, "runtime/openquantum/openmaic-ui/wordmark.tsx"), "utf8")]);
   writes.push(["components/openquantum-use-host-theme.ts", await readFile(path.join(root, "runtime/openquantum/openmaic-ui/use-host-theme.ts"), "utf8")]);
