@@ -21,8 +21,8 @@ Session event log 为准，科学状态以 Acceptance Report 为准。2026-09 �
 
 ## Harness 0.2.1 迁移
 
-- 目标已经确定为 Harness `0.2.1-rc.2` / 原版 DSH Desktop `2.0.18`，在
-  [PR #38](https://github.com/xi-zhao/OpenQuantum/pull/38) 单独推进；适配记录见[升级记录](docs/releases/2026-10-23-harness-0.2.1.md)。
+- Harness `0.2.1-rc.2` / 原版 DSH Desktop `2.0.18` 已随
+  [PR #38](https://github.com/xi-zhao/OpenQuantum/pull/38) 合入主线（`cb765c3c`）；适配记录见[升级记录](docs/releases/2026-10-23-harness-0.2.1.md)。
 - 已修复旧模型 route 标识迁移及模型选择保留；容器检查等待健康状态和认证启动地址，生产 Host 集成测试覆盖成功与失败路径。
 - 已实际构建固定的 Desktop 2.0.18，并从其源码补齐 59 条遗漏文案；8 种语言的 1278 条新增短语全部逐种重译和 AI 审读，
   不是人工母语认证。审校来源及内容摘要见 `runtime/openquantum/web-locales/translation-review.json`。
@@ -32,8 +32,9 @@ Session event log 为准，科学状态以 Acceptance Report 为准。2026-09 �
 
 ## 下一唯一里程碑
 
-#35 和 #41 已经合并；#38 基于这两项基线完成迁移修复，整合后本地检查通过，只有 PR 检查也全部通过才合并。
-实际主线提交和合并状态以 GitHub 为准，公开发行仍为 `v0.8.4`。后续发布需另行授权，并补真实原生界面及外部模型验收；
+#35、#41 和 #38 已经合并；#38 的本地与 7 项 PR 检查通过。合并后主线复检暴露了就绪测试对瞬时快照的假设，
+后续修复仅为测试增加有界等待和失败原因码，不降低产品就绪标准。实际主线提交、补充修复和 CI 状态以 GitHub 为准。
+公开发行仍为 `v0.8.4`。后续发布需另行授权，并补真实原生界面及外部模型验收；
 本次工作不替换本机安装，也不把工程检查当成科学验收。
 
 ## 已知缺口
