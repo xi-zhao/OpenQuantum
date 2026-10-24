@@ -21,7 +21,7 @@ Codex 插件的公开版本仍为 [codex-v0.8.4](https://github.com/xi-zhao/Open
 
 默认数据目录是 `~/Library/Application Support/OpenQuantum/`：`project/` 保存可写部署、会话和配置，
 `native/` 保存窗口与原生偏好。应用更新只替换 `/Applications/OpenQuantum.app`；不要删除数据目录。
-现有模型配置、凭据与兼容 V3 会话继续沿用。升级前退出应用，完整备份该数据目录及任何自选 Home。
+现有模型配置、凭据与兼容 V0 会话可以沿用。V3 等后续格式不能直接继续，必须保留原 Home 并使用独立数据目录。升级前退出应用，完整备份该数据目录及任何自选 Home。
 旧启动器应停用或改为新应用的链接，避免旧程序再次写入共用部署；保留备份和旧 `versions/` 以便恢复。
 
 内置基线固定为 DSH Desktop `2.0.0`、Harness `0.1.0-rc.6`，同时包含经过审查的依赖安全修复。
@@ -66,8 +66,8 @@ DSH 的凭据服务写入原生存储（macOS 为 `0600`），已有原生凭据
 其他自定义进程环境（例如 Python 环境目录、计算资源限制）仍使用 `OpenQuantum DSH.command/.cmd` 启动入口加载，
 不声称原版 Finder 启动会读取整个项目 `.env`。
 
-Harness 0.2 的 V4 会话不能交给此版本改写。安装与准备会拒绝 V4 Home；使用单独兼容 Home，并保留原目录。
-这不提供 V4 → V3 会话转换。旧源码 Home 没有分发清单时，无法证明的旧程序副本或仍引用进程目录的 preset 会阻止启动；先备份并比较 Home 的 `.openquantum-defaults/`，或选择新的兼容 Home。既有 SDK 的显式安装、账户、平台与许可要求仍见[环境说明](integrations/LOCAL_ENVIRONMENTS.md)。
+此版本只支持 Harness 0.1.0-rc.6 的 V0 会话。安装与准备会拒绝含 V1–V5 文件的 Home；使用单独兼容 Home，并保留原目录。
+这不提供后续会话格式向 V0 的转换。旧源码 Home 没有分发清单时，无法证明的旧程序副本或仍引用进程目录的 preset 会阻止启动；先备份并比较 Home 的 `.openquantum-defaults/`，或选择新的兼容 Home。既有 SDK 的显式安装、账户、平台与许可要求仍见[环境说明](integrations/LOCAL_ENVIRONMENTS.md)。
 量子库原生 API 入口和完整接入范围见[完整接入记录](integrations/FULL_SDK_ACCESS.md)。
 
 ## 开发与工程验证

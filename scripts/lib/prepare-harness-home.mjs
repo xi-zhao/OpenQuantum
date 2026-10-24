@@ -8,6 +8,7 @@ import { buildLearningClient } from "./build-learning-client.mjs";
 import { buildLocaleClient } from "./build-locale-client.mjs";
 import { buildCapabilityClient } from "./build-capability-client.mjs";
 import { productUiOverlay } from "./product-ui-policy.mjs";
+import { migrateDesktopCredentials } from "./desktop-credential-migration.mjs";
 import { assertCompatibleHarnessHome } from "./harness-home-compatibility.mjs";
 import { migrateDesktopPreparation } from "./desktop-preparation-migration.mjs";
 import { desktopPreset } from "./desktop-profile-config.mjs";
@@ -52,6 +53,7 @@ export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot, 
     await preflightTree(extensionRoot);
   }
   await assertCompatibleHarnessHome(harnessHome);
+  const credentialMigration = desktop ? await migrateDesktopCredentials(harnessHome) : undefined;
   // 0.1.0 has no shipped ACP profile. Reuse its official base bundle and
   // apply the explicit transport overlay at launch; never replace user edits.
   if (!desktop) {
@@ -165,7 +167,7 @@ export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot, 
   if (existing && !existing.isSymbolicLink()) throw new Error("Refusing to replace unmanaged preset node_modules");
   if (existing) await rm(presetNodeModulesTarget);
   await symlink(path.join(projectRoot, "node_modules"), presetNodeModulesTarget, process.platform === "win32" ? "junction" : "dir");
-  return { ...result, presetTarget, presetNodeModulesTarget,
+  return { ...result, credentialMigration, presetTarget, presetNodeModulesTarget,
     modelRoutesTarget: path.join(harnessHome, "profiles/model-routes.cordis.yml"),
     patchTarget: path.join(harnessHome, patchRelative),
     learningPresetTarget: path.join(harnessHome, ".agent-presets/quantum-learning"),

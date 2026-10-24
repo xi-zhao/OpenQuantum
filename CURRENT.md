@@ -1,6 +1,6 @@
 # OpenQuantum 当前交接
 
-核验日期：2026-10-24。此页只记录交接状态；架构以[文档总入口](docs/README.md)为准，执行事实以 Harness
+核验日期：2026-10-25。此页只记录交接状态；架构以[文档总入口](docs/README.md)为准，执行事实以 Harness
 Session event log 为准，科学状态以 Acceptance Report 为准。2026-09 至 2026-10-16 的日期化记录已迁至
 [交接历史](docs/handoff/HISTORY.md)，内容未删改。接手时先重新查询 Git、PR 与 CI，不把本页当作实时状态。
 
@@ -46,11 +46,13 @@ Session event log 为准，科学状态以 Acceptance Report 为准。2026-09 �
 
 - #43 已合并（`1658aa25`），但其 `2.0.7` 不是用户最早使用的版本。用户已明确纠正为 **DSH Desktop `2.0.0` / Harness `0.1.0-rc.6`**，固定上游提交 `ee1235e1dd1675bbd6c52cfbe3f27b27bcfcfa81`。
 - 本任务分支 `c/desktop-standalone-release` 恢复正确基线；按用户选择，桌面暂保留原生中英文，不为十语言引入新版接口。所有 README 和已有翻译保留。
-- 使用原版 HTTP 服务、Session V3 和生命周期；独立 Host 扩展保留本机访问认证，不增加登录页。2.0.7 的旧测试结果不能替代本次验证。
+- 实查确认此版本使用 V0 会话；后续 V3 记录不会显示，安装前必须使用独立 Home 并保留旧数据，不能宣称原历史可直接继续。
+- 使用原版 HTTP 服务、Session V0 和生命周期；独立 Host 扩展保留本机访问认证，不增加登录页。2.0.7 的旧测试结果不能替代本次验证。
 - 用户已授权构建和发布 OpenQuantum 安装包，并在备份后替换本机版本。本次只交付 macOS Apple Silicon 独立 DMG；
   产品源码版本为 `0.8.5`，Codex 公开 Release 仍为 `codex-v0.8.4`。
 - 独立应用复用固定上游源码与正式扩展，自带 Node/uv、能力代码和生产依赖；不修改上游实现。
   构建、发布与本机安装证据分别核验，详见 [0.8.5 发布记录](docs/releases/v0.8.5.md)。
+- 候选应用已完成隔离 Magpie 文件读取；Session event log 记录 `read` Tool 成功与 `turn/end=completed`，退出重开后内容恢复。
 - 发布附件采用 ad-hoc 本地签名，没有 Apple Developer ID 分发签名或公证。主线合并、Release 与本机安装状态以实时证据为准。
 
 ## 插件优先维护
@@ -58,7 +60,7 @@ Session event log 为准，科学状态以 Acceptance Report 为准。2026-09 �
 - 共享 Skills、Tools、MCP Server 与科学合同是核心，DSH/Codex 适配并列，Desktop 是品牌化的交付形态。
 - Codex 构建已改为读取共享能力目录；不再调用 Desktop 设置服务。连接地址、凭据和启停状态由各宿主维护。
 - 共享执行入口增加静态依赖检查；旧 DSH 品牌适配集中维护。边界与贡献路径见[模块地图](docs/architecture/MODULES.md)。
-- 本地完整检查通过：主测试 1024 项，710 通过、314 条件跳过、0 失败；其余合同与能力套件均无失败。
+- 本地完整检查通过：主测试 1039 项，725 通过、314 条件跳过、0 失败；其余合同与能力套件均无失败。
   合并、Release 和本机安装分别以 GitHub 与最终发布验证附件为准，不由本地检查推定。
 
 ## 已知缺口

@@ -80,7 +80,7 @@ export async function clearRemovedDesktopModelSelection(harnessHome, removed) {
   const active = providers(await readFile(path.join(harnessHome, "profiles/model-routes.cordis.yml"), "utf8"));
   const homePatch = path.join(harnessHome, "cordis.patch.yml");
   const homeSource = await readFile(homePatch, "utf8").catch(error => { if (error.code === "ENOENT") return ""; throw error; });
-  // DSH Desktop 2.0.7 treats an empty machine patch as no layer, and applies
+  // The pinned Desktop treats an empty machine patch as no layer, and applies
   // that layer after the Profile. Keep both its ordering and identity checks.
   const entries = composeEntries([
     [{ insert: [{ id: "agent-default-model", name: "@deepseek-ai/dsh-agent-default-model", config: { provider: "", model: "" } }] }],

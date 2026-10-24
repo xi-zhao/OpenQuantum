@@ -8,6 +8,7 @@ export const DESKTOP_SOURCE = Object.freeze({
   revision: "ee1235e1dd1675bbd6c52cfbe3f27b27bcfcfa81",
   version: "2.0.0",
   harnessVersion: "0.1.0-rc.6",
+  sessionFormatVersion: 0,
 });
 
 export function desktopSourceDirectory(projectRoot) {

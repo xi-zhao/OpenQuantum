@@ -3,6 +3,8 @@ import { mkdir, mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promis
 import { tmpdir } from "node:os";
 import path from "node:path";
 import test from "node:test";
+import { SESSION_FORMAT_VERSION } from "@deepseek-ai/dsh-session";
+import { DESKTOP_SOURCE } from "../scripts/lib/desktop-source.mjs";
 import { assertCompatibleHarnessHome } from "../scripts/lib/harness-home-compatibility.mjs";
 import { prepareOpenQuantumHarnessHome } from "../scripts/lib/prepare-harness-home.mjs";
 
@@ -28,7 +30,7 @@ async function snapshot(directory) {
   return files;
 }
 
-for (const log of ["log.v4.jsonl", "log.v4.jsonl.zstd", "log.v5.jsonl", "session.v4.jsonl", "session.v4.jsonl.zstd", "session.v5.jsonl.zstd"]) {
+for (const log of ["log.v1.jsonl", "session.v2.jsonl.zstd", "session.v3.jsonl", "session.v3.jsonl.zstd", "log.v4.jsonl", "log.v4.jsonl.zstd", "log.v5.jsonl", "session.v4.jsonl", "session.v4.jsonl.zstd", "session.v5.jsonl.zstd"]) {
   test(`refuses ${log} before changing any Home or project file`, async t => {
     const { root, home } = await fixture(t, {
       [`sessions/research/${log}`]: "newer session evidence\n",
@@ -37,7 +39,7 @@ for (const log of ["log.v4.jsonl", "log.v4.jsonl.zstd", "log.v5.jsonl", "session
     const before = await snapshot(root);
     await assert.rejects(prepareOpenQuantumHarnessHome({
       projectRoot: path.join(root, "absent-project"), harnessHome: home,
-    }), /V[45] sessions.*2\.0\.0.*separate V3-compatible Home/);
+    }), /V[1-5] sessions.*2\.0\.0.*separate V0-compatible Home/);
     assert.deepEqual(await snapshot(root), before);
   });
 }
@@ -60,18 +62,22 @@ for (const marker of [
   test(`preserves newer profile settings at ${marker}`, async t => {
     const { home } = await fixture(t, { [marker]: "# retained newer settings\n" });
     const before = await snapshot(home);
-    await assert.rejects(assertCompatibleHarnessHome(home), /newer Harness profile.*separate V3-compatible Home/);
+    await assert.rejects(assertCompatibleHarnessHome(home), /newer Harness profile.*separate V0-compatible Home/);
     assert.deepEqual(await snapshot(home), before);
   });
 }
 
-test("accepts the matching 0.1.0-rc.6 Home without touching V3 history or settings", async t => {
+test("accepts the matching 0.1.0-rc.6 Home without touching V0 history or settings", async t => {
   const { home } = await fixture(t, {
-    "sessions/research/log.v3.jsonl": "retained V3 session evidence\n",
+    "sessions/research/session.jsonl": '{"type":"session","version":0}\n',
     "settings.yaml": "llm-pi-ai:\n  providers: {}\n",
     "profiles/desktop/package.json": JSON.stringify({ dependencies: { "@deepseek-ai/dsh": "0.1.0-rc.6" } }),
   });
   const before = await snapshot(home);
   await assertCompatibleHarnessHome(home);
   assert.deepEqual(await snapshot(home), before);
+});
+
+test("the installer compatibility gate matches the actual pinned Session format", () => {
+  assert.equal(DESKTOP_SOURCE.sessionFormatVersion, SESSION_FORMAT_VERSION);
 });
