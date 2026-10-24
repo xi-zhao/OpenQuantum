@@ -25,7 +25,11 @@ jobs:
       - name: Build the pinned Desktop source
         run: npm run desktop:setup
       - name: Package the standalone application
-        run: npm run desktop:app:package -- --dir --output "$RUNNER_TEMP/openquantum-app"
+        run: |
+          # The macOS signer scans bundled dependency files concurrently.
+          # Keep this limit local to the build process and its children.
+          ulimit -n 65536
+          npm run desktop:app:package -- --dir --output "$RUNNER_TEMP/openquantum-app"
       - name: Verify bundled runtimes, startup and retained user settings
         run: npm run desktop:app:smoke -- "$RUNNER_TEMP/openquantum-app/directory/mac-arm64/OpenQuantum.app" "$RUNNER_TEMP/openquantum-app/validation"
       - name: Upload verification summary
