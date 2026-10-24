@@ -98,7 +98,7 @@ export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot, 
 
   const deploymentPatch = await readFile(path.join(projectRoot, "runtime/openquantum/cordis.patch.yml"), "utf8");
   const uiPatch = desktop
-    ? await readFile(path.join(projectRoot, "runtime/openquantum/desktop.cordis.patch.yml"), "utf8")
+    ? `${await readFile(path.join(projectRoot, "runtime/openquantum/desktop.cordis.patch.yml"), "utf8")}\n${await productUiOverlay(projectRoot, { desktop: true })}`
     : await productUiOverlay(projectRoot);
   const modelRoutes = await readFile(path.join(projectRoot, "runtime/openquantum/model-routes.cordis.yml"), "utf8");
   const desktopRoutes = desktop ? await desktopModelRoutes(modelRoutes, projectRoot, harnessHome) : null;

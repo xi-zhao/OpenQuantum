@@ -28,11 +28,11 @@ async function snapshot(directory) {
   return files;
 }
 
-for (const log of ["log.v4.jsonl", "log.v4.jsonl.zstd", "log.v5.jsonl"]) {
+for (const log of ["log.v4.jsonl", "log.v4.jsonl.zstd", "log.v5.jsonl", "session.v4.jsonl", "session.v4.jsonl.zstd", "session.v5.jsonl.zstd"]) {
   test(`refuses ${log} before changing any Home or project file`, async t => {
     const { root, home } = await fixture(t, {
       [`sessions/research/${log}`]: "newer session evidence\n",
-      "settings.yaml": "agent-default-model:\n  provider: magpie\n  model: existing-model\n",
+      "settings.yaml": "agent-default-model:\n  provider: fixture-provider\n  model: existing-model\n",
     });
     const before = await snapshot(root);
     await assert.rejects(prepareOpenQuantumHarnessHome({

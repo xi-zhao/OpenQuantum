@@ -190,6 +190,22 @@ const BRAND_STYLES = `
     white-space: nowrap;
   }
 
+  .oq-desktop-titlebar {
+    position: fixed; inset: 0 0 auto; height: 40px; display: grid; place-items: center;
+    font: 600 13px system-ui; -webkit-app-region: drag; pointer-events: auto;
+  }
+  .oq-settings-trigger { background: none; color: inherit; border: 0; cursor: pointer; display: flex; align-items: center; gap: 10px; padding: 10px; width: 100%; }
+  .oq-settings { width: min(760px, calc(100vw - 24px)); max-height: calc(100vh - 56px); }
+  .oq-settings-content { min-height: 200px; overflow: auto; }
+  .oq-settings-nav { display: flex; gap: 8px; padding-bottom: 16px; overflow-x: auto; }
+  .oq-settings-nav button { background: transparent; color: inherit; font: inherit; border: 1px solid transparent; border-radius: 8px; padding: 8px 12px; cursor: pointer; flex-shrink: 0; }
+  .oq-settings-nav button[aria-current] { background: var(--dsw-alias-interactive-bg-hover); }
+  .oq-settings-nav button:focus-visible, .oq-settings-trigger:focus-visible { outline: 2px solid #8872db; outline-offset: 2px; }
+  .oq-settings a { color: inherit; }
+  @media (max-width: 600px) {
+    .oq-settings [data-slot="settings.general.item"] > div:has(> span > button[aria-haspopup="menu"]) { flex-direction: column; align-items: stretch; gap: 10px; }
+  }
+
   /* Keep the native settings shell usable with long translations on phones. */
   @media (max-width: 600px) {
     /* The old sidebar grid item otherwise paints its modal below the chat. */
@@ -282,13 +298,16 @@ function staticAssetHandler(contentType, body) {
   };
 }
 
-export function apply(ctx, { minimalUi = false } = {}) {
+export function apply(ctx, { minimalUi = false, minimalSettings = false } = {}) {
   ctx.effect(
     () => ctx.webServer.tapIndex((html) => {
-      const branded = brandHarnessIndex(html);
-      return minimalUi && !branded.includes('name="openquantum-minimal-ui"')
-        ? branded.replace("</head>", '<meta name="openquantum-minimal-ui" content="true" />\n</head>')
-        : branded;
+      let branded = brandHarnessIndex(html);
+      for (const [enabled, marker] of [[minimalUi, "openquantum-minimal-ui"], [minimalSettings, "openquantum-minimal-settings"]]) {
+        if (enabled && !branded.includes(`name="${marker}"`)) {
+          branded = branded.replace("</head>", `<meta name="${marker}" content="true" />\n</head>`);
+        }
+      }
+      return branded;
     }),
     "openquantum: native Harness Web branding",
   );

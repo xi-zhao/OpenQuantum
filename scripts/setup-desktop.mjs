@@ -5,6 +5,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
 import { DESKTOP_SOURCE, desktopSourceDirectory, desktopPackageDirectory } from "./lib/desktop-source.mjs";
+import { installDesktopDependencies, verifyDesktopDependencySecurity } from "./lib/desktop-dependencies.mjs";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
 const directory = desktopSourceDirectory(root);
@@ -14,9 +15,9 @@ const env = { ...process.env, PATH: `${path.dirname(process.execPath)}${path.del
 env.NODE_USE_ENV_PROXY ??= "1";
 if (env.HTTP_PROXY || env.HTTPS_PROXY || env.http_proxy || env.https_proxy) env.ELECTRON_GET_USE_PROXY ??= "1";
 const exec = promisify(execFile);
-async function run(command, args, cwd = directory) {
+async function run(command, args, cwd = directory, extraEnv = {}) {
   await new Promise((resolve, reject) => {
-    const child = spawn(command, args, { cwd, env, stdio: "inherit", shell: process.platform === "win32" && command === "corepack" });
+    const child = spawn(command, args, { cwd, env: { ...env, ...extraEnv }, stdio: "inherit", shell: process.platform === "win32" && command === "corepack" });
     child.once("error", reject);
     child.once("exit", (code) => code === 0 ? resolve() : reject(new Error(`${command} exited ${code}`)));
   });
@@ -32,12 +33,15 @@ if (fresh || stdout.trim() !== DESKTOP_SOURCE.revision) {
 }
 const { stdout: changes } = await exec("git", ["status", "--porcelain", "--untracked-files=no"], { cwd: directory });
 if (changes.trim()) throw new Error("Desktop 源码有本地修改；为避免覆盖，请先保留这些修改再构建固定版本。");
-await run("corepack", ["yarn", "install", "--immutable"]);
+const dependencySecurity = await installDesktopDependencies(directory, () =>
+  run("corepack", ["yarn", "install"], directory, { YARN_ENABLE_IMMUTABLE_INSTALLS: "false" }),
+);
+await verifyDesktopDependencySecurity(directory, dependencySecurity);
 await run("corepack", ["yarn", "workspace", "dsh-community-market", "build"]);
 await run("corepack", ["yarn", "workspace", "dsh-plugin-desktop", "build"]);
 const packageRoot = desktopPackageDirectory(root);
 // Upstream disables dependency hooks and exposes native setup explicitly.
 await run(process.execPath, [path.join(packageRoot, "node_modules/electron/install.js")]);
 await run("corepack", ["yarn", "workspace", "dsh-plugin-desktop", "prepare:electron-native"]);
-await writeFile(path.join(directory, ".openquantum-build.json"), JSON.stringify(DESKTOP_SOURCE, null, 2));
-console.log(`Unmodified DSH Desktop ready: ${DESKTOP_SOURCE.version} (${DESKTOP_SOURCE.revision.slice(0, 12)}).`);
+await writeFile(path.join(directory, ".openquantum-build.json"), JSON.stringify({ ...DESKTOP_SOURCE, dependencySecurity }, null, 2));
+console.log(`DSH Desktop ready: ${DESKTOP_SOURCE.version} (${DESKTOP_SOURCE.revision.slice(0, 12)}); upstream app code unchanged, security-patched dependencies.`);

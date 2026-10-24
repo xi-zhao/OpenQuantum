@@ -9,7 +9,7 @@ export async function assertCompatibleHarnessHome(harnessHome) {
       throw error;
     })) {
       if (entry.isSymbolicLink()) continue;
-      const version = /^log\.v(\d+)\.jsonl(?:\.zstd)?$/.exec(entry.name)?.[1];
+      const version = /^(?:log|session)\.v(\d+)\.jsonl(?:\.zstd)?$/.exec(entry.name)?.[1];
       if (version && Number(version) > 3) {
         throw new Error(`This Home contains V${version} sessions; DSH Desktop 2.0.7 requires a separate V3-compatible Home: ${harnessHome}`);
       }

@@ -97,7 +97,12 @@ test("composes the Desktop shell around the OpenQuantum Harness home", { skip: !
   assert.equal(rows.get("openquantum-web-capabilities")?.config?.channels, false);
   assert.equal(rows.get("llm-deepseek")?.disabled, true);
   assert.equal(rows.get("llm-pi-ai")?.disabled, true);
-  assert.notEqual(rows.get("desktop-updates")?.disabled, true, "upstream owns native updates");
+  for (const id of ["desktop-updates", "desktop-profiles", "desktop-diagnostics", "ui-cordis", "ui-agent-preset", "ui-settings-general", "ui-settings-plugin-inventory", "ui-settings-plugins", "openquantum-web-learning"]) {
+    assert.equal(rows.get(id)?.disabled, true, `${id} is outside the minimal Desktop surface`);
+  }
+  for (const id of ["ui-chat", "ui-approval", "ui-workspace", "ui-settings-models", "ui-sidebar-files", "ui-deliverables"]) {
+    assert.notEqual(rows.get(id)?.disabled, true, `${id} remains available`);
+  }
   assert.equal(rows.get("openquantum-web-updates")?.name, "@openquantum/harness-web-updates");
   assert.equal(
     rows.get("openquantum-model-routes")?.name,

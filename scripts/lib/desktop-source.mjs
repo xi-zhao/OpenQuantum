@@ -2,6 +2,7 @@ import { access, readFile } from "node:fs/promises";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import path from "node:path";
+import { verifyDesktopDependencySecurity } from "./desktop-dependencies.mjs";
 
 export const DESKTOP_SOURCE = Object.freeze({
   repository: "https://github.com/anywhere-labs/dsh-desktop.git",
@@ -27,6 +28,7 @@ export async function requireDesktopBuild(projectRoot) {
     }
     const marker = JSON.parse(await readFile(path.join(desktopSourceDirectory(projectRoot), ".openquantum-build.json"), "utf8"));
     if (marker.revision !== DESKTOP_SOURCE.revision) throw new Error("Desktop build revision differs from the pinned source.");
+    await verifyDesktopDependencySecurity(desktopSourceDirectory(projectRoot), marker.dependencySecurity);
     const { stdout } = await promisify(execFile)("git", ["rev-parse", "HEAD"], { cwd: desktopSourceDirectory(projectRoot) });
     if (stdout.trim() !== DESKTOP_SOURCE.revision) throw new Error("Desktop checkout differs from the pinned source.");
     await access(path.join(directory, "lib/bin.js"));

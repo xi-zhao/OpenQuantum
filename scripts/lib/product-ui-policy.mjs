@@ -8,7 +8,11 @@ export const HIDDEN_UPSTREAM_UI = Object.freeze([
   "ui-settings-plugin-inventory", "ui-settings-plugins",
 ]);
 
-export function productUiPatch(source) {
+export const HIDDEN_DESKTOP_UI = Object.freeze([
+  ...HIDDEN_UPSTREAM_UI, "ui-cordis", "ui-agent-preset", "ui-schedule", "ui-settings-general",
+]);
+
+export function productUiPatch(source, { desktop = false } = {}) {
   const document = parseDocument(source);
   if (document.errors.length) throw new Error("Cannot inspect the pinned Harness UI profile");
   const ids = new Set();
@@ -20,10 +24,10 @@ export function productUiPatch(source) {
   visit(document.toJS());
   // Different pinned DSH releases have different rows; never create a patch for
   // an absent row. Adding a future upstream entry requires explicit review here.
-  return HIDDEN_UPSTREAM_UI.filter(id => ids.has(id)).map(id => ({ id, disabled: true }));
+  return (desktop ? HIDDEN_DESKTOP_UI : HIDDEN_UPSTREAM_UI).filter(id => ids.has(id)).map(id => ({ id, disabled: true }));
 }
 
-export async function productUiOverlay(projectRoot) {
+export async function productUiOverlay(projectRoot, options) {
   const source = await readFile(path.join(projectRoot, "node_modules/@deepseek-ai/dsh-web-app/cordis.patch.yml"), "utf8");
-  return stringify(productUiPatch(source));
+  return stringify(productUiPatch(source, options));
 }

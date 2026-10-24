@@ -1,5 +1,5 @@
-# The original DSH Desktop owns its native interface and update feed.
-# OpenQuantum registers only /openquantum/api/updates for its capability package.
+# OpenQuantum owns the default product surface over the pinned DSH runtime.
+# Upstream feature upgrades are reviewed explicitly, never installed from its UI.
 - insert:
     - id: openquantum-capability-host
       name: '@openquantum/harness-capability-host'
@@ -19,3 +19,16 @@
   config:
     channels: false
     adaptive: true
+
+# Keep the personal workspace focused on conversations and files.
+- id: desktop-updates
+  disabled: true
+
+- id: desktop-profiles
+  disabled: true
+
+- id: desktop-diagnostics
+  disabled: true
+
+- id: openquantum-web-learning
+  disabled: true

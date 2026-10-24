@@ -16,5 +16,10 @@
     "smol-toml": "1.9.1",
     "yaml": "2.9.0",
     "jose": "6.2.12"
+  },
+  "overrides": {
+    "body-parser": "2.4.0",
+    "zod": "4.6.6",
+    "fast-uri": "3.1.9"
   }
 }

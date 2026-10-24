@@ -5,8 +5,8 @@
 
 ## 先记住三个结论
 
-1. **OpenQuantum 提供共享量子能力，有 Desktop 与 Codex 插件两个发行入口。** Desktop 使用 DeepSeek Harness，
-   保留量子学习通；Codex 插件使用宿主原生聊天与登录，侧边页只配置能力。OpenQuantum 不新增 Agent Runtime。
+1. **OpenQuantum Desktop 是基于 DSH 的独立个人 Harness，另提供共享量子能力的 Codex 插件。**
+   Desktop 默认聚焦会话、文件、执行、历史、安全与最少设置；Codex 插件使用宿主原生聊天与登录。OpenQuantum 不新增 Agent Runtime。
 2. **Agent 唯一直接调用的执行原语是 Tool。** Skill 提供工作方法；原生 Tool Plugin 或 Harness MCP Client
    把 Tool 注册进 Registry；MCP Server 只是 Tool 的进程外或远程提供方式。
 3. **运行完成不等于科学验收通过。** Tool 产生 facts，Materializer 形成可重读证据，Validator 产生
@@ -20,7 +20,7 @@
 flowchart TB
   S[共享 Skill、Tool implementation 与科学合同] --> D[Desktop / DeepSeek Harness]
   S --> C[Codex 插件 / 本机 MCP]
-  D --> L[量子学习通与科研工作台]
+  D --> L[简洁个人桌面与按需量子工具]
   C --> H[Codex 原生聊天、项目与线程]
   C --> P[OpenQuantum 能力设置页]
 ```
