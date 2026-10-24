@@ -49,8 +49,9 @@ SDK workbench 和领域 Skill 支持通过宿主代码工具编写原生程序�
 
 Desktop 与 Codex 共用 `project-settings-catalog.mjs` 的服务、凭据说明及官方链接，
 共享页面按服务组织凭据组，复用 `credential-card.mjs` 的样式及 `credential-field.mjs` 输入表单。
-`component-view.mjs` 复用组件卡片；Codex 构建期从 Desktop 的
-`readProjectSettings` 导出完整展示目录与同一份中文文案，不携带 Desktop Runtime 或用户状态。
+`component-view.mjs` 复用组件卡片；Codex 构建期从共享 `component-directory.mjs` 读取完整展示目录，
+从 `src/settings/locales/openquantum-source.json` 读取同一份产品文案。目录以能力声明和 Skill 元数据为源，
+不调用 Desktop 的设置服务，不读取其 preset 或用户状态；连接地址、权限与凭据要求由当前宿主补充。
 Codex 适配层只补充宿主连接、可用范围、字段要求、默认开关和执行注入。
 Desktop 使用 Harness credential store；Codex 使用本机系统凭据库。两个入口不复制或自动迁移彼此的密钥。
 

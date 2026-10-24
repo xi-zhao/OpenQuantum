@@ -19,16 +19,16 @@ OpenQuantum is an open-source AI platform for quantum research, open to collabor
 
 Start from a research question, a paper or an existing program, and bring AI into the investigation. Programs, parameters and checks are kept, so one investigation becomes the starting point for the next.
 
-Choose the entry point that suits you; both share the same domain capabilities. The **[Codex plugin](../integrations/CODEX_PLUGIN.md)** brings quantum Skills and scientific Tools into native Codex conversations, with a settings page for capability switches, MCP connections and tokens. **Desktop** includes the research workbench and the separate Quantum Learning application, with model services you configure yourself.
+OpenQuantum is built around a shared quantum research plugin: Skills, Tools and MCP servers, connected to each Harness through an adapter. Choose the entry point that suits you; both share the same domain capabilities. The **[Codex plugin](../integrations/CODEX_PLUGIN.md)** brings quantum Skills and scientific Tools into native Codex conversations, with a settings page for capability switches, MCP connections and tokens. **Desktop** is a simple personal Harness for conversations, workspaces, files, tools and history, with model services you configure yourself.
 
 **[Install the Codex plugin](#codex)** · [Install Desktop](#desktop-installer) · [See calculations and results](#use-and-inspect-results) · [Visit the website](https://xi-zhao.github.io/OpenQuantum/)
 
 **Start with the measured cases:** a [PennyLane Pauli commutator](#pennylane-rust-case) runs **5.09×** faster as a complete call, and a [QuTiP Wigner-function calculation](#qutip-rust-case) runs **5.69×** faster. Both keep performance comparisons, result checks and reproduction records.
 
-**Current version 0.8.4:** [Desktop download and release notes](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.4) · [Codex plugin download and release notes](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.4). Both use the same product version.
+**Desktop 0.8.5:** [standalone Mac Apple Silicon installer](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.5) · **Codex plugin 0.8.4:** [download and release notes](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.4). See each release for its artifacts.
 
 - **Easier to find capabilities:** Tools, MCP and Skills are grouped into eight use categories, with search and status filters.
-- **One brand entry point:** `OpenQuantum.app` on Mac and `OpenQuantum.lnk` on Windows use the OpenQuantum icon, while the original DSH Desktop interface, Quantum Learning and update entry are kept.
+- **A simpler personal desktop:** `OpenQuantum.app` for Mac Apple Silicon includes its runtimes. Settings focus on General and Models; login, a plugin marketplace and Quantum Learning are absent from the default interface.
 
 <p align="center">
   <a href="#why-openquantum">Why OpenQuantum</a> ·
@@ -45,7 +45,7 @@ Choose the entry point that suits you; both share the same domain capabilities. 
 
 <p align="center">
   <img src="../images/openquantum-desktop-20261013.jpg" width="100%" alt="OpenQuantum workbench in the original DSH Desktop: branding, new session, Quantum Learning and a prompt to add your own model" /><br />
-  <sub>The familiar original Desktop interface. Add your own model service in settings to start a new session.</sub>
+  <sub>Earlier interface shown for reference; version 0.8.5 simplifies the sidebar and settings. Add your own model service in settings to start a new session.</sub>
 </p>
 
 <details>
@@ -262,7 +262,7 @@ Pro teaching tasks use the upstream application's own tools and records and are 
 
 ### Desktop, messaging and languages
 
-**Desktop.** The OpenQuantum desktop provides a native window, system tray, terminal and notifications, and reuses the workbench's models, quantum Skills, computing tools and execution records. It uses the third-party original DSH Desktop with a separately delivered OpenQuantum capability package, on Mac (Apple Silicon / Intel), Windows and from source. [Install Desktop](#desktop-installer) · [Build Desktop from source](#desktop-from-source).
+**Desktop.** The OpenQuantum desktop provides a native window, system tray, terminal and notifications, and reuses the workbench's models, quantum Skills, computing tools and execution records. Mac Apple Silicon uses the standalone OpenQuantum 0.8.5 app. Intel Mac and Windows retain the 0.8.4 capability packages with their pinned third-party client; source builds are also available. [Install Desktop](#desktop-installer) · [Build Desktop from source](#desktop-from-source).
 
 **Messaging.** Through CC Connect you can start tasks from WeChat, Feishu, DingTalk, Slack, Telegram, Discord and other channels, reusing the workbench's Skills, Tools and execution records. [Configure messaging channels](#messaging-channels).
 
@@ -271,15 +271,15 @@ Pro teaching tasks use the upstream application's own tools and records and are 
   <sub>A task and reply in the WeChat channel.</sub>
 </p>
 
-**Interface languages.** Under **Settings → General → Language**, choose Simplified Chinese, English, Japanese, Korean, Spanish, French, German, Portuguese, Russian or Arabic. The choice persists, Quantum Learning follows it, and Arabic uses right-to-left reading.
+**Interface languages.** The restored 0.8.5 desktop offers the original Simplified Chinese and English options under **Settings → General → Language**, with persistent selection. The other eight README editions, translation catalogs and review records are retained; they are not selectable Desktop languages in this baseline.
 
-![Language selection in the running OpenQuantum Desktop application](../images/openquantum-languages-20260919.jpg)
+[Historical screenshot of the earlier ten-language interface](../images/openquantum-languages-20260919.jpg)
 
 The interface language does not rewrite existing conversations, course materials, user Skills or tool output. Some native system dialogs fall back to English outside Chinese and English.
 
 ## Quick start
 
-Choose one entry point: install the plugin in Codex, use the Desktop client with its capability package, or run the workbench from source. Desktop and the source workbench are intended for single-user local use; choose source for development or to use capabilities on `main`.
+Choose one entry point: install the plugin in Codex, install the standalone Desktop app on Mac Apple Silicon, or run the workbench from source. Desktop and the source workbench are intended for single-user local use; choose source for development or to use capabilities on `main`.
 
 <a id="codex"></a>
 
@@ -298,7 +298,7 @@ Keep existing plugins and user settings, and check the Skills, MCP tools and the
 Tell me exactly what to do if the app needs reloading. Finally, report what was actually verified and which scientific dependencies still need preparation.
 ```
 
-The Desktop capability package, Codex plugin and installer all use **OpenQuantum 0.8.4**. This plugin includes 168 Skills and 87 scientific Tools, adds 26 native SDK Skills and unifies the Status, MCP, Skills and Service keys tabs; the 16 new credential-backed service Tools are off by default. The release tag is `codex-v0.8.4`; attachments and verification scope are as stated in the Release.
+The public Codex plugin remains at **OpenQuantum 0.8.4**; the Desktop 0.8.5 release does not publish a new Codex plugin. This plugin includes 168 Skills and 87 scientific Tools, adds 26 native SDK Skills and unifies the Status, MCP, Skills and Service keys tabs; the 16 new credential-backed service Tools are off by default. The release tag is `codex-v0.8.4`; attachments and verification scope are as stated in the Release.
 
 **[Download the Codex plugin 0.8.4 complete installer](https://github.com/xi-zhao/OpenQuantum/releases/download/codex-v0.8.4/openquantum-0.8.4-codex-install.zip)** ([release notes and SHA256SUMS](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.4)).
 
@@ -328,17 +328,11 @@ If the installer cannot find the current Codex app's CLI, set `OPENQUANTUM_CODEX
 
 ### Desktop installer
 
-The current desktop release combines the [original DSH Desktop 2.0.7 client](https://github.com/anywhere-labs/dsh-desktop/releases/tag/v2.0.7) with a separate OpenQuantum capability package. The original client keeps its upstream name and version; the capability package bundles Node / uv and provides the full SDK entry points, quantum Skills, Tools and configuration. The installer creates a launcher with the OpenQuantum icon (`OpenQuantum.app` on Mac, `OpenQuantum.lnk` on Windows).
+On Mac Apple Silicon, download **[OpenQuantum 0.8.5 DMG](https://github.com/xi-zhao/OpenQuantum/releases/download/v0.8.5/OpenQuantum-0.8.5-macOS-arm64.dmg)**. Verify it against [SHA256SUMS in the Release](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.5), open the DMG and drag `OpenQuantum.app` into Applications. The desktop, Node / uv and locked dependencies are included; no separate client is needed.
 
-Install the original DSH Desktop first, then choose the capability package for your platform:
+Built on DSH Desktop 2.0.0 / Harness 0.1.0-rc.6, this personal desktop focuses on conversations, workspaces, files, tools, safety and history. Configure your own model service. The app is ad-hoc signed and **has no Apple Developer ID distribution signature or notarization**. See the [installation and migration guide](../DESKTOP_INSTALLERS.md) for first launch and backup steps.
 
-| Platform | OpenQuantum 0.8.4 download | Run after extracting |
-| --- | --- | --- |
-| Mac Apple Silicon | [darwin-arm64 package](https://github.com/xi-zhao/OpenQuantum/releases/download/v0.8.4/OpenQuantum-0.8.4-DSH-darwin-arm64.tar.gz) | `install.command` |
-| Mac Intel | [darwin-x64 package](https://github.com/xi-zhao/OpenQuantum/releases/download/v0.8.4/OpenQuantum-0.8.4-DSH-darwin-x64.tar.gz) | `install.command` |
-| Windows x64 | [win32-x64 package](https://github.com/xi-zhao/OpenQuantum/releases/download/v0.8.4/OpenQuantum-0.8.4-DSH-win32-x64.tar.gz) | `install.cmd` |
-
-Verify the download against [SHA256SUMS in the Release](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.4) before extracting. Upgrades keep existing settings; see the [installation and migration guide](../DESKTOP_INSTALLERS.md). The capability package and Codex plugin are both `0.8.4`, and Harness stays at `0.1.5-rc.1`. Computing environments, accounts and licenses are still prepared per capability.
+Intel Mac and Windows still use the [0.8.4 capability packages](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.4) and their installation instructions. Those older artifacts do not include this simplified desktop update. Computing environments, accounts and licenses remain specific to each capability.
 
 ### Install from source
 
@@ -503,7 +497,7 @@ After installing source dependencies, run in the same checkout:
 npm run learning:ui:setup
 ```
 
-Then start Web or Desktop and open **Quantum Learning** from the sidebar. The first launch starts a local database and course service, with no global PostgreSQL needed; model requests use the model currently selected in OpenQuantum.
+Then start Web and open **Quantum Learning** from the sidebar. The simplified Desktop does not include this entry by default. The first launch starts a local database and course service, with no global PostgreSQL needed; model requests use the model currently selected in OpenQuantum.
 
 Installation and startup are verified on macOS. The installer depends on `/bin/sh` and is not yet adapted to ordinary Windows; Linux is not yet verified. A new Git worktree needs its own installation. Backup, migration and platform status are in the [integration guide](../integrations/OPENMAIC.md#使用).
 

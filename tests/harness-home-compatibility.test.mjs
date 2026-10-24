@@ -37,7 +37,7 @@ for (const log of ["log.v4.jsonl", "log.v4.jsonl.zstd", "log.v5.jsonl", "session
     const before = await snapshot(root);
     await assert.rejects(prepareOpenQuantumHarnessHome({
       projectRoot: path.join(root, "absent-project"), harnessHome: home,
-    }), /V[45] sessions.*2\.0\.7.*separate V3-compatible Home/);
+    }), /V[45] sessions.*2\.0\.0.*separate V3-compatible Home/);
     assert.deepEqual(await snapshot(root), before);
   });
 }
@@ -65,11 +65,11 @@ for (const marker of [
   });
 }
 
-test("accepts the matching 0.1.5 Home without touching V3 history or settings", async t => {
+test("accepts the matching 0.1.0-rc.6 Home without touching V3 history or settings", async t => {
   const { home } = await fixture(t, {
     "sessions/research/log.v3.jsonl": "retained V3 session evidence\n",
     "settings.yaml": "llm-pi-ai:\n  providers: {}\n",
-    "profiles/desktop/package.json": JSON.stringify({ dependencies: { "@deepseek-ai/dsh": "0.1.5-rc.1" } }),
+    "profiles/desktop/package.json": JSON.stringify({ dependencies: { "@deepseek-ai/dsh": "0.1.0-rc.6" } }),
   });
   const before = await snapshot(home);
   await assertCompatibleHarnessHome(home);

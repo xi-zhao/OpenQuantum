@@ -25,7 +25,7 @@ globalThis.__ModuleLoader__.load({
 
     function showModelSetupHint(ctx) {
       ctx.slots.inject("conversation.input.model", () => {
-        const fiber = ctx.inject(["remote", "remote.session", "locale", "modelDirectories", "sessions"], (scope) => {
+        const fiber = ctx.inject(["connection", "remote", "locale", "modelDirectories", "sessions"], (scope) => {
           function ModelSetupHint({ available }) {
             const locale = React.useSyncExternalStore(
               (notify) => scope.locale.subscribe(notify),
@@ -48,13 +48,15 @@ globalThis.__ModuleLoader__.load({
             const refresh = async () => {
               const request = ++generation;
               try {
-                const response = await scope.remote.session.modelCatalog();
+                const [response, providers] = await Promise.all([
+                  scope.connection.api.llm.models({}), scope.connection.api.llm.providers({}),
+                ]);
                 if (disposed || request !== generation) return;
-                const catalog = response.ok ? response.value : null;
+                const catalog = response.ok && providers.ok ? response.value : null;
                 // A failed catalog or an existing provider retains the native
                 // selector and its diagnostics. Never rewrite Session history.
-                const empty = catalog?.groups.length === 0 &&
-                  catalog.routableProviders.length === 0 && catalog.failures.length === 0;
+                const empty = catalog?.groups.length === 0 && catalog.failures.length === 0 &&
+                  !providers.value.providers.some(provider => provider.active);
                 if (empty) {
                   removeHint ??= scope.slots.register(
                     {
@@ -76,7 +78,7 @@ globalThis.__ModuleLoader__.load({
             const stop = [
               scope.remote.$on("llm/adapters-updated", refresh),
               scope.remote.$on("settings/document-updated", refresh),
-              scope.remote.$on("credentials/reference-updated", refresh),
+              scope.remote.$on("credentials/updated", refresh),
               scope.on("connection/reset", () => { hide(); void refresh(); }),
             ];
             void refresh();
@@ -97,7 +99,7 @@ globalThis.__ModuleLoader__.load({
     function installMinimalSettings(ctx) {
       ctx.slots.inject("sidebar.settings", () => {
         const fiber = ctx.inject(["locale", "connection"], (scope) => {
-          const { Modal, IconSettingsOutline16, ConnectionIndicator } = require("@deepseek-ai/dsh-client-ui-primitives");
+          const { Modal, IconSettingsOutline16 } = require("@deepseek-ai/dsh-client-ui-primitives");
           scope.effect(() => scope.locale.register("settings", {
             zh: { trigger: "设置", title: "设置", close: "关闭", "general.nav": "通用设置",
               "connection.error": "连接异常", "connection.retry": "立即重连", "connection.connecting": "自动重连中",
@@ -121,7 +123,6 @@ globalThis.__ModuleLoader__.load({
               },
               () => `${scope.slots.getVersion("settings.section")}:${scope.locale.getSnapshot().revision}`,
             );
-            const connection = React.useSyncExternalStore(scope.connection.state.subscribe, scope.connection.state.getSnapshot);
             const sections = scope.slots.entriesOfSlot("settings.section")
               .filter(entry => ["general", "models"].includes(entry.options.id))
               .map(entry => ({ id: entry.options.id, label: typeof entry.options.label === "function"
@@ -132,10 +133,6 @@ globalThis.__ModuleLoader__.load({
               h("button", { className: "oq-settings-trigger", ref: trigger, type: "button",
                 "aria-label": t("trigger"), "aria-haspopup": "dialog", "aria-expanded": open, onClick: () => setOpen(true) },
                 h(IconSettingsOutline16, { size: 20 }), wide && t("trigger")),
-              h(ConnectionIndicator, { state: connection === "connected" ? undefined : connection,
-                disconnectedLabel: t("connection.error"), reconnectLabel: t("connection.retry"),
-                connectingLabel: t("connection.connecting"), reconnectActionLabel: t("connection.reconnect"),
-                restartActionLabel: t("connection.restart"), onReconnect: () => scope.connection.reconnect() }),
               h(Modal, { open, onClose: close, title: t("title"), closeLabel: t("close"),
                 className: "oq-settings", contentClassName: "oq-settings-content",
                 footer: h("a", { href: "https://github.com/xi-zhao/OpenQuantum/blob/main/THIRD_PARTY_NOTICES.md", target: "_blank", rel: "noreferrer" },

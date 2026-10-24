@@ -551,15 +551,15 @@ globalThis.__ModuleLoader__.load({
     }
 
     const NS = "settings.openquantumCapabilities";
-    const inject = ["slots", "locale", "connection", "remote", "remote.credentials"];
+    const inject = ["slots", "locale", "connection"];
     function apply(ctx) {
       t = ctx.locale.bind(NS);
       activeLocale = () => ctx.locale.getSnapshot().active;
       const connection = ctx.get("connection");
       const credentialOperations = {
-        describe: async (refs) => unwrap(await ctx.remote.credentials.describe(refs)),
-        set: async (ref, value) => unwrap(await ctx.remote.credentials.set(ref, value)),
-        unset: async (ref) => unwrap(await ctx.remote.credentials.unset(ref)),
+        describe: async (refs) => unwrap(await connection.api.credentials.describe({ refs })).credentials,
+        set: async (ref, value) => unwrap(await connection.api.credentials.set({ ref, value })),
+        unset: async (ref) => unwrap(await connection.api.credentials.unset({ ref })),
       };
       ctx.slots.inject("settings.section", () => ctx.slots.register({
         name: "settings.section",

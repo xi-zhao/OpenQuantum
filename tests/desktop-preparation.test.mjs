@@ -107,16 +107,16 @@ test("real native full access prepares without an ask; a live confined override 
   const selection = { skillId: "qiskit-circuit-workbench" };
   assert.equal((await call(agent, "prepare_openquantum_skill", selection)).isError, false);
   assert.equal(preparations, 1);
-  assert.equal(session.snapshotEvents().filter(event => event.type === "approval/asked").length, 0);
+  assert.equal(session.events.filter(event => event.type === "approval/asked").length, 0);
   session.append("sandbox/mode", { mode: "workspace-write" });
   assert.equal((await call(agent, "prepare_openquantum_skill", selection)).isError, true);
   assert.equal(preparations, 1);
-  assert.equal(session.snapshotEvents().findLast(event => event.type === "approval/decided").data.outcome, "rejected");
+  assert.equal(session.events.findLast(event => event.type === "approval/decided").data.outcome, "rejected");
   session.append("approval/policy", { policy: "ask" });
   ctx.on("approval/request", async () => "allowed-once");
   assert.equal((await call(agent, "prepare_openquantum_skill", selection)).isError, false);
   assert.equal(preparations, 2);
-  assert.equal(session.snapshotEvents().findLast(event => event.type === "approval/decided").data.outcome, "allowed-once");
+  assert.equal(session.events.findLast(event => event.type === "approval/decided").data.outcome, "allowed-once");
 });
 
 test("full access preserves other host asks and denials, and does not grant external writes", async t => {

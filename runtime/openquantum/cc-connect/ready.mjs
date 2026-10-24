@@ -35,7 +35,7 @@ export async function apply(ctx, { provider }) {
         await new Promise((resolve) => setTimeout(resolve, 20));
       }
       await entry.fiber?.await();
-      // Loader propagates apply failures. On 0.1.5, optional credential-bound
+      // Loader propagates apply failures. Optional credential-bound
       // providers can remain pending without making this composition fail.
       await entry.subtree.await();
     })(),

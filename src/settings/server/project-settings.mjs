@@ -15,6 +15,7 @@ import path from "node:path";
 
 import { withFileLock } from "@deepseek-ai/dsh-atomic-write";
 import { parse, parseDocument } from "yaml";
+import { skillPresentation } from "../component-directory.mjs";
 import { capabilityCategory } from "../capability-categories.mjs";
 import { readCapabilityCatalog } from "./capability-catalog.mjs";
 
@@ -403,26 +404,8 @@ async function readSkill(projectRoot, directoryName) {
     document: parsed.document,
     body: parsed.body,
     view: {
-      name: directoryName,
-      displayName:
-        managedMarker
-          ? managedMarker.displayName
-          : typeof uiMetadata.display_name === "string"
-          ? uiMetadata.display_name
-          : isRecord(capability) && typeof capability.displayName === "string"
-          ? capability.displayName
-          : directoryName,
-      description: String(parsed.value.description ?? ""),
-      version:
-        isRecord(capability) && typeof capability.version === "string"
-          ? capability.version
-          : null,
-      maturity:
-        isRecord(capability) &&
-        isRecord(capability.maturity) &&
-        typeof capability.maturity.status === "string"
-          ? capability.maturity.status
-          : null,
+      ...skillPresentation(directoryName, parsed.value, capability, uiMetadata),
+      ...(managedMarker ? { displayName: managedMarker.displayName } : {}),
       modelInvocable: parsed.value["disable-model-invocation"] !== true,
       userInvocable: parsed.value["user-invocable"] !== false,
       managed: managedMarker !== null,

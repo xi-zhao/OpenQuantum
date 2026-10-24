@@ -1,10 +1,6 @@
 # OpenQuantum updates
 
-**Settings → Updates** shows the installed OpenQuantum version, last check and release notes.
-The OpenQuantum sidebar update button also opens this view. Reminders offer **Remind me tomorrow** and
-**Skip this version** in the workbench's selected language. The Desktop title-bar **Check for updates**
-command checks the original DSH Desktop client through its upstream service. Settings identifies the OpenQuantum product version separately from
-the pinned Desktop dependency.
+The full Web interface exposes OpenQuantum release discovery through **Settings → Updates** and its sidebar reminder. The simplified Desktop keeps only General and Models settings and hides upstream update controls; download its updates from the [OpenQuantum Releases](https://github.com/xi-zhao/OpenQuantum/releases) page. Neither interface installs or restarts an application automatically.
 
 ## Discovery and reminders
 
@@ -30,7 +26,7 @@ OpenQuantum content updates and original DSH Desktop updates are separate. OpenQ
 The OpenQuantum service only offers release notes and upgrade instructions; it does not download, install or restart the client.
 
 For an installed capability package, quit the Host, back up the OpenQuantum data directory, verify and extract the new capability archive, then run its installer. Keep the original DSH Desktop on the compatible version named in the release notes. See [installation and migration](DESKTOP_INSTALLERS.md).
-Version 0.8.2 and later use capability archives with the original DSH Desktop client. The old private OpenQuantum DMG/EXE packages are no longer the installation path; their Git tags and source history remain available.
+Versions 0.8.2–0.8.4 use capability archives with the original DSH Desktop client. Version 0.8.5 adds a standalone Mac Apple Silicon DMG containing the pinned desktop and runtimes. Back up the data directory and replace the application bundle; the writable deployment, compatible sessions and settings are retained. This build is ad-hoc signed and not notarized. Intel Mac and Windows retain their existing release channel.
 
 For a source installation:
 
@@ -68,7 +64,7 @@ without prerelease suffixes or build metadata, matching the supported synchroniz
    the shared release notes and current download links. Review dependency compatibility and migration
    notes, run `npm run release:check`, and merge the reviewed change. `npm run check` and both package
    builders reject mismatched product versions. The version command does not change dependencies.
-2. Wait for CI and all three `DSH capability packages` jobs at that exact commit to pass. Download
+2. Wait for CI, all three `DSH capability packages` jobs and, for a standalone app, `Standalone macOS app (arm64)` at that exact commit to pass. Download
    their capability archives and `SHA256SUMS` artifacts; verify each hash and combine the three checksum lines
    into one `SHA256SUMS`. Preserve the archive filenames, versions and bytes.
 3. Create the matching `vX.Y.Z` tag at that commit. Prepare a draft Release with user-facing notes,
@@ -81,6 +77,8 @@ without prerelease suffixes or build metadata, matching the supported synchroniz
    uploads from GitHub runners, preserves matching existing assets and rejects mismatches. Upload the
    combined `SHA256SUMS` and any validation records separately, then verify all remote assets before
    publishing. This workflow does not create a Release, publish it or change `latest`.
+   For the standalone macOS release, build the DMG from that clean commit with `desktop:app:package`, mount it, verify its signature and checksum, and run the packaged-app smoke plus first-launch and migration GUI checks. Attach the DMG, its `SHA256SUMS` and a credential-free validation record to the draft. The capability-archive upload workflow does not build or upload this DMG. A release may publish only the explicitly verified platform; label the supported architecture and lack of notarization in its notes.
+
 4. `release-updates.yml` runs the same quality, macOS/Windows Desktop installation and container gates
    as CI against the release revision. Only after all gates pass does it attach `openquantum-update.json`.
    Ordinary pushes, draft releases and prereleases do not publish this stable update asset.
@@ -101,7 +99,7 @@ node scripts/build-update-manifest.mjs --tag v0.6.0 --published-at 2026-09-29T00
 
 Use the actual version and publication date. The generator rejects mismatched tags and prerelease
 versions. It records the OpenQuantum version, pinned Harness/Desktop compatibility versions and
-notes/upgrade URLs. `artifacts` remains empty for the current unsigned test builds; their downloads
+notes/upgrade URLs. `artifacts` remains empty for the current builds without distribution signing; their downloads
 and SHA-256 checksums are attached to the Release. The reserved manifest entries will describe
 verified, signed installers; an entry alone cannot enable installation.
 

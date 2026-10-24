@@ -44,7 +44,7 @@ export function apply(ctx) {
   ctx.effect(() => ctx.webServer.register({
     path: "/openquantum/api/learning", exact: true,
     handler: createLearningHandler({
-      requestRejection: (request) => ctx.connection.requestRejection(request),
+      requestRejection: (request) => ctx.openquantumWebSecurity ? ctx.openquantumWebSecurity.requestRejection(request) : ctx.connection.requestRejection(request),
       dispatch: async (command) => (await application).dispatch(command),
       openUi: async (origin) => (await ui).open(origin),
     }),

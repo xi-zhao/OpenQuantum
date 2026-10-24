@@ -12,7 +12,7 @@ const reference = JSON.parse(await readFile(referenceUrl, "utf8"));
 const { sources, desktopChecked } = await installedLocaleSources(root, { requireDesktop: args.has("--require-desktop") });
 // A normal Web checkout does not install Desktop. Its source is checked in the
 // Desktop CI job; keep that reference when synchronizing from a Web checkout.
-if (!desktopChecked) sources["desktop.settings"] = reference["desktop.settings"];
+if (!desktopChecked && reference["desktop.settings"]) sources["desktop.settings"] = reference["desktop.settings"];
 const differences = sourceDifferences(reference, sources);
 if (args.has("--write")) {
   await writeFile(referenceUrl, `${JSON.stringify(Object.fromEntries(Object.entries(sources).sort(([a], [b]) => a.localeCompare(b))), null, 2)}\n`);

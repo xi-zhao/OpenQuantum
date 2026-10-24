@@ -5,25 +5,30 @@
 
 ## 先记住三个结论
 
-1. **OpenQuantum Desktop 是基于 DSH 的独立个人 Harness，另提供共享量子能力的 Codex 插件。**
-   Desktop 默认聚焦会话、文件、执行、历史、安全与最少设置；Codex 插件使用宿主原生聊天与登录。OpenQuantum 不新增 Agent Runtime。
+1. **OpenQuantum 插件是产品核心：共享 Skills、Tools、MCP Server 与科学合同。**
+   维护顺序是共享插件、Harness 适配、品牌/UI。DSH 与 Codex 并列接入；Desktop 是带 OpenQuantum 品牌的 DSH 交付形态。
+   各宿主拥有聊天、模型、权限、历史与执行循环；OpenQuantum 不新增 Agent Runtime。
 2. **Agent 唯一直接调用的执行原语是 Tool。** Skill 提供工作方法；原生 Tool Plugin 或 Harness MCP Client
    把 Tool 注册进 Registry；MCP Server 只是 Tool 的进程外或远程提供方式。
 3. **运行完成不等于科学验收通过。** Tool 产生 facts，Materializer 形成可重读证据，Validator 产生
    observations，Acceptance Profile 定义规则，只有 central Acceptance Builder 推导 Acceptance。
 
-界面与文档语言：工作台支持首批 10 种语言，语言包、学习通同步及原生系统对话框回退范围见[多语言说明](../runtime/openquantum/web-locales/README.md)。
+界面与文档语言：恢复后的桌面暂支持原生中英文，保留 10 种语言的 README 与译文；当前可选语言、学习通同步及回退范围见[多语言说明](../runtime/openquantum/web-locales/README.md)。
 
 ## 架构总览
 
 ```mermaid
 flowchart TB
-  S[共享 Skill、Tool implementation 与科学合同] --> D[Desktop / DeepSeek Harness]
-  S --> C[Codex 插件 / 本机 MCP]
-  D --> L[简洁个人桌面与按需量子工具]
-  C --> H[Codex 原生聊天、项目与线程]
-  C --> P[OpenQuantum 能力设置页]
+  S[共享 OpenQuantum 插件<br/>Skills · Tool implementation · MCP Server · 科学合同]
+  D[DSH Adapter<br/>注册 · 权限/凭据 · 生命周期]
+  C[Codex Adapter<br/>Skill 投影 · MCP · 宿主设置]
+  D -->|依赖| S
+  C -->|依赖| S
+  B[OpenQuantum Desktop<br/>固定的 DSH 基线 · 品牌与简洁界面] --> D
+  P[Codex 内的 OpenQuantum<br/>共享品牌 · 宿主允许的设置与结果展示] --> C
 ```
+
+图中箭头表示代码依赖，不表示请求流水线。共享核心不能反向依赖适配器或 UI。
 
 Codex 的目录、打包和设置边界见 [Codex 插件](integrations/CODEX_PLUGIN.md)。下方 Harness Runtime、
 Agent Preset 和事件日志的详细结构描述 Desktop 发行版；Codex 插件不复制这些运行时对象。

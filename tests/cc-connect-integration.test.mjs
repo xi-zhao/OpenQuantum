@@ -301,7 +301,7 @@ test("CC Connect ACP shares model composition and deployment defaults", () => {
     { provider: acpAgent?.config?.provider, model: acpAgent?.config?.model },
     deploymentDefault,
   );
-  assert.match(acpById.get("system-prompt").config.personaPrefix, /trusted Acceptance Report or Result Commit/);
+  assert.match(acpById.get("system-prompt").config.persona, /trusted Acceptance Report or Result Commit/);
 
   assert.deepEqual(acpById.get("settings")?.config?.dshHome, acpById.get("credentials")?.config?.dshHome);
   assert.equal(acpById.get("llm-deepseek")?.disabled, true);

@@ -76,7 +76,7 @@ export function classroomTool({ llm, application = learningApplication(openQuant
       if (!args || Object.keys(args).some((key) => key !== "courseId")) throw new TypeError("只接受课堂编号");
       requireCourseId(args.courseId);
       if (!exec.agent) throw new TypeError("建课必须在 Harness 会话中执行");
-      const turn = exec.agent.session.snapshotEvents().findLast((event) => event.type === "turn/start")?.data.turn;
+      const turn = exec.agent.session.events.findLast((event) => event.type === "turn/start")?.data.turn;
       if (!Number.isInteger(turn)) throw new TypeError("建课必须在已开始的 Harness Turn 中执行");
       const attempt = `${turn}:${args.courseId}`;
       if (failedAttempts.get(exec.agent) === attempt) throw new TypeError("本轮建课已失败，请等待用户明确重试，不自动重复模型请求");

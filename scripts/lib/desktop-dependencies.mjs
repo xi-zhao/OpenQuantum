@@ -13,7 +13,7 @@ export const DESKTOP_SECURITY_VERSIONS = Object.freeze({
   electron: "43.8.1", "body-parser": "2.4.0", "@modelcontextprotocol/sdk": "1.32.1",
   "js-yaml": "4.3.2", hono: "4.13.11", qs: "6.16.1", "proxy-addr": "2.0.8",
   "ip-address": "10.7.4", sharp: "0.35.5", compression: "1.8.2",
-  "adm-zip": "0.6.1", pnpm: "11.26.0",
+  "adm-zip": "0.6.1", pnpm: "11.26.0", katex: "0.18.7",
 });
 
 export function desktopSecurityResolutions(source) {
@@ -74,6 +74,10 @@ export async function verifyDesktopDependencySecurity(directory, marker) {
       });
       if (manifest !== undefined) { version = JSON.parse(manifest).version; break; }
     }
+    // A reviewed version may be absent from this older dependency graph (for
+    // example adm-zip only arrived with the later desktop features). A package
+    // declared in the upstream lock must still resolve and match the patch.
+    if (version === undefined && !Object.keys(parse(original)).some(selector => selector.startsWith(`${name}@`))) continue;
     const expected = name === "undici" ? Object.values(undici) : name === "fast-uri" ? Object.values(fastUri)
       : [name === "zod" ? "4.6.6" : DESKTOP_SECURITY_VERSIONS[name]];
     if (!expected.includes(version)) throw new Error(`Desktop resolves an unpatched dependency: ${name}@${version}`);

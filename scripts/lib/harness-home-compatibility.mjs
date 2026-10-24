@@ -1,7 +1,8 @@
 import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
+import { DESKTOP_SOURCE } from "./desktop-source.mjs";
 
-// The pinned 0.1.5 Harness reads V3. Never let it recover/repair a newer Home.
+// The pinned Harness reads V3. Never let it recover/repair a newer Home.
 export async function assertCompatibleHarnessHome(harnessHome) {
   async function visit(directory) {
     for (const entry of await readdir(directory, { withFileTypes: true }).catch((error) => {
@@ -11,7 +12,7 @@ export async function assertCompatibleHarnessHome(harnessHome) {
       if (entry.isSymbolicLink()) continue;
       const version = /^(?:log|session)\.v(\d+)\.jsonl(?:\.zstd)?$/.exec(entry.name)?.[1];
       if (version && Number(version) > 3) {
-        throw new Error(`This Home contains V${version} sessions; DSH Desktop 2.0.7 requires a separate V3-compatible Home: ${harnessHome}`);
+        throw new Error(`This Home contains V${version} sessions; DSH Desktop ${DESKTOP_SOURCE.version} requires a separate V3-compatible Home: ${harnessHome}`);
       }
       if (entry.isDirectory() && !["node_modules", "cache", ".cache"].includes(entry.name)) await visit(path.join(directory, entry.name));
     }
@@ -27,7 +28,7 @@ export async function assertCompatibleHarnessHome(harnessHome) {
       if (error.code === "ENOENT") return undefined;
       throw error;
     });
-    if (source !== undefined) throw new Error(`This Home contains newer Harness profile settings; DSH Desktop 2.0.7 requires a separate V3-compatible Home: ${harnessHome}`);
+    if (source !== undefined) throw new Error(`This Home contains newer Harness profile settings; DSH Desktop ${DESKTOP_SOURCE.version} requires a separate V3-compatible Home: ${harnessHome}`);
   }
   for (const profile of ["desktop", "web", "acp"]) {
     const manifest = await readFile(path.join(harnessHome, "profiles", profile, "package.json"), "utf8").then(JSON.parse).catch((error) => {
@@ -36,7 +37,7 @@ export async function assertCompatibleHarnessHome(harnessHome) {
     });
     for (const dependency of ["@deepseek-ai/dsh", "@deepseek-ai/dsh-base", "@deepseek-ai/dsh-base-profile", "@deepseek-ai/dsh-web-app", "@deepseek-ai/dsh-acp-app"]) {
       const version = manifest?.dependencies?.[dependency];
-      if (version && version !== "0.1.5-rc.1") throw new Error(`Incompatible Harness dependency in ${profile}: ${dependency}@${version}; use a separate V3-compatible Home`);
+      if (version && version !== DESKTOP_SOURCE.harnessVersion) throw new Error(`Incompatible Harness dependency in ${profile}: ${dependency}@${version}; use a separate V3-compatible Home`);
     }
   }
 }

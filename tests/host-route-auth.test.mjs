@@ -7,6 +7,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
+import WebSocket from "ws";
 
 import { prepareOpenQuantumHarnessHome } from "../scripts/lib/prepare-harness-home.mjs";
 import { harnessHttpCookie, redactHarnessLaunchTokens } from "../scripts/lib/harness-http-auth.mjs";
@@ -69,7 +70,7 @@ test("real Harness cookies protect settings and preparation from a different wor
   const port = reserved.address().port;
   await new Promise((resolve) => reserved.close(resolve));
   const base = `http://127.0.0.1:${port}`;
-  child = spawn(process.execPath, [path.join(projectRoot, "node_modules/@deepseek-ai/dsh/lib/bin.js"), "web", "--no-open", "--host", "127.0.0.1", "--port", String(port)], {
+  child = spawn(process.execPath, [path.join(projectRoot, "node_modules/@deepseek-ai/dsh/lib/bin.js"), "web", "--host", "127.0.0.1", "--port", String(port)], {
     cwd: sandbox,
     env: {
       ...process.env, DSH_HOME: harnessHome, DSH_TELEMETRY_DISABLED: "1", DSH_TELEMETRY_MODE: "DISABLED",
@@ -91,6 +92,23 @@ test("real Harness cookies protect settings and preparation from a different wor
   }
   assert.ok(cookie, `Harness did not start: ${diagnostics()}`);
   const invalidCookie = cookie.replace(/=[^;]*/g, "=invalid");
+  // Cover the transport itself, including static files and the native downlink.
+  for (const route of ["/", "/plugins/modules/client.js", "/api/llm.models", "/openquantum/settings"]) {
+    const response = await fetch(`${base}${route}`);
+    assert.equal(response.status, 401, route);
+    await response.arrayBuffer();
+  }
+  const upgradeStatus = headers => new Promise((resolve, reject) => {
+    const socket = new WebSocket(`${base.replace("http:", "ws:")}/api/events.mux`, { headers, handshakeTimeout: 3000 });
+    socket.once("open", () => { socket.close(); resolve(101); });
+    socket.once("unexpected-response", (_request, response) => { response.resume(); socket.terminate(); resolve(response.statusCode); });
+    socket.once("error", reject);
+  });
+  assert.equal(await upgradeStatus({}), 401);
+  assert.equal(await upgradeStatus({ cookie: "invalid" }), 401);
+  assert.equal(await upgradeStatus({ cookie, origin: "https://foreign.example" }), 403);
+  assert.equal(await upgradeStatus({ cookie, origin: base }), 101);
+
   const endpoints = [
     ["/openquantum/api/capabilities", { action: "snapshot" }],
     ["/openquantum/api/channels", { action: "snapshot" }],
@@ -111,7 +129,7 @@ test("real Harness cookies protect settings and preparation from a different wor
       await response.arrayBuffer();
     }
     const response = await request(endpoint, command, { cookie });
-    assert.equal(response.status, 200, `${endpoint}: ${diagnostics()}`);
+    assert.equal(response.status, 200, `${endpoint} ${command.action}: ${response.status === 200 ? "" : await response.clone().text()}\n${diagnostics()}`);
     const result = await response.json();
     if (command.action === "credential.field.prepare") {
       assert.equal(typeof result.nonce, "string");

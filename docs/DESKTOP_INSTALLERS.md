@@ -6,15 +6,34 @@ Agent 预设管理、自动化中心或 Magpie 专用连接页。
 
 复用固定版本 DSH 的窗口、会话、权限和持久化机制，通过官方配置与 Client Slot 扩展收拢界面。
 普通界面、窗口与图标使用 OpenQuantum 品牌，上游来源保留在设置底部的开源许可链接。不自动吸收上游新增功能。
-已发布的 v0.8.4 仍是依赖第三方客户端的能力包，不能把本分支的恢复与安全修复当成已发布附件。
-原版签名应用不被改写；以下安装流程仍描述这个既有发行渠道。
 
-当前兼容基线是 [DSH Desktop 2.0.7](https://github.com/anywhere-labs/dsh-desktop/releases/tag/v2.0.7)
-与 Harness `0.1.5-rc.1`。不要用上游 `latest` 链接自动替换固定版本；该链接可能指向 NEXT 渠道或不同 Harness family。
-OpenQuantum 能力包与 Codex 插件继续共用产品版本（当前源码 `0.8.4`）；第三方客户端显示其真实的上游版本 `2.0.7`。
-[OpenQuantum 0.8.4 Desktop Release](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.4) 提供 Mac Apple Silicon、Mac Intel 和 Windows x64 能力包；[同版本 Codex 插件](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.4) 单独安装。以下流程适用于能力包，旧私有 DMG/EXE 不再作为安装入口。
+## OpenQuantum 0.8.5 独立安装包（Mac Apple Silicon）
 
-## 安装与启动
+从 [v0.8.5 Release](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.5) 下载
+`OpenQuantum-0.8.5-macOS-arm64.dmg` 和 `SHA256SUMS`，校验摘要后打开 DMG，将 `OpenQuantum.app`
+拖入「应用程序」再打开。应用自带桌面程序、Node、uv 与锁定依赖，无需另装 DSH Desktop。
+Codex 插件的公开版本仍为 [codex-v0.8.4](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.4)。
+本次独立安装包只覆盖 Apple Silicon；Intel 和 Windows 的既有能力包见下文。
+
+此安装包使用 ad-hoc 本地签名，**没有 Apple Developer ID 分发签名或公证**。校验摘要不等于 Apple 公证。
+若 macOS 拦截启动，仅在确认下载来源与摘要后，使用「系统设置 → 隐私与安全性」对该应用单独允许打开；
+不关闭系统安全检查。若系统仍拒绝启动，保留报错并使用源码入口，不执行全局绕过命令。
+
+默认数据目录是 `~/Library/Application Support/OpenQuantum/`：`project/` 保存可写部署、会话和配置，
+`native/` 保存窗口与原生偏好。应用更新只替换 `/Applications/OpenQuantum.app`；不要删除数据目录。
+现有模型配置、凭据与兼容 V3 会话继续沿用。升级前退出应用，完整备份该数据目录及任何自选 Home。
+旧启动器应停用或改为新应用的链接，避免旧程序再次写入共用部署；保留备份和旧 `versions/` 以便恢复。
+
+内置基线固定为 DSH Desktop `2.0.0`、Harness `0.1.0-rc.6`，同时包含经过审查的依赖安全修复。
+不是上游签名应用的改包；上游源码保持不变，应用入口、资源封装与正式扩展负责 OpenQuantum 品牌和配置。
+
+## 既有能力包安装（0.8.4）
+
+以下流程仍适用于 [v0.8.4 能力包](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.4)，
+覆盖 Mac Apple Silicon、Mac Intel 与 Windows x64，依赖另行安装的
+[DSH Desktop 2.0.7](https://github.com/anywhere-labs/dsh-desktop/releases/tag/v2.0.7)。
+不要用上游 `latest` 链接自动替换固定版本；它可能指向不同 Harness family。
+这些既有附件不包含 0.8.5 的简洁桌面与安全更新。
 
 1. 从上述上游 `v2.0.7` Release 安装原版 DSH Desktop。Mac 使用 universal DMG，Windows 使用 x64 Setup。
 2. 从 OpenQuantum 对应 Release 下载 `OpenQuantum-<version>-DSH-<platform>-<arch>.tar.gz`，按同页 `SHA256SUMS` 验证后解压。
@@ -60,11 +79,15 @@ npm run desktop -- --source   # 使用已构建的独立测试桌面
 npm run desktop:package:check
 npm run desktop:package       # 只构建 OpenQuantum 能力包
 npm run desktop:package:smoke
+# 独立 macOS 应用：输出目录应位于容量充足的构建盘
+npm run desktop:app:package -- --output /absolute/build-directory
+npm run desktop:app:smoke -- /absolute/build-directory/artifacts/mac-arm64/OpenQuantum.app /absolute/evidence-directory
 ```
 
 打包需要与目标架构相同的原生 runner、Node `24.14.1` 和 npm；输出在
 `.openquantum/distributions/<platform>-<arch>/artifacts/`。`--dir` 仅准备 `content/`，不生成压缩包。
-Desktop 保留原生会话、模型表单、文件和审批组件。默认设置只展示通用与模型两页；语言、外观和输入习惯由原生表单保存。
+独立应用输出 DMG、`SHA256SUMS` 和 `.app`；`desktop:app:package -- --dir --output ...` 只生成 `directory/` 中的应用。
+Desktop 保留原生会话、模型表单、文件和审批组件。默认设置只展示通用与模型两页；语言、外观和输入习惯由原生表单保存。桌面语言暂为原版支持的中文与英文，其他语言 README 和译文文件继续保留。
 插件管理、Agent 预设、开发调试与上游升级入口默认关闭，学习通不出现在个人桌面的侧栏。
 这只改变产品入口；Skill、Tool Provider、Harness MCP Client 与量子验收合同仍按原职责运行。
 
@@ -72,17 +95,21 @@ Desktop 保留原生会话、模型表单、文件和审批组件。默认设置
 
 模型目录为空时，原生输入区显示「请在设置 → 模型中添加模型」。配置后恢复原版模型选择器；读取失败时保留原版错误处理，不改写历史会话的模型选择。量子组件使用 Tools、MCP、Skills 名称，中文说明分别解释工具、服务连接和任务指导的用途；首次配置或等待会话时显示下一步操作，读取超时等异常仍明确显示。技术状态与检查边界保留在折叠的「诊断详情」中，已加载不等于连接或科学验收通过。
 
-五个 OpenQuantum Web 包和一个声明配置的 bundle 通过 `desktop` Profile 的正式 `link:` 依赖注册。
+OpenQuantum 的 Web、访问保护与能力 Host 包及声明配置的 bundle 通过 `desktop` Profile 的正式 `link:` 依赖注册。
 扩展只在该 Profile 激活，新建和切换其他原生 Profile 不会加载这些依赖。用户的 Profile patch 保留原文，覆盖顺序沿用上游规则。
 升级只迁移仍与安装记录一致的全局 Home patch，并在 `.openquantum-migrations` 保留原件；若其中的 OpenQuantum 配置已被手动修改，先停止迁移并提示合并配置。
 原生 Profile 修复可以按 manifest 重建链接，无需向上游 app 或其 `node_modules` 注入文件。
 Desktop 图标扩展只在 OpenQuantum 的 Desktop Profile 内加载。它在原生 `DesktopRuntime.schedule` 接口中替换图标、产品名和窗口标题，其余窗口和生命周期仍由原版 Desktop 处理；兼容独立 Host 进程，不直接导入 Electron。
-原生桌面通过 Cordis 依赖等待图标扩展就绪；Profile 卸载会等待桌面清理完成，恢复原接口可与清理并行。已启动桌面的图标参数不受影响，后续其他 Profile 继续使用原版图标。扩展不读取模型、凭据、会话或网络，不注册新的 Tool；设置导航的精简由独立 Client Plugin 完成，表单与写入仍由 Harness 管理。
+原生桌面通过 Cordis 依赖等待图标扩展就绪；Profile 卸载会等待桌面清理完成，恢复原接口可与清理并行。已启动桌面的图标参数不受影响，后续其他 Profile 继续使用原版图标。桌面入口通过本机启动令牌自动取得访问 Cookie，无需账户或登录页；令牌使用内存密钥，重启重新授权，不迁移凭据格式。扩展不读取模型凭据或会话，不注册新的 Tool；设置导航的精简由独立 Client Plugin 完成，表单与写入仍由 Harness 管理。
 
 工程检查覆盖安装、再次安装、配置保留、独立工作目录和捆绑运行环境；不运行外部模型或真实科研任务。
-该命令不宣称原生 UI 验收。发布前另需对原版客户端完成实际启动、设置、关键操作和重启检查。
+独立应用检查还会实际启动两次并确认 Host 与界面健康，不预填模型或凭据；首次设置与用户数据迁移另做 GUI 验收。
+发布前对最终 DMG 中的应用完成实际启动、设置、关键操作和重启检查。
 [能力包 CI](../.github/workflows/desktop-installers.yml)覆盖三个原生构建目标，
 [发布附件流程](../.github/workflows/release-artifacts.yml)只接受同一提交通过 CI 的能力包。
 上游桌面版本升级须另行评审，默认界面关闭其自动更新入口；OpenQuantum 内容更新使用[自身的版本提醒](UPDATES.md)。
 源码构建额外修复 Electron 与传递依赖的已知安全通告。该修复不作用于用户另外安装的原版签名应用，
 发布前需要核对实际交付的二进制与依赖，不能用源码审计结果代替原版应用的安全状态。
+
+[独立应用 CI](../.github/workflows/desktop-app.yml)构建 macOS arm64 应用并验证捆绑运行环境、实际启动与设置保留。
+Release 附件须来自通过检查的干净提交；发布前挂载并验证 DMG、应用签名与摘要，不上传用户 Home 或凭据。

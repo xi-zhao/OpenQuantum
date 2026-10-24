@@ -1,6 +1,6 @@
 {
   "name": "openquantum",
-  "version": "0.8.4",
+  "version": "0.8.5",
   "private": true,
   "description": "Quantum research Skills and Tools for DeepSeek Harness Desktop and Codex",
   "author": "OpenQuantum contributors",
@@ -126,16 +126,17 @@
     "sdk:inventory:check": "node scripts/audit-sdk-integration.mjs --check",
     "sdk:guides:check": "node scripts/build-sdk-skills.mjs --check",
     "sdk:test": "node --test tests/sdk-access.test.mjs tests/sdk-package.test.mjs",
-    "sdk:ecosystem:test": "OPENQUANTUM_ECOSYSTEM_CHECKS=1 node --test --test-concurrency=1 tests/sdk-ecosystem-live.test.mjs"
+    "sdk:ecosystem:test": "OPENQUANTUM_ECOSYSTEM_CHECKS=1 node --test --test-concurrency=1 tests/sdk-ecosystem-live.test.mjs",
+    "desktop:app:package": "node scripts/package-desktop-app.mjs",
+    "desktop:app:smoke": "node scripts/smoke-desktop-app.mjs"
   },
   "dependencies": {
-    "@deepseek-ai/dsh": "0.1.5-rc.1",
-    "@deepseek-ai/dsh-acp": "0.1.5-rc.1",
-    "@deepseek-ai/dsh-acp-app": "0.1.5-rc.1",
-    "@deepseek-ai/dsh-atomic-write": "0.1.5-rc.1",
-    "@deepseek-ai/dsh-cordis-host-runner": "0.1.5-rc.1",
-    "@deepseek-ai/dsh-credentials": "0.1.5-rc.1",
-    "@deepseek-ai/dsh-mcp-client": "0.1.5-rc.1",
+    "@deepseek-ai/dsh": "0.1.0-rc.6",
+    "@deepseek-ai/dsh-acp": "0.1.0-rc.6",
+    "@deepseek-ai/dsh-atomic-write": "0.1.0-rc.6",
+    "@deepseek-ai/dsh-cordis-host-runner": "0.1.0-rc.6",
+    "@deepseek-ai/dsh-credentials": "0.1.0-rc.6",
+    "@deepseek-ai/dsh-mcp-client": "0.1.0-rc.6",
     "@modelcontextprotocol/sdk": "1.32.1",
     "@openmaic/dsl": "0.11.1",
     "@openmaic/generation": "0.3.6",
@@ -153,7 +154,7 @@
     "smol-toml": "1.9.1",
     "fflate": "0.8.3",
     "jose": "6.2.12",
-    "@deepseek-ai/dsh-agent-presets": "0.1.5-rc.1"
+    "@deepseek-ai/dsh-agent-presets": "0.1.0-rc.6"
   },
   "devDependencies": {
     "@agentclientprotocol/sdk": "1.4.0",
@@ -173,6 +174,7 @@
     },
     "@openmaic/generation": {
       "katex": "$katex"
-    }
+    },
+    "katex": "$katex"
   }
 }

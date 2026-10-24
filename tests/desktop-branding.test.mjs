@@ -29,9 +29,10 @@ test("public shell branding preserves native callbacks and restores the service 
   const originalSchedule = runtime.schedule;
   const ctx = new Context();
   ctx.provide("desktopRuntime", runtime);
+  ctx.provide("openquantumWebSecurity", { authenticatedUrl: url => url + "?token=fixture" });
   let indexTransform;
   ctx.provide("webServer", { tapIndex(transform) { indexTransform = transform; return () => { indexTransform = undefined; }; } });
-  const spec = Object.freeze({ iconPath: "/upstream.png", productName: "DSH Desktop", requestQuit: () => {}, readThemeSource: () => "system" });
+  const spec = Object.freeze({ url: "http://127.0.0.1:3000/", iconPath: "/upstream.png", productName: "DSH Desktop", requestQuit: () => {}, readThemeSource: () => "system" });
   const shell = ctx.plugin({ name: "shell-fixture", inject: ["desktopRuntime", "openquantumDesktopIcon"], apply(ctx) {
     ctx.effect(() => ctx.get("desktopRuntime").schedule(spec));
   } });
@@ -42,7 +43,7 @@ test("public shell branding preserves native callbacks and restores the service 
   const brandedIndex = indexTransform("<head></head>");
   assert.match(brandedIndex, /openquantum-minimal-settings/);
   assert.equal(indexTransform(brandedIndex), brandedIndex);
-  assert.deepEqual(calls[0], { spec: { ...spec, productName: "OpenQuantum", windowTitle: "OpenQuantum", iconPath: fileURLToPath(new URL("../packages/openquantum-web-branding/assets/icon-512.png", import.meta.url)) }, platform: "darwin" });
+  assert.deepEqual(calls[0], { spec: { ...spec, url: spec.url + "?token=fixture", productName: "OpenQuantum", windowTitle: "OpenQuantum", iconPath: fileURLToPath(new URL("../packages/openquantum-web-branding/assets/icon-512.png", import.meta.url)) }, platform: "darwin" });
   assert.equal(spec.iconPath, "/upstream.png");
   let disposed = false;
   const disposal = icon.dispose().then(() => { disposed = true; });

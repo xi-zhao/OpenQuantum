@@ -81,7 +81,7 @@ test("retained AI review binds all eight phrase sets and the unchanged active su
   assert.equal(review.phrases.length, 1278);
   assert.equal(new Set(review.phrases).size, review.phrases.length);
   assert.equal(review.source, "Harness 0.2.1-rc.2 / Desktop 2.0.18 interface copy");
-  assert.equal(review.activeBaseline.source, "Harness 0.1.5-rc.1 / Desktop 2.0.7 interface copy");
+  assert.equal(review.activeBaseline.source, "Harness 0.1.0-rc.6 / Desktop 2.0.0 interface copy");
   assert.equal(review.activeBaseline.sourceSha256, digest(await readFile(new URL("harness-source.json", root))));
   assert.deepEqual(review.languages, languages.filter(({ id }) => !["zh", "en"].includes(id)).map(({ id }) => id));
   const english = new Set(Object.values(sources).flatMap((entry) => Object.values(entry.en ?? {})));
@@ -158,22 +158,23 @@ test("native Harness owns switching, durable restoration, fallback and plugin di
     return { locale: ctx.locale, dispose: () => disposers.reverse().forEach((dispose) => dispose()) };
   };
   const first = mount();
-  assert.equal(first.locale.getSnapshot().locales.length, 10);
+  assert.deepEqual(Array.from(first.locale.getSnapshot().locales, ({ id }) => id), ["zh", "en"]);
+  assert.throws(() => first.locale.setLocale("ja"), /not registered/);
   const label = first.locale.bind("settings.locale");
-  for (const { id, direction } of languages) {
+  for (const { id, direction } of languages.filter(({ id }) => ["zh", "en"].includes(id))) {
     first.locale.setLocale(id);
     assert.equal(persisted.preference, id);
     assert.equal(root.dir, direction);
     assert.equal(label("language.title"), dictionariesFor(id)["settings.locale"]?.["language.title"] ?? sources["settings.locale"][id]["language.title"]);
   }
-  first.locale.register("future.plugin", "en", { help: "English fallback {name}" });
-  assert.equal(first.locale.bind("future.plugin")("help", { name: "OK" }), "English fallback OK");
+  first.locale.register("future.plugin", "zh", { help: "中文回退 {name}" });
+  assert.equal(first.locale.bind("future.plugin")("help", { name: "OK" }), "中文回退 OK");
   first.dispose();
-  assert.equal(persisted.preference, "ar", "unloading must not rewrite the preference");
+  assert.equal(persisted.preference, "en", "unloading must not rewrite the preference");
   assert.equal(root.dir, "ltr");
   const refreshed = mount();
-  assert.equal(refreshed.locale.getSnapshot().active, "ar");
-  assert.equal(root.dir, "rtl");
+  assert.equal(refreshed.locale.getSnapshot().active, "en");
+  assert.equal(root.dir, "ltr");
   refreshed.locale.setLocale("en");
   assert.equal(root.dir, "ltr");
   refreshed.dispose();

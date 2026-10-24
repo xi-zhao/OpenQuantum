@@ -114,7 +114,7 @@ test("a failed generation cannot spend another SDK budget in the same Harness tu
   let attempts = 0;
   const tool = classroomTool({ llm: {}, application: { async generate() { attempts++; throw new TypeError("fixture-failure"); } } });
   const events = [{ type: "turn/start", data: { turn: 1 } }, { type: "request/header", data: { header: { config: { provider: "test", model: "test" } } } }];
-  const exec = { signal: signal(), agent: { id: "fixture", session: { snapshotEvents: () => events, requestHeader: () => events.findLast((event) => event.type === "request/header")?.data.header } } };
+  const exec = { signal: signal(), agent: { id: "fixture", session: { events: events, requestHeader: () => events.findLast((event) => event.type === "request/header")?.data.header } } };
   const args = { courseId: randomUUID() };
   await assert.rejects(tool.execute(args, exec), /fixture-failure/);
   await assert.rejects(tool.execute(args, exec), /不自动重复/);

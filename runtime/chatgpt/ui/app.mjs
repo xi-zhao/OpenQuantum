@@ -457,7 +457,7 @@ function renderMcp(container) {
       card.append(setup);
     }
     const info = disclosure(`provider-info:${server.id}`, "详情", "technical-details");
-    info.append(element("code", server.id), element("p", `${server.transport ?? "stdio"} · ${server.target ?? server.id}`, "hint"));
+    info.append(element("code", server.id), element("p", server.transport ? `${server.transport} · ${server.target ?? server.id}` : "连接由当前宿主管理", "hint"));
     if (server.sourceUrl) {
       const source = element("a", "源码"); source.href = server.sourceUrl; source.target = "_blank"; source.rel = "noopener noreferrer";
       source.onclick = event => { if (!preview && !desktop) { event.preventDefault(); void openHostLink(app, source.href).catch(() => notice(`未能打开源码：${source.href}`, true)); } }; info.append(source);

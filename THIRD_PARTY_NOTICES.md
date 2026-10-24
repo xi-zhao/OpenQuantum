@@ -195,3 +195,16 @@ while its privately obtained NetSquid dependency stack is not represented as pub
 | Yao.jl | Apache-2.0 primary text; component review remains | 原生公开 API；隔离环境或固定源码构建 | [QuantumBFS/Yao.jl](https://github.com/QuantumBFS/Yao.jl) |
 
 Qsyn 构建中的 xtl、xtensor、xtensor-blas、libfort、fmt、spdlog、GSL、dynamic_bitset、nlohmann/json、CaDiCaL、ABC 与 Catch2 由独立 `native.lock.json` 固定，源码 checkout 保留原始许可证及子模块。本轮只携带依赖描述和安装器。
+
+## Local browser access guard
+
+`packages/openquantum-web-security/browser-auth.mjs` adapts the browser-session
+authentication implementation from `@deepseek-ai/dsh-client-connection`
+`0.1.5-rc.1` (DeepSeek, MIT). The complete copyright and permission notice is
+preserved in [its LICENSE](packages/openquantum-web-security/LICENSE).
+Source: https://www.npmjs.com/package/@deepseek-ai/dsh-client-connection/v/0.1.5-rc.1
+
+OpenQuantum uses an in-memory signing secret with a one-day cookie lifetime,
+preserves the two allowlisted Desktop display parameters during token exchange,
+and installs the guard through the original 0.1.0-rc.6 WebServer registration
+API. No newer runtime or credential schema is introduced.

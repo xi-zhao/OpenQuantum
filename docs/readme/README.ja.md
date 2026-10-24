@@ -2,6 +2,8 @@
 
 <p align="center"><a href="../../README.md">简体中文</a> · <a href="./README.en.md">English</a> · <a href="./README.ja.md">日本語</a> · <a href="./README.ko.md">한국어</a> · <a href="./README.es.md">Español</a> · <a href="./README.fr.md">Français</a> · <a href="./README.de.md">Deutsch</a> · <a href="./README.pt.md">Português</a> · <a href="./README.ru.md">Русский</a> · <a href="./README.ar.md">العربية</a></p>
 
+**0.8.5 デスクトップについて：** macOS Apple Silicon 向けの独立した OpenQuantum アプリです。DSH Desktop 2.0.0 / Harness 0.1.0-rc.6 のシンプルな操作感に戻し、画面の言語は当面、中国語と英語に限定します。既存の翻訳と README は保持します。以下の 0.8.4 の説明は旧リリースの記録です。現在のインストール方法と署名の制約は[インストールガイド](../DESKTOP_INSTALLERS.md)をご確認ください。Codex プラグインの公開版は 0.8.4 のままです。
+
 <p align="center">
   <strong>OpenQuantum — 信頼できる量子研究 AI を、ともに育てる。</strong><br />
   <sub>量子研究の専門知を、一つの OpenQuantum に</sub>
