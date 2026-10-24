@@ -24,6 +24,8 @@ jobs:
         run: npm ci
       - name: Build the pinned Desktop source
         run: npm run desktop:setup
+      - name: Check signing traversal with a low file limit
+        run: npm run desktop:app:signing:check
       - name: Package the standalone application
         run: |
           # The macOS signer scans bundled dependency files concurrently.

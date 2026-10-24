@@ -127,6 +127,7 @@
     "sdk:guides:check": "node scripts/build-sdk-skills.mjs --check",
     "sdk:test": "node --test tests/sdk-access.test.mjs tests/sdk-package.test.mjs",
     "sdk:ecosystem:test": "OPENQUANTUM_ECOSYSTEM_CHECKS=1 node --test --test-concurrency=1 tests/sdk-ecosystem-live.test.mjs",
+    "desktop:app:signing:check": "node scripts/check-desktop-signing.mjs",
     "desktop:app:package": "node scripts/package-desktop-app.mjs",
     "desktop:app:smoke": "node scripts/smoke-desktop-app.mjs"
   },
