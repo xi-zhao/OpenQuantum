@@ -93,9 +93,7 @@ test("Harness discovers Bloqade Skill, runs real dynamics and persists success a
     const result = events.find(event => event.type === "tool/result" && JSON.stringify(event).includes(`bloqade-fixture-${index}`));
     assert.ok(result, `${capability.id}: missing result`);
     const serialized = JSON.stringify(result);
-    // Session V4 persists each Tool result as one role "tool" message.
-    const block = result.data.message;
-    assert.equal(block.role, "tool");
+    const block = result.data.message.content.find(item => item.type === "tool-result");
     if (capability.expectError) {
       assert.equal(block.isError, true);
       assert.match(serialized, /Atom positions must be distinct/);

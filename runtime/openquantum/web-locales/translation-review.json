@@ -1317,5 +1317,11 @@
     "Current turn failed",
     "Automation task completed",
     "Automation task failed"
-  ]
+  ],
+  "activeBaseline": {
+    "source": "Harness 0.1.5-rc.1 / Desktop 2.0.7 interface copy",
+    "sourceSha256": "d2f93d2f5460caa1f74aeac8db0364c7df1292026e3f1b068aaeea36ab28cd98",
+    "phrases": [],
+    "disposition": "Only this unchanged subset is active on the restored baseline. The full 0.2.1 review and all translated phrases remain retained above; no new native-speaker review is claimed."
+  }
 }

@@ -255,12 +255,34 @@ test("CC Connect management probe authenticates the exact local service", async 
 });
 
 test("CC Connect ACP shares model composition and deployment defaults", () => {
-  const runtimeRoot = path.join(projectRoot, "runtime", "openquantum");
-  const load = (name) => loadOverlayPatches("openquantum-cc-connect-test", path.join(runtimeRoot, name));
-  const acpRows = load("cc-connect/cordis.yml");
-  const deploymentPatches = load("cordis.patch.yml");
-  const modelRouteRows = load("model-routes.cordis.yml");
-  const profileDefaults = new Map(load("profile-defaults.cordis.yml").map((row) => [row.id, row]));
+  const acpConfigPath = path.join(
+    projectRoot,
+    "runtime",
+    "openquantum",
+    "cc-connect",
+    "cordis.yml",
+  );
+  const deploymentPatchPath = path.join(
+    projectRoot,
+    "runtime",
+    "openquantum",
+    "cordis.patch.yml",
+  );
+  const modelRoutesPath = path.join(
+    projectRoot,
+    "runtime",
+    "openquantum",
+    "model-routes.cordis.yml",
+  );
+  const acpRows = loadOverlayPatches("openquantum-cc-connect-test", acpConfigPath);
+  const deploymentPatches = loadOverlayPatches(
+    "openquantum-cc-connect-test",
+    deploymentPatchPath,
+  );
+  const modelRouteRows = loadOverlayPatches(
+    "openquantum-cc-connect-test",
+    modelRoutesPath,
+  );
   const acpById = new Map([...acpRows, ...insertedRows(acpRows)].map((row) => [row.id, row]));
   const deploymentById = new Map(
     deploymentPatches.filter((patch) => patch.id).map((patch) => [patch.id, patch]),
@@ -269,36 +291,36 @@ test("CC Connect ACP shares model composition and deployment defaults", () => {
     insertedRows(deploymentPatches).map((row) => [row.id, row]),
   );
   const acpAgent = acpById.get("acp");
-  const deploymentDefault = profileDefaults.get("agent-default-model")?.config;
+  const deploymentDefault = deploymentById.get("agent-default-model")?.config;
 
   assert.deepEqual(deploymentDefault, {
     provider: "openquantum-public",
     model: "kimi-k2.7-code",
   });
-  assert.equal(profileDefaults.get("agent-preset-registry")?.config?.default, "openquantum");
   assert.deepEqual(
     { provider: acpAgent?.config?.provider, model: acpAgent?.config?.model },
     deploymentDefault,
   );
-  assert.deepEqual(acpById.get("agent-default-model")?.config, deploymentDefault);
   assert.match(acpById.get("system-prompt").config.personaPrefix, /trusted Acceptance Report or Result Commit/);
 
-  // 0.2.1 profiles own settings; routes arrive from the prepared profile bundle.
-  assert.equal(acpById.has("settings"), false);
+  assert.deepEqual(acpById.get("settings")?.config?.dshHome, acpById.get("credentials")?.config?.dshHome);
   assert.equal(acpById.get("llm-deepseek")?.disabled, true);
-  assert.equal(acpById.has("llm-pi-ai"), false);
-  assert.equal(acpById.has("openquantum-acp-model-routes"), false);
-  assert.equal(acpById.get("openquantum-presets")?.disabled, true);
+  assert.equal(acpById.get("llm-pi-ai")?.disabled, true);
+  assert.equal(acpById.get("openquantum-acp-model-routes")?.name, "@deepseek-ai/cordis-plugin-include");
   assert.equal(acpById.get("openquantum-web-learning")?.disabled, true);
   assert.equal(acpById.get("openquantum-web-updates")?.disabled, true);
-  assert.equal(acpRows.some((row) => row.name === "@deepseek-ai/dsh-llm-pi-ai"), false);
+  assert.equal(
+    acpRows.some((row) => row.name === "@deepseek-ai/dsh-llm-pi-ai"),
+    false,
+  );
 
-  assert.equal(deploymentById.has("llm-pi-ai"), false);
-  assert.equal(deploymentById.has("agent-default-model"), false);
-  assert.equal(deploymentInserted.has("openquantum-model-routes"), false);
-  assert.equal(deploymentInserted.get("openquantum-presets")?.name, "@deepseek-ai/cordis-plugin-include");
+  assert.equal(deploymentById.get("llm-pi-ai")?.disabled, true);
+  assert.equal(
+    deploymentInserted.get("openquantum-model-routes")?.name,
+    "@deepseek-ai/cordis-plugin-include",
+  );
   assert.equal(modelRouteRows.length, 1);
-  assert.equal(modelRouteRows[0]?.id, "llm-pi-ai");
+  assert.equal(modelRouteRows[0]?.id, "openquantum-llm-pi-ai");
   assert.equal(modelRouteRows[0]?.name, "@deepseek-ai/dsh-llm-pi-ai");
   assert.equal(
     modelRouteRows[0]?.config?.providers?.["openquantum-public"]?.models?.[0]?.id,
@@ -311,14 +333,12 @@ test("OpenQuantum ACP uses the shared settings.yaml model route override", { tim
   const dshHome = path.join(stateRoot, "dsh");
   const modelServer = await startOpenAiCompletionServer();
   await mkdir(dshHome, { recursive: true });
-  // A legacy shared settings.yaml override migrates into the ACP profile.
+  await prepareOpenQuantumHarnessHome({ projectRoot, harnessHome: dshHome });
   await writeFile(
     path.join(dshHome, "settings.yaml"),
     `llm-pi-ai:\n  providers:\n    openquantum-public:\n      baseURL: ${modelServer.baseURL}\n`,
     { mode: 0o600 },
   );
-  const prepared = await prepareOpenQuantumHarnessHome({ projectRoot, harnessHome: dshHome });
-  assert.deepEqual(prepared.migratedSettings, ["llm-pi-ai"]);
   const paths = resolveCcConnectPaths(projectRoot);
   const child = spawn(paths.acpBin, ["--profile", "acp", "--patch", paths.acpConfigPath], {
     cwd: projectRoot,

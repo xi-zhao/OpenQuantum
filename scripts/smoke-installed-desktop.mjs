@@ -5,6 +5,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { promisify } from "node:util";
+import { DESKTOP_MODEL_ROUTES } from "./lib/desktop-profile-bundle.mjs";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
 const target = `${process.platform}-${process.arch}`;
@@ -31,7 +32,7 @@ if (process.platform === "darwin") {
   assert.ok(shortcut.length > 0);
 }
 const home = path.join(projectRoot, ".openquantum/dsh");
-const route = path.join(home, ".openquantum-extensions/harness-desktop-profile/model-routes.cordis.yml");
+const route = path.join(home, DESKTOP_MODEL_ROUTES);
 const original = await readFile(route, "utf8");
 await writeFile(route, original + "\n# retained user route preference\n");
 const customSkill = path.join(projectRoot, ".agents/skills/smoke-retention/SKILL.md");

@@ -41,11 +41,14 @@ test("brands the official Harness index without replacing its application shell"
 test("narrow settings keep native navigation and give translated content its own row", async () => {
   const branded = brandHarnessIndex(HARNESS_INDEX);
   const native = await readFile(new URL("../node_modules/@deepseek-ai/dsh-client-ui-settings-general/lib/client.js", import.meta.url), "utf8");
-  assert.match(native, /"data-shortcut-modal": "settings"/);
+  assert.match(native, /role: "dialog"/);
+  assert.match(native, /"aria-modal": "true"/);
+  assert.match(native, /"aria-current": row\.id === active/);
   assert.match(native, /renderSlot\("settings\.general\.item"/);
   assert.match(branded, /@media \(max-width: 600px\)/);
-  assert.match(branded, /\[role="dialog"\]\[data-shortcut-modal="settings"\] \{\s*flex-direction: column;/);
-  assert.match(branded, /\[data-shortcut-modal="settings"\] > nav > div:last-child \{\s*flex-direction: row;/);
+  assert.match(branded, /\[data-sidebar-collapsed\] > div:has\(> \[data-slot="sidebar"\]\):has\(\[role="dialog"\]\[aria-modal="true"\]\) \{\s*z-index: 1000;/);
+  assert.match(branded, /\[role="dialog"\]\[aria-modal="true"\]:has\(> nav \[aria-current\]\) \{\s*flex-direction: column;/);
+  assert.match(branded, /\[aria-modal="true"\]:has\(> nav \[aria-current\]\) > nav > div:last-child \{\s*flex-direction: row;/);
   assert.match(branded, /\[data-slot="settings\.general\.item"\] > div:has\(> span > button\[aria-haspopup="menu"\]\)/);
   assert.doesNotMatch(branded, /VOzbGW_|hVGvvW_/, "do not couple the adaptation to generated CSS class hashes");
 });
@@ -346,7 +349,7 @@ test("Desktop empty model hint restores the native selector on configuration, fa
   const on = (event, callback) => { listeners.set(event, callback); return () => listeners.delete(event); };
   const ctx = {
     slots: {
-      inject(_name, register) { const result = register(); if (result?.[Symbol.iterator]) Array.from(result); },
+      inject(_name, register) { if (_name === "sidebar.settings") return () => {}; const result = register(); if (result?.[Symbol.iterator]) Array.from(result); },
       register(entry, component) { slots.set(entry.name, sessionId => component(entry.inject?.(sessionId))); return () => slots.delete(entry.name); },
     },
     inject(_names, register) { register(ctx); return { dispose() {} }; },
@@ -465,4 +468,64 @@ test("only minimal Desktop composition enables the empty model hint", () => {
     assert.equal(html.includes('name="openquantum-minimal-ui"'), minimalUi);
     assert.equal(transform(html), html);
   }
+});
+
+test("Desktop settings owns its child slots and renders only native general and model forms", async () => {
+  const client = await readFile(new URL("../packages/openquantum-web-branding/client.js", import.meta.url), "utf8");
+  const declarations = new Set(["sidebar.settings", "shell.overlay"]);
+  const occupants = new Map(), pending = new Map(), forms = [];
+  const nativeModels = { options: { id: "models", label: "Models" } };
+  const nativeDesktop = { options: { id: "desktop", label: "Desktop" } };
+  const slots = {
+    inject(name, register) {
+      if (declarations.has(name)) return register();
+      pending.set(name, register);
+      return () => {};
+    },
+    register(options, component) {
+      assert.ok(declarations.has(options.name), options.name);
+      for (const child of Object.keys(options.children ?? {})) {
+        assert.ok(!declarations.has(child), `duplicate child declaration: ${child}`);
+        declarations.add(child);
+        pending.get(child)?.();
+      }
+      occupants.set(options.name, { options, component });
+      return () => occupants.delete(options.name);
+    },
+    subscribe: () => () => {}, getVersion: () => 1,
+    entriesOfSlot: () => [occupants.get("settings.section"), nativeModels, nativeDesktop],
+  };
+  const react = {
+    createElement: (type, props, ...children) => { assert.ok(type, "every component must exist"); return { type, props, children }; },
+    Fragment: "fragment", useState: value => [value, () => {}], useRef: () => ({ current: null }),
+    useEffect() {}, useSyncExternalStore: (_subscribe, snapshot) => snapshot(),
+  };
+  let plugin;
+  runInNewContext(client, {
+    document: { querySelector: selector => selector.includes("minimal-settings") ? {} : null },
+    __ModuleLoader__: { load({ factory }) {
+      plugin = factory(name => name === "react" ? react : { Modal: "native-modal", IconSettingsOutline16: "native-icon", ConnectionIndicator: "native-connection" });
+    } },
+  });
+  const scope = { slots, effect: fn => fn(),
+    locale: { register: () => () => {}, bind: () => key => key, subscribe: () => () => {}, getSnapshot: () => ({ revision: 1 }) },
+    connection: { state: { subscribe: () => () => {}, getSnapshot: () => "connected" }, reconnect() {} },
+  };
+  scope.inject = (_names, callback) => { callback(scope); return { dispose() {} }; };
+  plugin.apply(scope);
+  const render = (entry, props = {}) => entry.component({ ...props, ...entry.options.children && {
+    renderSlot(name, owner, options) {
+      assert.ok(entry.options.children[name], `unauthorized child slot: ${name}`);
+      forms.push({ name, owner, options });
+      return "native-form";
+    },
+  } });
+  const root = render(occupants.get("sidebar.settings"), { wide: true });
+  const modal = root.children.find(child => child.type === "native-modal");
+  assert.deepEqual(modal.children[0].children.map(button => button.children[0]), ["general.nav", "Models"]);
+  assert.equal(forms[0].name, "settings.section");
+  assert.equal(forms[0].options.only, "general");
+  render(occupants.get("settings.section"));
+  assert.equal(forms[1].name, "settings.general.item");
+  assert.equal(typeof modal.props.onClose, "function");
 });

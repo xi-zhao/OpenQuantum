@@ -1,11 +1,11 @@
 # OpenQuantum-owned static model route catalog.
 #
-# Loaded through the OpenQuantum profile-defaults bundle below each profile's
-# native settings layer. Web, Desktop and ACP share these defaults; each
-# profile saves its own overrides. Secrets remain environment or credential
-# references and are resolved per request.
+# Web/Desktop Home composition and CC Connect ACP composition include this
+# fragment. Runtime endpoint/model overrides come from the shared
+# $DSH_HOME/settings.yaml settings document. Secrets remain environment or
+# credential references and are resolved per request.
 
-- id: llm-pi-ai
+- id: openquantum-llm-pi-ai
   name: '@deepseek-ai/dsh-llm-pi-ai'
   config:
     providers:

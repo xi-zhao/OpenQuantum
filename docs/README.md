@@ -5,8 +5,8 @@
 
 ## 先记住三个结论
 
-1. **OpenQuantum 提供共享量子能力，有 Desktop 与 Codex 插件两个发行入口。** Desktop 使用 DeepSeek Harness，
-   保留量子学习通；Codex 插件使用宿主原生聊天与登录，侧边页只配置能力。OpenQuantum 不新增 Agent Runtime。
+1. **OpenQuantum Desktop 是基于 DSH 的独立个人 Harness，另提供共享量子能力的 Codex 插件。**
+   Desktop 默认聚焦会话、文件、执行、历史、安全与最少设置；Codex 插件使用宿主原生聊天与登录。OpenQuantum 不新增 Agent Runtime。
 2. **Agent 唯一直接调用的执行原语是 Tool。** Skill 提供工作方法；原生 Tool Plugin 或 Harness MCP Client
    把 Tool 注册进 Registry；MCP Server 只是 Tool 的进程外或远程提供方式。
 3. **运行完成不等于科学验收通过。** Tool 产生 facts，Materializer 形成可重读证据，Validator 产生
@@ -20,7 +20,7 @@
 flowchart TB
   S[共享 Skill、Tool implementation 与科学合同] --> D[Desktop / DeepSeek Harness]
   S --> C[Codex 插件 / 本机 MCP]
-  D --> L[量子学习通与科研工作台]
+  D --> L[简洁个人桌面与按需量子工具]
   C --> H[Codex 原生聊天、项目与线程]
   C --> P[OpenQuantum 能力设置页]
 ```
@@ -131,9 +131,8 @@ Skill 与 Tool 在概念和发行版 policy 中都相互独立：Skill-only、To
 | --- | --- | --- |
 | Desktop、Codex 插件和安装器的统一产品版本 | 根 `package.json`；通过 `npm run release:version -- X.Y.Z` 更新各包与锁文件 | `npm run release:check`、CI 和打包入口 |
 | 静态模型 Provider catalog | `runtime/openquantum/model-routes.cordis.yml` | Web/Desktop/ACP 组合一致性测试 + model probe |
-| 用户模型 Route 覆盖 | Git 忽略的 `$DSH_HOME/profiles/<profile>/cordis.patch.yml`（旧 `settings.yaml` 一次性迁入） | Web 设置测试 + ACP 本地模型回路测试 |
-| Deployment 默认模型与默认 Agent Preset | `runtime/openquantum/profile-defaults.cordis.yml`（profile bundle，低于原生设置） | Web/ACP 组合一致性测试 |
-| Deployment Host 扩展与 Agent Preset 声明 | `runtime/openquantum/cordis.patch.yml` | `npm run harness:config`、`npm run desktop:check` |
+| 用户模型 Route 覆盖 | Git 忽略的 `$DSH_HOME/settings.yaml` | Web 设置测试 + ACP 本地模型回路测试 |
+| Deployment 默认模型、Agent Preset 与 Host 扩展 | `runtime/openquantum/cordis.patch.yml` | `npm run harness:config`、`npm run desktop:check` |
 | OpenQuantum Agent 的 Skill/Tool Provider 组合 | `runtime/openquantum/agent-presets/openquantum/agent.cordis.yml` | Harness Registry 集成测试 |
 | 发行版 Capability 与 L0–L3 证据引用 | `.agents/capability-packages.yml` | `npm run capability:conformance` |
 | Skill 指令与领域资源 | `.agents/skills/<id>/` | Skill discovery、capability test |
@@ -150,6 +149,7 @@ Skill 与 Tool 在概念和发行版 policy 中都相互独立：Skill-only、To
 
 - [桌面测试安装包](DESKTOP_INSTALLERS.md)：原版 DSH Desktop、OpenQuantum 能力包、数据保留与工程检查。
 - [部署与启动](DEPLOYMENT.md)：本地、Docker、模型配置和启动检查。
+- [第三方客户端 2.0.7 基线恢复](releases/2026-10-24-desktop-2.0.7.md)：旧版配套、会话保护、本地验证及尚未完成的构建边界。
 - [本地计算环境准备](integrations/LOCAL_ENVIRONMENTS.md)：按能力显式准备固定依赖，已有环境原地核验与升级。
 - [原生 SDK 生态扩展](integrations/SDK_ECOSYSTEM_2026-10-14.md)：26 个维护中的 SDK/源码入口、TensorCircuit-NG 迁移与 MQT Bench v2；分列实际 API 与科学验收状态。
 - [完整 SDK 接入与逐库审计](integrations/FULL_SDK_ACCESS.md)：原生公开 API、环境定位、自定义程序、分批补齐与工程验证；便捷 Tool 的模型范围不再是 SDK 能力上限。

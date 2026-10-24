@@ -10,7 +10,7 @@ The pinned Desktop's web settings share these dictionaries. Its operating-system
 
 ## Catalog maintenance
 
-- `harness-source.json` records the source key contracts of Harness `0.2.1-rc.2` and Desktop `2.0.18` (`6a63b9730b82cf4e858b9a11ac9783da9a5a0c3a`). Retain namespace ownership when upgrading.
+- `harness-source.json` records the source key contracts of Harness `0.1.5-rc.1` and Desktop `2.0.7` (`5184a2ab7ab197e7405c1053feb324003409a142`). Retain namespace ownership when upgrading.
 - `openquantum-source.json` owns capability settings, messaging channels and the learning launcher. Chinese source phrases remain stable keys for existing settings copy.
 - `locales/*.json` contains deduplicated translations keyed by English source text. The first edition reuses matching OpenMAIC strings and includes drafts produced with local Argos Translate models; these translations have not received a complete native-speaker review.
 - `translation-review.json` records sequential AI retranslation and semantic review of all 1219 migration phrases plus 59 phrases extracted from the actual pinned Desktop source: 1278 phrases in each of eight languages (10224 translations). The original Argos draft provenance is retained, but those drafts have been replaced. No subagents or external translation provider were used. This is **not human native-speaker certification**, and it does not certify older entries outside this list. Source and translation SHA-256 digests bind the review to the recorded wording.
@@ -33,3 +33,6 @@ Run `node --test tests/ui-locales.test.mjs` for catalog/placeholder coverage, th
 6. Adding a language starts in `languages.json`. Add its catalog import, translations, brand tagline and README edition; ensure a corresponding upstream learning dictionary exists. The learning selector is generated from this same registry and fails if its source dictionary is absent. Check the actual Web and Desktop layout before delivery.
 
 For README changes, follow [the translation guide](../../../docs/readme/TRANSLATING.md). A source catalog check cannot certify the meaning or naturalness of a translation; terminology and longer help text still need human review.
+
+The 0.2.1 translation review and all reviewed wording are retained for provenance.
+`translation-review.json.activeBaseline` binds the unchanged active subset to the restored 0.1.5 / 2.0.7 source; it does not claim a new review.

@@ -43,7 +43,7 @@ Interface 注册和生命周期机制，Skill、Tool、Validator 等是职责模
 | Integration Catalog Entry | 名称、来源、固定版本、安装要求、凭据说明 | `src/settings/server/project-settings-catalog.mjs` | 只描述产品目录，不保存运行状态或密钥 |
 | Runtime Readiness Snapshot | 当前 Host 的 Model Route 与已挂载 Agent scope 的 Skill / Tool Registry 证据 | `src/readiness/server/runtime-readiness.mjs` | 被动观察不启动 Preset、MCP Server、Tool 或模型；未探测的外部可达性保持 `not_checked` |
 | Static Model Route Catalog | Provider、模型能力、默认 Endpoint 与凭据名 | `runtime/openquantum/model-routes.cordis.yml` | Web/Desktop/ACP 共享一份静态基线；只引用环境变量名，不承载科学规则 |
-| User Model Route Override | 用户在模型设置中保存的非秘密 Route 覆盖 | Git 忽略的 `$DSH_HOME/profiles/<profile>/cordis.patch.yml` | 各 profile 独立保存；旧 `settings.yaml` 模型段一次性迁入 Web/ACP 或 Desktop；不进入源码或提交 |
+| User Model Route Override | 用户在模型设置中保存的非秘密 Route 覆盖 | Git 忽略的 `$DSH_HOME/settings.yaml` | 由 Web/Desktop/ACP 共读；不进入源码或提交 |
 | Eval / Benchmark Evidence | 固定案例、评分、复现和诊断报告 | capability `evals/`、`evidence/`、共享合同 | 测试证据与在线可用性证据必须区分 |
 
 ## 3. 一级模块边界

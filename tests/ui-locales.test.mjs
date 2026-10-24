@@ -70,7 +70,7 @@ test("all ten language catalogs preserve source keys and interpolation parameter
   }
 });
 
-test("sequential AI review is bound to the source and all eight translated phrase sets", async () => {
+test("retained AI review binds all eight phrase sets and the unchanged active subset", async () => {
   const root = new URL("../runtime/openquantum/web-locales/", import.meta.url);
   const review = JSON.parse(await readFile(new URL("translation-review.json", root), "utf8"));
   const digest = (value) => createHash("sha256").update(value).digest("hex");
@@ -80,11 +80,13 @@ test("sequential AI review is bound to the source and all eight translated phras
   assert.equal(review.initialDraft.phraseCount, 1219);
   assert.equal(review.phrases.length, 1278);
   assert.equal(new Set(review.phrases).size, review.phrases.length);
-  assert.equal(review.sourceSha256, digest(await readFile(new URL("harness-source.json", root))));
+  assert.equal(review.source, "Harness 0.2.1-rc.2 / Desktop 2.0.18 interface copy");
+  assert.equal(review.activeBaseline.source, "Harness 0.1.5-rc.1 / Desktop 2.0.7 interface copy");
+  assert.equal(review.activeBaseline.sourceSha256, digest(await readFile(new URL("harness-source.json", root))));
   assert.deepEqual(review.languages, languages.filter(({ id }) => !["zh", "en"].includes(id)).map(({ id }) => id));
   const english = new Set(Object.values(sources).flatMap((entry) => Object.values(entry.en ?? {})));
+  assert.deepEqual(review.activeBaseline.phrases, review.phrases.filter(phrase => english.has(phrase)));
   for (const phrase of review.phrases) {
-    assert.ok(english.has(phrase), `stale review entry: ${phrase}`);
     for (const id of review.languages) assert.ok(Object.hasOwn(translations[id], phrase), `${id}: reviewed translation missing for ${phrase}`);
   }
   for (const id of review.languages) {
@@ -106,12 +108,10 @@ test("translated actions retain their meaning and date formatters use regional l
   };
   for (const { id, learningLocale } of languages.filter(({ id }) => actions[id])) {
     const dict = dictionariesFor(id);
-    assert.equal(dict["settings.account"].signOut, actions[id][0]);
-    assert.equal(dict.workspace["actions.unpin"], actions[id][1]);
-    for (const namespace of ["schedule.catalog", "schedule.manager"]) {
-      assert.equal(dict[namespace]["time.locale"], learningLocale);
-      assert.doesNotThrow(() => new Intl.DateTimeFormat(dict[namespace]["time.locale"]).format(0));
-    }
+    assert.equal(translations[id]["Sign out"], actions[id][0]);
+    assert.equal(translations[id].Unpin, actions[id][1]);
+    assert.equal(translations[id].en, learningLocale);
+    assert.doesNotThrow(() => new Intl.DateTimeFormat(translations[id].en).format(0));
     const help = translations[id]["Unable to create default workspace. Use Choose workspace to select a folder."];
     assert.ok(help.includes(dict.conversation["hero.chooseWorkspace"]), `${id}: workspace help must match the visible label`);
   }

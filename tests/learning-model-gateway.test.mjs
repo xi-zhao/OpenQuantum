@@ -20,7 +20,7 @@ test("the application model transport retains history, tools, inline images and 
   assert.equal(request.messages[0].content[1].attachment.attachmentId, "image-ref");
   assert.equal(calls[0].data.length, 3);
   assert.equal(request.messages[1].content[1].type, "tool-call");
-  assert.equal(request.messages[2].toolCallId, "call-1");
+  assert.equal(request.messages[2].content[0].toolCallId, "call-1");
   assert.equal(request.tools[0].name, "read_material");
   await assert.rejects(modelRequest({ ...body, model: "arbitrary-model" }, selection), /无效/);
   await assert.rejects(modelRequest({ ...body, messages: [{ role: "user", content: [{ type: "image_url", image_url: { url: "http://127.0.0.1/private" } }] }] }, selection, { saveImage() { assert.fail(); } }), /内嵌图片/);

@@ -13,9 +13,8 @@ import { desktopPreset } from "./desktop-profile-config.mjs";
 import { writeManagedHomeFiles } from "./managed-home-files.mjs";
 import { desktopEnvironmentDefaults, persistDesktopCredentials } from "./desktop-environment.mjs";
 import { assertNoLinks } from "./desktop-distribution.mjs";
-import { adoptLegacyDesktopRoutes, desktopModelRoutes, desktopModelDefault, clearRemovedDesktopModelSelection } from "./desktop-model-routes.mjs";
-import { DESKTOP_BUNDLE_PATCHES, DESKTOP_MODEL_ROUTES, DESKTOP_PROFILE_BUNDLE, DESKTOP_PROFILE_DEFAULTS, DESKTOP_PROFILE_DIRECTORY, DESKTOP_PROFILE_PATCH, desktopHomePatchMigration, desktopProfileManifest } from "./desktop-profile-bundle.mjs";
-import { MODEL_ROUTES_BUNDLE, bundleRows, migrateLegacyModelSettings, prepareModelProfiles, presetDeclarations } from "./prepare-model-profiles.mjs";
+import { desktopModelRoutes, desktopModelDefault, clearRemovedDesktopModelSelection } from "./desktop-model-routes.mjs";
+import { DESKTOP_PROFILE_BUNDLE, DESKTOP_PROFILE_DIRECTORY, DESKTOP_PROFILE_PATCH, desktopHomePatchMigration, desktopProfileManifest } from "./desktop-profile-bundle.mjs";
 
 const extensions = {
   capabilityHost: ["runtime/openquantum/capability-host", "harness-capability-host"],
@@ -78,9 +77,9 @@ export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot, 
     const { version } = JSON.parse(await readFile(path.join(projectRoot, "package.json"), "utf8"));
     await mkdir(bundleDirectory, { recursive: true });
     await writeFile(path.join(bundleDirectory, "package.json"), JSON.stringify({
-      name: DESKTOP_PROFILE_BUNDLE, version, private: true, type: "module", dsh: { bundle: { patch: DESKTOP_BUNDLE_PATCHES } },
+      name: DESKTOP_PROFILE_BUNDLE, version, private: true, type: "module", dsh: { bundle: { patch: "./cordis.patch.yml" } },
     }, null, 2));
-    initProfile(profile, PROFILE_TEMPLATES.web.bundles);
+    initProfile(profile, PROFILE_TEMPLATES.web.bundles, PROFILE_TEMPLATES.web.patchReload);
     const manifest = JSON.parse(await readFile(path.join(profile, "package.json"), "utf8"));
     const packages = Object.values(extensions).map(([, name]) => ({
       name: `@openquantum/${name}`, spec: `link:${path.join(extensionRoot, name).replaceAll("\\", "/")}`,
@@ -99,22 +98,20 @@ export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot, 
 
   const deploymentPatch = await readFile(path.join(projectRoot, "runtime/openquantum/cordis.patch.yml"), "utf8");
   const uiPatch = desktop
-    ? await readFile(path.join(projectRoot, "runtime/openquantum/desktop.cordis.patch.yml"), "utf8")
+    ? `${await readFile(path.join(projectRoot, "runtime/openquantum/desktop.cordis.patch.yml"), "utf8")}\n${await productUiOverlay(projectRoot, { desktop: true })}`
     : await productUiOverlay(projectRoot);
   const modelRoutes = await readFile(path.join(projectRoot, "runtime/openquantum/model-routes.cordis.yml"), "utf8");
-  const profileDefaults = await readFile(path.join(projectRoot, "runtime/openquantum/profile-defaults.cordis.yml"), "utf8");
   const desktopRoutes = desktop ? await desktopModelRoutes(modelRoutes, projectRoot, harnessHome) : null;
-  const files = new Map(migration);
+  const routeFile = "profiles/model-routes.cordis.yml";
+  let effectivePatch = deploymentPatch;
   if (desktop) {
-    await adoptLegacyDesktopRoutes(harnessHome, legacyHomeFiles);
-    result.preservedFiles = await writeManagedHomeFiles(harnessHome, new Map([[DESKTOP_MODEL_ROUTES, desktopEnvironmentDefaults(desktopRoutes.content, projectRoot)]]), legacyHomeFiles);
-    const activeRoutes = await readFile(path.join(harnessHome, DESKTOP_MODEL_ROUTES), "utf8");
-    files.set(DESKTOP_PROFILE_DEFAULTS, desktopModelDefault(profileDefaults, activeRoutes, desktopRoutes.removed));
-  } else {
-    await prepareModelProfiles({ projectRoot, harnessHome });
+    result.preservedFiles = await writeManagedHomeFiles(harnessHome, new Map([[routeFile, desktopEnvironmentDefaults(desktopRoutes.content, projectRoot)]]), legacyHomeFiles);
+    const activeRoutes = await readFile(path.join(harnessHome, routeFile), "utf8");
+    effectivePatch = desktopModelDefault(deploymentPatch, activeRoutes, desktopRoutes.removed);
   }
   const patchRelative = desktop ? DESKTOP_PROFILE_PATCH : "cordis.patch.yml";
-  files.set(patchRelative, `${deploymentPatch}\n${uiPatch}`);
+  const files = new Map([...migration, [patchRelative, `${effectivePatch}\n${uiPatch}`]]);
+  if (!desktop) files.set(routeFile, modelRoutes);
   async function presetFiles(source, relative) {
     for (const entry of await readdir(source, { withFileTypes: true })) {
       if (entry.name === "node_modules") continue;
@@ -131,21 +128,12 @@ export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot, 
       }
     }
   }
-  const presetIds = ["openquantum", "quantum-learning"];
-  for (const name of presetIds) await presetFiles(path.join(projectRoot, "runtime/openquantum/agent-presets", name), `.agent-presets/${name}`);
-  files.set("profiles/.agent-presets/presets.cordis.yml", await presetDeclarations(path.join(projectRoot, "runtime/openquantum/agent-presets"), path.join(harnessHome, ".agent-presets"), presetIds));
+  for (const name of ["openquantum", "quantum-learning"]) await presetFiles(path.join(projectRoot, "runtime/openquantum/agent-presets", name), `.agent-presets/${name}`);
   if (desktop) result.preservedFiles.push(...await writeManagedHomeFiles(harnessHome, files, legacyHomeFiles));
   else for (const [relative, content] of files) {
     await mkdir(path.dirname(path.join(harnessHome, relative)), { recursive: true });
     await writeFile(path.join(harnessHome, relative), content);
   }
-  const routeDefaults = desktop
-    ? bundleRows(path.join(harnessHome, DESKTOP_MODEL_ROUTES), path.join(harnessHome, DESKTOP_PROFILE_DEFAULTS))
-    : bundleRows(...["model-routes.cordis.yml", "profile-defaults.cordis.yml"].map(name => path.join(harnessHome, "profiles/web/node_modules", MODEL_ROUTES_BUNDLE, name)));
-  const acpDefaults = routeDefaults.filter(row => row.id === "llm-pi-ai");
-  result.migratedSettings = await migrateLegacyModelSettings(harnessHome, desktop
-    ? [["desktop", routeDefaults]]
-    : [["web", routeDefaults], ["acp", acpDefaults]]);
   if (desktop) {
     if (migration.has("cordis.patch.yml") && result.preservedFiles.includes("cordis.patch.yml")) {
       throw new Error("Desktop Home patch changed during migration. It was preserved; reconcile cordis.patch.yml before launching.");
@@ -157,22 +145,17 @@ export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot, 
       throw new Error(`Desktop Home contains an older or edited preset that needs reconciliation; compare .openquantum-defaults before launching: ${harnessHome}`);
     }
     result.migratedCredentialRefs = await persistDesktopCredentials(projectRoot, harnessHome, [
-      await readFile(path.join(harnessHome, DESKTOP_MODEL_ROUTES), "utf8"), active,
+      await readFile(path.join(harnessHome, "profiles/model-routes.cordis.yml"), "utf8"), active,
     ]);
   }
   const presetTarget = path.join(harnessHome, ".agent-presets/openquantum");
   const presetNodeModulesTarget = path.join(presetTarget, "node_modules");
-  // Every declared preset composition resolves its plugins from the project dependencies.
-  for (const id of presetIds) {
-    const target = path.join(harnessHome, ".agent-presets", id, "node_modules");
-    const existing = await lstat(target).catch(() => null);
-    if (existing && !existing.isSymbolicLink()) throw new Error("Refusing to replace unmanaged preset node_modules");
-    if (existing) await rm(target);
-    await symlink(path.join(projectRoot, "node_modules"), target, process.platform === "win32" ? "junction" : "dir");
-  }
+  const existing = await lstat(presetNodeModulesTarget).catch(() => null);
+  if (existing && !existing.isSymbolicLink()) throw new Error("Refusing to replace unmanaged preset node_modules");
+  if (existing) await rm(presetNodeModulesTarget);
+  await symlink(path.join(projectRoot, "node_modules"), presetNodeModulesTarget, process.platform === "win32" ? "junction" : "dir");
   return { ...result, presetTarget, presetNodeModulesTarget,
-    modelRoutesTarget: desktop ? path.join(harnessHome, DESKTOP_MODEL_ROUTES) : path.join(harnessHome, "profiles/web/node_modules", MODEL_ROUTES_BUNDLE, "model-routes.cordis.yml"),
-    presetDeclarationsTarget: path.join(harnessHome, "profiles/.agent-presets/presets.cordis.yml"),
+    modelRoutesTarget: path.join(harnessHome, "profiles/model-routes.cordis.yml"),
     patchTarget: path.join(harnessHome, patchRelative),
     learningPresetTarget: path.join(harnessHome, ".agent-presets/quantum-learning"),
   };

@@ -35,11 +35,9 @@ export async function apply(ctx, { provider }) {
         await new Promise((resolve) => setTimeout(resolve, 20));
       }
       await entry.fiber?.await();
+      // Loader propagates apply failures. On 0.1.5, optional credential-bound
+      // providers can remain pending without making this composition fail.
       await entry.subtree.await();
-      const failed = [...entry.subtree.entries()].find((candidate) =>
-        !candidate.disabled && typeof candidate.options.name === "string" && candidate.fiber?.state !== 2,
-      );
-      if (failed) throw new Error(`OpenQuantum ACP Tool provider did not start: ${failed.options.id}`);
     })(),
     new Promise((_, reject) => {
       timeout = setTimeout(() => reject(new Error("OpenQuantum ACP Tool composition did not become ready")), 30_000);

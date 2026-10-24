@@ -1,9 +1,0 @@
-# Product defaults stay below each profile's native settings overrides.
-- id: agent-default-model
-  config:
-    provider: openquantum-public
-    model: kimi-k2.7-code
-
-- id: agent-preset-registry
-  config:
-    default: openquantum
