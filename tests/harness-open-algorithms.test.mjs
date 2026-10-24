@@ -105,7 +105,7 @@ test("Harness discovers all 66 open workflows and executes SDK examples through 
   await new Promise(resolve => reserved.close(resolve));
   await prepareOpenQuantumHarnessHome({ projectRoot: root, harnessHome });
   let logs = "";
-  child = spawn(process.execPath, [path.join(root, "node_modules/@deepseek-ai/dsh/lib/bin.js"), "web", "--no-open", "--host", "127.0.0.1", "--port", String(port)], {
+  child = spawn(process.execPath, [path.join(root, "node_modules/@deepseek-ai/dsh/lib/bin.js"), "web", "--host", "127.0.0.1", "--port", String(port)], {
     cwd: root,
     env: {
       ...process.env,
@@ -123,12 +123,11 @@ test("Harness discovers all 66 open workflows and executes SDK examples through 
   let cookie;
   async function rpc(method, payload = {}) {
     cookie ??= await harnessHttpCookie(base, logs);
-    if (method === "session/prompt") payload = { requestId: crypto.randomUUID(), ...payload };
     const response = await fetch(`${base}/api/${method}`, {
       method: "POST", headers: { "content-type": "application/json", cookie },
       body: JSON.stringify({
         type: "client-request", rpcId: crypto.randomUUID(), method,
-        payload: { args: method === "session/modelCatalog" ? {} : { request: payload } },
+        payload,
       }),
       signal: AbortSignal.timeout(5000),
     });
@@ -137,16 +136,16 @@ test("Harness discovers all 66 open workflows and executes SDK examples through 
     assert.equal(result.ok, true, `${JSON.stringify(result)}\n${redactHarnessLaunchTokens(logs)}`);
     return result.value;
   }
-  await waitFor(() => rpc("session/modelCatalog"), "Harness startup");
+  await waitFor(() => rpc("llm.models"), "Harness startup");
   const sessionId = `session-open-algorithms-${crypto.randomUUID()}`;
-  await rpc("session/create", { sessionId, cwd: root, agentPreset: "openquantum" });
-  const skills = await rpc("skills/list", { sessionId });
+  await rpc("session.create", { sessionId, cwd: root, agentPreset: "openquantum" });
+  const skills = await rpc("skill.list", { sessionId });
   for (const row of coverage.guides) {
     const skill = skills.skills.find(skill => skill.name === row.skill);
     assert.ok(skill, `Existing user-visible Skill must be preserved: ${row.skill}`);
     assert.equal(skill.modelInvocable, row.invocation !== "manual", `${row.skill}: wrong automatic selection policy`);
   }
-  await rpc("session/prompt", {
+  await rpc("session.prompt", {
     sessionId, mode: "queue",
     content: [{ type: "text", text: "/quantum-guide-algorithms Read the local HHL Skill, run HHL and QSVT through the existing shell Tool, and report the actual invalid-algorithm failure." }],
   });

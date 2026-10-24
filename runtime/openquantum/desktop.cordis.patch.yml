@@ -27,8 +27,5 @@
 - id: desktop-profiles
   disabled: true
 
-- id: desktop-diagnostics
-  disabled: true
-
 - id: openquantum-web-learning
   disabled: true

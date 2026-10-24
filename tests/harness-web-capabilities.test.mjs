@@ -338,9 +338,9 @@ test("client plugin contributes the native settings section and uses Harness cre
   assert.match(client, /CC Connect/);
   assert.match(client, /DeepSeek Harness/);
   assert.match(client, /channel\.commands\.start/);
-  assert.match(client, /ctx\.remote\.credentials\.set/);
-  assert.match(client, /ctx\.remote\.credentials\.unset/);
-  assert.doesNotMatch(client, /connection\.api/);
+  assert.match(client, /connection\.api\.credentials\.set/);
+  assert.match(client, /connection\.api\.credentials\.unset/);
+  assert.doesNotMatch(client, /remote\.credentials/);
   assert.match(client, /已有值不会回显/);
   assert.match(client, /requiredByEnabled/);
   assert.match(shared, /Harness MCP Client 独立连接和启停 Server/);
@@ -362,26 +362,26 @@ test("client plugin contributes the native settings section and uses Harness cre
   assert.doesNotMatch(client, /localStorage|sessionStorage/);
 });
 
-test("capability settings bind the current Remote credential contract without the removed connection.api", async () => {
+test("capability settings bind the pinned native credential API without requiring newer Remote services", async () => {
   const source = await capabilityClientSource(fileURLToPath(new URL("..", import.meta.url)));
   let plugin;
   runInNewContext(source, {
     __ModuleLoader__: { load: ({ factory }) => { plugin = factory(() => ({ createElement() {} })); } },
   });
-  assert.ok(plugin.inject.includes("remote.credentials"));
+  assert.ok(plugin.inject.includes("connection"));
+  assert.ok(!plugin.inject.some(name => name.startsWith("remote.")));
   const registrations = [];
   const calls = [];
   const metadata = { TEST_REF: { configured: true, writable: true } };
   const credentials = {
-    async describe(refs) { calls.push(["describe", refs]); return { ok: true, value: metadata }; },
-    async set(ref, value) { calls.push(["set", ref, value]); return { ok: true, value: undefined }; },
-    async unset(ref) { calls.push(["unset", ref]); return { ok: false, error: { message: "reference is in use" } }; },
+    async describe({ refs }) { calls.push(["describe", refs]); return { ok: true, value: { credentials: metadata } }; },
+    async set({ ref, value }) { calls.push(["set", ref, value]); return { ok: true, value: undefined }; },
+    async unset({ ref }) { calls.push(["unset", ref]); return { ok: false, error: { message: "reference is in use" } }; },
   };
   plugin.apply({
     effect: (register) => register(),
     locale: { register: () => () => {}, bind: () => (key) => key },
-    get: () => ({ isLoopback: true }),
-    remote: { credentials },
+    get: () => ({ isLoopback: true, api: { credentials } }),
     slots: {
       inject: (name, register) => register(),
       register: (entry) => { registrations.push(entry); return () => {}; },

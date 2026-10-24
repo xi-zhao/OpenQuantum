@@ -1,7 +1,7 @@
 import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
+import { createRequire } from "node:module";
 import { parse } from "acorn";
-import { transform } from "esbuild";
 import { DESKTOP_SOURCE, desktopPackageDirectory } from "./desktop-source.mjs";
 
 // Read literals from the installed source without executing third-party UI code.
@@ -98,11 +98,20 @@ export function extractLocaleRegistrations(source) {
 
 export async function installedLocaleSources(root, { requireDesktop = false } = {}) {
   const base = path.join(root, "node_modules/@deepseek-ai");
-  const entries = (await readdir(base)).filter((name) => name.startsWith("dsh-client-")).sort();
+  const webManifest = path.join(base, "dsh-web-app/package.json");
+  const webRequire = createRequire(webManifest);
+  const web = JSON.parse(await readFile(webManifest, "utf8"));
+  const entries = [...new Set([
+    ...(await readdir(base)).filter(name => name.startsWith("dsh-client-")),
+    ...Object.keys(web.dependencies).filter(name => name.startsWith("@deepseek-ai/dsh-client-")).map(name => name.slice("@deepseek-ai/".length)),
+  ])].sort();
   const sources = {};
   for (const name of entries) {
     let source;
-    try { source = await readFile(path.join(base, name, "lib/client.js"), "utf8"); }
+    try {
+      const manifest = webRequire.resolve(`@deepseek-ai/${name}/package.json`);
+      source = await readFile(path.join(path.dirname(manifest), "lib/client.js"), "utf8");
+    }
     catch (error) { if (error.code === "ENOENT") continue; throw error; }
     let extracted;
     try { extracted = extractLocaleRegistrations(source); }
@@ -118,11 +127,9 @@ export async function installedLocaleSources(root, { requireDesktop = false } = 
     const directory = desktopPackageDirectory(root);
     const manifest = JSON.parse(await readFile(path.join(directory, "package.json"), "utf8"));
     if (manifest.version !== DESKTOP_SOURCE.version) throw new Error("Desktop locale source version differs from the pin.");
-    const source = await readFile(path.join(directory, "src/client/desktop-settings-locales.ts"), "utf8");
-    const { code } = await transform(source, { loader: "ts", format: "esm" });
-    const parsed = staticSource(code);
-    const locales = Object.fromEntries(["en", "zh"].map((id) => [id, parsed.literal({ type: "Identifier", name: id }, parsed.root)]));
-    sources["desktop.settings"] = { package: `dsh-plugin-desktop@${manifest.version}`, ...locales };
+    // Desktop 2.0.0 has no separate desktop-settings locale module. Its
+    // interface uses the matching Harness dictionaries collected above.
+    if (DESKTOP_SOURCE.version !== "2.0.0") throw new Error("Re-audit Desktop locale ownership before upgrading");
     desktopChecked = true;
   } catch (error) {
     if (error.code !== "ENOENT" || requireDesktop) throw error;

@@ -9,7 +9,7 @@ import { compareVersions, DEFAULT_UPDATE_FEED, fetchRelease, MAX_MANIFEST_BYTES,
 import { CHECK_INTERVAL_MS, createUpdateService } from "../src/updates/service.mjs";
 import { createUpdateHandler } from "../runtime/openquantum/web-updates/index.mjs";
 
-const manifest = { name: "openquantum", version: "0.5.0", dependencies: { "@deepseek-ai/dsh": "0.1.5-rc.1" } };
+const manifest = { name: "openquantum", version: "0.5.0", dependencies: { "@deepseek-ai/dsh": "0.1.0-rc.6" } };
 const release = (version = "0.5.0") => buildUpdateManifest({ manifest: { ...manifest, version }, tag: `v${version}`, publishedAt: "2026-09-20T00:00:00Z" });
 const response = (value = release()) => new Response(JSON.stringify(value));
 
@@ -37,7 +37,7 @@ test("compares product SemVer including prereleases, large components and build 
 test("generates deterministic OpenQuantum metadata and rejects mismatched releases", () => {
   assert.deepEqual(release(), release());
   assert.equal(release().version, "0.5.0");
-  assert.equal(release().compatibility.desktop, "2.0.7");
+  assert.equal(release().compatibility.desktop, "2.0.0");
   assert.deepEqual(release().artifacts, []);
   assert.throws(() => buildUpdateManifest({ manifest, tag: "v0.6.0", publishedAt: "2026-09-20" }), /tag/);
   assert.throws(() => release("0.5.0-beta.1"), /stable/);

@@ -20,7 +20,7 @@ await prepareOpenQuantumHarnessHome({ harnessHome, projectRoot });
 
 const child = spawn(
   process.execPath,
-  [harnessBin, "--profile", "web", ...process.argv.slice(2)],
+  [harnessBin, "web", ...process.argv.slice(2)],
   {
     cwd: projectRoot,
     env: {

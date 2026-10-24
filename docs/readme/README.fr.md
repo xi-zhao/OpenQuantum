@@ -2,6 +2,8 @@
 
 <p align="center"><a href="../../README.md">简体中文</a> · <a href="./README.en.md">English</a> · <a href="./README.ja.md">日本語</a> · <a href="./README.ko.md">한국어</a> · <a href="./README.es.md">Español</a> · <a href="./README.fr.md">Français</a> · <a href="./README.de.md">Deutsch</a> · <a href="./README.pt.md">Português</a> · <a href="./README.ru.md">Русский</a> · <a href="./README.ar.md">العربية</a></p>
 
+**À propos de Desktop 0.8.5 :** L’application autonome OpenQuantum pour macOS sur Apple Silicon retrouve l’interface simple de DSH Desktop 2.0.0 / Harness 0.1.0-rc.6. L’interface propose pour le moment le chinois et l’anglais ; les traductions et les README existants sont conservés. Les indications ci-dessous concernant la version 0.8.4 décrivent la version précédente. Consultez le [guide d’installation](../DESKTOP_INSTALLERS.md) pour la procédure actuelle et les limites de la signature. Le plugin Codex publié reste en version 0.8.4.
+
 <p align="center">
   <strong>OpenQuantum — Construisons ensemble une IA de confiance pour la recherche quantique.</strong><br />
   <sub>L’expertise de la recherche quantique réunie dans OpenQuantum</sub>

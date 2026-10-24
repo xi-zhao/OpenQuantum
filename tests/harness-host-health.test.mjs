@@ -110,7 +110,7 @@ test("real production Harness passes anonymous health and authenticated page/RPC
   const base = await listen(reserved);
   await new Promise((resolve) => reserved.close(resolve));
   child = spawn(process.execPath, [
-    "scripts/run-harness.mjs", "--no-open", "--host", "127.0.0.1", "--port", new URL(base).port,
+    "scripts/run-harness.mjs", "--host", "127.0.0.1", "--port", new URL(base).port,
   ], {
     env: {
       ...process.env,

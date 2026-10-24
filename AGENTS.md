@@ -36,16 +36,19 @@ Model 等要求描述 OpenQuantum 产品架构，不要求仓库维护任务都�
 
 ## 产品与架构基线
 
-OpenQuantum 以共享 Skill、Tool implementation 和科学合同为核心，有两个发行入口：Desktop 与 Codex 插件。
-Desktop 保留量子学习通，由 DeepSeek Harness 负责通用 Agent Runtime；Codex 插件使用外层 Codex 的聊天、
-项目、线程、登录和模型，侧边页只配置本插件的 Skill、MCP 连接与 Tool，不携带第二个 app-server 或学习通。
-Codex 打包与设置合同见 `docs/integrations/CODEX_PLUGIN.md`；以下 Harness/Cordis 生命周期规则适用于 Desktop。
+OpenQuantum 的核心产品是可跨宿主使用的量子科研插件：共享 Skill、Tool implementation、MCP Server 与科学合同。
+维护优先级固定为：**共享插件 → Harness 适配 → 品牌/UI**。DSH 与 Codex 是并列宿主；OpenQuantum Desktop
+是 DSH 适配加品牌界面的一种交付形态。桌面版本与外观调整不能迫使共享插件依赖某个宿主。
 
-Desktop 中，量子计算、
-性质预测、案例咨询和通用问答等产品能力由 Agent Preset 组合独立的 Harness Skill 与 Tool Provider；
-Tool 可以由原生 Tool Plugin 注册，或由 MCP Server 暴露后经 Harness MCP Client 注册，必要时再调用
-OpenQuantum Scientific Validator。只有 Tool hook 等 Agent 生命周期行为才在同一 Preset 组合受信任的
-agent-scoped Host Plugin。
+- 共享实现只维护一份，不依赖 DSH/Cordis、Electron、宿主 Session 对象或私有 UI API。
+- 宿主适配器负责 Tool/Skill 注册、权限与凭据映射、协议、生命周期及兼容性；会话、模型和执行循环由宿主拥有。
+- 品牌层统一名称、图标、主题、导航与结果展示。Desktop 默认聚焦对话、工作区、文件、执行、历史与最少设置。
+- 先复用已有深模块，再处理已发生的宿主差异；不为目录整齐搬迁代码，不建立 OpenQuantum 通用 Agent Runtime。
+
+Codex 的发行与设置合同见 `docs/integrations/CODEX_PLUGIN.md`；以下 Harness/Cordis 生命周期规则
+限定于 DSH 适配器。DSH 的 Agent Preset 组合独立 Skill Provider 与 Tool Provider；Tool 可以由原生
+Tool Plugin 注册，或由 MCP Server 暴露后经 Harness MCP Client 注册。只有确实需要 Agent 生命周期
+行为时，才组合受信任的 agent-scoped Host Plugin。
 
 DeepSeek Harness 的“一切皆 Plugin”是运行时装配原则：可组合模块统一通过 Cordis Plugin row 注入、注册
 Interface 并随 scope 回收。Skill、Tool、MCP Server、Validator 等是职责对象；它们说明模块负责什么，

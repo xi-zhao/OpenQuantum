@@ -2,6 +2,8 @@
 
 <p align="center"><strong>OpenQuantum — نبني معًا ذكاءً اصطناعيًا موثوقًا للبحث الكمي.</strong><br /><sub>خبرات البحث الكمي مجتمعة في OpenQuantum واحد</sub></p>
 
+**ملاحظة بشأن Desktop 0.8.5:** يعود تطبيق OpenQuantum المستقل لنظام macOS على Apple Silicon إلى الواجهة البسيطة في DSH Desktop 2.0.0 / Harness 0.1.0-rc.6. تقتصر لغات الواجهة حاليًا على الصينية والإنجليزية، مع الاحتفاظ بالترجمات وملفات README الموجودة. تصف المعلومات الواردة أدناه عن 0.8.4 الإصدار السابق. راجع [دليل التثبيت](../DESKTOP_INSTALLERS.md) لمعرفة خطوات التثبيت الحالية وحدود توقيع التطبيق. يظل الإصدار المنشور من إضافة Codex هو 0.8.4.
+
 <p align="center"><a href="../../README.md">简体中文</a> · <a href="./README.en.md">English</a> · <a href="./README.ja.md">日本語</a> · <a href="./README.ko.md">한국어</a> · <a href="./README.es.md">Español</a> · <a href="./README.fr.md">Français</a> · <a href="./README.de.md">Deutsch</a> · <a href="./README.pt.md">Português</a> · <a href="./README.ru.md">Русский</a> · <a href="./README.ar.md">العربية</a></p>
 
 <p align="center">

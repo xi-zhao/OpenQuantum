@@ -210,7 +210,7 @@ test("installer rejects a downgrade before staging a version or replacing the la
   const stateFile = path.join(f.projectRoot, ".openquantum/desktop-distribution.json");
   const state = await readFile(stateFile, "utf8");
   const packageRoot = path.join(f.root, "older-package");
-  for (const relative of ["scripts/lib/desktop-distribution.mjs", "scripts/lib/harness-home-compatibility.mjs", "scripts/lib/desktop-branding.mjs", "src/updates/release.mjs"]) {
+  for (const relative of ["scripts/lib/desktop-distribution.mjs", "scripts/lib/harness-home-compatibility.mjs", "scripts/lib/desktop-source.mjs", "scripts/lib/desktop-dependencies.mjs", "scripts/lib/desktop-branding.mjs", "src/updates/release.mjs"]) {
     const target = path.join(packageRoot, "openquantum", relative);
     await mkdir(path.dirname(target), { recursive: true });
     await cp(new URL(`../${relative}`, import.meta.url), target);

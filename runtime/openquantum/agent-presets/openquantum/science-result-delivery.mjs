@@ -29,7 +29,7 @@ async function saveResult(ctx, exec, value) {
   if (sandboxPolicy.mode === "read-only") throw new Error("Session is read-only");
   const cwd = session.header.cwd;
   if (typeof cwd !== "string" || !path.isAbsolute(cwd)) throw new Error("A session workspace is required");
-  const call = session.snapshotEvents().findLast(event => event.type === "tool/call"
+  const call = session.events.findLast(event => event.type === "tool/call"
     && event.data.callId === exec.callId && event.data.name === exec.name);
   if (!call) throw new Error("A recorded tool call is required");
   const args = typeof call.data.arguments === "string" ? JSON.parse(call.data.arguments) : call.data.arguments;

@@ -58,7 +58,7 @@ test("Harness discovers all 17 vendor Skills, executes their real SDKs and persi
   }
   await writeFile(presetPath, preset); // isolated test home only; product defaults stay opt-in.
   let logs = "";
-  const child = spawn(process.execPath, [path.join(root, "node_modules/@deepseek-ai/dsh/lib/bin.js"), "web", "--no-open", "--host", "127.0.0.1", "--port", String(port)], {
+  const child = spawn(process.execPath, [path.join(root, "node_modules/@deepseek-ai/dsh/lib/bin.js"), "web", "--host", "127.0.0.1", "--port", String(port)], {
     cwd: root, env: { ...process.env, DSH_HOME: harnessHome, DSH_TELEMETRY_DISABLED: "1", OPENQUANTUM_DISABLE_QISKIT_MCP: "1", OPENQUANTUM_PUBLIC_API_KEY: "local-fixture-only", OPENQUANTUM_PUBLIC_BASE_URL: `http://127.0.0.1:${modelPort}/v1` },
     stdio: ["ignore", "pipe", "pipe"],
   });
@@ -76,18 +76,17 @@ test("Harness discovers all 17 vendor Skills, executes their real SDKs and persi
   let cookie;
   async function rpc(method, payload = {}) {
     cookie ??= await harnessHttpCookie(base, logs);
-    if (method === "session/prompt") payload = { requestId: crypto.randomUUID(), ...payload };
-    const response = await fetch(`${base}/api/${method}`, { method: "POST", headers: { "content-type": "application/json", cookie }, body: JSON.stringify({ type: "client-request", rpcId: crypto.randomUUID(), method, payload: { args: method === "session/modelCatalog" ? {} : { request: payload } } }), signal: AbortSignal.timeout(5000) });
+    const response = await fetch(`${base}/api/${method}`, { method: "POST", headers: { "content-type": "application/json", cookie }, body: JSON.stringify({ type: "client-request", rpcId: crypto.randomUUID(), method, payload }), signal: AbortSignal.timeout(5000) });
     const result = (await response.json()).result;
     assert.equal(result.ok, true, `${JSON.stringify(result)}\n${redactHarnessLaunchTokens(logs)}`);
     return result.value;
   }
-  await waitFor(() => rpc("session/modelCatalog"), "Harness startup");
+  await waitFor(() => rpc("llm.models"), "Harness startup");
   const sessionId = `session-vendor-${crypto.randomUUID()}`;
-  await rpc("session/create", { sessionId, cwd: root, agentPreset: "openquantum" });
-  const skillList = await rpc("skills/list", { sessionId });
+  await rpc("session.create", { sessionId, cwd: root, agentPreset: "openquantum" });
+  const skillList = await rpc("skill.list", { sessionId });
   for (const c of VENDOR_SDK_TOOLS) assert.ok(skillList.skills.some(skill => skill.name === c.id && skill.modelInvocable), c.id);
-  await rpc("session/prompt", { sessionId, mode: "queue", content: [{ type: "text", text: "Run the 17 fixed vendor SDK cases locally and the invalid input, returning actual evidence." }] });
+  await rpc("session.prompt", { sessionId, mode: "queue", content: [{ type: "text", text: "Run the 17 fixed vendor SDK cases locally and the invalid input, returning actual evidence." }] });
   const history = await waitFor(async () => {
     const snapshot = await harnessSessionSnapshot(base, cookie, sessionId, 500);
     return snapshot.records.some((entry) => entry.event?.type === "turn/end") && snapshot;

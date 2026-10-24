@@ -87,7 +87,7 @@ test("Harness discovers the Hamiltonian Skill, runs both open formulas and rerea
   await new Promise(resolve => reserved.close(resolve));
   await prepareOpenQuantumHarnessHome({ projectRoot: root, harnessHome });
   let logs = "";
-  child = spawn(process.execPath, [path.join(root, "node_modules/@deepseek-ai/dsh/lib/bin.js"), "web", "--no-open", "--host", "127.0.0.1", "--port", String(port)], {
+  child = spawn(process.execPath, [path.join(root, "node_modules/@deepseek-ai/dsh/lib/bin.js"), "web", "--host", "127.0.0.1", "--port", String(port)], {
     cwd: root,
     env: {
       ...process.env,
@@ -105,12 +105,11 @@ test("Harness discovers the Hamiltonian Skill, runs both open formulas and rerea
   let cookie;
   async function rpc(method, payload = {}) {
     cookie ??= await harnessHttpCookie(base, logs);
-    if (method === "session/prompt") payload = { requestId: crypto.randomUUID(), ...payload };
     const response = await fetch(`${base}/api/${method}`, {
       method: "POST", headers: { "content-type": "application/json", cookie },
       body: JSON.stringify({
         type: "client-request", rpcId: crypto.randomUUID(), method,
-        payload: { args: method === "session/modelCatalog" ? {} : { request: payload } },
+        payload,
       }),
       signal: AbortSignal.timeout(5000),
     });
@@ -119,12 +118,12 @@ test("Harness discovers the Hamiltonian Skill, runs both open formulas and rerea
     assert.equal(result.ok, true, `${JSON.stringify(result)}\n${redactHarnessLaunchTokens(logs)}`);
     return result.value;
   }
-  await waitFor(() => rpc("session/modelCatalog"), "Harness startup");
+  await waitFor(() => rpc("llm.models"), "Harness startup");
   const sessionId = `session-hamiltonian-${crypto.randomUUID()}`;
-  await rpc("session/create", { sessionId, cwd: root, agentPreset: "openquantum" });
-  const skills = await rpc("skills/list", { sessionId });
+  await rpc("session.create", { sessionId, cwd: root, agentPreset: "openquantum" });
+  const skills = await rpc("skill.list", { sessionId });
   assert.ok(skills.skills.some(skill => skill.name === "hamiltonian-simulation" && skill.modelInvocable));
-  await rpc("session/prompt", {
+  await rpc("session.prompt", {
     sessionId, mode: "queue",
     content: [{ type: "text", text: "Run both fixed Hamiltonian cases and the invalid-order case using their actual Tool results." }],
   });

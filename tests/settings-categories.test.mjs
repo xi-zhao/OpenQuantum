@@ -17,7 +17,7 @@ test("every built-in capability has one display category; unknown entries remain
   const policy = parse(await readFile(path.join(root, ".agents/capability-packages.yml"), "utf8"));
   assert.deepEqual(Object.keys(CAPABILITY_CATEGORY_IDS).sort(), policy.packages.map(item => item.id).sort());
   const allowed = new Set(CAPABILITY_CATEGORIES.map(item => item.id));
-  const labels = JSON.parse(await readFile(path.join(root, "runtime/openquantum/web-locales/openquantum-source.json"), "utf8"))["settings.openquantumCapabilities"];
+  const labels = JSON.parse(await readFile(path.join(root, "src/settings/locales/openquantum-source.json"), "utf8"))["settings.openquantumCapabilities"];
   for (const category of CAPABILITY_CATEGORIES) assert.ok(labels.en[category.title] && labels.zh[category.title]);
   for (const item of policy.packages) {
     assert.ok(allowed.has(capabilityCategory(item.id)), item.id);

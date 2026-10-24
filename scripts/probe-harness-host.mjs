@@ -10,13 +10,13 @@ const cookie = await harnessHttpCookie(baseUrl, output);
 const page = await fetch(baseUrl, { headers: { cookie }, signal: AbortSignal.timeout(5000) });
 assert.equal(page.status, 200);
 assert.match(await page.text(), /<title>OpenQuantum<\/title>/);
-const method = "session/modelCatalog";
+const method = "llm.models";
 const response = await fetch(`${baseUrl}/api/${method}`, {
   method: "POST", headers: { "content-type": "application/json", cookie },
-  body: JSON.stringify({ type: "client-request", rpcId: "host-smoke", method, payload: { args: {} } }),
+  body: JSON.stringify({ type: "client-request", rpcId: "host-smoke", method, payload: {} }),
   signal: AbortSignal.timeout(5000),
 });
-assert.equal(response.status, 200);
+assert.equal(response.status, 200, await response.clone().text());
 assert.equal((await response.json()).result?.ok, true);
 const updates = await fetch(`${baseUrl}/openquantum/api/updates`, {
   method: "POST", headers: { "content-type": "application/json", origin: new URL(baseUrl).origin, cookie },

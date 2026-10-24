@@ -1,19 +1,17 @@
 # OpenQuantum interface languages
 
-The deployment contributes Simplified Chinese (`zh`), English (`en`), Japanese (`ja`), Korean (`ko`), Spanish (`es`), French (`fr`), German (`de`), Portuguese (`pt`), Russian (`ru`) and Arabic (`ar`).
+The pinned Desktop 2.0.0 / Harness 0.1.0-rc.6 interface supports Simplified Chinese (`zh`) and English (`en`). The eight other translation catalogs and all ten README editions remain in the repository; they are not advertised as selectable languages in this baseline.
 
-Select **Settings → General → Language**. Harness owns the selector, active language, settings persistence and rendering subscriptions. This package adds language definitions and dictionaries using the public `locale.addLanguage` and `locale.register` interfaces. It does not edit Harness dependencies or maintain another preference store. Unavailable keys from future plugins fall back to English.
+Select **Settings → General → Language**. Harness owns the selector, active language, settings persistence and rendering subscriptions. This package registers dictionaries only for languages already supported by the pinned runtime, using its public `locale.register` interface. It does not call the later `locale.addLanguage` API. It does not edit Harness dependencies or maintain another preference store. Unavailable keys from future plugins fall back to English.
 
 `languages.json` maps the workbench language IDs to OpenMAIC's regional IDs. The learning iframe follows the Harness selection, and its own language selector sends a bounded selection back to Harness. Both directions require the expected window, exact origin, channel and registered language. Embedded changes do not overwrite the standalone OpenMAIC preference. Document language and writing direction update together; Arabic uses RTL. Technical identifiers, command inputs and code retain LTR direction.
 
-The pinned Desktop's web settings share these dictionaries. Its operating-system menus, recovery dialogs and first-launch wizard currently ship Chinese and English only. An explicit non-Chinese preference uses English for these native dialogs, rather than reverting to the OS's Chinese. The bounded adaptation lives in the separately prepared Desktop presentation package.
-
 ## Catalog maintenance
 
-- `harness-source.json` records the source key contracts of Harness `0.1.5-rc.1` and Desktop `2.0.7` (`5184a2ab7ab197e7405c1053feb324003409a142`). Retain namespace ownership when upgrading.
-- `openquantum-source.json` owns capability settings, messaging channels and the learning launcher. Chinese source phrases remain stable keys for existing settings copy.
+- `harness-source.json` records the source key contracts of Harness `0.1.0-rc.6` and Desktop `2.0.0` (`ee1235e1dd1675bbd6c52cfbe3f27b27bcfcfa81`). Retain namespace ownership when upgrading.
+- `src/settings/locales/openquantum-source.json` owns capability settings, messaging channels and the learning launcher. Chinese source phrases remain stable keys for existing settings copy.
 - `locales/*.json` contains deduplicated translations keyed by English source text. The first edition reuses matching OpenMAIC strings and includes drafts produced with local Argos Translate models; these translations have not received a complete native-speaker review.
-- `translation-review.json` records sequential AI retranslation and semantic review of all 1219 migration phrases plus 59 phrases extracted from the actual pinned Desktop source: 1278 phrases in each of eight languages (10224 translations). The original Argos draft provenance is retained, but those drafts have been replaced. No subagents or external translation provider were used. This is **not human native-speaker certification**, and it does not certify older entries outside this list. Source and translation SHA-256 digests bind the review to the recorded wording.
+- `translation-review.json` records sequential AI retranslation and semantic review of all 1219 migration phrases plus 59 phrases extracted from the actual pinned Desktop source: 1278 phrases in each of eight languages (10224 translations). That historical review is retained alongside the active baseline and 36 additional phrases recovered from 0.1.0-rc.6. The original Argos draft provenance is retained, but those drafts have been replaced. No subagents or external translation provider were used. This is **not human native-speaker certification**, and it does not certify older entries outside this list. Source and translation SHA-256 digests bind the review to the recorded wording.
 - `reviewed.json` overrides frequent navigation, settings, learning labels and full-access confirmation copy. Review terminology and sentence meaning as well as syntax when changing translations. The homepage taglines live with the canonical brand identity.
 - `licenses/` retains upstream MIT notices for reused source dictionaries and translations. Translation models and the local translation environment are not distributed and are not runtime dependencies.
 
@@ -23,7 +21,7 @@ Run `node --test tests/ui-locales.test.mjs` for catalog/placeholder coverage, th
 
 ### Routine changes and upstream upgrades
 
-1. Add application copy to `openquantum-source.json` in both source languages and call it through the owned namespace. Preserve existing keys when only wording changes; use descriptive keys for new modules. Do not put language branches into components.
+1. Add application copy to `src/settings/locales/openquantum-source.json` in both source languages and call it through the owned namespace. Preserve existing keys when only wording changes; use descriptive keys for new modules. Do not put language branches into components.
 2. Update the English-phrase entries in each `locales/<id>.json`. Check `reviewed.json` for an override: it takes precedence and is the place to maintain those reviewed phrases. Do not mark untranslated English as a completed translation; keep proper names unchanged.
    For a phrase in `translation-review.json`, re-read its source context, review all affected wording and update the corresponding digest after review, not as an automatic way to silence a test. Check referenced labels against the effective dictionary, including overrides. External plugin labels may remain English; retain their actual name in translated instructions.
 3. Run `npm run locales:check`. It compares every installed Harness client locale registration against the source snapshot, then checks language/key coverage, named interpolation parameters, README links and startup commands, persisted switching and iframe boundaries. It is part of `npm run check`, so CI checks it on every pull request.
