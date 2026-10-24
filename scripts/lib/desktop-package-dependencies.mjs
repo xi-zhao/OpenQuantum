@@ -1,6 +1,17 @@
-import { cp, mkdir, readFile } from "node:fs/promises";
+import { cp, mkdir, readFile, writeFile } from "node:fs/promises";
 import { createRequire } from "node:module";
 import path from "node:path";
+
+// The official signer uses unbounded async fs.open calls when discovering
+// binaries. Apply its already-locked graceful-fs dependency at the builder's
+// process entry point, before the signer captures fs.open. This generated
+// preload stays outside the application and never runs in the shipped Desktop.
+export async function writeDesktopBuilderPreload(upstream, directory) {
+  const require = createRequire(path.join(upstream, "package.json"));
+  const preload = path.join(directory, "desktop-builder-fs.cjs");
+  await writeFile(preload, `require(${JSON.stringify(require.resolve("graceful-fs"))}).gracefulify(require("node:fs"));\n`);
+  return preload;
+}
 
 /** Materialize the pinned Yarn workspace's production closure for the packager.
  * npm list against a symlinked Yarn node_modules loses optional native modules.

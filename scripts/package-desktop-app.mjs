@@ -6,7 +6,7 @@ import { createRequire } from "node:module";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { DESKTOP_SOURCE, requireDesktopBuild } from "./lib/desktop-source.mjs";
-import { copyDesktopProductionDependencies } from "./lib/desktop-package-dependencies.mjs";
+import { copyDesktopProductionDependencies, writeDesktopBuilderPreload } from "./lib/desktop-package-dependencies.mjs";
 import { checkReleaseVersions } from "./lib/release-version.mjs";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
@@ -102,7 +102,8 @@ export default async function verifyFinalFuses(result) {
 `);
 const configPath = path.join(stage, "electron-builder.json");
 await writeFile(configPath, JSON.stringify(config, null, 2));
-await run(process.execPath, [require.resolve("electron-builder/cli.js"), "--projectDir", application, "--config", configPath,
+const preload = await writeDesktopBuilderPreload(upstream, stage);
+await run(process.execPath, ["--require", preload, require.resolve("electron-builder/cli.js"), "--projectDir", application, "--config", configPath,
   "--mac", `--${process.arch}`, "--publish", "never"], application);
 const checksums = [];
 for (const name of (await readdir(output)).filter(name => name === `OpenQuantum-${manifest.version}-macOS-${process.arch}.dmg`)) {

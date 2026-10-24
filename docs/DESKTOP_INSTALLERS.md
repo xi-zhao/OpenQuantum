@@ -80,6 +80,7 @@ npm run desktop:package:check
 npm run desktop:package       # 只构建 OpenQuantum 能力包
 npm run desktop:package:smoke
 # 独立 macOS 应用：输出目录应位于容量充足的构建盘
+npm run desktop:app:signing:check # 低文件上限下验证官方签名扫描完整性
 npm run desktop:app:package -- --output /absolute/build-directory
 npm run desktop:app:smoke -- /absolute/build-directory/artifacts/mac-arm64/OpenQuantum.app /absolute/evidence-directory
 ```
