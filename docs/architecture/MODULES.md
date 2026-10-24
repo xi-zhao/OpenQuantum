@@ -1,7 +1,7 @@
 # OpenQuantum 模块地图与演进契约
 
 - 状态：当前模块边界
-- 日期：2026-08-29
+- 日期：2026-10-25
 - 适用范围：新增能力、接入 SDK 或 MCP Server、修改设置、升级 Harness、增加科研验收
 
 先读[文档与架构入口](../README.md)获得五分钟总览；本文件只负责长期模块 Interface、允许的依赖方向和
@@ -26,6 +26,25 @@ Skill、Tool Provider，以及确有 Harness hook 需求的 agent-scoped Host Pl
 
 以上对象按职责划分；它们进入 DSH Runtime 时统一由 Cordis Plugin row 装配。Cordis Plugin 是依赖注入、
 Interface 注册和生命周期机制，Skill、Tool、Validator 等是职责模型。技术容器统一不等于业务职责可以混合。
+
+## 维护优先级与宿主边界
+
+1. **共享插件优先。** `.agents/skills/`、`src/capabilities/` 和科学合同拥有领域方法、输入输出、副作用及验证规则。
+   同一 Tool 在不同宿主复用同一实现；不能导入 `runtime/`、DSH/Cordis 或 Electron。
+2. **适配真实宿主。** `runtime/openquantum/` 将共享内容接入 DSH；`runtime/chatgpt/` 将其接入 Codex。
+   Adapter 拥有注册、协议、凭据映射、宿主生命周期和版本兼容；不复制量子算法，不伪造当前宿主未提供的能力。
+3. **固定品牌与展示。** `packages/openquantum-web-branding/` 和宿主 UI Adapter 复用同一品牌资产。
+   DSH 2.0.0 的装饰图标选择器集中在 `dsh-0.1.0.mjs`，由 `tapIndex` 注入；保留原 React 节点和交互。
+   Codex 使用其允许的扩展面；统一品牌和信息表达不意味着重写所有宿主界面。
+
+共享展示目录由 `src/settings/component-directory.mjs` 从能力声明与 Skill 元数据读取；中文和英文产品文案
+统一存放于 `src/settings/locales/openquantum-source.json`。目录不读取 Desktop preset、用户 Home、连接地址或密钥，
+也不拥有启停状态。DSH 的设置写入继续归属 Project Settings Interface，Codex 的配置归属自己的 Application Interface。
+
+本轮不增加新的包管理层或统一 Runtime，也不改变现有产品版本同步规则。新增宿主必须先复用共享工具合同，
+再提供该宿主的注册和失败路径检查；桌面升级另做 UI、配置/会话兼容和实际安装验证。
+`tests/plugin-boundaries.test.mjs` 检查共享执行入口的静态模块图；`tests/component-parity.test.mjs`
+验证目录内容一致，并在没有任何 DSH runtime/preset 的目录中构建。两者不替代真实宿主验收。
 
 ## 2. 核心对象
 

@@ -37,11 +37,9 @@ const dependencySecurity = await installDesktopDependencies(directory, () =>
   run("corepack", ["yarn", "install"], directory, { YARN_ENABLE_IMMUTABLE_INSTALLS: "false" }),
 );
 await verifyDesktopDependencySecurity(directory, dependencySecurity);
-await run("corepack", ["yarn", "workspace", "dsh-community-market", "build"]);
 await run("corepack", ["yarn", "workspace", "dsh-plugin-desktop", "build"]);
 const packageRoot = desktopPackageDirectory(root);
 // Upstream disables dependency hooks and exposes native setup explicitly.
 await run(process.execPath, [path.join(packageRoot, "node_modules/electron/install.js")]);
-await run("corepack", ["yarn", "workspace", "dsh-plugin-desktop", "prepare:electron-native"]);
 await writeFile(path.join(directory, ".openquantum-build.json"), JSON.stringify({ ...DESKTOP_SOURCE, dependencySecurity }, null, 2));
 console.log(`DSH Desktop ready: ${DESKTOP_SOURCE.version} (${DESKTOP_SOURCE.revision.slice(0, 12)}); upstream app code unchanged, security-patched dependencies.`);

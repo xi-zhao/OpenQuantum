@@ -69,9 +69,9 @@ npm run desktop -- --source
 设置、Skill、MCP 与 Validator；Desktop 只增加窗口、托盘、终端和原生通知。
 
 Web 和 Desktop 共用 `.openquantum/dsh`。两种启动方式用于访问同一份本地配置和 Session 状态，不应同时
-运行；从 Web 切换到 Desktop 前先停止 `npm run dev`。当前固定第三方 Desktop `2.0.7` 源码提交 `5184a2ab7ab1`，
-与 Harness `0.1.5-rc.1` 配套。不要只替换其中一个版本，也不要使用上游 `latest` 自动升级。
-恢复范围和数据保护见 [2.0.7 兼容基线恢复](releases/2026-10-24-desktop-2.0.7.md)。
+运行；从 Web 切换到 Desktop 前先停止 `npm run dev`。当前固定第三方 Desktop `2.0.0` 源码提交 `ee1235e1dd16`，
+与 Harness `0.1.0-rc.6` 配套。不要只替换其中一个版本，也不要使用上游 `latest` 自动升级。
+恢复范围和数据保护见 [2.0.7 兼容基线恢复](releases/v0.8.5.md)。
 
 旧版继续使用原有 `settings.yaml` 和 V3 会话。已经由新版写入 V4 会话或 profile 设置的 Home 会在任何准备写入前
 被拒绝；不会降写、删除会话或反向覆盖设置。请保留整个新版 Home，另设空目录供旧版使用，或选择原有未升级的 Home。

@@ -8,7 +8,7 @@ import { existsSync } from "node:fs";
 import { createRequire, findPackageJSON } from "node:module";
 
 import {
-  composeEntries,
+  composeEntries, initProfile, PROFILE_TEMPLATES,
   loadOverlayPatches,
 } from "@deepseek-ai/dsh-app-boot";
 import { DESKTOP_SOURCE, desktopPackageDirectory } from "../scripts/lib/desktop-source.mjs";
@@ -38,7 +38,6 @@ test("pins a Desktop source build for the same Harness family", async () => {
 
 test("composes the Desktop shell around the OpenQuantum Harness home", { skip: !desktopBuilt }, async (t) => {
   const { prepareDesktopProfile } = await import(pathToFileURL(path.join(desktopRoot, "lib/profile.js")));
-  const { createDesktopWebProfile } = await import(pathToFileURL(path.join(desktopRoot, "lib/profile-manager.js")));
   const { installProfilePackageResolver } = await import(pathToFileURL(path.join(desktopRoot, "lib/module-resolution.js")));
   const desktopManifest = JSON.parse(await readFile(path.join(desktopRoot, "package.json"), "utf8"));
   assert.equal(desktopManifest.version, DESKTOP_SOURCE.version);
@@ -48,7 +47,7 @@ test("composes the Desktop shell around the OpenQuantum Harness home", { skip: !
   );
   const harnessHome = path.join(sandboxRoot, "dsh");
   t.after(() => rm(sandboxRoot, { recursive: true, force: true }));
-  createDesktopWebProfile(harnessHome, "existing");
+  initProfile(path.join(harnessHome, "profiles/existing"), PROFILE_TEMPLATES.web);
   const nativePatchFile = path.join(harnessHome, "profiles/existing/cordis.patch.yml");
   const nativePatch = '# native user preference\n- id: agent-default-model\n  config:\n    provider: user-local\n    model: user-model\n';
   await writeFile(nativePatchFile, nativePatch);
@@ -98,7 +97,7 @@ test("composes the Desktop shell around the OpenQuantum Harness home", { skip: !
   assert.equal(rows.get("llm-deepseek")?.disabled, true);
   assert.equal(rows.get("llm-pi-ai")?.disabled, true);
   for (const id of ["desktop-updates", "desktop-profiles", "desktop-diagnostics", "ui-cordis", "ui-agent-preset", "ui-settings-general", "ui-settings-plugin-inventory", "ui-settings-plugins", "openquantum-web-learning"]) {
-    assert.equal(rows.get(id)?.disabled, true, `${id} is outside the minimal Desktop surface`);
+    assert.ok(!rows.has(id) || rows.get(id).disabled === true, `${id} is outside the minimal Desktop surface`);
   }
   for (const id of ["ui-chat", "ui-approval", "ui-workspace", "ui-settings-models", "ui-sidebar-files", "ui-deliverables"]) {
     assert.notEqual(rows.get(id)?.disabled, true, `${id} remains available`);
@@ -130,7 +129,7 @@ test("composes the Desktop shell around the OpenQuantum Harness home", { skip: !
   assert.equal(rows.get("agent-default-model")?.config?.provider, "");
   assert.equal(rows.get("agent-default-model")?.config?.model, "");
 
-  createDesktopWebProfile(harnessHome, "fresh");
+  initProfile(path.join(harnessHome, "profiles/fresh"), PROFILE_TEMPLATES.web);
   for (const name of ["existing", "fresh"]) {
     const native = prepareDesktopProfile("1", harnessHome, process.platform, name);
     const entries = composeEntries([native.patches]);
@@ -162,7 +161,7 @@ test("registers extensions without changing upstream Desktop files", { skip: !de
   assert.deepEqual(Object.keys(manifest.dependencies).filter(name => name.startsWith("@openquantum/")).sort(), [
     "@openquantum/harness-capability-host", "@openquantum/harness-desktop-profile",
     "@openquantum/harness-web-branding", "@openquantum/harness-web-capabilities",
-    "@openquantum/harness-web-learning", "@openquantum/harness-web-locales", "@openquantum/harness-web-updates",
+    "@openquantum/harness-web-learning", "@openquantum/harness-web-locales", "@openquantum/harness-web-security", "@openquantum/harness-web-updates",
   ].sort());
   assert.equal(manifest.dsh.profile.bundles.filter(name => name === DESKTOP_PROFILE_BUNDLE).length, 1);
   assert.ok(!manifest.dsh.profile.bundles.includes("@openquantum/harness-web-branding"));

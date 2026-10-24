@@ -22,7 +22,7 @@ async function setup(t, value = scienceResultFixture()) {
   const fileSystem = new LocalFileSystem(new Context(), { cwd: workspaceRoot, diffBasisMaxBytes: 1024 * 1024 });
   const event = { type: "tool/call", seq: 4, data: { name: TOOL, callId: "call-a", arguments: JSON.stringify(value.input) } };
   const exec = { name: TOOL, callId: "call-a", arguments: value.input, signal: new AbortController().signal,
-    agent: { session: { id: "session-a", header: { cwd: workspaceRoot }, snapshotEvents: () => [event] } } };
+    agent: { session: { id: "session-a", header: { cwd: workspaceRoot }, events: [event] } } };
   const response = scienceToolResponse(value);
   const result = { value: response, content: response.content, isError: false };
   let listener;
@@ -119,17 +119,13 @@ test("errors, nested calls, foreign/read-only Tools, invalid provenance and chan
 test("the real Harness sandbox honors a read-only session override without granting write access", async t => {
   const f = await setup(t);
   const context = new Context();
-  let sessionMode = "read-only";
-  context.provide("sessionProjections", { register: () => {}, stateOf: session => {
-    assert.equal(session, f.exec.agent.session);
-    return sessionMode;
-  } });
+  f.exec.agent.session.events.unshift({ type: "sandbox/mode", data: { mode: "read-only" } });
   f.ctx.sandboxPolicy = new SandboxPolicyService(context, { mode: "workspace-write", workspaceRoot: f.workspaceRoot });
   f.ctx.fs = new SandboxedFileSystem(context, { cwd: f.workspaceRoot, diffBasisMaxBytes: 1024 * 1024 });
   const denied = await f.run();
   assert.deepEqual(denied.content[0], f.result.content[0]);
   assert.deepEqual(await readdir(f.workspaceRoot), []);
-  sessionMode = "workspace-write";
+  f.exec.agent.session.events.push({ type: "sandbox/mode", data: { mode: "workspace-write" } });
   const delivered = JSON.parse((await f.run()).content[0].text);
   assert.equal(delivered.kind, "openquantum-science-summary");
   assert.deepEqual(JSON.parse(await readFile(path.join(f.workspaceRoot, delivered.fullResult.path), "utf8")), f.result.value.structuredContent);
@@ -138,7 +134,7 @@ test("the real Harness sandbox honors a read-only session override without grant
 for (const failure of ["missing-call", "arguments", "cancelled", "write", "readback", "collision", "escape"]) {
   test(`delivery failure (${failure}) retains the complete result and never claims successful storage`, async t => {
     const f = await setup(t);
-    if (failure === "missing-call") f.exec.agent.session.snapshotEvents = () => [];
+    if (failure === "missing-call") f.exec.agent.session.events = [];
     if (failure === "arguments") f.event.data.arguments = "{}";
     if (failure === "cancelled") f.exec.signal = AbortSignal.abort();
     if (failure === "write") f.ctx.fs.writeText = async () => { throw new Error("Disk full"); };

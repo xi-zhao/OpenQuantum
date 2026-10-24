@@ -74,7 +74,7 @@ test("Harness discovers Pasqal, executes the real offline pipeline and Pulser To
   const modelPort = await listen(model);
   const reserved = createServer(), port = await listen(reserved); await new Promise(resolve => reserved.close(resolve));
   await prepareOpenQuantumHarnessHome({ projectRoot: root, harnessHome });
-  child = spawn(process.execPath, [path.join(root, "node_modules/@deepseek-ai/dsh/lib/bin.js"), "web", "--no-open", "--host", "127.0.0.1", "--port", String(port)], {
+  child = spawn(process.execPath, [path.join(root, "node_modules/@deepseek-ai/dsh/lib/bin.js"), "web", "--host", "127.0.0.1", "--port", String(port)], {
     cwd: root, env: { ...process.env, DSH_HOME: harnessHome, DSH_TELEMETRY_DISABLED: "1", OPENQUANTUM_DISABLE_QISKIT_MCP: "1", OPENQUANTUM_PUBLIC_API_KEY: "local-fixture-only", OPENQUANTUM_PUBLIC_BASE_URL: `http://127.0.0.1:${modelPort}/v1` },
     stdio: ["ignore", "pipe", "pipe"],
   });
@@ -83,19 +83,18 @@ test("Harness discovers Pasqal, executes the real offline pipeline and Pulser To
   let cookie;
   async function rpc(method, payload = {}) {
     cookie ??= await harnessHttpCookie(base, logs);
-    if (method === "session/prompt") payload = { requestId: crypto.randomUUID(), ...payload };
     const response = await fetch(`${base}/api/${method}`, { method: "POST", headers: { "content-type": "application/json", cookie },
-      body: JSON.stringify({ type: "client-request", rpcId: crypto.randomUUID(), method, payload: { args: method === "session/modelCatalog" ? {} : { request: payload } } }), signal: AbortSignal.timeout(method === "session/create" ? 30000 : 5000) });
+      body: JSON.stringify({ type: "client-request", rpcId: crypto.randomUUID(), method, payload }), signal: AbortSignal.timeout(method === "session.create" ? 30000 : 5000) });
     const result = (await response.json()).result;
     assert.equal(result.ok, true, `${JSON.stringify(result)}\n${redactHarnessLaunchTokens(logs)}`);
     return result.value;
   }
-  await waitFor(() => rpc("session/modelCatalog"), "Harness startup");
+  await waitFor(() => rpc("llm.models"), "Harness startup");
   const sessionId = `session-pasqal-${crypto.randomUUID()}`;
-  await rpc("session/create", { sessionId, cwd: root, agentPreset: "openquantum" });
-  const catalog = await rpc("skills/list", { sessionId });
+  await rpc("session.create", { sessionId, cwd: root, agentPreset: "openquantum" });
+  const catalog = await rpc("skill.list", { sessionId });
   assert.ok(catalog.skills.some(skill => skill.name === "pasqal-experiments" && skill.modelInvocable));
-  await rpc("session/prompt", { sessionId, mode: "queue", content: [{ type: "text", text: "Run the local Pasqal fixture pipeline and Pulser regression, preserving actual results and the rejected input." }] });
+  await rpc("session.prompt", { sessionId, mode: "queue", content: [{ type: "text", text: "Run the local Pasqal fixture pipeline and Pulser regression, preserving actual results and the rejected input." }] });
   const history = await waitFor(async () => {
     const data = await harnessSessionSnapshot(base, cookie, sessionId, 400);
     return data.records.some(row => row.event?.type === "turn/end") && data;

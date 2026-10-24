@@ -6,13 +6,10 @@ export function apply(ctx) {
   // remain owned by Harness. A language pack contributes only catalog entries.
   ctx.effect(() => {
     const dispose = [];
-    for (const language of languages) {
+    for (const language of languages.filter(({ id }) => ctx.locale.getSnapshot().locales.some(locale => locale.id === id))) {
       for (const [namespace, dictionary] of Object.entries(dictionariesFor(language.id))) {
         dispose.push(ctx.locale.register(namespace, language.id, dictionary));
       }
-    }
-    for (const language of languages.filter(({ id }) => !["zh", "en"].includes(id))) {
-      dispose.push(ctx.locale.addLanguage({ id: language.id, label: language.label, fallback: "en" }));
     }
     const root = document.documentElement;
     const previousDirection = root.getAttribute("dir");

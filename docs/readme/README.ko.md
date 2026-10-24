@@ -2,6 +2,8 @@
 
 <p align="center"><strong>OpenQuantum — 함께 만드는 신뢰할 수 있는 양자 연구 AI.</strong><br /><sub>양자 연구의 전문 지식을 하나의 OpenQuantum에</sub></p>
 
+**Desktop 0.8.5 안내:** macOS Apple Silicon용 독립 OpenQuantum 앱은 DSH Desktop 2.0.0 / Harness 0.1.0-rc.6의 간결한 사용 환경으로 돌아갑니다. 화면 언어는 우선 중국어와 영어만 지원하며, 기존 번역과 README는 보존합니다. 아래의 0.8.4 설명은 이전 릴리스에 관한 기록입니다. 최신 설치 방법과 서명 관련 제약은 [설치 안내](../DESKTOP_INSTALLERS.md)를 확인하세요. 공개된 Codex 플러그인 버전은 0.8.4입니다.
+
 <p align="center"><a href="../../README.md">简体中文</a> · <a href="./README.en.md">English</a> · <a href="./README.ja.md">日本語</a> · <a href="./README.ko.md">한국어</a> · <a href="./README.es.md">Español</a> · <a href="./README.fr.md">Français</a> · <a href="./README.de.md">Deutsch</a> · <a href="./README.pt.md">Português</a> · <a href="./README.ru.md">Русский</a> · <a href="./README.ar.md">العربية</a></p>
 
 <p align="center">

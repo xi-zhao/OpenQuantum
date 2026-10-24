@@ -2,11 +2,13 @@ import { cp, lstat, mkdir, readFile, readdir, rm, symlink, writeFile } from "nod
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import path from "node:path";
-import { initProfile, PROFILE_TEMPLATES } from "@deepseek-ai/dsh-app-boot";
+import { writeFileAtomic } from "@deepseek-ai/dsh-atomic-write";
+import { healProfilesModuleFallback, initProfile, PROFILE_TEMPLATES } from "@deepseek-ai/dsh-app-boot";
 import { buildLearningClient } from "./build-learning-client.mjs";
 import { buildLocaleClient } from "./build-locale-client.mjs";
 import { buildCapabilityClient } from "./build-capability-client.mjs";
 import { productUiOverlay } from "./product-ui-policy.mjs";
+import { migrateDesktopCredentials } from "./desktop-credential-migration.mjs";
 import { assertCompatibleHarnessHome } from "./harness-home-compatibility.mjs";
 import { migrateDesktopPreparation } from "./desktop-preparation-migration.mjs";
 import { desktopPreset } from "./desktop-profile-config.mjs";
@@ -17,6 +19,7 @@ import { desktopModelRoutes, desktopModelDefault, clearRemovedDesktopModelSelect
 import { DESKTOP_PROFILE_BUNDLE, DESKTOP_PROFILE_DIRECTORY, DESKTOP_PROFILE_PATCH, desktopHomePatchMigration, desktopProfileManifest } from "./desktop-profile-bundle.mjs";
 
 const extensions = {
+  security: ["packages/openquantum-web-security", "harness-web-security"],
   capabilityHost: ["runtime/openquantum/capability-host", "harness-capability-host"],
   branding: ["packages/openquantum-web-branding", "harness-web-branding"],
   capabilities: ["runtime/openquantum/web-capabilities", "harness-web-capabilities"],
@@ -50,12 +53,19 @@ export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot, 
     await preflightTree(extensionRoot);
   }
   await assertCompatibleHarnessHome(harnessHome);
+  const credentialMigration = desktop ? await migrateDesktopCredentials(harnessHome) : undefined;
+  // 0.1.0 has no shipped ACP profile. Reuse its official base bundle and
+  // apply the explicit transport overlay at launch; never replace user edits.
+  if (!desktop) {
+    initProfile(path.join(harnessHome, "profiles/acp"), ["@deepseek-ai/dsh-base"]);
+    healProfilesModuleFallback(path.join(projectRoot, "package.json"), harnessHome);
+  }
   const migration = desktop ? await desktopHomePatchMigration(harnessHome, legacyHomeFiles) : new Map();
   if (desktop) await migrateDesktopPreparation(projectRoot, harnessHome);
   const result = {};
   const marker = JSON.stringify({ projectRoot: path.resolve(projectRoot), nodeExecutable: process.execPath });
   await mkdir(path.join(projectRoot, ".openquantum"), { recursive: true });
-  await writeFile(path.join(projectRoot, ".openquantum/runtime.json"), marker);
+  await writeFileAtomic(path.join(projectRoot, ".openquantum/runtime.json"), marker, { mode: 0o600, dirMode: 0o700 });
   // This module is a deployment locator, not a runtime or lifecycle hook.
   for (const directory of [harnessHome, extensionRoot]) {
     await mkdir(directory, { recursive: true });
@@ -79,7 +89,7 @@ export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot, 
     await writeFile(path.join(bundleDirectory, "package.json"), JSON.stringify({
       name: DESKTOP_PROFILE_BUNDLE, version, private: true, type: "module", dsh: { bundle: { patch: "./cordis.patch.yml" } },
     }, null, 2));
-    initProfile(profile, PROFILE_TEMPLATES.web.bundles, PROFILE_TEMPLATES.web.patchReload);
+    initProfile(profile, PROFILE_TEMPLATES.web);
     const manifest = JSON.parse(await readFile(path.join(profile, "package.json"), "utf8"));
     const packages = Object.values(extensions).map(([, name]) => ({
       name: `@openquantum/${name}`, spec: `link:${path.join(extensionRoot, name).replaceAll("\\", "/")}`,
@@ -111,7 +121,10 @@ export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot, 
   }
   const patchRelative = desktop ? DESKTOP_PROFILE_PATCH : "cordis.patch.yml";
   const files = new Map([...migration, [patchRelative, `${effectivePatch}\n${uiPatch}`]]);
-  if (!desktop) files.set(routeFile, modelRoutes);
+  if (!desktop) {
+    files.set(routeFile, modelRoutes);
+    files.set("profiles/acp/openquantum-ready.mjs", await readFile(path.join(projectRoot, "runtime/openquantum/cc-connect/ready.mjs")));
+  }
   async function presetFiles(source, relative) {
     for (const entry of await readdir(source, { withFileTypes: true })) {
       if (entry.name === "node_modules") continue;
@@ -154,7 +167,7 @@ export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot, 
   if (existing && !existing.isSymbolicLink()) throw new Error("Refusing to replace unmanaged preset node_modules");
   if (existing) await rm(presetNodeModulesTarget);
   await symlink(path.join(projectRoot, "node_modules"), presetNodeModulesTarget, process.platform === "win32" ? "junction" : "dir");
-  return { ...result, presetTarget, presetNodeModulesTarget,
+  return { ...result, credentialMigration, presetTarget, presetNodeModulesTarget,
     modelRoutesTarget: path.join(harnessHome, "profiles/model-routes.cordis.yml"),
     patchTarget: path.join(harnessHome, patchRelative),
     learningPresetTarget: path.join(harnessHome, ".agent-presets/quantum-learning"),

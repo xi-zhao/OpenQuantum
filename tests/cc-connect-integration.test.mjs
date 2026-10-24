@@ -40,23 +40,18 @@ async function availablePort() {
 }
 
 async function startOpenAiCompletionServer() {
-  let resolveRequest;
-  let rejectRequest;
-  const request = new Promise((resolve, reject) => {
-    resolveRequest = resolve;
-    rejectRequest = reject;
-  });
+  const requests = [];
   const server = createServer((incoming, response) => {
     let body = "";
     incoming.setEncoding("utf8");
     incoming.on("data", (chunk) => {
       body += chunk;
     });
-    incoming.on("error", rejectRequest);
+    incoming.on("error", () => response.destroy());
     incoming.on("end", () => {
       try {
         const parsed = JSON.parse(body);
-        resolveRequest({
+        requests.push({
           authorization: incoming.headers.authorization,
           body: parsed,
           method: incoming.method,
@@ -91,8 +86,7 @@ async function startOpenAiCompletionServer() {
           },
         })}\n\n`);
         response.end("data: [DONE]\n\n");
-      } catch (error) {
-        rejectRequest(error);
+      } catch {
         response.writeHead(400, { "content-type": "application/json" });
         response.end(JSON.stringify({ error: { message: "invalid test request" } }));
       }
@@ -107,7 +101,7 @@ async function startOpenAiCompletionServer() {
   assert.equal(typeof address, "object");
   return {
     baseURL: `http://127.0.0.1:${address.port}/v1`,
-    request,
+    requests,
     async close() {
       await new Promise((resolve, reject) => {
         server.close((error) => error ? reject(error) : resolve());
@@ -301,7 +295,7 @@ test("CC Connect ACP shares model composition and deployment defaults", () => {
     { provider: acpAgent?.config?.provider, model: acpAgent?.config?.model },
     deploymentDefault,
   );
-  assert.match(acpById.get("system-prompt").config.personaPrefix, /trusted Acceptance Report or Result Commit/);
+  assert.match(acpById.get("system-prompt").config.persona, /trusted Acceptance Report or Result Commit/);
 
   assert.deepEqual(acpById.get("settings")?.config?.dshHome, acpById.get("credentials")?.config?.dshHome);
   assert.equal(acpById.get("llm-deepseek")?.disabled, true);
@@ -379,7 +373,10 @@ test("OpenQuantum ACP uses the shared settings.yaml model route override", { tim
       prompt: [{ type: "text", text: "Reply with one short confirmation." }],
     });
     assert.equal(prompt.stopReason, "end_turn");
-    const modelRequest = await modelServer.request;
+    // The native title generator also uses this endpoint and may arrive first.
+    // Check the Agent request, whose Tool surface is part of this contract.
+    const modelRequest = modelServer.requests.find(request => Array.isArray(request.body.tools));
+    assert.ok(modelRequest, "The Agent request must expose its registered Tools");
     assert.equal(modelRequest.method, "POST");
     assert.equal(modelRequest.url, "/v1/chat/completions");
     assert.equal(modelRequest.body.model, "kimi-k2.7-code");

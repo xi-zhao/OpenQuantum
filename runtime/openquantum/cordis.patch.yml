@@ -1,3 +1,17 @@
+# Keep the original 2.0.0 carrier; route producers wait for its access guard.
+- insert:
+    - id: openquantum-web-security
+      name: '@openquantum/harness-web-security'
+
+- id: web-runtime
+  inject: [webStartup, openquantumWebSecurity]
+- id: modules
+  inject: [openquantumWebSecurity]
+- id: client-hmr
+  inject: [openquantumWebSecurity]
+- id: connection
+  inject: [webRuntime, openquantumWebSecurity]
+
 # OpenQuantum deployment composition for DeepSeek Harness.
 # Secrets stay behind apiKeyEnv references and are resolved per request.
 
@@ -32,19 +46,19 @@
 - insert:
     - id: openquantum-web-locales
       name: '@openquantum/harness-web-locales'
-      inject: [webServer]
+      inject: [webServer, openquantumWebSecurity]
     - id: openquantum-web-branding
       name: '@openquantum/harness-web-branding'
-      inject: [webServer]
+      inject: [webServer, openquantumWebSecurity]
     - id: openquantum-web-capabilities
       name: '@openquantum/harness-web-capabilities'
-      inject: [webServer, connection, credentials, skills, tools, llm]
+      inject: [openquantumWebSecurity, webServer, connection, credentials, skills, tools, llm]
     - id: openquantum-web-learning
       name: '@openquantum/harness-web-learning'
-      inject: [webServer, connection, llm, agentDefaultModel, attachments]
+      inject: [openquantumWebSecurity, webServer, connection, llm, agentDefaultModel, attachments]
     - id: openquantum-web-updates
       name: '@openquantum/harness-web-updates'
-      inject: [webServer, connection]
+      inject: [openquantumWebSecurity, webServer, connection]
 
 # Profile roots live at $DSH_HOME/profiles/<profile>/cordis.yml; the fragment
 # is materialized beside them so its plugins resolve through the profile's

@@ -181,7 +181,7 @@ export function createRuntimeReadinessHandler({
 }
 
 export function apply(ctx, { channels = true, adaptive = false } = {}) {
-  const requestRejection = (request) => ctx.connection.requestRejection(request);
+  const requestRejection = (request) => ctx.openquantumWebSecurity ? ctx.openquantumWebSecurity.requestRejection(request) : ctx.connection.requestRejection(request);
   if (!channels) ctx.effect(() => ctx.webServer.tapIndex(html => html.replace("</head>", '<meta name="openquantum-channels" content="disabled" />\n</head>')), "openquantum: capability navigation");
   const capabilityHandler = createCapabilitySettingsHandler({
     requestRejection,

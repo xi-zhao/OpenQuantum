@@ -5,6 +5,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { promisify } from "node:util";
+import { parse } from "yaml";
 import { DESKTOP_MODEL_ROUTES } from "./lib/desktop-profile-bundle.mjs";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
@@ -54,12 +55,21 @@ for (const [relative, contents] of retainedState) {
   await writeFile(filename, contents, { mode: 0o600 });
 }
 await install();
-for (const [relative, contents] of retainedState) assert.equal(await readFile(path.join(home, relative), "utf8"), contents, relative);
+for (const [relative, contents] of retainedState) {
+  const installed = await readFile(path.join(home, relative), "utf8");
+  if (relative === ".credentials.yaml") {
+    assert.deepEqual(parse(installed), parse(contents).refs);
+    const { createHash } = await import("node:crypto");
+    const digest = createHash("sha256").update(contents).digest("hex");
+    assert.equal(await readFile(path.join(home, ".openquantum-migrations/credentials-v1", digest, relative), "utf8"), contents);
+  } else assert.equal(installed, contents, relative);
+}
 assert.match(await readFile(route, "utf8"), /retained user route preference/);
 assert.match(await readFile(customSkill, "utf8"), /Retain this user Skill/);
 assert.equal(await readFile(userPatch, "utf8"), profilePatch);
 const profile = JSON.parse(await readFile(path.join(home, "profiles/desktop/package.json")));
-assert.equal(Object.keys(profile.dependencies).filter(name => name.startsWith("@openquantum/")).length, 7);
+assert.equal(Object.keys(profile.dependencies).filter(name => name.startsWith("@openquantum/")).length, 8);
+assert.ok(profile.dependencies["@openquantum/harness-web-security"], "The local HTTP authentication extension must be installed");
 assert.equal(profile.dsh.profile.bundles.filter(name => name === "@openquantum/harness-desktop-profile").length, 1);
 const preset = await readFile(path.join(home, ".agent-presets/openquantum/agent.cordis.yml"), "utf8");
 assert.doesNotMatch(preset, /process\.cwd\(\)|process\.execPath/);
@@ -69,7 +79,7 @@ const uv = path.join(path.dirname(runtime.nodeExecutable), process.platform === 
 await execute(uv, ["--version"], { env });
 // Import the installed OQ modules from an unrelated cwd, as Finder does.
 await execute(runtime.nodeExecutable, ["--input-type=module", "-e", `const { projectRoot } = await import(${JSON.stringify(pathToFileURL(path.join(home, "project-root.mjs")).href)}); if (projectRoot !== ${JSON.stringify(projectRoot)}) throw Error('wrong project'); await import(${JSON.stringify(pathToFileURL(path.join(home, ".agent-presets/openquantum/native-quantum-tools.mjs")).href)});`], { cwd: temporary, env });
-const report = { target, dataRoot, checks: ["installation", "brand-launcher", "repeat-install", "user-configuration-retained", "explicit-skill-tool-mcp-restrictions-retained", "native-credentials-retained", "profile-bundle-and-dependencies", "persistent-node-and-uv", "independent-working-directory"],
+const report = { target, dataRoot, checks: ["installation", "brand-launcher", "repeat-install", "user-configuration-retained", "explicit-skill-tool-mcp-restrictions-retained", "credential-refs-retained-and-original-archived", "profile-bundle-and-dependencies", "persistent-node-and-uv", "independent-working-directory"],
   upstreamClient: "not-bundled", nativeUI: "not-tested-by-this-command", scientificValidation: "not_evaluated" };
 await writeFile(path.join(output, "content-install.json"), JSON.stringify(report, null, 2));
 console.log(JSON.stringify(report));

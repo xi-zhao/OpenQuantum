@@ -1,3 +1,4 @@
+import { createRequire } from "node:module";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
@@ -26,7 +27,8 @@ test("brands the official Harness index without replacing its application shell"
   assert.match(branded, /data-openquantum-branding/);
   assert.match(branded, /\.oq-brand-name/);
   assert.match(branded, /\.oq-brand-mark/);
-  assert.doesNotMatch(branded, /svg\[viewBox/);
+  assert.match(branded, /\[data-slot="sidebar"\] button > svg\[viewBox="0 0 182 24"\] \{ visibility: hidden; \}/);
+  assert.match(branded, /\[data-phase="hero"\] span > svg\[viewBox="0 0 23.16 17.04"\] \{ visibility: hidden; \}/);
   assert.doesNotMatch(branded, /content: "OQ"/);
   assert.match(branded, /name="application-name" content="OpenQuantum"/);
   assert.match(branded, /name="theme-color" content="#061f38"/);
@@ -40,7 +42,9 @@ test("brands the official Harness index without replacing its application shell"
 
 test("narrow settings keep native navigation and give translated content its own row", async () => {
   const branded = brandHarnessIndex(HARNESS_INDEX);
-  const native = await readFile(new URL("../node_modules/@deepseek-ai/dsh-client-ui-settings-general/lib/client.js", import.meta.url), "utf8");
+  const require = createRequire(new URL("../node_modules/@deepseek-ai/dsh-web-app/package.json", import.meta.url));
+  const manifest = require.resolve("@deepseek-ai/dsh-client-ui-settings-general/package.json");
+  const native = await readFile(manifest.replace(/package\.json$/, "lib/client.js"), "utf8");
   assert.match(native, /role: "dialog"/);
   assert.match(native, /"aria-modal": "true"/);
   assert.match(native, /"aria-current": row\.id === active/);
@@ -337,6 +341,7 @@ test("Desktop empty model hint restores the native selector on configuration, fa
   const slots = new Map(), listeners = new Map(), pending = [], effects = [], directories = [];
   let plugin;
   const locale = { active: "zh" };
+  let activeProvider = false;
   runInNewContext(client, {
     document: { querySelector: () => ({}) },
     __ModuleLoader__: { load({ factory }) {
@@ -358,11 +363,14 @@ test("Desktop empty model hint restores the native selector on configuration, fa
     locale: { subscribe: () => () => {}, getSnapshot: () => locale },
     modelDirectories: { directoryFor: sessionId => directories.push(sessionId) },
     sessions: { subagentAddress: sessionId => sessionId === "child" ? {} : undefined },
-    remote: { $on: on, session: { modelCatalog: () => new Promise((resolve, reject) => pending.push({ resolve, reject })) } },
+    remote: { $on: on },
+    connection: { api: { llm: { models: () => new Promise((resolve, reject) => pending.push({ resolve, reject })),
+      providers: async () => ({ ok: true, value: { providers: activeProvider ? [{ active: true }] : [] } }),
+    } } },
   };
   const hint = () => slots.get("conversation.input.model");
-  const empty = { ok: true, value: { groups: [], routableProviders: [], failures: [] } };
-  const configured = { ok: true, value: { groups: [], routableProviders: ["user-provider"], failures: [] } };
+  const empty = { ok: true, value: { groups: [], failures: [] } };
+  const configured = { ok: true, value: { groups: [{ provider: "user-provider", models: [] }], failures: [] } };
   plugin.apply(ctx);
   pending.shift().resolve(empty);
   await new Promise(setImmediate);
@@ -373,6 +381,13 @@ test("Desktop empty model hint restores the native selector on configuration, fa
   locale.active = "en";
   assert.match(hint()().children.join(""), /Settings → Models/);
 
+  activeProvider = true;
+  const unadvertisedRead = listeners.get("settings/document-updated")();
+  pending.shift().resolve(empty);
+  await unadvertisedRead;
+  assert.equal(hint(), undefined, "an active route without advertised models retains the native selector");
+  activeProvider = false;
+
   const configuredRead = listeners.get("settings/document-updated")();
   pending.shift().resolve(configured);
   await configuredRead;
@@ -380,14 +395,14 @@ test("Desktop empty model hint restores the native selector on configuration, fa
 
   const oldRead = listeners.get("llm/adapters-updated")();
   const old = pending.shift();
-  const freshRead = listeners.get("credentials/reference-updated")();
+  const freshRead = listeners.get("credentials/updated")();
   pending.shift().resolve(configured);
   await freshRead;
   old.resolve(empty);
   await oldRead;
   assert.equal(hint(), undefined, "an older response must not hide the configured selector");
 
-  for (const result of [empty, { ok: true, value: { groups: [], routableProviders: [], failures: [{ provider: "broken" }] } }, empty, { ok: false }]) {
+  for (const result of [empty, { ok: true, value: { groups: [], failures: [{ provider: "broken" }] } }, empty, { ok: false }]) {
     const read = listeners.get("settings/document-updated")();
     pending.shift().resolve(result);
     await read;
@@ -422,10 +437,10 @@ test("native Cordis disposes and remounts the model hint with its slot declarati
   const listeners = new Map(), pending = [], slots = new Set();
   const remote = {
     $on(event, callback) { listeners.set(event, callback); return () => listeners.delete(event); },
-    session: { modelCatalog: () => new Promise(resolve => pending.push(resolve)) },
+
   };
   ctx.provide("remote", remote);
-  ctx.provide("remote.session", remote.session);
+  ctx.provide("connection", { api: { llm: { models: () => new Promise(resolve => pending.push(resolve)), providers: async () => ({ ok: true, value: { providers: [] } }) } } });
   ctx.provide("locale", {});
   ctx.provide("modelDirectories", {});
   ctx.provide("sessions", {});
@@ -437,7 +452,7 @@ test("native Cordis disposes and remounts the model hint with its slot declarati
     register(entry) { slots.add(entry.name); return () => slots.delete(entry.name); },
   });
   plugin.apply(ctx);
-  const empty = { ok: true, value: { groups: [], routableProviders: [], failures: [] } };
+  const empty = { ok: true, value: { groups: [], failures: [] } };
   for (let mount = 0; mount < 2; mount++) {
     // The pinned SlotRegistry uses this actual effect boundary for each declaration.
     const dispose = ctx.effect(registerSlot);
@@ -504,12 +519,11 @@ test("Desktop settings owns its child slots and renders only native general and 
   runInNewContext(client, {
     document: { querySelector: selector => selector.includes("minimal-settings") ? {} : null },
     __ModuleLoader__: { load({ factory }) {
-      plugin = factory(name => name === "react" ? react : { Modal: "native-modal", IconSettingsOutline16: "native-icon", ConnectionIndicator: "native-connection" });
+      plugin = factory(name => name === "react" ? react : { Modal: "native-modal", IconSettingsOutline16: "native-icon" });
     } },
   });
   const scope = { slots, effect: fn => fn(),
     locale: { register: () => () => {}, bind: () => key => key, subscribe: () => () => {}, getSnapshot: () => ({ revision: 1 }) },
-    connection: { state: { subscribe: () => () => {}, getSnapshot: () => "connected" }, reconnect() {} },
   };
   scope.inject = (_names, callback) => { callback(scope); return { dispose() {} }; };
   plugin.apply(scope);
@@ -528,4 +542,19 @@ test("Desktop settings owns its child slots and renders only native general and 
   render(occupants.get("settings.section"));
   assert.equal(forms[1].name, "settings.general.item");
   assert.equal(typeof modal.props.onClose, "function");
+});
+
+
+test("the pinned legacy brand adapter matches both shipped decorative marks", async () => {
+  const require = createRequire(new URL("../node_modules/@deepseek-ai/dsh-web-app/package.json", import.meta.url));
+  const source = async name => readFile(require.resolve(`${name}/package.json`).replace(/package\.json$/, "lib/client.js"), "utf8");
+  const sidebar = await source("@deepseek-ai/dsh-client-ui-sidebar");
+  const conversation = await source("@deepseek-ai/dsh-client-ui-conversation");
+  const primitives = await readFile(require.resolve("@deepseek-ai/dsh-client-ui-primitives"), "utf8");
+  assert.match(sidebar, /\.BrandWordmark/);
+  assert.match(sidebar, /\.FishLogo/);
+  assert.match(primitives, /viewBox: "0 0 182 24"/);
+  assert.match(primitives, /viewBox: "0 0 23.16 17.04"/);
+  assert.match(conversation, /\.FishLogo/);
+  assert.match(conversation, /"data-phase":/);
 });

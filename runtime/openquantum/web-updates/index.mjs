@@ -39,7 +39,7 @@ export function createUpdateHandler(service, { trustedHost, requestRejection } =
 }
 
 export function apply(ctx) {
-  const requestRejection = (request) => ctx.connection.requestRejection(request);
+  const requestRejection = (request) => ctx.openquantumWebSecurity ? ctx.openquantumWebSecurity.requestRejection(request) : ctx.connection.requestRejection(request);
   ctx.effect(async () => {
     const root = openQuantumProjectRoot;
     const { version } = JSON.parse(await readFile(path.join(root, "package.json"), "utf8"));

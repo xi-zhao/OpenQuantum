@@ -1,0 +1,38 @@
+name: Standalone OpenQuantum Desktop
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  mac-app:
+    name: Standalone macOS app (arm64)
+    runs-on: macos-15
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24.14.1
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Build the pinned Desktop source
+        run: npm run desktop:setup
+      - name: Package the standalone application
+        run: npm run desktop:app:package -- --dir --output "$RUNNER_TEMP/openquantum-app"
+      - name: Verify bundled runtimes, startup and retained user settings
+        run: npm run desktop:app:smoke -- "$RUNNER_TEMP/openquantum-app/directory/mac-arm64/OpenQuantum.app" "$RUNNER_TEMP/openquantum-app/validation"
+      - name: Upload verification summary
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: OpenQuantum-standalone-app-checks
+          path: ${{ runner.temp }}/openquantum-app/validation/installed-smoke.json
+          if-no-files-found: ignore
+          retention-days: 14

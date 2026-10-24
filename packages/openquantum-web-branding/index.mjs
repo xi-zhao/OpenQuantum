@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { legacyBrandStyles } from "./dsh-0.1.0.mjs";
 import { OPENQUANTUM_BRAND } from "./identity.mjs";
 
 const BRAND_MARKER = "data-openquantum-branding";
@@ -175,7 +176,9 @@ const BRAND_METADATA = `
 
 const BRAND_STYLES = `
 <style ${BRAND_MARKER}>
-  /* Brand occupants use the native sidebar slots in Web and Desktop. */
+  ${legacyBrandStyles}
+
+  /* Use brand slots when a compatible host supplies them. */
   .oq-brand-mark {
     display: block;
     object-fit: contain;
@@ -251,8 +254,8 @@ const BRAND_STYLES = `
  *
  * The shell, routes and client plugins remain owned by DeepSeek Harness. This
  * host-supported index transform supplies browser metadata, product copy and
- * styles. The companion Client Plugin supplies the sidebar brand through
- * native slots, without depending on upstream SVG geometry or a UI source fork.
+ * styles. The pinned 2.0.0 decorative marks use scoped styles; compatible
+ * hosts may supply brand slots. No upstream UI implementation is rewritten.
  */
 export function brandHarnessIndex(html) {
   if (html.includes(BRAND_MARKER)) {

@@ -1,5 +1,5 @@
-# Applied by dsh --profile acp --patch <this file>. The official base and ACP
-# bundles own Agent lifecycle, persistence, permissions and JSON-RPC stdio.
+# Applied by dsh --profile acp --patch <this file>. The official base bundle
+# owns Agent lifecycle, persistence and permissions; dsh-acp owns JSON-RPC stdio.
 # This overlay contributes OpenQuantum identity, routes and additional Tools.
 
 - id: credentials
@@ -16,11 +16,8 @@
 - id: llm-pi-ai
   disabled: true
 
-- id: acp
-  inject: [acpAppStartup, openquantumAcpModelReady]
-  config:
-    provider: openquantum-public
-    model: kimi-k2.7-code
+- id: hmr
+  disabled: true
 
 - id: agent-default-model
   config:
@@ -29,13 +26,12 @@
 
 - id: system-prompt
   config:
-    personaPrefix: >-
+    persona: >-
       You are OpenQuantum, a scientific research agent powered by {{model}}.
       Your working directory is {{cwd}}. Load the relevant project Skill before
       performing domain work, preserve scientific uncertainty, and never claim
       scientific acceptance unless a trusted Acceptance Report or Result Commit
       records status=passed for the relevant materialized evidence.
-    personaSuffix: ''
 
 - id: session-persistence-jsonl
   config:
@@ -50,6 +46,10 @@
       - !!js process.cwd() + '/.agents/skills'
 
 # The shared home can carry Web/Desktop rows; stdio mounts no browser host.
+- id: webserver
+  disabled: true
+- id: openquantum-web-security
+  disabled: true
 - id: openquantum-web-locales
   disabled: true
 - id: openquantum-web-branding
@@ -66,8 +66,15 @@
   disabled: true
 
 - insert:
+    - id: acp
+      name: '@deepseek-ai/dsh-acp'
+      inject: [openquantumAcpModelReady]
+      config:
+        provider: openquantum-public
+        model: kimi-k2.7-code
+
     - id: openquantum-acp-ready
-      name: ./ready.mjs
+      name: ./openquantum-ready.mjs
       config:
         provider: openquantum-public
 

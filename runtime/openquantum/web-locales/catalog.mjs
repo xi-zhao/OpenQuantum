@@ -1,6 +1,6 @@
 import languages from "./languages.json" with { type: "json" };
 import source from "./harness-source.json" with { type: "json" };
-import own from "./openquantum-source.json" with { type: "json" };
+import own from "../../../src/settings/locales/openquantum-source.json" with { type: "json" };
 import ja from "./locales/ja.json" with { type: "json" };
 import ko from "./locales/ko.json" with { type: "json" };
 import es from "./locales/es.json" with { type: "json" };

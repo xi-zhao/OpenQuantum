@@ -1,7 +1,8 @@
 # Contributing to OpenQuantum
 
-OpenQuantum 是 DeepSeek Harness 的开源量子科研发行版。最常见的二次开发方式是 Fork 仓库，
-直接增加 Harness 原生 Skill、Tool Provider 或经过审查的 Host Plugin，而不是接入 OpenQuantum 私有市场或包协议。
+OpenQuantum 首先维护通用量子科研插件，再维护 DSH、Codex 等 Harness 的适配，最后维护统一品牌与界面。
+贡献领域方法和计算时，优先修改共享 Skill、Tool implementation、MCP Server 或科学合同；宿主注册与 UI 改动
+留在对应 Adapter。共享核心不导入 DSH、Electron 或宿主 Session 对象；已有合同和实现只维护一份。
 
 第一次参与项目前，先读[文档与架构入口](docs/README.md)。它用五分钟说明核心模型、运行链和权威文件；
 只有需要设计新 Interface 或改变依赖方向时，再进入[扩展对象模型](docs/architecture/EXTENSION_MODEL.md)和
@@ -27,7 +28,7 @@ OpenQuantum 是 DeepSeek Harness 的开源量子科研发行版。最常见的�
 | 产品需求 | 最小组合 | 黄金样板 | 最小验证 |
 | --- | --- | --- | --- |
 | 只增加知识、选择方法或工作步骤 | Skill | [`quantum-sdk-advisor`](.agents/skills/quantum-sdk-advisor/SKILL.md) | `npm run capability:conformance` + 真实 `skills/list` 测试 |
-| 让 Agent 执行一个动作 | Tool + Tool Provider；Skill 按工作流需要可选 | [原生 Tool Provider](runtime/openquantum/agent-presets/openquantum/native-quantum-tools.mjs)；跨语言参考 [`qpanda-qubo`](.agents/skills/qpanda-qubo/) | capability test + `npm run capability:contracts:test` + Harness Registry 测试 |
+| 让 Agent 执行一个动作 | Tool + Tool Provider；Skill 按工作流需要可选 | [原生 Tool Provider](runtime/openquantum/agent-presets/openquantum/native-quantum-tools.mjs)；跨语言参考 [`qpanda-qubo`](.agents/skills/qpanda-qubo/) | capability test + `npm run capability:contracts:test` + 对应宿主的 Registry/MCP 测试 |
 | 让执行结果形成可审计 observations | L1 + schema + Validator + eval evidence | [`platform-diagnostics`](.agents/skills/platform-diagnostics/) | capability/eval + Validator 失败路径测试 |
 | 对科学主张给出可回放验收 | L2 + Acceptance Profile + Result Package + Materializer/重读 + central Acceptance Builder 接入；只有通过 `post-execute` 自动物化时才增加 agent-scoped Host Plugin/内部 Adapter | [`quantum-ground-state`](.agents/skills/quantum-ground-state/) | contract + materialization + Result Commit/Session replay 测试 |
 
@@ -37,7 +38,7 @@ Conformance 核对 policy 引用的工作树文件、Git 跟踪的 Skill 清单�
 包括默认关闭项。新 Skill 在提交前须暂存，使 Git 跟踪清单覆盖它；不必为 Tool-only 能力创建占位 Skill。
 
 不要在 OpenQuantum 中重新实现 Session、Agent loop、Tool Registry、Skill Registry、Harness MCP Client、Host Plugin 或 Client Plugin 系统、
-审批、权限、沙箱、模型路由或持久化。若 Harness 缺少通用能力，优先向 DeepSeek Harness 上游贡献；
+审批、权限、沙箱、模型路由或持久化。若宿主缺少通用能力，优先向相应 Harness 上游贡献；
 OpenQuantum 只保留无法上游化且确实必要的薄适配。
 
 ## 开发环境

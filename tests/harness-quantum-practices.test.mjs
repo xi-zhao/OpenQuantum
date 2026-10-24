@@ -94,7 +94,7 @@ test("Harness invokes reference retrieval, persists sources and returns invalid-
   await new Promise(resolve => reserved.close(resolve));
   await prepareOpenQuantumHarnessHome({ projectRoot: root, harnessHome });
   let logs = "";
-  child = spawn(process.execPath, [path.join(root, "node_modules/@deepseek-ai/dsh/lib/bin.js"), "web", "--no-open", "--host", "127.0.0.1", "--port", String(port)], {
+  child = spawn(process.execPath, [path.join(root, "node_modules/@deepseek-ai/dsh/lib/bin.js"), "web", "--host", "127.0.0.1", "--port", String(port)], {
     cwd: root,
     env: {
       ...process.env,
@@ -112,15 +112,14 @@ test("Harness invokes reference retrieval, persists sources and returns invalid-
   let cookie;
   async function rpc(method, payload = {}) {
     cookie ??= await harnessHttpCookie(base, logs);
-    if (method === "session/prompt") payload = { requestId: crypto.randomUUID(), ...payload };
     const response = await fetch(`${base}/api/${method}`, {
       method: "POST", headers: { "content-type": "application/json", cookie },
       body: JSON.stringify({
         type: "client-request", rpcId: crypto.randomUUID(), method,
-        payload: { args: method === "session/modelCatalog" ? {} : { request: payload } },
+        payload,
       }),
       // Session creation initializes every enabled MCP client on a cold CI runner.
-      signal: AbortSignal.timeout(method === "session/create" ? 30_000 : 5000),
+      signal: AbortSignal.timeout(method === "session.create" ? 30_000 : 5000),
     }).catch((cause) => {
       throw new Error(`Harness RPC ${method} failed.\n${redactHarnessLaunchTokens(logs)}`, { cause });
     });
@@ -129,10 +128,10 @@ test("Harness invokes reference retrieval, persists sources and returns invalid-
     assert.equal(result.ok, true, `${JSON.stringify(result)}\n${redactHarnessLaunchTokens(logs)}`);
     return result.value;
   }
-  await waitFor(() => rpc("session/modelCatalog"), "Harness startup");
+  await waitFor(() => rpc("llm.models"), "Harness startup");
   const sessionId = `session-practices-${crypto.randomUUID()}`;
-  await rpc("session/create", { sessionId, cwd: root, agentPreset: "openquantum" });
-  await rpc("session/prompt", {
+  await rpc("session.create", { sessionId, cwd: root, agentPreset: "openquantum" });
+  await rpc("session.prompt", {
     sessionId, mode: "queue",
     content: [{ type: "text", text: "Look up the fixed HHL and heat-equation references; include the invalid-id error check." }],
   });

@@ -18,3 +18,13 @@ test("the generation dependency retains display math and invalid-input behavior"
   }
   assert.match(renderer.renderToString(String.raw`\frac{`, options), /katex-error/);
 });
+
+// The original Desktop baseline also brings KaTeX through its UI primitives.
+test("the pinned Harness renderer uses the same safe formula dependency", () => {
+  const harnessRequire = createRequire(import.meta.resolve("@deepseek-ai/dsh-client-ui-primitives"));
+  const nativeRenderer = harnessRequire("katex");
+  assert.equal(nativeRenderer.version, renderer.version);
+  const options = Object.assign(Object.create({ trust: true }), { throwOnError: false, output: "html" });
+  assert.doesNotMatch(nativeRenderer.renderToString(String.raw`\includegraphics{https://untrusted.invalid/tracker}`, options), /<img\b/);
+  assert.match(nativeRenderer.renderToString(String.raw`\frac{1}{2}`, { displayMode: true }), /katex-display/);
+});

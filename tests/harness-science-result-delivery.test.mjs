@@ -106,24 +106,23 @@ test("real Harness/MCP delivery reaches model context, native file read and proc
   const diagnostics = () => redactHarnessLaunchTokens(logs);
   function start() {
     logs = ""; cookie = undefined;
-    child = spawn(process.execPath, [path.join(root, "node_modules/@deepseek-ai/dsh/lib/bin.js"), "web", "--no-open", "--host", "127.0.0.1", "--port", String(port)], {
+    child = spawn(process.execPath, [path.join(root, "node_modules/@deepseek-ai/dsh/lib/bin.js"), "web", "--host", "127.0.0.1", "--port", String(port)], {
       cwd: root, env: { ...process.env, ...prepared, DSH_HOME: harnessHome, DSH_TELEMETRY_DISABLED: "1", DSH_TELEMETRY_MODE: "DISABLED", OPENQUANTUM_DISABLE_QISKIT_MCP: "1", OPENQUANTUM_PUBLIC_API_KEY: "local-fixture-only", OPENQUANTUM_PUBLIC_BASE_URL: `http://127.0.0.1:${modelPort}/v1` }, stdio: ["ignore", "pipe", "pipe"],
     });
     for (const stream of [child.stdout, child.stderr]) stream.on("data", chunk => { logs = (logs + chunk).slice(-16000); });
   }
   async function rpc(method, payload = {}) {
     cookie ??= await harnessHttpCookie(base, logs);
-    if (method === "session/prompt") payload = { requestId: crypto.randomUUID(), ...payload };
     const response = await fetch(`${base}/api/${method}`, { method: "POST", headers: { "content-type": "application/json", cookie },
-      body: JSON.stringify({ type: "client-request", rpcId: crypto.randomUUID(), method, payload: { args: method === "session/modelCatalog" ? {} : { request: payload } } }), signal: AbortSignal.timeout(15000) });
+      body: JSON.stringify({ type: "client-request", rpcId: crypto.randomUUID(), method, payload }), signal: AbortSignal.timeout(15000) });
     const result = (await response.json()).result;
     assert.equal(result.ok, true, JSON.stringify(result)); return result.value;
   }
   start();
-  await waitFor(() => rpc("session/modelCatalog"), diagnostics);
+  await waitFor(() => rpc("llm.models"), diagnostics);
   const sessionId = `science-delivery-${crypto.randomUUID()}`;
-  await rpc("session/create", { sessionId, cwd: workspace, agentPreset: "openquantum" });
-  await rpc("session/prompt", { sessionId, mode: "queue", content: [{ type: "text", text: "Run delivery protocol fixtures and read the saved result." }] });
+  await rpc("session.create", { sessionId, cwd: workspace, agentPreset: "openquantum" });
+  await rpc("session.prompt", { sessionId, mode: "queue", content: [{ type: "text", text: "Run delivery protocol fixtures and read the saved result." }] });
   const history = await waitFor(async () => {
     const snapshot = await harnessSessionSnapshot(base, cookie, sessionId, 200);
     return snapshot.records.some(entry => entry.event?.type === "turn/end") && snapshot;
@@ -140,10 +139,10 @@ test("real Harness/MCP delivery reaches model context, native file read and proc
   const callCount = await readFile(counter, "utf8");
   assert.equal(callCount.split("call\n").length - 1, 2);
   await stop(child); restarting = true; start();
-  await waitFor(() => rpc("session/modelCatalog"), diagnostics);
+  await waitFor(() => rpc("llm.models"), diagnostics);
   const replay = await harnessSessionSnapshot(base, cookie, sessionId, 200);
   assert.deepEqual(toolEvents(replay), originalEvents);
-  await rpc("session/prompt", { sessionId, mode: "queue", content: [{ type: "text", text: "Read the existing saved result after restart." }] });
+  await rpc("session.prompt", { sessionId, mode: "queue", content: [{ type: "text", text: "Read the existing saved result after restart." }] });
   await waitFor(async () => {
     const snapshot = await harnessSessionSnapshot(base, cookie, sessionId, 200);
     return snapshot.records.filter(entry => entry.event?.type === "turn/end").length === 2 && snapshot;
