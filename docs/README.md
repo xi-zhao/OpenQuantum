@@ -131,9 +131,8 @@ Skill 与 Tool 在概念和发行版 policy 中都相互独立：Skill-only、To
 | --- | --- | --- |
 | Desktop、Codex 插件和安装器的统一产品版本 | 根 `package.json`；通过 `npm run release:version -- X.Y.Z` 更新各包与锁文件 | `npm run release:check`、CI 和打包入口 |
 | 静态模型 Provider catalog | `runtime/openquantum/model-routes.cordis.yml` | Web/Desktop/ACP 组合一致性测试 + model probe |
-| 用户模型 Route 覆盖 | Git 忽略的 `$DSH_HOME/profiles/<profile>/cordis.patch.yml`（旧 `settings.yaml` 一次性迁入） | Web 设置测试 + ACP 本地模型回路测试 |
-| Deployment 默认模型与默认 Agent Preset | `runtime/openquantum/profile-defaults.cordis.yml`（profile bundle，低于原生设置） | Web/ACP 组合一致性测试 |
-| Deployment Host 扩展与 Agent Preset 声明 | `runtime/openquantum/cordis.patch.yml` | `npm run harness:config`、`npm run desktop:check` |
+| 用户模型 Route 覆盖 | Git 忽略的 `$DSH_HOME/settings.yaml` | Web 设置测试 + ACP 本地模型回路测试 |
+| Deployment 默认模型、Agent Preset 与 Host 扩展 | `runtime/openquantum/cordis.patch.yml` | `npm run harness:config`、`npm run desktop:check` |
 | OpenQuantum Agent 的 Skill/Tool Provider 组合 | `runtime/openquantum/agent-presets/openquantum/agent.cordis.yml` | Harness Registry 集成测试 |
 | 发行版 Capability 与 L0–L3 证据引用 | `.agents/capability-packages.yml` | `npm run capability:conformance` |
 | Skill 指令与领域资源 | `.agents/skills/<id>/` | Skill discovery、capability test |
@@ -150,6 +149,7 @@ Skill 与 Tool 在概念和发行版 policy 中都相互独立：Skill-only、To
 
 - [桌面测试安装包](DESKTOP_INSTALLERS.md)：原版 DSH Desktop、OpenQuantum 能力包、数据保留与工程检查。
 - [部署与启动](DEPLOYMENT.md)：本地、Docker、模型配置和启动检查。
+- [第三方客户端 2.0.7 基线恢复](releases/2026-10-24-desktop-2.0.7.md)：旧版配套、会话保护、本地验证及尚未完成的构建边界。
 - [本地计算环境准备](integrations/LOCAL_ENVIRONMENTS.md)：按能力显式准备固定依赖，已有环境原地核验与升级。
 - [原生 SDK 生态扩展](integrations/SDK_ECOSYSTEM_2026-10-14.md)：26 个维护中的 SDK/源码入口、TensorCircuit-NG 迁移与 MQT Bench v2；分列实际 API 与科学验收状态。
 - [完整 SDK 接入与逐库审计](integrations/FULL_SDK_ACCESS.md)：原生公开 API、环境定位、自定义程序、分批补齐与工程验证；便捷 Tool 的模型范围不再是 SDK 能力上限。

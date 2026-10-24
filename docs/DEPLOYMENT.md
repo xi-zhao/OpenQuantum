@@ -54,8 +54,11 @@ cd openQuantum
 npm ci --include=dev
 npm run desktop:setup
 npm run desktop:verify-install
-npm run desktop
+npm run desktop -- --source
 ```
+
+`--source` 使用刚构建的固定版本。省略该参数时，启动器会检查并打开已经安装的原版 DSH Desktop；
+本机旧客户端即使仍可打开，也不能代替本次源码构建。
 
 `desktop:verify-install` 是无图形界面的安装检查：它验证 Desktop 与 Harness 版本、OpenQuantum 最终组合和
 桌面启动器。`desktop:setup` 从固定上游源码构建桌面端并安装 Electron 原生模块，需要 Git、Node.js 24、Corepack 和系统 C++ 构建工具；首次打开可能显示上游的可选设置向导。
@@ -66,9 +69,14 @@ npm run desktop
 设置、Skill、MCP 与 Validator；Desktop 只增加窗口、托盘、终端和原生通知。
 
 Web 和 Desktop 共用 `.openquantum/dsh`。两种启动方式用于访问同一份本地配置和 Session 状态，不应同时
-运行；从 Web 切换到 Desktop 前先停止 `npm run dev`。当前固定 Desktop `2.0.18` 源码提交 `6a63b9730b82`，与项目的
-Harness `0.2.1-rc.2` 同族。源码构建尚不是上游正式发行包；版本、兼容性检查与迁移说明见
-[Harness 0.2.1 升级记录](releases/2026-10-23-harness-0.2.1.md)。
+运行；从 Web 切换到 Desktop 前先停止 `npm run dev`。当前固定第三方 Desktop `2.0.7` 源码提交 `5184a2ab7ab1`，
+与 Harness `0.1.5-rc.1` 配套。不要只替换其中一个版本，也不要使用上游 `latest` 自动升级。
+恢复范围和数据保护见 [2.0.7 兼容基线恢复](releases/2026-10-24-desktop-2.0.7.md)。
+
+旧版继续使用原有 `settings.yaml` 和 V3 会话。已经由新版写入 V4 会话或 profile 设置的 Home 会在任何准备写入前
+被拒绝；不会降写、删除会话或反向覆盖设置。请保留整个新版 Home，另设空目录供旧版使用，或选择原有未升级的 Home。
+例如 `DSH_HOME=/path/to/separate-v3-home npm run desktop -- --source`；已安装客户端还须在自身的数据目录设置中选择
+同一 Home。不要把 V4 日志复制进旧版目录。
 
 不要全局安装或直接 `npx dsh-plugin-desktop`：那条上游命令使用默认 DSH Home，不会自动组合 OpenQuantum
 preset、Skill、MCP 与 Validator。OpenQuantum 品牌 `.dmg` / `.exe` 安装包尚未发布。

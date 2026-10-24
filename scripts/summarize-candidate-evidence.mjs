@@ -30,7 +30,7 @@ for (const [id, labels] of Object.entries(groups)) {
   }
 }
 const session = await readJson("harness-session.json");
-const results = session.events.filter(event => event.type === "tool/result").map(event => event.data.message);
+const results = session.events.filter(event => event.type === "tool/result").map(event => event.data.message.content.find(block => block.type === "tool-result"));
 assert.equal(results.length, 6);
 assert.equal(results.filter(result => result.isError).length, 1);
 const flag = await readJson("flagquantum-live.json");

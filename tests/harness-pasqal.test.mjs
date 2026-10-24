@@ -104,9 +104,7 @@ test("Harness discovers Pasqal, executes the real offline pipeline and Pulser To
   for (const call of calls) {
     const result = events.find(event => event.type === "tool/result" && JSON.stringify(event).includes(call.id));
     assert.ok(result, `${call.id}: missing persisted result\n${redactHarnessLaunchTokens(logs)}`);
-    // Session V4 persists each Tool result as one role "tool" message.
-    const block = result.data.message;
-    assert.equal(block.role, "tool");
+    const block = result.data.message.content.find(item => item.type === "tool-result");
     assert.equal(block.isError, call.id === "pasqal-invalid", JSON.stringify(block));
     assert.ok(delivered.has(call.id));
   }

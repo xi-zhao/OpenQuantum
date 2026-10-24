@@ -39,11 +39,10 @@ Harness Client Plugin
 “被动”表示不创建或执行 Runtime 资源，不表示完全没有本地读取。`ctx.skills.snapshot()` 可能触发 Skill Provider
 进行本地目录发现和 frontmatter 解析；Readiness 只保留 Skill 名称，不返回正文、路径或 Provider locator。
 
-读取路径不会调用 `agentPresets.acquireScope()` 或创建 Agent，因为这会持有或挂载 Preset 修订，并可能启动 MCP stdio 进程。
+读取路径不会调用 `agentPresets.standingKeyFor()`，因为它会主动挂载 Preset，并可能启动 MCP stdio 进程。
 它也不会启动或重启 MCP Server、执行 Tool、发送模型请求、访问真实量子硬件、读取凭据值或自动修复配置。
-DSH 0.2 的 `agentPresets` 注册表在声明时就挂载 Preset；Host Adapter 只读取其已保留的 generation
-（`presetId`、scope key 与 fiber），并按 Cordis root 过滤。该字段不是公开 API，升级 Harness 时由
-`tests/runtime-readiness.test.mjs` 与真实 Host 测试守护。
+Host Adapter 直接依赖固定版本的 `@deepseek-ai/dsh-agent-presets`，只使用其公开只读
+`livePresetMounts()` helper；显式声明这个本来已由 Harness 带入的依赖，是为了避免依赖未声明的传递包。
 
 相关验证：
 

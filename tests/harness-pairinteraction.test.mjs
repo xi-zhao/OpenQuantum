@@ -102,7 +102,7 @@ test("Harness loads the PairInteraction Skill, runs both real channels and rerea
     assert.match(serialized, /dependencyLockSha256/);
     assert.doesNotMatch(serialized, /"isError":true/);
     const message = result.data.message;
-    const block = message.role === "tool" ? message : undefined;
+    const block = message.role === "tool" ? message : message.content.find(item => item.type === "tool-result");
     assert.ok(block, "Persisted tool result is present in the Harness message format");
     assert.equal(block.isError, false);
     const output = JSON.parse(block.content.find(item => item.type === "text").text);

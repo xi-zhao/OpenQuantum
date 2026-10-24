@@ -96,9 +96,7 @@ test("Harness loads Skills, dispatches real scientific tools and persists each r
     assert.match(serialized, /not_evaluated/);
     assert.match(serialized, /dependencyLockSha256/);
     assert.doesNotMatch(serialized, /"isError":true/);
-    // Session V4 persists each Tool result as one role "tool" message.
-    const block = result.data.message;
-    assert.equal(block.role, "tool");
+    const block = result.data.message.content.find(item => item.type === "tool-result");
     assert.equal(block.isError, false);
     const output = JSON.parse(block.content.find(item => item.type === "text").text);
     const { definition } = await import(`../.agents/skills/${capability.id}/mcp/contracts.mjs`);

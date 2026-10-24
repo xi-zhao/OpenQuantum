@@ -1,13 +1,19 @@
 # Applied by dsh --profile acp --patch <this file>. The official base and ACP
 # bundles own Agent lifecycle, persistence, permissions and JSON-RPC stdio.
-# This overlay contributes OpenQuantum identity and additional Tools; model
-# routes come from the OpenQuantum bundle prepared in the acp profile.
+# This overlay contributes OpenQuantum identity, routes and additional Tools.
 
 - id: credentials
   config:
     dshHome: !!js process.env.DSH_HOME || process.cwd() + '/.openquantum/dsh'
 
+- id: settings
+  config:
+    dshHome: !!js process.env.DSH_HOME || process.cwd() + '/.openquantum/dsh'
+
 - id: llm-deepseek
+  disabled: true
+
+- id: llm-pi-ai
   disabled: true
 
 - id: acp
@@ -25,7 +31,7 @@
   config:
     personaPrefix: >-
       You are OpenQuantum, a scientific research agent powered by {{model}}.
-      Load the relevant project Skill before
+      Your working directory is {{cwd}}. Load the relevant project Skill before
       performing domain work, preserve scientific uncertainty, and never claim
       scientific acceptance unless a trusted Acceptance Report or Result Commit
       records status=passed for the relevant materialized evidence.
@@ -55,7 +61,8 @@
 - id: openquantum-web-updates
   disabled: true
 
-- id: openquantum-presets
+# Reuse the route catalog even when this home has never launched Web.
+- id: openquantum-model-routes
   disabled: true
 
 - insert:
@@ -63,6 +70,11 @@
       name: ./ready.mjs
       config:
         provider: openquantum-public
+
+    - id: openquantum-acp-model-routes
+      name: '@deepseek-ai/cordis-plugin-include'
+      config:
+        path: ../model-routes.cordis.yml
 
     # Generic rows already belong to dsh-base. Mount only the additional
     # native Tools, MCP Clients and scientific result hook from this preset.

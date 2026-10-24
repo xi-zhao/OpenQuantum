@@ -82,7 +82,7 @@ try {
     const secretValues = Object.entries(process.env).filter(([key]) => /KEY|TOKEN|PASSWORD|SECRET/.test(key)).map(([, value]) => value).filter(value => value.length > 4);
     let serialized = JSON.stringify(events, null, 2); for (const value of secretValues) serialized = serialized.split(value).join("[REDACTED]");
     await fs.writeFile(path.join(output, "session-events.json"), serialized, { mode: 0o600 });
-    const report = { sessionId, nativeHost: "DSH 0.2.1-rc.2 native plugins on isolated Web Host", electronWindow: "not_checked", skills: skills.skills.length,
+    const report = { sessionId, nativeHost: "DSH 0.1.5-rc.1 native plugins on isolated Web Host", electronWindow: "not_checked", skills: skills.skills.length,
       firstTurnEvents: first.length, events: events.length, toolCalls: events.filter(e => e.type === "tool/call").map(e => e.data),
       approvals: events.filter(e => e.type === "approval/decided").map(e => e.data.outcome), scientificAcceptance: "not_evaluated" };
     await fs.writeFile(path.join(output, "report.json"), JSON.stringify(report, null, 2));

@@ -129,13 +129,13 @@
     "sdk:ecosystem:test": "OPENQUANTUM_ECOSYSTEM_CHECKS=1 node --test --test-concurrency=1 tests/sdk-ecosystem-live.test.mjs"
   },
   "dependencies": {
-    "@deepseek-ai/dsh": "0.2.1-rc.2",
-    "@deepseek-ai/dsh-acp": "0.2.1-rc.2",
-    "@deepseek-ai/dsh-acp-app": "0.2.1-rc.2",
-    "@deepseek-ai/dsh-atomic-write": "0.2.1-rc.2",
-    "@deepseek-ai/dsh-cordis-host-runner": "0.2.1-rc.2",
-    "@deepseek-ai/dsh-credentials": "0.2.1-rc.2",
-    "@deepseek-ai/dsh-mcp-client": "0.2.1-rc.2",
+    "@deepseek-ai/dsh": "0.1.5-rc.1",
+    "@deepseek-ai/dsh-acp": "0.1.5-rc.1",
+    "@deepseek-ai/dsh-acp-app": "0.1.5-rc.1",
+    "@deepseek-ai/dsh-atomic-write": "0.1.5-rc.1",
+    "@deepseek-ai/dsh-cordis-host-runner": "0.1.5-rc.1",
+    "@deepseek-ai/dsh-credentials": "0.1.5-rc.1",
+    "@deepseek-ai/dsh-mcp-client": "0.1.5-rc.1",
     "@modelcontextprotocol/sdk": "1.32.1",
     "@openmaic/dsl": "0.11.1",
     "@openmaic/generation": "0.3.6",
@@ -153,7 +153,7 @@
     "smol-toml": "1.9.1",
     "fflate": "0.8.3",
     "jose": "6.2.12",
-    "@deepseek-ai/dsh-agent-preset": "0.2.1-rc.2"
+    "@deepseek-ai/dsh-agent-presets": "0.1.5-rc.1"
   },
   "devDependencies": {
     "@agentclientprotocol/sdk": "1.4.0",
@@ -164,9 +164,7 @@
   },
   "overrides": {
     "pnpm": "11.26.0",
-    "@deepseek-ai/dsh-mcp-client": {
-      "@modelcontextprotocol/client": "2.3.1"
-    },
+    "undici": "8.11.2",
     "@deepseek-ai/libreoffice-kit": {
       "fflate": "$fflate"
     },

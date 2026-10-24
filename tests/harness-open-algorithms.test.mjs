@@ -170,9 +170,7 @@ test("Harness discovers all 66 open workflows and executes SDK examples through 
     const result = events.find(event => event.type === "tool/result" && JSON.stringify(event).includes(call.id));
     assert.ok(called, `${call.id}: missing persisted call`);
     assert.ok(result, `${call.id}: missing persisted result`);
-    // Session V4 persists each Tool result as one role "tool" message.
-    const block = result.data.message;
-    assert.equal(block.role, "tool");
+    const block = result.data.message.content.find(item => item.type === "tool-result");
     const content = block.content.map(item => item.text ?? "").join("\n");
     if (call.id === "open-category-reject") {
       assert.equal(block.isError, true);
@@ -205,7 +203,7 @@ test("Harness discovers all 66 open workflows and executes SDK examples through 
   const target = path.join(root, ".openquantum/open-algorithms-harness.json");
   await mkdir(path.dirname(target), { recursive: true });
   await writeFile(target, JSON.stringify({
-    verifiedAt: new Date().toISOString(), harness: "0.2.1-rc.2",
+    verifiedAt: new Date().toISOString(), harness: "0.1.5-rc.1",
     model: "local protocol fixture", externalModelTested: false,
     skillCount: coverage.guides.length, skills: coverage.guides.map(row => row.skill),
     automaticSkills: coverage.guides.filter(row => row.invocation !== "manual").length,

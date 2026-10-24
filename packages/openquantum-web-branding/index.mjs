@@ -192,32 +192,37 @@ const BRAND_STYLES = `
 
   /* Keep the native settings shell usable with long translations on phones. */
   @media (max-width: 600px) {
-    [role="dialog"][data-shortcut-modal="settings"] {
+    /* The old sidebar grid item otherwise paints its modal below the chat. */
+    [data-sidebar-collapsed] > div:has(> [data-slot="sidebar"]):has([role="dialog"][aria-modal="true"]) {
+      z-index: 1000;
+    }
+
+    [role="dialog"][aria-modal="true"]:has(> nav [aria-current]) {
       flex-direction: column;
       width: calc(100vw - 24px);
       max-width: calc(100vw - 24px);
     }
 
-    [role="dialog"][data-shortcut-modal="settings"] > nav {
+    [role="dialog"][aria-modal="true"]:has(> nav [aria-current]) > nav {
       width: 100%;
       gap: 8px;
       padding-block: 12px 0;
     }
 
-    [role="dialog"][data-shortcut-modal="settings"] > nav > div:last-child {
+    [role="dialog"][aria-modal="true"]:has(> nav [aria-current]) > nav > div:last-child {
       flex-direction: row;
       overflow-x: auto;
     }
 
-    [role="dialog"][data-shortcut-modal="settings"] > nav button {
+    [role="dialog"][aria-modal="true"]:has(> nav [aria-current]) > nav button {
       flex-shrink: 0;
     }
 
-    [role="dialog"][data-shortcut-modal="settings"] > nav + div {
+    [role="dialog"][aria-modal="true"]:has(> nav [aria-current]) > nav + div {
       min-height: 0;
     }
 
-    [data-shortcut-modal="settings"] [data-slot="settings.general.item"] > div:has(> span > button[aria-haspopup="menu"]) {
+    [role="dialog"][aria-modal="true"]:has(> nav [aria-current]) [data-slot="settings.general.item"] > div:has(> span > button[aria-haspopup="menu"]) {
       flex-direction: column;
       align-items: stretch;
       gap: 10px;
