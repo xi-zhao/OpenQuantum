@@ -19,9 +19,12 @@ Codex 插件的公开版本仍为 [codex-v0.8.4](https://github.com/xi-zhao/Open
 若 macOS 拦截启动，仅在确认下载来源与摘要后，使用「系统设置 → 隐私与安全性」对该应用单独允许打开；
 不关闭系统安全检查。若系统仍拒绝启动，保留报错并使用源码入口，不执行全局绕过命令。
 
-默认数据目录是 `~/Library/Application Support/OpenQuantum/`：`project/` 保存可写部署、会话和配置，
+默认数据目录是 `~/Library/Application Support/OpenQuantum/Desktop/`：`project/` 保存可写部署、会话和配置，
 `native/` 保存窗口与原生偏好。应用更新只替换 `/Applications/OpenQuantum.app`；不要删除数据目录。
-现有模型配置、凭据与兼容 V0 会话可以沿用。V3 等后续格式不能直接继续，必须保留原 Home 并使用独立数据目录。升级前退出应用，完整备份该数据目录及任何自选 Home。
+Finder 和 Dock 启动也使用这个独立目录，不复用旧启动器的 `OpenQuantum/project/` 和 `OpenQuantum/native/`。
+旧会话、配置和程序留在原位；简洁版从新会话开始。模型配置与凭据可以在备份后单独复制，
+但 V3 等后续会话格式不能复制进简洁版继续使用。需要阅读旧会话时，另行导出阅读副本。
+升级前退出应用，完整备份 `~/Library/Application Support/OpenQuantum/` 及任何自选 Home。
 旧启动器应停用或改为新应用的链接，避免旧程序再次写入共用部署；保留备份和旧 `versions/` 以便恢复。
 
 内置基线固定为 DSH Desktop `2.0.0`、Harness `0.1.0-rc.6`，同时包含经过审查的依赖安全修复。
