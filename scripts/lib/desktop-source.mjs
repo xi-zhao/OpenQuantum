@@ -30,6 +30,8 @@ export async function requireDesktopBuild(projectRoot) {
     if (marker.revision !== DESKTOP_SOURCE.revision) throw new Error("Desktop build revision differs from the pinned source.");
     const { verifyDesktopDependencySecurity } = await import("./desktop-dependencies.mjs");
     await verifyDesktopDependencySecurity(desktopSourceDirectory(projectRoot), marker.dependencySecurity);
+    const { verifyDesktopNativeMenu } = await import("./desktop-native-menu.mjs");
+    await verifyDesktopNativeMenu(desktopSourceDirectory(projectRoot), marker.nativeMenu);
     const { stdout } = await promisify(execFile)("git", ["rev-parse", "HEAD"], { cwd: desktopSourceDirectory(projectRoot) });
     if (stdout.trim() !== DESKTOP_SOURCE.revision) throw new Error("Desktop checkout differs from the pinned source.");
     await access(path.join(directory, "lib/bin.js"));

@@ -76,7 +76,7 @@ Pasqal 的原生 `run_pasqal_workflow` 调用既有受控工作流；租约获�
 旧 `.env` 中对应凭据一次性纳入原生凭据存储；迁移后删除的值不会从 `.env` 再次恢复。
 
 `desktop:package` 包含原生 Host package、Preset、共享实现、设置页与带摘要的 Tool 目录。
-能力包供原版 DSH Desktop 加载；独立 OpenQuantum 应用则捆绑固定的桌面运行时与同一份能力包，不修改上游实现。首次源码启动缺少目录时由构建步骤生成；打开设置不安装 SDK。
+能力包供原版 DSH Desktop 加载；独立 OpenQuantum 应用则捆绑固定的桌面运行时与同一份能力包；0.8.7 的最小原生菜单源码扩展和摘要验证见 [Desktop 安装说明](../DESKTOP_INSTALLERS.md)。首次源码启动缺少目录时由构建步骤生成；打开设置不安装 SDK。
 
 ## 可复现验证
 

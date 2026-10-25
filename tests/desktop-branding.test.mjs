@@ -16,6 +16,7 @@ test("public shell branding preserves native callbacks and restores the service 
   const finishCleanup = Promise.withResolvers();
   class Runtime {
     #platform = "darwin";
+    refreshTrayMenu() { events.push("menu-refreshed"); }
     schedule(spec) {
       calls.push({ spec, platform: this.#platform });
       return async () => {
@@ -29,10 +30,12 @@ test("public shell branding preserves native callbacks and restores the service 
   const originalSchedule = runtime.schedule;
   const ctx = new Context();
   ctx.provide("desktopRuntime", runtime);
-  ctx.provide("openquantumWebSecurity", { authenticatedUrl: url => url + "?token=fixture" });
+  ctx.provide("openquantumWebSecurity", { authenticatedUrl: url => { const value = new URL(url); value.searchParams.set("token", "fixture"); return value.href; } });
+  let preference = "zh";
+  ctx.provide("settings", { get: namespace => namespace === "locale" ? { preference } : undefined });
   let indexTransform;
   ctx.provide("webServer", { tapIndex(transform) { indexTransform = transform; return () => { indexTransform = undefined; }; } });
-  const spec = Object.freeze({ url: "http://127.0.0.1:3000/", iconPath: "/upstream.png", productName: "DSH Desktop", requestQuit: () => {}, readThemeSource: () => "system" });
+  const spec = Object.freeze({ mode: "advanced", url: "http://127.0.0.1:3000/?dsh-desktop-mode=advanced", iconPath: "/upstream.png", productName: "DSH Desktop", requestQuit: () => {}, readThemeSource: () => "system" });
   const shell = ctx.plugin({ name: "shell-fixture", inject: ["desktopRuntime", "openquantumDesktopIcon"], apply(ctx) {
     ctx.effect(() => ctx.get("desktopRuntime").schedule(spec));
   } });
@@ -43,7 +46,26 @@ test("public shell branding preserves native callbacks and restores the service 
   const brandedIndex = indexTransform("<head></head>");
   assert.match(brandedIndex, /openquantum-minimal-settings/);
   assert.equal(indexTransform(brandedIndex), brandedIndex);
-  assert.deepEqual(calls[0], { spec: { ...spec, url: spec.url + "?token=fixture", productName: "OpenQuantum", windowTitle: "OpenQuantum", iconPath: fileURLToPath(new URL("../packages/openquantum-web-branding/assets/icon-512.png", import.meta.url)) }, platform: "darwin" });
+  const presented = calls[0].spec;
+  assert.equal(calls[0].platform, "darwin");
+  assert.equal(presented.productName, "OpenQuantum");
+  assert.equal(presented.windowTitle, "OpenQuantum");
+  assert.equal(presented.mode, "compatibility");
+  assert.equal(presented.url, "http://127.0.0.1:3000/?dsh-desktop-mode=compatibility&token=fixture");
+  assert.equal(presented.iconPath, fileURLToPath(new URL("../packages/openquantum-web-branding/assets/icon-512.png", import.meta.url)));
+  assert.equal(presented.requestQuit, spec.requestQuit);
+  assert.equal(presented.readThemeSource, spec.readThemeSource);
+  for (const filename of Object.values(presented.trayIcons)) assert.ok((await readFile(filename)).length > 0);
+  assert.deepEqual(presented.readTrayMenu(["en-US"]), { openLabel: "打开 OpenQuantum", quitLabel: "退出 OpenQuantum", showContributions: false, showModeSwitch: false });
+  preference = "en";
+  ctx.emit("settings/updated", "locale", { preference });
+  assert.deepEqual(events.splice(0), ["menu-refreshed"]);
+  assert.equal(presented.readTrayMenu(["zh-CN"]).quitLabel, "Quit OpenQuantum");
+  preference = undefined;
+  assert.equal(presented.readTrayMenu(["de-DE", "en-GB"]).openLabel, "Open OpenQuantum");
+  assert.equal(presented.readTrayMenu(["ja-JP"]).openLabel, "打开 OpenQuantum");
+  ctx.emit("settings/updated", "unrelated", {});
+  assert.deepEqual(events, []);
   assert.equal(spec.iconPath, "/upstream.png");
   let disposed = false;
   const disposal = icon.dispose().then(() => { disposed = true; });
@@ -54,6 +76,8 @@ test("public shell branding preserves native callbacks and restores the service 
   finishCleanup.resolve();
   await disposal;
   assert.deepEqual(events, ["shell-disposed"]);
+  ctx.emit("settings/updated", "locale", { preference: "zh" });
+  assert.deepEqual(events, ["shell-disposed"], "disposed profile cannot refresh a later menu");
   assert.equal(runtime.schedule, originalSchedule);
   runtime.schedule(spec);
   assert.equal(calls[1].spec, spec, "next native Profile retains the upstream icon");

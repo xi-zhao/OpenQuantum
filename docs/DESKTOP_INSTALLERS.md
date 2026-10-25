@@ -28,7 +28,7 @@ Finder 和 Dock 启动也使用这个独立目录，不复用旧启动器的 `Op
 旧启动器应停用或改为新应用的链接，避免旧程序再次写入共用部署；保留备份和旧 `versions/` 以便恢复。
 
 内置基线固定为 DSH Desktop `2.0.0`、Harness `0.1.0-rc.6`，同时包含经过审查的依赖安全修复。
-不是上游签名应用的改包；上游源码保持不变，应用入口、资源封装与正式扩展负责 OpenQuantum 品牌和配置。
+不是上游签名应用的改包。0.8.7 源码构建增加可核验的原生菜单展示接口，由品牌 Host Plugin 提供文案、菜单规则和图标；Harness 执行机制保持原样。
 
 ## 既有能力包安装（0.8.4）
 
@@ -77,7 +77,7 @@ DSH 的凭据服务写入原生存储（macOS 为 `0600`），已有原生凭据
 
 ```sh
 npm ci
-npm run desktop:setup          # 固定上游源码，应用经过审查的依赖安全补丁
+npm run desktop:setup          # 固定源码，应用并验证菜单接口与依赖安全补丁
 npm run desktop -- --source   # 使用已构建的独立测试桌面
 npm run desktop:package:check
 npm run desktop:package       # 只构建 OpenQuantum 能力包
@@ -105,7 +105,11 @@ OpenQuantum 的 Web、访问保护与能力 Host 包及声明配置的 bundle �
 扩展只在该 Profile 激活，新建和切换其他原生 Profile 不会加载这些依赖。用户的 Profile patch 保留原文，覆盖顺序沿用上游规则。
 升级只迁移仍与安装记录一致的全局 Home patch，并在 `.openquantum-migrations` 保留原件；若其中的 OpenQuantum 配置已被手动修改，先停止迁移并提示合并配置。
 原生 Profile 修复可以按 manifest 重建链接，无需向上游 app 或其 `node_modules` 注入文件。
-Desktop 图标扩展只在 OpenQuantum 的 Desktop Profile 内加载。它在原生 `DesktopRuntime.schedule` 接口中替换图标、产品名和窗口标题，其余窗口和生命周期仍由原版 Desktop 处理；兼容独立 Host 进程，不直接导入 Electron。
+Desktop 品牌扩展只在 OpenQuantum 的 Desktop Profile 内加载。它通过 `DesktopRuntime.schedule` 提供窗口与菜单栏图标、产品名和标题，并固定 compatibility 窗口样式。0.8.7 独立应用的菜单只保留「打开 OpenQuantum」「退出 OpenQuantum」，跟随原生 `locale` 设置；关闭窗口后仍可从菜单重新打开。Agent 的终端执行 Tool 不受影响。
+
+固定 Desktop 2.0.0 的菜单没有原生精简开关，因此构建时应用 `scripts/patches/dsh-desktop-2.0.0-tray-menu.patch`，仅增加 `readTrayMenu` 展示策略和 `refreshTrayMenu` 刷新接口。默认行为与现有回调不变；此合同可独立向上游贡献。品牌插件只读取语言设置，不直接导入 Electron，不读取凭据、不新增网络或子进程权限。实际打开、退出和清理仍由原生桌面执行。
+
+`desktop:setup` 运行原生窗口、菜单与图标回归后恢复上游源码字节，构建记录保存补丁及入口与原生菜单模块的摘要；打包拒绝缺失或不匹配的构建记录，不改写 `node_modules` 或发行二进制。原版第三方 Desktop 没有该新增接口，仍沿用其原生菜单；OpenQuantum 独立应用和源码入口提供精简菜单。菜单图像由现有 `mark.svg` 生成，可运行 `node scripts/generate-desktop-tray-icons.mjs` 重新生成。
 原生桌面通过 Cordis 依赖等待图标扩展就绪；Profile 卸载会等待桌面清理完成，恢复原接口可与清理并行。已启动桌面的图标参数不受影响，后续其他 Profile 继续使用原版图标。桌面入口通过本机启动令牌自动取得访问 Cookie，无需账户或登录页；令牌使用内存密钥，重启重新授权，不迁移凭据格式。扩展不读取模型凭据或会话，不注册新的 Tool；设置导航的精简由独立 Client Plugin 完成，表单与写入仍由 Harness 管理。
 
 工程检查覆盖安装、再次安装、配置保留、独立工作目录和捆绑运行环境；不运行外部模型或真实科研任务。

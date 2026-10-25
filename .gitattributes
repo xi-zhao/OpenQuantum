@@ -71,3 +71,6 @@ docs/integrations/evidence/sdk-ecosystem-2026-10-14/** -text
 .agents/skills/tsim-sampling/uv.lock text eol=lf
 .agents/skills/yao-circuits/references/native-example.jl text eol=lf
 .agents/skills/yao-circuits/Manifest.toml text eol=lf
+
+# Native Desktop source patches require exact LF bytes on Windows too.
+scripts/patches/dsh-desktop-2.0.0-tray-menu.patch text eol=lf whitespace=-blank-at-eol

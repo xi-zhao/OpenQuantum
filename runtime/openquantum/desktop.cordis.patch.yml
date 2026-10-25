@@ -10,6 +10,8 @@
 
 - id: desktop-shell
   inject: [openquantumDesktopIcon]
+  config:
+    mode: compatibility
 
 - id: openquantum-web-branding
   config:
@@ -25,6 +27,9 @@
   disabled: true
 
 - id: desktop-profiles
+  disabled: true
+
+- id: desktop-terminal
   disabled: true
 
 - id: openquantum-web-learning

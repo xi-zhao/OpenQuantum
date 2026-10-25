@@ -4,7 +4,7 @@ import { mkdir, realpath } from "node:fs/promises";
 import path from "node:path";
 import { promisify } from "node:util";
 
-// Keep the upstream Electron/Harness runtime intact. This bootstrap only gives
+// Preserve the native shell lifecycle and Harness runtime. This bootstrap gives
 // it a writable deployment and the pinned runtimes shipped with the installer.
 async function start() {
   // Standalone releases must not reuse the legacy launcher's project or native
@@ -16,7 +16,7 @@ async function start() {
   const nativeData = path.join(dataRoot, "native");
   await mkdir(nativeData, { recursive: true });
   app.setPath("userData", nativeData);
-  app.setName("OpenQuantum Desktop");
+  app.setName("OpenQuantum");
   // Repeated requests in this process retain the lock for upstream main.js.
   // A second launch forwards its arguments to the running Desktop without
   // rewriting live configuration or racing a first-install preparation.

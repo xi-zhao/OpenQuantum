@@ -83,6 +83,7 @@ test("composes the Desktop shell around the OpenQuantum Harness home", { skip: !
   assert.equal(rows.get("openquantum-desktop-branding")?.name, "@openquantum/harness-web-branding/desktop");
   assert.deepEqual(rows.get("openquantum-desktop-branding")?.inject, ["desktopRuntime"]);
   assert.deepEqual(rows.get("desktop-shell")?.inject, ["openquantumDesktopIcon"]);
+  assert.equal(rows.get("desktop-shell")?.config?.mode, "compatibility");
   assert.equal(
     rows.get("openquantum-web-branding")?.name,
     "@openquantum/harness-web-branding",
@@ -96,7 +97,7 @@ test("composes the Desktop shell around the OpenQuantum Harness home", { skip: !
   assert.equal(rows.get("openquantum-web-capabilities")?.config?.channels, false);
   assert.equal(rows.get("llm-deepseek")?.disabled, true);
   assert.equal(rows.get("llm-pi-ai")?.disabled, true);
-  for (const id of ["desktop-updates", "desktop-profiles", "desktop-diagnostics", "ui-cordis", "ui-agent-preset", "ui-settings-general", "ui-settings-plugin-inventory", "ui-settings-plugins", "openquantum-web-learning"]) {
+  for (const id of ["desktop-updates", "desktop-profiles", "desktop-terminal", "desktop-diagnostics", "ui-cordis", "ui-agent-preset", "ui-settings-general", "ui-settings-plugin-inventory", "ui-settings-plugins", "openquantum-web-learning"]) {
     assert.ok(!rows.has(id) || rows.get(id).disabled === true, `${id} is outside the minimal Desktop surface`);
   }
   for (const id of ["ui-chat", "ui-approval", "ui-workspace", "ui-settings-models", "ui-sidebar-files", "ui-deliverables"]) {

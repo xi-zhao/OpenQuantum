@@ -1,0 +1,209 @@
+--- a/dsh-plugin-desktop/src/runtime.ts
++++ b/dsh-plugin-desktop/src/runtime.ts
+@@ -30,6 +30,14 @@
+   templatePath: string
+   /** Brand-blue Windows/Linux image with DPI representations beside it. */
+   bluePath: string
++}
++
++/** Optional presentation policy; actions retain the native shell lifecycle. */
++export interface DesktopTrayMenuPolicy {
++  openLabel?: string
++  quitLabel?: string
++  showContributions?: boolean
++  showModeSwitch?: boolean
+ }
+ 
+ /** Stable placement groups for Host plugins that extend the native tray. */
+@@ -125,6 +133,8 @@
+   iconPath: string
+   /** Generated tray assets derived from the repository-owned SVG. */
+   trayIcons: DesktopTrayIcons
++  /** Resolve tray presentation using current settings and system languages. */
++  readTrayMenu?(languages: readonly string[]): DesktopTrayMenuPolicy
+   /** Read the authoritative built-in theme preference after Host boot settles. */
+   readThemeSource(): DesktopThemeSource
+   /** Request Cordis teardown followed by native application exit. */
+@@ -166,6 +176,9 @@
+    */
+   registerTrayItem(item: DesktopTrayItem): DesktopTrayItemRegistration
+ 
++  /** Refresh presentation after a Host preference changes; safe before mount. */
++  refreshTrayMenu?(): void
++
+   /** Open a native terminal containing packaged DSH command shims. */
+   openTerminal(): void
+ 
+--- a/dsh-plugin-desktop/src/electron-runtime.ts
++++ b/dsh-plugin-desktop/src/electron-runtime.ts
+@@ -144,17 +144,17 @@
+   registerTrayItem(item: DesktopTrayItem): DesktopTrayItemRegistration {
+     const key = Symbol()
+     this.trayItems.set(key, item)
+-    this.rebuildTrayMenu()
++    this.refreshTrayMenu()
+     let active = true
+     return {
+       refresh: () => {
+-        if (active) this.rebuildTrayMenu()
++        if (active) this.refreshTrayMenu()
+       },
+       dispose: () => {
+         if (!active) return
+         active = false
+         this.trayItems.delete(key)
+-        this.rebuildTrayMenu()
++        this.refreshTrayMenu()
+       },
+     }
+   }
+@@ -406,22 +406,24 @@
+     }
+   }
+ 
+-  private rebuildTrayMenu(): void {
++  /** @inheritdoc */
++  refreshTrayMenu(): void {
+     const tray = this.tray
+     const spec = this.scheduled
+     if (tray === undefined || spec === undefined) return
+ 
++    const policy = spec.readTrayMenu?.(app.getPreferredSystemLanguages())
+     const show = (): void => { this.show() }
+-    const tools = this.contributedTrayItems('tools')
+-    const profiles = this.contributedTrayItems('profiles')
+-    const status = this.contributedTrayItems('status')
++    const tools = policy?.showContributions === false ? [] : this.contributedTrayItems('tools')
++    const profiles = policy?.showContributions === false ? [] : this.contributedTrayItems('profiles')
++    const status = policy?.showContributions === false ? [] : this.contributedTrayItems('status')
+     const template: Electron.MenuItemConstructorOptions[] = [
+-      { label: `Open ${spec.productName}`, click: show },
++      { label: policy?.openLabel ?? `Open ${spec.productName}`, click: show },
+     ]
+     if (tools.length > 0) template.push({ type: 'separator' }, ...tools)
+     if (profiles.length > 0) template.push({ type: 'separator' }, ...profiles)
+     if (status.length > 0) template.push({ type: 'separator' }, ...status)
+-    template.push(
++    if (policy?.showModeSwitch !== false) template.push(
+       { type: 'separator' },
+       {
+         label: modeToggleLabel(spec.mode),
+@@ -432,8 +434,10 @@
+           })
+         },
+       },
++    )
++    template.push(
+       { type: 'separator' },
+-      { label: 'Quit', click: () => { spec.requestQuit(0) } },
++      { label: policy?.quitLabel ?? 'Quit', click: () => { spec.requestQuit(0) } },
+     )
+     tray.setContextMenu(Menu.buildFromTemplate(template))
+   }
+@@ -497,7 +501,7 @@
+       tray = new Tray(prepareTrayIcon(spec.trayIcons, this.platform))
+       this.tray = tray
+       tray.setToolTip(spec.productName)
+-      this.rebuildTrayMenu()
++      this.refreshTrayMenu()
+       tray.on('click', show)
+       beforeInteractive?.()
+     } catch (cause) {
+--- a/dsh-plugin-desktop/tests/electron-runtime.spec.ts
++++ b/dsh-plugin-desktop/tests/electron-runtime.spec.ts
+@@ -1,3 +1,4 @@
++import { join } from 'node:path'
+ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+ import type { DesktopShellSpec } from '../src/runtime.ts'
+ 
+@@ -132,6 +133,7 @@
+       dock: { setIcon: vi.fn() },
+       getPath: vi.fn(() => '/tmp/dsh-desktop-user-data'),
+       getVersion: vi.fn(() => '43.4.0'),
++      getPreferredSystemLanguages: vi.fn(() => ['en-US']),
+       isPackaged: false,
+       on: vi.fn(),
+       off: vi.fn(),
+@@ -359,6 +361,44 @@
+     await release()
+   })
+ 
++  it('refreshes a minimal localized tray while retaining native show, quit and disposal', async () => {
++    vi.spyOn(process, 'platform', 'get').mockReturnValue('darwin')
++    const { ElectronDesktopRuntime } = await import('../src/electron-runtime.ts')
++    const runtime = new ElectronDesktopRuntime(async () => {})
++    const requestQuit = vi.fn()
++    const contribution = runtime.registerTrayItem({ group: 'tools', order: 1, label: () => 'Terminal', invoke: vi.fn() })
++    let chinese = true
++    const readTrayMenu = vi.fn(() => ({
++      openLabel: chinese ? '打开 OpenQuantum' : 'Open OpenQuantum',
++      quitLabel: chinese ? '退出 OpenQuantum' : 'Quit OpenQuantum',
++      showContributions: false,
++      showModeSwitch: false,
++    }))
++    runtime.refreshTrayMenu()
++    expect(electron.menuTemplates).toHaveLength(0)
++    const release = runtime.schedule({ ...spec, readTrayMenu, requestQuit })
++    await runtime.mountScheduled()
++    const menu = () => electron.menuTemplates.at(-1) as Array<{ label?: string, click?: () => void }>
++    expect(menu().map(item => item.label)).toEqual(['打开 OpenQuantum', undefined, '退出 OpenQuantum'])
++    expect(readTrayMenu).toHaveBeenCalledWith(['en-US'])
++    electron.browserWindows[0]?.show.mockClear()
++    menu()[0]?.click?.()
++    expect(electron.browserWindows[0]?.show).toHaveBeenCalledOnce()
++    expect(electron.browserWindows[0]?.focus).toHaveBeenCalled()
++    chinese = false
++    runtime.refreshTrayMenu()
++    expect(menu().map(item => item.label)).toEqual(['Open OpenQuantum', undefined, 'Quit OpenQuantum'])
++    menu()[2]?.click?.()
++    expect(requestQuit).toHaveBeenCalledWith(0)
++    expect(spec.requestModeChange).not.toHaveBeenCalled()
++    await release()
++    expect(electron.trays[0]?.destroy).toHaveBeenCalledOnce()
++    const count = electron.menuTemplates.length
++    runtime.refreshTrayMenu()
++    contribution.dispose()
++    expect(electron.menuTemplates).toHaveLength(count)
++  })
++
+   it('rebuilds ordered effect-scoped tray contributions without replacing native commands', async () => {
+     vi.spyOn(process, 'platform', 'get').mockReturnValue('darwin')
+     const { ElectronDesktopRuntime } = await import('../src/electron-runtime.ts')
+@@ -470,14 +510,14 @@
+       expect(terminal.open).toHaveBeenCalledWith(expect.objectContaining({
+         platform: 'darwin',
+         appExecutable: process.execPath,
+-        dshBootstrapPath: expect.stringMatching(/\/src\/desktop-cli\.js$/u),
+-        pnpmBinPath: expect.stringMatching(/\/node_modules\/pnpm\/bin\/pnpm\.mjs$/u),
++        dshBootstrapPath: expect.stringMatching(/[\\/]src[\\/]desktop-cli\.js$/u),
++        pnpmBinPath: expect.stringMatching(/[\\/]node_modules[\\/]pnpm[\\/]bin[\\/]pnpm\.mjs$/u),
+         electronVersion: '43.4.0',
+         profileName: 'desktop',
+         productVersion: '2.0.0',
+         profileDir: '/tmp/dsh-home/profiles/desktop',
+         homeDir: '/tmp/dsh-home',
+-        stateDir: expect.stringMatching(/^\/tmp\/dsh-desktop-user-data\/cli\/[a-f0-9]{64}$/u),
++        stateDir: expect.stringMatching(/^[\\/]tmp[\\/]dsh-desktop-user-data[\\/]cli[\\/][a-f0-9]{64}$/u),
+         spawn: expect.any(Function),
+         onLaunchError: expect.any(Function),
+       }))
+@@ -542,7 +582,7 @@
+       isPackaged: false,
+       canDownload: false,
+       currentVersion: '2.0.0',
+-      statePath: '/tmp/dsh-desktop-user-data/updates/state.json',
++      statePath: join('/tmp/dsh-desktop-user-data', 'updates', 'state.json'),
+     })
+     electron.app.isPackaged = true
+     expect(runtime.updates).toMatchObject({ isPackaged: true, canDownload: true })
+--- a/dsh-plugin-desktop/src/main.ts
++++ b/dsh-plugin-desktop/src/main.ts
+@@ -36,7 +36,7 @@
+ } from './shutdown.ts'
+ 
+ const BIN_NAME = 'dsh-plugin-desktop'
+-const PRODUCT_NAME = 'DSH Desktop'
++const PRODUCT_NAME = app.isPackaged ? app.getName() : 'DSH Desktop'
+ 
+ /** Report profile recovery without changing startup or rollback outcomes. */
+ function notifyProfileRecovery(runtime: ElectronDesktopRuntime, body: string): void {
