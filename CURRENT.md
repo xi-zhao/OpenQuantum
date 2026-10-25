@@ -6,12 +6,12 @@ Session event log 为准，科学状态以 Acceptance Report 为准。2026-09 �
 
 ## 当前基线
 
-- 公开发行：Desktop [v0.8.4](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.4) 与 Codex
-  [codex-v0.8.4](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.4)；Harness 固定
-  `0.1.5-rc.1`，原版 DSH Desktop `2.0.7`。
+- 公开发行：Desktop [v0.8.5](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.5) 提供 macOS Apple Silicon
+  独立应用，固定 DSH Desktop `2.0.0` / Harness `0.1.0-rc.6`。Codex 公开版本仍为
+  [codex-v0.8.4](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.4)；本轮未发布新的 Codex 标签。
 - 能力成熟度以 `.agents/capability-packages.yml` 为准；工程检查通过不表示所有能力均通过科学验收。
 - [PR #39](https://github.com/xi-zhao/OpenQuantum/pull/39) 的拒绝降级与旧设置入口清理、
-  [PR #40](https://github.com/xi-zhao/OpenQuantum/pull/40) 的临时凭据授权生命周期修复已经进入主线；没有发布新版本。
+  [PR #40](https://github.com/xi-zhao/OpenQuantum/pull/40) 的临时凭据授权生命周期修复已经进入主线，并随 Desktop v0.8.5 发行。
 - [PR #35](https://github.com/xi-zhao/OpenQuantum/pull/35) 补齐根项目、Codex 插件和独立安装器的 MCP SDK `1.32.1`，
   更新 sanitize-html `2.18.1` 及受影响的传递依赖；发行依赖与根项目的一致性由打包测试约束。
   学习通生成库通过定向依赖覆盖复用项目已使用的 KaTeX `0.18.7`，避免保留旧版的信任选项漏洞；
@@ -45,17 +45,26 @@ Session event log 为准，科学状态以 Acceptance Report 为准。2026-09 �
 ## 独立安装包 0.8.5
 
 - #43 已合并（`1658aa25`），但其 `2.0.7` 不是用户最早使用的版本。用户已明确纠正为 **DSH Desktop `2.0.0` / Harness `0.1.0-rc.6`**，固定上游提交 `ee1235e1dd1675bbd6c52cfbe3f27b27bcfcfa81`。
-- 本任务分支 `c/desktop-standalone-release` 恢复正确基线；按用户选择，桌面暂保留原生中英文，不为十语言引入新版接口。所有 README 和已有翻译保留。
+- [PR #44](https://github.com/xi-zhao/OpenQuantum/pull/44) 恢复正确基线；按用户选择，桌面暂保留原生中英文，不为十语言引入新版接口。所有 README 和已有翻译保留。
 - 实查确认此版本使用 V0 会话；后续 V3 记录不会显示，安装前必须使用独立 Home 并保留旧数据，不能宣称原历史可直接继续。
 - 用户已选择完整保留旧会话并导出阅读副本。简洁版默认使用 `~/Library/Application Support/OpenQuantum/Desktop/`，
   与旧启动器的部署和原生偏好隔离；此默认值直接随应用交付，Finder 与 Dock 启动无需临时环境设置。
 - 使用原版 HTTP 服务、Session V0 和生命周期；独立 Host 扩展保留本机访问认证，不增加登录页。2.0.7 的旧测试结果不能替代本次验证。
-- 用户已授权构建和发布 OpenQuantum 安装包，并在备份后替换本机版本。本次只交付 macOS Apple Silicon 独立 DMG；
+- v0.8.5 已发布，并在备份后替换本机程序。本次只交付 macOS Apple Silicon 独立 DMG；
   产品源码版本为 `0.8.5`，Codex 公开 Release 仍为 `codex-v0.8.4`。
 - 独立应用复用固定上游源码与正式扩展，自带 Node/uv、能力代码和生产依赖；不修改上游实现。
   构建、发布与本机安装证据分别核验，详见 [0.8.5 发布记录](docs/releases/v0.8.5.md)。
-- 候选应用已完成隔离 Magpie 文件读取；Session event log 记录 `read` Tool 成功与 `turn/end=completed`，退出重开后内容恢复。
-- 发布附件采用 ad-hoc 本地签名，没有 Apple Developer ID 分发签名或公证。主线合并、Release 与本机安装状态以实时证据为准。
+- [PR #45](https://github.com/xi-zhao/OpenQuantum/pull/45) 提高文件上限后，主线签名仍复现 `EMFILE`；
+  [PR #46](https://github.com/xi-zhao/OpenQuantum/pull/46) 通过构建进程的文件访问排队修复，低上限回归和完整应用扫描通过。
+- [PR #47](https://github.com/xi-zhao/OpenQuantum/pull/47) 固定独立数据目录。发行来自干净提交 `429a2cc3`，
+  该提交包含在 main 的 `ef7ae405` 中且文件树相同；PR 的 11 项检查和该 main 提交的 8 项检查全部通过。
+  DMG 完整性、镜像内签名、首次部署、两次启动、捆绑运行工具及配置保留检查通过；GitHub 附件摘要与本地包一致。
+- 本机安装为 `/Applications/OpenQuantum.app`，原启动器已可恢复归档，原快捷入口指向新应用。
+  旧配置和会话的 4,757 个文件逐一核对摘要不变；两段 V3 会话完整导出为本地私有 HTML、Markdown 和事件副本。
+- 正式安装版已从 GUI 使用 Magpie 调用 `read`；Session event log 记录测试文件结果与 `turn/end=completed`。
+  退出重开后测试会话、模型和中文设置保留。原生文件选择器已触发，但验收工具无法接管其辅助窗口；
+  验证工作区通过官方工作区接口预先注册，此项不能算作文件选择器完整验收。
+- 发布附件采用 ad-hoc 本地签名，没有 Apple Developer ID 分发签名或公证；未关闭系统安全检查。
 
 ## 插件优先维护
 
@@ -68,7 +77,7 @@ Session event log 为准，科学状态以 Acceptance Report 为准。2026-09 �
 ## 已知缺口
 
 - 科学验收：建议优先把 2–3 个高频能力（如电路等价性、QEC 存储实验）推进到 L2/L3，而不是继续扩充 SDK 数量。
-- 在线模型：当前公开发行没有新的外部模型 ready 证据；发布前需重跑目标 Provider 的文本生成与 Tool Calling 探针。
+- 在线模型：v0.8.5 本机 Magpie 文本与 Tool Calling 验收通过；这不代表公共网关或其他 Provider 已通过在线验收。
 - 仓库体积：主页、小红书配图与实验 `.npz` 结果单个约 1–2 MB，未迁出。
 
 ## 动作边界
