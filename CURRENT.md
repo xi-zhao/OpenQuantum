@@ -68,7 +68,7 @@ Session event log 为准，科学状态以 Acceptance Report 为准。2026-09 �
 
 ## 0.8.6 插件设置
 
-- 「设置 → OpenQuantum」使用与 Codex 侧边应用相同的页面，提供概览、Skill、凭据，以及高级设置中的 Tool 和 MCP。
+- 「设置 → OpenQuantum」沿用本机 Codex 0.8.4 的「首页、Skills、MCP」导航与版式；工具、环境和凭据在对应卡片内配置。
 - 简洁导航保留通用、模型与 OpenQuantum；共用目录、分类、搜索和设置逻辑，各宿主分别保存配置和凭据。
 - 不改变按需准备机制或固定的 Desktop/Harness 基线。页面读取不安装 SDK，也不启动计算服务。
 - 更新说明见 [0.8.6 发布记录](docs/releases/v0.8.6.md)；发布、镜像与本机升级的完成证据以该版本 Release 验证附件为准。

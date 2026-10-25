@@ -5,7 +5,7 @@ import { SETTINGS_TABS } from "../../runtime/chatgpt/ui/settings-model.mjs";
 
 export function componentNavigation(copy = {}) {
   const escape = value => value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
-  return SETTINGS_TABS.map(([id, label]) => `<button data-tab="${id}"${["tools", "mcp"].includes(id) ? ' data-advanced hidden' : ""} role="tab" aria-selected="${id === "runtime"}"${id === "runtime" ? ' class="active"' : ""}>${escape(copy[label] ?? label)}</button>`).join("\n");
+  return SETTINGS_TABS.map(([id, label]) => `<button id="tab-${id}" data-tab="${id}" role="tab" aria-selected="${id === "runtime"}"${id === "runtime" ? ' class="active"' : ""}>${escape(copy[label] ?? label)}</button>`).join("\n");
 }
 
 // Build from shared declarations, never from a user's Desktop settings or Home.

@@ -60,6 +60,7 @@ export async function buildChatgpt({ root = PROJECT_ROOT, output = path.join(roo
   const uiRoot = path.join(PROJECT_ROOT, "runtime/chatgpt/ui");
   try {
     const mark = `data:image/svg+xml;base64,${(await fs.readFile(path.join(root, "packages/openquantum-web-branding/assets/mark.svg"))).toString("base64")}`;
+    const inverseMark = `data:image/svg+xml;base64,${(await fs.readFile(path.join(root, "packages/openquantum-web-branding/assets/mark-inverse.svg"))).toString("base64")}`;
     const app = await build({ entryPoints: [path.join(uiRoot, "app.mjs")], outfile: path.join(output, "app.js"), bundle: true, write: false, format: "esm", platform: "browser", target: "es2022", minify: true, legalComments: "inline", metafile: true,
       define: { "process.env.NODE_ENV": '"production"' },
       loader: { ".module.css": "local-css", ".woff2": "dataurl", ".woff": "dataurl", ".ttf": "dataurl" },
@@ -85,7 +86,7 @@ export async function buildChatgpt({ root = PROJECT_ROOT, output = path.join(roo
     const template = await fs.readFile(path.join(uiRoot, "app.html"), "utf8");
     const directory = await componentDirectory(root);
     const tabs = componentNavigation(directory.copy);
-    await fs.writeFile(path.join(output, "app.html"), template.replace("<!-- COMPONENT_TABS -->", () => tabs).replaceAll("__RELEASE_VERSION__", release.version).replaceAll("__OQ_MARK__", mark).replace("/* APP_STYLES */", () => styles).replace("/* APP_SCRIPT */", () => script));
+    await fs.writeFile(path.join(output, "app.html"), template.replace("<!-- COMPONENT_TABS -->", () => tabs).replaceAll("__RELEASE_VERSION__", release.version).replaceAll("__OQ_MARK__", mark).replaceAll("__OQ_MARK_INVERSE__", inverseMark).replace("/* APP_STYLES */", () => styles).replace("/* APP_SCRIPT */", () => script));
     const contracts = { capabilities: backend.capabilities, providers: backend.providers, tools: backend.tools };
     const contractDigest = digest(json(contracts));
     await fs.writeFile(path.join(output, "capabilities.json"), json(contracts));

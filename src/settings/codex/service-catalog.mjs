@@ -5,7 +5,7 @@ import { mcpCatalogEntry, mcpCredentialCatalogEntry } from "../server/project-se
 const field = (name, title, required = true, secret = true) => {
   const entry = mcpCredentialCatalogEntry(name);
   return { name, title: title ?? entry.displayName, displayName: entry.displayName, required, secret,
-    description: entry.description.replaceAll("Harness 凭据库", "系统凭据库").replaceAll("Harness 安全凭据", "安全凭据"),
+    description: entry.description.replaceAll("Harness 凭据库", "本机凭据库").replaceAll("Harness 安全凭据", "安全凭据"),
     documentationUrl: entry.documentationUrl };
 };
 const token = (name, title = "API Token", required = true) => field(name, title, required);

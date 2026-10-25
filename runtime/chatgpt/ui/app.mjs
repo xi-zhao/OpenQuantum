@@ -1,16 +1,16 @@
 import { App, applyHostStyleVariables, applyDocumentTheme } from "@modelcontextprotocol/ext-apps";
 import { openHostLink } from "./open-link.mjs";
-import { credentialEntries, renderCredentialCards, clearCredentialDrafts, h } from "./credential-cards.mjs";
-import { componentCard, componentCardCss } from "../../../src/settings/component-view.mjs";
+import { credentialEntries, renderCredentialCards, clearCredentialDrafts } from "./credential-cards.mjs";
 import { environmentLabel, environmentPanel } from "./environment-cards.mjs";
-import { SETTINGS_TABS, skillPresentation, shortDescription, toolState, skillPreparation, skillIssue, environmentState, providerState, connectionState, settingsTools } from "./settings-model.mjs";
+import { SETTINGS_TABS, skillPresentation, shortDescription, toolState, skillPreparation, skillIssue, environmentState, providerState, connectionState } from "./settings-model.mjs";
 import "./style.css";
 
 const desktop = document.querySelector('meta[name="openquantum-host"]')?.content === "Desktop";
 const hostName = desktop ? "Desktop" : "Codex";
 const $ = selector => document.querySelector(selector);
 const filterToolbar = $("#toolbar");
-let snapshot, tab = "runtime", busy = false, app, advanced = false;
+let snapshot, tab = "runtime", busy = false, app;
+let expandedEntry;
 let preparationFocus = desktop && location.hash.startsWith("#skill=") ? { skillId: decodeURIComponent(location.hash.slice(7)) } : undefined;
 let defaultState;
 let stateRequests = Promise.resolve();
@@ -32,7 +32,7 @@ function schedulePoll() {
   clearTimeout(pollTimer);
   if (!snapshot?.environments?.some(item => ["preparing", "cancelling"].includes(item.state))) return;
   pollTimer = setTimeout(async () => {
-    if (busy || tab === "credentials" || document.hidden) { schedulePoll(); return; }
+    if (busy || document.hidden || document.activeElement?.matches("input, textarea")) { schedulePoll(); return; }
     try { await updateSnapshot({ action: "snapshot" }); reportEnvironmentCompletion(); render(); }
     catch { notice("暂时无法读取安装进度，请刷新重试。安装操作会在本机继续。", true); }
     finally { schedulePoll(); }
@@ -40,7 +40,6 @@ function schedulePoll() {
 }
 const expandedGroups = new Map();
 const selectedEnvironments = new Map();
-const componentStyle = document.createElement("style"); componentStyle.textContent = componentCardCss; document.head.append(componentStyle);
 function t(key, params) {
   let value = snapshot?.components?.copy?.[key] ?? key;
   for (const [name, replacement] of Object.entries(params ?? {})) value = value.replaceAll(`{${name}}`, replacement);
@@ -50,15 +49,13 @@ function skillEntries() {
   return (snapshot.components?.skills ?? snapshot.skills).map(skill => skillPresentation({ ...skill,
     description: /\p{Script=Han}/u.test(skill.description ?? "") ? skill.description : snapshot.tools.find(tool => skill.relations?.toolIds.includes(tool.id))?.summary ?? skill.description }));
 }
-function mcpEntries() { return snapshot.components?.mcpServers ?? snapshot.providers; }
-function sdkEntries() {
-  const represented = new Set(mcpEntries().filter(item => item.supported !== false).map(item => item.environmentId));
-  return (snapshot.environments ?? []).filter(item => !represented.has(item.id)).map(item => {
-    const skill = skillEntries().find(skill => skill.id === item.id) ?? skillEntries().find(skill => skill.environmentId === item.id);
-    return { ...item, environmentId: item.id, title: item.id === "quantum-algorithms" ? "量子算法" : item.title,
-      description: skill?.description ?? `通过 ${hostName} Tool 编写和运行自定义计算。`,
-      category: skill?.category ?? "other", supported: true, kind: "host-environment" };
-  });
+function allServices() {
+  const entries = snapshot.components?.mcpServers ?? snapshot.providers;
+  return [...entries, ...snapshot.providers.filter(item => !entries.some(entry => entry.id === item.id))];
+}
+function mcpEntries() { return allServices().filter(item => !item.id.startsWith("native:")); }
+function unlinkedServices() {
+  return allServices().filter(item => item.id.startsWith("native:") && !skillEntries().some(skill => skill.relations?.providerIds.includes(item.id)));
 }
 const preview = window.parent === window && ["127.0.0.1", "localhost", "[::1]"].includes(location.hostname) && location.hash.startsWith("#preview=");
 const previewToken = preview ? location.hash.slice(9) : null;
@@ -118,7 +115,7 @@ async function run(input) {
 function switchFor(checked, label, action, { disabled = false, text } = {}) {
   const node = element("label", undefined, "switch");
   const input = element("input"); input.type = "checkbox"; input.checked = checked; input.setAttribute("aria-label", label);
-  input.disabled = disabled; input.dataset.focusKey = `${action.action}:${action.id}:${action.tool ?? ""}`;
+  input.disabled = busy || disabled; input.dataset.focusKey = `${action.action}:${action.id}:${action.tool ?? ""}`;
   input.onchange = () => run({ ...action, enabled: input.checked }); node.append(input, element("span", text ?? (checked ? "已启用" : "未启用"))); return node;
 }
 function button(text, action, className) { const node = element("button", text, className); node.type = "button"; node.onclick = action; return node; }
@@ -135,33 +132,83 @@ function matches(item) {
   const query = $("#search").value.trim().normalize("NFKC").toLowerCase();
   const state = $("#state").value;
   const supported = item.supported !== false && item.configuration !== "unsupported";
-  const prepared = () => item.kind === "host-environment" ? environmentFor(item)?.ready
-    : (tab === "mcp" ? snapshot.connections.includes(item) ? connectionState(item) : providerState(item, snapshot) : toolState(item, snapshot)).key === "prepared";
-  const recent = (snapshot.recentSkills ?? []).find(value => value.id === item.id);
-  const requestedServices = (snapshot.recentSkills ?? []).filter(value => value.serviceId).map(value => value.serviceId);
-  const accountNeeded = item.serverNames?.some(id => requestedServices.includes(id));
-  const stateMatches = state === "recent" ? Boolean(recent) : state === "attention" ? Boolean(skillIssue(item, snapshot))
-    : state === "relevant" ? accountNeeded || ["configured", "partial", "unavailable"].includes(item.configuration)
-      : state === "all" || (["prepared", "needs_setup"].includes(state) ? supported && Boolean(prepared()) === (state === "prepared") : state === "ready" ? environmentFor(item)?.ready : state === "needs_install" ? environmentFor(item) && !environmentFor(item).ready : state === "preparing" ? ["preparing", "cancelling"].includes(environmentFor(item)?.state) : (state === "unsupported" ? item.supported === false || item.configuration === "unsupported" : ["enabled", "disabled"].includes(state) ? supported && item.enabled === (state === "enabled") : item.configuration === state));
+  const prepared = () => (snapshot.connections.includes(item) ? connectionState(item) : providerState(item, snapshot)).key === "prepared";
+  const recent = (snapshot.recentSkills ?? []).some(value => value.id === item.id);
+  const stateMatches = state === "all" || (state === "recent" ? recent : state === "attention" ? Boolean(skillIssue(item, snapshot))
+    : state === "unsupported" ? !supported : ["prepared", "needs_setup"].includes(state)
+      ? supported && prepared() === (state === "prepared") : supported && item.enabled === (state === "enabled"));
   return query.split(/\s+/).every(word => searchText(item).includes(word)) && stateMatches
     && ($("#category").value === "all" || categoryOf(item) === $("#category").value);
 }
-function categoryGroups(container, items, renderItem, scope = tab) {
+function categoryGroups(container, items, renderItem) {
   const filtered = items.filter(item => matches(item));
   for (const category of categories()) {
     const entries = filtered.filter(item => categoryOf(item) === category.id);
     if (!entries.length) continue;
-    const group = element("details", undefined, "category-group");
-    const key = [scope, $("#search").value.trim(), $("#category").value, $("#state").value, category.id].join("|");
-    group.open = expandedGroups.get(key) ?? Boolean($("#search").value.trim() || $("#category").value !== "all" || $("#state").value !== "all");
-    group.ontoggle = () => { if (group.isConnected) expandedGroups.set(key, group.open); };
-    const summary = element("summary");
-    summary.append(element("strong", t(category.title)), element("span", `${entries.length} 项`, "hint"));
-    const grid = element("div", undefined, "oq-cap-grid");
+    const group = element("section", undefined, "catalog-group");
+    const heading = element("h2", t(category.title));
+    heading.append(element("span", `${entries.length}`, "hint"));
+    const grid = element("div", undefined, "catalog-grid");
     for (const item of entries) grid.append(renderItem(item));
-    group.append(summary, grid); container.append(group);
+    group.append(heading, grid);
+    container.append(group);
   }
   return filtered.length;
+}
+// The summary and settings belong to the same entry. Build forms only when
+// expanded; keep one entry open so shared credential fields never compete.
+function catalogItem(item, state, scope, renderBody) {
+  const key = scope === "connection" ? `${scope}:${item.id}:${item.instance}` : `${scope}:${item.id}`;
+  const card = element("article", undefined, "catalog-item");
+  card.dataset.entryId = item.id; card.dataset.entryKey = key;
+  card.dataset.expanded = String(expandedEntry === key);
+  const details = element("details", undefined, "catalog-disclosure");
+  details.name = "catalog-entry";
+  details.open = expandedEntry === key;
+  const summary = element("summary"), text = element("span", undefined, "catalog-summary");
+  const top = element("div", undefined, "catalog-card-top");
+  const icon = element("span", undefined, "catalog-icon");
+  icon.setAttribute("aria-hidden", "true");
+  const drawing = scope === "skill" ? '<path d="M12 6c-3-2-6-2-9-1v14c3-1 6-1 9 1 3-2 6-2 9-1V5c-3-1-6-1-9 1Zm0 0v14"/>'
+    : item.id.startsWith("native:") ? '<path d="m12 3 9 5-9 5-9-5 9-5Zm-9 9 9 5 9-5M3 16l9 5 9-5"/>'
+      : '<rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/><path d="M10 6h5a3 3 0 0 1 3 3v5M14 18H9a3 3 0 0 1-3-3v-5"/>';
+  icon.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${drawing}</svg>`;
+  const action = { action: scope === "skill" ? "skill.set" : scope === "connection" ? "connection.set" : "provider.set", id: item.id };
+  top.append(icon, item.supported === false ? element("span", "当前不支持", "hint") : switchFor(item.enabled !== false, `允许使用 ${item.title ?? item.id}`, action,
+    { text: item.enabled === false ? "已关闭" : "允许使用" }));
+  text.append(element("strong", item.title ?? item.id), element("span", shortDescription(item.description), "hint"));
+  const footer = element("span", undefined, "catalog-card-footer");
+  const status = element("span", state.key === "disabled" ? "关闭不删除配置" : state.label, `catalog-status${state.key === "prepared" ? " prepared" : ""}`);
+  status.dataset.state = state.key;
+  const affordance = element("span", undefined, "catalog-affordance");
+  affordance.append(element("span", item.supported === false ? "查看说明" : scope === "skill" ? "用法与配置" : item.id.startsWith("native:") ? "权限与配置" : "连接与配置", "catalog-collapsed-label"),
+    element("span", "收起配置", "catalog-expanded-label"));
+  footer.append(status, affordance);
+  summary.append(text, footer);
+  summary.dataset.focusKey = key;
+  const body = element("div", undefined, "catalog-settings");
+  let mounted = false;
+  const mount = () => {
+    if (mounted) return;
+    renderBody(body); mounted = true;
+    if (busy) body.querySelectorAll("button,input,select,textarea").forEach(node => { node.disabled = true; });
+  };
+  if (details.open) mount();
+  details.ontoggle = () => {
+    if (!details.isConnected) return;
+    card.dataset.expanded = String(details.open);
+    if (details.open) {
+      if (expandedEntry !== key) clearCredentialDrafts();
+      expandedEntry = key; mount();
+    }
+    else {
+      if (expandedEntry === key) expandedEntry = undefined;
+      clearCredentialDrafts(); body.replaceChildren(); mounted = false;
+    }
+  };
+  details.append(summary, body);
+  card.append(top, details);
+  return card;
 }
 function disclosure(key, title, className = "setup-details") {
   const details = element("details", undefined, className);
@@ -176,12 +223,10 @@ function credentialOptions(scope) {
     openLink: async url => { try { if (preview || desktop) window.open(url, "_blank", "noopener,noreferrer"); else await openHostLink(app, url); } catch { notice(`未能打开文档：${url}`, true); } },
     fallback: (id, card) => openCredential(id, card, true) };
 }
-function showSkill(id) { setTab("skills"); $("#state").value = "all"; $("#search").value = id; expandedGroups.set(`skill:${id}`, true);
+function showSkill(id) { setTab("skills"); $("#state").value = "all"; $("#search").value = id; expandedEntry = `skill:${id}`;
   const selection = snapshot.recentSkills?.find(item => item.id === id)?.selection;
   if (selection?.sdkId) selectedEnvironments.set(id, selection.sdkId);
   render(); }
-function showTools(id) { setTab("tools"); $("#search").value = id; render(); }
-function showMcp(id) { setTab("mcp"); $("#search").value = id; render(); }
 function toolRow(tool, compact = false) {
   const row = element("div", undefined, "tool-row"), info = element("div");
   const state = toolState(tool, snapshot);
@@ -219,7 +264,7 @@ function relatedCredentials(container, ids, scope) {
 }
 function skillSetup(skill) {
   const relations = skill.relations ?? { toolIds: [], providerIds: [], environmentIds: [], credentialServiceIds: [] };
-  const details = disclosure(`skill:${skill.id}`, "关联配置");
+  const details = element("div", undefined, "preparation-focus");
   details.append(element("p", "Agent 会在执行需要时准备。这里可提前配置或处理安装问题。", "hint"));
   let environmentId = relations.environmentIds[0];
   if (relations.environmentIds.length > 1) {
@@ -261,61 +306,17 @@ function skillSetup(skill) {
   return details;
 }
 function renderSkills(container) {
-  categoryGroups(container, skillEntries(), skill => {
-    const supported = skill.supported !== false;
-    const actions = element("div", undefined, "oq-cap-actions");
-    actions.append(switchFor(skill.enabled, `${skill.title} Skill`, { action: "skill.set", id: skill.id }, { disabled: !supported, text: skill.enabled ? "允许 Agent 选择" : "已禁止" }));
-    const card = componentCard(h, { title: skill.title, description: shortDescription(skill.description),
-      label: !supported ? "当前插件不支持" : skill.enabled ? "自动选择" : "已禁止", actions,
-      note: skill.availabilityNote, tone: supported && skill.enabled ? "ready" : "off" });
-    if (supported) {
-      card.append(element("p", skill.enabled ? skillPreparation(skill, snapshot) : "Agent 不会选择此 Skill。", "preparation-summary"));
-      const relations = skill.relations;
-      if (relations && (relations.toolIds.length || relations.environmentIds.length || relations.credentialServiceIds.length)) {
-        const mcp = relations.providerIds.filter(id => !id.startsWith("native:"));
-        const parts = [relations.toolIds.length ? `${relations.toolIds.length} 个 Tool` : relations.usesHostTools ? `${hostName} Tool` : null,
-          ...mcp.map(id => `${snapshot.providers.find(item => item.id === id)?.title ?? id} MCP`),
-          ...relations.credentialServiceIds.map(id => `${snapshot.services.find(item => item.id === id)?.title ?? id} 凭据`)];
-        const setup = skillSetup(skill);
-        setup.append(element("p", `关联：${parts.filter(Boolean).join(" · ")}`, "relation-summary"));
-        card.append(setup);
-      }
-    }
-    const info = disclosure(`skill-info:${skill.id}`, "详情", "technical-details");
-    info.append(element("code", skill.id));
-    if (skill.description.length > 110) info.append(element("p", skill.description, "hint"));
-    card.append(info);
-    return card;
-  });
-}
-function renderTools(container) {
-  categoryGroups(container, settingsTools(snapshot), tool => {
-    const state = toolState(tool, snapshot);
-    const card = componentCard(h, { title: tool.title, description: shortDescription(tool.summary ?? tool.description), label: state.label, tone: state.key === "prepared" ? "ready" : "off" });
-    const control = toolRow(tool, true);
-    if (control.childElementCount) card.append(control);
-    const actions = element("div", undefined, "oq-cap-actions");
-    const skill = skillEntries().find(item => item.relations?.toolIds.includes(tool.id));
-    if (skill) actions.append(button(`配置关联 Skill · ${skill.title}`, () => showSkill(skill.id)));
-    else if (tool.connectionId) actions.append(button(`配置关联 MCP · ${tool.connectionId}`, () => showMcp(tool.connectionId)));
-    else if (snapshot.providers.some(item => item.id === tool.provider)) actions.append(providerControl(tool.provider));
-    card.append(actions);
-    const info = disclosure(`tool:${tool.id}`, "详情", "technical-details");
-    info.append(element("code", tool.name ?? tool.id), element("p", tool.description, "hint"), element("p", tool.readOnly ? "只读计算或查询" : "可能写入文件或访问外部服务", "hint"));
-    if (tool.credential?.requirement === "required") info.append(element("p", "凭据保存后，账户认证仍需实际调用验证。", "hint"));
-    card.append(info); return card;
-  }, "tools");
-  const sdks = sdkEntries();
-  if (sdks.some(matches)) {
-    container.append(element("h2", `通过 ${hostName} Tool 使用`, "section-title"), element("p", "按任务准备环境；无需启用额外 MCP。", "hint"));
-    categoryGroups(container, sdks, entry => {
-      const environment = environmentFor(entry);
-      const card = componentCard(h, { title: entry.title, description: shortDescription(entry.description), label: environmentState(environment).label });
-      const details = disclosure(`host-environment:${entry.id}`, "运行准备");
-      details.append(environmentPanel(environment, { element, button, run, drafts: environmentDrafts, expanded: expandedGroups }));
-      card.append(details); return card;
-    }, "host-tools");
-  }
+  categoryGroups(container, skillEntries(), skill => catalogItem(skill, {
+    key: skill.enabled === false ? "disabled" : "allowed",
+    label: skill.supported === false ? "当前插件不支持" : skillPreparation(skill, snapshot),
+  }, "skill", body => {
+    if (skill.supported !== false) body.append(skillSetup(skill));
+    else body.append(element("p", skill.availabilityNote, "hint"));
+    const info = disclosure(`skill-info:${skill.id}`, "方法与适用范围", "technical-details");
+    info.append(element("code", skill.id), element("p", skill.description, "hint"));
+    body.append(info);
+  }));
+  categoryGroups(container, unlinkedServices(), serviceCard);
 }
 async function openCredential(id, container, service = false) {
   if (busy) return;
@@ -350,44 +351,21 @@ function setTab(value) {
   if (value !== tab) clearCredentialDrafts();
   if (!SETTINGS_TABS.some(([id]) => id === value)) return;
   tab = value;
-  if (["tools", "mcp"].includes(tab)) advanced = true;
-  document.querySelectorAll("[data-advanced]").forEach(node => { node.hidden = !advanced; });
-  $("#advanced").setAttribute("aria-expanded", String(advanced));
-  $("#advanced").textContent = advanced ? "收起高级设置" : "高级设置";
   document.querySelectorAll("[data-tab]").forEach(node => { node.classList.toggle("active", node.dataset.tab === tab); node.setAttribute("aria-selected", String(node.dataset.tab === tab)); node.tabIndex = node.dataset.tab === tab ? 0 : -1; });
   $("#state").value = "all"; $("#category").value = "all"; $("#search").value = "";
-  defaultState = tab === "skills" ? "recent" : tab === "credentials" ? "relevant" : "all";
+  defaultState = "all";
+  expandedEntry = undefined;
+  $("#content").setAttribute("aria-labelledby", `tab-${tab}`);
   notice("");
   render();
 }
 function renderRuntime(container) {
-  const prepared = settingsTools(snapshot).filter(tool => toolState(tool, snapshot).key === "prepared").length;
   const introduction = element("section", undefined, "overview-introduction");
-  introduction.append(
-    element("p", "开源量子 Agent 与应用平台", "overview-positioning"),
-    element("h2", "让量子想法运行起来。"),
-    element("p", "汇聚量子软件与研究方法，让人与 Agent 使用、组合和继续建设量子能力。", "overview-description"),
-  );
-  container.append(introduction);
-  const heading = element("div", undefined, "overview-heading");
-  heading.append(element("h2", "当前状态"), element("span", `读取于 ${new Date(snapshot.observedAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`, "hint"));
-  container.append(heading);
-  const grid = element("div", undefined, "overview-grid");
-  for (const [title, value, status, note] of [
-    ["Skill", snapshot.skills.filter(skill => skill.enabled).length, "允许自动选择", "告诉助手怎么做：提供研究方法和步骤。"],
-    ["Tool", prepared, "已准备", "实际执行动作，例如计算、查询或分析。"],
-    ["MCP", mcpEntries().filter(item => item.supported !== false && !item.id.startsWith("native:") && providerState(item, snapshot).key === "prepared").length + snapshot.connections.filter(item => connectionState(item).key === "prepared").length, "已准备", "连接本机或远端服务，向助手提供 Tool。"],
-  ]) {
-    const card = element("article", undefined, "overview-card");
-    const metric = element("div", undefined, "overview-metric");
-    metric.append(element("strong", value), element("span", status));
-    card.append(element("h3", title), metric, element("p", note, "hint")); grid.append(card);
-  }
-  container.append(grid,
-    element("p", "直接在聊天中描述任务。Agent 选择 Skill，按需准备 Tool 和 SDK；部分 Tool 由 MCP 提供。", "hint"),
-    element("p", "已准备表示本机环境与配置满足要求，远端可用性以实际调用为准。", "hint"),
-    element("p", `服务仅在调用 Tool 时启动。模型与账户由 ${hostName} 管理。`, "overview-context hint"),
-  );
+  introduction.append(element("p", `OpenQuantum 为 ${hostName} 提供量子研究 Skills、计算工具和服务连接。从电路检查到量子模拟，在熟悉的对话里推进研究。`, "overview-description"));
+  const links = element("div", undefined, "actions");
+  links.append(button("浏览 Skills", () => setTab("skills"), "primary"), button("浏览 MCP", () => setTab("mcp")));
+  introduction.append(links); container.append(introduction);
+  container.append(element("p", `直接在 ${hostName} 对话里描述研究问题。需要安装环境或填写账户时，在对应 Skill 或 MCP 中展开配置。`, "hint home-guide"));
 }
 function connectionForm(connection) {
   const id = connection?.id ?? "new";
@@ -434,36 +412,35 @@ function connectionForm(connection) {
   };
   return form;
 }
-function renderMcp(container) {
-  const add = disclosure("connection-add", "添加 MCP", "add-connection"); add.append(connectionForm());
-  if (connectionDrafts.has("add")) add.open = true;
-  categoryGroups(container, mcpEntries(), server => {
-    const supported = server.supported !== false;
-    const tools = snapshot.tools.filter(tool => tool.provider === server.id);
-    const state = providerState(server, snapshot);
-    const prepared = tools.filter(tool => toolState(tool, snapshot).key === "prepared").length;
-    const actions = element("div", undefined, "oq-cap-actions");
-    if (supported) actions.append(providerControl(server.id));
-    const card = componentCard(h, { title: server.title, description: shortDescription(server.description),
-      label: !supported ? "当前插件不支持" : state.label, tone: supported && state.key === "prepared" ? "ready" : "off", note: server.availabilityNote, actions: actions.childElementCount ? actions : null });
-    if (tools.length) card.append(element("p", `${tools.length} 个 Tool · ${prepared} 个已准备`, "preparation-summary"));
-    if (supported) {
-      const setup = disclosure(`provider:${server.id}`, "运行准备");
+function serviceCard(server) {
+  const state = providerState(server, snapshot);
+  return catalogItem(server, state, "provider", body => {
+    if (server.supported !== false) {
       const environment = environmentFor(server);
-      if (environment) setup.append(environmentPanel(environment, { element, button, run, drafts: environmentDrafts, expanded: expandedGroups }));
-      relatedCredentials(setup, server.service ? [server.service] : [], `mcp-${server.id}`);
-      if (tools.length) setup.append(button("查看关联 Tool", () => showTools(server.id)));
-      for (const skill of skillEntries().filter(item => item.relations?.providerIds.includes(server.id))) setup.append(button(`关联 Skill · ${skill.title}`, () => showSkill(skill.id)));
-      card.append(setup);
-    }
+      if (environment) body.append(environmentPanel(environment, { element, button, run, drafts: environmentDrafts, expanded: expandedGroups }));
+      relatedCredentials(body, [server.service ?? server.id], `mcp-${server.id}`);
+      const tools = snapshot.tools.filter(tool => tool.provider === server.id);
+      if (tools.length) {
+        const controls = disclosure(`provider-tools:${server.id}`, `Tools（${tools.length}）`);
+        for (const tool of tools) controls.append(toolRow(tool));
+        body.append(controls);
+      }
+      for (const skill of skillEntries().filter(item => item.relations?.providerIds.includes(server.id))) body.append(button(`关联 Skill · ${skill.title}`, () => showSkill(skill.id)));
+    } else body.append(element("p", server.availabilityNote, "hint"));
     const info = disclosure(`provider-info:${server.id}`, "详情", "technical-details");
     info.append(element("code", server.id), element("p", server.transport ? `${server.transport} · ${server.target ?? server.id}` : "连接由当前宿主管理", "hint"));
     if (server.sourceUrl) {
-      const source = element("a", "源码"); source.href = server.sourceUrl; source.target = "_blank"; source.rel = "noopener noreferrer";
-      source.onclick = event => { if (!preview && !desktop) { event.preventDefault(); void openHostLink(app, source.href).catch(() => notice(`未能打开源码：${source.href}`, true)); } }; info.append(source);
+      const link = element("a", "源码"); link.href = server.sourceUrl; link.target = "_blank"; link.rel = "noopener noreferrer";
+      link.onclick = event => { if (!preview && !desktop) { event.preventDefault(); void openHostLink(app, link.href).catch(() => notice(`未能打开源码：${link.href}`, true)); } };
+      info.append(link);
     }
-    card.append(info); return card;
-  }, "builtin-mcp");
+    body.append(info);
+  });
+}
+function renderMcp(container) {
+  const add = disclosure("connection-add", "添加 MCP", "add-connection"); add.append(connectionForm());
+  if (connectionDrafts.has("add")) add.open = true;
+  categoryGroups(container, mcpEntries(), serviceCard);
   if (desktop) return;
   if (snapshot.connections.some(connection => matches(connection))) container.append(element("h2", "我的 MCP 连接", "section-title"));
   if (!snapshot.connections.length && !$("#search").value.trim() && $("#category").value === "all" && $("#state").value === "all") container.append(element("p", "还没有自定义连接。内置能力由 Agent 按任务准备。", "hint"));
@@ -489,11 +466,11 @@ function renderMcp(container) {
     const edit = disclosure(`connection-edit:${connection.id}`, "编辑连接"); edit.append(connectionForm(connection));
     card.append(choice, edit);
     return card;
-  }, "custom-connections");
+  });
   container.append(add);
 }
 function render() {
-  $("#refresh").hidden = Boolean(snapshot) && tab === "runtime";
+  $("#refresh").hidden = false;
   if (!snapshot) return;
   const active = document.activeElement;
   const focusedFilter = filterToolbar.contains(active) ? active : null;
@@ -502,27 +479,24 @@ function render() {
   const focusTarget = focusedFilter || (focusedDraft ? active : null);
   const selection = focusTarget && typeof focusTarget.selectionStart === "number"
     ? [focusTarget.selectionStart, focusTarget.selectionEnd, focusTarget.selectionDirection] : null;
-  // Keep the same filter controls alive while moving them into the Tools panel.
-  // Returning them before replacing content also preserves their event handlers.
+  // Preserve the filter controls and their event handlers across views.
   $("#notice").before(filterToolbar);
   const intro = {
-    runtime: ["概览", ""],
-    skills: ["Skill", "Agent 会按任务选择方法，需要执行时再准备。你只需管理不想使用的 Skill。"],
-    tools: ["Tool", "实际执行计算、查询等动作。可从关联 Skill 一起配置所需环境和 MCP。"],
-    mcp: ["MCP", "为 Tool 提供本机或远端服务。内置 MCP 按调用启动；此处管理使用限制和自定义连接。"],
-    credentials: ["凭据", "点击账户展开填写；与 Skill 的关联配置共用，无需重复输入。"],
+    runtime: ["让量子想法运行起来。", ""],
+    skills: ["Skills", "研究方法与工作流程。展开卡片查看用法、准备环境和配置账户。"],
+    mcp: ["MCP", "连接工具服务。展开卡片配置账户和管理 Tools；远端可用性以实际调用为准。"],
   }[tab];
   $("#page-title").textContent = intro[0]; $("#page-description").textContent = intro[1];
   $("#page-description").hidden = !intro[1];
+  $("#settings-scope").hidden = tab === "runtime" || !snapshot.scope;
+  $("#settings-scope").textContent = snapshot.scope ? `生效范围：${snapshot.scope}。已保存的设置在关闭面板后仍会保留。` : "";
   filterToolbar.hidden = tab === "runtime";
-  $("#search").placeholder = tab === "credentials" ? "搜索账户或凭据" : "搜索名称或用途";
-  const items = tab === "credentials" ? credentialEntries(snapshot.services ?? []) : tab === "skills" ? skillEntries() : tab === "tools" ? [...settingsTools(snapshot), ...sdkEntries()] : tab === "runtime" ? [] : [...snapshot.connections, ...mcpEntries()];
-  const states = [["all", "全部"], ["enabled", "允许自动选择"], ["disabled", "已禁止"]];
-  if (tab === "skills") states.unshift(["recent", "最近选择"], ["attention", "需要处理"]);
-  if (["skills", "mcp"].includes(tab)) states.push(["unsupported", "当前插件不支持"]);
-  if (["tools", "mcp"].includes(tab)) states.splice(1, 1, ["prepared", "已准备"], ["needs_setup", "待准备"]);
-  if (tab === "credentials") states.splice(1, 2, ["incomplete", "未配置"], ["partial", "待补全"], ["configured", "已保存"], ["optional", "按需配置"], ["unavailable", "未读取"], ["unsupported", "云端未接入"]);
-  if (tab === "credentials") states.unshift(["relevant", "需要填写或已保存"]);
+  $("#search").placeholder = "搜索名称或用途";
+  $("#search").setAttribute("aria-label", tab === "mcp" ? "搜索 MCP" : "搜索 Skills");
+  const items = tab === "skills" ? [...skillEntries(), ...unlinkedServices()] : tab === "runtime" ? [] : [...snapshot.connections, ...mcpEntries()];
+  const states = [["all", "全部"], ["enabled", "允许使用"], ["disabled", "已关闭"], ["unsupported", "当前插件不支持"]];
+  if (tab === "skills") states.push(["recent", "最近选择"], ["attention", "需要处理"]);
+  if (tab === "mcp") states.push(["prepared", "已准备"], ["needs_setup", "待准备"]);
   const selectedState = defaultState ?? $("#state").value;
   defaultState = null;
   $("#state").replaceChildren(...states.map(([value, label]) => { const option = element("option", label); option.value = value; return option; }));
@@ -536,11 +510,12 @@ function render() {
     const option = element("option", `${t(category.title)} (${total})`); option.value = category.id; $("#category").append(option);
   }
   $("#category").value = selected;
+  const applied = [$("#category"), $("#state")].filter(select => select.value !== "all").map(select => select.selectedOptions[0]?.textContent);
+  $("#filters summary").textContent = applied.length ? `筛选 · ${applied.join(" · ")}` : "筛选";
+  $("#clear-filters").hidden = !applied.length && !$("#search").value;
   $("#count").textContent = `${t("显示 {p0} / {p1} 项", { p0: items.filter(item => matches(item)).length, p1: items.length })}`;
   const content = $("#content"); content.replaceChildren();
-  if (tab === "credentials") {
-    renderCredentialCards(content, items.filter(matches), { ...credentialOptions("credentials"), expandMatches: Boolean($("#search").value.trim()) });
-  } else if (tab === "runtime") renderRuntime(content); else if (tab === "skills") renderSkills(content); else if (tab === "tools") renderTools(content); else renderMcp(content);
+  if (tab === "runtime") renderRuntime(content); else if (tab === "skills") renderSkills(content); else renderMcp(content);
   if (tab !== "runtime" && !items.some(item => matches(item))) {
     const empty = element("div", undefined, "empty");
     const initial = ["recent", "relevant"].includes($("#state").value) && !$("#search").value;
@@ -566,13 +541,7 @@ $("#search").addEventListener("compositionend", filterChanged);
 $("#category").onchange = filterChanged;
 $("#state").onchange = filterChanged;
 $("#refresh").onclick = () => run({ action: "snapshot" });
-$("#advanced").onclick = () => {
-  advanced = !advanced;
-  if (!advanced && ["tools", "mcp"].includes(tab)) setTab("skills");
-  document.querySelectorAll("[data-advanced]").forEach(node => { node.hidden = !advanced; });
-  $("#advanced").setAttribute("aria-expanded", String(advanced));
-  $("#advanced").textContent = advanced ? "收起高级设置" : "高级设置";
-};
+$("#clear-filters").onclick = () => { $("#search").value = ""; $("#category").value = "all"; $("#state").value = "all"; filterChanged(); };
 const githubLink = $("#github-link");
 githubLink.onclick = async event => {
   if (preview || desktop) return;

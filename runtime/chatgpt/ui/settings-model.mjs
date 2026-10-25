@@ -1,4 +1,4 @@
-export const SETTINGS_TABS = [["runtime", "概览"], ["skills", "Skill"], ["credentials", "凭据"], ["tools", "Tool"], ["mcp", "MCP"]];
+export const SETTINGS_TABS = [["runtime", "首页"], ["skills", "Skills"], ["mcp", "MCP"]];
 const titles = {
   "quantum-sdk-workbench": "量子计算工作台", "quantum-sdk-advisor": "量子计算选型",
   "quantum-algorithms": "量子算法导航", "quantum-guide-algorithms": "量子算法方法选择",
@@ -13,7 +13,7 @@ export function skillPresentation(skill) {
     if (guideTitles[topic]) title = `${guideTitles[topic]}方法选择`;
   } else title = titles[skill.id] ?? algorithmTitles[skill.id.replace(/^quantum-/, "")] ?? title;
   let description = skill.description;
-  if (skill.id === "quantum-sdk-workbench") description = "按任务选择运行环境，通过 Codex Tool 编写和运行自定义量子计算。";
+  if (skill.id === "quantum-sdk-workbench") description = "按任务选择运行环境，通过宿主 Tool 编写和运行自定义量子计算。";
   else if (skill.id === "quantum-sdk-advisor") description = "按研究问题、硬件条件与运行成本，选择合适的量子计算方法和软件。";
   else if (skill.id === "quantum-algorithms" || skill.id.startsWith("quantum-guide-")) description = `帮助选择${title.replace(/方法选择|导航/g, "")}相关的 Skill；需要计算时再准备环境。`;
   else description = (description ?? "").split(" 可经宿主代码工具")[0].replace(/^方法解释与选型参考：[^。]+。此 Skill 不附带计算 Tool。/, "");
@@ -126,5 +126,5 @@ export function skillPreparation(skill, snapshot) {
     }
     return state.key === "prepared" ? state.label : `运行环境 · ${state.label}`;
   }
-  return relations.usesHostTools ? "通过 Codex Tool 执行" : "无需安装";
+  return relations.usesHostTools ? "通过宿主 Tool 执行" : "无需安装";
 }

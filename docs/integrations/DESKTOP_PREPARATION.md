@@ -24,7 +24,7 @@ flowchart TD
 ## 装配与职责
 
 - deployment-scoped `@openquantum/harness-capability-host` 注册 Application Interface、
-  `/openquantum/settings` 与有界 `/openquantum/api/preparation`。原生 Client Slot 内嵌共用设置页，从「设置 → OpenQuantum」进入。与 Codex 侧边应用共用概览、Skill、凭据、Tool 和 MCP 页面，宿主各自保存配置和凭据。
+  `/openquantum/settings` 与有界 `/openquantum/api/preparation`。原生 Client Slot 内嵌共用设置页，从「设置 → OpenQuantum」进入。沿用 Codex 0.8.4 的首页、Skills、MCP 导航与卡片版式，工具和账户配置归入对应卡片。页面与设置逻辑继续共用，宿主各自保存配置和凭据。
 - agent-scoped `adaptive-capabilities.mjs` 向 DSH 注册原生 Tool Provider 和 Skill Provider。
   搜索只读取说明和收据；准备只处理明确选择的一项，不执行科学任务。
 - `src/settings/desktop/application.mjs` 复用受控设置与准备用例，按 Agent 分配连接和安装所有权。
