@@ -6,7 +6,7 @@ Session event log 为准，科学状态以 Acceptance Report 为准。2026-09 �
 
 ## 当前基线
 
-- 公开发行：Desktop [v0.8.6](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.6) 提供 macOS Apple Silicon
+- 公开发行：Desktop [v0.8.7](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.7) 提供 macOS Apple Silicon
   独立应用，固定 DSH Desktop `2.0.0` / Harness `0.1.0-rc.6`。Codex 公开版本仍为
   [codex-v0.8.4](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.4)；本轮未发布新的 Codex 标签。
 - 能力成熟度以 `.agents/capability-packages.yml` 为准；工程检查通过不表示所有能力均通过科学验收。
@@ -87,13 +87,16 @@ Session event log 为准，科学状态以 Acceptance Report 为准。2026-09 �
 - 在线模型：v0.8.5 本机 Magpie 文本与 Tool Calling 验收通过；这不代表公共网关或其他 Provider 已通过在线验收。
 - 仓库体积：主页、小红书配图与实验 `.npz` 结果单个约 1–2 MB，未迁出。
 
-## 0.8.7 原生菜单（待发布）
+## 0.8.7 原生菜单
 
 - 独立桌面的菜单栏统一为 OpenQuantum 图标与「打开 / 退出」两项，跟随中英文语言设置；
   固定 compatibility 窗口样式，移除 DSH Terminal 和窗口模式切换入口，Agent 执行 Tool 不受影响。
 - 固定 Desktop 2.0.0 源码构建增加最小菜单展示接口；品牌决策仍由 OpenQuantum Host Plugin 拥有。
   补丁和实际构建入口与原生菜单模块均以摘要验证，构建后恢复上游源码；不修改 Harness 依赖实现。
-- 当前公开版本和本机安装仍为 0.8.6；本轮代码、CI、发布和安装验收须分别完成后再更新交付状态。
+- [PR #51](https://github.com/xi-zhao/OpenQuantum/pull/51) 已合并；PR 的 12 项检查和 main `1cbfcfc2` 的 10 项检查全部通过。
+  v0.8.7 来自干净提交 `d2066782`，已发布 Mac Apple Silicon DMG；GitHub 附件大小与摘要同本地包一致。
+- GUI 已核对中英文、系统应用菜单、插件设置、验收会话和镜像内启动。菜单栏弹出层无法由当前验收工具读取，
+  两项菜单、语言刷新与回调由原生自动化测试覆盖。发布和本机安装的具体范围见 [0.8.7 发布记录](docs/releases/v0.8.7.md) 与 Release 验证附件。
 
 ## 动作边界
 
