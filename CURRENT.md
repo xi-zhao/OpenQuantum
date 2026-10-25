@@ -6,7 +6,7 @@ Session event log 为准，科学状态以 Acceptance Report 为准。2026-09 �
 
 ## 当前基线
 
-- 公开发行：Desktop [v0.8.5](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.5) 提供 macOS Apple Silicon
+- 公开发行：Desktop [v0.8.6](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.6) 提供 macOS Apple Silicon
   独立应用，固定 DSH Desktop `2.0.0` / Harness `0.1.0-rc.6`。Codex 公开版本仍为
   [codex-v0.8.4](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.4)；本轮未发布新的 Codex 标签。
 - 能力成熟度以 `.agents/capability-packages.yml` 为准；工程检查通过不表示所有能力均通过科学验收。
