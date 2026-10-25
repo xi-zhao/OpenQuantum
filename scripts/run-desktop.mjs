@@ -17,7 +17,7 @@ const native = process.env.DSH_DESKTOP_EXECUTABLE || (process.platform === "darw
 if (args[0] === "--version") {
   console.log(`OpenQuantum capability package; compatible original DSH Desktop ${DESKTOP_SOURCE.version}, Harness ${DESKTOP_SOURCE.harnessVersion}`);
 } else if (args[0] === "--help") {
-  console.log(`Install the original DSH Desktop ${DESKTOP_SOURCE.version}, then run npm run desktop. Set DSH_DESKTOP_EXECUTABLE for a custom installation. --source uses the unmodified pinned source build.`);
+  console.log(`Install the original DSH Desktop ${DESKTOP_SOURCE.version}, then run npm run desktop. Set DSH_DESKTOP_EXECUTABLE for a custom installation. --source uses the pinned source build with the reviewed native menu extension.`);
 } else {
   const source = args[0] === "--source";
   if (!source && !existsSync(native)) throw new Error(`Install the original DSH Desktop ${DESKTOP_SOURCE.version}: https://github.com/anywhere-labs/dsh-desktop/releases/tag/v${DESKTOP_SOURCE.version}`);

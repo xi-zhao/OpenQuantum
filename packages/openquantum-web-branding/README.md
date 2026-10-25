@@ -22,3 +22,11 @@ dsh plugin --profile web add github:xi-zhao/OpenQuantum#path:/packages/openquant
 The full OpenQuantum quantum-research distribution remains available from the
 repository root. This package intentionally exposes only the independently
 installable Web branding module.
+
+The Desktop Host Plugin also supplies the existing OpenQuantum mark as native
+tray images and fixes the window presentation to compatibility mode. In the
+source-built OpenQuantum app, a reviewed Desktop 2.0.0 presentation extension
+accepts a minimal tray policy: Open and Quit, localized from the Host's `locale`
+preference, refreshed after settings updates. The native shell retains its show,
+quit and disposal callbacks. Third-party Desktop builds without this extension
+keep their original tray menu. See [the build contract](../../docs/DESKTOP_INSTALLERS.md).

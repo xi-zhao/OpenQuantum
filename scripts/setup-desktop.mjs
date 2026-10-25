@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
 import { DESKTOP_SOURCE, desktopSourceDirectory, desktopPackageDirectory } from "./lib/desktop-source.mjs";
 import { installDesktopDependencies, verifyDesktopDependencySecurity } from "./lib/desktop-dependencies.mjs";
+import { buildDesktopNativeMenu } from "./lib/desktop-native-menu.mjs";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
 const directory = desktopSourceDirectory(root);
@@ -37,9 +38,12 @@ const dependencySecurity = await installDesktopDependencies(directory, () =>
   run("corepack", ["yarn", "install"], directory, { YARN_ENABLE_IMMUTABLE_INSTALLS: "false" }),
 );
 await verifyDesktopDependencySecurity(directory, dependencySecurity);
-await run("corepack", ["yarn", "workspace", "dsh-plugin-desktop", "build"]);
+const nativeMenu = await buildDesktopNativeMenu(directory, async () => {
+  await run("corepack", ["yarn", "workspace", "dsh-plugin-desktop", "build"]);
+  await run("corepack", ["yarn", "workspace", "dsh-plugin-desktop", "exec", "vitest", "run", "tests/electron-runtime.spec.ts", "tests/tray-icons.spec.ts"]);
+});
 const packageRoot = desktopPackageDirectory(root);
 // Upstream disables dependency hooks and exposes native setup explicitly.
 await run(process.execPath, [path.join(packageRoot, "node_modules/electron/install.js")]);
-await writeFile(path.join(directory, ".openquantum-build.json"), JSON.stringify({ ...DESKTOP_SOURCE, dependencySecurity }, null, 2));
-console.log(`DSH Desktop ready: ${DESKTOP_SOURCE.version} (${DESKTOP_SOURCE.revision.slice(0, 12)}); upstream app code unchanged, security-patched dependencies.`);
+await writeFile(path.join(directory, ".openquantum-build.json"), JSON.stringify({ ...DESKTOP_SOURCE, dependencySecurity, nativeMenu }, null, 2));
+console.log(`DSH Desktop ready: ${DESKTOP_SOURCE.version} (${DESKTOP_SOURCE.revision.slice(0, 12)}); reviewed native menu extension and security-patched dependencies.`);

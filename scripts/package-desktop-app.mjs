@@ -23,6 +23,7 @@ if (process.platform !== "darwin" || !["arm64", "x64"].includes(process.arch)) t
 await checkReleaseVersions(root);
 const manifest = JSON.parse(await readFile(path.join(root, "package.json"), "utf8"));
 const upstream = await requireDesktopBuild(root);
+const buildMarker = JSON.parse(await readFile(path.join(upstream, "../.openquantum-build.json"), "utf8"));
 const require = createRequire(path.join(upstream, "package.json"));
 const upstreamManifest = JSON.parse(await readFile(path.join(upstream, "package.json"), "utf8"));
 const env = { ...process.env, CSC_IDENTITY_AUTO_DISCOVERY: "false", NODE_USE_ENV_PROXY: "1",
@@ -61,7 +62,7 @@ for (const name of Object.keys(appManifest.dependencies)) {
 }
 await writeFile(path.join(application, "package.json"), JSON.stringify({ ...appManifest,
   version: manifest.version, productName: "OpenQuantum", description: "OpenQuantum personal Harness", author: manifest.author,
-  main: "launcher.mjs", openquantum: { upstream: DESKTOP_SOURCE, signing: "ad-hoc", notarized: false },
+  main: "launcher.mjs", openquantum: { upstream: DESKTOP_SOURCE, nativeMenu: buildMarker.nativeMenu, signing: "ad-hoc", notarized: false },
 }, null, 2));
 const config = {
   ...upstreamManifest.build,

@@ -4,7 +4,7 @@ import { mkdir, realpath } from "node:fs/promises";
 import path from "node:path";
 import { promisify } from "node:util";
 
-// Keep the upstream Electron/Harness runtime intact. This bootstrap only gives
+// Preserve the native shell lifecycle and Harness runtime. This bootstrap gives
 // it a writable deployment and the pinned runtimes shipped with the installer.
 async function start() {
   // Standalone releases must not reuse the legacy launcher's project or native
