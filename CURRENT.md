@@ -47,6 +47,8 @@ Session event log 为准，科学状态以 Acceptance Report 为准。2026-09 �
 - #43 已合并（`1658aa25`），但其 `2.0.7` 不是用户最早使用的版本。用户已明确纠正为 **DSH Desktop `2.0.0` / Harness `0.1.0-rc.6`**，固定上游提交 `ee1235e1dd1675bbd6c52cfbe3f27b27bcfcfa81`。
 - 本任务分支 `c/desktop-standalone-release` 恢复正确基线；按用户选择，桌面暂保留原生中英文，不为十语言引入新版接口。所有 README 和已有翻译保留。
 - 实查确认此版本使用 V0 会话；后续 V3 记录不会显示，安装前必须使用独立 Home 并保留旧数据，不能宣称原历史可直接继续。
+- 用户已选择完整保留旧会话并导出阅读副本。简洁版默认使用 `~/Library/Application Support/OpenQuantum/Desktop/`，
+  与旧启动器的部署和原生偏好隔离；此默认值直接随应用交付，Finder 与 Dock 启动无需临时环境设置。
 - 使用原版 HTTP 服务、Session V0 和生命周期；独立 Host 扩展保留本机访问认证，不增加登录页。2.0.7 的旧测试结果不能替代本次验证。
 - 用户已授权构建和发布 OpenQuantum 安装包，并在备份后替换本机版本。本次只交付 macOS Apple Silicon 独立 DMG；
   产品源码版本为 `0.8.5`，Codex 公开 Release 仍为 `codex-v0.8.4`。

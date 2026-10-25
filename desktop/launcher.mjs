@@ -7,8 +7,10 @@ import { promisify } from "node:util";
 // Keep the upstream Electron/Harness runtime intact. This bootstrap only gives
 // it a writable deployment and the pinned runtimes shipped with the installer.
 async function start() {
+  // Standalone releases must not reuse the legacy launcher's project or native
+  // profile: newer session formats cannot be continued by this pinned runtime.
   const requestedRoot = path.resolve(process.env.OPENQUANTUM_DESKTOP_DATA_DIR
-    || path.join(app.getPath("appData"), "OpenQuantum"));
+    || path.join(app.getPath("appData"), "OpenQuantum", "Desktop"));
   await mkdir(requestedRoot, { recursive: true });
   const dataRoot = await realpath(requestedRoot);
   const nativeData = path.join(dataRoot, "native");
