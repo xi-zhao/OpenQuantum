@@ -555,6 +555,7 @@ globalThis.__ModuleLoader__.load({
     function apply(ctx) {
       t = ctx.locale.bind(NS);
       activeLocale = () => ctx.locale.getSnapshot().active;
+      const onDemand = Boolean(globalThis.document?.querySelector('meta[name="openquantum-on-demand"]'));
       const connection = ctx.get("connection");
       const credentialOperations = {
         describe: async (refs) => unwrap(await connection.api.credentials.describe({ refs })).credentials,
@@ -565,10 +566,10 @@ globalThis.__ModuleLoader__.load({
         name: "settings.section",
         id: "openquantum-capabilities",
         order: 12,
-        label: () => t("nav"),
+        label: () => onDemand ? "OpenQuantum" : t("nav"),
         locale: NS,
         inject: () => ({ credentialOperations, loopback: connection.isLoopback }),
-      }, globalThis.document?.querySelector('meta[name="openquantum-on-demand"]') ? () => h("iframe", { title: "OpenQuantum 设置", src: "/openquantum/settings", style: { border: 0, width: "100%", height: "calc(100vh - 150px)", minHeight: 520 } }) : CapabilitySettingsSection));
+      }, onDemand ? () => h("iframe", { title: "OpenQuantum", className: "oq-plugin-settings", src: "/openquantum/settings", style: { border: 0, display: "block", width: "100%", height: "min(65vh, 760px)", minHeight: 280 } }) : CapabilitySettingsSection));
       if (!globalThis.document?.querySelector('meta[name="openquantum-channels"][content="disabled"]')) ctx.slots.inject("settings.section", () => ctx.slots.register({
         name: "settings.section",
         id: "openquantum-channels",

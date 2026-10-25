@@ -51,7 +51,7 @@ Session event log 为准，科学状态以 Acceptance Report 为准。2026-09 �
   与旧启动器的部署和原生偏好隔离；此默认值直接随应用交付，Finder 与 Dock 启动无需临时环境设置。
 - 使用原版 HTTP 服务、Session V0 和生命周期；独立 Host 扩展保留本机访问认证，不增加登录页。2.0.7 的旧测试结果不能替代本次验证。
 - v0.8.5 已发布，并在备份后替换本机程序。本次只交付 macOS Apple Silicon 独立 DMG；
-  产品源码版本为 `0.8.5`，Codex 公开 Release 仍为 `codex-v0.8.4`。
+  该发行源码版本为 `0.8.5`，Codex 公开 Release 仍为 `codex-v0.8.4`。
 - 独立应用复用固定上游源码与正式扩展，自带 Node/uv、能力代码和生产依赖；不修改上游实现。
   构建、发布与本机安装证据分别核验，详见 [0.8.5 发布记录](docs/releases/v0.8.5.md)。
 - [PR #45](https://github.com/xi-zhao/OpenQuantum/pull/45) 提高文件上限后，主线签名仍复现 `EMFILE`；
@@ -65,6 +65,13 @@ Session event log 为准，科学状态以 Acceptance Report 为准。2026-09 �
   退出重开后测试会话、模型和中文设置保留。原生文件选择器已触发，但验收工具无法接管其辅助窗口；
   验证工作区通过官方工作区接口预先注册，此项不能算作文件选择器完整验收。
 - 发布附件采用 ad-hoc 本地签名，没有 Apple Developer ID 分发签名或公证；未关闭系统安全检查。
+
+## 0.8.6 插件设置
+
+- 「设置 → OpenQuantum」使用与 Codex 侧边应用相同的页面，提供概览、Skill、凭据，以及高级设置中的 Tool 和 MCP。
+- 简洁导航保留通用、模型与 OpenQuantum；共用目录、分类、搜索和设置逻辑，各宿主分别保存配置和凭据。
+- 不改变按需准备机制或固定的 Desktop/Harness 基线。页面读取不安装 SDK，也不启动计算服务。
+- 更新说明见 [0.8.6 发布记录](docs/releases/v0.8.6.md)；发布、镜像与本机升级的完成证据以该版本 Release 验证附件为准。
 
 ## 插件优先维护
 
