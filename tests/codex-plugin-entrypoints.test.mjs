@@ -44,8 +44,11 @@ test("the only advertised entrypoint opens the existing settings document", asyn
   assert.equal(resource.text, html);
   assert.equal(resource.mimeType, RESOURCE_MIME_TYPE);
   assert.equal(resource._meta["openai/ui"].preferredDisplayMode, "fullscreen");
-  for (const tab of ["runtime", "skills", "tools", "mcp", "credentials"]) assert.ok(resource.text.includes(`data-tab="${tab}"`));
-  assert.equal((resource.text.match(/data-tab=/g) ?? []).length, 5);
+  for (const [tab, label] of [["runtime", "首页"], ["skills", "Skills"], ["mcp", "MCP"]]) {
+    assert.match(resource.text, new RegExp(`<button id="tab-${tab}" data-tab="${tab}"[^>]*>${label}</button>`));
+  }
+  assert.equal((resource.text.match(/data-tab=/g) ?? []).length, 3);
+  assert.doesNotMatch(resource.text, /data-advanced|id="advanced"/);
 });
 
 test("discovery and app sessions share a bundle URI but bind resources to the reading session", async t => {

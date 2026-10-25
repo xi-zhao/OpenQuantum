@@ -91,7 +91,9 @@ npm run desktop:app:smoke -- /absolute/build-directory/artifacts/mac-arm64/OpenQ
 打包需要与目标架构相同的原生 runner、Node `24.14.1` 和 npm；输出在
 `.openquantum/distributions/<platform>-<arch>/artifacts/`。`--dir` 仅准备 `content/`，不生成压缩包。
 独立应用输出 DMG、`SHA256SUMS` 和 `.app`；`desktop:app:package -- --dir --output ...` 只生成 `directory/` 中的应用。
-Desktop 保留原生会话、模型表单、文件和审批组件。默认设置只展示通用与模型两页；语言、外观和输入习惯由原生表单保存。桌面语言暂为原版支持的中文与英文，其他语言 README 和译文文件继续保留。
+Desktop 保留原生会话、模型表单、文件和审批组件。设置提供「通用设置」「模型」「OpenQuantum」三个入口；语言、外观和输入习惯由原生表单保存。桌面语言暂为原版支持的中文与英文，其他语言 README 和译文文件继续保留。
+
+「OpenQuantum」使用与本机 Codex 0.8.4 侧边应用一致的「首页、Skills、MCP」三栏布局。按用途浏览卡片，展开相应 Skill 或 MCP 后配置环境、账户和 Tool 使用限制。分类、搜索、准备状态和管理操作共用一套实现；桌面通过本机受控接口保存到自己的数据目录，不读取或同步 Codex 的凭据和使用限制。打开页面只读取状态，不自动安装 SDK 或启动 MCP 服务。
 插件管理、Agent 预设、开发调试与上游升级入口默认关闭，学习通不出现在个人桌面的侧栏。
 这只改变产品入口；Skill、Tool Provider、Harness MCP Client 与量子验收合同仍按原职责运行。
 

@@ -124,7 +124,7 @@ globalThis.__ModuleLoader__.load({
               () => `${scope.slots.getVersion("settings.section")}:${scope.locale.getSnapshot().revision}`,
             );
             const sections = scope.slots.entriesOfSlot("settings.section")
-              .filter(entry => ["general", "models"].includes(entry.options.id))
+              .filter(entry => ["general", "models", "openquantum-capabilities"].includes(entry.options.id))
               .map(entry => ({ id: entry.options.id, label: typeof entry.options.label === "function"
                 ? entry.options.label() : entry.options.label }));
             const active = sections.some(section => section.id === selected) ? selected : sections[0]?.id;

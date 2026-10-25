@@ -199,6 +199,7 @@ const BRAND_STYLES = `
   }
   .oq-settings-trigger { background: none; color: inherit; border: 0; cursor: pointer; display: flex; align-items: center; gap: 10px; padding: 10px; width: 100%; }
   .oq-settings { width: min(760px, calc(100vw - 24px)); max-height: calc(100vh - 56px); }
+  .oq-settings:has(.oq-plugin-settings) { width: min(1080px, calc(100vw - 24px)); }
   .oq-settings-content { min-height: 200px; overflow: auto; }
   .oq-settings-nav { display: flex; gap: 8px; padding-bottom: 16px; overflow-x: auto; }
   .oq-settings-nav button { background: transparent; color: inherit; font: inherit; border: 1px solid transparent; border-radius: 8px; padding: 8px 12px; cursor: pointer; flex-shrink: 0; }

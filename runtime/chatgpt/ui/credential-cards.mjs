@@ -103,7 +103,7 @@ export function renderCredentialCards(container, entries, { request, refresh, no
     if (service) row.append(credentialField(h, { id: `${scope}-credential-${field.name}`, title,
       configured: field.configured, value: drafts.get(field.name) ?? "", disabled, secret: field.secret, maxLength: 4096,
       description: service.id === "pasqal_cloud" ? undefined : field.description,
-      help: field.writable === false ? "由宿主环境提供，请在对应认证来源修改。" : unavailable ? "已有配置暂时无法读取。可重新保存以统一配置；如保存失败，请检查系统凭据库权限。" : undefined,
+      help: field.writable === false ? "由宿主环境提供，请在对应认证来源修改。" : unavailable ? "已有配置暂时无法读取。可重新保存以统一配置；如保存失败，请检查本机凭据库权限。" : undefined,
       onChange: event => { drafts.set(field.name, event.currentTarget.value); row.querySelector('[data-primary="true"]').disabled = disabled || !event.currentTarget.value.trim(); },
       actions: h("div", { className: "oq-cap-actions" },
         h("button", { type: "button", className: "oq-cap-button", "data-primary": "true", disabled: disabled || !(drafts.get(field.name) ?? "").trim(), onClick: () => void write("set") }, "保存"),

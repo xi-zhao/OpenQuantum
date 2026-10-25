@@ -1,6 +1,6 @@
 # Desktop 原生插件与按需准备
 
-Desktop 使用 DSH 0.1.5-rc.1 的 Cordis Plugin、Tool Registry、Skill Provider、审批和 Agent 生命周期。
+Desktop 使用固定的 DSH Desktop 2.0.0 / Harness 0.1.0-rc.6 的 Cordis Plugin、Tool Registry、Skill Provider、审批和 Agent 生命周期。
 Codex 与 Desktop 共用领域 Skill、固定 Tool 合同、SDK 安装器、环境收据和凭据字段定义。
 两个发行入口分别保存使用限制和凭据；共用实现不等于复制用户密钥。
 
@@ -24,14 +24,14 @@ flowchart TD
 ## 装配与职责
 
 - deployment-scoped `@openquantum/harness-capability-host` 注册 Application Interface、
-  `/openquantum/settings` 与有界 `/openquantum/api/preparation`。原生 Client Slot 内嵌共用设置页。
+  `/openquantum/settings` 与有界 `/openquantum/api/preparation`。原生 Client Slot 内嵌共用设置页，从「设置 → OpenQuantum」进入。沿用 Codex 0.8.4 的首页、Skills、MCP 导航与卡片版式，工具和账户配置归入对应卡片。页面与设置逻辑继续共用，宿主各自保存配置和凭据。
 - agent-scoped `adaptive-capabilities.mjs` 向 DSH 注册原生 Tool Provider 和 Skill Provider。
   搜索只读取说明和收据；准备只处理明确选择的一项，不执行科学任务。
 - `src/settings/desktop/application.mjs` 复用受控设置与准备用例，按 Agent 分配连接和安装所有权。
   它不接管 Session、Turn、Tool 调度、审批或事件日志。
 - 纯 JavaScript Tool 经共用 `native-adapter.mjs` 在进程内执行。跨语言 MCP 沿用已审查的
   固定合同与隔离连接实现；此处是原生 Tool implementation 的 MCP 适配，不是另一套 Harness MCP Client。
-  DSH 0.1.5 的通用 MCP Client 在加载时连接并注册上游全部 Tool，不能直接替代本实现的按需合同。
+  该 Harness 基线的通用 MCP Client 在加载时连接并注册上游全部 Tool，不能直接替代本实现的按需合同。
 - `additional-skills.mjs` 委托 DSH 原生文件 Skill Provider 保留用户自建 Skill。
   内置 Skill 由受控 Provider 拥有；同名文件不能绕过明确禁用。
 - 原有科学结果 Host hook 保留。裸 Tool 名与原 MCP 前缀名进入同一结果物化、Validator 和中央验收链。
@@ -76,7 +76,7 @@ Pasqal 的原生 `run_pasqal_workflow` 调用既有受控工作流；租约获�
 旧 `.env` 中对应凭据一次性纳入原生凭据存储；迁移后删除的值不会从 `.env` 再次恢复。
 
 `desktop:package` 包含原生 Host package、Preset、共享实现、设置页与带摘要的 Tool 目录。
-发行包仍不修改或重新打包原版 DSH Desktop。首次源码启动缺少目录时由构建步骤生成；打开设置不安装 SDK。
+能力包供原版 DSH Desktop 加载；独立 OpenQuantum 应用则捆绑固定的桌面运行时与同一份能力包，不修改上游实现。首次源码启动缺少目录时由构建步骤生成；打开设置不安装 SDK。
 
 ## 可复现验证
 

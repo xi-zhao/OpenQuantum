@@ -485,12 +485,15 @@ test("only minimal Desktop composition enables the empty model hint", () => {
   }
 });
 
-test("Desktop settings owns its child slots and renders only native general and model forms", async () => {
+test("Desktop settings keeps native forms and the shared OpenQuantum section without upstream management pages", async () => {
   const client = await readFile(new URL("../packages/openquantum-web-branding/client.js", import.meta.url), "utf8");
   const declarations = new Set(["sidebar.settings", "shell.overlay"]);
   const occupants = new Map(), pending = new Map(), forms = [];
   const nativeModels = { options: { id: "models", label: "Models" } };
-  const nativeDesktop = { options: { id: "desktop", label: "Desktop" } };
+  const hiddenSections = ["desktop", "plugins", "agents", "openquantum-channels"].map(id => ({ options: { id, label: id } }));
+  const openquantum = { options: { id: "openquantum-capabilities", label: () => "OpenQuantum" } };
+  const state = [];
+  let hook = 0;
   const slots = {
     inject(name, register) {
       if (declarations.has(name)) return register();
@@ -508,11 +511,11 @@ test("Desktop settings owns its child slots and renders only native general and 
       return () => occupants.delete(options.name);
     },
     subscribe: () => () => {}, getVersion: () => 1,
-    entriesOfSlot: () => [occupants.get("settings.section"), nativeModels, nativeDesktop],
+    entriesOfSlot: () => [occupants.get("settings.section"), nativeModels, openquantum, ...hiddenSections],
   };
   const react = {
     createElement: (type, props, ...children) => { assert.ok(type, "every component must exist"); return { type, props, children }; },
-    Fragment: "fragment", useState: value => [value, () => {}], useRef: () => ({ current: null }),
+    Fragment: "fragment", useState: value => { const index = hook++; state[index] ??= value; return [state[index], next => { state[index] = next; }]; }, useRef: () => ({ current: null }),
     useEffect() {}, useSyncExternalStore: (_subscribe, snapshot) => snapshot(),
   };
   let plugin;
@@ -536,12 +539,16 @@ test("Desktop settings owns its child slots and renders only native general and 
   } });
   const root = render(occupants.get("sidebar.settings"), { wide: true });
   const modal = root.children.find(child => child.type === "native-modal");
-  assert.deepEqual(modal.children[0].children.map(button => button.children[0]), ["general.nav", "Models"]);
+  assert.deepEqual(modal.children[0].children.map(button => button.children[0]), ["general.nav", "Models", "OpenQuantum"]);
   assert.equal(forms[0].name, "settings.section");
   assert.equal(forms[0].options.only, "general");
   render(occupants.get("settings.section"));
   assert.equal(forms[1].name, "settings.general.item");
   assert.equal(typeof modal.props.onClose, "function");
+  modal.children[0].children[2].props.onClick();
+  hook = 0;
+  render(occupants.get("sidebar.settings"), { wide: true });
+  assert.equal(forms.at(-1).options.only, "openquantum-capabilities");
 });
 
 
