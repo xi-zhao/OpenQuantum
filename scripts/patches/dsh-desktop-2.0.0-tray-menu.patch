@@ -111,7 +111,12 @@
      } catch (cause) {
 --- a/dsh-plugin-desktop/tests/electron-runtime.spec.ts
 +++ b/dsh-plugin-desktop/tests/electron-runtime.spec.ts
-@@ -132,6 +132,7 @@
+@@ -1,3 +1,4 @@
++import { join } from 'node:path'
+ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+ import type { DesktopShellSpec } from '../src/runtime.ts'
+ 
+@@ -132,6 +133,7 @@
        dock: { setIcon: vi.fn() },
        getPath: vi.fn(() => '/tmp/dsh-desktop-user-data'),
        getVersion: vi.fn(() => '43.4.0'),
@@ -119,7 +124,7 @@
        isPackaged: false,
        on: vi.fn(),
        off: vi.fn(),
-@@ -359,6 +360,44 @@
+@@ -359,6 +361,44 @@
      await release()
    })
  
@@ -164,6 +169,33 @@
    it('rebuilds ordered effect-scoped tray contributions without replacing native commands', async () => {
      vi.spyOn(process, 'platform', 'get').mockReturnValue('darwin')
      const { ElectronDesktopRuntime } = await import('../src/electron-runtime.ts')
+@@ -470,14 +510,14 @@
+       expect(terminal.open).toHaveBeenCalledWith(expect.objectContaining({
+         platform: 'darwin',
+         appExecutable: process.execPath,
+-        dshBootstrapPath: expect.stringMatching(/\/src\/desktop-cli\.js$/u),
+-        pnpmBinPath: expect.stringMatching(/\/node_modules\/pnpm\/bin\/pnpm\.mjs$/u),
++        dshBootstrapPath: expect.stringMatching(/[\\/]src[\\/]desktop-cli\.js$/u),
++        pnpmBinPath: expect.stringMatching(/[\\/]node_modules[\\/]pnpm[\\/]bin[\\/]pnpm\.mjs$/u),
+         electronVersion: '43.4.0',
+         profileName: 'desktop',
+         productVersion: '2.0.0',
+         profileDir: '/tmp/dsh-home/profiles/desktop',
+         homeDir: '/tmp/dsh-home',
+-        stateDir: expect.stringMatching(/^\/tmp\/dsh-desktop-user-data\/cli\/[a-f0-9]{64}$/u),
++        stateDir: expect.stringMatching(/^[\\/]tmp[\\/]dsh-desktop-user-data[\\/]cli[\\/][a-f0-9]{64}$/u),
+         spawn: expect.any(Function),
+         onLaunchError: expect.any(Function),
+       }))
+@@ -542,7 +582,7 @@
+       isPackaged: false,
+       canDownload: false,
+       currentVersion: '2.0.0',
+-      statePath: '/tmp/dsh-desktop-user-data/updates/state.json',
++      statePath: join('/tmp/dsh-desktop-user-data', 'updates', 'state.json'),
+     })
+     electron.app.isPackaged = true
+     expect(runtime.updates).toMatchObject({ isPackaged: true, canDownload: true })
 --- a/dsh-plugin-desktop/src/main.ts
 +++ b/dsh-plugin-desktop/src/main.ts
 @@ -36,7 +36,7 @@
