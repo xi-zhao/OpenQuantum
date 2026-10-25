@@ -16,7 +16,7 @@ async function start() {
   const nativeData = path.join(dataRoot, "native");
   await mkdir(nativeData, { recursive: true });
   app.setPath("userData", nativeData);
-  app.setName("OpenQuantum Desktop");
+  app.setName("OpenQuantum");
   // Repeated requests in this process retain the lock for upstream main.js.
   // A second launch forwards its arguments to the running Desktop without
   // rewriting live configuration or racing a first-install preparation.

@@ -13,7 +13,7 @@
 +  showContributions?: boolean
 +  showModeSwitch?: boolean
  }
-
+ 
  /** Stable placement groups for Host plugins that extend the native tray. */
 @@ -125,6 +133,8 @@
    iconPath: string
@@ -27,13 +27,13 @@
 @@ -166,6 +176,9 @@
     */
    registerTrayItem(item: DesktopTrayItem): DesktopTrayItemRegistration
-
+ 
 +  /** Refresh presentation after a Host preference changes; safe before mount. */
 +  refreshTrayMenu?(): void
 +
    /** Open a native terminal containing packaged DSH command shims. */
    openTerminal(): void
-
+ 
 --- a/dsh-plugin-desktop/src/electron-runtime.ts
 +++ b/dsh-plugin-desktop/src/electron-runtime.ts
 @@ -144,17 +144,17 @@
@@ -60,14 +60,14 @@
 @@ -406,22 +406,24 @@
      }
    }
-
+ 
 -  private rebuildTrayMenu(): void {
 +  /** @inheritdoc */
 +  refreshTrayMenu(): void {
      const tray = this.tray
      const spec = this.scheduled
      if (tray === undefined || spec === undefined) return
-
+ 
 +    const policy = spec.readTrayMenu?.(app.getPreferredSystemLanguages())
      const show = (): void => { this.show() }
 -    const tools = this.contributedTrayItems('tools')
@@ -122,7 +122,7 @@
 @@ -359,6 +360,44 @@
      await release()
    })
-
+ 
 +  it('refreshes a minimal localized tray while retaining native show, quit and disposal', async () => {
 +    vi.spyOn(process, 'platform', 'get').mockReturnValue('darwin')
 +    const { ElectronDesktopRuntime } = await import('../src/electron-runtime.ts')
@@ -164,3 +164,14 @@
    it('rebuilds ordered effect-scoped tray contributions without replacing native commands', async () => {
      vi.spyOn(process, 'platform', 'get').mockReturnValue('darwin')
      const { ElectronDesktopRuntime } = await import('../src/electron-runtime.ts')
+--- a/dsh-plugin-desktop/src/main.ts
++++ b/dsh-plugin-desktop/src/main.ts
+@@ -36,7 +36,7 @@
+ } from './shutdown.ts'
+ 
+ const BIN_NAME = 'dsh-plugin-desktop'
+-const PRODUCT_NAME = 'DSH Desktop'
++const PRODUCT_NAME = app.isPackaged ? app.getName() : 'DSH Desktop'
+ 
+ /** Report profile recovery without changing startup or rollback outcomes. */
+ function notifyProfileRecovery(runtime: ElectronDesktopRuntime, body: string): void {

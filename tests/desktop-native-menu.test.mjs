@@ -9,7 +9,7 @@ import { buildDesktopNativeMenu, verifyDesktopNativeMenu } from "../scripts/lib/
 import { desktopSourceDirectory } from "../scripts/lib/desktop-source.mjs";
 
 const upstream = desktopSourceDirectory(fileURLToPath(new URL("..", import.meta.url)));
-const files = ["src/runtime.ts", "src/electron-runtime.ts", "tests/electron-runtime.spec.ts"];
+const files = ["src/main.ts", "src/runtime.ts", "src/electron-runtime.ts", "tests/electron-runtime.spec.ts"];
 
 for (const succeeds of [true, false]) {
   test(`native menu compilation restores the pinned source after ${succeeds ? "success" : "failure"}`, {
