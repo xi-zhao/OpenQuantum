@@ -26,7 +26,7 @@
 | `fieldqkit-hardware` | FieldQKit | python | fieldqkit @ git+https://github.com/FieldQuantum/fieldqkit.git@3ef2493d3f840b6a924af66a0c3f1b79cfce3fa0 | QuantumHardwareClient、provider runtime 与供应商后端协议 | 本地程序构建与外部调用分开；账户、凭据、费用、设备操作和数据外发沿用宿主及用户授权。原生 SDK 访问不自动启用服务。 |
 | `flagquantum-workbench` | FlagQuantum | python | flagquantum-mcp-server==0.3.0, flagquantum==0.2.0 | Circuit、序列化、门、拓扑、路由、训练与后端 | 按固定版本、已安装可选组件及目标平台核实 |
 | `flow-vqe` | Flow-VQE source / Torch / Zuko | python | torch==2.6.0, torchaudio==2.6.0, torchvision==0.21.0, zuko==1.4.0, numpy==1.26.4, pennylane==0.40.0, pennylane-lightning==0.40.0, autoray==0.7.2, scipy==1.17.1, matplotlib==3.10.1, h5py==3.13.0, pandas==2.2.3, pyscf==2.8.0, openfermion==1.7.0, openfermionpyscf==0.5, tqdm==4.67.1, seaborn==0.13.2, basis-set-exchange | 自定义 objective、分布、flow、训练数据与优化循环 | 完整 SDK setup 另取固定版本上游源码，论文程序的预置 CLI 不限制用户用公开函数自定义任务。旧 upstream/ 仅供原有便捷 Tool 的稳定实现。 SciPy 固定为 1.17.1，以避开原 1.15.2 PROPACK 扩展在当前 macOS 的加载失败；这是记录在依赖锁中的兼容性调整。 |
-| `graphix-mbqc` | Graphix | python | graphix==0.4, numpy==2.4.6 | 自定义 pattern、测量平面、依赖、标准化、优化与模拟 | 按固定版本、已安装可选组件及目标平台核实 |
+| `graphix-mbqc` | Graphix | python | graphix==0.4.1, numpy==2.4.6 | 自定义 pattern、测量平面、依赖、标准化、优化与模拟 | 按固定版本、已安装可选组件及目标平台核实 |
 | `guppy-programs` | Guppy / Selene | python | guppylang==1.1.1, selene-sim==0.3.2 | 任意 Guppy 程序、控制流、编译、模拟与结果处理 | 按固定版本、已安装可选组件及目标平台核实 |
 | `hamiltonian-simulation` | Qiskit | python | qiskit==2.5.2, numpy==2.5.3, scipy==1.18.1 | QuantumCircuit、自定义指令、Hamiltonian、演化合成与量子信息对象 | 按固定版本、已安装可选组件及目标平台核实 |
 | `ionq-programs` | Qiskit IonQ | python | qiskit-ionq==1.1.1, qiskit==2.5.2 | 原生门、电路转换、provider、backend 与 job API | 本地程序构建与外部调用分开；账户、凭据、费用、设备操作和数据外发沿用宿主及用户授权。原生 SDK 访问不自动启用服务。 |

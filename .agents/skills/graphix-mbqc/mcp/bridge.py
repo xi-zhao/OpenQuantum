@@ -12,7 +12,7 @@ def compute(v):
     from graphix.transpiler import Circuit
     from graphix.simulator import PatternSimulator, DefaultMeasureMethod
     from graphix.states import BasicStates
-    if version("graphix") != "0.4":
+    if version("graphix") != "0.4.1":
         raise ValueError("Unexpected Graphix version; restore the frozen environment")
     n = v["numQubits"]
     circuit = Circuit(n)
@@ -61,7 +61,7 @@ def compute(v):
         "Pure zero or plus product input, noiseless adaptive MBQC, with output Pauli corrections included. Angles are radians at the circuit input.",
         "Seeds select sampled measurement branches; they do not exhaust all branches or prove arbitrary-input channel equivalence.",
         "Graph nodes are MBQC resource qubits, not logical width. The returned pattern includes preparation, entanglement, measurement and correction commands.",
-        "Graphix 0.4 and NumPy 2.4.6 are frozen together. No hardware, noise model or central scientific acceptance."]
+        "Graphix 0.4.1 and NumPy 2.4.6 are frozen together. No hardware, noise model or central scientific acceptance."]
 
 
 execute(compute)
