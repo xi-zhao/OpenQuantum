@@ -11,43 +11,12 @@ import { readSdkLibraries } from "../src/lib/sdk-access.mjs";
 const root = fileURLToPath(new URL("..", import.meta.url));
 const sdkLibraries = await readSdkLibraries(root);
 const ids = ["sqd-chemistry", "tjm-dynamics", "ldpc-decoding", "flow-vqe", "tenpy-ground-state", "randomized-measurements"];
-const supported = ["fieldqkit-hardware", "qpanda-qubo", "quantum-circuit-verification", "qec-memory-experiment", "fatqat-workbench", "tyxonq-workbench", "quantum-information-audit", "qbraid-conversion", "qdmi-device", ...ids, "hamiltonian-simulation", "qcut-knitting", "compact-optimization", "openqarp-excited-states", "cqlib-kernel", "flagquantum-workbench", "mitiq-error-mitigation", "dynamiqs-dynamics", "clifft-sampling", "oqupy-dynamics", "deltakit-qec", "pyzx-optimization", "graphix-mbqc", "symmer-tapering", "paulie-algebra"];
-supported.push("bloqade-analog");
-supported.push(
-  "pennylane-differentiable", "deepquantum-differentiable", "tensorcircuit-differentiable", "mindquantum-differentiable",
-  "pytket-compilation", "ocean-optimization", "kaiwu-qubo", "pyquil-simulation", "spinqit-simulation", "qutrunk-simulation",
-  "perceval-photonics", "iqm-circuit-workbench", "alicebob-cat-circuits", "pulser-dynamics", "qoolqit-workbench",
-  "ionq-programs", "superstaq-compilation",
-);
-supported.push(
-  "qsteed-compilation",
-  "quairkit-information",
-  "qcompute-simulation",
-  "qibo-simulation",
-  "qrisp-arithmetic",
-  "lightworks-photonics",
-  "braket-simulation",
-  "quri-parts-estimation",
-  "qdk-resource-estimation",
-  "qualtran-resources",
-  "openfermion-mapping",
-  "mqt-ddsim",
-  "mqt-qmap",
-  "classiq-synthesis",
-  "qctrl-workbench",
-  "qua-programs",
-  "laboneq-control",
-  "qcarchive-query",
-  "cudaq-simulation",
-  "netqasm-network"
-);
+// Python and Julia setup entries come from the SDK catalog. QDMI also has a
+// Python bridge, although its primary SDK entry describes the native C ABI.
+const supported = ["qdmi-device", ...sdkLibraries
+  .filter(entry => entry.language === "python" || entry.language === "julia")
+  .map(entry => entry.id)];
 // These SDKs publish different Python ABIs; keep their environments isolated.
-supported.push(
-  "simqn-network", "qcover-optimization", "vqnet-learning", "pychemiq-chemistry",
-  "qblox-scheduling", "qililab-control", "guppy-programs", "oqc-qat",
-  "mrmustard-optics", "merlin-learning", "mimiq-simulation", "myqlm-simulation",
-  "aqt-workbench", "oqc-cloud", "quantuminspire-cloud",
-);
 const pythonVersions = {
   "mrmustard-optics": "3.11",
   "qcover-optimization": "3.10",
@@ -59,8 +28,6 @@ const pythonVersions = {
   "qutrunk-simulation": "3.10",
 };
 const selected = process.argv.slice(2);
-supported.push("pairinteraction-rydberg");
-supported.push(...sdkLibraries.filter(entry => entry.language === "python" || entry.language === "julia").map(entry => entry.id));
 const allowedEnvironment = ["HOME", "PATH", "HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY", "NO_PROXY", "SSL_CERT_FILE", "SSL_CERT_DIR", "UV_CACHE_DIR", "UV_PYTHON_INSTALL_DIR", "UV_CONCURRENT_DOWNLOADS", "UV_HTTP_TIMEOUT", "UV_HTTP_RETRIES", "UV_LINK_MODE", "SYSTEMROOT", "TEMP", "TMP", "TMPDIR", "WINDIR"];
 const environment = Object.fromEntries(allowedEnvironment.filter(key => process.env[key]).map(key => [key, process.env[key]]));
 if (selected.some((id) => !supported.includes(id))) throw new Error(`Expected capability ids from: ${supported.join(", ")}`);
