@@ -33,7 +33,7 @@ test("Codex categories are presentation metadata and preserve configured states"
   assert.equal(f.calls(), 0);
 });
 
-test("settings change the real MCP inventory and reject a stale cached Tool call", async t => {
+test("settings change execution policy, retain the stable MCP interface and reject cached calls", async t => {
   const f = await fixture(t);
   const connections = new Connections(f);
   const server = createMcpServer({ ...f, connections, credentialWindow: {}, html: "<html></html>", release: { version: "0.7.4" } });
@@ -41,12 +41,18 @@ test("settings change the real MCP inventory and reject a stale cached Tool call
   const [a, b] = InMemoryTransport.createLinkedPair();
   await Promise.all([server.connect(a), client.connect(b)]);
   t.after(async () => { await client.close(); await server.close(); });
-  assert.ok((await client.listTools()).tools.some(tool => tool.name === "calculate"));
+  const initial = (await client.listTools()).tools;
+  assert.ok(initial.some(tool => tool.name === "execute_openquantum_tool"));
   await client.callTool({ name: "calculate", arguments: {} }); assert.equal(f.calls(), 1);
   const snapshot = await f.settings.snapshot();
   await f.settings.command({ action: "tool.set", id: "calculate", enabled: false, revision: snapshot.revision });
   assert.ok(!(await client.listTools()).tools.some(tool => tool.name === "calculate"));
+  assert.deepEqual((await client.listTools()).tools, initial);
+  const blocked = await client.callTool({ name: "find_openquantum_skills", arguments: { skillId: "example", toolName: "calculate" } });
+  assert.equal(blocked.structuredContent.state, "blocked");
+  assert.equal(blocked.structuredContent.tool, undefined);
   assert.equal((await client.callTool({ name: "calculate", arguments: {} })).isError, true);
+  assert.equal((await client.callTool({ name: "execute_openquantum_tool", arguments: { skillId: "example", toolName: "calculate", arguments: {} } })).isError, true);
   assert.equal(f.calls(), 1);
   const management = (await client.listTools()).tools.find(tool => tool.name === SETTINGS_TOOL);
   assert.deepEqual(management._meta.ui.visibility, ["app"]);

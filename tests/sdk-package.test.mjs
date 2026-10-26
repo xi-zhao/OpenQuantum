@@ -6,6 +6,9 @@ import path from "node:path";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { fileURLToPath } from "node:url";
+import { randomUUID } from "node:crypto";
+import { Client } from "@modelcontextprotocol/sdk/client/index.js";
+import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 import { buildPlugin } from "../scripts/build-codex-plugin.mjs";
 import { readSdkLibraries } from "../src/lib/sdk-access.mjs";
 import { readCapabilities, providerGroups } from "../runtime/chatgpt/catalog.mjs";
@@ -95,4 +98,46 @@ test("SDK access survives archive, split installation and cached Skill relocatio
   const workbench = await fs.readFile(path.join(cached, "skills/quantum-sdk-workbench/SKILL.md"), "utf8");
   assert.match(workbench, /原生 SDK/);
   await fs.access(path.join(cached, "skills/netqasm-network/SKILL.md"));
+  // Exercise the relocated bundle over real stdio. Observing spawn in this
+  // process distinguishes a static catalog from eager provider handshakes.
+  const trace = path.join(directory, "provider-starts.jsonl");
+  const preload = path.join(directory, "trace-spawn.mjs");
+  await fs.writeFile(preload, `import cp from 'node:child_process';
+import fs from 'node:fs';
+import { syncBuiltinESMExports } from 'node:module';
+const spawn = cp.spawn;
+cp.spawn = function(command, args, options) {
+  fs.appendFileSync(${JSON.stringify(trace)}, JSON.stringify({ command, args }) + '\\n');
+  return spawn.call(this, command, args, options);
+};
+syncBuiltinESMExports();\n`);
+  const transport = new StdioClientTransport({
+    command: process.execPath, args: ["--import", preload, path.join(runtime, "runtime/chatgpt/main.mjs"), "--stdio"], cwd: directory,
+    env: { PATH: process.env.PATH, HOME: process.env.HOME, ...(process.env.SYSTEMROOT ? { SYSTEMROOT: process.env.SYSTEMROOT } : {}),
+      CODEX_HOME: path.join(directory, "stdio codex"), OPENQUANTUM_PLUGIN_ROOT: cached,
+      OPENQUANTUM_PLUGIN_SETTINGS_HOME: path.join(directory, "stdio settings"),
+      OPENQUANTUM_PLUGIN_CREDENTIAL_SERVICE: `org.openquantum.test.${randomUUID()}` }, stderr: "pipe",
+  });
+  let stderr = "";
+  transport.stderr.on("data", bytes => { stderr += bytes; });
+  const client = new Client({ name: "on-demand-package-test", version: "1.0.0" });
+  const started = performance.now();
+  try {
+    await client.connect(transport, { timeout: 15000 });
+    const listed = await client.listTools();
+    assert.ok(listed.tools.some(tool => tool.name === "execute_openquantum_tool"));
+    await assert.rejects(fs.access(trace), { code: "ENOENT" });
+    t.diagnostic(`Relocated MCP handshake and tools/list: ${Math.round(performance.now() - started)} ms; zero provider processes`);
+    const reference = await client.callTool({ name: "execute_openquantum_tool", arguments: { skillId: "quantum-practices", toolName: "quantum_practices", arguments: { action: "search", query: "QFT", limit: 1 } } });
+    assert.notEqual(reference.isError, true, JSON.stringify(reference));
+    assert.match(JSON.stringify(reference.content), /QFT|Fourier/i);
+    const starts = (await fs.readFile(trace, "utf8")).trim().split("\n").map(JSON.parse);
+    assert.equal(starts.length, 1);
+    assert.equal(starts[0].args.at(-1), "native:./quantum-practices-tools.mjs");
+    await assert.rejects(fs.access(path.join(runtime, "examples/quantum-algorithms/.venv")), { code: "ENOENT" });
+    assert.equal((await locateSdkRuntime(cached)), runtime);
+  } catch (error) {
+    t.diagnostic(stderr);
+    throw error;
+  } finally { await client.close(); }
 });

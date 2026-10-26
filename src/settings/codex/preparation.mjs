@@ -1,4 +1,5 @@
 import path from "node:path";
+import { ALGORITHM_GROUPS, algorithmGroupArgs, algorithmSelection } from "../../lib/algorithm-environment.mjs";
 import { atomicWrite, readOptional, withLock } from "./storage.mjs";
 import { skillRelations } from "./relations.mjs";
 import { SERVICES, serviceById, serviceSupported, serviceValues, missingFields } from "./service-catalog.mjs";
@@ -14,6 +15,7 @@ export const preparationProperties = {
   skillId: { type: "string", maxLength: 128 },
   toolName: { type: "string", maxLength: 128, description: "Choose one declared Tool. Omit for a knowledge-only Skill." },
   sdkId: { type: "string", maxLength: 128, description: "Choose one declared SDK for a custom program instead of a scientific Tool." },
+  dependencyGroups: { type: "array", maxItems: 4, uniqueItems: true, items: { enum: ALGORITHM_GROUPS }, description: "Only for quantum-algorithms: add the groups required by the current task. The Skill's own required groups are always included." },
   serviceId: { type: "string", maxLength: 128, description: "Only for a task that needs this Skill's cloud credentials, e.g. pasqal_cloud. Never pass credentials." },
   credentialField: { type: "string", maxLength: 128, description: "Optional field NAME returned by a preparation_required result for the chosen platform. Never pass its value." },
   operationName: { type: "string", maxLength: 128, description: "For an integrated external MCP Tool, select an operation to inspect its exact input schema and preparation requirements." },
@@ -24,6 +26,7 @@ function validate(input, keys) {
   for (const key of ["skillId", "toolName", "sdkId", "serviceId", "credentialField", "operationName", "query"]) if (input[key] !== undefined && (typeof input[key] !== "string" || !input[key].trim() || input[key].length > (key === "query" ? 240 : 128))) throw new Error("能力选择无效");
   if (input.operationArguments !== undefined && (!input.operationName || !input.operationArguments || typeof input.operationArguments !== "object" || Array.isArray(input.operationArguments))) throw new Error("操作参数需要 operationName 和对象参数");
   if (input.retry !== undefined && typeof input.retry !== "boolean") throw new Error("重试选项无效");
+  if (input.dependencyGroups !== undefined) algorithmGroupArgs(input.dependencyGroups);
 }
 export async function recentSkills(settings) {
   const raw = await readOptional(path.join(path.dirname(settings.file), "activity.json"));
@@ -45,14 +48,14 @@ export async function recordSkill(settings, id, state, extra = {}) {
     await atomicWrite(file, JSON.stringify([item, ...previous.filter(item => item.id !== id)].slice(0, 20)));
   });
 }
-const available = settings => settings.backend.sourceCapabilities.filter(item => item.status === "available" && item.skill);
-const brief = (item, enabled) => ({ skillId: item.id, title: item.title, description: (item.summary ?? item.description ?? "").slice(0, 240), policy: enabled ? "auto" : "blocked", tools: item.tools ?? [], sdkIds: item.sdkIds ?? [] });
+const available = settings => settings.backend.sourceCapabilities.filter(item => item.status === "available" && (item.skill || item.tools?.length));
+const brief = (item, enabled) => ({ skillId: item.id, kind: item.skill ? "skill" : "tool", title: item.title, description: (item.summary ?? item.description ?? "").slice(0, 240), policy: enabled ? "auto" : "blocked", tools: item.tools ?? [], sdkIds: item.sdkIds ?? [] });
 
 export async function discoverSkills(settings, input = {}) {
   validate(input, [...Object.keys(preparationProperties), "query"]);
   if (input.skillId) return inspectPreparation(settings, input);
-  if (["toolName", "sdkId", "serviceId", "credentialField", "operationName", "operationArguments"].some(key => input[key])) throw new Error("请先指定 Skill");
-  const { codex } = await settings.read();
+  if (["toolName", "sdkId", "dependencyGroups", "serviceId", "credentialField", "operationName", "operationArguments"].some(key => input[key])) throw new Error("请先指定 Skill");
+  const { config, codex } = await settings.read();
   const enabled = new Map(settings.skills(codex).map(item => [item.id, item.enabled]));
   const query = (input.query ?? "").normalize("NFKC").toLowerCase();
   const terms = query.match(/[a-z0-9_-]+|[\p{Script=Han}]/gu) ?? [];
@@ -60,11 +63,11 @@ export async function discoverSkills(settings, input = {}) {
     const text = `${item.id} ${item.title} ${item.summary} ${item.description} ${item.tools.join(" ")}`.normalize("NFKC").toLowerCase();
     const score = (query && text.includes(query) ? 20 : 0) + terms.reduce((sum, term) => sum + (text.includes(term) ? 1 : 0), 0);
     return { item, score };
-  }).filter(value => (!terms.length || value.score > 0) && enabled.get(value.item.id))
+  }).filter(({ item, score }) => (!terms.length || score > 0) && (item.skill ? enabled.get(item.id) : item.tools.some(name => settings.builtinAllowed(config, codex, name))))
     .sort((a, b) => b.score - a.score || a.item.id.localeCompare(b.item.id));
   return { selection: "Agent chooses a relevant Skill; users can explicitly forbid it. Discovery has no setup side effects.",
     matches: matches.slice(0, 8).map(({ item }) => brief(item, true)), totalMatches: matches.length,
-    next: `Read the selected Skill, then call ${PREPARE_TOOL} only when its execution is needed. Refine the query if needed.` };
+    next: `Inspect one selection for its exact Tool contract; read its Skill when present. Call ${PREPARE_TOOL} only when execution is needed. Refine the query if needed.` };
 }
 
 export async function inspectPreparation(settings, input) {
@@ -72,7 +75,7 @@ export async function inspectPreparation(settings, input) {
   const capability = available(settings).find(item => item.id === input.skillId);
   if (!capability) throw new Error("当前插件未提供此 Skill");
   const { config, codex } = await settings.read();
-  const enabled = settings.skills(codex).find(item => item.id === capability.id)?.enabled;
+  const enabled = !capability.skill || settings.skills(codex).find(item => item.id === capability.id)?.enabled;
   const result = { ...brief(capability, enabled), state: "ready", selection: { skillId: capability.id } };
   if (!enabled) return { ...result, state: "blocked", message: "用户已禁止此 Skill；不能自行恢复或改用原生代码绕过。" };
   if (input.toolName && input.sdkId) throw new Error("一次只选择一个 Tool 或 SDK");
@@ -81,10 +84,13 @@ export async function inspectPreparation(settings, input) {
   const toolName = input.toolName ?? (!input.sdkId && capability.tools.length === 1 ? capability.tools[0] : undefined);
   if (!toolName && !input.sdkId && capability.tools.length > 1) return { ...result, state: "choice_required", message: "按任务选择一个 Tool，或指定 SDK 编写自定义程序。" };
   const sdkId = input.sdkId ?? (toolName ? settings.environmentFor(toolName) : capability.sdkIds?.length === 1 ? capability.sdkIds[0] : null);
+  if (input.dependencyGroups && sdkId !== "quantum-algorithms") throw new Error("依赖组只适用于 quantum-algorithms");
+  const groups = sdkId === "quantum-algorithms" ? algorithmSelection(algorithmGroupArgs([...new Set([...(capability.sdkGroups ?? []), ...(input.dependencyGroups ?? [])])])) : [];
   if (!toolName && !sdkId && capability.sdkIds?.length > 1) return { ...result, state: "choice_required", message: "按任务选择一个 SDK；不会安装整个目录。" };
   if (sdkId && !toolName && !settings.sdkAllowed(config, codex, sdkId)) return { ...result, state: "blocked", message: "用户已禁止此 SDK 所属的 Skill、Tool 或 MCP；不能通过其他 Skill 绕过。" };
   if (toolName) result.selection.toolName = toolName;
   else if (sdkId) result.selection.sdkId = sdkId;
+  if (sdkId === "quantum-algorithms") result.selection.dependencyGroups = groups;
   // A direct SDK route must not silently circumvent a forbidden associated
   // provider or Tool. The user may restore the choice in settings.
   const relations = skillRelations(capability, settings.backend, SERVICES);
@@ -92,7 +98,7 @@ export async function inspectPreparation(settings, input) {
   // governed by its actual owner (sdkAllowed above), not every workbench MCP.
   const blocked = (toolName ? [toolName] : sdkId ? [] : relations.toolIds).filter(id => !settings.toolEnabled(config, id));
   const blockedProviders = (toolName ? [settings.backend.providerFor(toolName)] : sdkId ? [] : relations.providerIds).filter(id => config.disabledProviders.includes(id));
-  if (blocked.length || blockedProviders.length) return { ...result, state: "blocked", blockedTools: blocked, blockedProviders,
+  if (blocked.length || blockedProviders.length || (toolName && !settings.builtinAllowed(config, codex, toolName, capability.id))) return { ...result, state: "blocked", blockedTools: blocked, blockedProviders,
     message: "用户已禁止关联的 Tool 或 MCP；准备不会更改此选择。" };
   const external = toolName && externalMcp(settings.backend.providerFor(toolName));
   let requiredField;
@@ -133,9 +139,9 @@ export async function inspectPreparation(settings, input) {
   }
   if (sdkId) {
     if (!settings.environments) return { ...result, state: "unavailable", message: "当前插件缺少环境管理入口。" };
-    const environment = await settings.environments.status(sdkId);
+    const environment = await settings.environments.status(sdkId, { groups });
     result.environment = { id: sdkId, title: environment.title, state: environment.state, installation: environment.installation,
-      ready: environment.ready, job: environment.job };
+      ready: environment.ready, job: environment.job, ...(sdkId === "quantum-algorithms" ? { requiredGroups: groups } : {}) };
     if (!environment.ready) result.state = runningJob(environment.job) && ["preparing", "cancelling"].includes(environment.state) ? "preparing"
       : ["unsupported_platform", "unreadable", "needs_configuration"].includes(environment.state) ? "configuration_required"
         : ["failed", "cancelled", "interrupted"].includes(environment.job?.status) ? "retry_required" : "environment_required";
@@ -165,7 +171,7 @@ export async function prepareSkill(settings, input, signal, { allowInstall = tru
       // before installation, after asynchronous planning and owner creation.
       if ((typeof allowInstall === "function" ? allowInstall() : allowInstall) !== true) return { ...plan, message: "准备状态或权限已变化，请重新调用 prepare_openquantum_skill 以确认安装。" };
       const operation = plan.environment.installation === "present" ? "check" : "install";
-      await settings.environments.start(plan.environment.id, operation, { signal, onStarted });
+      await settings.environments.start(plan.environment.id, operation, { signal, onStarted, groups: plan.environment.requiredGroups ?? [] });
       plan = await inspectPreparation(settings, input);
     }
     return plan;
@@ -174,9 +180,9 @@ export async function prepareSkill(settings, input, signal, { allowInstall = tru
   return result;
 }
 
-export async function executionPreparation(settings, name, args) {
-  const capability = settings.capabilityFor(name);
-  if (!capability?.skill) return null;
+export async function executionPreparation(settings, name, args, { skillId } = {}) {
+  const capability = skillId ? settings.backend.sourceCapabilities.find(item => item.id === skillId) : settings.capabilityFor(name);
+  if (!capability) return null;
   const external = externalMcp(settings.backend.providerFor(name));
   const plan = await inspectPreparation(settings, { skillId: capability.id, toolName: name,
     ...(external ? { operationName: args.operation, operationArguments: args.arguments } : {}) });

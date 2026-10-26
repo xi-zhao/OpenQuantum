@@ -6,6 +6,7 @@ import { parse as parseToml } from "smol-toml";
 import { parse as parseYaml } from "yaml";
 import { pythonEnvironmentRoot } from "./prepared-python.mjs";
 import { verifySdkSourceSnapshot } from "./sdk-source-record.mjs";
+import { algorithmEnvironmentRoot, algorithmPreparation, algorithmSelection } from "./algorithm-environment.mjs";
 
 // Documentation and environment discovery, not a Tool registry or an executor.
 // The host owns file editing, processes, permissions, cancellation and jobs.
@@ -88,17 +89,24 @@ async function preparedState(command, marker, lockSha256) {
   return "prepared";
 }
 
-export async function describeSdk(root, id, { environment = process.env } = {}) {
+export async function describeSdk(root, id, { environment = process.env, selection = [] } = {}) {
   // Resolve only reviewed catalog IDs, never arbitrary caller paths or modules.
   const inventory = await sdkInventory(root);
   const entry = inventory.libraries.find((library) => library.id === id);
   if (!entry) throw new Error(`Unknown SDK id: ${id}`);
+  if (selection.length && id !== "quantum-algorithms") throw new Error("Dependency groups apply only to quantum-algorithms");
+  const groups = id === "quantum-algorithms" ? algorithmSelection(selection) : null;
   const project = path.join(root, entry.project);
-  const setup = { command: process.execPath, args: [path.join(root, "scripts/setup-sdk.mjs"), id], cwd: root, effect: "workspace-write-and-download" };
+  const setup = { command: process.execPath, args: [path.join(root, "scripts/setup-sdk.mjs"), id, ...selection], cwd: root, effect: "workspace-write-and-download" };
   let interpreter = null;
   let state = "not_checked";
-  if (entry.language === "python") {
-    const directory = id === "quantum-algorithms" && !environment.OPENQUANTUM_PYTHON_ENV_ROOT ? path.join(project, ".venv") : pythonEnvironmentRoot(root, id, environment);
+  let availableGroups;
+  if (id === "quantum-algorithms") {
+    const prepared = await algorithmPreparation(algorithmEnvironmentRoot(root, environment), entry.lock.sha256, groups);
+    ({ interpreter, availableGroups } = prepared);
+    state = prepared.state;
+  } else if (entry.language === "python") {
+    const directory = pythonEnvironmentRoot(root, id, environment);
     interpreter = path.join(directory, process.platform === "win32" ? "Scripts/python.exe" : "bin/python");
     state = await preparedState(interpreter, path.join(directory, "openquantum-lock.sha256"), entry.lock.sha256);
   } else if (entry.language === "julia") {
@@ -141,6 +149,7 @@ export async function describeSdk(root, id, { environment = process.env } = {}) 
   }
   return {
     ...entry, project, environmentState: state, setup,
+    ...(groups ? { selectedGroups: groups, availableGroups } : {}),
     ...(sourceProject ? { sourceProject } : {}),
     ...(nativeDependency ? { nativeDependency } : {}),
     ...(nativeBuild ? { nativeBuild } : {}),
@@ -152,7 +161,7 @@ export async function describeSdk(root, id, { environment = process.env } = {}) 
       : { command: interpreter, args: ["-m", "pydoc", "<module-from-modules>"], note: "Read the installed version's public API; this may import the selected module." } : null,
     source: entry.nativeProject ? sdkSourceRoot(root, id, environment) : entry.language === "native" ? path.join(environment.OPENQUANTUM_QDMI_HOME || path.join(root, ".openquantum/qdmi"), "source") : null,
     bootstrap: entry.bootstrap ? { path: path.join(root, "src/lib/sdk_bootstrap.py"), function: "prepare_sdk", argument: id, reason: entry.bootstrap } : null,
-    readinessMeaning: "prepared verifies dependency markers and interpreter or native binary integrity, not API or scientific acceptance",
+    readinessMeaning: "prepared verifies dependency markers, selected groups and interpreter or native binary integrity, not API or scientific acceptance",
   };
 }
 
@@ -162,6 +171,6 @@ export async function sdkCli(root, args, options) {
     return readSdkLibraries(root);
   }
   if (args[0] === "inventory" && args.length === 1) return sdkInventory(root);
-  if (args[0] === "inspect" && args.length === 2) return describeSdk(root, args[1], options);
-  throw new Error("Use list, inventory, or inspect <sdk-id>");
+  if (args[0] === "inspect" && args.length >= 2) return describeSdk(root, args[1], { ...options, selection: args.slice(2) });
+  throw new Error("Use list, inventory, or inspect <sdk-id> [--group <name> | --all]");
 }

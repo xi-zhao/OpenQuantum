@@ -12,5 +12,5 @@ chemistry = [{include-group = "tensor"}, "pyscf==2.14.0"]
 
 [tool.uv]
 package = false
-# Preserve the original full installation when no group is selected.
-default-groups = ["gradients", "pennylane", "chemistry"]
+# Additional SDKs are selected for the task, or explicitly with --all.
+default-groups = []

@@ -7,7 +7,7 @@ export function environmentPanel(environment, { element, button, run, drafts, ex
   panel.setAttribute("aria-label", "运行环境");
   const running = ["preparing", "cancelling"].includes(environment.state);
   const unavailable = environment.state === "unsupported_platform";
-  const invoke = operation => run({ action: `environment.${operation}`, id: environment.id, ...(operation === "cancel" ? { jobId: environment.job.id } : {}) });
+  const invoke = operation => run({ action: `environment.${operation}`, id: environment.id, ...(operation === "cancel" ? { jobId: environment.job.id } : environment.dependencyGroups ? { dependencyGroups: environment.dependencyGroups } : {}) });
   const actions = element("div", undefined, "environment-actions");
   const state = environmentState(environment);
   const note = environment.requirements.note;

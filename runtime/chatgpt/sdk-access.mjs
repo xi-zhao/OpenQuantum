@@ -38,8 +38,8 @@ if (process.argv[1] && await fs.realpath(process.argv[1]).catch(() => null) === 
     if (args[0] === "inspect") {
       const record = await manager.read(args[1]);
       const environment = manager.values(args[1], record);
-      value.dashboard = await manager.status(args[1]);
-      value.setup = { tool: "prepare_openquantum_skill", sdkId: args[1], effect: "workspace-write-and-download", note: "执行需要时准备；检查与定位本身不安装。" };
+      value.dashboard = await manager.status(args[1], { groups: value.selectedGroups ?? [] });
+      value.setup = { tool: "prepare_openquantum_skill", sdkId: args[1], ...(value.selectedGroups ? { dependencyGroups: value.selectedGroups } : {}), effect: "workspace-write-and-download", note: "执行需要时准备；检查与定位本身不安装。" };
       if (value.run) value.run.environment = { ...environment, ...value.run.environment };
     }
     console.log(JSON.stringify(value, null, 2));

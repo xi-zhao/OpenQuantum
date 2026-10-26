@@ -65,6 +65,9 @@ test("generated Skill identifies the host and keeps Tool execution separate from
   assert.match(text, /当前 Codex 对话/);
   assert.match(text, /not_checked/);
   assert.match(text, /不能伪造/);
+  assert.match(text, /execute_openquantum_tool/);
+  assert.match(text, /完整 inputSchema/);
+  assert.match(text, /不要只汇报安装状态就结束原任务/);
 });
 
 test("runtime distribution has no Agent runtime dependency or model credential field", async () => {
