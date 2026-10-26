@@ -106,6 +106,7 @@ test("a Python-computed versioned digest survives materialization and the centra
   const result = await scientificResultAdapter(QUANTUM_INFORMATION_AUDIT_TOOL).materialize({
     fileSystem: new LocalFileSystem(context, { cwd: workspaceRoot, diffBasisMaxBytes: 1048576 }),
     workspaceRoot, sessionId: "digest-regression", callId: "digest-call", eventRange: { from: 1, to: 2 },
+    sandboxPolicy: { mode: "workspace-write", workspaceRoot },
     arguments: request, canonicalValue: { structuredContent: { analysis } }, signal: new AbortController().signal,
   });
   assert.equal(result.acceptanceStatus, "passed");

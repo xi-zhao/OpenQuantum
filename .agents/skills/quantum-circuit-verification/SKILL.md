@@ -24,7 +24,7 @@ description: 使用 OpenQuantum 的固定版本 MQT QCEC 本地检查两份无�
 - 两份电路必须声明相同的总量子位数。
 - 只允许标准 `qelib1.inc`；不接受任意 include 路径。
 - 不接受 `measure`、`reset`、`if`、`creg` 或 `opaque`。
-- 固定 10 秒 QCEC 超时，调用方不能扩大运行预算。
+- QCEC 的 `timeoutSeconds=0` 表示后端不设固定超时；实际调用仍服从宿主的资源策略与取消信号。
 
 ## 工作流
 
@@ -36,7 +36,18 @@ description: 使用 OpenQuantum 的固定版本 MQT QCEC 本地检查两份无�
    - `equivalent_up_to_phase` / `equivalent_up_to_global_phase`：只在用户目标允许相位等价时采用；
    - `not_equivalent`：本次比较不等价；
    - `probably_equivalent` / `probably_not_equivalent` / `no_information`：不确定，不能升级成确定结论。
-5. 同时报告实际包版本、输入 SHA-256、QCEC checker 记录、耗时和 `provenance.complete=not_checked`；环境不可用时报告工具错误，不编造结果。
+5. 同时报告实际包版本、输入 SHA-256、QCEC checker 记录、耗时和来源状态；环境不可用时报告工具错误，不编造结果。
+6. DSH 的可信 Host Plugin 可将输入与计算事实物化为 Result Package，独立复核后由 central Acceptance Builder 生成 Acceptance Report、Result Commit 和 `readable-report.md`。提供可读报告和结构化证据路径；模型没有生成最终说明也不影响已完成的文件交付。Codex 目前复用计算，不具备这条会话验收链。
+
+## 独立科学验收范围
+
+便捷 Tool 的计算规模仍由调用方选择。当前 `unitary-classification-audit-v1` 科学验收单独覆盖每份输入最多 16 量子位、65536 UTF-8 字节、512 条语句：
+
+- 所有输入先经固定 Qiskit 独立解析，检查有限酉门语义（包含自定义门体）；字节完全相同的合法输入再使用 source-identity 证明，无需构造大矩阵。其他输入在最多 8 量子位内构造完整酉矩阵复核，不调用 MQT。解析不支持或参考失败时保持 `conditional`。
+- 严格等价与全局相位等价分别检查，正例容差为 `1e-9`；否定结论须越过 `1e-8` margin。一般相位、概率性和无信息结果保持 `conditional`。
+- 9–16 量子位且非相同输入不自动进行稠密复核，保留 `conditional`；超出该 Profile 范围保留计算 observations，不生成最终 Acceptance。独立参考范围不限制主计算。
+- `passed` 表示 QCEC 的分类结论经复核成立；`not_equivalent` 的 `passed` 仍是电路不等价。失败、未复核和相位类型必须原样交付。
+- 物化使用会话当前有效沙箱权限。只读会话、取消、来源不符或证据写入失败时，不宣称最终验收。
 
 ## 必须保持的规则
 

@@ -1,5 +1,5 @@
-import { projectRoot as openQuantumProjectRoot } from "../../project-root.mjs";
 import path from "node:path";
+import { projectRoot as repositoryRoot } from "../../project-root.mjs";
 import { pathToFileURL } from "node:url";
 
 import { defineScientificResultMaterializer } from "./scientific-result-materializer.mjs";
@@ -8,11 +8,13 @@ export const SOLVE_AND_VALIDATE_TOOL =
   "solve_and_validate_ground_state";
 export const QUANTUM_INFORMATION_AUDIT_TOOL =
   "mcp__toqito_audit__audit_density_matrix";
+export const QUANTUM_CIRCUIT_VERIFICATION_TOOL =
+  "mcp__qcec_local__verify_circuit_equivalence";
 
-const repositoryRoot = openQuantumProjectRoot;
 const GROUND_STATE_SKILL = ".agents/skills/quantum-ground-state";
 const QUANTUM_INFORMATION_SKILL =
   ".agents/skills/quantum-information-audit";
+const QUANTUM_CIRCUIT_SKILL = ".agents/skills/quantum-circuit-verification";
 const GROUND_STATE_FACT_FILES = Object.freeze({
   problemSpec: "problem-spec.json",
   hamiltonianManifest: "hamiltonian-manifest.json",
@@ -24,6 +26,7 @@ const GROUND_STATE_FACT_FILES = Object.freeze({
 
 let groundStateRuntimePromise;
 let quantumInformationRuntimePromise;
+let quantumCircuitRuntimePromise;
 
 function moduleUrl(relativePath) {
   return pathToFileURL(path.join(repositoryRoot, relativePath)).href;
@@ -50,8 +53,18 @@ function quantumInformationRuntime() {
         `${QUANTUM_INFORMATION_SKILL}/validators/validate-state-analysis.mjs`,
       )
     ),
-  ]).then(([stateMath, validator]) => ({ ...stateMath, ...validator }));
+    import(moduleUrl(`${QUANTUM_INFORMATION_SKILL}/core/render-report.mjs`)),
+  ]).then(([stateMath, validator, report]) => ({ ...stateMath, ...validator, ...report }));
   return quantumInformationRuntimePromise;
+}
+
+function quantumCircuitRuntime() {
+  quantumCircuitRuntimePromise ??= Promise.all([
+    import(moduleUrl(`${QUANTUM_CIRCUIT_SKILL}/core/request-contract.mjs`)),
+    import(moduleUrl(`${QUANTUM_CIRCUIT_SKILL}/validators/validate-qcec-analysis.mjs`)),
+    import(moduleUrl(`${QUANTUM_CIRCUIT_SKILL}/core/render-report.mjs`)),
+  ]).then(modules => Object.assign({}, ...modules));
+  return quantumCircuitRuntimePromise;
 }
 
 function validatorVersion(validatorId) {
@@ -141,6 +154,11 @@ const materializeQuantumInformation = defineScientificResultMaterializer({
       path: `${QUANTUM_INFORMATION_SKILL}/uv.lock`,
       version: "1.3.1",
     },
+    {
+      id: "density-matrix-readable-report",
+      path: `${QUANTUM_INFORMATION_SKILL}/core/render-report.mjs`,
+      version: "1.0.0",
+    },
   ],
   async prepare({ request, structuredContent }) {
     const runtime = await quantumInformationRuntime();
@@ -177,6 +195,37 @@ const materializeQuantumInformation = defineScientificResultMaterializer({
           profile,
         });
       },
+      renderReport(context) { return runtime.renderStateAuditReport(context); },
+    };
+  },
+});
+
+const materializeQuantumCircuit = defineScientificResultMaterializer({
+  capabilityId: "quantum-circuit-verification", skillPath: QUANTUM_CIRCUIT_SKILL,
+  resultRoot: "results/openquantum/quantum-circuit-verification", packagePrefix: "qcec",
+  inputId: "circuit-equivalence-request", profileId: "unitary-classification-audit",
+  validatorId: "qcec-classification-validator",
+  provenanceTools: [
+    { id: "qcec-mcp", path: `${QUANTUM_CIRCUIT_SKILL}/mcp/server.mjs`, version: capability => capability.manifest.version },
+    { id: "qcec-python-bridge", path: `${QUANTUM_CIRCUIT_SKILL}/mcp/bridge.py`, version: "3.10.0" },
+    { id: "qcec-request-boundary", path: `${QUANTUM_CIRCUIT_SKILL}/core/request-contract.mjs`, version: "1.0.0" },
+    { id: "qcec-validator", path: `${QUANTUM_CIRCUIT_SKILL}/validators/validate-qcec-analysis.mjs`, version: "1.0.0" },
+    { id: "independent-reference-driver", path: `${QUANTUM_CIRCUIT_SKILL}/validators/independent-reference.mjs`, version: "1.0.0" },
+    { id: "qiskit-unitary-reference", path: `${QUANTUM_CIRCUIT_SKILL}/validators/reference.py`, version: "2.5.2" },
+    { id: "qcec-environment-lock", path: `${QUANTUM_CIRCUIT_SKILL}/uv.lock`, version: "3.10.0+qiskit.2.5.2" },
+  ],
+  async prepare({ request, structuredContent }) {
+    const runtime = await quantumCircuitRuntime();
+    const normalized = runtime.normalizeAuditRequest(request);
+    const canonicalRequest = { circuitAOpenQasm2: normalized.circuitAOpenQasm2, circuitBOpenQasm2: normalized.circuitBOpenQasm2 };
+    const analysis = runtime.prepareQcecAnalysis(canonicalRequest, structuredContent);
+    return {
+      request: canonicalRequest,
+      artifacts: [{ key: "analysis", id: "qcec-analysis", type: "qcec-analysis", fileName: "qcec-analysis.json", value: analysis }],
+      validate({ resultPackage, profile, request: persistedRequest, artifacts, signal }) {
+        return runtime.validateMaterializedQcec({ request: persistedRequest, analysis: artifacts.analysis, resultPackage, profile, signal });
+      },
+      renderReport(context) { return runtime.renderClassificationReport(context); },
     };
   },
 });
@@ -350,6 +399,20 @@ function quantumInformationPresentation(structuredContent) {
   };
 }
 
+function quantumCircuitPresentation(value) {
+  const verdict = value?.result?.equivalence;
+  if (value?.schemaVersion !== "1.0" || value.scientificValidation !== "observations_available"
+    || !["equivalent", "equivalent_up_to_global_phase", "equivalent_up_to_phase", "not_equivalent", "probably_equivalent", "probably_not_equivalent", "no_information"].includes(verdict)
+    || typeof value.packageVersion !== "string" || value.packageVersion.length > 80
+    || !finiteNumber(value.result.statistics?.checkSeconds)) return undefined;
+  return {
+    schemaVersion: "1.0", capabilityId: "quantum-circuit-verification", operation: "verify-circuit-equivalence",
+    title: "电路判定观察", summary: `QCEC 判定：${verdict}；尚未形成中央科学验收。`,
+    scientificStatus: "observations_available",
+    details: [detail("电路判定", verdict), detail("MQT QCEC", value.packageVersion), detail("检查用时", `${formatNumber(value.result.statistics.checkSeconds)} 秒`)],
+  };
+}
+
 function materializedPresentation({
   computational,
   materialized,
@@ -389,6 +452,21 @@ function materializedPresentation({
 }
 
 const adapters = new Map([
+  [QUANTUM_CIRCUIT_VERIFICATION_TOOL, Object.freeze({
+    descriptor: Object.freeze({ capabilityId: "quantum-circuit-verification", operation: "verify-circuit-equivalence",
+      title: "电路判定复核", scientificStatuses: Object.freeze(["observations_available", "acceptance_available"]),
+      materializedArtifactTypes: Object.freeze(["qcec-analysis"]) }),
+    project: quantumCircuitPresentation,
+    materialize(context) { return materializeQuantumCircuit({ ...context, request: context.arguments, structuredContent: context.canonicalValue?.structuredContent }); },
+    projectMaterialized(canonicalValue, materialized) {
+      const presentation = materializedPresentation({ computational: quantumCircuitPresentation(canonicalValue?.structuredContent), materialized,
+        title: "电路判定复核", leadingDetails: details => details.slice(0, 2) });
+      if (!presentation) return undefined;
+      const verdict = canonicalValue.structuredContent.result.equivalence;
+      return { ...presentation, summary: `电路判定：${verdict}；判定的数值与来源复核：${materialized.acceptanceStatus}。复核通过不将“不等价”改成“等价”。`,
+        details: [...presentation.details, ...(materialized.readableReport ? [detail("可读验收报告", materialized.readableReport.path)] : [])] };
+    },
+  })],
   [
     SOLVE_AND_VALIDATE_TOOL,
     Object.freeze({
@@ -455,7 +533,7 @@ const adapters = new Map([
         });
       },
       projectMaterialized(canonicalValue, materialized) {
-        return materializedPresentation({
+        const presentation = materializedPresentation({
           computational: quantumInformationPresentation(
             canonicalValue?.structuredContent,
           ),
@@ -463,11 +541,16 @@ const adapters = new Map([
           title: "量子信息科学验收",
           leadingDetails: (details) => details.slice(0, 2),
         });
+        if (!presentation) return undefined;
+        return { ...presentation, details: [...presentation.details,
+          ...(materialized.readableReport ? [detail("可读验收报告", materialized.readableReport.path)] : [])] };
       },
     }),
   ],
 ]);
 
 export function scientificResultAdapter(toolName) {
-  return adapters.get(toolName === "audit_density_matrix" ? QUANTUM_INFORMATION_AUDIT_TOOL : toolName);
+  const name = toolName === "audit_density_matrix" ? QUANTUM_INFORMATION_AUDIT_TOOL
+    : toolName === "verify_circuit_equivalence" ? QUANTUM_CIRCUIT_VERIFICATION_TOOL : toolName;
+  return adapters.get(name);
 }

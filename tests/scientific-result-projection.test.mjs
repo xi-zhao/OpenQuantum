@@ -126,8 +126,7 @@ test("post-execute adapter persists a bounded scientific projection in tool/resu
   let listener;
   const ctx = {
     on(name, callback) {
-      assert.equal(name, "tools/post-execute");
-      listener = callback;
+      if (name === "tools/post-execute") listener = callback;
     },
   };
   apply(ctx);

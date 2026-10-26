@@ -1,13 +1,12 @@
-import { projectRoot as openQuantumProjectRoot } from "../../project-root.mjs";
 import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
+import { projectRoot as repositoryRoot } from "../../project-root.mjs";
 import { pathToFileURL } from "node:url";
 
 // Agent presets are copied into DSH_HOME before loading. Project-owned
-// scientific modules therefore resolve from Harness's configured process cwd,
+// scientific modules therefore resolve from the configured project root,
 // never from this copied preset file's physical location.
-const repositoryRoot = openQuantumProjectRoot;
 const capabilityPromises = new Map();
 let contractsPromise;
 
@@ -90,7 +89,7 @@ async function writeNewText({
   fileSystem,
   workspaceTarget,
   workspaceRoot,
-  sessionId,
+  sandboxPolicy,
   relativePath,
   content,
   signal,
@@ -107,18 +106,16 @@ async function writeNewText({
     content,
     { kind: "createIfAbsent" },
     signal,
-    {
-      mode: "workspace-write",
-      workspaceRoot,
-      sessionId,
-    },
+    sandboxPolicy,
   );
   return target;
 }
 
-function resultDirectory(resultRoot, sessionId, callId) {
+function resultDirectory(resultRoot, sessionId, callId, callEventSeq) {
   const sessionDigest = identityDigest({ kind: "session", id: sessionId });
-  const callDigest = identityDigest({ kind: "tool-call", id: callId });
+  // Providers may reuse a call id in a later step. The native event sequence
+  // distinguishes the actual executions without adding runtime identity.
+  const callDigest = identityDigest({ kind: "tool-call", id: callId, callEventSeq });
   return {
     relativePath: `${resultRoot}/${sessionDigest}/${callDigest}`,
     callDigest,
@@ -195,6 +192,7 @@ export function defineScientificResultMaterializer(definition) {
   return async function materializeScientificResult({
     fileSystem,
     workspaceRoot,
+    sandboxPolicy,
     sessionId,
     callId,
     eventRange,
@@ -222,6 +220,11 @@ export function defineScientificResultMaterializer(definition) {
       eventRange.from > eventRange.to
     ) {
       throw new Error("Harness execution event range is invalid");
+    }
+
+    signal?.throwIfAborted();
+    if (!sandboxPolicy || sandboxPolicy.mode === "read-only") {
+      throw new Error("Scientific materialization requires the effective writable session sandbox policy");
     }
 
     const {
@@ -274,6 +277,7 @@ export function defineScientificResultMaterializer(definition) {
       definition.resultRoot,
       sessionId,
       callId,
+      eventRange.from,
     );
     const inputContent = canonicalJson(prepared.request);
     const inputReference = fileReference({
@@ -323,7 +327,7 @@ export function defineScientificResultMaterializer(definition) {
       fileSystem,
       workspaceTarget,
       workspaceRoot,
-      sessionId,
+      sandboxPolicy,
       relativePath: `${directory.relativePath}/${inputReference.path}`,
       content: inputContent,
       signal,
@@ -334,7 +338,7 @@ export function defineScientificResultMaterializer(definition) {
         fileSystem,
         workspaceTarget,
         workspaceRoot,
-        sessionId,
+        sandboxPolicy,
         relativePath: `${directory.relativePath}/${entry.reference.path}`,
         content: entry.content,
         signal,
@@ -348,7 +352,7 @@ export function defineScientificResultMaterializer(definition) {
       fileSystem,
       workspaceTarget,
       workspaceRoot,
-      sessionId,
+      sandboxPolicy,
       relativePath: resultPackageRelativePath,
       content: canonicalJson(resultPackageValue),
       signal,
@@ -366,6 +370,7 @@ export function defineScientificResultMaterializer(definition) {
     const validation = await prepared.validate({
       resultPackage,
       profile,
+      signal,
       request: readPersistedJson(fileSystem, inputTarget),
       artifacts: persistedArtifacts,
     });
@@ -387,7 +392,7 @@ export function defineScientificResultMaterializer(definition) {
       fileSystem,
       workspaceTarget,
       workspaceRoot,
-      sessionId,
+      sandboxPolicy,
       relativePath: acceptanceRelativePath,
       content: canonicalJson(acceptanceValue),
       signal,
@@ -404,12 +409,31 @@ export function defineScientificResultMaterializer(definition) {
       artifactRoot: workspaceProcessPath,
     });
 
+    let readableReport;
+    if (typeof prepared.renderReport === "function") {
+      const content = prepared.renderReport({
+        request: readPersistedJson(fileSystem, inputTarget), artifacts: persistedArtifacts,
+        acceptanceReport: acceptanceReport.value, resultPackage: resultPackage.value,
+        acceptanceReportPath: acceptanceRelativePath, resultPackagePath: resultPackageRelativePath,
+      });
+      if (typeof content !== "string" || content.length === 0 || Buffer.byteLength(content) > 65536) {
+        throw new Error("Scientific readable report exceeds its bounded contract");
+      }
+      const relativePath = `${directory.relativePath}/readable-report.md`;
+      const target = await writeNewText({ fileSystem, workspaceTarget, workspaceRoot, sandboxPolicy, relativePath, content, signal });
+      if (fs.readFileSync(fileSystem.processPath(target), "utf8") !== content) {
+        throw new Error("Scientific readable report readback differs");
+      }
+      readableReport = { path: relativePath, sha256: sha256Text(content), bytes: Buffer.byteLength(content) };
+    }
+
     return Object.freeze({
       validation,
       acceptanceStatus: acceptanceReport.value.status,
       resultCommit,
       resultPackagePath: resultPackageRelativePath,
       acceptanceReportPath: acceptanceRelativePath,
+      ...(readableReport ? { readableReport } : {}),
     });
   };
 }

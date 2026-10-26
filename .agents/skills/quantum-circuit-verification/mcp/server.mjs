@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-import { createHash } from "node:crypto";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -10,6 +9,8 @@ import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
+
+import { normalizeVerificationRequest } from "../core/request-contract.mjs";
 
 import { preparedPythonLaunch } from "../../../../src/lib/prepared-python.mjs";
 import { runLocalJsonProcess } from "../../../../src/lib/local-json-process.mjs";
@@ -53,7 +54,7 @@ const TOOLS = Object.freeze([
     name: "verify_circuit_equivalence",
     title: "Verify two unitary OpenQASM 2 circuits",
     description:
-      "Use pinned MQT QCEC to classify two supplied unitary OpenQASM 2 circuits as equivalent, non-equivalent, phase-equivalent, probabilistic or inconclusive. Measurements, resets, classical control, arbitrary include files and more than 16 qubits are rejected before Python execution. Returns validation observations, not provenance-complete final acceptance.",
+      "Use pinned MQT QCEC to classify two supplied unitary OpenQASM 2 circuits as equivalent, non-equivalent, phase-equivalent, probabilistic or inconclusive. Measurements, resets, classical control and arbitrary include files are rejected before Python execution. Computation scale is caller-controlled; the optional scientific audit has its own documented scope. Returns validation observations, not provenance-complete final acceptance.",
     inputSchema: {
       type: "object",
       properties: {
@@ -88,71 +89,6 @@ const TOOLS = Object.freeze([
     annotations: localExecutionAnnotations,
   },
 ]);
-
-function isRecord(value) {
-  return value !== null && typeof value === "object" && !Array.isArray(value);
-}
-
-function strippedQasm(value) {
-  return value.replace(/\/\*[\s\S]*?\*\//g, "").replace(/\/\/[^\n]*/g, "");
-}
-
-function summarizeQasm(value, field) {
-  if (typeof value !== "string") throw new TypeError(`${field} must be a string`);
-  const bytes = Buffer.byteLength(value, "utf8");
-  if (bytes < 1 || value.includes("\0")) {
-    throw new TypeError(`${field} must be a nonempty OpenQASM string without NUL bytes`);
-  }
-  const source = strippedQasm(value);
-  if (!/^\s*OPENQASM\s+2\.0\s*;/i.test(source)) {
-    throw new TypeError(`${field} must declare OPENQASM 2.0`);
-  }
-  if (/\b(measure|reset|if|opaque|creg)\b/i.test(source)) {
-    throw new TypeError(`${field} must be unitary and contain no measurement or classical control`);
-  }
-  const includeStatements = [...source.matchAll(/\binclude\s+"([^"]+)"\s*;/gi)];
-  const includeTokens = source.match(/\binclude\b/gi) ?? [];
-  if (
-    includeStatements.length !== includeTokens.length ||
-    includeStatements.some((match) => match[1] !== "qelib1.inc")
-  ) {
-    throw new TypeError(`${field} may include only qelib1.inc`);
-  }
-  const qregs = [...source.matchAll(/\bqreg\s+[A-Za-z_][A-Za-z0-9_]*\[(\d+)\]\s*;/g)];
-  if (qregs.length < 1) throw new TypeError(`${field} must declare at least one qreg`);
-  const qubits = qregs.reduce((total, match) => total + Number(match[1]), 0);
-  if (!Number.isSafeInteger(qubits) || qubits < 1) {
-    throw new TypeError(`${field} must declare a positive, exactly representable qubit count`);
-  }
-  const statements = (source.match(/;/g) ?? []).length;
-  return {
-    bytes,
-    sha256: createHash("sha256").update(value).digest("hex"),
-    qubits,
-    statements,
-  };
-}
-
-function normalizeVerificationRequest(value) {
-  if (
-    !isRecord(value) ||
-    Object.keys(value).some(
-      (key) => !["circuitAOpenQasm2", "circuitBOpenQasm2"].includes(key),
-    )
-  ) {
-    throw new TypeError("circuit equivalence request is invalid");
-  }
-  const circuitA = summarizeQasm(value.circuitAOpenQasm2, "circuitAOpenQasm2");
-  const circuitB = summarizeQasm(value.circuitBOpenQasm2, "circuitBOpenQasm2");
-  if (circuitA.qubits !== circuitB.qubits) {
-    throw new TypeError("both circuits must declare the same total qubit count in this profile");
-  }
-  return {
-    circuitAOpenQasm2: value.circuitAOpenQasm2,
-    circuitBOpenQasm2: value.circuitBOpenQasm2,
-    summaries: { circuitA, circuitB },
-  };
-}
 
 function bridgeEnvironment() {
   return {

@@ -55,24 +55,27 @@ test("Harness discovers four ecosystem Skills, runs four real Tools and persists
     ]) response.write(`data: ${JSON.stringify({ id: "unitary-tools-fixture", object: "chat.completion.chunk", created: 1, model: body.model, ...item })}\n\n`);
     response.end("data: [DONE]\n\n");
   });
-  const modelPort = await listen(model);
-  const reserved = createServer(); const port = await listen(reserved); await new Promise((resolve) => reserved.close(resolve));
-  await prepareOpenQuantumHarnessHome({ projectRoot: root, harnessHome });
-  let logs = "";
-  const child = spawn(process.execPath, [path.join(root, "node_modules/@deepseek-ai/dsh/lib/bin.js"), "web", "--host", "127.0.0.1", "--port", String(port)], {
-    cwd: root, env: { ...process.env, DSH_HOME: harnessHome, DSH_TELEMETRY_DISABLED: "1", OPENQUANTUM_DISABLE_QISKIT_MCP: "1", OPENQUANTUM_PUBLIC_API_KEY: "local-fixture-only", OPENQUANTUM_PUBLIC_BASE_URL: `http://127.0.0.1:${modelPort}/v1` },
-    stdio: ["ignore", "pipe", "pipe"],
-  });
-  child.stdout.on("data", (chunk) => { logs = (logs + chunk).slice(-20000); });
-  child.stderr.on("data", (chunk) => { logs = (logs + chunk).slice(-20000); });
+  let child;
   t.after(async () => {
-    if (child.exitCode === null) {
+    if (child?.exitCode === null && child.signalCode === null) {
       const exited = once(child, "exit"); child.kill("SIGTERM");
       const timer = setTimeout(() => child.kill("SIGKILL"), 5000); await exited; clearTimeout(timer);
     }
     model.closeAllConnections(); await new Promise((resolve) => model.close(resolve));
     await rm(sandbox, { recursive: true, force: true });
   });
+  const modelPort = await listen(model);
+  const reserved = createServer(); const port = await listen(reserved); await new Promise((resolve) => reserved.close(resolve));
+  await prepareOpenQuantumHarnessHome({ projectRoot: root, harnessHome });
+  const workspace = path.join(sandbox, "workspace");
+  await mkdir(workspace);
+  let logs = "";
+  child = spawn(process.execPath, [path.join(root, "node_modules/@deepseek-ai/dsh/lib/bin.js"), "web", "--host", "127.0.0.1", "--port", String(port)], {
+    cwd: root, env: { ...process.env, DSH_HOME: harnessHome, DSH_TELEMETRY_DISABLED: "1", OPENQUANTUM_DISABLE_QISKIT_MCP: "1", OPENQUANTUM_PUBLIC_API_KEY: "local-fixture-only", OPENQUANTUM_PUBLIC_BASE_URL: `http://127.0.0.1:${modelPort}/v1` },
+    stdio: ["ignore", "pipe", "pipe"],
+  });
+  child.stdout.on("data", (chunk) => { logs = (logs + chunk).slice(-20000); });
+  child.stderr.on("data", (chunk) => { logs = (logs + chunk).slice(-20000); });
   const base = `http://127.0.0.1:${port}`;
   let cookie;
   async function rpc(method, payload = {}) {
@@ -84,7 +87,7 @@ test("Harness discovers four ecosystem Skills, runs four real Tools and persists
   }
   await waitFor(() => rpc("llm.models"), "Harness startup");
   const sessionId = `session-unitary-${crypto.randomUUID()}`;
-  await rpc("session.create", { sessionId, cwd: root, agentPreset: "openquantum" });
+  await rpc("session.create", { sessionId, cwd: workspace, agentPreset: "openquantum" });
   const skillList = await rpc("skill.list", { sessionId });
   for (const c of UNITARY_NEXT_TOOLS) assert.ok(skillList.skills.some(skill => skill.name === c.id && skill.modelInvocable), c.id);
   await rpc("session.prompt", { sessionId, mode: "queue", content: [{ type: "text", text: "Run the configured unitary-next cases and return their actual evidence." }] });
@@ -94,9 +97,11 @@ test("Harness discovers four ecosystem Skills, runs four real Tools and persists
   }, "completed unitary-tools Harness turn", 540000);
   const events = history.records.map((entry) => entry.event);
   for (const [index, capability] of CASES.entries()) {
-    const call = events.find(event => event.type === "tool/call" && JSON.stringify(event).includes(toolNames[index]));
+    const callId = `unitary-fixture-${index}`;
+    const call = events.find(event => event.type === "tool/call" && event.data.callId === callId);
     assert.ok(call, `${capability.id}: missing call\n${redactHarnessLaunchTokens(logs)}`);
-    const result = events.find(event => event.type === "tool/result" && JSON.stringify(event).includes(`unitary-fixture-${index}`));
+    assert.equal(call.data.name, toolNames[index]);
+    const result = events.find(event => event.type === "tool/result" && event.data.message.source.callId === callId);
     assert.ok(result, `${capability.id}: missing result`);
     const serialized = JSON.stringify(result);
     const block = result.data.message.content.find(item => item.type === "tool-result");
@@ -124,7 +129,7 @@ test("Harness discovers four ecosystem Skills, runs four real Tools and persists
     }
   }
   assert.equal(sawModelToolResult, true);
-  const evidence = path.join(root, ".openquantum/unitary-next-evidence");
+  const evidence = path.resolve(process.env.OPENQUANTUM_UNITARY_NEXT_EVIDENCE ?? ".openquantum/unitary-next-evidence");
   await mkdir(evidence, { recursive: true });
   await writeFile(path.join(evidence, scaled ? "harness-scale-session.json" : "harness-session.json"), JSON.stringify({ verifiedAt: new Date().toISOString(), model: "local protocol fixture", externalModelTested: false, sessionId, events }, null, 2));
 });

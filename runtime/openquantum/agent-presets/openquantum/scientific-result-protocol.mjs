@@ -2,6 +2,7 @@ import { scientificResultAdapter } from "./scientific-result-adapters.mjs";
 
 export {
   QUANTUM_INFORMATION_AUDIT_TOOL,
+  QUANTUM_CIRCUIT_VERIFICATION_TOOL,
   SOLVE_AND_VALIDATE_TOOL,
 } from "./scientific-result-adapters.mjs";
 

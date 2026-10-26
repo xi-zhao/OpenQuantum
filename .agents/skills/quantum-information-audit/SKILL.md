@@ -37,7 +37,8 @@ description: 使用固定版本 toqito 对用户提供的多体密度矩阵做�
 5. 确认 `tool/result` 是否包含 `acceptance_available` 与 Result Commit；只有可信 Host Plugin 通过
    内部 Scientific Result Adapter 进入 Materializer，并完成物化、重读和校验时，才能按 central
    Acceptance Builder 推导的状态报告最终验收。
-6. 不把 negativity 写成普适的纠缠分类结论；它只对应本次指定的二分和部分转置判据。
+6. DSH 物化成功时交付 `readable-report.md`、Acceptance Report 和 Result Commit 的路径。可读报告由重读后的证据生成，不依赖模型最终说明；只读会话不能写报告，也不能因此宣称验收完成。
+7. 不把 negativity 写成普适的纠缠分类结论；它只对应本次指定的二分和部分转置判据。
 
 ## 必须保持的规则
 
