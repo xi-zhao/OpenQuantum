@@ -1,5 +1,4 @@
 """Small independently checkable Chromobius API example, not a color-code benchmark."""
-import argparse
 import importlib.metadata
 import json
 from pathlib import Path
@@ -63,15 +62,7 @@ def run_example(shots=1024, seed=20261026):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--shots", type=int, default=1024)
-    parser.add_argument("--seed", type=int, default=20261026)
-    parser.add_argument("--output", type=Path)
-    args = parser.parse_args()
-    result = json.dumps(run_example(args.shots, args.seed), ensure_ascii=False, indent=2) + "\n"
-    if args.output:
-        # Do not overwrite an earlier experiment.
-        with args.output.open("x", encoding="utf-8") as output:
-            output.write(result)
-    else:
-        print(result, end="")
+    # Run in a fresh task directory; edit run_example arguments for a new experiment.
+    result = json.dumps(run_example(), ensure_ascii=False, indent=2) + "\n"
+    with Path("result.json").open("x", encoding="utf-8") as output:
+        output.write(result)
