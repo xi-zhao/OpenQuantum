@@ -20,7 +20,7 @@
     "version": "1.1.1",
     "revision": "efae0325e4a8fc13be981434d38e499aa06b989f"
   },
-  "exampleSha256": "d0fe0f6a86d977cc76040443a1720535849c1e364888c9c12dcea9396206331c",
+  "exampleSha256": "7d2904ac1d2388f8d6fc45fbe3c893c56e9b321ae380e1bcda0c181e8a3a6dca",
   "lockSha256": "6ea9b3b5ca229ab3ad607719d9240d18f4c5a6bc050ded16753a27114349ef2a",
   "checks": {
     "frozenSetup": "passed",

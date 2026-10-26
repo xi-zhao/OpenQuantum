@@ -75,4 +75,3 @@ if __name__ == "__main__":
             output.write(result)
     else:
         print(result, end="")
-
