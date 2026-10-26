@@ -1,0 +1,17 @@
+{
+  "id": "chromobius-decoding",
+  "dependencyLockSha256": "6ea9b3b5ca229ab3ad607719d9240d18f4c5a6bc050ded16753a27114349ef2a",
+  "sourceSha256": "242e681d6e457e20c2e7d82fc3bc09b5db02813995cefb2a3e85ca45f8fefc82",
+  "networkIsolation": "macOS sandbox-exec deny network*",
+  "scientificValidation": "not_evaluated",
+  "status": "passed",
+  "files": {
+    "attempt.json": "27ec8f5c42524a324f022ac2080dbbff163e9f13e974130177dfd3073df8b4dd",
+    "program.py": "242e681d6e457e20c2e7d82fc3bc09b5db02813995cefb2a3e85ca45f8fefc82",
+    "result.json": "489cbe4707de976ddab4d0a184af37b3c84123b74743893f4cccaafdb1097c6f",
+    "runner.py": "886f044a51f94ee08cbe47de0182294b7d01277db6bd1b7b4f0a1c9d214d1602",
+    "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "versions.json": "b9312a298778c74edc618cc4b7ca9d20d2c97f38c68c8f1ce489f443237eca04"
+  }
+}

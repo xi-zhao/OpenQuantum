@@ -1,0 +1,71 @@
+version = 1
+revision = 3
+requires-python = "==3.12.*"
+
+[[package]]
+name = "chromobius"
+version = "1.1.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "numpy" },
+    { name = "stim" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/e3/fd/6a93b2b7f052c66e75e54aeebcf6d2848c9da2a04a6bdf33fa16cbbe5191/chromobius-1.1.1.tar.gz", hash = "sha256:c782935d6016289eaebd66d633528427d9b60c8db2f2a11e576b526b95b66847", size = 57440, upload-time = "2025-11-21T17:49:29.804Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/f6/f2/92c06d1a63f0318e8bcc7a96b5adff21c572bf128d1a2104f9cb3f749e38/chromobius-1.1.1-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:b52c04bf772336a7207674a1a2955dabbb258dd884b301e658c43fa8ab9f10e7", size = 879170, upload-time = "2025-11-21T17:49:08.693Z" },
+    { url = "https://files.pythonhosted.org/packages/ff/e5/2bdf271966fa636de6d91d4015b8287027f318790a419cc240b911613442/chromobius-1.1.1-cp312-cp312-macosx_11_0_x86_64.whl", hash = "sha256:13a55022ce527047c553b82354f94396d57d87d3489fe1f0136f300379806574", size = 900848, upload-time = "2025-11-21T17:49:09.889Z" },
+    { url = "https://files.pythonhosted.org/packages/4f/cf/054ae60e1ec56da80a54e70d0f494f4398e0893467c5f3cc2aaf2f10879c/chromobius-1.1.1-cp312-cp312-manylinux_2_26_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:02bfe3f3b5322e0f9d4b3ef235858e838585536d99602c94098335eeb94a4609", size = 1079453, upload-time = "2025-11-21T17:49:11.231Z" },
+    { url = "https://files.pythonhosted.org/packages/dc/b5/f8891028b1617ad457273c83ba6962e2ccf17693d1933ec2c34aac0dd020/chromobius-1.1.1-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:2ac415f25764d9cfcf56669695c522bb3d7ff1ef438998003e51d6d717f7a649", size = 1196305, upload-time = "2025-11-21T17:49:12.839Z" },
+    { url = "https://files.pythonhosted.org/packages/3d/d9/ef88321d62a47b7bbbff758f90758ee1321befa43476b1ccc4f031d35eaf/chromobius-1.1.1-cp312-cp312-win_amd64.whl", hash = "sha256:d1b4df7ba12494bc64b6511714de18b1f1972f900e00504083a11a7bc3562e2d", size = 2049508, upload-time = "2025-11-21T17:49:14.319Z" },
+]
+
+[[package]]
+name = "numpy"
+version = "2.5.3"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/13/01/11703282db468b85f6f7b8c7f22d058de5970d5c7e60a3a8aaa313c3de36/numpy-2.5.3.tar.gz", hash = "sha256:df2d5874ff183595a4ba404edd04f6bd9b5505c1d7708573f6a6c17489a67563", size = 20791231, upload-time = "2026-09-06T16:27:47.073Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/d6/50/8fdbb16af64895706a45f06a4068e29db732ec180f3c1375f14123359138/numpy-2.5.3-cp312-cp312-macosx_10_13_x86_64.whl", hash = "sha256:cb189f09db39283b26bfd061ec16189e14f71c6755207f72a0f7540867afe5b9", size = 16994982, upload-time = "2026-09-06T16:24:29.244Z" },
+    { url = "https://files.pythonhosted.org/packages/60/39/789131c1188c078dcb3a1692e72e1e050c68b88ffe72c9ccaac9bcd7a9cd/numpy-2.5.3-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:f59a878c33d6b88122d80d239bb3b845d58708750b0cb06a09aebb9b18ec696c", size = 12009327, upload-time = "2026-09-06T16:24:32.491Z" },
+    { url = "https://files.pythonhosted.org/packages/9c/59/a312e95696e5f601914dd8b6dd844692ba61670807417e24b68e337b5c70/numpy-2.5.3-cp312-cp312-macosx_14_0_arm64.whl", hash = "sha256:a72f874bc9e10e4b8f80426fb49716d5141f64442a0c8418065093ec8017fbb0", size = 5445405, upload-time = "2026-09-06T16:24:35.071Z" },
+    { url = "https://files.pythonhosted.org/packages/30/d0/5623a1707ed4fe16e3909fe3cf5ee3da004ae677ad23d83bbf3adf1a6faf/numpy-2.5.3-cp312-cp312-macosx_14_0_x86_64.whl", hash = "sha256:fc36dc566135b5eceec4cf89758fcb719266a019ef07dae1754ae7c9f617ef3e", size = 6783213, upload-time = "2026-09-06T16:24:37.253Z" },
+    { url = "https://files.pythonhosted.org/packages/f1/32/84146fc020ad3c25f805f70ab60da46fe3c540a21369754a7e4369754b6f/numpy-2.5.3-cp312-cp312-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:76c2c1e6bfa5c84adc6434dfbf013aa92096a7985221762c8f11fedfd20fff58", size = 15687872, upload-time = "2026-09-06T16:24:39.751Z" },
+    { url = "https://files.pythonhosted.org/packages/65/af/aa78d1a88805456e212b65461354cd943197fb9acecc4c90fd12295123a3/numpy-2.5.3-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:b7e18c623bb5c95acb3b3328861272816ba199fb531921c5d6d0b675f1fde9e3", size = 16717410, upload-time = "2026-09-06T16:24:42.745Z" },
+    { url = "https://files.pythonhosted.org/packages/3b/24/faa79d865e69a97ba17473b23a1b74094b2259c03e820c70297293b9ea49/numpy-2.5.3-cp312-cp312-musllinux_1_2_aarch64.whl", hash = "sha256:4f8929ee6c96bfbd7b4ed2032e0c03af86fe1826740ab61ddabf9072d06e57ff", size = 17040975, upload-time = "2026-09-06T16:24:45.961Z" },
+    { url = "https://files.pythonhosted.org/packages/62/4a/8877e629445a7176297dffcaf9c485faa96a95d81728a62521ad55bd4c0f/numpy-2.5.3-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:b5d93cf48f687479941d12b69c873ad2cc76bbd487f0091c2200636497f34034", size = 18476479, upload-time = "2026-09-06T16:24:49.35Z" },
+    { url = "https://files.pythonhosted.org/packages/c8/db/35e1c2d38b04cbd5b731f9d71495e055e813197669d22b612f11748d2ff9/numpy-2.5.3-cp312-cp312-win32.whl", hash = "sha256:bf63afbe037eb5d2fe87fbcc7778e61da53ebaf21d938a4515aa73b62532a5d4", size = 6133378, upload-time = "2026-09-06T16:24:51.915Z" },
+    { url = "https://files.pythonhosted.org/packages/3c/a1/accf6d4f0c80c5d9ba9735d6b1550e444180599f34dec69ca01360f717ad/numpy-2.5.3-cp312-cp312-win_amd64.whl", hash = "sha256:0a59a421a32580a009e8a1751345bf829631b990dc1794b80514ab722b435def", size = 12567828, upload-time = "2026-09-06T16:24:54.255Z" },
+    { url = "https://files.pythonhosted.org/packages/22/43/1764aff32e4652526ae2f71fa8b3efd8d25c8a3d6926914454e47138ed1e/numpy-2.5.3-cp312-cp312-win_arm64.whl", hash = "sha256:ccb32e0525d29e8b0572eb84c9a57af0e7a4e615726927506f55063c62414034", size = 10485432, upload-time = "2026-09-06T16:24:57.278Z" },
+]
+
+[[package]]
+name = "openquantum-chromobius-decoding"
+version = "0.1.0"
+source = { virtual = "." }
+dependencies = [
+    { name = "chromobius" },
+    { name = "numpy" },
+    { name = "stim" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "chromobius", specifier = "==1.1.1" },
+    { name = "numpy", specifier = "==2.5.3" },
+    { name = "stim", specifier = "==1.16.0" },
+]
+
+[[package]]
+name = "stim"
+version = "1.16.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "numpy" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/77/bd/c0f5d6241cdb806400a63e0c7febe22982ddf1c8761142bb0ea6b51d3f50/stim-1.16.0.tar.gz", hash = "sha256:9092a996429dcf616d8d4ca01fec886b7b310caf9425a39fcfe499005636bd52", size = 882497, upload-time = "2026-05-22T05:41:56.575Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/20/d9/8b70c39860e67e233178a9ef595c15a7ec718f0b88bc424ae2c6ad8f97da/stim-1.16.0-cp312-cp312-macosx_10_13_x86_64.whl", hash = "sha256:3e2883216fb4f57411531c99dfa1838c0d8201c619ccd01b197b9afd54d326cf", size = 2067905, upload-time = "2026-05-22T05:41:34.9Z" },
+    { url = "https://files.pythonhosted.org/packages/51/e3/45a8c0889f4629027cbdd8ed8e9f5824b5bd8b12b0f5d24be27ec0c2a3dc/stim-1.16.0-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:b8580dfbe5ff27594dd15a83b24262630b82cf089d1463d29dbee90ffbc6898b", size = 1902644, upload-time = "2026-05-22T05:41:36.132Z" },
+    { url = "https://files.pythonhosted.org/packages/e4/71/db565f5bd0f273414e90d85551eed1c75f7b689847bd605a7cf0c4c0386d/stim-1.16.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:883b24c3c95fa69818e931e8b60daf4fc8195d159d321e7548d8706dbac16558", size = 5307850, upload-time = "2026-05-22T05:41:37.69Z" },
+    { url = "https://files.pythonhosted.org/packages/bb/65/0ddfa6f76c4a137aefeee4d51a65945e0ec77cc2221322f13a5768f4c488/stim-1.16.0-cp312-cp312-win_amd64.whl", hash = "sha256:85b9c544c65377a42c6b5c9a57616a5ed5580e1cabb286a604800a045c7a12fb", size = 2760794, upload-time = "2026-05-22T05:41:39.731Z" },
+]

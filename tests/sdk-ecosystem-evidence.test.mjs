@@ -16,14 +16,16 @@ function contained(relative) {
   return file;
 }
 
-test("26 scoped API receipts are durable, match current locks and retain the science boundary", async () => {
+test("native SDK scoped API receipts are durable, match current locks and retain the science boundary", async () => {
   const report = JSON.parse(await fs.readFile(path.join(root, reportPath)));
+  const chromobius = JSON.parse(await fs.readFile(path.join(root, "docs/integrations/evidence/chromobius-2026-10-26.json")));
+  const receipts = [...report.libraries, chromobius.receipt];
   const cohort = (await readSdkLibraries(root)).filter(entry => entry.nativeOnly);
   const tracked = new Set(execFileSync("git", ["ls-files", "-z", "--", "docs/integrations/evidence"], { cwd: root, encoding: "utf8" }).split("\0"));
-  assert.deepEqual(report.libraries.map(entry => entry.id).sort(), cohort.map(entry => entry.id).sort());
+  assert.deepEqual(receipts.map(entry => entry.id).sort(), cohort.map(entry => entry.id).sort());
   assert.equal(report.summary.passed, 26);
   assert.equal(report.summary.scientificValidation, "not_evaluated");
-  for (const entry of report.libraries) {
+  for (const entry of receipts) {
     assert.equal(entry.status, "passed_scoped_engineering", entry.id);
     assert.equal(entry.scientificValidation, "not_evaluated", entry.id);
     assert.equal(hash(await fs.readFile(contained(entry.sourcePath))), entry.sourceSha256, entry.id);

@@ -2,6 +2,8 @@ import assert from "node:assert/strict";
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import test from "node:test";
+import { execFileSync } from "node:child_process";
+import { describeSdk } from "../src/lib/sdk-access.mjs";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 import { UNITARY_NEXT_TOOLS } from "./fixtures/unitary-next.mjs";
@@ -13,7 +15,8 @@ async function withTool(t, id, action) {
   const capability = UNITARY_NEXT_TOOLS.find(c => c.id === id);
   const client = new Client({ name: "unitary-next-numerical-check", version: "1" }, { capabilities: {} });
   t.after(() => client.close());
-  await client.connect(new StdioClientTransport({ command: process.execPath, args: [path.join(process.cwd(), ".agents/skills", id, "mcp/server.mjs")] }));
+  await client.connect(new StdioClientTransport({ command: process.execPath, args: [path.join(process.cwd(), ".agents/skills", id, "mcp/server.mjs")],
+    env: process.env.OPENQUANTUM_PYTHON_ENV_ROOT ? { OPENQUANTUM_PYTHON_ENV_ROOT: process.env.OPENQUANTUM_PYTHON_ENV_ROOT } : undefined }));
   await mkdir(evidence, { recursive: true });
   await action(async (input, label) => {
     const response = await client.callTool({ name: capability.tool, arguments: input }, undefined, { timeout: 195000 });
@@ -76,6 +79,16 @@ test("real Graphix: radians, adaptive measurement corrections, initial states an
       }
     }
   });
+});
+
+test("real Graphix: exported RZZ preserves the full two-qubit unitary", { skip: !enabled, timeout: 120000 }, async () => {
+  const sdk = await describeSdk(process.cwd(), "graphix-mbqc");
+  assert.equal(sdk.environmentState, "prepared");
+  const result = JSON.parse(execFileSync(sdk.run.command, ["-B", "tests/fixtures/graphix-qasm-regression.py"], { encoding: "utf8", timeout: 110000 }));
+  assert.equal(result.graphix, "0.4.1");
+  assert.ok(result.unitaryMaxErrorUpToGlobalPhase < 1e-12);
+  await mkdir(evidence, { recursive: true });
+  await writeFile(path.join(evidence, "graphix-qasm-rzz.json"), JSON.stringify(result, null, 2) + "\n");
 });
 
 test("real Symmer: opposite sectors, non-diagonal generators, stabilizer product signs and zero operator", { skip: !enabled, timeout: 300000 }, async t => {
