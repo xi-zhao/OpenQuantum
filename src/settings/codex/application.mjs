@@ -264,6 +264,7 @@ export class Settings {
   async command(input) {
     requireKeys(input, ["action", "revision", "id", "enabled", "connection", "tool", "resetCredential", "connectionInstance"]);
     if (typeof input.revision !== "string") throw new Error("缺少设置版本，请刷新页面");
+    let savedConnection;
     await withLock(this.file, () => withLock(this.codexFile, async () => {
       const current = await this.read();
       if (input.revision !== current.revision) throw new Error("配置已被其他操作更新，请刷新后重试");
@@ -335,9 +336,15 @@ export class Settings {
         default: throw new Error("未知设置操作");
       }
       if (input.action !== "skill.set") await atomicWrite(this.file, JSON.stringify(config, null, 2) + "\n");
+      if (["connection.add", "connection.update"].includes(input.action)) {
+        const saved = config.connections.find(item => item.id === (input.id ?? input.connection.id));
+        // Capture ownership while holding the write lock. A subsequent snapshot
+        // may already describe another writer's replacement at the same address.
+        savedConnection = { id: saved.id, instance: saved.instance };
+      }
     }));
     await this.changed();
-    return this.snapshot();
+    return { ...await this.snapshot(), ...(savedConnection ? { savedConnection } : {}) };
   }
   async inventory(id, tools, before) {
     await withLock(this.file, async () => {

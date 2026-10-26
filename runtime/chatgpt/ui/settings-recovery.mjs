@@ -19,8 +19,9 @@ export function settingsSaveMatches(input, before, after, receipt) {
   const connection = after?.connections?.find(item => item.id === (input.id ?? input.connection?.id));
   if (input.connectionInstance !== undefined && input.connectionInstance !== previous?.instance) return false;
   if (receipt && input.action.startsWith("connection.") && input.action !== "connection.remove") {
-    const saved = receipt.connections?.find(item => item.id === (input.id ?? input.connection?.id));
-    if (!saved || saved.instance !== connection?.instance) return false;
+    const saved = ["connection.add", "connection.update"].includes(input.action) ? receipt.savedConnection
+      : receipt.connections?.find(item => item.id === input.id);
+    if (!saved || saved.id !== connection?.id || saved.instance !== connection?.instance) return false;
   }
   switch (input.action) {
     case "skill.set": return after?.skills?.find(item => item.id === input.id)?.enabled === input.enabled;

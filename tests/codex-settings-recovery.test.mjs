@@ -139,3 +139,19 @@ test("the actual edit form preserves untouched arguments, ignores no-ops and iso
   assert.equal(form.children[0].children.find(label => label.children[0].name === "target").children[0].value, "new-command");
   assert.equal(drafts.size, 1, "the original draft is retained, never applied to the replacement");
 });
+
+
+test("the save receipt binds the writer before a replacement races its response snapshot", async t => {
+  const f = await setup(t);
+  await f.session.update({ action: "connection.add", connection });
+  let replace = true;
+  f.settings.listeners.add(async () => {
+    if (!replace) return;
+    replace = false;
+    for (const command of [{ action: "connection.remove", id: connection.id }, { action: "connection.add", connection: { ...connection, url: "https://example.invalid/changed" } }]) {
+      await f.settings.command({ ...command, revision: (await f.settings.read()).revision });
+    }
+  });
+  const result = await f.session.update({ action: "connection.update", id: connection.id, connection: { ...connection, url: "https://example.invalid/changed" } });
+  assert.equal(result.confirmed, false, "matching addresses cannot replace the original writer's receipt");
+});
