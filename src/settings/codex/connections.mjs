@@ -52,11 +52,12 @@ export class Connections {
     catch { await transport.close(); throw new Error("MCP 连接失败，请检查地址、启动命令和认证"); }
   }
   async closeClient(client) { this.clients.delete(client); await client.close(); }
-  async probe(id) { return this.bounded(() => this.probeConnection(id)); }
-  async probeConnection(id) {
+  async probe(id, instance) { return this.bounded(() => this.probeConnection(id, instance)); }
+  async probeConnection(id, instance) {
     const { config } = await this.settings.read();
     const connection = config.connections.find(value => value.id === id);
     if (!connection) throw new Error("连接不存在");
+    if (instance !== undefined && instance !== connection.instance) throw new Error("连接已被替换，请刷新后重新测试");
     const before = JSON.stringify({ ...connection, tools: [] });
     let client, token;
     try {

@@ -47,7 +47,7 @@ export async function createDesktopApplication({ root, directory, credentials: p
   async function describeSdk(value, current) {
     if (value.state !== "ready" || !value.selection?.sdkId) return value;
     const id = value.selection.sdkId;
-    const sdk = await sdkCli(root, ["inspect", id], { environment: current.environments.environment });
+    const sdk = await sdkCli(root, ["inspect", id, ...(value.selection.dependencyGroups ?? []).flatMap(group => ["--group", group])], { environment: current.environments.environment });
     if (sdk.run) sdk.run.environment = { ...current.environments.values(id, await current.environments.read(id)), ...sdk.run.environment };
     sdk.setup = { tool: "prepare_openquantum_skill", selection: value.selection, effect: "workspace-write-and-download" };
     return { ...value, sdk };

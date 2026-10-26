@@ -93,7 +93,7 @@
 | `qua-programs` | QUA | python | qm-qua==1.4.1 | 任意 program、控制流、stream processing、配置与量子机器接口 | 本地程序构建与外部调用分开；账户、凭据、费用、设备操作和数据外发沿用宿主及用户授权。原生 SDK 访问不自动启用服务。 qm 导入会读取用户配置并初始化日志；离线程序构建先使用本 Skill bridge.py 的 offline_user_config 上下文，真实设备任务则使用用户授权的实际配置。不要在离线步骤构造 QuantumMachinesManager。 |
 | `quairkit-information` | QuAIRKit | python | quairkit==0.5.1, torch==2.11.0 | 任意维数态、信道、算符、电路与可微优化 | 按固定版本、已安装可选组件及目标平台核实 |
 | `qualtran-resources` | Qualtran | python | qualtran==0.7.0 | 自定义 Bloq、组合、分解、call graph 与符号资源计数 | 按固定版本、已安装可选组件及目标平台核实 |
-| `quantum-algorithms` | Qiskit / PennyLane / quimb / PySCF | python | numpy==2.5.3, scipy==1.18.1, qiskit==2.5.2 | 原生 SDK 电路、任意张量网络、MPS/MPO、分子、积分与量子化学计算 | 依赖组有 gradients、pennylane、tensor、chemistry；完整 setup 安装所有默认组，算法示例不是允许调用的 API 白名单。 |
+| `quantum-algorithms` | Qiskit / PennyLane / quimb / PySCF | python | numpy==2.5.3, scipy==1.18.1, qiskit==2.5.2 | 原生 SDK 电路、任意张量网络、MPS/MPO、分子、积分与量子化学计算 | 依赖组有 gradients、pennylane、tensor、chemistry；默认 setup 仅安装基础依赖；按任务选择依赖组，--all 才安装全部组，算法示例不是允许调用的 API 白名单。 |
 | `quantum-circuit-verification` | MQT QCEC | python | mqt.qcec[qiskit]==3.10.0 | 任意受支持电路、编译流程配置与等价性验证接口 | 按固定版本、已安装可选组件及目标平台核实 |
 | `quantum-information-audit` | toqito | python | toqito==1.3.1 | 态、信道、矩阵、熵、纠缠、态区分与优化接口 | 按固定版本、已安装可选组件及目标平台核实 |
 | `quantumclifford-julia` | QuantumClifford.jl | julia | JSON3, QuantumClifford | Pauli/稳定子、图态、Clifford 操作、测量与 Pauli frame | 明确 Pauli 相位、位序、稳定子独立性与测量语义。非 Clifford 方法按该版本实际 API 选择，不静默投影为 Clifford。 |

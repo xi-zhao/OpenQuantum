@@ -12,7 +12,7 @@ description: "为 量子计算任务 选择完整的开源算法工作流，路�
 
 使用 `node scripts/sdk-access.mjs inspect quantum-algorithms` 定位环境，按[完整 SDK 工作流](../quantum-sdk-workbench/references/workflow.md)执行。模块导航：`qiskit`、`qiskit_algorithms`、`pennylane`、`quimb`、`pyscf`；导航不是 API 白名单。
 
-依赖组有 gradients、pennylane、tensor、chemistry；完整 setup 安装所有默认组，算法示例不是允许调用的 API 白名单。
+依赖组有 gradients、pennylane、tensor、chemistry；默认 setup 仅安装基础依赖；按任务选择依赖组，--all 才安装全部组，算法示例不是允许调用的 API 白名单。
 
 下文关于模型、门集、输入与预算的限制描述便捷 Tool 的合同；原生 SDK 另受上游版本、可选依赖、宿主资源与用户授权约束。已禁用或被拒绝的动作不能借代码路径绕过。执行状态和科研验收分别报告。
 <!-- END NATIVE SDK ACCESS -->

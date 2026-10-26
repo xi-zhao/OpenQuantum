@@ -39,7 +39,7 @@ export function containedPath(root, relative) {
 export async function readCapabilities(root = PROJECT_ROOT) {
   const sdkLibraries = await readSdkLibraries(root);
   const algorithms = JSON.parse(await fs.readFile(path.join(root, "examples/quantum-algorithms/coverage.json"), "utf8"));
-  const algorithmIds = new Set(algorithms.guides.map((entry) => entry.skill));
+  const algorithmEntries = new Map(algorithms.guides.map((entry) => [entry.skill, entry]));
   const policy = parse(await fs.readFile(path.join(root, ".agents/capability-packages.yml"), "utf8"));
   if (policy.schemaVersion !== "1.1" || !Array.isArray(policy.packages)) {
     throw new Error("Unsupported capability policy; review the ChatGPT projection before releasing.");
@@ -89,13 +89,15 @@ export async function readCapabilities(root = PROJECT_ROOT) {
     const sdkIds = entry.id === "quantum-sdk-workbench" ? sdkLibraries.map((library) => library.id)
       : entry.id === "pasqal-experiments" ? ["pulser-dynamics"]
       : sdkLibraries.some((library) => library.id === entry.id) ? [entry.id]
-        : algorithmIds.has(entry.id) ? ["quantum-algorithms"] : [];
+        : algorithmEntries.has(entry.id) ? ["quantum-algorithms"] : [];
+    const sdkGroups = algorithmEntries.get(entry.id)?.dependencyGroups
+      ?? (entry.id === "quantum-guide-simulators-pennylane" ? ["pennylane"] : []);
     const description = sdkIds.length ? `${sourceDescription} 可经宿主代码工具使用锁定环境中的原生 SDK 公开 API，自定义任务不限于便捷 Tool 的参数范围。`
       : !native.length && !mcp.length ? `方法解释与选型参考：${title}。此 Skill 不附带计算 Tool。${sourceDescription}` : sourceDescription;
     return {
       id: entry.id, title, description, summary: NATIVE_PRESENTATION[entry.id]?.description ?? presentation?.description ?? description,
       status: reason ? "unsupported" : "available", ...(reason ? { reason } : {}),
-      skill, native, mcp, sdkIds, hostTools, optIn: managed || optional, tools: [...native.map((tool) => tool.name), ...mcp.flatMap((server) => server.tools.map((tool) => tool.name))],
+      skill, native, mcp, sdkIds, sdkGroups, hostTools, optIn: managed || optional, tools: [...native.map((tool) => tool.name), ...mcp.flatMap((server) => server.tools.map((tool) => tool.name))],
     };
   }));
   for (const external of EXTERNAL_MCP) {

@@ -6,6 +6,7 @@ import { randomUUID } from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { readSdkLibraries, nativeSdkRoot } from "../../lib/sdk-access.mjs";
 import { pythonEnvironmentRoot } from "../../lib/prepared-python.mjs";
+import { algorithmEnvironmentRoot, algorithmPreparation, algorithmGroupArgs, algorithmSelection } from "../../lib/algorithm-environment.mjs";
 import { atomicWrite, digest, readOptional, withLock } from "./storage.mjs";
 import { runtimeRequirements } from "./runtime-catalog.mjs";
 import { EXTERNAL_MCP, externalMcp, externalProject } from "../../../runtime/chatgpt/external/catalog.mjs";
@@ -70,10 +71,16 @@ export class Environments {
     return digest(JSON.stringify([id, process.platform, process.arch, digest(bytes), configuration,
       RUNTIME_ENV_NAMES.map(key => this.environment[key] ?? null), ...(entry.external ? [adapter] : [])]));
   }
-  async installation(id, entry, configuration) {
+  async installation(id, entry, configuration, groups = []) {
     // Only inspect files here. Opening settings never loads modules or starts MCP.
     const exists = (file, mode = constants.F_OK) => fs.access(file, mode).then(() => true, error => { if (error.code === "ENOENT") return false; throw error; });
     try {
+      if (id === "quantum-algorithms") {
+        const lock = digest(await fs.readFile(path.join(this.root, "examples/quantum-algorithms/uv.lock")));
+        const prepared = await algorithmPreparation(algorithmEnvironmentRoot(this.root, this.environment), lock, groups);
+        if (prepared.state === "prepared") return "present";
+        return prepared.state === "not_prepared" ? "missing" : "incomplete";
+      }
       if (id === "qdmi-device") {
         const configured = configuration.driverConfiguration;
         if (!await exists(configured || path.join(this.environment.OPENQUANTUM_QDMI_HOME, "driver.json"), constants.R_OK)) return configured ? "configuration_missing" : "missing";
@@ -111,7 +118,8 @@ export class Environments {
       throw error;
     }
   }
-  async status(id) {
+  async status(id, { groups = [] } = {}) {
+    if (id === "quantum-algorithms") groups = algorithmSelection(algorithmGroupArgs(groups));
     const entry = await this.entry(id), record = await this.read(id);
     const requirements = runtimeRequirements(id);
     requirements.prerequisite = entry.language === "julia" ? "安装前需准备本机 Julia。"
@@ -136,7 +144,7 @@ export class Environments {
     if (!requirements.supported) state = "unsupported_platform";
     else if (job && runningJob(job)) state = job.status === "cancelling" ? "cancelling" : "preparing";
     else if (job?.status === "failed" || job?.status === "interrupted" || job?.status === "cancelled") state = job.status;
-    const installation = await this.installation(id, entry, record.configuration);
+    const installation = await this.installation(id, entry, record.configuration, groups);
     if (state === "ready" && !["present", "unknown"].includes(installation)) { state = "needs_check"; check = null; }
     if (requirements.supported && !runningJob(job) && state !== "ready") {
       // A missing environment is a normal setup step, including after a user
@@ -148,7 +156,9 @@ export class Environments {
       if (installation === "configuration_missing") state = "needs_configuration";
       if (installation === "unreadable") state = "unreadable";
     }
-    return { id, title: entry.title, state, requirements, configuration: record.configuration,
+    const algorithm = id === "quantum-algorithms" ? await algorithmPreparation(algorithmEnvironmentRoot(this.root, this.environment),
+      digest(await fs.readFile(path.join(this.root, "examples/quantum-algorithms/uv.lock"))), groups) : null;
+    return { id, title: entry.title, state, requirements, ...(algorithm ? { availableGroups: algorithm.availableGroups } : {}), configuration: record.configuration,
       configurationRevision: digest(JSON.stringify(record.configuration)), fingerprint,
       ready: state === "ready", checkedAt: check?.checkedAt ?? null, checks: check?.details ?? [],
       optionalSimulation: check?.optionalSimulation ?? false, installation, job, conditions: entry.conditions ?? [] };
@@ -182,7 +192,9 @@ export class Environments {
     this.starts.add(pending);
     try { return await pending; } finally { this.starts.delete(pending); }
   }
-  async startOwned(id, operation, { signal, onStarted } = {}) {
+  async startOwned(id, operation, { signal, onStarted, groups = [] } = {}) {
+    groups = algorithmSelection(algorithmGroupArgs(groups));
+    if (groups.length && id !== "quantum-algorithms") throw new Error("依赖组只适用于 quantum-algorithms");
     if (this.closed) throw new Error("环境准备入口已关闭");
     signal?.throwIfAborted();
     await this.entry(id);
@@ -195,7 +207,7 @@ export class Environments {
       if (jobAlive(record.job)) return;
       record.leases = record.leases.filter(lease => live(lease.pid));
       if (record.leases.length) throw new Error("该环境正在执行任务，请待任务结束后再安装或检查");
-      record.job = { id: randomUUID(), operation, status: "starting", phase: "准备操作", startedAt: new Date().toISOString(), pid: null };
+      record.job = { id: randomUUID(), operation, status: "starting", phase: "准备操作", startedAt: new Date().toISOString(), pid: null, ...(id === "quantum-algorithms" ? { groups } : {}) };
       delete record.check;
       await this.write(id, record);
       if (signal?.aborted) {

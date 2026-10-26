@@ -6,10 +6,11 @@ import { withLock } from "./storage.mjs";
 import { runSetupCommand } from "../../lib/setup-process.mjs";
 import { externalMcp } from "../../../runtime/chatgpt/external/catalog.mjs";
 import { setupExternal } from "../../../runtime/chatgpt/external/setup.mjs";
+import { algorithmGroupArgs } from "../../lib/algorithm-environment.mjs";
 
 export async function runEnvironmentJob({ manager, id, jobId, inspect = inspectEnvironment, install = async (signal, onOutput) => externalMcp(id)
   ? setupExternal(manager.root, id, { environment: manager.environment, signal, onOutput })
-  : runSetupCommand(process.execPath, [path.join(manager.root, "scripts/setup-sdk.mjs"), id], {
+  : runSetupCommand(process.execPath, [path.join(manager.root, "scripts/setup-sdk.mjs"), id, ...(id === "quantum-algorithms" ? algorithmGroupArgs((await manager.read(id)).job?.groups) : [])], {
   cwd: manager.root, env: manager.environment, capture: true, signal, onOutput,
 }) }) {
   await manager.entry(id);

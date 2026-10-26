@@ -2,7 +2,8 @@ import { App, applyHostStyleVariables, applyDocumentTheme } from "@modelcontextp
 import { openHostLink } from "./open-link.mjs";
 import { credentialEntries, renderCredentialCards, clearCredentialDrafts } from "./credential-cards.mjs";
 import { environmentLabel, environmentPanel } from "./environment-cards.mjs";
-import { SETTINGS_TABS, skillPresentation, shortDescription, toolState, skillPreparation, skillIssue, environmentState, providerState, connectionState } from "./settings-model.mjs";
+import { SETTINGS_TABS, skillPresentation, shortDescription, toolState, skillPreparation, skillEnvironment, skillIssue, environmentState, providerState, connectionState } from "./settings-model.mjs";
+import { SettingsSession, sameConnectionDestination } from "./settings-recovery.mjs";
 import "./style.css";
 
 const desktop = document.querySelector('meta[name="openquantum-host"]')?.content === "Desktop";
@@ -13,7 +14,7 @@ let snapshot, tab = "runtime", busy = false, app;
 let expandedEntry;
 let preparationFocus = desktop && location.hash.startsWith("#skill=") ? { skillId: decodeURIComponent(location.hash.slice(7)) } : undefined;
 let defaultState;
-let stateRequests = Promise.resolve();
+const settingsSession = new SettingsSession(request);
 const connectionDrafts = new Map();
 const environmentDrafts = new Map();
 let pollTimer;
@@ -32,7 +33,7 @@ function schedulePoll() {
   clearTimeout(pollTimer);
   if (!snapshot?.environments?.some(item => ["preparing", "cancelling"].includes(item.state))) return;
   pollTimer = setTimeout(async () => {
-    if (busy || document.hidden || document.activeElement?.matches("input, textarea")) { schedulePoll(); return; }
+    if (busy || settingsSession.pending || document.hidden || document.activeElement?.matches("input, textarea")) { schedulePoll(); return; }
     try { await updateSnapshot({ action: "snapshot" }); reportEnvironmentCompletion(); render(); }
     catch { notice("暂时无法读取安装进度，请刷新重试。安装操作会在本机继续。", true); }
     finally { schedulePoll(); }
@@ -73,14 +74,19 @@ async function request(input) {
   if (!value) throw new Error("宿主未返回设置数据，请检查插件版本");
   return value;
 }
-function updateSnapshot(input) {
-  // Credential cards can save independently. Serialize every state response,
-  // including commands and manual refresh, so an older read cannot win later.
-  const next = stateRequests.catch(() => {}).then(async () => {
-    snapshot = await request({ ...input, ...(snapshot && input.action !== "snapshot" ? { revision: snapshot.revision } : {}) });
-  });
-  stateRequests = next;
-  return next;
+async function updateSnapshot(input) {
+  const result = await settingsSession.update(input);
+  snapshot = result.snapshot;
+  if (result.save) {
+    if (!result.confirmed) throw new Error(result.error || "已读取最新设置，但无法确认上次保存。请核对当前内容；编辑草稿已保留。");
+    if (["connection.add", "connection.update"].includes(result.save.action)) {
+      const key = result.save.id ? `edit:${result.save.id}:${result.save.connectionInstance}` : "add";
+      connectionDrafts.delete(key);
+      expandedGroups.set(result.save.id ? `connection-edit:${result.save.id}` : "connection-add", false);
+    }
+    if (result.recovered) notice("已重新读取并核对当前设置，没有重复提交。");
+  }
+  return result;
 }
 async function run(input) {
   if (busy) return;
@@ -90,14 +96,10 @@ async function run(input) {
   notice(input.action === "connection.test" ? "正在连接 MCP 并读取工具清单…" : "正在更新设置…");
   document.querySelectorAll("button,input,select,textarea").forEach(node => node.disabled = true);
   try {
-    await updateSnapshot(input);
-    if (["connection.add", "connection.update"].includes(input.action)) {
-      connectionDrafts.delete(input.id ? `edit:${input.id}` : "add");
-      expandedGroups.set(input.id ? `connection-edit:${input.id}` : "connection-add", false);
-    }
+    const result = await updateSnapshot(input);
     if (input.action === "environment.configure") environmentDrafts.delete(input.id);
     const messages = { "connection.update": "连接已保存并关闭，请测试连接后重新启用 MCP 和 Tool。", "environment.install": "安装已开始。完成后 Agent 可直接调用。", "environment.check": "正在检查现有依赖与配置。", "environment.cancel": "已请求取消，正在等待安装进程退出。", "environment.configure": "配置已保存。" };
-    notice(messages[input.action] ?? (input.action === "snapshot" ? "" : input.action === "skill.set" ? "选择已保存，新的准备和调用立即遵循此选择。" : "设置已保存。"));
+    notice(result.recovered ? "已重新读取并核对当前设置，没有重复提交。" : messages[input.action] ?? (input.action === "snapshot" ? "" : input.action === "skill.set" ? "选择已保存，新的准备和调用立即遵循此选择。" : "设置已保存。"));
     if (["environment.install", "environment.check", "environment.cancel"].includes(input.action)) {
       pendingEnvironmentNotice = { id: input.id, jobId: snapshot.environments?.find(item => item.id === input.id)?.job?.id };
       reportEnvironmentCompletion();
@@ -281,7 +283,7 @@ function skillSetup(skill) {
     select.onchange = () => { selectedEnvironments.set(skill.id, select.value); render(); };
     label.append(select); details.append(label);
   }
-  const environment = snapshot.environments?.find(item => item.id === environmentId);
+  const environment = skillEnvironment(skill, snapshot, environmentId);
   const needed = preparationFocus?.skillId === skill.id && preparationFocus.serviceId
     ? preparationFocus.serviceId : snapshot.recentSkills?.find(item => item.id === skill.id)?.serviceId;
   if (needed) relatedCredentials(details, [needed], `skill-${skill.id}`);
@@ -369,7 +371,7 @@ function renderRuntime(container) {
 }
 function connectionForm(connection) {
   const id = connection?.id ?? "new";
-  const key = connection ? `edit:${id}` : "add";
+  const key = connection ? `edit:${id}:${connection.instance}` : "add";
   const draft = connectionDrafts.get(key) ?? (connection ? { id, transport: connection.transport, target: connection.url ?? connection.command,
     authentication: connection.authentication, tokenEnv: connection.tokenEnv ?? "", args: (connection.args ?? []).join("\n") } : {});
   const form = element("form", undefined, "card");
@@ -405,10 +407,15 @@ function connectionForm(connection) {
     : "添加后默认关闭。Token 在添加后通过系统凭据库保存。", "hint"), submit);
   if (connection) form.append(button("取消编辑", () => { connectionDrafts.delete(key); expandedGroups.set(`connection-edit:${id}`, false); render(); }));
   form.onsubmit = event => {
-    event.preventDefault(); const value = Object.fromEntries(Object.entries(inputs).map(([key, input]) => [key, input.value.trim()]));
-    run({ action: connection ? "connection.update" : "connection.add", ...(connection ? { id, resetCredential: reset } : {}),
-      connection: { id: value.id, transport: value.transport, authentication: value.authentication,
-        ...(value.transport === "http" ? { url: value.target } : { command: value.target, args: value.args ? value.args.split("\n").filter(Boolean) : [], ...(value.authentication === "token" ? { tokenEnv: value.tokenEnv } : {}) }) } });
+    event.preventDefault();
+    const value = Object.fromEntries(Object.entries(inputs).map(([key, input]) => [key, input.value]));
+    const next = { id: value.id.trim(), transport: value.transport, authentication: value.authentication,
+      ...(value.transport === "http" ? { url: value.target.trim() } : {
+        command: connection?.transport === "stdio" && value.target === connection.command ? connection.command : value.target.trim(),
+        args: connection?.transport === "stdio" && value.args === (connection.args ?? []).join("\n") ? connection.args : value.args ? value.args.split("\n") : [],
+        ...(value.authentication === "token" ? { tokenEnv: value.tokenEnv.trim() } : {}) }) };
+    if (connection && sameConnectionDestination(connection, next)) { notice("连接内容没有变化，无需保存。"); return; }
+    run({ action: connection ? "connection.update" : "connection.add", ...(connection ? { id, connectionInstance: connection.instance, resetCredential: reset } : {}), connection: next });
   };
   return form;
 }
@@ -442,6 +449,17 @@ function renderMcp(container) {
   if (connectionDrafts.has("add")) add.open = true;
   categoryGroups(container, mcpEntries(), serviceCard);
   if (desktop) return;
+  for (const [key, draft] of connectionDrafts) {
+    if (!key.startsWith("edit:") || snapshot.connections.some(item => key === `edit:${item.id}:${item.instance}`)) continue;
+    const retained = element("details", undefined, "card");
+    retained.append(element("summary", `${draft.id} · 原连接的编辑草稿`),
+      element("p", "连接已被替换或移除。这份草稿仅供核对，不会应用到新连接。", "hint"));
+    for (const name of ["target", "args", "authentication", "tokenEnv"]) {
+      const value = element("textarea"); value.value = draft[name] ?? ""; value.readOnly = true;
+      value.setAttribute("aria-label", `${draft.id} 原草稿 ${name}`); retained.append(value);
+    }
+    retained.append(button("丢弃此草稿", () => { connectionDrafts.delete(key); render(); })); container.append(retained);
+  }
   if (snapshot.connections.some(connection => matches(connection))) container.append(element("h2", "我的 MCP 连接", "section-title"));
   if (!snapshot.connections.length && !$("#search").value.trim() && $("#category").value === "all" && $("#state").value === "all") container.append(element("p", "还没有自定义连接。内置能力由 Agent 按任务准备。", "hint"));
   categoryGroups(container, snapshot.connections, connection => {
@@ -449,18 +467,22 @@ function renderMcp(container) {
     const state = connectionState(connection);
     top.append(element("h2", connection.id), element("span", state.label, state.key === "prepared" ? "badge" : "badge warning"));
     const choice = disclosure(`connection-choice:${connection.id}`, "MCP 开关", "saved-choice");
-    choice.append(switchFor(connection.enabled, `${connection.id} 启用`, { action: "connection.set", id: connection.id }, { text: "允许使用此 MCP" }));
+    choice.append(switchFor(connection.enabled, `${connection.id} 启用`, { action: "connection.set", id: connection.id, connectionInstance: connection.instance }, { text: "允许使用此 MCP" }));
     card.append(top, element("p", connection.url || connection.command, "description"), element("p", connection.status.message, "hint"));
     if (connection.authentication === "token") card.append(element("span", connection.credential.unavailable ? "凭据库不可用" : connection.credential.configured ? "Token 已配置" : "需要 Token", "badge"));
     const actions = element("div", undefined, "actions");
-    actions.append(button("测试连接", () => run({ action: "connection.test", id: connection.id })));
+    actions.append(button("测试连接", () => run({ action: "connection.test", id: connection.id, connectionInstance: connection.instance })));
     if (connection.authentication === "token") actions.append(button("配置 Token", () => openCredential(connection.id, actions)));
-    actions.append(button("移除连接", () => run({ action: "connection.remove", id: connection.id }), "danger")); card.append(actions);
+    const removal = element("div", undefined, "actions"); removal.hidden = true;
+    removal.append(element("span", `确认移除 ${connection.id}？请先关闭连接并移除 Token。`),
+      button("确认移除", () => run({ action: "connection.remove", id: connection.id, connectionInstance: connection.instance }), "danger"),
+      button("取消", () => { removal.hidden = true; }));
+    actions.append(button("移除连接", () => { removal.hidden = false; }, "danger")); card.append(actions, removal);
     const toolList = element("details"); toolList.append(element("summary", `Tool（${connection.tools.length}）`));
     toolList.open = Boolean($("#search").value.trim());
     for (const tool of connection.tools) {
       const row = element("div", undefined, "tool-row"); const info = element("div"); info.append(element("strong", tool.title || tool.name), element("p", tool.description, "hint"));
-      row.append(info, switchFor(tool.enabled, `${connection.id} ${tool.name} 启用`, { action: "connection.tool.set", id: connection.id, tool: tool.name })); toolList.append(row);
+      row.append(info, switchFor(tool.enabled, `${connection.id} ${tool.name} 启用`, { action: "connection.tool.set", id: connection.id, connectionInstance: connection.instance, tool: tool.name })); toolList.append(row);
     }
     if (connection.tools.length) card.append(toolList);
     const edit = disclosure(`connection-edit:${connection.id}`, "编辑连接"); edit.append(connectionForm(connection));
@@ -559,8 +581,11 @@ try {
     app.onhostcontextchanged = theme;
     app.ontoolresult = result => {
       if (result._meta?.openquantumFocus) preparationFocus = result._meta.openquantumFocus;
-      if (result._meta?.openquantumSettings) snapshot = result._meta.openquantumSettings;
-      if (snapshot && preparationFocus?.skillId) showSkill(preparationFocus.skillId);
+      // Host notifications can arrive late; use a queued fresh read instead of
+      // replacing the UI with an older embedded snapshot.
+      if (result._meta?.openquantumSettings) void updateSnapshot({ action: "snapshot" }).then(() => {
+        if (preparationFocus?.skillId) showSkill(preparationFocus.skillId); else render();
+      }).catch(error => notice(error.message, true));
     };
     await app.connect(); theme(app.getHostContext());
   }

@@ -34,6 +34,7 @@ export function environmentState(environment) {
   const failure = missing || repair || (operation === "install" && !environment.job?.synced)
     ? ["安装未完成", "install", repair ? "修复环境" : "重试安装"] : ["检查未通过", "check", "重新检查"];
   const [label, action, actionLabel] = ({
+    missing_groups: ["需补充依赖", "install", "补充所需依赖"],
     not_installed: ["未安装", "install", "安装环境"], needs_repair: ["环境需修复", "install", "修复环境"],
     preparing: [operation === "check" ? "正在检查" : "正在安装"], cancelling: ["正在取消"],
     failed: failure, cancelled: ["操作已取消", retry, retry === "check" ? "检查环境" : "继续安装"],
@@ -87,6 +88,14 @@ export function connectionState(connection) {
   if (!connection.enabled) return { key: "disabled", label: "MCP 已关闭" };
   return { key: "prepared", label: "MCP 已启用" };
 }
+export function skillEnvironment(skill, snapshot, id) {
+  const environment = snapshot.environments?.find(item => item.id === id);
+  if (!environment || id !== "quantum-algorithms") return environment;
+  const recent = snapshot.recentSkills?.find(item => item.id === skill.id)?.selection;
+  const dependencyGroups = [...new Set([...(skill.relations?.dependencyGroups ?? []), ...(recent?.sdkId === id ? recent.dependencyGroups ?? [] : [])])];
+  const missing = dependencyGroups.some(group => !environment.availableGroups?.includes(group));
+  return { ...environment, dependencyGroups, ...(environment.ready && missing ? { ready: false, state: "missing_groups", installation: "incomplete" } : {}) };
+}
 export function skillIssue(skill, snapshot) {
   if (skill.enabled === false) return null;
   const recent = snapshot.recentSkills?.find(item => item.id === skill.id);
@@ -97,8 +106,8 @@ export function skillIssue(skill, snapshot) {
   if (service && (service.configuration === "incomplete" || (field && !service.fields?.find(item => item.name === field)?.configured))) return `待填写 ${service.title} 凭据`;
   const tool = snapshot.tools.find(item => item.id === recent.selection?.toolName);
   const environmentId = recent.selection?.sdkId ?? tool?.environmentId ?? (skill.relations?.environmentIds.length === 1 ? skill.relations.environmentIds[0] : null);
-  const environment = snapshot.environments?.find(item => item.id === environmentId);
-  if (environment && ["failed", "cancelled", "interrupted", "needs_configuration", "unreadable", "unsupported_platform"].includes(environment.state)) return environmentState(environment).label;
+  const environment = skillEnvironment(skill, snapshot, environmentId);
+  if (environment && ["missing_groups", "failed", "cancelled", "interrupted", "needs_configuration", "unreadable", "unsupported_platform"].includes(environment.state)) return environmentState(environment).label;
   if (tool) {
     const state = toolState(tool, snapshot);
     if (state.key === "credentials" || (tool.id === "simulate_squidasm_bell_pairs" && state.label === "待配置仿真环境")) return state.label;
@@ -117,7 +126,7 @@ export function skillPreparation(skill, snapshot) {
   }
   if (relations.environmentIds.length > 1) return "按任务选择运行环境";
   if (relations.environmentIds.length) {
-    const state = environmentState(snapshot.environments?.find(item => item.id === relations.environmentIds[0]));
+    const state = environmentState(skillEnvironment(skill, snapshot, relations.environmentIds[0]));
     const services = (snapshot.services ?? []).filter(service => relations.credentialServiceIds?.includes(service.id));
     if (state.key === "prepared" && services.length) {
       if (services.some(service => service.configuration === "unavailable")) return "本地已准备 · 云端凭据未读取";

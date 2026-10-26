@@ -5,6 +5,7 @@ import os from "node:os";
 import path from "node:path";
 import { spawn, execFileSync } from "node:child_process";
 import { createInterface } from "node:readline";
+import { randomUUID } from "node:crypto";
 import { installPlugin } from "./install-codex-plugin.mjs";
 import { Settings } from "../src/settings/codex/application.mjs";
 
@@ -15,7 +16,8 @@ const home = await fs.mkdtemp(path.join(os.tmpdir(), "oq-host-validation-"));
 const codexHome = path.join(home, ".codex");
 const env = { PATH: process.env.PATH, HOME: home, CODEX_HOME: codexHome, TMPDIR: os.tmpdir() };
 const receipt = { cli: execFileSync(cli, ["--version"], { encoding: "utf8" }).trim(), scope: "isolated fixture installation; no model requests" };
-async function skills() {
+let installed;
+async function skills({ verifyAgentInterface = false } = {}) {
   const child = spawn(cli, ["app-server", "--listen", "stdio://"], { cwd: home, env, stdio: ["pipe", "pipe", "pipe"] });
   const lines = createInterface({ input: child.stdout }); child.stderr.resume();
   let serial = 0; const pending = new Map();
@@ -25,15 +27,45 @@ async function skills() {
     pending.delete(message.id); clearTimeout(item.timer);
     message.error ? item.reject(new Error(message.error.message)) : item.resolve(message.result);
   });
-  const call = (method, params) => new Promise((resolve, reject) => {
+  const call = (method, params, timeoutMs = 20000) => new Promise((resolve, reject) => {
     const id = ++serial;
-    pending.set(id, { resolve, reject, timer: setTimeout(() => reject(new Error(`Host timeout: ${method}`)), 20000) });
+    pending.set(id, { resolve, reject, timer: setTimeout(() => reject(new Error(`Host timeout: ${method}`)), timeoutMs) });
     child.stdin.write(JSON.stringify({ id, method, params }) + "\n");
   });
   try {
     await call("initialize", { clientInfo: { name: "openquantum-host-validation", version: "1" }, capabilities: { experimentalApi: true } });
     child.stdin.write('{"method":"initialized"}\n');
     const result = await call("skills/list", { cwds: [home], forceReload: true });
+    if (verifyAgentInterface) {
+      // An ephemeral native thread loads the actual plugin MCP connection.
+      // No turn/start or model request is made by this protocol acceptance.
+      const { thread } = await call("thread/start", { cwd: home, ephemeral: true }, 60000);
+      const status = await call("mcpServerStatus/list", { threadId: thread.id, detail: "toolsAndAuthOnly", limit: 100 }, 60000);
+      const server = status.data.find(item => Object.values(item.tools).some(tool => tool.name === "find_openquantum_skills"));
+      assert.ok(server, "native host must discover the preparation interface");
+      const modelTools = Object.values(server.tools).filter(tool => !tool._meta?.ui?.visibility || tool._meta.ui.visibility.includes("model")).map(tool => tool.name).sort();
+      assert.deepEqual(modelTools, ["execute_openquantum_tool", "find_openquantum_skills", "prepare_openquantum_skill"]);
+      const invoke = async (tool, args) => {
+        const response = await call("mcpServer/tool/call", { threadId: thread.id, server: server.name, tool, arguments: args }, 60000);
+        assert.ok(!response.isError, "native MCP call must succeed");
+        if (response.structuredContent != null) return response.structuredContent;
+        const text = response.content.find(item => item.type === "text")?.text;
+        try { return JSON.parse(text); } catch { return response; }
+      };
+      const braket = await invoke("find_openquantum_skills", { skillId: "braket-simulation", toolName: "simulate_braket_circuit" });
+      assert.equal(braket.state, "environment_required");
+      const catalog = JSON.parse(await fs.readFile(path.join(installed.runtimeDirectory, "dist/chatgpt/capabilities.json"), "utf8"));
+      const expected = catalog.tools.find(tool => tool.name === "simulate_braket_circuit");
+      for (const key of ["inputSchema", "outputSchema", "annotations"]) assert.deepEqual(braket.tool[key], expected[key]);
+      const search = await invoke("find_openquantum_skills", { query: "quantum_practices" });
+      const capability = search.matches.find(item => item.tools.includes("quantum_practices"));
+      assert.ok(capability);
+      const reference = await invoke("prepare_openquantum_skill", { skillId: capability.skillId, toolName: "quantum_practices" });
+      assert.equal(reference.state, "ready");
+      await invoke("execute_openquantum_tool", { ...reference.execution.arguments, arguments: { action: "list", limit: 1 } });
+      receipt.nativeAgentInterface = { modelTools, exactScientificContract: true, missingEnvironmentDiscovered: true,
+        sameThreadPreparationAndExecution: true, referenceExecution: true, credentialNamespaceIsolated: true, modelAutonomy: "not_checked", modelRequests: false };
+    }
     return result.data.flatMap(entry => entry.skills).filter(skill => skill.name.startsWith("openquantum:"));
   } finally {
     for (const item of pending.values()) clearTimeout(item.timer);
@@ -46,8 +78,19 @@ async function skills() {
   }
 }
 try {
-  const installed = await installPlugin(archive, { home, codexHome, codex: cli, offline: process.env.OPENQUANTUM_OFFLINE === "1" });
-  const first = await skills();
+  installed = await installPlugin(archive, { home, codexHome, codex: cli, offline: process.env.OPENQUANTUM_OFFLINE === "1" });
+  // HOME does not isolate the system keyring. Pin an explicit random namespace
+  // in both fixture manifests before starting a native MCP connection; do not
+  // depend on app-server forwarding arbitrary environment variables.
+  const credentialService = `org.openquantum.test.${randomUUID()}`;
+  for (const directory of [installed.pluginDirectory, path.join(codexHome, "plugins/cache/personal/openquantum", installed.version)]) {
+    const file = path.join(directory, "mcp.json");
+    const manifest = JSON.parse(await fs.readFile(file, "utf8"));
+    Object.assign(manifest.mcpServers.openquantum.env, { OPENQUANTUM_PLUGIN_CREDENTIAL_SERVICE: credentialService,
+      OPENQUANTUM_PLUGIN_SETTINGS_HOME: path.join(home, "settings") });
+    await fs.writeFile(file, JSON.stringify(manifest));
+  }
+  const first = await skills({ verifyAgentInterface: process.env.OPENQUANTUM_VERIFY_AGENT_INTERFACE === "1" });
   assert.equal(first.length, installed.probe.skills);
   const id = "quantum-ground-state";
   const target = list => list.find(skill => skill.name === `openquantum:${id}`);
@@ -70,6 +113,6 @@ try {
   assert.equal((await restoredSettings.snapshot()).skills[0].enabled, false);
   await restoredSettings.command({ action: "skill.set", id, enabled: true, revision: (await restoredSettings.snapshot()).revision });
   assert.equal(target(await skills()).enabled, true);
-  Object.assign(receipt, { version: installed.version, skills: first.length, pluginMcpRegistered: true, nativeDisableVerified: true, nativeUpgradePreserved: true, nativeReenableVerified: true, probe: installed.probe });
+  Object.assign(receipt, { version: installed.version, archiveSha256: installed.archiveSha256, skills: first.length, pluginMcpRegistered: true, nativeDisableVerified: true, nativeUpgradePreserved: true, nativeReenableVerified: true, probe: installed.probe });
 } finally { await fs.rm(home, { recursive: true, force: true }); }
 console.log(JSON.stringify(receipt, null, 2));

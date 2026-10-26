@@ -29,7 +29,7 @@ export async function diagnoseCodex({ root, pluginRoot, environment = process.en
     try {
       await client.connect(transport, { timeout: 30000 });
       const result = await client.listTools({}, { timeout: 30000 });
-      if (result.nextCursor || !["find_openquantum_skills", "prepare_openquantum_skill"].every(name => result.tools.some(tool => tool.name === name))) throw new Error("能力选择或准备 Tool 缺失");
+      if (result.nextCursor || !["find_openquantum_skills", "prepare_openquantum_skill", "execute_openquantum_tool"].every(name => result.tools.some(tool => tool.name === name))) throw new Error("能力发现、准备或执行 Tool 缺失");
       add("codex.mcp", "harness", "pass", `原生插件入口完成实际 stdio 握手与 tools/list：${result.tools.length} 个 Tool；未启动科学 MCP、安装依赖或执行计算。`);
     } catch {
       add("codex.mcp", "harness", "fail", "原生插件入口握手或 Tool 发现失败。", "检查插件安装与运行日志；修复后重新运行本诊断。");

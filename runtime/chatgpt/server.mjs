@@ -2,6 +2,7 @@ import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { CallToolRequestSchema, ListToolsRequestSchema, ListResourcesRequestSchema, ReadResourceRequestSchema } from "@modelcontextprotocol/sdk/types.js";
 import { RESOURCE_MIME_TYPE } from "@modelcontextprotocol/ext-apps/server";
 import { DISCOVER_TOOL, PREPARE_TOOL, preparationProperties, discoverSkills, prepareSkill } from "../../src/settings/codex/preparation.mjs";
+import { EXECUTE_TOOL, executionTool, describePreparation, executeTool } from "./agent-tools.mjs";
 
 const LEGACY_UI_URI = "ui://openquantum/workbench.html";
 const SETTINGS_UI_URI = /^ui:\/\/openquantum\/settings\/[a-f0-9]{64}\.html$/;
@@ -16,6 +17,7 @@ const schema = { type: "object", properties: { action: { type: "string", enum: [
   configurationRevision: { type: "string", maxLength: 64 }, jobId: { type: "string", maxLength: 64 },
   nonce: { type: "string", pattern: "^[a-f0-9]{64}$" }, ciphertext: { type: "string", maxLength: 32768 },
   field: { type: "string", maxLength: 128 }, operation: { enum: ["set", "remove"] }, origin: { type: "string", maxLength: 2048 },
+  connectionInstance: { type: "string", maxLength: 128 },
   revision: { type: "string", maxLength: 64 }, id: { type: "string", maxLength: 128 }, enabled: { type: "boolean" }, tool: { type: "string", maxLength: 128 },
   connection: { type: "object", additionalProperties: false, properties: { id: { type: "string", maxLength: 32 }, transport: { enum: ["stdio", "http"] }, url: { type: "string", maxLength: 2048 }, command: { type: "string", maxLength: 1024 }, args: { type: "array", maxItems: 32, items: { type: "string", maxLength: 2048 } }, tokenEnv: { type: "string", maxLength: 64 }, authentication: { enum: ["none", "token"] } }, required: ["id", "transport", "authentication"] },
 }, required: ["action"], additionalProperties: false };
@@ -34,7 +36,7 @@ export async function settingsRequest({ settings, connections, credentialWindow 
     return settings.snapshot();
   }
   if (input.action?.startsWith("environment.")) return settings.environmentCommand(input);
-  if (input.action === "connection.test") return connections.probe(input.id);
+  if (input.action === "connection.test") return connections.probe(input.id, input.connectionInstance);
   return settings.command(input);
 }
 
@@ -44,7 +46,7 @@ export function createMcpServer({ backend, settings, connections, credentialWind
   const uiUri = settingsResourceUri(html);
   const server = new Server({ name: "openquantum", version: release.version, icons: [{ src: ICON, mimeType: "image/svg+xml" }] }, {
     capabilities: { tools: { listChanged: true }, resources: {} },
-    instructions: `OpenQuantum: choose Skills for the user's task, not by asking them to toggle a catalog. Use ${DISCOVER_TOOL} to search concise descriptions and inspect preparation without side effects. Before executing, use ${PREPARE_TOOL} for exactly the selected Tool or SDK; it may install pinned dependencies but never runs the scientific task. Explicit user prohibitions always win: never restore settings or use raw code to bypass them. If credentials are missing, show the attached configuration form; never ask for secrets in chat. Allowed scientific Tools are discoverable before setup and callable in this same conversation after preparation; no reload is needed for installation. Tool completion is not final scientific Acceptance.`,
+    instructions: `OpenQuantum: choose Skills for the user's task, not by asking them to toggle a catalog. Use ${DISCOVER_TOOL} to search concise descriptions and inspect the selected Tool's exact inputSchema without side effects. Before executing, use ${PREPARE_TOOL} for exactly the selected Tool or SDK; it may install pinned dependencies but never runs the scientific task. While preparing, keep inspecting the same selection until ready, then continue the original task with ${EXECUTE_TOOL}; do not stop at an installation status or ask the user to install through settings. This stable interface covers the full scientific catalog without loading every Tool into model context. Explicit user prohibitions always win: never restore settings or use raw code to bypass them. If credentials are missing, show the attached configuration form; never ask for secrets in chat. No reload is needed after dependency installation. Tool completion is not final scientific Acceptance.`,
   });
   const changed = () => server.sendToolListChanged();
   settings.listeners.add(changed);
@@ -56,14 +58,17 @@ export function createMcpServer({ backend, settings, connections, credentialWind
     { name: SETTINGS_TOOL, title: "OpenQuantum 能力设置", description: "Configure OpenQuantum capabilities from the settings UI. Never pass plaintext credentials in this tool.", inputSchema: schema,
       annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: true },
       _meta: { ui: { resourceUri: uiUri, visibility: ["app"] } } },
-    { name: DISCOVER_TOOL, title: "选择 OpenQuantum Skill", description: "Find relevant quantum Skills by task, or inspect one Skill and its selected Tool/SDK preparation. Read-only; no installation or service startup. Forbidden Skills are excluded from search.",
+    { name: DISCOVER_TOOL, title: "选择 OpenQuantum Skill", description: "Find relevant quantum Skills by task, or inspect one Skill and its selected Tool/SDK preparation. Returns the selected scientific Tool's exact inputSchema and execution route. Read-only; no installation or service startup. Forbidden Skills are excluded from search.",
       inputSchema: { type: "object", properties: { query: { type: "string", maxLength: 240 }, ...preparationProperties }, additionalProperties: false },
       annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false } },
     { name: PREPARE_TOOL, title: "准备所需能力", description: "Prepare exactly one selected Skill's Tool or SDK for an actual task. Downloads and installs pinned dependencies only when missing; reuses existing environments. No scientific execution or policy changes. Missing credentials open the configuration form. After a failed/cancelled job, retry:true explicitly retries; inspect progress with find_openquantum_skills.",
       inputSchema: { type: "object", properties: { ...preparationProperties, retry: { type: "boolean", default: false } }, required: ["skillId"], additionalProperties: false },
       annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: true },
       _meta: { ui: { resourceUri: uiUri, visibility: ["model", "app"] } } },
-    ...await settings.listTools(),
+    executionTool,
+    // User-added connections retain their explicit opt-in contracts. Bundled
+    // scientific Tools are selected through discovery and the stable executor.
+    ...(await settings.listTools()).filter(tool => !backend.providerFor(tool.name)),
   ] }));
   server.setRequestHandler(ListResourcesRequestSchema, async () => ({ resources: [{ uri: uiUri, name: "OpenQuantum Settings", mimeType: RESOURCE_MIME_TYPE }] }));
   server.setRequestHandler(ReadResourceRequestSchema, async ({ params }) => {
@@ -80,10 +85,12 @@ export function createMcpServer({ backend, settings, connections, credentialWind
     try {
       if (params.name === DISCOVER_TOOL || params.name === PREPARE_TOOL) {
         signal?.throwIfAborted();
-        const value = await (params.name === DISCOVER_TOOL ? discoverSkills(settings, params.arguments ?? {}) : prepareSkill(settings, params.arguments ?? {}, signal));
+        const plan = await (params.name === DISCOVER_TOOL ? discoverSkills(settings, params.arguments ?? {}) : prepareSkill(settings, params.arguments ?? {}, signal));
+        const value = await describePreparation(settings, plan);
         return { content: [{ type: "text", text: JSON.stringify(value) }], structuredContent: value,
           ...(params.name === PREPARE_TOOL ? { _meta: { openquantumSettings: await settings.snapshot(), openquantumFocus: { skillId: value.skillId, serviceId: value.serviceId, fields: value.fields?.map(field => field.name) } } } : {}) };
       }
+      if (params.name === EXECUTE_TOOL) return await executeTool(settings, params.arguments ?? {}, signal);
       if (params.name === OPENER || params.name === LEGACY_OPENER || params.name === SETTINGS_TOOL) {
         const value = await settingsRequest(context, params.name === SETTINGS_TOOL ? params.arguments : { action: "snapshot" });
         return { content: [], _meta: { openquantumSettings: value } };

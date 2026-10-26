@@ -193,9 +193,15 @@ export class Settings {
   }
   async callBuiltin(name, args, signal, context = {}) {
     await this.backend.validateCall?.(name, args);
-    if (!await this.enabled(name)) throw new Error("用户已禁止此 Skill、Tool 或 MCP；不能自动恢复");
+    const external = externalMcp(this.backend.providerFor(name));
+    const authorize = async () => {
+      const { config, codex } = await this.read();
+      return this.builtinAllowed(config, codex, name, context.skillId) && (!external || !config.disabledTools.includes(args.operation));
+    };
+    const initial = await this.read();
+    if (!this.builtinAllowed(initial.config, initial.codex, name, context.skillId)) throw new Error("用户已禁止此 Skill、Tool 或 MCP；不能自动恢复");
     signal?.throwIfAborted();
-    const preparation = args.operation === "close_session" && externalMcp(this.backend.providerFor(name))?.persistent ? null : await executionPreparation(this, name, args);
+    const preparation = args.operation === "close_session" && externalMcp(this.backend.providerFor(name))?.persistent ? null : await executionPreparation(this, name, args, { skillId: context.skillId });
     if (preparation) {
       await recordSkill(this, preparation.skillId, preparation.state, { selection: preparation.selection, ...(preparation.serviceId ? { serviceId: preparation.serviceId } : {}) });
       // Scientific output schemas describe successful results. Keep setup errors
@@ -203,12 +209,10 @@ export class Settings {
       return { isError: true, content: [{ type: "text", text: JSON.stringify({ code: "preparation_required", ...preparation }) }] };
     }
     const id = this.environmentFor(name);
-    const external = externalMcp(this.backend.providerFor(name));
     const lease = !external && id && this.environments ? await this.environments.acquire(id, name) : null;
     try {
       const getValues = async () => ({ ...(external && id ? this.environments.values(id, await this.environments.read(id)) : lease?.values), ...await this.providerEnvironment(name, args) });
       const values = await getValues();
-      const authorize = async () => await this.enabled(name) && (!external || !(await this.read()).config.disabledTools.includes(args.operation));
       const result = await this.backend.call(name, args, signal, authorize, values, { ...context, ...(external ? { values: getValues, acquire: () => this.environments.acquire(id, name) } : {}) });
       const capability = this.capabilityFor(name);
       if (capability && !result.isError) await recordSkill(this, capability.id, "used", { selection: { skillId: capability.id, toolName: name }, lastUsedAt: new Date().toISOString() }).catch(() => {});
@@ -217,13 +221,13 @@ export class Settings {
   }
   async environmentCommand(input) {
     if (!this.environments) throw new Error("当前插件没有运行环境管理入口");
-    requireKeys(input, ["action", "id", "revision", "configuration", "configurationRevision", "jobId"]);
+    requireKeys(input, ["action", "id", "revision", "configuration", "configurationRevision", "jobId", "dependencyGroups"]);
     if (input.revision !== (await this.read()).revision) throw new Error("设置已更新，请刷新后重试");
     const ids = this.environmentIds();
     if (!ids.includes(input.id)) throw new Error("当前插件未提供此运行环境");
     if (input.action === "environment.configure") await this.environments.configure(input.id, input.configuration, input.configurationRevision);
     else if (input.action === "environment.cancel") await this.environments.cancel(input.id, input.jobId);
-    else if (["environment.install", "environment.check"].includes(input.action)) await this.environments.start(input.id, input.action.slice("environment.".length));
+    else if (["environment.install", "environment.check"].includes(input.action)) await this.environments.start(input.id, input.action.slice("environment.".length), { groups: input.dependencyGroups ?? [] });
     else throw new Error("未知运行环境操作");
     await this.changed();
     return this.snapshot();
@@ -237,10 +241,13 @@ export class Settings {
     if (provider) return this.builtinAllowed(config, codex, name);
     return config.connections.some(connection => connection.enabled && connection.tools.some(tool => externalToolName(connection.id, tool.name) === name && tool.enabled));
   }
-  builtinAllowed(config, codex, name) {
+  builtinAllowed(config, codex, name, skillId) {
     const capability = this.capabilityFor(name);
+    const selected = skillId ? this.backend.sourceCapabilities.find(item => item.id === skillId && item.status === "available" && item.tools.includes(name)) : capability;
+    if (skillId && !selected) return false;
     return this.providerEnabled(config, this.backend.providerFor(name)) && this.toolEnabled(config, name)
-      && (!capability?.skill || this.skillPolicy.enabled(codex, capability.id));
+      && (!capability?.skill || this.skillPolicy.enabled(codex, capability.id))
+      && (!selected?.skill || this.skillPolicy.enabled(codex, selected.id));
   }
   sdkAllowed(config, codex, id) {
     const owner = this.backend.sourceCapabilities.find(item => item.id === id && item.status === "available");
@@ -255,12 +262,14 @@ export class Settings {
     ];
   }
   async command(input) {
-    requireKeys(input, ["action", "revision", "id", "enabled", "connection", "tool", "resetCredential"]);
+    requireKeys(input, ["action", "revision", "id", "enabled", "connection", "tool", "resetCredential", "connectionInstance"]);
     if (typeof input.revision !== "string") throw new Error("缺少设置版本，请刷新页面");
     await withLock(this.file, () => withLock(this.codexFile, async () => {
       const current = await this.read();
       if (input.revision !== current.revision) throw new Error("配置已被其他操作更新，请刷新后重试");
       const { config, codex } = current;
+      if (input.connectionInstance !== undefined && (!input.action.startsWith("connection.") || typeof input.connectionInstance !== "string"
+        || config.connections.find(item => item.id === input.id)?.instance !== input.connectionInstance)) throw new Error("连接已被替换，请刷新后重新操作");
       switch (input.action) {
         case "skill.set": {
           if (!this.skills(codex).some(skill => skill.id === input.id)) throw new Error("未知 OpenQuantum Skill");

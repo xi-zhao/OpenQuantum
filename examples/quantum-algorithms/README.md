@@ -15,7 +15,7 @@ Agent 加载对应的原生 Skill，通过已有 Harness `bash` / `pwsh` Tool �
 执行依赖和 L1 检查集中登记在 `quantum-algorithms` 能力包；其余 65 个 Skill 是复用这些执行工具的
 L0 指令与工作流，不重复登记同一个通用 Tool 的合同。
 
-## 一次准备，按任务运行
+## 按需准备，按任务运行
 
 在 OpenQuantum 仓库根目录准备 Python 3.12 和锁定依赖：
 
@@ -23,12 +23,12 @@ L0 指令与工作流，不重复登记同一个通用 Tool 的合同。
 npm run capability:algorithms:setup
 ```
 
-不带参数保持原完整安装。只需要基础方法时可使用 `npm run capability:algorithms:setup -- --minimal`；
+不带参数只安装基础依赖，`--minimal` 是相同选择；需要全部可选组时显式使用 `--all`。
 按工作流增加依赖使用 `--group gradients|pennylane|tensor|chemistry`，可重复指定 `--group`。
 最小环境包含 NumPy、SciPy、Qiskit；梯度组增加 qiskit-algorithms，PennyLane 组服务可微电路、
 态制备及 QSP/QSVT，tensor 组增加 quimb，chemistry 组包含 tensor 与 PySCF。
 各方法的组记录在 `coverage.json`，缺依赖时 runner 给出对应命令。分组准备保留已安装的其他组；
-完整准备重新同步全部默认组。`--list` 和 `--describe` 只需 Python 3.12，不导入计算 SDK。
+`--all` 准备全部组，已完整安装的旧环境仍可复用。`--list` 和 `--describe` 只需 Python 3.12，不导入计算 SDK。
 
 需要已有 `uv`；setup 使用 `uv sync --locked`，会下载依赖并创建此目录下忽略的 `.venv`。
 计算脚本直接调用该环境，不联网、安装依赖或创建隐藏结果目录。安装、任务文件与报告写入仍由

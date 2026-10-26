@@ -1137,7 +1137,7 @@
       "group": "chemistry",
       "workflow": "原生 SDK 电路、任意张量网络、MPS/MPO、分子、积分与量子化学计算",
       "conditions": [
-        "依赖组有 gradients、pennylane、tensor、chemistry；完整 setup 安装所有默认组，算法示例不是允许调用的 API 白名单。"
+        "依赖组有 gradients、pennylane、tensor、chemistry；默认 setup 仅安装基础依赖；按任务选择依赖组，--all 才安装全部组，算法示例不是允许调用的 API 白名单。"
       ]
     },
     {

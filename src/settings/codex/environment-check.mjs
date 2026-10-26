@@ -5,6 +5,7 @@ import { pythonEnvironmentRoot } from "../../lib/prepared-python.mjs";
 import { runSetupCommand } from "../../lib/setup-process.mjs";
 import { digest } from "./storage.mjs";
 import { inspectExternalEnvironment } from "../../../runtime/chatgpt/external/check.mjs";
+import { algorithmGroupArgs, algorithmModules } from "../../lib/algorithm-environment.mjs";
 
 export async function validateDriverConfiguration(file) {
   const bytes = await fs.readFile(file);
@@ -31,7 +32,7 @@ export async function inspectEnvironment(manager, id, record, signal, onOutput) 
   if (entry.external) return inspectExternalEnvironment(manager, id, record, signal);
   const env = { ...manager.environment, ...manager.values(id, record), PYTHONNOUSERSITE: "1", PYTHONDONTWRITEBYTECODE: "1" };
   let paths = [], markers = [], details = [], optionalSimulation = false;
-  let python;
+  let python, algorithmGroups;
   if (id === "qdmi-device") {
     const config = env.OPENQUANTUM_QDMI_CONFIG || path.join(env.OPENQUANTUM_QDMI_HOME, "driver.json");
     const verified = await validateDriverConfiguration(config);
@@ -40,7 +41,8 @@ export async function inspectEnvironment(manager, id, record, signal, onOutput) 
     details.push(verified.kind === "example" ? "官方示例驱动已校验；返回模拟设备信息" : "驱动文件摘要已校验；实际设备连接尚未验证");
     python = path.join(pythonEnvironmentRoot(manager.root, id, env), process.platform === "win32" ? "Scripts/python.exe" : "bin/python");
   } else {
-    const described = await describeSdk(manager.root, id, { environment: env });
+    const described = await describeSdk(manager.root, id, { environment: env, ...(id === "quantum-algorithms" ? { selection: algorithmGroupArgs(record.job?.groups) } : {}) });
+    algorithmGroups = described.availableGroups;
     if (entry.language === "julia") {
       await runSetupCommand(env.OPENQUANTUM_JULIA || "julia", ["--startup-file=no", `--project=${described.project}`, "-e", entry.modules.map(name => `Base.require(Main, Symbol(${JSON.stringify(name)}))`).join("; ")], { cwd: manager.root, env: { ...env, JULIA_DEPOT_PATH: env.OPENQUANTUM_JULIA_DEPOT_PATH }, signal, capture: true, onOutput, timeoutMs: 90000 });
       paths.push(path.join(described.project, "Manifest.toml"));
@@ -53,13 +55,24 @@ export async function inspectEnvironment(manager, id, record, signal, onOutput) 
   }
   if (python) {
     const project = id === "quantum-algorithms" ? path.join(manager.root, "examples/quantum-algorithms") : path.join(manager.root, ".agents/skills", id);
-    const marker = path.join(path.dirname(path.dirname(python)), "openquantum-lock.sha256");
+    let marker = path.join(path.dirname(path.dirname(python)), "openquantum-lock.sha256");
     const lock = await fs.readFile(path.join(project, "uv.lock"));
-    if ((await fs.readFile(marker, "utf8")).trim() !== digest(lock)) throw new Error("运行环境依赖标记不一致，请重新安装");
-    markers.push({ path: marker, sha256: digest(await fs.readFile(marker)) });
+    if (id === "quantum-algorithms") {
+      const grouped = path.join(path.dirname(marker), "openquantum-groups.json");
+      // Capture and validate the same receipt bytes that the check will retain.
+      if (await fs.access(grouped).then(() => true, error => { if (error.code === "ENOENT") return false; throw error; })) marker = grouped;
+    }
+    const markerBytes = await fs.readFile(marker);
+    if (marker.endsWith("openquantum-groups.json")) {
+      const receipt = JSON.parse(markerBytes);
+      if (receipt.schemaVersion !== 1 || receipt.lockSha256 !== digest(lock)
+        || JSON.stringify(receipt.groups) !== JSON.stringify(algorithmGroups)) throw new Error("运行环境依赖组已变化，请重新检查");
+    } else if (markerBytes.toString("utf8").trim() !== digest(lock)) throw new Error("运行环境依赖标记不一致，请重新安装");
+    markers.push({ path: marker, sha256: digest(markerBytes) });
+    const modules = id === "quantum-algorithms" ? algorithmModules(algorithmGroups) : entry.modules;
     const program = ["import sys, importlib", `sys.path.insert(0, ${JSON.stringify(path.join(manager.root, "src/lib"))})`,
       ...(entry.bootstrap ? ["from sdk_bootstrap import prepare_sdk", `prepare_sdk(${JSON.stringify(id)})`] : []),
-      ...entry.modules.map(name => `importlib.import_module(${JSON.stringify(name)})`), "print('OPENQUANTUM_ENVIRONMENT_OK')"].join("\n");
+      ...modules.map(name => `importlib.import_module(${JSON.stringify(name)})`), "print('OPENQUANTUM_ENVIRONMENT_OK')"].join("\n");
     // macOS loader bootstrap must be able to re-exec a saved script.
     await fs.mkdir(path.join(manager.directory, "checks"), { recursive: true, mode: 0o700 });
     const temporary = await fs.mkdtemp(path.join(manager.directory, "checks", `${id}-`));
