@@ -1,0 +1,17 @@
+{
+  "fixture": "three-independent-detectors-one-observable",
+  "scope": "API and bit-order regression; not a complete color-code memory experiment",
+  "dem": "error(0.01) D0 L0\nerror(0.02) D1\nerror(0.03) D2\ndetector(0, 0, 0, 0) D0\ndetector(1, 0, 0, 1) D1\ndetector(2, 0, 0, 2) D2\n",
+  "versions": {
+    "chromobius": "1.1.1",
+    "stim": "1.16.0",
+    "numpy": "2.5.3"
+  },
+  "seed": 20261026,
+  "shots": 1024,
+  "exactSyndromesChecked": 8,
+  "zeroSyndromePrediction": 0,
+  "logicalErrors": 0,
+  "missingCoordinatesRejected": true,
+  "scientificValidation": "not_evaluated"
+}

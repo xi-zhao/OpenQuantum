@@ -23,11 +23,11 @@ FlagQuantum 构建复用已审阅的固定版本 `upstream-tools.json`，无需�
 Desktop 的旧 preset 关闭状态则保守迁移为禁止，详见[Desktop 原生准备](DESKTOP_PREPARATION.md)。
 实际发布状态、源码提交和附件摘要以 Release 的 `release-validation.json` 为准。
 其中没有执行 Tool 的 Skill 明确提供方法解释与选型参考，不把知识目录数量等同于可执行计算数量。
-SDK workbench 和领域 Skill 支持通过宿主代码工具编写原生程序，随包携带 111 个 SDK/源码环境的导航、
+SDK workbench 和领域 Skill 支持通过宿主代码工具编写原生程序，随包携带 112 个 SDK/源码环境的导航、
 固定依赖、显式 setup 和源码资源；便捷 Tool 的预设案例不再限制原生 API 的使用。
 平台诊断使用本机只读检查；学习通仍属于 Desktop。平台、驱动或许可条件按具体 SDK 检查，不能以目录可见代替环境就绪。
 云端请求与硬件操作仍遵守任务授权、Tool 副作用声明和宿主权限。
-完整范围与逐库工程证据见[原生 SDK 接入](FULL_SDK_ACCESS.md)；SDK 环境并非 111 个不同上游库；本轮新增入口见[生态扩展](SDK_ECOSYSTEM_2026-10-14.md)。
+完整范围与逐库工程证据见[原生 SDK 接入](FULL_SDK_ACCESS.md)；SDK 环境并非 112 个不同上游库；本轮新增入口见[生态扩展](SDK_ECOSYSTEM_2026-10-14.md)。
 
 `plugin.json` 使用 Agent Plugins 1.0，并保留 `.codex-plugin/plugin.json` 兼容入口。插件身份仍为
 `openquantum@personal`。左侧“…”菜单的全局入口由 `open_openquantum_settings` 提供，名称为
@@ -57,8 +57,8 @@ Desktop 使用 Harness credential store；Codex 使用本机系统凭据库。�
 
 默认打开只读“概览”，保留 README 的产品定位及 Skill、Tool、MCP 的简短说明。
 默认标签为概览、Skill、凭据；“高级设置”展开 Tool 和 MCP。
-设置目录显示全部 183 个 Skill 和 91 个 MCP，并补上 27 个没有对应 MCP 卡片的原生 SDK 环境入口，
-覆盖全部 111 个 SDK 环境。安装前展示具体平台、驱动和许可条件。
+设置目录显示全部 184 个 Skill 和 91 个 MCP，并补上 28 个没有对应 MCP 卡片的原生 SDK 环境入口，
+覆盖全部 112 个 SDK 环境。安装前展示具体平台、驱动和许可条件。
 目录可见不表示当前宿主具有相同执行能力；真实开关和凭据状态仍来自当前宿主。
 
 Skill 默认显示“最近选择”，首次使用时提示在聊天中描述任务。可搜索全部目录或筛选已禁止、需要处理。
