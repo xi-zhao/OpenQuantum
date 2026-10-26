@@ -169,7 +169,7 @@ Agent 可以帮你阅读材料、编写程序和调用工具。安装 OpenQuantu
 
 本地计算可以从无需量子云账户的任务开始。真实硬件和付费服务按需配置；各方法的输入范围、准备条件与验证状态分别保留在详细目录中。
 
-当前源码为 **111 个 SDK/源码环境**提供完整原生 API 的使用路径，其中 26 项来自本轮[生态扩展](docs/integrations/SDK_ECOSYSTEM_2026-10-14.md)，随 0.8.4 分发。Agent 可以编写自定义程序、组合公开 API 并保存完整结果，研究程序的范围可以超出便捷 Tool 的预设案例。
+当前源码为 **112 个 SDK/源码环境**提供完整原生 API 的使用路径，其中 26 项来自本轮[生态扩展](docs/integrations/SDK_ECOSYSTEM_2026-10-14.md)，随 0.8.4 分发。Agent 可以编写自定义程序、组合公开 API 并保存完整结果，研究程序的范围可以超出便捷 Tool 的预设案例。
 
 各环境需按任务显式准备，平台、账户、许可和可选后端限制仍适用。逐库工程检查及其范围见[完整 SDK 接入记录](docs/integrations/FULL_SDK_ACCESS.md)；这些环境尚未经过真实科研任务验收，科学状态仍为 `not_evaluated`。
 
@@ -775,7 +775,7 @@ Harness 是通用 Agent Runtime，扩展通过 Cordis Plugin 装配。UI、模�
   <a href="#原生量子-tools">原生量子 Tools</a>
 </p>
 
-当前源码分发 **183 个内置 Skill、91 个 MCP 服务连接、5 个原生量子 Tool**。其中 66 个 Skill 来自 quantum-skills 的开源工作流适配，共用现有代码执行工具；其中 49 项提供可运行示例，覆盖 unitarylab_algorithms 的全部 39 个模块。84 个 MCP 服务使用 OpenQuantum 的本地桥接实现。Skill、Tool 和 MCP 连接分别统计。
+当前源码分发 **184 个内置 Skill、91 个 MCP 服务连接、5 个原生量子 Tool**。其中 66 个 Skill 来自 quantum-skills 的开源工作流适配，共用现有代码执行工具；其中 49 项提供可运行示例，覆盖 unitarylab_algorithms 的全部 39 个模块。84 个 MCP 服务使用 OpenQuantum 的本地桥接实现。Skill、Tool 和 MCP 连接分别统计。
 
 当前配置共包含 **282 个可配置 Tool 名称**：258 个由 MCP 服务提供，18 个为 Harness 通用工具，6 个为平台原生工具（上面的 5 个量子动作及 1 个教学生成动作）。这是配置全集；`bash` / `pwsh` 按平台互斥，连接开关、环境和工具范围也会影响实际可调用集合。既有能力的逐项决定见[治理记录](docs/architecture/EXTENSION_GOVERNANCE.md)，新增中性原子动力学见 [Bloqade Analog](docs/integrations/BLOQADE_ANALOG.md)。
 
@@ -786,7 +786,7 @@ Harness 是通用 Agent Runtime，扩展通过 Cordis Plugin 装配。UI、模�
 
 既有条目与治理情况见[治理清单](docs/architecture/EXTENSION_GOVERNANCE.md)；相近入口及大型可选服务的专业工具范围见[能力选择](docs/integrations/CAPABILITY_SELECTION.md)。
 
-这 183 个 Skill 覆盖方法选择、计算实验、结果解释和平台诊断。其中 170 项可由 Agent 自动选择，13 个分类索引保留为用户手动导航；原名称和手动调用均可继续使用。点击名称即可查看完整的 `SKILL.md`；所需工具与连接分别配置。新增算法工作流的参数、安装与开源替换差异见[运行说明](examples/quantum-algorithms/README.md)。
+这 184 个 Skill 覆盖方法选择、计算实验、结果解释和平台诊断。其中 171 项可由 Agent 自动选择，13 个分类索引保留为用户手动导航；原名称和手动调用均可继续使用。点击名称即可查看完整的 `SKILL.md`；所需工具与连接分别配置。新增算法工作流的参数、安装与开源替换差异见[运行说明](examples/quantum-algorithms/README.md)。
 
 下表按**研究方法与用途**介绍能力。各 Tool 提供的模型、参数和输入格式见[计算参数与运行方式](#计算参数与运行方式)。
 
@@ -816,6 +816,7 @@ Harness 是通用 Agent Runtime，扩展通过 Cordis Plugin 装配。UI、模�
 | [`quantumsavory-network`](.agents/skills/quantumsavory-network/SKILL.md) | 量子寄存器、器件状态、链路、网络协议与离散事件模拟 | 宿主代码 Tool；显式准备原生 SDK |
 | [`squlearn-learning`](.agents/skills/squlearn-learning/SKILL.md) | 编码线路、observable、executor、量子核与 sklearn estimator | 宿主代码 Tool；显式准备原生 SDK |
 | [`staq-compilation`](.agents/skills/staq-compilation/SKILL.md) | OpenQASM AST、综合、线路变换、优化与映射 | 宿主代码 Tool；显式准备原生 SDK |
+| [`chromobius-decoding`](.agents/skills/chromobius-decoding/SKILL.md) | 带颜色/基标注的 Stim DEM 与逻辑 observable 解码 | 宿主代码 Tool；显式准备原生 SDK |
 | [`tesseract-decoding`](.agents/skills/tesseract-decoding/SKILL.md) | Stim DEM、syndrome、搜索式解码器与统计 | 宿主代码 Tool；显式准备原生 SDK |
 | [`tqec-compilation`](.agents/skills/tqec-compilation/SKILL.md) | BlockGraph、逻辑计算块、相关面与 Stim 线路生成 | 宿主代码 Tool；显式准备原生 SDK |
 | [`tsim-sampling`](.agents/skills/tsim-sampling/SKILL.md) | Clifford/非 Clifford 线路、噪声、detector 与 observable 采样 | 宿主代码 Tool；显式准备原生 SDK |
@@ -1289,7 +1290,7 @@ docs/                    架构、路线与生态文档
 
 ### 可选上游 Skill
 
-[OriginQ 官方 `pyqpanda3` Skill](https://github.com/OriginQ/pyqpanda3-skill) 提供电路编程、算法模板、迁移与 QCloud 使用指导。它**不计入上面的 183 个内置 Skill，也不会在首次启动时自动安装**；运行 `npm run skill:qpanda:setup` 后，固定审阅版本才会进入项目 Skill 目录。安装这个 Skill 不会自动启用 `qpanda_runtime`，也不会赋予云任务权限。
+[OriginQ 官方 `pyqpanda3` Skill](https://github.com/OriginQ/pyqpanda3-skill) 提供电路编程、算法模板、迁移与 QCloud 使用指导。它**不计入上面的 184 个内置 Skill，也不会在首次启动时自动安装**；运行 `npm run skill:qpanda:setup` 后，固定审阅版本才会进入项目 Skill 目录。安装这个 Skill 不会自动启用 `qpanda_runtime`，也不会赋予云任务权限。
 
 ## 长期发展规划
 

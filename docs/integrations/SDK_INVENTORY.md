@@ -2,7 +2,7 @@
 
 由 `node scripts/audit-sdk-integration.mjs` 从 capability policy、SDK 导航、项目 manifest 和依赖锁生成；用 `--check` 检查是否过期。
 
-本表覆盖 111 个 SDK/源码环境入口：102 个 Python（包含算法共享环境）、7 个 Julia、2 个原生源码或 ABI 入口。原生 QDMI 另有 Python 桥接依赖项目。一个入口可包含多个库，同一个库也可能有多个隔离版本，不能把入口数量当成独立 SDK 数量。所有锁摘要与间接依赖版本可通过 `node scripts/sdk-access.mjs inventory` 读出。
+本表覆盖 112 个 SDK/源码环境入口：103 个 Python（包含算法共享环境）、7 个 Julia、2 个原生源码或 ABI 入口。原生 QDMI 另有 Python 桥接依赖项目。一个入口可包含多个库，同一个库也可能有多个隔离版本，不能把入口数量当成独立 SDK 数量。所有锁摘要与间接依赖版本可通过 `node scripts/sdk-access.mjs inventory` 读出。
 
 **接入状态：原生路径与指南已提供；逐 API、可选依赖、平台与外部服务验证不由这张静态清单推断。** 环境是否准备需 `inspect`，实际执行证据见[完整接入记录](FULL_SDK_ACCESS.md)。
 
@@ -14,6 +14,7 @@
 | `bloqade-analog` | Bloqade Analog | python | bloqade-analog==0.16.9, numpy==2.4.2 | 任意原子布局、波形、局部/全局驱动、程序构建与模拟 | 按固定版本、已安装可选组件及目标平台核实 |
 | `braket-simulation` | Amazon Braket | python | amazon-braket-sdk==1.127.2 | 电路、模拟器、AHS、噪声、设备、task/batch 与参数化程序 | 本地程序构建与外部调用分开；账户、凭据、费用、设备操作和数据外发沿用宿主及用户授权。原生 SDK 访问不自动启用服务。 |
 | `catalyst-compilation` | PennyLane Catalyst | python | pennylane-catalyst==0.15.0 | qjit、混合程序、QNode、控制流、编译配置与梯度 | 固定兼容的 PennyLane/JAX/编译栈。区分首次编译与后续执行耗时，缓存与静态参数进入记录；experimental API 不承诺跨版本兼容。 |
+| `chromobius-decoding` | Chromobius | python | chromobius==1.1.1, stim==1.16.0, numpy==2.5.3 | 带颜色和基标注的 Stim DEM、bit-packed detector 样本与逻辑 observable 解码 | 固定 Chromobius 1.1.1；DEM 必须满足颜色/基坐标及上游可解码条件。Möbius 解码为近似方法；小例回归不代表阈值、实时延迟或科学验收。 |
 | `classiq-synthesis` | Classiq | python | httpx[socks]==0.28.1, classiq==1.29.1 | Qmod、自定义模型、综合约束、执行与结果接口 | 本地程序构建与外部调用分开；账户、凭据、费用、设备操作和数据外发沿用宿主及用户授权。原生 SDK 访问不自动启用服务。 |
 | `clifft-sampling` | Clifft / Stim | python | clifft==0.10.1, stim==1.16.0 | 自定义电路、噪声模型、测量与采样程序 | 按固定版本、已安装可选组件及目标平台核实 |
 | `compact-optimization` | CompactQ | python | compactq==0.2.3, qiskit==2.5.2, numpy==2.4.6 | 自定义电路、编译优化策略与结果检查 | 按固定版本、已安装可选组件及目标平台核实 |
