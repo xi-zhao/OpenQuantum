@@ -31,7 +31,7 @@ Codex 使用 `execute_openquantum_tool`，DSH 保持原生 Tool Registry。Skill
 科学验收链独立于执行完成：Tool facts 经 Materializer 保存、重读和核对摘要，Validator 产生 observations，
 Acceptance Profile 提供规则，只有 central Acceptance Builder 推导最终 Acceptance。
 
-**图示时的实现范围：**DSH 已为量子基态与量子信息审计接通自动物化和会话验收；Codex 复用计算与验证结果，
+**图示时的实现范围：**DSH 已为量子基态、量子信息审计与 QCEC 分类复核接通自动物化和会话验收；QCEC 的科学验收范围独立于主计算规模，见[能力说明](../../.agents/skills/quantum-circuit-verification/SKILL.md#独立科学验收范围)。Codex 复用计算与验证结果，
 其原生适配仍将未核实的 provenance 保留为 `not_checked`，没有复制 DSH 的自动物化和会话验收链。
 这不是所有能力或所有宿主均已完成科学验收的声明；后续维护应重新核对相关实现。
 
@@ -47,8 +47,11 @@ Acceptance Profile 提供规则，只有 central Acceptance Builder 推导最终
 | 品牌与打包 | [品牌插件](../../packages/openquantum-web-branding/desktop.mjs)、[Desktop 打包](../../scripts/package-desktop-app.mjs)、[Codex 打包](../../scripts/build-codex-plugin.mjs) |
 | 科学验收接入 | [结果适配器](../../runtime/openquantum/agent-presets/openquantum/scientific-result-adapters.mjs)、[证据物化](../../runtime/openquantum/agent-presets/openquantum/scientific-result-materializer.mjs) |
 
-图的源码快照为 [main · a9be484d](https://github.com/xi-zhao/OpenQuantum/commit/a9be484d081e404b8077a35bca55d3fca33a4b9b)，
-包含 PR #64 的按需执行、最小依赖和设置恢复改进。源码快照不代表已发布或本机已安装的版本同步更新。
+全景图的源码快照为 [main · a9be484d](https://github.com/xi-zhao/OpenQuantum/commit/a9be484d081e404b8077a35bca55d3fca33a4b9b)，
+包含 [PR #64](https://github.com/xi-zhao/OpenQuantum/pull/64) 的按需执行、最小依赖和设置恢复改进。任务图在
+[f87df719 基线](https://github.com/xi-zhao/OpenQuantum/commit/f87df719fbdb1b6a6057da0630413c66cd0042eb)上同步了
+[QCEC 迁移](../releases/2026-10-26-scalable-migration.md)的宿主支持范围，其他职责与调用关系保持原样。
+源码快照不代表已发布或本机已安装的版本同步更新。
 
 两图由 Matplotlib 3.10.7 绘制，沿用 OpenQuantum 配色；仓库内图片可独立查看，不依赖本机聊天工件路径。
 职责、接口或宿主支持范围变化时，在同一改动中更新受影响的图、快照说明和相应契约。

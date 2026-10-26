@@ -78,8 +78,8 @@ Interface 注册和生命周期机制，Skill、Tool、Validator 等是职责模
 | Capability Package | 原生 `SKILL.md`；独立 Tool Provider；可选 Validator 与 Acceptance Profile | 一个有界领域问题的工作流、确定性执行和科学规则 | 自动绑定内部模块、Harness 生命周期、Provider 鉴权 | package 内 unit、MCP contract 与 eval 测试 |
 | Capability Conformance | `auditCapabilityPackages({ projectRoot })` | 以 `scope=static-declaration` 验证 Git 跟踪的 Skill、Tool contract、Agent Preset Provider/activation 声明、合同检查入口、科学合同、依赖锁和 L3 物化证据文件 | 执行 check、证明 Provider 当前已启用或 ready、动态查询 MCP Tool 清单、替代 Validator | `npm run capability:conformance` 与失败关闭测试 |
 | Scientific Contracts | `.agents/skill-contracts/index.mjs` | Result、Acceptance、Score、Reproduction 的共享 schema 与构建规则 | 具体量子算法、Session 持久化、UI | contract/profile/report 测试 |
-| Scientific Result Materialization | `defineScientificResultMaterializer(definition)` | 统一完成 workspace 路径约束、原子写入、真实字节重读与 digest 校验；将结构化证据交给 Validator 和 central Acceptance Builder | 领域数值计算、产生 observation、Harness 生命周期 | QGS/QI materialization 测试 |
-| Scientific Result Adapter Registry（Host Plugin 内部） | `scientificResultAdapter(toolName)` | 将受支持 Tool 映射到领域投影、Materializer、Validator 与 Artifact 类型 | 拥有 `tools/post-execute` hook、自动发现任意 Skill、注册 Tool 或创造 Runtime | projection 与双 L3 回放测试 |
+| Scientific Result Materialization | `defineScientificResultMaterializer(definition)` | 按有效 Session 沙箱统一完成 workspace 路径约束、原子写入、真实字节重读与 digest 校验；将结构化证据交给 Validator 和 central Acceptance Builder，并可输出确定性可读报告 | 领域数值计算、产生 observation、Harness 生命周期 | QGS/QI/QCEC materialization 测试 |
+| Scientific Result Adapter Registry（Host Plugin 内部） | `scientificResultAdapter(toolName)` | 将受支持 Tool 映射到领域投影、Materializer、Validator 与 Artifact 类型 | 拥有 `tools/post-execute` hook、自动发现任意 Skill、注册 Tool 或创造 Runtime | projection 与三条 L3 回放测试 |
 | Scientific Validation | capability Validator + Acceptance Profile + central Acceptance Builder | Validator 从结构化证据产生 observations；Profile 定义规则；Builder 唯一地推导 Acceptance | 读写文件、调用模型、拥有 Session 或用 eval 代替运行时证据 | validator/profile/contract 测试 |
 | Model Routes | Harness `llm.models` / Provider adapter | 模型目录、协议适配、超时和凭据引用 | 量子数值计算、科学结论 | model probe、真实 Tool Calling E2E |
 | Evidence & Diagnostics | 版本化 eval、benchmark、诊断 JSON 和发布证据 | 检测开发回归和当前连接状态 | 运行时科学判定、用历史 PASS 代替当前在线检查 | package eval、benchmark、platform diagnostics tests |
@@ -87,8 +87,9 @@ Interface 注册和生命周期机制，Skill、Tool、Validator 等是职责模
 `Project Settings Interface` 与 `Integration Catalog` 已刻意拆开。新增一个 MCP Server 连接的名称、版本和文档不应触碰
 文件锁、路径安全和 CAS 规则；调整设置事务也不应修改所有集成条目。
 
-QGS 与 `quantum-information-audit` 已形成两个真实的内部 Scientific Result Adapter。可信 Host Plugin
-拥有 `tools/post-execute` hook，Registry 只登记明确支持的 Tool；通用 Materializer 隐藏 workspace 写入和
+QGS、`quantum-information-audit` 与 QCEC 已形成三条内部 Scientific Result Adapter 纵切。可信 Host Plugin
+连接原生 Tool 与 Session 生命周期，按真实结果事件绑定来源并回填展示；Registry 只登记明确支持的 Tool。
+通用 Materializer 隐藏 workspace 写入和
 字节重读，领域 Adapter 只拥有输入规范化、Artifact 形态与 Validator 映射。这不是可独立安装的
 Tool Provider，也不是根据 Skill 自动执行任意代码的 Capability Runtime。
 

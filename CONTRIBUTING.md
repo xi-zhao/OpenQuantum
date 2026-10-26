@@ -147,8 +147,9 @@ Model 在两次调用之间复制大型结构化 bundle。仍可保留 facts-onl
 接口，但不自动扩大模型可见 Tool surface。原子 Tool 只能报告它真正检查过的维度；缺少 Harness 物化来源链时必须返回 `not_checked`，不能填充
 假的 Session、Artifact path 或 digest。
 
-OpenQuantum 参考实现使用受信任的 Host Plugin 拥有 Harness `tools/post-execute` hook。Plugin 从真实
-Agent/Session/Tool call 取得执行身份，并查询内部 Scientific Result Adapter。Materializer 通过 `ctx.fs`
+OpenQuantum 参考实现使用受信任的 Host Plugin 连接 Harness Tool 与 Session 生命周期。Plugin 从真实
+Agent/Session/Tool call 取得执行身份，在原生 `tool/result` 落账后绑定实际事件序号，再查询内部
+Scientific Result Adapter。Materializer 通过 `ctx.fs`
 在 Session workspace 的 `results/openquantum/` 下原子写入、重读和校验 input、Artifact 与合同文件；
 Validator 只接收重读后的结构化证据，central Acceptance Builder 再消费 Profile、observations 和
 provenance。MCP Server 本身仍不写
@@ -206,9 +207,10 @@ Validator 仍需由 Tool、Materializer 或 CI 显式调用；若从 Harness hoo
 
 Harness MCP Client 负责 MCP Server 进程、重连、Tool Registry 注册和调用；不要在 Skill 中复制这些职责。MCP
 `structuredContent` 是执行期结构化值。若某些摘要必须在刷新或 Session resume 后继续展示，应通过仓库内
-可信的 `tools/post-execute` Adapter 生成一个有界展示投影，使它随 Harness 原生 `tool/result` 持久化。
+可信 Host Plugin 生成有界展示投影。`tools/post-execute` 只保留候选与 observations；原生结果事件落账后
+再物化验收，并用原生 `surfaceOp: replace` 追加只改 content 的 `tool/result` 展示。原始结果与替换事件均可追溯。
 
-当前 QGS 与 QI 两条 L3 纵切拆成四个深模块：其中 `scientific-result-projection.mjs`
+当前 QGS、QI 与 QCEC 三条 L3 纵切复用四个深模块：其中 `scientific-result-projection.mjs`
 是拥有 hook 的可信 Host Plugin，Adapter Registry 只是该 Plugin 的内部 Interface。
 
 共享科学 envelope 的大型 L1 输出另由 `science-result-delivery.mjs` 在有效 Session 沙箱内保存完整 JSON，
@@ -218,9 +220,11 @@ Harness MCP Client 负责 MCP Server 进程、重连、Tool Registry 注册和�
 - `scientific-result-protocol.mjs`：可在 Host/UI 两侧重放的有界协议；
 - `scientific-result-materializer.mjs`：Harness workspace 路径约束、物化、真实字节重读与中央合同编排；
 - `scientific-result-adapters.mjs`：显式登记 Tool、领域投影、Artifact 类型和 capability Validator；
-- `scientific-result-projection.mjs`：只连接 `tools/post-execute`、`ctx.fs` 与 Adapter registry。
+- `scientific-result-projection.mjs`：连接原生 Tool 终结、Session 事件、步骤/回合等待 hook、`ctx.fs` 与 Adapter registry。
 
-第二个真实能力已经证明并形成 capability adapter Interface。继续接入 L3 能力时：
+三条纵切共用 capability adapter Interface。QI 与 QCEC 的可读报告由同一 Materializer 从重读证据生成，写入仍使用 Session 当前有效的 `sandboxPolicy`；只读会话不提升权限。输入参数须与原生 `tool/call` 一致，证据路径包含调用事件序号，防止复用 call ID 覆盖先前结果。
+
+QCEC 的分类验收覆盖每份输入最多 16 量子位、65536 UTF-8 字节、512 条语句；独立完整酉矩阵复核最多 8 量子位，范围内的完全相同输入须先通过独立 Qiskit 解析和有限酉门检查，再使用 source-identity 证明。该 Profile 范围不限制 Tool 主计算；超出范围保留 observations，参考不可用保持 `conditional`。`not_equivalent` 的验收 `passed` 表示不等价分类经复核，不能写成电路等价。继续接入 L3 能力时：
 
 1. 先实现该能力自己的 Artifact、Validator、Profile 和物化测试，再显式登记 Tool descriptor / Adapter；
 2. 只投影 UI 真正需要的有限字段和受校验 Result Commit，不把 Artifact 正文或凭证塞进 Session event；
