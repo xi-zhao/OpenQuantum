@@ -1,0 +1,40 @@
+{
+  "fixture": "three-independent-detectors-one-observable",
+  "scope": "API and bit-order regression; not a complete color-code memory experiment",
+  "dem": "error(0.01) D0 L0\nerror(0.02) D1\nerror(0.03) D2\ndetector(0, 0, 0, 0) D0\ndetector(1, 0, 0, 1) D1\ndetector(2, 0, 0, 2) D2\n",
+  "versions": {
+    "chromobius": "1.1.1",
+    "stim": "1.16.0",
+    "numpy": "2.5.3"
+  },
+  "seed": 20261026,
+  "shots": 1024,
+  "exactSyndromesChecked": 8,
+  "zeroSyndromePrediction": 0,
+  "logicalErrors": 0,
+  "missingCoordinatesRejected": true,
+  "scientificValidation": "not_evaluated",
+  "date": "2026-10-26",
+  "upstream": {
+    "url": "https://github.com/quantumlib/chromobius",
+    "version": "1.1.1",
+    "revision": "efae0325e4a8fc13be981434d38e499aa06b989f"
+  },
+  "exampleSha256": "d0fe0f6a86d977cc76040443a1720535849c1e364888c9c12dcea9396206331c",
+  "lockSha256": "6ea9b3b5ca229ab3ad607719d9240d18f4c5a6bc050ded16753a27114349ef2a",
+  "checks": {
+    "frozenSetup": "passed",
+    "exhaustiveFixture": "passed",
+    "missingCoordinates": "rejected",
+    "capabilityConformance": "passed",
+    "sdkInventoryAndGuides": "passed",
+    "sdkAndReadmeTests": "15 passed",
+    "codexCatalogSettings": "passed",
+    "localHarnessRegistry": "blocked by reused installation dependency mismatch; CI must verify committed lock"
+  },
+  "limitations": [
+    "Synthetic unambiguous DEM, not a full color-code memory experiment.",
+    "No threshold, decoder-optimality or hardware performance claim.",
+    "No independent Validator or central Acceptance Report; scientificValidation remains not_evaluated."
+  ]
+}

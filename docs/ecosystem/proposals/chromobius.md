@@ -50,3 +50,11 @@ manifest/锁文件和小型可编辑示例，复用 `sdk-access` / `setup-sdk` �
 同时发现 NVIDIA Ising-Decoding 的神经预解码路线，但其 Torch/cuStabilizer、模型权重和 GPU
 训练/推理条件更重，当前保留观察，不因本次联调新增这些依赖。
 
+
+## 首次接入记录
+
+本 PR 已实现上述 L0 Skill 与固定 SDK 环境，并通过八种 syndrome 的独立穷举对照、1,024 shots、
+缺失坐标拒绝检查、SDK/文档一致性与 Codex 目录设置测试。
+[数值证据与验证边界](../../integrations/evidence/chromobius-2026-10-26.json)。
+本机复用的旧 Node 依赖不匹配当前锁文件，Harness 注册检查须由使用提交锁文件的 CI 完成；
+在此之前保持 Draft。接入未合并、未发布，不代表完整色码科学验收。
