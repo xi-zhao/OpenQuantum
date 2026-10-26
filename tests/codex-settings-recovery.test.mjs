@@ -103,6 +103,8 @@ test("stale connection actions and probes cannot target a replacement even using
     await assert.rejects(f.settings.command({ action, id: connection.id, connectionInstance: instance,
       enabled: true, connection, revision: f.session.snapshot.revision }), /已被替换/);
   }
+  const staleSave = await f.session.update({ action: "connection.set", id: connection.id, connectionInstance: instance, enabled: false });
+  assert.equal(staleSave.confirmed, false, "matching state on a replacement cannot confirm a stale form");
   let resolves = 0;
   const connections = new Connections({ settings: f.settings, credentials: { resolve: async () => { resolves++; } } });
   t.after(() => connections.close());

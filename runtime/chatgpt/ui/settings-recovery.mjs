@@ -17,6 +17,7 @@ export function settingsSaveMatches(input, before, after, receipt) {
   if (input.action.endsWith(".set") && typeof input.enabled !== "boolean") return false;
   const previous = before?.connections?.find(item => item.id === input.id);
   const connection = after?.connections?.find(item => item.id === (input.id ?? input.connection?.id));
+  if (input.connectionInstance !== undefined && input.connectionInstance !== previous?.instance) return false;
   if (receipt && input.action.startsWith("connection.") && input.action !== "connection.remove") {
     const saved = receipt.connections?.find(item => item.id === (input.id ?? input.connection?.id));
     if (!saved || saved.instance !== connection?.instance) return false;
