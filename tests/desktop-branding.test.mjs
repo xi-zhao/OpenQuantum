@@ -52,7 +52,7 @@ test("public shell branding preserves native callbacks and restores the service 
   assert.equal(presented.windowTitle, "OpenQuantum");
   assert.equal(presented.mode, "compatibility");
   assert.equal(presented.url, "http://127.0.0.1:3000/?dsh-desktop-mode=compatibility&token=fixture");
-  assert.equal(presented.iconPath, fileURLToPath(new URL("../packages/openquantum-web-branding/assets/icon-512.png", import.meta.url)));
+  assert.equal(presented.iconPath, fileURLToPath(new URL("../packages/openquantum-web-branding/assets/desktop-icon-512.png", import.meta.url)));
   assert.equal(presented.requestQuit, spec.requestQuit);
   assert.equal(presented.readThemeSource, spec.readThemeSource);
   for (const filename of Object.values(presented.trayIcons)) assert.ok((await readFile(filename)).length > 0);
@@ -109,7 +109,7 @@ test("Mac launcher uses the brand icon and bundled runtime across repeated insta
   const shell = await readFile(path.join(first.launcher, "Contents/MacOS/OpenQuantum"), "utf8");
   assert.match(shell, /exec '\/custom runtime\/bin\/node'/);
   assert.ok(shell.includes(path.join(projectRoot, "scripts/run-desktop.mjs")));
-  const png = await readFile(path.join(projectRoot, "packages/openquantum-web-branding/assets/icon-512.png"));
+  const png = await readFile(path.join(projectRoot, "packages/openquantum-web-branding/assets/desktop-icon-512.png"));
   const icon = await readFile(path.join(first.launcher, "Contents/Resources/OpenQuantum.icns"));
   assert.deepEqual(icon, macIcon(png));
   assert.equal(icon.subarray(8, 12).toString(), "ic09");

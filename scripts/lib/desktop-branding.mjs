@@ -88,7 +88,7 @@ export async function installDesktopBranding({ projectRoot, dataRoot, node, vers
     return writeDesktopLauncher({ dataRoot, launcher: application, files: {
       "OpenQuantum.app/Contents/Info.plist": { content: plist },
       "OpenQuantum.app/Contents/MacOS/OpenQuantum": { content: `#!/bin/sh\nexec ${quote(node)} ${quote(path.join(projectRoot, "scripts/run-desktop.mjs"))}\n`, mode: 0o755 },
-      "OpenQuantum.app/Contents/Resources/OpenQuantum.icns": { content: macIcon(await readFile(path.join(projectRoot, "packages/openquantum-web-branding/assets/icon-512.png"))) },
+      "OpenQuantum.app/Contents/Resources/OpenQuantum.icns": { content: macIcon(await readFile(path.join(projectRoot, "packages/openquantum-web-branding/assets/desktop-icon-512.png"))) },
     } });
   }
   if (process.platform === "win32") {
@@ -114,7 +114,7 @@ export async function installDesktopBranding({ projectRoot, dataRoot, node, vers
         env: { ...process.env, OQ_ICON_SHORTCUT: stagedShortcut, OQ_ICON_NODE: node, OQ_ICON_SCRIPT: path.join(projectRoot, "scripts/run-desktop.mjs"), OQ_ICON_PROJECT: projectRoot, OQ_ICON_FILE: iconFile },
       });
       return await writeDesktopLauncher({ dataRoot, launcher: shortcut, files: {
-        "OpenQuantum.ico": { content: pngIcon(await readFile(path.join(projectRoot, "packages/openquantum-web-branding/assets/icon-192.png"))) },
+        "OpenQuantum.ico": { content: pngIcon(await readFile(path.join(projectRoot, "packages/openquantum-web-branding/assets/desktop-icon-192.png"))) },
         "OpenQuantum.lnk": { content: await readFile(stagedShortcut) },
       } });
     } finally { await rm(temporary, { recursive: true, force: true }); }
