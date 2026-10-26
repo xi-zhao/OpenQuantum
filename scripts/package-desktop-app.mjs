@@ -51,7 +51,7 @@ for (const entry of ["lib", "build", "cordis.patch.yml", "LICENSE"]) {
   await cp(path.join(upstream, entry), path.join(application, entry), { recursive: true });
 }
 await cp(path.join(root, "desktop/launcher.mjs"), path.join(application, "launcher.mjs"));
-await cp(path.join(root, "packages/openquantum-web-branding/assets/icon-512.png"), path.join(application, "build/openquantum.png"));
+await cp(path.join(root, "packages/openquantum-web-branding/assets/desktop-icon-512.png"), path.join(application, "build/openquantum.png"));
 const moduleCount = await copyDesktopProductionDependencies(upstream, path.join(application, "node_modules"));
 console.log(`Materialized ${moduleCount} Desktop production packages`);
 const appManifest = { ...upstreamManifest };

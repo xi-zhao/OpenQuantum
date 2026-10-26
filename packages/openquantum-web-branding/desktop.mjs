@@ -2,7 +2,7 @@ import { fileURLToPath } from "node:url";
 
 export const name = "openquantum-desktop-branding";
 export const inject = ["desktopRuntime", "openquantumWebSecurity", "settings"];
-const iconPath = fileURLToPath(new URL("assets/icon-512.png", import.meta.url));
+const iconPath = fileURLToPath(new URL("assets/desktop-icon-512.png", import.meta.url));
 const trayIcons = Object.freeze({
   templatePath: fileURLToPath(new URL("assets/tray-iconTemplate.png", import.meta.url)),
   bluePath: fileURLToPath(new URL("assets/tray-icon-color.png", import.meta.url)),

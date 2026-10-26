@@ -30,3 +30,9 @@ accepts a minimal tray policy: Open and Quit, localized from the Host's `locale`
 preference, refreshed after settings updates. The native shell retains its show,
 quit and disposal callbacks. Third-party Desktop builds without this extension
 keep their original tray menu. See [the build contract](../../docs/DESKTOP_INSTALLERS.md).
+
+Desktop application icons place the unchanged vector mark on a white rounded
+tile. The running Dock icon, standalone installer and branded launchers use
+`assets/desktop-icon-*.png`; Web and menu-bar marks retain their transparent
+background. Regenerate the application icons with
+`node scripts/generate-desktop-app-icons.mjs` after `desktop:setup`.
