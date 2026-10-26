@@ -5,11 +5,11 @@ OpenQuantum 对四个上游项目做了计算适配，分别解决电路优化�
 | 项目与固定版本 | 连接 / Tool | 当前范围 |
 | --- | --- | --- |
 | [PyZX 0.10.6](https://github.com/zxcalc/pyzx/tree/v0.10.6)，Apache-2.0 | `pyzx_local` / `optimize_pyzx_circuit` | Clifford+T 电路的 ZX 重写、提取、QASM 和门数；可选完整酉矩阵对照 |
-| [Graphix 0.4](https://github.com/TeamGraphix/graphix/tree/v0.4)，Apache-2.0 | `graphix_local` / `simulate_graphix_pattern` | 电路转 MBQC 模式与资源图；可选测量过程模拟、输出纠正及独立态矢对照 |
+| [Graphix 0.4.1](https://github.com/TeamGraphix/graphix/tree/v0.4.1)，Apache-2.0 | `graphix_local` / `simulate_graphix_pattern` | 电路转 MBQC 模式与资源图；可选测量过程模拟、输出纠正及独立态矢对照 |
 | [Symmer 0.0.13 / a4ba56e3](https://github.com/qmatter-labs/symmer/tree/a4ba56e3332424a65d4a2c088fd6363aca0c68e6)，MIT | `symmer_local` / `taper_symmer_hamiltonian` | 实 Pauli Hamiltonian 按指定独立对称性和扇区降维；允许零量子位标量 |
 | [PauLie 0.2.3](https://github.com/QPauLie/PauLie/tree/v0.2.3)，MIT | `paulie_local` / `analyze_paulie_algebra` | 非恒等 Pauli 生成元的分类与精确维数；可选闭包及独立实 Lie 空间对照 |
 
-每个目录的 `pyproject.toml` 与带包摘要的 `uv.lock` 固定完整依赖。Symmer 使用表中的完整源码 SHA，避免把较旧 GitHub Release 与开发分支混为同一版本。Graphix 升至 0.4 后继续固定 `numpy==2.4.6`；0.4 在 PyPI 可用，但 GitHub Release 仍标记为预发布。资源图、空间调度和测量结果 API 的迁移与验证见[2026-09-22 升级记录](../releases/2026-09-22-quantum-upstream-update.md)。四个项目的许可证及分发边界见[第三方声明](../../THIRD_PARTY_NOTICES.md)。
+每个目录的 `pyproject.toml` 与带包摘要的 `uv.lock` 固定完整依赖。Symmer 使用表中的完整源码 SHA，避免把较旧 GitHub Release 与开发分支混为同一版本。Graphix 固定稳定版 0.4.1，修复原生 QASM 导出将 RZZ 误作 CRZ 等问题；继续使用 Python 3.12 与 `numpy==2.4.6`，其余锁定依赖保持不变。资源图、空间调度和测量结果 API 的历史迁移见[2026-09-22 升级记录](../releases/2026-09-22-quantum-upstream-update.md)，本次实测见[升级证据](evidence/graphix-2026-10-26.json)。四个项目的许可证及分发边界见[第三方声明](../../THIRD_PARTY_NOTICES.md)。
 
 ## 安装与执行
 

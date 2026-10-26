@@ -1,0 +1,94 @@
+{
+  "date": "2026-10-26T06:31:35.679411+00:00",
+  "baseline": "f4da33fb15a09721d1070e7486a91555bfeaad2a",
+  "upstream": "https://github.com/TeamGraphix/graphix/releases/tag/v0.4.1",
+  "dependencyChanges": {
+    "graphix": {
+      "before": "0.4",
+      "after": "0.4.1"
+    }
+  },
+  "python": "3.12",
+  "numpy": "2.4.6",
+  "oldRzz": {
+    "graphix": "0.4",
+    "numpy": "2.4.6",
+    "qasm": "OPENQASM 3;\ninclude \"stdgates.inc\";\nqubit[2] q;\ncrz(pi/4) q[0], q[1];",
+    "angleRadians": 0.7853981633974483,
+    "basisStatesChecked": 4,
+    "unitaryMaxErrorUpToGlobalPhase": 0.7653668647301795,
+    "scientificValidation": "not_evaluated"
+  },
+  "oldRzzExpectedFailure": true,
+  "newRzz": {
+    "graphix": "0.4.1",
+    "numpy": "2.4.6",
+    "qasm": "OPENQASM 3;\ninclude \"stdgates.inc\";\nqubit[2] q;\ncx q[0], q[1];\nrz(pi/4) q[1];\ncx q[0], q[1];",
+    "angleRadians": 0.7853981633974483,
+    "basisStatesChecked": 4,
+    "unitaryMaxErrorUpToGlobalPhase": 0,
+    "scientificValidation": "not_evaluated"
+  },
+  "mbqcCases": [
+    {
+      "case": "graphix-mbqc-bell-phase",
+      "maxInfidelity": 2.220446049250313e-16,
+      "branches": 8,
+      "sha256": "d494e13b8be6304596aada9d38c9a03e0e1175ac547de8cb3e665bc289b6a803"
+    },
+    {
+      "case": "graphix-mbqc-bit-order",
+      "maxInfidelity": 0,
+      "branches": 4,
+      "sha256": "5040eee408edb2ef480feaec2709e998dd7a55ea89191d571e09ec5b74db7c3e"
+    },
+    {
+      "case": "graphix-mbqc-cz-rotation",
+      "maxInfidelity": 2.220446049250313e-16,
+      "branches": 4,
+      "sha256": "c4788714dc915ba1825e00cdc17cead8cb725ef3002c2baf736027b4479fcecf"
+    },
+    {
+      "case": "graphix-mbqc-repeat",
+      "maxInfidelity": 2.220446049250313e-16,
+      "branches": 8,
+      "sha256": "24f1f4772aeba5e57d92a5cba6396318a9a3528370c4890ec8ec3ff032dd520e"
+    },
+    {
+      "case": "graphix-mbqc-rx",
+      "maxInfidelity": 0,
+      "branches": 4,
+      "sha256": "cb4895eb96ff026c96d25dff88ba2440f51891627d69ea107be9c7a3f25a47d9"
+    },
+    {
+      "case": "graphix-mbqc-ry",
+      "maxInfidelity": 2.220446049250313e-16,
+      "branches": 4,
+      "sha256": "e1964f764ed5b9958d29782735c44b28a4908779a7291aa87a079c55cdea37ed"
+    },
+    {
+      "case": "graphix-mbqc-rz-plus",
+      "maxInfidelity": 0,
+      "branches": 4,
+      "sha256": "7276946a433fb209f0da540f38f06173317090461d288147ff545370bb64bfcd"
+    }
+  ],
+  "checks": {
+    "frozenSetup": "passed",
+    "unitaryContracts": "5 passed",
+    "graphixLive": "2 passed",
+    "fixedSeedRepeat": "passed",
+    "sdkInventory": "passed"
+  },
+  "scientificValidation": "not_evaluated",
+  "limitations": [
+    "Two-qubit RZZ export and bounded noiseless MBQC fixtures; not all public Graphix APIs.",
+    "No hardware, noise model, external model or central scientific acceptance.",
+    "Local reused Node installation does not match current main Harness lock; exact-lock CI checks the shared host integration."
+  ],
+  "sourceHashes": {
+    ".agents/skills/graphix-mbqc/uv.lock": "fc63c9cdfe80a5336b31ff88bec2f38978e082bde7be0481634cdf911cdfa5e1",
+    ".agents/skills/graphix-mbqc/mcp/bridge.py": "2884ae3dfc54657e0774a0e8a5be51854a278b05839623967f31dc8dad111c91",
+    "tests/fixtures/graphix-qasm-regression.py": "00649c2103808cbbb1fb9bc93dd0363a62edc3547d59bb9cfb376ea0a2b305b2"
+  }
+}

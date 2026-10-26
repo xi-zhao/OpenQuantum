@@ -113,7 +113,7 @@ wheels = [
 
 [[package]]
 name = "graphix"
-version = "0.4"
+version = "0.4.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "matplotlib" },
@@ -125,9 +125,9 @@ dependencies = [
     { name = "sympy" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/f7/db/052f921993ff8ae6b118df8b2ef28dde0ef5fec2a94ac850f097151053ac/graphix-0.4.tar.gz", hash = "sha256:8d4c61d64446c36a8e76689afdbc9910a17f598036ec9b119f7b90cae38469fe", size = 393032, upload-time = "2026-08-18T16:03:26.248Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/73/a0/0b1bad96da4a90b19a9e6c719688df53b751a45b50923a5e1e9feb282d3e/graphix-0.4.1.tar.gz", hash = "sha256:a51e186e5151cac2459c709768b221f1868c73493880a4f2630c7cca67fd168f", size = 681002, upload-time = "2026-10-13T23:09:25.612Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/06/fd/e5049c5d37e01f7d38cf4c4ab4d8e9276ff58166c833b29007f594648d2b/graphix-0.4-py3-none-any.whl", hash = "sha256:b2d25443f6650ac1aac6728d7d9703782747765dba5861a3e1e59db0fa8869c3", size = 219504, upload-time = "2026-08-18T16:03:24.715Z" },
+    { url = "https://files.pythonhosted.org/packages/f9/e2/9831ae92d18ba2d71d4124a0c280e9b0358443a174fdacc6215aec7534aa/graphix-0.4.1-py3-none-any.whl", hash = "sha256:ccc9495c69d5e5fb8a6f69e27c6f48fac22f615dc66411de025074c3d3a63dcb", size = 226085, upload-time = "2026-10-13T23:09:23.908Z" },
 ]
 
 [[package]]
@@ -258,7 +258,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "graphix", specifier = "==0.4" },
+    { name = "graphix", specifier = "==0.4.1" },
     { name = "numpy", specifier = "==2.4.6" },
 ]
 
