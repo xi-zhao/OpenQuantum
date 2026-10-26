@@ -12,12 +12,129 @@ export const sourceDirectory = (root) => path.join(root, ".openquantum/external/
 // Preserve the full upstream product. Empty replacement lists restore former
 // UI-only patches (including the disabled instrumentation and API blockers).
 const patches = {
+  "components/edit/surfaces/quiz/QuestionCard.tsx": [
+    ["  const accent = TYPE_ACCENT[q.type];", "  const accent = TYPE_ACCENT[q.type] ?? { badge: 'bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-300', rail: 'from-neutral-400 to-neutral-500' };"],
+    ["{t(`edit.quiz.type.${q.type}`)}", "{TYPES.includes(q.type) ? t(`edit.quiz.type.${q.type}`) : t('edit.quiz.typeLabel')}"],
+    ["<SelectValue />", "<SelectValue placeholder={t('edit.quiz.typeLabel')} />"],
+  ],
+  "lib/server/agent-runtime/generation-tools.ts": [
+    ["  brief: Type.String({ minLength: 1 }),", `  quizConfig: Type.Optional(Type.Object({
+    questionCount: Type.Integer({ minimum: 1 }),
+    difficulty: Type.Union([Type.Literal('easy'), Type.Literal('medium'), Type.Literal('hard')]),
+    questionTypes: Type.Array(Type.Union([Type.Literal('single'), Type.Literal('multiple'), Type.Literal('text')]), { minItems: 1, maxItems: 3, uniqueItems: true }),
+  }, { description: 'Quiz pages only. Supply the exact requested number and question types here; the brief does not override the default quiz count.' })),
+  brief: Type.String({ minLength: 1 }),`],
+    ["      const requestedMedia = params.media ?? [];", "      if (params.quizConfig && params.type !== 'quiz') return result('quizConfig is only accepted for quiz pages.', { error: 'quiz-config-requires-quiz' }, true);\n      const requestedMedia = params.media ?? [];"],
+    ["        keyPoints: params.materialFacts ?? [],", "        keyPoints: params.materialFacts ?? [],\n        ...(params.type === 'quiz' && params.quizConfig ? { quizConfig: params.quizConfig } : {}),"],
+  ],
+  "packages/@openmaic/generation/src/scene-generator.ts": [
+    ["  // Ensure each question has an ID and normalize options format\n  const questions: QuizQuestion[] = generatedQuestions.map((q) => {", `  // A single declared type is unambiguous when the model omits its type field.
+  const requestedTypes = quizConfig.questionTypes.map((type) => type === 'text' ? 'short_answer' : type);
+  if (generatedQuestions.some((q) => !q || typeof q !== 'object' || Array.isArray(q))) {
+    onFailure?.({ code: 'invalid-model-output' });
+    return null;
+  }
+  const typedQuestions = generatedQuestions.map((q) => ({ ...q, type: q.type ?? (requestedTypes.length === 1 ? requestedTypes[0] : undefined) }));
+  if ((outline.quizConfig && typedQuestions.length !== quizConfig.questionCount) || typedQuestions.some((q) => !q.type || !['single', 'multiple', 'short_answer'].includes(q.type) || (outline.quizConfig && !requestedTypes.includes(q.type)))) {
+    log.error('Generated quiz does not match the declared count or question types.');
+    onFailure?.({ code: 'invalid-model-output' });
+    return null;
+  }
+  // Ensure each question has an ID and normalize options format.
+  const questions: QuizQuestion[] = typedQuestions.map((item) => {
+    const q = { ...item, type: item.type as QuizQuestion['type'] };`],
+  ],
+  "components/slide-renderer/components/element/LatexElement/BaseLatexElement.tsx": [
+    ["import { useRef, useState, useLayoutEffect } from 'react';", "import { useRef, useState, useLayoutEffect, useMemo } from 'react';\nimport { formulaHtml } from '@/components/openquantum-latex';"],
+    ["export function BaseLatexElement({ elementInfo }: BaseLatexElementProps) {", "export function BaseLatexElement({ elementInfo }: BaseLatexElementProps) {\n  const html = useMemo(() => formulaHtml(elementInfo), [elementInfo.latex, elementInfo.html]);"],
+    ["{elementInfo.html ? (", "{html ? ("],
+    ["html={elementInfo.html}", "html={html}"],
+  ],
+  "components/slide-renderer/components/element/LatexElement/index.tsx": [
+    ["import { useRef, useState, useLayoutEffect } from 'react';", "import { useRef, useState, useLayoutEffect, useMemo } from 'react';\nimport { formulaHtml } from '@/components/openquantum-latex';"],
+    ["  const handleSelectElement =", "  const html = useMemo(() => formulaHtml(elementInfo), [elementInfo.latex, elementInfo.html]);\n  const handleSelectElement ="],
+    ["{elementInfo.html ? (", "{html ? ("],
+    ["html={elementInfo.html}", "html={html}"],
+  ],
+  "packages/@openmaic/renderer/src/elements/latex/BaseLatexElement.tsx": [
+    ["import { useCallback, useEffect, useRef, useState, useLayoutEffect } from 'react';", "import { useCallback, useEffect, useRef, useState, useLayoutEffect, useMemo } from 'react';\nimport { formulaHtml } from '../../formula-html';"],
+    ["export function BaseLatexElement({ elementInfo }: BaseLatexElementProps) {", "export function BaseLatexElement({ elementInfo }: BaseLatexElementProps) {\n  const html = useMemo(() => formulaHtml(elementInfo), [elementInfo.latex, elementInfo.html]);"],
+    ["{elementInfo.html ? (", "{html ? ("],
+    ["html={elementInfo.html}", "html={html}"],
+  ],
+  "packages/mathml2omml/src/mathml/text_container.js": [
+    ["const STYLES = {", "const STYLES = {\n  normal: 'p',"],
+  ],
+  "packages/mathml2omml/src/mathml/mrow.js": [
+    ["  if (children.length >= 2) {", "  // Empty fence pairs are visible punctuation, not editable empty operands.\n  if (children.length > 2) {"],
+    ["const begChar = first.children?.[0]?.data || '('", "const begChar = first.children?.[0]?.data || ''"],
+    ["const endChar = last.children?.[0]?.data || ')'", "const endChar = last.children?.[0]?.data || ''"],
+  ],
+  "lib/export/latex-to-omml.ts": [
+    ["  // Strip DOCX-only xmlns:w and redundant xmlns:m from <m:oMath>", "  // Math styles remain in m:rPr. Remove Word run properties before dropping\n  // their namespace, then supply PowerPoint's DrawingML run properties.\n  result = result.replace(/<w:rPr(?:\\/>|>[\\s\\S]*?<\\/w:rPr>)/g, '');\n\n  // Strip DOCX-only xmlns:w and redundant xmlns:m from <m:oMath>"],
+    ["  result = result.replace(/<m:r>(\\s*)<m:t/g, `<m:r>$1${rpr}$1<m:t`);", "  result = result.replace(/<m:r>(?!<a:rPr)/g, `<m:r>${rpr}`);"],
+  ],
+  "lib/export/use-export-pptx.ts": [
+    ["import { type AST, toAST } from '@/lib/export/html-parser';", "import { type AST, toAST } from '@/lib/export/html-parser';\nimport { exportCssProperties, pptxFontFace } from '@/lib/export/openquantum-text-export';"],
+    ["        const styleArr = styleAttr.value.split(';');\n        for (const styleItem of styleArr) {\n          const match = styleItem.match(/([^:]+):\\s*(.+)/);\n          if (match) {\n            const [key, value] = [match[1].trim(), match[2].trim()];\n            if (key && value) styleObj[key] = value;\n          }\n        }", "        Object.assign(styleObj, exportCssProperties(styleAttr.value));"],
+    ["if (styleObj['font-family']) options.fontFace = styleObj['font-family'];", "if (styleObj['font-family']) options.fontFace = pptxFontFace(styleObj['font-family']);"],
+    ["import { latexToOmml } from '@/lib/export/latex-to-omml';", "import { latexToOmml } from '@/lib/export/latex-to-omml';\nimport { formulaFontSize } from '@/lib/export/openquantum-formula-layout';"],
+    ["        // Try native OMML formula first (editable in PowerPoint)\n        // Estimate line count from \\\\ line breaks to compute a fitting font size.\n        // Formula rendered height ≈ lines * 1.5 * fontSize, so fontSize ≈ boxHeight / (lines * 1.5)\n        const lineBreaks = (el.latex?.match(/\\\\\\\\/g) || []).length;\n        const lines = lineBreaks + 1;\n        const boxHeightPt = el.height / ratioPx2Pt;\n        const fontSize = Math.round(boxHeightPt / (lines * 3));", "        // Keep native editable math at the classroom's measured size.\n        const fontSize = await formulaFontSize(el, ratioPx2Pt);"],
+  ],
+  "components/workbench/chat/system-notice.ts": [
+    ["import type { ChatNode, SystemTone }", "import { modelFailureCopy } from '@/components/openquantum-model-failure';\nimport type { ChatNode, SystemTone }"],
+    ["  return {\n    tone,\n    summary,", "  const modelFailure = tone === 'error' && node.copyKey === 'workbench.system.runFailed' ? modelFailureCopy(detail) : undefined;\n  if (modelFailure) return { tone, summary: oneLine(t(modelFailure.summary)), hint: oneLine(t(modelFailure.hint)), ...(detail ? { detail } : {}) };\n  return {\n    tone,\n    summary,"],
+  ],
+  "lib/i18n/workbench.ts": [
+    ["    runFailed: 'This build failed',", "    runFailed: 'This build failed',\n    modelNetworkFailed: 'The model connection failed',\n    modelNetworkHint: 'Check the model connection, then send a message to continue. Saved content remains available',"],
+    ["    runFailed: '本轮生成失败',", "    runFailed: '本轮生成失败',\n    modelNetworkFailed: '模型网络连接失败',\n    modelNetworkHint: '请检查模型连接，恢复后再发送消息继续；已保存的内容仍可查看',"],
+  ],
+  "packages/pptxgenjs/src/gen-xml.ts": [
+    ["strSlideXml += '  <a:bodyPr wrap=\"square\" rtlCol=\"0\"><a:spAutoFit/></a:bodyPr>'\n\t\t\t\tstrSlideXml += '  <a:lstStyle/>'\n\t\t\t\tstrSlideXml += '  <a:p>'", "strSlideXml += '  <a:bodyPr wrap=\"none\" lIns=\"0\" tIns=\"0\" rIns=\"0\" bIns=\"0\" anchor=\"ctr\" rtlCol=\"0\"><a:noAutofit/></a:bodyPr>'\n\t\t\t\tstrSlideXml += '  <a:lstStyle/>'\n\t\t\t\tstrSlideXml += '  <a:p>'"],
+  ],
+  "packages/@openmaic/generation/src/prompts/loader.ts": [
+    ["const DEFAULT_PROMPTS_DIR = resolve(dirname(fileURLToPath(import.meta.url)), '../..');", "const DEFAULT_PROMPTS_DIR = process.env.OPENQUANTUM_GENERATION_RESOURCE_DIR || resolve(dirname(fileURLToPath(import.meta.url)), '../..');"],
+  ],
+  "packages/@openmaic/generation/src/pbl/prompts/loader.ts": [
+    ["const PROMPTS_DIR = resolve(dirname(fileURLToPath(import.meta.url)), '../../../prompts-pbl');", "const PROMPTS_DIR = process.env.OPENQUANTUM_GENERATION_RESOURCE_DIR ? resolve(process.env.OPENQUANTUM_GENERATION_RESOURCE_DIR, 'prompts-pbl') : resolve(dirname(fileURLToPath(import.meta.url)), '../../../prompts-pbl');"],
+  ],
+  "lib/workbench/use-workbench-session.ts": [
+    ["      .then((r) => (r.ok ? r.json() : null))", `      .then((r) => {
+        if (!r.ok) throw r;
+        return r.json();
+      })`],
+    ["      .catch(() => {});\n    // Read the resume point", `      .catch((error: unknown) => {
+        if (!isCurrent() || connected) return;
+        const status = error instanceof Response ? error.status : 0;
+        // A denied/missing conversation cannot recover by replaying this URL.
+        // Network/server errors retain upstream EventSource retry behavior.
+        if ([401, 403, 404].includes(status)) {
+          source.close();
+          window.clearTimeout(replayWatchdog);
+        }
+        setAttached(false);
+        finishReplayState();
+        setError('openquantum:session-connection:' + status);
+      });
+    // Read the resume point`],
+    ["setError('event stream closed');", `const terminal = ['succeeded', 'failed', 'cancelled'].includes(useWorkbenchStore.getState().status);
+        if (!terminal) setError('openquantum:session-connection:0');`],
+  ],
+  "components/workbench/workspace/WorkspaceChatPane.tsx": [
+    ["import { LoaderCircle } from 'lucide-react';", "import { LoaderCircle } from 'lucide-react';\nimport { SessionConnectionNotice, isSessionConnectionError, sessionConnectionTitle } from '@/components/openquantum-session-connection';"],
+    ["  const { t } = useI18n();\n  const sessionPrompt", "  const { t, locale } = useI18n();\n  const connectionError = useWorkbenchStore((s) => isSessionConnectionError(s.error) && !s.attached);\n  const sessionPrompt"],
+    ["presentation.tone === 'live' ? (", "presentation.tone === 'live' && !connectionError ? ("],
+    ["presentation.tone === 'error' && 'ws-dot-fail'", "(connectionError || presentation.tone === 'error') && 'ws-dot-fail'"],
+    ["{t(presentation.labelKey)}", "{connectionError ? sessionConnectionTitle(locale) : t(presentation.labelKey)}"],
+    ["      </header>\n\n      <div", "      </header>\n      <SessionConnectionNotice />\n\n      <div"],
+  ],
   "pnpm-lock.yaml": [],
   "package.json": [
     ['"next": "16.2.11"', '"next": "16.3.4"'],
     ['"react": "19.2.3"', '"react": "19.3.0"'],
     ['"react-dom": "19.2.3"', '"react-dom": "19.3.0"'],
     ['"katex": "^0.16.33"', '"katex": "0.18.7"'],
+    ['"pnpm": {', '"pnpm": {\n    "overrides": { "katex": "0.18.7" },'],
   ],
   "app/api/generate/scene-outlines-stream/route.ts": [
     ["const textStream = streamLLM(", "const fullStream = streamLLM("],
@@ -218,6 +335,11 @@ export function patchOpenMaicUiSource(name, original) {
     if (expected.split(before).length !== 2) throw new Error(`OpenMAIC patch no longer matches ${name}`);
     expected = expected.replace(before, after);
   }
+  if (name === "packages/pptxgenjs/src/gen-xml.ts") {
+    // Typeface names are XML attributes, including user-authored quotes and '&'.
+    expected = expected.replaceAll('typeface="${opts.fontFace}"', 'typeface="${encodeXmlEntities(opts.fontFace)}"')
+      .replaceAll('typeface="${slide._slideNumberProps.fontFace}"', 'typeface="${encodeXmlEntities(slide._slideNumberProps.fontFace)}"');
+  }
   return expected;
 }
 
@@ -268,6 +390,12 @@ export async function applyOpenMaicUiOverlay(root) {
   writes.push(["lib/import/openquantum-pptx-classroom.ts", await readFile(path.join(root, "runtime/openquantum/openmaic-ui/pptx-classroom.ts"), "utf8")]);
   writes.push(["components/openquantum-wordmark.tsx", await readFile(path.join(root, "runtime/openquantum/openmaic-ui/wordmark.tsx"), "utf8")]);
   writes.push(["components/openquantum-use-host-theme.ts", await readFile(path.join(root, "runtime/openquantum/openmaic-ui/use-host-theme.ts"), "utf8")]);
+  writes.push(["components/openquantum-session-connection.tsx", await readFile(path.join(root, "runtime/openquantum/openmaic-ui/session-connection.tsx"), "utf8")]);
+  writes.push(["components/openquantum-latex.ts", await readFile(path.join(root, "runtime/openquantum/openmaic-ui/latex.ts"), "utf8")]);
+  writes.push(["components/openquantum-model-failure.ts", await readFile(path.join(root, "runtime/openquantum/openmaic-ui/model-failure.ts"), "utf8")]);
+  writes.push(["lib/export/openquantum-formula-layout.ts", await readFile(path.join(root, "runtime/openquantum/openmaic-ui/formula-layout.ts"), "utf8")]);
+  writes.push(["lib/export/openquantum-text-export.ts", await readFile(path.join(root, "runtime/openquantum/openmaic-ui/text-export.ts"), "utf8")]);
+  writes.push(["packages/@openmaic/renderer/src/formula-html.ts", await readFile(path.join(root, "runtime/openquantum/openmaic-ui/latex.ts"), "utf8")]);
   writes.push(["components/openquantum-use-host-locale.ts", await readFile(path.join(root, "runtime/openquantum/openmaic-ui/use-host-locale.ts"), "utf8")]);
   writes.push(["lib/openquantum-ui-locale.mjs", (await readFile(path.join(root, "src/learning/ui-locale.mjs"), "utf8")).replace("../../runtime/openquantum/web-locales/languages.json", "./openquantum-languages.json")]);
   writes.push(["lib/openquantum-languages.json", await readFile(path.join(root, "runtime/openquantum/web-locales/languages.json"), "utf8")]);

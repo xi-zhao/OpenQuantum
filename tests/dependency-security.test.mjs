@@ -6,6 +6,20 @@ import { promisify } from "node:util";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 import { z } from "zod";
+import { createRequire } from "node:module";
+
+const proxyAddr = createRequire(import.meta.url)("proxy-addr");
+test("invalid mapped IPv6 subnets do not trust unrelated IPv4 peers", () => {
+  const request = { socket: { remoteAddress: "203.0.113.7" }, headers: { "x-forwarded-for": "10.0.0.1" } };
+  assert.equal(proxyAddr(request, proxyAddr.compile("::ffff:10.0.0.0/8")), "203.0.113.7");
+  assert.equal(proxyAddr(request, proxyAddr.compile("::/1")), "203.0.113.7");
+});
+
+test("correctly scoped trusted proxies still resolve their forwarded clients", () => {
+  const request = { socket: { remoteAddress: "10.0.0.2" }, headers: { "x-forwarded-for": "203.0.113.7" } };
+  assert.equal(proxyAddr(request, proxyAddr.compile("10.0.0.0/8")), "203.0.113.7");
+  assert.equal(proxyAddr(request, proxyAddr.compile("::ffff:10.0.0.0/104")), "203.0.113.7");
+});
 
 const root = new URL("../", import.meta.url);
 const patched = { "body-parser": "2.4.0", undici: "8.12.2", zod: "4.6.6", "fast-uri": "3.1.9" };

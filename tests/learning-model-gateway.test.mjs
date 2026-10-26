@@ -26,6 +26,44 @@ test("the application model transport retains history, tools, inline images and 
   await assert.rejects(modelRequest({ ...body, messages: [{ role: "user", content: [{ type: "image_url", image_url: { url: "http://127.0.0.1/private" } }] }] }, selection, { saveImage() { assert.fail(); } }), /内嵌图片/);
 });
 
+test("classroom requests preserve explicit caller and deployment reasoning choices", async () => {
+  for (const reasoningEffort of ["off", "low", "high", "max"]) {
+    assert.equal((await modelRequest({ ...body, reasoning_effort: reasoningEffort }, selection)).reasoningEffort, reasoningEffort);
+    assert.equal((await modelRequest(body, { ...selection, reasoningEffort })).reasoningEffort, reasoningEffort);
+  }
+  const defaultSelection = { provider: selection.provider, model: selection.model };
+  assert.equal((await modelRequest(body, defaultSelection)).reasoningEffort, undefined);
+  await assert.rejects(modelRequest({ ...body, reasoning_effort: "invalid value" }, selection), /推理强度/);
+});
+
+test("provider failures retain bounded codes and status without raw diagnostics", async () => {
+  const records = [];
+  let cause;
+  const gateway = await createModelGateway({ selection: () => selection, record: async value => records.push(value), llm: { async *stream() {
+    yield { type: "finish", reason: { kind: "error", failure: { ...cause, message: "synthetic-private-detail", body: "synthetic-private-body" } } };
+  } } });
+  try {
+    for (const [code, status, expected, text] of [
+      ["TRANSPORT", 502, "TRANSPORT", /网络连接失败/],
+      ["TIMEOUT", 504, "TIMEOUT", /连接超时/],
+      ["AUTH", 401, "AUTH", /认证失败/],
+      ["RATE_LIMIT", 429, "RATE_LIMIT", /过于频繁/],
+      ["SERVER", 503, "SERVER", /暂时不可用/],
+      ["synthetic-private-code", "synthetic-private-status", "UNKNOWN", /连接未完成/],
+    ]) {
+      cause = { code, status };
+      const response = await fetch(`${gateway.url}/chat/completions`, { method: "POST", headers: { "content-type": "application/json", authorization: `Bearer ${gateway.token}` }, body: JSON.stringify(body) });
+      assert.equal(response.status, 502);
+      const value = await response.json();
+      assert.match(value.error.message, text);
+      assert.doesNotMatch(JSON.stringify(value), /synthetic-private/);
+      assert.equal(records.at(-1).failureCode, expected);
+      assert.equal(records.at(-1).failureStatus, typeof status === "number" ? status : undefined);
+    }
+    assert.doesNotMatch(JSON.stringify(records), /synthetic-private|Explain a qubit/);
+  } finally { gateway.dispose(); }
+});
+
 test("the private gateway supports streaming tool calls, JSON replies, credential isolation and provider errors", async () => {
   const requests = [], records = [];
   let failing = false;

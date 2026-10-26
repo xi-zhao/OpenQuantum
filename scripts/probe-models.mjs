@@ -27,13 +27,48 @@ const providers = [
 const providerFlagIndex = process.argv.indexOf("--provider");
 const selectedProvider =
   providerFlagIndex === -1 ? undefined : process.argv[providerFlagIndex + 1];
-const providersToProbe = selectedProvider
+const modelFlagIndex = process.argv.indexOf("--model");
+const selectedModel = modelFlagIndex === -1 ? undefined : process.argv[modelFlagIndex + 1];
+const requestedProviders = selectedProvider
   ? providers.filter((provider) => provider.id === selectedProvider)
   : providers;
 
-if (selectedProvider && providersToProbe.length === 0) {
-  console.error(`Unknown provider: ${selectedProvider}`);
+if (providerFlagIndex !== -1 && (!selectedProvider || requestedProviders.length === 0)) {
+  console.error("Use --provider openquantum-public or openquantum-private.");
   process.exit(2);
+}
+if (modelFlagIndex !== -1 && (!selectedModel || !requestedProviders.some(provider => provider.models.includes(selectedModel)))) {
+  console.error("Select a model declared in the requested provider catalog.");
+  process.exit(2);
+}
+const providersToProbe = selectedModel
+  ? requestedProviders.filter(provider => provider.models.includes(selectedModel))
+  : requestedProviders;
+
+// Upstream bodies and transport messages can echo credentials. Reports retain
+// only finite error classes, status codes and verified protocol facts.
+function httpFailure(response) {
+  if (response.ok) return null;
+  const category = response.status === 401 ? "unauthorized" : response.status === 403 ? "forbidden"
+    : response.status === 404 ? "not-found" : response.status === 429 ? "rate-limited"
+      : response.status >= 500 ? "upstream-failure" : "invalid-request";
+  return `HTTP ${response.status}: ${category}`;
+}
+
+function transportFailure(error) {
+  return error?.name === "TimeoutError" || error?.name === "AbortError" ? "request-timeout" : "request-failed";
+}
+
+function finishReason(choice) {
+  const reason = choice?.finish_reason;
+  if (reason == null) return null;
+  return ["stop", "length", "tool_calls", "content_filter", "function_call"].includes(reason) ? reason : "unknown";
+}
+
+function reportEndpoint(provider) {
+  const url = new URL(provider.baseURL);
+  return `${url.protocol}//${url.host}${url.pathname}`.replaceAll(provider.apiKey, "[redacted]")
+    .replaceAll(encodeURIComponent(provider.apiKey), "[redacted]");
 }
 
 function endpoint(baseURL, resource) {
@@ -46,7 +81,7 @@ async function readJson(response) {
   try {
     return JSON.parse(text);
   } catch {
-    return { raw: text.slice(0, 300) };
+    return {};
   }
 }
 
@@ -89,9 +124,10 @@ async function probeTextGeneration(provider, model) {
   return {
     status: response.status,
     ok: response.ok,
-    finishReason: choice?.finish_reason ?? null,
+    finishReason: finishReason(choice),
     hasText: Boolean(choice?.message?.content),
-    error: response.ok ? null : (body.error?.message ?? body.raw ?? "Unknown error"),
+    exactText: typeof choice?.message?.content === "string" && choice.message.content.trim() === "OPENQUANTUM_OK",
+    error: httpFailure(response),
   };
 }
 
@@ -101,7 +137,7 @@ async function probeToolCalling(provider, model) {
     messages: [
       {
         role: "user",
-        content: "Call platform_health now. Do not answer in plain text.",
+        content: "Call platform_health with marker OPENQUANTUM_OK. Do not answer in plain text.",
       },
     ],
     max_tokens: 256,
@@ -114,7 +150,10 @@ async function probeToolCalling(provider, model) {
           description: "Return the platform health status.",
           parameters: {
             type: "object",
-            properties: {},
+            properties: {
+              marker: { type: "string", enum: ["OPENQUANTUM_OK"] },
+            },
+            required: ["marker"],
             additionalProperties: false,
           },
         },
@@ -126,13 +165,21 @@ async function probeToolCalling(provider, model) {
     },
   });
   const choice = body.choices?.[0];
+  const healthCall = choice?.message?.tool_calls?.find(
+    (call) => call.function?.name === "platform_health",
+  );
+  let validHealthCall = false;
+  try {
+    const args = JSON.parse(healthCall?.function?.arguments ?? "null");
+    validHealthCall = args?.marker === "OPENQUANTUM_OK" && Object.keys(args).length === 1;
+  } catch { /* Invalid tool JSON is a failed probe. */ }
 
   return {
     status: response.status,
     ok: response.ok,
-    finishReason: choice?.finish_reason ?? null,
-    hasToolCall: Boolean(choice?.message?.tool_calls?.length),
-    error: response.ok ? null : (body.error?.message ?? body.raw ?? "Unknown error"),
+    finishReason: finishReason(choice),
+    hasToolCall: validHealthCall,
+    error: httpFailure(response),
   };
 }
 
@@ -147,8 +194,11 @@ async function probeModel(provider, model) {
     ok:
       textGeneration.ok &&
       textGeneration.hasText &&
+      textGeneration.exactText &&
+      textGeneration.finishReason === "stop" &&
       toolCalling.ok &&
-      toolCalling.hasToolCall,
+      toolCalling.hasToolCall &&
+      toolCalling.finishReason === "tool_calls",
   };
 }
 
@@ -163,32 +213,32 @@ async function probeProvider(provider) {
   const modelsResponse = await request(provider, "models");
   const modelsBody = await readJson(modelsResponse);
   const advertised = Array.isArray(modelsBody.data)
-    ? modelsBody.data.map((entry) => entry.id).filter(Boolean)
+    ? modelsBody.data.map((entry) => entry?.id).filter(id => typeof id === "string"
+      && id.length <= 256 && !id.includes(provider.apiKey) && !id.includes(encodeURIComponent(provider.apiKey))
+      && /^[A-Za-z0-9_.:/-]+$/.test(id))
     : [];
   const modelResults = [];
 
-  for (const model of provider.models) {
+  for (const model of selectedModel ? provider.models.filter(model => model === selectedModel) : provider.models) {
     try {
       modelResults.push(await probeModel(provider, model));
     } catch (error) {
       modelResults.push({
         model,
         ok: false,
-        error: error instanceof Error ? error.message : String(error),
+        error: transportFailure(error),
       });
     }
   }
 
   return {
     provider: provider.id,
-    baseURL: provider.baseURL,
+    baseURL: reportEndpoint(provider),
     modelsEndpoint: {
       status: modelsResponse.status,
       ok: modelsResponse.ok,
       advertised,
-      error: modelsResponse.ok
-        ? null
-        : (modelsBody.error?.message ?? modelsBody.raw ?? "Unknown error"),
+      error: httpFailure(modelsResponse),
     },
     models: modelResults,
   };
@@ -202,7 +252,7 @@ for (const provider of providersToProbe) {
   } catch (error) {
     results.push({
       provider: provider.id,
-      error: error instanceof Error ? error.message : String(error),
+      error: transportFailure(error),
     });
   }
 }

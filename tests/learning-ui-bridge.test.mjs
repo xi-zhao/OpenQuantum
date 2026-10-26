@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { randomUUID } from "node:crypto";
-import { mkdtemp, mkdir, writeFile, readFile, readlink, rm } from "node:fs/promises";
+import { mkdtemp, mkdir, writeFile, readFile, readlink, symlink, unlink, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { acceptsMessage, CHANNEL } from "../src/learning/ui-bridge.mjs";
@@ -41,6 +41,28 @@ test("application materials survive checkout data relocation and repeated startu
   } finally { await rm(root, { recursive: true, force: true }); }
 });
 
+test("a project alias preserves the same learning data but cannot redirect it elsewhere", async t => {
+  const sandbox = await mkdtemp(path.join(tmpdir(), "learning-data-alias-"));
+  t.after(() => rm(sandbox, { recursive: true, force: true }));
+  const root = path.join(sandbox, "project"), alias = path.join(sandbox, "project-alias");
+  const directory = path.join(root, "vendor"), persistent = path.join(root, ".openquantum/learning/openmaic-data");
+  const data = path.join(directory, "data");
+  await mkdir(persistent, { recursive: true }); await mkdir(directory);
+  await symlink(root, alias, process.platform === "win32" ? "junction" : "dir");
+  const original = path.join(alias, ".openquantum/learning/openmaic-data");
+  await symlink(original, data, process.platform === "win32" ? "junction" : "dir");
+  await writeFile(path.join(persistent, "course.txt"), "retained classroom");
+  await prepareLearningData(root, directory);
+  assert.equal(await readlink(data), original);
+  assert.equal(await readFile(path.join(data, "course.txt"), "utf8"), "retained classroom");
+  const foreign = path.join(sandbox, "foreign");
+  await mkdir(foreign); await unlink(data);
+  await symlink(foreign, data, process.platform === "win32" ? "junction" : "dir");
+  await assert.rejects(prepareLearningData(root, directory), /已有自定义链接/);
+  assert.equal(await readlink(data), foreign);
+  assert.equal(await readFile(path.join(persistent, "course.txt"), "utf8"), "retained classroom");
+});
+
 test("two existing material directories are preserved instead of overwriting either", async () => {
   const root = await mkdtemp(path.join(tmpdir(), "learning-data-"));
   const directory = path.join(root, "vendor");
@@ -54,6 +76,26 @@ test("two existing material directories are preserved instead of overwriting eit
     assert.equal(await readFile(path.join(directory, "data/material.txt"), "utf8"), "existing vendor material");
     assert.equal(await readFile(path.join(persistent, "material.txt"), "utf8"), "existing persistent material");
   } finally { await rm(root, { recursive: true, force: true }); }
+});
+
+test("classroom status is authenticated, origin-bound and never reopens the application", async () => {
+  const reads = [];
+  const handler = createLearningHandler({ requestRejection: request => request.headers.cookie === "fixture" ? undefined : "Unauthorized",
+    dispatch: () => assert.fail("status must not dispatch a classroom mutation"), openUi: () => assert.fail("status must not start the app"),
+    uiStatus: origin => { reads.push(origin); return { state: "unavailable" }; },
+  });
+  async function request(origin, cookie = "fixture") {
+    const req = Readable.from([Buffer.from(JSON.stringify({ action: "ui-status" }))]);
+    req.method = "POST"; req.headers = { host: "localhost:3000", origin, cookie, "content-type": "application/json" };
+    let status, body;
+    await handler(req, { writeHead(value) { status = value; }, end(value) { body = JSON.parse(value); } });
+    return { status, body };
+  }
+  assert.notEqual((await request("http://localhost:3000", "")).status, 200);
+  assert.equal((await request("https://example.org")).status, 403);
+  assert.deepEqual(reads, []);
+  assert.deepEqual(await request("http://localhost:3000"), { status: 200, body: { state: "unavailable" } });
+  assert.deepEqual(reads, ["http://localhost:3000"]);
 });
 
 test("opening the original UI crosses the existing Host request boundary", async () => {

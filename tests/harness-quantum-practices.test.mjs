@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
 import { once } from "node:events";
-import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { createServer } from "node:http";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -32,10 +32,20 @@ async function waitFor(probe, description, timeoutMs = 30_000) {
   throw new Error(`${description}: ${lastError ?? "timed out"}`);
 }
 
-test("Harness invokes reference retrieval, persists sources and returns invalid-input errors", { timeout: 60_000 }, async (t) => {
+async function stopHarness(child) {
+  if (!child || child.exitCode !== null || child.signalCode !== null) return;
+  const closed = once(child, "close");
+  child.kill("SIGTERM");
+  const timer = setTimeout(() => child.kill("SIGKILL"), 5000);
+  try { await closed; } finally { clearTimeout(timer); }
+}
+
+test("Harness invokes references and restores success and invalid-input results after restart", { timeout: 90_000 }, async (t) => {
   const root = process.cwd();
   const sandbox = await mkdtemp(path.join(tmpdir(), "oq-practices-harness-"));
   const harnessHome = path.join(sandbox, "dsh");
+  const workspaceRoot = path.join(sandbox, "workspace");
+  await mkdir(workspaceRoot);
   const fixtureCalls = [
     { id: "practice-hhl", input: { action: "get", query: "HHL matrix constraints" } },
     { id: "practice-heat", input: { action: "get", query: "一维热方程的假设" } },
@@ -71,13 +81,7 @@ test("Harness invokes reference retrieval, persists sources and returns invalid-
     response.end("data: [DONE]\n\n");
   });
   t.after(async () => {
-    if (child && child.exitCode === null && child.signalCode === null) {
-      const exited = once(child, "exit");
-      child.kill("SIGTERM");
-      const timer = setTimeout(() => child.kill("SIGKILL"), 5000);
-      await exited;
-      clearTimeout(timer);
-    }
+    await stopHarness(child);
     model.closeAllConnections();
     await new Promise(resolve => model.close(resolve));
     await rm(sandbox, { recursive: true, force: true });
@@ -94,22 +98,26 @@ test("Harness invokes reference retrieval, persists sources and returns invalid-
   await new Promise(resolve => reserved.close(resolve));
   await prepareOpenQuantumHarnessHome({ projectRoot: root, harnessHome });
   let logs = "";
-  child = spawn(process.execPath, [path.join(root, "node_modules/@deepseek-ai/dsh/lib/bin.js"), "web", "--host", "127.0.0.1", "--port", String(port)], {
-    cwd: root,
-    env: {
-      ...process.env,
-      DSH_HOME: harnessHome,
-      DSH_TELEMETRY_DISABLED: "1",
-      OPENQUANTUM_DISABLE_QISKIT_MCP: "1",
-      OPENQUANTUM_PUBLIC_API_KEY: "local-fixture-only",
-      OPENQUANTUM_PUBLIC_BASE_URL: `http://127.0.0.1:${modelPort}/v1`,
-    },
-    stdio: ["ignore", "pipe", "pipe"],
-  });
-  child.stdout.on("data", chunk => { logs = (logs + chunk).slice(-20_000); });
-  child.stderr.on("data", chunk => { logs = (logs + chunk).slice(-20_000); });
   const base = `http://127.0.0.1:${port}`;
   let cookie;
+  function startHarness() {
+    logs = "";
+    cookie = undefined;
+    child = spawn(process.execPath, [path.join(root, "node_modules/@deepseek-ai/dsh/lib/bin.js"), "web", "--host", "127.0.0.1", "--port", String(port)], {
+      cwd: root,
+      env: {
+        ...process.env,
+        DSH_HOME: harnessHome,
+        DSH_TELEMETRY_DISABLED: "1",
+        OPENQUANTUM_DISABLE_QISKIT_MCP: "1",
+        OPENQUANTUM_PUBLIC_API_KEY: "local-fixture-only",
+        OPENQUANTUM_PUBLIC_BASE_URL: `http://127.0.0.1:${modelPort}/v1`,
+      },
+      stdio: ["ignore", "pipe", "pipe"],
+    });
+    child.stdout.on("data", chunk => { logs = (logs + chunk).slice(-20_000); });
+    child.stderr.on("data", chunk => { logs = (logs + chunk).slice(-20_000); });
+  }
   async function rpc(method, payload = {}) {
     cookie ??= await harnessHttpCookie(base, logs);
     const response = await fetch(`${base}/api/${method}`, {
@@ -128,9 +136,10 @@ test("Harness invokes reference retrieval, persists sources and returns invalid-
     assert.equal(result.ok, true, `${JSON.stringify(result)}\n${redactHarnessLaunchTokens(logs)}`);
     return result.value;
   }
+  startHarness();
   await waitFor(() => rpc("llm.models"), "Harness startup");
   const sessionId = `session-practices-${crypto.randomUUID()}`;
-  await rpc("session.create", { sessionId, cwd: root, agentPreset: "openquantum" });
+  await rpc("session.create", { sessionId, cwd: workspaceRoot, agentPreset: "openquantum" });
   await rpc("session.prompt", {
     sessionId, mode: "queue",
     content: [{ type: "text", text: "Look up the fixed HHL and heat-equation references; include the invalid-id error check." }],
@@ -162,12 +171,20 @@ test("Harness invokes reference retrieval, persists sources and returns invalid-
     assert.ok(deliveredResults.some(message => message.tool_call_id === call.id), `${call.id}: result must return to the model protocol`);
     evidence.push({ call: called, result });
   }
+  await stopHarness(child);
+  startHarness();
+  await waitFor(() => rpc("llm.models"), "Harness restart");
+  const reread = await harnessSessionSnapshot(base, cookie, sessionId, 200);
+  const restoredResults = reread.records.filter(entry => entry.event.type === "tool/result").map(entry => entry.event);
+  assert.deepEqual(restoredResults, events.filter(event => event.type === "tool/result"));
   if (process.env.OPENQUANTUM_PRACTICES_EVIDENCE) {
+    const harnessPackage = JSON.parse(await readFile(path.join(root, "node_modules/@deepseek-ai/dsh/package.json"), "utf8"));
     const target = path.resolve(process.env.OPENQUANTUM_PRACTICES_EVIDENCE);
     await mkdir(path.dirname(target), { recursive: true });
     await writeFile(target, JSON.stringify({
-      verifiedAt: new Date().toISOString(), harness: "0.1.5-rc.1",
+      verifiedAt: new Date().toISOString(), harness: harnessPackage.version,
       model: "local protocol fixture", externalModelTested: false,
+      persistence: { hostRestarted: true, toolResultsReread: restoredResults.length },
       source: SOURCE, sessionId, events: evidence,
     }, null, 2) + "\n");
   }

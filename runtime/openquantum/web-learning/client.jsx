@@ -3,12 +3,13 @@ import css from "./learning.css";
 import { acceptsMessage, CHANNEL } from "../../../src/learning/ui-bridge.mjs";
 import { acceptsThemeRequest, createThemeMessage } from "../../../src/learning/ui-theme.mjs";
 import { acceptsLocaleRequest, createLocaleMessage, readLocaleMessage } from "../../../src/learning/ui-locale.mjs";
+import { watchLearningUi } from "../../../src/learning/ui-connection.mjs";
 
 const NS = "openquantum.learning";
 let t = (key) => key;
 
-async function command(value) {
-  const response = await fetch("/openquantum/api/learning", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(value) });
+async function command(value, signal) {
+  const response = await fetch("/openquantum/api/learning", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(value), signal });
   const data = await response.json();
   if (!response.ok) throw new Error(t(data.error || "unavailable"));
   return data;
@@ -34,11 +35,27 @@ function LearningApp({ onClose, themeContext }) {
     return () => { unsubscribe(); window.removeEventListener("message", receive); };
   }, [service, themeContext]);
   useEffect(() => {
-    let disposed = false;
+    const controller = new AbortController();
     setError("");
-    command({ action: "open-ui" }).then((value) => { if (!disposed) setService(value); }).catch((e) => { if (!disposed) setError(e.message); });
-    return () => { disposed = true; };
+    setService(null);
+    setLoaded(false);
+    command({ action: "open-ui" }, controller.signal).then((value) => { if (!controller.signal.aborted) setService(value); }).catch((e) => { if (!controller.signal.aborted) setError(e.message); });
+    return () => controller.abort();
   }, [attempt]);
+  useEffect(() => {
+    if (!service) return;
+    const controller = new AbortController();
+    void watchLearningUi({ signal: controller.signal,
+      check: (signal) => command({ action: "ui-status" }, AbortSignal.any([signal, AbortSignal.timeout(5000)])),
+      onUnavailable: () => setError(t("unavailable")),
+    });
+    return () => controller.abort();
+  }, [service]);
+  useEffect(() => {
+    if (!service || loaded) return;
+    const timer = setTimeout(() => setError(t("unavailable")), 60_000);
+    return () => clearTimeout(timer);
+  }, [service, loaded]);
   useEffect(() => {
     if (!service) return;
     let pending;
@@ -51,7 +68,7 @@ function LearningApp({ onClose, themeContext }) {
         frame.current?.contentWindow?.postMessage(message, service.origin);
       });
     };
-    const receive = (event) => { if (acceptsThemeRequest(event, frame.current?.contentWindow, service.origin)) send(); };
+    const receive = (event) => { if (acceptsThemeRequest(event, frame.current?.contentWindow, service.origin)) { setLoaded(true); send(); } };
     const unsubscribe = themeContext.on("theme/change", send);
     window.addEventListener("message", receive);
     send();
@@ -76,9 +93,9 @@ function LearningApp({ onClose, themeContext }) {
   }, [service]);
   return <div className="oq-learning-shell">
     <header className="oq-learning-bar"><img src="/openquantum/mark.svg" alt="" className="oq-learning-mark" /><strong>{t("name")}</strong><span className="oq-learning-parent">OpenQuantum</span><button className="oq-learning-return" onClick={onClose}>{t("back")}</button></header>
-    {error && <div role="alert" className="oq-learning-notice">{error}</div>}
-    {service ? <div className="oq-learning-frame-wrap"><iframe ref={frame} className="oq-learning-frame" src={service.url} title={t("name")} onLoad={() => setLoaded(true)} allow="fullscreen; clipboard-write; microphone" allowFullScreen />{!loaded && <div className="oq-learning-loading" role="status">{t("loading")}</div>}</div>
-      : <div className="oq-learning-status">{error ? <button onClick={() => setAttempt(attempt + 1)}>{t("retry")}</button> : t("starting")}</div>}
+    {error && <div role="alert" className="oq-learning-notice">{error} <button onClick={() => { setService(null); setAttempt(attempt + 1); }}>{t("retry")}</button></div>}
+    {service ? <div className="oq-learning-frame-wrap"><iframe key={attempt} ref={frame} className="oq-learning-frame" src={service.url} title={t("name")} allow="fullscreen; clipboard-write; microphone" allowFullScreen />{!loaded && !error && <div className="oq-learning-loading" role="status">{t("loading")}</div>}</div>
+      : !error && <div className="oq-learning-status">{t("starting")}</div>}
   </div>;
 }
 

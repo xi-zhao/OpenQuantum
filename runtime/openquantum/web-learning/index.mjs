@@ -11,7 +11,7 @@ const json = (response, status, value) => {
   response.end(JSON.stringify(value));
 };
 
-export function createLearningHandler({ dispatch, openUi, requestRejection }) {
+export function createLearningHandler({ dispatch, openUi, uiStatus, requestRejection }) {
   return async (request, response) => {
     const rejected = capabilityRequestBoundary(request, { surface: "Quantum Learning", maxBytes: MAX_BYTES, requestRejection });
     if (rejected) { json(response, rejected.status, { error: rejected.error }); return; }
@@ -24,9 +24,11 @@ export function createLearningHandler({ dispatch, openUi, requestRejection }) {
         chunks.push(chunk);
       }
       const command = JSON.parse(Buffer.concat(chunks).toString("utf8"));
+      const parentOrigin = request.headers.origin || `http://${request.headers.host}`;
       const result = command?.action === "open-ui" && openUi
-        ? await openUi(request.headers.origin || `http://${request.headers.host}`)
-        : await dispatch(command);
+        ? await openUi(parentOrigin)
+        : command?.action === "ui-status" && uiStatus ? await uiStatus(parentOrigin)
+          : await dispatch(command);
       json(response, 200, result);
     } catch (error) {
       const badRequest = error instanceof TypeError || error instanceof SyntaxError;
@@ -40,13 +42,14 @@ export function apply(ctx) {
     .then((module) => module.learningApplication(openQuantumProjectRoot));
   const ui = import(pathToFileURL(path.join(openQuantumProjectRoot, "src/learning/ui-service.mjs")).href)
     .then((module) => module.createLearningUiService(openQuantumProjectRoot, { llm: ctx.llm, selection: () => ctx.agentDefaultModel.currentSelection(), attachments: ctx.attachments }));
-  ctx.effect(() => () => { void ui.then((service) => service.dispose()); }, "openquantum: OpenMAIC UI lifecycle");
+  ctx.effect(() => () => ui.then((service) => service.dispose()), "openquantum: OpenMAIC UI lifecycle");
   ctx.effect(() => ctx.webServer.register({
     path: "/openquantum/api/learning", exact: true,
     handler: createLearningHandler({
       requestRejection: (request) => ctx.openquantumWebSecurity ? ctx.openquantumWebSecurity.requestRejection(request) : ctx.connection.requestRejection(request),
       dispatch: async (command) => (await application).dispatch(command),
       openUi: async (origin) => (await ui).open(origin),
+      uiStatus: async (origin) => (await ui).status(origin),
     }),
   }), "openquantum: quantum learning API");
 }
