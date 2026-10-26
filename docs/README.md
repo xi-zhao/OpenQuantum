@@ -17,6 +17,9 @@
 
 ## 架构总览
 
+用户确认的[全项目架构图与运行流程](architecture/PROJECT_ARCHITECTURE.md)覆盖共享插件、DSH/Codex 适配、
+设置与环境、品牌 UI、打包及科学验收；后续维护约束见根目录 [AGENTS.md](../AGENTS.md#已确认的架构图与维护约束)。
+
 ```mermaid
 flowchart TB
   S[共享 OpenQuantum 插件<br/>Skills · Tool implementation · MCP Server · 科学合同]
