@@ -25,7 +25,7 @@ OpenQuantum 的核心是一套通用量子科研插件，由 Skills、Tools 和 
 
 **先看实测案例：**[PennyLane Pauli 对易子计算](#pennylane-rust-case)完整调用提速 **5.09 倍**；[QuTiP Wigner 函数计算](#qutip-rust-case)完整调用提速 **5.69 倍**，均保留性能对照、结果核对与复跑记录。
 
-**Desktop 0.8.7：**[Mac Apple Silicon 独立安装包](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.7) · **Codex 插件 0.8.4：**[下载与发布说明](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.4)。以各 Release 附件为准。
+**Desktop 0.8.8：**[Mac Apple Silicon 独立安装包](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.8) · **Codex 插件 0.8.4：**[下载与发布说明](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.4)。以各 Release 附件为准。
 
 - **更容易找到能力：** Tools、MCP、Skills 按 8 类用途分组，支持搜索和状态筛选。
 - **简洁个人桌面：** Mac Apple Silicon 的 `OpenQuantum.app` 自带运行环境；设置包含通用、模型与 OpenQuantum 插件。插件页沿用首页、Skills、MCP 三栏，展开卡片配置环境、账户与工具限制。
@@ -45,7 +45,7 @@ OpenQuantum 的核心是一套通用量子科研插件，由 Skills、Tools 和 
 
 <p align="center">
   <img src="./docs/images/openquantum-desktop-20261013.jpg" width="100%" alt="原版 DSH Desktop 中的 OpenQuantum 工作台：品牌、新会话、量子学习通与自行添加模型的提示" /><br />
-  <sub>早期版本界面参考；0.8.7 简洁版已收拢侧栏和设置。在设置中添加自己的模型服务，即可开始新会话。</sub>
+  <sub>早期版本界面参考；0.8.8 简洁版已收拢侧栏和设置。在设置中添加自己的模型服务，即可开始新会话。</sub>
 </p>
 
 <details>
@@ -298,7 +298,7 @@ Pro 教学任务使用上游应用自己的工具与记录，尚未自动接入�
 
 OpenQuantum 桌面端提供原生窗口、简洁菜单栏与通知，复用科研工作台的模型、量子 Skill、计算工具和执行记录。菜单栏只保留「打开 OpenQuantum」与「退出 OpenQuantum」，跟随中英文设置；Agent 仍可按权限使用终端执行 Tool。
 
-Mac Apple Silicon 使用 OpenQuantum 0.8.7 独立安装包。Intel 和 Windows 暂沿用 0.8.4 能力包及固定的第三方客户端；也可从源码运行。
+Mac Apple Silicon 使用 OpenQuantum 0.8.8 独立安装包。Intel 和 Windows 暂沿用 0.8.4 能力包及固定的第三方客户端；也可从源码运行。
 
 [下载并安装桌面客户端](#桌面安装包) · [从源码启动桌面客户端](#桌面客户端)。
 
@@ -315,7 +315,7 @@ Mac Apple Silicon 使用 OpenQuantum 0.8.7 独立安装包。Intel 和 Windows �
 
 #### 界面语言
 
-恢复后的 0.8.7 桌面在「设置 → 通用设置 → 语言」提供原生简体中文与英语，选择会保存。其余八种语言的 README、译文和审校记录继续保留，暂不开放为桌面选项。
+恢复后的 0.8.8 桌面在「设置 → 通用设置 → 语言」提供原生简体中文与英语，选择会保存。其余八种语言的 README、译文和审校记录继续保留，暂不开放为桌面选项。
 
 [此前十语言版本的界面记录](docs/images/openquantum-languages-20260919.jpg)
 
@@ -355,7 +355,7 @@ https://github.com/xi-zhao/OpenQuantum/blob/codex-v0.8.4/docs/integrations/CODEX
 需要我重载应用时，告诉我具体操作。最后报告实际验证的结果，以及仍需准备的科学计算依赖。
 ```
 
-Codex 插件的公开版本为 **OpenQuantum 0.8.4**；本次 Desktop 0.8.7 不另行发布 Codex 插件。本版 Codex 插件包含 168 个 Skill、87 个科学 Tool，新增 26 个原生 SDK Skill，并统一运行状态、MCP、Skills、服务密钥四个标签；新增的 16 个凭据服务 Tool 默认关闭。发行标签为 `codex-v0.8.4`，实际附件与验证范围以 Release 为准。
+Codex 插件的公开版本为 **OpenQuantum 0.8.4**；本次 Desktop 0.8.8 不另行发布 Codex 插件。本版 Codex 插件包含 168 个 Skill、87 个科学 Tool，新增 26 个原生 SDK Skill，并统一运行状态、MCP、Skills、服务密钥四个标签；新增的 16 个凭据服务 Tool 默认关闭。发行标签为 `codex-v0.8.4`，实际附件与验证范围以 Release 为准。
 
 **[下载 Codex 插件 0.8.4 完整安装包](https://github.com/xi-zhao/OpenQuantum/releases/download/codex-v0.8.4/openquantum-0.8.4-codex-install.zip)**
 （[发布说明与 SHA256SUMS](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.4)）。
@@ -390,8 +390,8 @@ npm run plugin:install
 
 ### 桌面安装包
 
-Mac Apple Silicon 直接安装 **[OpenQuantum 0.8.7 DMG](https://github.com/xi-zhao/OpenQuantum/releases/download/v0.8.7/OpenQuantum-0.8.7-macOS-arm64.dmg)**。
-按 [Release 中的 SHA256SUMS](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.7) 核对文件，打开 DMG，将 `OpenQuantum.app` 拖入「应用程序」。桌面程序、Node / uv 和锁定依赖均已包含，无需另装客户端。
+Mac Apple Silicon 直接安装 **[OpenQuantum 0.8.8 DMG](https://github.com/xi-zhao/OpenQuantum/releases/download/v0.8.8/OpenQuantum-0.8.8-macOS-arm64.dmg)**。
+按 [Release 中的 SHA256SUMS](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.8) 核对文件，打开 DMG，将 `OpenQuantum.app` 拖入「应用程序」。桌面程序、Node / uv 和锁定依赖均已包含，无需另装客户端。
 
 这是基于 DSH Desktop 2.0.0 / Harness 0.1.0-rc.6 的简洁个人桌面，保留对话、工作区、文件、工具执行、安全与历史；模型服务自行配置。安装包采用 ad-hoc 本地签名，尚未取得 Apple 分发签名或公证。首次打开及升级备份步骤见[安装与迁移说明](docs/DESKTOP_INSTALLERS.md)。
 

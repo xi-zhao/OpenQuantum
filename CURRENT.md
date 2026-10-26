@@ -6,9 +6,9 @@ Session event log 为准，科学状态以 Acceptance Report 为准。2026-09 �
 
 ## 当前基线
 
-- 公开发行：Desktop [v0.8.7](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.7) 提供 macOS Apple Silicon
+- 发行入口：Desktop [v0.8.8](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.8) 的目标为 macOS Apple Silicon
   独立应用，固定 DSH Desktop `2.0.0` / Harness `0.1.0-rc.6`。Codex 公开版本仍为
-  [codex-v0.8.4](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.4)；本轮未发布新的 Codex 标签。
+  [codex-v0.8.4](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.4)；本轮不发布新的 Codex 标签。正式发布状态以 Release 页面及验证附件为准。
 - 能力成熟度以 `.agents/capability-packages.yml` 为准；工程检查通过不表示所有能力均通过科学验收。
 - [PR #39](https://github.com/xi-zhao/OpenQuantum/pull/39) 的拒绝降级与旧设置入口清理、
   [PR #40](https://github.com/xi-zhao/OpenQuantum/pull/40) 的临时凭据授权生命周期修复已经进入主线，并随 Desktop v0.8.5 发行。
@@ -98,13 +98,14 @@ Session event log 为准，科学状态以 Acceptance Report 为准。2026-09 �
 - GUI 已核对中英文、系统应用菜单、插件设置、验收会话和镜像内启动。菜单栏弹出层无法由当前验收工具读取，
   两项菜单、语言刷新与回调由原生自动化测试覆盖。发布和本机安装的具体范围见 [0.8.7 发布记录](docs/releases/v0.8.7.md) 与 Release 验证附件。
 
-## 0.8.8 白底应用图标（本地构建）
+## 0.8.8 白底应用图标
 
 - 任务分支 `c/desktop-white-icon`，源码提交 `4dc1afe1`：原有标志置于白色圆角底板，
   Dock 运行时、独立 Mac 应用和品牌启动器共用桌面图标；Web 与菜单栏的透明标志保持各自用途。
 - `npm run check` 与 17 项品牌定向检查通过，干净提交打包、严格签名验证和本机安装完成。
   实际应用信息窗口显示白底图标及 0.8.8；已有验收会话、Magpie 选择与 12 个受保护文件摘要均保留。
-- 这是本地构建，尚未推送、创建 PR 或发布 Release；上方公开版本记录仍为 0.8.7。
+- 发布说明与兼容性见 [0.8.8 发布记录](docs/releases/v0.8.8.md)；Release 的 `release-verification.json`
+  绑定最终源码、PR/main 检查、安装包摘要与验证范围。本机已验证的初始构建来自 `4dc1afe1`。
   当前 GUI 工具未直接捕获 Dock 和菜单栏弹出层，不以图标资源核验替代该项可见操作验收。
 
 ## 动作边界
