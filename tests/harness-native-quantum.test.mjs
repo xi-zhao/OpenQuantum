@@ -45,6 +45,7 @@ const SHELL_TOOL_CONTRACTS = readDeclaredNativeToolContracts({
   capabilityId: "platform-diagnostics",
 });
 const EXPECTED_QUANTUM_SKILLS = Object.freeze([
+  "chromobius-decoding",
   "platform-diagnostics",
   "quantum-ground-state",
   "qiskit-circuit-workbench",

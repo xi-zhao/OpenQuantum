@@ -208,3 +208,9 @@ OpenQuantum uses an in-memory signing secret with a one-day cookie lifetime,
 preserves the two allowlisted Desktop display parameters during token exchange,
 and installs the guard through the original 0.1.0-rc.6 WebServer registration
 API. No newer runtime or credential schema is introduced.
+
+## Chromobius 原生 SDK 工作流
+
+Chromobius 1.1.1 为 Apache-2.0，固定上游提交 `efae0325e4a8fc13be981434d38e499aa06b989f`；
+[上游源码](https://github.com/quantumlib/chromobius)。本仓库分发原创 Skill、示例和锁文件，
+不捆绑上游二进制。显式准备时由包管理器取得 Chromobius、Stim（Apache-2.0）与 NumPy（BSD-3-Clause），保留各自许可。

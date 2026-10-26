@@ -2,7 +2,7 @@
 
 由 `node scripts/audit-sdk-integration.mjs` 从 capability policy、SDK 导航、项目 manifest 和依赖锁生成；用 `--check` 检查是否过期。
 
-本表覆盖 111 个 SDK/源码环境入口：102 个 Python（包含算法共享环境）、7 个 Julia、2 个原生源码或 ABI 入口。原生 QDMI 另有 Python 桥接依赖项目。一个入口可包含多个库，同一个库也可能有多个隔离版本，不能把入口数量当成独立 SDK 数量。所有锁摘要与间接依赖版本可通过 `node scripts/sdk-access.mjs inventory` 读出。
+本表覆盖 112 个 SDK/源码环境入口：103 个 Python（包含算法共享环境）、7 个 Julia、2 个原生源码或 ABI 入口。原生 QDMI 另有 Python 桥接依赖项目。一个入口可包含多个库，同一个库也可能有多个隔离版本，不能把入口数量当成独立 SDK 数量。所有锁摘要与间接依赖版本可通过 `node scripts/sdk-access.mjs inventory` 读出。
 
 **接入状态：原生路径与指南已提供；逐 API、可选依赖、平台与外部服务验证不由这张静态清单推断。** 环境是否准备需 `inspect`，实际执行证据见[完整接入记录](FULL_SDK_ACCESS.md)。
 
@@ -14,6 +14,7 @@
 | `bloqade-analog` | Bloqade Analog | python | bloqade-analog==0.16.9, numpy==2.4.2 | 任意原子布局、波形、局部/全局驱动、程序构建与模拟 | 按固定版本、已安装可选组件及目标平台核实 |
 | `braket-simulation` | Amazon Braket | python | amazon-braket-sdk==1.127.2 | 电路、模拟器、AHS、噪声、设备、task/batch 与参数化程序 | 本地程序构建与外部调用分开；账户、凭据、费用、设备操作和数据外发沿用宿主及用户授权。原生 SDK 访问不自动启用服务。 |
 | `catalyst-compilation` | PennyLane Catalyst | python | pennylane-catalyst==0.15.0 | qjit、混合程序、QNode、控制流、编译配置与梯度 | 固定兼容的 PennyLane/JAX/编译栈。区分首次编译与后续执行耗时，缓存与静态参数进入记录；experimental API 不承诺跨版本兼容。 |
+| `chromobius-decoding` | Chromobius | python | chromobius==1.1.1, stim==1.16.0, numpy==2.5.3 | 带颜色和基标注的 Stim DEM、bit-packed detector 样本与逻辑 observable 解码 | 固定 Chromobius 1.1.1；DEM 必须满足颜色/基坐标及上游可解码条件。Möbius 解码为近似方法；小例回归不代表阈值、实时延迟或科学验收。 |
 | `classiq-synthesis` | Classiq | python | httpx[socks]==0.28.1, classiq==1.29.1 | Qmod、自定义模型、综合约束、执行与结果接口 | 本地程序构建与外部调用分开；账户、凭据、费用、设备操作和数据外发沿用宿主及用户授权。原生 SDK 访问不自动启用服务。 |
 | `clifft-sampling` | Clifft / Stim | python | clifft==0.10.1, stim==1.16.0 | 自定义电路、噪声模型、测量与采样程序 | 按固定版本、已安装可选组件及目标平台核实 |
 | `compact-optimization` | CompactQ | python | compactq==0.2.3, qiskit==2.5.2, numpy==2.4.6 | 自定义电路、编译优化策略与结果检查 | 按固定版本、已安装可选组件及目标平台核实 |
@@ -26,7 +27,7 @@
 | `fieldqkit-hardware` | FieldQKit | python | fieldqkit @ git+https://github.com/FieldQuantum/fieldqkit.git@3ef2493d3f840b6a924af66a0c3f1b79cfce3fa0 | QuantumHardwareClient、provider runtime 与供应商后端协议 | 本地程序构建与外部调用分开；账户、凭据、费用、设备操作和数据外发沿用宿主及用户授权。原生 SDK 访问不自动启用服务。 |
 | `flagquantum-workbench` | FlagQuantum | python | flagquantum-mcp-server==0.3.0, flagquantum==0.2.0 | Circuit、序列化、门、拓扑、路由、训练与后端 | 按固定版本、已安装可选组件及目标平台核实 |
 | `flow-vqe` | Flow-VQE source / Torch / Zuko | python | torch==2.6.0, torchaudio==2.6.0, torchvision==0.21.0, zuko==1.4.0, numpy==1.26.4, pennylane==0.40.0, pennylane-lightning==0.40.0, autoray==0.7.2, scipy==1.17.1, matplotlib==3.10.1, h5py==3.13.0, pandas==2.2.3, pyscf==2.8.0, openfermion==1.7.0, openfermionpyscf==0.5, tqdm==4.67.1, seaborn==0.13.2, basis-set-exchange | 自定义 objective、分布、flow、训练数据与优化循环 | 完整 SDK setup 另取固定版本上游源码，论文程序的预置 CLI 不限制用户用公开函数自定义任务。旧 upstream/ 仅供原有便捷 Tool 的稳定实现。 SciPy 固定为 1.17.1，以避开原 1.15.2 PROPACK 扩展在当前 macOS 的加载失败；这是记录在依赖锁中的兼容性调整。 |
-| `graphix-mbqc` | Graphix | python | graphix==0.4, numpy==2.4.6 | 自定义 pattern、测量平面、依赖、标准化、优化与模拟 | 按固定版本、已安装可选组件及目标平台核实 |
+| `graphix-mbqc` | Graphix | python | graphix==0.4.1, numpy==2.4.6 | 自定义 pattern、测量平面、依赖、标准化、优化与模拟 | 按固定版本、已安装可选组件及目标平台核实 |
 | `guppy-programs` | Guppy / Selene | python | guppylang==1.1.1, selene-sim==0.3.2 | 任意 Guppy 程序、控制流、编译、模拟与结果处理 | 按固定版本、已安装可选组件及目标平台核实 |
 | `hamiltonian-simulation` | Qiskit | python | qiskit==2.5.2, numpy==2.5.3, scipy==1.18.1 | QuantumCircuit、自定义指令、Hamiltonian、演化合成与量子信息对象 | 按固定版本、已安装可选组件及目标平台核实 |
 | `ionq-programs` | Qiskit IonQ | python | qiskit-ionq==1.1.1, qiskit==2.5.2 | 原生门、电路转换、provider、backend 与 job API | 本地程序构建与外部调用分开；账户、凭据、费用、设备操作和数据外发沿用宿主及用户授权。原生 SDK 访问不自动启用服务。 |

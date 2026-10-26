@@ -84,6 +84,23 @@
       "pythonVersion": "3.12"
     },
     {
+      "id": "chromobius-decoding",
+      "title": "Chromobius",
+      "language": "python",
+      "modules": [
+        "chromobius",
+        "stim",
+        "numpy"
+      ],
+      "group": "qec",
+      "workflow": "带颜色和基标注的 Stim DEM、bit-packed detector 样本与逻辑 observable 解码",
+      "conditions": [
+        "固定 Chromobius 1.1.1；DEM 必须满足颜色/基坐标及上游可解码条件。Möbius 解码为近似方法；小例回归不代表阈值、实时延迟或科学验收。"
+      ],
+      "nativeOnly": true,
+      "pythonVersion": "3.12"
+    },
+    {
       "id": "classiq-synthesis",
       "title": "Classiq",
       "language": "python",
