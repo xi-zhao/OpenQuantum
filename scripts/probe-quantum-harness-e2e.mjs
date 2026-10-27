@@ -240,26 +240,36 @@ export async function runQuantumHarnessE2E({
     async function rpc(method, payload = {}) {
       cookie ??= await harnessHttpCookie(baseUrlLocal, logs);
       if (method === "session.history") { const snapshot = await harnessSessionSnapshot(baseUrlLocal, cookie, payload.sessionId, payload.maxMessages); return { ok: true, value: { events: snapshot.records } }; }
-        const rpcId = `e2e-${method}-${crypto.randomUUID()}`;
-      const response = await fetch(`${baseUrlLocal}/api/${method}`, {
-        method: "POST",
-        headers: { "content-type": "application/json", cookie },
-        body: JSON.stringify({
-          type: "client-request",
-          rpcId,
-          method,
-          payload,
-        }),
-        signal: AbortSignal.timeout(10_000),
-      });
-      if (response.status !== 200) {
-        throw new Error(`${method} returned HTTP ${response.status}`);
+      const rpcId = `e2e-${method}-${crypto.randomUUID()}`;
+      // Creating a Session waits for the cold Preset and its Tool Providers.
+      const requestTimeoutMs = method === "session.create" ? 30_000 : 10_000;
+      const signal = AbortSignal.timeout(requestTimeoutMs);
+      try {
+        const response = await fetch(`${baseUrlLocal}/api/${method}`, {
+          method: "POST",
+          headers: { "content-type": "application/json", cookie },
+          body: JSON.stringify({
+            type: "client-request",
+            rpcId,
+            method,
+            payload,
+          }),
+          signal,
+        });
+        if (response.status !== 200) {
+          throw new Error(`${method} returned HTTP ${response.status}`);
+        }
+        const envelope = await response.json();
+        if (envelope.rpcId !== rpcId) {
+          throw new Error(`${method} returned a mismatched rpcId`);
+        }
+        return envelope.result;
+      } catch (error) {
+        if (signal.aborted) {
+          throw new Error(`${method} timed out after ${requestTimeoutMs} ms`, { cause: error });
+        }
+        throw error;
       }
-      const envelope = await response.json();
-      if (envelope.rpcId !== rpcId) {
-        throw new Error(`${method} returned a mismatched rpcId`);
-      }
-      return envelope.result;
     }
 
     await waitForOutcome(

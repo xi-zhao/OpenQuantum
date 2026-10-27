@@ -31,10 +31,11 @@ test("the real quantum probe reads the current scientific surface but cites the 
   });
   server.listen(0, "127.0.0.1"); await once(server, "listening");
   t.after(async () => { server.closeAllConnections(); await new Promise(resolve => server.close(resolve)); });
-  const { stdout } = await run(process.execPath, [path.resolve("scripts/probe-quantum-harness-e2e.mjs"), "--timeout-ms", "45000"], {
+  const { stdout, stderr } = await run(process.execPath, ["--import", path.resolve("tests/fixtures/quantum-probe-slow-create.mjs"), path.resolve("scripts/probe-quantum-harness-e2e.mjs"), "--timeout-ms", "45000"], {
     cwd: process.cwd(), timeout: 75000, maxBuffer: 1024 * 1024,
     env: { ...process.env, OPENQUANTUM_PUBLIC_API_KEY: "local-probe-fixture-only", OPENQUANTUM_PUBLIC_BASE_URL: `http://127.0.0.1:${server.address().port}/v1`, OPENQUANTUM_PRIVATE_API_KEY: "", OPENQUANTUM_PRIVATE_BASE_URL: "" },
   });
+  assert.match(stderr, /delayed session\.create response delivered once/);
   const report = JSON.parse(stdout);
   assert.equal(report.status, "passed");
   assert.equal(report.evidence.acceptanceStatus, "passed");
