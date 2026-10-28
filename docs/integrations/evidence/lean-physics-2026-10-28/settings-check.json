@@ -1,0 +1,51 @@
+{
+  "before": {
+    "id": "lean-physics",
+    "title": "Lean 4 / mathlib / physlib",
+    "state": "needs_check",
+    "requirements": {
+      "supported": true,
+      "note": "运行环境独立安装；账户要求见对应服务的配置说明。",
+      "fields": [],
+      "prerequisite": "准备前用 OPENQUANTUM_LEAN_BIN 指定固定版本 Lean 的绝对路径；依赖与缓存按任务显式准备。"
+    },
+    "configuration": {},
+    "configurationRevision": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+    "fingerprint": "43a1141a1030e0f7ed6a0b546357ada62db282ca02a5f65e335d32d75d8a237c",
+    "ready": false,
+    "checkedAt": null,
+    "checks": [],
+    "optionalSimulation": false,
+    "installation": "present",
+    "job": null,
+    "conditions": [
+      "固定兼容的 Lean 4.35.0 与 Lake 依赖锁；显式准备导入闭包。形式证明仅覆盖给定定义和假设，不代表真实物理或科学验收。"
+    ]
+  },
+  "after": {
+    "id": "lean-physics",
+    "title": "Lean 4 / mathlib / physlib",
+    "state": "ready",
+    "requirements": {
+      "supported": true,
+      "note": "运行环境独立安装；账户要求见对应服务的配置说明。",
+      "fields": [],
+      "prerequisite": "准备前用 OPENQUANTUM_LEAN_BIN 指定固定版本 Lean 的绝对路径；依赖与缓存按任务显式准备。"
+    },
+    "configuration": {},
+    "configurationRevision": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+    "fingerprint": "43a1141a1030e0f7ed6a0b546357ada62db282ca02a5f65e335d32d75d8a237c",
+    "ready": true,
+    "checkedAt": "2026-10-28T09:04:54.814Z",
+    "checks": [
+      "固定 Lean 环境及 Pauli 示例文件已检查；用户目标的证明、公理与物理适用性另行核验"
+    ],
+    "optionalSimulation": false,
+    "installation": "present",
+    "job": null,
+    "conditions": [
+      "固定兼容的 Lean 4.35.0 与 Lake 依赖锁；显式准备导入闭包。形式证明仅覆盖给定定义和假设，不代表真实物理或科学验收。"
+    ]
+  },
+  "scope": "Codex environment adapter, not UI or scientific acceptance"
+}

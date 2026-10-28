@@ -1,0 +1,19 @@
+{
+  "lean": "4.35.0",
+  "leanVersionCheck": "prepareLeanSdk checked the actual --version output before building",
+  "leanArchiveSha256": "55132a570e3dfc6203626944b262793c0f0f6a8230c0d09344a06ac992fac4a9",
+  "mathlib": "56a005855ea17e0b0958f73ec801ae140b0a1679",
+  "physlib": "6fd50cbcfafb503e4b96435e49bedb0e220f09e2",
+  "dependencyLock": ".agents/skills/lean-physics/lake-manifest.json",
+  "ci": {
+    "repository": "xi-zhao/OpenQuantum",
+    "workflowRun": 40660434719,
+    "job": 122721819979,
+    "head": "26b10a187561464fee7b89bb7ec1e8bb82166c66",
+    "url": "https://github.com/xi-zhao/OpenQuantum/actions/runs/40660434719/job/122721819979",
+    "artifactId": 12803653239,
+    "artifactSha256": "4163c80effacc4b45c2e10cb866e98ea7f2f473fd8a329657612927683794217",
+    "platform": "macOS arm64",
+    "networkBoundary": "Each proof checked with sandbox-exec deny network*; explicit setup precedes isolation."
+  }
+}

@@ -121,4 +121,6 @@ node scripts/sdk-engineering-evidence.mjs .openquantum/sdk-checks/remaining \
 
 `lean-physics` 增加 Lean 4.35.0、mathlib 与 physlib 的固定兼容项目，复用 SDK 发现与显式准备入口。默认准备 Pauli 示例的导入闭包，其他模块按任务准备；不用新的 Tool 或 MCP Server。使用绝对 Lean 可执行文件与准备后的 `LEAN_PATH` 检查用户证明，执行不隐式安装。
 
+[持久工程证据](evidence/lean-physics-2026-10-28.json)记录 macOS arm64 CI 中四个具名定理、错误命题拒绝、`sorryAx` 披露，以及 Codex 环境适配从 `needs_check` 到 `ready`。证明进程禁用网络；原始源文件、输出与摘要均随仓库保存。三个数学/物理例子依赖 `propext`、`Classical.choice`、`Quot.sound`，不含 `sorryAx`。本机准备因磁盘保留线停止，不将 CI 通过描述为用户机器已安装；其他平台、完整上游库与科学验收未验证。
+
 详见 [Skill 与固定来源](../../.agents/skills/lean-physics/SKILL.md)。文件编译、目标的证明及公理审计、物理适用性和科学验收分别报告；不声明全库或全平台已验证。

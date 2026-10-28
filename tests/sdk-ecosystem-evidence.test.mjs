@@ -19,7 +19,8 @@ function contained(relative) {
 test("native SDK scoped API receipts are durable, match current locks and retain the science boundary", async () => {
   const report = JSON.parse(await fs.readFile(path.join(root, reportPath)));
   const chromobius = JSON.parse(await fs.readFile(path.join(root, "docs/integrations/evidence/chromobius-2026-10-26.json")));
-  const receipts = [...report.libraries, chromobius.receipt];
+  const lean = JSON.parse(await fs.readFile(path.join(root, "docs/integrations/evidence/lean-physics-2026-10-28.json")));
+  const receipts = [...report.libraries, chromobius.receipt, lean.receipt];
   const cohort = (await readSdkLibraries(root)).filter(entry => entry.nativeOnly);
   const tracked = new Set(execFileSync("git", ["ls-files", "-z", "--", "docs/integrations/evidence"], { cwd: root, encoding: "utf8" }).split("\0"));
   assert.deepEqual(receipts.map(entry => entry.id).sort(), cohort.map(entry => entry.id).sort());
@@ -49,6 +50,12 @@ test("native SDK scoped API receipts are durable, match current locks and retain
     if (entry.language === "native") {
       assert.match(entry.nativeExecutableSha256, /^[0-9a-f]{64}$/);
       assert.equal(entry.nativeExecutableSha256, receipt.nativeExecutableSha256);
+    }
+    if (entry.language === "lean") {
+      assert.equal(hash(await fs.readFile(contained(entry.toolchainPath))), entry.toolchainSha256);
+      assert.equal(receipt.toolchainSha256, entry.toolchainSha256);
+      const proofRun = JSON.parse(await fs.readFile(path.join(directory, "result.json")));
+      assert.equal(proofRun.toolchain.sha256, entry.toolchainSha256);
     }
   }
 });
