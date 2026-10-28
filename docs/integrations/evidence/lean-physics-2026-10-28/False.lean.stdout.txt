@@ -1,0 +1,6 @@
+/Users/runner/work/_temp/lean-proof-evidence/lean-proofs-3APKnD/False.lean:1:45: error: Tactic `rfl` failed: The left-hand side
+  1
+is not definitionally equal to the right-hand side
+  2
+
+⊢ 1 = 2

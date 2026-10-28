@@ -1,0 +1,6 @@
+CI: .github/workflows/lean-physics.yml at 26b10a187561464fee7b89bb7ec1e8bb82166c66
+1. Download Lean v4.35.0 for the runner architecture and verify the release archive SHA-256.
+2. Set task-owned OPENQUANTUM_LEAN_BIN and OPENQUANTUM_LEAN_ENV_ROOT.
+3. node scripts/setup-sdk.mjs lean-physics
+4. OPENQUANTUM_LIVE_LEAN=1 node --test tests/lean-physics-live.test.mjs
+The test executes the absolute Lean binary for each saved proof through sandbox-exec with network denied, then checks the existing Codex environment adapter in separate test settings.

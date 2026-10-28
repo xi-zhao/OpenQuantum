@@ -214,3 +214,10 @@ API. No newer runtime or credential schema is introduced.
 Chromobius 1.1.1 为 Apache-2.0，固定上游提交 `efae0325e4a8fc13be981434d38e499aa06b989f`；
 [上游源码](https://github.com/quantumlib/chromobius)。本仓库分发原创 Skill、示例和锁文件，
 不捆绑上游二进制。显式准备时由包管理器取得 Chromobius、Stim（Apache-2.0）与 NumPy（BSD-3-Clause），保留各自许可。
+# Lean 形式化环境
+
+`lean-physics` 的显式准备使用 [Lean 4](https://github.com/leanprover/lean4)、
+[mathlib](https://github.com/leanprover-community/mathlib4) 和
+[physlib](https://github.com/leanprover-community/physlib)，均为 Apache-2.0。
+插件只包含项目模板、依赖锁和工作流指南，不捆绑完整工具链或库；准备所得源码保留上游许可。
+固定版本及间接依赖见 `.agents/skills/lean-physics/lean-toolchain` 和 `lake-manifest.json`。

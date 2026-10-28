@@ -13,9 +13,9 @@
 
 ## 当前 Skill
 
-以下 184 个 Skill 随源码分发；它们与 MCP Server 不是一一对应关系，知识型 Skill 可以不绑定专用 Tool，
+以下 185 个 Skill 随源码分发；它们与 MCP Server 不是一一对应关系，知识型 Skill 可以不绑定专用 Tool，
 工作流也可以使用多个服务或进程内原生 Tool。连接默认配置与凭据条件见[项目首页](../../README.md#mcp-服务目录)。
-当前 171 项可由模型自动选择，13 个分类索引仅保留用户显式调用；名称和来源映射不变。
+当前 172 项可由模型自动选择，13 个分类索引仅保留用户显式调用；名称和来源映射不变。
 分批建议与兼容影响见[扩展治理清单](../../docs/architecture/EXTENSION_GOVERNANCE.md)。
 
 | Skill | 作用 | 依赖的执行模块 |
@@ -23,6 +23,7 @@
 | `platform-diagnostics` | UI、Harness、Skill 和 Model 四个职责面的平台诊断 | Harness Tool、诊断 Validator 与 eval evidence |
 | `quantum-sdk-advisor` | 量子软件栈选型 | 无强制 Tool Provider |
 | `quantum-sdk-workbench` | 固定依赖中的原生 SDK、自定义代码与复现工件 | 宿主已有 `bash` / `pwsh`；不新增任意代码 MCP |
+| `lean-physics` | Lean 4、mathlib 与 physlib 证明、假设和公理审计 | 宿主代码 Tool；显式准备固定 Lean 环境 |
 | `arc-rydberg` | 原子、能级、跃迁矩阵元、寿命、Stark 图与相互作用 | 宿主代码 Tool；显式准备 python 环境 |
 | `catalyst-compilation` | qjit、混合程序、QNode、控制流、编译配置与梯度 | 宿主代码 Tool；显式准备 python 环境 |
 | `jaxquantum-modeling` | JAX 算符、器件与 bosonic 模型、动力学、扫描与梯度 | 宿主代码 Tool；显式准备 python 环境 |

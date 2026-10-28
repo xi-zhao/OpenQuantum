@@ -1,0 +1,29 @@
+{
+  "results": {
+    "Proofs.lean": {
+      "exitCode": 0,
+      "stdout": "'OpenQuantumProofs.natural_add_zero' does not depend on any axioms\n'OpenQuantumProofs.imaginary_square' depends on axioms: [propext, Classical.choice, Quot.sound]\n'OpenQuantumProofs.pauli_x_square' depends on axioms: [propext, Classical.choice, Quot.sound]\n'OpenQuantumProofs.pauli_xy_commutator' depends on axioms: [propext, Classical.choice, Quot.sound]\n",
+      "stderr": ""
+    },
+    "False.lean": {
+      "exitCode": 1,
+      "stdout": "/Users/runner/work/_temp/lean-proof-evidence/lean-proofs-3APKnD/False.lean:1:45: error: Tactic `rfl` failed: The left-hand side\n  1\nis not definitionally equal to the right-hand side\n  2\n\n⊢ 1 = 2\n",
+      "stderr": ""
+    },
+    "Unfinished.lean": {
+      "exitCode": 0,
+      "stdout": "/Users/runner/work/_temp/lean-proof-evidence/lean-proofs-3APKnD/Unfinished.lean:1:8: warning: declaration uses `sorry`\n'unfinished' depends on axioms: [sorryAx]\n",
+      "stderr": ""
+    }
+  },
+  "toolchain": {
+    "path": ".agents/skills/lean-physics/lean-toolchain",
+    "value": "leanprover/lean4:v4.35.0",
+    "sha256": "ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c"
+  },
+  "lock": {
+    "path": ".agents/skills/lean-physics/lake-manifest.json",
+    "sha256": "f87c3e68ce2e7156c9c292b6e963bbdf09ccd28a435681915f4741b9b074684e"
+  },
+  "scientificValidation": "not_evaluated"
+}

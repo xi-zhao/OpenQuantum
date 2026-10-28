@@ -1,0 +1,4 @@
+'OpenQuantumProofs.natural_add_zero' does not depend on any axioms
+'OpenQuantumProofs.imaginary_square' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OpenQuantumProofs.pauli_x_square' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OpenQuantumProofs.pauli_xy_commutator' depends on axioms: [propext, Classical.choice, Quot.sound]

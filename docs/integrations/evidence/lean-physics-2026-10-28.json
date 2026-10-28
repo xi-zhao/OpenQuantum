@@ -1,0 +1,95 @@
+{
+  "date": "2026-10-28",
+  "scope": "four Lean/mathlib/physlib example proofs, false-theorem rejection, sorryAx disclosure, Codex environment adapter check; not a user research theorem or scientific acceptance",
+  "ci": {
+    "repository": "xi-zhao/OpenQuantum",
+    "workflowRun": 40660434719,
+    "job": 122721819979,
+    "head": "26b10a187561464fee7b89bb7ec1e8bb82166c66",
+    "url": "https://github.com/xi-zhao/OpenQuantum/actions/runs/40660434719/job/122721819979",
+    "artifactId": 12803653239,
+    "artifactSha256": "4163c80effacc4b45c2e10cb866e98ea7f2f473fd8a329657612927683794217",
+    "platform": "macOS arm64",
+    "networkBoundary": "Each proof checked with sandbox-exec deny network*; explicit setup precedes isolation."
+  },
+  "versions": {
+    "lean": "4.35.0",
+    "leanVersionCheck": "prepareLeanSdk checked the actual --version output before building",
+    "leanArchiveSha256": "55132a570e3dfc6203626944b262793c0f0f6a8230c0d09344a06ac992fac4a9",
+    "mathlib": "56a005855ea17e0b0958f73ec801ae140b0a1679",
+    "physlib": "6fd50cbcfafb503e4b96435e49bedb0e220f09e2",
+    "dependencyLock": ".agents/skills/lean-physics/lake-manifest.json",
+    "ci": {
+      "repository": "xi-zhao/OpenQuantum",
+      "workflowRun": 40660434719,
+      "job": 122721819979,
+      "head": "26b10a187561464fee7b89bb7ec1e8bb82166c66",
+      "url": "https://github.com/xi-zhao/OpenQuantum/actions/runs/40660434719/job/122721819979",
+      "artifactId": 12803653239,
+      "artifactSha256": "4163c80effacc4b45c2e10cb866e98ea7f2f473fd8a329657612927683794217",
+      "platform": "macOS arm64",
+      "networkBoundary": "Each proof checked with sandbox-exec deny network*; explicit setup precedes isolation."
+    }
+  },
+  "checks": {
+    "explicitPreparation": "passed",
+    "offlineProofs": "4 named theorems passed",
+    "falseTheorem": "rejected with exit 1",
+    "unfinishedProof": "exit 0 but warning and sorryAx; not accepted as complete",
+    "codexEnvironmentAdapter": "needs_check -> ready",
+    "localMacPreparation": "stopped at storage reserve; no local readiness claim"
+  },
+  "axioms": {
+    "natural_add_zero": [],
+    "imaginary_square": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "pauli_x_square": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "pauli_xy_commutator": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ]
+  },
+  "scientificValidation": "not_evaluated",
+  "limitations": [
+    "Only the default Pauli import closure was built, not all Mathlib/Physlib/QuantumInfo.",
+    "Proof runtime check covers macOS arm64 CI, not Linux/Windows or the local user installation.",
+    "No central Acceptance Builder/Validator integration, physical model validation, or hardware claim."
+  ],
+  "receipt": {
+    "id": "lean-physics",
+    "language": "lean",
+    "status": "passed_scoped_engineering",
+    "scientificValidation": "not_evaluated",
+    "sourcePath": ".agents/skills/lean-physics/OpenQuantumProofs.lean",
+    "sourceSha256": "a15b11b93aee6a732070514c825b8d1e47ee74eab24d6f9c60f619e9f0b183d6",
+    "dependencyLockPath": ".agents/skills/lean-physics/lake-manifest.json",
+    "dependencyLockSha256": "f87c3e68ce2e7156c9c292b6e963bbdf09ccd28a435681915f4741b9b074684e",
+    "durableEvidenceDirectory": "docs/integrations/evidence/lean-physics-2026-10-28",
+    "verificationSha256": "9215194bc6e135ced216a81fa25089c9895b83d713a9ed77323ce9060166a0ef",
+    "artifacts": {
+      "False.lean": "388cccfbe70cd25157cb09a13587a18f170b151b06cd0f4d84b8ae9697b20425",
+      "False.lean.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "False.lean.stdout.txt": "5978d5c5f8375dee2a812b1bc13cd011c060ddf2432beb1a50519380ef0b7680",
+      "Proofs.lean": "a15b11b93aee6a732070514c825b8d1e47ee74eab24d6f9c60f619e9f0b183d6",
+      "Proofs.lean.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "Proofs.lean.stdout.txt": "fa87f24001ca77fd7135092ef6054cd8a4e6f775d11956d95d6fce96fe5f944c",
+      "Unfinished.lean": "41de738c2f0b449354ef1e7be9dd04da136cf18aa0ee32e13634370392988e7c",
+      "Unfinished.lean.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "Unfinished.lean.stdout.txt": "7350f114675ae094897b1bc8353f79daab11f5c0765de2aa30063e757b9d8b40",
+      "commands.txt": "3bac3fce25f54dc77fc361de871f5180f285ce5ae2d0dbcecec5d3f6eaad8f3b",
+      "result.json": "cfe415f0f526fcd8c9c871e034086040bc31fccf72c639de08d75c8ef84f6eae",
+      "settings-check.json": "5d528feb0a30ef3bd4cbe23cfdcb6ae820fbbc420e3246a5e57cf233dbb39d73",
+      "versions.json": "c6e6e4df777cfd729f762f9df9eb46dcb4b0c233fa58965561ba582e4ccbceca"
+    },
+    "toolchainPath": ".agents/skills/lean-physics/lean-toolchain",
+    "toolchainSha256": "ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c"
+  }
+}

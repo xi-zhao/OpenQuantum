@@ -22,6 +22,7 @@ const run = (command, args, cwd = root, capture = false) => runSetupCommand(comm
 for (const id of ids) {
   const entry = libraries.find(item => item.id === id);
   if (id === "quantum-algorithms") await setupAlgorithmEnvironment(selection);
+  else if (entry.language === "lean") await run(process.execPath, [path.join(root, "scripts/setup-lean-sdk.mjs"), id]);
   else if (entry.nativeProject) await run(process.execPath, [path.join(root, "scripts/setup-native-sdk.mjs"), id]);
   else if (entry.language === "native") await run(process.execPath, [path.join(root, "scripts/setup-qdmi.mjs")]);
   else await run(process.execPath, [path.join(root, "scripts/setup-paper-tools.mjs"), id]);

@@ -1,0 +1,68 @@
+name: Lean proof integration
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    paths:
+      - .agents/skills/lean-physics/**
+      - .agents/sdk-libraries.json
+      - scripts/setup-lean-sdk.mjs
+      - scripts/setup-sdk.mjs
+      - src/lib/sdk-*.mjs
+      - src/lib/setup-process.mjs
+      - src/settings/codex/environment*.mjs
+      - tests/lean-physics-live.test.mjs
+      - tests/fixtures/sdk-engineering-process.mjs
+      - .github/workflows/lean-physics.yml
+  workflow_dispatch:
+
+jobs:
+  proofs:
+    runs-on: macos-latest
+    timeout-minutes: 40
+    env:
+      OPENQUANTUM_LIVE_LEAN: "1"
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - name: Install JavaScript test dependencies
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Prepare the fixed Lean toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          case "$(uname -m)" in
+            arm64)
+              archive=lean-4.35.0-darwin_aarch64
+              digest=55132a570e3dfc6203626944b262793c0f0f6a8230c0d09344a06ac992fac4a9
+              ;;
+            x86_64)
+              archive=lean-4.35.0-darwin
+              digest=67002270b63c6cb12d6024fd00a38aa1e5fc9dc9b6c91cd3bd6f5aa34ed333ef
+              ;;
+            *) exit 1 ;;
+          esac
+          cd "$RUNNER_TEMP"
+          curl --fail --location --retry 3 -o "$archive.zip" "https://github.com/leanprover/lean4/releases/download/v4.35.0/$archive.zip"
+          printf '%s  %s\n' "$digest" "$archive.zip" | shasum -a 256 --check
+          unzip -q "$archive.zip"
+          rm "$archive.zip"
+          printf 'OPENQUANTUM_LEAN_BIN=%s/%s/bin/lean\n' "$RUNNER_TEMP" "$archive" >> "$GITHUB_ENV"
+          printf 'OPENQUANTUM_LEAN_ENV_ROOT=%s/lean-environments\n' "$RUNNER_TEMP" >> "$GITHUB_ENV"
+          printf 'OPENQUANTUM_LEAN_TEST_OUTPUT=%s/lean-proof-evidence\n' "$RUNNER_TEMP" >> "$GITHUB_ENV"
+      - name: Explicitly prepare the fixed proof imports
+        run: node scripts/setup-sdk.mjs lean-physics
+      - name: Check proofs, rejection and axiom reporting without network
+        run: node --test tests/lean-physics-live.test.mjs
+      - name: Preserve proof output
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: lean-proof-evidence
+          path: ${{ runner.temp }}/lean-proof-evidence
+          if-no-files-found: ignore

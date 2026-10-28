@@ -24,7 +24,7 @@ async function fixture(t) {
   const directory = await fs.mkdtemp(path.join(os.tmpdir(), "oq sdk on demand "));
   t.after(() => fs.rm(directory, { recursive: true, force: true }));
   for (const folder of ["scripts", "src/lib", ".agents", "bin", "examples/quantum-algorithms"]) await fs.mkdir(path.join(directory, folder), { recursive: true });
-  for (const file of ["scripts/setup-sdk.mjs", "scripts/setup-open-algorithm-examples.mjs", "src/lib/sdk-access.mjs", "src/lib/algorithm-environment.mjs", "src/lib/prepared-python.mjs", "src/lib/installed-python.mjs", "src/lib/setup-process.mjs", "src/lib/sdk-source.mjs", "src/lib/sdk-source-record.mjs"]) await fs.copyFile(path.join(root, file), path.join(directory, file));
+  for (const file of ["scripts/setup-sdk.mjs", "scripts/setup-open-algorithm-examples.mjs", "src/lib/sdk-access.mjs", "src/lib/sdk-lean.mjs", "src/lib/algorithm-environment.mjs", "src/lib/prepared-python.mjs", "src/lib/installed-python.mjs", "src/lib/setup-process.mjs", "src/lib/sdk-source.mjs", "src/lib/sdk-source-record.mjs"]) await fs.copyFile(path.join(root, file), path.join(directory, file));
   await fs.symlink(path.join(root, "node_modules"), path.join(directory, "node_modules"), process.platform === "win32" ? "junction" : "dir");
   await fs.writeFile(path.join(directory, ".agents/sdk-libraries.json"), JSON.stringify({ schemaVersion: 1, libraries: [{ id: "quantum-algorithms", language: "python", modules: ["qiskit"] }] }));
   await fs.writeFile(path.join(directory, ".agents/capability-packages.yml"), 'schemaVersion: "1.1"\npackages:\n  - id: quantum-algorithms\n');
