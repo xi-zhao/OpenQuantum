@@ -157,7 +157,9 @@ Choisissez un domaine et indiquez à l’environnement de recherche votre questi
 
 Les calculs locaux peuvent commencer sans compte de cloud quantique. Le matériel réel et les services payants se configurent à la demande ; le domaine d’entrée, la préparation et l’état de vérification de chaque méthode sont consignés dans le catalogue détaillé.
 
-Les sources actuelles offrent un accès complet aux API natives de **111 environnements SDK ou sources**, dont 26 issus de la dernière [extension de l’écosystème](../integrations/SDK_ECOSYSTEM_2026-10-14.md) livrée avec 0.8.4. Les agents peuvent écrire leurs propres programmes, combiner les API publiques et conserver les résultats complets, au-delà des cas prédéfinis des Tools de commodité.
+Les sources actuelles offrent un accès complet aux API natives de **113 environnements SDK ou sources**, dont 26 issus de la dernière [extension de l’écosystème](../integrations/SDK_ECOSYSTEM_2026-10-14.md) livrée avec 0.8.4. Les agents peuvent écrire leurs propres programmes, combiner les API publiques et conserver les résultats complets, au-delà des cas prédéfinis des Tools de commodité.
+
+**Mathématiques et physique formelles :** [Lean 4, mathlib et physlib](../../.agents/skills/lean-physics/SKILL.md) permettent de vérifier des preuves et leurs axiomes dans un projet fixé à Lean 4.35.0. La préparation explicite construit le petit exemple de Pauli et ses imports ; les autres modules sont préparés selon le besoin. La vérification n’installe aucune dépendance. Une preuve porte sur les définitions et hypothèses énoncées, pas sur la validité physique du modèle ni sur son acceptation scientifique.
 
 Chaque environnement se prépare explicitement pour chaque tâche, et les limites de plateforme, de compte, de licence et de backend optionnel restent applicables. Les vérifications d’ingénierie de chaque bibliothèque figurent dans le [registre d’accès complet aux SDK](../integrations/FULL_SDK_ACCESS.md) ; ces environnements n’ont pas encore fait l’objet d’une acceptation scientifique (le constat, fondé sur des vérifications indépendantes et une traçabilité complète des sources, qu’un résultat est scientifiquement fiable) sur de véritables tâches de recherche, et leur statut scientifique reste `not_evaluated`.
 
@@ -674,7 +676,7 @@ Préférez les Tool Providers natifs pour les actions dans le processus, dans le
 
 </details>
 
-Le catalogue complet des Skills, services MCP et Tools natifs est tenu à jour dans le [README chinois](../../README.md#能力接口目录) : les sources actuelles livrent **183 Skills intégrés** (170 sélectionnables automatiquement, 13 index de catégories manuels), **91 connexions de services MCP** (66 activées par défaut, 25 à activer explicitement) et **5 Tools quantiques natifs**.
+Le catalogue complet des Skills, services MCP et Tools natifs est tenu à jour dans le [README chinois](../../README.md#能力接口目录) : les sources actuelles livrent **185 Skills intégrés** (172 sélectionnables automatiquement, 13 index de catégories manuels), **91 connexions de services MCP** (66 activées par défaut, 25 à activer explicitement) et **5 Tools quantiques natifs**.
 
 <a id="development-and-verification"></a>
 
@@ -704,7 +706,7 @@ Choisissez les vérifications pertinentes pour votre modification ; la liste com
 
 </details>
 
-Le [Skill officiel `pyqpanda3` d’OriginQ](https://github.com/OriginQ/pyqpanda3-skill) est un Skill amont optionnel : il n’est pas compté parmi les 183 Skills intégrés et n’est pas installé automatiquement. `npm run skill:qpanda:setup` installe la version examinée ; cette commande n’active pas `qpanda_runtime` et n’accorde aucune autorisation de tâches dans le cloud.
+Le [Skill officiel `pyqpanda3` d’OriginQ](https://github.com/OriginQ/pyqpanda3-skill) est un Skill amont optionnel : il n’est pas compté parmi les 185 Skills intégrés et n’est pas installé automatiquement. `npm run skill:qpanda:setup` installe la version examinée ; cette commande n’active pas `qpanda_runtime` et n’accorde aucune autorisation de tâches dans le cloud.
 
 <a id="roadmap-and-rsi"></a>
 

@@ -5,20 +5,21 @@ import { spawn } from "node:child_process";
 import { randomUUID } from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { readSdkLibraries, nativeSdkRoot } from "../../lib/sdk-access.mjs";
+import { leanSdkRoot, leanPreparation, leanProjectHashes } from "../../lib/sdk-lean.mjs";
 import { pythonEnvironmentRoot } from "../../lib/prepared-python.mjs";
 import { algorithmEnvironmentRoot, algorithmPreparation, algorithmGroupArgs, algorithmSelection } from "../../lib/algorithm-environment.mjs";
 import { atomicWrite, digest, readOptional, withLock } from "./storage.mjs";
 import { runtimeRequirements } from "./runtime-catalog.mjs";
 import { EXTERNAL_MCP, externalMcp, externalProject } from "../../../runtime/chatgpt/external/catalog.mjs";
 
-export const RUNTIME_ENV_NAMES = ["OPENQUANTUM_PYTHON_ENV_ROOT", "OPENQUANTUM_NATIVE_SDK_ROOT", "OPENQUANTUM_SDK_SOURCE_ROOT", "OPENQUANTUM_QDMI_HOME", "OPENQUANTUM_JULIA_DEPOT_PATH", "OPENQUANTUM_JULIA", "OPENQUANTUM_NETQASM_SIMULATION_PYTHON", "OPENQUANTUM_QDMI_CONFIG"];
+export const RUNTIME_ENV_NAMES = ["OPENQUANTUM_PYTHON_ENV_ROOT", "OPENQUANTUM_NATIVE_SDK_ROOT", "OPENQUANTUM_SDK_SOURCE_ROOT", "OPENQUANTUM_QDMI_HOME", "OPENQUANTUM_JULIA_DEPOT_PATH", "OPENQUANTUM_JULIA", "OPENQUANTUM_LEAN_ENV_ROOT", "OPENQUANTUM_LEAN_BIN", "OPENQUANTUM_NETQASM_SIMULATION_PYTHON", "OPENQUANTUM_QDMI_CONFIG"];
 export const runningJob = job => ["starting", "running", "cancelling"].includes(job?.status);
 const live = pid => {
   if (!Number.isSafeInteger(pid) || pid <= 0) return false;
   try { process.kill(pid, 0); return true; } catch (error) { return error.code !== "ESRCH"; }
 };
 export const jobAlive = job => runningJob(job) && (job.pid ? live(job.pid) : Date.now() - Date.parse(job.startedAt) < 30000);
-const safeEnv = source => Object.fromEntries(["HOME", "PATH", "SYSTEMROOT", "WINDIR", "TEMP", "TMP", "TMPDIR", "HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY", "NO_PROXY", "SSL_CERT_FILE", "SSL_CERT_DIR", "UV_CACHE_DIR", "UV_PYTHON_INSTALL_DIR", "UV_LINK_MODE", "OPENQUANTUM_JULIA"].filter(key => source[key]).map(key => [key, source[key]]));
+const safeEnv = source => Object.fromEntries(["HOME", "PATH", "SYSTEMROOT", "WINDIR", "TEMP", "TMP", "TMPDIR", "HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY", "NO_PROXY", "SSL_CERT_FILE", "SSL_CERT_DIR", "UV_CACHE_DIR", "UV_PYTHON_INSTALL_DIR", "UV_LINK_MODE", "OPENQUANTUM_JULIA", "OPENQUANTUM_LEAN_BIN"].filter(key => source[key]).map(key => [key, source[key]]));
 export function runtimeEnvironment(directory, source = process.env) {
   return { ...safeEnv(source),
     OPENQUANTUM_PYTHON_ENV_ROOT: source.OPENQUANTUM_PYTHON_ENV_ROOT || path.join(directory, "environments/python"),
@@ -26,6 +27,7 @@ export function runtimeEnvironment(directory, source = process.env) {
     OPENQUANTUM_SDK_SOURCE_ROOT: source.OPENQUANTUM_SDK_SOURCE_ROOT || path.join(directory, "environments/sources"),
     OPENQUANTUM_QDMI_HOME: source.OPENQUANTUM_QDMI_HOME || path.join(directory, "environments/qdmi"),
     OPENQUANTUM_JULIA_DEPOT_PATH: source.OPENQUANTUM_JULIA_DEPOT_PATH || path.join(directory, "environments/julia"),
+    OPENQUANTUM_LEAN_ENV_ROOT: source.OPENQUANTUM_LEAN_ENV_ROOT || path.join(directory, "environments/lean"),
   };
 }
 
@@ -60,7 +62,7 @@ export class Environments {
   async fingerprint(id, configuration = {}) {
     const entry = await this.entry(id);
     const project = entry.external ? externalProject(this.root, id) : id === "quantum-algorithms" ? "examples/quantum-algorithms" : `.agents/skills/${id}`;
-    const lock = entry.nativeProject?.lock ?? (entry.language === "julia" ? "Manifest.toml" : "uv.lock");
+    const lock = entry.nativeProject?.lock ?? (entry.language === "lean" ? "lake-manifest.json" : entry.language === "julia" ? "Manifest.toml" : "uv.lock");
     const bytes = await fs.readFile(path.resolve(this.root, project, lock));
     const adapter = entry.external ? await Promise.all(["launch.py", "qpanda_tls.py", "qpanda_compat.py", "process.mjs"].map(async file => digest(await fs.readFile(path.join(this.root, "runtime/chatgpt/external", file))))) : [];
     if (entry.external) {
@@ -68,8 +70,9 @@ export class Environments {
       const source = await readOptional(path.join(project, "source.json"));
       if (source) adapter.push(digest(source));
     }
-    return digest(JSON.stringify([id, process.platform, process.arch, digest(bytes), configuration,
-      RUNTIME_ENV_NAMES.map(key => this.environment[key] ?? null), ...(entry.external ? [adapter] : [])]));
+    const leanFiles = entry.language === "lean" ? await leanProjectHashes(path.join(this.root, project)) : null;
+    return digest(JSON.stringify([id, process.platform, process.arch, digest(bytes), configuration, ...(leanFiles ? [leanFiles] : []),
+      RUNTIME_ENV_NAMES.filter(key => entry.language === "lean" || !key.startsWith("OPENQUANTUM_LEAN_")).map(key => this.environment[key] ?? null), ...(entry.external ? [adapter] : [])]));
   }
   async installation(id, entry, configuration, groups = []) {
     // Only inspect files here. Opening settings never loads modules or starts MCP.
@@ -112,6 +115,10 @@ export class Environments {
           && record.manifestSha256 === digest(manifestBytes)
           && record.dependencyLockSha256 === digest(await fs.readFile(path.join(project, entry.nativeProject.lock))) ? "present" : "incomplete";
       }
+      if (entry.language === "lean") {
+        const prepared = await leanPreparation(path.join(this.root, ".agents/skills", id), leanSdkRoot(this.root, id, this.environment));
+        return prepared.state === "prepared" ? "present" : prepared.state === "not_prepared" ? "missing" : "incomplete";
+      }
       return "unknown";
     } catch (error) {
       if (["EACCES", "EPERM"].includes(error.code)) return "unreadable";
@@ -123,6 +130,7 @@ export class Environments {
     const entry = await this.entry(id), record = await this.read(id);
     const requirements = runtimeRequirements(id);
     requirements.prerequisite = entry.language === "julia" ? "安装前需准备本机 Julia。"
+      : entry.language === "lean" ? "准备前用 OPENQUANTUM_LEAN_BIN 指定固定版本 Lean 的绝对路径；依赖与缓存按任务显式准备。"
       : entry.language === "python" || id === "qdmi-device" ? "安装前需准备本机 uv；安装器会准备对应的固定 Python 版本。" : "安装前需准备 Git、CMake 和 C++ 工具链。";
     const fingerprint = await this.fingerprint(id, record.configuration);
     const job = record.job ? { id: record.job.id, operation: record.job.operation, status: record.job.status, phase: record.job.phase,

@@ -41,7 +41,7 @@ const groups = [
     bloqade-analog perceval-photonics pulser-dynamics lightworks-photonics
     openfermion-mapping pychemiq-chemistry mrmustard-optics
     monoprop-propagation piquasso-photonics qdk-chemistry jaxquantum-modeling
-    paulistrings-dynamics
+    paulistrings-dynamics lean-physics
   `],
   ["qec", "纠错与噪声", `
     qec-memory-experiment mitiq-error-mitigation ldpc-decoding clifft-sampling

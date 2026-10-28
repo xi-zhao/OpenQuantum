@@ -14,6 +14,7 @@
 - `inspect` 的 `setup` 是显式依赖准备，`run` 是解释器调用模板。确认 `environmentState=prepared` 后用用户脚本绝对路径替换占位符。Julia 还需核实固定版本与 `Pkg` 环境；QDMI 需检查构建输出和 ABI，其他原生入口返回构建后的可执行文件。
 - 算法环境默认只含 NumPy、SciPy、Qiskit。按当前任务在 `inspect quantum-algorithms` 后添加 `--group gradients|pennylane|tensor|chemistry`；化学自动包含 tensor。Codex/DSH 的 `prepare_openquantum_skill` 用 `dependencyGroups` 选择这些组，不能用基础环境的就绪状态替代所需组的检查。准备后重新 inspect，继续原任务；仅解释或选型不安装依赖。源码安装器只有显式 `--all` 才准备全部组，扩装保留已有组。
 - 可用 `OPENQUANTUM_JULIA` 指定解释器，`OPENQUANTUM_JULIA_DEPOT_PATH` 指定 Julia depot；定位器返回的 `run.environment` 与命令一起传给宿主工具。源码及原生构建缓存可用 `OPENQUANTUM_SDK_SOURCE_ROOT` 和 `OPENQUANTUM_NATIVE_SDK_ROOT` 外置。
+- Lean 形式化使用 `lean-physics`：`OPENQUANTUM_LEAN_BIN` 指定固定版本的绝对可执行路径，`OPENQUANTUM_LEAN_ENV_ROOT` 外置环境与缓存。显式 setup 准备默认示例的导入闭包；执行保存的 `.lean` 文件时使用 inspect 返回的绝对命令及 `LEAN_PATH`，不通过 elan/Lake 隐式安装。其他模块先显式准备。证明与公理检查见该 Skill，不能以编译成功代替科学验收。
 - 大型依赖下载受网络和缓存磁盘影响。显式 Python setup 可继承 `UV_CACHE_DIR`、`UV_CONCURRENT_DOWNLOADS`、`UV_HTTP_TIMEOUT`、`UV_HTTP_RETRIES` 与 `UV_LINK_MODE`；这些设置只影响准备过程，不改变依赖锁。失败后仍需成功完成 setup 才能标记 prepared。
 - 通用 Python setup 与算法环境 setup 在标记成功前检查 wheel 的原始 `RECORD` 所列文件是否存在、大小是否完整。磁盘写满后，即使 uv 的元数据检查成功，残缺文件仍会阻止标记；按同一锁与环境重装报告的依赖，再重新 setup。该检查不导入 SDK，也不证明 API 或数值行为正确。
 - 文档先查已安装模块的 docstring、`help()`、`inspect.signature()` 和包元数据中的官方文档。只读取相关模块，不递归导入全部子模块；导入也可能产生缓存或尝试连接外部服务。发现 API 与示例版本不符时修正任务代码，不能伪造兼容接口。
@@ -34,7 +35,7 @@
 
 ## 运行、失败与工件
 
-任务目录由用户工作区拥有。建议保留 `program.py`/`program.jl`、输入文件、运行配置、日志和完整结果文件；文件名可按项目调整。Agent 编写可重复调用的函数或 CLI，参数扫描从输入读取，不能把研究参数固定在示例中。
+任务目录由用户工作区拥有。建议保留 `program.py`/`program.jl`/`Proof.lean`、输入文件、运行配置、日志和完整结果文件；文件名可按项目调整。Agent 编写可重复调用的函数或 CLI，参数扫描从输入读取，不能把研究参数固定在示例中。
 
 运行前估计内存、执行时间、并行度与输出规模。MCP 便捷 Tool 的单次预算不限制宿主代码路径的功能；宿主、机器和用户的资源限制仍有效。长任务使用宿主已有进程/Job 接口。不能因输出窗口截断而丢弃完整数组，使用 NPZ/HDF5/库原生格式等工件保存，再给摘要。
 

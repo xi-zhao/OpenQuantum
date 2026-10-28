@@ -2506,3 +2506,6 @@ packages:
 
   - id: qsyn-compilation
     level: L0
+
+  - id: lean-physics
+    level: L0

@@ -2,7 +2,7 @@
 
 由 `node scripts/audit-sdk-integration.mjs` 从 capability policy、SDK 导航、项目 manifest 和依赖锁生成；用 `--check` 检查是否过期。
 
-本表覆盖 112 个 SDK/源码环境入口：103 个 Python（包含算法共享环境）、7 个 Julia、2 个原生源码或 ABI 入口。原生 QDMI 另有 Python 桥接依赖项目。一个入口可包含多个库，同一个库也可能有多个隔离版本，不能把入口数量当成独立 SDK 数量。所有锁摘要与间接依赖版本可通过 `node scripts/sdk-access.mjs inventory` 读出。
+本表覆盖 113 个 SDK/源码环境入口：103 个 Python（包含算法共享环境）、7 个 Julia、2 个原生源码或 ABI 入口、1 个 Lean 项目。原生 QDMI 另有 Python 桥接依赖项目。一个入口可包含多个库，同一个库也可能有多个隔离版本，不能把入口数量当成独立 SDK 数量。所有锁摘要与间接依赖版本可通过 `node scripts/sdk-access.mjs inventory` 读出。
 
 **接入状态：原生路径与指南已提供；逐 API、可选依赖、平台与外部服务验证不由这张静态清单推断。** 环境是否准备需 `inspect`，实际执行证据见[完整接入记录](FULL_SDK_ACCESS.md)。
 
@@ -37,6 +37,7 @@
 | `kaiwu-qubo` | Kaiwu Community | python | kaiwu-community==1.0.7 | 上游社区版表达式、约束、QUBO/Ising 转换与优化接口 | 固定的是 Kaiwu Community；商业服务和企业版不是该发行版的一部分。 |
 | `laboneq-control` | LabOne Q | python | laboneq==26.7.0 | DeviceSetup、Experiment、校准、pulse、sweep、编译与 session | 本地程序构建与外部调用分开；账户、凭据、费用、设备操作和数据外发沿用宿主及用户授权。原生 SDK 访问不自动启用服务。 |
 | `ldpc-decoding` | LDPC | python | ldpc==2.4.1 | 自定义校验矩阵、错误模型、BP/OSD/LSD 译码器与批处理 | 按固定版本、已安装可选组件及目标平台核实 |
+| `lean-physics` | Lean 4 / mathlib / physlib | lean | Physlib@6fd50cbcfafb503e4b96435e49bedb0e220f09e2, mathlib@56a005855ea17e0b0958f73ec801ae140b0a1679, plausible@dfa4f38190d07c37e315953e08b90fe2d95b3c24, LeanSearchClient@d6b4c7be5be75ec4917c873ac50c756dc1436372, importGraph@a41f0e9a4dea23188ea9cc1c41ac9f8bbafe0b93, proofwidgets@df72b022e558978a1c50264cfc4d7fec86fa8e04, aesop@4a174c490d8707121c4a9290800489f105d85e07, Qq@dce0ad79c486cb1fb504af04f953c3466b0c6db8, batteries@66e469188fe07963e5cf666c7d4433f45b8131c5, Cli@c24fe6078c630e89b489bffe59b3e20ac30d12c8 | 数学与物理命题、Pauli 矩阵关系、量子信息定理与依赖公理审计 | 固定兼容的 Lean 4.35.0 与 Lake 依赖锁；显式准备导入闭包。形式证明仅覆盖给定定义和假设，不代表真实物理或科学验收。 |
 | `lightworks-photonics` | Lightworks | python | lightworks==2.3.5 | PhotonicCircuit、自定义输入、计算任务、后端与误差模型 | 按固定版本、已安装可选组件及目标平台核实 |
 | `merlin-learning` | MerLin | python | merlinquantum==0.4.1, perceval-quandela==1.2.1 | 自定义光学电路、QuantumLayer、测量策略与 Torch 训练 | 按固定版本、已安装可选组件及目标平台核实 |
 | `mimiq-simulation` | MIMIQ | python | mimiq-exaqt==0.3.0, mimiqcircuits==0.28.0 | 任意电路、指令、噪声、模拟器与远程接口 | 原生 Exaqt 目标有限；MIMIQ 远程服务、许可证和二进制平台分别核实。 |

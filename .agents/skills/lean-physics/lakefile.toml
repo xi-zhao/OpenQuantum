@@ -1,0 +1,10 @@
+name = "OpenQuantumProofs"
+defaultTargets = ["OpenQuantumProofs"]
+
+[[require]]
+name = "Physlib"
+git = "https://github.com/leanprover-community/physlib.git"
+rev = "6fd50cbcfafb503e4b96435e49bedb0e220f09e2"
+
+[[lean_lib]]
+name = "OpenQuantumProofs"

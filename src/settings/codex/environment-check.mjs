@@ -48,6 +48,13 @@ export async function inspectEnvironment(manager, id, record, signal, onOutput) 
       paths.push(path.join(described.project, "Manifest.toml"));
     } else if (described.environmentState !== "prepared") throw new Error("运行环境缺失或与固定依赖不一致，请先安装或修复环境");
     if (entry.language === "python") python = described.run.command;
+    if (entry.language === "lean") {
+      await runSetupCommand(described.run.command, [path.join(described.project, "OpenQuantumProofs.lean")], { cwd: manager.root, env: { ...env, ...described.run.environment }, signal, capture: true, onOutput, timeoutMs: 90000 });
+      const marker = path.join(described.leanProject.directory, "openquantum-lean.json");
+      paths.push(described.run.command, marker);
+      markers.push({ path: marker, sha256: digest(await fs.readFile(marker)) });
+      details.push("固定 Lean 环境及 Pauli 示例文件已检查；用户目标的证明、公理与物理适用性另行核验");
+    }
     if (described.nativeBuild) {
       paths.push(described.nativeBuild.executable);
       markers.push({ path: described.nativeBuild.executable, sha256: described.nativeBuild.executableSha256 });

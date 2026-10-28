@@ -7,6 +7,7 @@ import { parse as parseYaml } from "yaml";
 import { pythonEnvironmentRoot } from "./prepared-python.mjs";
 import { verifySdkSourceSnapshot } from "./sdk-source-record.mjs";
 import { algorithmEnvironmentRoot, algorithmPreparation, algorithmSelection } from "./algorithm-environment.mjs";
+import { leanSdkRoot, leanPreparation } from "./sdk-lean.mjs";
 
 // Documentation and environment discovery, not a Tool registry or an executor.
 // The host owns file editing, processes, permissions, cancellation and jobs.
@@ -22,8 +23,9 @@ export async function readSdkLibraries(root) {
   const ids = new Set();
   for (const entry of catalog.libraries) {
     if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(entry.id) || ids.has(entry.id)) throw new Error("Invalid or duplicate SDK id");
-    if (!["python", "julia", "native"].includes(entry.language) || !Array.isArray(entry.modules)) throw new Error(`Invalid SDK entry: ${entry.id}`);
+    if (!["python", "julia", "native", "lean"].includes(entry.language) || !Array.isArray(entry.modules)) throw new Error(`Invalid SDK entry: ${entry.id}`);
     if (entry.pythonVersion && !/^3\.\d+$/.test(entry.pythonVersion)) throw new Error(`Invalid Python version: ${entry.id}`);
+    if (entry.leanCacheModules !== undefined && (entry.language !== "lean" || !Array.isArray(entry.leanCacheModules) || !entry.leanCacheModules.length || entry.leanCacheModules.some(name => !/^Mathlib(?:\.[A-Za-z_][A-Za-z0-9_]*)+$/.test(name)))) throw new Error(`Invalid Lean cache modules: ${entry.id}`);
     if (entry.nativeProject && (entry.language !== "native" || ![entry.nativeProject.manifest, entry.nativeProject.lock].every(name => /^[a-z][a-z0-9.-]*\.json$/.test(name)))) throw new Error(`Invalid native project files: ${entry.id}`);
     ids.add(entry.id);
   }
@@ -37,12 +39,26 @@ export async function sdkInventory(root) {
   const entries = await Promise.all(libraries.map(async (library) => {
     const directory = relativeProject(library.id);
     const julia = library.language === "julia";
+    const lean = library.language === "lean";
     const native = Boolean(library.nativeProject);
-    const manifestPath = `${directory}/${native ? library.nativeProject.manifest : julia ? "Project.toml" : "pyproject.toml"}`;
-    const lockPath = `${directory}/${native ? library.nativeProject.lock : julia ? "Manifest.toml" : "uv.lock"}`;
+    const manifestPath = `${directory}/${native ? library.nativeProject.manifest : lean ? "lakefile.toml" : julia ? "Project.toml" : "pyproject.toml"}`;
+    const lockPath = `${directory}/${native ? library.nativeProject.lock : lean ? "lake-manifest.json" : julia ? "Manifest.toml" : "uv.lock"}`;
     const [manifestBytes, lockBytes] = await Promise.all([fs.readFile(path.join(root, manifestPath)), fs.readFile(path.join(root, lockPath))]);
     const manifest = native ? JSON.parse(manifestBytes) : parseToml(manifestBytes.toString());
-    const lock = native ? JSON.parse(lockBytes) : parseToml(lockBytes.toString());
+    const lock = native || lean ? JSON.parse(lockBytes) : parseToml(lockBytes.toString());
+    const toolchainBytes = lean ? await fs.readFile(path.join(root, directory, "lean-toolchain")) : null;
+    if (lean) {
+      const names = new Set();
+      if (!/^leanprover\/lean4:v\d+\.\d+\.\d+$/.test(toolchainBytes.toString().trim()) || lock.packagesDir !== ".lake/packages" || !Array.isArray(lock.packages) || !lock.packages.length) throw new Error(`Invalid fixed Lean toolchain or dependency lock: ${library.id}`);
+      for (const item of lock.packages) {
+        if (item.type !== "git" || !/^[A-Za-z][A-Za-z0-9_-]*$/.test(item.name) || names.has(item.name) || !/^[a-f0-9]{40}$/.test(item.rev) || !/^https:\/\/github\.com\/[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+(?:\.git)?$/.test(item.url) || item.subDir) throw new Error(`Invalid fixed Lean dependency: ${library.id}`);
+        names.add(item.name);
+      }
+      for (const dependency of manifest.require ?? []) {
+        const locked = lock.packages.find(item => item.name === dependency.name);
+        if (!locked || locked.url !== dependency.git || locked.rev !== dependency.rev) throw new Error(`Manifest differs from fixed Lean lock: ${library.id}`);
+      }
+    }
     if (native && (manifest.schemaVersion !== 1 || lock.schemaVersion !== 1 || !Array.isArray(lock.sources))) throw new Error(`Unsupported native SDK lock: ${library.id}`);
     if (native && (!/^[a-z][a-z0-9-]*$/.test(manifest.executable) || !/^[a-z][a-z0-9-]*$/.test(manifest.target))) throw new Error(`Invalid native executable: ${library.id}`);
     const capability = byId.get(library.id);
@@ -53,11 +69,13 @@ export async function sdkInventory(root) {
       project: directory,
       manifest: { path: manifestPath, sha256: sha256(manifestBytes) },
       lock: { path: lockPath, sha256: sha256(lockBytes) },
+      ...(lean ? { toolchain: { path: `${directory}/lean-toolchain`, value: toolchainBytes.toString().trim(), sha256: sha256(toolchainBytes) } } : {}),
       ...(native ? { nativeExecutable: manifest.executable } : {}),
       requiresPython: manifest.project?.["requires-python"] ?? null,
-      dependencies: native ? lock.sources.map(item => `${item.name}@${item.revision}`) : julia ? manifest.deps : manifest.project.dependencies,
+      dependencies: native ? lock.sources.map(item => `${item.name}@${item.revision}`) : lean ? lock.packages.map(item => `${item.name}@${item.rev}`) : julia ? manifest.deps : manifest.project.dependencies,
       dependencyGroups: manifest["dependency-groups"] ?? {},
       lockedPackages: native ? lock.sources.map(item => ({ name: item.name, version: item.revision, source: { git: item.repository } }))
+        : lean ? lock.packages.map(item => ({ name: item.name, version: item.rev, source: { git: item.url } }))
         : julia ? Object.entries(lock.deps).flatMap(([name, versions]) => versions.map((item) => ({ name, version: item.version ?? null })))
         : lock.package.map((item) => ({ name: item.name, version: item.version ?? null, source: item.source })),
       convenienceTools: [...(capability.execution?.nativeTools ?? []).filter(tool => !["bash", "pwsh"].includes(tool.name)).map((tool) => tool.name), ...providers.flatMap((server) => server.tools.map((tool) => tool.name))],
@@ -101,6 +119,8 @@ export async function describeSdk(root, id, { environment = process.env, selecti
   let interpreter = null;
   let state = "not_checked";
   let availableGroups;
+  let leanProject = null;
+  let leanPrepared = null;
   if (id === "quantum-algorithms") {
     const prepared = await algorithmPreparation(algorithmEnvironmentRoot(root, environment), entry.lock.sha256, groups);
     ({ interpreter, availableGroups } = prepared);
@@ -113,6 +133,10 @@ export async function describeSdk(root, id, { environment = process.env, selecti
     interpreter = environment.OPENQUANTUM_JULIA || "julia";
     // Julia's Pkg owns its depot and build state; a manifest alone is not readiness.
     state = "requires_julia_check";
+  } else if (entry.language === "lean") {
+    leanProject = { directory: leanSdkRoot(root, id, environment) };
+    leanPrepared = await leanPreparation(project, leanProject.directory);
+    state = leanPrepared.state;
   } else {
     state = "requires_native_build_check";
   }
@@ -153,8 +177,10 @@ export async function describeSdk(root, id, { environment = process.env, selecti
     ...(sourceProject ? { sourceProject } : {}),
     ...(nativeDependency ? { nativeDependency } : {}),
     ...(nativeBuild ? { nativeBuild } : {}),
+    ...(leanProject ? { leanProject } : {}),
     run: interpreter ? { command: interpreter, args: entry.language === "julia" ? ["--startup-file=no", `--project=${project}`, "<absolute-script.jl>"] : ["-B", "<absolute-script.py>"], cwd: "<user-workspace>", effect: "depends-on-script", resourceLimits: "host-and-user-budget",
       ...(entry.language === "julia" && environment.OPENQUANTUM_JULIA_DEPOT_PATH ? { environment: { JULIA_DEPOT_PATH: environment.OPENQUANTUM_JULIA_DEPOT_PATH } } : {}) }
+      : leanPrepared?.state === "prepared" ? { command: leanPrepared.command, args: ["<absolute-proof.lean>"], environment: leanPrepared.environment, cwd: "<user-workspace>", effect: "depends-on-script", resourceLimits: "host-and-user-budget" }
       : nativeBuild ? { command: nativeBuild.executable, args: ["<reviewed-cli-arguments>"], cwd: "<user-workspace>", effect: "depends-on-command", resourceLimits: "host-and-user-budget" } : null,
     documentation: entry.language === "python" ? entry.bootstrap
       ? { mode: "in-script-after-bootstrap", note: "Use help(module) and inspect.signature after prepare_sdk in the saved script; plain python -m pydoc bypasses required loader compatibility." }

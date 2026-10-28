@@ -392,6 +392,28 @@
       "conditions": []
     },
     {
+      "id": "lean-physics",
+      "title": "Lean 4 / mathlib / physlib",
+      "language": "lean",
+      "leanCacheModules": [
+        "Mathlib.Analysis.Complex.Basic",
+        "Mathlib.LinearAlgebra.CrossProduct",
+        "Mathlib.LinearAlgebra.Matrix.Determinant.Basic",
+        "Mathlib.LinearAlgebra.Matrix.Trace"
+      ],
+      "modules": [
+        "Mathlib",
+        "Physlib",
+        "QuantumInfo"
+      ],
+      "group": "physics",
+      "workflow": "数学与物理命题、Pauli 矩阵关系、量子信息定理与依赖公理审计",
+      "conditions": [
+        "固定兼容的 Lean 4.35.0 与 Lake 依赖锁；显式准备导入闭包。形式证明仅覆盖给定定义和假设，不代表真实物理或科学验收。"
+      ],
+      "nativeOnly": true
+    },
+    {
       "id": "lightworks-photonics",
       "title": "Lightworks",
       "language": "python",
