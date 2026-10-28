@@ -1,0 +1,123 @@
+schemaVersion: "1.1"
+id: quantum-circuit-verification
+version: 0.2.0
+displayName: Quantum Circuit Classification Audit
+description: Preserves bounded MQT QCEC classifications and independently audits
+  persisted input, full small-system unitaries and Harness provenance before
+  central Acceptance.
+maturity:
+  status: draft
+  evidence: []
+skill:
+  name: quantum-circuit-verification
+  entrypoint: SKILL.md
+scope:
+  supportedClaims:
+    - Bounded unitary OpenQASM 2 classification with persisted input and Harness
+      execution provenance
+    - Independent Qiskit matrix replay up to 8 qubits at a maximum-entry
+      tolerance of 1e-9, or exact source identity within the 16-qubit scientific
+      audit scope
+  outOfScope:
+    - Physical hardware, noise, measurements, resets, classical control and
+      arbitrary include paths
+    - Strict mathematical proof for arbitrary floating-point rotations,
+      automatic acceptance of relative phase or probabilistic classifications
+    - Passed independent acceptance for different circuit pairs above the
+      8-qubit dense reference budget
+  examples:
+    - title: Audit a simplification and a faulty control
+      prompt: Verify a redundant X/X removal and a deleted CX control, then read their
+        persisted classification Acceptance Reports.
+input:
+  id: circuit-equivalence-request
+  schema: inputs/request.schema.json
+  maxBytes: 1048576
+  mediaTypes:
+    - application/json
+artifacts:
+  - id: qcec-analysis
+    schema: artifacts/qcec-analysis.schema.json
+    required: true
+    mediaType: application/json
+validators:
+  - id: qcec-classification-validator
+    version: 1.0.0
+    command:
+      executable: node
+      script: validators/validate-qcec-analysis.mjs
+      args: []
+      shell: false
+acceptanceProfiles:
+  - id: unitary-classification-audit
+    version: 1.0.0
+    validator: qcec-classification-validator
+    definition:
+      path: acceptance-profiles/unitary-classification-audit-v1.json
+      sha256: 6a0c7ad5bd598614d64d84df5d89ad4173f3ffed6e868e510b60addc9d3a2a51
+reproductionProfiles:
+  - id: local-qcec-qiskit-replay
+    version: 1.0.0
+    validator: qcec-classification-validator
+    definition:
+      path: reproduction-profiles/local-qcec-qiskit-replay-v1.json
+      sha256: 5281be492c3fc033d52285e0c98de42452c14a09ec201c176bda29b5675efe7a
+modelRequirements:
+  textGeneration: true
+  toolCalling: true
+  structuredOutput: true
+  minContextTokens: 8192
+  multimodal: false
+permissions:
+  network:
+    mode: none
+    destinations: []
+  filesystem:
+    read:
+      - package
+      - workspace/input
+      - workspace/results
+    write:
+      - workspace/results
+  subprocess:
+    allowed: true
+    commands:
+      - node
+      - python
+  cloudCompute:
+    allowed: false
+    providers: []
+  limits:
+    wallTimeSeconds: null
+    memoryMiB: null
+    maxArtifacts: 1
+    maxCostUsd: 0
+  data:
+    classification: public
+    retentionDays: 0
+    externalTransfer: forbidden
+    licenses:
+      - MIT
+evals:
+  runner:
+    executable: node
+    script: evals/run-evals.mjs
+    args: []
+    shell: false
+  suite:
+    id: qcec-classification-reference
+    version: 1.0.0
+    path: evals/suite.json
+    sha256: fe64203eefc708a84c7e75f917264a9057223297433ff1afc869e3e0a592b803
+compatibility:
+  contract: "1.1"
+  harness: ">=0.1.0-rc.6 <0.2.0"
+dependencies:
+  - id: mqt-qcec
+    kind: scientific-backend
+    version: 3.10.0
+    digest: 3a3f718e08ffd6ee7b0f44c1cb465f6ee6eb3b3093a01c26509729a2fbed6954
+  - id: qiskit-reference
+    kind: scientific-backend
+    version: 2.5.2
+    digest: 3a3f718e08ffd6ee7b0f44c1cb465f6ee6eb3b3093a01c26509729a2fbed6954

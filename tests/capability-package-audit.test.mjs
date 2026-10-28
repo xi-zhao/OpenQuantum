@@ -90,9 +90,9 @@ test("repository capability packages conform to their declared L0-L3 evidence", 
   assert.equal(report.status, "pass", report.issues.join("\n"));
   assert.deepEqual(report.summary.levelCounts, {
     L0: 93,
-    L1: 96,
+    L1: 95,
     L2: 1,
-    L3: 2,
+    L3: 3,
   });
   assert.equal(report.packages.length, 192);
   assert.equal(report.packages.flatMap((entry) => entry.execution.mcpServers).length, 91);

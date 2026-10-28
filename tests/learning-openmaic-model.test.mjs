@@ -79,7 +79,7 @@ test("real SDK and pinned outline consumer reject startup and partial failures, 
     assert.equal(events.some((event) => event.type === "done"), mode === "recovery");
     if (mode === "recovery") assert.equal(events.at(-1).outlines.length, 1);
     else {
-      assert.match(events.at(-1).error, /连接未完成/);
+      assert.match(events.at(-1).error, /网络连接失败/);
       assert.doesNotMatch(events.at(-1).error, /empty response|private-provider-detail|\[object Object\]/);
     }
   }

@@ -1,0 +1,34 @@
+{
+  "schemaVersion": "1.0",
+  "id": "local-qcec-qiskit-replay",
+  "version": "1.0.0",
+  "scope": {
+    "supportedClaims": [
+      "Two independently accepted executions of byte-identical bounded circuit pairs preserve the exact QCEC classification"
+    ],
+    "outOfScope": [
+      "Hardware reproduction, phase reinterpretation or deriving definitive conclusions from probabilistic outputs"
+    ]
+  },
+  "checks": [
+    {
+      "id": "execution.independent",
+      "category": "independence",
+      "required": true,
+      "criterion": "The two materialized packages have distinct Session execution traces."
+    },
+    {
+      "id": "request.identical",
+      "category": "reproducibility",
+      "required": true,
+      "criterion": "The original circuit pair hashes are byte-identical."
+    },
+    {
+      "id": "classification.identical",
+      "category": "scientific",
+      "required": true,
+      "criterion": "The exact raw classification and independently verified numerical relation agree."
+    }
+  ],
+  "independenceCheck": "execution.independent"
+}

@@ -4,15 +4,13 @@ import os from "node:os";
 import path from "node:path";
 import test from "node:test";
 
-import { Context } from "@deepseek-ai/cordis";
-import { LocalFileSystem } from "@deepseek-ai/dsh-fs-local";
+import { scientificProjectionFixture } from "./helpers/scientific-projection.mjs";
 
 import {
   computeReferenceAnalysis,
 } from "../.agents/skills/quantum-information-audit/validators/state-math.mjs";
 import { validateStateAnalysis } from "../.agents/skills/quantum-information-audit/validators/validate-state-analysis.mjs";
 import {
-  apply,
   parseScientificToolResult,
   QUANTUM_INFORMATION_AUDIT_TOOL,
 } from "../runtime/openquantum/agent-presets/openquantum/scientific-result-projection.mjs";
@@ -58,51 +56,10 @@ function canonicalValue(request, mutate = (analysis) => analysis) {
   };
 }
 
-function localFileSystem(workspaceRoot) {
-  const context = new Context();
-  return new LocalFileSystem(context, {
-    cwd: workspaceRoot,
-    diffBasisMaxBytes: 1024 * 1024,
-  });
-}
-
 async function executePostAdapter({ workspaceRoot, request, value, callId }) {
-  const warnings = [];
-  let listener;
-  const ctx = {
-    fs: localFileSystem(workspaceRoot),
-    logger: { warn: (message) => warnings.push(message) },
-    on(name, callback) {
-      assert.equal(name, "tools/post-execute");
-      listener = callback;
-    },
-  };
-  apply(ctx);
-  const session = {
-    id: `session-${callId}`,
-    header: { cwd: workspaceRoot },
-    events: [
-      {
-        type: "tool/call",
-        seq: 11,
-        data: { callId, name: QUANTUM_INFORMATION_AUDIT_TOOL },
-      },
-    ],
-    seq: 12,
-  };
-  const decision = await listener(
-    {
-      name: QUANTUM_INFORMATION_AUDIT_TOOL,
-      callId,
-      arguments: request,
-      agent: { session },
-      parent: undefined,
-      signal: new AbortController().signal,
-    },
-    { isError: false, value, content: value.content },
-    async () => ({ kind: "accept" }),
-  );
-  return { decision, session, warnings };
+  const fixture = scientificProjectionFixture({ workspaceRoot, sessionId: `session-${callId}` });
+  const result = await fixture.execute({ tool: QUANTUM_INFORMATION_AUDIT_TOOL, request, value, callId, seq: 11 });
+  return { content: result.content, session: fixture.session, warnings: fixture.warnings };
 }
 
 function readCommitJson(workspaceRoot, reference) {
@@ -115,7 +72,7 @@ test("QI Adapter materializes exact bytes and derives passed Acceptance", async 
   const workspaceRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openquantum-qia-"));
   t.after(() => fs.rmSync(workspaceRoot, { recursive: true, force: true }));
   const request = bellRequest();
-  const { decision, session, warnings } = await executePostAdapter({
+  const { content, session, warnings } = await executePostAdapter({
     workspaceRoot,
     request,
     value: canonicalValue(request),
@@ -125,7 +82,7 @@ test("QI Adapter materializes exact bytes and derives passed Acceptance", async 
   assert.deepEqual(warnings, []);
   const presentation = parseScientificToolResult(
     QUANTUM_INFORMATION_AUDIT_TOOL,
-    decision.content[0].text,
+    content[0].text,
   );
   assert.equal(presentation.scientificStatus, "acceptance_available");
   assert.equal(presentation.acceptanceStatus, "passed");
@@ -150,11 +107,39 @@ test("QI Adapter materializes exact bytes and derives passed Acceptance", async 
   assert.equal(resultPackage.artifacts.length, 2);
   assert.equal(acceptance.status, "passed");
   assert.equal(acceptance.checks.length, 10);
+  const readablePath = presentation.details.find(detail => detail.label === "可读验收报告").value;
+  const readable = fs.readFileSync(path.join(workspaceRoot, readablePath), "utf8");
+  assert.match(readable, /中央验收状态：`passed`/);
+  assert.ok(readable.includes("| (0, 3) | 0.5 |"));
+  assert.ok(!readable.includes("| (1, 2) | 0.5 |"), "The input matrix must not be replaced by its partial transpose");
+  assert.ok(readable.includes(presentation.resultCommit.acceptanceReport.path));
   assert.equal(
     acceptance.checks.find((check) => check.id === "provenance.complete")
       .status,
     "pass",
   );
+});
+
+test("large QI matrices keep full evidence while the readable report stays bounded", async t => {
+  const workspaceRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openquantum-qia-large-"));
+  t.after(() => fs.rmSync(workspaceRoot, { recursive: true, force: true }));
+  const request = {
+    matrixReal: Array.from({ length: 64 }, () => Array(64).fill(1 / 64)),
+    subsystemDimensions: [8, 8], transposeSubsystems: [0],
+  };
+  const { content, warnings } = await executePostAdapter({
+    workspaceRoot, request, value: canonicalValue(request), callId: "qia-large-call",
+  });
+  assert.deepEqual(warnings, []);
+  const presentation = parseScientificToolResult(QUANTUM_INFORMATION_AUDIT_TOOL, content[0].text);
+  assert.equal(presentation.acceptanceStatus, "passed");
+  const readablePath = presentation.details.find(detail => detail.label === "可读验收报告").value;
+  const report = fs.readFileSync(path.join(workspaceRoot, readablePath), "utf8");
+  assert.ok(Buffer.byteLength(report) < 65536);
+  assert.match(report, /64 \/ 4096/);
+  const resultPackage = readCommitJson(workspaceRoot, presentation.resultCommit.resultPackage);
+  const inputPath = path.join(workspaceRoot, path.dirname(presentation.resultCommit.resultPackage.path), resultPackage.inputs[0].path);
+  assert.deepEqual(JSON.parse(fs.readFileSync(inputPath, "utf8")).matrixReal, request.matrixReal);
 });
 
 test("QI Adapter independently rejects a tampered numerical fact", async (t) => {
@@ -167,7 +152,7 @@ test("QI Adapter independently rejects a tampered numerical fact", async (t) => 
     analysis.partialTranspose.negativity = 0.25;
     return analysis;
   });
-  const { decision, warnings } = await executePostAdapter({
+  const { content, warnings } = await executePostAdapter({
     workspaceRoot,
     request,
     value,
@@ -177,10 +162,12 @@ test("QI Adapter independently rejects a tampered numerical fact", async (t) => 
   assert.deepEqual(warnings, []);
   const presentation = parseScientificToolResult(
     QUANTUM_INFORMATION_AUDIT_TOOL,
-    decision.content[0].text,
+    content[0].text,
   );
   assert.equal(presentation.scientificStatus, "acceptance_available");
   assert.equal(presentation.acceptanceStatus, "failed");
+  const readablePath = presentation.details.find(detail => detail.label === "可读验收报告").value;
+  assert.match(fs.readFileSync(path.join(workspaceRoot, readablePath), "utf8"), /中央验收状态：`failed`/);
   const acceptance = readCommitJson(
     workspaceRoot,
     presentation.resultCommit.acceptanceReport,
@@ -201,7 +188,7 @@ test("QI Adapter rejects facts that do not come from the pinned toqito version",
     analysis.packageVersion = "9.9.9";
     return analysis;
   });
-  const { decision, warnings } = await executePostAdapter({
+  const { content, warnings } = await executePostAdapter({
     workspaceRoot,
     request,
     value,
@@ -211,7 +198,7 @@ test("QI Adapter rejects facts that do not come from the pinned toqito version",
   assert.deepEqual(warnings, []);
   const presentation = parseScientificToolResult(
     QUANTUM_INFORMATION_AUDIT_TOOL,
-    decision.content[0].text,
+    content[0].text,
   );
   assert.equal(presentation.acceptanceStatus, "failed");
   const acceptance = readCommitJson(

@@ -9,7 +9,7 @@ import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js"
 import { UNITARY_NEXT_TOOLS } from "./fixtures/unitary-next.mjs";
 
 const enabled = process.env.OPENQUANTUM_REAL_UNITARY_NEXT === "1";
-const evidence = path.join(process.cwd(), ".openquantum/unitary-next-evidence");
+const evidence = path.resolve(process.env.OPENQUANTUM_UNITARY_NEXT_EVIDENCE ?? ".openquantum/unitary-next-evidence");
 const near = (x, y, tolerance = 1e-8) => assert.ok(Math.abs(x - y) <= tolerance, `${x} differs from ${y}; tolerance=${tolerance}`);
 async function withTool(t, id, action) {
   const capability = UNITARY_NEXT_TOOLS.find(c => c.id === id);
@@ -61,6 +61,26 @@ test("real Graphix: radians, adaptive measurement corrections, initial states an
     assert.ok(new Set(bell.branches.map(b => JSON.stringify(b.measurements))).size > 1);
     const repeated = await run({ branches: 8 }, "repeat");
     assert.deepEqual(repeated.branches, bell.branches);
+    const identityInput = { numQubits: 2, gates: [
+      { gate: "CZ", targets: [0, 1] }, { gate: "CZ", targets: [0, 1] },
+    ] };
+    for (const initialState of ["zero", "plus"]) {
+      const identity = await run({ ...identityInput, initialState, referenceMode: "required" }, `empty-pattern-${initialState}`);
+      assert.equal(identity.pattern, "");
+      assert.deepEqual(identity.edges, []);
+      assert.deepEqual(identity.outputNodes, identity.inputNodes);
+      for (const branch of identity.branches) {
+        assert.deepEqual(branch.measurements, []);
+        near(branch.fidelity, 1);
+        near(branch.normError, 0);
+      }
+    }
+    const generated = await run({ ...identityInput, simulate: false, referenceMode: "skip" }, "empty-pattern-generation");
+    assert.equal(generated.pattern, "");
+    assert.deepEqual(generated.edges, []);
+    assert.deepEqual(generated.branches, []);
+    assert.equal(generated.reference.status, "not_run");
+    assert.equal(generated.referenceStatevector, null);
     const cases = [
       ["rx", { numQubits: 1, gates: [{ gate: "RX", targets: [0], angle: Math.PI }] }, [0, 1]],
       ["ry", { numQubits: 1, gates: [{ gate: "RY", targets: [0], angle: Math.PI / 2 }] }, [0.5, 0.5]],

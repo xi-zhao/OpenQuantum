@@ -1,0 +1,56 @@
+{
+  "schemaVersion": "1.0",
+  "id": "unitary-classification-audit",
+  "version": "1.0.0",
+  "scope": {
+    "supportedClaims": [
+      "Bounded unitary OpenQASM 2 classification with persisted input and Harness execution provenance",
+      "Independent Qiskit matrix replay up to 8 qubits at a maximum-entry tolerance of 1e-9, or exact source identity within the 16-qubit scientific audit scope"
+    ],
+    "outOfScope": [
+      "Physical hardware, noise, measurements, resets, classical control and arbitrary include paths",
+      "Strict mathematical proof for arbitrary floating-point rotations, automatic acceptance of relative phase or probabilistic classifications",
+      "Passed independent acceptance for different circuit pairs above the 8-qubit dense reference budget"
+    ]
+  },
+  "checks": [
+    {
+      "id": "request.scope",
+      "category": "scope",
+      "required": true,
+      "criterion": "Both inputs satisfy the scientific audit scope: unitary OpenQASM 2, at most 16 qubits, 65536 UTF-8 bytes and 512 statements per circuit. This scope does not restrict Tool execution."
+    },
+    {
+      "id": "inputs.digest",
+      "category": "reproducibility",
+      "required": true,
+      "criterion": "Raw UTF-8 input SHA-256, qubit counts, statement counts and byte counts match the persisted request."
+    },
+    {
+      "id": "backend.version",
+      "category": "reproducibility",
+      "required": true,
+      "criterion": "Pinned MQT QCEC 3.10.0, timeoutSeconds=0 (no backend timeout, subject to host resource policy) and finite timing facts are present."
+    },
+    {
+      "id": "qcec.conclusive",
+      "category": "scientific",
+      "required": true,
+      "criterion": "The classification is deterministic strict/global-phase equivalence or non-equivalence; other classifications produce a warning."
+    },
+    {
+      "id": "classification.replayed",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Independent Qiskit parsing validates finite unitary semantics, including custom-gate bodies, before source-identity proof or complete-unitary replay supports the original classification. Positive maximum-entry tolerance is 1e-9; negative classification requires a residual above 1e-8. Unavailable references or values between these margins warn and remain conditional.",
+      "threshold": 1e-9,
+      "unit": "dimensionless"
+    },
+    {
+      "id": "provenance.complete",
+      "category": "reproducibility",
+      "required": true,
+      "criterion": "Harness materialized and reread the request, analysis artifact and Result Package with a real call/result event range."
+    }
+  ]
+}

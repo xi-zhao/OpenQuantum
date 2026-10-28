@@ -3,6 +3,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
+import { scientificProjectionFixture } from "./helpers/scientific-projection.mjs";
 
 import { Context } from "@deepseek-ai/cordis";
 import { LocalFileSystem } from "@deepseek-ai/dsh-fs-local";
@@ -14,7 +15,6 @@ import {
 import { validateGroundStateComputation } from "../.agents/skills/quantum-ground-state/validators/validate-result.mjs";
 import { scientificResultAdapter } from "../runtime/openquantum/agent-presets/openquantum/scientific-result-adapters.mjs";
 import {
-  apply,
   parseScientificToolResult,
   SOLVE_AND_VALIDATE_TOOL,
 } from "../runtime/openquantum/agent-presets/openquantum/scientific-result-projection.mjs";
@@ -59,65 +59,22 @@ function assertRegularJson(workspaceRoot, relativePath) {
 function materializeGroundStateResult({ request, facts, ...context }) {
   return scientificResultAdapter(SOLVE_AND_VALIDATE_TOOL).materialize({
     ...context,
+    sandboxPolicy: { mode: "workspace-write", workspaceRoot: context.workspaceRoot },
     arguments: { request },
     canonicalValue: { structuredContent: { facts } },
   });
 }
 
-test("Harness post-execute materializes facts and projects central Acceptance", async (t) => {
+test("Harness committed result materializes facts and projects central Acceptance", async (t) => {
   const workspaceRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openquantum-qgs-"));
   t.after(() => fs.rmSync(workspaceRoot, { recursive: true, force: true }));
-  const fileSystem = localFileSystem(workspaceRoot);
   const request = fixtureRequest();
-  const canonicalValue = atomicValue(request);
-  const warnings = [];
-  let listener;
-  const ctx = {
-    fs: fileSystem,
-    logger: { warn: (message) => warnings.push(message) },
-    on(name, callback) {
-      assert.equal(name, "tools/post-execute");
-      listener = callback;
-    },
-  };
-  apply(ctx);
-
-  const callEvent = {
-    type: "tool/call",
-    seq: 7,
-    data: {
-      callId: "qgs-materialized-call",
-      name: SOLVE_AND_VALIDATE_TOOL,
-    },
-  };
-  const session = {
-    id: "session-qgs-materialized",
-    header: { cwd: workspaceRoot },
-    events: [callEvent],
-    seq: 8,
-  };
-  const decision = await listener(
-    {
-      name: SOLVE_AND_VALIDATE_TOOL,
-      callId: callEvent.data.callId,
-      arguments: { request },
-      agent: { session },
-      parent: undefined,
-      signal: new AbortController().signal,
-    },
-    {
-      isError: false,
-      value: canonicalValue,
-      content: canonicalValue.content,
-    },
-    async () => ({ kind: "accept" }),
-  );
-
+  const fixture = scientificProjectionFixture({ workspaceRoot, sessionId: "session-qgs-materialized" });
+  const { presentation, decision } = await fixture.execute({ tool: SOLVE_AND_VALIDATE_TOOL,
+    request: { request }, value: atomicValue(request), callId: "qgs-materialized-call", seq: 7 });
+  const { warnings, session } = fixture;
+  assert.equal(parseScientificToolResult(SOLVE_AND_VALIDATE_TOOL, decision.content[0].text).scientificStatus, "observations_available");
   assert.deepEqual(warnings, []);
-  const presentation = parseScientificToolResult(
-    SOLVE_AND_VALIDATE_TOOL,
-    decision.content[0].text,
-  );
   assert.equal(presentation.scientificStatus, "acceptance_available");
   assert.equal(presentation.acceptanceStatus, "passed");
   assert.equal(presentation.resultCommit.acceptanceReport.status, "passed");
@@ -179,47 +136,12 @@ test("workspace escape fails closed to computational observations", async (t) =>
   t.after(() => fs.rmSync(outsideRoot, { recursive: true, force: true }));
   fs.symlinkSync(outsideRoot, path.join(workspaceRoot, "results"));
   const request = fixtureRequest();
-  const canonicalValue = atomicValue(request);
-  const warnings = [];
-  let listener;
-  const ctx = {
-    fs: localFileSystem(workspaceRoot),
-    logger: { warn: (message) => warnings.push(message) },
-    on(_name, callback) {
-      listener = callback;
-    },
-  };
-  apply(ctx);
-  const session = {
-    id: "session-qgs-escape",
-    header: { cwd: workspaceRoot },
-    events: [
-      {
-        type: "tool/call",
-        seq: 1,
-        data: { callId: "qgs-escape-call", name: SOLVE_AND_VALIDATE_TOOL },
-      },
-    ],
-    seq: 2,
-  };
-  const decision = await listener(
-    {
-      name: SOLVE_AND_VALIDATE_TOOL,
-      callId: "qgs-escape-call",
-      arguments: { request },
-      agent: { session },
-      parent: undefined,
-      signal: new AbortController().signal,
-    },
-    { isError: false, value: canonicalValue, content: canonicalValue.content },
-    async () => ({ kind: "accept" }),
-  );
-  const presentation = parseScientificToolResult(
-    SOLVE_AND_VALIDATE_TOOL,
-    decision.content[0].text,
-  );
+  const fixture = scientificProjectionFixture({ workspaceRoot, sessionId: "session-qgs-escape" });
+  const { presentation } = await fixture.execute({ tool: SOLVE_AND_VALIDATE_TOOL, request: { request },
+    value: atomicValue(request), callId: "qgs-escape-call", seq: 1 });
+  const { warnings } = fixture;
   assert.equal(presentation.scientificStatus, "observations_available");
   assert.equal(presentation.acceptanceStatus, undefined);
-  assert.match(warnings[0], /escapes the Harness workspace/);
+  assert.equal(warnings[0], "Scientific result materialization failed; original observations retained");
   assert.deepEqual(fs.readdirSync(outsideRoot), []);
 });

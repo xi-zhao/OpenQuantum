@@ -138,11 +138,16 @@ test("non-equivalence remains a scientific observation rather than a tool error"
   );
 });
 
-test("dynamic circuits, arbitrary includes and oversized scopes fail before Python", async () => {
+test("dynamic circuits, arbitrary includes and mismatched qubit counts fail before Python", async () => {
   const invalid = [
     qasmH.replace("h q[0];", "creg c[1];\nmeasure q[0] -> c[0];"),
     qasmH.replace('include "qelib1.inc";', 'include "../secret.inc";'),
     qasmH.replace("qreg q[1];", "qreg q[17];"),
+    qasmH.replace("qreg q[1];", "qreg q[0];"),
+    qasmH.replace("qreg q[1];", "qreg q[1+1];"),
+    qasmH.replace("qreg q[1];", "qreg q[1]; qreg q[1];"),
+    qasmH + "// /*\ncreg c[1]; measure q[0] -> c[0];\n// */",
+    qasmH + "// /*\nqreg extra[17];\n// */",
   ];
   for (const circuit of invalid) {
     const result = await client.callTool({
@@ -150,6 +155,22 @@ test("dynamic circuits, arbitrary includes and oversized scopes fail before Pyth
       arguments: { circuitAOpenQasm2: circuit, circuitBOpenQasm2: qasmH },
     });
     assert.equal(result.isError, true);
+  }
+});
+
+test("execution preserves large and spaced circuit inputs beyond the scientific audit scope", async () => {
+  for (const source of [
+    'OPENQASM 2.0; include "qelib1.inc"; qreg q[1]; qreg extra [ 17 ]; h extra[16];',
+    qasmH + "x q[0]; ".repeat(600),
+    qasmH + "// " + "a".repeat(65536),
+  ]) {
+    const result = await client.callTool({ name: "verify_circuit_equivalence",
+      arguments: { circuitAOpenQasm2: source, circuitBOpenQasm2: source } });
+    assert.notEqual(result.isError, true);
+    assert.equal(result.structuredContent.result.equivalence, "equivalent");
+    assert.equal(result.structuredContent.inputs.circuitA.bytes, Buffer.byteLength(source));
+    if (source.includes("extra")) assert.equal(result.structuredContent.inputs.circuitA.qubits, 18);
+    assert.equal(result.structuredContent.scientificValidation, "observations_available");
   }
 });
 

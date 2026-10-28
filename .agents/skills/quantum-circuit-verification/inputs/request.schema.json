@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "circuitAOpenQasm2",
+    "circuitBOpenQasm2"
+  ],
+  "properties": {
+    "circuitAOpenQasm2": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 65536
+    },
+    "circuitBOpenQasm2": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 65536
+    }
+  }
+}

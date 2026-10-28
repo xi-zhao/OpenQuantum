@@ -504,7 +504,7 @@ packages:
         - .agents/skills/qpanda-qubo/test/mcp.test.mjs
 
   - id: quantum-circuit-verification
-    level: L1
+    level: L3
     execution:
       mcpServers:
         - name: qcec_local
@@ -519,6 +519,15 @@ packages:
       nativeTools: []
       checks:
         - .agents/skills/quantum-circuit-verification/test/mcp.test.mjs
+        - .agents/skills/quantum-circuit-verification/evals/run-evals.mjs
+    audit:
+      manifest: capability.yaml
+    materialization:
+      adapter: runtime/openquantum/agent-presets/openquantum/scientific-result-projection.mjs
+      checks:
+        - tests/quantum-circuit-materialization.test.mjs
+        - tests/harness-qcec-acceptance.test.mjs
+        - tests/qcec-scientific-live.test.mjs
 
   - id: qec-memory-experiment
     level: L1

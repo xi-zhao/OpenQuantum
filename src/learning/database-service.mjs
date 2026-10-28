@@ -20,7 +20,14 @@ export async function createLearningDatabase(root) {
   const port = reserve.address().port;
   await new Promise((resolve) => reserve.close(resolve));
   const worker = fork(fileURLToPath(new URL("database-worker.mjs", import.meta.url)), [], { execPath: process.env.OPENQUANTUM_NODE_EXECUTABLE || deployedNodeExecutable, stdio: ["ignore", "ignore", "ignore", "ipc"], execArgv: [], env: { PATH: process.env.PATH, HOME: process.env.HOME, TMPDIR: process.env.TMPDIR } });
-  const dispose = () => { worker.kill("SIGTERM"); };
+  const closed = new Promise(resolve => worker.once("close", resolve));
+  let stopping;
+  const dispose = () => {
+    if (stopping) return stopping;
+    stopping = closed;
+    if (worker.exitCode === null && worker.signalCode === null) worker.kill("SIGTERM");
+    return stopping;
+  };
   try {
     await new Promise((resolve, reject) => {
       const timer = setTimeout(() => reject(new Error("课堂数据库启动超时。")), 40_000);
@@ -30,5 +37,5 @@ export async function createLearningDatabase(root) {
       worker.send({ databaseDir: path.join(directory, "postgres"), port, user: "openmaic", password });
     });
     return { url: `postgresql://openmaic:${password}@127.0.0.1:${port}/postgres`, dispose };
-  } catch (error) { dispose(); throw error; }
+  } catch (error) { await dispose(); throw error; }
 }

@@ -4,6 +4,24 @@ import { createUserMessage, createAssistantMessage, createToolResultMessage } fr
 
 export const GATEWAY_MODEL = "harness-default";
 const MAX_BYTES = 32 * 1024 * 1024;
+// Only provider-neutral, finite classifications can enter diagnostics.
+const FAILURE_CODES = new Set([
+  "TIMEOUT", "ABORTED", "NETWORK_ERROR", "AUTHENTICATION_ERROR", "RATE_LIMIT",
+  "MODEL_UNAVAILABLE", "UNSUPPORTED_INPUT_MODALITY", "TRANSPORT", "AUTH", "SERVER",
+  "INVALID_REQUEST", "PI_AI_ERROR", "UNKNOWN", "EMPTY_RESPONSE", "STREAM_CLOSED",
+  "MISSING_CREDENTIAL", "INVALID_CREDENTIAL", "NO_ADAPTER", "UNKNOWN_MODEL",
+  "INVALID_CONFIG", "UNSUPPORTED_OPTION", "UNSUPPORTED_CONTENT",
+  "UNSUPPORTED_REASONING_EFFORT", "CONTEXT_WINDOW_EXCEEDED", "QUOTA_EXCEEDED",
+]);
+const safeFailureCode = code => FAILURE_CODES.has(code) ? code : "UNKNOWN";
+function modelFailureMessage(code) {
+  if (code === "TIMEOUT") return "OpenQuantum 当前模型连接超时，请检查模型设置后重试。";
+  if (["TRANSPORT", "NETWORK_ERROR", "STREAM_CLOSED"].includes(code)) return "OpenQuantum 当前模型网络连接失败，请检查网络连接后重试。";
+  if (["AUTH", "AUTHENTICATION_ERROR", "MISSING_CREDENTIAL", "INVALID_CREDENTIAL"].includes(code)) return "OpenQuantum 当前模型认证失败，请检查模型设置中的凭据。";
+  if (code === "RATE_LIMIT") return "OpenQuantum 当前模型请求过于频繁，请稍后重试。";
+  if (code === "SERVER") return "OpenQuantum 当前模型服务暂时不可用，请稍后重试。";
+  return "OpenQuantum 当前模型连接未完成，请检查模型设置后重试。";
+}
 class RequestError extends TypeError {}
 const json = (res, status, value) => { res.writeHead(status, { "content-type": "application/json", "cache-control": "no-store" }); res.end(JSON.stringify(value)); };
 const failure = (message, code = "model_request_failed") => ({ error: { message, type: "api_error", code } });
@@ -58,10 +76,12 @@ export async function modelRequest(body, selection, attachments) {
   });
   const maxTokens = body.max_completion_tokens ?? body.max_tokens;
   if (maxTokens !== undefined && (!Number.isInteger(maxTokens) || maxTokens < 1)) throw new RequestError("无效的模型输出限制。");
+  const reasoningEffort = body.reasoning_effort ?? selection.reasoningEffort;
+  if (reasoningEffort !== undefined && (typeof reasoningEffort !== "string" || !/^[a-z][a-z0-9_-]{0,31}$/.test(reasoningEffort))) throw new RequestError("无效的推理强度。");
   if (body.n !== undefined && body.n !== 1) throw new RequestError("每次课堂请求只生成一个回答。");
   if (body.response_format?.type === "json_object") system.push("Return a valid JSON object only.");
   else if (body.response_format?.type === "json_schema") system.push(`Return JSON matching this schema: ${JSON.stringify(body.response_format.json_schema?.schema)}`);
-  return { ...selection, messages, system: system.join("\n\n"), ...(tools?.length ? { tools } : {}), ...(maxTokens ? { maxTokens } : {}), ...(typeof body.temperature === "number" ? { temperature: body.temperature } : {}), ...(body.stop ? { stop: Array.isArray(body.stop) ? body.stop : [body.stop] } : {}) };
+  return { ...selection, messages, system: system.join("\n\n"), ...(tools?.length ? { tools } : {}), ...(reasoningEffort ? { reasoningEffort } : {}), ...(maxTokens ? { maxTokens } : {}), ...(typeof body.temperature === "number" ? { temperature: body.temperature } : {}), ...(body.stop ? { stop: Array.isArray(body.stop) ? body.stop : [body.stop] } : {}) };
 }
 
 /** Private loopback transport: only the owned OpenMAIC server has this token.
@@ -82,7 +102,7 @@ export async function createModelGateway({ llm, selection, attachments, record =
     const abort = () => { if (!res.writableEnded) controller.abort(); };
     res.once("close", abort);
     const id = `chatcmpl-${randomUUID()}`, started = Date.now();
-    let route, usage, failureCode, finish = "error";
+    let route, usage, failureCode, failureStatus, finish = "error";
     try {
       if (metadata) {
         route = selection();
@@ -133,8 +153,9 @@ export async function createModelGateway({ llm, selection, attachments, record =
           usage = { prompt_tokens: input, completion_tokens: u.outputTokens, total_tokens: input + u.outputTokens, ...(u.cacheReadTokens ? { prompt_tokens_details: { cached_tokens: u.cacheReadTokens } } : {}) };
         } else if (chunk.type === "finish") {
           if (!["stop", "tool-calls", "max-tokens"].includes(chunk.reason.kind)) {
-            const code = chunk.reason.failure?.code;
-            if (["TIMEOUT", "ABORTED", "NETWORK_ERROR", "AUTHENTICATION_ERROR", "RATE_LIMIT", "MODEL_UNAVAILABLE", "UNSUPPORTED_INPUT_MODALITY"].includes(code)) failureCode = code;
+            failureCode = safeFailureCode(chunk.reason.failure?.code);
+            const status = chunk.reason.failure?.status;
+            if (Number.isInteger(status) && status >= 100 && status <= 599) failureStatus = status;
             throw new Error("provider-failure");
           }
           finish = ({ stop: "stop", "tool-calls": "tool_calls", "max-tokens": "length" })[chunk.reason.kind];
@@ -146,14 +167,15 @@ export async function createModelGateway({ llm, selection, attachments, record =
     } catch (error) {
       finish = signal.aborted ? "cancelled" : "error";
       const invalid = error instanceof RequestError || error instanceof SyntaxError;
-      const message = error instanceof RequestError ? error.message : error instanceof SyntaxError ? "无效的模型请求正文。" : failureCode === "TIMEOUT" ? "OpenQuantum 当前模型连接超时，请检查模型设置后重试。" : "OpenQuantum 当前模型连接未完成，请检查模型设置后重试。";
+      if (!invalid) failureCode ??= signal.aborted ? "ABORTED" : safeFailureCode(error?.code);
+      const message = error instanceof RequestError ? error.message : error instanceof SyntaxError ? "无效的模型请求正文。" : modelFailureMessage(failureCode);
       const value = failure(message);
       if (!res.destroyed && !res.headersSent) json(res, invalid ? 400 : 502, value);
       else if (!res.destroyed) res.end(`data: ${JSON.stringify(value)}\n\ndata: [DONE]\n\n`);
     } finally {
       controllers.delete(controller); res.removeListener("close", abort);
       // Metadata only: no prompts, material, provider URL, credentials or raw errors.
-      if (!metadata) await record({ id, at: new Date(started).toISOString(), provider: route?.provider, model: route?.model, finish, failureCode, durationMs: Date.now() - started, usage }).catch(() => {});
+      if (!metadata) await record({ id, at: new Date(started).toISOString(), provider: route?.provider, model: route?.model, finish, failureCode, failureStatus, durationMs: Date.now() - started, usage }).catch(() => {});
     }
   });
   server.requestTimeout = 600_000;

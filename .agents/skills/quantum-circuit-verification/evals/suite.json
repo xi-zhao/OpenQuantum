@@ -1,0 +1,104 @@
+{
+  "schemaVersion": "1.0",
+  "id": "qcec-classification-reference",
+  "version": "1.0.0",
+  "cases": [
+    {
+      "id": "equivalent",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "conclusive": "pass",
+        "replay": "pass"
+      }
+    },
+    {
+      "id": "global-phase",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "conclusive": "pass",
+        "replay": "pass"
+      }
+    },
+    {
+      "id": "negative-control",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "conclusive": "pass",
+        "replay": "pass"
+      }
+    },
+    {
+      "id": "relative-phase",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "conclusive": "warn",
+        "replay": "warn"
+      }
+    },
+    {
+      "id": "probably-equivalent",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "conclusive": "warn",
+        "replay": "warn"
+      }
+    },
+    {
+      "id": "no-information",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "conclusive": "warn",
+        "replay": "warn"
+      }
+    },
+    {
+      "id": "near-negative-margin",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "conclusive": "pass",
+        "replay": "warn"
+      }
+    },
+    {
+      "id": "digest-tamper",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "conclusive": "pass",
+        "replay": "pass"
+      }
+    },
+    {
+      "id": "backend-tamper",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "conclusive": "pass",
+        "replay": "pass"
+      }
+    },
+    {
+      "id": "missing-reference",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "conclusive": "pass",
+        "replay": "warn"
+      }
+    }
+  ],
+  "metric": {
+    "id": "case-pass-rate",
+    "unit": "percent",
+    "direction": "higher_is_better",
+    "minimum": 0,
+    "maximum": 100
+  }
+}

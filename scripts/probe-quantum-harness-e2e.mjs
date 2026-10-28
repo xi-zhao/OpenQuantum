@@ -9,6 +9,7 @@ import { createServer } from "node:http";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { foldSurface } from "@deepseek-ai/dsh-session";
 
 import {
   loadAcceptanceReport,
@@ -171,8 +172,12 @@ function redact(text, secretValues) {
 export async function runQuantumHarnessE2E({
   provider = "openquantum-public",
   model,
+  reasoningEffort,
   timeoutMs = 180_000,
 } = {}) {
+  if (reasoningEffort !== undefined && !["default", "off", "low", "high", "max"].includes(reasoningEffort)) {
+    throw new Error("--reasoning must be default, off, low, high or max");
+  }
   if (fs.existsSync(envFile)) process.loadEnvFile(envFile);
   const providerConfig = PROVIDERS[provider];
   if (!providerConfig) {
@@ -235,26 +240,36 @@ export async function runQuantumHarnessE2E({
     async function rpc(method, payload = {}) {
       cookie ??= await harnessHttpCookie(baseUrlLocal, logs);
       if (method === "session.history") { const snapshot = await harnessSessionSnapshot(baseUrlLocal, cookie, payload.sessionId, payload.maxMessages); return { ok: true, value: { events: snapshot.records } }; }
-        const rpcId = `e2e-${method}-${crypto.randomUUID()}`;
-      const response = await fetch(`${baseUrlLocal}/api/${method}`, {
-        method: "POST",
-        headers: { "content-type": "application/json", cookie },
-        body: JSON.stringify({
-          type: "client-request",
-          rpcId,
-          method,
-          payload,
-        }),
-        signal: AbortSignal.timeout(10_000),
-      });
-      if (response.status !== 200) {
-        throw new Error(`${method} returned HTTP ${response.status}`);
+      const rpcId = `e2e-${method}-${crypto.randomUUID()}`;
+      // Creating a Session waits for the cold Preset and its Tool Providers.
+      const requestTimeoutMs = method === "session.create" ? 30_000 : 10_000;
+      const signal = AbortSignal.timeout(requestTimeoutMs);
+      try {
+        const response = await fetch(`${baseUrlLocal}/api/${method}`, {
+          method: "POST",
+          headers: { "content-type": "application/json", cookie },
+          body: JSON.stringify({
+            type: "client-request",
+            rpcId,
+            method,
+            payload,
+          }),
+          signal,
+        });
+        if (response.status !== 200) {
+          throw new Error(`${method} returned HTTP ${response.status}`);
+        }
+        const envelope = await response.json();
+        if (envelope.rpcId !== rpcId) {
+          throw new Error(`${method} returned a mismatched rpcId`);
+        }
+        return envelope.result;
+      } catch (error) {
+        if (signal.aborted) {
+          throw new Error(`${method} timed out after ${requestTimeoutMs} ms`, { cause: error });
+        }
+        throw error;
       }
-      const envelope = await response.json();
-      if (envelope.rpcId !== rpcId) {
-        throw new Error(`${method} returned a mismatched rpcId`);
-      }
-      return envelope.result;
     }
 
     await waitForOutcome(
@@ -274,10 +289,18 @@ export async function runQuantumHarnessE2E({
     if (!created.ok) {
       throw new Error(`session.create failed: ${JSON.stringify(created.error)}`);
     }
+    let selectedReasoning = reasoningEffort;
+    if (selectedReasoning === undefined) {
+      const current = await rpc("session.models", { sessionId });
+      if (!current.ok) throw new Error(`session.models failed: ${JSON.stringify(current.error)}`);
+      const inherited = current.value.current;
+      if (inherited.provider === provider && inherited.model === selectedModel) selectedReasoning = inherited.reasoningEffort;
+    }
     const selected = await rpc("session.selectModel", {
       sessionId,
       provider,
       model: selectedModel,
+      ...(selectedReasoning && selectedReasoning !== "default" ? { reasoningEffort: selectedReasoning } : {}),
     });
     if (!selected.ok) {
       throw new Error(`session.selectModel failed: ${JSON.stringify(selected.error)}`);
@@ -336,9 +359,13 @@ export async function runQuantumHarnessE2E({
         }
         const call = calls[0];
         const result = call
-          ? events.find(
-              (event) => toolResultText(event, call.data.callId) !== undefined,
-            )
+          ? events.find(event => event.surfaceOp === "append"
+              && event.sourceEventSeqs?.length === 1 && event.sourceEventSeqs[0] === call.seq
+              && toolResultText(event, call.data.callId) !== undefined)
+          : undefined;
+        const surface = new Set(foldSurface(events).nodes);
+        const presentationEvent = call
+          ? events.findLast(event => surface.has(event.seq) && toolResultText(event, call.data.callId) !== undefined)
           : undefined;
         const turnEnd = events.findLast((event) => event.type === "turn/end");
         if (turnEnd && turnEnd.data?.reason?.kind !== "completed") {
@@ -349,20 +376,20 @@ export async function runQuantumHarnessE2E({
         if (turnEnd && (!call || !result)) {
           throw new Error("Harness turn completed without the required quantum tool result");
         }
-        if (!call || !result || !turnEnd) return undefined;
+        if (!call || !result || !presentationEvent || !turnEnd) return undefined;
         const finalAssistant = events
-          .filter((event) => event.seq > result.seq)
+          .filter((event) => event.seq > presentationEvent.seq)
           .map(assistantText)
           .find(Boolean);
         if (!finalAssistant) {
           throw new Error("Harness turn completed without a final assistant response");
         }
-        return { events, call, result, turnEnd, finalAssistant };
+        return { events, call, result, presentationEvent, turnEnd, finalAssistant };
       },
       { timeoutMs, diagnostics },
     );
 
-    const resultText = toolResultText(outcome.result, outcome.call.data.callId);
+    const resultText = toolResultText(outcome.presentationEvent, outcome.call.data.callId);
     const presentation = parseScientificToolResult(
       SOLVE_AND_VALIDATE_TOOL,
       resultText,
@@ -409,6 +436,7 @@ export async function runQuantumHarnessE2E({
       status: "passed",
       provider,
       model: selectedModel,
+      reasoningEffort: selected.value.selected.reasoningEffort ?? null,
       sessionId,
       durationMs: Date.now() - startedAt,
       evidence: Object.freeze({
@@ -463,11 +491,13 @@ if (invokedFile === fileURLToPath(import.meta.url)) {
   try {
     const provider = argument("--provider", "openquantum-public");
     const model = argument("--model", undefined);
+    const reasoningEffort = argument("--reasoning", undefined);
+    if (process.argv.includes("--reasoning") && reasoningEffort === undefined) throw new Error("--reasoning requires a value");
     const timeoutMs = positiveInteger(
       argument("--timeout-ms", "180000"),
       "--timeout-ms",
     );
-    const report = await runQuantumHarnessE2E({ provider, model, timeoutMs });
+    const report = await runQuantumHarnessE2E({ provider, model, reasoningEffort, timeoutMs });
     console.log(JSON.stringify(report, null, 2));
   } catch (error) {
     console.error(error instanceof Error ? error.message : String(error));

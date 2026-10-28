@@ -1,0 +1,199 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "artifactType",
+    "packageVersion",
+    "inputs",
+    "result"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "1.0"
+    },
+    "artifactType": {
+      "const": "qcec-analysis"
+    },
+    "packageVersion": {
+      "type": "string",
+      "maxLength": 80
+    },
+    "inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "circuitA",
+        "circuitB"
+      ],
+      "properties": {
+        "circuitA": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "sha256",
+            "qubits",
+            "statements",
+            "bytes"
+          ],
+          "properties": {
+            "sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "qubits": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 16
+            },
+            "statements": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 512
+            },
+            "bytes": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 65536
+            }
+          }
+        },
+        "circuitB": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "sha256",
+            "qubits",
+            "statements",
+            "bytes"
+          ],
+          "properties": {
+            "sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "qubits": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 16
+            },
+            "statements": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 512
+            },
+            "bytes": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 65536
+            }
+          }
+        }
+      }
+    },
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "equivalence",
+        "inputDigests",
+        "statistics",
+        "timeoutSeconds"
+      ],
+      "properties": {
+        "equivalence": {
+          "enum": [
+            "equivalent",
+            "equivalent_up_to_global_phase",
+            "equivalent_up_to_phase",
+            "not_equivalent",
+            "probably_equivalent",
+            "probably_not_equivalent",
+            "no_information"
+          ]
+        },
+        "inputDigests": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "circuitA",
+            "circuitB"
+          ],
+          "properties": {
+            "circuitA": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "circuitB": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            }
+          }
+        },
+        "timeoutSeconds": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "statistics": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "preprocessingSeconds",
+            "checkSeconds",
+            "performedSimulations",
+            "performedInstantiations",
+            "checkers"
+          ],
+          "properties": {
+            "preprocessingSeconds": {
+              "type": "number",
+              "minimum": 0
+            },
+            "checkSeconds": {
+              "type": "number",
+              "minimum": 0
+            },
+            "performedSimulations": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "performedInstantiations": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "checkers": {
+              "type": "array",
+              "maxItems": 64,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "checker",
+                  "equivalence",
+                  "runtimeSeconds"
+                ],
+                "properties": {
+                  "checker": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "equivalence": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "runtimeSeconds": {
+                    "type": "number",
+                    "minimum": 0
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
