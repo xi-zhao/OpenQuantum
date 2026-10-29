@@ -83,18 +83,18 @@ const table = `# UnitaryLab 开源适配覆盖表\n\n66 份上游指南逐项对
 const tablePath = path.join(root, "docs/integrations/UNITARYLAB_OPEN_COVERAGE.md");
 if (check) assert.equal(await readFile(tablePath, "utf8"), table, "Outdated coverage table");
 else await writeFile(tablePath, table);
-for (const [relativePath, prefix] of [["README.md", ".agents/skills/"], [".agents/skills/README.md", ""]]) {
+for (const [relativePath, prefix] of [["docs/CAPABILITIES.md", "../.agents/skills/"], [".agents/skills/README.md", ""]]) {
   const filename = path.join(root, relativePath);
   let markdown = await readFile(filename, "utf8");
   const begin = "<!-- BEGIN OPEN ALGORITHM SKILLS -->";
   const end = "<!-- END OPEN ALGORITHM SKILLS -->";
-  const heading = relativePath === "README.md" ? "##### 开源算法与后端工作流" : "### 开源算法与后端工作流";
+  const heading = "### 开源算法与后端工作流";
   const catalog = manifest.guides.map(row => {
     const purpose = row.algorithm ? row.scope.split("；")[0].replaceAll("|", "\\|") : `${row.guideId} 分类、后端或迁移指引`;
     const execution = row.invocation === "manual" ? "手动分类导航；自动任务直接选择方法 Skill" : row.algorithm ? `已有 Harness \`bash\` / \`pwsh\`；\`${row.algorithm}\` 开源示例` : "按任务组合已有 Skill 和通用 Tool";
     return `| [\`${row.skill}\`](${prefix}${row.skill}/SKILL.md) | ${purpose} | ${execution} |`;
   });
-  const header = relativePath === "README.md" ? "| Skill | 研究方法与用途 | 执行入口 |" : "| Skill | 作用 | 依赖的执行模块 |";
+  const header = relativePath === "docs/CAPABILITIES.md" ? "| Skill | 研究方法与用途 | 执行入口 |" : "| Skill | 作用 | 依赖的执行模块 |";
   const block = `${begin}\n${heading}\n\n66 个适配 Skill 共用现有执行工具；49 个算法示例覆盖原库的 39 个模块和指南新增方法。13 个分类索引保留为手动导航，53 个方法与入口可由 Agent 自动选择。\n\n${header}\n| --- | --- | --- |\n${catalog.join("\n")}\n${end}`;
   if (markdown.includes(begin)) {
     const start = markdown.indexOf(begin);
@@ -104,8 +104,8 @@ for (const [relativePath, prefix] of [["README.md", ".agents/skills/"], [".agent
     else markdown = markdown.slice(0, start) + block + markdown.slice(stop);
   } else {
     assert.ok(!check, `Missing catalog: ${relativePath}`);
-    const at = relativePath === "README.md"
-      ? markdown.indexOf("</details>", markdown.indexOf("#### 内置 Skills\n"))
+    const at = relativePath === "docs/CAPABILITIES.md"
+      ? markdown.indexOf("</details>", markdown.indexOf("## 内置 Skills\n"))
       : markdown.indexOf("可选的上游");
     assert.ok(at >= 0);
     markdown = markdown.slice(0, at) + block + "\n\n" + markdown.slice(at);
