@@ -1,0 +1,92 @@
+{
+  "date": "2026-10-29",
+  "upstream": {
+    "url": "https://github.com/MathysRennela/emlint",
+    "version": "0.2.4",
+    "revision": "b124d2ba9e98f3676e6b385a5720c21ea7180a39",
+    "license": "Apache-2.0",
+    "notice": "https://github.com/MathysRennela/emlint/blob/b124d2ba9e98f3676e6b385a5720c21ea7180a39/NOTICE"
+  },
+  "versions": {
+    "emlint": "0.2.4",
+    "stim": "1.16.0",
+    "numpy": "2.5.4"
+  },
+  "platform": {
+    "system": "Darwin",
+    "machine": "arm64"
+  },
+  "scope": "Public SDK example, API/CLI compatibility and Codex environment adapter; not code distance, decoding or scientific acceptance.",
+  "checks": {
+    "offlineExample": "passed; four cases, raw reports preserved",
+    "publicApiCli": "passed; duplicate warning, invalid/missing input, skipped/inconclusive/vacuous, repeat/shift, XOR and decomposition hints",
+    "cliExitCodes": {
+      "clean": 0,
+      "logical_fault": 1,
+      "duplicates": 2,
+      "missing_context": 2,
+      "invalid": 3,
+      "missing_file": 3,
+      "disabled": 0
+    },
+    "surfaceCode": {
+      "raw": {
+        "mechanisms": 221,
+        "findings": []
+      },
+      "decomposed": {
+        "mechanisms": 291,
+        "findings": [
+          {
+            "name": "duplicates",
+            "severity": "warning",
+            "status": "verdict"
+          }
+        ]
+      }
+    },
+    "codexEnvironmentAdapter": "passed; isolated settings, present but not ready until environment check",
+    "actualTests": "3 dedicated live tests and 1 selected shared SDK runner passed; 28 unrelated SDKs skipped"
+  },
+  "regressionSource": {
+    "path": "tests/fixtures/emlint-regression.py",
+    "sha256": "6b5becb7b476c71664dec7f49984e0a6365a3836ca7d4e868101fe47f655618b"
+  },
+  "liveTestSource": {
+    "path": "tests/emlint-dem-audit-live.test.mjs",
+    "sha256": "bf8075380dba3e3c7c6d9912249cb5ce795378698a4dc56bafe9fc43b05e07b2"
+  },
+  "limitations": [
+    "No full upstream API or cross-platform installation validation.",
+    "No decoder sampling, distance/threshold guarantee, full physical-model validation or large-DEM performance claim.",
+    "Warnings and inconclusive/skipped/vacuous states are preserved, not converted to scientific acceptance.",
+    "No model-driven host session or UI acceptance test."
+  ],
+  "scientificValidation": "not_evaluated",
+  "receipt": {
+    "id": "emlint-dem-audit",
+    "language": "python",
+    "status": "passed_scoped_engineering",
+    "scientificValidation": "not_evaluated",
+    "sourcePath": ".agents/skills/emlint-dem-audit/references/native-example.py",
+    "sourceSha256": "170ce554e220d147f0e6a3cf2d623c4802ad6a242ae1c90b26ca73ff470e0fa4",
+    "dependencyLockPath": ".agents/skills/emlint-dem-audit/uv.lock",
+    "dependencyLockSha256": "72471fef76fb44fcebdb4591d1397a09051f80573f4f0b09711516c52a322604",
+    "durableEvidenceDirectory": "docs/integrations/evidence/emlint-2026-10-29",
+    "verificationSha256": "b1c22eba00d95f949518d73db7f08441e96836621d4cafb2059304e647b06da0",
+    "artifacts": {
+      "attempt.json": "fef515b4f3563c161cf0c68850af33dad7422739fe833589bcbed8254f392fff",
+      "program.py": "170ce554e220d147f0e6a3cf2d623c4802ad6a242ae1c90b26ca73ff470e0fa4",
+      "result.json": "aaff1f8f9e432f3316b0f77bfbb5bcec53bfebf0c00ca4239b5a1183ca186910",
+      "runner.py": "886f044a51f94ee08cbe47de0182294b7d01277db6bd1b7b4f0a1c9d214d1602",
+      "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "versions.json": "4cb7769f2e90354afff2485cfd243e89bd1ff065a5d9e1478ff4802d11f482c8",
+      "regression.json": "4b0798e1f7602f087861438daf9f65e8d70aeaac4e6baa20a409903fe0a41d71",
+      "surface-code.stim": "eed7be257d83d374bde32559a34245f866b4c31e738750a7582c77dbce7ea9ed",
+      "surface-code-raw.dem": "28656e87e4832314bb0d05323aec136c277d994a769b6e1ee5515eb5be1a4dce",
+      "surface-code-decomposed.dem": "e5102796e95a27a6e74182251f3e83255fd4843305666ba15de9eae533a2601f",
+      "settings-check.json": "40ec03a4e5cddf7cc06b9816fe5ea652011f175ed07b17bf2cb74cc9501506b1"
+    }
+  }
+}

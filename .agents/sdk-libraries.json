@@ -204,6 +204,22 @@
       ]
     },
     {
+      "id": "emlint-dem-audit",
+      "title": "emlint",
+      "language": "python",
+      "modules": [
+        "emlint",
+        "stim"
+      ],
+      "group": "qec",
+      "workflow": "Stim DEM 结构诊断、反例、profile 上下文和不完整检查披露",
+      "conditions": [
+        "固定 emlint 0.2.4；beta 结构诊断不证明电路或解码正确。保留 warning、skipped、inconclusive、vacuous 与输入失败，不自动修模型。"
+      ],
+      "nativeOnly": true,
+      "pythonVersion": "3.12"
+    },
+    {
       "id": "fatqat-workbench",
       "title": "FatQat / QuTiP",
       "language": "python",

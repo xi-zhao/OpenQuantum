@@ -1,9 +1,9 @@
-# emlint：纠错 DEM 静态诊断接入提案
+# emlint：纠错 DEM 静态诊断接入规格
 
 - 调研日期：2026-10-29（Asia/Shanghai）；OpenQuantum 基线 `7a111fae86905abaca32d3345c35d01f94dd23ec`。
 - 上游：[MathysRennela/emlint](https://github.com/MathysRennela/emlint)。
 - 固定候选：[v0.2.4](https://github.com/MathysRennela/emlint/tree/v0.2.4)，完整提交 `b124d2ba9e98f3676e6b385a5720c21ea7180a39`。
-- 本 PR 只交付提案，保持 Draft；后续“候选接入”任务沿用同一分支和 PR 实施、验证及更新 README。用户可随时关闭或暂停。
+- 发现任务提交提案后，接入任务沿用同一分支与 PR 实施；当前已提供 L0 Skill、固定 SDK 环境、真实接口证据与 README。PR 交付待审，不自动合并；用户可随时关闭或暂停。
 
 ## 用户任务与增量价值
 
@@ -24,7 +24,7 @@ syndrome、哪些机制具有重复签名，以及发现依赖什么模型假设
 
 [PyPI 0.2.4 元数据](https://pypi.org/pypi/emlint/0.2.4/json)中的纯 Python wheel 为 50,327 字节，
 SHA-256 为 `210167b055c3f155628b5f86589f2a1a0f102ec983f055e327840eeceeec11e5`。
-本轮只读比较 wheel 内 8 个包文件与固定 Git tree 的 blob 摘要，全部一致；没有安装或执行上游代码。
+提案阶段只读比较 wheel 内 8 个包文件与固定 Git tree 的 blob 摘要，全部一致；当时没有安装或执行上游代码。接入阶段的实际运行见下方证据。
 GitHub tag 指向上述提交，但 release 列表为空，不把 changelog 的 release 链接当成发布证明。
 
 [固定提交 CI](https://github.com/MathysRennela/emlint/actions/runs/40518655716)通过 Python 3.10/3.12 测试和 CLI 检查。
@@ -71,7 +71,7 @@ Stim 版本复用现有 QEC 基线，兼容性须由接入任务实跑确认。�
 
 ## 接入验收条件
 
-以下是后续同 PR 必须产生的证据，本提案尚未运行这些检查。期望值来自小模型的直接推导，
+以下为同 PR 的验收条件；已完成的限定范围证据见表后链接。期望值来自小模型的直接推导，
 不能以 emlint 的同一实现重算答案；优先走公开 Python Interface 和 CLI。
 
 | 用例 | 应验证的结果 |
@@ -89,13 +89,19 @@ Stim 版本复用现有 QEC 基线，兼容性须由接入任务实跑确认。�
 使用当前单代理 code-review 方法分别自审 Standards/Spec，记录 `independent=false`；
 任何必要检查或语义取舍未解决时保持 Draft。最终仍为 `scientificValidation=not_evaluated`。
 
+## 实施证据（2026-10-29）
+
+[固定示例与接口证据](../../integrations/evidence/emlint-2026-10-29.json)包含原始报告、程序与依赖锁摘要、Stim 生成参数、两份 DEM、CLI 输出及 Codex 环境检查。3 项专用实跑测试及 1 项共享 SDK runner 通过；28 个无关 SDK 未重跑。示例明确保留 `all_passed=true` 同时 `status=inconclusive` 的情形。分解后的表面码 DEM 有 `duplicates` warning，照实记录，不据此修模型或降低严重性。
+
+[根 README](../../../README.md#纠错模型静态诊断)已给出使用入口与科学边界，并同步各语言导航和目录计数。没有新增 Tool、MCP Server、Runtime、Validator 或 Acceptance 规则。全仓检查与当前提交的 Standards/Spec 自审结论记录在 PR 正文；自审按用户要求使用单代理，`independent=false`。
+
 ## 许可与后续维护
 
 [源码许可](https://github.com/MathysRennela/emlint/blob/b124d2ba9e98f3676e6b385a5720c21ea7180a39/LICENSE)为 Apache-2.0，
 保留 [NOTICE](https://github.com/MathysRennela/emlint/blob/b124d2ba9e98f3676e6b385a5720c21ea7180a39/NOTICE)；
 [运行依赖](https://github.com/MathysRennela/emlint/blob/b124d2ba9e98f3676e6b385a5720c21ea7180a39/pyproject.toml)
 只有 Stim（Python 3.10 另需 tomli）。不需要账户、QPU、付费求解器或云端执行。
-本轮 wheel 比对未验证 macOS/Windows/Linux 实际安装；未来准备仍受 Stim wheel 与宿主资源约束。
+提案阶段 wheel 比对不证明实际安装；接入阶段已在 macOS arm64 隔离环境准备并验证。Windows/Linux 未实跑，准备仍受 Stim wheel 与宿主资源约束。
 
 每周同步时一起核对 emlint/Stim 兼容性、profile 与 severity/status/exit 语义、repeat 行为及上游文档差异。
 不自动跟随 main，不复制实验性 distance/multifault 算法。若为适配上游需要私有补丁或新的科学公共合同，

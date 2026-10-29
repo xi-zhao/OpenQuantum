@@ -13,9 +13,9 @@
 
 ## 当前 Skill
 
-以下 185 个 Skill 随源码分发；它们与 MCP Server 不是一一对应关系，知识型 Skill 可以不绑定专用 Tool，
+以下 186 个 Skill 随源码分发；它们与 MCP Server 不是一一对应关系，知识型 Skill 可以不绑定专用 Tool，
 工作流也可以使用多个服务或进程内原生 Tool。连接默认配置与凭据条件见[项目首页](../../README.md#mcp-服务目录)。
-当前 172 项可由模型自动选择，13 个分类索引仅保留用户显式调用；名称和来源映射不变。
+当前 173 项可由模型自动选择，13 个分类索引仅保留用户显式调用；名称和来源映射不变。
 分批建议与兼容影响见[扩展治理清单](../../docs/architecture/EXTENSION_GOVERNANCE.md)。
 
 | Skill | 作用 | 依赖的执行模块 |
@@ -47,6 +47,7 @@
 | `squlearn-learning` | 编码线路、observable、executor、量子核与 sklearn estimator | 宿主代码 Tool；显式准备 python 环境 |
 | `staq-compilation` | OpenQASM AST、综合、线路变换、优化与映射 | 宿主代码 Tool；显式准备 python 环境 |
 | `chromobius-decoding` | 带颜色/基标注的 Stim DEM 与逻辑 observable 解码 | 宿主代码 Tool；显式准备 Python 环境 |
+| `emlint-dem-audit` | DEM 结构诊断、反例和不完整检查状态；不证明解码正确性 | 宿主代码 Tool；显式准备 Python 环境 |
 | `tesseract-decoding` | Stim DEM、syndrome、搜索式解码器与统计 | 宿主代码 Tool；显式准备 python 环境 |
 | `tqec-compilation` | BlockGraph、逻辑计算块、相关面与 Stim 线路生成 | 宿主代码 Tool；显式准备 python 环境 |
 | `tsim-sampling` | Clifford/非 Clifford 线路、噪声、detector 与 observable 采样 | 宿主代码 Tool；显式准备 python 环境 |

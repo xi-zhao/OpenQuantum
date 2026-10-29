@@ -2509,3 +2509,6 @@ packages:
 
   - id: lean-physics
     level: L0
+
+  - id: emlint-dem-audit
+    level: L0
