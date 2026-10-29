@@ -584,7 +584,7 @@ Qiskit Gym、Quantum Hardware、FlagQuantum は既定で無効です。必要な
 
 ### ローカル計算と量子クラウド
 
-ローカルの数値計算には量子クラウドのアカウントは不要です。他のツールを使う場合は、**設定 → 量子コンポーネント → MCP Server 接続**で接続を設定し、ワークベンチを再起動して、タスクでバックエンドを指定してください。既定の有効・無効は [MCP サービスカタログ](../../README.md#mcp-服务目录)に記載しています。
+ローカルの数値計算には量子クラウドのアカウントは不要です。他のツールを使う場合は、**設定 → 量子コンポーネント → MCP Server 接続**で接続を設定し、ワークベンチを再起動して、タスクでバックエンドを指定してください。既定の有効・無効は [MCP サービスカタログ](../CAPABILITIES.md#mcp-服务目录)に記載しています。
 
 実機を使う場合は、対象サービスの認証情報、権限、クォータを用意してください。**デバイスの探索、実ジョブの投入、ローカルシミュレーションは、それぞれ範囲が異なります。** 設定があることはサービスがオンラインであることを意味しません。ジョブが成功したかどうかは実際の実行記録で確認してください。
 
@@ -605,7 +605,7 @@ Qiskit Gym、Quantum Hardware、FlagQuantum は既定で無効です。必要な
 
 主計算と厳密な比較は分かれています。回路の最適化、MBQC パターンの生成、対称性による削減、Lie 代数の解析、テンソルアルゴリズムの実行を直接行い、`referenceMode` で独立参照を自動、強制、省略から選べます。パラメーター、戻り値、資源の設定は[ローカル計算ガイド](../integrations/SCALABLE_BRIDGES.md)に記載しています。ローカル検証の入力、バージョン、結果は、再現のために各統合の記録に残しています。
 
-回路、基底状態、ノイズ、ダイナミクス、ベンチマーク照会のコピーして使えるタスクは、[中国語版 README](../../README.md#更多可复制的计算任务)にさらに掲載しています。
+回路、基底状態、ノイズ、ダイナミクス、ベンチマーク照会のコピーして使えるタスクは、[中国語のリファレンス](../EXAMPLES.md#更多可复制的计算任务)にさらに掲載しています。
 
 <a id="execution-records-and-scientific-acceptance"></a>
 
@@ -678,7 +678,7 @@ OpenQuantum が統合するのは、SDK、アルゴリズム、計算サービ�
 
 </details>
 
-Skill、MCP サービス、ネイティブ Tool の完全なカタログは[中国語版 README](../../README.md#能力接口目录)で管理しています。現在のソースには **186 個の組み込み Skill**（自動選択 173、手動の分類索引 13）、**91 個の MCP サービス接続**（既定で有効 66、既定で無効 25）、**5 個のネイティブ量子 Tool**が含まれます。
+Skill、MCP サービス、ネイティブ Tool の完全なカタログは[中国語のリファレンス](../CAPABILITIES.md#接口总览)で管理しています。現在のソースには **186 個の組み込み Skill**（自動選択 173、手動の分類索引 13）、**91 個の MCP サービス接続**（既定で有効 66、既定で無効 25）、**5 個のネイティブ量子 Tool**が含まれます。
 
 <a id="development-and-verification"></a>
 
@@ -704,7 +704,7 @@ npm run capability:algorithms:live
 npm run e2e:quantum-harness -- --provider openquantum-public
 ```
 
-変更に関連するチェックを選んでください。完全な一覧は[中国語版 README](../../README.md#开发与验证)にあります。テストとローカルの証拠は、公開リリースや科学的受入れとは別物です。リリースの変更点は [v0.8.4 リリースノート](../releases/v0.8.4.md)に記載しています。
+変更に関連するチェックを選んでください。完全な一覧は[中国語のリファレンス](../EXAMPLES.md#开发与验证)にあります。テストとローカルの証拠は、公開リリースや科学的受入れとは別物です。リリースの変更点は [v0.8.4 リリースノート](../releases/v0.8.4.md)に記載しています。
 
 </details>
 
@@ -800,6 +800,6 @@ OpenQuantum の量子機能は、オープンサイエンスとオープンソ�
 | [CC Connect](../integrations/CC_CONNECT.md) | WeChat、Feishu などのチャネルからの依頼をワークベンチに届けるメッセージングブリッジ |
 | [OpenMAIC](https://github.com/THU-MAIC/OpenMAIC) | Quantum Learning の教育基盤。完全な UI、サーバー、教育ワークフローを保持し、OpenQuantum の名称、テーマ、モデル接続を適用します |
 
-各機能を支える計算、デバイス、参照のプロジェクトと、それぞれの適合方法は[中国語版 README](../../README.md#开源生态与致谢)に掲載しています。
+各機能を支える計算、デバイス、参照のプロジェクトと、それぞれの適合方法は[中国語のリファレンス](../CAPABILITIES.md#开源生态与致谢)に掲載しています。
 
 OpenQuantum 独自のコードは、個別にライセンスされたディレクトリを除き [MIT License](../../LICENSE) です。[Mitiq 誤り緩和機能のディレクトリ](../../.agents/skills/mitiq-error-mitigation/)は GPL-3.0-only、[Metriq 公開データのスナップショット](../../src/metriq-data/upstream/)は CC-BY-4.0 で、それぞれ独自の LICENSE と NOTICE を持ちます。DeepSeek Harness、DSH Desktop、OpenMAIC、FatQat、Qiskit MCP Servers、FieldQKit、Quantum Hardware MCP などのサードパーティコンポーネントは、それぞれのライセンスを保持します。再配布や任意の統合を有効にする前に [THIRD_PARTY_NOTICES.md](../../THIRD_PARTY_NOTICES.md) を確認してください。スクリーンショットと図のソースは[画像の説明](../images/README.md)にあります。

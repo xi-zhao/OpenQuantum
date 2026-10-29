@@ -155,6 +155,10 @@ Skill 与 Tool 在概念和发行版 policy 中都相互独立：Skill-only、To
 
 ### 使用 OpenQuantum
 
+- [能力与接口参考](CAPABILITIES.md)：按科研任务查能力，核对完整 Skill、MCP 连接、原生 Tool、默认开关与上游来源。
+- [任务示例与验证](EXAMPLES.md)：固定本地案例、Agent 请求、算法程序和按需选择的开发检查。
+- [长期发展规划](roadmap/VISION.md)：平台、应用、教学与 RSI 的愿景和当前边界；与已交付功能分开阅读。
+
 - [桌面测试安装包](DESKTOP_INSTALLERS.md)：原版 DSH Desktop、OpenQuantum 能力包、数据保留与工程检查。
 - [部署与启动](DEPLOYMENT.md)：本地、Docker、模型配置和启动检查。
 - [第三方客户端 2.0.7 基线恢复](releases/2026-10-24-desktop-2.0.7.md)：旧版配套、会话保护、本地验证及尚未完成的构建边界。
@@ -192,7 +196,7 @@ Skill 与 Tool 在概念和发行版 policy 中都相互独立：Skill-only、To
 - [UnitaryLab 开源适配](integrations/UNITARYLAB_OPEN_ADAPTATION.md)：66 个原生 Skill、49 个可运行开源示例，逐项覆盖 39 个上游算法模块；复用现有代码执行工具。
 - [量子算法参考检索](integrations/QUANTUM_PRACTICES.md)：固定 Quantum-Practices 资料、原生只读 Tool、中文查询和许可边界。
 - [项目首页](../README.md)：产品能力、已集成工具和快速开始。
-- [Skill 目录](../README.md#内置-skills)与 [MCP 服务目录](../README.md#mcp-服务目录)：逐项查看工作流、服务用途、默认开关与使用条件；[原生量子 Tools](../README.md#原生量子-tools)单独列出。
+- [Skill 目录](CAPABILITIES.md#内置-skills)与 [MCP 服务目录](CAPABILITIES.md#mcp-服务目录)：逐项查看工作流、服务用途、默认开关与使用条件；[原生量子 Tools](CAPABILITIES.md#原生量子-tools)单独列出。
 
 ### 二次开发
 

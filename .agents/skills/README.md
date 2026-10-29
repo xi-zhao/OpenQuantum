@@ -1,7 +1,7 @@
 # OpenQuantum Skills
 
 这个目录是 DeepSeek Harness 的项目 Skill 根。含有 `SKILL.md` 的一级子目录是可发现的 Skill，
-该文件的 frontmatter 与正文是指令权威。面向使用者的[完整 Skill 与 MCP 服务目录](../../README.md#已集成的量子工具与能力)见项目首页。
+该文件的 frontmatter 与正文是指令权威。面向使用者的[完整 Skill 与 MCP 服务目录](../../docs/CAPABILITIES.md#接口总览)见能力参考。
 
 ## 运行规则
 
@@ -14,7 +14,7 @@
 ## 当前 Skill
 
 以下 186 个 Skill 随源码分发；它们与 MCP Server 不是一一对应关系，知识型 Skill 可以不绑定专用 Tool，
-工作流也可以使用多个服务或进程内原生 Tool。连接默认配置与凭据条件见[项目首页](../../README.md#mcp-服务目录)。
+工作流也可以使用多个服务或进程内原生 Tool。连接默认配置与凭据条件见[MCP 服务目录](../../docs/CAPABILITIES.md#mcp-服务目录)。
 当前 173 项可由模型自动选择，13 个分类索引仅保留用户显式调用；名称和来源映射不变。
 分批建议与兼容影响见[扩展治理清单](../../docs/architecture/EXTENSION_GOVERNANCE.md)。
 
@@ -164,7 +164,7 @@
 <!-- END OPEN ALGORITHM SKILLS -->
 
 可选的上游 `pyqpanda3` Skill 需要通过 `npm run skill:qpanda:setup` 单独安装，不计入上述内置清单；
-安装 Skill 不会自动启用本源量子云任务服务。安装来源与边界见[可选上游 Skill](../../README.md#可选上游-skill-与开发证据)。
+安装 Skill 不会自动启用本源量子云任务服务。安装来源与边界见[可选上游 Skill](../../docs/CAPABILITIES.md#可选上游-skill)。
 
 新增或修改 Skill 前先读[文档与架构入口](../../docs/README.md)和[贡献指南](../../CONTRIBUTING.md)。
 发行版当前 Skill 清单与 L0–L3 证据等级以 [`.agents/capability-packages.yml`](../capability-packages.yml) 为机器权威。

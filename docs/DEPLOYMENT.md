@@ -46,7 +46,7 @@ Windows PowerShell 使用 `Copy-Item .env.example .env`，再填写需要的值�
 
 ## 方式三：原生桌面工作台
 
-当前 OpenQuantum Desktop 只提供源码启动方式，完整安装命令如下：
+以下是 Desktop 的源码构建路径。Mac Apple Silicon 的独立安装包见[安装说明](DESKTOP_INSTALLERS.md)；从源码启动时执行：
 
 ```bash
 git clone https://github.com/xi-zhao/openQuantum.git
