@@ -536,7 +536,7 @@ Qiskit Gym, Quantum Hardware and FlagQuantum are off by default. When you need t
 
 ### Local computing and quantum clouds
 
-Local numerical calculations need no quantum-cloud account. To use other tools, configure the connection under **Settings → Quantum components → MCP Server connections**, restart the workbench and name the backend in the task. Default switches are listed in the [MCP service catalog](../../README.md#mcp-服务目录).
+Local numerical calculations need no quantum-cloud account. To use other tools, configure the connection under **Settings → Quantum components → MCP Server connections**, restart the workbench and name the backend in the task. Default switches are listed in the [MCP service catalog](../CAPABILITIES.md#mcp-服务目录).
 
 For real hardware, prepare credentials, permissions and quota for the target service. **Device discovery, real job submission and local simulation each have their own scope.** A configuration does not mean the service is online; check the actual run record to see whether a job succeeded.
 
@@ -557,7 +557,7 @@ Within each tool's supported models and inputs, you choose qubit counts, circuit
 
 The main computation and exact comparison are separate: you can optimize circuits, generate MBQC patterns, taper symmetries, analyze Lie algebras or run tensor algorithms directly, and choose automatic, forced or skipped independent references with `referenceMode`. Parameters, return values and resource settings are in the [local computing guide](../integrations/SCALABLE_BRIDGES.md). Local verification inputs, versions and results are kept in each integration's records for reproduction.
 
-More copyable tasks for circuits, ground states, noise, dynamics and benchmark queries are in the [Chinese README](../../README.md#更多可复制的计算任务).
+More copyable tasks for circuits, ground states, noise, dynamics and benchmark queries are in the [Chinese reference documentation](../EXAMPLES.md#更多可复制的计算任务).
 
 <a id="execution-records-and-scientific-acceptance"></a>
 
@@ -626,7 +626,7 @@ Prefer native Tool Providers for in-process, same-language actions without isola
 
 </details>
 
-The full Skill, MCP service and native Tool catalog is maintained in the [Chinese README](../../README.md#能力接口目录): the current source ships **186 built-in Skills** (173 automatically selectable, 13 manual category indexes), **91 MCP service connections** (66 on by default, 25 opt-in) and **5 native quantum Tools**.
+The full Skill, MCP service and native Tool catalog is maintained in the [Chinese reference documentation](../CAPABILITIES.md#接口总览): the current source ships **186 built-in Skills** (173 automatically selectable, 13 manual category indexes), **91 MCP service connections** (66 on by default, 25 opt-in) and **5 native quantum Tools**.
 
 ### Development and verification
 
@@ -650,7 +650,7 @@ npm run capability:algorithms:live
 npm run e2e:quantum-harness -- --provider openquantum-public
 ```
 
-Choose the checks relevant to your change; the full list is in the [Chinese README](../../README.md#开发与验证). Tests and local evidence are distinct from a published release or scientific acceptance. Release changes are in the [v0.8.4 release notes](../releases/v0.8.4.md).
+Choose the checks relevant to your change; the full list is in the [Chinese reference documentation](../EXAMPLES.md#开发与验证). Tests and local evidence are distinct from a published release or scientific acceptance. Release changes are in the [v0.8.4 release notes](../releases/v0.8.4.md).
 
 </details>
 
@@ -739,6 +739,6 @@ OpenQuantum's quantum capabilities build on open science and open-source softwar
 | [CC Connect](../integrations/CC_CONNECT.md) | Messaging bridge that brings requests from WeChat, Feishu and other channels into the workbench |
 | [OpenMAIC](https://github.com/THU-MAIC/OpenMAIC) | Teaching foundation of Quantum Learning, keeping its full interface, server and teaching workflows, with OpenQuantum naming, theme and model connection |
 
-The computing, device and reference projects behind each capability, and how each is adapted, are listed in the [Chinese README](../../README.md#开源生态与致谢).
+The computing, device and reference projects behind each capability, and how each is adapted, are listed in the [Chinese reference documentation](../CAPABILITIES.md#开源生态与致谢).
 
 OpenQuantum's own code is under the [MIT License](../../LICENSE), except for separately licensed directories. The [Mitiq error-mitigation capability directory](../../.agents/skills/mitiq-error-mitigation/) is GPL-3.0-only, and the [Metriq public data snapshot](../../src/metriq-data/upstream/) is CC-BY-4.0, each with its own LICENSE and NOTICE. DeepSeek Harness, DSH Desktop, OpenMAIC, FatQat, Qiskit MCP Servers, FieldQKit, Quantum Hardware MCP and other third-party components keep their own licenses; see [THIRD_PARTY_NOTICES.md](../../THIRD_PARTY_NOTICES.md) before redistributing or enabling an optional integration. Screenshot and diagram sources are in the [image notes](../images/README.md).

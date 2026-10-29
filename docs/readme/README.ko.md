@@ -581,7 +581,7 @@ Qiskit Gym, Quantum Hardware와 FlagQuantum은 기본으로 꺼져 있습니다.
 
 ### 로컬 계산과 양자 클라우드
 
-로컬 수치 계산에는 양자 클라우드 계정이 필요하지 않습니다. 다른 도구를 사용하려면 **설정 → 양자 구성 요소 → MCP Server 연결**에서 연결을 설정하고, 워크벤치를 재시작한 뒤 과제에서 백엔드를 지정하세요. 기본 스위치는 [MCP 서비스 카탈로그](../../README.md#mcp-服务目录)에 정리되어 있습니다.
+로컬 수치 계산에는 양자 클라우드 계정이 필요하지 않습니다. 다른 도구를 사용하려면 **설정 → 양자 구성 요소 → MCP Server 연결**에서 연결을 설정하고, 워크벤치를 재시작한 뒤 과제에서 백엔드를 지정하세요. 기본 스위치는 [MCP 서비스 카탈로그](../CAPABILITIES.md#mcp-服务目录)에 정리되어 있습니다.
 
 실제 하드웨어를 사용하려면 대상 서비스의 인증 정보, 권한과 할당량을 준비하세요. **장치 탐색, 실제 작업 제출과 로컬 시뮬레이션은 각각 범위가 다릅니다.** 구성이 있다고 해서 서비스가 온라인이라는 뜻은 아니므로, 작업 성공 여부는 실제 실행 기록으로 확인하세요.
 
@@ -602,7 +602,7 @@ Qiskit Gym, Quantum Hardware와 FlagQuantum은 기본으로 꺼져 있습니다.
 
 주 계산과 정확한 비교는 분리되어 있습니다. 회로 최적화, MBQC 패턴 생성, 대칭성 축소, Lie 대수 분석이나 텐서 알고리즘을 바로 실행할 수 있으며, `referenceMode`로 독립 참조를 자동, 강제 또는 생략 중에서 선택할 수 있습니다. 매개변수, 반환 값과 자원 설정은 [로컬 계산 가이드](../integrations/SCALABLE_BRIDGES.md)에 있습니다. 로컬 검증의 입력, 버전과 결과는 재현을 위해 각 통합의 기록에 보존됩니다.
 
-회로, 바닥상태, 잡음, 동역학과 벤치마크 조회에 관한 더 많은 복사용 과제는 [중국어 README](../../README.md#更多可复制的计算任务)에 있습니다.
+회로, 바닥상태, 잡음, 동역학과 벤치마크 조회에 관한 더 많은 복사용 과제는 [중국어 참고 문서](../EXAMPLES.md#更多可复制的计算任务)에 있습니다.
 
 <a id="execution-records-and-scientific-acceptance"></a>
 
@@ -675,7 +675,7 @@ OpenQuantum은 SDK, 알고리즘과 계산 서비스뿐 아니라 정해진 사�
 
 </details>
 
-전체 Skill, MCP 서비스와 네이티브 Tool 카탈로그는 [중국어 README](../../README.md#能力接口目录)에서 관리합니다. 현재 소스에는 **내장 Skill 186개**(자동 선택 173개, 수동 범주 색인 13개), **MCP 서비스 연결 91개**(기본 활성 66개, opt-in 25개)와 **네이티브 양자 Tool 5개**가 있습니다.
+전체 Skill, MCP 서비스와 네이티브 Tool 카탈로그는 [중국어 참고 문서](../CAPABILITIES.md#接口总览)에서 관리합니다. 현재 소스에는 **내장 Skill 186개**(자동 선택 173개, 수동 범주 색인 13개), **MCP 서비스 연결 91개**(기본 활성 66개, opt-in 25개)와 **네이티브 양자 Tool 5개**가 있습니다.
 
 <a id="development-and-verification"></a>
 
@@ -701,7 +701,7 @@ npm run capability:algorithms:live
 npm run e2e:quantum-harness -- --provider openquantum-public
 ```
 
-변경 사항에 관련된 검사를 고르세요. 전체 목록은 [중국어 README](../../README.md#开发与验证)에 있습니다. 테스트와 로컬 증거는 공개 릴리스나 과학적 승인과 구별됩니다. 릴리스 변경 사항은 [v0.8.4 릴리스 노트](../releases/v0.8.4.md)에 있습니다.
+변경 사항에 관련된 검사를 고르세요. 전체 목록은 [중국어 참고 문서](../EXAMPLES.md#开发与验证)에 있습니다. 테스트와 로컬 증거는 공개 릴리스나 과학적 승인과 구별됩니다. 릴리스 변경 사항은 [v0.8.4 릴리스 노트](../releases/v0.8.4.md)에 있습니다.
 
 </details>
 
@@ -797,6 +797,6 @@ OpenQuantum의 양자 기능은 열린 과학과 오픈 소스 소프트웨어 �
 | [CC Connect](../integrations/CC_CONNECT.md) | WeChat, Feishu 등 채널의 요청을 워크벤치로 가져오는 메신저 브리지 |
 | [OpenMAIC](https://github.com/THU-MAIC/OpenMAIC) | Quantum Learning의 교육 기반; 전체 인터페이스, 서버와 교육 워크플로를 유지하고 OpenQuantum 이름, 테마와 모델 연결을 적용 |
 
-각 기능을 뒷받침하는 계산, 장치와 참고 자료 프로젝트, 그리고 각각의 이식 방식은 [중국어 README](../../README.md#开源生态与致谢)에 정리되어 있습니다.
+각 기능을 뒷받침하는 계산, 장치와 참고 자료 프로젝트, 그리고 각각의 이식 방식은 [중국어 참고 문서](../CAPABILITIES.md#开源生态与致谢)에 정리되어 있습니다.
 
 OpenQuantum 자체 코드는 별도 라이선스 디렉터리를 제외하고 [MIT License](../../LICENSE)를 따릅니다. [Mitiq 오류 완화 기능 디렉터리](../../.agents/skills/mitiq-error-mitigation/)는 GPL-3.0-only, [Metriq 공개 데이터 스냅숏](../../src/metriq-data/upstream/)은 CC-BY-4.0이며, 각각 자체 LICENSE와 NOTICE가 있습니다. DeepSeek Harness, DSH Desktop, OpenMAIC, FatQat, Qiskit MCP Servers, FieldQKit, Quantum Hardware MCP 등 서드파티 구성 요소는 각자의 라이선스를 유지합니다. 재배포하거나 선택적 통합을 활성화하기 전에 [THIRD_PARTY_NOTICES.md](../../THIRD_PARTY_NOTICES.md)를 확인하세요. 스크린숏과 다이어그램의 원본은 [이미지 설명](../images/README.md)에 있습니다.

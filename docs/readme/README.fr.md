@@ -584,7 +584,7 @@ Qiskit Gym, Quantum Hardware et FlagQuantum sont désactivés par défaut. Lorsq
 
 ### Calcul local et clouds quantiques
 
-Les calculs numériques locaux ne nécessitent pas de compte de cloud quantique. Pour utiliser d’autres outils, configurez la connexion sous **Paramètres → Composants quantiques → Connexions MCP Server**, redémarrez l’environnement de recherche et indiquez le backend dans la tâche. Les interrupteurs par défaut sont listés dans le [catalogue des services MCP](../../README.md#mcp-服务目录) (en chinois).
+Les calculs numériques locaux ne nécessitent pas de compte de cloud quantique. Pour utiliser d’autres outils, configurez la connexion sous **Paramètres → Composants quantiques → Connexions MCP Server**, redémarrez l’environnement de recherche et indiquez le backend dans la tâche. Les interrupteurs par défaut sont listés dans le [catalogue des services MCP](../CAPABILITIES.md#mcp-服务目录) (en chinois).
 
 Pour le matériel réel, préparez les identifiants, autorisations et quotas du service cible. **La découverte de dispositifs, la soumission de tâches réelles et la simulation locale ont chacune leur propre périmètre.** Une configuration ne signifie pas que le service est en ligne ; consultez la trace d’exécution effective pour savoir si une tâche a réussi.
 
@@ -605,7 +605,7 @@ Dans les limites des modèles et entrées pris en charge par chaque outil, vous 
 
 Le calcul principal et la comparaison exacte sont séparés : vous pouvez optimiser des circuits, générer des motifs MBQC, réduire par symétrie, analyser des algèbres de Lie ou exécuter directement des algorithmes tensoriels, et choisir des références indépendantes automatiques, forcées ou ignorées avec `referenceMode`. Paramètres, valeurs de retour et réglages de ressources sont décrits dans le [guide de calcul local](../integrations/SCALABLE_BRIDGES.md). Les entrées, versions et résultats des vérifications locales sont conservés dans les traces de chaque intégration pour permettre la reproduction.
 
-D’autres tâches prêtes à copier pour les circuits, les états fondamentaux, le bruit, la dynamique et la consultation de bancs d’essai figurent dans le [README chinois](../../README.md#更多可复制的计算任务).
+D’autres tâches prêtes à copier pour les circuits, les états fondamentaux, le bruit, la dynamique et la consultation de bancs d’essai figurent dans le [documentation de référence en chinois](../EXAMPLES.md#更多可复制的计算任务).
 
 <a id="execution-records-and-scientific-acceptance"></a>
 
@@ -678,7 +678,7 @@ Préférez les Tool Providers natifs pour les actions dans le processus, dans le
 
 </details>
 
-Le catalogue complet des Skills, services MCP et Tools natifs est tenu à jour dans le [README chinois](../../README.md#能力接口目录) : les sources actuelles livrent **186 Skills intégrés** (173 sélectionnables automatiquement, 13 index de catégories manuels), **91 connexions de services MCP** (66 activées par défaut, 25 à activer explicitement) et **5 Tools quantiques natifs**.
+Le catalogue complet des Skills, services MCP et Tools natifs est tenu à jour dans le [documentation de référence en chinois](../CAPABILITIES.md#接口总览) : les sources actuelles livrent **186 Skills intégrés** (173 sélectionnables automatiquement, 13 index de catégories manuels), **91 connexions de services MCP** (66 activées par défaut, 25 à activer explicitement) et **5 Tools quantiques natifs**.
 
 <a id="development-and-verification"></a>
 
@@ -704,7 +704,7 @@ npm run capability:algorithms:live
 npm run e2e:quantum-harness -- --provider openquantum-public
 ```
 
-Choisissez les vérifications pertinentes pour votre modification ; la liste complète figure dans le [README chinois](../../README.md#开发与验证). Les tests et les preuves locales sont distincts d’une version publiée ou d’une acceptation scientifique. Les changements de version figurent dans les [notes de version v0.8.4](../releases/v0.8.4.md).
+Choisissez les vérifications pertinentes pour votre modification ; la liste complète figure dans le [documentation de référence en chinois](../EXAMPLES.md#开发与验证). Les tests et les preuves locales sont distincts d’une version publiée ou d’une acceptation scientifique. Les changements de version figurent dans les [notes de version v0.8.4](../releases/v0.8.4.md).
 
 </details>
 
@@ -800,6 +800,6 @@ Les fonctionnalités quantiques d’OpenQuantum s’appuient sur la science ouve
 | [CC Connect](../integrations/CC_CONNECT.md) | Pont de messagerie qui achemine les demandes de WeChat, Feishu et d’autres canaux vers l’environnement de recherche |
 | [OpenMAIC](https://github.com/THU-MAIC/OpenMAIC) | Socle pédagogique de Quantum Learning, qui conserve son interface complète, son serveur et ses flux pédagogiques, avec le nommage, le thème et la connexion aux modèles d’OpenQuantum |
 
-Les projets de calcul, de dispositifs et de référence qui sous-tendent chaque fonctionnalité, ainsi que la façon dont chacun est adapté, sont listés dans le [README chinois](../../README.md#开源生态与致谢).
+Les projets de calcul, de dispositifs et de référence qui sous-tendent chaque fonctionnalité, ainsi que la façon dont chacun est adapté, sont listés dans le [documentation de référence en chinois](../CAPABILITIES.md#开源生态与致谢).
 
 Le code propre à OpenQuantum est sous [licence MIT](../../LICENSE), à l’exception des répertoires sous licence distincte. Le [répertoire de la fonctionnalité d’atténuation d’erreurs Mitiq](../../.agents/skills/mitiq-error-mitigation/) est sous GPL-3.0-only, et l’[instantané des données publiques Metriq](../../src/metriq-data/upstream/) sous CC-BY-4.0, chacun avec ses propres fichiers LICENSE et NOTICE. DeepSeek Harness, DSH Desktop, OpenMAIC, FatQat, Qiskit MCP Servers, FieldQKit, Quantum Hardware MCP et les autres composants tiers conservent leurs propres licences ; consultez [THIRD_PARTY_NOTICES.md](../../THIRD_PARTY_NOTICES.md) avant toute redistribution ou activation d’une intégration optionnelle. Les sources des captures d’écran et des schémas figurent dans les [notes sur les images](../images/README.md).
