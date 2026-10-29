@@ -9,6 +9,7 @@ const pending = new Set();
 const failures = new Set();
 const expanded = new Map();
 const fieldSelections = new Map();
+const fieldRequests = new Map();
 export const clearCredentialDrafts = () => drafts.clear();
 window.addEventListener("pagehide", clearCredentialDrafts);
 
@@ -24,7 +25,7 @@ export function h(tag, props, ...children) {
   return node;
 }
 
-export function renderCredentialCards(container, entries, { request, refresh, notice, openLink, fallback, expandMatches = false, scope = "credentials" }) {
+export function renderCredentialCards(container, entries, { request, refresh, notice, openLink, fallback, expandMatches = false, scope = "credentials", preferredFields = [] }) {
   const grid = h("div", { className: "oq-cap-credential-grid oq-service-grid" });
   container.append(grid);
   for (const entry of entries) {
@@ -51,6 +52,12 @@ export function renderCredentialCards(container, entries, { request, refresh, no
       includes: (field, value) => value === "token" ? field.name === "PASQAL_AUTH_TOKEN" : field.name !== "PASQAL_AUTH_TOKEN",
     } : null;
     if (selection) {
+      const requested = preferredFields.find(name => entry.fields.some(field => field.name === name));
+      if (requested && fieldRequests.get(key) !== requested) {
+        fieldSelections.set(key, entry.id === "fieldqkit" ? requested : requested === "PASQAL_AUTH_TOKEN" ? "token" : "password");
+        fieldRequests.set(key, requested);
+        details.open = true;
+      }
       const value = fieldSelections.get(key) ?? selection.initial;
       const select = h("select", { "aria-label": selection.title, "data-focus-key": `${key}:selection` },
         selection.choices.map(([id, title]) => h("option", { value: id }, title)));

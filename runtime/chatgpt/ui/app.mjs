@@ -257,9 +257,9 @@ function providerControl(id) {
     { text: provider.enabled ? "允许按需使用" : "已禁止" }));
   return row;
 }
-function relatedCredentials(container, ids, scope) {
+function relatedCredentials(container, ids, scope, preferredFields = []) {
   const entries = credentialEntries(snapshot.services ?? []).filter(entry => entry.serverNames.some(id => ids.includes(id)));
-  if (entries.length) renderCredentialCards(container, entries, { ...credentialOptions(scope), expandMatches: true });
+  if (entries.length) renderCredentialCards(container, entries, { ...credentialOptions(scope), expandMatches: true, preferredFields });
 }
 function skillSetup(skill) {
   const relations = skill.relations ?? { toolIds: [], providerIds: [], environmentIds: [], credentialServiceIds: [] };
@@ -283,7 +283,9 @@ function skillSetup(skill) {
   const environment = skillEnvironment(skill, snapshot, environmentId);
   const needed = preparationFocus?.skillId === skill.id && preparationFocus.serviceId
     ? preparationFocus.serviceId : snapshot.recentSkills?.find(item => item.id === skill.id)?.serviceId;
-  relatedCredentials(details, [...new Set([needed, ...relations.credentialServiceIds].filter(Boolean))], `skill-${skill.id}`);
+  const preferredFields = preparationFocus?.skillId === skill.id && preparationFocus.fields?.length
+    ? preparationFocus.fields : [snapshot.recentSkills?.find(item => item.id === skill.id)?.selection?.credentialField].filter(Boolean);
+  relatedCredentials(details, [...new Set([needed, ...relations.credentialServiceIds].filter(Boolean))], `skill-${skill.id}`, preferredFields);
   if (environment) details.append(environmentPanel(environment, { element, button, run, drafts: environmentDrafts, expanded: expandedGroups }));
   else if (environmentId) details.append(element("p", "环境状态未读取，请刷新后重试。", "hint"));
   const controls = disclosure(`advanced-skill:${skill.id}`, "Tool 与 MCP 使用限制");
