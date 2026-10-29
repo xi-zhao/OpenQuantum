@@ -199,4 +199,3 @@ docs/                    架构、路线与生态文档
 2026-09-24 的[算法适配](integrations/UNITARYLAB_OPEN_ADAPTATION.md)、[本地互操作](integrations/QUANTUM_INTEROP.md)和[治理证据](integrations/evidence/extension-governance-2026-09-24.json)分别记录源码接入、实际 SDK 计算与 Harness 会话验证；这些记录不代表新安装包发布、外部模型或真实硬件验收。
 
 </details>
-
