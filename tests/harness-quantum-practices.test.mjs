@@ -41,6 +41,8 @@ async function stopHarness(child) {
 }
 
 test("Harness invokes references and restores success and invalid-input results after restart", { timeout: 90_000 }, async (t) => {
+  const traceStart = performance.now();
+  const trace = (stage) => console.error(`[DEBUG-ci68] ${Math.round(performance.now() - traceStart)}ms ${stage}`);
   const root = process.cwd();
   const sandbox = await mkdtemp(path.join(tmpdir(), "oq-practices-harness-"));
   const harnessHome = path.join(sandbox, "dsh");
@@ -93,10 +95,12 @@ test("Harness invokes references and restores success and invalid-input results 
   });
   assert.equal(titleProbe.status, 200);
   assert.doesNotMatch(await titleProbe.text(), /"tool_calls":\[/, "an auxiliary request must not dispatch or consume Tool cases");
+  trace("title fixture ready");
   const reserved = createServer();
   const port = await listen(reserved);
   await new Promise(resolve => reserved.close(resolve));
   await prepareOpenQuantumHarnessHome({ projectRoot: root, harnessHome });
+  trace("Home prepared");
   let logs = "";
   const base = `http://127.0.0.1:${port}`;
   let cookie;
@@ -138,16 +142,20 @@ test("Harness invokes references and restores success and invalid-input results 
   }
   startHarness();
   await waitFor(() => rpc("llm.models"), "Harness startup");
+  trace("first host ready");
   const sessionId = `session-practices-${crypto.randomUUID()}`;
   await rpc("session.create", { sessionId, cwd: workspaceRoot, agentPreset: "openquantum" });
+  trace("session created");
   await rpc("session.prompt", {
     sessionId, mode: "queue",
     content: [{ type: "text", text: "Look up the fixed HHL and heat-equation references; include the invalid-id error check." }],
   });
+  trace("prompt acknowledged");
   const history = await waitFor(async () => {
     const snapshot = await harnessSessionSnapshot(base, cookie, sessionId, 200);
     return snapshot.records.some(entry => entry.event?.type === "turn/end") && snapshot;
   }, "completed reference retrieval turn");
+  trace("turn completed");
   assert.ok(registeredTool, "real Harness request must include the registered Tool");
   assert.equal(registeredTool.function.parameters.additionalProperties, false);
   const events = history.records.map(entry => entry.event);
@@ -172,9 +180,12 @@ test("Harness invokes references and restores success and invalid-input results 
     evidence.push({ call: called, result });
   }
   await stopHarness(child);
+  trace("first host stopped");
   startHarness();
   await waitFor(() => rpc("llm.models"), "Harness restart");
+  trace("restarted host ready");
   const reread = await harnessSessionSnapshot(base, cookie, sessionId, 200);
+  trace("restarted history received");
   const restoredResults = reread.records.filter(entry => entry.event.type === "tool/result").map(entry => entry.event);
   assert.deepEqual(restoredResults, events.filter(event => event.type === "tool/result"));
   if (process.env.OPENQUANTUM_PRACTICES_EVIDENCE) {
