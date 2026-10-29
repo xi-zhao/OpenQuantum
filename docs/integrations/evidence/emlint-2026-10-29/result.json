@@ -1,0 +1,140 @@
+{
+  "scope": "Small DEM structural diagnostics; not circuit or decoder verification",
+  "versions": {
+    "emlint": "0.2.4",
+    "stim": "1.16.0",
+    "numpy": "2.5.4"
+  },
+  "cases": {
+    "detected": {
+      "dem": "error(0.1) D0 L0",
+      "sha256": "56f72ff3cd5c6edb7086e61bd942a5f627cd34c2d0ba9677dac9f1df58a24c92",
+      "context": {},
+      "report": {
+        "num_detectors": 1,
+        "num_observables": 1,
+        "num_error_mechanisms": 1,
+        "profile": null,
+        "disabled_checks": [],
+        "applied_overrides": {},
+        "unknown_instructions": [],
+        "all_passed": true,
+        "any_skipped": false,
+        "is_vacuous": false,
+        "has_errors": false,
+        "has_warnings": false,
+        "results": [
+          {
+            "name": "detectability",
+            "passed": true,
+            "severity": "error",
+            "message": "All error mechanisms that flip observables also trigger detectors.",
+            "counter_example": null,
+            "counter_example_data": null,
+            "status": "verdict",
+            "hint": null
+          }
+        ]
+      }
+    },
+    "logical_fault": {
+      "dem": "error(0.1) L0",
+      "sha256": "f5d605552d232e63d02053a261d60f42dc091440f848660277cdcaf27c61b75e",
+      "context": {},
+      "report": {
+        "num_detectors": 0,
+        "num_observables": 1,
+        "num_error_mechanisms": 1,
+        "profile": null,
+        "disabled_checks": [],
+        "applied_overrides": {},
+        "unknown_instructions": [],
+        "all_passed": false,
+        "any_skipped": false,
+        "is_vacuous": false,
+        "has_errors": true,
+        "has_warnings": false,
+        "results": [
+          {
+            "name": "detectability",
+            "passed": false,
+            "severity": "error",
+            "message": "Found 1 undetectable error mechanism instance(s) across 1 distinct location(s) that flip observable(s).",
+            "counter_example": "error(0.1) flips L0 but triggers 0 detectors",
+            "counter_example_data": {
+              "mechanisms": [
+                "error(0.1) L0"
+              ],
+              "instance_count": 1
+            },
+            "status": "verdict",
+            "hint": "Hypothesis: an observable flip with no detector syndrome often comes from a fault path after the last stabilizer-measurement round, or from a data-qubit region whose measurement is not wrapped in a DETECTOR; inspect the circuit region between the fault location and the observable's final measurement."
+          }
+        ]
+      }
+    },
+    "empty": {
+      "dem": "detector D0\nlogical_observable L0",
+      "sha256": "042d185ea3d1c5634c440012e19973963a4d0812113b28c79b4ffae84ef6427b",
+      "context": {},
+      "report": {
+        "num_detectors": 1,
+        "num_observables": 1,
+        "num_error_mechanisms": 0,
+        "profile": null,
+        "disabled_checks": [],
+        "applied_overrides": {},
+        "unknown_instructions": [],
+        "all_passed": true,
+        "any_skipped": false,
+        "is_vacuous": true,
+        "has_errors": false,
+        "has_warnings": false,
+        "results": [
+          {
+            "name": "detectability",
+            "passed": true,
+            "severity": "error",
+            "message": "All error mechanisms that flip observables also trigger detectors.",
+            "counter_example": null,
+            "counter_example_data": null,
+            "status": "verdict",
+            "hint": null
+          }
+        ]
+      }
+    },
+    "missing_context": {
+      "dem": "error(0.1) D0 L0",
+      "sha256": "56f72ff3cd5c6edb7086e61bd942a5f627cd34c2d0ba9677dac9f1df58a24c92",
+      "context": {},
+      "report": {
+        "num_detectors": 1,
+        "num_observables": 1,
+        "num_error_mechanisms": 1,
+        "profile": "graphlike-decoder",
+        "disabled_checks": [],
+        "applied_overrides": {},
+        "unknown_instructions": [],
+        "all_passed": true,
+        "any_skipped": true,
+        "is_vacuous": false,
+        "has_errors": false,
+        "has_warnings": true,
+        "results": [
+          {
+            "name": "detectability",
+            "passed": false,
+            "severity": "error",
+            "message": "inconclusive: missing required context: complete_syndrome, decoder",
+            "counter_example": null,
+            "counter_example_data": null,
+            "status": "inconclusive",
+            "hint": null
+          }
+        ]
+      }
+    }
+  },
+  "scientificValidation": "not_evaluated"
+}

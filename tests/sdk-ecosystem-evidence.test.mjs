@@ -20,7 +20,8 @@ test("native SDK scoped API receipts are durable, match current locks and retain
   const report = JSON.parse(await fs.readFile(path.join(root, reportPath)));
   const chromobius = JSON.parse(await fs.readFile(path.join(root, "docs/integrations/evidence/chromobius-2026-10-26.json")));
   const lean = JSON.parse(await fs.readFile(path.join(root, "docs/integrations/evidence/lean-physics-2026-10-28.json")));
-  const receipts = [...report.libraries, chromobius.receipt, lean.receipt];
+  const emlint = JSON.parse(await fs.readFile(path.join(root, "docs/integrations/evidence/emlint-2026-10-29.json")));
+  const receipts = [...report.libraries, chromobius.receipt, lean.receipt, emlint.receipt];
   const cohort = (await readSdkLibraries(root)).filter(entry => entry.nativeOnly);
   const tracked = new Set(execFileSync("git", ["ls-files", "-z", "--", "docs/integrations/evidence"], { cwd: root, encoding: "utf8" }).split("\0"));
   assert.deepEqual(receipts.map(entry => entry.id).sort(), cohort.map(entry => entry.id).sort());

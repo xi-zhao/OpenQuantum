@@ -172,9 +172,23 @@ test("Harness invokes references and restores success and invalid-input results 
     evidence.push({ call: called, result });
   }
   await stopHarness(child);
+  // A cold history read mounts the recorded preset, including its MCP clients.
+  // Force that composition beyond the single-request 10s budget without
+  // depending on CI machine speed or changing the real Tool/event-log path.
+  const presetRoot = path.join(harnessHome, ".agent-presets/openquantum");
+  await writeFile(path.join(presetRoot, "cold-replay-fixture.mjs"), `
+export async function apply() {
+  await new Promise(resolve => setTimeout(resolve, 11_000));
+}
+`);
+  const compositionPath = path.join(presetRoot, "agent.cordis.yml");
+  const composition = await readFile(compositionPath, "utf8");
+  await writeFile(compositionPath, `- id: cold-replay-fixture\n  name: ./cold-replay-fixture.mjs\n\n${composition}`);
   startHarness();
   await waitFor(() => rpc("llm.models"), "Harness restart");
-  const reread = await harnessSessionSnapshot(base, cookie, sessionId, 200);
+  // llm.models readiness does not ensure the recorded preset is mounted.
+  // Keep the request budget bounded and wait for the cold transcript itself.
+  const reread = await waitFor(() => harnessSessionSnapshot(base, cookie, sessionId, 200), "restored reference history");
   const restoredResults = reread.records.filter(entry => entry.event.type === "tool/result").map(entry => entry.event);
   assert.deepEqual(restoredResults, events.filter(event => event.type === "tool/result"));
   if (process.env.OPENQUANTUM_PRACTICES_EVIDENCE) {

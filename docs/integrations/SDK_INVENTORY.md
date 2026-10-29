@@ -2,7 +2,7 @@
 
 由 `node scripts/audit-sdk-integration.mjs` 从 capability policy、SDK 导航、项目 manifest 和依赖锁生成；用 `--check` 检查是否过期。
 
-本表覆盖 113 个 SDK/源码环境入口：103 个 Python（包含算法共享环境）、7 个 Julia、2 个原生源码或 ABI 入口、1 个 Lean 项目。原生 QDMI 另有 Python 桥接依赖项目。一个入口可包含多个库，同一个库也可能有多个隔离版本，不能把入口数量当成独立 SDK 数量。所有锁摘要与间接依赖版本可通过 `node scripts/sdk-access.mjs inventory` 读出。
+本表覆盖 114 个 SDK/源码环境入口：104 个 Python（包含算法共享环境）、7 个 Julia、2 个原生源码或 ABI 入口、1 个 Lean 项目。原生 QDMI 另有 Python 桥接依赖项目。一个入口可包含多个库，同一个库也可能有多个隔离版本，不能把入口数量当成独立 SDK 数量。所有锁摘要与间接依赖版本可通过 `node scripts/sdk-access.mjs inventory` 读出。
 
 **接入状态：原生路径与指南已提供；逐 API、可选依赖、平台与外部服务验证不由这张静态清单推断。** 环境是否准备需 `inspect`，实际执行证据见[完整接入记录](FULL_SDK_ACCESS.md)。
 
@@ -23,6 +23,7 @@
 | `deepquantum-differentiable` | DeepQuantum | python | deepquantum==4.5.0, torch==2.11.0 | 自定义 qubit/光学电路、噪声、测量、编码与训练 | 按固定版本、已安装可选组件及目标平台核实 |
 | `deltakit-qec` | Deltakit | python | deltakit==0.10.0, stim==1.16.0, pymatching==2.4.0 | 自定义码、电路、噪声、QPU 模型、采样与译码 | 按固定版本、已安装可选组件及目标平台核实 |
 | `dynamiqs-dynamics` | Dynamiqs | python | dynamiqs, jax==0.6.2, diffrax==0.7.0 | 任意维数与复合系统、时变算符、sesolve、mesolve、批处理与自动微分 | 显式选择 JAX 数值精度和 target；需要 float64 时在建立数组前启用 jax_enable_x64。CPU、GPU 选择按任务与已安装后端决定。 |
+| `emlint-dem-audit` | emlint | python | emlint==0.2.4, stim==1.16.0 | Stim DEM 结构诊断、反例、profile 上下文和不完整检查披露 | 固定 emlint 0.2.4；beta 结构诊断不证明电路或解码正确。保留 warning、skipped、inconclusive、vacuous 与输入失败，不自动修模型。 |
 | `fatqat-workbench` | FatQat / QuTiP | python | fatqat @ git+https://github.com/spaceqat/fatqat.git@39b75e30ae50ddb4a8c7b840847edce678aa814c | 量子系统、原生门、任意 Qobj、Hamiltonian、时变驱动、耗散与观测量 | 按固定版本、已安装可选组件及目标平台核实 |
 | `fieldqkit-hardware` | FieldQKit | python | fieldqkit @ git+https://github.com/FieldQuantum/fieldqkit.git@3ef2493d3f840b6a924af66a0c3f1b79cfce3fa0 | QuantumHardwareClient、provider runtime 与供应商后端协议 | 本地程序构建与外部调用分开；账户、凭据、费用、设备操作和数据外发沿用宿主及用户授权。原生 SDK 访问不自动启用服务。 |
 | `flagquantum-workbench` | FlagQuantum | python | flagquantum-mcp-server==0.3.0, flagquantum==0.2.0 | Circuit、序列化、门、拓扑、路由、训练与后端 | 按固定版本、已安装可选组件及目标平台核实 |

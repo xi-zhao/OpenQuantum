@@ -45,6 +45,7 @@ const SHELL_TOOL_CONTRACTS = readDeclaredNativeToolContracts({
   capabilityId: "platform-diagnostics",
 });
 const EXPECTED_QUANTUM_SKILLS = Object.freeze([
+  "emlint-dem-audit",
   "lean-physics",
   "chromobius-decoding",
   "platform-diagnostics",

@@ -1,0 +1,4368 @@
+{
+  "versions": {
+    "emlint": "0.2.4",
+    "stim": "1.16.0",
+    "numpy": "2.5.4"
+  },
+  "scientificValidation": "not_evaluated",
+  "duplicates": {
+    "dem": "error(0.1) D0 L0\nerror(0.2) D0 L0",
+    "report": {
+      "num_detectors": 1,
+      "num_observables": 1,
+      "num_error_mechanisms": 2,
+      "profile": null,
+      "disabled_checks": [],
+      "applied_overrides": {},
+      "unknown_instructions": [],
+      "all_passed": false,
+      "any_skipped": false,
+      "is_vacuous": false,
+      "has_errors": false,
+      "has_warnings": true,
+      "results": [
+        {
+          "name": "duplicates",
+          "passed": false,
+          "severity": "warning",
+          "message": "Found 1 duplicate mechanism signature(s) across 1 distinct location(s). Distinct fault paths can legitimately share a (detector, observable) signature on multi-round circuit-level DEMs (signature collision); if this DEM was assembled by concatenating sub-circuit DEMs, the same fault path may instead be double-counted. The decoder-facing probability for a shared signature is the XOR-folded value p_eff = p1*(1-p2) + p2*(1-p1) (iterated for 3+), shown per group in the counter-example.",
+          "counter_example": "signature D0 L0: p = {0.1, 0.2} -> p_eff = 0.26",
+          "counter_example_data": {
+            "mechanisms": [
+              "error(0.1) D0 L0",
+              "error(0.2) D0 L0"
+            ],
+            "signature_count": 1,
+            "location_count": 1,
+            "mixed_group_count": 0,
+            "repeated_target_mechanisms": [],
+            "groups": [
+              {
+                "signature": [
+                  "D0",
+                  "L0"
+                ],
+                "detector_coordinates": [],
+                "probabilities": [
+                  0.1,
+                  0.2
+                ],
+                "p_fused": 0.26,
+                "decompositions": [
+                  [
+                    "plain"
+                  ]
+                ]
+              }
+            ]
+          },
+          "status": "verdict",
+          "hint": "Hypothesis: mechanisms sharing a full signature in the same spatial boundary region suggest sub-circuit DEMs concatenated without XOR-merging; the correct probability is the XOR-fused value shown in the counter-example. On decompose_errors=True output, an undecomposed and a ^-decomposed instruction can also legitimately share a merged signature; groups marked '[mixed decomposition]' are distinct fault paths that collide only at the merged-signature granularity and are not true duplicates."
+        }
+      ]
+    }
+  },
+  "explicitly_inapplicable": {
+    "context": {
+      "circuit_role": "state_preparation"
+    },
+    "report": {
+      "num_detectors": 0,
+      "num_observables": 1,
+      "num_error_mechanisms": 1,
+      "profile": null,
+      "disabled_checks": [],
+      "applied_overrides": {},
+      "unknown_instructions": [],
+      "all_passed": true,
+      "any_skipped": true,
+      "is_vacuous": false,
+      "has_errors": false,
+      "has_warnings": false,
+      "results": [
+        {
+          "name": "detectability",
+          "passed": false,
+          "severity": "warning",
+          "message": "skipped: circuit_role='state_preparation' is outside the check's applicability domain",
+          "counter_example": null,
+          "counter_example_data": null,
+          "status": "skipped",
+          "hint": null
+        }
+      ]
+    }
+  },
+  "input_errors": {
+    "invalid": {
+      "type": "ValueError",
+      "message": "Failed to parse DEM: 'error' instruction argument must be a probability (0 to 1) but got 2.000000"
+    },
+    "missing_file": {
+      "type": "FileNotFoundError",
+      "message": "[Errno 2] No such file or directory: 'absent.dem'"
+    }
+  },
+  "repeat": {
+    "dem": "repeat 2 {\n error(0.1) D0 L0\n shift_detectors 1\n}",
+    "hand_expansion": "error(0.1) D0 L0\nerror(0.1) D1 L0",
+    "mechanisms": [
+      {
+        "probability": 0.1,
+        "detectors": [
+          0
+        ],
+        "observables": [
+          0
+        ],
+        "decomposition_hints": [],
+        "repeated_targets": []
+      },
+      {
+        "probability": 0.1,
+        "detectors": [
+          1
+        ],
+        "observables": [
+          0
+        ],
+        "decomposition_hints": [],
+        "repeated_targets": []
+      }
+    ],
+    "report": {
+      "num_detectors": 2,
+      "num_observables": 1,
+      "num_error_mechanisms": 1,
+      "profile": null,
+      "disabled_checks": [],
+      "applied_overrides": {},
+      "unknown_instructions": [],
+      "all_passed": true,
+      "any_skipped": false,
+      "is_vacuous": false,
+      "has_errors": false,
+      "has_warnings": false,
+      "results": [
+        {
+          "name": "detectability",
+          "passed": true,
+          "severity": "error",
+          "message": "All error mechanisms that flip observables also trigger detectors.",
+          "counter_example": null,
+          "counter_example_data": null,
+          "status": "verdict",
+          "hint": null
+        },
+        {
+          "name": "duplicates",
+          "passed": true,
+          "severity": "warning",
+          "message": "No duplicate mechanism signatures found.",
+          "counter_example": null,
+          "counter_example_data": null,
+          "status": "verdict",
+          "hint": null
+        }
+      ]
+    },
+    "expanded_report": {
+      "num_detectors": 2,
+      "num_observables": 1,
+      "num_error_mechanisms": 2,
+      "profile": null,
+      "disabled_checks": [],
+      "applied_overrides": {},
+      "unknown_instructions": [],
+      "all_passed": true,
+      "any_skipped": false,
+      "is_vacuous": false,
+      "has_errors": false,
+      "has_warnings": false,
+      "results": [
+        {
+          "name": "detectability",
+          "passed": true,
+          "severity": "error",
+          "message": "All error mechanisms that flip observables also trigger detectors.",
+          "counter_example": null,
+          "counter_example_data": null,
+          "status": "verdict",
+          "hint": null
+        },
+        {
+          "name": "duplicates",
+          "passed": true,
+          "severity": "warning",
+          "message": "No duplicate mechanism signatures found.",
+          "counter_example": null,
+          "counter_example_data": null,
+          "status": "verdict",
+          "hint": null
+        }
+      ]
+    }
+  },
+  "target_semantics": {
+    "xor_dem": "error(0.1) D0 D0 D1 L0 L0",
+    "xor": [
+      {
+        "probability": 0.1,
+        "detectors": [
+          1
+        ],
+        "observables": [],
+        "decomposition_hints": [],
+        "repeated_targets": [
+          "D0",
+          "L0"
+        ]
+      }
+    ],
+    "decomposed_dem": "error(0.1) D0 ^ D1 L0",
+    "decomposed": [
+      {
+        "probability": 0.1,
+        "detectors": [
+          0,
+          1
+        ],
+        "observables": [
+          0
+        ],
+        "decomposition_hints": [
+          [
+            [
+              0
+            ],
+            []
+          ],
+          [
+            [
+              1
+            ],
+            [
+              0
+            ]
+          ]
+        ],
+        "repeated_targets": []
+      }
+    ]
+  },
+  "surface_code": {
+    "generator": "surface_code:rotated_memory_x",
+    "parameters": {
+      "distance": 3,
+      "rounds": 3,
+      "after_clifford_depolarization": 0.001,
+      "before_measure_flip_probability": 0.001,
+      "after_reset_flip_probability": 0.001
+    },
+    "circuit_sha256": "eed7be257d83d374bde32559a34245f866b4c31e738750a7582c77dbce7ea9ed",
+    "context": {},
+    "models": {
+      "raw": {
+        "sha256": "28656e87e4832314bb0d05323aec136c277d994a769b6e1ee5515eb5be1a4dce",
+        "report": {
+          "num_detectors": 24,
+          "num_observables": 1,
+          "num_error_mechanisms": 221,
+          "profile": null,
+          "disabled_checks": [],
+          "applied_overrides": {},
+          "unknown_instructions": [],
+          "all_passed": true,
+          "any_skipped": false,
+          "is_vacuous": false,
+          "has_errors": false,
+          "has_warnings": false,
+          "results": [
+            {
+              "name": "detectability",
+              "passed": true,
+              "severity": "error",
+              "message": "All error mechanisms that flip observables also trigger detectors.",
+              "counter_example": null,
+              "counter_example_data": null,
+              "status": "verdict",
+              "hint": null
+            },
+            {
+              "name": "sensitivity",
+              "passed": true,
+              "severity": "warning",
+              "message": "All detectors are triggered by at least one error mechanism.",
+              "counter_example": null,
+              "counter_example_data": null,
+              "status": "verdict",
+              "hint": null
+            },
+            {
+              "name": "observable_coverage",
+              "passed": true,
+              "severity": "error",
+              "message": "All declared observables are flipped by at least one error mechanism.",
+              "counter_example": null,
+              "counter_example_data": null,
+              "status": "verdict",
+              "hint": null
+            },
+            {
+              "name": "probability_bounds",
+              "passed": true,
+              "severity": "error",
+              "message": "All error mechanism probabilities are finite and strictly positive.",
+              "counter_example": null,
+              "counter_example_data": null,
+              "status": "verdict",
+              "hint": null
+            },
+            {
+              "name": "duplicates",
+              "passed": true,
+              "severity": "warning",
+              "message": "No duplicate mechanism signatures found.",
+              "counter_example": null,
+              "counter_example_data": null,
+              "status": "verdict",
+              "hint": null
+            },
+            {
+              "name": "correctability",
+              "passed": true,
+              "severity": "warning",
+              "message": "Every syndrome maps to at most one distinct set of logical observables.",
+              "counter_example": null,
+              "counter_example_data": null,
+              "status": "verdict",
+              "hint": null
+            },
+            {
+              "name": "null_mechanism",
+              "passed": true,
+              "severity": "warning",
+              "message": "No mechanism has empty detector and observable support.",
+              "counter_example": null,
+              "counter_example_data": null,
+              "status": "verdict",
+              "hint": null
+            },
+            {
+              "name": "high_probability_mechanisms",
+              "passed": true,
+              "severity": "warning",
+              "message": "All mechanism probabilities are ≤ 0.3.",
+              "counter_example": null,
+              "counter_example_data": null,
+              "status": "verdict",
+              "hint": null
+            },
+            {
+              "name": "connectivity",
+              "passed": true,
+              "severity": "warning",
+              "message": "Decoding graph is fully connected.",
+              "counter_example": null,
+              "counter_example_data": null,
+              "status": "verdict",
+              "hint": null
+            },
+            {
+              "name": "boundary_symmetry",
+              "passed": true,
+              "severity": "warning",
+              "message": "Skipped: fewer than 2 logical observables (boundary symmetry requires ≥ 2).",
+              "counter_example": null,
+              "counter_example_data": null,
+              "status": "verdict",
+              "hint": null
+            }
+          ]
+        }
+      },
+      "decomposed": {
+        "sha256": "e5102796e95a27a6e74182251f3e83255fd4843305666ba15de9eae533a2601f",
+        "report": {
+          "num_detectors": 24,
+          "num_observables": 1,
+          "num_error_mechanisms": 291,
+          "profile": null,
+          "disabled_checks": [],
+          "applied_overrides": {},
+          "unknown_instructions": [],
+          "all_passed": false,
+          "any_skipped": false,
+          "is_vacuous": false,
+          "has_errors": false,
+          "has_warnings": true,
+          "results": [
+            {
+              "name": "detectability",
+              "passed": true,
+              "severity": "error",
+              "message": "All error mechanisms that flip observables also trigger detectors.",
+              "counter_example": null,
+              "counter_example_data": null,
+              "status": "verdict",
+              "hint": null
+            },
+            {
+              "name": "sensitivity",
+              "passed": true,
+              "severity": "warning",
+              "message": "All detectors are triggered by at least one error mechanism.",
+              "counter_example": null,
+              "counter_example_data": null,
+              "status": "verdict",
+              "hint": null
+            },
+            {
+              "name": "observable_coverage",
+              "passed": true,
+              "severity": "error",
+              "message": "All declared observables are flipped by at least one error mechanism.",
+              "counter_example": null,
+              "counter_example_data": null,
+              "status": "verdict",
+              "hint": null
+            },
+            {
+              "name": "probability_bounds",
+              "passed": true,
+              "severity": "error",
+              "message": "All error mechanism probabilities are finite and strictly positive.",
+              "counter_example": null,
+              "counter_example_data": null,
+              "status": "verdict",
+              "hint": null
+            },
+            {
+              "name": "duplicates",
+              "passed": false,
+              "severity": "warning",
+              "message": "Found 70 duplicate mechanism signature(s) across 70 distinct location(s). Distinct fault paths can legitimately share a (detector, observable) signature on multi-round circuit-level DEMs (signature collision); if this DEM was assembled by concatenating sub-circuit DEMs, the same fault path may instead be double-counted. The decoder-facing probability for a shared signature is the XOR-folded value p_eff = p1*(1-p2) + p2*(1-p1) (iterated for 3+), shown per group in the counter-example. 70 of 70 group(s) are mixed (mechanisms with different decomposition structures share only the merged signature — distinct fault paths, not true duplicates).",
+              "counter_example": "signature D0 D4 [mixed decomposition]: p = {0.00359008, 0.000266738} -> p_eff = 0.00385491\nsignature D1 D4 [mixed decomposition]: p = {0.000133387, 6.66978e-05} -> p_eff = 0.000200067\nsignature D1 D4 D5 [mixed decomposition]: p = {0.000133387, 6.66978e-05} -> p_eff = 0.000200067\nsignature D1 D9 [mixed decomposition]: p = {0.0036563, 0.000266738} -> p_eff = 0.00392109\nsignature D1 D5 D8 ...(+1 more) [mixed decomposition]: p = {6.66978e-05, 0.000133387} -> p_eff = 0.000200067\nsignature D1 D8 D9 [mixed decomposition]: p = {6.66978e-05, 0.000133387} -> p_eff = 0.000200067\nsignature D1 D5 D8 ...(+1 more) [mixed decomposition]: p = {6.66978e-05, 0.000133387} -> p_eff = 0.000200067\nsignature D1 D8 L0 [mixed decomposition]: p = {0.00059996, 0.000133387} -> p_eff = 0.000733187\nsignature D2 D6 [mixed decomposition]: p = {0.00359008, 0.000400053} -> p_eff = 0.00398726\nsignature D2 D5 D6 [mixed decomposition]: p = {0.000266738, 0.000133387} -> p_eff = 0.000400053\n(and 60 more)",
+              "counter_example_data": {
+                "mechanisms": [
+                  "error(0.003590083941683587) D0 D4",
+                  "error(0.0002667378157289138) D0 D4",
+                  "error(0.0001333866998761608) D1 D4",
+                  "error(6.669779853440971e-05) D1 D4",
+                  "error(0.0001333866998761608) D1 D4 D5",
+                  "error(6.669779853440971e-05) D1 D4 D5",
+                  "error(0.003656302838827069) D1 D9",
+                  "error(0.0002667378157289138) D1 D9",
+                  "error(6.669779853440971e-05) D1 D5 D8 D9",
+                  "error(0.0001333866998761608) D1 D5 D8 D9",
+                  "error(6.669779853440971e-05) D1 D8 D9",
+                  "error(0.0001333866998761608) D1 D8 D9",
+                  "error(6.669779853440971e-05) D1 D5 D8 L0",
+                  "error(0.0001333866998761608) D1 D5 D8 L0",
+                  "error(0.000599959987549121) D1 D8 L0",
+                  "error(0.0001333866998761608) D1 D8 L0",
+                  "error(0.003590083941683587) D2 D6",
+                  "error(0.00040005335705113) D2 D6",
+                  "error(0.0002667378157289138) D2 D5 D6",
+                  "error(0.0001333866998761608) D2 D5 D6",
+                  "error(0.0001333866998761608) D3 D6",
+                  "error(0.0001333866998761608) D3 D6",
+                  "error(0.0001333866998761608) D3 D6 D10",
+                  "error(0.0001333866998761608) D3 D6 D10",
+                  "error(0.003457619642754575) D3 D11",
+                  "error(0.0001333866998761608) D3 D11",
+                  "error(0.0001333866998761608) D3 D10 D11",
+                  "error(0.0001333866998761608) D3 D10 D11",
+                  "error(0.0002667378157289138) D3 D10",
+                  "error(0.0002667378157289138) D3 D10",
+                  "error(0.003457619642754575) D4 D12",
+                  "error(0.0001333866998761608) D4 D12",
+                  "error(0.0001333866998761608) D4 D5 D12",
+                  "error(0.0001333866998761608) D4 D5 D12",
+                  "error(0.0002667378157289138) D5 D8",
+                  "error(0.0001333866998761608) D5 D8",
+                  "error(0.0001333866998761608) D5 D10",
+                  "error(0.0001333866998761608) D5 D10",
+                  "error(0.0001333866998761608) D5 D6 D9 D10",
+                  "error(0.0001333866998761608) D5 D6 D9 D10",
+                  "error(0.002197267238658072) D5 D13",
+                  "error(0.0002000667052120995) D5 D13",
+                  "error(0.0001333866998761608) D5 D6 D9 D13",
+                  "error(6.669779853440971e-05) D5 D6 D9 D13",
+                  "error(6.669779853440971e-05) D5 D9 D12 D13",
+                  "error(6.669779853440971e-05) D5 D9 D12 D13",
+                  "error(6.669779853440971e-05) D5 D12 D13 L0",
+                  "error(0.0001333866998761608) D5 D12 D13 L0",
+                  "error(0.003523856210052302) D6 D14",
+                  "error(0.0002000667052120995) D6 D14",
+                  "error(6.669779853440971e-05) D6 D7 D10 D14",
+                  "error(0.0001333866998761608) D6 D7 D10 D14",
+                  "error(6.669779853440971e-05) D6 D7 D13 D14",
+                  "error(6.669779853440971e-05) D6 D7 D13 D14",
+                  "error(0.0001333866998761608) D6 D13 D14",
+                  "error(6.669779853440971e-05) D6 D13 D14",
+                  "error(0.0001333866998761608) D6 D7 D10",
+                  "error(0.0001333866998761608) D6 D7 D10",
+                  "error(0.0002667378157289138) D7 D10",
+                  "error(0.0001333866998761608) D7 D10",
+                  "error(6.669779853440971e-05) D7 D13",
+                  "error(6.669779853440971e-05) D7 D13",
+                  "error(0.002130853686623456) D7 D15",
+                  "error(0.0001333866998761608) D7 D15",
+                  "error(0.0001333866998761608) D7 D14 D15",
+                  "error(0.0001333866998761608) D7 D14 D15",
+                  "error(0.002130853686623456) D8 D16",
+                  "error(0.0001333866998761608) D8 D16",
+                  "error(0.0001333866998761608) D8 D9 D16 L0",
+                  "error(0.0001333866998761608) D8 D9 D16 L0",
+                  "error(0.0001333866998761608) D8 D9 L0",
+                  "error(0.0001333866998761608) D8 D9 L0",
+                  "error(6.669779853440971e-05) D9 D12",
+                  "error(6.669779853440971e-05) D9 D12",
+                  "error(0.003523856210052302) D9 D17",
+                  "error(0.0002000667052120995) D9 D17",
+                  "error(0.0001333866998761608) D9 D10 D17",
+                  "error(6.669779853440971e-05) D9 D10 D17",
+                  "error(6.669779853440971e-05) D9 D10 D16 D17",
+                  "error(6.669779853440971e-05) D9 D10 D16 D17",
+                  "error(6.669779853440971e-05) D9 D13 D16 D17",
+                  "error(0.0001333866998761608) D9 D13 D16 D17",
+                  "error(6.669779853440971e-05) D10 D16",
+                  "error(6.669779853440971e-05) D10 D16",
+                  "error(0.002197267238658072) D10 D18",
+                  "error(0.0002000667052120995) D10 D18",
+                  "error(6.669779853440971e-05) D10 D11 D18",
+                  "error(0.0001333866998761608) D10 D11 D18",
+                  "error(0.0001333866998761608) D10 D14 D17 D18",
+                  "error(6.669779853440971e-05) D10 D14 D17 D18",
+                  "error(6.669779853440971e-05) D10 D11 D14 D18",
+                  "error(6.669779853440971e-05) D10 D11 D14 D18",
+                  "error(0.0001333866998761608) D10 D11",
+                  "error(0.0001333866998761608) D10 D11",
+                  "error(6.669779853440971e-05) D11 D14",
+                  "error(6.669779853440971e-05) D11 D14",
+                  "error(0.003457619642754575) D11 D19",
+                  "error(0.0001333866998761608) D11 D19",
+                  "error(0.0001333866998761608) D11 D18 D19",
+                  "error(0.0001333866998761608) D11 D18 D19",
+                  "error(0.0001333866998761608) D11 D18",
+                  "error(0.0001333866998761608) D11 D18",
+                  "error(0.003457619642754575) D12 D20",
+                  "error(0.0001333866998761608) D12 D20",
+                  "error(0.0001333866998761608) D12 D13 D20",
+                  "error(0.0001333866998761608) D12 D13 D20",
+                  "error(0.0002667378157289138) D13 D16",
+                  "error(0.0001333866998761608) D13 D16",
+                  "error(0.0001333866998761608) D13 D16 D17 L0",
+                  "error(0.0001333866998761608) D13 D16 D17 L0",
+                  "error(0.0001333866998761608) D13 D18",
+                  "error(0.0001333866998761608) D13 D18",
+                  "error(0.0001333866998761608) D13 D14 D17 D18",
+                  "error(0.0001333866998761608) D13 D14 D17 D18",
+                  "error(0.003656302838827069) D14 D22",
+                  "error(0.0002667378157289138) D14 D22",
+                  "error(6.669779853440971e-05) D14 D15 D22",
+                  "error(0.0001333866998761608) D14 D15 D22",
+                  "error(6.669779853440971e-05) D14 D15 D18 D22",
+                  "error(0.0001333866998761608) D14 D15 D18 D22",
+                  "error(0.0002667378157289138) D15 D18",
+                  "error(0.0001333866998761608) D15 D18",
+                  "error(0.0001333866998761608) D15 D18 D22",
+                  "error(6.669779853440971e-05) D15 D18 D22",
+                  "error(0.0001333866998761608) D17 D20",
+                  "error(0.0001333866998761608) D17 D20",
+                  "error(0.0001333866998761608) D13 D17 D20",
+                  "error(0.0001333866998761608) D13 D17 D20",
+                  "error(0.003590083941683587) D17 D21",
+                  "error(0.00040005335705113) D17 D21",
+                  "error(0.0002667378157289138) D17 D18 D21",
+                  "error(0.0001333866998761608) D17 D18 D21",
+                  "error(0.0001333866998761608) D18 D19",
+                  "error(0.0003334000326131335) D18 D19",
+                  "error(0.0001333866998761608) D19 D22",
+                  "error(6.669779853440971e-05) D19 D22",
+                  "error(0.0001333866998761608) D18 D19 D22",
+                  "error(6.669779853440971e-05) D18 D19 D22",
+                  "error(0.003590083941683587) D19 D23",
+                  "error(0.0002667378157289138) D19 D23"
+                ],
+                "signature_count": 70,
+                "location_count": 70,
+                "mixed_group_count": 70,
+                "repeated_target_mechanisms": [],
+                "groups": [
+                  {
+                    "signature": [
+                      "D0",
+                      "D4"
+                    ],
+                    "detector_coordinates": [
+                      "D0@(2,0,0)",
+                      "D4@(2,0,1)"
+                    ],
+                    "probabilities": [
+                      0.003590083941683587,
+                      0.0002667378157289138
+                    ],
+                    "p_fused": 0.0038549065351147246,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              4
+                            ],
+                            [
+                              0
+                            ]
+                          ],
+                          [
+                            [
+                              0
+                            ],
+                            [
+                              0
+                            ]
+                          ]
+                        ]
+                      ],
+                      [
+                        "plain"
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D1",
+                      "D4"
+                    ],
+                    "detector_coordinates": [
+                      "D1@(2,4,0)",
+                      "D4@(2,0,1)"
+                    ],
+                    "probabilities": [
+                      0.0001333866998761608,
+                      6.669779853440971e-05
+                    ],
+                    "p_fused": 0.00020006670521209948,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              1
+                            ],
+                            [
+                              0
+                            ]
+                          ],
+                          [
+                            [
+                              4
+                            ],
+                            [
+                              0
+                            ]
+                          ]
+                        ]
+                      ],
+                      [
+                        "plain"
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D1",
+                      "D4",
+                      "D5"
+                    ],
+                    "detector_coordinates": [
+                      "D1@(2,4,0)",
+                      "D4@(2,0,1)",
+                      "D5@(2,2,1)"
+                    ],
+                    "probabilities": [
+                      0.0001333866998761608,
+                      6.669779853440971e-05
+                    ],
+                    "p_fused": 0.00020006670521209948,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              1
+                            ],
+                            [
+                              0
+                            ]
+                          ],
+                          [
+                            [
+                              4
+                            ],
+                            [
+                              0
+                            ]
+                          ],
+                          [
+                            [
+                              5
+                            ],
+                            []
+                          ]
+                        ]
+                      ],
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              1,
+                              4
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              5
+                            ],
+                            []
+                          ]
+                        ]
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D1",
+                      "D9"
+                    ],
+                    "detector_coordinates": [
+                      "D1@(2,4,0)",
+                      "D9@(2,4,1)"
+                    ],
+                    "probabilities": [
+                      0.003656302838827069,
+                      0.0002667378157289138
+                    ],
+                    "p_fused": 0.0039210901060902385,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              9
+                            ],
+                            [
+                              0
+                            ]
+                          ],
+                          [
+                            [
+                              1
+                            ],
+                            [
+                              0
+                            ]
+                          ]
+                        ]
+                      ],
+                      [
+                        "plain"
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D1",
+                      "D5",
+                      "D8",
+                      "D9"
+                    ],
+                    "detector_coordinates": [
+                      "D1@(2,4,0)",
+                      "D5@(2,2,1)",
+                      "D8@(0,4,1)",
+                      "D9@(2,4,1)"
+                    ],
+                    "probabilities": [
+                      6.669779853440971e-05,
+                      0.0001333866998761608
+                    ],
+                    "p_fused": 0.00020006670521209948,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              1,
+                              9
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              5
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              8
+                            ],
+                            []
+                          ]
+                        ]
+                      ],
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              5,
+                              8
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              9
+                            ],
+                            [
+                              0
+                            ]
+                          ],
+                          [
+                            [
+                              1
+                            ],
+                            [
+                              0
+                            ]
+                          ]
+                        ]
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D1",
+                      "D8",
+                      "D9"
+                    ],
+                    "detector_coordinates": [
+                      "D1@(2,4,0)",
+                      "D8@(0,4,1)",
+                      "D9@(2,4,1)"
+                    ],
+                    "probabilities": [
+                      6.669779853440971e-05,
+                      0.0001333866998761608
+                    ],
+                    "p_fused": 0.00020006670521209948,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              1,
+                              9
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              8
+                            ],
+                            []
+                          ]
+                        ]
+                      ],
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              8
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              9
+                            ],
+                            [
+                              0
+                            ]
+                          ],
+                          [
+                            [
+                              1
+                            ],
+                            [
+                              0
+                            ]
+                          ]
+                        ]
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D1",
+                      "D5",
+                      "D8",
+                      "L0"
+                    ],
+                    "detector_coordinates": [
+                      "D1@(2,4,0)",
+                      "D5@(2,2,1)",
+                      "D8@(0,4,1)"
+                    ],
+                    "probabilities": [
+                      6.669779853440971e-05,
+                      0.0001333866998761608
+                    ],
+                    "p_fused": 0.00020006670521209948,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              1
+                            ],
+                            [
+                              0
+                            ]
+                          ],
+                          [
+                            [
+                              5
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              8
+                            ],
+                            []
+                          ]
+                        ]
+                      ],
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              5,
+                              8
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              1
+                            ],
+                            [
+                              0
+                            ]
+                          ]
+                        ]
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D1",
+                      "D8",
+                      "L0"
+                    ],
+                    "detector_coordinates": [
+                      "D1@(2,4,0)",
+                      "D8@(0,4,1)"
+                    ],
+                    "probabilities": [
+                      0.000599959987549121,
+                      0.0001333866998761608
+                    ],
+                    "p_fused": 0.000733186634059688,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              1
+                            ],
+                            [
+                              0
+                            ]
+                          ],
+                          [
+                            [
+                              8
+                            ],
+                            []
+                          ]
+                        ]
+                      ],
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              8
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              1
+                            ],
+                            [
+                              0
+                            ]
+                          ]
+                        ]
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D2",
+                      "D6"
+                    ],
+                    "detector_coordinates": [
+                      "D2@(4,2,0)",
+                      "D6@(4,2,1)"
+                    ],
+                    "probabilities": [
+                      0.003590083941683587,
+                      0.00040005335705113
+                    ],
+                    "p_fused": 0.003987264848468785,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              6
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              2
+                            ],
+                            []
+                          ]
+                        ]
+                      ],
+                      [
+                        "plain"
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D2",
+                      "D5",
+                      "D6"
+                    ],
+                    "detector_coordinates": [
+                      "D2@(4,2,0)",
+                      "D5@(2,2,1)",
+                      "D6@(4,2,1)"
+                    ],
+                    "probabilities": [
+                      0.0002667378157289138,
+                      0.0001333866998761608
+                    ],
+                    "p_fused": 0.0004000533570511301,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              2,
+                              6
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              5
+                            ],
+                            []
+                          ]
+                        ]
+                      ],
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              5
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              6
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              2
+                            ],
+                            []
+                          ]
+                        ]
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D3",
+                      "D6"
+                    ],
+                    "detector_coordinates": [
+                      "D3@(4,6,0)",
+                      "D6@(4,2,1)"
+                    ],
+                    "probabilities": [
+                      0.0001333866998761608,
+                      0.0001333866998761608
+                    ],
+                    "p_fused": 0.0002667378157289139,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              6
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              3
+                            ],
+                            []
+                          ]
+                        ]
+                      ],
+                      [
+                        "plain"
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D3",
+                      "D6",
+                      "D10"
+                    ],
+                    "detector_coordinates": [
+                      "D10@(4,4,1)",
+                      "D3@(4,6,0)",
+                      "D6@(4,2,1)"
+                    ],
+                    "probabilities": [
+                      0.0001333866998761608,
+                      0.0001333866998761608
+                    ],
+                    "p_fused": 0.0002667378157289139,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              3,
+                              6
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              10
+                            ],
+                            []
+                          ]
+                        ]
+                      ],
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              6
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              10
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              3
+                            ],
+                            []
+                          ]
+                        ]
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D3",
+                      "D11"
+                    ],
+                    "detector_coordinates": [
+                      "D11@(4,6,1)",
+                      "D3@(4,6,0)"
+                    ],
+                    "probabilities": [
+                      0.003457619642754575,
+                      0.0001333866998761608
+                    ],
+                    "p_fused": 0.003590083941683588,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              11
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              3
+                            ],
+                            []
+                          ]
+                        ]
+                      ],
+                      [
+                        "plain"
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D3",
+                      "D10",
+                      "D11"
+                    ],
+                    "detector_coordinates": [
+                      "D10@(4,4,1)",
+                      "D11@(4,6,1)",
+                      "D3@(4,6,0)"
+                    ],
+                    "probabilities": [
+                      0.0001333866998761608,
+                      0.0001333866998761608
+                    ],
+                    "p_fused": 0.0002667378157289139,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              3,
+                              11
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              10
+                            ],
+                            []
+                          ]
+                        ]
+                      ],
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              10
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              11
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              3
+                            ],
+                            []
+                          ]
+                        ]
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D3",
+                      "D10"
+                    ],
+                    "detector_coordinates": [
+                      "D10@(4,4,1)",
+                      "D3@(4,6,0)"
+                    ],
+                    "probabilities": [
+                      0.0002667378157289138,
+                      0.0002667378157289138
+                    ],
+                    "p_fused": 0.000533333333333148,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              3
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              10
+                            ],
+                            []
+                          ]
+                        ]
+                      ],
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              10
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              3
+                            ],
+                            []
+                          ]
+                        ]
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D4",
+                      "D12"
+                    ],
+                    "detector_coordinates": [
+                      "D12@(2,0,2)",
+                      "D4@(2,0,1)"
+                    ],
+                    "probabilities": [
+                      0.003457619642754575,
+                      0.0001333866998761608
+                    ],
+                    "p_fused": 0.003590083941683588,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              12
+                            ],
+                            [
+                              0
+                            ]
+                          ],
+                          [
+                            [
+                              4
+                            ],
+                            [
+                              0
+                            ]
+                          ]
+                        ]
+                      ],
+                      [
+                        "plain"
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D4",
+                      "D5",
+                      "D12"
+                    ],
+                    "detector_coordinates": [
+                      "D12@(2,0,2)",
+                      "D4@(2,0,1)",
+                      "D5@(2,2,1)"
+                    ],
+                    "probabilities": [
+                      0.0001333866998761608,
+                      0.0001333866998761608
+                    ],
+                    "p_fused": 0.0002667378157289139,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              4,
+                              12
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              5
+                            ],
+                            []
+                          ]
+                        ]
+                      ],
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              12
+                            ],
+                            [
+                              0
+                            ]
+                          ],
+                          [
+                            [
+                              4
+                            ],
+                            [
+                              0
+                            ]
+                          ],
+                          [
+                            [
+                              5
+                            ],
+                            []
+                          ]
+                        ]
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D5",
+                      "D8"
+                    ],
+                    "detector_coordinates": [
+                      "D5@(2,2,1)",
+                      "D8@(0,4,1)"
+                    ],
+                    "probabilities": [
+                      0.0002667378157289138,
+                      0.0001333866998761608
+                    ],
+                    "p_fused": 0.0004000533570511301,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              5
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              8
+                            ],
+                            []
+                          ]
+                        ]
+                      ],
+                      [
+                        "plain"
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D5",
+                      "D10"
+                    ],
+                    "detector_coordinates": [
+                      "D10@(4,4,1)",
+                      "D5@(2,2,1)"
+                    ],
+                    "probabilities": [
+                      0.0001333866998761608,
+                      0.0001333866998761608
+                    ],
+                    "p_fused": 0.0002667378157289139,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              10
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              5
+                            ],
+                            []
+                          ]
+                        ]
+                      ],
+                      [
+                        "plain"
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D5",
+                      "D6",
+                      "D9",
+                      "D10"
+                    ],
+                    "detector_coordinates": [
+                      "D10@(4,4,1)",
+                      "D5@(2,2,1)",
+                      "D6@(4,2,1)",
+                      "D9@(2,4,1)"
+                    ],
+                    "probabilities": [
+                      0.0001333866998761608,
+                      0.0001333866998761608
+                    ],
+                    "p_fused": 0.0002667378157289139,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              5,
+                              10
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              6,
+                              9
+                            ],
+                            []
+                          ]
+                        ]
+                      ],
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              6,
+                              9
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              10
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              5
+                            ],
+                            []
+                          ]
+                        ]
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D5",
+                      "D13"
+                    ],
+                    "detector_coordinates": [
+                      "D13@(2,2,2)",
+                      "D5@(2,2,1)"
+                    ],
+                    "probabilities": [
+                      0.002197267238658072,
+                      0.0002000667052120995
+                    ],
+                    "p_fused": 0.002396454743836354,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              13
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              5
+                            ],
+                            []
+                          ]
+                        ]
+                      ],
+                      [
+                        "plain"
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D5",
+                      "D6",
+                      "D9",
+                      "D13"
+                    ],
+                    "detector_coordinates": [
+                      "D13@(2,2,2)",
+                      "D5@(2,2,1)",
+                      "D6@(4,2,1)",
+                      "D9@(2,4,1)"
+                    ],
+                    "probabilities": [
+                      0.0001333866998761608,
+                      6.669779853440971e-05
+                    ],
+                    "p_fused": 0.00020006670521209948,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              5,
+                              13
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              6,
+                              9
+                            ],
+                            []
+                          ]
+                        ]
+                      ],
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              6,
+                              9
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              13
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              5
+                            ],
+                            []
+                          ]
+                        ]
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D5",
+                      "D9",
+                      "D12",
+                      "D13"
+                    ],
+                    "detector_coordinates": [
+                      "D12@(2,0,2)",
+                      "D13@(2,2,2)",
+                      "D5@(2,2,1)",
+                      "D9@(2,4,1)"
+                    ],
+                    "probabilities": [
+                      6.669779853440971e-05,
+                      6.669779853440971e-05
+                    ],
+                    "p_fused": 0.00013338669987616076,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              5,
+                              13
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              9
+                            ],
+                            [
+                              0
+                            ]
+                          ],
+                          [
+                            [
+                              12
+                            ],
+                            [
+                              0
+                            ]
+                          ]
+                        ]
+                      ],
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              9,
+                              12
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              13
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              5
+                            ],
+                            []
+                          ]
+                        ]
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D5",
+                      "D12",
+                      "D13",
+                      "L0"
+                    ],
+                    "detector_coordinates": [
+                      "D12@(2,0,2)",
+                      "D13@(2,2,2)",
+                      "D5@(2,2,1)"
+                    ],
+                    "probabilities": [
+                      6.669779853440971e-05,
+                      0.0001333866998761608
+                    ],
+                    "p_fused": 0.00020006670521209948,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              5,
+                              13
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              12
+                            ],
+                            [
+                              0
+                            ]
+                          ]
+                        ]
+                      ],
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              12
+                            ],
+                            [
+                              0
+                            ]
+                          ],
+                          [
+                            [
+                              13
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              5
+                            ],
+                            []
+                          ]
+                        ]
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D6",
+                      "D14"
+                    ],
+                    "detector_coordinates": [
+                      "D14@(4,2,2)",
+                      "D6@(4,2,1)"
+                    ],
+                    "probabilities": [
+                      0.003523856210052302,
+                      0.0002000667052120995
+                    ],
+                    "p_fused": 0.0037225129026612286,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              14
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              6
+                            ],
+                            []
+                          ]
+                        ]
+                      ],
+                      [
+                        "plain"
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D6",
+                      "D7",
+                      "D10",
+                      "D14"
+                    ],
+                    "detector_coordinates": [
+                      "D10@(4,4,1)",
+                      "D14@(4,2,2)",
+                      "D6@(4,2,1)",
+                      "D7@(6,2,1)"
+                    ],
+                    "probabilities": [
+                      6.669779853440971e-05,
+                      0.0001333866998761608
+                    ],
+                    "p_fused": 0.00020006670521209948,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              6,
+                              14
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              7,
+                              10
+                            ],
+                            []
+                          ]
+                        ]
+                      ],
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              7,
+                              10
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              14
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              6
+                            ],
+                            []
+                          ]
+                        ]
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D6",
+                      "D7",
+                      "D13",
+                      "D14"
+                    ],
+                    "detector_coordinates": [
+                      "D13@(2,2,2)",
+                      "D14@(4,2,2)",
+                      "D6@(4,2,1)",
+                      "D7@(6,2,1)"
+                    ],
+                    "probabilities": [
+                      6.669779853440971e-05,
+                      6.669779853440971e-05
+                    ],
+                    "p_fused": 0.00013338669987616076,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              6,
+                              14
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              7,
+                              13
+                            ],
+                            []
+                          ]
+                        ]
+                      ],
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              13
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              14
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              6
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              7
+                            ],
+                            []
+                          ]
+                        ]
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D6",
+                      "D13",
+                      "D14"
+                    ],
+                    "detector_coordinates": [
+                      "D13@(2,2,2)",
+                      "D14@(4,2,2)",
+                      "D6@(4,2,1)"
+                    ],
+                    "probabilities": [
+                      0.0001333866998761608,
+                      6.669779853440971e-05
+                    ],
+                    "p_fused": 0.00020006670521209948,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              6,
+                              14
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              13
+                            ],
+                            []
+                          ]
+                        ]
+                      ],
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              13
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              14
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              6
+                            ],
+                            []
+                          ]
+                        ]
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D6",
+                      "D7",
+                      "D10"
+                    ],
+                    "detector_coordinates": [
+                      "D10@(4,4,1)",
+                      "D6@(4,2,1)",
+                      "D7@(6,2,1)"
+                    ],
+                    "probabilities": [
+                      0.0001333866998761608,
+                      0.0001333866998761608
+                    ],
+                    "p_fused": 0.0002667378157289139,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              6
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              7
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              10
+                            ],
+                            []
+                          ]
+                        ]
+                      ],
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              7,
+                              10
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              6
+                            ],
+                            []
+                          ]
+                        ]
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D7",
+                      "D10"
+                    ],
+                    "detector_coordinates": [
+                      "D10@(4,4,1)",
+                      "D7@(6,2,1)"
+                    ],
+                    "probabilities": [
+                      0.0002667378157289138,
+                      0.0001333866998761608
+                    ],
+                    "p_fused": 0.0004000533570511301,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              7
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              10
+                            ],
+                            []
+                          ]
+                        ]
+                      ],
+                      [
+                        "plain"
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D7",
+                      "D13"
+                    ],
+                    "detector_coordinates": [
+                      "D13@(2,2,2)",
+                      "D7@(6,2,1)"
+                    ],
+                    "probabilities": [
+                      6.669779853440971e-05,
+                      6.669779853440971e-05
+                    ],
+                    "p_fused": 0.00013338669987616076,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              13
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              7
+                            ],
+                            []
+                          ]
+                        ]
+                      ],
+                      [
+                        "plain"
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D7",
+                      "D15"
+                    ],
+                    "detector_coordinates": [
+                      "D15@(6,2,2)",
+                      "D7@(6,2,1)"
+                    ],
+                    "probabilities": [
+                      0.002130853686623456,
+                      0.0001333866998761608
+                    ],
+                    "p_fused": 0.002263671931417261,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              15
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              7
+                            ],
+                            []
+                          ]
+                        ]
+                      ],
+                      [
+                        "plain"
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D7",
+                      "D14",
+                      "D15"
+                    ],
+                    "detector_coordinates": [
+                      "D14@(4,2,2)",
+                      "D15@(6,2,2)",
+                      "D7@(6,2,1)"
+                    ],
+                    "probabilities": [
+                      0.0001333866998761608,
+                      0.0001333866998761608
+                    ],
+                    "p_fused": 0.0002667378157289139,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              7,
+                              15
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              14
+                            ],
+                            []
+                          ]
+                        ]
+                      ],
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              14
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              15
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              7
+                            ],
+                            []
+                          ]
+                        ]
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D8",
+                      "D16"
+                    ],
+                    "detector_coordinates": [
+                      "D16@(0,4,2)",
+                      "D8@(0,4,1)"
+                    ],
+                    "probabilities": [
+                      0.002130853686623456,
+                      0.0001333866998761608
+                    ],
+                    "p_fused": 0.002263671931417261,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              16
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              8
+                            ],
+                            []
+                          ]
+                        ]
+                      ],
+                      [
+                        "plain"
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D8",
+                      "D9",
+                      "D16",
+                      "L0"
+                    ],
+                    "detector_coordinates": [
+                      "D16@(0,4,2)",
+                      "D8@(0,4,1)",
+                      "D9@(2,4,1)"
+                    ],
+                    "probabilities": [
+                      0.0001333866998761608,
+                      0.0001333866998761608
+                    ],
+                    "p_fused": 0.0002667378157289139,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              8,
+                              16
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              9
+                            ],
+                            [
+                              0
+                            ]
+                          ]
+                        ]
+                      ],
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              9
+                            ],
+                            [
+                              0
+                            ]
+                          ],
+                          [
+                            [
+                              16
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              8
+                            ],
+                            []
+                          ]
+                        ]
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D8",
+                      "D9",
+                      "L0"
+                    ],
+                    "detector_coordinates": [
+                      "D8@(0,4,1)",
+                      "D9@(2,4,1)"
+                    ],
+                    "probabilities": [
+                      0.0001333866998761608,
+                      0.0001333866998761608
+                    ],
+                    "p_fused": 0.0002667378157289139,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              8
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              9
+                            ],
+                            [
+                              0
+                            ]
+                          ]
+                        ]
+                      ],
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              9
+                            ],
+                            [
+                              0
+                            ]
+                          ],
+                          [
+                            [
+                              8
+                            ],
+                            []
+                          ]
+                        ]
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D9",
+                      "D12"
+                    ],
+                    "detector_coordinates": [
+                      "D12@(2,0,2)",
+                      "D9@(2,4,1)"
+                    ],
+                    "probabilities": [
+                      6.669779853440971e-05,
+                      6.669779853440971e-05
+                    ],
+                    "p_fused": 0.00013338669987616076,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              9
+                            ],
+                            [
+                              0
+                            ]
+                          ],
+                          [
+                            [
+                              12
+                            ],
+                            [
+                              0
+                            ]
+                          ]
+                        ]
+                      ],
+                      [
+                        "plain"
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D9",
+                      "D17"
+                    ],
+                    "detector_coordinates": [
+                      "D17@(2,4,2)",
+                      "D9@(2,4,1)"
+                    ],
+                    "probabilities": [
+                      0.003523856210052302,
+                      0.0002000667052120995
+                    ],
+                    "p_fused": 0.0037225129026612286,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              17
+                            ],
+                            [
+                              0
+                            ]
+                          ],
+                          [
+                            [
+                              9
+                            ],
+                            [
+                              0
+                            ]
+                          ]
+                        ]
+                      ],
+                      [
+                        "plain"
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D9",
+                      "D10",
+                      "D17"
+                    ],
+                    "detector_coordinates": [
+                      "D10@(4,4,1)",
+                      "D17@(2,4,2)",
+                      "D9@(2,4,1)"
+                    ],
+                    "probabilities": [
+                      0.0001333866998761608,
+                      6.669779853440971e-05
+                    ],
+                    "p_fused": 0.00020006670521209948,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              9,
+                              17
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              10
+                            ],
+                            []
+                          ]
+                        ]
+                      ],
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              17
+                            ],
+                            [
+                              0
+                            ]
+                          ],
+                          [
+                            [
+                              9
+                            ],
+                            [
+                              0
+                            ]
+                          ],
+                          [
+                            [
+                              10
+                            ],
+                            []
+                          ]
+                        ]
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D9",
+                      "D10",
+                      "D16",
+                      "D17"
+                    ],
+                    "detector_coordinates": [
+                      "D10@(4,4,1)",
+                      "D16@(0,4,2)",
+                      "D17@(2,4,2)",
+                      "D9@(2,4,1)"
+                    ],
+                    "probabilities": [
+                      6.669779853440971e-05,
+                      6.669779853440971e-05
+                    ],
+                    "p_fused": 0.00013338669987616076,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              9,
+                              17
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              10,
+                              16
+                            ],
+                            []
+                          ]
+                        ]
+                      ],
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              17
+                            ],
+                            [
+                              0
+                            ]
+                          ],
+                          [
+                            [
+                              9
+                            ],
+                            [
+                              0
+                            ]
+                          ],
+                          [
+                            [
+                              16
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              10
+                            ],
+                            []
+                          ]
+                        ]
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D9",
+                      "D13",
+                      "D16",
+                      "D17"
+                    ],
+                    "detector_coordinates": [
+                      "D13@(2,2,2)",
+                      "D16@(0,4,2)",
+                      "D17@(2,4,2)",
+                      "D9@(2,4,1)"
+                    ],
+                    "probabilities": [
+                      6.669779853440971e-05,
+                      0.0001333866998761608
+                    ],
+                    "p_fused": 0.00020006670521209948,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              9,
+                              17
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              13,
+                              16
+                            ],
+                            []
+                          ]
+                        ]
+                      ],
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              13,
+                              16
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              17
+                            ],
+                            [
+                              0
+                            ]
+                          ],
+                          [
+                            [
+                              9
+                            ],
+                            [
+                              0
+                            ]
+                          ]
+                        ]
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D10",
+                      "D16"
+                    ],
+                    "detector_coordinates": [
+                      "D10@(4,4,1)",
+                      "D16@(0,4,2)"
+                    ],
+                    "probabilities": [
+                      6.669779853440971e-05,
+                      6.669779853440971e-05
+                    ],
+                    "p_fused": 0.00013338669987616076,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              16
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              10
+                            ],
+                            []
+                          ]
+                        ]
+                      ],
+                      [
+                        "plain"
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D10",
+                      "D18"
+                    ],
+                    "detector_coordinates": [
+                      "D10@(4,4,1)",
+                      "D18@(4,4,2)"
+                    ],
+                    "probabilities": [
+                      0.002197267238658072,
+                      0.0002000667052120995
+                    ],
+                    "p_fused": 0.002396454743836354,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              18
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              10
+                            ],
+                            []
+                          ]
+                        ]
+                      ],
+                      [
+                        "plain"
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D10",
+                      "D11",
+                      "D18"
+                    ],
+                    "detector_coordinates": [
+                      "D10@(4,4,1)",
+                      "D11@(4,6,1)",
+                      "D18@(4,4,2)"
+                    ],
+                    "probabilities": [
+                      6.669779853440971e-05,
+                      0.0001333866998761608
+                    ],
+                    "p_fused": 0.00020006670521209948,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              10,
+                              18
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              11
+                            ],
+                            []
+                          ]
+                        ]
+                      ],
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              11
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              18
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              10
+                            ],
+                            []
+                          ]
+                        ]
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D10",
+                      "D14",
+                      "D17",
+                      "D18"
+                    ],
+                    "detector_coordinates": [
+                      "D10@(4,4,1)",
+                      "D14@(4,2,2)",
+                      "D17@(2,4,2)",
+                      "D18@(4,4,2)"
+                    ],
+                    "probabilities": [
+                      0.0001333866998761608,
+                      6.669779853440971e-05
+                    ],
+                    "p_fused": 0.00020006670521209948,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              10,
+                              18
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              14,
+                              17
+                            ],
+                            []
+                          ]
+                        ]
+                      ],
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              14,
+                              17
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              18
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              10
+                            ],
+                            []
+                          ]
+                        ]
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D10",
+                      "D11",
+                      "D14",
+                      "D18"
+                    ],
+                    "detector_coordinates": [
+                      "D10@(4,4,1)",
+                      "D11@(4,6,1)",
+                      "D14@(4,2,2)",
+                      "D18@(4,4,2)"
+                    ],
+                    "probabilities": [
+                      6.669779853440971e-05,
+                      6.669779853440971e-05
+                    ],
+                    "p_fused": 0.00013338669987616076,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              10,
+                              18
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              14
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              11
+                            ],
+                            []
+                          ]
+                        ]
+                      ],
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              11,
+                              14
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              18
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              10
+                            ],
+                            []
+                          ]
+                        ]
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D10",
+                      "D11"
+                    ],
+                    "detector_coordinates": [
+                      "D10@(4,4,1)",
+                      "D11@(4,6,1)"
+                    ],
+                    "probabilities": [
+                      0.0001333866998761608,
+                      0.0001333866998761608
+                    ],
+                    "p_fused": 0.0002667378157289139,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              10
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              11
+                            ],
+                            []
+                          ]
+                        ]
+                      ],
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              11
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              10
+                            ],
+                            []
+                          ]
+                        ]
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D11",
+                      "D14"
+                    ],
+                    "detector_coordinates": [
+                      "D11@(4,6,1)",
+                      "D14@(4,2,2)"
+                    ],
+                    "probabilities": [
+                      6.669779853440971e-05,
+                      6.669779853440971e-05
+                    ],
+                    "p_fused": 0.00013338669987616076,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              14
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              11
+                            ],
+                            []
+                          ]
+                        ]
+                      ],
+                      [
+                        "plain"
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D11",
+                      "D19"
+                    ],
+                    "detector_coordinates": [
+                      "D11@(4,6,1)",
+                      "D19@(4,6,2)"
+                    ],
+                    "probabilities": [
+                      0.003457619642754575,
+                      0.0001333866998761608
+                    ],
+                    "p_fused": 0.003590083941683588,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              19
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              11
+                            ],
+                            []
+                          ]
+                        ]
+                      ],
+                      [
+                        "plain"
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D11",
+                      "D18",
+                      "D19"
+                    ],
+                    "detector_coordinates": [
+                      "D11@(4,6,1)",
+                      "D18@(4,4,2)",
+                      "D19@(4,6,2)"
+                    ],
+                    "probabilities": [
+                      0.0001333866998761608,
+                      0.0001333866998761608
+                    ],
+                    "p_fused": 0.0002667378157289139,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              11,
+                              19
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              18
+                            ],
+                            []
+                          ]
+                        ]
+                      ],
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              18
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              19
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              11
+                            ],
+                            []
+                          ]
+                        ]
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D11",
+                      "D18"
+                    ],
+                    "detector_coordinates": [
+                      "D11@(4,6,1)",
+                      "D18@(4,4,2)"
+                    ],
+                    "probabilities": [
+                      0.0001333866998761608,
+                      0.0001333866998761608
+                    ],
+                    "p_fused": 0.0002667378157289139,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              11
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              18
+                            ],
+                            []
+                          ]
+                        ]
+                      ],
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              18
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              11
+                            ],
+                            []
+                          ]
+                        ]
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D12",
+                      "D20"
+                    ],
+                    "detector_coordinates": [
+                      "D12@(2,0,2)",
+                      "D20@(2,0,3)"
+                    ],
+                    "probabilities": [
+                      0.003457619642754575,
+                      0.0001333866998761608
+                    ],
+                    "p_fused": 0.003590083941683588,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              20
+                            ],
+                            [
+                              0
+                            ]
+                          ],
+                          [
+                            [
+                              12
+                            ],
+                            [
+                              0
+                            ]
+                          ]
+                        ]
+                      ],
+                      [
+                        "plain"
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D12",
+                      "D13",
+                      "D20"
+                    ],
+                    "detector_coordinates": [
+                      "D12@(2,0,2)",
+                      "D13@(2,2,2)",
+                      "D20@(2,0,3)"
+                    ],
+                    "probabilities": [
+                      0.0001333866998761608,
+                      0.0001333866998761608
+                    ],
+                    "p_fused": 0.0002667378157289139,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              12,
+                              20
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              13
+                            ],
+                            []
+                          ]
+                        ]
+                      ],
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              20
+                            ],
+                            [
+                              0
+                            ]
+                          ],
+                          [
+                            [
+                              12
+                            ],
+                            [
+                              0
+                            ]
+                          ],
+                          [
+                            [
+                              13
+                            ],
+                            []
+                          ]
+                        ]
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D13",
+                      "D16"
+                    ],
+                    "detector_coordinates": [
+                      "D13@(2,2,2)",
+                      "D16@(0,4,2)"
+                    ],
+                    "probabilities": [
+                      0.0002667378157289138,
+                      0.0001333866998761608
+                    ],
+                    "p_fused": 0.0004000533570511301,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              13
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              16
+                            ],
+                            []
+                          ]
+                        ]
+                      ],
+                      [
+                        "plain"
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D13",
+                      "D16",
+                      "D17",
+                      "L0"
+                    ],
+                    "detector_coordinates": [
+                      "D13@(2,2,2)",
+                      "D16@(0,4,2)",
+                      "D17@(2,4,2)"
+                    ],
+                    "probabilities": [
+                      0.0001333866998761608,
+                      0.0001333866998761608
+                    ],
+                    "p_fused": 0.0002667378157289139,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              13,
+                              16
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              17
+                            ],
+                            [
+                              0
+                            ]
+                          ]
+                        ]
+                      ],
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              17
+                            ],
+                            [
+                              0
+                            ]
+                          ],
+                          [
+                            [
+                              13
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              16
+                            ],
+                            []
+                          ]
+                        ]
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D13",
+                      "D18"
+                    ],
+                    "detector_coordinates": [
+                      "D13@(2,2,2)",
+                      "D18@(4,4,2)"
+                    ],
+                    "probabilities": [
+                      0.0001333866998761608,
+                      0.0001333866998761608
+                    ],
+                    "p_fused": 0.0002667378157289139,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              18
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              13
+                            ],
+                            []
+                          ]
+                        ]
+                      ],
+                      [
+                        "plain"
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D13",
+                      "D14",
+                      "D17",
+                      "D18"
+                    ],
+                    "detector_coordinates": [
+                      "D13@(2,2,2)",
+                      "D14@(4,2,2)",
+                      "D17@(2,4,2)",
+                      "D18@(4,4,2)"
+                    ],
+                    "probabilities": [
+                      0.0001333866998761608,
+                      0.0001333866998761608
+                    ],
+                    "p_fused": 0.0002667378157289139,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              13,
+                              18
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              14,
+                              17
+                            ],
+                            []
+                          ]
+                        ]
+                      ],
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              14,
+                              17
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              18
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              13
+                            ],
+                            []
+                          ]
+                        ]
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D14",
+                      "D22"
+                    ],
+                    "detector_coordinates": [
+                      "D14@(4,2,2)",
+                      "D22@(4,2,3)"
+                    ],
+                    "probabilities": [
+                      0.003656302838827069,
+                      0.0002667378157289138
+                    ],
+                    "p_fused": 0.0039210901060902385,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              22
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              14
+                            ],
+                            []
+                          ]
+                        ]
+                      ],
+                      [
+                        "plain"
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D14",
+                      "D15",
+                      "D22"
+                    ],
+                    "detector_coordinates": [
+                      "D14@(4,2,2)",
+                      "D15@(6,2,2)",
+                      "D22@(4,2,3)"
+                    ],
+                    "probabilities": [
+                      6.669779853440971e-05,
+                      0.0001333866998761608
+                    ],
+                    "p_fused": 0.00020006670521209948,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              14,
+                              22
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              15
+                            ],
+                            []
+                          ]
+                        ]
+                      ],
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              22
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              14
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              15
+                            ],
+                            []
+                          ]
+                        ]
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D14",
+                      "D15",
+                      "D18",
+                      "D22"
+                    ],
+                    "detector_coordinates": [
+                      "D14@(4,2,2)",
+                      "D15@(6,2,2)",
+                      "D18@(4,4,2)",
+                      "D22@(4,2,3)"
+                    ],
+                    "probabilities": [
+                      6.669779853440971e-05,
+                      0.0001333866998761608
+                    ],
+                    "p_fused": 0.00020006670521209948,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              14,
+                              22
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              15
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              18
+                            ],
+                            []
+                          ]
+                        ]
+                      ],
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              15,
+                              18
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              22
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              14
+                            ],
+                            []
+                          ]
+                        ]
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D15",
+                      "D18"
+                    ],
+                    "detector_coordinates": [
+                      "D15@(6,2,2)",
+                      "D18@(4,4,2)"
+                    ],
+                    "probabilities": [
+                      0.0002667378157289138,
+                      0.0001333866998761608
+                    ],
+                    "p_fused": 0.0004000533570511301,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              15
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              18
+                            ],
+                            []
+                          ]
+                        ]
+                      ],
+                      [
+                        "plain"
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D15",
+                      "D18",
+                      "D22"
+                    ],
+                    "detector_coordinates": [
+                      "D15@(6,2,2)",
+                      "D18@(4,4,2)",
+                      "D22@(4,2,3)"
+                    ],
+                    "probabilities": [
+                      0.0001333866998761608,
+                      6.669779853440971e-05
+                    ],
+                    "p_fused": 0.00020006670521209948,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              15,
+                              18
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              22
+                            ],
+                            []
+                          ]
+                        ]
+                      ],
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              22
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              15
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              18
+                            ],
+                            []
+                          ]
+                        ]
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D17",
+                      "D20"
+                    ],
+                    "detector_coordinates": [
+                      "D17@(2,4,2)",
+                      "D20@(2,0,3)"
+                    ],
+                    "probabilities": [
+                      0.0001333866998761608,
+                      0.0001333866998761608
+                    ],
+                    "p_fused": 0.0002667378157289139,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              17
+                            ],
+                            [
+                              0
+                            ]
+                          ],
+                          [
+                            [
+                              20
+                            ],
+                            [
+                              0
+                            ]
+                          ]
+                        ]
+                      ],
+                      [
+                        "plain"
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D13",
+                      "D17",
+                      "D20"
+                    ],
+                    "detector_coordinates": [
+                      "D13@(2,2,2)",
+                      "D17@(2,4,2)",
+                      "D20@(2,0,3)"
+                    ],
+                    "probabilities": [
+                      0.0001333866998761608,
+                      0.0001333866998761608
+                    ],
+                    "p_fused": 0.0002667378157289139,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              17
+                            ],
+                            [
+                              0
+                            ]
+                          ],
+                          [
+                            [
+                              20
+                            ],
+                            [
+                              0
+                            ]
+                          ],
+                          [
+                            [
+                              13
+                            ],
+                            []
+                          ]
+                        ]
+                      ],
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              17,
+                              20
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              13
+                            ],
+                            []
+                          ]
+                        ]
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D17",
+                      "D21"
+                    ],
+                    "detector_coordinates": [
+                      "D17@(2,4,2)",
+                      "D21@(2,4,3)"
+                    ],
+                    "probabilities": [
+                      0.003590083941683587,
+                      0.00040005335705113
+                    ],
+                    "p_fused": 0.003987264848468785,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              21
+                            ],
+                            [
+                              0
+                            ]
+                          ],
+                          [
+                            [
+                              17
+                            ],
+                            [
+                              0
+                            ]
+                          ]
+                        ]
+                      ],
+                      [
+                        "plain"
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D17",
+                      "D18",
+                      "D21"
+                    ],
+                    "detector_coordinates": [
+                      "D17@(2,4,2)",
+                      "D18@(4,4,2)",
+                      "D21@(2,4,3)"
+                    ],
+                    "probabilities": [
+                      0.0002667378157289138,
+                      0.0001333866998761608
+                    ],
+                    "p_fused": 0.0004000533570511301,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              17,
+                              21
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              18
+                            ],
+                            []
+                          ]
+                        ]
+                      ],
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              18
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              21
+                            ],
+                            [
+                              0
+                            ]
+                          ],
+                          [
+                            [
+                              17
+                            ],
+                            [
+                              0
+                            ]
+                          ]
+                        ]
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D18",
+                      "D19"
+                    ],
+                    "detector_coordinates": [
+                      "D18@(4,4,2)",
+                      "D19@(4,6,2)"
+                    ],
+                    "probabilities": [
+                      0.0001333866998761608,
+                      0.0003334000326131335
+                    ],
+                    "p_fused": 0.0004666977902291166,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              18
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              19
+                            ],
+                            []
+                          ]
+                        ]
+                      ],
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              19
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              18
+                            ],
+                            []
+                          ]
+                        ]
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D19",
+                      "D22"
+                    ],
+                    "detector_coordinates": [
+                      "D19@(4,6,2)",
+                      "D22@(4,2,3)"
+                    ],
+                    "probabilities": [
+                      0.0001333866998761608,
+                      6.669779853440971e-05
+                    ],
+                    "p_fused": 0.00020006670521209948,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              22
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              19
+                            ],
+                            []
+                          ]
+                        ]
+                      ],
+                      [
+                        "plain"
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D18",
+                      "D19",
+                      "D22"
+                    ],
+                    "detector_coordinates": [
+                      "D18@(4,4,2)",
+                      "D19@(4,6,2)",
+                      "D22@(4,2,3)"
+                    ],
+                    "probabilities": [
+                      0.0001333866998761608,
+                      6.669779853440971e-05
+                    ],
+                    "p_fused": 0.00020006670521209948,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              19,
+                              22
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              18
+                            ],
+                            []
+                          ]
+                        ]
+                      ],
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              22
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              19
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              18
+                            ],
+                            []
+                          ]
+                        ]
+                      ]
+                    ]
+                  },
+                  {
+                    "signature": [
+                      "D19",
+                      "D23"
+                    ],
+                    "detector_coordinates": [
+                      "D19@(4,6,2)",
+                      "D23@(4,6,3)"
+                    ],
+                    "probabilities": [
+                      0.003590083941683587,
+                      0.0002667378157289138
+                    ],
+                    "p_fused": 0.0038549065351147246,
+                    "decompositions": [
+                      [
+                        "decomposed",
+                        [
+                          [
+                            [
+                              23
+                            ],
+                            []
+                          ],
+                          [
+                            [
+                              19
+                            ],
+                            []
+                          ]
+                        ]
+                      ],
+                      [
+                        "plain"
+                      ]
+                    ]
+                  }
+                ]
+              },
+              "status": "verdict",
+              "hint": "Hypothesis: mechanisms sharing a full signature in the same spatial boundary region suggest sub-circuit DEMs concatenated without XOR-merging; the correct probability is the XOR-fused value shown in the counter-example. On decompose_errors=True output, an undecomposed and a ^-decomposed instruction can also legitimately share a merged signature; groups marked '[mixed decomposition]' are distinct fault paths that collide only at the merged-signature granularity and are not true duplicates."
+            },
+            {
+              "name": "correctability",
+              "passed": true,
+              "severity": "warning",
+              "message": "Every syndrome maps to at most one distinct set of logical observables.",
+              "counter_example": null,
+              "counter_example_data": null,
+              "status": "verdict",
+              "hint": null
+            },
+            {
+              "name": "null_mechanism",
+              "passed": true,
+              "severity": "warning",
+              "message": "No mechanism has empty detector and observable support.",
+              "counter_example": null,
+              "counter_example_data": null,
+              "status": "verdict",
+              "hint": null
+            },
+            {
+              "name": "high_probability_mechanisms",
+              "passed": true,
+              "severity": "warning",
+              "message": "All mechanism probabilities are ≤ 0.3.",
+              "counter_example": null,
+              "counter_example_data": null,
+              "status": "verdict",
+              "hint": null
+            },
+            {
+              "name": "connectivity",
+              "passed": true,
+              "severity": "warning",
+              "message": "Decoding graph is fully connected.",
+              "counter_example": null,
+              "counter_example_data": null,
+              "status": "verdict",
+              "hint": null
+            },
+            {
+              "name": "boundary_symmetry",
+              "passed": true,
+              "severity": "warning",
+              "message": "Skipped: fewer than 2 logical observables (boundary symmetry requires ≥ 2).",
+              "counter_example": null,
+              "counter_example_data": null,
+              "status": "verdict",
+              "hint": null
+            }
+          ]
+        }
+      }
+    }
+  },
+  "cli": {
+    "clean": {
+      "input": "error(0.1) D0 L0",
+      "args": [
+        "--only",
+        "detectability"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"num_detectors\": 1,\n  \"num_observables\": 1,\n  \"num_error_mechanisms\": 1,\n  \"profile\": null,\n  \"disabled_checks\": [],\n  \"applied_overrides\": {},\n  \"unknown_instructions\": [],\n  \"all_passed\": true,\n  \"any_skipped\": false,\n  \"is_vacuous\": false,\n  \"has_errors\": false,\n  \"has_warnings\": false,\n  \"results\": [\n    {\n      \"name\": \"detectability\",\n      \"passed\": true,\n      \"severity\": \"error\",\n      \"message\": \"All error mechanisms that flip observables also trigger detectors.\",\n      \"counter_example\": null,\n      \"counter_example_data\": null,\n      \"status\": \"verdict\",\n      \"hint\": null\n    }\n  ]\n}\n",
+      "stderr": ""
+    },
+    "logical_fault": {
+      "input": "error(0.1) L0",
+      "args": [
+        "--only",
+        "detectability"
+      ],
+      "exit_code": 1,
+      "stdout": "{\n  \"num_detectors\": 0,\n  \"num_observables\": 1,\n  \"num_error_mechanisms\": 1,\n  \"profile\": null,\n  \"disabled_checks\": [],\n  \"applied_overrides\": {},\n  \"unknown_instructions\": [],\n  \"all_passed\": false,\n  \"any_skipped\": false,\n  \"is_vacuous\": false,\n  \"has_errors\": true,\n  \"has_warnings\": false,\n  \"results\": [\n    {\n      \"name\": \"detectability\",\n      \"passed\": false,\n      \"severity\": \"error\",\n      \"message\": \"Found 1 undetectable error mechanism instance(s) across 1 distinct location(s) that flip observable(s).\",\n      \"counter_example\": \"error(0.1) flips L0 but triggers 0 detectors\",\n      \"counter_example_data\": {\n        \"mechanisms\": [\n          \"error(0.1) L0\"\n        ],\n        \"instance_count\": 1\n      },\n      \"status\": \"verdict\",\n      \"hint\": \"Hypothesis: an observable flip with no detector syndrome often comes from a fault path after the last stabilizer-measurement round, or from a data-qubit region whose measurement is not wrapped in a DETECTOR; inspect the circuit region between the fault location and the observable's final measurement.\"\n    }\n  ]\n}\n",
+      "stderr": ""
+    },
+    "duplicates": {
+      "input": "error(0.1) D0 L0\nerror(0.2) D0 L0",
+      "args": [
+        "--only",
+        "duplicates"
+      ],
+      "exit_code": 2,
+      "stdout": "{\n  \"num_detectors\": 1,\n  \"num_observables\": 1,\n  \"num_error_mechanisms\": 2,\n  \"profile\": null,\n  \"disabled_checks\": [],\n  \"applied_overrides\": {},\n  \"unknown_instructions\": [],\n  \"all_passed\": false,\n  \"any_skipped\": false,\n  \"is_vacuous\": false,\n  \"has_errors\": false,\n  \"has_warnings\": true,\n  \"results\": [\n    {\n      \"name\": \"duplicates\",\n      \"passed\": false,\n      \"severity\": \"warning\",\n      \"message\": \"Found 1 duplicate mechanism signature(s) across 1 distinct location(s). Distinct fault paths can legitimately share a (detector, observable) signature on multi-round circuit-level DEMs (signature collision); if this DEM was assembled by concatenating sub-circuit DEMs, the same fault path may instead be double-counted. The decoder-facing probability for a shared signature is the XOR-folded value p_eff = p1*(1-p2) + p2*(1-p1) (iterated for 3+), shown per group in the counter-example.\",\n      \"counter_example\": \"signature D0 L0: p = {0.1, 0.2} -> p_eff = 0.26\",\n      \"counter_example_data\": {\n        \"mechanisms\": [\n          \"error(0.1) D0 L0\",\n          \"error(0.2) D0 L0\"\n        ],\n        \"signature_count\": 1,\n        \"location_count\": 1,\n        \"mixed_group_count\": 0,\n        \"repeated_target_mechanisms\": [],\n        \"groups\": [\n          {\n            \"signature\": [\n              \"D0\",\n              \"L0\"\n            ],\n            \"detector_coordinates\": [],\n            \"probabilities\": [\n              0.1,\n              0.2\n            ],\n            \"p_fused\": 0.26,\n            \"decompositions\": [\n              [\n                \"plain\"\n              ]\n            ]\n          }\n        ]\n      },\n      \"status\": \"verdict\",\n      \"hint\": \"Hypothesis: mechanisms sharing a full signature in the same spatial boundary region suggest sub-circuit DEMs concatenated without XOR-merging; the correct probability is the XOR-fused value shown in the counter-example. On decompose_errors=True output, an undecomposed and a ^-decomposed instruction can also legitimately share a merged signature; groups marked '[mixed decomposition]' are distinct fault paths that collide only at the merged-signature granularity and are not true duplicates.\"\n    }\n  ]\n}\n",
+      "stderr": ""
+    },
+    "missing_context": {
+      "input": "error(0.1) D0 L0",
+      "args": [
+        "--only",
+        "detectability",
+        "--profile",
+        "graphlike-decoder"
+      ],
+      "exit_code": 2,
+      "stdout": "{\n  \"num_detectors\": 1,\n  \"num_observables\": 1,\n  \"num_error_mechanisms\": 1,\n  \"profile\": \"graphlike-decoder\",\n  \"disabled_checks\": [],\n  \"applied_overrides\": {},\n  \"unknown_instructions\": [],\n  \"all_passed\": true,\n  \"any_skipped\": true,\n  \"is_vacuous\": false,\n  \"has_errors\": false,\n  \"has_warnings\": true,\n  \"results\": [\n    {\n      \"name\": \"detectability\",\n      \"passed\": false,\n      \"severity\": \"error\",\n      \"message\": \"inconclusive: missing required context: complete_syndrome, decoder\",\n      \"counter_example\": null,\n      \"counter_example_data\": null,\n      \"status\": \"inconclusive\",\n      \"hint\": null\n    }\n  ]\n}\n",
+      "stderr": ""
+    },
+    "invalid": {
+      "input": "error(2) D0",
+      "args": [],
+      "exit_code": 3,
+      "stdout": "",
+      "stderr": "emlint: unable to lint input: Failed to parse DEM: 'error' instruction argument must be a probability (0 to 1) but got 2.000000\nNo static checks were run.\n"
+    },
+    "missing_file": {
+      "input": "absent.dem",
+      "args": [],
+      "exit_code": 3,
+      "stdout": "",
+      "stderr": "emlint: unable to lint input: Failed to parse DEM: Unrecognized instruction name: absent\nNo static checks were run.\n"
+    },
+    "disabled": {
+      "input": "error(0.1) L0",
+      "args": [
+        "--only",
+        "detectability",
+        "--ignore",
+        "detectability"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"num_detectors\": 0,\n  \"num_observables\": 1,\n  \"num_error_mechanisms\": 1,\n  \"profile\": null,\n  \"disabled_checks\": [\n    \"detectability\"\n  ],\n  \"applied_overrides\": {},\n  \"unknown_instructions\": [],\n  \"all_passed\": true,\n  \"any_skipped\": false,\n  \"is_vacuous\": false,\n  \"has_errors\": false,\n  \"has_warnings\": false,\n  \"results\": []\n}\n",
+      "stderr": ""
+    }
+  }
+}

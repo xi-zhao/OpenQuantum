@@ -6,7 +6,7 @@
 
 ## 全量梳理结果
 
-[SDK 清单](SDK_INVENTORY.md)当前覆盖 113 个环境入口：103 个 Python（含算法共享环境）、7 个 Julia、2 个原生源码或 ABI 入口、1 个 Lean 项目。2026-10-14 的[生态扩展](SDK_ECOSYSTEM_2026-10-14.md)增加 26 个入口；此前 85 个环境的日期化工程证据保留。它们不是 113 个不同的上游库；例如共享环境同时含 Qiskit、PennyLane、quimb 和 PySCF，同一库也可能因兼容性保留多个版本。
+[SDK 清单](SDK_INVENTORY.md)当前覆盖 114 个环境入口：104 个 Python（含算法共享环境）、7 个 Julia、2 个原生源码或 ABI 入口、1 个 Lean 项目。2026-10-14 的[生态扩展](SDK_ECOSYSTEM_2026-10-14.md)增加 26 个入口；此前 85 个环境的日期化工程证据保留。它们不是 114 个不同的上游库；例如共享环境同时含 Qiskit、PennyLane、quimb 和 PySCF，同一库也可能因兼容性保留多个版本。
 
 每个条目记录原生模块、任务对象、直接依赖、固定依赖锁、原有便捷 Tool、启用条件和已知限制。其他能力单独列出：6 项外部 MCP、8 项原生实现或宿主工作流、66 项方法/知识参考。外部 MCP 连接和 OpenQuantum 自有模拟器不冒充供应商完整 SDK。
 
@@ -22,7 +22,7 @@ flowchart LR
   F --> E
 ```
 
-源码和 Desktop 使用仓库内的原生 Skill。Codex 的 SDK workbench 提供全目录导航，已启用的领域 Skill 投影保留同样的原生代码路径；当前源码候选随包携带 113 个环境的目录、依赖锁、显式 setup、完整算法代码和工件辅助脚本。原有未启用连接与 Skill 的状态保持不变。缓存 Skill 通过插件自己的 `mcp.json` 定位运行时，适配解压包与插件/运行时分开安装；不依赖研究项目的当前目录。
+源码和 Desktop 使用仓库内的原生 Skill。Codex 的 SDK workbench 提供全目录导航，已启用的领域 Skill 投影保留同样的原生代码路径；当前源码候选随包携带 114 个环境的目录、依赖锁、显式 setup、完整算法代码和工件辅助脚本。原有未启用连接与 Skill 的状态保持不变。缓存 Skill 通过插件自己的 `mcp.json` 定位运行时，适配解压包与插件/运行时分开安装；不依赖研究项目的当前目录。
 
 执行、权限、超时、取消与进程管理继续由宿主负责。`sdk-access.mjs` 只读取目录和准备状态，不安装依赖、不 import 第三方包、不执行用户程序；没有新增通用任意 Python 执行 MCP 或另一套 Runtime。
 
@@ -124,3 +124,11 @@ node scripts/sdk-engineering-evidence.mjs .openquantum/sdk-checks/remaining \
 [持久工程证据](evidence/lean-physics-2026-10-28.json)记录 macOS arm64 CI 中四个具名定理、错误命题拒绝、`sorryAx` 披露，以及 Codex 环境适配从 `needs_check` 到 `ready`。证明进程禁用网络；原始源文件、输出与摘要均随仓库保存。三个数学/物理例子依赖 `propext`、`Classical.choice`、`Quot.sound`，不含 `sorryAx`。本机准备因磁盘保留线停止，不将 CI 通过描述为用户机器已安装；其他平台、完整上游库与科学验收未验证。
 
 详见 [Skill 与固定来源](../../.agents/skills/lean-physics/SKILL.md)。文件编译、目标的证明及公理审计、物理适用性和科学验收分别报告；不声明全库或全平台已验证。
+
+## emlint DEM 静态诊断（2026-10-29）
+
+`emlint-dem-audit` 通过既有 SDK 工作台和宿主代码工具调用 emlint 0.2.4 / Stim 1.16.0。独立 Python 3.12 环境及依赖锁不改变现有纠错环境；没有新增 Tool、MCP Server 或科学验收器。发现只读、准备显式安装、执行不隐式安装。
+
+[持久工程证据](evidence/emlint-2026-10-29.json)记录 macOS arm64 离线运行的 detectability 正反例、重复机制告警、输入失败、空模型、缺失上下文、明确不适用角色、repeat/shift 的手工展开对照与 XOR/分解提示。另保存同一 Stim 小型表面码模型原始和分解 DEM 的完整报告及命令行退出码 0/1/2/3。告警照实保留，不以零告警作为模型正确性条件。Codex 环境适配检查只证明隔离环境的准备状态，不代表界面或真实模型会话验收。
+
+使用入口见 [Skill](../../.agents/skills/emlint-dem-audit/SKILL.md)。这些检查不证明码距、多故障可纠正性、解码成功、阈值或科学验收；不覆盖全部上游 API、其他平台或大 DEM 性能，保持 `scientificValidation=not_evaluated`。

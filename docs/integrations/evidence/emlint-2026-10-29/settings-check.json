@@ -1,0 +1,51 @@
+{
+  "before": {
+    "id": "emlint-dem-audit",
+    "title": "emlint",
+    "state": "needs_check",
+    "requirements": {
+      "supported": true,
+      "note": "运行环境独立安装；账户要求见对应服务的配置说明。",
+      "fields": [],
+      "prerequisite": "安装前需准备本机 uv；安装器会准备对应的固定 Python 版本。"
+    },
+    "configuration": {},
+    "configurationRevision": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+    "fingerprint": "448f39f713ece28a39442d51f59668ad1bf1f5b65b0d827fbbcd704bb40d25e9",
+    "ready": false,
+    "checkedAt": null,
+    "checks": [],
+    "optionalSimulation": false,
+    "installation": "present",
+    "job": null,
+    "conditions": [
+      "固定 emlint 0.2.4；beta 结构诊断不证明电路或解码正确。保留 warning、skipped、inconclusive、vacuous 与输入失败，不自动修模型。"
+    ]
+  },
+  "after": {
+    "id": "emlint-dem-audit",
+    "title": "emlint",
+    "state": "ready",
+    "requirements": {
+      "supported": true,
+      "note": "运行环境独立安装；账户要求见对应服务的配置说明。",
+      "fields": [],
+      "prerequisite": "安装前需准备本机 uv；安装器会准备对应的固定 Python 版本。"
+    },
+    "configuration": {},
+    "configurationRevision": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+    "fingerprint": "448f39f713ece28a39442d51f59668ad1bf1f5b65b0d827fbbcd704bb40d25e9",
+    "ready": true,
+    "checkedAt": "2026-10-29T03:17:54.217Z",
+    "checks": [
+      "固定依赖与模块加载已检查；实际计算结果需在调用后确认"
+    ],
+    "optionalSimulation": false,
+    "installation": "present",
+    "job": null,
+    "conditions": [
+      "固定 emlint 0.2.4；beta 结构诊断不证明电路或解码正确。保留 warning、skipped、inconclusive、vacuous 与输入失败，不自动修模型。"
+    ]
+  },
+  "scope": "Codex environment adapter; not UI or scientific acceptance"
+}

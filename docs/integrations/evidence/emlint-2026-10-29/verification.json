@@ -1,0 +1,27 @@
+{
+  "id": "emlint-dem-audit",
+  "dependencyLockSha256": "72471fef76fb44fcebdb4591d1397a09051f80573f4f0b09711516c52a322604",
+  "sourceSha256": "170ce554e220d147f0e6a3cf2d623c4802ad6a242ae1c90b26ca73ff470e0fa4",
+  "networkIsolation": "macOS sandbox-exec deny network*",
+  "scientificValidation": "not_evaluated",
+  "status": "passed",
+  "files": {
+    "attempt.json": "fef515b4f3563c161cf0c68850af33dad7422739fe833589bcbed8254f392fff",
+    "program.py": "170ce554e220d147f0e6a3cf2d623c4802ad6a242ae1c90b26ca73ff470e0fa4",
+    "result.json": "aaff1f8f9e432f3316b0f77bfbb5bcec53bfebf0c00ca4239b5a1183ca186910",
+    "runner.py": "886f044a51f94ee08cbe47de0182294b7d01277db6bd1b7b4f0a1c9d214d1602",
+    "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "versions.json": "4cb7769f2e90354afff2485cfd243e89bd1ff065a5d9e1478ff4802d11f482c8",
+    "regression.json": "4b0798e1f7602f087861438daf9f65e8d70aeaac4e6baa20a409903fe0a41d71",
+    "surface-code.stim": "eed7be257d83d374bde32559a34245f866b4c31e738750a7582c77dbce7ea9ed",
+    "surface-code-raw.dem": "28656e87e4832314bb0d05323aec136c277d994a769b6e1ee5515eb5be1a4dce",
+    "surface-code-decomposed.dem": "e5102796e95a27a6e74182251f3e83255fd4843305666ba15de9eae533a2601f",
+    "settings-check.json": "40ec03a4e5cddf7cc06b9816fe5ea652011f175ed07b17bf2cb74cc9501506b1"
+  },
+  "regressionSourcePath": "tests/fixtures/emlint-regression.py",
+  "regressionSourceSha256": "6b5becb7b476c71664dec7f49984e0a6365a3836ca7d4e868101fe47f655618b",
+  "liveTestSourcePath": "tests/emlint-dem-audit-live.test.mjs",
+  "liveTestSourceSha256": "bf8075380dba3e3c7c6d9912249cb5ce795378698a4dc56bafe9fc43b05e07b2",
+  "scope": "Fixed-version example and public API/CLI checks offline; Codex environment readiness checked using task-owned settings."
+}

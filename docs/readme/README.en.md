@@ -151,9 +151,11 @@ Pick an area and tell the workbench your question, your inputs and the results y
 
 Local calculations can start without a quantum-cloud account. Real hardware and paid services are configured on demand; each method's input range, preparation and verification status are kept in the detailed catalog.
 
-The current source provides full native-API paths for **113 SDK/source environments**, 26 of them from the latest [ecosystem expansion](../integrations/SDK_ECOSYSTEM_2026-10-14.md) shipped with 0.8.4. Agents can write custom programs, combine public APIs and save complete results, going beyond the preset cases of the convenience Tools.
+The current source provides full native-API paths for **114 SDK/source environments**, 26 of them from the latest [ecosystem expansion](../integrations/SDK_ECOSYSTEM_2026-10-14.md) shipped with 0.8.4. Agents can write custom programs, combine public APIs and save complete results, going beyond the preset cases of the convenience Tools.
 
 **Formal mathematics and physics:** [Lean 4, mathlib and physlib](../../.agents/skills/lean-physics/SKILL.md) provide a fixed Lean 4.35.0 project for checking proofs and their axioms. Explicit preparation builds the small Pauli example and its imports; other modules are prepared as needed. Proof checking does not install dependencies. A formal proof covers its stated definitions and assumptions, not the physical validity of a model or scientific acceptance.
+
+**DEM diagnostics:** [emlint](../../.agents/skills/emlint-dem-audit/SKILL.md) inspects Stim detector error models through an explicitly prepared SDK environment. Reports retain counterexamples, skipped checks and inconclusive or vacuous results. These structural checks do not prove code distance, decoding correctness or scientific acceptance.
 
 Each environment is prepared explicitly per task, and platform, account, license and optional-backend limits still apply. Engineering checks per library are in the [full SDK access record](../integrations/FULL_SDK_ACCESS.md); these environments have not been accepted on real research tasks, and their scientific status remains `not_evaluated`.
 
@@ -624,7 +626,7 @@ Prefer native Tool Providers for in-process, same-language actions without isola
 
 </details>
 
-The full Skill, MCP service and native Tool catalog is maintained in the [Chinese README](../../README.md#能力接口目录): the current source ships **185 built-in Skills** (172 automatically selectable, 13 manual category indexes), **91 MCP service connections** (66 on by default, 25 opt-in) and **5 native quantum Tools**.
+The full Skill, MCP service and native Tool catalog is maintained in the [Chinese README](../../README.md#能力接口目录): the current source ships **186 built-in Skills** (173 automatically selectable, 13 manual category indexes), **91 MCP service connections** (66 on by default, 25 opt-in) and **5 native quantum Tools**.
 
 ### Development and verification
 
@@ -652,7 +654,7 @@ Choose the checks relevant to your change; the full list is in the [Chinese READ
 
 </details>
 
-The [official OriginQ `pyqpanda3` Skill](https://github.com/OriginQ/pyqpanda3-skill) is an optional upstream Skill: it is not counted among the 185 built-in Skills and is not installed automatically. `npm run skill:qpanda:setup` installs the reviewed version; it does not enable `qpanda_runtime` or grant cloud-job permissions.
+The [official OriginQ `pyqpanda3` Skill](https://github.com/OriginQ/pyqpanda3-skill) is an optional upstream Skill: it is not counted among the 186 built-in Skills and is not installed automatically. `npm run skill:qpanda:setup` installs the reviewed version; it does not enable `qpanda_runtime` or grant cloud-job permissions.
 
 ## Roadmap and RSI
 
