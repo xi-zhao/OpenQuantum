@@ -4,19 +4,122 @@
 
 <p align="center"><a href="./README.md">简体中文</a> · <a href="./docs/readme/README.en.md">English</a> · <a href="./docs/readme/README.ja.md">日本語</a> · <a href="./docs/readme/README.ko.md">한국어</a> · <a href="./docs/readme/README.es.md">Español</a> · <a href="./docs/readme/README.fr.md">Français</a> · <a href="./docs/readme/README.de.md">Deutsch</a> · <a href="./docs/readme/README.pt.md">Português</a> · <a href="./docs/readme/README.ru.md">Русский</a> · <a href="./docs/readme/README.ar.md">العربية</a></p>
 
-<p align="center"><strong>OpenQuantum，共建可信的量子科研智能。</strong></p>
+<p align="center">
+  <strong>OpenQuantum，共建可信的量子科研智能。</strong><br />
+  <sub>把量子科研的专业积累，汇聚到一个 OpenQuantum</sub>
+</p>
 
 <p align="center">
-  <a href="https://github.com/xi-zhao/OpenQuantum/actions/workflows/ci.yml"><img src="https://github.com/xi-zhao/OpenQuantum/actions/workflows/ci.yml/badge.svg" alt="CI status" /></a>
+  <a href="https://github.com/xi-zhao/openQuantum/actions/workflows/ci.yml"><img src="https://github.com/xi-zhao/openQuantum/actions/workflows/ci.yml/badge.svg" alt="CI status" /></a>
   <a href="./THIRD_PARTY_NOTICES.md"><img src="https://img.shields.io/badge/licenses-MIT%20%2B%20component%20licenses-111111.svg" alt="MIT 与组件许可证" /></a>
   <img src="https://img.shields.io/badge/Node.js-24%2B-3c873a.svg" alt="Node.js 24 or newer" />
 </p>
 
-OpenQuantum 是开源的量子科研 AI 插件，把社区的算法、SDK 和研究方法接入 Agent：从阅读材料、选择方法，到编写程序、执行计算和核对结果，让研究过程留下可复用的程序与证据。
+OpenQuantum 是开源开放的量子科研 AI 平台，连接开源社区的优秀软件、算法与公开研究成果，让 AI 围绕你的研究问题开展分析、选择方法、执行计算并核对结果，把专业积累转化为实际的科研能力。
 
-共享能力可在 **Codex** 和 **DeepSeek Harness（DSH）** 中使用；**OpenQuantum Desktop** 是带品牌界面的 DSH 桌面交付形态。宿主负责对话、模型和执行循环，插件提供量子领域的方法、工具及科学合同。
+从一个研究问题、一篇论文或一段现有程序出发，让 AI 参与科研探索。保留程序、参数与核对记录，让一次研究成为下一次的起点。
 
-**[快速开始](#快速开始)** · [能力地图](#可以用它做什么) · [首个任务](#跑通第一个任务) · [结果解读](#使用与结果) · [实测案例](#实测案例) · [开发与贡献](#开发与贡献) · [文档导航](#文档导航) · [官网](https://xi-zhao.github.io/OpenQuantum/)
+OpenQuantum 的核心是一套通用量子科研插件，由 Skills、Tools 和 MCP Server 组成；再通过适配器接入不同 Harness。选择适合你的安装入口，两者复用同一份领域能力：**[Codex 插件](docs/integrations/CODEX_PLUGIN.md)** 将量子 Skill 与科学 Tool 接入 Codex 原生对话，侧边入口用于管理能力开关、MCP 连接和 Token；**Desktop** 是简洁的个人 Harness，保留对话、工作区、文件、工具执行和历史，模型服务可自行配置。
+
+**[安装 Codex 插件](#codex-plugin)**　·　[安装 Desktop](#桌面安装包)　·　[先看计算与结果](#使用与结果)　·　[访问官网](https://xi-zhao.github.io/OpenQuantum/)
+
+**先看实测案例：**[PennyLane Pauli 对易子计算](#pennylane-rust-case)完整调用提速 **5.09 倍**；[QuTiP Wigner 函数计算](#qutip-rust-case)完整调用提速 **5.69 倍**，均保留性能对照、结果核对与复跑记录。
+
+**Desktop 0.8.8：**[Mac Apple Silicon 独立安装包](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.8) · **Codex 插件 0.8.4：**[下载与发布说明](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.4)。以各 Release 附件为准。
+
+- **更容易找到能力：** Tools、MCP、Skills 按 8 类用途分组，支持搜索和状态筛选。
+- **简洁个人桌面：** Mac Apple Silicon 的 `OpenQuantum.app` 自带运行环境；设置包含通用、模型与 OpenQuantum 插件。插件页沿用首页、Skills、MCP 三栏，展开卡片配置环境、账户与工具限制。
+
+<p align="center">
+  <a href="#为什么选择-openquantum">为什么选择</a> ·
+  <a href="#optimization-cases">优化实测</a> ·
+  <a href="#可以用它做什么">浏览能力</a> ·
+  <a href="#codex-plugin">Codex 插件</a> ·
+  <a href="#快速开始">开始使用</a> ·
+  <a href="#使用与结果">使用与结果</a> ·
+  <a href="#把你的量子能力接进来">开发与扩展</a> ·
+  <a href="#长期发展规划">路线与 RSI</a> ·
+  <a href="#一起建设-openquantum">参与建设</a> ·
+  <a href="#开源生态与致谢">开源生态</a>
+</p>
+
+<p align="center">
+  <img src="./docs/images/openquantum-desktop-20261013.jpg" width="100%" alt="原版 DSH Desktop 中的 OpenQuantum 工作台：品牌、新会话、量子学习通与自行添加模型的提示" /><br />
+  <sub>早期版本界面参考；0.8.8 简洁版已收拢侧栏和设置。在设置中添加自己的模型服务，即可开始新会话。</sub>
+</p>
+
+<details>
+<summary><strong>查看 Tools、MCP、Skills 的分类设置</strong></summary>
+
+按用途展开所需分组，再用搜索或启用状态缩小范围。Tools 用于查看可调用的动作，MCP 用于管理服务连接，Skills 用于选择任务方法与指南。
+
+![Desktop 中按用途分组的 MCP 连接、搜索和状态筛选](./docs/images/openquantum-settings-categories-20261013.jpg)
+
+图为 2026-10-13 在原版客户端中验证分类功能时的实际界面，截图来源见[图片说明](docs/images/README.md)。配置启用不代表服务已经在线。
+
+</details>
+
+<a id="为什么做-openquantum"></a>
+
+## 为什么选择 OpenQuantum
+
+### 覆盖广，让研究思路有路可走
+
+从量子算法与线路模拟，到量子化学、多体计算和量子纠错，持续拓展专业方向，打通工具与方法之间的衔接。让研究者少花时间准备工具，多花时间探索问题。Qiskit、PennyLane、QuTiP、PyZX、TeNPy、Stim / PyMatching 等社区项目，为这些研究方向提供专业积累。
+
+### 计算快，让更多想法得到验证
+
+持续优化关键计算环节，缩短等待，支持更多比较与尝试。在针对性优化案例中，[PennyLane Pauli 对易子计算](#pennylane-rust-case)与 [QuTiP Wigner 函数计算](#qutip-rust-case)的完整调用，分别实现了 **5.09 倍**和 **5.69 倍**加速，结果均经过原库对照与独立参考计算核对。
+
+### 开放共建，让科研能力不断向前
+
+持续引入有价值的开源项目与论文方法，在适配、优化和实际使用中共同改进。OpenQuantum 围绕这些成果建设 Agent 工作流、计算接口与验证记录，让新的工具、方法与经验成为平台继续生长的力量。欢迎所有人[参与建设](#一起建设-openquantum)，一起把社区的专业积累建设成研究者用得上、能检验、愿意信赖的量子科研智能。
+
+<a id="从问题出发调用专业能力"></a>
+<a id="对不同的工作解决不同的难点"></a>
+
+### 从你的工作开始
+
+| 你的工作 | 核心难点 | OpenQuantum 的价值 |
+| --- | --- | --- |
+| **科研与算法研究** | 验证一个新想法，常要反复实现方法、寻找对照、核对结果。 | 从算法示例与专业 SDK 起步，改输入、做对照，结合已支持的独立检查，留下可复用的程序与结果。见[计算与结果](#使用与结果)。 |
+| **应用与 Agent 开发** | 想在现有应用中加入量子计算，还缺专业方法与可用的调用路径。 | 接入已有 Skill、Tool 与原生 SDK，让应用使用专业软件，并保留自己的界面与流程。见[开发与扩展](#把你的量子能力接进来)。 |
+| **行业研发与技术评估** | 有了应用方向，还需要依据来选择计算方法、估算资源、确定研发路线。 | 从已支持的任务做初步对照，查看方法条件、资源假设与结果来源，为后续研究准备依据。见[参考资料与选型](docs/CAPABILITIES.md#参考资料与选型)。 |
+| **教学与课程建设** | 想把抽象概念变成学生能动手的课程，材料、实验与课件却分散。 | 用开源算例设计实验，借量子学习通组织材料与课件。教学功能与课程建设进度见[量子学习通](#量子学习通)。 |
+| **学习与动手探索** | 概念读懂了，还不知道怎样运行算法、调整输入、解释结果。 | 运行示例、修改参数，结合指南与可用参考结果，理解方法为什么适用、有什么限制。见[算法学习与方法比较](#算法学习与方法比较)。 |
+| **研究软件与生态建设** | 已有论文方法、研究代码或 SDK，还需要工作流、接口与示例，让别人用起来。 | 将方法整理为 Skill、需要执行的动作接为 Tool，或接入完整应用；保留来源与贡献归属，让他人继续使用和扩展。见[能力接入](#把你的量子能力接进来)。 |
+
+<a id="开源让能力可以检查修改和延续"></a>
+
+### 开源：把能力掌握在自己手中
+
+你可以查看平台与接入代码，了解方法的来源，按相应许可修改、部署和维护自己的工具组合。模型服务与计算后端可以按需选择，研究数据是否共享也由你决定。作者、许可证和贡献归属继续保留，让已有工作能够随项目延续。
+
+<a id="全面让方法选择与组合有共同起点"></a>
+
+### 全面：让一个问题有更多方法可选
+
+OpenQuantum 汇聚算法、编译、仿真、量子信息、化学与多体、优化、纠错、动力学、控制和网络等方向的软件与研究方法。从指南与开源示例，到原生 SDK 和计算 Tool，你可以按任务选择所需能力，也可以组合工具、设计新的对照。各能力的输入、准备条件与支持范围见[能力目录](#可以用它做什么)。
+
+例如，分别用 PyZX 做电路优化、QCEC 检查等价性，再用噪声模拟研究含噪表现，可以围绕“电路更简洁，结果是否更好”设计对照。跨工具组合还需要核对模型、单位、位序和预算，当前范围见[计算与资源配置](docs/integrations/SCALABLE_BRIDGES.md)。
+
+<a id="让一次研究成为下一次的起点"></a>
+<a id="agent-时代让专业能力进入工作并持续积累"></a>
+<a id="agent-时代让想法接上专业能力"></a>
+
+### 让 AI 用上专业科研能力
+
+Agent 可以帮你阅读材料、编写程序和调用工具。安装 OpenQuantum 后，你可以围绕已支持的任务，按需要准备依赖和服务配置，让 AI 用上量子领域的方法与计算能力。Skill 说明方法与步骤，Tool 执行具体动作，原生 SDK 也可通过宿主代码工具使用。
+
+记录程序、结果与适用的检查，让后续工作有据可循。有依据的负结果也值得保留，帮助判断方法何时适用、何时需要换一条路线。程序故障与科学结果要分别看待；相关记录可以用于[复核与复用](#执行记录与科学验收)，科学判断仍由使用者负责。
+
+<a id="把你的方法变成别人能用的能力"></a>
+
+**把开源库与论文方法变成可用的 Agent 能力，支撑着平台的持续建设。** 为此，我们梳理方法、编写工作流、接入软件，并保留来源与使用条件。你也可以把自己的方法、程序或完整应用接进来，让一次开发成为更多人的起点。
+
+这些积累也为[下一轮研究能力的改进](#rsi)提供基础，相关方向与进度在长期规划中说明。
+
+**[先运行一个任务](#快速开始)**　·　[把你的能力接进来](#把你的量子能力接进来)
 
 ## 快速开始
 
