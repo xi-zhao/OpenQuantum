@@ -12,9 +12,11 @@
   --action-hover: #103f5b;
   --on-action: #fff;
   --accent: #103f5b;
-  --focus: #8b5cf6;
+  --focus: #126b91;
   --success: #23684b;
   --danger: #a92e29;
+  --selected: #edf4f7;
+  --warning: #8a560f;
   --mark-light: block;
   --mark-dark: none;
 }
@@ -31,9 +33,11 @@
   --action-hover: #fff;
   --on-action: #0a2438;
   --accent: #a7dce6;
-  --focus: #b99aff;
+  --focus: #84cee9;
   --success: #96d3b3;
   --danger: #ffb4aa;
+  --selected: #293840;
+  --warning: #eac087;
   --mark-light: none;
   --mark-dark: block;
 }
@@ -44,7 +48,8 @@
     --line: #3b3b42; --control-line: #797982;
     --text: #f5f5f7; --muted: #b1b1ba;
     --action: #dcecf5; --action-hover: #fff; --on-action: #0a2438;
-    --accent: #a7dce6; --focus: #b99aff; --success: #96d3b3; --danger: #ffb4aa;
+    --accent: #a7dce6; --focus: #84cee9; --success: #96d3b3; --danger: #ffb4aa;
+    --selected: #293840; --warning: #eac087;
     --mark-light: none; --mark-dark: block;
   }
 }

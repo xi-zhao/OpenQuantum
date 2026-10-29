@@ -14,6 +14,26 @@ const presentation = {
   ionq: { title: "IonQ", description: "IonQ 云端硬件连接使用的 API Key。" },
 };
 
+export function accountState(item, services) {
+  if (item.authentication) {
+    if (item.authentication === "none") return { key: "none", label: "无需账户" };
+    if (item.credential?.unavailable) return { key: "unavailable", label: "凭据未读取" };
+    return item.credential?.configured ? { key: "configured", label: "Token 已保存" } : { key: "missing", label: "待配置 Token" };
+  }
+  const ids = item.relations?.credentialServiceIds ?? [item.service ?? item.id];
+  const entries = services.filter(service => ids.includes(service.id));
+  if (!entries.length) return { key: "none", label: "无需账户" };
+  if (entries.every(service => !service.supported)) return { key: "unsupported", label: "查看云端账户要求" };
+  if (entries.some(service => service.configuration === "unavailable")) return { key: "unavailable", label: "凭据未读取" };
+  if (entries.some(service => service.configuration === "incomplete")) {
+    const fields = entries.flatMap(service => service.fields).filter(field => field.required && !field.configured);
+    const kind = fields.length && fields.every(field => /TOKEN|KEY/.test(field.name)) ? fields.some(field => /KEY/.test(field.name)) ? "Key" : "Token" : "账户";
+    return { key: "missing", label: `云端待配置 ${kind}` };
+  }
+  if (entries.some(service => service.fields.some(field => field.configured))) return { key: "configured", label: "凭据已保存" };
+  return { key: "optional", label: "云端按需配置" };
+}
+
 export function credentialEntries(services) {
   const fields = new Map();
   for (const service of services) for (const field of service.fields) {

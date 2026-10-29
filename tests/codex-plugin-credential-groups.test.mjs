@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { SERVICES, missingFields } from "../src/settings/codex/service-catalog.mjs";
-import { credentialEntries } from "../runtime/chatgpt/ui/credential-groups.mjs";
+import { credentialEntries, accountState } from "../runtime/chatgpt/ui/credential-groups.mjs";
 
 function snapshot(values = {}) {
   return SERVICES.map(service => {
@@ -31,6 +31,20 @@ test("QCArchive reports partial account configuration without requiring anonymou
   assert.equal(state({ QCPORTAL_ADDRESS: "address" }).configuration, "configured");
   assert.equal(state({ QCPORTAL_ADDRESS: "address", QCPORTAL_USERNAME: "user" }).configuration, "partial");
   assert.equal(state({ QCPORTAL_ADDRESS: "address", QCPORTAL_USERNAME: "user", QCPORTAL_PASSWORD: "password" }).configuration, "configured");
+});
+
+test("directory account hints distinguish permissions, optional platforms and incomplete paired fields", () => {
+  const services = snapshot({ fieldqkit: { ORIGIN_API_TOKEN: "fixture" }, qcarchive_data: { QCPORTAL_ADDRESS: "address", QCPORTAL_USERNAME: "user" } });
+  assert.equal(accountState({ id: "qiskit_ibm_runtime", enabled: false }, services).key, "missing");
+  assert.match(accountState({ id: "qiskit_ibm_runtime" }, services).label, /Token/);
+  assert.equal(accountState({ id: "qiskit_docs" }, services).key, "none");
+  assert.equal(accountState({ id: "fieldqkit" }, services).key, "configured");
+  assert.equal(accountState({ id: "fieldqkit" }, snapshot()).key, "optional");
+  assert.equal(accountState({ id: "qcarchive_data" }, services).key, "missing");
+  assert.equal(accountState({ id: "pasqal-experiments", relations: { credentialServiceIds: ["pasqal_cloud"] } }, services).key, "missing");
+  assert.equal(accountState({ id: "custom", authentication: "none" }, services).key, "none");
+  assert.equal(accountState({ id: "custom", authentication: "token", credential: { configured: true } }, services).key, "configured");
+  assert.equal(accountState({ id: "custom", authentication: "token", credential: { configured: true, unavailable: true } }, services).key, "unavailable");
 });
 
 test("independent platform credentials are optional and a store failure cannot look configured", () => {

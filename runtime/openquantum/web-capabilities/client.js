@@ -569,7 +569,7 @@ globalThis.__ModuleLoader__.load({
         label: () => onDemand ? "OpenQuantum" : t("nav"),
         locale: NS,
         inject: () => ({ credentialOperations, loopback: connection.isLoopback }),
-      }, onDemand ? () => h("iframe", { title: "OpenQuantum", className: "oq-plugin-settings", src: "/openquantum/settings", style: { border: 0, display: "block", width: "100%", height: "min(65vh, 760px)", minHeight: 280 } }) : CapabilitySettingsSection));
+      }, onDemand ? () => h("iframe", { title: "OpenQuantum", className: "oq-plugin-settings", src: "/openquantum/settings", style: { border: 0, display: "block", width: "100%", height: "100%", flex: 1, minHeight: 280 } }) : CapabilitySettingsSection));
       if (!globalThis.document?.querySelector('meta[name="openquantum-channels"][content="disabled"]')) ctx.slots.inject("settings.section", () => ctx.slots.register({
         name: "settings.section",
         id: "openquantum-channels",
