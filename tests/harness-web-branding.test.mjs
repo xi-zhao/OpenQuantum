@@ -539,7 +539,10 @@ test("Desktop settings keeps native forms and the shared OpenQuantum section wit
   } });
   const root = render(occupants.get("sidebar.settings"), { wide: true });
   const modal = root.children.find(child => child.type === "native-modal");
-  assert.deepEqual(modal.children[0].children.map(button => button.children[0]), ["general.nav", "Models", "OpenQuantum"]);
+  const navigation = modal.children[0].children;
+  assert.deepEqual(navigation.filter(child => child.type === "button").map(button => button.children[0]), ["general.nav", "Models", "OpenQuantum"]);
+  assert.equal(navigation.find(child => child.type === "a").props.href, "https://github.com/xi-zhao/OpenQuantum/blob/main/THIRD_PARTY_NOTICES.md");
+  assert.equal(modal.props.footer, undefined, "license navigation does not consume a second settings footer");
   assert.equal(forms[0].name, "settings.section");
   assert.equal(forms[0].options.only, "general");
   render(occupants.get("settings.section"));

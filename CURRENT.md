@@ -6,10 +6,13 @@ Session event log 为准，科学状态以 Acceptance Report 为准。2026-09 �
 
 ## 当前基线
 
-- 正在交付统一版本 **0.8.9**：Desktop [v0.8.9](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.9) 与
-  Codex [codex-v0.8.9](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.9) 使用同一源码提交。
-  Desktop 继续固定 DSH Desktop `2.0.0`；功能架构与宿主边界不变。合并、发行、本机安装和最终验收分别以
-  Release 的 `release-verification.json` / `release-validation.json` 为准；发布完成前公开基线仍为 Desktop 0.8.8、Codex 0.8.4。
+- **0.8.9** 已发布并完成本机 Desktop / Codex 更新，源码为 `2035b0f5`；随后实际使用发现设置页可浏览区域过小。
+- 正在交付统一补丁 **0.8.10**：压缩设置页重复标题与页尾，扩大目录和详情，修复筛选区滚动与展开表单的空白溢出。
+  [Desktop v0.8.10](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.10) 与
+  [Codex codex-v0.8.10](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.10) 使用同一源码提交；
+  打包验收新增真实滚轮、键盘、短窗口底部可达与内容区高度检查。说明见 [0.8.10 发布记录](docs/releases/v0.8.10.md)。
+  Desktop 继续固定 DSH Desktop `2.0.0`；功能架构与宿主边界不变。发行、本机安装和最终验收以 Release 的
+  `release-verification.json` / `release-validation.json` 为准；补丁公开前发行基线仍为两端 0.8.9。
 - 能力成熟度以 `.agents/capability-packages.yml` 为准；工程检查通过不表示所有能力均通过科学验收。
 - [PR #39](https://github.com/xi-zhao/OpenQuantum/pull/39) 的拒绝降级与旧设置入口清理、
   [PR #40](https://github.com/xi-zhao/OpenQuantum/pull/40) 的临时凭据授权生命周期修复已经进入主线，并随 Desktop v0.8.5 发行。

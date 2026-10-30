@@ -135,11 +135,10 @@ globalThis.__ModuleLoader__.load({
                 h(IconSettingsOutline16, { size: 20 }), wide && t("trigger")),
               h(Modal, { open, onClose: close, title: t("title"), closeLabel: t("close"),
                 className: "oq-settings", contentClassName: "oq-settings-content",
-                footer: h("a", { href: "https://github.com/xi-zhao/OpenQuantum/blob/main/THIRD_PARTY_NOTICES.md", target: "_blank", rel: "noreferrer" },
-                  "OpenQuantum · © / MIT"),
               },
                 h("nav", { className: "oq-settings-nav", ref: navigation }, ...sections.map(section => h("button", { key: section.id, type: "button",
-                  "aria-current": section.id === active ? "page" : undefined, onClick: () => select(section.id) }, section.label))),
+                  "aria-current": section.id === active ? "page" : undefined, onClick: () => select(section.id) }, section.label)),
+                  h("a", { className: "oq-settings-license", href: "https://github.com/xi-zhao/OpenQuantum/blob/main/THIRD_PARTY_NOTICES.md", target: "_blank", rel: "noreferrer" }, "OpenQuantum · © / MIT")),
                 active && renderSlot("settings.section", { close }, { only: active }),
               ),
             );
