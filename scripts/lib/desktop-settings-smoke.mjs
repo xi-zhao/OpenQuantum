@@ -28,17 +28,19 @@ export async function verifyDesktopSettingsScrolling(port) {
   });
   const evaluate = async expression => (await command("Runtime.evaluate", { expression, returnByValue: true, awaitPromise: true })).result?.value;
   const inside = expression => evaluate(`(() => { const frame = document.querySelector("iframe.oq-plugin-settings"); const doc = frame.contentDocument; return (${expression}); })()`);
-  async function waitFor(expression) {
+  async function waitFor(expression, message = "Desktop settings did not finish rendering") {
     for (let attempt = 0; attempt < 80; attempt++) { if (await evaluate(expression)) return; await delay(100); }
-    throw new Error("Desktop settings did not finish rendering");
+    throw new Error(message);
   }
   async function wheel(selector, scrollSelector, deltaY = 420) {
     const point = await inside(`(() => { const area = doc.querySelector(${JSON.stringify(selector)}).getBoundingClientRect(); const host = frame.getBoundingClientRect(); return {x: host.x + area.x + 12, y: host.y + Math.max(0, area.y) + 12}; })()`);
-    const scrolling = scrollSelector ? `doc.querySelector(${JSON.stringify(scrollSelector)})` : "doc.scrollingElement";
+    const scrolling = `doc.querySelector(${JSON.stringify(scrollSelector)})`;
     const before = await inside(`${scrolling}.scrollTop`);
     await command("Input.dispatchMouseEvent", { type: "mouseMoved", ...point });
     await command("Input.dispatchMouseEvent", { type: "mouseWheel", ...point, deltaX: 0, deltaY });
-    await waitFor(`document.querySelector("iframe.oq-plugin-settings") && (() => { const doc = document.querySelector("iframe.oq-plugin-settings").contentDocument; return ${scrolling}.scrollTop > ${before}; })()`);
+    await waitFor(`document.querySelector("iframe.oq-plugin-settings") && (() => { const doc = document.querySelector("iframe.oq-plugin-settings").contentDocument; return ${scrolling}.scrollTop > ${before}; })()`, `Wheel over ${selector} must scroll ${scrollSelector} from ${before}`);
+    // Finish the gesture before resetting positions or changing focus.
+    await delay(500);
     const after = await inside(`${scrolling}.scrollTop`);
     assert.ok(after > before, `Wheel over ${selector} must scroll ${scrollSelector} (${before} -> ${after})`);
     return { before, after };
@@ -60,9 +62,10 @@ export async function verifyDesktopSettingsScrolling(port) {
       await inside('(() => { doc.querySelector("[data-tab=runtime]").click(); doc.querySelector("[data-tab=skills]").click(); doc.scrollingElement.scrollTop = 0; return true; })()');
       const catalogWheel = await wheel("#toolbar", ".catalog-pane");
       await inside('(() => { const pane = doc.querySelector(".catalog-pane"); pane.scrollTop = 0; frame.focus(); pane.focus({ preventScroll: true }); return true; })()');
-      await command("Input.dispatchKeyEvent", { type: "keyDown", key: "PageDown", code: "PageDown", windowsVirtualKeyCode: 34 });
-      await command("Input.dispatchKeyEvent", { type: "keyUp", key: "PageDown", code: "PageDown", windowsVirtualKeyCode: 34 });
-      await delay(180);
+      await command("Input.dispatchKeyEvent", { type: "rawKeyDown", key: "PageDown", code: "PageDown", windowsVirtualKeyCode: 34, ...(process.platform === "darwin" ? { nativeVirtualKeyCode: 121 } : {}) });
+      await command("Input.dispatchKeyEvent", { type: "keyUp", key: "PageDown", code: "PageDown", windowsVirtualKeyCode: 34, ...(process.platform === "darwin" ? { nativeVirtualKeyCode: 121 } : {}) });
+      await waitFor('document.querySelector("iframe.oq-plugin-settings").contentDocument.querySelector(".catalog-pane").scrollTop > 0', "PageDown must scroll the focused catalog");
+      await delay(300);
       const keyboard = await inside('({top: doc.querySelector(".catalog-pane").scrollTop, active: doc.activeElement.className, focused: doc.hasFocus(), hostActive: document.activeElement.className})');
       assert.ok(keyboard.top > 0, `Keyboard PageDown must scroll the focused catalog: ${JSON.stringify(keyboard)}`);
       const remembered = await inside('(() => { const pane = doc.querySelector(".catalog-pane"); const before = pane.scrollTop; doc.querySelector(".catalog-item").click(); return before; })()');
@@ -76,9 +79,9 @@ export async function verifyDesktopSettingsScrolling(port) {
       const geometry = await inside('({viewport: frame.clientHeight, pane: doc.querySelector(".detail-pane").clientHeight, document: doc.scrollingElement.scrollHeight, app: doc.querySelector("#app").offsetHeight})');
       assert.ok(geometry.pane >= geometry.viewport * .6, "Catalog and detail must occupy most of the settings workspace");
       assert.ok(geometry.document <= geometry.app + 1, "Hidden form labels must not create blank document overflow");
-      const documentWheel = geometry.document > geometry.viewport + 1 ? await wheel(".detail-pane", null, 100_000) : null;
-      assert.ok(await inside('(() => { const rect = doc.querySelector("footer").getBoundingClientRect(); return rect.top >= 0 && rect.bottom <= frame.clientHeight + 1; })()'), "The complete footer must be visible at the document bottom");
-      results.push({ ...size, geometry, catalogWheel, keyboardPageDown: true, catalogPositionRetained: true, detailWheel, detailBottomReachable: bottom, documentWheel, footerVisible: true });
+      assert.ok(geometry.document <= geometry.viewport + 1, "Settings must fit the host without clipping pane bottoms");
+      assert.ok(await inside('(() => { const rect = doc.querySelector("footer").getBoundingClientRect(); return rect.top >= 0 && rect.bottom <= frame.clientHeight + 1; })()'), "The complete footer must remain inside the host viewport");
+      results.push({ ...size, geometry, catalogWheel, keyboardPageDown: true, catalogPositionRetained: true, detailWheel, detailBottomReachable: bottom, footerVisible: true });
       await inside('(() => { const input = doc.querySelector("#search"); input.value = ""; input.dispatchEvent(new doc.defaultView.Event("input", { bubbles: true })); return true; })()');
     }
     return results;
