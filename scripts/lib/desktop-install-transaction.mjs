@@ -199,16 +199,31 @@ async function restoreDetached(root, target, entry) {
   await syncDirectory(path.dirname(target));
 }
 
+function lockKind(root, target) {
+  const home = path.join(root, ".openquantum/dsh");
+  if (target === path.join(home, ".credentials.yaml.lock")) return "credential-lock";
+  const settings = [".openquantum-home.json", ...["migration.json", "settings.json", "skill-policy.json"].map(name => `.openquantum/capabilities/${name}`)];
+  if (settings.some(name => target === path.join(home, `${name}.openquantum.lock`))) return "settings-lock";
+  throw new Error("Only Desktop credential and migration writer locks can be registered");
+}
+
 async function restoreLock(root, target, entry) {
-  if (path.basename(target) !== ".credentials.yaml.lock" || !Number.isSafeInteger(entry.pid) || entry.pid <= 0) throw new Error("Invalid Desktop credential lock registration");
+  if (entry.kind !== lockKind(root, target) || !Number.isSafeInteger(entry.pid) || entry.pid <= 0) throw new Error("Invalid Desktop writer lock registration");
   await noLinks(target);
   const before = await statOrNull(target);
   if (!before) return;
-  const expected = `${entry.pid}\n`;
-  if (!before.isFile() || await readFile(target, "utf8") !== expected) throw new Error("Desktop credential lock belongs to another writer; recovery remains pending");
-  if (entry.pid !== process.pid && alive(entry.pid)) throw new Error("Desktop credential lock owner is still running; recovery remains pending");
+  if (!before.isFile()) throw new Error("Desktop writer lock is not a regular file; recovery remains pending");
+  const expected = await readFile(target, "utf8");
+  let owned = expected === `${entry.pid}\n`;
+  if (entry.kind === "settings-lock") {
+    let owner;
+    try { owner = JSON.parse(expected); } catch { /* An incomplete lock cannot prove ownership. */ }
+    owned = owner?.pid === entry.pid && typeof owner.nonce === "string" && /^[a-f0-9-]{36}$/.test(owner.nonce);
+  }
+  if (!owned) throw new Error("Desktop writer lock belongs to another writer; recovery remains pending");
+  if (entry.pid !== process.pid && alive(entry.pid)) throw new Error("Desktop writer lock owner is still running; recovery remains pending");
   const after = await lstat(target);
-  if (!after.isFile() || before.dev !== after.dev || before.ino !== after.ino || await readFile(target, "utf8") !== expected) throw new Error("Desktop credential lock changed; recovery remains pending");
+  if (!after.isFile() || before.dev !== after.dev || before.ino !== after.ino || await readFile(target, "utf8") !== expected) throw new Error("Desktop writer lock changed; recovery remains pending");
   await rm(target);
   await syncDirectory(path.dirname(target));
 }
@@ -228,7 +243,7 @@ async function rollback(root, journal) {
     const target = targetPath(root, entry.path);
     if (entry.kind === "tree") await restoreTree(root, target, entry);
     else if (entry.kind === "detached") await restoreDetached(root, target, entry);
-    else if (entry.kind === "credential-lock") await restoreLock(root, target, entry);
+    else if (["credential-lock", "settings-lock"].includes(entry.kind)) await restoreLock(root, target, entry);
     else if (entry.kind === "created-directory") {
       await noLinks(target);
       await rmdir(target).catch(error => { if (error.code !== "ENOENT") throw error; });
@@ -315,12 +330,12 @@ async function begin(root) {
   };
   const captureLock = async filename => {
     const target = targetPath(root, filename);
-    if (target !== path.join(root, ".openquantum/dsh/.credentials.yaml.lock")) throw new Error("Only the Desktop credential writer lock can be registered");
+    const kind = lockKind(root, target);
     if (recorded.has(target)) return;
     await noLinks(target);
-    if (await statOrNull(target)) throw new Error(`Desktop credential writer lock already exists: ${target}`);
+    if (await statOrNull(target)) throw new Error(`Desktop writer lock already exists: ${target}`);
     await parents(target);
-    await add(target, { kind: "credential-lock", pid: process.pid });
+    await add(target, { kind, pid: process.pid });
   };
   const captureTree = async (filename, { exclude = [] } = {}) => {
     const target = targetPath(root, filename);

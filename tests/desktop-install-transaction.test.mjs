@@ -223,6 +223,48 @@ test("credential lock recovery preserves foreign ownership and retries after it 
   assert.equal(await readFile(filename, "utf8"), "existing lock");
 });
 
+test("interrupted migration releases its registered settings locks before removing new directories", async t => {
+  const { project, home } = await fixture(t);
+  const storageURL = new URL("../src/settings/codex/storage.mjs", import.meta.url).href;
+  await interrupted(t, project, `
+    const { withLock } = await import(${JSON.stringify(storageURL)});
+    const home = path.join(project, '.openquantum/dsh');
+    const files = ['migration.json', 'settings.json', 'skill-policy.json'].map(name => path.join(home, '.openquantum/capabilities', name));
+    files.push(path.join(home, '.openquantum-home.json'));
+    for (const file of files) await tx.capture(file);
+    for (const file of files) await tx.captureLock(file + '.openquantum.lock');
+    async function hold(index) {
+      if (index < files.length) return withLock(files[index], () => hold(index + 1));
+      await writeFile(files[0], '{}');
+      process.send('ready');
+      await new Promise(() => {});
+    }
+    await hold(0);
+  `);
+  assert.equal((await readdir(path.join(home, '.openquantum/capabilities'))).filter(name => name.endsWith('.lock')).length, 3);
+  await recoverDesktopInstall(project);
+  await assert.rejects(stat(home), { code: "ENOENT" });
+  await noJournal(project);
+});
+
+test("migration lock recovery preserves a replacement owned by another process", async t => {
+  const { project, home } = await fixture(t);
+  const file = path.join(home, '.openquantum/capabilities/settings.json.openquantum.lock');
+  await interrupted(t, project, `
+    const file = path.join(project, '.openquantum/dsh/.openquantum/capabilities/settings.json.openquantum.lock');
+    await tx.captureLock(file);
+    await mkdir(path.dirname(file), { recursive: true });
+    await writeFile(file, JSON.stringify({ pid: process.pid, nonce: '11111111-1111-1111-1111-111111111111' }));
+  `);
+  const foreign = JSON.stringify({ pid: process.pid, nonce: '22222222-2222-2222-2222-222222222222' });
+  await writeFile(file, foreign);
+  await assert.rejects(recoverDesktopInstall(project), /belongs to another writer/);
+  assert.equal(await readFile(file, 'utf8'), foreign);
+  await rm(file);
+  await recoverDesktopInstall(project);
+  await noJournal(project);
+});
+
 test("disk errors retain the journal until a later successful, idempotent recovery", async t => {
   const { project } = await fixture(t);
   const target = path.join(project, "settings.yaml");

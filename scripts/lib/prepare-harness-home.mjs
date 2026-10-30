@@ -126,6 +126,9 @@ export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot, 
     }
     if (transaction) {
       await transaction.captureLock(path.join(harnessHome, ".credentials.yaml.lock"));
+      for (const relative of [".openquantum-home.json", ...["migration.json", "settings.json", "skill-policy.json"].map(name => `.openquantum/capabilities/${name}`)]) {
+        await transaction.captureLock(path.join(harnessHome, `${relative}.openquantum.lock`));
+      }
       const credentialBytes = await readFile(path.join(harnessHome, ".credentials.yaml")).catch(error => { if (error.code === "ENOENT") return null; throw error; });
       if (credentialBytes) await transaction.capture(path.join(harnessHome, ".openquantum-migrations/credentials-v1", sha256(credentialBytes), ".credentials.yaml"));
       for (const relative of migration.keys()) await transaction.capture(path.join(harnessHome, relative));
