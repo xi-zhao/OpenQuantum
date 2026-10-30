@@ -13,6 +13,8 @@ const dataRoot = args[0] || (process.platform === "darwin" ? path.join(homedir()
 const manifest = JSON.parse(await readFile(path.join(source, "openquantum/distribution.json"), "utf8"));
 const projectRoot = path.join(dataRoot, "project");
 const { assertCompatibleHarnessHome } = await import(new URL("./openquantum/scripts/lib/harness-home-compatibility.mjs", import.meta.url));
+const { recoverDesktopInstall } = await import(new URL("./openquantum/scripts/lib/desktop-install-transaction.mjs", import.meta.url));
+await recoverDesktopInstall(projectRoot);
 const { desktopPayloadIdentity, assertNoLinks, assertDesktopUpgrade } = await import(new URL("./openquantum/scripts/lib/desktop-distribution.mjs", import.meta.url));
 const { installDesktopBranding } = await import(new URL("./openquantum/scripts/lib/desktop-branding.mjs", import.meta.url));
 const identity = desktopPayloadIdentity(manifest);
@@ -40,11 +42,12 @@ const prepared = await promisify(execFile)(node, [path.join(payloadRoot, "openqu
 await mkdir(dataRoot, { recursive: true });
 const launcher = path.join(dataRoot, process.platform === "win32" ? "OpenQuantum DSH.cmd" : "OpenQuantum DSH.command");
 const quote = text => `'${text.replaceAll("'", "'\\''")}'`;
+const bootstrap = path.join(payloadRoot, "openquantum/scripts/start-installed-desktop.mjs");
 const body = process.platform === "win32"
-  ? `@echo off\r\n"${node}" "${path.join(projectRoot, "scripts/run-desktop.mjs")}"\r\n`
-  : `#!/bin/sh\nexec ${quote(node)} ${quote(path.join(projectRoot, "scripts/run-desktop.mjs"))}\n`;
+  ? `@echo off\r\n"${node}" "${bootstrap}" "${projectRoot}"\r\n`
+  : `#!/bin/sh\nexec ${quote(node)} ${quote(bootstrap)} ${quote(projectRoot)}\n`;
 await writeFile(launcher, body, { mode: 0o755 });
-const branding = await installDesktopBranding({ projectRoot, dataRoot, node, version: manifest.version });
+const branding = await installDesktopBranding({ projectRoot, dataRoot, node, version: manifest.version, bootstrap });
 let launchEntry = branding.launcher;
 if (process.platform === "darwin" && !args.length) {
   const applications = path.join(homedir(), "Applications");

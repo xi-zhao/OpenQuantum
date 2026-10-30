@@ -78,6 +78,17 @@ Pasqal 的原生 `run_pasqal_workflow` 调用既有受控工作流；租约获�
 不能用保留备份替代保留生效配置，也不自动恢复默认值。
 旧 `.env` 中对应凭据一次性纳入原生凭据存储；迁移后删除的值不会从 `.env` 再次恢复。
 
+Web 与源码 Desktop 继续使用同一 Home 和既有 preset 路径；两端都通过摘要记录区分已应用默认与用户修改。
+只有仍匹配已应用摘要的文件才自动升级。未应用的新默认单独记录并放入 `.openquantum-defaults/`，不会因此取得现有文件的所有权。
+未修改的旧 preset 从当前发行模板重新生成；用户的 persona 和自建 rows 保留，旧 `persona.prefix` 仅在语义明确时转换为 `text`。
+已修改的 Desktop 按需 preset 在切回 Web 前需要手动合并，不能通过覆盖用户配置完成切换。
+
+安装器先只读检查 Home，再将程序、依赖链接、本次准备涉及的配置和版本收据纳入同一可恢复事务。
+准备失败恢复之前的文件与链接；启动时先恢复未完成事务，再进行版本比较及加载项目模块。
+恢复材料留在项目 `.openquantum/desktop-install-backups/`，权限仅限当前用户；事务日志不保存凭据正文。
+仍须先退出使用该 Home 的 Host。恢复不能证明活动的准备进程已退出时会停止并保留材料，不覆盖仍在写入的数据。
+macOS/Linux 用进程组核验安装子进程已退出；Windows 在准备子进程期间发生异常中断时可能保持待恢复状态，需要人工确认进程退出后处理。
+
 `desktop:package` 包含原生 Host package、Preset、共享实现、设置页与带摘要的 Tool 目录。
 能力包供原版 DSH Desktop 加载；独立 OpenQuantum 应用则捆绑固定的桌面运行时与同一份能力包；0.8.7 的最小原生菜单源码扩展和摘要验证见 [Desktop 安装说明](../DESKTOP_INSTALLERS.md)。首次源码启动缺少目录时由构建步骤生成；打开设置不安装 SDK。
 
@@ -85,6 +96,7 @@ Pasqal 的原生 `run_pasqal_workflow` 调用既有受控工作流；租约获�
 
 ```sh
 node --test tests/desktop-preparation.test.mjs tests/desktop-preparation-wait.test.mjs tests/desktop-home.test.mjs tests/desktop-profile-bundle.test.mjs
+node --test tests/harness-home-roundtrip.test.mjs tests/desktop-preset-upgrade.test.mjs tests/desktop-install-transaction.test.mjs tests/desktop-install-home.test.mjs tests/desktop-payload.test.mjs
 node --test tests/codex-plugin-environments.test.mjs
 OPENQUANTUM_DESKTOP_LIVE=1 node --test tests/desktop-preparation.test.mjs
 ```

@@ -43,6 +43,17 @@ for (const ownership of ["managed", "legacy"]) {
   });
 }
 
+test("recognizes an exact legacy Web output even with a stale Desktop ledger", async t => {
+  const home = await isolatedHome(t);
+  const original = '- insert:\n    - id: oq\n      name: "@openquantum/harness-web-branding"\n';
+  await writeFile(path.join(home, "cordis.patch.yml"), original);
+  await writeFile(path.join(home, ".openquantum-home.json"), JSON.stringify({ files: { "cordis.patch.yml": sha256("[]\n") } }));
+  const legacy = { "cordis.patch.yml": sha256(original) };
+  const changes = await desktopHomePatchMigration(home, legacy);
+  assert.deepEqual(await writeManagedHomeFiles(home, changes, legacy), []);
+  assert.equal(await readFile(path.join(home, "cordis.patch.yml"), "utf8"), "[]\n");
+});
+
 test("preserves custom Home overrides and rejects edited OpenQuantum activation before any write", async t => {
   const home = await isolatedHome(t);
   const filename = path.join(home, "cordis.patch.yml");

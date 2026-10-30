@@ -1231,6 +1231,7 @@
   "Deployed MCP URL": "MCP URL の展開",
   "Arguments (one per line)": "引数(ライン1本)",
   "Credential reference (optional)": "認証基準(オプション)",
+  "This form supports HTTP(S) services without authentication only. URLs must not contain a username, password, query parameters or a # fragment.": "このフォームでは、認証不要の HTTP(S) サービスのみ登録できます。URL にユーザー名、パスワード、クエリパラメーター、# フラグメントを含めないでください。",
   "Register as disabled": "障がい者登録",
   "Add an existing Skill": "既存のSkillを追加します。",
   "The Harness filesystem provider discovers Skills in the project. A simple Skill needs a SKILL.md with frontmatter. Complex Skills can include references, scripts and other resources in the same directory.": "Harnessファイルシステムプロバイダは、プロジェクトでSkillsを発見します。 シンプルなSkillは、フロントマッターでSKILL.mdを必要とします。 複雑なSkillsは、同じディレクトリに参照、スクリプト、およびその他のリソースを含めることができます。",

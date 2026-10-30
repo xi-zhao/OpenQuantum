@@ -10,7 +10,7 @@ import { serviceById } from "../../src/settings/codex/service-catalog.mjs";
 import { redactToolResult } from "../../src/settings/codex/redaction.mjs";
 import { RUNTIME_ENV_NAMES } from "../../src/settings/codex/environments.mjs";
 import { externalMcp, externalContract, externalTool } from "./external/catalog.mjs";
-import { ExternalSessions, connectExternal, validateExternal } from "./external/client.mjs";
+import { ExternalSessions, connectExternal as connectExternalProvider, validateExternal } from "./external/client.mjs";
 
 export const LIMITS = Object.freeze({ timeoutMs: 180000, maxOutputBytes: 2 * 1024 * 1024, threads: 2, concurrentCalls: 2 });
 const ajv = new Ajv({ strict: false, allErrors: true });
@@ -90,7 +90,8 @@ export async function readBundledTools(root, providers) {
 }
 
 export async function createBackend({ root = PROJECT_ROOT, discover = false, nodeExecutable = process.execPath,
-  connect = (provider, root, values, signal) => connectProvider(provider, root, values, signal, nodeExecutable) } = {}) {
+  connect = (provider, root, values, signal) => connectProvider(provider, root, values, signal, nodeExecutable),
+  connectExternal = (root, entry, values, options) => connectExternalProvider(root, entry, values, { ...options, nodeExecutable }) } = {}) {
   const capabilities = await readCapabilities(root);
   const providers = providerGroups(capabilities);
   const tools = [];
@@ -132,7 +133,7 @@ export async function createBackend({ root = PROJECT_ROOT, discover = false, nod
   let closed = false;
   const calls = new Set();
   const draining = new Set();
-  const externalSessions = new ExternalSessions({ root, connect: (root, entry, values, options) => connectExternal(root, entry, values, { ...options, nodeExecutable }) });
+  const externalSessions = new ExternalSessions({ root, connect: connectExternal });
   return {
     root,
     providers,
@@ -167,8 +168,9 @@ export async function createBackend({ root = PROJECT_ROOT, discover = false, nod
           const result = await externalSessions.call(externalMcp(route.provider.key), args, { signal: combined, authorize,
             values: lifecycle.values ?? (async () => values), acquire: lifecycle.acquire ?? (async () => ({ release: async () => {} })) });
           if (Buffer.byteLength(JSON.stringify(result)) > LIMITS.maxOutputBytes) throw new Error("Tool output exceeds the ChatGPT result budget");
-          const secrets = (serviceById(route.provider.key)?.fields ?? []).filter(field => field.secret).map(field => values[field.name]).filter(Boolean);
-          return redactToolResult(result, secrets);
+          // ExternalSessions redacts using credentials read during this call,
+          // including a newer generation than the initial values snapshot.
+          return result;
         }
         client = await connect(route.provider, root, values, combined);
         const actual = await providerTools(client, route.provider, combined);
@@ -189,7 +191,7 @@ export async function createBackend({ root = PROJECT_ROOT, discover = false, nod
         // before its stdio connection is closed. No tool process is reused by a
         // different user's call.
         if (client) await new Promise((resolve) => setTimeout(resolve, 250));
-        if ((serviceById(route.provider.key)?.fields ?? []).some(field => field.secret && values[field.name])) throw new Error("服务调用失败、已取消或已停用；请检查服务配置和账户状态");
+        if (route.provider.kind !== "external" && (serviceById(route.provider.key)?.fields ?? []).some(field => field.secret && values[field.name])) throw new Error("服务调用失败、已取消或已停用；请检查服务配置和账户状态");
         throw error;
       } finally {
         try { await client?.close(); }

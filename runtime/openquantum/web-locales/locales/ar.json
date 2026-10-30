@@ -1231,6 +1231,7 @@
   "Deployed MCP URL": "Deployed MCP URL",
   "Arguments (one per line)": "الحجج (واحدة لكل خط)",
   "Credential reference (optional)": "المرجعيات (الاختيارية)",
+  "This form supports HTTP(S) services without authentication only. URLs must not contain a username, password, query parameters or a # fragment.": "يدعم هذا النموذج خدمات HTTP(S) التي لا تتطلب مصادقة فقط. يجب ألا يحتوي عنوان URL على اسم مستخدم أو كلمة مرور أو معاملات استعلام أو جزء يبدأ بالرمز #.",
   "Register as disabled": "السجل حسب الإعاقة",
   "Add an existing Skill": "يضاف ما هو قائم من Skill",
   "The Harness filesystem provider discovers Skills in the project. A simple Skill needs a SKILL.md with frontmatter. Complex Skills can include references, scripts and other resources in the same directory.": "The Harness اكتشافات مزود الملفات Skills في المشروع بسيط Skill الاحتياجات(أ) SKILL.md مع الواجهة الأمامية Skills ويمكن أن يتضمن الدليل نفسه إشارات ومحاضرات وموارد أخرى.",

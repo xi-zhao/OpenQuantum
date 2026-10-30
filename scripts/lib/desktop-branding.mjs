@@ -67,7 +67,8 @@ export function macIcon(png) {
 }
 
 /** A branded launch entry keeps upstream signed application resources intact. */
-export async function installDesktopBranding({ projectRoot, dataRoot, node, version }) {
+export async function installDesktopBranding({ projectRoot, dataRoot, node, version, bootstrap }) {
+  const launchScript = bootstrap ?? path.join(projectRoot, "scripts/run-desktop.mjs");
   if (process.platform === "darwin") {
     const application = path.join(dataRoot, "OpenQuantum.app");
     const escape = value => value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
@@ -87,7 +88,7 @@ export async function installDesktopBranding({ projectRoot, dataRoot, node, vers
 </dict></plist>\n`;
     return writeDesktopLauncher({ dataRoot, launcher: application, files: {
       "OpenQuantum.app/Contents/Info.plist": { content: plist },
-      "OpenQuantum.app/Contents/MacOS/OpenQuantum": { content: `#!/bin/sh\nexec ${quote(node)} ${quote(path.join(projectRoot, "scripts/run-desktop.mjs"))}\n`, mode: 0o755 },
+      "OpenQuantum.app/Contents/MacOS/OpenQuantum": { content: `#!/bin/sh\nexec ${quote(node)} ${quote(launchScript)}${bootstrap ? ` ${quote(projectRoot)}` : ""}\n`, mode: 0o755 },
       "OpenQuantum.app/Contents/Resources/OpenQuantum.icns": { content: macIcon(await readFile(path.join(projectRoot, "packages/openquantum-web-branding/assets/desktop-icon-512.png"))) },
     } });
   }
@@ -99,7 +100,7 @@ export async function installDesktopBranding({ projectRoot, dataRoot, node, vers
       '$ErrorActionPreference = "Stop"',
       '$link = (New-Object -ComObject WScript.Shell).CreateShortcut($env:OQ_ICON_SHORTCUT)',
       '$link.TargetPath = $env:OQ_ICON_NODE',
-      '$link.Arguments = \'"\' + $env:OQ_ICON_SCRIPT + \'"\'',
+      '$link.Arguments = \'"\' + $env:OQ_ICON_SCRIPT + \'"\' + $env:OQ_ICON_PROJECT_ARG',
       '$link.WorkingDirectory = $env:OQ_ICON_PROJECT',
       '$link.IconLocation = $env:OQ_ICON_FILE + ",0"',
       '$link.Description = "OpenQuantum"',
@@ -111,7 +112,7 @@ export async function installDesktopBranding({ projectRoot, dataRoot, node, vers
       // Finder/Explorer launches and isolated installs need no developer PATH.
       const powershell = path.join(process.env.SystemRoot || process.env.WINDIR || "C:\\Windows", "System32/WindowsPowerShell/v1.0/powershell.exe");
       await execute(powershell, ["-NoProfile", "-NonInteractive", "-EncodedCommand", Buffer.from(script, "utf16le").toString("base64")], {
-        env: { ...process.env, OQ_ICON_SHORTCUT: stagedShortcut, OQ_ICON_NODE: node, OQ_ICON_SCRIPT: path.join(projectRoot, "scripts/run-desktop.mjs"), OQ_ICON_PROJECT: projectRoot, OQ_ICON_FILE: iconFile },
+        env: { ...process.env, OQ_ICON_SHORTCUT: stagedShortcut, OQ_ICON_NODE: node, OQ_ICON_SCRIPT: launchScript, OQ_ICON_PROJECT_ARG: bootstrap ? ` "${projectRoot}"` : "", OQ_ICON_PROJECT: projectRoot, OQ_ICON_FILE: iconFile },
       });
       return await writeDesktopLauncher({ dataRoot, launcher: shortcut, files: {
         "OpenQuantum.ico": { content: pngIcon(await readFile(path.join(projectRoot, "packages/openquantum-web-branding/assets/desktop-icon-192.png"))) },

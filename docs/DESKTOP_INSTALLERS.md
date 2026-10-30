@@ -7,12 +7,12 @@ Agent 预设管理、自动化中心或 Magpie 专用连接页。
 复用固定版本 DSH 的窗口、会话、权限和持久化机制，通过官方配置与 Client Slot 扩展收拢界面。
 普通界面、窗口与图标使用 OpenQuantum 品牌，上游来源保留在设置底部的开源许可链接。不自动吸收上游新增功能。
 
-## OpenQuantum 0.8.8 独立安装包（Mac Apple Silicon）
+## OpenQuantum 0.8.9 独立安装包（Mac Apple Silicon）
 
-从 [v0.8.8 Release](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.8) 下载
-`OpenQuantum-0.8.8-macOS-arm64.dmg` 和 `SHA256SUMS`，校验摘要后打开 DMG，将 `OpenQuantum.app`
+从 [v0.8.9 Release](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.9) 下载
+`OpenQuantum-0.8.9-macOS-arm64.dmg` 和 `SHA256SUMS`，校验摘要后打开 DMG，将 `OpenQuantum.app`
 拖入「应用程序」再打开。应用自带桌面程序、Node、uv 与锁定依赖，无需另装 DSH Desktop。
-Codex 插件的公开版本仍为 [codex-v0.8.4](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.4)。
+Codex 插件同步发行 [codex-v0.8.9](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.9)，两个标签指向同一源码提交。
 0.8.8 的应用与 Dock 图标使用白色圆角底板，菜单栏继续使用适合系统背景的透明标志。
 
 本次独立安装包只覆盖 Apple Silicon；Intel 和 Windows 的既有能力包见下文。
@@ -23,6 +23,8 @@ Codex 插件的公开版本仍为 [codex-v0.8.4](https://github.com/xi-zhao/Open
 
 默认数据目录是 `~/Library/Application Support/OpenQuantum/Desktop/`：`project/` 保存可写部署、会话和配置，
 `native/` 保存窗口与原生偏好。应用更新只替换 `/Applications/OpenQuantum.app`；不要删除数据目录。
+0.8.9 将依赖与 Node、uv 保留到该数据目录的 `versions/`，供成功安装和失败恢复使用。
+首次从旧实现迁移时，已被外部替换掉的旧应用内依赖无法恢复，因此升级前仍须备份旧应用与数据。
 Finder 和 Dock 启动也使用这个独立目录，不复用旧启动器的 `OpenQuantum/project/` 和 `OpenQuantum/native/`。
 旧会话、配置和程序留在原位；简洁版从新会话开始。模型配置与凭据可以在备份后单独复制，
 但 V3 等后续会话格式不能复制进简洁版继续使用。需要阅读旧会话时，另行导出阅读副本。
@@ -58,7 +60,9 @@ Windows 自定义客户端位置通过 `DSH_DESKTOP_EXECUTABLE` 指定原版 `DS
 旧私有客户端安装迁移时，仅自动替换能与旧分发清单逐字节匹配的生成默认文件；用户修改继续保留。
 
 安装器按语义版本比较分发清单，在复制能力包、更新程序或启动入口前拒绝降级；同版本修复和升级仍可执行。
-版本缺失或无效时停止，不猜测版本顺序。安装过程不改写用户会话、凭据或自定义设置。
+版本缺失或无效时停止，不猜测版本顺序。程序、依赖和 Home 准备全部成功后才提交新版本收据；
+普通失败恢复此前状态，进程中断后从安装或启动入口先恢复未完成事务。成功升级后的降级保护继续生效。
+恢复只覆盖本次安装管理的文件，不纳入用户会话、工作区或 SDK 环境；凭据格式迁移与默认配置投影遵循下述规则。
 已经安装的旧私有 `OpenQuantum Desktop.app` 自带旧安装器，不能自动获得此保护。
 完成迁移后应备份并停用这个旧入口；可将其原路径改为新版 `OpenQuantum.app` 的链接，使已有快捷入口继续指向新版。
 若旧入口曾把共用 `project/` 回写为旧版，需要重新安装对应能力包恢复程序与依赖；不要通过删除 Home 或数据目录处理。

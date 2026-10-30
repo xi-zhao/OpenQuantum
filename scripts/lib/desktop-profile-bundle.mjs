@@ -32,7 +32,7 @@ export async function desktopHomePatchMigration(home, legacyFiles = {}) {
     throw error;
   });
   const hash = sha256(source);
-  if (hash === state.files?.["cordis.patch.yml"]) {
+  if (hash === state.files?.["cordis.patch.yml"] || hash === legacyFiles["cordis.patch.yml"]) {
     if (source.toString() !== "[]\n") files.set(`.openquantum-migrations/${hash}/cordis.patch.yml`, source);
     files.set("cordis.patch.yml", "[]\n");
     return files;

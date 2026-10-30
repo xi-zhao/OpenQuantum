@@ -33,7 +33,7 @@ const fixtureCredentials = () => {
     set: async (ref, value) => values.set(ref, value), unset: async ref => values.delete(ref) };
 };
 async function fixture(t, options = {}) {
-  const directory = await fs.mkdtemp(path.join(os.tmpdir(), "oq-desktop-preparation-"));
+  const directory = await fs.mkdtemp(path.join(await fs.realpath(os.tmpdir()), "oq-desktop-preparation-"));
   const credentials = fixtureCredentials();
   const app = await createDesktopApplication({ root, directory, credentials, ...options });
   t.after(async () => { await app.close(); await fs.rm(directory, { recursive: true, force: true }); });
@@ -208,7 +208,7 @@ test("chat teardown and plugin close drain the same in-flight resource, without 
 });
 
 test("Desktop projection removes overlapping old MCP registrations and migration preserves actual prohibitions", async t => {
-  const home = await fs.mkdtemp(path.join(os.tmpdir(), "oq-desktop-migration-")); t.after(() => fs.rm(home, { recursive: true, force: true }));
+  const home = await fs.mkdtemp(path.join(await fs.realpath(os.tmpdir()), "oq-desktop-migration-")); t.after(() => fs.rm(home, { recursive: true, force: true }));
   const original = await fs.readFile(path.join(root, "runtime/openquantum/agent-presets/openquantum/agent.cordis.yml"), "utf8");
   const projected = desktopPreset(original, root, process.execPath, { onDemand: true });
   const entries = parse(projected, { customTags: [{ tag: "tag:yaml.org,2002:js", resolve: value => value }] });
@@ -228,13 +228,13 @@ test("Desktop projection removes overlapping old MCP registrations and migration
 
 test("legacy native Provider bans survive migration with the complete old MCP preset", async t => {
   const original = await fs.readFile(path.join(root, "runtime/openquantum/agent-presets/openquantum/agent.cordis.yml"), "utf8");
-  const oldNode = path.join(os.tmpdir(), "old-openquantum-runtime", process.platform === "win32" ? "node.exe" : "node");
+  const oldNode = path.join(await fs.realpath(os.tmpdir()), "old-openquantum-runtime", process.platform === "win32" ? "node.exe" : "node");
   const deployed = desktopPreset(original, root, oldNode, { runtimeBin: path.dirname(oldNode) });
   for (const [plugin, tool] of [["./native-quantum-tools.mjs", "solve_and_validate_ground_state"],
     ["./quantum-practices-tools.mjs", "quantum_practices"], ["./metriq-data-tools.mjs", "metriq_benchmarks"]]) {
     const document = parseDocument(deployed, { customTags: [{ tag: "tag:yaml.org,2002:js", resolve: value => value }] });
     document.contents.items.find(row => row.get("name") === plugin).set("disabled", true);
-    const home = await fs.mkdtemp(path.join(os.tmpdir(), "oq-native-ban-migration-"));
+    const home = await fs.mkdtemp(path.join(await fs.realpath(os.tmpdir()), "oq-native-ban-migration-"));
     t.after(() => fs.rm(home, { recursive: true, force: true }));
     const active = path.join(home, ".agent-presets/openquantum/agent.cordis.yml");
     await fs.mkdir(path.dirname(active), { recursive: true }); await fs.writeFile(active, document.toString());
@@ -254,7 +254,7 @@ test("custom managed MCP configuration blocks migration before changing any user
   const original = await fs.readFile(path.join(root, "runtime/openquantum/agent-presets/openquantum/agent.cordis.yml"), "utf8");
   for (const [field, value] of [["command", "/custom/approved-python"], ["args", ["/custom/reviewed-server.py"]],
     ["env", { RESEARCH_SETTING: "custom" }], ["credentialEnv", { TOKEN: "CUSTOM_TOKEN_REF" }], ["toolCallTimeoutMs", 12345], ["reconnect", undefined]]) {
-    const home = await fs.mkdtemp(path.join(os.tmpdir(), "oq-custom-mcp-migration-"));
+    const home = await fs.mkdtemp(path.join(await fs.realpath(os.tmpdir()), "oq-custom-mcp-migration-"));
     t.after(() => fs.rm(home, { recursive: true, force: true }));
     const document = parseDocument(original, { customTags: [{ tag: "tag:yaml.org,2002:js", resolve: item => item }] });
     const row = document.contents.items.find(item => item.get("config", true)?.get("serverName") === "qiskit");
@@ -275,7 +275,7 @@ test("custom managed MCP configuration blocks migration before changing any user
 });
 
 test("legacy Desktop Tool profiles retain deployment defaults, embedded fallbacks and current overrides", async t => {
-  const directory = await fs.mkdtemp(path.join(os.tmpdir(), "oq-profile-migration-"));
+  const directory = await fs.mkdtemp(path.join(await fs.realpath(os.tmpdir()), "oq-profile-migration-"));
   t.after(() => fs.rm(directory, { recursive: true, force: true }));
   const project = path.join(directory, "project");
   await fs.mkdir(path.join(project, ".agents/skills"), { recursive: true });
@@ -332,7 +332,7 @@ test("legacy Desktop Tool profiles retain deployment defaults, embedded fallback
 });
 
 test("legacy Qiskit prohibition survives missing deployment defaults and honors an explicit override", async t => {
-  const directory = await fs.mkdtemp(path.join(os.tmpdir(), "oq-qiskit-migration-"));
+  const directory = await fs.mkdtemp(path.join(await fs.realpath(os.tmpdir()), "oq-qiskit-migration-"));
   t.after(() => fs.rm(directory, { recursive: true, force: true }));
   const project = path.join(directory, "project");
   await fs.mkdir(path.join(project, ".agents/skills"), { recursive: true });

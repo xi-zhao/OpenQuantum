@@ -3,6 +3,7 @@ import { lstat, mkdir, readFile, rename, rm, symlink, writeFile } from "node:fs/
 import path from "node:path";
 import { assertCompatibleHarnessHome } from "./harness-home-compatibility.mjs";
 import { compareVersions, parseVersion } from "../../src/updates/release.mjs";
+import { withDesktopInstall } from "./desktop-install-transaction.mjs";
 
 const STATE = ".openquantum/desktop-distribution.json";
 export const sha256 = (data) => createHash("sha256").update(data).digest("hex");
@@ -92,8 +93,14 @@ export async function assertDesktopUpgrade(projectRoot, version) {
   return previous;
 }
 
-/** Refresh only distributed files; preserve sessions, credentials and user extensions. */
-export async function installDesktopDistribution({ payload, projectRoot }) {
+/** Refresh distribution and optional Home preparation as one recoverable install. */
+export async function installDesktopDistribution({ payload, projectRoot, preflight, prepare }) {
+  return withDesktopInstall(projectRoot, async ({ begin }) => {
+    return installLocked({ payload, projectRoot, preflight, prepare, begin });
+  });
+}
+
+async function installLocked({ payload, projectRoot, preflight, prepare, begin }) {
   await assertCompatibleHarnessHome(path.join(projectRoot, ".openquantum/dsh"));
   const next = JSON.parse(await readFile(path.join(payload, "distribution.json"), "utf8"));
   validateManifest(next);
@@ -134,6 +141,11 @@ export async function installDesktopDistribution({ payload, projectRoot }) {
   const dependencies = path.join(projectRoot, "node_modules");
   const dependencyStat = await statOrNull(dependencies);
   if (dependencyStat && !dependencyStat.isSymbolicLink()) throw new Error("An unmanaged node_modules directory blocks Desktop preparation");
+  await preflight?.({ next, changes, preservedFiles: preserved });
+  const tx = await begin();
+  for (const { target } of changes) await tx.capture(target);
+  await tx.capture(dependencies);
+  await tx.capture(statePath);
   for (const { target, content, mode } of changes) {
     if (content === null) await rm(target, { force: true });
     else await atomicWrite(target, content, mode);
@@ -141,6 +153,7 @@ export async function installDesktopDistribution({ payload, projectRoot }) {
   await mkdir(projectRoot, { recursive: true });
   if (dependencyStat) await rm(dependencies, { force: true });
   await symlink(path.join(payload, "node_modules"), dependencies, process.platform === "win32" ? "junction" : "dir");
+  await prepare?.(tx);
   await atomicWrite(statePath, JSON.stringify(next, null, 2));
   return { version: next.version, changedFiles: changes.length, preservedFiles: preserved };
 }

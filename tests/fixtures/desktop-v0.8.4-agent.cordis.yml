@@ -1,0 +1,1542 @@
+# OpenQuantum agent-plane composition. Domain behavior lives in project
+# Skills/MCP; this preset only gives them a safe execution surface.
+
+- id: persona
+  name: '@deepseek-ai/dsh-persona'
+  config:
+    prefix: >-
+      You are OpenQuantum, a scientific research agent powered by {{model}}.
+      Your working directory is {{cwd}}. Load the relevant project Skill before
+      performing domain work, preserve scientific uncertainty, and never claim
+      scientific acceptance unless a trusted Acceptance Report or Result Commit
+      records status=passed for the relevant materialized evidence.
+
+- id: agent-instructions
+  name: '@deepseek-ai/dsh-agent-instructions'
+  config:
+    maxBytes: 65536
+
+- id: tool-bash
+  name: '@deepseek-ai/dsh-tool-bash'
+  disabled: !!js process.platform === 'win32'
+
+- id: tool-pwsh
+  name: '@deepseek-ai/dsh-tool-pwsh'
+  disabled: !!js process.platform !== 'win32'
+
+- id: tool-fs
+  name: '@deepseek-ai/dsh-tool-fs'
+
+- id: tool-fs-search
+  name: '@deepseek-ai/dsh-tool-fs-search'
+  config:
+    sampleOverCapGlobResults: false
+
+- id: tool-jobs
+  name: '@deepseek-ai/dsh-tool-jobs'
+
+# Optional operator-selected Tool subsets; default full preserves existing sessions.
+# This scoped Host Plugin uses Harness restrictions without another Tool registry.
+- id: optional-tool-profiles
+  name: ./optional-tool-profiles.mjs
+  config:
+    qiskit_gym: !!js process.env.OPENQUANTUM_GYM_TOOL_PROFILE || 'full'
+    quantum_hardware: !!js process.env.OPENQUANTUM_HARDWARE_TOOL_PROFILE || 'full'
+    flagquantum: !!js process.env.OPENQUANTUM_FLAGQUANTUM_TOOL_PROFILE || 'full'
+
+- id: skill-filesystem
+  name: '@deepseek-ai/dsh-skill-filesystem'
+  config:
+    providerName: openquantum-capabilities
+    includeDefaultRoots: false
+    customSkillDirs:
+      - !!js process.cwd() + '/.agents/skills'
+
+# Pure local JavaScript runs in-process through one bounded Tool Provider.
+# MCP remains reserved for independent processes, cross-language runtimes and
+# remote services. The provider exposes only the ordinary user-facing actions.
+- id: tool-openquantum-native-quantum
+  name: ./native-quantum-tools.mjs
+
+- id: tool-quantum-learning
+  name: ./learning-tools.mjs
+
+# Pinned MIT reference catalog; no simulator or Python execution.
+- id: tool-quantum-practices
+  name: ./quantum-practices-tools.mjs
+
+# Open MIT algorithm adaptation; Python environment is prepared explicitly.
+- id: mcp-hamiltonian-simulation
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: hamiltonian_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/hamiltonian-simulation/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: true
+
+# Agent Presets mounts this composition once per process and every joined
+# Session inherits the same Harness MCP Client. Restart Harness after editing this
+# composition: retained hot-reload generations must not own the same
+# serverName concurrently.
+
+# FieldQKit is a Python SDK rather than a native MCP Server. This thin trusted
+# bridge exposes only credential status and cloud-side read-only backend discovery. The
+# pinned package is prepared explicitly with setup-paper-tools.mjs fieldqkit-hardware;
+# no QPU job submission tool is registered in this milestone.
+- id: mcp-fieldqkit
+  name: ./credentialed-mcp-client.mjs
+  config:
+    serverName: fieldqkit
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/fieldqkit-hardware/mcp/server.mjs'
+    env: {}
+    optionalCredentialEnv:
+      QUAFU_API_TOKEN: QUAFU_API_TOKEN
+      TIANYAN_API_TOKEN: TIANYAN_API_TOKEN
+      GUODUN_API_TOKEN: GUODUN_API_TOKEN
+      TENCENT_API_TOKEN: TENCENT_API_TOKEN
+      ORIGIN_API_TOKEN: ORIGIN_API_TOKEN
+      FIELDQUANTUM_API_TOKEN: FIELDQUANTUM_API_TOKEN
+      LOGICALQUBIT_API_TOKEN: LOGICALQUBIT_API_TOKEN
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 180000
+    failOnStartupError: true
+    reconnect:
+      enabled: true
+      initialDelayMs: 1000
+      maxDelayMs: 30000
+      maxAttempts: 10
+
+# Pinned toqito density-matrix facts plus an independent JavaScript Validator.
+# The MCP process starts cheaply and uv materializes the Python environment only
+# on first use. It exposes no cloud credentials, remote service or hardware job.
+- id: mcp-quantum-information-audit
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: toqito_audit
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/quantum-information-audit/mcp/server.mjs'
+    env: {}
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: true
+    reconnect:
+      enabled: true
+      initialDelayMs: 1000
+      maxDelayMs: 30000
+      maxAttempts: 10
+
+# Pinned MQT QCEC unitary-circuit equivalence checking. The MCP process starts
+# cheaply and uv materializes the native wheel only on first use. Inputs are
+# bounded OpenQASM 2 strings; no arbitrary paths, cloud or hardware are exposed.
+- id: mcp-quantum-circuit-verification
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: qcec_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/quantum-circuit-verification/mcp/server.mjs'
+    env: {}
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: true
+    reconnect:
+      enabled: true
+      initialDelayMs: 1000
+      maxDelayMs: 30000
+      maxAttempts: 10
+
+# Pinned Stim and PyMatching rotated-surface-code memory experiments. Inputs are
+# explicitly bounded and seeded; results are finite-shot observations with
+# uncertainty, not threshold or hardware claims. No cloud credentials or QPU
+# submission Tool is registered.
+- id: mcp-qec-memory-experiment
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: qec_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/qec-memory-experiment/mcp/server.mjs'
+    env: {}
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: true
+    reconnect:
+      enabled: true
+      initialDelayMs: 1000
+      maxDelayMs: 30000
+      maxAttempts: 10
+
+# FatQat runs bounded circuit/profile and Hamiltonian experiments in an isolated
+# Python process. Startup only registers Tools; first use materializes the locked
+# environment. The server owns no Session, model route or cloud/QPU operation.
+- id: mcp-fatqat-local
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: fatqat_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/fatqat-workbench/mcp/server.mjs'
+    env: {}
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: true
+    reconnect:
+      enabled: true
+      initialDelayMs: 1000
+      maxDelayMs: 30000
+      maxAttempts: 10
+
+# PairInteraction owns a separate Python environment and atomic database lock.
+# Registration is lightweight; dependency and data setup is an explicit action.
+- id: mcp-pairinteraction-rydberg
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: pairinteraction_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/pairinteraction-rydberg/mcp/server.mjs'
+    env: {}
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: true
+    reconnect:
+      enabled: true
+      initialDelayMs: 1000
+      maxDelayMs: 30000
+      maxAttempts: 10
+
+# TyxonQ is a Python SDK rather than a stable upstream MCP server. This local
+# bridge exposes only bounded circuit and noise simulation. It is disabled by
+# default because the pinned scientific Python environment is large and is
+# prepared explicitly with setup-paper-tools.mjs tyxonq-workbench. No cloud token or hardware
+# submission Tool is registered.
+- id: mcp-tyxonq-local
+  name: '@deepseek-ai/dsh-mcp-client'
+  disabled: true
+  config:
+    serverName: tyxonq_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/tyxonq-workbench/mcp/server.mjs'
+    env: {}
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: true
+    reconnect:
+      enabled: true
+      initialDelayMs: 1000
+      maxDelayMs: 30000
+      maxAttempts: 10
+
+# Local pyqpanda_alg QUBO modeling and solving bridge. The MCP process starts
+# cheaply; its pinned scientific Python environment (pyqpanda3 is a native
+# wheel) is prepared explicitly with setup-paper-tools.mjs qpanda-qubo. It only compiles
+# and solves bounded QUBO problems on the CPU simulator and registers no Origin
+# Quantum cloud token or hardware submission Tool.
+- id: mcp-qpanda-qubo
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: qpanda_qubo
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/qpanda-qubo/mcp/server.mjs'
+    env: {}
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: true
+    reconnect:
+      enabled: true
+      initialDelayMs: 1000
+      maxDelayMs: 30000
+      maxAttempts: 10
+
+# Official Qiskit MCP servers. Package versions are pinned so every Fork gets
+# the same tool schemas. Set OPENQUANTUM_DISABLE_QISKIT_MCP=1 for offline CI;
+# normal installations enable the two credential-free core services.
+- id: mcp-qiskit
+  name: '@deepseek-ai/dsh-mcp-client'
+  disabled: !!js process.env.OPENQUANTUM_DISABLE_QISKIT_MCP === '1'
+  config:
+    serverName: qiskit
+    transport: stdio
+    command: uvx
+    args:
+      - --from
+      - qiskit-mcp-server==0.3.1
+      - qiskit-mcp-server
+    env: {}
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 120000
+    failOnStartupError: true
+    reconnect:
+      enabled: true
+      initialDelayMs: 1000
+      maxDelayMs: 30000
+      maxAttempts: 10
+
+- id: mcp-qiskit-docs
+  name: '@deepseek-ai/dsh-mcp-client'
+  disabled: !!js process.env.OPENQUANTUM_DISABLE_QISKIT_MCP === '1'
+  config:
+    serverName: qiskit_docs
+    transport: stdio
+    command: uvx
+    args:
+      - --from
+      - qiskit-docs-mcp-server==0.3.0
+      - --with
+      - socksio==1.0.0
+      - qiskit-docs-mcp-server
+    env: {}
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 120000
+    failOnStartupError: true
+    reconnect:
+      enabled: true
+      initialDelayMs: 1000
+      maxDelayMs: 30000
+      maxAttempts: 10
+
+# Cloud services stay opt-in. Their shared IBM token is resolved from the
+# Harness credential store by a thin trusted adapter, never from UI state or
+# Cordis YAML. Enabling either service requires a Harness restart.
+- id: mcp-qiskit-ibm-runtime
+  name: ./credentialed-mcp-client.mjs
+  disabled: true
+  config:
+    serverName: qiskit_ibm_runtime
+    transport: stdio
+    command: uvx
+    args:
+      - --from
+      - qiskit-ibm-runtime-mcp-server==0.6.1
+      - qiskit-ibm-runtime-mcp-server
+    env: {}
+    credentialEnv:
+      QISKIT_IBM_TOKEN: QISKIT_IBM_TOKEN
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 300000
+    failOnStartupError: true
+    reconnect:
+      enabled: true
+      initialDelayMs: 1000
+      maxDelayMs: 60000
+      maxAttempts: 10
+
+- id: mcp-qiskit-ibm-transpiler
+  name: ./credentialed-mcp-client.mjs
+  disabled: true
+  config:
+    serverName: qiskit_ibm_transpiler
+    transport: stdio
+    command: uvx
+    args:
+      - --from
+      - qiskit-ibm-transpiler-mcp-server==0.4.1
+      - qiskit-ibm-transpiler-mcp-server
+    env: {}
+    credentialEnv:
+      QISKIT_IBM_TOKEN: QISKIT_IBM_TOKEN
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 300000
+    failOnStartupError: true
+    reconnect:
+      enabled: true
+      initialDelayMs: 1000
+      maxDelayMs: 60000
+      maxAttempts: 10
+
+# Community server: intentionally disabled until a project explicitly opts in.
+- id: mcp-qiskit-gym
+  name: '@deepseek-ai/dsh-mcp-client'
+  disabled: true
+  config:
+    serverName: qiskit_gym
+    transport: stdio
+    command: uvx
+    args:
+      - --from
+      - qiskit-gym-mcp-server==0.4.1
+      - qiskit-gym-mcp-server
+    env: {}
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 300000
+    failOnStartupError: true
+    reconnect:
+      enabled: true
+      initialDelayMs: 1000
+      maxDelayMs: 60000
+      maxAttempts: 10
+
+# Community multi-provider hardware control plane. It is intentionally kept
+# disabled: the server exposes real job submission/cancellation tools and its
+# upstream Python dependency ranges are not a reproducible release. The setup
+# command checks out one reviewed commit into the ignored .openquantum tree;
+# Harness still owns MCP lifecycle and credential injection.
+- id: mcp-quantum-hardware
+  name: ./credentialed-mcp-client.mjs
+  disabled: true
+  config:
+    serverName: quantum_hardware
+    transport: stdio
+    command: uv
+    args:
+      - run
+      - --with-requirements
+      - !!js process.cwd() + '/.openquantum/external/quantum-hardware-mcp/requirements.txt'
+      - python
+      - !!js process.cwd() + '/.openquantum/external/quantum-hardware-mcp/server.py'
+    env:
+      IBM_SHOW_ACCOUNT_INFO: 'false'
+    credentialEnv:
+      IBM_QUANTUM_TOKEN: QISKIT_IBM_TOKEN
+    optionalCredentialEnv:
+      IONQ_API_KEY: IONQ_API_KEY
+    cwd: !!js process.cwd() + '/.openquantum/external/quantum-hardware-mcp'
+    toolCallTimeoutMs: 600000
+    failOnStartupError: true
+    reconnect:
+      enabled: true
+      initialDelayMs: 2000
+      maxDelayMs: 60000
+      maxAttempts: 5
+
+# Origin Quantum (OriginQ) official runtime MCP. Like the community hardware
+# control plane it stays disabled by default: sample/estimate/batch tools submit
+# real jobs to the Origin Quantum cloud (Wukong QPU) and consume credits. The
+# setup command checks out one reviewed commit into the ignored .openquantum
+# tree; uv builds the pinned pyproject environment (pyqpanda3 is a native wheel)
+# on the first tool call. The QPANDA3_API_KEY credential is resolved from the
+# Harness store by the trusted adapter, never from UI state or Cordis YAML.
+- id: mcp-qpanda-runtime
+  name: ./credentialed-mcp-client.mjs
+  disabled: true
+  config:
+    serverName: qpanda_runtime
+    transport: stdio
+    command: uv
+    args:
+      - run
+      - --project
+      - !!js process.cwd() + '/.openquantum/external/qpanda3-runtime-mcp'
+      - python
+      - -m
+      - qpanda3_runtime_mcp_server
+    env: {}
+    credentialEnv:
+      QPANDA3_API_KEY: QPANDA3_API_KEY
+    cwd: !!js process.cwd() + '/.openquantum/external/qpanda3-runtime-mcp'
+    toolCallTimeoutMs: 600000
+    failOnStartupError: true
+    reconnect:
+      enabled: true
+      initialDelayMs: 2000
+      maxDelayMs: 60000
+      maxAttempts: 5
+
+# Preserve one bounded scientific presentation in Harness-native tool/result
+# content. The plugin owns no runtime or storage; it only adapts MCP
+# structuredContent at the official tools/post-execute seam.
+# Persist large L1 results before replacing model-facing text with a summary.
+- id: science-result-delivery
+  name: ./science-result-delivery.mjs
+
+- id: scientific-result-projection
+  name: ./scientific-result-projection.mjs
+
+- id: tool-skill
+  name: '@deepseek-ai/dsh-tool-skill'
+
+- id: tool-goal
+  name: '@deepseek-ai/dsh-tool-goal'
+
+- id: compaction
+  name: cordis:group
+  group: true
+  isolate:
+    compaction: true
+    toolResultPruner: true
+  config:
+    - id: compaction-basic
+      name: '@deepseek-ai/dsh-compaction-basic'
+
+    - id: command-compact
+      name: '@deepseek-ai/dsh-command-compact'
+
+    - id: tool-result-pruner
+      name: '@deepseek-ai/dsh-compaction-tool-result-pruner'
+      config:
+        thresholdChars: 8192
+        headChars: 4096
+        tailChars: 1024
+
+- id: tool-ask-user
+  name: '@deepseek-ai/dsh-tool-ask-user'
+
+- id: tool-todo
+  name: '@deepseek-ai/dsh-tool-todo'
+  config:
+    allowParallelInProgress: true
+
+- id: tool-web
+  name: '@deepseek-ai/dsh-tool-web'
+  config:
+    fetch: false
+    searchTimeoutMs: 60000
+
+# Paper-backed local science tools. Python/Julia workers use pinned isolated environments.
+- id: mcp-sqd-chemistry
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: sqd_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/sqd-chemistry/mcp/server.mjs'
+    env: {}
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: true
+    reconnect:
+      enabled: true
+      initialDelayMs: 1000
+      maxDelayMs: 30000
+      maxAttempts: 10
+
+- id: mcp-tjm-dynamics
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: tjm_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/tjm-dynamics/mcp/server.mjs'
+    env: {}
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: true
+    reconnect:
+      enabled: true
+      initialDelayMs: 1000
+      maxDelayMs: 30000
+      maxAttempts: 10
+
+- id: mcp-ldpc-decoding
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: ldpc_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/ldpc-decoding/mcp/server.mjs'
+    env: {}
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: true
+    reconnect:
+      enabled: true
+      initialDelayMs: 1000
+      maxDelayMs: 30000
+      maxAttempts: 10
+
+- id: mcp-flow-vqe
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: flow_vqe_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/flow-vqe/mcp/server.mjs'
+    env: {}
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: true
+    reconnect:
+      enabled: true
+      initialDelayMs: 1000
+      maxDelayMs: 30000
+      maxAttempts: 10
+
+- id: mcp-tenpy-ground-state
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: tenpy_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/tenpy-ground-state/mcp/server.mjs'
+    env: {}
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: true
+    reconnect:
+      enabled: true
+      initialDelayMs: 1000
+      maxDelayMs: 30000
+      maxAttempts: 10
+
+- id: mcp-mitiq-error-mitigation
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: mitiq_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/mitiq-error-mitigation/mcp/server.mjs'
+    env: {}
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: true
+    reconnect:
+      enabled: true
+      initialDelayMs: 1000
+      maxDelayMs: 30000
+      maxAttempts: 10
+
+- id: mcp-randomized-measurements
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: random_meas_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/randomized-measurements/mcp/server.mjs'
+    env: {}
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: true
+    reconnect:
+      enabled: true
+      initialDelayMs: 1000
+      maxDelayMs: 30000
+      maxAttempts: 10
+
+# Pinned local Unitary ecosystem capabilities; isolated scientific workers.
+- id: mcp-dynamiqs-dynamics
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: dynamiqs_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/dynamiqs-dynamics/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: true
+
+- id: mcp-clifft-sampling
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: clifft_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/clifft-sampling/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: true
+
+- id: mcp-oqupy-dynamics
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: oqupy_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/oqupy-dynamics/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: true
+
+- id: mcp-deltakit-qec
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: deltakit_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/deltakit-qec/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: true
+
+# Read-only CC-BY-4.0 benchmark snapshot; no runner or remote job lifecycle.
+- id: tool-metriq-data
+  name: ./metriq-data-tools.mjs
+
+- id: mcp-pyzx-optimization
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: pyzx_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/pyzx-optimization/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: true
+
+- id: mcp-graphix-mbqc
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: graphix_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/graphix-mbqc/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: true
+
+- id: mcp-symmer-tapering
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: symmer_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/symmer-tapering/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: true
+
+- id: mcp-paulie-algebra
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: paulie_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/paulie-algebra/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: true
+
+# QCut: pinned local execution; scientific acceptance remains separate.
+- id: mcp-qcut-knitting
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: qcut_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/qcut-knitting/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: true
+
+# Compact: pinned local execution; scientific acceptance remains separate.
+- id: mcp-compact-optimization
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: compact_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/compact-optimization/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: true
+
+# OpenQARP: pinned local execution; scientific acceptance remains separate.
+- id: mcp-openqarp-excited-states
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: openqarp_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/openqarp-excited-states/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: true
+
+# cqlib-qml: pinned local execution; scientific acceptance remains separate.
+- id: mcp-cqlib-kernel
+  name: '@deepseek-ai/dsh-mcp-client'
+  disabled: true
+  config:
+    serverName: cqlib_kernel_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/cqlib-kernel/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: true
+
+# FlagQuantum: pinned local execution; scientific acceptance remains separate.
+- id: mcp-flagquantum-workbench
+  name: '@deepseek-ai/dsh-mcp-client'
+  disabled: true
+  config:
+    serverName: flagquantum
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/flagquantum-workbench/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: true
+
+- id: mcp-qbraid-conversion
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: qbraid_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/qbraid-conversion/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: true
+
+- id: mcp-qdmi-device
+  name: '@deepseek-ai/dsh-mcp-client'
+  disabled: true
+  config:
+    serverName: qdmi_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/qdmi-device/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: true
+
+# Local Rydberg-array dynamics; dependencies are prepared by explicit setup.
+- id: mcp-bloqade-analog
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: bloqade_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/bloqade-analog/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: true
+
+# PennyLane 可微分电路; explicit environment setup, isolated fixed dependencies.
+- id: mcp-pennylane-differentiable
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: pennylane_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/pennylane-differentiable/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# DeepQuantum 可微分电路; explicit environment setup, isolated fixed dependencies.
+- id: mcp-deepquantum-differentiable
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: deepquantum_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/deepquantum-differentiable/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# TensorCircuit 可微分电路; explicit environment setup, isolated fixed dependencies.
+- id: mcp-tensorcircuit-differentiable
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: tensorcircuit_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/tensorcircuit-differentiable/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# MindQuantum 可微分电路; explicit environment setup, isolated fixed dependencies.
+- id: mcp-mindquantum-differentiable
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: mindquantum_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/mindquantum-differentiable/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# TKET 电路编译; explicit environment setup, isolated fixed dependencies.
+- id: mcp-pytket-compilation
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: pytket_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/pytket-compilation/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# D-Wave Ocean 经典采样; explicit environment setup, isolated fixed dependencies.
+- id: mcp-ocean-optimization
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: ocean_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/ocean-optimization/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# Kaiwu Community 建模; explicit environment setup, isolated fixed dependencies.
+- id: mcp-kaiwu-qubo
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: kaiwu_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/kaiwu-qubo/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# pyQuil 本地仿真; explicit environment setup, isolated fixed dependencies.
+- id: mcp-pyquil-simulation
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: pyquil_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/pyquil-simulation/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# SpinQit 本地仿真; explicit environment setup, isolated fixed dependencies.
+- id: mcp-spinqit-simulation
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: spinqit_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/spinqit-simulation/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# QuTrunk 本地仿真; explicit environment setup, isolated fixed dependencies.
+- id: mcp-qutrunk-simulation
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: qutrunk_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/qutrunk-simulation/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# Perceval 光量子仿真; explicit environment setup, isolated fixed dependencies.
+- id: mcp-perceval-photonics
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: perceval_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/perceval-photonics/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# IQM 电路与模拟后端; explicit environment setup, isolated fixed dependencies.
+- id: mcp-iqm-circuit-workbench
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: iqm_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/iqm-circuit-workbench/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# Alice & Bob 猫态模型; explicit environment setup, isolated fixed dependencies.
+- id: mcp-alicebob-cat-circuits
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: alicebob_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/alicebob-cat-circuits/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# Pulser Rydberg 动力学; explicit environment setup, isolated fixed dependencies.
+- id: mcp-pulser-dynamics
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: pulser_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/pulser-dynamics/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# QoolQit 模拟程序; explicit environment setup, isolated fixed dependencies.
+- id: mcp-qoolqit-workbench
+  name: '@deepseek-ai/dsh-mcp-client'
+  disabled: true
+  config:
+    serverName: qoolqit_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/qoolqit-workbench/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# IonQ 本地程序准备; explicit environment setup, isolated fixed dependencies.
+- id: mcp-ionq-programs
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: ionq_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/ionq-programs/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# Superstaq 电路编译; explicit environment setup, isolated fixed dependencies.
+- id: mcp-superstaq-compilation
+  name: ./credentialed-mcp-client.mjs
+  disabled: true
+  config:
+    serverName: superstaq_cloud
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/superstaq-compilation/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    optionalCredentialEnv:
+      SUPERSTAQ_API_KEY: SUPERSTAQ_API_KEY
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# QSteed 电路编译; explicit environment preparation, user-owned service access.
+- id: mcp-qsteed-compilation
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: qsteed_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/qsteed-compilation/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# QuAIRKit 量子通道; explicit environment preparation, user-owned service access.
+- id: mcp-quairkit-information
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: quairkit_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/quairkit-information/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# QCompute 本地仿真; explicit environment preparation, user-owned service access.
+- id: mcp-qcompute-simulation
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: qcompute_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/qcompute-simulation/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# Qibo 电路仿真; explicit environment preparation, user-owned service access.
+- id: mcp-qibo-simulation
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: qibo_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/qibo-simulation/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# Qrisp 量子算术; explicit environment preparation, user-owned service access.
+- id: mcp-qrisp-arithmetic
+  name: '@deepseek-ai/dsh-mcp-client'
+  disabled: true
+  config:
+    serverName: qrisp_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/qrisp-arithmetic/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# Lightworks 光子仿真; explicit environment preparation, user-owned service access.
+- id: mcp-lightworks-photonics
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: lightworks_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/lightworks-photonics/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# Braket 本地仿真; explicit environment preparation, user-owned service access.
+- id: mcp-braket-simulation
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: braket_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/braket-simulation/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# QURI 可观测量估计; explicit environment preparation, user-owned service access.
+- id: mcp-quri-parts-estimation
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: quri_parts_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/quri-parts-estimation/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# QDK 容错资源估算; explicit environment preparation, user-owned service access.
+- id: mcp-qdk-resource-estimation
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: qdk_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/qdk-resource-estimation/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# Qualtran 资源计数; explicit environment preparation, user-owned service access.
+- id: mcp-qualtran-resources
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: qualtran_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/qualtran-resources/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# OpenFermion 算符映射; explicit environment preparation, user-owned service access.
+- id: mcp-openfermion-mapping
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: openfermion_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/openfermion-mapping/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# MQT 决策图仿真; explicit environment preparation, user-owned service access.
+- id: mcp-mqt-ddsim
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: mqt_ddsim_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/mqt-ddsim/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# MQT 硬件拓扑映射; explicit environment preparation, user-owned service access.
+- id: mcp-mqt-qmap
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: mqt_qmap_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/mqt-qmap/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# Classiq 电路综合; explicit environment preparation, user-owned service access.
+- id: mcp-classiq-synthesis
+  name: ./credentialed-mcp-client.mjs
+  disabled: true
+  config:
+    serverName: classiq_cloud
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/classiq-synthesis/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    optionalCredentialEnv:
+      CLASSIQ_XCH_TOKEN: CLASSIQ_XCH_TOKEN
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# Q-CTRL 控制模型与作业查询; explicit environment preparation, user-owned service access.
+- id: mcp-qctrl-workbench
+  name: ./credentialed-mcp-client.mjs
+  disabled: true
+  config:
+    serverName: qctrl_cloud
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/qctrl-workbench/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    optionalCredentialEnv:
+      QCTRL_API_KEY: QCTRL_API_KEY
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# QUA 脉冲程序; explicit environment preparation, user-owned service access.
+- id: mcp-qua-programs
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: qua_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/qua-programs/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# LabOne Q 离线控制; explicit environment preparation, user-owned service access.
+- id: mcp-laboneq-control
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: laboneq_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/laboneq-control/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# QCArchive 计算记录查询; explicit environment preparation, user-owned service access.
+- id: mcp-qcarchive-query
+  name: ./credentialed-mcp-client.mjs
+  disabled: true
+  config:
+    serverName: qcarchive_data
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/qcarchive-query/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    optionalCredentialEnv:
+      QCPORTAL_ADDRESS: QCPORTAL_ADDRESS
+      QCPORTAL_USERNAME: QCPORTAL_USERNAME
+      QCPORTAL_PASSWORD: QCPORTAL_PASSWORD
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# CUDA-Q CPU 仿真; explicit environment preparation, user-owned service access.
+- id: mcp-cudaq-simulation
+  name: '@deepseek-ai/dsh-mcp-client'
+  disabled: true
+  config:
+    serverName: cudaq_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/cudaq-simulation/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# NetQASM / SquidASM 网络; explicit environment preparation, user-owned service access.
+- id: mcp-netqasm-network
+  name: '@deepseek-ai/dsh-mcp-client'
+  disabled: true
+  config:
+    serverName: netqasm_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/netqasm-network/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# SimQN network; explicit isolated environment, user-owned service credentials.
+- id: mcp-simqn-network
+  name: '@deepseek-ai/dsh-mcp-client'
+  disabled: true
+  config:
+    serverName: simqn_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/simqn-network/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# Qcover QAOA; explicit isolated environment, user-owned service credentials.
+- id: mcp-qcover-optimization
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: qcover_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/qcover-optimization/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# VQNet learning; explicit isolated environment, user-owned service credentials.
+- id: mcp-vqnet-learning
+  name: '@deepseek-ai/dsh-mcp-client'
+  disabled: true
+  config:
+    serverName: vqnet_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/vqnet-learning/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# pyChemiQ chemistry; explicit isolated environment, user-owned service credentials.
+- id: mcp-pychemiq-chemistry
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: pychemiq_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/pychemiq-chemistry/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# Qblox Scheduler; explicit isolated environment, user-owned service credentials.
+- id: mcp-qblox-scheduling
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: qblox_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/qblox-scheduling/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# Qililab; explicit isolated environment, user-owned service credentials.
+- id: mcp-qililab-control
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: qililab_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/qililab-control/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# Guppy and Selene; explicit isolated environment, user-owned service credentials.
+- id: mcp-guppy-programs
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: guppy_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/guppy-programs/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# OQC QAT; explicit isolated environment, user-owned service credentials.
+- id: mcp-oqc-qat
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: qat_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/oqc-qat/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# MrMustard Optics; explicit isolated environment, user-owned service credentials.
+- id: mcp-mrmustard-optics
+  name: '@deepseek-ai/dsh-mcp-client'
+  disabled: true
+  config:
+    serverName: mrmustard_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/mrmustard-optics/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# MerLin Learning; explicit isolated environment, user-owned service credentials.
+- id: mcp-merlin-learning
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: merlin_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/merlin-learning/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# MIMIQ Exaqt; explicit isolated environment, user-owned service credentials.
+- id: mcp-mimiq-simulation
+  name: '@deepseek-ai/dsh-mcp-client'
+  disabled: true
+  config:
+    serverName: mimiq_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/mimiq-simulation/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# myQLM Simulation; explicit isolated environment, user-owned service credentials.
+- id: mcp-myqlm-simulation
+  name: '@deepseek-ai/dsh-mcp-client'
+  disabled: true
+  config:
+    serverName: myqlm_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/myqlm-simulation/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# AQT 电路与设备; explicit isolated environment, user-owned service credentials.
+- id: mcp-aqt-workbench
+  name: ./credentialed-mcp-client.mjs
+  disabled: true
+  config:
+    serverName: aqt_local
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/aqt-workbench/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    optionalCredentialEnv:
+      AQT_API_TOKEN: AQT_API_TOKEN
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# OQC 云任务; explicit isolated environment, user-owned service credentials.
+- id: mcp-oqc-cloud
+  name: ./credentialed-mcp-client.mjs
+  disabled: true
+  config:
+    serverName: oqc_cloud
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/oqc-cloud/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    optionalCredentialEnv:
+      OQC_API_TOKEN: OQC_API_TOKEN
+      OQC_API_ENDPOINT: OQC_API_ENDPOINT
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false
+
+# Quantum Inspire 查询; explicit isolated environment, user-owned service credentials.
+- id: mcp-quantuminspire-cloud
+  name: ./credentialed-mcp-client.mjs
+  disabled: true
+  config:
+    serverName: quantuminspire_cloud
+    transport: stdio
+    command: !!js process.execPath
+    args:
+      - !!js process.cwd() + '/.agents/skills/quantuminspire-cloud/mcp/server.mjs'
+    cwd: !!js process.cwd()
+    optionalCredentialEnv:
+      QUANTUMINSPIRE_API_TOKEN: QUANTUMINSPIRE_API_TOKEN
+    toolCallTimeoutMs: 2147483647
+    failOnStartupError: false

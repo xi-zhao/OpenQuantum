@@ -8,6 +8,8 @@ import Ajv from "ajv";
 import { externalContract, ACCOUNT_OPERATIONS, operationCredential, operationLimitation } from "./catalog.mjs";
 import { externalPaths } from "./setup.mjs";
 import { digest } from "../../../src/settings/codex/storage.mjs";
+import { serviceById } from "../../../src/settings/codex/service-catalog.mjs";
+import { redactToolResult } from "../../../src/settings/codex/redaction.mjs";
 
 const ajv = new Ajv({ strict: false, allErrors: true });
 const validateCache = new Map();
@@ -112,7 +114,11 @@ export class ExternalSessions {
       // releasing its lease, including cancellation during initialization.
       await session.opening?.catch(() => {});
       try { await session.close?.(); } finally { await session.lease?.release(); }
-    })().finally(() => this.closing.delete(session.closing));
+    })().catch(() => {
+      // Cleanup may run without reading credentials (close_session, reconcile or
+      // Agent shutdown). Never expose an upstream exception from that boundary.
+      throw new Error("MCP 连接回收失败；请检查服务配置和账户状态");
+    }).finally(() => this.closing.delete(session.closing));
     this.closing.add(session.closing);
     return session.closing;
   }
@@ -126,7 +132,29 @@ export class ExternalSessions {
       } catch { await this.drop(session); }
     }));
   }
-  async call(entry, input, { signal, authorize, values, acquire }) {
+  async call(entry, input, { values, ...options }) {
+    const fields = (serviceById(entry.id)?.fields ?? []).filter(field => field.secret);
+    const secrets = new Set();
+    const readValues = async () => {
+      let current;
+      try { current = await values(); }
+      catch { throw new Error("服务凭据读取失败；请检查服务配置和账户状态"); }
+      for (const field of fields) {
+        const value = current[field.name];
+        if (typeof value === "string" && value.length) secrets.add(value);
+      }
+      return current;
+    };
+    try {
+      return redactToolResult(await this.#call(entry, input, { ...options, values, readValues }), [...secrets]);
+    } catch (error) {
+      if (secrets.size) throw new Error("服务调用失败、已取消或已停用；请检查服务配置和账户状态");
+      throw error;
+    } finally {
+      secrets.clear();
+    }
+  }
+  async #call(entry, input, { signal, authorize, values, readValues, acquire }) {
     if (this.closed) throw new Error("MCP 连接已关闭");
     await validateExternal(this.root, entry, input);
     signal?.throwIfAborted();
@@ -135,7 +163,7 @@ export class ExternalSessions {
     if (!await authorize()) throw new Error("用户已禁止关联 Skill、Tool、MCP 或操作");
     if (input.operation === "close_session") { await this.drop(session); return { content: [{ type: "text", text: entry.id === "qpanda_runtime"
       ? "本地 MCP 会话已关闭；已提交的云端任务没有取消，可能继续运行。" : "MCP 会话与计算进程已关闭" }] }; }
-    const currentValues = await values();
+    const currentValues = await readValues();
     // Validation, policy and credential reads can yield while the Agent closes.
     if (this.closed) throw new Error("MCP 连接已关闭");
     if (session && (session.generation !== generation(entry, currentValues)
@@ -150,6 +178,8 @@ export class ExternalSessions {
       this.sessions.set(session.id, session);
     }
     session.busy = true;
+    // Keep only the original getter: readValues owns this call's secret set and
+    // must never be retained by a persistent session or credential reconciliation.
     session.authorize = authorize; session.values = values;
     const abort = () => this.drop(session).catch(() => {});
     signal?.addEventListener("abort", abort, { once: true });
@@ -181,7 +211,7 @@ export class ExternalSessions {
       }
       combined.throwIfAborted();
       if (!await authorize()) throw new Error("用户已禁止此操作");
-      if (session.authenticated && credentialGeneration(await values()) !== session.authenticated) throw new Error("凭据已变化，请重新开始会话");
+      if (session.authenticated && credentialGeneration(await readValues()) !== session.authenticated) throw new Error("凭据已变化，请重新开始会话");
       const result = externalResult(await session.client.callTool({ name: input.operation, arguments: input.arguments }, undefined, { signal: combined, timeout: 180000 }));
       if (Buffer.byteLength(JSON.stringify(result)) > 2 * 1024 * 1024) throw new Error("MCP 返回超过 2 MiB 传输预算，会话已关闭");
       session.lastUsed = Date.now();

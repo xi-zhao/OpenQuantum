@@ -356,6 +356,7 @@ test("client plugin contributes the native settings section and uses Harness cre
   assert.doesNotMatch(client, /skill\.create|Skill 指令（Markdown）/);
   assert.match(client, /注册已有 MCP Server/);
   assert.match(client, /不会下载、安装或创建 MCP Server/);
+  assert.match(client, /此入口仅支持无需认证的 HTTP\(S\) 服务；URL 不得包含用户名、密码、查询参数或 # 片段。/);
   assert.match(client, /\.oq-cap-credential\{display:flex;flex-direction:column;gap:12px\}/);
   assert.doesNotMatch(client, /\.oq-cap-credential\{[^}]*grid-template-columns/);
   assert.doesNotMatch(client, /HARNESS EXTENSIONS|className: "oq-cap-hero"/);
