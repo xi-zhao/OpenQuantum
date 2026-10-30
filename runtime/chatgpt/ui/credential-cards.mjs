@@ -8,6 +8,8 @@ const drafts = new Map();
 const pending = new Set();
 const failures = new Set();
 const expanded = new Map();
+const fieldSelections = new Map();
+const fieldRequests = new Map();
 export const clearCredentialDrafts = () => drafts.clear();
 window.addEventListener("pagehide", clearCredentialDrafts);
 
@@ -23,7 +25,7 @@ export function h(tag, props, ...children) {
   return node;
 }
 
-export function renderCredentialCards(container, entries, { request, refresh, notice, openLink, fallback, expandMatches = false, scope = "credentials" }) {
+export function renderCredentialCards(container, entries, { request, refresh, notice, openLink, fallback, expandMatches = false, scope = "credentials", preferredFields = [] }) {
   const grid = h("div", { className: "oq-cap-credential-grid oq-service-grid" });
   container.append(grid);
   for (const entry of entries) {
@@ -40,7 +42,33 @@ export function renderCredentialCards(container, entries, { request, refresh, no
     const fields = h("fieldset", null, h("legend", { className: "oq-visually-hidden" }, `${entry.title} 凭据`));
     if (entry.supported) fields.append(h("p", { className: "oq-cap-secret-help" }, "已有值不回显；留空保留。逐项保存到本机凭据库，保存不代表账户认证通过。"));
     else fields.append(h("p", { className: "oq-cap-secret-help" }, entry.services[0].availabilityNote ?? "请在宿主 Tool 使用的环境中配置认证，具体要求见官方说明。"));
-    for (const field of entry.fields) fields.append(renderField(field));
+    const selection = entry.id === "fieldqkit" ? {
+      title: "选择平台", choices: entry.fields.map(field => [field.name, field.title]),
+      initial: entry.fields.find(field => field.configured)?.name ?? entry.fields[0].name,
+      includes: (field, value) => field.name === value,
+    } : entry.id === "pasqal_cloud" ? {
+      title: "认证方式", choices: [["token", "Access Token"], ["password", "用户名与密码"]],
+      initial: entry.fields.some(field => field.name === "PASQAL_AUTH_TOKEN" && field.configured) || !entry.saved ? "token" : "password",
+      includes: (field, value) => value === "token" ? field.name === "PASQAL_AUTH_TOKEN" : field.name !== "PASQAL_AUTH_TOKEN",
+    } : null;
+    if (selection) {
+      const requested = preferredFields.find(name => entry.fields.some(field => field.name === name));
+      if (requested && fieldRequests.get(key) !== requested) {
+        fieldSelections.set(key, entry.id === "fieldqkit" ? requested : requested === "PASQAL_AUTH_TOKEN" ? "token" : "password");
+        fieldRequests.set(key, requested);
+        details.open = true;
+      }
+      const value = fieldSelections.get(key) ?? selection.initial;
+      const select = h("select", { "aria-label": selection.title, "data-focus-key": `${key}:selection` },
+        selection.choices.map(([id, title]) => h("option", { value: id }, title)));
+      select.value = value;
+      const rows = entry.fields.map(field => { const row = renderField(field); row.hidden = !selection.includes(field, value); return row; });
+      select.onchange = () => {
+        fieldSelections.set(key, select.value);
+        rows.forEach((row, index) => { row.hidden = !selection.includes(entry.fields[index], select.value); });
+      };
+      fields.append(h("label", { className: "credential-selection" }, selection.title, select), ...rows);
+    } else for (const field of entry.fields) fields.append(renderField(field));
     const help = h("details", { className: "technical-details" }, h("summary", null, "配置说明与变量"));
     const documents = new Map();
     for (const field of entry.fields) if (field.documentationUrl) documents.set(field.documentationUrl, [...(documents.get(field.documentationUrl) ?? []), field]);
@@ -96,7 +124,8 @@ export function renderCredentialCards(container, entries, { request, refresh, no
         notice(message, failed);
       }
     };
-    const status = !service ? "云端未接入" : unavailable ? "未读取" : field.configured ? "已保存" : field.required ? "必填" : service.missing?.includes(field.name) ? "待补全" : "选填";
+    const required = field.services.some(item => item.supported && item.fields.some(value => value.name === field.name && value.required));
+    const status = !service ? "云端未接入" : unavailable ? "未读取" : field.configured ? "已保存" : required ? "云端必填" : service.missing?.includes(field.name) ? "待补全" : "选填";
     row = h("div", { className: "oq-service-field" },
       h("div", { className: "oq-service-field-heading" },
         h("span", null, title), h("span", { className: "oq-cap-badge", "data-tone": field.configured ? "ready" : "off" }, status)));

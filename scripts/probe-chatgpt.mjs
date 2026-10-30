@@ -32,7 +32,7 @@ export async function probeTransport(transport, discoveredResource) {
     const resource = await client.readResource({ uri: discoveredResource?.uri ?? opener._meta.ui.resourceUri });
     const html = resource.contents[0]?.text;
     if (!html || settingsResourceUri(html) !== opener._meta.ui.resourceUri ||
-        !["runtime", "mcp", "skills", "credentials"].every(tab => html.includes(`data-tab="${tab}"`))) throw new Error("Global entrypoint does not resolve to the current settings document");
+        !["runtime", "skills", "mcp"].every(tab => html.includes(`data-tab="${tab}"`))) throw new Error("Global entrypoint does not resolve to the current settings document");
     const credentialOrigin = credentialOriginOf(resource.contents[0]);
     if (discoveredResource?.origin === credentialOrigin) throw new Error("Cross-process probe did not use independent credential listeners");
     const permission = await client.callTool({ name: "openquantum_settings", arguments: {
