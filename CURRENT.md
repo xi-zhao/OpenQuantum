@@ -6,13 +6,18 @@ Session event log 为准，科学状态以 Acceptance Report 为准。2026-09 �
 
 ## 当前基线
 
-- **0.8.9** 已发布并完成本机 Desktop / Codex 更新，源码为 `2035b0f5`；随后实际使用发现设置页可浏览区域过小。
-- 正在交付统一补丁 **0.8.10**：压缩设置页重复标题与页尾，扩大目录和详情，修复筛选区滚动与展开表单的空白溢出。
-  [Desktop v0.8.10](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.10) 与
-  [Codex codex-v0.8.10](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.10) 使用同一源码提交；
-  打包验收新增真实滚轮、键盘、短窗口底部可达与内容区高度检查。说明见 [0.8.10 发布记录](docs/releases/v0.8.10.md)。
-  Desktop 继续固定 DSH Desktop `2.0.0`；功能架构与宿主边界不变。发行、本机安装和最终验收以 Release 的
-  `release-verification.json` / `release-validation.json` 为准；补丁公开前发行基线仍为两端 0.8.9。
+- **0.8.10** 已发布，并完成本机 Desktop / Codex 更新；两端均来自干净源码提交 `091278a6`。
+  [Desktop v0.8.10](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.10) 为最新发行，
+  [Codex codex-v0.8.10](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.10) 已公开；0.8.9 历史发行保留。
+- 设置页压缩重复标题与页尾，扩大目录和详情，修复筛选区滚动与展开表单的空白溢出；普通 Desktop 窗口的
+  详情高度由约 253px 增至 483px。真实安装在普通、低矮和窄窗口均通过滚轮、键盘、详情底部及完整页尾检查。
+  Codex 原生页面核对了版本、搜索、目录和账户详情浏览；宿主输入框仍覆盖部分共享页尾，未将其计为完整页尾验收。
+- 主线 10 项检查通过，DMG 摘要、镜像完整性、严格签名及公开附件摘要一致。本机普通重启正常，中文、模型选择、
+  19 个受保护文件及 3 个既有会话保留；Codex 的其他配置与插件条目不变。旧 Desktop 0.8.9 保留用于回退。
+  验证范围见 [Desktop 验收附件](https://github.com/xi-zhao/OpenQuantum/releases/download/v0.8.10/release-verification.json)、
+  [Codex 验收附件](https://github.com/xi-zhao/OpenQuantum/releases/download/codex-v0.8.10/release-validation.json) 和
+  [0.8.10 发布记录](docs/releases/v0.8.10.md)。Desktop 继续固定 DSH Desktop `2.0.0`，功能架构与宿主边界不变；
+  Mac 包仍为 ad-hoc 签名，未做 Apple 公证。
 - 能力成熟度以 `.agents/capability-packages.yml` 为准；工程检查通过不表示所有能力均通过科学验收。
 - [PR #39](https://github.com/xi-zhao/OpenQuantum/pull/39) 的拒绝降级与旧设置入口清理、
   [PR #40](https://github.com/xi-zhao/OpenQuantum/pull/40) 的临时凭据授权生命周期修复已经进入主线，并随 Desktop v0.8.5 发行。
