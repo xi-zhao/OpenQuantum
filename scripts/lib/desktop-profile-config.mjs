@@ -3,6 +3,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { isMap, isSeq, parse, parseDocument, Scalar } from "yaml";
 import { isDeepStrictEqual } from "node:util";
 import { desktopEnvironmentDefaults } from "./desktop-environment.mjs";
+import { Config as PersonaConfig } from "@deepseek-ai/dsh-persona";
 
 export const nativeProviderNames = new Set(["./native-quantum-tools.mjs", "./quantum-practices-tools.mjs", "./metriq-data-tools.mjs"]);
 export const desktopYamlOptions = { customTags: [{ tag: "tag:yaml.org,2002:js",
@@ -42,13 +43,35 @@ function assertManagedRows(source, projectRoot, nodeExecutable, managed) {
   }
 }
 
-export function desktopPreset(source, projectRoot, nodeExecutable = process.execPath, { runtimeBin, onDemand = false } = {}) {
+export function migrateDesktopPresetSchema(source) {
+  const document = parseDocument(source, desktopYamlOptions);
+  if (document.errors.length || !isSeq(document.contents)) throw new Error("Invalid OpenQuantum preset");
+  let changed = false;
+  for (const row of document.contents.items) {
+    if (!isMap(row) || row.get("name") !== "@deepseek-ai/dsh-persona") continue;
+    const config = row.get("config", true);
+    if (!isMap(config) || !config.has("prefix")) continue;
+    const prefix = config.get("prefix", true);
+    if (!(prefix instanceof Scalar) || typeof prefix.value !== "string" || prefix.tag || config.has("text") && config.get("text") !== prefix.value) {
+      throw new Error("Desktop persona prefix/text 配置冲突，请保留原配置并手动合并");
+    }
+    if (!config.has("text")) config.set("text", prefix);
+    config.delete("prefix");
+    changed = true;
+  }
+  for (const row of document.contents.items) {
+    if (isMap(row) && row.get("name") === "@deepseek-ai/dsh-persona") PersonaConfig(row.get("config", true)?.toJSON());
+  }
+  return changed ? document.toString({ lineWidth: 0 }) : source;
+}
+
+export function desktopPreset(source, sourceRoot, nodeExecutable = process.execPath, { runtimeBin, onDemand = false, projectRoot = sourceRoot } = {}) {
   const rendered = render(source, projectRoot, nodeExecutable);
   const document = parseDocument(rendered, desktopYamlOptions);
   if (document.errors.length) throw new Error("Invalid OpenQuantum preset");
   if (!isSeq(document.contents)) throw new Error("Expected preset rows");
   if (onDemand) {
-    const policy = parse(readFileSync(path.join(projectRoot, ".agents/capability-packages.yml"), "utf8"));
+    const policy = parse(readFileSync(path.join(sourceRoot, ".agents/capability-packages.yml"), "utf8"));
     const managed = new Set(policy.packages.flatMap(item => (item.execution?.mcpServers ?? []).map(server => server.name)));
     assertManagedRows(source, projectRoot, nodeExecutable, managed);
     document.contents.items = document.contents.items.filter(row => {

@@ -208,6 +208,20 @@ test("adopts verified legacy defaults and retains user edits and deletions", asy
   await assert.rejects(readFile(path.join(home, "preset.yml")), { code: "ENOENT" });
 });
 
+test("reviewed defaults do not become the applied ownership baseline", async t => {
+  const home = await mkdtemp(path.join(await realpath(tmpdir()), "oq-home-ownership-"));
+  t.after(() => rm(home, { recursive: true, force: true }));
+  await writeManagedHomeFiles(home, new Map([["preset.yml", "old default"]]));
+  await writeFile(path.join(home, "preset.yml"), "user edit");
+  assert.deepEqual(await writeManagedHomeFiles(home, new Map([["preset.yml", "new default"]])), ["preset.yml"]);
+  const state = JSON.parse(await readFile(path.join(home, ".openquantum-home.json")));
+  assert.equal(state.files["preset.yml"], sha256("old default"));
+  assert.equal(state.defaults["preset.yml"], sha256("new default"));
+  await writeFile(path.join(home, "preset.yml"), "old default");
+  assert.deepEqual(await writeManagedHomeFiles(home, new Map([["preset.yml", "new default"]])), []);
+  assert.equal(await readFile(path.join(home, "preset.yml"), "utf8"), "new default");
+});
+
 test("generated presets resolve workers with an unrelated cwd and system-only PATH", async t => {
   const { desktopPreset } = await import("../scripts/lib/desktop-profile-config.mjs");
   const { loadOverlayPatches } = await import("@deepseek-ai/dsh-app-boot");

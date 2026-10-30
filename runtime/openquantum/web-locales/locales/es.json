@@ -1231,6 +1231,7 @@
   "Deployed MCP URL": "Configuración de MCP URL",
   "Arguments (one per line)": "Argumentos (uno por línea)",
   "Credential reference (optional)": "Referencia credencial (opcional)",
+  "This form supports HTTP(S) services without authentication only. URLs must not contain a username, password, query parameters or a # fragment.": "Este formulario solo admite servicios HTTP(S) sin autenticación. Las URL no deben contener nombre de usuario, contraseña, parámetros de consulta ni fragmentos #.",
   "Register as disabled": "Inscribirse como inválido",
   "Add an existing Skill": "Añadir un Skill existente",
   "The Harness filesystem provider discovers Skills in the project. A simple Skill needs a SKILL.md with frontmatter. Complex Skills can include references, scripts and other resources in the same directory.": "El proveedor de sistemas de archivos Harness descubre Skills en el proyecto. Un Skill simple necesita un SKILL.md con frontmatter. Complejo Skills puede incluir referencias, scripts y otros recursos en el mismo directorio.",

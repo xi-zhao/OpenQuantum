@@ -10,11 +10,11 @@ import { buildCapabilityClient } from "./build-capability-client.mjs";
 import { productUiOverlay } from "./product-ui-policy.mjs";
 import { migrateDesktopCredentials } from "./desktop-credential-migration.mjs";
 import { assertCompatibleHarnessHome } from "./harness-home-compatibility.mjs";
-import { migrateDesktopPreparation } from "./desktop-preparation-migration.mjs";
-import { desktopPreset } from "./desktop-profile-config.mjs";
-import { writeManagedHomeFiles } from "./managed-home-files.mjs";
+import { migrateDesktopPreparation, planDesktopPreparation } from "./desktop-preparation-migration.mjs";
+import { desktopPreset, migrateDesktopPresetSchema } from "./desktop-profile-config.mjs";
+import { writeManagedHomeFiles, readManagedHomeState } from "./managed-home-files.mjs";
 import { desktopEnvironmentDefaults, persistDesktopCredentials } from "./desktop-environment.mjs";
-import { assertNoLinks } from "./desktop-distribution.mjs";
+import { assertNoLinks, sha256 } from "./desktop-distribution.mjs";
 import { desktopModelRoutes, desktopModelDefault, clearRemovedDesktopModelSelection } from "./desktop-model-routes.mjs";
 import { DESKTOP_PROFILE_BUNDLE, DESKTOP_PROFILE_DIRECTORY, DESKTOP_PROFILE_PATCH, desktopHomePatchMigration, desktopProfileManifest } from "./desktop-profile-bundle.mjs";
 
@@ -28,8 +28,47 @@ const extensions = {
   updates: ["runtime/openquantum/web-updates", "harness-web-updates"],
 };
 
+export async function preflightDesktopHome({ harnessHome, projectRoot, sourceRoot = projectRoot, legacyHomeFiles = {}, preservedFiles = [] }) {
+  await assertCompatibleHarnessHome(harnessHome);
+  const activePatch = await readFile(path.join(harnessHome, "cordis.patch.yml")).catch(error => { if (error.code === "ENOENT") return null; throw error; });
+  const sourcePatch = activePatch && await readFile(path.join(projectRoot, "runtime/openquantum/cordis.patch.yml"), "utf8").catch(error => { if (error.code === "ENOENT") return null; throw error; });
+  // Old Web launches did not keep an ownership ledger. Recognize their exact
+  // output before migration preflight, while the old project still exists.
+  if (sourcePatch !== null && activePatch) {
+    const webHash = sha256(`${sourcePatch}\n${await productUiOverlay(projectRoot)}`);
+    if (sha256(activePatch) === webHash) legacyHomeFiles = { ...legacyHomeFiles, "cordis.patch.yml": webHash };
+  }
+  const patchMigration = await desktopHomePatchMigration(harnessHome, legacyHomeFiles);
+  const presetRelative = "runtime/openquantum/agent-presets/openquantum/agent.cordis.yml";
+  const presetRoot = preservedFiles.includes(presetRelative) ? projectRoot : sourceRoot;
+  const migration = await planDesktopPreparation(projectRoot, harnessHome, { legacyHomeFiles, sourceRoot, presetRoot });
+  const state = await readManagedHomeState(harnessHome, legacyHomeFiles);
+  async function checkPreset(directory, relative) {
+    for (const entry of await readdir(directory, { withFileTypes: true })) {
+      if (entry.name === "node_modules") continue;
+      const source = path.join(directory, entry.name), target = path.posix.join(relative, entry.name);
+      await assertNoLinks(path.join(harnessHome, target));
+      if (entry.isDirectory()) await checkPreset(source, target);
+      else if (entry.isFile()) {
+        const sourceRelative = target.replace(".agent-presets/", "runtime/openquantum/agent-presets/");
+        const content = await readFile(preservedFiles.includes(sourceRelative) ? path.join(projectRoot, sourceRelative) : source);
+        const current = await readFile(path.join(harnessHome, target)).catch(error => { if (error.code === "ENOENT") return null; throw error; });
+        if (entry.name === "agent.cordis.yml") {
+          desktopPreset(migrateDesktopPresetSchema(content.toString()), sourceRoot, process.execPath, { projectRoot, onDemand: relative.endsWith("/openquantum") });
+          if (!current && state.files?.[target]) throw new Error(`Desktop preset was intentionally removed; restore it before launching: ${target}`);
+        }
+        if (entry.name.endsWith(".mjs") && current && sha256(current) !== sha256(content) && sha256(current) !== state.files?.[target] && sha256(current) !== legacyHomeFiles[target]) {
+          throw new Error(`Desktop Home contains an edited preset module; reconcile it before upgrading: ${target}`);
+        }
+      }
+    }
+  }
+  for (const name of ["openquantum", "quantum-learning"]) await checkPreset(path.join(sourceRoot, "runtime/openquantum/agent-presets", name), `.agent-presets/${name}`);
+  return { ...migration, legacyHomeFiles, patchMigration };
+}
+
 /** The upstream runtime owns its Profile; OpenQuantum contributes dependencies and patches. */
-export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot, profileName = "web", legacyHomeFiles = {} }) {
+export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot, profileName = "web", legacyHomeFiles = {}, transaction }) {
   if (!/^[A-Za-z0-9_-]+$/.test(profileName)) throw new Error("Invalid Harness profile name");
   const desktop = profileName === "desktop";
   const profile = path.join(harnessHome, "profiles", profileName);
@@ -53,16 +92,48 @@ export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot, 
     await preflightTree(extensionRoot);
   }
   await assertCompatibleHarnessHome(harnessHome);
-  const credentialMigration = desktop ? await migrateDesktopCredentials(harnessHome) : undefined;
+  if (!desktop) {
+    const relative = ".agent-presets/openquantum/agent.cordis.yml";
+    const active = await readFile(path.join(harnessHome, relative), "utf8").catch(error => { if (error.code === "ENOENT") return null; throw error; });
+    const state = await readManagedHomeState(harnessHome, legacyHomeFiles);
+    if (active?.includes("id: openquantum-adaptive-capabilities") && sha256(active) !== state.files?.[relative]) {
+      throw new Error("Desktop preset has user edits; preserve and reconcile them before switching this Home to Web");
+    }
+  }
+  let credentialMigration;
   // 0.1.0 has no shipped ACP profile. Reuse its official base bundle and
   // apply the explicit transport overlay at launch; never replace user edits.
   if (!desktop) {
     initProfile(path.join(harnessHome, "profiles/acp"), ["@deepseek-ai/dsh-base"]);
     healProfilesModuleFallback(path.join(projectRoot, "package.json"), harnessHome);
   }
-  const migration = desktop ? await desktopHomePatchMigration(harnessHome, legacyHomeFiles) : new Map();
-  if (desktop) await migrateDesktopPreparation(projectRoot, harnessHome);
-  const result = {};
+  let migration = new Map();
+  if (desktop) {
+    const planned = await preflightDesktopHome({ harnessHome, projectRoot, legacyHomeFiles });
+    legacyHomeFiles = planned.legacyHomeFiles;
+    migration = planned.patchMigration;
+    if (transaction) {
+      for (const relative of ["settings.yaml", ".credentials.yaml", ".openquantum-credential-migration.json", ".openquantum-home.json", "cordis.patch.yml", "project-root.mjs", "openquantum-project.json", "profiles/model-routes.cordis.yml",
+        ...["package.json", "cordis.yml", "cordis.patch.yml", "pnpm-workspace.yaml", "pnpm-lock.yaml"].map(name => `profiles/desktop/${name}`)]) await transaction.capture(path.join(harnessHome, relative));
+      for (const filename of ["project-root.mjs", "openquantum-project.json"]) await transaction.capture(path.join(extensionRoot, filename));
+      for (const filename of ["settings.json", "skill-policy.json", "migration.json", "legacy-preset.yml"]) await transaction.capture(path.join(harnessHome, ".openquantum/capabilities", filename));
+      for (const relative of [".agent-presets/openquantum", ".agent-presets/quantum-learning", DESKTOP_PROFILE_DIRECTORY,
+        ...Object.values(extensions).map(([, name]) => `.openquantum-extensions/${name}`)]) {
+        await transaction.captureTree(path.join(harnessHome, relative), { exclude: ["node_modules"] });
+      }
+      await transaction.capture(path.join(harnessHome, ".agent-presets/openquantum/node_modules"));
+      await transaction.capture(path.join(projectRoot, ".openquantum/runtime.json"));
+    }
+    if (transaction) {
+      await transaction.captureLock(path.join(harnessHome, ".credentials.yaml.lock"));
+      const credentialBytes = await readFile(path.join(harnessHome, ".credentials.yaml")).catch(error => { if (error.code === "ENOENT") return null; throw error; });
+      if (credentialBytes) await transaction.capture(path.join(harnessHome, ".openquantum-migrations/credentials-v1", sha256(credentialBytes), ".credentials.yaml"));
+      for (const relative of migration.keys()) await transaction.capture(path.join(harnessHome, relative));
+    }
+    credentialMigration = await migrateDesktopCredentials(harnessHome);
+    await migrateDesktopPreparation(projectRoot, harnessHome, { legacyHomeFiles });
+  }
+  const result = { preservedFiles: [] };
   const marker = JSON.stringify({ projectRoot: path.resolve(projectRoot), nodeExecutable: process.execPath });
   await mkdir(path.join(projectRoot, ".openquantum"), { recursive: true });
   await writeFileAtomic(path.join(projectRoot, ".openquantum/runtime.json"), marker, { mode: 0o600, dirMode: 0o700 });
@@ -99,9 +170,13 @@ export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot, 
     for (const pkg of packages) {
       if (manifest.dependencies?.[pkg.name] !== pkg.spec || !await lstat(path.join(profile, "node_modules", pkg.name)).catch(() => null)) install = true;
     }
-    if (install) await promisify(execFile)(process.execPath, [path.join(projectRoot, "node_modules/pnpm/bin/pnpm.cjs"), "--dir", profile, "add", ...packages.map(pkg => `${pkg.name}@${pkg.spec}`)], {
-      cwd: projectRoot, maxBuffer: 2 * 1024 * 1024, env: { ...process.env, PATH: `${path.dirname(process.execPath)}${path.delimiter}${process.env.PATH}` },
-    });
+    if (install) {
+      if (transaction) await transaction.detachDirectory(path.join(profile, "node_modules"));
+      const execute = transaction ? transaction.runWriter : promisify(execFile);
+      await execute(process.execPath, [path.join(projectRoot, "node_modules/pnpm/bin/pnpm.cjs"), "--dir", profile, "add", ...packages.map(pkg => `${pkg.name}@${pkg.spec}`)], {
+        cwd: projectRoot, maxBuffer: 2 * 1024 * 1024, env: { ...process.env, PATH: `${path.dirname(process.execPath)}${path.delimiter}${process.env.PATH}` },
+      });
+    }
     const currentManifest = JSON.parse(await readFile(path.join(profile, "package.json"), "utf8"));
     await writeFile(path.join(profile, "package.json"), JSON.stringify(desktopProfileManifest(currentManifest), null, 2) + "\n");
   }
@@ -115,7 +190,9 @@ export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot, 
   const routeFile = "profiles/model-routes.cordis.yml";
   let effectivePatch = deploymentPatch;
   if (desktop) {
-    result.preservedFiles = await writeManagedHomeFiles(harnessHome, new Map([[routeFile, desktopEnvironmentDefaults(desktopRoutes.content, projectRoot)]]), legacyHomeFiles);
+    const content = desktopEnvironmentDefaults(desktopRoutes.content, projectRoot);
+    if (transaction) await transaction.capture(path.join(harnessHome, ".openquantum-defaults", sha256(content), routeFile));
+    result.preservedFiles = await writeManagedHomeFiles(harnessHome, new Map([[routeFile, content]]), legacyHomeFiles);
     const activeRoutes = await readFile(path.join(harnessHome, routeFile), "utf8");
     effectivePatch = desktopModelDefault(deploymentPatch, activeRoutes, desktopRoutes.removed);
   }
@@ -134,19 +211,15 @@ export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot, 
       else if (entry.isFile()) {
         let content = await readFile(filename);
         if (desktop && entry.name === "agent.cordis.yml" && relative.endsWith("/openquantum")) {
-          const active = await readFile(path.join(harnessHome, target), "utf8").catch(error => { if (error.code === "ENOENT") return null; throw error; });
-          content = Buffer.from(desktopPreset(active ?? content.toString(), projectRoot, process.execPath, { onDemand: true }));
-        } else if (desktop && entry.name === "agent.cordis.yml") content = Buffer.from(desktopPreset(content.toString(), projectRoot, process.execPath, { onDemand: false }));
+          content = Buffer.from(desktopPreset(migrateDesktopPresetSchema(content.toString()), projectRoot, process.execPath, { onDemand: true }));
+        } else if (desktop && entry.name === "agent.cordis.yml") content = Buffer.from(desktopPreset(migrateDesktopPresetSchema(content.toString()), projectRoot, process.execPath, { onDemand: false }));
         files.set(target, content);
       }
     }
   }
   for (const name of ["openquantum", "quantum-learning"]) await presetFiles(path.join(projectRoot, "runtime/openquantum/agent-presets", name), `.agent-presets/${name}`);
-  if (desktop) result.preservedFiles.push(...await writeManagedHomeFiles(harnessHome, files, legacyHomeFiles));
-  else for (const [relative, content] of files) {
-    await mkdir(path.dirname(path.join(harnessHome, relative)), { recursive: true });
-    await writeFile(path.join(harnessHome, relative), content);
-  }
+  if (transaction) for (const [relative, content] of files) await transaction.capture(path.join(harnessHome, ".openquantum-defaults", sha256(content), relative));
+  result.preservedFiles.push(...await writeManagedHomeFiles(harnessHome, files, legacyHomeFiles));
   if (desktop) {
     if (migration.has("cordis.patch.yml") && result.preservedFiles.includes("cordis.patch.yml")) {
       throw new Error("Desktop Home patch changed during migration. It was preserved; reconcile cordis.patch.yml before launching.");

@@ -1,8 +1,9 @@
 import { app, dialog } from "electron";
 import { execFile } from "node:child_process";
-import { mkdir, realpath } from "node:fs/promises";
+import { mkdir, readFile, realpath } from "node:fs/promises";
 import path from "node:path";
 import { promisify } from "node:util";
+import { pathToFileURL } from "node:url";
 
 // Preserve the native shell lifecycle and Harness runtime. This bootstrap gives
 // it a writable deployment and the pinned runtimes shipped with the installer.
@@ -25,8 +26,17 @@ async function start() {
     return;
   }
   const projectRoot = path.join(dataRoot, "project");
-  const payload = path.join(process.resourcesPath, "openquantum");
-  const bin = path.join(process.resourcesPath, "runtimes", "bin");
+  let payload = path.join(process.resourcesPath, "openquantum");
+  if (!process.argv.includes("--export-diagnostics")) {
+    const { recoverDesktopInstall } = await import(pathToFileURL(path.join(payload, "scripts/lib/desktop-install-transaction.mjs")));
+    await recoverDesktopInstall(projectRoot);
+    const { assertDesktopUpgrade } = await import(pathToFileURL(path.join(payload, "scripts/lib/desktop-distribution.mjs")));
+    const { stageDesktopPayload } = await import(pathToFileURL(path.join(payload, "scripts/lib/desktop-payload.mjs")));
+    const manifest = JSON.parse(await readFile(path.join(payload, "distribution.json"), "utf8"));
+    await assertDesktopUpgrade(projectRoot, manifest.version);
+    payload = await stageDesktopPayload(payload, dataRoot, path.join(process.resourcesPath, "runtimes"));
+  }
+  const bin = path.join(payload, "../runtimes/bin");
   const node = path.join(bin, process.platform === "win32" ? "node.exe" : "node");
   process.env.PATH = `${bin}${path.delimiter}${process.env.PATH || ""}`;
   process.env.OPENQUANTUM_BUNDLED_BIN = bin;

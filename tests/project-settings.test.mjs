@@ -404,31 +404,69 @@ test("custom stdio MCP is registered disabled with a dynamic credential and can 
   );
 });
 
-test("custom HTTP MCP accepts HTTP(S) endpoints without embedded credentials", async (t) => {
+test("custom HTTP MCP accepts HTTP(S) endpoints only without URL credentials, query or fragment", async (t) => {
   const root = await fixture(t);
-  const before = await readProjectSettings(root);
-  const created = await executeProjectSettingsCommand(root, {
-    action: "mcp.register",
-    revision: before.mcpRevision,
-    serverName: "public_remote",
-    transport: "streamable-http",
-    url: "https://example.com/mcp",
-  });
-  const server = created.mcpServers.find((candidate) => candidate.serverName === "public_remote");
-  assert.equal(server.transport, "streamable-http");
-  assert.equal(server.target, "https://example.com/mcp");
-  assert.equal(server.managed, true);
+  const configPath = path.join(root, "runtime/openquantum/agent-presets/openquantum/agent.cordis.yml");
+  let snapshot = await readProjectSettings(root);
+  for (const [serverName, url] of [["public_remote", "https://example.com/mcp"], ["http_remote", "http://example.com:8080/mcp"]]) {
+    snapshot = await executeProjectSettingsCommand(root, {
+      action: "mcp.register", revision: snapshot.mcpRevision, serverName, transport: "streamable-http", url,
+    });
+    const server = snapshot.mcpServers.find(candidate => candidate.serverName === serverName);
+    assert.equal(server.transport, "streamable-http");
+    assert.equal(server.target, url);
+    assert.equal(server.managed, true);
+    assert.equal(server.enabled, false);
+    assert.deepEqual(server.credentialRefs, []);
+  }
+  const original = await readFile(configPath, "utf8");
+  for (const url of [
+    "https://fixture-user@example.com/mcp", "https://:fixture-password@example.com/mcp",
+    "https://example.com/mcp?token=fixture-token", "https://example.com/mcp?mode=public",
+    "https://example.com/mcp#fixture-fragment", "https://example.com/mcp?mode=public#fixture-fragment",
+    "ftp://example.com/mcp", "invalid-fixture-url",
+  ]) {
+    await assert.rejects(executeProjectSettingsCommand(root, {
+      action: "mcp.register", revision: snapshot.mcpRevision, serverName: "private_remote", transport: "streamable-http", url,
+    }), error => {
+      assert.match(error.message, /MCP URL/);
+      assert.doesNotMatch(error.message, /fixture-/);
+      return true;
+    });
+    assert.equal(await readFile(configPath, "utf8"), original, "rejection must not save URL material");
+  }
+  await assert.rejects(executeProjectSettingsCommand(root, {
+    action: "mcp.register", revision: snapshot.mcpRevision, serverName: "private_remote", transport: "streamable-http",
+    url: "https://example.com/mcp", credentialRef: "EXAMPLE_API_KEY",
+  }), /只支持无凭据端点/);
+  assert.equal(await readFile(configPath, "utf8"), original);
+});
 
-  await assert.rejects(
-    executeProjectSettingsCommand(root, {
-      action: "mcp.register",
-      revision: created.mcpRevision,
-      serverName: "private_remote",
-      transport: "streamable-http",
-      url: "https://token@example.com/mcp",
-    }),
-    /无内嵌凭据/,
-  );
+test("legacy HTTP URL projections remove credentials, query and fragment without rewriting presets", async t => {
+  const root = await fixture(t);
+  const configPath = path.join(root, "runtime/openquantum/agent-presets/openquantum/agent.cordis.yml");
+  const cases = [
+    ["https://fixture-user:fixture-password@example.com/mcp?token=fixture-query#fixture-fragment", "https://example.com/mcp"],
+    ["http://example.com:8080/mcp?api_key=fixture-query", "http://example.com:8080/mcp"],
+    ["https://example.com/mcp#fixture-fragment", "https://example.com/mcp"],
+    ["https://fixture-user:fixture-password@[invalid/mcp?fixture-query", "URL 无效"],
+    ["data:text/plain,fixture-password?fixture-query#fixture-fragment", "URL 无效"],
+    [null, "未配置 URL"],
+  ];
+  const rows = cases.map(([url], index) => ({ id: `mcp-user-legacy_${index}`, name: "@deepseek-ai/dsh-mcp-client",
+    config: { serverName: `legacy_${index}`, transport: "streamable-http", url } }));
+  const original = JSON.stringify(rows);
+  await writeFile(configPath, original);
+  const snapshot = await readProjectSettings(root);
+  assert.deepEqual(snapshot.mcpServers.map(server => server.target), cases.map(([, target]) => target));
+  assert.doesNotMatch(JSON.stringify(snapshot), /fixture-/);
+  assert.equal(await readFile(configPath, "utf8"), original);
+  const updated = await executeProjectSettingsCommand(root, {
+    action: "mcp.update", revision: snapshot.mcpRevision, serverName: "legacy_0", enabled: false,
+    toolCallTimeoutMs: 60000, reconnect: snapshot.mcpServers[0].reconnect,
+  });
+  assert.doesNotMatch(JSON.stringify(updated), /fixture-/);
+  assert.equal(parseDocument(await readFile(configPath, "utf8")).toJS()[0].config.url, cases[0][0]);
 });
 
 test("repository preset exposes reviewed quantum MCPs with safe defaults", async () => {

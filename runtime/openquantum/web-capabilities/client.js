@@ -455,7 +455,7 @@ globalThis.__ModuleLoader__.load({
             mcpDraft.transport === "stdio" ? h(React.Fragment, null,
               h("div", { className: "oq-cap-field" }, h("label", null, t("参数（每行一项）")), h("textarea", { className: "oq-cap-textarea", value: mcpDraft.args, onChange: (event) => setMcpDraft({ ...mcpDraft, args: event.currentTarget.value }) })),
               h("div", { className: "oq-cap-field" }, h("label", null, t("凭据引用（可选）")), h("input", { className: "oq-cap-input", pattern: "[A-Za-z_][A-Za-z0-9_]*", value: mcpDraft.credentialRef, placeholder: "EXAMPLE_API_KEY", onChange: (event) => setMcpDraft({ ...mcpDraft, credentialRef: event.currentTarget.value }) })),
-            ) : null,
+            ) : h("p", { className: "oq-cap-span" }, t("此入口仅支持无需认证的 HTTP(S) 服务；URL 不得包含用户名、密码、查询参数或 # 片段。")),
             h("div", { className: "oq-cap-span" }, h("button", { type: "submit", className: "oq-cap-button", "data-primary": "true", disabled }, t("注册为关闭状态"))),
           ),
         ) : null,

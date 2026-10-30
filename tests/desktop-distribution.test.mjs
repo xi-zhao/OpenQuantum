@@ -1,11 +1,12 @@
 import assert from "node:assert/strict";
-import { cp, mkdir, mkdtemp, readFile, readlink, realpath, rm, stat, symlink, writeFile } from "node:fs/promises";
+import { chmod, cp, mkdir, mkdtemp, readFile, readlink, realpath, rm, stat, symlink, writeFile } from "node:fs/promises";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import test from "node:test";
 import { desktopPayloadIdentity, installDesktopDistribution, sha256 } from "../scripts/lib/desktop-distribution.mjs";
+import { withDesktopInstall } from "../scripts/lib/desktop-install-transaction.mjs";
 
 test("same-version packages keep separate dependencies across native architectures and runtime locks", () => {
   const manifest = { kind: "dsh-capability-package", version: "0.8.1", target: "darwin-arm64", runtimeLockSha256: sha256("runtime 1"), files: {} };
@@ -198,6 +199,83 @@ test("allows same-version repair and numeric upgrades, but rejects unorderable m
   assert.equal(await readFile(path.join(f.projectRoot, "src/main.mjs"), "utf8"), "upgraded");
 });
 
+test("Home preflight runs before any program, dependency link or receipt change", async t => {
+  const f = await fixture(t);
+  await f.release("1.0.0", { "src/main.mjs": "old" });
+  await f.install();
+  const state = path.join(f.projectRoot, ".openquantum/desktop-distribution.json");
+  const receipt = await readFile(state, "utf8");
+  const dependencies = await readlink(path.join(f.projectRoot, "node_modules"));
+  await f.release("2.0.0", { "src/main.mjs": "new" });
+  await assert.rejects(installDesktopDistribution({ ...f, preflight: async ({ next, changes }) => {
+    assert.equal(next.version, "2.0.0");
+    assert.equal(changes.length, 1);
+    assert.equal(await readFile(path.join(f.projectRoot, "src/main.mjs"), "utf8"), "old");
+    await assert.rejects(stat(path.join(f.projectRoot, ".openquantum/desktop-install-journal.json")), { code: "ENOENT" });
+    throw new Error("Home conflict");
+  } }), /Home conflict/);
+  assert.equal(await readFile(state, "utf8"), receipt);
+  assert.equal(await readlink(path.join(f.projectRoot, "node_modules")), dependencies);
+  assert.equal(await readFile(path.join(f.projectRoot, "src/main.mjs"), "utf8"), "old");
+});
+
+test("Home failure restores programs, modes, old dependency link, Home files and exact receipt", async t => {
+  const f = await fixture(t);
+  await f.release("1.0.0", { "src/main.mjs": "old", "src/removed.mjs": "removed" });
+  await f.install();
+  const program = path.join(f.projectRoot, "src/main.mjs");
+  await chmod(program, 0o750);
+  const state = path.join(f.projectRoot, ".openquantum/desktop-distribution.json");
+  const receipt = await readFile(state, "utf8");
+  const dependencies = await readlink(path.join(f.projectRoot, "node_modules"));
+  const homeFile = path.join(f.projectRoot, ".openquantum/dsh/.credentials.yaml");
+  await mkdir(path.dirname(homeFile), { recursive: true });
+  await writeFile(homeFile, "synthetic old credential", { mode: 0o600 });
+  await f.release("2.0.0", { "src/main.mjs": "new", "src/added.mjs": "added" });
+  const nextPayload = path.join(f.root, "next-payload");
+  await cp(f.payload, nextPayload, { recursive: true });
+  await assert.rejects(installDesktopDistribution({ payload: nextPayload, projectRoot: f.projectRoot, prepare: async tx => {
+    assert.equal(await readFile(program, "utf8"), "new");
+    assert.equal(await readFile(state, "utf8"), receipt);
+    assert.equal(await readlink(path.join(f.projectRoot, "node_modules")), path.join(nextPayload, "node_modules"));
+    await tx.capture(homeFile);
+    await writeFile(homeFile, "synthetic new credential");
+    throw new Error("late Home failure");
+  } }), /late Home failure/);
+  assert.equal(await readFile(program, "utf8"), "old");
+  if (process.platform !== "win32") assert.equal((await stat(program)).mode & 0o777, 0o750);
+  assert.equal(await readFile(path.join(f.projectRoot, "src/removed.mjs"), "utf8"), "removed");
+  await assert.rejects(stat(path.join(f.projectRoot, "src/added.mjs")), { code: "ENOENT" });
+  assert.equal(await readlink(path.join(f.projectRoot, "node_modules")), dependencies);
+  assert.equal(await readFile(state, "utf8"), receipt);
+  assert.equal(await readFile(homeFile, "utf8"), "synthetic old credential");
+  await assert.rejects(stat(path.join(f.projectRoot, ".openquantum/desktop-install-journal.json")), { code: "ENOENT" });
+});
+
+test("pending recovery precedes downgrade checks and a committed upgrade still rejects downgrade", async t => {
+  const f = await fixture(t);
+  await f.release("1.0.0", { "src/main.mjs": "old" });
+  await f.install();
+  const receipt = path.join(f.projectRoot, ".openquantum/desktop-distribution.json");
+  let saved;
+  await assert.rejects(withDesktopInstall(f.projectRoot, async ({ begin }) => {
+    const tx = await begin();
+    await tx.capture(receipt);
+    await writeFile(receipt, JSON.stringify({ schemaVersion: 1, version: "9.0.0", files: {} }));
+    const journal = JSON.parse(await readFile(path.join(f.projectRoot, ".openquantum/desktop-install-journal.json"), "utf8"));
+    const filename = path.join(f.projectRoot, ".openquantum/desktop-install-backups", journal.entries.at(-1).blob);
+    saved = { filename, bytes: await readFile(filename) };
+    await rm(filename);
+    throw new Error("disk failure");
+  }), /recovery remains pending/);
+  await writeFile(saved.filename, saved.bytes, { mode: 0o600 });
+  await f.release("2.0.0", { "src/main.mjs": "new" });
+  assert.equal((await f.install()).version, "2.0.0");
+  assert.equal(await readFile(path.join(f.projectRoot, "src/main.mjs"), "utf8"), "new");
+  await f.release("1.0.0", { "src/main.mjs": "old" });
+  await assert.rejects(f.install(), /Refusing to downgrade/);
+});
+
 test("installer rejects a downgrade before staging a version or replacing the launcher", {
   skip: !["darwin-arm64", "darwin-x64", "win32-x64"].includes(`${process.platform}-${process.arch}`),
 }, async t => {
@@ -210,7 +288,7 @@ test("installer rejects a downgrade before staging a version or replacing the la
   const stateFile = path.join(f.projectRoot, ".openquantum/desktop-distribution.json");
   const state = await readFile(stateFile, "utf8");
   const packageRoot = path.join(f.root, "older-package");
-  for (const relative of ["scripts/lib/desktop-distribution.mjs", "scripts/lib/harness-home-compatibility.mjs", "scripts/lib/desktop-source.mjs", "scripts/lib/desktop-dependencies.mjs", "scripts/lib/desktop-branding.mjs", "src/updates/release.mjs"]) {
+  for (const relative of ["scripts/lib/desktop-distribution.mjs", "scripts/lib/desktop-install-transaction.mjs", "scripts/lib/harness-home-compatibility.mjs", "scripts/lib/desktop-source.mjs", "scripts/lib/desktop-dependencies.mjs", "scripts/lib/desktop-branding.mjs", "src/updates/release.mjs"]) {
     const target = path.join(packageRoot, "openquantum", relative);
     await mkdir(path.dirname(target), { recursive: true });
     await cp(new URL(`../${relative}`, import.meta.url), target);

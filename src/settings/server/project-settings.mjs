@@ -255,7 +255,16 @@ async function readSkillUiMetadata(projectRoot, directoryName) {
 
 function displayTarget(config) {
   if (config.transport === "streamable-http") {
-    return typeof config.url === "string" ? config.url : "未配置 URL";
+    if (typeof config.url !== "string") return "未配置 URL";
+    try {
+      const url = new URL(config.url);
+      if (!["http:", "https:"].includes(url.protocol)) return "URL 无效";
+      // Legacy presets may contain secrets even though registration rejects them.
+      url.username = ""; url.password = ""; url.search = ""; url.hash = "";
+      return url.toString();
+    } catch {
+      return "URL 无效";
+    }
   }
   if (config.command === "uvx" && Array.isArray(config.args)) {
     return ["uvx", ...config.args].join(" ");
@@ -637,9 +646,11 @@ async function registerMcpSettings(projectRoot, input) {
     if (
       !["http:", "https:"].includes(parsedUrl.protocol) ||
       parsedUrl.username ||
-      parsedUrl.password
+      parsedUrl.password ||
+      parsedUrl.search ||
+      parsedUrl.hash
     ) {
-      throw new TypeError("MCP URL 必须是无内嵌凭据的 HTTP(S) 地址");
+      throw new TypeError("MCP URL 必须是无内嵌凭据、查询参数或片段的 HTTP(S) 地址");
     }
     config = {
       serverName: input.serverName,

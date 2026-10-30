@@ -2,7 +2,11 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import fs from "node:fs/promises";
 import path from "node:path";
+import os from "node:os";
 import { fileURLToPath } from "node:url";
+import { createHash } from "node:crypto";
+import { CallToolResultSchema } from "@modelcontextprotocol/sdk/types.js";
+import { createBackend } from "../runtime/chatgpt/backend.mjs";
 import { fixture } from "./fixtures/codex-settings.mjs";
 import { EXTERNAL_MCP, externalMcp, externalContract, operationCredential, ACCOUNT_OPERATIONS } from "../runtime/chatgpt/external/catalog.mjs";
 import { ExternalSessions, validateExternal, externalResult } from "../runtime/chatgpt/external/client.mjs";
@@ -189,6 +193,225 @@ async function poolFixture(t, { connect: customConnect, idleMs = 1800000, provid
   return { entry, pool, options, client, calls, value: value => { values = value; }, authorize: value => { authorized = value; }, leases: () => leases, closes: () => closes,
     call: (operation, id, args = {}) => pool.call(entry, { operation, arguments: args, ...(id ? { sessionId: id } : {}) }, options) };
 }
+
+async function backendFixture(t, { provider = "qpanda_runtime" } = {}) {
+  const directory = await fs.mkdtemp(path.join(os.tmpdir(), "oq-external-backend-"));
+  const entry = externalMcp(provider), contract = await externalContract(root, entry.id);
+  const externalDirectory = path.join(directory, "runtime/chatgpt/external/environments", entry.id);
+  for (const name of [".agents", "examples/quantum-algorithms", "dist/chatgpt", externalDirectory]) await fs.mkdir(path.resolve(directory, name), { recursive: true });
+  await fs.writeFile(path.join(directory, ".agents/sdk-libraries.json"), JSON.stringify({ schemaVersion: 1, libraries: [] }));
+  await fs.writeFile(path.join(directory, "examples/quantum-algorithms/coverage.json"), JSON.stringify({ guides: [] }));
+  await fs.writeFile(path.join(directory, ".agents/capability-packages.yml"), JSON.stringify({ schemaVersion: "1.1", packages: [
+    { id: entry.skillId, execution: { mcpServers: [{ name: entry.id, source: "package", activation: "opt-in",
+      tools: contract.tools.map(({ name }) => ({ name, effect: "external-write" })) }] } },
+  ] }));
+  await fs.writeFile(path.join(externalDirectory, "tools.json"), JSON.stringify(contract));
+  let values = {}, leases = 0, reads = 0;
+  const events = [], overrides = {};
+  const options = { root: directory,
+    connect: async () => { throw new Error("native providers must not start"); },
+    connectExternal: async (_root, _entry, current, options) => {
+      events.push({ type: "connect", values: current });
+      if (overrides.connect) await overrides.connect(current, options);
+      return { client: {
+        listTools: async () => {
+          if (overrides.list) await overrides.list(current);
+          return { tools: contract.tools };
+        },
+        callTool: async (input, _schema, request) => {
+          events.push({ type: "call", ...input });
+          return overrides.call ? overrides.call(input, current, request) : text({ status: "success" });
+        },
+      }, close: async () => { events.push({ type: "close" }); if (overrides.close) await overrides.close(); } };
+    },
+  };
+  const built = await createBackend({ ...options, discover: true });
+  const bytes = JSON.stringify({ providers: built.providers, tools: built.tools });
+  await built.close();
+  await fs.writeFile(path.join(directory, "dist/chatgpt/capabilities.json"), bytes);
+  await fs.writeFile(path.join(directory, "dist/chatgpt/release.json"), JSON.stringify({ contractDigest: createHash("sha256").update(bytes).digest("hex") }));
+  const backend = await createBackend(options);
+  t.after(async () => { try { await backend.close(); } finally { await fs.rm(directory, { recursive: true, force: true }); } });
+  const lifecycle = {
+    values: async () => { reads++; return overrides.values ? overrides.values() : values; },
+    acquire: async () => { events.push({ type: "acquire" }); leases++; return { release: async () => { events.push({ type: "release" }); leases--; } }; },
+  };
+  return { backend, entry, events, overrides, lifecycle, value: next => { values = next; }, leases: () => leases, reads: () => reads,
+    call: (operation, { id, args = {}, signal, initial = {}, authorize = async () => true } = {}) => backend.call(entry.toolName,
+      { operation, arguments: args, ...(id ? { sessionId: id } : {}) }, signal, authorize, initial, lifecycle) };
+}
+
+test("backend and real ExternalSessions redact actual credentials across nested JSON, even with no old value", async t => {
+  for (const initial of [{ QPANDA3_API_KEY: "fixture-obsolete-key" }, {}]) {
+    await t.test(Object.keys(initial).length ? "rotated snapshot" : "empty snapshot", async t => {
+      const f = await backendFixture(t);
+      const secret = 'fixture-new-"quoted"-key\\with-slash';
+      f.value({ QPANDA3_API_KEY: secret });
+      const body = { source: { name: "text" }, nested: { echo: secret }, status: "success" };
+      f.overrides.call = async input => input.name === "setup_origin_quantum_account_tool" ? text({ status: "success" }) : {
+        content: [{ type: "text", text: JSON.stringify(body) }, { type: "text", text: JSON.stringify(JSON.stringify(body)) }], structuredContent: body,
+      };
+      const result = await f.call("list_qpu_devices_tool", { initial });
+      assert.equal(CallToolResultSchema.safeParse(result).success, true);
+      assert.equal(result.structuredContent.nested.echo, "[redacted]");
+      assert.equal(JSON.parse(result.content[0].text).nested.echo, "[redacted]");
+      assert.equal(JSON.parse(JSON.parse(result.content[1].text)).nested.echo, "[redacted]");
+      assert.deepEqual(result.structuredContent.source, body.source);
+      assert.doesNotMatch(JSON.stringify(result), /fixture-new|fixture-obsolete/);
+      assert.equal(f.events.find(event => event.type === "connect").values.QPANDA3_API_KEY, secret);
+      assert.equal(f.events.find(event => event.name === "setup_origin_quantum_account_tool").arguments.api_key, secret);
+      assert.equal(f.reads(), 2, "authentication generation is rechecked before the operation");
+      assert.equal(f.leases(), 1);
+      await f.call("close_session", { id: sessionId(result) });
+      assert.equal(f.leases(), 0);
+      assert.equal(f.events.filter(event => event.name === "list_qpu_devices_tool").length, 1);
+    });
+  }
+});
+
+test("backend redacts every actual service secret in upstream business errors and preserves protocol types", async t => {
+  const f = await backendFixture(t, { provider: "quantum_hardware" });
+  f.value({ QISKIT_IBM_TOKEN: "text", IONQ_API_KEY: "fixture-ionq-key" });
+  f.overrides.call = async () => ({ content: [{ type: "text", text: JSON.stringify({ status: "error", details: ["text", "fixture-ionq-key"] }) }],
+    structuredContent: { status: "error", message: "text / fixture-ionq-key" } });
+  const result = await f.call("ionq_devices");
+  assert.equal(result.isError, true);
+  assert.equal(CallToolResultSchema.safeParse(result).success, true);
+  assert.deepEqual(JSON.parse(result.content[0].text).details, ["[redacted]", "[redacted]"]);
+  assert.equal(result.structuredContent.message, "[redacted] / [redacted]");
+  assert.equal(f.leases(), 0);
+});
+
+test("backend masks new-credential exceptions from connection, handshake, authentication, execution and cleanup", async t => {
+  for (const phase of ["connect", "list", "authenticate", "execute", "close"]) {
+    await t.test(phase, async t => {
+      const f = await backendFixture(t), secret = `fixture-${phase}-new-key`;
+      f.value({ QPANDA3_API_KEY: secret });
+      const fail = () => { throw Object.assign(new Error(`provider echoed ${secret}`, { cause: new Error(secret) }), { detail: { secret } }); };
+      if (["connect", "list"].includes(phase)) f.overrides[phase] = fail;
+      else if (phase === "close") {
+        f.overrides.close = fail;
+        f.overrides.call = async input => { if (input.name !== "setup_origin_quantum_account_tool") fail(); return text({ status: "success" }); };
+      } else f.overrides.call = async input => {
+        if ((input.name === "setup_origin_quantum_account_tool") === (phase === "authenticate")) fail();
+        return text({ status: "success" });
+      };
+      await assert.rejects(f.call("list_qpu_devices_tool"), error => {
+        assert.match(error.message, /服务调用失败/);
+        assert.doesNotMatch(String(error.stack) + JSON.stringify(error), /fixture-/);
+        assert.equal(error.cause, undefined);
+        return true;
+      });
+      assert.equal(f.leases(), 0);
+      assert.ok(f.events.filter(event => event.name === "list_qpu_devices_tool").length <= 1);
+      f.overrides.connect = f.overrides.list = f.overrides.close = f.overrides.call = undefined;
+    });
+  }
+});
+
+test("backend masks credential-read failures without an old value and preserves errors for credential-free calls", async t => {
+  const f = await backendFixture(t);
+  f.overrides.values = async () => { throw new Error("fixture-secret-in-store-error"); };
+  await assert.rejects(f.call("list_bindings_tool"), error => {
+    assert.match(error.message, /服务凭据读取失败/);
+    assert.doesNotMatch(error.stack, /fixture-secret/);
+    assert.equal(error.cause, undefined);
+    return true;
+  });
+  assert.deepEqual(f.events, []);
+  f.overrides.values = undefined;
+  f.overrides.call = async () => { throw new Error("local fixture failure"); };
+  await assert.rejects(f.call("list_bindings_tool"), /local fixture failure/);
+  assert.equal(f.leases(), 0);
+});
+
+test("backend rotation preserves first-save state, closes authenticated sessions and never replays a cloud submission", async t => {
+  const f = await backendFixture(t);
+  const id = sessionId(await f.call("list_bindings_tool"));
+  f.value({ QPANDA3_API_KEY: "fixture-first-key" });
+  await f.backend.reconcileExternal();
+  assert.equal(f.leases(), 1);
+  const args = { circuit: "QINIT 1", device_id: "20" };
+  assert.equal(sessionId(await f.call("sample_tool", { id, args })), id);
+  f.value({ QPANDA3_API_KEY: "fixture-rotated-key" });
+  await f.backend.reconcileExternal();
+  assert.equal(f.leases(), 0);
+  await assert.rejects(f.call("sample_tool", { id, args }), /会话已失效/);
+  assert.equal(f.events.filter(event => event.name === "sample_tool").length, 1);
+  assert.equal(f.events.filter(event => event.type === "connect").length, 1);
+});
+
+test("backend detects credential rotation during authentication before any cloud submission", async t => {
+  const f = await backendFixture(t);
+  f.value({ QPANDA3_API_KEY: "fixture-first-key" });
+  f.overrides.call = async () => { f.value({ QPANDA3_API_KEY: "fixture-rotated-key" }); return text({ status: "success" }); };
+  await assert.rejects(f.call("sample_tool", { args: { circuit: "QINIT 1", device_id: "20" } }), /服务调用失败/);
+  assert.deepEqual(f.events.filter(event => event.type === "call").map(event => event.name), ["setup_origin_quantum_account_tool"]);
+  assert.equal(f.leases(), 0);
+});
+
+test("backend cleanup errors stay safe without rereading credentials on close, reconcile and shutdown", async t => {
+  for (const action of ["close_session", "reconcile", "shutdown"]) await t.test(action, async t => {
+    const f = await backendFixture(t), secret = "fixture-historical-authentication-key";
+    f.value({ QPANDA3_API_KEY: secret });
+    const id = sessionId(await f.call("list_qpu_devices_tool")), reads = f.reads();
+    f.overrides.close = async () => { throw new Error(`cleanup echoed ${secret}`); };
+    f.value({ QPANDA3_API_KEY: "fixture-rotated-key" });
+    const pending = action === "close_session" ? f.call(action, { id })
+      : action === "reconcile" ? f.backend.reconcileExternal() : f.backend.close();
+    await assert.rejects(pending, error => {
+      assert.match(error.message, /MCP 连接回收失败/);
+      assert.doesNotMatch(String(error.stack) + JSON.stringify(error), /fixture-/);
+      for (const child of error.errors ?? []) assert.doesNotMatch(child.stack, /fixture-/);
+      return true;
+    });
+    if (action !== "reconcile") assert.equal(f.reads(), reads, "cleanup must work even when credentials cannot be read");
+    assert.equal(f.leases(), 0);
+    if (action === "shutdown") f.backend.close = async () => {};
+  });
+});
+
+test("backend cancellation masks the actual credential and retains leases until connection cleanup finishes", async t => {
+  const f = await backendFixture(t), started = Promise.withResolvers(), finish = Promise.withResolvers();
+  const secret = "fixture-cancel-new-key", controller = new AbortController();
+  f.value({ QPANDA3_API_KEY: secret });
+  f.overrides.call = async (input, _current, { signal }) => {
+    if (input.name === "setup_origin_quantum_account_tool") return text({ status: "success" });
+    started.resolve();
+    return new Promise((_resolve, reject) => signal.addEventListener("abort", () => reject(new Error(`cancelled ${secret}`)), { once: true }));
+  };
+  f.overrides.close = async () => { await finish.promise; };
+  const pending = f.call("list_qpu_devices_tool", { signal: controller.signal });
+  const rejected = assert.rejects(pending, error => {
+    assert.match(error.message, /服务调用失败/);
+    assert.doesNotMatch(error.stack, /fixture-cancel/);
+    return true;
+  });
+  await started.promise;
+  controller.abort();
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(f.leases(), 1, "the environment remains leased during connection cleanup");
+  finish.resolve(); await rejected;
+  assert.equal(f.leases(), 0);
+  assert.equal(f.events.filter(event => event.name === "list_qpu_devices_tool").length, 1);
+  assert.deepEqual(f.events.slice(-2).map(event => event.type), ["close", "release"]);
+});
+
+test("ExternalSessions retains the original getter without retaining a call's redaction scope", async t => {
+  const f = await poolFixture(t);
+  f.value({ QPANDA3_API_KEY: "fixture-first-key" });
+  f.client.callTool = async input => input.name === "setup_origin_quantum_account_tool" ? text({ status: "success" }) : text({ echo: "fixture-first-key" });
+  const first = await f.call("list_qpu_devices_tool");
+  assert.equal(JSON.parse(first.content[0].text).echo, "[redacted]");
+  assert.equal(f.pool.sessions.get(sessionId(first)).values, f.options.values);
+  f.value({ QPANDA3_API_KEY: "fixture-second-key" });
+  await f.pool.reconcile();
+  f.client.callTool = async input => input.name === "setup_origin_quantum_account_tool" ? text({ status: "success" }) : text({ echo: "fixture-second-key" });
+  const second = await f.call("list_qpu_devices_tool");
+  assert.equal(JSON.parse(second.content[0].text).echo, "[redacted]");
+  assert.notEqual(sessionId(second), sessionId(first));
+  assert.equal(f.pool.sessions.get(sessionId(second)).values, f.options.values);
+});
 
 test("one session survives local work, first credential save and cloud authentication; rotation closes it", async t => {
   const f = await poolFixture(t);

@@ -114,6 +114,12 @@ test("Mac launcher uses the brand icon and bundled runtime across repeated insta
   assert.deepEqual(icon, macIcon(png));
   assert.equal(icon.subarray(8, 12).toString(), "ic09");
   assert.deepEqual(icon.subarray(16), png);
+  const bootstrap = path.join(dataRoot, "versions/release/openquantum/scripts/start-installed-desktop.mjs");
+  await installDesktopBranding({ ...options, bootstrap });
+  const upgraded = await readFile(path.join(first.launcher, "Contents/MacOS/OpenQuantum"), "utf8");
+  assert.ok(upgraded.includes(bootstrap.replaceAll("'", "'\\''")));
+  assert.ok(upgraded.includes(projectRoot));
+  assert.ok(!upgraded.includes(path.join(projectRoot, "scripts/run-desktop.mjs")));
 });
 
 test("launcher upgrades reject modified files before any write and retain recoverable install ownership", async t => {
