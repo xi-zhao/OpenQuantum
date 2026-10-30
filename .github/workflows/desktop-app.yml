@@ -31,9 +31,19 @@ jobs:
           # The macOS signer scans bundled dependency files concurrently.
           # Keep this limit local to the build process and its children.
           ulimit -n 65536
-          npm run desktop:app:package -- --dir --output "$RUNNER_TEMP/openquantum-app"
+          npm run desktop:app:package -- --output "$RUNNER_TEMP/openquantum-app"
       - name: Verify bundled runtimes, startup and retained user settings
-        run: npm run desktop:app:smoke -- "$RUNNER_TEMP/openquantum-app/directory/mac-arm64/OpenQuantum.app" "$RUNNER_TEMP/openquantum-app/validation"
+        run: npm run desktop:app:smoke -- "$RUNNER_TEMP/openquantum-app/artifacts/mac-arm64/OpenQuantum.app" "$RUNNER_TEMP/openquantum-app/validation"
+      - name: Upload verified standalone installer
+        uses: actions/upload-artifact@v7
+        with:
+          name: OpenQuantum-standalone-macOS-arm64
+          path: |
+            ${{ runner.temp }}/openquantum-app/artifacts/*.dmg
+            ${{ runner.temp }}/openquantum-app/artifacts/SHA256SUMS
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 14
       - name: Upload verification summary
         if: always()
         uses: actions/upload-artifact@v7

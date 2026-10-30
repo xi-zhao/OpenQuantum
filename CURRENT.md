@@ -1,14 +1,15 @@
 # OpenQuantum 当前交接
 
-核验日期：2026-10-26。此页只记录交接状态；架构以[文档总入口](docs/README.md)为准，执行事实以 Harness
+核验日期：2026-10-30。此页只记录交接状态；架构以[文档总入口](docs/README.md)为准，执行事实以 Harness
 Session event log 为准，科学状态以 Acceptance Report 为准。2026-09 至 2026-10-16 的日期化记录已迁至
 [交接历史](docs/handoff/HISTORY.md)，内容未删改。接手时先重新查询 Git、PR 与 CI，不把本页当作实时状态。
 
 ## 当前基线
 
-- 发行入口：Desktop [v0.8.8](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.8) 的目标为 macOS Apple Silicon
-  独立应用，固定 DSH Desktop `2.0.0` / Harness `0.1.0-rc.6`。Codex 公开版本仍为
-  [codex-v0.8.4](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.4)；本轮不发布新的 Codex 标签。正式发布状态以 Release 页面及验证附件为准。
+- 正在交付统一版本 **0.8.9**：Desktop [v0.8.9](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.9) 与
+  Codex [codex-v0.8.9](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.9) 使用同一源码提交。
+  Desktop 继续固定 DSH Desktop `2.0.0`；功能架构与宿主边界不变。合并、发行、本机安装和最终验收分别以
+  Release 的 `release-verification.json` / `release-validation.json` 为准；发布完成前公开基线仍为 Desktop 0.8.8、Codex 0.8.4。
 - 能力成熟度以 `.agents/capability-packages.yml` 为准；工程检查通过不表示所有能力均通过科学验收。
 - [PR #39](https://github.com/xi-zhao/OpenQuantum/pull/39) 的拒绝降级与旧设置入口清理、
   [PR #40](https://github.com/xi-zhao/OpenQuantum/pull/40) 的临时凭据授权生命周期修复已经进入主线，并随 Desktop v0.8.5 发行。

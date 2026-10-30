@@ -172,8 +172,8 @@ Codex 面向模型的内置入口固定为 `find_openquantum_skills`、`prepare_
 
 ## 构建、检查与安装
 
-正式包见 [codex-v0.8.4 Release](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.4)。
-首次安装下载 `openquantum-0.8.4-codex-install.zip`，其中已包含安装器、锁文件与插件 ZIP；
+正式包见 [codex-v0.8.9 Release](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.9)。
+首次安装下载 `openquantum-0.8.9-codex-install.zip`，其中已包含安装器、锁文件与插件 ZIP；
 解压后执行 `npm ci --ignore-scripts` 和 `npm run plugin:install`。
 
 让 Codex Agent 代为安装时，使用[面向 Agent 的安装指南](CODEX_AGENT_INSTALL.md)。指南包含现成插件包与
@@ -195,7 +195,7 @@ Skill 关闭、其他 Skill 保留、缓存路径升级后的状态与重新开�
 可通过 `OPENQUANTUM_CODEX_CLI` 指定 CLI 路径。Keychain 集成测试另用
 `OPENQUANTUM_TEST_KEYCHAIN=1 npm run plugin:test`，只创建并清理随机测试服务条目。
 
-产物为 `dist/codex-plugin/openquantum-0.8.4-codex-plugin.zip`。构建不会安装到当前用户。明确安装时执行：
+产物为 `dist/codex-plugin/openquantum-0.8.9-codex-plugin.zip`。构建不会安装到当前用户。明确安装时执行：
 
 ```sh
 npm run plugin:install
@@ -207,7 +207,7 @@ npm run plugin:install
 安装器只接管自己管理的原 OpenQuantum 本地来源；其他来源冲突会明确报错。安装后按宿主提示重载。
 
 维护者运行 `npm run plugin:release` 生成独立插件 ZIP、完整安装包与 `SHA256SUMS`；要求干净的提交。
-完整安装包回归使用 `node scripts/verify-codex-release.mjs dist/codex-release/openquantum-0.8.4-codex-install.zip`。
+完整安装包回归使用 `node scripts/verify-codex-release.mjs dist/codex-release/openquantum-0.8.9-codex-install.zip`。
 使用 `npm run release:version -- X.Y.Z` 统一更新产品版本，`npm run release:check` 检查所有副本；
 构建会拒绝不一致的版本。同步发行时，`vX.Y.Z` 和 `codex-vX.Y.Z` 指向同一提交。
 0.8.4 同时提供原版 DSH Desktop 的 OpenQuantum 能力包；两个渠道固定到同一提交。GitHub `latest` 与 Desktop 更新清单属于 `v0.8.4`，Codex 插件使用 `codex-v0.8.4`，不附带 Desktop 更新清单。完整规则见[发布流程](../UPDATES.md#publishing-a-stable-update)。
