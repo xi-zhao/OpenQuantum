@@ -141,6 +141,9 @@ async function restoreLeaf(root, target, entry) {
   await rm(temporary, { force: true });
   if (entry.kind === "link") await symlink(bytes.toString(), temporary, process.platform === "win32" ? "junction" : undefined);
   else { await durableFile(temporary, bytes, entry.mode); await chmod(temporary, entry.mode); }
+  // Windows cannot rename over a directory junction. The durable snapshot stays
+  // pending until replacement completes, so recovery can retry after this unlink.
+  if (process.platform === "win32" && (await statOrNull(target))?.isSymbolicLink()) await removeLeaf(target);
   await rename(temporary, target);
   await syncDirectory(path.dirname(target));
 }
