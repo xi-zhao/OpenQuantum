@@ -204,7 +204,8 @@ const BRAND_STYLES = `
   .oq-settings-content > :has(> .oq-settings-nav):has(.oq-plugin-settings) { display: flex; flex-direction: column; flex: 1; min-height: 0; }
   .oq-settings:has(.oq-plugin-settings) .oq-settings-nav { flex-shrink: 0; }
   .oq-settings-content { min-height: 200px; overflow: auto; }
-  .oq-settings-nav { display: flex; gap: 8px; padding-bottom: 16px; overflow-x: auto; }
+  .oq-settings-nav { display: flex; align-items: center; gap: 8px; padding-bottom: 8px; overflow-x: auto; }
+  .oq-settings-license { margin-left: auto; padding: 8px 0 8px 12px; font-size: 12px; white-space: nowrap; }
   .oq-settings-nav button { background: transparent; color: inherit; font: inherit; border: 1px solid transparent; border-radius: 8px; padding: 8px 12px; cursor: pointer; flex-shrink: 0; }
   .oq-settings-nav button[aria-current] { background: var(--dsw-alias-interactive-bg-hover); }
   .oq-settings-nav button:focus-visible, .oq-settings-trigger:focus-visible { outline: 2px solid #8872db; outline-offset: 2px; }

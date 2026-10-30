@@ -7,6 +7,7 @@ import { createServer } from "node:net";
 import path from "node:path";
 import { promisify } from "node:util";
 import { setTimeout as delay } from "node:timers/promises";
+import { verifyDesktopSettingsScrolling } from "./lib/desktop-settings-smoke.mjs";
 
 const windows = process.platform === "win32";
 const target = `${process.platform}-${process.arch}`;
@@ -115,6 +116,10 @@ try {
       }
       assert.ok(healthy, "Installed Host and renderer must become healthy within two minutes");
       checks.push(`Launch ${attempt}: native profile healthy and visible OpenQuantum interface rendered`);
+      if (attempt === 1) {
+        report.settingsScrolling = await verifyDesktopSettingsScrolling(port);
+        checks.push("Settings catalog and detail scroll with wheel and keyboard in desktop, short and narrow views");
+      }
     } finally {
       if (child.exitCode === null && child.signalCode === null) {
         if (windows) await execute(executable, ["--dsh-installer-quit"], { env: environment, timeout: 20_000 }).catch(() => {});

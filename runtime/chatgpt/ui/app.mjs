@@ -490,8 +490,8 @@ function render() {
     empty.append(element("h2", "暂时无法读取设置"), element("p", "请检查插件连接后刷新。已有配置不会因此改变。", "hint"), button("重新读取", () => run({ action: "snapshot" }), "primary"));
     $("#content").replaceChildren(empty); return;
   }
-  const oldList = $(".catalog-list"), oldDetail = $(".detail-pane");
-  if (oldList && oldList.dataset.tab === tab && oldList.getClientRects().length) catalogScroll = oldList.scrollTop;
+  const oldCatalog = $(".catalog-pane"), oldDetail = $(".detail-pane");
+  if (oldCatalog && oldCatalog.dataset.tab === tab && oldCatalog.getClientRects().length) catalogScroll = oldCatalog.scrollTop;
   const detailScroll = oldDetail && oldDetail.dataset.entryKey === selectedEntry ? oldDetail.scrollTop : 0;
   const active = document.activeElement;
   const focusedFilter = filterToolbar.contains(active) ? active : null;
@@ -548,6 +548,7 @@ function render() {
     }
     const layout = element("div", undefined, "catalog-layout"); layout.dataset.detail = String(showDetail);
     const pane = element("aside", undefined, "catalog-pane"); pane.setAttribute("aria-label", "能力目录");
+    pane.dataset.tab = tab; pane.tabIndex = 0;
     pane.append(filterToolbar);
     if (tab === "mcp" && !desktop) pane.append(button("添加 MCP 连接", () => {
       selectedEntry = "connection:new"; showDetail = true; render();
@@ -555,7 +556,7 @@ function render() {
     }, "add-connection"));
     const list = element("div", undefined, "catalog-list"); list.dataset.tab = tab; pane.append(list);
     detailPane = element("section", undefined, "detail-pane"); detailPane.id = "catalog-detail";
-    detailPane.dataset.entryKey = selectedEntry ?? ""; detailPane.setAttribute("aria-label", "配置详情");
+    detailPane.dataset.entryKey = selectedEntry ?? ""; detailPane.setAttribute("aria-label", "配置详情"); detailPane.tabIndex = 0;
     layout.append(pane, detailPane); content.append(layout);
     if (tab === "skills") renderSkills(list); else renderMcp(list);
     if (selectedEntry === "connection:new") {
@@ -570,7 +571,7 @@ function render() {
       })); list.append(empty);
       if (!selectedEntry) detailPane.append(element("p", "调整搜索或筛选，选择需要配置的项目。", "hint"));
     }
-    list.scrollTop = catalogScroll; detailPane.scrollTop = detailScroll;
+    pane.scrollTop = catalogScroll; detailPane.scrollTop = detailScroll;
   }
   const restored = focusedFilter?.isConnected ? focusedFilter : focusedDraft ? [...document.querySelectorAll("[data-focus-key]")].find(input => input.dataset.focusKey === focusedDraft) : null;
   if (restored) { restored.focus({ preventScroll: true }); if (selection && restored.setSelectionRange) restored.setSelectionRange(...selection); }
@@ -585,7 +586,7 @@ document.querySelectorAll("button[data-tab]").forEach(node => {
     if (next !== null) { event.preventDefault(); tabs[next].click(); tabs[next].focus(); }
   };
 });
-const filterChanged = () => { catalogScroll = 0; const list = $(".catalog-list"); if (list) list.scrollTop = 0; notice(""); render(); };
+const filterChanged = () => { catalogScroll = 0; const pane = $(".catalog-pane"); if (pane) pane.scrollTop = 0; notice(""); render(); };
 const searchChanged = event => {
   if (event.isComposing) return;
   if (["recent", "relevant"].includes($("#state").value)) $("#state").value = "all";
