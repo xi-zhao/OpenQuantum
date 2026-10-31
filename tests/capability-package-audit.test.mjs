@@ -89,7 +89,7 @@ test("repository capability packages conform to their declared L0-L3 evidence", 
   assert.equal(report.scope, "static-declaration");
   assert.equal(report.status, "pass", report.issues.join("\n"));
   assert.deepEqual(report.summary.levelCounts, {
-    L0: 95,
+    L0: 96,
     L1: 95,
     L2: 1,
     L3: 3,
