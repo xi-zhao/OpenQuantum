@@ -30,7 +30,9 @@ for (const library of libraries) test(`SDK ecosystem: ${library.id}`, { skip: !e
   await fs.writeFile(path.join(output, `program.${extension}`), source);
   await fs.writeFile(path.join(output, "attempt.json"), JSON.stringify({ id: library.id, startedAt: new Date().toISOString(), dependencyLockSha256: sdk.lock.sha256, sourceSha256: hash(source), scientificValidation: "not_evaluated" }, null, 2));
   await fs.mkdir(path.join(output, "home"));
-  const environment = { ...isolatedEnvironment(output, path), JAX_PLATFORMS: "cpu", JAX_ENABLE_X64: "true", QSHARP_PYTHON_TELEMETRY: "disabled", JULIA_NUM_PRECOMPILE_TASKS: "2", JULIA_PKG_PRECOMPILE_AUTO: "0", JULIA_PKG_OFFLINE: "true", ...(sdk.run.environment ?? {}) };
+  const environment = { ...isolatedEnvironment(output, path), OPENQUANTUM_ROOT: root,
+    ...(sdk.sourceProject ? { OPENQUANTUM_SDK_SOURCE_ROOT: path.dirname(sdk.sourceProject.directory) } : {}),
+    JAX_PLATFORMS: "cpu", JAX_ENABLE_X64: "true", QSHARP_PYTHON_TELEMETRY: "disabled", JULIA_NUM_PRECOMPILE_TASKS: "2", JULIA_PKG_PRECOMPILE_AUTO: "0", JULIA_PKG_OFFLINE: "true", ...(sdk.run.environment ?? {}) };
   let args;
   if (library.language === "python") {
     const runner = `import importlib, importlib.metadata, json, pathlib, runpy, sys
@@ -39,8 +41,10 @@ def offline(event, args):
         raise RuntimeError('Unexpected network access in offline SDK verification')
 sys.addaudithook(offline)
 if __name__ == '__main__':
-    runpy.run_path(sys.argv[1], run_name='__main__')
-    for name in json.loads(sys.argv[2]):
+    program, modules = sys.argv[1], json.loads(sys.argv[2])
+    sys.argv = [program]
+    runpy.run_path(program, run_name='__main__')
+    for name in modules:
         importlib.import_module(name)
     versions = {d.metadata['Name']: d.version for d in importlib.metadata.distributions() if d.metadata['Name']}
     pathlib.Path('versions.json').write_text(json.dumps(versions, sort_keys=True))

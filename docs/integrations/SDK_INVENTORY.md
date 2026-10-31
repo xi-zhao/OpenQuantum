@@ -2,7 +2,7 @@
 
 由 `node scripts/audit-sdk-integration.mjs` 从 capability policy、SDK 导航、项目 manifest 和依赖锁生成；用 `--check` 检查是否过期。
 
-本表覆盖 114 个 SDK/源码环境入口：104 个 Python（包含算法共享环境）、7 个 Julia、2 个原生源码或 ABI 入口、1 个 Lean 项目。原生 QDMI 另有 Python 桥接依赖项目。一个入口可包含多个库，同一个库也可能有多个隔离版本，不能把入口数量当成独立 SDK 数量。所有锁摘要与间接依赖版本可通过 `node scripts/sdk-access.mjs inventory` 读出。
+本表覆盖 115 个 SDK/源码环境入口：105 个 Python（包含算法共享环境）、7 个 Julia、2 个原生源码或 ABI 入口、1 个 Lean 项目。原生 QDMI 另有 Python 桥接依赖项目。一个入口可包含多个库，同一个库也可能有多个隔离版本，不能把入口数量当成独立 SDK 数量。所有锁摘要与间接依赖版本可通过 `node scripts/sdk-access.mjs inventory` 读出。
 
 **接入状态：原生路径与指南已提供；逐 API、可选依赖、平台与外部服务验证不由这张静态清单推断。** 环境是否准备需 `inspect`，实际执行证据见[完整接入记录](FULL_SDK_ACCESS.md)。
 
@@ -107,6 +107,7 @@
 | `qutrunk-simulation` | QuTrunk | python | qutrunk==0.2.2 | QCircuit、参数、门与上游后端 | 按固定版本、已安装可选组件及目标平台核实 |
 | `randomized-measurements` | RandomMeas.jl | julia | JSON3, RandomMeas | 用户量子态、测量数据、随机测量协议与估计函数 | 按固定版本、已安装可选组件及目标平台核实 |
 | `simqn-network` | SimQN | python | qns==0.2.3 | 拓扑、节点、信道、存储、事件与自定义协议 | 上游 GPL 许可；保持独立进程，不改变现有 MCP 默认关闭状态。 |
+| `slowquant-response` | SlowQuant | python | numpy==2.5.3, scipy==1.18.1, numba==0.67.0, pyscf==2.8.0, qiskit==2.3.0, qiskit-nature==0.7.2 | 自定义分子、活性空间、酉波函数与量子线性响应，计算激发能、跃迁性质和吸收谱 | 固定完整源码，经显式准备与摘要校验后使用；不通过 pip 安装同名包。 不同响应形式、轨道与活性空间近似须分别解释；数值回归不代表最终科学验收。 Qiskit 入口与真实硬件验证分开报告；云端任务需另行授权。 |
 | `spinqit-simulation` | SpinQit | python | spinqit==0.2.4, scipy==1.14.1 | 电路、门、参数、编译与后端接口 | 按固定版本、已安装可选组件及目标平台核实 |
 | `sqd-chemistry` | Qiskit Addon SQD | python | qiskit-addon-sqd==0.13.1 | 用户 bitstrings、configuration recovery、投影子空间与费米子求解 | 按固定版本、已安装可选组件及目标平台核实 |
 | `squlearn-learning` | sQUlearn | python | squlearn==0.11.2 | 编码线路、observable、executor、量子核与 sklearn estimator | 明确本地 executor、编码参数、kernel regularization 和数据划分。账户、真实设备与外部服务保持独立授权；不自动选择云后端。 |

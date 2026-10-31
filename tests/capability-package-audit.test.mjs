@@ -94,7 +94,7 @@ test("repository capability packages conform to their declared L0-L3 evidence", 
     L2: 1,
     L3: 3,
   });
-  assert.equal(report.packages.length, 194);
+  assert.equal(report.packages.length, 195);
   assert.equal(report.packages.flatMap((entry) => entry.execution.mcpServers).length, 91);
   assert(
     report.packages.every((entry) => entry.status === "pass"),

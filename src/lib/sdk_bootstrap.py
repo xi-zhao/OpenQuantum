@@ -35,16 +35,49 @@ def prepare_sdk(capability_id, *, data_directory=None):
             if not sys.argv or not Path(sys.argv[0]).is_file():
                 raise RuntimeError("VQNet macOS loader requires a saved script, not stdin or -c")
             os.execve(sys.executable, [sys.executable, "-B", *sys.argv], {**os.environ, "DYLD_LIBRARY_PATH": libraries})
-    elif capability_id == "flow-vqe":
+    elif capability_id in ("flow-vqe", "slowquant-response"):
         root = Path(__file__).resolve().parents[2]
-        source = Path(os.environ.get("OPENQUANTUM_SDK_SOURCE_ROOT", root / ".openquantum/sdk-sources")) / "flow-vqe"
-        record = json.loads((source / "openquantum-source.json").read_text())
-        if record["revision"] != "f7642afa330e5108ea5738d42fe80b551363733c":
-            raise RuntimeError("Flow-VQE source revision differs from the reviewed snapshot")
-        for name, expected in record["files"].items():
+        source = root / os.environ.get("OPENQUANTUM_SDK_SOURCE_ROOT", ".openquantum/sdk-sources") / capability_id
+        record = json.loads((source / "openquantum-source.json").read_text(encoding="utf-8"))
+        libraries = json.loads((root / ".agents/sdk-libraries.json").read_text(encoding="utf-8"))["libraries"]
+        expected = next(entry["sourceProject"] for entry in libraries if entry["id"] == capability_id)
+        if any(record.get(key) != expected[key] for key in ("revision", "repository")):
+            raise RuntimeError(f"{capability_id} source differs from the reviewed snapshot")
+        if not isinstance(record.get("files"), dict) or not record["files"]:
+            raise RuntimeError(f"{capability_id} source manifest is empty")
+        links = record.get("symlinks", {})
+        recorded = set(record["files"]) | set(links)
+        ignored = {".git", "openquantum-source.json"}
+        ignored.update(f"{name}/.git" for name in record.get("submodulePaths", []))
+        found = set()
+        for directory, directories, names in os.walk(source):
+            for name in directories[:]:
+                file = Path(directory) / name
+                relative = file.relative_to(source).as_posix()
+                if relative in ignored:
+                    directories.remove(name)
+                elif file.is_symlink():
+                    directories.remove(name)
+                    names.append(name)
+                elif not any(item.startswith(relative + "/") for item in recorded):
+                    raise RuntimeError(f"{capability_id} source has an unrecorded directory")
+            found.update((Path(directory) / name).relative_to(source).as_posix() for name in names
+                         if (Path(directory) / name).relative_to(source).as_posix() not in ignored)
+        if found != recorded:
+            raise RuntimeError(f"{capability_id} source files changed")
+        for name, digest in record["files"].items():
             file = (source / name).resolve()
-            if source.resolve() not in file.parents or hashlib.sha256(file.read_bytes()).hexdigest() != expected:
-                raise RuntimeError("Flow-VQE source changed; use an explicitly recorded task environment")
+            if (source / name).is_symlink() or source.resolve() not in file.parents or hashlib.sha256(file.read_bytes()).hexdigest() != digest:
+                raise RuntimeError(f"{capability_id} source changed; use an explicitly recorded task environment")
+        for name, target in links.items():
+            file = source / name
+            if not file.is_symlink() or os.readlink(file) != target or source.resolve() not in file.resolve().parents:
+                raise RuntimeError(f"{capability_id} source link changed")
+        if capability_id == "slowquant-response":
+            # Numba writes compiled kernels even with Python's -B option.
+            cache = Path(os.environ.setdefault("NUMBA_CACHE_DIR", str(source.parent / ".numba-cache" / capability_id))).resolve()
+            if cache == source.resolve() or source.resolve() in cache.parents:
+                raise ValueError("SlowQuant JIT cache must be outside the fixed source checkout")
         sys.path.insert(0, str(source))
     elif capability_id == "qpanda-qubo" and sys.platform == "darwin":
         root = Path(__file__).resolve().parents[2]
