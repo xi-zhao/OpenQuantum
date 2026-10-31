@@ -1,0 +1,15 @@
+[project]
+name = "openquantum-slowquant-response"
+version = "0.1.0"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+  "numpy==2.5.3",
+  "scipy==1.18.1",
+  "numba==0.67.0",
+  "pyscf==2.8.0",
+  "qiskit==2.3.0",
+  "qiskit-nature==0.7.2",
+]
+
+[tool.uv]
+package = false

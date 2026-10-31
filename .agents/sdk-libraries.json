@@ -1331,6 +1331,32 @@
       ]
     },
     {
+      "id": "slowquant-response",
+      "title": "SlowQuant",
+      "language": "python",
+      "modules": [
+        "slowquant.SlowQuant",
+        "slowquant.unitary_coupled_cluster.ucc_wavefunction",
+        "slowquant.unitary_coupled_cluster.ups_wavefunction",
+        "slowquant.unitary_coupled_cluster.linear_response",
+        "slowquant.qiskit_interface.interface"
+      ],
+      "group": "chemistry",
+      "workflow": "自定义分子、活性空间、酉波函数与量子线性响应，计算激发能、跃迁性质和吸收谱",
+      "conditions": [
+        "固定完整源码，经显式准备与摘要校验后使用；不通过 pip 安装同名包。",
+        "不同响应形式、轨道与活性空间近似须分别解释；数值回归不代表最终科学验收。",
+        "Qiskit 入口与真实硬件验证分开报告；云端任务需另行授权。"
+      ],
+      "nativeOnly": true,
+      "pythonVersion": "3.12",
+      "sourceProject": {
+        "repository": "https://github.com/erikkjellgren/SlowQuant.git",
+        "revision": "b0d12b2e7e680141e50f3de0c9ba029d9574bbca"
+      },
+      "bootstrap": "校验固定完整源码后加入模块搜索路径；保留全部上游公开 API，不替换响应方程或数值算法"
+    },
+    {
       "id": "spinqit-simulation",
       "title": "SpinQit",
       "language": "python",

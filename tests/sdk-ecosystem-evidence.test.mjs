@@ -21,8 +21,12 @@ test("native SDK scoped API receipts are durable, match current locks and retain
   const chromobius = JSON.parse(await fs.readFile(path.join(root, "docs/integrations/evidence/chromobius-2026-10-26.json")));
   const lean = JSON.parse(await fs.readFile(path.join(root, "docs/integrations/evidence/lean-physics-2026-10-28.json")));
   const emlint = JSON.parse(await fs.readFile(path.join(root, "docs/integrations/evidence/emlint-2026-10-29.json")));
-  const receipts = [...report.libraries, chromobius.receipt, lean.receipt, emlint.receipt];
+  const slowquant = JSON.parse(await fs.readFile(path.join(root, "docs/integrations/evidence/slowquant-2026-10-31.json")));
+  const receipts = [...report.libraries, chromobius.receipt, lean.receipt, emlint.receipt, slowquant.receipt];
   const cohort = (await readSdkLibraries(root)).filter(entry => entry.nativeOnly);
+  const slowquantResult = JSON.parse(await fs.readFile(path.join(contained(slowquant.receipt.durableEvidenceDirectory), "result.json")));
+  assert.equal(slowquantResult.upstreamRevision, cohort.find(entry => entry.id === "slowquant-response").sourceProject.revision);
+  assert.equal(slowquant.upstream.revision, slowquantResult.upstreamRevision);
   const tracked = new Set(execFileSync("git", ["ls-files", "-z", "--", "docs/integrations/evidence"], { cwd: root, encoding: "utf8" }).split("\0"));
   assert.deepEqual(receipts.map(entry => entry.id).sort(), cohort.map(entry => entry.id).sort());
   assert.equal(report.summary.passed, 26);

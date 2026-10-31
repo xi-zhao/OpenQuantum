@@ -159,7 +159,9 @@ Wählen Sie ein Gebiet und nennen Sie der Workbench Ihre Frage, Ihre Eingaben un
 
 Lokale Berechnungen funktionieren ohne Konto bei einer Quantencloud. Echte Hardware und kostenpflichtige Dienste werden bei Bedarf eingerichtet; Eingabebereich, Vorbereitung und Prüfstatus jeder Methode stehen im ausführlichen Katalog.
 
-Der aktuelle Quellcode bietet vollständige Zugänge zu nativen APIs in **114 SDK- und Quellcodeumgebungen**, davon 26 aus der jüngsten, mit 0.8.4 ausgelieferten [Ökosystem-Erweiterung](../integrations/SDK_ECOSYSTEM_2026-10-14.md). Agenten können eigene Programme schreiben, öffentliche APIs kombinieren und vollständige Ergebnisse speichern – über die vorgegebenen Fälle der vorkonfigurierten Tools hinaus.
+Der aktuelle Quellcode bietet vollständige Zugänge zu nativen APIs in **115 SDK- und Quellcodeumgebungen**, davon 26 aus der jüngsten, mit 0.8.4 ausgelieferten [Ökosystem-Erweiterung](../integrations/SDK_ECOSYSTEM_2026-10-14.md). Agenten können eigene Programme schreiben, öffentliche APIs kombinieren und vollständige Ergebnisse speichern – über die vorgegebenen Fälle der vorkonfigurierten Tools hinaus.
+
+SlowQuant ergänzt molekulare lineare Antwort und Übergangseigenschaften über ein festgelegtes Quellcode-SDK. [Einrichtung und Prüfgrenzen](../integrations/SLOWQUANT.md); molekulare Qiskit-qLR und Hardware sind noch nicht validiert.
 
 **Formale Mathematik und Physik:** [Lean 4, mathlib und physlib](../../.agents/skills/lean-physics/SKILL.md) prüfen Beweise und ihre Axiome mit einem auf Lean 4.35.0 festgelegten Projekt. Die ausdrückliche Vorbereitung erstellt das kleine Pauli-Beispiel samt Imports; weitere Module werden nach Bedarf vorbereitet. Die Beweisprüfung installiert keine Abhängigkeiten. Ein Beweis gilt für die angegebenen Definitionen und Annahmen, nicht für die physikalische Gültigkeit eines Modells oder dessen wissenschaftliche Abnahme.
 
@@ -680,7 +682,7 @@ Bevorzugen Sie native Tool Provider für Aktionen im selben Prozess und in derse
 
 </details>
 
-Der vollständige Katalog der Skills, MCP-Dienste und nativen Tools wird in der [chinesischen Nachschlagewerk](../CAPABILITIES.md#接口总览) gepflegt: Der aktuelle Quellcode liefert **186 integrierte Skills** (173 automatisch auswählbar, 13 manuelle Kategorieindizes), **91 MCP-Dienstverbindungen** (66 standardmäßig aktiv, 25 Opt-in) und **5 native Quanten-Tools**.
+Der vollständige Katalog der Skills, MCP-Dienste und nativen Tools wird in der [chinesischen Nachschlagewerk](../CAPABILITIES.md#接口总览) gepflegt: Der aktuelle Quellcode liefert **187 integrierte Skills** (174 automatisch auswählbar, 13 manuelle Kategorieindizes), **91 MCP-Dienstverbindungen** (66 standardmäßig aktiv, 25 Opt-in) und **5 native Quanten-Tools**.
 
 <a id="development-and-verification"></a>
 
@@ -710,7 +712,7 @@ Wählen Sie die für Ihre Änderung relevanten Prüfungen; die vollständige Lis
 
 </details>
 
-Der [offizielle `pyqpanda3`-Skill von OriginQ](https://github.com/OriginQ/pyqpanda3-skill) ist ein optionaler Upstream-Skill: Er zählt nicht zu den 186 integrierten Skills und wird nicht automatisch installiert. `npm run skill:qpanda:setup` installiert die geprüfte Version; damit wird weder `qpanda_runtime` aktiviert noch eine Berechtigung für Cloud-Jobs erteilt.
+Der [offizielle `pyqpanda3`-Skill von OriginQ](https://github.com/OriginQ/pyqpanda3-skill) ist ein optionaler Upstream-Skill: Er zählt nicht zu den 187 integrierten Skills und wird nicht automatisch installiert. `npm run skill:qpanda:setup` installiert die geprüfte Version; damit wird weder `qpanda_runtime` aktiviert noch eine Berechtigung für Cloud-Jobs erteilt.
 
 <a id="roadmap-and-rsi"></a>
 

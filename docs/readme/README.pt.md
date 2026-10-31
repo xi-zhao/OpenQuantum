@@ -154,7 +154,9 @@ Escolha uma área e diga ao ambiente de trabalho qual é sua pergunta, quais sã
 
 Cálculos locais podem começar sem conta em nuvem quântica. Hardware real e serviços pagos são configurados conforme a necessidade; a faixa de entradas, a preparação e o estado de verificação de cada método ficam no catálogo detalhado.
 
-O código-fonte atual oferece caminhos completos de API nativa para **114 ambientes SDK ou de código-fonte**, 26 deles vindos da mais recente [expansão do ecossistema](../integrations/SDK_ECOSYSTEM_2026-10-14.md), entregue com a 0.8.4. Os agentes podem escrever programas próprios, combinar APIs públicas e salvar resultados completos, indo além dos casos predefinidos das Tools de conveniência.
+O código-fonte atual oferece caminhos completos de API nativa para **115 ambientes SDK ou de código-fonte**, 26 deles vindos da mais recente [expansão do ecossistema](../integrations/SDK_ECOSYSTEM_2026-10-14.md), entregue com a 0.8.4. Os agentes podem escrever programas próprios, combinar APIs públicas e salvar resultados completos, indo além dos casos predefinidos das Tools de conveniência.
+
+SlowQuant acrescenta resposta linear molecular e propriedades de transição por um SDK de código-fonte fixado. [Preparação e limites de validação](../integrations/SLOWQUANT.md); qLR molecular com Qiskit e hardware ainda não foram validados.
 
 **Matemática e física formalizadas:** [Lean 4, mathlib e physlib](../../.agents/skills/lean-physics/SKILL.md) verificam provas e seus axiomas em um projeto fixado no Lean 4.35.0. A preparação explícita compila o pequeno exemplo de Pauli e suas importações; outros módulos são preparados conforme a tarefa. A verificação não instala dependências. Uma prova cobre as definições e hipóteses declaradas, não a validade física do modelo nem sua aceitação científica.
 
@@ -675,7 +677,7 @@ Prefira Tool Providers nativos para ações no mesmo processo e na mesma linguag
 
 </details>
 
-O catálogo completo de Skills, serviços MCP e Tools nativas é mantido no [documentação de referência em chinês](../CAPABILITIES.md#接口总览): o código-fonte atual traz **186 Skills integradas** (173 selecionáveis automaticamente e 13 índices de categoria manuais), **91 conexões de serviços MCP** (66 ativadas por padrão e 25 opcionais) e **5 Tools quânticas nativas**.
+O catálogo completo de Skills, serviços MCP e Tools nativas é mantido no [documentação de referência em chinês](../CAPABILITIES.md#接口总览): o código-fonte atual traz **187 Skills integradas** (174 selecionáveis automaticamente e 13 índices de categoria manuais), **91 conexões de serviços MCP** (66 ativadas por padrão e 25 opcionais) e **5 Tools quânticas nativas**.
 
 <a id="development-and-verification"></a>
 
@@ -705,7 +707,7 @@ Escolha as verificações relevantes para sua alteração; a lista completa est�
 
 </details>
 
-A [Skill oficial `pyqpanda3` da OriginQ](https://github.com/OriginQ/pyqpanda3-skill) é uma Skill opcional de origem externa: não é contada entre as 186 Skills integradas e não é instalada automaticamente. `npm run skill:qpanda:setup` instala a versão revisada; isso não ativa `qpanda_runtime` nem concede permissões para jobs na nuvem.
+A [Skill oficial `pyqpanda3` da OriginQ](https://github.com/OriginQ/pyqpanda3-skill) é uma Skill opcional de origem externa: não é contada entre as 187 Skills integradas e não é instalada automaticamente. `npm run skill:qpanda:setup` instala a versão revisada; isso não ativa `qpanda_runtime` nem concede permissões para jobs na nuvem.
 
 <a id="roadmap-and-rsi"></a>
 
