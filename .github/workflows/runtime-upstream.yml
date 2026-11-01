@@ -76,3 +76,41 @@ jobs:
           name: runtime-${{ matrix.id }}-compatibility
           path: .openquantum/upstream-updates-evidence
           if-no-files-found: ignore
+
+  native-sdk-receipts:
+    runs-on: macos-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        id: [qdk-chemistry, squlearn-learning]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: false
+      - name: Install JavaScript check dependencies
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Explicitly prepare the fixed SDK
+        run: node scripts/setup-sdk.mjs "${{ matrix.id }}"
+      - name: Run the existing offline public API verification
+        env:
+          OPENQUANTUM_ECOSYSTEM_CHECKS: "1"
+          OPENQUANTUM_SDK_IDS: ${{ matrix.id }}
+          OPENQUANTUM_SDK_CHECK_OUTPUT: ${{ github.workspace }}/.openquantum/runtime-sdk-evidence
+        run: node --test --test-name-pattern="SDK ecosystem: ${{ matrix.id }}" tests/sdk-ecosystem-live.test.mjs
+      - name: Preserve SDK receipts and exact outputs
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: runtime-native-sdk-${{ matrix.id }}
+          path: |
+            .openquantum/runtime-sdk-evidence/*/*.json
+            .openquantum/runtime-sdk-evidence/*/*.py
+            .openquantum/runtime-sdk-evidence/*/*.log
+            .openquantum/runtime-sdk-evidence/*/*.xyz
+          if-no-files-found: ignore
