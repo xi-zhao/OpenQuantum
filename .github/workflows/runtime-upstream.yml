@@ -9,13 +9,17 @@ on:
       - .agents/skills/oqc-qat/uv.lock
       - .agents/skills/qcut-knitting/uv.lock
       - .agents/skills/qdk-chemistry/uv.lock
+      - .agents/skills/qdk-chemistry/references/native-example.py
       - .agents/skills/squlearn-learning/uv.lock
+      - .agents/skills/squlearn-learning/references/native-example.py
       - runtime/chatgpt/external/environments/qiskit_gym/**
       - runtime/chatgpt/external/environments/qiskit_ibm_runtime/**
       - runtime/chatgpt/external/environments/quantum_hardware/**
       - runtime/chatgpt/external/launch.py
       - benchmarks/upstream-updates/runtime_rzz_regressions.py
       - tests/upstream-updates-live.test.mjs
+      - tests/sdk-ecosystem-live.test.mjs
+      - tests/fixtures/sdk-engineering-process.mjs
       - .github/workflows/runtime-upstream.yml
   workflow_dispatch:
 
@@ -102,7 +106,8 @@ jobs:
           OPENQUANTUM_ECOSYSTEM_CHECKS: "1"
           OPENQUANTUM_SDK_IDS: ${{ matrix.id }}
           OPENQUANTUM_SDK_CHECK_OUTPUT: ${{ github.workspace }}/.openquantum/runtime-sdk-evidence
-        run: node --test --test-name-pattern="SDK ecosystem: ${{ matrix.id }}" tests/sdk-ecosystem-live.test.mjs
+        run: |
+          node --test --test-name-pattern="SDK ecosystem: ${{ matrix.id }}" tests/sdk-ecosystem-live.test.mjs
       - name: Preserve SDK receipts and exact outputs
         if: always()
         uses: actions/upload-artifact@v7
