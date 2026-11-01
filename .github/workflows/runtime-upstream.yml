@@ -1,0 +1,78 @@
+name: IBM Runtime compatibility
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    paths:
+      - .agents/skills/oqc-qat/uv.lock
+      - .agents/skills/qcut-knitting/uv.lock
+      - .agents/skills/qdk-chemistry/uv.lock
+      - .agents/skills/squlearn-learning/uv.lock
+      - runtime/chatgpt/external/environments/qiskit_gym/**
+      - runtime/chatgpt/external/environments/qiskit_ibm_runtime/**
+      - runtime/chatgpt/external/environments/quantum_hardware/**
+      - runtime/chatgpt/external/launch.py
+      - benchmarks/upstream-updates/runtime_rzz_regressions.py
+      - tests/upstream-updates-live.test.mjs
+      - .github/workflows/runtime-upstream.yml
+  workflow_dispatch:
+
+jobs:
+  runtime-compatibility:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - id: qcut-knitting
+            environment: qcut-knitting
+            kind: sdk
+          - id: qiskit_ibm_runtime
+            environment: mcp-qiskit-ibm-runtime
+            kind: mcp
+          - id: qiskit_gym
+            environment: mcp-qiskit-gym
+            kind: mcp
+          - id: quantum_hardware
+            environment: mcp-quantum-hardware
+            kind: mcp
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: false
+      - name: Install JavaScript check dependencies
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Explicitly prepare the fixed SDK
+        if: matrix.kind == 'sdk'
+        run: node scripts/setup-sdk.mjs "${{ matrix.id }}"
+      - name: Explicitly prepare the fixed MCP environment
+        if: matrix.kind == 'mcp'
+        run: node runtime/chatgpt/external/setup.mjs "${{ matrix.id }}"
+      - name: Check RZZ target and complete unitary offline
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p .openquantum/upstream-updates-evidence
+          ".openquantum/python-envs/${{ matrix.environment }}/bin/python" -B \
+            benchmarks/upstream-updates/runtime_rzz_regressions.py \
+            > ".openquantum/upstream-updates-evidence/${{ matrix.id }}-rzz.json"
+      - name: Compare MCP tools without credentials or execution
+        if: matrix.kind == 'mcp'
+        env:
+          OPENQUANTUM_RUNTIME_MCP_LIVE: "1"
+        run: node --test --test-name-pattern="Runtime patch preserves ${{ matrix.id }} MCP" tests/upstream-updates-live.test.mjs
+      - name: Preserve compatibility evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: runtime-${{ matrix.id }}-compatibility
+          path: .openquantum/upstream-updates-evidence
+          if-no-files-found: ignore

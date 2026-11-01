@@ -16,6 +16,8 @@ OPENQUANTUM_REAL_UNITARY_NEXT=1 node --test --test-name-pattern='real Graphix' t
 
 - `compiler_regressions.py`：14 项。Qiskit Clifford+T 目标缺少 sx/sxdg 时的四级转译回归；Compact 三种目标在 16/24/48 门上的完整 unitary 与 QASM 重读检查；9 qubit 的 auto 参考范围。
 - `clifft_regressions.py`：2 项。LOSS/LEAKAGE 续执行后旁观量子位的奇数次翻转概率，与独立解析二项模型比较；验证串行/并行同 seed 逐行一致。
+- `runtime_rzz_regressions.py`：48 项。24 个 RZZ 角度分别经过公开折叠 pass 和 fake backend 预设编译流程，检查目标指令集、角度范围及包含全局相位的解析酉矩阵。补丁依据与边界见 [IBM Runtime 升级记录](../../docs/releases/2026-11-01-qiskit-runtime.md)。
+- `OPENQUANTUM_RUNTIME_MCP_LIVE=1 node --test tests/upstream-updates-live.test.mjs`：在已准备的三个外部 MCP 环境中比较完整 Tool 清单与固定合同；只做握手和 `tools/list`，不提交云端任务。环境可通过现有 `OPENQUANTUM_PYTHON_ENV_ROOT` 指向隔离目录。
 - `tests/upstream-updates-live.test.mjs` 另检查 Graphix 11 qubit 仅生成、跳过参考、四量子位复杂相位及 12 个采样分支。
 - 原候选编译回归继续覆盖 CleitonForge 输入、全局相位、隐藏 CZ 负例和 ECR/iSWAP 上游误判；这两个门仍不进入 Compact Tool 输入。
 
