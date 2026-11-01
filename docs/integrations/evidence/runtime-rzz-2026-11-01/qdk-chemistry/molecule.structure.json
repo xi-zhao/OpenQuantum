@@ -1,0 +1,33 @@
+{
+  "coordinates": [
+    [
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      1.42
+    ]
+  ],
+  "elements": [
+    1,
+    1
+  ],
+  "masses": [
+    1.008,
+    1.008
+  ],
+  "nuclear_charges": [
+    1.0,
+    1.0
+  ],
+  "num_atoms": 2,
+  "symbols": [
+    "H",
+    "H"
+  ],
+  "units": "bohr",
+  "version": "0.1.0"
+}

@@ -29,12 +29,16 @@ Quantum Hardware 三个外部 MCP 环境。现有公开接口和宿主注册不�
 - 七份锁均通过离线一致性检查，仅 Runtime 的版本和发行包摘要改变。共享模块边界、宿主目录
   对齐、外部 MCP 合同等定向检查通过 43 项，7 个显式 live 检查在默认模式跳过；另通过能力声明、
   SDK 指南/清单、产品版本及改动文件 lint 检查。
+- QDK Chemistry 与 sQUlearn 另在 CI 的新锁环境中重跑现有断网 SDK 样例：前者检查 H₂ 核排斥
+  解析值及结构文件往返，后者检查固定三点保真核矩阵。输出与旧记录一致或在 `1e-12` 内一致，
+  所有实际安装的包版本均核对锁文件；新耐久记录与旧记录分开保存，原证据不被覆盖。
 
 [版本化本机证据](../integrations/evidence/runtime-rzz-2026-11-01.json)保留失败输入、两个补丁的
 完整回归结果、锁摘要与 MCP 清单核对结果。复跑入口见[上游回归说明](../../benchmarks/upstream-updates/README.md)。
 专用 `IBM Runtime compatibility` CI 在 Linux 按当前锁重新准备 QCut 和三个 MCP 环境，
 各运行 48 项回归，并对三个 MCP 完整核对 Tool 合同；其实际结论以 PR 检查和上传的工件为准。
 本机未完整准备 Qiskit Gym，原因是缺少固定 Torch 的缓存且外置盘接近空间保留线。
+上述两个原生 SDK 的证据刷新也在 CI 完成；本机缺少固定依赖缓存，没有继续大规模下载。
 
 本机证据不覆盖七个环境的所有科学工作流，也未重新执行 DSH/Codex 的真实模型任务或实际安装验收。
 固定 base/head 的 Standards、Spec 结论记录在 PR 正文；这是同一维护任务的顺序自审，不是独立领域审阅。

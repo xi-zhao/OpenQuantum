@@ -1154,5 +1154,41 @@
     "all scientific workflows of the seven affected environments",
     "DSH/Codex model-driven tasks",
     "real quantum devices"
+  ],
+  "nativeSdkRefresh": [
+    {
+      "id": "qdk-chemistry",
+      "durableEvidenceDirectory": "docs/integrations/evidence/runtime-rzz-2026-11-01/qdk-chemistry",
+      "verificationSha256": "2525710041e676745d2dced15f8806c916ab03d636b343c271a00ae407b379a4",
+      "dependencyLockSha256": "8beb7243b11e2f4abe704e811dd85cfa993bc1c84bdc728fadd43ff5287d8714",
+      "artifactProvenance": {
+        "runUrl": "https://github.com/xi-zhao/OpenQuantum/actions/runs/41289502864",
+        "head": "d6664393ee923c3687666cc5aea030b008815c24",
+        "artifactId": 13076428220,
+        "archiveSha256": "c045d820dea64bafb27aff8304ed8078f288cf1168e23248ef009c6ffa4426ad",
+        "downloadUrl": "https://github.com/xi-zhao/OpenQuantum/actions/runs/41289502864/artifacts/13076428220"
+      },
+      "previousResultComparison": {
+        "equal": true,
+        "scope": "H2 nuclear repulsion analytic value and structure round-trip"
+      }
+    },
+    {
+      "id": "squlearn-learning",
+      "durableEvidenceDirectory": "docs/integrations/evidence/runtime-rzz-2026-11-01/squlearn-learning",
+      "verificationSha256": "8af954da82b0cb23d4fce4dafc7002843a75d0d091d14966955cf55d5051ab37",
+      "dependencyLockSha256": "9dcddc5a5dcab8d0f4f036c1bb0351c410cbfd9516f78c8fca60f3da2e192d7d",
+      "artifactProvenance": {
+        "runUrl": "https://github.com/xi-zhao/OpenQuantum/actions/runs/41289502864",
+        "head": "d6664393ee923c3687666cc5aea030b008815c24",
+        "artifactId": 13076164314,
+        "archiveSha256": "9bfa52eba4cf6caa208138214d28a8a4e5ce353161e6e7cde70c6de063945fb3",
+        "downloadUrl": "https://github.com/xi-zhao/OpenQuantum/actions/runs/41289502864/artifacts/13076164314"
+      },
+      "previousResultComparison": {
+        "maxAbsoluteError": 0.0,
+        "scope": "fixed 3x3 local FidelityKernel matrix, not arbitrary training or all backends"
+      }
+    }
   ]
 }
