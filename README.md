@@ -1,71 +1,45 @@
-<h1 align="center">
-  <img src="./packages/openquantum-web-branding/assets/lockup.svg" width="430" alt="OpenQuantum" />
-</h1>
+<p align="center">
+  <a href="https://xi-zhao.github.io/OpenQuantum/"><img src="./docs/images/readme/banner.webp" width="100%" alt="OpenQuantum：共建可信的量子科研智能。开源开放的量子科研 AI 平台，汇聚社区的优秀软件与方法，推进可核对的研究。背景为量子波场概念视觉。" /></a>
+</p>
 
 <p align="center"><a href="./README.md">简体中文</a> · <a href="./docs/readme/README.en.md">English</a> · <a href="./docs/readme/README.ja.md">日本語</a> · <a href="./docs/readme/README.ko.md">한국어</a> · <a href="./docs/readme/README.es.md">Español</a> · <a href="./docs/readme/README.fr.md">Français</a> · <a href="./docs/readme/README.de.md">Deutsch</a> · <a href="./docs/readme/README.pt.md">Português</a> · <a href="./docs/readme/README.ru.md">Русский</a> · <a href="./docs/readme/README.ar.md">العربية</a></p>
 
 <p align="center">
-  <strong>共建可信的量子科研智能</strong><br />
-  <sub>开源的量子科研 AI 平台：让 AI 选择方法、执行计算并核对结果</sub>
+  <a href="#科研能力">科研能力</a>　·　<a href="#优化实测">优化实测</a>　·　<a href="#开放共建">开放共建</a>　·　<a href="https://xi-zhao.github.io/OpenQuantum/">官网</a>　·　<a href="#开始使用"><strong>开始使用 ↗</strong></a>
+</p>
+
+<p align="center">
+  <strong>186</strong> 个内置 Skill　　<strong>91</strong> 个 MCP 服务连接　　<strong>114</strong> 个 SDK 环境　　开源 · MIT 许可
 </p>
 
 <p align="center">
   <a href="https://github.com/xi-zhao/openQuantum/actions/workflows/ci.yml"><img src="https://github.com/xi-zhao/openQuantum/actions/workflows/ci.yml/badge.svg" alt="CI status" /></a>
-  <a href="./THIRD_PARTY_NOTICES.md"><img src="https://img.shields.io/badge/licenses-MIT%20%2B%20component%20licenses-111111.svg" alt="MIT 与组件许可证" /></a>
+  <a href="https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.10"><img src="https://img.shields.io/badge/release-0.8.10-187a91.svg" alt="Release 0.8.10" /></a>
+  <a href="./THIRD_PARTY_NOTICES.md"><img src="https://img.shields.io/badge/licenses-MIT%20%2B%20component%20licenses-18232e.svg" alt="MIT 与组件许可证" /></a>
   <img src="https://img.shields.io/badge/Node.js-24%2B-3c873a.svg" alt="Node.js 24 or newer" />
 </p>
 
-<p align="center">
-  <a href="#快速开始"><strong>快速开始</strong></a> ·
-  <a href="#可以用它做什么">能力</a> ·
-  <a href="#实测案例">实测案例</a> ·
-  <a href="#跑通第一个任务">第一个任务</a> ·
-  <a href="#开发与贡献">参与贡献</a> ·
-  <a href="#文档导航">文档</a> ·
-  <a href="https://xi-zhao.github.io/OpenQuantum/">官网</a>
-</p>
+<br />
 
-OpenQuantum 把 Qiskit、PennyLane、QuTiP、Stim 等开源量子软件和论文方法，整理成 AI 可以直接使用的
-Skill、Tool 和 MCP 服务。你从一个研究问题、一篇论文或一段现有程序出发，AI 帮你选择方法、执行计算并核对结果；
-程序、参数和检查记录都会保留下来，成为下一次研究的起点。
-
-同一套能力有两种用法：
-
-- **[Codex 插件](#codex-插件)**：在 Codex 原生对话中使用量子 Skill 与科学 Tool，侧边入口管理能力开关、MCP 连接和 Token。
-- **[OpenQuantum Desktop](#桌面安装包)**：自带运行环境的个人桌面工作台，保留对话、工作区、文件、工具执行和历史，模型服务自行配置。
-
-**当前版本 0.8.10：**[Desktop（Mac Apple Silicon）](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.10) · [Codex 插件](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.10)。功能与验证范围以各 Release 附件为准。
-
-<p align="center">
-  <img src="./docs/images/openquantum-desktop-20261013.jpg" width="100%" alt="原版 DSH Desktop 中的 OpenQuantum 工作台：品牌、新会话、量子学习通与自行添加模型的提示" /><br />
-  <sub>早期版本界面参考；0.8.10 简洁版已收拢侧栏和设置。</sub>
-</p>
-
-## 为什么选择 OpenQuantum
-
-- **覆盖广：** 从算法与线路、化学与多体，到量子纠错、动力学、光子与网络，接入社区主流软件和论文方法，少花时间准备工具。
-- **算得快：** 持续优化关键计算环节。PennyLane Pauli 对易子与 QuTiP Wigner 函数的完整调用，分别提速 **5.09 倍**和 **5.69 倍**，见[实测案例](#实测案例)。
-- **结果可核对：** 保留输入、随机种子、依赖版本、程序与检查状态；运行成功与科学验收分开记录，有依据的负结果同样保留。
-- **开源可控：** 代码与方法来源公开，保留原作者和许可；模型服务、计算后端按需选择，研究数据是否共享由你决定。
-
-<details>
-<summary><strong>按你的工作找起点</strong></summary>
-
-| 你的工作 | OpenQuantum 能帮什么 |
-| --- | --- |
-| 科研与算法研究 | 从算法示例与专业 SDK 起步，改输入、做对照，留下可复用的程序与结果。见[跑通第一个任务](#跑通第一个任务)。 |
-| 应用与 Agent 开发 | 接入已有 Skill、Tool 与原生 SDK，让应用用上专业软件，并保留自己的界面与流程。见[开发与贡献](#开发与贡献)。 |
-| 行业研发与技术评估 | 从已支持的任务做初步对照，查看方法条件、资源假设与结果来源。见[参考资料与选型](docs/CAPABILITIES.md#参考资料与选型)。 |
-| 教学与课程建设 | 用开源算例设计实验，借量子学习通组织材料与课件。见[量子学习通](#量子学习通)。 |
-| 学习与动手探索 | 运行示例、修改参数，结合指南理解方法为什么适用、有什么限制。见[算法学习与方法比较](#算法学习与方法比较)。 |
-| 研究软件与生态建设 | 把方法整理为 Skill、把动作接为 Tool，保留来源与贡献归属，让他人继续使用。见[开发与贡献](#开发与贡献)。 |
-
-</details>
-
+<a id="科研能力"></a>
+<a id="可以用它做什么"></a>
 <a id="openquantum-的核心能力"></a>
 <a id="能力接口目录"></a>
 
-## 可以用它做什么
+## 让研究思路，有路可走
+
+从一个问题、一篇论文或一段程序出发，让 AI 选择方法、执行计算、核对结果，把一次探索留给下一次研究。
+
+**广阔的专业世界，一个共同的起点。** 社区提供专业软件、算法与研究方法；OpenQuantum 持续筛选、适配、整合与优化，连接到 AI 科研工作流。
+
+| 量子算法与线路 | 量子系统与多体 | 纠错与误差抑制 |
+| --- | --- | --- |
+| [Qiskit](https://github.com/Qiskit/qiskit) | [QuTiP](https://github.com/qutip/qutip) | [Stim](https://github.com/quantumlib/Stim) |
+| [PennyLane](https://github.com/PennyLaneAI/pennylane) | [TeNPy](https://github.com/tenpy/tenpy) | [PyMatching](https://github.com/oscarhiggott/PyMatching) |
+| [PyZX](https://github.com/zxcalc/pyzx) | [OpenFermion](https://github.com/quantumlib/OpenFermion) | [Mitiq](https://github.com/unitaryfoundation/mitiq) |
+| [Graphix](https://github.com/TeamGraphix/graphix) | [Dynamiqs](https://github.com/dynamiqs/dynamiqs) | [MQT QECC](https://github.com/munich-quantum-toolkit/qecc) |
+
+### 完整能力目录
 
 按研究任务选择能力，直接使用现成的计算入口，或通过 SDK 工作台编写自己的研究程序。
 
@@ -82,49 +56,109 @@ Skill、Tool 和 MCP 服务。你从一个研究问题、一篇论文或一段�
 | 查询方法与公开基准 | [Quantum-Practices 与 Metriq](docs/CAPABILITIES.md#参考资料与选型) | 固定资料和历史记录，不代表当前设备性能 |
 | <a id="量子学习通"></a>组织教学材料与课堂 | [量子学习通 / OpenMAIC](docs/integrations/OPENMAIC.md)：材料、课件、测验与课堂 | 完整课程体系仍在建设，真实在线 AI 教学流程尚未完整验收 |
 
-能力可以组合使用。例如先用 PyZX 优化电路、再用 QCEC 检查等价性、最后用噪声模拟比较含噪表现；
-跨工具组合需要核对模型、单位、位序和预算，见[计算与资源配置](docs/integrations/SCALABLE_BRIDGES.md)。
+能力可以组合使用：先用 PyZX 优化电路，再用 QCEC 检查等价性，最后用噪声模拟比较含噪表现。跨工具组合需要核对模型、单位、位序和预算，见[计算与资源配置](docs/integrations/SCALABLE_BRIDGES.md)。
 
 当前源码分发 **186 个内置 Skill、91 个 MCP 服务连接、5 个原生量子 Tool**，并为 **114 个 SDK/源码环境**提供原生 API 使用路径。
 清单数量、配置启用、环境就绪与科学验收是不同状态；每项能力按需准备，平台、账户和许可限制见对应说明。
 
 [完整 Skill 目录](docs/CAPABILITIES.md#内置-skills) · [MCP 服务及默认开关](docs/CAPABILITIES.md#mcp-服务目录) · [原生 Tool 与副作用](docs/CAPABILITIES.md#原生量子-tools) · [SDK API 与逐库验证](docs/integrations/FULL_SDK_ACCESS.md) · [相近方法怎么选](docs/integrations/CAPABILITY_SELECTION.md)
 
+<br />
+
+<a id="使用与结果"></a>
+<a id="执行记录与科学验收"></a>
+
+## 从研究问题，走到计算与结果
+
+让 AI 参与探索，让研究留下依据。
+
+<table>
+  <tr>
+    <td width="50%" valign="top"><strong>分析问题，选择方法</strong><br />围绕你的任务，调用社区软件、算法与论文方法，让研究想法找到实际的计算路径。</td>
+    <td width="50%" valign="top"><strong>执行计算，留下依据</strong><br />保留程序、参数、对照与核对记录，让结果可回看，让下一次研究接着向前。</td>
+  </tr>
+  <tr>
+    <td valign="top"><a href="./docs/images/openquantum-desktop-20261013.jpg"><img src="./docs/images/openquantum-desktop-20261013.jpg" alt="OpenQuantum Desktop 科研工作台，包含新会话、量子学习通与模型配置入口" /></a><br /><sub>科研工作台 · 2026-10-13 实际界面</sub></td>
+    <td valign="top"><a href="./docs/images/openquantum-settings-categories-20261013.jpg"><img src="./docs/images/openquantum-settings-categories-20261013.jpg" alt="OpenQuantum 按用途分类的能力设置，含搜索、筛选与连接配置" /></a><br /><sub>能力分类设置 · 2026-10-13 实际界面</sub></td>
+  </tr>
+</table>
+
+Skill 说明方法与步骤，Tool 执行具体动作，原生 SDK 也可以通过宿主的代码工具直接使用。日常使用遵循 **发现 → 准备 → 执行**：先查能力和条件，再为所选 SDK 准备依赖与连接，最后执行计算；计算调用本身不会隐式安装科学依赖。
+
+- **看实际执行记录。** 配置启用和模型的文字回复，不能替代 Tool 调用、程序与结果文件。
+- **分清检查范围。** 工程 CI、数值参考对照、形式证明和科学验收分别说明；只有支持完整证据链的能力，才能按相应合同给出科学验收结论。
+- **保留可复算材料。** 记录输入、单位、随机种子、依赖版本、程序、结果和检查状态，也保留失败与负结果。
+- **按需连接外部资源。** 本地数值计算无需量子云账户；真实硬件和付费服务需要另行配置凭据、权限及额度。
+
+科学判断仍由使用者负责。[结果与证据说明](docs/EXAMPLES.md#方法与结果可以继续复用) · [能力与宿主边界](docs/README.md) · [常见问题](docs/TROUBLESHOOTING.md)
+
+<br />
+
+<a id="优化实测"></a>
+<a id="实测案例"></a>
+<a id="optimization-cases"></a>
+
+## 更快，也经得起核对
+
+把时间还给新的想法。两项针对性优化，保留完整调用计时、独立核对和复跑记录。
+
+<a id="qutip-rust-case"></a>
+
+<p align="center"><img src="./docs/images/readme/case-qutip.webp" width="100%" alt="QuTiP Wigner 函数：QuTiP 原库 171.77 毫秒，OpenQuantum 优化后 30.18 毫秒，完整调用提速 5.69 倍。64 维单模 Fock 空间、201 × 201 网格、Apple M4。原库结果、优化后结果与逐点绝对差并排对照，完整网格最大绝对差 6.52 × 10⁻¹⁶；另有 272 项独立、解析及拒绝路径检查。" /></p>
+
 <details>
-<summary><strong>查看设置页中 Tools、MCP、Skills 的分类</strong></summary>
+<summary>QuTiP：查看计时与核对条件</summary>
 
-能力按 8 类用途分组，支持搜索和启用状态筛选。Tools 是可调用的动作，MCP 是服务连接，Skills 是任务方法与指南。
+Apple M4，QuTiP 5.3.1；64 维、rank-4 单模密度矩阵，201 × 201 网格。单线程设定，2 次预热，9 轮交错热运行中位数。包含输入读取、转换、检查与完整输出构造；不含准备、编译、输入生成及结果核对。提速仅对应此项固定输入计算。
 
-![Desktop 中按用途分组的 MCP 连接、搜索和状态筛选](./docs/images/openquantum-settings-categories-20261013.jpg)
-
-图为 2026-10-13 在原版客户端中验证分类功能时的实际界面，截图来源见[图片说明](docs/images/README.md)。配置启用不代表服务已经在线。
+<img src="./site/assets/qutip-timings.svg" width="100%" alt="QuTiP 四个预定规模的完整调用计时与四分位区间" />
 
 </details>
 
-<a id="optimization-cases"></a>
+[核对与复跑](experiments/qutip-rust-wigner/README.md) · [原始计时](experiments/qutip-rust-wigner/results/summary.json) · 专项基准 · 9 轮热运行中位数 · 含输入转换与输出构造
+
 <a id="pennylane-rust-case"></a>
-<a id="qutip-rust-case"></a>
 
-## 实测案例
+<p align="center"><img src="./docs/images/readme/case-pennylane.webp" width="100%" alt="PennyLane Pauli 对易子：PennyLane 原库 30.62 毫秒，OpenQuantum 优化后 6.02 毫秒，完整调用提速 5.09 倍。32 量子位、125 项 Hamiltonian × 512 项算符池、Apple M4。9 个基准输入的输出算符及系数逐项一致；另以 4,368 对 Pauli 基础核对、40 组复系数随机矩阵核对。" /></p>
 
-针对固定科研计算的优化，公开完整调用计时、输出和独立参考检查，便于复跑与评估。
+<details>
+<summary>PennyLane：查看计时与核对条件</summary>
 
-| 计算任务 | 原实现 → 优化后 | 测量条件与证据 |
-| --- | --- | --- |
-| PennyLane Pauli 对易子 | 30.62 ms → **6.02 ms（5.09 倍）** | 32 量子位局域模型；Apple M4、PennyLane 0.45.1、9 轮热运行中位数；[程序、原始计时与独立核验](experiments/pennylane-rust-commutator/README.md) |
-| QuTiP Wigner 函数 | 171.77 ms → **30.18 ms（5.69 倍）** | 64 维 Fock 空间、201×201 网格；Apple M4、QuTiP 5.3.1、单线程、9 轮热运行中位数；[程序、原始计时与独立核验](experiments/qutip-rust-wigner/README.md) |
+Apple M4，PennyLane 0.45.1；32 量子位、125 项 Hamiltonian 与 512 项局域双体算符池。单线程设定，2 次预热，9 轮热运行中位数。完整调用从 PauliSentence 输入到 PauliSentence 输出，包含双向转换与结果构造，不含准备、编译及核对。5.09 倍仅对应此项输入；其他规模结果见完整报告。
 
-两项计时包含输入输出转换，不含环境准备与编译；收益限于各报告定义的任务与条件，不能推广为所有量子计算的加速比。
+</details>
 
-## 快速开始
+[核对与复跑](experiments/pennylane-rust-commutator/README.md) · [原始计时](experiments/pennylane-rust-commutator/results/benchmark.json) · 专项基准 · 9 轮热运行中位数 · 含输入转换与输出构造
 
-| 你想怎样使用 | 入口 | 需要什么 |
-| --- | --- | --- |
-| 在 Codex 原生对话中使用 | [Codex 插件](#codex-插件) | 支持插件的 Codex、Node.js 24+ 和 npm |
-| 使用独立桌面应用 | [桌面安装包](#桌面安装包) | macOS Apple Silicon；自带 Node / uv 与运行依赖 |
-| 使用主线能力或参与开发 | [从源码运行](#从源码运行) | Git、Node.js 24；计算环境按任务准备 |
+<sub>两项计时包含输入输出转换，不含环境准备与编译；收益限于各报告定义的任务与条件，不能推广为所有量子计算的加速比。</sub>
 
-三种入口都只安装平台本身，科学计算依赖在用到时按需准备。
+<br />
+
+<a id="开始使用"></a>
+<a id="快速开始"></a>
+
+## 你的下一个想法，从这里开始
+
+一个 OpenQuantum，两种熟悉的入口。两者复用同一份领域能力，科学计算依赖在用到时按需准备。
+
+<table>
+  <tr>
+    <td width="50%" valign="top">
+      <strong>Codex 插件</strong><br />
+      在 Codex 原生对话中使用量子科研能力。<br /><br />
+      <a href="#codex-插件"><strong>安装 Codex 插件 ↗</strong></a><br />
+      <sub>需要支持插件的 Codex、Node.js 24+ 和 npm</sub>
+    </td>
+    <td width="50%" valign="top">
+      <strong>Desktop</strong><br />
+      独立科研工作台，按需配置模型服务。<br /><br />
+      <a href="#桌面安装包"><strong>下载 Desktop ↗</strong></a><br />
+      <sub>macOS Apple Silicon，自带 Node / uv 与运行依赖</sub>
+    </td>
+  </tr>
+</table>
+
+想使用主线能力或参与开发，可以[从源码运行](#从源码运行)。
 
 <a id="codex-plugin"></a>
 
@@ -187,9 +221,9 @@ npm run dev
 
 [模型与部署配置](docs/DEPLOYMENT.md) · [按需准备计算环境](docs/integrations/LOCAL_ENVIRONMENTS.md) · [升级与数据保留](docs/UPDATES.md) · [故障排查](docs/TROUBLESHOOTING.md)
 
-## 跑通第一个任务
+### 跑通第一个任务
 
-### 无需模型密钥：复算基态案例
+#### 无需模型密钥：复算基态案例
 
 完成源码的 `npm ci` 后，运行固定的二量子位 VQE 案例，并与独立参考比较：
 
@@ -199,7 +233,7 @@ npm run demo:quantum-ground-state
 
 该命令给出本地计算及逐项检查；完整科学验收还需要会话来源和可重读的验收报告。见[输入、历史结果与验证边界](docs/EXAMPLES.md#不需要模型密钥复算一个固定案例)。
 
-### 让 Agent 执行：Bell 态采样
+#### 让 Agent 执行：Bell 态采样
 
 先准备 FatQat 的固定环境（需要 uv），再在已配置模型的工作台中发起任务：
 
@@ -213,23 +247,18 @@ node scripts/setup-paper-tools.mjs fatqat-workbench
 
 [更多可复制的任务](docs/EXAMPLES.md) · [直接运行 HHL 等算法示例](docs/EXAMPLES.md#直接运行开源算法示例)
 
-<a id="执行记录与科学验收"></a>
+<br />
 
-## 使用与结果
+<a id="开放共建"></a>
+<a id="开发与贡献"></a>
 
-Skill 说明方法与步骤，Tool 执行具体动作，原生 SDK 也可以通过宿主的代码工具直接使用。
-日常使用遵循 **发现 → 准备 → 执行**：先查能力和条件，再为所选 SDK 准备依赖与连接，最后执行计算。计算调用本身不会隐式安装本地科学依赖。
+## 让专业积累，成为共同的能力
 
-- **看实际执行记录。** 配置启用和模型的文字回复，不能替代 Tool 调用、程序与结果文件。
-- **分清检查范围。** 工程 CI、数值参考对照、形式证明和科学验收分别说明；只有支持完整证据链的能力，才能按相应合同给出科学验收结论。
-- **保留可复算材料。** 记录输入、单位、随机种子、依赖版本、程序、结果和检查状态，也保留失败与负结果。
-- **按需连接外部资源。** 本地数值计算无需量子云账户；真实硬件和付费服务需要另行配置凭据、权限及额度。
+优秀的软件、算法与研究方法，来自开放的科研社区。OpenQuantum 将这些成果连接起来，持续适配、优化与核对，让更多研究者能够直接用起来。
 
-科学判断仍由使用者负责。[结果与证据说明](docs/EXAMPLES.md#方法与结果可以继续复用) · [能力与宿主边界](docs/README.md) · [常见问题](docs/TROUBLESHOOTING.md)
+欢迎把你的研究问题、工具、论文方法或复现实验带进来，一起建设研究者用得上、能检验、愿意信赖的量子科研智能。
 
-## 开发与贡献
-
-OpenQuantum 优先复用社区已有实现：研究方法进入共享插件，再适配 DSH、Codex 等宿主。共享实现只维护一份，不新增通用 Agent Runtime。
+**[参与共建 ↗](CONTRIBUTING.md)**　·　[提出研究问题](https://github.com/xi-zhao/OpenQuantum/issues)
 
 | 你想贡献什么 | 从哪里开始 |
 | --- | --- |
@@ -238,16 +267,14 @@ OpenQuantum 优先复用社区已有实现：研究方法进入共享插件，�
 | 科学检查与验收 | 使用 Validator、科学合同与相应证据链；见[四条贡献路径](docs/README.md#四条贡献路径) |
 | 应用、课程或可复算案例 | 说明用户任务、输入输出、来源、许可与验证范围；提交到 [GitHub Issues](https://github.com/xi-zhao/OpenQuantum/issues) |
 
-全仓质量检查入口为 `npm run check`，按改动选择的数值与宿主验证见[开发验证示例](docs/EXAMPLES.md#开发与验证)。
-新增能力时，同步本页的任务说明与使用入口；逐项接口、依赖和验证细节放入[能力参考](docs/CAPABILITIES.md)及对应接入文档。
+共享实现只维护一份：研究方法进入共享插件，再适配 DSH、Codex 等宿主，不新增通用 Agent Runtime。全仓质量检查入口为 `npm run check`，按改动选择的数值与宿主验证见[开发验证示例](docs/EXAMPLES.md#开发与验证)。
 
 <a id="长期发展规划"></a>
 <a id="rsi"></a>
 
-### 路线图
+**路线图：** 长期方向包括专业软件接入、量子与经典计算协同、教学应用，以及经验证的研究能力改进（RSI）。**完整 RSI 闭环尚未实现**；愿景、评估条件与权限边界见[长期发展规划](docs/roadmap/VISION.md)。
 
-长期方向包括专业软件接入、量子与经典计算协同、教学应用，以及经验证的研究能力改进（RSI）。
-**完整 RSI 闭环尚未实现**；愿景、评估条件与权限边界见[长期发展规划](docs/roadmap/VISION.md)。
+<br />
 
 ## 文档导航
 
@@ -264,8 +291,22 @@ OpenQuantum 优先复用社区已有实现：研究方法进入共享插件，�
 
 OpenQuantum 建立在量子开源社区和宿主平台的工作之上，保留原作者、项目来源与贡献归属。[上游项目及适配关系](docs/CAPABILITIES.md#开源生态与致谢)与 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) 集中列出来源和许可。
 
-自有代码除单独声明的目录外采用 [MIT License](LICENSE)，© 2026 Xi Zhao。Mitiq 能力目录采用 [GPL-3.0-only](.agents/skills/mitiq-error-mitigation/LICENSE)，Metriq 数据快照采用 [CC-BY-4.0](src/metriq-data/upstream/LICENSE)；对应 NOTICE 与发行约束继续适用。
+自有代码除单独声明的目录外采用 [MIT License](LICENSE)，© 2026 Xi Zhao。Mitiq 能力目录采用 [GPL-3.0-only](.agents/skills/mitiq-error-mitigation/LICENSE)，Metriq 数据快照采用 [CC-BY-4.0](src/metriq-data/upstream/LICENSE)；对应 NOTICE 与发行约束继续适用。只分享已获授权的内容，安全问题按[安全政策](SECURITY.md)私密报告。
 
-欢迎贡献问题、代码、教学材料和复现记录。只分享已获授权的内容，安全问题按[安全政策](SECURITY.md)私密报告。
+<br />
 
-**OpenQuantum · 量子计算，就在指尖。**
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="./packages/openquantum-web-branding/assets/lockup-inverse.svg" />
+    <img src="./packages/openquantum-web-branding/assets/lockup.svg" width="260" alt="OpenQuantum" />
+  </picture>
+</p>
+
+<p align="center">
+  <strong>开源开放，一起向前。</strong><br />
+  <sub>OpenQuantum · 量子计算，就在指尖。</sub>
+</p>
+
+<p align="center">
+  <sub><a href="https://xi-zhao.github.io/OpenQuantum/">官网</a> · <a href="https://github.com/xi-zhao/OpenQuantum">源码</a> · <a href="./LICENSE">MIT 许可</a> · <a href="./THIRD_PARTY_NOTICES.md">组件与开源许可</a></sub>
+</p>

@@ -1,10 +1,25 @@
 # README 图片说明
 
+## 2026-11-02 首页风格横幅与实测卡片
+
+README 与[产品官网](https://xi-zhao.github.io/OpenQuantum/)共用一套视觉。以下三张图由
+`scripts/render-readme-images.py` 从 `site/` 首页的标记、样式和素材原样渲染，再转为 WebP；
+重新生成时运行该脚本即可（需要本地 Chrome、Playwright 与 Pillow，均不是项目依赖）。
+
+| 图片 | 内容与来源 |
+| --- | --- |
+| [横幅](readme/banner.webp) | 首页首屏的量子波场、OQ 标记、标题与介绍文字，排成带圆角的横幅。背景是 `site/assets/quantum-field-v3.png` 概念视觉，图中保留「概念视觉」标注；不含能力数量或版本号，避免随发布过期。 |
+| [QuTiP 实测卡片](readme/case-qutip.webp) | 首页 QuTiP Wigner 案例面板，去掉可展开条件和链接（README 以文字给出）。数值与 Wigner 对照图来自首页，`tests/homepage.test.mjs` 核对其与固定实验数据一致。 |
+| [PennyLane 实测卡片](readme/case-pennylane.webp) | 首页 PennyLane Pauli 对易子案例面板，处理方式同上。 |
+
+渲染时使用 1300 px 视口、2 倍像素密度和减少动态效果，输出宽度 1800 px。中文字体取决于渲染机器
+（2026-11-02 版本使用 Noto Sans CJK）。这些图只是首页内容的静态呈现，不是新的测量或界面验收证据。
+
 ## 2026-10-13 原版 Desktop 与分类设置
 
 | 图片 | 实际显示 |
 | --- | --- |
-| [Desktop 工作台](openquantum-desktop-20261013.jpg) | 原版 DSH Desktop 2.0.7 中的 OpenQuantum 品牌、新会话、量子学习通入口，以及添加模型的提示。作为当前 README 首图。 |
+| [Desktop 工作台](openquantum-desktop-20261013.jpg) | 原版 DSH Desktop 2.0.7 中的 OpenQuantum 品牌、新会话、量子学习通入口，以及添加模型的提示。README 在「从研究问题，走到计算与结果」一节与分类设置图并排展示。 |
 | [MCP 分类设置](openquantum-settings-categories-20261013.jpg) | 按用途折叠的 8 个分组、91 个连接，以及搜索、用途和启用状态筛选。 |
 
 两图直接取自 2026-10-13 的实际 macOS 原生客户端验证，尺寸均为 **2560 × 1680**，按原始字节保存，未裁剪、改字或合成。
