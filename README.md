@@ -3,7 +3,12 @@
 </h1>
 
 <p align="center">
-  <a href="https://xi-zhao.github.io/OpenQuantum/"><img src="./docs/images/readme/banner.webp" width="100%" alt="共建可信的量子科研智能。开源开放的量子科研 AI 平台，汇聚社区的优秀软件与方法，推进可核对的研究。背景为量子波场概念视觉。" /></a>
+  <a href="https://xi-zhao.github.io/OpenQuantum/">
+    <picture>
+      <source media="(prefers-reduced-motion: reduce)" srcset="./docs/images/readme/banner.webp" />
+      <img src="./docs/images/readme/banner-motion.webp" width="100%" alt="共建可信的量子科研智能。动态横幅：深色量子场中依次出现社区软件、AI 的工作方式与两项实测提速（QuTiP 5.69×、PennyLane 5.09×）。" />
+    </picture>
+  </a>
 </p>
 
 <p align="center"><a href="./README.md">简体中文</a> · <a href="./docs/readme/README.en.md">English</a> · <a href="./docs/readme/README.ja.md">日本語</a> · <a href="./docs/readme/README.ko.md">한국어</a> · <a href="./docs/readme/README.es.md">Español</a> · <a href="./docs/readme/README.fr.md">Français</a> · <a href="./docs/readme/README.de.md">Deutsch</a> · <a href="./docs/readme/README.pt.md">Português</a> · <a href="./docs/readme/README.ru.md">Русский</a> · <a href="./docs/readme/README.ar.md">العربية</a></p>

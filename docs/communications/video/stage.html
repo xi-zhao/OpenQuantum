@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>OpenQuantum Motion Stage</title>
+<!--
+  Deterministic motion stage for the OpenQuantum promo film and the README hero loop.
+  render.py loads this page, calls window.render(t) for every frame and captures it.
+  Copy and numbers follow site/index.html. Abstract visuals (particles, strands, Bloch sphere)
+  are illustration; the only measured values shown are the two published benchmark results.
+-->
+<style>
+@font-face { font-family: "Inter"; src: url("../../../public/openquantum/fonts/inter-latin.woff2") format("woff2"); font-weight: 100 900; font-display: block; }
+@font-face { font-family: "JB Mono"; src: url("../../../public/openquantum/fonts/jetbrains-mono-latin.woff2") format("woff2"); font-weight: 100 800; font-display: block; }
+:root {
+  /* night-sky brand palette taken from the OQ mark gradients */
+  --night: #030a14; --deep: #061f38; --navy: #0b416d;
+  --cyan: #2de3ef; --cyan2: #11bdd4; --violet: #7862ff;
+  --text: #f2f8fc; --dim: #93a9bb; --faint: #5f7a8f;
+  --sans: "Inter", "Noto Sans CJK SC", "PingFang SC", sans-serif;
+  --mono: "JB Mono", "Inter", "Noto Sans CJK SC", monospace;
+}
+* { box-sizing: border-box; margin: 0; }
+html, body { background: transparent; font-family: var(--sans); color: var(--text); font-synthesis: none; -webkit-font-smoothing: antialiased; }
+.stage { position: relative; overflow: hidden; background: var(--night); }
+canvas.fx { position: absolute; inset: 0; width: 100%; height: 100%; }
+.shot { position: absolute; inset: 0; display: none; }
+.abs { position: absolute; }
+.center { position: absolute; left: 0; right: 0; text-align: center; }
+.mono { font-family: var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
+.glow { text-shadow: 0 0 40px rgba(45, 227, 239, .35); }
+.num { font-family: var(--mono); font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+.cy { color: var(--cyan); }
+.flash { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(60% 60% at 50% 50%, rgba(190, 248, 255, .9), rgba(45, 227, 239, .25) 45%, rgba(3, 10, 20, 0) 75%); mix-blend-mode: screen; opacity: 0; }
+.fade { position: absolute; inset: 0; background: var(--night); pointer-events: none; opacity: 0; }
+
+/* hero loop (README): 1200 x 600 css px with rounded corners */
+.hero { width: 1200px; height: 600px; border-radius: 28px; }
+.hero h1 { font-size: 74px; line-height: 1.24; font-weight: 500; letter-spacing: -.03em; }
+.hero .rot { position: relative; height: 40px; margin-top: 30px; }
+.hero .rot p { position: absolute; left: 0; right: 0; font-size: 21px; line-height: 40px; color: var(--dim); white-space: nowrap; }
+.hero .rot b { font-weight: 500; color: var(--text); }
+.hero .rot .cy { font-family: var(--mono); font-weight: 500; }
+.hero .tag { position: absolute; bottom: 26px; font-size: 13px; }
+
+/* film: 1920 x 1080 */
+.film { width: 1920px; height: 1080px; }
+.big { font-size: 96px; font-weight: 500; line-height: 1.18; letter-spacing: -.03em; }
+.mid { font-size: 64px; font-weight: 500; line-height: 1.25; letter-spacing: -.025em; }
+.ask { position: absolute; left: 340px; top: 480px; width: 1240px; height: 120px; display: flex; align-items: center; gap: 26px; padding: 0 44px; border-radius: 60px;
+  background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.05)); box-shadow: inset 0 0 0 1px rgba(255,255,255,.16), 0 30px 90px rgba(0,0,0,.45), 0 0 80px rgba(45,227,239,.12); }
+.ask img { width: 44px; height: 44px; flex: none; }
+.ask .q { font-size: 34px; letter-spacing: -.01em; white-space: nowrap; }
+.ask .caret { width: 3px; height: 42px; background: var(--cyan); box-shadow: 0 0 12px var(--cyan); margin-left: -18px; flex: none; }
+.ask .ph { position: absolute; left: 114px; font-size: 34px; color: var(--faint); }
+/* light workbench window (illustrative recreation of the desktop UI) */
+.win { position: absolute; left: 200px; top: 96px; width: 1520px; height: 900px; border-radius: 22px; overflow: hidden; background: #ffffff; color: #18232e;
+  box-shadow: 0 0 0 1px rgba(255,255,255,.12), 0 60px 160px rgba(0,0,0,.6), 0 0 160px rgba(45,227,239,.16); display: none; }
+.win .bar { height: 46px; display: flex; align-items: center; gap: 9px; padding: 0 18px; background: #f3f5f8; border-bottom: 1px solid #e5eaf0; position: relative; }
+.win .bar i { width: 13px; height: 13px; border-radius: 50%; background: #d9dee4; }
+.win .bar span { position: absolute; left: 0; right: 0; text-align: center; font-size: 15px; color: #6b7886; }
+.win aside { position: absolute; left: 0; top: 46px; bottom: 0; width: 270px; background: #f7f9fb; border-right: 1px solid #e8edf2; padding: 22px 18px; }
+.win .brand { display: flex; align-items: center; gap: 10px; font-size: 19px; margin-bottom: 22px; }
+.win .brand img { width: 26px; height: 26px; }
+.win .brand b, .win .agent b { font-weight: 500; letter-spacing: -.02em; }
+.win .new { border: 1px solid #e1e7ee; background: #fff; border-radius: 10px; padding: 9px 14px; font-size: 16px; color: #3f5264; margin-bottom: 22px; }
+.win .sec { font-size: 13px; color: #8795a3; margin: 0 4px 8px; }
+.win .it { font-size: 16px; color: #3f5264; padding: 9px 12px; border-radius: 8px; }
+.win .it.on { background: #e9eff5; color: #18232e; }
+.win main { position: absolute; left: 270px; right: 0; top: 46px; bottom: 0; }
+.win .head { height: 58px; display: flex; align-items: center; padding: 0 40px; font-size: 17px; color: #54616e; border-bottom: 1px solid #eef2f6; }
+.win .col { position: absolute; left: 105px; right: 105px; top: 86px; }
+.win .umsg { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; margin-bottom: 26px; }
+.win .bubble { background: #eef3f7; border-radius: 20px; padding: 16px 24px; font-size: 21px; line-height: 1.5; max-width: 720px; }
+.win .chip { font-family: var(--mono); font-size: 14px; color: #54616e; background: #fff; border: 1px solid #e3e9ef; border-radius: 10px; padding: 7px 12px; }
+.win .agent { display: flex; align-items: center; gap: 10px; font-size: 18px; margin-bottom: 14px; }
+.win .agent img { width: 26px; height: 26px; }
+.win .step { display: flex; align-items: baseline; gap: 14px; font-size: 19px; padding: 9px 0; }
+.win .step b, .win .tool b { font-weight: 500; }
+.win .step em { font-style: normal; color: #6b7886; }
+.st { width: 18px; height: 18px; border-radius: 50%; flex: none; border: 2px solid #c9d3dd; display: inline-block; position: relative; top: 2px; }
+.st.spin { border-color: #187a91; border-right-color: transparent; }
+.st.done { border-color: #187a91; background: #187a91; }
+.st.done::after { content: ""; position: absolute; left: 4px; top: 1px; width: 5px; height: 9px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+.win .tool { border: 1px solid #e3e9ef; border-radius: 14px; background: #fbfcfd; margin: 8px 0; }
+.win .th { display: flex; align-items: center; gap: 14px; padding: 13px 18px; border-bottom: 1px solid #eef2f6; }
+.win .th code { font-family: var(--mono); font-size: 16px; color: #18232e; }
+.win .pill { margin-left: auto; font-size: 14px; color: #8a5a00; background: #fff4dc; border-radius: 100px; padding: 3px 12px; }
+.win .pill.ok { color: #0f6a3a; background: #e3f6ea; }
+.win .tb { display: flex; gap: 22px; padding: 11px 18px 12px 50px; font-family: var(--mono); font-size: 15px; color: #54616e; }
+.win .res { margin-top: 18px; border-radius: 18px; background: #f5f8fb; box-shadow: inset 0 0 0 1px #e3e9ef; display: grid; grid-template-columns: 1fr 1fr 1fr auto; }
+.win .cell { padding: 24px 20px 18px; border-right: 1px solid #e6ecf2; white-space: nowrap; }
+.win .cell .r2 { font-size: 29px; }
+.win .cell:nth-child(4) { border-right: 0; }
+.win .cell strong { font-family: "Inter", sans-serif; font-size: 31px; font-weight: 500; letter-spacing: -.03em; font-variant-numeric: tabular-nums; color: #18232e; }
+.win .cell .r3 { color: #0f6a3a; }
+.win .cell small { font-size: 16px; margin-left: 6px; color: #54616e; }
+.win .cell span { display: block; margin-top: 6px; font-size: 15px; color: #6b7886; }
+.win .foot { grid-column: 1 / -1; border-top: 1px solid #e6ecf2; padding: 13px 22px; font-size: 15px; color: #54616e; display: flex; gap: 14px; align-items: center; }
+.win .file { font-family: var(--mono); font-size: 13px; background: #fff; border: 1px solid #e3e9ef; border-radius: 8px; padding: 4px 10px; color: #3f5264; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+const params = new URLSearchParams(location.search);
+const MODE = params.get("mode") || "film";
+const DPR = Number(params.get("dpr") || 1);
+
+// ---------- helpers ----------
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const seg = (t, a, b) => clamp((t - a) / (b - a));
+const outCubic = (p) => 1 - Math.pow(1 - p, 3);
+const outQuint = (p) => 1 - Math.pow(1 - p, 5);
+const inOut = (p) => (p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2);
+const outExpo = (p) => (p >= 1 ? 1 : 1 - Math.pow(2, -10 * p));
+const mix = (a, b, p) => a + (b - a) * p;
+const TAU = Math.PI * 2;
+function rng(seed) { return () => { seed |= 0; seed = (seed + 0x6D2B79F5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+// Text entrance: opacity, rise, blur and tracking all settle together.
+function enter(el, t, a, b, { y = 30, blur = 14, s = 1, x = 0, track = null } = {}) {
+  const p = outQuint(seg(t, a, b));
+  el.style.opacity = p;
+  el.style.transform = `translate(${mix(x, 0, p)}px, ${mix(y, 0, p)}px) scale(${mix(s, 1, p)})`;
+  el.style.filter = blur ? `blur(${(1 - p) * blur}px)` : "none";
+  if (track) el.style.letterSpacing = `${mix(track[0], track[1], p)}em`;
+  return p;
+}
+function leave(el, t, a, b, { y = -16, s = 1.03 } = {}) {
+  const p = inOut(seg(t, a, b)); if (p <= 0) return 0;
+  el.style.opacity = Number(el.style.opacity) * (1 - p);
+  el.style.transform += ` translateY(${y * p}px) scale(${mix(1, s, p)})`;
+  el.style.filter = `blur(${p * 10}px)`;
+  return p;
+}
+
+// ---------- canvas effects ----------
+function makeSprite(r, stops) {
+  const c = document.createElement("canvas"); c.width = c.height = r * 2;
+  const g = c.getContext("2d"), grd = g.createRadialGradient(r, r, 0, r, r, r);
+  stops.forEach(([o, col]) => grd.addColorStop(o, col)); g.fillStyle = grd; g.fillRect(0, 0, r * 2, r * 2); return c;
+}
+const DOT = makeSprite(32, [[0, "rgba(255,255,255,1)"], [0.18, "rgba(170,245,252,.9)"], [0.45, "rgba(45,227,239,.25)"], [1, "rgba(45,227,239,0)"]]);
+const VDOT = makeSprite(32, [[0, "rgba(255,255,255,1)"], [0.2, "rgba(200,190,255,.85)"], [0.5, "rgba(120,98,255,.25)"], [1, "rgba(120,98,255,0)"]]);
+
+function background(ctx, W, H, t, { glowX = .5, glowY = .5, glow = 1 } = {}) {
+  ctx.globalCompositeOperation = "source-over";
+  const g = ctx.createRadialGradient(W * glowX, H * glowY, 0, W * glowX, H * glowY, W * .75);
+  g.addColorStop(0, `rgba(11,65,109,${.75 * glow})`); g.addColorStop(.45, "rgba(6,31,56,.9)"); g.addColorStop(1, "#030a14");
+  ctx.fillStyle = "#030a14"; ctx.fillRect(0, 0, W, H); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+}
+function vignette(ctx, W, H) {
+  const g = ctx.createRadialGradient(W / 2, H / 2, H * .35, W / 2, H / 2, W * .72);
+  g.addColorStop(0, "rgba(3,10,20,0)"); g.addColorStop(1, "rgba(3,10,20,.75)");
+  ctx.globalCompositeOperation = "source-over"; ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+}
+
+// Particle field in 3D; camera depth `cz` wraps every DEPTH units so a loop can be seamless.
+const DEPTH = 2800;
+function makeField(n, W, H, seed = 7) {
+  const r = rng(seed);
+  return Array.from({ length: n }, () => ({ x: (r() * 2 - 1) * W * 1.1, y: (r() * 2 - 1) * H * 1.1, z: r() * DEPTH, v: r() < .18, s: .6 + r() * 1.2 }));
+}
+function drawField(ctx, pts, W, H, cz, alpha = 1, f = 620) {
+  ctx.globalCompositeOperation = "lighter";
+  for (const p of pts) {
+    const z = ((p.z - cz) % DEPTH + DEPTH) % DEPTH + 60;
+    const sx = W / 2 + (p.x * f) / z, sy = H / 2 + (p.y * f) / z;
+    if (sx < -40 || sx > W + 40 || sy < -40 || sy > H + 40) continue;
+    const near = clamp((z - 60) / 260), far = clamp((DEPTH - z) / 900);
+    const a = alpha * near * far * (0.35 + 0.65 * (1 - z / DEPTH));
+    if (a < .01) continue;
+    const size = clamp((26 * f) / z * p.s, 2, 46);
+    ctx.globalAlpha = a; ctx.drawImage(p.v ? VDOT : DOT, sx - size / 2, sy - size / 2, size, size);
+  }
+  ctx.globalAlpha = 1;
+}
+// Glowing interference strands; all phases advance in whole turns over `period`.
+function drawStrands(ctx, W, H, t, { period = 12, n = 26, alpha = 1, cy = .5, spread = .55, reveal = 1 } = {}) {
+  const turn = (TAU * t) / period;
+  ctx.globalCompositeOperation = "lighter"; ctx.lineCap = "round";
+  const x0 = W / 2 - (W / 2 + 40) * reveal, x1 = W / 2 + (W / 2 + 40) * reveal;
+  for (let i = 0; i < n; i++) {
+    const u = i / (n - 1);
+    const amp = H * (.06 + .05 * Math.sin(i * .61 + 1.3)), f1 = 1.05 + .3 * Math.sin(i * .37), ph = i * .42;
+    const base = H * (cy + (u - .5) * spread);
+    ctx.beginPath();
+    for (let k = 0; k <= 140; k++) {
+      const x = mix(x0, x1, k / 140), xs = x / W;
+      const pinch = Math.cos((xs - .5) * Math.PI) ** 2;            // strands gather toward the centre
+      const y = base + (H * cy - base) * .55 * pinch + amp * Math.sin(TAU * f1 * xs + ph + turn) + amp * .45 * Math.sin(TAU * 2.3 * xs - ph * 1.7 - 2 * turn);
+      k ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+    }
+    const a = (.05 + .1 * Math.sin(Math.PI * u) ** 2) * alpha;
+    const g = ctx.createLinearGradient(0, 0, W, 0);
+    g.addColorStop(0, `rgba(120,98,255,${a})`); g.addColorStop(.5, `rgba(45,227,239,${a * 1.6})`); g.addColorStop(1, `rgba(120,98,255,${a})`);
+    ctx.strokeStyle = g; ctx.lineWidth = 6; ctx.globalAlpha = .35; ctx.stroke();
+    ctx.lineWidth = 1.2; ctx.globalAlpha = 1; ctx.stroke();
+  }
+  ctx.globalAlpha = 1;
+}
+const ASSET = {
+  mark: "../../../packages/openquantum-web-branding/assets/mark-inverse.svg",
+  markLight: "../../../packages/openquantum-web-branding/assets/mark.svg",
+  lockup: "../../../packages/openquantum-web-branding/assets/lockup-inverse.svg",
+};
+const root = $("#root");
+let renderFn = () => {};
+window.DURATION = 0;
+const preload = [];
+
+// ======================= HERO LOOP =======================
+if (MODE === "hero") {
+  const P = 12, W = 1200, H = 600;
+  window.DURATION = P;
+  root.innerHTML = `<div class="stage hero" id="shot"><canvas class="fx"></canvas>
+    <div class="center" style="top:166px"><h1 class="glow">共建可信的<br>量子科研智能</h1>
+      <div class="rot">
+        <p>汇聚 <b>Qiskit · PennyLane · QuTiP · Stim</b> 等社区软件与论文方法</p>
+        <p>让 AI 选择方法、执行计算、核对结果</p>
+        <p>QuTiP Wigner 函数完整调用提速 <span class="cy">5.69×</span>，全网格最大绝对差 6.52 × 10<sup>−16</sup></p>
+        <p>PennyLane Pauli 对易子完整调用提速 <span class="cy">5.09×</span>，9 个基准输入逐项一致</p>
+      </div></div>
+    <span class="tag mono" style="left:40px">Open-source · MIT</span>
+    <span class="tag mono" style="right:40px">Codex 插件 · Desktop</span></div>`;
+  const cv = $("canvas.fx"); cv.width = W * DPR; cv.height = H * DPR; const ctx = cv.getContext("2d");
+  const pts = makeField(520, W, H, 11);
+  const lines = $$(".rot p"), slot = P / lines.length, xf = .6;
+  renderFn = (t) => {
+    t = ((t % P) + P) % P;
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    background(ctx, W, H, t, { glowY: .52 });
+    drawField(ctx, pts, W, H, (t / P) * DEPTH, .75, 520);
+    drawStrands(ctx, W, H, t, { period: P, n: 22, alpha: .9, cy: .5, spread: .9 });
+    // keep the title area calm
+    const g = ctx.createRadialGradient(W / 2, H * .45, 0, W / 2, H * .45, W * .34);
+    g.addColorStop(0, "rgba(3,10,20,.55)"); g.addColorStop(1, "rgba(3,10,20,0)");
+    ctx.globalCompositeOperation = "source-over"; ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    vignette(ctx, W, H);
+    lines.forEach((el, i) => {
+      let d = t - i * slot; if (d < -xf) d += P;
+      const pin = inOut(seg(d, -xf / 2, xf / 2)), pout = inOut(seg(d, slot - xf / 2, slot + xf / 2));
+      el.style.opacity = pin * (1 - pout);
+      el.style.transform = `translateY(${(1 - pin) * 12 - pout * 12}px)`;
+      el.style.filter = `blur(${(1 - pin) * 6 + pout * 6}px)`;
+    });
+  };
+}
+
+// ======================= FILM: one question, one checkable answer =======================
+// Story told through the product: a typed request, the agent's visible steps, a verified result.
+// Values are the recorded 2026-09-12 local run in docs/examples/quantum-ground-state-local-demo-2026-09-12.json.
+if (MODE === "film") {
+  const W = 1920, H = 1080;
+  const S = { P1: [0, 4.2], P2: [4.2, 9.6], P3: [9.6, 12.6], P4: [12.6, 15.0], P5: [15.0, 19.2] };
+  window.DURATION = 19.2; window.SHOTS = S;
+  const Q = "求这个 Hamiltonian 在汉明权重 1 扇区的基态能量，并用独立方法核对。";
+  const typedAt = (i, n) => 1.35 + 2.6 * (i / (n - 1)) + 0.03 * Math.sin(i * 7.3);   // score.py uses the same schedule
+  root.innerHTML = `<div class="stage film" id="shot"><canvas class="fx"></canvas>
+    <div class="cam" style="position:absolute;inset:0;transform-origin:0 0">
+      <div class="win">
+        <div class="bar"><i></i><i></i><i></i><span>OpenQuantum</span></div>
+        <aside><div class="brand"><img src="${ASSET.markLight}" alt=""><b>OpenQuantum</b></div>
+          <div class="new">＋ 新会话</div><div class="sec">工作区</div>
+          <div class="it on">基态能量核对</div><div class="it">Bell 态采样</div><div class="it">Wigner 函数对照</div></aside>
+        <main>
+          <div class="head">基态能量核对</div>
+          <div class="col">
+            <div class="umsg"><div class="bubble">${Q}</div>
+              <div class="chip">H = −1.0524 II + 0.3979 IZ − 0.3979 ZI − 0.0113 ZZ + 0.1809 XX　·　2 量子位</div></div>
+            <div class="agent"><img src="${ASSET.markLight}" alt=""><b>OpenQuantum</b></div>
+            <div class="step s1"><span class="st"></span><b>选择方法</b><em>VQE · 态矢量模拟 · Givens 单激发拟设</em></div>
+            <div class="tool s2"><div class="th"><span class="st"></span><code>solve_and_validate_ground_state</code><span class="pill">运行中</span></div>
+              <div class="tb"><span class="ev">评估 0 次</span><span class="cv">已收敛</span></div></div>
+            <div class="step s3"><span class="st"></span><b>独立核对</b><em>闭式精确解对照</em></div>
+            <div class="res">
+              <div class="cell"><strong class="r0">−1.85727503</strong><small>Ha</small><span>VQE 能量</span></div>
+              <div class="cell"><strong class="r1">−1.85727503</strong><small>Ha</small><span>独立精确参考</span></div>
+              <div class="cell"><strong class="r2">4.44 × 10<sup>−16</sup></strong><small>Ha</small><span>能量差</span></div>
+              <div class="cell"><strong class="r3">15 项通过</strong><span>本地计算检查 · 0 失败</span></div>
+              <div class="foot"><span class="file">quantum-ground-state-local-demo-2026-09-12.json</span>输入、程序与核对记录已保留</div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+    <div class="ask"><img src="${ASSET.mark}" alt=""><span class="q"></span><span class="caret"></span><span class="ph">问 OpenQuantum 一个研究问题</span></div>
+    <div class="center mono note" style="top:1030px;font-size:15px;letter-spacing:.06em;text-transform:none;color:var(--faint)">界面示意 · 数值取自 2026-09-12 本地复验记录</div>
+    <div class="center" style="top:388px"><div class="big glow l1">从一个问题</div></div>
+    <div class="center" style="top:520px"><div class="big glow l2">到一个经得起核对的结果</div></div>
+    <div class="center" style="top:396px"><img class="lk" src="${ASSET.lockup}" style="width:680px;height:auto" alt="OpenQuantum"></div>
+    <div class="center" style="top:640px"><div class="mid tg" style="font-size:48px">共建可信的量子科研智能</div></div>
+    <div class="center mono un" style="top:742px;font-size:20px">Codex 插件 · Desktop · 开源 MIT</div>
+    <div class="flash"></div><div class="fade"></div></div>`;
+
+  const cv = $("canvas.fx"); cv.width = W; cv.height = H; const ctx = cv.getContext("2d");
+  const field = makeField(700, W, H, 3);
+  const cam = $(".cam"), win = $(".win"), ask = $(".ask"), qEl = $(".q"), caret = $(".caret"), ph = $(".ph");
+  const flash = $(".flash"), fade = $(".fade");
+  // Camera targets in .cam coordinates, from layout offsets (transforms do not affect them).
+  let focus = null;
+  const rel = (el) => { let x = 0, y = 0; while (el && el !== cam) { x += el.offsetLeft; y += el.offsetTop; el = el.offsetParent; } return { x, y }; };
+  const measure = () => {
+    const box = (el) => { const o = rel(el); return { x: o.x + el.offsetWidth / 2, y: o.y + el.offsetHeight / 2, w: el.offsetWidth, top: o.y, bottom: o.y + el.offsetHeight }; };
+    const a = box($(".agent")), s3 = box($(".s3")), r = box($(".res")), b = box($(".bubble"));
+    focus = { steps: { x: r.x, y: (a.top + s3.bottom) / 2 + 30 }, res: { x: r.x, y: r.y - 10 }, bubble: b };
+  };
+  const setCam = (s, fx, fy) => { cam.style.transform = `translate(${W / 2 - fx * s}px, ${H / 2 - fy * s}px) scale(${s})`; };
+  const status = (el, done, spin, t) => {
+    el.classList.toggle("done", done); el.classList.toggle("spin", !done && spin);
+    if (!done && spin) el.style.transform = `rotate(${t * 540}deg)`; else el.style.transform = "none";
+  };
+  renderFn = (t) => {
+    win.style.display = t >= 4.2 && t < 13.5 ? "block" : "none";
+    if (!focus && win.style.display === "block") measure();
+    const bubble = focus ? focus.bubble : { x: W / 2, y: H / 2, w: 1240 };
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    background(ctx, W, H, t, { glowY: .55, glow: mix(.4, 1, seg(t, 3.6, 5.0)) * (1 - .5 * seg(t, 12.6, 13.6)) + .4 * seg(t, 15, 16) });
+    drawField(ctx, field, W, H, t * 160 + outQuint(seg(t, 12.6, 14.0)) * 900, mix(.35, .8, seg(t, 0, 3)));
+    if (t < 4.6 || t >= 12.6) drawStrands(ctx, W, H, t, { alpha: t < 4.6 ? .55 * (1 - seg(t, 4.2, 4.6)) : .9 * seg(t, 12.8, 13.8), cy: t < 4.6 ? .5 : .52, spread: .6 });
+    vignette(ctx, W, H);
+
+    // ---- P1: the request is typed
+    const n = Q.length, shown = [...Q].filter((_, i) => typedAt(i, n) <= t).length;
+    qEl.textContent = Q.slice(0, shown);
+    ph.style.opacity = shown ? 0 : 1;
+    const typing = t > 1.3 && t < 4.05;
+    caret.style.opacity = typing || Math.floor(t / .5) % 2 === 0 ? 1 : 0;
+    const askIn = outQuint(seg(t, .3, 1.1));
+    const morph = inOut(seg(t, 4.2, 4.8));
+    if (t < 4.8) {
+      ask.style.display = "flex";
+      const k = mix(1, bubble.w / 1240, morph);
+      ask.style.opacity = askIn * (1 - seg(t, 4.5, 4.8));
+      ask.style.transform = `translate(${mix(0, bubble.x - W / 2, morph)}px, ${mix(mix(30, 0, askIn), bubble.y - H / 2, morph)}px) scale(${k})`;
+      ask.style.filter = `blur(${(1 - askIn) * 10}px)`;
+    } else ask.style.display = "none";
+
+    // ---- P2/P3: the workbench shows each step, then the result
+    const winIn = outQuint(seg(t, 4.25, 5.1)), winOut = inOut(seg(t, 12.6, 13.4));
+    win.style.opacity = winIn * (1 - winOut);
+    win.style.filter = `blur(${winOut * 14}px)`;
+    // establishing shot of the whole window, then push in on the steps, then onto the result
+    if (focus) {
+      const inStep = inOut(seg(t, 5.0, 6.2)), toRes = inOut(seg(t, 9.4, 10.3)), back = outQuint(seg(t, 12.55, 13.6));
+      const drift = seg(t, 6.2, 9.4) * 40;
+      let fx = mix(W / 2, focus.steps.x, inStep), fy = mix(H / 2, focus.steps.y + drift, inStep);
+      let sc = mix(mix(1.04, 1, winIn), 1.26, inStep);
+      fx = mix(fx, focus.res.x, toRes); fy = mix(fy, focus.res.y, toRes); sc = mix(sc, 1.34, toRes);
+      fx = mix(fx, W / 2, back); fy = mix(fy, H / 2, back); sc = mix(sc, .62, back);
+      setCam(sc, fx, fy);
+    }
+    enter($(".bubble"), t, 4.45, 4.9, { y: 0, blur: 0 }); enter($(".chip"), t, 4.75, 5.2, { y: 8, blur: 0 });
+    enter($(".agent"), t, 5.15, 5.5, { y: 8, blur: 0 });
+    enter($(".s1"), t, 5.4, 5.8, { y: 10, blur: 0 }); status($(".s1 .st"), t >= 6.4, t >= 5.4, t);
+    enter($(".s2"), t, 6.5, 6.95, { y: 12, blur: 0 }); status($(".s2 .st"), t >= 8.9, t >= 6.5, t);
+    $(".pill").textContent = t >= 8.9 ? "已完成" : "运行中"; $(".pill").classList.toggle("ok", t >= 8.9);
+    $(".ev").textContent = `评估 ${Math.round(112 * outCubic(seg(t, 6.9, 8.85)))} 次`;
+    $(".cv").style.opacity = seg(t, 8.85, 9.1);
+    enter($(".s3"), t, 8.0, 8.4, { y: 10, blur: 0 }); status($(".s3 .st"), t >= 9.3, t >= 8.0, t);
+    const res = $(".res"); enter(res, t, 9.55, 10.05, { y: 24, blur: 0, s: .98 });
+    // digits settle like a counter: unresolved places cycle until they lock left to right
+    const roll = (el, text, a, b) => {
+      const p = seg(t, a, b), keep = Math.floor(p * text.length);
+      el.textContent = [...text].map((ch, i) => (i < keep || !/[0-9]/.test(ch) ? ch : String((i * 7 + Math.floor(t * 30)) % 10))).join("");
+    };
+    roll($(".r0"), "−1.85727503", 9.65, 10.35); roll($(".r1"), "−1.85727503", 9.8, 10.5);
+    $$(".cell").forEach((c, i) => enter(c, t, 9.65 + i * .15, 10.05 + i * .15, { y: 14, blur: 0 }));
+    enter($(".foot"), t, 10.7, 11.1, { y: 8, blur: 0 });
+    const note = $(".note"); note.style.opacity = seg(t, 9.9, 10.4) * (1 - seg(t, 12.4, 12.7));
+
+    // ---- P4: pull back to the idea
+    enter($(".l1"), t, 13.0, 13.7, { y: 0, blur: 18, track: [.28, -.03] }); leave($(".l1"), t, 14.6, 15.0);
+    enter($(".l2"), t, 13.45, 14.15, { y: 0, blur: 18, track: [.2, -.03] }); leave($(".l2"), t, 14.6, 15.0);
+    $(".l1").parentElement.style.display = $(".l2").parentElement.style.display = t >= 12.9 && t < 15.05 ? "block" : "none";
+
+    // ---- P5: end card
+    const endOn = t >= 15.0;
+    [$(".lk").parentElement, $(".tg").parentElement, $(".un")].forEach((el) => { el.style.display = endOn ? "block" : "none"; });
+    if (endOn) {
+      enter($(".lk"), t, 15.1, 15.9, { y: 0, s: .94, blur: 16 });
+      $(".lk").style.filter += ` drop-shadow(0 0 ${mix(60, 18, seg(t, 15.2, 16.5))}px rgba(45,227,239,.4))`;
+      enter($(".tg"), t, 15.7, 16.4, { y: 18, blur: 10 }); enter($(".un"), t, 16.2, 16.8, { y: 8, blur: 4 });
+    }
+    let fl = 0;
+    for (const h of [9.6, 15.0]) fl = Math.max(fl, (t >= h ? Math.exp(-(t - h) * 6) : 0) * .55);
+    flash.style.opacity = fl;
+    fade.style.opacity = Math.max(1 - seg(t, 0, .4), inOut(seg(t, 18.4, 19.2)));
+  };
+}
+
+window.render = (t) => { renderFn(t); };
+window.ready = Promise.all([document.fonts.load('500 64px "Inter"'), document.fonts.load('400 30px "JB Mono"'), document.fonts.ready, ...[...document.images].map((im) => im.decode().catch(() => {})), ...preload]).then(() => { renderFn(0); return true; });
+</script>
+</body>
+</html>
