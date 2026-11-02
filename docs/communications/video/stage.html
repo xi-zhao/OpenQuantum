@@ -117,8 +117,8 @@ canvas.fx { position: absolute; inset: 0; width: 100%; height: 100%; }
 .lane b { font-weight: 500; color: var(--text); }
 .speed { font-family: "Inter", sans-serif; font-size: 250px; font-weight: 300; letter-spacing: -.06em; line-height: 1; text-align: right; font-variant-numeric: tabular-nums; color: var(--text); }
 .speed small { font-size: 110px; margin-left: 10px; letter-spacing: 0; }
-.theme.four { gap: 110px; }
-.theme.four .tw b { font-size: 190px; }
+.theme.four { gap: 96px; }
+.theme.four .tw b { font-size: 156px; }
 .theme.four .tw span { font-size: 28px; letter-spacing: .04em; }
 .qc { position: absolute; font-size: 30px; padding: 16px 30px; border-radius: 100px; background: rgba(255,255,255,.06); box-shadow: inset 0 0 0 1px rgba(255,255,255,.16); color: var(--text); white-space: nowrap; }
 .lline { font-family: var(--mono); font-size: 27px; color: #dbe7f0; }
@@ -385,10 +385,10 @@ if (MODE === "film") {
       note: "9 个基准输入，输出算符及系数逐项一致" },
   ];
   const CHAPTERS = {
-    BIG: ["01 · Coverage", "大", "社区里好用的软件，我们挑出来接好了", "算法 · 化学 · 多体 · 纠错 · 光子 · 证明"],
-    FAST: ["02 · Performance", "快", "耗时的计算核心，用 Rust 重写", "与原库输出逐项对照 · 下面是两组实测"],
-    TRUST: ["03 · Verifiable", "可信", "算出来的结果，要能核对", "保留输入、程序与记录 · 推导交给 Lean 检查"],
-    OPENCARD: ["04 · Open source", "开放", "全部开源，MIT 许可", "代码、方法和核对记录都在 GitHub 上"],
+    BIG: ["01 · Coverage", "全面", "甄选开源社区的专业软件与方法", "算法 · 化学 · 多体 · 纠错 · 光子 · 形式化证明"],
+    FAST: ["02 · Performance", "高效", "关键计算，以 Rust 重新实现", "与原库输出逐项比对 · 以下为两组实测"],
+    TRUST: ["03 · Verifiable", "可信", "每一个结果，都有据可查", "完整保留输入、程序与记录 · 推导由 Lean 验证"],
+    OPENCARD: ["04 · Open source", "开放", "MIT 许可，完全开源", "代码、方法与核对记录，全部公开"],
   };
   const CATS = ["电路与编译", "算法与优化", "模拟与化学", "纠错与噪声", "量子机器学习", "硬件与实验", "量子信息与网络", "资料与辅助"];
   const NAMES = ["Qiskit", "PennyLane", "QuTiP", "Stim", "PyZX", "TeNPy", "OpenFermion", "Mitiq", "Dynamiqs", "PyMatching", "Graphix", "MQT QECC", "Bloqade", "Perceval", "Pulser", "Qualtran"];
@@ -463,29 +463,29 @@ if (MODE === "film") {
   root.innerHTML = `<div class="stage film" id="shot"><canvas class="fx"></canvas>
     ${WIN}
     <div class="scene" id="INSIGHT">
-      <div class="center" style="top:440px"><div class="big i1">很多人已经在用 AI 做科研</div></div>
-      <div class="abs i2" style="left:140px;top:280px"><div class="mid">可 AI 往往<br>从零写起</div><div class="lead" style="margin-top:30px">一个 Wigner 函数，<br>改了三遍还在报错。</div></div>
+      <div class="center" style="top:440px"><div class="big i1">越来越多的科研，开始交给 AI</div></div>
+      <div class="abs i2" style="left:140px;top:280px"><div class="mid">但 AI 常常<br>从零开始</div><div class="lead" style="margin-top:30px">一个 Wigner 函数，<br>反复重写，仍未跑通。</div></div>
       <div class="codep" style="left:900px;top:190px;width:880px;height:700px"><div class="ch mono">AI 从零实现 wigner() · 示意</div><div class="cw"><div class="cbody"></div></div></div>
-      <div class="center" style="top:360px"><div class="big i3" style="font-size:84px">写出来的结果，也很难判断对不对</div></div>
-      <div class="qc q0" style="left:430px;top:560px">用的什么方法？</div>
-      <div class="qc q1" style="left:820px;top:610px">参数对吗？</div>
-      <div class="qc q2" style="left:1150px;top:560px">换台机器还能复现吗？</div>
-      <div class="center" style="top:430px"><div class="big i4" style="font-size:84px">其实社区里早有现成的专业软件</div></div>
-      <div class="center" style="top:560px"><div class="lead i4b">只是很少有人知道该用哪个</div></div>
-      <div class="center" style="top:380px"><div class="big i5" style="font-size:80px">推导对不对，也可以交给 Lean 检查</div></div>
+      <div class="center" style="top:360px"><div class="big i3" style="font-size:84px">它给出的结果，也难以判断是否可靠</div></div>
+      <div class="qc q0" style="left:430px;top:560px">方法是否恰当？</div>
+      <div class="qc q1" style="left:820px;top:610px">参数是否合理？</div>
+      <div class="qc q2" style="left:1150px;top:560px">能否复现？</div>
+      <div class="center" style="top:430px"><div class="big i4" style="font-size:84px">开源社区里，早有成熟的专业软件</div></div>
+      <div class="center" style="top:560px"><div class="lead i4b">只是很少有人知道，该选哪一个、如何用对</div></div>
+      <div class="center" style="top:380px"><div class="big i5" style="font-size:80px">物理推导，也能由 Lean 严格验证</div></div>
       <div class="center" style="top:540px"><span class="lline i5b"><i>theorem</i>pauli_xy_commutator : σ1 * σ2 − σ2 * σ1 = (2 * I) • σ3<b class="i5ok">✓</b></span></div>
       <div class="center mono i5c" style="top:640px;font-size:20px;text-transform:none;letter-spacing:.08em">Lean 4 · mathlib · physlib</div>
       <div class="center" style="top:300px"><img class="i6" src="${ASSET.mark}" style="width:120px;height:120px" alt=""></div>
-      <div class="center" style="top:470px"><div class="big i7" style="font-size:80px">OpenQuantum 把这些整理好了</div></div>
-      <div class="center" style="top:594px"><div class="mid i8" style="font-size:52px;color:var(--cyan)">直接交给你的 AI 用</div></div>
+      <div class="center" style="top:470px"><div class="big i7" style="font-size:80px">OpenQuantum 甄选并优化了它们</div></div>
+      <div class="center" style="top:594px"><div class="mid i8" style="font-size:52px;color:var(--cyan)">让你的 AI 即刻可用</div></div>
     </div>
     <div class="center mono asklbl" style="top:410px;font-size:18px">Ask OpenQuantum</div>
     <div class="ask"><img src="${ASSET.mark}" alt=""><span class="q"></span><span class="caret"></span><span class="ph">问 OpenQuantum 一个研究问题</span></div>
     <div class="center mono note" style="top:1030px;font-size:15px;letter-spacing:.06em;text-transform:none;color:var(--faint)">界面示意 · 数值取自 2026-09-12 本地复验记录</div>
     <div class="scene" id="THEME">
       <div class="theme four" style="top:340px">
-        <div class="tw w0"><b>大</b><span>186 个 Skill</span></div><div class="tw w1"><b>快</b><span>实测 5.69×</span></div>
-        <div class="tw w2"><b>可信</b><span>Lean 检查</span></div><div class="tw w3"><b>开放</b><span>MIT 开源</span></div>
+        <div class="tw w0"><b>全面</b><span>186 个科研 Skill</span></div><div class="tw w1"><b>高效</b><span>实测提速 5.69×</span></div>
+        <div class="tw w2"><b>可信</b><span>Lean 形式化验证</span></div><div class="tw w3"><b>开放</b><span>MIT 开源</span></div>
       </div>
     </div>
     ${Object.entries(CHAPTERS).map(([id, [eb, g, l1, l2]]) => `<div class="scene" id="${id}">
@@ -496,7 +496,7 @@ if (MODE === "film") {
     </div>`).join("")}
     <div class="scene" id="REACH">
       <div class="center mono rc0" style="top:236px;font-size:20px">Skills · MCP · SDK</div>
-      <div class="center mid rc1" style="top:282px">这些都已经接进来了</div>
+      <div class="center mid rc1" style="top:282px">已全面接入，随时可用</div>
       <div class="counters" style="top:450px">
         <div class="ctr k0"><strong class="tabnum">0</strong><span>内置 Skill</span></div>
         <div class="ctr k1"><strong class="tabnum">0</strong><span>MCP 服务连接</span></div>
@@ -506,18 +506,18 @@ if (MODE === "film") {
     </div>
     <div class="scene" id="SKILLS">
       <div class="center mono sk0" style="top:176px;font-size:20px">Skills · AI4S</div>
-      <div class="center mid sk1" style="top:218px;font-size:60px">长期做 AI4S 的经验，写成了 186 个 Skill</div>
-      <div class="center lead sk2" style="top:318px">每个 Skill 写清楚：什么情况用哪个工具，结果怎么核对。</div>
+      <div class="center mid sk1" style="top:218px;font-size:60px">多年 AI4S 实践，凝练为 186 个科研 Skill</div>
+      <div class="center lead sk2" style="top:318px">每个 Skill 写明：何时选用哪个工具、按什么步骤执行、结果如何核对。</div>
       <div class="wall" style="top:450px">${SKILL_ROWS.map((row, r) => `<div class="wrow" data-r="${r}" style="top:${r * 152}px">${row.map(([b, id, p]) => `<div class="sk"><b>${b}</b><code>${id}</code><p>${p}</p></div>`).join("")}</div>`).join("")}</div>
       <div class="center mono sk3" style="top:1010px;font-size:14px;text-transform:none;letter-spacing:.04em;color:var(--faint)">来自 .agents/skills · 2026-11-02 共 186 个</div>
     </div>
     <div class="scene" id="PREP">
       <div class="center mono pp0" style="top:200px;font-size:20px">Discover · Prepare · Run</div>
-      <div class="center mid pp1" style="top:246px">114 个环境，用到哪个，准备哪个</div>
+      <div class="center mid pp1" style="top:246px">114 个软件环境，按需准备</div>
       <div class="pipe" style="top:460px">
-        <div class="node n0"><div class="mono">01 · 发现</div><h3>先看清，再动手</h3><p>输入、依赖与账户要求一目了然</p></div>
-        <div class="node n1"><div class="mono">02 · 准备</div><h3>只装要用的</h3><p>依赖版本锁定，方便复现</p></div>
-        <div class="node n2"><div class="mono">03 · 执行</div><h3>不动你的环境</h3><p>运行时不会悄悄安装任何东西</p></div>
+        <div class="node n0"><div class="mono">01 · 发现</div><h3>先了解，再准备</h3><p>输入、依赖与账户要求，一目了然</p></div>
+        <div class="node n1"><div class="mono">02 · 准备</div><h3>只装所需</h3><p>依赖版本锁定，便于复现</p></div>
+        <div class="node n2"><div class="mono">03 · 执行</div><h3>执行不改动环境</h3><p>运行过程中不会自动安装任何组件</p></div>
       </div>
     </div>
     <div class="scene" id="CASES">${BREADTH.map((c, i) => `
@@ -545,10 +545,10 @@ if (MODE === "film") {
     </div>
     <div class="scene" id="LEAN">
       <div class="abs mono ln0" style="left:140px;top:230px;font-size:20px;text-transform:none;letter-spacing:.08em">Lean 4.35 · mathlib · physlib</div>
-      <div class="abs mid ln1" style="left:140px;top:274px;font-size:62px">推导，交给 Lean 检查</div>
-      <div class="abs lead ln2" style="left:140px;top:372px;font-size:26px">physlib 是用 Lean 写成的物理库</div>
-      <div class="abs lv ln3" style="left:140px;top:540px"><span class="x">✕</span>错的，过不了。</div>
-      <div class="abs lv ln4" style="left:140px;top:650px"><span class="w">!</span>没证完的，不算数。</div>
+      <div class="abs mid ln1" style="left:140px;top:274px;font-size:62px">推导，由 Lean 逐步验证</div>
+      <div class="abs lead ln2" style="left:140px;top:372px;font-size:26px">physlib：基于 Lean 的物理学形式化库</div>
+      <div class="abs lv ln3" style="left:140px;top:540px"><span class="x">✕</span>错误的命题，无法通过。</div>
+      <div class="abs lv ln4" style="left:140px;top:650px"><span class="w">!</span>未完成的证明，不予计入。</div>
       <div class="abs code lc" style="right:120px;top:230px;width:900px;font-size:24px">
         <div class="fh">OpenQuantumProofs.lean · 离线检查</div>
         <div class="cl l0"><i>theorem</i> natural_add_zero : n + 0 = n <b>✓</b></div>
@@ -562,9 +562,9 @@ if (MODE === "film") {
     </div>
     <div class="scene" id="OPENSRC">
       <div class="abs mono os0" style="left:140px;top:300px;font-size:20px">Open source · MIT</div>
-      <div class="abs os1" style="left:140px;top:346px"><div class="big" style="font-size:84px">欢迎把你的方法</div></div>
-      <div class="abs os2" style="left:140px;top:448px"><div class="big" style="font-size:84px">也加进来</div></div>
-      <div class="abs lead os3" style="left:140px;top:600px;width:720px;font-size:27px">每次接入都公开审阅，保留原作者与来源。</div>
+      <div class="abs os1" style="left:140px;top:346px"><div class="big" style="font-size:84px">期待你的方法</div></div>
+      <div class="abs os2" style="left:140px;top:448px"><div class="big" style="font-size:84px">也加入其中</div></div>
+      <div class="abs lead os3" style="left:140px;top:600px;width:720px;font-size:27px">每一次接入都经过公开审阅，并完整保留原作者与出处。</div>
       <div class="feed fd" style="left:1010px;top:230px;width:780px;height:620px">
         <div class="fhead mono"><i></i>xi-zhao/OpenQuantum · Pull requests</div>
         <div class="fwin"><div class="flist"><div class="frow"><div class="ftop"><span class="ftag">量子接入</span><span class="fmeta">#54 · 已合并 · 10-26</span></div><div class="ftitle">Chromobius：补充本地色码解码工作流</div></div><div class="frow"><div class="ftop"><span class="ftag">上游同步</span><span class="fmeta">#55 · 已合并 · 10-26</span></div><div class="ftitle">Graphix 0.4.1：修复 RZZ 导出并验证 MBQC 兼容性</div></div><div class="frow"><div class="ftop"><span class="ftag">量子接入</span><span class="fmeta">#67 · 已合并 · 10-28</span></div><div class="ftitle">Lean 4、mathlib 与 physlib 形式化工作流</div></div><div class="frow"><div class="ftop"><span class="ftag">量子接入</span><span class="fmeta">#68 · 已合并 · 10-29</span></div><div class="ftitle">emlint：纠错 DEM 结构诊断与完整状态报告</div></div><div class="frow open"><div class="ftop"><span class="ftag">量子接入</span><span class="fmeta">#74 · 审阅中</span></div><div class="ftitle">SlowQuant：分子线性响应与谱学</div></div><div class="frow open"><div class="ftop"><span class="ftag">上游同步</span><span class="fmeta">#75 · 审阅中</span></div><div class="ftitle">IBM Runtime：修复 RZZ 编译输出的非法全局相位门</div></div><div class="frow open"><div class="ftop"><span class="ftag">量子候选</span><span class="fmeta">#76 · 审阅中</span></div><div class="ftitle">TNQS：非规则平面图的 CTMRG 与张量网络采样</div></div></div></div>
@@ -572,15 +572,15 @@ if (MODE === "film") {
     </div>
     <div class="scene" id="ENTRY">
       <div class="center mono g0" style="top:190px;font-size:20px">Codex · Desktop</div>
-      <div class="center mid g1" style="top:236px">在 Codex 里用，或者用桌面版</div>
+      <div class="center mid g1" style="top:236px">Codex 插件与桌面版，两种方式使用</div>
       <div style="position:absolute;inset:0;perspective:2000px">
-        <div class="glass g2" style="left:250px;top:440px;width:660px;height:380px"><div class="mono" style="font-size:18px">Plugin</div><h3>Codex 插件</h3><p>在 Codex 的对话里<br>直接调用这些能力</p></div>
-        <div class="glass g3" style="left:1010px;top:440px;width:660px;height:380px"><div class="mono" style="font-size:18px">macOS · Apple Silicon</div><h3>Desktop</h3><p>独立的科研工作台<br>模型服务可以自己配置</p></div>
+        <div class="glass g2" style="left:250px;top:440px;width:660px;height:380px"><div class="mono" style="font-size:18px">Plugin</div><h3>Codex 插件</h3><p>在 Codex 对话中<br>直接调用量子科研能力</p></div>
+        <div class="glass g3" style="left:1010px;top:440px;width:660px;height:380px"><div class="mono" style="font-size:18px">macOS · Apple Silicon</div><h3>Desktop</h3><p>独立的科研工作台<br>模型服务可自行配置</p></div>
       </div>
     </div>
     <div class="scene" id="END">
       <div class="center" style="top:396px"><img class="lk" src="${ASSET.lockup}" style="width:680px;height:auto" alt="OpenQuantum"></div>
-      <div class="center" style="top:640px"><div class="mid tg" style="font-size:48px">做量子科研，不必从零开始</div></div>
+      <div class="center" style="top:640px"><div class="mid tg" style="font-size:48px">量子科研，不必从零开始</div></div>
       <div class="center mono un" style="top:742px;font-size:20px;text-transform:none;letter-spacing:.06em">github.com/xi-zhao/OpenQuantum</div>
     </div>
     <div class="flash"></div><div class="redflash" style="position:absolute;inset:0;pointer-events:none;opacity:0;background:radial-gradient(55% 55% at 72% 55%, rgba(255,110,110,.32), rgba(255,90,90,0) 70%)"></div><div class="fade"></div></div>`;
