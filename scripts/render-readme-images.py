@@ -36,8 +36,6 @@ html, body { background: transparent !important; margin: 0; }
 .banner { position: relative; width: 1200px; height: 600px; border-radius: 28px; overflow: hidden;
   background: #f2f8fe; display: flex; align-items: center; justify-content: center; }
 .banner .hero-figure figcaption { left: 40px; bottom: 26px; }
-.banner .brand { position: absolute; top: 34px; left: 40px; z-index: 2; font-size: 22px; }
-.banner .brand img { width: 32px; height: 32px; }
 .banner .hero-copy { max-width: 760px; }
 .banner h1 { font-size: 76px; font-weight: 450; line-height: 1.25; letter-spacing: -.035em; }
 .banner .hero-description { max-width: 520px; margin: 30px auto 0; font-size: 20px; line-height: 1.85; color: #3f5264; }
@@ -51,7 +49,6 @@ html, body { background: transparent !important; margin: 0; }
 BANNER = """<section class="banner" id="shot">
   <figure class="hero-figure"><div class="hero-field"><img src="./assets/quantum-field-v3.png" alt=""></div>
     <figcaption>量子波场 · 概念视觉</figcaption></figure>
-  <div class="brand"><img src="./assets/mark.svg" alt=""><span>OpenQuantum</span></div>
   <div class="hero-copy">
     <h1>共建可信的<br>量子科研智能</h1>
     <p class="hero-description">开源开放的量子科研 AI 平台，汇聚社区的优秀软件与方法，推进可核对的研究。</p>

@@ -8,7 +8,7 @@ README 与[产品官网](https://xi-zhao.github.io/OpenQuantum/)共用一套视�
 
 | 图片 | 内容与来源 |
 | --- | --- |
-| [横幅](readme/banner.webp) | 首页首屏的量子波场、OQ 标记、标题与介绍文字，排成带圆角的横幅。背景是 `site/assets/quantum-field-v3.png` 概念视觉，图中保留「概念视觉」标注；不含能力数量或版本号，避免随发布过期。 |
+| [横幅](readme/banner.webp) | 首页首屏的量子波场、标题与介绍文字，排成带圆角的横幅；品牌标志由 README 顶部的 `<h1>` 给出，横幅里不重复。背景是 `site/assets/quantum-field-v3.png` 概念视觉，图中保留「概念视觉」标注；不含能力数量或版本号，避免随发布过期。 |
 | [QuTiP 实测卡片](readme/case-qutip.webp) | 首页 QuTiP Wigner 案例面板，去掉可展开条件和链接（README 以文字给出）。数值与 Wigner 对照图来自首页，`tests/homepage.test.mjs` 核对其与固定实验数据一致。 |
 | [PennyLane 实测卡片](readme/case-pennylane.webp) | 首页 PennyLane Pauli 对易子案例面板，处理方式同上。 |
 
