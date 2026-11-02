@@ -6,8 +6,8 @@
 <!--
   Deterministic motion stage for the OpenQuantum promo film and the README hero loop.
   render.py loads this page, calls window.render(t) for every frame and captures it.
-  Copy and numbers follow site/index.html. Abstract visuals (particles, strands, Bloch sphere)
-  are illustration; the only measured values shown are the two published benchmark results.
+  Abstract visuals (particles, strands, light) are illustration. Every measured value on screen comes
+  from a record in this repository; README.md in this folder lists the sources and their limits.
 -->
 <style>
 @font-face { font-family: "Inter"; src: url("../../../public/openquantum/fonts/inter-latin.woff2") format("woff2"); font-weight: 100 900; font-display: block; }
@@ -53,6 +53,19 @@ canvas.fx { position: absolute; inset: 0; width: 100%; height: 100%; }
 .ask .q { font-size: 34px; letter-spacing: -.01em; white-space: nowrap; }
 .ask .caret { width: 3px; height: 42px; background: var(--cyan); box-shadow: 0 0 12px var(--cyan); margin-left: -18px; flex: none; }
 .ask .ph { position: absolute; left: 114px; font-size: 34px; color: var(--faint); }
+/* insight, theme and chapter cards */
+.codep { position: absolute; border-radius: 22px; overflow: hidden; background: rgba(5,16,30,.94); box-shadow: inset 0 0 0 1px rgba(255,255,255,.10), 0 50px 140px rgba(0,0,0,.6); transform-origin: 0 50%; }
+.codep .ch { height: 56px; display: flex; align-items: center; padding: 0 28px; font-size: 15px; text-transform: none; letter-spacing: .04em; border-bottom: 1px solid rgba(255,255,255,.08); }
+.codep .cw { position: absolute; left: 0; right: 0; top: 56px; bottom: 0; overflow: hidden; -webkit-mask-image: linear-gradient(to bottom, #000 80%, transparent); mask-image: linear-gradient(to bottom, #000 80%, transparent); }
+.codep .cbody { padding: 22px 30px; font-family: var(--mono); font-size: 20px; line-height: 33px; color: #b9c9d6; white-space: pre; }
+.codep .ln.err { color: #ff8f8f; }
+.codep .ln.flash { background: rgba(255,90,90,.12); }
+.theme { position: absolute; left: 0; right: 0; display: flex; justify-content: center; gap: 140px; }
+.tw { text-align: center; }
+.tw b { display: block; font-size: 220px; font-weight: 500; line-height: 1.1; letter-spacing: -.02em; text-shadow: 0 0 60px rgba(45,227,239,.35); }
+.tw span { display: block; margin-top: 18px; font-size: 32px; color: var(--dim); letter-spacing: .1em; }
+.cg { position: absolute; left: 0; right: 0; font-size: 260px; font-weight: 500; line-height: 1.1; letter-spacing: -.02em; }
+.cl1 { position: absolute; left: 0; right: 0; font-size: 52px; font-weight: 500; letter-spacing: -.02em; }
 /* feature chapters */
 .scene { position: absolute; inset: 0; display: none; }
 .case { position: absolute; inset: 0; display: none; }
@@ -82,10 +95,47 @@ canvas.fx { position: absolute; inset: 0; width: 100%; height: 100%; }
 .node .mono { font-size: 17px; }
 .node h3 { font-size: 46px; font-weight: 500; letter-spacing: -.02em; margin: 18px 0 12px; }
 .node p { font-size: 24px; line-height: 1.55; color: var(--dim); }
-.glass { position: absolute; border-radius: 28px; padding: 54px 58px; background: linear-gradient(160deg, rgba(255,255,255,.09), rgba(255,255,255,.03)); box-shadow: inset 0 0 0 1px rgba(255,255,255,.12), 0 40px 120px rgba(0,0,0,.45); }
+.glass { position: absolute; border-radius: 28px; padding: 54px 58px; background: linear-gradient(160deg, rgba(24,50,78,.94), rgba(10,26,44,.94)); box-shadow: inset 0 0 0 1px rgba(255,255,255,.12), 0 40px 120px rgba(0,0,0,.45); }
 .glass h3 { font-size: 58px; font-weight: 500; letter-spacing: -.02em; margin: 22px 0 16px; }
 .glass p { font-size: 28px; color: var(--dim); line-height: 1.6; }
 .lead { font-size: 30px; line-height: 1.6; color: var(--dim); }
+.feed { position: absolute; border-radius: 26px; overflow: hidden; background: linear-gradient(160deg, rgba(18,44,72,.92), rgba(6,20,36,.94)); box-shadow: inset 0 0 0 1px rgba(255,255,255,.12), 0 50px 140px rgba(0,0,0,.55), 0 0 90px rgba(45,227,239,.12); }
+.fhead { height: 64px; display: flex; align-items: center; gap: 12px; padding: 0 30px; font-size: 16px; text-transform: none; letter-spacing: .04em; border-bottom: 1px solid rgba(255,255,255,.08); }
+.fhead i { width: 9px; height: 9px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 12px var(--cyan); }
+.fwin { position: absolute; left: 0; right: 0; top: 64px; bottom: 0; overflow: hidden; -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 40px, #000 calc(100% - 60px), transparent 100%); mask-image: linear-gradient(to bottom, transparent 0, #000 40px, #000 calc(100% - 60px), transparent 100%); }
+.flist { position: absolute; left: 0; right: 0; top: 18px; }
+.frow { padding: 20px 30px 22px 34px; border-bottom: 1px solid rgba(255,255,255,.07); position: relative; transition: none; }
+.frow::before { content: ""; position: absolute; left: 0; top: 18px; bottom: 18px; width: 3px; border-radius: 3px; background: rgba(255,255,255,.12); }
+.frow.hot::before { background: var(--cyan); box-shadow: 0 0 14px var(--cyan); }
+.ftop { display: flex; align-items: center; gap: 14px; margin-bottom: 10px; }
+.ftag { font-size: 15px; padding: 3px 12px; border-radius: 100px; color: var(--cyan); box-shadow: inset 0 0 0 1px rgba(45,227,239,.45); }
+.frow.open .ftag { color: #c9c0ff; box-shadow: inset 0 0 0 1px rgba(154,138,255,.5); }
+.fmeta { font-family: var(--mono); font-size: 15px; color: var(--dim); letter-spacing: .02em; }
+.ftitle { font-size: 25px; line-height: 1.4; color: var(--text); letter-spacing: -.01em; }
+.frow:not(.hot) .ftitle { color: rgba(242,248,252,.72); }
+.lane { font-size: 26px; color: var(--dim); }
+.lane b { font-weight: 500; color: var(--text); }
+.speed { font-family: "Inter", sans-serif; font-size: 250px; font-weight: 300; letter-spacing: -.06em; line-height: 1; text-align: right; font-variant-numeric: tabular-nums; color: var(--text); }
+.speed small { font-size: 110px; margin-left: 10px; letter-spacing: 0; }
+.theme.four { gap: 110px; }
+.theme.four .tw b { font-size: 190px; }
+.theme.four .tw span { font-size: 28px; letter-spacing: .04em; }
+.qc { position: absolute; font-size: 30px; padding: 16px 30px; border-radius: 100px; background: rgba(255,255,255,.06); box-shadow: inset 0 0 0 1px rgba(255,255,255,.16); color: var(--text); white-space: nowrap; }
+.lline { font-family: var(--mono); font-size: 27px; color: #dbe7f0; }
+.lline i { font-style: normal; color: #9a8aff; margin-right: 12px; }
+.lline b { color: var(--cyan); font-weight: 500; margin-left: 18px; }
+.wall { position: absolute; left: 0; right: 0; height: 450px; -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent); mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent); }
+.wrow { position: absolute; left: 0; display: flex; gap: 20px; }
+.sk { flex: none; width: 440px; height: 132px; border-radius: 18px; padding: 20px 24px; background: linear-gradient(160deg, rgba(22,52,84,.92), rgba(8,24,42,.92)); box-shadow: inset 0 0 0 1px rgba(255,255,255,.10); opacity: .62; }
+.sk b { display: block; font-size: 25px; font-weight: 500; letter-spacing: -.01em; white-space: nowrap; }
+.sk code { display: block; margin: 5px 0 9px; font-family: var(--mono); font-size: 14px; color: var(--faint); letter-spacing: .02em; }
+.sk p { font-size: 19px; color: var(--dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sk.hot { opacity: 1; box-shadow: inset 0 0 0 1.5px rgba(45,227,239,.7), 0 0 50px rgba(45,227,239,.18); }
+.sk.hot code { color: var(--cyan); }
+.lv { font-size: 58px; font-weight: 500; letter-spacing: -.02em; }
+.lv span { display: inline-block; width: 64px; }
+.lv .x { color: #ff8f8f; } .lv .w { color: #ffd78a; }
+.code .fh { font-size: 16px; color: var(--faint); padding-bottom: 14px; margin-bottom: 6px; border-bottom: 1px solid rgba(255,255,255,.08); letter-spacing: .04em; }
 /* light workbench window (illustrative recreation of the desktop UI) */
 .win { position: absolute; left: 200px; top: 96px; width: 1520px; height: 900px; border-radius: 22px; overflow: hidden; background: #ffffff; color: #18232e;
   box-shadow: 0 0 0 1px rgba(255,255,255,.12), 0 60px 160px rgba(0,0,0,.6), 0 0 160px rgba(45,227,239,.16); display: none; }
@@ -153,7 +203,7 @@ function rng(seed) { return () => { seed |= 0; seed = (seed + 0x6D2B79F5) | 0; l
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 // Text entrance: opacity, rise, blur and tracking all settle together.
-function enter(el, t, a, b, { y = 30, blur = 14, s = 1, x = 0, track = null } = {}) {
+function enter(el, t, a, b, { y = 30, blur = 8, s = 1, x = 0, track = null } = {}) {
   const p = outQuint(seg(t, a, b));
   el.style.opacity = p;
   el.style.transform = `translate(${mix(x, 0, p)}px, ${mix(y, 0, p)}px) scale(${mix(s, 1, p)})`;
@@ -285,44 +335,104 @@ if (MODE === "hero") {
   };
 }
 
-// ======================= FILM: one question, then the breadth behind it =======================
+// ======================= FILM: the problem, a demo, then big · fast · verifiable · open =======================
 // Every number on screen comes from a record in this repository (see README.md in this folder).
 if (MODE === "film") {
   const W = 1920, H = 1080;
   // shot list on the 100 BPM grid (beat 0.6 s, bar 2.4 s)
-  const S = { OPEN: [0, 7.2], STEPS: [7.2, 12.6], RESULT: [12.6, 15.6], BRIDGE: [15.6, 18.0], CASES: [18.0, 32.4],
-    REACH: [32.4, 37.2], PREP: [37.2, 42.0], ENTRY: [42.0, 46.8], OPENSRC: [46.8, 51.6], END: [51.6, 57.6] };
-  window.DURATION = 57.6; window.SHOTS = S;
-  const O = 3.0;   // the workbench story starts 3 s later than in the short cut
+  const S = {
+    INSIGHT: [0, 14.4], OPEN: [14.4, 21.6], STEPS: [21.6, 27.0], RESULT: [27.0, 30.0], THEME: [30.0, 33.0],
+    BIG: [33.0, 34.2], REACH: [34.2, 38.4], SKILLS: [38.4, 43.2], PREP: [43.2, 46.8], CASES: [46.8, 50.4],
+    FAST: [50.4, 51.6], RACE: [51.6, 58.8],
+    TRUST: [58.8, 60.0], LEAN: [60.0, 66.0],
+    OPENCARD: [66.0, 67.2], OPENSRC: [67.2, 72.0], ENTRY: [72.0, 75.6], END: [75.6, 81.0],
+  };
+  const DUR = 81.0;
+  window.DURATION = DUR; window.SHOTS = S;
+  const at = (k) => S[k][0];
+  const OP = at("OPEN"), ST = at("STEPS"), TH = at("THEME");
+  const O = OP + 3.0;   // workbench timings below are relative to O; the request lands at O + 4.2
   const CAROUSEL = [
-    ["在 201 × 201 相空间网格上计算 Wigner 函数", 0.6],
-    ["为 32 量子位 Hamiltonian 计算 Pauli 对易子", 1.8],
-    ["复现这篇论文的薛定谔化方法", 3.0],
-    ["检查 [σx, σy] = 2iσz 的 Lean 证明", 4.2],
+    ["在 201 × 201 相空间网格上计算 Wigner 函数", OP + .6],
+    ["为 32 量子位 Hamiltonian 计算 Pauli 对易子", OP + 1.8],
+    ["复现这篇论文的薛定谔化方法", OP + 3.0],
+    ["检查 [σx, σy] = 2iσz 的 Lean 证明", OP + 4.2],
   ];
   const Q = "计算氢分子的基态能量，并用独立方法核对。";
-  const QT0 = 5.45, QT1 = 6.9;
-  const typedTimes = [];
-  CAROUSEL.forEach(([q, a]) => [...q].forEach((_, i) => typedTimes.push(a + 0.5 * i / (q.length - 1))));
-  [...Q].forEach((_, i) => typedTimes.push(QT0 + (QT1 - QT0) * i / (Q.length - 1) + 0.02 * Math.sin(i * 7.3)));
-  const CASES = [
-    { at: 18.0, tag: "Quantum optics · 量子光学", q: "在 201 × 201 相空间网格上<br>计算 Wigner 函数", setup: "QuTiP 5.3.1 · 64 维单模 Fock 空间 · Apple M4",
-      big: "5.69", unit: "×", label: "完整调用提速", sub: "全网格最大绝对差 6.52 × 10<sup>−16</sup> · 272 项独立核对", fig: ASSET.wigner, src: "experiments/qutip-rust-wigner" },
-    { at: 21.6, tag: "Many-body · 多体与算法", q: "为 32 量子位 Hamiltonian<br>计算 Pauli 对易子", setup: "PennyLane 0.45.1 · 125 项 Hamiltonian × 512 项算符池",
-      big: "5.09", unit: "×", label: "完整调用提速", sub: "9 个基准输入，输出算符及系数逐项一致", fig: ASSET.penny, src: "experiments/pennylane-rust-commutator" },
-    { at: 25.2, tag: "From a paper · 论文复现", q: "复现薛定谔化方法<br>求解一维热方程", setup: "arXiv:2407.15895 · NumPy / SciPy 经典仿真原型",
-      big: "4.1", unit: "× 10<sup>−4</sup>", label: "与离散热方程解的相对 L2 误差", sub: "8 × 512 维扩展状态 · 不声称量子加速", fig: ASSET.heat, src: "experiments/schrodingerization-heat1d" },
-    { at: 28.8, tag: "Formal proof · 形式化证明", q: "检查 Pauli 矩阵关系的<br>Lean 4 证明", setup: "Lean 4.35 · mathlib · physlib · 离线检查",
-      big: "4", unit: "/ 4", label: "定理检查通过", sub: "错误命题被拒绝 · 含 sorry 的证明不计为完成", fig: null, src: "docs/integrations/evidence/lean-physics-2026-10-28" },
+  const QT0 = OP + 5.45, QT1 = OP + 6.9;
+  const qTime = (i) => QT0 + (QT1 - QT0) * i / (Q.length - 1) + 0.02 * Math.sin(i * 7.3);
+  // the "from scratch" code shown in the opening: illustrative, written for this film
+  const SCRATCH = [
+    "import numpy as np", "from math import factorial", "", "def wigner(rho, xvec, pvec):", "    # 手写拉盖尔多项式与相空间网格", "    N = rho.shape[0]",
+    "    X, P = np.meshgrid(xvec, pvec)", "    A = (X + 1j * P) / np.sqrt(2)", "    W = np.zeros_like(X)", "    for m in range(N):", "        for n in range(N):",
+    "            c = rho[m, n] * (-1) ** m", "            L = laguerre(n - m, m, 4 * abs(A) ** 2)", "            W += np.real(c * L * A ** (n - m))",
+    "Traceback (most recent call last):", "ValueError: operands could not be broadcast together", "", "    # 第二遍：换一种递推写法", "def laguerre(k, a, x):",
+    "    if k < 0: return laguerre(-k, a, x)", "    L0, L1 = 1, 1 + a - x", "    for i in range(2, k + 1):", "        L0, L1 = L1, ((2*i - 1 + a - x) * L1 - (i - 1 + a) * L0) / i",
+    "OverflowError: int too large to convert to float", "", "    # 第三遍：归一化与数值稳定", "    norm = np.sqrt(factorial(m) / factorial(n))", "    ...",
   ];
+  const typedTimes = [];
+  SCRATCH.forEach((_, i) => typedTimes.push(2.7 + i * 0.12));
+  CAROUSEL.forEach(([q, a]) => [...q].forEach((_, i) => typedTimes.push(a + 0.5 * i / (q.length - 1))));
+  [...Q].forEach((_, i) => typedTimes.push(qTime(i)));
+  const BREADTH = [
+    { at: at("CASES"), tag: "From a paper · 论文复现", q: "复现薛定谔化方法<br>求解一维热方程", setup: "arXiv:2407.15895 · NumPy / SciPy 经典仿真原型",
+      big: "4.1", unit: "× 10<sup>−4</sup>", label: "与离散热方程解的相对 L2 误差", sub: "8 × 512 维扩展状态 · 不声称量子加速", fig: ASSET.heat, src: "experiments/schrodingerization-heat1d" },
+  ];
+  const RACES = [
+    { at: at("RACE"), label: "QuTiP Wigner 函数 · 完整调用", title: "64 维 Fock 空间 · 201 × 201 相空间网格", lib: "QuTiP 原库", base: 171.77, opt: 30.18, speed: 5.69,
+      note: "全网格最大绝对差 6.52 × 10<sup>−16</sup> · 272 项独立核对" },
+    { at: at("RACE") + 3.6, label: "PennyLane Pauli 对易子 · 完整调用", title: "32 量子位 · 125 项 Hamiltonian × 512 项算符池", lib: "PennyLane 原库", base: 30.62, opt: 6.02, speed: 5.09,
+      note: "9 个基准输入，输出算符及系数逐项一致" },
+  ];
+  const CHAPTERS = {
+    BIG: ["01 · Coverage", "大", "社区里好用的软件，我们挑出来接好了", "算法 · 化学 · 多体 · 纠错 · 光子 · 证明"],
+    FAST: ["02 · Performance", "快", "耗时的计算核心，用 Rust 重写", "与原库输出逐项对照 · 下面是两组实测"],
+    TRUST: ["03 · Verifiable", "可信", "算出来的结果，要能核对", "保留输入、程序与记录 · 推导交给 Lean 检查"],
+    OPENCARD: ["04 · Open source", "开放", "全部开源，MIT 许可", "代码、方法和核对记录都在 GitHub 上"],
+  };
   const CATS = ["电路与编译", "算法与优化", "模拟与化学", "纠错与噪声", "量子机器学习", "硬件与实验", "量子信息与网络", "资料与辅助"];
   const NAMES = ["Qiskit", "PennyLane", "QuTiP", "Stim", "PyZX", "TeNPy", "OpenFermion", "Mitiq", "Dynamiqs", "PyMatching", "Graphix", "MQT QECC", "Bloqade", "Perceval", "Pulser", "Qualtran"];
-  window.CUES = { bpm: 100, duration: 57.6, typed: typedTimes, send: 7.2, steps: [6.4 + O, 8.9 + O, 9.3 + O], result: 12.6, pullBack: 15.6,
-    bridgeLine: 16.0, cases: CASES.map((c) => c.at), caseHits: CASES.map((c) => c.at + 1.2), reach: 32.4, prep: 37.2, prepNodes: [38.0, 38.9, 39.8],
-    entry: 42.0, open: 46.8, end: 51.6 };
+  // real Skills from .agents/skills (title · id · what it does); the highlighted card of each row is listed third/fourth
+  const SKILL_ROWS = [
+    [["Mitiq 误差缓解实验", "mitiq-error-mitigation", "同一采样预算下比较 ZNE、PEC、CDR"], ["TeNPy 多体基态", "tenpy-ground-state", "DMRG，并与精确对角化比较"],
+     ["量子电路等价性验证", "quantum-circuit-verification", "MQT QCEC · 区分严格等价与相位等价"], ["SQD 量子化学", "sqd-chemistry", "分子活性空间的采样子空间对角化"],
+     ["哈密顿量演化", "hamiltonian-simulation", "Trotter-Suzuki 与 qDrift 误差对照"], ["QDK 容错资源估算", "qdk-resource-estimation", "估算物理量子位数与运行时间"],
+     ["Flow-VQE 参数学习", "flow-vqe", "调用论文的 flow 训练算法"], ["QMClaw Workbench", "qmclaw-workbench", "超导比特 S21、Rabi、Ramsey、T1"]],
+    [["QEC Memory Experiment", "qec-memory-experiment", "Stim + PyMatching 表面码存储实验"], ["量子信息审计", "quantum-information-audit", "toqito · 部分转置谱与 negativity"],
+     ["Pulser Rydberg 动力学", "pulser-dynamics", "二维原子阵列的全局脉冲"], ["Lean 数学与物理证明", "lean-physics", "Lean 4 · mathlib · physlib，检查依赖公理"],
+     ["Perceval 线性光学", "perceval-photonics", "Fock 输入、分束器与 HOM 干涉"], ["OpenFermion 算符映射", "openfermion-mapping", "Jordan-Wigner 或 Bravyi-Kitaev"],
+     ["Quantum Ground State", "quantum-ground-state", "二量子位 VQE 基态与独立核对"], ["PairInteraction 原子对", "pairinteraction-rydberg", "Rb Rydberg 原子对势能"]],
+    [["PennyLane 可微分量子线路", "pennylane-differentiable", "指定旋转角的解析梯度"], ["TQEC", "tqec-compilation", "逻辑计算块到 Stim 线路"],
+     ["Deltakit 纠错实验构建", "deltakit-qec", "rotated planar-code 存储实验"], ["纠错 DEM 静态诊断", "emlint-dem-audit", "定位没有 syndrome 的逻辑翻转"],
+     ["Qiskit Machine Learning", "qiskit-machine-learning", "量子核、QSVC 与 QNN"], ["Q-CTRL 控制图", "qctrl-workbench", "单量子位分段控制"],
+     ["MerLin 光子层推断", "merlin-learning", "对相移的自动微分梯度"], ["QURI Parts / Qulacs", "quri-parts-estimation", "Pauli Hamiltonian 精确期望值"]],
+  ];
+  const CARD = 460;   // card width + gap
+  const rowX = (r, u) => [-200 - u * 90, -900 + u * 90, -500 - u * 90][r];
+  const HOT_AT = [1.2, 2.4, 3.6];   // one card per row lights up on the beat
+  const hotCard = (r) => { const x = rowX(r, HOT_AT[r]); let best = 0; SKILL_ROWS[r].forEach((_, k) => { if (Math.abs(x + k * CARD + 220 - W / 2) < Math.abs(x + best * CARD + 220 - W / 2)) best = k; }); return best; };
+  const L = at("LEAN"), REJECT = L + 2.4, SORRY = L + 4.2;
+  const beat = 0.6;
+  window.CUES = {
+    bpm: 100, duration: DUR, end: at("END"), typed: typedTimes,
+    sections: [[0, 2.4, "intro"], [2.4, 8.4, "tension"], [8.4, 14.4, "build"], [OP, ST, "intro"], [ST, 27.0, "build"],
+      [27.0, TH, "groove"], [TH, at("BIG"), "hits"], [at("BIG"), at("TRUST"), "groove"], [at("TRUST"), at("OPENCARD"), "build"],
+      [at("OPENCARD"), at("END"), "light"], [at("END"), DUR, "end"]],
+    impacts: [[6.0, .4], [8.4, .6], [10.2, .4], [12.0, .75], [27.0, .9],
+      ...[0, 1, 2, 3].map((i) => [TH + .3 + i * beat, i === 3 ? .7 : .5]), [at("BIG"), .7], [at("REACH"), .3], [at("SKILLS"), .35], [at("PREP"), .3], [at("CASES"), .35],
+      [at("FAST"), .7], [RACES[0].at + 1.5, .75], [RACES[1].at + 1.5, .65], [at("TRUST"), .65], [REJECT, .5], [at("OPENCARD"), .6], [at("ENTRY"), .3], [at("END"), .85]],
+    swells: [[8.4, 1.0, .6, 1], [12.0, 1.2, .8, 1], [ST + .05, .5, .5, 1], [27.0, 1.2, .9, 1], [TH, 1.4, .7, 0], [RACES[0].at + 1.5, .9, .7, 1], [RACES[1].at + 1.5, .6, .5, 1],
+      [at("TRUST"), 1.0, .6, 1], [at("END"), 1.6, .9, 1]],
+    bells: [[0.4, 81, .6, .2], [2.6, 77, .5, -.2], [6.75, 74, .4, -.35], [7.05, 77, .4, 0], [7.35, 80, .4, .35], [11.15, 84, .6, .2], [12.15, 81, .9, 0],
+      [O + 6.4, 88, .55, -.25], [O + 8.9, 91, .55, 0], [O + 9.3, 93, .55, .25], [27.0, 81, .9, 0],
+      ...HOT_AT.map((h, i) => [at("SKILLS") + h, [86, 88, 91][i], .45, (i - 1) * .3]),
+      ...[0, 1, 2].map((i) => [at("PREP") + .6 + i * .75, [86, 88, 91][i], .45, (i - 1) * .3]), [at("CASES") + 1.0, 83, .7, .2],
+      ...[0, 1, 2, 3].map((k) => [L + 1.1 + k * .3, [86, 88, 91, 93][k], .35, (k - 1.5) * .2]), [SORRY, 74, .55, 0],
+      [at("END") + .15, 81, 1.2, 0], [at("END") + .15, 88, .7, .3]],
+  };
+  const NOFLASH = new Set([REJECT]);   // the rejected proof gets a red pulse instead of the cyan flash
 
-  root.innerHTML = `<div class="stage film" id="shot"><canvas class="fx"></canvas>
-    <div class="cam" style="position:absolute;inset:0;transform-origin:0 0">
+  const WIN = `    <div class="cam" style="position:absolute;inset:0;transform-origin:0 0">
       <div class="win">
         <div class="bar"><i></i><i></i><i></i><span>OpenQuantum</span></div>
         <aside><div class="brand"><img src="${ASSET.markLight}" alt=""><b>OpenQuantum</b></div>
@@ -349,36 +459,44 @@ if (MODE === "film") {
         </main>
       </div>
     </div>
+`;
+  root.innerHTML = `<div class="stage film" id="shot"><canvas class="fx"></canvas>
+    ${WIN}
+    <div class="scene" id="INSIGHT">
+      <div class="center" style="top:440px"><div class="big i1">很多人已经在用 AI 做科研</div></div>
+      <div class="abs i2" style="left:140px;top:280px"><div class="mid">可 AI 往往<br>从零写起</div><div class="lead" style="margin-top:30px">一个 Wigner 函数，<br>改了三遍还在报错。</div></div>
+      <div class="codep" style="left:900px;top:190px;width:880px;height:700px"><div class="ch mono">AI 从零实现 wigner() · 示意</div><div class="cw"><div class="cbody"></div></div></div>
+      <div class="center" style="top:360px"><div class="big i3" style="font-size:84px">写出来的结果，也很难判断对不对</div></div>
+      <div class="qc q0" style="left:430px;top:560px">用的什么方法？</div>
+      <div class="qc q1" style="left:820px;top:610px">参数对吗？</div>
+      <div class="qc q2" style="left:1150px;top:560px">换台机器还能复现吗？</div>
+      <div class="center" style="top:430px"><div class="big i4" style="font-size:84px">其实社区里早有现成的专业软件</div></div>
+      <div class="center" style="top:560px"><div class="lead i4b">只是很少有人知道该用哪个</div></div>
+      <div class="center" style="top:380px"><div class="big i5" style="font-size:80px">推导对不对，也可以交给 Lean 检查</div></div>
+      <div class="center" style="top:540px"><span class="lline i5b"><i>theorem</i>pauli_xy_commutator : σ1 * σ2 − σ2 * σ1 = (2 * I) • σ3<b class="i5ok">✓</b></span></div>
+      <div class="center mono i5c" style="top:640px;font-size:20px;text-transform:none;letter-spacing:.08em">Lean 4 · mathlib · physlib</div>
+      <div class="center" style="top:300px"><img class="i6" src="${ASSET.mark}" style="width:120px;height:120px" alt=""></div>
+      <div class="center" style="top:470px"><div class="big i7" style="font-size:80px">OpenQuantum 把这些整理好了</div></div>
+      <div class="center" style="top:594px"><div class="mid i8" style="font-size:52px;color:var(--cyan)">直接交给你的 AI 用</div></div>
+    </div>
     <div class="center mono asklbl" style="top:410px;font-size:18px">Ask OpenQuantum</div>
     <div class="ask"><img src="${ASSET.mark}" alt=""><span class="q"></span><span class="caret"></span><span class="ph">问 OpenQuantum 一个研究问题</span></div>
     <div class="center mono note" style="top:1030px;font-size:15px;letter-spacing:.06em;text-transform:none;color:var(--faint)">界面示意 · 数值取自 2026-09-12 本地复验记录</div>
-    <div class="scene" id="BRIDGE">
-      <div class="center" style="top:420px"><div class="big glow br1">从化学到多体，从论文到证明</div></div>
-      <div class="center" style="top:570px"><div class="lead br2">每一个结果，都留下可以核对的依据</div></div>
+    <div class="scene" id="THEME">
+      <div class="theme four" style="top:340px">
+        <div class="tw w0"><b>大</b><span>186 个 Skill</span></div><div class="tw w1"><b>快</b><span>实测 5.69×</span></div>
+        <div class="tw w2"><b>可信</b><span>Lean 检查</span></div><div class="tw w3"><b>开放</b><span>MIT 开源</span></div>
+      </div>
     </div>
-    <div class="scene" id="CASES">${CASES.map((c, i) => `
-      <div class="case" data-i="${i}">
-        <div class="abs mono ctag" style="left:140px;top:170px;font-size:20px">${c.tag}</div>
-        <div class="abs cq" style="left:140px;top:214px">${c.q}</div>
-        <div class="abs mono csetup" style="left:140px;top:384px;font-size:17px;text-transform:none;letter-spacing:.04em">${c.setup}</div>
-        <div class="abs cbig glow" style="left:130px;top:468px">${c.big}<small>${c.unit}</small></div>
-        <div class="abs clabel" style="left:140px;top:712px">${c.label}</div>
-        <div class="abs csub" style="left:140px;top:766px">${c.sub}</div>
-        ${c.fig ? `<div class="abs cfig" style="right:120px;top:300px;width:820px"><img src="${c.fig}" alt=""></div>` : `
-        <div class="abs code" style="right:120px;top:270px;width:820px">
-          <div class="cl l0"><i>theorem</i> pauli_x_square : σ1 * σ1 = 1 <b>✓</b></div>
-          <div class="cl l1"><i>theorem</i> pauli_xy_commutator :<br>　σ1 * σ2 − σ2 * σ1 = (2 * I) • σ3 <b>✓</b></div>
-          <div class="cl l2"><i>theorem</i> imaginary_square : I * I = −1 <b>✓</b></div>
-          <div class="cl l3"><i>theorem</i> natural_add_zero : n + 0 = n <b>✓</b></div>
-          <div class="cl l4 bad">False.lean　→　被拒绝（exit 1）<b class="x">✕</b></div>
-          <div class="cl l5 warn">Unfinished.lean　→　sorry，不计为完成</div>
-        </div>`}
-        <div class="abs mono csrc" style="left:140px;top:1000px;font-size:14px;text-transform:none;letter-spacing:.04em;color:var(--faint)">记录：${c.src}</div>
-      </div>`).join("")}
-    </div>
+    ${Object.entries(CHAPTERS).map(([id, [eb, g, l1, l2]]) => `<div class="scene" id="${id}">
+      <div class="center mono ce" style="top:250px;font-size:20px">${eb}</div>
+      <div class="center"><div class="cg glow" style="top:300px">${g}</div></div>
+      <div class="center cl1" style="top:640px">${l1}</div>
+      <div class="center mono cl2" style="top:724px;font-size:20px;text-transform:none;letter-spacing:.08em">${l2}</div>
+    </div>`).join("")}
     <div class="scene" id="REACH">
-      <div class="center mono rc0" style="top:236px;font-size:20px">Community software · Published methods</div>
-      <div class="center mid glow rc1" style="top:282px">汇聚社区的专业软件与方法</div>
+      <div class="center mono rc0" style="top:236px;font-size:20px">Skills · MCP · SDK</div>
+      <div class="center mid rc1" style="top:282px">这些都已经接进来了</div>
       <div class="counters" style="top:450px">
         <div class="ctr k0"><strong class="tabnum">0</strong><span>内置 Skill</span></div>
         <div class="ctr k1"><strong class="tabnum">0</strong><span>MCP 服务连接</span></div>
@@ -386,47 +504,114 @@ if (MODE === "film") {
       </div>
       <div class="chips" style="top:760px">${CATS.map((c) => `<span class="cat">${c}</span>`).join("")}</div>
     </div>
+    <div class="scene" id="SKILLS">
+      <div class="center mono sk0" style="top:176px;font-size:20px">Skills · AI4S</div>
+      <div class="center mid sk1" style="top:218px;font-size:60px">长期做 AI4S 的经验，写成了 186 个 Skill</div>
+      <div class="center lead sk2" style="top:318px">每个 Skill 写清楚：什么情况用哪个工具，结果怎么核对。</div>
+      <div class="wall" style="top:450px">${SKILL_ROWS.map((row, r) => `<div class="wrow" data-r="${r}" style="top:${r * 152}px">${row.map(([b, id, p]) => `<div class="sk"><b>${b}</b><code>${id}</code><p>${p}</p></div>`).join("")}</div>`).join("")}</div>
+      <div class="center mono sk3" style="top:1010px;font-size:14px;text-transform:none;letter-spacing:.04em;color:var(--faint)">来自 .agents/skills · 2026-11-02 共 186 个</div>
+    </div>
     <div class="scene" id="PREP">
       <div class="center mono pp0" style="top:200px;font-size:20px">Discover · Prepare · Run</div>
-      <div class="center mid glow pp1" style="top:246px">用到什么，准备什么</div>
+      <div class="center mid pp1" style="top:246px">114 个环境，用到哪个，准备哪个</div>
       <div class="pipe" style="top:460px">
-        <div class="node n0"><div class="mono">01 · 发现</div><h3>只读查询</h3><p>查看能力、输入与准备条件</p></div>
-        <div class="node n1"><div class="mono">02 · 准备</div><h3>按需准备</h3><p>只为所选 SDK 安装锁定依赖</p></div>
-        <div class="node n2"><div class="mono">03 · 执行</div><h3>执行计算</h3><p>计算调用不会隐式安装</p></div>
+        <div class="node n0"><div class="mono">01 · 发现</div><h3>先看清，再动手</h3><p>输入、依赖与账户要求一目了然</p></div>
+        <div class="node n1"><div class="mono">02 · 准备</div><h3>只装要用的</h3><p>依赖版本锁定，方便复现</p></div>
+        <div class="node n2"><div class="mono">03 · 执行</div><h3>不动你的环境</h3><p>运行时不会悄悄安装任何东西</p></div>
+      </div>
+    </div>
+    <div class="scene" id="CASES">${BREADTH.map((c, i) => `
+      <div class="case" data-i="${i}">
+        <div class="abs mono ctag" style="left:140px;top:170px;font-size:20px">${c.tag}</div>
+        <div class="abs cq" style="left:140px;top:214px">${c.q}</div>
+        <div class="abs mono csetup" style="left:140px;top:384px;font-size:17px;text-transform:none;letter-spacing:.04em">${c.setup}</div>
+        <div class="abs cbig glow" style="left:130px;top:468px">${c.big}<small>${c.unit}</small></div>
+        <div class="abs clabel" style="left:140px;top:712px">${c.label}</div>
+        <div class="abs csub" style="left:140px;top:766px">${c.sub}</div>
+        <div class="abs cfig" style="right:120px;top:300px;width:820px"><img src="${c.fig}" alt=""></div>
+        <div class="abs mono csrc" style="left:140px;top:1000px;font-size:14px;text-transform:none;letter-spacing:.04em;color:var(--faint)">记录：${c.src}</div>
+      </div>`).join("")}
+    </div>
+    <div class="scene" id="RACE">
+      <div class="abs mono f0" style="left:160px;top:200px;font-size:22px;text-transform:none;letter-spacing:.06em"></div>
+      <div class="abs mid f1" style="left:160px;top:240px;font-size:52px"></div>
+      <div class="abs lane f2" style="left:160px;top:420px"></div>
+      <div class="abs lane f3" style="left:160px;top:560px"><b>OpenQuantum 优化后</b></div>
+      <div class="abs num f4" style="top:486px;font-size:30px"></div>
+      <div class="abs num cy f5" style="top:626px;font-size:30px"></div>
+      <div class="abs speed glow f6" style="right:160px;top:680px"></div>
+      <div class="abs lead f7" style="right:160px;top:950px;text-align:right;font-size:26px"></div>
+      <div class="abs mono f8" style="left:160px;top:1010px;font-size:15px;color:var(--faint);text-transform:none;letter-spacing:.04em">Apple M4 · 单线程 · 9 轮热运行中位数 · 含输入转换与输出构造 · 提速仅对应所列输入</div>
+    </div>
+    <div class="scene" id="LEAN">
+      <div class="abs mono ln0" style="left:140px;top:230px;font-size:20px;text-transform:none;letter-spacing:.08em">Lean 4.35 · mathlib · physlib</div>
+      <div class="abs mid ln1" style="left:140px;top:274px;font-size:62px">推导，交给 Lean 检查</div>
+      <div class="abs lead ln2" style="left:140px;top:372px;font-size:26px">physlib 是用 Lean 写成的物理库</div>
+      <div class="abs lv ln3" style="left:140px;top:540px"><span class="x">✕</span>错的，过不了。</div>
+      <div class="abs lv ln4" style="left:140px;top:650px"><span class="w">!</span>没证完的，不算数。</div>
+      <div class="abs code lc" style="right:120px;top:230px;width:900px;font-size:24px">
+        <div class="fh">OpenQuantumProofs.lean · 离线检查</div>
+        <div class="cl l0"><i>theorem</i> natural_add_zero : n + 0 = n <b>✓</b></div>
+        <div class="cl l1"><i>theorem</i> imaginary_square : I * I = −1 <b>✓</b></div>
+        <div class="cl l2"><i>theorem</i> pauli_x_square : σ1 * σ1 = 1 <b>✓</b></div>
+        <div class="cl l3"><i>theorem</i> pauli_xy_commutator :<br>　σ1 * σ2 − σ2 * σ1 = (2 * I) • σ3 <b>✓</b></div>
+        <div class="cl l4 bad">False.lean　→　被拒绝（exit 1）<b class="x">✕</b></div>
+        <div class="cl l5 warn">Unfinished.lean　→　含 sorry，不计为完成</div>
+      </div>
+      <div class="abs mono ln5" style="left:140px;top:1000px;font-size:14px;text-transform:none;letter-spacing:.04em;color:var(--faint)">证明只覆盖文件中的定义、假设与公理 · 记录：docs/integrations/evidence/lean-physics-2026-10-28</div>
+    </div>
+    <div class="scene" id="OPENSRC">
+      <div class="abs mono os0" style="left:140px;top:300px;font-size:20px">Open source · MIT</div>
+      <div class="abs os1" style="left:140px;top:346px"><div class="big" style="font-size:84px">欢迎把你的方法</div></div>
+      <div class="abs os2" style="left:140px;top:448px"><div class="big" style="font-size:84px">也加进来</div></div>
+      <div class="abs lead os3" style="left:140px;top:600px;width:720px;font-size:27px">每次接入都公开审阅，保留原作者与来源。</div>
+      <div class="feed fd" style="left:1010px;top:230px;width:780px;height:620px">
+        <div class="fhead mono"><i></i>xi-zhao/OpenQuantum · Pull requests</div>
+        <div class="fwin"><div class="flist"><div class="frow"><div class="ftop"><span class="ftag">量子接入</span><span class="fmeta">#54 · 已合并 · 10-26</span></div><div class="ftitle">Chromobius：补充本地色码解码工作流</div></div><div class="frow"><div class="ftop"><span class="ftag">上游同步</span><span class="fmeta">#55 · 已合并 · 10-26</span></div><div class="ftitle">Graphix 0.4.1：修复 RZZ 导出并验证 MBQC 兼容性</div></div><div class="frow"><div class="ftop"><span class="ftag">量子接入</span><span class="fmeta">#67 · 已合并 · 10-28</span></div><div class="ftitle">Lean 4、mathlib 与 physlib 形式化工作流</div></div><div class="frow"><div class="ftop"><span class="ftag">量子接入</span><span class="fmeta">#68 · 已合并 · 10-29</span></div><div class="ftitle">emlint：纠错 DEM 结构诊断与完整状态报告</div></div><div class="frow open"><div class="ftop"><span class="ftag">量子接入</span><span class="fmeta">#74 · 审阅中</span></div><div class="ftitle">SlowQuant：分子线性响应与谱学</div></div><div class="frow open"><div class="ftop"><span class="ftag">上游同步</span><span class="fmeta">#75 · 审阅中</span></div><div class="ftitle">IBM Runtime：修复 RZZ 编译输出的非法全局相位门</div></div><div class="frow open"><div class="ftop"><span class="ftag">量子候选</span><span class="fmeta">#76 · 审阅中</span></div><div class="ftitle">TNQS：非规则平面图的 CTMRG 与张量网络采样</div></div></div></div>
       </div>
     </div>
     <div class="scene" id="ENTRY">
-      <div class="center mono g0" style="top:190px;font-size:20px">Two ways in</div>
-      <div class="center mid glow g1" style="top:236px">两种入口，同一套科研能力</div>
+      <div class="center mono g0" style="top:190px;font-size:20px">Codex · Desktop</div>
+      <div class="center mid g1" style="top:236px">在 Codex 里用，或者用桌面版</div>
       <div style="position:absolute;inset:0;perspective:2000px">
-        <div class="glass g2" style="left:250px;top:440px;width:660px;height:380px"><div class="mono" style="font-size:18px">Plugin</div><h3>Codex 插件</h3><p>在 Codex 原生对话中<br>使用量子科研能力</p></div>
-        <div class="glass g3" style="left:1010px;top:440px;width:660px;height:380px"><div class="mono" style="font-size:18px">macOS · Apple Silicon</div><h3>Desktop</h3><p>独立科研工作台<br>按需配置模型服务</p></div>
+        <div class="glass g2" style="left:250px;top:440px;width:660px;height:380px"><div class="mono" style="font-size:18px">Plugin</div><h3>Codex 插件</h3><p>在 Codex 的对话里<br>直接调用这些能力</p></div>
+        <div class="glass g3" style="left:1010px;top:440px;width:660px;height:380px"><div class="mono" style="font-size:18px">macOS · Apple Silicon</div><h3>Desktop</h3><p>独立的科研工作台<br>模型服务可以自己配置</p></div>
       </div>
-    </div>
-    <div class="scene" id="OPENSRC">
-      <div class="center mono os0" style="top:200px;font-size:20px">Open source · MIT</div>
-      <div class="center mid glow os1" style="top:246px">开源开放，一起建设</div>
-      <div class="pipe tiles" style="top:450px">
-        <div class="node t0"><div class="mono">Skill</div><h3>方法与步骤</h3><p>把领域经验写成 Agent 能用的工作流</p></div>
-        <div class="node t1"><div class="mono">Tool</div><h3>执行动作</h3><p>有界的输入输出、错误语义与副作用</p></div>
-        <div class="node t2"><div class="mono">MCP</div><h3>服务连接</h3><p>接入完整应用与云端服务</p></div>
-      </div>
-      <div class="center lead os2" style="top:820px;font-size:26px">保留原作者、来源与贡献归属 · 欢迎提交你的方法与复现实验</div>
     </div>
     <div class="scene" id="END">
       <div class="center" style="top:396px"><img class="lk" src="${ASSET.lockup}" style="width:680px;height:auto" alt="OpenQuantum"></div>
-      <div class="center" style="top:640px"><div class="mid tg" style="font-size:48px">共建可信的量子科研智能</div></div>
+      <div class="center" style="top:640px"><div class="mid tg" style="font-size:48px">做量子科研，不必从零开始</div></div>
       <div class="center mono un" style="top:742px;font-size:20px;text-transform:none;letter-spacing:.06em">github.com/xi-zhao/OpenQuantum</div>
     </div>
-    <div class="flash"></div><div class="fade"></div></div>`;
+    <div class="flash"></div><div class="redflash" style="position:absolute;inset:0;pointer-events:none;opacity:0;background:radial-gradient(55% 55% at 72% 55%, rgba(255,110,110,.32), rgba(255,90,90,0) 70%)"></div><div class="fade"></div></div>`;
 
   const cv = $("canvas.fx"); cv.width = W; cv.height = H; const ctx = cv.getContext("2d");
   const field = makeField(800, W, H, 3);
   const cam = $(".cam"), win = $(".win"), ask = $(".ask"), qEl = $(".q"), caret = $(".caret"), ph = $(".ph");
-  const flash = $(".flash"), fade = $(".fade");
+  const flash = $(".flash"), redflash = $(".redflash"), fade = $(".fade");
   const scenes = Object.fromEntries($$(".scene").map((el) => [el.id, el]));
+  const within = (t, [a, b]) => t >= a - 1e-6 && t < b + 1e-6;
   const tr = rng(19);
   const tunnel = Array.from({ length: 30 }, (_, i) => { const a = tr() * TAU, rad = 360 + tr() * 700; return { w: NAMES[i % NAMES.length], x: Math.cos(a) * rad * 1.5, y: Math.sin(a) * rad * .8, z: 300 + (i / 30) * 5600 + tr() * 140, c: tr() < .3 }; });
+  const drawTunnel = (u, a, clearCenter) => {
+    const camz = u * 1000 + outCubic(seg(u, 0, 1.2)) * 300;
+    ctx.globalCompositeOperation = "source-over"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    tunnel.map((p) => ({ p, z: p.z - camz })).filter((o) => o.z > 40 && o.z < 3200).sort((m, n) => n.z - m.z).forEach(({ p, z }) => {
+      const f = 700, sx = W / 2 + (p.x * f) / z, sy = H / 2 - 40 + (p.y * f) / z, size = 60 * f / z;
+      const e = Math.hypot((sx - W / 2) / 760, (sy - H / 2 - 20) / 430);
+      const alp = a * .6 * clamp((3200 - z) / 1200) * clamp((z - 40) / 240) * (clearCenter ? clamp((e - .85) / .35) : 1);
+      if (alp < .01) return;
+      ctx.font = `500 ${size}px Inter, "Noto Sans CJK SC", sans-serif`;
+      ctx.shadowColor = p.c ? "rgba(45,227,239,.9)" : "rgba(160,200,255,.6)"; ctx.shadowBlur = 24 * (f / z);
+      ctx.fillStyle = p.c ? `rgba(120,240,248,${alp})` : `rgba(242,248,252,${alp})`; ctx.fillText(p.w, sx, sy);
+    });
+    ctx.shadowBlur = 0;
+  };
+  // code panel for the opening
+  const cbody = $(".cbody");
+  cbody.innerHTML = SCRATCH.map((l) => `<div class="ln${/Error|Traceback/.test(l) ? " err" : ""}">${l.replace(/&/g, "&amp;").replace(/</g, "&lt;") || "&nbsp;"}</div>`).join("");
+  const lines = $$(".ln", cbody);
+  const rows = $$(".wrow"), hot = SKILL_ROWS.map((_, r) => hotCard(r));
   let focus = null;
   const rel = (el) => { let x = 0, y = 0; while (el && el !== cam) { x += el.offsetLeft; y += el.offsetTop; el = el.offsetParent; } return { x, y }; };
   const measure = () => {
@@ -435,76 +620,111 @@ if (MODE === "film") {
     focus = { steps: { x: r.x, y: (a.top + s3.bottom) / 2 + 30 }, res: { x: r.x, y: r.y - 10 }, bubble: b };
   };
   const setCam = (s, fx, fy) => { cam.style.transform = `translate(${W / 2 - fx * s}px, ${H / 2 - fy * s}px) scale(${s})`; };
-  const status = (el, done, spin, t) => {
-    el.classList.toggle("done", done); el.classList.toggle("spin", !done && spin);
-    el.style.transform = !done && spin ? `rotate(${t * 540}deg)` : "none";
-  };
-  const within = (t, [a, b]) => t >= a - 1e-6 && t < b + 1e-6;
+  const status = (el, done, spin, t) => { el.classList.toggle("done", done); el.classList.toggle("spin", !done && spin); el.style.transform = !done && spin ? `rotate(${t * 540}deg)` : "none"; };
 
   renderFn = (t) => {
     for (const [id, el] of Object.entries(scenes)) el.style.display = within(t, S[id]) ? "block" : "none";
-    win.style.display = t >= 7.2 && t < 16.5 ? "block" : "none";
+    win.style.display = t >= ST && t < TH + .9 ? "block" : "none";
     if (!focus && win.style.display === "block") measure();
     const bubble = focus ? focus.bubble : { x: W / 2, y: H / 2, w: 1240 };
 
     // ---------- canvas ----------
     ctx.setTransform(1, 0, 0, 1, 0, 0);
-    const inUI = t >= 7.6 && t < 15.6;
+    const inUI = t >= ST + .4 && t < TH;
     background(ctx, W, H, t, { glowY: .55, glow: inUI ? 1 : .8 });
-    const tunnelOn = within(t, S.REACH);
-    let cz = t * 160 + outQuint(seg(t, 15.6, 17.0)) * 900 + outCubic(seg(t, 32.4, 37.2)) * 600;
-    drawField(ctx, field, W, H, cz, mix(.35, .8, seg(t, 0, 3)) * (tunnelOn ? .6 : 1));
-    if (!inUI) drawStrands(ctx, W, H, t, { alpha: t < 7.6 ? .55 * (1 - seg(t, 7.2, 7.6)) : (within(t, S.CASES) ? .35 : .8), cy: within(t, S.CASES) ? .62 : .52, spread: .6 });
-    if (tunnelOn) {
-      const u = t - 32.4, a = outCubic(seg(u, 0, .4)) * (1 - inOut(seg(u, 4.5, 4.8)));
-      const camz = u * 1000 + outCubic(seg(u, 0, 1.2)) * 300;
-      ctx.globalCompositeOperation = "source-over"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
-      tunnel.map((p) => ({ p, z: p.z - camz })).filter((o) => o.z > 40 && o.z < 3200).sort((m, n) => n.z - m.z).forEach(({ p, z }) => {
-        const f = 700, sx = W / 2 + (p.x * f) / z, sy = H / 2 - 40 + (p.y * f) / z, size = 60 * f / z;
-        // keep the counters and heading readable: names fade out inside the central ellipse
-        const e = Math.hypot((sx - W / 2) / 760, (sy - H / 2 - 20) / 430);
-        const alp = a * .6 * clamp((3200 - z) / 1200) * clamp((z - 40) / 240) * clamp((e - .85) / .35);
-        ctx.font = `500 ${size}px Inter, "Noto Sans CJK SC", sans-serif`;
-        ctx.shadowColor = p.c ? "rgba(45,227,239,.9)" : "rgba(160,200,255,.6)"; ctx.shadowBlur = 24 * (f / z);
-        ctx.fillStyle = p.c ? `rgba(120,240,248,${alp})` : `rgba(242,248,252,${alp})`; ctx.fillText(p.w, sx, sy);
-      });
-      ctx.shadowBlur = 0;
-    }
-    if (within(t, S.PREP)) {   // a light pulse travels along the pipeline
-      const u = t - 37.2, x0 = 420, x1 = 1500, y = 588, p = outCubic(seg(u, .6, 2.8));
+    const cz = t * 160 + outQuint(seg(t, TH, TH + 1.4)) * 900 + outCubic(seg(t, at("REACH"), S.REACH[1])) * 600 + outCubic(seg(t, 8.4, 10.2)) * 500;
+    const dimField = within(t, S.REACH) || within(t, [8.4, 10.2]) || within(t, S.SKILLS);
+    drawField(ctx, field, W, H, cz, mix(.35, .8, seg(t, 0, 3)) * (dimField ? .55 : 1));
+    const busy = within(t, S.CASES) || within(t, S.RACE) || within(t, S.SKILLS) || within(t, S.LEAN);
+    if (!inUI) drawStrands(ctx, W, H, t, { alpha: within(t, [2.4, 8.4]) ? .22 : busy ? .32 : .75, cy: within(t, S.CASES) ? .62 : .52, spread: .6 });
+    if (within(t, [8.4, 10.2])) drawTunnel(t - 8.4, outCubic(seg(t, 8.4, 8.8)) * (1 - inOut(seg(t, 9.8, 10.2))), true);
+    if (within(t, S.REACH)) drawTunnel(t - at("REACH"), outCubic(seg(t, at("REACH"), at("REACH") + .4)) * (1 - inOut(seg(t, S.REACH[1] - .3, S.REACH[1]))), true);
+    if (within(t, S.PREP)) {
+      const u = t - at("PREP"), x0 = 420, x1 = 1500, y = 588, p = outCubic(seg(u, .5, 2.6));
       ctx.globalCompositeOperation = "lighter";
       const g = ctx.createLinearGradient(x0, 0, x1, 0); g.addColorStop(0, "rgba(120,98,255,.5)"); g.addColorStop(1, "rgba(45,227,239,.9)");
-      ctx.fillStyle = "rgba(255,255,255,.08)"; ctx.fillRect(x0, y - 2, x1 - x0, 4);
-      ctx.fillStyle = g; ctx.fillRect(x0, y - 2, (x1 - x0) * p, 4);
+      ctx.fillStyle = "rgba(255,255,255,.08)"; ctx.fillRect(x0, y - 2, x1 - x0, 4); ctx.fillStyle = g; ctx.fillRect(x0, y - 2, (x1 - x0) * p, 4);
       ctx.globalAlpha = p > 0 && p < 1 ? 1 : 0; ctx.drawImage(DOT, x0 + (x1 - x0) * p - 40, y - 40, 80, 80); ctx.globalAlpha = 1;
+    }
+    if (within(t, S.RACE)) {
+      const r = t < RACES[1].at ? RACES[0] : RACES[1], u = t - r.at;
+      const x0 = 160, x1 = 1760, laneY = [470, 610];
+      const pb = outQuint(seg(u, .4, 1.1)), po = outQuint(seg(u, .7, 1.25));
+      const ratio = r.opt / r.base, xb = mix(x0, x1, pb), xo = mix(x0, x0 + (x1 - x0) * ratio, po);
+      const fadeOut = 1 - inOut(seg(u, 3.3, 3.6));
+      ctx.globalCompositeOperation = "source-over"; ctx.globalAlpha = fadeOut;
+      ctx.fillStyle = "rgba(255,255,255,.06)"; laneY.forEach((y) => ctx.fillRect(x0, y - 3, x1 - x0, 6));
+      ctx.fillStyle = "rgba(147,169,187,.75)"; ctx.fillRect(x0, laneY[0] - 3, xb - x0, 6);
+      ctx.globalCompositeOperation = "lighter";
+      const gg = ctx.createLinearGradient(x0, 0, Math.max(xo, x0 + 1), 0); gg.addColorStop(0, "rgba(120,98,255,.5)"); gg.addColorStop(1, "rgba(45,227,239,1)");
+      ctx.fillStyle = gg; ctx.fillRect(x0, laneY[1] - 4, xo - x0, 8);
+      ctx.globalAlpha = po * fadeOut; ctx.drawImage(DOT, xo - 40, laneY[1] - 40, 80, 80); ctx.globalAlpha = 1;
+      const f4 = $(".f4"), f5 = $(".f5");
+      [f4, f5].forEach((el) => { el.style.transform = "none"; el.style.filter = "none"; });
+      f4.textContent = `${(r.base * pb).toFixed(2)} ms`; f4.style.left = `${Math.max(x0, xb - 190)}px`; f4.style.opacity = (pb > .02 ? 1 : 0) * fadeOut;
+      f5.textContent = `${(r.opt * po).toFixed(2)} ms`; f5.style.left = `${xo + 34}px`; f5.style.opacity = (po > .02 ? 1 : 0) * fadeOut;
+      $(".f0").textContent = r.label; $(".f1").textContent = r.title; $(".f2").innerHTML = `<b>${r.lib}</b>`;
+      enter($(".f0"), u, .05, .45, { y: 8, blur: 4 }); enter($(".f1"), u, .1, .6, { y: 20, blur: 6 });
+      enter($(".f2"), u, .3, .7, { y: 0, x: -20, blur: 4 }); enter($(".f3"), u, .55, .95, { y: 0, x: -20, blur: 4 });
+      const sp = $(".f6"); sp.style.filter = "none";
+      const hit = 1.5, cnt = outExpo(seg(u, hit - .5, hit)), slam = seg(u, hit, hit + .35);
+      sp.innerHTML = `${(1 + (r.speed - 1) * cnt).toFixed(2)}<small>×</small>`;
+      sp.style.opacity = seg(u, hit - .5, hit - .38); sp.style.transformOrigin = "100% 100%";
+      sp.style.transform = `scale(${u < hit ? .94 : mix(1.06, 1, outCubic(slam))})`;
+      const f7 = $(".f7"); f7.innerHTML = r.note; enter(f7, u, hit + .2, hit + .75, { y: 14, blur: 6 });
+      enter($(".f8"), t - at("RACE"), .5, 1.0, { y: 0, blur: 0 });
+      ["f0", "f1", "f2", "f3", "f6", "f7"].forEach((c) => leave($("." + c), u, 3.3, 3.6, { y: 0, s: 1 }));
+      leave($(".f8"), t, S.RACE[1] - .3, S.RACE[1]);
     }
     vignette(ctx, W, H);
 
+    // ---------- INSIGHT: the problem in four beats, then the answer ----------
+    if (within(t, S.INSIGHT)) {
+      enter($(".i1"), t, .3, 1.0, { y: 16 }); leave($(".i1"), t, 2.1, 2.4);
+      enter($(".i2"), t, 2.55, 3.2, { y: 0, x: -30 }); leave($(".i2"), t, 5.7, 6.0);
+      const cp = $(".codep"); enter(cp, t, 2.5, 3.1, { y: 0, x: 60 }); cp.style.transform += ` perspective(1800px) rotateY(-8deg)`; leave(cp, t, 5.7, 6.0);
+      const shown = SCRATCH.filter((_, i) => 2.7 + i * .12 <= t).length;
+      lines.forEach((l, i) => { l.style.opacity = i < shown ? 1 : 0; l.classList.toggle("flash", l.classList.contains("err") && i < shown && i >= shown - 3); });
+      cbody.style.transform = `translateY(${-Math.max(0, shown - 17) * 33}px)`;
+      enter($(".i3"), t, 6.1, 6.7, { y: 16 }); leave($(".i3"), t, 8.05, 8.4);
+      [".q0", ".q1", ".q2"].forEach((c, i) => {
+        const el = $(c); enter(el, t, 6.75 + i * .3, 7.15 + i * .3, { y: 24, blur: 6 });
+        el.style.transform += ` translateY(${Math.sin(t * 1.7 + i * 2) * 6}px)`; leave(el, t, 8.05, 8.4);
+      });
+      enter($(".i4"), t, 8.5, 9.1, { y: 16 }); enter($(".i4b"), t, 8.95, 9.4, { y: 10, blur: 4 });
+      [".i4", ".i4b"].forEach((c) => leave($(c), t, 9.85, 10.2));
+      enter($(".i5"), t, 10.3, 10.9, { y: 16 }); enter($(".i5b"), t, 10.65, 11.1, { y: 10, blur: 4 }); enter($(".i5c"), t, 10.85, 11.3, { y: 6, blur: 0 });
+      const ok = $(".i5ok"); ok.style.opacity = seg(t, 11.15, 11.25); ok.style.textShadow = `0 0 ${mix(30, 8, seg(t, 11.15, 11.8))}px rgba(45,227,239,.8)`;
+      [".i5", ".i5b", ".i5c"].forEach((c) => leave($(c), t, 11.65, 12.0));
+      enter($(".i6"), t, 12.0, 12.6, { y: 0, s: .7, blur: 10 }); $(".i6").style.filter += ` drop-shadow(0 0 ${mix(40, 14, seg(t, 12.2, 13.4))}px rgba(45,227,239,.45))`;
+      enter($(".i7"), t, 12.2, 12.9, { y: 16 }); enter($(".i8"), t, 12.8, 13.3, { y: 12, blur: 6 });
+      [".i6", ".i7", ".i8"].forEach((c) => leave($(c), t, 14.05, 14.4, { y: 0, s: 1.03 }));
+    }
+
     // ---------- OPEN: questions cycle, then the main request is typed ----------
     let text = "", ci = -1;
-    CAROUSEL.forEach(([q, a], i) => { if (t >= a && t < a + 1.2) { ci = i; const n = Math.round(q.length * seg(t, a, a + .5)); text = q.slice(0, n); } });
-    const qa = ci >= 0 ? CAROUSEL[ci][1] : 0;
-    if (ci >= 0) { const out = seg(t, qa + 1.0, qa + 1.2); qEl.style.opacity = 1 - out; qEl.style.transform = `translateY(${-14 * out}px)`; qEl.style.filter = `blur(${out * 6}px)`; }
+    CAROUSEL.forEach(([q, a], i) => { if (t >= a && t < a + 1.2) { ci = i; text = q.slice(0, Math.round(q.length * seg(t, a, a + .5))); } });
+    if (ci >= 0) { const qa = CAROUSEL[ci][1], out = seg(t, qa + 1.0, qa + 1.2); qEl.style.opacity = 1 - out; qEl.style.transform = `translateY(${-14 * out}px)`; qEl.style.filter = `blur(${out * 6}px)`; }
     else { qEl.style.opacity = 1; qEl.style.transform = "none"; qEl.style.filter = "none"; }
-    if (t >= 5.4) text = [...Q].filter((_, i) => QT0 + (QT1 - QT0) * i / (Q.length - 1) + 0.02 * Math.sin(i * 7.3) <= t).join("");
+    if (t >= OP + 5.4) text = [...Q].filter((_, i) => qTime(i) <= t).join("");
     qEl.textContent = text;
-    ph.style.opacity = t < 0.6 ? 1 : 0;
-    caret.style.opacity = (t > .55 && t < 7.0) || Math.floor(t / .5) % 2 === 0 ? 1 : 0;
-    const askIn = outQuint(seg(t, .1, .7)), morph = inOut(seg(t, 7.2, 7.8));
-    if (t < 7.8) {
+    ph.style.opacity = t < OP + .6 ? 1 : 0;
+    caret.style.opacity = (t > OP + .55 && t < OP + 7.0) || Math.floor(t / .5) % 2 === 0 ? 1 : 0;
+    const askIn = outQuint(seg(t, OP + .1, OP + .7)), morph = inOut(seg(t, ST, ST + .6));
+    if (t >= OP && t < ST + .6) {
       ask.style.display = "flex";
-      ask.style.opacity = askIn * (1 - seg(t, 7.5, 7.8));
+      ask.style.opacity = askIn * (1 - seg(t, ST + .3, ST + .6));
       ask.style.transform = `translate(${mix(0, bubble.x - W / 2, morph)}px, ${mix(mix(30, 0, askIn), bubble.y - H / 2, morph)}px) scale(${mix(1, bubble.w / 1240, morph)})`;
       ask.style.filter = `blur(${(1 - askIn) * 10}px)`;
     } else ask.style.display = "none";
-    const lbl = $(".asklbl"); lbl.style.display = t < 7.4 ? "block" : "none"; enter(lbl, t, .2, .8, { y: 8, blur: 4 }); leave(lbl, t, 7.0, 7.3);
+    const lbl = $(".asklbl"); lbl.style.display = t >= OP && t < ST + .2 ? "block" : "none"; enter(lbl, t, OP + .2, OP + .8, { y: 8, blur: 4 }); leave(lbl, t, ST - .2, ST + .1);
 
     // ---------- STEPS + RESULT (workbench) ----------
-    const T = t - O;   // timing reused from the short cut
-    const winIn = outQuint(seg(T, 4.25, 5.1)), winOut = inOut(seg(t, 15.6, 16.4));
+    const T = t - O;
+    const winIn = outQuint(seg(T, 4.25, 5.1)), winOut = inOut(seg(t, TH, TH + .8));
     win.style.opacity = winIn * (1 - winOut); win.style.filter = `blur(${winOut * 14}px)`;
     if (focus) {
-      const inStep = inOut(seg(T, 5.0, 6.2)), toRes = inOut(seg(T, 9.4, 10.3)), back = outQuint(seg(t, 15.55, 16.6));
+      const inStep = inOut(seg(T, 5.0, 6.2)), toRes = inOut(seg(T, 9.4, 10.3)), back = outQuint(seg(t, TH - .05, TH + 1.0));
       const drift = seg(T, 6.2, 9.4) * 40;
       let fx = mix(W / 2, focus.steps.x, inStep), fy = mix(H / 2, focus.steps.y + drift, inStep), sc = mix(mix(1.04, 1, winIn), 1.26, inStep);
       fx = mix(fx, focus.res.x, toRes); fy = mix(fy, focus.res.y, toRes); sc = mix(sc, 1.34, toRes);
@@ -524,75 +744,114 @@ if (MODE === "film") {
     roll($(".r0"), "−1.85727503", 9.65, 10.35); roll($(".r1"), "−1.85727503", 9.8, 10.5);
     $$(".cell").forEach((c, i) => enter(c, T, 9.65 + i * .15, 10.05 + i * .15, { y: 14, blur: 0 }));
     enter($(".foot"), T, 10.7, 11.1, { y: 8, blur: 0 });
-    $(".note").style.opacity = seg(T, 9.9, 10.4) * (1 - seg(t, 15.4, 15.7));
+    $(".note").style.opacity = seg(T, 9.9, 10.4) * (1 - seg(t, TH - .2, TH + .1));
 
-    // ---------- BRIDGE ----------
-    if (within(t, S.BRIDGE)) { const u = t - 15.6; enter($(".br1"), u, .35, 1.1, { y: 0, blur: 18, track: [.2, -.03] }); enter($(".br2"), u, .9, 1.5, { y: 12, blur: 6 }); [$(".br1"), $(".br2")].forEach((e) => leave(e, u, 2.1, 2.4)); }
-
-    // ---------- CASES ----------
-    if (within(t, S.CASES)) {
-      $$(".case").forEach((el, i) => {
-        const c = CASES[i], u = t - c.at, on = u >= -1e-6 && u < 3.6 + 1e-6;
-        el.style.display = on ? "block" : "none"; if (!on) return;
-        enter($(".ctag", el), u, .05, .45, { y: 0, x: -20, blur: 4 }); enter($(".cq", el), u, .1, .6, { y: 0, x: -30, blur: 10 });
-        enter($(".csetup", el), u, .35, .8, { y: 8, blur: 4 });
-        const big = $(".cbig", el); enter(big, u, 1.0, 1.25, { y: 0, s: 1.12, blur: 12 });
-        enter($(".clabel", el), u, 1.25, 1.6, { y: 10, blur: 4 }); enter($(".csub", el), u, 1.45, 1.9, { y: 10, blur: 4 });
-        enter($(".csrc", el), u, 1.6, 2.0, { y: 0, blur: 0 });
-        const fig = $(".cfig", el); if (fig) { enter(fig, u, .4, 1.1, { y: 0, x: 60, blur: 8 }); fig.style.transform += ` perspective(1800px) rotateY(${mix(-10, -4, seg(u, .4, 3.6))}deg)`; }
-        const code = $(".code", el); if (code) { enter(code, u, .3, .9, { y: 0, x: 60, blur: 8 }); $$(".cl", code).forEach((l, k) => enter(l, u, .7 + k * .28, 1.0 + k * .28, { y: 0, x: -16, blur: 0 })); }
-        $$(".abs", el).forEach((e) => leave(e, u, 3.3, 3.6, { y: 0, s: 1 }));
-      });
+    // ---------- THEME: big · fast · verifiable · open, one word per beat ----------
+    if (within(t, S.THEME)) {
+      const u = t - TH;
+      ["w0", "w1", "w2", "w3"].forEach((c, i) => { const el = $("." + c); enter(el, u, .3 + i * beat, .55 + i * beat, { y: 0, s: 1.12, blur: 10 }); leave(el, u, 2.7, 3.0, { y: 0, s: 1.03 }); });
+    }
+    // ---------- chapter cards ----------
+    for (const id of Object.keys(CHAPTERS)) {
+      if (!within(t, S[id])) continue;
+      const u = t - at(id), sc = scenes[id];
+      enter($(".ce", sc), u, .02, .3, { y: 6, blur: 4 }); enter($(".cg", sc), u, 0, .35, { y: 0, s: 1.15, blur: 14 });
+      enter($(".cl1", sc), u, .25, .6, { y: 14, blur: 6 }); enter($(".cl2", sc), u, .4, .75, { y: 8, blur: 4 });
+      $$(".ce, .cg, .cl1, .cl2", sc).forEach((e) => leave(e, u, .95, 1.2, { y: 0, s: 1.03 }));
     }
     // ---------- REACH ----------
     if (within(t, S.REACH)) {
-      const u = t - 32.4;
-      enter($(".rc0"), u, .2, .6, { y: 8, blur: 4 }); enter($(".rc1"), u, .3, 1.0, { y: 30 });
+      const u = t - at("REACH");
+      enter($(".rc0"), u, .1, .5, { y: 8, blur: 4 }); enter($(".rc1"), u, .2, .9, { y: 24 });
       [[".k0", 186], [".k1", 91], [".k2", 114]].forEach(([c, v], i) => {
-        const el = $(c); enter(el, u, .8 + i * .25, 1.3 + i * .25, { y: 20, blur: 8 });
-        $("strong", el).textContent = Math.round(v * outExpo(seg(u, .8 + i * .25, 1.9 + i * .25)));
+        const el = $(c); enter(el, u, .6 + i * .22, 1.1 + i * .22, { y: 20, blur: 6 });
+        $("strong", el).textContent = Math.round(v * outExpo(seg(u, .6 + i * .22, 1.7 + i * .22)));
       });
-      $$(".cat").forEach((el, i) => enter(el, u, 2.1 + i * .09, 2.5 + i * .09, { y: 12, blur: 4 }));
-      $$("#REACH .center, #REACH .ctr, #REACH .cat").forEach((e) => leave(e, u, 4.45, 4.8));
+      $$(".cat").forEach((el, i) => enter(el, u, 1.8 + i * .08, 2.2 + i * .08, { y: 12, blur: 4 }));
+      $$("#REACH .center, #REACH .ctr, #REACH .cat").forEach((e) => leave(e, u, 3.9, 4.2));
+    }
+    // ---------- SKILLS: the wall of real Skills ----------
+    if (within(t, S.SKILLS)) {
+      const u = t - at("SKILLS");
+      enter($(".sk0"), u, .05, .45, { y: 8, blur: 4 }); enter($(".sk1"), u, .1, .75, { y: 24 }); enter($(".sk2"), u, .5, 1.0, { y: 10, blur: 4 });
+      enter($(".sk3"), u, 1.0, 1.4, { y: 0, blur: 0 });
+      rows.forEach((row, r) => {
+        const p = outQuint(seg(u, .3 + r * .15, 1.0 + r * .15));
+        row.style.transform = `translate(${rowX(r, u)}px, ${(1 - p) * 40}px)`; row.style.opacity = p;
+        $$(".sk", row).forEach((card, k) => card.classList.toggle("hot", k === hot[r] && u >= HOT_AT[r]));
+      });
+      $$("#SKILLS .center, #SKILLS .wrow").forEach((e) => leave(e, u, 4.5, 4.8, { y: 0, s: 1.01 }));
     }
     // ---------- PREP ----------
     if (within(t, S.PREP)) {
-      const u = t - 37.2;
-      enter($(".pp0"), u, .15, .55, { y: 8, blur: 4 }); enter($(".pp1"), u, .25, .95, { y: 30 });
-      ["n0", "n1", "n2"].forEach((c, i) => { const el = $("." + c); enter(el, u, .8 + i * .9, 1.3 + i * .9, { y: 30, blur: 8 }); el.classList.toggle("lit", u >= .8 + i * .9); });
-      $$("#PREP .center, #PREP .node").forEach((e) => leave(e, u, 4.45, 4.8));
+      const u = t - at("PREP");
+      enter($(".pp0"), u, .1, .45, { y: 8, blur: 4 }); enter($(".pp1"), u, .15, .8, { y: 24 });
+      ["n0", "n1", "n2"].forEach((c, i) => { const el = $("." + c); enter(el, u, .6 + i * .75, 1.05 + i * .75, { y: 30, blur: 6 }); el.classList.toggle("lit", u >= .6 + i * .75); });
+      $$("#PREP .center, #PREP .node").forEach((e) => leave(e, u, 3.3, 3.6));
     }
-    // ---------- ENTRY ----------
-    if (within(t, S.ENTRY)) {
-      const u = t - 42.0;
-      enter($(".g0"), u, .15, .6, { y: 8, blur: 4 }); enter($(".g1"), u, .25, 1.0, { y: 30 });
-      [["g2", -1, .7], ["g3", 1, .95]].forEach(([c, side, a]) => {
-        const el = $("." + c), p = outQuint(seg(u, a, a + 1.0));
-        el.style.opacity = p; el.style.filter = "none"; el.style.transform = `translate3d(${side * 160 * (1 - p)}px, ${40 * (1 - p)}px, ${-300 * (1 - p)}px) rotateY(${side * -14 * (1 - p) + side * -4}deg)`;
+    // ---------- paper case ----------
+    if (within(t, S.CASES)) {
+      $$(".case").forEach((el, i) => {
+        const c = BREADTH[i], u = t - c.at, on = u >= -1e-6 && u < 3.6 + 1e-6;
+        el.style.display = on ? "block" : "none"; if (!on) return;
+        enter($(".ctag", el), u, .05, .45, { y: 0, x: -20, blur: 4 }); enter($(".cq", el), u, .1, .6, { y: 0, x: -30, blur: 6 });
+        enter($(".csetup", el), u, .35, .8, { y: 8, blur: 4 });
+        enter($(".cbig", el), u, 1.0, 1.25, { y: 0, s: 1.1, blur: 8 });
+        enter($(".clabel", el), u, 1.25, 1.6, { y: 10, blur: 4 }); enter($(".csub", el), u, 1.45, 1.9, { y: 10, blur: 4 });
+        enter($(".csrc", el), u, 1.6, 2.0, { y: 0, blur: 0 });
+        const fig = $(".cfig", el); enter(fig, u, .4, 1.1, { y: 0, x: 60, blur: 6 }); fig.style.transform += ` perspective(1800px) rotateY(${mix(-10, -4, seg(u, .4, 3.6))}deg)`;
+        $$(".abs", el).forEach((e) => leave(e, u, 3.3, 3.6, { y: 0, s: 1 }));
       });
-      $$("#ENTRY .center, #ENTRY .glass").forEach((e) => leave(e, u, 4.45, 4.8, { y: 0, s: 1.03 }));
+    }
+    // ---------- LEAN: what passes, what is rejected, what does not count ----------
+    if (within(t, S.LEAN)) {
+      const u = t - L;
+      enter($(".ln0"), u, .1, .5, { y: 8, blur: 4 }); enter($(".ln1"), u, .2, .85, { y: 20 }); enter($(".ln2"), u, .6, 1.1, { y: 10, blur: 4 });
+      enter($(".ln5"), u, 1.0, 1.5, { y: 0, blur: 0 });
+      const lc = $(".lc"); enter(lc, u, .3, .9, { y: 0, x: 60, blur: 6 }); lc.style.transform += ` perspective(1800px) rotateY(${mix(-9, -4, seg(u, .3, 6))}deg)`;
+      enter($(".fh", lc), u, .6, .9, { y: 0, blur: 0 });
+      [0, 1, 2, 3].forEach((k) => { const l = $(".l" + k, lc); enter(l, u, .9 + k * .3, 1.15 + k * .3, { y: 0, x: -16, blur: 0 }); $("b", l).style.opacity = seg(u, 1.1 + k * .3, 1.2 + k * .3); });
+      const l4 = $(".l4", lc), l5 = $(".l5", lc);
+      enter(l4, u, 2.3, 2.5, { y: 0, x: -16, blur: 0 }); l4.style.background = `rgba(255,90,90,${.16 * Math.exp(-Math.max(0, u - 2.4) * 2.2) * (u >= 2.4 ? 1 : 0)})`;
+      enter(l5, u, 4.1, 4.3, { y: 0, x: -16, blur: 0 }); l5.style.background = `rgba(255,200,90,${.12 * Math.exp(-Math.max(0, u - 4.2) * 2.2) * (u >= 4.2 ? 1 : 0)})`;
+      enter($(".ln3"), u, 2.4, 2.85, { y: 0, x: -24, blur: 6 }); enter($(".ln4"), u, 4.2, 4.65, { y: 0, x: -24, blur: 6 });
+      $$("#LEAN .abs").forEach((e) => leave(e, u, 5.65, 6.0, { y: 0, s: 1.01 }));
     }
     // ---------- OPEN SOURCE ----------
     if (within(t, S.OPENSRC)) {
-      const u = t - 46.8;
-      enter($(".os0"), u, .15, .55, { y: 8, blur: 4 }); enter($(".os1"), u, .25, .95, { y: 30 });
-      ["t0", "t1", "t2"].forEach((c, i) => { const el = $("." + c); enter(el, u, .8 + i * .3, 1.4 + i * .3, { y: 40, blur: 8, s: .96 }); el.classList.toggle("lit", u >= 1.9); });
-      enter($(".os2"), u, 2.0, 2.6, { y: 12, blur: 6 });
-      $$("#OPENSRC .center, #OPENSRC .node").forEach((e) => leave(e, u, 4.45, 4.8));
+      const u = t - at("OPENSRC");
+      enter($(".os0"), u, .15, .55, { y: 8, blur: 4 });
+      enter($(".os1"), u, .25, .9, { y: 20 }); enter($(".os2"), u, .5, 1.15, { y: 20 });
+      enter($(".os3"), u, 1.1, 1.7, { y: 12, blur: 6 });
+      enter($(".fd"), u, .45, 1.2, { y: 0, x: 70, blur: 6 });
+      const list = $(".flist"), rowsEl = $$(".frow"), rowH = rowsEl[0].offsetHeight, view = $(".fwin").offsetHeight;
+      const off = mix(0, Math.max(0, rowsEl.length * rowH - view + 20), inOut(seg(u, 1.0, 4.1)));
+      list.style.transform = `translateY(${-off}px)`;
+      rowsEl.forEach((r, i) => { const y = i * rowH - off; r.classList.toggle("hot", y > view - rowH * 2.2 && y < view - rowH * .2); });
+      $$("#OPENSRC .abs, #OPENSRC .feed").forEach((e) => leave(e, u, 4.45, 4.8, { y: 0, s: 1.02 }));
+    }
+    // ---------- ENTRY ----------
+    if (within(t, S.ENTRY)) {
+      const u = t - at("ENTRY");
+      enter($(".g0"), u, .1, .5, { y: 8, blur: 4 }); enter($(".g1"), u, .2, .9, { y: 24 });
+      [["g2", -1, .55], ["g3", 1, .8]].forEach(([c, side, a]) => {
+        const el = $("." + c), p = outQuint(seg(u, a, a + 1.0));
+        el.style.opacity = p; el.style.filter = "none"; el.style.transform = `translate3d(${side * 160 * (1 - p)}px, ${40 * (1 - p)}px, ${-300 * (1 - p)}px) rotateY(${side * -14 * (1 - p) + side * -4}deg)`;
+      });
+      $$("#ENTRY .center, #ENTRY .glass").forEach((e) => leave(e, u, 3.3, 3.6, { y: 0, s: 1.03 }));
     }
     // ---------- END ----------
     if (within(t, S.END)) {
-      const u = t - 51.6;
-      enter($(".lk"), u, .1, .9, { y: 0, s: .94, blur: 16 });
-      $(".lk").style.filter += ` drop-shadow(0 0 ${mix(60, 18, seg(u, .2, 1.5))}px rgba(45,227,239,.4))`;
-      enter($(".tg"), u, .7, 1.4, { y: 18, blur: 10 }); enter($(".un"), u, 1.2, 1.8, { y: 8, blur: 4 });
+      const u = t - at("END");
+      enter($(".lk"), u, .1, .9, { y: 0, s: .95, blur: 10 });
+      $(".lk").style.filter += ` drop-shadow(0 0 ${mix(50, 16, seg(u, .2, 1.5))}px rgba(45,227,239,.35))`;
+      enter($(".tg"), u, .7, 1.4, { y: 18, blur: 6 }); enter($(".un"), u, 1.2, 1.8, { y: 8, blur: 4 });
     }
     let fl = 0;
-    for (const h of [12.6, 18.0, 51.6]) fl = Math.max(fl, (t >= h ? Math.exp(-(t - h) * 6) : 0) * .55);
-    for (const h of [21.6, 25.2, 28.8, 32.4, 37.2, 42.0, 46.8]) fl = Math.max(fl, (t >= h ? Math.exp(-(t - h) * 9) : 0) * .3);
-    for (const c of CASES) fl = Math.max(fl, (t >= c.at + 1.0 ? Math.exp(-(t - c.at - 1.0) * 8) : 0) * .35);
+    for (const [h, g] of window.CUES.impacts) if (!NOFLASH.has(h)) fl = Math.max(fl, (t >= h ? Math.exp(-(t - h) * 7) : 0) * g * .6);
     flash.style.opacity = fl;
-    fade.style.opacity = Math.max(1 - seg(t, 0, .4), inOut(seg(t, 56.8, 57.6)));
+    redflash.style.opacity = t >= REJECT ? Math.exp(-(t - REJECT) * 3) : 0;
+    fade.style.opacity = Math.max(1 - seg(t, 0, .4), inOut(seg(t, DUR - .8, DUR)));
   };
 }
 

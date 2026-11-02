@@ -82,7 +82,8 @@ async def film(out: Path) -> None:
     kbps = int(9.4 * 8192 / duration) - 128
     small = out / "OpenQuantum-promo-github.mp4"
     log = str(out / "x264-2pass")
-    common = ["-c:v", "libx264", "-preset", "slow", "-b:v", f"{kbps}k", "-pix_fmt", "yuv420p", "-passlogfile", log]
+    # 720p keeps the particle field clean at this bitrate; GitHub's player is about 880 px wide anyway
+    common = ["-vf", "scale=1280:720:flags=lanczos", "-c:v", "libx264", "-preset", "slow", "-b:v", f"{kbps}k", "-pix_fmt", "yuv420p", "-passlogfile", log]
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(final), *common, "-pass", "1", "-an", "-f", "mp4", os.devnull], check=True)
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(final), *common, "-pass", "2", "-c:a", "aac", "-b:a", "128k", "-movflags", "+faststart", str(small)], check=True)
     print(final)
