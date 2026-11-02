@@ -2,6 +2,7 @@
 """Render the OpenQuantum promo film and README hero loop from stage.html.
 
   python3 render.py film  OUT_DIR   # 1920x1080 30 fps, one H.264 file per shot, joined, plus score
+  ONLY=REACH python3 render.py film OUT_DIR   # re-render one shot, reuse the others
   python3 render.py hero  OUT_DIR   # 1440x720 20 fps seamless animated WebP and a still WebP
 
 Optional tooling (not project dependencies): Playwright with Chrome/Chromium, Pillow, numpy,
@@ -11,6 +12,7 @@ scipy and ffmpeg built with libx264 and libwebp. Set CHROME to use a local Chrom
 from __future__ import annotations
 
 import asyncio
+import json
 import os
 import subprocess
 import sys
@@ -42,10 +44,16 @@ async def film(out: Path) -> None:
     async with async_playwright() as p:
         browser, page, errors = await open_stage(p, "mode=film", 1920, 1080, 1)
         shots = await page.evaluate("window.SHOTS")
+        cues = out / "cues.json"
+        cues.write_text(json.dumps(await page.evaluate("window.CUES"), ensure_ascii=False, indent=1))
         parts = []
+        only = set(filter(None, os.environ.get("ONLY", "").split(",")))   # e.g. ONLY=REACH re-renders one shot
         for name, (a, b) in shots.items():
             target = out / f"shot-{name}.mp4"
             tmp = out / f"shot-{name}.partial.mp4"
+            if only and name not in only and target.exists():
+                parts.append(target)
+                continue
             ff = subprocess.Popen(["ffmpeg", "-y", "-loglevel", "error", "-f", "image2pipe", "-framerate", str(FPS), "-c:v", "mjpeg", "-i", "-", *X264, str(tmp)], stdin=subprocess.PIPE)
             for i in range(round(a * FPS), round(b * FPS)):
                 await page.evaluate(f"window.render({i / FPS})")
@@ -64,11 +72,21 @@ async def film(out: Path) -> None:
     silent = out / "film-silent.mp4"
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-f", "concat", "-safe", "0", "-i", str(listing), "-c", "copy", str(silent)], check=True)
     score = out / "score.wav"
-    subprocess.run([sys.executable, str(HERE / "score.py"), str(score)], check=True)
+    subprocess.run([sys.executable, str(HERE / "score.py"), str(cues), str(score)], check=True)
     final = out / "OpenQuantum-promo.mp4"
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(silent), "-i", str(score), "-map", "0:v", "-map", "1:a",
                     "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-af", "loudnorm=I=-15:TP=-1.5:LRA=9", "-shortest", "-movflags", "+faststart", str(final)], check=True)
+    # a copy under GitHub's 10 MB attachment limit: two-pass x264 at a fixed size budget
+    duration = float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", str(final)],
+                                    capture_output=True, text=True, check=True).stdout)
+    kbps = int(9.4 * 8192 / duration) - 128
+    small = out / "OpenQuantum-promo-github.mp4"
+    log = str(out / "x264-2pass")
+    common = ["-c:v", "libx264", "-preset", "slow", "-b:v", f"{kbps}k", "-pix_fmt", "yuv420p", "-passlogfile", log]
+    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(final), *common, "-pass", "1", "-an", "-f", "mp4", os.devnull], check=True)
+    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(final), *common, "-pass", "2", "-c:a", "aac", "-b:a", "128k", "-movflags", "+faststart", str(small)], check=True)
     print(final)
+    print(small)
 
 
 async def hero(out: Path) -> None:
