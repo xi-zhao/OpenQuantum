@@ -60,7 +60,7 @@ canvas.fx { position: absolute; inset: 0; width: 100%; height: 100%; }
 .codep .cw { position: absolute; left: 0; right: 0; top: 56px; bottom: 0; overflow: hidden; -webkit-mask-image: linear-gradient(to bottom, #000 80%, transparent); mask-image: linear-gradient(to bottom, #000 80%, transparent); }
 .codep .cbody { padding: 22px 30px; font-family: var(--mono); font-size: 20px; line-height: 33px; color: #b9c9d6; white-space: pre; }
 .codep .ln.err { color: #ff8f8f; }
-.codep .ln.flash { background: rgba(255,90,90,.12); }
+.codep .ln.hit { background: rgba(255,90,90,.12); }
 .theme { position: absolute; left: 0; right: 0; display: flex; justify-content: center; gap: 140px; }
 .tw { text-align: center; }
 .tw b { display: block; font-size: 220px; font-weight: 500; line-height: 1.1; letter-spacing: -.02em; text-shadow: 0 0 60px rgba(45,227,239,.35); }
@@ -342,13 +342,13 @@ if (MODE === "film") {
   const W = 1920, H = 1080;
   // shot list on the 100 BPM grid (beat 0.6 s, bar 2.4 s)
   const S = {
-    INSIGHT: [0, 14.4], OPEN: [14.4, 21.6], STEPS: [21.6, 27.0], RESULT: [27.0, 30.0], THEME: [30.0, 33.0],
-    BIG: [33.0, 34.2], REACH: [34.2, 38.4], SKILLS: [38.4, 43.2], PREP: [43.2, 46.8], CASES: [46.8, 50.4],
-    FAST: [50.4, 51.6], RACE: [51.6, 58.8],
-    TRUST: [58.8, 60.0], LEAN: [60.0, 66.0],
-    OPENCARD: [66.0, 67.2], OPENSRC: [67.2, 72.0], ENTRY: [72.0, 75.6], END: [75.6, 81.0],
+    INSIGHT: [0, 12.0], OPEN: [12.0, 19.2], STEPS: [19.2, 24.6], RESULT: [24.6, 27.6], THEME: [27.6, 30.6],
+    BIG: [30.6, 31.8], REACH: [31.8, 36.0], SKILLS: [36.0, 40.8], PREP: [40.8, 44.4], CASES: [44.4, 48.0],
+    FAST: [48.0, 49.2], RACE: [49.2, 56.4],
+    TRUST: [56.4, 57.6], LEAN: [57.6, 63.6],
+    OPENCARD: [63.6, 64.8], OPENSRC: [64.8, 69.6], ENTRY: [69.6, 73.2], END: [73.2, 78.6],
   };
-  const DUR = 81.0;
+  const DUR = 78.6;
   window.DURATION = DUR; window.SHOTS = S;
   const at = (k) => S[k][0];
   const OP = at("OPEN"), ST = at("STEPS"), TH = at("THEME");
@@ -416,16 +416,16 @@ if (MODE === "film") {
   const beat = 0.6;
   window.CUES = {
     bpm: 100, duration: DUR, end: at("END"), typed: typedTimes,
-    sections: [[0, 2.4, "intro"], [2.4, 8.4, "tension"], [8.4, 14.4, "build"], [OP, ST, "intro"], [ST, 27.0, "build"],
-      [27.0, TH, "groove"], [TH, at("BIG"), "hits"], [at("BIG"), at("TRUST"), "groove"], [at("TRUST"), at("OPENCARD"), "build"],
+    sections: [[0, 2.4, "intro"], [2.4, 8.4, "tension"], [8.4, OP, "build"], [OP, ST, "intro"], [ST, at("RESULT"), "build"],
+      [at("RESULT"), TH, "groove"], [TH, at("BIG"), "hits"], [at("BIG"), at("TRUST"), "groove"], [at("TRUST"), at("OPENCARD"), "build"],
       [at("OPENCARD"), at("END"), "light"], [at("END"), DUR, "end"]],
-    impacts: [[6.0, .4], [8.4, .6], [10.2, .4], [12.0, .75], [27.0, .9],
+    impacts: [[0.3, .55], [6.0, .4], [8.4, .6], [10.2, .75], [at("RESULT"), .9],
       ...[0, 1, 2, 3].map((i) => [TH + .3 + i * beat, i === 3 ? .7 : .5]), [at("BIG"), .7], [at("REACH"), .3], [at("SKILLS"), .35], [at("PREP"), .3], [at("CASES"), .35],
       [at("FAST"), .7], [RACES[0].at + 1.5, .75], [RACES[1].at + 1.5, .65], [at("TRUST"), .65], [REJECT, .5], [at("OPENCARD"), .6], [at("ENTRY"), .3], [at("END"), .85]],
-    swells: [[8.4, 1.0, .6, 1], [12.0, 1.2, .8, 1], [ST + .05, .5, .5, 1], [27.0, 1.2, .9, 1], [TH, 1.4, .7, 0], [RACES[0].at + 1.5, .9, .7, 1], [RACES[1].at + 1.5, .6, .5, 1],
+    swells: [[0.3, 1.0, .5, 1], [8.4, 1.0, .6, 1], [10.2, 1.2, .8, 1], [ST + .05, .5, .5, 1], [at("RESULT"), 1.2, .9, 1], [TH, 1.4, .7, 0], [RACES[0].at + 1.5, .9, .7, 1], [RACES[1].at + 1.5, .6, .5, 1],
       [at("TRUST"), 1.0, .6, 1], [at("END"), 1.6, .9, 1]],
-    bells: [[0.4, 81, .6, .2], [2.6, 77, .5, -.2], [6.75, 74, .4, -.35], [7.05, 77, .4, 0], [7.35, 80, .4, .35], [11.15, 84, .6, .2], [12.15, 81, .9, 0],
-      [O + 6.4, 88, .55, -.25], [O + 8.9, 91, .55, 0], [O + 9.3, 93, .55, .25], [27.0, 81, .9, 0],
+    bells: [[0.4, 81, .6, .2], [2.6, 77, .5, -.2], [6.75, 74, .4, -.35], [7.05, 77, .4, 0], [7.35, 80, .4, .35], [10.35, 81, .9, 0],
+      [O + 6.4, 88, .55, -.25], [O + 8.9, 91, .55, 0], [O + 9.3, 93, .55, .25], [at("RESULT"), 81, .9, 0],
       ...HOT_AT.map((h, i) => [at("SKILLS") + h, [86, 88, 91][i], .45, (i - 1) * .3]),
       ...[0, 1, 2].map((i) => [at("PREP") + .6 + i * .75, [86, 88, 91][i], .45, (i - 1) * .3]), [at("CASES") + 1.0, 83, .7, .2],
       ...[0, 1, 2, 3].map((k) => [L + 1.1 + k * .3, [86, 88, 91, 93][k], .35, (k - 1.5) * .2]), [SORRY, 74, .55, 0],
@@ -464,18 +464,16 @@ if (MODE === "film") {
   root.innerHTML = `<div class="stage film" id="shot"><canvas class="fx"></canvas>
     ${WIN}
     <div class="scene" id="INSIGHT">
-      <div class="center" style="top:440px"><div class="big i1">越来越多的研究者，开始让 AI 参与科研</div></div>
-      <div class="abs i2" style="left:140px;top:280px"><div class="mid">可 AI 常常<br>从零写起</div><div class="lead" style="margin-top:30px">一个 Wigner 函数，<br>反复重写，仍未跑通。</div></div>
+      <div class="center" style="top:400px"><img class="i1" src="${ASSET.lockup}" style="width:640px;height:auto" alt="OpenQuantum"></div>
+      <div class="center" style="top:600px"><div class="sub i1b">开源量子智能体平台</div></div>
+      <div class="abs i2" style="left:140px;top:280px"><div class="mid">让 AI 做科研，<br>它却常常从零写起</div><div class="lead" style="margin-top:30px">一个 Wigner 函数，<br>反复重写，仍未跑通。</div></div>
       <div class="codep" style="left:900px;top:190px;width:880px;height:700px"><div class="ch mono">AI 从零实现 wigner() · 示意</div><div class="cw"><div class="cbody"></div></div></div>
       <div class="center" style="top:360px"><div class="big i3">就算跑通了，结果能信吗？</div></div>
       <div class="qc q0" style="left:430px;top:560px">方法是否恰当？</div>
       <div class="qc q1" style="left:820px;top:610px">参数是否合理？</div>
       <div class="qc q2" style="left:1150px;top:560px">能否复现？</div>
       <div class="center" style="top:430px"><div class="big i4">如果你的 AI，一开始就像资深研究员那样工作？</div></div>
-      <div class="center" style="top:560px"><div class="lead i4b"></div></div>
-      <div class="center" style="top:380px"><div class="big i5">知道用什么工具、按什么步骤、怎样核对结果</div></div>
-      <div class="center" style="top:540px"><span class="lead i5b">186 个科研 Skill · 114 个专业环境 · 兼容 IBM、Google、Microsoft 等主流量子平台<b class="i5ok"></b></span></div>
-      <div class="center mono i5c" style="top:640px;font-size:20px"></div>
+      <div class="center" style="top:560px"><div class="lead i4b">知道用什么工具、按什么步骤、怎样核对结果</div></div>
       <div class="center" style="top:300px"><img class="i6" src="${ASSET.mark}" style="width:120px;height:120px" alt=""></div>
       <div class="center" style="top:470px"><div class="big i7">OpenQuantum，把这些交到你的 AI 手中</div></div>
       <div class="center" style="top:594px"><div class="sub i8" style="color:var(--cyan)">你只需要提出一个问题</div></div>
@@ -582,8 +580,9 @@ if (MODE === "film") {
     </div>
     <div class="scene" id="END">
       <div class="center" style="top:396px"><img class="lk" src="${ASSET.lockup}" style="width:680px;height:auto" alt="OpenQuantum"></div>
-      <div class="center" style="top:640px"><div class="sub tg">量子研究，从一个问题开始</div></div>
-      <div class="center mono un" style="top:742px;font-size:20px;text-transform:none;letter-spacing:.06em">github.com/xi-zhao/OpenQuantum</div>
+      <div class="center" style="top:630px"><div class="sub tg">开源量子智能体平台</div></div>
+      <div class="center lead tg2" style="top:704px;letter-spacing:.3em">全面 · 高效 · 可信 · 开放</div>
+      <div class="center mono un" style="top:800px;font-size:20px;text-transform:none;letter-spacing:.06em">github.com/xi-zhao/OpenQuantum</div>
     </div>
     <div class="flash"></div><div class="redflash" style="position:absolute;inset:0;pointer-events:none;opacity:0;background:radial-gradient(55% 55% at 72% 55%, rgba(255,110,110,.32), rgba(255,90,90,0) 70%)"></div><div class="fade"></div></div>`;
 
@@ -682,11 +681,12 @@ if (MODE === "film") {
 
     // ---------- INSIGHT: the problem in four beats, then the answer ----------
     if (within(t, S.INSIGHT)) {
-      enter($(".i1"), t, .3, 1.0, { y: 16 }); leave($(".i1"), t, 2.1, 2.4);
+      enter($(".i1"), t, .15, .9, { y: 0, s: .95, blur: 10 }); $(".i1").style.filter += ` drop-shadow(0 0 ${mix(50, 16, seg(t, .3, 1.8))}px rgba(45,227,239,.4))`;
+      enter($(".i1b"), t, .6, 1.2, { y: 12, blur: 6 }); [".i1", ".i1b"].forEach((c) => leave($(c), t, 2.05, 2.4));
       enter($(".i2"), t, 2.55, 3.2, { y: 0, x: -30 }); leave($(".i2"), t, 5.7, 6.0);
       const cp = $(".codep"); enter(cp, t, 2.5, 3.1, { y: 0, x: 60 }); cp.style.transform += ` perspective(1800px) rotateY(-8deg)`; leave(cp, t, 5.7, 6.0);
       const shown = SCRATCH.filter((_, i) => 2.7 + i * .12 <= t).length;
-      lines.forEach((l, i) => { l.style.opacity = i < shown ? 1 : 0; l.classList.toggle("flash", l.classList.contains("err") && i < shown && i >= shown - 3); });
+      lines.forEach((l, i) => { l.style.opacity = i < shown ? 1 : 0; l.classList.toggle("hit", l.classList.contains("err") && i < shown && i >= shown - 3); });
       cbody.style.transform = `translateY(${-Math.max(0, shown - 17) * 33}px)`;
       enter($(".i3"), t, 6.1, 6.7, { y: 16 }); leave($(".i3"), t, 8.05, 8.4);
       [".q0", ".q1", ".q2"].forEach((c, i) => {
@@ -695,12 +695,9 @@ if (MODE === "film") {
       });
       enter($(".i4"), t, 8.5, 9.1, { y: 16 }); enter($(".i4b"), t, 8.95, 9.4, { y: 10, blur: 4 });
       [".i4", ".i4b"].forEach((c) => leave($(c), t, 9.85, 10.2));
-      enter($(".i5"), t, 10.3, 10.9, { y: 16 }); enter($(".i5b"), t, 10.65, 11.1, { y: 10, blur: 4 }); enter($(".i5c"), t, 10.85, 11.3, { y: 6, blur: 0 });
-      const ok = $(".i5ok"); ok.style.opacity = seg(t, 11.15, 11.25); ok.style.textShadow = `0 0 ${mix(30, 8, seg(t, 11.15, 11.8))}px rgba(45,227,239,.8)`;
-      [".i5", ".i5b", ".i5c"].forEach((c) => leave($(c), t, 11.65, 12.0));
-      enter($(".i6"), t, 12.0, 12.6, { y: 0, s: .7, blur: 10 }); $(".i6").style.filter += ` drop-shadow(0 0 ${mix(40, 14, seg(t, 12.2, 13.4))}px rgba(45,227,239,.45))`;
-      enter($(".i7"), t, 12.2, 12.9, { y: 16 }); enter($(".i8"), t, 12.8, 13.3, { y: 12, blur: 6 });
-      [".i6", ".i7", ".i8"].forEach((c) => leave($(c), t, 14.05, 14.4, { y: 0, s: 1.03 }));
+      enter($(".i6"), t, 10.2, 10.7, { y: 0, s: .7, blur: 10 }); $(".i6").style.filter += ` drop-shadow(0 0 ${mix(40, 14, seg(t, 10.3, 11.4))}px rgba(45,227,239,.45))`;
+      enter($(".i7"), t, 10.3, 10.9, { y: 16 }); enter($(".i8"), t, 10.7, 11.15, { y: 12, blur: 6 });
+      [".i6", ".i7", ".i8"].forEach((c) => leave($(c), t, 11.65, 12.0, { y: 0, s: 1.03 }));
     }
 
     // ---------- OPEN: questions cycle, then the main request is typed ----------
@@ -848,7 +845,7 @@ if (MODE === "film") {
       const u = t - at("END");
       enter($(".lk"), u, .1, .9, { y: 0, s: .95, blur: 10 });
       $(".lk").style.filter += ` drop-shadow(0 0 ${mix(50, 16, seg(u, .2, 1.5))}px rgba(45,227,239,.35))`;
-      enter($(".tg"), u, .7, 1.4, { y: 18, blur: 6 }); enter($(".un"), u, 1.2, 1.8, { y: 8, blur: 4 });
+      enter($(".tg"), u, .7, 1.4, { y: 18, blur: 6 }); enter($(".tg2"), u, 1.1, 1.7, { y: 10, blur: 4 }); enter($(".un"), u, 1.2, 1.8, { y: 8, blur: 4 });
     }
     let fl = 0;
     for (const [h, g] of window.CUES.impacts) if (!NOFLASH.has(h)) fl = Math.max(fl, (t >= h ? Math.exp(-(t - h) * 7) : 0) * g * .6);
