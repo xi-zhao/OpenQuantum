@@ -387,7 +387,7 @@ if (MODE === "film") {
   const CHAPTERS = {
     BIG: ["01 · Coverage", "全面", "一个入口，备齐量子研究所需的专业能力", "兼容 IBM Qiskit · Google Stim · Microsoft QDK · NVIDIA CUDA-Q · AWS Braket 等主流平台"],
     FAST: ["02 · Performance", "高效", "关键计算，以 Rust 重写提速", "实测提速 5.09–5.69 倍 · 结果与原库逐项一致"],
-    TRUST: ["03 · Verifiable", "可信", "每一个结果，都有据可查", "完整保留输入、程序与记录 · 推导由 Lean 验证"],
+    TRUST: ["03 · Verifiable", "可信", "每一个结果，都有据可查", "完整记录 · 独立核对 · 机器证明 · 片中数字均有公开记录可查"],
     OPENCARD: ["04 · Open source", "开放", "MIT 许可，完全开源", "代码、方法与核对记录，全部公开"],
   };
   const CATS = ["电路与编译", "算法与优化", "模拟与化学", "纠错与噪声", "量子机器学习", "硬件与实验", "量子信息与网络", "资料与辅助"];
@@ -466,20 +466,20 @@ if (MODE === "film") {
       <div class="center" style="top:440px"><div class="big i1" style="font-size:84px">越来越多的研究者，开始让 AI 参与科研</div></div>
       <div class="abs i2" style="left:140px;top:280px"><div class="mid">可 AI 常常<br>从零写起</div><div class="lead" style="margin-top:30px">一个 Wigner 函数，<br>反复重写，仍未跑通。</div></div>
       <div class="codep" style="left:900px;top:190px;width:880px;height:700px"><div class="ch mono">AI 从零实现 wigner() · 示意</div><div class="cw"><div class="cbody"></div></div></div>
-      <div class="center" style="top:360px"><div class="big i3" style="font-size:84px">算出来的结果，又该如何相信？</div></div>
+      <div class="center" style="top:360px"><div class="big i3" style="font-size:84px">就算跑通了，结果能信吗？</div></div>
       <div class="qc q0" style="left:430px;top:560px">方法是否恰当？</div>
       <div class="qc q1" style="left:820px;top:610px">参数是否合理？</div>
       <div class="qc q2" style="left:1150px;top:560px">能否复现？</div>
-      <div class="center" style="top:430px"><div class="big i4" style="font-size:84px">如果 AI 一开始，就掌握专业的量子工具呢？</div></div>
-      <div class="center" style="top:560px"><div class="lead i4b">186 个科研 Skill · 114 个专业环境 · 兼容主流量子平台</div></div>
-      <div class="center" style="top:380px"><div class="big i5" style="font-size:80px">物理推导，也能像代码一样被机器严格检验</div></div>
-      <div class="center" style="top:540px"><span class="lline i5b"><i>theorem</i>pauli_xy_commutator : σ1 * σ2 − σ2 * σ1 = (2 * I) • σ3<b class="i5ok">✓</b></span></div>
-      <div class="center mono i5c" style="top:640px;font-size:20px;text-transform:none;letter-spacing:.08em">Lean 4 · mathlib · physlib</div>
+      <div class="center" style="top:430px"><div class="big i4" style="font-size:72px">如果你的 AI，一开始就像资深研究员那样工作？</div></div>
+      <div class="center" style="top:560px"><div class="lead i4b"></div></div>
+      <div class="center" style="top:380px"><div class="big i5" style="font-size:72px">知道用什么工具、按什么步骤、怎样核对结果</div></div>
+      <div class="center" style="top:540px"><span class="lead i5b">186 个科研 Skill · 114 个专业环境 · 兼容 IBM、Google、Microsoft 等主流量子平台<b class="i5ok"></b></span></div>
+      <div class="center mono i5c" style="top:640px;font-size:20px"></div>
       <div class="center" style="top:300px"><img class="i6" src="${ASSET.mark}" style="width:120px;height:120px" alt=""></div>
-      <div class="center" style="top:470px"><div class="big i7" style="font-size:80px">OpenQuantum 把这一切，交到你的 AI 手中</div></div>
+      <div class="center" style="top:470px"><div class="big i7" style="font-size:80px">OpenQuantum，把这些交到你的 AI 手中</div></div>
       <div class="center" style="top:594px"><div class="mid i8" style="font-size:52px;color:var(--cyan)">提一个问题，就能开始量子研究</div></div>
     </div>
-    <div class="center mono asklbl" style="top:410px;font-size:18px">Ask OpenQuantum</div>
+    <div class="center asklbl" style="top:404px;font-size:26px;color:var(--dim)">你只需要提出问题</div>
     <div class="ask"><img src="${ASSET.mark}" alt=""><span class="q"></span><span class="caret"></span><span class="ph">问 OpenQuantum 一个研究问题</span></div>
     <div class="center mono note" style="top:1030px;font-size:15px;letter-spacing:.06em;text-transform:none;color:var(--faint)">界面示意 · 数值取自 2026-09-12 本地复验记录</div>
     <div class="scene" id="THEME">
@@ -561,21 +561,21 @@ if (MODE === "film") {
       <div class="abs mono ln5" style="left:140px;top:1000px;font-size:14px;text-transform:none;letter-spacing:.04em;color:var(--faint)">证明只覆盖文件中的定义、假设与公理 · 记录：docs/integrations/evidence/lean-physics-2026-10-28</div>
     </div>
     <div class="scene" id="OPENSRC">
-      <div class="abs mono os0" style="left:140px;top:300px;font-size:20px">Open source · MIT</div>
-      <div class="abs os1" style="left:140px;top:346px"><div class="big" style="font-size:84px">开源，</div></div>
-      <div class="abs os2" style="left:140px;top:448px"><div class="big" style="font-size:84px">并且一直在生长</div></div>
-      <div class="abs lead os3" style="left:140px;top:600px;width:720px;font-size:27px">新能力持续接入，每一项都经过公开审阅。</div>
+      <div class="abs mono os0" style="left:140px;top:300px;font-size:20px">For tool builders · MIT</div>
+      <div class="abs os1" style="left:140px;top:346px"><div class="big" style="font-size:64px">你的工具，接入一次</div></div>
+      <div class="abs os2" style="left:140px;top:430px"><div class="big" style="font-size:64px">就能被更多研究者的 AI 调用</div></div>
+      <div class="abs lead os3" style="left:140px;top:560px;width:780px;font-size:26px">以 Skill、Tool 或 MCP 服务接入，保留原作者与出处，公开审阅、持续核对。自 8 月开源以来，已合并 64 个 PR。</div>
       <div class="feed fd" style="left:1010px;top:230px;width:780px;height:620px">
         <div class="fhead mono"><i></i>xi-zhao/OpenQuantum · Pull requests</div>
-        <div class="fwin"><div class="flist"><div class="frow"><div class="ftop"><span class="ftag">新能力</span><span class="fmeta">#54 · 已合并 · 10-26</span></div><div class="ftitle">Chromobius：补充本地色码解码工作流</div></div><div class="frow"><div class="ftop"><span class="ftag">兼容性</span><span class="fmeta">#55 · 已合并 · 10-26</span></div><div class="ftitle">Graphix 0.4.1：修复 RZZ 导出并验证 MBQC 兼容性</div></div><div class="frow"><div class="ftop"><span class="ftag">新能力</span><span class="fmeta">#67 · 已合并 · 10-28</span></div><div class="ftitle">Lean 4、mathlib 与 physlib 形式化工作流</div></div><div class="frow"><div class="ftop"><span class="ftag">新能力</span><span class="fmeta">#68 · 已合并 · 10-29</span></div><div class="ftitle">emlint：纠错 DEM 结构诊断与完整状态报告</div></div><div class="frow open"><div class="ftop"><span class="ftag">新能力</span><span class="fmeta">#74 · 审阅中</span></div><div class="ftitle">SlowQuant：分子线性响应与谱学</div></div><div class="frow open"><div class="ftop"><span class="ftag">兼容性</span><span class="fmeta">#75 · 审阅中</span></div><div class="ftitle">IBM Runtime：修复 RZZ 编译输出的非法全局相位门</div></div><div class="frow open"><div class="ftop"><span class="ftag">新能力</span><span class="fmeta">#76 · 审阅中</span></div><div class="ftitle">TNQS：非规则平面图的 CTMRG 与张量网络采样</div></div></div></div>
+        <div class="fwin"><div class="flist"><div class="frow"><div class="ftop"><span class="ftag">新接入</span><span class="fmeta">#54 · 已合并 · 10-26</span></div><div class="ftitle">Chromobius：补充本地色码解码工作流</div></div><div class="frow"><div class="ftop"><span class="ftag">兼容性</span><span class="fmeta">#55 · 已合并 · 10-26</span></div><div class="ftitle">Graphix 0.4.1：修复 RZZ 导出并验证 MBQC 兼容性</div></div><div class="frow"><div class="ftop"><span class="ftag">新接入</span><span class="fmeta">#67 · 已合并 · 10-28</span></div><div class="ftitle">Lean 4、mathlib 与 physlib 形式化工作流</div></div><div class="frow"><div class="ftop"><span class="ftag">新接入</span><span class="fmeta">#68 · 已合并 · 10-29</span></div><div class="ftitle">emlint：纠错 DEM 结构诊断与完整状态报告</div></div><div class="frow open"><div class="ftop"><span class="ftag">新接入</span><span class="fmeta">#74 · 审阅中</span></div><div class="ftitle">SlowQuant：分子线性响应与谱学</div></div><div class="frow open"><div class="ftop"><span class="ftag">兼容性</span><span class="fmeta">#75 · 审阅中</span></div><div class="ftitle">IBM Runtime：修复 RZZ 编译输出的非法全局相位门</div></div><div class="frow open"><div class="ftop"><span class="ftag">新接入</span><span class="fmeta">#76 · 审阅中</span></div><div class="ftitle">TNQS：非规则平面图的 CTMRG 与张量网络采样</div></div></div></div>
       </div>
     </div>
     <div class="scene" id="ENTRY">
-      <div class="center mono g0" style="top:190px;font-size:20px">Codex · Desktop</div>
-      <div class="center mid g1" style="top:236px">Codex 插件与桌面版，两种方式使用</div>
+      <div class="center mono g0" style="top:190px;font-size:20px">Get started</div>
+      <div class="center mid g1" style="top:236px">今天就能用上</div>
       <div style="position:absolute;inset:0;perspective:2000px">
-        <div class="glass g2" style="left:250px;top:440px;width:660px;height:380px"><div class="mono" style="font-size:18px">Plugin</div><h3>Codex 插件</h3><p>在 Codex 对话中<br>直接调用量子科研能力</p></div>
-        <div class="glass g3" style="left:1010px;top:440px;width:660px;height:380px"><div class="mono" style="font-size:18px">macOS · Apple Silicon</div><h3>Desktop</h3><p>独立的科研工作台<br>模型服务可自行配置</p></div>
+        <div class="glass g2" style="left:250px;top:440px;width:660px;height:380px"><div class="mono" style="font-size:18px">Plugin</div><h3>Codex 插件</h3><p>把一段安装请求发给 Codex<br>它会下载、核对并完成安装</p></div>
+        <div class="glass g3" style="left:1010px;top:440px;width:660px;height:380px"><div class="mono" style="font-size:18px">macOS · Apple Silicon</div><h3>Desktop</h3><p>下载 DMG，即装即用<br>模型服务可自行配置</p></div>
       </div>
     </div>
     <div class="scene" id="END">

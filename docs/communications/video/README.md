@@ -25,7 +25,7 @@
 
 ### 文案原则
 
-- 这是对外的产品宣传片，主要面向希望上手 AI 科研的科研工作者，也兼顾投资人：先讲 AI 做科研的痛点，再讲产品能力；用词保持克制、准确，写软件名、Skill 名、实测数字，少用空泛的大词和口号。
+- 这是对外的产品宣传片，主要面向希望上手 AI 科研的科研工作者，同时让投资人看到可靠与价值、让量子工具方愿意接入：先讲 AI 做科研的痛点，再讲产品能力，最后给出安装与接入的入口；用词保持克制、准确，写软件名、Skill 名、实测数字，少用空泛的大词和口号。
 - 每一句都要经得起对照记录核对；不夸大适用范围，限定条件写在画面脚注里。
 - 画面上的数字都能在下表的记录里找到；示意画面明确标注「示意」。
 
@@ -40,7 +40,7 @@
 | Pauli 对易子 | 30.62 → 6.02 ms，5.09×，9 个输入逐项一致 | [PennyLane Rust 案例](../../../experiments/pennylane-rust-commutator/README.md) | 同上 |
 | 薛定谔化 | 相对 L2 误差 4.1 × 10⁻⁴（8 × 512 维） | [2026-09-12 实验报告](../../../experiments/schrodingerization-heat1d/evidence/2026-09-12/report.md) | NumPy/SciPy 经典仿真原型，片中注明不声称量子加速 |
 | Lean 证明 | `OpenQuantumProofs.lean` 的 4 个定理通过；错误命题以 exit 1 被拒绝；含 sorry 的证明不计为完成 | [2026-10-28 证据](../../integrations/evidence/lean-physics-2026-10-28.json)，[证明文件](../../../.agents/skills/lean-physics/OpenQuantumProofs.lean) | Lean 4.35.0、macOS arm64 CI；只构建了默认的 Pauli 依赖闭包；证明只覆盖文件中的定义、假设与公理；科学验证未评估 |
-| PR 动态 | #54、#55、#67、#68、#74、#75、#76 | GitHub Pull requests，2026-11-02 | 标题按 PR 原文缩写 |
+| PR 动态 | #54、#55、#67、#68、#74、#75、#76；自 2026-08-15 建库以来合并 64 个 PR | GitHub Pull requests，2026-11-02 | 标题按 PR 原文缩写 |
 | 兼容平台 | IBM Qiskit、Google Stim、Microsoft QDK、NVIDIA CUDA-Q、AWS Braket | `.agents/skills` 中的对应 Skill 与 SDK 环境 | 指可在 OpenQuantum 中调用这些开源 SDK，不表示与相关公司有合作或认证 |
 
 - 工作台是按 Desktop 界面重新绘制的示意，片中标注「界面示意」。
