@@ -11,8 +11,6 @@
   </a>
 </p>
 
-https://github.com/user-attachments/assets/9f03d011-1c8c-41c6-88f3-9d8100821046
-
 <p align="center"><a href="./README.md">简体中文</a> · <a href="./docs/readme/README.en.md">English</a> · <a href="./docs/readme/README.ja.md">日本語</a> · <a href="./docs/readme/README.ko.md">한국어</a> · <a href="./docs/readme/README.es.md">Español</a> · <a href="./docs/readme/README.fr.md">Français</a> · <a href="./docs/readme/README.de.md">Deutsch</a> · <a href="./docs/readme/README.pt.md">Português</a> · <a href="./docs/readme/README.ru.md">Русский</a> · <a href="./docs/readme/README.ar.md">العربية</a></p>
 
 <p align="center">
@@ -29,6 +27,10 @@ https://github.com/user-attachments/assets/9f03d011-1c8c-41c6-88f3-9d8100821046
   <a href="./THIRD_PARTY_NOTICES.md"><img src="https://img.shields.io/badge/licenses-MIT%20%2B%20component%20licenses-18232e.svg" alt="MIT 与组件许可证" /></a>
   <img src="https://img.shields.io/badge/Node.js-24%2B-3c873a.svg" alt="Node.js 24 or newer" />
 </p>
+
+<p align="center"><strong>▶ 78 秒了解 OpenQuantum</strong></p>
+
+https://github.com/user-attachments/assets/5c00a30d-eef0-493a-975f-3faeb200cc9e
 
 <br />
 

@@ -681,8 +681,9 @@ if (MODE === "film") {
 
     // ---------- INSIGHT: the problem in four beats, then the answer ----------
     if (within(t, S.INSIGHT)) {
-      enter($(".i1"), t, .15, .9, { y: 0, s: .95, blur: 10 }); $(".i1").style.filter += ` drop-shadow(0 0 ${mix(50, 16, seg(t, .3, 1.8))}px rgba(45,227,239,.4))`;
-      enter($(".i1b"), t, .6, 1.2, { y: 12, blur: 6 }); [".i1", ".i1b"].forEach((c) => leave($(c), t, 2.05, 2.4));
+      enter($(".i1"), t, -1, 0, { y: 0, blur: 0 });   // first frame is the poster GitHub shows, so the logo is already there
+      $(".i1").style.filter += ` drop-shadow(0 0 ${mix(50, 16, seg(t, .3, 1.8))}px rgba(45,227,239,.4))`;
+      enter($(".i1b"), t, -1, 0, { y: 0, blur: 0 }); [".i1", ".i1b"].forEach((c) => leave($(c), t, 2.05, 2.4));
       enter($(".i2"), t, 2.55, 3.2, { y: 0, x: -30 }); leave($(".i2"), t, 5.7, 6.0);
       const cp = $(".codep"); enter(cp, t, 2.5, 3.1, { y: 0, x: 60 }); cp.style.transform += ` perspective(1800px) rotateY(-8deg)`; leave(cp, t, 5.7, 6.0);
       const shown = SCRATCH.filter((_, i) => 2.7 + i * .12 <= t).length;
@@ -851,7 +852,7 @@ if (MODE === "film") {
     for (const [h, g] of window.CUES.impacts) if (!NOFLASH.has(h)) fl = Math.max(fl, (t >= h ? Math.exp(-(t - h) * 7) : 0) * g * .6);
     flash.style.opacity = fl;
     redflash.style.opacity = t >= REJECT ? Math.exp(-(t - REJECT) * 3) : 0;
-    fade.style.opacity = Math.max(1 - seg(t, 0, .4), inOut(seg(t, DUR - .8, DUR)));
+    fade.style.opacity = inOut(seg(t, DUR - .8, DUR));
   };
 }
 
