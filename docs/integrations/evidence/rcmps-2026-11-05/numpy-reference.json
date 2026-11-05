@@ -1,0 +1,35 @@
+{
+  "reference": "NumPy least squares of independently constructed Lindblad operator",
+  "numpy": "2.5.3",
+  "stateError": 7.87273485665947e-16,
+  "residual": 1.4821483875836085e-17,
+  "minimumEigenvalue": 0.006685338177973793,
+  "singularValues": [
+    0.4746034892130753,
+    0.4152208900315466,
+    0.13773504277617354,
+    9.466248015301061e-18
+  ],
+  "referenceReal": [
+    [
+      0.4202185377228588,
+      -0.4548571203780388
+    ],
+    [
+      -0.45485712037803866,
+      0.5797814622771413
+    ]
+  ],
+  "referenceImaginary": [
+    [
+      5.1488995905959666e-17,
+      0.17349142309318902
+    ],
+    [
+      -0.17349142309318924,
+      -7.398022841151626e-17
+    ]
+  ],
+  "scientificValidation": "not_evaluated",
+  "status": "passed_scoped_numerical_check"
+}

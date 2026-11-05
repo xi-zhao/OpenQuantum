@@ -3,7 +3,7 @@
 - 调研日期：2026-11-04（Asia/Shanghai）；OpenQuantum 基线 `b0f7161313a4a119079ce41e5d6233a3f6d384e6`。
 - 上游：[AntoineTilloy/RcmpsCore.jl](https://github.com/AntoineTilloy/RcmpsCore.jl)；作者维护的 GitLab 仓库也由上游 README 明确链接。
 - 固定候选：[v0.2.1](https://github.com/AntoineTilloy/RcmpsCore.jl/tree/v0.2.1)，解引用后的完整源码提交 **`175b0aa41c2e4eee7d26f44a33d7d59ea641fbe1`**；annotated tag 对象 `d2a1b9bcc0903954da6c931f046d765dfa7e1cc1` 不是源码提交。
-- **状态：同一 PR #78 接入中。** 2026-11-05 已加入固定 Julia 环境、L0 Skill、示例、数值检查与 README；实际验证和合并结果见 PR 与[使用说明](../../integrations/RCMPS.md)。以下保留候选阶段依据与验收规格。
+- **状态：同一 PR #78 已实现。** 2026-11-05 已加入固定 Julia 环境、L0 Skill、示例、数值检查与 README；实际验证和合并结果见 PR 与[使用说明](../../integrations/RCMPS.md)。以下保留候选阶段依据与验收规格。
 
 ## 用户任务与增量价值
 

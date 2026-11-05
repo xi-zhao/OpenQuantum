@@ -54,6 +54,14 @@ DSH 与 Codex 复用相同 Skill、SDK 清单及宿主代码执行；没有新�
 工程、有限数值对照、CI 和科学验收分别记录，始终 `scientificValidation=not_evaluated`。
 实际通过范围以同 PR 的版本化执行证据为准；未执行的平台或方法不由可调用 API 推断。
 
+2026-11-05 的[隔离执行](https://github.com/xi-zhao/OpenQuantum/actions/runs/41955037827)通过上述
+36 项 Julia 断言和独立 NumPy 检查，并通过既有 SDK 接口运行了复制出的原生程序。
+[版本化回执与原始输出](evidence/rcmps-2026-11-05.json)保留来源、锁、程序和检查文件摘要：
+NumPy 稳态差为 `7.87e-16`，物理残差 `1.48e-17`；方向导数误差 `2.52e-9`。
+相干试探态 action/ODE 的四组窗口、求积及容差设置，相对解析能量的最大绝对误差为 `8.74e-11`。
+三步 D=2 优化的能量从 `0.06824` 降到 `1.287e-5`，但梯度范数仍为 `0.007958`，
+所以原样记录 `converged=false`。这些是 macOS arm64 CPU 上的有界数值回归，不是基态或质量谱的最终验收。
+
 ## 来源与维护
 
 - [固定 tag 源码](https://github.com/AntoineTilloy/RcmpsCore.jl/tree/175b0aa41c2e4eee7d26f44a33d7d59ea641fbe1)：
