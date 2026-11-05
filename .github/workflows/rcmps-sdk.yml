@@ -39,6 +39,11 @@ jobs:
       - uses: julia-actions/setup-julia@v2
         with:
           version: '1.12.7'
+      - name: Reuse the exact frozen Julia environment
+        uses: actions/cache@v5
+        with:
+          path: ${{ env.JULIA_DEPOT_PATH }}
+          key: rcmps-julia-1.12.7-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('.agents/skills/rcmps-field-theory/Project.toml', '.agents/skills/rcmps-field-theory/Manifest.toml') }}
       - uses: actions/setup-node@v6
         with:
           node-version: '24'
