@@ -25,11 +25,13 @@ jobs:
     env:
       JULIA_NUM_PRECOMPILE_TASKS: '2'
       JULIA_PKG_PRECOMPILE_AUTO: '0'
-      OPENQUANTUM_JULIA_DEPOT_PATH: ${{ runner.temp }}/tnqs-depot
-      JULIA_DEPOT_PATH: ${{ runner.temp }}/tnqs-depot
-      OPENQUANTUM_SDK_CHECK_OUTPUT: ${{ runner.temp }}/tnqs-evidence
     steps:
       - uses: actions/checkout@v7
+      - name: Select isolated task directories
+        run: |
+          echo "OPENQUANTUM_JULIA_DEPOT_PATH=$RUNNER_TEMP/tnqs-depot" >> "$GITHUB_ENV"
+          echo "JULIA_DEPOT_PATH=$RUNNER_TEMP/tnqs-depot" >> "$GITHUB_ENV"
+          echo "OPENQUANTUM_SDK_CHECK_OUTPUT=$RUNNER_TEMP/tnqs-evidence" >> "$GITHUB_ENV"
       - uses: julia-actions/setup-julia@v2
         with:
           version: '1.12.7'

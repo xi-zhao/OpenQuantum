@@ -3,7 +3,7 @@
 - 调研日期：2026-11-02（Asia/Shanghai）；OpenQuantum 基线 `b0f7161313a4a119079ce41e5d6233a3f6d384e6`。
 - 上游：[JoeyT1994/TensorNetworkQuantumSimulator.jl](https://github.com/JoeyT1994/TensorNetworkQuantumSimulator.jl)。
 - 固定候选：[v0.5.0](https://github.com/JoeyT1994/TensorNetworkQuantumSimulator.jl/releases/tag/v0.5.0)，完整提交 `c37fba6eac78649f7bf146888e04df3f1deebb92`；已解引用 annotated tag，不能把 tag 对象摘要当源码提交。
-- **状态：只有候选提案，尚未接入或安装。** 候选接入任务继续同一分支、同一 PR；用户可随时关闭或要求暂停。本次不修改 README 的已接入能力或生产依赖。
+- **状态：同一 PR #76 接入中。** 2026-11-05 已加入原生 Julia 环境、L0 Skill、示例、数值检查与 README；实际验证和合并结果见 PR 与[使用记录](../../integrations/TNQS.md)。以下保留候选阶段的依据和验收规格。
 
 ## 用户任务与为什么值得接入
 
