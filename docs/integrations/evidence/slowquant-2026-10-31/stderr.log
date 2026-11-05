@@ -1,0 +1,2 @@
+/Volumes/Elements/CodexArtifacts/Projects/OpenQuantum/2026-10-31--SlowQuant接入/python-envs/slowquant-response/lib/python3.12/site-packages/scipy/optimize/_minimize.py:779: OptimizeWarning: Desired error not necessarily achieved due to precision loss.
+  res = _minimize_bfgs(fun, x0, args, jac, callback, **options)
