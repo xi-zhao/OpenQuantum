@@ -3,7 +3,8 @@
 
   python3 render.py film  OUT_DIR   # 1920x1080 30 fps, one H.264 file per shot, joined, plus score
   ONLY=REACH python3 render.py film OUT_DIR   # re-render one shot, reuse the others
-  python3 render.py hero  OUT_DIR   # 1440x720 20 fps seamless animated WebP and a still WebP
+  python3 render.py edu   OUT_DIR   # the version for AI education platforms, same pipeline
+  python3 render.py hero  OUT_DIR   # 1200x600 15 fps seamless animated WebP and a still WebP
 
 Optional tooling (not project dependencies): Playwright with Chrome/Chromium, Pillow, numpy,
 scipy and ffmpeg built with libx264 and libwebp. Set CHROME to use a local Chrome binary.
@@ -39,10 +40,10 @@ async def open_stage(p, query: str, w: int, h: int, dpr: float):
     return browser, page, errors
 
 
-async def film(out: Path) -> None:
+async def film(out: Path, mode: str = "film") -> None:
     out.mkdir(parents=True, exist_ok=True)
     async with async_playwright() as p:
-        browser, page, errors = await open_stage(p, "mode=film", 1920, 1080, 1)
+        browser, page, errors = await open_stage(p, f"mode={mode}", 1920, 1080, 1)
         shots = await page.evaluate("window.SHOTS")
         cues = out / "cues.json"
         cues.write_text(json.dumps(await page.evaluate("window.CUES"), ensure_ascii=False, indent=1))
@@ -73,14 +74,15 @@ async def film(out: Path) -> None:
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-f", "concat", "-safe", "0", "-i", str(listing), "-c", "copy", str(silent)], check=True)
     score = out / "score.wav"
     subprocess.run([sys.executable, str(HERE / "score.py"), str(cues), str(score)], check=True)
-    final = out / "OpenQuantum-promo.mp4"
+    name = "OpenQuantum-promo" if mode == "film" else f"OpenQuantum-{mode}"
+    final = out / f"{name}.mp4"
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(silent), "-i", str(score), "-map", "0:v", "-map", "1:a",
                     "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-af", "loudnorm=I=-15:TP=-1.5:LRA=9", "-shortest", "-movflags", "+faststart", str(final)], check=True)
     # a copy under GitHub's 10 MB attachment limit: two-pass x264 at a fixed size budget
     duration = float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", str(final)],
                                     capture_output=True, text=True, check=True).stdout)
     kbps = int(9.4 * 8192 / duration) - 128
-    small = out / "OpenQuantum-promo-github.mp4"
+    small = out / f"{name}-github.mp4"
     log = str(out / "x264-2pass")
     # 720p keeps the particle field clean at this bitrate; GitHub's player is about 880 px wide anyway
     common = ["-vf", "scale=1280:720:flags=lanczos", "-c:v", "libx264", "-preset", "slow", "-b:v", f"{kbps}k", "-pix_fmt", "yuv420p", "-passlogfile", log]
@@ -124,4 +126,4 @@ async def hero(out: Path) -> None:
 
 if __name__ == "__main__":
     mode, target = sys.argv[1], Path(sys.argv[2])
-    asyncio.run({"film": film, "hero": hero}[mode](target))
+    asyncio.run(hero(target) if mode == "hero" else film(target, mode))
