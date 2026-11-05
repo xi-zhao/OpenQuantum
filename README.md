@@ -205,6 +205,7 @@ npm run dev
 | 基态、化学与多体计算 | VQE、SQD、TeNPy、OpenFermion；[方法选择](docs/CAPABILITIES.md#基态化学与优化) | 活性空间、粒子扇区、收敛和独立参考 |
 | 分子激发态与光谱 | [SlowQuant](.agents/skills/slowquant-response/SKILL.md)：酉波函数、量子线性响应、跃迁性质与吸收谱 | 活性空间、响应近似与独立参考；[使用与验证边界](docs/integrations/SLOWQUANT.md) |
 | 非规则图张量网络 | [TNQS](.agents/skills/tnqs-dynamics/SKILL.md)：图上的电路、动力学、有限平面 CTMRG 与采样 | 有效平面嵌入、截断与环境收敛；[使用与验证边界](docs/integrations/TNQS.md) |
+| 连续相对论场论 | [RcmpsCore](.agents/skills/rcmps-field-theory/SKILL.md)：1+1 维标量场、RCMPS 优化与同真空激发 | 正常序、背景收敛与能隙定义；[使用与验证边界](docs/integrations/RCMPS.md) |
 | 误差缓解与量子纠错 | Mitiq、Stim / PyMatching、LDPC、Chromobius；[纠错能力](docs/CAPABILITIES.md#误差缓解与量子纠错) | 采样预算、统计误差及解码器的适用模型 |
 | <a id="纠错模型静态诊断"></a>检查 detector error model | [emlint](.agents/skills/emlint-dem-audit/SKILL.md)：结构诊断、反例及不完整检查状态 | 保留告警、跳过项和缺失上下文；不证明码距或解码正确性 |
 | 动力学与实验模拟 | Trotter / qDrift、Dynamiqs、OQuPy、Bloqade、Pulser、PairInteraction；[模拟与硬件入口](docs/CAPABILITIES.md#哈密顿量模拟与开放系统) | 单位、截断、时间步长；模拟与真实设备操作分别说明 |
@@ -215,6 +216,8 @@ npm run dev
 
 TNQS 使用 `tnqs-dynamics` 入口：先显式运行 `node scripts/setup-sdk.mjs tnqs-dynamics`，再通过 SDK 工作台使用公开 Julia API。小系统对照不代表大规模收敛或科学验收。
 
+RcmpsCore 使用 `rcmps-field-theory` 入口：显式运行 `node scripts/setup-sdk.mjs rcmps-field-theory` 后编写 Julia 程序。传递 gap 不等于 Hamiltonian 能隙；试探态示例不证明相互作用基态或质量谱。
+
 SlowQuant 使用 `slowquant-response` 入口：先显式运行 `node scripts/setup-sdk.mjs slowquant-response`，再通过 SDK 工作台运行自定义程序。已验证小规模离线响应；Qiskit 分子谱学与硬件另行核验。
 
 <a id="能力接口目录"></a>
@@ -222,7 +225,7 @@ SlowQuant 使用 `slowquant-response` 入口：先显式运行 `node scripts/set
 <a id="mcp-服务目录"></a>
 <a id="原生量子-tools"></a>
 
-当前源码分发 **188 个内置 Skill、91 个 MCP 服务连接、5 个原生量子 Tool**，并为 **116 个 SDK/源码环境**提供原生 API 使用路径。清单数量、配置启用、环境就绪与科学验收是不同状态；每项能力按需准备，平台、账户和许可限制见对应说明。
+当前源码分发 **189 个内置 Skill、91 个 MCP 服务连接、5 个原生量子 Tool**，并为 **117 个 SDK/源码环境**提供原生 API 使用路径。清单数量、配置启用、环境就绪与科学验收是不同状态；每项能力按需准备，平台、账户和许可限制见对应说明。
 
 [完整 Skill 目录](docs/CAPABILITIES.md#内置-skills) · [MCP 服务及默认开关](docs/CAPABILITIES.md#mcp-服务目录) · [原生 Tool 与副作用](docs/CAPABILITIES.md#原生量子-tools) · [SDK API 与逐库验证](docs/integrations/FULL_SDK_ACCESS.md) · [相近方法怎么选](docs/integrations/CAPABILITY_SELECTION.md)
 

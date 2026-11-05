@@ -159,11 +159,13 @@ Elige un área y explica al entorno de investigación tu pregunta, tus entradas 
 
 Los cálculos locales pueden empezar sin cuenta en una nube cuántica. El hardware real y los servicios de pago se configuran cuando se necesitan; el rango de entradas, la preparación y el estado de verificación de cada método se mantienen en el catálogo detallado.
 
-El código fuente actual ofrece rutas completas a las API nativas de **116 entornos SDK o de código fuente**, 26 de ellos procedentes de la última [ampliación del ecosistema](../integrations/SDK_ECOSYSTEM_2026-10-14.md) incluida en 0.8.4. Los agentes pueden escribir programas propios, combinar API públicas y guardar resultados completos, más allá de los casos predefinidos de las Tools de conveniencia.
+El código fuente actual ofrece rutas completas a las API nativas de **117 entornos SDK o de código fuente**, 26 de ellos procedentes de la última [ampliación del ecosistema](../integrations/SDK_ECOSYSTEM_2026-10-14.md) incluida en 0.8.4. Los agentes pueden escribir programas propios, combinar API públicas y guardar resultados completos, más allá de los casos predefinidos de las Tools de conveniencia.
 
 SlowQuant añade respuesta lineal molecular y propiedades de transición mediante un SDK de código fuente fijado. [Preparación y límites de validación](../integrations/SLOWQUANT.md); qLR molecular con Qiskit y hardware aún no están validados.
 
 TNQS ofrece API nativas de Julia para redes tensoriales en grafos irregulares, CTMRG planar y muestreo. Preparación explícita: `node scripts/setup-sdk.mjs tnqs-dynamics`. [Geometría, convergencia y límites de validación](../integrations/TNQS.md).
+
+RcmpsCore ofrece API nativas de Julia en CPU para campos escalares continuos en 1+1 dimensiones, optimización RCMPS y excitaciones del mismo vacío. Preparación explícita: `node scripts/setup-sdk.mjs rcmps-field-theory`. [Convenciones y límites de validación](../integrations/RCMPS.md); la brecha de transferencia no es la del Hamiltoniano.
 
 **Matemáticas y física formalizadas:** [Lean 4, mathlib y physlib](../../.agents/skills/lean-physics/SKILL.md) permiten comprobar pruebas y sus axiomas en un proyecto fijado a Lean 4.35.0. La preparación explícita compila el pequeño ejemplo de Pauli y sus importaciones; los demás módulos se preparan según la tarea. Comprobar una prueba no instala dependencias. La prueba cubre sus definiciones e hipótesis, no la validez física del modelo ni su aceptación científica.
 
@@ -686,7 +688,7 @@ Da preferencia a los Tool Providers nativos para acciones en el mismo proceso y 
 
 </details>
 
-El catálogo completo de Skills, servicios MCP y Tools nativas se mantiene en el [documentación de referencia en chino](../CAPABILITIES.md#接口总览): el código fuente actual incluye **188 Skills integradas** (175 seleccionables automáticamente y 13 índices de categorías manuales), **91 conexiones de servicios MCP** (66 activadas por defecto y 25 opcionales) y **5 Tools cuánticas nativas**.
+El catálogo completo de Skills, servicios MCP y Tools nativas se mantiene en el [documentación de referencia en chino](../CAPABILITIES.md#接口总览): el código fuente actual incluye **189 Skills integradas** (176 seleccionables automáticamente y 13 índices de categorías manuales), **91 conexiones de servicios MCP** (66 activadas por defecto y 25 opcionales) y **5 Tools cuánticas nativas**.
 
 <a id="development-and-verification"></a>
 
@@ -716,7 +718,7 @@ Elige las comprobaciones relevantes para tu cambio; la lista completa está en e
 
 </details>
 
-La [Skill oficial `pyqpanda3` de OriginQ](https://github.com/OriginQ/pyqpanda3-skill) es una Skill de origen opcional: no se cuenta entre las 188 Skills integradas y no se instala automáticamente. `npm run skill:qpanda:setup` instala la versión revisada; no activa `qpanda_runtime` ni concede permisos para trabajos en la nube.
+La [Skill oficial `pyqpanda3` de OriginQ](https://github.com/OriginQ/pyqpanda3-skill) es una Skill de origen opcional: no se cuenta entre las 189 Skills integradas y no se instala automáticamente. `npm run skill:qpanda:setup` instala la versión revisada; no activa `qpanda_runtime` ni concede permisos para trabajos en la nube.
 
 <a id="roadmap-and-rsi"></a>
 

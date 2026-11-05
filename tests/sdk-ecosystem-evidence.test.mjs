@@ -23,7 +23,8 @@ test("native SDK scoped API receipts are durable, match current locks and retain
   const emlint = JSON.parse(await fs.readFile(path.join(root, "docs/integrations/evidence/emlint-2026-10-29.json")));
   const slowquant = JSON.parse(await fs.readFile(path.join(root, "docs/integrations/evidence/slowquant-2026-10-31.json")));
   const tnqs = JSON.parse(await fs.readFile(path.join(root, "docs/integrations/evidence/tnqs-2026-11-05.json")));
-  const receipts = [...report.libraries, chromobius.receipt, lean.receipt, emlint.receipt, slowquant.receipt, tnqs.receipt];
+  const rcmps = JSON.parse(await fs.readFile(path.join(root, "docs/integrations/evidence/rcmps-2026-11-05.json")));
+  const receipts = [...report.libraries, chromobius.receipt, lean.receipt, emlint.receipt, slowquant.receipt, tnqs.receipt, rcmps.receipt];
   const cohort = (await readSdkLibraries(root)).filter(entry => entry.nativeOnly);
   const slowquantResult = JSON.parse(await fs.readFile(path.join(contained(slowquant.receipt.durableEvidenceDirectory), "result.json")));
   assert.equal(slowquantResult.upstreamRevision, cohort.find(entry => entry.id === "slowquant-response").sourceProject.revision);
@@ -32,6 +33,17 @@ test("native SDK scoped API receipts are durable, match current locks and retain
   assert.deepEqual(receipts.map(entry => entry.id).sort(), cohort.map(entry => entry.id).sort());
   assert.equal(report.summary.passed, 26);
   assert.equal(report.summary.scientificValidation, "not_evaluated");
+  for (const numerical of [tnqs, rcmps]) {
+    for (const source of numerical.validationSources) {
+      assert.equal(hash(await fs.readFile(contained(source.path))), source.sha256, source.path);
+    }
+    for (const [name, digest] of Object.entries(numerical.numericalEvidence)) {
+      assert.equal(path.basename(name), name);
+      const relative = `${numerical.receipt.durableEvidenceDirectory}/${name}`;
+      assert.ok(tracked.has(relative), `Unversioned numerical evidence: ${relative}`);
+      assert.equal(hash(await fs.readFile(contained(relative))), digest, relative);
+    }
+  }
   for (const entry of receipts) {
     assert.equal(entry.status, "passed_scoped_engineering", entry.id);
     assert.equal(entry.scientificValidation, "not_evaluated", entry.id);

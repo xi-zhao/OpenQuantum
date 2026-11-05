@@ -2,7 +2,7 @@
 
 由 `node scripts/audit-sdk-integration.mjs` 从 capability policy、SDK 导航、项目 manifest 和依赖锁生成；用 `--check` 检查是否过期。
 
-本表覆盖 116 个 SDK/源码环境入口：105 个 Python（包含算法共享环境）、8 个 Julia、2 个原生源码或 ABI 入口、1 个 Lean 项目。原生 QDMI 另有 Python 桥接依赖项目。一个入口可包含多个库，同一个库也可能有多个隔离版本，不能把入口数量当成独立 SDK 数量。所有锁摘要与间接依赖版本可通过 `node scripts/sdk-access.mjs inventory` 读出。
+本表覆盖 117 个 SDK/源码环境入口：105 个 Python（包含算法共享环境）、9 个 Julia、2 个原生源码或 ABI 入口、1 个 Lean 项目。原生 QDMI 另有 Python 桥接依赖项目。一个入口可包含多个库，同一个库也可能有多个隔离版本，不能把入口数量当成独立 SDK 数量。所有锁摘要与间接依赖版本可通过 `node scripts/sdk-access.mjs inventory` 读出。
 
 **接入状态：原生路径与指南已提供；逐 API、可选依赖、平台与外部服务验证不由这张静态清单推断。** 环境是否准备需 `inspect`，实际执行证据见[完整接入记录](FULL_SDK_ACCESS.md)。
 
@@ -106,6 +106,7 @@
 | `quri-parts-estimation` | QURI Parts / Qulacs | python | quri-parts[qulacs]==0.27.0, qulacs==0.6.14 | 电路、态、算符、estimator、sampler、梯度与后端 | 按固定版本、已安装可选组件及目标平台核实 |
 | `qutrunk-simulation` | QuTrunk | python | qutrunk==0.2.2 | QCircuit、参数、门与上游后端 | 按固定版本、已安装可选组件及目标平台核实 |
 | `randomized-measurements` | RandomMeas.jl | julia | JSON3, RandomMeas | 用户量子态、测量数据、随机测量协议与估计函数 | 按固定版本、已安装可选组件及目标平台核实 |
+| `rcmps-field-theory` | RcmpsCore.jl | julia | JSON3, RcmpsCore | 连续相对论标量场、RCMPS 优化、正常序观测量与同真空激发 | 单标量玻色场、无限体积、ComplexF64；正常序参考质量为 1，耦合为 g :phi^4:。传递 gap 不等于 Hamiltonian 能隙；保留背景优化、数值控制和失败诊断。 |
 | `simqn-network` | SimQN | python | qns==0.2.3 | 拓扑、节点、信道、存储、事件与自定义协议 | 上游 GPL 许可；保持独立进程，不改变现有 MCP 默认关闭状态。 |
 | `slowquant-response` | SlowQuant | python | numpy==2.5.3, scipy==1.18.1, numba==0.67.0, pyscf==2.8.0, qiskit==2.3.0, qiskit-nature==0.7.2 | 自定义分子、活性空间、酉波函数与量子线性响应，计算激发能、跃迁性质和吸收谱 | 固定完整源码，经显式准备与摘要校验后使用；不通过 pip 安装同名包。 不同响应形式、轨道与活性空间近似须分别解释；数值回归不代表最终科学验收。 Qiskit 入口与真实硬件验证分开报告；云端任务需另行授权。 |
 | `spinqit-simulation` | SpinQit | python | spinqit==0.2.4, scipy==1.14.1 | 电路、门、参数、编译与后端接口 | 按固定版本、已安装可选组件及目标平台核实 |

@@ -32,7 +32,7 @@ const groups = [
   ["simulation", "模拟与化学", `
     hamiltonian-simulation sqd-chemistry tjm-dynamics tenpy-ground-state
     quantum-ground-state dynamiqs-dynamics oqupy-dynamics symmer-tapering
-    openqarp-excited-states pairinteraction-rydberg slowquant-response tnqs-dynamics
+    openqarp-excited-states pairinteraction-rydberg slowquant-response tnqs-dynamics rcmps-field-theory
     quantum-guide-algorithms-hamiltonian-simulation quantum-cartan quantum-qdrift
     quantum-hamiltonian-qsp quantum-taylor quantum-trotter
     quantum-guide-algorithms-quantum-chemistry quantum-molecular-dmrg

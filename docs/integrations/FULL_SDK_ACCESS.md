@@ -6,7 +6,7 @@
 
 ## 全量梳理结果
 
-[SDK 清单](SDK_INVENTORY.md)当前覆盖 116 个环境入口：105 个 Python（含算法共享环境）、8 个 Julia、2 个原生源码或 ABI 入口、1 个 Lean 项目。2026-10-14 的[生态扩展](SDK_ECOSYSTEM_2026-10-14.md)增加 26 个入口；此前 85 个环境的日期化工程证据保留。它们不是 116 个不同的上游库；例如共享环境同时含 Qiskit、PennyLane、quimb 和 PySCF，同一库也可能因兼容性保留多个版本。
+[SDK 清单](SDK_INVENTORY.md)当前覆盖 117 个环境入口：105 个 Python（含算法共享环境）、9 个 Julia、2 个原生源码或 ABI 入口、1 个 Lean 项目。2026-10-14 的[生态扩展](SDK_ECOSYSTEM_2026-10-14.md)增加 26 个入口；此前 85 个环境的日期化工程证据保留。它们不是 117 个不同的上游库；例如共享环境同时含 Qiskit、PennyLane、quimb 和 PySCF，同一库也可能因兼容性保留多个版本。
 
 每个条目记录原生模块、任务对象、直接依赖、固定依赖锁、原有便捷 Tool、启用条件和已知限制。其他能力单独列出：6 项外部 MCP、8 项原生实现或宿主工作流、66 项方法/知识参考。外部 MCP 连接和 OpenQuantum 自有模拟器不冒充供应商完整 SDK。
 
@@ -22,7 +22,7 @@ flowchart LR
   F --> E
 ```
 
-源码和 Desktop 使用仓库内的原生 Skill。Codex 的 SDK workbench 提供全目录导航，已启用的领域 Skill 投影保留同样的原生代码路径；当前源码候选随包携带 116 个环境的目录、依赖锁、显式 setup、完整算法代码和工件辅助脚本。原有未启用连接与 Skill 的状态保持不变。缓存 Skill 通过插件自己的 `mcp.json` 定位运行时，适配解压包与插件/运行时分开安装；不依赖研究项目的当前目录。
+源码和 Desktop 使用仓库内的原生 Skill。Codex 的 SDK workbench 提供全目录导航，已启用的领域 Skill 投影保留同样的原生代码路径；当前源码候选随包携带 117 个环境的目录、依赖锁、显式 setup、完整算法代码和工件辅助脚本。原有未启用连接与 Skill 的状态保持不变。缓存 Skill 通过插件自己的 `mcp.json` 定位运行时，适配解压包与插件/运行时分开安装；不依赖研究项目的当前目录。
 
 执行、权限、超时、取消与进程管理继续由宿主负责。`sdk-access.mjs` 只读取目录和准备状态，不安装依赖、不 import 第三方包、不执行用户程序；没有新增通用任意 Python 执行 MCP 或另一套 Runtime。
 
@@ -140,3 +140,7 @@ node scripts/sdk-engineering-evidence.mjs .openquantum/sdk-checks/remaining \
 ## 非规则平面图张量网络
 
 `tnqs-dynamics` 使用固定 TNQS 0.5.0 / Julia 1.12.7 原生环境，支持用户自定义图、电路、CTMRG 和采样。复用 SDK 工作台，不新增 Tool 或 MCP；[使用与数值边界](TNQS.md)。
+
+## 连续相对论标量场
+
+`rcmps-field-theory` 使用固定 RcmpsCore 0.2.1 / Julia 1.12.7 CPU SDK，供用户编写连续 RCMPS 优化、观测量与同真空激发程序。传递 gap 与 Hamiltonian 能隙分别报告；[模型约定、使用与验证边界](RCMPS.md)。
