@@ -1,0 +1,30 @@
+
+Setting number of Numba threads to 1
+
+### Parameters information:
+### Number kappa: 0
+### Number theta1: 1
+### Number theta2: 1
+### Number theta3: 0
+### Number theta4: 0
+### Number theta5: 0
+### Number theta6: 0
+### Total parameters: 2
+
+Iteration # | Iteration time [s] | Electronic energy [Hartree]
+--------     1      |         0.20       |     -1.8523855345604425     |                     
+--------     2      |         0.00       |     -1.8523881733721563     |                     
+--------     3      |         0.00       |     -1.8523881735695820     |                     
+--------     4      |         0.00       |     -1.8523881735695822     |                     
+         Current function value: -1.852388
+         Iterations: 4
+         Function evaluations: 22
+         Gradient evaluations: 16
+Optimization failed.
+Desired error not necessarily achieved due to precision loss.
+Gs 2
+qs 0
+idx, max(abs(grad active)): 0 2.22721998782277e-10
+Smallest Hessian eigenvalue: (0.7522223979097175+0j)
+Smallest diagonal element in the metric: 0.9746677470252577
+Wrote result.json; scientificValidation=not_evaluated

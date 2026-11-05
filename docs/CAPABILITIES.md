@@ -138,6 +138,10 @@ OpenQuantum 为本地模拟、IBM Quantum、IonQ 和多家国内量子云保留�
 
 </details>
 
+## 分子线性响应与光谱
+
+[SlowQuant](../.agents/skills/slowquant-response/SKILL.md) 支持自定义分子/活性空间、酉波函数、轨道优化和 qLR 形式，计算激发能、跃迁偶极与振子强度。使用 `slowquant-response` 显式准备固定源码环境，再通过宿主代码工具使用公开 API；例子不限制 API 或问题规模。[使用与验证](integrations/SLOWQUANT.md)区分离线数值对照、Qiskit 路径和科学验收。
+
 ## 接口总览
 
 <p>
@@ -146,7 +150,7 @@ OpenQuantum 为本地模拟、IBM Quantum、IonQ 和多家国内量子云保留�
   <a href="#原生量子-tools">原生量子 Tools</a>
 </p>
 
-当前源码分发 **186 个内置 Skill、91 个 MCP 服务连接、5 个原生量子 Tool**。其中 66 个 Skill 来自 quantum-skills 的开源工作流适配，共用现有代码执行工具；其中 49 项提供可运行示例，覆盖 unitarylab_algorithms 的全部 39 个模块。Skill、Tool 和 MCP 连接分别统计。
+当前源码分发 **187 个内置 Skill、91 个 MCP 服务连接、5 个原生量子 Tool**。其中 66 个 Skill 来自 quantum-skills 的开源工作流适配，共用现有代码执行工具；其中 49 项提供可运行示例，覆盖 unitarylab_algorithms 的全部 39 个模块。Skill、Tool 和 MCP 连接分别统计。
 
 当前配置共包含 **282 个可配置 Tool 名称**：258 个由 MCP 服务提供，18 个为 Harness 通用工具，6 个为平台原生工具（上面的 5 个量子动作及 1 个教学生成动作）。这是配置全集；`bash` / `pwsh` 按平台互斥，连接开关、环境和工具范围也会影响实际可调用集合。既有能力的逐项决定见[治理记录](architecture/EXTENSION_GOVERNANCE.md)，新增中性原子动力学见 [Bloqade Analog](integrations/BLOQADE_ANALOG.md)。
 
@@ -157,7 +161,7 @@ OpenQuantum 为本地模拟、IBM Quantum、IonQ 和多家国内量子云保留�
 
 既有条目与治理情况见[治理清单](architecture/EXTENSION_GOVERNANCE.md)；相近入口及大型可选服务的专业工具范围见[能力选择](integrations/CAPABILITY_SELECTION.md)。
 
-这 186 个 Skill 覆盖方法选择、计算实验、结果解释和平台诊断。其中 173 项可由 Agent 自动选择，13 个分类索引保留为用户手动导航；原名称和手动调用均可继续使用。点击名称即可查看完整的 `SKILL.md`；所需工具与连接分别配置。新增算法工作流的参数、安装与开源替换差异见[运行说明](../examples/quantum-algorithms/README.md)。
+这 187 个 Skill 覆盖方法选择、计算实验、结果解释和平台诊断。其中 174 项可由 Agent 自动选择，13 个分类索引保留为用户手动导航；原名称和手动调用均可继续使用。点击名称即可查看完整的 `SKILL.md`；所需工具与连接分别配置。新增算法工作流的参数、安装与开源替换差异见[运行说明](../examples/quantum-algorithms/README.md)。
 
 下表按**研究方法与用途**介绍能力。各 Tool 提供的模型、参数和输入格式见[计算参数与运行方式](EXAMPLES.md#计算参数与运行方式)。
 
@@ -189,6 +193,7 @@ OpenQuantum 为本地模拟、IBM Quantum、IonQ 和多家国内量子云保留�
 | [`staq-compilation`](../.agents/skills/staq-compilation/SKILL.md) | OpenQASM AST、综合、线路变换、优化与映射 | 宿主代码 Tool；显式准备原生 SDK |
 | [`lean-physics`](../.agents/skills/lean-physics/SKILL.md) | Lean 4 / mathlib / physlib 证明与公理审计 | 宿主代码 Tool；显式准备固定 Lean 环境 |
 | [`chromobius-decoding`](../.agents/skills/chromobius-decoding/SKILL.md) | 带颜色/基标注的 Stim DEM 与逻辑 observable 解码 | 宿主代码 Tool；显式准备原生 SDK |
+| [`slowquant-response`](../.agents/skills/slowquant-response/SKILL.md) | 分子激发能、跃迁性质与量子线性响应 | 宿主代码 Tool；显式准备固定源码 SDK；保留响应近似与诊断 |
 | [`emlint-dem-audit`](../.agents/skills/emlint-dem-audit/SKILL.md) | DEM 结构诊断、反例与不完整检查状态 | 宿主代码 Tool；显式准备原生 SDK；不证明解码正确性 |
 | [`tesseract-decoding`](../.agents/skills/tesseract-decoding/SKILL.md) | Stim DEM、syndrome、搜索式解码器与统计 | 宿主代码 Tool；显式准备原生 SDK |
 | [`tqec-compilation`](../.agents/skills/tqec-compilation/SKILL.md) | BlockGraph、逻辑计算块、相关面与 Stim 线路生成 | 宿主代码 Tool；显式准备原生 SDK |
@@ -610,7 +615,7 @@ OpenQuantum 提供以下 5 个原生量子动作，用于基态求解、调校�
 
 ## 可选上游 Skill
 
-[OriginQ 官方 `pyqpanda3` Skill](https://github.com/OriginQ/pyqpanda3-skill) 提供电路编程、算法模板、迁移与 QCloud 使用指导。它**不计入上面的 186 个内置 Skill，也不会在首次启动时自动安装**；运行 `npm run skill:qpanda:setup` 后，固定审阅版本才会进入项目 Skill 目录。安装这个 Skill 不会自动启用 `qpanda_runtime`，也不会赋予云任务权限。
+[OriginQ 官方 `pyqpanda3` Skill](https://github.com/OriginQ/pyqpanda3-skill) 提供电路编程、算法模板、迁移与 QCloud 使用指导。它**不计入上面的 187 个内置 Skill，也不会在首次启动时自动安装**；运行 `npm run skill:qpanda:setup` 后，固定审阅版本才会进入项目 Skill 目录。安装这个 Skill 不会自动启用 `qpanda_runtime`，也不会赋予云任务权限。
 
 ## 开源生态与致谢
 
