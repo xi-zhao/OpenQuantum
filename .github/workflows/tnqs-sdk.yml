@@ -1,0 +1,44 @@
+name: TNQS SDK
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    paths:
+      - '.agents/skills/tnqs-dynamics/**'
+      - '.github/workflows/tnqs-sdk.yml'
+      - 'tests/fixtures/tnqs-*'
+      - 'tests/tnqs-*'
+  push:
+    branches: [main]
+    paths:
+      - '.agents/skills/tnqs-dynamics/**'
+      - '.github/workflows/tnqs-sdk.yml'
+      - 'tests/fixtures/tnqs-*'
+      - 'tests/tnqs-*'
+
+jobs:
+  native-sdk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      JULIA_NUM_PRECOMPILE_TASKS: '2'
+      JULIA_PKG_PRECOMPILE_AUTO: '0'
+    steps:
+      - uses: actions/checkout@v7
+      - uses: julia-actions/setup-julia@v2
+        with:
+          version: '1.12.7'
+      - name: Resolve the fixed source environment
+        run: julia --startup-file=no --project=.agents/skills/tnqs-dynamics -e 'using Pkg; Pkg.instantiate(;allow_autoprecomp=false)'
+      - name: Save dependency resolution
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: tnqs-dependency-lock
+          path: |
+            .agents/skills/tnqs-dynamics/Project.toml
+            .agents/skills/tnqs-dynamics/Manifest.toml
+          include-hidden-files: true
+          if-no-files-found: error
