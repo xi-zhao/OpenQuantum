@@ -1,0 +1,1 @@
+{"dill": "0.4.1", "h5py": "3.16.0", "llvmlite": "0.49.0", "numba": "0.67.0", "numpy": "2.5.3", "psutil": "7.2.2", "pyscf": "2.8.0", "qiskit": "2.3.0", "qiskit-algorithms": "0.4.0", "qiskit-nature": "0.7.2", "rustworkx": "0.18.1", "scipy": "1.18.1", "setuptools": "84.2.1", "stevedore": "5.9.1", "typing_extensions": "4.16.0"}

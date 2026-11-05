@@ -2512,3 +2512,6 @@ packages:
 
   - id: emlint-dem-audit
     level: L0
+
+  - id: slowquant-response
+    level: L0

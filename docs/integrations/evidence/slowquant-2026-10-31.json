@@ -1,0 +1,344 @@
+{
+  "date": "2026-10-31",
+  "upstream": {
+    "url": "https://github.com/erikkjellgren/SlowQuant",
+    "revision": "b0d12b2e7e680141e50f3de0c9ba029d9574bbca",
+    "license": "BSD-3-Clause"
+  },
+  "platform": {
+    "system": "Darwin",
+    "machine": "arm64"
+  },
+  "scope": "Fixed complete source SDK and editable offline response program; bounded numerical comparisons, loader integrity and host adapters. Not final scientific acceptance.",
+  "numericalChecks": [
+    {
+      "actual": {
+        "inputs": {
+          "atom": "H 0 0 0; H 0 0 0.74",
+          "basis": "sto-3g",
+          "charge": 0,
+          "spin": 0,
+          "active_electrons": 2,
+          "active_orbitals": 2,
+          "excitations": "SD",
+          "method": "naive",
+          "optimize_orbitals": false,
+          "maxiter": 100,
+          "output": "result.json"
+        },
+        "distanceUnit": "Angstrom",
+        "energyUnit": "Hartree",
+        "totalEnergyHartree": -1.137283834488501,
+        "excitationEnergiesHartree": [
+          0.9689314015346459,
+          1.6204265076249713
+        ],
+        "transitionDipolesAtomicUnits": [
+          [
+            0.0,
+            0.0,
+            -1.1595361184379953
+          ],
+          [
+            0.0,
+            0.0,
+            -8.25955415173496e-11
+          ]
+        ],
+        "oscillatorStrengths": [
+          0.8685010222464716,
+          7.36972512018198e-21
+        ],
+        "diagnostics": {
+          "hfConverged": true,
+          "responseResiduals": [
+            3.3335590258932494e-16,
+            2.796511984674376e-16
+          ],
+          "maxResponseResidual": 3.3335590258932494e-16,
+          "responseNorms": [
+            0.9499772171081636,
+            0.9743469910982817
+          ],
+          "smallestHessianEigenvalue": 0.7522223979097176,
+          "maxImaginaryEigenvalue": 0.0,
+          "finiteGeneralizedEigenvalues": true,
+          "note": "Keep stdout/stderr optimizer and response diagnostics; these fields do not decide scientific acceptance."
+        },
+        "upstreamRevision": "b0d12b2e7e680141e50f3de0c9ba029d9574bbca",
+        "versions": {
+          "numpy": "2.5.3",
+          "scipy": "1.18.1",
+          "numba": "0.67.0",
+          "pyscf": "2.8.0",
+          "qiskit": "2.3.0",
+          "qiskit-nature": "0.7.2"
+        },
+        "scientificValidation": "not_evaluated"
+      },
+      "independentReference": {
+        "reference": "PySCF singlet FCI and transition one-particle density matrices",
+        "distanceAngstrom": 0.74,
+        "basis": "sto-3g",
+        "spinSquared": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "totalEnergyHartree": -1.137283834488502,
+        "excitationEnergiesHartree": [
+          0.968931401517438,
+          1.6204265076077635
+        ],
+        "oscillatorStrengths": [
+          0.8685010222630041,
+          4.793591706133436e-31
+        ],
+        "scientificValidation": "not_evaluated"
+      },
+      "maxErrors": {
+        "totalEnergyHartree": 8.881784197001252e-16,
+        "excitationEnergyHartree": 1.7207901770177614e-11,
+        "oscillatorStrength": 1.653244208199567e-11
+      },
+      "predefinedRegressionTolerances": {
+        "totalEnergyHartree": 1e-08,
+        "excitationEnergyHartree": 1e-07,
+        "oscillatorStrength": 1e-07
+      }
+    },
+    {
+      "actual": {
+        "inputs": {
+          "atom": "H 0 0 0; H 0 0 1.1",
+          "basis": "sto-3g",
+          "charge": 0,
+          "spin": 0,
+          "active_electrons": 2,
+          "active_orbitals": 2,
+          "excitations": "SD",
+          "method": "projected",
+          "optimize_orbitals": false,
+          "maxiter": 100,
+          "output": "result.json"
+        },
+        "distanceUnit": "Angstrom",
+        "energyUnit": "Hartree",
+        "totalEnergyHartree": -1.079192944969074,
+        "excitationEnergiesHartree": [
+          0.6926777007250745,
+          1.0108916543754622
+        ],
+        "transitionDipolesAtomicUnits": [
+          [
+            0.0,
+            0.0,
+            -1.265406953023089
+          ],
+          [
+            0.0,
+            0.0,
+            -3.0705505262626034e-08
+          ]
+        ],
+        "oscillatorStrengths": [
+          0.7394356421246905,
+          6.353980071510925e-16
+        ],
+        "diagnostics": {
+          "hfConverged": true,
+          "responseResiduals": [
+            1.1102230246251585e-16,
+            2.240251588123473e-16
+          ],
+          "maxResponseResidual": 2.240251588123473e-16,
+          "responseNorms": [
+            0.9578054865370429,
+            0.9173913500404617
+          ],
+          "smallestHessianEigenvalue": 0.6634505021563388,
+          "maxImaginaryEigenvalue": 0.0,
+          "finiteGeneralizedEigenvalues": true,
+          "note": "Keep stdout/stderr optimizer and response diagnostics; these fields do not decide scientific acceptance."
+        },
+        "upstreamRevision": "b0d12b2e7e680141e50f3de0c9ba029d9574bbca",
+        "versions": {
+          "numpy": "2.5.3",
+          "scipy": "1.18.1",
+          "numba": "0.67.0",
+          "pyscf": "2.8.0",
+          "qiskit": "2.3.0",
+          "qiskit-nature": "0.7.2"
+        },
+        "scientificValidation": "not_evaluated"
+      },
+      "independentReference": {
+        "reference": "PySCF singlet FCI and transition one-particle density matrices",
+        "distanceAngstrom": 1.1,
+        "basis": "sto-3g",
+        "spinSquared": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "totalEnergyHartree": -1.079192944969075,
+        "excitationEnergiesHartree": [
+          0.6926777007250755,
+          1.0108916484605546
+        ],
+        "oscillatorStrengths": [
+          0.7394357052555663,
+          5.191750656803086e-32
+        ],
+        "scientificValidation": "not_evaluated"
+      },
+      "maxErrors": {
+        "totalEnergyHartree": 8.881784197001252e-16,
+        "excitationEnergyHartree": 5.914907674764436e-09,
+        "oscillatorStrength": 6.313087586029553e-08
+      },
+      "predefinedRegressionTolerances": {
+        "totalEnergyHartree": 1e-08,
+        "excitationEnergyHartree": 1e-07,
+        "oscillatorStrength": 1e-07
+      }
+    }
+  ],
+  "qiskitBridge": {
+    "cases": [
+      {
+        "mitigation": false,
+        "postselection": false,
+        "occupations": [
+          2.0,
+          0.0
+        ],
+        "repeatedOccupations": [
+          2.0,
+          0.0
+        ]
+      },
+      {
+        "mitigation": true,
+        "postselection": false,
+        "occupations": [
+          2.0,
+          0.0
+        ],
+        "repeatedOccupations": [
+          2.0,
+          0.0
+        ]
+      },
+      {
+        "mitigation": true,
+        "postselection": true,
+        "occupations": [
+          2.0,
+          0.0
+        ],
+        "repeatedOccupations": [
+          2.0,
+          0.0
+        ]
+      },
+      {
+        "mitigation": false,
+        "postselection": true,
+        "occupations": [
+          2.0,
+          0.0
+        ],
+        "repeatedOccupations": [
+          2.0,
+          0.0
+        ]
+      },
+      {
+        "mitigation": false,
+        "postselection": false,
+        "occupations": [
+          2.0,
+          0.0
+        ],
+        "repeatedOccupations": [
+          2.0,
+          0.0
+        ]
+      }
+    ],
+    "shots": 256,
+    "scope": "Noise-free HF determinant occupations, flag changes and repeated public calls only",
+    "molecularQlrVerified": false,
+    "hardwareVerified": false,
+    "scientificValidation": "not_evaluated"
+  },
+  "failureChecks": {
+    "invalidActiveSpace": "rejected; no result.json written",
+    "unoptimizedGroundState": "upstream Large Gradient error retained; no result.json written",
+    "sourceIntegrity": [
+      "missing source",
+      "empty manifest",
+      "unrecorded Python source",
+      "changed bytes",
+      "changed revision"
+    ],
+    "hostSourceCacheRegression": "A Codex module check wrote Numba cache inside the attested source; reproduced failure, redirected default cache outside source, verified prepared state after the real check.",
+    "relocatedExample": "Explicit OPENQUANTUM_ROOT and repository-relative OPENQUANTUM_SDK_SOURCE_ROOT work for a shallow copied program; both original failures reproduced before repair."
+  },
+  "hostChecks": {
+    "codexEnvironmentAdapter": "passed; present -> explicit check -> ready; source remains prepared",
+    "dshSkillDiscovery": "passed; real Harness skills/list across two Sessions includes slowquant-response",
+    "codexUi": "not_tested",
+    "modelSession": "not_tested"
+  },
+  "validationSources": [
+    {
+      "path": "tests/slowquant-response-live.test.mjs",
+      "sha256": "d7370c0120dcfd6a60c585b5bab9e26cae994bc4df066dd83c58b84d1054aa21"
+    },
+    {
+      "path": "tests/fixtures/slowquant-fci-reference.py",
+      "sha256": "bffee7212f461ea336bbb256da5dc2b2a36faa39b5b8276f3927237b66ec8cdb"
+    },
+    {
+      "path": "tests/fixtures/slowquant-qiskit-reference.py",
+      "sha256": "3c619b4d788fe369607513a7c977d3d25415f9cd690183cc2b724836e2bafa76"
+    },
+    {
+      "path": "tests/sdk-bootstrap.test.mjs",
+      "sha256": "a9641a227cc6c837337504f91b7f1b32932ef848d46b8c9e2828350f1f08b48a"
+    }
+  ],
+  "limitations": [
+    "All upstream public APIs remain navigable, but not all methods/inputs/platforms were numerically verified.",
+    "FCI reference is an independent solver and transition RDM implementation using the same stated PySCF molecular model/integrals.",
+    "Qiskit molecular qLR, noisy spectroscopy, full measurement-cache correctness and real hardware are not validated.",
+    "No Validator, Acceptance Profile or central Acceptance integration; no quantum advantage claim."
+  ],
+  "scientificValidation": "not_evaluated",
+  "receipt": {
+    "id": "slowquant-response",
+    "language": "python",
+    "status": "passed_scoped_engineering",
+    "scientificValidation": "not_evaluated",
+    "sourcePath": ".agents/skills/slowquant-response/references/native-example.py",
+    "sourceSha256": "8995956e3790b4a8293e9207d00267864d1984a4bd78477bdb32ddf7e6c045c8",
+    "dependencyLockPath": ".agents/skills/slowquant-response/uv.lock",
+    "dependencyLockSha256": "cf96803be1c5550965bfa0c54f7226f2e521717bd0fb14957b2dcb9f69b4e91a",
+    "durableEvidenceDirectory": "docs/integrations/evidence/slowquant-2026-10-31",
+    "verificationSha256": "8bfc80b426da725f22bc0d00548e83268de2c45ffcd0c7a60c8b92d523869b06",
+    "artifacts": {
+      "attempt.json": "563a0873d016abd60baaab8aa75f1d8e27e5d41fca762409d080df1cf3e3c3de",
+      "program.py": "8995956e3790b4a8293e9207d00267864d1984a4bd78477bdb32ddf7e6c045c8",
+      "result.json": "722ea3fc096d3eda4cbd411110352a02ef46c4fe2f20e3667f04b36ad84828fa",
+      "runner.py": "4d8e55212145f22f02d8198f4582194f9aa937013038af3c543a95c6fa77e4b9",
+      "stderr.log": "6b5b229f0ea9b0f7e5c7618fea91c76f66da598a361ee37ffecb11d17666491d",
+      "stdout.log": "aafc68919700cf446a380b91a10f1a16545215f1c89323423ed971d7532f726f",
+      "versions.json": "b9b692857c507edcd92cc9d3b91772ca454a4e60a4837b031b0175f3191fc0a1"
+    }
+  },
+  "optimizerWarnings": [
+    "SciPy BFGS precision-loss warning is retained in stderr.log; bounded FCI comparisons and response diagnostics passed, but this does not establish general optimizer convergence."
+  ]
+}
