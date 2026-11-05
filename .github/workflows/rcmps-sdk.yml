@@ -1,0 +1,44 @@
+name: RcmpsCore SDK
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    paths:
+      - '.agents/skills/rcmps-field-theory/**'
+      - '.github/workflows/rcmps-sdk.yml'
+      - 'tests/fixtures/rcmps-*'
+      - 'tests/rcmps-*'
+  push:
+    branches: [main]
+    paths:
+      - '.agents/skills/rcmps-field-theory/**'
+      - '.github/workflows/rcmps-sdk.yml'
+      - 'tests/fixtures/rcmps-*'
+      - 'tests/rcmps-*'
+
+jobs:
+  native-sdk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      JULIA_NUM_PRECOMPILE_TASKS: '2'
+      JULIA_PKG_PRECOMPILE_AUTO: '0'
+    steps:
+      - uses: actions/checkout@v7
+      - uses: julia-actions/setup-julia@v2
+        with:
+          version: '1.12.7'
+      - name: Resolve the fixed source environment
+        run: julia --startup-file=no --project=.agents/skills/rcmps-field-theory -e 'using Pkg; Pkg.instantiate(;allow_autoprecomp=false)'
+      - name: Save dependency resolution
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: rcmps-dependency-lock
+          path: |
+            .agents/skills/rcmps-field-theory/Project.toml
+            .agents/skills/rcmps-field-theory/Manifest.toml
+          include-hidden-files: true
+          if-no-files-found: error
