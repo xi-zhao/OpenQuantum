@@ -20,25 +20,47 @@ on:
 
 jobs:
   native-sdk:
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
+    runs-on: macos-latest
+    timeout-minutes: 45
     env:
       JULIA_NUM_PRECOMPILE_TASKS: '2'
       JULIA_PKG_PRECOMPILE_AUTO: '0'
+      JULIA_LOAD_PATH: '@:@stdlib'
     steps:
       - uses: actions/checkout@v7
+      - name: Select isolated task directories
+        run: |
+          echo "OPENQUANTUM_JULIA_DEPOT_PATH=$RUNNER_TEMP/rcmps-depot" >> "$GITHUB_ENV"
+          echo "JULIA_DEPOT_PATH=$RUNNER_TEMP/rcmps-depot" >> "$GITHUB_ENV"
+          echo "OPENQUANTUM_SDK_CHECK_OUTPUT=$RUNNER_TEMP/rcmps-evidence" >> "$GITHUB_ENV"
       - uses: julia-actions/setup-julia@v2
         with:
           version: '1.12.7'
-      - name: Resolve the fixed source environment
-        run: julia --startup-file=no --project=.agents/skills/rcmps-field-theory -e 'using Pkg; Pkg.instantiate(;allow_autoprecomp=false)'
-      - name: Save dependency resolution
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Explicit preparation of frozen Julia and independent NumPy environments
+        run: |
+          julia --startup-file=no --project=.agents/skills/rcmps-field-theory -e 'using Pkg; Pkg.instantiate(;allow_autoprecomp=false); Pkg.precompile(["RcmpsCore", "JSON3"])'
+          git diff --exit-code -- .agents/skills/rcmps-field-theory/Project.toml .agents/skills/rcmps-field-theory/Manifest.toml
+          python -m venv "$RUNNER_TEMP/rcmps-reference"
+          "$RUNNER_TEMP/rcmps-reference/bin/python" -m pip install --disable-pip-version-check numpy==2.5.3
+      - name: Offline native example, analytic references, controls and failure cases
+        env:
+          JULIA_PKG_OFFLINE: 'true'
+        run: |
+          mkdir -p "$OPENQUANTUM_SDK_CHECK_OUTPUT"
+          sandbox-exec -p '(version 1) (allow default) (deny network*)' julia --startup-file=no --project=.agents/skills/rcmps-field-theory tests/fixtures/rcmps-validation.jl 2>&1 | tee "$OPENQUANTUM_SDK_CHECK_OUTPUT/numerical.log"
+      - name: Independent NumPy stationary-state reference
+        run: sandbox-exec -p '(version 1) (allow default) (deny network*)' "$RUNNER_TEMP/rcmps-reference/bin/python" -B tests/fixtures/rcmps-steady-reference.py "$OPENQUANTUM_SDK_CHECK_OUTPUT/rcmps-validation.json" "$OPENQUANTUM_SDK_CHECK_OUTPUT/numpy-reference.json"
+      - name: Save execution evidence
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: rcmps-dependency-lock
+          name: rcmps-sdk-evidence
           path: |
             .agents/skills/rcmps-field-theory/Project.toml
             .agents/skills/rcmps-field-theory/Manifest.toml
+            ${{ runner.temp }}/rcmps-evidence
           include-hidden-files: true
           if-no-files-found: error
