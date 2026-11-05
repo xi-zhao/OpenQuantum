@@ -1318,6 +1318,22 @@
       "conditions": []
     },
     {
+      "id": "rcmps-field-theory",
+      "title": "RcmpsCore.jl",
+      "language": "julia",
+      "modules": [
+        "RcmpsCore",
+        "JSON3"
+      ],
+      "group": "physics",
+      "workflow": "连续相对论标量场、RCMPS 优化、正常序观测量与同真空激发",
+      "conditions": [
+        "单标量玻色场、无限体积、ComplexF64；正常序参考质量为 1，耦合为 g :phi^4:。传递 gap 不等于 Hamiltonian 能隙；保留背景优化、数值控制和失败诊断。"
+      ],
+      "nativeOnly": true,
+      "juliaVersion": "1.12.7"
+    },
+    {
       "id": "simqn-network",
       "title": "SimQN",
       "language": "python",
