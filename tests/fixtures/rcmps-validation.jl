@@ -116,10 +116,10 @@ end
         state.integrator_param.max_point = window
         state.integrator_param.n_quad = nodes
         state.integrator_param.atol = state.integrator_param.rtol = tolerance
-        excitation = excitation_spectrum(state, p; model = ExcitationModel(:phi4, g), kinetic_backend = :ode)
+        excitation = excitation_spectrum(state, p; model = ExcitationModel(:phi4, g), assembly = :action, kinetic_backend = :ode)
         energy = only(excitation.energies)
         @test abs(energy-reference) < 2e-7
-        push!(rows, (; window, nodes, tolerance, energy, reference, error = abs(energy-reference), residuals = excitation.residuals))
+        push!(rows, (; window, nodes, tolerance, assembly = "action", kineticBackend = "ode", energy, reference, error = abs(energy-reference), residuals = excitation.residuals))
     end
     records["interactingConvergence"] = rows
 end

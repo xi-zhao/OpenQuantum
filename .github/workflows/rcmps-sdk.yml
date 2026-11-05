@@ -22,6 +22,9 @@ jobs:
   native-sdk:
     runs-on: macos-latest
     timeout-minutes: 45
+    defaults:
+      run:
+        shell: bash
     env:
       JULIA_NUM_PRECOMPILE_TASKS: '2'
       JULIA_PKG_PRECOMPILE_AUTO: '0'
@@ -36,15 +39,25 @@ jobs:
       - uses: julia-actions/setup-julia@v2
         with:
           version: '1.12.7'
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci --ignore-scripts
       - uses: actions/setup-python@v6
         with:
           python-version: '3.12'
       - name: Explicit preparation of frozen Julia and independent NumPy environments
         run: |
-          julia --startup-file=no --project=.agents/skills/rcmps-field-theory -e 'using Pkg; Pkg.instantiate(;allow_autoprecomp=false); Pkg.precompile(["RcmpsCore", "JSON3"])'
+          node scripts/setup-sdk.mjs rcmps-field-theory
           git diff --exit-code -- .agents/skills/rcmps-field-theory/Project.toml .agents/skills/rcmps-field-theory/Manifest.toml
           python -m venv "$RUNNER_TEMP/rcmps-reference"
           "$RUNNER_TEMP/rcmps-reference/bin/python" -m pip install --disable-pip-version-check numpy==2.5.3
+      - name: Offline native user program through the existing SDK interface
+        env:
+          OPENQUANTUM_ECOSYSTEM_CHECKS: '1'
+          OPENQUANTUM_SDK_IDS: rcmps-field-theory
+        run: node --test tests/sdk-ecosystem-live.test.mjs
       - name: Offline native example, analytic references, controls and failure cases
         env:
           JULIA_PKG_OFFLINE: 'true'
