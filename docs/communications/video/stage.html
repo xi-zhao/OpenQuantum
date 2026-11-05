@@ -980,7 +980,6 @@ if (MODE === "edu") {
     <div class="scene" id="BRAND">
       <div class="center" style="top:380px"><img class="b1" src="${ASSET.lockup}" style="width:640px;height:auto" alt="OpenQuantum"></div>
       <div class="center" style="top:580px"><div class="sub b2">开源量子智能体平台</div></div>
-      <div class="center mono b3" style="top:660px;font-size:20px;text-transform:none;letter-spacing:.12em">面向 AI 教育平台</div>
     </div>
     <div class="scene" id="VOICES">
       <div class="voice v1" style="left:300px;top:290px"><div class="mono">研究生</div><p>这篇论文的方法，能帮我复现吗？</p></div>
@@ -1106,8 +1105,8 @@ if (MODE === "edu") {
 
     if (within(t, S.BRAND)) {
       enter($(".b1"), t, -1, 0, { y: 0, blur: 0 }); $(".b1").style.filter += ` drop-shadow(0 0 ${mix(50, 16, seg(t, .3, 1.8))}px rgba(45,227,239,.4))`;
-      enter($(".b2"), t, -1, 0, { y: 0, blur: 0 }); enter($(".b3"), t, .4, .9, { y: 8, blur: 4 });
-      [".b1", ".b2", ".b3"].forEach((c) => leave($(c), t, 2.05, 2.4));
+      enter($(".b2"), t, -1, 0, { y: 0, blur: 0 });
+      [".b1", ".b2"].forEach((c) => leave($(c), t, 2.05, 2.4));
     }
     if (within(t, S.VOICES)) {
       const u = t - at("VOICES");
