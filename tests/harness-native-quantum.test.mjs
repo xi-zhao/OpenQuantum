@@ -46,6 +46,7 @@ const SHELL_TOOL_CONTRACTS = readDeclaredNativeToolContracts({
 });
 const EXPECTED_QUANTUM_SKILLS = Object.freeze([
   "slowquant-response",
+  "tnqs-dynamics",
   "emlint-dem-audit",
   "lean-physics",
   "chromobius-decoding",

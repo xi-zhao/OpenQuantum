@@ -1493,6 +1493,22 @@
       "conditions": []
     },
     {
+      "id": "tnqs-dynamics",
+      "title": "TensorNetworkQuantumSimulator.jl",
+      "language": "julia",
+      "modules": [
+        "TensorNetworkQuantumSimulator",
+        "JSON3"
+      ],
+      "group": "physics",
+      "workflow": "非规则图张量网络、电路、时间演化、平面 CTMRG 与采样",
+      "conditions": [
+        "CTMRG 需要有效平面嵌入；分别记录状态/环境维数、截断、精度与收敛。采样权重相对于实际规约态，函数名 certified 不构成科学验收。"
+      ],
+      "nativeOnly": true,
+      "juliaVersion": "1.12.7"
+    },
+    {
       "id": "tqec-compilation",
       "title": "TQEC",
       "language": "python",

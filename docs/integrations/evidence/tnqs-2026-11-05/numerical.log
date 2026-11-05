@@ -1,0 +1,14 @@
+Test Summary:            | Pass  Total  Time
+fixed source and runtime |    4      4  1.6s
+Test Summary:                              | Pass  Total   Time
+positive tree and triangle tensor networks |    2      2  34.3s
+Test Summary:                                 | Pass  Total  Time
+Ising partition function and free-energy sign |    3      3  7.2s
+Test Summary:                                              | Pass  Total   Time
+editable circuit against independent dense Pauli rotations |    4      4  19.1s
+Test Summary:                               | Pass  Total  Time
+non-square loop bond and environment sweeps |    6      6  0.6s
+Test Summary:                                                         | Pass  Total   Time
+product and GHZ sampling: support, probability and norm-scaled weight |   12     12  42.0s
+Test Summary:                                  | Pass  Total  Time
+invalid drawings and projector fail explicitly |    4      4  0.8s
