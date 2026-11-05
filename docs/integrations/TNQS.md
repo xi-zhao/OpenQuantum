@@ -46,7 +46,10 @@ DSH/Codex 复用相同 Skill、SDK 清单和宿主代码工具；没有新 Tool�
 - 固定源码加载、完整锁、SDK 发现、DSH Skill 发现及 Codex 分发投影。
 
 这些是有界工程/数值回归，不能替代大系统收敛研究、论文结果复现、Windows/Linux 数值运行或用户科研验收。
-本入口始终保留 `scientificValidation=not_evaluated`。实际执行记录随本 PR 的版本化证据交付。
+本入口始终保留 `scientificValidation=not_evaluated`。[版本化执行证据](evidence/tnqs-2026-11-05.json)
+记录 macOS arm64 / Julia 1.12.7 的 35 项检查和离线 SDK 运行。完整态最大误差为 `1.12e-16`，
+GHZ 的 512 次样本中全零为 260 次；规约后范数为 2，权重约为 2。
+三角环维数扫描在所有测试环境维数上已经精确，不能据此推断大系统收敛或性能收益。
 
 ## 来源与维护
 
