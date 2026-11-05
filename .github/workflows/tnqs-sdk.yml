@@ -20,25 +20,47 @@ on:
 
 jobs:
   native-sdk:
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
+    runs-on: macos-latest
+    timeout-minutes: 45
     env:
       JULIA_NUM_PRECOMPILE_TASKS: '2'
       JULIA_PKG_PRECOMPILE_AUTO: '0'
+      OPENQUANTUM_JULIA_DEPOT_PATH: ${{ runner.temp }}/tnqs-depot
+      JULIA_DEPOT_PATH: ${{ runner.temp }}/tnqs-depot
+      OPENQUANTUM_SDK_CHECK_OUTPUT: ${{ runner.temp }}/tnqs-evidence
     steps:
       - uses: actions/checkout@v7
       - uses: julia-actions/setup-julia@v2
         with:
           version: '1.12.7'
-      - name: Resolve the fixed source environment
-        run: julia --startup-file=no --project=.agents/skills/tnqs-dynamics -e 'using Pkg; Pkg.instantiate(;allow_autoprecomp=false)'
-      - name: Save dependency resolution
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - name: Explicit preparation of the frozen environment
+        run: |
+          node scripts/setup-sdk.mjs tnqs-dynamics
+          git diff --exit-code -- .agents/skills/tnqs-dynamics/Project.toml .agents/skills/tnqs-dynamics/Manifest.toml
+      - name: Offline native user program through the existing SDK interface
+        env:
+          OPENQUANTUM_ECOSYSTEM_CHECKS: '1'
+          OPENQUANTUM_SDK_IDS: tnqs-dynamics
+        run: node --test tests/sdk-ecosystem-live.test.mjs
+      - name: Independent small-system numerical references and failure cases
+        env:
+          JULIA_PKG_OFFLINE: 'true'
+        run: |
+          mkdir -p "$OPENQUANTUM_SDK_CHECK_OUTPUT"
+          sandbox-exec -p '(version 1) (allow default) (deny network*)' julia --startup-file=no --project=.agents/skills/tnqs-dynamics tests/fixtures/tnqs-validation.jl 2>&1 | tee "$OPENQUANTUM_SDK_CHECK_OUTPUT/numerical.log"
+      - name: Save execution evidence
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: tnqs-dependency-lock
+          name: tnqs-sdk-evidence
           path: |
             .agents/skills/tnqs-dynamics/Project.toml
             .agents/skills/tnqs-dynamics/Manifest.toml
+            ${{ runner.temp }}/tnqs-evidence
           include-hidden-files: true
           if-no-files-found: error
