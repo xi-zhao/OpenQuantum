@@ -1,0 +1,60 @@
+{
+  "date": "2026-11-05",
+  "upstream": {
+    "url": "https://github.com/JoeyT1994/TensorNetworkQuantumSimulator.jl",
+    "version": "0.5.0",
+    "revision": "c37fba6eac78649f7bf146888e04df3f1deebb92",
+    "license": "MIT"
+  },
+  "execution": {
+    "url": "https://github.com/xi-zhao/OpenQuantum/actions/runs/41950747007",
+    "head": "ffbb19176ad68e08eab983970ccb414f3dde4674",
+    "artifactId": 13381301333,
+    "artifactSha256": "145a7d9b4ca4dd6079d02efea4c4f436301f2c01efad5f8a0c77bdd7c4ac72c4",
+    "platform": "GitHub macos-latest arm64",
+    "julia": "1.12.7",
+    "networkIsolation": "macOS sandbox-exec deny network*"
+  },
+  "scope": "Fixed complete Julia SDK with editable offline program; 35 scoped numerical/source/failure assertions against explicit tensor enumeration, spin sums and dense Pauli matrices. Not scientific acceptance.",
+  "numericalEvidence": {
+    "tnqs-validation.json": "5c77951a1c4038188f51fc12004e289ecaf24723b9f8cf215f3d2bd21e02b191",
+    "numerical.log": "5fec9cc3995f8f5637f646ec2032a8d7123f80fc1479e2ec01716d5cb94a69fe"
+  },
+  "validationSources": [
+    {
+      "path": "tests/fixtures/tnqs-validation.jl",
+      "sha256": "744c657f738aaee81bf138ab239f72c07197ffe26d75259939e93aac7a29c89e"
+    },
+    {
+      "path": "tests/sdk-ecosystem-live.test.mjs",
+      "sha256": "64fd1fbebc4738a9ca3828b71026a13bac4c801021501ad0e5b9d5d02929e873"
+    }
+  ],
+  "limitations": [
+    "The triangle dimension sweep was already exact at all tested environment dimensions; it does not establish large-system convergence or a performance advantage.",
+    "Sampling checks cover product/GHZ with 512 shots each; GHZ gauging has norm 2 and weights about 2, not a unit-normalized state.",
+    "No QASM/dynamic circuit, optional Qiskit.jl, GPU/MPI, Windows/Linux numerical run, paper replication or host UI session acceptance.",
+    "No Validator or Acceptance Profile added."
+  ],
+  "scientificValidation": "not_evaluated",
+  "receipt": {
+    "id": "tnqs-dynamics",
+    "language": "julia",
+    "status": "passed_scoped_engineering",
+    "scientificValidation": "not_evaluated",
+    "sourcePath": ".agents/skills/tnqs-dynamics/references/native-example.jl",
+    "sourceSha256": "1f1b0a119d7f0bdb448eaaf4b6ed9d447cc0ea710933e40988146cdb32c4a752",
+    "dependencyLockPath": ".agents/skills/tnqs-dynamics/Manifest.toml",
+    "dependencyLockSha256": "c38b98e62614f3826fc16f60f57d3f52a6cc1795c5b641eeb9a899f8c6cd1390",
+    "durableEvidenceDirectory": "docs/integrations/evidence/tnqs-2026-11-05",
+    "verificationSha256": "5ff4d82b85dfba10d100de3f1925206adc13342ff45e3022903c4f0eaa6b0f16",
+    "artifacts": {
+      "attempt.json": "652b78ac22d6690044c85ed3d8781c120ee64c36b3baabc3e062f7aeae7e75c7",
+      "program.jl": "1f1b0a119d7f0bdb448eaaf4b6ed9d447cc0ea710933e40988146cdb32c4a752",
+      "result.json": "9a16c4cd86fa69d37f7d16a7f6ec8610a0b5443611bf7352f52228baed663852",
+      "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "versions.json": "20ca6b529826dcda2536c3b75070dd20d6070e834a816110f17e915599a27926"
+    }
+  }
+}

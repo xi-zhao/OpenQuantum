@@ -2515,3 +2515,6 @@ packages:
 
   - id: slowquant-response
     level: L0
+
+  - id: tnqs-dynamics
+    level: L0
