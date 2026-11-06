@@ -13,9 +13,9 @@
 
 ## 当前 Skill
 
-以下 189 个 Skill 随源码分发；它们与 MCP Server 不是一一对应关系，知识型 Skill 可以不绑定专用 Tool，
+以下 190 个 Skill 随源码分发；它们与 MCP Server 不是一一对应关系，知识型 Skill 可以不绑定专用 Tool，
 工作流也可以使用多个服务或进程内原生 Tool。连接默认配置与凭据条件见[MCP 服务目录](../../docs/CAPABILITIES.md#mcp-服务目录)。
-当前 176 项可由模型自动选择，13 个分类索引仅保留用户显式调用；名称和来源映射不变。
+当前 177 项可由模型自动选择，13 个分类索引仅保留用户显式调用；名称和来源映射不变。
 分批建议与兼容影响见[扩展治理清单](../../docs/architecture/EXTENSION_GOVERNANCE.md)。
 
 | Skill | 作用 | 依赖的执行模块 |
@@ -47,6 +47,7 @@
 | `squlearn-learning` | 编码线路、observable、executor、量子核与 sklearn estimator | 宿主代码 Tool；显式准备 python 环境 |
 | `staq-compilation` | OpenQASM AST、综合、线路变换、优化与映射 | 宿主代码 Tool；显式准备 python 环境 |
 | `chromobius-decoding` | 带颜色/基标注的 Stim DEM 与逻辑 observable 解码 | 宿主代码 Tool；显式准备 Python 环境 |
+| [`mwpf-decoding`](mwpf-decoding/SKILL.md) | 加权超图 syndrome 译码、primal/dual 权重界与 Stim/Sinter | 宿主代码 Tool；显式准备 Python SDK；异常抛出与预算结果分别记录 |
 | `emlint-dem-audit` | DEM 结构诊断、反例和不完整检查状态；不证明解码正确性 | 宿主代码 Tool；显式准备 Python 环境 |
 | `slowquant-response` | 分子线性响应、激发能和跃迁性质；保留响应近似与验证边界 | 宿主代码 Tool；显式准备固定源码 SDK |
 | [`tnqs-dynamics`](tnqs-dynamics/SKILL.md) | 非规则图张量网络、电路、有限平面 CTMRG 与采样 | 宿主代码 Tool；显式准备固定 Julia SDK；保留几何与收敛边界 |

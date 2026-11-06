@@ -1,0 +1,17 @@
+{
+  "scope": "editable native API example; not a threshold or fault-tolerance experiment",
+  "versions": {
+    "mwpf": "0.2.18",
+    "stim": "1.16.0",
+    "sinter": "1.16.0",
+    "numpy": "2.5.3"
+  },
+  "scientificValidation": "not_evaluated",
+  "dem": "error(0.01) D0 D1 D8 L0\nerror(0.02) D1 L8\nerror(0.03) D8 L0 L8\n",
+  "shots": 1024,
+  "seed": 7,
+  "clusterNodeLimit": 50,
+  "panicAction": "RAISE",
+  "fallbackObserved": "not_exposed_by_this_interface",
+  "logicalErrors": 0
+}

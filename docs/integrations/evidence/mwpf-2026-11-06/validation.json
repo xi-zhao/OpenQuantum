@@ -1,0 +1,1283 @@
+{
+  "testsRun": 7,
+  "passed": true,
+  "failures": 0,
+  "errors": 0,
+  "oracle": "exhaustive XOR of independent edge subsets; no MWPF reference solver",
+  "hypergraphCases": [
+    {
+      "syndrome": 0,
+      "limit": null,
+      "oracleWeight": 0,
+      "edges": [],
+      "weight": 0,
+      "lowerBound": 0.0,
+      "upperBound": 0.0,
+      "requestedClusterNodeLimit": null,
+      "effectiveConfig": {
+        "cluster_node_limit": 18014398509481983,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 0,
+      "limit": 0,
+      "oracleWeight": 0,
+      "edges": [],
+      "weight": 0,
+      "lowerBound": 0.0,
+      "upperBound": 0.0,
+      "requestedClusterNodeLimit": 0,
+      "effectiveConfig": {
+        "cluster_node_limit": 0,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 0,
+      "limit": 1,
+      "oracleWeight": 0,
+      "edges": [],
+      "weight": 0,
+      "lowerBound": 0.0,
+      "upperBound": 0.0,
+      "requestedClusterNodeLimit": 1,
+      "effectiveConfig": {
+        "cluster_node_limit": 1,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 0,
+      "limit": 50,
+      "oracleWeight": 0,
+      "edges": [],
+      "weight": 0,
+      "lowerBound": 0.0,
+      "upperBound": 0.0,
+      "requestedClusterNodeLimit": 50,
+      "effectiveConfig": {
+        "cluster_node_limit": 50,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 3,
+      "limit": null,
+      "oracleWeight": 100,
+      "edges": [
+        0
+      ],
+      "weight": 100,
+      "lowerBound": 100.0,
+      "upperBound": 100.0,
+      "requestedClusterNodeLimit": null,
+      "effectiveConfig": {
+        "cluster_node_limit": 18014398509481983,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 3,
+      "limit": 0,
+      "oracleWeight": 100,
+      "edges": [
+        0
+      ],
+      "weight": 100,
+      "lowerBound": 100.0,
+      "upperBound": 100.0,
+      "requestedClusterNodeLimit": 0,
+      "effectiveConfig": {
+        "cluster_node_limit": 0,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 3,
+      "limit": 1,
+      "oracleWeight": 100,
+      "edges": [
+        0
+      ],
+      "weight": 100,
+      "lowerBound": 100.0,
+      "upperBound": 100.0,
+      "requestedClusterNodeLimit": 1,
+      "effectiveConfig": {
+        "cluster_node_limit": 1,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 3,
+      "limit": 50,
+      "oracleWeight": 100,
+      "edges": [
+        0
+      ],
+      "weight": 100,
+      "lowerBound": 100.0,
+      "upperBound": 100.0,
+      "requestedClusterNodeLimit": 50,
+      "effectiveConfig": {
+        "cluster_node_limit": 50,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 6,
+      "limit": null,
+      "oracleWeight": 100,
+      "edges": [
+        1
+      ],
+      "weight": 100,
+      "lowerBound": 100.0,
+      "upperBound": 100.0,
+      "requestedClusterNodeLimit": null,
+      "effectiveConfig": {
+        "cluster_node_limit": 18014398509481983,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 6,
+      "limit": 0,
+      "oracleWeight": 100,
+      "edges": [
+        1
+      ],
+      "weight": 100,
+      "lowerBound": 100.0,
+      "upperBound": 100.0,
+      "requestedClusterNodeLimit": 0,
+      "effectiveConfig": {
+        "cluster_node_limit": 0,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 6,
+      "limit": 1,
+      "oracleWeight": 100,
+      "edges": [
+        1
+      ],
+      "weight": 100,
+      "lowerBound": 100.0,
+      "upperBound": 100.0,
+      "requestedClusterNodeLimit": 1,
+      "effectiveConfig": {
+        "cluster_node_limit": 1,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 6,
+      "limit": 50,
+      "oracleWeight": 100,
+      "edges": [
+        1
+      ],
+      "weight": 100,
+      "lowerBound": 100.0,
+      "upperBound": 100.0,
+      "requestedClusterNodeLimit": 50,
+      "effectiveConfig": {
+        "cluster_node_limit": 50,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 5,
+      "limit": null,
+      "oracleWeight": 200,
+      "edges": [
+        0,
+        1
+      ],
+      "weight": 200,
+      "lowerBound": 200.0,
+      "upperBound": 200.0,
+      "requestedClusterNodeLimit": null,
+      "effectiveConfig": {
+        "cluster_node_limit": 18014398509481983,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 5,
+      "limit": 0,
+      "oracleWeight": 200,
+      "edges": [
+        0,
+        1
+      ],
+      "weight": 200,
+      "lowerBound": 130.0,
+      "upperBound": 200.0,
+      "requestedClusterNodeLimit": 0,
+      "effectiveConfig": {
+        "cluster_node_limit": 0,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 5,
+      "limit": 1,
+      "oracleWeight": 200,
+      "edges": [
+        0,
+        1
+      ],
+      "weight": 200,
+      "lowerBound": 130.0,
+      "upperBound": 200.0,
+      "requestedClusterNodeLimit": 1,
+      "effectiveConfig": {
+        "cluster_node_limit": 1,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 5,
+      "limit": 50,
+      "oracleWeight": 200,
+      "edges": [
+        0,
+        1
+      ],
+      "weight": 200,
+      "lowerBound": 200.0,
+      "upperBound": 200.0,
+      "requestedClusterNodeLimit": 50,
+      "effectiveConfig": {
+        "cluster_node_limit": 50,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 12,
+      "limit": null,
+      "oracleWeight": 100,
+      "edges": [
+        2
+      ],
+      "weight": 100,
+      "lowerBound": 100.0,
+      "upperBound": 100.0,
+      "requestedClusterNodeLimit": null,
+      "effectiveConfig": {
+        "cluster_node_limit": 18014398509481983,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 12,
+      "limit": 0,
+      "oracleWeight": 100,
+      "edges": [
+        2
+      ],
+      "weight": 100,
+      "lowerBound": 100.0,
+      "upperBound": 100.0,
+      "requestedClusterNodeLimit": 0,
+      "effectiveConfig": {
+        "cluster_node_limit": 0,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 12,
+      "limit": 1,
+      "oracleWeight": 100,
+      "edges": [
+        2
+      ],
+      "weight": 100,
+      "lowerBound": 100.0,
+      "upperBound": 100.0,
+      "requestedClusterNodeLimit": 1,
+      "effectiveConfig": {
+        "cluster_node_limit": 1,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 12,
+      "limit": 50,
+      "oracleWeight": 100,
+      "edges": [
+        2
+      ],
+      "weight": 100,
+      "lowerBound": 100.0,
+      "upperBound": 100.0,
+      "requestedClusterNodeLimit": 50,
+      "effectiveConfig": {
+        "cluster_node_limit": 50,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 15,
+      "limit": null,
+      "oracleWeight": 200,
+      "edges": [
+        0,
+        2
+      ],
+      "weight": 200,
+      "lowerBound": 200.0,
+      "upperBound": 200.0,
+      "requestedClusterNodeLimit": null,
+      "effectiveConfig": {
+        "cluster_node_limit": 18014398509481983,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 15,
+      "limit": 0,
+      "oracleWeight": 200,
+      "edges": [
+        0,
+        2
+      ],
+      "weight": 200,
+      "lowerBound": 200.0,
+      "upperBound": 200.0,
+      "requestedClusterNodeLimit": 0,
+      "effectiveConfig": {
+        "cluster_node_limit": 0,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 15,
+      "limit": 1,
+      "oracleWeight": 200,
+      "edges": [
+        0,
+        2
+      ],
+      "weight": 200,
+      "lowerBound": 200.0,
+      "upperBound": 200.0,
+      "requestedClusterNodeLimit": 1,
+      "effectiveConfig": {
+        "cluster_node_limit": 1,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 15,
+      "limit": 50,
+      "oracleWeight": 200,
+      "edges": [
+        0,
+        2
+      ],
+      "weight": 200,
+      "lowerBound": 200.0,
+      "upperBound": 200.0,
+      "requestedClusterNodeLimit": 50,
+      "effectiveConfig": {
+        "cluster_node_limit": 50,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 10,
+      "limit": null,
+      "oracleWeight": 200,
+      "edges": [
+        1,
+        2
+      ],
+      "weight": 200,
+      "lowerBound": 200.0,
+      "upperBound": 200.0,
+      "requestedClusterNodeLimit": null,
+      "effectiveConfig": {
+        "cluster_node_limit": 18014398509481983,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 10,
+      "limit": 0,
+      "oracleWeight": 200,
+      "edges": [
+        1,
+        2
+      ],
+      "weight": 200,
+      "lowerBound": 180.0,
+      "upperBound": 200.0,
+      "requestedClusterNodeLimit": 0,
+      "effectiveConfig": {
+        "cluster_node_limit": 0,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 10,
+      "limit": 1,
+      "oracleWeight": 200,
+      "edges": [
+        1,
+        2
+      ],
+      "weight": 200,
+      "lowerBound": 180.0,
+      "upperBound": 200.0,
+      "requestedClusterNodeLimit": 1,
+      "effectiveConfig": {
+        "cluster_node_limit": 1,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 10,
+      "limit": 50,
+      "oracleWeight": 200,
+      "edges": [
+        1,
+        2
+      ],
+      "weight": 200,
+      "lowerBound": 200.0,
+      "upperBound": 200.0,
+      "requestedClusterNodeLimit": 50,
+      "effectiveConfig": {
+        "cluster_node_limit": 50,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 9,
+      "limit": null,
+      "oracleWeight": 300,
+      "edges": [
+        0,
+        1,
+        2
+      ],
+      "weight": 300,
+      "lowerBound": 300.0,
+      "upperBound": 300.0,
+      "requestedClusterNodeLimit": null,
+      "effectiveConfig": {
+        "cluster_node_limit": 18014398509481983,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 9,
+      "limit": 0,
+      "oracleWeight": 300,
+      "edges": [
+        0,
+        2,
+        3,
+        4
+      ],
+      "weight": 360,
+      "lowerBound": 180.0,
+      "upperBound": 360.0,
+      "requestedClusterNodeLimit": 0,
+      "effectiveConfig": {
+        "cluster_node_limit": 0,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 9,
+      "limit": 1,
+      "oracleWeight": 300,
+      "edges": [
+        0,
+        2,
+        3,
+        4
+      ],
+      "weight": 360,
+      "lowerBound": 180.0,
+      "upperBound": 360.0,
+      "requestedClusterNodeLimit": 1,
+      "effectiveConfig": {
+        "cluster_node_limit": 1,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 9,
+      "limit": 50,
+      "oracleWeight": 300,
+      "edges": [
+        0,
+        1,
+        2
+      ],
+      "weight": 300,
+      "lowerBound": 300.0,
+      "upperBound": 300.0,
+      "requestedClusterNodeLimit": 50,
+      "effectiveConfig": {
+        "cluster_node_limit": 50,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 1,
+      "limit": null,
+      "oracleWeight": 100,
+      "edges": [
+        3
+      ],
+      "weight": 100,
+      "lowerBound": 100.0,
+      "upperBound": 100.0,
+      "requestedClusterNodeLimit": null,
+      "effectiveConfig": {
+        "cluster_node_limit": 18014398509481983,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 1,
+      "limit": 0,
+      "oracleWeight": 100,
+      "edges": [
+        3
+      ],
+      "weight": 100,
+      "lowerBound": 100.0,
+      "upperBound": 100.0,
+      "requestedClusterNodeLimit": 0,
+      "effectiveConfig": {
+        "cluster_node_limit": 0,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 1,
+      "limit": 1,
+      "oracleWeight": 100,
+      "edges": [
+        3
+      ],
+      "weight": 100,
+      "lowerBound": 100.0,
+      "upperBound": 100.0,
+      "requestedClusterNodeLimit": 1,
+      "effectiveConfig": {
+        "cluster_node_limit": 1,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 1,
+      "limit": 50,
+      "oracleWeight": 100,
+      "edges": [
+        3
+      ],
+      "weight": 100,
+      "lowerBound": 100.0,
+      "upperBound": 100.0,
+      "requestedClusterNodeLimit": 50,
+      "effectiveConfig": {
+        "cluster_node_limit": 50,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 2,
+      "limit": null,
+      "oracleWeight": 200,
+      "edges": [
+        0,
+        3
+      ],
+      "weight": 200,
+      "lowerBound": 200.0,
+      "upperBound": 200.0,
+      "requestedClusterNodeLimit": null,
+      "effectiveConfig": {
+        "cluster_node_limit": 18014398509481983,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 2,
+      "limit": 0,
+      "oracleWeight": 200,
+      "edges": [
+        0,
+        1,
+        4
+      ],
+      "weight": 260,
+      "lowerBound": 100.0,
+      "upperBound": 260.0,
+      "requestedClusterNodeLimit": 0,
+      "effectiveConfig": {
+        "cluster_node_limit": 0,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 2,
+      "limit": 1,
+      "oracleWeight": 200,
+      "edges": [
+        0,
+        1,
+        4
+      ],
+      "weight": 260,
+      "lowerBound": 100.0,
+      "upperBound": 260.0,
+      "requestedClusterNodeLimit": 1,
+      "effectiveConfig": {
+        "cluster_node_limit": 1,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 2,
+      "limit": 50,
+      "oracleWeight": 200,
+      "edges": [
+        0,
+        3
+      ],
+      "weight": 200,
+      "lowerBound": 200.0,
+      "upperBound": 200.0,
+      "requestedClusterNodeLimit": 50,
+      "effectiveConfig": {
+        "cluster_node_limit": 50,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 7,
+      "limit": null,
+      "oracleWeight": 60,
+      "edges": [
+        4
+      ],
+      "weight": 60,
+      "lowerBound": 60.0,
+      "upperBound": 60.0,
+      "requestedClusterNodeLimit": null,
+      "effectiveConfig": {
+        "cluster_node_limit": 18014398509481983,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 7,
+      "limit": 0,
+      "oracleWeight": 60,
+      "edges": [
+        4
+      ],
+      "weight": 60,
+      "lowerBound": 60.0,
+      "upperBound": 60.0,
+      "requestedClusterNodeLimit": 0,
+      "effectiveConfig": {
+        "cluster_node_limit": 0,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 7,
+      "limit": 1,
+      "oracleWeight": 60,
+      "edges": [
+        4
+      ],
+      "weight": 60,
+      "lowerBound": 60.0,
+      "upperBound": 60.0,
+      "requestedClusterNodeLimit": 1,
+      "effectiveConfig": {
+        "cluster_node_limit": 1,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 7,
+      "limit": 50,
+      "oracleWeight": 60,
+      "edges": [
+        4
+      ],
+      "weight": 60,
+      "lowerBound": 60.0,
+      "upperBound": 60.0,
+      "requestedClusterNodeLimit": 50,
+      "effectiveConfig": {
+        "cluster_node_limit": 50,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 4,
+      "limit": null,
+      "oracleWeight": 160,
+      "edges": [
+        0,
+        4
+      ],
+      "weight": 160,
+      "lowerBound": 160.0,
+      "upperBound": 160.0,
+      "requestedClusterNodeLimit": null,
+      "effectiveConfig": {
+        "cluster_node_limit": 18014398509481983,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 4,
+      "limit": 0,
+      "oracleWeight": 160,
+      "edges": [
+        0,
+        4
+      ],
+      "weight": 160,
+      "lowerBound": 160.0,
+      "upperBound": 160.0,
+      "requestedClusterNodeLimit": 0,
+      "effectiveConfig": {
+        "cluster_node_limit": 0,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 4,
+      "limit": 1,
+      "oracleWeight": 160,
+      "edges": [
+        0,
+        4
+      ],
+      "weight": 160,
+      "lowerBound": 160.0,
+      "upperBound": 160.0,
+      "requestedClusterNodeLimit": 1,
+      "effectiveConfig": {
+        "cluster_node_limit": 1,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 4,
+      "limit": 50,
+      "oracleWeight": 160,
+      "edges": [
+        0,
+        4
+      ],
+      "weight": 160,
+      "lowerBound": 160.0,
+      "upperBound": 160.0,
+      "requestedClusterNodeLimit": 50,
+      "effectiveConfig": {
+        "cluster_node_limit": 50,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 13,
+      "limit": null,
+      "oracleWeight": 200,
+      "edges": [
+        2,
+        3
+      ],
+      "weight": 200,
+      "lowerBound": 200.0,
+      "upperBound": 200.0,
+      "requestedClusterNodeLimit": null,
+      "effectiveConfig": {
+        "cluster_node_limit": 18014398509481983,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 13,
+      "limit": 0,
+      "oracleWeight": 200,
+      "edges": [
+        2,
+        3
+      ],
+      "weight": 200,
+      "lowerBound": 180.0,
+      "upperBound": 200.0,
+      "requestedClusterNodeLimit": 0,
+      "effectiveConfig": {
+        "cluster_node_limit": 0,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 13,
+      "limit": 1,
+      "oracleWeight": 200,
+      "edges": [
+        2,
+        3
+      ],
+      "weight": 200,
+      "lowerBound": 180.0,
+      "upperBound": 200.0,
+      "requestedClusterNodeLimit": 1,
+      "effectiveConfig": {
+        "cluster_node_limit": 1,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 13,
+      "limit": 50,
+      "oracleWeight": 200,
+      "edges": [
+        2,
+        3
+      ],
+      "weight": 200,
+      "lowerBound": 200.0,
+      "upperBound": 200.0,
+      "requestedClusterNodeLimit": 50,
+      "effectiveConfig": {
+        "cluster_node_limit": 50,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 14,
+      "limit": null,
+      "oracleWeight": 300,
+      "edges": [
+        0,
+        2,
+        3
+      ],
+      "weight": 300,
+      "lowerBound": 300.0,
+      "upperBound": 300.0,
+      "requestedClusterNodeLimit": null,
+      "effectiveConfig": {
+        "cluster_node_limit": 18014398509481983,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 14,
+      "limit": 0,
+      "oracleWeight": 300,
+      "edges": [
+        0,
+        1,
+        2,
+        4
+      ],
+      "weight": 360,
+      "lowerBound": 180.0,
+      "upperBound": 360.0,
+      "requestedClusterNodeLimit": 0,
+      "effectiveConfig": {
+        "cluster_node_limit": 0,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 14,
+      "limit": 1,
+      "oracleWeight": 300,
+      "edges": [
+        0,
+        1,
+        2,
+        4
+      ],
+      "weight": 360,
+      "lowerBound": 180.0,
+      "upperBound": 360.0,
+      "requestedClusterNodeLimit": 1,
+      "effectiveConfig": {
+        "cluster_node_limit": 1,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 14,
+      "limit": 50,
+      "oracleWeight": 300,
+      "edges": [
+        0,
+        2,
+        3
+      ],
+      "weight": 300,
+      "lowerBound": 300.0,
+      "upperBound": 300.0,
+      "requestedClusterNodeLimit": 50,
+      "effectiveConfig": {
+        "cluster_node_limit": 50,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 11,
+      "limit": null,
+      "oracleWeight": 160,
+      "edges": [
+        2,
+        4
+      ],
+      "weight": 160,
+      "lowerBound": 160.0,
+      "upperBound": 160.0,
+      "requestedClusterNodeLimit": null,
+      "effectiveConfig": {
+        "cluster_node_limit": 18014398509481983,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 11,
+      "limit": 0,
+      "oracleWeight": 160,
+      "edges": [
+        2,
+        4
+      ],
+      "weight": 160,
+      "lowerBound": 160.0,
+      "upperBound": 160.0,
+      "requestedClusterNodeLimit": 0,
+      "effectiveConfig": {
+        "cluster_node_limit": 0,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 11,
+      "limit": 1,
+      "oracleWeight": 160,
+      "edges": [
+        2,
+        4
+      ],
+      "weight": 160,
+      "lowerBound": 160.0,
+      "upperBound": 160.0,
+      "requestedClusterNodeLimit": 1,
+      "effectiveConfig": {
+        "cluster_node_limit": 1,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 11,
+      "limit": 50,
+      "oracleWeight": 160,
+      "edges": [
+        2,
+        4
+      ],
+      "weight": 160,
+      "lowerBound": 160.0,
+      "upperBound": 160.0,
+      "requestedClusterNodeLimit": 50,
+      "effectiveConfig": {
+        "cluster_node_limit": 50,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 8,
+      "limit": null,
+      "oracleWeight": 260,
+      "edges": [
+        0,
+        2,
+        4
+      ],
+      "weight": 260,
+      "lowerBound": 260.0,
+      "upperBound": 260.0,
+      "requestedClusterNodeLimit": null,
+      "effectiveConfig": {
+        "cluster_node_limit": 18014398509481983,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 8,
+      "limit": 0,
+      "oracleWeight": 260,
+      "edges": [
+        0,
+        2,
+        4
+      ],
+      "weight": 260,
+      "lowerBound": 260.0,
+      "upperBound": 260.0,
+      "requestedClusterNodeLimit": 0,
+      "effectiveConfig": {
+        "cluster_node_limit": 0,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 8,
+      "limit": 1,
+      "oracleWeight": 260,
+      "edges": [
+        0,
+        2,
+        4
+      ],
+      "weight": 260,
+      "lowerBound": 260.0,
+      "upperBound": 260.0,
+      "requestedClusterNodeLimit": 1,
+      "effectiveConfig": {
+        "cluster_node_limit": 1,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    },
+    {
+      "syndrome": 8,
+      "limit": 50,
+      "oracleWeight": 260,
+      "edges": [
+        0,
+        2,
+        4
+      ],
+      "weight": 260,
+      "lowerBound": 260.0,
+      "upperBound": 260.0,
+      "requestedClusterNodeLimit": 50,
+      "effectiveConfig": {
+        "cluster_node_limit": 50,
+        "only_solve_primal_once": false,
+        "primal": null,
+        "timeout": 1.7976931348623157e+308
+      },
+      "fallbackObserved": "not_exposed_by_this_interface"
+    }
+  ],
+  "versions": {
+    "mwpf": "0.2.18",
+    "stim": "1.16.0",
+    "sinter": "1.16.0",
+    "numpy": "2.5.3"
+  },
+  "scope": "small API, objective/bound, packed-bit and failure regressions",
+  "scientificValidation": "not_evaluated"
+}
