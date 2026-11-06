@@ -1,0 +1,76 @@
+{
+  "date": "2026-11-06",
+  "upstream": {
+    "repository": "yuewuo/mwpf",
+    "version": "0.2.18",
+    "revision": "e50f72e2f389950db50bce075163a4e4022c9dcd"
+  },
+  "scope": "Native SDK/CLI, independent small hypergraph and packed-observable references, failure behavior and Codex environment adapter. Not live host-session or scientific acceptance.",
+  "checks": {
+    "nativeOfflineRunner": "passed",
+    "pythonRegressionTests": 7,
+    "hypergraphConfigurations": 64,
+    "packedScenarios": 8,
+    "packedClusterBudgets": [
+      0,
+      1,
+      50
+    ],
+    "sampledShots": 1024,
+    "sampledLogicalErrors": 0,
+    "invalidInput": "raises; no success artifact",
+    "processTimeout": "test runner terminates real sleeping Python process; not live host-session verification",
+    "codexEnvironmentAdapter": "ready after actual module check"
+  },
+  "platform": {
+    "os": "macOS",
+    "arch": "arm64",
+    "python": "3.12.13"
+  },
+  "limitations": [
+    "Independent enumeration is limited to the recorded small hypergraph and unambiguous DEM, not optimality for general graphs or logical cosets.",
+    "No threshold, timing-performance, real hardware, heralded-erasure, BP or rational-variant validation.",
+    "Linux/Windows installation and numerical CI are separate from this local record.",
+    "README synchronization waits for overlapping PR #77; candidate remains Draft."
+  ],
+  "validationSources": [
+    {
+      "path": "tests/fixtures/mwpf-validation.py",
+      "sha256": "8980623557bd0d210e730c5a078d2f0f78470829ae3075bc7e0041a641166a08"
+    },
+    {
+      "path": "tests/mwpf-decoding-live.test.mjs",
+      "sha256": "2cb5c018ad0b2cb3199280a589c9ad834ac22adaa5f17892b7d82f88ee5d6311"
+    }
+  ],
+  "numericalEvidence": {
+    "dem-result.json": "4ce370f4701a7211fde54c550f46151210e4e64ed3261f44a3a1dae7097e4ef7",
+    "numerical-stderr.log": "ff8cd31ad40c87e78b28e06d164f222f3d11db058ad8de881565f266626b8f8f",
+    "model.dem": "8e2bfb658034c61e25e0cfaca32abbd46a170b4783b6e93b3f9a454a843d7c8d",
+    "validation.json": "18a7c16d749b48be104fdbcb62df5a2186742c6f6fded928255b8bee404400b6",
+    "samples.npz": "9d0bed039bcae5ba76c8bf6d1f9ce5e7db9750111f299159bbf23be584550c58",
+    "numerical-stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "scientificValidation": "not_evaluated",
+  "receipt": {
+    "id": "mwpf-decoding",
+    "language": "python",
+    "status": "passed_scoped_engineering",
+    "scientificValidation": "not_evaluated",
+    "sourcePath": ".agents/skills/mwpf-decoding/references/native-example.py",
+    "sourceSha256": "51b17460c8007b45ddd0c1ef696f1c82bdbc5c1ff8bd2cc0936ccbeb9b676582",
+    "dependencyLockPath": ".agents/skills/mwpf-decoding/uv.lock",
+    "dependencyLockSha256": "100bd22d83194753930213b1492137f13b82e1eb5227fff94dd42de4ca5ae1b4",
+    "durableEvidenceDirectory": "docs/integrations/evidence/mwpf-2026-11-06",
+    "verificationSha256": "a2cd47186adb3fef91b242e07c10197faa240ba18eae680b8db739694f6f1aa0",
+    "artifacts": {
+      "attempt.json": "a2a2f8ec7e201ef646b75118f94de6c935c21bd2e2d98fb8be2fa6c57ab6b883",
+      "program.py": "51b17460c8007b45ddd0c1ef696f1c82bdbc5c1ff8bd2cc0936ccbeb9b676582",
+      "result.json": "5221848bd6dddee6e4b7122c34d404f2cfc66b1b518fdd211342edb218cf66f4",
+      "runner.py": "4d8e55212145f22f02d8198f4582194f9aa937013038af3c543a95c6fa77e4b9",
+      "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "versions.json": "1897e749a045a88e56ca4fed0002a713793fc3d786eb2f35a25e52e5c23aa385"
+    }
+  }
+}
