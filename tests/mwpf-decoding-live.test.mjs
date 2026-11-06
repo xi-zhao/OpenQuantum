@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { describeSdk } from "../src/lib/sdk-access.mjs";
+import { pythonEnvironmentRoot } from "../src/lib/prepared-python.mjs";
 import { Environments } from "../src/settings/codex/environments.mjs";
 import { inspectEnvironment } from "../src/settings/codex/environment-check.mjs";
 import { offlineProcess, isolatedEnvironment } from "./fixtures/sdk-engineering-process.mjs";
@@ -77,7 +78,10 @@ test("MWPF CLI preserves actual samples and predictions for a user DEM", { skip:
 test("MWPF uses the existing process timeout and Codex prepared-environment check", { skip: !enabled }, async t => {
   const { output, execute } = await prepare(t);
   await assert.rejects(execute(["-c", "import time; print('started', flush=True); time.sleep(30)"], { timeout: 1000 }), error => error.killed === true && /started/.test(error.stdout));
-  const manager = new Environments({ root, directory: path.join(output, "settings") });
+  // Point this adapter fixture at the explicitly prepared SDK. Its own default
+  // directory intentionally differs from the command-line environment directory.
+  const environment = { ...process.env, OPENQUANTUM_PYTHON_ENV_ROOT: path.dirname(pythonEnvironmentRoot(root, "mwpf-decoding")) };
+  const manager = new Environments({ root, directory: path.join(output, "settings"), environment });
   const record = await manager.read("mwpf-decoding");
   const before = await manager.status("mwpf-decoding");
   assert.equal(before.installation, "present");

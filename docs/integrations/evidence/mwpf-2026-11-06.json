@@ -20,7 +20,7 @@
     "sampledLogicalErrors": 0,
     "invalidInput": "raises; no success artifact",
     "processTimeout": "test runner terminates real sleeping Python process; not live host-session verification",
-    "codexEnvironmentAdapter": "ready after actual module check"
+    "codexEnvironmentAdapter": "ready after actual module check; fixture explicitly maps to the prepared command-line SDK, preserving distinct host defaults"
   },
   "platform": {
     "os": "macOS",
@@ -40,7 +40,7 @@
     },
     {
       "path": "tests/mwpf-decoding-live.test.mjs",
-      "sha256": "2cb5c018ad0b2cb3199280a589c9ad834ac22adaa5f17892b7d82f88ee5d6311"
+      "sha256": "9e372ae2fd4bf8fb5f39e4698ccf667386a78d75d1a8bee7449c91da2d65c504"
     }
   ],
   "numericalEvidence": {
