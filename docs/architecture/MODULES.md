@@ -46,6 +46,33 @@ Interface 注册和生命周期机制，Skill、Tool、Validator 等是职责模
 `tests/plugin-boundaries.test.mjs` 检查共享执行入口的静态模块图；`tests/component-parity.test.mjs`
 验证目录内容一致，并在没有任何 DSH runtime/preset 的目录中构建。两者不替代真实宿主验收。
 
+### 两端共用的有界 Tool 调用模块
+
+`src/lib/tool-backend.mjs` 的 `createToolBackend` 接收已验证的目录、显式执行预算、普通连接 Adapter
+与外部会话 Adapter 工厂，拥有参数和实时合同检查、调用并发、权限复查、取消与调用排空。
+它不读取目录文件、不构造子进程、不访问凭据库，也不导入宿主模块；宿主仍拥有 Agent、审批、注册和科学验收。
+普通 Adapter 的 `close()` 必须等待其资源释放；外部会话 Adapter 继续拥有凭据代次、持久会话与环境租约。
+共享 backend 的首次 `close()` 同步拒绝新调用并取消在途调用；所有调用者复用同一关闭 Promise。
+即使一处回收失败，也先等待其余在途清理，再报告失败。调用容量与清理回执由同一 Map 拥有；
+完整状态归属、恢复规则和维护决定见[状态协议清单](STATE_LIFECYCLES.md)。
+
+```mermaid
+flowchart TD
+  C[Codex backend 装配] --> E[共享 Tool backend]
+  D[Desktop backend 装配] --> E
+  P[已验证目录与显式预算] --> E
+  C --> S[stdio 连接 Adapter]
+  D --> N[进程内原生 Tool Adapter]
+  D --> S
+  E --> A[注入的连接与外部会话 Interface]
+```
+
+两端当前继续复用 `runtime/chatgpt/catalog.mjs` 的产品目录投影和 `dist/chatgpt` 的摘要目录，
+保留相同的 Tool schema、能力范围及预算；这部分历史路径不是共享执行模块的反向依赖。
+`runtime/chatgpt/backend.mjs` 与 `src/settings/desktop/backend.mjs` 分别装配相同共享模块，
+Desktop 不再委托 Codex backend 工厂。原 `createBackend`、预算与目录读取导出仍兼容已有入口。
+静态模块图检查覆盖共享 backend；行为测试同时验证取消排空和两端的 stdio/进程内差异。
+
 ## 2. 核心对象
 
 | 核心对象 | 状态或内容 | 权威模块 | 关键不变量 |

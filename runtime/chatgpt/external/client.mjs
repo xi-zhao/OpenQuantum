@@ -5,7 +5,7 @@ import { isDeepStrictEqual } from "node:util";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 import Ajv from "ajv";
-import { externalContract, ACCOUNT_OPERATIONS, operationCredential, operationLimitation } from "./catalog.mjs";
+import { externalMcp, externalContract, ACCOUNT_OPERATIONS, operationCredential, operationLimitation } from "./catalog.mjs";
 import { externalPaths } from "./setup.mjs";
 import { digest } from "../../../src/settings/codex/storage.mjs";
 import { serviceById } from "../../../src/settings/codex/service-catalog.mjs";
@@ -236,4 +236,16 @@ export class ExternalSessions {
       if (failures.length) throw new AggregateError(failures, "MCP 连接回收失败");
     })();
   }
+}
+
+// Host assembly passes this narrow interface to the shared Tool backend. Keep
+// the persistent session/credential protocol owned by ExternalSessions.
+export function createExternalSessionAdapter(options) {
+  const sessions = new ExternalSessions(options);
+  return {
+    validateCall: (provider, input) => validateExternal(options.root, externalMcp(provider), input),
+    call: (provider, input, lifecycle) => sessions.call(externalMcp(provider), input, lifecycle),
+    reconcile: () => sessions.reconcile(),
+    close: () => sessions.close(),
+  };
 }

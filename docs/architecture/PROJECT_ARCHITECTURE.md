@@ -41,6 +41,7 @@ Acceptance Profile 提供规则，只有 central Acceptance Builder 推导最终
 | --- | --- |
 | 对象职责和依赖方向 | [扩展对象模型](EXTENSION_MODEL.md)、[模块地图](MODULES.md) |
 | 共享能力与科学合同 | [能力声明](../../.agents/capability-packages.yml)、[原生 Tool](../../src/capabilities/native-quantum-tools.mjs)、[科学合同](../../.agents/skill-contracts/index.mjs) |
+| 两端共用的有界 Tool 调用 | [共享 backend](../../src/lib/tool-backend.mjs)、[装配与依赖方向](MODULES.md#两端共用的有界-tool-调用模块)；目录、连接与预算由两端入口提供，宿主仍拥有注册与执行循环 |
 | DSH 装配、准备与资源所有权 | [Desktop 按需准备](../integrations/DESKTOP_PREPARATION.md)、[Desktop Application Interface](../../src/settings/desktop/application.mjs) |
 | Codex 接入与执行 | [Codex 插件](../integrations/CODEX_PLUGIN.md)、[执行入口](../../runtime/chatgpt/agent-tools.mjs)、[原生适配边界](../../runtime/chatgpt/native-adapter.mjs) |
 | 设置保存与最小依赖 | [设置恢复](../../runtime/chatgpt/ui/settings-recovery.mjs)、[算法环境](../../src/lib/algorithm-environment.mjs) |

@@ -9,10 +9,15 @@ Codex 插件在外层 Codex 对话中提供量子 Skill 和科学 Tool。OpenQua
 | --- | --- |
 | `.agents/capability-packages.yml`、`.agents/skills/` | 领域能力、源 Skill、MCP implementation 与科学合同的唯一来源 |
 | `src/capabilities/` | 原生科学 Tool 定义与实现；不注册宿主 Runtime |
+| `src/lib/tool-backend.mjs` | 两端共用的有界调用、合同检查、取消及排空；接收目录、预算与连接 Adapter，不依赖宿主 |
 | `runtime/openquantum/agent-presets/openquantum/` | 将共享定义注册到 Harness，按 Harness 需要投影 schema |
 | `runtime/chatgpt/` | 将可适配能力投影为本机 MCP，提供设置资源；没有 Agent loop 或模型请求 |
 | `src/settings/codex/` | 设置 Application Interface、受控连接、系统凭据库、卡片内保存和备用凭据窗口 |
 | `distributions/codex-plugin/` | 与 Desktop 一致的产品版本及插件运行依赖锁定 |
+
+`runtime/chatgpt/backend.mjs` 保留现有入口，只负责目录、预算和连接装配；原生 Tool 继续经 stdio 调用。
+目录读取与固定合同投影集中在 `catalog.mjs`，连接构造位于 `provider-connection.mjs`。
+Desktop 单独装配同一个共享 backend，并为原生 Tool 提供进程内 Adapter；两端保留现有预算和返回合同。
 
 构建从能力策略与已审阅的 Tool 合同生成目录、Skill 和完整输入合同，检查重复名称和策略漂移。
 FlagQuantum 构建复用已审阅的固定版本 `upstream-tools.json`，无需为打包安装其 Python 环境；

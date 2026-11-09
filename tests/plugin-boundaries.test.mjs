@@ -12,7 +12,8 @@ test("shared Tool and MCP module graphs do not import a host runtime or UI", asy
   const native = (await readdir(path.join(root, "src/capabilities"))).filter(name => name.endsWith(".mjs")).map(name => `src/capabilities/${name}`);
   const servers = policy.packages.flatMap(item => (item.execution?.mcpServers ?? [])
     .filter(server => server.source === "package").map(server => server.entrypoint));
-  const { metafile } = await build({ absWorkingDir: root, entryPoints: [...new Set([...native, ...servers])],
+  const sharedExecution = ["src/lib/tool-backend.mjs"];
+  const { metafile } = await build({ absWorkingDir: root, entryPoints: [...new Set([...native, ...servers, ...sharedExecution])],
     bundle: true, packages: "external", platform: "node", format: "esm", write: false,
     outdir: "dist/boundary-check", metafile: true, logLevel: "silent" });
   for (const [filename, input] of Object.entries(metafile.inputs)) {
