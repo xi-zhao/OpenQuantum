@@ -4,7 +4,7 @@
 
 <p align="center"><a href="../../README.md">简体中文</a> · <a href="./README.en.md">English</a> · <a href="./README.ja.md">日本語</a> · <a href="./README.ko.md">한국어</a> · <a href="./README.es.md">Español</a> · <a href="./README.fr.md">Français</a> · <a href="./README.de.md">Deutsch</a> · <a href="./README.pt.md">Português</a> · <a href="./README.ru.md">Русский</a> · <a href="./README.ar.md">العربية</a></p>
 
-**Hinweis zu Desktop 0.8.5:** Die eigenständige OpenQuantum-App für macOS auf Apple Silicon kehrt zur einfachen Oberfläche von DSH Desktop 2.0.0 / Harness 0.1.0-rc.6 zurück. Die Oberfläche bietet vorerst Chinesisch und Englisch; vorhandene Übersetzungen und README-Dateien bleiben erhalten. Die folgenden Angaben zu 0.8.4 beschreiben die frühere Veröffentlichung. Aktuelle Installationshinweise und Einschränkungen der Signierung stehen in der [Installationsanleitung](../DESKTOP_INSTALLERS.md). Das veröffentlichte Codex-Plugin bleibt bei 0.8.4.
+**Version 0.8.11:** Desktop und das Codex-Plugin verwenden dieselbe Produktversion. Aktuelle Downloads und Prüfgrenzen stehen in der [Desktop-Anleitung](../DESKTOP_INSTALLERS.md) und der [Codex-Anleitung](../integrations/CODEX_AGENT_INSTALL.md). Die ausführlichen Angaben zu 0.8.4 weiter unten bleiben als historische Beschreibung erhalten und beziehen sich nicht auf das Paket 0.8.11.
 
 <p align="center">
   <strong>OpenQuantum — Gemeinsam vertrauenswürdige KI für die Quantenforschung entwickeln.</strong><br />
@@ -27,7 +27,7 @@ Wählen Sie den Zugang, der zu Ihnen passt; beide nutzen dieselben Fachfunktione
 
 **Beginnen Sie mit den gemessenen Fällen:** Ein [Pauli-Kommutator mit PennyLane](#pennylane-rust-case) läuft als vollständiger Aufruf **5,09×** schneller, eine [Wigner-Funktion mit QuTiP](#qutip-rust-case) **5,69×** schneller. Für beide liegen Leistungsvergleiche, Ergebnisprüfungen und Reproduktionsprotokolle vor.
 
-**Aktuelle Version 0.8.4:** [Desktop-Download und Versionshinweise](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.4) · [Codex-Plugin-Download und Versionshinweise](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.4). Beide haben dieselbe Produktversion.
+**Aktuelle Version 0.8.11:** [Desktop-Download und Versionshinweise](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.11) · [Codex-Plugin-Download und Versionshinweise](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.11). Beide haben dieselbe Produktversion.
 
 - **Funktionen leichter finden:** Tools, MCP und Skills sind in acht Nutzungskategorien gegliedert, mit Suche und Statusfiltern.
 - **Ein Startsymbol mit eigener Marke:** `OpenQuantum.app` auf dem Mac und `OpenQuantum.lnk` unter Windows tragen das OpenQuantum-Symbol; die ursprüngliche Oberfläche von DSH Desktop, Quantum Learning und die Update-Funktion bleiben erhalten.

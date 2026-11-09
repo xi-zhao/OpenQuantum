@@ -2,7 +2,7 @@
 
 <p align="center"><a href="../../README.md">简体中文</a> · <a href="./README.en.md">English</a> · <a href="./README.ja.md">日本語</a> · <a href="./README.ko.md">한국어</a> · <a href="./README.es.md">Español</a> · <a href="./README.fr.md">Français</a> · <a href="./README.de.md">Deutsch</a> · <a href="./README.pt.md">Português</a> · <a href="./README.ru.md">Русский</a> · <a href="./README.ar.md">العربية</a></p>
 
-**0.8.5 デスクトップについて：** macOS Apple Silicon 向けの独立した OpenQuantum アプリです。DSH Desktop 2.0.0 / Harness 0.1.0-rc.6 のシンプルな操作感に戻し、画面の言語は当面、中国語と英語に限定します。既存の翻訳と README は保持します。以下の 0.8.4 の説明は旧リリースの記録です。現在のインストール方法と署名の制約は[インストールガイド](../DESKTOP_INSTALLERS.md)をご確認ください。Codex プラグインの公開版は 0.8.4 のままです。
+**バージョン 0.8.11：** Desktop と Codex プラグインは同じ製品バージョンを使用します。現在のダウンロードと検証範囲は [Desktop ガイド](../DESKTOP_INSTALLERS.md)と [Codex ガイド](../integrations/CODEX_AGENT_INSTALL.md)を参照してください。以下の 0.8.4 に関する詳細は過去の記録として残しており、0.8.11 パッケージの説明ではありません。
 
 <p align="center">
   <strong>OpenQuantum — 信頼できる量子研究 AI を、ともに育てる。</strong><br />
@@ -25,7 +25,7 @@ OpenQuantum は、オープンソースで共同開発に開かれた量子研�
 
 **まずは実測事例から：** [PennyLane の Pauli 交換子](#pennylane-rust-case)は呼び出し全体で **5.09 倍**、[QuTiP の Wigner 関数計算](#qutip-rust-case)は **5.69 倍**高速化しました。いずれも性能比較、結果の確認、再現記録を残しています。
 
-**現行バージョン 0.8.4：**[Desktop のダウンロードとリリースノート](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.4) · [Codex プラグインのダウンロードとリリースノート](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.4)。両者は同じ製品バージョンを使用します。
+**現行バージョン 0.8.11：**[Desktop のダウンロードとリリースノート](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.11) · [Codex プラグインのダウンロードとリリースノート](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.11)。両者は同じ製品バージョンを使用します。
 
 - **機能を見つけやすく：** Tools・MCP・Skills を用途別の 8 分類に整理し、検索と状態フィルターを追加しました。
 - **起動アイコンを一つに：** Mac の `OpenQuantum.app` と Windows の `OpenQuantum.lnk` は OpenQuantum アイコンを使用し、オリジナルの DSH Desktop の UI、Quantum Learning、アップデート機能はそのまま保持します。

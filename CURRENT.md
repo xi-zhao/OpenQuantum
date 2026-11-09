@@ -1,11 +1,14 @@
 # OpenQuantum 当前交接
 
-核验日期：2026-10-30。此页只记录交接状态；架构以[文档总入口](docs/README.md)为准，执行事实以 Harness
+核验日期：2026-11-09。此页只记录交接状态；架构以[文档总入口](docs/README.md)为准，执行事实以 Harness
 Session event log 为准，科学状态以 Acceptance Report 为准。2026-09 至 2026-10-16 的日期化记录已迁至
 [交接历史](docs/handoff/HISTORY.md)，内容未删改。接手时先重新查询 Git、PR 与 CI，不把本页当作实时状态。
 
 ## 当前基线
 
+- **0.8.11 正在发行准备**：共享 backend 与状态协议修复已合入本地 main（`82b20366`）；该合并上的相关回归为 218 通过、4 条件跳过。
+  同步发行将覆盖主线已有的 SlowQuant、TNQS、RcmpsCore 接入，详见 [0.8.11 更新说明](docs/releases/v0.8.11.md)。
+  发布、包摘要与最终宿主验收尚待完成；以下 0.8.10 记录仍是已有发行与本机安装证据，不代表本机已升级。
 - **0.8.10** 已发布，并完成本机 Desktop / Codex 更新；两端均来自干净源码提交 `091278a6`。
   [Desktop v0.8.10](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.10) 为最新发行，
   [Codex codex-v0.8.10](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.10) 已公开；0.8.9 历史发行保留。
