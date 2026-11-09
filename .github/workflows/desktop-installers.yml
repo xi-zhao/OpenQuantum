@@ -92,6 +92,8 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: 24.14.1
+      - name: Install locked client-service dependencies
+        run: npm ci --no-audit --no-fund
       - name: Verify the public feed using the unchanged client service
         run: |
           node --input-type=module <<'NODE'
