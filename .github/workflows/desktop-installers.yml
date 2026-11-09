@@ -1,7 +1,13 @@
-name: Verify mounted OpenQuantum 0.8.11 DMG
+name: Verify OpenQuantum 0.8.11 release
 
 # One-off release evidence branch; the reviewed product source and image stay immutable.
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        type: choice
+        default: update
+        options: [update, image]
 
 permissions:
   contents: read
@@ -13,6 +19,7 @@ env:
 
 jobs:
   verify-image:
+    if: inputs.target == 'image'
     name: Mounted release DMG (macOS arm64)
     runs-on: macos-15
     timeout-minutes: 30
@@ -71,3 +78,45 @@ jobs:
       - name: Detach this verification image
         if: always()
         run: hdiutil detach /Volumes/OpenQuantum || true
+
+  verify-update:
+    if: inputs.target == 'update'
+    name: Live update client with default timeout
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: 5f6f0114d83f9ba64766e15e25e923767b13fa6b
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24.14.1
+      - name: Verify the public feed using the unchanged client service
+        run: |
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          import fs from 'node:fs/promises';
+          import path from 'node:path';
+          import os from 'node:os';
+          import { createUpdateService } from './src/updates/service.mjs';
+          import { DEFAULT_UPDATE_FEED } from './src/updates/release.mjs';
+          const fixture = await fs.mkdtemp(path.join(os.tmpdir(), 'oq-published-feed-'));
+          const results = [];
+          for (const [currentVersion, expectedStatus] of [['0.8.10', 'available'], ['0.8.11', 'current']]) {
+            const service = await createUpdateService({ currentVersion, statePath: path.join(fixture, `${currentVersion}.json`), automatic: false });
+            try {
+              const result = await service.dispatch({ action: 'check' });
+              assert.equal(result.status, expectedStatus);
+              assert.equal(result.release.version, '0.8.11');
+              results.push({ currentVersion, status: result.status, release: result.release });
+            } finally { await service.dispose(); }
+          }
+          await fs.writeFile(path.join(process.env.RUNNER_TEMP, 'update-client.json'), JSON.stringify({ feed: DEFAULT_UPDATE_FEED, sourceRevision: process.env.OQ_RELEASE_REVISION, defaultTimeoutMs: 10000, scope: 'isolated update-service state; no application upgrade', results }, null, 2));
+          NODE
+      - uses: actions/upload-artifact@v7
+        with:
+          name: OpenQuantum-live-update-verification-0.8.11
+          path: ${{ runner.temp }}/update-client.json
+          if-no-files-found: error
+          retention-days: 14
