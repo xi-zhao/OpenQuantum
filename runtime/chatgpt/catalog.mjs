@@ -1,12 +1,16 @@
 import fs from "node:fs/promises";
 import path from "node:path";
+import { createHash } from "node:crypto";
+import { isDeepStrictEqual } from "node:util";
 import { fileURLToPath } from "node:url";
 import { parse } from "yaml";
 import { mcpCatalogEntry } from "../../src/settings/server/project-settings-catalog.mjs";
 import { readSdkLibraries } from "../../src/lib/sdk-access.mjs";
 import { serviceById } from "../../src/settings/codex/service-catalog.mjs";
 import { optionalRuntime } from "../../src/settings/codex/runtime-catalog.mjs";
-import { EXTERNAL_MCP, externalMcp } from "./external/catalog.mjs";
+import { EXTERNAL_MCP, externalMcp, externalContract, externalTool } from "./external/catalog.mjs";
+import { RUNTIME_ENV_NAMES } from "../../src/settings/codex/environments.mjs";
+import { compileToolInput, reviewProviderTools } from "../../src/lib/tool-backend.mjs";
 
 export const PROJECT_ROOT = fileURLToPath(new URL("../../", import.meta.url));
 export const PRESET_PATH = "src/capabilities";
@@ -128,4 +132,70 @@ export function providerGroups(capabilities) {
     }
   }
   return [...providers.values()];
+}
+
+export async function readBundledTools(root, providers) {
+  // This is a build artifact of the existing policy and real tools/list, not a
+  // separate registry. Discovery must never fall back to starting providers.
+  const directory = path.join(root, "dist/chatgpt");
+  const [bytes, release] = await Promise.all([
+    fs.readFile(path.join(directory, "capabilities.json")),
+    fs.readFile(path.join(directory, "release.json"), "utf8").then(JSON.parse),
+  ]);
+  if (createHash("sha256").update(bytes).digest("hex") !== release.contractDigest) {
+    throw new Error("Bundled tool catalog digest mismatch; rebuild or reinstall the plugin");
+  }
+  const catalog = JSON.parse(bytes);
+  if (!isDeepStrictEqual(catalog.providers, providers) || !Array.isArray(catalog.tools)) {
+    throw new Error("Bundled tool catalog does not match capability policy; rebuild the plugin");
+  }
+  const expected = providers.flatMap(provider => provider.tools.map(tool => tool.name)).sort();
+  if (!isDeepStrictEqual(catalog.tools.map(tool => tool.name).sort(), expected)) {
+    throw new Error("Bundled tool catalog has missing or duplicate tools; rebuild the plugin");
+  }
+  return catalog.tools;
+}
+
+// Both hosts currently consume this same reviewed product projection. Keeping
+// its bundle location and bytes stable is separate from executing its Tools.
+export async function loadBackendCatalog({ root = PROJECT_ROOT, discover = false, connect, limits }) {
+  const capabilities = await readCapabilities(root);
+  const providers = providerGroups(capabilities);
+  const tools = [];
+  const bundled = discover ? null : await readBundledTools(root, providers);
+  for (const provider of providers) {
+    let client;
+    try {
+      if (provider.kind === "external") {
+        const contract = await externalContract(root, provider.key);
+        if (contract.tools.map(tool => tool.name).sort().join("\n") !== provider.upstreamTools.map(tool => tool.name).sort().join("\n")) throw new Error(`External MCP contract does not match policy: ${provider.key}`);
+        const tool = externalTool(externalMcp(provider.key), provider.upstreamTools, contract);
+        if (!discover && !isDeepStrictEqual(tool, bundled.find(item => item.name === tool.name))) throw new Error(`Bundled external MCP contract changed: ${provider.key}`);
+        compileToolInput(tool.inputSchema);
+        tools.push(tool);
+        continue;
+      }
+      // Build/probe may query local declarations, but never installs Python.
+      // FlagQuantum retains its reviewed snapshot rather than starting an SDK.
+      const pinned = discover && provider.key === "flagquantum"
+        ? JSON.parse(await fs.readFile(path.join(root, ".agents/skills/flagquantum-workbench/mcp/upstream-tools.json"), "utf8")) : null;
+      if (discover && !pinned) client = await connect(provider, root, Object.fromEntries(RUNTIME_ENV_NAMES.filter(key => process.env[key]).map(key => [key, process.env[key]])));
+      const actual = pinned ? reviewProviderTools(pinned, provider, limits) : discover
+        ? reviewProviderTools(await client.listTools({}, { timeout: 15000 }), provider, limits)
+        : bundled.filter(tool => provider.tools.some(declared => declared.name === tool.name));
+      for (const tool of actual) {
+        if (tools.some(existing => existing.name === tool.name)) throw new Error(`Duplicate tool name: ${tool.name}`);
+        compileToolInput(tool.inputSchema);
+        tools.push(tool);
+      }
+    } catch (error) {
+      if (discover) throw new Error(`Provider discovery failed: ${provider.key}`, { cause: error });
+      throw error;
+    } finally {
+      await client?.close();
+    }
+  }
+  const secretFields = Object.fromEntries(providers.map(provider => [provider.key,
+    (serviceById(provider.key)?.fields ?? []).filter(field => field.secret).map(field => field.name)]));
+  return { root, capabilities, providers, tools, secretFields };
 }

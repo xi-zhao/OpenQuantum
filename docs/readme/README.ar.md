@@ -2,7 +2,7 @@
 
 <p align="center"><strong>OpenQuantum — نبني معًا ذكاءً اصطناعيًا موثوقًا للبحث الكمي.</strong><br /><sub>خبرات البحث الكمي مجتمعة في OpenQuantum واحد</sub></p>
 
-**ملاحظة بشأن Desktop 0.8.5:** يعود تطبيق OpenQuantum المستقل لنظام macOS على Apple Silicon إلى الواجهة البسيطة في DSH Desktop 2.0.0 / Harness 0.1.0-rc.6. تقتصر لغات الواجهة حاليًا على الصينية والإنجليزية، مع الاحتفاظ بالترجمات وملفات README الموجودة. تصف المعلومات الواردة أدناه عن 0.8.4 الإصدار السابق. راجع [دليل التثبيت](../DESKTOP_INSTALLERS.md) لمعرفة خطوات التثبيت الحالية وحدود توقيع التطبيق. يظل الإصدار المنشور من إضافة Codex هو 0.8.4.
+**الإصدار 0.8.11:** تتشارك إصدارات Desktop وإضافة Codex رقم المنتج نفسه. راجع [دليل Desktop](../DESKTOP_INSTALLERS.md) و[دليل Codex](../integrations/CODEX_AGENT_INSTALL.md) للتنزيل الحالي وحدود التحقق. المعلومات التفصيلية عن 0.8.4 أدناه محفوظة كسجل للإصدار السابق؛ وهي لا تصف حزمة 0.8.11.
 
 <p align="center"><a href="../../README.md">简体中文</a> · <a href="./README.en.md">English</a> · <a href="./README.ja.md">日本語</a> · <a href="./README.ko.md">한국어</a> · <a href="./README.es.md">Español</a> · <a href="./README.fr.md">Français</a> · <a href="./README.de.md">Deutsch</a> · <a href="./README.pt.md">Português</a> · <a href="./README.ru.md">Русский</a> · <a href="./README.ar.md">العربية</a></p>
 
@@ -22,7 +22,7 @@ OpenQuantum منصة ذكاء اصطناعي للبحث الكمي، مفتوح�
 
 **ابدأ بالحالات المقيسة:** يعمل [مبدّل باولي في PennyLane](#pennylane-rust-case) أسرع بمقدار **5.09×** كاستدعاء كامل، ويعمل [حساب دالة ويغنر في QuTiP](#qutip-rust-case) أسرع بمقدار **5.69×**. تحتفظ الحالتان بمقارنات الأداء وفحوص النتائج وسجلات إعادة الإنتاج.
 
-**الإصدار الحالي 0.8.4:** [تنزيل Desktop وملاحظات الإصدار](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.4) · [تنزيل إضافة Codex وملاحظات الإصدار](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.4). يستخدم الاثنان رقم إصدار المنتج نفسه.
+**الإصدار الحالي 0.8.11:** [تنزيل Desktop وملاحظات الإصدار](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.11) · [تنزيل إضافة Codex وملاحظات الإصدار](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.11). يستخدم الاثنان رقم إصدار المنتج نفسه.
 
 - **عثور أسهل على الوظائف:** نُظّمت Tools وMCP وSkills في ثماني فئات حسب الاستخدام، مع البحث والتصفية حسب الحالة.
 - **أيقونة تشغيل موحّدة للعلامة:** يستخدم `OpenQuantum.app` على Mac و`OpenQuantum.lnk` على Windows أيقونة OpenQuantum، مع الإبقاء على واجهة DSH Desktop الرسمية وQuantum Learning وميزة التحديث.

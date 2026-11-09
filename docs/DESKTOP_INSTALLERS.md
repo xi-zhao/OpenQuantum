@@ -7,12 +7,12 @@ Agent 预设管理、自动化中心或 Magpie 专用连接页。
 复用固定版本 DSH 的窗口、会话、权限和持久化机制，通过官方配置与 Client Slot 扩展收拢界面。
 普通界面、窗口与图标使用 OpenQuantum 品牌，上游来源保留在设置底部的开源许可链接。不自动吸收上游新增功能。
 
-## OpenQuantum 0.8.9 独立安装包（Mac Apple Silicon）
+## OpenQuantum 0.8.11 独立安装包（Mac Apple Silicon）
 
-从 [v0.8.9 Release](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.9) 下载
-`OpenQuantum-0.8.9-macOS-arm64.dmg` 和 `SHA256SUMS`，校验摘要后打开 DMG，将 `OpenQuantum.app`
+从 [v0.8.11 Release](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.11) 下载
+`OpenQuantum-0.8.11-macOS-arm64.dmg` 和 `SHA256SUMS`，校验摘要后打开 DMG，将 `OpenQuantum.app`
 拖入「应用程序」再打开。应用自带桌面程序、Node、uv 与锁定依赖，无需另装 DSH Desktop。
-Codex 插件同步发行 [codex-v0.8.9](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.9)，两个标签指向同一源码提交。
+Codex 插件同步发行 [codex-v0.8.11](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.11)，两个标签指向同一源码提交。
 0.8.8 的应用与 Dock 图标使用白色圆角底板，菜单栏继续使用适合系统背景的透明标志。
 
 本次独立安装包只覆盖 Apple Silicon；Intel 和 Windows 的既有能力包见下文。
