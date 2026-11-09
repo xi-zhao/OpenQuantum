@@ -69,6 +69,82 @@ test("shared shutdown aborts the active call and waits for adapter cleanup befor
   assert.equal(finished, true);
 });
 
+test("a failed external shutdown still drains ordinary calls and repeated closes share the outcome", { timeout: 10000 }, async t => {
+  const entered = Promise.withResolvers(), closing = Promise.withResolvers(), release = Promise.withResolvers();
+  const failure = new Error("external cleanup failed");
+  let closes = 0;
+  const backend = createToolBackend({ catalog: catalog(), limits,
+    createExternal: () => ({ close: () => { closes++; throw failure; } }),
+    connect: async () => ({
+      listTools: async () => ({ tools: [tool] }),
+      callTool: async (_input, _schema, { signal }) => new Promise((_resolve, reject) => {
+        signal.addEventListener("abort", () => reject(signal.reason), { once: true }); entered.resolve();
+      }),
+      close: async () => { closing.resolve(); await release.promise; },
+    }),
+  });
+  t.after(async () => { release.resolve(); await backend.close().catch(() => {}); });
+  const call = assert.rejects(backend.call(tool.name, { value: 1 }), /abort/i);
+  await entered.promise;
+  let finished = false;
+  const stopped = backend.close();
+  const observed = stopped.catch(error => { finished = true; return error; });
+  await closing.promise;
+  assert.equal(finished, false, "shutdown cannot report failure before the other resources finish closing");
+  assert.equal(backend.close(), stopped, "all callers observe the same shutdown");
+  await assert.rejects(backend.call(tool.name, { value: 2 }), /已关闭/);
+  release.resolve();
+  await call;
+  assert.equal(await observed, failure);
+  assert.equal(closes, 1);
+});
+
+test("ordinary cleanup failures reach both call and shutdown without exposing credentials", { timeout: 10000 }, async t => {
+  const entered = Promise.withResolvers();
+  const secret = "fixture-cleanup-secret";
+  const backend = createToolBackend({ catalog: catalog(), limits, createExternal: noExternal,
+    connect: async () => ({
+      listTools: async () => ({ tools: [tool] }),
+      callTool: async (_input, _schema, { signal }) => new Promise((_resolve, reject) => {
+        signal.addEventListener("abort", () => reject(signal.reason), { once: true }); entered.resolve();
+      }),
+      close: async () => { throw new Error(`cleanup echoed ${secret}`); },
+    }),
+  });
+  t.after(() => backend.close().catch(() => {}));
+  const safeFailure = error => {
+    assert.match(error.message, /回收失败/);
+    assert.doesNotMatch(error.stack + JSON.stringify(error), /fixture-cleanup-secret/);
+    return true;
+  };
+  const call = assert.rejects(backend.call(tool.name, { value: 1 }, undefined, async () => true, { TOKEN: secret }), safeFailure);
+  await entered.promise;
+  await Promise.all([call, assert.rejects(backend.close(), safeFailure)]);
+});
+
+test("shutdown reports independent cleanup failures together after both adapters finish", { timeout: 10000 }, async t => {
+  const entered = Promise.withResolvers();
+  const ordinary = new Error("ordinary cleanup failed"), external = new Error("external cleanup failed");
+  const backend = createToolBackend({ catalog: catalog(), limits,
+    createExternal: () => ({ close: async () => { throw external; } }),
+    connect: async () => ({
+      listTools: async () => ({ tools: [tool] }),
+      callTool: async (_input, _schema, { signal }) => new Promise((_resolve, reject) => {
+        signal.addEventListener("abort", () => reject(signal.reason), { once: true }); entered.resolve();
+      }),
+      close: async () => { throw ordinary; },
+    }),
+  });
+  t.after(() => backend.close().catch(() => {}));
+  const call = assert.rejects(backend.call(tool.name, { value: 1 }), error => error === ordinary);
+  await entered.promise;
+  await Promise.all([call, assert.rejects(backend.close(), error => {
+    assert.ok(error instanceof AggregateError);
+    assert.deepEqual(error.errors, [external, ordinary]);
+    return true;
+  })]);
+});
+
 test("invalid catalogs do not allocate a persistent external owner", () => {
   let owners = 0;
   const input = catalog();

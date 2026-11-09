@@ -56,10 +56,9 @@ export function createToolBackend({ catalog, limits, connect, createExternal }) 
       routes.set(tool.name, { provider, validate: compileToolInput(tool.inputSchema), contracts });
     }
   }
-  let active = 0;
-  let closed = false;
-  const calls = new Set();
-  const draining = new Set();
+  let closePromise;
+  // One entry owns both a call's capacity and its cleanup acknowledgement.
+  const calls = new Map();
   const external = createExternal();
   return {
     root,
@@ -74,18 +73,16 @@ export function createToolBackend({ catalog, limits, connect, createExternal }) 
       if (route.provider.kind === "external") await external.validateCall(route.provider.key, args);
     },
     async call(name, args, signal, authorize = async () => true, values = {}, lifecycle = {}) {
-      if (closed) throw new Error("计算连接已关闭");
+      if (closePromise) throw new Error("计算连接已关闭");
       const route = routes.get(name);
       if (!route) throw new Error("Unknown or unavailable tool");
       if (!route.validate(args)) throw new Error(`Invalid arguments: ${ajv.errorsText(route.validate.errors)}`);
-      if (active >= limits.concurrentCalls) throw new Error("计算服务繁忙，请稍后重试。");
+      if (calls.size >= limits.concurrentCalls) throw new Error("计算服务繁忙，请稍后重试。");
       signal?.throwIfAborted();
-      active += 1;
       const controller = new AbortController();
-      calls.add(controller);
       let settled;
       const drain = new Promise(resolve => { settled = resolve; });
-      draining.add(drain);
+      calls.set(controller, drain);
       let client;
       const combined = signal ? AbortSignal.any([signal, controller.signal]) : controller.signal;
       try {
@@ -118,16 +115,36 @@ export function createToolBackend({ catalog, limits, connect, createExternal }) 
         if (route.provider.kind !== "external" && (secretFields[route.provider.key] ?? []).some(field => values[field])) throw new Error("服务调用失败、已取消或已停用；请检查服务配置和账户状态");
         throw error;
       } finally {
-        try { await client?.close(); }
-        finally { calls.delete(controller); active -= 1; draining.delete(drain); settled(); }
+        let failure;
+        try {
+          await Promise.resolve().then(() => client?.close()).catch(error => {
+            const secret = (secretFields[route.provider.key] ?? []).some(field => values[field]);
+            failure = { error: secret ? new Error("计算连接回收失败；请检查服务配置和账户状态") : error };
+            throw failure.error;
+          });
+        } finally {
+          calls.delete(controller);
+          // Resolve with the cleanup outcome even when no shutdown is waiting;
+          // the call itself reports failure without an unhandled drain rejection.
+          settled(failure);
+        }
       }
     },
     reconcileExternal: () => external.reconcile(),
-    async close() {
-      closed = true;
-      for (const controller of calls) controller.abort();
-      await external.close();
-      await Promise.allSettled([...draining]);
+    close() {
+      if (closePromise) return closePromise;
+      const draining = [...calls.values()];
+      closePromise = Promise.resolve().then(async () => {
+        // An external adapter may throw synchronously. Still wait for every
+        // admitted call, and publish one terminal outcome to all close callers.
+        const externalCleanup = Promise.resolve().then(() => external.close()).then(() => undefined, error => ({ error }));
+        const outcomes = await Promise.all([externalCleanup, ...draining]);
+        const failures = outcomes.filter(Boolean).map(outcome => outcome.error);
+        if (failures.length === 1) throw failures[0];
+        if (failures.length) throw new AggregateError(failures, "计算连接回收失败");
+      });
+      for (const controller of calls.keys()) controller.abort();
+      return closePromise;
     },
   };
 }
