@@ -2,7 +2,7 @@
 
 由 `node scripts/audit-sdk-integration.mjs` 从 capability policy、SDK 导航、项目 manifest 和依赖锁生成；用 `--check` 检查是否过期。
 
-本表覆盖 117 个 SDK/源码环境入口：105 个 Python（包含算法共享环境）、9 个 Julia、2 个原生源码或 ABI 入口、1 个 Lean 项目。原生 QDMI 另有 Python 桥接依赖项目。一个入口可包含多个库，同一个库也可能有多个隔离版本，不能把入口数量当成独立 SDK 数量。所有锁摘要与间接依赖版本可通过 `node scripts/sdk-access.mjs inventory` 读出。
+本表覆盖 118 个 SDK/源码环境入口：106 个 Python（包含算法共享环境）、9 个 Julia、2 个原生源码或 ABI 入口、1 个 Lean 项目。原生 QDMI 另有 Python 桥接依赖项目。一个入口可包含多个库，同一个库也可能有多个隔离版本，不能把入口数量当成独立 SDK 数量。所有锁摘要与间接依赖版本可通过 `node scripts/sdk-access.mjs inventory` 读出。
 
 **接入状态：原生路径与指南已提供；逐 API、可选依赖、平台与外部服务验证不由这张静态清单推断。** 环境是否准备需 `inspect`，实际执行证据见[完整接入记录](FULL_SDK_ACCESS.md)。
 
@@ -50,6 +50,7 @@
 | `mqt-qecc` | MQT QECC | python | mqt-qecc==2.0.0 | CSS 码、容错态制备、色码与模拟信息解码 | 明确 Hx/Hz 的 GF(2) 约定、逻辑算符、故障模型与后选择。2.x 不包含旧 union-find 实现；qsample 是另备的可选组件。 |
 | `mqt-qmap` | MQT QMAP | python | mqt-qmap==3.10.0 | 自定义架构、configuration、映射与布局算法 | 按固定版本、已安装可选组件及目标平台核实 |
 | `mrmustard-optics` | MrMustard | python | mrmustard==0.7.3, tensorflow==2.15.0 | 任意连续变量态、门、信道、参数与优化 | 固定 Python 3.11 / TensorFlow 2.15 环境；原生 wheel 与目标平台兼容性需核验。 |
+| `mwpf-decoding` | MWPF | python | mwpf[stim]==0.2.18, stim==1.16.0, sinter==1.16.0, numpy==2.5.3 | 用户自定义加权超图、syndrome 与权重界，以及 Stim/Sinter 逻辑 observable 译码 | 固定 MWPF 0.2.18；Sinter 必须显式 PanicAction.RAISE，有限 cluster 预算可回退 UF，float64 权重界不是形式化证明。一般超图求解无最坏耗时保证；使用宿主进程预算。 |
 | `myqlm-simulation` | myQLM | python | myqlm==1.13.7 | AQASM、自定义程序、job、QPU、插件与计算栈 | myQLM 按上游 EULA 使用；不能视为 OQC 的同名 qat 包，两者环境必须隔离。 |
 | `netqasm-network` | NetQASM | python | netqasm==2.0.0, numpy==1.26.4, scipy==1.14.1 | 任意程序、EPR/经典通信、编译、连接与运行时 | 本锁不含受许可限制的 NetSquid/SquidASM，端到端网络运行须准备相应运行时。 |
 | `ocean-optimization` | D-Wave Ocean SDK | python | dimod==0.12.22, dwave-ocean-sdk==9.5.0, dwave-samplers==1.8.0 | BQM、CQM、离散模型、变量、约束、sampler 与 SampleSet | 完整 Ocean 元包已进入依赖锁；本地模型、采样器与云客户端共享原生 API。连接 Leap、提交收费或 QPU 作业仍需用户授权与凭据。 |

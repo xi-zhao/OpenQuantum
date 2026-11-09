@@ -221,3 +221,12 @@ Chromobius 1.1.1 为 Apache-2.0，固定上游提交 `efae0325e4a8fc13be981434d3
 [physlib](https://github.com/leanprover-community/physlib)，均为 Apache-2.0。
 插件只包含项目模板、依赖锁和工作流指南，不捆绑完整工具链或库；准备所得源码保留上游许可。
 固定版本及间接依赖见 `.agents/skills/lean-physics/lean-toolchain` 和 `lake-manifest.json`。
+
+## MWPF 超图译码 SDK
+
+MWPF 0.2.18 为 MIT，固定上游提交 `e50f72e2f389950db50bce075163a4e4022c9dcd`；
+[源码与许可](https://github.com/yuewuo/mwpf/tree/e50f72e2f389950db50bce075163a4e4022c9dcd)。
+本仓库仅分发原创指南、示例、测试和依赖锁，不捆绑其二进制或复制算法源码。显式准备时获取发行包，
+保留 MWPF 以及 wheel 内 HiGHS、heapz、slp 等组件的许可；依赖 Stim/Sinter（Apache-2.0）、
+NumPy/SciPy（BSD-3-Clause）、Matplotlib 等完整来源与版本以 `mwpf-decoding/uv.lock` 和安装包元数据为准。
+原生 API 可用性、浮点权重界与科研验收分别验证。
