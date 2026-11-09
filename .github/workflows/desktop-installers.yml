@@ -1,71 +1,73 @@
-name: DSH capability packages
+name: Verify mounted OpenQuantum 0.8.11 DMG
 
-# These checks are required for main, including documentation-only changes.
-on:
-  workflow_dispatch:
-  push:
-    branches: [main, 'c/desktop-*']
-  pull_request:
-    branches: [main]
+# One-off release evidence branch; the reviewed product source and image stay immutable.
+on: workflow_dispatch
 
 permissions:
   contents: read
+  actions: read
+
+env:
+  OQ_RELEASE_REVISION: 5f6f0114d83f9ba64766e15e25e923767b13fa6b
+  OQ_IMAGE_RUN: '42573114309'
 
 jobs:
-  build:
-    name: Capability package (${{ matrix.target }})
-    runs-on: ${{ matrix.os }}
-    timeout-minutes: 45
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - os: macos-15
-            target: darwin-arm64
-          - os: macos-15-intel
-            target: darwin-x64
-          - os: windows-latest
-            target: win32-x64
+  verify-image:
+    name: Mounted release DMG (macOS arm64)
+    runs-on: macos-15
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v7
+        with:
+          ref: 5f6f0114d83f9ba64766e15e25e923767b13fa6b
+          persist-credentials: false
       - uses: actions/setup-node@v7
         with:
           node-version: 24.14.1
           cache: npm
-      - name: Install locked build dependencies
-        run: npm ci
-      - name: Check distribution upgrades and source integration
-        run: npm run desktop:package:check
-      - name: Build OpenQuantum capability archive for the original DSH Desktop
-        run: npm run desktop:package
-      - name: Verify archive and extract installation payload
-        shell: bash
+      - name: Install locked verification dependencies
+        run: npm ci --no-audit --no-fund
+      - name: Download the exact main-branch image
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh run download "$OQ_IMAGE_RUN" --repo "$GITHUB_REPOSITORY" --name OpenQuantum-standalone-macOS-arm64 --dir "$RUNNER_TEMP/oq-image"
+      - name: Verify checksums, mount image and verify signature
         run: |
-          oq_artifacts=".openquantum/distributions/${{ matrix.target }}/artifacts"
-          cd "$oq_artifacts"
-          if command -v shasum >/dev/null; then shasum -a 256 -c SHA256SUMS; else sha256sum -c SHA256SUMS; fi
-          mkdir -p ../verified-content
-          tar -xzf OpenQuantum-*-DSH-*.tar.gz -C ../verified-content
-      - name: Verify installed dependencies, configuration retention and runtimes
-        shell: bash
-        run: npm run desktop:package:smoke -- ".openquantum/distributions/${{ matrix.target }}/verified-content"
-      - name: Upload verified capability archive
-        uses: actions/upload-artifact@v7
-        with:
-          name: OpenQuantum-test-${{ matrix.target }}
-          path: |
-            .openquantum/distributions/${{ matrix.target }}/artifacts/*.tar.gz
-            .openquantum/distributions/${{ matrix.target }}/artifacts/SHA256SUMS
-          if-no-files-found: error
-          include-hidden-files: true
-          compression-level: 0
-          retention-days: 14
+          mkdir -p "$RUNNER_TEMP/oq-image-evidence"
+          cd "$RUNNER_TEMP/oq-image"
+          shasum -a 256 -c SHA256SUMS
+          hdiutil verify OpenQuantum-0.8.11-macOS-arm64.dmg > "$RUNNER_TEMP/oq-image-evidence/dmg-integrity.log" 2>&1
+          hdiutil attach -readonly -nobrowse OpenQuantum-0.8.11-macOS-arm64.dmg
+          codesign --verify --deep --strict --verbose=2 /Volumes/OpenQuantum/OpenQuantum.app > "$RUNNER_TEMP/oq-image-evidence/signature-verification.log" 2>&1
+          codesign -d --verbose=4 /Volumes/OpenQuantum/OpenQuantum.app > "$RUNNER_TEMP/oq-image-evidence/signature-details.log" 2>&1
+      - name: Bind the mounted payload to the reviewed release
+        run: |
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          import fs from 'node:fs/promises';
+          import path from 'node:path';
+          const payload = JSON.parse(await fs.readFile('/Volumes/OpenQuantum/OpenQuantum.app/Contents/Resources/openquantum/distribution.json', 'utf8'));
+          assert.equal(payload.version, '0.8.11');
+          assert.equal(payload.sourceRevision, process.env.OQ_RELEASE_REVISION);
+          assert.equal(payload.sourceDirty, false);
+          const checksums = await fs.readFile(path.join(process.env.RUNNER_TEMP, 'oq-image/SHA256SUMS'), 'utf8');
+          const [sha256, name] = checksums.trim().split(/\s+/);
+          assert.equal(name, 'OpenQuantum-0.8.11-macOS-arm64.dmg');
+          assert.equal(sha256, '0f69e96d77dd296e479f37d7aab6e3b510380f04bf060bbaa409ecd093c0b6d6');
+          await fs.writeFile(path.join(process.env.RUNNER_TEMP, 'oq-image-evidence/mounted-source.json'), JSON.stringify({ version: payload.version, sourceRevision: payload.sourceRevision, sourceDirty: payload.sourceDirty, artifact: { name, sha256 }, diskImageIntegrity: 'verified', strictSignature: 'verified', notarization: false }, null, 2));
+          NODE
+      - name: Run unmodified packaged-app acceptance against the mounted image
+        run: node scripts/smoke-desktop-app.mjs /Volumes/OpenQuantum/OpenQuantum.app "$RUNNER_TEMP/oq-image-smoke"
       - name: Upload verification evidence
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: OpenQuantum-installer-checks-${{ matrix.target }}
-          path: .openquantum/distributions/${{ matrix.target }}/validation
-          if-no-files-found: ignore
-          include-hidden-files: true
+          name: OpenQuantum-mounted-DMG-verification-0.8.11
+          path: |
+            ${{ runner.temp }}/oq-image-evidence
+            ${{ runner.temp }}/oq-image-smoke/installed-smoke.json
+          if-no-files-found: error
           retention-days: 14
+      - name: Detach this verification image
+        if: always()
+        run: hdiutil detach /Volumes/OpenQuantum || true
