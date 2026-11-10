@@ -52,7 +52,9 @@ test("SDK access survives archive, split installation and cached Skill relocatio
   assert.ok(discovery.some(entry => entry.id === "quantum-algorithms"));
   assert.ok(discovery.some(entry => entry.id === "netqasm-network"));
   assert.ok(discovery.some(entry => entry.id === "ppvm-simulation"));
-  await fs.access(path.join(cached, "skills/ppvm-simulation/references/native-example.py"));
+  await fs.access(path.join(runtime, ".agents/skills/ppvm-simulation/references/native-example.py"));
+  const ppvmDomain = await fs.readFile(path.join(cached, "skills/ppvm-simulation/references/domain.md"), "utf8");
+  assert.match(ppvmDomain, /https:\/\/github\.com\/xi-zhao\/OpenQuantum\/blob\/[0-9a-f]{40}\/\.agents\/skills\/ppvm-simulation\/references\/native-example\.py/);
   const pasqalScript = path.join(cached, "skills/pasqal-experiments/scripts/pasqal-cloud.mjs");
   await fs.access(pasqalScript);
   const pasqalSkill = await fs.readFile(path.join(cached, "skills/pasqal-experiments/SKILL.md"), "utf8");

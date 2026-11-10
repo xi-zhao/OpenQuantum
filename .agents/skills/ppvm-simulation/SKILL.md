@@ -26,7 +26,7 @@ Heisenberg 计算倒序处理整条门和噪声链；LOST 与比特值分开；r
 
 ## 方法选择与边界
 
-- `PauliSum` / `LossyPauliSum`：从观测量出发反向传播，**整条门和噪声操作链倒序，旋转角保留原符号**。记录截断规则，不能以一次有限截断计算宣称收敛。
+- `PauliSum` / `LossyPauliSum`：从观测量出发反向传播，**整条门和噪声操作链倒序，旋转角保留原符号**。PauliSum 没有 `t()` 简写，T 门的观测量传播使用 `rz(q, math.pi/4)`（忽略无关全局相位）。记录截断规则，不能以一次有限截断计算宣称收敛。
 - `GeneralizedTableau`：按物理时间顺序作用门，再测量。Python 绑定支持 1–2048 qubit；此上限不表示这些规模在任意非 Clifford 电路上都可承受，系数可能迅速增长。
 - `StimProgram` / `sample_stim`：使用固定版本支持的 Stim 指令及扩展，不假定与 Stim 全指令等价。保存原始测量记录；`LOST=2` 不是布尔比特，不能直接转成 detector flips。
 - `reset_state` 只重置活跃 qubit，保留丢失/泄漏标记；`reset` 才恢复计算子空间。丢失与泄漏的模型语义分别报告。
