@@ -56,7 +56,8 @@ for theta in (0.19, -0.61, 1.17):
         observable = PauliSum.new(2, [word])
         observable.rx(1, theta)
         observable.cnot(0, 1)
-        observable.t(0)
+        # PauliSum has no t() shortcut; Rz(pi/4) differs from T only by global phase.
+        observable.rz(0, math.pi / 4)
         observable.h(0)
         close(f"heisenberg-dense-{theta}-{word}", observable.overlap_with_zero(), reference)
 
