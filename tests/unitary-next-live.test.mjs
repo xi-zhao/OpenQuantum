@@ -158,3 +158,40 @@ test("real PauLie: real Lie dimension, abelian central generators, local sum and
     }
   });
 });
+
+
+test("real PyZX: production SDK fixes XPhase remapping and U3 adjoint", { skip: !enabled, timeout: 120000 }, async () => {
+  const sdk = await describeSdk(process.cwd(), "pyzx-optimization");
+  assert.equal(sdk.environmentState, "prepared");
+  const result = JSON.parse(execFileSync(sdk.run.command, ["-B", "benchmarks/upstream-updates/pyzx_regressions.py"], { encoding: "utf8", timeout: 110000 }));
+  assert.equal(result.pyzx, "0.10.8");
+  assert.equal(result.records.length, 5);
+  for (const record of result.records) assert.equal(record.passed, true, record.name);
+  assert.equal(result.scientificAcceptance, "not_evaluated");
+  await mkdir(evidence, { recursive: true });
+  await writeFile(path.join(evidence, "pyzx-sdk-correctness.json"), JSON.stringify(result, null, 2) + "\n");
+});
+
+test("real PyZX: required, skipped, large automatic references and invalid input", { skip: !enabled, timeout: 240000 }, async t => {
+  await withTool(t, "pyzx-optimization", async run => {
+    const input = { numQubits: 2, gates: [
+      { gate: "CX", targets: [1, 0] }, { gate: "CX", targets: [0, 1] },
+      { gate: "H", targets: [1] }, { gate: "S", targets: [1] }, { gate: "H", targets: [1] },
+    ] };
+    const required = await run({ ...input, referenceMode: "required" }, "required-remapping");
+    assert.equal(required.reference.status, "computed");
+    assert.ok(required.unitaryMaxError < 1e-8);
+    const skipped = await run({ ...input, referenceMode: "skip" }, "skip-remapping");
+    const automatic = await run({ numQubits: 65, gates: [{ gate: "H", targets: [64] }], referenceMode: "auto" }, "auto-65-qubits");
+    for (const result of [skipped, automatic]) {
+      assert.equal(result.reference.status, "not_run");
+      assert.equal(result.unitaryMaxError, null);
+      assert.equal(result.equivalentUpToGlobalPhase, null);
+    }
+  });
+  const client = new Client({ name: "pyzx-invalid-regression", version: "1" }, { capabilities: {} });
+  t.after(() => client.close());
+  await client.connect(new StdioClientTransport({ command: process.execPath, args: [".agents/skills/pyzx-optimization/mcp/server.mjs"] }));
+  const response = await client.callTool({ name: "optimize_pyzx_circuit", arguments: { gates: [] } });
+  assert.equal(response.isError, true);
+});

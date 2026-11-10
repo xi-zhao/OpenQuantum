@@ -3,9 +3,9 @@
 调研与验证日期：2026-11-08（Asia/Shanghai）。基线：
 `0da563fa87c6592a8923d2eb98eea80f484d2151`。
 
-**状态：开发环境对照已完成；生产仍固定 0.10.6，升级尚未完成。**
-[PR #79](https://github.com/xi-zhao/OpenQuantum/pull/79) 正在修改共享 SDK 清单；按顺序交接后，
-在本升级 PR 继续更新生产依赖与清单。该等待不影响本次隔离诊断，也不改变用户环境。
+**状态：2026-11-10 已在本 PR 接入生产依赖 0.10.8；尚未合并或部署。**
+后续实施与本机验证见 [升级记录](2026-11-10-pyzx-production-upgrade.md)。
+下文保留 11 月 8 日隔离诊断的历史事实；#79 不再阻塞这个独立正确性修复。
 
 ## 为什么值得升级
 
@@ -55,16 +55,18 @@ export UV_PYTHON_INSTALL_DIR="$OQ_CHECK_DIR/python-install"
 export TMPDIR="$OQ_CHECK_DIR/tmp"
 export UV_LINK_MODE=copy
 
-OPENQUANTUM_PYTHON_ENV_ROOT="$OQ_CHECK_DIR/old" node scripts/setup-paper-tools.mjs pyzx-optimization
+# 旧版必须从旧提交的冻结 manifest/lock 准备，当前产品已为 0.10.8。
+git worktree add --detach "$OQ_CHECK_DIR/old-source" 7a23b15fbc37d21321ea2b7486cba5c1f533e62f
+UV_PROJECT_ENVIRONMENT="$OQ_CHECK_DIR/old/pyzx-optimization" uv sync --frozen --no-dev --project "$OQ_CHECK_DIR/old-source/.agents/skills/pyzx-optimization" --python 3.12
 "$OQ_CHECK_DIR/old/pyzx-optimization/bin/python" benchmarks/upstream-updates/pyzx_regressions.py
-# 当前生产 pin 为 0.10.6：上行预期退出 1，JSON 中两个 SDK 反例失败。
+# 历史生产 pin 为 0.10.6：上行预期退出 1，JSON 中两个 SDK 反例失败。
 
 UV_PROJECT_ENVIRONMENT="$OQ_CHECK_DIR/new" uv sync --frozen --no-dev --project benchmarks/upstream-updates/probes/pyzx --python 3.12
 "$OQ_CHECK_DIR/new/bin/python" benchmarks/upstream-updates/pyzx_regressions.py
 # 目标 0.10.8：预期退出 0。
 ```
 
-## 后续迁移与回退
+## 11 月 8 日迁移计划（历史，实施见后续记录）
 
 PR 正文是本次需求规格；本文件保存版本化诊断证据。最小迁移继续使用原有 SDK、
 `optimize_pyzx_circuit` 和两宿主适配，不增加公开接口、转发层或运行时。
