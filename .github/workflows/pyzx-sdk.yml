@@ -1,0 +1,50 @@
+name: PyZX correctness
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    paths:
+      - '.agents/skills/pyzx-optimization/**'
+      - 'benchmarks/upstream-updates/pyzx_regressions.py'
+      - 'tests/unitary-next-live.test.mjs'
+      - '.github/workflows/pyzx-sdk.yml'
+  push:
+    branches: [main]
+    paths:
+      - '.agents/skills/pyzx-optimization/**'
+      - 'benchmarks/upstream-updates/pyzx_regressions.py'
+      - 'tests/unitary-next-live.test.mjs'
+      - '.github/workflows/pyzx-sdk.yml'
+
+jobs:
+  numerical-regressions:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - uses: astral-sh/setup-uv@v7
+      - name: Prepare the frozen production SDK
+        run: node scripts/setup-paper-tools.mjs pyzx-optimization
+      - name: Real MCP, independent references and error boundaries
+        env:
+          OPENQUANTUM_REAL_UNITARY_NEXT: '1'
+        run: node --test --test-name-pattern='real PyZX' tests/unitary-next-live.test.mjs
+      - name: Save numerical evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: pyzx-correctness-${{ matrix.os }}
+          path: .openquantum/unitary-next-evidence
+          include-hidden-files: true
+          if-no-files-found: error

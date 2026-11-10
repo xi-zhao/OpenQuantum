@@ -71,7 +71,7 @@
 | `pygsti-characterization` | pyGSTi | python | pygsti[reports]==0.10.2 | Circuit、Model、DataSet、GST/RB/RPE 与拟合报告 | 保留原始计数、SPAM、gauge、样本数、拟合诊断与不确定度。合成数据明确标记；拟合质量与实际硬件性能分开。 |
 | `pyquil-simulation` | pyQuil | python | pyquil==4.21.0 | Program、自定义 gates、Quil 控制流、编译器与模拟/设备接口 | 按固定版本、已安装可选组件及目标平台核实 |
 | `pytket-compilation` | pytket | python | pytket==2.18.4 | 自定义 Circuit、Architecture、pass、predicate、路由与后端 | 按固定版本、已安装可选组件及目标平台核实 |
-| `pyzx-optimization` | PyZX | python | pyzx==0.10.6 | Circuit、Graph、重写策略、提取、优化与等价性流程 | 按固定版本、已安装可选组件及目标平台核实 |
+| `pyzx-optimization` | PyZX | python | pyzx==0.10.8 | Circuit、Graph、重写策略、提取、优化与等价性流程 | 按固定版本、已安装可选组件及目标平台核实 |
 | `qblox-scheduling` | Qblox Scheduler | python | qblox-scheduler==1.0.0b8 | 自定义 Schedule、operation、pulse、资源、硬件配置与编译 | 本地程序构建与外部调用分开；账户、凭据、费用、设备操作和数据外发沿用宿主及用户授权。原生 SDK 访问不自动启用服务。 |
 | `qbraid-conversion` | qBraid / Cirq | python | qbraid==0.12.2, qiskit==2.5.2, cirq-core==1.6.1, ply==3.11 | 程序类型、转换图、转译路径、序列化与供应商接口 | 按固定版本、已安装可选组件及目标平台核实 |
 | `qcarchive-query` | QCArchive Portal | python | qcportal==0.70 | PortalClient、分子、记录、dataset、查询与任务提交接口 | 本地程序构建与外部调用分开；账户、凭据、费用、设备操作和数据外发沿用宿主及用户授权。原生 SDK 访问不自动启用服务。 |
