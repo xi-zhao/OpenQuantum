@@ -1,0 +1,32 @@
+name: PPVM SDK
+
+permissions:
+  contents: read
+
+on:
+  push:
+    branches: [c/ppvm-integration]
+    paths:
+      - '.agents/skills/ppvm-simulation/**'
+      - '.github/workflows/ppvm-sdk.yml'
+
+jobs:
+  resolve:
+    runs-on: macos-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v7
+      - name: Resolve fixed upstream source in an isolated environment
+        env:
+          UV_CACHE_DIR: ${{ runner.temp }}/ppvm-uv-cache
+          CARGO_HOME: ${{ runner.temp }}/ppvm-cargo
+        run: |
+          rustc --version
+          uv lock --project .agents/skills/ppvm-simulation --python 3.12
+      - uses: actions/upload-artifact@v7
+        with:
+          name: ppvm-resolved-lock
+          path: .agents/skills/ppvm-simulation/uv.lock
+          include-hidden-files: true
+          if-no-files-found: error
