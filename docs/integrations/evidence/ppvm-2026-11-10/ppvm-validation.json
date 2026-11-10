@@ -1,0 +1,269 @@
+{
+  "upstreamVersion": "0.3.0",
+  "status": "passed_scoped_engineering",
+  "checks": [
+    {
+      "name": "tableau-dense-0.19-XI",
+      "actual": -6.938893903907228e-18,
+      "reference": 0.0,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "heisenberg-dense-0.19-XI",
+      "actual": 0.0,
+      "reference": 0.0,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "tableau-dense-0.19-IZ",
+      "actual": -8.283304597789254e-17,
+      "reference": 5.551115123125783e-17,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "heisenberg-dense-0.19-IZ",
+      "actual": 0.0,
+      "reference": 5.551115123125783e-17,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "tableau-dense-0.19-XX",
+      "actual": 0.7071067811865475,
+      "reference": 0.7071067811865476,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "heisenberg-dense-0.19-XX",
+      "actual": 0.7071067811865476,
+      "reference": 0.7071067811865476,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "tableau-dense-0.19-XY",
+      "actual": 0.6943818538053307,
+      "reference": 0.6943818538053305,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "heisenberg-dense-0.19-XY",
+      "actual": 0.6943818538053306,
+      "reference": 0.6943818538053305,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "tableau-dense-0.19-ZY",
+      "actual": -0.18885889497650057,
+      "reference": -0.18885889497650055,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "heisenberg-dense-0.19-ZY",
+      "actual": -0.18885889497650057,
+      "reference": -0.18885889497650055,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "tableau-dense--0.61-XI",
+      "actual": -2.4286128663675293e-17,
+      "reference": 0.0,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "heisenberg-dense--0.61-XI",
+      "actual": 0.0,
+      "reference": 0.0,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "tableau-dense--0.61-IZ",
+      "actual": 0.0,
+      "reference": -2.7755575615628914e-17,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "heisenberg-dense--0.61-IZ",
+      "actual": 0.0,
+      "reference": -2.7755575615628914e-17,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "tableau-dense--0.61-XX",
+      "actual": 0.7071067811865476,
+      "reference": 0.7071067811865475,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "heisenberg-dense--0.61-XX",
+      "actual": 0.7071067811865476,
+      "reference": 0.7071067811865475,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "tableau-dense--0.61-XY",
+      "actual": 0.5795786716046509,
+      "reference": 0.5795786716046508,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "heisenberg-dense--0.61-XY",
+      "actual": 0.5795786716046509,
+      "reference": 0.5795786716046508,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "tableau-dense--0.61-ZY",
+      "actual": 0.5728674601004812,
+      "reference": 0.5728674601004812,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "heisenberg-dense--0.61-ZY",
+      "actual": 0.5728674601004813,
+      "reference": 0.5728674601004812,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "tableau-dense-1.17-XI",
+      "actual": 6.938893903907228e-18,
+      "reference": 5.551115123125783e-17,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "heisenberg-dense-1.17-XI",
+      "actual": 0.0,
+      "reference": 5.551115123125783e-17,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "tableau-dense-1.17-IZ",
+      "actual": 0.0,
+      "reference": 8.326672684688674e-17,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "heisenberg-dense-1.17-IZ",
+      "actual": 0.0,
+      "reference": 8.326672684688674e-17,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "tableau-dense-1.17-XX",
+      "actual": 0.7071067811865474,
+      "reference": 0.7071067811865475,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "heisenberg-dense-1.17-XX",
+      "actual": 0.7071067811865476,
+      "reference": 0.7071067811865475,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "tableau-dense-1.17-XY",
+      "actual": 0.2758789016657027,
+      "reference": 0.27587890166570267,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "heisenberg-dense-1.17-XY",
+      "actual": 0.2758789016657027,
+      "reference": 0.27587890166570267,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "tableau-dense-1.17-ZY",
+      "actual": -0.9207505977361357,
+      "reference": -0.9207505977361354,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "heisenberg-dense-1.17-ZY",
+      "actual": -0.9207505977361357,
+      "reference": -0.9207505977361354,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "rx-then-damping-analytic",
+      "actual": 0.7334845671472799,
+      "reference": 0.7334845671472799,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "wrong-noise-order-negative-control",
+      "passed": true
+    },
+    {
+      "name": "state-reset-preserves-lost",
+      "passed": true
+    },
+    {
+      "name": "full-reset-restores-lost",
+      "passed": true
+    },
+    {
+      "name": "state-reset-preserves-leaked-pinned-one",
+      "passed": true
+    },
+    {
+      "name": "full-reset-restores-leaked",
+      "passed": true
+    },
+    {
+      "name": "correlated-loss-named-probability-analytic",
+      "actual": 0.4,
+      "reference": 0.4,
+      "tolerance": 1e-10
+    },
+    {
+      "name": "correlated-loss-trajectory-frequency",
+      "actual": 0.572265625,
+      "reference": 0.6,
+      "tolerance": 0.059515987500791664
+    },
+    {
+      "name": "stim-bell-record-shape-and-correlation",
+      "passed": true
+    },
+    {
+      "name": "stim-bell-one-frequency",
+      "actual": 0.5029296875,
+      "reference": 0.5,
+      "tolerance": 0.059515987500791664
+    },
+    {
+      "name": "stim-fixed-seed-replay",
+      "passed": true
+    },
+    {
+      "name": "stim-loss-is-not-bool",
+      "passed": true
+    },
+    {
+      "name": "asymmetric-loss-survivor-approximation-detected",
+      "passed": true
+    },
+    {
+      "name": "zero-qubit-tableau",
+      "rejected": "ValueError"
+    },
+    {
+      "name": "python-tableau-binding-limit",
+      "rejected": "ValueError"
+    },
+    {
+      "name": "incomplete-cnot-pair",
+      "rejected": "ValueError"
+    }
+  ],
+  "sampling": {
+    "shots": 2048,
+    "hoeffdingDeltaPerMean": 1e-06,
+    "tolerance": 0.059515987500791664
+  },
+  "limitations": [
+    "Small CPU instances only; no scaling, speed or device calibration claim.",
+    "Asymmetric-loss surviving branch is intentionally recorded as an upstream approximation.",
+    "No Bloqade compilation, Lindbladian, Rust-only >2048-qubit or full Stim instruction coverage."
+  ],
+  "scientificValidation": "not_evaluated"
+}

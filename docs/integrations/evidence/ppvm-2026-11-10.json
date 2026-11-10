@@ -1,0 +1,64 @@
+{
+  "date": "2026-11-10",
+  "upstream": {
+    "url": "https://github.com/QuEraComputing/ppvm",
+    "version": "0.3.0",
+    "revision": "3cc883fd93b2475cb10c892a8a31adcc09a7579c",
+    "license": "Apache-2.0"
+  },
+  "execution": {
+    "url": "https://github.com/xi-zhao/OpenQuantum/actions/runs/42731058813",
+    "head": "aa118e8927ec418b627ffca53ccba45bb881422d",
+    "artifactId": 13725676067,
+    "artifactSha256": "91432ddc8e0805a04bf0450e3175ab9af5dbf0f5f7b27c4213e4bfae2c736088",
+    "platform": "GitHub macos-26-arm64",
+    "python": "3.12.10",
+    "rust": "1.99.1",
+    "networkIsolation": "macOS sandbox-exec deny network*"
+  },
+  "scope": "Fixed complete Python SDK with editable offline program; 46 scoped numerical, semantic and failure assertions against independent dense gates/statevectors, analytic noise expectations and discrete events. Not scientific acceptance.",
+  "numericalEvidence": {
+    "ppvm-validation.json": "64bf80adf4cdf47dfe7dd0fa05744a4ca34dad024c5d3a9c4a03df88b8c43d89",
+    "numerical.log": "179f4ab2809baf80306d907e0b69074f797fb5f8c26207b393d13f82371e54cf"
+  },
+  "validationSources": [
+    {
+      "path": "tests/fixtures/ppvm-validation.py",
+      "sha256": "564621248d10407e1d09cffa514193e5475a31edd9aa25673b98397ae7ce2f0f"
+    },
+    {
+      "path": "tests/sdk-ecosystem-live.test.mjs",
+      "sha256": "64fd1fbebc4738a9ca3828b71026a13bac4c801021501ad0e5b9d5d02929e873"
+    }
+  ],
+  "limitations": [
+    "Small CPU instances only; no scaling, speed or device calibration claim.",
+    "Asymmetric-loss surviving branch is intentionally recorded as an upstream approximation.",
+    "No Bloqade compilation, Lindbladian, Rust-only >2048-qubit or full Stim instruction coverage.",
+    "Sampling uses 2048 shots with a two-sided Hoeffding bound of delta=1e-6 per mean; this is a development regression, not an Acceptance Profile.",
+    "No Linux/Windows numerical execution, real device, installed host UI session or full public-API certification.",
+    "No Validator or Acceptance Profile added."
+  ],
+  "scientificValidation": "not_evaluated",
+  "receipt": {
+    "id": "ppvm-simulation",
+    "language": "python",
+    "status": "passed_scoped_engineering",
+    "scientificValidation": "not_evaluated",
+    "sourcePath": ".agents/skills/ppvm-simulation/references/native-example.py",
+    "sourceSha256": "7aa9a5c1f953402afc70603b85e6b23658f45dc087e56d783ebe873d4ff38b71",
+    "dependencyLockPath": ".agents/skills/ppvm-simulation/uv.lock",
+    "dependencyLockSha256": "e6a2f1d15b8af569f4bdb32662e9b52308cb5b95548b5c74741cf1445957797e",
+    "durableEvidenceDirectory": "docs/integrations/evidence/ppvm-2026-11-10",
+    "verificationSha256": "05a3bb394b8778770bd1af9041a8bc8f1ce37656308e98532ff33fc92fbe774f",
+    "artifacts": {
+      "attempt.json": "49bcee268078e161189c2e5dfedd466d570ef593bdbd965218f5cb8f547e4f3a",
+      "program.py": "7aa9a5c1f953402afc70603b85e6b23658f45dc087e56d783ebe873d4ff38b71",
+      "result.json": "ab6623746404bebdb7cea6fb26941fcf5dd00d1e622a8453bf5c3832c6dae863",
+      "runner.py": "4d8e55212145f22f02d8198f4582194f9aa937013038af3c543a95c6fa77e4b9",
+      "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "versions.json": "406acec55cea09248dce28b5322a7954201b482a3774da22958d702488eb7504"
+    }
+  }
+}
