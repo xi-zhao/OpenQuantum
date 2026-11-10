@@ -34,3 +34,5 @@ OpenQuantum 面向量子科研、应用和教学。PPVM 的增量是把 Pauli �
 - 相关丢失参数的第二项是每个指定量子比特单独丢失的概率，恰好一个丢失的总概率为其两倍；已丢失一个时第三项另有条件语义。
 - Stim 格式支持范围由该版本及所选 backend 决定，不承诺全部 Stim 语法或自动生成 detector error model。
 - 所有证据保留 `scientificValidation=not_evaluated`；本次不添加 Validator/Acceptance Builder 集成，不声称硬件校准或量子优势。
+
+补充固定版源码边界：Python tableau 支持 1–2048 qubit，实际可计算规模取决于非 Clifford 系数增长；非对称丢失不含存活分支反作用。本 PR 的开发检查须把这一近似明确记录为限制，不能当作完整物理通道通过。

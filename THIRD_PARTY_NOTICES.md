@@ -221,3 +221,7 @@ Chromobius 1.1.1 为 Apache-2.0，固定上游提交 `efae0325e4a8fc13be981434d3
 [physlib](https://github.com/leanprover-community/physlib)，均为 Apache-2.0。
 插件只包含项目模板、依赖锁和工作流指南，不捆绑完整工具链或库；准备所得源码保留上游许可。
 固定版本及间接依赖见 `.agents/skills/lean-physics/lean-toolchain` 和 `lake-manifest.json`。
+
+## PPVM 原生 SDK 工作流
+
+[QuEraComputing/ppvm](https://github.com/QuEraComputing/ppvm) v0.3.0 为 Apache-2.0，固定提交 `3cc883fd93b2475cb10c892a8a31adcc09a7579c`；[许可证原文](https://github.com/QuEraComputing/ppvm/blob/3cc883fd93b2475cb10c892a8a31adcc09a7579c/LICENSE)。本仓库仅分发原创指南、示例、验证与依赖锁，不捆绑上游源码或二进制。显式准备时构建 `ppvm-python`，间接 Python 依赖由 `uv.lock` 固定，Rust 工作区来源由完整提交固定并保留其 Cargo.lock 与许可。各依赖保留自身许可，不将 Apache-2.0 扩展为所有传递依赖的统一许可证。

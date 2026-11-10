@@ -1596,6 +1596,23 @@
       ],
       "nativeOnly": true,
       "juliaVersion": "1.12.7"
+    },
+    {
+      "id": "ppvm-simulation",
+      "title": "PPVM",
+      "language": "python",
+      "modules": [
+        "ppvm"
+      ],
+      "group": "qec",
+      "workflow": "Pauli 传播、广义 tableau、近 Clifford 观测量与含丢失/泄漏的自定义电路采样",
+      "conditions": [
+        "显式准备固定源码的 Python 3.12 / Rust 环境；完整原生 API 可用，成本取决于非 Clifford 分支与截断。",
+        "Heisenberg 计算倒序处理整条门和噪声链；LOST 与比特值分开；reset_state 不恢复丢失/泄漏。",
+        "非对称丢失的存活分支反作用尚未实现；开发数值对照不构成器件模型或科学验收。"
+      ],
+      "nativeOnly": true,
+      "pythonVersion": "3.12"
     }
   ]
 }
