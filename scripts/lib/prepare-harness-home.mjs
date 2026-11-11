@@ -20,6 +20,7 @@ import { DESKTOP_PROFILE_BUNDLE, DESKTOP_PROFILE_DIRECTORY, DESKTOP_PROFILE_PATC
 
 const extensions = {
   security: ["packages/openquantum-web-security", "harness-web-security"],
+  executionBoundary: ["runtime/openquantum/execution-boundary", "harness-execution-boundary"],
   capabilityHost: ["runtime/openquantum/capability-host", "harness-capability-host"],
   branding: ["packages/openquantum-web-branding", "harness-web-branding"],
   capabilities: ["runtime/openquantum/web-capabilities", "harness-web-capabilities"],

@@ -26,6 +26,7 @@ const NATIVE_EFFECT_EVIDENCE = "conservative-provider";
 const MCP_PLUGINS = new Set([
   "@deepseek-ai/dsh-mcp-client",
   "./credentialed-mcp-client.mjs",
+  "./scientific-mcp-client.mjs",
 ]);
 
 function isRecord(value) {

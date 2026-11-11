@@ -7,6 +7,8 @@
  * enter Cordis YAML, browser snapshots, logs, or Session events.
  */
 
+import { confinedMcpLaunch } from "./execution-boundary.mjs";
+
 import { credentialRef } from "@deepseek-ai/dsh-credentials";
 import { apply as applyMcpClient } from "@deepseek-ai/dsh-mcp-client";
 
@@ -14,7 +16,7 @@ const ENVIRONMENT_NAME = /^[A-Za-z_][A-Za-z0-9_]*$/;
 const MAX_CREDENTIALS = 8;
 
 export const name = "openquantum-credentialed-mcp-client";
-export const inject = ["tools", "credentials"];
+export const inject = ["tools", "credentials", "sandbox"];
 
 function record(value, field) {
   if (value === null || typeof value !== "object" || Array.isArray(value)) {
@@ -74,12 +76,16 @@ export async function resolveCredentialedMcpConfig(config, resolveCredential) {
   }
 
   const mcpConfig = { ...source };
+  delete mcpConfig.scientific;
   delete mcpConfig.credentialEnv;
   delete mcpConfig.optionalCredentialEnv;
   return { ...mcpConfig, env };
 }
 
 export async function apply(ctx, config) {
+  // Establish containment before even resolving named service secrets.
+  const launch = config.scientific ? await confinedMcpLaunch(ctx.sandbox, config) : {};
+  if (launch.dispose) ctx.effect(() => launch.dispose);
   const credentials = ctx.get("credentials");
   if (!credentials) {
     throw new Error("Harness credential service is unavailable");
@@ -87,5 +93,7 @@ export async function apply(ctx, config) {
   const resolved = await resolveCredentialedMcpConfig(config, async (reference) =>
     credentials.resolve(credentialRef(reference)),
   );
-  await applyMcpClient(ctx, resolved);
+  await applyMcpClient(ctx, { ...resolved, ...(config.scientific ? {
+    command: launch.command, args: launch.args, env: { ...resolved.env, ...launch.env },
+  } : {}) });
 }

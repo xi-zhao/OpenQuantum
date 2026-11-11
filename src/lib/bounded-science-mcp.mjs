@@ -58,7 +58,7 @@ export async function serveScienceTool({ entrypoint, id, definition, definitions
   const projectRoot = path.resolve(skillRoot, "../../..");
   const lockFile = runtime === "julia" ? "Manifest.toml" : "uv.lock";
   const dependencyLockSha256 = sha256(await readFile(path.join(skillRoot, lockFile)));
-  const allowed = ["HOME", "PATH", "HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY", "NO_PROXY", "SSL_CERT_FILE", "SSL_CERT_DIR", "REQUESTS_CA_BUNDLE", "CURL_CA_BUNDLE", "UV_CACHE_DIR", "UV_PYTHON_INSTALL_DIR", "SYSTEMROOT", "TEMP", "TMP", "TMPDIR", "WINDIR"];
+  const allowed = ["HOME", "PATH", "HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY", "NO_PROXY", "SSL_CERT_FILE", "SSL_CERT_DIR", "REQUESTS_CA_BUNDLE", "CURL_CA_BUNDLE", "UV_CACHE_DIR", "UV_PYTHON_INSTALL_DIR", "SYSTEMROOT", "TEMP", "TMP", "TMPDIR", "WINDIR", "OPENQUANTUM_COMPUTE_CACHE_ROOT"];
   // A trusted server entrypoint may name its own credential references. No
   // request-controlled environment names or credentials enter tool arguments.
   for (const name of credentialEnvironment) {
@@ -69,7 +69,7 @@ export async function serveScienceTool({ entrypoint, id, definition, definitions
     ...Object.fromEntries(allowed.filter((key) => process.env[key]).map((key) => [key, process.env[key]])),
     UV_PROJECT_ENVIRONMENT: path.join(projectRoot, ".openquantum/python-envs", id),
     CARGO_HOME: path.join(projectRoot, ".openquantum/cargo-cache"),
-    MPLCONFIGDIR: path.join(projectRoot, ".openquantum/cache", `${id}-matplotlib`),
+    MPLCONFIGDIR: path.join(process.env.OPENQUANTUM_COMPUTE_CACHE_ROOT || path.join(projectRoot, ".openquantum/cache"), `${id}-matplotlib`),
     PYTHONNOUSERSITE: "1", PYTHONDONTWRITEBYTECODE: "1", MPLBACKEND: "Agg",
     JULIA_NUM_PRECOMPILE_TASKS: "2", JULIA_PKG_PRECOMPILE_AUTO: "0",
     ...(process.env.OPENQUANTUM_JULIA_DEPOT_PATH ? { JULIA_DEPOT_PATH: process.env.OPENQUANTUM_JULIA_DEPOT_PATH } : {}),

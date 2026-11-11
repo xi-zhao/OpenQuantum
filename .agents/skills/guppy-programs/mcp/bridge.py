@@ -43,9 +43,9 @@ def compute(v):
     from hugr.qsystem.result import QsysShot
 
     source, measured = build_source(v)
-    cache = ROOT / ".openquantum/cache/guppy-programs"
+    cache = Path(os.environ["OPENQUANTUM_COMPUTE_CACHE_ROOT"]) / "guppy-programs" if os.environ.get("OPENQUANTUM_COMPUTE_CACHE_ROOT") else ROOT / ".openquantum/cache/guppy-programs"
     cache.mkdir(parents=True, exist_ok=True)
-    # Keep the native compiler's global cache in the workspace as well.
+    # Hosted runs keep generated code and compiler caches in the confined temp area.
     os.environ["ZIG_GLOBAL_CACHE_DIR"] = str(cache / "zig")
     counts = Counter()
     with tempfile.TemporaryDirectory(prefix="build-", dir=cache) as temporary:
