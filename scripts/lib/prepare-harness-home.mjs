@@ -17,16 +17,7 @@ import { desktopEnvironmentDefaults, persistDesktopCredentials } from "./desktop
 import { assertNoLinks, sha256 } from "./desktop-distribution.mjs";
 import { desktopModelRoutes, desktopModelDefault, clearRemovedDesktopModelSelection } from "./desktop-model-routes.mjs";
 import { DESKTOP_PROFILE_BUNDLE, DESKTOP_PROFILE_DIRECTORY, DESKTOP_PROFILE_PATCH, desktopHomePatchMigration, desktopProfileManifest } from "./desktop-profile-bundle.mjs";
-
-const extensions = {
-  security: ["packages/openquantum-web-security", "harness-web-security"],
-  capabilityHost: ["runtime/openquantum/capability-host", "harness-capability-host"],
-  branding: ["packages/openquantum-web-branding", "harness-web-branding"],
-  capabilities: ["runtime/openquantum/web-capabilities", "harness-web-capabilities"],
-  learning: ["runtime/openquantum/web-learning", "harness-web-learning"],
-  locales: ["runtime/openquantum/web-locales", "harness-web-locales"],
-  updates: ["runtime/openquantum/web-updates", "harness-web-updates"],
-};
+import { DESKTOP_EXTENSIONS as extensions, DESKTOP_EXTENSION_RECEIPT, planDesktopExtensions } from "./desktop-extension-preparation.mjs";
 
 export async function preflightDesktopHome({ harnessHome, projectRoot, sourceRoot = projectRoot, legacyHomeFiles = {}, preservedFiles = [] }) {
   await assertCompatibleHarnessHome(harnessHome);
@@ -68,7 +59,8 @@ export async function preflightDesktopHome({ harnessHome, projectRoot, sourceRoo
 }
 
 /** The upstream runtime owns its Profile; OpenQuantum contributes dependencies and patches. */
-export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot, profileName = "web", legacyHomeFiles = {}, transaction }) {
+export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot, profileName = "web", legacyHomeFiles = {}, transaction,
+  extensionSourceDigest, rebuildExtensions = false }) {
   if (!/^[A-Za-z0-9_-]+$/.test(profileName)) throw new Error("Invalid Harness profile name");
   const desktop = profileName === "desktop";
   const profile = path.join(harnessHome, "profiles", profileName);
@@ -77,7 +69,7 @@ export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot, 
     // Preflight every owned destination before any locator, extension or pnpm
     // write. Profile dependency links themselves remain owned by upstream.
     for (const filename of [path.join(projectRoot, ".openquantum/runtime.json"),
-      ...["settings.yaml", ".credentials.yaml"].map(name => path.join(harnessHome, name)),
+      ...["settings.yaml", ".credentials.yaml", DESKTOP_EXTENSION_RECEIPT].map(name => path.join(harnessHome, name)),
       ...[harnessHome, extensionRoot].flatMap(directory => [path.join(directory, "project-root.mjs"), path.join(directory, "openquantum-project.json")]),
       ...["package.json", "cordis.yml", "cordis.patch.yml", "pnpm-workspace.yaml", "pnpm-lock.yaml", "node_modules"].map(name => path.join(profile, name)),
     ]) await assertNoLinks(filename);
@@ -108,19 +100,22 @@ export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot, 
     healProfilesModuleFallback(path.join(projectRoot, "package.json"), harnessHome);
   }
   let migration = new Map();
+  let extensionPlan;
   if (desktop) {
     const planned = await preflightDesktopHome({ harnessHome, projectRoot, legacyHomeFiles });
     legacyHomeFiles = planned.legacyHomeFiles;
     migration = planned.patchMigration;
+    extensionPlan = await planDesktopExtensions({ harnessHome, projectRoot, sourceDigest: extensionSourceDigest, force: rebuildExtensions });
     if (transaction) {
       for (const relative of ["settings.yaml", ".credentials.yaml", ".openquantum-credential-migration.json", ".openquantum-home.json", "cordis.patch.yml", "project-root.mjs", "openquantum-project.json", "profiles/model-routes.cordis.yml",
         ...["package.json", "cordis.yml", "cordis.patch.yml", "pnpm-workspace.yaml", "pnpm-lock.yaml"].map(name => `profiles/desktop/${name}`)]) await transaction.capture(path.join(harnessHome, relative));
       for (const filename of ["project-root.mjs", "openquantum-project.json"]) await transaction.capture(path.join(extensionRoot, filename));
       for (const filename of ["settings.json", "skill-policy.json", "migration.json", "legacy-preset.yml"]) await transaction.capture(path.join(harnessHome, ".openquantum/capabilities", filename));
       for (const relative of [".agent-presets/openquantum", ".agent-presets/quantum-learning", DESKTOP_PROFILE_DIRECTORY,
-        ...Object.values(extensions).map(([, name]) => `.openquantum-extensions/${name}`)]) {
+        ...(extensionPlan.reused ? [] : Object.values(extensions).map(([, name]) => `.openquantum-extensions/${name}`))]) {
         await transaction.captureTree(path.join(harnessHome, relative), { exclude: ["node_modules"] });
       }
+      if (!extensionPlan.reused) await transaction.capture(extensionPlan.receiptPath);
       await transaction.capture(path.join(harnessHome, ".agent-presets/openquantum/node_modules"));
       await transaction.capture(path.join(projectRoot, ".openquantum/runtime.json"));
     }
@@ -136,7 +131,7 @@ export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot, 
     credentialMigration = await migrateDesktopCredentials(harnessHome);
     await migrateDesktopPreparation(projectRoot, harnessHome, { legacyHomeFiles });
   }
-  const result = { preservedFiles: [] };
+  const result = { preservedFiles: [], reusedExtensions: extensionPlan?.reused ?? false };
   const marker = JSON.stringify({ projectRoot: path.resolve(projectRoot), nodeExecutable: process.execPath });
   await mkdir(path.join(projectRoot, ".openquantum"), { recursive: true });
   await writeFileAtomic(path.join(projectRoot, ".openquantum/runtime.json"), marker, { mode: 0o600, dirMode: 0o700 });
@@ -146,14 +141,16 @@ export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot, 
     await cp(path.join(projectRoot, "runtime/openquantum/project-root.mjs"), path.join(directory, "project-root.mjs"));
     await writeFile(path.join(directory, "openquantum-project.json"), marker);
   }
-  for (const [role, [source, name]] of Object.entries(extensions)) {
-    const target = path.join(extensionRoot, name);
-    await cp(path.join(projectRoot, source), target, { recursive: true, force: true });
-    result[`${role}Target`] = target;
+  for (const [role, [, name]] of Object.entries(extensions)) result[`${role}Target`] = path.join(extensionRoot, name);
+  if (!result.reusedExtensions) {
+    await extensionPlan?.invalidate();
+    for (const [source, name] of Object.values(extensions)) {
+      await cp(path.join(projectRoot, source), path.join(extensionRoot, name), { recursive: true, force: true });
+    }
+    await buildLearningClient(projectRoot, path.join(result.learningTarget, "client.js"));
+    await buildLocaleClient(projectRoot, path.join(result.localesTarget, "client.js"));
+    await buildCapabilityClient(projectRoot, path.join(result.capabilitiesTarget, "client.js"));
   }
-  await buildLearningClient(projectRoot, path.join(result.learningTarget, "client.js"));
-  await buildLocaleClient(projectRoot, path.join(result.localesTarget, "client.js"));
-  await buildCapabilityClient(projectRoot, path.join(result.capabilitiesTarget, "client.js"));
 
   if (desktop) {
     // One declarative bundle owns activation in the same Profile as its dependencies.
@@ -243,6 +240,7 @@ export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot, 
   if (existing && !existing.isSymbolicLink()) throw new Error("Refusing to replace unmanaged preset node_modules");
   if (existing) await rm(presetNodeModulesTarget);
   await symlink(path.join(projectRoot, "node_modules"), presetNodeModulesTarget, process.platform === "win32" ? "junction" : "dir");
+  await extensionPlan?.complete();
   return { ...result, credentialMigration, presetTarget, presetNodeModulesTarget,
     modelRoutesTarget: path.join(harnessHome, "profiles/model-routes.cordis.yml"),
     patchTarget: path.join(harnessHome, patchRelative),
