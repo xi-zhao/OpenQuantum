@@ -1,0 +1,19 @@
+{
+  "id": "qdk-chemistry",
+  "dependencyLockSha256": "8beb7243b11e2f4abe704e811dd85cfa993bc1c84bdc728fadd43ff5287d8714",
+  "sourceSha256": "f629bc9164fcb1f63fa92b2de255808365340008e939abfb92cc076495181258",
+  "networkIsolation": "macOS sandbox-exec deny network*",
+  "scientificValidation": "not_evaluated",
+  "status": "passed",
+  "files": {
+    "attempt.json": "647fc31907dd16a91bc6f3cff7fd5bf000c421db0b0179180b77e406f2e87361",
+    "molecule.structure.json": "fa14f8665583db785c971e55f911b3511f76cb8b8904a360a0a0c9c290bdb05f",
+    "molecule.xyz": "df93cde7a54f1112346a1dc701df6cec06539a29c0c73b1003f488577393f652",
+    "program.py": "f629bc9164fcb1f63fa92b2de255808365340008e939abfb92cc076495181258",
+    "result.json": "7f0991388f9eb3df02e4eaa98a957430551acea9a5e133176394ff4a95403473",
+    "runner.py": "886f044a51f94ee08cbe47de0182294b7d01277db6bd1b7b4f0a1c9d214d1602",
+    "stderr.log": "cace1071573ef725e762e8856427937617c8c67e5d0784c45c0e854e56a803a8",
+    "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "versions.json": "aab9c2ef3151ad8b3aaf67624541deb606ef8edc6ad6a50ff97847109ce6d934"
+  }
+}

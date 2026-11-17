@@ -1,0 +1,1194 @@
+{
+  "recordedAt": "2026-11-01",
+  "baseRevision": "b0f7161313a4a119079ce41e5d6233a3f6d384e6",
+  "scope": "offline SDK compiler compatibility and MCP tools/list; no cloud or hardware execution",
+  "scientificValidation": "not_evaluated",
+  "fixture": "benchmarks/upstream-updates/runtime_rzz_regressions.py",
+  "fixtureSha256": "fd470d27c4878ffbc9b14f0f7cf6e9c0656d9c6e0507e801665c13a26e9d7d27",
+  "red": [
+    {
+      "versions": {
+        "qiskit": "2.5.2",
+        "qiskit-ibm-runtime": "0.49.0"
+      },
+      "angleRadians": 2.356194490192345,
+      "unsupportedInstructions": [
+        "global_phase"
+      ],
+      "completeUnitaryMaxError": 2.482534153247273e-16,
+      "scientificValidation": "not_evaluated",
+      "exitCode": 1
+    },
+    {
+      "versions": {
+        "qiskit": "2.5.2",
+        "qiskit-ibm-runtime": "0.50.0"
+      },
+      "angleRadians": 2.356194490192345,
+      "unsupportedInstructions": [
+        "global_phase"
+      ],
+      "completeUnitaryMaxError": 2.482534153247273e-16,
+      "scientificValidation": "not_evaluated",
+      "exitCode": 1
+    }
+  ],
+  "green": [
+    {
+      "versions": {
+        "qiskit": "2.5.2",
+        "qiskit-ibm-runtime": "0.49.1"
+      },
+      "denominator": 48,
+      "passed": 48,
+      "cases": [
+        {
+          "route": "fold-pass",
+          "angleRadians": 2.356194490192345,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            0.7853981633974483
+          ],
+          "completeUnitaryMaxError": 2.482534153247273e-16,
+          "isaError": null,
+          "passed": true
+        },
+        {
+          "route": "fold-pass",
+          "angleRadians": 0.0,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            0.0
+          ],
+          "completeUnitaryMaxError": 0.0,
+          "isaError": null,
+          "passed": true
+        },
+        {
+          "route": "fold-pass",
+          "angleRadians": 1.5707963267948966,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            1.5707963267948966
+          ],
+          "completeUnitaryMaxError": 0.0,
+          "isaError": null,
+          "passed": true
+        },
+        {
+          "route": "fold-pass",
+          "angleRadians": -1.5707963267948966,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            1.5707963267948966
+          ],
+          "completeUnitaryMaxError": 3.1401849173675503e-16,
+          "isaError": null,
+          "passed": true
+        },
+        {
+          "route": "fold-pass",
+          "angleRadians": 3.141592653589793,
+          "unsupportedInstructions": [],
+          "rzzAngles": [],
+          "completeUnitaryMaxError": 2.4492935982947064e-16,
+          "isaError": null,
+          "passed": true
+        },
+        {
+          "route": "fold-pass",
+          "angleRadians": -3.141592653589793,
+          "unsupportedInstructions": [],
+          "rzzAngles": [],
+          "completeUnitaryMaxError": 2.4492935982947064e-16,
+          "isaError": null,
+          "passed": true
+        },
+        {
+          "route": "fold-pass",
+          "angleRadians": 9.42477796076938,
+          "unsupportedInstructions": [],
+          "rzzAngles": [],
+          "completeUnitaryMaxError": 4.898587196589413e-16,
+          "isaError": null,
+          "passed": true
+        },
+        {
+          "route": "fold-pass",
+          "angleRadians": -9.42477796076938,
+          "unsupportedInstructions": [],
+          "rzzAngles": [],
+          "completeUnitaryMaxError": 2.4492935982947064e-16,
+          "isaError": null,
+          "passed": true
+        },
+        {
+          "route": "fold-pass",
+          "angleRadians": 15.707963267948966,
+          "unsupportedInstructions": [],
+          "rzzAngles": [],
+          "completeUnitaryMaxError": 4.898587196589413e-16,
+          "isaError": null,
+          "passed": true
+        },
+        {
+          "route": "fold-pass",
+          "angleRadians": -15.707963267948966,
+          "unsupportedInstructions": [],
+          "rzzAngles": [],
+          "completeUnitaryMaxError": 4.898587196589413e-16,
+          "isaError": null,
+          "passed": true
+        },
+        {
+          "route": "fold-pass",
+          "angleRadians": 21.991148575128552,
+          "unsupportedInstructions": [],
+          "rzzAngles": [],
+          "completeUnitaryMaxError": 7.347880794884119e-16,
+          "isaError": null,
+          "passed": true
+        },
+        {
+          "route": "fold-pass",
+          "angleRadians": -21.991148575128552,
+          "unsupportedInstructions": [],
+          "rzzAngles": [],
+          "completeUnitaryMaxError": 4.898587196589413e-16,
+          "isaError": null,
+          "passed": true
+        },
+        {
+          "route": "fold-pass",
+          "angleRadians": 0.1,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            0.1
+          ],
+          "completeUnitaryMaxError": 0.0,
+          "isaError": null,
+          "passed": true
+        },
+        {
+          "route": "fold-pass",
+          "angleRadians": -0.1,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            0.09999999999999999
+          ],
+          "completeUnitaryMaxError": 6.938893903907228e-18,
+          "isaError": null,
+          "passed": true
+        },
+        {
+          "route": "fold-pass",
+          "angleRadians": 1.6707963267948966,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            1.4707963267948965
+          ],
+          "completeUnitaryMaxError": 1.5700924586837752e-16,
+          "isaError": null,
+          "passed": true
+        },
+        {
+          "route": "fold-pass",
+          "angleRadians": -3.041592653589793,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            0.10000000000000009
+          ],
+          "completeUnitaryMaxError": 2.42861286636753e-16,
+          "isaError": null,
+          "passed": true
+        },
+        {
+          "route": "fold-pass",
+          "angleRadians": 6.383185307179586,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            0.09999999999999941
+          ],
+          "completeUnitaryMaxError": 1.249000902703301e-16,
+          "isaError": null,
+          "passed": true
+        },
+        {
+          "route": "fold-pass",
+          "angleRadians": 6.183185307179587,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            0.09999999999999988
+          ],
+          "completeUnitaryMaxError": 1.3183898417423734e-16,
+          "isaError": null,
+          "passed": true
+        },
+        {
+          "route": "fold-pass",
+          "angleRadians": -4.61238898038469,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            1.4707963267948967
+          ],
+          "completeUnitaryMaxError": 4.0029660424867215e-16,
+          "isaError": null,
+          "passed": true
+        },
+        {
+          "route": "fold-pass",
+          "angleRadians": 3.241592653589793,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            0.09999999999999964
+          ],
+          "completeUnitaryMaxError": 2.220446049250313e-16,
+          "isaError": null,
+          "passed": true
+        },
+        {
+          "route": "fold-pass",
+          "angleRadians": -37.599111843077516,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            0.10000000000000289
+          ],
+          "completeUnitaryMaxError": 0.0,
+          "isaError": null,
+          "passed": true
+        },
+        {
+          "route": "fold-pass",
+          "angleRadians": 36.22831551628262,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            1.4707963267948985
+          ],
+          "completeUnitaryMaxError": 1.1102230246251565e-16,
+          "isaError": null,
+          "passed": true
+        },
+        {
+          "route": "fold-pass",
+          "angleRadians": 34.65751918948772,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            0.09999999999999654
+          ],
+          "completeUnitaryMaxError": 3.122502256758253e-16,
+          "isaError": null,
+          "passed": true
+        },
+        {
+          "route": "fold-pass",
+          "angleRadians": -37.79911184307752,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            0.09999999999999994
+          ],
+          "completeUnitaryMaxError": 6.938893903907228e-18,
+          "isaError": null,
+          "passed": true
+        },
+        {
+          "route": "backend-preset",
+          "angleRadians": 2.356194490192345,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            0.7853981633974492
+          ],
+          "completeUnitaryMaxError": 4.0412728104402656e-16,
+          "isaError": "",
+          "passed": true
+        },
+        {
+          "route": "backend-preset",
+          "angleRadians": 0.0,
+          "unsupportedInstructions": [],
+          "rzzAngles": [],
+          "completeUnitaryMaxError": 0.0,
+          "isaError": "",
+          "passed": true
+        },
+        {
+          "route": "backend-preset",
+          "angleRadians": 1.5707963267948966,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            1.5707963267948966
+          ],
+          "completeUnitaryMaxError": 0.0,
+          "isaError": "",
+          "passed": true
+        },
+        {
+          "route": "backend-preset",
+          "angleRadians": -1.5707963267948966,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            1.5707963267948966
+          ],
+          "completeUnitaryMaxError": 3.1401849173675503e-16,
+          "isaError": "",
+          "passed": true
+        },
+        {
+          "route": "backend-preset",
+          "angleRadians": 3.141592653589793,
+          "unsupportedInstructions": [],
+          "rzzAngles": [],
+          "completeUnitaryMaxError": 2.4492935982947064e-16,
+          "isaError": "",
+          "passed": true
+        },
+        {
+          "route": "backend-preset",
+          "angleRadians": -3.141592653589793,
+          "unsupportedInstructions": [],
+          "rzzAngles": [],
+          "completeUnitaryMaxError": 2.4492935982947064e-16,
+          "isaError": "",
+          "passed": true
+        },
+        {
+          "route": "backend-preset",
+          "angleRadians": 9.42477796076938,
+          "unsupportedInstructions": [],
+          "rzzAngles": [],
+          "completeUnitaryMaxError": 4.898587196589413e-16,
+          "isaError": "",
+          "passed": true
+        },
+        {
+          "route": "backend-preset",
+          "angleRadians": -9.42477796076938,
+          "unsupportedInstructions": [],
+          "rzzAngles": [],
+          "completeUnitaryMaxError": 2.4492935982947064e-16,
+          "isaError": "",
+          "passed": true
+        },
+        {
+          "route": "backend-preset",
+          "angleRadians": 15.707963267948966,
+          "unsupportedInstructions": [],
+          "rzzAngles": [],
+          "completeUnitaryMaxError": 4.898587196589413e-16,
+          "isaError": "",
+          "passed": true
+        },
+        {
+          "route": "backend-preset",
+          "angleRadians": -15.707963267948966,
+          "unsupportedInstructions": [],
+          "rzzAngles": [],
+          "completeUnitaryMaxError": 4.898587196589413e-16,
+          "isaError": "",
+          "passed": true
+        },
+        {
+          "route": "backend-preset",
+          "angleRadians": 21.991148575128552,
+          "unsupportedInstructions": [],
+          "rzzAngles": [],
+          "completeUnitaryMaxError": 7.347880794884119e-16,
+          "isaError": "",
+          "passed": true
+        },
+        {
+          "route": "backend-preset",
+          "angleRadians": -21.991148575128552,
+          "unsupportedInstructions": [],
+          "rzzAngles": [],
+          "completeUnitaryMaxError": 4.898587196589413e-16,
+          "isaError": "",
+          "passed": true
+        },
+        {
+          "route": "backend-preset",
+          "angleRadians": 0.1,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            0.1
+          ],
+          "completeUnitaryMaxError": 0.0,
+          "isaError": "",
+          "passed": true
+        },
+        {
+          "route": "backend-preset",
+          "angleRadians": -0.1,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            0.09999999999999964
+          ],
+          "completeUnitaryMaxError": 1.8041124150158794e-16,
+          "isaError": "",
+          "passed": true
+        },
+        {
+          "route": "backend-preset",
+          "angleRadians": 1.6707963267948966,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            1.470796326794897
+          ],
+          "completeUnitaryMaxError": 1.5700924586837752e-16,
+          "isaError": "",
+          "passed": true
+        },
+        {
+          "route": "backend-preset",
+          "angleRadians": -3.041592653589793,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            0.10000000000000009
+          ],
+          "completeUnitaryMaxError": 2.42861286636753e-16,
+          "isaError": "",
+          "passed": true
+        },
+        {
+          "route": "backend-preset",
+          "angleRadians": 6.383185307179586,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            0.09999999999999941
+          ],
+          "completeUnitaryMaxError": 1.249000902703301e-16,
+          "isaError": "",
+          "passed": true
+        },
+        {
+          "route": "backend-preset",
+          "angleRadians": 6.183185307179587,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            0.09999999999999964
+          ],
+          "completeUnitaryMaxError": 2.498001805406602e-16,
+          "isaError": "",
+          "passed": true
+        },
+        {
+          "route": "backend-preset",
+          "angleRadians": -4.61238898038469,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            1.470796326794897
+          ],
+          "completeUnitaryMaxError": 2.482534153247273e-16,
+          "isaError": "",
+          "passed": true
+        },
+        {
+          "route": "backend-preset",
+          "angleRadians": 3.241592653589793,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            0.09999999999999964
+          ],
+          "completeUnitaryMaxError": 2.220446049250313e-16,
+          "isaError": "",
+          "passed": true
+        },
+        {
+          "route": "backend-preset",
+          "angleRadians": -37.599111843077516,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            0.10000000000000289
+          ],
+          "completeUnitaryMaxError": 0.0,
+          "isaError": "",
+          "passed": true
+        },
+        {
+          "route": "backend-preset",
+          "angleRadians": 36.22831551628262,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            1.4707963267948987
+          ],
+          "completeUnitaryMaxError": 1.5700924586837752e-16,
+          "isaError": "",
+          "passed": true
+        },
+        {
+          "route": "backend-preset",
+          "angleRadians": 34.65751918948772,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            0.09999999999999654
+          ],
+          "completeUnitaryMaxError": 3.122502256758253e-16,
+          "isaError": "",
+          "passed": true
+        },
+        {
+          "route": "backend-preset",
+          "angleRadians": -37.79911184307752,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            0.09999999999999964
+          ],
+          "completeUnitaryMaxError": 1.5265566588595902e-16,
+          "isaError": "",
+          "passed": true
+        }
+      ],
+      "scientificValidation": "not_evaluated"
+    },
+    {
+      "versions": {
+        "qiskit": "2.5.2",
+        "qiskit-ibm-runtime": "0.50.1"
+      },
+      "denominator": 48,
+      "passed": 48,
+      "cases": [
+        {
+          "route": "fold-pass",
+          "angleRadians": 2.356194490192345,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            0.7853981633974483
+          ],
+          "completeUnitaryMaxError": 2.482534153247273e-16,
+          "isaError": null,
+          "passed": true
+        },
+        {
+          "route": "fold-pass",
+          "angleRadians": 0.0,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            0.0
+          ],
+          "completeUnitaryMaxError": 0.0,
+          "isaError": null,
+          "passed": true
+        },
+        {
+          "route": "fold-pass",
+          "angleRadians": 1.5707963267948966,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            1.5707963267948966
+          ],
+          "completeUnitaryMaxError": 0.0,
+          "isaError": null,
+          "passed": true
+        },
+        {
+          "route": "fold-pass",
+          "angleRadians": -1.5707963267948966,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            1.5707963267948966
+          ],
+          "completeUnitaryMaxError": 3.1401849173675503e-16,
+          "isaError": null,
+          "passed": true
+        },
+        {
+          "route": "fold-pass",
+          "angleRadians": 3.141592653589793,
+          "unsupportedInstructions": [],
+          "rzzAngles": [],
+          "completeUnitaryMaxError": 2.4492935982947064e-16,
+          "isaError": null,
+          "passed": true
+        },
+        {
+          "route": "fold-pass",
+          "angleRadians": -3.141592653589793,
+          "unsupportedInstructions": [],
+          "rzzAngles": [],
+          "completeUnitaryMaxError": 2.4492935982947064e-16,
+          "isaError": null,
+          "passed": true
+        },
+        {
+          "route": "fold-pass",
+          "angleRadians": 9.42477796076938,
+          "unsupportedInstructions": [],
+          "rzzAngles": [],
+          "completeUnitaryMaxError": 4.898587196589413e-16,
+          "isaError": null,
+          "passed": true
+        },
+        {
+          "route": "fold-pass",
+          "angleRadians": -9.42477796076938,
+          "unsupportedInstructions": [],
+          "rzzAngles": [],
+          "completeUnitaryMaxError": 2.4492935982947064e-16,
+          "isaError": null,
+          "passed": true
+        },
+        {
+          "route": "fold-pass",
+          "angleRadians": 15.707963267948966,
+          "unsupportedInstructions": [],
+          "rzzAngles": [],
+          "completeUnitaryMaxError": 4.898587196589413e-16,
+          "isaError": null,
+          "passed": true
+        },
+        {
+          "route": "fold-pass",
+          "angleRadians": -15.707963267948966,
+          "unsupportedInstructions": [],
+          "rzzAngles": [],
+          "completeUnitaryMaxError": 4.898587196589413e-16,
+          "isaError": null,
+          "passed": true
+        },
+        {
+          "route": "fold-pass",
+          "angleRadians": 21.991148575128552,
+          "unsupportedInstructions": [],
+          "rzzAngles": [],
+          "completeUnitaryMaxError": 7.347880794884119e-16,
+          "isaError": null,
+          "passed": true
+        },
+        {
+          "route": "fold-pass",
+          "angleRadians": -21.991148575128552,
+          "unsupportedInstructions": [],
+          "rzzAngles": [],
+          "completeUnitaryMaxError": 4.898587196589413e-16,
+          "isaError": null,
+          "passed": true
+        },
+        {
+          "route": "fold-pass",
+          "angleRadians": 0.1,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            0.1
+          ],
+          "completeUnitaryMaxError": 0.0,
+          "isaError": null,
+          "passed": true
+        },
+        {
+          "route": "fold-pass",
+          "angleRadians": -0.1,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            0.09999999999999999
+          ],
+          "completeUnitaryMaxError": 6.938893903907228e-18,
+          "isaError": null,
+          "passed": true
+        },
+        {
+          "route": "fold-pass",
+          "angleRadians": 1.6707963267948966,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            1.4707963267948965
+          ],
+          "completeUnitaryMaxError": 1.5700924586837752e-16,
+          "isaError": null,
+          "passed": true
+        },
+        {
+          "route": "fold-pass",
+          "angleRadians": -3.041592653589793,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            0.10000000000000009
+          ],
+          "completeUnitaryMaxError": 2.42861286636753e-16,
+          "isaError": null,
+          "passed": true
+        },
+        {
+          "route": "fold-pass",
+          "angleRadians": 6.383185307179586,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            0.09999999999999941
+          ],
+          "completeUnitaryMaxError": 1.249000902703301e-16,
+          "isaError": null,
+          "passed": true
+        },
+        {
+          "route": "fold-pass",
+          "angleRadians": 6.183185307179587,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            0.09999999999999988
+          ],
+          "completeUnitaryMaxError": 1.3183898417423734e-16,
+          "isaError": null,
+          "passed": true
+        },
+        {
+          "route": "fold-pass",
+          "angleRadians": -4.61238898038469,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            1.4707963267948967
+          ],
+          "completeUnitaryMaxError": 4.0029660424867215e-16,
+          "isaError": null,
+          "passed": true
+        },
+        {
+          "route": "fold-pass",
+          "angleRadians": 3.241592653589793,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            0.09999999999999964
+          ],
+          "completeUnitaryMaxError": 2.220446049250313e-16,
+          "isaError": null,
+          "passed": true
+        },
+        {
+          "route": "fold-pass",
+          "angleRadians": -37.599111843077516,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            0.10000000000000289
+          ],
+          "completeUnitaryMaxError": 0.0,
+          "isaError": null,
+          "passed": true
+        },
+        {
+          "route": "fold-pass",
+          "angleRadians": 36.22831551628262,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            1.4707963267948985
+          ],
+          "completeUnitaryMaxError": 1.1102230246251565e-16,
+          "isaError": null,
+          "passed": true
+        },
+        {
+          "route": "fold-pass",
+          "angleRadians": 34.65751918948772,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            0.09999999999999654
+          ],
+          "completeUnitaryMaxError": 3.122502256758253e-16,
+          "isaError": null,
+          "passed": true
+        },
+        {
+          "route": "fold-pass",
+          "angleRadians": -37.79911184307752,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            0.09999999999999994
+          ],
+          "completeUnitaryMaxError": 6.938893903907228e-18,
+          "isaError": null,
+          "passed": true
+        },
+        {
+          "route": "backend-preset",
+          "angleRadians": 2.356194490192345,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            0.7853981633974492
+          ],
+          "completeUnitaryMaxError": 4.0412728104402656e-16,
+          "isaError": "",
+          "passed": true
+        },
+        {
+          "route": "backend-preset",
+          "angleRadians": 0.0,
+          "unsupportedInstructions": [],
+          "rzzAngles": [],
+          "completeUnitaryMaxError": 0.0,
+          "isaError": "",
+          "passed": true
+        },
+        {
+          "route": "backend-preset",
+          "angleRadians": 1.5707963267948966,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            1.5707963267948966
+          ],
+          "completeUnitaryMaxError": 0.0,
+          "isaError": "",
+          "passed": true
+        },
+        {
+          "route": "backend-preset",
+          "angleRadians": -1.5707963267948966,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            1.5707963267948966
+          ],
+          "completeUnitaryMaxError": 3.1401849173675503e-16,
+          "isaError": "",
+          "passed": true
+        },
+        {
+          "route": "backend-preset",
+          "angleRadians": 3.141592653589793,
+          "unsupportedInstructions": [],
+          "rzzAngles": [],
+          "completeUnitaryMaxError": 2.4492935982947064e-16,
+          "isaError": "",
+          "passed": true
+        },
+        {
+          "route": "backend-preset",
+          "angleRadians": -3.141592653589793,
+          "unsupportedInstructions": [],
+          "rzzAngles": [],
+          "completeUnitaryMaxError": 2.4492935982947064e-16,
+          "isaError": "",
+          "passed": true
+        },
+        {
+          "route": "backend-preset",
+          "angleRadians": 9.42477796076938,
+          "unsupportedInstructions": [],
+          "rzzAngles": [],
+          "completeUnitaryMaxError": 4.898587196589413e-16,
+          "isaError": "",
+          "passed": true
+        },
+        {
+          "route": "backend-preset",
+          "angleRadians": -9.42477796076938,
+          "unsupportedInstructions": [],
+          "rzzAngles": [],
+          "completeUnitaryMaxError": 2.4492935982947064e-16,
+          "isaError": "",
+          "passed": true
+        },
+        {
+          "route": "backend-preset",
+          "angleRadians": 15.707963267948966,
+          "unsupportedInstructions": [],
+          "rzzAngles": [],
+          "completeUnitaryMaxError": 4.898587196589413e-16,
+          "isaError": "",
+          "passed": true
+        },
+        {
+          "route": "backend-preset",
+          "angleRadians": -15.707963267948966,
+          "unsupportedInstructions": [],
+          "rzzAngles": [],
+          "completeUnitaryMaxError": 4.898587196589413e-16,
+          "isaError": "",
+          "passed": true
+        },
+        {
+          "route": "backend-preset",
+          "angleRadians": 21.991148575128552,
+          "unsupportedInstructions": [],
+          "rzzAngles": [],
+          "completeUnitaryMaxError": 7.347880794884119e-16,
+          "isaError": "",
+          "passed": true
+        },
+        {
+          "route": "backend-preset",
+          "angleRadians": -21.991148575128552,
+          "unsupportedInstructions": [],
+          "rzzAngles": [],
+          "completeUnitaryMaxError": 4.898587196589413e-16,
+          "isaError": "",
+          "passed": true
+        },
+        {
+          "route": "backend-preset",
+          "angleRadians": 0.1,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            0.1
+          ],
+          "completeUnitaryMaxError": 0.0,
+          "isaError": "",
+          "passed": true
+        },
+        {
+          "route": "backend-preset",
+          "angleRadians": -0.1,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            0.09999999999999964
+          ],
+          "completeUnitaryMaxError": 1.8041124150158794e-16,
+          "isaError": "",
+          "passed": true
+        },
+        {
+          "route": "backend-preset",
+          "angleRadians": 1.6707963267948966,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            1.470796326794897
+          ],
+          "completeUnitaryMaxError": 1.5700924586837752e-16,
+          "isaError": "",
+          "passed": true
+        },
+        {
+          "route": "backend-preset",
+          "angleRadians": -3.041592653589793,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            0.10000000000000009
+          ],
+          "completeUnitaryMaxError": 2.42861286636753e-16,
+          "isaError": "",
+          "passed": true
+        },
+        {
+          "route": "backend-preset",
+          "angleRadians": 6.383185307179586,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            0.09999999999999941
+          ],
+          "completeUnitaryMaxError": 1.249000902703301e-16,
+          "isaError": "",
+          "passed": true
+        },
+        {
+          "route": "backend-preset",
+          "angleRadians": 6.183185307179587,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            0.09999999999999964
+          ],
+          "completeUnitaryMaxError": 2.498001805406602e-16,
+          "isaError": "",
+          "passed": true
+        },
+        {
+          "route": "backend-preset",
+          "angleRadians": -4.61238898038469,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            1.470796326794897
+          ],
+          "completeUnitaryMaxError": 2.482534153247273e-16,
+          "isaError": "",
+          "passed": true
+        },
+        {
+          "route": "backend-preset",
+          "angleRadians": 3.241592653589793,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            0.09999999999999964
+          ],
+          "completeUnitaryMaxError": 2.220446049250313e-16,
+          "isaError": "",
+          "passed": true
+        },
+        {
+          "route": "backend-preset",
+          "angleRadians": -37.599111843077516,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            0.10000000000000289
+          ],
+          "completeUnitaryMaxError": 0.0,
+          "isaError": "",
+          "passed": true
+        },
+        {
+          "route": "backend-preset",
+          "angleRadians": 36.22831551628262,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            1.4707963267948987
+          ],
+          "completeUnitaryMaxError": 1.5700924586837752e-16,
+          "isaError": "",
+          "passed": true
+        },
+        {
+          "route": "backend-preset",
+          "angleRadians": 34.65751918948772,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            0.09999999999999654
+          ],
+          "completeUnitaryMaxError": 3.122502256758253e-16,
+          "isaError": "",
+          "passed": true
+        },
+        {
+          "route": "backend-preset",
+          "angleRadians": -37.79911184307752,
+          "unsupportedInstructions": [],
+          "rzzAngles": [
+            0.09999999999999964
+          ],
+          "completeUnitaryMaxError": 1.5265566588595902e-16,
+          "isaError": "",
+          "passed": true
+        }
+      ],
+      "scientificValidation": "not_evaluated"
+    }
+  ],
+  "locks": [
+    {
+      "preservedOtherMetadata": [],
+      "path": ".agents/skills/oqc-qat/uv.lock",
+      "before": "0.50.0",
+      "after": "0.50.1",
+      "changedPackages": [
+        "qiskit-ibm-runtime"
+      ],
+      "dependenciesUnchanged": true,
+      "sha256": "3fc00f90688b184686dbd6e12f466adf130580375ed8990eea9c080fd093dcf6",
+      "offlineLockCheck": "passed"
+    },
+    {
+      "preservedOtherMetadata": [],
+      "path": ".agents/skills/qcut-knitting/uv.lock",
+      "before": "0.49.0",
+      "after": "0.49.1",
+      "changedPackages": [
+        "qiskit-ibm-runtime"
+      ],
+      "dependenciesUnchanged": true,
+      "sha256": "25950895bfc88e276261592f05237c21d35a3242c1c200b62947e570ad16b0d1",
+      "offlineLockCheck": "passed"
+    },
+    {
+      "preservedOtherMetadata": [
+        "pyscf"
+      ],
+      "path": ".agents/skills/qdk-chemistry/uv.lock",
+      "before": "0.50.0",
+      "after": "0.50.1",
+      "changedPackages": [
+        "qiskit-ibm-runtime"
+      ],
+      "dependenciesUnchanged": true,
+      "sha256": "8beb7243b11e2f4abe704e811dd85cfa993bc1c84bdc728fadd43ff5287d8714",
+      "offlineLockCheck": "passed"
+    },
+    {
+      "preservedOtherMetadata": [],
+      "path": ".agents/skills/squlearn-learning/uv.lock",
+      "before": "0.50.0",
+      "after": "0.50.1",
+      "changedPackages": [
+        "qiskit-ibm-runtime"
+      ],
+      "dependenciesUnchanged": true,
+      "sha256": "9dcddc5a5dcab8d0f4f036c1bb0351c410cbfd9516f78c8fca60f3da2e192d7d",
+      "offlineLockCheck": "passed"
+    },
+    {
+      "preservedOtherMetadata": [],
+      "path": "runtime/chatgpt/external/environments/qiskit_gym/uv.lock",
+      "before": "0.50.0",
+      "after": "0.50.1",
+      "changedPackages": [
+        "qiskit-ibm-runtime"
+      ],
+      "dependenciesUnchanged": true,
+      "sha256": "0e6c0c6926853b56b7781262458d07bb05eaed78bf4cf78d165075784f692d2a",
+      "offlineLockCheck": "passed"
+    },
+    {
+      "preservedOtherMetadata": [],
+      "path": "runtime/chatgpt/external/environments/qiskit_ibm_runtime/uv.lock",
+      "before": "0.50.0",
+      "after": "0.50.1",
+      "changedPackages": [
+        "qiskit-ibm-runtime"
+      ],
+      "dependenciesUnchanged": true,
+      "sha256": "bdd3816a3448348e7c8cc03a321f3fb04582b0e6b4daaa5f8b8e8ce77540a801",
+      "offlineLockCheck": "passed"
+    },
+    {
+      "preservedOtherMetadata": [],
+      "path": "runtime/chatgpt/external/environments/quantum_hardware/uv.lock",
+      "before": "0.50.0",
+      "after": "0.50.1",
+      "changedPackages": [
+        "qiskit-ibm-runtime"
+      ],
+      "dependenciesUnchanged": true,
+      "sha256": "4ff0ffcd67f963cb5c2abea8ac9b92a98d06110430a6e833e0643f60f3695ff6",
+      "offlineLockCheck": "passed"
+    }
+  ],
+  "mcpContracts": [
+    {
+      "server": "qiskit_ibm_runtime",
+      "toolsChecked": 20,
+      "matchesFixedContract": true,
+      "executionCalls": 0,
+      "scientificValidation": "not_evaluated"
+    },
+    {
+      "server": "quantum_hardware",
+      "toolsChecked": 53,
+      "matchesFixedContract": true,
+      "executionCalls": 0,
+      "scientificValidation": "not_evaluated"
+    }
+  ],
+  "unverifiedLocally": [
+    "Qiskit Gym complete environment",
+    "all scientific workflows of the seven affected environments",
+    "DSH/Codex model-driven tasks",
+    "real quantum devices"
+  ],
+  "nativeSdkRefresh": [
+    {
+      "id": "qdk-chemistry",
+      "durableEvidenceDirectory": "docs/integrations/evidence/runtime-rzz-2026-11-01/qdk-chemistry",
+      "verificationSha256": "2525710041e676745d2dced15f8806c916ab03d636b343c271a00ae407b379a4",
+      "dependencyLockSha256": "8beb7243b11e2f4abe704e811dd85cfa993bc1c84bdc728fadd43ff5287d8714",
+      "artifactProvenance": {
+        "runUrl": "https://github.com/xi-zhao/OpenQuantum/actions/runs/41289502864",
+        "head": "d6664393ee923c3687666cc5aea030b008815c24",
+        "artifactId": 13076428220,
+        "archiveSha256": "c045d820dea64bafb27aff8304ed8078f288cf1168e23248ef009c6ffa4426ad",
+        "downloadUrl": "https://github.com/xi-zhao/OpenQuantum/actions/runs/41289502864/artifacts/13076428220"
+      },
+      "previousResultComparison": {
+        "equal": true,
+        "scope": "H2 nuclear repulsion analytic value and structure round-trip"
+      }
+    },
+    {
+      "id": "squlearn-learning",
+      "durableEvidenceDirectory": "docs/integrations/evidence/runtime-rzz-2026-11-01/squlearn-learning",
+      "verificationSha256": "8af954da82b0cb23d4fce4dafc7002843a75d0d091d14966955cf55d5051ab37",
+      "dependencyLockSha256": "9dcddc5a5dcab8d0f4f036c1bb0351c410cbfd9516f78c8fca60f3da2e192d7d",
+      "artifactProvenance": {
+        "runUrl": "https://github.com/xi-zhao/OpenQuantum/actions/runs/41289502864",
+        "head": "d6664393ee923c3687666cc5aea030b008815c24",
+        "artifactId": 13076164314,
+        "archiveSha256": "9bfa52eba4cf6caa208138214d28a8a4e5ce353161e6e7cde70c6de063945fb3",
+        "downloadUrl": "https://github.com/xi-zhao/OpenQuantum/actions/runs/41289502864/artifacts/13076164314"
+      },
+      "previousResultComparison": {
+        "maxAbsoluteError": 0.0,
+        "scope": "fixed 3x3 local FidelityKernel matrix, not arbitrary training or all backends"
+      }
+    }
+  ]
+}

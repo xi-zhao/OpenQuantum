@@ -1,0 +1,121 @@
+name: IBM Runtime compatibility
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    paths:
+      - .agents/skills/oqc-qat/uv.lock
+      - .agents/skills/qcut-knitting/uv.lock
+      - .agents/skills/qdk-chemistry/uv.lock
+      - .agents/skills/qdk-chemistry/references/native-example.py
+      - .agents/skills/squlearn-learning/uv.lock
+      - .agents/skills/squlearn-learning/references/native-example.py
+      - runtime/chatgpt/external/environments/qiskit_gym/**
+      - runtime/chatgpt/external/environments/qiskit_ibm_runtime/**
+      - runtime/chatgpt/external/environments/quantum_hardware/**
+      - runtime/chatgpt/external/launch.py
+      - benchmarks/upstream-updates/runtime_rzz_regressions.py
+      - tests/upstream-updates-live.test.mjs
+      - tests/sdk-ecosystem-live.test.mjs
+      - tests/fixtures/sdk-engineering-process.mjs
+      - .github/workflows/runtime-upstream.yml
+  workflow_dispatch:
+
+jobs:
+  runtime-compatibility:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - id: qcut-knitting
+            environment: qcut-knitting
+            kind: sdk
+          - id: qiskit_ibm_runtime
+            environment: mcp-qiskit-ibm-runtime
+            kind: mcp
+          - id: qiskit_gym
+            environment: mcp-qiskit-gym
+            kind: mcp
+          - id: quantum_hardware
+            environment: mcp-quantum-hardware
+            kind: mcp
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: false
+      - name: Install JavaScript check dependencies
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Explicitly prepare the fixed SDK
+        if: matrix.kind == 'sdk'
+        run: node scripts/setup-sdk.mjs "${{ matrix.id }}"
+      - name: Explicitly prepare the fixed MCP environment
+        if: matrix.kind == 'mcp'
+        run: node runtime/chatgpt/external/setup.mjs "${{ matrix.id }}"
+      - name: Check RZZ target and complete unitary offline
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p .openquantum/upstream-updates-evidence
+          ".openquantum/python-envs/${{ matrix.environment }}/bin/python" -B \
+            benchmarks/upstream-updates/runtime_rzz_regressions.py \
+            > ".openquantum/upstream-updates-evidence/${{ matrix.id }}-rzz.json"
+      - name: Compare MCP tools without credentials or execution
+        if: matrix.kind == 'mcp'
+        env:
+          OPENQUANTUM_RUNTIME_MCP_LIVE: "1"
+        run: node --test --test-name-pattern="Runtime patch preserves ${{ matrix.id }} MCP" tests/upstream-updates-live.test.mjs
+      - name: Preserve compatibility evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: runtime-${{ matrix.id }}-compatibility
+          path: .openquantum/upstream-updates-evidence
+          if-no-files-found: ignore
+
+  native-sdk-receipts:
+    runs-on: macos-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        id: [qdk-chemistry, squlearn-learning]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: false
+      - name: Install JavaScript check dependencies
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Explicitly prepare the fixed SDK
+        run: node scripts/setup-sdk.mjs "${{ matrix.id }}"
+      - name: Run the existing offline public API verification
+        env:
+          OPENQUANTUM_ECOSYSTEM_CHECKS: "1"
+          OPENQUANTUM_SDK_IDS: ${{ matrix.id }}
+          OPENQUANTUM_SDK_CHECK_OUTPUT: ${{ github.workspace }}/.openquantum/runtime-sdk-evidence
+        run: |
+          node --test --test-name-pattern="SDK ecosystem: ${{ matrix.id }}" tests/sdk-ecosystem-live.test.mjs
+      - name: Preserve SDK receipts and exact outputs
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: runtime-native-sdk-${{ matrix.id }}
+          path: |
+            .openquantum/runtime-sdk-evidence/*/*.json
+            .openquantum/runtime-sdk-evidence/*/*.py
+            .openquantum/runtime-sdk-evidence/*/*.log
+            .openquantum/runtime-sdk-evidence/*/*.xyz
+          if-no-files-found: ignore
