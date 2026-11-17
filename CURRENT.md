@@ -1,13 +1,18 @@
 # OpenQuantum 当前交接
 
-核验日期：2026-10-30。此页只记录交接状态；架构以[文档总入口](docs/README.md)为准，执行事实以 Harness
+核验日期：2026-11-09。此页只记录交接状态；架构以[文档总入口](docs/README.md)为准，执行事实以 Harness
 Session event log 为准，科学状态以 Acceptance Report 为准。2026-09 至 2026-10-16 的日期化记录已迁至
 [交接历史](docs/handoff/HISTORY.md)，内容未删改。接手时先重新查询 Git、PR 与 CI，不把本页当作实时状态。
 
 ## 当前基线
 
-- **0.8.10** 已发布，并完成本机 Desktop / Codex 更新；两端均来自干净源码提交 `091278a6`。
-  [Desktop v0.8.10](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.10) 为最新发行，
+- **0.8.11 源码基线与发行入口**：共享 backend 与状态协议修复已整合，相关回归为 218 通过、4 条件跳过。
+  同步版本包含 SlowQuant、TNQS、RcmpsCore 接入，详见 [0.8.11 更新说明](docs/releases/v0.8.11.md)。
+  [Desktop v0.8.11](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.11) 与
+  [Codex codex-v0.8.11](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.11) 的公开状态、最终源码提交、包摘要和隔离宿主验收，以对应 Release 及验证附件为准；源码版本本身不代表发行完成。
+  此次发行不自动替换本机安装；以下 0.8.10 记录保留为上次实际安装验收证据。
+- **0.8.10 安装验收记录**：当次完成本机 Desktop / Codex 更新；两端均来自干净源码提交 `091278a6`。
+  [Desktop v0.8.10](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.10) 保留用于回退，
   [Codex codex-v0.8.10](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.10) 已公开；0.8.9 历史发行保留。
 - 设置页压缩重复标题与页尾，扩大目录和详情，修复筛选区滚动与展开表单的空白溢出；普通 Desktop 窗口的
   详情高度由约 253px 增至 483px。真实安装在普通、低矮和窄窗口均通过滚轮、键盘、详情底部及完整页尾检查。

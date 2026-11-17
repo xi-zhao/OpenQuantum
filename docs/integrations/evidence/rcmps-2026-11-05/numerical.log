@@ -1,0 +1,28 @@
+Precompiling packages...
+   6372.2 ms  ✓ Test (serial)
+  1 dependency successfully precompiled in 6 seconds
+Precompiling packages...
+    796.3 ms  ✓ InverseFunctionsTestExt (serial)
+  1 dependency successfully precompiled in 1 seconds
+Precompiling packages...
+    649.8 ms  ✓ TestExt (serial)
+  1 dependency successfully precompiled in 1 seconds
+Test Summary:            | Pass  Total  Time
+fixed source and runtime |    4      4  0.6s
+Test Summary:                                             | Pass  Total   Time
+native trial-state program and normal-ordering convention |    5      5  42.5s
+Test Summary:                                 | Pass  Total  Time
+free vacuum: dispersion and two distinct gaps |    5      5  0.2s
+Test Summary:                                      | Pass  Total  Time
+coherent-state moments, vertices and modified mass |    3      3  0.4s
+Test Summary:                                                                  | Pass  Total  Time
+nontrivial state: independent parameter perturbation and exported steady state |    1      1  7.0s
+┌ Warning: LBFGS: not converged to requested tol after 3 iterations and time  3.42 s: f = 1.287296776968e-05, ‖∇f‖ = 7.9576e-03
+└ @ OptimKit ~/work/_temp/rcmps-depot/packages/OptimKit/JZJWK/src/lbfgs.jl:238
+Test Summary:                                                  | Pass  Total   Time
+optimization trace and separate interacting numerical controls |    6      6  14.2s
+┌ Warning: Verbosity toggle: max_iters 
+│  Interrupted. Larger maxiters is needed. If you are using an integrator for non-stiff ODEs or an automatic switching algorithm (the default), you may want to consider using a method for stiff equations. See the solver pages for more details (e.g. https://docs.sciml.ai/DiffEqDocs/stable/solvers/ode_solve/#Stiff-Problems).
+└ @ DiffEqBase ~/work/_temp/rcmps-depot/packages/DiffEqBase/WgyOh/src/check_error.jl:44
+Test Summary:                              | Pass  Total  Time
+invalid inputs, nonconvergence and storage |   12     12  2.6s

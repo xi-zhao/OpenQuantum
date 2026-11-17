@@ -57,6 +57,8 @@ test("Desktop native catalog, Skill changes and cached calls use the same curren
   assert.equal(ctx.tools.schemas().filter(item => item.name === "find_openquantum_skills").length, 1);
   assert.ok(ctx.tools.schemas().some(item => item.name === "run_qiskit_circuit"));
   assert.ok((await ctx.skills.get("qiskit-circuit-workbench")).content.includes("prepare_openquantum_skill"));
+  assert.ok((await ctx.skills.list()).some(item => item.name === "ppvm-simulation"));
+  assert.match((await ctx.skills.get("ppvm-simulation")).content, /reset_state/);
   const discovered = await call(agent, "find_openquantum_skills", { query: "qiskit" }); assert.equal(discovered.isError, false);
   await app.request({ action: "skill.set", id: "qiskit-circuit-workbench", enabled: false, revision: (await app.settings.read()).revision });
   assert.ok(!ctx.tools.schemas().some(item => item.name === "run_qiskit_circuit"));

@@ -1,0 +1,15 @@
+{
+  "upstreamVersion": "0.3.0",
+  "parameters": {
+    "theta": 0.73,
+    "amplitudeDamping": 0.23,
+    "seed": 20261110
+  },
+  "zAfterRxAndDamping": 0.8037842898055502,
+  "analyticReference": 0.8037842898055502,
+  "bellZZ": 1.0,
+  "afterStateOnlyReset": "LOST",
+  "afterFullReset": "ZERO",
+  "scope": "small public-API checks; not a hardware or performance benchmark",
+  "scientificValidation": "not_evaluated"
+}

@@ -32,7 +32,7 @@ const groups = [
   ["simulation", "模拟与化学", `
     hamiltonian-simulation sqd-chemistry tjm-dynamics tenpy-ground-state
     quantum-ground-state dynamiqs-dynamics oqupy-dynamics symmer-tapering
-    openqarp-excited-states pairinteraction-rydberg
+    openqarp-excited-states pairinteraction-rydberg slowquant-response tnqs-dynamics rcmps-field-theory
     quantum-guide-algorithms-hamiltonian-simulation quantum-cartan quantum-qdrift
     quantum-hamiltonian-qsp quantum-taylor quantum-trotter
     quantum-guide-algorithms-quantum-chemistry quantum-molecular-dmrg
@@ -47,7 +47,7 @@ const groups = [
     qec-memory-experiment mitiq-error-mitigation ldpc-decoding clifft-sampling
     deltakit-qec quantum-qldpc alicebob-cat-circuits
     mqt-qecc tqec-compilation tesseract-decoding tsim-sampling pecos-qec
-    quantumclifford-julia chromobius-decoding emlint-dem-audit
+    quantumclifford-julia chromobius-decoding emlint-dem-audit ppvm-simulation
   `],
   ["learning", "量子机器学习", `
     quantum-guide-algorithms-quantum-machine-learning quantum-cvqnn quantum-qcbm

@@ -1,0 +1,11 @@
+[deps]
+JSON3 = "0f8b85d8-7281-11e9-16c2-39a750bddbf1"
+RcmpsCore = "dc2d0369-e811-4a76-a451-968b98ba0a85"
+
+[sources]
+RcmpsCore = {url = "https://github.com/AntoineTilloy/RcmpsCore.jl.git", rev = "175b0aa41c2e4eee7d26f44a33d7d59ea641fbe1"}
+
+[compat]
+JSON3 = "=1.14.3"
+RcmpsCore = "=0.2.1"
+julia = "=1.12.7"

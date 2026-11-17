@@ -112,6 +112,13 @@ test("build discovery identifies a failed provider and closes the preceding conn
   assert.deepEqual(f.events, ["connect:alpha", "close:alpha", "connect:beta"]);
 });
 
+test("build discovery rejects an invalid schema before starting the next provider", async t => {
+  const f = await fixture(t);
+  f.overrides.tool = { inputSchema: { type: "invalid-schema-type" } };
+  await assert.rejects(f.backend({ discover: true }), /Provider discovery failed: native:\.\/quantum-practices-tools\.mjs/);
+  assert.deepEqual(f.events, ["connect:alpha", "close:alpha"]);
+});
+
 test("cancellation or disable during handshake prevents execution and frees call capacity", async t => {
   const f = await fixture(t), backend = await f.backend();
   const controller = new AbortController();

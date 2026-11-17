@@ -1,0 +1,66 @@
+{
+  "date": "2026-11-05",
+  "upstream": {
+    "url": "https://github.com/AntoineTilloy/RcmpsCore.jl",
+    "version": "0.2.1",
+    "revision": "175b0aa41c2e4eee7d26f44a33d7d59ea641fbe1",
+    "license": "MIT"
+  },
+  "execution": {
+    "url": "https://github.com/xi-zhao/OpenQuantum/actions/runs/41955037827",
+    "head": "86a05d4ea836c11a091d8ae5a9dbb7033ee1009c",
+    "artifactId": 13383007687,
+    "artifactSha256": "7a8893e143fc30c5a007a9132ec095014535eb303da9afc5ac928dc550a5f44a",
+    "platform": "GitHub macos-latest arm64",
+    "julia": "1.12.7",
+    "networkIsolation": "macOS sandbox-exec deny network*"
+  },
+  "scope": "Fixed complete Julia CPU SDK with editable offline program; 36 scoped numerical/source/failure assertions plus an independent NumPy Lindblad stationary-state reference. Not scientific acceptance.",
+  "numericalEvidence": {
+    "rcmps-validation.json": "df6c1ca77df704b93533675be5a68791b42371e5bbe67bc3011c5aba40533e8e",
+    "numpy-reference.json": "6f50e3a5b63e03aeef99b4b46c8be8c2e2c5c75096886e83ace454b65c4a7545",
+    "numerical.log": "75da67225a9ed0078ceeaf486c1401bf23ec2a363d311079f1109f986274dd71"
+  },
+  "validationSources": [
+    {
+      "path": "tests/fixtures/rcmps-validation.jl",
+      "sha256": "5db12f978df781baa3c2f957401c3ba3b17728fe856d571abb523fb80bf0378b"
+    },
+    {
+      "path": "tests/fixtures/rcmps-steady-reference.py",
+      "sha256": "f436161222d1ecc006c55dc21eb24f5b645d561982286852ae3179c83d3a01cf"
+    },
+    {
+      "path": "tests/sdk-ecosystem-live.test.mjs",
+      "sha256": "64fd1fbebc4738a9ca3828b71026a13bac4c801021501ad0e5b9d5d02929e873"
+    }
+  ],
+  "limitations": [
+    "Three-step D=2 optimization intentionally retains converged=false; its decreasing energy does not prove a ground state.",
+    "D=1 interacting coherent trial-state action/ODE control checks have an analytic reference but do not certify an interacting vacuum mass spectrum or large-D convergence.",
+    "Transfer gap and Hamiltonian gap are distinct; no kink, general multiparticle, GPU, real-time, critical extrapolation, paper-precision or speedup claim.",
+    "Numerical execution was macOS arm64 CPU only; no other platform numerical run or live host UI acceptance.",
+    "No Validator or Acceptance Profile added."
+  ],
+  "scientificValidation": "not_evaluated",
+  "receipt": {
+    "id": "rcmps-field-theory",
+    "language": "julia",
+    "status": "passed_scoped_engineering",
+    "scientificValidation": "not_evaluated",
+    "sourcePath": ".agents/skills/rcmps-field-theory/references/native-example.jl",
+    "sourceSha256": "39a98ca3907641f4096e81eabd9028fe795885c7cbd969421ca5fed669b4b717",
+    "dependencyLockPath": ".agents/skills/rcmps-field-theory/Manifest.toml",
+    "dependencyLockSha256": "a1457515ca416f96a41a69df4b3e8f0af8492bd0a4122bf1618a6e3a416096ad",
+    "durableEvidenceDirectory": "docs/integrations/evidence/rcmps-2026-11-05",
+    "verificationSha256": "f4bcea08543917b09dccd45b67a7dd32f07550aecb6b4813640bbcc566748224",
+    "artifacts": {
+      "attempt.json": "0639858c2f3e3943a13ee8f6b305392be73b874a2c61eb9c475e0841c31383ed",
+      "program.jl": "39a98ca3907641f4096e81eabd9028fe795885c7cbd969421ca5fed669b4b717",
+      "result.json": "c0e3ed7b9ab7c2b9a04f040aee57fda9995b2ab59b7a1b4f75cce12e94d35179",
+      "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "versions.json": "4cf3fa8d0661a1913b765f21229de9370cf0e9069724f2906305be1a6d67703f"
+    }
+  }
+}
