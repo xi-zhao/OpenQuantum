@@ -10,7 +10,7 @@ from science_reference import reference_plan
 def compute(v):
     import numpy as np
     import pyzx as zx
-    if version("pyzx") != "0.10.6":
+    if version("pyzx") != "0.10.8":
         raise ValueError("Unexpected PyZX version; restore the frozen environment")
     circuit = zx.Circuit(v["numQubits"])
     names = {"H": "HAD", "X": "NOT", "CX": "CNOT"}
