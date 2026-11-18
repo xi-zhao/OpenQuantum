@@ -1,0 +1,10 @@
+[project]
+name = "openquantum-ppvm-simulation"
+version = "0.1.0"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+  "bloqade-ppvm @ git+https://github.com/QuEraComputing/ppvm.git@3cc883fd93b2475cb10c892a8a31adcc09a7579c#subdirectory=ppvm-python",
+]
+
+[tool.uv]
+package = false

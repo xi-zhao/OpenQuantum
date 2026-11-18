@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "createdAt": "2026-10-14",
-  "scope": "native API examples on Apple Silicon macOS 27.0.1; offline; no QPU or cloud requests",
+  "scope": "26-library scoped native API engineering cohort; initial collection and refreshed receipt platform/time are recorded separately; offline, no QPU or cloud requests",
   "baseline": "ac00ceba1a08ef8f246aa765b6894a61d2e52cfa",
   "summary": {
     "newLibraries": 26,
@@ -1003,11 +1003,11 @@
       "sourcePath": ".agents/skills/qdk-chemistry/references/native-example.py",
       "sourceSha256": "f629bc9164fcb1f63fa92b2de255808365340008e939abfb92cc076495181258",
       "dependencyLockPath": ".agents/skills/qdk-chemistry/uv.lock",
-      "dependencyLockSha256": "59e9b4afe494e92154a0724a880e2f2f18b3f726cce3ed46c9db0cc6c8110680",
-      "verifiedAt": "2026-10-13T18:05:01.020Z",
-      "evidenceDirectory": "/Users/xizhao/.codex/visualizations/2026/10/13/01a135c9-9a23-7410-ad1f-e51d874ec4a9/quantum-integration-review/implementation/api-checks/qdk-chemistry-kQKCHf",
+      "dependencyLockSha256": "8beb7243b11e2f4abe704e811dd85cfa993bc1c84bdc728fadd43ff5287d8714",
+      "verifiedAt": "2026-11-01T08:36:05.996Z",
+      "evidenceDirectory": "docs/integrations/evidence/runtime-rzz-2026-11-01/qdk-chemistry",
       "artifacts": {
-        "attempt.json": "c8442463280eafb0bbc603144ed585397c8311ba86e731b8801ae88ba208f3cf",
+        "attempt.json": "647fc31907dd16a91bc6f3cff7fd5bf000c421db0b0179180b77e406f2e87361",
         "molecule.structure.json": "fa14f8665583db785c971e55f911b3511f76cb8b8904a360a0a0c9c290bdb05f",
         "molecule.xyz": "df93cde7a54f1112346a1dc701df6cec06539a29c0c73b1003f488577393f652",
         "program.py": "f629bc9164fcb1f63fa92b2de255808365340008e939abfb92cc076495181258",
@@ -1015,7 +1015,7 @@
         "runner.py": "886f044a51f94ee08cbe47de0182294b7d01277db6bd1b7b4f0a1c9d214d1602",
         "stderr.log": "cace1071573ef725e762e8856427937617c8c67e5d0784c45c0e854e56a803a8",
         "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-        "versions.json": "937c165b3b585d0963e580031b956c56f00be36d5b79656c30ab6fd6240086b8"
+        "versions.json": "aab9c2ef3151ad8b3aaf67624541deb606ef8edc6ad6a50ff97847109ce6d934"
       },
       "versions": {
         "PubChemPy": "1.0.5",
@@ -1086,7 +1086,7 @@
         "qiskit": "2.5.2",
         "qiskit-aer": "0.17.2",
         "qiskit-algorithms": "0.4.0",
-        "qiskit-ibm-runtime": "0.50.0",
+        "qiskit-ibm-runtime": "0.50.1",
         "qiskit-mitigation": "0.1.1",
         "qiskit-nature": "0.8.0",
         "qiskit-qasm3-import": "0.6.0",
@@ -1127,9 +1127,27 @@
         "nuclearRepulsionHartree": 0.7042253521126761,
         "scientificValidation": "not_evaluated"
       },
-      "attemptsRetained": 2,
-      "durableEvidenceDirectory": "docs/integrations/evidence/sdk-ecosystem-2026-10-14/qdk-chemistry",
-      "verificationSha256": "f96bfc7131d1e48c4a1cfd9e7cc5cce6f3a2f20d0c746f6f67669ca7a8ae407c"
+      "attemptsRetained": 3,
+      "durableEvidenceDirectory": "docs/integrations/evidence/runtime-rzz-2026-11-01/qdk-chemistry",
+      "verificationSha256": "2525710041e676745d2dced15f8806c916ab03d636b343c271a00ae407b379a4",
+      "previousVerification": {
+        "verifiedAt": "2026-10-13T18:05:01.020Z",
+        "dependencyLockSha256": "59e9b4afe494e92154a0724a880e2f2f18b3f726cce3ed46c9db0cc6c8110680",
+        "durableEvidenceDirectory": "docs/integrations/evidence/sdk-ecosystem-2026-10-14/qdk-chemistry",
+        "verificationSha256": "f96bfc7131d1e48c4a1cfd9e7cc5cce6f3a2f20d0c746f6f67669ca7a8ae407c"
+      },
+      "platform": "GitHub Actions macos-latest; OS network denied by existing sandbox-exec fixture",
+      "artifactProvenance": {
+        "runUrl": "https://github.com/xi-zhao/OpenQuantum/actions/runs/41289502864",
+        "head": "d6664393ee923c3687666cc5aea030b008815c24",
+        "artifactId": 13076428220,
+        "archiveSha256": "c045d820dea64bafb27aff8304ed8078f288cf1168e23248ef009c6ffa4426ad",
+        "downloadUrl": "https://github.com/xi-zhao/OpenQuantum/actions/runs/41289502864/artifacts/13076428220"
+      },
+      "previousResultComparison": {
+        "equal": true,
+        "scope": "H2 nuclear repulsion analytic value and structure round-trip"
+      }
     },
     {
       "id": "qiskit-machine-learning",
@@ -1916,17 +1934,17 @@
       "sourcePath": ".agents/skills/squlearn-learning/references/native-example.py",
       "sourceSha256": "9c411c3904f3e51adf684b0a4101e2eb62e498a2331da443170a116c1d97c9fe",
       "dependencyLockPath": ".agents/skills/squlearn-learning/uv.lock",
-      "dependencyLockSha256": "9ee2cc4f5a7fda7eca14dbbf42a0733de6bf97f6e83ffa47c45fb29c5a6cbfc2",
-      "verifiedAt": "2026-10-13T17:37:24.815Z",
-      "evidenceDirectory": "/Users/xizhao/.codex/visualizations/2026/10/13/01a135c9-9a23-7410-ad1f-e51d874ec4a9/quantum-integration-review/implementation/api-checks/squlearn-learning-E1om7e",
+      "dependencyLockSha256": "9dcddc5a5dcab8d0f4f036c1bb0351c410cbfd9516f78c8fca60f3da2e192d7d",
+      "verifiedAt": "2026-11-01T08:37:24.788Z",
+      "evidenceDirectory": "docs/integrations/evidence/runtime-rzz-2026-11-01/squlearn-learning",
       "artifacts": {
-        "attempt.json": "6f71ee37d834741e0c92b53f97e05d2424042f6049462f9a9428620a57ae635a",
+        "attempt.json": "d8ca62ac9bd2a76edb54e17cd160b86cfd6bb4bd1e1413e5cf3abe7f95e31601",
         "program.py": "9c411c3904f3e51adf684b0a4101e2eb62e498a2331da443170a116c1d97c9fe",
         "result.json": "7b28fae98dc1dae8915a26725b482483eadf11163efb462025ad080e95abf6d6",
-        "runner.py": "a0fc307c398b014acf774d85f64cfb450988b7b72ea285429a70a4497c13cb94",
-        "stderr.log": "156261139a330fc29ce1a090841ee61efb1aac46bc8e77f2730462b55557933e",
+        "runner.py": "886f044a51f94ee08cbe47de0182294b7d01277db6bd1b7b4f0a1c9d214d1602",
+        "stderr.log": "fa7a340f83145ea28ad8ffb736233e8bd77bceaca28ded1709ed78eae90d5ae1",
         "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-        "versions.json": "9d82b2ef01fd2b3ec7d6adf8b69ca073e27a6fc6415c7aeb4726f80993493e2c"
+        "versions.json": "dba8d94b77d6c364a96a58417293ce2153455e9c2957a754bf9d2f726b69d11b"
       },
       "versions": {
         "PyJWT": "2.15.1",
@@ -1971,7 +1989,7 @@
         "qiskit": "2.5.2",
         "qiskit-aer": "0.17.2",
         "qiskit-algorithms": "0.4.0",
-        "qiskit-ibm-runtime": "0.50.0",
+        "qiskit-ibm-runtime": "0.50.1",
         "qiskit-machine-learning": "0.9.1",
         "qiskit-mitigation": "0.1.1",
         "qiskit-qasm3-import": "0.6.0",
@@ -2017,9 +2035,27 @@
         "executor": "pennylane local CPU",
         "scientificValidation": "not_evaluated"
       },
-      "attemptsRetained": 1,
-      "durableEvidenceDirectory": "docs/integrations/evidence/sdk-ecosystem-2026-10-14/squlearn-learning",
-      "verificationSha256": "b49c4277ae68c7a484620f45a80f185368649012d99723da1414d598750915cd"
+      "attemptsRetained": 2,
+      "durableEvidenceDirectory": "docs/integrations/evidence/runtime-rzz-2026-11-01/squlearn-learning",
+      "verificationSha256": "8af954da82b0cb23d4fce4dafc7002843a75d0d091d14966955cf55d5051ab37",
+      "previousVerification": {
+        "verifiedAt": "2026-10-13T17:37:24.815Z",
+        "dependencyLockSha256": "9ee2cc4f5a7fda7eca14dbbf42a0733de6bf97f6e83ffa47c45fb29c5a6cbfc2",
+        "durableEvidenceDirectory": "docs/integrations/evidence/sdk-ecosystem-2026-10-14/squlearn-learning",
+        "verificationSha256": "b49c4277ae68c7a484620f45a80f185368649012d99723da1414d598750915cd"
+      },
+      "platform": "GitHub Actions macos-latest; OS network denied by existing sandbox-exec fixture",
+      "artifactProvenance": {
+        "runUrl": "https://github.com/xi-zhao/OpenQuantum/actions/runs/41289502864",
+        "head": "d6664393ee923c3687666cc5aea030b008815c24",
+        "artifactId": 13076164314,
+        "archiveSha256": "9bfa52eba4cf6caa208138214d28a8a4e5ce353161e6e7cde70c6de063945fb3",
+        "downloadUrl": "https://github.com/xi-zhao/OpenQuantum/actions/runs/41289502864/artifacts/13076164314"
+      },
+      "previousResultComparison": {
+        "maxAbsoluteError": 0.0,
+        "scope": "fixed 3x3 local FidelityKernel matrix, not arbitrary training or all backends"
+      }
     },
     {
       "id": "staq-compilation",
@@ -2596,5 +2632,18 @@
     "benchmarkTests": 5,
     "independentReview": "two P2 findings resolved; no remaining P1/P2",
     "releaseState": "local source candidate; not pushed, merged, installed as user plugin or published"
-  }
+  },
+  "initialCollectionScope": "native API examples on Apple Silicon macOS 27.0.1; offline; no QPU or cloud requests",
+  "maintenanceUpdates": [
+    {
+      "date": "2026-11-01",
+      "libraries": [
+        "qdk-chemistry",
+        "squlearn-learning"
+      ],
+      "reason": "IBM Runtime patch changes dependency locks; existing public API examples rerun under frozen locks and old durable evidence retained",
+      "evidence": "docs/integrations/evidence/runtime-rzz-2026-11-01",
+      "initialSummaryNote": "summary.sdkEnvironmentCount and baseline describe the original collection, not the current whole repository inventory"
+    }
+  ]
 }

@@ -21,6 +21,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
+      - name: Check workflow definitions
+        shell: bash
+        run: |
+          actionlint_dir="$RUNNER_TEMP/actionlint"
+          mkdir -p "$actionlint_dir"
+          curl --fail --location --retry 3 --output "$actionlint_dir/actionlint.tar.gz" \
+            https://github.com/rhysd/actionlint/releases/download/v1.7.12/actionlint_1.7.12_linux_amd64.tar.gz
+          printf '8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8  %s\n' "$actionlint_dir/actionlint.tar.gz" | sha256sum --check
+          tar -xzf "$actionlint_dir/actionlint.tar.gz" -C "$actionlint_dir" actionlint
+          "$actionlint_dir/actionlint" -color -shellcheck= -pyflakes=
+
       - name: Setup Node.js
         uses: actions/setup-node@v7
         with:

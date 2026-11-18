@@ -2,7 +2,7 @@
 
 <p align="center"><a href="../../README.md">简体中文</a> · <a href="./README.en.md">English</a> · <a href="./README.ja.md">日本語</a> · <a href="./README.ko.md">한국어</a> · <a href="./README.es.md">Español</a> · <a href="./README.fr.md">Français</a> · <a href="./README.de.md">Deutsch</a> · <a href="./README.pt.md">Português</a> · <a href="./README.ru.md">Русский</a> · <a href="./README.ar.md">العربية</a></p>
 
-**О Desktop 0.8.5:** Самостоятельное приложение OpenQuantum для macOS на Apple Silicon возвращается к простому интерфейсу DSH Desktop 2.0.0 / Harness 0.1.0-rc.6. Пока доступны китайский и английский языки интерфейса; существующие переводы и README сохранены. Приведённые ниже сведения о версии 0.8.4 относятся к предыдущему выпуску. Актуальный порядок установки и ограничения подписи описаны в [руководстве по установке](../DESKTOP_INSTALLERS.md). Опубликованная версия плагина Codex остаётся 0.8.4.
+**Версия 0.8.11:** Desktop и плагин Codex используют одну версию продукта. Актуальные загрузки и границы проверки указаны в [руководстве Desktop](../DESKTOP_INSTALLERS.md) и [руководстве Codex](../integrations/CODEX_AGENT_INSTALL.md). Подробные сведения о 0.8.4 ниже сохранены как историческая справка и не описывают пакет 0.8.11.
 
 <p align="center">
   <strong>OpenQuantum — Вместе создаём надёжный ИИ для квантовых исследований.</strong><br />
@@ -25,7 +25,7 @@ OpenQuantum — платформа ИИ для квантовых исследо
 
 **Начните с измеренных примеров:** полный вызов [коммутатора Паули в PennyLane](#pennylane-rust-case) выполняется в **5,09 раза** быстрее, а [расчёт функции Вигнера в QuTiP](#qutip-rust-case) — в **5,69 раза** быстрее. Для обоих сохранены сравнения производительности, проверки результатов и записи для воспроизведения.
 
-**Текущая версия 0.8.4:** [загрузка Desktop и примечания к выпуску](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.4) · [загрузка плагина Codex и примечания к выпуску](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.4). Оба выпуска используют одну версию продукта.
+**Текущая версия 0.8.11:** [загрузка Desktop и примечания к выпуску](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.11) · [загрузка плагина Codex и примечания к выпуску](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.11). Оба выпуска используют одну версию продукта.
 
 - **Возможности проще найти:** Tools, MCP и Skills распределены по восьми категориям назначения; добавлены поиск и фильтры состояния.
 - **Единый фирменный значок запуска:** `OpenQuantum.app` на Mac и `OpenQuantum.lnk` на Windows используют значок OpenQuantum; исходный интерфейс DSH Desktop, Quantum Learning и механизм обновлений сохранены.

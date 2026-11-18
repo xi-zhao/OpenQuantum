@@ -29,6 +29,8 @@ flowchart TD
   搜索只读取说明和收据；准备只处理明确选择的一项，不执行科学任务。
 - `src/settings/desktop/application.mjs` 复用受控设置与准备用例，按 Agent 分配连接和安装所有权。
   它不接管 Session、Turn、Tool 调度、审批或事件日志。
+- `src/settings/desktop/backend.mjs` 直接装配 `src/lib/tool-backend.mjs`，提供已验证目录、显式预算与连接 Adapter。
+  与 Codex 共用调用校验、权限复查、取消和排空实现；保留原预算及摘要目录，不委托 Codex backend 工厂。
 - 纯 JavaScript Tool 经共用 `native-adapter.mjs` 在进程内执行。跨语言 MCP 沿用已审查的
   固定合同与隔离连接实现；此处是原生 Tool implementation 的 MCP 适配，不是另一套 Harness MCP Client。
   该 Harness 基线的通用 MCP Client 在加载时连接并注册上游全部 Tool，不能直接替代本实现的按需合同。
