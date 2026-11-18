@@ -148,3 +148,10 @@ node scripts/sdk-engineering-evidence.mjs .openquantum/sdk-checks/remaining \
 ## PPVM：Pauli 传播与丢失/泄漏
 
 `ppvm-simulation` 使用固定 PPVM v0.3.0 源码与 Python 3.12，复用已有显式准备和完整原生 SDK 路径。可编写观测量传播、广义 tableau 和 Stim 格式采样程序；非对称丢失尚不包含存活反作用。方法选择、使用与逐项验证范围见 [PPVM](PPVM.md)。
+
+## MWPF 超图译码
+
+`mwpf-decoding` 提供 L0 Skill 和固定 Python 3.12 / MWPF 0.2.18 环境，复用已有 SDK 工作台。
+可编写用户自定义加权超图或 Stim/Sinter 程序；[操作、输入与失败边界](../../.agents/skills/mwpf-decoding/SKILL.md)。
+固定小超图的独立穷举、跨字节位序、采样与失败记录见[版本化证据](evidence/mwpf-2026-11-06.json)。
+零 cluster 预算不是无限预算，Sinter 必须显式抛出异常；小例回归不是一般最优性、阈值或科学验收。

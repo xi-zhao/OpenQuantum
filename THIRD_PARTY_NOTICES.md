@@ -225,3 +225,12 @@ Chromobius 1.1.1 为 Apache-2.0，固定上游提交 `efae0325e4a8fc13be981434d3
 ## PPVM 原生 SDK 工作流
 
 [QuEraComputing/ppvm](https://github.com/QuEraComputing/ppvm) v0.3.0 为 Apache-2.0，固定提交 `3cc883fd93b2475cb10c892a8a31adcc09a7579c`；[许可证原文](https://github.com/QuEraComputing/ppvm/blob/3cc883fd93b2475cb10c892a8a31adcc09a7579c/LICENSE)。本仓库仅分发原创指南、示例、验证与依赖锁，不捆绑上游源码或二进制。显式准备时构建 `ppvm-python`，间接 Python 依赖由 `uv.lock` 固定，Rust 工作区来源由完整提交固定并保留其 Cargo.lock 与许可。各依赖保留自身许可，不将 Apache-2.0 扩展为所有传递依赖的统一许可证。
+
+## MWPF 超图译码 SDK
+
+MWPF 0.2.18 为 MIT，固定上游提交 `e50f72e2f389950db50bce075163a4e4022c9dcd`；
+[源码与许可](https://github.com/yuewuo/mwpf/tree/e50f72e2f389950db50bce075163a4e4022c9dcd)。
+本仓库仅分发原创指南、示例、测试和依赖锁，不捆绑其二进制或复制算法源码。显式准备时获取发行包，
+保留 MWPF 以及 wheel 内 HiGHS、heapz、slp 等组件的许可；依赖 Stim/Sinter（Apache-2.0）、
+NumPy/SciPy（BSD-3-Clause）、Matplotlib 等完整来源与版本以 `mwpf-decoding/uv.lock` 和安装包元数据为准。
+原生 API 可用性、浮点权重界与科研验收分别验证。
