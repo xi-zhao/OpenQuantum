@@ -2,7 +2,7 @@
 
 <p align="center"><a href="../../README.md">简体中文</a> · <a href="./README.en.md">English</a> · <a href="./README.ja.md">日本語</a> · <a href="./README.ko.md">한국어</a> · <a href="./README.es.md">Español</a> · <a href="./README.fr.md">Français</a> · <a href="./README.de.md">Deutsch</a> · <a href="./README.pt.md">Português</a> · <a href="./README.ru.md">Русский</a> · <a href="./README.ar.md">العربية</a></p>
 
-**0.8.5 デスクトップについて：** macOS Apple Silicon 向けの独立した OpenQuantum アプリです。DSH Desktop 2.0.0 / Harness 0.1.0-rc.6 のシンプルな操作感に戻し、画面の言語は当面、中国語と英語に限定します。既存の翻訳と README は保持します。以下の 0.8.4 の説明は旧リリースの記録です。現在のインストール方法と署名の制約は[インストールガイド](../DESKTOP_INSTALLERS.md)をご確認ください。Codex プラグインの公開版は 0.8.4 のままです。
+**バージョン 0.8.11：** Desktop と Codex プラグインは同じ製品バージョンを使用します。現在のダウンロードと検証範囲は [Desktop ガイド](../DESKTOP_INSTALLERS.md)と [Codex ガイド](../integrations/CODEX_AGENT_INSTALL.md)を参照してください。以下の 0.8.4 に関する詳細は過去の記録として残しており、0.8.11 パッケージの説明ではありません。
 
 <p align="center">
   <strong>OpenQuantum — 信頼できる量子研究 AI を、ともに育てる。</strong><br />
@@ -25,7 +25,7 @@ OpenQuantum は、オープンソースで共同開発に開かれた量子研�
 
 **まずは実測事例から：** [PennyLane の Pauli 交換子](#pennylane-rust-case)は呼び出し全体で **5.09 倍**、[QuTiP の Wigner 関数計算](#qutip-rust-case)は **5.69 倍**高速化しました。いずれも性能比較、結果の確認、再現記録を残しています。
 
-**現行バージョン 0.8.4：**[Desktop のダウンロードとリリースノート](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.4) · [Codex プラグインのダウンロードとリリースノート](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.4)。両者は同じ製品バージョンを使用します。
+**現行バージョン 0.8.11：**[Desktop のダウンロードとリリースノート](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.11) · [Codex プラグインのダウンロードとリリースノート](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.11)。両者は同じ製品バージョンを使用します。
 
 - **機能を見つけやすく：** Tools・MCP・Skills を用途別の 8 分類に整理し、検索と状態フィルターを追加しました。
 - **起動アイコンを一つに：** Mac の `OpenQuantum.app` と Windows の `OpenQuantum.lnk` は OpenQuantum アイコンを使用し、オリジナルの DSH Desktop の UI、Quantum Learning、アップデート機能はそのまま保持します。
@@ -157,7 +157,13 @@ OpenQuantum は、アルゴリズム、コンパイル、シミュレーショ�
 
 ローカル計算は量子クラウドのアカウントなしで始められます。実機と有料サービスは必要に応じて設定します。各手法の入力範囲、準備、検証状況は詳細カタログに記載しています。
 
-現在のソースは **114 の SDK・ソース環境**でネイティブ API を完全に利用する経路を提供し、そのうち 26 件は 0.8.4 に含まれる最新の[エコシステム拡張](../integrations/SDK_ECOSYSTEM_2026-10-14.md)によるものです。エージェントは独自のプログラムを書き、公開 API を組み合わせ、完全な結果を保存でき、便宜的な Tool の既定事例にとどまりません。
+現在のソースは **117 の SDK・ソース環境**でネイティブ API を完全に利用する経路を提供し、そのうち 26 件は 0.8.4 に含まれる最新の[エコシステム拡張](../integrations/SDK_ECOSYSTEM_2026-10-14.md)によるものです。エージェントは独自のプログラムを書き、公開 API を組み合わせ、完全な結果を保存でき、便宜的な Tool の既定事例にとどまりません。
+
+SlowQuant は固定ソース SDK を通じて分子の線形応答と遷移特性を扱います。[準備と検証範囲](../integrations/SLOWQUANT.md)を参照してください。Qiskit による分子 qLR と実機は未検証です。
+
+TNQS は非規則グラフ上のテンソルネットワーク、平面 CTMRG、サンプリングに Julia の公開 API を提供します。`node scripts/setup-sdk.mjs tnqs-dynamics` で明示的に準備し、[幾何・収束・検証範囲](../integrations/TNQS.md)を確認してください。
+
+RcmpsCore は 1+1 次元連続スカラー場の RCMPS、最適化、同一真空の励起を扱う Julia CPU API を提供します。`node scripts/setup-sdk.mjs rcmps-field-theory` で明示的に準備します。[規約と検証範囲](../integrations/RCMPS.md)を確認し、転送演算子のギャップと Hamiltonian のエネルギーギャップを区別してください。
 
 **数学と物理の形式化：** [Lean 4・mathlib・physlib](../../.agents/skills/lean-physics/SKILL.md) を Lean 4.35.0 に固定したプロジェクトで使い、証明と依存する公理を確認できます。明示的な準備で小さな Pauli の例とその依存モジュールを構築し、他のモジュールは必要に応じて準備します。証明の検査中に依存関係をインストールしません。証明が保証するのは記述した定義と仮定の下での命題であり、物理モデルの妥当性や科学的受理ではありません。
 
@@ -678,7 +684,7 @@ OpenQuantum が統合するのは、SDK、アルゴリズム、計算サービ�
 
 </details>
 
-Skill、MCP サービス、ネイティブ Tool の完全なカタログは[中国語のリファレンス](../CAPABILITIES.md#接口总览)で管理しています。現在のソースには **186 個の組み込み Skill**（自動選択 173、手動の分類索引 13）、**91 個の MCP サービス接続**（既定で有効 66、既定で無効 25）、**5 個のネイティブ量子 Tool**が含まれます。
+Skill、MCP サービス、ネイティブ Tool の完全なカタログは[中国語のリファレンス](../CAPABILITIES.md#接口总览)で管理しています。現在のソースには **189 個の組み込み Skill**（自動選択 176、手動の分類索引 13）、**91 個の MCP サービス接続**（既定で有効 66、既定で無効 25）、**5 個のネイティブ量子 Tool**が含まれます。
 
 <a id="development-and-verification"></a>
 
@@ -708,7 +714,7 @@ npm run e2e:quantum-harness -- --provider openquantum-public
 
 </details>
 
-[本源量子公式の `pyqpanda3` Skill](https://github.com/OriginQ/pyqpanda3-skill) は任意の上流 Skill です。186 個の組み込み Skill には数えず、自動ではインストールされません。`npm run skill:qpanda:setup` はレビュー済みのバージョンをインストールしますが、`qpanda_runtime` を有効化したり、クラウドジョブの権限を付与したりはしません。
+[本源量子公式の `pyqpanda3` Skill](https://github.com/OriginQ/pyqpanda3-skill) は任意の上流 Skill です。189 個の組み込み Skill には数えず、自動ではインストールされません。`npm run skill:qpanda:setup` はレビュー済みのバージョンをインストールしますが、`qpanda_runtime` を有効化したり、クラウドジョブの権限を付与したりはしません。
 
 <a id="roadmap-and-rsi"></a>
 

@@ -2,7 +2,7 @@
 
 由 `node scripts/audit-sdk-integration.mjs` 从 capability policy、SDK 导航、项目 manifest 和依赖锁生成；用 `--check` 检查是否过期。
 
-本表覆盖 114 个 SDK/源码环境入口：104 个 Python（包含算法共享环境）、7 个 Julia、2 个原生源码或 ABI 入口、1 个 Lean 项目。原生 QDMI 另有 Python 桥接依赖项目。一个入口可包含多个库，同一个库也可能有多个隔离版本，不能把入口数量当成独立 SDK 数量。所有锁摘要与间接依赖版本可通过 `node scripts/sdk-access.mjs inventory` 读出。
+本表覆盖 118 个 SDK/源码环境入口：106 个 Python（包含算法共享环境）、9 个 Julia、2 个原生源码或 ABI 入口、1 个 Lean 项目。原生 QDMI 另有 Python 桥接依赖项目。一个入口可包含多个库，同一个库也可能有多个隔离版本，不能把入口数量当成独立 SDK 数量。所有锁摘要与间接依赖版本可通过 `node scripts/sdk-access.mjs inventory` 读出。
 
 **接入状态：原生路径与指南已提供；逐 API、可选依赖、平台与外部服务验证不由这张静态清单推断。** 环境是否准备需 `inspect`，实际执行证据见[完整接入记录](FULL_SDK_ACCESS.md)。
 
@@ -71,7 +71,7 @@
 | `pygsti-characterization` | pyGSTi | python | pygsti[reports]==0.10.2 | Circuit、Model、DataSet、GST/RB/RPE 与拟合报告 | 保留原始计数、SPAM、gauge、样本数、拟合诊断与不确定度。合成数据明确标记；拟合质量与实际硬件性能分开。 |
 | `pyquil-simulation` | pyQuil | python | pyquil==4.21.0 | Program、自定义 gates、Quil 控制流、编译器与模拟/设备接口 | 按固定版本、已安装可选组件及目标平台核实 |
 | `pytket-compilation` | pytket | python | pytket==2.18.4 | 自定义 Circuit、Architecture、pass、predicate、路由与后端 | 按固定版本、已安装可选组件及目标平台核实 |
-| `pyzx-optimization` | PyZX | python | pyzx==0.10.6 | Circuit、Graph、重写策略、提取、优化与等价性流程 | 按固定版本、已安装可选组件及目标平台核实 |
+| `pyzx-optimization` | PyZX | python | pyzx==0.10.8 | Circuit、Graph、重写策略、提取、优化与等价性流程 | 按固定版本、已安装可选组件及目标平台核实 |
 | `qblox-scheduling` | Qblox Scheduler | python | qblox-scheduler==1.0.0b8 | 自定义 Schedule、operation、pulse、资源、硬件配置与编译 | 本地程序构建与外部调用分开；账户、凭据、费用、设备操作和数据外发沿用宿主及用户授权。原生 SDK 访问不自动启用服务。 |
 | `qbraid-conversion` | qBraid / Cirq | python | qbraid==0.12.2, qiskit==2.5.2, cirq-core==1.6.1, ply==3.11 | 程序类型、转换图、转译路径、序列化与供应商接口 | 按固定版本、已安装可选组件及目标平台核实 |
 | `qcarchive-query` | QCArchive Portal | python | qcportal==0.70 | PortalClient、分子、记录、dataset、查询与任务提交接口 | 本地程序构建与外部调用分开；账户、凭据、费用、设备操作和数据外发沿用宿主及用户授权。原生 SDK 访问不自动启用服务。 |
@@ -106,7 +106,9 @@
 | `quri-parts-estimation` | QURI Parts / Qulacs | python | quri-parts[qulacs]==0.27.0, qulacs==0.6.14 | 电路、态、算符、estimator、sampler、梯度与后端 | 按固定版本、已安装可选组件及目标平台核实 |
 | `qutrunk-simulation` | QuTrunk | python | qutrunk==0.2.2 | QCircuit、参数、门与上游后端 | 按固定版本、已安装可选组件及目标平台核实 |
 | `randomized-measurements` | RandomMeas.jl | julia | JSON3, RandomMeas | 用户量子态、测量数据、随机测量协议与估计函数 | 按固定版本、已安装可选组件及目标平台核实 |
+| `rcmps-field-theory` | RcmpsCore.jl | julia | JSON3, RcmpsCore | 连续相对论标量场、RCMPS 优化、正常序观测量与同真空激发 | 单标量玻色场、无限体积、ComplexF64；正常序参考质量为 1，耦合为 g :phi^4:。传递 gap 不等于 Hamiltonian 能隙；保留背景优化、数值控制和失败诊断。 |
 | `simqn-network` | SimQN | python | qns==0.2.3 | 拓扑、节点、信道、存储、事件与自定义协议 | 上游 GPL 许可；保持独立进程，不改变现有 MCP 默认关闭状态。 |
+| `slowquant-response` | SlowQuant | python | numpy==2.5.3, scipy==1.18.1, numba==0.67.0, pyscf==2.8.0, qiskit==2.3.0, qiskit-nature==0.7.2 | 自定义分子、活性空间、酉波函数与量子线性响应，计算激发能、跃迁性质和吸收谱 | 固定完整源码，经显式准备与摘要校验后使用；不通过 pip 安装同名包。 不同响应形式、轨道与活性空间近似须分别解释；数值回归不代表最终科学验收。 Qiskit 入口与真实硬件验证分开报告；云端任务需另行授权。 |
 | `spinqit-simulation` | SpinQit | python | spinqit==0.2.4, scipy==1.14.1 | 电路、门、参数、编译与后端接口 | 按固定版本、已安装可选组件及目标平台核实 |
 | `sqd-chemistry` | Qiskit Addon SQD | python | qiskit-addon-sqd==0.13.1 | 用户 bitstrings、configuration recovery、投影子空间与费米子求解 | 按固定版本、已安装可选组件及目标平台核实 |
 | `squlearn-learning` | sQUlearn | python | squlearn==0.11.2 | 编码线路、observable、executor、量子核与 sklearn estimator | 明确本地 executor、编码参数、kernel regularization 和数据划分。账户、真实设备与外部服务保持独立授权；不自动选择云后端。 |
@@ -117,11 +119,13 @@
 | `tensorcircuit-differentiable` | TensorCircuit-NG | python | tensorcircuit-ng==1.10.0, jax==0.7.1, jaxlib==0.7.1, numpy==2.3.5, optax==0.2.4, qiskit==2.5.2, cirq-core==1.6.1 | 自定义电路、张量网络、后端、vmap、梯度与优化 | 显式选择 JAX 数值精度和 target；需要 float64 时在建立数组前启用 jax_enable_x64。CPU、GPU 选择按任务与已安装后端决定。 TensorCircuit-NG 1.10.0、Qiskit 2.5.2、JAX 0.7.1 与 NumPy 2.3.5 在独立环境内固定；JAX、Optax 和 Cirq 转换依赖已提供。TensorFlow、PyTorch、CuPy 和 GPU 是上游可选后端，需按目标另备兼容依赖；本机工程检查不覆盖这些后端。 |
 | `tesseract-decoding` | Tesseract Decoder | python | tesseract-decoder==0.1.1.dev20261013012529 | Stim DEM、syndrome、搜索式解码器与统计 | 本环境是明确固定的开发版。记录 beam、剪枝、搜索预算及 DEM 的概率/observable 语义；启发式结果不能默认视为最优解。 |
 | `tjm-dynamics` | MQT YAQS | python | mqt.yaqs==0.6.0 | 自定义 MPS/MPO、电路、噪声模型、时间演化与张量跳跃 | 按固定版本、已安装可选组件及目标平台核实 |
+| `tnqs-dynamics` | TensorNetworkQuantumSimulator.jl | julia | JSON3, TensorNetworkQuantumSimulator | 非规则图张量网络、电路、时间演化、平面 CTMRG 与采样 | CTMRG 需要有效平面嵌入；分别记录状态/环境维数、截断、精度与收敛。采样权重相对于实际规约态，函数名 certified 不构成科学验收。 |
 | `tqec-compilation` | TQEC | python | tqec @ https://github.com/tqec/tqec/archive/2c4b8cf9d3f8f520571093c60d752af0ad46a745.tar.gz | BlockGraph、逻辑计算块、相关面与 Stim 线路生成 | 上游不承诺向后兼容，因此固定源码 SHA。保留码距/尺度 k、噪声、detector 和 observable 映射；生成线路不等于完整逻辑协议已验收。 |
 | `tsim-sampling` | Tsim | python | bloqade-tsim==0.1.5 | Clifford/非 Clifford 线路、噪声、detector 与 observable 采样 | 统一实际 detector/observable 值与参考样本 flips 的语义。发布包和上游 main 的功能分别核实；CPU/JAX 与 CUDA target 单独选择。 |
 | `tyxonq-workbench` | TyxonQ | python | tyxonq==1.3.0 | 电路、门、测量与上游后端接口 | 按固定版本、已安装可选组件及目标平台核实 |
 | `vqnet-learning` | VQNet | python | pyvqnet==2.18.1, numpy==1.26.4 | tensor、量子/经典层、模型、数据与优化器 | 按固定版本、已安装可选组件及目标平台核实 |
 | `yao-circuits` | Yao.jl | julia | JSON3, Yao | 量子寄存器、block、电路、算符、参数与梯度 | 保留 block 作用线、位序、参数和精度。测量、态矢量与梯度的语义分别核对；跨框架导出须保留映射。 |
+| `ppvm-simulation` | PPVM | python | bloqade-ppvm @ git+https://github.com/QuEraComputing/ppvm.git@3cc883fd93b2475cb10c892a8a31adcc09a7579c#subdirectory=ppvm-python | Pauli 传播、广义 tableau、近 Clifford 观测量与含丢失/泄漏的自定义电路采样 | 显式准备固定源码的 Python 3.12 / Rust 环境；完整原生 API 可用，成本取决于非 Clifford 分支与截断。 Heisenberg 计算倒序处理整条门和噪声链；LOST 与比特值分开；reset_state 不恢复丢失/泄漏。 非对称丢失的存活分支反作用尚未实现；开发数值对照不构成器件模型或科学验收。 |
 
 ## 外部 MCP（6 项）
 

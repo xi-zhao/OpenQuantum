@@ -1,0 +1,16 @@
+{
+  "id": "rcmps-field-theory",
+  "dependencyLockSha256": "a1457515ca416f96a41a69df4b3e8f0af8492bd0a4122bf1618a6e3a416096ad",
+  "sourceSha256": "39a98ca3907641f4096e81eabd9028fe795885c7cbd969421ca5fed669b4b717",
+  "networkIsolation": "macOS sandbox-exec deny network*",
+  "scientificValidation": "not_evaluated",
+  "status": "passed",
+  "files": {
+    "attempt.json": "0639858c2f3e3943a13ee8f6b305392be73b874a2c61eb9c475e0841c31383ed",
+    "program.jl": "39a98ca3907641f4096e81eabd9028fe795885c7cbd969421ca5fed669b4b717",
+    "result.json": "c0e3ed7b9ab7c2b9a04f040aee57fda9995b2ab59b7a1b4f75cce12e94d35179",
+    "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "versions.json": "4cf3fa8d0661a1913b765f21229de9370cf0e9069724f2906305be1a6d67703f"
+  }
+}

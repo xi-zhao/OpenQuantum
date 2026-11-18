@@ -4,7 +4,7 @@ OpenQuantum 对四个上游项目做了计算适配，分别解决电路优化�
 
 | 项目与固定版本 | 连接 / Tool | 当前范围 |
 | --- | --- | --- |
-| [PyZX 0.10.6](https://github.com/zxcalc/pyzx/tree/v0.10.6)，Apache-2.0 | `pyzx_local` / `optimize_pyzx_circuit` | Clifford+T 电路的 ZX 重写、提取、QASM 和门数；可选完整酉矩阵对照 |
+| [PyZX 0.10.8](https://github.com/zxcalc/pyzx/tree/v0.10.8)，Apache-2.0 | `pyzx_local` / `optimize_pyzx_circuit` | Clifford+T 电路的 ZX 重写、提取、QASM 和门数；可选完整酉矩阵对照 |
 | [Graphix 0.4.1](https://github.com/TeamGraphix/graphix/tree/v0.4.1)，Apache-2.0 | `graphix_local` / `simulate_graphix_pattern` | 电路转 MBQC 模式与资源图；可选测量过程模拟、输出纠正及独立态矢对照 |
 | [Symmer 0.0.13 / a4ba56e3](https://github.com/qmatter-labs/symmer/tree/a4ba56e3332424a65d4a2c088fd6363aca0c68e6)，MIT | `symmer_local` / `taper_symmer_hamiltonian` | 实 Pauli Hamiltonian 按指定独立对称性和扇区降维；允许零量子位标量 |
 | [PauLie 0.2.3](https://github.com/QPauLie/PauLie/tree/v0.2.3)，MIT | `paulie_local` / `analyze_paulie_algebra` | 非恒等 Pauli 生成元的分类与精确维数；可选闭包及独立实 Lie 空间对照 |

@@ -2,7 +2,7 @@
 
 <p align="center"><strong>OpenQuantum — 함께 만드는 신뢰할 수 있는 양자 연구 AI.</strong><br /><sub>양자 연구의 전문 지식을 하나의 OpenQuantum에</sub></p>
 
-**Desktop 0.8.5 안내:** macOS Apple Silicon용 독립 OpenQuantum 앱은 DSH Desktop 2.0.0 / Harness 0.1.0-rc.6의 간결한 사용 환경으로 돌아갑니다. 화면 언어는 우선 중국어와 영어만 지원하며, 기존 번역과 README는 보존합니다. 아래의 0.8.4 설명은 이전 릴리스에 관한 기록입니다. 최신 설치 방법과 서명 관련 제약은 [설치 안내](../DESKTOP_INSTALLERS.md)를 확인하세요. 공개된 Codex 플러그인 버전은 0.8.4입니다.
+**버전 0.8.11:** Desktop과 Codex 플러그인은 같은 제품 버전을 사용합니다. 현재 다운로드와 검증 범위는 [Desktop 안내](../DESKTOP_INSTALLERS.md)와 [Codex 안내](../integrations/CODEX_AGENT_INSTALL.md)를 참조하세요. 아래의 0.8.4 상세 설명은 과거 기록으로 보존한 내용이며 0.8.11 패키지를 설명하지 않습니다.
 
 <p align="center"><a href="../../README.md">简体中文</a> · <a href="./README.en.md">English</a> · <a href="./README.ja.md">日本語</a> · <a href="./README.ko.md">한국어</a> · <a href="./README.es.md">Español</a> · <a href="./README.fr.md">Français</a> · <a href="./README.de.md">Deutsch</a> · <a href="./README.pt.md">Português</a> · <a href="./README.ru.md">Русский</a> · <a href="./README.ar.md">العربية</a></p>
 
@@ -22,7 +22,7 @@ OpenQuantum은 오픈 소스로 공개되고 공동 개발에 열려 있는 양�
 
 **실측 사례부터 살펴보세요.** [PennyLane Pauli 교환자](#pennylane-rust-case) 계산은 전체 호출 기준 **5.09배**, [QuTiP Wigner 함수 계산](#qutip-rust-case)은 **5.69배** 빨라졌습니다. 두 사례 모두 성능 비교, 결과 검증과 재현 기록을 보관합니다.
 
-**현재 버전 0.8.4:** [Desktop 다운로드와 릴리스 노트](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.4) · [Codex 플러그인 다운로드와 릴리스 노트](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.4). 두 배포판은 같은 제품 버전을 사용합니다.
+**현재 버전 0.8.11:** [Desktop 다운로드와 릴리스 노트](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.11) · [Codex 플러그인 다운로드와 릴리스 노트](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.11). 두 배포판은 같은 제품 버전을 사용합니다.
 
 - **더 쉬워진 기능 찾기:** Tools, MCP, Skills를 용도별 8개 범주로 분류하고 검색과 상태 필터를 추가했습니다.
 - **하나의 브랜드 실행 아이콘:** Mac의 `OpenQuantum.app`과 Windows의 `OpenQuantum.lnk`는 OpenQuantum 아이콘을 사용하며, 공식 DSH Desktop 인터페이스, Quantum Learning과 업데이트 메뉴는 그대로 유지합니다.
@@ -154,7 +154,13 @@ OpenQuantum은 알고리즘, 컴파일, 시뮬레이션, 양자 정보, 화학�
 
 로컬 계산은 양자 클라우드 계정 없이 시작할 수 있습니다. 실제 하드웨어와 유료 서비스는 필요할 때 설정하며, 각 방법의 입력 범위, 준비 사항과 검증 상태는 상세 카탈로그에 보존됩니다.
 
-현재 소스는 **114개 SDK/소스 환경**에 대해 네이티브 API 전체 경로를 제공하며, 그중 26개는 0.8.4과 함께 배포된 최신 [생태계 확장](../integrations/SDK_ECOSYSTEM_2026-10-14.md)에서 왔습니다. 에이전트는 사용자 정의 프로그램을 작성하고, 공개 API를 조합하며, 완전한 결과를 저장할 수 있어 편의 Tool의 사전 설정 사례를 넘어설 수 있습니다.
+현재 소스는 **117개 SDK/소스 환경**에 대해 네이티브 API 전체 경로를 제공하며, 그중 26개는 0.8.4과 함께 배포된 최신 [생태계 확장](../integrations/SDK_ECOSYSTEM_2026-10-14.md)에서 왔습니다. 에이전트는 사용자 정의 프로그램을 작성하고, 공개 API를 조합하며, 완전한 결과를 저장할 수 있어 편의 Tool의 사전 설정 사례를 넘어설 수 있습니다.
+
+SlowQuant는 고정 소스 SDK를 통해 분자 선형 응답과 전이 특성을 지원합니다. [준비 및 검증 범위](../integrations/SLOWQUANT.md)를 참고하세요. Qiskit 분자 qLR과 실제 하드웨어는 아직 검증하지 않았습니다.
+
+TNQS는 불규칙 그래프의 텐서 네트워크, 평면 CTMRG, 샘플링을 위한 Julia 공개 API를 제공합니다. `node scripts/setup-sdk.mjs tnqs-dynamics`로 명시적으로 준비하고 [기하·수렴·검증 범위](../integrations/TNQS.md)를 확인하세요.
+
+RcmpsCore는 1+1차원 연속 스칼라장의 RCMPS, 최적화, 동일 진공의 들뜸을 위한 Julia CPU API를 제공합니다. `node scripts/setup-sdk.mjs rcmps-field-theory`로 명시적으로 준비하세요. [규약 및 검증 범위](../integrations/RCMPS.md)를 확인하고 전달 연산자의 갭과 Hamiltonian 에너지 갭을 구별해야 합니다.
 
 **수학·물리 형식화:** [Lean 4, mathlib, physlib](../../.agents/skills/lean-physics/SKILL.md)를 Lean 4.35.0으로 고정한 프로젝트에서 사용해 증명과 의존 공리를 확인합니다. 명시적 준비 단계에서 작은 Pauli 예제와 필요한 모듈을 빌드하며, 다른 모듈은 작업에 따라 준비합니다. 증명 검사 중에는 의존성을 설치하지 않습니다. 증명은 명시된 정의와 가정에 관한 것이며, 모델의 물리적 타당성이나 과학적 승인을 보장하지 않습니다.
 
@@ -675,7 +681,7 @@ OpenQuantum은 SDK, 알고리즘과 계산 서비스뿐 아니라 정해진 사�
 
 </details>
 
-전체 Skill, MCP 서비스와 네이티브 Tool 카탈로그는 [중국어 참고 문서](../CAPABILITIES.md#接口总览)에서 관리합니다. 현재 소스에는 **내장 Skill 186개**(자동 선택 173개, 수동 범주 색인 13개), **MCP 서비스 연결 91개**(기본 활성 66개, opt-in 25개)와 **네이티브 양자 Tool 5개**가 있습니다.
+전체 Skill, MCP 서비스와 네이티브 Tool 카탈로그는 [중국어 참고 문서](../CAPABILITIES.md#接口总览)에서 관리합니다. 현재 소스에는 **내장 Skill 189개**(자동 선택 176개, 수동 범주 색인 13개), **MCP 서비스 연결 91개**(기본 활성 66개, opt-in 25개)와 **네이티브 양자 Tool 5개**가 있습니다.
 
 <a id="development-and-verification"></a>
 
@@ -705,7 +711,7 @@ npm run e2e:quantum-harness -- --provider openquantum-public
 
 </details>
 
-[OriginQ 공식 `pyqpanda3` Skill](https://github.com/OriginQ/pyqpanda3-skill)은 선택적인 원본 Skill입니다. 내장 Skill 186개에 포함되지 않으며 자동으로 설치되지 않습니다. `npm run skill:qpanda:setup`은 검토된 버전을 설치하지만 `qpanda_runtime`을 활성화하거나 클라우드 작업 권한을 부여하지는 않습니다.
+[OriginQ 공식 `pyqpanda3` Skill](https://github.com/OriginQ/pyqpanda3-skill)은 선택적인 원본 Skill입니다. 내장 Skill 189개에 포함되지 않으며 자동으로 설치되지 않습니다. `npm run skill:qpanda:setup`은 검토된 버전을 설치하지만 `qpanda_runtime`을 활성화하거나 클라우드 작업 권한을 부여하지는 않습니다.
 
 <a id="roadmap-and-rsi"></a>
 

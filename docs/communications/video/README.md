@@ -54,10 +54,10 @@
 
 ```bash
 cd docs/communications/video
-python3 render.py film /tmp/oq-film               # 分镜头编码、拼接、合成配乐，输出母版与 GitHub 版
-ONLY=SKILLS python3 render.py film /tmp/oq-film   # 只重渲一个镜头，其余复用
-python3 render.py edu /tmp/oq-edu                 # 教育平台版
-python3 render.py hero /tmp/oq-hero               # 输出 banner-motion.webp 与 banner.webp
+python3 render.py film /path/to/artifacts/oq-film               # 分镜头编码、拼接、合成配乐，输出母版与 GitHub 版
+ONLY=SKILLS python3 render.py film /path/to/artifacts/oq-film   # 只重渲一个镜头，其余复用
+python3 render.py edu /path/to/artifacts/oq-edu                 # 教育平台版
+python3 render.py hero /path/to/artifacts/oq-hero               # 输出 banner-motion.webp 与 banner.webp
 ```
 
 `CHROME` 环境变量可指定本地浏览器；`WEBP_Q`、`HERO_FPS`、`HERO_DPR` 可调整横幅的体积与清晰度。

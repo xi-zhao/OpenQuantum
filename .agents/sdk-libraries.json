@@ -1318,6 +1318,22 @@
       "conditions": []
     },
     {
+      "id": "rcmps-field-theory",
+      "title": "RcmpsCore.jl",
+      "language": "julia",
+      "modules": [
+        "RcmpsCore",
+        "JSON3"
+      ],
+      "group": "physics",
+      "workflow": "连续相对论标量场、RCMPS 优化、正常序观测量与同真空激发",
+      "conditions": [
+        "单标量玻色场、无限体积、ComplexF64；正常序参考质量为 1，耦合为 g :phi^4:。传递 gap 不等于 Hamiltonian 能隙；保留背景优化、数值控制和失败诊断。"
+      ],
+      "nativeOnly": true,
+      "juliaVersion": "1.12.7"
+    },
+    {
       "id": "simqn-network",
       "title": "SimQN",
       "language": "python",
@@ -1329,6 +1345,32 @@
       "conditions": [
         "上游 GPL 许可；保持独立进程，不改变现有 MCP 默认关闭状态。"
       ]
+    },
+    {
+      "id": "slowquant-response",
+      "title": "SlowQuant",
+      "language": "python",
+      "modules": [
+        "slowquant.SlowQuant",
+        "slowquant.unitary_coupled_cluster.ucc_wavefunction",
+        "slowquant.unitary_coupled_cluster.ups_wavefunction",
+        "slowquant.unitary_coupled_cluster.linear_response",
+        "slowquant.qiskit_interface.interface"
+      ],
+      "group": "chemistry",
+      "workflow": "自定义分子、活性空间、酉波函数与量子线性响应，计算激发能、跃迁性质和吸收谱",
+      "conditions": [
+        "固定完整源码，经显式准备与摘要校验后使用；不通过 pip 安装同名包。",
+        "不同响应形式、轨道与活性空间近似须分别解释；数值回归不代表最终科学验收。",
+        "Qiskit 入口与真实硬件验证分开报告；云端任务需另行授权。"
+      ],
+      "nativeOnly": true,
+      "pythonVersion": "3.12",
+      "sourceProject": {
+        "repository": "https://github.com/erikkjellgren/SlowQuant.git",
+        "revision": "b0d12b2e7e680141e50f3de0c9ba029d9574bbca"
+      },
+      "bootstrap": "校验固定完整源码后加入模块搜索路径；保留全部上游公开 API，不替换响应方程或数值算法"
     },
     {
       "id": "spinqit-simulation",
@@ -1467,6 +1509,22 @@
       "conditions": []
     },
     {
+      "id": "tnqs-dynamics",
+      "title": "TensorNetworkQuantumSimulator.jl",
+      "language": "julia",
+      "modules": [
+        "TensorNetworkQuantumSimulator",
+        "JSON3"
+      ],
+      "group": "physics",
+      "workflow": "非规则图张量网络、电路、时间演化、平面 CTMRG 与采样",
+      "conditions": [
+        "CTMRG 需要有效平面嵌入；分别记录状态/环境维数、截断、精度与收敛。采样权重相对于实际规约态，函数名 certified 不构成科学验收。"
+      ],
+      "nativeOnly": true,
+      "juliaVersion": "1.12.7"
+    },
+    {
       "id": "tqec-compilation",
       "title": "TQEC",
       "language": "python",
@@ -1538,6 +1596,23 @@
       ],
       "nativeOnly": true,
       "juliaVersion": "1.12.7"
+    },
+    {
+      "id": "ppvm-simulation",
+      "title": "PPVM",
+      "language": "python",
+      "modules": [
+        "ppvm"
+      ],
+      "group": "qec",
+      "workflow": "Pauli 传播、广义 tableau、近 Clifford 观测量与含丢失/泄漏的自定义电路采样",
+      "conditions": [
+        "显式准备固定源码的 Python 3.12 / Rust 环境；完整原生 API 可用，成本取决于非 Clifford 分支与截断。",
+        "Heisenberg 计算倒序处理整条门和噪声链；LOST 与比特值分开；reset_state 不恢复丢失/泄漏。",
+        "非对称丢失的存活分支反作用尚未实现；开发数值对照不构成器件模型或科学验收。"
+      ],
+      "nativeOnly": true,
+      "pythonVersion": "3.12"
     }
   ]
 }

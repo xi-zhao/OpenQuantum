@@ -1,0 +1,52 @@
+{
+  "pyzx": "0.10.6",
+  "numpy": "2.5.3",
+  "python": "3.12.13",
+  "platform": "macOS-27.2-arm64-arm-64bit",
+  "reference": "src/lib/quantum_reference.py plus analytic 2x2 U3",
+  "tolerance": 1e-08,
+  "records": [
+    {
+      "name": "optimizer-input-calibration",
+      "unitaryMaxError": 3.3333914541515734e-16,
+      "passed": true,
+      "scope": "SDK input against independent circuit_unitary"
+    },
+    {
+      "name": "swap-remapping-XPhase",
+      "unitaryMaxError": 0.7071067811865475,
+      "passed": false,
+      "scope": "public pyzx.optimize.basic_optimization"
+    },
+    {
+      "name": "U3-input-calibration",
+      "unitaryMaxError": 6.684427777288334e-16,
+      "passed": true,
+      "scope": "analytic U3 matrix, up to global phase"
+    },
+    {
+      "name": "U3-adjoint",
+      "unitaryMaxError": 0.9999999999999997,
+      "passed": false,
+      "scope": "public Circuit.adjoint"
+    },
+    {
+      "name": "existing-bridge-public-pipeline",
+      "unitaryMaxError": 5.558049685633556e-16,
+      "passed": true,
+      "scope": "SDK pipeline only; MCP/version guard not exercised"
+    }
+  ],
+  "scientificAcceptance": "not_evaluated",
+  "productPinsChanged": false,
+  "upstreamUrl": "https://github.com/zxcalc/pyzx/releases/tag/v0.10.8",
+  "checkedAt": "2026-11-08",
+  "baseRevision": "0da563fa87c6592a8923d2eb98eea80f484d2151",
+  "environment": "production-frozen",
+  "lockPath": ".agents/skills/pyzx-optimization/uv.lock",
+  "lockSha256": "cc0e9a97de0fa0439ea4add6b7f13b8bb0ba3b18954b94ebcfba94595676b458",
+  "probePath": "benchmarks/upstream-updates/pyzx_regressions.py",
+  "probeSha256": "0b5417e1c1d36559ad13fffaaeb574b5f4a774e66b3e6051aff8fc1b5a95d95f",
+  "referenceSha256": "1a45bd14f97019f4c11b8bfa58820f51d2d98d9f0e01e95a347b142918f2c1fd",
+  "exitCode": 1
+}

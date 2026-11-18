@@ -2512,3 +2512,15 @@ packages:
 
   - id: emlint-dem-audit
     level: L0
+
+  - id: slowquant-response
+    level: L0
+
+  - id: tnqs-dynamics
+    level: L0
+
+  - id: rcmps-field-theory
+    level: L0
+
+  - id: ppvm-simulation
+    level: L0

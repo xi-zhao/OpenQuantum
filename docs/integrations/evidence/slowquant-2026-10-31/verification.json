@@ -1,0 +1,17 @@
+{
+  "id": "slowquant-response",
+  "dependencyLockSha256": "cf96803be1c5550965bfa0c54f7226f2e521717bd0fb14957b2dcb9f69b4e91a",
+  "sourceSha256": "8995956e3790b4a8293e9207d00267864d1984a4bd78477bdb32ddf7e6c045c8",
+  "networkIsolation": "macOS sandbox-exec deny network*",
+  "scientificValidation": "not_evaluated",
+  "status": "passed",
+  "files": {
+    "attempt.json": "563a0873d016abd60baaab8aa75f1d8e27e5d41fca762409d080df1cf3e3c3de",
+    "program.py": "8995956e3790b4a8293e9207d00267864d1984a4bd78477bdb32ddf7e6c045c8",
+    "result.json": "722ea3fc096d3eda4cbd411110352a02ef46c4fe2f20e3667f04b36ad84828fa",
+    "runner.py": "4d8e55212145f22f02d8198f4582194f9aa937013038af3c543a95c6fa77e4b9",
+    "stderr.log": "6b5b229f0ea9b0f7e5c7618fea91c76f66da598a361ee37ffecb11d17666491d",
+    "stdout.log": "aafc68919700cf446a380b91a10f1a16545215f1c89323423ed971d7532f726f",
+    "versions.json": "b9b692857c507edcd92cc9d3b91772ca454a4e60a4837b031b0175f3191fc0a1"
+  }
+}

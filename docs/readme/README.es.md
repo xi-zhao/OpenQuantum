@@ -4,7 +4,7 @@
 
 <p align="center"><a href="../../README.md">简体中文</a> · <a href="./README.en.md">English</a> · <a href="./README.ja.md">日本語</a> · <a href="./README.ko.md">한국어</a> · <a href="./README.es.md">Español</a> · <a href="./README.fr.md">Français</a> · <a href="./README.de.md">Deutsch</a> · <a href="./README.pt.md">Português</a> · <a href="./README.ru.md">Русский</a> · <a href="./README.ar.md">العربية</a></p>
 
-**Nota sobre Desktop 0.8.5:** La aplicación independiente de OpenQuantum para macOS con Apple Silicon recupera la interfaz sencilla de DSH Desktop 2.0.0 / Harness 0.1.0-rc.6. Por ahora, la interfaz ofrece chino e inglés; se conservan las traducciones y los README existentes. Las indicaciones siguientes sobre 0.8.4 corresponden a la versión anterior. Consulta la [guía de instalación](../DESKTOP_INSTALLERS.md) para conocer el procedimiento actual y las limitaciones de la firma. La versión publicada del plugin de Codex sigue siendo 0.8.4.
+**Versión 0.8.11:** Desktop y el plugin de Codex comparten la misma versión del producto. Las descargas actuales y el alcance de la verificación están en la [guía de Desktop](../DESKTOP_INSTALLERS.md) y la [guía de Codex](../integrations/CODEX_AGENT_INSTALL.md). Los detalles de 0.8.4 que aparecen más abajo se conservan como referencia histórica y no describen el paquete 0.8.11.
 
 <p align="center">
   <strong>OpenQuantum — Construyamos juntos una IA fiable para la investigación cuántica.</strong><br />
@@ -27,7 +27,7 @@ Elige el acceso que mejor te convenga; ambos comparten las mismas funciones de d
 
 **Empieza por los casos medidos:** un [conmutador de Pauli de PennyLane](#pennylane-rust-case) se ejecuta **5.09×** más rápido como llamada completa, y un [cálculo de la función de Wigner con QuTiP](#qutip-rust-case), **5.69×** más rápido. Ambos conservan comparaciones de rendimiento, comprobaciones de resultados y registros de reproducción.
 
-**Versión actual 0.8.4:** [descarga y notas de la versión de Desktop](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.4) · [descarga y notas de la versión del plugin de Codex](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.4). Ambos comparten la misma versión de producto.
+**Versión actual 0.8.11:** [descarga y notas de la versión de Desktop](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.11) · [descarga y notas de la versión del plugin de Codex](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.11). Ambos comparten la misma versión de producto.
 
 - **Funciones más fáciles de encontrar:** Tools, MCP y Skills se agrupan en ocho categorías de uso, con búsqueda y filtros de estado.
 - **Un único acceso con la marca:** `OpenQuantum.app` en Mac y `OpenQuantum.lnk` en Windows usan el icono de OpenQuantum, y se conservan la interfaz original de DSH Desktop, Quantum Learning y el acceso a las actualizaciones.
@@ -159,7 +159,13 @@ Elige un área y explica al entorno de investigación tu pregunta, tus entradas 
 
 Los cálculos locales pueden empezar sin cuenta en una nube cuántica. El hardware real y los servicios de pago se configuran cuando se necesitan; el rango de entradas, la preparación y el estado de verificación de cada método se mantienen en el catálogo detallado.
 
-El código fuente actual ofrece rutas completas a las API nativas de **114 entornos SDK o de código fuente**, 26 de ellos procedentes de la última [ampliación del ecosistema](../integrations/SDK_ECOSYSTEM_2026-10-14.md) incluida en 0.8.4. Los agentes pueden escribir programas propios, combinar API públicas y guardar resultados completos, más allá de los casos predefinidos de las Tools de conveniencia.
+El código fuente actual ofrece rutas completas a las API nativas de **117 entornos SDK o de código fuente**, 26 de ellos procedentes de la última [ampliación del ecosistema](../integrations/SDK_ECOSYSTEM_2026-10-14.md) incluida en 0.8.4. Los agentes pueden escribir programas propios, combinar API públicas y guardar resultados completos, más allá de los casos predefinidos de las Tools de conveniencia.
+
+SlowQuant añade respuesta lineal molecular y propiedades de transición mediante un SDK de código fuente fijado. [Preparación y límites de validación](../integrations/SLOWQUANT.md); qLR molecular con Qiskit y hardware aún no están validados.
+
+TNQS ofrece API nativas de Julia para redes tensoriales en grafos irregulares, CTMRG planar y muestreo. Preparación explícita: `node scripts/setup-sdk.mjs tnqs-dynamics`. [Geometría, convergencia y límites de validación](../integrations/TNQS.md).
+
+RcmpsCore ofrece API nativas de Julia en CPU para campos escalares continuos en 1+1 dimensiones, optimización RCMPS y excitaciones del mismo vacío. Preparación explícita: `node scripts/setup-sdk.mjs rcmps-field-theory`. [Convenciones y límites de validación](../integrations/RCMPS.md); la brecha de transferencia no es la del Hamiltoniano.
 
 **Matemáticas y física formalizadas:** [Lean 4, mathlib y physlib](../../.agents/skills/lean-physics/SKILL.md) permiten comprobar pruebas y sus axiomas en un proyecto fijado a Lean 4.35.0. La preparación explícita compila el pequeño ejemplo de Pauli y sus importaciones; los demás módulos se preparan según la tarea. Comprobar una prueba no instala dependencias. La prueba cubre sus definiciones e hipótesis, no la validez física del modelo ni su aceptación científica.
 
@@ -682,7 +688,7 @@ Da preferencia a los Tool Providers nativos para acciones en el mismo proceso y 
 
 </details>
 
-El catálogo completo de Skills, servicios MCP y Tools nativas se mantiene en el [documentación de referencia en chino](../CAPABILITIES.md#接口总览): el código fuente actual incluye **186 Skills integradas** (173 seleccionables automáticamente y 13 índices de categorías manuales), **91 conexiones de servicios MCP** (66 activadas por defecto y 25 opcionales) y **5 Tools cuánticas nativas**.
+El catálogo completo de Skills, servicios MCP y Tools nativas se mantiene en el [documentación de referencia en chino](../CAPABILITIES.md#接口总览): el código fuente actual incluye **189 Skills integradas** (176 seleccionables automáticamente y 13 índices de categorías manuales), **91 conexiones de servicios MCP** (66 activadas por defecto y 25 opcionales) y **5 Tools cuánticas nativas**.
 
 <a id="development-and-verification"></a>
 
@@ -712,7 +718,7 @@ Elige las comprobaciones relevantes para tu cambio; la lista completa está en e
 
 </details>
 
-La [Skill oficial `pyqpanda3` de OriginQ](https://github.com/OriginQ/pyqpanda3-skill) es una Skill de origen opcional: no se cuenta entre las 186 Skills integradas y no se instala automáticamente. `npm run skill:qpanda:setup` instala la versión revisada; no activa `qpanda_runtime` ni concede permisos para trabajos en la nube.
+La [Skill oficial `pyqpanda3` de OriginQ](https://github.com/OriginQ/pyqpanda3-skill) es una Skill de origen opcional: no se cuenta entre las 189 Skills integradas y no se instala automáticamente. `npm run skill:qpanda:setup` instala la versión revisada; no activa `qpanda_runtime` ni concede permisos para trabajos en la nube.
 
 <a id="roadmap-and-rsi"></a>
 

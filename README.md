@@ -18,12 +18,12 @@
 </p>
 
 <p align="center">
-  <strong>186</strong> 个内置 Skill　　<strong>91</strong> 个 MCP 服务连接　　<strong>114</strong> 个 SDK 环境　　开源 · MIT 许可
+  <strong>190</strong> 个内置 Skill　　<strong>91</strong> 个 MCP 服务连接　　<strong>118</strong> 个 SDK 环境　　开源 · MIT 许可
 </p>
 
 <p align="center">
   <a href="https://github.com/xi-zhao/openQuantum/actions/workflows/ci.yml"><img src="https://github.com/xi-zhao/openQuantum/actions/workflows/ci.yml/badge.svg" alt="CI status" /></a>
-  <a href="https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.10"><img src="https://img.shields.io/badge/release-0.8.10-187a91.svg" alt="Release 0.8.10" /></a>
+  <a href="https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.11"><img src="https://img.shields.io/badge/release-0.8.11-187a91.svg" alt="Release 0.8.11" /></a>
   <a href="./THIRD_PARTY_NOTICES.md"><img src="https://img.shields.io/badge/licenses-MIT%20%2B%20component%20licenses-18232e.svg" alt="MIT 与组件许可证" /></a>
   <img src="https://img.shields.io/badge/Node.js-24%2B-3c873a.svg" alt="Node.js 24 or newer" />
 </p>
@@ -31,6 +31,8 @@
 <p align="center"><strong>▶ 78 秒了解 OpenQuantum</strong></p>
 
 https://github.com/user-attachments/assets/5c00a30d-eef0-493a-975f-3faeb200cc9e
+
+<p align="center"><sub>2026-11-02 演示，片中数量为当时快照；当前能力与验证边界见下方目录。<a href="docs/communications/video/README.md">来源与复跑说明</a></sub></p>
 
 <br />
 
@@ -54,13 +56,17 @@ https://github.com/user-attachments/assets/5c00a30d-eef0-493a-975f-3faeb200cc9e
 
 ### 完整能力目录
 
-按研究任务选择能力，直接使用现成的计算入口，或通过 SDK 工作台编写自己的研究程序。
+按研究任务选择能力，直接使用现成的计算入口，或通过 SDK 工作台编写自己的研究程序。本页能力对应源码主线；已发布安装包的功能与验证范围以各自 Release 为准。
 
 | 研究任务 | 代表能力与入口 | 需要核对的边界 |
 | --- | --- | --- |
 | <a id="算法学习与方法比较"></a>学习算法、比较方法 | [49 项可执行示例](examples/quantum-algorithms/README.md)：QFT、HHL、VQE、QAOA、QSP、态制备等 | 默认输入用于教学；实际误差、收敛和方法适用条件逐项检查 |
 | 电路编译、仿真与信息分析 | Qiskit、PennyLane、PyZX、Graphix、QCEC、密度矩阵审计；[任务与接口](docs/CAPABILITIES.md#电路与量子信息) | 门集、位序、噪声模型与等价性检查范围 |
 | 基态、化学与多体计算 | VQE、SQD、TeNPy、OpenFermion；[方法选择](docs/CAPABILITIES.md#基态化学与优化) | 活性空间、粒子扇区、收敛和独立参考 |
+| 分子激发态与光谱 | [SlowQuant](.agents/skills/slowquant-response/SKILL.md)：酉波函数、量子线性响应、跃迁性质与吸收谱 | 活性空间、响应近似与独立参考；[使用与验证边界](docs/integrations/SLOWQUANT.md) |
+| 非规则图张量网络 | [TNQS](.agents/skills/tnqs-dynamics/SKILL.md)：图上的电路、动力学、有限平面 CTMRG 与采样 | 有效平面嵌入、截断与环境收敛；[使用与验证边界](docs/integrations/TNQS.md) |
+| 连续相对论场论 | [RcmpsCore](.agents/skills/rcmps-field-theory/SKILL.md)：1+1 维标量场、RCMPS 优化与同真空激发 | 正常序、背景收敛与能隙定义；[使用与验证边界](docs/integrations/RCMPS.md) |
+| 近 Clifford 与丢失/泄漏仿真 | [PPVM](.agents/skills/ppvm-simulation/SKILL.md)：Pauli 传播、广义 tableau 与 Stim 格式采样 | 非对称丢失的存活反作用尚未实现；[使用与验证边界](docs/integrations/PPVM.md) |
 | 误差缓解与量子纠错 | Mitiq、Stim / PyMatching、LDPC、Chromobius；[纠错能力](docs/CAPABILITIES.md#误差缓解与量子纠错) | 采样预算、统计误差及解码器的适用模型 |
 | <a id="纠错模型静态诊断"></a>检查 detector error model | [emlint](.agents/skills/emlint-dem-audit/SKILL.md)：结构诊断、反例及不完整检查状态 | 保留告警、跳过项和缺失上下文；不证明码距或解码正确性 |
 | 动力学与实验模拟 | Trotter / qDrift、Dynamiqs、OQuPy、Bloqade、Pulser、PairInteraction；[模拟与硬件入口](docs/CAPABILITIES.md#哈密顿量模拟与开放系统) | 单位、截断、时间步长；模拟与真实设备操作分别说明 |
@@ -69,9 +75,17 @@ https://github.com/user-attachments/assets/5c00a30d-eef0-493a-975f-3faeb200cc9e
 | 查询方法与公开基准 | [Quantum-Practices 与 Metriq](docs/CAPABILITIES.md#参考资料与选型) | 固定资料和历史记录，不代表当前设备性能 |
 | <a id="量子学习通"></a>组织教学材料与课堂 | [量子学习通 / OpenMAIC](docs/integrations/OPENMAIC.md)：材料、课件、测验与课堂 | 完整课程体系仍在建设，真实在线 AI 教学流程尚未完整验收 |
 
+TNQS 使用 `tnqs-dynamics` 入口：先显式运行 `node scripts/setup-sdk.mjs tnqs-dynamics`，再通过 SDK 工作台使用公开 Julia API。小系统对照不代表大规模收敛或科学验收。
+
+RcmpsCore 使用 `rcmps-field-theory` 入口：显式运行 `node scripts/setup-sdk.mjs rcmps-field-theory` 后编写 Julia 程序。传递 gap 不等于 Hamiltonian 能隙；试探态示例不证明相互作用基态或质量谱。
+
+PPVM 使用 `ppvm-simulation` 入口：显式运行 `node scripts/setup-sdk.mjs ppvm-simulation` 后编写 Python 程序，准备会构建固定版本 Rust 扩展。`LOST` 与比特分开，`reset_state` 不恢复丢失/泄漏；小规模对照不证明器件模型或性能优势。
+
+SlowQuant 使用 `slowquant-response` 入口：先显式运行 `node scripts/setup-sdk.mjs slowquant-response`，再通过 SDK 工作台运行自定义程序。已验证小规模离线响应；Qiskit 分子谱学与硬件另行核验。
+
 能力可以组合使用：先用 PyZX 优化电路，再用 QCEC 检查等价性，最后用噪声模拟比较含噪表现。跨工具组合需要核对模型、单位、位序和预算，见[计算与资源配置](docs/integrations/SCALABLE_BRIDGES.md)。
 
-当前源码分发 **186 个内置 Skill、91 个 MCP 服务连接、5 个原生量子 Tool**，并为 **114 个 SDK/源码环境**提供原生 API 使用路径。
+当前源码分发 **190 个内置 Skill、91 个 MCP 服务连接、5 个原生量子 Tool**，并为 **118 个 SDK/源码环境**提供原生 API 使用路径。
 清单数量、配置启用、环境就绪与科学验收是不同状态；每项能力按需准备，平台、账户和许可限制见对应说明。
 
 [完整 Skill 目录](docs/CAPABILITIES.md#内置-skills) · [MCP 服务及默认开关](docs/CAPABILITIES.md#mcp-服务目录) · [原生 Tool 与副作用](docs/CAPABILITIES.md#原生量子-tools) · [SDK API 与逐库验证](docs/integrations/FULL_SDK_ACCESS.md) · [相近方法怎么选](docs/integrations/CAPABILITY_SELECTION.md)
@@ -91,7 +105,7 @@ https://github.com/user-attachments/assets/5c00a30d-eef0-493a-975f-3faeb200cc9e
     <td width="50%" valign="top"><strong>执行计算，留下依据</strong><br />保留程序、参数、对照与核对记录，让结果可回看，让下一次研究接着向前。</td>
   </tr>
   <tr>
-    <td valign="top"><a href="./docs/images/openquantum-desktop-20261013.jpg"><img src="./docs/images/openquantum-desktop-20261013.jpg" alt="OpenQuantum Desktop 科研工作台，包含新会话、量子学习通与模型配置入口" /></a><br /><sub>科研工作台 · 2026-10-13 实际界面</sub></td>
+    <td valign="top"><a href="./docs/images/openquantum-desktop-20261013.jpg"><img src="./docs/images/openquantum-desktop-20261013.jpg" alt="OpenQuantum Desktop 科研工作台，包含新会话、量子学习通与模型配置入口" /></a><br /><sub>科研工作台 · 2026-10-13 实际界面；0.8.11 已收拢侧栏和设置</sub></td>
     <td valign="top"><a href="./docs/images/openquantum-settings-categories-20261013.jpg"><img src="./docs/images/openquantum-settings-categories-20261013.jpg" alt="OpenQuantum 按用途分类的能力设置，含搜索、筛选与连接配置" /></a><br /><sub>能力分类设置 · 2026-10-13 实际界面</sub></td>
   </tr>
 </table>
@@ -180,9 +194,9 @@ Apple M4，PennyLane 0.45.1；32 量子位、125 项 Hamiltonian 与 512 项局�
 **让 Codex 帮你安装：** 新建聊天，复制下面的请求：
 
 ```text
-请帮我安装 OpenQuantum Codex 插件 0.8.10。先阅读安装指南：
-https://github.com/xi-zhao/OpenQuantum/blob/codex-v0.8.10/docs/integrations/CODEX_AGENT_INSTALL.md
-从 https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.10 下载完整安装包与 SHA256SUMS，
+请帮我安装 OpenQuantum Codex 插件 0.8.11。先阅读安装指南：
+https://github.com/xi-zhao/OpenQuantum/blob/codex-v0.8.11/docs/integrations/CODEX_AGENT_INSTALL.md
+从 https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.11 下载完整安装包与 SHA256SUMS，
 核对摘要后，检查 Codex、Node.js 24+ 和 npm，使用包内安装器完成安装。
 请保留已有插件和用户配置，核对 Skills、MCP 工具和左侧全局“OpenQuantum 设置”入口。
 需要我重载应用时，告诉我具体操作。最后报告实际验证的结果，以及仍需准备的科学计算依赖。
@@ -190,11 +204,11 @@ https://github.com/xi-zhao/OpenQuantum/blob/codex-v0.8.10/docs/integrations/CODE
 
 安装后按提示重载 Codex，在新聊天中直接提出量子任务；能力和连接在「OpenQuantum 设置」中管理。
 
-[完整安装包与校验摘要](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.10) · [手动安装与故障处理](docs/integrations/CODEX_AGENT_INSTALL.md) · [插件功能与宿主边界](docs/integrations/CODEX_PLUGIN.md)
+[完整安装包与校验摘要](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.11) · [手动安装与故障处理](docs/integrations/CODEX_AGENT_INSTALL.md) · [插件功能与宿主边界](docs/integrations/CODEX_PLUGIN.md)
 
 ### 桌面安装包
 
-1. 下载 **[OpenQuantum 0.8.10 DMG](https://github.com/xi-zhao/OpenQuantum/releases/download/v0.8.10/OpenQuantum-0.8.10-macOS-arm64.dmg)**（Mac Apple Silicon），按 [SHA256SUMS](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.10) 核对摘要。
+1. 下载 **[OpenQuantum 0.8.11 DMG](https://github.com/xi-zhao/OpenQuantum/releases/download/v0.8.11/OpenQuantum-0.8.11-macOS-arm64.dmg)**（Mac Apple Silicon），按 [SHA256SUMS](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.11) 核对摘要。
 2. 将 `OpenQuantum.app` 拖入「应用程序」。
 3. 在「设置 → 模型」中配置模型服务。
 

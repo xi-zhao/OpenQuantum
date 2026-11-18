@@ -1,0 +1,64 @@
+{
+  "inputs": {
+    "atom": "H 0 0 0; H 0 0 0.74",
+    "basis": "sto-3g",
+    "charge": 0,
+    "spin": 0,
+    "active_electrons": 2,
+    "active_orbitals": 2,
+    "excitations": "SD",
+    "method": "naive",
+    "optimize_orbitals": false,
+    "maxiter": 100,
+    "output": "result.json"
+  },
+  "distanceUnit": "Angstrom",
+  "energyUnit": "Hartree",
+  "totalEnergyHartree": -1.137283834488501,
+  "excitationEnergiesHartree": [
+    0.9689314015346459,
+    1.6204265076249713
+  ],
+  "transitionDipolesAtomicUnits": [
+    [
+      0.0,
+      0.0,
+      -1.1595361184379953
+    ],
+    [
+      0.0,
+      0.0,
+      -8.25955415173496e-11
+    ]
+  ],
+  "oscillatorStrengths": [
+    0.8685010222464716,
+    7.36972512018198e-21
+  ],
+  "diagnostics": {
+    "hfConverged": true,
+    "responseResiduals": [
+      3.3335590258932494e-16,
+      2.796511984674376e-16
+    ],
+    "maxResponseResidual": 3.3335590258932494e-16,
+    "responseNorms": [
+      0.9499772171081636,
+      0.9743469910982817
+    ],
+    "smallestHessianEigenvalue": 0.7522223979097176,
+    "maxImaginaryEigenvalue": 0.0,
+    "finiteGeneralizedEigenvalues": true,
+    "note": "Keep stdout/stderr optimizer and response diagnostics; these fields do not decide scientific acceptance."
+  },
+  "upstreamRevision": "b0d12b2e7e680141e50f3de0c9ba029d9574bbca",
+  "versions": {
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "numba": "0.67.0",
+    "pyscf": "2.8.0",
+    "qiskit": "2.3.0",
+    "qiskit-nature": "0.7.2"
+  },
+  "scientificValidation": "not_evaluated"
+}

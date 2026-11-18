@@ -1,0 +1,43 @@
+{
+  "pyzx": "0.10.6",
+  "numpy": "2.5.3",
+  "python": "3.12.14",
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "reference": "src/lib/quantum_reference.py plus analytic 2x2 U3",
+  "tolerance": 1e-08,
+  "records": [
+    {
+      "name": "optimizer-input-calibration",
+      "unitaryMaxError": 5.552748978401242e-16,
+      "passed": true,
+      "scope": "SDK input against independent circuit_unitary"
+    },
+    {
+      "name": "swap-remapping-XPhase",
+      "unitaryMaxError": 0.7071067811865475,
+      "passed": false,
+      "scope": "public pyzx.optimize.basic_optimization"
+    },
+    {
+      "name": "U3-input-calibration",
+      "unitaryMaxError": 6.684427777288334e-16,
+      "passed": true,
+      "scope": "analytic U3 matrix, up to global phase"
+    },
+    {
+      "name": "U3-adjoint",
+      "unitaryMaxError": 0.9999999999999997,
+      "passed": false,
+      "scope": "public Circuit.adjoint"
+    },
+    {
+      "name": "existing-bridge-public-pipeline",
+      "unitaryMaxError": 5.558049685633556e-16,
+      "passed": true,
+      "scope": "SDK pipeline only; MCP/version guard not exercised"
+    }
+  ],
+  "scientificAcceptance": "not_evaluated",
+  "productPinsChanged": false,
+  "upstreamUrl": "https://github.com/zxcalc/pyzx/releases/tag/v0.10.8"
+}
