@@ -12,6 +12,7 @@ import SessionProjections from "@deepseek-ai/dsh-session-projection";
 import SandboxPolicy from "@deepseek-ai/dsh-sandbox-policy";
 import ApprovalService from "@deepseek-ai/dsh-user-approval";
 import { Session } from "@deepseek-ai/dsh-session";
+import { Environments } from "../src/settings/codex/environments.mjs";
 import { createDesktopApplication } from "../src/settings/desktop/application.mjs";
 import { apply } from "../src/settings/desktop/provider.mjs";
 import { createBackend } from "../runtime/chatgpt/backend.mjs";
@@ -209,6 +210,62 @@ test("chat teardown and plugin close drain the same in-flight resource, without 
   assert.equal(backends.length, 3);
 });
 
+test("Desktop drains other chats, pending requests and shared resources before reporting a chat close failure", async t => {
+  const directory = await fs.mkdtemp(path.join(os.tmpdir(), "oq-desktop-close-"));
+  t.after(() => fs.rm(directory, { recursive: true, force: true }));
+  const failure = new Error("session backend close failed");
+  const slowChat = Promise.withResolvers(), request = Promise.withResolvers();
+  const closingSlowChat = Promise.withResolvers();
+  const closedBackends = [];
+  const closeEnvironments = t.mock.method(Environments.prototype, "close");
+  let nextBackend = 0;
+  const app = await createDesktopApplication({ root, directory, credentials: fixtureCredentials(), backendFactory: async () => {
+    const backend = await createBackend({ root });
+    const index = nextBackend++;
+    const close = backend.close;
+    backend.close = async () => {
+      closedBackends.push(index);
+      await close();
+      if (index === 1) throw failure;
+      if (index === 2) {
+        closingSlowChat.resolve();
+        await slowChat.promise;
+      }
+    };
+    return backend;
+  } });
+  const first = {}, second = {};
+  for (const agent of [first, second]) {
+    await app.prepare({ skillId: "quantum-sdk-advisor" }, { agent, signal: signal() });
+  }
+  t.mock.method(app.settings, "snapshot", () => request.promise);
+  const pending = app.request({ action: "snapshot" });
+  const closingFirst = assert.rejects(app.closeAgent(first), error => error === failure);
+  let reported = false;
+  const closing = app.close();
+  const outcome = assert.rejects(closing, error => {
+    reported = true;
+    return error === failure;
+  });
+  try {
+    await closingSlowChat.promise;
+    await new Promise(resolve => setImmediate(resolve));
+    assert.equal(reported, false, "reported failure before the other chat finished");
+    slowChat.resolve();
+    await app.closeAgent(second);
+    await new Promise(resolve => setImmediate(resolve));
+    assert.equal(reported, false, "reported failure before the pending request finished");
+    assert.ok(!closedBackends.includes(0), "closed shared backend while request was active");
+  } finally {
+    slowChat.resolve();
+    request.resolve();
+    await Promise.all([pending, closingFirst, outcome]);
+  }
+  await assert.rejects(app.close(), error => error === failure);
+  assert.deepEqual(closedBackends.toSorted(), [0, 1, 2]);
+  assert.equal(closeEnvironments.mock.callCount(), 3);
+});
+
 test("Desktop projection removes overlapping old MCP registrations and migration preserves actual prohibitions", async t => {
   const home = await fs.mkdtemp(path.join(await fs.realpath(os.tmpdir()), "oq-desktop-migration-")); t.after(() => fs.rm(home, { recursive: true, force: true }));
   const original = await fs.readFile(path.join(root, "runtime/openquantum/agent-presets/openquantum/agent.cordis.yml"), "utf8");
@@ -398,6 +455,32 @@ test("native Pasqal checks Tool and MCP prohibitions again after lease and inter
     else assert.equal((await run()).isError, true);
     assert.equal(executed, 0); assert.equal(releases, 1); await backend.close();
   }
+});
+
+test("a failing Desktop backend still waits for an active workflow to release its lease", async t => {
+  const { app } = await fixture(t);
+  const acquiring = Promise.withResolvers(), acquired = Promise.withResolvers();
+  const failure = new Error("backend close failed");
+  let released = false;
+  const backend = withDesktopWorkflow({
+    ...await createBackend({ root }), close() { throw failure; },
+  }, {
+    settings: () => app.settings,
+    environments: { acquire: async () => {
+      acquiring.resolve();
+      await acquired.promise;
+      return { release() { released = true; } };
+    } },
+  });
+  const args = ["device", "--project-id", "fixture", "--device", "fixture", "--out", "unused"];
+  const call = assert.rejects(backend.call("run_pasqal_workflow", { args }, signal(), () => true), { name: "AbortError" });
+  await acquiring.promise;
+  const closed = assert.rejects(backend.close(), error => {
+    assert.ok(released, "backend close reported failure while the workflow still held its lease");
+    return error === failure;
+  });
+  acquired.resolve();
+  await Promise.all([call, closed]);
 });
 
 test("custom filesystem Skills survive while duplicate bundled names cannot override a prohibition", async t => {

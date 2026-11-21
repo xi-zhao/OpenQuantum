@@ -10,6 +10,15 @@ import { DesktopCredentials } from "./credentials.mjs";
 import { withDesktopWorkflow } from "./workflow.mjs";
 import { prepareDesktopSkill } from "./preparation.mjs";
 
+function closeSettings({ backend, environments }) {
+  return Promise.allSettled([backend, environments].map(async resource => resource.close()));
+}
+
+function throwCloseFailure(results) {
+  const failure = results.find(result => result.status === "rejected");
+  if (failure) throw failure.reason;
+}
+
 // Application Interface shared by the native Tool Provider and bounded settings
 // route. This owns preparation, not Agent turns, permissions or a Tool registry.
 export async function createDesktopApplication({ root, directory, credentials: provider, backendFactory = createDesktopBackend, environment = process.env, nodeExecutable = process.execPath } = {}) {
@@ -26,13 +35,12 @@ export async function createDesktopApplication({ root, directory, credentials: p
   const settings = createSettings(await backendFactory({ root, nodeExecutable }));
   const channel = createCredentialChannel({ settings, credentials });
   const agents = new Map();
-  const disposedAgents = new WeakSet();
-  const closingAgents = new Map();
+  const closingAgents = new WeakMap();
   const pending = new Set();
   const lifetime = new AbortController();
-  let closed = false;
+  let closePromise;
   async function owned(agent) {
-    if (closed || !agent || disposedAgents.has(agent)) throw new Error("此 Tool 需要当前有效的 Desktop 聊天");
+    if (closePromise || !agent || closingAgents.has(agent)) throw new Error("此 Tool 需要当前有效的 Desktop 聊天");
     if (!agents.has(agent)) {
       agents.set(agent, backendFactory({ root, nodeExecutable }).then(backend => ({ settings: createSettings(backend), controller: new AbortController() })));
       agent.ctx?.effect(() => () => closeAgent(agent), "openquantum: close this chat's resources");
@@ -40,7 +48,7 @@ export async function createDesktopApplication({ root, directory, credentials: p
     return agents.get(agent);
   }
   async function track(action) {
-    if (closed) throw new Error("OpenQuantum 插件已关闭");
+    if (closePromise) throw new Error("OpenQuantum 插件已关闭");
     const promise = action(); pending.add(promise);
     try { return await promise; } finally { pending.delete(promise); }
   }
@@ -57,18 +65,18 @@ export async function createDesktopApplication({ root, directory, credentials: p
   });
   function closeAgent(agent) {
     if (closingAgents.has(agent)) return closingAgents.get(agent);
-    disposedAgents.add(agent);
     const promise = agents.get(agent);
     const closing = (async () => {
-      if (!promise) return;
-      const owner = await promise;
-      owner.controller.abort();
-      await Promise.all([owner.settings.backend.close(), owner.settings.environments.close()]);
-      agents.delete(agent);
+      try {
+        if (!promise) return;
+        const owner = await promise;
+        owner.controller.abort();
+        throwCloseFailure(await closeSettings(owner.settings));
+      } finally {
+        agents.delete(agent);
+      }
     })();
     closingAgents.set(agent, closing);
-    // Retain only active teardown work; disposedAgents prevents recreation.
-    closing.finally(() => closingAgents.delete(agent)).catch(() => {});
     return closing;
   }
   return {
@@ -101,12 +109,18 @@ export async function createDesktopApplication({ root, directory, credentials: p
       return settings.command(input);
     }); },
     closeAgent,
-    async close() {
-      closed = true; lifetime.abort(); channel.close();
-      await Promise.all([...agents.keys()].map(agent => closeAgent(agent)));
-      await Promise.all([...closingAgents.values()]);
-      await Promise.allSettled([...pending]);
-      await Promise.all([settings.environments.close(), settings.backend.close()]);
+    close() {
+      if (closePromise) return closePromise;
+      const activeAgents = [...agents.keys()];
+      closePromise = Promise.resolve().then(async () => {
+        const sessions = await Promise.allSettled(activeAgents.map(closeAgent));
+        await Promise.allSettled([...pending]);
+        const shared = await closeSettings(settings);
+        throwCloseFailure([...sessions, ...shared]);
+      });
+      lifetime.abort();
+      channel.close();
+      return closePromise;
     },
   };
 }
