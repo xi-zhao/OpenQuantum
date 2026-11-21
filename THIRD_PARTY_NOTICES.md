@@ -17,7 +17,7 @@ Pasqal agent-marketplace 的实验方法与三个研究示例固定于 `2b0353d8
 | qBraid | Apache-2.0 | 固定 0.12.2，独立 Python 环境调用 Qiskit/QASM2/Cirq 双向转换；不使用云 Provider，不复制上游源码 | [qBraid/qBraid](https://github.com/qBraid/qBraid/tree/v0.12.2) |
 | QDMI | Apache-2.0 WITH LLVM-exception | 固定 v1.3.3 / `18cfb67fd9042761d3005c2f8655751c1758f9c5`；显式安装器在忽略目录构建官方示例 client driver/device 并保留 LICENSE，Python ctypes 只读查询 client ABI；不重新分发上游源码或二进制 | [Munich-Quantum-Software-Stack/QDMI](https://github.com/Munich-Quantum-Software-Stack/QDMI/tree/v1.3.3) |
 | Cirq / Qiskit SDK | Apache-2.0 | qBraid 环境固定 Cirq 1.6.1 / Qiskit 2.5.2，用于电路表示、转换和独立矩阵对照；由包管理器安装并保留各自许可证 | [Cirq](https://github.com/quantumlib/Cirq) / [Qiskit](https://github.com/Qiskit/qiskit) |
-| PyZX | Apache-2.0 | 固定 0.10.6，隔离环境调用ZX 重写、Clifford+T 门数比较与完整酉矩阵对照；上游源码由包管理器安装，保留原始许可证，不随本仓库重新分发 | [zxcalc/pyzx](https://github.com/zxcalc/pyzx) |
+| PyZX | Apache-2.0 | 固定 0.10.8，隔离环境调用ZX 重写、Clifford+T 门数比较与完整酉矩阵对照；上游源码由包管理器安装，保留原始许可证，不随本仓库重新分发 | [zxcalc/pyzx](https://github.com/zxcalc/pyzx) |
 | Graphix | Apache-2.0 | 固定 0.4，隔离环境调用电路到 MBQC 模式、资源图、自适应测量和纠正输出；上游源码由包管理器安装，保留原始许可证，不随本仓库重新分发 | [TeamGraphix/graphix](https://github.com/TeamGraphix/graphix) |
 | Symmer | MIT | 固定 0.0.13@a4ba56e3，隔离环境调用指定 Pauli 对称性扇区的降比特与同扇区保谱检查；上游源码由包管理器安装，保留原始许可证，不随本仓库重新分发 | [qmatter-labs/symmer](https://github.com/qmatter-labs/symmer) |
 | PauLie | MIT | 固定 0.2.3，隔离环境调用Pauli 生成元的 Lie 闭包、分类维数与独立矩阵参照；上游源码由包管理器安装，保留原始许可证，不随本仓库重新分发 | [QPauLie/PauLie](https://github.com/QPauLie/PauLie) |
@@ -221,3 +221,7 @@ Chromobius 1.1.1 为 Apache-2.0，固定上游提交 `efae0325e4a8fc13be981434d3
 [physlib](https://github.com/leanprover-community/physlib)，均为 Apache-2.0。
 插件只包含项目模板、依赖锁和工作流指南，不捆绑完整工具链或库；准备所得源码保留上游许可。
 固定版本及间接依赖见 `.agents/skills/lean-physics/lean-toolchain` 和 `lake-manifest.json`。
+
+## PPVM 原生 SDK 工作流
+
+[QuEraComputing/ppvm](https://github.com/QuEraComputing/ppvm) v0.3.0 为 Apache-2.0，固定提交 `3cc883fd93b2475cb10c892a8a31adcc09a7579c`；[许可证原文](https://github.com/QuEraComputing/ppvm/blob/3cc883fd93b2475cb10c892a8a31adcc09a7579c/LICENSE)。本仓库仅分发原创指南、示例、验证与依赖锁，不捆绑上游源码或二进制。显式准备时构建 `ppvm-python`，间接 Python 依赖由 `uv.lock` 固定，Rust 工作区来源由完整提交固定并保留其 Cargo.lock 与许可。各依赖保留自身许可，不将 Apache-2.0 扩展为所有传递依赖的统一许可证。

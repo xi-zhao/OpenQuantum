@@ -506,7 +506,7 @@ const MCP_CATALOG = Object.freeze({
     provider: "pyzx / OpenQuantum",
     sourceUrl: "https://github.com/zxcalc/pyzx",
     packageName: "pyzx",
-    packageVersion: "0.10.6",
+    packageVersion: "0.10.8",
     setup: null,
   }),
   graphix_local: Object.freeze({

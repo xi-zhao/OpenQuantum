@@ -2,7 +2,7 @@
 
 <p align="center"><strong>OpenQuantum — 함께 만드는 신뢰할 수 있는 양자 연구 AI.</strong><br /><sub>양자 연구의 전문 지식을 하나의 OpenQuantum에</sub></p>
 
-**Desktop 0.8.5 안내:** macOS Apple Silicon용 독립 OpenQuantum 앱은 DSH Desktop 2.0.0 / Harness 0.1.0-rc.6의 간결한 사용 환경으로 돌아갑니다. 화면 언어는 우선 중국어와 영어만 지원하며, 기존 번역과 README는 보존합니다. 아래의 0.8.4 설명은 이전 릴리스에 관한 기록입니다. 최신 설치 방법과 서명 관련 제약은 [설치 안내](../DESKTOP_INSTALLERS.md)를 확인하세요. 공개된 Codex 플러그인 버전은 0.8.4입니다.
+**버전 0.8.11:** Desktop과 Codex 플러그인은 같은 제품 버전을 사용합니다. 현재 다운로드와 검증 범위는 [Desktop 안내](../DESKTOP_INSTALLERS.md)와 [Codex 안내](../integrations/CODEX_AGENT_INSTALL.md)를 참조하세요. 아래의 0.8.4 상세 설명은 과거 기록으로 보존한 내용이며 0.8.11 패키지를 설명하지 않습니다.
 
 <p align="center"><a href="../../README.md">简体中文</a> · <a href="./README.en.md">English</a> · <a href="./README.ja.md">日本語</a> · <a href="./README.ko.md">한국어</a> · <a href="./README.es.md">Español</a> · <a href="./README.fr.md">Français</a> · <a href="./README.de.md">Deutsch</a> · <a href="./README.pt.md">Português</a> · <a href="./README.ru.md">Русский</a> · <a href="./README.ar.md">العربية</a></p>
 
@@ -22,7 +22,7 @@ OpenQuantum은 오픈 소스로 공개되고 공동 개발에 열려 있는 양�
 
 **실측 사례부터 살펴보세요.** [PennyLane Pauli 교환자](#pennylane-rust-case) 계산은 전체 호출 기준 **5.09배**, [QuTiP Wigner 함수 계산](#qutip-rust-case)은 **5.69배** 빨라졌습니다. 두 사례 모두 성능 비교, 결과 검증과 재현 기록을 보관합니다.
 
-**현재 버전 0.8.4:** [Desktop 다운로드와 릴리스 노트](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.4) · [Codex 플러그인 다운로드와 릴리스 노트](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.4). 두 배포판은 같은 제품 버전을 사용합니다.
+**현재 버전 0.8.11:** [Desktop 다운로드와 릴리스 노트](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.11) · [Codex 플러그인 다운로드와 릴리스 노트](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.11). 두 배포판은 같은 제품 버전을 사용합니다.
 
 - **더 쉬워진 기능 찾기:** Tools, MCP, Skills를 용도별 8개 범주로 분류하고 검색과 상태 필터를 추가했습니다.
 - **하나의 브랜드 실행 아이콘:** Mac의 `OpenQuantum.app`과 Windows의 `OpenQuantum.lnk`는 OpenQuantum 아이콘을 사용하며, 공식 DSH Desktop 인터페이스, Quantum Learning과 업데이트 메뉴는 그대로 유지합니다.

@@ -59,6 +59,11 @@ VQD 两个实现的输入、优化过程与结果合同不同，只合并选择�
 
 ## 厂商 SDK 与既有入口
 
+近 Clifford 电路优先按模型选择：普通 Clifford 采样继续用 Stim；现有 Tsim/Clifft 已覆盖的采样先复用其入口。
+需要明确区分丢失、泄漏、复位，或使用广义 tableau 时，选择 [PPVM 原生 SDK](PPVM.md)；少数观测量也可用其 Pauli 反向传播。
+通用 Pauli/Majorana 传播可比较 monoprop。PPVM 的 Rust 实现不预设性能优势，非对称丢失尚缺存活反作用；
+不同实现作为对照前必须统一门/噪声顺序、位序、截断与测量语义。
+
 - 用户给出结构化线路并需要 Pauli 期望及梯度时，在 PennyLane、DeepQuantum、TensorCircuit、
   MindQuantum 中按指定 SDK 选择一个入口；需要修改算法代码或优化循环时继续使用既有算法示例。
 - 电路优化选择 TKET 或既有 PyZX / Compact，比较前统一门集、线序与全局相位。

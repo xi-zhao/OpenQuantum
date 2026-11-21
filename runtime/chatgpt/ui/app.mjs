@@ -5,6 +5,7 @@ import { environmentLabel, environmentPanel } from "./environment-cards.mjs";
 import { SETTINGS_TABS, skillPresentation, shortDescription, toolState, skillPreparation, skillEnvironment, skillIssue, environmentState, providerState, connectionState } from "./settings-model.mjs";
 import { accountState } from "./credential-groups.mjs";
 import { SettingsSession, sameConnectionDestination } from "./settings-recovery.mjs";
+import { PreparationPoller } from "./preparation-poller.mjs";
 import "./style.css";
 
 const desktop = document.querySelector('meta[name="openquantum-host"]')?.content === "Desktop";
@@ -19,7 +20,15 @@ let defaultState;
 const settingsSession = new SettingsSession(request);
 const connectionDrafts = new Map();
 const environmentDrafts = new Map();
-let pollTimer;
+const preparationPoller = new PreparationPoller({
+  canPoll: () => !busy && !settingsSession.pending && !document.activeElement?.matches("input, textarea"),
+  refresh: async () => { await updateSnapshot({ action: "snapshot" }); reportEnvironmentCompletion(); render(); },
+  onError: () => notice("暂时无法读取安装进度，请刷新重试。安装操作会在本机继续。", true),
+});
+preparationPoller.setSuspended(document.hidden);
+window.addEventListener("pagehide", () => preparationPoller.setSuspended(true));
+window.addEventListener("pageshow", () => preparationPoller.setSuspended(document.hidden));
+document.addEventListener("visibilitychange", () => preparationPoller.setSuspended(document.hidden));
 let pendingEnvironmentNotice;
 let pendingFocusKey;
 function environmentFor(item) { return snapshot.environments?.find(value => value.id === item.environmentId); }
@@ -30,16 +39,6 @@ function reportEnvironmentCompletion() {
   if (["preparing", "cancelling"].includes(environment.state)) return;
   notice(environment.ready ? "环境已准备，Agent 可直接使用。" : `${environmentLabel(environment)}${environmentState(environment).actionLabel ? `，请${environmentState(environment).actionLabel}。` : "。"}`, ["failed", "interrupted"].includes(environment.state));
   pendingEnvironmentNotice = null;
-}
-function schedulePoll() {
-  clearTimeout(pollTimer);
-  if (!snapshot?.environments?.some(item => ["preparing", "cancelling"].includes(item.state))) return;
-  pollTimer = setTimeout(async () => {
-    if (busy || settingsSession.pending || document.hidden || document.activeElement?.matches("input, textarea")) { schedulePoll(); return; }
-    try { await updateSnapshot({ action: "snapshot" }); reportEnvironmentCompletion(); render(); }
-    catch { notice("暂时无法读取安装进度，请刷新重试。安装操作会在本机继续。", true); }
-    finally { schedulePoll(); }
-  }, 1500);
 }
 const expandedGroups = new Map();
 const selectedEnvironments = new Map();
@@ -83,6 +82,7 @@ async function request(input) {
 async function updateSnapshot(input) {
   const result = await settingsSession.update(input);
   snapshot = result.snapshot;
+  preparationPoller.update(snapshot);
   if (result.save) {
     if (!result.confirmed) throw new Error(result.error || "已读取最新设置，但无法确认上次保存。请核对当前内容；编辑草稿已保留。");
     if (["connection.add", "connection.update"].includes(result.save.action)) {
@@ -125,7 +125,7 @@ async function run(input) {
     busy = false;
     $("#content").setAttribute("aria-busy", "false");
     document.querySelectorAll("button,input,select,textarea").forEach(node => node.disabled = false);
-    render(); schedulePoll();
+    render();
   }
 }
 function switchFor(checked, label, action, { disabled = false, text } = {}) {
