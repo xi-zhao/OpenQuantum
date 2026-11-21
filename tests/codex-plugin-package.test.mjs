@@ -2,10 +2,12 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { zipSync } from "fflate";
+import os from "node:os";
+import { unzipSync, zipSync } from "fflate";
 import { parse } from "acorn";
 import { unpackPlugin, updateMarketplace, installedMcpServer } from "../scripts/install-codex-plugin.mjs";
 import { projectSkill } from "../scripts/build-chatgpt.mjs";
+import { buildPlugin } from "../scripts/build-codex-plugin.mjs";
 import { installerFiles } from "../scripts/build-codex-release.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -22,6 +24,28 @@ test("Codex runtime and installer pin the same shared dependencies as the tested
       assert.equal(lock.packages[`node_modules/${name}`].version, version, `${distribution}: ${name} lock must match its manifest`);
     }
   }
+});
+
+test("Codex plugin ZIP excludes stale files in the shared ChatGPT build", { timeout: 180000 }, async t => {
+  const output = await fs.mkdtemp(path.join(os.tmpdir(), "oq-plugin-package-"));
+  t.after(() => fs.rm(output, { recursive: true, force: true }));
+  const shared = path.join(root, "dist/chatgpt");
+  await fs.mkdir(shared, { recursive: true });
+  const stale = await fs.mkdtemp(path.join(shared, "previous-build-"));
+  t.after(() => fs.rm(stale, { recursive: true, force: true }));
+  const marker = path.join(stale, "obsolete.txt");
+  await fs.writeFile(marker, "old build");
+
+  const { zipPath } = await buildPlugin({ root, output });
+  const bundle = "openquantum/server/dist/chatgpt";
+  const currentFile = `${bundle}/capabilities.json`;
+  const obsoleteFile = `${bundle}/${path.basename(stale)}/obsolete.txt`;
+  const entries = unzipSync(await fs.readFile(zipPath), {
+    filter: entry => entry.name === currentFile || entry.name === obsoleteFile,
+  });
+  assert.ok(Object.hasOwn(entries, currentFile));
+  assert.ok(!Object.hasOwn(entries, obsoleteFile), "ZIP included a stale shared build file");
+  assert.equal(await fs.readFile(marker, "utf8"), "old build");
 });
 
 test("standalone installer includes its complete module graph and declares its runtime dependencies", async () => {
