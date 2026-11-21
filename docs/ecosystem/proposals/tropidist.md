@@ -3,7 +3,7 @@
 - 调研日期：2026-11-07（Asia/Shanghai）；OpenQuantum 基线 `0da563fa87c6592a8923d2eb98eea80f484d2151`。
 - 官方仓库：[Fanerst/tropidist](https://github.com/Fanerst/tropidist)；固定完整 SHA：[`b03ec2d4077f287f89f97b5c2c16ce5ce17c2c58`](https://github.com/Fanerst/tropidist/tree/b03ec2d4077f287f89f97b5c2c16ce5ce17c2c58)。
 - 上游没有列出的 GitHub Release；这是固定研究源码提案，不把 main 或论文发布当稳定软件版本。
-- 状态：**尚未接入、安装或运行**。本 Draft 由“候选接入”任务沿用同一分支与 PR 实现；用户可随时关闭或要求停止。
+- 11 月 21 日接入进度：**已完成小矩阵与小电路的隔离核验，产品入口待接入**。进度见[接入 PR #80](https://github.com/xi-zhao/OpenQuantum/pull/80)；用户可随时关闭或要求停止。
 
 ## 用户任务、增量价值与优先级
 
@@ -92,7 +92,7 @@ GF(2) 秩和 syndrome，明确未计算码距；[emlint](../../../.agents/skills
 
 ## 接入任务的验收条件
 
-本轮只读源码和文档；下面均为**尚未执行**的验收计划。
+以下是 11 月 7 日候选提案确定的验收条件。已完成的小规模数值核验见下节；准备、宿主和用户文档仍待交付。
 优先沿用公开 CLI、原生 SDK 与现有工程入口，独立参考不能再调用相同 solver 生成答案。
 
 | 入口/用例 | 应检查的行为与范围 |
@@ -109,6 +109,21 @@ GF(2) 秩和 syndrome，明确未计算码距；[emlint](../../../.agents/skills
 首轮工程和小规模数值检查不等于科学验收；保留 `scientificValidation=not_evaluated`。
 不新增或放宽 Acceptance Profile、阈值、独立领域审阅要求，也不把作者的大规模结果标为本项目已复现。
 实现后按单代理方式分别自审 Standards/Spec；缺少必要结论或验证时继续保持 Draft。
+
+## 已完成的小规模电路核验
+
+11 月 19 日已核验 Steane 矩阵、重复列与多 observable、限深和超时，并在含三探测器超边的电路中穷举 16 种物理注错，得到唯一的四故障逻辑翻转。原始版本、配置和对照见[接入 PR 的首轮记录](https://github.com/xi-zhao/OpenQuantum/pull/80)。
+
+11 月 21 日在 macOS arm64 上用同一固定源码、Python 3.12.13、NumPy 2.5.3、Stim 1.16.0 检查两轮量子存储电路。两轮之间，每个数据位独立以 0.01 的概率发生 X 错误。第二轮测量前，每个 Z 校验辅助位独立以同样概率发生 X 错误，翻转其读出。其余门和测量理想，每个物理故障位置计权 1。
+
+| 固定电路与原始结果 | 独立穷举 | 距离与见证 |
+| --- | --- | --- |
+| [三位重复码电路](../../integrations/evidence/tropidist-2026-11-21/repetition.stim) · [CLI 输出](../../integrations/evidence/tropidist-2026-11-21/repetition.json) | 3 个数据位、2 个读出位，共 32 种故障集合 | 上下界均为 3。唯一的最小集合是在数据位 0、2、4 注入 X。 |
+| [旋转表面码 Z 存储电路](../../integrations/evidence/tropidist-2026-11-21/surface-z.stim) · [CLI 输出](../../integrations/evidence/tropidist-2026-11-21/surface-z.json) | 9 个数据位、4 个读出位，共 8,192 种故障集合 | 上下界均为 3，共有 8 个最小物理集合。13 个物理位置产生 11 种可区分的探测器与逻辑响应。返回见证的一组物理位置为 1、8、15，位置 3 可替代位置 1。 |
+
+独立参考从 Z 校验的支撑直接计算奇偶。把第 j 个校验支撑内的数据翻转取异或，记为 `s_j`，相应的读出翻转记为 `m_j`。第二轮与首轮的探测器差为 `s_j XOR m_j`，末轮数据测量与第二轮的差为 `m_j`。逻辑位取逻辑 Z 支撑上数据翻转的奇偶。逐一枚举后，再把单个物理故障和每组最小集合分别插入无噪声电路。用原无噪声电路的参考把原始测量转换为探测器和逻辑读数，所有最小集合均只翻转逻辑位 0。[校验与逻辑支撑、最小集合、见证映射及数据摘要](../../integrations/evidence/tropidist-2026-11-21/reference.json)
+
+两组模型均为图状模型，Stim 的 `shortest_graphlike_error` 也得到 3。tropidist 的公开入口为已准备源码中的 `python -m cdist <电路>`。上述记录使用 `--threads 1 --time-limit 5 --config dp=2,kmin=1,kmax=6`，每次 `--out` 指向新目录，外层限时 18 秒。结论限于所列电路与故障集合。含噪双比特门、其他逻辑基、阈值和规模优势仍未核验，`scientificValidation=not_evaluated`。
 
 ## 许可证、依赖与成本
 
