@@ -6,6 +6,7 @@ import test from "node:test";
 
 import { parseDocument } from "yaml";
 
+import { sdkInventory } from "../src/lib/sdk-access.mjs";
 import * as projectSettings from "../src/settings/server/project-settings.mjs";
 import { quantumHardwareMcpIntegration } from "../src/settings/server/quantum-hardware-mcp.mjs";
 
@@ -469,13 +470,49 @@ test("legacy HTTP URL projections remove credentials, query and fragment without
   assert.equal(parseDocument(await readFile(configPath, "utf8")).toJS()[0].config.url, cases[0][0]);
 });
 
+test("project settings identify the pinned Python distribution for each SDK server", async t => {
+  const [{ libraries }, settings] = await Promise.all([sdkInventory(process.cwd()), readProjectSettings(process.cwd())]);
+  const servers = new Map(settings.mcpServers.map(server => [server.serverName, server]));
+  const distributionName = value => /^[\w.-]+/.exec(value.trim())?.[0].toLowerCase().replace(/[-_.]+/g, "-");
+
+  for (const sdk of libraries) {
+    if (sdk.language !== "python" || sdk.sourceProject) continue;
+    for (const { name } of sdk.providers) {
+      const server = servers.get(name);
+      assert.ok(server, `${sdk.id}: missing settings entry for ${name}`);
+      if (!/^[\w.-]+(?:\[[\w., -]+\])?$/.test(server.packageName ?? "")) continue;
+      const distribution = distributionName(server.packageName);
+      const locked = sdk.lockedPackages.filter(pkg => distributionName(pkg.name) === distribution);
+      if (locked.some(pkg => !pkg.source?.registry)) continue;
+
+      await t.test(name, () => {
+        assert.ok(locked.length, `${server.packageName} is missing from ${sdk.lock.path}`);
+        const direct = sdk.dependencies.filter(requirement => distributionName(requirement) === distribution);
+        assert.ok(direct.length, `${server.packageName} is not a direct dependency in ${sdk.manifest.path}`);
+        if (direct.length !== 1) return;
+        const exact = /^[\w.-]+(?:\[[^\]]+\])?\s*==\s*([0-9][\w.+!-]*)$/.exec(direct[0].trim());
+        if (exact) assert.equal(server.packageVersion, exact[1], `${server.packageName} in ${sdk.manifest.path}`);
+      });
+    }
+  }
+});
+
 test("repository preset exposes reviewed quantum MCPs with safe defaults", async () => {
   const snapshot = await readProjectSettings(process.cwd());
   const byName = new Map(snapshot.mcpServers.map((server) => [server.serverName, server]));
 
   assert.equal(byName.get("qiskit")?.enabled, true);
-  for (const [server, version, enabled] of [["pennylane_local","0.45.1",true],["deepquantum_local","4.5.0",true],["tensorcircuit_local","0.12.0",true],["mindquantum_local","0.12.0",true],["pytket_local","2.18.4",true],["ocean_local","0.12.22 / 1.8.0",true],["kaiwu_local","1.0.7",true],["pyquil_local","4.21.0",true],["spinqit_local","0.2.4",true],["qutrunk_local","0.2.2",true],["perceval_local","1.3.0",true],["iqm_local","35.0.3",true],["alicebob_local","1.3.0",true],["pulser_local","1.9.1",true],["qoolqit_local","1.4.0",false],["ionq_local","1.1.1",true],["superstaq_cloud","0.5.69",false]]) {
-    assert.equal(byName.get(server)?.packageVersion, version, server);
+  assert.equal(byName.get("ocean_local")?.packageVersion, "0.12.22 / 1.8.0");
+  assert.equal(byName.get("pulser_local")?.packageVersion, "1.9.1");
+  for (const [server, enabled] of [
+    ["pennylane_local", true], ["deepquantum_local", true], ["tensorcircuit_local", true],
+    ["mindquantum_local", true], ["pytket_local", true], ["ocean_local", true],
+    ["kaiwu_local", true], ["pyquil_local", true], ["spinqit_local", true],
+    ["qutrunk_local", true], ["perceval_local", true], ["iqm_local", true],
+    ["alicebob_local", true], ["pulser_local", true], ["qoolqit_local", false],
+    ["ionq_local", true], ["superstaq_cloud", false],
+  ]) {
+    assert.ok(byName.get(server)?.packageVersion, server);
     assert.equal(byName.get(server)?.enabled, enabled, server);
     assert.deepEqual(byName.get(server)?.requiredCredentialRefs, [], server);
     assert.deepEqual(byName.get(server)?.credentialRefs, server === "superstaq_cloud" ? ["SUPERSTAQ_API_KEY"] : [], server);

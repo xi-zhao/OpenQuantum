@@ -508,7 +508,7 @@ OpenQuantum 组合本地 MCP 桥接与直接接入的上游 MCP 服务。下表�
 | --- | --- | --- | --- |
 | [`pennylane_local`](../.agents/skills/pennylane-differentiable/mcp/server.mjs) · [pennylane](https://github.com/PennyLaneAI/pennylane) | 用户电路的概率、Pauli 期望值和参数梯度。 | 默认开启 | 显式准备独立环境；[版本与边界](integrations/VENDOR_SDKS.md) |
 | [`deepquantum_local`](../.agents/skills/deepquantum-differentiable/mcp/server.mjs) · [deepquantum](https://github.com/TuringQ/deepquantum) | 基于 PyTorch 的电路概率、期望值和参数梯度。 | 默认开启 | 显式准备独立环境；[版本与边界](integrations/VENDOR_SDKS.md) |
-| [`tensorcircuit_local`](../.agents/skills/tensorcircuit-differentiable/mcp/server.mjs) · [tensorcircuit](https://github.com/tencent-quantum-lab/tensorcircuit) | 张量网络电路的概率、期望值和参数梯度。 | 默认开启 | 显式准备独立环境；[版本与边界](integrations/VENDOR_SDKS.md) |
+| [`tensorcircuit_local`](../.agents/skills/tensorcircuit-differentiable/mcp/server.mjs) · [TensorCircuit-NG](https://github.com/tensorcircuit/tensorcircuit-ng) | 张量网络电路的概率、期望值和参数梯度。 | 默认开启 | 显式准备独立环境；[版本与边界](integrations/VENDOR_SDKS.md) |
 | [`mindquantum_local`](../.agents/skills/mindquantum-differentiable/mcp/server.mjs) · [mindquantum](https://gitee.com/mindspore/mindquantum) | 本地电路模拟、Pauli 期望值和参数梯度。 | 默认开启 | 显式准备独立环境；[版本与边界](integrations/VENDOR_SDKS.md) |
 | [`pytket_local`](../.agents/skills/pytket-compilation/mcp/server.mjs) · [pytket](https://github.com/Quantinuum/tket) | 本地电路优化、门数比较与 OpenQASM 导出。 | 默认开启 | 显式准备独立环境；[版本与边界](integrations/VENDOR_SDKS.md) |
 | [`ocean_local`](../.agents/skills/ocean-optimization/mcp/server.mjs) · [dimod + dwave-samplers](https://github.com/dwavesystems/dwave-ocean-sdk) | 二值二次模型的本地穷举或模拟退火；不是量子退火硬件执行。 | 默认开启 | 显式准备独立环境；[版本与边界](integrations/VENDOR_SDKS.md) |

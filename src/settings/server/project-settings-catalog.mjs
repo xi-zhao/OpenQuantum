@@ -339,12 +339,12 @@ const MCP_CATALOG = Object.freeze({
     "setup": null
   }),
   tensorcircuit_local: Object.freeze({
-    "displayName": "TensorCircuit 可微分电路",
+    "displayName": "TensorCircuit-NG 可微分电路",
     "description": "张量网络电路的概率、期望值和参数梯度。",
-    "provider": "腾讯量子实验室 / OpenQuantum",
-    "sourceUrl": "https://github.com/tencent-quantum-lab/tensorcircuit",
-    "packageName": "tensorcircuit",
-    "packageVersion": "0.12.0",
+    "provider": "TensorCircuit / OpenQuantum",
+    "sourceUrl": "https://github.com/tensorcircuit/tensorcircuit-ng",
+    "packageName": "tensorcircuit-ng",
+    "packageVersion": "1.10.0",
     "setup": null
   }),
   mindquantum_local: Object.freeze({
@@ -515,7 +515,7 @@ const MCP_CATALOG = Object.freeze({
     provider: "graphix / OpenQuantum",
     sourceUrl: "https://github.com/TeamGraphix/graphix",
     packageName: "graphix",
-    packageVersion: "0.3.5",
+    packageVersion: "0.4.1",
     setup: null,
   }),
   symmer_local: Object.freeze({
@@ -552,7 +552,7 @@ const MCP_CATALOG = Object.freeze({
     provider: "Compact / OpenQuantum",
     sourceUrl: "https://github.com/Q-PROOF/Compact",
     packageName: "compactq",
-    packageVersion: "0.2.1",
+    packageVersion: "0.2.3",
     setup: null,
   }),
   openqarp_local: Object.freeze({
