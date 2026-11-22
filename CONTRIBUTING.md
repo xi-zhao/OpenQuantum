@@ -3,6 +3,7 @@
 OpenQuantum 首先维护通用量子科研插件，再维护 DSH、Codex 等 Harness 的适配，最后维护统一品牌与界面。
 贡献领域方法和计算时，优先修改共享 Skill、Tool implementation、MCP Server 或科学合同；宿主注册与 UI 改动
 留在对应 Adapter。共享核心不导入 DSH、Electron 或宿主 Session 对象；已有合同和实现只维护一份。
+变更准备合入或发布时，按[跨宿主变更与发版回归](AGENTS.md#跨宿主变更与发版回归)验证共享合同与宿主隔离。
 
 第一次参与项目前，先读[文档与架构入口](docs/README.md)。它用五分钟说明核心模型、运行链和权威文件；
 只有需要设计新 Interface 或改变依赖方向时，再进入[扩展对象模型](docs/architecture/EXTENSION_MODEL.md)和

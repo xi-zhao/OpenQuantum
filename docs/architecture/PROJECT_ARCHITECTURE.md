@@ -21,6 +21,8 @@
 - **品牌与 UI**复用自有页面，通过宿主扩展控制相应品牌元素；Desktop 是带品牌的 DSH 交付形态。
 - **打包与工程交付**组合发行内容、检查和文档；CI、Release、实际安装与科学验收分别验证。
 
+修改能力目录、Tool 合同或宿主适配时，遵循[跨宿主变更与发版回归](../../AGENTS.md#跨宿主变更与发版回归)。
+
 ## 任务执行与科学验收
 
 ![OpenQuantum 任务执行与科学验收：先发现、按需准备和执行，再由已接通能力的物化证据、Validator、Profile 与中央 Builder 形成验收报告](images/task-and-acceptance.png)
