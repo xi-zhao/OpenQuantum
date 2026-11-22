@@ -6,14 +6,43 @@ import test from "node:test";
 import { promisify } from "node:util";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
+import { connectExternal } from "../runtime/chatgpt/external/client.mjs";
+import { externalMcp, externalContract } from "../runtime/chatgpt/external/catalog.mjs";
 
 const run = promisify(execFile);
 const enabled = process.env.OPENQUANTUM_REAL_UPSTREAM_UPDATES === "1";
 const root = process.cwd();
 const evidence = path.join(root, ".openquantum/upstream-updates-evidence");
+for (const id of ["qiskit_ibm_runtime", "qiskit_gym", "quantum_hardware"]) {
+  test(`Runtime patch preserves ${id} MCP contract`, { skip: process.env.OPENQUANTUM_RUNTIME_MCP_LIVE !== "1", timeout: 120000 }, async () => {
+    const session = await connectExternal(root, externalMcp(id), {
+      OPENQUANTUM_PYTHON_ENV_ROOT: process.env.OPENQUANTUM_PYTHON_ENV_ROOT,
+    });
+    try {
+      const expected = await externalContract(root, id);
+      const actual = await session.client.listTools({}, { timeout: 90000 });
+      assert.equal(actual.nextCursor, undefined, "review every tool in this fixed surface");
+      assert.deepEqual(actual.tools.map(tool => tool.name).sort(), expected.tools.map(tool => tool.name).sort());
+      for (const before of expected.tools) {
+        const after = actual.tools.find(tool => tool.name === before.name);
+        for (const field of ["description", "inputSchema", "outputSchema", "annotations"]) {
+          assert.deepEqual(after[field], before[field], `${id}.${before.name}.${field}`);
+        }
+      }
+      await mkdir(evidence, { recursive: true });
+      await writeFile(path.join(evidence, `${id}-runtime-patch.json`), JSON.stringify({
+        server: id, toolsChecked: actual.tools.length, matchesFixedContract: true,
+        executionCalls: 0, scientificValidation: "not_evaluated",
+      }, null, 2));
+    } finally {
+      await session.close();
+    }
+  });
+}
 for (const [capability, script, count] of [
   ["compact-optimization", "compiler_regressions.py", 14],
   ["clifft-sampling", "clifft_regressions.py", 2],
+  ["qcut-knitting", "runtime_rzz_regressions.py", 48],
 ]) {
   test(`upstream update regression: ${script}`, { skip: !enabled, timeout: 240000 }, async () => {
     const python = path.join(root, ".openquantum/python-envs", capability, process.platform === "win32" ? "Scripts/python.exe" : "bin/python");

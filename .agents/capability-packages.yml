@@ -2444,6 +2444,9 @@ packages:
   - id: chromobius-decoding
     level: L0
 
+  - id: mwpf-decoding
+    level: L0
+
   - id: tesseract-decoding
     level: L0
 
@@ -2520,4 +2523,7 @@ packages:
     level: L0
 
   - id: rcmps-field-theory
+    level: L0
+
+  - id: ppvm-simulation
     level: L0

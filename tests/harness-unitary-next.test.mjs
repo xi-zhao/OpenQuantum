@@ -18,7 +18,12 @@ const scaledInputs = {
   "symmer-tapering": { numQubits: 65, terms: [{ pauli: "I".repeat(64) + "Z", coefficient: 0.5 }], symmetries: [{ pauli: "Z" + "I".repeat(64), sector: -1 }], referenceMode: "skip" },
   "paulie-algebra": { numQubits: 65, generators: ["I".repeat(64) + "X", "I".repeat(64) + "Z"], closureMode: "skip", referenceMode: "skip" },
 };
-const CASES = [...UNITARY_NEXT_TOOLS.map(c => scaled ? { ...c, input: scaledInputs[c.id] } : c),
+// Upgrade checks may prepare one SDK without installing unrelated environments.
+// The default remains the complete four-SDK suite.
+const selectedIds = process.env.OPENQUANTUM_UNITARY_NEXT_IDS?.split(",").filter(Boolean);
+if (selectedIds && (!selectedIds.length || selectedIds.some(id => !UNITARY_NEXT_TOOLS.some(c => c.id === id)))) throw new Error("Unknown unitary-next SDK selection");
+const selectedTools = selectedIds ? UNITARY_NEXT_TOOLS.filter(c => selectedIds.includes(c.id)) : UNITARY_NEXT_TOOLS;
+const CASES = [...selectedTools.map(c => scaled ? { ...c, input: scaledInputs[c.id] } : c),
   { id: "pyzx-invalid", server: "pyzx_local", tool: "optimize_pyzx_circuit", input: { gates: [] }, expectError: true },
 ];
 const toolNames = CASES.map(c => c.server ? `mcp__${c.server}__${c.tool}` : c.tool);
@@ -35,7 +40,7 @@ async function waitFor(probe, description, timeoutMs = 45000) {
   throw new Error(`${description}: ${last ?? "timed out"}`);
 }
 
-test("Harness discovers four ecosystem Skills, runs four real Tools and persists success and failure results", { skip: !enabled, timeout: 600000 }, async (t) => {
+test("Harness discovers ecosystem Skills, runs selected real Tools and persists success and failure results", { skip: !enabled, timeout: 600000 }, async (t) => {
   const root = process.cwd();
   const sandbox = await mkdtemp(path.join(tmpdir(), "oq-unitary-harness-"));
   const harnessHome = path.join(sandbox, "dsh");
@@ -45,9 +50,12 @@ test("Harness discovers four ecosystem Skills, runs four real Tools and persists
     const chunks = []; for await (const chunk of request) chunks.push(chunk);
     const body = JSON.parse(Buffer.concat(chunks).toString());
     sawModelToolResult ||= body.messages?.some((message) => message.role === "tool");
-    const initial = !dispatched;
-    dispatched = true;
-    const delta = initial ? { role: "assistant", tool_calls: CASES.map((c, index) => ({ index, id: `unitary-fixture-${index}`, type: "function", function: { name: toolNames[index], arguments: JSON.stringify(c.input) } })) } : { role: "assistant", content: "Four local ecosystem actions completed and one invalid circuit failed as expected; scientificValidation=not_evaluated." };
+    // Session-title requests can race the tool-bearing conversation request.
+    // They must not consume the one-shot tool dispatch fixture.
+    const hasRequestedTools = toolNames.every(name => body.tools?.some(tool => tool.function?.name === name));
+    const initial = hasRequestedTools && !dispatched;
+    if (initial) dispatched = true;
+    const delta = initial ? { role: "assistant", tool_calls: CASES.map((c, index) => ({ index, id: `unitary-fixture-${index}`, type: "function", function: { name: toolNames[index], arguments: JSON.stringify(c.input) } })) } : { role: "assistant", content: "Selected local ecosystem actions completed and one invalid circuit failed as expected; scientificValidation=not_evaluated." };
     response.writeHead(200, { "content-type": "text/event-stream" });
     for (const item of [
       { choices: [{ index: 0, delta, finish_reason: null }] },
@@ -85,7 +93,8 @@ test("Harness discovers four ecosystem Skills, runs four real Tools and persists
     assert.equal(result.ok, true, `${JSON.stringify(result)}\n${redactHarnessLaunchTokens(logs)}`);
     return result.value;
   }
-  await waitFor(() => rpc("llm.models"), "Harness startup");
+  try { await waitFor(() => rpc("llm.models"), "Harness startup"); }
+  catch (error) { throw new Error(`${error.message}\n${redactHarnessLaunchTokens(logs)}`, { cause: error }); }
   const sessionId = `session-unitary-${crypto.randomUUID()}`;
   await rpc("session.create", { sessionId, cwd: workspace, agentPreset: "openquantum" });
   const skillList = await rpc("skill.list", { sessionId });

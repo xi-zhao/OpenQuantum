@@ -1,0 +1,67 @@
+name: PPVM SDK
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    paths:
+      - '.agents/skills/ppvm-simulation/**'
+      - '.github/workflows/ppvm-sdk.yml'
+      - 'tests/fixtures/ppvm-*'
+      - 'tests/ppvm-*'
+  push:
+    branches: [main]
+    paths:
+      - '.agents/skills/ppvm-simulation/**'
+      - '.github/workflows/ppvm-sdk.yml'
+      - 'tests/fixtures/ppvm-*'
+      - 'tests/ppvm-*'
+
+jobs:
+  native-sdk:
+    runs-on: macos-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - uses: astral-sh/setup-uv@v7
+      - name: Select isolated task directories
+        run: |
+          echo "OPENQUANTUM_PYTHON_ENV_ROOT=$RUNNER_TEMP/ppvm-python" >> "$GITHUB_ENV"
+          echo "UV_CACHE_DIR=$RUNNER_TEMP/ppvm-uv-cache" >> "$GITHUB_ENV"
+          echo "OPENQUANTUM_CARGO_HOME=$RUNNER_TEMP/ppvm-cargo" >> "$GITHUB_ENV"
+          echo "OPENQUANTUM_SDK_CHECK_OUTPUT=$RUNNER_TEMP/ppvm-evidence" >> "$GITHUB_ENV"
+          echo "RAYON_NUM_THREADS=2" >> "$GITHUB_ENV"
+      - name: Explicit preparation of the frozen source environment
+        run: |
+          rustc --version
+          node scripts/setup-sdk.mjs ppvm-simulation
+          git diff --exit-code -- .agents/skills/ppvm-simulation/pyproject.toml .agents/skills/ppvm-simulation/uv.lock
+      - name: Offline native user program through the existing SDK interface
+        env:
+          OPENQUANTUM_ECOSYSTEM_CHECKS: '1'
+          OPENQUANTUM_SDK_IDS: ppvm-simulation
+        run: node --test tests/sdk-ecosystem-live.test.mjs
+      - name: Independent numerical references and failure cases
+        run: |
+          mkdir -p "$OPENQUANTUM_SDK_CHECK_OUTPUT"
+          sandbox-exec -p '(version 1) (allow default) (deny network*)' "$OPENQUANTUM_PYTHON_ENV_ROOT/ppvm-simulation/bin/python" -B tests/fixtures/ppvm-validation.py 2>&1 | tee "$OPENQUANTUM_SDK_CHECK_OUTPUT/numerical.log"
+      - name: Save execution evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: ppvm-sdk-evidence
+          path: |
+            .agents/skills/ppvm-simulation/pyproject.toml
+            .agents/skills/ppvm-simulation/uv.lock
+            ${{ runner.temp }}/ppvm-evidence
+          include-hidden-files: true
+          if-no-files-found: error

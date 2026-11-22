@@ -1,10 +1,22 @@
 # README 图片说明
 
+## 2026-11-02 README 动态横幅与实测卡片
+
+| 图片 | 内容与来源 |
+| --- | --- |
+| [动态横幅](readme/banner-motion.webp) | 12 秒无缝循环的 animated WebP（1200 × 600，15 fps，约 3 MB），由 `docs/communications/video/render.py hero` 从 `stage.html` 逐帧渲染。粒子、干涉条纹是程序生成的示意画面；文字中的两项提速与误差取自首页实测案例。 |
+| [静态横幅](readme/banner.webp) | 同一画面在 1.5 s 处的静帧，README 通过 `<picture>` 在系统开启「减少动态效果」时显示它。 |
+| [QuTiP 实测卡片](readme/case-qutip.webp) | 首页 QuTiP Wigner 案例面板，去掉可展开条件和链接（README 以文字给出）。数值与 Wigner 对照图来自首页，`tests/homepage.test.mjs` 核对其与固定实验数据一致。由 `scripts/render-readme-images.py` 渲染。 |
+| [PennyLane 实测卡片](readme/case-pennylane.webp) | 首页 PennyLane Pauli 对易子案例面板，处理方式同上。 |
+
+品牌标志由 README 顶部的 `<h1>` 给出，横幅里不重复。中文字体取决于渲染机器（2026-11-02 版本使用 Noto Sans CJK）。
+这些图只是已有内容的静态或动态呈现，不是新的测量或界面验收证据。宣传片的来源与边界见 [视频说明](../communications/video/README.md)。
+
 ## 2026-10-13 原版 Desktop 与分类设置
 
 | 图片 | 实际显示 |
 | --- | --- |
-| [Desktop 工作台](openquantum-desktop-20261013.jpg) | 原版 DSH Desktop 2.0.7 中的 OpenQuantum 品牌、新会话、量子学习通入口，以及添加模型的提示。作为当前 README 首图。 |
+| [Desktop 工作台](openquantum-desktop-20261013.jpg) | 原版 DSH Desktop 2.0.7 中的 OpenQuantum 品牌、新会话、量子学习通入口，以及添加模型的提示。README 在「从研究问题，走到计算与结果」一节与分类设置图并排展示。 |
 | [MCP 分类设置](openquantum-settings-categories-20261013.jpg) | 按用途折叠的 8 个分组、91 个连接，以及搜索、用途和启用状态筛选。 |
 
 两图直接取自 2026-10-13 的实际 macOS 原生客户端验证，尺寸均为 **2560 × 1680**，按原始字节保存，未裁剪、改字或合成。
