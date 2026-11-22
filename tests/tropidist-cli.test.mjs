@@ -35,6 +35,7 @@ test("tropidist produces a fresh logical witness or preserves its incomplete run
   }
   const matrix = await execute("matrix", []);
   assert.deepEqual([matrix.result.lowerBound, matrix.result.upperBound, matrix.result.checkedExact], [3, 3, true]);
+  assert.deepEqual(matrix.result.argv.slice(0, 5), ["--matrices", "H.mtx", "L.mtx", "--out", "distance.json"]);
   assert.deepEqual(matrix.raw.witness.toSorted((a, b) => a - b), [0, 1, 2]);
   await assert.rejects(execute("matrix", []), /fresh task directory/);
   const limited = await execute("limited", ["--kmax", "1"]);

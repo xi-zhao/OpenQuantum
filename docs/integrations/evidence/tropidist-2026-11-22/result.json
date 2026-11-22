@@ -1,0 +1,27 @@
+{
+  "inputSha256": {
+    "H.mtx": "442ef4d7c3bb1f8fa4b61755bed1a74b119d541cbfe7f8e5fa02928754701d75",
+    "L.mtx": "8e9598aa607f4d9e5bd6f525df8c1913fdc2caaea1f3f834c074e67786ae624c"
+  },
+  "argv": [
+    "--matrices",
+    "H.mtx",
+    "L.mtx",
+    "--out",
+    "distance.json",
+    "--threads",
+    "1",
+    "--time-limit",
+    "5",
+    "--config",
+    "dp=2,kmin=1,kmax=6"
+  ],
+  "wallSeconds": 18,
+  "scientificValidation": "not_evaluated",
+  "status": "exact",
+  "checkedExact": true,
+  "lowerBound": 3,
+  "upperBound": 3,
+  "raw": "tropidist-tkiafdfm/distance.json",
+  "rawSha256": "cde09df371345c396b878ba36c29afe7ce92cc09d9069d78b05e2c69583129ac"
+}

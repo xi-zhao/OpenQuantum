@@ -82,26 +82,26 @@ def main():
     matrices = None
     if args.circuit:
         inputs = {"circuit.stim": args.circuit.read_bytes()}
-        argv = [str(work / "circuit.stim")]
+        argv = ["circuit.stim"]
     else:
         h, l = (file.read_bytes() for file in args.matrices) if args.matrices else (DEFAULT_H, DEFAULT_L)
         matrices = (columns(h), columns(l))
         if len(matrices[0]) != len(matrices[1]):
             raise ValueError("H and L require the same number of columns")
         inputs = {"H.mtx": h, "L.mtx": l}
-        argv = ["--matrices", str(work / "H.mtx"), str(work / "L.mtx")]
+        argv = ["--matrices", "H.mtx", "L.mtx"]
     for name, data in inputs.items():
         (work / name).write_bytes(data)
     raw = work / "distance.json"
-    argv += ["--out", str(raw), "--threads", "1", "--time-limit", str(args.seconds),
+    argv += ["--out", raw.name, "--threads", "1", "--time-limit", str(args.seconds),
              "--config", f"dp=2,kmin=1,kmax={args.kmax}"]
     attempt = {"inputSha256": {k: hashlib.sha256(v).hexdigest() for k,v in inputs.items()},
                "argv": argv, "wallSeconds": args.wall_seconds, "scientificValidation": "not_evaluated"}
     (work / "attempt.json").write_text(json.dumps(attempt, indent=2))
-    env = {"PATH": os.devnull, "PYTHONNOUSERSITE": "1", "PYTHONDONTWRITEBYTECODE": "1",
+    env = {"PATH": os.devnull, "PYTHONPATH": str(payload), "PYTHONNOUSERSITE": "1", "PYTHONDONTWRITEBYTECODE": "1",
            "TMPDIR": str(work), "OPENBLAS_NUM_THREADS": "1", "OMP_NUM_THREADS": "1", "VECLIB_MAXIMUM_THREADS": "1"}
     with (work / "stdout.log").open("x") as out, (work / "stderr.log").open("x") as err:
-        proc = subprocess.Popen([sys.executable, "-B", "-m", "cdist", *argv], cwd=payload,
+        proc = subprocess.Popen([sys.executable, "-P", "-B", "-m", "cdist", *argv], cwd=work,
                                 env=env, stdout=out, stderr=err, start_new_session=True)
         try:
             proc.wait(timeout=args.wall_seconds)
