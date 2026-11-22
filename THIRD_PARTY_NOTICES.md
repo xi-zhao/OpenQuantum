@@ -141,7 +141,7 @@ installed environments, proprietary packages and NetSquid binaries are not redis
 | [Qibo / TII / INFN](https://github.com/qiboteam/qibo) | qibo==0.3.5 | Apache-2.0 |
 | [Eclipse / Fraunhofer](https://github.com/eclipse-qrisp/Qrisp) | qrisp==0.9.9 | EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0 |
 | [Aegiq](https://github.com/Aegiq/lightworks) | lightworks==2.3.5 | Apache-2.0 |
-| [Amazon](https://github.com/amazon-braket/amazon-braket-sdk-python) | amazon-braket-sdk==1.127.2 | Apache-2.0 |
+| [Amazon](https://github.com/amazon-braket/amazon-braket-sdk-python) | amazon-braket-sdk==1.128.1 | Apache-2.0 |
 | [QunaSys](https://github.com/QunaSys/quri-sdk) | quri-parts[qulacs]==0.27.0 | Apache-2.0 (QURI Parts); MIT (Qulacs) |
 | [Microsoft](https://github.com/microsoft/qdk) | qdk[qre]==1.32.3 | MIT |
 | [Google Quantum AI](https://github.com/quantumlib/Qualtran) | qualtran==0.7.0 | Apache-2.0 |

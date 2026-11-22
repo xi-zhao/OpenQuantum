@@ -9,6 +9,24 @@ deny_network()
 
 
 class CircuitScience(unittest.TestCase):
+    def test_cnot_noise_matches_both_gate_encodings(self):
+        from braket.circuits import Circuit, Gate, Noise
+        from braket.circuits.noise_model import GateCriteria, NoiseModel
+        from braket.devices import LocalSimulator
+
+        model = NoiseModel().add_noise(Noise.TwoQubitDepolarizing(0.15), GateCriteria(Gate.CNot))
+        simulator = LocalSimulator("braket_dm")
+        # From |11>, four of the fifteen nonidentity Pauli pairs reach each other bitstring.
+        expected = [0.04, 0.04, 0.04, 0.88]
+        for gate, circuit in [
+            ("CNot", Circuit().x(0).cnot(0, 1)),
+            ("controlled X", Circuit().x(0).x(1, control=0)),
+        ]:
+            with self.subTest(gate=gate):
+                noisy = model.apply(circuit).probability()
+                observed = simulator.run(noisy, shots=0).result().values[0]
+                np.testing.assert_allclose(observed, expected, rtol=0, atol=1e-12)
+
     def test_analytical_bit_order_rotations_and_random_circuits(self):
         evidence = []
         for value in circuit_cases():

@@ -73,6 +73,21 @@ jobs:
           node scripts/setup-sdk.mjs stgrape-control
           node --test tests/stgrape-control-live.test.mjs
 
+      - name: Check Braket's local simulator and controlled-gate noise
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          OPENQUANTUM_REAL_SDK_EXPANSION_CIRCUITS: '1'
+          AWS_EC2_METADATA_DISABLED: 'true'
+        run: |
+          if git diff --quiet "$BASE_SHA" HEAD -- .agents/skills/braket-simulation scripts/setup-paper-tools.mjs \
+            src/lib/{prepared-python.mjs,sdk_expansion_circuits.py} tests/sdk-expansion-circuits-live.test.mjs \
+            tests/fixtures/sdk_expansion_circuits_science.py .github/workflows/ci.yml; then exit 0; fi
+          python3 -m venv "$RUNNER_TEMP/braket-tools"
+          "$RUNNER_TEMP/braket-tools/bin/pip" install uv==0.11.1
+          export PATH="$RUNNER_TEMP/braket-tools/bin:$PATH"
+          node scripts/setup-paper-tools.mjs braket-simulation
+          node --test --test-name-pattern=braket-simulation tests/sdk-expansion-circuits-live.test.mjs
+
   desktop-source-install:
     name: Desktop source install (${{ matrix.os }})
     runs-on: ${{ matrix.os }}

@@ -200,7 +200,7 @@ const MCP_CATALOG = Object.freeze({
     "provider": "Amazon / OpenQuantum",
     "sourceUrl": "https://github.com/amazon-braket/amazon-braket-sdk-python",
     "packageName": "amazon-braket-sdk",
-    "packageVersion": "1.127.2",
+    "packageVersion": "1.128.1",
     "setup": null
   }),
   quri_parts_local: Object.freeze({
