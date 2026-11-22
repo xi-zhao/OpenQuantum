@@ -1,0 +1,186 @@
+{
+  "inputs": {
+    "model": "H0=0.55XX+0.23IX, Hc=0.5ZI+0.22IZ, noise=(width0*IZ,width1*YI)",
+    "initial": "00",
+    "target": "11",
+    "units": "rad/us and us",
+    "dt": 0.35,
+    "parameters": {
+      "method": "st-grape",
+      "coefficients": [
+        0.3,
+        -0.7,
+        1.1
+      ],
+      "widths": [
+        0.06,
+        0.04
+      ],
+      "order": 2,
+      "steps": 2,
+      "iterations": 3,
+      "evaluations": 16,
+      "seconds": 12,
+      "seed": 20261122
+    },
+    "initialAmplitudes": [
+      [
+        0.18,
+        -0.3,
+        0.38000000000000006,
+        0.44000000000000006
+      ]
+    ]
+  },
+  "inputSha256": "09eed5d9e8f18a897572e774fcc554567bfd2b10665b519692f08da9024bded8",
+  "lockSha256": "d08a411df4df25a5a6ac1eaad535bdcd17119cf4904fb4f7872a1db1c5a4783e",
+  "wheel": "sha256:a45119e0ebf8a66381112c42679bfda3ad424f73ae13c8996f5fb69baaf8ca64",
+  "programSha256": "b6b497e1c54461639d1ede8dfd6fcd534cb319eaef61449bc13f8fc11c3015c3",
+  "platform": "macOS-27.2-arm64-arm-64bit",
+  "python": "3.12.13",
+  "blas": {
+    "name": "accelerate",
+    "version": "unknown"
+  },
+  "versions": {
+    "stgrape": "1.0.0",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "qutip": "5.3.1"
+  },
+  "configuration": {
+    "algorithm": "st-grape",
+    "optimizer": {
+      "method": "L-BFGS-B",
+      "max_iterations": 3,
+      "max_function_evaluations": 16,
+      "effective_max_function_evaluations": 16,
+      "function_tolerance": 1e-14,
+      "gradient_tolerance": 1e-14,
+      "max_corrections": 20,
+      "max_control_amplitude": 3.0
+    },
+    "propagation": {
+      "representation": "dense",
+      "solver": {
+        "method": "dop853",
+        "implementation": "scipy.integrate.solve_ivp",
+        "preset": "reference-dop853",
+        "rtol": 1e-10,
+        "atol": 1e-12,
+        "first_step": null,
+        "max_step": "inf"
+      },
+      "normalize_output": false
+    },
+    "time_limit_seconds": 12,
+    "true_loss_safeguard": {
+      "check_interval": 1,
+      "increase_patience": 2,
+      "absolute_tolerance": 1e-08,
+      "relative_tolerance": 0.001,
+      "final_evaluation": true
+    },
+    "trotter_splitting": {
+      "initial_steps": 2,
+      "adaptive": false,
+      "maximum_steps": 2,
+      "error_criterion": "absolute-plus-relative",
+      "relative_tolerance": 0.15,
+      "absolute_tolerance": 2e-05
+    }
+  },
+  "optimizerWallSeconds": 0.015343584003858268,
+  "optimizerSuccess": false,
+  "termination": "STOP: TOTAL NO. OF ITERATIONS REACHED LIMIT",
+  "initialSdkLoss": 0.5681003550244852,
+  "initialReferenceLoss": 0.5683350778207432,
+  "controls": [
+    [
+      0.1752276957011177,
+      -0.38516276705018726,
+      0.14791036702645116,
+      0.32170968061804855
+    ]
+  ],
+  "optimizedCoefficients": [
+    [
+      0.29204615950186286,
+      -0.836635384751554,
+      0.8042742015451213
+    ]
+  ],
+  "objectiveHistory": [
+    0.5718551942129606,
+    0.5695236653785076,
+    0.569293108869819
+  ],
+  "exactCheckIterations": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "splittingHistory": [
+    2,
+    2,
+    2
+  ],
+  "objective": 0.569293108869819,
+  "odeObjective": 0.569467430076786,
+  "finalReferenceLoss": 0.5653557706973997,
+  "gaussianDiagnostics": {
+    "p1": 0.09050832365213639,
+    "p1_squared": 0.00819175665031987,
+    "hybrid_p1_base": 0.00819175665031987,
+    "p2": 0.008163449949203382,
+    "evaluated_order": 2,
+    "rhs_evaluations": 128,
+    "reference": "exact-ode-block-sparse"
+  },
+  "heldoutOffsets": [
+    [
+      -0.11482065725950988,
+      1.5493252880289283
+    ],
+    [
+      0.9686827894991359,
+      0.22280340225967704
+    ],
+    [
+      -1.4186420026467506,
+      -1.9127861393805554
+    ],
+    [
+      1.1866634035161303,
+      0.8245272538362037
+    ],
+    [
+      -1.9947150770297675,
+      0.6253496382269269
+    ],
+    [
+      -2.3879145601607115,
+      0.9974755934860466
+    ],
+    [
+      0.7027591352758916,
+      0.9655501430723202
+    ],
+    [
+      -0.4426534207288612,
+      0.6904698982874821
+    ]
+  ],
+  "heldoutLosses": [
+    0.5332940725091945,
+    0.561542435816501,
+    0.6085441464582787,
+    0.5495120468433544,
+    0.5570089865975129,
+    0.5513908389366333,
+    0.5456471573547118,
+    0.5511845082453097
+  ],
+  "scientificValidation": "not_evaluated"
+}

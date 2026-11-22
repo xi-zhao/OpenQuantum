@@ -60,7 +60,7 @@ const groups = [
     fatqat-workbench qmclaw-workbench qdmi-device pasqal-experiments ionq-programs
     qctrl-workbench qua-programs laboneq-control qblox-scheduling qililab-control
     aqt-workbench oqc-cloud quantuminspire-cloud
-    pygsti-characterization arc-rydberg josephson-circuits quantumcontrol-julia
+    pygsti-characterization arc-rydberg josephson-circuits quantumcontrol-julia stgrape-control
   `],
   ["information", "量子信息与网络", `
     quantum-information-audit randomized-measurements paulie-algebra quantum-qfi

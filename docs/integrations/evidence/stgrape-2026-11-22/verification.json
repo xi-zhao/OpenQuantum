@@ -1,0 +1,17 @@
+{
+  "id": "stgrape-control",
+  "dependencyLockSha256": "d08a411df4df25a5a6ac1eaad535bdcd17119cf4904fb4f7872a1db1c5a4783e",
+  "sourceSha256": "b6b497e1c54461639d1ede8dfd6fcd534cb319eaef61449bc13f8fc11c3015c3",
+  "networkIsolation": "macOS sandbox-exec deny network*",
+  "scientificValidation": "not_evaluated",
+  "status": "passed",
+  "files": {
+    "attempt.json": "07ea0f95b2a4fdc74de6e2783ef85d11a1bb8c75d90f5df74e33243d85cfc3e2",
+    "program.py": "b6b497e1c54461639d1ede8dfd6fcd534cb319eaef61449bc13f8fc11c3015c3",
+    "result.json": "ef65ae6114b381d33f8451568eb12d2ce7b636df5dc7305e7d02cfae2abbf90c",
+    "runner.py": "4d8e55212145f22f02d8198f4582194f9aa937013038af3c543a95c6fa77e4b9",
+    "stderr.log": "cace1071573ef725e762e8856427937617c8c67e5d0784c45c0e854e56a803a8",
+    "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "versions.json": "426f96b2255ad03a4bcd10fdde31079be21c7f4a9c883a548da212030103e5f7"
+  }
+}
