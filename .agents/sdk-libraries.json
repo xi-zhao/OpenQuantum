@@ -570,6 +570,24 @@
       ]
     },
     {
+      "id": "mwpf-decoding",
+      "title": "MWPF",
+      "language": "python",
+      "modules": [
+        "mwpf",
+        "stim",
+        "sinter",
+        "numpy"
+      ],
+      "group": "qec",
+      "workflow": "用户自定义加权超图、syndrome 与权重界，以及 Stim/Sinter 逻辑 observable 译码",
+      "conditions": [
+        "固定 MWPF 0.2.18；Sinter 必须显式 PanicAction.RAISE，有限 cluster 预算可回退 UF，float64 权重界不是形式化证明。一般超图求解无最坏耗时保证；使用宿主进程预算。"
+      ],
+      "nativeOnly": true,
+      "pythonVersion": "3.12"
+    },
+    {
       "id": "myqlm-simulation",
       "title": "myQLM",
       "language": "python",
