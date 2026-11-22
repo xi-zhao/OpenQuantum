@@ -7,6 +7,30 @@ import test from "node:test";
 import { prepareSdkSource } from "../src/lib/sdk-source.mjs";
 import { verifySdkSourceSnapshot } from "../src/lib/sdk-source-record.mjs";
 
+test("a reviewed source selection excludes paper data and still detects an extra input", async t => {
+  const directory = await fs.mkdtemp(path.join(os.tmpdir(), "oq source selection "));
+  t.after(() => fs.rm(directory, { recursive: true, force: true }));
+  const git = args => execFileSync("git", args, { cwd: directory, encoding: "utf8", stdio: "pipe" }).trim();
+  const repository = "https://github.com/fixture/selected.git";
+  git(["init"]);
+  git(["remote", "add", "origin", repository]);
+  await fs.mkdir(path.join(directory, "lib"));
+  await fs.writeFile(path.join(directory, "lib/program.py"), "pass\n");
+  await fs.writeFile(path.join(directory, "paper.csv"), "historical output\n");
+  git(["add", "."]);
+  git(["-c", "user.name=Fixture", "-c", "user.email=fixture@example.invalid", "commit", "-m", "fixture"]);
+  const revision = git(["rev-parse", "HEAD"]);
+  git(["sparse-checkout", "set", "--no-cone", "/lib/"]);
+  const selected = { repository, revision, include: ["lib"] };
+  const record = await prepareSdkSource(directory, selected);
+  assert.deepEqual(Object.keys(record.files), ["lib/program.py"]);
+  assert.ok(await verifySdkSourceSnapshot(directory, record));
+  assert.equal(await fs.stat(path.join(directory, "paper.csv")).catch(() => null), null);
+  await fs.writeFile(path.join(directory, "lib/extra.py"), "pass\n");
+  await assert.rejects(prepareSdkSource(directory, selected), /Unrecorded/);
+  assert.equal(await verifySdkSourceSnapshot(directory, record), false);
+});
+
 test("source preparation preserves changes and records internal generated-header links", async t => {
   const parent = await fs.mkdtemp(path.join(os.tmpdir(), "oq source with spaces "));
   t.after(() => fs.rm(parent, { recursive: true, force: true }));

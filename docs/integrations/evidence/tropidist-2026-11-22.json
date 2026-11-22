@@ -1,0 +1,41 @@
+{
+  "date": "2026-11-22",
+  "receipt": {
+    "id": "tropidist-distance",
+    "language": "python",
+    "status": "passed_scoped_engineering",
+    "scientificValidation": "not_evaluated",
+    "sourcePath": ".agents/skills/tropidist-distance/references/native-example.py",
+    "sourceSha256": "7016fe83c20f71f6ebc449d5d062c1e77fa12ddfcc5b48b57a8b4e8e6cae140e",
+    "dependencyLockPath": ".agents/skills/tropidist-distance/uv.lock",
+    "dependencyLockSha256": "7fd0162722e8108b2790a0f06b77af08de21c75d4f5c21bcee539b359c695cb0",
+    "durableEvidenceDirectory": "docs/integrations/evidence/tropidist-2026-11-22",
+    "verificationSha256": "ef2be9a910ddec99b88eb2b8a13c2fa8e5a866c179c512794563797cfc38db31",
+    "artifacts": {
+      "attempt.json": "f36ff105de26000f0ee2454fd73a565afe1da627da2d7bd2886404e07cc8bef8",
+      "program.py": "7016fe83c20f71f6ebc449d5d062c1e77fa12ddfcc5b48b57a8b4e8e6cae140e",
+      "result.json": "dfa8ea682929ad01724b183dd6344092cbd8bbbe6bd20ad13a320c218496e34d",
+      "runner.py": "4d8e55212145f22f02d8198f4582194f9aa937013038af3c543a95c6fa77e4b9",
+      "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "versions.json": "e289a4eb3edd57124ef437be2fbe49a797e9ceb27803459eb184b75f003a7780"
+    }
+  },
+  "scientificValidation": "not_evaluated",
+  "upstream": {
+    "repository": "Fanerst/tropidist",
+    "revision": "b03ec2d4077f287f89f97b5c2c16ce5ce17c2c58"
+  },
+  "independentStimEvidence": "docs/integrations/evidence/tropidist-2026-11-21/reference.json",
+  "numericalEvidence": {},
+  "validationSources": [
+    {
+      "path": "tests/tropidist-cli.test.mjs",
+      "sha256": "a72b9d78f8e4c088b321fd67e1947b7a229799c52f10de2225e1c595ece0ad54"
+    },
+    {
+      "path": "tests/tropidist-build.test.mjs",
+      "sha256": "96f8bcfd91c0715f2ab04682705740ee578bbec5f566eaf96a123ea214fc0703"
+    }
+  ]
+}

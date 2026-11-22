@@ -234,3 +234,7 @@ MWPF 0.2.18 为 MIT，固定上游提交 `e50f72e2f389950db50bce075163a4e4022c9d
 保留 MWPF 以及 wheel 内 HiGHS、heapz、slp 等组件的许可；依赖 Stim/Sinter（Apache-2.0）、
 NumPy/SciPy（BSD-3-Clause）、Matplotlib 等完整来源与版本以 `mwpf-decoding/uv.lock` 和安装包元数据为准。
 原生 API 可用性、浮点权重界与科研验收分别验证。
+
+## tropidist
+
+显式准备采用 Fanerst/tropidist 固定提交 `b03ec2d4077f287f89f97b5c2c16ce5ce17c2c58` 的代码，保留上游 MIT 许可和第三方电路的 Apache-2.0 来源说明。论文结果和电路集合均不随包分发。Python 依赖保留各自许可。[MIT 许可](https://github.com/Fanerst/tropidist/blob/b03ec2d4077f287f89f97b5c2c16ce5ce17c2c58/LICENSE) · [电路来源](https://github.com/Fanerst/tropidist/blob/b03ec2d4077f287f89f97b5c2c16ce5ce17c2c58/circuits/NOTICE.md)
