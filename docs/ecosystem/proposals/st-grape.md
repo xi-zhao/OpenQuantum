@@ -1,9 +1,9 @@
-# ST-GRAPE：多误差源鲁棒脉冲优化候选提案
+# ST-GRAPE：多误差源鲁棒脉冲优化接入与验证
 
 - 调研日期：2026-11-08（Asia/Shanghai）；OpenQuantum 基线 `0da563fa87c6592a8923d2eb98eea80f484d2151`。
 - 官方仓库：[Fanyd271/ST-GRAPE](https://github.com/Fanyd271/ST-GRAPE)；稳定发布 [v1.0.0](https://github.com/Fanyd271/ST-GRAPE/releases/tag/v1.0.0)，发布时间 2026-11-07 12:04（北京时间）。
 - 固定源码：[`5f0d75dd250649b0a8ff629b104a4fc30c9b6c5b`](https://github.com/Fanyd271/ST-GRAPE/tree/5f0d75dd250649b0a8ff629b104a4fc30c9b6c5b)；annotated tag 对象为 `9108e1d41ad0b13d99ed3e11936b171f606f07cd`。
-- 状态：**仅候选规格，尚未接入、安装或运行**。由“候选接入”任务沿用同一分支与 PR 续办；用户可随时关闭或要求停止。
+- 11 月 8 日候选规格与一手资料保留如下。11 月 22 日在同一 PR 完成固定版本的 SDK 接入与可复核的小规模对照，实测范围见文末。
 
 ## 用户任务与增量价值
 
@@ -34,7 +34,7 @@ OpenQuantum 已有 [QuantumControl.jl](../../../.agents/skills/quantumcontrol-ju
 [CI 配置](https://github.com/Fanyd271/ST-GRAPE/blob/5f0d75dd250649b0a8ff629b104a4fc30c9b6c5b/.github/workflows/ci.yml)
 覆盖 Python 3.12 的 Ubuntu/Windows；固定提交的 [上游运行](https://github.com/Fanyd271/ST-GRAPE/actions/runs/42336720908)
 已成功。[verification.json](https://github.com/Fanyd271/ST-GRAPE/blob/5f0d75dd250649b0a8ff629b104a4fc30c9b6c5b/docs/verification.json)
-另外记录作者在 macOS arm64 的 121 项测试。以上均是上游证据，**本轮没有复现**，不等于 OpenQuantum 宿主验收。
+另外记录作者在 macOS arm64 的 121 项测试。以上均是上游证据，**候选调研时没有复现**，不等于 OpenQuantum 宿主验收。
 
 接入必须保留以下限制：
 
@@ -50,7 +50,7 @@ OpenQuantum 已有 [QuantumControl.jl](../../../.agents/skills/quantumcontrol-ju
    初态/目标归一化、门或态保真度定义，校验维数、有限值与时间网格。
 5. ST 路径需要满足公开接口要求的 `control_groups`。
    [workflow](https://github.com/Fanyd271/ST-GRAPE/blob/5f0d75dd250649b0a8ff629b104a4fc30c9b6c5b/src/stgrape/workflow.py)
-   检查通道覆盖、重复和变换基下的对角形式；不能对任意非对易控制项随意声称分组成立。
+   检查控制通道并比对变换后的算符。11 月 22 日的反例表明，v1.0.0 会接受某些非对角输入。接入示例在调用前额外核对酉性、实对角谱和各通道覆盖。
 6. [优化选项](https://github.com/Fanyd271/ST-GRAPE/blob/5f0d75dd250649b0a8ff629b104a4fc30c9b6c5b/src/stgrape/optimizers/options.py)
    默认没有时间上限，迭代上限很大。示例必须显式限制时间、迭代、求值和规模；
    宿主外层超时覆盖整个调用，包括单次线性代数与最终参考计算。
@@ -82,13 +82,13 @@ OpenQuantum 已有 [QuantumControl.jl](../../../.agents/skills/quantumcontrol-ju
   [paths.py](https://github.com/Fanyd271/ST-GRAPE/blob/5f0d75dd250649b0a8ff629b104a4fc30c9b6c5b/src/stgrape/paths.py)
   允许没有归档时使用独立输出目录；数据复现入口缺归档则明确 unavailable。
   使用新任务目录，不覆盖已有结果、不向来源或上游 `data/` 写入。执行阶段不下载、不安装。
-- **交接顺序**：#79 MWPF 已实现中，#80 tropidist 先于本提案；实现时先复核它们的共享清单写入，
+- **11 月 8 日交接**：当时 #79 MWPF 正在实现，#80 tropidist 先于本提案；当时要求先复核它们的共享清单写入，
   并复核 #77 README 与 #75 环境锁的实际差异。纯提案路径不重叠，本轮不修改这些 PR。
 
 预期维护成本**低到中等**：代码体积小且已有正式版本，但首次公开发行、数值方法和依赖精度仍需持续回归。
 如果必须维护私有算法补丁、重写通用执行层或无法给出独立参考，就保留 Draft/观察，不扩大范围。
 
-## 接入验收计划（尚未执行）
+## 11 月 8 日拟定的接入验收条件
 
 | 入口/用例 | 必须验证的内容 |
 | --- | --- |
@@ -114,7 +114,7 @@ OpenQuantum 已有 [QuantumControl.jl](../../../.agents/skills/quantumcontrol-ju
 首选 [官方 code-only wheel](https://github.com/Fanyd271/ST-GRAPE/releases/download/v1.0.0/stgrape-1.0.0-py3-none-any.whl)
 大小 181,212 bytes，release 元数据 SHA-256 为
 `a45119e0ebf8a66381112c42679bfda3ad424f73ae13c8996f5fb69baaf8ca64`。
-本轮核对元数据，未下载或验证发行包内部字节；接入准备必须实际校验该摘要。
+候选调研核对发行元数据。接入时实际读取 wheel 字节，所得 SHA-256 与该字段及依赖锁一致。
 完整源码/数据归档约 41 MB，不是默认所需；未据此声称存在 PyPI 发行。
 
 [pyproject.toml](https://github.com/Fanyd271/ST-GRAPE/blob/5f0d75dd250649b0a8ff629b104a4fc30c9b6c5b/pyproject.toml)
@@ -125,3 +125,21 @@ OpenQuantum 已有 [QuantumControl.jl](../../../.agents/skills/quantumcontrol-ju
 增广块数随误差源数/阶数增长，Hilbert 空间随 qubit 数指数增长，目标门的传播列数也高于单态任务。
 默认采用小规模、有明确预算的 CPU 验证，不运行完整 stress 套件；大环境和临时产物按外置盘规则准备。
 发布后重点追踪公开 API、噪声/单位约定、默认精度、分裂误差、终止状态及依赖兼容，不能按版本号盲升。
+
+## 11 月 22 日接入实测
+
+本轮核对 OpenQuantum `main@8b99814df8b8e1f68b2ebb7302ff3d7d00dd6104` 的根 README、[长期方向](../../roadmap/VISION.md)、[架构入口](../../README.md)及 SDK 和能力目录。科研工作流侧重可复用的控制设计与可独立核对的数值输出。
+
+复用[原生 SDK 工作台](../../../.agents/skills/quantum-sdk-workbench/SKILL.md)与宿主代码工具。Python 3.12 的显式准备使用已核对摘要的官方 v1.0.0 代码 wheel、固定依赖和独立环境。新增一份领域指南和一个可编辑示例。与现有 QuantumControl.jl 的常规控制路径相比，这项能力把两个静态扰动源的一阶、二阶响应、分裂精度和未参与优化的脉冲评估放进同一次可记录的计算。[使用入口](../../../.agents/skills/stgrape-control/SKILL.md) · [根 README](../../../README.md)
+
+| 任务 | 参考与实测 |
+| --- | --- |
+| 单比特态与门 | Hamiltonian 为 X/2，实际脉冲面积为 π。在对角化 X 的基底上，解析态翻转及 X 门的损失均为零，SDK 测得绝对误差均低于 2×10⁻¹⁵。 |
+| 两比特非对易传播 | 从 00 到 11，4 段各 0.35 µs，H₀=0.55 XX+0.23 IX，Hc=0.5 ZI+0.22 IZ，角频率以 rad/µs 计。独立构造 NumPy 张量矩阵并逐段用 SciPy 指数相乘，初始脉冲损失为 0.5683350778207432。ST 分裂 1、2、4 子步的绝对误差为 9.3391×10⁻⁴、2.3472×10⁻⁴、5.8758×10⁻⁵。dense 和 block-sparse 的相应误差约 3.1×10⁻¹³。 |
+| 两个准静态噪声源 | 独立标准高斯变量分别乘以 0.06 IZ、0.04 YI。独立中心差分使用三个步长并计入二阶混合项及高斯四阶矩。SDK 返回 P₁=0.09047779435、P₂=0.008156638115，最细差分给出 0.09047779414 和 0.008156638119。 |
+| 控制基反例 | 对同一单比特 π 脉冲，把 X/2 错当作在计算基已经对角。解析态损失小于 10⁻²⁵，原生优化器却返回初始损失 1 并报告收敛。示例在调用前拒绝这个输入。直接编写原生代码时仍需要验证分组。 |
+| 有界优化 | 五条路径共用初始脉冲、控制幅度界 3、迭代上限 3、求值上限 16、内部 12 秒和外层进程截止。五次均达到迭代上限。用独立传播器评估最终脉冲，8 个留出高斯样本使用种子 20261122；样本量与运行规模仅覆盖此例。 |
+
+库所用 Taylor 增广传播与独立矩阵指数、有限差分的实现不同。它们共享明确给出的 Hamiltonian 和时间约定。结果支持这个小模型上的扰动响应与分裂误差核查；有色或相关噪声、硬件控制、尺寸提升、加速比和优化收敛均需要另外验证。当前结果保留 `scientificValidation=not_evaluated`。
+
+回归还覆盖非整数网格、目标维数错误、缺失或重复通道、非法输入、非有限参考、外层截止、旧结果保护和缺少可选数据归档。固定锁、输入摘要、BLAS、求解终止、实际脉冲、留出样本和工具链信息随样例输出保存。[独立数值回归](../../../tests/fixtures/stgrape-validation.py) · [版本化实测](../../integrations/evidence/stgrape-2026-11-22.json)

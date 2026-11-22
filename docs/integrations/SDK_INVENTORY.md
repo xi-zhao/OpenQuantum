@@ -2,7 +2,7 @@
 
 由 `node scripts/audit-sdk-integration.mjs` 从 capability policy、SDK 导航、项目 manifest 和依赖锁生成；用 `--check` 检查是否过期。
 
-本表覆盖 120 个 SDK/源码环境入口：108 个 Python（包含算法共享环境）、9 个 Julia、2 个原生源码或 ABI 入口、1 个 Lean 项目。原生 QDMI 另有 Python 桥接依赖项目。一个入口可包含多个库，同一个库也可能有多个隔离版本，不能把入口数量当成独立 SDK 数量。所有锁摘要与间接依赖版本可通过 `node scripts/sdk-access.mjs inventory` 读出。
+本表覆盖 121 个 SDK/源码环境入口：109 个 Python（包含算法共享环境）、9 个 Julia、2 个原生源码或 ABI 入口、1 个 Lean 项目。原生 QDMI 另有 Python 桥接依赖项目。一个入口可包含多个库，同一个库也可能有多个隔离版本，不能把入口数量当成独立 SDK 数量。所有锁摘要与间接依赖版本可通过 `node scripts/sdk-access.mjs inventory` 读出。
 
 **接入状态：原生路径与指南已提供；逐 API、可选依赖、平台与外部服务验证不由这张静态清单推断。** 环境是否准备需 `inspect`，实际执行证据见[完整接入记录](FULL_SDK_ACCESS.md)。
 
@@ -114,6 +114,7 @@
 | `sqd-chemistry` | Qiskit Addon SQD | python | qiskit-addon-sqd==0.13.1 | 用户 bitstrings、configuration recovery、投影子空间与费米子求解 | 按固定版本、已安装可选组件及目标平台核实 |
 | `squlearn-learning` | sQUlearn | python | squlearn==0.11.2 | 编码线路、observable、executor、量子核与 sklearn estimator | 明确本地 executor、编码参数、kernel regularization 和数据划分。账户、真实设备与外部服务保持独立授权；不自动选择云后端。 |
 | `staq-compilation` | STAQ / pystaq | python | pystaq @ git+https://github.com/softwareQinc/staq.git@a2acd39e60ed0e5f1978fa530df7e1e0c7cedf7a | OpenQASM AST、综合、线路变换、优化与映射 | 固定完整上游源码。语言版本、门集、物理/逻辑布局和全局相位分别保留；GMP 等可选原生组件以实际构建为准。 |
+| `stgrape-control` | ST-GRAPE | python | stgrape @ https://github.com/Fanyd271/ST-GRAPE/releases/download/v1.0.0/stgrape-1.0.0-py3-none-any.whl#sha256=a45119e0ebf8a66381112c42679bfda3ad424f73ae13c8996f5fb69baaf8ca64, numpy==2.5.3, scipy==1.18.1, qutip==5.3.1, matplotlib==3.11.2, pillow==12.3.0 | 固定时间网格的鲁棒脉冲优化、独立准静态高斯误差响应及分裂传播精度对照 | 为 ST 路径验证控制基与实对角谱。保留角频率单位、时间步、Taylor 阶数、独立误差宽度和预算终止原因。 |
 | `superstaq-compilation` | Qiskit Superstaq | python | qiskit-superstaq==0.5.69, qiskit==2.5.2 | 自定义电路、编译选项、targets、provider 与执行结果 | 本地程序构建与外部调用分开；账户、凭据、费用、设备操作和数据外发沿用宿主及用户授权。原生 SDK 访问不自动启用服务。 |
 | `symmer-tapering` | Symmer | python | symmer | PauliwordOp、投影、对称性、tapering 与子空间方法 | 按固定版本、已安装可选组件及目标平台核实 |
 | `tenpy-ground-state` | TeNPy | python | physics-tenpy==1.1.1 | 自定义 site、lattice、CouplingMPOModel、MPS、DMRG、TEBD 与保存恢复 | 按固定版本、已安装可选组件及目标平台核实 |

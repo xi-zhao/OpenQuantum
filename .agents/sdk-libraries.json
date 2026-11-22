@@ -1448,6 +1448,24 @@
       }
     },
     {
+      "id": "stgrape-control",
+      "title": "ST-GRAPE",
+      "language": "python",
+      "modules": [
+        "stgrape",
+        "qutip",
+        "numpy",
+        "scipy"
+      ],
+      "group": "physics",
+      "workflow": "固定时间网格的鲁棒脉冲优化、独立准静态高斯误差响应及分裂传播精度对照",
+      "conditions": [
+        "为 ST 路径验证控制基与实对角谱。保留角频率单位、时间步、Taylor 阶数、独立误差宽度和预算终止原因。"
+      ],
+      "nativeOnly": true,
+      "pythonVersion": "3.12"
+    },
+    {
       "id": "superstaq-compilation",
       "title": "Qiskit Superstaq",
       "language": "python",

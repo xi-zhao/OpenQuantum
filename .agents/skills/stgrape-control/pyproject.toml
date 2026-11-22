@@ -1,0 +1,15 @@
+[project]
+name = "openquantum-stgrape-control"
+version = "0.1.0"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+  "stgrape @ https://github.com/Fanyd271/ST-GRAPE/releases/download/v1.0.0/stgrape-1.0.0-py3-none-any.whl#sha256=a45119e0ebf8a66381112c42679bfda3ad424f73ae13c8996f5fb69baaf8ca64",
+  "numpy==2.5.3",
+  "scipy==1.18.1",
+  "qutip==5.3.1",
+  "matplotlib==3.11.2",
+  "pillow==12.3.0",
+]
+
+[tool.uv]
+package = false

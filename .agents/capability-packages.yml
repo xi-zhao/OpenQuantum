@@ -2495,6 +2495,9 @@ packages:
   - id: quantumcontrol-julia
     level: L0
 
+  - id: stgrape-control
+    level: L0
+
   - id: quantumclifford-julia
     level: L0
 

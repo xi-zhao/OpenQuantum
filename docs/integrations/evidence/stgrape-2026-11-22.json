@@ -1,0 +1,44 @@
+{
+  "date": "2026-11-22",
+  "receipt": {
+    "id": "stgrape-control",
+    "language": "python",
+    "status": "passed_scoped_engineering",
+    "scientificValidation": "not_evaluated",
+    "sourcePath": ".agents/skills/stgrape-control/references/native-example.py",
+    "sourceSha256": "b6b497e1c54461639d1ede8dfd6fcd534cb319eaef61449bc13f8fc11c3015c3",
+    "dependencyLockPath": ".agents/skills/stgrape-control/uv.lock",
+    "dependencyLockSha256": "d08a411df4df25a5a6ac1eaad535bdcd17119cf4904fb4f7872a1db1c5a4783e",
+    "durableEvidenceDirectory": "docs/integrations/evidence/stgrape-2026-11-22",
+    "verificationSha256": "d30edf60857069ca4e4ae4e8b0d4532672f4073fdd95979c9e54d6f83acec9f4",
+    "artifacts": {
+      "attempt.json": "07ea0f95b2a4fdc74de6e2783ef85d11a1bb8c75d90f5df74e33243d85cfc3e2",
+      "program.py": "b6b497e1c54461639d1ede8dfd6fcd534cb319eaef61449bc13f8fc11c3015c3",
+      "result.json": "ef65ae6114b381d33f8451568eb12d2ce7b636df5dc7305e7d02cfae2abbf90c",
+      "runner.py": "4d8e55212145f22f02d8198f4582194f9aa937013038af3c543a95c6fa77e4b9",
+      "stderr.log": "cace1071573ef725e762e8856427937617c8c67e5d0784c45c0e854e56a803a8",
+      "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "versions.json": "426f96b2255ad03a4bcd10fdde31079be21c7f4a9c883a548da212030103e5f7"
+    }
+  },
+  "scientificValidation": "not_evaluated",
+  "upstream": {
+    "repository": "Fanyd271/ST-GRAPE",
+    "tag": "v1.0.0",
+    "revision": "5f0d75dd250649b0a8ff629b104a4fc30c9b6c5b",
+    "wheelSha256": "a45119e0ebf8a66381112c42679bfda3ad424f73ae13c8996f5fb69baaf8ca64"
+  },
+  "numericalEvidence": {
+    "validation.json": "1aaef7724f779859fd01ae118b3aedfa2cae492789eb6778ef8e2b568a4022f7"
+  },
+  "validationSources": [
+    {
+      "path": "tests/fixtures/stgrape-validation.py",
+      "sha256": "d062a90cfd91f3802a7d486ae4c34c4d8398e828b80cad5878f4022754fd9f54"
+    },
+    {
+      "path": "tests/stgrape-control-live.test.mjs",
+      "sha256": "8a33569cdb7587624c4a21f16ba5261a3b3c706726bb47a9183ce8724584caae"
+    }
+  ]
+}

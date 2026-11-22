@@ -238,3 +238,7 @@ NumPy/SciPy（BSD-3-Clause）、Matplotlib 等完整来源与版本以 `mwpf-dec
 ## tropidist
 
 显式准备采用 Fanerst/tropidist 固定提交 `b03ec2d4077f287f89f97b5c2c16ce5ce17c2c58` 的代码，保留上游 MIT 许可和第三方电路的 Apache-2.0 来源说明。论文结果和电路集合均不随包分发。Python 依赖保留各自许可。[MIT 许可](https://github.com/Fanerst/tropidist/blob/b03ec2d4077f287f89f97b5c2c16ce5ce17c2c58/LICENSE) · [电路来源](https://github.com/Fanerst/tropidist/blob/b03ec2d4077f287f89f97b5c2c16ce5ce17c2c58/circuits/NOTICE.md)
+
+## ST-GRAPE
+
+v1.0.0 的代码及文档采用 MIT 许可，Python 锁固定官方 code-only wheel。可选科研数据按 CC BY 4.0 署名，默认准备仅获取代码与依赖。传递依赖保留各自许可。[代码许可](https://github.com/Fanyd271/ST-GRAPE/blob/5f0d75dd250649b0a8ff629b104a4fc30c9b6c5b/LICENSE) · [数据许可](https://github.com/Fanyd271/ST-GRAPE/blob/5f0d75dd250649b0a8ff629b104a4fc30c9b6c5b/data/LICENSE)

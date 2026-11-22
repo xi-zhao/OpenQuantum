@@ -60,6 +60,19 @@ jobs:
           node scripts/setup-sdk.mjs tropidist-distance
           node --test tests/tropidist-cli.test.mjs
 
+      - name: Check the prepared ST-GRAPE example on Linux
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          OPENQUANTUM_LIVE_STGRAPE: '1'
+        run: |
+          if git diff --quiet "$BASE_SHA" HEAD -- .agents/skills/stgrape-control .agents/sdk-libraries.json \
+            scripts/setup-{sdk,paper-tools}.mjs tests/{stgrape-control-live.test.mjs,fixtures/stgrape-validation.py} .github/workflows/ci.yml; then exit 0; fi
+          python3 -m venv "$RUNNER_TEMP/stgrape-tools"
+          "$RUNNER_TEMP/stgrape-tools/bin/pip" install uv==0.11.1
+          export PATH="$RUNNER_TEMP/stgrape-tools/bin:$PATH"
+          node scripts/setup-sdk.mjs stgrape-control
+          node --test tests/stgrape-control-live.test.mjs
+
   desktop-source-install:
     name: Desktop source install (${{ matrix.os }})
     runs-on: ${{ matrix.os }}

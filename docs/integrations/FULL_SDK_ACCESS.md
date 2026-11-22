@@ -159,3 +159,7 @@ node scripts/sdk-engineering-evidence.mjs .openquantum/sdk-checks/remaining \
 ## tropidist · 纠错距离与故障见证
 
 [tropidist-distance](../../.agents/skills/tropidist-distance/SKILL.md) 通过 SDK 工作台显式准备，使用两种宿主已有的代码工具。限已声明的故障模型，分别核对下界和上界见证。[固定版本与实测范围](../ecosystem/proposals/tropidist.md)
+
+## ST-GRAPE · 多误差源鲁棒脉冲控制
+
+[stgrape-control](../../.agents/skills/stgrape-control/SKILL.md) 通过 SDK 工作台显式准备，使用两种宿主已有的代码工具。限固定时间网格和噪声假设，记录预算终止及独立传播误差。[固定版本与实测范围](../ecosystem/proposals/st-grape.md)
