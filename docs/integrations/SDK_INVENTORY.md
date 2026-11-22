@@ -12,7 +12,7 @@
 | `aqt-workbench` | AQT Provider | python | qiskit-aqt-provider==1.15.0 | 本地与远程 provider、电路、设备模型与 job | 本地程序构建与外部调用分开；账户、凭据、费用、设备操作和数据外发沿用宿主及用户授权。原生 SDK 访问不自动启用服务。 |
 | `arc-rydberg` | ARC Rydberg | python | ARC-Alkali-Rydberg-Calculator==3.10.2 | 原子、能级、跃迁矩阵元、寿命、Stark 图与相互作用 | 记录原子物种、量子数、数据表、温度、截断与单位。能量 eV、矩阵元原子单位和 SI 的换算要按实际 API 核对。 |
 | `bloqade-analog` | Bloqade Analog | python | bloqade-analog==0.16.9, numpy==2.4.2 | 任意原子布局、波形、局部/全局驱动、程序构建与模拟 | 按固定版本、已安装可选组件及目标平台核实 |
-| `braket-simulation` | Amazon Braket | python | amazon-braket-sdk==1.127.2 | 电路、模拟器、AHS、噪声、设备、task/batch 与参数化程序 | 本地程序构建与外部调用分开；账户、凭据、费用、设备操作和数据外发沿用宿主及用户授权。原生 SDK 访问不自动启用服务。 |
+| `braket-simulation` | Amazon Braket | python | amazon-braket-sdk==1.128.1 | 电路、模拟器、AHS、噪声、设备、task/batch 与参数化程序 | 本地程序构建与外部调用分开；账户、凭据、费用、设备操作和数据外发沿用宿主及用户授权。原生 SDK 访问不自动启用服务。 |
 | `catalyst-compilation` | PennyLane Catalyst | python | pennylane-catalyst==0.15.0 | qjit、混合程序、QNode、控制流、编译配置与梯度 | 固定兼容的 PennyLane/JAX/编译栈。区分首次编译与后续执行耗时，缓存与静态参数进入记录；experimental API 不承诺跨版本兼容。 |
 | `chromobius-decoding` | Chromobius | python | chromobius==1.1.1, stim==1.16.0, numpy==2.5.3 | 带颜色和基标注的 Stim DEM、bit-packed detector 样本与逻辑 observable 解码 | 固定 Chromobius 1.1.1；DEM 必须满足颜色/基坐标及上游可解码条件。Möbius 解码为近似方法；小例回归不代表阈值、实时延迟或科学验收。 |
 | `classiq-synthesis` | Classiq | python | httpx[socks]==0.28.1, classiq==1.29.1 | Qmod、自定义模型、综合约束、执行与结果接口 | 本地程序构建与外部调用分开；账户、凭据、费用、设备操作和数据外发沿用宿主及用户授权。原生 SDK 访问不自动启用服务。 |
