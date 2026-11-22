@@ -2,7 +2,7 @@
 
 由 `node scripts/audit-sdk-integration.mjs` 从 capability policy、SDK 导航、项目 manifest 和依赖锁生成；用 `--check` 检查是否过期。
 
-本表覆盖 119 个 SDK/源码环境入口：107 个 Python（包含算法共享环境）、9 个 Julia、2 个原生源码或 ABI 入口、1 个 Lean 项目。原生 QDMI 另有 Python 桥接依赖项目。一个入口可包含多个库，同一个库也可能有多个隔离版本，不能把入口数量当成独立 SDK 数量。所有锁摘要与间接依赖版本可通过 `node scripts/sdk-access.mjs inventory` 读出。
+本表覆盖 120 个 SDK/源码环境入口：108 个 Python（包含算法共享环境）、9 个 Julia、2 个原生源码或 ABI 入口、1 个 Lean 项目。原生 QDMI 另有 Python 桥接依赖项目。一个入口可包含多个库，同一个库也可能有多个隔离版本，不能把入口数量当成独立 SDK 数量。所有锁摘要与间接依赖版本可通过 `node scripts/sdk-access.mjs inventory` 读出。
 
 **接入状态：原生路径与指南已提供；逐 API、可选依赖、平台与外部服务验证不由这张静态清单推断。** 环境是否准备需 `inspect`，实际执行证据见[完整接入记录](FULL_SDK_ACCESS.md)。
 
@@ -122,6 +122,7 @@
 | `tjm-dynamics` | MQT YAQS | python | mqt.yaqs==0.6.0 | 自定义 MPS/MPO、电路、噪声模型、时间演化与张量跳跃 | 按固定版本、已安装可选组件及目标平台核实 |
 | `tnqs-dynamics` | TensorNetworkQuantumSimulator.jl | julia | JSON3, TensorNetworkQuantumSimulator | 非规则图张量网络、电路、时间演化、平面 CTMRG 与采样 | CTMRG 需要有效平面嵌入；分别记录状态/环境维数、截断、精度与收敛。采样权重相对于实际规约态，函数名 certified 不构成科学验收。 |
 | `tqec-compilation` | TQEC | python | tqec @ https://github.com/tqec/tqec/archive/2c4b8cf9d3f8f520571093c60d752af0ad46a745.tar.gz | BlockGraph、逻辑计算块、相关面与 Stim 线路生成 | 上游不承诺向后兼容，因此固定源码 SHA。保留码距/尺度 k、噪声、detector 和 observable 映射；生成线路不等于完整逻辑协议已验收。 |
+| `tropidist-distance` | tropidist | python | numpy==2.5.3, stim==1.16.0 | 从二进制校验矩阵或 Stim 纠错电路求单位权距离的上下界与故障见证 | 显式准备固定源码及本机 C 内核。Linux 需要 OpenMP。完整结果需要匹配上下界、有效见证和适用的故障模型。 |
 | `tsim-sampling` | Tsim | python | bloqade-tsim==0.1.5 | Clifford/非 Clifford 线路、噪声、detector 与 observable 采样 | 统一实际 detector/observable 值与参考样本 flips 的语义。发布包和上游 main 的功能分别核实；CPU/JAX 与 CUDA target 单独选择。 |
 | `tyxonq-workbench` | TyxonQ | python | tyxonq==1.3.0 | 电路、门、测量与上游后端接口 | 按固定版本、已安装可选组件及目标平台核实 |
 | `vqnet-learning` | VQNet | python | pyvqnet==2.18.1, numpy==1.26.4 | tensor、量子/经典层、模型、数据与优化器 | 按固定版本、已安装可选组件及目标平台核实 |

@@ -1562,6 +1562,23 @@
       }
     },
     {
+      "id": "tropidist-distance",
+      "title": "tropidist",
+      "bootstrap": "只读复核来源和 C 内核后定位已构建的 cdist",
+      "language": "python",
+      "modules": ["cdist", "stim", "numpy"],
+      "group": "qec",
+      "workflow": "从二进制校验矩阵或 Stim 纠错电路求单位权距离的上下界与故障见证",
+      "conditions": ["显式准备固定源码及本机 C 内核。Linux 需要 OpenMP。完整结果需要匹配上下界、有效见证和适用的故障模型。"],
+      "sourceProject": {
+        "repository": "https://github.com/Fanerst/tropidist.git",
+        "revision": "b03ec2d4077f287f89f97b5c2c16ce5ce17c2c58",
+        "include": ["cdist", "bench/common.py", "bench/replay_witnesses.py", "bench/adapters/ours_pipeline.py", "LICENSE", "circuits/NOTICE.md", "requirements.txt"]
+      },
+      "nativeOnly": true,
+      "pythonVersion": "3.12"
+    },
+    {
       "id": "tsim-sampling",
       "title": "Tsim",
       "language": "python",

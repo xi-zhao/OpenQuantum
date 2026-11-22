@@ -1,6 +1,6 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { readSdkLibraries, sdkSourceRoot } from "../src/lib/sdk-access.mjs";
+import { nativeSdkRoot, readSdkLibraries, sdkSourceRoot } from "../src/lib/sdk-access.mjs";
 import { prepareSdkSource } from "../src/lib/sdk-source.mjs";
 import { algorithmSelection } from "../src/lib/algorithm-environment.mjs";
 import { runSetupCommand } from "../src/lib/setup-process.mjs";
@@ -29,7 +29,10 @@ for (const id of ids) {
   if (id === "qpanda-qubo") await run(process.execPath, [path.join(root, ".agents/skills/qpanda-qubo/scripts/setup-native.mjs")]);
   if (!entry.sourceProject || entry.nativeProject) continue;
   const directory = sdkSourceRoot(root, id);
-  const { repository, revision } = entry.sourceProject;
-  await prepareSdkSource(directory, { repository, revision });
-  console.log(`Prepared complete source checkout for ${id} at ${revision}`);
+  const source = await prepareSdkSource(directory, entry.sourceProject);
+  if (id === "tropidist-distance") {
+    const { prepareTropidistBuild } = await import("../src/lib/tropidist-build.mjs");
+    await prepareTropidistBuild(directory, source, nativeSdkRoot(root, id));
+  }
+  console.log(`Prepared reviewed source for ${id} at ${source.revision}`);
 }

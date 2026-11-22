@@ -3,7 +3,7 @@
 - 调研日期：2026-11-07（Asia/Shanghai）；OpenQuantum 基线 `0da563fa87c6592a8923d2eb98eea80f484d2151`。
 - 官方仓库：[Fanerst/tropidist](https://github.com/Fanerst/tropidist)；固定完整 SHA：[`b03ec2d4077f287f89f97b5c2c16ce5ce17c2c58`](https://github.com/Fanerst/tropidist/tree/b03ec2d4077f287f89f97b5c2c16ce5ce17c2c58)。
 - 上游没有列出的 GitHub Release；这是固定研究源码提案，不把 main 或论文发布当稳定软件版本。
-- 11 月 21 日接入进度：**已完成小矩阵与小电路的隔离核验，产品入口待接入**。进度见[接入 PR #80](https://github.com/xi-zhao/OpenQuantum/pull/80)；用户可随时关闭或要求停止。
+- 11 月 21 日接入进度：**已完成小矩阵与小电路的隔离核验**。进度见[接入 PR #80](https://github.com/xi-zhao/OpenQuantum/pull/80)；用户可随时关闭或要求停止。
 
 ## 用户任务、增量价值与优先级
 
@@ -92,7 +92,7 @@ GF(2) 秩和 syndrome，明确未计算码距；[emlint](../../../.agents/skills
 
 ## 接入任务的验收条件
 
-以下是 11 月 7 日候选提案确定的验收条件。已完成的小规模数值核验见下节；准备、宿主和用户文档仍待交付。
+以下是 11 月 7 日候选提案确定的验收条件。已完成的小规模核验、准备入口与平台边界见下文。
 优先沿用公开 CLI、原生 SDK 与现有工程入口，独立参考不能再调用相同 solver 生成答案。
 
 | 入口/用例 | 应检查的行为与范围 |
@@ -140,3 +140,11 @@ C 编译器和 Linux OpenMP 支持单独核验。不需要 Gurobi、其他竞品
 预期维护成本**中等**：无稳定发布、C 编译/平台差异及下界完整性语义比纯 Python 库更敏感。
 按完整 SHA 比较后续修改，重点回归准备产物、status、约化条件、时间截止、深度/整数边界和 witness 来源。
 若需要维护私有算法补丁或大范围重写准备系统才能成立，保留观察并说明原因，不扩张本候选范围。
+
+## 已实现的显式准备与运行
+
+本 PR 在现有 SDK 工作台接入 `tropidist-distance`。比较基线为已包含 MWPF 的 OpenQuantum main `74242355fc6e501f45c491a9e9f56a405631fed6`，定位见根 README 的科研能力表、VISION 的证据复核目标，以及 SDK 与能力目录。MWPF 解决给定 syndrome 的译码。tropidist 的输入是校验和逻辑矩阵或带故障的电路，输出包括排除更低权故障的界及见证。前述独立穷举和电路重放分别校对了可核查的小实例。
+
+本地在 macOS arm64 用提交 `b03ec2d4077f287f89f97b5c2c16ce5ce17c2c58` 实际准备了 28 个文件，共 379,530 字节。Git 稀疏检出保留提交来源并略去论文结果。独立目录显式编译五个 C 内核，记录编译器、选项与产物摘要。读取准备状态会校验来源、构建输入、二进制和触发重编译的文件时间条件。使用新目录运行可编辑的上游 CLI 示例，输入摘要与原始结果一并保留。
+
+实际入口复核了三列矩阵距离 3、零探测器单逻辑距离 1、重复码和表面码的距离 3 与电路重放。限深保留不完整结果，外层截止、非法数值矩阵、复用结果目录、缺失或篡改内核会失败。Linux 路径使用同一组 CLI 回归，并由现有仓库 CI 执行。Windows 和真实器件未验证。每项距离均依赖所给模型，保留 `scientificValidation=not_evaluated`。[使用指南](../../../.agents/skills/tropidist-distance/SKILL.md) · [用户入口](../../../README.md) · [CLI 回归](../../../tests/tropidist-cli.test.mjs)
