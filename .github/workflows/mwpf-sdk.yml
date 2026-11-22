@@ -1,0 +1,72 @@
+name: MWPF SDK
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    paths:
+      - '.agents/skills/mwpf-decoding/**'
+      - '.github/workflows/mwpf-sdk.yml'
+      - 'tests/fixtures/mwpf-validation.py'
+      - 'tests/mwpf-decoding-live.test.mjs'
+  push:
+    branches: [main]
+    paths:
+      - '.agents/skills/mwpf-decoding/**'
+      - '.github/workflows/mwpf-sdk.yml'
+      - 'tests/fixtures/mwpf-validation.py'
+      - 'tests/mwpf-decoding-live.test.mjs'
+
+jobs:
+  native-sdk:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          cache: npm
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - run: python -m pip install uv==0.11.1
+      - run: npm ci --ignore-scripts
+      - name: Explicit frozen SDK preparation
+        run: |
+          echo "OPENQUANTUM_SDK_CHECK_OUTPUT=$RUNNER_TEMP/mwpf-evidence" >> "$GITHUB_ENV"
+          node scripts/setup-sdk.mjs mwpf-decoding
+          git diff --exit-code -- .agents/skills/mwpf-decoding/uv.lock
+          node --input-type=module -e "import fs from 'node:fs'; import {describeSdk} from './src/lib/sdk-access.mjs'; const sdk=await describeSdk(process.cwd(),'mwpf-decoding'); fs.appendFileSync(process.env.GITHUB_ENV,'MWPF_PYTHON='+sdk.run.command+'\n');"
+      - name: Independent hypergraph, bit order and failure regressions
+        run: |
+          mkdir -p "$OPENQUANTUM_SDK_CHECK_OUTPUT"
+          SCRIPT="$GITHUB_WORKSPACE/tests/fixtures/mwpf-validation.py"
+          cd "$OPENQUANTUM_SDK_CHECK_OUTPUT"
+          "$MWPF_PYTHON" -B "$SCRIPT" 2>&1 | tee numerical.log
+      - name: macOS OS-isolated SDK program and Codex adapter
+        if: runner.os == 'macOS'
+        env:
+          OPENQUANTUM_LIVE_MWPF: '1'
+          OPENQUANTUM_ECOSYSTEM_CHECKS: '1'
+          OPENQUANTUM_SDK_IDS: mwpf-decoding
+        run: node --test --test-concurrency=1 tests/mwpf-decoding-live.test.mjs tests/sdk-ecosystem-live.test.mjs
+      - name: Save execution evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: mwpf-sdk-${{ matrix.os }}
+          path: |
+            .agents/skills/mwpf-decoding/pyproject.toml
+            .agents/skills/mwpf-decoding/uv.lock
+            ${{ runner.temp }}/mwpf-evidence
+          include-hidden-files: true
+          if-no-files-found: error
