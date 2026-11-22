@@ -10,6 +10,7 @@ import json
 import os
 from pathlib import Path
 import platform
+import subprocess
 import sys
 import sysconfig
 
@@ -35,6 +36,19 @@ def prepare_sdk(capability_id, *, data_directory=None):
             if not sys.argv or not Path(sys.argv[0]).is_file():
                 raise RuntimeError("VQNet macOS loader requires a saved script, not stdin or -c")
             os.execve(sys.executable, [sys.executable, "-B", *sys.argv], {**os.environ, "DYLD_LIBRARY_PATH": libraries})
+    elif capability_id == "tropidist-distance":
+        root = Path(__file__).resolve().parents[2]
+        report = subprocess.run(
+            [os.environ.get("OPENQUANTUM_SDK_NODE", "node"), root / "scripts/sdk-access.mjs", "inspect", capability_id],
+            cwd=root, capture_output=True, check=True, text=True, timeout=30,
+            env={**os.environ, "OPENQUANTUM_PYTHON_ENV_ROOT": str(Path(sys.prefix).parent)},
+        )
+        sdk = json.loads(report.stdout)
+        if sdk["environmentState"] != "prepared" or Path(sdk["run"]["command"]).parent.parent != Path(sys.prefix):
+            raise RuntimeError("Explicitly prepare the fixed tropidist sources, Python environment and C kernels")
+        payload = sdk["nativeDependency"]["directory"]
+        sys.path.insert(0, payload)
+        return Path(payload)
     elif capability_id in ("flow-vqe", "slowquant-response"):
         root = Path(__file__).resolve().parents[2]
         source = root / os.environ.get("OPENQUANTUM_SDK_SOURCE_ROOT", ".openquantum/sdk-sources") / capability_id

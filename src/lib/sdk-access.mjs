@@ -153,6 +153,7 @@ export async function describeSdk(root, id, { environment = process.env, selecti
     state = nativeBuild.state;
   }
   let sourceProject = null;
+  let nativeDependency = null;
   if (entry.sourceProject) {
     const directory = sdkSourceRoot(root, id, environment);
     const record = await fs.readFile(path.join(directory, "openquantum-source.json"), "utf8").then(JSON.parse).catch(error => { if (error.code === "ENOENT") return null; throw error; });
@@ -160,8 +161,14 @@ export async function describeSdk(root, id, { environment = process.env, selecti
     if (ready) ready = await verifySdkSourceSnapshot(directory, record);
     sourceProject = { ...entry.sourceProject, directory, state: ready ? "prepared" : "not_prepared" };
     if (!ready && state === "prepared") state = "source_not_prepared";
+    if (id === "tropidist-distance") {
+      const { readTropidistBuild } = await import("./tropidist-build.mjs");
+      const build = nativeSdkRoot(root, id, environment);
+      const native = ready && await readTropidistBuild(build, record);
+      nativeDependency = { directory: path.join(build, "payload"), state: native ? "prepared" : "not_prepared" };
+      if (!native && state === "prepared") state = "native_not_prepared";
+    }
   }
-  let nativeDependency = null;
   if (id === "qpanda-qubo" && process.platform === "darwin") {
     const directory = nativeSdkRoot(root, "qpanda-qubo", environment);
     const record = await fs.readFile(path.join(directory, "native.json"), "utf8").then(JSON.parse).catch(error => { if (error.code === "ENOENT") return null; throw error; });
@@ -179,6 +186,12 @@ export async function describeSdk(root, id, { environment = process.env, selecti
     ...(nativeBuild ? { nativeBuild } : {}),
     ...(leanProject ? { leanProject } : {}),
     run: interpreter ? { command: interpreter, args: entry.language === "julia" ? ["--startup-file=no", `--project=${project}`, "<absolute-script.jl>"] : ["-B", "<absolute-script.py>"], cwd: "<user-workspace>", effect: "depends-on-script", resourceLimits: "host-and-user-budget",
+      ...(id === "tropidist-distance" ? { environment: {
+        OPENQUANTUM_ROOT: root, OPENQUANTUM_SDK_NODE: process.execPath,
+        OPENQUANTUM_PYTHON_ENV_ROOT: path.dirname(pythonEnvironmentRoot(root, id, environment)),
+        OPENQUANTUM_SDK_SOURCE_ROOT: path.dirname(sourceProject.directory),
+        OPENQUANTUM_NATIVE_SDK_ROOT: path.dirname(nativeSdkRoot(root, id, environment)),
+      } } : {}),
       ...(entry.language === "julia" && environment.OPENQUANTUM_JULIA_DEPOT_PATH ? { environment: { JULIA_DEPOT_PATH: environment.OPENQUANTUM_JULIA_DEPOT_PATH } } : {}) }
       : leanPrepared?.state === "prepared" ? { command: leanPrepared.command, args: ["<absolute-proof.lean>"], environment: leanPrepared.environment, cwd: "<user-workspace>", effect: "depends-on-script", resourceLimits: "host-and-user-budget" }
       : nativeBuild ? { command: nativeBuild.executable, args: ["<reviewed-cli-arguments>"], cwd: "<user-workspace>", effect: "depends-on-command", resourceLimits: "host-and-user-budget" } : null,

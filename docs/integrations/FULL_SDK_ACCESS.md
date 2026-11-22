@@ -155,3 +155,7 @@ node scripts/sdk-engineering-evidence.mjs .openquantum/sdk-checks/remaining \
 可编写用户自定义加权超图或 Stim/Sinter 程序；[操作、输入与失败边界](../../.agents/skills/mwpf-decoding/SKILL.md)。
 固定小超图的独立穷举、跨字节位序、采样与失败记录见[版本化证据](evidence/mwpf-2026-11-06.json)。
 零 cluster 预算不是无限预算，Sinter 必须显式抛出异常；小例回归不是一般最优性、阈值或科学验收。
+
+## tropidist · 纠错距离与故障见证
+
+[tropidist-distance](../../.agents/skills/tropidist-distance/SKILL.md) 通过 SDK 工作台显式准备，使用两种宿主已有的代码工具。限已声明的故障模型，分别核对下界和上界见证。[固定版本与实测范围](../ecosystem/proposals/tropidist.md)
