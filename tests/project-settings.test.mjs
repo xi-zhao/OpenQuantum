@@ -6,6 +6,7 @@ import test from "node:test";
 
 import { parseDocument } from "yaml";
 
+import { sdkInventory } from "../src/lib/sdk-access.mjs";
 import * as projectSettings from "../src/settings/server/project-settings.mjs";
 import { quantumHardwareMcpIntegration } from "../src/settings/server/quantum-hardware-mcp.mjs";
 
@@ -467,6 +468,33 @@ test("legacy HTTP URL projections remove credentials, query and fragment without
   });
   assert.doesNotMatch(JSON.stringify(updated), /fixture-/);
   assert.equal(parseDocument(await readFile(configPath, "utf8")).toJS()[0].config.url, cases[0][0]);
+});
+
+test("project settings identify the pinned Python distribution for each SDK server", async t => {
+  const [{ libraries }, settings] = await Promise.all([sdkInventory(process.cwd()), readProjectSettings(process.cwd())]);
+  const servers = new Map(settings.mcpServers.map(server => [server.serverName, server]));
+  const canonicalName = name => name.toLowerCase().replace(/[-_.]+/g, "-");
+
+  for (const sdk of libraries) {
+    if (sdk.language !== "python" || sdk.sourceProject) continue;
+    for (const { name } of sdk.providers) {
+      const server = servers.get(name);
+      assert.ok(server, `${sdk.id}: missing settings entry for ${name}`);
+      const singlePackage = /^([\w.-]+)(?:\[[\w., -]+\])?$/.exec(server.packageName ?? "");
+      if (!singlePackage) continue;
+      const distribution = canonicalName(singlePackage[1]);
+      const locked = sdk.lockedPackages.filter(pkg => canonicalName(pkg.name) === distribution);
+      const pin = sdk.dependencies
+        .map(requirement => /^([\w.-]+)(?:\[[^\]]+\])?\s*==\s*([\w.+!-]+)$/.exec(requirement))
+        .find(match => match && canonicalName(match[1]) === distribution);
+      if (locked.length && (!pin || locked.some(pkg => !pkg.source?.registry))) continue;
+
+      await t.test(name, () => {
+        assert.ok(locked.length, `${server.packageName} is missing from ${sdk.lock.path}`);
+        assert.equal(server.packageVersion, pin[2], `${server.packageName} in ${sdk.manifest.path}`);
+      });
+    }
+  }
 });
 
 test("repository preset exposes reviewed quantum MCPs with safe defaults", async () => {
