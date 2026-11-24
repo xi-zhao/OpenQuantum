@@ -192,7 +192,7 @@ Skill 与 Tool 在概念和发行版 policy 中都相互独立：Skill-only、To
 
 - [领域语言](../CONTEXT.md)：唯一的产品与科研术语表，不放实现细节。
 - [架构审计与证据基线](architecture/ARCHITECTURE_AUDIT.md)：日期化结论、证据、风险和待办。
-- [扩展治理清单（2026-11-24 基线）](architecture/EXTENSION_GOVERNANCE.md)：当前 201 个 Capability、193 个 Skill、91 个 MCP 连接与 121 个 SDK 环境的基线统计、成熟度门槛及 2026-09-24 历史逐项决定。
+- [扩展治理清单（2026-11-24 快照）](architecture/EXTENSION_GOVERNANCE.md)：当日 201 个 Capability、193 个 Skill、91 个 MCP 连接与 121 个 SDK 环境的统计、成熟度门槛及 2026-09-24 历史逐项决定；实时数量运行 `npm run governance:audit`。
 - [ADR-002：Harness 原生扩展优先](architecture/ADR-002-HARNESS-NATIVE-EXTENSIONS-FIRST.md)：当前有效。
 - [ADR-003：Desktop 作为 Host Adapter](architecture/ADR-003-DESKTOP-AS-HARNESS-HOST-ADAPTER.md)：当前有效。
 - [ADR-001：知情审批默认拒绝](architecture/ADR-001-INFORMED-APPROVAL-FAIL-CLOSED.md)：历史记录，已由 Harness 原生审批机制取代，不是当前实现契约。

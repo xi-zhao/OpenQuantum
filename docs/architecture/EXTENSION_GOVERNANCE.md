@@ -1,11 +1,11 @@
-# 扩展治理清单（2026-11-24 基线）
+# 扩展治理清单（2026-11-24 快照）
 
-> 本文件顶部维护 **2026-11-24 当前全量基线、成熟度准入规则与防漂移检查**；下方完整保留 2026-09-24 首次治理（101 Skill / 37 MCP / 220 Tool，B1/B2/B3）的逐项历史决定，不改写既有记录。
-> 当前基线数字由 [`scripts/audit-extension-governance.mjs`](../../scripts/audit-extension-governance.mjs) 直接核对源码声明并受 `npm run governance:audit` 守卫。
+> 本文件顶部记录 **2026-11-24 全量快照与治理决定**；下方完整保留 2026-09-24 首次治理（101 Skill / 37 MCP / 220 Tool，B1/B2/B3）的逐项历史决定，不改写既有记录。
+> 实时数量请运行 `npm run governance:audit`：[`审计脚本`](../../scripts/audit-extension-governance.mjs) 解析源码 YAML/JSON 声明，输出统计并核对内部一致性。新增 Skill 无需修改本页的历史数字；本页不是 CI 的固定数量门禁。
 
-## 2026-11-24 全量扩展基线与保守治理策略
+## 2026-11-24 全量扩展快照与保守治理策略
 
-| 维度 | 当前统计 | 说明 |
+| 维度 | 2026-11-24 统计 | 说明 |
 | --- | --- | --- |
 | Capability 总数 | **201** 个 Capability | `L0=102`、`L1=95`、`L2=1`、`L3=3`（含 8 个 Tool-only 能力：`metriq-data`、`qiskit-gym`、`qiskit-ibm-runtime`、`qiskit-ibm-transpiler`、`qpanda-runtime`、`quantum-hardware`、`quantum-learning`、`quantum-practices`） |
 | 内置 Skill | **193** 个内置 Skill | 180 自动可选，13 手动分类索引（`disable-model-invocation: true`） |
@@ -14,7 +14,7 @@
 
 ### 本轮治理决策（2026-11-24）
 
-1. **自动调用 Skill 集合（保守策略）**：维持现有 180 个自动可选 Skill 与 13 个手动分类索引不变，不破坏既有会话与模型发现路径；改由 `npm run governance:audit` 持续监测扩展面增长，避免无感知膨胀。
+1. **自动调用 Skill 集合（保守策略）**：本轮保留当时 180 个自动可选 Skill 与 13 个手动分类索引的策略；后续变更通过 `npm run governance:audit` 查看实时统计和声明内部一致性，不以本页数字限制新增能力。
 2. **宿主激活边界对齐**：
    - **Desktop（0.8.6+）**：通过 `adaptive-capabilities.mjs` 将受管 MCP rows 转为按需原生 Tool Provider，默认开启不意味着启动时同时拉起相应 MCP 子进程；
    - **Codex 插件**：通过发现 → 准备 → 执行三入口按需调用共享后端；
@@ -23,12 +23,12 @@
 
 ### 成熟度准入与升级门槛
 
-当前能力分布呈明显头重脚轻（`L0=102`、`L1=95`、`L2=1`、`L3=3`）：
+2026-11-24 的能力分布为 `L0=102`、`L1=95`、`L2=1`、`L3=3`：
 
 - **新增能力准入门槛**：
-  1. 必须先经去重核查，说明相较现有 121 个 SDK 的真实物理/算法增量，不以实现语言差异或同类包装作为接入理由；
+  1. 必须先经去重核查，说明相较实时 SDK 目录的真实物理/算法增量，不以实现语言差异或同类包装作为接入理由；
   2. 新接入优先采用“L0 Skill + 固定原生 SDK 环境 + 独立数值对照”路径，避免无必要地继续增加默认开启的 MCP 进程；
-  3. 同步更新 `.agents/capability-packages.yml`、`docs/CAPABILITIES.md`、`docs/architecture/EXTENSION_GOVERNANCE.md`，并通过 `npm run governance:audit` 与 `npm run capability:conformance`；
+  3. 同步更新 `.agents/capability-packages.yml` 与 `docs/CAPABILITIES.md`，并通过 `npm run governance:audit` 与 `npm run capability:conformance`；本页仅在治理规则变化或新增日期化审计记录时更新；
   4. 大体量日志与过程产物留在 CI Artifact（`sdk-checks.yml`），主仓仅保留紧凑的摘要 JSON 与最小原始见证（见 [证据边界说明](../integrations/evidence/README.md)）。
 - **L2 / L3 科学验收推进优先级**：
   - 当前 L3 仅覆盖 `quantum-ground-state`、`quantum-information-audit` 与 `quantum-circuit-verification`（DSH 侧），Codex 自动物化与会话验收尚未接通；

@@ -1,30 +1,32 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { parseDocument } from "yaml";
 
 const POLICY_PATH = ".agents/capability-packages.yml";
 const PRESET_PATH = "runtime/openquantum/agent-presets/openquantum/agent.cordis.yml";
 const SDK_LIBRARIES_PATH = ".agents/sdk-libraries.json";
 const SKILLS_DIR = ".agents/skills";
-const GOVERNANCE_DOC_PATH = "docs/architecture/EXTENSION_GOVERNANCE.md";
+
+function readYaml(source, label, customTags = []) {
+  const document = parseDocument(source, { strict: true, uniqueKeys: true, customTags });
+  if (document.errors.length || document.warnings.length) {
+    throw new Error(`${label}: ${[...document.errors, ...document.warnings].map(issue => issue.message).join("; ")}`);
+  }
+  return document.toJS({ maxAliasCount: 20 });
+}
 
 function readPolicySummary(projectRoot) {
   const raw = fs.readFileSync(path.join(projectRoot, POLICY_PATH), "utf8");
-  const blocks = raw.split(/\n(?= {2}- id: )/).slice(1);
+  const { packages } = readYaml(raw, POLICY_PATH);
   const levels = { L0: 0, L1: 0, L2: 0, L3: 0 };
-  const ids = [];
+  const ids = packages.map(item => item.id);
   let mcpToolCount = 0;
 
-  for (const block of blocks) {
-    const idMatch = block.match(/^ {2}- id:\s*(\S+)/);
-    const levelMatch = block.match(/^ {4}level:\s*(L[0-3])/m);
-    if (idMatch) ids.push(idMatch[1]);
-    if (levelMatch) levels[levelMatch[1]] += 1;
-
-    const mcpSection = block.match(/(?:^|\n) {6}mcpServers:\n([\s\S]*?)(?=\n {6}[a-zA-Z]|$)/);
-    if (mcpSection) {
-      const toolMatches = mcpSection[1].match(/^ {12}- name:\s*\S+/gm) ?? [];
-      mcpToolCount += toolMatches.length;
+  for (const item of packages) {
+    if (Object.hasOwn(levels, item.level)) levels[item.level] += 1;
+    for (const server of item.execution?.mcpServers ?? []) {
+      mcpToolCount += (server.tools ?? []).length;
     }
   }
 
@@ -44,8 +46,10 @@ function readSkillSummary(projectRoot) {
     if (!fs.existsSync(skillPath)) continue;
     skillIds.push(entry.name);
     const content = fs.readFileSync(skillPath, "utf8");
-    const frontmatter = content.match(/^---\n([\s\S]*?)\n---/)?.[1] ?? "";
-    if (/^disable-model-invocation:\s*true\s*$/m.test(frontmatter)) {
+    const frontmatter = content.match(/^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/)?.[1];
+    if (frontmatter === undefined) throw new Error(`${skillPath} must begin with YAML frontmatter`);
+    const metadata = readYaml(frontmatter, skillPath);
+    if (metadata["disable-model-invocation"] === true) {
       manualCount += 1;
     } else {
       autoCount += 1;
@@ -58,17 +62,17 @@ function readSkillSummary(projectRoot) {
 
 function readPresetMcpSummary(projectRoot) {
   const raw = fs.readFileSync(path.join(projectRoot, PRESET_PATH), "utf8");
-  const blocks = raw.split(/\n(?=- id: )/);
+  // Cordis expressions are data here. Never evaluate !!js while auditing declarations.
+  const rows = readYaml(raw, PRESET_PATH, [{ tag: "tag:yaml.org,2002:js", resolve: expression => ({ expression }) }]);
   const activation = { always: 0, conditional: 0, "opt-in": 0 };
   const serverNames = [];
 
-  for (const block of blocks) {
-    const serverMatch = block.match(/^\s+serverName:\s*(\S+)/m);
-    if (!serverMatch) continue;
-    serverNames.push(serverMatch[1]);
-    if (/^\s*disabled:\s*true\b/m.test(block)) {
+  for (const row of rows) {
+    if (!row.config?.serverName) continue;
+    serverNames.push(row.config.serverName);
+    if (row.disabled === true) {
       activation["opt-in"] += 1;
-    } else if (/^\s*disabled:\s*!!js\b/m.test(block)) {
+    } else if (row.disabled?.expression !== undefined) {
       activation.conditional += 1;
     } else {
       activation.always += 1;
@@ -124,35 +128,24 @@ export function collectExtensionGovernanceMetrics(projectRoot = process.cwd()) {
   };
 }
 
-export function checkGovernanceDocument(projectRoot = process.cwd()) {
-  const metrics = collectExtensionGovernanceMetrics(projectRoot);
-  const docPath = path.join(projectRoot, GOVERNANCE_DOC_PATH);
-  const content = fs.readFileSync(docPath, "utf8");
+export function validateExtensionGovernanceMetrics(metrics) {
   const issues = [];
-
-  const requiredTokens = [
-    ["capabilities", `**${metrics.capabilities}** 个 Capability`],
-    ["levels", `L0=${metrics.levels.L0}`],
-    ["levels", `L1=${metrics.levels.L1}`],
-    ["levels", `L2=${metrics.levels.L2}`],
-    ["levels", `L3=${metrics.levels.L3}`],
-    ["skills", `**${metrics.skills.total}** 个内置 Skill`],
-    ["auto/manual", `${metrics.skills.auto} 自动可选`],
-    ["auto/manual", `${metrics.skills.manual} 手动分类索引`],
-    ["mcp", `**${metrics.mcp.total}** 个 MCP 连接`],
-    ["mcp activation", `${metrics.mcp.always + metrics.mcp.conditional} 个默认开启`],
-    ["mcp activation", `${metrics.mcp.optIn} 个按需启用`],
-    ["sdk", `**${metrics.sdk.total}** 个 SDK/源码环境`],
-    ["sdk nativeOnly", `nativeOnly=${metrics.sdk.nativeOnly}`],
+  const sum = values => Object.values(values).reduce((total, value) => total + value, 0);
+  const checks = [
+    ["capability levels", sum(metrics.levels), metrics.capabilities],
+    ["Skill activation", metrics.skills.auto + metrics.skills.manual, metrics.skills.total],
+    ["Skills + Tool-only capabilities", metrics.skills.total + metrics.toolOnlyCapabilities.length, metrics.capabilities],
+    ["MCP activation", metrics.mcp.always + metrics.mcp.conditional + metrics.mcp.optIn, metrics.mcp.total],
+    ["SDK languages", sum(metrics.sdk.byLanguage), metrics.sdk.total],
   ];
-
-  for (const [label, token] of requiredTokens) {
-    if (!content.includes(token)) {
-      issues.push(`${GOVERNANCE_DOC_PATH} is out of sync (${label}): expected "${token}"`);
-    }
+  for (const [label, actual, expected] of checks) {
+    if (actual !== expected) issues.push(`${label}: sum ${actual} does not match total ${expected}`);
   }
-
   return { status: issues.length === 0 ? "pass" : "fail", metrics, issues };
+}
+
+export function checkExtensionGovernance(projectRoot = process.cwd()) {
+  return validateExtensionGovernanceMetrics(collectExtensionGovernanceMetrics(projectRoot));
 }
 
 function formatMarkdown(metrics) {
@@ -174,9 +167,9 @@ if (path.resolve(process.argv[1] ?? "") === fileURLToPath(import.meta.url)) {
   const args = new Set(process.argv.slice(2));
   const projectRoot = process.cwd();
   if (args.has("--check")) {
-    const result = checkGovernanceDocument(projectRoot);
+    const result = checkExtensionGovernance(projectRoot);
     if (result.status !== "pass") {
-      console.error("Extension governance drift detected:\n" + result.issues.map(i => `- ${i}`).join("\n"));
+      console.error("Extension governance inconsistency detected:\n" + result.issues.map(i => `- ${i}`).join("\n"));
       process.exit(1);
     }
     console.log(JSON.stringify({ status: "pass", metrics: result.metrics }, null, 2));

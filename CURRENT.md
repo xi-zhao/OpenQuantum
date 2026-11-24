@@ -39,7 +39,7 @@ Session event log 为准，科学状态以 Acceptance Report 为准。2026-09 �
 ## 已知缺口与治理跟进
 
 - **科学验收**：L3 验收链目前仅覆盖 QGS、量子信息审计与 QCEC 分类复核（`L0=102, L1=95, L2=1, L3=3`），Codex 的自动物化与会话验收仍未接通；后续需避免仅扩充 SDK 数量而忽视高频能力的证据链提升。
-- **扩展与仓库治理**：[扩展治理清单](docs/architecture/EXTENSION_GOVERNANCE.md)已刷新至 2026-11-24 基线并接入 `npm run governance:audit` 防漂移守卫；零引用的 `outputs/` 已清理并加入 `.gitignore`，[证据边界](docs/integrations/evidence/README.md)与[宣传素材边界](docs/communications/README.md)已落盘。`docs/communications/` 待迁出至外部归档后移除，`experiments/` 中非主页校验大文件边界待后续确认。
+- **扩展与仓库治理**：[扩展治理清单](docs/architecture/EXTENSION_GOVERNANCE.md)保留 2026-11-24 快照；`npm run governance:audit` 输出实时统计并检查声明内部一致性，无需随新增 Skill 改写快照。零引用的 `outputs/` 已清理并加入 `.gitignore`，[证据边界](docs/integrations/evidence/README.md)与[宣传素材边界](docs/communications/README.md)已落盘。`docs/communications/` 待迁出至外部归档后移除，`experiments/` 中非主页校验大文件边界待后续确认。
 - **待分诊的未合入本地修复分支**：本机存在 3 个 11 月未合入主线的修复分支（`c/shared-credential-redaction`、`c/desktop-preparation-reuse`、`c/security-scientific-bridge-boundary`）及 3 个 11 月 23–24 日活跃候选分支，需逐项核对后再决定合入或清理，切勿盲删。
 - **在线模型**：v0.8.5 本机 Magpie 文本与 Tool Calling 验收通过；这不代表公共网关或其他 Provider 已通过在线验收。
 
