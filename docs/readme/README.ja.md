@@ -292,7 +292,7 @@ Pro の教育タスクは上流アプリケーション自身のツールと記�
 
 ### Desktop・メッセージング・言語
 
-**Desktop。** OpenQuantum のデスクトップ版は、ネイティブウィンドウ、システムトレイ、ターミナル、通知を備え、ワークベンチのモデル、量子 Skill、計算ツール、実行記録を再利用します。サードパーティ製のオリジナル DSH Desktop と、別途提供する OpenQuantum 機能パッケージを組み合わせて使用し、Mac（Apple Silicon / Intel）、Windows、ソースからの起動に対応します。[Desktop をインストール](#desktop-installer) · [ソースから Desktop をビルド](#desktop-from-source)。
+**Desktop：** OpenQuantum のデスクトップは、ネイティブウィンドウ、簡潔なメニューバー、通知を備え、ワークベンチのモデル、量子 Skill、計算ツール、実行記録を利用します。メニューは中国語または英語で開く・終了する操作のみを表示し、エージェントは選択された権限内でターミナル Tool を利用できます。Mac Apple Silicon は単体アプリ OpenQuantum 0.8.11 を使います。Intel Mac と Windows は固定クライアント付きの 0.8.4 パッケージを継続利用でき、ソースからのビルドも可能です。[Desktop をインストール](#desktop-installer) · [ソースから Desktop をビルド](#desktop-from-source)。
 
 **メッセージング。** CC Connect を通じて、WeChat、Feishu、DingTalk、Slack、Telegram、Discord などのチャネルからタスクを開始でき、ワークベンチの Skill、Tool、実行記録を再利用します。[メッセージングチャネルを設定](#messaging-channels)。
 

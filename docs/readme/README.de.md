@@ -676,7 +676,7 @@ Bevorzugen Sie native Tool Provider für Aktionen im selben Prozess und in derse
 
 </details>
 
-Der vollständige Katalog der Skills, MCP-Dienste und nativen Tools wird in der [chinesischen Nachschlagewerk](../CAPABILITIES.md#接口总览) gepflegt: Der aktuelle Quellcode liefert **193 integrierte Skills** (180 automatisch auswählbar, 13 manuelle Kategorieindizes), **91 MCP-Dienstverbindungen** (66 standardmäßig aktiv, darunter zwei per Offline-Schalter deaktivierbare Qiskit-Verbindungen; 25 Opt-in) und **5 native Quanten-Tools**.
+Der vollständige Katalog der Skills, MCP-Dienste und nativen Tools wird im [chinesischen Nachschlagewerk](../CAPABILITIES.md#接口总览) gepflegt: Der aktuelle Quellcode liefert **193 integrierte Skills** (180 automatisch auswählbar, 13 manuelle Kategorieindizes), **91 MCP-Dienstverbindungen** (66 standardmäßig aktiv, darunter zwei per Offline-Schalter deaktivierbare Qiskit-Verbindungen; 25 Opt-in) und **5 native Quanten-Tools**.
 
 <a id="development-and-verification"></a>
 
@@ -702,7 +702,7 @@ npm run capability:algorithms:live
 npm run e2e:quantum-harness -- --provider openquantum-public
 ```
 
-Wählen Sie die für Ihre Änderung relevanten Prüfungen; die vollständige Liste steht in der [chinesischen Nachschlagewerk](../EXAMPLES.md#开发与验证). Tests und lokale Belege sind etwas anderes als ein veröffentlichtes Release oder eine wissenschaftliche Abnahme. Änderungen des Release stehen in den [Versionshinweisen zu v0.8.11](../releases/v0.8.11.md).
+Wählen Sie die für Ihre Änderung relevanten Prüfungen; die vollständige Liste steht im [chinesischen Nachschlagewerk](../EXAMPLES.md#开发与验证). Tests und lokale Belege sind etwas anderes als ein veröffentlichtes Release oder eine wissenschaftliche Abnahme. Änderungen des Release stehen in den [Versionshinweisen zu v0.8.11](../releases/v0.8.11.md).
 
 </details>
 

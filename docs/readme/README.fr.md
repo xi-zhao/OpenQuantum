@@ -674,7 +674,7 @@ Préférez les Tool Providers natifs pour les actions dans le processus, dans le
 
 </details>
 
-Le catalogue complet des Skills, services MCP et Tools natifs est tenu à jour dans le [documentation de référence en chinois](../CAPABILITIES.md#接口总览) : les sources actuelles livrent **193 Skills intégrés** (180 sélectionnables automatiquement, 13 index de catégories manuels), **91 connexions de services MCP** (66 activées par défaut, dont deux connexions Qiskit désactivables avec l’option hors ligne ; 25 à activer explicitement) et **5 Tools quantiques natifs**.
+Le catalogue complet des Skills, services MCP et Tools natifs est tenu à jour dans la [documentation de référence en chinois](../CAPABILITIES.md#接口总览) : les sources actuelles livrent **193 Skills intégrés** (180 sélectionnables automatiquement, 13 index de catégories manuels), **91 connexions de services MCP** (66 activées par défaut, dont deux connexions Qiskit désactivables avec l’option hors ligne ; 25 à activer explicitement) et **5 Tools quantiques natifs**.
 
 <a id="development-and-verification"></a>
 
@@ -700,7 +700,7 @@ npm run capability:algorithms:live
 npm run e2e:quantum-harness -- --provider openquantum-public
 ```
 
-Choisissez les vérifications pertinentes pour votre modification ; la liste complète figure dans le [documentation de référence en chinois](../EXAMPLES.md#开发与验证). Les tests et les preuves locales sont distincts d’une version publiée ou d’une acceptation scientifique. Les changements de version figurent dans les [notes de version v0.8.11](../releases/v0.8.11.md).
+Choisissez les vérifications pertinentes pour votre modification ; la liste complète figure dans la [documentation de référence en chinois](../EXAMPLES.md#开发与验证). Les tests et les preuves locales sont distincts d’une version publiée ou d’une acceptation scientifique. Les changements de version figurent dans les [notes de version v0.8.11](../releases/v0.8.11.md).
 
 </details>
 
