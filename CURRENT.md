@@ -1,6 +1,6 @@
 # OpenQuantum 当前交接
 
-核验日期：2026-11-24。此页只记录当前交接状态；架构以[文档总入口](docs/README.md)为准，执行事实以 Harness
+核验日期：2026-11-25。此页只记录当前交接状态；架构以[文档总入口](docs/README.md)为准，执行事实以 Harness
 Session event log 为准，科学状态以 Acceptance Report 为准。2026-09 至 2026-10-30 的日期化记录（含 Harness 0.2.1 迁移、
 0.8.5–0.8.8 独立安装包及 scalable 增量迁移）已迁至[交接历史](docs/handoff/HISTORY.md)，内容未删改。
 接手时先重新查询 Git、PR 与 CI，不把本页当作实时状态。
@@ -40,7 +40,11 @@ Session event log 为准，科学状态以 Acceptance Report 为准。2026-09 �
 
 - **科学验收**：L3 验收链目前仅覆盖 QGS、量子信息审计与 QCEC 分类复核（`L0=102, L1=95, L2=1, L3=3`），Codex 的自动物化与会话验收仍未接通；后续需避免仅扩充 SDK 数量而忽视高频能力的证据链提升。
 - **扩展与仓库治理**：[扩展治理清单](docs/architecture/EXTENSION_GOVERNANCE.md)保留 2026-11-24 快照；`npm run governance:audit` 输出实时统计并检查声明内部一致性，无需随新增 Skill 改写快照。零引用的 `outputs/` 已清理并加入 `.gitignore`，[证据边界](docs/integrations/evidence/README.md)与[宣传素材边界](docs/communications/README.md)已落盘。`docs/communications/` 待迁出至外部归档后移除，`experiments/` 中非主页校验大文件边界待后续确认。
-- **待分诊的未合入本地修复分支**：本机存在 3 个 11 月未合入主线的修复分支（`c/shared-credential-redaction`、`c/desktop-preparation-reuse`、`c/security-scientific-bridge-boundary`）及 3 个 11 月 23–24 日活跃候选分支，需逐项核对后再决定合入或清理，切勿盲删。
+- **未合入本地修复分支复核**：从 `origin/main @ 4b06e3ce` 创建以下本地分支，原分支保留，均未推送。
+  - `c/shared-credential-redaction-rebased @ 980692be`：定向测试 74 项通过；完整检查有 1 项失败，PairInteraction 隔离夹具漏复制新增的 `tool-redaction.mjs` 依赖，需补齐后复核。
+  - `c/desktop-preparation-reuse-rebased @ 35eb2f67`：安装恢复定向测试 15 项及完整 `npm run check` 通过；尚未做安装包或实际 Desktop 升级验收。
+  - `c/security-scientific-bridge-boundary-rebased @ a08e2a46`：保留主线 README 布局并补回执行边界说明；指定定向测试 9 项、能力一致性与 Harness 配置通过。本机 macOS 沙箱实测返回 `enforcement: "full"` 且拒绝目录外写入，但完整检查有 6 项宿主集成失败，涉及 ACP、教学、资料检索及科学结果交付，暂不具备合入条件。
+  - 两条失败分支的对应测试在主线复跑通过；未放宽沙箱或强行修补。另有 3 个 11 月 23–24 日活跃候选分支仍待分诊，后续合入或清理另行决定。
 - **在线模型**：v0.8.5 本机 Magpie 文本与 Tool Calling 验收通过；这不代表公共网关或其他 Provider 已通过在线验收。
 
 ## 动作边界
