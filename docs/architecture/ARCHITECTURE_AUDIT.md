@@ -4,9 +4,10 @@
 - 日期：2026-09-05（扩展边界补审；上游版本结论沿用 2026-09-01 基线）
 - 上游：DeepSeek Harness `0.1.0-rc.6`（已审阅 `0.1.1-rc.2`，等待匹配的可安装 Desktop Host Adapter 包）
 
-> 历史审计说明：下文是当时版本与证据。当前产品按“共享插件 → Harness 适配 → 品牌/UI”维护，
-> 见[模块地图](MODULES.md)。本轮恢复 Desktop 2.0.0 / Harness 0.1.0-rc.6；当前交付与验证状态见
-> [CURRENT.md](../../CURRENT.md)，不以本文历史检查结果代替。
+> 历史审计说明：下文是 2026-09 基线版本与证据（当时 16 个登记能力；2026-09-24 扩展治理清单为 101 Skill / 37 MCP）。
+> 当前产品按“共享插件 → Harness 适配 → 品牌/UI”维护，见[模块地图](MODULES.md)与[全项目架构图](PROJECT_ARCHITECTURE.md)。
+> Desktop 固定 `2.0.0` / Harness `0.1.0-rc.6`；截至 2026-11-24 主线已扩展至 201 Capability / 193 Skill / 91 MCP / 121 SDK 环境，
+> 当前交付与验证状态见 [CURRENT.md](../../CURRENT.md)，不以本文历史检查结果代替。
 
 稳定的架构总览与文档权威见[文档与架构入口](../README.md)；扩展职责见
 [扩展对象模型](EXTENSION_MODEL.md)，模块依赖见[模块地图](MODULES.md)。本文件只记录本次审计时点的

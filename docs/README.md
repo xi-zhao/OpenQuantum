@@ -156,49 +156,28 @@ Skill 与 Tool 在概念和发行版 policy 中都相互独立：Skill-only、To
 
 ### 使用 OpenQuantum
 
-- [能力与接口参考](CAPABILITIES.md)：按科研任务查能力，核对完整 Skill、MCP 连接、原生 Tool、默认开关与上游来源。
+#### 核心入口与日常运维
+
+- [项目首页](../README.md)：产品定位、已集成能力总览与快速开始。
+- [能力与接口参考](CAPABILITIES.md)：按科研任务查能力，核对[内置 Skill 目录](CAPABILITIES.md#内置-skills)、[MCP 服务目录](CAPABILITIES.md#mcp-服务目录)与[原生量子 Tools](CAPABILITIES.md#原生量子-tools)。
 - [任务示例与验证](EXAMPLES.md)：固定本地案例、Agent 请求、算法程序和按需选择的开发检查。
+- [相近能力的选择](integrations/CAPABILITY_SELECTION.md)：算法示例与专业计算入口的选择，以及大型可选服务的工具范围。
+- [桌面测试安装包](DESKTOP_INSTALLERS.md) · [Codex 插件](integrations/CODEX_PLUGIN.md) · [部署与启动](DEPLOYMENT.md) · [版本更新](UPDATES.md)。
+- [本地计算环境准备](integrations/LOCAL_ENVIRONMENTS.md) · [完整 SDK 接入与逐库审计](integrations/FULL_SDK_ACCESS.md) · [大型结果交付](integrations/SCIENCE_RESULT_DELIVERY.md)。
+- [常见问题与故障排查](TROUBLESHOOTING.md)：按 UI、模型、MCP Server、凭据和 Docker 分层定位。
 - [长期发展规划](roadmap/VISION.md)：平台、应用、教学与 RSI 的愿景和当前边界；与已交付功能分开阅读。
 
-- [桌面测试安装包](DESKTOP_INSTALLERS.md)：原版 DSH Desktop、OpenQuantum 能力包、数据保留与工程检查。
-- [部署与启动](DEPLOYMENT.md)：本地、Docker、模型配置和启动检查。
-- [第三方客户端 2.0.7 基线恢复](releases/2026-10-24-desktop-2.0.7.md)：旧版配套、会话保护、本地验证及尚未完成的构建边界。
-- [本地计算环境准备](integrations/LOCAL_ENVIRONMENTS.md)：按能力显式准备固定依赖，已有环境原地核验与升级。
-- [原生 SDK 生态扩展](integrations/SDK_ECOSYSTEM_2026-10-14.md)：26 个维护中的 SDK/源码入口、TensorCircuit-NG 迁移与 MQT Bench v2；分列实际 API 与科学验收状态。
-- [完整 SDK 接入与逐库审计](integrations/FULL_SDK_ACCESS.md)：原生公开 API、环境定位、自定义程序、分批补齐与工程验证；便捷 Tool 的模型范围不再是 SDK 能力上限。
-- [Pasqal 实验工作流与 Cloud SDK](integrations/PASQAL.md)：复用 Pulser，覆盖实验规范、理想/含噪扫描、云提交恢复与原始采样分析。
-- [相近能力的选择](integrations/CAPABILITY_SELECTION.md)：算法示例与专业计算入口的选择，以及大型可选服务的工具范围。
-- [版本更新](UPDATES.md)：新版本提醒、源码升级、发布通道和维护流程。
-- [0.8.9 统一发行](releases/v0.8.9.md)：凭据保护、共享 Home 配置保留和可恢复升级；[Codex 插件说明](releases/codex-v0.8.9.md)。
-- [OpenQuantum 0.8.4 Desktop](releases/v0.8.4.md)：26 个新增 SDK、TensorCircuit-NG 迁移与 MQT Bench v2。
-- [Codex 插件 0.8.4](releases/codex-v0.8.4.md)：168 个 Skill、87 个科学 Tool 与完整量子组件设置。
-- [OpenQuantum 0.8.3 Desktop](releases/v0.8.3.md)：设置分类、搜索筛选与品牌图标。
-- [Codex 插件 0.8.3](releases/codex-v0.8.3.md)：共用设置分类、134 个 Skill 和 71 个科学 Tool。
-- [Codex 插件 0.8.2](releases/codex-v0.8.2.md)：Pasqal 实验工作流与计划、环境一致性检查。
-- [v0.8.1 统一发行说明](releases/v0.8.1.md)：Desktop、Codex 插件和安装器共用产品版本及更新命令；发行渠道分别保留。
-- [v0.7.0 发行说明](releases/v0.7.0.md)：完整原生 SDK 接入、大结果交付、Desktop 安装升级及工程验证范围。
-- [Codex 插件 0.8.0](releases/codex-v0.8.0.md)：133 个 Skill、71 个科学 Tool、85 个 SDK 环境入口和独立安装包。
-- [常见问题与故障排查](TROUBLESHOOTING.md)：按 UI、模型、MCP Server、凭据和 Docker 分层定位。
-- [消息渠道接入](integrations/CC_CONNECT.md)：通过 CC Connect 和 ACP 接入微信、飞书等平台。
-- [量子学习通 / OpenMAIC](integrations/OPENMAIC.md)：完整原版子应用、Pro 工作台、持久存储与 Harness 当前模型连接；含实际验收和未通过项。
-- [FatQat 量子实验](integrations/FATQAT.md)：Skill、两个 MCP 计算 Tool、固定版本、实验边界与真实数值验证。
-- [PairInteraction 原子对相互作用](integrations/PAIRINTERACTION.md)：独立软件环境和数据库快照，S–S 势能、S–P 交换、微扰边界与版本治理。
-- [Bloqade Analog 中性原子动力学](integrations/BLOQADE_ANALOG.md)：二维阵列、全局时变脉冲、本地 Python 仿真、单位和验证范围。
-- [国内外厂商 SDK](integrations/VENDOR_SDKS.md)：17 个固定 SDK 能力包、19 个 Tool、安装与许可，以及本地和远程验证边界。
-- [公司与机构 SDK 补充](integrations/SDK_EXPANSION.md)：20 个新增能力、23 个 Tool，覆盖量子通道、资源估算、化学数据、光子学和控制；凭据由用户设置。
-- [网络、控制、光学与云 SDK 补充](integrations/SDK_GAPS.md)：15 个新增能力、18 个 Tool，含 SimQN、Qcover、VQNet、pyChemiQ、Guppy、MerLin 及 AQT/OQC/Quantum Inspire。
-- [论文方法计算接入](integrations/PAPER_BACKED_TOOLS.md)：SQD、TJM、LSD、RandomMeas、Flow-VQE 和 TeNPy 的固定实现、六个 Tool、安装与科学范围。
-- [Mitiq 误差缓解](integrations/MITIQ.md)：ZNE、REM、PEC、CDR 的本地实验、相同 shots 预算、统计和 GPL 发行边界。
-- [Unitary 生态计算与数据](integrations/UNITARY_ECOSYSTEM.md)：Dynamiqs、Clifft、OQuPy、Deltakit 的计算接口，以及 Metriq 公开数据快照查询。
-- [Clifft、qBraid 与 QDMI](integrations/QUANTUM_INTEROP.md)：Stim 格式固定 shots 记录、Qiskit/Cirq 本地转换与显式配置驱动的只读设备查询。
-- [电路与代数工具](integrations/UNITARY_NEXT_TOOLS.md)：PyZX 电路优化、Graphix 测量式计算、Symmer 对称性降比特与 PauLie 代数分析。
-- [候选量子库接入与科学边界](integrations/CANDIDATE_LIBRARIES.md) · [实施计划与去重决策](integrations/CANDIDATE_INTEGRATION_PLAN.md)
-- [2026-09-22 量子库更新](releases/2026-09-22-quantum-upstream-update.md)：Compact、Clifft、Qiskit 更新，Graphix 迁移与隔离开发版回归。
-- [本地计算功能与资源配置](integrations/SCALABLE_BRIDGES.md)：全部本地计算适配的输入输出、可选参考、运行资源设置及补充核验记录。
-- [UnitaryLab 开源适配](integrations/UNITARYLAB_OPEN_ADAPTATION.md)：66 个原生 Skill、49 个可运行开源示例，逐项覆盖 39 个上游算法模块；复用现有代码执行工具。
-- [量子算法参考检索](integrations/QUANTUM_PRACTICES.md)：固定 Quantum-Practices 资料、原生只读 Tool、中文查询和许可边界。
-- [项目首页](../README.md)：产品能力、已集成工具和快速开始。
-- [Skill 目录](CAPABILITIES.md#内置-skills)与 [MCP 服务目录](CAPABILITIES.md#mcp-服务目录)：逐项查看工作流、服务用途、默认开关与使用条件；[原生量子 Tools](CAPABILITIES.md#原生量子-tools)单独列出。
+#### 发行说明与变更记录
+
+- **当前版本 `0.8.11`**：[0.8.11 统一发行说明](releases/v0.8.11.md) · [Codex 插件 0.8.11](releases/codex-v0.8.11.md) · [0.8.10 安装验收基线](releases/v0.8.10.md)。
+- **全部历史版本与迁移记录**：见[发行说明与版本档案](releases/README.md)与根目录 [`CHANGELOG.md`](../CHANGELOG.md)。
+
+#### 专题能力与生态接入
+
+- **生态与扩展目录**：[原生 SDK 生态扩展](integrations/SDK_ECOSYSTEM_2026-10-14.md)、[国内外厂商 SDK](integrations/VENDOR_SDKS.md)、[公司与机构 SDK 补充](integrations/SDK_EXPANSION.md)、[网络、控制、光学与云 SDK 补充](integrations/SDK_GAPS.md)、[本地计算功能与资源配置](integrations/SCALABLE_BRIDGES.md)。
+- **算法与参考资料**：[UnitaryLab 开源适配](integrations/UNITARYLAB_OPEN_ADAPTATION.md)（66 个原生 Skill、49 个可运行开源示例）、[量子算法参考检索](integrations/QUANTUM_PRACTICES.md)、[论文方法计算接入](integrations/PAPER_BACKED_TOOLS.md)、[候选量子库接入与科学边界](integrations/CANDIDATE_LIBRARIES.md) · [实施计划与去重决策](integrations/CANDIDATE_INTEGRATION_PLAN.md)。
+- **纠错、模拟、化学与中性原子专题**：[PPVM](integrations/PPVM.md)、[SlowQuant](integrations/SLOWQUANT.md)、[TNQS](integrations/TNQS.md)、[RcmpsCore](integrations/RCMPS.md)、[Pasqal 实验工作流与 Cloud SDK](integrations/PASQAL.md)、[Bloqade Analog](integrations/BLOQADE_ANALOG.md)、[PairInteraction](integrations/PAIRINTERACTION.md)、[FatQat 量子实验](integrations/FATQAT.md)、[Mitiq 误差缓解](integrations/MITIQ.md)、[Unitary 生态计算与数据](integrations/UNITARY_ECOSYSTEM.md)、[Clifft、qBraid 与 QDMI](integrations/QUANTUM_INTEROP.md)、[电路与代数工具](integrations/UNITARY_NEXT_TOOLS.md)。
+- **消息渠道与教学应用**：[消息渠道接入（CC Connect）](integrations/CC_CONNECT.md)、[量子学习通 / OpenMAIC](integrations/OPENMAIC.md)。
 
 ### 二次开发
 
@@ -206,7 +185,7 @@ Skill 与 Tool 在概念和发行版 policy 中都相互独立：Skill-only、To
 - [扩展对象模型](architecture/EXTENSION_MODEL.md)：对象职责、选择规则和禁止依赖。
 - [模块地图](architecture/MODULES.md)：模块 Interface、依赖方向和代码落点。
 - [仓库地图](REPOSITORY_GUIDE.md)：目录职责、配置权威和实际编排关系。
-- [量子能力候选清单](ecosystem/QUANTUM_CAPABILITY_CATALOG.md)：当前集成和后续候选。
+- [量子能力候选清单](ecosystem/QUANTUM_CAPABILITY_CATALOG.md) · [候选接入提案索引](ecosystem/proposals/README.md)：当前集成和历史候选规格。
 - [一维热方程独立实验](../experiments/schrodingerization-heat1d/README.md)：使用开源数值库评估薛定谔化精度和成本；尚未接入产品计算 Tool。
 
 ### 架构证据与决策

@@ -151,7 +151,7 @@ Pick an area and tell the workbench your question, your inputs and the results y
 
 Local calculations can start without a quantum-cloud account. Real hardware and paid services are configured on demand; each method's input range, preparation and verification status are kept in the detailed catalog.
 
-The current source provides full native-API paths for **117 SDK/source environments**, 26 of them from the latest [ecosystem expansion](../integrations/SDK_ECOSYSTEM_2026-10-14.md) shipped with 0.8.4. Agents can write custom programs, combine public APIs and save complete results, going beyond the preset cases of the convenience Tools.
+The current source provides full native-API paths for **121 SDK/source environments** (including the 26 added in the [ecosystem expansion](../integrations/SDK_ECOSYSTEM_2026-10-14.md) shipped with 0.8.4, plus subsequent integrations). Agents can write custom programs, combine public APIs and save complete results, going beyond the preset cases of the convenience Tools.
 
 SlowQuant adds molecular linear-response and transition-property workflows through a fixed source SDK. See [setup and validation limits](../integrations/SLOWQUANT.md); molecular Qiskit qLR and hardware remain unvalidated.
 
@@ -632,7 +632,7 @@ Prefer native Tool Providers for in-process, same-language actions without isola
 
 </details>
 
-The full Skill, MCP service and native Tool catalog is maintained in the [Chinese reference documentation](../CAPABILITIES.md#接口总览): the current source ships **189 built-in Skills** (176 automatically selectable, 13 manual category indexes), **91 MCP service connections** (66 on by default, 25 opt-in) and **5 native quantum Tools**.
+The full Skill, MCP service and native Tool catalog is maintained in the [Chinese reference documentation](../CAPABILITIES.md#接口总览): the current source ships **193 built-in Skills** (180 automatically selectable, 13 manual category indexes), **91 MCP service connections** (64 on by default, 2 conditional, 25 opt-in) and **5 native quantum Tools**.
 
 ### Development and verification
 
@@ -656,11 +656,11 @@ npm run capability:algorithms:live
 npm run e2e:quantum-harness -- --provider openquantum-public
 ```
 
-Choose the checks relevant to your change; the full list is in the [Chinese reference documentation](../EXAMPLES.md#开发与验证). Tests and local evidence are distinct from a published release or scientific acceptance. Release changes are in the [v0.8.4 release notes](../releases/v0.8.4.md).
+Choose the checks relevant to your change; the full list is in the [Chinese reference documentation](../EXAMPLES.md#开发与验证). Tests and local evidence are distinct from a published release or scientific acceptance. Release changes are in the [v0.8.11 release notes](../releases/v0.8.11.md).
 
 </details>
 
-The [official OriginQ `pyqpanda3` Skill](https://github.com/OriginQ/pyqpanda3-skill) is an optional upstream Skill: it is not counted among the 189 built-in Skills and is not installed automatically. `npm run skill:qpanda:setup` installs the reviewed version; it does not enable `qpanda_runtime` or grant cloud-job permissions.
+The [official OriginQ `pyqpanda3` Skill](https://github.com/OriginQ/pyqpanda3-skill) is an optional upstream Skill: it is not counted among the 193 built-in Skills and is not installed automatically. `npm run skill:qpanda:setup` installs the reviewed version; it does not enable `qpanda_runtime` or grant cloud-job permissions.
 
 ## Roadmap and RSI
 

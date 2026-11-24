@@ -3,7 +3,7 @@
 - 调研日期：2026-11-07（Asia/Shanghai）；OpenQuantum 基线 `0da563fa87c6592a8923d2eb98eea80f484d2151`。
 - 官方仓库：[Fanerst/tropidist](https://github.com/Fanerst/tropidist)；固定完整 SHA：[`b03ec2d4077f287f89f97b5c2c16ce5ce17c2c58`](https://github.com/Fanerst/tropidist/tree/b03ec2d4077f287f89f97b5c2c16ce5ce17c2c58)。
 - 上游没有列出的 GitHub Release；这是固定研究源码提案，不把 main 或论文发布当稳定软件版本。
-- 11 月 21 日接入进度：**已完成小矩阵与小电路的隔离核验**。进度见[接入 PR #80](https://github.com/xi-zhao/OpenQuantum/pull/80)；用户可随时关闭或要求停止。
+- **状态：已合入主线（[PR #80](https://github.com/xi-zhao/OpenQuantum/pull/80)）。** 已交付 [`tropidist-distance`](../../../.agents/skills/tropidist-distance/SKILL.md) 与固定环境证据（[tropidist-2026-11-22.json](../../integrations/evidence/tropidist-2026-11-22.json)）；11 月 21 日隔离核验与候选规格保留如下。
 
 ## 用户任务、增量价值与优先级
 

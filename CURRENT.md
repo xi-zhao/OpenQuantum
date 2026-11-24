@@ -1,145 +1,47 @@
 # OpenQuantum 当前交接
 
-核验日期：2026-11-09。此页只记录交接状态；架构以[文档总入口](docs/README.md)为准，执行事实以 Harness
-Session event log 为准，科学状态以 Acceptance Report 为准。2026-09 至 2026-10-16 的日期化记录已迁至
-[交接历史](docs/handoff/HISTORY.md)，内容未删改。接手时先重新查询 Git、PR 与 CI，不把本页当作实时状态。
+核验日期：2026-11-24。此页只记录当前交接状态；架构以[文档总入口](docs/README.md)为准，执行事实以 Harness
+Session event log 为准，科学状态以 Acceptance Report 为准。2026-09 至 2026-10-30 的日期化记录（含 Harness 0.2.1 迁移、
+0.8.5–0.8.8 独立安装包及 scalable 增量迁移）已迁至[交接历史](docs/handoff/HISTORY.md)，内容未删改。
+接手时先重新查询 Git、PR 与 CI，不把本页当作实时状态。
 
 ## 当前基线
 
-- **0.8.11 源码基线与发行入口**：共享 backend 与状态协议修复已整合，相关回归为 218 通过、4 条件跳过。
-  同步版本包含 SlowQuant、TNQS、RcmpsCore 接入，详见 [0.8.11 更新说明](docs/releases/v0.8.11.md)。
+- **主线源码状态（`origin/main` @ `4b06e3ce`，源码版本 `0.8.11`）**：
+  - 在 `v0.8.11` 之后陆续合入 [PR #75](https://github.com/xi-zhao/OpenQuantum/pull/75)（IBM Runtime RZZ 兼容补丁）、
+    [PR #77](https://github.com/xi-zhao/OpenQuantum/pull/77)（README 首屏与宣传资料重构）、
+    [PR #79](https://github.com/xi-zhao/OpenQuantum/pull/79)（MWPF 超图译码）、
+    [PR #80](https://github.com/xi-zhao/OpenQuantum/pull/80)（tropidist 纠错距离界）、
+    [PR #81](https://github.com/xi-zhao/OpenQuantum/pull/81)（ST-GRAPE 多误差源脉冲控制）、
+    [PR #82](https://github.com/xi-zhao/OpenQuantum/pull/82)（PyZX 0.10.8 升级与正确性回归）、
+    [PR #84](https://github.com/xi-zhao/OpenQuantum/pull/84)（PPVM 丢失/泄漏模拟）、
+    [PR #85](https://github.com/xi-zhao/OpenQuantum/pull/85)（CI 数值回归退出码守卫）、
+    [PR #87](https://github.com/xi-zhao/OpenQuantum/pull/87)（`ws 8.23.0` 传输升级）、
+    [PR #88](https://github.com/xi-zhao/OpenQuantum/pull/88)（Braket 受控门本地噪声验证）和
+    [PR #89](https://github.com/xi-zhao/OpenQuantum/pull/89)（设置页按环境报告 SDK 实际版本）。
+  - 当前静态能力规模：**201 个 Capability**（[`.agents/capability-packages.yml`](.agents/capability-packages.yml)：`L0=102, L1=95, L2=1, L3=3`）、
+    **193 个内置 Skill**（180 自动可选、13 手动分类索引）、**91 个 MCP 连接**（64 默认开启、25 opt-in、2 条件开关）、
+    **5 个原生量子 Tool**、**121 个 SDK/源码环境**。以上为源码静态声明，不代表新版本已发布或已全部科学验收。
+- **0.8.11 发行入口**：共享 backend、状态协议修复及 SlowQuant / TNQS / RcmpsCore 接入见 [0.8.11 更新说明](docs/releases/v0.8.11.md)。
   [Desktop v0.8.11](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.11) 与
   [Codex codex-v0.8.11](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.11) 的公开状态、最终源码提交、包摘要和隔离宿主验收，以对应 Release 及验证附件为准；源码版本本身不代表发行完成。
   此次发行不自动替换本机安装；以下 0.8.10 记录保留为上次实际安装验收证据。
 - **0.8.10 安装验收记录**：当次完成本机 Desktop / Codex 更新；两端均来自干净源码提交 `091278a6`。
   [Desktop v0.8.10](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.10) 保留用于回退，
   [Codex codex-v0.8.10](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.10) 已公开；0.8.9 历史发行保留。
-- 设置页压缩重复标题与页尾，扩大目录和详情，修复筛选区滚动与展开表单的空白溢出；普通 Desktop 窗口的
-  详情高度由约 253px 增至 483px。真实安装在普通、低矮和窄窗口均通过滚轮、键盘、详情底部及完整页尾检查。
-  Codex 原生页面核对了版本、搜索、目录和账户详情浏览；宿主输入框仍覆盖部分共享页尾，未将其计为完整页尾验收。
-- 主线 10 项检查通过，DMG 摘要、镜像完整性、严格签名及公开附件摘要一致。本机普通重启正常，中文、模型选择、
-  19 个受保护文件及 3 个既有会话保留；Codex 的其他配置与插件条目不变。旧 Desktop 0.8.9 保留用于回退。
   验证范围见 [Desktop 验收附件](https://github.com/xi-zhao/OpenQuantum/releases/download/v0.8.10/release-verification.json)、
   [Codex 验收附件](https://github.com/xi-zhao/OpenQuantum/releases/download/codex-v0.8.10/release-validation.json) 和
-  [0.8.10 发布记录](docs/releases/v0.8.10.md)。Desktop 继续固定 DSH Desktop `2.0.0`，功能架构与宿主边界不变；
+  [0.8.10 发布记录](docs/releases/v0.8.10.md)。Desktop 继续固定 DSH Desktop `2.0.0` / Harness `0.1.0-rc.6`（V0 会话），
   Mac 包仍为 ad-hoc 签名，未做 Apple 公证。
-- 能力成熟度以 `.agents/capability-packages.yml` 为准；工程检查通过不表示所有能力均通过科学验收。
-- [PR #39](https://github.com/xi-zhao/OpenQuantum/pull/39) 的拒绝降级与旧设置入口清理、
-  [PR #40](https://github.com/xi-zhao/OpenQuantum/pull/40) 的临时凭据授权生命周期修复已经进入主线，并随 Desktop v0.8.5 发行。
-- [PR #35](https://github.com/xi-zhao/OpenQuantum/pull/35) 补齐根项目、Codex 插件和独立安装器的 MCP SDK `1.32.1`，
-  更新 sanitize-html `2.18.1` 及受影响的传递依赖；发行依赖与根项目的一致性由打包测试约束。
-  学习通生成库通过定向依赖覆盖复用项目已使用的 KaTeX `0.18.7`，避免保留旧版的信任选项漏洞；
-  真实依赖解析、公式生成和原型继承失败路径均有回归测试；本地检查与 7 项 PR 检查通过，已合入主线（`38a059d6`）。
-- [PR #41](https://github.com/xi-zhao/OpenQuantum/pull/41) 的 Host 鉴权、固定源完整性、科学计算预算/摘要及课堂流程
-  七项修复已进入主线（`a120d198`），并完整整合进 #38；真实 Host 与课堂 SDK 回归检查通过。
+- **能力与安全基础**：早期合入的 PR #35（MCP SDK 1.32.1 / KaTeX 0.18.7 / sanitize-html 2.18.1）、
+  PR #39（拒绝降级与旧设置清理）、PR #40（临时凭据生命周期）与 PR #41（Host 鉴权与预算摘要）均保留在当前基线中。
 
-## Harness 0.2.1 迁移
+## 已知缺口与治理跟进
 
-- Harness `0.2.1-rc.2` / 原版 DSH Desktop `2.0.18` 已随
-  [PR #38](https://github.com/xi-zhao/OpenQuantum/pull/38) 合入主线（`cb765c3c`）；适配记录见[升级记录](docs/releases/2026-10-23-harness-0.2.1.md)。
-- 已修复旧模型 route 标识迁移及模型选择保留；容器检查等待健康状态和认证启动地址，生产 Host 集成测试覆盖成功与失败路径。
-- 已实际构建固定的 Desktop 2.0.18，并从其源码补齐 59 条遗漏文案；8 种语言的 1278 条新增短语全部逐种重译和 AI 审读，
-  不是人工母语认证。审校来源及内容摘要见 `runtime/openquantum/web-locales/translation-review.json`。
-- 真实 Web 页面逐一验证八种语言切换、刷新保留、1440px/390px 布局及阿拉伯文 RTL；修复窄屏设置内容被侧栏挤窄的问题。
-  本地工程、桌面安装验证及 PR 检查的具体证据见升级记录和 PR；跨平台 CI 不能替代原生 GUI 与真实模型验收。
-- 旧的 `c/scalable-quantum-bridges` 迁移线及主工作区改动仅作历史参考，保留原样，不直接混入两个 PR。
-
-## 初次基线恢复（后续已纠正）
-
-- 最初误将第三方 DSH Desktop `2.0.7` 作为恢复目标；在独立任务分支 `c/desktop-2.0.7-baseline`
-  恢复配套 Harness `0.1.5-rc.1`，不把 #38 整体反向合并，不撤销 #35、#39、#40、#41 的无关修复。
-- 保留原有 `settings.yaml`、自定义模型与凭据引用；拒绝在旧版启动前改写 V4/V5 会话和新版 profile 设置。
-  新旧 Home 不做有损转换；现有新版数据与已安装客户端保持原样。
-- 所有八语言译文与 #38 的审校摘要保留；活动文案目录恢复到匹配的旧版，只装载旧版实际拥有的界面模块。
-- 实施与验证证据见 [恢复记录](docs/releases/2026-10-24-desktop-2.0.7.md)。用户已授权本地检查、推送、PR 与检查通过后合并；
-  发布与替换本机安装不在本轮范围内，主线状态仍以 GitHub 为准。
-- 简洁个人界面、源码构建、桌面/手机界面检查、真实 Magpie 文件读取与重启恢复完成。主测试 1017 项，704 通过、313 条件跳过。
-  根项目、两个 Codex 发行入口与源码桌面实际生产依赖均无匹配的已知安全通告；已安装原版应用未被更新。
-
-## 独立安装包 0.8.5
-
-- #43 已合并（`1658aa25`），但其 `2.0.7` 不是用户最早使用的版本。用户已明确纠正为 **DSH Desktop `2.0.0` / Harness `0.1.0-rc.6`**，固定上游提交 `ee1235e1dd1675bbd6c52cfbe3f27b27bcfcfa81`。
-- [PR #44](https://github.com/xi-zhao/OpenQuantum/pull/44) 恢复正确基线；按用户选择，桌面暂保留原生中英文，不为十语言引入新版接口。所有 README 和已有翻译保留。
-- 实查确认此版本使用 V0 会话；后续 V3 记录不会显示，安装前必须使用独立 Home 并保留旧数据，不能宣称原历史可直接继续。
-- 用户已选择完整保留旧会话并导出阅读副本。简洁版默认使用 `~/Library/Application Support/OpenQuantum/Desktop/`，
-  与旧启动器的部署和原生偏好隔离；此默认值直接随应用交付，Finder 与 Dock 启动无需临时环境设置。
-- 使用原版 HTTP 服务、Session V0 和生命周期；独立 Host 扩展保留本机访问认证，不增加登录页。2.0.7 的旧测试结果不能替代本次验证。
-- v0.8.5 已发布，并在备份后替换本机程序。本次只交付 macOS Apple Silicon 独立 DMG；
-  该发行源码版本为 `0.8.5`，Codex 公开 Release 仍为 `codex-v0.8.4`。
-- 独立应用复用固定上游源码与正式扩展，自带 Node/uv、能力代码和生产依赖；不修改上游实现。
-  构建、发布与本机安装证据分别核验，详见 [0.8.5 发布记录](docs/releases/v0.8.5.md)。
-- [PR #45](https://github.com/xi-zhao/OpenQuantum/pull/45) 提高文件上限后，主线签名仍复现 `EMFILE`；
-  [PR #46](https://github.com/xi-zhao/OpenQuantum/pull/46) 通过构建进程的文件访问排队修复，低上限回归和完整应用扫描通过。
-- [PR #47](https://github.com/xi-zhao/OpenQuantum/pull/47) 固定独立数据目录。发行来自干净提交 `429a2cc3`，
-  该提交包含在 main 的 `ef7ae405` 中且文件树相同；PR 的 11 项检查和该 main 提交的 8 项检查全部通过。
-  DMG 完整性、镜像内签名、首次部署、两次启动、捆绑运行工具及配置保留检查通过；GitHub 附件摘要与本地包一致。
-- 本机安装为 `/Applications/OpenQuantum.app`，原启动器已可恢复归档，原快捷入口指向新应用。
-  旧配置和会话的 4,757 个文件逐一核对摘要不变；两段 V3 会话完整导出为本地私有 HTML、Markdown 和事件副本。
-- 正式安装版已从 GUI 使用 Magpie 调用 `read`；Session event log 记录测试文件结果与 `turn/end=completed`。
-  退出重开后测试会话、模型和中文设置保留。原生文件选择器已触发，但验收工具无法接管其辅助窗口；
-  验证工作区通过官方工作区接口预先注册，此项不能算作文件选择器完整验收。
-- 发布附件采用 ad-hoc 本地签名，没有 Apple Developer ID 分发签名或公证；未关闭系统安全检查。
-
-## 0.8.6 插件设置
-
-- 「设置 → OpenQuantum」沿用本机 Codex 0.8.4 的「首页、Skills、MCP」导航与版式；工具、环境和凭据在对应卡片内配置。
-- 简洁导航保留通用、模型与 OpenQuantum；共用目录、分类、搜索和设置逻辑，各宿主分别保存配置和凭据。
-- 不改变按需准备机制或固定的 Desktop/Harness 基线。页面读取不安装 SDK，也不启动计算服务。
-- 更新说明见 [0.8.6 发布记录](docs/releases/v0.8.6.md)；发布、镜像与本机升级的完成证据以该版本 Release 验证附件为准。
-
-## 插件优先维护
-
-- 共享 Skills、Tools、MCP Server 与科学合同是核心，DSH/Codex 适配并列，Desktop 是品牌化的交付形态。
-- Codex 构建已改为读取共享能力目录；不再调用 Desktop 设置服务。连接地址、凭据和启停状态由各宿主维护。
-- 共享执行入口增加静态依赖检查；旧 DSH 品牌适配集中维护。边界与贡献路径见[模块地图](docs/architecture/MODULES.md)。
-- 本地完整检查通过：主测试 1039 项，725 通过、314 条件跳过、0 失败；其余合同与能力套件均无失败。
-  合并、Release 和本机安装分别以 GitHub 与最终发布验证附件为准，不由本地检查推定。
-
-## 按需插件与设置恢复整合
-
-- 从 0.8.8 主线整理旧任务分支的三项改进；保留现行首页 / Skills / MCP 布局和 Desktop 基线。
-- Codex 使用发现、准备、执行三个内置入口；选择后返回精确 Tool 合同，执行继续委托共享实现。
-- 算法环境默认最小依赖，按任务增加组；安装、取消和就绪收据复用现有管理器。
-- 设置保存后读取核对，丢失回复不重发写入；未确认时保留草稿，连接操作绑定实例。
-- 本节描述源码改动，不代表已发布新的 Codex 插件或桌面安装包；本轮检查与合并以对应 PR 为准。
-
-## scalable 有效增量迁移
-
-- 从 `origin/main` 的 `f87df719` 建立 `c/migrate-scalable-increments`，按功能核对旧分支九个独有提交；
-  旧分支 `c/scalable-quantum-bridges` 与学习资料保留。主线已实现或替代的宿主、模型、依赖和四库主体沿用主线。
-- QCEC 分类复核接入共享科学合同与 DSH 自动物化链，QI/QCEC 增加可重读的可读报告；执行规模与独立科学验收范围分开。
-  Graphix 合法空 pattern 与课堂/探针有效修复按当前主线接口迁入。
-- [迁移记录](docs/releases/2026-10-26-scalable-migration.md)列明逐提交处置、独立审阅修复与宿主边界。
-  本轮全部测试阶段通过（主测试 831 通过、320 条件跳过），Harness 配置在独立 V0 Home 验证通过；
-  默认 Home 中的旧 V3 会话保留，兼容性检查仍拒绝原地使用。本节记录源码状态，PR/CI 以 GitHub 为准；
-  不表示发布、合并或本机应用更新。
-
-## 已知缺口
-
-- 科学验收：QCEC 已补齐 DSH 分类复核纵切，Codex 的自动会话验收仍未接通；后续优先完善高频能力的证据链，避免仅扩充 SDK 数量。
-- 在线模型：v0.8.5 本机 Magpie 文本与 Tool Calling 验收通过；这不代表公共网关或其他 Provider 已通过在线验收。
-- 仓库体积：主页、小红书配图与实验 `.npz` 结果单个约 1–2 MB，未迁出。
-
-## 0.8.7 原生菜单
-
-- 独立桌面的菜单栏统一为 OpenQuantum 图标与「打开 / 退出」两项，跟随中英文语言设置；
-  固定 compatibility 窗口样式，移除 DSH Terminal 和窗口模式切换入口，Agent 执行 Tool 不受影响。
-- 固定 Desktop 2.0.0 源码构建增加最小菜单展示接口；品牌决策仍由 OpenQuantum Host Plugin 拥有。
-  补丁和实际构建入口与原生菜单模块均以摘要验证，构建后恢复上游源码；不修改 Harness 依赖实现。
-- [PR #51](https://github.com/xi-zhao/OpenQuantum/pull/51) 已合并；PR 的 12 项检查和 main `1cbfcfc2` 的 10 项检查全部通过。
-  v0.8.7 来自干净提交 `d2066782`，已发布 Mac Apple Silicon DMG；GitHub 附件大小与摘要同本地包一致。
-- GUI 已核对中英文、系统应用菜单、插件设置、验收会话和镜像内启动。菜单栏弹出层无法由当前验收工具读取，
-  两项菜单、语言刷新与回调由原生自动化测试覆盖。发布和本机安装的具体范围见 [0.8.7 发布记录](docs/releases/v0.8.7.md) 与 Release 验证附件。
-
-## 0.8.8 白底应用图标
-
-- 任务分支 `c/desktop-white-icon`，源码提交 `4dc1afe1`：原有标志置于白色圆角底板，
-  Dock 运行时、独立 Mac 应用和品牌启动器共用桌面图标；Web 与菜单栏的透明标志保持各自用途。
-- `npm run check` 与 17 项品牌定向检查通过，干净提交打包、严格签名验证和本机安装完成。
-  实际应用信息窗口显示白底图标及 0.8.8；已有验收会话、Magpie 选择与 12 个受保护文件摘要均保留。
-- 发布说明与兼容性见 [0.8.8 发布记录](docs/releases/v0.8.8.md)；Release 的 `release-verification.json`
-  绑定最终源码、PR/main 检查、安装包摘要与验证范围。本机已验证的初始构建来自 `4dc1afe1`。
-  当前 GUI 工具未直接捕获 Dock 和菜单栏弹出层，不以图标资源核验替代该项可见操作验收。
+- **科学验收**：L3 验收链目前仅覆盖 QGS、量子信息审计与 QCEC 分类复核（`L0=102, L1=95, L2=1, L3=3`），Codex 的自动物化与会话验收仍未接通；后续需避免仅扩充 SDK 数量而忽视高频能力的证据链提升。
+- **扩展与仓库治理**：[扩展治理清单](docs/architecture/EXTENSION_GOVERNANCE.md) 仍停在 2026-09-24（101 Skill / 37 MCP），待随下一批治理刷新至 2026-11 基线；`outputs/`、宣传素材及 `experiments/` 非引用大文件边界亦待按批次清理。
+- **待分诊的未合入本地修复分支**：本机存在 3 个 11 月未合入主线的修复分支（`c/shared-credential-redaction`、`c/desktop-preparation-reuse`、`c/security-scientific-bridge-boundary`）及 3 个 11 月 23–24 日活跃候选分支，需逐项核对后再决定合入或清理，切勿盲删。
+- **在线模型**：v0.8.5 本机 Magpie 文本与 Tool Calling 验收通过；这不代表公共网关或其他 Provider 已通过在线验收。
 
 ## 动作边界
 
