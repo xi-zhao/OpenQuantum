@@ -9,6 +9,7 @@ __pycache__/
 
 # Local OpenQuantum runtime state and scientific outputs
 .openquantum/
+outputs/
 results/
 
 # Opt-in upstream skill checkouts (mounted as-is via setup, not redistributed)
