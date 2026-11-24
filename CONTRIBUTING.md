@@ -112,6 +112,13 @@ Tool 最大副作用和证据来源也必须分开登记：本地 MCP Server 通
 `conservative-provider`，按 Provider 能力保守分类。副作用包括完整调用的环境安装和 Host 后置证据写入，
 不能只检查计算函数。`effectEvidence` 不是“运行时已连接”的证明。
 
+### 扩展准入与成熟度治理
+
+- 新增 SDK 或能力前先核对[扩展治理清单](docs/architecture/EXTENSION_GOVERNANCE.md)与[相近能力选择](docs/integrations/CAPABILITY_SELECTION.md)，明确相较既有 121 个 SDK 的真实物理或算法增量；优先采用原生 SDK 公开 API 路径，避免为已有能力重复新增默认开启的 MCP 进程。
+- 新增或修改能力、Skill、MCP 连接或 SDK 环境后，同步更新[扩展治理清单](docs/architecture/EXTENSION_GOVERNANCE.md)基线统计并运行 `npm run governance:audit` 防止文档与声明漂移。
+- 涉及隔离数值 CI 验证的 SDK 统一通过 [`.github/workflows/sdk-checks.yml`](.github/workflows/sdk-checks.yml) 与 Python/Julia 可复用模板接入，不再复制单 SDK workflow 或在 `ci.yml` 中内联临时 `git diff` 逻辑。
+- 在扩充 L0/L1 覆盖的同时，优先把高频能力的科学检查推进到 L2/L3（Validator + Acceptance Profile + Materializer + central Acceptance Builder）。
+
 ## 增加 Tool 或 MCP Server
 
 先定义 Agent 真正需要的最小 Tool surface：名称、输入输出 schema、错误语义、副作用、超时和审批要求。

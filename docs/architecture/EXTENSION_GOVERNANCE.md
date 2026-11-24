@@ -1,4 +1,42 @@
-# 扩展治理清单（2026-09-24）
+# 扩展治理清单（2026-11-24 基线）
+
+> 本文件顶部维护 **2026-11-24 当前全量基线、成熟度准入规则与防漂移检查**；下方完整保留 2026-09-24 首次治理（101 Skill / 37 MCP / 220 Tool，B1/B2/B3）的逐项历史决定，不改写既有记录。
+> 当前基线数字由 [`scripts/audit-extension-governance.mjs`](../../scripts/audit-extension-governance.mjs) 直接核对源码声明并受 `npm run governance:audit` 守卫。
+
+## 2026-11-24 全量扩展基线与保守治理策略
+
+| 维度 | 当前统计 | 说明 |
+| --- | --- | --- |
+| Capability 总数 | **201** 个 Capability | `L0=102`、`L1=95`、`L2=1`、`L3=3`（含 8 个 Tool-only 能力：`metriq-data`、`qiskit-gym`、`qiskit-ibm-runtime`、`qiskit-ibm-transpiler`、`qpanda-runtime`、`quantum-hardware`、`quantum-learning`、`quantum-practices`） |
+| 内置 Skill | **193** 个内置 Skill | 180 自动可选，13 手动分类索引（`disable-model-invocation: true`） |
+| MCP 服务连接 | **91** 个 MCP 连接 | 64 默认开启、2 条件开关（`qiskit`、`qiskit_docs`）、25 按需启用；策略登记 258 个 MCP Tool |
+| SDK / 源码环境 | **121** 个 SDK/源码环境 | `python=109`、`julia=9`、`native=2`、`lean=1`；其中 `nativeOnly=36` |
+
+### 本轮治理决策（2026-11-24）
+
+1. **自动调用 Skill 集合（保守策略）**：维持现有 180 个自动可选 Skill 与 13 个手动分类索引不变，不破坏既有会话与模型发现路径；改由 `npm run governance:audit` 持续监测扩展面增长，避免无感知膨胀。
+2. **宿主激活边界对齐**：
+   - **Desktop（0.8.6+）**：通过 `adaptive-capabilities.mjs` 将受管 MCP rows 转为按需原生 Tool Provider，不会在启动时同时拉起 64 个 MCP 子进程；
+   - **Codex 插件**：通过发现 → 准备 → 执行三入口按需调用共享后端；
+   - **源码 Web 模式**：直接装载 [`agent.cordis.yml`](../../runtime/openquantum/agent-presets/openquantum/agent.cordis.yml) 的默认声明（64 默认开启 + 2 条件 + 25 opt-in）；`agent.cordis.yml` 同时作为 25+ 脚本、迁移器与一致性测试的单文件声明权威，不在统一抽象就绪前强行拆文件。
+3. **CI 验证模板收敛**：新增或维护 SDK 的隔离数值回归统一接入 [`.github/workflows/sdk-checks.yml`](../../.github/workflows/sdk-checks.yml) 与 Python/Julia 可复用模板（`_reusable-python-sdk.yml` / `_reusable-julia-sdk.yml`），禁止再为单个 SDK 复制独立 workflow 或向 `ci.yml` 内联手工 `git diff` 逻辑。
+
+### 成熟度准入与升级门槛
+
+当前能力分布呈明显头重脚轻（`L0=102`、`L1=95`、`L2=1`、`L3=3`）：
+
+- **新增能力准入门槛**：
+  1. 必须先经去重核查，说明相较现有 121 个 SDK 的真实物理/算法增量，不以实现语言差异或同类包装作为接入理由；
+  2. 新接入优先采用“L0 Skill + 固定原生 SDK 环境 + 独立数值对照”路径，避免无必要地继续增加默认开启的 MCP 进程；
+  3. 同步更新 `.agents/capability-packages.yml`、`docs/CAPABILITIES.md`、`docs/architecture/EXTENSION_GOVERNANCE.md`，并通过 `npm run governance:audit` 与 `npm run capability:conformance`；
+  4. 大体量日志与过程产物留在 CI Artifact（`sdk-checks.yml`），主仓仅保留紧凑的摘要 JSON 与最小原始见证（见 [证据边界说明](../integrations/evidence/README.md)）。
+- **L2 / L3 科学验收推进优先级**：
+  - 当前 L3 仅覆盖 `quantum-ground-state`、`quantum-information-audit` 与 `quantum-circuit-verification`（DSH 侧），Codex 自动物化与会话验收尚未接通；
+  - 后续演进优先从高频科研能力中提升 L2/L3 覆盖（如 `qec-memory-experiment`、`hamiltonian-simulation`、`qiskit-circuit-workbench`），避免仅扩充 L0/L1 数量。
+
+---
+
+## 历史基线：扩展治理清单（2026-09-24）
 
 本清单以主线基线 `9254ab2f73830d6f635433fd1ab21c7e017f8059` 为起点，覆盖仓库默认 Preset 的 **101 个 Skill、37 个 MCP 连接和 220 个可配置注册的 Tool 名称**。B1/B2/B3 调整均已落地，逐项保留兼容入口；本次完成范围是扩展治理，不是全部云服务在线验收。用户自行添加的 Skill、MCP 与其他 Preset 不在这个固定分母内。
 
