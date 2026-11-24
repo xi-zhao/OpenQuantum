@@ -15,6 +15,7 @@ import { readCapabilities, providerGroups } from "../runtime/chatgpt/catalog.mjs
 import { Settings } from "../src/settings/codex/application.mjs";
 import { locateSdkRuntime } from "../runtime/chatgpt/sdk-access.mjs";
 import { installedMcpServer } from "../scripts/install-codex-plugin.mjs";
+import { localModuleFiles } from "./helpers/module-graph.mjs";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const run = promisify(execFile);
@@ -24,6 +25,9 @@ test("SDK access survives archive, split installation and cached Skill relocatio
   t.after(() => fs.rm(directory, { recursive: true, force: true }));
   const { pluginRoot } = await buildPlugin({ root, output: path.join(directory, "build") });
   const server = path.join(pluginRoot, "server");
+  for (const file of await localModuleFiles(root, ["src/lib/local-json-process.mjs"])) {
+    assert.deepEqual(await fs.readFile(path.join(server, file)), await fs.readFile(path.join(root, file)), `Missing or stale shared dependency: ${file}`);
+  }
   assert.equal(await locateSdkRuntime(pluginRoot), server);
   for (const entry of await readSdkLibraries(root)) {
     const project = entry.id === "quantum-algorithms" ? "examples/quantum-algorithms" : `.agents/skills/${entry.id}`;
