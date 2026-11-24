@@ -1,0 +1,238 @@
+name: SDK verification
+
+permissions:
+  contents: read
+
+on:
+  workflow_dispatch:
+    inputs:
+      sdk:
+        description: SDK verification target to run
+        required: true
+        default: all
+        type: choice
+        options:
+          - all
+          - mwpf
+          - ppvm
+          - pyzx
+          - tropidist
+          - stgrape
+          - braket
+          - rcmps
+          - tnqs
+  pull_request:
+    paths:
+      - '.github/workflows/sdk-checks.yml'
+      - '.github/workflows/_reusable-python-sdk.yml'
+      - '.github/workflows/_reusable-julia-sdk.yml'
+      - 'scripts/detect-sdk-ci-targets.mjs'
+      - '.agents/skills/mwpf-decoding/**'
+      - 'tests/fixtures/mwpf-validation.py'
+      - 'tests/mwpf-decoding-live.test.mjs'
+      - '.agents/skills/ppvm-simulation/**'
+      - 'tests/fixtures/ppvm-*'
+      - 'tests/ppvm-*'
+      - '.agents/skills/pyzx-optimization/**'
+      - 'benchmarks/upstream-updates/pyzx_regressions.py'
+      - 'tests/unitary-next-live.test.mjs'
+      - '.agents/skills/tropidist-distance/**'
+      - '.agents/skills/stgrape-control/**'
+      - '.agents/skills/braket-simulation/**'
+      - '.agents/sdk-libraries.json'
+      - 'src/lib/sdk-source.mjs'
+      - 'src/lib/sdk-source-record.mjs'
+      - 'src/lib/sdk-access.mjs'
+      - 'src/lib/sdk_bootstrap.py'
+      - 'src/lib/tropidist-build.mjs'
+      - 'src/lib/prepared-python.mjs'
+      - 'src/lib/sdk_expansion_circuits.py'
+      - 'scripts/setup-sdk.mjs'
+      - 'scripts/setup-paper-tools.mjs'
+      - 'tests/tropidist-*'
+      - 'tests/stgrape-control-live.test.mjs'
+      - 'tests/fixtures/stgrape-validation.py'
+      - 'tests/sdk-expansion-circuits-live.test.mjs'
+      - 'tests/fixtures/sdk_expansion_circuits_science.py'
+      - '.agents/skills/rcmps-field-theory/**'
+      - 'tests/fixtures/rcmps-*'
+      - 'tests/rcmps-*'
+      - '.agents/skills/tnqs-dynamics/**'
+      - 'tests/fixtures/tnqs-*'
+      - 'tests/tnqs-*'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/sdk-checks.yml'
+      - '.github/workflows/_reusable-python-sdk.yml'
+      - '.github/workflows/_reusable-julia-sdk.yml'
+      - 'scripts/detect-sdk-ci-targets.mjs'
+      - '.agents/skills/mwpf-decoding/**'
+      - 'tests/fixtures/mwpf-validation.py'
+      - 'tests/mwpf-decoding-live.test.mjs'
+      - '.agents/skills/ppvm-simulation/**'
+      - 'tests/fixtures/ppvm-*'
+      - 'tests/ppvm-*'
+      - '.agents/skills/pyzx-optimization/**'
+      - 'benchmarks/upstream-updates/pyzx_regressions.py'
+      - 'tests/unitary-next-live.test.mjs'
+      - '.agents/skills/tropidist-distance/**'
+      - '.agents/skills/stgrape-control/**'
+      - '.agents/skills/braket-simulation/**'
+      - '.agents/sdk-libraries.json'
+      - 'src/lib/sdk-source.mjs'
+      - 'src/lib/sdk-source-record.mjs'
+      - 'src/lib/sdk-access.mjs'
+      - 'src/lib/sdk_bootstrap.py'
+      - 'src/lib/tropidist-build.mjs'
+      - 'src/lib/prepared-python.mjs'
+      - 'src/lib/sdk_expansion_circuits.py'
+      - 'scripts/setup-sdk.mjs'
+      - 'scripts/setup-paper-tools.mjs'
+      - 'tests/tropidist-*'
+      - 'tests/stgrape-control-live.test.mjs'
+      - 'tests/fixtures/stgrape-validation.py'
+      - 'tests/sdk-expansion-circuits-live.test.mjs'
+      - 'tests/fixtures/sdk_expansion_circuits_science.py'
+      - '.agents/skills/rcmps-field-theory/**'
+      - 'tests/fixtures/rcmps-*'
+      - 'tests/rcmps-*'
+      - '.agents/skills/tnqs-dynamics/**'
+      - 'tests/fixtures/tnqs-*'
+      - 'tests/tnqs-*'
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      mwpf: ${{ steps.detect.outputs.mwpf }}
+      ppvm: ${{ steps.detect.outputs.ppvm }}
+      pyzx: ${{ steps.detect.outputs.pyzx }}
+      tropidist: ${{ steps.detect.outputs.tropidist }}
+      stgrape: ${{ steps.detect.outputs.stgrape }}
+      braket: ${{ steps.detect.outputs.braket }}
+      rcmps: ${{ steps.detect.outputs.rcmps }}
+      tnqs: ${{ steps.detect.outputs.tnqs }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+      - id: detect
+        name: Detect affected SDK targets
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          DISPATCH_TARGET: ${{ github.event_name == 'workflow_dispatch' && inputs.sdk || '' }}
+        run: |
+          if [ -n "$DISPATCH_TARGET" ]; then
+            node scripts/detect-sdk-ci-targets.mjs --dispatch "$DISPATCH_TARGET" --github-output "$GITHUB_OUTPUT"
+          else
+            node scripts/detect-sdk-ci-targets.mjs --base "$BASE_SHA" --head HEAD --github-output "$GITHUB_OUTPUT"
+          fi
+
+  mwpf:
+    needs: changes
+    if: needs.changes.outputs.mwpf == 'true'
+    uses: ./.github/workflows/_reusable-python-sdk.yml
+    with:
+      sdk_id: mwpf-decoding
+      os_matrix: '["macos-latest","ubuntu-latest","windows-latest"]'
+      timeout_minutes: 20
+      python_version: '3.12'
+      lockfiles: .agents/skills/mwpf-decoding/uv.lock
+      resolve_sdk_python: true
+      numerical_script: tests/fixtures/mwpf-validation.py
+      test_command: OPENQUANTUM_LIVE_MWPF=1 OPENQUANTUM_ECOSYSTEM_CHECKS=1 OPENQUANTUM_SDK_IDS=mwpf-decoding node --test --test-concurrency=1 tests/mwpf-decoding-live.test.mjs tests/sdk-ecosystem-live.test.mjs
+      test_command_os: macOS
+      artifact_name: mwpf-sdk
+      artifact_extra_paths: |
+        .agents/skills/mwpf-decoding/pyproject.toml
+        .agents/skills/mwpf-decoding/uv.lock
+
+  ppvm:
+    needs: changes
+    if: needs.changes.outputs.ppvm == 'true'
+    uses: ./.github/workflows/_reusable-python-sdk.yml
+    with:
+      sdk_id: ppvm-simulation
+      os_matrix: '["macos-latest"]'
+      timeout_minutes: 45
+      lockfiles: .agents/skills/ppvm-simulation/pyproject.toml .agents/skills/ppvm-simulation/uv.lock
+      isolated_temp_dirs: true
+      log_rustc: true
+      ecosystem_check: true
+      numerical_script: tests/fixtures/ppvm-validation.py
+      sandbox_numerical: true
+      artifact_name: ppvm-sdk-evidence
+      artifact_extra_paths: |
+        .agents/skills/ppvm-simulation/pyproject.toml
+        .agents/skills/ppvm-simulation/uv.lock
+
+  pyzx:
+    needs: changes
+    if: needs.changes.outputs.pyzx == 'true'
+    uses: ./.github/workflows/_reusable-python-sdk.yml
+    with:
+      sdk_id: pyzx-optimization
+      os_matrix: '["ubuntu-latest","macos-latest"]'
+      timeout_minutes: 15
+      setup_script: scripts/setup-paper-tools.mjs
+      test_command: OPENQUANTUM_REAL_UNITARY_NEXT=1 node --test --test-name-pattern='real PyZX' tests/unitary-next-live.test.mjs
+      artifact_name: pyzx-correctness
+      upload_evidence_dir: false
+      artifact_extra_paths: .openquantum/unitary-next-evidence
+
+  tropidist:
+    needs: changes
+    if: needs.changes.outputs.tropidist == 'true'
+    uses: ./.github/workflows/_reusable-python-sdk.yml
+    with:
+      sdk_id: tropidist-distance
+      timeout_minutes: 20
+      test_command: OPENQUANTUM_LIVE_TROPIDIST=1 node --test tests/tropidist-cli.test.mjs
+
+  stgrape:
+    needs: changes
+    if: needs.changes.outputs.stgrape == 'true'
+    uses: ./.github/workflows/_reusable-python-sdk.yml
+    with:
+      sdk_id: stgrape-control
+      timeout_minutes: 20
+      test_command: OPENQUANTUM_LIVE_STGRAPE=1 node --test tests/stgrape-control-live.test.mjs
+
+  braket:
+    needs: changes
+    if: needs.changes.outputs.braket == 'true'
+    uses: ./.github/workflows/_reusable-python-sdk.yml
+    with:
+      sdk_id: braket-simulation
+      timeout_minutes: 20
+      setup_script: scripts/setup-paper-tools.mjs
+      test_command: OPENQUANTUM_REAL_SDK_EXPANSION_CIRCUITS=1 AWS_EC2_METADATA_DISABLED=true node --test --test-name-pattern=braket-simulation tests/sdk-expansion-circuits-live.test.mjs
+
+  rcmps:
+    needs: changes
+    if: needs.changes.outputs.rcmps == 'true'
+    uses: ./.github/workflows/_reusable-julia-sdk.yml
+    with:
+      sdk_id: rcmps-field-theory
+      cache_depot: true
+      julia_load_path: '@:@stdlib'
+      validation_script: tests/fixtures/rcmps-validation.jl
+      numpy_version: '2.5.3'
+      numpy_reference_script: tests/fixtures/rcmps-steady-reference.py
+      numpy_reference_input: rcmps-validation.json
+      numpy_reference_output: numpy-reference.json
+      artifact_name: rcmps-sdk-evidence
+
+  tnqs:
+    needs: changes
+    if: needs.changes.outputs.tnqs == 'true'
+    uses: ./.github/workflows/_reusable-julia-sdk.yml
+    with:
+      sdk_id: tnqs-dynamics
+      validation_script: tests/fixtures/tnqs-validation.jl
+      artifact_name: tnqs-sdk-evidence

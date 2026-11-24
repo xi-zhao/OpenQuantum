@@ -1,0 +1,130 @@
+name: Reusable Julia SDK verification
+
+permissions:
+  contents: read
+
+on:
+  workflow_call:
+    inputs:
+      sdk_id:
+        required: true
+        type: string
+      julia_version:
+        default: '1.12.7'
+        type: string
+      timeout_minutes:
+        default: 45
+        type: number
+      cache_depot:
+        default: false
+        type: boolean
+      julia_load_path:
+        default: ''
+        type: string
+      validation_script:
+        required: true
+        type: string
+      numpy_version:
+        default: ''
+        type: string
+      numpy_reference_script:
+        default: ''
+        type: string
+      numpy_reference_input:
+        default: ''
+        type: string
+      numpy_reference_output:
+        default: ''
+        type: string
+      artifact_name:
+        required: true
+        type: string
+
+jobs:
+  native-sdk:
+    runs-on: macos-latest
+    timeout-minutes: ${{ inputs.timeout_minutes }}
+    defaults:
+      run:
+        shell: bash
+    env:
+      JULIA_NUM_PRECOMPILE_TASKS: '2'
+      JULIA_PKG_PRECOMPILE_AUTO: '0'
+    steps:
+      - uses: actions/checkout@v7
+      - name: Select isolated task directories
+        env:
+          SDK_ID: ${{ inputs.sdk_id }}
+          JULIA_LOAD_PATH_INPUT: ${{ inputs.julia_load_path }}
+        run: |
+          echo "OPENQUANTUM_JULIA_DEPOT_PATH=$RUNNER_TEMP/${SDK_ID}-depot" >> "$GITHUB_ENV"
+          echo "JULIA_DEPOT_PATH=$RUNNER_TEMP/${SDK_ID}-depot" >> "$GITHUB_ENV"
+          echo "OPENQUANTUM_SDK_CHECK_OUTPUT=$RUNNER_TEMP/${SDK_ID}-evidence" >> "$GITHUB_ENV"
+          if [ -n "$JULIA_LOAD_PATH_INPUT" ]; then
+            echo "JULIA_LOAD_PATH=$JULIA_LOAD_PATH_INPUT" >> "$GITHUB_ENV"
+          fi
+          lock_hash="$(shasum -a 256 ".agents/skills/${SDK_ID}/Project.toml" ".agents/skills/${SDK_ID}/Manifest.toml" | shasum -a 256 | awk '{print $1}')"
+          echo "JULIA_LOCK_HASH=${lock_hash}" >> "$GITHUB_ENV"
+      - uses: julia-actions/setup-julia@v2
+        with:
+          version: ${{ inputs.julia_version }}
+      - name: Reuse the exact frozen Julia environment
+        if: inputs.cache_depot
+        uses: actions/cache@v5
+        with:
+          path: ${{ env.JULIA_DEPOT_PATH }}
+          key: ${{ inputs.sdk_id }}-julia-${{ inputs.julia_version }}-${{ runner.os }}-${{ runner.arch }}-${{ env.JULIA_LOCK_HASH }}
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+      - name: Install JavaScript check dependencies
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - if: inputs.numpy_version != ''
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Explicit preparation of the frozen Julia environment
+        env:
+          SDK_ID: ${{ inputs.sdk_id }}
+          NUMPY_VERSION: ${{ inputs.numpy_version }}
+        run: |
+          node scripts/setup-sdk.mjs "$SDK_ID"
+          git diff --exit-code -- ".agents/skills/${SDK_ID}/Project.toml" ".agents/skills/${SDK_ID}/Manifest.toml"
+          if [ -n "$NUMPY_VERSION" ]; then
+            python -m venv "$RUNNER_TEMP/${SDK_ID}-reference"
+            "$RUNNER_TEMP/${SDK_ID}-reference/bin/python" -m pip install --disable-pip-version-check "numpy==${NUMPY_VERSION}"
+          fi
+      - name: Offline native user program through the existing SDK interface
+        env:
+          OPENQUANTUM_ECOSYSTEM_CHECKS: '1'
+          OPENQUANTUM_SDK_IDS: ${{ inputs.sdk_id }}
+        run: node --test tests/sdk-ecosystem-live.test.mjs
+      - name: Independent numerical references and failure cases
+        env:
+          JULIA_PKG_OFFLINE: 'true'
+          SDK_ID: ${{ inputs.sdk_id }}
+          VALIDATION_SCRIPT: ${{ inputs.validation_script }}
+        run: |
+          mkdir -p "$OPENQUANTUM_SDK_CHECK_OUTPUT"
+          sandbox-exec -p '(version 1) (allow default) (deny network*)' julia --startup-file=no --project=".agents/skills/$SDK_ID" "$VALIDATION_SCRIPT" 2>&1 | tee "$OPENQUANTUM_SDK_CHECK_OUTPUT/numerical.log"
+      - name: Independent NumPy stationary-state reference
+        if: inputs.numpy_reference_script != ''
+        env:
+          SDK_ID: ${{ inputs.sdk_id }}
+          NUMPY_REFERENCE_SCRIPT: ${{ inputs.numpy_reference_script }}
+          NUMPY_REFERENCE_INPUT: ${{ inputs.numpy_reference_input }}
+          NUMPY_REFERENCE_OUTPUT: ${{ inputs.numpy_reference_output }}
+        run: |
+          sandbox-exec -p '(version 1) (allow default) (deny network*)' "$RUNNER_TEMP/${SDK_ID}-reference/bin/python" -B "$NUMPY_REFERENCE_SCRIPT" "$OPENQUANTUM_SDK_CHECK_OUTPUT/$NUMPY_REFERENCE_INPUT" "$OPENQUANTUM_SDK_CHECK_OUTPUT/$NUMPY_REFERENCE_OUTPUT"
+      - name: Save execution evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ inputs.artifact_name }}
+          path: |
+            .agents/skills/${{ inputs.sdk_id }}/Project.toml
+            .agents/skills/${{ inputs.sdk_id }}/Manifest.toml
+            ${{ runner.temp }}/${{ inputs.sdk_id }}-evidence
+          include-hidden-files: true
+          if-no-files-found: error

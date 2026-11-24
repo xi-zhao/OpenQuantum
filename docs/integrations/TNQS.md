@@ -34,7 +34,7 @@ DSH/Codex 复用相同 Skill、SDK 清单和宿主代码工具；没有新 Tool�
 
 ## 验证入口
 
-[`tnqs-sdk.yml`](../../.github/workflows/tnqs-sdk.yml) 在远端 macOS 隔离环境显式准备依赖，
+[`sdk-checks.yml`](../../.github/workflows/sdk-checks.yml)（经 [`_reusable-julia-sdk.yml`](../../.github/workflows/_reusable-julia-sdk.yml)）在远端 macOS 隔离环境显式准备依赖，
 并以操作系统拒绝网络的方式运行原生用户程序和
 [小系统检查](../../tests/fixtures/tnqs-validation.jl)。固定随机种子与执行前声明的容差，检查：
 
