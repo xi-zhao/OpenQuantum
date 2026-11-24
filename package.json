@@ -45,7 +45,6 @@
     "demo:quantum-ground-state": "node scripts/run-quantum-ground-state-demo.mjs",
     "test:harness-web-branding": "node --test tests/harness-web-branding.test.mjs",
     "test:contracts": "node --test .agents/skill-contracts/test/*.test.mjs",
-    "cap": "node scripts/capability-cli.mjs",
     "governance:audit": "node scripts/audit-extension-governance.mjs --check",
     "capability:conformance": "node scripts/audit-capability-packages.mjs",
     "capability:quantum-practices:test": "node --test tests/quantum-practices.test.mjs tests/harness-quantum-practices.test.mjs",
