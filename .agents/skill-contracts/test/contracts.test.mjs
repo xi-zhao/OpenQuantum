@@ -594,6 +594,19 @@ test("Acceptance builder injects profile fields and derives passed", () => {
   assert.equal(report.checks[1].required, false);
 });
 
+test("observations-only v1 manifests load but cannot manufacture Acceptance", async () => {
+  await withCapabilityTree(({ manifest, saveManifest }) => {
+    manifest.acceptanceProfiles = [];
+    saveManifest();
+  }, async ({ skillRoot }) => {
+    const observationsOnly = await loadCapability(skillRoot);
+    assert.deepEqual(observationsOnly.manifest.acceptanceProfiles, []);
+    await expectContractFailure(() => buildReport(clone(passedObservationsDocument.checks), {
+      capability: observationsOnly,
+    }), "unknown acceptance profile");
+  });
+});
+
 const acceptanceStatusCases = [
   { check: "energy-accuracy", checkStatus: "fail", expected: "failed" },
   { check: "energy-accuracy", checkStatus: "not_checked", expected: "failed" },

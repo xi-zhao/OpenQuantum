@@ -100,8 +100,9 @@ MCP Server 只提供协议边界，不自动使规则可信。
 
 仓库发行版自带的 Skill 还必须登记在 `.agents/capability-packages.yml`。L0–L3 是开发证据等级，不是
 Harness 运行状态：L1 绑定 Agent Preset 声明的 Tool Provider、activation、Tool contract 和合同检查入口，L2 额外通过共享
-`loadCapability` 验证科学合同，L3 还必须
-声明真实 Harness 物化 Adapter 和回放测试。用户本地 Skill 与 Git 忽略的上游挂载不进入这个发行版清单。
+`loadCapability` 验证科学合同；只产 observations 时可声明空 `acceptanceProfiles`（v1.1 的
+`reproductionProfiles` 也可为空），不创建占位验收规则。L3 还必须声明至少一个 Acceptance Profile、
+真实 Harness 物化 Adapter 和回放测试。用户本地 Skill 与 Git 忽略的上游挂载不进入这个发行版清单。
 `npm run capability:conformance` 输出的 `scope` 固定为 `static-declaration`，只证明声明互相一致；本地
 Tool surface 由 `npm run capability:contracts:test` 直接按 policy 中的 `contractCheck` 实际查询。外部固定源码
 可先做显式源码摘要检查，真实 `tools/list` 则需独立 probe；[默认关闭接入审查](docs/integrations/OPT_IN_MCP_EFFECT_REVIEW.md)
@@ -117,7 +118,7 @@ Tool 最大副作用和证据来源也必须分开登记：本地 MCP Server 通
 - 新增 SDK 或能力前先核对[扩展治理清单](docs/architecture/EXTENSION_GOVERNANCE.md)与[相近能力选择](docs/integrations/CAPABILITY_SELECTION.md)，明确相较已有 SDK 的真实物理或算法增量；优先采用原生 SDK 公开 API 路径，避免为已有能力重复新增默认开启的 MCP 进程。
 - 新增或修改能力、Skill、MCP 连接或 SDK 环境后，运行 `npm run governance:audit` 查看实时统计并检查声明内部一致性；[扩展治理清单](docs/architecture/EXTENSION_GOVERNANCE.md)保留日期化快照，无需随每次新增 Skill 改写历史数字。
 - 涉及隔离数值 CI 验证的 SDK 统一通过 [`.github/workflows/sdk-checks.yml`](.github/workflows/sdk-checks.yml) 与 Python/Julia 可复用模板接入，不再复制单 SDK workflow 或在 `ci.yml` 中内联临时 `git diff` 逻辑。
-- 在扩充 L0/L1 覆盖的同时，优先把高频能力的科学检查推进到 L2/L3（Validator + Acceptance Profile + Materializer + central Acceptance Builder）。
+- 在扩充 L0/L1 覆盖的同时，优先把高频能力推进到 L2（schema + 独立 Validator + eval evidence）；确需最终科学验收时再接入 L3 的 Acceptance Profile、Materializer 与 central Acceptance Builder。
 
 ## 增加 Tool 或 MCP Server
 

@@ -1,7 +1,16 @@
-# 扩展治理清单（2026-11-24 快照）
+# 扩展治理清单（2026-11-25 快照）
 
-> 本文件顶部记录 **2026-11-24 全量快照与治理决定**；下方完整保留 2026-09-24 首次治理（101 Skill / 37 MCP / 220 Tool，B1/B2/B3）的逐项历史决定，不改写既有记录。
+> 本文件顶部记录 **2026-11-25 成熟度快照**；保留 2026-11-24 全量快照与治理决定，以及 2026-09-24 首次治理（101 Skill / 37 MCP / 220 Tool，B1/B2/B3）的逐项历史决定，不改写既有记录。
 > 实时数量请运行 `npm run governance:audit`：[`审计脚本`](../../scripts/audit-extension-governance.mjs) 解析源码 YAML/JSON 声明，输出统计并核对内部一致性。新增 Skill 无需修改本页的历史数字；本页不是 CI 的固定数量门禁。
+
+## 2026-11-25 成熟度快照
+
+201 个 Capability：`L0=102`、`L1=94`、`L2=2`、`L3=3`。本次将
+[`qec-memory-experiment`](../../.agents/skills/qec-memory-experiment/SKILL.md) 从 L1 推进到 L2：
+增加结构化结果、独立计数/区间复算、Stim 电路与 DEM 参数复核及同机 seed 重放；固定 eval 与本地 SDK
+失败路径证据见[验证记录](../../.agents/skills/qec-memory-experiment/evals/README.md)。
+Validator 仅产 observations，没有新增 Acceptance Profile、Materializer 或 central Acceptance Builder 接入。
+内置 Skill 193、MCP 连接 91、SDK/源码环境 121 与前一日快照相同。
 
 ## 2026-11-24 全量扩展快照与保守治理策略
 

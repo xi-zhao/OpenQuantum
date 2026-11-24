@@ -680,6 +680,9 @@ async function validateAudit(definition, projectRoot, packageRoot, issues) {
   );
   try {
     const capability = await loadCapability(packageRoot);
+    if (definition.level === "L3" && capability.manifest.acceptanceProfiles.length === 0) {
+      issues.push(`${definition.id}: L3 requires at least one Acceptance Profile`);
+    }
     return {
       manifest: path.relative(projectRoot, capability.manifestPath),
       schemaVersion: capability.manifest.schemaVersion,

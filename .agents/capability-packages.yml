@@ -530,7 +530,7 @@ packages:
         - tests/qcec-scientific-live.test.mjs
 
   - id: qec-memory-experiment
-    level: L1
+    level: L2
     execution:
       mcpServers:
         - name: qec_local
@@ -545,6 +545,10 @@ packages:
       nativeTools: []
       checks:
         - .agents/skills/qec-memory-experiment/test/mcp.test.mjs
+        - .agents/skills/qec-memory-experiment/test/live.test.mjs
+        - .agents/skills/qec-memory-experiment/evals/run-evals.mjs
+    audit:
+      manifest: capability.yaml
 
   - id: fatqat-workbench
     level: L1

@@ -1,5 +1,8 @@
+import { cases, checkSuite, evaluateCase } from "../evals/run-evals.mjs";
+import { validateExperiment, experimentDigest } from "../validators/validate-result.mjs";
 import { preparePythonFixture } from "../../../../tests/helpers/prepared-python.mjs";
 import assert from "node:assert/strict";
+import { spawnSync } from "node:child_process";
 import { chmod, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
@@ -38,20 +41,17 @@ before(async () => {
   await writeFile(
     uvPath,
     `#!/usr/bin/env node
-const {createHash}=await import("node:crypto");
+const {readFileSync}=await import("node:fs");
+const {isDeepStrictEqual}=await import("node:util");
 const chunks=[];
 for await (const chunk of process.stdin) chunks.push(chunk);
-const envelope=JSON.parse(Buffer.concat(chunks).toString("utf8"));
-const canonical=(value)=>Array.isArray(value)?"["+value.map(canonical).join(",")+"]":value&&typeof value==="object"?"{"+Object.keys(value).sort().map(key=>JSON.stringify(key)+":"+canonical(value[key])).join(",")+"}":JSON.stringify(value);
-if (envelope.action !== "experiment") throw new Error("Unexpected bridge action");
-  const request=envelope.request;
-  const errors=request.physicalErrorRate===0?0:7;
-  const rate=errors/request.shots;
-  const z=1.959963984540054;
-  const denominator=1+z*z/request.shots;
-  const center=(rate+z*z/(2*request.shots))/denominator;
-  const half=z*Math.sqrt(rate*(1-rate)/request.shots+z*z/(4*request.shots*request.shots))/denominator;
-  process.stdout.write(JSON.stringify({schemaVersion:"1.0",packages:{stim:"1.16.0",pymatching:"2.4.0"},experiment:request,experimentDigest:createHash("sha256").update(canonical(request)).digest("hex"),codeTask:"surface_code:rotated_memory_"+request.basis,circuit:{qubits:26,detectors:24,observables:1,sha256:"a".repeat(64)},detectorModel:{detectors:24,observables:1,sha256:"b".repeat(64)},result:{shots:request.shots,logicalErrors:errors,successfulShots:request.shots-errors,logicalErrorRate:rate,standardError:Math.sqrt(rate*(1-rate)/request.shots),wilson95:{low:Math.max(0,center-half),high:Math.min(1,center+half)}},runtimeSeconds:0.01}));
+const input=JSON.parse(Buffer.concat(chunks).toString("utf8"));
+const replay=process.argv.some(arg=>arg.endsWith("/replay.py"));
+const request=replay?input:input.request;
+if (!replay && input.action!=="experiment") throw new Error("Unexpected bridge action");
+const fixture=JSON.parse(readFileSync(${JSON.stringify(path.join(skillRoot, "evals/fixtures"))}+(request.physicalErrorRate===0?"/zero-noise.json":"/noisy.json"),"utf8"));
+if (!isDeepStrictEqual(request,fixture.request)) throw new Error("Unexpected fixture input");
+process.stdout.write(JSON.stringify(replay?fixture.reference:fixture.facts));
 `,
   );
   await chmod(uvPath, 0o755);
@@ -133,8 +133,8 @@ test("noisy finite-shot experiment reports counts and uncertainty without a thre
   const first = await client.callTool({ name: "run_qec_memory_experiment", arguments: request });
   const replay = await client.callTool({ name: "run_qec_memory_experiment", arguments: request });
   assert.equal(first.isError, undefined);
-  assert.equal(first.structuredContent.facts.result.logicalErrors, 7);
-  assert.equal(first.structuredContent.facts.result.successfulShots, 993);
+  assert.equal(first.structuredContent.facts.result.logicalErrors, 74);
+  assert.equal(first.structuredContent.facts.result.successfulShots, 926);
   assert.equal(
     first.structuredContent.facts.experimentDigest,
     replay.structuredContent.facts.experimentDigest,
@@ -170,4 +170,56 @@ test("bridge environment is allowlisted and has no cloud credentials", async () 
   assert.match(source, /BRIDGE_ENVIRONMENT_NAMES/);
   assert.match(source, /UV_PROJECT_ENVIRONMENT/);
   assert.doesNotMatch(source, /QISKIT_IBM_TOKEN|AWS_SECRET|IONQ_API_KEY/);
+});
+
+
+test("L2 manifest loads without Acceptance or Reproduction Profiles and binds the fixed evals", checkSuite);
+for (const item of cases) test(`independent QEC observations: ${item.id}`, () => evaluateCase(item));
+
+test("invalid requests and malformed scientific artifacts cannot report valid observations", async () => {
+  const input = JSON.parse(await readFile(path.join(skillRoot, "evals/fixtures/noisy.json"), "utf8"));
+  for (const changes of [{ distance: 1 }, { distance: 4 }, { rounds: 0 }, { shots: 0 },
+    { shots: 1.5 }, { shots: Number.MAX_SAFE_INTEGER + 1 }, { physicalErrorRate: -1 },
+    { physicalErrorRate: NaN }, { physicalErrorRate: Infinity }, { physicalErrorRate: 1.1 },
+    { seed: -1 }, { seed: 2 ** 32 }, { basis: "y" }, { unexpected: true }]) {
+    const validation = validateExperiment({ ...input, request: { ...input.request, ...changes } });
+    assert.equal(validation.observations.find(item => item.id === "request.scope").status, "fail", JSON.stringify(changes));
+  }
+  for (const facts of [null, {}, { ...input.facts, scientificAcceptance: "passed" }]) {
+    assert.equal(validateExperiment({ ...input, facts }).observations.find(item => item.id === "artifact.schema").status, "fail");
+  }
+});
+
+test("missing or incompatible reference execution is explicitly not checked", async () => {
+  const input = JSON.parse(await readFile(path.join(skillRoot, "evals/fixtures/noisy.json"), "utf8"));
+  const unavailable = validateExperiment({ ...input, reference: undefined });
+  for (const id of ["circuit.replayed", "detectorModel.replayed", "seed.replayed"]) {
+    assert.equal(unavailable.observations.find(item => item.id === id).status, "not_checked");
+  }
+  input.reference.sampling.runtime.machine = "different-machine";
+  assert.equal(validateExperiment(input).observations.find(item => item.id === "seed.replayed").status, "not_checked");
+});
+
+test("request digest binds every parameter and canonicalizes signed zero", () => {
+  const request = { ...zeroNoise, physicalErrorRate: 0.000001 };
+  for (const changes of [{ basis: "x" }, { distance: 5 }, { rounds: 4 }, { shots: 1001 }, { seed: 1235 }, { physicalErrorRate: 0.000002 }]) {
+    assert.notEqual(experimentDigest(request), experimentDigest({ ...request, ...changes }));
+  }
+  assert.equal(experimentDigest(zeroNoise), experimentDigest({ ...zeroNoise, physicalErrorRate: -0 }));
+});
+
+test("standalone Validator reports unavailable replay without claiming checked science or installing dependencies", async () => {
+  const { facts } = JSON.parse(await readFile(path.join(skillRoot, "evals/fixtures/noisy.json"), "utf8"));
+  const filename = path.join(temporary, "result.json");
+  await writeFile(filename, JSON.stringify(facts));
+  const result = spawnSync(process.execPath, [path.join(skillRoot, "validators/validate-result.mjs"), filename, "--replay"], {
+    encoding: "utf8", env: { ...process.env, OPENQUANTUM_PYTHON_ENV_ROOT: path.join(temporary, "missing-environment") },
+  });
+  assert.equal(result.status, 2, result.stderr);
+  const validation = JSON.parse(result.stdout);
+  for (const id of ["circuit.replayed", "detectorModel.replayed", "seed.replayed", "replay.available"]) {
+    assert.equal(validation.observations.find(item => item.id === id).status, "not_checked");
+  }
+  assert.match(validation.observations.find(item => item.id === "replay.available").detail, /Prepared environment missing/);
+  assert.equal(Object.hasOwn(validation, "status"), false);
 });

@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "basis",
+    "distance",
+    "rounds",
+    "shots",
+    "physicalErrorRate",
+    "seed"
+  ],
+  "properties": {
+    "basis": {
+      "enum": [
+        "x",
+        "z"
+      ]
+    },
+    "distance": {
+      "type": "integer",
+      "minimum": 3,
+      "maximum": 9007199254740991,
+      "not": {
+        "multipleOf": 2
+      }
+    },
+    "rounds": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+    },
+    "shots": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+    },
+    "physicalErrorRate": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "seed": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 4294967295
+    }
+  }
+}
