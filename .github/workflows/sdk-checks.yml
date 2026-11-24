@@ -4,6 +4,12 @@ permissions:
   contents: read
 
 on:
+  workflow_call:
+    inputs:
+      targets:
+        description: Comma-separated SDK verification targets, or all
+        required: true
+        type: string
   workflow_dispatch:
     inputs:
       sdk:
@@ -125,7 +131,7 @@ jobs:
         name: Detect affected SDK targets
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
-          DISPATCH_TARGET: ${{ github.event_name == 'workflow_dispatch' && inputs.sdk || '' }}
+          DISPATCH_TARGET: ${{ inputs.targets || (github.event_name == 'workflow_dispatch' && inputs.sdk) || '' }}
         run: |
           if [ -n "$DISPATCH_TARGET" ]; then
             node scripts/detect-sdk-ci-targets.mjs --dispatch "$DISPATCH_TARGET" --github-output "$GITHUB_OUTPUT"

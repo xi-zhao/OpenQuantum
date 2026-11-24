@@ -9,7 +9,7 @@ OpenQuantum 的重要变更记录在此。格式遵循 [Keep a Changelog](https:
 
 - 新增 [MWPF 超图译码](.agents/skills/mwpf-decoding/SKILL.md)、[PPVM 丢失/泄漏模拟](docs/integrations/PPVM.md)、[tropidist 纠错距离界](.agents/skills/tropidist-distance/SKILL.md)与 [ST-GRAPE 多误差源鲁棒脉冲控制](.agents/skills/stgrape-control/SKILL.md)的固定原生 SDK 环境、示例与独立数值检查；源码能力目录现为 193 个内置 Skill、91 个 MCP 连接与 121 个 SDK 环境（均保持 `scientificValidation=not_evaluated`）。
 - 升级 [PyZX 0.10.8](docs/releases/2026-11-10-pyzx-production-upgrade.md)、[IBM Runtime RZZ 兼容补丁](docs/releases/2026-11-01-qiskit-runtime.md)、Braket 受控门本地噪声核验与 `ws 8.23.0` 传输依赖。
-- 新增 `tests/workflow-gates.test.mjs` 守卫数值 CI 退出码传播，并收敛 SDK 验证工作流与项目文档基线。
+- PR #85 新增 `tests/workflow-gates.test.mjs` 守卫数值 CI 退出码传播；本轮治理扩展该测试，收敛 SDK 验证工作流并保留发布时的 tropidist、ST-GRAPE 与 Braket 本地检查。
 
 ### Changed
 
@@ -45,6 +45,10 @@ OpenQuantum 的重要变更记录在此。格式遵循 [Keep a Changelog](https:
 - 修复筛选区滚轮不可滚、键盘翻页、窄窗口返回位置丢失及隐藏表单标签引发的页面底部空白溢出。
 
 ## [0.8.9] - 2026-10-30
+
+### Added
+
+- 新增 [Chromobius 译码工作流](.agents/skills/chromobius-decoding/SKILL.md)与固定原生 SDK 环境（2026-10-26 的 `f44a0b2a`，首次包含于 `v0.8.9` / `codex-v0.8.9`）。
 
 ### Changed
 
@@ -83,7 +87,7 @@ OpenQuantum 的重要变更记录在此。格式遵循 [Keep a Changelog](https:
 
 ### Added
 
-- 新增 26 个原生 SDK/源码入口，SDK 环境目录增至 111 项、Desktop 源 Skill 增至 183 项；新增 Chromobius / MQT Bench v2（保留 v1）。
+- 新增 26 个原生 SDK/源码入口，SDK 环境目录增至 111 项、Desktop 源 Skill 增至 183 项；新增 MQT Bench v2（保留 v1）。
 - 原 TensorCircuit 入口迁移至 `tensorcircuit-ng==1.10.0`。见 [v0.8.4](docs/releases/v0.8.4.md) 与 [codex-v0.8.4](docs/releases/codex-v0.8.4.md)。
 
 ### Changed

@@ -10,20 +10,20 @@ const GOVERNANCE_DOC_PATH = "docs/architecture/EXTENSION_GOVERNANCE.md";
 
 function readPolicySummary(projectRoot) {
   const raw = fs.readFileSync(path.join(projectRoot, POLICY_PATH), "utf8");
-  const blocks = raw.split(/\n(?=  - id: )/).slice(1);
+  const blocks = raw.split(/\n(?= {2}- id: )/).slice(1);
   const levels = { L0: 0, L1: 0, L2: 0, L3: 0 };
   const ids = [];
   let mcpToolCount = 0;
 
   for (const block of blocks) {
-    const idMatch = block.match(/^  - id:\s*(\S+)/);
-    const levelMatch = block.match(/^    level:\s*(L[0-3])/m);
+    const idMatch = block.match(/^ {2}- id:\s*(\S+)/);
+    const levelMatch = block.match(/^ {4}level:\s*(L[0-3])/m);
     if (idMatch) ids.push(idMatch[1]);
     if (levelMatch) levels[levelMatch[1]] += 1;
 
-    const mcpSection = block.match(/(?:^|\n)      mcpServers:\n([\s\S]*?)(?=\n      [a-zA-Z]|$)/);
+    const mcpSection = block.match(/(?:^|\n) {6}mcpServers:\n([\s\S]*?)(?=\n {6}[a-zA-Z]|$)/);
     if (mcpSection) {
-      const toolMatches = mcpSection[1].match(/^            - name:\s*\S+/gm) ?? [];
+      const toolMatches = mcpSection[1].match(/^ {12}- name:\s*\S+/gm) ?? [];
       mcpToolCount += toolMatches.length;
     }
   }
@@ -140,9 +140,8 @@ export function checkGovernanceDocument(projectRoot = process.cwd()) {
     ["auto/manual", `${metrics.skills.auto} 自动可选`],
     ["auto/manual", `${metrics.skills.manual} 手动分类索引`],
     ["mcp", `**${metrics.mcp.total}** 个 MCP 连接`],
-    ["mcp activation", `${metrics.mcp.always} 默认开启`],
-    ["mcp activation", `${metrics.mcp.conditional} 条件开关`],
-    ["mcp activation", `${metrics.mcp.optIn} 按需启用`],
+    ["mcp activation", `${metrics.mcp.always + metrics.mcp.conditional} 个默认开启`],
+    ["mcp activation", `${metrics.mcp.optIn} 个按需启用`],
     ["sdk", `**${metrics.sdk.total}** 个 SDK/源码环境`],
     ["sdk nativeOnly", `nativeOnly=${metrics.sdk.nativeOnly}`],
   ];
@@ -166,7 +165,7 @@ function formatMarkdown(metrics) {
     `| --- | --- | --- |`,
     `| Capability 总数 | **${metrics.capabilities}** 个 Capability | \`L0=${metrics.levels.L0}\`、\`L1=${metrics.levels.L1}\`、\`L2=${metrics.levels.L2}\`、\`L3=${metrics.levels.L3}\`（含 ${metrics.toolOnlyCapabilities.length} 个 Tool-only 能力） |`,
     `| 内置 Skill | **${metrics.skills.total}** 个内置 Skill | ${metrics.skills.auto} 自动可选，${metrics.skills.manual} 手动分类索引（\`disable-model-invocation: true\`） |`,
-    `| MCP 服务连接 | **${metrics.mcp.total}** 个 MCP 连接 | ${metrics.mcp.always} 默认开启、${metrics.mcp.conditional} 条件开关、${metrics.mcp.optIn} 按需启用；策略登记 ${metrics.mcp.policyTools} 个 MCP Tool |`,
+    `| MCP 服务连接 | **${metrics.mcp.total}** 个 MCP 连接 | ${metrics.mcp.always + metrics.mcp.conditional} 个默认开启（其中 ${metrics.mcp.conditional} 项可通过离线开关关闭），${metrics.mcp.optIn} 个按需启用；策略登记 ${metrics.mcp.policyTools} 个 MCP Tool |`,
     `| SDK / 源码环境 | **${metrics.sdk.total}** 个 SDK/源码环境 | ${langs}；其中 \`nativeOnly=${metrics.sdk.nativeOnly}\` |`,
   ].join("\n");
 }

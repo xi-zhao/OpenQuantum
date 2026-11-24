@@ -9,16 +9,16 @@
 | --- | --- | --- |
 | Capability 总数 | **201** 个 Capability | `L0=102`、`L1=95`、`L2=1`、`L3=3`（含 8 个 Tool-only 能力：`metriq-data`、`qiskit-gym`、`qiskit-ibm-runtime`、`qiskit-ibm-transpiler`、`qpanda-runtime`、`quantum-hardware`、`quantum-learning`、`quantum-practices`） |
 | 内置 Skill | **193** 个内置 Skill | 180 自动可选，13 手动分类索引（`disable-model-invocation: true`） |
-| MCP 服务连接 | **91** 个 MCP 连接 | 64 默认开启、2 条件开关（`qiskit`、`qiskit_docs`）、25 按需启用；策略登记 258 个 MCP Tool |
+| MCP 服务连接 | **91** 个 MCP 连接 | 66 个默认开启（其中 Qiskit 两项可通过离线开关关闭），25 个按需启用；策略登记 258 个 MCP Tool |
 | SDK / 源码环境 | **121** 个 SDK/源码环境 | `python=109`、`julia=9`、`native=2`、`lean=1`；其中 `nativeOnly=36` |
 
 ### 本轮治理决策（2026-11-24）
 
 1. **自动调用 Skill 集合（保守策略）**：维持现有 180 个自动可选 Skill 与 13 个手动分类索引不变，不破坏既有会话与模型发现路径；改由 `npm run governance:audit` 持续监测扩展面增长，避免无感知膨胀。
 2. **宿主激活边界对齐**：
-   - **Desktop（0.8.6+）**：通过 `adaptive-capabilities.mjs` 将受管 MCP rows 转为按需原生 Tool Provider，不会在启动时同时拉起 64 个 MCP 子进程；
+   - **Desktop（0.8.6+）**：通过 `adaptive-capabilities.mjs` 将受管 MCP rows 转为按需原生 Tool Provider，默认开启不意味着启动时同时拉起相应 MCP 子进程；
    - **Codex 插件**：通过发现 → 准备 → 执行三入口按需调用共享后端；
-   - **源码 Web 模式**：直接装载 [`agent.cordis.yml`](../../runtime/openquantum/agent-presets/openquantum/agent.cordis.yml) 的默认声明（64 默认开启 + 2 条件 + 25 opt-in）；`agent.cordis.yml` 同时作为 25+ 脚本、迁移器与一致性测试的单文件声明权威，不在统一抽象就绪前强行拆文件。
+   - **源码 Web 模式**：直接装载 [`agent.cordis.yml`](../../runtime/openquantum/agent-presets/openquantum/agent.cordis.yml) 的默认声明（66 个默认开启，其中 Qiskit 两项可通过离线开关关闭；25 个按需启用）；`agent.cordis.yml` 同时作为 25+ 脚本、迁移器与一致性测试的单文件声明权威，不在统一抽象就绪前强行拆文件。
 3. **CI 验证模板收敛**：新增或维护 SDK 的隔离数值回归统一接入 [`.github/workflows/sdk-checks.yml`](../../.github/workflows/sdk-checks.yml) 与 Python/Julia 可复用模板（`_reusable-python-sdk.yml` / `_reusable-julia-sdk.yml`），禁止再为单个 SDK 复制独立 workflow 或向 `ci.yml` 内联手工 `git diff` 逻辑。
 
 ### 成熟度准入与升级门槛

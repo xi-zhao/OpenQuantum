@@ -108,14 +108,20 @@ export function selectSdkTargets({ changedFiles = [], dispatchTarget = "" } = {}
       for (const name of names) selected[name] = true;
       return selected;
     }
-    if (!Object.hasOwn(SDK_CI_TARGETS, dispatchTarget)) {
-      throw new Error(`Unknown SDK CI target: ${dispatchTarget}`);
+    for (const target of dispatchTarget.split(",").map(value => value.trim())) {
+      if (!Object.hasOwn(SDK_CI_TARGETS, target)) {
+        throw new Error(`Unknown SDK CI target: ${target}`);
+      }
+      selected[target] = true;
     }
-    selected[dispatchTarget] = true;
     return selected;
   }
 
   const normalizedFiles = changedFiles.map(file => file.replaceAll("\\", "/").replace(/^\.\//, ""));
+  if (normalizedFiles.includes(SDK_CHECKS_WORKFLOW) || normalizedFiles.includes("scripts/detect-sdk-ci-targets.mjs")) {
+    for (const name of names) selected[name] = true;
+    return selected;
+  }
   const pythonTemplateChanged = normalizedFiles.includes(REUSABLE_PYTHON_WORKFLOW);
   const juliaTemplateChanged = normalizedFiles.includes(REUSABLE_JULIA_WORKFLOW);
 

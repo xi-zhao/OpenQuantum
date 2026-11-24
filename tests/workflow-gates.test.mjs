@@ -113,6 +113,8 @@ test("unified sdk-checks workflow stays aligned with SDK_CI_TARGETS and reusable
   const targetNames = Object.keys(SDK_CI_TARGETS);
 
   assert.deepEqual(sdkChecks.on.workflow_dispatch.inputs.sdk.options, ["all", ...targetNames]);
+  assert.equal(sdkChecks.on.workflow_call.inputs.targets.type, "string");
+  assert.equal(sdkChecks.on.workflow_call.inputs.targets.required, true);
   assert.deepEqual(Object.keys(sdkChecks.jobs.changes.outputs), targetNames);
 
   const prPaths = sdkChecks.on.pull_request.paths;
@@ -178,6 +180,31 @@ test("detect-sdk-ci-targets routes file changes, template updates and manual dis
 
   const dispatchAll = selectSdkTargets({ dispatchTarget: "all" });
   assert.ok(Object.values(dispatchAll).every(Boolean));
+  for (const file of [SDK_CHECKS_WORKFLOW, "scripts/detect-sdk-ci-targets.mjs"]) {
+    assert.ok(Object.values(selectSdkTargets({ changedFiles: [file] })).every(Boolean), file);
+  }
 
   assert.throws(() => selectSdkTargets({ dispatchTarget: "unknown-sdk" }), /Unknown SDK CI target/);
+  assert.throws(() => selectSdkTargets({ dispatchTarget: "tropidist,unknown-sdk" }), /Unknown SDK CI target/);
+});
+
+test("release SDK detection runs exactly the three former CI checks with an empty event base", { skip: process.platform === "win32" }, async t => {
+  const release = parse(await readFile(path.join(root, ".github/workflows/release-updates.yml"), "utf8"));
+  const workflow = parse(await readFile(path.join(root, SDK_CHECKS_WORKFLOW), "utf8"));
+  const detect = workflow.jobs.changes.steps.find(step => step.id === "detect");
+  assert.equal(detect.env.DISPATCH_TARGET, "${{ inputs.targets || (github.event_name == 'workflow_dispatch' && inputs.sdk) || '' }}");
+  const directory = await mkdtemp(path.join(tmpdir(), "oq-release-sdk-"));
+  t.after(() => rm(directory, { recursive: true, force: true }));
+  const output = path.join(directory, "output");
+  const result = spawnSync("bash", ["--noprofile", "--norc", "-e", "-c", detect.run], {
+    cwd: root,
+    encoding: "utf8",
+    env: { ...process.env, BASE_SHA: "", DISPATCH_TARGET: release.jobs["verify-sdk"].with.targets, GITHUB_OUTPUT: output },
+    timeout: 5000,
+  });
+  assert.ifError(result.error);
+  assert.equal(result.status, 0, result.stderr);
+  const expected = Object.fromEntries(Object.keys(SDK_CI_TARGETS).map(name => [name, ["tropidist", "stgrape", "braket"].includes(name)]));
+  assert.deepEqual(JSON.parse(result.stdout).selected, expected);
+  assert.equal(await readFile(output, "utf8"), Object.entries(expected).map(([name, enabled]) => `${name}=${enabled}\n`).join(""));
 });

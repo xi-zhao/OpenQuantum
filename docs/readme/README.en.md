@@ -632,7 +632,7 @@ Prefer native Tool Providers for in-process, same-language actions without isola
 
 </details>
 
-The full Skill, MCP service and native Tool catalog is maintained in the [Chinese reference documentation](../CAPABILITIES.md#接口总览): the current source ships **193 built-in Skills** (180 automatically selectable, 13 manual category indexes), **91 MCP service connections** (64 on by default, 2 conditional, 25 opt-in) and **5 native quantum Tools**.
+The full Skill, MCP service and native Tool catalog is maintained in the [Chinese reference documentation](../CAPABILITIES.md#接口总览): the current source ships **193 built-in Skills** (180 automatically selectable, 13 manual category indexes), **91 MCP service connections** (66 enabled by default, including two Qiskit connections that can be disabled with the offline switch; 25 opt-in) and **5 native quantum Tools**.
 
 ### Development and verification
 

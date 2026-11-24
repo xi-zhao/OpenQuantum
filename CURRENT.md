@@ -20,7 +20,7 @@ Session event log 为准，科学状态以 Acceptance Report 为准。2026-09 �
     [PR #88](https://github.com/xi-zhao/OpenQuantum/pull/88)（Braket 受控门本地噪声验证）和
     [PR #89](https://github.com/xi-zhao/OpenQuantum/pull/89)（设置页按环境报告 SDK 实际版本）。
   - 当前静态能力规模：**201 个 Capability**（[`.agents/capability-packages.yml`](.agents/capability-packages.yml)：`L0=102, L1=95, L2=1, L3=3`）、
-    **193 个内置 Skill**（180 自动可选、13 手动分类索引）、**91 个 MCP 连接**（64 默认开启、25 opt-in、2 条件开关）、
+    **193 个内置 Skill**（180 自动可选、13 手动分类索引）、**91 个 MCP 连接**（66 个默认开启，其中 Qiskit 两项可通过离线开关关闭；25 个按需启用）、
     **5 个原生量子 Tool**、**121 个 SDK/源码环境**。以上为源码静态声明，不代表新版本已发布或已全部科学验收。
 - **0.8.11 发行入口**：共享 backend、状态协议修复及 SlowQuant / TNQS / RcmpsCore 接入见 [0.8.11 更新说明](docs/releases/v0.8.11.md)。
   [Desktop v0.8.11](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.11) 与
