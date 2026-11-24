@@ -23,6 +23,7 @@
 # Keep research writes separate from trusted Tool code and prepared runtimes.
 - id: sandbox-policy
   config:
+    mode: !!js process.env.DSH_PERMISSION_MODE ?? 'workspace-write'
     workspaceRoot: !!js process.env.OPENQUANTUM_WORKSPACE_ROOT || process.cwd()
 
 # Product sessions default to the deployment-owned OpenQuantum composition.

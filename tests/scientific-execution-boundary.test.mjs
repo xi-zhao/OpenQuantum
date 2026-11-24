@@ -189,6 +189,7 @@ test("every packaged scientific MCP uses the confined adapter and legacy Desktop
   assert.equal(compose.services.openquantum.environment.OPENQUANTUM_WORKSPACE_ROOT, "/research");
   assert.ok(compose.services.openquantum.volumes.includes("openquantum-results:/research"));
   const patch = parse(await readFile(path.join(root, "runtime/openquantum/cordis.patch.yml"), "utf8"), options);
+  assert.equal(patch.find(row => row.id === "sandbox-policy").config.mode, "process.env.DSH_PERMISSION_MODE ?? 'workspace-write'");
   assert.ok(patch.find(row => row.id === "agent-presets").inject.includes("openquantumExecutionBoundary"));
   assert.ok(patch.flatMap(row => row.insert ?? []).some(row => row.name === "@openquantum/harness-execution-boundary"));
 });
