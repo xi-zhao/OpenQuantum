@@ -2,8 +2,6 @@
 
 <p align="center"><strong>OpenQuantum — نبني معًا ذكاءً اصطناعيًا موثوقًا للبحث الكمي.</strong><br /><sub>خبرات البحث الكمي مجتمعة في OpenQuantum واحد</sub></p>
 
-**الإصدار 0.8.11:** تتشارك إصدارات Desktop وإضافة Codex رقم المنتج نفسه. راجع [دليل Desktop](../DESKTOP_INSTALLERS.md) و[دليل Codex](../integrations/CODEX_AGENT_INSTALL.md) للتنزيل الحالي وحدود التحقق. المعلومات التفصيلية عن 0.8.4 أدناه محفوظة كسجل للإصدار السابق؛ وهي لا تصف حزمة 0.8.11.
-
 <p align="center"><a href="../../README.md">简体中文</a> · <a href="./README.en.md">English</a> · <a href="./README.ja.md">日本語</a> · <a href="./README.ko.md">한국어</a> · <a href="./README.es.md">Español</a> · <a href="./README.fr.md">Français</a> · <a href="./README.de.md">Deutsch</a> · <a href="./README.pt.md">Português</a> · <a href="./README.ru.md">Русский</a> · <a href="./README.ar.md">العربية</a></p>
 
 <p align="center">
@@ -154,7 +152,7 @@ OpenQuantum منصة ذكاء اصطناعي للبحث الكمي، مفتوح�
 
 يمكن بدء الحسابات المحلية دون حساب في سحابة كمية. يُضبط العتاد الحقيقي والخدمات المدفوعة عند الحاجة؛ ويحتفظ الفهرس التفصيلي بنطاق مدخلات كل أسلوب وتجهيزه وحالة التحقق منه.
 
-يوفّر المصدر الحالي مسارات كاملة لواجهات API الأصلية في **117 بيئة SDK أو شيفرة مصدرية**، منها 26 من [توسعة المنظومة](../integrations/SDK_ECOSYSTEM_2026-10-14.md) الأحدث التي صدرت مع 0.8.4. يستطيع الوكلاء كتابة برامج مخصصة ودمج واجهات API العامة وحفظ النتائج كاملة، متجاوزين الحالات المعدّة مسبقًا في Tools الميسّرة.
+يوفّر المصدر الحالي وصولًا كاملًا إلى واجهات API الأصلية في **121 بيئة SDK أو شيفرة مصدرية**، بما فيها البيئات الـ26 من [توسعة المنظومة](../integrations/SDK_ECOSYSTEM_2026-10-14.md) التي صدرت مع 0.8.4 والتكاملات اللاحقة. يستطيع الوكلاء كتابة برامج مخصصة ودمج واجهات API العامة وحفظ النتائج كاملة، متجاوزين الحالات المعدّة مسبقًا في Tools الميسّرة.
 
 يضيف SlowQuant استجابة خطية جزيئية وخصائص انتقال عبر SDK ذي مصدر مثبت. راجع [الإعداد وحدود التحقق](../integrations/SLOWQUANT.md)؛ لم يُتحقق بعد من qLR الجزيئي عبر Qiskit أو الأجهزة الفعلية.
 
@@ -293,7 +291,7 @@ OpenQuantum منصة ذكاء اصطناعي للبحث الكمي، مفتوح�
 
 ### Desktop والمراسلة واللغات
 
-**Desktop.** يوفّر تطبيق OpenQuantum لسطح المكتب نافذة أصلية وأيقونة في شريط النظام وطرفية وإشعارات، ويعيد استخدام نماذج بيئة العمل وSkills الكمية وأدوات الحساب وسجلات التنفيذ. يستخدم DSH Desktop الرسمي من طرف ثالث مع حزمة وظائف OpenQuantum تُسلَّم منفصلة، على Mac (Apple Silicon / Intel) وWindows ومن المصدر. [تثبيت Desktop](#desktop-installer) · [بناء Desktop من المصدر](#desktop-from-source).
+**Desktop.** يوفّر سطح مكتب OpenQuantum نافذة أصلية وشريط قوائم بسيطًا وإشعارات، ويستخدم نماذج بيئة العمل وSkills الكمية وأدوات الحساب وسجلات التنفيذ. يتيح شريط القوائم فتح OpenQuantum والخروج منه فقط، بالصينية أو الإنجليزية؛ ويظل بإمكان الوكيل استخدام Tool الطرفية ضمن الأذونات المختارة. يستخدم Mac Apple Silicon تطبيق OpenQuantum 0.8.11 المستقل. يحتفظ Intel Mac وWindows بحزم 0.8.4 وعميل الطرف الثالث ذي الإصدار المحدد؛ ويمكن أيضًا البناء من المصدر. [تثبيت Desktop](#desktop-installer) · [بناء Desktop من المصدر](#desktop-from-source).
 
 **المراسلة.** عبر CC Connect يمكنك بدء المهام من WeChat وFeishu وDingTalk وSlack وTelegram وDiscord وقنوات أخرى، مع إعادة استخدام Skills وTools وسجلات التنفيذ في بيئة العمل. [ضبط قنوات المراسلة](#messaging-channels).
 
@@ -312,7 +310,7 @@ OpenQuantum منصة ذكاء اصطناعي للبحث الكمي، مفتوح�
 
 ## البدء السريع
 
-اختر طريقة استخدام واحدة: ثبّت الإضافة في Codex، أو استخدم عميل Desktop مع حزمة وظائفه، أو شغّل بيئة العمل من المصدر. صُمّم Desktop وبيئة العمل من المصدر للاستخدام المحلي من قِبل مستخدم واحد؛ اختر المصدر للتطوير أو لاستخدام الوظائف المتاحة في `main`.
+اختر طريقة الوصول: ثبّت الإضافة في Codex، أو تطبيق Desktop المستقل على Mac Apple Silicon، أو شغّل بيئة العمل من المصدر. Desktop وبيئة العمل من المصدر مخصّصان للاستخدام المحلي الفردي؛ اختر المصدر للتطوير أو لاستخدام وظائف `main`.
 
 <a id="codex"></a>
 
@@ -323,17 +321,17 @@ OpenQuantum منصة ذكاء اصطناعي للبحث الكمي، مفتوح�
 **دع Codex يثبّتها لك:** افتح Codex، وابدأ محادثة جديدة، والصق الطلب التالي.
 
 ```text
-Please install the OpenQuantum Codex plugin 0.8.4. First read the installation guide:
-https://github.com/xi-zhao/OpenQuantum/blob/codex-v0.8.4/docs/integrations/CODEX_AGENT_INSTALL.md
-Download the complete installer and SHA256SUMS from https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.4,
+Please install the OpenQuantum Codex plugin 0.8.11. First read the installation guide:
+https://github.com/xi-zhao/OpenQuantum/blob/codex-v0.8.11/docs/integrations/CODEX_AGENT_INSTALL.md
+Download the complete installer and SHA256SUMS from https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.11,
 verify the checksum, check Codex, Node.js 24+ and npm, and install with the bundled installer.
 Keep existing plugins and user settings, and check the Skills, MCP tools and the global "OpenQuantum settings" entry.
 Tell me exactly what to do if the app needs reloading. Finally, report what was actually verified and which scientific dependencies still need preparation.
 ```
 
-تستخدم حزمة وظائف Desktop وإضافة Codex والمثبّت جميعها **OpenQuantum 0.8.4**. تتضمن هذه الإضافة 168 Skill و87 Tool علمية، وتضيف 26 Skill أصلية لـ SDK، وتوحّد علامات التبويب Status وMCP وSkills وService keys؛ أما Tools الخدمية الجديدة الـ16 المعتمدة على بيانات اعتماد فمعطّلة افتراضيًا. وسم الإصدار هو `codex-v0.8.4`؛ والمرفقات ونطاق التحقق كما هو مذكور في صفحة Release.
+تستخدم Desktop وإضافة Codex الإصدار **OpenQuantum 0.8.11** ونفس commit للشيفرة المصدرية. يحسّن هذا الإصدار إيقاف Tools وعرض تقدم التجهيز، ويشارك التنفيذ المقيّد بين المضيفين، ويضيف مسارات SDK لـ SlowQuant وTNQS وRcmpsCore. تبقى حدود المسؤولية بين الإضافة المشتركة والمضيفين كما هي. تُسجّل أعداد Skills وTools والمجاميع الاختبارية ونتائج التحقق في مرفقات الإصدار.
 
-**[تنزيل المثبّت الكامل لإضافة Codex 0.8.4](https://github.com/xi-zhao/OpenQuantum/releases/download/codex-v0.8.4/openquantum-0.8.4-codex-install.zip)** ([ملاحظات الإصدار وSHA256SUMS](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.4)).
+**[تنزيل المثبّت الكامل لإضافة Codex 0.8.11](https://github.com/xi-zhao/OpenQuantum/releases/download/codex-v0.8.11/openquantum-0.8.11-codex-install.zip)** ([ملاحظات الإصدار وSHA256SUMS](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.11)).
 
 يحتوي المثبّت على ملف ZIP للإضافة وسكربت التثبيت وملف قفل الاعتماديات؛ ولا حاجة إلى نسخة من المصدر. يتطلب Node.js 24 أو أحدث وnpm وإصدارًا من Codex يدعم الإضافات وصفحات الإعدادات العامة؛ ويستطيع الوكيل فحص ذلك ومعالجته باستخدام [دليل التثبيت](../integrations/CODEX_AGENT_INSTALL.md). جرى التحقق من التثبيت المحلي على macOS؛ افحص التوافق على المنصات وإصدارات البيئة المضيفة الأخرى.
 
@@ -341,7 +339,7 @@ Tell me exactly what to do if the app needs reloading. Finally, report what was 
 
 1. أعد تحميل Codex عند المطالبة، ثم افتح محادثة جديدة لتُحمَّل Skills والأدوات الجديدة.
 2. اسأل مباشرة في المحادثة، مثلًا: «استخدم OpenQuantum للعثور على أساليب تصحيح الأخطاء الكمية واقترح تجربة أولى».
-3. افتح **«…» ← «OpenQuantum settings»** وأدر الوظائف من علامات التبويب **Status / MCP / Skills / Service keys**؛ مفاتيح تفعيل Tools موجودة تحت **Status ← Tools**. تأتي الخدمات المدمجة مهيّأة مع الإضافة؛ ولإضافة خادم MCP خاص بك، أدخل تفاصيل الاتصال واحفظ الرموز المميزة عبر مربع حوار بيانات الاعتماد المخصص.
+3. افتح **"…" → "OpenQuantum settings"** وأدر الوظائف من علامات التبويب **Home / Skills / MCP**؛ تُجمع البيئات وبيانات الاعتماد ومفاتيح تشغيل Tools في البطاقات ذات الصلة. الخدمات المدمجة معدّة مسبقًا مع الإضافة؛ ولإضافة خادم MCP خاص بك، أدخل تفاصيل الاتصال واحفظ الرموز عبر مربع الحوار المخصص لبيانات الاعتماد.
 
 تثبّت الإضافة شيفرة الوظائف وصفحة الإعدادات؛ ولا تزال بعض الحسابات تحتاج إلى Python أو SDK كمية أو حسابات لدى أطراف ثالثة تُجهَّز عند الحاجة. راجع [دليل الإضافة](../integrations/CODEX_PLUGIN.md).
 
@@ -363,19 +361,9 @@ npm run plugin:install
 
 ### مثبّت Desktop
 
-يجمع إصدار سطح المكتب الحالي بين [عميل DSH Desktop 2.0.7 الرسمي](https://github.com/anywhere-labs/dsh-desktop/releases/tag/v2.0.7) وحزمة وظائف OpenQuantum منفصلة. يحتفظ العميل الأصلي باسمه ورقم إصداره في المشروع الأصلي؛ وتضم حزمة الوظائف Node / uv وتوفّر الوصول الكامل إلى SDK وSkills الكمية وTools والإعدادات. ينشئ المثبّت مشغّلًا بأيقونة OpenQuantum (`OpenQuantum.app` على Mac و`OpenQuantum.lnk` على Windows).
+على Mac Apple Silicon، نزّل **[OpenQuantum 0.8.11 DMG](https://github.com/xi-zhao/OpenQuantum/releases/download/v0.8.11/OpenQuantum-0.8.11-macOS-arm64.dmg)**. تحقّق منه باستخدام [SHA256SUMS في الإصدار](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.11)، ثم افتح DMG واسحب `OpenQuantum.app` إلى التطبيقات. يتضمن سطح المكتب وNode / uv والاعتماديات المثبّتة الإصدارات؛ ولا يحتاج إلى عميل منفصل.
 
-ثبّت DSH Desktop الرسمي أولًا، ثم اختر حزمة الوظائف المناسبة لمنصتك:
-
-| المنصة | تنزيل OpenQuantum 0.8.4 | ما يُشغَّل بعد فك الضغط |
-| --- | --- | --- |
-| Mac Apple Silicon | [حزمة darwin-arm64](https://github.com/xi-zhao/OpenQuantum/releases/download/v0.8.4/OpenQuantum-0.8.4-DSH-darwin-arm64.tar.gz) | `install.command` |
-| Mac Intel | [حزمة darwin-x64](https://github.com/xi-zhao/OpenQuantum/releases/download/v0.8.4/OpenQuantum-0.8.4-DSH-darwin-x64.tar.gz) | `install.command` |
-| Windows x64 | [حزمة win32-x64](https://github.com/xi-zhao/OpenQuantum/releases/download/v0.8.4/OpenQuantum-0.8.4-DSH-win32-x64.tar.gz) | `install.cmd` |
-
-تحقق من التنزيل مقابل [SHA256SUMS في صفحة Release](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.4) قبل فك الضغط. تحافظ الترقيات على الإعدادات الحالية؛ راجع [دليل التثبيت والترحيل](../DESKTOP_INSTALLERS.md). حزمة الوظائف وإضافة Codex كلتاهما بالإصدار `0.8.4`، ويبقى Harness عند `0.1.5-rc.1`. لا تزال بيئات الحساب والحسابات والتراخيص تُجهَّز لكل وظيفة على حدة.
-
-<a id="install-from-source"></a>
+راجع [دليل التثبيت والترحيل](../DESKTOP_INSTALLERS.md). يواصل Intel Mac وWindows استخدام [حزم الوظائف 0.8.4](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.4) مع عميل الطرف الثالث ذي الإصدار المحدد وتعليمات التثبيت الخاصة بها. لا تتضمن تلك الحزم القديمة تبسيط سطح المكتب الجديد. تظل بيئات الحساب والحسابات والتراخيص خاصة بكل وظيفة.
 
 ### التثبيت من المصدر
 
@@ -697,7 +685,7 @@ Qiskit Gym وQuantum Hardware وFlagQuantum معطّلة افتراضيًا. ع�
 
 </details>
 
-يُحفظ الفهرس الكامل لـ Skills وخدمات MCP وTools الأصلية في [الوثائق المرجعية بالصينية](../CAPABILITIES.md#接口总览): يتضمن المصدر الحالي **189 Skill مدمجة** (176 قابلة للاختيار تلقائيًا و13 فهرس فئات يدويًا)، و**91 اتصال خدمة MCP** (66 مفعّلًا افتراضيًا و25 يُفعَّل بالاختيار)، و**5 Tools كمية أصلية**.
+يُحفظ الفهرس الكامل لـ Skills وخدمات MCP وTools الأصلية في [الوثائق المرجعية بالصينية](../CAPABILITIES.md#接口总览): يتضمن المصدر الحالي **193 Skill مدمجة** (180 قابلة للاختيار تلقائيًا و13 فهرس فئات يدويًا)، و**91 اتصال خدمة MCP** (66 مفعّلًا افتراضيًا، منها اتصالان لـ Qiskit يمكن تعطيلهما بمفتاح وضع عدم الاتصال؛ و25 يُفعَّل عند الطلب)، و**5 Tools كمية أصلية**.
 
 <a id="development-and-verification"></a>
 
@@ -723,11 +711,11 @@ npm run capability:algorithms:live
 npm run e2e:quantum-harness -- --provider openquantum-public
 ```
 
-اختر الفحوص المتعلقة بتغييرك؛ والقائمة الكاملة موجودة في [الوثائق المرجعية بالصينية](../EXAMPLES.md#开发与验证). الاختبارات والأدلة المحلية متمايزة عن الإصدار المنشور أو القبول العلمي. تغييرات الإصدار موجودة في [ملاحظات إصدار v0.8.4](../releases/v0.8.4.md).
+اختر الفحوص المتعلقة بتغييرك؛ والقائمة الكاملة موجودة في [الوثائق المرجعية بالصينية](../EXAMPLES.md#开发与验证). الاختبارات والأدلة المحلية متمايزة عن الإصدار المنشور أو القبول العلمي. تغييرات الإصدار موجودة في [ملاحظات إصدار v0.8.11](../releases/v0.8.11.md).
 
 </details>
 
-[Skill الرسمية `pyqpanda3` من OriginQ](https://github.com/OriginQ/pyqpanda3-skill) هي Skill اختيارية من المشروع الأصلي: لا تُحتسب ضمن Skills المدمجة الـ189 ولا تُثبَّت تلقائيًا. يثبّت `npm run skill:qpanda:setup` الإصدار المراجَع؛ ولا يفعّل `qpanda_runtime` ولا يمنح صلاحيات مهام السحابة.
+[Skill الرسمية `pyqpanda3` من OriginQ](https://github.com/OriginQ/pyqpanda3-skill) هي Skill اختيارية من المشروع الأصلي: لا تُحتسب ضمن Skills المدمجة الـ193 ولا تُثبَّت تلقائيًا. يثبّت `npm run skill:qpanda:setup` الإصدار المراجَع؛ ولا يفعّل `qpanda_runtime` ولا يمنح صلاحيات مهام السحابة.
 
 <a id="roadmap-and-rsi"></a>
 

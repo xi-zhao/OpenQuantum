@@ -4,8 +4,6 @@
 
 <p align="center"><a href="../../README.md">简体中文</a> · <a href="./README.en.md">English</a> · <a href="./README.ja.md">日本語</a> · <a href="./README.ko.md">한국어</a> · <a href="./README.es.md">Español</a> · <a href="./README.fr.md">Français</a> · <a href="./README.de.md">Deutsch</a> · <a href="./README.pt.md">Português</a> · <a href="./README.ru.md">Русский</a> · <a href="./README.ar.md">العربية</a></p>
 
-**Versión 0.8.11:** Desktop y el plugin de Codex comparten la misma versión del producto. Las descargas actuales y el alcance de la verificación están en la [guía de Desktop](../DESKTOP_INSTALLERS.md) y la [guía de Codex](../integrations/CODEX_AGENT_INSTALL.md). Los detalles de 0.8.4 que aparecen más abajo se conservan como referencia histórica y no describen el paquete 0.8.11.
-
 <p align="center">
   <strong>OpenQuantum — Construyamos juntos una IA fiable para la investigación cuántica.</strong><br />
   <sub>La experiencia de la investigación cuántica, reunida en OpenQuantum</sub>
@@ -159,7 +157,7 @@ Elige un área y explica al entorno de investigación tu pregunta, tus entradas 
 
 Los cálculos locales pueden empezar sin cuenta en una nube cuántica. El hardware real y los servicios de pago se configuran cuando se necesitan; el rango de entradas, la preparación y el estado de verificación de cada método se mantienen en el catálogo detallado.
 
-El código fuente actual ofrece rutas completas a las API nativas de **117 entornos SDK o de código fuente**, 26 de ellos procedentes de la última [ampliación del ecosistema](../integrations/SDK_ECOSYSTEM_2026-10-14.md) incluida en 0.8.4. Los agentes pueden escribir programas propios, combinar API públicas y guardar resultados completos, más allá de los casos predefinidos de las Tools de conveniencia.
+El código fuente actual ofrece acceso completo a las API nativas de **121 entornos SDK o de código fuente** (incluidos los 26 de la [ampliación del ecosistema](../integrations/SDK_ECOSYSTEM_2026-10-14.md) publicada con 0.8.4 y las integraciones posteriores). Los agentes pueden escribir programas propios, combinar API públicas y guardar resultados completos, más allá de los casos predefinidos de las Tools de conveniencia.
 
 SlowQuant añade respuesta lineal molecular y propiedades de transición mediante un SDK de código fuente fijado. [Preparación y límites de validación](../integrations/SLOWQUANT.md); qLR molecular con Qiskit y hardware aún no están validados.
 
@@ -298,7 +296,7 @@ Las tareas docentes de Pro usan las herramientas y registros propios de la aplic
 
 ### Desktop, mensajería e idiomas
 
-**Desktop.** El escritorio de OpenQuantum ofrece ventana nativa, bandeja del sistema, terminal y notificaciones, y reutiliza los modelos, las Skills cuánticas, las herramientas de cálculo y los registros de ejecución del entorno de investigación. Usa el DSH Desktop original de terceros con un paquete de funciones de OpenQuantum entregado por separado, en Mac (Apple Silicon / Intel), Windows y desde el código fuente. [Instalar Desktop](#desktop-installer) · [Compilar Desktop desde el código fuente](#desktop-from-source).
+**Desktop.** El escritorio de OpenQuantum ofrece una ventana nativa, una barra de menús sencilla y notificaciones, y reutiliza los modelos, las Skills cuánticas, las herramientas de cálculo y los registros del entorno de investigación. La barra de menús solo ofrece abrir y cerrar OpenQuantum, en chino o inglés; el agente conserva su Tool de terminal con los permisos elegidos. Mac Apple Silicon usa la aplicación independiente OpenQuantum 0.8.11. Intel Mac y Windows conservan los paquetes 0.8.4 con su cliente de terceros fijado; también puedes compilar desde el código fuente. [Instalar Desktop](#desktop-installer) · [Compilar Desktop desde el código fuente](#desktop-from-source).
 
 **Mensajería.** Mediante CC Connect puedes iniciar tareas desde WeChat, Feishu, DingTalk, Slack, Telegram, Discord y otros canales, reutilizando las Skills, las Tools y los registros de ejecución del entorno de investigación. [Configurar canales de mensajería](#messaging-channels).
 
@@ -317,7 +315,7 @@ El idioma de la interfaz no reescribe las conversaciones existentes, los materia
 
 ## Inicio rápido
 
-Elige un modo de acceso: instala el plugin en Codex, usa el cliente Desktop con su paquete de funciones o ejecuta el entorno de investigación desde el código fuente. Desktop y el entorno de investigación desde el código fuente están pensados para un uso local individual; elige el código fuente para desarrollar o para usar las funciones de `main`.
+Elige un modo de acceso: instala el plugin en Codex, instala la aplicación Desktop independiente en Mac Apple Silicon o ejecuta el entorno de investigación desde el código fuente. Desktop y el entorno desde el código fuente están pensados para uso local individual; elige el código fuente para desarrollar o usar las funciones de `main`.
 
 <a id="codex"></a>
 
@@ -328,17 +326,17 @@ Al instalar una vez el plugin de OpenQuantum se registran juntos **Skills, servi
 **Deja que Codex lo instale por ti:** abre Codex, inicia una conversación nueva y pega la siguiente petición.
 
 ```text
-Please install the OpenQuantum Codex plugin 0.8.4. First read the installation guide:
-https://github.com/xi-zhao/OpenQuantum/blob/codex-v0.8.4/docs/integrations/CODEX_AGENT_INSTALL.md
-Download the complete installer and SHA256SUMS from https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.4,
+Please install the OpenQuantum Codex plugin 0.8.11. First read the installation guide:
+https://github.com/xi-zhao/OpenQuantum/blob/codex-v0.8.11/docs/integrations/CODEX_AGENT_INSTALL.md
+Download the complete installer and SHA256SUMS from https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.11,
 verify the checksum, check Codex, Node.js 24+ and npm, and install with the bundled installer.
 Keep existing plugins and user settings, and check the Skills, MCP tools and the global "OpenQuantum settings" entry.
 Tell me exactly what to do if the app needs reloading. Finally, report what was actually verified and which scientific dependencies still need preparation.
 ```
 
-El paquete de funciones de Desktop, el plugin de Codex y el instalador usan **OpenQuantum 0.8.4**. Este plugin incluye 168 Skills y 87 Tools científicas, añade 26 Skills de SDK nativos y unifica las pestañas Status, MCP, Skills y Service keys; las 16 nuevas Tools de servicio que requieren credenciales están desactivadas por defecto. La etiqueta de la versión es `codex-v0.8.4`; los adjuntos y el alcance de la verificación son los que indica la Release.
+Desktop y el plugin de Codex comparten **OpenQuantum 0.8.11** y el mismo commit de origen. Esta versión mejora el cierre de Tools y el progreso de la preparación, comparte la ejecución acotada entre hosts y añade flujos de trabajo SDK para SlowQuant, TNQS y RcmpsCore. Se mantienen los límites entre el plugin compartido y los hosts. Los adjuntos de la versión registran los recuentos de Skills y Tools, las sumas de comprobación y los resultados de verificación.
 
-**[Descargar el instalador completo del plugin de Codex 0.8.4](https://github.com/xi-zhao/OpenQuantum/releases/download/codex-v0.8.4/openquantum-0.8.4-codex-install.zip)** ([notas de la versión y SHA256SUMS](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.4)).
+**[Descargar el instalador completo del plugin de Codex 0.8.11](https://github.com/xi-zhao/OpenQuantum/releases/download/codex-v0.8.11/openquantum-0.8.11-codex-install.zip)** ([notas de la versión y SHA256SUMS](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.11)).
 
 El instalador contiene el ZIP del plugin, el script de instalación y el archivo de bloqueo de dependencias; no hace falta clonar el código fuente. Requiere Node.js 24+, npm y una versión de Codex que admita plugins y páginas de ajustes globales; un agente puede comprobarlo y resolverlo siguiendo la [guía de instalación](../integrations/CODEX_AGENT_INSTALL.md). La instalación local está verificada en macOS; comprueba la compatibilidad en otras plataformas y versiones del host.
 
@@ -346,7 +344,7 @@ El instalador contiene el ZIP del plugin, el script de instalación y el archivo
 
 1. Recarga Codex cuando se te indique y abre una conversación nueva para que se carguen las nuevas Skills y herramientas.
 2. Pregunta directamente en la conversación, por ejemplo: «Usa OpenQuantum para buscar métodos de corrección cuántica de errores y recomiéndame un primer experimento».
-3. Abre **"…" → "OpenQuantum settings"** y gestiona las funciones en las pestañas **Status / MCP / Skills / Service keys**; los interruptores de las Tools están en **Status → Tools**. Los servicios integrados vienen configurados con el plugin; para añadir tu propio servidor MCP, introduce sus datos de conexión y guarda los tokens mediante el diálogo de credenciales específico.
+3. Abre **"…" → "OpenQuantum settings"** y gestiona las funciones en las pestañas **Home / Skills / MCP**; los entornos, las credenciales y los interruptores de las Tools están agrupados en las tarjetas correspondientes. Los servicios integrados vienen configurados con el plugin; para añadir tu propio servidor MCP, introduce sus datos de conexión y guarda los tokens mediante el diálogo de credenciales específico.
 
 El plugin instala el código de las funciones y los puntos de configuración; algunos cálculos siguen necesitando que prepares Python, SDK cuánticos o cuentas de terceros cuando haga falta. Consulta la [guía del plugin](../integrations/CODEX_PLUGIN.md).
 
@@ -368,17 +366,9 @@ Si el instalador no encuentra la CLI de la aplicación Codex actual, define `OPE
 
 ### Instalador de Desktop
 
-La versión de escritorio actual combina el [cliente original DSH Desktop 2.0.7](https://github.com/anywhere-labs/dsh-desktop/releases/tag/v2.0.7) con un paquete de funciones de OpenQuantum independiente. El cliente original conserva el nombre y la versión de su proyecto de origen; el paquete de funciones incluye Node / uv y aporta los accesos completos a los SDK, las Skills cuánticas, las Tools y la configuración. El instalador crea un lanzador con el icono de OpenQuantum (`OpenQuantum.app` en Mac, `OpenQuantum.lnk` en Windows).
+En Mac Apple Silicon, descarga **[OpenQuantum 0.8.11 DMG](https://github.com/xi-zhao/OpenQuantum/releases/download/v0.8.11/OpenQuantum-0.8.11-macOS-arm64.dmg)**. Verifica el archivo con [SHA256SUMS de la versión](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.11), abre el DMG y arrastra `OpenQuantum.app` a Aplicaciones. Incluye el escritorio, Node / uv y las dependencias fijadas; no necesitas otro cliente.
 
-Instala primero el DSH Desktop original y después elige el paquete de funciones para tu plataforma:
-
-| Plataforma | Descarga de OpenQuantum 0.8.4 | Ejecutar tras extraer |
-| --- | --- | --- |
-| Mac Apple Silicon | [paquete darwin-arm64](https://github.com/xi-zhao/OpenQuantum/releases/download/v0.8.4/OpenQuantum-0.8.4-DSH-darwin-arm64.tar.gz) | `install.command` |
-| Mac Intel | [paquete darwin-x64](https://github.com/xi-zhao/OpenQuantum/releases/download/v0.8.4/OpenQuantum-0.8.4-DSH-darwin-x64.tar.gz) | `install.command` |
-| Windows x64 | [paquete win32-x64](https://github.com/xi-zhao/OpenQuantum/releases/download/v0.8.4/OpenQuantum-0.8.4-DSH-win32-x64.tar.gz) | `install.cmd` |
-
-Verifica la descarga con [SHA256SUMS de la Release](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.4) antes de extraerla. Las actualizaciones conservan los ajustes existentes; consulta la [guía de instalación y migración](../DESKTOP_INSTALLERS.md). El paquete de funciones y el plugin de Codex son ambos `0.8.4`, y Harness se mantiene en `0.1.5-rc.1`. Los entornos de cálculo, las cuentas y las licencias se siguen preparando para cada función.
+Consulta la [guía de instalación y migración](../DESKTOP_INSTALLERS.md). Intel Mac y Windows siguen usando los [paquetes de funciones 0.8.4](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.4) con su cliente de terceros fijado y sus instrucciones de instalación. Esos paquetes anteriores no incluyen esta simplificación del escritorio. Los entornos de cálculo, las cuentas y las licencias siguen siendo específicos de cada función.
 
 ### Instalar desde el código fuente
 
@@ -688,7 +678,7 @@ Da preferencia a los Tool Providers nativos para acciones en el mismo proceso y 
 
 </details>
 
-El catálogo completo de Skills, servicios MCP y Tools nativas se mantiene en el [documentación de referencia en chino](../CAPABILITIES.md#接口总览): el código fuente actual incluye **189 Skills integradas** (176 seleccionables automáticamente y 13 índices de categorías manuales), **91 conexiones de servicios MCP** (66 activadas por defecto y 25 opcionales) y **5 Tools cuánticas nativas**.
+El catálogo completo de Skills, servicios MCP y Tools nativas se mantiene en el [documentación de referencia en chino](../CAPABILITIES.md#接口总览): el código fuente actual incluye **193 Skills integradas** (180 seleccionables automáticamente y 13 índices de categorías manuales), **91 conexiones de servicios MCP** (66 activadas por defecto, incluidas dos conexiones de Qiskit que se pueden desactivar con el interruptor sin conexión; 25 opcionales) y **5 Tools cuánticas nativas**.
 
 <a id="development-and-verification"></a>
 
@@ -714,11 +704,11 @@ npm run capability:algorithms:live
 npm run e2e:quantum-harness -- --provider openquantum-public
 ```
 
-Elige las comprobaciones relevantes para tu cambio; la lista completa está en el [documentación de referencia en chino](../EXAMPLES.md#开发与验证). Las pruebas y las evidencias locales son distintas de una versión publicada o de una aceptación científica. Los cambios de la versión están en las [notas de la versión v0.8.4](../releases/v0.8.4.md).
+Elige las comprobaciones relevantes para tu cambio; la lista completa está en el [documentación de referencia en chino](../EXAMPLES.md#开发与验证). Las pruebas y las evidencias locales son distintas de una versión publicada o de una aceptación científica. Los cambios de la versión están en las [notas de la versión v0.8.11](../releases/v0.8.11.md).
 
 </details>
 
-La [Skill oficial `pyqpanda3` de OriginQ](https://github.com/OriginQ/pyqpanda3-skill) es una Skill de origen opcional: no se cuenta entre las 189 Skills integradas y no se instala automáticamente. `npm run skill:qpanda:setup` instala la versión revisada; no activa `qpanda_runtime` ni concede permisos para trabajos en la nube.
+La [Skill oficial `pyqpanda3` de OriginQ](https://github.com/OriginQ/pyqpanda3-skill) es una Skill de origen opcional: no se cuenta entre las 193 Skills integradas y no se instala automáticamente. `npm run skill:qpanda:setup` instala la versión revisada; no activa `qpanda_runtime` ni concede permisos para trabajos en la nube.
 
 <a id="roadmap-and-rsi"></a>
 

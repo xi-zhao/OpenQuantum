@@ -2,8 +2,6 @@
 
 <p align="center"><a href="../../README.md">简体中文</a> · <a href="./README.en.md">English</a> · <a href="./README.ja.md">日本語</a> · <a href="./README.ko.md">한국어</a> · <a href="./README.es.md">Español</a> · <a href="./README.fr.md">Français</a> · <a href="./README.de.md">Deutsch</a> · <a href="./README.pt.md">Português</a> · <a href="./README.ru.md">Русский</a> · <a href="./README.ar.md">العربية</a></p>
 
-**バージョン 0.8.11：** Desktop と Codex プラグインは同じ製品バージョンを使用します。現在のダウンロードと検証範囲は [Desktop ガイド](../DESKTOP_INSTALLERS.md)と [Codex ガイド](../integrations/CODEX_AGENT_INSTALL.md)を参照してください。以下の 0.8.4 に関する詳細は過去の記録として残しており、0.8.11 パッケージの説明ではありません。
-
 <p align="center">
   <strong>OpenQuantum — 信頼できる量子研究 AI を、ともに育てる。</strong><br />
   <sub>量子研究の専門知を、一つの OpenQuantum に</sub>
@@ -157,7 +155,7 @@ OpenQuantum は、アルゴリズム、コンパイル、シミュレーショ�
 
 ローカル計算は量子クラウドのアカウントなしで始められます。実機と有料サービスは必要に応じて設定します。各手法の入力範囲、準備、検証状況は詳細カタログに記載しています。
 
-現在のソースは **117 の SDK・ソース環境**でネイティブ API を完全に利用する経路を提供し、そのうち 26 件は 0.8.4 に含まれる最新の[エコシステム拡張](../integrations/SDK_ECOSYSTEM_2026-10-14.md)によるものです。エージェントは独自のプログラムを書き、公開 API を組み合わせ、完全な結果を保存でき、便宜的な Tool の既定事例にとどまりません。
+現在のソースは **121 の SDK・ソース環境**でネイティブ API を完全に利用する経路を提供します。0.8.4 に含まれた[エコシステム拡張](../integrations/SDK_ECOSYSTEM_2026-10-14.md)の 26 件と、その後の統合を含みます。エージェントは独自のプログラムを書き、公開 API を組み合わせ、完全な結果を保存でき、便宜的な Tool の既定事例にとどまりません。
 
 SlowQuant は固定ソース SDK を通じて分子の線形応答と遷移特性を扱います。[準備と検証範囲](../integrations/SLOWQUANT.md)を参照してください。Qiskit による分子 qLR と実機は未検証です。
 
@@ -313,7 +311,7 @@ UI の言語を変えても、既存の会話、コース教材、ユーザー�
 
 ## クイックスタート
 
-利用方法を一つ選んでください。Codex にプラグインをインストールする、機能パッケージ付きの Desktop クライアントを使う、またはソースからワークベンチを起動する、のいずれかです。Desktop とソース版ワークベンチはローカル環境で一人で使う場合を想定しています。開発や `main` にある機能を使う場合はソース版を選んでください。
+Codex プラグイン、Mac Apple Silicon 向けの単体 Desktop アプリ、ソースから起動するワークベンチのいずれかを選びます。Desktop とソース版ワークベンチは個人のローカル利用向けです。開発や `main` の機能を使う場合はソース版を選んでください。
 
 <a id="codex"></a>
 
@@ -324,17 +322,17 @@ OpenQuantum プラグインを一度インストールすると、**Skill、ロ�
 **Codex にインストールを任せる：** Codex を開き、新しい会話を始めて、次の依頼を貼り付けてください。
 
 ```text
-Please install the OpenQuantum Codex plugin 0.8.4. First read the installation guide:
-https://github.com/xi-zhao/OpenQuantum/blob/codex-v0.8.4/docs/integrations/CODEX_AGENT_INSTALL.md
-Download the complete installer and SHA256SUMS from https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.4,
+Please install the OpenQuantum Codex plugin 0.8.11. First read the installation guide:
+https://github.com/xi-zhao/OpenQuantum/blob/codex-v0.8.11/docs/integrations/CODEX_AGENT_INSTALL.md
+Download the complete installer and SHA256SUMS from https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.11,
 verify the checksum, check Codex, Node.js 24+ and npm, and install with the bundled installer.
 Keep existing plugins and user settings, and check the Skills, MCP tools and the global "OpenQuantum settings" entry.
 Tell me exactly what to do if the app needs reloading. Finally, report what was actually verified and which scientific dependencies still need preparation.
 ```
 
-Desktop の機能パッケージ、Codex プラグイン、インストーラーはいずれも **OpenQuantum 0.8.4** です。このプラグインには 168 個の Skill と 87 個の科学 Tool が含まれ、26 個のネイティブ SDK Skill を追加し、「ステータス」「MCP」「Skills」「サービスキー」のタブを統一しました。認証情報を必要とする 16 個の新しいサービス Tool は既定で無効です。リリースタグは `codex-v0.8.4` で、添付ファイルと検証範囲は Release の記載どおりです。
+Desktop と Codex プラグインは **OpenQuantum 0.8.11** と同じソースコミットを共有します。このリリースでは Tool の終了処理と準備状況の表示を改善し、制限付き実行をホスト間で共有するとともに、SlowQuant、TNQS、RcmpsCore の SDK ワークフローを追加しました。共有プラグインとホストの責任範囲は変わりません。Skill と Tool の件数、パッケージのチェックサム、検証結果はリリースの添付資料に記録されています。
 
-**[Codex プラグイン 0.8.4 完全インストールパッケージをダウンロード](https://github.com/xi-zhao/OpenQuantum/releases/download/codex-v0.8.4/openquantum-0.8.4-codex-install.zip)**（[リリースノートと SHA256SUMS](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.4)）。
+**[Codex プラグイン 0.8.11 完全インストールパッケージをダウンロード](https://github.com/xi-zhao/OpenQuantum/releases/download/codex-v0.8.11/openquantum-0.8.11-codex-install.zip)**（[リリースノートと SHA256SUMS](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.11)）。
 
 インストールパッケージにはプラグイン ZIP、インストールスクリプト、依存関係のロックファイルが含まれ、ソースのチェックアウトは不要です。Node.js 24 以降、npm、プラグインとグローバル設定ページに対応した Codex が必要です。エージェントは[インストールガイド](../integrations/CODEX_AGENT_INSTALL.md)に従ってこれらを確認・対処できます。ローカルでのインストールは macOS で検証済みです。他のプラットフォームやホストのバージョンでは互換性を確認してください。
 
@@ -342,7 +340,7 @@ Desktop の機能パッケージ、Codex プラグイン、インストーラー
 
 1. 案内に従って Codex を再読み込みし、新しい Skill とツールが読み込まれるよう新しい会話を開きます。
 2. 会話で直接依頼します。例：「OpenQuantum で量子誤り訂正の手法を探し、最初の実験を提案してください。」
-3. **「…」→「OpenQuantum settings」**を開き、**ステータス / MCP / Skills / サービスキー**のタブで機能を管理します。Tool の切り替えは**ステータス → Tools** にあります。組み込みサービスはプラグインとともに設定済みです。独自の MCP サーバーを追加する場合は接続情報を入力し、トークンは専用の認証情報ダイアログで保存してください。
+3. **"…" → "OpenQuantum settings"** を開き、**Home / Skills / MCP** タブで機能を管理します。環境、認証情報、Tool の切り替えは、対応するカードにまとめられています。組み込みサービスは設定済みです。独自の MCP サーバーを追加する場合は接続情報を入力し、専用の認証情報ダイアログでトークンを保存してください。
 
 プラグインがインストールするのは機能のコードと設定画面です。一部の計算には、必要に応じて Python、量子 SDK、サードパーティのアカウントの準備が引き続き必要です。[プラグインガイド](../integrations/CODEX_PLUGIN.md)を参照してください。
 
@@ -364,17 +362,9 @@ npm run plugin:install
 
 ### Desktop インストーラー
 
-現在のデスクトップリリースは、[オリジナルの DSH Desktop 2.0.7 クライアント](https://github.com/anywhere-labs/dsh-desktop/releases/tag/v2.0.7)と別途提供する OpenQuantum 機能パッケージを組み合わせたものです。オリジナルのクライアントは上流の名前とバージョンを維持します。機能パッケージは Node / uv を同梱し、完全な SDK へのアクセス、量子 Skill、Tool、設定を提供します。インストーラーは OpenQuantum アイコン付きのランチャー（Mac は `OpenQuantum.app`、Windows は `OpenQuantum.lnk`）を作成します。
+Mac Apple Silicon では **[OpenQuantum 0.8.11 DMG](https://github.com/xi-zhao/OpenQuantum/releases/download/v0.8.11/OpenQuantum-0.8.11-macOS-arm64.dmg)** をダウンロードします。[リリースの SHA256SUMS](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.11) で検証し、DMG を開いて `OpenQuantum.app` をアプリケーションフォルダーへドラッグしてください。デスクトップ、Node / uv、固定バージョンの依存関係が含まれており、別のクライアントは不要です。
 
-先にオリジナルの DSH Desktop をインストールし、続いてプラットフォームに合った機能パッケージを選んでください。
-
-| プラットフォーム | OpenQuantum 0.8.4 のダウンロード | 展開後に実行 |
-| --- | --- | --- |
-| Mac Apple Silicon | [darwin-arm64 パッケージ](https://github.com/xi-zhao/OpenQuantum/releases/download/v0.8.4/OpenQuantum-0.8.4-DSH-darwin-arm64.tar.gz) | `install.command` |
-| Mac Intel | [darwin-x64 パッケージ](https://github.com/xi-zhao/OpenQuantum/releases/download/v0.8.4/OpenQuantum-0.8.4-DSH-darwin-x64.tar.gz) | `install.command` |
-| Windows x64 | [win32-x64 パッケージ](https://github.com/xi-zhao/OpenQuantum/releases/download/v0.8.4/OpenQuantum-0.8.4-DSH-win32-x64.tar.gz) | `install.cmd` |
-
-展開前に、ダウンロードしたファイルを [Release の SHA256SUMS](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.4) で検証してください。アップグレード時は既存の設定を保持します。[インストールと移行のガイド](../DESKTOP_INSTALLERS.md)を参照してください。機能パッケージと Codex プラグインはいずれも `0.8.4` で、Harness は `0.1.5-rc.1` のままです。計算環境、アカウント、ライセンスは引き続き機能ごとに準備します。
+[インストールと移行のガイド](../DESKTOP_INSTALLERS.md)を参照してください。Intel Mac と Windows は引き続き [0.8.4 の機能パッケージ](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.4)、固定バージョンのサードパーティークライアント、そのインストール手順を使います。これらの旧パッケージには今回のデスクトップ簡素化は含まれません。計算環境、アカウント、ライセンスは機能ごとに準備します。
 
 ### ソースからのインストール
 
@@ -684,7 +674,7 @@ OpenQuantum が統合するのは、SDK、アルゴリズム、計算サービ�
 
 </details>
 
-Skill、MCP サービス、ネイティブ Tool の完全なカタログは[中国語のリファレンス](../CAPABILITIES.md#接口总览)で管理しています。現在のソースには **189 個の組み込み Skill**（自動選択 176、手動の分類索引 13）、**91 個の MCP サービス接続**（既定で有効 66、既定で無効 25）、**5 個のネイティブ量子 Tool**が含まれます。
+Skill、MCP サービス、ネイティブ Tool の完全なカタログは[中国語のリファレンス](../CAPABILITIES.md#接口总览)で管理しています。現在のソースには **193 個の組み込み Skill**（自動選択 180、手動の分類索引 13）、**91 個の MCP サービス接続**（既定で有効 66、このうち Qiskit の 2 接続はオフラインスイッチで無効化可能；必要に応じて有効化 25）、**5 個のネイティブ量子 Tool**が含まれます。
 
 <a id="development-and-verification"></a>
 
@@ -710,11 +700,11 @@ npm run capability:algorithms:live
 npm run e2e:quantum-harness -- --provider openquantum-public
 ```
 
-変更に関連するチェックを選んでください。完全な一覧は[中国語のリファレンス](../EXAMPLES.md#开发与验证)にあります。テストとローカルの証拠は、公開リリースや科学的受入れとは別物です。リリースの変更点は [v0.8.4 リリースノート](../releases/v0.8.4.md)に記載しています。
+変更に関連するチェックを選んでください。完全な一覧は[中国語のリファレンス](../EXAMPLES.md#开发与验证)にあります。テストとローカルの証拠は、公開リリースや科学的受入れとは別物です。リリースの変更点は [v0.8.11 リリースノート](../releases/v0.8.11.md)に記載しています。
 
 </details>
 
-[本源量子公式の `pyqpanda3` Skill](https://github.com/OriginQ/pyqpanda3-skill) は任意の上流 Skill です。189 個の組み込み Skill には数えず、自動ではインストールされません。`npm run skill:qpanda:setup` はレビュー済みのバージョンをインストールしますが、`qpanda_runtime` を有効化したり、クラウドジョブの権限を付与したりはしません。
+[本源量子公式の `pyqpanda3` Skill](https://github.com/OriginQ/pyqpanda3-skill) は任意の上流 Skill です。193 個の組み込み Skill には数えず、自動ではインストールされません。`npm run skill:qpanda:setup` はレビュー済みのバージョンをインストールしますが、`qpanda_runtime` を有効化したり、クラウドジョブの権限を付与したりはしません。
 
 <a id="roadmap-and-rsi"></a>
 
