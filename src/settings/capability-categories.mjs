@@ -47,7 +47,7 @@ const groups = [
     qec-memory-experiment mitiq-error-mitigation ldpc-decoding clifft-sampling
     deltakit-qec quantum-qldpc alicebob-cat-circuits
     mqt-qecc tqec-compilation tesseract-decoding tsim-sampling pecos-qec
-    quantumclifford-julia chromobius-decoding mwpf-decoding tropidist-distance emlint-dem-audit ppvm-simulation
+    quantumclifford-julia chromobius-decoding mwpf-decoding tropidist-distance erasure-recovery emlint-dem-audit ppvm-simulation
   `],
   ["learning", "量子机器学习", `
     quantum-guide-algorithms-quantum-machine-learning quantum-cvqnn quantum-qcbm

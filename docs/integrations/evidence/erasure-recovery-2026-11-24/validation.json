@@ -1,0 +1,30 @@
+{
+  "cutDecompositionMaxErrors": [
+    2.7755575615628914e-17,
+    2.7755575615628914e-17
+  ],
+  "numpy": "2.5.2",
+  "cases": {
+    "line": {
+      "cost": 2,
+      "branches": 4,
+      "probabilitySum": 0.9999999999999996,
+      "maxBellEntryError": 1.1102230246251565e-16,
+      "cutLowerBound": 2
+    },
+    "triangle": {
+      "cost": 1,
+      "branches": 4,
+      "probabilitySum": 0.9999999999999998,
+      "maxBellEntryError": 1.1102230246251565e-16,
+      "cutLowerBound": 1
+    },
+    "fresh_relays": {
+      "cost": 4,
+      "branches": 16,
+      "probabilitySum": 0.9999999999999999,
+      "maxBellEntryError": 1.1102230246251565e-16
+    }
+  },
+  "branchesFailingWithoutXCorrection": 2
+}

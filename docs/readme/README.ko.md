@@ -154,7 +154,7 @@ OpenQuantum은 알고리즘, 컴파일, 시뮬레이션, 양자 정보, 화학�
 
 로컬 계산은 양자 클라우드 계정 없이 시작할 수 있습니다. 실제 하드웨어와 유료 서비스는 필요할 때 설정하며, 각 방법의 입력 범위, 준비 사항과 검증 상태는 상세 카탈로그에 보존됩니다.
 
-현재 소스는 **117개 SDK/소스 환경**에 대해 네이티브 API 전체 경로를 제공하며, 그중 26개는 0.8.4과 함께 배포된 최신 [생태계 확장](../integrations/SDK_ECOSYSTEM_2026-10-14.md)에서 왔습니다. 에이전트는 사용자 정의 프로그램을 작성하고, 공개 API를 조합하며, 완전한 결과를 저장할 수 있어 편의 Tool의 사전 설정 사례를 넘어설 수 있습니다.
+현재 소스는 **[122개 SDK/소스 환경](../integrations/SDK_INVENTORY.md)**에 대해 네이티브 API 전체 경로를 제공하며, 그중 26개는 0.8.4과 함께 배포된 최신 [생태계 확장](../integrations/SDK_ECOSYSTEM_2026-10-14.md)에서 왔습니다. 에이전트는 사용자 정의 프로그램을 작성하고, 공개 API를 조합하며, 완전한 결과를 저장할 수 있어 편의 Tool의 사전 설정 사례를 넘어설 수 있습니다.
 
 SlowQuant는 고정 소스 SDK를 통해 분자 선형 응답과 전이 특성을 지원합니다. [준비 및 검증 범위](../integrations/SLOWQUANT.md)를 참고하세요. Qiskit 분자 qLR과 실제 하드웨어는 아직 검증하지 않았습니다.
 
@@ -229,6 +229,7 @@ v0.6.0에서 통합한 기업과 연구기관의 SDK는 미분 가능한 회로,
 | --- | --- | --- |
 | 오류 완화 | Mitiq으로 ZNE, REM, PEC 또는 CDR을 실행하고 같은 샘플링 예산에서 원시 결과와 완화 결과 비교 | 이상적 참조값, 경험적 편향, 분산과 RMSE, 그리고 보정·학습·샘플링 비용 |
 | 양자 오류 정정 | Stim / PyMatching으로 표면 부호 메모리 실험, Deltakit으로 직사각형 패치 구성, 또는 BP+LSD로 복호 | 실제 잡음 회로, 고정 샷 수에서의 논리 오류율과 구간; LSD의 신드롬 일관성 검사 |
+| [위치가 알려진 소실](../../.agents/skills/erasure-recovery/SKILL.md) | 가중 결합 그래프의 지정한 위치에 부호화된 큐비트 하나를 복원 | 적응형 안정자 회로를 출력한다. 비용은 소실 이후의 CNOT만 포함한다. |
 
 <a id="hamiltonian-simulation-and-open-systems"></a>
 
@@ -681,7 +682,7 @@ OpenQuantum은 SDK, 알고리즘과 계산 서비스뿐 아니라 정해진 사�
 
 </details>
 
-전체 Skill, MCP 서비스와 네이티브 Tool 카탈로그는 [중국어 참고 문서](../CAPABILITIES.md#接口总览)에서 관리합니다. 현재 소스에는 **내장 Skill 189개**(자동 선택 176개, 수동 범주 색인 13개), **MCP 서비스 연결 91개**(기본 활성 66개, opt-in 25개)와 **네이티브 양자 Tool 5개**가 있습니다.
+전체 Skill, MCP 서비스와 네이티브 Tool 카탈로그는 [중국어 참고 문서](../CAPABILITIES.md#接口总览)에서 관리합니다. 현재 소스에는 **[내장 Skill 194개](../../.agents/skills/README.md)**(자동 선택 181개, 수동 범주 색인 13개), **MCP 서비스 연결 91개**(기본 활성 66개, opt-in 25개)와 **네이티브 양자 Tool 5개**가 있습니다.
 
 <a id="development-and-verification"></a>
 
@@ -711,7 +712,7 @@ npm run e2e:quantum-harness -- --provider openquantum-public
 
 </details>
 
-[OriginQ 공식 `pyqpanda3` Skill](https://github.com/OriginQ/pyqpanda3-skill)은 선택적인 원본 Skill입니다. 내장 Skill 189개에 포함되지 않으며 자동으로 설치되지 않습니다. `npm run skill:qpanda:setup`은 검토된 버전을 설치하지만 `qpanda_runtime`을 활성화하거나 클라우드 작업 권한을 부여하지는 않습니다.
+[OriginQ 공식 `pyqpanda3` Skill](https://github.com/OriginQ/pyqpanda3-skill)은 선택적인 원본 Skill입니다. 내장 Skill 194개에 포함되지 않으며 자동으로 설치되지 않습니다. `npm run skill:qpanda:setup`은 검토된 버전을 설치하지만 `qpanda_runtime`을 활성화하거나 클라우드 작업 권한을 부여하지는 않습니다.
 
 <a id="roadmap-and-rsi"></a>
 

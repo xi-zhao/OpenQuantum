@@ -157,7 +157,7 @@ Choisissez un domaine et indiquez à l’environnement de recherche votre questi
 
 Les calculs locaux peuvent commencer sans compte de cloud quantique. Le matériel réel et les services payants se configurent à la demande ; le domaine d’entrée, la préparation et l’état de vérification de chaque méthode sont consignés dans le catalogue détaillé.
 
-Les sources actuelles offrent un accès complet aux API natives de **117 environnements SDK ou sources**, dont 26 issus de la dernière [extension de l’écosystème](../integrations/SDK_ECOSYSTEM_2026-10-14.md) livrée avec 0.8.4. Les agents peuvent écrire leurs propres programmes, combiner les API publiques et conserver les résultats complets, au-delà des cas prédéfinis des Tools de commodité.
+Les sources actuelles offrent un accès complet aux API natives de **[122 environnements SDK ou sources](../integrations/SDK_INVENTORY.md)**, dont 26 issus de la dernière [extension de l’écosystème](../integrations/SDK_ECOSYSTEM_2026-10-14.md) livrée avec 0.8.4. Les agents peuvent écrire leurs propres programmes, combiner les API publiques et conserver les résultats complets, au-delà des cas prédéfinis des Tools de commodité.
 
 SlowQuant ajoute la réponse linéaire moléculaire et les propriétés de transition via un SDK source figé. [Installation et limites de validation](../integrations/SLOWQUANT.md) ; qLR moléculaire avec Qiskit et matériel restent non validés.
 
@@ -232,6 +232,7 @@ L’adaptation conserve les sources et licences d’origine et ne dépend pas du
 | --- | --- | --- |
 | Atténuation des erreurs | Exécuter ZNE, REM, PEC ou CDR avec Mitiq et comparer résultats bruts et atténués à budget d’échantillonnage égal | Référence idéale, biais empirique, variance et RMSE, ainsi que coûts de calibration, d’entraînement et d’échantillonnage |
 | Correction d’erreurs quantiques | Mener des expériences de mémoire sur le code de surface avec Stim / PyMatching, construire des patchs rectangulaires avec Deltakit, ou décoder avec BP+LSD | Circuits bruités effectifs, taux d’erreur logique et intervalles à nombre de tirs fixé ; vérification de cohérence des syndromes pour LSD |
+| [Effacements connus](../../.agents/skills/erasure-recovery/SKILL.md) | Récupérer un qubit encodé sur un site choisi du graphe de couplage pondéré | Circuits stabilisateurs adaptatifs. Le coût compte uniquement les CNOT après effacement. |
 
 <a id="hamiltonian-simulation-and-open-systems"></a>
 
@@ -684,7 +685,7 @@ Préférez les Tool Providers natifs pour les actions dans le processus, dans le
 
 </details>
 
-Le catalogue complet des Skills, services MCP et Tools natifs est tenu à jour dans le [documentation de référence en chinois](../CAPABILITIES.md#接口总览) : les sources actuelles livrent **189 Skills intégrés** (176 sélectionnables automatiquement, 13 index de catégories manuels), **91 connexions de services MCP** (66 activées par défaut, 25 à activer explicitement) et **5 Tools quantiques natifs**.
+Le catalogue complet des Skills, services MCP et Tools natifs est tenu à jour dans le [documentation de référence en chinois](../CAPABILITIES.md#接口总览) : les sources actuelles livrent **[194 Skills intégrés](../../.agents/skills/README.md)** (181 sélectionnables automatiquement, 13 index de catégories manuels), **91 connexions de services MCP** (66 activées par défaut, 25 à activer explicitement) et **5 Tools quantiques natifs**.
 
 <a id="development-and-verification"></a>
 
@@ -714,7 +715,7 @@ Choisissez les vérifications pertinentes pour votre modification ; la liste com
 
 </details>
 
-Le [Skill officiel `pyqpanda3` d’OriginQ](https://github.com/OriginQ/pyqpanda3-skill) est un Skill amont optionnel : il n’est pas compté parmi les 189 Skills intégrés et n’est pas installé automatiquement. `npm run skill:qpanda:setup` installe la version examinée ; cette commande n’active pas `qpanda_runtime` et n’accorde aucune autorisation de tâches dans le cloud.
+Le [Skill officiel `pyqpanda3` d’OriginQ](https://github.com/OriginQ/pyqpanda3-skill) est un Skill amont optionnel : il n’est pas compté parmi les 194 Skills intégrés et n’est pas installé automatiquement. `npm run skill:qpanda:setup` installe la version examinée ; cette commande n’active pas `qpanda_runtime` et n’accorde aucune autorisation de tâches dans le cloud.
 
 <a id="roadmap-and-rsi"></a>
 

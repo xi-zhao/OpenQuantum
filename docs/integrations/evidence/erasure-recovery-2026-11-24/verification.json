@@ -1,0 +1,17 @@
+{
+  "id": "erasure-recovery",
+  "dependencyLockSha256": "a1a33697cf0727ca342ec38d6bdf530c8e132c64eeb41a692f075ea868ef20a1",
+  "sourceSha256": "cf0561e252a6fb29e9b026d5fd868219ef25ba24f2c8bc9d6e73719aceb56bef",
+  "networkIsolation": "macOS sandbox-exec deny network*",
+  "scientificValidation": "not_evaluated",
+  "status": "passed",
+  "files": {
+    "attempt.json": "2edbb21c1efc7bea2a918d6e7ae99ebefa4e14a603377beaffa66e6b0b8572e6",
+    "program.py": "cf0561e252a6fb29e9b026d5fd868219ef25ba24f2c8bc9d6e73719aceb56bef",
+    "result.json": "de6af1f1191e69e6bb940c326c71f1bbef2b42783afba3fb2e592159c59a19d1",
+    "runner.py": "4d8e55212145f22f02d8198f4582194f9aa937013038af3c543a95c6fa77e4b9",
+    "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "versions.json": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+  }
+}

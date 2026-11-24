@@ -220,6 +220,31 @@
       "pythonVersion": "3.12"
     },
     {
+      "id": "erasure-recovery",
+      "title": "Quantum Erasure Recovery Compiler",
+      "language": "python",
+      "modules": [
+        "verification.compiler"
+      ],
+      "group": "qec",
+      "workflow": "根据单逻辑比特的稳定子编码、已知擦除与带权耦合图，把逻辑态恢复到指定站点",
+      "conditions": [
+        "v1.1.0 的 Python 参考编译器只用标准库。费用只计擦除后的 CNOT，单比特操作、复位、测量及经典前馈免费。枚举成本随规模增长。"
+      ],
+      "nativeOnly": true,
+      "pythonVersion": "3.12",
+      "sourceProject": {
+        "repository": "https://github.com/GoGoKo699/Quantum-Erasure-Recovery-Compiler.git",
+        "revision": "159c6122610972d703d15f60f6d011fcb494c50f",
+        "include": [
+          "LICENSE",
+          "verification/compiler.py",
+          "verification/README.md"
+        ]
+      },
+      "bootstrap": "校验固定的参考编译器源码并加入 Python 搜索路径"
+    },
+    {
       "id": "fatqat-workbench",
       "title": "FatQat / QuTiP",
       "language": "python",

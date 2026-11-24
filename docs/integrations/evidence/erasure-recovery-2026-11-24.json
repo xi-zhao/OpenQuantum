@@ -1,0 +1,62 @@
+{
+  "receipt": {
+    "id": "erasure-recovery",
+    "language": "python",
+    "status": "passed_scoped_engineering",
+    "scientificValidation": "not_evaluated",
+    "sourcePath": ".agents/skills/erasure-recovery/references/native-example.py",
+    "sourceSha256": "cf0561e252a6fb29e9b026d5fd868219ef25ba24f2c8bc9d6e73719aceb56bef",
+    "dependencyLockPath": ".agents/skills/erasure-recovery/uv.lock",
+    "dependencyLockSha256": "a1a33697cf0727ca342ec38d6bdf530c8e132c64eeb41a692f075ea868ef20a1",
+    "durableEvidenceDirectory": "docs/integrations/evidence/erasure-recovery-2026-11-24",
+    "verificationSha256": "41bfa8e11df7784e7f66c7456b38d6e83311192a832885f82bd3286112ed656e",
+    "artifacts": {
+      "attempt.json": "2edbb21c1efc7bea2a918d6e7ae99ebefa4e14a603377beaffa66e6b0b8572e6",
+      "program.py": "cf0561e252a6fb29e9b026d5fd868219ef25ba24f2c8bc9d6e73719aceb56bef",
+      "result.json": "de6af1f1191e69e6bb940c326c71f1bbef2b42783afba3fb2e592159c59a19d1",
+      "runner.py": "4d8e55212145f22f02d8198f4582194f9aa937013038af3c543a95c6fa77e4b9",
+      "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "versions.json": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+    }
+  },
+  "scientificValidation": "not_evaluated",
+  "upstream": {
+    "repository": "GoGoKo699/Quantum-Erasure-Recovery-Compiler",
+    "tag": "v1.1.0",
+    "revision": "159c6122610972d703d15f60f6d011fcb494c50f",
+    "compilerSha256": "7c0a2a312896a3bd2ef2ca027e514a412a9bc218db2c7f0691244ac504ee5789",
+    "license": "MIT"
+  },
+  "numericalEvidence": {
+    "validation.json": "2ded1e7e582b4cd25f1695de4a43e3db14ca5a9fde1b2c0195f557dbed336e63"
+  },
+  "validationSources": [
+    {
+      "path": "tests/fixtures/erasure-recovery-validation.py",
+      "sha256": "dd930ac548bf50059e31a7360b8379591cdde103482ab3c585280d0946bc664d"
+    },
+    {
+      "path": "tests/erasure-recovery-live.test.mjs",
+      "sha256": "2eb841763b87fab8f49951050426e281fbbbce80ef7cfbe36dc3d6e0f20219e5"
+    }
+  ],
+  "referenceEnvironment": {
+    "id": "qec-memory-experiment",
+    "lockSha256": "7ce22952043711f23b4b65a2a0b85f3e48c096a1567ad2894fbcc64463943823",
+    "numpy": "2.5.2"
+  },
+  "performance": {
+    "host": "macOS arm64",
+    "python": "3.12.13",
+    "compileFiveCases": {
+      "wallSeconds": 0.03,
+      "peakResidentBytes": 25296896
+    },
+    "replayAndCutChecks": {
+      "wallSeconds": 0.27,
+      "peakResidentBytes": 44597248
+    },
+    "scope": "One local run per process including interpreter startup and file I/O. Excludes one-time dependency and source preparation. Replay in a separate locked environment."
+  }
+}

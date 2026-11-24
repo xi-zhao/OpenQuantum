@@ -6,7 +6,7 @@
 
 ## 全量梳理结果
 
-[SDK 清单](SDK_INVENTORY.md)当前覆盖 118 个环境入口：106 个 Python（含算法共享环境）、9 个 Julia、2 个原生源码或 ABI 入口、1 个 Lean 项目。2026-10-14 的[生态扩展](SDK_ECOSYSTEM_2026-10-14.md)增加 26 个入口；此前 85 个环境的日期化工程证据保留。它们不是 118 个不同的上游库；例如共享环境同时含 Qiskit、PennyLane、quimb 和 PySCF，同一库也可能因兼容性保留多个版本。
+[SDK 清单](SDK_INVENTORY.md)当前覆盖 122 个环境入口：110 个 Python（含算法共享环境）、9 个 Julia、2 个原生源码或 ABI 入口、1 个 Lean 项目。2026-10-14 的[生态扩展](SDK_ECOSYSTEM_2026-10-14.md)增加 26 个入口；此前 85 个环境的日期化工程证据保留。它们不是 122 个不同的上游库；例如共享环境同时含 Qiskit、PennyLane、quimb 和 PySCF，同一库也可能因兼容性保留多个版本。
 
 每个条目记录原生模块、任务对象、直接依赖、固定依赖锁、原有便捷 Tool、启用条件和已知限制。其他能力单独列出：6 项外部 MCP、8 项原生实现或宿主工作流、66 项方法/知识参考。外部 MCP 连接和 OpenQuantum 自有模拟器不冒充供应商完整 SDK。
 
@@ -22,7 +22,7 @@ flowchart LR
   F --> E
 ```
 
-源码和 Desktop 使用仓库内的原生 Skill。Codex 的 SDK workbench 提供全目录导航，已启用的领域 Skill 投影保留同样的原生代码路径；当前源码候选随包携带 118 个环境的目录、依赖锁、显式 setup、完整算法代码和工件辅助脚本。原有未启用连接与 Skill 的状态保持不变。缓存 Skill 通过插件自己的 `mcp.json` 定位运行时，适配解压包与插件/运行时分开安装；不依赖研究项目的当前目录。
+源码和 Desktop 使用仓库内的原生 Skill。Codex 的 SDK workbench 提供全目录导航，已启用的领域 Skill 投影保留同样的原生代码路径；当前源码候选随包携带 122 个环境的目录、依赖锁、显式 setup、完整算法代码和工件辅助脚本。原有未启用连接与 Skill 的状态保持不变。缓存 Skill 通过插件自己的 `mcp.json` 定位运行时，适配解压包与插件/运行时分开安装；不依赖研究项目的当前目录。
 
 执行、权限、超时、取消与进程管理继续由宿主负责。`sdk-access.mjs` 只读取目录和准备状态，不安装依赖、不 import 第三方包、不执行用户程序；没有新增通用任意 Python 执行 MCP 或另一套 Runtime。
 
@@ -155,6 +155,10 @@ node scripts/sdk-engineering-evidence.mjs .openquantum/sdk-checks/remaining \
 可编写用户自定义加权超图或 Stim/Sinter 程序；[操作、输入与失败边界](../../.agents/skills/mwpf-decoding/SKILL.md)。
 固定小超图的独立穷举、跨字节位序、采样与失败记录见[版本化证据](evidence/mwpf-2026-11-06.json)。
 零 cluster 预算不是无限预算，Sinter 必须显式抛出异常；小例回归不是一般最优性、阈值或科学验收。
+
+## 已知擦除后的逻辑态恢复
+
+显式准备 `erasure-recovery` 后，在宿主代码工具中调用 `verification.compiler.compile_recovery`。编译器输出指定站点的条件恢复线路和带权 CNOT 费用。见[操作与位序](../../.agents/skills/erasure-recovery/SKILL.md)和[五比特码的独立核对](../ecosystem/proposals/erasure-recovery.md#integration-evidence)。
 
 ## tropidist · 纠错距离与故障见证
 

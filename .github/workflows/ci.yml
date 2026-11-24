@@ -73,6 +73,20 @@ jobs:
           node scripts/setup-sdk.mjs stgrape-control
           node --test tests/stgrape-control-live.test.mjs
 
+      - name: Replay compiled erasure-recovery circuits on Linux
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          OPENQUANTUM_LIVE_ERASURE_RECOVERY: '1'
+        run: |
+          if git diff --quiet "$BASE_SHA" HEAD -- .agents/skills/{erasure-recovery,qec-memory-experiment} .agents/sdk-libraries.json \
+            scripts/setup-{sdk,paper-tools}.mjs src/lib/{sdk-access.mjs,sdk-source*.mjs,sdk_bootstrap.py} \
+            tests/{erasure-recovery-live.test.mjs,fixtures/erasure-recovery-validation.py} .github/workflows/ci.yml; then exit 0; fi
+          python3 -m venv "$RUNNER_TEMP/erasure-tools"
+          "$RUNNER_TEMP/erasure-tools/bin/pip" install uv==0.11.1
+          export PATH="$RUNNER_TEMP/erasure-tools/bin:$PATH"
+          node scripts/setup-sdk.mjs erasure-recovery qec-memory-experiment
+          node --test tests/erasure-recovery-live.test.mjs
+
       - name: Check Braket's local simulator and controlled-gate noise
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
