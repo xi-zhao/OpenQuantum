@@ -14,6 +14,8 @@ import { ToolRuntime } from "@deepseek-ai/dsh-tools";
 
 const projectRoot = fileURLToPath(new URL("..", import.meta.url));
 const toolName = "mcp__qec_cancellation_test__run_qec_memory_experiment";
+const qecRoot = path.join(projectRoot, ".agents/skills/qec-memory-experiment");
+const fixturePath = path.join(qecRoot, "evals/fixtures/zero-noise.json");
 
 function isRunning(pid) {
   try {
@@ -42,36 +44,33 @@ async function waitFor(read, message) {
 function stubSource(pidsPath) {
   return `#!/usr/bin/env node
 import { spawn } from "node:child_process";
-import { createHash } from "node:crypto";
-import { writeFileSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
+import { pathToFileURL } from "node:url";
+import assert from "node:assert/strict";
+const { experimentDigest } = await import(pathToFileURL(${JSON.stringify(path.join(qecRoot, "validators/validate-result.mjs"))}));
 const chunks = [];
 for await (const chunk of process.stdin) chunks.push(chunk);
-const { request } = JSON.parse(Buffer.concat(chunks));
-if (request.seed === 1) {
+const input = JSON.parse(Buffer.concat(chunks));
+const replay = process.argv.some(arg => arg.endsWith("/replay.py"));
+const request = replay ? input : input.request;
+const fixture = JSON.parse(readFileSync(${JSON.stringify(fixturePath)}, "utf8"));
+assert.deepEqual({ ...request, seed: fixture.request.seed }, fixture.request);
+if ((!replay && request.seed === 1) || (replay && request.seed === 3)) {
   const child = spawn(process.execPath, ["-e", "process.send('ready'); setInterval(() => {}, 1000)"], {
     stdio: ["ignore", "ignore", "ignore", "ipc"],
   });
   child.once("message", () => writeFileSync(${JSON.stringify(pidsPath)}, JSON.stringify({ parent: process.pid, child: child.pid })));
   setInterval(() => {}, 1000);
 } else {
-  const canonical = JSON.stringify(Object.fromEntries(Object.keys(request).sort().map((key) => [key, request[key]])));
-  process.stdout.write(JSON.stringify({
-    packages: { stim: "test-fixture", pymatching: "test-fixture" },
-    experiment: request,
-    experimentDigest: createHash("sha256").update(canonical).digest("hex"),
-    result: {
-      shots: request.shots,
-      logicalErrors: 0,
-      successfulShots: request.shots,
-      logicalErrorRate: 0,
-      wilson95: { low: 0, high: 0.04 },
-    },
-  }));
+  // Recorded noiseless evidence is a protocol fixture, not a fresh SDK run.
+  fixture.facts.experiment = request;
+  fixture.facts.experimentDigest = experimentDigest(request);
+  process.stdout.write(JSON.stringify(replay ? fixture.reference : fixture.facts));
 }
 `;
 }
 
-test("Harness cancellation reaches the QEC computation tree and preserves the MCP connection", {
+for (const phase of ["computation", "reference replay"]) test(`Harness cancellation reaches the QEC ${phase} tree and preserves the MCP connection`, {
   // The executable PATH shim exercises POSIX process groups; Windows tree
   // termination belongs to the shared process-runner tests.
   skip: process.platform === "win32" ? "POSIX executable uv fixture" : false,
@@ -113,8 +112,8 @@ test("Harness cancellation reaches the QEC computation tree and preserves the MC
   }));
 
   const request = {
-    basis: "z", distance: 3, rounds: 1, shots: 100,
-    physicalErrorRate: 0, seed: 1,
+    ...JSON.parse(await readFile(fixturePath, "utf8")).request,
+    seed: phase === "computation" ? 1 : 3,
   };
   const pending = context.tools.execute({
     callId: "cancel-qec",
