@@ -40,11 +40,13 @@ Session event log 为准，科学状态以 Acceptance Report 为准。2026-09 �
 
 - **科学验收**：L3 验收链目前仅覆盖 QGS、量子信息审计与 QCEC 分类复核（`L0=102, L1=94, L2=2, L3=3`），QEC memory 已达到 L2（独立计数/区间、电路/DEM 参数和同机 seed 复核，只产 observations），Codex 的自动物化与会话验收仍未接通；后续需避免仅扩充 SDK 数量而忽视高频能力的证据链提升。
 - **扩展与仓库治理**：[扩展治理清单](docs/architecture/EXTENSION_GOVERNANCE.md)新增 2026-11-25 成熟度快照并保留 2026-11-24 历史快照；`npm run governance:audit` 输出实时统计并检查声明内部一致性，无需随新增 Skill 改写快照。零引用的 `outputs/` 已清理并加入 `.gitignore`，[证据边界](docs/integrations/evidence/README.md)与[宣传素材边界](docs/communications/README.md)已落盘。`docs/communications/` 待迁出至外部归档后移除，`experiments/` 中非主页校验大文件边界待后续确认。
-- **未合入本地修复分支复核**：从 `origin/main @ 4b06e3ce` 创建以下本地分支，原分支保留，均未推送。
-  - `c/shared-credential-redaction-rebased @ 980692be`：定向测试 74 项通过；完整检查有 1 项失败，PairInteraction 隔离夹具漏复制新增的 `tool-redaction.mjs` 依赖，需补齐后复核。
-  - `c/desktop-preparation-reuse-rebased @ 35eb2f67`：安装恢复定向测试 15 项及完整 `npm run check` 通过；尚未做安装包或实际 Desktop 升级验收。
-  - `c/security-scientific-bridge-boundary-rebased @ a08e2a46`：保留主线 README 布局并补回执行边界说明；指定定向测试 9 项、能力一致性与 Harness 配置通过。本机 macOS 沙箱实测返回 `enforcement: "full"` 且拒绝目录外写入，但完整检查有 6 项宿主集成失败，涉及 ACP、教学、资料检索及科学结果交付，暂不具备合入条件。
-  - 两条失败分支的对应测试在主线复跑通过；未放宽沙箱或强行修补。另有 3 个 11 月 23–24 日活跃候选分支仍待分诊，后续合入或清理另行决定。
+- **本地治理合流（未推送）**：`xi-zhao/chore-project-governance` 已依次以 `--no-ff` 合入三条修复分支；
+  `c/shared-credential-redaction-rebased @ 3dc29060`、`c/desktop-preparation-reuse-rebased @ 35eb2f67`、
+  `c/security-scientific-bridge-boundary-rebased @ 67d8c2fa` 的引用保留原位，可独立或合流交付 PR。
+  Desktop 扩展复用清单包含 execution boundary，ACP 仍单独安装 guard；科学 MCP 使用完整文件写入沙箱。
+  本机 QEC 12 项实时 SDK/独立重放测试在 `enforcement: full` 下通过；本地治理检查见外部 phase4 报告。
+  `npm ci` 已把本工作区依赖同步至 `hono 4.13.16` / `@hono/node-server 2.1.6`，漏洞审计 0 项。
+  以上不代表远端合入、安装包或实际 Desktop 升级验收；另有 3 个活跃候选分支仍待分诊。
 - **在线模型**：v0.8.5 本机 Magpie 文本与 Tool Calling 验收通过；这不代表公共网关或其他 Provider 已通过在线验收。
 
 ## 动作边界
