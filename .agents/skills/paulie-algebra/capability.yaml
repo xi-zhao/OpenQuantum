@@ -1,16 +1,15 @@
 schemaVersion: "1.1"
 id: paulie-algebra
-version: 1.0.0
+version: 1.1.0
 displayName: paulie-algebra independent observations
-description: Exact nested Pauli commutator closure, orthogonal basis, DLA and
-  center dimensions for <=4 qubits; dense pairwise audit for <=3 qubits.
+description: Independent observations with persisted evidence and replayable central Acceptance.
 maturity:
   status: draft
   evidence:
     - id: independent-observations-2026-11-25
       kind: eval-report
       path: evals/evidence-2026-11-25.json
-      sha256: bfac73fb2aede343721cf9963757c4cf28b0b8452f139b3f80fc1d7f52d40601
+      sha256: 3853b19f7046e1865384e18e3581b3ee7f5c497c6f9808ec9d2db9e9d6444fae
 skill:
   name: paulie-algebra
   entrypoint: SKILL.md
@@ -21,7 +20,6 @@ scope:
   outOfScope:
     - Finite-depth ansatz performance, pulse reachability and hardware
       controllability.
-    - Final scientific Acceptance and materialized Session provenance.
   examples:
     - title: Independent local audit
       prompt: Run the fixed numerical example and explain its independent observations.
@@ -44,7 +42,13 @@ validators:
       script: validators/validate-result.mjs
       args: []
       shell: false
-acceptanceProfiles: []
+acceptanceProfiles:
+  - id: paulie-lie-closure-audit
+    version: 1.0.0
+    validator: paulie-algebra-observations
+    definition:
+      path: acceptance-profiles/paulie-lie-closure-audit-v1.json
+      sha256: df49bf8f9a8192467ea5683cd96ee2b704175c37698539ccba4ac05a067621f1
 reproductionProfiles: []
 modelRequirements:
   textGeneration: false
@@ -60,6 +64,7 @@ permissions:
       - structured-result
     write:
       - temporary-compute-cache
+      - workspace/results
   subprocess:
     allowed: true
     commands:

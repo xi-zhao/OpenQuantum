@@ -1,16 +1,15 @@
 schemaVersion: "1.1"
 id: symmer-tapering
-version: 1.0.0
+version: 1.1.0
 displayName: symmer-tapering independent observations
-description: Independent symplectic commutation and GF(2) rank, reduced
-  Hermiticity and full target-sector eigenspectrum for <=6 qubits.
+description: Independent observations with persisted evidence and replayable central Acceptance.
 maturity:
   status: draft
   evidence:
     - id: independent-observations-2026-11-25
       kind: eval-report
       path: evals/evidence-2026-11-25.json
-      sha256: f2bcc44d1eda110cacb49b751a95674361ba1137e871f84d732369b967ec0e17
+      sha256: b1daf730c418f88bb89ec9a50e777dfd6baad3ebf380618a5b9517a0e4f40cd0
 skill:
   name: symmer-tapering
   entrypoint: SKILL.md
@@ -21,7 +20,6 @@ scope:
   outOfScope:
     - Global ground states in other sectors and independent proof of NumPy
       eigensolvers.
-    - Final scientific Acceptance and materialized Session provenance.
   examples:
     - title: Independent local audit
       prompt: Run the fixed numerical example and explain its independent observations.
@@ -44,7 +42,13 @@ validators:
       script: validators/validate-result.mjs
       args: []
       shell: false
-acceptanceProfiles: []
+acceptanceProfiles:
+  - id: symmer-sector-spectrum-audit
+    version: 1.0.0
+    validator: symmer-tapering-observations
+    definition:
+      path: acceptance-profiles/symmer-sector-spectrum-audit-v1.json
+      sha256: 0ed5ca6777a05e40cb90a203c95b85d4c8e0fdfa25aaa4de88824fb866ee0df3
 reproductionProfiles: []
 modelRequirements:
   textGeneration: false
@@ -60,6 +64,7 @@ permissions:
       - structured-result
     write:
       - temporary-compute-cache
+      - workspace/results
   subprocess:
     allowed: true
     commands:

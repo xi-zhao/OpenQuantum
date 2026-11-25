@@ -977,7 +977,7 @@ packages:
         - tests/harness-unitary-tools.test.mjs
 
   - id: pyzx-optimization
-    level: L2
+    level: L3
     execution:
       mcpServers:
         - name: pyzx_local
@@ -1000,9 +1000,17 @@ packages:
         - .agents/skills/pyzx-optimization/evals/run-evals.mjs
     audit:
       manifest: capability.yaml
+    materialization:
+      adapter: runtime/openquantum/agent-presets/openquantum/scientific-result-projection.mjs
+      resultRoot: results/openquantum/pyzx-optimization
+      checks:
+        - tests/unitary-scientific-materialization.test.mjs
+        - tests/harness-unitary-acceptance.test.mjs
+      replayChecks:
+        - tests/harness-unitary-acceptance.test.mjs
 
   - id: graphix-mbqc
-    level: L2
+    level: L3
     execution:
       mcpServers:
         - name: graphix_local
@@ -1025,9 +1033,17 @@ packages:
         - .agents/skills/graphix-mbqc/evals/run-evals.mjs
     audit:
       manifest: capability.yaml
+    materialization:
+      adapter: runtime/openquantum/agent-presets/openquantum/scientific-result-projection.mjs
+      resultRoot: results/openquantum/graphix-mbqc
+      checks:
+        - tests/unitary-scientific-materialization.test.mjs
+        - tests/harness-unitary-acceptance.test.mjs
+      replayChecks:
+        - tests/harness-unitary-acceptance.test.mjs
 
   - id: symmer-tapering
-    level: L2
+    level: L3
     execution:
       mcpServers:
         - name: symmer_local
@@ -1050,9 +1066,17 @@ packages:
         - .agents/skills/symmer-tapering/evals/run-evals.mjs
     audit:
       manifest: capability.yaml
+    materialization:
+      adapter: runtime/openquantum/agent-presets/openquantum/scientific-result-projection.mjs
+      resultRoot: results/openquantum/symmer-tapering
+      checks:
+        - tests/unitary-scientific-materialization.test.mjs
+        - tests/harness-unitary-acceptance.test.mjs
+      replayChecks:
+        - tests/harness-unitary-acceptance.test.mjs
 
   - id: paulie-algebra
-    level: L2
+    level: L3
     execution:
       mcpServers:
         - name: paulie_local
@@ -1075,6 +1099,14 @@ packages:
         - .agents/skills/paulie-algebra/evals/run-evals.mjs
     audit:
       manifest: capability.yaml
+    materialization:
+      adapter: runtime/openquantum/agent-presets/openquantum/scientific-result-projection.mjs
+      resultRoot: results/openquantum/paulie-algebra
+      checks:
+        - tests/unitary-scientific-materialization.test.mjs
+        - tests/harness-unitary-acceptance.test.mjs
+      replayChecks:
+        - tests/harness-unitary-acceptance.test.mjs
 
   - id: qcut-knitting
     level: L1

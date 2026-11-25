@@ -1,16 +1,15 @@
 schemaVersion: "1.1"
 id: graphix-mbqc
-version: 1.0.0
+version: 1.1.0
 displayName: graphix-mbqc independent observations
-description: Independent input circuit state, Born probabilities, normalization
-  and sampled adaptive pattern/byproduct replay for <=10 logical/live qubits.
+description: Independent observations with persisted evidence and replayable central Acceptance.
 maturity:
   status: draft
   evidence:
     - id: independent-observations-2026-11-25
       kind: eval-report
       path: evals/evidence-2026-11-25.json
-      sha256: fb1bff6cd5f41117b256a69e2dd487ddf6448cf6186f364d465c06944a565366
+      sha256: 7c8ba33a453a333fb2a117683d4744753462f4889af0ef3852832225cd5b5609
 skill:
   name: graphix-mbqc
   entrypoint: SKILL.md
@@ -21,7 +20,6 @@ scope:
   outOfScope:
     - Unobserved branches, arbitrary-input channel equivalence, noise or
       hardware performance.
-    - Final scientific Acceptance and materialized Session provenance.
   examples:
     - title: Independent local audit
       prompt: Run the fixed numerical example and explain its independent observations.
@@ -44,7 +42,13 @@ validators:
       script: validators/validate-result.mjs
       args: []
       shell: false
-acceptanceProfiles: []
+acceptanceProfiles:
+  - id: graphix-mbqc-pattern-audit
+    version: 1.0.0
+    validator: graphix-mbqc-observations
+    definition:
+      path: acceptance-profiles/graphix-mbqc-pattern-audit-v1.json
+      sha256: 35a4bdd21c564433bd8dd3002efa80c0b4da0b58f936a3c754bec2e6834393bf
 reproductionProfiles: []
 modelRequirements:
   textGeneration: false
@@ -60,6 +64,7 @@ permissions:
       - structured-result
     write:
       - temporary-compute-cache
+      - workspace/results
   subprocess:
     allowed: true
     commands:

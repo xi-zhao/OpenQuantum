@@ -34,7 +34,7 @@ export function evaluateCase(testCase) {
 
 export async function checkSuite() {
   const capability = await loadCapability(root);
-  assert.deepEqual(capability.manifest.acceptanceProfiles, []);
+  assert.equal(capability.manifest.acceptanceProfiles[0].id, "paulie-lie-closure-audit");
   const evidence = JSON.parse(readFileSync(new URL("./evidence-2026-11-25.json", import.meta.url), "utf8"));
   for (const [filename, expected] of Object.entries(evidence.files)) {
     assert.equal(createHash("sha256").update(readFileSync(path.join(root, filename))).digest("hex"), expected, `Evidence drift: ${filename}`);

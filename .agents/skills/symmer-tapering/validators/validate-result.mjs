@@ -39,12 +39,12 @@ export function validateResult({ request, result, reference }) {
   }
   return audit.finish();
 }
-export async function referenceSpectrum(request, result, signal) {
+export async function referenceSpectrum(request, result, signal, runProcess = runLocalJsonProcess) {
   const audit = observationAudit(import.meta.url, request, result), input = audit.input;
   if (!audit.valid || input.numQubits > 6 || input.terms.length > 256 || input.referenceMode === "skip") return undefined;
   const root = fileURLToPath(new URL("..", import.meta.url));
   const env = Object.fromEntries(["HOME", "PATH", "SYSTEMROOT", "TEMP", "TMP", "TMPDIR", "WINDIR"].flatMap(k => process.env[k] ? [[k, process.env[k]]] : []));
-  return runLocalJsonProcess({ ...await preparedPythonLaunch({ skillRoot: root, args: [fileURLToPath(new URL("./reference.py", import.meta.url))] }),
+  return runProcess({ ...await preparedPythonLaunch({ skillRoot: root, args: [fileURLToPath(new URL("./reference.py", import.meta.url))] }),
     cwd: root, env: localComputeEnvironment(env, input.execution), input: { request: input, reducedTerms: result.reducedTerms }, signal,
     ...localComputeProcessOptions(input.execution), label: "Independent symmetry-sector eigenspectrum" });
 }

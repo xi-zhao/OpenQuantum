@@ -9,6 +9,7 @@ import test from "node:test";
 import { harnessHttpCookie, harnessSessionSnapshot, redactHarnessLaunchTokens } from "../scripts/lib/harness-http-auth.mjs";
 import { prepareOpenQuantumHarnessHome } from "../scripts/lib/prepare-harness-home.mjs";
 import { createProtectedState } from "./helpers/protected-state.mjs";
+import { parseScientificToolResult } from "../runtime/openquantum/agent-presets/openquantum/scientific-result-protocol.mjs";
 
 import { UNITARY_NEXT_TOOLS } from "./fixtures/unitary-next.mjs";
 const scaled = process.env.OPENQUANTUM_REAL_LOCAL_SCALE === "1";
@@ -126,13 +127,21 @@ test("Harness discovers ecosystem Skills, runs selected real Tools and persists 
     assert.match(serialized, /dependencyLockSha256/);
     assert.doesNotMatch(serialized, /"isError":true/);
     assert.equal(block.isError, false);
-    const output = JSON.parse(block.content.find(item => item.type === "text").text);
+    const rawText = block.content.find(item => item.type === "text").text;
+    assert.equal(parseScientificToolResult(toolNames[index], rawText)?.scientificStatus, "observations_available");
+    const output = JSON.parse(rawText.split("\n").filter(line => !line.startsWith("OPENQUANTUM_SCIENTIFIC_RESULT_V1 ")).join("\n"));
     if (capability.server) {
       const { definition } = await import(`../.agents/skills/${capability.id}/mcp/contracts.mjs`);
       assert.ok(definition.validateOutput(output), `${capability.id}: invalid persisted result`);
       assert.deepEqual(output.input, definition.normalize(capability.tool, capability.input));
       assert.deepEqual(output.validation.observations.filter(check => check.status === "fail"), []);
       assert.equal(output.validation.observations.find(check => check.id === "provenance.complete").status, "not_checked");
+      const replacement = events.find(event => event.type === "tool/result"
+        && event.data.message.source.callId === callId && event.surfaceOp?.op === "replace");
+      assert.ok(replacement, `${capability.id}: missing post-materialization result`);
+      const presentation = parseScientificToolResult(toolNames[index], replacement.data.message.content[0].content[0].text);
+      assert.equal(presentation?.acceptanceStatus, scaled ? "conditional" : "passed", capability.id);
+      assert.deepEqual(replacement.sourceEventSeqs, [result.seq]);
       if (scaled) {
         assert.equal(output.result.reference.status, "not_run");
         if (capability.id === "graphix-mbqc") assert.deepEqual(output.result.branches, []);

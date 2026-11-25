@@ -69,7 +69,16 @@ test("SDK access survives archive, split installation and cached Skill relocatio
       const validation = module[validator](JSON.parse(await fs.readFile(path.join(source, "evals/fixtures", fixture), "utf8")));
       assert.deepEqual(validation.observations.filter(item => item.status === "fail"), [], id);
       assert.equal(validation.observations.find(item => item.id === "provenance.complete").status, "not_checked");
-      if (["qpanda-qubo", "ldpc-decoding"].includes(id)) {
+      if ([
+        "qec-memory-experiment",
+        "hamiltonian-simulation",
+        "qpanda-qubo",
+        "ldpc-decoding",
+        "pyzx-optimization",
+        "symmer-tapering",
+        "paulie-algebra",
+        "graphix-mbqc",
+      ].includes(id)) {
         const materialized = await import(pathToFileURL(path.join(installed, "validators/validate-materialized.mjs")));
         const report = await import(pathToFileURL(path.join(installed, "core/render-report.mjs")));
         assert.equal(typeof materialized.validateMaterializedResult, "function");

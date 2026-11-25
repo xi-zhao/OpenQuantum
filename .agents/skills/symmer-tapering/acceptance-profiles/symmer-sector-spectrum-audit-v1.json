@@ -1,0 +1,88 @@
+{
+  "schemaVersion": "1.0",
+  "id": "symmer-sector-spectrum-audit",
+  "version": "1.0.0",
+  "scope": {
+    "supportedClaims": [
+      "Persisted symmetry tapering evidence with independent symplectic GF(2) verification, optional confined target-sector spectrum replay (<=6 qubits, <=256 terms) and central Acceptance."
+    ],
+    "outOfScope": [
+      "Automatic symmetry discovery, contextual-subspace VQE, global ground-state optimality across unselected sectors or dense spectrum checks beyond 6 qubits or 256 terms.",
+      "Independent proof of upstream Symmer implementation correctness."
+    ]
+  },
+  "checks": [
+    {
+      "id": "request.schema",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Persisted tapering request satisfies its JSON Schema and valid Pauli symmetry contract."
+    },
+    {
+      "id": "artifact.schema",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Persisted tapering result satisfies its JSON Schema."
+    },
+    {
+      "id": "symmetry.independent",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Symmetry generators are independent over GF(2) by independent symplectic row elimination."
+    },
+    {
+      "id": "symmetry.commutes",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Symmetry generators commute pairwise under the symplectic inner product."
+    },
+    {
+      "id": "hamiltonian.symmetry",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Every symmetry commutes with every nonzero term of the original Hamiltonian."
+    },
+    {
+      "id": "reduction.structure",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Reduced qubit count n-k, sector dimension 2^(n-k), distinct Pauli words and finite real coefficients agree."
+    },
+    {
+      "id": "reference.policy",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Reported reference mode binds to the requested referenceMode."
+    },
+    {
+      "id": "reference.binding",
+      "category": "reproducibility",
+      "required": false,
+      "criterion": "Confined request-only Python spectrum reference binds the original request and candidate reduced operator; the Host runner requires enforcement full."
+    },
+    {
+      "id": "sector.spectrum",
+      "category": "scientific",
+      "required": false,
+      "criterion": "When within <=6 qubits, <=256 terms and reference enabled, independent target-sector projection reproduces the full reduced eigenspectrum and ground energy."
+    },
+    {
+      "id": "spectrum.claims",
+      "category": "scientific",
+      "required": false,
+      "criterion": "When the Tool reports a computed spectrum reference, its reported spectra and error metrics agree with independent recomputation."
+    },
+    {
+      "id": "observations.integrity",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Every performed independent check is non-failing; optional reference availability cannot hide a scientific contradiction."
+    },
+    {
+      "id": "provenance.complete",
+      "category": "reproducibility",
+      "required": true,
+      "criterion": "Actual re-read canonical input and artifact bytes match their digests and actual Harness event range."
+    }
+  ]
+}

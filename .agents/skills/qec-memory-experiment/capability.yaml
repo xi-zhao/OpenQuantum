@@ -9,7 +9,7 @@ maturity:
     - id: local-observations-2026-11-25
       kind: eval-report
       path: evals/evidence-phase5.json
-      sha256: f4fa1b286433187123f0eaa6bee50e169a9ea53f1e24f1b11900158b340d3ae9
+      sha256: 600cc2e33cee90f19a85bd017c525c525f6bed8e81daa69d0ac4cb474a324a16
 skill:
   name: qec-memory-experiment
   entrypoint: SKILL.md

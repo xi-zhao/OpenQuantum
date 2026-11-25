@@ -16,6 +16,10 @@ export const HAMILTONIAN_SIMULATION_TOOL = "mcp__hamiltonian_local__simulate_ham
 export const QUBO_SOLVE_TOOL = "mcp__qpanda_qubo__solve_qpanda_qubo";
 export const QUBO_MODEL_TOOL = "mcp__qpanda_qubo__model_and_solve_qpanda_qubo";
 export const LDPC_DECODING_TOOL = "mcp__ldpc_local__decode_ldpc_syndromes";
+export const PYZX_OPTIMIZATION_TOOL = "mcp__pyzx_local__optimize_pyzx_circuit";
+export const SYMMER_TAPERING_TOOL = "mcp__symmer_local__taper_symmer_hamiltonian";
+export const PAULIE_ALGEBRA_TOOL = "mcp__paulie_local__analyze_paulie_algebra";
+export const GRAPHIX_MBQC_TOOL = "mcp__graphix_local__simulate_graphix_pattern";
 
 const GROUND_STATE_SKILL = ".agents/skills/quantum-ground-state";
 const QUANTUM_INFORMATION_SKILL =
@@ -555,6 +559,29 @@ const adapters = new Map([
     validatorId: "ldpc-decoding-observations", artifactType: "ldpc-result", artifactKey: "result", referenceFile: "validators/reference.py",
     describe: result => Number.isSafeInteger(result.statistics?.shots)
       ? [detail("样本数", String(result.statistics.shots)), detail("syndrome 匹配数", String(result.statistics.syndromeMatchedCount))] : undefined }),
+  numericalAdapter({ capabilityId: "pyzx-optimization", tool: PYZX_OPTIMIZATION_TOOL,
+    operation: "zx-optimization", title: "PyZX 酉优化验收", profileId: "pyzx-unitary-optimization-audit",
+    validatorId: "pyzx-optimization-observations", artifactType: "numerical-result", artifactKey: "result",
+    describe: result => Number.isSafeInteger(result.before?.gates) && Number.isSafeInteger(result.after?.gates)
+      && Number.isSafeInteger(result.before?.tCount) && Number.isSafeInteger(result.after?.tCount)
+      ? [detail("门数变化", `${result.before.gates} -> ${result.after.gates}`), detail("T 门变化", `${result.before.tCount} -> ${result.after.tCount}`)] : undefined }),
+  numericalAdapter({ capabilityId: "symmer-tapering", tool: SYMMER_TAPERING_TOOL,
+    operation: "symmetry-tapering", title: "Symmer 对称性降比特验收", profileId: "symmer-sector-spectrum-audit",
+    validatorId: "symmer-tapering-observations", artifactType: "numerical-result", artifactKey: "result", referenceFile: "validators/reference.py",
+    describe: result => Number.isSafeInteger(result.reducedQubits)
+      && (Number.isSafeInteger(result.sectorDimension) || (typeof result.sectorDimension === "string" && /^[1-9][0-9]*$/.test(result.sectorDimension)))
+      ? [detail("降维量子位数", String(result.reducedQubits)), detail("扇区维数", String(result.sectorDimension))] : undefined }),
+  numericalAdapter({ capabilityId: "paulie-algebra", tool: PAULIE_ALGEBRA_TOOL,
+    operation: "lie-closure", title: "PauLie 动力学 Lie 代数验收", profileId: "paulie-lie-closure-audit",
+    validatorId: "paulie-algebra-observations", artifactType: "numerical-result", artifactKey: "result",
+    describe: result => (Number.isSafeInteger(result.dimension) || (typeof result.dimension === "string" && /^[1-9][0-9]*$/.test(result.dimension)))
+      && typeof result.classification === "string" && result.classification.length > 0 && result.classification.length <= 160
+      ? [detail("DLA 维数", String(result.dimension)), detail("分类标记", result.classification)] : undefined }),
+  numericalAdapter({ capabilityId: "graphix-mbqc", tool: GRAPHIX_MBQC_TOOL,
+    operation: "mbqc-pattern", title: "Graphix MBQC 模式验收", profileId: "graphix-mbqc-pattern-audit",
+    validatorId: "graphix-mbqc-observations", artifactType: "numerical-result", artifactKey: "result",
+    describe: result => Array.isArray(result.nodes) && Number.isSafeInteger(result.maxSpace) && Array.isArray(result.branches)
+      ? [detail("资源节点数", String(result.nodes.length)), detail("模拟分支数", String(result.branches.length))] : undefined }),
   numericalAdapter({ capabilityId: "qec-memory-experiment", tool: QEC_MEMORY_TOOL,
     operation: "memory-experiment", title: "QEC 存储实验验收", profileId: "rotated-surface-memory-audit",
     validatorId: "memory-observations", artifactType: "memory-result", artifactKey: "facts", referenceFile: "validators/replay.py",
@@ -669,6 +696,10 @@ export function scientificResultAdapter(toolName) {
     : toolName === "solve_qpanda_qubo" ? QUBO_SOLVE_TOOL
     : toolName === "model_and_solve_qpanda_qubo" ? QUBO_MODEL_TOOL
     : toolName === "decode_ldpc_syndromes" ? LDPC_DECODING_TOOL
+    : toolName === "optimize_pyzx_circuit" ? PYZX_OPTIMIZATION_TOOL
+    : toolName === "taper_symmer_hamiltonian" ? SYMMER_TAPERING_TOOL
+    : toolName === "analyze_paulie_algebra" ? PAULIE_ALGEBRA_TOOL
+    : toolName === "simulate_graphix_pattern" ? GRAPHIX_MBQC_TOOL
     : toolName === "simulate_hamiltonian" ? HAMILTONIAN_SIMULATION_TOOL : toolName;
   return adapters.get(name);
 }

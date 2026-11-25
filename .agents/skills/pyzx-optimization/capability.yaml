@@ -1,16 +1,15 @@
 schemaVersion: "1.1"
 id: pyzx-optimization
-version: 1.0.0
+version: 1.1.0
 displayName: pyzx-optimization independent observations
-description: Independently parse gate tables, gate/T/two-qubit counts and depth;
-  compare complete unitaries up to global phase for <=6 qubits.
+description: Independent observations with persisted evidence and replayable central Acceptance.
 maturity:
   status: draft
   evidence:
     - id: independent-observations-2026-11-25
       kind: eval-report
       path: evals/evidence-2026-11-25.json
-      sha256: c7b52b4dd1a9a173fc547c59608f490da66133377a39addf0af5cebbc7e88781
+      sha256: 1b97f9c7b8082cc374a0ff3e3e232bf1ae0135b43d12eb54563d8e8f541d0955
 skill:
   name: pyzx-optimization
   entrypoint: SKILL.md
@@ -21,7 +20,6 @@ scope:
   outOfScope:
     - Hardware routing, guaranteed gate-count improvement, larger dense-unitary
       proofs.
-    - Final scientific Acceptance and materialized Session provenance.
   examples:
     - title: Independent local audit
       prompt: Run the fixed numerical example and explain its independent observations.
@@ -44,7 +42,13 @@ validators:
       script: validators/validate-result.mjs
       args: []
       shell: false
-acceptanceProfiles: []
+acceptanceProfiles:
+  - id: pyzx-unitary-optimization-audit
+    version: 1.0.0
+    validator: pyzx-optimization-observations
+    definition:
+      path: acceptance-profiles/pyzx-unitary-optimization-audit-v1.json
+      sha256: 42925d1dfd8519d8c08eccb9e1e01a90a62d737d6b9546bbd00da553b6613c62
 reproductionProfiles: []
 modelRequirements:
   textGeneration: false
@@ -60,6 +64,7 @@ permissions:
       - structured-result
     write:
       - temporary-compute-cache
+      - workspace/results
   subprocess:
     allowed: true
     commands:

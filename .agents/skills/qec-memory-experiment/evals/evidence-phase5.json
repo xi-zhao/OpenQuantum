@@ -64,13 +64,13 @@
     "Fixed protocol cases and local prepared SDK checks are separate; these engineering checks are not independent domain review or a user scientific Acceptance."
   ],
   "sharedFiles": {
-    "runtime/openquantum/agent-presets/openquantum/scientific-result-adapters.mjs": "64eb3a575ca3596527cc8306b16febe2cd91964b5d8b226d28c7edf1405c1fcb",
+    "runtime/openquantum/agent-presets/openquantum/scientific-result-adapters.mjs": "61900efcb3321c17b1ae20ff1d2ad1f5d5c971550fc05afea9e48a3f6c4dc709",
     "runtime/openquantum/agent-presets/openquantum/scientific-result-materializer.mjs": "400ef4698154a9686bfe1f29143b81beabeb1d66b4c7be12390e8b2d04626b67",
-    "runtime/openquantum/agent-presets/openquantum/scientific-result-protocol.mjs": "0f9340060934502b7c1d83c4a2934e20d888b2cd14620616ad4ece8670973fbf",
+    "runtime/openquantum/agent-presets/openquantum/scientific-result-protocol.mjs": "8d512831a933fea5cc2d751501e5266d46699c6aaf97451b956feffcec8ddf93",
     "tests/numerical-scientific-materialization.test.mjs": "466e754dadb0306c95f7d96974c64dac20db93cb41c5d1aeb5c23b7543a6002c",
     "tests/harness-numerical-acceptance.test.mjs": "bcc8d0e829175f7eef766fb5538f039dcb339f4a9c51bb1802e4269d44e776a9",
     "tests/harness-hamiltonian.test.mjs": "800e6efa041390a97a2f8eaa35b63c494a693791d1e130877ac0b2f2374dd5bd",
-    "tests/scientific-tool-effects.test.mjs": "1e36ef04023abba97b37a6a2ed0e4ad7a31616f7567d353751707620af9edd95",
+    "tests/scientific-tool-effects.test.mjs": "7ffbbde80487f18bc0eecf6a90f7a037d4bcf7b6b7feb3db21d6085df90af0ed",
     "runtime/openquantum/agent-presets/openquantum/scientific-result-projection.mjs": "295445647729cf85b35397e02da4887188ed1bd7f20e97b293a8e2d5be366333",
     "runtime/openquantum/agent-presets/openquantum/execution-boundary.mjs": "862a4c185b0e3eee0d5833dcb9cdfb96b9b15b3a8735f6ce4c0186399f1b9620",
     "src/lib/cli-entrypoint.mjs": "e9f69ad9812d8242969c96039be4c9fae46e232c131402de7609221dcec3083e"
@@ -80,5 +80,6 @@
     "path": ".agents/skills/qec-memory-experiment/evals/evidence-phase5.json",
     "sha256": "4b78162e7506eb294b728162323cb298d2278ca4aff223c74ed5822fa792053b"
   },
-  "phase6SourceUpdate": "Phase6 adds QUBO/LDPC registry adapters and canonical CLI entry detection; numerical algorithms and phase5 check provenance are retained. Current source digests are refreshed, with phase6 regression and final gate evidence in report-phase6.md."
+  "phase6SourceUpdate": "Phase6 adds QUBO/LDPC registry adapters and canonical CLI entry detection; numerical algorithms and phase5 check provenance are retained. Current source digests are refreshed, with phase6 regression and final gate evidence in report-phase6.md.",
+  "phase7SourceUpdate": "Phase7 confines QCEC Host reference subprocesses under full sandbox and adds 4 unitary L3 adapters (pyzx-optimization, symmer-tapering, paulie-algebra, graphix-mbqc); numerical algorithms and phase5 check provenance are retained. Live regression across QUBO/LDPC/QEC/Hamiltonian passed 5/5 (logSha256=5bb652de1fba3bf74da19968c43aaa6c3e2f09ddf77b23a678a1674ce6ff3bea)."
 }
