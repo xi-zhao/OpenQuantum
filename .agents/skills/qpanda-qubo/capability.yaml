@@ -9,7 +9,7 @@ maturity:
     - id: independent-observations-2026-11-25
       kind: eval-report
       path: evals/evidence-2026-11-25.json
-      sha256: 35314fb69032eee768a2296a60c1960f6d40685d0df7b100705a29e372562d4c
+      sha256: caf1c308dbe123f0ab1428d8d17c957d2acbec122c0a84f1537f64b2628affc0
 skill:
   name: qpanda-qubo
   entrypoint: SKILL.md

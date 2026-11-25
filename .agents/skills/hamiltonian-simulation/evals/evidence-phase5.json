@@ -16,6 +16,21 @@
       "command": "node --test --test-concurrency=2 tests/numerical-scientific-materialization.test.mjs tests/harness-numerical-acceptance.test.mjs tests/scientific-result-materialization.test.mjs tests/scientific-result-projection.test.mjs tests/scientific-tool-effects.test.mjs tests/quantum-circuit-materialization.test.mjs tests/hamiltonian-contracts.test.mjs .agents/skills/qec-memory-experiment/test/mcp.test.mjs",
       "exitCode": 0,
       "logSha256": "b9635191c261347371cb9bd38f27abea6f247da69e5cf01cfc27db8300e7ea42"
+    },
+    {
+      "command": "env OPENQUANTUM_PYTHON_ENV_ROOT=/Volumes/Elements/CodexArtifacts/Projects/openQuantum/2026-11-25--governance-phase5-environments/replay-envs OPENQUANTUM_REAL_QEC_MEMORY=1 node --test .agents/skills/qec-memory-experiment/test/live.test.mjs",
+      "exitCode": 0,
+      "logSha256": "af4736d8d40804a39b42ded08f2e42964a7bde3905d389d3749d904485e8e877"
+    },
+    {
+      "command": "env OPENQUANTUM_PYTHON_ENV_ROOT=/Volumes/Elements/CodexArtifacts/Projects/openQuantum/2026-11-25--governance-phase5-environments/replay-envs OPENQUANTUM_REAL_HAMILTONIAN=1 OPENQUANTUM_HAMILTONIAN_EVIDENCE=/Volumes/Elements/CodexArtifacts/Projects/openQuantum/2026-11-25--governance-corrective/hamiltonian-evidence-phase5 node --test --test-concurrency=1 .agents/skills/hamiltonian-simulation/test/live.test.mjs tests/hamiltonian-live.test.mjs tests/harness-hamiltonian.test.mjs",
+      "exitCode": 0,
+      "logSha256": "19c1844f93a570315a245f1ed5bcf54085fa5b11262e302903bc496194998deb"
+    },
+    {
+      "command": "env OPENQUANTUM_PYTHON_ENV_ROOT=/Volumes/Elements/CodexArtifacts/Projects/openQuantum/2026-11-25--governance-phase5-environments/replay-envs OPENQUANTUM_REAL_NUMERICAL_DELIVERY=1 node --test tests/harness-numerical-acceptance.test.mjs",
+      "exitCode": 0,
+      "logSha256": "6be4ef60b338755db0d24cdc11399fb0df39f23c2c76b0436abde1cc3aab9efd"
     }
   ],
   "files": {
@@ -51,5 +66,14 @@
   "scope": [
     "Fixed numerical observations and versioned materialization/replay contracts.",
     "Protocol fixtures are separate from live pinned SDK checks; exact commands and outcomes are recorded in report-phase5.md."
-  ]
+  ],
+  "sharedFiles": {
+    "runtime/openquantum/agent-presets/openquantum/scientific-result-adapters.mjs": "e4885052c6f2b8ae7d9db52978d4140fd7f6c6a2c8b490aec407682f1d50cb35",
+    "runtime/openquantum/agent-presets/openquantum/scientific-result-materializer.mjs": "bd39f73f4a5c6f36d414a6530490a6ea041dd0788564f7a2e9cd17d391d9c95f",
+    "runtime/openquantum/agent-presets/openquantum/scientific-result-protocol.mjs": "0f9340060934502b7c1d83c4a2934e20d888b2cd14620616ad4ece8670973fbf",
+    "tests/numerical-scientific-materialization.test.mjs": "431a95b9631ecadaa17cc785f36fa458afef306a5647cd9f25883a947c7afec5",
+    "tests/harness-numerical-acceptance.test.mjs": "bcc8d0e829175f7eef766fb5538f039dcb339f4a9c51bb1802e4269d44e776a9",
+    "tests/harness-hamiltonian.test.mjs": "800e6efa041390a97a2f8eaa35b63c494a693791d1e130877ac0b2f2374dd5bd",
+    "tests/scientific-tool-effects.test.mjs": "59c68c08c49f37cf73ee2d39fce84e1f240928b5151e8155843448ae741db83e"
+  }
 }

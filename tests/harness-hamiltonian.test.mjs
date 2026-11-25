@@ -12,6 +12,7 @@ import { harnessHttpCookie, harnessSessionSnapshot, redactHarnessLaunchTokens } 
 import { prepareOpenQuantumHarnessHome } from "../scripts/lib/prepare-harness-home.mjs";
 import { definition } from "../.agents/skills/hamiltonian-simulation/mcp/contracts.mjs";
 import { HAMILTONIAN_INPUT } from "./fixtures/hamiltonian.mjs";
+import { parseScientificToolResult } from "../runtime/openquantum/agent-presets/openquantum/scientific-result-protocol.mjs";
 
 const toolName = "mcp__hamiltonian_local__simulate_hamiltonian";
 
@@ -151,12 +152,20 @@ test("Harness discovers the Hamiltonian Skill, runs both open formulas and rerea
       assert.match(content, /order must be 1 or even/);
     } else {
       assert.equal(block.isError, false);
-      const output = JSON.parse(content);
+      assert.equal(parseScientificToolResult(toolName, content)?.scientificStatus, "observations_available");
+      // The raw execution result is retained before the bounded presentation.
+      const output = JSON.parse(content.split("\n").filter(line => !line.startsWith("OPENQUANTUM_SCIENTIFIC_RESULT_V1 ")).join("\n"));
       assert.ok(definition.validateOutput(output), JSON.stringify(definition.validateOutput.errors));
       assert.deepEqual(output.input, definition.normalize("simulate_hamiltonian", call.input));
       assert.equal(output.scientificValidation, "observations_available");
       assert.deepEqual(output.validation.observations.filter(o => o.status === "fail"), []);
       assert.ok(output.result.unitaryFrobeniusError < 0.001);
+      const replacement = events.find(event => event.type === "tool/result"
+        && event.data.message.source.callId === call.id && event.surfaceOp?.op === "replace");
+      assert.ok(replacement, `${call.id}: missing post-materialization result`);
+      const presentation = parseScientificToolResult(toolName, replacement.data.message.content[0].content[0].text);
+      assert.equal(presentation?.acceptanceStatus, "passed");
+      assert.deepEqual(replacement.sourceEventSeqs, [result.seq]);
     }
     assert.ok(deliveredResults.some(message => message.tool_call_id === call.id), `${call.id}: result must return to the model protocol`);
     evidence.push({ call: called, result });

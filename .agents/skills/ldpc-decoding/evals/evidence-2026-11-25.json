@@ -18,6 +18,13 @@
       "passed": 11,
       "failed": 0,
       "logSha256": "53036938a5f9f5496d1627f5c1610e27c5c3774a1eba228274aa306451ae66b7"
+    },
+    {
+      "command": "env OPENQUANTUM_PYTHON_ENV_ROOT=/Volumes/Elements/CodexArtifacts/Projects/openQuantum/2026-11-25--governance-phase5-environments/replay-envs OPENQUANTUM_REAL_L2=1 node --test --test-concurrency=1 .agents/skills/qpanda-qubo/test/live.test.mjs .agents/skills/ldpc-decoding/test/live.test.mjs",
+      "exitCode": 0,
+      "passed": 11,
+      "failed": 0,
+      "logSha256": "fb80cbcb036345c05ab98de47b2ab7583357318804abe603a280bb6bcd47ad01"
     }
   ],
   "files": {
