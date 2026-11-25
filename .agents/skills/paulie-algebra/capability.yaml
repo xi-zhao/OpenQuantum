@@ -10,7 +10,7 @@ maturity:
     - id: independent-observations-2026-11-25
       kind: eval-report
       path: evals/evidence-2026-11-25.json
-      sha256: b62c0a8b9a9b56ed03974aa4b7cca2f516aa56df769683e5b213e07a504c77c1
+      sha256: bfac73fb2aede343721cf9963757c4cf28b0b8452f139b3f80fc1d7f52d40601
 skill:
   name: paulie-algebra
   entrypoint: SKILL.md

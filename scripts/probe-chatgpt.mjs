@@ -1,7 +1,7 @@
+import { isMainModule } from "../src/lib/cli-entrypoint.mjs";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 import { randomUUID } from "node:crypto";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
@@ -109,7 +109,7 @@ export async function probePlugin(directory) {
   } finally { await discovery.close(); await fs.rm(temporary, { recursive: true, force: true }); }
 }
 
-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (isMainModule(import.meta.url)) {
   if (!process.argv[2]) throw new Error("Usage: node scripts/probe-chatgpt.mjs <plugin-directory>");
   console.log(JSON.stringify(await probePlugin(path.resolve(process.argv[2])), null, 2));
 }

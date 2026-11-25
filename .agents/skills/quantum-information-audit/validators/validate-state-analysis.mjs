@@ -1,8 +1,7 @@
 #!/usr/bin/env node
+import { isMainModule } from "../../../../src/lib/cli-entrypoint.mjs";
 
 import fs from "node:fs";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
 import { isDeepStrictEqual } from "node:util";
 
 import {
@@ -304,8 +303,7 @@ export function validateMaterializedStateAnalysis({
   };
 }
 
-const currentFile = fileURLToPath(import.meta.url);
-if (process.argv[1] && path.resolve(process.argv[1]) === currentFile) {
+if (isMainModule(import.meta.url)) {
   try {
     const input = JSON.parse(fs.readFileSync(0, "utf8"));
     process.stdout.write(`${JSON.stringify(validateStateAnalysis(input), null, 2)}\n`);

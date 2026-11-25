@@ -10,7 +10,7 @@ maturity:
     - id: independent-observations-2026-11-25
       kind: eval-report
       path: evals/evidence-2026-11-25.json
-      sha256: 227a9e521fa9b1673abb034e6f1ea133c023d1843aefc097187c5b07f3715bff
+      sha256: d40f2cc1a4ccffc5fe6fca21e3d0d5de7454948e53c38e2699835e19b85638f3
 skill:
   name: pyzx-optimization
   entrypoint: SKILL.md

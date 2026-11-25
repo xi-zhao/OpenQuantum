@@ -1,7 +1,7 @@
+import { isMainModule } from "../../../../src/lib/cli-entrypoint.mjs";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
-import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadCapability } from "../../../skill-contracts/index.mjs";
 import { validateExperiment } from "../validators/validate-result.mjs";
@@ -40,7 +40,7 @@ export async function checkSuite() {
   }
 }
 
-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (isMainModule(import.meta.url)) {
   await checkSuite();
   let failures = 0;
   for (const item of cases) {

@@ -73,7 +73,7 @@
     "evals/fixtures/local.json": "df4c53362f582285385a0947217ec83b955b6b000997a6fd2ff9c59b520f1bac",
     "evals/fixtures/single.json": "54d2d140bf6ca375cf5f254bdcfb75b87ee5b391cff7d7ddeadc49a57e6c0065",
     "evals/fixtures/skip.json": "3bc54013ec2cd3b80a1e8fdb3383d5eecd0509476d03045ddabf8cd79f7867c9",
-    "evals/run-evals.mjs": "7df720dbdebbb58e09d24392ae4961b7ae13287ad7062104e2586df2bc1aba4d",
+    "evals/run-evals.mjs": "80bfedf1b5cb348f668da9308e9e58c0ad3c1658a6c483d3145bc287be561c03",
     "evals/suite.json": "37ae7061be3374561cda7a120684ace030d772925d15ceb4d6f2382b57e02423",
     "inputs/request.schema.json": "903902e3650ce60a546e5f618a1d05132b07e36ac2f7b14ba8b76dcda229f4bb",
     "mcp/bridge.py": "18fa9940cb4587d258af0d255c21bad01b12545f61d52b88a4d449fc772d210d",
@@ -82,7 +82,7 @@
     "pyproject.toml": "75534e9dbfc16de79b820f436a600d12a7c0ab591c0174a4d96a3df08acecae8",
     "test/validator.test.mjs": "68ed8a5c69ca58b17043aed30df6868f63ecb8c4cf0fd5e7ed2b72ae9675dd0b",
     "uv.lock": "a94e920a4a7d718e081e8a83c2550b0b0e7c1c1a8a5347eb7bd52e2b7f8094f9",
-    "validators/validate-result.mjs": "75d8bf242471acb67b318f64de206276cb3ae0e3d530b7ab2d95826a2d3fc697"
+    "validators/validate-result.mjs": "cc71cb7e1fed3802dd70f75ee0d6aa43316f6e65b3a18dfa0ee241dde6ac0014"
   },
   "limitations": [
     "No independent human domain review is claimed."
@@ -94,6 +94,7 @@
   ],
   "sharedFiles": {
     "src/lib/independent-quantum-math.mjs": "51de52020bf825bfccfa3645b50972df800a8065d73afe570815f9b6d89895af",
-    "src/lib/independent-observations.mjs": "549c50823327e8a23d5bebbc0be4c73bce4029dfa6e7f54b4c21df162ffc8c47"
+    "src/lib/independent-observations.mjs": "549c50823327e8a23d5bebbc0be4c73bce4029dfa6e7f54b4c21df162ffc8c47",
+    "src/lib/cli-entrypoint.mjs": "e9f69ad9812d8242969c96039be4c9fae46e232c131402de7609221dcec3083e"
   }
 }

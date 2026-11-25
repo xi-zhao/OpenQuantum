@@ -1,3 +1,4 @@
+import { isMainModule } from "../../../../src/lib/cli-entrypoint.mjs";
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -203,7 +204,7 @@ export async function referenceSimulation(request, signal, runProcess = runLocal
   });
 }
 
-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (isMainModule(import.meta.url)) {
   const [filename, option] = process.argv.slice(2);
   if (!filename || option !== undefined && option !== "--reference") throw new Error("Usage: node validate-result.mjs result.json [--reference]");
   const value = JSON.parse(readFileSync(filename, "utf8"));

@@ -46,7 +46,7 @@
     "evals/cases.json": "328e19697c387de8f7f3eb4c3062182c06a86b90398b8ea79efa0e3e83843599",
     "evals/fixtures/noisy.json": "12267fb09542abbe02e3c32ad00ec5b20af2174a52a751ead51bc688e7906e10",
     "evals/fixtures/zero-noise.json": "c8de06ee736d7d48c692aaa7f226ffc048118c73e10a337aad29e31f59138f16",
-    "evals/run-evals.mjs": "473f724bcf869a956b766e9e4aa67a5dfb812ef3b8f9eb7edead326654d3a289",
+    "evals/run-evals.mjs": "dd9cf0fa70508cf82eb37bf6e149f448dd1101cf98e78a8f37bea6233c9d067c",
     "evals/suite.json": "1db23db67bc0e1b2cb412cedc64f3e1bbfa2c14b2ad3a681962e6fd05847fd2e",
     "inputs/request.schema.json": "fa6c330967040b8fba6d3d40473713c8082aa5f7398376807c88f12736f22036",
     "mcp/bridge.py": "fa37a12b4a5ee5b46e36a54df93fc2209cef46af9c37cacc633cd131093f711b",
@@ -57,26 +57,28 @@
     "uv.lock": "7ce22952043711f23b4b65a2a0b85f3e48c096a1567ad2894fbcc64463943823",
     "validators/replay.py": "dc9f030919635385c6ce00e5113983c2896bc18868f387ac1124e6c00b8d7623",
     "validators/validate-materialized.mjs": "93aa77e8d75dc44bb90a61559c14e1b53b0176c8170f7daa04266a6a5724562c",
-    "validators/validate-result.mjs": "0e6b4811fa2a2632986b345e4179a37cfe52ad1f1d2fc9ea76a289d8175e4f7c"
+    "validators/validate-result.mjs": "38f1077f25ae31991bb74816b98de05931bff6c36ffc015553f4f906a131c671"
   },
   "scope": [
     "2026-11-25 review verification of the exact source digests below; earlier evidence is preserved by previousEvidence in Git.",
     "Fixed protocol cases and local prepared SDK checks are separate; these engineering checks are not independent domain review or a user scientific Acceptance."
   ],
   "sharedFiles": {
-    "runtime/openquantum/agent-presets/openquantum/scientific-result-adapters.mjs": "7998cf85c9fc0b480347095eda07687f29e729db6e0da33777abd691d36904e5",
+    "runtime/openquantum/agent-presets/openquantum/scientific-result-adapters.mjs": "64eb3a575ca3596527cc8306b16febe2cd91964b5d8b226d28c7edf1405c1fcb",
     "runtime/openquantum/agent-presets/openquantum/scientific-result-materializer.mjs": "400ef4698154a9686bfe1f29143b81beabeb1d66b4c7be12390e8b2d04626b67",
     "runtime/openquantum/agent-presets/openquantum/scientific-result-protocol.mjs": "0f9340060934502b7c1d83c4a2934e20d888b2cd14620616ad4ece8670973fbf",
     "tests/numerical-scientific-materialization.test.mjs": "466e754dadb0306c95f7d96974c64dac20db93cb41c5d1aeb5c23b7543a6002c",
     "tests/harness-numerical-acceptance.test.mjs": "bcc8d0e829175f7eef766fb5538f039dcb339f4a9c51bb1802e4269d44e776a9",
     "tests/harness-hamiltonian.test.mjs": "800e6efa041390a97a2f8eaa35b63c494a693791d1e130877ac0b2f2374dd5bd",
-    "tests/scientific-tool-effects.test.mjs": "59c68c08c49f37cf73ee2d39fce84e1f240928b5151e8155843448ae741db83e",
+    "tests/scientific-tool-effects.test.mjs": "1e36ef04023abba97b37a6a2ed0e4ad7a31616f7567d353751707620af9edd95",
     "runtime/openquantum/agent-presets/openquantum/scientific-result-projection.mjs": "295445647729cf85b35397e02da4887188ed1bd7f20e97b293a8e2d5be366333",
-    "runtime/openquantum/agent-presets/openquantum/execution-boundary.mjs": "862a4c185b0e3eee0d5833dcb9cdfb96b9b15b3a8735f6ce4c0186399f1b9620"
+    "runtime/openquantum/agent-presets/openquantum/execution-boundary.mjs": "862a4c185b0e3eee0d5833dcb9cdfb96b9b15b3a8735f6ce4c0186399f1b9620",
+    "src/lib/cli-entrypoint.mjs": "e9f69ad9812d8242969c96039be4c9fae46e232c131402de7609221dcec3083e"
   },
   "previousEvidence": {
     "commit": "fe2622ddea2c3d34fe8cec7120ffb537383cbcb9",
     "path": ".agents/skills/qec-memory-experiment/evals/evidence-phase5.json",
     "sha256": "4b78162e7506eb294b728162323cb298d2278ca4aff223c74ed5822fa792053b"
-  }
+  },
+  "phase6SourceUpdate": "Phase6 adds QUBO/LDPC registry adapters and canonical CLI entry detection; numerical algorithms and phase5 check provenance are retained. Current source digests are refreshed, with phase6 regression and final gate evidence in report-phase6.md."
 }

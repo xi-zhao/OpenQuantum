@@ -72,7 +72,7 @@
     "evals/fixtures/scalar.json": "aac1874071728cbf7a3086b9a6b741801055a6578a773adc2ddd859d84fe4996",
     "evals/fixtures/signed.json": "341e62dbfab2df69a2c7fd295cea86442b804ec7e6cfddbb0e322c0449875853",
     "evals/fixtures/skip.json": "245a7a6a02a1c4b4c51c4710a9d02293c66563e47fbe75cb589fc45e044709bf",
-    "evals/run-evals.mjs": "7df720dbdebbb58e09d24392ae4961b7ae13287ad7062104e2586df2bc1aba4d",
+    "evals/run-evals.mjs": "80bfedf1b5cb348f668da9308e9e58c0ad3c1658a6c483d3145bc287be561c03",
     "evals/suite.json": "41cd65ebb36c2ed076ab74f6394b5a37608a7598c96d175f3dc071e9385ea0d0",
     "inputs/request.schema.json": "2d68e5b7a4f169754ad06f2dd24812524dc60bbf1f4410faea14673c312b7ec6",
     "mcp/bridge.py": "14387a79a33b327435bb28a6ec19ea79e701502414c39248650edb6115a89178",
@@ -82,7 +82,7 @@
     "test/validator.test.mjs": "b166d65c822bb85cf3e52ad2b7889f6459a8af47c9a7e6870c729421f9ff0453",
     "uv.lock": "7504ea581181a6db65692c6ceb6f208d3bd9582c0cbd31b451942044c2ea968a",
     "validators/reference.py": "26d692b94a38d7c94e3c132942b8d58b782d83283cd9dfec27b610f91c76742a",
-    "validators/validate-result.mjs": "5d6ef508e3552ef82be21710dc27c8e494fe726558b004fdf6e2d729c1c8b37d"
+    "validators/validate-result.mjs": "d1e00fc633b135e3582bacdf9e36de7d368c95e0ab29e46b58177c5d5d63204a"
   },
   "limitations": [
     "No independent human domain review is claimed."
@@ -94,6 +94,7 @@
   ],
   "sharedFiles": {
     "src/lib/independent-quantum-math.mjs": "51de52020bf825bfccfa3645b50972df800a8065d73afe570815f9b6d89895af",
-    "src/lib/independent-observations.mjs": "549c50823327e8a23d5bebbc0be4c73bce4029dfa6e7f54b4c21df162ffc8c47"
+    "src/lib/independent-observations.mjs": "549c50823327e8a23d5bebbc0be4c73bce4029dfa6e7f54b4c21df162ffc8c47",
+    "src/lib/cli-entrypoint.mjs": "e9f69ad9812d8242969c96039be4c9fae46e232c131402de7609221dcec3083e"
   }
 }

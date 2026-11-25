@@ -1,5 +1,5 @@
+import { isMainModule } from "../../../../src/lib/cli-entrypoint.mjs";
 import { readFileSync } from "node:fs";
-import path from "node:path";
 import { isDeepStrictEqual } from "node:util";
 import { fileURLToPath } from "node:url";
 import { observationAudit } from "../../../../src/lib/independent-observations.mjs";
@@ -49,7 +49,7 @@ export async function referenceSpectrum(request, result, signal) {
     ...localComputeProcessOptions(input.execution), label: "Independent symmetry-sector eigenspectrum" });
 }
 
-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (isMainModule(import.meta.url)) {
   const bundle = JSON.parse(readFileSync(process.argv[2], "utf8"));
   if (process.argv.includes("--replay")) {
     try { bundle.reference = await referenceSpectrum(bundle.request, bundle.result); } catch { delete bundle.reference; }

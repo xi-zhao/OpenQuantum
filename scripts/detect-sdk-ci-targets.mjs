@@ -1,7 +1,6 @@
+import { isMainModule } from "../src/lib/cli-entrypoint.mjs";
 import { execFileSync } from "node:child_process";
 import { appendFileSync } from "node:fs";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
 
 export const REUSABLE_PYTHON_WORKFLOW = ".github/workflows/_reusable-python-sdk.yml";
 export const REUSABLE_JULIA_WORKFLOW = ".github/workflows/_reusable-julia-sdk.yml";
@@ -164,7 +163,7 @@ function parseArgs(argv) {
   return options;
 }
 
-if (path.resolve(process.argv[1] ?? "") === fileURLToPath(import.meta.url)) {
+if (isMainModule(import.meta.url)) {
   const options = parseArgs(process.argv.slice(2));
   const changedFiles = options.dispatch
     ? []

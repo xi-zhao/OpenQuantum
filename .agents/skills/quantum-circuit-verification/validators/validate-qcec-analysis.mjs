@@ -1,7 +1,6 @@
+import { isMainModule } from "../../../../src/lib/cli-entrypoint.mjs";
 import { isDeepStrictEqual } from "node:util";
 import fs from "node:fs";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
 import { normalizeAuditRequest } from "../core/request-contract.mjs";
 import { independentReference } from "./independent-reference.mjs";
 
@@ -55,7 +54,7 @@ function replayObservation(request, normalized, reference, verdict) {
   return item;
 }
 
-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (isMainModule(import.meta.url)) {
   try {
     const source = fs.readFileSync(0);
     if (source.length > 1048576) throw new Error("Validator input exceeds its bounded envelope");

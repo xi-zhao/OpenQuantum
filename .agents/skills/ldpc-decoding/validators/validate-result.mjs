@@ -1,3 +1,4 @@
+import { isMainModule } from "../../../../src/lib/cli-entrypoint.mjs";
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -89,7 +90,7 @@ export async function replayDecoding(request, signal, runProcess = runLocalJsonP
     ...localComputeProcessOptions(input.execution), label: "Independent LDPC decoder reference" });
 }
 
-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (isMainModule(import.meta.url)) {
   const value = JSON.parse(readFileSync(process.argv[2], "utf8"));
   let reference, unavailable;
   if (process.argv[3] === "--replay") {

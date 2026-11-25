@@ -1,6 +1,5 @@
+import { isMainModule } from "../../../../src/lib/cli-entrypoint.mjs";
 import { readFileSync } from "node:fs";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
 import { isDeepStrictEqual } from "node:util";
 import { observationAudit } from "../../../../src/lib/independent-observations.mjs";
 import { checkGates, parseQasm, circuitMetrics, circuitUnitary, phaseComparison, near } from "../../../../src/lib/independent-quantum-math.mjs";
@@ -30,7 +29,7 @@ export function validateResult({ request, result }) {
   return audit.finish();
 }
 
-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (isMainModule(import.meta.url)) {
   const bundle = JSON.parse(readFileSync(process.argv[2], "utf8"));
   const validation = validateResult(bundle);
   console.log(JSON.stringify(validation, null, 2));

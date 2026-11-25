@@ -1,3 +1,4 @@
+import { isMainModule } from "../src/lib/cli-entrypoint.mjs";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 import { createHash } from "node:crypto";
@@ -48,6 +49,6 @@ export async function setupAlgorithmEnvironment(selection = []) {
   } finally { await unlock(); }
 }
 
-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (isMainModule(import.meta.url)) {
   await setupAlgorithmEnvironment(process.argv.slice(2));
 }

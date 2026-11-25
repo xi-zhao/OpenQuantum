@@ -10,7 +10,7 @@ maturity:
     - id: independent-observations-2026-11-25
       kind: eval-report
       path: evals/evidence-2026-11-25.json
-      sha256: 0b1fc7510102882549e0688ae1d3c2dc3953f5814a5aaef620367f298f29935b
+      sha256: fb1bff6cd5f41117b256a69e2dd487ddf6448cf6186f364d465c06944a565366
 skill:
   name: graphix-mbqc
   entrypoint: SKILL.md

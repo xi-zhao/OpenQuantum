@@ -1,6 +1,6 @@
+import { isMainModule } from "../src/lib/cli-entrypoint.mjs";
 import fs from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 import { parseDocument } from "yaml";
 
 const POLICY_PATH = ".agents/capability-packages.yml";
@@ -163,7 +163,7 @@ function formatMarkdown(metrics) {
   ].join("\n");
 }
 
-if (path.resolve(process.argv[1] ?? "") === fileURLToPath(import.meta.url)) {
+if (isMainModule(import.meta.url)) {
   const args = new Set(process.argv.slice(2));
   const projectRoot = process.cwd();
   if (args.has("--check")) {

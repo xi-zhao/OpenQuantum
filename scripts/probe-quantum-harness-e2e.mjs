@@ -1,3 +1,4 @@
+import { isMainModule } from "../src/lib/cli-entrypoint.mjs";
 import { harnessHttpCookie, harnessSessionSnapshot } from "./lib/harness-http-auth.mjs";
 import assert from "node:assert/strict";
 import crypto from "node:crypto";
@@ -491,8 +492,7 @@ export async function runQuantumHarnessE2E({
   }
 }
 
-const invokedFile = process.argv[1] ? path.resolve(process.argv[1]) : undefined;
-if (invokedFile === fileURLToPath(import.meta.url)) {
+if (isMainModule(import.meta.url)) {
   try {
     const provider = argument("--provider", "openquantum-public");
     const model = argument("--model", undefined);

@@ -1,3 +1,4 @@
+import { isMainModule } from "../../../../src/lib/cli-entrypoint.mjs";
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import path from "node:path";
@@ -107,7 +108,7 @@ export async function replayExperiment(request, signal, runProcess = runLocalJso
   });
 }
 
-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (isMainModule(import.meta.url)) {
   const [filename, option] = process.argv.slice(2);
   if (!filename || option !== undefined && option !== "--replay") throw new Error("Usage: node validate-result.mjs result.json [--replay]");
   const facts = JSON.parse(readFileSync(filename, "utf8"));

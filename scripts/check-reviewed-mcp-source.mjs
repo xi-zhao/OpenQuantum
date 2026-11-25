@@ -1,13 +1,12 @@
 #!/usr/bin/env node
+import { isMainModule } from "../src/lib/cli-entrypoint.mjs";
 
-import path from "node:path";
-import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
 import { readExternalMcpReview, inspectReviewedMcpSource } from "../src/lib/reviewed-mcp-source.mjs";
 
 export { readExternalMcpReview, inspectReviewedMcpSource };
 
-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (isMainModule(import.meta.url)) {
   try {
     const { values } = parseArgs({
       options: { server: { type: "string" }, "source-root": { type: "string" } },

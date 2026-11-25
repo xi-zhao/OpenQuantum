@@ -1,3 +1,4 @@
+import { isMainModule } from "../../../../src/lib/cli-entrypoint.mjs";
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import path from "node:path";
@@ -169,7 +170,7 @@ export function validateQubo({ request, result }) {
   return { schemaVersion: "1.0", observations, solutionEvaluations };
 }
 
-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (isMainModule(import.meta.url)) {
   const value = JSON.parse(readFileSync(process.argv[2], "utf8"));
   const validation = validateQubo(value);
   console.log(JSON.stringify(validation, null, 2));

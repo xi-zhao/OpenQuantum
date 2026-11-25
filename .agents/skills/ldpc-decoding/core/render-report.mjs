@@ -1,5 +1,5 @@
 /** Deterministic rendering of persisted evidence and the central report. */
-export function renderReport({ request, artifacts, acceptanceReport, resultPackage, acceptanceReportPath, resultPackagePath }) {
+export function renderReport({ artifacts, acceptanceReport, resultPackage, acceptanceReportPath, resultPackagePath }) {
   return ["# LDPC syndrome 重放验收报告", "",
     `- 科学验收状态：\`${acceptanceReport.status}\``,
     `- 样本数：${artifacts.result.statistics.shots}；syndrome 匹配数：${artifacts.result.statistics.syndromeMatchedCount}`,

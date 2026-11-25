@@ -65,12 +65,12 @@
     "acceptance-profiles/ldpc-syndrome-replay-audit-v1.json": "ee9e10fdb33db208c4abcceb503b242322bf078e0ca20c58c9d750c7346ec5b6",
     "artifacts/ldpc-result.schema.json": "65f75e8c5260a76df0d0662790cd0fd5b0b7dd908fd3d2e699550997fa1e431f",
     "artifacts/observations.schema.json": "ff49634d5fd59ce6dd7bf623e3245254adddbeb6e528d4fb6294df1b86295f87",
-    "core/render-report.mjs": "790f3500bf47cdef4325e7e9f56971754e8ab562f4335ae3c393c5fbd7952d5f",
+    "core/render-report.mjs": "1b623de718b2822a8805ae40dddeaeee7aeb88b29c1941e35420fee3b49befaa",
     "evals/README.md": "fee8eb91b09b94685d9542b1de3fb8619952bc50168980b8c1a8211e30917768",
     "evals/cases.json": "823f7a39b2b6f1ddd43309bea5bc3c2a23cda049f9ba870615e2a8b3c971f3ee",
     "evals/fixtures/logical.json": "8a4f29776a8f2eac8d6d17a79097f5033932cec55b19181e8a83014ce2898c3e",
     "evals/fixtures/parity.json": "81cb3c537e325a7fa86b4f46af9e99bfae9999bc1fe1cc571c135c0f069288bd",
-    "evals/run-evals.mjs": "935c01ebdd007a5a8e7bb47102eead84e2f569c5c093b2925c951f3f774eda45",
+    "evals/run-evals.mjs": "e13a7072dceaee9a9340c5d23926ad084c72420d938c48901595a4b8053a5cc9",
     "evals/suite.json": "96eac7a2ba029c07792a14d6290ecdc2baba3e0c46a4b77aafa4c55f2fb65a34",
     "inputs/request.schema.json": "47ea752ba88eb6de6405db411f77a5c54f6380dbfbf37cae5af54500f943bf0f",
     "mcp/bridge.py": "391014af7bc35f1ee82d5e286f5c2ed0ab9f8c97c6d4f76a769fc45fe6cc4b9c",
@@ -82,7 +82,7 @@
     "uv.lock": "828976c42ecf21fe0473c9bb19fb98fcfc329bd37b1c0b918074e9f92b0e0162",
     "validators/reference.py": "80b5ad7b77f7a9d0133ab539716494e5e7273ba798a51f92ed9eebad7c12cbea",
     "validators/validate-materialized.mjs": "bd94d62625103904e0779ad596a0006ad733987d0d90721b694535c80976a8eb",
-    "validators/validate-result.mjs": "60ff4085cd1eca510e7e96ea0f3e8499b6ebd81237d96f4eacd854e2de8bc616"
+    "validators/validate-result.mjs": "5a49e6c053b88eff5efb45e03493ef92c4049684dd3793cc9fd7bf4c526f731f"
   },
   "scope": [
     "Independent observations; only versioned profiles and persisted evidence enable central Acceptance.",
@@ -91,5 +91,8 @@
   "limitations": [
     "No independent human domain review is claimed.",
     "No threshold, hardware or quantum advantage inference."
-  ]
+  ],
+  "sharedFiles": {
+    "src/lib/cli-entrypoint.mjs": "e9f69ad9812d8242969c96039be4c9fae46e232c131402de7609221dcec3083e"
+  }
 }

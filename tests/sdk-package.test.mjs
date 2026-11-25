@@ -43,6 +43,8 @@ test("SDK access survives archive, split installation and cached Skill relocatio
   await fs.cp(pluginRoot, cached, { recursive: true });
   assert.equal(await locateSdkRuntime(cached), runtime);
   const script = path.join(cached, "skills/tenpy-ground-state/scripts/sdk-access.mjs");
+  assert.deepEqual(await fs.readFile(path.join(path.dirname(script), "cli-entrypoint.mjs")),
+    await fs.readFile(path.join(root, "src/lib/cli-entrypoint.mjs")));
   const environment = { ...process.env, OPENQUANTUM_PLUGIN_SETTINGS_HOME: path.join(directory, "isolated settings") };
   await t.test("relocated numerical MCP services and independent Validators retain their runtime schemas", async () => {
     const cases = [
@@ -99,6 +101,16 @@ test("SDK access survives archive, split installation and cached Skill relocatio
   assert.equal(result.run.command, path.join(environment.OPENQUANTUM_PLUGIN_SETTINGS_HOME, "environments/python/tenpy-ground-state", process.platform === "win32" ? "Scripts/python.exe" : "bin/python"));
   assert.equal(result.dashboard.state, "not_installed");
   assert.equal(result.environmentState, "not_prepared");
+  const caseAlias = path.join(path.dirname(cached), "OpenQuantum");
+  try { await fs.realpath(caseAlias); }
+  catch (error) {
+    assert.equal(error.code, "ENOENT");
+    await fs.symlink(cached, caseAlias, process.platform === "win32" ? "junction" : "dir");
+  }
+  const aliasedScript = path.join(caseAlias, "skills/tenpy-ground-state/scripts/sdk-access.mjs");
+  const aliased = JSON.parse((await run(process.execPath, ["--preserve-symlinks-main", aliasedScript, "inspect", "tenpy-ground-state"], { cwd: directory, env: environment })).stdout);
+  assert.equal(aliased.project, result.project);
+  assert.equal(aliased.environmentState, "not_prepared");
   const discovery = JSON.parse((await run(process.execPath, [path.join(cached, "skills/quantum-sdk-workbench/scripts/sdk-access.mjs"), "list"], { env: environment })).stdout);
   assert.ok(discovery.some(entry => entry.id === "quantum-algorithms"));
   assert.ok(discovery.some(entry => entry.id === "netqasm-network"));

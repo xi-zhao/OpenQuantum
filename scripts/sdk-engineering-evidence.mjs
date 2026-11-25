@@ -1,3 +1,4 @@
+import { isMainModule } from "../src/lib/cli-entrypoint.mjs";
 import assert from "node:assert/strict";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -119,7 +120,7 @@ export async function collectEngineeringEvidence(directory, { repository = root 
     scientificValidation: "not_evaluated", libraries, attempts };
 }
 
-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (isMainModule(import.meta.url)) {
   const [directory, destination, flag] = process.argv.slice(2);
   if (!directory || !destination || (flag && flag !== "--require-complete")) throw new Error("Usage: node scripts/sdk-engineering-evidence.mjs <evidence-directory> <report.json> [--require-complete]");
   const report = await collectEngineeringEvidence(path.resolve(directory));

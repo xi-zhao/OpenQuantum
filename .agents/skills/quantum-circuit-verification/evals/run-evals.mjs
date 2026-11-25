@@ -1,6 +1,5 @@
+import { isMainModule } from "../../../../src/lib/cli-entrypoint.mjs";
 import assert from "node:assert/strict";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
 import fs from "node:fs";
 import { normalizeVerificationRequest } from "../core/request-contract.mjs";
 import { auditQcecAnalysis, prepareQcecAnalysis } from "../validators/validate-qcec-analysis.mjs";
@@ -51,4 +50,4 @@ export function runEvals() {
   return { status: "passed", cases: cases.length, scope: "controlled-validator-boundaries", scientificAcceptance: "not_evaluated" };
 }
 
-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) console.log(JSON.stringify(runEvals()));
+if (isMainModule(import.meta.url)) console.log(JSON.stringify(runEvals()));

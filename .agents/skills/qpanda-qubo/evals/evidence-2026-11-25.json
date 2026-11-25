@@ -74,7 +74,7 @@
     "evals/fixtures/model.json": "2cbe5e92bfdc502bbd158520a3dc15cb691457a015a7defcd1eaf3649ccf1293",
     "evals/fixtures/raw.json": "111f5731c3670aef2bde4b06dcb740779446c4d09c14b21d262992116bbf14d4",
     "evals/fixtures/weak-penalty.json": "e6a91ea4082c9d5efe53d956dfa76c0836127c5b76cc2b31d21654e852b1bf21",
-    "evals/run-evals.mjs": "74259cf598bb7471cc19e671b586b392c439e534c57452e5a02dc1f4fead0f45",
+    "evals/run-evals.mjs": "613f9aa7174aaa5f86361edf9d38c869ed6488706d4a6e223ddb41bbbe3315c4",
     "evals/suite.json": "6802c394c258da16b2a0da16aee8575394fc65e3a9a57dbab823535949fd6454",
     "inputs/request.schema.json": "6a44af5f48de1906cee29ca25bbc74cf3b8555309313b7ee0b400459d337af53",
     "mcp/bridge.py": "901750b55e69ad34452efab2ec0c34758274a05aa72a976707481d89ac42d453",
@@ -88,7 +88,7 @@
     "test/validator.test.mjs": "8fbc989029959f402e790ec32d6816b16d0521f00e7a3e6ea1a2f187ae814f9b",
     "uv.lock": "180c8f8f4022619b23a69756c7b121dcfd0d7984cc626b5501c86b7b1a23df68",
     "validators/validate-materialized.mjs": "b38fc15cceb66270157a31923b065c4a94267dc1f0c47fb0417667773c2532df",
-    "validators/validate-result.mjs": "b2dfac352312b6137861700e8c9da7bb6d21f0c13146c62c3c5c76be50cee053"
+    "validators/validate-result.mjs": "1ee1fd5284dcd31b3507812986b49029eebd202d3066ee784cb5564308532cd0"
   },
   "scope": [
     "Independent observations; only versioned profiles and persisted evidence enable central Acceptance.",
@@ -102,5 +102,8 @@
     "commit": "fe2622ddea2c3d34fe8cec7120ffb537383cbcb9",
     "path": ".agents/skills/qpanda-qubo/evals/evidence-2026-11-25.json",
     "sha256": "caf1c308dbe123f0ab1428d8d17c957d2acbec122c0a84f1537f64b2628affc0"
+  },
+  "sharedFiles": {
+    "src/lib/cli-entrypoint.mjs": "e9f69ad9812d8242969c96039be4c9fae46e232c131402de7609221dcec3083e"
   }
 }

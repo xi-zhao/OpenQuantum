@@ -1,3 +1,4 @@
+import { isMainModule } from "../src/lib/cli-entrypoint.mjs";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -48,4 +49,4 @@ export async function buildRelease({ directory = root } = {}) {
     artifacts: [{ name: pluginName, sha256: sha256(pluginBytes) }, { name: installName, sha256: sha256(installBytes) }] };
 }
 
-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) console.log(JSON.stringify(await buildRelease(), null, 2));
+if (isMainModule(import.meta.url)) console.log(JSON.stringify(await buildRelease(), null, 2));

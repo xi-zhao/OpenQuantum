@@ -1,6 +1,6 @@
+import { isMainModule } from "../src/lib/cli-entrypoint.mjs";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 import { parse, stringify } from "yaml";
 import { zipSync } from "fflate";
 import { buildChatgpt, git, json } from "./build-chatgpt.mjs";
@@ -85,4 +85,4 @@ export async function buildPlugin({ root = PROJECT_ROOT, output = path.join(root
   await fs.writeFile(zipPath, zipSync(entries, { level: 6, mtime: new Date("2026-01-01T00:00:00Z") }));
   return { pluginRoot, zipPath, release, tools: built.tools.length, skills: skillCount };
 }
-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) console.log(JSON.stringify(await buildPlugin(), null, 2));
+if (isMainModule(import.meta.url)) console.log(JSON.stringify(await buildPlugin(), null, 2));
