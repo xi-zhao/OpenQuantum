@@ -1,12 +1,12 @@
 import assert from "node:assert/strict";
-import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, realpath, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import test from "node:test";
 import { DESKTOP_EXTENSIONS, planDesktopExtensions } from "../scripts/lib/desktop-extension-preparation.mjs";
 
 test("Desktop extension reuse verifies the merged execution guard, including missing and tampered copies", async t => {
-  const directory = await mkdtemp(path.join(tmpdir(), "oq-guard-reuse-"));
+  const directory = await mkdtemp(path.join(await realpath(tmpdir()), "oq-guard-reuse-"));
   t.after(() => rm(directory, { recursive: true, force: true }));
   const harnessHome = path.join(directory, "home"), projectRoot = path.join(directory, "project");
   await mkdir(path.join(projectRoot, "node_modules"), { recursive: true });

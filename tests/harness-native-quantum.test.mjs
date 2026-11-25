@@ -5,6 +5,7 @@ import { once } from "node:events";
 import {
   mkdtemp,
   readFile,
+  realpath,
   rm,
   symlink,
   writeFile,
@@ -187,7 +188,7 @@ test(
   { timeout: INCLUDE_IBM_RUNTIME_MCP ? 180_000 : 90_000 },
   async (t) => {
     const sandboxRoot = await mkdtemp(
-      path.join(tmpdir(), "openquantum-harness-native-"),
+      path.join(await realpath(tmpdir()), "openquantum-harness-native-"),
     );
     const harnessHome = path.join(sandboxRoot, "dsh");
     const { presetTarget } = await prepareOpenQuantumHarnessHome({
