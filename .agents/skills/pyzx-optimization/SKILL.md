@@ -36,4 +36,4 @@ description: 用固定 PyZX 对 Clifford+T 电路做 ZX 重写和电路提取，
 
 ## 独立科学观察（L2）
 
-独立验证器只产 observations，不自行推导科学验收；`acceptanceProfiles: []` 和 `reproductionProfiles: []`。执行期 `provenance.complete=not_checked`。独立解析前后 QASM，复算门数/T 门数/双比特门数及依赖深度；≤6 qubits、≤512 输入门、≤2048 输出门且未跳过参考时，用独立复矩阵乘法核对全局相位无关酉等价。 超出参考范围或缺环境时相应观察为 not_checked，不限制主 Tool 的计算规模。
+独立验证器只产 observations，不自行推导科学验收；`acceptanceProfiles: []` 和 `reproductionProfiles: []`。执行期 `provenance.complete=not_checked`。独立解析前后 QASM，精确核对输入门表与请求（含已声明的 Y→X、Z 展开），防止通过相消门填充虚报优化幅度；复算门数/T 门数/双比特门数及依赖深度。≤6 qubits、≤512 输入门、≤2048 输出门且未跳过参考时，用独立复矩阵乘法核对全局相位无关酉等价。超出参考范围或缺环境时相应观察为 not_checked，不限制主 Tool 的计算规模。

@@ -40,6 +40,48 @@
     "failedChecks": []
   },
   {
+    "id": "padded-input-default",
+    "fixture": "default.json",
+    "fixtureSha256": "77533adce800266f6804af29833ad2eac783b04c519edd0d11df7b764427bdcd",
+    "edits": {
+      "result.inputQasm": "OPENQASM 2.0;\ninclude \"qelib1.inc\";\nqreg q[2];\nh q[0];\nt q[0];\nt q[0];\ncx q[0], q[1];\n\nx q[0];\nx q[0];\n",
+      "result.before": {
+        "gates": 6,
+        "twoQubitGates": 1,
+        "tCount": 2,
+        "depth": 6
+      }
+    },
+    "observations": {
+      "input.structure": "fail",
+      "resources.replayed": "pass"
+    },
+    "failedChecks": [
+      "input.structure"
+    ]
+  },
+  {
+    "id": "padded-input-skip",
+    "fixture": "skip.json",
+    "fixtureSha256": "543966998a716163fdcb6978cf6a9bf75b4c68a27a7417e80aea3f9c515868df",
+    "edits": {
+      "result.inputQasm": "OPENQASM 2.0;\ninclude \"qelib1.inc\";\nqreg q[2];\nh q[0];\nt q[0];\nt q[0];\ncx q[0], q[1];\n\nx q[0];\nx q[0];\n",
+      "result.before": {
+        "gates": 6,
+        "twoQubitGates": 1,
+        "tCount": 2,
+        "depth": 6
+      }
+    },
+    "observations": {
+      "input.structure": "fail",
+      "resources.replayed": "pass"
+    },
+    "failedChecks": [
+      "input.structure"
+    ]
+  },
+  {
     "id": "false-gates",
     "fixture": "default.json",
     "fixtureSha256": "77533adce800266f6804af29833ad2eac783b04c519edd0d11df7b764427bdcd",
@@ -127,7 +169,8 @@
       "input.binding": "fail"
     },
     "failedChecks": [
-      "input.binding"
+      "input.binding",
+      "input.structure"
     ]
   },
   {

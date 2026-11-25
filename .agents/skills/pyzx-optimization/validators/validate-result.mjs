@@ -11,6 +11,10 @@ export function validateResult({ request, result }) {
     checkGates(input.numQubits, input.gates);
     const before = parseQasm(result.inputQasm), after = parseQasm(result.optimizedQasm);
     emit("circuit.structure", before.n === input.numQubits && after.n === input.numQubits, "Independently parse every emitted gate, angle, arity and wire.");
+    const expectedInput = input.gates.flatMap(g => g.gate === "Y"
+      ? [{ gate: "X", targets: g.targets }, { gate: "Z", targets: g.targets }] : [g]);
+    emit("input.structure", before.n === input.numQubits && isDeepStrictEqual(before.gates, expectedInput),
+      "Input gate table exactly binds to the request, with the declared Y-to-X-then-Z expansion; cancelling gates cannot inflate the pre-optimization resources.");
     emit("resources.replayed", isDeepStrictEqual(result.before, circuitMetrics(before.n, before.gates))
       && isDeepStrictEqual(result.after, circuitMetrics(after.n, after.gates)), "Gate, T, two-qubit counts and dependency depth recomputed from emitted QASM.");
     emit("reference.policy", result.reference.mode === input.referenceMode, "Reference policy binds to input.");

@@ -10,7 +10,7 @@ maturity:
     - id: independent-observations-2026-11-25
       kind: eval-report
       path: evals/evidence-2026-11-25.json
-      sha256: d40f2cc1a4ccffc5fe6fca21e3d0d5de7454948e53c38e2699835e19b85638f3
+      sha256: c7b52b4dd1a9a173fc547c59608f490da66133377a39addf0af5cebbc7e88781
 skill:
   name: pyzx-optimization
   entrypoint: SKILL.md
@@ -88,7 +88,7 @@ evals:
     id: pyzx-optimization-observations-eval
     version: 1.0.0
     path: evals/suite.json
-    sha256: 97ef8c27fc7ffc6062a02afbe46f9dcf7f8bb07165528a2d6435795439a652d3
+    sha256: 07baa5199708b9c9b704e215e44e79588a6dcbd592ee532e11a4d163be660887
 compatibility:
   contract: "1.1"
   harness: 0.1.0-rc.6

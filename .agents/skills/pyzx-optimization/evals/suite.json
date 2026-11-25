@@ -56,6 +56,28 @@
       }
     },
     {
+      "id": "padded-input-default",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "input.structure"
+        ],
+        "caseSha256": "26c06435fc3ae74279eef24dc28e8292dd68c07a51563332e684290e767c7f3e"
+      }
+    },
+    {
+      "id": "padded-input-skip",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "input.structure"
+        ],
+        "caseSha256": "df594d91b7ccb2fc3be0410468eceb2206db211af2a1817acd9ce6b6f45231da"
+      }
+    },
+    {
       "id": "false-gates",
       "weight": 1,
       "hardGate": true,
@@ -117,9 +139,10 @@
       "hardGate": true,
       "expectedOutcome": {
         "failedChecks": [
-          "input.binding"
+          "input.binding",
+          "input.structure"
         ],
-        "caseSha256": "2b018b86f4024df7eb5c87ae0cef2e7b14d8d4a7575783c23d4d335f4fe19f11"
+        "caseSha256": "568f3582ad6eb8094b72aeb6e89aaf391cc5c69a0ffd83b8ecb544b669b2418c"
       }
     },
     {
