@@ -7,6 +7,7 @@ import test, { before, after } from "node:test";
 import { Context } from "@deepseek-ai/cordis";
 import { SandboxedFileSystem } from "@deepseek-ai/dsh-fs-sandbox";
 import { SandboxPolicyService } from "@deepseek-ai/dsh-sandbox-policy";
+import LocalSandbox from "@deepseek-ai/dsh-sandbox-local";
 import { loadCapability, loadResultPackage, loadAcceptanceReport, validateResultCommitValue } from "../.agents/skill-contracts/index.mjs";
 import { scientificResultAdapter } from "../runtime/openquantum/agent-presets/openquantum/scientific-result-adapters.mjs";
 import { parseScientificToolResult } from "../runtime/openquantum/agent-presets/openquantum/scientific-result-protocol.mjs";
@@ -14,12 +15,16 @@ import { scientificProjectionFixture } from "./helpers/scientific-projection.mjs
 import { numericalFixtures, numericalCanonical, prepareNumericalFixtures } from "./helpers/numerical-scientific-fixtures.mjs";
 
 let preparedRoot;
+const sandboxContext = new Context();
+let sandboxFiber;
 const previous = process.env.OPENQUANTUM_PYTHON_ENV_ROOT;
 before(async () => {
+  sandboxFiber = await sandboxContext.plugin(LocalSandbox, {});
   preparedRoot = fs.mkdtempSync(path.join(os.tmpdir(), "oq-numerical-python-"));
   Object.assign(process.env, await prepareNumericalFixtures(process.cwd(), preparedRoot));
 });
-after(() => {
+after(async () => {
+  await sandboxFiber.dispose();
   if (previous === undefined) delete process.env.OPENQUANTUM_PYTHON_ENV_ROOT;
   else process.env.OPENQUANTUM_PYTHON_ENV_ROOT = previous;
   fs.rmSync(preparedRoot, { recursive: true, force: true });
@@ -28,9 +33,65 @@ function fixture(t) {
   const workspaceRoot = fs.mkdtempSync(path.join(os.tmpdir(), "oq-numerical-result-"));
   t.after(() => fs.rmSync(workspaceRoot, { recursive: true, force: true }));
   const f = scientificProjectionFixture({ workspaceRoot });
+  f.ctx.sandbox = sandboxContext.sandbox;
   return { ...f, workspaceRoot };
 }
+
+function protectedReference(t, spec) {
+  // Outside OS temporary roots: these disposable files represent the protected
+  // installation/runtime. The recorded interpreter tries a harmless write.
+  fs.mkdirSync("temp", { recursive: true });
+  const directory = fs.mkdtempSync(path.resolve("temp/numerical-reference-"));
+  const canary = path.join(directory, "canary");
+  fs.writeFileSync(canary, "unchanged");
+  const executable = path.join(process.env.OPENQUANTUM_PYTHON_ENV_ROOT, spec.id,
+    process.platform === "win32" ? "Scripts/python.exe" : "bin/python");
+  const original = fs.readFileSync(executable, "utf8");
+  fs.writeFileSync(executable, original.replace("\nconst {isDeepStrictEqual}",
+    `\ntry { require('node:fs').writeFileSync(${JSON.stringify(canary)}, 'escaped'); } catch {}\nconst {isDeepStrictEqual}`));
+  t.after(() => {
+    fs.writeFileSync(executable, original);
+    fs.rmSync(directory, { recursive: true, force: true });
+  });
+  return canary;
+}
 for (const spec of numericalFixtures) {
+  test(`${spec.id}: Host reference process inherits full confinement and cannot write the installation`, async t => {
+    const canary = protectedReference(t, spec), f = fixture(t), policies = [];
+    f.ctx.sandbox = { async confine(argv, policy) {
+      const confined = await sandboxContext.sandbox.confine(argv, policy);
+      assert.equal(confined.enforcement, "full");
+      policies.push(policy);
+      return confined;
+    } };
+    const { presentation } = await f.execute({ tool: spec.tool, request: spec.cases[0].request, value: numericalCanonical(spec) });
+    assert.equal(presentation.acceptanceStatus, "passed");
+    assert.equal(policies.length, 1, "The Host must confine its independent reference child");
+    assert.deepEqual(policies[0], { mode: "workspace-write", workspaceRoot: fs.realpathSync.native(os.tmpdir()) });
+    assert.equal(fs.readFileSync(canary, "utf8"), "unchanged");
+  });
+  test(`${spec.id}: unavailable or partial confinement never executes the Host reference`, async t => {
+    const canary = protectedReference(t, spec);
+    for (const sandbox of [undefined, { confine: argv => ({ argv, enforcement: "partial" }) }]) {
+      const f = fixture(t);
+      f.ctx.sandbox = sandbox;
+      const { presentation } = await f.execute({ tool: spec.tool, request: spec.cases[0].request, value: numericalCanonical(spec) });
+      assert.equal(presentation.acceptanceStatus, "conditional");
+      assert.equal(fs.readFileSync(canary, "utf8"), "unchanged");
+    }
+  });
+  test(`${spec.id}: cancellation during confinement prevents reference execution and Acceptance publication`, async t => {
+    const canary = protectedReference(t, spec), f = fixture(t), abort = new AbortController();
+    f.ctx.sandbox = { async confine(...args) {
+      const confined = await sandboxContext.sandbox.confine(...args);
+      abort.abort();
+      return confined;
+    } };
+    const { presentation } = await f.execute({ tool: spec.tool, request: spec.cases[0].request,
+      value: numericalCanonical(spec), signal: abort.signal });
+    assert.equal(presentation.acceptanceStatus, undefined);
+    assert.equal(fs.readFileSync(canary, "utf8"), "unchanged");
+  });
   test(`${spec.id}: canonical and bare names materialize re-read facts and deterministic readable central Acceptance`, async t => {
     assert.equal(scientificResultAdapter(spec.tool), scientificResultAdapter(spec.bare));
     const f = fixture(t);

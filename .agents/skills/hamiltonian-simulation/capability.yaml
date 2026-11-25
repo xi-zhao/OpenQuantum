@@ -9,7 +9,7 @@ maturity:
     - id: local-observations-2026-11-25
       kind: eval-report
       path: evals/evidence-phase5.json
-      sha256: f11fb651905cf6e5d81916e3f5c312d2d374540ddd1c5030ccdeaad9934606d2
+      sha256: c067b5a9a6a479f098caff17c38ffe88f441041a16702bed9710ec3ec8aaee37
 skill:
   name: hamiltonian-simulation
   entrypoint: SKILL.md

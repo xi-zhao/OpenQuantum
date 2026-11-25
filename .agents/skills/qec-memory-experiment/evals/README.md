@@ -1,8 +1,9 @@
-# QEC memory L2 验证证据
+# QEC memory 验证证据
 
-本目录记录开发证据，不是科学 Acceptance Report。`capability.yaml` 固定结果 schema、独立 Validator、
-eval suite 及证据摘要；`acceptanceProfiles` / `reproductionProfiles` 为空，未接 Materializer 或 central
-Acceptance Builder。成熟度为 L2，不表示阈值、硬件表现或科研验收通过。
+本目录记录开发证据，不是科学 Acceptance Report。当前能力为 L3，`capability.yaml` 绑定结果 schema、
+独立 Validator、eval suite 和版本化 Acceptance Profile。计算期 Validator 只产 observations；Harness
+物化并重读证据后，只有 central Acceptance Builder 推导最终状态。没有 Reproduction Profile，
+也不表示阈值、硬件表现或任意科研任务已通过验收。此前 L2 证据保留为历史记录。
 
 ## 独立检查
 
@@ -70,3 +71,7 @@ node .agents/skills/qec-memory-experiment/validators/validate-result.mjs result.
 `tests/numerical-scientific-materialization.test.mjs` 和 `tests/harness-numerical-acceptance.test.mjs`
 覆盖版本化 Profile、真实字节拒绝篡改、可读报告与 Session 重启回放。新增源码证据为
 [evidence-phase5.json](evidence-phase5.json)；此前 L2 记录保留为历史，不代替新的验证。
+
+Harness 宿主重跑独立参考时，使用与科学 MCP 相同的仅临时目录可写、`enforcement === "full"`
+进程隔离；参考进程不能写安装目录或运行环境。沙箱缺失或隔离不完整时不启动参考，相关观察为未知，
+不能生成 `passed` 的中央结果；取消时不发布 Acceptance。共享 Validator 仅接收进程执行函数，不依赖 Harness。

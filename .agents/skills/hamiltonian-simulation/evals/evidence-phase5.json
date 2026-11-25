@@ -13,24 +13,28 @@
   },
   "checks": [
     {
+      "command": "node --test tests/numerical-scientific-materialization.test.mjs",
+      "exitCode": 0,
+      "pass": 22,
+      "fail": 0,
+      "skip": 0,
+      "logSha256": "39acd2d07e754b941c43cc000aa4b516087289e62ac0040e68071439ec47640c"
+    },
+    {
       "command": "node --test --test-concurrency=2 tests/numerical-scientific-materialization.test.mjs tests/harness-numerical-acceptance.test.mjs tests/scientific-result-materialization.test.mjs tests/scientific-result-projection.test.mjs tests/scientific-tool-effects.test.mjs tests/quantum-circuit-materialization.test.mjs tests/hamiltonian-contracts.test.mjs .agents/skills/qec-memory-experiment/test/mcp.test.mjs",
       "exitCode": 0,
-      "logSha256": "b9635191c261347371cb9bd38f27abea6f247da69e5cf01cfc27db8300e7ea42"
-    },
-    {
-      "command": "env OPENQUANTUM_PYTHON_ENV_ROOT=/Volumes/Elements/CodexArtifacts/Projects/openQuantum/2026-11-25--governance-phase5-environments/replay-envs OPENQUANTUM_REAL_QEC_MEMORY=1 node --test .agents/skills/qec-memory-experiment/test/live.test.mjs",
-      "exitCode": 0,
-      "logSha256": "af4736d8d40804a39b42ded08f2e42964a7bde3905d389d3749d904485e8e877"
-    },
-    {
-      "command": "env OPENQUANTUM_PYTHON_ENV_ROOT=/Volumes/Elements/CodexArtifacts/Projects/openQuantum/2026-11-25--governance-phase5-environments/replay-envs OPENQUANTUM_REAL_HAMILTONIAN=1 OPENQUANTUM_HAMILTONIAN_EVIDENCE=/Volumes/Elements/CodexArtifacts/Projects/openQuantum/2026-11-25--governance-corrective/hamiltonian-evidence-phase5 node --test --test-concurrency=1 .agents/skills/hamiltonian-simulation/test/live.test.mjs tests/hamiltonian-live.test.mjs tests/harness-hamiltonian.test.mjs",
-      "exitCode": 0,
-      "logSha256": "19c1844f93a570315a245f1ed5bcf54085fa5b11262e302903bc496194998deb"
+      "pass": 114,
+      "fail": 0,
+      "skip": 0,
+      "logSha256": "2cf0476a860476b66cdd0b83e8fc486348b3ce40c0679ad27616eb71da4defcc"
     },
     {
       "command": "env OPENQUANTUM_PYTHON_ENV_ROOT=/Volumes/Elements/CodexArtifacts/Projects/openQuantum/2026-11-25--governance-phase5-environments/replay-envs OPENQUANTUM_REAL_NUMERICAL_DELIVERY=1 node --test tests/harness-numerical-acceptance.test.mjs",
       "exitCode": 0,
-      "logSha256": "6be4ef60b338755db0d24cdc11399fb0df39f23c2c76b0436abde1cc3aab9efd"
+      "pass": 2,
+      "fail": 0,
+      "skip": 0,
+      "logSha256": "84d18a353a8ece03e17dd66b2a08a3f6ab35604a134c6fa0ad1b57fb99edd77a"
     }
   ],
   "files": {
@@ -39,7 +43,7 @@
     "artifacts/hamiltonian-simulation-result.schema.json": "b8cb226b6eb8da04da91f4c3312991afa841d95c398ea2df0a38e08a119b38d1",
     "artifacts/observations.schema.json": "27a211ae533f0ca83483eceb29deed11546091433adb84d36023139fb8103124",
     "core/render-report.mjs": "bd94b836e810dbc9363eceef613731de3633571925dd21d840ba24df0dd80f2f",
-    "evals/README.md": "ce6d765f4a874eb8523e927f9fb5d57c089e928d2fcd08e269256d4656eb20c2",
+    "evals/README.md": "55b65a3d25145119d868c777059df0b8b8f78dbff34221a2ca45c582044d1a99",
     "evals/cases.json": "a3f50015c3ac0b936a3cdd334369085a99d48411dd5ae99d5387ab6d1c68a780",
     "evals/fixtures/circuit-only.json": "009c045ce9337a1f5bf74841358d8fb229211172e419d905a5912f4d7b5a348f",
     "evals/fixtures/identity.json": "74dc237fd1530ebf6a50f93ff278f10c8ef944d92f04163ace1ac7a97e333fa1",
@@ -60,20 +64,27 @@
     "test/validator.test.mjs": "965618241d3932d6b6af0be0673fc61b9f16ee71b6206c91c19f3b5524d01e52",
     "uv.lock": "29be3d89c73a3a5dd34c4826daff00bc02f6cbcde8355ed070675581b6cfab46",
     "validators/reference.py": "524af3d1fdeb321ab6bf073bcb7f66b4773fcb97c4e6c2e737f878deff05d281",
-    "validators/validate-materialized.mjs": "da2a60395ec6b65bc8d863f433f30c7194f9d0b9ba69c5253cf128a51b03d1ba",
-    "validators/validate-result.mjs": "9b5effe15b052bdefad8b9a9b2b199c9c566534bf17a49601d1567f151f8c11a"
+    "validators/validate-materialized.mjs": "4464dfc674b9d58ee4076775172e436dce3bc0d9d014e546b75692eeea5864c9",
+    "validators/validate-result.mjs": "8f36c69a54c173f658528c3f2137d2df677e8faca3fc221ea2a90260173f30df"
   },
   "scope": [
-    "Fixed numerical observations and versioned materialization/replay contracts.",
-    "Protocol fixtures are separate from live pinned SDK checks; exact commands and outcomes are recorded in report-phase5.md."
+    "2026-11-25 review verification of the exact source digests below; earlier evidence is preserved by previousEvidence in Git.",
+    "Fixed protocol cases and local prepared SDK checks are separate; these engineering checks are not independent domain review or a user scientific Acceptance."
   ],
   "sharedFiles": {
-    "runtime/openquantum/agent-presets/openquantum/scientific-result-adapters.mjs": "e4885052c6f2b8ae7d9db52978d4140fd7f6c6a2c8b490aec407682f1d50cb35",
-    "runtime/openquantum/agent-presets/openquantum/scientific-result-materializer.mjs": "bd39f73f4a5c6f36d414a6530490a6ea041dd0788564f7a2e9cd17d391d9c95f",
+    "runtime/openquantum/agent-presets/openquantum/scientific-result-adapters.mjs": "7998cf85c9fc0b480347095eda07687f29e729db6e0da33777abd691d36904e5",
+    "runtime/openquantum/agent-presets/openquantum/scientific-result-materializer.mjs": "400ef4698154a9686bfe1f29143b81beabeb1d66b4c7be12390e8b2d04626b67",
     "runtime/openquantum/agent-presets/openquantum/scientific-result-protocol.mjs": "0f9340060934502b7c1d83c4a2934e20d888b2cd14620616ad4ece8670973fbf",
-    "tests/numerical-scientific-materialization.test.mjs": "431a95b9631ecadaa17cc785f36fa458afef306a5647cd9f25883a947c7afec5",
+    "tests/numerical-scientific-materialization.test.mjs": "466e754dadb0306c95f7d96974c64dac20db93cb41c5d1aeb5c23b7543a6002c",
     "tests/harness-numerical-acceptance.test.mjs": "bcc8d0e829175f7eef766fb5538f039dcb339f4a9c51bb1802e4269d44e776a9",
     "tests/harness-hamiltonian.test.mjs": "800e6efa041390a97a2f8eaa35b63c494a693791d1e130877ac0b2f2374dd5bd",
-    "tests/scientific-tool-effects.test.mjs": "59c68c08c49f37cf73ee2d39fce84e1f240928b5151e8155843448ae741db83e"
+    "tests/scientific-tool-effects.test.mjs": "59c68c08c49f37cf73ee2d39fce84e1f240928b5151e8155843448ae741db83e",
+    "runtime/openquantum/agent-presets/openquantum/scientific-result-projection.mjs": "295445647729cf85b35397e02da4887188ed1bd7f20e97b293a8e2d5be366333",
+    "runtime/openquantum/agent-presets/openquantum/execution-boundary.mjs": "862a4c185b0e3eee0d5833dcb9cdfb96b9b15b3a8735f6ce4c0186399f1b9620"
+  },
+  "previousEvidence": {
+    "commit": "fe2622ddea2c3d34fe8cec7120ffb537383cbcb9",
+    "path": ".agents/skills/hamiltonian-simulation/evals/evidence-phase5.json",
+    "sha256": "f11fb651905cf6e5d81916e3f5c312d2d374540ddd1c5030ccdeaad9934606d2"
   }
 }

@@ -1,8 +1,9 @@
-# Hamiltonian L2 验证证据
+# Hamiltonian 验证证据
 
-本目录是开发证据，能力等级为 L2。`acceptanceProfiles: []`、`reproductionProfiles: []`；没有
-Acceptance Profile、Result Package、Materializer 或 central Acceptance Builder 接入。Validator 只给
-observations，`provenance.complete` 始终为 `not_checked`，不宣称科学验收通过。
+本目录是开发证据，当前能力等级为 L3，已绑定版本化 Acceptance Profile、Result Package 与 Harness
+Materializer。计算期 Validator 只给 observations，`provenance.complete=not_checked`；物化阶段重读
+证据并复核来源后，只有 central Acceptance Builder 推导最终状态。没有 Reproduction Profile，
+本目录不宣称任意科研任务已通过验收；此前 L2 证据保留为历史记录。
 
 ## 独立性与边界
 
@@ -79,3 +80,7 @@ Python 脚本本身缺 NumPy 时也退出 2。当前命令、计数和文件摘�
 `tests/numerical-scientific-materialization.test.mjs` 和 `tests/harness-numerical-acceptance.test.mjs`
 覆盖版本化 Profile、真实字节拒绝篡改、可读报告与 Session 重启回放。新增源码证据为
 [evidence-phase5.json](evidence-phase5.json)；此前 L2 记录保留为历史，不代替新的验证。
+
+Harness 宿主重跑独立参考时，使用与科学 MCP 相同的仅临时目录可写、`enforcement === "full"`
+进程隔离；参考进程不能写安装目录或运行环境。沙箱缺失或隔离不完整时不启动参考，相关观察为未知，
+不能生成 `passed` 的中央结果；取消时不发布 Acceptance。共享 Validator 仅接收进程执行函数，不依赖 Harness。

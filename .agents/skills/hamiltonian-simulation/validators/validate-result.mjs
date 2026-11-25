@@ -192,11 +192,11 @@ export function validateSimulation({ request, result, reference }) {
   return { schemaVersion: "1.0", observations };
 }
 
-export async function referenceSimulation(request, signal) {
+export async function referenceSimulation(request, signal, runProcess = runLocalJsonProcess) {
   const input = normalizeRequest(request);
   const environment = Object.fromEntries(["HOME", "PATH", "SYSTEMROOT", "TEMP", "TMP", "TMPDIR", "WINDIR"]
     .flatMap(k => process.env[k] ? [[k, process.env[k]]] : []));
-  return runLocalJsonProcess({
+  return runProcess({
     ...await preparedPythonLaunch({ skillRoot, args: [path.join(skillRoot, "validators/reference.py")] }),
     cwd: skillRoot, env: localComputeEnvironment(environment, input.execution), input, signal,
     ...localComputeProcessOptions(input.execution), label: "Independent Hamiltonian reference",

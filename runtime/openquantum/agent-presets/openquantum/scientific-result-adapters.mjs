@@ -3,6 +3,7 @@ import { projectRoot as repositoryRoot } from "../../project-root.mjs";
 import { pathToFileURL } from "node:url";
 
 import { defineScientificResultMaterializer } from "./scientific-result-materializer.mjs";
+import { confinedMcpLaunch } from "./execution-boundary.mjs";
 
 export const SOLVE_AND_VALIDATE_TOOL =
   "solve_and_validate_ground_state";
@@ -244,6 +245,7 @@ function numericalAdapter({ capabilityId, tool, operation, title, profileId, val
   const runtime = () => runtimePromise ??= Promise.all([
     import(moduleUrl(`${skillPath}/validators/validate-materialized.mjs`)),
     import(moduleUrl(`${skillPath}/core/render-report.mjs`)),
+    import(moduleUrl("src/lib/local-json-process.mjs")),
   ]).then(modules => Object.assign({}, ...modules));
   const project = value => {
     if (value?.scientificValidation !== "observations_available" || !Array.isArray(value.validation?.observations)
@@ -262,7 +264,7 @@ function numericalAdapter({ capabilityId, tool, operation, title, profileId, val
       id: `${capabilityId}-${file.replaceAll(/[/.]/g, "-")}`, path: `${skillPath}/${file}`,
       version: capability => capability.manifest.version,
     })),
-    async prepare({ request, structuredContent }) {
+    async prepare({ request, structuredContent, processSandbox }) {
       const implementation = await runtime();
       const canonicalRequest = implementation.normalizeAuditRequest(request);
       if (!project(structuredContent)) throw new Error(`Invalid ${capabilityId} computational envelope`);
@@ -271,7 +273,19 @@ function numericalAdapter({ capabilityId, tool, operation, title, profileId, val
         artifacts: [{ key: artifactKey, id: artifactType, type: artifactType,
           fileName: `${artifactType}.json`, value: structuredContent[artifactKey] }],
         validate({ request: persistedRequest, artifacts, ...context }) {
-          return implementation.validateMaterializedResult({ ...context, request: persistedRequest, [artifactKey]: artifacts[artifactKey] });
+          return implementation.validateMaterializedResult({ ...context, request: persistedRequest, [artifactKey]: artifacts[artifactKey],
+            // The reference starts in the Host, outside the MCP process tree.
+            // Reuse its temp-only, full-confinement boundary before spawning;
+            // shared Validators receive a runner, never a Harness dependency.
+            async runReferenceProcess(options) {
+              options.signal?.throwIfAborted();
+              const launch = await confinedMcpLaunch(processSandbox, options);
+              try {
+                return await implementation.runLocalJsonProcess({ ...options, command: launch.command,
+                  args: launch.args, env: { ...options.env, ...launch.env } });
+              } finally { await launch.dispose(); }
+            },
+          });
         },
         renderReport: implementation.renderReport,
       };

@@ -95,12 +95,12 @@ export function validateExperiment({ request, facts, reference }) {
 }
 
 /** Uses only the prepared, locked interpreter; never installs or imports Tool code. */
-export async function replayExperiment(request, signal) {
+export async function replayExperiment(request, signal, runProcess = runLocalJsonProcess) {
   const issues = validateJsonWithSchema(request, requestSchema);
   if (issues.length) throw new TypeError(`Invalid reference request: ${issues.join("; ")}`);
   const environment = Object.fromEntries(["HOME", "PATH", "SYSTEMROOT", "TEMP", "TMP", "TMPDIR", "WINDIR"]
     .flatMap(name => process.env[name] ? [[name, process.env[name]]] : []));
-  return runLocalJsonProcess({
+  return runProcess({
     ...await preparedPythonLaunch({ skillRoot, args: [path.join(skillRoot, "validators/replay.py")] }),
     cwd: skillRoot, env: localComputeEnvironment(environment), input: request, signal,
     ...localComputeProcessOptions(), label: "Independent QEC replay",

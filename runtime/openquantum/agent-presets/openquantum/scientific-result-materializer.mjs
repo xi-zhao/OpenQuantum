@@ -195,6 +195,7 @@ export function defineScientificResultMaterializer(definition) {
 
   return async function materializeScientificResult({
     fileSystem,
+    processSandbox,
     workspaceRoot,
     sandboxPolicy,
     sessionId,
@@ -258,6 +259,7 @@ export function defineScientificResultMaterializer(definition) {
     const prepared = await definition.prepare({
       request,
       structuredContent,
+      processSandbox,
       capability: loadedCapability,
       profile,
     });

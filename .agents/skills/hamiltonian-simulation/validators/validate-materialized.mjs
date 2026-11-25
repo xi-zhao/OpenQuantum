@@ -20,13 +20,13 @@ function matchesBytes(value, ref) {
 }
 
 /** Only the Materializer supplies persisted bytes and a centrally loaded package. */
-export async function validateMaterializedResult({ request, result, resultPackage, profile, signal,
+export async function validateMaterializedResult({ request, result, resultPackage, profile, signal, runReferenceProcess,
   referenceImplementation = referenceSimulation }) {
   normalizeAuditRequest(request);
   if (profile?.id !== auditProfile.id || profile.version !== auditProfile.version
     || !isDeepStrictEqual(profile.checks, auditProfile.checks)) throw new Error("Validator and Acceptance Profile differ");
   let reference;
-  try { reference = await referenceImplementation(request, signal); } catch (error) {
+  try { reference = await referenceImplementation(request, signal, runReferenceProcess); } catch (error) {
     if (signal?.aborted) throw error;
     // Missing prepared runtime is explicit uncertainty, never automatic installation.
   }
