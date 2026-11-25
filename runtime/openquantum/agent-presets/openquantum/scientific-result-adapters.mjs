@@ -69,8 +69,26 @@ function quantumCircuitRuntime() {
     import(moduleUrl(`${QUANTUM_CIRCUIT_SKILL}/core/request-contract.mjs`)),
     import(moduleUrl(`${QUANTUM_CIRCUIT_SKILL}/validators/validate-qcec-analysis.mjs`)),
     import(moduleUrl(`${QUANTUM_CIRCUIT_SKILL}/core/render-report.mjs`)),
+    import(moduleUrl("src/lib/local-json-process.mjs")),
   ]).then(modules => Object.assign({}, ...modules));
   return quantumCircuitRuntimePromise;
+}
+
+function createConfinedReferenceRunner(processSandbox, runLocalJsonProcess) {
+  return async function runReferenceProcess(options) {
+    options.signal?.throwIfAborted();
+    const launch = await confinedMcpLaunch(processSandbox, options);
+    try {
+      return await runLocalJsonProcess({
+        ...options,
+        command: launch.command,
+        args: launch.args,
+        env: { ...options.env, ...launch.env },
+      });
+    } finally {
+      await launch.dispose();
+    }
+  };
 }
 
 function validatorVersion(validatorId) {
@@ -220,7 +238,7 @@ const materializeQuantumCircuit = defineScientificResultMaterializer({
     { id: "qiskit-unitary-reference", path: `${QUANTUM_CIRCUIT_SKILL}/validators/reference.py`, version: "2.5.2" },
     { id: "qcec-environment-lock", path: `${QUANTUM_CIRCUIT_SKILL}/uv.lock`, version: "3.10.0+qiskit.2.5.2" },
   ],
-  async prepare({ request, structuredContent }) {
+  async prepare({ request, structuredContent, processSandbox }) {
     const runtime = await quantumCircuitRuntime();
     const normalized = runtime.normalizeAuditRequest(request);
     const canonicalRequest = { circuitAOpenQasm2: normalized.circuitAOpenQasm2, circuitBOpenQasm2: normalized.circuitBOpenQasm2 };
@@ -229,7 +247,10 @@ const materializeQuantumCircuit = defineScientificResultMaterializer({
       request: canonicalRequest,
       artifacts: [{ key: "analysis", id: "qcec-analysis", type: "qcec-analysis", fileName: "qcec-analysis.json", value: analysis }],
       validate({ resultPackage, profile, request: persistedRequest, artifacts, signal }) {
-        return runtime.validateMaterializedQcec({ request: persistedRequest, analysis: artifacts.analysis, resultPackage, profile, signal });
+        return runtime.validateMaterializedQcec({
+          request: persistedRequest, analysis: artifacts.analysis, resultPackage, profile, signal,
+          runReferenceProcess: createConfinedReferenceRunner(processSandbox, runtime.runLocalJsonProcess),
+        });
       },
       renderReport(context) { return runtime.renderClassificationReport(context); },
     };
@@ -276,18 +297,14 @@ function numericalAdapter({ capabilityId, tool, operation, title, profileId, val
         artifacts: [{ key: artifactKey, id: artifactType, type: artifactType,
           fileName: `${artifactType}.json`, value: selectArtifact(structuredContent) }],
         validate({ request: persistedRequest, artifacts, ...context }) {
-          return implementation.validateMaterializedResult({ ...context, request: persistedRequest, [artifactKey]: artifacts[artifactKey],
+          return implementation.validateMaterializedResult({
+            ...context,
+            request: persistedRequest,
+            [artifactKey]: artifacts[artifactKey],
             // The reference starts in the Host, outside the MCP process tree.
             // Reuse its temp-only, full-confinement boundary before spawning;
             // shared Validators receive a runner, never a Harness dependency.
-            async runReferenceProcess(options) {
-              options.signal?.throwIfAborted();
-              const launch = await confinedMcpLaunch(processSandbox, options);
-              try {
-                return await implementation.runLocalJsonProcess({ ...options, command: launch.command,
-                  args: launch.args, env: { ...options.env, ...launch.env } });
-              } finally { await launch.dispose(); }
-            },
+            runReferenceProcess: createConfinedReferenceRunner(processSandbox, implementation.runLocalJsonProcess),
           });
         },
         renderReport: implementation.renderReport,

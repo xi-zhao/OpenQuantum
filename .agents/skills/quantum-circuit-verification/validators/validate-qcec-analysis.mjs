@@ -90,13 +90,20 @@ export function auditQcecAnalysis({ request, analysis, reference }) {
 }
 
 export async function validateMaterializedQcec({ request, analysis, resultPackage, profile, signal,
-  referenceImplementation = independentReference }) {
+  runReferenceProcess,
+  referenceImplementation }) {
   if (!isDeepStrictEqual(profile?.checks?.map(check => check.id), CHECK_IDS)
     || profile.checks.find(check => check.id === "classification.replayed")?.threshold !== REPLAY_TOLERANCE) {
     throw new Error("QCEC Validator and Acceptance Profile differ");
   }
+  const runReference = referenceImplementation ?? ((req, sig) => {
+    if (typeof runReferenceProcess !== "function") {
+      throw new Error("Full-sandbox reference runner is required");
+    }
+    return independentReference(req, sig, { runProcess: runReferenceProcess });
+  });
   let reference;
-  try { reference = await referenceImplementation(request, signal); } catch (error) {
+  try { reference = await runReference(request, signal); } catch (error) {
     if (signal?.aborted) throw error;
     reference = { mode: "unavailable", reason: "reference_process_failed" };
   }
