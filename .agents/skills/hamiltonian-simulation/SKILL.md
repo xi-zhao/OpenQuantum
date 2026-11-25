@@ -38,7 +38,16 @@ Python 计算进程隔离由本地 MCP Server 提供，Harness MCP Client 注册
 运行前通过已有终端 Tool 执行 `npm run capability:hamiltonian:setup`，显式准备固定的开放依赖；
 计算 Tool 不安装、不联网、不写结果文件。缺失或过期环境显式报错。
 通过 `execution` 独立配置运行资源。用户决定规模，稠密内存成本须结合实际资源解释。
-输出 `scientificValidation=not_evaluated`；执行成功和数值对照不构成中央科学验收。
+输出 `scientificValidation=observations_available`。独立 JS Validator 与只读原始请求的 Python
+参考复核范数、态保真度、完整酉误差、门序列和资源、Trotter 加密步数的误差界，以及同机 qDrift seed。
+参考用位索引 Pauli 矩阵和谱分解，不导入 Tool bridge 或 Qiskit；自动稠密参考仍遵循上述规模边界。
+Trotter 在 N、2N、4N 上没有分辨出稳定渐近区时，经验收敛阶为 `not_checked`；不承诺单次 qDrift
+轨迹收敛。缺少参考条件的检查也保持 `not_checked`，不把环境缺失当成通过。
+
+本能力为 L2 observations-only：`acceptanceProfiles: []`、`reproductionProfiles: []`，不接
+Materializer 或 central Acceptance Builder；`provenance.complete` 始终为 `not_checked`。
+执行成功、Validator 无失败和静态 L2 等级均不构成中央科学验收。
+固定案例、失败路径、数值容差和独立复跑命令见[验证记录](evals/README.md)。
 
 这是 MIT 算法的开源适配；没有调用 UnitaryLab 模拟器或宣称集成整个算法库。
 来源、复跑示例和差异见[集成说明](../../../docs/integrations/UNITARYLAB_OPEN_ADAPTATION.md)。

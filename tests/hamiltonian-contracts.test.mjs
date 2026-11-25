@@ -1,3 +1,4 @@
+import "../.agents/skills/hamiltonian-simulation/test/validator.test.mjs";
 import assert from "node:assert/strict";
 import { chmod, copyFile, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -48,14 +49,24 @@ test("prepared MCP never installs, rejects missing/stale setup and checks errors
   const lock = sha256(await readFile(path.join(skill, "uv.lock")));
   const moduleUrl = new URL("../src/lib/bounded-science-mcp.mjs", import.meta.url).href;
   const contractUrl = new URL("../.agents/skills/hamiltonian-simulation/mcp/contracts.mjs", import.meta.url).href;
-  await writeFile(path.join(skill, "mcp/server.mjs"), `import {serveScienceTool} from ${JSON.stringify(moduleUrl)};import {definition} from ${JSON.stringify(contractUrl)};await serveScienceTool({entrypoint:import.meta.url,id:"hamiltonian-simulation",definition,preparedEnvironment:true});`);
+  await writeFile(path.join(skill, "mcp/server.mjs"), `import {serveScienceTool} from ${JSON.stringify(moduleUrl)};import {definition} from ${JSON.stringify(contractUrl)};await serveScienceTool({entrypoint:import.meta.url,id:"hamiltonian-simulation",definition,observeResult:async(_value,signal)=>{
+const {readFileSync}=await import("node:fs");
+const mode=readFileSync(${JSON.stringify(modeFile)},"utf8");
+if(mode==="observation-schema") return {status:"passed"};
+if(mode==="observation-wait") await new Promise((resolve,reject)=>{
+const abort=()=>reject(new Error("reference cancelled"));
+if(signal.aborted) abort(); else signal.addEventListener("abort",abort,{once:true});
+});
+return {schemaVersion:"1.0",observations:[{id:"protocol.fixture",status:"not_checked",detail:"Protocol fixture only"}]};
+}});`);
   const result = {
     method: "trotter", numQubits: 2, steps: 8, order: 2, seed: null, terms: [],
     identityCoefficient: 0, lambda: 0, pauliRotations: 0, sampledTermCounts: [],
     sequenceSha256: "0".repeat(64), openQasm3: "OPENQASM 3.0;",
     circuit: { depth: 0, gates: 0, twoQubitGates: 0, globalPhase: 0, gateCounts: {} },
     statevector: [[1, 0], [0, 0], [0, 0], [0, 0]], stateNorm: 1,
-    unitaryFrobeniusError: 0, unitarySpectralError: 0,
+    unitaryFrobeniusError: 0, unitarySpectralError: 0, stateFidelity: 1,
+    runtime: { numpy: "fixture", system: "fixture", machine: "fixture" },
     reference: { mode: "auto", status: "computed", method: "protocol fixture", reason: "not scientific evidence" },
     convention: "leftmost Pauli and statevector bit is q0; hbar=1; circuit implements exp(-iHt)",
     interpretation: "deterministic product formula",
@@ -102,22 +113,24 @@ process.stdout.write(JSON.stringify(output));
   assert.equal(JSON.parse(await readFile(envFile)).OMP_NUM_THREADS, "3");
   assert.equal((await call({ ...input, steps: 0 })).isError, true);
   assert.equal((await client.callTool({ name: "unknown", arguments: input })).isError, true);
-  for (const mode of ["hash", "lock", "input", "schema", "fail"]) {
+  for (const mode of ["hash", "lock", "input", "schema", "fail", "observation-schema"]) {
     await writeFile(modeFile, mode);
     assert.equal((await call()).isError, true, mode);
   }
-  await writeFile(modeFile, "wait");
-  const controller = new AbortController();
-  const pending = call(input, { signal: controller.signal }).catch(error => error);
-  await new Promise(resolve => setTimeout(resolve, 200));
-  assert.match(JSON.stringify(await call()), /busy/);
-  controller.abort(); await pending;
-  await writeFile(modeFile, "valid");
-  let recovered;
-  for (let i = 0; i < 20; i++) {
-    recovered = await call();
-    if (!recovered.isError) break;
-    await new Promise(resolve => setTimeout(resolve, 50));
+  for (const phase of ["wait", "observation-wait"]) {
+    await writeFile(modeFile, phase);
+    const controller = new AbortController();
+    const pending = call(input, { signal: controller.signal }).catch(error => error);
+    await new Promise(resolve => setTimeout(resolve, 200));
+    assert.match(JSON.stringify(await call()), /busy/);
+    controller.abort(); await pending;
+    await writeFile(modeFile, "valid");
+    let recovered;
+    for (let i = 0; i < 20; i++) {
+      recovered = await call();
+      if (!recovered.isError) break;
+      await new Promise(resolve => setTimeout(resolve, 50));
+    }
+    assert.equal(recovered.isError, undefined);
   }
-  assert.equal(recovered.isError, undefined);
 });

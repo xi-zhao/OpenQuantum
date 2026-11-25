@@ -2,7 +2,7 @@ schemaVersion: "1.1"
 
 packages:
   - id: hamiltonian-simulation
-    level: L1
+    level: L2
     execution:
       mcpServers:
         - name: hamiltonian_local
@@ -19,6 +19,11 @@ packages:
         - tests/hamiltonian-contracts.test.mjs
         - tests/hamiltonian-live.test.mjs
         - tests/harness-hamiltonian.test.mjs
+        - .agents/skills/hamiltonian-simulation/test/validator.test.mjs
+        - .agents/skills/hamiltonian-simulation/test/live.test.mjs
+        - .agents/skills/hamiltonian-simulation/evals/run-evals.mjs
+    audit:
+      manifest: capability.yaml
 
   - id: quantum-practices
     level: L1

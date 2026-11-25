@@ -19,7 +19,7 @@ export const integerSchema = (minimum, maximum, defaultValue) => ({ ...numberSch
 export const arraySchema = (items, minItems, maxItems) => ({ type: "array", items, minItems, maxItems });
 
 // Strict stdio contracts only; Harness owns registration and lifecycle.
-export function defineScienceTool({ name, description, source, inputSchema, resultSchema, checkInput = () => {} }) {
+export function defineScienceTool({ name, description, source, inputSchema, resultSchema, observationSchema, checkInput = () => {} }) {
   inputSchema = { ...inputSchema, properties: { ...inputSchema.properties, execution: executionSchema } };
   const ajv = new Ajv({ allErrors: true, useDefaults: true, strict: false, strictNumbers: true });
   const validateInput = ajv.compile(inputSchema);
@@ -39,10 +39,17 @@ export function defineScienceTool({ name, description, source, inputSchema, resu
       then: { properties: { result: { properties: { reference: { properties: { mode: { const: mode } } } } } } },
     }));
   }
-  const validateOutput = new Ajv({ strict: false, strictNumbers: true, allErrors: true }).compile(outputSchema);
+  const compiler = new Ajv({ strict: false, strictNumbers: true, allErrors: true });
+  const validateBridgeOutput = compiler.compile(outputSchema);
+  const toolOutputSchema = observationSchema ? {
+    ...outputSchema,
+    properties: { ...outputSchema.properties, validation: observationSchema, scientificValidation: { const: "observations_available" } },
+    required: [...outputSchema.required, "validation"],
+  } : outputSchema;
+  const validateOutput = compiler.compile(toolOutputSchema);
   return {
-    source, validateOutput,
-    tool: { name, description, inputSchema, outputSchema, annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: true } },
+    source, validateOutput, validateBridgeOutput,
+    tool: { name, description, inputSchema, outputSchema: toolOutputSchema, annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: true } },
     normalize(nameToCall, args) {
       if (nameToCall !== name) throw new Error(`Unknown tool: ${nameToCall}`);
       const value = structuredClone(args ?? {});
@@ -53,7 +60,7 @@ export function defineScienceTool({ name, description, source, inputSchema, resu
   };
 }
 
-export async function serveScienceTool({ entrypoint, id, definition, definitions = [definition], runtime = "python", credentialEnvironment = [], launchFor }) {
+export async function serveScienceTool({ entrypoint, id, definition, definitions = [definition], runtime = "python", credentialEnvironment = [], launchFor, observeResult }) {
   const skillRoot = fileURLToPath(new URL("..", entrypoint));
   const projectRoot = path.resolve(skillRoot, "../../..");
   const lockFile = runtime === "julia" ? "Manifest.toml" : "uv.lock";
@@ -96,12 +103,19 @@ export async function serveScienceTool({ entrypoint, id, definition, definitions
         ...localComputeProcessOptions(input.execution),
         label: id,
       });
-      if (!definition.validateOutput(value)
+      if (!(definition.validateBridgeOutput ?? definition.validateOutput)(value)
         || value.inputSha256 !== inputSha256 || value.dependencyLockSha256 !== dependencyLockSha256
         || !isDeepStrictEqual(value.input, input)) {
         throw new Error("Scientific bridge returned an invalid result or mismatched provenance");
       }
-      return { content: [{ type: "text", text: JSON.stringify(value) }], structuredContent: value };
+      // Trusted capability code may add observations after the raw bridge contract
+      // and input binding have been checked. Both stages share cancellation.
+      const output = observeResult ? { ...value,
+        validation: await observeResult(value, AbortSignal.any([signal, controller.signal].filter(Boolean))),
+        scientificValidation: "observations_available",
+      } : value;
+      if (!definition.validateOutput(output)) throw new Error("Scientific observations returned an invalid result");
+      return { content: [{ type: "text", text: JSON.stringify(output) }], structuredContent: output };
     } catch (error) {
       return { isError: true, content: [{ type: "text", text: `${id}: ${error.message}` }] };
     } finally {

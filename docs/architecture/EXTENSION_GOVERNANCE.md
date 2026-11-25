@@ -3,7 +3,16 @@
 > 本文件顶部记录 **2026-11-25 成熟度快照**；保留 2026-11-24 全量快照与治理决定，以及 2026-09-24 首次治理（101 Skill / 37 MCP / 220 Tool，B1/B2/B3）的逐项历史决定，不改写既有记录。
 > 实时数量请运行 `npm run governance:audit`：[`审计脚本`](../../scripts/audit-extension-governance.mjs) 解析源码 YAML/JSON 声明，输出统计并核对内部一致性。新增 Skill 无需修改本页的历史数字；本页不是 CI 的固定数量门禁。
 
-## 2026-11-25 成熟度快照
+## 2026-11-25 合流与 Hamiltonian L2 快照（G–J）
+
+201 个 Capability：`L0=102`、`L1=93`、`L2=3`、`L3=3`。
+[`hamiltonian-simulation`](../../.agents/skills/hamiltonian-simulation/SKILL.md) 增加独立请求式矩阵参考、
+态/保真度/酉误差、门序列与资源、Trotter 加密步数上界及 qDrift seed 复核，见[验证证据](../../.agents/skills/hamiltonian-simulation/evals/README.md)。
+与 QEC memory 一样仅产 observations，没有新增 Acceptance Profile、Materializer 或 central Acceptance Builder。
+三个本地安全/准备分支已在治理分支合流，原分支引用保留；科学 MCP 保持 `enforcement: full`，
+QEC 实时 SDK/独立重放测试在完整沙箱中通过。源码静态 Skill/MCP/SDK 数与下方历史快照相同。
+
+## 2026-11-25 QEC 成熟度快照（E 阶段，保留记录）
 
 201 个 Capability：`L0=102`、`L1=94`、`L2=2`、`L3=3`。本次将
 [`qec-memory-experiment`](../../.agents/skills/qec-memory-experiment/SKILL.md) 从 L1 推进到 L2：

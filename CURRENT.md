@@ -19,7 +19,7 @@ Session event log 为准，科学状态以 Acceptance Report 为准。2026-09 �
     [PR #87](https://github.com/xi-zhao/OpenQuantum/pull/87)（`ws 8.23.0` 传输升级）、
     [PR #88](https://github.com/xi-zhao/OpenQuantum/pull/88)（Braket 受控门本地噪声验证）和
     [PR #89](https://github.com/xi-zhao/OpenQuantum/pull/89)（设置页按环境报告 SDK 实际版本）。
-  - 当前静态能力规模：**201 个 Capability**（[`.agents/capability-packages.yml`](.agents/capability-packages.yml)：`L0=102, L1=94, L2=2, L3=3`）、
+  - 当前静态能力规模：**201 个 Capability**（[`.agents/capability-packages.yml`](.agents/capability-packages.yml)：`L0=102, L1=93, L2=3, L3=3`）、
     **193 个内置 Skill**（180 自动可选、13 手动分类索引）、**91 个 MCP 连接**（66 个默认开启，其中 Qiskit 两项可通过离线开关关闭；25 个按需启用）、
     **5 个原生量子 Tool**、**121 个 SDK/源码环境**。以上为源码静态声明，不代表新版本已发布或已全部科学验收。
 - **0.8.11 发行入口**：共享 backend、状态协议修复及 SlowQuant / TNQS / RcmpsCore 接入见 [0.8.11 更新说明](docs/releases/v0.8.11.md)。
@@ -38,7 +38,7 @@ Session event log 为准，科学状态以 Acceptance Report 为准。2026-09 �
 
 ## 已知缺口与治理跟进
 
-- **科学验收**：L3 验收链目前仅覆盖 QGS、量子信息审计与 QCEC 分类复核（`L0=102, L1=94, L2=2, L3=3`），QEC memory 已达到 L2（独立计数/区间、电路/DEM 参数和同机 seed 复核，只产 observations），Codex 的自动物化与会话验收仍未接通；后续需避免仅扩充 SDK 数量而忽视高频能力的证据链提升。
+- **科学验收**：L3 验收链目前仅覆盖 QGS、量子信息审计与 QCEC 分类复核（`L0=102, L1=93, L2=3, L3=3`），QEC memory 与 Hamiltonian simulation 已达到 L2（前者复核计数/区间、电路/DEM 与 seed；后者复核态、保真度、酉误差、门资源、Trotter 加密及 qDrift seed；均只产 observations），Codex 的自动物化与会话验收仍未接通；后续需避免仅扩充 SDK 数量而忽视高频能力的证据链提升。
 - **扩展与仓库治理**：[扩展治理清单](docs/architecture/EXTENSION_GOVERNANCE.md)新增 2026-11-25 成熟度快照并保留 2026-11-24 历史快照；`npm run governance:audit` 输出实时统计并检查声明内部一致性，无需随新增 Skill 改写快照。零引用的 `outputs/` 已清理并加入 `.gitignore`，[证据边界](docs/integrations/evidence/README.md)与[宣传素材边界](docs/communications/README.md)已落盘。`docs/communications/` 待迁出至外部归档后移除，`experiments/` 中非主页校验大文件边界待后续确认。
 - **本地治理合流（未推送）**：`xi-zhao/chore-project-governance` 已依次以 `--no-ff` 合入三条修复分支；
   `c/shared-credential-redaction-rebased @ 3dc29060`、`c/desktop-preparation-reuse-rebased @ 35eb2f67`、

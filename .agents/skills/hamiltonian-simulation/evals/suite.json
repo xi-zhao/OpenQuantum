@@ -1,0 +1,320 @@
+{
+  "schemaVersion": "1.0",
+  "id": "hamiltonian-observations-eval",
+  "version": "1.0.0",
+  "metric": {
+    "id": "expected-observation-outcome",
+    "unit": "case fraction",
+    "direction": "higher_is_better",
+    "minimum": 0,
+    "maximum": 1
+  },
+  "cases": [
+    {
+      "id": "trotter-1",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [],
+        "caseSha256": "22967f3fb9f750f82d63d251db2ede2e4ab236460a5e4613e324504df3b75255"
+      }
+    },
+    {
+      "id": "trotter-2",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [],
+        "caseSha256": "1bd8dae352fba1135b17a1ab25026b0d33eb5daefeb4afc691642132cc5430c5"
+      }
+    },
+    {
+      "id": "trotter-4",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [],
+        "caseSha256": "678082d8cee2919e4eee6a6091222758bd91171af5de0fde9ec74935b1c1ed6f"
+      }
+    },
+    {
+      "id": "qdrift",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [],
+        "caseSha256": "a653241e34b3648f390fde57411da93edf28b5f629542a4c3f69398a06f1aea4"
+      }
+    },
+    {
+      "id": "identity",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [],
+        "caseSha256": "e3ec921b1782e5be3560a3832d32835511149ce2e7add8e2d741083b57f6d562"
+      }
+    },
+    {
+      "id": "zero-time",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [],
+        "caseSha256": "5996fa8c4cf843fa27fc6cf0f74aefe0ddae56500b8870e35cb543a7a82f3048"
+      }
+    },
+    {
+      "id": "circuit-only",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [],
+        "caseSha256": "9a9a846405901a8141b11d189d8f89dd21bac15bc55ae77d832e13a0a8610b45"
+      }
+    },
+    {
+      "id": "illegal-pauli",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "request.scope"
+        ],
+        "caseSha256": "8fb4e9d3659f976dc1f677ddd082f5d6f3e144283549c0499025c362e501894a"
+      }
+    },
+    {
+      "id": "nonhermitian-coefficient",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "request.scope"
+        ],
+        "caseSha256": "475bd54d380fdd1e1631a206a94eb37b8e489262f5b0d6b6c04885940e6034b8"
+      }
+    },
+    {
+      "id": "invalid-initial-state",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "request.scope"
+        ],
+        "caseSha256": "5135650f40e48c815e3c51d4ef59cbd053d83a68667e73d0038fe89ff1fb1d92"
+      }
+    },
+    {
+      "id": "odd-order",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "request.scope"
+        ],
+        "caseSha256": "5fdc12c5694eeaf0ab140d78f163b470352f76901e34ebb89cdbcb46178667cd"
+      }
+    },
+    {
+      "id": "zero-steps",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "request.scope"
+        ],
+        "caseSha256": "1df60f958fb1d3738c34e9a33b367a6227b3bcec12821a6d240c90346bc09bb1"
+      }
+    },
+    {
+      "id": "unnormalized-result",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "state.normalized",
+          "state.replayed",
+          "fidelity.replayed"
+        ],
+        "caseSha256": "2e23620f06e6eb831633ce5bede9a7c75ca3cb494708acc8f384c157f5e876f6"
+      }
+    },
+    {
+      "id": "forged-norm",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "state.normalized"
+        ],
+        "caseSha256": "aca7ca56eb937e563a073d9a2831f8527ca827d197f74e0ea3a5f787526ef829"
+      }
+    },
+    {
+      "id": "forged-fidelity",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "fidelity.replayed"
+        ],
+        "caseSha256": "522c524dc4bcb36cd4fa0fb247236071684d1ce7400fedf81bd0942fab21e5a1"
+      }
+    },
+    {
+      "id": "forged-spectral-error",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "unitary-error.replayed"
+        ],
+        "caseSha256": "e566af1765f3764b7dbbe354b322dbf2e475083d233c24434d40f91dcbfa69d5"
+      }
+    },
+    {
+      "id": "forged-frobenius-error",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "unitary-error.replayed"
+        ],
+        "caseSha256": "98241a43a235c0ac47a565baed9ae464f2ad589d4fc7e5fbd767df5c613e711b"
+      }
+    },
+    {
+      "id": "inconsistent-step-count",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "request.binding"
+        ],
+        "caseSha256": "fddcb38cd85c1d206f48d02338cf4d17f8db74195b46768997b502ebba84b21a"
+      }
+    },
+    {
+      "id": "inconsistent-rotations",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "sampling.budget"
+        ],
+        "caseSha256": "4fbb0eced7cad11aefbacbc6d0b1ac0075a7e468bddce85d93ba94c49bde7d6d"
+      }
+    },
+    {
+      "id": "inconsistent-gate-count",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "circuit.resources",
+          "circuit.replayed"
+        ],
+        "caseSha256": "eacf2a34112299a7d88a078566f21d7b3d3cea5168ef7658d200d124bf98e1a7"
+      }
+    },
+    {
+      "id": "seed-digest-forgery",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "seed.replayed"
+        ],
+        "caseSha256": "79b6010547c8bb45c7aa076b6ce83ac8ed3d65b304709eff0d5b81481c096199"
+      }
+    },
+    {
+      "id": "seed-count-forgery",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "seed.replayed"
+        ],
+        "caseSha256": "27186f398cb489a6cafe2029d73b51721d13f0cd305344fa290a1ee54cccad76"
+      }
+    },
+    {
+      "id": "qdrift-budget-forgery",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "sampling.budget",
+          "seed.replayed"
+        ],
+        "caseSha256": "68b80b4e4f0cbb9e91b3fabbb294aec4ddb6ba868eaa06369669ce3c0f0ed127"
+      }
+    },
+    {
+      "id": "reference-bound-forgery",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "trotter.error-bound"
+        ],
+        "caseSha256": "bade38f61fc0a7572bee2422aabcc333396238f7f755ec1f480d8757a90306c3"
+      }
+    },
+    {
+      "id": "reference-request-substitution",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "reference.binding",
+          "circuit.replayed"
+        ],
+        "caseSha256": "cdf6d9e7a5d1b6a31caf3521cfedd629bd4cac7ebdb5fe2407421adffa3744d1"
+      }
+    },
+    {
+      "id": "no-reference",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [],
+        "caseSha256": "d5cdb2d8596c975e25cea4093995978f090427fbef96201e32f7bdedb3a953eb"
+      }
+    },
+    {
+      "id": "incompatible-numpy",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [],
+        "caseSha256": "ec4f10682abe7ba5a95c860e59cc2dbe7f88fbb345e40f70e2c0f6654eb1685b"
+      }
+    },
+    {
+      "id": "forged-depth",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "circuit.replayed"
+        ],
+        "caseSha256": "043ca85a00246cc81b0f08831a7ff804ed94f33a8a0ff72c9a313fbf85b49dae"
+      }
+    },
+    {
+      "id": "forged-gate-angle",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "circuit.replayed"
+        ],
+        "caseSha256": "390a8b0d6a80505ac00971d1439b42840cc3f0a15a09724ca725db4561079cdd"
+      }
+    }
+  ]
+}
