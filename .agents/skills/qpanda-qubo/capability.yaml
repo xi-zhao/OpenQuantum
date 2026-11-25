@@ -9,7 +9,7 @@ maturity:
     - id: independent-observations-2026-11-25
       kind: eval-report
       path: evals/evidence-2026-11-25.json
-      sha256: caf1c308dbe123f0ab1428d8d17c957d2acbec122c0a84f1537f64b2628affc0
+      sha256: 3dccfa955f3fa0b5b16832ab714cd41d9f97abdf1f2fa3eb04ac01ddd96054d6
 skill:
   name: qpanda-qubo
   entrypoint: SKILL.md
@@ -89,7 +89,7 @@ evals:
     id: qpanda-qubo-observations-eval
     version: 1.0.0
     path: evals/suite.json
-    sha256: 8c6e9f19fb3dcc9d418d073ea09a07d885287a1933dee6df77134a12883068a0
+    sha256: 6802c394c258da16b2a0da16aee8575394fc65e3a9a57dbab823535949fd6454
 compatibility:
   contract: "1.1"
   harness: 0.1.0-rc.6

@@ -251,5 +251,66 @@
       "solver.solution-energy",
       "solver.classical-reference"
     ]
+  },
+  {
+    "id": "qaoa-traversal-substitution",
+    "fixture": "raw.json",
+    "fixtureSha256": "111f5731c3670aef2bde4b06dcb740779446c4d09c14b21d262992116bbf14d4",
+    "edits": {
+      "request.method": "qaoa",
+      "request.layer": 2
+    },
+    "reference": true,
+    "failedChecks": [
+      "solver.request-binding"
+    ]
+  },
+  {
+    "id": "qaoa-layer-mismatch",
+    "fixture": "raw.json",
+    "fixtureSha256": "111f5731c3670aef2bde4b06dcb740779446c4d09c14b21d262992116bbf14d4",
+    "edits": {
+      "request.method": "qaoa",
+      "request.layer": 2,
+      "result.quantum": {
+        "layer": 3,
+        "optimizer": "SLSQP",
+        "distribution": {
+          "01": 1
+        },
+        "topBitstring": "01"
+      },
+      "result.classicalRole": "reference",
+      "result.reference.status": "computed"
+    },
+    "reference": true,
+    "failedChecks": [
+      "solver.request-binding"
+    ]
+  },
+  {
+    "id": "qaoa-required-reference-missing",
+    "fixture": "raw.json",
+    "fixtureSha256": "111f5731c3670aef2bde4b06dcb740779446c4d09c14b21d262992116bbf14d4",
+    "edits": {
+      "request.method": "qaoa",
+      "request.layer": 2,
+      "request.referenceMode": "required",
+      "result.quantum": {
+        "layer": 2,
+        "optimizer": "SLSQP",
+        "distribution": {
+          "01": 1
+        },
+        "topBitstring": "01"
+      },
+      "result.classical": null,
+      "result.classicalRole": "not_run",
+      "result.reference.mode": "required"
+    },
+    "reference": true,
+    "failedChecks": [
+      "solver.request-binding"
+    ]
   }
 ]

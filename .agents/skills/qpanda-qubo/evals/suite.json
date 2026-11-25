@@ -236,6 +236,39 @@
         ],
         "caseSha256": "4fbdafa48edf917efe4e38723d90b481f0c1e2ae03b5d5848fab8204926968a6"
       }
+    },
+    {
+      "id": "qaoa-traversal-substitution",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "solver.request-binding"
+        ],
+        "caseSha256": "d534491d307e8d9efa9cc24679342f1854ed8d0842a448ea9cd13fe31fa19a4c"
+      }
+    },
+    {
+      "id": "qaoa-layer-mismatch",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "solver.request-binding"
+        ],
+        "caseSha256": "81792d43db948f51658a487e9e2813d6c45063910d101d3591385cc5d74f2b3f"
+      }
+    },
+    {
+      "id": "qaoa-required-reference-missing",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "solver.request-binding"
+        ],
+        "caseSha256": "954d6bef2c08eef2d80dc14ff671f2f4122dff3a517126d7be5ce8d85d10135a"
+      }
     }
   ]
 }

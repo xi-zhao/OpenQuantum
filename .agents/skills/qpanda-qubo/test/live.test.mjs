@@ -31,3 +31,19 @@ for (const name of ["model", "maximize", "raw", "infeasible", "weak-penalty"]) {
     assert.ok(validation.solutionEvaluations.every(row => Number.isFinite(row.objectiveValue) && Number.isFinite(row.penalizedEnergy)));
   });
 }
+for (const name of ["raw", "model"]) for (const referenceMode of ["required", "skip"]) {
+  test(`pinned QAOA result keeps requested layer and ${referenceMode} reference for ${name}`, live, async () => {
+    const { request } = JSON.parse(readFileSync(path.join(root, "evals/fixtures", `${name}.json`)));
+    Object.assign(request, { method: "qaoa", layer: referenceMode === "required" ? 1 : 2, referenceMode });
+    const response = await client.callTool({ name: request.model ? "model_and_solve_qpanda_qubo" : "solve_qpanda_qubo", arguments: request });
+    assert.equal(response.isError, undefined, JSON.stringify(response));
+    const result = response.structuredContent, validation = validateQubo({ request, result });
+    assert.deepEqual(result.validation, validation);
+    assert.deepEqual(validation.observations.filter(o => o.status === "fail"), []);
+    assert.equal(validation.observations.find(o => o.id === "solver.request-binding").status, "pass");
+    const output = request.model ? result.solver : result;
+    assert.equal(output.quantum.layer, request.layer);
+    assert.equal(output.classical === null, referenceMode === "skip");
+    assert.equal(Object.hasOwn(validation, "status"), false, "QAOA observations do not assert Acceptance or global optimality");
+  });
+}

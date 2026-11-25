@@ -105,6 +105,14 @@ export function validateQubo({ request, result }) {
     }
     const solver = request.model ? result.solver : result;
     emit("solver.shape", solver?.problem?.size === problem.n && solver.packageVersion === "2.0.0", "Solver dimension and pinned package agree.");
+    const traversal = request.method === "traversal", hasClassical = solver.classical !== null;
+    const referenceMode = request.referenceMode ?? "auto";
+    emit("solver.request-binding", (traversal ? hasClassical && solver.quantum === null : solver.quantum?.layer === request.layer)
+      && solver.classicalRole === (traversal ? "main" : hasClassical ? "reference" : "not_run")
+      && solver.reference?.mode === referenceMode
+      && solver.reference?.status === (!traversal && hasClassical ? "computed" : "not_run")
+      && (traversal || referenceMode === "auto" || hasClassical === (referenceMode === "required")),
+    "Primary method and QAOA layer match the request; classical results retain their main/reference role and obey required/skip without substituting for QAOA.");
     let q, matrixValid = true;
     if (request.model) {
       q = result.modeling?.qubo;
