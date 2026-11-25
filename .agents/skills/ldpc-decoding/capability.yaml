@@ -1,15 +1,15 @@
 schemaVersion: "1.1"
 id: ldpc-decoding
-version: 1.0.0
+version: 1.1.0
 displayName: ldpc-decoding independent observations
-description: L2 independent numerical observations; no final scientific Acceptance.
+description: Independent observations with persisted evidence and replayable central Acceptance.
 maturity:
   status: draft
   evidence:
     - id: independent-observations-2026-11-25
       kind: eval-report
       path: evals/evidence-2026-11-25.json
-      sha256: c1a1f654a10968cbd911344e8766995bc81087a8d68560fd5eb9c8ab3a49e32c
+      sha256: 1e0984383405c259330df5130beb42f48be2998e7403f3af635335f4f3fc3d85
 skill:
   name: ldpc-decoding
   entrypoint: SKILL.md
@@ -22,8 +22,7 @@ scope:
   outOfScope:
     - Code thresholds, hardware performance and proof of logical-operator
       correctness.
-    - Logical success without supplied errors and parity vectors; final
-      scientific Acceptance.
+    - Logical success without supplied errors and parity vectors.
   examples:
     - title: Fixed independent check
       prompt: Run the local fixed case and report independent observations.
@@ -46,7 +45,13 @@ validators:
       script: validators/validate-result.mjs
       args: []
       shell: false
-acceptanceProfiles: []
+acceptanceProfiles:
+  - id: ldpc-syndrome-replay-audit
+    version: 1.0.0
+    validator: ldpc-decoding-observations
+    definition:
+      path: acceptance-profiles/ldpc-syndrome-replay-audit-v1.json
+      sha256: ee9e10fdb33db208c4abcceb503b242322bf078e0ca20c58c9d750c7346ec5b6
 reproductionProfiles: []
 modelRequirements:
   textGeneration: false
@@ -62,6 +67,7 @@ permissions:
       - structured-result
     write:
       - temporary-compute-cache
+      - workspace/results
   subprocess:
     allowed: true
     commands:

@@ -3,39 +3,74 @@
   "kind": "development-eval-evidence",
   "date": "2026-11-25",
   "capability": "ldpc-decoding",
-  "level": "L2",
+  "level": "L3",
   "checks": [
     {
-      "command": "node --test --test-concurrency=2 tests/l2-independent-validators.test.mjs tests/paper-tools-contracts.test.mjs .agents/skills/qpanda-qubo/test/mcp.test.mjs tests/capability-package-audit.test.mjs",
+      "command": [
+        "node",
+        "--test",
+        "tests/optimization-scientific-materialization.test.mjs",
+        "tests/l2-independent-validators.test.mjs",
+        "tests/scientific-tool-effects.test.mjs"
+      ],
       "exitCode": 0,
-      "passed": 98,
+      "passed": 81,
       "failed": 0,
-      "logSha256": "6c120507dd04d47885305a29182d1e3265a25b9eb8a485d8f0c58af9237607b0"
+      "logSha256": "73196b5fc651e9d9e3d7832c8dec375d21f0b0b4434549fb4d7b8ac8989c7c55"
     },
     {
-      "command": "env OPENQUANTUM_REAL_L2=1 OPENQUANTUM_PYTHON_ENV_ROOT=/Volumes/Elements/CodexArtifacts/Projects/openQuantum/2026-11-25--governance-phase5-environments/python-envs OPENQUANTUM_COMPUTE_CACHE_ROOT=/Volumes/Elements/CodexArtifacts/Projects/openQuantum/2026-11-25--governance-phase5-environments/cache node --test --test-concurrency=1 .agents/skills/ldpc-decoding/test/live.test.mjs .agents/skills/qpanda-qubo/test/live.test.mjs",
+      "command": [
+        "node",
+        "--test",
+        "tests/harness-optimization-acceptance.test.mjs"
+      ],
       "exitCode": 0,
-      "passed": 11,
+      "passed": 3,
       "failed": 0,
-      "logSha256": "53036938a5f9f5496d1627f5c1610e27c5c3774a1eba228274aa306451ae66b7"
+      "logSha256": "25ce866424b34929e124be604cd4afcfc7e42ca7944e23d4b5e8c50aac7bc540"
     },
     {
-      "command": "env OPENQUANTUM_PYTHON_ENV_ROOT=/Volumes/Elements/CodexArtifacts/Projects/openQuantum/2026-11-25--governance-phase5-environments/replay-envs OPENQUANTUM_REAL_L2=1 node --test --test-concurrency=1 .agents/skills/qpanda-qubo/test/live.test.mjs .agents/skills/ldpc-decoding/test/live.test.mjs",
+      "command": [
+        "env",
+        "OPENQUANTUM_PYTHON_ENV_ROOT=/Volumes/Elements/CodexArtifacts/Projects/OpenQuantum/2026-11-25--governance-phase6-environments/python-envs",
+        "OPENQUANTUM_REAL_L2=1",
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        ".agents/skills/qpanda-qubo/test/live.test.mjs",
+        ".agents/skills/ldpc-decoding/test/live.test.mjs"
+      ],
       "exitCode": 0,
-      "passed": 11,
+      "passed": 15,
       "failed": 0,
-      "logSha256": "fb80cbcb036345c05ab98de47b2ab7583357318804abe603a280bb6bcd47ad01"
+      "logSha256": "5d6ea8c8b5d00a01068877b1e95e4c0c4dfb000dcd8bd214cfaa4a1f61474d5a"
+    },
+    {
+      "command": [
+        "env",
+        "OPENQUANTUM_PYTHON_ENV_ROOT=/Volumes/Elements/CodexArtifacts/Projects/OpenQuantum/2026-11-25--governance-phase6-environments/python-envs",
+        "OPENQUANTUM_REAL_OPTIMIZATION_DELIVERY=1",
+        "node",
+        "--test",
+        "tests/harness-optimization-acceptance.test.mjs"
+      ],
+      "exitCode": 0,
+      "passed": 3,
+      "failed": 0,
+      "logSha256": "9f87eaa08fefe29d12c6446393bb371d7a5680552b1dc49d4a238fec7c818947"
     }
   ],
   "files": {
-    "SKILL.md": "08054a61eab62f877ab4479bb7aac84768ec6481e0dc6b7ca874011372d6c35e",
+    "SKILL.md": "46258881f71db192da331aab5509dfc573655131cfabd76250bcc69d872e99e0",
+    "acceptance-profiles/ldpc-syndrome-replay-audit-v1.json": "ee9e10fdb33db208c4abcceb503b242322bf078e0ca20c58c9d750c7346ec5b6",
     "artifacts/ldpc-result.schema.json": "65f75e8c5260a76df0d0662790cd0fd5b0b7dd908fd3d2e699550997fa1e431f",
     "artifacts/observations.schema.json": "ff49634d5fd59ce6dd7bf623e3245254adddbeb6e528d4fb6294df1b86295f87",
+    "core/render-report.mjs": "790f3500bf47cdef4325e7e9f56971754e8ab562f4335ae3c393c5fbd7952d5f",
     "evals/README.md": "5e7d9c9cfeb04b7079229033aa857fd5272a7bdd5858cf016a64a60bf29e8dc6",
     "evals/cases.json": "823f7a39b2b6f1ddd43309bea5bc3c2a23cda049f9ba870615e2a8b3c971f3ee",
     "evals/fixtures/logical.json": "8a4f29776a8f2eac8d6d17a79097f5033932cec55b19181e8a83014ce2898c3e",
     "evals/fixtures/parity.json": "81cb3c537e325a7fa86b4f46af9e99bfae9999bc1fe1cc571c135c0f069288bd",
-    "evals/run-evals.mjs": "b2734002073b90c453b9103a2c195591566c4bf1658ac01dfbfdcbe278f3550d",
+    "evals/run-evals.mjs": "935c01ebdd007a5a8e7bb47102eead84e2f569c5c093b2925c951f3f774eda45",
     "evals/suite.json": "96eac7a2ba029c07792a14d6290ecdc2baba3e0c46a4b77aafa4c55f2fb65a34",
     "inputs/request.schema.json": "47ea752ba88eb6de6405db411f77a5c54f6380dbfbf37cae5af54500f943bf0f",
     "mcp/bridge.py": "391014af7bc35f1ee82d5e286f5c2ed0ab9f8c97c6d4f76a769fc45fe6cc4b9c",
@@ -43,14 +78,15 @@
     "mcp/server.mjs": "53cee58b3b26449e377120d850c9b63850dcbc17a543fe5b5b2687da75165e1c",
     "pyproject.toml": "218a2a6568e2ae3762218f6637e7c388de03cbc521d4acdba552fe0621fa0a0a",
     "test/live.test.mjs": "f2aa431b5537b3209003754983452c6e1381903abc7b772824b35ffa2f3f5ee1",
-    "test/validator.test.mjs": "b5d6e2aa0c964e6241f29439993bfccc08cba09f2f44ee737ca8faee72fdc83a",
+    "test/validator.test.mjs": "4b9843df796569d656021aef93a1a04fbee20aafe5c5fbb0e7d92077e8b5b81d",
     "uv.lock": "828976c42ecf21fe0473c9bb19fb98fcfc329bd37b1c0b918074e9f92b0e0162",
     "validators/reference.py": "80b5ad7b77f7a9d0133ab539716494e5e7273ba798a51f92ed9eebad7c12cbea",
-    "validators/validate-result.mjs": "120873a5660fa899e4103c5b0f739ea0e41d129102cedeb4d679da3b7c697130"
+    "validators/validate-materialized.mjs": "bd94d62625103904e0779ad596a0006ad733987d0d90721b694535c80976a8eb",
+    "validators/validate-result.mjs": "60ff4085cd1eca510e7e96ea0f3e8499b6ebd81237d96f4eacd854e2de8bc616"
   },
   "scope": [
-    "Independent numerical observations only; empty Acceptance and Reproduction Profiles.",
-    "Live pinned SDK checks are local; no model, quantum cloud or hardware calls."
+    "Independent observations; only versioned profiles and persisted evidence enable central Acceptance.",
+    "Local pinned numerical checks; no real model, quantum cloud or hardware."
   ],
   "limitations": [
     "No independent human domain review is claimed.",

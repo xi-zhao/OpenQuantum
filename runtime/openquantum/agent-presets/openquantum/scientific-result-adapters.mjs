@@ -13,6 +13,9 @@ export const QUANTUM_CIRCUIT_VERIFICATION_TOOL =
   "mcp__qcec_local__verify_circuit_equivalence";
 export const QEC_MEMORY_TOOL = "mcp__qec_local__run_qec_memory_experiment";
 export const HAMILTONIAN_SIMULATION_TOOL = "mcp__hamiltonian_local__simulate_hamiltonian";
+export const QUBO_SOLVE_TOOL = "mcp__qpanda_qubo__solve_qpanda_qubo";
+export const QUBO_MODEL_TOOL = "mcp__qpanda_qubo__model_and_solve_qpanda_qubo";
+export const LDPC_DECODING_TOOL = "mcp__ldpc_local__decode_ldpc_syndromes";
 
 const GROUND_STATE_SKILL = ".agents/skills/quantum-ground-state";
 const QUANTUM_INFORMATION_SKILL =
@@ -239,7 +242,7 @@ function isRecord(value) {
 
 // Both numerical capabilities already own independent computational Validators.
 // This internal Adapter adds only their persisted-evidence boundary and projection.
-function numericalAdapter({ capabilityId, tool, operation, title, profileId, validatorId, artifactType, artifactKey, referenceFile, describe }) {
+function numericalAdapter({ capabilityId, tool, operation, title, profileId, validatorId, artifactType, artifactKey, referenceFile, describe, selectArtifact = value => value?.[artifactKey] }) {
   const skillPath = `.agents/skills/${capabilityId}`;
   let runtimePromise;
   const runtime = () => runtimePromise ??= Promise.all([
@@ -249,8 +252,8 @@ function numericalAdapter({ capabilityId, tool, operation, title, profileId, val
   ]).then(modules => Object.assign({}, ...modules));
   const project = value => {
     if (value?.scientificValidation !== "observations_available" || !Array.isArray(value.validation?.observations)
-      || !isRecord(value[artifactKey])) return undefined;
-    const details = describe(value[artifactKey]);
+      || !isRecord(selectArtifact(value))) return undefined;
+    const details = describe(selectArtifact(value));
     if (!details) return undefined;
     return { schemaVersion: "1.0", capabilityId, operation, title,
       summary: "已生成计算事实与独立观察；最终科学验收需物化证据后由中央规则推导。",
@@ -260,7 +263,7 @@ function numericalAdapter({ capabilityId, tool, operation, title, profileId, val
     capabilityId, skillPath, resultRoot: `results/openquantum/${capabilityId}`,
     packagePrefix: capabilityId, inputId: "experiment-request", profileId, validatorId,
     provenanceTools: ["mcp/server.mjs", "mcp/bridge.py", "validators/validate-result.mjs",
-      "validators/validate-materialized.mjs", referenceFile, "core/render-report.mjs", "uv.lock"].map(file => ({
+      "validators/validate-materialized.mjs", referenceFile, "core/render-report.mjs", "uv.lock"].filter(Boolean).map(file => ({
       id: `${capabilityId}-${file.replaceAll(/[/.]/g, "-")}`, path: `${skillPath}/${file}`,
       version: capability => capability.manifest.version,
     })),
@@ -271,7 +274,7 @@ function numericalAdapter({ capabilityId, tool, operation, title, profileId, val
       return {
         request: canonicalRequest,
         artifacts: [{ key: artifactKey, id: artifactType, type: artifactType,
-          fileName: `${artifactType}.json`, value: structuredContent[artifactKey] }],
+          fileName: `${artifactType}.json`, value: selectArtifact(structuredContent) }],
         validate({ request: persistedRequest, artifacts, ...context }) {
           return implementation.validateMaterializedResult({ ...context, request: persistedRequest, [artifactKey]: artifacts[artifactKey],
             // The reference starts in the Host, outside the MCP process tree.
@@ -524,6 +527,17 @@ function materializedPresentation({
 }
 
 const adapters = new Map([
+  ...[QUBO_SOLVE_TOOL, QUBO_MODEL_TOOL].map(tool => numericalAdapter({ capabilityId: "qpanda-qubo", tool,
+    operation: "qubo-audit", title: "QUBO 代数与最优性验收", profileId: "qubo-algebraic-optimality-audit",
+    validatorId: "qpanda-qubo-observations", artifactType: "qubo-result", artifactKey: "result",
+    selectArtifact: value => value,
+    describe: result => Number.isSafeInteger((result.solver ?? result).problem?.size)
+      ? [detail("变量数", String((result.solver ?? result).problem.size)), detail("主算法", (result.solver ?? result).quantum ? "QAOA" : "traversal")] : undefined })),
+  numericalAdapter({ capabilityId: "ldpc-decoding", tool: LDPC_DECODING_TOOL,
+    operation: "syndrome-audit", title: "LDPC syndrome 重放验收", profileId: "ldpc-syndrome-replay-audit",
+    validatorId: "ldpc-decoding-observations", artifactType: "ldpc-result", artifactKey: "result", referenceFile: "validators/reference.py",
+    describe: result => Number.isSafeInteger(result.statistics?.shots)
+      ? [detail("样本数", String(result.statistics.shots)), detail("syndrome 匹配数", String(result.statistics.syndromeMatchedCount))] : undefined }),
   numericalAdapter({ capabilityId: "qec-memory-experiment", tool: QEC_MEMORY_TOOL,
     operation: "memory-experiment", title: "QEC 存储实验验收", profileId: "rotated-surface-memory-audit",
     validatorId: "memory-observations", artifactType: "memory-result", artifactKey: "facts", referenceFile: "validators/replay.py",
@@ -635,6 +649,9 @@ export function scientificResultAdapter(toolName) {
   const name = toolName === "audit_density_matrix" ? QUANTUM_INFORMATION_AUDIT_TOOL
     : toolName === "verify_circuit_equivalence" ? QUANTUM_CIRCUIT_VERIFICATION_TOOL
     : toolName === "run_qec_memory_experiment" ? QEC_MEMORY_TOOL
+    : toolName === "solve_qpanda_qubo" ? QUBO_SOLVE_TOOL
+    : toolName === "model_and_solve_qpanda_qubo" ? QUBO_MODEL_TOOL
+    : toolName === "decode_ldpc_syndromes" ? LDPC_DECODING_TOOL
     : toolName === "simulate_hamiltonian" ? HAMILTONIAN_SIMULATION_TOOL : toolName;
   return adapters.get(name);
 }

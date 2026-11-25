@@ -81,10 +81,10 @@ export function validateDecoding({ request, result, reference }) {
   return { schemaVersion: "1.0", observations };
 }
 
-export async function replayDecoding(request, signal) {
+export async function replayDecoding(request, signal, runProcess = runLocalJsonProcess) {
   const input = normalizeRequest(request);
   const environment = Object.fromEntries(["HOME", "PATH", "SYSTEMROOT", "TEMP", "TMP", "TMPDIR", "WINDIR"].flatMap(k => process.env[k] ? [[k, process.env[k]]] : []));
-  return runLocalJsonProcess({ ...await preparedPythonLaunch({ skillRoot: root, args: [path.join(root, "validators/reference.py")] }),
+  return runProcess({ ...await preparedPythonLaunch({ skillRoot: root, args: [path.join(root, "validators/reference.py")] }),
     cwd: root, input, env: localComputeEnvironment(environment, input.execution), signal,
     ...localComputeProcessOptions(input.execution), label: "Independent LDPC decoder reference" });
 }

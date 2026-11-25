@@ -96,3 +96,7 @@ sympy 表达式字符串、文件路径或数据集加载。
 `acceptanceProfiles: []`、`reproductionProfiles: []`，`scientificValidation=observations_available`，
 `provenance.complete=not_checked`；L2 与工具执行成功均不等于科学 Acceptance。
 固定正反例、输入/结果 Schema 与证据见 [eval 说明](evals/README.md)。
+
+## 可回放科学验收
+
+执行期只生成独立 observations，`provenance.complete=not_checked`。DSH 完整调用含 workspace-write：宿主 Materializer 经 ctx.fs 原子写入并重读证据，中央 Builder 按 `qubo-algebraic-optimality-audit@1.0.0` 派生验收并保存可读报告。只在 n≤16 且未跳过穷举时核对全局最优集合；QAOA 分布不构成全局最优证明。 缺少穷举或独立重放保留 conditional，独立检查发现错误则 failed。Codex 继续只提供执行期 observations。

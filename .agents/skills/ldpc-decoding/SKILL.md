@@ -78,3 +78,7 @@ BP 不收敛仍可由 LSD 得到满足校验的修正；两种状态分别报告
 `acceptanceProfiles: []`、`reproductionProfiles: []`；`provenance.complete=not_checked`，不派生科学 Acceptance。
 固定案例和复跑入口见 [eval 说明](evals/README.md)；上游属性语义见
 [BP+LSD 文档](https://software.roffe.eu/ldpc/ldpc/bplsd_decoder.html)。
+
+## 可回放科学验收
+
+执行期只生成独立 observations，`provenance.complete=not_checked`。DSH 完整调用含 workspace-write：宿主 Materializer 经 ctx.fs 原子写入并重读证据，中央 Builder 按 `ldpc-syndrome-replay-audit@1.0.0` 派生验收并保存可读报告。仅核对给定 H 的逐样本校验与固定 serial BP+LSD 重放，不证明量子码距或硬件容错阈值。 缺少穷举或独立重放保留 conditional，独立检查发现错误则 failed。Codex 继续只提供执行期 observations。

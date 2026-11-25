@@ -498,7 +498,7 @@ packages:
         - .agents/skills/fieldqkit-hardware/test/mcp.test.mjs
 
   - id: qpanda-qubo
-    level: L2
+    level: L3
     execution:
       mcpServers:
         - name: qpanda_qubo
@@ -520,6 +520,15 @@ packages:
         - .agents/skills/qpanda-qubo/evals/run-evals.mjs
     audit:
       manifest: capability.yaml
+
+    materialization:
+      adapter: runtime/openquantum/agent-presets/openquantum/scientific-result-projection.mjs
+      resultRoot: results/openquantum/qpanda-qubo
+      checks:
+        - tests/optimization-scientific-materialization.test.mjs
+        - tests/harness-optimization-acceptance.test.mjs
+      replayChecks:
+        - tests/harness-optimization-acceptance.test.mjs
 
   - id: quantum-circuit-verification
     level: L3
@@ -759,7 +768,7 @@ packages:
         - tests/harness-paper-tools.test.mjs
 
   - id: ldpc-decoding
-    level: L2
+    level: L3
     execution:
       mcpServers:
         - name: ldpc_local
@@ -781,6 +790,15 @@ packages:
         - .agents/skills/ldpc-decoding/evals/run-evals.mjs
     audit:
       manifest: capability.yaml
+
+    materialization:
+      adapter: runtime/openquantum/agent-presets/openquantum/scientific-result-projection.mjs
+      resultRoot: results/openquantum/ldpc-decoding
+      checks:
+        - tests/optimization-scientific-materialization.test.mjs
+        - tests/harness-optimization-acceptance.test.mjs
+      replayChecks:
+        - tests/harness-optimization-acceptance.test.mjs
 
   - id: flow-vqe
     level: L1

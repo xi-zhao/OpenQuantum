@@ -139,7 +139,7 @@ export function validateQubo({ request, result }) {
     emit("solutions.replayed", solutionsValid, "Each returned candidate is independently evaluated for raw objective, every equality residual, feasibility, penalty and total energy.");
     if (solver?.classical) emit("solver.solution-energy", solutionsValid && solver.classical.optimalAssignments.length > 0
       && solver.classical.optimalAssignments.every(bits => validBits(bits, problem.n) && near(evaluate(problem, bits).penalizedEnergy, solver.classical.minimumValue)), "Every claimed optimum has the independently recomputed penalized energy, including the constant.");
-    if (problem.n <= 16) {
+    if (problem.n <= 16 && referenceMode !== "skip") {
       const reference = enumerate(problem);
       if (solver?.classical) emit("solver.classical-reference", near(solver.classical.minimumValue, reference.minimum)
         && sameAssignments(solver.classical.optimalAssignments, reference.optimal.map(r => r.bitVector), problem.n), "JS exhaustively enumerated every one of 2^n assignments; optimum energy and complete minimizing set agree.");
@@ -162,7 +162,7 @@ export function validateQubo({ request, result }) {
         } else missing("reference.optimum", "Tool omitted its optional reference; independent small-n enumeration still ran.");
       }
     } else {
-      for (const id of ["solver.classical-reference", ...(request.model ? ["compilation.exhaustive-replay", "constraints.feasible", "penalty.sufficient", "reference.optimum"] : [])]) missing(id, "Independent enumeration is bounded to n<=16; larger problems retain candidate checks without global optimality claims.");
+      for (const id of ["solver.classical-reference", ...(request.model ? ["compilation.exhaustive-replay", "constraints.feasible", "penalty.sufficient", "reference.optimum"] : [])]) missing(id, "Independent enumeration requires n<=16 and referenceMode!=skip; candidate checks do not certify global optimality.");
     }
   }
   missing("provenance.complete", "L2 observations only; no materialized Session provenance or final Acceptance.");

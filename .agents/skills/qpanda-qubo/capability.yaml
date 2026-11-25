@@ -1,15 +1,15 @@
 schemaVersion: "1.1"
 id: qpanda-qubo
-version: 1.0.0
+version: 1.1.0
 displayName: qpanda-qubo independent observations
-description: L2 independent numerical observations; no final scientific Acceptance.
+description: Independent observations with persisted evidence and replayable central Acceptance.
 maturity:
   status: draft
   evidence:
     - id: independent-observations-2026-11-25
       kind: eval-report
       path: evals/evidence-2026-11-25.json
-      sha256: 06aad42dc31f575563815c4c2162915e552ae05382789090e6f7e9b63fdef294
+      sha256: 16bcbf83f2c3a2a4054fc90608d4df575dbef8789dcdf67f2b6e0571f1e66ccc
 skill:
   name: qpanda-qubo
   entrypoint: SKILL.md
@@ -22,7 +22,7 @@ scope:
   outOfScope:
     - Global optimum proof above 16 variables, automatic penalty choice,
       inequalities or quantum advantage.
-    - Final scientific Acceptance or materialized Session provenance.
+    - QAOA global optimality without independent exhaustive evidence.
   examples:
     - title: Fixed independent check
       prompt: Run the local fixed case and report independent observations.
@@ -45,7 +45,13 @@ validators:
       script: validators/validate-result.mjs
       args: []
       shell: false
-acceptanceProfiles: []
+acceptanceProfiles:
+  - id: qubo-algebraic-optimality-audit
+    version: 1.0.0
+    validator: qpanda-qubo-observations
+    definition:
+      path: acceptance-profiles/qubo-algebraic-optimality-audit-v1.json
+      sha256: fa900407ef0fe3a1828d9f7c0734a3df03ff35008674b078a790ece0aeb8bf18
 reproductionProfiles: []
 modelRequirements:
   textGeneration: false
@@ -61,6 +67,7 @@ permissions:
       - structured-result
     write:
       - temporary-compute-cache
+      - workspace/results
   subprocess:
     allowed: true
     commands:
