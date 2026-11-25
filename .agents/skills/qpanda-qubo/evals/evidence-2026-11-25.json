@@ -6,7 +6,7 @@
   "level": "L2",
   "checks": [
     {
-      "command": "node --test --test-name-pattern=QUBO result binds .agents/skills/qpanda-qubo/test/validator.test.mjs",
+      "command": "node --test '--test-name-pattern=QUBO result binds' .agents/skills/qpanda-qubo/test/validator.test.mjs",
       "exitCode": 0,
       "pass": 2,
       "fail": 0,
