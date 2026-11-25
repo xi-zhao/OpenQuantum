@@ -94,28 +94,35 @@ test("installed CLI reuses verified extensions on a second launch", { timeout: 9
   assert.equal((await stat(client, { bigint: true })).mtimeNs, before.mtimeNs);
 });
 
-test("installed CLI rebuilds missing or damaged extensions and receipts, and supports forced repair", { timeout: 90000 }, async t => {
+// Independent recovery scenarios get separate timeout budgets. The previous
+// parent accumulated all six rebuilds plus forced repair under one 90s timer.
+for (const [name, damage] of [
+  ["modified client", ({ client }) => writeFile(client, "damaged client")],
+  ["missing client", ({ client }) => rm(client)],
+  ["missing extension", ({ home }) => rm(path.join(home, ".openquantum-extensions/harness-web-security"), { recursive: true })],
+  ["missing receipt", ({ receipt }) => rm(receipt)],
+  ["invalid receipt", ({ receipt }) => writeFile(receipt, "{partial receipt")],
+  ["unsupported receipt", ({ receipt }) => writeFile(receipt, JSON.stringify({ schemaVersion: 999 }))],
+]) {
+  test(`installed CLI rebuilds after ${name}`, { timeout: 90000 }, async t => {
+    const f = await fixture(t);
+    const payload = await f.release("1.0.0");
+    await f.install(payload);
+    const client = path.join(f.home, ".openquantum-extensions/harness-web-capabilities/client.js");
+    const receipt = path.join(f.home, ".openquantum-extensions.json");
+    const expected = await readFile(client);
+    await damage({ client, receipt, home: f.home });
+    assert.equal(JSON.parse((await f.install(payload)).stdout).reusedExtensions, false);
+    assert.deepEqual(await readFile(client), expected);
+    assert.equal(JSON.parse((await f.install(payload)).stdout).reusedExtensions, true);
+  });
+}
+
+test("installed CLI supports forced repair of verified extensions", { timeout: 90000 }, async t => {
   const f = await fixture(t);
   const payload = await f.release("1.0.0");
   await f.install(payload);
   const client = path.join(f.home, ".openquantum-extensions/harness-web-capabilities/client.js");
-  const receipt = path.join(f.home, ".openquantum-extensions.json");
-  const expected = await readFile(client);
-  for (const [name, damage] of [
-    ["modified client", () => writeFile(client, "damaged client")],
-    ["missing client", () => rm(client)],
-    ["missing extension", () => rm(path.join(f.home, ".openquantum-extensions/harness-web-security"), { recursive: true })],
-    ["missing receipt", () => rm(receipt)],
-    ["invalid receipt", () => writeFile(receipt, "{partial receipt")],
-    ["unsupported receipt", () => writeFile(receipt, JSON.stringify({ schemaVersion: 999 }))],
-  ]) {
-    await t.test(name, async () => {
-      await damage();
-      assert.equal(JSON.parse((await f.install(payload)).stdout).reusedExtensions, false);
-      assert.deepEqual(await readFile(client), expected);
-      assert.equal(JSON.parse((await f.install(payload)).stdout).reusedExtensions, true);
-    });
-  }
   const before = await stat(client, { bigint: true });
   assert.equal(JSON.parse((await f.install(payload, "--rebuild-extensions")).stdout).reusedExtensions, false);
   assert.notEqual((await stat(client, { bigint: true })).mtimeNs, before.mtimeNs);
