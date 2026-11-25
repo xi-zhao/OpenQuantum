@@ -39,7 +39,7 @@ Session event log 为准，科学状态以 Acceptance Report 为准。2026-09 �
 ## 已知缺口与治理跟进
 
 - **科学验收**：L3 验收链目前仅覆盖 QGS、量子信息审计与 QCEC 分类复核（`L0=102, L1=93, L2=3, L3=3`），QEC memory 与 Hamiltonian simulation 已达到 L2（前者复核计数/区间、电路/DEM 与 seed；后者复核态、保真度、酉误差、门资源、Trotter 加密及 qDrift seed；均只产 observations），Codex 的自动物化与会话验收仍未接通；后续需避免仅扩充 SDK 数量而忽视高频能力的证据链提升。
-- **扩展与仓库治理**：[扩展治理清单](docs/architecture/EXTENSION_GOVERNANCE.md)新增 2026-11-25 成熟度快照并保留 2026-11-24 历史快照；`npm run governance:audit` 输出实时统计并检查声明内部一致性，无需随新增 Skill 改写快照。零引用的 `outputs/` 已清理并加入 `.gitignore`，[证据边界](docs/integrations/evidence/README.md)与[宣传素材边界](docs/communications/README.md)已落盘。`docs/communications/` 待迁出至外部归档后移除，`experiments/` 中非主页校验大文件边界待后续确认。
+- **扩展与仓库治理**：[扩展治理清单](docs/architecture/EXTENSION_GOVERNANCE.md)新增 2026-11-25 成熟度快照并保留 2026-11-24 历史快照；`npm run governance:audit` 输出实时统计并检查声明内部一致性，无需随新增 Skill 改写快照。零引用的 `outputs/` 已清理并加入 `.gitignore`，[证据边界](docs/integrations/evidence/README.md)与[宣传素材边界](docs/communications/README.md)已落盘。`docs/communications/` 待迁出至外部归档后移除，`experiments/` 已逐项核查 100 个原有文件：9 个二进制均受 provenance / 文档 / 脚本引用保护，未发现可删除的零引用一次性大文件；保留边界见[实验说明](experiments/README.md)。
 - **本地治理合流（未推送）**：`xi-zhao/chore-project-governance` 已依次以 `--no-ff` 合入三条修复分支；
   `c/shared-credential-redaction-rebased @ 3dc29060`、`c/desktop-preparation-reuse-rebased @ 35eb2f67`、
   `c/security-scientific-bridge-boundary-rebased @ 67d8c2fa` 的引用保留原位，可独立或合流交付 PR。
