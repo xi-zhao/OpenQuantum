@@ -3,6 +3,7 @@ import { projectRoot as repositoryRoot } from "../../project-root.mjs";
 import { pathToFileURL } from "node:url";
 
 import { defineScientificResultMaterializer } from "./scientific-result-materializer.mjs";
+import { confinedMcpLaunch } from "./execution-boundary.mjs";
 
 export const SOLVE_AND_VALIDATE_TOOL =
   "solve_and_validate_ground_state";
@@ -10,6 +11,15 @@ export const QUANTUM_INFORMATION_AUDIT_TOOL =
   "mcp__toqito_audit__audit_density_matrix";
 export const QUANTUM_CIRCUIT_VERIFICATION_TOOL =
   "mcp__qcec_local__verify_circuit_equivalence";
+export const QEC_MEMORY_TOOL = "mcp__qec_local__run_qec_memory_experiment";
+export const HAMILTONIAN_SIMULATION_TOOL = "mcp__hamiltonian_local__simulate_hamiltonian";
+export const QUBO_SOLVE_TOOL = "mcp__qpanda_qubo__solve_qpanda_qubo";
+export const QUBO_MODEL_TOOL = "mcp__qpanda_qubo__model_and_solve_qpanda_qubo";
+export const LDPC_DECODING_TOOL = "mcp__ldpc_local__decode_ldpc_syndromes";
+export const PYZX_OPTIMIZATION_TOOL = "mcp__pyzx_local__optimize_pyzx_circuit";
+export const SYMMER_TAPERING_TOOL = "mcp__symmer_local__taper_symmer_hamiltonian";
+export const PAULIE_ALGEBRA_TOOL = "mcp__paulie_local__analyze_paulie_algebra";
+export const GRAPHIX_MBQC_TOOL = "mcp__graphix_local__simulate_graphix_pattern";
 
 const GROUND_STATE_SKILL = ".agents/skills/quantum-ground-state";
 const QUANTUM_INFORMATION_SKILL =
@@ -63,8 +73,26 @@ function quantumCircuitRuntime() {
     import(moduleUrl(`${QUANTUM_CIRCUIT_SKILL}/core/request-contract.mjs`)),
     import(moduleUrl(`${QUANTUM_CIRCUIT_SKILL}/validators/validate-qcec-analysis.mjs`)),
     import(moduleUrl(`${QUANTUM_CIRCUIT_SKILL}/core/render-report.mjs`)),
+    import(moduleUrl("src/lib/local-json-process.mjs")),
   ]).then(modules => Object.assign({}, ...modules));
   return quantumCircuitRuntimePromise;
+}
+
+function createConfinedReferenceRunner(processSandbox, runLocalJsonProcess) {
+  return async function runReferenceProcess(options) {
+    options.signal?.throwIfAborted();
+    const launch = await confinedMcpLaunch(processSandbox, options);
+    try {
+      return await runLocalJsonProcess({
+        ...options,
+        command: launch.command,
+        args: launch.args,
+        env: { ...options.env, ...launch.env },
+      });
+    } finally {
+      await launch.dispose();
+    }
+  };
 }
 
 function validatorVersion(validatorId) {
@@ -214,7 +242,7 @@ const materializeQuantumCircuit = defineScientificResultMaterializer({
     { id: "qiskit-unitary-reference", path: `${QUANTUM_CIRCUIT_SKILL}/validators/reference.py`, version: "2.5.2" },
     { id: "qcec-environment-lock", path: `${QUANTUM_CIRCUIT_SKILL}/uv.lock`, version: "3.10.0+qiskit.2.5.2" },
   ],
-  async prepare({ request, structuredContent }) {
+  async prepare({ request, structuredContent, processSandbox }) {
     const runtime = await quantumCircuitRuntime();
     const normalized = runtime.normalizeAuditRequest(request);
     const canonicalRequest = { circuitAOpenQasm2: normalized.circuitAOpenQasm2, circuitBOpenQasm2: normalized.circuitBOpenQasm2 };
@@ -223,7 +251,10 @@ const materializeQuantumCircuit = defineScientificResultMaterializer({
       request: canonicalRequest,
       artifacts: [{ key: "analysis", id: "qcec-analysis", type: "qcec-analysis", fileName: "qcec-analysis.json", value: analysis }],
       validate({ resultPackage, profile, request: persistedRequest, artifacts, signal }) {
-        return runtime.validateMaterializedQcec({ request: persistedRequest, analysis: artifacts.analysis, resultPackage, profile, signal });
+        return runtime.validateMaterializedQcec({
+          request: persistedRequest, analysis: artifacts.analysis, resultPackage, profile, signal,
+          runReferenceProcess: createConfinedReferenceRunner(processSandbox, runtime.runLocalJsonProcess),
+        });
       },
       renderReport(context) { return runtime.renderClassificationReport(context); },
     };
@@ -232,6 +263,71 @@ const materializeQuantumCircuit = defineScientificResultMaterializer({
 
 function isRecord(value) {
   return value !== null && typeof value === "object" && !Array.isArray(value);
+}
+
+// Both numerical capabilities already own independent computational Validators.
+// This internal Adapter adds only their persisted-evidence boundary and projection.
+function numericalAdapter({ capabilityId, tool, operation, title, profileId, validatorId, artifactType, artifactKey, referenceFile, describe, selectArtifact = value => value?.[artifactKey] }) {
+  const skillPath = `.agents/skills/${capabilityId}`;
+  let runtimePromise;
+  const runtime = () => runtimePromise ??= Promise.all([
+    import(moduleUrl(`${skillPath}/validators/validate-materialized.mjs`)),
+    import(moduleUrl(`${skillPath}/core/render-report.mjs`)),
+    import(moduleUrl("src/lib/local-json-process.mjs")),
+  ]).then(modules => Object.assign({}, ...modules));
+  const project = value => {
+    if (value?.scientificValidation !== "observations_available" || !Array.isArray(value.validation?.observations)
+      || !isRecord(selectArtifact(value))) return undefined;
+    const details = describe(selectArtifact(value));
+    if (!details) return undefined;
+    return { schemaVersion: "1.0", capabilityId, operation, title,
+      summary: "已生成计算事实与独立观察；最终科学验收需物化证据后由中央规则推导。",
+      scientificStatus: "observations_available", details };
+  };
+  const materialize = defineScientificResultMaterializer({
+    capabilityId, skillPath, resultRoot: `results/openquantum/${capabilityId}`,
+    packagePrefix: capabilityId, inputId: "experiment-request", profileId, validatorId,
+    provenanceTools: ["mcp/server.mjs", "mcp/bridge.py", "validators/validate-result.mjs",
+      "validators/validate-materialized.mjs", referenceFile, "core/render-report.mjs", "uv.lock"].filter(Boolean).map(file => ({
+      id: `${capabilityId}-${file.replaceAll(/[/.]/g, "-")}`, path: `${skillPath}/${file}`,
+      version: capability => capability.manifest.version,
+    })),
+    async prepare({ request, structuredContent, processSandbox }) {
+      const implementation = await runtime();
+      const canonicalRequest = implementation.normalizeAuditRequest(request);
+      if (!project(structuredContent)) throw new Error(`Invalid ${capabilityId} computational envelope`);
+      return {
+        request: canonicalRequest,
+        artifacts: [{ key: artifactKey, id: artifactType, type: artifactType,
+          fileName: `${artifactType}.json`, value: selectArtifact(structuredContent) }],
+        validate({ request: persistedRequest, artifacts, ...context }) {
+          return implementation.validateMaterializedResult({
+            ...context,
+            request: persistedRequest,
+            [artifactKey]: artifacts[artifactKey],
+            // The reference starts in the Host, outside the MCP process tree.
+            // Reuse its temp-only, full-confinement boundary before spawning;
+            // shared Validators receive a runner, never a Harness dependency.
+            runReferenceProcess: createConfinedReferenceRunner(processSandbox, implementation.runLocalJsonProcess),
+          });
+        },
+        renderReport: implementation.renderReport,
+      };
+    },
+  });
+  return [tool, Object.freeze({
+    descriptor: Object.freeze({ capabilityId, operation, title,
+      scientificStatuses: Object.freeze(["observations_available", "acceptance_available"]),
+      materializedArtifactTypes: Object.freeze([artifactType]) }),
+    project,
+    materialize(context) { return materialize({ ...context, request: context.arguments, structuredContent: context.canonicalValue?.structuredContent }); },
+    projectMaterialized(canonicalValue, materialized) {
+      const presentation = materializedPresentation({ computational: project(canonicalValue?.structuredContent),
+        materialized, title, leadingDetails: details => details.slice(0, 2) });
+      return presentation && { ...presentation, details: [...presentation.details,
+        ...(materialized.readableReport ? [detail("可读验收报告", materialized.readableReport.path)] : [])] };
+    },
+  })];
 }
 
 function finiteNumber(value) {
@@ -452,6 +548,50 @@ function materializedPresentation({
 }
 
 const adapters = new Map([
+  ...[QUBO_SOLVE_TOOL, QUBO_MODEL_TOOL].map(tool => numericalAdapter({ capabilityId: "qpanda-qubo", tool,
+    operation: "qubo-audit", title: "QUBO 代数与最优性验收", profileId: "qubo-algebraic-optimality-audit",
+    validatorId: "qpanda-qubo-observations", artifactType: "qubo-result", artifactKey: "result",
+    selectArtifact: value => value,
+    describe: result => Number.isSafeInteger((result.solver ?? result).problem?.size)
+      ? [detail("变量数", String((result.solver ?? result).problem.size)), detail("主算法", (result.solver ?? result).quantum ? "QAOA" : "traversal")] : undefined })),
+  numericalAdapter({ capabilityId: "ldpc-decoding", tool: LDPC_DECODING_TOOL,
+    operation: "syndrome-audit", title: "LDPC syndrome 重放验收", profileId: "ldpc-syndrome-replay-audit",
+    validatorId: "ldpc-decoding-observations", artifactType: "ldpc-result", artifactKey: "result", referenceFile: "validators/reference.py",
+    describe: result => Number.isSafeInteger(result.statistics?.shots)
+      ? [detail("样本数", String(result.statistics.shots)), detail("syndrome 匹配数", String(result.statistics.syndromeMatchedCount))] : undefined }),
+  numericalAdapter({ capabilityId: "pyzx-optimization", tool: PYZX_OPTIMIZATION_TOOL,
+    operation: "zx-optimization", title: "PyZX 酉优化验收", profileId: "pyzx-unitary-optimization-audit",
+    validatorId: "pyzx-optimization-observations", artifactType: "numerical-result", artifactKey: "result",
+    describe: result => Number.isSafeInteger(result.before?.gates) && Number.isSafeInteger(result.after?.gates)
+      && Number.isSafeInteger(result.before?.tCount) && Number.isSafeInteger(result.after?.tCount)
+      ? [detail("门数变化", `${result.before.gates} -> ${result.after.gates}`), detail("T 门变化", `${result.before.tCount} -> ${result.after.tCount}`)] : undefined }),
+  numericalAdapter({ capabilityId: "symmer-tapering", tool: SYMMER_TAPERING_TOOL,
+    operation: "symmetry-tapering", title: "Symmer 对称性降比特验收", profileId: "symmer-sector-spectrum-audit",
+    validatorId: "symmer-tapering-observations", artifactType: "numerical-result", artifactKey: "result", referenceFile: "validators/reference.py",
+    describe: result => Number.isSafeInteger(result.reducedQubits)
+      && (Number.isSafeInteger(result.sectorDimension) || (typeof result.sectorDimension === "string" && /^[1-9][0-9]*$/.test(result.sectorDimension)))
+      ? [detail("降维量子位数", String(result.reducedQubits)), detail("扇区维数", String(result.sectorDimension))] : undefined }),
+  numericalAdapter({ capabilityId: "paulie-algebra", tool: PAULIE_ALGEBRA_TOOL,
+    operation: "lie-closure", title: "PauLie 动力学 Lie 代数验收", profileId: "paulie-lie-closure-audit",
+    validatorId: "paulie-algebra-observations", artifactType: "numerical-result", artifactKey: "result",
+    describe: result => (Number.isSafeInteger(result.dimension) || (typeof result.dimension === "string" && /^[1-9][0-9]*$/.test(result.dimension)))
+      && typeof result.classification === "string" && result.classification.length > 0 && result.classification.length <= 160
+      ? [detail("DLA 维数", String(result.dimension)), detail("分类标记", result.classification)] : undefined }),
+  numericalAdapter({ capabilityId: "graphix-mbqc", tool: GRAPHIX_MBQC_TOOL,
+    operation: "mbqc-pattern", title: "Graphix MBQC 模式验收", profileId: "graphix-mbqc-pattern-audit",
+    validatorId: "graphix-mbqc-observations", artifactType: "numerical-result", artifactKey: "result",
+    describe: result => Array.isArray(result.nodes) && Number.isSafeInteger(result.maxSpace) && Array.isArray(result.branches)
+      ? [detail("资源节点数", String(result.nodes.length)), detail("模拟分支数", String(result.branches.length))] : undefined }),
+  numericalAdapter({ capabilityId: "qec-memory-experiment", tool: QEC_MEMORY_TOOL,
+    operation: "memory-experiment", title: "QEC 存储实验验收", profileId: "rotated-surface-memory-audit",
+    validatorId: "memory-observations", artifactType: "memory-result", artifactKey: "facts", referenceFile: "validators/replay.py",
+    describe: facts => Number.isSafeInteger(facts.result?.shots) && Number.isSafeInteger(facts.result?.logicalErrors)
+      ? [detail("采样数", String(facts.result.shots)), detail("逻辑失败数", String(facts.result.logicalErrors))] : undefined }),
+  numericalAdapter({ capabilityId: "hamiltonian-simulation", tool: HAMILTONIAN_SIMULATION_TOOL,
+    operation: "pauli-evolution", title: "Hamiltonian 演化验收", profileId: "pauli-evolution-reference-audit",
+    validatorId: "hamiltonian-observations", artifactType: "hamiltonian-result", artifactKey: "result", referenceFile: "validators/reference.py",
+    describe: result => ["trotter", "qdrift"].includes(result.method) && Number.isSafeInteger(result.numQubits)
+      ? [detail("演化方法", result.method), detail("量子位数", String(result.numQubits))] : undefined }),
   [QUANTUM_CIRCUIT_VERIFICATION_TOOL, Object.freeze({
     descriptor: Object.freeze({ capabilityId: "quantum-circuit-verification", operation: "verify-circuit-equivalence",
       title: "电路判定复核", scientificStatuses: Object.freeze(["observations_available", "acceptance_available"]),
@@ -551,6 +691,15 @@ const adapters = new Map([
 
 export function scientificResultAdapter(toolName) {
   const name = toolName === "audit_density_matrix" ? QUANTUM_INFORMATION_AUDIT_TOOL
-    : toolName === "verify_circuit_equivalence" ? QUANTUM_CIRCUIT_VERIFICATION_TOOL : toolName;
+    : toolName === "verify_circuit_equivalence" ? QUANTUM_CIRCUIT_VERIFICATION_TOOL
+    : toolName === "run_qec_memory_experiment" ? QEC_MEMORY_TOOL
+    : toolName === "solve_qpanda_qubo" ? QUBO_SOLVE_TOOL
+    : toolName === "model_and_solve_qpanda_qubo" ? QUBO_MODEL_TOOL
+    : toolName === "decode_ldpc_syndromes" ? LDPC_DECODING_TOOL
+    : toolName === "optimize_pyzx_circuit" ? PYZX_OPTIMIZATION_TOOL
+    : toolName === "taper_symmer_hamiltonian" ? SYMMER_TAPERING_TOOL
+    : toolName === "analyze_paulie_algebra" ? PAULIE_ALGEBRA_TOOL
+    : toolName === "simulate_graphix_pattern" ? GRAPHIX_MBQC_TOOL
+    : toolName === "simulate_hamiltonian" ? HAMILTONIAN_SIMULATION_TOOL : toolName;
   return adapters.get(name);
 }

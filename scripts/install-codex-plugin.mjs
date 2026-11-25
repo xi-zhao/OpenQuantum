@@ -1,3 +1,4 @@
+import { isMainModule } from "../src/lib/cli-entrypoint.mjs";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
@@ -146,7 +147,7 @@ export async function installPlugin(archivePath, { home = os.homedir(), offline 
   return { version: archive.version, pluginDirectory, runtimeDirectory, archiveSha256: archive.digest, probe };
 }
 
-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (isMainModule(import.meta.url)) {
   const root = fileURLToPath(new URL("../", import.meta.url));
   const { version } = JSON.parse(await fs.readFile(path.join(root, "distributions/codex-plugin/package.json"), "utf8"));
   const args = process.argv.slice(2);

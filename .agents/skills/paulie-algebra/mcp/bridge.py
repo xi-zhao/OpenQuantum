@@ -68,7 +68,7 @@ def compute(v):
         if dimension != reference_dimension or span_error > 1e-8:
             raise ValueError("PauLie classification disagrees with the independent dense Lie span")
     return {
-        "dimension": json_integer(dimension), "referenceDimension": json_integer(reference_dimension) if reference_dimension is not None else None,
+        "dimension": json_integer(dimension), "centerDimension": sum(all(get_pauli_string(word).commutes_with(generator) for generator in generators) for word in closure) if closure is not None else None, "referenceDimension": json_integer(reference_dimension) if reference_dimension is not None else None,
         "classification": classification, "fullSpecialUnitaryDimension": json_integer(4 ** n - 1),
         "generatesFullSpecialUnitary": dimension == 4 ** n - 1, "reference": reference,
         "closure": closure if enumerate_closure else None, "closureStatus": "computed" if enumerate_closure else "not_run",

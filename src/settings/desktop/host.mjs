@@ -1,3 +1,4 @@
+import { confinedMcpLaunch, protectExecutionRoots } from "../../../runtime/openquantum/agent-presets/openquantum/execution-boundary.mjs";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { Service } from "@deepseek-ai/cordis";
@@ -5,7 +6,11 @@ import { createDesktopApplication } from "./application.mjs";
 import { createCapabilitySettingsHandler } from "../../../runtime/openquantum/web-capabilities/index.mjs";
 
 export async function apply(ctx, { root, nodeExecutable, directory = path.join(process.env.DSH_HOME, ".openquantum/capabilities") }) {
-  const application = await createDesktopApplication({ root, directory, nodeExecutable, credentials: ctx.credentials });
+  const application = await createDesktopApplication({ root, directory, nodeExecutable, credentials: ctx.credentials,
+    confine: launch => confinedMcpLaunch(ctx.get("sandbox"), launch) });
+  // Desktop prepares environments under its settings directory. Protect their
+  // actual interpreter targets too, including environments installed later.
+  protectExecutionRoots(ctx, { root, environment: application.settings.environments.environment });
   class CapabilityInterface extends Service {
     constructor() { super(ctx, "openquantumCapabilities"); this.application = application; }
   }

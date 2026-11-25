@@ -1,0 +1,52 @@
+{
+  "request": {
+    "referenceMode": "skip",
+    "numQubits": 2,
+    "terms": [
+      {
+        "pauli": "ZI",
+        "coefficient": 1
+      },
+      {
+        "pauli": "IZ",
+        "coefficient": 0.5
+      },
+      {
+        "pauli": "XX",
+        "coefficient": 0.3
+      }
+    ],
+    "symmetries": [
+      {
+        "pauli": "ZZ",
+        "sector": 1
+      }
+    ],
+    "execution": {}
+  },
+  "result": {
+    "reducedQubits": 1,
+    "sectorDimension": 2,
+    "reducedTerms": [
+      {
+        "pauli": "X",
+        "coefficient": -0.3
+      },
+      {
+        "pauli": "Z",
+        "coefficient": 1.5
+      }
+    ],
+    "reference": {
+      "mode": "skip",
+      "status": "not_run",
+      "method": "Independent dense projection and full spectrum of the selected symmetry sector",
+      "reason": "Reference explicitly skipped by the caller."
+    },
+    "reducedSpectrum": null,
+    "referenceSectorSpectrum": null,
+    "maxSpectrumError": null,
+    "projectorIdempotenceError": null,
+    "bitOrder": "left-to-right tensor factors; reduced qubits use Symmer's transformed basis"
+  }
+}

@@ -1,0 +1,431 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "nodes": {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991
+      },
+      "minItems": 1
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "minItems": 2,
+        "maxItems": 2
+      },
+      "minItems": 0
+    },
+    "inputNodes": {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991
+      },
+      "minItems": 1
+    },
+    "outputNodes": {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991
+      },
+      "minItems": 1
+    },
+    "maxSpace": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+    },
+    "pattern": {
+      "type": "string"
+    },
+    "simulation": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "enum": [
+            "computed",
+            "not_run"
+          ]
+        },
+        "backend": {
+          "const": "statevector"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "status",
+        "backend",
+        "reason"
+      ],
+      "additionalProperties": false
+    },
+    "referenceStatevector": {
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "number",
+              "minimum": -1.00000001,
+              "maximum": 1.00000001
+            },
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "minItems": 2
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "branches": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "seed": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "statevector": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "number",
+                "minimum": -1.00000001,
+                "maximum": 1.00000001
+              },
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "minItems": 2
+          },
+          "fidelity": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1.00000001
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "normError": {
+            "type": "number",
+            "minimum": 0
+          },
+          "measurements": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "node": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "outcome": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 1
+                }
+              },
+              "required": [
+                "node",
+                "outcome"
+              ],
+              "additionalProperties": false
+            },
+            "minItems": 0
+          }
+        },
+        "required": [
+          "seed",
+          "statevector",
+          "fidelity",
+          "normError",
+          "measurements"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0
+    },
+    "maxInfidelity": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "bitOrder": {
+      "const": "left-to-right logical q0,q1,... mapped by outputNodes"
+    },
+    "reference": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": [
+            "auto",
+            "required",
+            "skip"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "computed",
+            "not_run"
+          ]
+        },
+        "method": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 400
+        }
+      },
+      "required": [
+        "mode",
+        "status",
+        "method",
+        "reason"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "nodes",
+    "edges",
+    "inputNodes",
+    "outputNodes",
+    "maxSpace",
+    "pattern",
+    "simulation",
+    "referenceStatevector",
+    "branches",
+    "maxInfidelity",
+    "bitOrder",
+    "reference"
+  ],
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "reference": {
+            "properties": {
+              "status": {
+                "const": "computed"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "type": "object"
+      },
+      "then": {
+        "properties": {
+          "referenceStatevector": {
+            "not": {
+              "type": "null"
+            }
+          },
+          "maxInfidelity": {
+            "not": {
+              "type": "null"
+            }
+          }
+        },
+        "type": "object"
+      },
+      "else": {
+        "properties": {
+          "referenceStatevector": {
+            "type": "null"
+          },
+          "maxInfidelity": {
+            "type": "null"
+          }
+        },
+        "type": "object"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "reference": {
+            "properties": {
+              "mode": {
+                "const": "required"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "type": "object"
+      },
+      "then": {
+        "properties": {
+          "reference": {
+            "properties": {
+              "status": {
+                "const": "computed"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "type": "object"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "reference": {
+            "properties": {
+              "mode": {
+                "const": "skip"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "type": "object"
+      },
+      "then": {
+        "properties": {
+          "reference": {
+            "properties": {
+              "status": {
+                "const": "not_run"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "type": "object"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "reference": {
+            "properties": {
+              "status": {
+                "const": "computed"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "type": "object"
+      },
+      "then": {
+        "properties": {
+          "branches": {
+            "minItems": 1,
+            "items": {
+              "properties": {
+                "fidelity": {
+                  "type": "number"
+                }
+              },
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "else": {
+        "properties": {
+          "branches": {
+            "items": {
+              "properties": {
+                "fidelity": {
+                  "type": "null"
+                }
+              },
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "simulation": {
+            "properties": {
+              "status": {
+                "const": "not_run"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "type": "object"
+      },
+      "then": {
+        "properties": {
+          "branches": {
+            "maxItems": 0,
+            "type": "array"
+          },
+          "reference": {
+            "properties": {
+              "status": {
+                "const": "not_run"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "type": "object"
+      },
+      "else": {
+        "properties": {
+          "branches": {
+            "minItems": 1,
+            "type": "array"
+          }
+        },
+        "type": "object"
+      }
+    }
+  ]
+}

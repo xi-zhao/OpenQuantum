@@ -146,8 +146,8 @@
       }
     },
     "acceptanceProfiles": {
+      "description": "An empty list declares observations only; no Acceptance can be built.",
       "type": "array",
-      "minItems": 1,
       "items": {
         "type": "object",
         "additionalProperties": false,

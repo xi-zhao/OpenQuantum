@@ -1,0 +1,107 @@
+schemaVersion: "1.1"
+id: hamiltonian-simulation
+version: 1.1.0
+displayName: Hamiltonian product-formula observations
+description: Independent matrix, resource and sampling checks with materialized, replayable central Acceptance.
+maturity:
+  status: draft
+  evidence:
+    - id: local-observations-2026-11-25
+      kind: eval-report
+      path: evals/evidence-phase5.json
+      sha256: 3841016a4ad6cd5d2ca1841fa03b69ce5fd570bcd81d93142ab2cd9c41dfe132
+skill:
+  name: hamiltonian-simulation
+  entrypoint: SKILL.md
+scope:
+  supportedClaims:
+    - State normalization, state fidelity and full-unitary errors agree with an independent spectral reference.
+    - Emitted gates, wires, rotation angles and resources match the requested product formula.
+    - Trotter spectral errors at N, 2N and 4N obey a conservative remainder bound; observed convergence is conditional on a resolved asymptotic regime.
+    - qDrift uses exactly the requested sampling budget and replays with pinned NumPy PCG64 on the same machine.
+  outOfScope:
+    - Hardware accuracy, quantum advantage and universal single-realization qDrift error guarantees.
+    - Exact arithmetic proofs or independent validation of NumPy linear algebra and RNG implementations.
+  examples:
+    - title: Compare product formulas
+      prompt: Compare first and second order Trotter errors at 8 and 16 steps for a real Pauli Hamiltonian.
+input:
+  id: experiment-request
+  schema: inputs/request.schema.json
+  maxBytes: 65536
+  mediaTypes: [application/json]
+artifacts:
+  - id: hamiltonian-result
+    schema: artifacts/hamiltonian-simulation-result.schema.json
+    required: true
+    mediaType: application/json
+validators:
+  - id: hamiltonian-observations
+    version: 1.0.0
+    command:
+      executable: node
+      script: validators/validate-result.mjs
+      args: []
+      shell: false
+acceptanceProfiles:
+  - id: pauli-evolution-reference-audit
+    version: 1.0.0
+    validator: hamiltonian-observations
+    definition:
+      path: acceptance-profiles/pauli-evolution-reference-audit-v1.json
+      sha256: 2fda14b806a5da81c63de39c7d867bcd5cb48eaea9adc8ae36778dede40c68aa
+reproductionProfiles: []
+modelRequirements:
+  textGeneration: false
+  toolCalling: false
+  structuredOutput: false
+permissions:
+  network:
+    mode: none
+    destinations: []
+  filesystem:
+    read: [prepared-runtime, structured-result]
+    write: [temporary-compute-cache, workspace/results]
+  subprocess:
+    allowed: true
+    commands: [python]
+  cloudCompute:
+    allowed: false
+    providers: []
+  limits:
+    wallTimeSeconds: null
+    memoryMiB: null
+    maxArtifacts: 1
+    maxCostUsd: 0
+  data:
+    classification: public
+    retentionDays: 0
+    externalTransfer: forbidden
+    licenses: [MIT]
+evals:
+  runner:
+    executable: node
+    script: evals/run-evals.mjs
+    args: []
+    shell: false
+  suite:
+    id: hamiltonian-observations-eval
+    version: 1.0.0
+    path: evals/suite.json
+    sha256: bc713b97ce53ca098f972abe0f67c322e49e8e5fbe2e90e5d075770dc3f6a3c6
+compatibility:
+  contract: "1.1"
+  harness: 0.1.0-rc.6
+dependencies:
+  - id: qiskit
+    kind: scientific-backend
+    version: 2.5.2
+    digest: 29be3d89c73a3a5dd34c4826daff00bc02f6cbcde8355ed070675581b6cfab46
+  - id: numpy
+    kind: scientific-backend
+    version: 2.5.3
+    digest: 29be3d89c73a3a5dd34c4826daff00bc02f6cbcde8355ed070675581b6cfab46
+  - id: scipy
+    kind: scientific-backend
+    version: 1.18.1
+    digest: 29be3d89c73a3a5dd34c4826daff00bc02f6cbcde8355ed070675581b6cfab46

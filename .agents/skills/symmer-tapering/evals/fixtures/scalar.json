@@ -1,0 +1,76 @@
+{
+  "request": {
+    "numQubits": 1,
+    "terms": [
+      {
+        "pauli": "Z",
+        "coefficient": 2
+      }
+    ],
+    "symmetries": [
+      {
+        "pauli": "Z",
+        "sector": -1
+      }
+    ],
+    "referenceMode": "auto",
+    "execution": {}
+  },
+  "result": {
+    "reducedQubits": 0,
+    "sectorDimension": 1,
+    "reducedTerms": [
+      {
+        "pauli": "",
+        "coefficient": -2
+      }
+    ],
+    "reference": {
+      "mode": "auto",
+      "status": "computed",
+      "method": "Independent dense projection and full spectrum of the selected symmetry sector",
+      "reason": "Independent reference computed for this input."
+    },
+    "reducedSpectrum": [
+      -2
+    ],
+    "referenceSectorSpectrum": [
+      -2
+    ],
+    "maxSpectrumError": 0,
+    "projectorIdempotenceError": 0,
+    "bitOrder": "left-to-right tensor factors; reduced qubits use Symmer's transformed basis"
+  },
+  "reference": {
+    "request": {
+      "numQubits": 1,
+      "terms": [
+        {
+          "pauli": "Z",
+          "coefficient": 2
+        }
+      ],
+      "symmetries": [
+        {
+          "pauli": "Z",
+          "sector": -1
+        }
+      ],
+      "referenceMode": "auto",
+      "execution": {}
+    },
+    "reducedTerms": [
+      {
+        "pauli": "",
+        "coefficient": -2
+      }
+    ],
+    "sectorSpectrum": [
+      -2
+    ],
+    "spectrum": [
+      -2
+    ],
+    "projectorError": 0
+  }
+}

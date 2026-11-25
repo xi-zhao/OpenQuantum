@@ -8,6 +8,7 @@ import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js"
 import { readDeclaredMcpToolContract } from "../scripts/lib/capability-tool-contract.mjs";
 import { sha256 } from "../src/lib/bounded-science-mcp.mjs";
 import { definition } from "../.agents/skills/pairinteraction-rydberg/mcp/contracts.mjs";
+import { copyModuleGraph } from "./helpers/module-graph.mjs";
 
 const id = "pairinteraction-rydberg";
 const name = "calculate_rydberg_pair";
@@ -45,7 +46,8 @@ test("independent PairInteraction MCP: setup boundary, policy, provenance, failu
   const modeFile = path.join(sandbox, "mode");
   const envFile = path.join(sandbox, "worker-env.json");
   // A private project copy lets us replace only its interpreter, never the real environment.
-  for (const file of ["mcp/server.mjs", "mcp/contracts.mjs", "uv.lock", "database-lock.json"].map(file => `${relative}/${file}`).concat(["src/lib/local-json-process.mjs", "src/lib/bounded-science-mcp.mjs", "src/lib/prepared-python.mjs", "src/lib/science-execution.mjs", "src/lib/local-compute-policy.mjs"])) {
+  await copyModuleGraph(root, sandbox, [`${relative}/mcp/server.mjs`]);
+  for (const file of ["uv.lock", "database-lock.json"].map(file => `${relative}/${file}`)) {
     await mkdir(path.dirname(path.join(sandbox, file)), { recursive: true });
     await copyFile(path.join(root, file), path.join(sandbox, file));
   }

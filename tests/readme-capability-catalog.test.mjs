@@ -60,6 +60,46 @@ const declaredServers = report.packages.flatMap((entry) => entry.execution.mcpSe
 const declaredNativeTools = report.packages.flatMap((entry) => entry.execution.nativeTools)
   .filter((tool) => ["./native-quantum-tools.mjs", "./quantum-practices-tools.mjs", "./metriq-data-tools.mjs"].includes(tool.providerPlugin));
 
+// Read the prose already maintained by each edition; counts come from the
+// capability declarations above, not a second generated inventory.
+const countPatterns = {
+  zh: [/(\d+) 个内置 Skill/g, /(\d+) 个 MCP 服务连接/g, /(\d+) 个原生量子 Tool/g],
+  en: [/(\d+) built-in Skills/g, /(\d+) MCP service connections/g, /(\d+) native quantum Tools/g],
+  ja: [/(\d+) 個の組み込み Skill/g, /(\d+) 個の MCP サービス接続/g, /(\d+) 個のネイティブ量子 Tool/g],
+  ko: [/내장 Skill (\d+)개/g, /MCP 서비스 연결 (\d+)개/g, /네이티브 양자 Tool (\d+)개/g],
+  es: [/(\d+) Skills integradas/g, /(\d+) conexiones de servicios MCP/g, /(\d+) Tools cuánticas nativas/g],
+  fr: [/(\d+) Skills intégrés/g, /(\d+) connexions de services MCP/g, /(\d+) Tools quantiques natifs/g],
+  de: [/(\d+) integrierte[n]? Skills/g, /(\d+) MCP-Dienstverbindungen/g, /(\d+) native Quanten-Tools/g],
+  pt: [/(\d+) Skills integradas/g, /(\d+) conexões de serviços MCP/g, /(\d+) Tools quânticas nativas/g],
+  ru: [/(\d+) встроенных Skill/g, /(\d+) подключение сервисов MCP/g, /(\d+) нативных квантовых Tools/g],
+  ar: [/(\d+) Skill مدمجة/g, /(\d+) اتصال خدمة MCP/g, /(\d+) Tools كمية أصلية/g],
+};
+const languages = JSON.parse(await readFile(new URL("../runtime/openquantum/web-locales/languages.json", import.meta.url), "utf8"));
+const { version } = JSON.parse(await readFile(new URL("../package.json", import.meta.url), "utf8"));
+for (const { id } of languages) {
+  test(`${id} README counts and Codex installation links match the current distribution`, async () => {
+    const filename = id === "zh" ? "README.md" : `docs/readme/README.${id}.md`;
+    const markdown = await readFile(new URL(`../${filename}`, import.meta.url), "utf8");
+    const prose = markdown.replace(/<[^>]+>/g, "");
+    assert.ok(countPatterns[id], `${id}: missing translated inventory checks`);
+    const expected = [trackedSkillIds.length, declaredServers.length, declaredNativeTools.length];
+    for (const [index, pattern] of countPatterns[id].entries()) {
+      const matches = [...prose.matchAll(pattern)];
+      assert.ok(matches.length, `${filename}: missing inventory count ${index}`);
+      for (const match of matches) assert.equal(Number(match[1]), expected[index], `${filename}: stale count in ${match[0]}`);
+    }
+    const release = "https://github.com/xi-zhao/OpenQuantum";
+    assert.ok(markdown.includes(`${release}/blob/codex-v${version}/docs/integrations/CODEX_AGENT_INSTALL.md`));
+    assert.ok(markdown.includes(`${release}/releases/tag/codex-v${version}`));
+    const links = [...markdown.matchAll(/https:\/\/github\.com\/xi-zhao\/OpenQuantum\/[^\s)]+\/codex-v(\d+\.\d+\.\d+)/g)];
+    assert.ok(links.length);
+    for (const link of links) assert.equal(link[1], version, `${filename}: stale Codex URL`);
+    if (id !== "zh") {
+      assert.ok(markdown.includes(`${release}/releases/download/codex-v${version}/openquantum-${version}-codex-install.zip`));
+    }
+  });
+}
+
 test("both Skill catalogs enumerate every source-distributed Skill exactly once", () => {
   assert.deepEqual([...skills.keys()].sort(), trackedSkillIds);
   assert.deepEqual([...catalogRows(skillReadme, "## 当前 Skill").keys()].sort(), trackedSkillIds);

@@ -1,0 +1,82 @@
+{
+  "schemaVersion": "1.0",
+  "id": "pyzx-unitary-optimization-audit",
+  "version": "1.0.0",
+  "scope": {
+    "supportedClaims": [
+      "Persisted bounded Clifford+T optimization evidence with independent QASM parsing, resource recounting, dense unitary equivalence (<=6 qubits) and central Acceptance."
+    ],
+    "outOfScope": [
+      "Hardware routing, noise/measurement semantics, guaranteed gate-count reduction or independent dense unitary proof beyond 6 qubits, 512 input gates or 2048 emitted gates.",
+      "Independent proof of upstream PyZX rewrite soundness across arbitrary circuits."
+    ]
+  },
+  "checks": [
+    {
+      "id": "request.schema",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Persisted optimization request satisfies its JSON Schema and bounded gate contract."
+    },
+    {
+      "id": "artifact.schema",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Persisted optimization result satisfies its JSON Schema."
+    },
+    {
+      "id": "circuit.structure",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Independently parse every emitted before/after OpenQASM 2 gate, angle, arity and wire."
+    },
+    {
+      "id": "input.structure",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Emitted input gate table exactly binds to the request, including the declared Y-to-X-then-Z expansion."
+    },
+    {
+      "id": "resources.replayed",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Before and after gate, T, two-qubit counts and dependency depth match independent recount."
+    },
+    {
+      "id": "reference.policy",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Reported reference mode binds to the requested referenceMode."
+    },
+    {
+      "id": "input.binding",
+      "category": "scientific",
+      "required": false,
+      "criterion": "When within <=6 qubits, <=512 input gates, <=2048 emitted gates and reference enabled, emitted input QASM reproduces the original unitary up to global phase."
+    },
+    {
+      "id": "unitary.equivalence",
+      "category": "scientific",
+      "required": false,
+      "criterion": "When within <=6 qubits, <=512 input gates, <=2048 emitted gates and reference enabled, independent dense matrix multiplication confirms global-phase-aligned unitary equivalence and unit normalized trace overlap."
+    },
+    {
+      "id": "unitary.claims",
+      "category": "scientific",
+      "required": false,
+      "criterion": "When the Tool reports a computed unitary reference, its equivalence flag and max error match independent recomputation."
+    },
+    {
+      "id": "observations.integrity",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Every performed independent check is non-failing; optional reference availability cannot hide a scientific contradiction."
+    },
+    {
+      "id": "provenance.complete",
+      "category": "reproducibility",
+      "required": true,
+      "criterion": "Actual re-read canonical input and artifact bytes match their digests and actual Harness event range."
+    }
+  ]
+}

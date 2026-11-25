@@ -2,7 +2,8 @@
 
 - 调研日期：2026-10-28；OpenQuantum 基线 `e70af1722e48025e705055a856f7c15fad51ac56`。
 - 来源：用户在本轮四任务手动联调中明确要求接入 Lean 4、mathlib 与 physlib；不是将三个现有项目描述为今日新建库。
-- 候选作为一个共享的 `lean-physics` 能力进入接入队列；沿用同一 PR 实现，用户可关闭或暂停。
+- **状态：已合入主线。** 已交付 [`lean-physics`](../../../.agents/skills/lean-physics/SKILL.md) 与固定工具链证据（[lean-physics-2026-10-28.json](../../integrations/evidence/lean-physics-2026-10-28.json)）；以下保留原候选阶段记录。
+- 原提案状态：候选作为一个共享的 `lean-physics` 能力进入接入队列；沿用同一 PR 实现，用户可关闭或暂停。
 
 ## 用户问题与增量价值
 

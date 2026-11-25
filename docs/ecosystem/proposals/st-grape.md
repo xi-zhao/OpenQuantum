@@ -3,7 +3,7 @@
 - 调研日期：2026-11-08（Asia/Shanghai）；OpenQuantum 基线 `0da563fa87c6592a8923d2eb98eea80f484d2151`。
 - 官方仓库：[Fanyd271/ST-GRAPE](https://github.com/Fanyd271/ST-GRAPE)；稳定发布 [v1.0.0](https://github.com/Fanyd271/ST-GRAPE/releases/tag/v1.0.0)，发布时间 2026-11-07 12:04（北京时间）。
 - 固定源码：[`5f0d75dd250649b0a8ff629b104a4fc30c9b6c5b`](https://github.com/Fanyd271/ST-GRAPE/tree/5f0d75dd250649b0a8ff629b104a4fc30c9b6c5b)；annotated tag 对象为 `9108e1d41ad0b13d99ed3e11936b171f606f07cd`。
-- 11 月 8 日候选规格与一手资料保留如下。11 月 22 日在同一 PR 完成固定版本的 SDK 接入与可复核的小规模对照，实测范围见文末。
+- **状态：已合入主线（[PR #81](https://github.com/xi-zhao/OpenQuantum/pull/81)）。** 已交付 [`stgrape-control`](../../../.agents/skills/stgrape-control/SKILL.md) 与固定验证证据（[stgrape-2026-11-22.json](../../integrations/evidence/stgrape-2026-11-22.json)）；11 月 8 日候选规格与 11 月 22 日实测对照保留如下。
 
 ## 用户任务与增量价值
 

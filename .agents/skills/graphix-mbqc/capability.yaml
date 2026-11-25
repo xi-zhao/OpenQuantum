@@ -1,0 +1,104 @@
+schemaVersion: "1.1"
+id: graphix-mbqc
+version: 1.1.0
+displayName: graphix-mbqc independent observations
+description: Independent observations with persisted evidence and replayable central Acceptance.
+maturity:
+  status: draft
+  evidence:
+    - id: independent-observations-2026-11-25
+      kind: eval-report
+      path: evals/evidence-2026-11-25.json
+      sha256: 7c8ba33a453a333fb2a117683d4744753462f4889af0ef3852832225cd5b5609
+skill:
+  name: graphix-mbqc
+  entrypoint: SKILL.md
+scope:
+  supportedClaims:
+    - Independent input circuit state, Born probabilities, normalization and
+      sampled adaptive pattern/byproduct replay for <=10 logical/live qubits.
+  outOfScope:
+    - Unobserved branches, arbitrary-input channel equivalence, noise or
+      hardware performance.
+  examples:
+    - title: Independent local audit
+      prompt: Run the fixed numerical example and explain its independent observations.
+input:
+  id: experiment-request
+  schema: inputs/request.schema.json
+  maxBytes: 65536
+  mediaTypes:
+    - application/json
+artifacts:
+  - id: numerical-result
+    schema: artifacts/result.schema.json
+    required: true
+    mediaType: application/json
+validators:
+  - id: graphix-mbqc-observations
+    version: 1.0.0
+    command:
+      executable: node
+      script: validators/validate-result.mjs
+      args: []
+      shell: false
+acceptanceProfiles:
+  - id: graphix-mbqc-pattern-audit
+    version: 1.0.0
+    validator: graphix-mbqc-observations
+    definition:
+      path: acceptance-profiles/graphix-mbqc-pattern-audit-v1.json
+      sha256: 35a4bdd21c564433bd8dd3002efa80c0b4da0b58f936a3c754bec2e6834393bf
+reproductionProfiles: []
+modelRequirements:
+  textGeneration: false
+  toolCalling: false
+  structuredOutput: false
+permissions:
+  network:
+    mode: none
+    destinations: []
+  filesystem:
+    read:
+      - prepared-runtime
+      - structured-result
+    write:
+      - temporary-compute-cache
+      - workspace/results
+  subprocess:
+    allowed: true
+    commands:
+      - python
+  cloudCompute:
+    allowed: false
+    providers: []
+  limits:
+    wallTimeSeconds: null
+    memoryMiB: null
+    maxArtifacts: 1
+    maxCostUsd: 0
+  data:
+    classification: public
+    retentionDays: 0
+    externalTransfer: forbidden
+    licenses:
+      - MIT
+evals:
+  runner:
+    executable: node
+    script: evals/run-evals.mjs
+    args: []
+    shell: false
+  suite:
+    id: graphix-mbqc-observations-eval
+    version: 1.0.0
+    path: evals/suite.json
+    sha256: 009c80c4bbd8654ead67e68d00775a69bdc86a283b52bcab8021a93dbd1f3502
+compatibility:
+  contract: "1.1"
+  harness: 0.1.0-rc.6
+dependencies:
+  - id: graphix
+    kind: scientific-backend
+    version: 0.4.1
+    digest: fc63c9cdfe80a5336b31ff88bec2f38978e082bde7be0481634cdf911cdfa5e1

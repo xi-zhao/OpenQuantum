@@ -1,0 +1,104 @@
+schemaVersion: "1.1"
+id: paulie-algebra
+version: 1.1.0
+displayName: paulie-algebra independent observations
+description: Independent observations with persisted evidence and replayable central Acceptance.
+maturity:
+  status: draft
+  evidence:
+    - id: independent-observations-2026-11-25
+      kind: eval-report
+      path: evals/evidence-2026-11-25.json
+      sha256: 3853b19f7046e1865384e18e3581b3ee7f5c497c6f9808ec9d2db9e9d6444fae
+skill:
+  name: paulie-algebra
+  entrypoint: SKILL.md
+scope:
+  supportedClaims:
+    - Exact nested Pauli commutator closure, orthogonal basis, DLA and center
+      dimensions for <=4 qubits; dense pairwise audit for <=3 qubits.
+  outOfScope:
+    - Finite-depth ansatz performance, pulse reachability and hardware
+      controllability.
+  examples:
+    - title: Independent local audit
+      prompt: Run the fixed numerical example and explain its independent observations.
+input:
+  id: experiment-request
+  schema: inputs/request.schema.json
+  maxBytes: 65536
+  mediaTypes:
+    - application/json
+artifacts:
+  - id: numerical-result
+    schema: artifacts/result.schema.json
+    required: true
+    mediaType: application/json
+validators:
+  - id: paulie-algebra-observations
+    version: 1.0.0
+    command:
+      executable: node
+      script: validators/validate-result.mjs
+      args: []
+      shell: false
+acceptanceProfiles:
+  - id: paulie-lie-closure-audit
+    version: 1.0.0
+    validator: paulie-algebra-observations
+    definition:
+      path: acceptance-profiles/paulie-lie-closure-audit-v1.json
+      sha256: df49bf8f9a8192467ea5683cd96ee2b704175c37698539ccba4ac05a067621f1
+reproductionProfiles: []
+modelRequirements:
+  textGeneration: false
+  toolCalling: false
+  structuredOutput: false
+permissions:
+  network:
+    mode: none
+    destinations: []
+  filesystem:
+    read:
+      - prepared-runtime
+      - structured-result
+    write:
+      - temporary-compute-cache
+      - workspace/results
+  subprocess:
+    allowed: true
+    commands:
+      - python
+  cloudCompute:
+    allowed: false
+    providers: []
+  limits:
+    wallTimeSeconds: null
+    memoryMiB: null
+    maxArtifacts: 1
+    maxCostUsd: 0
+  data:
+    classification: public
+    retentionDays: 0
+    externalTransfer: forbidden
+    licenses:
+      - MIT
+evals:
+  runner:
+    executable: node
+    script: evals/run-evals.mjs
+    args: []
+    shell: false
+  suite:
+    id: paulie-algebra-observations-eval
+    version: 1.0.0
+    path: evals/suite.json
+    sha256: 37ae7061be3374561cda7a120684ace030d772925d15ceb4d6f2382b57e02423
+compatibility:
+  contract: "1.1"
+  harness: 0.1.0-rc.6
+dependencies:
+  - id: paulie
+    kind: scientific-backend
+    version: 0.2.3
+    digest: a94e920a4a7d718e081e8a83c2550b0b0e7c1c1a8a5347eb7bd52e2b7f8094f9

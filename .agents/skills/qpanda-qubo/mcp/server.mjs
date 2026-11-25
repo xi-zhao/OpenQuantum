@@ -10,6 +10,8 @@ import {
   ListToolsRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
 
+import observationSchema from "../artifacts/observations.schema.json" with { type: "json" };
+import { validateQubo } from "../validators/validate-result.mjs";
 import { referenceModeSchema } from "../../../../src/lib/science-reference.mjs";
 
 import { preparedPythonLaunch } from "../../../../src/lib/prepared-python.mjs";
@@ -77,7 +79,7 @@ const TOOLS = Object.freeze([
     name: "solve_qpanda_qubo",
     title: "Solve a QUBO with pyqpanda_alg",
     description:
-      "Solve quadratic unconstrained binary optimization locally with pyqpanda_alg traversal or QAOA. referenceMode selects an optional exhaustive reference for QAOA. Dependencies must be prepared explicitly before calling this tool; the calculation never uses the Origin Quantum cloud or real hardware and does not claim independent scientific validation.",
+      "Solve quadratic unconstrained binary optimization locally with pyqpanda_alg traversal or QAOA. referenceMode selects an optional exhaustive reference for QAOA. Dependencies must be prepared explicitly before calling this tool; the calculation never uses the Origin Quantum cloud or real hardware and returns independent observations without final scientific Acceptance.",
     inputSchema: {
       type: "object",
       properties: {
@@ -114,7 +116,8 @@ const TOOLS = Object.freeze([
         reference: { type: "object" },
         quantum: { type: ["object", "null"] },
         checks: { type: "object" },
-        scientificValidation: { type: "string", const: "not_evaluated" },
+        scientificValidation: { type: "string", const: "observations_available" },
+        validation: observationSchema,
         limitations: { type: "array", items: { type: "string" } },
       },
       required: [
@@ -205,7 +208,7 @@ const TOOLS = Object.freeze([
         packageVersion: { type: "string" },
         modeling: { type: "object" },
         solver: { type: "object" },
-        validation: { type: "object" },
+        validation: observationSchema,
         scientificValidation: { type: "string", const: "observations_available" },
         limitations: { type: "array", items: { type: "string" } },
       },
@@ -359,9 +362,11 @@ server.setRequestHandler(CallToolRequestSchema, async (request, { signal }) => {
     if (request.params.name === "solve_qpanda_qubo") {
       const solve = normalizeSolveRequest(request.params.arguments);
       const result = await runBridge({ action: "solve", request: solve }, signal);
+      result.validation = validateQubo({ request: solve, result });
+      result.scientificValidation = "observations_available";
       const optimum = result.classical?.minimumValue ?? "not computed";
       return textResult(
-        `pyqpanda_alg ${result.packageVersion} solved a ${result.problem.size}-variable QUBO. Classical minimum ${optimum}. Scientific validation remains not_evaluated.`,
+        `pyqpanda_alg ${result.packageVersion} solved a ${result.problem.size}-variable QUBO. Classical minimum ${optimum}. Independent observations are available; final Acceptance is not evaluated.`,
         result,
       );
     }
@@ -381,44 +386,11 @@ server.setRequestHandler(CallToolRequestSchema, async (request, { signal }) => {
       };
       if (modeledRequest.layer !== undefined) solveRequest.layer = modeledRequest.layer;
       const solver = await runBridge({ action: "solve", request: solveRequest }, signal);
-      const checked = modeling.reference.status === "computed";
-      const solverMinimumError = checked && solver.classical ? Math.abs(solver.classical.minimumValue - modeling.reference.compiledMinimum) : null;
-      const validation = {
-        schemaVersion: "1.0",
-        observations: [
-          {
-            id: "compilation.exhaustive-replay",
-            status: !checked ? "not_checked" : modeling.reference.compilationMaxError <= 1e-9 ? "pass" : "fail",
-            metric: modeling.reference.compilationMaxError,
-            threshold: 1e-9,
-          },
-          {
-            id: "solver.classical-reference",
-            status: solverMinimumError === null ? "not_checked" : solverMinimumError <= 1e-9 ? "pass" : "fail",
-            metric: solverMinimumError,
-            threshold: 1e-9,
-          },
-          {
-            id: "constraints.feasible",
-            status: !checked ? "not_checked" : modeling.reference.feasibleOptimum === null ? "fail" : "pass",
-            feasibleAssignments: modeling.reference.feasibleAssignmentCount,
-          },
-          {
-            id: "penalty.sufficient",
-            status: !checked ? "not_checked" : modeling.reference.penaltySufficient ? "pass" : "fail",
-          },
-          {
-            id: "provenance.complete",
-            status: "not_checked",
-          },
-        ],
-      };
       const result = {
         schemaVersion: "1.0",
         packageVersion: solver.packageVersion,
         modeling,
         solver,
-        validation,
         scientificValidation: "observations_available",
         limitations: [
           "Only named binary variables and linear equality constraints are compiled; inequalities require explicit slack-variable modeling.",
@@ -426,6 +398,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request, { signal }) => {
           "QAOA remains a local variational estimate; final scientific acceptance and provenance are not materialized here.",
         ],
       };
+      result.validation = validateQubo({ request: request.params.arguments, result });
       return textResult(
         `Compiled ${modeling.model.variables.length} named binary variables into QUBO and solved it with pyqpanda_alg ${solver.packageVersion}. Scientific validation is observations_available; inspect feasibility and penalty observations.`,
         result,

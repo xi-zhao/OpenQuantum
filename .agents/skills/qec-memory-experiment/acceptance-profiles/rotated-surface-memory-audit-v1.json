@@ -1,0 +1,112 @@
+{
+  "schemaVersion": "1.0",
+  "id": "rotated-surface-memory-audit",
+  "version": "1.0.0",
+  "scope": {
+    "supportedClaims": [
+      "Pinned fixed-parameter local numerical observations with persisted input, artifact hashes and Harness execution provenance."
+    ],
+    "outOfScope": [
+      "Hardware performance, error-correction thresholds, quantum advantage and correctness proofs of numerical libraries.",
+      "Cross-machine bitwise reproducibility and claims outside the bounded numerical audit."
+    ]
+  },
+  "checks": [
+    {
+      "id": "request.scope",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Fixed rotated surface memory input: odd distance 3..11, rounds <=100, shots <=100000; only the acceptance scope is bounded."
+    },
+    {
+      "id": "artifact.schema",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Persisted facts satisfy the declared JSON Schema."
+    },
+    {
+      "id": "experiment.digest",
+      "category": "reproducibility",
+      "required": true,
+      "criterion": "Recomputed binary64 request digest and all experiment fields bind to persisted input."
+    },
+    {
+      "id": "experiment.seed-recorded",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Recorded seed equals input seed."
+    },
+    {
+      "id": "experiment.task",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Stim task matches the input memory basis."
+    },
+    {
+      "id": "counts.replayed",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Packed failure bits have exactly the requested shot count, valid padding and matching success/failure totals."
+    },
+    {
+      "id": "logical-error-rate.replayed",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Failures / shots agrees within 1e-15."
+    },
+    {
+      "id": "standard-error.replayed",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Binomial standard error agrees within 1e-15."
+    },
+    {
+      "id": "uncertainty.replayed",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Wilson score 95 percent interval with z=1.959963984540054 agrees within 1e-15."
+    },
+    {
+      "id": "circuit.digest",
+      "category": "reproducibility",
+      "required": true,
+      "criterion": "Serialized circuit digest matches its bytes."
+    },
+    {
+      "id": "circuit.replayed",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Independent request-only Stim circuit regeneration matches digest and structure."
+    },
+    {
+      "id": "detector-model.digest",
+      "category": "reproducibility",
+      "required": true,
+      "criterion": "Serialized detector error model digest matches its bytes."
+    },
+    {
+      "id": "detector-model.replayed",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Independent DEM regeneration matches digest and structure."
+    },
+    {
+      "id": "seed.replayed",
+      "category": "reproducibility",
+      "required": true,
+      "criterion": "Same-machine pinned Stim/PyMatching replay matches samples, decoding and failure bits; unavailable or incompatible runtime remains conditional."
+    },
+    {
+      "id": "zero-noise.invariant",
+      "category": "scientific",
+      "required": true,
+      "criterion": "If physicalErrorRate=0, all shots succeed; otherwise the implication is vacuously satisfied and no noiseless claim is made."
+    },
+    {
+      "id": "provenance.complete",
+      "category": "reproducibility",
+      "required": true,
+      "criterion": "Materializer atomically wrote and reread input/artifact bytes; digests and actual Harness call/result event range bind the evidence."
+    }
+  ]
+}

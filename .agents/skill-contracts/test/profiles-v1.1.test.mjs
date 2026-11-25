@@ -281,6 +281,17 @@ test("Capability loader dual-reads v1.0 and expands digest-locked v1.1 definitio
   });
 });
 
+test("observations-only v1.1 manifests declare no Acceptance or Reproduction definitions", async () => {
+  await withV11Capability(async context => {
+    context.manifest.acceptanceProfiles = [];
+    context.manifest.reproductionProfiles = [];
+    context.saveManifest();
+    const capability = await loadCapability(context.skillRoot);
+    assert.equal(capability.acceptanceProfileDefinitions.size, 0);
+    assert.equal(capability.reproductionProfileDefinitions.size, 0);
+  });
+});
+
 test("Capability v1.1 rejects a profile whose locked digest no longer matches", async () => {
   await withV11Capability(async (context) => {
     context.acceptanceProfile.scope.supportedClaims.push("Tampered claim");

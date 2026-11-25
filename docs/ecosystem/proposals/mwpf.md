@@ -7,8 +7,7 @@
 - 固定源码：[v0.2.18](https://github.com/yuewuo/mwpf/tree/v0.2.18)，完整提交
   `e50f72e2f389950db50bce075163a4e4022c9dcd`；annotated tag 对象
   `ecdd553c0da661d38318eff28052f67ba181f503`。
-- 状态：本 PR 分支已实现固定 SDK、Skill、原生示例与本地验证，尚未合入 main。
-  README 前置 PR #77 已合并；本分支已同步能力入口、数量和科学限制，当前提交验证完成前保持 Draft。
+- **状态：已合入主线（[PR #79](https://github.com/xi-zhao/OpenQuantum/pull/79)）。** 已交付 [`mwpf-decoding`](../../../.agents/skills/mwpf-decoding/SKILL.md) 与隔离验证证据（[mwpf-2026-11-06.json](../../integrations/evidence/mwpf-2026-11-06.json)）；以下保留原提案与规格。
 
 ## 用户任务与增量价值
 

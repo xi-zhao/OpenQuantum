@@ -1,0 +1,40 @@
+{
+  "request": {
+    "generators": [
+      "XI",
+      "ZI",
+      "IX",
+      "IZ"
+    ],
+    "numQubits": 2,
+    "closureMode": "auto",
+    "referenceMode": "auto",
+    "execution": {}
+  },
+  "result": {
+    "dimension": 6,
+    "centerDimension": 0,
+    "referenceDimension": 6,
+    "classification": "2*so(3)",
+    "fullSpecialUnitaryDimension": 15,
+    "generatesFullSpecialUnitary": false,
+    "reference": {
+      "mode": "auto",
+      "status": "computed",
+      "method": "Independent real dense commutator span and dimension",
+      "reason": "Independent reference computed for this input."
+    },
+    "closure": [
+      "IX",
+      "IY",
+      "IZ",
+      "XI",
+      "YI",
+      "ZI"
+    ],
+    "closureStatus": "computed",
+    "maxSpanResidual": 0,
+    "spanResidualTarget": "closure",
+    "bitOrder": "left-to-right q0,q1,..."
+  }
+}

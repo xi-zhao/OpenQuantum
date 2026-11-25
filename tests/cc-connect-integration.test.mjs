@@ -16,6 +16,7 @@ import {
 } from "@agentclientprotocol/sdk";
 import { loadOverlayPatches } from "@deepseek-ai/dsh-app-boot";
 import { prepareOpenQuantumHarnessHome } from "../scripts/lib/prepare-harness-home.mjs";
+import { createProtectedState } from "./helpers/protected-state.mjs";
 
 import {
   buildCcConnectPlatformSetupArgs,
@@ -324,7 +325,10 @@ test("CC Connect ACP shares model composition and deployment defaults", () => {
 
 test("OpenQuantum ACP uses the shared settings.yaml model route override", { timeout: 60_000 }, async () => {
   const stateRoot = await mkdtemp(path.join(tmpdir(), "openquantum-acp-"));
-  const dshHome = path.join(stateRoot, "dsh");
+  const privateRoot = await createProtectedState(projectRoot);
+  const dshHome = path.join(privateRoot, "dsh");
+  const workspace = path.join(stateRoot, "workspace");
+  await mkdir(workspace);
   const modelServer = await startOpenAiCompletionServer();
   await mkdir(dshHome, { recursive: true });
   await prepareOpenQuantumHarnessHome({ projectRoot, harnessHome: dshHome });
@@ -365,7 +369,7 @@ test("OpenQuantum ACP uses the shared settings.yaml model route override", { tim
       clientCapabilities: {},
     });
     assert.equal(initialized.protocolVersion, PROTOCOL_VERSION);
-    const session = await connection.newSession({ cwd: projectRoot, mcpServers: [] });
+    const session = await connection.newSession({ cwd: workspace, mcpServers: [] });
     assert.equal(typeof session.sessionId, "string");
     assert.ok(session.sessionId.length > 0);
     const prompt = await connection.prompt({
@@ -396,6 +400,7 @@ test("OpenQuantum ACP uses the shared settings.yaml model route override", { tim
     }
     await modelServer.close();
     await rm(stateRoot, { recursive: true, force: true });
+    await rm(privateRoot, { recursive: true, force: true });
   }
 });
 

@@ -1,0 +1,765 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "const": "1.0"
+        },
+        "packageVersion": {
+          "type": "string"
+        },
+        "problem": {
+          "type": "object",
+          "properties": {
+            "size": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "keyQubits": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "resultQubits": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            }
+          },
+          "required": [
+            "size",
+            "keyQubits",
+            "resultQubits",
+            "sha256"
+          ],
+          "additionalProperties": false
+        },
+        "classical": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "method": {
+                  "const": "qubobytraversal"
+                },
+                "optimalAssignments": {
+                  "type": "array",
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  }
+                },
+                "minimumValue": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "method",
+                "optimalAssignments",
+                "minimumValue"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "classicalRole": {
+          "enum": [
+            "main",
+            "reference",
+            "not_run"
+          ]
+        },
+        "reference": {
+          "type": "object",
+          "properties": {
+            "mode": {
+              "enum": [
+                "auto",
+                "required",
+                "skip"
+              ]
+            },
+            "status": {
+              "enum": [
+                "computed",
+                "not_run"
+              ]
+            },
+            "reason": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "mode",
+            "status",
+            "reason"
+          ],
+          "additionalProperties": false
+        },
+        "quantum": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "layer": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "optimizer": {
+                  "const": "SLSQP"
+                },
+                "distribution": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "number"
+                  }
+                },
+                "topBitstring": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "layer",
+                "optimizer",
+                "distribution",
+                "topBitstring"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "checks": {
+          "type": "object",
+          "properties": {
+            "objectiveConsistencyError": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "objectiveConsistencyError"
+          ],
+          "additionalProperties": false
+        },
+        "scientificValidation": {
+          "enum": [
+            "not_evaluated",
+            "observations_available"
+          ]
+        },
+        "validation": {
+          "type": "object"
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "packageVersion",
+        "problem",
+        "classical",
+        "quantum",
+        "checks",
+        "scientificValidation",
+        "limitations"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "const": "1.0"
+        },
+        "packageVersion": {
+          "type": "string"
+        },
+        "modeling": {
+          "type": "object",
+          "properties": {
+            "schemaVersion": {
+              "const": "1.0"
+            },
+            "model": {
+              "type": "object",
+              "properties": {
+                "variables": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "objective": {
+                  "type": "object",
+                  "properties": {
+                    "sense": {
+                      "enum": [
+                        "minimize",
+                        "maximize"
+                      ]
+                    },
+                    "linear": {
+                      "type": "array",
+                      "items": {
+                        "type": "number"
+                      }
+                    },
+                    "quadratic": {
+                      "type": "array",
+                      "items": {
+                        "type": "array",
+                        "items": {
+                          "type": "number"
+                        }
+                      }
+                    },
+                    "constant": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "sense",
+                    "linear",
+                    "quadratic",
+                    "constant"
+                  ],
+                  "additionalProperties": false
+                },
+                "constraints": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "coefficients": {
+                        "type": "array",
+                        "items": {
+                          "type": "number"
+                        }
+                      },
+                      "relation": {
+                        "const": "eq"
+                      },
+                      "rhs": {
+                        "type": "number"
+                      },
+                      "penalty": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "coefficients",
+                      "relation",
+                      "rhs",
+                      "penalty"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "required": [
+                "variables",
+                "objective",
+                "constraints"
+              ],
+              "additionalProperties": false
+            },
+            "qubo": {
+              "type": "object",
+              "properties": {
+                "variableOrder": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "quadratic": {
+                  "type": "array",
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "number"
+                    }
+                  }
+                },
+                "linear": {
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  }
+                },
+                "constant": {
+                  "type": "number"
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$"
+                }
+              },
+              "required": [
+                "variableOrder",
+                "quadratic",
+                "linear",
+                "constant",
+                "sha256"
+              ],
+              "additionalProperties": false
+            },
+            "reference": {
+              "type": "object",
+              "properties": {
+                "mode": {
+                  "enum": [
+                    "auto",
+                    "required",
+                    "skip"
+                  ]
+                },
+                "status": {
+                  "enum": [
+                    "computed",
+                    "not_run"
+                  ]
+                },
+                "reason": {
+                  "type": "string"
+                },
+                "assignmentCount": {
+                  "anyOf": [
+                    {
+                      "anyOf": [
+                        {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        {
+                          "type": "string",
+                          "pattern": "^[0-9]+$"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "feasibleAssignmentCount": {
+                  "anyOf": [
+                    {
+                      "anyOf": [
+                        {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        {
+                          "type": "string",
+                          "pattern": "^[0-9]+$"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "compiledMinimum": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "compiledAssignments": {
+                  "anyOf": [
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "values": {
+                            "type": "object",
+                            "additionalProperties": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 1
+                            }
+                          },
+                          "bitVector": {
+                            "type": "array",
+                            "items": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 1
+                            }
+                          },
+                          "value": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "values",
+                          "bitVector",
+                          "value"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "feasibleOptimum": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "objectiveValue": {
+                          "type": "number"
+                        },
+                        "assignments": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "values": {
+                                "type": "object",
+                                "additionalProperties": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                }
+                              },
+                              "bitVector": {
+                                "type": "array",
+                                "items": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                }
+                              },
+                              "value": {
+                                "type": "number"
+                              }
+                            },
+                            "required": [
+                              "values",
+                              "bitVector",
+                              "value"
+                            ],
+                            "additionalProperties": false
+                          }
+                        }
+                      },
+                      "required": [
+                        "objectiveValue",
+                        "assignments"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "penaltySufficient": {
+                  "anyOf": [
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "compilationMaxError": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "mode",
+                "status",
+                "reason",
+                "assignmentCount",
+                "feasibleAssignmentCount",
+                "compiledMinimum",
+                "compiledAssignments",
+                "feasibleOptimum",
+                "penaltySufficient",
+                "compilationMaxError"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "schemaVersion",
+            "model",
+            "qubo",
+            "reference"
+          ],
+          "additionalProperties": false
+        },
+        "solver": {
+          "type": "object",
+          "properties": {
+            "schemaVersion": {
+              "const": "1.0"
+            },
+            "packageVersion": {
+              "type": "string"
+            },
+            "problem": {
+              "type": "object",
+              "properties": {
+                "size": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "keyQubits": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "resultQubits": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$"
+                }
+              },
+              "required": [
+                "size",
+                "keyQubits",
+                "resultQubits",
+                "sha256"
+              ],
+              "additionalProperties": false
+            },
+            "classical": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "method": {
+                      "const": "qubobytraversal"
+                    },
+                    "optimalAssignments": {
+                      "type": "array",
+                      "items": {
+                        "type": "array",
+                        "items": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 1
+                        }
+                      }
+                    },
+                    "minimumValue": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "method",
+                    "optimalAssignments",
+                    "minimumValue"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "classicalRole": {
+              "enum": [
+                "main",
+                "reference",
+                "not_run"
+              ]
+            },
+            "reference": {
+              "type": "object",
+              "properties": {
+                "mode": {
+                  "enum": [
+                    "auto",
+                    "required",
+                    "skip"
+                  ]
+                },
+                "status": {
+                  "enum": [
+                    "computed",
+                    "not_run"
+                  ]
+                },
+                "reason": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "mode",
+                "status",
+                "reason"
+              ],
+              "additionalProperties": false
+            },
+            "quantum": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "layer": {
+                      "type": "integer",
+                      "minimum": 1
+                    },
+                    "optimizer": {
+                      "const": "SLSQP"
+                    },
+                    "distribution": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "number"
+                      }
+                    },
+                    "topBitstring": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "layer",
+                    "optimizer",
+                    "distribution",
+                    "topBitstring"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "checks": {
+              "type": "object",
+              "properties": {
+                "objectiveConsistencyError": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "objectiveConsistencyError"
+              ],
+              "additionalProperties": false
+            },
+            "scientificValidation": {
+              "enum": [
+                "not_evaluated",
+                "observations_available"
+              ]
+            },
+            "validation": {
+              "type": "object"
+            },
+            "limitations": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "schemaVersion",
+            "packageVersion",
+            "problem",
+            "classical",
+            "quantum",
+            "checks",
+            "scientificValidation",
+            "limitations"
+          ],
+          "additionalProperties": false
+        },
+        "validation": {
+          "type": "object"
+        },
+        "scientificValidation": {
+          "const": "observations_available"
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "packageVersion",
+        "modeling",
+        "solver",
+        "scientificValidation",
+        "limitations"
+      ],
+      "additionalProperties": false
+    }
+  ]
+}

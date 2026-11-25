@@ -27,9 +27,9 @@ test("Graphix accepts an empty identity pattern with or without state simulation
         bitOrder: "left-to-right logical q0,q1,... mapped by outputNodes",
       },
     };
-    assert.equal(definition.validateOutput(output), true, JSON.stringify(definition.validateOutput.errors));
+    assert.equal(definition.validateBridgeOutput(output), true, JSON.stringify(definition.validateBridgeOutput.errors));
     for (const pattern of [null, [], 0]) {
-      assert.equal(definition.validateOutput({ ...output, result: { ...output.result, pattern } }), false);
+      assert.equal(definition.validateBridgeOutput({ ...output, result: { ...output.result, pattern } }), false);
     }
   }
 });

@@ -100,8 +100,9 @@ MCP Server 只提供协议边界，不自动使规则可信。
 
 仓库发行版自带的 Skill 还必须登记在 `.agents/capability-packages.yml`。L0–L3 是开发证据等级，不是
 Harness 运行状态：L1 绑定 Agent Preset 声明的 Tool Provider、activation、Tool contract 和合同检查入口，L2 额外通过共享
-`loadCapability` 验证科学合同，L3 还必须
-声明真实 Harness 物化 Adapter 和回放测试。用户本地 Skill 与 Git 忽略的上游挂载不进入这个发行版清单。
+`loadCapability` 验证科学合同；只产 observations 时可声明空 `acceptanceProfiles`（v1.1 的
+`reproductionProfiles` 也可为空），不创建占位验收规则。L3 还必须声明至少一个 Acceptance Profile、
+真实 Harness 物化 Adapter 和回放测试。用户本地 Skill 与 Git 忽略的上游挂载不进入这个发行版清单。
 `npm run capability:conformance` 输出的 `scope` 固定为 `static-declaration`，只证明声明互相一致；本地
 Tool surface 由 `npm run capability:contracts:test` 直接按 policy 中的 `contractCheck` 实际查询。外部固定源码
 可先做显式源码摘要检查，真实 `tools/list` 则需独立 probe；[默认关闭接入审查](docs/integrations/OPT_IN_MCP_EFFECT_REVIEW.md)
@@ -111,6 +112,13 @@ Tool 最大副作用和证据来源也必须分开登记：本地 MCP Server 通
 的固定上游版本使用 `reviewed-source`、以 `effectEvidenceRef` 指向逐 Tool 审查记录，并由显式 probe 拒绝矛盾声明；Harness 原生 Tool 使用
 `conservative-provider`，按 Provider 能力保守分类。副作用包括完整调用的环境安装和 Host 后置证据写入，
 不能只检查计算函数。`effectEvidence` 不是“运行时已连接”的证明。
+
+### 扩展准入与成熟度治理
+
+- 新增 SDK 或能力前先核对[扩展治理清单](docs/architecture/EXTENSION_GOVERNANCE.md)与[相近能力选择](docs/integrations/CAPABILITY_SELECTION.md)，明确相较已有 SDK 的真实物理或算法增量；优先采用原生 SDK 公开 API 路径，避免为已有能力重复新增默认开启的 MCP 进程。
+- 新增或修改能力、Skill、MCP 连接或 SDK 环境后，运行 `npm run governance:audit` 查看实时统计并检查声明内部一致性；[扩展治理清单](docs/architecture/EXTENSION_GOVERNANCE.md)保留日期化快照，无需随每次新增 Skill 改写历史数字。
+- 涉及隔离数值 CI 验证的 SDK 统一通过 [`.github/workflows/sdk-checks.yml`](.github/workflows/sdk-checks.yml) 与 Python/Julia 可复用模板接入，不再复制单 SDK workflow 或在 `ci.yml` 中内联临时 `git diff` 逻辑。
+- 在扩充 L0/L1 覆盖的同时，优先把高频能力推进到 L2（schema + 独立 Validator + eval evidence）；确需最终科学验收时再接入 L3 的 Acceptance Profile、Materializer 与 central Acceptance Builder。
 
 ## 增加 Tool 或 MCP Server
 
@@ -210,7 +218,7 @@ Harness MCP Client 负责 MCP Server 进程、重连、Tool Registry 注册和�
 可信 Host Plugin 生成有界展示投影。`tools/post-execute` 只保留候选与 observations；原生结果事件落账后
 再物化验收，并用原生 `surfaceOp: replace` 追加只改 content 的 `tool/result` 展示。原始结果与替换事件均可追溯。
 
-当前 QGS、QI 与 QCEC 三条 L3 纵切复用四个深模块：其中 `scientific-result-projection.mjs`
+当前 QGS、QI、QCEC、QEC 与 Hamiltonian 五条 L3 纵切复用四个深模块：其中 `scientific-result-projection.mjs`
 是拥有 hook 的可信 Host Plugin，Adapter Registry 只是该 Plugin 的内部 Interface。
 
 共享科学 envelope 的大型 L1 输出另由 `science-result-delivery.mjs` 在有效 Session 沙箱内保存完整 JSON，
@@ -222,7 +230,7 @@ Harness MCP Client 负责 MCP Server 进程、重连、Tool Registry 注册和�
 - `scientific-result-adapters.mjs`：显式登记 Tool、领域投影、Artifact 类型和 capability Validator；
 - `scientific-result-projection.mjs`：连接原生 Tool 终结、Session 事件、步骤/回合等待 hook、`ctx.fs` 与 Adapter registry。
 
-三条纵切共用 capability adapter Interface。QI 与 QCEC 的可读报告由同一 Materializer 从重读证据生成，写入仍使用 Session 当前有效的 `sandboxPolicy`；只读会话不提升权限。输入参数须与原生 `tool/call` 一致，证据路径包含调用事件序号，防止复用 call ID 覆盖先前结果。
+五条纵切共用 capability adapter Interface。QI 与 QCEC 的可读报告由同一 Materializer 从重读证据生成，写入仍使用 Session 当前有效的 `sandboxPolicy`；只读会话不提升权限。输入参数须与原生 `tool/call` 一致，证据路径包含调用事件序号，防止复用 call ID 覆盖先前结果。
 
 QCEC 的分类验收覆盖每份输入最多 16 量子位、65536 UTF-8 字节、512 条语句；独立完整酉矩阵复核最多 8 量子位，范围内的完全相同输入须先通过独立 Qiskit 解析和有限酉门检查，再使用 source-identity 证明。该 Profile 范围不限制 Tool 主计算；超出范围保留 observations，参考不可用保持 `conditional`。`not_equivalent` 的验收 `passed` 表示不等价分类经复核，不能写成电路等价。继续接入 L3 能力时：
 

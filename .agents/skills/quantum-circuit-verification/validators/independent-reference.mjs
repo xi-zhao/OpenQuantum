@@ -12,11 +12,11 @@ const allowedEnvironment = [
   "UV_CACHE_DIR", "UV_PYTHON_INSTALL_DIR", "WINDIR",
 ];
 
-export function independentReference(request, signal) {
+export function independentReference(request, signal, { runProcess = runLocalJsonProcess } = {}) {
   signal?.throwIfAborted();
   normalizeAuditRequest(request);
   return preparedPythonLaunch({ skillRoot: root, args: [path.join(root, "validators/reference.py")] })
-    .then(launch => runLocalJsonProcess({
+    .then(launch => runProcess({
       ...launch, cwd: projectRoot,
       env: Object.fromEntries(allowedEnvironment.filter(name => process.env[name]).map(name => [name, process.env[name]])),
       input: request, signal, timeoutMs: 30000, maxOutputBytes: 65536,

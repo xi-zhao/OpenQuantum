@@ -1,0 +1,222 @@
+{
+  "schemaVersion": "1.0",
+  "id": "memory-observations-eval",
+  "version": "1.0.0",
+  "metric": {
+    "id": "expected-observation-outcome",
+    "unit": "case fraction",
+    "direction": "higher_is_better",
+    "minimum": 0,
+    "maximum": 1
+  },
+  "cases": [
+    {
+      "id": "zero-noise",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [],
+        "caseSha256": "ba8c4b3db5eb3212f03358ecf158e8f774647c319c10ee5b14c9c165c3ba7c9d"
+      }
+    },
+    {
+      "id": "noisy",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [],
+        "caseSha256": "e9608752863f611e37becf0b4eb45ebe0d4242be394ff973afffe14ecf207fa5"
+      }
+    },
+    {
+      "id": "inconsistent-failure-count",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "counts.replayed",
+          "logical-error-rate.replayed",
+          "standard-error.replayed",
+          "uncertainty.replayed"
+        ],
+        "caseSha256": "e192e48e6499f7062c5a94900c7b1f280d6e23f9db9f523754d86a75706312a1"
+      }
+    },
+    {
+      "id": "wrong-wilson",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "uncertainty.replayed"
+        ],
+        "caseSha256": "b11a8134eefc48d4be1a7b011f724e3f28df3910f5ea3d37c075dfe1b0fbc7b9"
+      }
+    },
+    {
+      "id": "wrong-standard-error",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "standard-error.replayed"
+        ],
+        "caseSha256": "fd7c6f01819543d1f858e5d7648d04001e7629ec25eace710a8b7f57550f70fe"
+      }
+    },
+    {
+      "id": "wrong-sample-hash",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "seed.replayed"
+        ],
+        "caseSha256": "76889d89a6c8c0f779ab8bf98d00843d8b1e317c97529da15fb998937caa19b1"
+      }
+    },
+    {
+      "id": "changed-circuit",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "circuit.digest"
+        ],
+        "caseSha256": "18c39754526a3d28aa1d7fd8a1764b1ed02fc639ed88b2f064ddb650d6ac02f3"
+      }
+    },
+    {
+      "id": "changed-dem",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "detectorModel.digest"
+        ],
+        "caseSha256": "acec6f6df53fe466078c7fa00a880d83676a803b61ccace353d8c2b3e752d957"
+      }
+    },
+    {
+      "id": "wrong-code-size",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "circuit.replayed"
+        ],
+        "caseSha256": "f873a9f90e3344970d36b2ce8ce40e8336e5a3419876332c6ad185e6cf6653fc"
+      }
+    },
+    {
+      "id": "wrong-round-count",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "experiment.digest"
+        ],
+        "caseSha256": "06878755d1e176eff025b1f6afcdecf0fd2a172774c632ba4e23b42e4def3d00"
+      }
+    },
+    {
+      "id": "wrong-seed",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "experiment.digest",
+          "experiment.seed-recorded"
+        ],
+        "caseSha256": "9e8652cdeeaaf3f72b04d1f4c1bfca128de4ff71a189e2e50b00dddbd94f67f2"
+      }
+    },
+    {
+      "id": "unknown-interval-method",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "artifact.schema"
+        ],
+        "caseSha256": "6e28ccfb7d365d93dc6bc4004b6cd2cbef5686a040b790ba7ca376b30d774700"
+      }
+    },
+    {
+      "id": "zero-shots",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "request.scope"
+        ],
+        "caseSha256": "367fe26bae565f7986fa07b5d774b278bb10e47e6fa7d1ff8f60142cd5edfe36"
+      }
+    },
+    {
+      "id": "even-distance",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "request.scope"
+        ],
+        "caseSha256": "15d1407b928742c247022adbf73a8c759988bf5c77ab85e937995302b0a18913"
+      }
+    },
+    {
+      "id": "one-shot-zero",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [],
+        "caseSha256": "e4aba914b86ef2931a3a00ae84595e200497eefe20e305ee50716d9f4405faad"
+      }
+    },
+    {
+      "id": "one-shot-zero-collapsed-interval",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "uncertainty.replayed"
+        ],
+        "caseSha256": "b5a281989c49b0ceb15cef1fefca1261c94bad3400b0caef4ed3a519575f29d9"
+      }
+    },
+    {
+      "id": "one-shot-all",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [],
+        "caseSha256": "b106f2b50b9b2bb194242805cff39dd7431181fdb28a48e33f29d2a388d67760"
+      }
+    },
+    {
+      "id": "one-shot-all-collapsed-interval",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "uncertainty.replayed"
+        ],
+        "caseSha256": "90f87f13dfe7000b47992469ec0f337ae705bd5a5399f262337c4ba9e1e27395"
+      }
+    },
+    {
+      "id": "nonzero-padding",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "counts.replayed",
+          "logical-error-rate.replayed",
+          "standard-error.replayed",
+          "uncertainty.replayed"
+        ],
+        "caseSha256": "6385a9cf3b91cb82254fb7b9e69cf681a6a040d83644c1548e6aa00c331ecd3c"
+      }
+    }
+  ]
+}

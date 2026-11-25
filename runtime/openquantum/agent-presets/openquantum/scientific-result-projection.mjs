@@ -20,7 +20,7 @@ import {
 export * from "./scientific-result-protocol.mjs";
 
 export const name = "openquantum-scientific-result-projection";
-export const inject = ["tools", "fs", "sandboxPolicy"];
+export const inject = ["tools", "fs", "sandboxPolicy", "sandbox"];
 
 function flattenText(content) {
   if (!Array.isArray(content) || content.some((block) => block?.type !== "text")) {
@@ -148,7 +148,7 @@ export function apply(ctx) {
       signal.throwIfAborted();
       if (!session.surface.nodes.includes(event.seq)) return;
       const materialized = await candidate.adapter.materialize({
-        sandboxPolicy: ctx.sandboxPolicy.resolve({ session }), fileSystem: ctx.fs,
+        sandboxPolicy: ctx.sandboxPolicy.resolve({ session }), fileSystem: ctx.fs, processSandbox: ctx.sandbox,
         workspaceRoot: session.header.cwd, sessionId: session.id, callId: candidate.exec.callId,
         eventRange: { from: candidate.callEvent.seq, to: event.seq },
         arguments: candidate.arguments, canonicalValue: candidate.canonicalValue, signal,

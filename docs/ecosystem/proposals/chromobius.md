@@ -3,7 +3,8 @@
 - 调研日期：2026-10-26；基线：OpenQuantum main `f4da33fb15a09721d1070e7486a91555bfeaad2a`。
 - 上游：[quantumlib/chromobius](https://github.com/quantumlib/chromobius)。
 - 固定候选：[v1.1.1](https://github.com/quantumlib/chromobius/releases/tag/v1.1.1)，完整提交 `efae0325e4a8fc13be981434d38e499aa06b989f`。
-- 本提案进入自动接入队列；实现与验证完成前保持 Draft，用户可关闭或暂停。
+- **状态：已合入主线。** 已交付 [`chromobius-decoding`](../../../.agents/skills/chromobius-decoding/SKILL.md) 与固定环境证据（[chromobius-2026-10-26.json](../../integrations/evidence/chromobius-2026-10-26.json)）；以下保留原候选阶段记录。
+- 原提案状态：本提案进入自动接入队列；实现与验证完成前保持 Draft，用户可关闭或暂停。
 
 ## 用户价值与重要性
 

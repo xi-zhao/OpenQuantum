@@ -1,3 +1,4 @@
+import { isMainModule } from "../../lib/cli-entrypoint.mjs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { Environments } from "./environments.mjs";
@@ -81,7 +82,7 @@ export async function runEnvironmentJob({ manager, id, jobId, inspect = inspectE
   return successful;
 }
 
-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (isMainModule(import.meta.url)) {
   const [id, jobId, directory] = process.argv.slice(2);
   const root = fileURLToPath(new URL("../../../", import.meta.url));
   if (!id || !/^[a-f0-9-]{36}$/.test(jobId ?? "") || !path.isAbsolute(directory ?? "")) throw new Error("Invalid environment worker request");

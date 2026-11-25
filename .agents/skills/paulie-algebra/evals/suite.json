@@ -1,0 +1,166 @@
+{
+  "schemaVersion": "1.0",
+  "id": "paulie-algebra-observations-eval",
+  "version": "1.0.0",
+  "metric": {
+    "id": "expected-observation-outcome",
+    "unit": "case fraction",
+    "direction": "higher_is_better",
+    "minimum": 0,
+    "maximum": 1
+  },
+  "cases": [
+    {
+      "id": "center",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [],
+        "caseSha256": "b72210bac2b341e77b0f7f11ad6ebb8cd1f6f74e6df2866dc8c85fe07aec25a8"
+      }
+    },
+    {
+      "id": "default",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [],
+        "caseSha256": "313044821d3fe422787309c127ddbd2a7502accde984ad2fd471f57afa52e00c"
+      }
+    },
+    {
+      "id": "large",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [],
+        "caseSha256": "7737ed079f44dbb6a60e47af0b750855206945b0efeaf54eb19719e7e59a80c6"
+      }
+    },
+    {
+      "id": "local",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [],
+        "caseSha256": "268f0efee3e8bdf60132b15b74026f662c1ad279f2431fbc3197d210901d3cc5"
+      }
+    },
+    {
+      "id": "single",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [],
+        "caseSha256": "b70a6f2197ccad24bb289dc546e958df6c13dd8afa805e9ab9ebde3f75ca6897"
+      }
+    },
+    {
+      "id": "skip",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [],
+        "caseSha256": "b2a3b02faab39f717fc56be1cc62b30b40d0bd23ebbb111fdca597ba2103d20b"
+      }
+    },
+    {
+      "id": "false-dimension",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "algebra.dimension"
+        ],
+        "caseSha256": "e7f07f8aacfd1026b4fce066244babb3d8d03f959208cc168664ccd58fa08d30"
+      }
+    },
+    {
+      "id": "missing-nested-commutator",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "algebra.closure",
+          "algebra.dimension",
+          "closure.complete"
+        ],
+        "caseSha256": "40c4177a57fd99305a049da1ed49ec32974639deef38f8d48b93de424bcb751d"
+      }
+    },
+    {
+      "id": "duplicate-basis",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "algebra.closure",
+          "basis.independent"
+        ],
+        "caseSha256": "27791b4af66691ad8d0102e5408ce03774f8eb1ed2d3e4f7f4dad263815731e5"
+      }
+    },
+    {
+      "id": "false-center",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "center.dimension"
+        ],
+        "caseSha256": "2da553ad2dac4757b285651e2a7cf740e86c807475b0e6ced692d4c22c4a04aa"
+      }
+    },
+    {
+      "id": "false-dense-dimension",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "dense.claims"
+        ],
+        "caseSha256": "995a2afd2dd951c560e6a4523485846a5188ebdba0ed8e310983fe0d7be40b2a"
+      }
+    },
+    {
+      "id": "identity-generator",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "generators.structure"
+        ],
+        "caseSha256": "0214c3bdb4833e7a42741eb8ff757ef980da2aed3c840b89181d48e360e49a05"
+      }
+    },
+    {
+      "id": "false-full-su",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "algebra.special-unitary"
+        ],
+        "caseSha256": "765a43ca1cd88feea1e826fd13a0e93f3c4a7b98305709f469bf6274604ff218"
+      }
+    },
+    {
+      "id": "skipped-basis",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [],
+        "caseSha256": "75cab254fdf824f2f5151387b58aac8494e173e61257113e5fa0df648b595ecb"
+      }
+    },
+    {
+      "id": "bounded-closure",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [],
+        "caseSha256": "6333c2864204a462e6919e1198196e915bff1e3f60db77fcbf93b654c6af6a33"
+      }
+    }
+  ]
+}

@@ -16,8 +16,14 @@ jobs:
     if: ${{ !github.event.release.prerelease && !github.event.release.draft && startsWith(github.event.release.tag_name, 'v') }}
     uses: ./.github/workflows/ci.yml
 
+  verify-sdk:
+    if: ${{ !github.event.release.prerelease && !github.event.release.draft && startsWith(github.event.release.tag_name, 'v') }}
+    uses: ./.github/workflows/sdk-checks.yml
+    with:
+      targets: tropidist,stgrape,braket
+
   publish:
-    needs: verify
+    needs: [verify, verify-sdk]
     runs-on: ubuntu-latest
     permissions:
       contents: write

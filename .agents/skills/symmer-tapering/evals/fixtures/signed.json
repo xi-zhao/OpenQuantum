@@ -1,0 +1,112 @@
+{
+  "request": {
+    "numQubits": 3,
+    "terms": [
+      {
+        "pauli": "XXZ",
+        "coefficient": 0.7
+      },
+      {
+        "pauli": "ZZI",
+        "coefficient": 0.4
+      },
+      {
+        "pauli": "YYZ",
+        "coefficient": -0.3
+      }
+    ],
+    "symmetries": [
+      {
+        "pauli": "XXI",
+        "sector": -1
+      },
+      {
+        "pauli": "ZZI",
+        "sector": 1
+      }
+    ],
+    "referenceMode": "auto",
+    "execution": {}
+  },
+  "result": {
+    "reducedQubits": 1,
+    "sectorDimension": 2,
+    "reducedTerms": [
+      {
+        "pauli": "I",
+        "coefficient": 0.4
+      },
+      {
+        "pauli": "Z",
+        "coefficient": -1
+      }
+    ],
+    "reference": {
+      "mode": "auto",
+      "status": "computed",
+      "method": "Independent dense projection and full spectrum of the selected symmetry sector",
+      "reason": "Independent reference computed for this input."
+    },
+    "reducedSpectrum": [
+      -0.6,
+      1.4
+    ],
+    "referenceSectorSpectrum": [
+      -0.5999999999999999,
+      1.3999999999999997
+    ],
+    "maxSpectrumError": 2.220446049250313e-16,
+    "projectorIdempotenceError": 0,
+    "bitOrder": "left-to-right tensor factors; reduced qubits use Symmer's transformed basis"
+  },
+  "reference": {
+    "request": {
+      "numQubits": 3,
+      "terms": [
+        {
+          "pauli": "XXZ",
+          "coefficient": 0.7
+        },
+        {
+          "pauli": "ZZI",
+          "coefficient": 0.4
+        },
+        {
+          "pauli": "YYZ",
+          "coefficient": -0.3
+        }
+      ],
+      "symmetries": [
+        {
+          "pauli": "XXI",
+          "sector": -1
+        },
+        {
+          "pauli": "ZZI",
+          "sector": 1
+        }
+      ],
+      "referenceMode": "auto",
+      "execution": {}
+    },
+    "reducedTerms": [
+      {
+        "pauli": "I",
+        "coefficient": 0.4
+      },
+      {
+        "pauli": "Z",
+        "coefficient": -1
+      }
+    ],
+    "sectorSpectrum": [
+      -0.5999999999999999,
+      1.3999999999999997
+    ],
+    "spectrum": [
+      -0.6,
+      1.4
+    ],
+    "projectorError": 0
+  }
+}

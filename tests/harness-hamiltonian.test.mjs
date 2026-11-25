@@ -7,10 +7,12 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import test from "node:test";
 
+import { createProtectedState } from "./helpers/protected-state.mjs";
 import { harnessHttpCookie, harnessSessionSnapshot, redactHarnessLaunchTokens } from "../scripts/lib/harness-http-auth.mjs";
 import { prepareOpenQuantumHarnessHome } from "../scripts/lib/prepare-harness-home.mjs";
 import { definition } from "../.agents/skills/hamiltonian-simulation/mcp/contracts.mjs";
 import { HAMILTONIAN_INPUT } from "./fixtures/hamiltonian.mjs";
+import { parseScientificToolResult } from "../runtime/openquantum/agent-presets/openquantum/scientific-result-protocol.mjs";
 
 const toolName = "mcp__hamiltonian_local__simulate_hamiltonian";
 
@@ -38,7 +40,8 @@ async function waitFor(probe, description, timeoutMs = 30_000) {
 test("Harness discovers the Hamiltonian Skill, runs both open formulas and rereads success and failure", { skip: process.env.OPENQUANTUM_REAL_HAMILTONIAN !== "1", timeout: 120_000 }, async (t) => {
   const root = process.cwd();
   const sandbox = await mkdtemp(path.join(tmpdir(), "oq-hamiltonian-harness-"));
-  const harnessHome = path.join(sandbox, "dsh");
+  const protectedState = await createProtectedState(root);
+  const harnessHome = path.join(protectedState, "dsh");
   const fixtureCalls = [
     { id: "hamiltonian-trotter", input: HAMILTONIAN_INPUT },
     { id: "hamiltonian-qdrift", input: { numQubits: 1, terms: [{ pauli: "Y", coefficient: -0.7 }], time: 0.4, method: "qdrift", steps: 8, seed: 3 } },
@@ -59,7 +62,7 @@ test("Harness discovers the Hamiltonian Skill, runs both open formulas and rerea
     const delta = next ? {
       role: "assistant",
       tool_calls: [{ index: 0, id: next.id, type: "function", function: { name: toolName, arguments: JSON.stringify(next.input) } }],
-    } : { role: "assistant", content: "Open Hamiltonian computations complete; scientificValidation=not_evaluated." };
+    } : { role: "assistant", content: "Open Hamiltonian computations complete; scientificValidation=observations_available; no Acceptance." };
     response.writeHead(200, { "content-type": "text/event-stream" });
     for (const choice of [
       { delta, finish_reason: null },
@@ -80,6 +83,7 @@ test("Harness discovers the Hamiltonian Skill, runs both open formulas and rerea
     model.closeAllConnections();
     await new Promise(resolve => model.close(resolve));
     await rm(sandbox, { recursive: true, force: true });
+    await rm(protectedState, { recursive: true, force: true });
   });
   const modelPort = await listen(model);
   const reserved = createServer();
@@ -92,6 +96,7 @@ test("Harness discovers the Hamiltonian Skill, runs both open formulas and rerea
     env: {
       ...process.env,
       DSH_HOME: harnessHome,
+      OPENQUANTUM_WORKSPACE_ROOT: sandbox,
       DSH_TELEMETRY_DISABLED: "1",
       OPENQUANTUM_DISABLE_QISKIT_MCP: "1",
       OPENQUANTUM_PUBLIC_API_KEY: "local-fixture-only",
@@ -120,7 +125,7 @@ test("Harness discovers the Hamiltonian Skill, runs both open formulas and rerea
   }
   await waitFor(() => rpc("llm.models"), "Harness startup");
   const sessionId = `session-hamiltonian-${crypto.randomUUID()}`;
-  await rpc("session.create", { sessionId, cwd: root, agentPreset: "openquantum" });
+  await rpc("session.create", { sessionId, cwd: sandbox, agentPreset: "openquantum" });
   const skills = await rpc("skill.list", { sessionId });
   assert.ok(skills.skills.some(skill => skill.name === "hamiltonian-simulation" && skill.modelInvocable));
   await rpc("session.prompt", {
@@ -147,11 +152,20 @@ test("Harness discovers the Hamiltonian Skill, runs both open formulas and rerea
       assert.match(content, /order must be 1 or even/);
     } else {
       assert.equal(block.isError, false);
-      const output = JSON.parse(content);
+      assert.equal(parseScientificToolResult(toolName, content)?.scientificStatus, "observations_available");
+      // The raw execution result is retained before the bounded presentation.
+      const output = JSON.parse(content.split("\n").filter(line => !line.startsWith("OPENQUANTUM_SCIENTIFIC_RESULT_V1 ")).join("\n"));
       assert.ok(definition.validateOutput(output), JSON.stringify(definition.validateOutput.errors));
       assert.deepEqual(output.input, definition.normalize("simulate_hamiltonian", call.input));
-      assert.equal(output.scientificValidation, "not_evaluated");
+      assert.equal(output.scientificValidation, "observations_available");
+      assert.deepEqual(output.validation.observations.filter(o => o.status === "fail"), []);
       assert.ok(output.result.unitaryFrobeniusError < 0.001);
+      const replacement = events.find(event => event.type === "tool/result"
+        && event.data.message.source.callId === call.id && event.surfaceOp?.op === "replace");
+      assert.ok(replacement, `${call.id}: missing post-materialization result`);
+      const presentation = parseScientificToolResult(toolName, replacement.data.message.content[0].content[0].text);
+      assert.equal(presentation?.acceptanceStatus, "passed");
+      assert.deepEqual(replacement.sourceEventSeqs, [result.seq]);
     }
     assert.ok(deliveredResults.some(message => message.tool_call_id === call.id), `${call.id}: result must return to the model protocol`);
     evidence.push({ call: called, result });
@@ -159,10 +173,10 @@ test("Harness discovers the Hamiltonian Skill, runs both open formulas and rerea
   const replay = await harnessSessionSnapshot(base, cookie, sessionId, 200);
   assert.deepEqual(replay.records.filter(item => item.event?.type === "tool/result").map(item => item.event),
     history.records.filter(item => item.event?.type === "tool/result").map(item => item.event));
-  const target = path.join(root, ".openquantum/hamiltonian-evidence/harness-session.json");
+  const target = path.join(process.env.OPENQUANTUM_HAMILTONIAN_EVIDENCE ?? path.join(root, ".openquantum/hamiltonian-evidence"), "harness-session.json");
   await mkdir(path.dirname(target), { recursive: true });
   await writeFile(target, JSON.stringify({
-    verifiedAt: new Date().toISOString(), harness: "0.1.5-rc.1",
+    verifiedAt: new Date().toISOString(), harness: "0.1.0-rc.6",
     model: "local protocol fixture", externalModelTested: false,
     source: definition.source, sessionId, events: evidence,
   }, null, 2) + "\n");

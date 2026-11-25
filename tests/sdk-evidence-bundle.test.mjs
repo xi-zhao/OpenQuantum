@@ -8,6 +8,7 @@ import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { gunzipSync } from "node:zlib";
 import { bundlePath, reportPaths, verifyEvidenceBundle } from "../scripts/sdk-evidence-bundle.mjs";
+import { copyModuleGraph } from "./helpers/module-graph.mjs";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const run = promisify(execFile);
@@ -23,8 +24,7 @@ async function freshRepository(t) {
 
 test("committed SDK evidence verifies in a fresh directory without the original workspace or dependencies", async t => {
   const repository = await freshRepository(t);
-  await fs.mkdir(path.join(repository, "scripts"));
-  await fs.copyFile(path.join(root, "scripts/sdk-evidence-bundle.mjs"), path.join(repository, "scripts/sdk-evidence-bundle.mjs"));
+  await copyModuleGraph(root, repository, ["scripts/sdk-evidence-bundle.mjs"]);
   for (const missing of [".git", ".openquantum", "node_modules"]) await assert.rejects(fs.stat(path.join(repository, missing)), { code: "ENOENT" });
   const result = await run(process.execPath, ["scripts/sdk-evidence-bundle.mjs", "verify"], { cwd: repository, env: {}, timeout: 30000 });
   const summary = JSON.parse(result.stdout);

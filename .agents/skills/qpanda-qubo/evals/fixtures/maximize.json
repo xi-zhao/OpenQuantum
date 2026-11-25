@@ -1,0 +1,294 @@
+{
+  "request": {
+    "model": {
+      "variables": [
+        "x",
+        "y"
+      ],
+      "objective": {
+        "sense": "maximize",
+        "constant": 2,
+        "linear": [
+          {
+            "variable": "x",
+            "coefficient": 3
+          },
+          {
+            "variable": "y",
+            "coefficient": 2
+          }
+        ],
+        "quadratic": [
+          {
+            "left": "x",
+            "right": "y",
+            "coefficient": 0.5
+          },
+          {
+            "left": "x",
+            "right": "x",
+            "coefficient": 1
+          }
+        ]
+      },
+      "constraints": [
+        {
+          "id": "choose",
+          "terms": [
+            {
+              "variable": "x",
+              "coefficient": 1
+            },
+            {
+              "variable": "y",
+              "coefficient": 1
+            }
+          ],
+          "relation": "eq",
+          "rhs": 1,
+          "penalty": 4
+        }
+      ]
+    },
+    "method": "traversal"
+  },
+  "result": {
+    "schemaVersion": "1.0",
+    "packageVersion": "2.0.0",
+    "modeling": {
+      "schemaVersion": "1.0",
+      "model": {
+        "variables": [
+          "x",
+          "y"
+        ],
+        "objective": {
+          "sense": "maximize",
+          "linear": [
+            3,
+            2
+          ],
+          "quadratic": [
+            [
+              1,
+              0.5
+            ],
+            [
+              0,
+              0
+            ]
+          ],
+          "constant": 2
+        },
+        "constraints": [
+          {
+            "id": "choose",
+            "coefficients": [
+              1,
+              1
+            ],
+            "relation": "eq",
+            "rhs": 1,
+            "penalty": 4
+          }
+        ]
+      },
+      "qubo": {
+        "variableOrder": [
+          "x",
+          "y"
+        ],
+        "quadratic": [
+          [
+            -1,
+            7.5
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "linear": [
+          -7,
+          -6
+        ],
+        "constant": 2,
+        "sha256": "5084b5a96762855db96da59daae7d4bdfec7c0f9957fc06f2e3272a2699ebb46"
+      },
+      "reference": {
+        "mode": "auto",
+        "status": "computed",
+        "reason": "All binary assignments independently replayed.",
+        "assignmentCount": 4,
+        "feasibleAssignmentCount": 2,
+        "compiledMinimum": -6,
+        "compiledAssignments": [
+          {
+            "values": {
+              "x": 1,
+              "y": 0
+            },
+            "bitVector": [
+              1,
+              0
+            ],
+            "value": -6
+          }
+        ],
+        "feasibleOptimum": {
+          "objectiveValue": 6,
+          "assignments": [
+            {
+              "values": {
+                "x": 1,
+                "y": 0
+              },
+              "bitVector": [
+                1,
+                0
+              ],
+              "value": 6
+            }
+          ]
+        },
+        "penaltySufficient": true,
+        "compilationMaxError": 0
+      }
+    },
+    "solver": {
+      "schemaVersion": "1.0",
+      "packageVersion": "2.0.0",
+      "problem": {
+        "size": 2,
+        "keyQubits": 2,
+        "resultQubits": 5,
+        "sha256": "b8895d2f78d4d239dbe93ddcf586cfe2c4101a677075b35dce3d95760c1ac9f2"
+      },
+      "classical": {
+        "method": "qubobytraversal",
+        "optimalAssignments": [
+          [
+            1,
+            0
+          ]
+        ],
+        "minimumValue": -6
+      },
+      "classicalRole": "main",
+      "reference": {
+        "mode": "auto",
+        "status": "not_run",
+        "reason": "No additional classical reference; traversal is still executed when selected as the main algorithm."
+      },
+      "quantum": null,
+      "checks": {
+        "objectiveConsistencyError": 0
+      },
+      "scientificValidation": "not_evaluated",
+      "limitations": [
+        "Local pyqpanda_alg CPU-simulator result; no Origin Quantum cloud or real QPU was used.",
+        "Engineering consistency checks are not an independent scientific Validator.",
+        "QAOA output is a sampled variational estimate and may differ from the classical optimum."
+      ]
+    },
+    "scientificValidation": "observations_available",
+    "limitations": [
+      "Only named binary variables and linear equality constraints are compiled; inequalities require explicit slack-variable modeling.",
+      "Penalty weights are caller-supplied and must be judged through the penalty.sufficient observation.",
+      "QAOA remains a local variational estimate; final scientific acceptance and provenance are not materialized here."
+    ],
+    "validation": {
+      "schemaVersion": "1.0",
+      "observations": [
+        {
+          "id": "request.scope",
+          "status": "pass",
+          "detail": "Independently parsed finite objective and A x = b; Q represents x^T Q x with a symmetric part and binary diagonal."
+        },
+        {
+          "id": "artifact.schema",
+          "status": "pass",
+          "detail": "Structured QUBO result."
+        },
+        {
+          "id": "solver.shape",
+          "status": "pass",
+          "detail": "Solver dimension and pinned package agree."
+        },
+        {
+          "id": "compilation.matrix",
+          "status": "pass",
+          "detail": "Independent symmetric Q and constant include each rho*(A x-b)^2 offset; no Tool compilation imported."
+        },
+        {
+          "id": "compilation.model",
+          "status": "pass",
+          "detail": "Normalized objective, variable order and every equality match the original model."
+        },
+        {
+          "id": "compilation.digest",
+          "status": "pass",
+          "detail": "Compilation SHA-256 matches actual fields."
+        },
+        {
+          "id": "solutions.replayed",
+          "status": "pass",
+          "detail": "Each returned candidate is independently evaluated for raw objective, every equality residual, feasibility, penalty and total energy."
+        },
+        {
+          "id": "solver.solution-energy",
+          "status": "pass",
+          "detail": "Every claimed optimum has the independently recomputed penalized energy, including the constant."
+        },
+        {
+          "id": "solver.classical-reference",
+          "status": "pass",
+          "detail": "JS exhaustively enumerated every one of 2^n assignments; optimum energy and complete minimizing set agree."
+        },
+        {
+          "id": "compilation.exhaustive-replay",
+          "status": "pass",
+          "detail": "Every compiled energy matches original signed objective plus squared equality penalties within 1e-9."
+        },
+        {
+          "id": "constraints.feasible",
+          "status": "pass",
+          "detail": "Independent feasible assignment count: 2."
+        },
+        {
+          "id": "penalty.sufficient",
+          "status": "pass",
+          "detail": "Every penalized global minimizer must be feasible; otherwise caller penalty is insufficient."
+        },
+        {
+          "id": "reference.optimum",
+          "status": "pass",
+          "detail": "Self-reported enumeration, feasible optimum, minimizing assignments and penalty claims are cross-checked against independent exhaustive JS results."
+        },
+        {
+          "id": "provenance.complete",
+          "status": "not_checked",
+          "detail": "L2 observations only; no materialized Session provenance or final Acceptance."
+        }
+      ],
+      "solutionEvaluations": [
+        {
+          "bitVector": [
+            1,
+            0
+          ],
+          "objectiveValue": 6,
+          "residuals": [
+            {
+              "id": "choose",
+              "value": 0
+            }
+          ],
+          "feasible": true,
+          "penalty": 0,
+          "penalizedEnergy": -6
+        }
+      ]
+    }
+  }
+}

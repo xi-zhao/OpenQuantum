@@ -26,6 +26,7 @@ const NATIVE_EFFECT_EVIDENCE = "conservative-provider";
 const MCP_PLUGINS = new Set([
   "@deepseek-ai/dsh-mcp-client",
   "./credentialed-mcp-client.mjs",
+  "./scientific-mcp-client.mjs",
 ]);
 
 function isRecord(value) {
@@ -680,6 +681,9 @@ async function validateAudit(definition, projectRoot, packageRoot, issues) {
   );
   try {
     const capability = await loadCapability(packageRoot);
+    if (definition.level === "L3" && capability.manifest.acceptanceProfiles.length === 0) {
+      issues.push(`${definition.id}: L3 requires at least one Acceptance Profile`);
+    }
     return {
       manifest: path.relative(projectRoot, capability.manifestPath),
       schemaVersion: capability.manifest.schemaVersion,
@@ -706,7 +710,7 @@ function validateMaterialization(definition, projectRoot, issues) {
   if (
     !exactKeys(
       definition.materialization,
-      new Set(["adapter", "checks"]),
+      new Set(["adapter", "checks", "resultRoot", "replayChecks"]),
       label,
       issues,
     )
@@ -729,9 +733,24 @@ function validateMaterialization(definition, projectRoot, issues) {
   for (const [index, check] of definition.materialization.checks.entries()) {
     inspectFile(projectRoot, check, `${label}.checks[${index}]`, issues);
   }
+  const { resultRoot, replayChecks } = definition.materialization;
+  if (resultRoot !== undefined && (typeof resultRoot !== "string"
+    || !/^results\/openquantum\/[a-z0-9]+(?:-[a-z0-9]+)*$/.test(resultRoot)
+    || resultRoot !== `results/openquantum/${definition.id}`)) {
+    issues.push(`${label}.resultRoot must be the capability's canonical workspace results directory`);
+  }
+  if (replayChecks !== undefined) {
+    if (!Array.isArray(replayChecks) || replayChecks.length === 0
+      || new Set(replayChecks).size !== replayChecks.length
+      || !replayChecks.every(check => definition.materialization.checks.includes(check))) {
+      issues.push(`${label}.replayChecks must be a non-empty unique subset of checks`);
+    }
+  }
   return {
     adapter: definition.materialization.adapter,
     checks: definition.materialization.checks,
+    ...(resultRoot === undefined ? {} : { resultRoot }),
+    ...(replayChecks === undefined ? {} : { replayChecks }),
   };
 }
 

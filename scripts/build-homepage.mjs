@@ -1,3 +1,4 @@
+import { isMainModule } from "../src/lib/cli-entrypoint.mjs";
 import { copyFile, mkdir, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -41,6 +42,6 @@ export async function buildHomepage() {
   return outputRoot;
 }
 
-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (isMainModule(import.meta.url)) {
   console.log(`Homepage built: ${await buildHomepage()}`);
 }
