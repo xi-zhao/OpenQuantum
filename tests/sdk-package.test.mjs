@@ -5,7 +5,7 @@ import os from "node:os";
 import path from "node:path";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { randomUUID } from "node:crypto";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
@@ -44,6 +44,40 @@ test("SDK access survives archive, split installation and cached Skill relocatio
   assert.equal(await locateSdkRuntime(cached), runtime);
   const script = path.join(cached, "skills/tenpy-ground-state/scripts/sdk-access.mjs");
   const environment = { ...process.env, OPENQUANTUM_PLUGIN_SETTINGS_HOME: path.join(directory, "isolated settings") };
+  await t.test("relocated numerical MCP services and independent Validators retain their runtime schemas", async () => {
+    const cases = [
+      ["qec-memory-experiment", "noisy.json", "validateExperiment", ["run_qec_memory_experiment"]],
+      ["hamiltonian-simulation", "trotter-2.json", "validateSimulation", ["simulate_hamiltonian"]],
+      ["qpanda-qubo", "model.json", "validateQubo", ["solve_qpanda_qubo", "model_and_solve_qpanda_qubo"]],
+      ["ldpc-decoding", "parity.json", "validateDecoding", ["decode_ldpc_syndromes"]],
+    ];
+    for (const [id, fixture, validator, names] of cases) {
+      const relative = path.join(".agents/skills", id);
+      const source = path.join(root, relative), installed = path.join(runtime, relative);
+      for (const filename of (await fs.readdir(path.join(source, "artifacts"))).filter(file => file.endsWith(".schema.json"))) {
+        assert.deepEqual(await fs.readFile(path.join(installed, "artifacts", filename)),
+          await fs.readFile(path.join(source, "artifacts", filename)), `${id}: runtime schema ${filename}`);
+      }
+      await assert.rejects(fs.access(path.join(installed, "evals/fixtures", fixture)), { code: "ENOENT" });
+      const module = await import(pathToFileURL(path.join(installed, "validators/validate-result.mjs")));
+      const validation = module[validator](JSON.parse(await fs.readFile(path.join(source, "evals/fixtures", fixture), "utf8")));
+      assert.deepEqual(validation.observations.filter(item => item.status === "fail"), [], id);
+      assert.equal(validation.observations.find(item => item.id === "provenance.complete").status, "not_checked");
+      const client = new Client({ name: "relocated-numerical-contract", version: "1.0.0" });
+      const transport = new StdioClientTransport({ command: process.execPath,
+        args: [path.join(installed, "mcp/server.mjs")], cwd: runtime, env: environment, stderr: "pipe" });
+      let stderr = "";
+      transport.stderr.on("data", bytes => { stderr += bytes; });
+      try {
+        await client.connect(transport, { timeout: 10000 });
+        const listed = await client.listTools();
+        assert.deepEqual(listed.tools.map(tool => tool.name).sort(), [...names].sort(), id);
+      } catch (error) {
+        t.diagnostic(stderr);
+        throw error;
+      } finally { await client.close(); }
+    }
+  });
   const { stdout } = await run(process.execPath, [script, "inspect", "tenpy-ground-state"], { cwd: directory, env: environment });
   const result = JSON.parse(stdout);
   assert.equal(result.project, path.join(runtime, ".agents/skills/tenpy-ground-state"));
