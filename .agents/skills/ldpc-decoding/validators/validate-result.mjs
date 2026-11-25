@@ -78,7 +78,7 @@ export function validateDecoding({ request, result, reference }) {
       && equal(reference.request, input) && equal(reference.corrections, result.corrections)
       && equal(reference.bpConverged, result.bpConverged) && equal(reference.bpIterationsUsed, result.bpIterationsUsed), "A separate request-only Python program replayed serial BP+LSD with fixed options and checked estimates, convergence and iterations.");
   }
-  missing("provenance.complete", "L2 observations only; no materialized Session provenance or final scientific Acceptance.");
+  missing("provenance.complete", "Execution observations only; no materialized Session provenance or final scientific Acceptance.");
   return { schemaVersion: "1.0", observations };
 }
 

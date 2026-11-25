@@ -82,7 +82,7 @@
     "uv.lock": "828976c42ecf21fe0473c9bb19fb98fcfc329bd37b1c0b918074e9f92b0e0162",
     "validators/reference.py": "80b5ad7b77f7a9d0133ab539716494e5e7273ba798a51f92ed9eebad7c12cbea",
     "validators/validate-materialized.mjs": "bd94d62625103904e0779ad596a0006ad733987d0d90721b694535c80976a8eb",
-    "validators/validate-result.mjs": "5a49e6c053b88eff5efb45e03493ef92c4049684dd3793cc9fd7bf4c526f731f"
+    "validators/validate-result.mjs": "aba400b6eb5d21bad2b91ef7e53a2dd40fe6f20f6433484fd6c2ab6a67dee001"
   },
   "scope": [
     "Independent observations; only versioned profiles and persisted evidence enable central Acceptance.",

@@ -9,7 +9,7 @@ maturity:
     - id: independent-observations-2026-11-25
       kind: eval-report
       path: evals/evidence-2026-11-25.json
-      sha256: 63aee9eae36020587da1589eda99d6f5672022396a8ef4899b2ffa619990d831
+      sha256: 6440dd4a4101ead9a98395bf0004288c73a1473ce46a42ccf71c3bf51d3e6e22
 skill:
   name: ldpc-decoding
   entrypoint: SKILL.md

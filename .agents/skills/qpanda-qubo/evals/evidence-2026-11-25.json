@@ -88,7 +88,7 @@
     "test/validator.test.mjs": "8fbc989029959f402e790ec32d6816b16d0521f00e7a3e6ea1a2f187ae814f9b",
     "uv.lock": "180c8f8f4022619b23a69756c7b121dcfd0d7984cc626b5501c86b7b1a23df68",
     "validators/validate-materialized.mjs": "b38fc15cceb66270157a31923b065c4a94267dc1f0c47fb0417667773c2532df",
-    "validators/validate-result.mjs": "1ee1fd5284dcd31b3507812986b49029eebd202d3066ee784cb5564308532cd0"
+    "validators/validate-result.mjs": "cdafb579021afcc4ff4b2402499f3aa02f4aa25477c932bdf014a79719f5a358"
   },
   "scope": [
     "Independent observations; only versioned profiles and persisted evidence enable central Acceptance.",

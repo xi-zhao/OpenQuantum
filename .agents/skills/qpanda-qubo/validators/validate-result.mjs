@@ -101,7 +101,7 @@ export function validateQubo({ request, result }) {
   if (problem && issues.length === 0) {
     if (Boolean(request.model) !== Boolean(result.modeling)) {
       emit("request.result-kind", false, "The result belongs to a different Tool/input kind.");
-      missing("provenance.complete", "L2 observations only.");
+      missing("provenance.complete", "Execution observations only.");
       return { schemaVersion: "1.0", observations, solutionEvaluations };
     }
     const solver = request.model ? result.solver : result;
@@ -166,7 +166,7 @@ export function validateQubo({ request, result }) {
       for (const id of ["solver.classical-reference", ...(request.model ? ["compilation.exhaustive-replay", "constraints.feasible", "penalty.sufficient", "reference.optimum"] : [])]) missing(id, "Independent enumeration requires n<=16 and referenceMode!=skip; candidate checks do not certify global optimality.");
     }
   }
-  missing("provenance.complete", "L2 observations only; no materialized Session provenance or final Acceptance.");
+  missing("provenance.complete", "Execution observations only; no materialized Session provenance or final Acceptance.");
   return { schemaVersion: "1.0", observations, solutionEvaluations };
 }
 
