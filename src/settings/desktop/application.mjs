@@ -12,7 +12,7 @@ import { prepareDesktopSkill } from "./preparation.mjs";
 
 // Application Interface shared by the native Tool Provider and bounded settings
 // route. This owns preparation, not Agent turns, permissions or a Tool registry.
-export async function createDesktopApplication({ root, directory, credentials: provider, backendFactory = createDesktopBackend, environment = process.env, nodeExecutable = process.execPath } = {}) {
+export async function createDesktopApplication({ root, directory, credentials: provider, backendFactory = createDesktopBackend, environment = process.env, nodeExecutable = process.execPath, confine } = {}) {
   environment = { ...environment, PATH: `${path.dirname(nodeExecutable)}${path.delimiter}${environment.PATH ?? ""}` };
   const credentials = new DesktopCredentials(provider);
   const skillPolicy = desktopSkillPolicy(directory);
@@ -23,7 +23,7 @@ export async function createDesktopApplication({ root, directory, credentials: p
     current = new Settings({ backend: adapted, credentials, skillPolicy, directory, skillRoot: path.join(root, ".agents/skills"), environments });
     return current;
   };
-  const settings = createSettings(await backendFactory({ root, nodeExecutable }));
+  const settings = createSettings(await backendFactory({ root, nodeExecutable, confine }));
   const channel = createCredentialChannel({ settings, credentials });
   const agents = new Map();
   const disposedAgents = new WeakSet();
@@ -34,7 +34,7 @@ export async function createDesktopApplication({ root, directory, credentials: p
   async function owned(agent) {
     if (closed || !agent || disposedAgents.has(agent)) throw new Error("此 Tool 需要当前有效的 Desktop 聊天");
     if (!agents.has(agent)) {
-      agents.set(agent, backendFactory({ root, nodeExecutable }).then(backend => ({ settings: createSettings(backend), controller: new AbortController() })));
+      agents.set(agent, backendFactory({ root, nodeExecutable, confine }).then(backend => ({ settings: createSettings(backend), controller: new AbortController() })));
       agent.ctx?.effect(() => () => closeAgent(agent), "openquantum: close this chat's resources");
     }
     return agents.get(agent);

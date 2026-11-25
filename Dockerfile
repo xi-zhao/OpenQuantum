@@ -31,8 +31,8 @@ COPY --chown=node:node . .
 ENV NODE_ENV=production
 ENV DSH_TELEMETRY_MODE=DISABLED
 
-RUN mkdir -p /workspace/.openquantum /workspace/results \
-  && chown -R node:node /workspace/.openquantum /workspace/results
+RUN mkdir -p /workspace/.openquantum /research \
+  && chown -R node:node /workspace/.openquantum /research
 
 USER node
 

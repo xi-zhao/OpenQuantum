@@ -20,10 +20,21 @@
     provider: openquantum-public
     model: kimi-k2.7-code
 
+# Keep research writes separate from trusted Tool code and prepared runtimes.
+- id: sandbox-policy
+  config:
+    mode: !!js process.env.DSH_PERMISSION_MODE ?? 'workspace-write'
+    workspaceRoot: !!js process.env.OPENQUANTUM_WORKSPACE_ROOT || process.cwd()
+
 # Product sessions default to the deployment-owned OpenQuantum composition.
 - id: agent-presets
+  inject: [openquantumExecutionBoundary]
   config:
     default: openquantum
+
+- insert:
+    - id: openquantum-execution-boundary
+      name: '@openquantum/harness-execution-boundary'
 
 # This deployment exposes only routes explicitly owned by OpenQuantum.
 - id: llm-deepseek

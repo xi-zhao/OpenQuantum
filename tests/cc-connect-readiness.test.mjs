@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { apply } from "../runtime/openquantum/cc-connect/ready.mjs";
+import { apply, inject } from "../runtime/openquantum/cc-connect/ready.mjs";
 
 function context(awaitComposition) {
   const published = [];
@@ -20,6 +20,7 @@ function context(awaitComposition) {
 }
 
 test("ACP readiness publishes only after the Loader finishes Tool composition", async () => {
+  assert.ok(inject.includes("openquantumExecutionBoundary"), "ACP must wait for the deployment execution guard");
   let release;
   const ctx = context(() => new Promise(resolve => { release = resolve; }));
   const ready = apply(ctx, { provider: "fixture" });

@@ -195,7 +195,11 @@ export async function runQuantumHarnessE2E({
   const sandboxRoot = await mkdtemp(
     path.join(os.tmpdir(), "openquantum-real-provider-e2e-"),
   );
-  const harnessHome = path.join(sandboxRoot, "dsh");
+  // A process sandbox permits OS temp writes, so keep executable Home content
+  // inside the protected installation and only research output in temp.
+  const homes = path.join(projectRoot, ".openquantum/probes");
+  await mkdir(homes, { recursive: true });
+  const harnessHome = await mkdtemp(path.join(homes, "quantum-e2e-"));
   const workspaceRoot = path.join(sandboxRoot, "workspace");
   await mkdir(workspaceRoot, { recursive: true });
   await prepareOpenQuantumHarnessHome({ harnessHome, projectRoot });
@@ -483,6 +487,7 @@ export async function runQuantumHarnessE2E({
     }
     await stopChild(child);
     await rm(sandboxRoot, { recursive: true, force: true });
+    await rm(harnessHome, { recursive: true, force: true });
   }
 }
 

@@ -151,6 +151,17 @@ export async function prepareOpenQuantumHarnessHome({ harnessHome, projectRoot, 
     await buildLocaleClient(projectRoot, path.join(result.localesTarget, "client.js"));
     await buildCapabilityClient(projectRoot, path.join(result.capabilitiesTarget, "client.js"));
   }
+  if (!desktop) {
+    // The deployment guard also belongs to ACP. Its profile cannot resolve
+    // packages installed only in the sibling Web profile.
+    const acpExtensions = path.join(harnessHome, "profiles/acp/node_modules/@openquantum");
+    await mkdir(acpExtensions, { recursive: true });
+    for (const filename of ["project-root.mjs", "openquantum-project.json"]) {
+      await cp(path.join(extensionRoot, filename), path.join(acpExtensions, filename));
+    }
+    const [source, name] = extensions.executionBoundary;
+    await cp(path.join(projectRoot, source), path.join(acpExtensions, name), { recursive: true, force: true });
+  }
 
   if (desktop) {
     // One declarative bundle owns activation in the same Profile as its dependencies.

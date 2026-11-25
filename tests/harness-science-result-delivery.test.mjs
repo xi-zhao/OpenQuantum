@@ -8,6 +8,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import test from "node:test";
 import { prepareOpenQuantumHarnessHome } from "../scripts/lib/prepare-harness-home.mjs";
+import { createProtectedState } from "./helpers/protected-state.mjs";
 import { harnessHttpCookie, harnessSessionSnapshot, redactHarnessLaunchTokens } from "../scripts/lib/harness-http-auth.mjs";
 import { preparePythonFixture } from "./helpers/prepared-python.mjs";
 import { scienceResultFixture } from "./fixtures/science-result.mjs";
@@ -40,7 +41,8 @@ test("real Harness/MCP delivery reaches model context, native file read and proc
 }, async t => {
   const root = process.cwd();
   const sandbox = await mkdtemp(path.join(tmpdir(), "oq-result-harness-"));
-  const harnessHome = path.join(sandbox, "dsh");
+  const privateRoot = await createProtectedState(root);
+  const harnessHome = path.join(privateRoot, "dsh");
   const workspace = path.join(sandbox, "workspace");
   await mkdir(workspace);
   const large = scienceResultFixture();
@@ -49,7 +51,7 @@ test("real Harness/MCP delivery reaches model context, native file read and proc
   const executable = path.join(sandbox, "fixture-worker");
   await writeFile(executable, `#!${process.execPath}\nconst fs=require('node:fs');let data='';process.stdin.on('data',c=>data+=c);process.stdin.on('end',()=>{const r=JSON.parse(data);fs.appendFileSync(${JSON.stringify(counter)},'call\\n');const v=r.input.numQubits===2?${JSON.stringify(small)}:${JSON.stringify(large)};process.stdout.write(JSON.stringify({...v,input:r.input,inputSha256:r.inputSha256,dependencyLockSha256:r.dependencyLockSha256,source:r.source}));});\n`);
   await chmod(executable, 0o755);
-  const prepared = await preparePythonFixture({ root, sandbox, id: "pennylane-differentiable", executable });
+  const prepared = await preparePythonFixture({ root, sandbox: privateRoot, id: "pennylane-differentiable", executable });
   let child, logs = "", cookie, restarting = false, fullResult, sawRead = false, sawSmall = false, sawRestartRead = false;
   const modelErrors = [];
   const model = createServer(async (request, response) => {
@@ -90,7 +92,7 @@ test("real Harness/MCP delivery reaches model context, native file read and proc
     }
     response.end("data: [DONE]\n\n");
   });
-  t.after(async () => { await stop(child); model.closeAllConnections(); await new Promise(resolve => model.close(resolve)); await rm(sandbox, { recursive: true, force: true }); });
+  t.after(async () => { await stop(child); model.closeAllConnections(); await new Promise(resolve => model.close(resolve)); await rm(sandbox, { recursive: true, force: true }); await rm(privateRoot, { recursive: true, force: true }); });
   const modelPort = await listen(model);
   const reserved = createServer(); const port = await listen(reserved); await new Promise(resolve => reserved.close(resolve));
   const { presetTarget } = await prepareOpenQuantumHarnessHome({ projectRoot: root, harnessHome });

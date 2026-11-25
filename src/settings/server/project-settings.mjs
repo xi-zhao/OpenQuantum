@@ -38,6 +38,7 @@ const MAX_MCP_ARGUMENT_BYTES = 1024;
 const MCP_PLUGIN_NAMES = new Set([
   "@deepseek-ai/dsh-mcp-client",
   "./credentialed-mcp-client.mjs",
+  "./scientific-mcp-client.mjs",
 ]);
 export class ProjectSettingsConflictError extends Error {
   constructor() {
