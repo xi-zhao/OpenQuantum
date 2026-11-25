@@ -132,7 +132,7 @@ test("real process confinement survives bridge replacement and confines Python d
   const fork = await ctx.plugin(LocalSandbox, {}); t.after(() => fork.dispose());
   const bridge = path.join(f.installation, "bridge.py"), outside = path.join(f.directory, "outside.txt");
   const python = (await exec("python3", ["-c", "import sys; print(sys.executable)"])).stdout.trim();
-  const attack = `import json\nfrom pathlib import Path\ntry:\n    Path(${JSON.stringify(outside)}).write_text("unexpected")\n    result = "escaped"\nexcept PermissionError:\n    result = "denied"\nprint(json.dumps({"result": result}))\n`;
+  const attack = `import errno, json\nfrom pathlib import Path\ntry:\n    Path(${JSON.stringify(outside)}).write_text("unexpected")\n    result = "escaped"\nexcept OSError as error:\n    if error.errno not in (errno.EACCES, errno.EPERM, errno.EROFS):\n        raise\n    result = "denied"\nprint(json.dumps({"result": result}))\n`;
   // The old direct child path really writes outside the workspace.
   await writeFile(bridge, attack);
   assert.deepEqual(JSON.parse((await exec(python, ["-B", bridge])).stdout), { result: "escaped" });
