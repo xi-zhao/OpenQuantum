@@ -1,0 +1,109 @@
+{
+  "request": {
+    "quadratic": [
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        -1
+      ]
+    ],
+    "linear": [
+      -1,
+      0
+    ],
+    "constant": 4,
+    "method": "traversal"
+  },
+  "result": {
+    "schemaVersion": "1.0",
+    "packageVersion": "2.0.0",
+    "problem": {
+      "size": 2,
+      "keyQubits": 2,
+      "resultQubits": 4,
+      "sha256": "d7cf8ae6989a88478c2e9a08e15292636e83b7239a1fea3d018797fec1ade09d"
+    },
+    "classical": {
+      "method": "qubobytraversal",
+      "optimalAssignments": [
+        [
+          0,
+          1
+        ]
+      ],
+      "minimumValue": 3
+    },
+    "classicalRole": "main",
+    "reference": {
+      "mode": "auto",
+      "status": "not_run",
+      "reason": "No additional classical reference; traversal is still executed when selected as the main algorithm."
+    },
+    "quantum": null,
+    "checks": {
+      "objectiveConsistencyError": 0
+    },
+    "scientificValidation": "observations_available",
+    "limitations": [
+      "Local pyqpanda_alg CPU-simulator result; no Origin Quantum cloud or real QPU was used.",
+      "Engineering consistency checks are not an independent scientific Validator.",
+      "QAOA output is a sampled variational estimate and may differ from the classical optimum."
+    ],
+    "validation": {
+      "schemaVersion": "1.0",
+      "observations": [
+        {
+          "id": "request.scope",
+          "status": "pass",
+          "detail": "Independently parsed finite objective and A x = b; Q represents x^T Q x with a symmetric part and binary diagonal."
+        },
+        {
+          "id": "artifact.schema",
+          "status": "pass",
+          "detail": "Structured QUBO result."
+        },
+        {
+          "id": "solver.shape",
+          "status": "pass",
+          "detail": "Solver dimension and pinned package agree."
+        },
+        {
+          "id": "solutions.replayed",
+          "status": "pass",
+          "detail": "Each returned candidate is independently evaluated for raw objective, every equality residual, feasibility, penalty and total energy."
+        },
+        {
+          "id": "solver.solution-energy",
+          "status": "pass",
+          "detail": "Every claimed optimum has the independently recomputed penalized energy, including the constant."
+        },
+        {
+          "id": "solver.classical-reference",
+          "status": "pass",
+          "detail": "JS exhaustively enumerated every one of 2^n assignments; optimum energy and complete minimizing set agree."
+        },
+        {
+          "id": "provenance.complete",
+          "status": "not_checked",
+          "detail": "L2 observations only; no materialized Session provenance or final Acceptance."
+        }
+      ],
+      "solutionEvaluations": [
+        {
+          "bitVector": [
+            0,
+            1
+          ],
+          "objectiveValue": 3,
+          "residuals": [],
+          "feasible": true,
+          "penalty": 0,
+          "penalizedEnergy": 3
+        }
+      ]
+    }
+  }
+}

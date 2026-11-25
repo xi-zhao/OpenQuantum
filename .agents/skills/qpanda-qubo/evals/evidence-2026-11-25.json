@@ -1,0 +1,58 @@
+{
+  "schemaVersion": "1.0",
+  "kind": "development-eval-evidence",
+  "date": "2026-11-25",
+  "capability": "qpanda-qubo",
+  "level": "L2",
+  "checks": [
+    {
+      "command": "node --test --test-concurrency=2 tests/l2-independent-validators.test.mjs tests/paper-tools-contracts.test.mjs .agents/skills/qpanda-qubo/test/mcp.test.mjs tests/capability-package-audit.test.mjs",
+      "exitCode": 0,
+      "passed": 98,
+      "failed": 0,
+      "logSha256": "6c120507dd04d47885305a29182d1e3265a25b9eb8a485d8f0c58af9237607b0"
+    },
+    {
+      "command": "env OPENQUANTUM_REAL_L2=1 OPENQUANTUM_PYTHON_ENV_ROOT=/Volumes/Elements/CodexArtifacts/Projects/openQuantum/2026-11-25--governance-phase5-environments/python-envs OPENQUANTUM_COMPUTE_CACHE_ROOT=/Volumes/Elements/CodexArtifacts/Projects/openQuantum/2026-11-25--governance-phase5-environments/cache node --test --test-concurrency=1 .agents/skills/ldpc-decoding/test/live.test.mjs .agents/skills/qpanda-qubo/test/live.test.mjs",
+      "exitCode": 0,
+      "passed": 11,
+      "failed": 0,
+      "logSha256": "53036938a5f9f5496d1627f5c1610e27c5c3774a1eba228274aa306451ae66b7"
+    }
+  ],
+  "files": {
+    "SKILL.md": "5ac5a146ef3e8b119269093141f2345ce6457d3b15afd990a4cbaaa8f09a2aa2",
+    "agents/openai.yaml": "a8981e3f0b8daa3c1992b669881c4e6dc2592e87d76708039e08c308160fde86",
+    "artifacts/observations.schema.json": "32408d479ec4755457931ee9cea4277d22721af46a1e35c0c6bd946fe152e8f3",
+    "artifacts/qubo-result.schema.json": "798e75ed1c4d98466bd6def84577fc91451eedd17232d8d6d23ffbd3a43fdcfe",
+    "evals/README.md": "9606db1cd50c344b5c1a3f68e41d78eacd37dccc88ad9fc18bdac512e25acb10",
+    "evals/cases.json": "e724182d073eebd0364a71feb9f90a99f24279200aeb0c62a269998a5c9cfd04",
+    "evals/fixtures/infeasible.json": "36553ea47ac4ddc8b68e88c38e396a163bf2be9b512f26a4c5a680f1636a6851",
+    "evals/fixtures/maximize.json": "fe3ddaa58bd3e7fae6c1fdaceecfaca324c86f82337ed5df42749b9ac953f7f2",
+    "evals/fixtures/model.json": "2cbe5e92bfdc502bbd158520a3dc15cb691457a015a7defcd1eaf3649ccf1293",
+    "evals/fixtures/raw.json": "111f5731c3670aef2bde4b06dcb740779446c4d09c14b21d262992116bbf14d4",
+    "evals/fixtures/weak-penalty.json": "e6a91ea4082c9d5efe53d956dfa76c0836127c5b76cc2b31d21654e852b1bf21",
+    "evals/run-evals.mjs": "7aab41e4b8b926313e5b12fcf675facb6ddd87fadad0b9250f57a7ef4153194c",
+    "evals/suite.json": "8c6e9f19fb3dcc9d418d073ea09a07d885287a1933dee6df77134a12883068a0",
+    "inputs/request.schema.json": "6a44af5f48de1906cee29ca25bbc74cf3b8555309313b7ee0b400459d337af53",
+    "mcp/bridge.py": "901750b55e69ad34452efab2ec0c34758274a05aa72a976707481d89ac42d453",
+    "mcp/server.mjs": "d7e32692bf6a6d9c7439c7466d7329937a1101cfac858bdeff4100dea9b74cb9",
+    "modeling/binary-linear-model.mjs": "df5a5fc2669ff8e7c51abc475421eb3c6c6ca4341a6ffef31b9d51e8a7b1a4f6",
+    "modeling/compile-worker.mjs": "cbe362d343934eca30b5898bb4d2d3dd3825124197148bcc61d90be7a9a7fc0e",
+    "pyproject.toml": "1ea6869aecfef7c18b98a56dc227791f8a6461c3cc20f7bf53548cbccd55687b",
+    "scripts/setup-native.mjs": "370cc7aa147552b613991f933ffb4fcc922e0228e6ddabc17e0ed375bce8ddad",
+    "test/live.test.mjs": "c0284c5a8bb9d871251db3dfcf2bab50d9e332ce67575f18b11cf74525735967",
+    "test/mcp.test.mjs": "3af97553a2b779093186efd1289ad502a5137908b1007836d390aea934d53132",
+    "test/validator.test.mjs": "162e5bc911f01ec465fb460583d7b4a43125fa58c8d917ec0386e0f3022f23aa",
+    "uv.lock": "180c8f8f4022619b23a69756c7b121dcfd0d7984cc626b5501c86b7b1a23df68",
+    "validators/validate-result.mjs": "5f8d58028cefca8573b7b74e532485e81f26e148863ca0f48b63ec2cde5b8efa"
+  },
+  "scope": [
+    "Independent numerical observations only; empty Acceptance and Reproduction Profiles.",
+    "Live pinned SDK checks are local; no model, quantum cloud or hardware calls."
+  ],
+  "limitations": [
+    "No independent human domain review is claimed.",
+    "No threshold, hardware or quantum advantage inference."
+  ]
+}

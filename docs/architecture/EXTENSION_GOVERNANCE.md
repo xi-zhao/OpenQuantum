@@ -3,12 +3,16 @@
 > 本文件顶部记录 **2026-11-25 成熟度快照**；保留 2026-11-24 全量快照与治理决定，以及 2026-09-24 首次治理（101 Skill / 37 MCP / 220 Tool，B1/B2/B3）的逐项历史决定，不改写既有记录。
 > 实时数量请运行 `npm run governance:audit`：[`审计脚本`](../../scripts/audit-extension-governance.mjs) 解析源码 YAML/JSON 声明，输出统计并核对内部一致性。新增 Skill 无需修改本页的历史数字；本页不是 CI 的固定数量门禁。
 
-## 2026-11-25 科学验收提升快照（K）
+## 2026-11-25 科学验收提升快照（K–N）
 
-201 个 Capability：`L0=102`、`L1=93`、`L2=1`、`L3=5`。
+201 个 Capability：`L0=102`、`L1=91`、`L2=3`、`L3=5`。
 QEC memory 与 Hamiltonian 接入版本化 Acceptance Profile、真实字节物化复核、确定性可读报告、
 中央 Acceptance Builder 和 Harness Session 重放。五条 L3 的完整调用副作用均包含工作区写入；
 独立参考缺失时不能获得 passed，不将静态成熟度等同于所有实例验收通过。
+
+QPanda QUBO 与 LDPC decoding 从 L1 升至 L2，增加 schema、独立 Validator 与固定 eval；
+前者重建原始目标/等式约束并独立穷举 n≤16，后者重算 GF(2) 残差、权重和统计并独立重放 BP+LSD。
+两项保持空 Acceptance / Reproduction Profiles；第三项 L2 为 platform-diagnostics。
 
 ## 2026-11-25 合流与 Hamiltonian L2 快照（G–J）
 

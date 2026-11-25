@@ -498,7 +498,7 @@ packages:
         - .agents/skills/fieldqkit-hardware/test/mcp.test.mjs
 
   - id: qpanda-qubo
-    level: L1
+    level: L2
     execution:
       mcpServers:
         - name: qpanda_qubo
@@ -515,6 +515,11 @@ packages:
       nativeTools: []
       checks:
         - .agents/skills/qpanda-qubo/test/mcp.test.mjs
+        - .agents/skills/qpanda-qubo/test/validator.test.mjs
+        - .agents/skills/qpanda-qubo/test/live.test.mjs
+        - .agents/skills/qpanda-qubo/evals/run-evals.mjs
+    audit:
+      manifest: capability.yaml
 
   - id: quantum-circuit-verification
     level: L3
@@ -754,7 +759,7 @@ packages:
         - tests/harness-paper-tools.test.mjs
 
   - id: ldpc-decoding
-    level: L1
+    level: L2
     execution:
       mcpServers:
         - name: ldpc_local
@@ -771,6 +776,11 @@ packages:
         - tests/paper-tools-contracts.test.mjs
         - tests/paper-tools-live.test.mjs
         - tests/harness-paper-tools.test.mjs
+        - .agents/skills/ldpc-decoding/test/validator.test.mjs
+        - .agents/skills/ldpc-decoding/test/live.test.mjs
+        - .agents/skills/ldpc-decoding/evals/run-evals.mjs
+    audit:
+      manifest: capability.yaml
 
   - id: flow-vqe
     level: L1

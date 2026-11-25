@@ -127,8 +127,8 @@ test("traversal solve returns a deterministic classical reference", async () => 
   assert.equal(result.structuredContent.packageVersion, "2.0.0");
   assert.equal(result.structuredContent.classical.minimumValue, -1);
   assert.deepEqual(result.structuredContent.classical.optimalAssignments, [[0, 1, 0]]);
-  assert.equal(result.structuredContent.scientificValidation, "not_evaluated");
-  assert.match(result.content[0].text, /not_evaluated/);
+  assert.equal(result.structuredContent.scientificValidation, "observations_available");
+  assert.match(result.content[0].text, /Independent observations/);
 });
 
 test("qaoa solve adds a bounded local variational distribution", async () => {

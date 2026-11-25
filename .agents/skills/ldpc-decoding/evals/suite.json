@@ -1,0 +1,225 @@
+{
+  "schemaVersion": "1.0",
+  "id": "ldpc-decoding-observations-eval",
+  "version": "1.0.0",
+  "metric": {
+    "id": "expected-observation-outcome",
+    "unit": "case fraction",
+    "direction": "higher_is_better",
+    "minimum": 0,
+    "maximum": 1
+  },
+  "cases": [
+    {
+      "id": "parity",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [],
+        "caseSha256": "a44c6183283a14160b9e9cfe1e47ed079685772b8d07df7b649ddc89ecafcc81"
+      }
+    },
+    {
+      "id": "logical-flips",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [],
+        "caseSha256": "2c2c31fc9613859ef67fabceb6a29cc22eeb20b01c7eb58ccff32d94fabae291"
+      }
+    },
+    {
+      "id": "nonbinary-matrix",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "request.scope"
+        ],
+        "caseSha256": "4d5a12027ec38c8ff29acb84aa42c9f86bc605a31128b3bb0f38c13bc03570ed"
+      }
+    },
+    {
+      "id": "nonbinary-syndrome",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "request.scope"
+        ],
+        "caseSha256": "bb8455ddffe93fc5372c083722d95d7a18dcd2b37e86b045875e127788594d6a"
+      }
+    },
+    {
+      "id": "matrix-dimension",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "request.scope"
+        ],
+        "caseSha256": "c1bb6e01ec165193e0d916ba874247a39225cdedb5a6a7a0e2b86bc4217867aa"
+      }
+    },
+    {
+      "id": "syndrome-dimension",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "request.scope"
+        ],
+        "caseSha256": "d06aaa98d2dafed5b1d98957189db033bc6914db1d4c417d4ac0d2209ca6045b"
+      }
+    },
+    {
+      "id": "inconsistent-syndrome",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "request.scope"
+        ],
+        "caseSha256": "8e4bd6a0825a3a47b1708b24fd5cfe129f60382675fea6921d95b8be14f0229b"
+      }
+    },
+    {
+      "id": "false-syndrome-success",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "syndrome.replayed",
+          "decoding.satisfied",
+          "weights.replayed",
+          "convergence.consistent",
+          "statistics.replayed",
+          "decoder.replayed"
+        ],
+        "caseSha256": "e1745e3827d64859fdcf1adbf495ebc67c953f6312dc873a53b6cf3c37365ea3"
+      }
+    },
+    {
+      "id": "wrong-hamming-weight",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "weights.replayed"
+        ],
+        "caseSha256": "058cc813f7ef14a4f56a7c479c893afcfb4bcd4c8243d01db03c4fe4bb9d52da"
+      }
+    },
+    {
+      "id": "false-residual",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "syndrome.replayed"
+        ],
+        "caseSha256": "cd4adeae0fba0801d97cf61bf0a81c5de05dbe1ed494cf2ae2158523a613c8c7"
+      }
+    },
+    {
+      "id": "false-aggregate",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "statistics.replayed"
+        ],
+        "caseSha256": "55781a4588dc599c6045d6a6ade4a5ec8e32f0077d595a6f3e1c7ae93db58601"
+      }
+    },
+    {
+      "id": "false-logical-rate",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "statistics.replayed",
+          "logical.replayed"
+        ],
+        "caseSha256": "944a2b673074930908e41334d3825f224b97dc085215bc8de3451f0f2b4ab1d6"
+      }
+    },
+    {
+      "id": "logical-claim-without-errors",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "logical.scope"
+        ],
+        "caseSha256": "1474e395c39f6e69b58d000d7140bd2490886eb924215a3e0ed842ff1ec4e12c"
+      }
+    },
+    {
+      "id": "invalid-correction-dimensions",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "result.dimensions",
+          "decoder.replayed"
+        ],
+        "caseSha256": "0ed20d71bbe9795e85d3099d229281c174067d07553047be60c1265f3106b469"
+      }
+    },
+    {
+      "id": "nonbinary-estimate",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "artifact.schema"
+        ],
+        "caseSha256": "6b79a7b2617195316da99e9eded704024894d64ce1f67f35586815cae2a411f0"
+      }
+    },
+    {
+      "id": "false-iteration-count",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "convergence.consistent",
+          "decoder.replayed"
+        ],
+        "caseSha256": "6e0f9cc28abf773f490a0552adb7ec9e43142c8c64e5df9dce5b598249d57215"
+      }
+    },
+    {
+      "id": "wrong-true-errors",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "request.scope"
+        ],
+        "caseSha256": "4e5b87df5f49ceab7d143ebc0648804bd4b4cc270eb3d40249e6934a78f6f9ce"
+      }
+    },
+    {
+      "id": "logical-vector-dimension",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "request.scope"
+        ],
+        "caseSha256": "e8f01bacf28da12cedf607b6e33013fc96936220d3e331e061dca6fdc2a69fb9"
+      }
+    },
+    {
+      "id": "missing-reference",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [],
+        "caseSha256": "8c63e3008985c8baec858c87f8033805122855cff68ce67d7a3aec753ef0f2e1"
+      }
+    }
+  ]
+}

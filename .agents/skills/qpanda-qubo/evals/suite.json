@@ -1,0 +1,241 @@
+{
+  "schemaVersion": "1.0",
+  "id": "qpanda-qubo-observations-eval",
+  "version": "1.0.0",
+  "metric": {
+    "id": "expected-observation-outcome",
+    "unit": "case fraction",
+    "direction": "higher_is_better",
+    "minimum": 0,
+    "maximum": 1
+  },
+  "cases": [
+    {
+      "id": "model",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [],
+        "caseSha256": "371c3da7650862a509af20e7828b0384813ef35d35f658b415c1430f92622f01"
+      }
+    },
+    {
+      "id": "maximize",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [],
+        "caseSha256": "5896e00cf3bda7e4c09e8e00c6f35716826b2a0b4fd36e71f58db1d81a086656"
+      }
+    },
+    {
+      "id": "raw-symmetric",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [],
+        "caseSha256": "a78ba16cd51d3574a50a93d90d2c33589b44267e91af6f9141e22bd93ca99191"
+      }
+    },
+    {
+      "id": "infeasible-equalities",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "constraints.feasible",
+          "penalty.sufficient"
+        ],
+        "caseSha256": "52fb69caf82204d7ee57592ecd0370634055bbcb15cf04fecc4f48db731df977"
+      }
+    },
+    {
+      "id": "insufficient-penalty",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "penalty.sufficient"
+        ],
+        "caseSha256": "e864076182fabc5764c259ecf268d691eb3d5343b95546538a844f572b26cd65"
+      }
+    },
+    {
+      "id": "illegal-variable",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "request.scope"
+        ],
+        "caseSha256": "48ab115aef0d301fcd261131fa9204448e088e3fa04344c1601f8ebe4fccb85a"
+      }
+    },
+    {
+      "id": "undeclared-variable",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "request.scope"
+        ],
+        "caseSha256": "714cf2e5fa3af30315515f66eb38a4a340254436913b21735fd4e34476f115b8"
+      }
+    },
+    {
+      "id": "duplicate-variable",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "request.scope"
+        ],
+        "caseSha256": "c38640f578aef2603c0d644686fe189fb4941799a92612dfe31d29d98dfcd0e8"
+      }
+    },
+    {
+      "id": "non-square-input",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "request.scope"
+        ],
+        "caseSha256": "87b4a088350ec4bd9344e8dc714330ee9b9f32868df11eb817a05c3d80eb3f1d"
+      }
+    },
+    {
+      "id": "wrong-vector-length",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "request.scope"
+        ],
+        "caseSha256": "b6bce600e998da79cf090d169c5f13bc5b4cf00578dfb6aa470bf432e926834a"
+      }
+    },
+    {
+      "id": "missing-constant-offset",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "compilation.matrix",
+          "compilation.digest",
+          "compilation.exhaustive-replay",
+          "reference.optimum"
+        ],
+        "caseSha256": "eacce93e611797971dbcf1f04fa3eb0dd8d8cba2591b3ce8dbc96b4515487b46"
+      }
+    },
+    {
+      "id": "wrong-offdiagonal-factor",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "compilation.matrix",
+          "compilation.digest",
+          "compilation.exhaustive-replay",
+          "reference.optimum"
+        ],
+        "caseSha256": "b6d41fdb4470659f1e1b522ac620ec7ec9e6e4ffeaa8a5ef7a1a3e49ccef5b15"
+      }
+    },
+    {
+      "id": "malformed-result-matrix",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "compilation.matrix",
+          "compilation.digest",
+          "compilation.exhaustive-replay",
+          "reference.optimum"
+        ],
+        "caseSha256": "9b7a495de031a6921b942e2068a350ff5d94e2b3f198269c377ccbcfa574417c"
+      }
+    },
+    {
+      "id": "fake-global-minimum",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "solver.solution-energy",
+          "solver.classical-reference"
+        ],
+        "caseSha256": "7a318c0c09ad200ddf7a3ea58494f159e6e20e7aa96ae3ba8981ae10b70d971d"
+      }
+    },
+    {
+      "id": "fake-feasible-optimum",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "reference.optimum"
+        ],
+        "caseSha256": "42730aec94cb723ea01965fae7ad3855236d231d279b26e51f86bb5167e33857"
+      }
+    },
+    {
+      "id": "fake-assignment",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "solver.solution-energy",
+          "solver.classical-reference"
+        ],
+        "caseSha256": "c4f0a81373914465a1b5d6d7d393b749b3664356171794c4aa144e8663f9d3a4"
+      }
+    },
+    {
+      "id": "nonbinary-solution",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "artifact.schema"
+        ],
+        "caseSha256": "417c6c700d88b4a8f2e268c84d7e79c2a6aa6ae5f9a9f3619278949b6fb4be61"
+      }
+    },
+    {
+      "id": "false-feasible-count",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "reference.optimum"
+        ],
+        "caseSha256": "03cc5f7724aa52efe8dd08ca1a5a6fb68838094360c34f812c147c8a04e0ccfc"
+      }
+    },
+    {
+      "id": "false-normalized-model",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "compilation.model"
+        ],
+        "caseSha256": "156348852a321f387054c461e999157a01bae381ff14f5252f05db936457f89b"
+      }
+    },
+    {
+      "id": "raw-constant-substitution",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "solver.solution-energy",
+          "solver.classical-reference"
+        ],
+        "caseSha256": "4fbdafa48edf917efe4e38723d90b481f0c1e2ae03b5d5848fab8204926968a6"
+      }
+    }
+  ]
+}

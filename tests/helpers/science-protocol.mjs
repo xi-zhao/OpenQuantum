@@ -34,6 +34,7 @@ export function registerScienceProtocolTests(capabilities, { cancellationId } = 
       const envFile = path.join(sandbox, "worker-env.json");
       await writeFile(modeFile, "valid");
       const executable = `#!${process.execPath}\nconst fs=require('node:fs');let input='';process.stdin.on('data',c=>input+=c);process.stdin.on('end',()=>{
+        if(!JSON.parse(input).input) {process.stdout.write(JSON.stringify({status:'not_checked',reason:'Protocol fixture has no numerical reference'}));return;}
         fs.writeFileSync(${JSON.stringify(envFile)},JSON.stringify(process.env));
         const mode=fs.readFileSync(${JSON.stringify(modeFile)},'utf8');
         if(mode==='fail'){process.stderr.write('controlled worker failure');process.exit(2);}

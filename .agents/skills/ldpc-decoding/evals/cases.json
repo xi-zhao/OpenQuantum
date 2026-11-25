@@ -1,0 +1,261 @@
+[
+  {
+    "id": "parity",
+    "fixture": "parity.json",
+    "fixtureSha256": "81cb3c537e325a7fa86b4f46af9e99bfae9999bc1fe1cc571c135c0f069288bd",
+    "edits": {},
+    "reference": true,
+    "failedChecks": []
+  },
+  {
+    "id": "logical-flips",
+    "fixture": "logical.json",
+    "fixtureSha256": "8a4f29776a8f2eac8d6d17a79097f5033932cec55b19181e8a83014ce2898c3e",
+    "edits": {},
+    "reference": true,
+    "failedChecks": []
+  },
+  {
+    "id": "nonbinary-matrix",
+    "fixture": "parity.json",
+    "fixtureSha256": "81cb3c537e325a7fa86b4f46af9e99bfae9999bc1fe1cc571c135c0f069288bd",
+    "edits": {
+      "request.parityCheck.0.0": 2
+    },
+    "reference": true,
+    "failedChecks": [
+      "request.scope"
+    ]
+  },
+  {
+    "id": "nonbinary-syndrome",
+    "fixture": "parity.json",
+    "fixtureSha256": "81cb3c537e325a7fa86b4f46af9e99bfae9999bc1fe1cc571c135c0f069288bd",
+    "edits": {
+      "request.syndromes.0.0": 2
+    },
+    "reference": true,
+    "failedChecks": [
+      "request.scope"
+    ]
+  },
+  {
+    "id": "matrix-dimension",
+    "fixture": "parity.json",
+    "fixtureSha256": "81cb3c537e325a7fa86b4f46af9e99bfae9999bc1fe1cc571c135c0f069288bd",
+    "edits": {
+      "request.parityCheck.0": [
+        1
+      ]
+    },
+    "reference": true,
+    "failedChecks": [
+      "request.scope"
+    ]
+  },
+  {
+    "id": "syndrome-dimension",
+    "fixture": "parity.json",
+    "fixtureSha256": "81cb3c537e325a7fa86b4f46af9e99bfae9999bc1fe1cc571c135c0f069288bd",
+    "edits": {
+      "request.syndromes.0": [
+        1
+      ]
+    },
+    "reference": true,
+    "failedChecks": [
+      "request.scope"
+    ]
+  },
+  {
+    "id": "inconsistent-syndrome",
+    "fixture": "parity.json",
+    "fixtureSha256": "81cb3c537e325a7fa86b4f46af9e99bfae9999bc1fe1cc571c135c0f069288bd",
+    "edits": {
+      "request.parityCheck": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          0
+        ]
+      ]
+    },
+    "reference": true,
+    "failedChecks": [
+      "request.scope"
+    ]
+  },
+  {
+    "id": "false-syndrome-success",
+    "fixture": "parity.json",
+    "fixtureSha256": "81cb3c537e325a7fa86b4f46af9e99bfae9999bc1fe1cc571c135c0f069288bd",
+    "edits": {
+      "result.corrections.0": [
+        0,
+        0,
+        0
+      ]
+    },
+    "reference": true,
+    "failedChecks": [
+      "syndrome.replayed",
+      "decoding.satisfied",
+      "weights.replayed",
+      "convergence.consistent",
+      "statistics.replayed",
+      "decoder.replayed"
+    ]
+  },
+  {
+    "id": "wrong-hamming-weight",
+    "fixture": "parity.json",
+    "fixtureSha256": "81cb3c537e325a7fa86b4f46af9e99bfae9999bc1fe1cc571c135c0f069288bd",
+    "edits": {
+      "result.correctionWeights.0": 3
+    },
+    "reference": true,
+    "failedChecks": [
+      "weights.replayed"
+    ]
+  },
+  {
+    "id": "false-residual",
+    "fixture": "parity.json",
+    "fixtureSha256": "81cb3c537e325a7fa86b4f46af9e99bfae9999bc1fe1cc571c135c0f069288bd",
+    "edits": {
+      "result.residualSyndromes.0": [
+        1,
+        0
+      ]
+    },
+    "reference": true,
+    "failedChecks": [
+      "syndrome.replayed"
+    ]
+  },
+  {
+    "id": "false-aggregate",
+    "fixture": "parity.json",
+    "fixtureSha256": "81cb3c537e325a7fa86b4f46af9e99bfae9999bc1fe1cc571c135c0f069288bd",
+    "edits": {
+      "result.statistics.syndromeMatchRate": 0
+    },
+    "reference": true,
+    "failedChecks": [
+      "statistics.replayed"
+    ]
+  },
+  {
+    "id": "false-logical-rate",
+    "fixture": "logical.json",
+    "fixtureSha256": "8a4f29776a8f2eac8d6d17a79097f5033932cec55b19181e8a83014ce2898c3e",
+    "edits": {
+      "result.statistics.logicalFlipRate": 0
+    },
+    "reference": true,
+    "failedChecks": [
+      "statistics.replayed",
+      "logical.replayed"
+    ]
+  },
+  {
+    "id": "logical-claim-without-errors",
+    "fixture": "parity.json",
+    "fixtureSha256": "81cb3c537e325a7fa86b4f46af9e99bfae9999bc1fe1cc571c135c0f069288bd",
+    "edits": {
+      "result.logicalSuccess": "evaluated-against-supplied-errors"
+    },
+    "reference": true,
+    "failedChecks": [
+      "logical.scope"
+    ]
+  },
+  {
+    "id": "invalid-correction-dimensions",
+    "fixture": "parity.json",
+    "fixtureSha256": "81cb3c537e325a7fa86b4f46af9e99bfae9999bc1fe1cc571c135c0f069288bd",
+    "edits": {
+      "result.corrections.0": [
+        1,
+        0
+      ]
+    },
+    "reference": true,
+    "failedChecks": [
+      "result.dimensions",
+      "decoder.replayed"
+    ]
+  },
+  {
+    "id": "nonbinary-estimate",
+    "fixture": "parity.json",
+    "fixtureSha256": "81cb3c537e325a7fa86b4f46af9e99bfae9999bc1fe1cc571c135c0f069288bd",
+    "edits": {
+      "result.corrections.0": [
+        2,
+        0,
+        0
+      ]
+    },
+    "reference": true,
+    "failedChecks": [
+      "artifact.schema"
+    ]
+  },
+  {
+    "id": "false-iteration-count",
+    "fixture": "parity.json",
+    "fixtureSha256": "81cb3c537e325a7fa86b4f46af9e99bfae9999bc1fe1cc571c135c0f069288bd",
+    "edits": {
+      "result.bpIterationsUsed.0": 999
+    },
+    "reference": true,
+    "failedChecks": [
+      "convergence.consistent",
+      "decoder.replayed"
+    ]
+  },
+  {
+    "id": "wrong-true-errors",
+    "fixture": "logical.json",
+    "fixtureSha256": "8a4f29776a8f2eac8d6d17a79097f5033932cec55b19181e8a83014ce2898c3e",
+    "edits": {
+      "request.trueErrors.0": [
+        0,
+        0,
+        0
+      ]
+    },
+    "reference": true,
+    "failedChecks": [
+      "request.scope"
+    ]
+  },
+  {
+    "id": "logical-vector-dimension",
+    "fixture": "logical.json",
+    "fixtureSha256": "8a4f29776a8f2eac8d6d17a79097f5033932cec55b19181e8a83014ce2898c3e",
+    "edits": {
+      "request.logicalObservables.0": [
+        1
+      ]
+    },
+    "reference": true,
+    "failedChecks": [
+      "request.scope"
+    ]
+  },
+  {
+    "id": "missing-reference",
+    "fixture": "parity.json",
+    "fixtureSha256": "81cb3c537e325a7fa86b4f46af9e99bfae9999bc1fe1cc571c135c0f069288bd",
+    "edits": {},
+    "reference": false,
+    "failedChecks": []
+  }
+]
