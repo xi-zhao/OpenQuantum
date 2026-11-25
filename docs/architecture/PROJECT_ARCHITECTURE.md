@@ -18,7 +18,7 @@
 - **共享插件**拥有领域 Skill、Tool implementation、MCP Server 与科学合同；共享执行不依赖某个宿主。
 - **DSH / Codex 适配**负责各自的注册、协议、权限、凭据映射和生命周期；会话、模型、执行循环与历史由宿主拥有。
 - **设置与准备**复用目录和用例逻辑，各宿主保存自己的配置和凭据。实现复用不等于已经拆成独立通用包。
-- **DSH 执行保护**在部署层防止会话可写范围覆盖安装和运行环境；内置科学 MCP 经宿主进程沙箱启动，后代只写临时区。共享科学实现不解析 Session 或导入 DSH。见[执行边界](../DEPLOYMENT.md#科学计算执行边界)。
+- **DSH 执行保护**在部署层防止会话可写范围覆盖安装和运行环境；内置科学 MCP 与宿主侧独立参考子进程（QCEC、QEC、Hamiltonian、LDPC、Symmer）均经宿主进程沙箱以 `enforcement: full` 启动，后代只写临时区。共享科学实现不解析 Session 或导入 DSH。见[执行边界](../DEPLOYMENT.md#科学计算执行边界)。
 - **品牌与 UI**复用自有页面，通过宿主扩展控制相应品牌元素；Desktop 是带品牌的 DSH 交付形态。
 - **打包与工程交付**组合发行内容、检查和文档；CI、Release、实际安装与科学验收分别验证。
 
@@ -32,9 +32,8 @@ Codex 使用 `execute_openquantum_tool`，DSH 保持原生 Tool Registry。Skill
 科学验收链独立于执行完成：Tool facts 经 Materializer 保存、重读和核对摘要，Validator 产生 observations，
 Acceptance Profile 提供规则，只有 central Acceptance Builder 推导最终 Acceptance。
 
-**图示时的实现范围：**DSH 已为量子基态、量子信息审计与 QCEC 分类复核接通自动物化和会话验收；QCEC 的科学验收范围独立于主计算规模，见[能力说明](../../.agents/skills/quantum-circuit-verification/SKILL.md#独立科学验收范围)。Codex 复用计算与验证结果，
-其原生适配仍将未核实的 provenance 保留为 `not_checked`，没有复制 DSH 的自动物化和会话验收链。
-这不是所有能力或所有宿主均已完成科学验收的声明；后续维护应重新核对相关实现。
+**当前实现范围（2026-11-26）：**DSH 已为 **11 项 L3 能力**（覆盖 12 个物化 Tool：量子基态、量子信息审计、QCEC 分类复核、QEC 存储实验、Hamiltonian 演化、QPanda QUBO 建模/求解、LDPC 解码、PyZX 优化、Symmer 降比特、PauLie Lie 代数与 Graphix MBQC）接通自动物化、确定性可读报告与会话重放验收；各能力的科学验收范围独立于主计算规模（如 [QCEC 能力说明](../../.agents/skills/quantum-circuit-verification/SKILL.md#独立科学验收范围)），缺参考或超范围保留 `conditional`，发现独立科学矛盾则 `failed`。Codex 复用共享计算与独立观察，其原生适配仍将未核实的 provenance 保留为 `not_checked`，没有复制 DSH 的自动物化和会话验收链。
+这不是所有能力或所有宿主均已完成科学验收的声明；上述两张静态架构图仍对应下方标注的历史源码快照，职责与依赖方向未变，后续维护应继续核对实时实现。
 
 ## 实现导航与更新方式
 

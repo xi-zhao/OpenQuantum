@@ -1,7 +1,15 @@
-# 扩展治理清单（2026-11-25 快照）
+# 扩展治理清单（2026-11-26 快照）
 
-> 本文件顶部记录 **2026-11-25 成熟度快照**；保留 2026-11-24 全量快照与治理决定，以及 2026-09-24 首次治理（101 Skill / 37 MCP / 220 Tool，B1/B2/B3）的逐项历史决定，不改写既有记录。
+> 本文件顶部记录 **2026-11-26 成熟度快照**；保留 2026-11-25、2026-11-24 全量快照与治理决定，以及 2026-09-24 首次治理（101 Skill / 37 MCP / 220 Tool，B1/B2/B3）的逐项历史决定，不改写既有记录。
 > 实时数量请运行 `npm run governance:audit`：[`审计脚本`](../../scripts/audit-extension-governance.mjs) 解析源码 YAML/JSON 声明，输出统计并核对内部一致性。新增 Skill 无需修改本页的历史数字；本页不是 CI 的固定数量门禁。
+
+## 2026-11-26 科学验收与边界加固快照
+
+201 个 Capability：`L0=102`、`L1=87`、`L2=1`、`L3=11`。
+
+- **QCEC Host 参考沙箱收口**：[`quantum-circuit-verification`](../../.agents/skills/quantum-circuit-verification/SKILL.md) 的宿主侧独立参考子进程经共享 `createConfinedReferenceRunner` 纳入 `enforcement: full` 临时目录沙箱，消除最后一处绕过 `ctx.sandbox` 的 Host 侧科学参考子进程；沙箱缺失或降级时 fail-closed 为 `conditional` 且不执行子进程。
+- **四项 unitary 能力升至 L3**：[`pyzx-optimization`](../../.agents/skills/pyzx-optimization/SKILL.md)、[`symmer-tapering`](../../.agents/skills/symmer-tapering/SKILL.md)、[`paulie-algebra`](../../.agents/skills/paulie-algebra/SKILL.md) 与 [`graphix-mbqc`](../../.agents/skills/graphix-mbqc/SKILL.md) 新增版本化 Acceptance Profile、物化重读 Validator、确定性可读报告、DSH 适配与 `full` 沙箱 Harness 重启回放；11 条 L3 对应的 12 个完整 Tool 调用均声明 `workspace-write`。缺独立参考、超稠密阈值或 `simulate=false` 保持 `conditional`，任何独立观察矛盾则 `failed`。Codex 侧保持执行期独立 observations（`provenance.complete=not_checked`）并经重定位打包测试验证。`platform-diagnostics` 保持为当前唯一 L2。
+- **共享模块图静态守卫扩展**：[`tests/plugin-boundaries.test.mjs`](../../tests/plugin-boundaries.test.mjs) 现同时检查全部 L2/L3 能力的 `validators/*.mjs` 与 `core/*.mjs` 打包依赖图，确保共享科学验证器与报告渲染器不反向导入 `runtime/`、UI、`@deepseek-ai/*` 或 `electron`。
 
 ## 2026-11-25 科学验收与工程稳健性快照（O–R）
 

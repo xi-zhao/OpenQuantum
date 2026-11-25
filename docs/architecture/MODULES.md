@@ -1,7 +1,7 @@
 # OpenQuantum 模块地图与演进契约
 
 - 状态：当前模块边界
-- 日期：2026-10-25
+- 日期：2026-11-26
 - 适用范围：新增能力、接入 SDK 或 MCP Server、修改设置、升级 Harness、增加科研验收
 
 先读[文档与架构入口](../README.md)获得五分钟总览；本文件只负责长期模块 Interface、允许的依赖方向和
@@ -43,7 +43,7 @@ Interface 注册和生命周期机制，Skill、Tool、Validator 等是职责模
 
 本轮不增加新的包管理层或统一 Runtime，也不改变现有产品版本同步规则。新增宿主必须先复用共享工具合同，
 再提供该宿主的注册和失败路径检查；桌面升级另做 UI、配置/会话兼容和实际安装验证。
-`tests/plugin-boundaries.test.mjs` 检查共享执行入口的静态模块图；`tests/component-parity.test.mjs`
+`tests/plugin-boundaries.test.mjs` 检查共享 Tool、MCP 与全部 L2/L3 科学 Validator/报告渲染器的静态模块图；`tests/component-parity.test.mjs`
 验证目录内容一致，并在没有任何 DSH runtime/preset 的目录中构建。两者不替代真实宿主验收。
 
 ### 两端共用的有界 Tool 调用模块
@@ -105,8 +105,8 @@ Desktop 不再委托 Codex backend 工厂。原 `createBackend`、预算与目�
 | Capability Package | 原生 `SKILL.md`；独立 Tool Provider；可选 Validator 与 Acceptance Profile | 一个有界领域问题的工作流、确定性执行和科学规则 | 自动绑定内部模块、Harness 生命周期、Provider 鉴权 | package 内 unit、MCP contract 与 eval 测试 |
 | Capability Conformance | `auditCapabilityPackages({ projectRoot })` | 以 `scope=static-declaration` 验证 Git 跟踪的 Skill、Tool contract、Agent Preset Provider/activation 声明、合同检查入口、科学合同、依赖锁和 L3 物化证据文件 | 执行 check、证明 Provider 当前已启用或 ready、动态查询 MCP Tool 清单、替代 Validator | `npm run capability:conformance` 与失败关闭测试 |
 | Scientific Contracts | `.agents/skill-contracts/index.mjs` | Result、Acceptance、Score、Reproduction 的共享 schema 与构建规则 | 具体量子算法、Session 持久化、UI | contract/profile/report 测试 |
-| Scientific Result Materialization | `defineScientificResultMaterializer(definition)` | 按有效 Session 沙箱统一完成 workspace 路径约束、原子写入、真实字节重读与 digest 校验；将结构化证据交给 Validator 和 central Acceptance Builder，并可输出确定性可读报告 | 领域数值计算、产生 observation、Harness 生命周期 | QGS/QI/QCEC materialization 测试 |
-| Scientific Result Adapter Registry（Host Plugin 内部） | `scientificResultAdapter(toolName)` | 将受支持 Tool 映射到领域投影、Materializer、Validator 与 Artifact 类型 | 拥有 `tools/post-execute` hook、自动发现任意 Skill、注册 Tool 或创造 Runtime | projection 与三条 L3 回放测试 |
+| Scientific Result Materialization | `defineScientificResultMaterializer(definition)` | 按有效 Session 沙箱统一完成 workspace 路径约束、原子写入、真实字节重读与 digest 校验；将结构化证据交给 Validator 和 central Acceptance Builder，并可输出确定性可读报告 | 领域数值计算、产生 observation、Harness 生命周期 | 各 L3 materialization 与篡改/沙箱测试 |
+| Scientific Result Adapter Registry（Host Plugin 内部） | `scientificResultAdapter(toolName)` | 将受支持 Tool 映射到领域投影、Materializer、受限 Host 参考执行器、Validator 与 Artifact 类型 | 拥有 `tools/post-execute` hook、自动发现任意 Skill、注册 Tool 或创造 Runtime | projection 与全部 L3 Harness 重放测试 |
 | Scientific Validation | capability Validator + Acceptance Profile + central Acceptance Builder | Validator 从结构化证据产生 observations；Profile 定义规则；Builder 唯一地推导 Acceptance | 读写文件、调用模型、拥有 Session 或用 eval 代替运行时证据 | validator/profile/contract 测试 |
 | Model Routes | Harness `llm.models` / Provider adapter | 模型目录、协议适配、超时和凭据引用 | 量子数值计算、科学结论 | model probe、真实 Tool Calling E2E |
 | Evidence & Diagnostics | 版本化 eval、benchmark、诊断 JSON 和发布证据 | 检测开发回归和当前连接状态 | 运行时科学判定、用历史 PASS 代替当前在线检查 | package eval、benchmark、platform diagnostics tests |
@@ -114,8 +114,8 @@ Desktop 不再委托 Codex backend 工厂。原 `createBackend`、预算与目�
 `Project Settings Interface` 与 `Integration Catalog` 已刻意拆开。新增一个 MCP Server 连接的名称、版本和文档不应触碰
 文件锁、路径安全和 CAS 规则；调整设置事务也不应修改所有集成条目。
 
-QGS、`quantum-information-audit` 与 QCEC 已形成三条内部 Scientific Result Adapter 纵切。可信 Host Plugin
-连接原生 Tool 与 Session 生命周期，按真实结果事件绑定来源并回填展示；Registry 只登记明确支持的 Tool。
+截至 2026-11-26，已有 11 项 L3 能力（12 个物化 Tool：QGS、量子信息审计、QCEC、QEC 存储、Hamiltonian 模拟、QPanda QUBO 建模/求解、LDPC 解码、PyZX、Symmer、PauLie、Graphix）通过内部 Scientific Result Adapter 接入。可信 Host Plugin
+连接原生 Tool 与 Session 生命周期，按真实结果事件绑定来源并回填展示；Registry 只登记明确支持的 Tool，并通过统一的 `full` 沙箱执行器约束宿主侧独立参考子进程。
 通用 Materializer 隐藏 workspace 写入和
 字节重读，领域 Adapter 只拥有输入规范化、Artifact 形态与 Validator 映射。这不是可独立安装的
 Tool Provider，也不是根据 Skill 自动执行任意代码的 Capability Runtime。
@@ -205,17 +205,17 @@ Server 显式列出 package entrypoint、MCP-exposed Tool、启用方式、合�
 默认离线 CI 通过 `npm run capability:contracts:test` 从 policy 自动收集 package MCP 与 native Tool 的
 `contractCheck`，新增能力不再需要同步维护第二份测试命令清单；外部上游 probe 仍保持显式运行。
 
-当前参考：
+当前参考（2026-11-26 实时统计以 `npm run governance:audit` 为准；当前 201 项为 `L0=102, L1=87, L2=1, L3=11`）：
 
 | 能力 | 当前等级 | 说明 |
 | --- | --- | --- |
 | `quantum-sdk-advisor` | L0 | 选型工作流，不执行付费或真实硬件操作 |
 | `qiskit-circuit-workbench` | L1 | 使用独立声明的 Qiskit Harness MCP Client 和显式 Tool contract |
 | `qiskit-ibm-runtime`、`qiskit-ibm-transpiler`、`qiskit-gym`、`qpanda-runtime`、`quantum-hardware` | L1 执行接入 | Tool-only 合同覆盖；全部默认关闭，只有固定源码及副作用审查，在线握手与正式启用证据另验 |
-| `fieldqkit-hardware`、`qpanda-qubo`、`quantum-circuit-verification`、`qec-memory-experiment`、`tyxonq-workbench`、`qmclaw-workbench` | L1 | 有界本地/只读执行与合同测试；`tyxonq-workbench` 为 opt-in，`qmclaw-workbench` 只产生合成实验数据；不宣称最终科学验收 |
+| `fieldqkit-hardware`、`tyxonq-workbench`、`qmclaw-workbench` | L1 | 有界本地/只读执行与合同测试；`tyxonq-workbench` 为 opt-in，`qmclaw-workbench` 只产生合成实验数据；不宣称最终科学验收 |
 | `platform-diagnostics` | L2 | 报告 schema、固定检查和独立 Validator |
-| `quantum-information-audit` | L3 | 独立重算、Profile/eval，并经 Harness 物化、真实字节重读、验收和回放 |
-| `quantum-ground-state` | L3 | 完整 Result Package -> Acceptance -> Result Commit 参考纵切 |
+| `quantum-ground-state`、`quantum-information-audit`、`quantum-circuit-verification` | L3 | 独立重算/受限参考、Profile/eval，并经 DSH Harness 物化、真实字节重读、中央验收与重启回放 |
+| `qec-memory-experiment`、`hamiltonian-simulation`、`qpanda-qubo`、`ldpc-decoding`、`pyzx-optimization`、`symmer-tapering`、`paulie-algebra`、`graphix-mbqc` | L3 | 版本化 Acceptance Profile、物化字节复核、确定性可读报告、受限 Host 参考（适用项）与 DSH Harness 重启回放；Codex 继续保留执行期独立 observations（`provenance.complete=not_checked`） |
 
 ## 6. 常见需求的落点
 

@@ -1,6 +1,6 @@
 # OpenQuantum 当前交接
 
-核验日期：2026-11-25。此页只记录当前交接状态；架构以[文档总入口](docs/README.md)为准，执行事实以 Harness
+核验日期：2026-11-26。此页只记录当前交接状态；架构以[文档总入口](docs/README.md)为准，执行事实以 Harness
 Session event log 为准，科学状态以 Acceptance Report 为准。2026-09 至 2026-10-30 的日期化记录（含 Harness 0.2.1 迁移、
 0.8.5–0.8.8 独立安装包及 scalable 增量迁移）已迁至[交接历史](docs/handoff/HISTORY.md)，内容未删改。
 接手时先重新查询 Git、PR 与 CI，不把本页当作实时状态。
@@ -19,7 +19,7 @@ Session event log 为准，科学状态以 Acceptance Report 为准。2026-09 �
     [PR #87](https://github.com/xi-zhao/OpenQuantum/pull/87)（`ws 8.23.0` 传输升级）、
     [PR #88](https://github.com/xi-zhao/OpenQuantum/pull/88)（Braket 受控门本地噪声验证）和
     [PR #89](https://github.com/xi-zhao/OpenQuantum/pull/89)（设置页按环境报告 SDK 实际版本）。
-  - 当前静态能力规模：**201 个 Capability**（[`.agents/capability-packages.yml`](.agents/capability-packages.yml)：`L0=102, L1=87, L2=5, L3=7`）、
+  - 当前静态能力规模：**201 个 Capability**（[`.agents/capability-packages.yml`](.agents/capability-packages.yml)：`L0=102, L1=87, L2=1, L3=11`）、
     **193 个内置 Skill**（180 自动可选、13 手动分类索引）、**91 个 MCP 连接**（66 个默认开启，其中 Qiskit 两项可通过离线开关关闭；25 个按需启用）、
     **5 个原生量子 Tool**、**121 个 SDK/源码环境**。以上为源码静态声明，不代表新版本已发布或已全部科学验收。
 - **0.8.11 发行入口**：共享 backend、状态协议修复及 SlowQuant / TNQS / RcmpsCore 接入见 [0.8.11 更新说明](docs/releases/v0.8.11.md)。
@@ -38,8 +38,8 @@ Session event log 为准，科学状态以 Acceptance Report 为准。2026-09 �
 
 ## 已知缺口与治理跟进
 
-- **科学验收**：七条 L3 覆盖 QGS、量子信息审计、QCEC 分类复核、QEC memory、Hamiltonian simulation、QPanda QUBO 与 LDPC decoding（`L0=102, L1=87, L2=5, L3=7`）。后四项已接入版本化 Profile、物化字节复核、中央 Acceptance、确定性可读报告与 Harness Session 重放；只在各自有界范围内派生验收。PyZX、Symmer、PauLie 和 Graphix 提升至 L2，与 platform-diagnostics 共五项；四项新增能力只产独立 observations，不派生 Acceptance。Codex 自动物化与会话验收仍未接通。
-- **扩展与仓库治理**：[扩展治理清单](docs/architecture/EXTENSION_GOVERNANCE.md)新增 2026-11-25 成熟度快照并保留 2026-11-24 历史快照；`npm run governance:audit` 输出实时统计并检查声明内部一致性，无需随新增 Skill 改写快照。零引用的 `outputs/` 已清理并加入 `.gitignore`，[证据边界](docs/integrations/evidence/README.md)与[宣传素材边界](docs/communications/README.md)已落盘。`docs/communications/` 待迁出至外部归档后移除，`experiments/` 已逐项核查 100 个原有文件：9 个二进制均受 provenance / 文档 / 脚本引用保护，未发现可删除的零引用一次性大文件；保留边界见[实验说明](experiments/README.md)。
+- **科学验收与沙箱收口**：**11 条 L3**（覆盖 12 个物化 Tool：`workspace-write`）包含 QGS、量子信息审计、QCEC 分类复核、QEC memory、Hamiltonian simulation、QPanda QUBO（建模/求解）、LDPC decoding、PyZX、Symmer、PauLie 与 Graphix（`L0=102, L1=87, L2=1, L3=11`，当前唯一 L2 为 `platform-diagnostics`）。所有 Host 侧独立科学参考子进程（含 QCEC、QEC、Hamiltonian、LDPC 与 Symmer）均统一经 `enforcement: full` 临时目录沙箱约束，沙箱不可用或降级时 fail-closed 为 `conditional`；四项新增 unitary L3 均已接入版本化 Profile、物化重读复核、确定性可读报告与实时冻结 SDK 下的完整沙箱 Harness 重启回放。[`tests/plugin-boundaries.test.mjs`](tests/plugin-boundaries.test.mjs) 现同时校验全部 L2/L3 共享 Validator 与报告渲染器模块图不反向导入宿主或 UI。Codex 侧继续保持执行期独立 observations（`provenance.complete=not_checked`），自动物化与会话验收仍未接通。
+- **扩展与仓库治理**：[扩展治理清单](docs/architecture/EXTENSION_GOVERNANCE.md)新增 2026-11-26 成熟度与边界加固快照，并保留 2026-11-25、2026-11-24 与 2026-09-24 历史快照；`npm run governance:audit` 输出实时统计并检查声明内部一致性，无需随新增 Skill 改写快照。零引用的 `outputs/` 已清理并加入 `.gitignore`，[证据边界](docs/integrations/evidence/README.md)与[宣传素材边界](docs/communications/README.md)已落盘。`docs/communications/` 待迁出至外部归档后移除，`experiments/` 已逐项核查 100 个原有文件：9 个二进制均受 provenance / 文档 / 脚本引用保护，未发现可删除的零引用一次性大文件；保留边界见[实验说明](experiments/README.md)。
 - **本地治理合流（未推送）**：`xi-zhao/chore-project-governance` 已依次以 `--no-ff` 合入三条修复分支；
   `c/shared-credential-redaction-rebased @ 3dc29060`、`c/desktop-preparation-reuse-rebased @ 35eb2f67`、
   `c/security-scientific-bridge-boundary-rebased @ 67d8c2fa` 的引用保留原位，可独立或合流交付 PR。

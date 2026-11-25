@@ -46,7 +46,7 @@ Symmer 使用 `IndependentOp` 和 `S3Projection.perform_projection`，不自动�
 
 PauLie 先运行分类和 `get_dla_dim`；closureMode 按需选择显式闭包，referenceMode 单独选择稠密参考。独立参考从 iP 出发，以原始生成元的伴随作用迭代构造实反厄米矩阵空间，双次正交化、增加基向量阈值 `1e-10`；维数必须一致且 span 残差不超过 `1e-8`。spanResidualTarget 标注残差覆盖的是闭包还是输入生成元；未枚举时不声称检查了 SDK 完整表示空间。这是实线性 Lie 维数，不是 GF(2) 秩。上游 classification 可以用同构名称，如 so(6) 与 su(4)；独立检查不构成完整抽象分类证明。全部控制系数独立是输入假设，不能由此推出有限深 ansatz 表现、训练性质或真实设备的可控性。
 
-四项均为 L2，返回输入、版本、输入摘要、依赖锁摘要及独立 Validator observations，`scientificValidation=observations_available`、`provenance.complete=not_checked`。每项提供输入/结果/observations schema 和固定 eval；保持空 Acceptance / Reproduction Profiles，没有新增 L3 Materializer 或中央验收适配。独立验证器不导入 Tool bridge：PyZX 重算门表及完整酉矩阵，Symmer 重算 GF(2) 与目标扇区能谱，PauLie 重算闭包/中心及小系统稠密对易子，Graphix 重放原电路态、资源图、给定测量分支与 X/Z 修正。范围外或参考不可用时明确 not_checked；开发回归不替代正式科学验收。
+四项在 DSH 侧均已达到 L3：执行期返回输入、版本、输入摘要、依赖锁摘要及独立 Validator observations（`scientificValidation=observations_available`、`provenance.complete=not_checked`）；DSH 宿主 Materializer 经 `ctx.fs` 原子写入并重读输入与结果字节（其中 Symmer 的独立扇区能谱参考在 `enforcement: full` 沙箱下执行），再由中央 Acceptance Builder 按各能力版本化 Acceptance Profile 派生验收并保存确定性可读报告与 Result Commit，支持 Harness 重启后无重算回放。独立验证器不导入 Tool bridge：PyZX 重算门表及完整酉矩阵，Symmer 重算 GF(2) 与目标扇区能谱，PauLie 重算闭包/中心及小系统稠密对易子，Graphix 重放原电路态、资源图、给定测量分支与 X/Z 修正。范围外、显式跳过、`simulate=false` 或参考不可用时保留 `conditional`，任何独立检查发现矛盾则 `failed`。Codex 继续保留执行期独立 observations，不复制 DSH 的会话物化链；开发回归不替代人工领域审阅。
 
 ## 验证与证据
 
