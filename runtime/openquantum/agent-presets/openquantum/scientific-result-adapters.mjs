@@ -10,6 +10,8 @@ export const QUANTUM_INFORMATION_AUDIT_TOOL =
   "mcp__toqito_audit__audit_density_matrix";
 export const QUANTUM_CIRCUIT_VERIFICATION_TOOL =
   "mcp__qcec_local__verify_circuit_equivalence";
+export const QEC_MEMORY_TOOL = "mcp__qec_local__run_qec_memory_experiment";
+export const HAMILTONIAN_SIMULATION_TOOL = "mcp__hamiltonian_local__simulate_hamiltonian";
 
 const GROUND_STATE_SKILL = ".agents/skills/quantum-ground-state";
 const QUANTUM_INFORMATION_SKILL =
@@ -234,6 +236,62 @@ function isRecord(value) {
   return value !== null && typeof value === "object" && !Array.isArray(value);
 }
 
+// Both numerical capabilities already own independent computational Validators.
+// This internal Adapter adds only their persisted-evidence boundary and projection.
+function numericalAdapter({ capabilityId, tool, operation, title, profileId, validatorId, artifactType, artifactKey, referenceFile, describe }) {
+  const skillPath = `.agents/skills/${capabilityId}`;
+  let runtimePromise;
+  const runtime = () => runtimePromise ??= Promise.all([
+    import(moduleUrl(`${skillPath}/validators/validate-materialized.mjs`)),
+    import(moduleUrl(`${skillPath}/core/render-report.mjs`)),
+  ]).then(modules => Object.assign({}, ...modules));
+  const project = value => {
+    if (value?.scientificValidation !== "observations_available" || !Array.isArray(value.validation?.observations)
+      || !isRecord(value[artifactKey])) return undefined;
+    const details = describe(value[artifactKey]);
+    if (!details) return undefined;
+    return { schemaVersion: "1.0", capabilityId, operation, title,
+      summary: "已生成计算事实与独立观察；最终科学验收需物化证据后由中央规则推导。",
+      scientificStatus: "observations_available", details };
+  };
+  const materialize = defineScientificResultMaterializer({
+    capabilityId, skillPath, resultRoot: `results/openquantum/${capabilityId}`,
+    packagePrefix: capabilityId, inputId: "experiment-request", profileId, validatorId,
+    provenanceTools: ["mcp/server.mjs", "mcp/bridge.py", "validators/validate-result.mjs",
+      "validators/validate-materialized.mjs", referenceFile, "core/render-report.mjs", "uv.lock"].map(file => ({
+      id: `${capabilityId}-${file.replaceAll(/[/.]/g, "-")}`, path: `${skillPath}/${file}`,
+      version: capability => capability.manifest.version,
+    })),
+    async prepare({ request, structuredContent }) {
+      const implementation = await runtime();
+      const canonicalRequest = implementation.normalizeAuditRequest(request);
+      if (!project(structuredContent)) throw new Error(`Invalid ${capabilityId} computational envelope`);
+      return {
+        request: canonicalRequest,
+        artifacts: [{ key: artifactKey, id: artifactType, type: artifactType,
+          fileName: `${artifactType}.json`, value: structuredContent[artifactKey] }],
+        validate({ request: persistedRequest, artifacts, ...context }) {
+          return implementation.validateMaterializedResult({ ...context, request: persistedRequest, [artifactKey]: artifacts[artifactKey] });
+        },
+        renderReport: implementation.renderReport,
+      };
+    },
+  });
+  return [tool, Object.freeze({
+    descriptor: Object.freeze({ capabilityId, operation, title,
+      scientificStatuses: Object.freeze(["observations_available", "acceptance_available"]),
+      materializedArtifactTypes: Object.freeze([artifactType]) }),
+    project,
+    materialize(context) { return materialize({ ...context, request: context.arguments, structuredContent: context.canonicalValue?.structuredContent }); },
+    projectMaterialized(canonicalValue, materialized) {
+      const presentation = materializedPresentation({ computational: project(canonicalValue?.structuredContent),
+        materialized, title, leadingDetails: details => details.slice(0, 2) });
+      return presentation && { ...presentation, details: [...presentation.details,
+        ...(materialized.readableReport ? [detail("可读验收报告", materialized.readableReport.path)] : [])] };
+    },
+  })];
+}
+
 function finiteNumber(value) {
   return typeof value === "number" && Number.isFinite(value);
 }
@@ -452,6 +510,16 @@ function materializedPresentation({
 }
 
 const adapters = new Map([
+  numericalAdapter({ capabilityId: "qec-memory-experiment", tool: QEC_MEMORY_TOOL,
+    operation: "memory-experiment", title: "QEC 存储实验验收", profileId: "rotated-surface-memory-audit",
+    validatorId: "memory-observations", artifactType: "memory-result", artifactKey: "facts", referenceFile: "validators/replay.py",
+    describe: facts => Number.isSafeInteger(facts.result?.shots) && Number.isSafeInteger(facts.result?.logicalErrors)
+      ? [detail("采样数", String(facts.result.shots)), detail("逻辑失败数", String(facts.result.logicalErrors))] : undefined }),
+  numericalAdapter({ capabilityId: "hamiltonian-simulation", tool: HAMILTONIAN_SIMULATION_TOOL,
+    operation: "pauli-evolution", title: "Hamiltonian 演化验收", profileId: "pauli-evolution-reference-audit",
+    validatorId: "hamiltonian-observations", artifactType: "hamiltonian-result", artifactKey: "result", referenceFile: "validators/reference.py",
+    describe: result => ["trotter", "qdrift"].includes(result.method) && Number.isSafeInteger(result.numQubits)
+      ? [detail("演化方法", result.method), detail("量子位数", String(result.numQubits))] : undefined }),
   [QUANTUM_CIRCUIT_VERIFICATION_TOOL, Object.freeze({
     descriptor: Object.freeze({ capabilityId: "quantum-circuit-verification", operation: "verify-circuit-equivalence",
       title: "电路判定复核", scientificStatuses: Object.freeze(["observations_available", "acceptance_available"]),
@@ -551,6 +619,8 @@ const adapters = new Map([
 
 export function scientificResultAdapter(toolName) {
   const name = toolName === "audit_density_matrix" ? QUANTUM_INFORMATION_AUDIT_TOOL
-    : toolName === "verify_circuit_equivalence" ? QUANTUM_CIRCUIT_VERIFICATION_TOOL : toolName;
+    : toolName === "verify_circuit_equivalence" ? QUANTUM_CIRCUIT_VERIFICATION_TOOL
+    : toolName === "run_qec_memory_experiment" ? QEC_MEMORY_TOOL
+    : toolName === "simulate_hamiltonian" ? HAMILTONIAN_SIMULATION_TOOL : toolName;
   return adapters.get(name);
 }

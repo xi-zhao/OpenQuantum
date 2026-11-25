@@ -188,7 +188,7 @@ export function validateSimulation({ request, result, reference }) {
       } catch (error) { emit("reference.structure", false, `Invalid independent reference: ${error.message}`); }
     }
   }
-  missing("provenance.complete", "L2 observations only: no Acceptance Profile, Result Package, Materializer or central Acceptance Builder.");
+  missing("provenance.complete", "Execution observations only: Session provenance is checked separately after Materializer readback.");
   return { schemaVersion: "1.0", observations };
 }
 

@@ -1,15 +1,15 @@
 schemaVersion: "1.1"
 id: qec-memory-experiment
-version: 1.0.0
+version: 1.1.0
 displayName: Rotated surface-code memory observations
-description: L2 independent checks of pinned Stim/PyMatching experiments; no scientific Acceptance.
+description: Independent pinned Stim/PyMatching observations with materialized, replayable central Acceptance.
 maturity:
   status: draft
   evidence:
     - id: local-observations-2026-11-25
       kind: eval-report
-      path: evals/evidence-2026-11-25.json
-      sha256: dd5b41b9924cee008c4f26e04b3e1465a58377c0ceca605143eb77b0da3f3c36
+      path: evals/evidence-phase5.json
+      sha256: eb6e4a3d95a12809e52526606d48fe1c8dd155034bf000b06fe4eba8137af66a
 skill:
   name: qec-memory-experiment
   entrypoint: SKILL.md
@@ -21,7 +21,6 @@ scope:
   outOfScope:
     - Error-correction thresholds, hardware performance and cross-machine bitwise reproducibility.
     - Independent proof of Stim or PyMatching algorithms and implementation correctness.
-    - Session provenance, Acceptance Profiles and final scientific Acceptance.
   examples:
     - title: A fixed local memory experiment
       prompt: Compare a noiseless and a noisy distance-3 Z-memory experiment with explicit shots and seed.
@@ -43,7 +42,13 @@ validators:
       script: validators/validate-result.mjs
       args: []
       shell: false
-acceptanceProfiles: []
+acceptanceProfiles:
+  - id: rotated-surface-memory-audit
+    version: 1.0.0
+    validator: memory-observations
+    definition:
+      path: acceptance-profiles/rotated-surface-memory-audit-v1.json
+      sha256: ff3897466667dec5debea04920fc188579c90863294a1cbf6f719c322264bbbc
 reproductionProfiles: []
 modelRequirements:
   textGeneration: false
@@ -55,7 +60,7 @@ permissions:
     destinations: []
   filesystem:
     read: [prepared-runtime, structured-result]
-    write: [temporary-compute-cache]
+    write: [temporary-compute-cache, workspace/results]
   subprocess:
     allowed: true
     commands: [python]
@@ -86,3 +91,12 @@ evals:
 compatibility:
   contract: "1.1"
   harness: 0.1.0-rc.6
+dependencies:
+  - id: stim
+    kind: scientific-backend
+    version: 1.16.0
+    digest: 7ce22952043711f23b4b65a2a0b85f3e48c096a1567ad2894fbcc64463943823
+  - id: pymatching
+    kind: scientific-backend
+    version: 2.4.0
+    digest: 7ce22952043711f23b4b65a2a0b85f3e48c096a1567ad2894fbcc64463943823

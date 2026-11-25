@@ -1,15 +1,15 @@
 schemaVersion: "1.1"
 id: hamiltonian-simulation
-version: 1.0.0
+version: 1.1.0
 displayName: Hamiltonian product-formula observations
-description: L2 independent matrix, resource and seeded-sampling checks; no scientific Acceptance.
+description: Independent matrix, resource and sampling checks with materialized, replayable central Acceptance.
 maturity:
   status: draft
   evidence:
     - id: local-observations-2026-11-25
       kind: eval-report
-      path: evals/evidence-2026-11-25.json
-      sha256: 1f99139c709b31a124ed463a7cfc3d262aed327a0eedba472f7b08be6098eab9
+      path: evals/evidence-phase5.json
+      sha256: e670be7edac5ba9aef6f964e174d4dfe2291aab8034e539d2ed7af07f02ace67
 skill:
   name: hamiltonian-simulation
   entrypoint: SKILL.md
@@ -22,7 +22,6 @@ scope:
   outOfScope:
     - Hardware accuracy, quantum advantage and universal single-realization qDrift error guarantees.
     - Exact arithmetic proofs or independent validation of NumPy linear algebra and RNG implementations.
-    - Session provenance, Acceptance Profiles and final scientific Acceptance.
   examples:
     - title: Compare product formulas
       prompt: Compare first and second order Trotter errors at 8 and 16 steps for a real Pauli Hamiltonian.
@@ -44,7 +43,13 @@ validators:
       script: validators/validate-result.mjs
       args: []
       shell: false
-acceptanceProfiles: []
+acceptanceProfiles:
+  - id: pauli-evolution-reference-audit
+    version: 1.0.0
+    validator: hamiltonian-observations
+    definition:
+      path: acceptance-profiles/pauli-evolution-reference-audit-v1.json
+      sha256: 2fda14b806a5da81c63de39c7d867bcd5cb48eaea9adc8ae36778dede40c68aa
 reproductionProfiles: []
 modelRequirements:
   textGeneration: false
@@ -56,7 +61,7 @@ permissions:
     destinations: []
   filesystem:
     read: [prepared-runtime, structured-result]
-    write: [temporary-compute-cache]
+    write: [temporary-compute-cache, workspace/results]
   subprocess:
     allowed: true
     commands: [python]
@@ -87,3 +92,16 @@ evals:
 compatibility:
   contract: "1.1"
   harness: 0.1.0-rc.6
+dependencies:
+  - id: qiskit
+    kind: scientific-backend
+    version: 2.5.2
+    digest: 29be3d89c73a3a5dd34c4826daff00bc02f6cbcde8355ed070675581b6cfab46
+  - id: numpy
+    kind: scientific-backend
+    version: 2.5.3
+    digest: 29be3d89c73a3a5dd34c4826daff00bc02f6cbcde8355ed070675581b6cfab46
+  - id: scipy
+    kind: scientific-backend
+    version: 1.18.1
+    digest: 29be3d89c73a3a5dd34c4826daff00bc02f6cbcde8355ed070675581b6cfab46

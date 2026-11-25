@@ -90,7 +90,7 @@ export function validateExperiment({ request, facts, reference }) {
       ? checked("zero-noise.invariant", countsMatch && failures === 0, "The noiseless memory experiment must have no logical failures.")
       : observe("zero-noise.invariant", "not_checked", "Not applicable to a nonzero noise experiment."));
   }
-  observations.push(observe("provenance.complete", "not_checked", "L2 does not bind Session events or materialize a Result Package; no Acceptance is derived."));
+  observations.push(observe("provenance.complete", "not_checked", "Execution does not bind Session events or materialize a Result Package; no Acceptance is derived."));
   return { schemaVersion: "1.0", observations };
 }
 

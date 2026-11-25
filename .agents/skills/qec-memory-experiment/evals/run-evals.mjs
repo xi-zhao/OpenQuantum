@@ -30,7 +30,7 @@ export function evaluateCase(testCase) {
 
 export async function checkSuite() {
   const capability = await loadCapability(root);
-  assert.deepEqual(capability.manifest.acceptanceProfiles, []);
+  assert.equal(capability.manifest.acceptanceProfiles.length, 1);
   assert.deepEqual(capability.manifest.reproductionProfiles, []);
   assert.deepEqual(capability.evaluationSuite.cases.map(item => item.id), cases.map(item => item.id));
   for (const [index, item] of cases.entries()) {

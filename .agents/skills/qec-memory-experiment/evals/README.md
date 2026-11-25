@@ -63,3 +63,10 @@ node .agents/skills/qec-memory-experiment/validators/validate-result.mjs result.
 
 默认仅复核文件中可重算的统计与哈希；`--replay` 才调用准备好的独立参考。检查失败退出 1，参考环境
 不可用退出 2；两种模式都只输出 observations。当前本地验证摘要见 `evidence-2026-11-25.json`。
+
+## Phase 5 L3 增量
+
+计算期固定 eval 继续检查 observations，`provenance.complete=not_checked`。当前 L3 合同另由
+`tests/numerical-scientific-materialization.test.mjs` 和 `tests/harness-numerical-acceptance.test.mjs`
+覆盖版本化 Profile、真实字节拒绝篡改、可读报告与 Session 重启回放。新增源码证据为
+[evidence-phase5.json](evidence-phase5.json)；此前 L2 记录保留为历史，不代替新的验证。

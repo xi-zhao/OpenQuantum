@@ -5,9 +5,8 @@ description: 使用 OpenQuantum 的固定版本 Stim 与 PyMatching 运行 rotat
 
 # QEC Memory Experiment
 
-开发证据等级为 **L2**：结构化结果、独立 Scientific Validator 与固定 eval 已接通。
-Validator 只产生 observations；本能力没有 Acceptance Profile、Reproduction Profile 或 central
-Acceptance Builder 接入，不产生科学验收或复现通过结论。
+开发证据等级为 **L3**：计算期独立 observations、物化后复核、版本化 Profile 与中央 Acceptance 已接通。
+Tool 内仍保留 `provenance.complete=not_checked`；只有 Harness 保存并重读证据后才派生验收。
 
 <!-- BEGIN NATIVE SDK ACCESS -->
 ## 原生 SDK 路径
@@ -74,3 +73,13 @@ Acceptance Builder 接入，不产生科学验收或复现通过结论。
 显式运行本地 SDK 重放；不调用模型、云服务或硬件。参考运行缺席时，离线检查把模型一致性和 seed 重放
 标为 `not_checked`；未准备环境不能替代这些检查。固定案例、实际执行记录及单 shot 统计边界见
 [eval 说明](evals/README.md)。
+
+## 可回放科学验收
+
+版本化 Profile `rotated-surface-memory-audit@1.0.0` 的验收范围：码距不超过 11、轮数不超过 100、shots 不超过 100000。
+这些边界只限制科学验收，不限制原计算 Tool。范围外结果保留执行期 observations。
+完整调用包含 Host 后置证据保存，副作用为 `workspace-write`，MCP `readOnlyHint=false`。
+证据位于 `results/openquantum/qec-memory-experiment/`，包括输入、Artifact、Result Package、
+中央 Acceptance Report 和确定性可读报告；Session 日志保存可回放的 Result Commit。
+缺失或不兼容的独立参考产生 conditional，数值不一致产生 failed，证据字节篡改阻止发布验收。
+`reproductionProfiles: []`，不宣称另行完成独立科学复现。

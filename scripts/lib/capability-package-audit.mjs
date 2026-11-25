@@ -710,7 +710,7 @@ function validateMaterialization(definition, projectRoot, issues) {
   if (
     !exactKeys(
       definition.materialization,
-      new Set(["adapter", "checks"]),
+      new Set(["adapter", "checks", "resultRoot", "replayChecks"]),
       label,
       issues,
     )
@@ -733,9 +733,24 @@ function validateMaterialization(definition, projectRoot, issues) {
   for (const [index, check] of definition.materialization.checks.entries()) {
     inspectFile(projectRoot, check, `${label}.checks[${index}]`, issues);
   }
+  const { resultRoot, replayChecks } = definition.materialization;
+  if (resultRoot !== undefined && (typeof resultRoot !== "string"
+    || !/^results\/openquantum\/[a-z0-9]+(?:-[a-z0-9]+)*$/.test(resultRoot)
+    || resultRoot !== `results/openquantum/${definition.id}`)) {
+    issues.push(`${label}.resultRoot must be the capability's canonical workspace results directory`);
+  }
+  if (replayChecks !== undefined) {
+    if (!Array.isArray(replayChecks) || replayChecks.length === 0
+      || new Set(replayChecks).size !== replayChecks.length
+      || !replayChecks.every(check => definition.materialization.checks.includes(check))) {
+      issues.push(`${label}.replayChecks must be a non-empty unique subset of checks`);
+    }
+  }
   return {
     adapter: definition.materialization.adapter,
     checks: definition.materialization.checks,
+    ...(resultRoot === undefined ? {} : { resultRoot }),
+    ...(replayChecks === undefined ? {} : { replayChecks }),
   };
 }
 

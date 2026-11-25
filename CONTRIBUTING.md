@@ -218,7 +218,7 @@ Harness MCP Client 负责 MCP Server 进程、重连、Tool Registry 注册和�
 可信 Host Plugin 生成有界展示投影。`tools/post-execute` 只保留候选与 observations；原生结果事件落账后
 再物化验收，并用原生 `surfaceOp: replace` 追加只改 content 的 `tool/result` 展示。原始结果与替换事件均可追溯。
 
-当前 QGS、QI 与 QCEC 三条 L3 纵切复用四个深模块：其中 `scientific-result-projection.mjs`
+当前 QGS、QI、QCEC、QEC 与 Hamiltonian 五条 L3 纵切复用四个深模块：其中 `scientific-result-projection.mjs`
 是拥有 hook 的可信 Host Plugin，Adapter Registry 只是该 Plugin 的内部 Interface。
 
 共享科学 envelope 的大型 L1 输出另由 `science-result-delivery.mjs` 在有效 Session 沙箱内保存完整 JSON，
@@ -230,7 +230,7 @@ Harness MCP Client 负责 MCP Server 进程、重连、Tool Registry 注册和�
 - `scientific-result-adapters.mjs`：显式登记 Tool、领域投影、Artifact 类型和 capability Validator；
 - `scientific-result-projection.mjs`：连接原生 Tool 终结、Session 事件、步骤/回合等待 hook、`ctx.fs` 与 Adapter registry。
 
-三条纵切共用 capability adapter Interface。QI 与 QCEC 的可读报告由同一 Materializer 从重读证据生成，写入仍使用 Session 当前有效的 `sandboxPolicy`；只读会话不提升权限。输入参数须与原生 `tool/call` 一致，证据路径包含调用事件序号，防止复用 call ID 覆盖先前结果。
+五条纵切共用 capability adapter Interface。QI 与 QCEC 的可读报告由同一 Materializer 从重读证据生成，写入仍使用 Session 当前有效的 `sandboxPolicy`；只读会话不提升权限。输入参数须与原生 `tool/call` 一致，证据路径包含调用事件序号，防止复用 call ID 覆盖先前结果。
 
 QCEC 的分类验收覆盖每份输入最多 16 量子位、65536 UTF-8 字节、512 条语句；独立完整酉矩阵复核最多 8 量子位，范围内的完全相同输入须先通过独立 Qiskit 解析和有限酉门检查，再使用 source-identity 证明。该 Profile 范围不限制 Tool 主计算；超出范围保留 observations，参考不可用保持 `conditional`。`not_equivalent` 的验收 `passed` 表示不等价分类经复核，不能写成电路等价。继续接入 L3 能力时：
 

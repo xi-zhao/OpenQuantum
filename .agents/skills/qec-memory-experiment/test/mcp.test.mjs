@@ -91,7 +91,7 @@ test("QEC MCP exposes only its bounded experiment action", async () => {
     ),
   );
   assert.ok(tools.every((tool) => tool.annotations.readOnlyHint === false));
-  assert.ok(tools.every((tool) => tool.annotations.openWorldHint === true));
+  assert.ok(tools.every((tool) => tool.annotations.openWorldHint === false));
   assert.ok(tools.every((tool) => !tool.annotations.destructiveHint));
 });
 
@@ -173,7 +173,7 @@ test("bridge environment is allowlisted and has no cloud credentials", async () 
 });
 
 
-test("L2 manifest loads without Acceptance or Reproduction Profiles and binds the fixed evals", checkSuite);
+test("L3 manifest binds Acceptance and preserves execution observations and binds the fixed evals", checkSuite);
 for (const item of cases) test(`independent QEC observations: ${item.id}`, () => evaluateCase(item));
 
 test("invalid requests and malformed scientific artifacts cannot report valid observations", async () => {

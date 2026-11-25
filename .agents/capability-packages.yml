@@ -2,7 +2,7 @@ schemaVersion: "1.1"
 
 packages:
   - id: hamiltonian-simulation
-    level: L2
+    level: L3
     execution:
       mcpServers:
         - name: hamiltonian_local
@@ -13,7 +13,7 @@ packages:
           effectEvidence: mcp-annotations
           tools:
             - name: simulate_hamiltonian
-              effect: read-only
+              effect: workspace-write
       nativeTools: []
       checks:
         - tests/hamiltonian-contracts.test.mjs
@@ -24,6 +24,14 @@ packages:
         - .agents/skills/hamiltonian-simulation/evals/run-evals.mjs
     audit:
       manifest: capability.yaml
+    materialization:
+      adapter: runtime/openquantum/agent-presets/openquantum/scientific-result-projection.mjs
+      resultRoot: results/openquantum/hamiltonian-simulation
+      checks:
+        - tests/numerical-scientific-materialization.test.mjs
+        - tests/harness-numerical-acceptance.test.mjs
+      replayChecks:
+        - tests/harness-numerical-acceptance.test.mjs
 
   - id: quantum-practices
     level: L1
@@ -535,7 +543,7 @@ packages:
         - tests/qcec-scientific-live.test.mjs
 
   - id: qec-memory-experiment
-    level: L2
+    level: L3
     execution:
       mcpServers:
         - name: qec_local
@@ -554,6 +562,14 @@ packages:
         - .agents/skills/qec-memory-experiment/evals/run-evals.mjs
     audit:
       manifest: capability.yaml
+    materialization:
+      adapter: runtime/openquantum/agent-presets/openquantum/scientific-result-projection.mjs
+      resultRoot: results/openquantum/qec-memory-experiment
+      checks:
+        - tests/numerical-scientific-materialization.test.mjs
+        - tests/harness-numerical-acceptance.test.mjs
+      replayChecks:
+        - tests/harness-numerical-acceptance.test.mjs
 
   - id: fatqat-workbench
     level: L1

@@ -44,10 +44,19 @@ Python 计算进程隔离由本地 MCP Server 提供，Harness MCP Client 注册
 Trotter 在 N、2N、4N 上没有分辨出稳定渐近区时，经验收敛阶为 `not_checked`；不承诺单次 qDrift
 轨迹收敛。缺少参考条件的检查也保持 `not_checked`，不把环境缺失当成通过。
 
-本能力为 L2 observations-only：`acceptanceProfiles: []`、`reproductionProfiles: []`，不接
-Materializer 或 central Acceptance Builder；`provenance.complete` 始终为 `not_checked`。
-执行成功、Validator 无失败和静态 L2 等级均不构成中央科学验收。
+本能力为 **L3**：执行期仍只给 observations，`provenance.complete=not_checked`；
+Harness Materializer 原子保存并重读证据后再次调用独立 Validator，由 central Acceptance Builder 派生验收。
 固定案例、失败路径、数值容差和独立复跑命令见[验证记录](evals/README.md)。
 
 这是 MIT 算法的开源适配；没有调用 UnitaryLab 模拟器或宣称集成整个算法库。
 来源、复跑示例和差异见[集成说明](../../../docs/integrations/UNITARYLAB_OPEN_ADAPTATION.md)。
+
+## 可回放科学验收
+
+版本化 Profile `pauli-evolution-reference-audit@1.0.0` 的验收范围：不超过 6 量子位、64 个输入项、1024 步；Trotter 阶数 1/2/4 或 qDrift，要求 statevector 与稠密参考。
+这些边界只限制科学验收，不限制原计算 Tool。范围外结果保留执行期 observations。
+完整调用包含 Host 后置证据保存，副作用为 `workspace-write`，MCP `readOnlyHint=false`。
+证据位于 `results/openquantum/hamiltonian-simulation/`，包括输入、Artifact、Result Package、
+中央 Acceptance Report 和确定性可读报告；Session 日志保存可回放的 Result Commit。
+缺失或不兼容的独立参考产生 conditional，数值不一致产生 failed，证据字节篡改阻止发布验收。
+`reproductionProfiles: []`，不宣称另行完成独立科学复现。

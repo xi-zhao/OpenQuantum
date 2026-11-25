@@ -49,7 +49,7 @@ const localExecutionAnnotations = Object.freeze({
   readOnlyHint: false,
   destructiveHint: false,
   idempotentHint: true,
-  openWorldHint: true,
+  openWorldHint: false,
 });
 
 const TOOLS = Object.freeze([
@@ -57,7 +57,7 @@ const TOOLS = Object.freeze([
     name: "run_qec_memory_experiment",
     title: "Run a rotated-surface-code memory experiment",
     description:
-      "Generate a rotated surface-code X- or Z-memory circuit with pinned Stim, sample a fixed number of noisy shots with an explicit seed, decode with pinned PyMatching, and report logical-error counts with uncertainty. This is one bounded Monte Carlo experiment, not a threshold or hardware claim.",
+      "Generate a rotated surface-code X- or Z-memory circuit with pinned Stim, sample a fixed number of noisy shots with an explicit seed, decode with pinned PyMatching, and report logical-error counts with uncertainty. This is one bounded Monte Carlo experiment, not a threshold or hardware claim. The composed Harness call saves and rereads scientific evidence in the session workspace.",
     inputSchema: {
       type: "object",
       properties: {
@@ -217,11 +217,11 @@ server.setRequestHandler(CallToolRequestSchema, async (request, { signal }) => {
           "The uniform circuit-level error rate is applied to Clifford depolarization, round data depolarization, measurement flips and reset flips.",
           "One finite-shot memory experiment cannot establish an error-correction threshold or compare hardware platforms.",
           "Exact seed replay is scoped to the same pinned packages, machine, Stim implementation and single-batch sampling convention.",
-          "This L2 capability has no Acceptance Profile or central Acceptance Builder integration; scientific acceptance remains not_evaluated.",
+          "Execution observations do not establish Acceptance; the Harness Materializer must persist and reread evidence before central Acceptance.",
         ],
       };
       return textResult(
-        `L2 observations (failed checks: ${validation.observations.filter(item => item.status === "fail").length}). Stim ${facts.packages.stim} / PyMatching ${facts.packages.pymatching} decoded ${facts.result.shots} shots with ${facts.result.logicalErrors} logical error(s). This is a bounded Monte Carlo observation, not a threshold claim.`,
+        `Computational observations (failed checks: ${validation.observations.filter(item => item.status === "fail").length}). Stim ${facts.packages.stim} / PyMatching ${facts.packages.pymatching} decoded ${facts.result.shots} shots with ${facts.result.logicalErrors} logical error(s). This is a bounded Monte Carlo observation, not a threshold claim.`,
         output,
       );
     }

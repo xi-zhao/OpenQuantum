@@ -9,7 +9,7 @@ delete resultSchema.$schema;
 
 export const definition = defineScienceTool({
   name: "simulate_hamiltonian",
-  description: "Build an open Qiskit circuit for exp(-iHt) from real Pauli terms using Trotter-Suzuki or one seeded qDrift realization. Return OpenQASM 3, gate resources and optional statevector; independently compare the full unitary to SciPy expm when requested. Leftmost Pauli/state bit is q0. No automatic installation, file output, cloud or hardware calls. Prepare the locked environment explicitly first.",
+  description: "Build an open Qiskit circuit for exp(-iHt) from real Pauli terms using Trotter-Suzuki or one seeded qDrift realization. Return OpenQASM 3, gate resources and optional statevector; independently compare the full unitary to SciPy expm when requested. Leftmost Pauli/state bit is q0. No automatic installation, cloud or hardware calls. The composed Harness call saves scientific evidence in the session workspace. Prepare the locked environment explicitly first.",
   source: {
     name: "UnitaryLab Algorithms MIT adaptation",
     repository: "https://github.com/unitarylab/unitarylab_algorithms",
@@ -41,4 +41,4 @@ export const definition = defineScienceTool({
 });
 
 // This capability calls only the interpreter prepared by the explicit setup command.
-definition.tool.annotations = { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false };
+definition.tool.annotations = { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: false };

@@ -1,0 +1,55 @@
+{
+  "schemaVersion": "1.0",
+  "kind": "development-eval-evidence",
+  "date": "2026-11-25",
+  "capability": "hamiltonian-simulation",
+  "level": "L3",
+  "runtime": {
+    "system": "Darwin",
+    "machine": "arm64",
+    "qiskit": "2.5.2",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1"
+  },
+  "checks": [
+    {
+      "command": "node --test --test-concurrency=2 tests/numerical-scientific-materialization.test.mjs tests/harness-numerical-acceptance.test.mjs tests/scientific-result-materialization.test.mjs tests/scientific-result-projection.test.mjs tests/scientific-tool-effects.test.mjs tests/quantum-circuit-materialization.test.mjs tests/hamiltonian-contracts.test.mjs .agents/skills/qec-memory-experiment/test/mcp.test.mjs",
+      "exitCode": 0,
+      "logSha256": "b9635191c261347371cb9bd38f27abea6f247da69e5cf01cfc27db8300e7ea42"
+    }
+  ],
+  "files": {
+    "SKILL.md": "a2638efb1ce0a046baa58e1f0f21abfb2106483c46127b7181dd4f8fcbb07027",
+    "acceptance-profiles/pauli-evolution-reference-audit-v1.json": "2fda14b806a5da81c63de39c7d867bcd5cb48eaea9adc8ae36778dede40c68aa",
+    "artifacts/hamiltonian-simulation-result.schema.json": "b8cb226b6eb8da04da91f4c3312991afa841d95c398ea2df0a38e08a119b38d1",
+    "artifacts/observations.schema.json": "27a211ae533f0ca83483eceb29deed11546091433adb84d36023139fb8103124",
+    "core/render-report.mjs": "bd94b836e810dbc9363eceef613731de3633571925dd21d840ba24df0dd80f2f",
+    "evals/README.md": "ce6d765f4a874eb8523e927f9fb5d57c089e928d2fcd08e269256d4656eb20c2",
+    "evals/cases.json": "a3f50015c3ac0b936a3cdd334369085a99d48411dd5ae99d5387ab6d1c68a780",
+    "evals/fixtures/circuit-only.json": "009c045ce9337a1f5bf74841358d8fb229211172e419d905a5912f4d7b5a348f",
+    "evals/fixtures/identity.json": "74dc237fd1530ebf6a50f93ff278f10c8ef944d92f04163ace1ac7a97e333fa1",
+    "evals/fixtures/qdrift.json": "7413a8bbb9ae949b43fcf8130c81e425a6e73dd139048a05f41681b10196a4d8",
+    "evals/fixtures/trotter-1.json": "d236144547113e930cee0000ea1eb37f1b718ea0f48b7f7622c133b3720b5fdf",
+    "evals/fixtures/trotter-2.json": "1bc4461df7becae9522c3c72525f0c08bb80606014115ad017a1d50ff732cf1e",
+    "evals/fixtures/trotter-4.json": "d4364e2096ffdc658279a3cd9c293f0f4231db9dfa713d5b62b4d8be015332a0",
+    "evals/fixtures/zero-time.json": "6c5a131e67d22b9014d4931f0e8736f84ba61521fce465041f70340722497084",
+    "evals/run-evals.mjs": "a1e1b096239573de3805d87cfe048b6dfb8689aadcf42d6f7499c5a4257d0e37",
+    "evals/suite.json": "bc713b97ce53ca098f972abe0f67c322e49e8e5fbe2e90e5d075770dc3f6a3c6",
+    "inputs/request.schema.json": "a4195aacebea02c3d8afc944bc120ace5ca5085adb8104b405b89b8150ea2907",
+    "mcp/bridge.py": "de4580efeb683183071e21053a20772b049bdf799de36c4ef7fbb583d1ccb92e",
+    "mcp/contracts.mjs": "4510290261f3be0da9fb2cd4e7ac26498f8dc1c5e39628afa690485a217bdb54",
+    "mcp/server.mjs": "8f7aea731d719aaf2fc7df71b8ae03954e2dba0548cad69810ca2e15b0f4d9fe",
+    "pyproject.toml": "64b9c2af702159fa7f2a86a9f8e78913539a73dafb95509927eb29cb344b184f",
+    "source.json": "9207ef3db9cabfb4279e3510c7a35c0c53538a2132796b40e0e6b1b1b90115f1",
+    "test/live.test.mjs": "07bde07df328720f2ce70ce1e11ca3db336a6e1c185ddd2c5bbf7fba4c203778",
+    "test/validator.test.mjs": "965618241d3932d6b6af0be0673fc61b9f16ee71b6206c91c19f3b5524d01e52",
+    "uv.lock": "29be3d89c73a3a5dd34c4826daff00bc02f6cbcde8355ed070675581b6cfab46",
+    "validators/reference.py": "524af3d1fdeb321ab6bf073bcb7f66b4773fcb97c4e6c2e737f878deff05d281",
+    "validators/validate-materialized.mjs": "da2a60395ec6b65bc8d863f433f30c7194f9d0b9ba69c5253cf128a51b03d1ba",
+    "validators/validate-result.mjs": "9b5effe15b052bdefad8b9a9b2b199c9c566534bf17a49601d1567f151f8c11a"
+  },
+  "scope": [
+    "Fixed numerical observations and versioned materialization/replay contracts.",
+    "Protocol fixtures are separate from live pinned SDK checks; exact commands and outcomes are recorded in report-phase5.md."
+  ]
+}

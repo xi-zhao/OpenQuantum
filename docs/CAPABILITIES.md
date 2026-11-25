@@ -730,3 +730,13 @@ IBM Quantum、IonQ 和本源量子是可连接的云服务。任务提交分别�
 </details>
 
 组件许可与再分发约束以 [THIRD_PARTY_NOTICES.md](../THIRD_PARTY_NOTICES.md) 和各目录 LICENSE / NOTICE 为准。
+
+## 可回放科学验收纵切
+
+QGS、QI、QCEC、QEC memory 与 Hamiltonian evolution 五条 L3 能力复用中央 Materializer、Validator 与
+Acceptance Builder。QEC 只验收固定参数的采样/解码、Wilson 区间、电路/DEM 和同机 seed 重放；
+Hamiltonian 验收有界厄米 Pauli 演化、态范数、谱分解参考、门资源、Trotter 误差界及 qDrift 重放。
+具体范围见 [QEC](../.agents/skills/qec-memory-experiment/SKILL.md) 和
+[Hamiltonian](../.agents/skills/hamiltonian-simulation/SKILL.md)。
+完整调用包含 `results/openquantum/` 下的证据与可读报告写入，因此均为 `workspace-write`；
+MCP 注解不得标记为只读。Tool 自身仅返回 observations，中央验收由物化后证据推导。

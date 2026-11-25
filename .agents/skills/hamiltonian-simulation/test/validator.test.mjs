@@ -8,7 +8,7 @@ import { normalizeRequest, validateSimulation, trotterBound } from "../validator
 
 const fixture = name => JSON.parse(readFileSync(new URL(`../evals/fixtures/${name}.json`, import.meta.url)));
 for (const item of cases) test(`Hamiltonian observation fixture: ${item.id}`, () => evaluateCase(item));
-test("Hamiltonian L2 manifest binds the offline suite without Acceptance Profiles", checkSuite);
+test("Hamiltonian L3 manifest binds the offline observation suite", checkSuite);
 test("missing reference and incompatible RNG scope remain explicitly not_checked", () => {
   const input = fixture("qdrift");
   delete input.reference;

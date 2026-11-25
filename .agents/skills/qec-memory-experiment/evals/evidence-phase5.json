@@ -1,0 +1,47 @@
+{
+  "schemaVersion": "1.0",
+  "kind": "development-eval-evidence",
+  "date": "2026-11-25",
+  "capability": "qec-memory-experiment",
+  "level": "L3",
+  "runtime": {
+    "system": "Darwin",
+    "machine": "arm64",
+    "stim": "1.16.0",
+    "pymatching": "2.4.0",
+    "stimImplementation": "stim._stim_polyfill"
+  },
+  "checks": [
+    {
+      "command": "node --test --test-concurrency=2 tests/numerical-scientific-materialization.test.mjs tests/harness-numerical-acceptance.test.mjs tests/scientific-result-materialization.test.mjs tests/scientific-result-projection.test.mjs tests/scientific-tool-effects.test.mjs tests/quantum-circuit-materialization.test.mjs tests/hamiltonian-contracts.test.mjs .agents/skills/qec-memory-experiment/test/mcp.test.mjs",
+      "exitCode": 0,
+      "logSha256": "b9635191c261347371cb9bd38f27abea6f247da69e5cf01cfc27db8300e7ea42"
+    }
+  ],
+  "files": {
+    "SKILL.md": "863b0755f0675399d755d2324645b55e3d8ff1ebcb25fa945aff664ada735c1e",
+    "acceptance-profiles/rotated-surface-memory-audit-v1.json": "ff3897466667dec5debea04920fc188579c90863294a1cbf6f719c322264bbbc",
+    "artifacts/qec-memory-result.schema.json": "a9542cfc36059d4cea143b2f7846e3c7ca6d4ff837c345cc503c9716d23e4f80",
+    "core/render-report.mjs": "5ff4390b1b5507f291e4acce416b4e23bd2dc32a1fab5199ba398bd21ca221ce",
+    "evals/README.md": "b8f8045a6f72837cf9466a487426ea9854bf558cea561d3e7d57fe8c921f17c6",
+    "evals/cases.json": "328e19697c387de8f7f3eb4c3062182c06a86b90398b8ea79efa0e3e83843599",
+    "evals/fixtures/noisy.json": "12267fb09542abbe02e3c32ad00ec5b20af2174a52a751ead51bc688e7906e10",
+    "evals/fixtures/zero-noise.json": "c8de06ee736d7d48c692aaa7f226ffc048118c73e10a337aad29e31f59138f16",
+    "evals/run-evals.mjs": "473f724bcf869a956b766e9e4aa67a5dfb812ef3b8f9eb7edead326654d3a289",
+    "evals/suite.json": "1db23db67bc0e1b2cb412cedc64f3e1bbfa2c14b2ad3a681962e6fd05847fd2e",
+    "inputs/request.schema.json": "fa6c330967040b8fba6d3d40473713c8082aa5f7398376807c88f12736f22036",
+    "mcp/bridge.py": "fa37a12b4a5ee5b46e36a54df93fc2209cef46af9c37cacc633cd131093f711b",
+    "mcp/server.mjs": "3970141f37f85d4d16aebb8a37784bede6b5e7adcc385651876200480bf04415",
+    "pyproject.toml": "99bedfae79ca85112d5c4b46f3ad978bf95e5421a20c6572d7f8cc5a783b6181",
+    "test/live.test.mjs": "8d8d4763b827b06d19d6ba919bae96b8bfb3e8711223afc404ccd89543a5af78",
+    "test/mcp.test.mjs": "d6570fb61dadd4e1e40224dffb178ce4776d616ad676be16b879a504930f687b",
+    "uv.lock": "7ce22952043711f23b4b65a2a0b85f3e48c096a1567ad2894fbcc64463943823",
+    "validators/replay.py": "dc9f030919635385c6ce00e5113983c2896bc18868f387ac1124e6c00b8d7623",
+    "validators/validate-materialized.mjs": "80fd111a6ebefd561f3eb6a90dc610723b4ea5aab8d76cb6b381441bcd6de041",
+    "validators/validate-result.mjs": "b4a25cefc1a327fbaa6246d433411d17eb15b4703f7d274aa32b0df129719de9"
+  },
+  "scope": [
+    "Fixed numerical observations and versioned materialization/replay contracts.",
+    "Protocol fixtures are separate from live pinned SDK checks; exact commands and outcomes are recorded in report-phase5.md."
+  ]
+}

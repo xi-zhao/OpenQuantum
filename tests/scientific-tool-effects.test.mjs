@@ -33,4 +33,8 @@ test("Tool effects include evidence writes performed by the composed Host hook",
   }
   assert.ok(materializingTools.includes("solve_and_validate_ground_state"));
   assert.ok(materializingTools.includes("mcp__toqito_audit__audit_density_matrix"));
+  assert.ok(materializingTools.includes("mcp__qcec_local__verify_circuit_equivalence"));
+  assert.ok(materializingTools.includes("mcp__qec_local__run_qec_memory_experiment"));
+  assert.ok(materializingTools.includes("mcp__hamiltonian_local__simulate_hamiltonian"));
+  assert.equal(materializingTools.length, 5);
 });

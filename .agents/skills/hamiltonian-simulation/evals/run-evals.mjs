@@ -30,13 +30,13 @@ export function evaluateCase(testCase) {
 
 export async function checkSuite() {
   const capability = await loadCapability(root);
-  assert.deepEqual(capability.manifest.acceptanceProfiles, []);
+  assert.equal(capability.manifest.acceptanceProfiles.length, 1);
   assert.deepEqual(capability.manifest.reproductionProfiles, []);
-  const evidence = JSON.parse(readFileSync(new URL("./evidence-2026-11-25.json", import.meta.url), "utf8"));
+  const evidence = JSON.parse(readFileSync(new URL("./evidence-phase5.json", import.meta.url), "utf8"));
   for (const [filename, expected] of Object.entries(evidence.files)) {
     assert.equal(createHash("sha256").update(readFileSync(path.join(root, filename))).digest("hex"), expected, `Evidence drift: ${filename}`);
   }
-  for (const [filename, expected] of Object.entries(evidence.sharedFiles)) {
+  for (const [filename, expected] of Object.entries(evidence.sharedFiles ?? {})) {
     assert.equal(createHash("sha256").update(readFileSync(path.resolve(root, "../../..", filename))).digest("hex"), expected, `Shared evidence drift: ${filename}`);
   }
   assert.deepEqual(capability.evaluationSuite.cases.map(item => item.id), cases.map(item => item.id));

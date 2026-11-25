@@ -72,3 +72,10 @@ node .agents/skills/hamiltonian-simulation/validators/validate-result.mjs result
 默认不信任文件内携带的 reference，只检查可重算的请求/范数/预算/QASM 资源；`--reference` 才运行
 独立 Python。检查失败退出 1，要求参考却缺少环境时明确 `not_checked` 并退出 2，不隐式安装。
 Python 脚本本身缺 NumPy 时也退出 2。当前命令、计数和文件摘要见 `evidence-2026-11-25.json`。
+
+## Phase 5 L3 增量
+
+计算期固定 eval 继续检查 observations，`provenance.complete=not_checked`。当前 L3 合同另由
+`tests/numerical-scientific-materialization.test.mjs` 和 `tests/harness-numerical-acceptance.test.mjs`
+覆盖版本化 Profile、真实字节拒绝篡改、可读报告与 Session 重启回放。新增源码证据为
+[evidence-phase5.json](evidence-phase5.json)；此前 L2 记录保留为历史，不代替新的验证。
