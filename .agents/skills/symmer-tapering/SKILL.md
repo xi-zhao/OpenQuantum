@@ -23,7 +23,7 @@ description: 用固定 Symmer 将实 Pauli Hamiltonian 投影到显式指定的�
 - 如果用户未指定扇区，先说明对称性选择并取得具体输入，不能将 Tool 的示例默认扇区当成用户模型的全局基态扇区。必要时分别运行多个允许扇区比较最低能量。
 - 返回 reducedTerms 和 sectorDimension，可选 reducedSpectrum 和 referenceSectorSpectrum。独立参考取投影算符 range 内的正交基，在该子空间对 Hamiltonian 对角化；不能把全维 PHP 的零本征值混入扇区能谱。
 - 降维 Pauli 轴是 Symmer 变换后的坐标，不能直接视作删去某些物理量子位。保谱仅限指定扇区，最低值不自动等于全系统基态。
-- 不开放 contextual-subspace VQE、自动对称性发现或多项式加速主张。当前 L1，`scientificValidation=not_evaluated`；依赖须显式准备；计算可能写本地缓存。
+- 不开放 contextual-subspace VQE、自动对称性发现或多项式加速主张。当前 L2，`scientificValidation=observations_available`；依赖须显式准备；计算可能写本地缓存。
 
 版本与验证见[接入说明](../../../docs/integrations/UNITARY_NEXT_TOOLS.md)。
 
@@ -34,3 +34,7 @@ Hamiltonian 量子位数、Pauli 项数及独立对称性由调用方选择，�
 ## 依赖准备
 
 运行前执行 `node scripts/setup-paper-tools.mjs symmer-tapering`。缺失、旧锁和已安装环境的处理见[共同准备说明](../../../docs/integrations/LOCAL_ENVIRONMENTS.md)；Tool 不自动安装或升级依赖。
+
+## 独立科学观察（L2）
+
+独立验证器只产 observations，不自行推导科学验收；`acceptanceProfiles: []` 和 `reproductionProfiles: []`。执行期 `provenance.complete=not_checked`。独立辛 GF(2) 检查生成元对易、秩、Hamiltonian 对易和 n−k 降比特结构；≤6 qubits、≤256 项且启用参考时，用单独 NumPy 程序构造目标扇区投影，逐一对比完整能谱。 超出参考范围或缺环境时相应观察为 not_checked，不限制主 Tool 的计算规模。

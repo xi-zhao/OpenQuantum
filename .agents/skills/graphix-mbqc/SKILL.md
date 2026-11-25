@@ -25,7 +25,7 @@ description: 用固定 Graphix 将量子电路转为测量式量子计算模式�
 - `simulate=false` 只生成与调度模式，不分配模拟态矢；此时不能同时要求 referenceMode=required。
 - 输出态按照 outputNodes 对应的逻辑 q0、q1……排序。输出已含测量副产物纠正；不要把单次原始测量位解释成最终计算结果。
 - 多 seed 对照只检查指定输入态下抽到的分支，不等于穷举所有分支或证明任意输入通道等价。当前不接硬件、不加噪声，也不声明资源最优。
-- 当前 L1，`scientificValidation=not_evaluated`；依赖须显式准备；计算可能写本地缓存。版本与证据见[接入说明](../../../docs/integrations/UNITARY_NEXT_TOOLS.md)。
+- 当前 L2，`scientificValidation=observations_available`；依赖须显式准备；计算可能写本地缓存。版本与证据见[接入说明](../../../docs/integrations/UNITARY_NEXT_TOOLS.md)。
 
 独立参考使用 `referenceMode=auto|required|skip`：auto 按默认阈值选择参考，required 使用调用方资源尝试所请求规模，skip 跳过。未执行时 `reference.status=not_run`，参考值和差异为 null；尝试后失败会返回错误。
 
@@ -34,3 +34,7 @@ description: 用固定 Graphix 将量子电路转为测量式量子计算模式�
 ## 依赖准备
 
 运行前执行 `node scripts/setup-paper-tools.mjs graphix-mbqc`。缺失、旧锁和已安装环境的处理见[共同准备说明](../../../docs/integrations/LOCAL_ENVIRONMENTS.md)；Tool 不自动安装或升级依赖。
+
+## 独立科学观察（L2）
+
+独立验证器只产 observations，不自行推导科学验收；`acceptanceProfiles: []` 和 `reproductionProfiles: []`。执行期 `provenance.complete=not_checked`。≤10 逻辑/活跃 qubits、≤512 门、≤4096 模式命令且启用参考时，从输入门序列独立算态和 Born 概率，并逐条重放 N/E/M/X/Z、自适应角度和给定测量分支的副产物修正。只覆盖采样分支，不声称所有输入的通道等价。 超出参考范围或缺环境时相应观察为 not_checked，不限制主 Tool 的计算规模。

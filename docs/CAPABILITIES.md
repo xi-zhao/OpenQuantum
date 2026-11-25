@@ -742,3 +742,5 @@ Hamiltonian 验收有界厄米 Pauli 演化、态范数、谱分解参考、门�
 MCP 注解不得标记为只读。Tool 自身仅返回 observations，中央验收由物化后证据推导。
 
 QPanda QUBO 的 `qubo-algebraic-optimality-audit@1.0.0` 将独立代数重建与 n≤16 全量穷举连接到物化验收；跳过穷举或超出变量阈值保持 conditional。LDPC 的 `ldpc-syndrome-replay-audit@1.0.0` 核对有界 H、逐样本 syndrome、权重、统计和 full 沙箱内的独立 serial BP+LSD 重放；缺环境保持 conditional。二者执行期仍只给 observations，完整调用均为 workspace-write，不据此证明量子码距、硬件阈值或 QAOA 的普遍最优性。
+
+PyZX、Symmer、PauLie 与 Graphix 为 observations-only L2：独立核对酉矩阵、目标对称扇区完整能谱、Pauli DLA 闭包/中心与 MBQC 分支修正。每项包含 schema、独立 Validator 和固定正反例；空 Acceptance / Reproduction Profiles 保留其计算观察边界，不因 Tool 成功宣称最终科学验收。

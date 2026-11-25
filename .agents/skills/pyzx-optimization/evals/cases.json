@@ -1,0 +1,183 @@
+[
+  {
+    "id": "default",
+    "fixture": "default.json",
+    "fixtureSha256": "77533adce800266f6804af29833ad2eac783b04c519edd0d11df7b764427bdcd",
+    "edits": {},
+    "observations": {},
+    "failedChecks": []
+  },
+  {
+    "id": "identity",
+    "fixture": "identity.json",
+    "fixtureSha256": "47323fa6443ca9ef81d484e7bb51797a049bc8e05f26502e031a494b25482f72",
+    "edits": {},
+    "observations": {},
+    "failedChecks": []
+  },
+  {
+    "id": "large",
+    "fixture": "large.json",
+    "fixtureSha256": "5b424dff4606fda0d78cdde5dde486462ff80600a81384826c62942f68031f04",
+    "edits": {},
+    "observations": {},
+    "failedChecks": []
+  },
+  {
+    "id": "phase",
+    "fixture": "phase.json",
+    "fixtureSha256": "7bff1a08c5d68f0c355706255098bdb6375352207aa72a5a15b728daacadae11",
+    "edits": {},
+    "observations": {},
+    "failedChecks": []
+  },
+  {
+    "id": "skip",
+    "fixture": "skip.json",
+    "fixtureSha256": "543966998a716163fdcb6978cf6a9bf75b4c68a27a7417e80aea3f9c515868df",
+    "edits": {},
+    "observations": {},
+    "failedChecks": []
+  },
+  {
+    "id": "false-gates",
+    "fixture": "default.json",
+    "fixtureSha256": "77533adce800266f6804af29833ad2eac783b04c519edd0d11df7b764427bdcd",
+    "edits": {
+      "result.after.gates": 0
+    },
+    "observations": {
+      "resources.replayed": "fail"
+    },
+    "failedChecks": [
+      "resources.replayed"
+    ]
+  },
+  {
+    "id": "false-t-count",
+    "fixture": "default.json",
+    "fixtureSha256": "77533adce800266f6804af29833ad2eac783b04c519edd0d11df7b764427bdcd",
+    "edits": {
+      "result.before.tCount": 0
+    },
+    "observations": {
+      "resources.replayed": "fail"
+    },
+    "failedChecks": [
+      "resources.replayed"
+    ]
+  },
+  {
+    "id": "false-depth",
+    "fixture": "default.json",
+    "fixtureSha256": "77533adce800266f6804af29833ad2eac783b04c519edd0d11df7b764427bdcd",
+    "edits": {
+      "result.after.depth": 99
+    },
+    "observations": {
+      "resources.replayed": "fail"
+    },
+    "failedChecks": [
+      "resources.replayed"
+    ]
+  },
+  {
+    "id": "false-two-qubit",
+    "fixture": "default.json",
+    "fixtureSha256": "77533adce800266f6804af29833ad2eac783b04c519edd0d11df7b764427bdcd",
+    "edits": {
+      "result.after.twoQubitGates": 0
+    },
+    "observations": {
+      "resources.replayed": "fail"
+    },
+    "failedChecks": [
+      "resources.replayed"
+    ]
+  },
+  {
+    "id": "inequivalent-extraction",
+    "fixture": "default.json",
+    "fixtureSha256": "77533adce800266f6804af29833ad2eac783b04c519edd0d11df7b764427bdcd",
+    "edits": {
+      "result.optimizedQasm": "OPENQASM 2.0;\ninclude \"qelib1.inc\";\nqreg q[2];\nx q[0];\n",
+      "result.after": {
+        "gates": 1,
+        "twoQubitGates": 0,
+        "tCount": 0,
+        "depth": 1
+      }
+    },
+    "observations": {
+      "unitary.equivalence": "fail"
+    },
+    "failedChecks": [
+      "unitary.claims",
+      "unitary.equivalence"
+    ]
+  },
+  {
+    "id": "replaced-input",
+    "fixture": "default.json",
+    "fixtureSha256": "77533adce800266f6804af29833ad2eac783b04c519edd0d11df7b764427bdcd",
+    "edits": {
+      "result.inputQasm": "OPENQASM 2.0;\ninclude \"qelib1.inc\";\nqreg q[2];\nx q[0];\nt q[0];\nt q[0];\ncx q[0], q[1];\n"
+    },
+    "observations": {
+      "input.binding": "fail"
+    },
+    "failedChecks": [
+      "input.binding"
+    ]
+  },
+  {
+    "id": "fake-error",
+    "fixture": "default.json",
+    "fixtureSha256": "77533adce800266f6804af29833ad2eac783b04c519edd0d11df7b764427bdcd",
+    "edits": {
+      "result.unitaryMaxError": 0.9
+    },
+    "observations": {
+      "unitary.claims": "fail"
+    },
+    "failedChecks": [
+      "unitary.claims"
+    ]
+  },
+  {
+    "id": "invalid-wire",
+    "fixture": "default.json",
+    "fixtureSha256": "77533adce800266f6804af29833ad2eac783b04c519edd0d11df7b764427bdcd",
+    "edits": {
+      "request.gates.0.targets": [
+        2
+      ]
+    },
+    "observations": {
+      "circuit.structure": "fail"
+    },
+    "failedChecks": [
+      "circuit.structure"
+    ]
+  },
+  {
+    "id": "skipped-observation",
+    "fixture": "skip.json",
+    "fixtureSha256": "543966998a716163fdcb6978cf6a9bf75b4c68a27a7417e80aea3f9c515868df",
+    "edits": {},
+    "observations": {
+      "unitary.equivalence": "not_checked"
+    },
+    "failedChecks": []
+  },
+  {
+    "id": "bounded-observation",
+    "fixture": "large.json",
+    "fixtureSha256": "5b424dff4606fda0d78cdde5dde486462ff80600a81384826c62942f68031f04",
+    "edits": {},
+    "observations": {
+      "unitary.equivalence": "not_checked"
+    },
+    "failedChecks": []
+  }
+]

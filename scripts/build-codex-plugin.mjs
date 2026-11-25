@@ -45,6 +45,15 @@ export async function buildPlugin({ root = PROJECT_ROOT, output = path.join(root
     }
   }
   const policy = parse(await fs.readFile(path.join(root, ".agents/capability-packages.yml"), "utf8"));
+  // L2/L3 execution must remain relocatable after eval fixtures are excluded.
+  // Check scientific runtime resources against their authoritative manifest.
+  for (const entry of policy.packages.filter(item => ["L2", "L3"].includes(item.level) && (owned.has(item.id) || sdkIds.has(item.id)))) {
+    const base = `.agents/skills/${entry.id}`;
+    const manifest = parse(await fs.readFile(path.join(root, base, entry.audit.manifest), "utf8"));
+    const required = [entry.audit.manifest, manifest.input.schema, ...manifest.artifacts.map(item => item.schema),
+      ...manifest.validators.map(item => item.command.script), ...manifest.acceptanceProfiles.map(item => item.definition?.path).filter(Boolean)];
+    for (const file of required) await fs.access(path.join(serverRoot, base, file));
+  }
   await fs.mkdir(path.join(serverRoot, ".agents"), { recursive: true });
   // Retain opt-in capability metadata for SDK discovery without enabling its MCP.
   await fs.writeFile(path.join(serverRoot, ".agents/capability-packages.yml"), stringify({ ...policy, packages: policy.packages.filter(item => owned.has(item.id) || sdkIds.has(item.id)) }));

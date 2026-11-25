@@ -1,0 +1,104 @@
+{
+  "request": {
+    "numQubits": 2,
+    "terms": [
+      {
+        "pauli": "ZI",
+        "coefficient": 1
+      },
+      {
+        "pauli": "IZ",
+        "coefficient": 0.5
+      },
+      {
+        "pauli": "XX",
+        "coefficient": 0.3
+      }
+    ],
+    "symmetries": [
+      {
+        "pauli": "ZZ",
+        "sector": 1
+      }
+    ],
+    "referenceMode": "auto",
+    "execution": {}
+  },
+  "result": {
+    "reducedQubits": 1,
+    "sectorDimension": 2,
+    "reducedTerms": [
+      {
+        "pauli": "X",
+        "coefficient": -0.3
+      },
+      {
+        "pauli": "Z",
+        "coefficient": 1.5
+      }
+    ],
+    "reference": {
+      "mode": "auto",
+      "status": "computed",
+      "method": "Independent dense projection and full spectrum of the selected symmetry sector",
+      "reason": "Independent reference computed for this input."
+    },
+    "reducedSpectrum": [
+      -1.5297058540778354,
+      1.5297058540778354
+    ],
+    "referenceSectorSpectrum": [
+      -1.5297058540778354,
+      1.5297058540778354
+    ],
+    "maxSpectrumError": 0,
+    "projectorIdempotenceError": 0,
+    "bitOrder": "left-to-right tensor factors; reduced qubits use Symmer's transformed basis"
+  },
+  "reference": {
+    "request": {
+      "numQubits": 2,
+      "terms": [
+        {
+          "pauli": "ZI",
+          "coefficient": 1
+        },
+        {
+          "pauli": "IZ",
+          "coefficient": 0.5
+        },
+        {
+          "pauli": "XX",
+          "coefficient": 0.3
+        }
+      ],
+      "symmetries": [
+        {
+          "pauli": "ZZ",
+          "sector": 1
+        }
+      ],
+      "referenceMode": "auto",
+      "execution": {}
+    },
+    "reducedTerms": [
+      {
+        "pauli": "X",
+        "coefficient": -0.3
+      },
+      {
+        "pauli": "Z",
+        "coefficient": 1.5
+      }
+    ],
+    "sectorSpectrum": [
+      -1.5297058540778354,
+      1.5297058540778354
+    ],
+    "spectrum": [
+      -1.5297058540778354,
+      1.5297058540778354
+    ],
+    "projectorError": 0
+  }
+}

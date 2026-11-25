@@ -61,12 +61,12 @@
     }
   ],
   "files": {
-    "SKILL.md": "46258881f71db192da331aab5509dfc573655131cfabd76250bcc69d872e99e0",
+    "SKILL.md": "5eb8482574b81db38dd44ee1c3ab5f85b8993a45fa14b220733e64f4c7024ed6",
     "acceptance-profiles/ldpc-syndrome-replay-audit-v1.json": "ee9e10fdb33db208c4abcceb503b242322bf078e0ca20c58c9d750c7346ec5b6",
     "artifacts/ldpc-result.schema.json": "65f75e8c5260a76df0d0662790cd0fd5b0b7dd908fd3d2e699550997fa1e431f",
     "artifacts/observations.schema.json": "ff49634d5fd59ce6dd7bf623e3245254adddbeb6e528d4fb6294df1b86295f87",
     "core/render-report.mjs": "790f3500bf47cdef4325e7e9f56971754e8ab562f4335ae3c393c5fbd7952d5f",
-    "evals/README.md": "5e7d9c9cfeb04b7079229033aa857fd5272a7bdd5858cf016a64a60bf29e8dc6",
+    "evals/README.md": "fee8eb91b09b94685d9542b1de3fb8619952bc50168980b8c1a8211e30917768",
     "evals/cases.json": "823f7a39b2b6f1ddd43309bea5bc3c2a23cda049f9ba870615e2a8b3c971f3ee",
     "evals/fixtures/logical.json": "8a4f29776a8f2eac8d6d17a79097f5033932cec55b19181e8a83014ce2898c3e",
     "evals/fixtures/parity.json": "81cb3c537e325a7fa86b4f46af9e99bfae9999bc1fe1cc571c135c0f069288bd",

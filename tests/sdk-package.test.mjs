@@ -50,6 +50,10 @@ test("SDK access survives archive, split installation and cached Skill relocatio
       ["hamiltonian-simulation", "trotter-2.json", "validateSimulation", ["simulate_hamiltonian"]],
       ["qpanda-qubo", "model.json", "validateQubo", ["solve_qpanda_qubo", "model_and_solve_qpanda_qubo"]],
       ["ldpc-decoding", "parity.json", "validateDecoding", ["decode_ldpc_syndromes"]],
+      ["pyzx-optimization", "default.json", "validateResult", ["optimize_pyzx_circuit"]],
+      ["symmer-tapering", "default.json", "validateResult", ["taper_symmer_hamiltonian"]],
+      ["paulie-algebra", "default.json", "validateResult", ["analyze_paulie_algebra"]],
+      ["graphix-mbqc", "default.json", "validateResult", ["simulate_graphix_pattern"]],
     ];
     for (const [id, fixture, validator, names] of cases) {
       const relative = path.join(".agents/skills", id);
@@ -63,6 +67,15 @@ test("SDK access survives archive, split installation and cached Skill relocatio
       const validation = module[validator](JSON.parse(await fs.readFile(path.join(source, "evals/fixtures", fixture), "utf8")));
       assert.deepEqual(validation.observations.filter(item => item.status === "fail"), [], id);
       assert.equal(validation.observations.find(item => item.id === "provenance.complete").status, "not_checked");
+      if (["qpanda-qubo", "ldpc-decoding"].includes(id)) {
+        const materialized = await import(pathToFileURL(path.join(installed, "validators/validate-materialized.mjs")));
+        const report = await import(pathToFileURL(path.join(installed, "core/render-report.mjs")));
+        assert.equal(typeof materialized.validateMaterializedResult, "function");
+        assert.equal(typeof report.renderReport, "function");
+      }
+      for (const file of (await fs.readdir(path.join(source, "validators"))).filter(f => /\.(?:mjs|py)$/.test(f))) {
+        assert.deepEqual(await fs.readFile(path.join(installed, "validators", file)), await fs.readFile(path.join(source, "validators", file)));
+      }
       const client = new Client({ name: "relocated-numerical-contract", version: "1.0.0" });
       const transport = new StdioClientTransport({ command: process.execPath,
         args: [path.join(installed, "mcp/server.mjs")], cwd: runtime, env: environment, stderr: "pipe" });

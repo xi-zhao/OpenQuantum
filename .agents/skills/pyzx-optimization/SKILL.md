@@ -22,7 +22,7 @@ description: 用固定 PyZX 对 Clifford+T 电路做 ZX 重写和电路提取，
 - 先明确比较目标是 T-count、双量子位门数还是总门数；三项可能此消彼长。报告 before/after 的实际值，不承诺每项都会改善。
 - Tool 返回输入和优化后的 OpenQASM 2，可按 referenceMode 独立构造完整酉矩阵，忽略整体相位比较。提取保留量子位排列；实际执行参考且发现不等价时，调用失败。
 - Y 在输入 QASM 中展开为 X 后接 Z，整体相位不影响此处合同；before 统计的是展开后的 PyZX 电路。QASM 可继续交给已有 QCEC 工具检查；本能力不做硬件映射。
-- 当前 L1，`scientificValidation=not_evaluated`；依赖须显式准备；计算可能写本地缓存。
+- 当前 L2，`scientificValidation=observations_available`；依赖须显式准备；计算可能写本地缓存。
 
 版本、准备命令、数值检查和限制见[接入说明](../../../docs/integrations/UNITARY_NEXT_TOOLS.md)。
 
@@ -33,3 +33,7 @@ description: 用固定 PyZX 对 Clifford+T 电路做 ZX 重写和电路提取，
 ## 依赖准备
 
 运行前执行 `node scripts/setup-paper-tools.mjs pyzx-optimization`。缺失、旧锁和已安装环境的处理见[共同准备说明](../../../docs/integrations/LOCAL_ENVIRONMENTS.md)；Tool 不自动安装或升级依赖。
+
+## 独立科学观察（L2）
+
+独立验证器只产 observations，不自行推导科学验收；`acceptanceProfiles: []` 和 `reproductionProfiles: []`。执行期 `provenance.complete=not_checked`。独立解析前后 QASM，复算门数/T 门数/双比特门数及依赖深度；≤6 qubits、≤512 输入门、≤2048 输出门且未跳过参考时，用独立复矩阵乘法核对全局相位无关酉等价。 超出参考范围或缺环境时相应观察为 not_checked，不限制主 Tool 的计算规模。

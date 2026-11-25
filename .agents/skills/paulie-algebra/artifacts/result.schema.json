@@ -1,0 +1,305 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "dimension": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        {
+          "type": "string",
+          "pattern": "^[1-9][0-9]*$"
+        }
+      ]
+    },
+    "centerDimension": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "referenceDimension": {
+      "anyOf": [
+        {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            },
+            {
+              "type": "string",
+              "pattern": "^[1-9][0-9]*$"
+            }
+          ]
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "classification": {
+      "type": "string",
+      "minLength": 1
+    },
+    "fullSpecialUnitaryDimension": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        {
+          "type": "string",
+          "pattern": "^[1-9][0-9]*$"
+        }
+      ]
+    },
+    "generatesFullSpecialUnitary": {
+      "type": "boolean"
+    },
+    "closure": {
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[IXYZ]+$",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "closureStatus": {
+      "enum": [
+        "computed",
+        "not_run"
+      ]
+    },
+    "maxSpanResidual": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "spanResidualTarget": {
+      "anyOf": [
+        {
+          "enum": [
+            "closure",
+            "generators"
+          ]
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "bitOrder": {
+      "const": "left-to-right q0,q1,..."
+    },
+    "reference": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": [
+            "auto",
+            "required",
+            "skip"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "computed",
+            "not_run"
+          ]
+        },
+        "method": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 400
+        }
+      },
+      "required": [
+        "mode",
+        "status",
+        "method",
+        "reason"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "dimension",
+    "centerDimension",
+    "referenceDimension",
+    "classification",
+    "fullSpecialUnitaryDimension",
+    "generatesFullSpecialUnitary",
+    "closure",
+    "closureStatus",
+    "maxSpanResidual",
+    "spanResidualTarget",
+    "bitOrder",
+    "reference"
+  ],
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "reference": {
+            "properties": {
+              "status": {
+                "const": "computed"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "type": "object"
+      },
+      "then": {
+        "properties": {
+          "referenceDimension": {
+            "not": {
+              "type": "null"
+            }
+          },
+          "maxSpanResidual": {
+            "not": {
+              "type": "null"
+            }
+          },
+          "spanResidualTarget": {
+            "not": {
+              "type": "null"
+            }
+          }
+        },
+        "type": "object"
+      },
+      "else": {
+        "properties": {
+          "referenceDimension": {
+            "type": "null"
+          },
+          "maxSpanResidual": {
+            "type": "null"
+          },
+          "spanResidualTarget": {
+            "type": "null"
+          }
+        },
+        "type": "object"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "reference": {
+            "properties": {
+              "mode": {
+                "const": "required"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "type": "object"
+      },
+      "then": {
+        "properties": {
+          "reference": {
+            "properties": {
+              "status": {
+                "const": "computed"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "type": "object"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "reference": {
+            "properties": {
+              "mode": {
+                "const": "skip"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "type": "object"
+      },
+      "then": {
+        "properties": {
+          "reference": {
+            "properties": {
+              "status": {
+                "const": "not_run"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "type": "object"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "closureStatus": {
+            "const": "computed"
+          }
+        },
+        "type": "object"
+      },
+      "then": {
+        "properties": {
+          "closure": {
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "else": {
+        "properties": {
+          "closure": {
+            "type": "null"
+          }
+        },
+        "type": "object"
+      }
+    }
+  ]
+}

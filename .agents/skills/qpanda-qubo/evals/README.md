@@ -9,8 +9,8 @@
 其中合成概率分布只验证绑定行为，不充当 QAOA 科学证据。实时测试另用锁定 SDK 覆盖两类输入、
 两种层数和有/无经典参考；概率最大的 bitstring 不等于已证明的全局最优解。
 
-`acceptanceProfiles: []`、`reproductionProfiles: []`。开发证据为 L2；执行只产生 observations，
-`provenance.complete=not_checked`，不派生科学 Acceptance。
+已接入版本化 Acceptance Profile，`reproductionProfiles: []`。开发证据为 L3；执行期只产生 observations，
+`provenance.complete=not_checked`；DSH 物化并重读字节后，中央 Builder 才派生 Acceptance。
 
 准备已有固定环境后运行 `OPENQUANTUM_REAL_L2=1 node --test .agents/skills/qpanda-qubo/test/live.test.mjs`，
 实时重算与独立参考相互核对；不调用真实模型、量子云或硬件。

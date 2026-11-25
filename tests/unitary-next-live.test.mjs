@@ -22,7 +22,9 @@ async function withTool(t, id, action) {
     const response = await client.callTool({ name: capability.tool, arguments: input }, undefined, { timeout: 195000 });
     assert.notEqual(response.isError, true, JSON.stringify(response));
     const output = response.structuredContent;
-    assert.equal(output.scientificValidation, "not_evaluated");
+    assert.equal(output.scientificValidation, "observations_available");
+    assert.deepEqual(output.validation.observations.filter(o => o.status === "fail"), []);
+    assert.equal(output.validation.observations.find(o => o.id === "provenance.complete").status, "not_checked");
     await writeFile(path.join(evidence, `${id}-${label}.json`), JSON.stringify({ verifiedAt: new Date().toISOString(), ...output }, null, 2));
     return output.result;
   });

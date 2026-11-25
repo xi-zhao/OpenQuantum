@@ -23,7 +23,7 @@ description: 用固定 PauLie 分析 Pauli 生成元的动力学 Lie 代数、�
 - 主动作先返回上游分类与精确维数；`closureMode=full` 枚举显式 Pauli 闭包，skip 不枚举，auto 仅在维数不超过 4096 时枚举。独立矩阵参考由 referenceMode 单独选择；`spanResidualTarget` 明确残差覆盖 closure 或 generators。超出 JavaScript 精确整数范围的维数返回十进制字符串。
 - classification 保留上游同构命名，如 so(3) 与 su(2)、so(6) 与 su(4)。当前独立验证的是表示空间与维数，不是完整抽象代数分类证明。
 - `generatesFullSpecialUnitary` 只对应上述独立理想控制假设，不自动证明有限深 ansatz 的表达能力、可训练性、脉冲可达性或真实硬件可控性。
-- 当前 L1，`scientificValidation=not_evaluated`；依赖须显式准备；计算可能写本地缓存。版本和案例见[接入说明](../../../docs/integrations/UNITARY_NEXT_TOOLS.md)。
+- 当前 L2，`scientificValidation=observations_available`；依赖须显式准备；计算可能写本地缓存。版本和案例见[接入说明](../../../docs/integrations/UNITARY_NEXT_TOOLS.md)。
 
 独立参考使用 `referenceMode=auto|required|skip`：auto 按默认阈值选择参考，required 使用调用方资源尝试所请求规模，skip 跳过。未执行时 `reference.status=not_run`，参考值和差异为 null；尝试后失败会返回错误。
 
@@ -32,3 +32,7 @@ description: 用固定 PauLie 分析 Pauli 生成元的动力学 Lie 代数、�
 ## 依赖准备
 
 运行前执行 `node scripts/setup-paper-tools.mjs paulie-algebra`。缺失、旧锁和已安装环境的处理见[共同准备说明](../../../docs/integrations/LOCAL_ENVIRONMENTS.md)；Tool 不自动安装或升级依赖。
+
+## 独立科学观察（L2）
+
+独立验证器只产 observations，不自行推导科学验收；`acceptanceProfiles: []` 和 `reproductionProfiles: []`。执行期 `provenance.complete=not_checked`。≤4 qubits、≤64 生成元独立计算所有嵌套对易闭包、正交 Pauli 基、DLA 维数与中心维数；≤3 qubits 加稠密 AB−BA 复核。辛向量秩不等于 DLA 维数。 超出参考范围或缺环境时相应观察为 not_checked，不限制主 Tool 的计算规模。

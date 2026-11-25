@@ -1,0 +1,60 @@
+{
+  "request": {
+    "referenceMode": "skip",
+    "numQubits": 2,
+    "gates": [
+      {
+        "gate": "H",
+        "targets": [
+          0
+        ]
+      },
+      {
+        "gate": "T",
+        "targets": [
+          0
+        ]
+      },
+      {
+        "gate": "T",
+        "targets": [
+          0
+        ]
+      },
+      {
+        "gate": "CX",
+        "targets": [
+          0,
+          1
+        ]
+      }
+    ],
+    "execution": {}
+  },
+  "result": {
+    "inputQasm": "OPENQASM 2.0;\ninclude \"qelib1.inc\";\nqreg q[2];\nh q[0];\nt q[0];\nt q[0];\ncx q[0], q[1];\n",
+    "optimizedQasm": "OPENQASM 2.0;\ninclude \"qelib1.inc\";\nqreg q[2];\nh q[0];\nrz(0.5*pi) q[0];\ncx q[0], q[1];\n",
+    "before": {
+      "gates": 4,
+      "twoQubitGates": 1,
+      "tCount": 2,
+      "depth": 4
+    },
+    "after": {
+      "gates": 3,
+      "twoQubitGates": 1,
+      "tCount": 0,
+      "depth": 3
+    },
+    "unitaryMaxError": null,
+    "reference": {
+      "mode": "skip",
+      "status": "not_run",
+      "method": "Independent complete unitary comparison up to global phase",
+      "reason": "Reference explicitly skipped by the caller."
+    },
+    "equivalenceTolerance": null,
+    "equivalentUpToGlobalPhase": null,
+    "bitOrder": "left-to-right q0,q1,..."
+  }
+}

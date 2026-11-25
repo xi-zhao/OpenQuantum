@@ -61,13 +61,13 @@
     }
   ],
   "files": {
-    "SKILL.md": "5dadb7e9a0694b869f35c9e53a31933c31c7f208ddbabc8b20242e769700cb15",
+    "SKILL.md": "c6748641fdaec9ac849c85fbf65ca133124dd4cb452b4869af6e7e6e8aabc374",
     "acceptance-profiles/qubo-algebraic-optimality-audit-v1.json": "fa900407ef0fe3a1828d9f7c0734a3df03ff35008674b078a790ece0aeb8bf18",
     "agents/openai.yaml": "a8981e3f0b8daa3c1992b669881c4e6dc2592e87d76708039e08c308160fde86",
     "artifacts/observations.schema.json": "32408d479ec4755457931ee9cea4277d22721af46a1e35c0c6bd946fe152e8f3",
     "artifacts/qubo-result.schema.json": "798e75ed1c4d98466bd6def84577fc91451eedd17232d8d6d23ffbd3a43fdcfe",
     "core/render-report.mjs": "d31a135a2febb530028491e5c5838111dda0906fb7cd1d2ea6b7af468d11458a",
-    "evals/README.md": "96317380595fb7c225909a2e3c8ac8f254de5783cd2ec8ec2de204f67c0ae4fa",
+    "evals/README.md": "705dc5720eae52494d287ce2669c924c7075010630621fe091a8a5df1f08763c",
     "evals/cases.json": "accf9cb437d00f83fcb7f275f2ce8b2832086a1334c2c2ebe785b3bec99344a5",
     "evals/fixtures/infeasible.json": "36553ea47ac4ddc8b68e88c38e396a163bf2be9b512f26a4c5a680f1636a6851",
     "evals/fixtures/maximize.json": "fe3ddaa58bd3e7fae6c1fdaceecfaca324c86f82337ed5df42749b9ac953f7f2",

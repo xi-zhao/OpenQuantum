@@ -1,0 +1,99 @@
+schemaVersion: "1.1"
+id: symmer-tapering
+version: 1.0.0
+displayName: symmer-tapering independent observations
+description: Independent symplectic commutation and GF(2) rank, reduced
+  Hermiticity and full target-sector eigenspectrum for <=6 qubits.
+maturity:
+  status: draft
+  evidence:
+    - id: independent-observations-2026-11-25
+      kind: eval-report
+      path: evals/evidence-2026-11-25.json
+      sha256: 707bc3d757abbd1b92dc3d3722e156a5c662a9ae92f1a3a4d636a4080ca91f40
+skill:
+  name: symmer-tapering
+  entrypoint: SKILL.md
+scope:
+  supportedClaims:
+    - Independent symplectic commutation and GF(2) rank, reduced Hermiticity and
+      full target-sector eigenspectrum for <=6 qubits.
+  outOfScope:
+    - Global ground states in other sectors and independent proof of NumPy
+      eigensolvers.
+    - Final scientific Acceptance and materialized Session provenance.
+  examples:
+    - title: Independent local audit
+      prompt: Run the fixed numerical example and explain its independent observations.
+input:
+  id: experiment-request
+  schema: inputs/request.schema.json
+  maxBytes: 65536
+  mediaTypes:
+    - application/json
+artifacts:
+  - id: numerical-result
+    schema: artifacts/result.schema.json
+    required: true
+    mediaType: application/json
+validators:
+  - id: symmer-tapering-observations
+    version: 1.0.0
+    command:
+      executable: node
+      script: validators/validate-result.mjs
+      args: []
+      shell: false
+acceptanceProfiles: []
+reproductionProfiles: []
+modelRequirements:
+  textGeneration: false
+  toolCalling: false
+  structuredOutput: false
+permissions:
+  network:
+    mode: none
+    destinations: []
+  filesystem:
+    read:
+      - prepared-runtime
+      - structured-result
+    write:
+      - temporary-compute-cache
+  subprocess:
+    allowed: true
+    commands:
+      - python
+  cloudCompute:
+    allowed: false
+    providers: []
+  limits:
+    wallTimeSeconds: null
+    memoryMiB: null
+    maxArtifacts: 1
+    maxCostUsd: 0
+  data:
+    classification: public
+    retentionDays: 0
+    externalTransfer: forbidden
+    licenses:
+      - MIT
+evals:
+  runner:
+    executable: node
+    script: evals/run-evals.mjs
+    args: []
+    shell: false
+  suite:
+    id: symmer-tapering-observations-eval
+    version: 1.0.0
+    path: evals/suite.json
+    sha256: 41cd65ebb36c2ed076ab74f6394b5a37608a7598c96d175f3dc071e9385ea0d0
+compatibility:
+  contract: "1.1"
+  harness: 0.1.0-rc.6
+dependencies:
+  - id: symmer
+    kind: scientific-backend
+    version: 0.0.13
+    digest: 7504ea581181a6db65692c6ceb6f208d3bd9582c0cbd31b451942044c2ea968a

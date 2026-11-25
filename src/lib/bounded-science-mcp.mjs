@@ -77,6 +77,8 @@ export async function serveScienceTool({ entrypoint, id, definition, definitions
     UV_PROJECT_ENVIRONMENT: path.join(projectRoot, ".openquantum/python-envs", id),
     CARGO_HOME: path.join(projectRoot, ".openquantum/cargo-cache"),
     MPLCONFIGDIR: path.join(process.env.OPENQUANTUM_COMPUTE_CACHE_ROOT || path.join(projectRoot, ".openquantum/cache"), `${id}-matplotlib`),
+    // Numba-backed SDKs must never cache beside the read-only prepared SDK.
+    NUMBA_CACHE_DIR: path.join(process.env.OPENQUANTUM_COMPUTE_CACHE_ROOT || path.join(projectRoot, ".openquantum/cache"), `${id}-numba`),
     PYTHONNOUSERSITE: "1", PYTHONDONTWRITEBYTECODE: "1", MPLBACKEND: "Agg",
     JULIA_NUM_PRECOMPILE_TASKS: "2", JULIA_PKG_PRECOMPILE_AUTO: "0",
     ...(process.env.OPENQUANTUM_JULIA_DEPOT_PATH ? { JULIA_DEPOT_PATH: process.env.OPENQUANTUM_JULIA_DEPOT_PATH } : {}),

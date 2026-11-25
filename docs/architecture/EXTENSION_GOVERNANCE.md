@@ -3,6 +3,12 @@
 > 本文件顶部记录 **2026-11-25 成熟度快照**；保留 2026-11-24 全量快照与治理决定，以及 2026-09-24 首次治理（101 Skill / 37 MCP / 220 Tool，B1/B2/B3）的逐项历史决定，不改写既有记录。
 > 实时数量请运行 `npm run governance:audit`：[`审计脚本`](../../scripts/audit-extension-governance.mjs) 解析源码 YAML/JSON 声明，输出统计并核对内部一致性。新增 Skill 无需修改本页的历史数字；本页不是 CI 的固定数量门禁。
 
+## 2026-11-25 科学验收与工程稳健性快照（O–R）
+
+201 个 Capability：`L0=102`、`L1=87`、`L2=5`、`L3=7`。QPanda QUBO 与 LDPC decoding 增加版本化 Profile、真实字节物化复核、可读报告和 full 沙箱 Harness 重启回放；七条 L3 的八个完整 Tool 调用均包含 workspace-write。缺参考保持 conditional，发现科学矛盾则 failed。
+
+PyZX、Symmer、PauLie 和 Graphix 增加独立 observations Validator、JSON Schema 和固定 eval，保持空 Acceptance / Reproduction Profiles；与 platform-diagnostics 共五条 L2。只在各自有界数值范围内核验，不外推量子优势、码距、硬件容错阈值或任意输入通道等价。
+
 ## 2026-11-25 科学验收提升快照（K–N）
 
 201 个 Capability：`L0=102`、`L1=91`、`L2=3`、`L3=5`。

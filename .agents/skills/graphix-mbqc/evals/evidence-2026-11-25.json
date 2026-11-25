@@ -1,0 +1,98 @@
+{
+  "schemaVersion": "1.0",
+  "kind": "development-eval-evidence",
+  "date": "2026-11-25",
+  "capability": "graphix-mbqc",
+  "checks": [
+    {
+      "command": [
+        "node",
+        "--test",
+        "tests/unitary-independent-validators.test.mjs",
+        "tests/unitary-next-contracts.test.mjs",
+        "tests/documentation-links.test.mjs"
+      ],
+      "exitCode": 0,
+      "passed": 80,
+      "failed": 0,
+      "logSha256": "eabba2021fa9b404be0adfe00ecd070d50ffab81a0eb2c95999d96ddca5065ab"
+    },
+    {
+      "command": [
+        "env",
+        "OPENQUANTUM_PYTHON_ENV_ROOT=/Volumes/Elements/CodexArtifacts/Projects/OpenQuantum/2026-11-25--governance-phase6-environments/python-envs",
+        "OPENQUANTUM_COMPUTE_CACHE_ROOT=/Volumes/Elements/CodexArtifacts/Projects/OpenQuantum/2026-11-25--governance-phase6-environments/cache",
+        "OPENQUANTUM_REAL_UNITARY_OBSERVATIONS=1",
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        "tests/unitary-independent-live.test.mjs"
+      ],
+      "exitCode": 0,
+      "passed": 21,
+      "failed": 0,
+      "logSha256": "72c2d39bfc58181a0e434e688f607a97cd842f0a326b59c85b13cba6002836f9"
+    },
+    {
+      "command": [
+        "node",
+        "--test",
+        "tests/unitary-next-contracts.test.mjs"
+      ],
+      "exitCode": 0,
+      "passed": 6,
+      "failed": 0,
+      "logSha256": "c879a042e9c0f2cbdef7de8ca81fd120000b7a177109f055ab6590d328517796"
+    },
+    {
+      "command": [
+        "env",
+        "OPENQUANTUM_PYTHON_ENV_ROOT=/Volumes/Elements/CodexArtifacts/Projects/OpenQuantum/2026-11-25--governance-phase6-environments/python-envs",
+        "OPENQUANTUM_COMPUTE_CACHE_ROOT=/Volumes/Elements/CodexArtifacts/Projects/OpenQuantum/2026-11-25--governance-phase6-environments/cache",
+        "OPENQUANTUM_REAL_UNITARY_NEXT=1",
+        "OPENQUANTUM_UNITARY_NEXT_EVIDENCE=/Volumes/Elements/CodexArtifacts/Projects/OpenQuantum/2026-11-25--governance-corrective/unitary-evidence-phase6",
+        "node",
+        "--test",
+        "tests/harness-unitary-next.test.mjs"
+      ],
+      "exitCode": 0,
+      "passed": 1,
+      "failed": 0,
+      "logSha256": "dac988a75a9a47d46e04b0204e7a483c1625132f082d530af2793210dec459a6"
+    }
+  ],
+  "files": {
+    "SKILL.md": "9979d6b604152ffe5a0d9190baccfdae9a28395442ad1f9e1253eb6edf9d9e9c",
+    "artifacts/observations.schema.json": "413cbdd34f1f8f2129c98d957a8d55f34170069399151830021dcd75148ece09",
+    "artifacts/result.schema.json": "237894cdadbf0fc7e5ca1d43264ed43a534abf2b9ff90cd9939183a996857724",
+    "evals/README.md": "498bc940e90c23d873b34fe2eb7a5da57372d2a35f49493cb79dcfaeeca1901e",
+    "evals/cases.json": "cb5e2874183a1ac7b8233c5a9a96d2b354523d3764e7f33d34c16ed0017abf35",
+    "evals/fixtures/default.json": "7548453f3c396635808bcf7da4932d5607d004eee57c9465006a1eaf58e0053a",
+    "evals/fixtures/generated.json": "6ed81da4032fc2a6cd2d0d88a1277d6539162a7a35b6f985019065cf1413191b",
+    "evals/fixtures/identity.json": "0a865d9e903831958e6da4a86a2037fbdc10fec4286c89b1ac3adb96cd1cf32f",
+    "evals/fixtures/rotation.json": "40acab8dfdebc751f190ce665bb59741d96129c2b3a1c2795fe9a2b5fae7568f",
+    "evals/fixtures/skip.json": "0c45ec89318ecd64041cff380a67db88b662a2b193708dab9d5f6fc97f70cd9b",
+    "evals/run-evals.mjs": "7df720dbdebbb58e09d24392ae4961b7ae13287ad7062104e2586df2bc1aba4d",
+    "evals/suite.json": "009c80c4bbd8654ead67e68d00775a69bdc86a283b52bcab8021a93dbd1f3502",
+    "inputs/request.schema.json": "7e7d1630c7fa1f97810bb3811ce5bf3e826214cbc9c9bfadfee03a83e3775960",
+    "mcp/bridge.py": "2884ae3dfc54657e0774a0e8a5be51854a278b05839623967f31dc8dad111c91",
+    "mcp/contracts.mjs": "2f31418fa51506e0b9956fd4552526941f46181d082a0f4c9d077930d5a985db",
+    "mcp/server.mjs": "0f82be6e64868af083a38226860818556adcfe2607c8215f6885eb08ce76deea",
+    "pyproject.toml": "44e6d115fc4cabecc650395c913711c4201527879a10f10e9124ebe544952174",
+    "test/validator.test.mjs": "e6ddcf66748a8bd81e51145d5e74b4fe0e5cf63874f68daf0f1f24c28e13d85f",
+    "uv.lock": "fc63c9cdfe80a5336b31ff88bec2f38978e082bde7be0481634cdf911cdfa5e1",
+    "validators/validate-result.mjs": "03545685dfb57b0c3a4e99e8f88ace0b5336e40b177e9bac2683c08d5c3e67de"
+  },
+  "limitations": [
+    "No independent human domain review is claimed."
+  ],
+  "level": "L2",
+  "scope": [
+    "Observations only; empty Acceptance and Reproduction Profiles.",
+    "Local pinned numerical checks; no real model, quantum cloud or hardware."
+  ],
+  "sharedFiles": {
+    "src/lib/independent-quantum-math.mjs": "51de52020bf825bfccfa3645b50972df800a8065d73afe570815f9b6d89895af",
+    "src/lib/independent-observations.mjs": "549c50823327e8a23d5bebbc0be4c73bce4029dfa6e7f54b4c21df162ffc8c47"
+  }
+}
