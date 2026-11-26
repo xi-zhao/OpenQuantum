@@ -16,7 +16,8 @@ for (const id of projects) if (!ids.has(id)) throw new Error(`Python SDK omitted
 const md = (value) => String(value).replaceAll("|", "\\|").replaceAll("\n", " ");
 const summary = inventory.libraries.map(entry => {
   const dependencies = Array.isArray(entry.dependencies) ? entry.dependencies.join(", ") : Object.keys(entry.dependencies).join(", ");
-  return `| \`${entry.id}\` | ${md(entry.title)} | ${entry.language} | ${md(dependencies || "QDMI C source (setup-qdmi.mjs)")} | ${md(entry.workflow)} | ${md(entry.conditions.join(" ") || "按固定版本、已安装可选组件及目标平台核实")} |`;
+  const noPackageDependencies = entry.id === "qdmi-device" ? "QDMI C source (setup-qdmi.mjs)" : "无直接包依赖";
+  return `| \`${entry.id}\` | ${md(entry.title)} | ${entry.language} | ${md(dependencies || noPackageDependencies)} | ${md(entry.workflow)} | ${md(entry.conditions.join(" ") || "按固定版本、已安装可选组件及目标平台核实")} |`;
 });
 const external = inventory.otherCapabilities.filter(entry => entry.kind === "external-mcp");
 const native = inventory.otherCapabilities.filter(entry => entry.kind === "native-implementation");

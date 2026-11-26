@@ -49,7 +49,7 @@ def prepare_sdk(capability_id, *, data_directory=None):
         payload = sdk["nativeDependency"]["directory"]
         sys.path.insert(0, payload)
         return Path(payload)
-    elif capability_id in ("flow-vqe", "slowquant-response"):
+    elif capability_id in ("erasure-recovery", "flow-vqe", "slowquant-response"):
         root = Path(__file__).resolve().parents[2]
         source = root / os.environ.get("OPENQUANTUM_SDK_SOURCE_ROOT", ".openquantum/sdk-sources") / capability_id
         record = json.loads((source / "openquantum-source.json").read_text(encoding="utf-8"))

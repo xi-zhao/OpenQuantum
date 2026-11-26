@@ -6,6 +6,7 @@
 | --- | --- | --- | --- |
 | [chromobius.md](chromobius.md) | 已合入主线 | [`chromobius-decoding`](../../../.agents/skills/chromobius-decoding/SKILL.md) | [证据摘要](../../integrations/evidence/chromobius-2026-10-26.json) |
 | [emlint.md](emlint.md) | 已合入主线 | [`emlint-dem-audit`](../../../.agents/skills/emlint-dem-audit/SKILL.md) | [证据摘要](../../integrations/evidence/emlint-2026-10-29.json) |
+| [erasure-recovery.md](erasure-recovery.md) | 已合入主线 | [`erasure-recovery`](../../../.agents/skills/erasure-recovery/SKILL.md) | [证据摘要](../../integrations/evidence/erasure-recovery-2026-11-24.json) |
 | [lean-physics.md](lean-physics.md) | 已合入主线 | [`lean-physics`](../../../.agents/skills/lean-physics/SKILL.md) | [证据摘要](../../integrations/evidence/lean-physics-2026-10-28.json) |
 | [mwpf.md](mwpf.md) | 已合入主线 | [`mwpf-decoding`](../../../.agents/skills/mwpf-decoding/SKILL.md) | [证据摘要](../../integrations/evidence/mwpf-2026-11-06.json) |
 | [ppvm.md](ppvm.md) | 已合入主线 | [`ppvm-simulation`](../../../.agents/skills/ppvm-simulation/SKILL.md) | [PPVM.md](../../integrations/PPVM.md) · [证据摘要](../../integrations/evidence/ppvm-2026-11-10.json) |

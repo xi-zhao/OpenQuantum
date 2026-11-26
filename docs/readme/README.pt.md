@@ -152,7 +152,7 @@ Escolha uma área e diga ao ambiente de trabalho qual é sua pergunta, quais sã
 
 Cálculos locais podem começar sem conta em nuvem quântica. Hardware real e serviços pagos são configurados conforme a necessidade; a faixa de entradas, a preparação e o estado de verificação de cada método ficam no catálogo detalhado.
 
-O código-fonte atual oferece acesso completo às APIs nativas de **121 ambientes de SDK ou código-fonte** (incluindo os 26 da [expansão do ecossistema](../integrations/SDK_ECOSYSTEM_2026-10-14.md) lançada com a versão 0.8.4 e as integrações posteriores). Os agentes podem escrever programas próprios, combinar APIs públicas e salvar resultados completos, além dos casos predefinidos das Tools de conveniência.
+O código-fonte atual oferece acesso completo às APIs nativas de **[122 ambientes de SDK ou código-fonte](../integrations/SDK_INVENTORY.md)** (incluindo os 26 da [expansão do ecossistema](../integrations/SDK_ECOSYSTEM_2026-10-14.md) lançada com a versão 0.8.4 e as integrações posteriores). Os agentes podem escrever programas próprios, combinar APIs públicas e salvar resultados completos, além dos casos predefinidos das Tools de conveniência.
 
 SlowQuant acrescenta resposta linear molecular e propriedades de transição por um SDK de código-fonte fixado. [Preparação e limites de validação](../integrations/SLOWQUANT.md); qLR molecular com Qiskit e hardware ainda não foram validados.
 
@@ -227,6 +227,7 @@ A adaptação preserva as fontes e licenças originais e não depende do runtime
 | --- | --- | --- |
 | Mitigação de erros | Executar ZNE, REM, PEC ou CDR com Mitiq e comparar resultados brutos e mitigados com o mesmo orçamento de amostragem | Referência ideal, viés empírico, variância e RMSE, além do custo de calibração, treinamento e amostragem |
 | Correção quântica de erros | Executar experimentos de memória com código de superfície em Stim / PyMatching, construir patches retangulares com Deltakit ou decodificar com BP+LSD | Circuitos ruidosos efetivos, taxas de erro lógico e intervalos com número fixo de shots; verificações de consistência de síndrome para LSD |
+| [Apagamentos conhecidos](../../.agents/skills/erasure-recovery/SKILL.md) | Recuperar um qubit codificado num sítio escolhido de um grafo de acoplamento ponderado | Circuitos adaptativos de estabilizadores. O custo conta apenas as CNOT posteriores ao apagamento. |
 
 <a id="hamiltonian-simulation-and-open-systems"></a>
 
@@ -671,7 +672,7 @@ Prefira Tool Providers nativos para ações no mesmo processo e na mesma linguag
 
 </details>
 
-O catálogo completo de Skills, serviços MCP e Tools nativas é mantido na [documentação de referência em chinês](../CAPABILITIES.md#接口总览): o código-fonte atual traz **193 Skills integradas** (180 selecionáveis automaticamente e 13 índices de categoria manuais), **91 conexões de serviços MCP** (66 ativadas por padrão, incluindo duas conexões Qiskit que podem ser desativadas pelo controle de modo offline; 25 opcionais) e **5 Tools quânticas nativas**.
+O catálogo completo de Skills, serviços MCP e Tools nativas é mantido na [documentação de referência em chinês](../CAPABILITIES.md#接口总览): o código-fonte atual traz **[194 Skills integradas](../../.agents/skills/README.md)** (181 selecionáveis automaticamente e 13 índices de categoria manuais), **91 conexões de serviços MCP** (66 ativadas por padrão, incluindo duas conexões Qiskit que podem ser desativadas pelo controle de modo offline; 25 opcionais) e **5 Tools quânticas nativas**.
 
 <a id="development-and-verification"></a>
 
@@ -701,7 +702,7 @@ Escolha as verificações relevantes para sua alteração; a lista completa est�
 
 </details>
 
-A [Skill oficial `pyqpanda3` da OriginQ](https://github.com/OriginQ/pyqpanda3-skill) é uma Skill opcional de origem externa: não é contada entre as 193 Skills integradas e não é instalada automaticamente. `npm run skill:qpanda:setup` instala a versão revisada; isso não ativa `qpanda_runtime` nem concede permissões para jobs na nuvem.
+A [Skill oficial `pyqpanda3` da OriginQ](https://github.com/OriginQ/pyqpanda3-skill) é uma Skill opcional de origem externa: não é contada entre as 194 Skills integradas e não é instalada automaticamente. `npm run skill:qpanda:setup` instala a versão revisada; isso não ativa `qpanda_runtime` nem concede permissões para jobs na nuvem.
 
 <a id="roadmap-and-rsi"></a>
 

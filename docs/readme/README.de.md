@@ -157,7 +157,7 @@ Wählen Sie ein Gebiet und nennen Sie der Workbench Ihre Frage, Ihre Eingaben un
 
 Lokale Berechnungen funktionieren ohne Konto bei einer Quantencloud. Echte Hardware und kostenpflichtige Dienste werden bei Bedarf eingerichtet; Eingabebereich, Vorbereitung und Prüfstatus jeder Methode stehen im ausführlichen Katalog.
 
-Der aktuelle Quellcode bietet vollständigen Zugriff auf die nativen APIs von **121 SDK- und Quellcode-Umgebungen** (einschließlich der 26 aus der mit 0.8.4 veröffentlichten [Ökosystem-Erweiterung](../integrations/SDK_ECOSYSTEM_2026-10-14.md) und späterer Integrationen). Agents können eigene Programme schreiben, öffentliche APIs kombinieren und vollständige Ergebnisse speichern, über die voreingestellten Beispiele der Komfort-Tools hinaus.
+Der aktuelle Quellcode bietet vollständigen Zugriff auf die nativen APIs von **[122 SDK- und Quellcode-Umgebungen](../integrations/SDK_INVENTORY.md)** (einschließlich der 26 aus der mit 0.8.4 veröffentlichten [Ökosystem-Erweiterung](../integrations/SDK_ECOSYSTEM_2026-10-14.md) und späterer Integrationen). Agents können eigene Programme schreiben, öffentliche APIs kombinieren und vollständige Ergebnisse speichern, über die voreingestellten Beispiele der Komfort-Tools hinaus.
 
 SlowQuant ergänzt molekulare lineare Antwort und Übergangseigenschaften über ein festgelegtes Quellcode-SDK. [Einrichtung und Prüfgrenzen](../integrations/SLOWQUANT.md); molekulare Qiskit-qLR und Hardware sind noch nicht validiert.
 
@@ -232,6 +232,7 @@ Die Adaption bewahrt Upstream-Quellen und -Lizenzen und benötigt keine propriet
 | --- | --- | --- |
 | Fehlerminderung | ZNE, REM, PEC oder CDR mit Mitiq ausführen und rohe mit geminderten Ergebnissen bei gleichem Stichprobenbudget vergleichen | Ideale Referenz, empirischer Bias, Varianz und RMSE sowie Kalibrierungs-, Trainings- und Stichprobenaufwand |
 | Quantenfehlerkorrektur | Memory-Experimente mit Surface Codes mit Stim / PyMatching ausführen, rechteckige Patches mit Deltakit aufbauen oder mit BP+LSD decodieren | Tatsächliche verrauschte Schaltungen, logische Fehlerraten und Intervalle bei festen Shots; Syndrom-Konsistenzprüfungen für LSD |
+| [Bekannte Auslöschungen](../../.agents/skills/erasure-recovery/SKILL.md) | Ein codiertes Qubit an einem gewählten Ort im gewichteten Kopplungsgraphen wiederherstellen | Adaptive Stabilisatorschaltungen. Die Kosten erfassen nur CNOTs nach der Auslöschung. |
 
 <a id="hamiltonian-simulation-and-open-systems"></a>
 
@@ -676,7 +677,7 @@ Bevorzugen Sie native Tool Provider für Aktionen im selben Prozess und in derse
 
 </details>
 
-Der vollständige Katalog der Skills, MCP-Dienste und nativen Tools wird im [chinesischen Nachschlagewerk](../CAPABILITIES.md#接口总览) gepflegt: Der aktuelle Quellcode liefert **193 integrierte Skills** (180 automatisch auswählbar, 13 manuelle Kategorieindizes), **91 MCP-Dienstverbindungen** (66 standardmäßig aktiv, darunter zwei per Offline-Schalter deaktivierbare Qiskit-Verbindungen; 25 Opt-in) und **5 native Quanten-Tools**.
+Der vollständige Katalog der Skills, MCP-Dienste und nativen Tools wird im [chinesischen Nachschlagewerk](../CAPABILITIES.md#接口总览) gepflegt: Der aktuelle Quellcode liefert **[194 integrierte Skills](../../.agents/skills/README.md)** (181 automatisch auswählbar, 13 manuelle Kategorieindizes), **91 MCP-Dienstverbindungen** (66 standardmäßig aktiv, darunter zwei per Offline-Schalter deaktivierbare Qiskit-Verbindungen; 25 Opt-in) und **5 native Quanten-Tools**.
 
 <a id="development-and-verification"></a>
 
@@ -706,7 +707,7 @@ Wählen Sie die für Ihre Änderung relevanten Prüfungen; die vollständige Lis
 
 </details>
 
-Der [offizielle `pyqpanda3`-Skill von OriginQ](https://github.com/OriginQ/pyqpanda3-skill) ist ein optionaler Upstream-Skill: Er zählt nicht zu den 193 integrierten Skills und wird nicht automatisch installiert. `npm run skill:qpanda:setup` installiert die geprüfte Version; damit wird weder `qpanda_runtime` aktiviert noch eine Berechtigung für Cloud-Jobs erteilt.
+Der [offizielle `pyqpanda3`-Skill von OriginQ](https://github.com/OriginQ/pyqpanda3-skill) ist ein optionaler Upstream-Skill: Er zählt nicht zu den 194 integrierten Skills und wird nicht automatisch installiert. `npm run skill:qpanda:setup` installiert die geprüfte Version; damit wird weder `qpanda_runtime` aktiviert noch eine Berechtigung für Cloud-Jobs erteilt.
 
 <a id="roadmap-and-rsi"></a>
 

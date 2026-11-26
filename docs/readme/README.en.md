@@ -151,7 +151,7 @@ Pick an area and tell the workbench your question, your inputs and the results y
 
 Local calculations can start without a quantum-cloud account. Real hardware and paid services are configured on demand; each method's input range, preparation and verification status are kept in the detailed catalog.
 
-The current source provides full native-API paths for **121 SDK/source environments** (including the 26 added in the [ecosystem expansion](../integrations/SDK_ECOSYSTEM_2026-10-14.md) shipped with 0.8.4, plus subsequent integrations). Agents can write custom programs, combine public APIs and save complete results, going beyond the preset cases of the convenience Tools.
+The current source provides full native-API paths for **[122 SDK/source environments](../integrations/SDK_INVENTORY.md)** (including the 26 added in the [ecosystem expansion](../integrations/SDK_ECOSYSTEM_2026-10-14.md) shipped with 0.8.4, plus subsequent integrations). Agents can write custom programs, combine public APIs and save complete results, going beyond the preset cases of the convenience Tools.
 
 SlowQuant adds molecular linear-response and transition-property workflows through a fixed source SDK. See [setup and validation limits](../integrations/SLOWQUANT.md); molecular Qiskit qLR and hardware remain unvalidated.
 
@@ -218,6 +218,7 @@ The adaptation keeps upstream sources and licenses and does not depend on the pr
 | --- | --- | --- |
 | Error mitigation | Run ZNE, REM, PEC or CDR with Mitiq and compare raw and mitigated results at the same sampling budget | Ideal reference, empirical bias, variance and RMSE, plus calibration, training and sampling cost |
 | Quantum error correction | Run surface-code memory experiments with Stim / PyMatching, build rectangular patches with Deltakit, or decode with BP+LSD | Actual noisy circuits, logical error rates and intervals at fixed shots; syndrome consistency checks for LSD |
+| [Known erasures](../../.agents/skills/erasure-recovery/SKILL.md) | Recover one encoded qubit at a chosen site on a weighted coupling graph | Adaptive stabilizer circuits. Only post-erasure CNOTs are charged. |
 
 ### Hamiltonian simulation and open systems
 
@@ -632,7 +633,7 @@ Prefer native Tool Providers for in-process, same-language actions without isola
 
 </details>
 
-The full Skill, MCP service and native Tool catalog is maintained in the [Chinese reference documentation](../CAPABILITIES.md#接口总览): the current source ships **193 built-in Skills** (180 automatically selectable, 13 manual category indexes), **91 MCP service connections** (66 enabled by default, including two Qiskit connections that can be disabled with the offline switch; 25 opt-in) and **5 native quantum Tools**.
+The full Skill, MCP service and native Tool catalog is maintained in the [Chinese reference documentation](../CAPABILITIES.md#接口总览): the current source ships **[194 built-in Skills](../../.agents/skills/README.md)** (181 automatically selectable, 13 manual category indexes), **91 MCP service connections** (66 enabled by default, including two Qiskit connections that can be disabled with the offline switch; 25 opt-in) and **5 native quantum Tools**.
 
 ### Development and verification
 
@@ -660,7 +661,7 @@ Choose the checks relevant to your change; the full list is in the [Chinese refe
 
 </details>
 
-The [official OriginQ `pyqpanda3` Skill](https://github.com/OriginQ/pyqpanda3-skill) is an optional upstream Skill: it is not counted among the 193 built-in Skills and is not installed automatically. `npm run skill:qpanda:setup` installs the reviewed version; it does not enable `qpanda_runtime` or grant cloud-job permissions.
+The [official OriginQ `pyqpanda3` Skill](https://github.com/OriginQ/pyqpanda3-skill) is an optional upstream Skill: it is not counted among the 194 built-in Skills and is not installed automatically. `npm run skill:qpanda:setup` installs the reviewed version; it does not enable `qpanda_runtime` or grant cloud-job permissions.
 
 ## Roadmap and RSI
 

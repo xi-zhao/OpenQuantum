@@ -28,11 +28,15 @@ test("native SDK scoped API receipts are durable, match current locks and retain
   const mwpf = JSON.parse(await fs.readFile(path.join(root, "docs/integrations/evidence/mwpf-2026-11-06.json")));
   const tropidist = JSON.parse(await fs.readFile(path.join(root, "docs/integrations/evidence/tropidist-2026-11-22.json")));
   const stgrape = JSON.parse(await fs.readFile(path.join(root, "docs/integrations/evidence/stgrape-2026-11-22.json")));
-  const receipts = [...report.libraries, chromobius.receipt, lean.receipt, emlint.receipt, slowquant.receipt, tnqs.receipt, rcmps.receipt, ppvm.receipt, mwpf.receipt, tropidist.receipt, stgrape.receipt];
+  const erasure = JSON.parse(await fs.readFile(path.join(root, "docs/integrations/evidence/erasure-recovery-2026-11-24.json")));
+  const receipts = [...report.libraries, chromobius.receipt, lean.receipt, emlint.receipt, slowquant.receipt, tnqs.receipt, rcmps.receipt, ppvm.receipt, mwpf.receipt, tropidist.receipt, stgrape.receipt, erasure.receipt];
   const cohort = (await readSdkLibraries(root)).filter(entry => entry.nativeOnly);
   const slowquantResult = JSON.parse(await fs.readFile(path.join(contained(slowquant.receipt.durableEvidenceDirectory), "result.json")));
   assert.equal(slowquantResult.upstreamRevision, cohort.find(entry => entry.id === "slowquant-response").sourceProject.revision);
   assert.equal(slowquant.upstream.revision, slowquantResult.upstreamRevision);
+  const recovered = JSON.parse(await fs.readFile(path.join(contained(erasure.receipt.durableEvidenceDirectory), "result.json")));
+  assert.equal(recovered.upstreamRevision, cohort.find(entry => entry.id === erasure.receipt.id).sourceProject.revision);
+  assert.equal(recovered.compilerSha256, erasure.upstream.compilerSha256);
   const tracked = new Set(execFileSync("git", ["ls-files", "-z", "--", "docs/integrations/evidence"], { cwd: root, encoding: "utf8" }).split("\0"));
   assert.deepEqual(receipts.map(entry => entry.id).sort(), cohort.map(entry => entry.id).sort());
   assert.equal(report.summary.passed, 26);
@@ -44,7 +48,7 @@ test("native SDK scoped API receipts are durable, match current locks and retain
     assert.equal(path.basename(name), name);
     assert.equal(hash(await fs.readFile(path.join(path.dirname(witness), name))), digest);
   }
-  for (const numerical of [tnqs, rcmps, ppvm, mwpf, tropidist, stgrape]) {
+  for (const numerical of [tnqs, rcmps, ppvm, mwpf, tropidist, stgrape, erasure]) {
     for (const source of numerical.validationSources) {
       assert.equal(hash(await fs.readFile(contained(source.path))), source.sha256, source.path);
     }
