@@ -84,7 +84,6 @@ async function request(input) {
 async function updateSnapshot(input) {
   const result = await settingsSession.update(input);
   snapshot = result.snapshot;
-  accounts = credentialEntries(snapshot.services ?? []);
   preparationPoller.update(snapshot);
   if (result.save) {
     if (!result.confirmed) throw new Error(result.error || "已读取最新设置，但无法确认上次保存。请核对当前内容；编辑草稿已保留。");
@@ -777,6 +776,7 @@ function render() {
     empty.append(element("h2", "暂时无法读取设置"), element("p", "请检查插件连接后刷新。已有配置不会因此改变。", "hint"), button("重新读取", () => run({ action: "snapshot" }), "primary"));
     $("#content").replaceChildren(empty); return;
   }
+  accounts = credentialEntries(snapshot.services ?? []);
   const oldCatalog = $(".catalog-pane"), oldDetail = $(".detail-pane");
   if (oldCatalog && oldCatalog.dataset.tab === tab && oldCatalog.getClientRects().length) catalogScroll = oldCatalog.scrollTop;
   const detailScroll = oldDetail && oldDetail.dataset.entryKey === selectedEntry ? oldDetail.scrollTop : 0;
