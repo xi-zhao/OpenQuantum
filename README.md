@@ -30,12 +30,12 @@
 <h2 align="center">量子智能体</h2>
 
 <p align="center">
-  <strong>研究从此不必从零开始，每一次突破都沉淀为下一次计算的起点。</strong><br />
-  将全球分散的量子软件栈、前沿论文方法与独立科学验证收敛为统一的智能体工作层——开箱即算、逐项可核验，并持续进化。
+  <strong>像与一位会计算、会编程、还会替你验算的量子科研搭档一起工作。</strong><br />
+  研究从此不必从零开始，每一次突破都沉淀为下一次计算的起点。
 </p>
 
 <h3 align="center">
-  <a href="#开始使用"><ins>立即开始</ins></a> &nbsp;·&nbsp;
+  <a href="#开始使用"><ins>下载与安装</ins></a> &nbsp;·&nbsp;
   <a href="#优化实测"><ins>实测突破 →</ins></a> &nbsp;·&nbsp;
   <a href="https://xi-zhao.github.io/OpenQuantum/"><ins>访问官网</ins></a>
 </h3>
@@ -51,9 +51,121 @@
 
 <br />
 
+<a id="使用与结果"></a>
+<a id="执行记录与科学验收"></a>
+<a id="科研能力"></a>
+<a id="可以用它做什么"></a>
+
+## 认识 OpenQuantum：从一句提问到真实计算
+
+普通聊天 AI 只能回答概念，或者生成一段未经运行、不知对错的代码。**OpenQuantum 是专为量子学习与研究打造的智能体产品**——你用自然语言提出问题，它会自动调用专业量子软件在本地完成真实计算，并把结果独立核对清楚。
+
+<table>
+<tr>
+<td width="50%" valign="middle">
+
+1. **直接提问，不用先学一堆工具**<br />
+   像对话一样描述目标：*“算一下氢分子的基态能量”*、*“构建 Bell 态电路并对比不同噪声”*、*“复现一篇量子纠错论文的实验”*。
+2. **自动调软件，真正在本地算出来**<br />
+   按需自动准备并调用 Qiskit、PennyLane、QuTiP、Stim 等专业科学软件，完成真实数值模拟、线路编译与推导。
+3. **算完独立核对，每一步可复查**<br />
+   将“程序跑通”与“物理结果成立”分开检查，输出误差范围、过程记录与可复跑脚本；本地计算无需量子云账号。
+
+</td>
+<td width="50%">
+  <a href="./docs/images/openquantum-desktop-20261013.jpg"><img src="./docs/images/openquantum-desktop-20261013.jpg" alt="OpenQuantum Desktop 量子科研工作台" width="100%" /></a>
+</td>
+</tr>
+</table>
+
+<details>
+<summary>观看 78 秒产品演示视频：看它如何从提问完成一次量子计算（2026-11-02 快照）</summary>
+
+<br />
+
+https://github.com/user-attachments/assets/5c00a30d-eef0-493a-975f-3faeb200cc9e
+
+<sub><a href="docs/communications/video/README.md">视频数据来源与复跑说明</a> · <a href="docs/images/openquantum-evidence-flow.png">科学证据流</a> · <a href="docs/images/openquantum-settings-categories-20261013.jpg">桌面分类设置</a> · <a href="docs/images/openquantum-codex-settings-20261011.png">Codex 设置界面</a></sub>
+
+</details>
+
+<table>
+  <tr>
+    <td width="33%" valign="top">
+      <strong>本科生与初学者</strong><br />
+      免去繁琐环境配置，用自然语言边问边做量子线路、能级、噪声与脉冲实验，并配套交互式<a href="docs/integrations/OPENMAIC.md">量子学习通</a>。
+    </td>
+    <td width="33%" valign="top">
+      <strong>科研人员与研究生</strong><br />
+      在一个工作台里打通化学多体、开放系统、量子纠错与形式化证明，完整保留对照基准与可回放证据链。
+    </td>
+    <td width="34%" valign="top">
+      <strong>算法与软件工程师</strong><br />
+      在 Codex 或桌面端直接调用并对比全球主流量子软件栈，重构底层性能瓶颈，并将验证过的能力沉淀复用。
+    </td>
+  </tr>
+</table>
+
+<br />
+
+<a id="开始使用"></a>
+<a id="快速开始"></a>
+
+## 下载与安装
+
+### Desktop 桌面版 — macOS Apple Silicon（推荐首次使用）
+
+无需命令行，像常规桌面软件一样打开即用：
+
+1. 下载 **[OpenQuantum 0.8.11 DMG](https://github.com/xi-zhao/OpenQuantum/releases/download/v0.8.11/OpenQuantum-0.8.11-macOS-arm64.dmg)**（内置 Node / uv，核对 [SHA256SUMS](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.11)），拖入「应用程序」。
+2. 打开应用后，在「设置 → 模型」中填入你已有的任意支持 **Tool Calling** 的模型服务，即可开始提问与计算。
+
+<sub>首次打开（ad-hoc 签名）见<a href="docs/DESKTOP_INSTALLERS.md">安装说明</a>；Intel Mac 与 Windows 可使用 <a href="https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.4">0.8.4 能力包</a> 或下方源码方式启动。</sub>
+
+<a id="codex-plugin"></a>
+
+### Codex 插件（推荐 Codex 用户）
+
+**让 Codex 帮你安装：** 新建对话，复制发送以下请求（需要支持插件的 Codex、Node.js 24+ 与 npm）：
+
+```text
+请帮我安装 OpenQuantum Codex 插件 0.8.11。先阅读安装指南：
+https://github.com/xi-zhao/OpenQuantum/blob/codex-v0.8.11/docs/integrations/CODEX_AGENT_INSTALL.md
+从 https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.11 下载完整安装包与 SHA256SUMS，
+核对摘要后，检查 Codex、Node.js 24+ 和 npm，使用包内安装器完成安装。
+请保留已有插件和用户配置，核对 Skills、MCP 工具和左侧全局“OpenQuantum 设置”入口。
+需要我重载应用时，告诉我具体操作。最后报告实际验证的结果，以及仍需准备的科学计算依赖。
+```
+
+[安装包与 SHA256SUMS](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.11) · [手动安装](docs/integrations/CODEX_AGENT_INSTALL.md) · [插件边界](docs/integrations/CODEX_PLUGIN.md)
+
+<a id="安装源码"></a>
+<a id="配置模型"></a>
+
+### 从源码体验（无需模型密钥，30 秒复算一次真实量子基态）
+
+```bash
+git clone https://github.com/xi-zhao/OpenQuantum.git && cd OpenQuantum
+npm ci
+npm run demo:quantum-ground-state   # 零密钥复算：H₂ 算符基态 VQE（-1.85727503 Ha，误差 4.44×10⁻¹⁶ Ha）
+npm run dev                         # 启动本地 Web 工作台
+```
+
+<details>
+<summary>更多部署方式：源码 Desktop · Docker（Linux）· 量子学习通 · 微信 / 飞书渠道</summary>
+
+- **源码 Desktop**：`npm run desktop:setup` → `npm run desktop:verify-install` → `npm run desktop -- --source`（[部署指南](docs/DEPLOYMENT.md#方式三原生桌面工作台)）
+- **Docker Compose（Linux）**：`cp .env.example .env && docker compose up --build`（[部署指南](docs/DEPLOYMENT.md#方式四docker-compose)）
+- **量子学习通**：`npm run learning:ui:setup`（[集成说明](docs/integrations/OPENMAIC.md)）
+- **微信 / 飞书等消息渠道**：`npm run cc-connect:setup`（[渠道配置](docs/integrations/CC_CONNECT.md)）
+
+</details>
+
+<br />
+
 ## 为什么是 OpenQuantum
 
-量子科研横跨上百套多语言工具与论文实现，大量研究时间仍消耗在重装环境、核对物理约定与编写一次性验证脚本上。OpenQuantum 将这层工作一次做成可复用、可核验的公共工作层：
+将全球分散的量子软件栈、前沿论文方法与独立科学验证收敛为统一的智能体工作层——开箱即算、逐项可核验，并持续进化：
 
 <table>
   <tr>
@@ -73,7 +185,7 @@
     </td>
     <td width="50%" valign="top">
       <strong>一份核心，跨宿主原生交付</strong><br />
-      同一套量子科研核心原生运行于 <strong>Codex 插件</strong> 与 <strong>OpenQuantum Desktop</strong>，模型无关、本地优先，兼容任意支持 Tool Calling 的模型服务，随基础模型演进而持续放大能力边界。
+      同一套量子科研核心原生运行于 <strong>OpenQuantum Desktop</strong> 与 <strong>Codex 插件</strong>，模型无关、本地优先，兼容任意支持 Tool Calling 的模型服务，随基础模型演进而持续放大能力边界。
     </td>
   </tr>
 </table>
@@ -112,53 +224,14 @@
 
 <br />
 
-<a id="使用与结果"></a>
-<a id="执行记录与科学验收"></a>
-<a id="科研能力"></a>
-<a id="可以用它做什么"></a>
 <a id="openquantum-的核心能力"></a>
 <a id="能力接口目录"></a>
-
-## 产品形态与全球生态
-
-<table>
-<tr>
-<td width="50%" valign="middle">
-
-### 一份核心，双端交付
-
-一套共享量子科研核心，原生嵌入不同宿主，不绑定单一框架或模型：
-
-- **Codex 插件**：在 Codex 原生对话中无缝调用全部量子科研能力。
-- **Desktop 独立工作台**：开箱即用的个人量子科研桌面，集成工作区、文件、执行记录与[量子学习通](docs/integrations/OPENMAIC.md)。
-- **清晰边界**：遵循「发现 → 准备 → 执行」，本地数值计算无需量子云凭据，真机任务按需显式开启。
-
-[系统架构](docs/README.md) · [科学证据流](docs/images/openquantum-evidence-flow.png) · [分类设置界面](docs/images/openquantum-settings-categories-20261013.jpg)
-
-</td>
-<td width="50%">
-  <a href="./docs/images/openquantum-desktop-20261013.jpg"><img src="./docs/images/openquantum-desktop-20261013.jpg" alt="OpenQuantum Desktop 科研工作台" width="100%" /></a>
-</td>
-</tr>
-</table>
-
-<details>
-<summary>观看 78 秒产品演示视频（2026-11-02 快照）</summary>
-
-<br />
-
-https://github.com/user-attachments/assets/5c00a30d-eef0-493a-975f-3faeb200cc9e
-
-<sub><a href="docs/communications/video/README.md">视频数据来源与复跑说明</a> · 另可查看 <a href="./docs/images/openquantum-codex-settings-20261011.png">Codex 全局设置界面</a></sub>
-
-</details>
-
 <a id="算法学习与方法比较"></a>
 <a id="纠错模型静态诊断"></a>
 <a id="数学与物理形式化"></a>
 <a id="量子学习通"></a>
 
-### 覆盖全球主流量子生态
+## 覆盖全球主流量子生态
 
 当前源码分发 **194 个内置 Skill、91 个 MCP 服务连接、5 个原生量子 Tool**，并为 **122 个 SDK/源码环境**提供原生 API 路径。
 
@@ -195,57 +268,7 @@ https://github.com/user-attachments/assets/5c00a30d-eef0-493a-975f-3faeb200cc9e
   <a href="docs/integrations/FULL_SDK_ACCESS.md"><kbd>+ 122 个锁定环境</kbd></a>
 </p>
 
-[完整 Skill 目录](docs/CAPABILITIES.md#内置-skills) · [MCP 服务目录](docs/CAPABILITIES.md#mcp-服务目录) · [原生量子 Tools](docs/CAPABILITIES.md#原生量子-tools) · [环境准备](docs/integrations/LOCAL_ENVIRONMENTS.md) · [方法选型](docs/integrations/CAPABILITY_SELECTION.md)
-
-<br />
-
-<a id="开始使用"></a>
-<a id="快速开始"></a>
-
-## 快速开始
-
-<a id="codex-plugin"></a>
-
-### Codex 插件
-
-**让 Codex 帮你安装：** 新建对话，复制发送以下请求（需要支持插件的 Codex、Node.js 24+ 与 npm）：
-
-```text
-请帮我安装 OpenQuantum Codex 插件 0.8.11。先阅读安装指南：
-https://github.com/xi-zhao/OpenQuantum/blob/codex-v0.8.11/docs/integrations/CODEX_AGENT_INSTALL.md
-从 https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.11 下载完整安装包与 SHA256SUMS，
-核对摘要后，检查 Codex、Node.js 24+ 和 npm，使用包内安装器完成安装。
-请保留已有插件和用户配置，核对 Skills、MCP 工具和左侧全局“OpenQuantum 设置”入口。
-需要我重载应用时，告诉我具体操作。最后报告实际验证的结果，以及仍需准备的科学计算依赖。
-```
-
-[安装包与 SHA256SUMS](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.11) · [手动安装](docs/integrations/CODEX_AGENT_INSTALL.md) · [插件边界](docs/integrations/CODEX_PLUGIN.md)
-
-### Desktop — macOS Apple Silicon
-
-下载 **[OpenQuantum 0.8.11 DMG](https://github.com/xi-zhao/OpenQuantum/releases/download/v0.8.11/OpenQuantum-0.8.11-macOS-arm64.dmg)**（内置 Node / uv），核对 [SHA256SUMS](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.11) 后拖入「应用程序」，在「设置 → 模型」中接入任意支持 **Tool Calling** 的模型服务。首次打开（ad-hoc 签名）见[安装说明](docs/DESKTOP_INSTALLERS.md)；Intel Mac 与 Windows 可使用 [0.8.4 能力包](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.4) 或下方源码启动。
-
-<a id="安装源码"></a>
-<a id="配置模型"></a>
-
-### 从源码运行（无需模型密钥即可复算验证）
-
-```bash
-git clone https://github.com/xi-zhao/OpenQuantum.git && cd OpenQuantum
-npm ci
-npm run demo:quantum-ground-state   # 零密钥复算：H₂ 算符基态 VQE（-1.85727503 Ha，误差 4.44×10⁻¹⁶ Ha）
-npm run dev                         # 启动本地 Web 工作台
-```
-
-<details>
-<summary>更多入口：源码 Desktop · Docker（Linux）· 量子学习通 · 微信 / 飞书渠道</summary>
-
-- **源码 Desktop**：`npm run desktop:setup` → `npm run desktop:verify-install` → `npm run desktop -- --source`（[部署指南](docs/DEPLOYMENT.md#方式三原生桌面工作台)）
-- **Docker Compose（Linux）**：`cp .env.example .env && docker compose up --build`（[部署指南](docs/DEPLOYMENT.md#方式四docker-compose)）
-- **量子学习通**：`npm run learning:ui:setup`（[集成说明](docs/integrations/OPENMAIC.md)）
-- **微信 / 飞书等消息渠道**：`npm run cc-connect:setup`（[渠道配置](docs/integrations/CC_CONNECT.md)）
-
-</details>
+[完整 Skill 目录](docs/CAPABILITIES.md#内置-skills) · [MCP 服务目录](docs/CAPABILITIES.md#mcp-服务目录) · [原生量子 Tools](docs/CAPABILITIES.md#原生量子-tools) · [环境准备](docs/integrations/LOCAL_ENVIRONMENTS.md) · [方法选型](docs/integrations/CAPABILITY_SELECTION.md) · [系统架构](docs/README.md)
 
 <br />
 
