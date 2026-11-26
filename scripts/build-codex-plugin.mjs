@@ -1,6 +1,7 @@
 import { isMainModule } from "../src/lib/cli-entrypoint.mjs";
 import fs from "node:fs/promises";
 import path from "node:path";
+import os from "node:os";
 import { parse, stringify } from "yaml";
 import { zipSync } from "fflate";
 import { buildChatgpt, git, json } from "./build-chatgpt.mjs";
@@ -12,7 +13,16 @@ export async function buildPlugin({ root = PROJECT_ROOT, output = path.join(root
   const version = await checkReleaseVersions(root);
   const release = { version, coreVersion: version,
     commit: git(root, ["rev-parse", "HEAD"]), dirty: Boolean(git(root, ["status", "--porcelain"])), connection: "local-desktop" };
-  const built = await buildChatgpt({ root, release });
+  const staging = await fs.mkdtemp(path.join(os.tmpdir(), "openquantum-codex-build-"));
+  try {
+    const built = await buildChatgpt({ root, output: staging, release });
+    return await packagePlugin({ root, output, release, built });
+  } finally {
+    await fs.rm(staging, { recursive: true, force: true });
+  }
+}
+
+async function packagePlugin({ root, output, release, built }) {
   const selected = (await readCapabilities(root)).filter(item => item.status === "available");
   const skillCount = selected.filter(item => item.skill).length;
   const owned = new Set(selected.map(item => item.id));
