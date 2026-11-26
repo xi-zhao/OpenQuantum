@@ -93,6 +93,7 @@
 
     <!-- ==================== 2. INTERACTIVE LIVE WORKFLOW THEATER ==================== -->
     <section class="theater" id="workflow" aria-labelledby="workflow-title">
+      <span id="workspace" class="workflow-anchor" aria-hidden="true"></span>
       <div class="frame">
         <div class="theater-head">
           <div>
@@ -174,14 +175,14 @@
                   <span>Stim 1.16.0 采样 · PyMatching 2.4.0 MWPM 译码</span>
                 </div>
                 <ol class="wf-trace">
-                  <li><span class="wf-check" aria-hidden="true">✓</span><code>qec-memory-experiment</code><span>构造 26 量子位、24 detectors、1 逻辑观测量的旋转表面码电路</span><em class="ok">READY</em></li>
+                  <li><span class="wf-check" aria-hidden="true">✓</span><code>qec-memory-experiment</code><span>旋转表面码电路有 17 个实际使用的物理量子位（9 数据、8 辅助），定义 24 个探测器和 1 个逻辑观测量</span><em class="ok">READY</em></li>
                   <li><span class="wf-check" aria-hidden="true">✓</span><code>run_qec_memory_experiment</code><span>执行 1,000 shots 采样与 MWPM 译码（耗时 3.33 ms）</span><em class="ok">DONE</em></li>
                   <li><span class="wf-check" aria-hidden="true">✓</span><code>reference cross-check</code><span>比对电路、DEM 与采样摘要 SHA-256，复核 95% Wilson 区间</span><em class="ok">MATCHED</em></li>
                 </ol>
                 <div class="wf-metrics">
                   <div><strong class="mono">0 / 1000</strong><span>逻辑错误数（错误率 0.0）</span></div>
                   <div><strong class="mono">[0, 0.003827]</strong><span>95% Wilson 置信区间</span></div>
-                  <div><strong class="mono ok">24 Detectors</strong><span>26 量子位 · 摘要逐项一致</span></div>
+                  <div><strong class="mono ok">24 Detectors</strong><span>17 个实际使用的物理量子位（9 数据、8 辅助）</span></div>
                 </div>
                 <div class="wf-foot">
                   <span>配套纠错生态：<code>emlint-dem-audit</code> · <code>mwpf-decoding</code> · <code>tropidist-distance</code></span>
@@ -218,7 +219,7 @@
                   <span>Lean 4 v4.35.0 锁定工具链 · Physlib &amp; mathlib 定理复用</span>
                 </div>
                 <ol class="wf-trace">
-                  <li><span class="wf-check" aria-hidden="true">✓</span><code>lake build</code><span>编译 <code>OpenQuantumProofs.lean</code> 通过类型检查（exitCode 0，stderr 为空）</span><em class="ok">COMPILED</em></li>
+                  <li><span class="wf-check" aria-hidden="true">✓</span><code>lean Proofs.lean</code><span>在禁网沙箱中逐文件编译，此证明文件通过类型检查（exitCode 0，stderr 为空）</span><em class="ok">COMPILED</em></li>
                   <li><span class="wf-check" aria-hidden="true">✓</span><code>warning audit</code><span>单独核查编译输出无 <code>declaration uses sorry</code> 警告（负例可检出 <code>sorryAx</code>）</span><em class="ok">CLEAN</em></li>
                   <li><span class="wf-check" aria-hidden="true">✓</span><code>#print axioms</code><span>逐定理输出依赖 <code>[propext, Classical.choice, Quot.sound]</code></span><em class="ok">AUDITED</em></li>
                 </ol>
@@ -500,7 +501,7 @@
               <div class="bar-line"><span>原库</span><div class="bar-track"><div class="time-bar baseline"></div></div></div>
               <div class="bar-line"><span>优化后</span><div class="bar-track"><div class="time-bar optimized" style="--ratio: 0.1965451"></div></div></div>
             </div>
-            <p class="input-scope">32 量子位 · 125 项 Hamiltonian × 512 项算符池 · Apple M4</p>
+            <p class="input-scope">32 量子位 · 125 项 H 与一个 512 项算符和的一次对易子 · Apple M4</p>
           </div>
           <figure class="result-figure penny-figure">
             <a href="./assets/pennylane-timings.svg" aria-label="查看 PennyLane 全部基准规模计时图">
@@ -515,7 +516,7 @@
         </div>
         <details class="case-conditions">
           <summary>查看计时与核对条件</summary>
-          <p>Apple M4，PennyLane 0.45.1；32 量子位、125 项 Hamiltonian 与 512 项局域双体算符池。单线程设定，2 次预热，9 轮热运行中位数。完整调用从 PauliSentence 输入到 PauliSentence 输出，包含双向转换与结果构造，不含准备、编译及核对。5.09 倍仅对应此项输入；其他规模结果见完整报告。</p>
+          <p>Apple M4，PennyLane 0.45.1。在 32 量子位上计算一次 [H, A]，其中 H 含 125 项，A 是 512 项局域双体算符之和。单线程设定，2 次预热，9 轮热运行中位数。完整调用从 PauliSentence 输入到 PauliSentence 输出，包含双向转换与结果构造，不含准备、编译及核对。5.09 倍仅对应此项输入，其他规模结果见完整报告。</p>
         </details>
         <div class="case-links">
           <a class="text-link" href="https://github.com/xi-zhao/OpenQuantum/tree/9fa53e6523dee2c81380483b1aedb19819f218ac/experiments/pennylane-rust-commutator">核对与复跑 ↗</a>

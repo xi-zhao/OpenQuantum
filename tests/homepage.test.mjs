@@ -11,6 +11,37 @@ const html = await readFile(path.join(root, "site/index.html"), "utf8");
 const json = async (file) => JSON.parse(await readFile(path.join(root, file), "utf8"));
 const caseHtml = (id) => html.match(new RegExp(`<article[^>]+id="case-${id}"[\\s\\S]+?</article>`))[0];
 
+test("both surface-code counts use the physical targets of the frozen Stim circuit", async () => {
+  const { facts } = await json(".agents/skills/qec-memory-experiment/evals/fixtures/zero-noise.json");
+  const physical = new Set(), data = new Set(), ancillas = new Set();
+  // Repeated rounds revisit the same targets. Coordinates and detector records are annotations.
+  for (const line of facts.circuit.text.split("\n")) {
+    const [gate, ...targets] = line.trim().split(/\s+/);
+    if (["TICK", "REPEAT", "}"].includes(gate) || /^(QUBIT_COORDS|SHIFT_COORDS|DETECTOR|OBSERVABLE_INCLUDE)\(/.test(gate)) continue;
+    for (const target of targets) {
+      assert.match(target, /^\d+$/, line);
+      physical.add(target);
+      if (gate === "M") data.add(target);
+      if (gate === "MR") ancillas.add(target);
+    }
+  }
+  assert.deepEqual(new Set([...data, ...ancillas]), physical);
+  assert.equal(data.size + ancillas.size, physical.size);
+  const expected = `${physical.size} 个实际使用的物理量子位（${data.size} 数据、${ancillas.size} 辅助）`;
+  const panel = html.match(/id="wf-panel-qec"[\s\S]*?<\/article>/)[0];
+  assert.ok(panel.match(/<ol class="wf-trace">([\s\S]*?)<\/ol>/)[1].includes(expected));
+  assert.ok(panel.match(/<div class="wf-metrics">([\s\S]*?)<div class="wf-foot">/)[1].includes(expected));
+});
+
+test("Lean compiler output is attributed to the sandboxed proof file", async () => {
+  const evidence = await json("docs/integrations/evidence/lean-physics-2026-10-28/result.json");
+  const proof = evidence.results["Proofs.lean"];
+  const step = html.match(/<li>[^\n]*<code>lean Proofs\.lean<\/code>[^\n]*<\/li>/)[0];
+  assert.equal(proof.stderr, "");
+  assert.ok(step.includes("沙箱中逐文件编译"));
+  assert.ok(step.includes(`exitCode ${proof.exitCode}，stderr 为空`));
+});
+
 test("QuTiP displayed timing, speedup and check scope agree with the frozen measured data", async () => {
   const measured = await json("experiments/qutip-rust-wigner/results/summary.json");
   const section = caseHtml("qutip");
@@ -35,7 +66,7 @@ test("PennyLane copy uses full calls and the declared input rather than the fast
   assert.ok(section.includes(`${rust.toFixed(2)}<span>ms</span>`));
   assert.ok(section.includes(`${(baseline / rust).toFixed(2)}×`));
   assert.ok(section.includes(`${chosen.qubits} 量子位`));
-  assert.ok(section.includes(`${chosen.actual_left_terms} 项 Hamiltonian × ${chosen.actual_right_terms} 项算符池`));
+  assert.ok(section.includes(`${chosen.actual_left_terms} 项 H 与一个 ${chosen.actual_right_terms} 项算符和的一次对易子`));
   assert.ok(measured.cases.every((item) => item.correctness.rust_end_to_end.passed));
   assert.ok(section.includes(`${measured.cases.length} 个基准输入`));
   assert.ok(section.includes("5.09 倍仅对应此项输入"));
@@ -49,6 +80,7 @@ test("portable output contains every referenced asset, intact original evidence 
   assert.equal(built, html);
   const ids = [...built.matchAll(/\bid="([^"]+)"/g)].map((match) => match[1]);
   assert.equal(ids.length, new Set(ids).size);
+  assert.match(built, /<section[^>]+id="workflow"[^>]*>\s*<span id="workspace"/);
   for (const [, href] of built.matchAll(/(?:href|src)="([^"]+)"/g)) {
     if (href.startsWith("./")) await access(path.join(output, href));
     if (href.startsWith("#") && href.length > 1) assert.ok(ids.includes(href.slice(1)), href);

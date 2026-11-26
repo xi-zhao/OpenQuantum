@@ -191,6 +191,7 @@ sup { font-size: 0.65em; }
               radial-gradient(45% 40% at 10% 95%, rgba(14, 116, 144, 0.12), transparent 70%);
 }
 .theater > .frame { position: relative; z-index: 1; }
+.workflow-anchor { position: absolute; top: 0; }
 .theater-head { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: var(--gap); align-items: end; }
 .theater-head h2 { color: #f8fafc; }
 .theater-lead { color: var(--obsidian-muted); font-size: 16px; line-height: 1.75; }
@@ -208,6 +209,7 @@ sup { font-size: 0.65em; }
 
 .wf-stage { margin-top: 24px; }
 .wf-panel { display: grid; grid-template-columns: 1.38fr 0.62fr; gap: 24px; align-items: stretch; }
+.wf-panel code { overflow-wrap: anywhere; }
 .wf-panel + .wf-panel { margin-top: 24px; }
 .wf-window {
   background: var(--obsidian-card);
@@ -559,7 +561,7 @@ figcaption { font-size: 13px; line-height: 1.6; margin-top: 12px; color: var(--s
   .hero-facts { border-radius: 18px; padding: 12px 16px; gap: 8px 16px; }
   .hero-figure figcaption { bottom: 18px; }
   .hero-next { bottom: 14px; }
-  .wf-trace li { grid-template-columns: 18px 1fr; gap: 6px 8px; }
+  .wf-trace li { grid-template-columns: 18px minmax(0, 1fr); gap: 6px 8px; }
   .wf-trace li span:nth-child(3), .wf-trace li em { grid-column: 2; }
   .wf-metrics { grid-template-columns: 1fr; }
   .wf-metrics > div { border-right: 0; border-bottom: 1px solid rgba(255, 255, 255, 0.07); }
