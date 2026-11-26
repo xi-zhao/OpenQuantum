@@ -45,15 +45,15 @@
 
 <p align="center">
   <a href="https://xi-zhao.github.io/OpenQuantum/">
-    <img src="../images/readme/banner-en.svg" width="100%" alt="OpenQuantum — نبني معًا ذكاءً اصطناعيًا موثوقًا للبحث الكمي. متوافق مع Qiskit وPennyLane وQuTiP وStim وPyMatching وLean 4 و121 بيئة مثبتة." />
+    <img src="../images/readme/banner-en.svg" width="100%" alt="OpenQuantum — نبني معًا ذكاءً اصطناعيًا موثوقًا للبحث الكمي. متوافق مع Qiskit وPennyLane وQuTiP وStim وPyMatching وLean 4 و122 بيئة مثبتة." />
   </a>
 </p>
 
 <table>
   <tr>
-    <td align="center" width="25%"><strong>193</strong><br /><sub>Skill مدمجة (180 تلقائية / 13 فهرس)</sub></td>
+    <td align="center" width="25%"><strong>194</strong><br /><sub>Skill مدمجة (181 تلقائية / 13 فهرس)</sub></td>
     <td align="center" width="25%"><strong>91</strong><br /><sub>اتصال MCP (66 افتراضي / 25 اختياري)</sub></td>
-    <td align="center" width="25%"><strong>121</strong><br /><sub>بيئة SDK ومصدر مثبتة</sub></td>
+    <td align="center" width="25%"><strong>122</strong><br /><sub>بيئة SDK ومصدر مثبتة</sub></td>
     <td align="center" width="25%"><strong>11 L3</strong><br /><sub>قبول علمي قابل للإعادة (DSH)</sub></td>
   </tr>
 </table>
@@ -81,7 +81,7 @@ https://github.com/user-attachments/assets/5c00a30d-eef0-493a-975f-3faeb200cc9e
 
 يواجه استخدام النماذج اللغوية العامة في البحث الكمي ثلاث عقبات: **إعادة كتابة شيفرات هشة من الصفر، وتشتّت أكثر من مئة حزمة SDK عبر لغات متعددة، وتوليد إجابات مقنعة شكليًا دون تحقق مستقل.** يجمع OpenQuantum البرمجيات المفتوحة والأساليب المنشورة ومسارات التحقق المستقل داخل **إضافة بحثية مشتركة**.
 
-- **تغطية شاملة**: 121 بيئة مثبتة (109 Python، 9 Julia، 2 أصلية، 1 Lean 4) و49 مثالًا قابلًا للتشغيل للخوارزميات الكمية (Qiskit وPennyLane وQuTiP وStim وPyMatching وTeNPy وMitiq وPyZX وOpenFermion وLean 4 وغيرها).
+- **تغطية شاملة**: 122 بيئة مثبتة (110 Python، 9 Julia، 2 أصلية، 1 Lean 4) و49 مثالًا قابلًا للتشغيل للخوارزميات الكمية (Qiskit وPennyLane وQuTiP وStim وPyMatching وTeNPy وMitiq وPyZX وOpenFermion وLean 4 وغيرها).
 - **أداء مقيس وقابل للتحقق**: تسريع الاستدعاء الكامل (**5.69×** في QuTiP و**5.09×** في PennyLane) مع تحقق دقيق لكل نقطة.
 - **علم قابل للتدقيق**: يُعرَّف *القبول العلمي* بأنه التوصل إلى موثوقية علمية للنتيجة استنادًا إلى فحوص مستقلة وسلسلة مصدر كاملة، ويظل منفصلًا تمامًا عن مجرد اكتمال تنفيذ أداة.
 - **مفتوح ومتعدد المضيفين**: تعمل الإضافة نفسها داخل **إضافة Codex** و**OpenQuantum Desktop / Web** مع أي نموذج يدعم Tool Calling (BYOM)، وبترخيص MIT للشيفرة الأصلية.
@@ -98,14 +98,14 @@ https://github.com/user-attachments/assets/5c00a30d-eef0-493a-975f-3faeb200cc9e
 | <a id="circuits-and-quantum-information"></a>**الدوائر والتصريف والتوافق** | Qiskit، PennyLane، PyZX، Graphix، MQT QCEC / QMAP / DDSIM، pytket، Compact، QCut، qBraid، Clifft، [PPVM](../../.agents/skills/ppvm-simulation/SKILL.md)، وتدقيق مصفوفات الكثافة | مجموعات البوابات، ترتيب البتات، نماذج الضوضاء ونطاق التكافؤ |
 | <a id="ground-states-chemistry-and-optimization"></a>**الحالة الأرضية والكيمياء والتحسين** | VQE (L3 قابل للإعادة)، SQD، TeNPy DMRG، OpenFermion، pyChemiQ، Flow-VQE، OpenQARP، Symmer، PauLie، وQPanda / Ocean / Kaiwu | الفضاء النشط، قطاع الجسيمات/التماثل والمرجع المستقل |
 | **الأطياف الجزيئية وشبكات الموتر ونظرية الحقل** | [SlowQuant](../../.agents/skills/slowquant-response/SKILL.md)، [TNQS](../../.agents/skills/tnqs-dynamics/SKILL.md)، [RcmpsCore](../../.agents/skills/rcmps-field-theory/SKILL.md) | تقريبات الاستجابة، التضمين المستوي، والفصل بين فجوة الانتقال وفجوة هاملتونيان |
-| <a id="error-mitigation-and-error-correction"></a>**تخفيف الأخطاء وتصحيحها (QEC)** | Mitiq، Stim / PyMatching، Deltakit، BP+LSD، Chromobius، [MWPF](../../.agents/skills/mwpf-decoding/SKILL.md)، [tropidist](../../.agents/skills/tropidist-distance/SKILL.md)، [emlint](../../.agents/skills/emlint-dem-audit/SKILL.md) | ميزانية العينات ونموذج الأعطال؛ الفحص الساكن لـ DEM لا يثبت مسافة الشيفرة |
+| <a id="error-mitigation-and-error-correction"></a>**تخفيف الأخطاء وتصحيحها (QEC)** | Mitiq، Stim / PyMatching، Deltakit، BP+LSD، Chromobius، [MWPF](../../.agents/skills/mwpf-decoding/SKILL.md)، [tropidist](../../.agents/skills/tropidist-distance/SKILL.md)، [erasure-recovery](../../.agents/skills/erasure-recovery/SKILL.md)، [emlint](../../.agents/skills/emlint-dem-audit/SKILL.md) | ميزانية العينات ونموذج الأعطال؛ الفحص الساكن لـ DEM لا يثبت مسافة الشيفرة |
 | <a id="hamiltonian-simulation-and-open-systems"></a>**الديناميكا والذرات المحايدة والنبضات** | Trotter / qDrift، Dynamiqs، OQuPy، TJM، Bloqade Analog، Pulser، PairInteraction، [ST-GRAPE](../../.agents/skills/stgrape-control/SKILL.md)، وQUA / LabOne Q / Qblox / Qililab / OQC QAT | الوحدات والقطع والشبكة الزمنية الثابتة؛ التصريف دون اتصال لا يشغّل الأجهزة المخبرية |
 | <a id="photonics-and-quantum-networks"></a>**الفوتونيات والشبكات الكمية** | Perceval، Piquasso، Lightworks، MerLin، MrMustard، SimQN، وNetQASM / SquidASM | ترتيب الأنماط وقطع فوك والترخيص المنفصل لـ NetSquid |
 | <a id="experiment-simulation-and-hardware"></a>**استكشاف العتاد والسحب الكمية** | FieldQKit، IBM Quantum، IonQ، OriginQ، Quafu، Tianyan، Guodun، Tencent، LogicalQubit، وQDMI | استكشاف للقراءة فقط افتراضيًا؛ إرسال المهام الفعلية إلى QPU يتطلب تفعيلًا صريحًا |
 | <a id="reference-material-and-selection"></a>**البراهين الشكلية والمعايير العامة** | [Lean 4 / mathlib / physlib](../../.agents/skills/lean-physics/SKILL.md)، و[Quantum-Practices (66) وMetriq (410)](../CAPABILITIES.md#参考资料与选型) | البراهين تغطي التعريفات والمسلّمات المصرح بها فقط؛ المعايير التاريخية لا تثبت أداء العتاد الحالي |
 | <a id="quantum-learning"></a>**التعليم والفصول التفاعلية** | [Quantum Learning / OpenMAIC](../integrations/OPENMAIC.md) | المنهج الكامل قيد البناء؛ تدفقات التدريس بالذكاء الاصطناعي عبر الإنترنت لم تستكمل القبول بعد |
 
-يوفّر التوزيع المصدري الحالي **193 Skill مدمجة**، و**91 اتصال خدمة MCP** (66 مفعّلة افتراضيًا و25 اختيارية)، و**5 Tools كمية أصلية**، و**121 بيئة SDK ومصدر** (منها **11 وظيفة L3** قابلة للإعادة على DSH). [الفهرس الكامل (بالصينية)](../CAPABILITIES.md#接口总览) · [تدقيق SDK](../integrations/FULL_SDK_ACCESS.md)
+يوفّر التوزيع المصدري الحالي **[194 Skill مدمجة](../../.agents/skills/README.md)**، و**91 اتصال خدمة MCP** (66 مفعّلة افتراضيًا و25 اختيارية)، و**5 Tools كمية أصلية**، و**[122 بيئة SDK ومصدر](../integrations/SDK_INVENTORY.md)** (منها **11 وظيفة L3** قابلة للإعادة على DSH). [الفهرس الكامل (بالصينية)](../CAPABILITIES.md#接口总览) · [تدقيق SDK](../integrations/FULL_SDK_ACCESS.md)
 
 ---
 
@@ -200,7 +200,7 @@ npm run demo:quantum-ground-state
 
 ```mermaid
 flowchart TB
-  Shared["إضافة OpenQuantum المشتركة<br/>193 Skills · 91 MCP · 121 SDK · العقود العلمية"]
+  Shared["إضافة OpenQuantum المشتركة<br/>194 Skills · 91 MCP · 122 SDK · العقود العلمية"]
   Shared --> DSH["DSH Desktop / Web<br/>سجل أصلي · عزل كامل · إعادة L3"]
   Shared --> CDX["إضافة Codex<br/>اكتشاف → تجهيز → تنفيذ · ملاحظات تشغيلية"]
 ```

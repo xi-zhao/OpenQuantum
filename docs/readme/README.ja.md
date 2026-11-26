@@ -45,15 +45,15 @@
 
 <p align="center">
   <a href="https://xi-zhao.github.io/OpenQuantum/">
-    <img src="../images/readme/banner-en.svg" width="100%" alt="OpenQuantum — 信頼できる量子研究 AI を、ともに育てる。Qiskit・PennyLane・QuTiP・Stim・PyMatching・Lean 4 など 121 の固定環境に対応。" />
+    <img src="../images/readme/banner-en.svg" width="100%" alt="OpenQuantum — 信頼できる量子研究 AI を、ともに育てる。Qiskit・PennyLane・QuTiP・Stim・PyMatching・Lean 4 など 122 の固定環境に対応。" />
   </a>
 </p>
 
 <table>
   <tr>
-    <td align="center" width="25%"><strong>193</strong><br /><sub>組み込み Skill（自動 180 / 索引 13）</sub></td>
+    <td align="center" width="25%"><strong>194</strong><br /><sub>組み込み Skill（自動 181 / 索引 13）</sub></td>
     <td align="center" width="25%"><strong>91</strong><br /><sub>MCP 接続（既定 66 / 任意 25）</sub></td>
-    <td align="center" width="25%"><strong>121</strong><br /><sub>固定 SDK・ソース環境</sub></td>
+    <td align="center" width="25%"><strong>122</strong><br /><sub>固定 SDK・ソース環境</sub></td>
     <td align="center" width="25%"><strong>11 件の L3</strong><br /><sub>再実行可能な科学的受入れ（DSH）</sub></td>
   </tr>
 </table>
@@ -91,7 +91,7 @@ OpenQuantum は、オープンソースの専門ソフトウェア・論文手�
   <tr>
     <td width="50%" valign="top">
       <strong>網羅性 · 量子ソフトウェア群を一つの起点に</strong><br />
-      Qiskit・PennyLane・QuTiP・Stim・PyMatching・TeNPy・Mitiq・PyZX・OpenFermion・Lean 4 など <strong>121 の固定環境</strong>（Python 109 / Julia 9 / Native 2 / Lean 1）と <strong>49 件の実行可能アルゴリズム例</strong>を接続します。
+      Qiskit・PennyLane・QuTiP・Stim・PyMatching・TeNPy・Mitiq・PyZX・OpenFermion・Lean 4 など <strong>122 の固定環境</strong>（Python 110 / Julia 9 / Native 2 / Lean 1）と <strong>49 件の実行可能アルゴリズム例</strong>を接続します。
     </td>
     <td width="50%" valign="top">
       <strong>高速化 · 実測と検証を伴う最適化</strong><br />
@@ -130,7 +130,7 @@ OpenQuantum は、オープンソースの専門ソフトウェア・論文手�
 | <a id="circuits-and-quantum-information"></a>**回路コンパイル・計算・相互運用** | Qiskit・PennyLane・PyZX・Graphix・MQT QCEC / QMAP / DDSIM・pytket・Compact・QCut・qBraid・Clifft・[PPVM](../../.agents/skills/ppvm-simulation/SKILL.md)・密度行列監査 | ゲート集合・ビット順・ノイズモデル・等価性範囲（PPVM の非対称消失における生存反作用は未実装） |
 | <a id="ground-states-chemistry-and-optimization"></a>**基底状態・量子化学・最適化** | VQE（再実行可能 L3）・SQD・TeNPy DMRG・OpenFermion・pyChemiQ・Flow-VQE・OpenQARP・Symmer・PauLie・QPanda / Ocean / Kaiwu | 活性空間・粒子数／対称性セクター・収束条件と独立参照 |
 | **分子スペクトル・グラフ TN・場の理論** | [SlowQuant](../../.agents/skills/slowquant-response/SKILL.md)（分子線形応答）、[TNQS](../../.agents/skills/tnqs-dynamics/SKILL.md)（不規則グラフ TN と CTMRG）、[RcmpsCore](../../.agents/skills/rcmps-field-theory/SKILL.md)（1+1 次元スカラー場 RCMPS） | 活性空間・応答近似、平面埋め込みと打ち切り、伝達ギャップとハミルトニアン静止ギャップの区別 |
-| <a id="error-mitigation-and-error-correction"></a>**誤差抑制と量子誤り訂正** | Mitiq（ZNE/REM/PEC/CDR）・Stim / PyMatching・Deltakit・BP+LSD・Chromobius・[MWPF](../../.agents/skills/mwpf-decoding/SKILL.md)・[tropidist](../../.agents/skills/tropidist-distance/SKILL.md)・[emlint](../../.agents/skills/emlint-dem-audit/SKILL.md) | サンプリング予算・統計誤差・故障モデル前提；静的 DEM 検査や小規模回帰は符号距離やしきい値を証明しない |
+| <a id="error-mitigation-and-error-correction"></a>**誤差抑制と量子誤り訂正** | Mitiq（ZNE/REM/PEC/CDR）・Stim / PyMatching・Deltakit・BP+LSD・Chromobius・[MWPF](../../.agents/skills/mwpf-decoding/SKILL.md)・[tropidist](../../.agents/skills/tropidist-distance/SKILL.md)・[erasure-recovery](../../.agents/skills/erasure-recovery/SKILL.md)・[emlint](../../.agents/skills/emlint-dem-audit/SKILL.md) | サンプリング予算・統計誤差・故障モデル前提；静的 DEM 検査や小規模回帰は符号距離やしきい値を証明しない |
 | <a id="hamiltonian-simulation-and-open-systems"></a>**ダイナミクス・中性原子・パルス制御** | Trotter / qDrift・Dynamiqs・OQuPy・TJM・Bloqade Analog・Pulser・PairInteraction・[ST-GRAPE](../../.agents/skills/stgrape-control/SKILL.md)・QUA / LabOne Q / Qblox / Qililab / OQC QAT | 単位・打ち切り・固定時間格子・ノイズ仮定；オフラインのパルス生成は実機制御と区別 |
 | <a id="photonics-and-quantum-networks"></a>**光量子計算と量子ネットワーク** | Perceval・Piquasso・Lightworks・MerLin・MrMustard・SimQN・NetQASM / SquidASM | モード順・Fock 打ち切り・損失モデル・外部ライセンス（NetSquid は別途許諾が必要） |
 | <a id="experiment-simulation-and-hardware"></a>**ハードウェア探索とクラウド API** | FieldQKit・IBM Quantum・IonQ・OriginQ・Quafu・Tianyan・Guodun・Tencent・LogicalQubit・QDMI C ドライバ | 認証情報・利用枠・任意有効化方針；探索は既定で読み取り専用、実機ジョブは明示的有効化が必要 |
@@ -152,7 +152,7 @@ OpenQuantum は、オープンソースの専門ソフトウェア・論文手�
 
 </details>
 
-現在のソース配布には **193 個の組み込み Skill**、**91 個の MCP サービス接続**（既定有効 66 / 任意有効 25）、**5 個のネイティブ量子 Tool**、および **121 の SDK・ソース環境**（うち DSH 側で **11 機能**が再実行可能な L3 科学的受入れに対応）が含まれます。
+現在のソース配布には **[194 個の組み込み Skill](../../.agents/skills/README.md)**、**91 個の MCP サービス接続**（既定有効 66 / 任意有効 25）、**5 個のネイティブ量子 Tool**、および **[122 の SDK・ソース環境](../integrations/SDK_INVENTORY.md)**（うち DSH 側で **11 機能**が再実行可能な L3 科学的受入れに対応）が含まれます。
 
 [完全なカタログ（中国語）](../CAPABILITIES.md#接口总览) · [SDK API 監査](../integrations/FULL_SDK_ACCESS.md) · [類似手法の選び方](../integrations/CAPABILITY_SELECTION.md)
 
@@ -265,8 +265,8 @@ npm run demo:quantum-ground-state
 ```mermaid
 flowchart TB
   subgraph Shared["共有 OpenQuantum 研究プラグイン"]
-    SK["193 Built-in Skills"]
-    TI["Tool 実装 & 91 MCP Servers · 121 固定 SDK"]
+    SK["194 Built-in Skills"]
+    TI["Tool 実装 & 91 MCP Servers · 122 固定 SDK"]
     SC["科学契約 · Validator · Acceptance Profile · Central Builder"]
   end
   Shared --> DSH["DSH Desktop / Web<br/>ネイティブ Registry · 完全サンドボックス · L3 再実行"]
@@ -287,7 +287,7 @@ flowchart TB
 
 ## ロードマップ
 
-- **提供済みベースライン**：193 Skill・91 MCP 接続・121 固定 SDK、Desktop＆Codex `v0.8.11`、DSH 側 11 機能の再実行可能 L3 科学的受入れ。
+- **提供済みベースライン**：194 Skill・91 MCP 接続・122 固定 SDK、Desktop＆Codex `v0.8.11`、DSH 側 11 機能の再実行可能 L3 科学的受入れ。
 - **継続開発**：L2/L3 検証の拡充、CPU / GPU / HPC / QPU 協調ワークフロー、実験機器インターフェース探索、[Quantum Learning](../integrations/OPENMAIC.md) 教材拡充。
 - **長期ビジョン（RSI）**：独立評価と権限境界に基づく研究能力の再帰的自己改善を探索中。**完全な RSI ループは未実装です**（[長期計画](../roadmap/VISION.md)）。
 

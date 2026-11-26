@@ -7,6 +7,8 @@ import { runInNewContext } from "node:vm";
 import { dictionariesFor, languages, sources, translations } from "../runtime/openquantum/web-locales/catalog.mjs";
 import { apply } from "../runtime/openquantum/web-locales/client.js";
 import { acceptsLocaleRequest, createLocaleMessage, languageFor, readLocaleMessage, LOCALE_CHANNEL } from "../src/learning/ui-locale.mjs";
+import { auditCapabilityPackages } from "../scripts/lib/capability-package-audit.mjs";
+import { readSdkLibraries } from "../src/lib/sdk-access.mjs";
 import { extractLocaleRegistrations, sourceDifferences } from "../scripts/lib/harness-locale-source.mjs";
 
 const placeholders = (text) => [...text.matchAll(/\{[A-Za-z0-9_]+\}/g)].map(([value]) => value).sort();
@@ -47,6 +49,27 @@ test("every README edition links all languages and keeps valid shared startup co
     for (const link of local) await access(fileURLToPath(link));
     for (const command of ["npm ci", "npm run dev", "npm run desktop:setup", "npm run desktop", "npm run learning:ui:setup"]) assert.ok(content.includes(command), `${edition}: missing ${command}`);
     for (const [, script] of content.matchAll(/npm run ([a-z][a-z0-9:-]*)/g)) assert.ok(Object.hasOwn(manifest.scripts, script), `${edition}: unknown npm script ${script}`);
+  }
+});
+
+test("translated Skill and SDK totals match the shipped catalogs", async () => {
+  const root = fileURLToPath(new URL("../", import.meta.url));
+  const policy = await auditCapabilityPackages({ projectRoot: root });
+  const counts = new Map([
+    ["../../.agents/skills/README.md", policy.packages.filter(entry => entry.skill).length],
+    ["../integrations/SDK_INVENTORY.md", (await readSdkLibraries(root)).length],
+  ]);
+  for (const { id } of languages.filter(language => language.id !== "zh")) {
+    const edition = new URL(`../docs/readme/README.${id}.md`, import.meta.url);
+    const content = await readFile(edition, "utf8");
+    const figures = [...content.matchAll(/\*\*\[([^\]]+)\]\(([^)]+)\)\*\*/g)];
+    for (const [target, expected] of counts) {
+      const totals = figures.filter(([, , url]) => url === target);
+      assert.ok(totals.length, `${id}: missing count for ${target}`);
+      for (const [, label] of totals) {
+        assert.deepEqual(label.match(/\d+/g), [String(expected)], `${id}: ${label} differs from ${target}`);
+      }
+    }
   }
 });
 

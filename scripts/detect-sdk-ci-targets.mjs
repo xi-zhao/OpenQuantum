@@ -67,6 +67,22 @@ export const SDK_CI_TARGETS = Object.freeze({
       "tests/fixtures/sdk_expansion_circuits_science.py",
     ]),
   }),
+  erasure: Object.freeze({
+    template: "python",
+    paths: Object.freeze([
+      ".agents/skills/erasure-recovery/**",
+      ".agents/skills/qec-memory-experiment/**",
+      ".agents/sdk-libraries.json",
+      "scripts/setup-sdk.mjs",
+      "scripts/setup-paper-tools.mjs",
+      "src/lib/sdk-access.mjs",
+      "src/lib/sdk-source.mjs",
+      "src/lib/sdk-source-record.mjs",
+      "src/lib/sdk_bootstrap.py",
+      "tests/erasure-recovery-live.test.mjs",
+      "tests/fixtures/erasure-recovery-validation.py",
+    ]),
+  }),
   rcmps: Object.freeze({
     template: "julia",
     paths: Object.freeze([

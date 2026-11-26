@@ -45,15 +45,15 @@
 
 <p align="center">
   <a href="https://xi-zhao.github.io/OpenQuantum/">
-    <img src="../images/readme/banner-en.svg" width="100%" alt="OpenQuantum — 함께 만드는 신뢰할 수 있는 양자 연구 AI. Qiskit, PennyLane, QuTiP, Stim, PyMatching, Lean 4 및 121개 고정 환경 지원." />
+    <img src="../images/readme/banner-en.svg" width="100%" alt="OpenQuantum — 함께 만드는 신뢰할 수 있는 양자 연구 AI. Qiskit, PennyLane, QuTiP, Stim, PyMatching, Lean 4 및 122개 고정 환경 지원." />
   </a>
 </p>
 
 <table>
   <tr>
-    <td align="center" width="25%"><strong>193</strong><br /><sub>내장 Skill (자동 180 / 색인 13)</sub></td>
+    <td align="center" width="25%"><strong>194</strong><br /><sub>내장 Skill (자동 181 / 색인 13)</sub></td>
     <td align="center" width="25%"><strong>91</strong><br /><sub>MCP 연결 (기본 66 / 선택 25)</sub></td>
-    <td align="center" width="25%"><strong>121</strong><br /><sub>고정 SDK 및 소스 환경</sub></td>
+    <td align="center" width="25%"><strong>122</strong><br /><sub>고정 SDK 및 소스 환경</sub></td>
     <td align="center" width="25%"><strong>11개 L3</strong><br /><sub>재현 가능한 과학적 승인 (DSH)</sub></td>
   </tr>
 </table>
@@ -84,8 +84,8 @@ https://github.com/user-attachments/assets/5c00a30d-eef0-493a-975f-3faeb200cc9e
 <table>
   <tr>
     <td width="50%" valign="top">
-      <strong>폭넓은 생태계 · 121개 고정 환경</strong><br />
-      Qiskit, PennyLane, QuTiP, Stim, PyMatching, TeNPy, Mitiq, PyZX, OpenFermion, Lean 4 등 <strong>121개 환경</strong>(Python 109 / Julia 9 / Native 2 / Lean 1)과 <strong>49개 실행 가능 알고리즘 예제</strong>를 제공합니다.
+      <strong>폭넓은 생태계 · 122개 고정 환경</strong><br />
+      Qiskit, PennyLane, QuTiP, Stim, PyMatching, TeNPy, Mitiq, PyZX, OpenFermion, Lean 4 등 <strong>122개 환경</strong>(Python 110 / Julia 9 / Native 2 / Lean 1)과 <strong>49개 실행 가능 알고리즘 예제</strong>를 제공합니다.
     </td>
     <td width="50%" valign="top">
       <strong>실측 성능 · 핵심 병목 최적화</strong><br />
@@ -122,14 +122,14 @@ https://github.com/user-attachments/assets/5c00a30d-eef0-493a-975f-3faeb200cc9e
 | <a id="circuits-and-quantum-information"></a>**회로 컴파일·시뮬레이션·상호운용** | Qiskit, PennyLane, PyZX, Graphix, MQT QCEC / QMAP / DDSIM, pytket, Compact, QCut, qBraid, Clifft, [PPVM](../../.agents/skills/ppvm-simulation/SKILL.md), 밀도 행렬 감사 | 게이트 집합, 비트 순서, 노이즈 모델, 동치성 범위 |
 | <a id="ground-states-chemistry-and-optimization"></a>**바닥상태·양자화학·최적화** | VQE(재현 가능 L3), SQD, TeNPy DMRG, OpenFermion, pyChemiQ, Flow-VQE, OpenQARP, Symmer, PauLie, QPanda / Ocean / Kaiwu | 활성 공간, 입자/대칭 섹터, 수렴 및 독립 참조 |
 | **분자 분광·그래프 TN·장론** | [SlowQuant](../../.agents/skills/slowquant-response/SKILL.md), [TNQS](../../.agents/skills/tnqs-dynamics/SKILL.md), [RcmpsCore](../../.agents/skills/rcmps-field-theory/SKILL.md) | 활성 공간·응답 근사, 평면 임베딩 및 절단, 전이 갭과 해밀토니안 갭 구분 |
-| <a id="error-mitigation-and-error-correction"></a>**오류 완화 및 양자 오류 정정** | Mitiq, Stim / PyMatching, Deltakit, BP+LSD, Chromobius, [MWPF](../../.agents/skills/mwpf-decoding/SKILL.md), [tropidist](../../.agents/skills/tropidist-distance/SKILL.md), [emlint](../../.agents/skills/emlint-dem-audit/SKILL.md) | 샘플링 예산, 통계 오차, 결함 모델 가정; 정적 DEM 진단이 부호 거리를 증명하지 않음 |
+| <a id="error-mitigation-and-error-correction"></a>**오류 완화 및 양자 오류 정정** | Mitiq, Stim / PyMatching, Deltakit, BP+LSD, Chromobius, [MWPF](../../.agents/skills/mwpf-decoding/SKILL.md), [tropidist](../../.agents/skills/tropidist-distance/SKILL.md), [erasure-recovery](../../.agents/skills/erasure-recovery/SKILL.md), [emlint](../../.agents/skills/emlint-dem-audit/SKILL.md) | 샘플링 예산, 통계 오차, 결함 모델 가정; 정적 DEM 진단이 부호 거리를 증명하지 않음 |
 | <a id="hamiltonian-simulation-and-open-systems"></a>**동역학·중성 원자·펄스 제어** | Trotter / qDrift, Dynamiqs, OQuPy, TJM, Bloqade Analog, Pulser, PairInteraction, [ST-GRAPE](../../.agents/skills/stgrape-control/SKILL.md), QUA / LabOne Q / Qblox / Qililab / OQC QAT | 단위, 절단, 고정 시간 격자; 오프라인 펄스 컴파일과 실제 장비 제어 구분 |
 | <a id="photonics-and-quantum-networks"></a>**광양자 및 양자 네트워크** | Perceval, Piquasso, Lightworks, MerLin, MrMustard, SimQN, NetQASM / SquidASM | 모드 순서, Fock 절단, 손실 모델 및 별도 라이선스(NetSquid) |
 | <a id="experiment-simulation-and-hardware"></a>**하드웨어 탐색 및 클라우드 API** | FieldQKit, IBM Quantum, IonQ, OriginQ, Quafu, Tianyan, Guodun, Tencent, LogicalQubit, QDMI C 드라이버 | 자격 증명·할당량 분리; 기본은 읽기 전용 탐색, 실제 QPU 작업은 명시적 활성화 필요 |
 | <a id="reference-material-and-selection"></a>**형식 증명 및 공개 벤치마크** | [Lean 4 / mathlib / physlib](../../.agents/skills/lean-physics/SKILL.md), [Quantum-Practices(66) & Metriq(410)](../CAPABILITIES.md#参考资料与选型) | 형식 증명은 기술된 정의와 공리만 보장; 과거 벤치마크는 현재 장비 성능이 아님 |
 | <a id="quantum-learning"></a>**교육 및 인터랙티브 강의실** | [Quantum Learning / OpenMAIC](../integrations/OPENMAIC.md): 강좌 라이브러리, 교재 편집, PPTX 가져오기, 퀴즈 | 전체 커리큘럼 구축 중; 실시간 온라인 AI 수업 전체 승인 대기 |
 
-현재 소스 배포판은 **내장 Skill 193개**, **MCP 서비스 연결 91개**(기본 66 / 선택 25), **네이티브 양자 Tool 5개**와 **121개 SDK/소스 환경**(DSH 측 재현 가능 L3 과학적 승인 11개 포함)을 제공합니다.
+현재 소스 배포판은 **[내장 Skill 194개](../../.agents/skills/README.md)**, **MCP 서비스 연결 91개**(기본 66 / 선택 25), **네이티브 양자 Tool 5개**와 **[122개 SDK/소스 환경](../integrations/SDK_INVENTORY.md)**(DSH 측 재현 가능 L3 과학적 승인 11개 포함)을 제공합니다.
 
 [전체 카탈로그(중국어)](../CAPABILITIES.md#接口总览) · [SDK API 감사](../integrations/FULL_SDK_ACCESS.md) · [유사 방법 선택 가이드](../integrations/CAPABILITY_SELECTION.md)
 
@@ -231,8 +231,8 @@ npm run demo:quantum-ground-state
 ```mermaid
 flowchart TB
   subgraph Shared["공유 OpenQuantum 연구 플러그인"]
-    SK["내장 Skill 193개"]
-    TI["Tool 구현 & MCP 서버 91개 · 고정 SDK 121개"]
+    SK["내장 Skill 194개"]
+    TI["Tool 구현 & MCP 서버 91개 · 고정 SDK 122개"]
     SC["과학 계약 · Validator · Acceptance Profile · Central Builder"]
   end
   Shared --> DSH["DSH Desktop / Web<br/>네이티브 Registry · 완전 샌드박스 · L3 재실행"]
@@ -253,7 +253,7 @@ flowchart TB
 
 ## 로드맵 · <a id="extend-the-platform"></a><a id="documentation-and-support"></a>참여 및 인용
 
-- **제공된 기준선**: 내장 Skill 193개, MCP 91개, 고정 SDK 121개, Desktop & Codex `v0.8.11`, DSH 재현 가능 L3 과학적 승인 11개.
+- **제공된 기준선**: 내장 Skill 194개, MCP 91개, 고정 SDK 122개, Desktop & Codex `v0.8.11`, DSH 재현 가능 L3 과학적 승인 11개.
 - **장기 비전(RSI)**: 독립 검증과 권한 경계에 기반한 재귀적 자기 개선을 탐색 중이며, **전체 RSI 루프는 아직 구현되지 않았습니다**([장기 계획](../roadmap/VISION.md)).
 - **기여하기**: [기여 가이드](../../CONTRIBUTING.md) · [Issues](https://github.com/xi-zhao/OpenQuantum/issues) · [행동 강령](../../CODE_OF_CONDUCT.md) · [보안 정책](../../SECURITY.md) (오프라인 전체 점검: `npm run check`).
 

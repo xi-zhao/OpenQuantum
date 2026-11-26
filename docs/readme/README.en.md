@@ -45,15 +45,15 @@
 
 <p align="center">
   <a href="https://xi-zhao.github.io/OpenQuantum/">
-    <img src="../images/readme/banner-en.svg" width="100%" alt="OpenQuantum — Building Trustworthy AI for Quantum Research. Compatible with Qiskit, PennyLane, QuTiP, Stim, PyMatching, Lean 4 and 121 pinned environments." />
+    <img src="../images/readme/banner-en.svg" width="100%" alt="OpenQuantum — Building Trustworthy AI for Quantum Research. Compatible with Qiskit, PennyLane, QuTiP, Stim, PyMatching, Lean 4 and 122 pinned environments." />
   </a>
 </p>
 
 <table>
   <tr>
-    <td align="center" width="25%"><strong>193</strong><br /><sub>Built-in Skills (180 auto / 13 index)</sub></td>
+    <td align="center" width="25%"><strong>194</strong><br /><sub>Built-in Skills (181 auto / 13 index)</sub></td>
     <td align="center" width="25%"><strong>91</strong><br /><sub>MCP connections (66 default / 25 opt-in)</sub></td>
-    <td align="center" width="25%"><strong>121</strong><br /><sub>Pinned SDK &amp; source environments</sub></td>
+    <td align="center" width="25%"><strong>122</strong><br /><sub>Pinned SDK &amp; source environments</sub></td>
     <td align="center" width="25%"><strong>11 L3</strong><br /><sub>Replayable scientific checks (DSH)</sub></td>
   </tr>
 </table>
@@ -67,7 +67,7 @@
 ## What's New
 
 - **2026-11-26** · Expanded replayable **L3 scientific acceptance** to **11 features** (ground-state VQE, quantum-information audit, QCEC equivalence, QEC memory, Hamiltonian simulation, QPanda QUBO, LDPC decoding, PyZX, Symmer, PauLie, and Graphix) with full-sandbox confinement for all host-side independent reference subprocesses.
-- **2026-11** · Added pinned native SDK workflows for **MWPF** (hypergraph decoding & primal/dual bounds), **PPVM** (near-Clifford erasure/leakage), **tropidist** (fault-distance witnesses), and **ST-GRAPE** (robust multi-error pulse control), plus a verified **PyZX 0.10.8** upgrade.
+- **2026-11** · Added pinned native SDK workflows for **MWPF** (hypergraph decoding & primal/dual bounds), **PPVM** (near-Clifford erasure/leakage), **erasure-recovery** (stabilizer logical state recovery after known erasures), **tropidist** (fault-distance witnesses), and **ST-GRAPE** (robust multi-error pulse control), plus a verified **PyZX 0.10.8** upgrade.
 - **2026-11-09** · Shipped **[OpenQuantum v0.8.11](../releases/v0.8.11.md)** ([Desktop DMG](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.11) & [Codex plugin](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.11)): unified bounded Tool execution backend across both hosts, plus **SlowQuant**, **TNQS**, and **RcmpsCore** native SDK workflows.
 - **2026-10** · Published two reproducible end-to-end optimization benchmarks: **5.69× speedup on QuTiP Wigner functions** (`6.52 × 10⁻¹⁶` max difference) and **5.09× speedup on PennyLane Pauli commutators**, with full raw timings and validation records.
 
@@ -91,7 +91,7 @@ OpenQuantum connects open-source quantum software, published research methods, a
   <tr>
     <td width="50%" valign="top">
       <strong>Comprehensive · One entry to the quantum stack</strong><br />
-      Connects Qiskit, PennyLane, QuTiP, Stim, PyMatching, TeNPy, Mitiq, PyZX, OpenFermion, Lean 4 and more across <strong>121 pinned environments</strong> (109 Python, 9 Julia, 2 Native, 1 Lean) plus <strong>49 executable algorithm examples</strong>.
+      Connects Qiskit, PennyLane, QuTiP, Stim, PyMatching, TeNPy, Mitiq, PyZX, OpenFermion, Lean 4 and more across <strong>122 pinned environments</strong> (110 Python, 9 Julia, 2 Native, 1 Lean) plus <strong>49 executable algorithm examples</strong>.
     </td>
     <td width="50%" valign="top">
       <strong>Fast · Targeted optimization with full benchmarks</strong><br />
@@ -134,7 +134,7 @@ Call bounded scientific Tools directly or write custom Python, Julia, and Lean r
 | <a id="circuits-and-quantum-information"></a>**Circuits, Compilation & Interop** | Qiskit, PennyLane, PyZX, Graphix, MQT QCEC / QMAP / DDSIM, pytket, Compact, QCut, qBraid, Clifft, [PPVM](../../.agents/skills/ppvm-simulation/SKILL.md), density-matrix audits | Gate sets, bit order, noise models, equivalence scope; PPVM asymmetric-loss survival back-action is not implemented |
 | <a id="ground-states-chemistry-and-optimization"></a>**Ground States, Chemistry & Optimization** | VQE (replayable L3), SQD, TeNPy DMRG, OpenFermion, pyChemiQ, Flow-VQE, OpenQARP, Symmer, PauLie, QPanda / Ocean / Kaiwu | Active spaces, particle/symmetry sectors, convergence, and independent references |
 | **Spectroscopy, Graph TNs & Field Theory** | [SlowQuant](../../.agents/skills/slowquant-response/SKILL.md) (molecular linear response), [TNQS](../../.agents/skills/tnqs-dynamics/SKILL.md) (irregular-graph tensor networks & CTMRG), [RcmpsCore](../../.agents/skills/rcmps-field-theory/SKILL.md) (1+1D scalar-field RCMPS) | Active-space/response approximations, planar embeddings & cutoffs; transfer gap differs from Hamiltonian rest gap |
-| <a id="error-mitigation-and-error-correction"></a>**Error Mitigation & QEC** | Mitiq (ZNE/REM/PEC/CDR), Stim / PyMatching, Deltakit, BP+LSD, Chromobius, [MWPF](../../.agents/skills/mwpf-decoding/SKILL.md), [tropidist](../../.agents/skills/tropidist-distance/SKILL.md), [emlint](../../.agents/skills/emlint-dem-audit/SKILL.md) | Sampling budgets, statistical errors, declared fault models; static DEM checks & small regressions do not prove code distance or threshold |
+| <a id="error-mitigation-and-error-correction"></a>**Error Mitigation & QEC** | Mitiq (ZNE/REM/PEC/CDR), Stim / PyMatching, Deltakit, BP+LSD, Chromobius, [MWPF](../../.agents/skills/mwpf-decoding/SKILL.md), [erasure-recovery](../../.agents/skills/erasure-recovery/SKILL.md), [tropidist](../../.agents/skills/tropidist-distance/SKILL.md), [emlint](../../.agents/skills/emlint-dem-audit/SKILL.md) | Sampling budgets, statistical errors, declared fault models; static DEM checks & small regressions do not prove code distance or threshold |
 | <a id="hamiltonian-simulation-and-open-systems"></a>**Dynamics, Neutral Atoms & Pulse Control** | Trotter / qDrift, Dynamiqs, OQuPy, TJM, Bloqade Analog, Pulser, PairInteraction, [ST-GRAPE](../../.agents/skills/stgrape-control/SKILL.md), QUA / LabOne Q / Qblox / Qililab / OQC QAT | Units, cutoffs, fixed time grids, noise assumptions; offline pulse compilation does not control live lab hardware |
 | <a id="photonics-and-quantum-networks"></a>**Photonics & Quantum Networks** | Perceval, Piquasso, Lightworks, MerLin, MrMustard, SimQN, NetQASM / SquidASM | Mode order, Fock cutoffs, loss models, and third-party licensing (NetSquid requires a separate license) |
 | <a id="experiment-simulation-and-hardware"></a>**Hardware Discovery & Cloud APIs** | FieldQKit, IBM Quantum, IonQ, OriginQ, Quafu, Tianyan, Guodun, Tencent, LogicalQubit, and local QDMI C drivers | Credentials, quotas, and opt-in policies; discovery is read-only by default, real QPU jobs require explicit opt-in |
@@ -142,7 +142,7 @@ Call bounded scientific Tools directly or write custom Python, Julia, and Lean r
 | <a id="quantum-learning"></a>**Teaching & Interactive Classrooms** | [Quantum Learning / OpenMAIC](../integrations/OPENMAIC.md): course library, courseware editor, PPTX import, quizzes, and interactive classrooms | Full curriculum is still under development; live online AI teaching workflows await full acceptance |
 
 <details>
-<summary><strong>Expand: Explicit Setup & Limits for Frontier Native SDKs (SlowQuant / TNQS / RcmpsCore / PPVM / MWPF / tropidist / ST-GRAPE)</strong></summary>
+<summary><strong>Expand: Explicit Setup & Limits for Frontier Native SDKs (SlowQuant / TNQS / RcmpsCore / PPVM / MWPF / erasure-recovery / tropidist / ST-GRAPE)</strong></summary>
 
 Each environment is prepared explicitly before running custom programs through the host's code tools; normal computation calls never auto-install dependencies:
 
@@ -153,6 +153,7 @@ Each environment is prepared explicitly before running custom programs through t
 | **RcmpsCore** | `node scripts/setup-sdk.mjs rcmps-field-theory` | [Skill](../../.agents/skills/rcmps-field-theory/SKILL.md) · [Notes](../integrations/RCMPS.md) | Transfer gap ≠ Hamiltonian rest gap; trial-state examples do not prove interacting ground states or mass spectra |
 | **PPVM** | `node scripts/setup-sdk.mjs ppvm-simulation` | [Skill](../../.agents/skills/ppvm-simulation/SKILL.md) · [Notes](../integrations/PPVM.md) | Setup builds a pinned Rust extension; `LOST` is separate from bit values and `reset_state` does not restore loss/leakage |
 | **MWPF** | `node scripts/setup-sdk.mjs mwpf-decoding` | [Editable example](../../.agents/skills/mwpf-decoding/references/native-example.py) · [Evidence](../integrations/evidence/mwpf-2026-11-06.json) | Sinter uses `PanicAction.RAISE`; zero cluster budget is not infinite; floating-point primal/dual bounds are not formal proofs |
+| **erasure-recovery** | `node scripts/setup-sdk.mjs erasure-recovery` | [Editable example](../../.agents/skills/erasure-recovery/references/native-example.py) · [Evidence](../ecosystem/proposals/erasure-recovery.md#integration-evidence) | Adaptive stabilizer circuits; only post-erasure CNOTs are charged |
 | **tropidist** | `node scripts/setup-sdk.mjs tropidist-distance` | [Editable example](../../.agents/skills/tropidist-distance/references/native-example.py) · [Comparison](../ecosystem/proposals/tropidist.md) | Scoped to declared unit-weight fault models; check lower and upper witness bounds separately |
 | **ST-GRAPE** | `node scripts/setup-sdk.mjs stgrape-control` | [Two-qubit example](../../.agents/skills/stgrape-control/references/native-example.py) · [Comparison](../ecosystem/proposals/st-grape.md) | Scoped to fixed time grids and quasi-static noise models; verify split-step error and budget termination |
 
@@ -165,7 +166,7 @@ Local numerical computing requires no quantum-cloud account. Real hardware and p
 
 | Backend | Supported Scope | Credentials & Activation Policy |
 | --- | --- | --- |
-| **Local Numerical Backends** | Circuits, noise, ground states, chemistry, many-body, QEC, photonics, and pulse simulation (121 pinned environments) | No cloud account needed; prepare pinned local dependencies per task |
+| **Local Numerical Backends** | Circuits, noise, ground states, chemistry, many-body, QEC, photonics, and pulse simulation (122 pinned environments) | No cloud account needed; prepare pinned local dependencies per task |
 | **IBM Quantum** | Runtime, AI Transpiler, hardware queries; optional job submission and cancellation | `QISKIT_IBM_TOKEN`; job MCP connections are opt-in (off by default) |
 | **IonQ** | Hardware queries; optional job submission, cancellation, and cost estimates | `IONQ_API_KEY`; job MCP connections are opt-in (off by default) |
 | **OriginQ Cloud** | Read-only discovery (FieldQKit); Wukong QPU queries and optional jobs via QPanda3 Runtime | `ORIGIN_API_TOKEN` (read-only); `QPANDA3_API_KEY` (opt-in jobs) |
@@ -174,7 +175,7 @@ Local numerical computing requires no quantum-cloud account. Real hardware and p
 
 </details>
 
-The current source distribution ships **193 built-in Skills**, **91 MCP service connections** (66 enabled by default, 25 opt-in), and **5 native quantum Tools**, with full native-API workflows for **121 SDK/source environments** (including **11 replayable L3 scientific acceptance features** on DSH). Inventory counts, configuration switches, environment readiness, and scientific acceptance are distinct states.
+The current source distribution ships **[194 built-in Skills](../../.agents/skills/README.md)**, **91 MCP service connections** (66 enabled by default, 25 opt-in), and **5 native quantum Tools**, with full native-API workflows for **[122 SDK/source environments](../integrations/SDK_INVENTORY.md)** (including **11 replayable L3 scientific acceptance features** on DSH). Inventory counts, configuration switches, environment readiness, and scientific acceptance are distinct states.
 
 [Full Skill & MCP Catalog (Chinese)](../CAPABILITIES.md#接口总览) · [Native SDK Audit](../integrations/FULL_SDK_ACCESS.md) · [Choosing Between Similar Methods](../integrations/CAPABILITY_SELECTION.md)
 
@@ -379,8 +380,8 @@ OpenQuantum centers on a **host-agnostic shared quantum research plugin** (Skill
 ```mermaid
 flowchart TB
   subgraph Shared["Shared OpenQuantum Research Plugin (Single Source of Truth)"]
-    SK["193 Built-in Skills<br/>Domain methods · Tool choice · Limits"]
-    TI["Tool Implementations & 91 MCP Servers<br/>5 Native Quantum Tools · 121 Pinned SDKs"]
+    SK["194 Built-in Skills<br/>Domain methods · Tool choice · Limits"]
+    TI["Tool Implementations & 91 MCP Servers<br/>5 Native Quantum Tools · 122 Pinned SDKs"]
     SC["Scientific Contracts<br/>Validators · Acceptance Profiles · Central Builder"]
   end
 
@@ -436,7 +437,7 @@ OpenQuantum aims for every investigation to leave both verifiable answers and st
 
 | Stage | Focus | Current Status |
 | --- | --- | --- |
-| **Delivered Baseline** | Shared plugin & dual-host delivery | 193 Skills, 91 MCP connections, 121 pinned SDKs; unified Desktop & Codex `v0.8.11`; 11 replayable L3 features with full-sandbox reference confinement |
+| **Delivered Baseline** | Shared plugin & dual-host delivery | 194 Skills, 91 MCP connections, 122 pinned SDKs; unified Desktop & Codex `v0.8.11`; 11 replayable L3 features with full-sandbox reference confinement |
 | **Active Development** | Ecosystem depth, HPC/QPU workflows & teaching | Expanding L2/L3 verification coverage, local CPU/GPU/HPC/QPU orchestration, laboratory instrument interfaces, and [Quantum Learning](../integrations/OPENMAIC.md) courses |
 | **Long-Term Vision (RSI)** | Verified recursive self-improvement | Exploring `real task → candidate improvement → independent checks & new-task comparisons → authorized update`; **the full RSI loop is not implemented** · [Vision & boundaries](../roadmap/VISION.md) |
 

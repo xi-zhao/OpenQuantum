@@ -1,0 +1,456 @@
+{
+  "choi": [
+    "+IXZZXI",
+    "+IIXZZX",
+    "+IXIXZZ",
+    "+IZXIXZ",
+    "+XXXXXX",
+    "+ZZZZZZ"
+  ],
+  "cases": {
+    "line": {
+      "erased": [
+        0,
+        4
+      ],
+      "hardware": [
+        [
+          0,
+          1,
+          1
+        ],
+        [
+          1,
+          2,
+          1
+        ],
+        [
+          2,
+          3,
+          1
+        ],
+        [
+          3,
+          4,
+          1
+        ]
+      ],
+      "output": 2,
+      "relay_erased": [],
+      "recovery": {
+        "cost": 2,
+        "join_edges": [
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "operations": [
+          {
+            "gate": "H",
+            "sites": [
+              2
+            ],
+            "parity": [],
+            "offset": 0
+          },
+          {
+            "gate": "CNOT",
+            "sites": [
+              3,
+              2
+            ],
+            "parity": [],
+            "offset": 0
+          },
+          {
+            "gate": "CNOT",
+            "sites": [
+              1,
+              2
+            ],
+            "parity": [],
+            "offset": 0
+          },
+          {
+            "gate": "H",
+            "sites": [
+              2
+            ],
+            "parity": [],
+            "offset": 0
+          },
+          {
+            "gate": "MEASURE_Y",
+            "sites": [
+              1
+            ],
+            "parity": [],
+            "offset": 0
+          },
+          {
+            "gate": "MEASURE_Y",
+            "sites": [
+              3
+            ],
+            "parity": [],
+            "offset": 0
+          },
+          {
+            "gate": "CORRECT_Z",
+            "sites": [
+              2
+            ],
+            "parity": [],
+            "offset": 1
+          },
+          {
+            "gate": "CORRECT_X",
+            "sites": [
+              2
+            ],
+            "parity": [
+              1,
+              3
+            ],
+            "offset": 1
+          }
+        ],
+        "logical_x": "-IZXZI",
+        "logical_z": "-IYZYI"
+      }
+    },
+    "triangle": {
+      "erased": [
+        0,
+        4
+      ],
+      "hardware": [
+        [
+          0,
+          1,
+          1
+        ],
+        [
+          1,
+          2,
+          1
+        ],
+        [
+          2,
+          3,
+          1
+        ],
+        [
+          3,
+          4,
+          1
+        ],
+        [
+          1,
+          3,
+          1
+        ]
+      ],
+      "output": 2,
+      "relay_erased": [],
+      "recovery": {
+        "cost": 1,
+        "join_edges": [
+          [
+            1,
+            3
+          ]
+        ],
+        "operations": [
+          {
+            "gate": "CNOT",
+            "sites": [
+              3,
+              1
+            ],
+            "parity": [],
+            "offset": 0
+          },
+          {
+            "gate": "MEASURE_Z",
+            "sites": [
+              1
+            ],
+            "parity": [],
+            "offset": 0
+          },
+          {
+            "gate": "MEASURE_X",
+            "sites": [
+              3
+            ],
+            "parity": [],
+            "offset": 0
+          },
+          {
+            "gate": "CORRECT_Z",
+            "sites": [
+              2
+            ],
+            "parity": [
+              1
+            ],
+            "offset": 1
+          },
+          {
+            "gate": "CORRECT_X",
+            "sites": [
+              2
+            ],
+            "parity": [
+              1,
+              3
+            ],
+            "offset": 0
+          }
+        ],
+        "logical_x": "-IZXZI",
+        "logical_z": "-IYZYI"
+      }
+    },
+    "uncorrectable": {
+      "erased": [
+        0,
+        1,
+        3
+      ],
+      "hardware": [
+        [
+          0,
+          1,
+          1
+        ],
+        [
+          1,
+          2,
+          1
+        ],
+        [
+          2,
+          3,
+          1
+        ],
+        [
+          3,
+          4,
+          1
+        ]
+      ],
+      "output": 2,
+      "relay_erased": [],
+      "no_recovery": "the surviving subsystem has no joint logical X and Z representatives"
+    },
+    "removed": {
+      "erased": [
+        1,
+        3
+      ],
+      "hardware": [
+        [
+          0,
+          1,
+          1
+        ],
+        [
+          1,
+          2,
+          1
+        ],
+        [
+          2,
+          3,
+          1
+        ],
+        [
+          3,
+          4,
+          1
+        ]
+      ],
+      "output": 2,
+      "relay_erased": [],
+      "no_recovery": "hardware connectivity prevents exact recovery at the selected site"
+    },
+    "fresh_relays": {
+      "erased": [
+        1,
+        3
+      ],
+      "hardware": [
+        [
+          0,
+          1,
+          1
+        ],
+        [
+          1,
+          2,
+          1
+        ],
+        [
+          2,
+          3,
+          1
+        ],
+        [
+          3,
+          4,
+          1
+        ]
+      ],
+      "output": 2,
+      "relay_erased": [
+        1,
+        3
+      ],
+      "recovery": {
+        "cost": 4,
+        "join_edges": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            4
+          ]
+        ],
+        "operations": [
+          {
+            "gate": "RESET",
+            "sites": [
+              3
+            ],
+            "parity": [],
+            "offset": 0
+          },
+          {
+            "gate": "CNOT",
+            "sites": [
+              4,
+              3
+            ],
+            "parity": [],
+            "offset": 0
+          },
+          {
+            "gate": "RESET",
+            "sites": [
+              1
+            ],
+            "parity": [],
+            "offset": 0
+          },
+          {
+            "gate": "CNOT",
+            "sites": [
+              0,
+              1
+            ],
+            "parity": [],
+            "offset": 0
+          },
+          {
+            "gate": "CNOT",
+            "sites": [
+              3,
+              2
+            ],
+            "parity": [],
+            "offset": 0
+          },
+          {
+            "gate": "CNOT",
+            "sites": [
+              1,
+              2
+            ],
+            "parity": [],
+            "offset": 0
+          },
+          {
+            "gate": "MEASURE_X",
+            "sites": [
+              0
+            ],
+            "parity": [],
+            "offset": 0
+          },
+          {
+            "gate": "MEASURE_Y",
+            "sites": [
+              1
+            ],
+            "parity": [],
+            "offset": 0
+          },
+          {
+            "gate": "MEASURE_Y",
+            "sites": [
+              3
+            ],
+            "parity": [],
+            "offset": 0
+          },
+          {
+            "gate": "MEASURE_X",
+            "sites": [
+              4
+            ],
+            "parity": [],
+            "offset": 0
+          },
+          {
+            "gate": "CORRECT_Z",
+            "sites": [
+              2
+            ],
+            "parity": [
+              0,
+              1,
+              3,
+              4
+            ],
+            "offset": 1
+          },
+          {
+            "gate": "CORRECT_X",
+            "sites": [
+              2
+            ],
+            "parity": [
+              0,
+              1,
+              3,
+              4
+            ],
+            "offset": 0
+          }
+        ],
+        "logical_x": "-YIXIY",
+        "logical_z": "-XIZIX"
+      }
+    }
+  },
+  "upstreamRevision": "159c6122610972d703d15f60f6d011fcb494c50f",
+  "compilerSha256": "7c0a2a312896a3bd2ef2ca027e514a412a9bc218db2c7f0691244ac504ee5789",
+  "scientificValidation": "not_evaluated"
+}

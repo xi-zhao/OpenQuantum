@@ -45,15 +45,15 @@
 
 <p align="center">
   <a href="https://xi-zhao.github.io/OpenQuantum/">
-    <img src="../images/readme/banner-en.svg" width="100%" alt="OpenQuantum — Construyendo juntos una IA fiable para la investigación cuántica. Compatible con Qiskit, PennyLane, QuTiP, Stim, PyMatching, Lean 4 y 121 entornos fijados." />
+    <img src="../images/readme/banner-en.svg" width="100%" alt="OpenQuantum — Construyendo juntos una IA fiable para la investigación cuántica. Compatible con Qiskit, PennyLane, QuTiP, Stim, PyMatching, Lean 4 y 122 entornos fijados." />
   </a>
 </p>
 
 <table>
   <tr>
-    <td align="center" width="25%"><strong>193</strong><br /><sub>Skills integradas (180 auto / 13 índice)</sub></td>
+    <td align="center" width="25%"><strong>194</strong><br /><sub>Skills integradas (181 auto / 13 índice)</sub></td>
     <td align="center" width="25%"><strong>91</strong><br /><sub>Conexiones MCP (66 activas / 25 opcionales)</sub></td>
-    <td align="center" width="25%"><strong>121</strong><br /><sub>Entornos SDK y fuente fijados</sub></td>
+    <td align="center" width="25%"><strong>122</strong><br /><sub>Entornos SDK y fuente fijados</sub></td>
     <td align="center" width="25%"><strong>11 L3</strong><br /><sub>Aceptación científica reproducible (DSH)</sub></td>
   </tr>
 </table>
@@ -81,7 +81,7 @@ https://github.com/user-attachments/assets/5c00a30d-eef0-493a-975f-3faeb200cc9e
 
 Usar un LLM genérico para investigar en computación cuántica suele chocar con tres límites: **reescribir código frágil desde cero, gestionar más de cien SDKs fragmentados y obtener respuestas verosímiles sin comprobación independiente.** OpenQuantum conecta software científico abierto, métodos publicados y comprobaciones independientes en un único **plugin compartido**.
 
-- **Cobertura completa**: 121 entornos fijados (109 Python, 9 Julia, 2 nativos, 1 Lean 4) y 49 ejemplos ejecutables de algoritmos (Qiskit, PennyLane, QuTiP, Stim, PyMatching, TeNPy, Mitiq, PyZX, OpenFermion, Lean 4 y más).
+- **Cobertura completa**: 122 entornos fijados (110 Python, 9 Julia, 2 nativos, 1 Lean 4) y 49 ejemplos ejecutables de algoritmos (Qiskit, PennyLane, QuTiP, Stim, PyMatching, TeNPy, Mitiq, PyZX, OpenFermion, Lean 4 y más).
 - **Más rápido y comprobable**: aceleraciones medidas en llamada completa (**5.69×** en QuTiP, **5.09×** en PennyLane) con verificación punto a punto.
 - **Ciencia verificable**: la *aceptación científica* —determinar que un resultado es científicamente fiable a partir de comprobaciones independientes y procedencia completa— se mantiene separada de la simple ejecución completada de una herramienta.
 - **Abierto y multihost**: un solo plugin sirve tanto al **plugin de Codex** como a **OpenQuantum Desktop / Web** con tu propio modelo Tool Calling (BYOM) y licencia MIT para el código propio.
@@ -98,14 +98,14 @@ Usar un LLM genérico para investigar en computación cuántica suele chocar con
 | <a id="circuits-and-quantum-information"></a>**Circuitos, compilación e interoperabilidad** | Qiskit, PennyLane, PyZX, Graphix, MQT QCEC / QMAP / DDSIM, pytket, Compact, QCut, qBraid, Clifft, [PPVM](../../.agents/skills/ppvm-simulation/SKILL.md), auditoría de matrices de densidad | Conjunto de puertas, orden de bits, ruido y alcance de equivalencia |
 | <a id="ground-states-chemistry-and-optimization"></a>**Estados fundamentales, química y optimización** | VQE (L3 reproducible), SQD, TeNPy DMRG, OpenFermion, pyChemiQ, Flow-VQE, OpenQARP, Symmer, PauLie, QPanda / Ocean / Kaiwu | Espacio activo, sector de partículas/simetría y referencia independiente |
 | **Espectroscopia, redes tensoriales y teoría de campos** | [SlowQuant](../../.agents/skills/slowquant-response/SKILL.md), [TNQS](../../.agents/skills/tnqs-dynamics/SKILL.md), [RcmpsCore](../../.agents/skills/rcmps-field-theory/SKILL.md) | Aproximaciones de respuesta, incrustación planar y diferencia entre brecha de transferencia y brecha hamiltoniana |
-| <a id="error-mitigation-and-error-correction"></a>**Mitigación y corrección de errores** | Mitiq, Stim / PyMatching, Deltakit, BP+LSD, Chromobius, [MWPF](../../.agents/skills/mwpf-decoding/SKILL.md), [tropidist](../../.agents/skills/tropidist-distance/SKILL.md), [emlint](../../.agents/skills/emlint-dem-audit/SKILL.md) | Presupuesto de muestreo, modelo de fallos; el diagnóstico DEM estático no prueba distancia ni umbral |
+| <a id="error-mitigation-and-error-correction"></a>**Mitigación y corrección de errores** | Mitiq, Stim / PyMatching, Deltakit, BP+LSD, Chromobius, [MWPF](../../.agents/skills/mwpf-decoding/SKILL.md), [tropidist](../../.agents/skills/tropidist-distance/SKILL.md), [erasure-recovery](../../.agents/skills/erasure-recovery/SKILL.md), [emlint](../../.agents/skills/emlint-dem-audit/SKILL.md) | Presupuesto de muestreo, modelo de fallos; el diagnóstico DEM estático no prueba distancia ni umbral |
 | <a id="hamiltonian-simulation-and-open-systems"></a>**Dinámica, átomos neutros y pulsos** | Trotter / qDrift, Dynamiqs, OQuPy, TJM, Bloqade Analog, Pulser, PairInteraction, [ST-GRAPE](../../.agents/skills/stgrape-control/SKILL.md), QUA / LabOne Q / Qblox / Qililab / OQC QAT | Unidades, cortes y malla temporal fija; la compilación offline no opera equipos físicos |
 | <a id="photonics-and-quantum-networks"></a>**Fotónica y redes cuánticas** | Perceval, Piquasso, Lightworks, MerLin, MrMustard, SimQN, NetQASM / SquidASM | Orden de modos, corte de Fock y licencia externa de NetSquid |
 | <a id="experiment-simulation-and-hardware"></a>**Hardware y nubes cuánticas** | FieldQKit, IBM Quantum, IonQ, OriginQ, Quafu, Tianyan, Guodun, Tencent, LogicalQubit y QDMI | Descubrimiento en solo lectura por defecto; envío real a QPU bajo activación explícita |
 | <a id="reference-material-and-selection"></a>**Pruebas formales y benchmarks** | [Lean 4 / mathlib / physlib](../../.agents/skills/lean-physics/SKILL.md), [Quantum-Practices (66) y Metriq (410)](../CAPABILITIES.md#参考资料与选型) | Pruebas acotadas a definiciones y axiomas declarados; datos históricos no certifican hardware actual |
 | <a id="quantum-learning"></a>**Docencia y aulas interactivas** | [Quantum Learning / OpenMAIC](../integrations/OPENMAIC.md) | Currículo completo en construcción; flujo docente con IA online pendiente de aceptación completa |
 
-La distribución fuente actual incluye **193 Skills integradas**, **91 conexiones de servicios MCP** (66 activadas por defecto y 25 opcionales), **5 Tools cuánticas nativas** y **121 entornos SDK/fuente** (con **11 funciones L3** reproducibles en DSH). [Catálogo completo (chino)](../CAPABILITIES.md#接口总览) · [Auditoría SDK](../integrations/FULL_SDK_ACCESS.md)
+La distribución fuente actual incluye **[194 Skills integradas](../../.agents/skills/README.md)**, **91 conexiones de servicios MCP** (66 activadas por defecto y 25 opcionales), **5 Tools cuánticas nativas** y **[122 entornos SDK/fuente](../integrations/SDK_INVENTORY.md)** (con **11 funciones L3** reproducibles en DSH). [Catálogo completo (chino)](../CAPABILITIES.md#接口总览) · [Auditoría SDK](../integrations/FULL_SDK_ACCESS.md)
 
 ---
 
@@ -200,7 +200,7 @@ npm run demo:quantum-ground-state
 
 ```mermaid
 flowchart TB
-  Shared["Plugin compartido OpenQuantum<br/>193 Skills · 91 MCP · 121 SDK · Contratos científicos"]
+  Shared["Plugin compartido OpenQuantum<br/>194 Skills · 91 MCP · 122 SDK · Contratos científicos"]
   Shared --> DSH["DSH Desktop / Web<br/>Registry nativo · Sandbox completo · Reproducción L3"]
   Shared --> CDX["Plugin de Codex<br/>Descubrir → Preparar → Ejecutar · Observaciones"]
 ```
