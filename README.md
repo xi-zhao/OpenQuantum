@@ -27,34 +27,23 @@
   </sub>
 </p>
 
-<h2 align="center">量子智能体</h2>
-
-<p align="center">
-  <strong>让研究思路，有路可走。</strong><br />
-  从一个问题、一篇论文或一段程序出发，让 AI 选择方法、执行计算、核对结果，把一次探索留给下一次研究。
-</p>
-
 <p align="center">
   <a href="https://xi-zhao.github.io/OpenQuantum/">
     <picture>
-      <source media="(prefers-reduced-motion: reduce)" srcset="./docs/images/readme/banner.webp" />
-      <img src="./docs/images/readme/banner-motion.webp" width="100%" alt="OpenQuantum：共建可信的量子科研智能" />
+      <source media="(prefers-color-scheme: dark)" srcset="./docs/images/readme/hero-zh-dark.webp" />
+      <img src="./docs/images/readme/hero-zh-light.webp" width="100%" alt="OpenQuantum 量子智能体：让研究思路，有路可走。从一个问题、一篇论文或一段程序出发，自动调用专业量子软件在本地完成真实计算，并独立核对结果。" />
     </picture>
   </a>
 </p>
 
-<h3 align="center">
-  <a href="#开始使用"><ins>立即获取</ins></a> &nbsp;·&nbsp;
-  <a href="#发布演示"><ins>观看 78 秒演示</ins></a> &nbsp;·&nbsp;
-  <a href="#优化实测"><ins>实测 5.69× 突破 →</ins></a> &nbsp;·&nbsp;
-  <a href="https://xi-zhao.github.io/OpenQuantum/"><ins>访问官网</ins></a>
-</h3>
-
-<br />
-
----
-
-<br />
+<p align="center">
+  <a href="https://github.com/xi-zhao/OpenQuantum/releases/download/v0.8.11/OpenQuantum-0.8.11-macOS-arm64.dmg">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="./docs/images/readme/launch-card-dark.webp" />
+      <img src="./docs/images/readme/launch-card-light.webp" width="100%" alt="OpenQuantum Desktop v0.8.11：独立量子科研桌面工作台，同步提供 Codex 原生插件，开源免费，点击下载 macOS 版。" />
+    </picture>
+  </a>
+</p>
 
 <a id="发布演示"></a>
 <a id="使用与结果"></a>
@@ -62,46 +51,46 @@
 <a id="科研能力"></a>
 <a id="可以用它做什么"></a>
 
-<h2 align="center">不止回答问题。<br />真正动手计算，并替你验算。</h2>
+**OpenQuantum** 是开源的量子智能体，同时交付为 **Desktop 桌面工作台**与 **Codex 插件**。用自然语言提出一个量子问题、附上一篇论文或一段线路，它自动调动本地专业量子软件完成真实计算，并把“代码跑通”与“科学核验”分开检查。
 
 <p align="center">
-  普通聊天 AI 只能停在文字解释或未经运行的代码。<br />
-  在 OpenQuantum，你用自然语言提出一个量子问题，它直接调动本地专业科学软件算出来，并独立核对结果。
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="./docs/images/readme/workflow-zh-dark.webp" />
+    <img src="./docs/images/readme/workflow-zh-light.webp" width="100%" alt="OpenQuantum 工作流：用自然语言提问、本地自动实算、独立科学核验；附 H₂ 分子基态 VQE 复算结果（-1.85727503 Ha，误差 4.44×10⁻¹⁶ Ha，16/16 项检查通过）。" />
+  </picture>
 </p>
+
+<details>
+<summary>观看 78 秒产品演示视频与真实界面截图</summary>
 
 <br />
 
 https://github.com/user-attachments/assets/5c00a30d-eef0-493a-975f-3faeb200cc9e
 
-<p align="center"><sub>78 秒产品演示（2026-11-02 快照） · <a href="docs/communications/video/README.md">视频来源与复跑说明</a></sub></p>
+<sub><a href="docs/communications/video/README.md">视频来源与复跑说明（2026-11-02 快照）</a> · <a href="docs/images/openquantum-desktop-20261013.jpg">Desktop 工作台截图</a> · <a href="docs/images/openquantum-settings-categories-20261013.jpg">分类设置界面</a> · <a href="docs/images/openquantum-codex-settings-20261011.png">Codex 设置界面</a> · <a href="docs/images/openquantum-evidence-flow.png">科学证据流</a></sub>
 
-<br />
+</details>
 
-<table>
-  <tr>
-    <td width="33.3%" valign="top">
-      <sub><strong>01 · 提问</strong></sub><br />
-      <strong>自然语言，直达研究</strong><br />
-      从氢分子基态、噪声线路到论文复现，直接描述物理目标即可起步。
-    </td>
-    <td width="33.3%" valign="top">
-      <sub><strong>02 · 实算</strong></sub><br />
-      <strong>本地原生，真实执行</strong><br />
-      按需准备专业软件与锁定环境，在本地完成真实计算，无需云端凭据。
-    </td>
-    <td width="33.4%" valign="top">
-      <sub><strong>03 · 核验</strong></sub><br />
-      <strong>独立校验，全程可查</strong><br />
-      分离“跑通”与“成立”，内置独立参照与形式化检查，复跑脚本完整留档。
-    </td>
-  </tr>
-</table>
+<a id="优化实测"></a>
+<a id="实测案例"></a>
+<a id="optimization-cases"></a>
+<a id="qutip-rust-case"></a>
+<a id="pennylane-rust-case"></a>
 
-<br />
+## 更快，也经得起核对
 
----
+不止于调用既有软件——两项针对高频算子的端到端重构均公开原始计时、独立精度核对与一键复跑脚本，把时间还给新的想法。
 
-<br />
+<p align="center">
+  <a href="experiments/qutip-rust-wigner/README.md">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="./docs/images/readme/benchmarks-zh-dark.webp" />
+      <img src="./docs/images/readme/benchmarks-zh-light.webp" width="100%" alt="OpenQuantum 实测突破：QuTiP Wigner 函数 171.77 ms 优化至 30.18 ms（5.69×，最大绝对差 6.52×10⁻¹⁶，272 项核对通过）；PennyLane Pauli 对易子 30.62 ms 优化至 6.02 ms（5.09×，9 组基准一致，最大误差 1.42×10⁻¹⁴）。" />
+    </picture>
+  </a>
+</p>
+
+[QuTiP 复跑报告](experiments/qutip-rust-wigner/README.md) · [QuTiP 多规模图](site/assets/qutip-timings.svg) · [PennyLane 复跑报告](experiments/pennylane-rust-commutator/README.md) · [PennyLane 全部 9 组图](site/assets/pennylane-timings.svg)
 
 <a id="openquantum-的核心能力"></a>
 <a id="能力接口目录"></a>
@@ -110,16 +99,9 @@ https://github.com/user-attachments/assets/5c00a30d-eef0-493a-975f-3faeb200cc9e
 <a id="数学与物理形式化"></a>
 <a id="量子学习通"></a>
 
-<h2 align="center">广阔的专业世界。<br />一个共同的起点。</h2>
+## 覆盖全球主流量子软件栈
 
-<div align="center">
-
-横跨 Python、Julia、Rust 与 Lean 4，将全球分散的量子工具链与前沿论文方法收敛进同一个入口。<br />
-当前源码分发 **194 个内置 Skill、91 个 MCP 服务连接、5 个原生量子 Tool**，直连 **122 个锁定科学环境**。
-
-</div>
-
-<br />
+当前源码分发 **194 个内置 Skill、91 个 MCP 服务连接、5 个原生量子 Tool**，直连 **122 个锁定科学环境**，横跨 Python、Julia、Rust 与 Lean 4。
 
 <table>
   <tr>
@@ -144,92 +126,16 @@ https://github.com/user-attachments/assets/5c00a30d-eef0-493a-975f-3faeb200cc9e
   </tr>
 </table>
 
-<div align="center">
-
 [完整 Skill 目录](docs/CAPABILITIES.md#内置-skills) · [MCP 服务目录](docs/CAPABILITIES.md#mcp-服务目录) · [原生量子 Tools](docs/CAPABILITIES.md#原生量子-tools) · [环境准备](docs/integrations/LOCAL_ENVIRONMENTS.md) · [方法选型](docs/integrations/CAPABILITY_SELECTION.md) · [系统架构](docs/README.md)
-
-</div>
-
-<br />
-
----
-
-<br />
-
-<a id="优化实测"></a>
-<a id="实测案例"></a>
-<a id="optimization-cases"></a>
-<a id="qutip-rust-case"></a>
-<a id="pennylane-rust-case"></a>
-
-<h2 align="center">更快。<br />也经得起核对。</h2>
-
-<p align="center">
-  <strong>把时间还给新的想法。</strong><br />
-  不止于调用既有软件——面向高频计算瓶颈做端到端重构，完整调用计时、逐点精度核对，全部开源可复跑。
-</p>
-
-<br />
-
-<p align="center">
-  <a href="experiments/qutip-rust-wigner/README.md">
-    <img src="./docs/images/readme/case-qutip.webp" width="100%" alt="QuTiP Wigner 函数：原库 171.77 ms，OpenQuantum 优化后 30.18 ms，完整调用提速 5.69 倍，最大绝对差 6.52 × 10⁻¹⁶，272 项核对通过。" />
-  </a>
-</p>
-
-| 优化算子 | 固定输入与硬件 | 完整调用中位数 | 提速 | 独立精度核对 | 复跑 |
-| :--- | :--- | :---: | :---: | :--- | :---: |
-| **QuTiP Wigner** | 64 维 Fock · 201×201 · M4 | `171.77 → 30.18 ms` | **5.69×** | 最大差 `6.52×10⁻¹⁶` · 272 项通过 | [报告](experiments/qutip-rust-wigner/README.md) · [图](site/assets/qutip-timings.svg) |
-| **PennyLane 对易子** | 32 量子位 · 125×512 · M4 | `30.62 → 6.02 ms` | **5.09×** | 9 组一致 · 最大差 `1.42×10⁻¹⁴` | [报告](experiments/pennylane-rust-commutator/README.md) · [图](site/assets/pennylane-timings.svg) |
-
-<details>
-<summary>查看 PennyLane 5.09× 实测卡片与计时边界说明</summary>
-
-<br />
-
-<p align="center"><img src="./docs/images/readme/case-pennylane.webp" width="100%" alt="PennyLane Pauli 对易子实测提速 5.09 倍" /></p>
-
-<sub>两项计时包含输入/输出对象转换（单线程 9 轮热运行中位数），不含环境准备与编译；收益仅对应各报告定义的固定输入与硬件条件，不推广为通用加速比。</sub>
-
-</details>
-
-<br />
-
----
-
-<br />
 
 <a id="开始使用"></a>
 <a id="快速开始"></a>
 
-<h2 align="center">一份核心。<br />两种形态，今天可用。</h2>
+## 安装与使用
 
-<p align="center">
-  同一套量子科研核心，原生运行于 <strong>OpenQuantum Desktop</strong> 与 <strong>Codex 插件</strong>。<br />
-  模型无关、本地优先、MIT 开源——接入任意支持 Tool Calling 的模型服务，即可开始。
-</p>
+### Desktop 桌面版（macOS Apple Silicon）
 
-<br />
-
-<table>
-<tr>
-<td width="48%" valign="middle">
-
-### OpenQuantum Desktop
-
-**面向首次使用与独立科研工作台**（macOS Apple Silicon · 内置 Node / uv · 无需命令行）：
-
-1. 下载 **[OpenQuantum 0.8.11 DMG](https://github.com/xi-zhao/OpenQuantum/releases/download/v0.8.11/OpenQuantum-0.8.11-macOS-arm64.dmg)** 并核对 [SHA256SUMS](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.11)，拖入「应用程序」。
-2. 打开后在「设置 → 模型」填入你常用的 Tool Calling 模型服务，立即开始对话与计算。
-
-<sub>首次打开见<a href="docs/DESKTOP_INSTALLERS.md">安装说明</a> · Intel Mac / Windows 见 <a href="https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.4">0.8.4 能力包</a> · <a href="docs/images/openquantum-evidence-flow.png">科学证据流</a> · <a href="docs/images/openquantum-settings-categories-20261013.jpg">分类设置</a></sub>
-
-</td>
-<td width="52%">
-  <a href="./docs/images/openquantum-desktop-20261013.jpg"><img src="./docs/images/openquantum-desktop-20261013.jpg" alt="OpenQuantum Desktop 量子科研工作台" width="100%" /></a>
-</td>
-</tr>
-</table>
+下载 **[OpenQuantum 0.8.11 DMG](https://github.com/xi-zhao/OpenQuantum/releases/download/v0.8.11/OpenQuantum-0.8.11-macOS-arm64.dmg)**（内置 Node / uv，核对 [SHA256SUMS](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.11)），拖入「应用程序」，在「设置 → 模型」填入任意支持 **Tool Calling** 的模型服务即可开始。首次打开见[安装说明](docs/DESKTOP_INSTALLERS.md)；Intel Mac 与 Windows 可使用 [0.8.4 能力包](https://github.com/xi-zhao/OpenQuantum/releases/tag/v0.8.4) 或下方源码启动。
 
 <a id="codex-plugin"></a>
 
@@ -246,12 +152,12 @@ https://github.com/xi-zhao/OpenQuantum/blob/codex-v0.8.11/docs/integrations/CODE
 需要我重载应用时，告诉我具体操作。最后报告实际验证的结果，以及仍需准备的科学计算依赖。
 ```
 
-[安装包与 SHA256SUMS](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.11) · [手动安装](docs/integrations/CODEX_AGENT_INSTALL.md) · [插件边界](docs/integrations/CODEX_PLUGIN.md) · [Codex 设置界面](docs/images/openquantum-codex-settings-20261011.png)
+[安装包与 SHA256SUMS](https://github.com/xi-zhao/OpenQuantum/releases/tag/codex-v0.8.11) · [手动安装](docs/integrations/CODEX_AGENT_INSTALL.md) · [插件边界](docs/integrations/CODEX_PLUGIN.md)
 
 <a id="安装源码"></a>
 <a id="配置模型"></a>
 
-### 30 秒零密钥本地复算
+### 从源码复算（无需模型密钥）
 
 ```bash
 git clone https://github.com/xi-zhao/OpenQuantum.git && cd OpenQuantum
@@ -270,56 +176,18 @@ npm run dev                         # 启动本地 Web 工作台
 
 </details>
 
-<br />
-
----
-
-<br />
-
 <a id="长期发展规划"></a>
 <a id="rsi"></a>
 <a id="开放共建"></a>
 <a id="开发与贡献"></a>
 
-<h2 align="center">把一次探索，<br />留给下一次研究。</h2>
+## 演进路线与开放共建
 
-<p align="center">
-  今天，让全球量子科研基础设施开箱即用。<br />
-  明天，让每一次经验证的研究产出，反哺下一次研究本身。
-</p>
+- **已交付（v0.8.11）**：跨语言锁定环境、Desktop 与 Codex 同步发行、桌面 / Web 宿主 11 项可回放科学验收与完整沙箱隔离。
+- **持续推进**：CPU / GPU / HPC / QPU 协同调度、实验仪器标准接口探索，以及体系化的[量子学习通](docs/integrations/OPENMAIC.md)教学与动手实验。
+- **长期愿景**：探索受独立评估与版本授权约束的科研自我进化闭环（RSI）；**完整闭环尚未实现**，安全边界见[长期发展规划](docs/roadmap/VISION.md)。
 
-<br />
-
-<table>
-  <tr>
-    <td width="33.3%" valign="top">
-      <sub><strong>01 · 已交付（v0.8.11）</strong></sub><br />
-      <strong>统一量子科研层</strong><br />
-      跨语言锁定环境、双端同步发行、11 项可回放科学验收与完整沙箱隔离。
-    </td>
-    <td width="33.3%" valign="top">
-      <sub><strong>02 · 持续推进</strong></sub><br />
-      <strong>多算力协同与教学</strong><br />
-      CPU / GPU / HPC / QPU 协同调度、仪器接口探索与<a href="docs/integrations/OPENMAIC.md">量子学习通</a>课程体系。
-    </td>
-    <td width="33.4%" valign="top">
-      <sub><strong>03 · 长期愿景</strong></sub><br />
-      <strong>经验证的科研自进化</strong><br />
-      探索受独立评估约束的 RSI 闭环；<strong>尚未实现</strong>，详见<a href="docs/roadmap/VISION.md">长期发展规划</a>。
-    </td>
-  </tr>
-</table>
-
-<br />
-
-<p align="center">
-  <a href="CONTRIBUTING.md">参与贡献</a> ·
-  <a href="https://github.com/xi-zhao/OpenQuantum/issues">需求与合作交流</a> ·
-  <a href="docs/README.md">系统架构</a> ·
-  <a href="docs/EXAMPLES.md">任务示例</a> ·
-  <a href="CHANGELOG.md">更新日志</a> ·
-  <code>npm run check</code>
-</p>
+[参与贡献](CONTRIBUTING.md) · [需求与合作交流](https://github.com/xi-zhao/OpenQuantum/issues) · [文档与架构总入口](docs/README.md) · [任务示例](docs/EXAMPLES.md) · [更新日志](CHANGELOG.md) · 本地全仓校验 `npm run check`
 
 <details>
 <summary>学术引用（BibTeX）与合规许可详情</summary>
@@ -338,18 +206,14 @@ npm run dev                         # 启动本地 Web 工作台
 
 </details>
 
-<p align="center">
-  <sub>
-    自有代码除单独声明外采用 <a href="LICENSE">MIT License</a>（© 2026 Xi Zhao）；<code>mitiq-error-mitigation</code> 采用 <a href=".agents/skills/mitiq-error-mitigation/LICENSE">GPL-3.0-only</a>，Metriq 公开数据快照采用 <a href="src/metriq-data/upstream/LICENSE">CC-BY-4.0</a>。完整清单见 <a href="THIRD_PARTY_NOTICES.md">THIRD_PARTY_NOTICES.md</a>。
-  </sub>
-</p>
+<sub>自有代码除单独声明外采用 <a href="LICENSE">MIT License</a>（© 2026 Xi Zhao）；<code>mitiq-error-mitigation</code> 采用 <a href=".agents/skills/mitiq-error-mitigation/LICENSE">GPL-3.0-only</a>，Metriq 公开数据快照采用 <a href="src/metriq-data/upstream/LICENSE">CC-BY-4.0</a>。完整第三方清单见 <a href="THIRD_PARTY_NOTICES.md">THIRD_PARTY_NOTICES.md</a>。</sub>
 
 <br />
 
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="./packages/openquantum-web-branding/assets/lockup-inverse.svg" />
-    <img src="./packages/openquantum-web-branding/assets/lockup.svg" width="220" alt="OpenQuantum" />
+    <img src="./packages/openquantum-web-branding/assets/lockup.svg" width="210" alt="OpenQuantum" />
   </picture>
 </p>
 
