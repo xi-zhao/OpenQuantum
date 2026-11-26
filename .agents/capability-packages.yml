@@ -2556,6 +2556,9 @@ packages:
   - id: mwpf-decoding
     level: L0
 
+  - id: erasure-recovery
+    level: L0
+
   - id: tropidist-distance
     level: L0
 

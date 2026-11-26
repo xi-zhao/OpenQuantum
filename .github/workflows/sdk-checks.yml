@@ -25,6 +25,7 @@ on:
           - tropidist
           - stgrape
           - braket
+          - erasure
           - rcmps
           - tnqs
   pull_request:
@@ -45,6 +46,8 @@ on:
       - '.agents/skills/tropidist-distance/**'
       - '.agents/skills/stgrape-control/**'
       - '.agents/skills/braket-simulation/**'
+      - '.agents/skills/erasure-recovery/**'
+      - '.agents/skills/qec-memory-experiment/**'
       - '.agents/sdk-libraries.json'
       - 'src/lib/sdk-source.mjs'
       - 'src/lib/sdk-source-record.mjs'
@@ -60,6 +63,8 @@ on:
       - 'tests/fixtures/stgrape-validation.py'
       - 'tests/sdk-expansion-circuits-live.test.mjs'
       - 'tests/fixtures/sdk_expansion_circuits_science.py'
+      - 'tests/erasure-recovery-live.test.mjs'
+      - 'tests/fixtures/erasure-recovery-validation.py'
       - '.agents/skills/rcmps-field-theory/**'
       - 'tests/fixtures/rcmps-*'
       - 'tests/rcmps-*'
@@ -85,6 +90,8 @@ on:
       - '.agents/skills/tropidist-distance/**'
       - '.agents/skills/stgrape-control/**'
       - '.agents/skills/braket-simulation/**'
+      - '.agents/skills/erasure-recovery/**'
+      - '.agents/skills/qec-memory-experiment/**'
       - '.agents/sdk-libraries.json'
       - 'src/lib/sdk-source.mjs'
       - 'src/lib/sdk-source-record.mjs'
@@ -100,6 +107,8 @@ on:
       - 'tests/fixtures/stgrape-validation.py'
       - 'tests/sdk-expansion-circuits-live.test.mjs'
       - 'tests/fixtures/sdk_expansion_circuits_science.py'
+      - 'tests/erasure-recovery-live.test.mjs'
+      - 'tests/fixtures/erasure-recovery-validation.py'
       - '.agents/skills/rcmps-field-theory/**'
       - 'tests/fixtures/rcmps-*'
       - 'tests/rcmps-*'
@@ -118,6 +127,7 @@ jobs:
       tropidist: ${{ steps.detect.outputs.tropidist }}
       stgrape: ${{ steps.detect.outputs.stgrape }}
       braket: ${{ steps.detect.outputs.braket }}
+      erasure: ${{ steps.detect.outputs.erasure }}
       rcmps: ${{ steps.detect.outputs.rcmps }}
       tnqs: ${{ steps.detect.outputs.tnqs }}
     steps:
@@ -218,6 +228,15 @@ jobs:
       timeout_minutes: 20
       setup_script: scripts/setup-paper-tools.mjs
       test_command: OPENQUANTUM_REAL_SDK_EXPANSION_CIRCUITS=1 AWS_EC2_METADATA_DISABLED=true node --test --test-name-pattern=braket-simulation tests/sdk-expansion-circuits-live.test.mjs
+
+  erasure:
+    needs: changes
+    if: needs.changes.outputs.erasure == 'true'
+    uses: ./.github/workflows/_reusable-python-sdk.yml
+    with:
+      sdk_id: erasure-recovery
+      timeout_minutes: 20
+      test_command: node scripts/setup-sdk.mjs qec-memory-experiment && OPENQUANTUM_LIVE_ERASURE_RECOVERY=1 node --test tests/erasure-recovery-live.test.mjs
 
   rcmps:
     needs: changes

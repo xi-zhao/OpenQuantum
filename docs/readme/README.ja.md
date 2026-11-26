@@ -155,7 +155,7 @@ OpenQuantum は、アルゴリズム、コンパイル、シミュレーショ�
 
 ローカル計算は量子クラウドのアカウントなしで始められます。実機と有料サービスは必要に応じて設定します。各手法の入力範囲、準備、検証状況は詳細カタログに記載しています。
 
-現在のソースは **121 の SDK・ソース環境**でネイティブ API を完全に利用する経路を提供します。0.8.4 に含まれた[エコシステム拡張](../integrations/SDK_ECOSYSTEM_2026-10-14.md)の 26 件と、その後の統合を含みます。エージェントは独自のプログラムを書き、公開 API を組み合わせ、完全な結果を保存でき、便宜的な Tool の既定事例にとどまりません。
+現在のソースは **[122 の SDK・ソース環境](../integrations/SDK_INVENTORY.md)**でネイティブ API を完全に利用する経路を提供します。0.8.4 に含まれた[エコシステム拡張](../integrations/SDK_ECOSYSTEM_2026-10-14.md)の 26 件と、その後の統合を含みます。エージェントは独自のプログラムを書き、公開 API を組み合わせ、完全な結果を保存でき、便宜的な Tool の既定事例にとどまりません。
 
 SlowQuant は固定ソース SDK を通じて分子の線形応答と遷移特性を扱います。[準備と検証範囲](../integrations/SLOWQUANT.md)を参照してください。Qiskit による分子 qLR と実機は未検証です。
 
@@ -230,6 +230,7 @@ v0.6.0 で統合した企業・研究機関の SDK は、微分可能回路、�
 | --- | --- | --- |
 | 誤り緩和 | Mitiq で ZNE、REM、PEC、CDR を実行し、同じサンプリング予算で緩和前後の結果を比較 | 理想的な参照、経験的バイアス、分散、RMSE と、較正・学習・サンプリングのコスト |
 | 量子誤り訂正 | Stim / PyMatching による表面符号のメモリー実験、Deltakit による長方形パッチの構築、BP+LSD による復号 | 実際のノイズ付き回路、固定ショット数での論理誤り率と区間。LSD ではシンドロームの整合性チェック |
+| [位置が既知の消失](../../.agents/skills/erasure-recovery/SKILL.md) | 重み付き結合グラフの指定位置に符号化された1量子ビットを復元する | 適応型スタビライザー回路を出力。コストの対象は消失後の CNOT のみ。 |
 
 <a id="hamiltonian-simulation-and-open-systems"></a>
 
@@ -674,7 +675,7 @@ OpenQuantum が統合するのは、SDK、アルゴリズム、計算サービ�
 
 </details>
 
-Skill、MCP サービス、ネイティブ Tool の完全なカタログは[中国語のリファレンス](../CAPABILITIES.md#接口总览)で管理しています。現在のソースには **193 個の組み込み Skill**（自動選択 180、手動の分類索引 13）、**91 個の MCP サービス接続**（既定で有効 66、このうち Qiskit の 2 接続はオフラインスイッチで無効化可能；必要に応じて有効化 25）、**5 個のネイティブ量子 Tool**が含まれます。
+Skill、MCP サービス、ネイティブ Tool の完全なカタログは[中国語のリファレンス](../CAPABILITIES.md#接口总览)で管理しています。現在のソースには **[194 個の組み込み Skill](../../.agents/skills/README.md)**（自動選択 181、手動の分類索引 13）、**91 個の MCP サービス接続**（既定で有効 66、このうち Qiskit の 2 接続はオフラインスイッチで無効化可能；必要に応じて有効化 25）、**5 個のネイティブ量子 Tool**が含まれます。
 
 <a id="development-and-verification"></a>
 
@@ -704,7 +705,7 @@ npm run e2e:quantum-harness -- --provider openquantum-public
 
 </details>
 
-[本源量子公式の `pyqpanda3` Skill](https://github.com/OriginQ/pyqpanda3-skill) は任意の上流 Skill です。193 個の組み込み Skill には数えず、自動ではインストールされません。`npm run skill:qpanda:setup` はレビュー済みのバージョンをインストールしますが、`qpanda_runtime` を有効化したり、クラウドジョブの権限を付与したりはしません。
+[本源量子公式の `pyqpanda3` Skill](https://github.com/OriginQ/pyqpanda3-skill) は任意の上流 Skill です。194 個の組み込み Skill には数えず、自動ではインストールされません。`npm run skill:qpanda:setup` はレビュー済みのバージョンをインストールしますが、`qpanda_runtime` を有効化したり、クラウドジョブの権限を付与したりはしません。
 
 <a id="roadmap-and-rsi"></a>
 

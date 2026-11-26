@@ -155,9 +155,15 @@ test("detect-sdk-ci-targets routes file changes, template updates and manual dis
   assert.equal(onlyBraket.mwpf, false);
   assert.equal(onlyBraket.rcmps, false);
 
+  const onlyErasure = selectSdkTargets({ changedFiles: [".agents/skills/erasure-recovery/uv.lock"] });
+  assert.equal(onlyErasure.erasure, true);
+  assert.equal(onlyErasure.tropidist, false);
+  assert.equal(onlyErasure.rcmps, false);
+
   const sharedSdk = selectSdkTargets({ changedFiles: [".agents/sdk-libraries.json"] });
   assert.equal(sharedSdk.tropidist, true);
   assert.equal(sharedSdk.stgrape, true);
+  assert.equal(sharedSdk.erasure, true);
   assert.equal(sharedSdk.braket, false);
 
   const juliaTemplate = selectSdkTargets({ changedFiles: [REUSABLE_JULIA_WORKFLOW] });
@@ -172,6 +178,7 @@ test("detect-sdk-ci-targets routes file changes, template updates and manual dis
   assert.equal(pythonTemplate.tropidist, true);
   assert.equal(pythonTemplate.stgrape, true);
   assert.equal(pythonTemplate.braket, true);
+  assert.equal(pythonTemplate.erasure, true);
   assert.equal(pythonTemplate.rcmps, false);
 
   const dispatchOne = selectSdkTargets({ dispatchTarget: "tnqs" });
