@@ -12,19 +12,24 @@ export async function buildHomepage() {
     ["site/style.css", "style.css"],
     ["site/main.mjs", "main.mjs"],
     ["packages/openquantum-web-branding/assets/mark.svg", "assets/mark.svg"],
+    ["packages/openquantum-web-branding/assets/mark-inverse.svg", "assets/mark-inverse.svg"],
     ["site/assets/quantum-field-v3.png", "assets/quantum-field-v3.png"],
     ["public/openquantum/fonts/inter-latin.woff2", "assets/inter-latin.woff2"],
-    ["docs/images/openquantum-desktop-20261013.jpg", "assets/desktop.jpg"],
-    ["docs/images/openquantum-settings-categories-20261013.jpg", "assets/settings.jpg"],
+    ["public/openquantum/fonts/jetbrains-mono-latin.woff2", "assets/jetbrains-mono-latin.woff2"],
     ["site/assets/wigner-comparison.svg", "assets/wigner-comparison.svg"],
     ["site/assets/qutip-timings.svg", "assets/qutip-timings.svg"],
     ["site/assets/pennylane-timings.svg", "assets/pennylane-timings.svg"],
     ["site/assets/benchmark-charts.json", "assets/benchmark-charts.json"],
   ]);
   await mkdir(path.join(outputRoot, "assets"), { recursive: true });
-  // Retire the previous presentation files when rebuilding an existing export.
-  await Promise.all(["wigner-comparison.png", "qutip-timings.png", "pennylane-timings.png"]
-    .map((name) => rm(path.join(outputRoot, "assets", name), { force: true })));
+  // Retire superseded presentation files when rebuilding an existing export.
+  await Promise.all([
+    "wigner-comparison.png",
+    "qutip-timings.png",
+    "pennylane-timings.png",
+    "desktop.jpg",
+    "settings.jpg",
+  ].map((name) => rm(path.join(outputRoot, "assets", name), { force: true })));
   await Promise.all([...files].map(([source, destination]) =>
     copyFile(path.join(projectRoot, source), path.join(outputRoot, destination))));
   await writeFile(path.join(outputRoot, "provenance.json"), `${JSON.stringify({
