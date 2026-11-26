@@ -214,7 +214,7 @@ test("keeps the repository brand name, tagline and mark aligned", async () => {
 
   assert.match(
     readme,
-    /<h1 align="center">\s*<img src="\.\/packages\/openquantum-web-branding\/assets\/lockup\.svg"[^>]*alt="OpenQuantum"[^>]*\/>\s*<\/h1>/,
+    /<h1 align="center">\s*<picture>\s*<source media="\(prefers-color-scheme: dark\)" srcset="\.\/packages\/openquantum-web-branding\/assets\/lockup-inverse\.svg" \/>\s*<img src="\.\/packages\/openquantum-web-branding\/assets\/lockup\.svg"[^>]*alt="OpenQuantum"[^>]*\/>\s*<\/picture>\s*<\/h1>/,
   );
   assert.ok(
     readme.includes(OPENQUANTUM_BRAND.tagline.zh),
