@@ -27,10 +27,10 @@
   </sub>
 </p>
 
-<h2 align="center">开源量子科研智能体插件与工作台。</h2>
+<h2 align="center">量子智能体</h2>
 
 <p align="center">
-  自带模型，连接社区专业量子软件、论文方法与独立核对，在 Codex 或 Desktop 中完成可复算的量子研究。
+  开源，自带模型。连接社区专业量子软件、论文方法与独立核对，在 Codex 或 Desktop 中直接开展可复算的量子研究。
 </p>
 
 <h3 align="center">
