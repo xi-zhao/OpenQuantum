@@ -117,19 +117,22 @@ export function skillIssue(skill, snapshot) {
 export function skillPreparationState(skill, snapshot) {
   if (skill.supported === false) return { key: "unsupported", label: "当前插件不支持" };
   if (skill.enabled === false) return { key: "disabled", label: "Skill 已关闭" };
-  const issue = skillIssue(skill, snapshot);
-  if (issue) return { key: "attention", label: issue };
   const relations = skill.relations ?? { toolIds: [], environmentIds: [] };
   const environments = relations.environmentIds.map(id => skillEnvironment(skill, snapshot, id));
   const active = environments.find(env => ["preparing", "cancelling"].includes(env?.state));
   const total = relations.toolIds.length;
+  const ready = total && snapshot.tools.filter(tool => relations.toolIds.includes(tool.id) && toolState(tool, snapshot).key === "prepared").length;
+  if (active) {
+    const action = environmentState(active);
+    return { key: action.key, label: total ? `${action.label}，${ready} / ${total} 个 Tool 已准备` : action.label };
+  }
+  const issue = skillIssue(skill, snapshot);
+  if (issue) return { key: "attention", label: issue };
   if (total) {
-    const ready = snapshot.tools.filter(tool => relations.toolIds.includes(tool.id) && toolState(tool, snapshot).key === "prepared").length;
     if (ready === total) return { key: "prepared", label: "关联 Tool 已准备" };
     if (ready) return { key: "partial", label: `${ready} / ${total} 个 Tool 已准备` };
-    if (!active) return { key: "pending", label: "关联 Tool 待准备" };
+    return { key: "pending", label: "关联 Tool 待准备" };
   }
-  if (active) return environmentState(active);
   if (environments.length > 1) return { key: "pending", label: "按任务选择运行环境" };
   if (environments.length) {
     const state = environmentState(environments[0]);

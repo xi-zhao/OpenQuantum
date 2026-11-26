@@ -68,12 +68,15 @@ export function credentialEntries(services) {
   }).sort((a, b) => Number(b.id === "fieldqkit") - Number(a.id === "fieldqkit"));
 }
 
-// The accounts filter already lists MCP owners. Include Skills for the remaining credential groups.
+// Use the same ownership relation for search and for the forms in the detail pane.
+export function accountsForOwner(item, groups, selectedService) {
+  if (item.authentication || item.supported === false) return [];
+  const ids = item.relations?.credentialServiceIds ?? [item.service ?? item.id];
+  return groups.filter(group => group.serverNames.some(id => ids.includes(id) || id === selectedService));
+}
+
 export function skillOnlyAccountOwners(groups, servers, skills) {
   const servicesWithServer = new Set(servers.filter(server => server.supported !== false).map(server => server.service ?? server.id));
   const remaining = groups.filter(group => !group.serverNames.some(id => servicesWithServer.has(id)));
-  return skills.flatMap(skill => {
-    const accounts = remaining.filter(group => group.serverNames.some(id => skill.relations?.credentialServiceIds?.includes(id)));
-    return accounts.length ? [{ ...skill, accountTitles: accounts.map(group => group.title) }] : [];
-  });
+  return skills.filter(skill => accountsForOwner(skill, remaining).length);
 }

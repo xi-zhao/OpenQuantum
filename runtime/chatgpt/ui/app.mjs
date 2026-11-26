@@ -1,9 +1,9 @@
 import { App, applyHostStyleVariables, applyDocumentTheme } from "@modelcontextprotocol/ext-apps";
 import { openHostLink } from "./open-link.mjs";
-import { credentialEntries, renderCredentialCards } from "./credential-cards.mjs";
+import { renderCredentialCards } from "./credential-cards.mjs";
 import { environmentLabel, environmentPanel } from "./environment-cards.mjs";
 import { SETTINGS_TABS, skillPresentation, shortDescription, toolState, skillPreparationState, skillEnvironment, skillIssue, environmentState, providerState, connectionState } from "./settings-model.mjs";
-import { accountState, skillOnlyAccountOwners } from "./credential-groups.mjs";
+import { accountState, accountsForOwner, credentialEntries, skillOnlyAccountOwners } from "./credential-groups.mjs";
 import { SettingsSession, sameConnectionDestination } from "./settings-recovery.mjs";
 import { PreparationPoller } from "./preparation-poller.mjs";
 import { starterPromptFor } from "./prompt-starter.mjs";
@@ -14,6 +14,7 @@ const hostName = desktop ? "Desktop" : "Codex";
 const $ = selector => document.querySelector(selector);
 const filterToolbar = $("#toolbar");
 let snapshot, tab = "runtime", busy = false, app;
+let accounts = [];
 let selectedEntry, detailPane, showDetail = false;
 let catalogScroll = 0;
 let preparationFocus = desktop && location.hash.startsWith("#skill=") ? { skillId: decodeURIComponent(location.hash.slice(7)) } : undefined;
@@ -83,6 +84,7 @@ async function request(input) {
 async function updateSnapshot(input) {
   const result = await settingsSession.update(input);
   snapshot = result.snapshot;
+  accounts = credentialEntries(snapshot.services ?? []);
   preparationPoller.update(snapshot);
   if (result.save) {
     if (!result.confirmed) throw new Error(result.error || "已读取最新设置，但无法确认上次保存。请核对当前内容；编辑草稿已保留。");
@@ -142,9 +144,15 @@ function categoryTitle(item) {
   const match = categories().find(value => value.id === categoryOf(item));
   return match ? t(match.title) : "其他与自定义";
 }
-function searchText(item) {
+function ownerAccounts(item) {
+  if (!item.relations) return accountsForOwner(item, accounts);
+  const selectedService = preparationFocus?.skillId === item.id && preparationFocus.serviceId
+    ? preparationFocus.serviceId : snapshot.recentSkills?.find(recent => recent.id === item.id)?.serviceId;
+  return accountsForOwner(item, accounts, selectedService);
+}
+function searchText(item, groups) {
   return [item.title, t(item.title ?? ""), item.id, item.summary, item.description, t(item.description ?? ""), item.note, item.provider, item.url, item.command,
-    ...(item.serverNames ?? []), ...(item.accountTitles ?? []),
+    ...(item.serverNames ?? []), ...groups.map(group => group.title),
     ...(item.fields ?? []).flatMap(field => [field.name, field.title, field.displayName, field.description]),
     ...(item.tools ?? []).flatMap(tool => typeof tool === "string" ? [tool] : [tool.name, tool.title, tool.description]),
     categories().find(value => value.id === categoryOf(item))?.title].filter(Boolean).join(" ").normalize("NFKC").toLowerCase();
@@ -156,11 +164,20 @@ function matches(item) {
   const prepared = () => (snapshot.connections.includes(item) ? connectionState(item) : providerState(item, snapshot)).key === "prepared";
   const recent = (snapshot.recentSkills ?? []).some(value => value.id === item.id);
   const account = accountState(item, snapshot.services ?? []);
+  const groups = ownerAccounts(item);
+  const searchable = state === "configured" ? groups.filter(group => group.configuration === "configured") : groups;
+  // On account filters, an exact form name must lead to that form in the requested state.
+  if (!item.authentication && ["accounts", "configured"].includes(state)) {
+    const named = accounts.find(group => group.title.toLowerCase() === query);
+    if (named && !searchable.includes(named)) return false;
+  }
   const stateMatches = state === "all" || (state === "recent" ? recent : state === "attention" ? Boolean(skillIssue(item, snapshot))
-    : state === "accounts" ? account.key !== "none" : state === "configured" ? account.key === "configured"
+    : state === "accounts" ? groups.length > 0 || account.key !== "none"
+    : state === "configured" ? (item.authentication ? account.key === "configured" : searchable.length > 0)
     : state === "unsupported" ? !supported : ["prepared", "needs_setup"].includes(state)
       ? supported && prepared() === (state === "prepared") : supported && item.enabled === (state === "enabled"));
-  return query.split(/\s+/).every(word => searchText(item).includes(word)) && stateMatches
+  const text = searchText(item, searchable);
+  return query.split(/\s+/).every(word => text.includes(word)) && stateMatches
     && ($("#category").value === "all" || categoryOf(item) === $("#category").value);
 }
 function orderedByCategory(items) {
@@ -350,8 +367,8 @@ function providerControl(id) {
     { text: provider.enabled ? "允许按需使用" : "已禁止" }));
   return row;
 }
-function relatedCredentials(container, ids, scope, preferredFields = []) {
-  const entries = credentialEntries(snapshot.services ?? []).filter(entry => entry.serverNames.some(id => ids.includes(id)));
+function relatedCredentials(container, item, scope, preferredFields = []) {
+  const entries = ownerAccounts(item);
   if (entries.length) renderCredentialCards(container, entries, { ...credentialOptions(scope), expandMatches: true, preferredFields });
 }
 function skillSetup(skill) {
@@ -374,11 +391,9 @@ function skillSetup(skill) {
     label.append(select); details.append(label);
   }
   const environment = skillEnvironment(skill, snapshot, environmentId);
-  const needed = preparationFocus?.skillId === skill.id && preparationFocus.serviceId
-    ? preparationFocus.serviceId : snapshot.recentSkills?.find(item => item.id === skill.id)?.serviceId;
   const preferredFields = preparationFocus?.skillId === skill.id && preparationFocus.fields?.length
     ? preparationFocus.fields : [snapshot.recentSkills?.find(item => item.id === skill.id)?.selection?.credentialField].filter(Boolean);
-  relatedCredentials(details, [...new Set([needed, ...relations.credentialServiceIds].filter(Boolean))], `skill-${skill.id}`, preferredFields);
+  relatedCredentials(details, skill, `skill-${skill.id}`, preferredFields);
   if (environment) details.append(environmentPanel(environment, { element, button, run, drafts: environmentDrafts, expanded: expandedGroups }));
   else if (environmentId) details.append(element("p", "环境状态未读取，请刷新后重试。", "hint"));
   const controls = disclosure(`advanced-skill:${skill.id}`, "Tool 与 MCP 使用限制");
@@ -456,7 +471,6 @@ function renderRuntime(container) {
   const hasEnvironments = Array.isArray(snapshot.environments);
   const environments = hasEnvironments ? snapshot.environments : [];
   const hasServices = Array.isArray(snapshot.services);
-  const accounts = hasServices ? credentialEntries(snapshot.services) : [];
   const skillStatesKnown = skills.every(item => item.supported === false || typeof item.enabled === "boolean");
   const mcpStatesKnown = mcps.every(item => item.supported === false || typeof item.enabled === "boolean");
   const enabledSkills = skills.filter(item => item.supported !== false && item.enabled === true).length;
@@ -464,6 +478,7 @@ function renderRuntime(container) {
   const readyEnvs = environments.filter(item => item.ready).length;
   const preparingEnvs = environments.filter(item => ["preparing", "cancelling"].includes(item.state));
   const configuredAccounts = accounts.filter(item => item.configuration === "configured").length;
+  const unreadAccounts = accounts.filter(item => item.configuration === "unavailable").length;
   const hasHostProvided = accounts.some(entry => entry.fields?.some(field => field.configured && field.writable === false));
   const attentionSkills = skills.filter(item => Boolean(skillIssue(item, snapshot)));
 
@@ -526,6 +541,7 @@ function renderRuntime(container) {
     () => openFiltered("skills"),
   );
   const accountSub = !hasServices ? "刷新后可读取账户状态"
+    : unreadAccounts ? `${configuredAccounts} 已确认保存，${unreadAccounts} 未读取 · 可刷新重试`
     : configuredAccounts
       ? (desktop || hasHostProvided ? "由当前宿主凭据来源读取（不代表在线）" : "已存本机系统凭据库（不代表在线）")
       : "本地计算免凭据，云端按需填写";
@@ -534,7 +550,7 @@ function renderRuntime(container) {
     hasServices ? configuredAccounts : "未读取",
     hasServices ? `/ ${accounts.length}` : "",
     accountSub,
-    configuredAccounts ? "ready" : "",
+    configuredAccounts && !unreadAccounts ? "ready" : "",
     () => openFiltered("mcp", { state: "accounts" }),
   );
   shell.append(metrics);
@@ -671,7 +687,7 @@ function serviceCard(server) {
   const state = providerState(server, snapshot);
   return catalogItem(server, state, "provider", body => {
     if (server.supported !== false) {
-      relatedCredentials(body, [server.service ?? server.id], `mcp-${server.id}`);
+      relatedCredentials(body, server, `mcp-${server.id}`);
       if (accountState(server, snapshot.services ?? []).key === "none") body.append(element("p", "此服务无需填写账户，可直接在本地按需运行。", "hint"));
       const environment = environmentFor(server);
       if (environment) body.append(environmentPanel(environment, { element, button, run, drafts: environmentDrafts, expanded: expandedGroups }));
@@ -794,8 +810,8 @@ function render() {
   defaultState = null;
   $("#state").replaceChildren(...states.map(([value, label]) => { const option = element("option", label); option.value = value; return option; }));
   $("#state").value = states.some(([value]) => value === selectedState) ? selectedState : "all";
-  const accountSkills = tab === "mcp" && ["accounts", "configured"].includes($("#state").value)
-    ? skillOnlyAccountOwners(credentialEntries(snapshot.services ?? []), mcpEntries(), skillEntries()) : [];
+  const accountSkills = tab === "mcp" && ["all", "accounts", "configured"].includes($("#state").value)
+    ? skillOnlyAccountOwners(accounts, mcpEntries(), skillEntries()) : [];
   const items = tab === "skills" ? skillEntries() : tab === "runtime" ? [] : [...mcpEntries(), ...accountSkills, ...(desktop ? [] : snapshot.connections)];
   renderQuickChips($("#state").value);
   const selected = $("#category").value || "all";

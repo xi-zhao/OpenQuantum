@@ -3,7 +3,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { PROJECT_ROOT, providerGroups, readCapabilities } from "../runtime/chatgpt/catalog.mjs";
 import { connectProvider } from "../runtime/chatgpt/provider-connection.mjs";
-import { credentialEntries, skillOnlyAccountOwners } from "../runtime/chatgpt/ui/credential-groups.mjs";
+import { accountsForOwner, credentialEntries, skillOnlyAccountOwners } from "../runtime/chatgpt/ui/credential-groups.mjs";
 import { starterPromptFor } from "../runtime/chatgpt/ui/prompt-starter.mjs";
 import { skillPreparationState } from "../runtime/chatgpt/ui/settings-model.mjs";
 import { compileToolInput } from "../src/lib/tool-backend.mjs";
@@ -55,14 +55,14 @@ test("each counted cloud account has a catalog owner, including Pasqal and the s
   }));
   const owners = skillOnlyAccountOwners(groups, servers, skills);
   for (const group of groups) {
-    assert.ok(servers.some(server => group.serverNames.includes(server.id)) || owners.some(skill => skill.accountTitles.includes(group.title)), group.title);
+    assert.ok([...servers, ...owners].some(item => accountsForOwner(item, groups).includes(group)), group.title);
   }
-  assert.deepEqual(owners.filter(skill => skill.accountTitles.includes("Pasqal Cloud")).map(skill => skill.id), ["pasqal-experiments"]);
+  assert.deepEqual(owners.filter(skill => accountsForOwner(skill, groups).some(group => group.title === "Pasqal Cloud")).map(skill => skill.id), ["pasqal-experiments"]);
   const ibm = groups.find(group => group.id === "ibm_quantum");
   assert.deepEqual(ibm.fields.map(field => field.name), ["QISKIT_IBM_TOKEN"]);
   assert.deepEqual(servers.filter(server => ibm.serverNames.includes(server.id)).map(server => server.id).sort(),
     ["qiskit_ibm_runtime", "qiskit_ibm_transpiler", "quantum_hardware"]);
-  assert.ok(!owners.some(skill => skill.accountTitles.includes(ibm.title)));
+  assert.ok(!owners.some(skill => accountsForOwner(skill, groups).includes(ibm)));
 });
 
 test("Skill readiness distinguishes zero, one and both prepared Tools from their actual states", () => {
@@ -75,6 +75,11 @@ test("Skill readiness distinguishes zero, one and both prepared Tools from their
   assert.deepEqual(skillPreparationState(skill, snapshot), { key: "pending", label: "关联 Tool 待准备" });
   snapshot.environments[0].ready = true;
   assert.deepEqual(skillPreparationState(skill, snapshot), { key: "partial", label: "1 / 2 个 Tool 已准备" });
+  for (const [state, action] of [["preparing", "正在安装"], ["cancelling", "正在取消"]]) {
+    snapshot.environments[1].state = state;
+    assert.deepEqual(skillPreparationState(skill, snapshot), { key: "preparing", label: `${action}，1 / 2 个 Tool 已准备` });
+  }
+  snapshot.environments[1].state = "ready";
   snapshot.environments[1].ready = true;
   assert.deepEqual(skillPreparationState(skill, snapshot), { key: "prepared", label: "关联 Tool 已准备" });
 });
