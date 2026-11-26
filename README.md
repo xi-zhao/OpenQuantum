@@ -85,7 +85,7 @@ https://github.com/user-attachments/assets/5c00a30d-eef0-493a-975f-3faeb200cc9e
   <a href="experiments/qutip-rust-wigner/README.md">
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="./docs/images/readme/benchmarks-zh-dark.webp" />
-      <img src="./docs/images/readme/benchmarks-zh-light.webp" width="100%" alt="OpenQuantum 实测突破：QuTiP Wigner 函数 171.77 ms 优化至 30.18 ms（5.69×，最大绝对差 6.52×10⁻¹⁶，272 项核对通过）；PennyLane Pauli 对易子 30.62 ms 优化至 6.02 ms（5.09×，9 组基准一致，最大误差 1.42×10⁻¹⁴）。" />
+      <img src="./docs/images/readme/benchmarks-zh-light.webp" width="100%" alt="QuTiP Wigner 函数从 171.77 ms 减至 30.18 ms（5.69×，最大绝对差 6.52×10⁻¹⁶，272 项核对通过）。PennyLane 计算 125 项 H 与一个 512 项算符和的一次对易子，完整调用从 30.62 ms 减至 6.02 ms（5.09×）。9 组基准一致，独立矩阵检查最大误差为 1.42×10⁻¹⁴。" />
     </picture>
   </a>
 </p>

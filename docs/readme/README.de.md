@@ -61,6 +61,8 @@
   </a>
 </p>
 
+Die Installationspakete von `v0.8.11` enthalten 189 Skills, 117 Umgebungen und 3 wissenschaftliche Abnahmeverfahren der Stufe L3 für DSH. Die Tabelle zeigt den aktuellen Quellstand auf `main` mit 194 Skills, 122 Umgebungen und 11 L3-Verfahren.
+
 <table>
   <tr>
     <td align="center" width="25%"><strong>194</strong><br /><sub>Integrierte Skills (181 auto / 13 Index)</sub></td>

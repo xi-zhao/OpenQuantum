@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Render light/dark keynote visual plates for the OpenQuantum README.
 
-All measured values are read directly from the frozen experiment JSON files in
-experiments/ and all visual motifs reuse official assets in site/assets/ and
+Measured values come from the frozen local demo in docs/examples/ and benchmarks
+in experiments/. The visual motifs reuse official assets in site/assets/ and
 packages/openquantum-web-branding/assets/.
 
 Usage:
@@ -13,6 +13,7 @@ Usage:
 from __future__ import annotations
 
 import asyncio
+import hashlib
 import json
 import os
 import tempfile
@@ -30,13 +31,39 @@ SCALE = 2
 CSS_W = 900  # 2x -> 1800px output width
 
 
+def frozen_json(path: str, sha256: str) -> dict:
+    try:
+        raw = (ROOT / path).read_bytes()
+    except FileNotFoundError as error:
+        raise ValueError(f"Missing frozen evidence: {path}") from error
+    if hashlib.sha256(raw).hexdigest() != sha256:
+        raise ValueError(f"Frozen evidence changed: {path} (expected SHA-256 {sha256})")
+    return json.loads(raw)
+
+
+def scientific_html(value: float) -> str:
+    mantissa, exponent = f"{value:.2e}".split("e")
+    return f"{mantissa}×10<sup>{str(int(exponent)).replace('-', '−')}</sup>"
+
+
 def load_data() -> dict:
-    qutip = json.loads((ROOT / "experiments/qutip-rust-wigner/results/summary.json").read_text("utf-8"))
-    penny_all = json.loads((ROOT / "experiments/pennylane-rust-commutator/results/benchmark.json").read_text("utf-8"))
+    demo = frozen_json("docs/examples/quantum-ground-state-local-demo-2026-09-12.json",
+                       "d646fdf691d945839c53da2d2820f4bab7c8a625a099f19de3965fc4ed78aeeb")["output"]
+    qutip = frozen_json("experiments/qutip-rust-wigner/results/summary.json",
+                        "a3b315e771103df017aa82c287a30a04f0166961247a57485270f9107cb82ce0")
+    penny_all = frozen_json("experiments/pennylane-rust-commutator/results/benchmark.json",
+                            "df203869e17f04ea65d3701d97272b9f6a08bdc058278ba67e6d85486b37a526")
+    validation = frozen_json("experiments/pennylane-rust-commutator/results/validation.json",
+                             "1f884052c54f1b4a92f20df523e6b4ea438450b79354e0c4f5a2a2de5a55f834")
     penny = next(c for c in penny_all["cases"] if c["id"] == "local-32q-pool512")
     p_base = penny["timings"]["pennylane"]["median_seconds"] * 1000
     p_opt = penny["timings"]["rust_end_to_end"]["median_seconds"] * 1000
     return {
+        "vqe": demo["result"],
+        "review": demo["scientificReview"],
+        "q_error": scientific_html(qutip["max_default_error"]),
+        "q_task": qutip["task"],
+        "q_cpu": qutip["hardware"],
         "q_base": f"{qutip['baseline_ms']:.2f}",
         "q_opt": f"{qutip['rust_ms']:.2f}",
         "q_speedup": f"{qutip['baseline_ms'] / qutip['rust_ms']:.2f}×",
@@ -47,6 +74,13 @@ def load_data() -> dict:
         "p_speedup": f"{p_base / p_opt:.2f}×",
         "p_ratio": p_opt / p_base,
         "p_cases": len(penny_all["cases"]),
+        "p_cpu": penny_all["cpu"],
+        "p_qubits": penny["qubits"],
+        "p_h_terms": penny["actual_left_terms"],
+        "p_a_terms": penny["actual_right_terms"],
+        "p_pairs": validation["exhaustive_word_pairs"],
+        "p_random": validation["random_complex_pairs"],
+        "p_error": scientific_html(validation["worst_independent_matrix_error"]),
     }
 
 
@@ -346,7 +380,7 @@ def launch_card_plate(dark: bool, lang: str = "zh") -> str:
     return wrap_doc(body, css, "en" if en else "zh-CN")
 
 
-def workflow_plate(dark: bool, lang: str = "zh") -> str:
+def workflow_plate(dark: bool, d: dict, lang: str = "zh") -> str:
     mark_uri = (BRAND / ("mark-inverse.svg" if dark else "mark.svg")).as_uri()
     en = lang == "en"
     outer_bg = "#101620" if dark else "#F6F8FB"
@@ -366,6 +400,8 @@ def workflow_plate(dark: bool, lang: str = "zh") -> str:
     accent = "#22D3EE" if dark else "#0E7490"
     res_bg = "#111926" if dark else "#F4F8FB"
     rail_bg = "#131C2A" if dark else "#FFFFFF"
+    vqe, review = d["vqe"], d["review"]
+    passed = review["observations"]["pass"]
     copy = (
         {
             "s1t": "Ask in plain language",
@@ -375,12 +411,12 @@ def workflow_plate(dark: bool, lang: str = "zh") -> str:
             "s3t": "Verify independently",
             "s3d": "Separates completed tool execution from scientific acceptance with exact references.",
             "win": "OpenQuantum · H₂ Ground-State VQE Local Demo",
-            "badge": "15 PASS · 1 NOT_CHECKED",
+            "badge": f'{passed} PASS · {review["observations"]["not_checked"]} NOT_CHECKED',
             "user": "Solve the 2-qubit H₂ Pauli Hamiltonian in the fixed particle sector and cross-check against exact diagonalization.",
             "sub": "Local deterministic solver · Independent numerical checks",
             "t1": "Load sector constraints &amp; VQE workflow",
-            "t2": "Converge noiseless statevector VQE (112 evals)",
-            "t3": "Exact diagonalization · 15 local checks; provenance not_checked",
+            "t2": f'Converge noiseless statevector VQE ({vqe["evaluationCount"]} evals)',
+            "t3": f'Exact diagonalization · {passed} local checks; provenance {review["provenance"]}',
             "t3code": "validator",
             "t3status": "OBSERVED",
             "m1": "VQE sector ground energy",
@@ -398,12 +434,12 @@ def workflow_plate(dark: bool, lang: str = "zh") -> str:
             "s3t": "独立科学核验",
             "s3d": "把“代码跑通”与“科学验收”严格拆开，留存误差与来源边界。",
             "win": "OpenQuantum · H₂ 分子基态 VQE 本机复算示例",
-            "badge": "15 项通过 · 来源未核查",
+            "badge": f"{passed} 项通过 · 来源未核查",
             "user": "求解给定 H₂ 二量子位哈密顿量在固定粒子扇区的基态能量，并用精确对角化核对误差。",
             "sub": "本机确定性求解 · 独立数值检查（验收由 DSH 会话另行推导）",
             "t1": "加载扇区约束与 VQE 流程",
-            "t2": "无噪 statevector VQE 优化收敛（112 次评估）",
-            "t3": "独立精确对角化 · 15 项计算检查通过，来源链保留 not_checked",
+            "t2": f'无噪 statevector VQE 优化收敛（{vqe["evaluationCount"]} 次评估）',
+            "t3": f'独立精确对角化 · {passed} 项计算检查通过，来源链保留 {review["provenance"]}',
             "t3code": "validator",
             "t3status": "OBSERVED",
             "m1": "VQE 扇区基态能量",
@@ -480,6 +516,7 @@ def workflow_plate(dark: bool, lang: str = "zh") -> str:
 .mcell:last-child {{ border-right: 0; }}
 .mval {{ font-size: 18px; font-weight: 600; color: {ink}; letter-spacing: -0.02em; white-space: nowrap; }}
 .mval.ok {{ color: {ok_ink}; }}
+.mval sup {{ font-size: 11px; }}
 .munit {{ font-size: 12px; font-weight: 500; color: {sub}; margin-left: 3px; }}
 .mlabel {{ margin-top: 4px; font-size: 11.5px; color: {muted}; }}
 .evidence {{
@@ -537,11 +574,11 @@ def workflow_plate(dark: bool, lang: str = "zh") -> str:
         </div>
         <div class="metrics">
           <div class="mcell">
-            <div class="mval mono">-1.85727503<span class="munit">Ha</span></div>
+            <div class="mval mono">{vqe["energyHartree"]:.8f}<span class="munit">Ha</span></div>
             <div class="mlabel">{copy["m1"]}</div>
           </div>
           <div class="mcell">
-            <div class="mval mono">4.44×10<sup style="font-size:11px">−16</sup><span class="munit">Ha</span></div>
+            <div class="mval mono">{scientific_html(vqe["absoluteErrorHartree"])}<span class="munit">Ha</span></div>
             <div class="mlabel">{copy["m2"]}</div>
           </div>
           <div class="mcell">
@@ -577,27 +614,27 @@ def benchmarks_plate(dark: bool, d: dict, lang: str = "zh") -> str:
     copy = (
         {
             "q_name": "QuTiP Wigner Function",
-            "q_scope": "64-dim Fock space · 201×201 grid · Apple M4",
+            "q_scope": f'{d["q_task"]["dimension"]}-dim Fock space · {d["q_task"]["nx"]}×{d["q_task"]["ny"]} grid · {d["q_cpu"]}',
             "speed_label": "end-to-end speedup",
             "orig": "Baseline",
             "opt_bar": "Optimized",
-            "q_checks": f'Max pointwise diff <b class="mono">6.52×10<sup>−16</sup></b><br /><b>{d["q_checks"]}</b> independent, analytic &amp; rejection checks passed',
+            "q_checks": f'Max pointwise diff <b class="mono">{d["q_error"]}</b><br /><b>{d["q_checks"]}</b> independent, analytic &amp; rejection checks passed',
             "p_name": "PennyLane Pauli Commutator",
-            "p_scope": "32 qubits · 125-term H × 512-op pool · Apple M4",
-            "p_right": f'<b>{d["p_cases"]} benchmark inputs</b> match exactly<br />4,368 Pauli pairs &amp; 40 random matrices max err <b class="mono">1.42×10<sup>−14</sup></b>',
+            "p_scope": f'One commutator [H, A] · {d["p_h_terms"]}-term H and one {d["p_a_terms"]}-term operator sum A<br />{d["p_qubits"]} qubits · {d["p_cpu"]}',
+            "p_right": f'<b>{d["p_cases"]} benchmark inputs</b> match exactly<br />{d["p_pairs"]:,} Pauli pairs &amp; {d["p_random"]} random matrices max err <b class="mono">{d["p_error"]}</b>',
             "foot": "Single-threaded median of 9 warm runs including object conversion; excludes setup &amp; compilation. Applies strictly to declared inputs.",
         }
         if en
         else {
             "q_name": "QuTiP Wigner 函数",
-            "q_scope": "64 维单模 Fock 空间 · 201×201 网格 · Apple M4",
+            "q_scope": f'{d["q_task"]["dimension"]} 维单模 Fock 空间 · {d["q_task"]["nx"]}×{d["q_task"]["ny"]} 网格 · {d["q_cpu"]}',
             "speed_label": "完整调用提速",
             "orig": "原库",
             "opt_bar": "优化后",
-            "q_checks": f'完整网格最大绝对差 <b class="mono">6.52×10<sup>−16</sup></b><br /><b>{d["q_checks"]} 项</b>独立、解析与拒绝路径检查全部通过',
+            "q_checks": f'完整网格最大绝对差 <b class="mono">{d["q_error"]}</b><br /><b>{d["q_checks"]} 项</b>独立、解析与拒绝路径检查全部通过',
             "p_name": "PennyLane Pauli 对易子",
-            "p_scope": "32 量子位 · 125 项 Hamiltonian × 512 项算符池 · Apple M4",
-            "p_right": f'<b>{d["p_cases"]} 组基准输入</b>输出算符与系数逐项一致<br />4,368 对 Pauli 与 40 组复系数随机矩阵最大误差 <b class="mono">1.42×10<sup>−14</sup></b>',
+            "p_scope": f'一次对易子 [H, A] · {d["p_h_terms"]} 项 H 与一个 {d["p_a_terms"]} 项算符和 A<br />{d["p_qubits"]} 量子位 · {d["p_cpu"]}',
+            "p_right": f'<b>{d["p_cases"]} 组基准输入</b>输出算符与系数逐项一致<br />{d["p_pairs"]:,} 对 Pauli 与 {d["p_random"]} 组复系数随机矩阵最大误差 <b class="mono">{d["p_error"]}</b>',
             "foot": "单线程 9 轮热运行中位数，包含输入/输出对象转换，不含环境准备与编译；提速仅对应各报告定义的固定输入与硬件条件。",
         }
     )
@@ -705,16 +742,16 @@ async def main() -> None:
         "hero-zh-dark": hero_plate(True, "zh"),
         "launch-card-light": launch_card_plate(False, "zh"),
         "launch-card-dark": launch_card_plate(True, "zh"),
-        "workflow-zh-light": workflow_plate(False, "zh"),
-        "workflow-zh-dark": workflow_plate(True, "zh"),
+        "workflow-zh-light": workflow_plate(False, d, "zh"),
+        "workflow-zh-dark": workflow_plate(True, d, "zh"),
         "benchmarks-zh-light": benchmarks_plate(False, d, "zh"),
         "benchmarks-zh-dark": benchmarks_plate(True, d, "zh"),
         "hero-en-light": hero_plate(False, "en"),
         "hero-en-dark": hero_plate(True, "en"),
         "launch-card-en-light": launch_card_plate(False, "en"),
         "launch-card-en-dark": launch_card_plate(True, "en"),
-        "workflow-en-light": workflow_plate(False, "en"),
-        "workflow-en-dark": workflow_plate(True, "en"),
+        "workflow-en-light": workflow_plate(False, d, "en"),
+        "workflow-en-dark": workflow_plate(True, d, "en"),
         "benchmarks-en-light": benchmarks_plate(False, d, "en"),
         "benchmarks-en-dark": benchmarks_plate(True, d, "en"),
     }

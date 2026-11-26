@@ -61,6 +61,8 @@
   </a>
 </p>
 
+`v0.8.11` 배포 패키지에는 Skill 189개, 환경 117개, DSH에서 재실행할 수 있는 L3 과학 검증 절차 3개가 포함되어 있습니다. 아래 표는 현재 `main` 소스 코드 기준으로 Skill 194개, 환경 122개, L3 검증 절차 11개를 집계한 것입니다.
+
 <table>
   <tr>
     <td align="center" width="25%"><strong>194</strong><br /><sub>내장 Skill (자동 181 / 색인 13)</sub></td>

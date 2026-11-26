@@ -1,31 +1,34 @@
 # README 图片说明
 
-## 2026-11-02 README 动态横幅与实测卡片
+## 当前 README 主视觉（2026-11-27）
 
-| 图片 | 内容与来源 |
+四组图片各提供中文、英文与亮暗主题，共 16 张 2× WebP。中文 README 使用中文图，其他语言复用英文图。[离线渲染脚本](../../scripts/render-readme-keynote.py)
+
+| 用途 | 中文 | 英文 | 尺寸（像素）与来源 |
+| --- | --- | --- | --- |
+| 主视觉 | [亮色](readme/hero-zh-light.webp) · [暗色](readme/hero-zh-dark.webp) | [亮色](readme/hero-en-light.webp) · [暗色](readme/hero-en-dark.webp) | 1800 × 840。亮色图沿用官网波场与量子态素材，暗色图为 Bloch 球示意。 |
+| Desktop v0.8.11 下载卡 | [亮色](readme/launch-card-light.webp) · [暗色](readme/launch-card-dark.webp) | [亮色](readme/launch-card-en-light.webp) · [暗色](readme/launch-card-en-dark.webp) | 1800 × 368。使用官方品牌标志。 |
+| 本机 VQE 工作流 | [亮色](readme/workflow-zh-light.webp) · [暗色](readme/workflow-zh-dark.webp) | [亮色](readme/workflow-en-light.webp) · [暗色](readme/workflow-en-dark.webp) | 中文 1800 × 1038，英文 1800 × 1018。能量、参考误差和独立检查来自[本机 VQE 冻结记录](../examples/quantum-ground-state-local-demo-2026-09-12.json)。 |
+| QuTiP 与 PennyLane 实测 | [亮色](readme/benchmarks-zh-light.webp) · [暗色](readme/benchmarks-zh-dark.webp) | [亮色](readme/benchmarks-en-light.webp) · [暗色](readme/benchmarks-en-dark.webp) | 中文 1800 × 1298，英文 1800 × 1282。面板使用 [QuTiP 网格误差与耗时](../../experiments/qutip-rust-wigner/results/summary.json)、[PennyLane 完整调用计时](../../experiments/pennylane-rust-commutator/results/benchmark.json)和[独立矩阵核对](../../experiments/pennylane-rust-commutator/results/validation.json)。 |
+
+## 历史素材 · 2026-11-02 动态横幅与实测卡片
+
+| 图片 | 当时的用途与来源 |
 | --- | --- |
-| [动态横幅](readme/banner-motion.webp) | 12 秒无缝循环的 animated WebP（1200 × 600，15 fps，约 3 MB），由 `docs/communications/video/render.py hero` 从 `stage.html` 逐帧渲染。粒子、干涉条纹是程序生成的示意画面；文字中的两项提速与误差取自首页实测案例。 |
-| [静态横幅](readme/banner.webp) | 同一画面在 1.5 s 处的静帧，README 通过 `<picture>` 在系统开启「减少动态效果」时显示它。 |
-| [英文矢量横幅](readme/banner-en.svg) | 1200 × 600 矢量 SVG，沿用主横幅夜空量子波场配色与圆角规格，用于英文与国际语言 README；波纹与节点为示意画面，文字中的两项提速与 L3 验收数量与当前源码主线和实测报告一致。 |
-| [QuTiP 实测卡片](readme/case-qutip.webp) | 首页 QuTiP Wigner 案例面板，去掉可展开条件和链接（README 以文字给出）。数值与 Wigner 对照图来自首页，`tests/homepage.test.mjs` 核对其与固定实验数据一致。由 `scripts/render-readme-images.py` 渲染。 |
-| [PennyLane 实测卡片](readme/case-pennylane.webp) | 首页 PennyLane Pauli 对易子案例面板，处理方式同上。 |
-| [中文主视觉（亮/暗）](readme/hero-zh-light.webp) / [暗色](readme/hero-zh-dark.webp) | 1800 × 840（2× Retina）亮/暗自适应 README 主视觉，由 `scripts/render-readme-keynote.py` 渲染；亮色版复用 `site/assets/quantum-field-v3.png` 与 `quantum-state-v2.png`，暗色版为几何 Bloch 球矢量示意。 |
-| [英文主视觉（亮/暗）](readme/hero-en-light.webp) / [暗色](readme/hero-en-dark.webp) | 1800 × 840（2× Retina）亮/暗自适应英文与国际版 README 主视觉，由 `scripts/render-readme-keynote.py` 同源渲染。 |
-| [桌面发行卡片（亮/暗）](readme/launch-card-light.webp) / [暗色](readme/launch-card-dark.webp) | 1800 × 368（2× Retina）亮/暗自适应 Desktop v0.8.11 发行横条，使用官方 `mark-inverse.svg` 标志，由 `scripts/render-readme-keynote.py` 渲染。 |
-| [英文桌面发行卡片（亮/暗）](readme/launch-card-en-light.webp) / [暗色](readme/launch-card-en-dark.webp) | 1800 × 368（2× Retina）亮/暗自适应英文 Desktop v0.8.11 发行横条，由 `scripts/render-readme-keynote.py` 同源渲染。 |
-| [工作流示意卡片（亮/暗）](readme/workflow-zh-light.webp) / [暗色](readme/workflow-zh-dark.webp) | 1800 × 1038（2× Retina）亮/暗自适应工作流示意面板，展示 `npm run demo:quantum-ground-state` 的本机 H₂ 基态 VQE 实跑输出（`-1.85727503 Ha`、差值 `4.44×10⁻¹⁶ Ha`、15 项本地计算检查通过、`provenance: not_checked`、`acceptance: not_derived`）；为静态说明视觉，不替代实际运行记录。 |
-| [英文工作流示意卡片（亮/暗）](readme/workflow-en-light.webp) / [暗色](readme/workflow-en-dark.webp) | 1800 × 1018（2× Retina）亮/暗自适应英文工作流示意面板，与中文版同源数值与状态口径渲染。 |
-| [实测突破双案卡（亮/暗）](readme/benchmarks-zh-light.webp) / [暗色](readme/benchmarks-zh-dark.webp) | 1800 × 1294（2× Retina）亮/暗自适应实测汇总面板，数值直接读取 `experiments/qutip-rust-wigner/results/summary.json` 与 `experiments/pennylane-rust-commutator/results/benchmark.json`，嵌入 `site/assets/wigner-comparison.svg`，由 `scripts/render-readme-keynote.py` 渲染。 |
-| [英文实测突破双案卡（亮/暗）](readme/benchmarks-en-light.webp) / [暗色](readme/benchmarks-en-dark.webp) | 1800 × 1218（2× Retina）亮/暗自适应英文实测汇总面板，数值来源与中文版完全一致。 |
+| [动态横幅](readme/banner-motion.webp) | 12 秒无缝循环的 animated WebP（1200 × 600，15 fps，约 3 MB），由 `docs/communications/video/render.py hero` 从 `stage.html` 逐帧渲染。粒子和干涉条纹为程序示意，提速与误差取自实测。 |
+| [静态横幅](readme/banner.webp) | 旧版 README 在系统开启「减少动态效果」时使用的 1.5 s 静帧。 |
+| [英文矢量横幅](readme/banner-en.svg) | 旧版英文与国际语言 README 使用的 1200 × 600 SVG，数量与性能文案对应当时的版本。 |
+| [QuTiP 实测卡片](readme/case-qutip.webp) · [PennyLane 实测卡片](readme/case-pennylane.webp) | 旧版 README 分别展示 Wigner 函数与 Pauli 对易子案例，由 `scripts/render-readme-images.py` 渲染。 |
 
-品牌标志由 README 顶部的 `<h1>` 给出，横幅里不重复。中文字体取决于渲染机器（2026-11-02 版本使用 Noto Sans CJK）。
-这些图只是已有内容的静态或动态呈现，不是新的测量或界面验收证据。宣传片的来源与边界见 [视频说明](../communications/video/README.md)。
+旧版横幅的品牌标志放在 README 顶部，中文渲染使用 Noto Sans CJK。同期宣传片的记录见[视频说明](../communications/video/README.md)。
 
-## 2026-10-13 原版 Desktop 与分类设置
+## 历史截图 · 2026-10-13 原版 Desktop 与分类设置
+
+旧版 README 将这两张截图并排展示。当前中文 README 在可展开的视频与截图区域提供原图链接。
 
 | 图片 | 实际显示 |
 | --- | --- |
-| [Desktop 工作台](openquantum-desktop-20261013.jpg) | 原版 DSH Desktop 2.0.7 中的 OpenQuantum 品牌、新会话、量子学习通入口，以及添加模型的提示。README 在「从研究问题，走到计算与结果」一节与分类设置图并排展示。 |
+| [Desktop 工作台](openquantum-desktop-20261013.jpg) | 原版 DSH Desktop 2.0.7 中的 OpenQuantum 品牌、新会话、量子学习通入口，以及添加模型的提示。 |
 | [MCP 分类设置](openquantum-settings-categories-20261013.jpg) | 按用途折叠的 8 个分组、91 个连接，以及搜索、用途和启用状态筛选。 |
 
 两图直接取自 2026-10-13 的实际 macOS 原生客户端验证，尺寸均为 **2560 × 1680**，按原始字节保存，未裁剪、改字或合成。

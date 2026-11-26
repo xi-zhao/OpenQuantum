@@ -81,7 +81,7 @@ Beyond connecting existing libraries, targeted end-to-end optimizations of recur
   <a href="../../experiments/qutip-rust-wigner/README.md">
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="../images/readme/benchmarks-en-dark.webp" />
-      <img src="../images/readme/benchmarks-en-light.webp" width="100%" alt="Verified OpenQuantum benchmarks: QuTiP Wigner function 171.77 ms to 30.18 ms (5.69× speedup on the 64-dim 201×201 input, 6.52×10⁻¹⁶ max diff, 272 checks passed); PennyLane Pauli commutator 30.62 ms to 6.02 ms (5.09× speedup on the 32-qubit 125×512 input; 9/9 benchmark inputs match term-for-term; 1.42×10⁻¹⁴ max error across 40 random complex matrix checks)." />
+      <img src="../images/readme/benchmarks-en-light.webp" width="100%" alt="QuTiP Wigner function from 171.77 ms to 30.18 ms (5.69× on the 64-dimensional 201×201 input, 6.52×10⁻¹⁶ maximum difference, 272 checks passed). One PennyLane commutator of a 125-term H with one 512-term operator sum on 32 qubits took 30.62 ms and 6.02 ms end to end (5.09×). All nine benchmark inputs match term for term. The largest error across 40 random complex matrix checks was 1.42×10⁻¹⁴." />
     </picture>
   </a>
 </p>

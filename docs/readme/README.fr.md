@@ -61,6 +61,8 @@
   </a>
 </p>
 
+Les paquets d’installation de `v0.8.11` contiennent 189 Skills, 117 environnements et 3 procédures de validation scientifique L3 sur DSH. Le tableau décrit le code source actuel de `main`, avec 194 Skills, 122 environnements et 11 procédures L3.
+
 <table>
   <tr>
     <td align="center" width="25%"><strong>194</strong><br /><sub>Skills intégrés (181 auto / 13 index)</sub></td>

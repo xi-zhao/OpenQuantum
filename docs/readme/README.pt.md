@@ -61,6 +61,8 @@
   </a>
 </p>
 
+Os pacotes de instalação da versão `v0.8.11` incluem 189 Skills, 117 ambientes e 3 fluxos de aceitação científica L3 no DSH. A tabela apresenta os números do código-fonte atual de `main`, com 194 Skills, 122 ambientes e 11 fluxos L3.
+
 <table>
   <tr>
     <td align="center" width="25%"><strong>194</strong><br /><sub>Skills integradas (181 auto / 13 índice)</sub></td>

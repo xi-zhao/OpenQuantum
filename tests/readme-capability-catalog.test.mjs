@@ -76,6 +76,22 @@ const countPatterns = {
 };
 const languages = JSON.parse(await readFile(new URL("../runtime/openquantum/web-locales/languages.json", import.meta.url), "utf8"));
 const { version } = JSON.parse(await readFile(new URL("../package.json", import.meta.url), "utf8"));
+test("translated download cards distinguish the shipped inventory from the adjacent source table", async () => {
+  const { libraries } = JSON.parse(await readFile(new URL("../.agents/sdk-libraries.json", import.meta.url), "utf8"));
+  const numbers = text => [...text.replaceAll("L3", "").matchAll(/\d+/g)].map(match => Number(match[0]));
+  for (const { id } of languages.filter(language => !["zh", "en"].includes(language.id))) {
+    const markdown = await readFile(new URL(`../docs/readme/README.${id}.md`, import.meta.url), "utf8");
+    const card = markdown.indexOf("launch-card-en-light.webp");
+    assert.notEqual(card, -1, id);
+    const cardEnd = markdown.indexOf("</p>", card);
+    const note = markdown.slice(cardEnd + 4, markdown.indexOf("<table>", cardEnd));
+    const [shipped, source] = note.split("`main`");
+    assert.ok(shipped.includes("`v0.8.11`") && source, id);
+    assert.deepEqual(numbers(shipped.replace("`v0.8.11`", "")), [189, 117, 3], id);
+    assert.deepEqual(numbers(source), [trackedSkillIds.length, libraries.length, report.summary.levelCounts.L3], id);
+  }
+});
+
 for (const { id } of languages) {
   test(`${id} README counts and Codex installation links match the current distribution`, async () => {
     const filename = id === "zh" ? "README.md" : `docs/readme/README.${id}.md`;
