@@ -31,7 +31,7 @@ globalThis.__ModuleLoader__.load({
               (notify) => scope.locale.subscribe(notify),
               () => scope.locale.getSnapshot(),
             );
-            return available ? h("span", { style: { fontSize: 13, opacity: 0.65 } },
+            return available ? h("span", { className: "oq-model-hint" },
               locale.active.startsWith("zh")
                 ? "请在设置 → 模型中添加模型"
                 : "Add a model in Settings → Models",

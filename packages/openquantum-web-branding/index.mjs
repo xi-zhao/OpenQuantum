@@ -195,20 +195,54 @@ const BRAND_STYLES = `
 
   .oq-desktop-titlebar {
     position: fixed; inset: 0 0 auto; height: 40px; display: grid; place-items: center;
-    font: 600 13px system-ui; -webkit-app-region: drag; pointer-events: auto;
+    font: 600 13px/1 -apple-system, BlinkMacSystemFont, "Inter", system-ui, sans-serif;
+    letter-spacing: -0.015em; -webkit-app-region: drag; pointer-events: auto;
   }
-  .oq-settings-trigger { background: none; color: inherit; border: 0; cursor: pointer; display: flex; align-items: center; gap: 10px; padding: 10px; width: 100%; }
-  .oq-settings { width: min(760px, calc(100vw - 24px)); max-height: calc(100vh - 56px); }
+  .oq-model-hint {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 4px 10px; border-radius: 999px; font-size: 12.5px; font-weight: 500;
+    color: var(--dsw-alias-label-secondary, #475569);
+    background: var(--dsw-alias-bg-module-platform, rgba(14, 116, 144, 0.08));
+    border: 1px solid var(--dsw-alias-border-l2, rgba(14, 116, 144, 0.22));
+  }
+  .oq-model-hint::before {
+    content: ""; width: 6px; height: 6px; border-radius: 50%;
+    background: #0e7490; flex-shrink: 0;
+  }
+  .oq-settings-trigger {
+    background: none; color: inherit; border: 0; border-radius: 9px; cursor: pointer;
+    display: flex; align-items: center; gap: 10px; padding: 9px 10px; width: 100%;
+    transition: background-color 150ms ease;
+  }
+  .oq-settings-trigger:hover { background: var(--dsw-alias-interactive-bg-hover, rgba(14, 116, 144, 0.08)); }
+  .oq-settings { width: min(780px, calc(100vw - 24px)); max-height: calc(100vh - 56px); }
   .oq-settings:has(.oq-plugin-settings) { width: calc(100vw - 24px); height: calc(100vh - 56px); }
   .oq-settings:has(.oq-plugin-settings) .oq-settings-content { display: flex; flex-direction: column; flex: 1; min-height: 0; overflow: hidden; }
   .oq-settings-content > :has(> .oq-settings-nav):has(.oq-plugin-settings) { display: flex; flex-direction: column; flex: 1; min-height: 0; }
   .oq-settings:has(.oq-plugin-settings) .oq-settings-nav { flex-shrink: 0; }
   .oq-settings-content { min-height: 200px; overflow: auto; }
-  .oq-settings-nav { display: flex; align-items: center; gap: 8px; padding-bottom: 8px; overflow-x: auto; }
-  .oq-settings-license { margin-left: auto; padding: 8px 0 8px 12px; font-size: 12px; white-space: nowrap; }
-  .oq-settings-nav button { background: transparent; color: inherit; font: inherit; border: 1px solid transparent; border-radius: 8px; padding: 8px 12px; cursor: pointer; flex-shrink: 0; }
-  .oq-settings-nav button[aria-current] { background: var(--dsw-alias-interactive-bg-hover); }
-  .oq-settings-nav button:focus-visible, .oq-settings-trigger:focus-visible { outline: 2px solid #8872db; outline-offset: 2px; }
+  .oq-settings-nav {
+    display: flex; align-items: center; gap: 6px; padding: 0 0 10px; margin-bottom: 4px;
+    border-bottom: 1px solid var(--dsw-alias-border-l2, rgba(148, 163, 184, 0.22));
+    overflow-x: auto;
+  }
+  .oq-settings-license {
+    margin-left: auto; padding: 6px 8px 6px 12px; font-size: 12px; white-space: nowrap;
+    opacity: 0.72; text-decoration: none;
+  }
+  .oq-settings-license:hover { opacity: 1; text-decoration: underline; }
+  .oq-settings-nav button {
+    background: transparent; color: inherit; font: inherit; font-size: 13.5px; font-weight: 500;
+    border: 1px solid transparent; border-radius: 8px; padding: 7px 14px; cursor: pointer; flex-shrink: 0;
+    transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease;
+  }
+  .oq-settings-nav button:hover { background: var(--dsw-alias-interactive-bg-hover); }
+  .oq-settings-nav button[aria-current] {
+    background: var(--dsw-alias-interactive-bg-hover);
+    border-color: var(--dsw-alias-border-l2, rgba(14, 116, 144, 0.25));
+    font-weight: 600;
+  }
+  .oq-settings-nav button:focus-visible, .oq-settings-trigger:focus-visible { outline: 2px solid #0e7490; outline-offset: 2px; }
   .oq-settings a { color: inherit; }
   @media (max-width: 600px) {
     .oq-settings [data-slot="settings.general.item"] > div:has(> span > button[aria-haspopup="menu"]) { flex-direction: column; align-items: stretch; gap: 10px; }
