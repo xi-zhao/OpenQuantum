@@ -67,3 +67,13 @@ export function credentialEntries(services) {
       stateLabel: ({ unsupported: "云端未接入", unavailable: "未读取", partial: "待补全", incomplete: "未配置", configured: "已保存", optional: "按需配置" })[configuration] };
   }).sort((a, b) => Number(b.id === "fieldqkit") - Number(a.id === "fieldqkit"));
 }
+
+// The accounts filter already lists MCP owners. Include Skills for the remaining credential groups.
+export function skillOnlyAccountOwners(groups, servers, skills) {
+  const servicesWithServer = new Set(servers.filter(server => server.supported !== false).map(server => server.service ?? server.id));
+  const remaining = groups.filter(group => !group.serverNames.some(id => servicesWithServer.has(id)));
+  return skills.flatMap(skill => {
+    const accounts = remaining.filter(group => group.serverNames.some(id => skill.relations?.credentialServiceIds?.includes(id)));
+    return accounts.length ? [{ ...skill, accountTitles: accounts.map(group => group.title) }] : [];
+  });
+}

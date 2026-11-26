@@ -2,8 +2,8 @@ import { App, applyHostStyleVariables, applyDocumentTheme } from "@modelcontextp
 import { openHostLink } from "./open-link.mjs";
 import { credentialEntries, renderCredentialCards } from "./credential-cards.mjs";
 import { environmentLabel, environmentPanel } from "./environment-cards.mjs";
-import { SETTINGS_TABS, skillPresentation, shortDescription, toolState, skillPreparation, skillEnvironment, skillIssue, environmentState, providerState, connectionState } from "./settings-model.mjs";
-import { accountState } from "./credential-groups.mjs";
+import { SETTINGS_TABS, skillPresentation, shortDescription, toolState, skillPreparationState, skillEnvironment, skillIssue, environmentState, providerState, connectionState } from "./settings-model.mjs";
+import { accountState, skillOnlyAccountOwners } from "./credential-groups.mjs";
 import { SettingsSession, sameConnectionDestination } from "./settings-recovery.mjs";
 import { PreparationPoller } from "./preparation-poller.mjs";
 import { starterPromptFor } from "./prompt-starter.mjs";
@@ -144,7 +144,7 @@ function categoryTitle(item) {
 }
 function searchText(item) {
   return [item.title, t(item.title ?? ""), item.id, item.summary, item.description, t(item.description ?? ""), item.note, item.provider, item.url, item.command,
-    ...(item.serverNames ?? []),
+    ...(item.serverNames ?? []), ...(item.accountTitles ?? []),
     ...(item.fields ?? []).flatMap(field => [field.name, field.title, field.displayName, field.description]),
     ...(item.tools ?? []).flatMap(tool => typeof tool === "string" ? [tool] : [tool.name, tool.title, tool.description]),
     categories().find(value => value.id === categoryOf(item))?.title].filter(Boolean).join(" ").normalize("NFKC").toLowerCase();
@@ -190,18 +190,11 @@ function categoryGroups(container, items, renderItem) {
 function entryKey(item, scope) {
   return scope === "connection" ? `${scope}:${item.id}:${item.instance}` : `${scope}:${item.id}`;
 }
-function toneFor(item, state, scope) {
+function toneFor(item, state) {
   if (item.supported === false || item.enabled === false) return "off";
-  if (scope === "skill") {
-    if (skillIssue(item, snapshot)) return "attention";
-    const envIds = item.relations?.environmentIds ?? [];
-    const envs = envIds.map(id => skillEnvironment(item, snapshot, id)).filter(Boolean);
-    if (envs.some(env => ["preparing", "cancelling"].includes(env.state))) return "working";
-    if (state.label.includes("已准备") || state.label === "无需安装" || state.label === "通过宿主 Tool 执行") return "ready";
-    return "off";
-  }
   if (state.key === "prepared") return "ready";
   if (state.key === "preparing") return "working";
+  if (["partial", "pending", "attention"].includes(state.key)) return state.key;
   if (["credentials", "connection", "environment"].includes(state.key)) return "attention";
   return "off";
 }
@@ -252,7 +245,7 @@ function starterPromptCard(skill) {
 function catalogItem(item, state, scope, renderBody) {
   const key = entryKey(item, scope), selected = selectedEntry === key;
   const account = accountState(item, snapshot.services ?? []);
-  const tone = toneFor(item, state, scope);
+  const tone = toneFor(item, state);
   const row = button("", () => {
     if (busy) return;
     selectedEntry = key; showDetail = true; render();
@@ -265,7 +258,7 @@ function catalogItem(item, state, scope, renderBody) {
   const dot = element("span", undefined, "catalog-dot");
   dot.dataset.tone = tone;
   dot.setAttribute("aria-hidden", "true");
-  top.append(element("strong", item.title ?? item.id, "catalog-title"), dot);
+  top.append(element("strong", item.title ?? item.id, "catalog-title"), dot, element("span", state.label, "oq-visually-hidden"));
   const chips = element("div", undefined, "catalog-chips");
   const accountClass = `catalog-account${["missing", "unavailable"].includes(account.key) ? " attention" : account.key === "configured" ? " ready" : ""}`;
   const permLabel = item.supported === false ? "当前不支持" : item.enabled === false ? "已关闭" : "允许使用";
@@ -401,17 +394,17 @@ function skillSetup(skill) {
   if (relations.providerIds.length || tools.length) details.append(controls);
   return details;
 }
-function renderSkills(container) {
-  categoryGroups(container, skillEntries(), skill => catalogItem(skill, {
-    key: skill.enabled === false ? "disabled" : "allowed",
-    label: skill.supported === false ? "当前插件不支持" : skillPreparation(skill, snapshot),
-  }, "skill", body => {
+function skillCard(skill) {
+  return catalogItem(skill, skillPreparationState(skill, snapshot), "skill", body => {
     if (skill.supported !== false) body.append(skillSetup(skill));
     else body.append(element("p", skill.availabilityNote, "hint"));
     const info = disclosure(`skill-info:${skill.id}`, "方法与适用范围", "technical-details");
     info.append(element("code", skill.id), element("p", skill.description, "hint"));
     body.append(info);
-  }));
+  });
+}
+function renderSkills(container) {
+  categoryGroups(container, skillEntries(), skillCard);
   if (unlinkedServices().some(matches)) {
     container.append(element("h2", "内置 Tools", "section-title"));
     categoryGroups(container, unlinkedServices(), serviceCard);
@@ -700,8 +693,12 @@ function serviceCard(server) {
     body.append(info);
   });
 }
-function renderMcp(container) {
+function renderMcp(container, accountSkills) {
   categoryGroups(container, mcpEntries(), serviceCard);
+  if (accountSkills.some(matches)) {
+    container.append(element("h2", "通过 Skill 配置的账户", "section-title"));
+    categoryGroups(container, accountSkills, skillCard);
+  }
   if (desktop) return;
   for (const [key, draft] of connectionDrafts) {
     if (!key.startsWith("edit:") || snapshot.connections.some(item => key === `edit:${item.id}:${item.instance}`)) continue;
@@ -788,7 +785,6 @@ function render() {
   filterToolbar.hidden = tab === "runtime";
   $("#search").placeholder = "搜索名称、领域或用途";
   $("#search").setAttribute("aria-label", tab === "mcp" ? "搜索 MCP" : "搜索 Skills");
-  const items = tab === "skills" ? skillEntries() : tab === "runtime" ? [] : [...(desktop ? [] : snapshot.connections), ...mcpEntries()];
   const extraTools = tab === "skills" ? unlinkedServices() : [];
   const states = [["all", "全部"], ["enabled", "允许使用"], ["disabled", "已关闭"], ["unsupported", "当前插件不支持"]];
   if (tab === "skills") states.push(["recent", "最近选择"], ["attention", "需要处理"]);
@@ -798,6 +794,9 @@ function render() {
   defaultState = null;
   $("#state").replaceChildren(...states.map(([value, label]) => { const option = element("option", label); option.value = value; return option; }));
   $("#state").value = states.some(([value]) => value === selectedState) ? selectedState : "all";
+  const accountSkills = tab === "mcp" && ["accounts", "configured"].includes($("#state").value)
+    ? skillOnlyAccountOwners(credentialEntries(snapshot.services ?? []), mcpEntries(), skillEntries()) : [];
+  const items = tab === "skills" ? skillEntries() : tab === "runtime" ? [] : [...mcpEntries(), ...accountSkills, ...(desktop ? [] : snapshot.connections)];
   renderQuickChips($("#state").value);
   const selected = $("#category").value || "all";
   const all = element("option", "全部用途"); all.value = "all";
@@ -818,8 +817,12 @@ function render() {
     // Match the exact visual display order of renderSkills / renderMcp so the first visible entry is selected by default.
     const entries = tab === "skills"
       ? [...orderedByCategory(skillEntries().filter(matches)), ...orderedByCategory(unlinkedServices().filter(matches))]
-      : [...orderedByCategory(mcpEntries().filter(matches)), ...orderedByCategory((desktop ? [] : snapshot.connections).filter(matches))];
-    const scopeFor = item => snapshot.connections.includes(item) ? "connection" : tab === "skills" && !item.id.startsWith("native:") ? "skill" : "provider";
+      : [...orderedByCategory(mcpEntries().filter(matches)), ...orderedByCategory(accountSkills.filter(matches)), ...orderedByCategory((desktop ? [] : snapshot.connections).filter(matches))];
+    const scopeFor = item => {
+      if (snapshot.connections.includes(item)) return "connection";
+      if (accountSkills.includes(item) || (tab === "skills" && !item.id.startsWith("native:"))) return "skill";
+      return "provider";
+    };
     if (selectedEntry !== "connection:new" && !entries.some(item => entryKey(item, scopeFor(item)) === selectedEntry)) {
       selectedEntry = entries.length ? entryKey(entries[0], scopeFor(entries[0])) : undefined;
       showDetail = false;
@@ -836,7 +839,7 @@ function render() {
     detailPane = element("section", undefined, "detail-pane"); detailPane.id = "catalog-detail";
     detailPane.dataset.entryKey = selectedEntry ?? ""; detailPane.setAttribute("aria-label", "配置详情"); detailPane.tabIndex = 0;
     layout.append(pane, detailPane); content.append(layout);
-    if (tab === "skills") renderSkills(list); else renderMcp(list);
+    if (tab === "skills") renderSkills(list); else renderMcp(list, accountSkills);
     if (selectedEntry === "connection:new") {
       const back = button("← 返回列表", () => { selectedEntry = undefined; showDetail = false; render(); }, "back-to-list quiet");
       const heading = element("h2", "添加 MCP 连接"); heading.id = "detail-title"; heading.tabIndex = -1;

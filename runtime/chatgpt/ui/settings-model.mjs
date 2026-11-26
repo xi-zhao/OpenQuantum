@@ -114,26 +114,37 @@ export function skillIssue(skill, snapshot) {
   }
   return null;
 }
-export function skillPreparation(skill, snapshot) {
-  if (skill.supported === false) return "当前插件不支持";
+export function skillPreparationState(skill, snapshot) {
+  if (skill.supported === false) return { key: "unsupported", label: "当前插件不支持" };
+  if (skill.enabled === false) return { key: "disabled", label: "Skill 已关闭" };
   const issue = skillIssue(skill, snapshot);
-  if (issue) return issue;
+  if (issue) return { key: "attention", label: issue };
   const relations = skill.relations ?? { toolIds: [], environmentIds: [] };
-  const tools = relations.toolIds.map(id => snapshot.tools.find(tool => tool.id === id)).filter(Boolean);
-  if (tools.length) {
-    const prepared = tools.filter(tool => toolState(tool, snapshot).key === "prepared").length;
-    return prepared === tools.length ? "关联 Tool 已准备" : prepared ? `${prepared} / ${tools.length} 个 Tool 已准备` : "关联 Tool 待准备";
+  const environments = relations.environmentIds.map(id => skillEnvironment(skill, snapshot, id));
+  const active = environments.find(env => ["preparing", "cancelling"].includes(env?.state));
+  const total = relations.toolIds.length;
+  if (total) {
+    const ready = snapshot.tools.filter(tool => relations.toolIds.includes(tool.id) && toolState(tool, snapshot).key === "prepared").length;
+    if (ready === total) return { key: "prepared", label: "关联 Tool 已准备" };
+    if (ready) return { key: "partial", label: `${ready} / ${total} 个 Tool 已准备` };
+    if (!active) return { key: "pending", label: "关联 Tool 待准备" };
   }
-  if (relations.environmentIds.length > 1) return "按任务选择运行环境";
-  if (relations.environmentIds.length) {
-    const state = environmentState(skillEnvironment(skill, snapshot, relations.environmentIds[0]));
+  if (active) return environmentState(active);
+  if (environments.length > 1) return { key: "pending", label: "按任务选择运行环境" };
+  if (environments.length) {
+    const state = environmentState(environments[0]);
     const services = (snapshot.services ?? []).filter(service => relations.credentialServiceIds?.includes(service.id));
     if (state.key === "prepared" && services.length) {
-      if (services.some(service => service.configuration === "unavailable")) return "本地已准备 · 云端凭据未读取";
-      if (services.some(service => service.configuration === "unsupported")) return "本地已准备 · 云端凭据需单独配置";
-      return services.every(service => service.configuration === "configured") ? "本地已准备 · 云端凭据已保存" : "本地已准备 · 云端待配置凭据";
+      let cloud = "云端待配置凭据";
+      if (services.some(service => service.configuration === "unavailable")) cloud = "云端凭据未读取";
+      else if (services.some(service => service.configuration === "unsupported")) cloud = "云端凭据需单独配置";
+      else if (services.every(service => service.configuration === "configured")) cloud = "云端凭据已保存";
+      return { key: "prepared", label: `本地已准备 · ${cloud}` };
     }
-    return state.key === "prepared" ? state.label : `运行环境 · ${state.label}`;
+    return state.key === "prepared" ? state : { key: "pending", label: `运行环境 · ${state.label}` };
   }
-  return relations.usesHostTools ? "通过宿主 Tool 执行" : "无需安装";
+  return { key: "prepared", label: relations.usesHostTools ? "通过宿主 Tool 执行" : "无需安装" };
+}
+export function skillPreparation(skill, snapshot) {
+  return skillPreparationState(skill, snapshot).label;
 }

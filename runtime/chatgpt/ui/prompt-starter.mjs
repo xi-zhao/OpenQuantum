@@ -8,7 +8,7 @@ function specificPromptFor(skill, desktop) {
     case "quantum-circuit-verification":
       return "请用 MQT QCEC 检查以下两份无测量的 2 量子位 OpenQASM 2 电路是否等价（区分严格等价、全局相位等价与不等价）：\n电路 A：OPENQASM 2.0; include \"qelib1.inc\"; qreg q[2]; h q[0]; cx q[0],q[1];\n电路 B：OPENQASM 2.0; include \"qelib1.inc\"; qreg q[2]; u2(0,pi) q[0]; cx q[0],q[1];";
     case "qec-memory-experiment":
-      return "请用 Stim 和 PyMatching 运行码距 d=3、3 轮、shots=1000、seed=1234 的 rotated surface code Z-memory 实验，报告逻辑错误率与 95% Wilson 置信区间（不从单点推导阈值）。";
+      return "请用 Stim 和 PyMatching 运行码距 d=3、3 轮、物理错误率 p=0（physicalErrorRate）、shots=1000、seed=1234 的 rotated surface code Z-memory 实验，报告逻辑错误率与 95% Wilson 置信区间（不从单点推导阈值）。";
     case "emlint-dem-audit":
       return "请用 emlint 静态审计我提供的 Stim detector error model（DEM），检查是否存在无 syndrome 的逻辑翻转、重复机制或连接结构异常，并说明静态检查不证明码距或解码正确性。";
     case "tropidist-distance":
@@ -46,7 +46,7 @@ function specificPromptFor(skill, desktop) {
     case "slowquant-response":
       return "请用 SlowQuant 计算小分子在最小基组下的酉波函数线性响应激发能，并说明活性空间与响应近似的边界。";
     case "fieldqkit-hardware":
-      return "请仅在只读模式下用 fieldqkit 检查当前已配置的量子云平台与满足量子位条件的后端，说明缺失凭据项（不要提交真实硬件任务）。";
+      return "请用 inspect_fieldqkit_setup 只读检查 FieldQKit 的本地配置，列出各云平台的凭据是否已配置，以及缺失项应在哪里填写。";
     case "qdmi-device":
       return "请通过已配置的固定 QDMI 驱动只读查询设备元数据、原生门集与耦合图，并区分示例驱动与真实硬件。";
     case "metriq-data":

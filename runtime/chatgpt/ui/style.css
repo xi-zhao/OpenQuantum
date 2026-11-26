@@ -593,7 +593,7 @@ input::placeholder, textarea::placeholder { color: var(--subtle); opacity: 1; }
   background: var(--success-bg);
   border-color: color-mix(in srgb, var(--success) 28%, transparent);
 }
-.status-pill[data-tone=attention] {
+.status-pill[data-tone=attention], .status-pill[data-tone=partial] {
   color: var(--warning);
   background: var(--warning-bg);
   border-color: color-mix(in srgb, var(--warning) 30%, transparent);
@@ -886,7 +886,7 @@ footer .quiet { min-height: 32px; padding-block: 4px; font-size: 12px; }
   background: var(--control-line);
 }
 .catalog-dot[data-tone=ready] { background: var(--success); }
-.catalog-dot[data-tone=attention] { background: var(--warning); }
+.catalog-dot[data-tone=attention], .catalog-dot[data-tone=partial] { background: var(--warning); }
 .catalog-dot[data-tone=working] { background: var(--accent); animation: working 1.4s ease-in-out infinite; }
 .catalog-summary {
   font-size: 12px;
