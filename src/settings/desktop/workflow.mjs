@@ -32,6 +32,13 @@ export function withDesktopWorkflow(backend, { credentials, environments, settin
       try { result = await pending; } finally { calls.delete(pending); }
       return { isError: result.exitCode !== 0, content: [{ type: "text", text: result.stdout || result.stderr }] };
     },
-    async close() { lifetime.abort(); await backend.close(); await Promise.allSettled([...calls]); },
+    async close() {
+      lifetime.abort();
+      try {
+        await backend.close();
+      } finally {
+        await Promise.allSettled([...calls]);
+      }
+    },
   };
 }
