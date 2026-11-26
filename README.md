@@ -30,8 +30,8 @@
 <h2 align="center">量子智能体</h2>
 
 <p align="center">
-  将全球量子开源软件栈、前沿论文方法与独立科学验证汇聚为统一智能体基础设施。<br />
-  让 AI 不仅能写代码，更能真正完成计算、突破底层性能瓶颈，并交付经得起核对的科研成果。
+  <strong>研究从此不必从零开始，每一次突破都沉淀为下一次计算的起点。</strong><br />
+  将全球分散的量子软件栈、前沿论文方法与独立科学验证收敛为统一的智能体工作层——开箱即算、逐项可核验，并持续进化。
 </p>
 
 <h3 align="center">
@@ -49,35 +49,31 @@
   </a>
 </p>
 
-<p align="center">
-  <strong>194</strong> 个内置 Skill　·　<strong>91</strong> 个 MCP 服务连接　·　<strong>122</strong> 个锁定科学环境　·　<strong>11 项</strong>可回放科学验收
-</p>
-
 <br />
 
 ## 为什么是 OpenQuantum
 
-通用大模型进入硬核科研的瓶颈从来不是“会不会写几行代码”，而是**工具链高度碎片化、底层计算低效、以及缺乏独立验证机制**。OpenQuantum 正在构建面向 AI for Quantum Science 的底层操作系统级能力：
+量子科研横跨上百套多语言工具与论文实现，大量研究时间仍消耗在重装环境、核对物理约定与编写一次性验证脚本上。OpenQuantum 将这层工作一次做成可复用、可核验的公共工作层：
 
 <table>
   <tr>
     <td width="50%" valign="top">
-      <strong>全栈量子软件底座</strong><br />
-      一次性打通 Python、Julia、Rust 与 Lean 4 共 <strong>122 个锁定版本科学环境</strong>与 <strong>49 项可执行算法</strong>，覆盖从电路编译、化学多体、量子纠错、开放系统到国内外量子云发现的完整科研栈。
+      <strong>统一的跨语言量子软件层</strong><br />
+      覆盖 Python、Julia、Rust 与 Lean 4 共 <strong>122 个锁定环境</strong>、<strong>194 个内置 Skill</strong>、<strong>91 个 MCP 服务连接</strong>与 <strong>49 项可执行算法</strong>，打通电路编译、化学多体、纠错解码、开放系统与量子云发现；按需准备，消除跨栈迁移成本。
     </td>
     <td width="50%" valign="top">
-      <strong>AI 反向加速科学计算</strong><br />
-      不止于封装调用——面向高频科研算子进行端到端重构，在固定基准上实测 <strong>QuTiP 5.69×</strong> 与 <strong>PennyLane 5.09×</strong> 完整调用提速，逐点精度误差低至 <code>10⁻¹⁴–10⁻¹⁶</code> 量级。
+      <strong>独立于模型的科学验证</strong><br />
+      将“程序跑通”与“科学成立”彻底分离。内置独立数值对照、电路等价检查（MQT QCEC）、DEM 静态审计（emlint）、桌面 / Web 宿主 <strong>11 项可回放科学验收</strong>，以及 <strong>Lean 4 / mathlib / physlib</strong> 形式化路径。
     </td>
   </tr>
   <tr>
     <td width="50%" valign="top">
-      <strong>架构级可验证科学</strong><br />
-      将“模型回答 / 工具执行”与“科学验收”彻底解耦。支持独立数值参照、沙箱化复核、桌面 / Web 宿主 <strong>11 项可回放科学验收</strong>，以及 <strong>Lean 4 / mathlib / physlib</strong> 机器定理证明。
+      <strong>可沉淀的底层计算加速</strong><br />
+      不止于调用既有软件。高频核心算子经重构与独立核验后直接沉淀进共享核心：固定基准下 <strong>QuTiP Wigner 提速 5.69×</strong>、<strong>PennyLane Pauli 对易子提速 5.09×</strong>，逐点误差低至 <code>10⁻¹⁴–10⁻¹⁶</code>。
     </td>
     <td width="50%" valign="top">
-      <strong>跨宿主分发与复利平台</strong><br />
-      一份共享科研核心同时驱动 <strong>Codex 插件</strong> 与 <strong>OpenQuantum Desktop</strong>，兼容任意支持 Tool Calling 的模型服务；本地优先、按需准备，MIT 开源，天然承接全球研究者、高校教学与产业研发。
+      <strong>一份核心，跨宿主原生交付</strong><br />
+      同一套量子科研核心原生运行于 <strong>Codex 插件</strong> 与 <strong>OpenQuantum Desktop</strong>，模型无关、本地优先，兼容任意支持 Tool Calling 的模型服务，随基础模型演进而持续放大能力边界。
     </td>
   </tr>
 </table>
@@ -90,9 +86,9 @@
 <a id="qutip-rust-case"></a>
 <a id="pennylane-rust-case"></a>
 
-## 实测突破：更快，也经得起核对
+## 实测突破：从调用软件，到进化软件
 
-每一项加速均基于**完整端到端调用计时**（包含输入/输出对象转换，单线程 9 轮热运行中位数），并公开全部原始计时、独立精度核对与一键复跑脚本。
+每一项加速均基于**完整端到端调用计时**（包含输入/输出对象转换，单线程 9 轮热运行中位数），公开全部原始计时、独立精度核对与一键复跑脚本。
 
 <p align="center">
   <a href="experiments/qutip-rust-wigner/README.md">
@@ -123,7 +119,7 @@
 <a id="openquantum-的核心能力"></a>
 <a id="能力接口目录"></a>
 
-## 产品形态与全景生态
+## 产品形态与全球生态
 
 <table>
 <tr>
@@ -131,11 +127,11 @@
 
 ### 一份核心，双端交付
 
-一套共享科研核心，原生嵌入不同宿主，不绑定单一框架或模型：
+一套共享量子科研核心，原生嵌入不同宿主，不绑定单一框架或模型：
 
 - **Codex 插件**：在 Codex 原生对话中无缝调用全部量子科研能力。
 - **Desktop 独立工作台**：开箱即用的个人量子科研桌面，集成工作区、文件、执行记录与[量子学习通](docs/integrations/OPENMAIC.md)。
-- **开放边界**：遵循「发现 → 准备 → 执行」，本地数值计算无需量子云凭据，真机任务按需显式开启。
+- **清晰边界**：遵循「发现 → 准备 → 执行」，本地数值计算无需量子云凭据，真机任务按需显式开启。
 
 [系统架构](docs/README.md) · [科学证据流](docs/images/openquantum-evidence-flow.png) · [分类设置界面](docs/images/openquantum-settings-categories-20261013.jpg)
 
@@ -206,7 +202,7 @@ https://github.com/user-attachments/assets/5c00a30d-eef0-493a-975f-3faeb200cc9e
 <a id="开始使用"></a>
 <a id="快速开始"></a>
 
-## 30 秒体验与安装
+## 快速开始
 
 <a id="codex-plugin"></a>
 
@@ -260,11 +256,11 @@ npm run dev                         # 启动本地 Web 工作台
 
 ## 演进路线与开放共建
 
-OpenQuantum 的长期目标是让每一次研究不仅产出可验证的答案，也沉淀出让下一次研究更强的工具与方法：
+**今天，让全球量子科研基础设施开箱即用；明天，让每一次经验证的研究产出，反哺下一次研究本身。**
 
-- **Phase 1 · 统一量子科研底座（已交付）**：194 Skill · 91 MCP · 122 锁定环境 · Desktop & Codex `v0.8.11` 同步发行 · 11 项可回放科学验收与完整沙箱隔离。
-- **Phase 2 · 量子-经典协同与产业工作流（持续推进）**：面向 CPU / GPU / HPC / QPU 的协同调度、实验室仪器标准接口探索，以及体系化的[量子学习通](docs/integrations/OPENMAIC.md)教学与科研应用。
-- **Phase 3 · 经验证的科研自进化（长期愿景）**：探索“真实任务 → 候选改进 → 独立评估与新任务对照 → 授权升级”的科研复利闭环（RSI）；**完整 RSI 闭环尚未实现**，评估门槛与安全边界见[长期发展规划](docs/roadmap/VISION.md)。
+- **Phase 1 · 统一量子科研层（已交付）**：194 Skill · 91 MCP · 122 锁定环境 · Desktop & Codex `v0.8.11` 同步发行 · 11 项可回放科学验收与完整沙箱隔离。
+- **Phase 2 · 量子—经典协同与实验接口（持续推进）**：面向 CPU / GPU / HPC / QPU 的协同调度、实验仪器标准接口探索，以及体系化的[量子学习通](docs/integrations/OPENMAIC.md)教学与科研应用。
+- **Phase 3 · 经验证的科研自我进化（长期愿景）**：探索“真实任务 → 候选改进 → 独立评估与新任务对照 → 授权升级”的科研闭环（RSI）；**完整 RSI 闭环尚未实现**，评估门槛与安全边界见[长期发展规划](docs/roadmap/VISION.md)。
 
 欢迎科研团队、量子软件维护者与生态伙伴交流与共建：[参与贡献](CONTRIBUTING.md) · [提出需求与合作交流](https://github.com/xi-zhao/OpenQuantum/issues) · [文档与架构总入口](docs/README.md) · [任务示例](docs/EXAMPLES.md) · [更新日志](CHANGELOG.md) · 本地全仓校验 `npm run check`。
 
