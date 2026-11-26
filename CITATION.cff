@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+title: "OpenQuantum: Building Trustworthy AI for Quantum Research"
+message: "If you use OpenQuantum in your research, software, or teaching, please cite it using the metadata below."
+type: software
+authors:
+  - family-names: Zhao
+    given-names: Xi
+  - name: "OpenQuantum contributors"
+version: "0.8.11"
+license: MIT
+repository-code: "https://github.com/xi-zhao/OpenQuantum"
+url: "https://xi-zhao.github.io/OpenQuantum/"
+keywords:
+  - quantum-computing
+  - scientific-agent
+  - model-context-protocol
+  - quantum-error-correction
+  - quantum-chemistry
+  - verifiable-science

@@ -6,6 +6,7 @@
 | --- | --- |
 | [动态横幅](readme/banner-motion.webp) | 12 秒无缝循环的 animated WebP（1200 × 600，15 fps，约 3 MB），由 `docs/communications/video/render.py hero` 从 `stage.html` 逐帧渲染。粒子、干涉条纹是程序生成的示意画面；文字中的两项提速与误差取自首页实测案例。 |
 | [静态横幅](readme/banner.webp) | 同一画面在 1.5 s 处的静帧，README 通过 `<picture>` 在系统开启「减少动态效果」时显示它。 |
+| [英文矢量横幅](readme/banner-en.svg) | 1200 × 600 矢量 SVG，沿用主横幅夜空量子波场配色与圆角规格，用于英文与国际语言 README；波纹与节点为示意画面，文字中的两项提速与 L3 验收数量与当前源码主线和实测报告一致。 |
 | [QuTiP 实测卡片](readme/case-qutip.webp) | 首页 QuTiP Wigner 案例面板，去掉可展开条件和链接（README 以文字给出）。数值与 Wigner 对照图来自首页，`tests/homepage.test.mjs` 核对其与固定实验数据一致。由 `scripts/render-readme-images.py` 渲染。 |
 | [PennyLane 实测卡片](readme/case-pennylane.webp) | 首页 PennyLane Pauli 对易子案例面板，处理方式同上。 |
 
