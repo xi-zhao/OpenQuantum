@@ -19,9 +19,6 @@ import os
 import tempfile
 from pathlib import Path
 
-from PIL import Image
-from playwright.async_api import async_playwright
-
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "docs" / "images" / "readme"
 FONTS = ROOT / "public" / "openquantum" / "fonts"
@@ -734,10 +731,9 @@ def benchmarks_plate(dark: bool, d: dict, lang: str = "zh") -> str:
     return wrap_doc(body, css, "en" if en else "zh-CN")
 
 
-async def main() -> None:
+def keynote_plates() -> dict[str, str]:
     d = load_data()
-    OUT.mkdir(parents=True, exist_ok=True)
-    plates = {
+    return {
         "hero-zh-light": hero_plate(False, "zh"),
         "hero-zh-dark": hero_plate(True, "zh"),
         "launch-card-light": launch_card_plate(False, "zh"),
@@ -755,6 +751,13 @@ async def main() -> None:
         "benchmarks-en-light": benchmarks_plate(False, d, "en"),
         "benchmarks-en-dark": benchmarks_plate(True, d, "en"),
     }
+
+
+async def render_plates(plates: dict[str, str], output: Path) -> None:
+    from PIL import Image
+    from playwright.async_api import async_playwright
+
+    output.mkdir(parents=True, exist_ok=True)
     chrome = os.environ.get("CHROME") or "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
     with tempfile.TemporaryDirectory() as tmp:
         workdir = Path(tmp)
@@ -779,11 +782,11 @@ async def main() -> None:
                 await (await tab.query_selector("#shot")).screenshot(path=str(shot_png), omit_background=True)
                 await tab.close()
                 im = Image.open(shot_png)
-                target = OUT / f"{name}.webp"
+                target = output / f"{name}.webp"
                 im.save(target, "WEBP", quality=92, method=6)
-                print(f"{target.relative_to(ROOT)}  {im.width}×{im.height}  {target.stat().st_size // 1024} KB")
+                print(f"{target.name}  {im.width}×{im.height}  {target.stat().st_size // 1024} KB")
             await browser.close()
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    asyncio.run(render_plates(keynote_plates(), OUT))
