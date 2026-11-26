@@ -1,0 +1,107 @@
+schemaVersion: "1.1"
+id: ldpc-decoding
+version: 1.1.0
+displayName: ldpc-decoding independent observations
+description: Independent observations with persisted evidence and replayable central Acceptance.
+maturity:
+  status: draft
+  evidence:
+    - id: independent-observations-2026-11-25
+      kind: eval-report
+      path: evals/evidence-2026-11-25.json
+      sha256: 6440dd4a4101ead9a98395bf0004288c73a1473ce46a42ccf71c3bf51d3e6e22
+skill:
+  name: ldpc-decoding
+  entrypoint: SKILL.md
+scope:
+  supportedClaims:
+    - Independently check binary dimensions, GF(2) residuals, Hamming weights,
+      convergence consistency and per-sample aggregates.
+    - Replay pinned serial BP+LSD in a separate request-only Python process;
+      logical flips only against supplied true errors and parity vectors.
+  outOfScope:
+    - Code thresholds, hardware performance and proof of logical-operator
+      correctness.
+    - Logical success without supplied errors and parity vectors.
+  examples:
+    - title: Fixed independent check
+      prompt: Run the local fixed case and report independent observations.
+input:
+  id: experiment-request
+  schema: inputs/request.schema.json
+  maxBytes: 65536
+  mediaTypes:
+    - application/json
+artifacts:
+  - id: ldpc-result
+    schema: artifacts/ldpc-result.schema.json
+    required: true
+    mediaType: application/json
+validators:
+  - id: ldpc-decoding-observations
+    version: 1.0.0
+    command:
+      executable: node
+      script: validators/validate-result.mjs
+      args: []
+      shell: false
+acceptanceProfiles:
+  - id: ldpc-syndrome-replay-audit
+    version: 1.0.0
+    validator: ldpc-decoding-observations
+    definition:
+      path: acceptance-profiles/ldpc-syndrome-replay-audit-v1.json
+      sha256: ee9e10fdb33db208c4abcceb503b242322bf078e0ca20c58c9d750c7346ec5b6
+reproductionProfiles: []
+modelRequirements:
+  textGeneration: false
+  toolCalling: false
+  structuredOutput: false
+permissions:
+  network:
+    mode: none
+    destinations: []
+  filesystem:
+    read:
+      - prepared-runtime
+      - structured-result
+    write:
+      - temporary-compute-cache
+      - workspace/results
+  subprocess:
+    allowed: true
+    commands:
+      - python
+  cloudCompute:
+    allowed: false
+    providers: []
+  limits:
+    wallTimeSeconds: null
+    memoryMiB: null
+    maxArtifacts: 1
+    maxCostUsd: 0
+  data:
+    classification: public
+    retentionDays: 0
+    externalTransfer: forbidden
+    licenses:
+      - MIT
+evals:
+  runner:
+    executable: node
+    script: evals/run-evals.mjs
+    args: []
+    shell: false
+  suite:
+    id: ldpc-decoding-observations-eval
+    version: 1.0.0
+    path: evals/suite.json
+    sha256: 96eac7a2ba029c07792a14d6290ecdc2baba3e0c46a4b77aafa4c55f2fb65a34
+compatibility:
+  contract: "1.1"
+  harness: 0.1.0-rc.6
+dependencies:
+  - id: ldpc
+    kind: scientific-backend
+    version: 2.4.1
+    digest: 828976c42ecf21fe0473c9bb19fb98fcfc329bd37b1c0b918074e9f92b0e0162

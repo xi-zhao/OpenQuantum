@@ -147,13 +147,13 @@
       }
     },
     "acceptanceProfiles": {
+      "description": "An empty list declares observations only; no Acceptance can be built.",
       "type": "array",
-      "minItems": 1,
       "items": { "$ref": "#/$defs/profileRef" }
     },
     "reproductionProfiles": {
+      "description": "Empty when no reproduction contract is declared.",
       "type": "array",
-      "minItems": 1,
       "items": { "$ref": "#/$defs/profileRef" }
     },
     "modelRequirements": {

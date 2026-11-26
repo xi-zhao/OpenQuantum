@@ -241,7 +241,10 @@ test("release publication reuses all CI gates and only uploads a matching stable
   assert.match(workflow.jobs.verify.if, /!github.event.release.prerelease/);
   assert.equal(workflow.jobs.verify.uses, "./.github/workflows/ci.yml");
   assert.ok(Object.hasOwn(ci.on, "workflow_call"));
-  assert.equal(workflow.jobs.publish.needs, "verify");
+  assert.equal(workflow.jobs["verify-sdk"].if, workflow.jobs.verify.if);
+  assert.equal(workflow.jobs["verify-sdk"].uses, "./.github/workflows/sdk-checks.yml");
+  assert.equal(workflow.jobs["verify-sdk"].with.targets, "tropidist,stgrape,braket");
+  assert.deepEqual(workflow.jobs.publish.needs, ["verify", "verify-sdk"]);
   assert.deepEqual(Object.keys(ci.jobs), ["quality", "desktop-source-install", "container-smoke"]);
   assert.equal(workflow.permissions.contents, "read");
   assert.equal(workflow.jobs.publish.permissions.contents, "write");

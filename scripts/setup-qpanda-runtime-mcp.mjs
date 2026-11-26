@@ -1,7 +1,7 @@
 #!/usr/bin/env node
+import { isMainModule } from "../src/lib/cli-entrypoint.mjs";
 
-import path from "node:path";
-import { fileURLToPath, pathToFileURL } from "node:url";
+import { fileURLToPath } from "node:url";
 
 import { qpandaRuntimeMcpIntegration } from "../src/settings/server/qpanda-runtime-mcp.mjs";
 import { installPinnedSource, inspectPinnedSource } from "./lib/install-pinned-source.mjs";
@@ -29,8 +29,7 @@ async function main() {
   );
 }
 
-const invokedPath = process.argv[1] ? pathToFileURL(path.resolve(process.argv[1])).href : null;
-if (invokedPath === import.meta.url) {
+if (isMainModule(import.meta.url)) {
   main().catch((error) => {
     process.stderr.write(`${error instanceof Error ? error.stack : String(error)}\n`);
     process.exitCode = 1;

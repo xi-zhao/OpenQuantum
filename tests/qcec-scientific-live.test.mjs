@@ -5,6 +5,7 @@ import path from "node:path";
 import test from "node:test";
 import { Context } from "@deepseek-ai/cordis";
 import { LocalFileSystem } from "@deepseek-ai/dsh-fs-local";
+import LocalSandbox from "@deepseek-ai/dsh-sandbox-local";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 import { independentReference } from "../.agents/skills/quantum-circuit-verification/validators/independent-reference.mjs";
@@ -23,6 +24,9 @@ test("real pinned MQT classifications agree with independent Qiskit complete uni
   t.after(() => client.close());
   const workspace = fs.mkdtempSync(path.join(os.tmpdir(), "oq-qcec-science-live-"));
   t.after(() => fs.rmSync(workspace, { recursive: true, force: true }));
+  const sandboxContext = new Context();
+  const sandboxFiber = await sandboxContext.plugin(LocalSandbox, {});
+  t.after(() => sandboxFiber.dispose());
   const cases = [
     { id: "redundant-x", a: prefix(2) + "h q[0]; cx q[0],q[1]; x q[1]; x q[1];", b: prefix(2) + "h q[0]; cx q[0],q[1];", verdict: "equivalent", status: "passed" },
     { id: "deleted-cx", a: prefix(2) + "h q[0]; cx q[0],q[1];", b: prefix(2) + "h q[0];", verdict: "not_equivalent", status: "passed" },
@@ -43,6 +47,7 @@ test("real pinned MQT classifications agree with independent Qiskit complete uni
     const materialized = await scientificResultAdapter(QUANTUM_CIRCUIT_VERIFICATION_TOOL).materialize({
       fileSystem: new LocalFileSystem(new Context(), { cwd: workspace, diffBasisMaxBytes: 1048576 }),
       sandboxPolicy: { mode: "workspace-write", workspaceRoot: workspace },
+      processSandbox: sandboxContext.sandbox,
       workspaceRoot: workspace, sessionId: "local-live-qcec-validation", callId: example.id,
       eventRange: { from: i * 2 + 1, to: i * 2 + 2 }, arguments: request, canonicalValue, signal: new AbortController().signal,
     });

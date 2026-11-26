@@ -1,0 +1,173 @@
+{
+  "request": {
+    "parityCheck": [
+      [
+        1,
+        1,
+        0
+      ],
+      [
+        0,
+        1,
+        1
+      ]
+    ],
+    "syndromes": [
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        0
+      ]
+    ],
+    "errorRate": 0.05,
+    "bpIterations": 10,
+    "lsdOrder": 0
+  },
+  "result": {
+    "corrections": [
+      [
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        1,
+        0
+      ],
+      [
+        0,
+        0,
+        0
+      ]
+    ],
+    "residualSyndromes": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        0
+      ]
+    ],
+    "syndromeSatisfied": [
+      true,
+      true,
+      true
+    ],
+    "correctionWeights": [
+      1,
+      1,
+      0
+    ],
+    "implementation": "serial BP+LSD, lsd_cs",
+    "logicalSuccess": "not_evaluated",
+    "bpConverged": [
+      true,
+      true,
+      true
+    ],
+    "bpIterationsUsed": [
+      1,
+      2,
+      0
+    ],
+    "statistics": {
+      "shots": 3,
+      "syndromeMatchedCount": 3,
+      "syndromeMatchRate": 1,
+      "bpConvergedCount": 3,
+      "bpConvergenceRate": 1,
+      "logicalFlipCount": null,
+      "logicalFlipRate": null,
+      "exactErrorMatchCount": null,
+      "exactErrorMatchRate": null
+    },
+    "runtime": {
+      "ldpc": "2.4.1",
+      "numpy": "2.5.3",
+      "system": "Darwin",
+      "machine": "arm64"
+    }
+  },
+  "reference": {
+    "schemaVersion": "1.0",
+    "request": {
+      "errorRate": 0.05,
+      "bpIterations": 10,
+      "lsdOrder": 0,
+      "execution": {},
+      "parityCheck": [
+        [
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          1
+        ]
+      ],
+      "syndromes": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          0
+        ]
+      ]
+    },
+    "corrections": [
+      [
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        1,
+        0
+      ],
+      [
+        0,
+        0,
+        0
+      ]
+    ],
+    "bpConverged": [
+      true,
+      true,
+      true
+    ],
+    "bpIterationsUsed": [
+      1,
+      2,
+      0
+    ],
+    "runtime": {
+      "ldpc": "2.4.1",
+      "numpy": "2.5.3",
+      "system": "Darwin",
+      "machine": "arm64"
+    }
+  }
+}

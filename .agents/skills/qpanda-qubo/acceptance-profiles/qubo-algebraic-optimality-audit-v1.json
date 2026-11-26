@@ -1,0 +1,118 @@
+{
+  "schemaVersion": "1.0",
+  "id": "qubo-algebraic-optimality-audit",
+  "version": "1.0.0",
+  "scope": {
+    "supportedClaims": [
+      "Persisted bounded numerical evidence with independent observations and central Acceptance."
+    ],
+    "outOfScope": [
+      "Quantum advantage, hardware thresholds, code distance or optimality beyond the declared audit.",
+      "Independent proof of SDK implementation correctness; QAOA global optimality without exhaustive candidate evidence."
+    ]
+  },
+  "checks": [
+    {
+      "id": "request.scope",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Finite binary quadratic objective or original binary model and equality penalties; complete global audit requires n<=16 and referenceMode!=skip."
+    },
+    {
+      "id": "artifact.schema",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Persisted result satisfies the JSON Schema."
+    },
+    {
+      "id": "solver.shape",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Solver dimension and pinned SDK match."
+    },
+    {
+      "id": "solver.request-binding",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Traversal and QAOA layers and classical reference roles bind to the requested algorithm."
+    },
+    {
+      "id": "compilation.matrix",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Independent symmetric Q and constant reproduce the original objective plus squared equality penalties."
+    },
+    {
+      "id": "compilation.model",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Normalized model retains all original objective and constraint terms."
+    },
+    {
+      "id": "compilation.digest",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Compilation digest matches its actual fields."
+    },
+    {
+      "id": "quantum.distribution",
+      "category": "scientific",
+      "required": true,
+      "criterion": "When QAOA is requested, the probability distribution and maximum label are consistent; this does not certify QAOA optimality."
+    },
+    {
+      "id": "solutions.replayed",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Recompute every candidate objective, residual, feasibility, penalty and penalized energy."
+    },
+    {
+      "id": "solver.solution-energy",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Every claimed classical optimum has the independently computed energy."
+    },
+    {
+      "id": "solver.classical-reference",
+      "category": "scientific",
+      "required": false,
+      "criterion": "Complete minimizing set and global energy agree with all 2^n binary assignments."
+    },
+    {
+      "id": "compilation.exhaustive-replay",
+      "category": "scientific",
+      "required": false,
+      "criterion": "All 2^n compiled energies equal the signed original objective plus equality penalties."
+    },
+    {
+      "id": "constraints.feasible",
+      "category": "scientific",
+      "required": false,
+      "criterion": "At least one binary assignment satisfies every equality."
+    },
+    {
+      "id": "penalty.sufficient",
+      "category": "scientific",
+      "required": false,
+      "criterion": "Every penalized global minimizer is feasible."
+    },
+    {
+      "id": "reference.optimum",
+      "category": "scientific",
+      "required": false,
+      "criterion": "Reported feasible optima and complete minimizing sets agree with independent enumeration."
+    },
+    {
+      "id": "observations.integrity",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Every performed independent check is non-failing; missing optional evidence cannot hide a scientific contradiction."
+    },
+    {
+      "id": "provenance.complete",
+      "category": "reproducibility",
+      "required": true,
+      "criterion": "Actual re-read canonical input and artifact bytes match their digests and actual Harness event range."
+    }
+  ]
+}

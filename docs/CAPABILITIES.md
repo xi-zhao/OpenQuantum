@@ -214,12 +214,12 @@ OpenQuantum 为本地模拟、IBM Quantum、IonQ 和多家国内量子云保留�
 | [`qiskit-circuit-workbench`](../.agents/skills/qiskit-circuit-workbench/SKILL.md) | 量子电路分析、格式转换、转译比较与 Qiskit 文档查证 | `qiskit`、`qiskit_docs` |
 | [`flagquantum-workbench`](../.agents/skills/flagquantum-workbench/SKILL.md) | 第二家量子 MCP 电路工作台 | `flagquantum`；[使用说明](integrations/CANDIDATE_LIBRARIES.md) |
 | [`tyxonq-workbench`](../.agents/skills/tyxonq-workbench/SKILL.md) | 门电路仿真、态矢演化、量子噪声与采样分布分析 | `tyxonq_local` |
-| [`pyzx-optimization`](../.agents/skills/pyzx-optimization/SKILL.md) | ZX 重写、Clifford+T 优化与电路提取 | `pyzx_local` |
+| [`pyzx-optimization`](../.agents/skills/pyzx-optimization/SKILL.md) | ZX 重写、Clifford+T 优化与电路提取 | `pyzx_local`；DSH 支持 L3 物化科学验收 |
 | [`compact-optimization`](../.agents/skills/compact-optimization/SKILL.md) | 线路优化与独立等价对照 | `compact_local`；[使用说明](integrations/CANDIDATE_LIBRARIES.md) |
-| [`hamiltonian-simulation`](../.agents/skills/hamiltonian-simulation/SKILL.md) | Trotter/qDrift 演化电路、态矢量与独立误差对照 | `hamiltonian_local`；[使用说明](integrations/UNITARYLAB_OPEN_ADAPTATION.md) |
+| [`hamiltonian-simulation`](../.agents/skills/hamiltonian-simulation/SKILL.md) | Trotter/qDrift 演化电路、态矢量与独立误差对照 | `hamiltonian_local`；DSH 支持 L3 物化科学验收；[使用说明](integrations/UNITARYLAB_OPEN_ADAPTATION.md) |
 | [`qcut-knitting`](../.agents/skills/qcut-knitting/SKILL.md) | 门切割与期望值重建 | `qcut_local`；[使用说明](integrations/CANDIDATE_LIBRARIES.md) |
-| [`graphix-mbqc`](../.agents/skills/graphix-mbqc/SKILL.md) | 电路到 MBQC 模式、资源图、自适应测量和纠正输出 | `graphix_local` |
-| [`quantum-circuit-verification`](../.agents/skills/quantum-circuit-verification/SKILL.md) | 量子电路等价性验证、优化前后对照与全局相位差异判定 | `qcec_local` |
+| [`graphix-mbqc`](../.agents/skills/graphix-mbqc/SKILL.md) | 电路到 MBQC 模式、资源图、自适应测量和纠正输出 | `graphix_local`；DSH 支持 L3 物化科学验收 |
+| [`quantum-circuit-verification`](../.agents/skills/quantum-circuit-verification/SKILL.md) | 量子电路等价性验证、优化前后对照与全局相位差异判定 | `qcec_local`；DSH 支持 L3 物化科学验收 |
 | [`clifft-sampling`](../.agents/skills/clifft-sampling/SKILL.md) | Clifford+T 噪声采样、Stim 格式记录与 detector/observable 原始奇偶值 | `clifft_local` |
 | [`qbraid-conversion`](../.agents/skills/qbraid-conversion/SKILL.md) | Qiskit/Cirq 酉电路转换、OpenQASM 2 导出与位序等价对照 | `qbraid_local` |
 
@@ -240,18 +240,18 @@ OpenQuantum 为本地模拟、IBM Quantum、IonQ 和多家国内量子云保留�
 | [`flow-vqe`](../.agents/skills/flow-vqe/SKILL.md) | 流模型辅助的 VQE 参数学习、低能量态搜索与基线比较 | `flow_vqe_local` |
 | [`openqarp-excited-states`](../.agents/skills/openqarp-excited-states/SKILL.md) | VQD 激发态、残差与正交性 | `openqarp_local`；[使用说明](integrations/CANDIDATE_LIBRARIES.md) |
 | [`cqlib-kernel`](../.agents/skills/cqlib-kernel/SKILL.md) | 角度编码核与 QSVM | `cqlib_kernel_local`；[使用说明](integrations/CANDIDATE_LIBRARIES.md) |
-| [`symmer-tapering`](../.agents/skills/symmer-tapering/SKILL.md) | 指定 Pauli 对称性扇区的降比特与同扇区保谱检查 | `symmer_local` |
-| [`paulie-algebra`](../.agents/skills/paulie-algebra/SKILL.md) | Pauli 生成元的 Lie 代数分类、精确维数与可选闭包 | `paulie_local` |
-| [`qpanda-qubo`](../.agents/skills/qpanda-qubo/SKILL.md) | 组合优化问题的 QUBO 建模、约束转换、经典求解与本地 QAOA 对照 | `qpanda_qubo` |
+| [`symmer-tapering`](../.agents/skills/symmer-tapering/SKILL.md) | 指定 Pauli 对称性扇区的降比特与同扇区保谱检查 | `symmer_local`；DSH 支持 L3 物化科学验收 |
+| [`paulie-algebra`](../.agents/skills/paulie-algebra/SKILL.md) | Pauli 生成元的 Lie 代数分类、精确维数与可选闭包 | `paulie_local`；DSH 支持 L3 物化科学验收 |
+| [`qpanda-qubo`](../.agents/skills/qpanda-qubo/SKILL.md) | 组合优化问题的 QUBO 建模、约束转换、经典求解与本地 QAOA 对照 | `qpanda_qubo`；DSH 支持 L3 物化科学验收 |
 
 ### 误差缓解与量子纠错
 
 | Skill | 研究方法与用途 | 执行入口 |
 | --- | --- | --- |
 | [`mitiq-error-mitigation`](../.agents/skills/mitiq-error-mitigation/SKILL.md) | 量子误差缓解方法比较、采样预算规划与误差成本分析，涵盖 ZNE、REM、PEC、CDR | `mitiq_local`；[使用说明](integrations/MITIQ.md) |
-| [`qec-memory-experiment`](../.agents/skills/qec-memory-experiment/SKILL.md) | 表面码存储实验、噪声采样、MWPM 译码与逻辑错误率分析 | `qec_local` |
+| [`qec-memory-experiment`](../.agents/skills/qec-memory-experiment/SKILL.md) | 表面码存储实验、噪声采样、MWPM 译码与逻辑错误率分析 | `qec_local`；DSH 支持 L3 物化科学验收 |
 | [`deltakit-qec`](../.agents/skills/deltakit-qec/SKILL.md) | 表面码码片建模、噪声实验、采样与译码性能分析 | `deltakit_local` |
-| [`ldpc-decoding`](../.agents/skills/ldpc-decoding/SKILL.md) | 二元校验矩阵的 BP+LSD 解码与 syndrome 一致性检查 | `ldpc_local` |
+| [`ldpc-decoding`](../.agents/skills/ldpc-decoding/SKILL.md) | 二元校验矩阵的 BP+LSD 解码与 syndrome 一致性检查 | `ldpc_local`；DSH 支持 L3 物化科学验收 |
 
 ### 开放系统动力学
 
@@ -731,3 +731,17 @@ IBM Quantum、IonQ 和本源量子是可连接的云服务。任务提交分别�
 </details>
 
 组件许可与再分发约束以 [THIRD_PARTY_NOTICES.md](../THIRD_PARTY_NOTICES.md) 和各目录 LICENSE / NOTICE 为准。
+
+## 可回放科学验收纵切
+
+QGS、QI、QCEC、QEC memory、Hamiltonian evolution、QPanda QUBO 与 LDPC decoding 七条 L3 能力复用中央 Materializer、Validator 与
+Acceptance Builder。QEC 只验收固定参数的采样/解码、Wilson 区间、电路/DEM 和同机 seed 重放；
+Hamiltonian 验收有界厄米 Pauli 演化、态范数、谱分解参考、门资源、Trotter 误差界及 qDrift 重放。
+具体范围见 [QEC](../.agents/skills/qec-memory-experiment/SKILL.md) 和
+[Hamiltonian](../.agents/skills/hamiltonian-simulation/SKILL.md)。
+完整调用包含 `results/openquantum/` 下的证据与可读报告写入，因此均为 `workspace-write`；
+MCP 注解不得标记为只读。Tool 自身仅返回 observations，中央验收由物化后证据推导。
+
+QPanda QUBO 的 `qubo-algebraic-optimality-audit@1.0.0` 将独立代数重建与 n≤16 全量穷举连接到物化验收；跳过穷举或超出变量阈值保持 conditional。LDPC 的 `ldpc-syndrome-replay-audit@1.0.0` 核对有界 H、逐样本 syndrome、权重、统计和 full 沙箱内的独立 serial BP+LSD 重放；缺环境保持 conditional。二者执行期仍只给 observations，完整调用均为 workspace-write，不据此证明量子码距、硬件阈值或 QAOA 的普遍最优性。
+
+PyZX、Symmer、PauLie 与 Graphix 为 observations-only L2：独立核对酉矩阵、目标对称扇区完整能谱、Pauli DLA 闭包/中心与 MBQC 分支修正。每项包含 schema、独立 Validator 和固定正反例；空 Acceptance / Reproduction Profiles 保留其计算观察边界，不因 Tool 成功宣称最终科学验收。

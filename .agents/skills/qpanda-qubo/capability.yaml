@@ -1,0 +1,107 @@
+schemaVersion: "1.1"
+id: qpanda-qubo
+version: 1.1.0
+displayName: qpanda-qubo independent observations
+description: Independent observations with persisted evidence and replayable central Acceptance.
+maturity:
+  status: draft
+  evidence:
+    - id: independent-observations-2026-11-25
+      kind: eval-report
+      path: evals/evidence-2026-11-25.json
+      sha256: 219ee9e2561f77259cf801b55e0e1931dd026ae7a07c12a3124f0a1ca9a42ade
+skill:
+  name: qpanda-qubo
+  entrypoint: SKILL.md
+scope:
+  supportedClaims:
+    - Independently reconstruct binary objective and squared equality penalties,
+      including the constant offset.
+    - Independently evaluate returned assignments and exhaustively check global
+      penalized and feasible optima for n<=16.
+  outOfScope:
+    - Global optimum proof above 16 variables, automatic penalty choice,
+      inequalities or quantum advantage.
+    - QAOA global optimality without independent exhaustive evidence.
+  examples:
+    - title: Fixed independent check
+      prompt: Run the local fixed case and report independent observations.
+input:
+  id: experiment-request
+  schema: inputs/request.schema.json
+  maxBytes: 65536
+  mediaTypes:
+    - application/json
+artifacts:
+  - id: qubo-result
+    schema: artifacts/qubo-result.schema.json
+    required: true
+    mediaType: application/json
+validators:
+  - id: qpanda-qubo-observations
+    version: 1.0.0
+    command:
+      executable: node
+      script: validators/validate-result.mjs
+      args: []
+      shell: false
+acceptanceProfiles:
+  - id: qubo-algebraic-optimality-audit
+    version: 1.0.0
+    validator: qpanda-qubo-observations
+    definition:
+      path: acceptance-profiles/qubo-algebraic-optimality-audit-v1.json
+      sha256: fa900407ef0fe3a1828d9f7c0734a3df03ff35008674b078a790ece0aeb8bf18
+reproductionProfiles: []
+modelRequirements:
+  textGeneration: false
+  toolCalling: false
+  structuredOutput: false
+permissions:
+  network:
+    mode: none
+    destinations: []
+  filesystem:
+    read:
+      - prepared-runtime
+      - structured-result
+    write:
+      - temporary-compute-cache
+      - workspace/results
+  subprocess:
+    allowed: true
+    commands:
+      - python
+  cloudCompute:
+    allowed: false
+    providers: []
+  limits:
+    wallTimeSeconds: null
+    memoryMiB: null
+    maxArtifacts: 1
+    maxCostUsd: 0
+  data:
+    classification: public
+    retentionDays: 0
+    externalTransfer: forbidden
+    licenses:
+      - MIT
+evals:
+  runner:
+    executable: node
+    script: evals/run-evals.mjs
+    args: []
+    shell: false
+  suite:
+    id: qpanda-qubo-observations-eval
+    version: 1.0.0
+    path: evals/suite.json
+    sha256: 6802c394c258da16b2a0da16aee8575394fc65e3a9a57dbab823535949fd6454
+compatibility:
+  contract: "1.1"
+  harness: 0.1.0-rc.6
+dependencies:
+  - id: pyqpanda-alg
+    kind: scientific-backend
+    version: 2.0.0
+    digest: 180c8f8f4022619b23a69756c7b121dcfd0d7984cc626b5501c86b7b1a23df68

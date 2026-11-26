@@ -5,7 +5,7 @@ import os from "node:os";
 import path from "node:path";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { randomUUID } from "node:crypto";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
@@ -15,6 +15,7 @@ import { readCapabilities, providerGroups } from "../runtime/chatgpt/catalog.mjs
 import { Settings } from "../src/settings/codex/application.mjs";
 import { locateSdkRuntime } from "../runtime/chatgpt/sdk-access.mjs";
 import { installedMcpServer } from "../scripts/install-codex-plugin.mjs";
+import { localModuleFiles } from "./helpers/module-graph.mjs";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const run = promisify(execFile);
@@ -24,6 +25,9 @@ test("SDK access survives archive, split installation and cached Skill relocatio
   t.after(() => fs.rm(directory, { recursive: true, force: true }));
   const { pluginRoot } = await buildPlugin({ root, output: path.join(directory, "build") });
   const server = path.join(pluginRoot, "server");
+  for (const file of await localModuleFiles(root, ["src/lib/local-json-process.mjs"])) {
+    assert.deepEqual(await fs.readFile(path.join(server, file)), await fs.readFile(path.join(root, file)), `Missing or stale shared dependency: ${file}`);
+  }
   assert.equal(await locateSdkRuntime(pluginRoot), server);
   for (const entry of await readSdkLibraries(root)) {
     const project = entry.id === "quantum-algorithms" ? "examples/quantum-algorithms" : `.agents/skills/${entry.id}`;
@@ -39,7 +43,65 @@ test("SDK access survives archive, split installation and cached Skill relocatio
   await fs.cp(pluginRoot, cached, { recursive: true });
   assert.equal(await locateSdkRuntime(cached), runtime);
   const script = path.join(cached, "skills/tenpy-ground-state/scripts/sdk-access.mjs");
+  assert.deepEqual(await fs.readFile(path.join(path.dirname(script), "cli-entrypoint.mjs")),
+    await fs.readFile(path.join(root, "src/lib/cli-entrypoint.mjs")));
   const environment = { ...process.env, OPENQUANTUM_PLUGIN_SETTINGS_HOME: path.join(directory, "isolated settings") };
+  await t.test("relocated numerical MCP services and independent Validators retain their runtime schemas", async () => {
+    const cases = [
+      ["qec-memory-experiment", "noisy.json", "validateExperiment", ["run_qec_memory_experiment"]],
+      ["hamiltonian-simulation", "trotter-2.json", "validateSimulation", ["simulate_hamiltonian"]],
+      ["qpanda-qubo", "model.json", "validateQubo", ["solve_qpanda_qubo", "model_and_solve_qpanda_qubo"]],
+      ["ldpc-decoding", "parity.json", "validateDecoding", ["decode_ldpc_syndromes"]],
+      ["pyzx-optimization", "default.json", "validateResult", ["optimize_pyzx_circuit"]],
+      ["symmer-tapering", "default.json", "validateResult", ["taper_symmer_hamiltonian"]],
+      ["paulie-algebra", "default.json", "validateResult", ["analyze_paulie_algebra"]],
+      ["graphix-mbqc", "default.json", "validateResult", ["simulate_graphix_pattern"]],
+    ];
+    for (const [id, fixture, validator, names] of cases) {
+      const relative = path.join(".agents/skills", id);
+      const source = path.join(root, relative), installed = path.join(runtime, relative);
+      for (const filename of (await fs.readdir(path.join(source, "artifacts"))).filter(file => file.endsWith(".schema.json"))) {
+        assert.deepEqual(await fs.readFile(path.join(installed, "artifacts", filename)),
+          await fs.readFile(path.join(source, "artifacts", filename)), `${id}: runtime schema ${filename}`);
+      }
+      await assert.rejects(fs.access(path.join(installed, "evals/fixtures", fixture)), { code: "ENOENT" });
+      const module = await import(pathToFileURL(path.join(installed, "validators/validate-result.mjs")));
+      const validation = module[validator](JSON.parse(await fs.readFile(path.join(source, "evals/fixtures", fixture), "utf8")));
+      assert.deepEqual(validation.observations.filter(item => item.status === "fail"), [], id);
+      assert.equal(validation.observations.find(item => item.id === "provenance.complete").status, "not_checked");
+      if ([
+        "qec-memory-experiment",
+        "hamiltonian-simulation",
+        "qpanda-qubo",
+        "ldpc-decoding",
+        "pyzx-optimization",
+        "symmer-tapering",
+        "paulie-algebra",
+        "graphix-mbqc",
+      ].includes(id)) {
+        const materialized = await import(pathToFileURL(path.join(installed, "validators/validate-materialized.mjs")));
+        const report = await import(pathToFileURL(path.join(installed, "core/render-report.mjs")));
+        assert.equal(typeof materialized.validateMaterializedResult, "function");
+        assert.equal(typeof report.renderReport, "function");
+      }
+      for (const file of (await fs.readdir(path.join(source, "validators"))).filter(f => /\.(?:mjs|py)$/.test(f))) {
+        assert.deepEqual(await fs.readFile(path.join(installed, "validators", file)), await fs.readFile(path.join(source, "validators", file)));
+      }
+      const client = new Client({ name: "relocated-numerical-contract", version: "1.0.0" });
+      const transport = new StdioClientTransport({ command: process.execPath,
+        args: [path.join(installed, "mcp/server.mjs")], cwd: runtime, env: environment, stderr: "pipe" });
+      let stderr = "";
+      transport.stderr.on("data", bytes => { stderr += bytes; });
+      try {
+        await client.connect(transport, { timeout: 10000 });
+        const listed = await client.listTools();
+        assert.deepEqual(listed.tools.map(tool => tool.name).sort(), [...names].sort(), id);
+      } catch (error) {
+        t.diagnostic(stderr);
+        throw error;
+      } finally { await client.close(); }
+    }
+  });
   const { stdout } = await run(process.execPath, [script, "inspect", "tenpy-ground-state"], { cwd: directory, env: environment });
   const result = JSON.parse(stdout);
   assert.equal(result.project, path.join(runtime, ".agents/skills/tenpy-ground-state"));
@@ -48,6 +110,16 @@ test("SDK access survives archive, split installation and cached Skill relocatio
   assert.equal(result.run.command, path.join(environment.OPENQUANTUM_PLUGIN_SETTINGS_HOME, "environments/python/tenpy-ground-state", process.platform === "win32" ? "Scripts/python.exe" : "bin/python"));
   assert.equal(result.dashboard.state, "not_installed");
   assert.equal(result.environmentState, "not_prepared");
+  const caseAlias = path.join(path.dirname(cached), "OpenQuantum");
+  try { await fs.realpath(caseAlias); }
+  catch (error) {
+    assert.equal(error.code, "ENOENT");
+    await fs.symlink(cached, caseAlias, process.platform === "win32" ? "junction" : "dir");
+  }
+  const aliasedScript = path.join(caseAlias, "skills/tenpy-ground-state/scripts/sdk-access.mjs");
+  const aliased = JSON.parse((await run(process.execPath, ["--preserve-symlinks-main", aliasedScript, "inspect", "tenpy-ground-state"], { cwd: directory, env: environment })).stdout);
+  assert.equal(aliased.project, result.project);
+  assert.equal(aliased.environmentState, "not_prepared");
   const discovery = JSON.parse((await run(process.execPath, [path.join(cached, "skills/quantum-sdk-workbench/scripts/sdk-access.mjs"), "list"], { env: environment })).stdout);
   assert.ok(discovery.some(entry => entry.id === "quantum-algorithms"));
   assert.ok(discovery.some(entry => entry.id === "netqasm-network"));

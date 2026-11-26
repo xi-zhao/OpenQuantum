@@ -1,0 +1,193 @@
+[
+  {
+    "id": "default",
+    "fixture": "default.json",
+    "fixtureSha256": "28c2d017455659a5c537428a3a76b16b494346938ee956dfd0acc042d537a259",
+    "edits": {},
+    "observations": {},
+    "failedChecks": []
+  },
+  {
+    "id": "negative",
+    "fixture": "negative.json",
+    "fixtureSha256": "325bedc8891a71dab1a65154c222959b87ee9494e750c31b1150a4c01ee794c4",
+    "edits": {},
+    "observations": {},
+    "failedChecks": []
+  },
+  {
+    "id": "scalar",
+    "fixture": "scalar.json",
+    "fixtureSha256": "aac1874071728cbf7a3086b9a6b741801055a6578a773adc2ddd859d84fe4996",
+    "edits": {},
+    "observations": {},
+    "failedChecks": []
+  },
+  {
+    "id": "signed",
+    "fixture": "signed.json",
+    "fixtureSha256": "341e62dbfab2df69a2c7fd295cea86442b804ec7e6cfddbb0e322c0449875853",
+    "edits": {},
+    "observations": {},
+    "failedChecks": []
+  },
+  {
+    "id": "skip",
+    "fixture": "skip.json",
+    "fixtureSha256": "245a7a6a02a1c4b4c51c4710a9d02293c66563e47fbe75cb589fc45e044709bf",
+    "edits": {},
+    "observations": {},
+    "failedChecks": []
+  },
+  {
+    "id": "false-symmetry",
+    "fixture": "default.json",
+    "fixtureSha256": "28c2d017455659a5c537428a3a76b16b494346938ee956dfd0acc042d537a259",
+    "edits": {
+      "request.symmetries.0.pauli": "XX"
+    },
+    "observations": {
+      "hamiltonian.symmetry": "fail"
+    },
+    "failedChecks": [
+      "hamiltonian.symmetry"
+    ]
+  },
+  {
+    "id": "dependent-symmetries",
+    "fixture": "default.json",
+    "fixtureSha256": "28c2d017455659a5c537428a3a76b16b494346938ee956dfd0acc042d537a259",
+    "edits": {
+      "request.symmetries": [
+        {
+          "pauli": "ZZ",
+          "sector": 1
+        },
+        {
+          "pauli": "ZZ",
+          "sector": 1
+        }
+      ]
+    },
+    "observations": {
+      "symmetry.independent": "fail"
+    },
+    "failedChecks": [
+      "symmetry.independent"
+    ]
+  },
+  {
+    "id": "noncommuting-generators",
+    "fixture": "default.json",
+    "fixtureSha256": "28c2d017455659a5c537428a3a76b16b494346938ee956dfd0acc042d537a259",
+    "edits": {
+      "request.symmetries": [
+        {
+          "pauli": "XI",
+          "sector": 1
+        },
+        {
+          "pauli": "ZI",
+          "sector": 1
+        }
+      ]
+    },
+    "observations": {
+      "symmetry.commutes": "fail"
+    },
+    "failedChecks": [
+      "hamiltonian.symmetry",
+      "reduction.structure",
+      "symmetry.commutes"
+    ]
+  },
+  {
+    "id": "false-width",
+    "fixture": "default.json",
+    "fixtureSha256": "28c2d017455659a5c537428a3a76b16b494346938ee956dfd0acc042d537a259",
+    "edits": {
+      "result.reducedQubits": 2
+    },
+    "observations": {
+      "reduction.structure": "fail"
+    },
+    "failedChecks": [
+      "reduction.structure"
+    ]
+  },
+  {
+    "id": "wrong-sector",
+    "fixture": "default.json",
+    "fixtureSha256": "28c2d017455659a5c537428a3a76b16b494346938ee956dfd0acc042d537a259",
+    "edits": {
+      "request.symmetries.0.sector": -1
+    },
+    "observations": {
+      "reference.binding": "fail"
+    },
+    "failedChecks": [
+      "reference.binding"
+    ]
+  },
+  {
+    "id": "fake-spectrum",
+    "fixture": "default.json",
+    "fixtureSha256": "28c2d017455659a5c537428a3a76b16b494346938ee956dfd0acc042d537a259",
+    "edits": {
+      "result.reducedSpectrum": [
+        0,
+        0
+      ]
+    },
+    "observations": {
+      "spectrum.claims": "fail"
+    },
+    "failedChecks": [
+      "spectrum.claims"
+    ]
+  },
+  {
+    "id": "wrong-reduced-operator",
+    "fixture": "scalar.json",
+    "fixtureSha256": "aac1874071728cbf7a3086b9a6b741801055a6578a773adc2ddd859d84fe4996",
+    "edits": {
+      "result.reducedTerms.0.coefficient": -3,
+      "reference.reducedTerms.0.coefficient": -3,
+      "reference.spectrum": [
+        -3
+      ]
+    },
+    "observations": {
+      "sector.spectrum": "fail"
+    },
+    "failedChecks": [
+      "sector.spectrum",
+      "spectrum.claims"
+    ]
+  },
+  {
+    "id": "missing-independent-environment",
+    "fixture": "default.json",
+    "fixtureSha256": "28c2d017455659a5c537428a3a76b16b494346938ee956dfd0acc042d537a259",
+    "edits": {},
+    "observations": {
+      "sector.spectrum": "not_checked"
+    },
+    "failedChecks": [],
+    "reference": false
+  },
+  {
+    "id": "nonreal-coefficient",
+    "fixture": "default.json",
+    "fixtureSha256": "28c2d017455659a5c537428a3a76b16b494346938ee956dfd0acc042d537a259",
+    "edits": {
+      "result.reducedTerms.0.coefficient": "1j"
+    },
+    "observations": {
+      "artifact.schema": "fail"
+    },
+    "failedChecks": [
+      "artifact.schema"
+    ]
+  }
+]

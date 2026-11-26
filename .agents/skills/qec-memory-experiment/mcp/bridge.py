@@ -2,9 +2,12 @@
 
 from __future__ import annotations
 
+import base64
 import hashlib
 import json
 import math
+import platform
+import struct
 import sys
 import time
 from typing import Any
@@ -14,7 +17,10 @@ MAX_SEED = 2**32 - 1
 
 
 def canonical_digest(value: dict[str, Any]) -> str:
-    encoded = json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf8")
+    # Binary64 encoding avoids Python/JS decimal and exponent spelling differences.
+    fields = [value["basis"], str(value["distance"]), str(value["rounds"]),
+              str(value["shots"]), struct.pack(">d", float(value["physicalErrorRate"])).hex(), str(value["seed"])]
+    encoded = json.dumps(fields, separators=(",", ":")).encode("utf8")
     return hashlib.sha256(encoded).hexdigest()
 
 
@@ -94,7 +100,8 @@ def experiment_payload(request: dict[str, Any]) -> dict[str, Any]:
         separate_observables=True,
     )
     predicted_observables = matching.decode_batch(detection_events)
-    logical_errors = int(np.sum(np.any(predicted_observables != actual_observables, axis=1)))
+    failures = np.any(predicted_observables != actual_observables, axis=1)
+    logical_errors = int(np.sum(failures))
     logical_error_rate = logical_errors / request["shots"]
     circuit_text = str(circuit)
     detector_model_text = str(detector_model)
@@ -102,26 +109,40 @@ def experiment_payload(request: dict[str, Any]) -> dict[str, Any]:
         "schemaVersion": "1.0",
         "packages": {"stim": stim.__version__, "pymatching": pymatching.__version__},
         "experiment": request,
+        "requestDigestVersion": "qec-binary64-v1",
         "experimentDigest": canonical_digest(request),
         "codeTask": code_task,
         "circuit": {
+            "text": circuit_text,
             "qubits": circuit.num_qubits,
             "detectors": circuit.num_detectors,
             "observables": circuit.num_observables,
             "sha256": hashlib.sha256(circuit_text.encode("utf8")).hexdigest(),
         },
         "detectorModel": {
+            "text": detector_model_text,
             "detectors": detector_model.num_detectors,
             "observables": detector_model.num_observables,
             "sha256": hashlib.sha256(detector_model_text.encode("utf8")).hexdigest(),
         },
         "result": {
+            "intervalMethod": "wilson-score-95",
             "shots": request["shots"],
             "logicalErrors": logical_errors,
             "successfulShots": request["shots"] - logical_errors,
             "logicalErrorRate": logical_error_rate,
             "standardError": math.sqrt(logical_error_rate * (1 - logical_error_rate) / request["shots"]),
             "wilson95": wilson_interval(logical_errors, request["shots"]),
+        },
+        "sampling": {
+            "method": "stim-detector-single-batch-v1",
+            "batchShots": request["shots"],
+            "bitOrder": "little",
+            "failureBits": base64.b64encode(np.packbits(failures, bitorder="little").tobytes()).decode("ascii"),
+            "detectorSha256": hashlib.sha256(detection_events.astype(np.uint8).tobytes()).hexdigest(),
+            "observableSha256": hashlib.sha256(actual_observables.astype(np.uint8).tobytes()).hexdigest(),
+            "predictionSha256": hashlib.sha256(predicted_observables.astype(np.uint8).tobytes()).hexdigest(),
+            "runtime": {"system": platform.system(), "machine": platform.machine(), "stimImplementation": stim.Circuit.__module__},
         },
         "runtimeSeconds": time.perf_counter() - started,
     }

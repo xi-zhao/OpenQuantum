@@ -34,6 +34,7 @@ export function registerScienceProtocolTests(capabilities, { cancellationId } = 
       const envFile = path.join(sandbox, "worker-env.json");
       await writeFile(modeFile, "valid");
       const executable = `#!${process.execPath}\nconst fs=require('node:fs');let input='';process.stdin.on('data',c=>input+=c);process.stdin.on('end',()=>{
+        if(!JSON.parse(input).input) {process.stdout.write(JSON.stringify({status:'not_checked',reason:'Protocol fixture has no numerical reference'}));return;}
         fs.writeFileSync(${JSON.stringify(envFile)},JSON.stringify(process.env));
         const mode=fs.readFileSync(${JSON.stringify(modeFile)},'utf8');
         if(mode==='fail'){process.stderr.write('controlled worker failure');process.exit(2);}
@@ -49,7 +50,7 @@ export function registerScienceProtocolTests(capabilities, { cancellationId } = 
       const client = new Client({ name: "science-protocol-fixture", version: "1" }, { capabilities: {} });
       t.after(async () => { await client.close(); await rm(sandbox, { recursive: true, force: true }); });
       await client.connect(new StdioClientTransport({ command: process.execPath, args: [path.join(root, ".agents/skills", capability.id, "mcp/server.mjs")], cwd: root,
-        env: { ...process.env, ...prepared, PATH: `${sandbox}${path.delimiter}${process.env.PATH}`, OPENAI_API_KEY: "science-contract-secret-sentinel", OMP_NUM_THREADS: "7", MKL_NUM_THREADS: "4" } }));
+        env: { ...process.env, ...prepared, PATH: `${sandbox}${path.delimiter}${process.env.PATH}`, OPENAI_API_KEY: "science-contract-secret-sentinel", OMP_NUM_THREADS: "7", MKL_NUM_THREADS: "4", OPENQUANTUM_COMPUTE_CACHE_ROOT: path.join(sandbox, "cache"), NUMBA_CACHE_DIR: "/untrusted-cache" } }));
       const listed = (await client.listTools()).tools;
       assert.deepEqual(listed.map(tool => tool.name), declared.map(tool => tool.name));
       const selected = listed.find(tool => tool.name === capability.tool);
@@ -64,6 +65,8 @@ export function registerScienceProtocolTests(capabilities, { cancellationId } = 
       assert.equal(childEnv.OPENAI_API_KEY, undefined);
       assert.equal(childEnv.OMP_NUM_THREADS, "7");
       assert.equal(childEnv.MKL_NUM_THREADS, "4");
+      assert.equal(childEnv.NUMBA_CACHE_DIR, path.join(sandbox, "cache", `${capability.id}-numba`));
+      assert.equal(childEnv.MPLCONFIGDIR, path.join(sandbox, "cache", `${capability.id}-matplotlib`));
       assert.equal((await call({ ...capability.input, execution: { threads: 3 } })).isError, undefined);
       const overrideEnv = JSON.parse(await readFile(envFile, "utf8"));
       for (const key of ["OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS"]) assert.equal(overrideEnv[key], "3");

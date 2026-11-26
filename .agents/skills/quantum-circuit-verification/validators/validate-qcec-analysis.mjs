@@ -1,7 +1,6 @@
+import { isMainModule } from "../../../../src/lib/cli-entrypoint.mjs";
 import { isDeepStrictEqual } from "node:util";
 import fs from "node:fs";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
 import { normalizeAuditRequest } from "../core/request-contract.mjs";
 import { independentReference } from "./independent-reference.mjs";
 
@@ -55,7 +54,7 @@ function replayObservation(request, normalized, reference, verdict) {
   return item;
 }
 
-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (isMainModule(import.meta.url)) {
   try {
     const source = fs.readFileSync(0);
     if (source.length > 1048576) throw new Error("Validator input exceeds its bounded envelope");
@@ -91,13 +90,20 @@ export function auditQcecAnalysis({ request, analysis, reference }) {
 }
 
 export async function validateMaterializedQcec({ request, analysis, resultPackage, profile, signal,
-  referenceImplementation = independentReference }) {
+  runReferenceProcess,
+  referenceImplementation }) {
   if (!isDeepStrictEqual(profile?.checks?.map(check => check.id), CHECK_IDS)
     || profile.checks.find(check => check.id === "classification.replayed")?.threshold !== REPLAY_TOLERANCE) {
     throw new Error("QCEC Validator and Acceptance Profile differ");
   }
+  const runReference = referenceImplementation ?? ((req, sig) => {
+    if (typeof runReferenceProcess !== "function") {
+      throw new Error("Full-sandbox reference runner is required");
+    }
+    return independentReference(req, sig, { runProcess: runReferenceProcess });
+  });
   let reference;
-  try { reference = await referenceImplementation(request, signal); } catch (error) {
+  try { reference = await runReference(request, signal); } catch (error) {
     if (signal?.aborted) throw error;
     reference = { mode: "unavailable", reason: "reference_process_failed" };
   }

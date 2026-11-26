@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
 import { once } from "node:events";
-import { appendFile, mkdtemp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
+import { appendFile, mkdtemp, mkdir, readFile, realpath, rm, writeFile } from "node:fs/promises";
 import { createServer } from "node:http";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -36,7 +36,7 @@ test("custom handlers fail closed when Harness authentication is not supplied", 
 
 test("real Harness cookies protect settings and preparation from a different working directory", { timeout: 60_000 }, async (t) => {
   const projectRoot = fileURLToPath(new URL("..", import.meta.url));
-  const sandbox = await mkdtemp(path.join(tmpdir(), "oq-route-auth-"));
+  const sandbox = await mkdtemp(path.join(await realpath(tmpdir()), "oq-route-auth-"));
   const harnessHome = path.join(sandbox, "dsh");
   let child;
   let logs = "";
@@ -168,7 +168,7 @@ test("real Harness cookies protect settings and preparation from a different wor
 });
 
 test("OpenQuantum update registration leaves the original Desktop update route untouched", async (t) => {
-  const home = await mkdtemp(path.join(tmpdir(), "oq-update-route-"));
+  const home = await mkdtemp(path.join(await realpath(tmpdir()), "oq-update-route-"));
   const previous = { DSH_HOME: process.env.DSH_HOME, OPENQUANTUM_UPDATE_CHECK: process.env.OPENQUANTUM_UPDATE_CHECK };
   process.env.DSH_HOME = home;
   process.env.OPENQUANTUM_UPDATE_CHECK = "0";

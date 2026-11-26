@@ -1,8 +1,8 @@
+import { isMainModule } from "../src/lib/cli-entrypoint.mjs";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { fileURLToPath } from "node:url";
 import { build } from "esbuild";
 import { stringify } from "yaml";
 import { PROJECT_ROOT } from "../runtime/chatgpt/catalog.mjs";
@@ -106,10 +106,12 @@ export async function buildChatgpt({ root = PROJECT_ROOT, output = path.join(roo
         await fs.mkdir(path.join(directory, "scripts"), { recursive: true });
         await fs.copyFile(path.join(root, "runtime/chatgpt/diagnostics-entry.mjs"), path.join(directory, "scripts/diagnostics.mjs"));
         await fs.copyFile(path.join(root, "runtime/chatgpt/sdk-access.mjs"), path.join(directory, "scripts/sdk-access.mjs"));
+        await fs.copyFile(path.join(root, "src/lib/cli-entrypoint.mjs"), path.join(directory, "scripts/cli-entrypoint.mjs"));
       }
       if (capability.sdkIds?.length) {
         await fs.mkdir(path.join(directory, "scripts"), { recursive: true });
         await fs.copyFile(path.join(root, "runtime/chatgpt/sdk-access.mjs"), path.join(directory, "scripts/sdk-access.mjs"));
+        await fs.copyFile(path.join(root, "src/lib/cli-entrypoint.mjs"), path.join(directory, "scripts/cli-entrypoint.mjs"));
         if (capability.id === "pasqal-experiments") await fs.copyFile(path.join(root, "runtime/chatgpt/pasqal-cloud.mjs"), path.join(directory, "scripts/pasqal-cloud.mjs"));
         await fs.copyFile(path.join(root, ".agents/skills/quantum-sdk-workbench/references/workflow.md"), path.join(directory, "references/sdk-workflow.md"));
         await fs.copyFile(path.join(root, ".agents/skills/quantum-sdk-workbench/references/evidence.py"), path.join(directory, "references/evidence.py"));
@@ -120,7 +122,7 @@ export async function buildChatgpt({ root = PROJECT_ROOT, output = path.join(roo
   } finally { await backend.close(); }
 }
 
-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (isMainModule(import.meta.url)) {
   const result = await buildChatgpt();
   console.log(`Built ChatGPT ${result.release.version}: ${result.tools.length} tools; ${result.output}`);
 }

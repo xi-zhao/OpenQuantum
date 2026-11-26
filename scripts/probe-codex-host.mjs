@@ -1,5 +1,5 @@
+import { isMainModule } from "../src/lib/cli-entrypoint.mjs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 import { spawn } from "node:child_process";
 import { createInterface } from "node:readline";
 
@@ -52,7 +52,7 @@ export async function probeHostPlugin({ codex, marketplacePath, env = process.en
   }
 }
 
-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (isMainModule(import.meta.url)) {
   const [codex, marketplacePath] = process.argv.slice(2);
   if (!codex || !marketplacePath) throw new Error("Usage: node scripts/probe-chatgpt-host.mjs <codex-executable> <marketplace.json>");
   const result = await probeHostPlugin({ codex, marketplacePath: path.resolve(marketplacePath) });

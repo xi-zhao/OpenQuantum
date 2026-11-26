@@ -1,0 +1,94 @@
+{
+  "schemaVersion": "1.0",
+  "id": "ldpc-syndrome-replay-audit",
+  "version": "1.0.0",
+  "scope": {
+    "supportedClaims": [
+      "Persisted bounded numerical evidence with independent observations and central Acceptance."
+    ],
+    "outOfScope": [
+      "Quantum code distance, logical operator completeness, hardware fault tolerance thresholds.",
+      "Cross-machine deterministic replay and independent proof of the LDPC library."
+    ]
+  },
+  "checks": [
+    {
+      "id": "request.scope",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Binary rectangular H with <=256 rows and columns and <=1024 consistent syndrome samples; larger main Tool computations remain available."
+    },
+    {
+      "id": "artifact.schema",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Persisted decoder result satisfies its JSON Schema."
+    },
+    {
+      "id": "result.dimensions",
+      "category": "scientific",
+      "required": true,
+      "criterion": "One correction and corresponding summaries per syndrome."
+    },
+    {
+      "id": "syndrome.replayed",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Compute H e_hat mod 2 and residual for every sample."
+    },
+    {
+      "id": "decoding.satisfied",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Every correction satisfies its syndrome; parity agreement does not establish logical correction."
+    },
+    {
+      "id": "weights.replayed",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Independent Hamming weights agree."
+    },
+    {
+      "id": "convergence.consistent",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Reported convergence and iteration counts are internally consistent."
+    },
+    {
+      "id": "statistics.replayed",
+      "category": "scientific",
+      "required": true,
+      "criterion": "All sample counts and rates are independently recomputed."
+    },
+    {
+      "id": "logical.scope",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Logical success is only evaluated against supplied true errors and logical parity vectors."
+    },
+    {
+      "id": "logical.replayed",
+      "category": "scientific",
+      "required": true,
+      "criterion": "When provided, recompute logical parity flips against supplied errors; no code-distance proof."
+    },
+    {
+      "id": "decoder.replayed",
+      "category": "reproducibility",
+      "required": false,
+      "criterion": "Separate pinned request-only serial BP+LSD replay agrees with estimates and convergence; the Host runner requires enforcement full."
+    },
+    {
+      "id": "observations.integrity",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Every performed independent check is non-failing; missing optional evidence cannot hide a scientific contradiction."
+    },
+    {
+      "id": "provenance.complete",
+      "category": "reproducibility",
+      "required": true,
+      "criterion": "Actual re-read canonical input and artifact bytes match their digests and actual Harness event range."
+    }
+  ]
+}

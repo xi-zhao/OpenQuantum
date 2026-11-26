@@ -1,5 +1,7 @@
 # PPVM：丢失、泄漏与非 Clifford 电路模拟
 
+- **状态：已合入主线（[PR #84](https://github.com/xi-zhao/OpenQuantum/pull/84)）。** 已交付 [`ppvm-simulation`](../../../.agents/skills/ppvm-simulation/SKILL.md)、[PPVM 使用说明](../../integrations/PPVM.md)与隔离验证证据（[ppvm-2026-11-10.json](../../integrations/evidence/ppvm-2026-11-10.json)）；以下保留原提案与设计依据。
+
 用户于 2026-11-10 明确要求接入。本项是用户指定实施，不受自动发现队列的三项上限限制；沿用现有插件架构、隔离验证和 PR 交付边界。
 
 ## 价值与替代

@@ -1,0 +1,35 @@
+{
+  "request": {
+    "numQubits": 5,
+    "generators": [
+      "XIIII",
+      "ZIIII"
+    ],
+    "referenceMode": "skip",
+    "closureMode": "auto",
+    "execution": {}
+  },
+  "result": {
+    "dimension": 3,
+    "centerDimension": 0,
+    "referenceDimension": null,
+    "classification": "so(3)",
+    "fullSpecialUnitaryDimension": 1023,
+    "generatesFullSpecialUnitary": false,
+    "reference": {
+      "mode": "skip",
+      "status": "not_run",
+      "method": "Independent real dense commutator span and dimension",
+      "reason": "Reference explicitly skipped by the caller."
+    },
+    "closure": [
+      "XIIII",
+      "YIIII",
+      "ZIIII"
+    ],
+    "closureStatus": "computed",
+    "maxSpanResidual": null,
+    "spanResidualTarget": null,
+    "bitOrder": "left-to-right q0,q1,..."
+  }
+}

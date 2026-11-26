@@ -1,0 +1,363 @@
+{
+  "request": {
+    "numQubits": 2,
+    "initialState": "plus",
+    "gates": [
+      {
+        "gate": "CZ",
+        "targets": [
+          1,
+          0
+        ]
+      },
+      {
+        "gate": "RX",
+        "targets": [
+          0
+        ],
+        "angle": -0.7
+      },
+      {
+        "gate": "RY",
+        "targets": [
+          1
+        ],
+        "angle": 1.1
+      },
+      {
+        "gate": "S",
+        "targets": [
+          0
+        ]
+      }
+    ],
+    "simulate": true,
+    "branches": 4,
+    "seed": 7,
+    "referenceMode": "auto",
+    "execution": {}
+  },
+  "result": {
+    "nodes": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "edges": [
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        2
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        8
+      ],
+      [
+        4,
+        5
+      ],
+      [
+        5,
+        6
+      ],
+      [
+        6,
+        7
+      ],
+      [
+        8,
+        9
+      ]
+    ],
+    "inputNodes": [
+      0,
+      1
+    ],
+    "outputNodes": [
+      9,
+      7
+    ],
+    "maxSpace": 3,
+    "pattern": "E((0, 1))\nN(2)\nE((0, 2))\nM(0, Measurement.XY(0))\nN(4)\nE((1, 4))\nM(1, Measurement.XY(0.5))\nN(3)\nE((2, 3))\nM(2, Measurement.XY(0.22281692032865347), {0})\nN(8)\nE((3, 8))\nM(3, Measurement.XY(1.5), {2})\nN(5)\nE((4, 5))\nM(4, Measurement.XY(1.6498591251978303), {1})\nN(6)\nE((5, 6))\nM(5, Measurement.XY(1.5), {4})\nN(7)\nE((6, 7))\nM(6, Measurement.XY(0), {1, 5})\nN(9)\nE((8, 9))\nM(8, Measurement.XY(0), {0, 3})\nZ(9, {0, 3})\nX(9, {8, 2})\nZ(7, {1, 5})\nX(7, {4, 6})",
+    "referenceStatevector": [
+      [
+        0.15492007642234035,
+        0.23577854710074983
+      ],
+      [
+        0.6459181966336126,
+        -0.056550242315461234
+      ],
+      [
+        -0.05655024231546118,
+        0.6459181966336127
+      ],
+      [
+        -0.23577854710074983,
+        -0.1549200764223403
+      ]
+    ],
+    "reference": {
+      "mode": "auto",
+      "status": "computed",
+      "method": "Independent gate-model statevector evolution",
+      "reason": "Independent reference computed for this input."
+    },
+    "simulation": {
+      "status": "computed",
+      "backend": "statevector",
+      "reason": "Sampled corrected output states computed."
+    },
+    "branches": [
+      {
+        "seed": 7,
+        "statevector": [
+          [
+            0.200300805875866,
+            -0.19867395530648457
+          ],
+          [
+            -0.18374713833575942,
+            -0.6218080377429799
+          ],
+          [
+            0.6442776353372022,
+            -0.07290113341134533
+          ],
+          [
+            -0.10499002296980911,
+            0.26185654169495814
+          ]
+        ],
+        "fidelity": 1,
+        "normError": 2.220446049250313e-16,
+        "measurements": [
+          {
+            "node": 0,
+            "outcome": 1
+          },
+          {
+            "node": 1,
+            "outcome": 1
+          },
+          {
+            "node": 2,
+            "outcome": 1
+          },
+          {
+            "node": 3,
+            "outcome": 0
+          },
+          {
+            "node": 4,
+            "outcome": 0
+          },
+          {
+            "node": 5,
+            "outcome": 1
+          },
+          {
+            "node": 6,
+            "outcome": 0
+          },
+          {
+            "node": 8,
+            "outcome": 1
+          }
+        ]
+      },
+      {
+        "seed": 8,
+        "statevector": [
+          [
+            -0.02520923047903509,
+            0.2809915444462684
+          ],
+          [
+            0.5411172991725771,
+            0.35721186316320935
+          ],
+          [
+            -0.44580651626652057,
+            0.4708129105097525
+          ],
+          [
+            -0.08839181686750838,
+            -0.267915359885366
+          ]
+        ],
+        "fidelity": 1,
+        "normError": 0,
+        "measurements": [
+          {
+            "node": 0,
+            "outcome": 0
+          },
+          {
+            "node": 1,
+            "outcome": 1
+          },
+          {
+            "node": 2,
+            "outcome": 0
+          },
+          {
+            "node": 3,
+            "outcome": 1
+          },
+          {
+            "node": 4,
+            "outcome": 1
+          },
+          {
+            "node": 5,
+            "outcome": 0
+          },
+          {
+            "node": 6,
+            "outcome": 0
+          },
+          {
+            "node": 8,
+            "outcome": 0
+          }
+        ]
+      },
+      {
+        "seed": 9,
+        "statevector": [
+          [
+            0.08839181686750863,
+            -0.267915359885366
+          ],
+          [
+            -0.44580651626652035,
+            -0.4708129105097527
+          ],
+          [
+            0.5411172991725773,
+            -0.357211863163209
+          ],
+          [
+            0.025209230479034977,
+            0.2809915444462685
+          ]
+        ],
+        "fidelity": 0.9999999999999998,
+        "normError": 0,
+        "measurements": [
+          {
+            "node": 0,
+            "outcome": 1
+          },
+          {
+            "node": 1,
+            "outcome": 0
+          },
+          {
+            "node": 2,
+            "outcome": 1
+          },
+          {
+            "node": 3,
+            "outcome": 1
+          },
+          {
+            "node": 4,
+            "outcome": 1
+          },
+          {
+            "node": 5,
+            "outcome": 1
+          },
+          {
+            "node": 6,
+            "outcome": 1
+          },
+          {
+            "node": 8,
+            "outcome": 1
+          }
+        ]
+      },
+      {
+        "seed": 10,
+        "statevector": [
+          [
+            0.08839181686750863,
+            -0.267915359885366
+          ],
+          [
+            -0.44580651626652035,
+            -0.4708129105097527
+          ],
+          [
+            0.5411172991725773,
+            -0.357211863163209
+          ],
+          [
+            0.025209230479034977,
+            0.2809915444462685
+          ]
+        ],
+        "fidelity": 0.9999999999999998,
+        "normError": 0,
+        "measurements": [
+          {
+            "node": 0,
+            "outcome": 1
+          },
+          {
+            "node": 1,
+            "outcome": 0
+          },
+          {
+            "node": 2,
+            "outcome": 1
+          },
+          {
+            "node": 3,
+            "outcome": 0
+          },
+          {
+            "node": 4,
+            "outcome": 1
+          },
+          {
+            "node": 5,
+            "outcome": 0
+          },
+          {
+            "node": 6,
+            "outcome": 1
+          },
+          {
+            "node": 8,
+            "outcome": 1
+          }
+        ]
+      }
+    ],
+    "maxInfidelity": 2.220446049250313e-16,
+    "bitOrder": "left-to-right logical q0,q1,... mapped by outputNodes"
+  }
+}

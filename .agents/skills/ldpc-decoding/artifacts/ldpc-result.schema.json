@@ -1,0 +1,198 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "corrections": {
+      "type": "array",
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "minItems": 1
+      },
+      "minItems": 1
+    },
+    "residualSyndromes": {
+      "type": "array",
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "minItems": 1
+      },
+      "minItems": 1
+    },
+    "syndromeSatisfied": {
+      "type": "array",
+      "items": {
+        "type": "boolean"
+      },
+      "minItems": 1
+    },
+    "correctionWeights": {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991
+      },
+      "minItems": 1
+    },
+    "implementation": {
+      "const": "serial BP+LSD, lsd_cs"
+    },
+    "logicalSuccess": {
+      "enum": [
+        "not_evaluated",
+        "evaluated-against-supplied-errors"
+      ]
+    },
+    "bpConverged": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "boolean"
+      }
+    },
+    "bpIterationsUsed": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "integer",
+        "minimum": 0
+      }
+    },
+    "statistics": {
+      "type": "object",
+      "properties": {
+        "shots": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "syndromeMatchedCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "syndromeMatchRate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "bpConvergedCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "bpConvergenceRate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "logicalFlipCount": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "logicalFlipRate": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "exactErrorMatchCount": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "exactErrorMatchRate": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "shots",
+        "syndromeMatchedCount",
+        "syndromeMatchRate",
+        "bpConvergedCount",
+        "bpConvergenceRate",
+        "logicalFlipCount",
+        "logicalFlipRate",
+        "exactErrorMatchCount",
+        "exactErrorMatchRate"
+      ],
+      "additionalProperties": false
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ldpc": {
+          "type": "string",
+          "minLength": 1
+        },
+        "numpy": {
+          "type": "string",
+          "minLength": 1
+        },
+        "system": {
+          "type": "string",
+          "minLength": 1
+        },
+        "machine": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "ldpc",
+        "numpy",
+        "system",
+        "machine"
+      ]
+    }
+  },
+  "required": [
+    "corrections",
+    "residualSyndromes",
+    "syndromeSatisfied",
+    "correctionWeights",
+    "implementation",
+    "logicalSuccess",
+    "bpConverged",
+    "bpIterationsUsed",
+    "statistics",
+    "runtime"
+  ],
+  "additionalProperties": false
+}

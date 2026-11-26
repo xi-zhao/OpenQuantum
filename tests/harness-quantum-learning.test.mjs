@@ -2,12 +2,13 @@ import { harnessHttpCookie, harnessSessionSnapshot, redactHarnessLaunchTokens } 
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
 import { once } from "node:events";
-import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm } from "node:fs/promises";
 import { createServer } from "node:http";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import test from "node:test";
 import { prepareOpenQuantumHarnessHome } from "../scripts/lib/prepare-harness-home.mjs";
+import { createProtectedState } from "./helpers/protected-state.mjs";
 import { fixtureResponses, requirements } from "./fixtures/quantum-learning.mjs";
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -25,8 +26,11 @@ async function waitFor(fn, description) {
 test("native UI/API → Harness Session → OpenMAIC SDK → saved classroom and durable tool result", { timeout: 90_000 }, async (t) => {
   const root = process.cwd();
   const sandbox = await mkdtemp(path.join(tmpdir(), "oq-learning-harness-"));
-  const harnessHome = path.join(sandbox, "dsh");
-  const classrooms = path.join(sandbox, "classrooms");
+  const privateRoot = await createProtectedState(root);
+  const harnessHome = path.join(privateRoot, "dsh");
+  const workspace = path.join(sandbox, "workspace");
+  await mkdir(workspace);
+  const classrooms = path.join(workspace, "classrooms");
   const answers = fixtureResponses();
   let courseId;
   let sdkCalls = 0;
@@ -62,7 +66,7 @@ test("native UI/API → Harness Session → OpenMAIC SDK → saved classroom and
   t.after(async () => {
     if (child.exitCode === null) { const exited = once(child, "exit"); child.kill("SIGTERM"); const timer = setTimeout(() => child.kill("SIGKILL"), 5000); await exited; clearTimeout(timer); }
     await new Promise((resolve) => model.close(resolve));
-    await rm(sandbox, { recursive: true, force: true });
+    await rm(sandbox, { recursive: true, force: true }); await rm(privateRoot, { recursive: true, force: true });
   });
   const base = `http://127.0.0.1:${port}`;
   let cookie;
@@ -83,7 +87,7 @@ test("native UI/API → Harness Session → OpenMAIC SDK → saved classroom and
   assert.ok(roster.presets.some((p) => p.id === "quantum-learning"));
   const sessionId = `session-learning-${crypto.randomUUID()}`;
   const course = await command({ action: "create", requirements, sessionId }); courseId = course.id;
-  await rpc("session.create", { sessionId, agentPreset: "quantum-learning" });
+  await rpc("session.create", { sessionId, cwd: workspace, agentPreset: "quantum-learning" });
   await rpc("session.rename", { sessionId, title: "OpenMAIC integration fixture" });
   await rpc("session.prompt", { sessionId, mode: "queue", content: [{ type: "text", text: `Generate courseId=${course.id}` }] });
   const saved = await waitFor(async () => { const value = await command({ action: "get", id: course.id }); return value.document && value; }, "saved classroom");

@@ -9,6 +9,7 @@ import test from "node:test";
 
 import { harnessHttpCookie, harnessSessionSnapshot, redactHarnessLaunchTokens } from "../scripts/lib/harness-http-auth.mjs";
 import { prepareOpenQuantumHarnessHome } from "../scripts/lib/prepare-harness-home.mjs";
+import { createProtectedState } from "./helpers/protected-state.mjs";
 import { SOURCE } from "../src/quantum-practices/index.mjs";
 
 async function listen(server) {
@@ -43,7 +44,8 @@ async function stopHarness(child) {
 test("Harness invokes references and restores success and invalid-input results after restart", { timeout: 90_000 }, async (t) => {
   const root = process.cwd();
   const sandbox = await mkdtemp(path.join(tmpdir(), "oq-practices-harness-"));
-  const harnessHome = path.join(sandbox, "dsh");
+  const privateRoot = await createProtectedState(root);
+  const harnessHome = path.join(privateRoot, "dsh");
   const workspaceRoot = path.join(sandbox, "workspace");
   await mkdir(workspaceRoot);
   const fixtureCalls = [
@@ -84,7 +86,7 @@ test("Harness invokes references and restores success and invalid-input results 
     await stopHarness(child);
     model.closeAllConnections();
     await new Promise(resolve => model.close(resolve));
-    await rm(sandbox, { recursive: true, force: true });
+    await rm(sandbox, { recursive: true, force: true }); await rm(privateRoot, { recursive: true, force: true });
   });
   const modelPort = await listen(model);
   const titleProbe = await fetch(`http://127.0.0.1:${modelPort}/v1/chat/completions`, {

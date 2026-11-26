@@ -1,0 +1,112 @@
+{
+  "schemaVersion": "1.0",
+  "id": "pauli-evolution-reference-audit",
+  "version": "1.0.0",
+  "scope": {
+    "supportedClaims": [
+      "Pinned fixed-parameter local numerical observations with persisted input, artifact hashes and Harness execution provenance."
+    ],
+    "outOfScope": [
+      "Hardware performance, error-correction thresholds, quantum advantage and correctness proofs of numerical libraries.",
+      "Cross-machine bitwise reproducibility and claims outside the bounded numerical audit."
+    ]
+  },
+  "checks": [
+    {
+      "id": "request.scope",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Hermitian real Pauli model: <=6 qubits, <=64 terms, <=1024 steps, Trotter order 1/2/4 or qDrift; normalized statevector and dense reference required. Computation remains uncapped."
+    },
+    {
+      "id": "artifact.schema",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Persisted result satisfies its JSON Schema."
+    },
+    {
+      "id": "request.binding",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Method, qubits, steps, order and seed match persisted input."
+    },
+    {
+      "id": "hamiltonian.terms",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Combine duplicate/cancelled terms and identity independently; coefficient L1 norm matches."
+    },
+    {
+      "id": "sampling.budget",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Pauli rotation count exactly matches Trotter formula or qDrift sample budget."
+    },
+    {
+      "id": "state.normalized",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Independent squared state norm equals one within 1e-10."
+    },
+    {
+      "id": "reference.mode",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Dense reference is computed as requested."
+    },
+    {
+      "id": "circuit.resources",
+      "category": "scientific",
+      "required": true,
+      "criterion": "OpenQASM gate counts, rotation budget and identity phase agree."
+    },
+    {
+      "id": "reference.binding",
+      "category": "reproducibility",
+      "required": true,
+      "criterion": "Independent reference consumed exactly the persisted request."
+    },
+    {
+      "id": "circuit.replayed",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Every gate, wire, angle, depth and resource count matches an independent schedule."
+    },
+    {
+      "id": "seed.replayed",
+      "category": "reproducibility",
+      "required": true,
+      "criterion": "qDrift sequence/counts replay under same NumPy PCG64 runtime; deterministic Trotter needs no seed. Incompatible or unavailable replay remains conditional."
+    },
+    {
+      "id": "state.replayed",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Analytic Pauli evolution reproduces every complex amplitude including phase, tolerance 1e-10 + 1e-8 relative."
+    },
+    {
+      "id": "fidelity.replayed",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Fidelity agrees with independent Hermitian eigendecomposition reference, tolerance 1e-10 + 1e-8 relative."
+    },
+    {
+      "id": "unitary-error.replayed",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Full-unitary Frobenius and spectral errors match independent reference, tolerance 1e-10 + 1e-8 relative."
+    },
+    {
+      "id": "trotter.error-bound",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Trotter spectral errors at N,2N,4N obey the conservative Taylor remainder bound capped at 2; qDrift makes no such claim."
+    },
+    {
+      "id": "provenance.complete",
+      "category": "reproducibility",
+      "required": true,
+      "criterion": "Materializer atomically wrote and reread input/artifact bytes; digests and actual Harness call/result event range bind the evidence."
+    }
+  ]
+}

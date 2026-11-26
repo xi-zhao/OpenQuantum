@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {
+      "const": "1.0"
+    },
+    "observations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "enum": [
+              "pass",
+              "warn",
+              "fail",
+              "not_checked"
+            ]
+          },
+          "detail": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "status",
+          "detail"
+        ]
+      },
+      "minItems": 1
+    },
+    "solutionEvaluations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "bitVector": {
+            "type": "array",
+            "items": {
+              "enum": [
+                0,
+                1
+              ]
+            }
+          },
+          "objectiveValue": {
+            "type": "number"
+          },
+          "residuals": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "value": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "id",
+                "value"
+              ]
+            }
+          },
+          "feasible": {
+            "type": "boolean"
+          },
+          "penalty": {
+            "type": "number",
+            "minimum": 0
+          },
+          "penalizedEnergy": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "bitVector",
+          "objectiveValue",
+          "residuals",
+          "feasible",
+          "penalty",
+          "penalizedEnergy"
+        ]
+      }
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "observations",
+    "solutionEvaluations"
+  ]
+}

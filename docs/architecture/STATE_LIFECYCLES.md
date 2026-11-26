@@ -361,6 +361,13 @@ stateDiagram-v2
 
 验证入口：[tests/desktop-install-transaction.test.mjs](../../tests/desktop-install-transaction.test.mjs)
 
+安装启动入口的扩展准备记录由
+[desktop-extension-preparation.mjs](../../scripts/lib/desktop-extension-preparation.mjs) 管理，沿用 F01 事务。
+只有已经完整核验的发行载荷身份、依赖路径、Node 身份和七个扩展目录的当前内容摘要全部匹配，才跳过扩展
+复制、客户端构建和对应备份；设置、凭据、兼容性与路径检查照常执行。记录缺失、损坏、身份变化或显式强制时
+重新准备；准备全部完成后才原子写入记录，失败连同扩展恢复旧记录。源码开发入口不使用此记录作为跳过依据。
+验证入口：[tests/desktop-install-home.test.mjs](../../tests/desktop-install-home.test.mjs)。
+
 **F02 · Desktop 安装 writer 启动门**（隐式；保留现有专用协议）
 
 归属：[scripts/lib/desktop-install-transaction.mjs](../../scripts/lib/desktop-install-transaction.mjs)。

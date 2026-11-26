@@ -1,0 +1,281 @@
+[
+  {
+    "id": "zero-noise",
+    "fixture": "zero-noise.json",
+    "reference": true,
+    "edits": {},
+    "failedChecks": [],
+    "fixtureSha256": "c8de06ee736d7d48c692aaa7f226ffc048118c73e10a337aad29e31f59138f16"
+  },
+  {
+    "id": "noisy",
+    "fixture": "noisy.json",
+    "reference": true,
+    "edits": {},
+    "failedChecks": [],
+    "fixtureSha256": "12267fb09542abbe02e3c32ad00ec5b20af2174a52a751ead51bc688e7906e10"
+  },
+  {
+    "id": "inconsistent-failure-count",
+    "fixture": "noisy.json",
+    "reference": true,
+    "edits": {
+      "facts.result.logicalErrors": 75
+    },
+    "failedChecks": [
+      "counts.replayed",
+      "logical-error-rate.replayed",
+      "standard-error.replayed",
+      "uncertainty.replayed"
+    ],
+    "fixtureSha256": "12267fb09542abbe02e3c32ad00ec5b20af2174a52a751ead51bc688e7906e10"
+  },
+  {
+    "id": "wrong-wilson",
+    "fixture": "noisy.json",
+    "reference": true,
+    "edits": {
+      "facts.result.wilson95.low": 0.07,
+      "facts.result.wilson95.high": 0.08
+    },
+    "failedChecks": [
+      "uncertainty.replayed"
+    ],
+    "fixtureSha256": "12267fb09542abbe02e3c32ad00ec5b20af2174a52a751ead51bc688e7906e10"
+  },
+  {
+    "id": "wrong-standard-error",
+    "fixture": "noisy.json",
+    "reference": true,
+    "edits": {
+      "facts.result.standardError": 0
+    },
+    "failedChecks": [
+      "standard-error.replayed"
+    ],
+    "fixtureSha256": "12267fb09542abbe02e3c32ad00ec5b20af2174a52a751ead51bc688e7906e10"
+  },
+  {
+    "id": "wrong-sample-hash",
+    "fixture": "noisy.json",
+    "reference": true,
+    "edits": {
+      "facts.sampling.detectorSha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    },
+    "failedChecks": [
+      "seed.replayed"
+    ],
+    "fixtureSha256": "12267fb09542abbe02e3c32ad00ec5b20af2174a52a751ead51bc688e7906e10"
+  },
+  {
+    "id": "changed-circuit",
+    "fixture": "noisy.json",
+    "reference": true,
+    "edits": {
+      "facts.circuit.text": "M 0"
+    },
+    "failedChecks": [
+      "circuit.digest"
+    ],
+    "fixtureSha256": "12267fb09542abbe02e3c32ad00ec5b20af2174a52a751ead51bc688e7906e10"
+  },
+  {
+    "id": "changed-dem",
+    "fixture": "noisy.json",
+    "reference": true,
+    "edits": {
+      "facts.detectorModel.text": "error(0.1) D0"
+    },
+    "failedChecks": [
+      "detectorModel.digest"
+    ],
+    "fixtureSha256": "12267fb09542abbe02e3c32ad00ec5b20af2174a52a751ead51bc688e7906e10"
+  },
+  {
+    "id": "wrong-code-size",
+    "fixture": "noisy.json",
+    "reference": true,
+    "edits": {
+      "facts.circuit.qubits": 27
+    },
+    "failedChecks": [
+      "circuit.replayed"
+    ],
+    "fixtureSha256": "12267fb09542abbe02e3c32ad00ec5b20af2174a52a751ead51bc688e7906e10"
+  },
+  {
+    "id": "wrong-round-count",
+    "fixture": "noisy.json",
+    "reference": true,
+    "edits": {
+      "facts.experiment.rounds": 4
+    },
+    "failedChecks": [
+      "experiment.digest"
+    ],
+    "fixtureSha256": "12267fb09542abbe02e3c32ad00ec5b20af2174a52a751ead51bc688e7906e10"
+  },
+  {
+    "id": "wrong-seed",
+    "fixture": "noisy.json",
+    "reference": true,
+    "edits": {
+      "facts.experiment.seed": 7
+    },
+    "failedChecks": [
+      "experiment.digest",
+      "experiment.seed-recorded"
+    ],
+    "fixtureSha256": "12267fb09542abbe02e3c32ad00ec5b20af2174a52a751ead51bc688e7906e10"
+  },
+  {
+    "id": "unknown-interval-method",
+    "fixture": "noisy.json",
+    "reference": true,
+    "edits": {
+      "facts.result.intervalMethod": "wald-95"
+    },
+    "failedChecks": [
+      "artifact.schema"
+    ],
+    "fixtureSha256": "12267fb09542abbe02e3c32ad00ec5b20af2174a52a751ead51bc688e7906e10"
+  },
+  {
+    "id": "zero-shots",
+    "fixture": "noisy.json",
+    "reference": true,
+    "edits": {
+      "request.shots": 0
+    },
+    "failedChecks": [
+      "request.scope"
+    ],
+    "fixtureSha256": "12267fb09542abbe02e3c32ad00ec5b20af2174a52a751ead51bc688e7906e10"
+  },
+  {
+    "id": "even-distance",
+    "fixture": "noisy.json",
+    "reference": true,
+    "edits": {
+      "request.distance": 4
+    },
+    "failedChecks": [
+      "request.scope"
+    ],
+    "fixtureSha256": "12267fb09542abbe02e3c32ad00ec5b20af2174a52a751ead51bc688e7906e10"
+  },
+  {
+    "id": "one-shot-zero",
+    "fixture": "noisy.json",
+    "reference": false,
+    "edits": {
+      "request.shots": 1,
+      "facts.experiment.shots": 1,
+      "facts.experimentDigest": "fca87861f3f1b988850274a42cd27a22d85183afc1ea169bf9179090c446559d",
+      "facts.sampling.batchShots": 1,
+      "facts.sampling.failureBits": "AA==",
+      "facts.result.shots": 1,
+      "facts.result.logicalErrors": 0,
+      "facts.result.successfulShots": 1,
+      "facts.result.logicalErrorRate": 0,
+      "facts.result.standardError": 0,
+      "facts.result.wilson95.low": 0,
+      "facts.result.wilson95.high": 0.7934506856227626
+    },
+    "failedChecks": [],
+    "fixtureSha256": "12267fb09542abbe02e3c32ad00ec5b20af2174a52a751ead51bc688e7906e10"
+  },
+  {
+    "id": "one-shot-zero-collapsed-interval",
+    "fixture": "noisy.json",
+    "reference": false,
+    "edits": {
+      "request.shots": 1,
+      "facts.experiment.shots": 1,
+      "facts.experimentDigest": "fca87861f3f1b988850274a42cd27a22d85183afc1ea169bf9179090c446559d",
+      "facts.sampling.batchShots": 1,
+      "facts.sampling.failureBits": "AA==",
+      "facts.result.shots": 1,
+      "facts.result.logicalErrors": 0,
+      "facts.result.successfulShots": 1,
+      "facts.result.logicalErrorRate": 0,
+      "facts.result.standardError": 0,
+      "facts.result.wilson95.low": 0,
+      "facts.result.wilson95.high": 0
+    },
+    "failedChecks": [
+      "uncertainty.replayed"
+    ],
+    "fixtureSha256": "12267fb09542abbe02e3c32ad00ec5b20af2174a52a751ead51bc688e7906e10"
+  },
+  {
+    "id": "one-shot-all",
+    "fixture": "noisy.json",
+    "reference": false,
+    "edits": {
+      "request.shots": 1,
+      "facts.experiment.shots": 1,
+      "facts.experimentDigest": "fca87861f3f1b988850274a42cd27a22d85183afc1ea169bf9179090c446559d",
+      "facts.sampling.batchShots": 1,
+      "facts.sampling.failureBits": "AQ==",
+      "facts.result.shots": 1,
+      "facts.result.logicalErrors": 1,
+      "facts.result.successfulShots": 0,
+      "facts.result.logicalErrorRate": 1,
+      "facts.result.standardError": 0,
+      "facts.result.wilson95.low": 0.20654931437723745,
+      "facts.result.wilson95.high": 1
+    },
+    "failedChecks": [],
+    "fixtureSha256": "12267fb09542abbe02e3c32ad00ec5b20af2174a52a751ead51bc688e7906e10"
+  },
+  {
+    "id": "one-shot-all-collapsed-interval",
+    "fixture": "noisy.json",
+    "reference": false,
+    "edits": {
+      "request.shots": 1,
+      "facts.experiment.shots": 1,
+      "facts.experimentDigest": "fca87861f3f1b988850274a42cd27a22d85183afc1ea169bf9179090c446559d",
+      "facts.sampling.batchShots": 1,
+      "facts.sampling.failureBits": "AQ==",
+      "facts.result.shots": 1,
+      "facts.result.logicalErrors": 1,
+      "facts.result.successfulShots": 0,
+      "facts.result.logicalErrorRate": 1,
+      "facts.result.standardError": 0,
+      "facts.result.wilson95.low": 1,
+      "facts.result.wilson95.high": 1
+    },
+    "failedChecks": [
+      "uncertainty.replayed"
+    ],
+    "fixtureSha256": "12267fb09542abbe02e3c32ad00ec5b20af2174a52a751ead51bc688e7906e10"
+  },
+  {
+    "id": "nonzero-padding",
+    "fixture": "noisy.json",
+    "reference": false,
+    "edits": {
+      "request.shots": 1,
+      "facts.experiment.shots": 1,
+      "facts.experimentDigest": "fca87861f3f1b988850274a42cd27a22d85183afc1ea169bf9179090c446559d",
+      "facts.sampling.batchShots": 1,
+      "facts.sampling.failureBits": "/w==",
+      "facts.result.shots": 1,
+      "facts.result.logicalErrors": 1,
+      "facts.result.successfulShots": 0,
+      "facts.result.logicalErrorRate": 1,
+      "facts.result.standardError": 0,
+      "facts.result.wilson95.low": 0.20654931437723745,
+      "facts.result.wilson95.high": 1
+    },
+    "failedChecks": [
+      "counts.replayed",
+      "logical-error-rate.replayed",
+      "standard-error.replayed",
+      "uncertainty.replayed"
+    ],
+    "fixtureSha256": "12267fb09542abbe02e3c32ad00ec5b20af2174a52a751ead51bc688e7906e10"
+  }
+]

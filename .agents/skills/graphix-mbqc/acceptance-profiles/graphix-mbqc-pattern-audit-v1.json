@@ -1,0 +1,82 @@
+{
+  "schemaVersion": "1.0",
+  "id": "graphix-mbqc-pattern-audit",
+  "version": "1.0.0",
+  "scope": {
+    "supportedClaims": [
+      "Persisted MBQC pattern evidence with independent command/causal-domain replay, branch normalization, gate-model state and adaptive byproduct verification (<=10 logical/live qubits) and central Acceptance."
+    ],
+    "outOfScope": [
+      "Exhaustive verification across all measurement branches or arbitrary-input quantum channel equivalence; hardware noise or resource-optimality claims.",
+      "Independent statevector and adaptive pattern replay when simulate=false, referenceMode=skip or beyond 10 logical/live qubits, 512 gates or 4096 commands."
+    ]
+  },
+  "checks": [
+    {
+      "id": "request.schema",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Persisted MBQC request satisfies its JSON Schema and bounded circuit/seed contract."
+    },
+    {
+      "id": "artifact.schema",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Persisted MBQC result satisfies its JSON Schema."
+    },
+    {
+      "id": "pattern.structure",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Recompute preparations, graph edges, measurements, causal X/Z domains, outputs and peak live space."
+    },
+    {
+      "id": "branches.binding",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Every branch binds its seed, output dimension and exactly one outcome per measured node."
+    },
+    {
+      "id": "reference.policy",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Reported simulation and reference policy bind to input."
+    },
+    {
+      "id": "branches.normalization",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Every simulated branch statevector is normalized and matches its reported normError."
+    },
+    {
+      "id": "branches.state",
+      "category": "scientific",
+      "required": false,
+      "criterion": "When simulated within <=10 logical/live qubits and reference enabled, every sampled branch matches the independent gate-model state, Born probabilities and reported fidelity."
+    },
+    {
+      "id": "branches.corrections",
+      "category": "scientific",
+      "required": false,
+      "criterion": "When simulated within <=10 logical/live qubits and reference enabled, independent adaptive XY projections and X/Z byproduct corrections reproduce every sampled branch statevector."
+    },
+    {
+      "id": "reference.claims",
+      "category": "scientific",
+      "required": false,
+      "criterion": "When the Tool reports a computed gate-model reference, its reference statevector and worst branch infidelity match independent recomputation."
+    },
+    {
+      "id": "observations.integrity",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Every performed independent check is non-failing; optional reference availability cannot hide a scientific contradiction."
+    },
+    {
+      "id": "provenance.complete",
+      "category": "reproducibility",
+      "required": true,
+      "criterion": "Actual re-read canonical input and artifact bytes match their digests and actual Harness event range."
+    }
+  ]
+}

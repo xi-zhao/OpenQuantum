@@ -1,4 +1,85 @@
-# 扩展治理清单（2026-09-24）
+# 扩展治理清单（2026-11-26 快照）
+
+> 本文件顶部记录 **2026-11-26 成熟度快照**；保留 2026-11-25、2026-11-24 全量快照与治理决定，以及 2026-09-24 首次治理（101 Skill / 37 MCP / 220 Tool，B1/B2/B3）的逐项历史决定，不改写既有记录。
+> 实时数量请运行 `npm run governance:audit`：[`审计脚本`](../../scripts/audit-extension-governance.mjs) 解析源码 YAML/JSON 声明，输出统计并核对内部一致性。新增 Skill 无需修改本页的历史数字；本页不是 CI 的固定数量门禁。
+
+## 2026-11-26 科学验收与边界加固快照
+
+201 个 Capability：`L0=102`、`L1=87`、`L2=1`、`L3=11`。
+
+- **QCEC Host 参考沙箱收口**：[`quantum-circuit-verification`](../../.agents/skills/quantum-circuit-verification/SKILL.md) 的宿主侧独立参考子进程经共享 `createConfinedReferenceRunner` 纳入 `enforcement: full` 临时目录沙箱，消除最后一处绕过 `ctx.sandbox` 的 Host 侧科学参考子进程；沙箱缺失或降级时 fail-closed 为 `conditional` 且不执行子进程。
+- **四项 unitary 能力升至 L3**：[`pyzx-optimization`](../../.agents/skills/pyzx-optimization/SKILL.md)、[`symmer-tapering`](../../.agents/skills/symmer-tapering/SKILL.md)、[`paulie-algebra`](../../.agents/skills/paulie-algebra/SKILL.md) 与 [`graphix-mbqc`](../../.agents/skills/graphix-mbqc/SKILL.md) 新增版本化 Acceptance Profile、物化重读 Validator、确定性可读报告、DSH 适配与 `full` 沙箱 Harness 重启回放；11 条 L3 对应的 12 个完整 Tool 调用均声明 `workspace-write`。缺独立参考、超稠密阈值或 `simulate=false` 保持 `conditional`，任何独立观察矛盾则 `failed`。Codex 侧保持执行期独立 observations（`provenance.complete=not_checked`）并经重定位打包测试验证。`platform-diagnostics` 保持为当前唯一 L2。
+- **共享模块图静态守卫扩展**：[`tests/plugin-boundaries.test.mjs`](../../tests/plugin-boundaries.test.mjs) 现同时检查全部 L2/L3 能力的 `validators/*.mjs` 与 `core/*.mjs` 打包依赖图，确保共享科学验证器与报告渲染器不反向导入 `runtime/`、UI、`@deepseek-ai/*` 或 `electron`。
+
+## 2026-11-25 科学验收与工程稳健性快照（O–R）
+
+201 个 Capability：`L0=102`、`L1=87`、`L2=5`、`L3=7`。QPanda QUBO 与 LDPC decoding 增加版本化 Profile、真实字节物化复核、可读报告和 full 沙箱 Harness 重启回放；七条 L3 的八个完整 Tool 调用均包含 workspace-write。缺参考保持 conditional，发现科学矛盾则 failed。
+
+PyZX、Symmer、PauLie 和 Graphix 增加独立 observations Validator、JSON Schema 和固定 eval，保持空 Acceptance / Reproduction Profiles；与 platform-diagnostics 共五条 L2。只在各自有界数值范围内核验，不外推量子优势、码距、硬件容错阈值或任意输入通道等价。
+
+## 2026-11-25 科学验收提升快照（K–N）
+
+201 个 Capability：`L0=102`、`L1=91`、`L2=3`、`L3=5`。
+QEC memory 与 Hamiltonian 接入版本化 Acceptance Profile、真实字节物化复核、确定性可读报告、
+中央 Acceptance Builder 和 Harness Session 重放。五条 L3 的完整调用副作用均包含工作区写入；
+独立参考缺失时不能获得 passed，不将静态成熟度等同于所有实例验收通过。
+
+QPanda QUBO 与 LDPC decoding 从 L1 升至 L2，增加 schema、独立 Validator 与固定 eval；
+前者重建原始目标/等式约束并独立穷举 n≤16，后者重算 GF(2) 残差、权重和统计并独立重放 BP+LSD。
+两项保持空 Acceptance / Reproduction Profiles；第三项 L2 为 platform-diagnostics。
+
+## 2026-11-25 合流与 Hamiltonian L2 快照（G–J）
+
+201 个 Capability：`L0=102`、`L1=93`、`L2=3`、`L3=3`。
+[`hamiltonian-simulation`](../../.agents/skills/hamiltonian-simulation/SKILL.md) 增加独立请求式矩阵参考、
+态/保真度/酉误差、门序列与资源、Trotter 加密步数上界及 qDrift seed 复核，见[验证证据](../../.agents/skills/hamiltonian-simulation/evals/README.md)。
+与 QEC memory 一样仅产 observations，没有新增 Acceptance Profile、Materializer 或 central Acceptance Builder。
+三个本地安全/准备分支已在治理分支合流，原分支引用保留；科学 MCP 保持 `enforcement: full`，
+QEC 实时 SDK/独立重放测试在完整沙箱中通过。源码静态 Skill/MCP/SDK 数与下方历史快照相同。
+
+## 2026-11-25 QEC 成熟度快照（E 阶段，保留记录）
+
+201 个 Capability：`L0=102`、`L1=94`、`L2=2`、`L3=3`。本次将
+[`qec-memory-experiment`](../../.agents/skills/qec-memory-experiment/SKILL.md) 从 L1 推进到 L2：
+增加结构化结果、独立计数/区间复算、Stim 电路与 DEM 参数复核及同机 seed 重放；固定 eval 与本地 SDK
+失败路径证据见[验证记录](../../.agents/skills/qec-memory-experiment/evals/README.md)。
+Validator 仅产 observations，没有新增 Acceptance Profile、Materializer 或 central Acceptance Builder 接入。
+内置 Skill 193、MCP 连接 91、SDK/源码环境 121 与前一日快照相同。
+
+## 2026-11-24 全量扩展快照与保守治理策略
+
+| 维度 | 2026-11-24 统计 | 说明 |
+| --- | --- | --- |
+| Capability 总数 | **201** 个 Capability | `L0=102`、`L1=95`、`L2=1`、`L3=3`（含 8 个 Tool-only 能力：`metriq-data`、`qiskit-gym`、`qiskit-ibm-runtime`、`qiskit-ibm-transpiler`、`qpanda-runtime`、`quantum-hardware`、`quantum-learning`、`quantum-practices`） |
+| 内置 Skill | **193** 个内置 Skill | 180 自动可选，13 手动分类索引（`disable-model-invocation: true`） |
+| MCP 服务连接 | **91** 个 MCP 连接 | 66 个默认开启（其中 Qiskit 两项可通过离线开关关闭），25 个按需启用；策略登记 258 个 MCP Tool |
+| SDK / 源码环境 | **121** 个 SDK/源码环境 | `python=109`、`julia=9`、`native=2`、`lean=1`；其中 `nativeOnly=36` |
+
+### 本轮治理决策（2026-11-24）
+
+1. **自动调用 Skill 集合（保守策略）**：本轮保留当时 180 个自动可选 Skill 与 13 个手动分类索引的策略；后续变更通过 `npm run governance:audit` 查看实时统计和声明内部一致性，不以本页数字限制新增能力。
+2. **宿主激活边界对齐**：
+   - **Desktop（0.8.6+）**：通过 `adaptive-capabilities.mjs` 将受管 MCP rows 转为按需原生 Tool Provider，默认开启不意味着启动时同时拉起相应 MCP 子进程；
+   - **Codex 插件**：通过发现 → 准备 → 执行三入口按需调用共享后端；
+   - **源码 Web 模式**：直接装载 [`agent.cordis.yml`](../../runtime/openquantum/agent-presets/openquantum/agent.cordis.yml) 的默认声明（66 个默认开启，其中 Qiskit 两项可通过离线开关关闭；25 个按需启用）；`agent.cordis.yml` 同时作为 25+ 脚本、迁移器与一致性测试的单文件声明权威，不在统一抽象就绪前强行拆文件。
+3. **CI 验证模板收敛**：新增或维护 SDK 的隔离数值回归统一接入 [`.github/workflows/sdk-checks.yml`](../../.github/workflows/sdk-checks.yml) 与 Python/Julia 可复用模板（`_reusable-python-sdk.yml` / `_reusable-julia-sdk.yml`），禁止再为单个 SDK 复制独立 workflow 或向 `ci.yml` 内联手工 `git diff` 逻辑。
+
+### 成熟度准入与升级门槛
+
+2026-11-24 的能力分布为 `L0=102`、`L1=95`、`L2=1`、`L3=3`：
+
+- **新增能力准入门槛**：
+  1. 必须先经去重核查，说明相较实时 SDK 目录的真实物理/算法增量，不以实现语言差异或同类包装作为接入理由；
+  2. 新接入优先采用“L0 Skill + 固定原生 SDK 环境 + 独立数值对照”路径，避免无必要地继续增加默认开启的 MCP 进程；
+  3. 同步更新 `.agents/capability-packages.yml` 与 `docs/CAPABILITIES.md`，并通过 `npm run governance:audit` 与 `npm run capability:conformance`；本页仅在治理规则变化或新增日期化审计记录时更新；
+  4. 大体量日志与过程产物留在 CI Artifact（`sdk-checks.yml`），主仓仅保留紧凑的摘要 JSON 与最小原始见证（见 [证据边界说明](../integrations/evidence/README.md)）。
+- **L2 / L3 科学验收推进优先级**：
+  - 当前 L3 仅覆盖 `quantum-ground-state`、`quantum-information-audit` 与 `quantum-circuit-verification`（DSH 侧），Codex 自动物化与会话验收尚未接通；
+  - 后续演进优先从高频科研能力中提升 L2/L3 覆盖（如 `qec-memory-experiment`、`hamiltonian-simulation`、`qiskit-circuit-workbench`），避免仅扩充 L0/L1 数量。
+
+---
+
+## 历史基线：扩展治理清单（2026-09-24）
 
 本清单以主线基线 `9254ab2f73830d6f635433fd1ab21c7e017f8059` 为起点，覆盖仓库默认 Preset 的 **101 个 Skill、37 个 MCP 连接和 220 个可配置注册的 Tool 名称**。B1/B2/B3 调整均已落地，逐项保留兼容入口；本次完成范围是扩展治理，不是全部云服务在线验收。用户自行添加的 Skill、MCP 与其他 Preset 不在这个固定分母内。
 

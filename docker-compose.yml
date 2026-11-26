@@ -13,9 +13,10 @@ services:
     environment:
       DSH_PERMISSION_MODE: "${DSH_PERMISSION_MODE:-workspace-write}"
       DSH_TELEMETRY_MODE: DISABLED
+      OPENQUANTUM_WORKSPACE_ROOT: /research
     volumes:
       - openquantum-state:/workspace/.openquantum
-      - openquantum-results:/workspace/results
+      - openquantum-results:/research
 
 volumes:
   openquantum-state:

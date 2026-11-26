@@ -1,6 +1,6 @@
+import { isMainModule } from "../src/lib/cli-entrypoint.mjs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
 import { DESKTOP_SOURCE } from "./lib/desktop-source.mjs";
 import { RELEASES_URL, validateRelease } from "../src/updates/release.mjs";
@@ -17,7 +17,7 @@ export function buildUpdateManifest({ manifest, tag, publishedAt, desktop = DESK
   });
 }
 
-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (isMainModule(import.meta.url)) {
   const { values } = parseArgs({ options: { tag: { type: "string" }, "published-at": { type: "string" }, output: { type: "string" } }, strict: true });
   if (!values.tag || !values["published-at"] || !values.output) throw new Error("Usage: --tag vX.Y.Z --published-at ISO_DATE --output FILE");
   const manifest = JSON.parse(await readFile(new URL("../package.json", import.meta.url), "utf8"));

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
 import { once } from "node:events";
-import { mkdtemp, rm } from "node:fs/promises";
+import { mkdtemp, realpath, rm } from "node:fs/promises";
 import { createServer } from "node:http";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -88,7 +88,7 @@ test("health check exits nonzero when the server is unavailable", async () => {
 });
 
 test("real production Harness passes anonymous health and authenticated page/RPC probes", { timeout: 60_000 }, async (t) => {
-  const sandbox = await mkdtemp(path.join(tmpdir(), "oq-host-health-"));
+  const sandbox = await mkdtemp(path.join(await realpath(tmpdir()), "oq-host-health-"));
   let child;
   t.after(async () => {
     if (child && child.exitCode === null) {

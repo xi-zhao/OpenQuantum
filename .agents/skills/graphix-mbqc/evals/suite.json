@@ -1,0 +1,176 @@
+{
+  "schemaVersion": "1.0",
+  "id": "graphix-mbqc-observations-eval",
+  "version": "1.0.0",
+  "metric": {
+    "id": "expected-observation-outcome",
+    "unit": "case fraction",
+    "direction": "higher_is_better",
+    "minimum": 0,
+    "maximum": 1
+  },
+  "cases": [
+    {
+      "id": "default",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [],
+        "caseSha256": "eddad8d885219151dc10ca7b957c84b6c296294499a6e56343e250a14cc13b5c"
+      }
+    },
+    {
+      "id": "generated",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [],
+        "caseSha256": "41473822f1922268d7df5d7edd320a54d9b33c40f66903ea4f0538a0d9383a04"
+      }
+    },
+    {
+      "id": "identity",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [],
+        "caseSha256": "159fa7b1cd7a6498aa5d3ee20cc27db5e919d0451e754e219e92a2ef91cf593e"
+      }
+    },
+    {
+      "id": "rotation",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [],
+        "caseSha256": "b87db1e64bc4712cfd019bc544940f80c27ab223528b28b046dd35a78341a46e"
+      }
+    },
+    {
+      "id": "skip",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [],
+        "caseSha256": "aa15216ddc7d39899e66093c597b038e3b97b9c18c37019579e0469b5d701024"
+      }
+    },
+    {
+      "id": "missing-byproduct-corrections",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "branch-0.corrections",
+          "branch-2.corrections",
+          "branch-3.corrections"
+        ],
+        "caseSha256": "9855a672d507fe95b0d54b703a4275135061ca06f7fa410d0cbcd7ba01978b0e"
+      }
+    },
+    {
+      "id": "false-fidelity",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "branch-0.claims"
+        ],
+        "caseSha256": "8c910ffadf1d5e49ab373dde777594411729760f6dfb3c17932fd75b2517a45a"
+      }
+    },
+    {
+      "id": "unnormalized-state",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "branch-0.claims",
+          "branch-0.corrections",
+          "branch-0.normalization",
+          "branch-0.state",
+          "reference.claims"
+        ],
+        "caseSha256": "01d6d3e6a629bee6226874f4604c38da5256d22b7773f09b30147b8e52597dc6"
+      }
+    },
+    {
+      "id": "false-corrected-state",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "branch-0.claims",
+          "branch-0.corrections",
+          "branch-0.state",
+          "reference.claims"
+        ],
+        "caseSha256": "3d7d1fc5fc5a90d87d62135a7eaa5219e424500403602ebf8d235170a3139c57"
+      }
+    },
+    {
+      "id": "missing-resource-edge",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "pattern.structure"
+        ],
+        "caseSha256": "e17452ecae520720eb49d124190965d0f652384a846597dc343ec60fb25cf975"
+      }
+    },
+    {
+      "id": "wrong-space",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "pattern.structure"
+        ],
+        "caseSha256": "a157d4e84db88d54be416fa96571bff62f1fd2dff2a3b50e965d156924370d21"
+      }
+    },
+    {
+      "id": "missing-measurement",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "branches.binding"
+        ],
+        "caseSha256": "590033a694a2a5ca0688b747269c0d6e013906f6a7befa10d7544b649189e289"
+      }
+    },
+    {
+      "id": "future-correction",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "pattern.structure"
+        ],
+        "caseSha256": "04aff16af0ac87ee886d7ea5c7a484e9a6845e8346d0d5f2626cc621fd4bb8fb"
+      }
+    },
+    {
+      "id": "fake-reference-state",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "reference.claims"
+        ],
+        "caseSha256": "e5d8539867d6e63059cb0c946e0c2249b6311618d8eff0bc3db80fe11449c5c7"
+      }
+    },
+    {
+      "id": "generation-only",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [],
+        "caseSha256": "3aa5e8aa63f9b49fef1b970896c0e4ebd01365ccd5ad418c3cda9ff793b9996f"
+      }
+    }
+  ]
+}

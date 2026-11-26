@@ -102,6 +102,8 @@ MWPF 使用 `mwpf-decoding` 入口：显式运行 `node scripts/setup-sdk.mjs mw
 
 [完整 Skill 目录](docs/CAPABILITIES.md#内置-skills) · [MCP 服务及默认开关](docs/CAPABILITIES.md#mcp-服务目录) · [原生 Tool 与副作用](docs/CAPABILITIES.md#原生量子-tools) · [SDK API 与逐库验证](docs/integrations/FULL_SDK_ACCESS.md) · [相近方法怎么选](docs/integrations/CAPABILITY_SELECTION.md)
 
+DSH 的研究工作区须与 OpenQuantum 安装目录、运行环境和 DSH Home 分开。内置科学 MCP 只在宿主文件沙箱中运行，临时计算文件与最终结果分别处理；具体权限与部署方式见[科学计算执行边界](docs/DEPLOYMENT.md#科学计算执行边界)。
+
 <br />
 
 <a id="使用与结果"></a>

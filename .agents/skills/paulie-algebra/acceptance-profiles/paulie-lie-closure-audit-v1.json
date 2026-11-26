@@ -1,0 +1,100 @@
+{
+  "schemaVersion": "1.0",
+  "id": "paulie-lie-closure-audit",
+  "version": "1.0.0",
+  "scope": {
+    "supportedClaims": [
+      "Persisted Pauli dynamical Lie algebra evidence with independent nested-commutator closure (<=4 qubits, <=64 generators), dense AB-BA cross-check (<=3 qubits) and central Acceptance."
+    ],
+    "outOfScope": [
+      "Abstract isomorphism proofs of upstream Lie algebra labels, finite-depth ansatz expressibility, trainability, pulse reachability or hardware controllability.",
+      "Independent closure proof beyond 4 qubits or 64 Pauli generators, or dense commutator verification beyond 3 qubits."
+    ]
+  },
+  "checks": [
+    {
+      "id": "request.schema",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Persisted generator request satisfies its JSON Schema."
+    },
+    {
+      "id": "artifact.schema",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Persisted Lie algebra result satisfies its JSON Schema."
+    },
+    {
+      "id": "generators.structure",
+      "category": "scientific",
+      "required": true,
+      "criterion": "All Pauli generators are distinct, nonidentity and match numQubits."
+    },
+    {
+      "id": "reference.policy",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Reported reference mode binds to the requested referenceMode."
+    },
+    {
+      "id": "algebra.dimension",
+      "category": "scientific",
+      "required": false,
+      "criterion": "When within <=4 qubits and <=64 generators, independent nested commutator closure agrees with reported DLA dimension."
+    },
+    {
+      "id": "algebra.special-unitary",
+      "category": "scientific",
+      "required": false,
+      "criterion": "Full su(2^n) dimension 4^n - 1 and generatesFullSpecialUnitary flag agree with independent closure."
+    },
+    {
+      "id": "basis.independent",
+      "category": "scientific",
+      "required": false,
+      "criterion": "When explicit closure is returned, basis elements are distinct nonidentity Hilbert-Schmidt orthogonal Pauli words."
+    },
+    {
+      "id": "algebra.closure",
+      "category": "scientific",
+      "required": false,
+      "criterion": "When explicit closure is returned within <=4 qubits, it exactly equals the independent nested commutator closure."
+    },
+    {
+      "id": "closure.complete",
+      "category": "scientific",
+      "required": false,
+      "criterion": "Returned closure contains every generator and is closed under all pairwise commutators."
+    },
+    {
+      "id": "center.dimension",
+      "category": "scientific",
+      "required": false,
+      "criterion": "Reported center dimension matches the centralizer of the independent closure."
+    },
+    {
+      "id": "dense.claims",
+      "category": "scientific",
+      "required": false,
+      "criterion": "When the Tool reports a computed dense reference, its dimension and residual agree with independent closure."
+    },
+    {
+      "id": "dense.commutators",
+      "category": "scientific",
+      "required": false,
+      "criterion": "For <=3 qubits, complex dense AB - BA commutators independently agree with every symplectic closure bracket."
+    },
+    {
+      "id": "observations.integrity",
+      "category": "scientific",
+      "required": true,
+      "criterion": "Every performed independent check is non-failing; optional reference availability cannot hide a scientific contradiction."
+    },
+    {
+      "id": "provenance.complete",
+      "category": "reproducibility",
+      "required": true,
+      "criterion": "Actual re-read canonical input and artifact bytes match their digests and actual Harness event range."
+    }
+  ]
+}

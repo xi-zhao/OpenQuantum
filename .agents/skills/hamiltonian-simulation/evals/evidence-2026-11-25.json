@@ -1,0 +1,90 @@
+{
+  "schemaVersion": "1.0",
+  "kind": "development-eval-evidence",
+  "date": "2026-11-25",
+  "capability": "hamiltonian-simulation",
+  "level": "L2",
+  "runtime": {
+    "system": "Darwin",
+    "machine": "arm64",
+    "qiskit": "2.5.2",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1"
+  },
+  "checks": [
+    {
+      "command": "node .agents/skills/hamiltonian-simulation/evals/run-evals.mjs",
+      "passed": 29,
+      "failed": 0,
+      "skipped": 0,
+      "logSha256": "ca1c597a7123f5e6a52dd3cba2cf8d1742457d0160bf3b4e41cd6439e22f8f2e"
+    },
+    {
+      "command": "npm run capability:hamiltonian:test",
+      "passed": 36,
+      "failed": 0,
+      "skipped": 0,
+      "logSha256": "9c301b1a04d0824f6718aa66fd88b3b74b4904c61ce16c2cf34b632dc5ee7cf2"
+    },
+    {
+      "command": "OPENQUANTUM_REAL_HAMILTONIAN=1 node --test --test-concurrency=1 .agents/skills/hamiltonian-simulation/test/live.test.mjs tests/hamiltonian-live.test.mjs tests/harness-hamiltonian.test.mjs",
+      "passed": 11,
+      "failed": 0,
+      "skipped": 0,
+      "logSha256": "cdab136118464260b4636a57cb1c10b8e61f58904164d5ce138980f07d80b9a6"
+    },
+    {
+      "command": "npm run capability:contracts:test",
+      "passed": 279,
+      "failed": 0,
+      "skipped": 1,
+      "logSha256": "84be17e243ea96d4b8fa3881de42f1f8309d904ebc7d61f92671e83694fed6ed"
+    }
+  ],
+  "files": {
+    "LICENSE": "dd7de183a152199c19d8e16fb81a0b92c73640896bf0213917650c96ce37b3b0",
+    "NOTICE": "8e853149d6771183599af3a625f31925fa95bb61188771567d30c683ac7c4f09",
+    "SKILL.md": "0c261884ab66dd88a0c69a8c5d8ac4ef0919136f390a8fc26c549173d1ce8e23",
+    "artifacts/hamiltonian-simulation-result.schema.json": "b8cb226b6eb8da04da91f4c3312991afa841d95c398ea2df0a38e08a119b38d1",
+    "artifacts/observations.schema.json": "27a211ae533f0ca83483eceb29deed11546091433adb84d36023139fb8103124",
+    "evals/README.md": "0ad4931b5acc7b2be9c30e193f859d1fb0c28de1f6630122335bf896fb65de09",
+    "evals/cases.json": "a3f50015c3ac0b936a3cdd334369085a99d48411dd5ae99d5387ab6d1c68a780",
+    "evals/fixtures/circuit-only.json": "009c045ce9337a1f5bf74841358d8fb229211172e419d905a5912f4d7b5a348f",
+    "evals/fixtures/identity.json": "74dc237fd1530ebf6a50f93ff278f10c8ef944d92f04163ace1ac7a97e333fa1",
+    "evals/fixtures/qdrift.json": "7413a8bbb9ae949b43fcf8130c81e425a6e73dd139048a05f41681b10196a4d8",
+    "evals/fixtures/trotter-1.json": "d236144547113e930cee0000ea1eb37f1b718ea0f48b7f7622c133b3720b5fdf",
+    "evals/fixtures/trotter-2.json": "1bc4461df7becae9522c3c72525f0c08bb80606014115ad017a1d50ff732cf1e",
+    "evals/fixtures/trotter-4.json": "d4364e2096ffdc658279a3cd9c293f0f4231db9dfa713d5b62b4d8be015332a0",
+    "evals/fixtures/zero-time.json": "6c5a131e67d22b9014d4931f0e8736f84ba61521fce465041f70340722497084",
+    "evals/run-evals.mjs": "6cce2018547f073d3cbb1899d0a7fbfc6c9df243441ca13493daed800410df6a",
+    "evals/suite.json": "bc713b97ce53ca098f972abe0f67c322e49e8e5fbe2e90e5d075770dc3f6a3c6",
+    "inputs/request.schema.json": "a4195aacebea02c3d8afc944bc120ace5ca5085adb8104b405b89b8150ea2907",
+    "mcp/bridge.py": "de4580efeb683183071e21053a20772b049bdf799de36c4ef7fbb583d1ccb92e",
+    "mcp/contracts.mjs": "f5b92e79d710477d3e58e65c850c57a08112dd89c7efa5dc843cefa418e7be5d",
+    "mcp/server.mjs": "8f7aea731d719aaf2fc7df71b8ae03954e2dba0548cad69810ca2e15b0f4d9fe",
+    "pyproject.toml": "64b9c2af702159fa7f2a86a9f8e78913539a73dafb95509927eb29cb344b184f",
+    "source.json": "9207ef3db9cabfb4279e3510c7a35c0c53538a2132796b40e0e6b1b1b90115f1",
+    "test/live.test.mjs": "07bde07df328720f2ce70ce1e11ca3db336a6e1c185ddd2c5bbf7fba4c203778",
+    "test/validator.test.mjs": "e303c82dd5177c4d55a0b72e4a2eed00112829da5969a58391f4122d22d26a92",
+    "uv.lock": "29be3d89c73a3a5dd34c4826daff00bc02f6cbcde8355ed070675581b6cfab46",
+    "validators/reference.py": "524af3d1fdeb321ab6bf073bcb7f66b4773fcb97c4e6c2e737f878deff05d281",
+    "validators/validate-result.mjs": "a5372292be2345163367198486d35caaee520e2614bf0fc01217d5a48afb33e7"
+  },
+  "sharedFiles": {
+    "src/lib/bounded-science-mcp.mjs": "280ff51d1c5ca574a7fcec47f271df08d3e35f13c112b4c728a574d0992bab5f",
+    "tests/hamiltonian-contracts.test.mjs": "f756cce838bb3054519fc089fe42bf8467d3a8ad8745a0ba1c1fca6e8cd5a0b1",
+    "tests/hamiltonian-live.test.mjs": "07168fa1e0aa0d18b6a5dc0579151405b9da6d04f3078b2eed512389432019e4",
+    "tests/harness-hamiltonian.test.mjs": "f0d35e97b71927a094f00e1c117bc7019c70314676a7b093a9b4b249757ab916"
+  },
+  "scope": [
+    "The Python reference reads only the original request and does not import Qiskit or the Tool bridge.",
+    "Fresh local MCP checks include full OS file-write confinement; the Harness model is a local protocol fixture.",
+    "Finite numerical consistency and resource/seed observations only; no external model, quantum cloud or hardware calls."
+  ],
+  "limitations": [
+    "No Acceptance Profile, Result Package, Materializer or central Acceptance Builder integration.",
+    "NumPy linear algebra and PCG64 are common dependencies, not independently proven correct.",
+    "Observed Trotter order is not asserted outside a resolved asymptotic regime; no single-realization qDrift error guarantee.",
+    "No independent external domain review or hardware acceptance is claimed."
+  ]
+}

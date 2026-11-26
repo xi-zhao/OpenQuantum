@@ -54,7 +54,7 @@ def compute(v):
             raise ValueError(f"PyZX output failed independent unitary equivalence: {error}")
     def metrics(c):
         stats = c.stats_dict()
-        return {"gates": stats["gates"], "twoQubitGates": stats["twoqubit"], "tCount": stats["tcount"]}
+        return {"gates": stats["gates"], "twoQubitGates": stats["twoqubit"], "tCount": stats["tcount"], "depth": c.depth()}
     return {"inputQasm": circuit.to_qasm(), "optimizedQasm": optimized.to_qasm(), "before": metrics(circuit), "after": metrics(optimized),
         "unitaryMaxError": error, "reference": reference, "equivalenceTolerance": 1e-8 if error is not None else None, "equivalentUpToGlobalPhase": True if error is not None else None, "bitOrder": "left-to-right q0,q1,..."}, [
         "Unitary Clifford+T circuits only; comparisons ignore global phase. Y is represented by X then Z in the emitted input QASM.",

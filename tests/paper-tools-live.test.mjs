@@ -18,7 +18,7 @@ async function withTool(t, id, action) {
   await action(async (input, label) => {
     const response = await client.callTool({ name: entry.tool, arguments: input }, undefined, { timeout: 195000 });
     assert.notEqual(response.isError, true, JSON.stringify(response));
-    assert.equal(response.structuredContent.scientificValidation, "not_evaluated");
+    assert.equal(response.structuredContent.scientificValidation, id === "ldpc-decoding" ? "observations_available" : "not_evaluated");
     await writeFile(path.join(evidence, `${id}-${label}.json`), JSON.stringify({ verifiedAt: new Date().toISOString(), ...response.structuredContent }, null, 2));
     return response.structuredContent.result;
   });

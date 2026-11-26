@@ -22,7 +22,7 @@ description: 用固定 PyZX 对 Clifford+T 电路做 ZX 重写和电路提取，
 - 先明确比较目标是 T-count、双量子位门数还是总门数；三项可能此消彼长。报告 before/after 的实际值，不承诺每项都会改善。
 - Tool 返回输入和优化后的 OpenQASM 2，可按 referenceMode 独立构造完整酉矩阵，忽略整体相位比较。提取保留量子位排列；实际执行参考且发现不等价时，调用失败。
 - Y 在输入 QASM 中展开为 X 后接 Z，整体相位不影响此处合同；before 统计的是展开后的 PyZX 电路。QASM 可继续交给已有 QCEC 工具检查；本能力不做硬件映射。
-- 当前 L1，`scientificValidation=not_evaluated`；依赖须显式准备；计算可能写本地缓存。
+- 当前 L3（DSH 侧支持物化证据与可回放中央验收；Codex 侧保留 `scientificValidation=observations_available` 独立观察）；依赖须显式准备；计算可能写本地缓存。
 
 版本、准备命令、数值检查和限制见[接入说明](../../../docs/integrations/UNITARY_NEXT_TOOLS.md)。
 
@@ -33,3 +33,9 @@ description: 用固定 PyZX 对 Clifford+T 电路做 ZX 重写和电路提取，
 ## 依赖准备
 
 运行前执行 `node scripts/setup-paper-tools.mjs pyzx-optimization`。缺失、旧锁和已安装环境的处理见[共同准备说明](../../../docs/integrations/LOCAL_ENVIRONMENTS.md)；Tool 不自动安装或升级依赖。
+
+## 独立科学观察与可回放科学验收（L3）
+
+执行期独立验证器只产 observations，不自行推导科学验收；`provenance.complete=not_checked`，`reproductionProfiles: []`。独立解析前后 QASM，精确核对输入门表与请求（含已声明的 Y→X、Z 展开），防止通过相消门填充虚报优化幅度；复算门数/T 门数/双比特门数及依赖深度。≤6 qubits、≤512 输入门、≤2048 输出门且未跳过参考时，用独立复矩阵乘法核对全局相位无关酉等价。超出参考范围或缺环境时相应观察为 not_checked，不限制主 Tool 的计算规模。
+
+DSH 完整调用含 `workspace-write`：宿主 Materializer 经 `ctx.fs` 原子写入并重读输入与结果字节，中央 Builder 按 `pyzx-unitary-optimization-audit@1.0.0` 派生科学验收并保存可读报告。缺少稠密酉对照或显式跳过参考保留 `conditional`，任何独立检查发现矛盾则 `failed`。Codex 继续只提供执行期 observations。

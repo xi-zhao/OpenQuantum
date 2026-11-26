@@ -1,3 +1,4 @@
+import { isMainModule } from "../src/lib/cli-entrypoint.mjs";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -75,7 +76,7 @@ export async function prepareLeanSdk(root, id, environment = process.env) {
   } finally { await fs.rmdir(guard); }
 }
 
-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (isMainModule(import.meta.url)) {
   const [id, ...extra] = process.argv.slice(2);
   if (extra.length) throw new Error("Provide one reviewed Lean SDK id");
   await prepareLeanSdk(fileURLToPath(new URL("../", import.meta.url)), id);

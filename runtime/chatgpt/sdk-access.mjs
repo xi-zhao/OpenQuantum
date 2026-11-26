@@ -2,6 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import os from "node:os";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { isMainModule } from "./cli-entrypoint.mjs";
 
 // Copied into each generated Skill's scripts/. The installed MCP manifest is
 // authoritative both in the archive and after the installer splits out runtime/.
@@ -17,7 +18,7 @@ export async function locateSdkRuntime(pluginRoot) {
   return root;
 }
 
-if (process.argv[1] && await fs.realpath(process.argv[1]).catch(() => null) === fileURLToPath(import.meta.url)) {
+if (isMainModule(import.meta.url)) {
   try {
     const pluginRoot = fileURLToPath(new URL("../../../", import.meta.url));
     const root = await locateSdkRuntime(pluginRoot);

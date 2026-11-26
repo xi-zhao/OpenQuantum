@@ -38,7 +38,7 @@ DSH 与 Codex 复用相同 Skill、SDK 清单及宿主代码执行；没有新�
 
 ## 验证入口
 
-[远端工作流](../../.github/workflows/rcmps-sdk.yml)显式准备固定环境，断网执行
+[远端工作流](../../.github/workflows/sdk-checks.yml)（经 [Julia SDK 可复用模板](../../.github/workflows/_reusable-julia-sdk.yml)）显式准备固定环境，断网执行
 [Julia 检查](../../tests/fixtures/rcmps-validation.jl)，再用
 [独立 NumPy 稳态参考](../../tests/fixtures/rcmps-steady-reference.py)核对：
 

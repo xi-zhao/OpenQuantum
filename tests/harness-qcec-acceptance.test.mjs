@@ -8,6 +8,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import test from "node:test";
 import { prepareOpenQuantumHarnessHome } from "../scripts/lib/prepare-harness-home.mjs";
+import { createProtectedState } from "./helpers/protected-state.mjs";
 import { harnessHttpCookie, harnessSessionSnapshot, redactHarnessLaunchTokens } from "../scripts/lib/harness-http-auth.mjs";
 import { preparePythonFixture } from "./helpers/prepared-python.mjs";
 import { parseScientificToolResult, QUANTUM_CIRCUIT_VERIFICATION_TOOL as TOOL } from "../runtime/openquantum/agent-presets/openquantum/scientific-result-protocol.mjs";
@@ -31,7 +32,8 @@ test("real Harness persists QCEC Acceptance before the model finishes and replay
 }, async t => {
   const root = process.cwd();
   const sandbox = await mkdtemp(path.join(tmpdir(), "oq-qcec-harness-"));
-  const harnessHome = path.join(sandbox, "dsh"), workspace = path.join(sandbox, "workspace");
+  const privateRoot = await createProtectedState(root);
+  const harnessHome = path.join(privateRoot, "dsh"), workspace = path.join(sandbox, "workspace");
   let child, logs = "", cookie, stage = 0, presentation, reportPath, readAfterRestart = false;
   const modelErrors = [];
   const model = createServer(async (request, response) => {
@@ -69,7 +71,7 @@ test("real Harness persists QCEC Acceptance before the model finishes and replay
     }
     response.end("data: [DONE]\n\n");
   });
-  t.after(async () => { await stop(child); model.closeAllConnections(); await new Promise(resolve => model.close(resolve)); await rm(sandbox, { recursive: true, force: true }); });
+  t.after(async () => { await stop(child); model.closeAllConnections(); await new Promise(resolve => model.close(resolve)); await rm(sandbox, { recursive: true, force: true }); await rm(privateRoot, { recursive: true, force: true }); });
   await mkdir(workspace);
   let prepared = {};
   if (!realBridge) {
@@ -86,7 +88,7 @@ process.stdin.on('end',()=>{
 });
 `);
     await chmod(executable, 0o755);
-    prepared = await preparePythonFixture({ root, sandbox, id: "quantum-circuit-verification", executable });
+    prepared = await preparePythonFixture({ root, sandbox: privateRoot, id: "quantum-circuit-verification", executable });
   }
   const modelPort = await listen(model), reserved = createServer(), port = await listen(reserved);
   await new Promise(resolve => reserved.close(resolve));

@@ -1,0 +1,173 @@
+{
+  "request": {
+    "gates": [
+      {
+        "gate": "CZ",
+        "targets": [
+          0,
+          1
+        ]
+      },
+      {
+        "gate": "CZ",
+        "targets": [
+          0,
+          1
+        ]
+      }
+    ],
+    "numQubits": 2,
+    "simulate": true,
+    "initialState": "zero",
+    "branches": 4,
+    "seed": 7,
+    "referenceMode": "auto",
+    "execution": {}
+  },
+  "result": {
+    "nodes": [
+      0,
+      1
+    ],
+    "edges": [],
+    "inputNodes": [
+      0,
+      1
+    ],
+    "outputNodes": [
+      0,
+      1
+    ],
+    "maxSpace": 2,
+    "pattern": "",
+    "referenceStatevector": [
+      [
+        1,
+        0
+      ],
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        0
+      ]
+    ],
+    "reference": {
+      "mode": "auto",
+      "status": "computed",
+      "method": "Independent gate-model statevector evolution",
+      "reason": "Independent reference computed for this input."
+    },
+    "simulation": {
+      "status": "computed",
+      "backend": "statevector",
+      "reason": "Sampled corrected output states computed."
+    },
+    "branches": [
+      {
+        "seed": 7,
+        "statevector": [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "fidelity": 1,
+        "normError": 0,
+        "measurements": []
+      },
+      {
+        "seed": 8,
+        "statevector": [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "fidelity": 1,
+        "normError": 0,
+        "measurements": []
+      },
+      {
+        "seed": 9,
+        "statevector": [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "fidelity": 1,
+        "normError": 0,
+        "measurements": []
+      },
+      {
+        "seed": 10,
+        "statevector": [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "fidelity": 1,
+        "normError": 0,
+        "measurements": []
+      }
+    ],
+    "maxInfidelity": 0,
+    "bitOrder": "left-to-right logical q0,q1,... mapped by outputNodes"
+  }
+}

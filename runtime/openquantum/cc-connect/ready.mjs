@@ -1,8 +1,8 @@
-/** Keep ACP's first handshake behind the configured model adapter's mount.
+/** Keep ACP's first handshake behind the execution guard and model adapter.
  * The official ACP bundle can accept stdio while sibling Includes are still
  * loading. This Host readiness service performs no model/network request.
  */
-export const inject = ["llm", "loader"];
+export const inject = ["llm", "loader", "openquantumExecutionBoundary"];
 
 export async function apply(ctx, { provider }) {
   await new Promise((resolve, reject) => {

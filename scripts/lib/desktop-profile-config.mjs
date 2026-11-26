@@ -33,6 +33,12 @@ function assertManagedRows(source, projectRoot, nodeExecutable, managed) {
     const nodes = new Set([nodeExecutable, ...(typeof deployedNode === "string" && path.isAbsolute(deployedNode) ? [deployedNode] : [])]);
     const matches = [...nodes].some(node => candidates(node).some(rows => rows.some(template => {
       const expected = { ...template }; delete expected.disabled; delete expected.id;
+      // The new adapter adds containment without changing the reviewed server.
+      // Accept the exact former adapter spelling during managed Home migration.
+      if (expected.name === "./scientific-mcp-client.mjs" && configuration.name === "@deepseek-ai/dsh-mcp-client") expected.name = configuration.name;
+      if (expected.name === "./credentialed-mcp-client.mjs" && expected.config?.scientific && !Object.hasOwn(configuration.config ?? {}, "scientific")) {
+        expected.config = { ...expected.config }; delete expected.config.scientific;
+      }
       return isDeepStrictEqual(configuration, expected);
     })));
     if (!matches) throw new Error(`Desktop 配置 ${id || row.config?.serverName || row.name} 包含自定义 MCP 或 Tool 参数，未转换。请保留原配置，与 runtime/openquantum/agent-presets/openquantum/agent.cordis.yml 比较并手动合并后再试。`);

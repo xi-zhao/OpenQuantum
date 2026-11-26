@@ -62,7 +62,7 @@ sympy 表达式字符串、文件路径或数据集加载。
 - `classical` 是经典暴力遍历的确定性参考；`checks.objectiveConsistencyError` 只是对目标函数取值
   做的自洽检查，不是独立 Validator。
 - 建模工具会枚举全部二值赋值，核对“原目标 + penalty 残差平方”等于编译后 QUBO，并独立比较
-  pyqpanda_alg 的经典最小值；这些是 `observations_available`，不自动物化最终 Acceptance。
+  pyqpanda_alg 的经典最小值；执行期为 `observations_available`，DSH 随后物化并由中央 Builder 推导最终 Acceptance。
 - `penalty.sufficient=fail` 是模型事实，不是运行错误：提高 penalty 或重新建模后再比较。
 - QAOA 结果是变分采样近似，含随机性；不要把一次分布解释为确定性最优。
 - Harness MCP Client 连接不可用或 MCP-exposed Tool 返回错误时保留原始错误语义，不编造最优解、分布或版本。
@@ -82,3 +82,20 @@ sympy 表达式字符串、文件路径或数据集加载。
 ## 依赖准备
 
 运行前执行 `node scripts/setup-paper-tools.mjs qpanda-qubo`。缺失、旧锁和已安装环境的处理见[共同准备说明](../../../docs/integrations/LOCAL_ENVIRONMENTS.md)；Tool 不自动安装或升级依赖。
+
+## 独立数值 observations
+
+两个 Tool 都由独立 JS Validator 从原始输入重新检查，不导入 Tool 编译器或采信其自报最优值。
+命名二元模型直接展开 `sign*objective + Σ penalty*(A x-b)^2`，常数偏置必须保留；
+矩阵采用 `x^T Q x`，上三角和对称表示可等价，非对角系数的对称部分与线性对角独立复核。
+每个返回解都报告原目标、逐约束残差、可行性、惩罚与总能量。
+变量数 `n≤16` 且未显式跳过参考时独立枚举全部 `2^n` 个二值向量，核对加罚全局最优、可行最优和所有最优赋值；
+更大规模保留候选解检查，最优性为 `not_checked`，不限制 Tool 计算规模。
+不可行约束或不足惩罚产生失败 observation；QAOA 的最高概率比特串不代表最优解。
+
+执行期 `scientificValidation=observations_available`、`provenance.complete=not_checked`；中央验收另见下节的版本化 Profile，`reproductionProfiles: []`。
+固定正反例、输入/结果 Schema 与证据见 [eval 说明](evals/README.md)。
+
+## 可回放科学验收
+
+执行期只生成独立 observations，`provenance.complete=not_checked`。DSH 完整调用含 workspace-write：宿主 Materializer 经 ctx.fs 原子写入并重读证据，中央 Builder 按 `qubo-algebraic-optimality-audit@1.0.0` 派生验收并保存可读报告。只在 n≤16 且未跳过穷举时核对全局最优集合；QAOA 分布不构成全局最优证明。 缺少穷举或独立重放保留 conditional，独立检查发现错误则 failed。Codex 继续只提供执行期 observations。
