@@ -30,7 +30,7 @@
 <h2 align="center">量子智能体</h2>
 
 <p align="center">
-  开源，自带模型。连接社区专业量子软件、论文方法与独立核对，在 Codex 或 Desktop 中直接开展可复算的量子研究。
+  开源开放，连接社区专业量子软件、论文方法与独立核对，在 Codex 或 Desktop 中直接开展可复算的量子研究。
 </p>
 
 <h3 align="center">
@@ -62,7 +62,7 @@
 
 ### 一份插件，两种入口
 
-同一套量子科研能力同时支持 **Codex 插件** 与 **OpenQuantum Desktop**。自带支持 Tool Calling 的模型，按需准备科学依赖，程序、参数与计算记录全程留痕。
+同一套量子科研能力同时支持 **Codex 插件** 与 **OpenQuantum Desktop**。接入你自己的 Tool Calling 模型服务，按需准备科学依赖，程序、参数与计算记录全程留痕。
 
 [Codex 插件](docs/integrations/CODEX_PLUGIN.md) · [Desktop 安装](docs/DESKTOP_INSTALLERS.md) · [架构说明 →](docs/README.md)
 
