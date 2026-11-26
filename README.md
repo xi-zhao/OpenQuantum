@@ -121,12 +121,28 @@ https://github.com/user-attachments/assets/5c00a30d-eef0-493a-975f-3faeb200cc9e
 
 <br />
 
-| 领域 | 已接入的开源软件、论文方法与生态入口 |
-| :--- | :--- |
-| **电路编译** | <a href="https://github.com/Qiskit/qiskit"><kbd>IBM Qiskit</kbd></a> <a href="https://github.com/PennyLaneAI/pennylane"><kbd>Xanadu PennyLane</kbd></a> <a href="https://github.com/CQCL/tket"><kbd>Quantinuum pytket</kbd></a> <a href="https://github.com/zxcalc/pyzx"><kbd>PyZX</kbd></a> <a href="https://github.com/TeamGraphix/graphix"><kbd>Graphix</kbd></a> <a href="https://github.com/munich-quantum-toolkit/qcec"><kbd>MQT QCEC</kbd></a> |
-| **纠错控制** | <a href="https://github.com/quantumlib/Stim"><kbd>Google Stim</kbd></a> <a href="https://github.com/oscarhiggott/PyMatching"><kbd>PyMatching</kbd></a> <a href="https://github.com/unitaryfoundation/mitiq"><kbd>Mitiq</kbd></a> <a href="https://github.com/munich-quantum-toolkit/qecc"><kbd>MQT QECC</kbd></a> <a href="https://github.com/quantumlib/chromobius"><kbd>Chromobius</kbd></a> <a href="https://github.com/Deltakit/deltakit"><kbd>Deltakit</kbd></a> <a href=".agents/skills/mwpf-decoding/SKILL.md"><kbd>MWPF</kbd></a> <a href=".agents/skills/emlint-dem-audit/SKILL.md"><kbd>emlint</kbd></a> <a href=".agents/skills/tropidist-distance/SKILL.md"><kbd>tropidist</kbd></a> <a href=".agents/skills/erasure-recovery/SKILL.md"><kbd>erasure-recovery</kbd></a> <a href=".agents/skills/stgrape-control/SKILL.md"><kbd>ST-GRAPE</kbd></a> |
-| **多体化学** | <a href="https://github.com/qutip/qutip"><kbd>QuTiP</kbd></a> <a href="https://github.com/tenpy/tenpy"><kbd>TeNPy</kbd></a> <a href="https://github.com/quantumlib/OpenFermion"><kbd>OpenFermion</kbd></a> <a href="https://github.com/dynamiqs/dynamiqs"><kbd>Dynamiqs</kbd></a> <a href=".agents/skills/slowquant-response/SKILL.md"><kbd>SlowQuant</kbd></a> <a href=".agents/skills/tnqs-dynamics/SKILL.md"><kbd>TNQS</kbd></a> <a href=".agents/skills/rcmps-field-theory/SKILL.md"><kbd>RcmpsCore</kbd></a> <a href=".agents/skills/ppvm-simulation/SKILL.md"><kbd>PPVM</kbd></a> <a href="https://github.com/QuEraComputing/bloqade-python"><kbd>QuEra Bloqade</kbd></a> <a href="https://github.com/pasqal-io/Pulser"><kbd>Pasqal Pulser</kbd></a> |
-| **形式与云** | <a href=".agents/skills/lean-physics/SKILL.md"><kbd>Lean 4 / mathlib / physlib</kbd></a> <a href="examples/quantum-algorithms/README.md"><kbd>49 项开源算法</kbd></a> <a href="docs/integrations/OPENMAIC.md"><kbd>量子学习通</kbd></a> <a href="docs/CAPABILITIES.md#本地计算与量子云"><kbd>IBM · IonQ · 本源 · 夸父 · 天衍</kbd></a> <a href="docs/integrations/FULL_SDK_ACCESS.md"><kbd>+ 122 个锁定环境</kbd></a> |
+<table>
+  <tr>
+    <th width="14%" align="left">领域</th>
+    <th width="86%" align="left">已接入的开源软件、论文方法与生态入口</th>
+  </tr>
+  <tr>
+    <td width="14%"><strong>电路编译</strong></td>
+    <td width="86%"><a href="https://github.com/Qiskit/qiskit"><kbd>IBM Qiskit</kbd></a> <a href="https://github.com/PennyLaneAI/pennylane"><kbd>Xanadu PennyLane</kbd></a> <a href="https://github.com/CQCL/tket"><kbd>Quantinuum pytket</kbd></a> <a href="https://github.com/zxcalc/pyzx"><kbd>PyZX</kbd></a> <a href="https://github.com/TeamGraphix/graphix"><kbd>Graphix</kbd></a> <a href="https://github.com/munich-quantum-toolkit/qcec"><kbd>MQT QCEC</kbd></a></td>
+  </tr>
+  <tr>
+    <td width="14%"><strong>纠错控制</strong></td>
+    <td width="86%"><a href="https://github.com/quantumlib/Stim"><kbd>Google Stim</kbd></a> <a href="https://github.com/oscarhiggott/PyMatching"><kbd>PyMatching</kbd></a> <a href="https://github.com/unitaryfoundation/mitiq"><kbd>Mitiq</kbd></a> <a href="https://github.com/munich-quantum-toolkit/qecc"><kbd>MQT QECC</kbd></a> <a href="https://github.com/quantumlib/chromobius"><kbd>Chromobius</kbd></a> <a href="https://github.com/Deltakit/deltakit"><kbd>Deltakit</kbd></a> <a href=".agents/skills/mwpf-decoding/SKILL.md"><kbd>MWPF</kbd></a> <a href=".agents/skills/emlint-dem-audit/SKILL.md"><kbd>emlint</kbd></a> <a href=".agents/skills/tropidist-distance/SKILL.md"><kbd>tropidist</kbd></a> <a href=".agents/skills/erasure-recovery/SKILL.md"><kbd>erasure-recovery</kbd></a> <a href=".agents/skills/stgrape-control/SKILL.md"><kbd>ST-GRAPE</kbd></a></td>
+  </tr>
+  <tr>
+    <td width="14%"><strong>多体化学</strong></td>
+    <td width="86%"><a href="https://github.com/qutip/qutip"><kbd>QuTiP</kbd></a> <a href="https://github.com/tenpy/tenpy"><kbd>TeNPy</kbd></a> <a href="https://github.com/quantumlib/OpenFermion"><kbd>OpenFermion</kbd></a> <a href="https://github.com/dynamiqs/dynamiqs"><kbd>Dynamiqs</kbd></a> <a href=".agents/skills/slowquant-response/SKILL.md"><kbd>SlowQuant</kbd></a> <a href=".agents/skills/tnqs-dynamics/SKILL.md"><kbd>TNQS</kbd></a> <a href=".agents/skills/rcmps-field-theory/SKILL.md"><kbd>RcmpsCore</kbd></a> <a href=".agents/skills/ppvm-simulation/SKILL.md"><kbd>PPVM</kbd></a> <a href="https://github.com/QuEraComputing/bloqade-python"><kbd>QuEra Bloqade</kbd></a> <a href="https://github.com/pasqal-io/Pulser"><kbd>Pasqal Pulser</kbd></a></td>
+  </tr>
+  <tr>
+    <td width="14%"><strong>形式与云</strong></td>
+    <td width="86%"><a href=".agents/skills/lean-physics/SKILL.md"><kbd>Lean 4 / mathlib / physlib</kbd></a> <a href="examples/quantum-algorithms/README.md"><kbd>49 项开源算法</kbd></a> <a href="docs/integrations/OPENMAIC.md"><kbd>量子学习通</kbd></a> <a href="docs/CAPABILITIES.md#本地计算与量子云"><kbd>IBM · IonQ · 本源 · 夸父 · 天衍</kbd></a> <a href="docs/integrations/FULL_SDK_ACCESS.md"><kbd>+ 122 个锁定环境</kbd></a></td>
+  </tr>
+</table>
 
 <div align="center">
 
