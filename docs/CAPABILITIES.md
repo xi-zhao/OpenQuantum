@@ -150,7 +150,7 @@ OpenQuantum 为本地模拟、IBM Quantum、IonQ 和多家国内量子云保留�
   <a href="#原生量子-tools">原生量子 Tools</a>
 </p>
 
-当前源码分发 **190 个内置 Skill、91 个 MCP 服务连接、5 个原生量子 Tool**。其中 66 个 Skill 来自 quantum-skills 的开源工作流适配，共用现有代码执行工具；其中 49 项提供可运行示例，覆盖 unitarylab_algorithms 的全部 39 个模块。Skill、Tool 和 MCP 连接分别统计。
+当前源码分发 **193 个内置 Skill、91 个 MCP 服务连接、5 个原生量子 Tool**。其中 66 个 Skill 来自 quantum-skills 的开源工作流适配，共用现有代码执行工具；其中 49 项提供可运行示例，覆盖 unitarylab_algorithms 的全部 39 个模块。Skill、Tool 和 MCP 连接分别统计。
 
 当前配置共包含 **282 个可配置 Tool 名称**：258 个由 MCP 服务提供，18 个为 Harness 通用工具，6 个为平台原生工具（上面的 5 个量子动作及 1 个教学生成动作）。这是配置全集；`bash` / `pwsh` 按平台互斥，连接开关、环境和工具范围也会影响实际可调用集合。既有能力的逐项决定见[治理记录](architecture/EXTENSION_GOVERNANCE.md)，新增中性原子动力学见 [Bloqade Analog](integrations/BLOQADE_ANALOG.md)。
 
@@ -161,7 +161,7 @@ OpenQuantum 为本地模拟、IBM Quantum、IonQ 和多家国内量子云保留�
 
 既有条目与治理情况见[治理清单](architecture/EXTENSION_GOVERNANCE.md)；相近入口及大型可选服务的专业工具范围见[能力选择](integrations/CAPABILITY_SELECTION.md)。
 
-这 190 个 Skill 覆盖方法选择、计算实验、结果解释和平台诊断。其中 177 项可由 Agent 自动选择，13 个分类索引保留为用户手动导航；原名称和手动调用均可继续使用。点击名称即可查看完整的 `SKILL.md`；所需工具与连接分别配置。新增算法工作流的参数、安装与开源替换差异见[运行说明](../examples/quantum-algorithms/README.md)。
+这 193 个 Skill 覆盖方法选择、计算实验、结果解释和平台诊断。其中 180 项可由 Agent 自动选择，13 个分类索引保留为用户手动导航；原名称和手动调用均可继续使用。点击名称即可查看完整的 `SKILL.md`；所需工具与连接分别配置。新增算法工作流的参数、安装与开源替换差异见[运行说明](../examples/quantum-algorithms/README.md)。
 
 下表按**研究方法与用途**介绍能力。各 Tool 提供的模型、参数和输入格式见[计算参数与运行方式](EXAMPLES.md#计算参数与运行方式)。
 
@@ -193,6 +193,9 @@ OpenQuantum 为本地模拟、IBM Quantum、IonQ 和多家国内量子云保留�
 | [`staq-compilation`](../.agents/skills/staq-compilation/SKILL.md) | OpenQASM AST、综合、线路变换、优化与映射 | 宿主代码 Tool；显式准备原生 SDK |
 | [`lean-physics`](../.agents/skills/lean-physics/SKILL.md) | Lean 4 / mathlib / physlib 证明与公理审计 | 宿主代码 Tool；显式准备固定 Lean 环境 |
 | [`chromobius-decoding`](../.agents/skills/chromobius-decoding/SKILL.md) | 带颜色/基标注的 Stim DEM 与逻辑 observable 解码 | 宿主代码 Tool；显式准备原生 SDK |
+| [`mwpf-decoding`](../.agents/skills/mwpf-decoding/SKILL.md) | 加权超图、syndrome、权重界与 Stim/Sinter observable 译码 | 宿主代码 Tool；显式准备原生 SDK；抛错模式和预算边界 |
+| [`stgrape-control`](../.agents/skills/stgrape-control/SKILL.md) | 有限维 Hamiltonian 的目标态控制、Taylor 响应与分裂传播 | 限固定时间网格和噪声假设，记录预算终止及独立传播误差 |
+| [`tropidist-distance`](../.agents/skills/tropidist-distance/SKILL.md) | GF(2) 矩阵或 Stim 电路的单位权故障距离、上下界与重放 | 限已声明的故障模型，分别核对下界和上界见证 |
 | [`slowquant-response`](../.agents/skills/slowquant-response/SKILL.md) | 分子激发能、跃迁性质与量子线性响应 | 宿主代码 Tool；显式准备固定源码 SDK；保留响应近似与诊断 |
 | [`tnqs-dynamics`](../.agents/skills/tnqs-dynamics/SKILL.md) | 非规则图张量网络、电路、有限平面 CTMRG 与采样 | 宿主代码 Tool；显式准备固定 Julia SDK；保留几何与收敛边界 |
 | [`rcmps-field-theory`](../.agents/skills/rcmps-field-theory/SKILL.md) | 连续 RCMPS、标量场优化、正常序观测量与同真空激发 | 宿主代码 Tool；显式准备固定 Julia CPU SDK；区分传递 gap 与 Hamiltonian 能隙 |
@@ -210,12 +213,12 @@ OpenQuantum 为本地模拟、IBM Quantum、IonQ 和多家国内量子云保留�
 | [`qiskit-circuit-workbench`](../.agents/skills/qiskit-circuit-workbench/SKILL.md) | 量子电路分析、格式转换、转译比较与 Qiskit 文档查证 | `qiskit`、`qiskit_docs` |
 | [`flagquantum-workbench`](../.agents/skills/flagquantum-workbench/SKILL.md) | 第二家量子 MCP 电路工作台 | `flagquantum`；[使用说明](integrations/CANDIDATE_LIBRARIES.md) |
 | [`tyxonq-workbench`](../.agents/skills/tyxonq-workbench/SKILL.md) | 门电路仿真、态矢演化、量子噪声与采样分布分析 | `tyxonq_local` |
-| [`pyzx-optimization`](../.agents/skills/pyzx-optimization/SKILL.md) | ZX 重写、Clifford+T 优化与电路提取 | `pyzx_local` |
+| [`pyzx-optimization`](../.agents/skills/pyzx-optimization/SKILL.md) | ZX 重写、Clifford+T 优化与电路提取 | `pyzx_local`；DSH 支持 L3 物化科学验收 |
 | [`compact-optimization`](../.agents/skills/compact-optimization/SKILL.md) | 线路优化与独立等价对照 | `compact_local`；[使用说明](integrations/CANDIDATE_LIBRARIES.md) |
-| [`hamiltonian-simulation`](../.agents/skills/hamiltonian-simulation/SKILL.md) | Trotter/qDrift 演化电路、态矢量与独立误差对照 | `hamiltonian_local`；[使用说明](integrations/UNITARYLAB_OPEN_ADAPTATION.md) |
+| [`hamiltonian-simulation`](../.agents/skills/hamiltonian-simulation/SKILL.md) | Trotter/qDrift 演化电路、态矢量与独立误差对照 | `hamiltonian_local`；DSH 支持 L3 物化科学验收；[使用说明](integrations/UNITARYLAB_OPEN_ADAPTATION.md) |
 | [`qcut-knitting`](../.agents/skills/qcut-knitting/SKILL.md) | 门切割与期望值重建 | `qcut_local`；[使用说明](integrations/CANDIDATE_LIBRARIES.md) |
-| [`graphix-mbqc`](../.agents/skills/graphix-mbqc/SKILL.md) | 电路到 MBQC 模式、资源图、自适应测量和纠正输出 | `graphix_local` |
-| [`quantum-circuit-verification`](../.agents/skills/quantum-circuit-verification/SKILL.md) | 量子电路等价性验证、优化前后对照与全局相位差异判定 | `qcec_local` |
+| [`graphix-mbqc`](../.agents/skills/graphix-mbqc/SKILL.md) | 电路到 MBQC 模式、资源图、自适应测量和纠正输出 | `graphix_local`；DSH 支持 L3 物化科学验收 |
+| [`quantum-circuit-verification`](../.agents/skills/quantum-circuit-verification/SKILL.md) | 量子电路等价性验证、优化前后对照与全局相位差异判定 | `qcec_local`；DSH 支持 L3 物化科学验收 |
 | [`clifft-sampling`](../.agents/skills/clifft-sampling/SKILL.md) | Clifford+T 噪声采样、Stim 格式记录与 detector/observable 原始奇偶值 | `clifft_local` |
 | [`qbraid-conversion`](../.agents/skills/qbraid-conversion/SKILL.md) | Qiskit/Cirq 酉电路转换、OpenQASM 2 导出与位序等价对照 | `qbraid_local` |
 
@@ -236,18 +239,18 @@ OpenQuantum 为本地模拟、IBM Quantum、IonQ 和多家国内量子云保留�
 | [`flow-vqe`](../.agents/skills/flow-vqe/SKILL.md) | 流模型辅助的 VQE 参数学习、低能量态搜索与基线比较 | `flow_vqe_local` |
 | [`openqarp-excited-states`](../.agents/skills/openqarp-excited-states/SKILL.md) | VQD 激发态、残差与正交性 | `openqarp_local`；[使用说明](integrations/CANDIDATE_LIBRARIES.md) |
 | [`cqlib-kernel`](../.agents/skills/cqlib-kernel/SKILL.md) | 角度编码核与 QSVM | `cqlib_kernel_local`；[使用说明](integrations/CANDIDATE_LIBRARIES.md) |
-| [`symmer-tapering`](../.agents/skills/symmer-tapering/SKILL.md) | 指定 Pauli 对称性扇区的降比特与同扇区保谱检查 | `symmer_local` |
-| [`paulie-algebra`](../.agents/skills/paulie-algebra/SKILL.md) | Pauli 生成元的 Lie 代数分类、精确维数与可选闭包 | `paulie_local` |
-| [`qpanda-qubo`](../.agents/skills/qpanda-qubo/SKILL.md) | 组合优化问题的 QUBO 建模、约束转换、经典求解与本地 QAOA 对照 | `qpanda_qubo` |
+| [`symmer-tapering`](../.agents/skills/symmer-tapering/SKILL.md) | 指定 Pauli 对称性扇区的降比特与同扇区保谱检查 | `symmer_local`；DSH 支持 L3 物化科学验收 |
+| [`paulie-algebra`](../.agents/skills/paulie-algebra/SKILL.md) | Pauli 生成元的 Lie 代数分类、精确维数与可选闭包 | `paulie_local`；DSH 支持 L3 物化科学验收 |
+| [`qpanda-qubo`](../.agents/skills/qpanda-qubo/SKILL.md) | 组合优化问题的 QUBO 建模、约束转换、经典求解与本地 QAOA 对照 | `qpanda_qubo`；DSH 支持 L3 物化科学验收 |
 
 ### 误差缓解与量子纠错
 
 | Skill | 研究方法与用途 | 执行入口 |
 | --- | --- | --- |
 | [`mitiq-error-mitigation`](../.agents/skills/mitiq-error-mitigation/SKILL.md) | 量子误差缓解方法比较、采样预算规划与误差成本分析，涵盖 ZNE、REM、PEC、CDR | `mitiq_local`；[使用说明](integrations/MITIQ.md) |
-| [`qec-memory-experiment`](../.agents/skills/qec-memory-experiment/SKILL.md) | 表面码存储实验、噪声采样、MWPM 译码与逻辑错误率分析 | `qec_local` |
+| [`qec-memory-experiment`](../.agents/skills/qec-memory-experiment/SKILL.md) | 表面码存储实验、噪声采样、MWPM 译码与逻辑错误率分析 | `qec_local`；DSH 支持 L3 物化科学验收 |
 | [`deltakit-qec`](../.agents/skills/deltakit-qec/SKILL.md) | 表面码码片建模、噪声实验、采样与译码性能分析 | `deltakit_local` |
-| [`ldpc-decoding`](../.agents/skills/ldpc-decoding/SKILL.md) | 二元校验矩阵的 BP+LSD 解码与 syndrome 一致性检查 | `ldpc_local` |
+| [`ldpc-decoding`](../.agents/skills/ldpc-decoding/SKILL.md) | 二元校验矩阵的 BP+LSD 解码与 syndrome 一致性检查 | `ldpc_local`；DSH 支持 L3 物化科学验收 |
 
 ### 开放系统动力学
 
@@ -505,7 +508,7 @@ OpenQuantum 组合本地 MCP 桥接与直接接入的上游 MCP 服务。下表�
 | --- | --- | --- | --- |
 | [`pennylane_local`](../.agents/skills/pennylane-differentiable/mcp/server.mjs) · [pennylane](https://github.com/PennyLaneAI/pennylane) | 用户电路的概率、Pauli 期望值和参数梯度。 | 默认开启 | 显式准备独立环境；[版本与边界](integrations/VENDOR_SDKS.md) |
 | [`deepquantum_local`](../.agents/skills/deepquantum-differentiable/mcp/server.mjs) · [deepquantum](https://github.com/TuringQ/deepquantum) | 基于 PyTorch 的电路概率、期望值和参数梯度。 | 默认开启 | 显式准备独立环境；[版本与边界](integrations/VENDOR_SDKS.md) |
-| [`tensorcircuit_local`](../.agents/skills/tensorcircuit-differentiable/mcp/server.mjs) · [tensorcircuit](https://github.com/tencent-quantum-lab/tensorcircuit) | 张量网络电路的概率、期望值和参数梯度。 | 默认开启 | 显式准备独立环境；[版本与边界](integrations/VENDOR_SDKS.md) |
+| [`tensorcircuit_local`](../.agents/skills/tensorcircuit-differentiable/mcp/server.mjs) · [TensorCircuit-NG](https://github.com/tensorcircuit/tensorcircuit-ng) | 张量网络电路的概率、期望值和参数梯度。 | 默认开启 | 显式准备独立环境；[版本与边界](integrations/VENDOR_SDKS.md) |
 | [`mindquantum_local`](../.agents/skills/mindquantum-differentiable/mcp/server.mjs) · [mindquantum](https://gitee.com/mindspore/mindquantum) | 本地电路模拟、Pauli 期望值和参数梯度。 | 默认开启 | 显式准备独立环境；[版本与边界](integrations/VENDOR_SDKS.md) |
 | [`pytket_local`](../.agents/skills/pytket-compilation/mcp/server.mjs) · [pytket](https://github.com/Quantinuum/tket) | 本地电路优化、门数比较与 OpenQASM 导出。 | 默认开启 | 显式准备独立环境；[版本与边界](integrations/VENDOR_SDKS.md) |
 | [`ocean_local`](../.agents/skills/ocean-optimization/mcp/server.mjs) · [dimod + dwave-samplers](https://github.com/dwavesystems/dwave-ocean-sdk) | 二值二次模型的本地穷举或模拟退火；不是量子退火硬件执行。 | 默认开启 | 显式准备独立环境；[版本与边界](integrations/VENDOR_SDKS.md) |
@@ -618,7 +621,7 @@ OpenQuantum 提供以下 5 个原生量子动作，用于基态求解、调校�
 
 ## 可选上游 Skill
 
-[OriginQ 官方 `pyqpanda3` Skill](https://github.com/OriginQ/pyqpanda3-skill) 提供电路编程、算法模板、迁移与 QCloud 使用指导。它**不计入上面的 190 个内置 Skill，也不会在首次启动时自动安装**；运行 `npm run skill:qpanda:setup` 后，固定审阅版本才会进入项目 Skill 目录。安装这个 Skill 不会自动启用 `qpanda_runtime`，也不会赋予云任务权限。
+[OriginQ 官方 `pyqpanda3` Skill](https://github.com/OriginQ/pyqpanda3-skill) 提供电路编程、算法模板、迁移与 QCloud 使用指导。它**不计入上面的 193 个内置 Skill，也不会在首次启动时自动安装**；运行 `npm run skill:qpanda:setup` 后，固定审阅版本才会进入项目 Skill 目录。安装这个 Skill 不会自动启用 `qpanda_runtime`，也不会赋予云任务权限。
 
 ## 开源生态与致谢
 
@@ -727,3 +730,17 @@ IBM Quantum、IonQ 和本源量子是可连接的云服务。任务提交分别�
 </details>
 
 组件许可与再分发约束以 [THIRD_PARTY_NOTICES.md](../THIRD_PARTY_NOTICES.md) 和各目录 LICENSE / NOTICE 为准。
+
+## 可回放科学验收纵切
+
+QGS、QI、QCEC、QEC memory、Hamiltonian evolution、QPanda QUBO 与 LDPC decoding 七条 L3 能力复用中央 Materializer、Validator 与
+Acceptance Builder。QEC 只验收固定参数的采样/解码、Wilson 区间、电路/DEM 和同机 seed 重放；
+Hamiltonian 验收有界厄米 Pauli 演化、态范数、谱分解参考、门资源、Trotter 误差界及 qDrift 重放。
+具体范围见 [QEC](../.agents/skills/qec-memory-experiment/SKILL.md) 和
+[Hamiltonian](../.agents/skills/hamiltonian-simulation/SKILL.md)。
+完整调用包含 `results/openquantum/` 下的证据与可读报告写入，因此均为 `workspace-write`；
+MCP 注解不得标记为只读。Tool 自身仅返回 observations，中央验收由物化后证据推导。
+
+QPanda QUBO 的 `qubo-algebraic-optimality-audit@1.0.0` 将独立代数重建与 n≤16 全量穷举连接到物化验收；跳过穷举或超出变量阈值保持 conditional。LDPC 的 `ldpc-syndrome-replay-audit@1.0.0` 核对有界 H、逐样本 syndrome、权重、统计和 full 沙箱内的独立 serial BP+LSD 重放；缺环境保持 conditional。二者执行期仍只给 observations，完整调用均为 workspace-write，不据此证明量子码距、硬件阈值或 QAOA 的普遍最优性。
+
+PyZX、Symmer、PauLie 与 Graphix 为 observations-only L2：独立核对酉矩阵、目标对称扇区完整能谱、Pauli DLA 闭包/中心与 MBQC 分支修正。每项包含 schema、独立 Validator 和固定正反例；空 Acceptance / Reproduction Profiles 保留其计算观察边界，不因 Tool 成功宣称最终科学验收。

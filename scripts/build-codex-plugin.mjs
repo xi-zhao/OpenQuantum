@@ -1,7 +1,7 @@
+import { isMainModule } from "../src/lib/cli-entrypoint.mjs";
 import fs from "node:fs/promises";
 import path from "node:path";
 import os from "node:os";
-import { fileURLToPath } from "node:url";
 import { parse, stringify } from "yaml";
 import { zipSync } from "fflate";
 import { buildChatgpt, git, json } from "./build-chatgpt.mjs";
@@ -46,12 +46,24 @@ async function packagePlugin({ root, output, release, built }) {
   for (const file of files) {
     const capability = file.match(/^\.agents\/skills\/([^/]+)\//)?.[1];
     if (prefixes.some(prefix => file.startsWith(prefix)) || metadataFiles.includes(file) || owned.has(capability) || sdkIds.has(capability)) {
-      if (/(?:^|\/)(?:test|tests|evals|__pycache__|artifacts)\//.test(file) && !file.startsWith(".agents/skills/quantum-ground-state/") && file !== ".agents/skills/platform-diagnostics/artifacts/diagnostic-report.schema.json") continue;
+      // Schemas are runtime contracts consumed by MCP/Validators, even when
+      // colocated with artifacts. Generated results and eval fixtures stay out.
+      const artifactSchema = /^\.agents\/skills\/[^/]+\/artifacts\/[^/]+\.schema\.json$/.test(file);
+      if (/(?:^|\/)(?:test|tests|evals|__pycache__|artifacts)\//.test(file) && !file.startsWith(".agents/skills/quantum-ground-state/") && !artifactSchema) continue;
       if (/\.env(?:\.|$)|\.(?:key|pem)$/.test(file)) throw new Error("Credential-like source cannot be packaged");
       await copy(file);
     }
   }
   const policy = parse(await fs.readFile(path.join(root, ".agents/capability-packages.yml"), "utf8"));
+  // L2/L3 execution must remain relocatable after eval fixtures are excluded.
+  // Check scientific runtime resources against their authoritative manifest.
+  for (const entry of policy.packages.filter(item => ["L2", "L3"].includes(item.level) && (owned.has(item.id) || sdkIds.has(item.id)))) {
+    const base = `.agents/skills/${entry.id}`;
+    const manifest = parse(await fs.readFile(path.join(root, base, entry.audit.manifest), "utf8"));
+    const required = [entry.audit.manifest, manifest.input.schema, ...manifest.artifacts.map(item => item.schema),
+      ...manifest.validators.map(item => item.command.script), ...manifest.acceptanceProfiles.map(item => item.definition?.path).filter(Boolean)];
+    for (const file of required) await fs.access(path.join(serverRoot, base, file));
+  }
   await fs.mkdir(path.join(serverRoot, ".agents"), { recursive: true });
   // Retain opt-in capability metadata for SDK discovery without enabling its MCP.
   await fs.writeFile(path.join(serverRoot, ".agents/capability-packages.yml"), stringify({ ...policy, packages: policy.packages.filter(item => owned.has(item.id) || sdkIds.has(item.id)) }));
@@ -83,4 +95,4 @@ async function packagePlugin({ root, output, release, built }) {
   await fs.writeFile(zipPath, zipSync(entries, { level: 6, mtime: new Date("2026-01-01T00:00:00Z") }));
   return { pluginRoot, zipPath, release, tools: built.tools.length, skills: skillCount };
 }
-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) console.log(JSON.stringify(await buildPlugin(), null, 2));
+if (isMainModule(import.meta.url)) console.log(JSON.stringify(await buildPlugin(), null, 2));

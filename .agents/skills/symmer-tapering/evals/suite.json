@@ -1,0 +1,159 @@
+{
+  "schemaVersion": "1.0",
+  "id": "symmer-tapering-observations-eval",
+  "version": "1.0.0",
+  "metric": {
+    "id": "expected-observation-outcome",
+    "unit": "case fraction",
+    "direction": "higher_is_better",
+    "minimum": 0,
+    "maximum": 1
+  },
+  "cases": [
+    {
+      "id": "default",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [],
+        "caseSha256": "2cab9dc0e3ff7eb8af7d21adfd873cb34101b2c2219b32b4cbb1fff607356df7"
+      }
+    },
+    {
+      "id": "negative",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [],
+        "caseSha256": "e0ce14e40b6df65bb1e38fbede47427c2ca86d198b2b104bf5e467637cac15ed"
+      }
+    },
+    {
+      "id": "scalar",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [],
+        "caseSha256": "062bc9789823b94d3559aee3946aef3576e0ac1d9cd749995aaf18c05a130385"
+      }
+    },
+    {
+      "id": "signed",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [],
+        "caseSha256": "8ec75ba0cc806f4a1815b6c995c4ed888abc98d3b83e26e81dd2dc15bb55a978"
+      }
+    },
+    {
+      "id": "skip",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [],
+        "caseSha256": "a19447cf5cd00960b01d583603a58709e34cde03d0b13d9d0eadc3de467080b2"
+      }
+    },
+    {
+      "id": "false-symmetry",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "hamiltonian.symmetry"
+        ],
+        "caseSha256": "80015ad8e2fd75896c19a80f399cf69cb5b98fcc78efa564521913cd3c0fe8ec"
+      }
+    },
+    {
+      "id": "dependent-symmetries",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "symmetry.independent"
+        ],
+        "caseSha256": "51b92841787b6121fd724d9c2291169e1d6d9051dbd83da3a365cca8a2ba25f5"
+      }
+    },
+    {
+      "id": "noncommuting-generators",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "hamiltonian.symmetry",
+          "reduction.structure",
+          "symmetry.commutes"
+        ],
+        "caseSha256": "df8f47917e1827eccdf738ebd36ea079cfd03ba20e8cbda093942b35fbc36d32"
+      }
+    },
+    {
+      "id": "false-width",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "reduction.structure"
+        ],
+        "caseSha256": "7985e36fd0816bae44da3d2614ad59b249f85ba1a1c654525844c326c1682e7e"
+      }
+    },
+    {
+      "id": "wrong-sector",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "reference.binding"
+        ],
+        "caseSha256": "17082866565122490eee8bf54aa9c3a28a47d199a49defa59fad6a7b9e9766e3"
+      }
+    },
+    {
+      "id": "fake-spectrum",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "spectrum.claims"
+        ],
+        "caseSha256": "53836b0ff701d6a6e5ccc5b756e81436e56e459f8fa7f72c906bf383c9fe002f"
+      }
+    },
+    {
+      "id": "wrong-reduced-operator",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "sector.spectrum",
+          "spectrum.claims"
+        ],
+        "caseSha256": "7c5bad104c4a0b72cb51707885adbd51388cf62294c7c4ae686a0ece13ac0960"
+      }
+    },
+    {
+      "id": "missing-independent-environment",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [],
+        "caseSha256": "e98612734ab80f33c07a789510a57c0fca90566fa3d8d2ce2abd013cb7545c3f"
+      }
+    },
+    {
+      "id": "nonreal-coefficient",
+      "weight": 1,
+      "hardGate": true,
+      "expectedOutcome": {
+        "failedChecks": [
+          "artifact.schema"
+        ],
+        "caseSha256": "a4ce5301013c4c207f196a8c03af10a6c94463959747d1d6f540e29ffccecda4"
+      }
+    }
+  ]
+}

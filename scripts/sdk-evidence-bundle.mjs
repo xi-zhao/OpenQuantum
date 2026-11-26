@@ -1,3 +1,4 @@
+import { isMainModule } from "../src/lib/cli-entrypoint.mjs";
 import assert from "node:assert/strict";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -185,7 +186,7 @@ export async function verifyEvidenceBundle({ repository = root } = {}) {
   return { reports: reports.length, firstBatch: 13, remaining: 72, files: index.size, objects: objects.size, unavailableHistoricalReferences: missingHistoricalReferences, scientificValidation: "not_evaluated" };
 }
 
-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (isMainModule(import.meta.url)) {
   const [action, filename, digest] = process.argv.slice(2);
   if (action === "build" && !filename) console.log(JSON.stringify(await buildEvidenceBundle()));
   else if (action === "verify" && !filename) console.log(JSON.stringify(await verifyEvidenceBundle()));

@@ -1,11 +1,12 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
+import { cp, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
 
+import { parse, stringify } from "yaml";
 import { auditCapabilityPackages } from "../scripts/lib/capability-package-audit.mjs";
 
 const projectRoot = fileURLToPath(new URL("..", import.meta.url));
@@ -89,12 +90,12 @@ test("repository capability packages conform to their declared L0-L3 evidence", 
   assert.equal(report.scope, "static-declaration");
   assert.equal(report.status, "pass", report.issues.join("\n"));
   assert.deepEqual(report.summary.levelCounts, {
-    L0: 99,
-    L1: 95,
+    L0: 102,
+    L1: 87,
     L2: 1,
-    L3: 3,
+    L3: 11,
   });
-  assert.equal(report.packages.length, 198);
+  assert.equal(report.packages.length, 201);
   assert.equal(report.packages.flatMap((entry) => entry.execution.mcpServers).length, 91);
   assert(
     report.packages.every((entry) => entry.status === "pass"),
@@ -1149,4 +1150,33 @@ test("failure reports retain the v1.1 report contract", async () => {
   assert.equal(report.schemaVersion, "1.1");
   assert.equal(report.scope, "static-declaration");
   assert.equal(report.status, "fail");
+});
+
+
+test("observations-only evidence qualifies for L2 but cannot silently qualify for L3", async t => {
+  const entrypoint = ".agents/skills/fixture-capability/mcp/server.mjs";
+  const policy = packageEntrypointPolicy(entrypoint).replace("id: demo-capability", "id: fixture-capability")
+    .replace("level: L1", "level: L2") + `    audit:
+      manifest: capability.yaml
+`;
+  const root = await temporaryProject(t, policy);
+  const target = path.join(root, ".agents/skills/fixture-capability");
+  await cp(path.join(projectRoot, ".agents/skill-contracts/test/fixtures/capabilities/fixture-capability"), target, { recursive: true });
+  await addTrackedSkill(root, "fixture-capability");
+  await writePackageMcpPreset(root, entrypoint);
+  await write(root, entrypoint, "// Fixture server.\n");
+  await write(root, "tests/demo.test.mjs", "// Fixture contract check.\n");
+  await write(root, "tests/fixture.test.mjs", "// Fixture check.\n");
+  const manifest = parse(await readFile(path.join(target, "capability.yaml"), "utf8"));
+  manifest.acceptanceProfiles = [];
+  await writeFile(path.join(target, "capability.yaml"), stringify(manifest));
+  const l2 = await auditCapabilityPackages({ projectRoot: root });
+  assert.equal(l2.status, "pass", l2.issues.join("\n"));
+  await write(root, ".agents/capability-packages.yml", policy.replace("level: L2", "level: L3") + `    materialization:
+      adapter: tests/fixture.test.mjs
+      checks: [tests/fixture.test.mjs]
+`);
+  const l3 = await auditCapabilityPackages({ projectRoot: root });
+  assert.equal(l3.status, "fail");
+  assert.ok(l3.issues.some(issue => issue.includes("L3 requires at least one Acceptance Profile")), l3.issues.join("\n"));
 });

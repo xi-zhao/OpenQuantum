@@ -176,8 +176,12 @@ function assertMaterializerDefinition(definition) {
   }
 }
 
-function readPersistedJson(fileSystem, target) {
-  return JSON.parse(fs.readFileSync(fileSystem.processPath(target), "utf8"));
+function readPersistedJson(fileSystem, target, reference) {
+  const content = fs.readFileSync(fileSystem.processPath(target), "utf8");
+  if (Buffer.byteLength(content) !== reference.bytes || sha256Text(content) !== reference.sha256) {
+    throw new Error("Scientific persisted evidence bytes differ from their recorded digest");
+  }
+  return JSON.parse(content);
 }
 
 /**
@@ -191,6 +195,7 @@ export function defineScientificResultMaterializer(definition) {
 
   return async function materializeScientificResult({
     fileSystem,
+    processSandbox,
     workspaceRoot,
     sandboxPolicy,
     sessionId,
@@ -254,6 +259,7 @@ export function defineScientificResultMaterializer(definition) {
     const prepared = await definition.prepare({
       request,
       structuredContent,
+      processSandbox,
       capability: loadedCapability,
       profile,
     });
@@ -364,14 +370,14 @@ export function defineScientificResultMaterializer(definition) {
     const persistedArtifacts = Object.fromEntries(
       artifactEntries.map((entry) => [
         entry.key,
-        readPersistedJson(fileSystem, artifactTargets.get(entry.key)),
+        readPersistedJson(fileSystem, artifactTargets.get(entry.key), entry.reference),
       ]),
     );
     const validation = await prepared.validate({
       resultPackage,
       profile,
       signal,
-      request: readPersistedJson(fileSystem, inputTarget),
+      request: readPersistedJson(fileSystem, inputTarget, inputReference),
       artifacts: persistedArtifacts,
     });
     const acceptanceValue = buildAcceptanceReport({
@@ -412,7 +418,7 @@ export function defineScientificResultMaterializer(definition) {
     let readableReport;
     if (typeof prepared.renderReport === "function") {
       const content = prepared.renderReport({
-        request: readPersistedJson(fileSystem, inputTarget), artifacts: persistedArtifacts,
+        request: readPersistedJson(fileSystem, inputTarget, inputReference), artifacts: persistedArtifacts,
         acceptanceReport: acceptanceReport.value, resultPackage: resultPackage.value,
         acceptanceReportPath: acceptanceRelativePath, resultPackagePath: resultPackageRelativePath,
       });

@@ -1,0 +1,110 @@
+{
+  "request": {
+    "simulate": false,
+    "referenceMode": "skip",
+    "numQubits": 2,
+    "gates": [
+      {
+        "gate": "H",
+        "targets": [
+          0
+        ]
+      },
+      {
+        "gate": "T",
+        "targets": [
+          0
+        ]
+      },
+      {
+        "gate": "T",
+        "targets": [
+          0
+        ]
+      },
+      {
+        "gate": "CX",
+        "targets": [
+          0,
+          1
+        ]
+      }
+    ],
+    "initialState": "zero",
+    "branches": 4,
+    "seed": 7,
+    "execution": {}
+  },
+  "result": {
+    "nodes": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "edges": [
+      [
+        0,
+        2
+      ],
+      [
+        1,
+        7
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ],
+      [
+        5,
+        6
+      ],
+      [
+        6,
+        7
+      ],
+      [
+        7,
+        8
+      ]
+    ],
+    "inputNodes": [
+      0,
+      1
+    ],
+    "outputNodes": [
+      6,
+      8
+    ],
+    "maxSpace": 3,
+    "pattern": "N(2)\nE((0, 2))\nM(0, Measurement.XY(0))\nN(7)\nE((1, 7))\nM(1, Measurement.XY(0))\nN(3)\nE((2, 3))\nM(2, Measurement.XY(1.75), {0})\nN(4)\nE((3, 4))\nM(3, Measurement.XY(0), {2})\nN(5)\nE((4, 5))\nM(4, Measurement.XY(1.75), {0, 3})\nN(6)\nE((5, 6))\nM(5, Measurement.XY(0), {2, 4})\nE((7, 6))\nN(8)\nE((7, 8))\nM(7, Measurement.XY(0), {1})\nZ(6, {1, 2, 4})\nX(6, {0, 3, 5})\nZ(8, {1})\nX(8, {0, 3, 5, 7})",
+    "referenceStatevector": null,
+    "reference": {
+      "mode": "skip",
+      "status": "not_run",
+      "method": "Independent gate-model statevector evolution",
+      "reason": "Reference explicitly skipped by the caller."
+    },
+    "simulation": {
+      "status": "not_run",
+      "backend": "statevector",
+      "reason": "Pattern generation requested without state simulation."
+    },
+    "branches": [],
+    "maxInfidelity": null,
+    "bitOrder": "left-to-right logical q0,q1,... mapped by outputNodes"
+  }
+}

@@ -1,0 +1,173 @@
+name: Reusable Python SDK verification
+
+permissions:
+  contents: read
+
+on:
+  workflow_call:
+    inputs:
+      sdk_id:
+        required: true
+        type: string
+      os_matrix:
+        default: '["ubuntu-latest"]'
+        type: string
+      timeout_minutes:
+        default: 25
+        type: number
+      setup_script:
+        default: scripts/setup-sdk.mjs
+        type: string
+      python_version:
+        default: ''
+        type: string
+      uv_version:
+        default: '0.11.1'
+        type: string
+      lockfiles:
+        default: ''
+        type: string
+      isolated_temp_dirs:
+        default: false
+        type: boolean
+      log_rustc:
+        default: false
+        type: boolean
+      resolve_sdk_python:
+        default: false
+        type: boolean
+      ecosystem_check:
+        default: false
+        type: boolean
+      numerical_script:
+        default: ''
+        type: string
+      sandbox_numerical:
+        default: false
+        type: boolean
+      test_command:
+        default: ''
+        type: string
+      test_command_os:
+        default: all
+        type: string
+      artifact_name:
+        default: ''
+        type: string
+      artifact_extra_paths:
+        default: ''
+        type: string
+      upload_evidence_dir:
+        default: true
+        type: boolean
+      artifact_if_no_files:
+        default: error
+        type: string
+
+jobs:
+  native-sdk:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ${{ fromJSON(inputs.os_matrix) }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: ${{ inputs.timeout_minutes }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+      - if: inputs.python_version != ''
+        uses: actions/setup-python@v6
+        with:
+          python-version: ${{ inputs.python_version }}
+      - uses: astral-sh/setup-uv@v7
+        with:
+          version: ${{ inputs.uv_version }}
+          enable-cache: false
+      - name: Install JavaScript check dependencies
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Select isolated task directories
+        env:
+          SDK_ID: ${{ inputs.sdk_id }}
+          ISOLATED_TEMP_DIRS: ${{ inputs.isolated_temp_dirs }}
+        run: |
+          echo "OPENQUANTUM_SDK_CHECK_OUTPUT=$RUNNER_TEMP/${SDK_ID}-evidence" >> "$GITHUB_ENV"
+          if [ "$ISOLATED_TEMP_DIRS" = "true" ]; then
+            echo "OPENQUANTUM_PYTHON_ENV_ROOT=$RUNNER_TEMP/${SDK_ID}-python" >> "$GITHUB_ENV"
+            echo "UV_CACHE_DIR=$RUNNER_TEMP/${SDK_ID}-uv-cache" >> "$GITHUB_ENV"
+            echo "OPENQUANTUM_CARGO_HOME=$RUNNER_TEMP/${SDK_ID}-cargo" >> "$GITHUB_ENV"
+            echo "RAYON_NUM_THREADS=2" >> "$GITHUB_ENV"
+          fi
+      - name: Explicit preparation of the frozen SDK
+        env:
+          SDK_ID: ${{ inputs.sdk_id }}
+          SETUP_SCRIPT: ${{ inputs.setup_script }}
+          LOCKFILES: ${{ inputs.lockfiles }}
+          LOG_RUSTC: ${{ inputs.log_rustc }}
+          RESOLVE_SDK_PYTHON: ${{ inputs.resolve_sdk_python }}
+        run: |
+          if [ "$LOG_RUSTC" = "true" ]; then
+            rustc --version
+          fi
+          node "$SETUP_SCRIPT" "$SDK_ID"
+          if [ -n "$LOCKFILES" ]; then
+            read -r -a lock_paths <<< "$LOCKFILES"
+            git diff --exit-code -- "${lock_paths[@]}"
+          fi
+          if [ "$RESOLVE_SDK_PYTHON" = "true" ]; then
+            node --input-type=module -e '
+              import fs from "node:fs";
+              import { describeSdk } from "./src/lib/sdk-access.mjs";
+              const sdk = await describeSdk(process.cwd(), process.env.SDK_ID);
+              fs.appendFileSync(process.env.GITHUB_ENV, `SDK_PYTHON=${sdk.run.command}\n`);
+            '
+          fi
+      - name: Offline native user program through the existing SDK interface
+        if: inputs.ecosystem_check
+        env:
+          OPENQUANTUM_ECOSYSTEM_CHECKS: '1'
+          OPENQUANTUM_SDK_IDS: ${{ inputs.sdk_id }}
+        run: node --test tests/sdk-ecosystem-live.test.mjs
+      - name: Independent numerical references and failure cases
+        if: inputs.numerical_script != ''
+        env:
+          SDK_ID: ${{ inputs.sdk_id }}
+          NUMERICAL_SCRIPT: ${{ inputs.numerical_script }}
+          SANDBOX_NUMERICAL: ${{ inputs.sandbox_numerical }}
+        run: |
+          mkdir -p "$OPENQUANTUM_SDK_CHECK_OUTPUT"
+          python_cmd="${SDK_PYTHON:-$OPENQUANTUM_PYTHON_ENV_ROOT/$SDK_ID/bin/python}"
+          if [ "$SANDBOX_NUMERICAL" = "true" ]; then
+            sandbox-exec -p '(version 1) (allow default) (deny network*)' "$python_cmd" -B "$NUMERICAL_SCRIPT" 2>&1 | tee "$OPENQUANTUM_SDK_CHECK_OUTPUT/numerical.log"
+          else
+            script_path="$GITHUB_WORKSPACE/$NUMERICAL_SCRIPT"
+            (cd "$OPENQUANTUM_SDK_CHECK_OUTPUT" && "$python_cmd" -B "$script_path") 2>&1 | tee "$OPENQUANTUM_SDK_CHECK_OUTPUT/numerical.log"
+          fi
+      - name: SDK live regression tests
+        if: inputs.test_command != '' && (inputs.test_command_os == 'all' || runner.os == inputs.test_command_os)
+        env:
+          TEST_COMMAND: ${{ inputs.test_command }}
+        run: bash -euo pipefail -c "$TEST_COMMAND"
+      - name: Save execution evidence (with evidence directory)
+        if: always() && inputs.artifact_name != '' && inputs.upload_evidence_dir
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ inputs.artifact_name }}-${{ matrix.os }}
+          path: |
+            ${{ inputs.artifact_extra_paths }}
+            ${{ runner.temp }}/${{ inputs.sdk_id }}-evidence
+          include-hidden-files: true
+          if-no-files-found: ${{ inputs.artifact_if_no_files }}
+      - name: Save execution evidence (custom paths)
+        if: always() && inputs.artifact_name != '' && !inputs.upload_evidence_dir
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ inputs.artifact_name }}-${{ matrix.os }}
+          path: ${{ inputs.artifact_extra_paths }}
+          include-hidden-files: true
+          if-no-files-found: ${{ inputs.artifact_if_no_files }}

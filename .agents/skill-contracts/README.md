@@ -34,6 +34,9 @@ Reproduction:       Reproduction Report 权威；缺席 = not_attempted
 - v1.0 Capability / Result / Acceptance 继续按原行为读取。
 - v1.1 将 Acceptance Profile、Reproduction Profile 与 Evaluation Suite 拆成独立 JSON，并由 manifest
   的版本和 SHA-256 锁定。
+- 只产 observations 的 L2 能力可以声明空 `acceptanceProfiles`；v1.1 也允许空 `reproductionProfiles`。
+  这是 v1.0/v1.1 的兼容扩展，不改变已有 Profile 的内容或推导规则。空集合不产生验收授权，Builder
+  仍拒绝未声明的 Profile；L3 conformance 额外要求至少一个 Acceptance Profile 及物化、回放证据。
 - v1.1 Result Package 必须精确记录 manifest 声明的依赖和 Acceptance Profile 摘要。
 - 已发布定义不得原地改写；规则变化必须发布新版本并产生新摘要。
 
@@ -58,6 +61,9 @@ import {
 ```
 
 典型流程：
+
+下列完整流程用于接入验收与回放的能力。L2 可以在独立 Validator 返回 observations 后结束，
+不需要创建占位 Profile、Result Package 或调用 Acceptance Builder。
 
 1. `await loadCapability(skillRoot)`；
 2. `loadResultPackage(resultPackagePath, capability)`；

@@ -1,0 +1,349 @@
+[
+  {
+    "id": "trotter-1",
+    "fixture": "trotter-1.json",
+    "fixtureSha256": "d236144547113e930cee0000ea1eb37f1b718ea0f48b7f7622c133b3720b5fdf",
+    "edits": {},
+    "reference": true,
+    "failedChecks": []
+  },
+  {
+    "id": "trotter-2",
+    "fixture": "trotter-2.json",
+    "fixtureSha256": "1bc4461df7becae9522c3c72525f0c08bb80606014115ad017a1d50ff732cf1e",
+    "edits": {},
+    "reference": true,
+    "failedChecks": []
+  },
+  {
+    "id": "trotter-4",
+    "fixture": "trotter-4.json",
+    "fixtureSha256": "d4364e2096ffdc658279a3cd9c293f0f4231db9dfa713d5b62b4d8be015332a0",
+    "edits": {},
+    "reference": true,
+    "failedChecks": []
+  },
+  {
+    "id": "qdrift",
+    "fixture": "qdrift.json",
+    "fixtureSha256": "7413a8bbb9ae949b43fcf8130c81e425a6e73dd139048a05f41681b10196a4d8",
+    "edits": {},
+    "reference": true,
+    "failedChecks": []
+  },
+  {
+    "id": "identity",
+    "fixture": "identity.json",
+    "fixtureSha256": "74dc237fd1530ebf6a50f93ff278f10c8ef944d92f04163ace1ac7a97e333fa1",
+    "edits": {},
+    "reference": true,
+    "failedChecks": []
+  },
+  {
+    "id": "zero-time",
+    "fixture": "zero-time.json",
+    "fixtureSha256": "6c5a131e67d22b9014d4931f0e8736f84ba61521fce465041f70340722497084",
+    "edits": {},
+    "reference": true,
+    "failedChecks": []
+  },
+  {
+    "id": "circuit-only",
+    "fixture": "circuit-only.json",
+    "fixtureSha256": "009c045ce9337a1f5bf74841358d8fb229211172e419d905a5912f4d7b5a348f",
+    "edits": {},
+    "reference": true,
+    "failedChecks": []
+  },
+  {
+    "id": "illegal-pauli",
+    "fixture": "trotter-2.json",
+    "fixtureSha256": "1bc4461df7becae9522c3c72525f0c08bb80606014115ad017a1d50ff732cf1e",
+    "edits": {
+      "request.terms.0.pauli": "XA"
+    },
+    "reference": true,
+    "failedChecks": [
+      "request.scope"
+    ]
+  },
+  {
+    "id": "nonhermitian-coefficient",
+    "fixture": "trotter-2.json",
+    "fixtureSha256": "1bc4461df7becae9522c3c72525f0c08bb80606014115ad017a1d50ff732cf1e",
+    "edits": {
+      "request.terms.0.coefficient": [
+        1,
+        0.1
+      ]
+    },
+    "reference": true,
+    "failedChecks": [
+      "request.scope"
+    ]
+  },
+  {
+    "id": "invalid-initial-state",
+    "fixture": "trotter-2.json",
+    "fixtureSha256": "1bc4461df7becae9522c3c72525f0c08bb80606014115ad017a1d50ff732cf1e",
+    "edits": {
+      "request.initialState": [
+        [
+          2,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ]
+    },
+    "reference": true,
+    "failedChecks": [
+      "request.scope"
+    ]
+  },
+  {
+    "id": "odd-order",
+    "fixture": "trotter-2.json",
+    "fixtureSha256": "1bc4461df7becae9522c3c72525f0c08bb80606014115ad017a1d50ff732cf1e",
+    "edits": {
+      "request.order": 3
+    },
+    "reference": true,
+    "failedChecks": [
+      "request.scope"
+    ]
+  },
+  {
+    "id": "zero-steps",
+    "fixture": "trotter-2.json",
+    "fixtureSha256": "1bc4461df7becae9522c3c72525f0c08bb80606014115ad017a1d50ff732cf1e",
+    "edits": {
+      "request.steps": 0
+    },
+    "reference": true,
+    "failedChecks": [
+      "request.scope"
+    ]
+  },
+  {
+    "id": "unnormalized-result",
+    "fixture": "trotter-2.json",
+    "fixtureSha256": "1bc4461df7becae9522c3c72525f0c08bb80606014115ad017a1d50ff732cf1e",
+    "edits": {
+      "result.statevector.0.0": 2
+    },
+    "reference": true,
+    "failedChecks": [
+      "state.normalized",
+      "state.replayed",
+      "fidelity.replayed"
+    ]
+  },
+  {
+    "id": "forged-norm",
+    "fixture": "trotter-2.json",
+    "fixtureSha256": "1bc4461df7becae9522c3c72525f0c08bb80606014115ad017a1d50ff732cf1e",
+    "edits": {
+      "result.stateNorm": 0.5
+    },
+    "reference": true,
+    "failedChecks": [
+      "state.normalized"
+    ]
+  },
+  {
+    "id": "forged-fidelity",
+    "fixture": "trotter-2.json",
+    "fixtureSha256": "1bc4461df7becae9522c3c72525f0c08bb80606014115ad017a1d50ff732cf1e",
+    "edits": {
+      "result.stateFidelity": 0.25
+    },
+    "reference": true,
+    "failedChecks": [
+      "fidelity.replayed"
+    ]
+  },
+  {
+    "id": "forged-spectral-error",
+    "fixture": "trotter-2.json",
+    "fixtureSha256": "1bc4461df7becae9522c3c72525f0c08bb80606014115ad017a1d50ff732cf1e",
+    "edits": {
+      "result.unitarySpectralError": 0
+    },
+    "reference": true,
+    "failedChecks": [
+      "unitary-error.replayed"
+    ]
+  },
+  {
+    "id": "forged-frobenius-error",
+    "fixture": "trotter-2.json",
+    "fixtureSha256": "1bc4461df7becae9522c3c72525f0c08bb80606014115ad017a1d50ff732cf1e",
+    "edits": {
+      "result.unitaryFrobeniusError": 9
+    },
+    "reference": true,
+    "failedChecks": [
+      "unitary-error.replayed"
+    ]
+  },
+  {
+    "id": "inconsistent-step-count",
+    "fixture": "trotter-2.json",
+    "fixtureSha256": "1bc4461df7becae9522c3c72525f0c08bb80606014115ad017a1d50ff732cf1e",
+    "edits": {
+      "result.steps": 9
+    },
+    "reference": true,
+    "failedChecks": [
+      "request.binding"
+    ]
+  },
+  {
+    "id": "inconsistent-rotations",
+    "fixture": "trotter-2.json",
+    "fixtureSha256": "1bc4461df7becae9522c3c72525f0c08bb80606014115ad017a1d50ff732cf1e",
+    "edits": {
+      "result.pauliRotations": 1
+    },
+    "reference": true,
+    "failedChecks": [
+      "sampling.budget"
+    ]
+  },
+  {
+    "id": "inconsistent-gate-count",
+    "fixture": "trotter-2.json",
+    "fixtureSha256": "1bc4461df7becae9522c3c72525f0c08bb80606014115ad017a1d50ff732cf1e",
+    "edits": {
+      "result.circuit.gates": 1
+    },
+    "reference": true,
+    "failedChecks": [
+      "circuit.resources",
+      "circuit.replayed"
+    ]
+  },
+  {
+    "id": "seed-digest-forgery",
+    "fixture": "qdrift.json",
+    "fixtureSha256": "7413a8bbb9ae949b43fcf8130c81e425a6e73dd139048a05f41681b10196a4d8",
+    "edits": {
+      "result.sequenceSha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "reference": true,
+    "failedChecks": [
+      "seed.replayed"
+    ]
+  },
+  {
+    "id": "seed-count-forgery",
+    "fixture": "qdrift.json",
+    "fixtureSha256": "7413a8bbb9ae949b43fcf8130c81e425a6e73dd139048a05f41681b10196a4d8",
+    "edits": {
+      "result.sampledTermCounts": [
+        23,
+        0,
+        0
+      ]
+    },
+    "reference": true,
+    "failedChecks": [
+      "seed.replayed"
+    ]
+  },
+  {
+    "id": "qdrift-budget-forgery",
+    "fixture": "qdrift.json",
+    "fixtureSha256": "7413a8bbb9ae949b43fcf8130c81e425a6e73dd139048a05f41681b10196a4d8",
+    "edits": {
+      "result.sampledTermCounts": [
+        0,
+        0,
+        0
+      ]
+    },
+    "reference": true,
+    "failedChecks": [
+      "sampling.budget",
+      "seed.replayed"
+    ]
+  },
+  {
+    "id": "reference-bound-forgery",
+    "fixture": "trotter-2.json",
+    "fixtureSha256": "1bc4461df7becae9522c3c72525f0c08bb80606014115ad017a1d50ff732cf1e",
+    "edits": {
+      "reference.refinements.0.bound": 0
+    },
+    "reference": true,
+    "failedChecks": [
+      "trotter.error-bound"
+    ]
+  },
+  {
+    "id": "reference-request-substitution",
+    "fixture": "trotter-2.json",
+    "fixtureSha256": "1bc4461df7becae9522c3c72525f0c08bb80606014115ad017a1d50ff732cf1e",
+    "edits": {
+      "reference.request.time": 3
+    },
+    "reference": true,
+    "failedChecks": [
+      "reference.binding",
+      "circuit.replayed"
+    ]
+  },
+  {
+    "id": "no-reference",
+    "fixture": "trotter-2.json",
+    "fixtureSha256": "1bc4461df7becae9522c3c72525f0c08bb80606014115ad017a1d50ff732cf1e",
+    "edits": {},
+    "reference": false,
+    "failedChecks": []
+  },
+  {
+    "id": "incompatible-numpy",
+    "fixture": "qdrift.json",
+    "fixtureSha256": "7413a8bbb9ae949b43fcf8130c81e425a6e73dd139048a05f41681b10196a4d8",
+    "edits": {
+      "reference.runtime.numpy": "different"
+    },
+    "reference": true,
+    "failedChecks": []
+  },
+  {
+    "id": "forged-depth",
+    "fixture": "trotter-2.json",
+    "fixtureSha256": "1bc4461df7becae9522c3c72525f0c08bb80606014115ad017a1d50ff732cf1e",
+    "edits": {
+      "result.circuit.depth": 1
+    },
+    "reference": true,
+    "failedChecks": [
+      "circuit.replayed"
+    ]
+  },
+  {
+    "id": "forged-gate-angle",
+    "fixture": "trotter-2.json",
+    "fixtureSha256": "1bc4461df7becae9522c3c72525f0c08bb80606014115ad017a1d50ff732cf1e",
+    "edits": {
+      "result.openQasm3": "OPENQASM 3.0;\ninclude \"stdgates.inc\";\nqubit[2] q;\nh q[0];\nrz(0) q[0];\nh q[0];\nsdg q[0];\nh q[0];\ncx q[0], q[1];\nrz(-0.03) q[1];\ncx q[0], q[1];\nh q[0];\ns q[0];\nrz(0.03) q[1];\nsdg q[0];\nh q[0];\ncx q[0], q[1];\nrz(-0.03) q[1];\ncx q[0], q[1];\nh q[0];\ns q[0];\nh q[0];\nrz(0.0525) q[0];\nh q[0];\nh q[0];\nrz(0.0525) q[0];\nh q[0];\nsdg q[0];\nh q[0];\ncx q[0], q[1];\nrz(-0.03) q[1];\ncx q[0], q[1];\nh q[0];\ns q[0];\nrz(0.03) q[1];\nsdg q[0];\nh q[0];\ncx q[0], q[1];\nrz(-0.03) q[1];\ncx q[0], q[1];\nh q[0];\ns q[0];\nh q[0];\nrz(0.0525) q[0];\nh q[0];\nh q[0];\nrz(0.0525) q[0];\nh q[0];\nsdg q[0];\nh q[0];\ncx q[0], q[1];\nrz(-0.03) q[1];\ncx q[0], q[1];\nh q[0];\ns q[0];\nrz(0.03) q[1];\nsdg q[0];\nh q[0];\ncx q[0], q[1];\nrz(-0.03) q[1];\ncx q[0], q[1];\nh q[0];\ns q[0];\nh q[0];\nrz(0.0525) q[0];\nh q[0];\nh q[0];\nrz(0.0525) q[0];\nh q[0];\nsdg q[0];\nh q[0];\ncx q[0], q[1];\nrz(-0.03) q[1];\ncx q[0], q[1];\nh q[0];\ns q[0];\nrz(0.03) q[1];\nsdg q[0];\nh q[0];\ncx q[0], q[1];\nrz(-0.03) q[1];\ncx q[0], q[1];\nh q[0];\ns q[0];\nh q[0];\nrz(0.0525) q[0];\nh q[0];\nh q[0];\nrz(0.0525) q[0];\nh q[0];\nsdg q[0];\nh q[0];\ncx q[0], q[1];\nrz(-0.03) q[1];\ncx q[0], q[1];\nh q[0];\ns q[0];\nrz(0.03) q[1];\nsdg q[0];\nh q[0];\ncx q[0], q[1];\nrz(-0.03) q[1];\ncx q[0], q[1];\nh q[0];\ns q[0];\nh q[0];\nrz(0.0525) q[0];\nh q[0];\nh q[0];\nrz(0.0525) q[0];\nh q[0];\nsdg q[0];\nh q[0];\ncx q[0], q[1];\nrz(-0.03) q[1];\ncx q[0], q[1];\nh q[0];\ns q[0];\nrz(0.03) q[1];\nsdg q[0];\nh q[0];\ncx q[0], q[1];\nrz(-0.03) q[1];\ncx q[0], q[1];\nh q[0];\ns q[0];\nh q[0];\nrz(0.0525) q[0];\nh q[0];\nh q[0];\nrz(0.0525) q[0];\nh q[0];\nsdg q[0];\nh q[0];\ncx q[0], q[1];\nrz(-0.03) q[1];\ncx q[0], q[1];\nh q[0];\ns q[0];\nrz(0.03) q[1];\nsdg q[0];\nh q[0];\ncx q[0], q[1];\nrz(-0.03) q[1];\ncx q[0], q[1];\nh q[0];\ns q[0];\nh q[0];\nrz(0.0525) q[0];\nh q[0];\nh q[0];\nrz(0.0525) q[0];\nh q[0];\nsdg q[0];\nh q[0];\ncx q[0], q[1];\nrz(-0.03) q[1];\ncx q[0], q[1];\nh q[0];\ns q[0];\nrz(0.03) q[1];\nsdg q[0];\nh q[0];\ncx q[0], q[1];\nrz(-0.03) q[1];\ncx q[0], q[1];\nh q[0];\ns q[0];\nh q[0];\nrz(0.0525) q[0];\nh q[0];\ngphase(6.2231853071795866);\n"
+    },
+    "reference": true,
+    "failedChecks": [
+      "circuit.replayed"
+    ]
+  }
+]

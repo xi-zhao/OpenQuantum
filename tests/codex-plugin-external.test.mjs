@@ -282,6 +282,20 @@ test("backend redacts every actual service secret in upstream business errors an
   assert.equal(f.leases(), 0);
 });
 
+test("external service results mask overlapping credentials read during the call", async t => {
+  const f = await backendFixture(t, { provider: "quantum_hardware" });
+  f.value({ QISKIT_IBM_TOKEN: "fixture-token", IONQ_API_KEY: "fixture-token-suffix" });
+  const body = { status: "error", message: "credential=fixture-token-suffix" };
+  f.overrides.call = async () => ({ content: [{ type: "text", text: JSON.stringify(body) }], structuredContent: body });
+  const result = await f.call("ionq_devices");
+  const expected = { ...body, message: "credential=[redacted]" };
+  assert.equal(result.isError, true);
+  assert.equal(CallToolResultSchema.safeParse(result).success, true);
+  assert.deepEqual(result.structuredContent, expected);
+  assert.deepEqual(JSON.parse(result.content[0].text), expected);
+  assert.equal(f.leases(), 0);
+});
+
 test("backend masks new-credential exceptions from connection, handshake, authentication, execution and cleanup", async t => {
   for (const phase of ["connect", "list", "authenticate", "execute", "close"]) {
     await t.test(phase, async t => {

@@ -1,0 +1,138 @@
+{
+  "schemaVersion": "1.0",
+  "kind": "development-eval-evidence",
+  "date": "2026-11-26",
+  "capability": "symmer-tapering",
+  "level": "L3",
+  "checks": [
+    {
+      "command": [
+        "node",
+        "--test",
+        "tests/unitary-scientific-materialization.test.mjs",
+        "tests/scientific-tool-effects.test.mjs",
+        "tests/plugin-boundaries.test.mjs"
+      ],
+      "exitCode": 0,
+      "passed": 39,
+      "failed": 0,
+      "logSha256": "95e010d6207cb8480f00f22b33f773735a86c2d709704c4dd05fb2723be57218"
+    },
+    {
+      "command": [
+        "node",
+        "--test",
+        "tests/harness-unitary-acceptance.test.mjs"
+      ],
+      "exitCode": 0,
+      "passed": 4,
+      "failed": 0,
+      "logSha256": "c54392fe50b6c788e0bd389869993d4ef851be7e6e969271fbb3b0c90cacb96f"
+    },
+    {
+      "command": [
+        "env",
+        "OPENQUANTUM_PYTHON_ENV_ROOT=/Volumes/Elements/CodexArtifacts/Projects/OpenQuantum/2026-11-25--governance-phase6-environments/python-envs",
+        "OPENQUANTUM_COMPUTE_CACHE_ROOT=/Volumes/Elements/CodexArtifacts/Projects/OpenQuantum/2026-11-25--governance-phase6-environments/cache",
+        "OPENQUANTUM_REAL_UNITARY_OBSERVATIONS=1",
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        "tests/unitary-independent-live.test.mjs"
+      ],
+      "exitCode": 0,
+      "passed": 21,
+      "failed": 0,
+      "logSha256": "45459f4ba2d0aab6ac8ab94243238707c6248074152b3f804e4dc35793bc9fcd"
+    },
+    {
+      "command": [
+        "env",
+        "OPENQUANTUM_PYTHON_ENV_ROOT=/Volumes/Elements/CodexArtifacts/Projects/OpenQuantum/2026-11-25--governance-phase6-environments/python-envs",
+        "OPENQUANTUM_COMPUTE_CACHE_ROOT=/Volumes/Elements/CodexArtifacts/Projects/OpenQuantum/2026-11-25--governance-phase6-environments/cache",
+        "OPENQUANTUM_REAL_UNITARY_DELIVERY=1",
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        "tests/harness-unitary-acceptance.test.mjs"
+      ],
+      "exitCode": 0,
+      "passed": 4,
+      "failed": 0,
+      "logSha256": "da2b45700b9e971ad8c05e923a5d0646488f2561ecc9d0eb81632ab6b33177bc"
+    },
+    {
+      "command": [
+        "env",
+        "OPENQUANTUM_PYTHON_ENV_ROOT=/Volumes/Elements/CodexArtifacts/Projects/OpenQuantum/2026-11-25--governance-phase6-environments/python-envs",
+        "OPENQUANTUM_COMPUTE_CACHE_ROOT=/Volumes/Elements/CodexArtifacts/Projects/OpenQuantum/2026-11-25--governance-phase6-environments/cache",
+        "OPENQUANTUM_REAL_UNITARY_NEXT=1",
+        "node",
+        "--test",
+        "tests/harness-unitary-next.test.mjs"
+      ],
+      "exitCode": 0,
+      "passed": 1,
+      "failed": 0,
+      "logSha256": "b0d3a5f9ee88b89220aabe3a114b79c3f8123e342b9c1e108d2ed433ed54eed4"
+    },
+    {
+      "command": [
+        "env",
+        "OPENQUANTUM_PYTHON_ENV_ROOT=/Volumes/Elements/CodexArtifacts/Projects/OpenQuantum/2026-11-25--governance-phase6-environments/python-envs",
+        "OPENQUANTUM_COMPUTE_CACHE_ROOT=/Volumes/Elements/CodexArtifacts/Projects/OpenQuantum/2026-11-25--governance-phase6-environments/cache",
+        "OPENQUANTUM_REAL_LOCAL_SCALE=1",
+        "node",
+        "--test",
+        "tests/harness-unitary-next.test.mjs"
+      ],
+      "exitCode": 0,
+      "passed": 1,
+      "failed": 0,
+      "logSha256": "650b25497e86d7d0a38d3b33e589e55ca0547b11e4fc8da58c4634d2291cd544"
+    }
+  ],
+  "files": {
+    "SKILL.md": "2f6c424e976b21f2970e4774066486bfa6bbb06a4c8e87eac4f5552294bd319b",
+    "acceptance-profiles/symmer-sector-spectrum-audit-v1.json": "0ed5ca6777a05e40cb90a203c95b85d4c8e0fdfa25aaa4de88824fb866ee0df3",
+    "artifacts/observations.schema.json": "413cbdd34f1f8f2129c98d957a8d55f34170069399151830021dcd75148ece09",
+    "artifacts/result.schema.json": "e22f3e7058c9c26bdebfb9231cfc5a19e24432a91422da0729b8fb3ded5ec2bb",
+    "core/render-report.mjs": "c32a5717026a80b93d4e9200f21c5a975e95340d18b4332dca28b4722267f3bf",
+    "evals/README.md": "d281095ef557245962837e774e7866d463e4c1f828c5ec7152b729c4cc49375c",
+    "evals/cases.json": "78c37903abf67337e722be6234a3feacf986c035a842d225630154e8a628a282",
+    "evals/fixtures/default.json": "28c2d017455659a5c537428a3a76b16b494346938ee956dfd0acc042d537a259",
+    "evals/fixtures/negative.json": "325bedc8891a71dab1a65154c222959b87ee9494e750c31b1150a4c01ee794c4",
+    "evals/fixtures/scalar.json": "aac1874071728cbf7a3086b9a6b741801055a6578a773adc2ddd859d84fe4996",
+    "evals/fixtures/signed.json": "341e62dbfab2df69a2c7fd295cea86442b804ec7e6cfddbb0e322c0449875853",
+    "evals/fixtures/skip.json": "245a7a6a02a1c4b4c51c4710a9d02293c66563e47fbe75cb589fc45e044709bf",
+    "evals/run-evals.mjs": "56a566c0c97db545a66600baf729ca8d0a37a9a05f9c4e4a38113cb196fa7585",
+    "evals/suite.json": "41cd65ebb36c2ed076ab74f6394b5a37608a7598c96d175f3dc071e9385ea0d0",
+    "inputs/request.schema.json": "2d68e5b7a4f169754ad06f2dd24812524dc60bbf1f4410faea14673c312b7ec6",
+    "mcp/bridge.py": "14387a79a33b327435bb28a6ec19ea79e701502414c39248650edb6115a89178",
+    "mcp/contracts.mjs": "74b56308f265b505d71833c80e86cfd5a98c07628dd1b5b5a5dc91b8bd650194",
+    "mcp/server.mjs": "1c5dcaa6f9006c885b8ab1a5a7fa1eedc7d07a17b5c02d196d24c9106831e087",
+    "pyproject.toml": "86e555351b3fd3fd9ad3c431e23753e44de1b47c6522ec8540c706e859f9687c",
+    "test/validator.test.mjs": "d3980ac6b84a89975c2a38c20db9f54bf3ff28fd09a7d330bf7731c6487c5f3d",
+    "uv.lock": "7504ea581181a6db65692c6ceb6f208d3bd9582c0cbd31b451942044c2ea968a",
+    "validators/reference.py": "26d692b94a38d7c94e3c132942b8d58b782d83283cd9dfec27b610f91c76742a",
+    "validators/validate-materialized.mjs": "2c1a50dd335abee27bafcb04c1c1918a764be17f3891e0efe603c1fdd334ecac",
+    "validators/validate-result.mjs": "70d2cc65ee84c31eec9ffc36368fb60480f499a465499144a35525fdb5de74f2"
+  },
+  "limitations": [
+    "No independent human domain review is claimed."
+  ],
+  "scope": [
+    "Independent observations; only versioned profiles and persisted evidence enable central Acceptance.",
+    "Local pinned numerical checks; no real model, quantum cloud or hardware."
+  ],
+  "previousEvidence": {
+    "commit": "c13b14ee184fa3b77e89746b5db4aa5e6f78a270",
+    "path": ".agents/skills/symmer-tapering/evals/evidence-2026-11-25.json",
+    "sha256": "f2bcc44d1eda110cacb49b751a95674361ba1137e871f84d732369b967ec0e17"
+  },
+  "sharedFiles": {
+    "src/lib/independent-quantum-math.mjs": "51de52020bf825bfccfa3645b50972df800a8065d73afe570815f9b6d89895af",
+    "src/lib/independent-observations.mjs": "549c50823327e8a23d5bebbc0be4c73bce4029dfa6e7f54b4c21df162ffc8c47",
+    "src/lib/cli-entrypoint.mjs": "e9f69ad9812d8242969c96039be4c9fae46e232c131402de7609221dcec3083e"
+  }
+}

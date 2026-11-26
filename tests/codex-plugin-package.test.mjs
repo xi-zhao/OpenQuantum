@@ -9,12 +9,14 @@ import { unpackPlugin, updateMarketplace, installedMcpServer } from "../scripts/
 import { projectSkill } from "../scripts/build-chatgpt.mjs";
 import { buildPlugin } from "../scripts/build-codex-plugin.mjs";
 import { installerFiles } from "../scripts/build-codex-release.mjs";
+import { DESKTOP_SECURITY_VERSIONS } from "../scripts/lib/desktop-dependencies.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 
 test("Codex runtime and installer pin the same shared dependencies as the tested root", async () => {
   const read = async file => JSON.parse(await fs.readFile(path.join(root, file), "utf8"));
   const source = await read("package.json");
+  const sourceLock = await read("package-lock.json");
   for (const distribution of ["codex-plugin", "codex-installer"]) {
     const manifest = await read(`distributions/${distribution}/package.json`);
     const lock = await read(`distributions/${distribution}/package-lock.json`);
@@ -23,7 +25,16 @@ test("Codex runtime and installer pin the same shared dependencies as the tested
       assert.equal(version, source.dependencies[name], `${distribution}: ${name} must match the tested root dependency`);
       assert.equal(lock.packages[`node_modules/${name}`].version, version, `${distribution}: ${name} lock must match its manifest`);
     }
+    for (const [name, version] of Object.entries(manifest.overrides)) {
+      assert.equal(version, source.overrides[name], `${distribution}: ${name} security pin must match root`);
+      for (const [label, packages] of [[distribution, lock.packages], ["root", sourceLock.packages]]) {
+        const entries = Object.entries(packages).filter(([key]) => key.endsWith(`/node_modules/${name}`) || key === `node_modules/${name}`);
+        assert.ok(entries.length, `${label}: ${name} missing from lock`);
+        for (const [, entry] of entries) assert.equal(entry.version, version, `${label}: ${name} security pin not locked`);
+      }
+    }
   }
+  assert.equal(DESKTOP_SECURITY_VERSIONS.hono, source.overrides.hono);
 });
 
 test("Codex plugin ZIP excludes stale files in the shared ChatGPT build", { timeout: 180000 }, async t => {

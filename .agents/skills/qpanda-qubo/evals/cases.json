@@ -1,0 +1,316 @@
+[
+  {
+    "id": "model",
+    "fixture": "model.json",
+    "fixtureSha256": "2cbe5e92bfdc502bbd158520a3dc15cb691457a015a7defcd1eaf3649ccf1293",
+    "edits": {},
+    "reference": true,
+    "failedChecks": []
+  },
+  {
+    "id": "maximize",
+    "fixture": "maximize.json",
+    "fixtureSha256": "fe3ddaa58bd3e7fae6c1fdaceecfaca324c86f82337ed5df42749b9ac953f7f2",
+    "edits": {},
+    "reference": true,
+    "failedChecks": []
+  },
+  {
+    "id": "raw-symmetric",
+    "fixture": "raw.json",
+    "fixtureSha256": "111f5731c3670aef2bde4b06dcb740779446c4d09c14b21d262992116bbf14d4",
+    "edits": {},
+    "reference": true,
+    "failedChecks": []
+  },
+  {
+    "id": "infeasible-equalities",
+    "fixture": "infeasible.json",
+    "fixtureSha256": "36553ea47ac4ddc8b68e88c38e396a163bf2be9b512f26a4c5a680f1636a6851",
+    "edits": {},
+    "reference": true,
+    "failedChecks": [
+      "constraints.feasible",
+      "penalty.sufficient"
+    ]
+  },
+  {
+    "id": "insufficient-penalty",
+    "fixture": "weak-penalty.json",
+    "fixtureSha256": "e6a91ea4082c9d5efe53d956dfa76c0836127c5b76cc2b31d21654e852b1bf21",
+    "edits": {},
+    "reference": true,
+    "failedChecks": [
+      "penalty.sufficient"
+    ]
+  },
+  {
+    "id": "illegal-variable",
+    "fixture": "model.json",
+    "fixtureSha256": "2cbe5e92bfdc502bbd158520a3dc15cb691457a015a7defcd1eaf3649ccf1293",
+    "edits": {
+      "request.model.variables.0": "bad-name"
+    },
+    "reference": true,
+    "failedChecks": [
+      "request.scope"
+    ]
+  },
+  {
+    "id": "undeclared-variable",
+    "fixture": "model.json",
+    "fixtureSha256": "2cbe5e92bfdc502bbd158520a3dc15cb691457a015a7defcd1eaf3649ccf1293",
+    "edits": {
+      "request.model.objective.linear.0.variable": "unknown"
+    },
+    "reference": true,
+    "failedChecks": [
+      "request.scope"
+    ]
+  },
+  {
+    "id": "duplicate-variable",
+    "fixture": "model.json",
+    "fixtureSha256": "2cbe5e92bfdc502bbd158520a3dc15cb691457a015a7defcd1eaf3649ccf1293",
+    "edits": {
+      "request.model.variables.1": "x"
+    },
+    "reference": true,
+    "failedChecks": [
+      "request.scope"
+    ]
+  },
+  {
+    "id": "non-square-input",
+    "fixture": "raw.json",
+    "fixtureSha256": "111f5731c3670aef2bde4b06dcb740779446c4d09c14b21d262992116bbf14d4",
+    "edits": {
+      "request.quadratic.1": [
+        1
+      ]
+    },
+    "reference": true,
+    "failedChecks": [
+      "request.scope"
+    ]
+  },
+  {
+    "id": "wrong-vector-length",
+    "fixture": "raw.json",
+    "fixtureSha256": "111f5731c3670aef2bde4b06dcb740779446c4d09c14b21d262992116bbf14d4",
+    "edits": {
+      "request.linear": [
+        1
+      ]
+    },
+    "reference": true,
+    "failedChecks": [
+      "request.scope"
+    ]
+  },
+  {
+    "id": "missing-constant-offset",
+    "fixture": "model.json",
+    "fixtureSha256": "2cbe5e92bfdc502bbd158520a3dc15cb691457a015a7defcd1eaf3649ccf1293",
+    "edits": {
+      "result.modeling.qubo.constant": 3
+    },
+    "reference": true,
+    "failedChecks": [
+      "compilation.matrix",
+      "compilation.digest",
+      "compilation.exhaustive-replay",
+      "reference.optimum"
+    ]
+  },
+  {
+    "id": "wrong-offdiagonal-factor",
+    "fixture": "model.json",
+    "fixtureSha256": "2cbe5e92bfdc502bbd158520a3dc15cb691457a015a7defcd1eaf3649ccf1293",
+    "edits": {
+      "result.modeling.qubo.quadratic.0.1": 4
+    },
+    "reference": true,
+    "failedChecks": [
+      "compilation.matrix",
+      "compilation.digest",
+      "compilation.exhaustive-replay",
+      "reference.optimum"
+    ]
+  },
+  {
+    "id": "malformed-result-matrix",
+    "fixture": "model.json",
+    "fixtureSha256": "2cbe5e92bfdc502bbd158520a3dc15cb691457a015a7defcd1eaf3649ccf1293",
+    "edits": {
+      "result.modeling.qubo.quadratic.0": [
+        1
+      ]
+    },
+    "reference": true,
+    "failedChecks": [
+      "compilation.matrix",
+      "compilation.digest",
+      "compilation.exhaustive-replay",
+      "reference.optimum"
+    ]
+  },
+  {
+    "id": "fake-global-minimum",
+    "fixture": "model.json",
+    "fixtureSha256": "2cbe5e92bfdc502bbd158520a3dc15cb691457a015a7defcd1eaf3649ccf1293",
+    "edits": {
+      "result.solver.classical.minimumValue": -100
+    },
+    "reference": true,
+    "failedChecks": [
+      "solver.solution-energy",
+      "solver.classical-reference"
+    ]
+  },
+  {
+    "id": "fake-feasible-optimum",
+    "fixture": "model.json",
+    "fixtureSha256": "2cbe5e92bfdc502bbd158520a3dc15cb691457a015a7defcd1eaf3649ccf1293",
+    "edits": {
+      "result.modeling.reference.feasibleOptimum.objectiveValue": -100
+    },
+    "reference": true,
+    "failedChecks": [
+      "reference.optimum"
+    ]
+  },
+  {
+    "id": "fake-assignment",
+    "fixture": "model.json",
+    "fixtureSha256": "2cbe5e92bfdc502bbd158520a3dc15cb691457a015a7defcd1eaf3649ccf1293",
+    "edits": {
+      "result.solver.classical.optimalAssignments": [
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    "reference": true,
+    "failedChecks": [
+      "solver.solution-energy",
+      "solver.classical-reference"
+    ]
+  },
+  {
+    "id": "nonbinary-solution",
+    "fixture": "raw.json",
+    "fixtureSha256": "111f5731c3670aef2bde4b06dcb740779446c4d09c14b21d262992116bbf14d4",
+    "edits": {
+      "result.classical.optimalAssignments": [
+        [
+          2,
+          0
+        ]
+      ]
+    },
+    "reference": true,
+    "failedChecks": [
+      "artifact.schema"
+    ]
+  },
+  {
+    "id": "false-feasible-count",
+    "fixture": "model.json",
+    "fixtureSha256": "2cbe5e92bfdc502bbd158520a3dc15cb691457a015a7defcd1eaf3649ccf1293",
+    "edits": {
+      "result.modeling.reference.feasibleAssignmentCount": 4
+    },
+    "reference": true,
+    "failedChecks": [
+      "reference.optimum"
+    ]
+  },
+  {
+    "id": "false-normalized-model",
+    "fixture": "model.json",
+    "fixtureSha256": "2cbe5e92bfdc502bbd158520a3dc15cb691457a015a7defcd1eaf3649ccf1293",
+    "edits": {
+      "result.modeling.model.objective.constant": 100
+    },
+    "reference": true,
+    "failedChecks": [
+      "compilation.model"
+    ]
+  },
+  {
+    "id": "raw-constant-substitution",
+    "fixture": "raw.json",
+    "fixtureSha256": "111f5731c3670aef2bde4b06dcb740779446c4d09c14b21d262992116bbf14d4",
+    "edits": {
+      "request.constant": 5
+    },
+    "reference": true,
+    "failedChecks": [
+      "solver.solution-energy",
+      "solver.classical-reference"
+    ]
+  },
+  {
+    "id": "qaoa-traversal-substitution",
+    "fixture": "raw.json",
+    "fixtureSha256": "111f5731c3670aef2bde4b06dcb740779446c4d09c14b21d262992116bbf14d4",
+    "edits": {
+      "request.method": "qaoa",
+      "request.layer": 2
+    },
+    "reference": true,
+    "failedChecks": [
+      "solver.request-binding"
+    ]
+  },
+  {
+    "id": "qaoa-layer-mismatch",
+    "fixture": "raw.json",
+    "fixtureSha256": "111f5731c3670aef2bde4b06dcb740779446c4d09c14b21d262992116bbf14d4",
+    "edits": {
+      "request.method": "qaoa",
+      "request.layer": 2,
+      "result.quantum": {
+        "layer": 3,
+        "optimizer": "SLSQP",
+        "distribution": {
+          "01": 1
+        },
+        "topBitstring": "01"
+      },
+      "result.classicalRole": "reference",
+      "result.reference.status": "computed"
+    },
+    "reference": true,
+    "failedChecks": [
+      "solver.request-binding"
+    ]
+  },
+  {
+    "id": "qaoa-required-reference-missing",
+    "fixture": "raw.json",
+    "fixtureSha256": "111f5731c3670aef2bde4b06dcb740779446c4d09c14b21d262992116bbf14d4",
+    "edits": {
+      "request.method": "qaoa",
+      "request.layer": 2,
+      "request.referenceMode": "required",
+      "result.quantum": {
+        "layer": 2,
+        "optimizer": "SLSQP",
+        "distribution": {
+          "01": 1
+        },
+        "topBitstring": "01"
+      },
+      "result.classical": null,
+      "result.classicalRole": "not_run",
+      "result.reference.mode": "required"
+    },
+    "reference": true,
+    "failedChecks": [
+      "solver.request-binding"
+    ]
+  }
+]

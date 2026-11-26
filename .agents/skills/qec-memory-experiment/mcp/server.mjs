@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-import { createHash } from "node:crypto";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -14,6 +13,9 @@ import {
 import { preparedPythonLaunch } from "../../../../src/lib/prepared-python.mjs";
 import { runLocalJsonProcess } from "../../../../src/lib/local-json-process.mjs";
 import { localComputeEnvironment, localComputeProcessOptions } from "../../../../src/lib/local-compute-policy.mjs";
+
+import factsSchema from "../artifacts/qec-memory-result.schema.json" with { type: "json" };
+import { replayExperiment, validateExperiment } from "../validators/validate-result.mjs";
 
 const skillRoot = fileURLToPath(new URL("..", import.meta.url));
 const projectRoot = path.resolve(skillRoot, "../../..");
@@ -47,7 +49,7 @@ const localExecutionAnnotations = Object.freeze({
   readOnlyHint: false,
   destructiveHint: false,
   idempotentHint: true,
-  openWorldHint: true,
+  openWorldHint: false,
 });
 
 const TOOLS = Object.freeze([
@@ -55,7 +57,7 @@ const TOOLS = Object.freeze([
     name: "run_qec_memory_experiment",
     title: "Run a rotated-surface-code memory experiment",
     description:
-      "Generate a rotated surface-code X- or Z-memory circuit with pinned Stim, sample a fixed number of noisy shots with an explicit seed, decode with pinned PyMatching, and report logical-error counts with uncertainty. This is one bounded Monte Carlo experiment, not a threshold or hardware claim.",
+      "Generate a rotated surface-code X- or Z-memory circuit with pinned Stim, sample a fixed number of noisy shots with an explicit seed, decode with pinned PyMatching, and report logical-error counts with uncertainty. This is one bounded Monte Carlo experiment, not a threshold or hardware claim. The composed Harness call saves and rereads scientific evidence in the session workspace.",
     inputSchema: {
       type: "object",
       properties: {
@@ -79,7 +81,7 @@ const TOOLS = Object.freeze([
         schemaVersion: { type: "string", const: "1.0" },
         packages: { type: "object" },
         experiment: { type: "object" },
-        facts: { type: "object" },
+        facts: { type: "object", properties: factsSchema.properties, required: factsSchema.required, additionalProperties: false },
         validation: { type: "object" },
         scientificValidation: { type: "string", const: "observations_available" },
         limitations: { type: "array", items: { type: "string" } },
@@ -152,21 +154,6 @@ function normalizeExperimentRequest(value) {
   };
 }
 
-function canonicalJson(value) {
-  if (Array.isArray(value)) return `[${value.map(canonicalJson).join(",")}]`;
-  if (isRecord(value)) {
-    return `{${Object.keys(value)
-      .sort()
-      .map((key) => `${JSON.stringify(key)}:${canonicalJson(value[key])}`)
-      .join(",")}}`;
-  }
-  return JSON.stringify(value);
-}
-
-function experimentDigest(request) {
-  return createHash("sha256").update(canonicalJson(request)).digest("hex");
-}
-
 function bridgeEnvironment() {
   return {
     ...Object.fromEntries(
@@ -202,56 +189,6 @@ function errorResult(error) {
   };
 }
 
-function validateFacts(request, facts) {
-  const result = facts?.result ?? {};
-  const countsMatch =
-    result.shots === request.shots &&
-    Number.isSafeInteger(result.logicalErrors) &&
-    result.logicalErrors >= 0 &&
-    result.logicalErrors <= request.shots &&
-    result.successfulShots === request.shots - result.logicalErrors;
-  const replayedRate = result.logicalErrors / request.shots;
-  const rateError =
-    Number.isFinite(result.logicalErrorRate)
-      ? Math.abs(result.logicalErrorRate - replayedRate)
-      : Number.POSITIVE_INFINITY;
-  const interval = result.wilson95 ?? {};
-  const intervalValid =
-    Number.isFinite(interval.low) &&
-    Number.isFinite(interval.high) &&
-    interval.low >= 0 &&
-    interval.high <= 1 &&
-    interval.low <= replayedRate &&
-    replayedRate <= interval.high;
-  const digestMatches = facts?.experimentDigest === experimentDigest(request);
-  const seedMatches = facts?.experiment?.seed === request.seed;
-  return {
-    schemaVersion: "1.0",
-    observations: [
-      { id: "experiment.digest", status: digestMatches ? "pass" : "fail" },
-      { id: "experiment.seed-recorded", status: seedMatches ? "pass" : "fail" },
-      { id: "counts.replayed", status: countsMatch ? "pass" : "fail" },
-      {
-        id: "logical-error-rate.replayed",
-        status: rateError <= 1e-15 ? "pass" : "fail",
-        metric: rateError,
-        threshold: 1e-15,
-      },
-      { id: "uncertainty.bounded", status: intervalValid ? "pass" : "fail" },
-      {
-        id: "zero-noise.invariant",
-        status:
-          request.physicalErrorRate === 0
-            ? result.logicalErrors === 0
-              ? "pass"
-              : "fail"
-            : "not_checked",
-      },
-      { id: "provenance.complete", status: "not_checked" },
-    ],
-  };
-}
-
 const server = new Server(
   { name: "openquantum-qec-memory-experiment", version: "0.1.0" },
   {
@@ -267,7 +204,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request, { signal }) => {
     if (request.params.name === "run_qec_memory_experiment") {
       const experiment = normalizeExperimentRequest(request.params.arguments);
       const facts = await runBridge({ action: "experiment", request: experiment }, signal);
-      const validation = validateFacts(experiment, facts);
+      const reference = await replayExperiment(experiment, signal);
+      const validation = validateExperiment({ request: experiment, facts, reference });
       const output = {
         schemaVersion: "1.0",
         packages: facts.packages,
@@ -278,12 +216,12 @@ server.setRequestHandler(CallToolRequestSchema, async (request, { signal }) => {
         limitations: [
           "The uniform circuit-level error rate is applied to Clifford depolarization, round data depolarization, measurement flips and reset flips.",
           "One finite-shot memory experiment cannot establish an error-correction threshold or compare hardware platforms.",
-          "Stim seed reproducibility is scoped to the pinned package versions and recorded experiment configuration.",
-          "Final scientific acceptance requires materialized artifacts and Session Event Log provenance.",
+          "Exact seed replay is scoped to the same pinned packages, machine, Stim implementation and single-batch sampling convention.",
+          "Execution observations do not establish Acceptance; the Harness Materializer must persist and reread evidence before central Acceptance.",
         ],
       };
       return textResult(
-        `Stim ${facts.packages.stim} / PyMatching ${facts.packages.pymatching} decoded ${facts.result.shots} shots with ${facts.result.logicalErrors} logical error(s). This is a bounded Monte Carlo observation, not a threshold claim.`,
+        `Computational observations (failed checks: ${validation.observations.filter(item => item.status === "fail").length}). Stim ${facts.packages.stim} / PyMatching ${facts.packages.pymatching} decoded ${facts.result.shots} shots with ${facts.result.logicalErrors} logical error(s). This is a bounded Monte Carlo observation, not a threshold claim.`,
         output,
       );
     }

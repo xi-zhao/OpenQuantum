@@ -1,0 +1,17 @@
+{
+  "id": "mwpf-decoding",
+  "dependencyLockSha256": "100bd22d83194753930213b1492137f13b82e1eb5227fff94dd42de4ca5ae1b4",
+  "sourceSha256": "51b17460c8007b45ddd0c1ef696f1c82bdbc5c1ff8bd2cc0936ccbeb9b676582",
+  "networkIsolation": "macOS sandbox-exec deny network*",
+  "scientificValidation": "not_evaluated",
+  "status": "passed",
+  "files": {
+    "attempt.json": "a2a2f8ec7e201ef646b75118f94de6c935c21bd2e2d98fb8be2fa6c57ab6b883",
+    "program.py": "51b17460c8007b45ddd0c1ef696f1c82bdbc5c1ff8bd2cc0936ccbeb9b676582",
+    "result.json": "5221848bd6dddee6e4b7122c34d404f2cfc66b1b518fdd211342edb218cf66f4",
+    "runner.py": "4d8e55212145f22f02d8198f4582194f9aa937013038af3c543a95c6fa77e4b9",
+    "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "versions.json": "1897e749a045a88e56ca4fed0002a713793fc3d786eb2f35a25e52e5c23aa385"
+  }
+}

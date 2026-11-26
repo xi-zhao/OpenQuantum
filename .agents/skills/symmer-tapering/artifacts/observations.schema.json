@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "const": "1.0"
+    },
+    "observations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "pass",
+              "fail",
+              "not_checked"
+            ]
+          },
+          "detail": {
+            "type": "string"
+          },
+          "observed": {}
+        },
+        "required": [
+          "id",
+          "status",
+          "detail"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "observations"
+  ],
+  "additionalProperties": false
+}

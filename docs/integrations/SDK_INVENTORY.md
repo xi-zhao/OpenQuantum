@@ -2,7 +2,7 @@
 
 由 `node scripts/audit-sdk-integration.mjs` 从 capability policy、SDK 导航、项目 manifest 和依赖锁生成；用 `--check` 检查是否过期。
 
-本表覆盖 118 个 SDK/源码环境入口：106 个 Python（包含算法共享环境）、9 个 Julia、2 个原生源码或 ABI 入口、1 个 Lean 项目。原生 QDMI 另有 Python 桥接依赖项目。一个入口可包含多个库，同一个库也可能有多个隔离版本，不能把入口数量当成独立 SDK 数量。所有锁摘要与间接依赖版本可通过 `node scripts/sdk-access.mjs inventory` 读出。
+本表覆盖 121 个 SDK/源码环境入口：109 个 Python（包含算法共享环境）、9 个 Julia、2 个原生源码或 ABI 入口、1 个 Lean 项目。原生 QDMI 另有 Python 桥接依赖项目。一个入口可包含多个库，同一个库也可能有多个隔离版本，不能把入口数量当成独立 SDK 数量。所有锁摘要与间接依赖版本可通过 `node scripts/sdk-access.mjs inventory` 读出。
 
 **接入状态：原生路径与指南已提供；逐 API、可选依赖、平台与外部服务验证不由这张静态清单推断。** 环境是否准备需 `inspect`，实际执行证据见[完整接入记录](FULL_SDK_ACCESS.md)。
 
@@ -12,7 +12,7 @@
 | `aqt-workbench` | AQT Provider | python | qiskit-aqt-provider==1.15.0 | 本地与远程 provider、电路、设备模型与 job | 本地程序构建与外部调用分开；账户、凭据、费用、设备操作和数据外发沿用宿主及用户授权。原生 SDK 访问不自动启用服务。 |
 | `arc-rydberg` | ARC Rydberg | python | ARC-Alkali-Rydberg-Calculator==3.10.2 | 原子、能级、跃迁矩阵元、寿命、Stark 图与相互作用 | 记录原子物种、量子数、数据表、温度、截断与单位。能量 eV、矩阵元原子单位和 SI 的换算要按实际 API 核对。 |
 | `bloqade-analog` | Bloqade Analog | python | bloqade-analog==0.16.9, numpy==2.4.2 | 任意原子布局、波形、局部/全局驱动、程序构建与模拟 | 按固定版本、已安装可选组件及目标平台核实 |
-| `braket-simulation` | Amazon Braket | python | amazon-braket-sdk==1.127.2 | 电路、模拟器、AHS、噪声、设备、task/batch 与参数化程序 | 本地程序构建与外部调用分开；账户、凭据、费用、设备操作和数据外发沿用宿主及用户授权。原生 SDK 访问不自动启用服务。 |
+| `braket-simulation` | Amazon Braket | python | amazon-braket-sdk==1.128.1 | 电路、模拟器、AHS、噪声、设备、task/batch 与参数化程序 | 本地程序构建与外部调用分开；账户、凭据、费用、设备操作和数据外发沿用宿主及用户授权。原生 SDK 访问不自动启用服务。 |
 | `catalyst-compilation` | PennyLane Catalyst | python | pennylane-catalyst==0.15.0 | qjit、混合程序、QNode、控制流、编译配置与梯度 | 固定兼容的 PennyLane/JAX/编译栈。区分首次编译与后续执行耗时，缓存与静态参数进入记录；experimental API 不承诺跨版本兼容。 |
 | `chromobius-decoding` | Chromobius | python | chromobius==1.1.1, stim==1.16.0, numpy==2.5.3 | 带颜色和基标注的 Stim DEM、bit-packed detector 样本与逻辑 observable 解码 | 固定 Chromobius 1.1.1；DEM 必须满足颜色/基坐标及上游可解码条件。Möbius 解码为近似方法；小例回归不代表阈值、实时延迟或科学验收。 |
 | `classiq-synthesis` | Classiq | python | httpx[socks]==0.28.1, classiq==1.29.1 | Qmod、自定义模型、综合约束、执行与结果接口 | 本地程序构建与外部调用分开；账户、凭据、费用、设备操作和数据外发沿用宿主及用户授权。原生 SDK 访问不自动启用服务。 |
@@ -50,6 +50,7 @@
 | `mqt-qecc` | MQT QECC | python | mqt-qecc==2.0.0 | CSS 码、容错态制备、色码与模拟信息解码 | 明确 Hx/Hz 的 GF(2) 约定、逻辑算符、故障模型与后选择。2.x 不包含旧 union-find 实现；qsample 是另备的可选组件。 |
 | `mqt-qmap` | MQT QMAP | python | mqt-qmap==3.10.0 | 自定义架构、configuration、映射与布局算法 | 按固定版本、已安装可选组件及目标平台核实 |
 | `mrmustard-optics` | MrMustard | python | mrmustard==0.7.3, tensorflow==2.15.0 | 任意连续变量态、门、信道、参数与优化 | 固定 Python 3.11 / TensorFlow 2.15 环境；原生 wheel 与目标平台兼容性需核验。 |
+| `mwpf-decoding` | MWPF | python | mwpf[stim]==0.2.18, stim==1.16.0, sinter==1.16.0, numpy==2.5.3 | 用户自定义加权超图、syndrome 与权重界，以及 Stim/Sinter 逻辑 observable 译码 | 固定 MWPF 0.2.18；Sinter 必须显式 PanicAction.RAISE，有限 cluster 预算可回退 UF，float64 权重界不是形式化证明。一般超图求解无最坏耗时保证；使用宿主进程预算。 |
 | `myqlm-simulation` | myQLM | python | myqlm==1.13.7 | AQASM、自定义程序、job、QPU、插件与计算栈 | myQLM 按上游 EULA 使用；不能视为 OQC 的同名 qat 包，两者环境必须隔离。 |
 | `netqasm-network` | NetQASM | python | netqasm==2.0.0, numpy==1.26.4, scipy==1.14.1 | 任意程序、EPR/经典通信、编译、连接与运行时 | 本锁不含受许可限制的 NetSquid/SquidASM，端到端网络运行须准备相应运行时。 |
 | `ocean-optimization` | D-Wave Ocean SDK | python | dimod==0.12.22, dwave-ocean-sdk==9.5.0, dwave-samplers==1.8.0 | BQM、CQM、离散模型、变量、约束、sampler 与 SampleSet | 完整 Ocean 元包已进入依赖锁；本地模型、采样器与云客户端共享原生 API。连接 Leap、提交收费或 QPU 作业仍需用户授权与凭据。 |
@@ -113,6 +114,7 @@
 | `sqd-chemistry` | Qiskit Addon SQD | python | qiskit-addon-sqd==0.13.1 | 用户 bitstrings、configuration recovery、投影子空间与费米子求解 | 按固定版本、已安装可选组件及目标平台核实 |
 | `squlearn-learning` | sQUlearn | python | squlearn==0.11.2 | 编码线路、observable、executor、量子核与 sklearn estimator | 明确本地 executor、编码参数、kernel regularization 和数据划分。账户、真实设备与外部服务保持独立授权；不自动选择云后端。 |
 | `staq-compilation` | STAQ / pystaq | python | pystaq @ git+https://github.com/softwareQinc/staq.git@a2acd39e60ed0e5f1978fa530df7e1e0c7cedf7a | OpenQASM AST、综合、线路变换、优化与映射 | 固定完整上游源码。语言版本、门集、物理/逻辑布局和全局相位分别保留；GMP 等可选原生组件以实际构建为准。 |
+| `stgrape-control` | ST-GRAPE | python | stgrape @ https://github.com/Fanyd271/ST-GRAPE/releases/download/v1.0.0/stgrape-1.0.0-py3-none-any.whl#sha256=a45119e0ebf8a66381112c42679bfda3ad424f73ae13c8996f5fb69baaf8ca64, numpy==2.5.3, scipy==1.18.1, qutip==5.3.1, matplotlib==3.11.2, pillow==12.3.0 | 固定时间网格的鲁棒脉冲优化、独立准静态高斯误差响应及分裂传播精度对照 | 为 ST 路径验证控制基与实对角谱。保留角频率单位、时间步、Taylor 阶数、独立误差宽度和预算终止原因。 |
 | `superstaq-compilation` | Qiskit Superstaq | python | qiskit-superstaq==0.5.69, qiskit==2.5.2 | 自定义电路、编译选项、targets、provider 与执行结果 | 本地程序构建与外部调用分开；账户、凭据、费用、设备操作和数据外发沿用宿主及用户授权。原生 SDK 访问不自动启用服务。 |
 | `symmer-tapering` | Symmer | python | symmer | PauliwordOp、投影、对称性、tapering 与子空间方法 | 按固定版本、已安装可选组件及目标平台核实 |
 | `tenpy-ground-state` | TeNPy | python | physics-tenpy==1.1.1 | 自定义 site、lattice、CouplingMPOModel、MPS、DMRG、TEBD 与保存恢复 | 按固定版本、已安装可选组件及目标平台核实 |
@@ -121,6 +123,7 @@
 | `tjm-dynamics` | MQT YAQS | python | mqt.yaqs==0.6.0 | 自定义 MPS/MPO、电路、噪声模型、时间演化与张量跳跃 | 按固定版本、已安装可选组件及目标平台核实 |
 | `tnqs-dynamics` | TensorNetworkQuantumSimulator.jl | julia | JSON3, TensorNetworkQuantumSimulator | 非规则图张量网络、电路、时间演化、平面 CTMRG 与采样 | CTMRG 需要有效平面嵌入；分别记录状态/环境维数、截断、精度与收敛。采样权重相对于实际规约态，函数名 certified 不构成科学验收。 |
 | `tqec-compilation` | TQEC | python | tqec @ https://github.com/tqec/tqec/archive/2c4b8cf9d3f8f520571093c60d752af0ad46a745.tar.gz | BlockGraph、逻辑计算块、相关面与 Stim 线路生成 | 上游不承诺向后兼容，因此固定源码 SHA。保留码距/尺度 k、噪声、detector 和 observable 映射；生成线路不等于完整逻辑协议已验收。 |
+| `tropidist-distance` | tropidist | python | numpy==2.5.3, stim==1.16.0 | 从二进制校验矩阵或 Stim 纠错电路求单位权距离的上下界与故障见证 | 显式准备固定源码及本机 C 内核。Linux 需要 OpenMP。完整结果需要匹配上下界、有效见证和适用的故障模型。 |
 | `tsim-sampling` | Tsim | python | bloqade-tsim==0.1.5 | Clifford/非 Clifford 线路、噪声、detector 与 observable 采样 | 统一实际 detector/observable 值与参考样本 flips 的语义。发布包和上游 main 的功能分别核实；CPU/JAX 与 CUDA target 单独选择。 |
 | `tyxonq-workbench` | TyxonQ | python | tyxonq==1.3.0 | 电路、门、测量与上游后端接口 | 按固定版本、已安装可选组件及目标平台核实 |
 | `vqnet-learning` | VQNet | python | pyvqnet==2.18.1, numpy==1.26.4 | tensor、量子/经典层、模型、数据与优化器 | 按固定版本、已安装可选组件及目标平台核实 |

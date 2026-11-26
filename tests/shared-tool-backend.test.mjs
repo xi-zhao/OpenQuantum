@@ -45,6 +45,23 @@ test("shared execution uses supplied budgets, authorization and secret fields wi
   assert.equal(closed, 2);
 });
 
+test("shared execution masks overlapping credentials in both result representations", async t => {
+  const input = catalog();
+  input.secretFields.fixture = ["TOKEN", "SECOND_TOKEN"];
+  const body = { status: "success", message: "credential=fixture-token-suffix", metric: 0.125 };
+  const backend = createToolBackend({ catalog: input, limits, createExternal: noExternal, connect: async () => ({
+    listTools: async () => ({ tools: [tool] }),
+    callTool: async () => ({ content: [{ type: "text", text: JSON.stringify(body) }], structuredContent: body }),
+    close: async () => {},
+  }) });
+  t.after(() => backend.close());
+  const result = await backend.call(tool.name, { value: 1 }, undefined, async () => true,
+    { TOKEN: "fixture-token", SECOND_TOKEN: "fixture-token-suffix" });
+  const expected = { ...body, message: "credential=[redacted]" };
+  assert.deepEqual(result.structuredContent, expected);
+  assert.deepEqual(JSON.parse(result.content[0].text), expected);
+});
+
 test("shared shutdown aborts the active call and waits for adapter cleanup before returning", { timeout: 10000 }, async t => {
   const entered = Promise.withResolvers(), closing = Promise.withResolvers(), release = Promise.withResolvers();
   const backend = createToolBackend({ catalog: catalog(), limits, createExternal: noExternal, connect: async () => ({

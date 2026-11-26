@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { cp, lstat, mkdir, mkdtemp, readFile, readdir, readlink, realpath, rm, symlink, writeFile } from "node:fs/promises";
+import { cp, lstat, mkdir, mkdtemp, readFile, readdir, readlink, realpath, rm, stat, symlink, writeFile } from "node:fs/promises";
 import { execFile, fork } from "node:child_process";
 import { once } from "node:events";
 import { promisify } from "node:util";
@@ -35,8 +35,8 @@ async function fixture(t) {
   const projectRoot = path.join(directory, "user data/project");
   const home = path.join(projectRoot, ".openquantum/dsh");
   await linkDesktopProfile(home);
-  async function release(version) {
-    const payload = path.join(directory, version);
+  async function release(version, edit = async () => {}, name = version) {
+    const payload = path.join(directory, name);
     await mkdir(payload, { recursive: true });
     for (const name of ["runtime", "src", "scripts", "packages"]) {
       await cp(path.join(root, name), path.join(payload, name), {
@@ -50,15 +50,132 @@ async function fixture(t) {
     await writeFile(path.join(payload, "package.json"), JSON.stringify(manifest));
     const source = path.join(payload, "runtime/openquantum/agent-presets/openquantum/agent.cordis.yml");
     await writeFile(source, `${await readFile(source, "utf8")}\n# release ${version}\n`);
+    await edit(payload);
     const contents = await snapshot(payload);
     const files = Object.fromEntries(Object.entries(contents).map(([name, info]) => [name, { sha256: info.sha256, mode: info.mode & 0o111 ? 0o755 : 0o644 }]));
     await writeFile(path.join(payload, "distribution.json"), JSON.stringify({ schemaVersion: 1, version, files }));
     await symlink(path.join(root, "node_modules"), path.join(payload, "node_modules"), process.platform === "win32" ? "junction" : "dir");
     return payload;
   }
-  const install = payload => execute(process.execPath, [path.join(payload, "scripts/prepare-installed-desktop.mjs"), payload, projectRoot], { maxBuffer: 4 * 1024 * 1024 });
+  const install = (payload, ...args) => execute(process.execPath, [path.join(payload, "scripts/prepare-installed-desktop.mjs"), payload, projectRoot, ...args], { maxBuffer: 4 * 1024 * 1024 });
   return { projectRoot, home, release, install };
 }
+
+test("installed CLI reuses verified extensions on a second launch", { timeout: 90000 }, async t => {
+  const f = await fixture(t);
+  const payload = await f.release("1.0.0");
+  assert.equal(JSON.parse((await f.install(payload)).stdout).reusedExtensions, false);
+  const client = path.join(f.home, ".openquantum-extensions/harness-web-capabilities/client.js");
+  const receipt = path.join(f.home, ".openquantum-extensions.json");
+  const settings = path.join(f.home, "settings.yaml");
+  const routes = path.join(f.home, "profiles/model-routes.cordis.yml");
+  const preferences = 'agent-default-model:\n  provider: user-local\n  model: user-model\n';
+  const customRoutes = '# user route\n- id: user-provider\n  config: {}\n';
+  await writeFile(settings, preferences);
+  await writeFile(routes, customRoutes);
+  const before = await stat(client, { bigint: true });
+  const originalReceipt = await stat(receipt, { bigint: true });
+  const originalExtensions = await snapshot(path.join(f.home, ".openquantum-extensions"));
+  const start = performance.now();
+  const result = JSON.parse((await f.install(payload)).stdout);
+  t.diagnostic(`Second installed preparation: ${Math.round(performance.now() - start)} ms`);
+  assert.equal(result.reusedExtensions, true);
+  assert.ok(result.preservedHomeFiles.includes("profiles/model-routes.cordis.yml"));
+  assert.equal(await readFile(settings, "utf8"), preferences);
+  assert.equal(await readFile(routes, "utf8"), customRoutes);
+  assert.deepEqual(await snapshot(path.join(f.home, ".openquantum-extensions")), originalExtensions);
+  const after = await stat(client, { bigint: true });
+  assert.equal(after.mtimeNs, before.mtimeNs, "an unchanged client must not be rebuilt");
+  assert.equal(after.ino, before.ino, "an unchanged client must not be replaced");
+  assert.equal((await stat(receipt, { bigint: true })).mtimeNs, originalReceipt.mtimeNs);
+  // A successful receipt must never bypass the per-launch compatibility check.
+  await writeFile(path.join(f.home, "log.v4.jsonl"), "");
+  await assert.rejects(f.install(payload), /V4|v4|newer|0\.2/);
+  assert.equal((await stat(client, { bigint: true })).mtimeNs, before.mtimeNs);
+});
+
+// Independent recovery scenarios get separate timeout budgets. The previous
+// parent accumulated all six rebuilds plus forced repair under one 90s timer.
+for (const [name, damage] of [
+  ["modified client", ({ client }) => writeFile(client, "damaged client")],
+  ["missing client", ({ client }) => rm(client)],
+  ["missing extension", ({ home }) => rm(path.join(home, ".openquantum-extensions/harness-web-security"), { recursive: true })],
+  ["missing receipt", ({ receipt }) => rm(receipt)],
+  ["invalid receipt", ({ receipt }) => writeFile(receipt, "{partial receipt")],
+  ["unsupported receipt", ({ receipt }) => writeFile(receipt, JSON.stringify({ schemaVersion: 999 }))],
+]) {
+  test(`installed CLI rebuilds after ${name}`, { timeout: 90000 }, async t => {
+    const f = await fixture(t);
+    const payload = await f.release("1.0.0");
+    await f.install(payload);
+    const client = path.join(f.home, ".openquantum-extensions/harness-web-capabilities/client.js");
+    const receipt = path.join(f.home, ".openquantum-extensions.json");
+    const expected = await readFile(client);
+    await damage({ client, receipt, home: f.home });
+    assert.equal(JSON.parse((await f.install(payload)).stdout).reusedExtensions, false);
+    assert.deepEqual(await readFile(client), expected);
+    assert.equal(JSON.parse((await f.install(payload)).stdout).reusedExtensions, true);
+  });
+}
+
+test("installed CLI supports forced repair of verified extensions", { timeout: 90000 }, async t => {
+  const f = await fixture(t);
+  const payload = await f.release("1.0.0");
+  await f.install(payload);
+  const client = path.join(f.home, ".openquantum-extensions/harness-web-capabilities/client.js");
+  const before = await stat(client, { bigint: true });
+  assert.equal(JSON.parse((await f.install(payload, "--rebuild-extensions")).stdout).reusedExtensions, false);
+  assert.notEqual((await stat(client, { bigint: true })).mtimeNs, before.mtimeNs);
+  assert.equal(JSON.parse((await f.install(payload)).stdout).reusedExtensions, true);
+});
+
+test("installed CLI invalidates extensions for changed source even at the same product version", { timeout: 90000 }, async t => {
+  const f = await fixture(t);
+  const first = await f.release("1.0.0");
+  await f.install(first);
+  const repacked = await f.release("1.0.0", async payload => {
+    const source = path.join(payload, "runtime/openquantum/web-capabilities/client.js");
+    await writeFile(source, `${await readFile(source, "utf8")}\nglobalThis.oqPreparationFixture = "changed-source";\n`);
+  }, "repacked");
+  assert.equal(JSON.parse((await f.install(repacked)).stdout).reusedExtensions, false);
+  assert.match(await readFile(path.join(f.home, ".openquantum-extensions/harness-web-capabilities/client.js"), "utf8"), /changed-source/);
+  assert.equal(JSON.parse((await f.install(repacked)).stdout).reusedExtensions, true);
+});
+
+test("failed extension rebuild restores programs, extensions and the previous readiness receipt", { timeout: 90000 }, async t => {
+  const f = await fixture(t);
+  const old = await f.release("1.0.0");
+  await f.install(old);
+  const next = await f.release("2.0.0", async payload => {
+    await writeFile(path.join(payload, "runtime/openquantum/web-locales/client.js"), 'import { incomplete build\n');
+  });
+  const before = await snapshot(f.projectRoot);
+  const dependencies = await readlink(path.join(f.projectRoot, "node_modules"));
+  await assert.rejects(f.install(next), /Build failed|Expected/);
+  assert.deepEqual(await snapshot(f.projectRoot), before);
+  assert.equal(await readlink(path.join(f.projectRoot, "node_modules")), dependencies);
+  assert.equal(JSON.parse((await f.install(old)).stdout).reusedExtensions, true);
+});
+
+test("valid extension receipts do not permit linked outputs or a linked receipt", { timeout: 90000, skip: process.platform === "win32" }, async t => {
+  const f = await fixture(t);
+  const payload = await f.release("1.0.0");
+  await f.install(payload);
+  const sentinel = path.join(f.projectRoot, "untouched.txt");
+  await writeFile(sentinel, "user content");
+  for (const relative of [".openquantum-extensions/harness-web-capabilities/client.js", ".openquantum-extensions.json"]) {
+    const filename = path.join(f.home, relative);
+    const before = await readFile(filename);
+    await rm(filename);
+    await symlink(sentinel, filename);
+    await assert.rejects(f.install(payload), /write through a link/);
+    assert.equal(await readFile(sentinel, "utf8"), "user content");
+    assert.equal(await readlink(filename), sentinel);
+    await rm(filename);
+    await writeFile(filename, before);
+  }
+  assert.equal(JSON.parse((await f.install(payload)).stdout).reusedExtensions, true);
+});
 
 test("installed CLI rolls back a late Home failure and can run the previous release again", { timeout: 90000 }, async t => {
   const f = await fixture(t);

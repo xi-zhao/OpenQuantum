@@ -1,0 +1,17 @@
+{
+  "id": "tropidist-distance",
+  "dependencyLockSha256": "7fd0162722e8108b2790a0f06b77af08de21c75d4f5c21bcee539b359c695cb0",
+  "sourceSha256": "7016fe83c20f71f6ebc449d5d062c1e77fa12ddfcc5b48b57a8b4e8e6cae140e",
+  "networkIsolation": "macOS sandbox-exec deny network*",
+  "scientificValidation": "not_evaluated",
+  "status": "passed",
+  "files": {
+    "attempt.json": "f36ff105de26000f0ee2454fd73a565afe1da627da2d7bd2886404e07cc8bef8",
+    "program.py": "7016fe83c20f71f6ebc449d5d062c1e77fa12ddfcc5b48b57a8b4e8e6cae140e",
+    "result.json": "dfa8ea682929ad01724b183dd6344092cbd8bbbe6bd20ad13a320c218496e34d",
+    "runner.py": "4d8e55212145f22f02d8198f4582194f9aa937013038af3c543a95c6fa77e4b9",
+    "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "versions.json": "e289a4eb3edd57124ef437be2fbe49a797e9ceb27803459eb184b75f003a7780"
+  }
+}

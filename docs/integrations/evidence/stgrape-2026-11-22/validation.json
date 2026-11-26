@@ -1,0 +1,127 @@
+{
+  "singleQubitStateLoss": 1.3322676295501878e-15,
+  "singleQubitGateLoss": 1.2212453270876722e-15,
+  "twoQubitInitialReferenceLoss": 0.5683350778207432,
+  "gaussian": {
+    "p1": 0.0904777943470751,
+    "p1_squared": 0.008186231269911616,
+    "hybrid_p1_base": 0.008186231269911616,
+    "p2": 0.008156638115100158,
+    "evaluated_order": 2,
+    "rhs_evaluations": 128,
+    "reference": "exact-ode-block-sparse"
+  },
+  "finiteDifferences": {
+    "0.006": [
+      0.09047779104092359,
+      0.008156637870194054
+    ],
+    "0.003": [
+      0.09047779352055775,
+      0.008156638121568287
+    ],
+    "0.0015": [
+      0.09047779414047082,
+      0.008156638119268741
+    ]
+  },
+  "runs": [
+    {
+      "method": "ST",
+      "substeps": 1,
+      "initialLossError": 0.0009339060309296876,
+      "finalReferenceLoss": 0.5654877505179834,
+      "holdoutMeanLoss": 0.5573656412657487,
+      "termination": "STOP: TOTAL NO. OF ITERATIONS REACHED LIMIT",
+      "elapsedSeconds": 0.006232333951629698,
+      "finalControls": [
+        [
+          0.17163776751939155,
+          -0.39687737091367176,
+          0.16330160426828022,
+          0.3361133136277125
+        ]
+      ]
+    },
+    {
+      "method": "ST",
+      "substeps": 2,
+      "initialLossError": 0.0002347227962580245,
+      "finalReferenceLoss": 0.5653557706973997,
+      "holdoutMeanLoss": 0.5572655240951871,
+      "termination": "STOP: TOTAL NO. OF ITERATIONS REACHED LIMIT",
+      "elapsedSeconds": 0.006709833978675306,
+      "finalControls": [
+        [
+          0.1752276957011177,
+          -0.38516276705018726,
+          0.14791036702645116,
+          0.32170968061804855
+        ]
+      ]
+    },
+    {
+      "method": "ST",
+      "substeps": 4,
+      "initialLossError": 5.875770949992365e-05,
+      "finalReferenceLoss": 0.5653252122165,
+      "holdoutMeanLoss": 0.5572432465768422,
+      "termination": "STOP: TOTAL NO. OF ITERATIONS REACHED LIMIT",
+      "elapsedSeconds": 0.008473790949210525,
+      "finalControls": [
+        [
+          0.17607977552606657,
+          -0.3823359532586674,
+          0.1440902766508298,
+          0.3181590601121289
+        ]
+      ]
+    },
+    {
+      "method": "dense",
+      "substeps": 1,
+      "initialLossError": 3.056443986793056e-13,
+      "finalReferenceLoss": 0.5654408903636158,
+      "holdoutMeanLoss": 0.5578190449490604,
+      "termination": "STOP: TOTAL NO. OF ITERATIONS REACHED LIMIT",
+      "elapsedSeconds": 0.012197208008728921,
+      "finalControls": [
+        [
+          0.27788890031900587,
+          -0.4040945360255527,
+          0.02271649460331515,
+          0.2770793532488279
+        ]
+      ]
+    },
+    {
+      "method": "block-sparse",
+      "substeps": 1,
+      "initialLossError": 3.055333763768431e-13,
+      "finalReferenceLoss": 0.5654408903636158,
+      "holdoutMeanLoss": 0.5578190449490608,
+      "termination": "STOP: TOTAL NO. OF ITERATIONS REACHED LIMIT",
+      "elapsedSeconds": 0.019058541976846755,
+      "finalControls": [
+        [
+          0.27788890031900154,
+          -0.40409453602556633,
+          0.02271649460329922,
+          0.277079353248822
+        ]
+      ]
+    }
+  ],
+  "heldoutSeed": 20261122,
+  "heldoutCount": 8,
+  "invalidBasis": {
+    "upstreamRejected": false,
+    "initialLoss": 1.0,
+    "success": true,
+    "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+    "analyticLoss": 8.024582750190571e-32,
+    "controlArea": 3.1415926535897927,
+    "exampleRejected": true
+  },
+  "scientificValidation": "not_evaluated"
+}

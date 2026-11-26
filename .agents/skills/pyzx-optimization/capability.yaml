@@ -1,0 +1,104 @@
+schemaVersion: "1.1"
+id: pyzx-optimization
+version: 1.1.0
+displayName: pyzx-optimization independent observations
+description: Independent observations with persisted evidence and replayable central Acceptance.
+maturity:
+  status: draft
+  evidence:
+    - id: independent-observations-2026-11-25
+      kind: eval-report
+      path: evals/evidence-2026-11-25.json
+      sha256: 1b97f9c7b8082cc374a0ff3e3e232bf1ae0135b43d12eb54563d8e8f541d0955
+skill:
+  name: pyzx-optimization
+  entrypoint: SKILL.md
+scope:
+  supportedClaims:
+    - Independently parse gate tables, gate/T/two-qubit counts and depth;
+      compare complete unitaries up to global phase for <=6 qubits.
+  outOfScope:
+    - Hardware routing, guaranteed gate-count improvement, larger dense-unitary
+      proofs.
+  examples:
+    - title: Independent local audit
+      prompt: Run the fixed numerical example and explain its independent observations.
+input:
+  id: experiment-request
+  schema: inputs/request.schema.json
+  maxBytes: 65536
+  mediaTypes:
+    - application/json
+artifacts:
+  - id: numerical-result
+    schema: artifacts/result.schema.json
+    required: true
+    mediaType: application/json
+validators:
+  - id: pyzx-optimization-observations
+    version: 1.0.0
+    command:
+      executable: node
+      script: validators/validate-result.mjs
+      args: []
+      shell: false
+acceptanceProfiles:
+  - id: pyzx-unitary-optimization-audit
+    version: 1.0.0
+    validator: pyzx-optimization-observations
+    definition:
+      path: acceptance-profiles/pyzx-unitary-optimization-audit-v1.json
+      sha256: 42925d1dfd8519d8c08eccb9e1e01a90a62d737d6b9546bbd00da553b6613c62
+reproductionProfiles: []
+modelRequirements:
+  textGeneration: false
+  toolCalling: false
+  structuredOutput: false
+permissions:
+  network:
+    mode: none
+    destinations: []
+  filesystem:
+    read:
+      - prepared-runtime
+      - structured-result
+    write:
+      - temporary-compute-cache
+      - workspace/results
+  subprocess:
+    allowed: true
+    commands:
+      - python
+  cloudCompute:
+    allowed: false
+    providers: []
+  limits:
+    wallTimeSeconds: null
+    memoryMiB: null
+    maxArtifacts: 1
+    maxCostUsd: 0
+  data:
+    classification: public
+    retentionDays: 0
+    externalTransfer: forbidden
+    licenses:
+      - MIT
+evals:
+  runner:
+    executable: node
+    script: evals/run-evals.mjs
+    args: []
+    shell: false
+  suite:
+    id: pyzx-optimization-observations-eval
+    version: 1.0.0
+    path: evals/suite.json
+    sha256: 07baa5199708b9c9b704e215e44e79588a6dcbd592ee532e11a4d163be660887
+compatibility:
+  contract: "1.1"
+  harness: 0.1.0-rc.6
+dependencies:
+  - id: pyzx
+    kind: scientific-backend
+    version: 0.10.8
+    digest: 93ed8d34a455c4cde334a8150d5018528dda7c911a3037c7ea31c93a8d02036c

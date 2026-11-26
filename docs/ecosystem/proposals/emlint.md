@@ -3,7 +3,8 @@
 - 调研日期：2026-10-29（Asia/Shanghai）；OpenQuantum 基线 `7a111fae86905abaca32d3345c35d01f94dd23ec`。
 - 上游：[MathysRennela/emlint](https://github.com/MathysRennela/emlint)。
 - 固定候选：[v0.2.4](https://github.com/MathysRennela/emlint/tree/v0.2.4)，完整提交 `b124d2ba9e98f3676e6b385a5720c21ea7180a39`。
-- 发现任务提交提案后，接入任务沿用同一分支与 PR 实施；当前已提供 L0 Skill、固定 SDK 环境、真实接口证据与 README。PR 交付待审，不自动合并；用户可随时关闭或暂停。
+- **状态：已合入主线。** 已交付 [`emlint-dem-audit`](../../../.agents/skills/emlint-dem-audit/SKILL.md) 与固定环境证据（[emlint-2026-10-29.json](../../integrations/evidence/emlint-2026-10-29.json)）；以下保留原候选阶段记录。
+- 原提案状态：发现任务提交提案后，接入任务沿用同一分支与 PR 实施；当前已提供 L0 Skill、固定 SDK 环境、真实接口证据与 README。PR 交付待审，不自动合并；用户可随时关闭或暂停。
 
 ## 用户任务与增量价值
 

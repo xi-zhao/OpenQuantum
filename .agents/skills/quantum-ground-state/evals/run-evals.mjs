@@ -1,3 +1,4 @@
+import { isMainModule } from "../../../../src/lib/cli-entrypoint.mjs";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -242,8 +243,7 @@ export function runEvaluationSuite() {
   };
 }
 
-const currentFile = fileURLToPath(import.meta.url);
-if (process.argv[1] && path.resolve(process.argv[1]) === currentFile) {
+if (isMainModule(import.meta.url)) {
   const report = runEvaluationSuite();
   process.stdout.write(`${JSON.stringify(report, null, 2)}\n`);
   if (!report.hardGatePassed) process.exitCode = 1;

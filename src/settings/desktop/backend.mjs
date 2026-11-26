@@ -6,11 +6,15 @@ import { createExternalSessionAdapter, connectExternal as connectExternalProvide
 
 // Reuse the reviewed catalog and MCP adapters, without delegating execution
 // policy or construction to the Codex backend. Native Tools remain in-process.
-export async function createDesktopBackend({ root = PROJECT_ROOT, discover = false, nodeExecutable = process.execPath,
+export async function createDesktopBackend({ root = PROJECT_ROOT, discover = false, nodeExecutable = process.execPath, confine,
   connectExternal = (root, entry, values, options) => connectExternalProvider(root, entry, values, { ...options, nodeExecutable }) } = {}) {
   const limits = DEFAULT_BACKEND_LIMITS;
+  const confinedLaunch = launch => {
+    if (typeof confine !== "function") throw new Error("Desktop scientific MCP requires host process confinement");
+    return confine(launch);
+  };
   const connect = (provider, root, values, signal) => provider.kind === "native"
-    ? nativeAdapter(provider, root) : connectProvider(provider, root, values, signal, nodeExecutable);
+    ? nativeAdapter(provider, root) : connectProvider(provider, root, values, signal, nodeExecutable, { confine: confinedLaunch });
   const catalog = await loadBackendCatalog({ root, discover, connect, limits });
   return createToolBackend({ catalog, limits, connect,
     createExternal: () => createExternalSessionAdapter({ root, connect: connectExternal }) });

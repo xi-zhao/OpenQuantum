@@ -9,6 +9,7 @@ import { execFileSync } from "node:child_process";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 import { Environments, runningJob } from "../src/settings/codex/environments.mjs";
+import { preparedPythonLaunch } from "../src/lib/prepared-python.mjs";
 import { EXECUTE_TOOL } from "../runtime/chatgpt/agent-tools.mjs";
 import { DISCOVER_TOOL, PREPARE_TOOL } from "../src/settings/codex/preparation.mjs";
 
@@ -87,9 +88,15 @@ test("real Braket cold install, same-conversation continuation, reuse and reconn
   }
   assert.equal(ready.state, "ready", JSON.stringify(ready.environment));
   const installMs = performance.now() - started;
+  const python = await preparedPythonLaunch({
+    skillRoot: path.join(root, ".agents/skills", selection.skillId),
+    environment: manager.environment,
+    args: ["-c", "from importlib.metadata import version\nprint(version('amazon-braket-sdk'))"],
+  });
+  const installedVersion = execFileSync(python.command, python.args, { encoding: "utf8" }).trim();
   const run = async current => {
     const result = await call(current, ready.execution.name, { ...ready.execution.arguments, arguments: input });
-    assert.equal(result.source.version, "1.127.2");
+    assert.equal(result.source.version, installedVersion);
     assert.equal(result.scientificValidation, "not_evaluated");
     assert.ok(result.result.normError < 1e-12);
     assert.equal(result.result.bitOrder, "leftmost bit is qubit 0");

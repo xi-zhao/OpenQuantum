@@ -1,0 +1,16 @@
+test_hyperedge_observables_cross_byte_boundaries (__main__.DetectorTests.test_hyperedge_observables_cross_byte_boundaries) ... ok
+test_unreachable_syndrome_raises_instead_of_random_prediction (__main__.DetectorTests.test_unreachable_syndrome_raises_instead_of_random_prediction) ... 
+thread '<unnamed>' (21080272) panicked at src/primal_module_serial.rs:287:25:
+cluster 0 is unsolvable: V_S = {0, 1}, E_S = {0}
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+ok
+test_wrong_packed_shape_is_rejected (__main__.DetectorTests.test_wrong_packed_shape_is_rejected) ... ok
+test_all_syndromes_agree_with_independent_subset_enumeration (__main__.HypergraphTests.test_all_syndromes_agree_with_independent_subset_enumeration) ... ok
+test_native_solver_can_be_cleared_and_reused (__main__.HypergraphTests.test_native_solver_can_be_cleared_and_reused) ... ok
+test_user_hyperedge_solves_the_spec_reference (__main__.HypergraphTests.test_user_hyperedge_solves_the_spec_reference) ... ok
+test_zero_cluster_budget_is_not_an_unlimited_alias (__main__.HypergraphTests.test_zero_cluster_budget_is_not_an_unlimited_alias) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.139s
+
+OK

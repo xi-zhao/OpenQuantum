@@ -1,0 +1,41 @@
+{
+  "request": {
+    "numQubits": 7,
+    "gates": [
+      {
+        "gate": "H",
+        "targets": [
+          6
+        ]
+      }
+    ],
+    "referenceMode": "auto",
+    "execution": {}
+  },
+  "result": {
+    "inputQasm": "OPENQASM 2.0;\ninclude \"qelib1.inc\";\nqreg q[7];\nh q[6];\n",
+    "optimizedQasm": "OPENQASM 2.0;\ninclude \"qelib1.inc\";\nqreg q[7];\nh q[6];\n",
+    "before": {
+      "gates": 1,
+      "twoQubitGates": 0,
+      "tCount": 0,
+      "depth": 1
+    },
+    "after": {
+      "gates": 1,
+      "twoQubitGates": 0,
+      "tCount": 0,
+      "depth": 1
+    },
+    "unitaryMaxError": null,
+    "reference": {
+      "mode": "auto",
+      "status": "not_run",
+      "method": "Independent complete unitary comparison up to global phase",
+      "reason": "Automatic dense reference is omitted above 6 qubits; required attempts it at any size."
+    },
+    "equivalenceTolerance": null,
+    "equivalentUpToGlobalPhase": null,
+    "bitOrder": "left-to-right q0,q1,..."
+  }
+}

@@ -1,3 +1,4 @@
+import { isMainModule } from "../../../../src/lib/cli-entrypoint.mjs";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -183,10 +184,7 @@ export function validateReport(report) {
   return errors;
 }
 
-const currentFile = fileURLToPath(import.meta.url);
-const invokedFile = process.argv[1] ? path.resolve(process.argv[1]) : undefined;
-
-if (invokedFile === currentFile) {
+if (isMainModule(import.meta.url)) {
   const reportFile = process.argv[2];
 
   if (!reportFile) {

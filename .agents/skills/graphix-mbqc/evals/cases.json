@@ -1,0 +1,295 @@
+[
+  {
+    "id": "default",
+    "fixture": "default.json",
+    "fixtureSha256": "7548453f3c396635808bcf7da4932d5607d004eee57c9465006a1eaf58e0053a",
+    "edits": {},
+    "observations": {},
+    "failedChecks": []
+  },
+  {
+    "id": "generated",
+    "fixture": "generated.json",
+    "fixtureSha256": "6ed81da4032fc2a6cd2d0d88a1277d6539162a7a35b6f985019065cf1413191b",
+    "edits": {},
+    "observations": {},
+    "failedChecks": []
+  },
+  {
+    "id": "identity",
+    "fixture": "identity.json",
+    "fixtureSha256": "0a865d9e903831958e6da4a86a2037fbdc10fec4286c89b1ac3adb96cd1cf32f",
+    "edits": {},
+    "observations": {},
+    "failedChecks": []
+  },
+  {
+    "id": "rotation",
+    "fixture": "rotation.json",
+    "fixtureSha256": "40acab8dfdebc751f190ce665bb59741d96129c2b3a1c2795fe9a2b5fae7568f",
+    "edits": {},
+    "observations": {},
+    "failedChecks": []
+  },
+  {
+    "id": "skip",
+    "fixture": "skip.json",
+    "fixtureSha256": "0c45ec89318ecd64041cff380a67db88b662a2b193708dab9d5f6fc97f70cd9b",
+    "edits": {},
+    "observations": {},
+    "failedChecks": []
+  },
+  {
+    "id": "missing-byproduct-corrections",
+    "fixture": "default.json",
+    "fixtureSha256": "7548453f3c396635808bcf7da4932d5607d004eee57c9465006a1eaf58e0053a",
+    "edits": {
+      "result.pattern": "N(2)\nE((0, 2))\nM(0, Measurement.XY(0))\nN(7)\nE((1, 7))\nM(1, Measurement.XY(0))\nN(3)\nE((2, 3))\nM(2, Measurement.XY(1.75), {0})\nN(4)\nE((3, 4))\nM(3, Measurement.XY(0), {2})\nN(5)\nE((4, 5))\nM(4, Measurement.XY(1.75), {0, 3})\nN(6)\nE((5, 6))\nM(5, Measurement.XY(0), {2, 4})\nE((7, 6))\nN(8)\nE((7, 8))\nM(7, Measurement.XY(0), {1})"
+    },
+    "observations": {
+      "branch-0.corrections": "fail"
+    },
+    "failedChecks": [
+      "branch-0.corrections",
+      "branch-2.corrections",
+      "branch-3.corrections"
+    ]
+  },
+  {
+    "id": "false-fidelity",
+    "fixture": "default.json",
+    "fixtureSha256": "7548453f3c396635808bcf7da4932d5607d004eee57c9465006a1eaf58e0053a",
+    "edits": {
+      "result.branches.0.fidelity": 0.4
+    },
+    "observations": {
+      "branch-0.claims": "fail"
+    },
+    "failedChecks": [
+      "branch-0.claims"
+    ]
+  },
+  {
+    "id": "unnormalized-state",
+    "fixture": "default.json",
+    "fixtureSha256": "7548453f3c396635808bcf7da4932d5607d004eee57c9465006a1eaf58e0053a",
+    "edits": {
+      "result.branches.0.statevector": [
+        [
+          -9.813077866773596e-17,
+          0.3535533905932738
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          -0.3535533905932738,
+          0
+        ]
+      ]
+    },
+    "observations": {
+      "branch-0.state": "fail"
+    },
+    "failedChecks": [
+      "branch-0.claims",
+      "branch-0.corrections",
+      "branch-0.normalization",
+      "branch-0.state",
+      "reference.claims"
+    ]
+  },
+  {
+    "id": "false-corrected-state",
+    "fixture": "default.json",
+    "fixtureSha256": "7548453f3c396635808bcf7da4932d5607d004eee57c9465006a1eaf58e0053a",
+    "edits": {
+      "result.branches.0.statevector": [
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "result.branches.0.fidelity": 1,
+      "result.branches.0.normError": 0
+    },
+    "observations": {
+      "branch-0.state": "fail",
+      "branch-0.corrections": "fail"
+    },
+    "failedChecks": [
+      "branch-0.claims",
+      "branch-0.corrections",
+      "branch-0.state",
+      "reference.claims"
+    ]
+  },
+  {
+    "id": "missing-resource-edge",
+    "fixture": "default.json",
+    "fixtureSha256": "7548453f3c396635808bcf7da4932d5607d004eee57c9465006a1eaf58e0053a",
+    "edits": {
+      "result.edges": [
+        [
+          1,
+          7
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          5,
+          6
+        ],
+        [
+          6,
+          7
+        ],
+        [
+          7,
+          8
+        ]
+      ]
+    },
+    "observations": {
+      "pattern.structure": "fail"
+    },
+    "failedChecks": [
+      "pattern.structure"
+    ]
+  },
+  {
+    "id": "wrong-space",
+    "fixture": "default.json",
+    "fixtureSha256": "7548453f3c396635808bcf7da4932d5607d004eee57c9465006a1eaf58e0053a",
+    "edits": {
+      "result.maxSpace": 1
+    },
+    "observations": {
+      "pattern.structure": "fail"
+    },
+    "failedChecks": [
+      "pattern.structure"
+    ]
+  },
+  {
+    "id": "missing-measurement",
+    "fixture": "default.json",
+    "fixtureSha256": "7548453f3c396635808bcf7da4932d5607d004eee57c9465006a1eaf58e0053a",
+    "edits": {
+      "result.branches.0.measurements": [
+        {
+          "node": 1,
+          "outcome": 1
+        },
+        {
+          "node": 2,
+          "outcome": 1
+        },
+        {
+          "node": 3,
+          "outcome": 0
+        },
+        {
+          "node": 4,
+          "outcome": 0
+        },
+        {
+          "node": 5,
+          "outcome": 1
+        },
+        {
+          "node": 7,
+          "outcome": 0
+        }
+      ]
+    },
+    "observations": {
+      "branches.binding": "fail"
+    },
+    "failedChecks": [
+      "branches.binding"
+    ]
+  },
+  {
+    "id": "future-correction",
+    "fixture": "default.json",
+    "fixtureSha256": "7548453f3c396635808bcf7da4932d5607d004eee57c9465006a1eaf58e0053a",
+    "edits": {
+      "result.pattern": "N(2)\nE((0, 2))\nM(0, Measurement.XY(0))\nN(7)\nE((1, 7))\nM(1, Measurement.XY(0))\nN(3)\nE((2, 3))\nM(2, Measurement.XY(1.75), {0})\nN(4)\nE((3, 4))\nM(3, Measurement.XY(0), {2})\nN(5)\nE((4, 5))\nM(4, Measurement.XY(1.75), {0, 3})\nN(6)\nE((5, 6))\nM(5, Measurement.XY(0), {2, 4})\nE((7, 6))\nN(8)\nE((7, 8))\nM(7, Measurement.XY(0), {1})\nZ(6, {1, 2, 4})\nX(6, {0, 3, 5})\nZ(8, {1})\nX(8, {0, 3, 5, 7})\nX(6, {999})"
+    },
+    "observations": {
+      "pattern.structure": "fail"
+    },
+    "failedChecks": [
+      "pattern.structure"
+    ]
+  },
+  {
+    "id": "fake-reference-state",
+    "fixture": "default.json",
+    "fixtureSha256": "7548453f3c396635808bcf7da4932d5607d004eee57c9465006a1eaf58e0053a",
+    "edits": {
+      "result.referenceStatevector": [
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ]
+    },
+    "observations": {
+      "reference.claims": "fail"
+    },
+    "failedChecks": [
+      "reference.claims"
+    ]
+  },
+  {
+    "id": "generation-only",
+    "fixture": "generated.json",
+    "fixtureSha256": "6ed81da4032fc2a6cd2d0d88a1277d6539162a7a35b6f985019065cf1413191b",
+    "edits": {},
+    "observations": {
+      "state.reference": "not_checked"
+    },
+    "failedChecks": []
+  }
+]

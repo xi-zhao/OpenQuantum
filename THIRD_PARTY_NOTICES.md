@@ -141,7 +141,7 @@ installed environments, proprietary packages and NetSquid binaries are not redis
 | [Qibo / TII / INFN](https://github.com/qiboteam/qibo) | qibo==0.3.5 | Apache-2.0 |
 | [Eclipse / Fraunhofer](https://github.com/eclipse-qrisp/Qrisp) | qrisp==0.9.9 | EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0 |
 | [Aegiq](https://github.com/Aegiq/lightworks) | lightworks==2.3.5 | Apache-2.0 |
-| [Amazon](https://github.com/amazon-braket/amazon-braket-sdk-python) | amazon-braket-sdk==1.127.2 | Apache-2.0 |
+| [Amazon](https://github.com/amazon-braket/amazon-braket-sdk-python) | amazon-braket-sdk==1.128.1 | Apache-2.0 |
 | [QunaSys](https://github.com/QunaSys/quri-sdk) | quri-parts[qulacs]==0.27.0 | Apache-2.0 (QURI Parts); MIT (Qulacs) |
 | [Microsoft](https://github.com/microsoft/qdk) | qdk[qre]==1.32.3 | MIT |
 | [Google Quantum AI](https://github.com/quantumlib/Qualtran) | qualtran==0.7.0 | Apache-2.0 |
@@ -225,3 +225,20 @@ Chromobius 1.1.1 为 Apache-2.0，固定上游提交 `efae0325e4a8fc13be981434d3
 ## PPVM 原生 SDK 工作流
 
 [QuEraComputing/ppvm](https://github.com/QuEraComputing/ppvm) v0.3.0 为 Apache-2.0，固定提交 `3cc883fd93b2475cb10c892a8a31adcc09a7579c`；[许可证原文](https://github.com/QuEraComputing/ppvm/blob/3cc883fd93b2475cb10c892a8a31adcc09a7579c/LICENSE)。本仓库仅分发原创指南、示例、验证与依赖锁，不捆绑上游源码或二进制。显式准备时构建 `ppvm-python`，间接 Python 依赖由 `uv.lock` 固定，Rust 工作区来源由完整提交固定并保留其 Cargo.lock 与许可。各依赖保留自身许可，不将 Apache-2.0 扩展为所有传递依赖的统一许可证。
+
+## MWPF 超图译码 SDK
+
+MWPF 0.2.18 为 MIT，固定上游提交 `e50f72e2f389950db50bce075163a4e4022c9dcd`；
+[源码与许可](https://github.com/yuewuo/mwpf/tree/e50f72e2f389950db50bce075163a4e4022c9dcd)。
+本仓库仅分发原创指南、示例、测试和依赖锁，不捆绑其二进制或复制算法源码。显式准备时获取发行包，
+保留 MWPF 以及 wheel 内 HiGHS、heapz、slp 等组件的许可；依赖 Stim/Sinter（Apache-2.0）、
+NumPy/SciPy（BSD-3-Clause）、Matplotlib 等完整来源与版本以 `mwpf-decoding/uv.lock` 和安装包元数据为准。
+原生 API 可用性、浮点权重界与科研验收分别验证。
+
+## tropidist
+
+显式准备采用 Fanerst/tropidist 固定提交 `b03ec2d4077f287f89f97b5c2c16ce5ce17c2c58` 的代码，保留上游 MIT 许可和第三方电路的 Apache-2.0 来源说明。论文结果和电路集合均不随包分发。Python 依赖保留各自许可。[MIT 许可](https://github.com/Fanerst/tropidist/blob/b03ec2d4077f287f89f97b5c2c16ce5ce17c2c58/LICENSE) · [电路来源](https://github.com/Fanerst/tropidist/blob/b03ec2d4077f287f89f97b5c2c16ce5ce17c2c58/circuits/NOTICE.md)
+
+## ST-GRAPE
+
+v1.0.0 的代码及文档采用 MIT 许可，Python 锁固定官方 code-only wheel。可选科研数据按 CC BY 4.0 署名，默认准备仅获取代码与依赖。传递依赖保留各自许可。[代码许可](https://github.com/Fanyd271/ST-GRAPE/blob/5f0d75dd250649b0a8ff629b104a4fc30c9b6c5b/LICENSE) · [数据许可](https://github.com/Fanyd271/ST-GRAPE/blob/5f0d75dd250649b0a8ff629b104a4fc30c9b6c5b/data/LICENSE)

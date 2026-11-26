@@ -2,7 +2,7 @@ schemaVersion: "1.1"
 
 packages:
   - id: hamiltonian-simulation
-    level: L1
+    level: L3
     execution:
       mcpServers:
         - name: hamiltonian_local
@@ -13,12 +13,25 @@ packages:
           effectEvidence: mcp-annotations
           tools:
             - name: simulate_hamiltonian
-              effect: read-only
+              effect: workspace-write
       nativeTools: []
       checks:
         - tests/hamiltonian-contracts.test.mjs
         - tests/hamiltonian-live.test.mjs
         - tests/harness-hamiltonian.test.mjs
+        - .agents/skills/hamiltonian-simulation/test/validator.test.mjs
+        - .agents/skills/hamiltonian-simulation/test/live.test.mjs
+        - .agents/skills/hamiltonian-simulation/evals/run-evals.mjs
+    audit:
+      manifest: capability.yaml
+    materialization:
+      adapter: runtime/openquantum/agent-presets/openquantum/scientific-result-projection.mjs
+      resultRoot: results/openquantum/hamiltonian-simulation
+      checks:
+        - tests/numerical-scientific-materialization.test.mjs
+        - tests/harness-numerical-acceptance.test.mjs
+      replayChecks:
+        - tests/harness-numerical-acceptance.test.mjs
 
   - id: quantum-practices
     level: L1
@@ -485,7 +498,7 @@ packages:
         - .agents/skills/fieldqkit-hardware/test/mcp.test.mjs
 
   - id: qpanda-qubo
-    level: L1
+    level: L3
     execution:
       mcpServers:
         - name: qpanda_qubo
@@ -502,6 +515,20 @@ packages:
       nativeTools: []
       checks:
         - .agents/skills/qpanda-qubo/test/mcp.test.mjs
+        - .agents/skills/qpanda-qubo/test/validator.test.mjs
+        - .agents/skills/qpanda-qubo/test/live.test.mjs
+        - .agents/skills/qpanda-qubo/evals/run-evals.mjs
+    audit:
+      manifest: capability.yaml
+
+    materialization:
+      adapter: runtime/openquantum/agent-presets/openquantum/scientific-result-projection.mjs
+      resultRoot: results/openquantum/qpanda-qubo
+      checks:
+        - tests/optimization-scientific-materialization.test.mjs
+        - tests/harness-optimization-acceptance.test.mjs
+      replayChecks:
+        - tests/harness-optimization-acceptance.test.mjs
 
   - id: quantum-circuit-verification
     level: L3
@@ -530,7 +557,7 @@ packages:
         - tests/qcec-scientific-live.test.mjs
 
   - id: qec-memory-experiment
-    level: L1
+    level: L3
     execution:
       mcpServers:
         - name: qec_local
@@ -545,6 +572,18 @@ packages:
       nativeTools: []
       checks:
         - .agents/skills/qec-memory-experiment/test/mcp.test.mjs
+        - .agents/skills/qec-memory-experiment/test/live.test.mjs
+        - .agents/skills/qec-memory-experiment/evals/run-evals.mjs
+    audit:
+      manifest: capability.yaml
+    materialization:
+      adapter: runtime/openquantum/agent-presets/openquantum/scientific-result-projection.mjs
+      resultRoot: results/openquantum/qec-memory-experiment
+      checks:
+        - tests/numerical-scientific-materialization.test.mjs
+        - tests/harness-numerical-acceptance.test.mjs
+      replayChecks:
+        - tests/harness-numerical-acceptance.test.mjs
 
   - id: fatqat-workbench
     level: L1
@@ -729,7 +768,7 @@ packages:
         - tests/harness-paper-tools.test.mjs
 
   - id: ldpc-decoding
-    level: L1
+    level: L3
     execution:
       mcpServers:
         - name: ldpc_local
@@ -746,6 +785,20 @@ packages:
         - tests/paper-tools-contracts.test.mjs
         - tests/paper-tools-live.test.mjs
         - tests/harness-paper-tools.test.mjs
+        - .agents/skills/ldpc-decoding/test/validator.test.mjs
+        - .agents/skills/ldpc-decoding/test/live.test.mjs
+        - .agents/skills/ldpc-decoding/evals/run-evals.mjs
+    audit:
+      manifest: capability.yaml
+
+    materialization:
+      adapter: runtime/openquantum/agent-presets/openquantum/scientific-result-projection.mjs
+      resultRoot: results/openquantum/ldpc-decoding
+      checks:
+        - tests/optimization-scientific-materialization.test.mjs
+        - tests/harness-optimization-acceptance.test.mjs
+      replayChecks:
+        - tests/harness-optimization-acceptance.test.mjs
 
   - id: flow-vqe
     level: L1
@@ -924,7 +977,7 @@ packages:
         - tests/harness-unitary-tools.test.mjs
 
   - id: pyzx-optimization
-    level: L1
+    level: L3
     execution:
       mcpServers:
         - name: pyzx_local
@@ -942,8 +995,22 @@ packages:
         - tests/unitary-next-live.test.mjs
         - tests/harness-unitary-next.test.mjs
 
+        - .agents/skills/pyzx-optimization/test/validator.test.mjs
+        - tests/unitary-independent-live.test.mjs
+        - .agents/skills/pyzx-optimization/evals/run-evals.mjs
+    audit:
+      manifest: capability.yaml
+    materialization:
+      adapter: runtime/openquantum/agent-presets/openquantum/scientific-result-projection.mjs
+      resultRoot: results/openquantum/pyzx-optimization
+      checks:
+        - tests/unitary-scientific-materialization.test.mjs
+        - tests/harness-unitary-acceptance.test.mjs
+      replayChecks:
+        - tests/harness-unitary-acceptance.test.mjs
+
   - id: graphix-mbqc
-    level: L1
+    level: L3
     execution:
       mcpServers:
         - name: graphix_local
@@ -961,8 +1028,22 @@ packages:
         - tests/unitary-next-live.test.mjs
         - tests/harness-unitary-next.test.mjs
 
+        - .agents/skills/graphix-mbqc/test/validator.test.mjs
+        - tests/unitary-independent-live.test.mjs
+        - .agents/skills/graphix-mbqc/evals/run-evals.mjs
+    audit:
+      manifest: capability.yaml
+    materialization:
+      adapter: runtime/openquantum/agent-presets/openquantum/scientific-result-projection.mjs
+      resultRoot: results/openquantum/graphix-mbqc
+      checks:
+        - tests/unitary-scientific-materialization.test.mjs
+        - tests/harness-unitary-acceptance.test.mjs
+      replayChecks:
+        - tests/harness-unitary-acceptance.test.mjs
+
   - id: symmer-tapering
-    level: L1
+    level: L3
     execution:
       mcpServers:
         - name: symmer_local
@@ -980,8 +1061,22 @@ packages:
         - tests/unitary-next-live.test.mjs
         - tests/harness-unitary-next.test.mjs
 
+        - .agents/skills/symmer-tapering/test/validator.test.mjs
+        - tests/unitary-independent-live.test.mjs
+        - .agents/skills/symmer-tapering/evals/run-evals.mjs
+    audit:
+      manifest: capability.yaml
+    materialization:
+      adapter: runtime/openquantum/agent-presets/openquantum/scientific-result-projection.mjs
+      resultRoot: results/openquantum/symmer-tapering
+      checks:
+        - tests/unitary-scientific-materialization.test.mjs
+        - tests/harness-unitary-acceptance.test.mjs
+      replayChecks:
+        - tests/harness-unitary-acceptance.test.mjs
+
   - id: paulie-algebra
-    level: L1
+    level: L3
     execution:
       mcpServers:
         - name: paulie_local
@@ -998,6 +1093,20 @@ packages:
         - tests/unitary-next-contracts.test.mjs
         - tests/unitary-next-live.test.mjs
         - tests/harness-unitary-next.test.mjs
+
+        - .agents/skills/paulie-algebra/test/validator.test.mjs
+        - tests/unitary-independent-live.test.mjs
+        - .agents/skills/paulie-algebra/evals/run-evals.mjs
+    audit:
+      manifest: capability.yaml
+    materialization:
+      adapter: runtime/openquantum/agent-presets/openquantum/scientific-result-projection.mjs
+      resultRoot: results/openquantum/paulie-algebra
+      checks:
+        - tests/unitary-scientific-materialization.test.mjs
+        - tests/harness-unitary-acceptance.test.mjs
+      replayChecks:
+        - tests/harness-unitary-acceptance.test.mjs
 
   - id: qcut-knitting
     level: L1
@@ -2444,6 +2553,12 @@ packages:
   - id: chromobius-decoding
     level: L0
 
+  - id: mwpf-decoding
+    level: L0
+
+  - id: tropidist-distance
+    level: L0
+
   - id: tesseract-decoding
     level: L0
 
@@ -2487,6 +2602,9 @@ packages:
     level: L0
 
   - id: quantumcontrol-julia
+    level: L0
+
+  - id: stgrape-control
     level: L0
 
   - id: quantumclifford-julia

@@ -1,6 +1,6 @@
+import { isMainModule } from "../../../../src/lib/cli-entrypoint.mjs";
 import fs from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 import { isDeepStrictEqual } from "node:util";
 
 import {
@@ -942,7 +942,6 @@ function runCli() {
   }
 }
 
-const currentFile = fileURLToPath(import.meta.url);
-if (process.argv[1] && path.resolve(process.argv[1]) === currentFile) {
+if (isMainModule(import.meta.url)) {
   runCli();
 }

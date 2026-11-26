@@ -8,6 +8,8 @@ import path from "node:path";
 import test from "node:test";
 import { harnessHttpCookie, harnessSessionSnapshot, redactHarnessLaunchTokens } from "../scripts/lib/harness-http-auth.mjs";
 import { prepareOpenQuantumHarnessHome } from "../scripts/lib/prepare-harness-home.mjs";
+import { createProtectedState } from "./helpers/protected-state.mjs";
+import { parseScientificToolResult } from "../runtime/openquantum/agent-presets/openquantum/scientific-result-protocol.mjs";
 
 import { UNITARY_NEXT_TOOLS } from "./fixtures/unitary-next.mjs";
 const scaled = process.env.OPENQUANTUM_REAL_LOCAL_SCALE === "1";
@@ -43,7 +45,8 @@ async function waitFor(probe, description, timeoutMs = 45000) {
 test("Harness discovers ecosystem Skills, runs selected real Tools and persists success and failure results", { skip: !enabled, timeout: 600000 }, async (t) => {
   const root = process.cwd();
   const sandbox = await mkdtemp(path.join(tmpdir(), "oq-unitary-harness-"));
-  const harnessHome = path.join(sandbox, "dsh");
+  const privateRoot = await createProtectedState(root);
+  const harnessHome = path.join(privateRoot, "dsh");
   let dispatched = false;
   let sawModelToolResult = false;
   const model = createServer(async (request, response) => {
@@ -55,7 +58,7 @@ test("Harness discovers ecosystem Skills, runs selected real Tools and persists 
     const hasRequestedTools = toolNames.every(name => body.tools?.some(tool => tool.function?.name === name));
     const initial = hasRequestedTools && !dispatched;
     if (initial) dispatched = true;
-    const delta = initial ? { role: "assistant", tool_calls: CASES.map((c, index) => ({ index, id: `unitary-fixture-${index}`, type: "function", function: { name: toolNames[index], arguments: JSON.stringify(c.input) } })) } : { role: "assistant", content: "Selected local ecosystem actions completed and one invalid circuit failed as expected; scientificValidation=not_evaluated." };
+    const delta = initial ? { role: "assistant", tool_calls: CASES.map((c, index) => ({ index, id: `unitary-fixture-${index}`, type: "function", function: { name: toolNames[index], arguments: JSON.stringify(c.input) } })) } : { role: "assistant", content: "Selected local ecosystem actions completed and one invalid circuit failed as expected; scientificValidation=observations_available." };
     response.writeHead(200, { "content-type": "text/event-stream" });
     for (const item of [
       { choices: [{ index: 0, delta, finish_reason: null }] },
@@ -71,6 +74,7 @@ test("Harness discovers ecosystem Skills, runs selected real Tools and persists 
     }
     model.closeAllConnections(); await new Promise((resolve) => model.close(resolve));
     await rm(sandbox, { recursive: true, force: true });
+    await rm(privateRoot, { recursive: true, force: true });
   });
   const modelPort = await listen(model);
   const reserved = createServer(); const port = await listen(reserved); await new Promise((resolve) => reserved.close(resolve));
@@ -119,15 +123,25 @@ test("Harness discovers ecosystem Skills, runs selected real Tools and persists 
       assert.match(serialized, /Invalid input/);
       continue;
     }
-    assert.match(serialized, /not_evaluated/);
+    assert.match(serialized, /observations_available/);
     assert.match(serialized, /dependencyLockSha256/);
     assert.doesNotMatch(serialized, /"isError":true/);
     assert.equal(block.isError, false);
-    const output = JSON.parse(block.content.find(item => item.type === "text").text);
+    const rawText = block.content.find(item => item.type === "text").text;
+    assert.equal(parseScientificToolResult(toolNames[index], rawText)?.scientificStatus, "observations_available");
+    const output = JSON.parse(rawText.split("\n").filter(line => !line.startsWith("OPENQUANTUM_SCIENTIFIC_RESULT_V1 ")).join("\n"));
     if (capability.server) {
       const { definition } = await import(`../.agents/skills/${capability.id}/mcp/contracts.mjs`);
       assert.ok(definition.validateOutput(output), `${capability.id}: invalid persisted result`);
       assert.deepEqual(output.input, definition.normalize(capability.tool, capability.input));
+      assert.deepEqual(output.validation.observations.filter(check => check.status === "fail"), []);
+      assert.equal(output.validation.observations.find(check => check.id === "provenance.complete").status, "not_checked");
+      const replacement = events.find(event => event.type === "tool/result"
+        && event.data.message.source.callId === callId && event.surfaceOp?.op === "replace");
+      assert.ok(replacement, `${capability.id}: missing post-materialization result`);
+      const presentation = parseScientificToolResult(toolNames[index], replacement.data.message.content[0].content[0].text);
+      assert.equal(presentation?.acceptanceStatus, scaled ? "conditional" : "passed", capability.id);
+      assert.deepEqual(replacement.sourceEventSeqs, [result.seq]);
       if (scaled) {
         assert.equal(output.result.reference.status, "not_run");
         if (capability.id === "graphix-mbqc") assert.deepEqual(output.result.branches, []);

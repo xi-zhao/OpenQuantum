@@ -1,0 +1,404 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "method": {
+      "enum": [
+        "trotter",
+        "qdrift"
+      ]
+    },
+    "numQubits": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+    },
+    "steps": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+    },
+    "order": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "seed": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "terms": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "pauli": {
+            "type": "string",
+            "pattern": "^[IXYZ]+$"
+          },
+          "coefficient": {
+            "type": "number",
+            "minimum": -1.7976931348623157e+308,
+            "maximum": 1.7976931348623157e+308
+          }
+        },
+        "required": [
+          "pauli",
+          "coefficient"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0
+    },
+    "identityCoefficient": {
+      "type": "number",
+      "minimum": -1.7976931348623157e+308,
+      "maximum": 1.7976931348623157e+308
+    },
+    "lambda": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1.7976931348623157e+308
+    },
+    "pauliRotations": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "sampledTermCounts": {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991
+      },
+      "minItems": 0
+    },
+    "sequenceSha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "openQasm3": {
+      "type": "string",
+      "minLength": 1
+    },
+    "circuit": {
+      "type": "object",
+      "properties": {
+        "depth": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "gates": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "twoQubitGates": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "globalPhase": {
+          "type": "number",
+          "minimum": -1.7976931348623157e+308,
+          "maximum": 1.7976931348623157e+308
+        },
+        "gateCounts": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          }
+        }
+      },
+      "required": [
+        "depth",
+        "gates",
+        "twoQubitGates",
+        "globalPhase",
+        "gateCounts"
+      ],
+      "additionalProperties": false
+    },
+    "statevector": {
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "number",
+              "minimum": -1.7976931348623157e+308,
+              "maximum": 1.7976931348623157e+308
+            },
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "minItems": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "stateNorm": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1.7976931348623157e+308
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "unitaryFrobeniusError": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1.7976931348623157e+308
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "unitarySpectralError": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1.7976931348623157e+308
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "convention": {
+      "const": "leftmost Pauli and statevector bit is q0; hbar=1; circuit implements exp(-iHt)"
+    },
+    "interpretation": {
+      "enum": [
+        "deterministic product formula",
+        "one seeded random circuit; not an ensemble channel error or error guarantee"
+      ]
+    },
+    "reference": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": [
+            "auto",
+            "required",
+            "skip"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "computed",
+            "not_run"
+          ]
+        },
+        "method": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 400
+        }
+      },
+      "required": [
+        "mode",
+        "status",
+        "method",
+        "reason"
+      ],
+      "additionalProperties": false
+    },
+    "stateFidelity": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1.0000000001
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "numpy",
+        "system",
+        "machine"
+      ],
+      "properties": {
+        "numpy": {
+          "type": "string",
+          "minLength": 1
+        },
+        "system": {
+          "type": "string",
+          "minLength": 1
+        },
+        "machine": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  },
+  "required": [
+    "method",
+    "numQubits",
+    "steps",
+    "order",
+    "seed",
+    "terms",
+    "identityCoefficient",
+    "lambda",
+    "pauliRotations",
+    "sampledTermCounts",
+    "sequenceSha256",
+    "openQasm3",
+    "circuit",
+    "statevector",
+    "stateNorm",
+    "unitaryFrobeniusError",
+    "unitarySpectralError",
+    "convention",
+    "interpretation",
+    "reference",
+    "stateFidelity",
+    "runtime"
+  ],
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "reference": {
+            "properties": {
+              "status": {
+                "const": "computed"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "type": "object"
+      },
+      "then": {
+        "properties": {
+          "unitaryFrobeniusError": {
+            "not": {
+              "type": "null"
+            }
+          },
+          "unitarySpectralError": {
+            "not": {
+              "type": "null"
+            }
+          }
+        },
+        "type": "object"
+      },
+      "else": {
+        "properties": {
+          "unitaryFrobeniusError": {
+            "type": "null"
+          },
+          "unitarySpectralError": {
+            "type": "null"
+          }
+        },
+        "type": "object"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "reference": {
+            "properties": {
+              "mode": {
+                "const": "required"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "type": "object"
+      },
+      "then": {
+        "properties": {
+          "reference": {
+            "properties": {
+              "status": {
+                "const": "computed"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "type": "object"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "reference": {
+            "properties": {
+              "mode": {
+                "const": "skip"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "type": "object"
+      },
+      "then": {
+        "properties": {
+          "reference": {
+            "properties": {
+              "status": {
+                "const": "not_run"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "type": "object"
+      }
+    }
+  ]
+}

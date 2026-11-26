@@ -33,4 +33,17 @@ test("Tool effects include evidence writes performed by the composed Host hook",
   }
   assert.ok(materializingTools.includes("solve_and_validate_ground_state"));
   assert.ok(materializingTools.includes("mcp__toqito_audit__audit_density_matrix"));
+  assert.ok(materializingTools.includes("mcp__qcec_local__verify_circuit_equivalence"));
+  assert.ok(materializingTools.includes("mcp__qec_local__run_qec_memory_experiment"));
+  assert.ok(materializingTools.includes("mcp__hamiltonian_local__simulate_hamiltonian"));
+  for (const name of [
+    "mcp__qpanda_qubo__solve_qpanda_qubo",
+    "mcp__qpanda_qubo__model_and_solve_qpanda_qubo",
+    "mcp__ldpc_local__decode_ldpc_syndromes",
+    "mcp__pyzx_local__optimize_pyzx_circuit",
+    "mcp__symmer_local__taper_symmer_hamiltonian",
+    "mcp__paulie_local__analyze_paulie_algebra",
+    "mcp__graphix_local__simulate_graphix_pattern",
+  ]) assert.ok(materializingTools.includes(name));
+  assert.equal(materializingTools.length, 12);
 });

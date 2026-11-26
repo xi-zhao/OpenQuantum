@@ -6,6 +6,7 @@ The circuit and the independent dense reference use separate Pauli constructions
 import hashlib
 import json
 import math
+import platform
 import sys
 from collections import Counter
 
@@ -131,7 +132,7 @@ def simulate(v):
 
     mode = v["referenceMode"]
     computed = mode == "required" or (mode == "auto" and n <= 6)
-    frobenius, spectral = None, None
+    frobenius, spectral, fidelity = None, None, None
     if computed:
         exact = expm(-1j * time * dense_hamiltonian(n, terms, identity))
         # Convert both row and column bit order before comparing; retain global phase.
@@ -140,6 +141,8 @@ def simulate(v):
         difference = approximate - exact
         frobenius = float(np.linalg.norm(difference, "fro"))
         spectral = float(np.linalg.norm(difference, 2))
+        if state is not None:
+            fidelity = float(abs(np.vdot(exact @ vector, ordered)) ** 2)
     # Qiskit 2.5.2's QASM 3 exporter omits QuantumCircuit.global_phase.
     # Export a zero-phase copy and append the exact global phase explicitly.
     export_circuit = circuit.copy()
@@ -147,6 +150,7 @@ def simulate(v):
     assembly = qasm3.dumps(export_circuit)
     assembly += f"gphase({float(circuit.global_phase):.17g});\n"
     return {
+        "runtime": {"numpy": np.__version__, "system": platform.system(), "machine": platform.machine()},
         "method": v["method"], "numQubits": n, "steps": steps,
         "order": v.get("order"), "seed": v.get("seed"),
         "terms": [{"pauli": p, "coefficient": c} for p, c in terms],
@@ -161,7 +165,7 @@ def simulate(v):
             "gateCounts": dict(circuit.count_ops()),
         },
         "statevector": state, "stateNorm": state_norm,
-        "unitaryFrobeniusError": frobenius, "unitarySpectralError": spectral,
+        "unitaryFrobeniusError": frobenius, "unitarySpectralError": spectral, "stateFidelity": fidelity,
         "reference": {
             "mode": mode, "status": "computed" if computed else "not_run",
             "method": "independent NumPy Kronecker Hamiltonian and scipy.linalg.expm; full-unitary Frobenius and spectral norms",
@@ -183,7 +187,7 @@ def main():
             "Statevectors cost O(2^n); dense full-unitary references cost at least O(4^n). Circuit-only mode and referenceMode=skip avoid these allocations.",
             "Gate counts are in the emitted h/s/sdg/rz/cx basis, exclude initial-state preparation, and are not physical-device resources.",
             "qDrift reports one seeded circuit; its single-realization unitary error is not an ensemble channel bound and need not decrease monotonically with steps.",
-            "Reference errors are numerical observations; no Scientific Validator, Acceptance Profile or final Acceptance is supplied.",
+            "The request-only Validator adds L2 observations after computation; no Acceptance Profile or final Acceptance is supplied.",
         ],
     }
     print(json.dumps(output, allow_nan=False, separators=(",", ":")))

@@ -45,6 +45,7 @@
     "demo:quantum-ground-state": "node scripts/run-quantum-ground-state-demo.mjs",
     "test:harness-web-branding": "node --test tests/harness-web-branding.test.mjs",
     "test:contracts": "node --test .agents/skill-contracts/test/*.test.mjs",
+    "governance:audit": "node scripts/audit-extension-governance.mjs --check",
     "capability:conformance": "node scripts/audit-capability-packages.mjs",
     "capability:quantum-practices:test": "node --test tests/quantum-practices.test.mjs tests/harness-quantum-practices.test.mjs",
     "capability:contracts:test": "node scripts/run-capability-contract-checks.mjs",
@@ -80,7 +81,7 @@
     "lint": "eslint .",
     "locales:check": "node scripts/sync-ui-locales.mjs --check && node --test tests/ui-locales.test.mjs",
     "locales:sync": "node scripts/sync-ui-locales.mjs --write",
-    "check": "npm run release:check && npm run lint && npm run locales:check && npm run capability:conformance && npm run sdk:guides:check && npm run sdk:inventory:check && npm run test:p1 && npm run harness:config",
+    "check": "npm run release:check && npm run lint && npm run locales:check && npm run capability:conformance && npm run governance:audit && npm run sdk:guides:check && npm run sdk:inventory:check && npm run test:p1 && npm run harness:config",
     "release:version": "node scripts/release-version.mjs",
     "release:check": "node scripts/release-version.mjs --check",
     "desktop:setup": "node scripts/setup-desktop.mjs",
@@ -148,7 +149,7 @@
     "katex": "0.18.7",
     "pnpm": "11.26.0",
     "sanitize-html": "2.18.1",
-    "ws": "8.21.3",
+    "ws": "8.23.0",
     "yaml": "2.9.0",
     "@modelcontextprotocol/ext-apps": "1.7.5",
     "@napi-rs/keyring": "2.1.1",
@@ -176,6 +177,8 @@
     "@openmaic/generation": {
       "katex": "$katex"
     },
-    "katex": "$katex"
+    "katex": "$katex",
+    "hono": "4.13.16",
+    "@hono/node-server": "2.1.6"
   }
 }

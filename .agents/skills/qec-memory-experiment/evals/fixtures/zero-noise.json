@@ -1,0 +1,101 @@
+{
+  "request": {
+    "basis": "z",
+    "distance": 3,
+    "rounds": 3,
+    "shots": 1000,
+    "physicalErrorRate": 0,
+    "seed": 1234
+  },
+  "facts": {
+    "schemaVersion": "1.0",
+    "packages": {
+      "stim": "1.16.0",
+      "pymatching": "2.4.0"
+    },
+    "experiment": {
+      "basis": "z",
+      "distance": 3,
+      "rounds": 3,
+      "shots": 1000,
+      "physicalErrorRate": 0,
+      "seed": 1234
+    },
+    "requestDigestVersion": "qec-binary64-v1",
+    "experimentDigest": "e3f6c503916e20bce5094494753d78a9ad11ec1bc3ef9908b3eede5686d6aad6",
+    "codeTask": "surface_code:rotated_memory_z",
+    "circuit": {
+      "text": "QUBIT_COORDS(1, 1) 1\nQUBIT_COORDS(2, 0) 2\nQUBIT_COORDS(3, 1) 3\nQUBIT_COORDS(5, 1) 5\nQUBIT_COORDS(1, 3) 8\nQUBIT_COORDS(2, 2) 9\nQUBIT_COORDS(3, 3) 10\nQUBIT_COORDS(4, 2) 11\nQUBIT_COORDS(5, 3) 12\nQUBIT_COORDS(6, 2) 13\nQUBIT_COORDS(0, 4) 14\nQUBIT_COORDS(1, 5) 15\nQUBIT_COORDS(2, 4) 16\nQUBIT_COORDS(3, 5) 17\nQUBIT_COORDS(4, 4) 18\nQUBIT_COORDS(5, 5) 19\nQUBIT_COORDS(4, 6) 25\nR 1 3 5 8 10 12 15 17 19 2 9 11 13 14 16 18 25\nTICK\nH 2 11 16 25\nTICK\nCX 2 3 16 17 11 12 15 14 10 9 19 18\nTICK\nCX 2 1 16 15 11 10 8 14 3 9 12 18\nTICK\nCX 16 10 11 5 25 19 8 9 17 18 12 13\nTICK\nCX 16 8 11 3 25 17 1 9 10 18 5 13\nTICK\nH 2 11 16 25\nTICK\nMR 2 9 11 13 14 16 18 25\nDETECTOR(0, 4, 0) rec[-4]\nDETECTOR(2, 2, 0) rec[-7]\nDETECTOR(4, 4, 0) rec[-2]\nDETECTOR(6, 2, 0) rec[-5]\nREPEAT 2 {\n    TICK\n    H 2 11 16 25\n    TICK\n    CX 2 3 16 17 11 12 15 14 10 9 19 18\n    TICK\n    CX 2 1 16 15 11 10 8 14 3 9 12 18\n    TICK\n    CX 16 10 11 5 25 19 8 9 17 18 12 13\n    TICK\n    CX 16 8 11 3 25 17 1 9 10 18 5 13\n    TICK\n    H 2 11 16 25\n    TICK\n    MR 2 9 11 13 14 16 18 25\n    SHIFT_COORDS(0, 0, 1)\n    DETECTOR(2, 0, 0) rec[-8] rec[-16]\n    DETECTOR(2, 2, 0) rec[-7] rec[-15]\n    DETECTOR(4, 2, 0) rec[-6] rec[-14]\n    DETECTOR(6, 2, 0) rec[-5] rec[-13]\n    DETECTOR(0, 4, 0) rec[-4] rec[-12]\n    DETECTOR(2, 4, 0) rec[-3] rec[-11]\n    DETECTOR(4, 4, 0) rec[-2] rec[-10]\n    DETECTOR(4, 6, 0) rec[-1] rec[-9]\n}\nM 1 3 5 8 10 12 15 17 19\nDETECTOR(0, 4, 1) rec[-3] rec[-6] rec[-13]\nDETECTOR(2, 2, 1) rec[-5] rec[-6] rec[-8] rec[-9] rec[-16]\nDETECTOR(4, 4, 1) rec[-1] rec[-2] rec[-4] rec[-5] rec[-11]\nDETECTOR(6, 2, 1) rec[-4] rec[-7] rec[-14]\nOBSERVABLE_INCLUDE(0) rec[-7] rec[-8] rec[-9]",
+      "qubits": 26,
+      "detectors": 24,
+      "observables": 1,
+      "sha256": "169e6e44081915cbd99ae6945a4d648b415bfd8987b4440dd8234303528fe522"
+    },
+    "detectorModel": {
+      "text": "detector(0, 4, 0) D0\ndetector(2, 2, 0) D1\ndetector(4, 4, 0) D2\ndetector(6, 2, 0) D3\nshift_detectors(0, 0, 1) 0\ndetector(2, 0, 0) D4\ndetector(2, 2, 0) D5\ndetector(4, 2, 0) D6\ndetector(6, 2, 0) D7\ndetector(0, 4, 0) D8\ndetector(2, 4, 0) D9\ndetector(4, 4, 0) D10\ndetector(4, 6, 0) D11\nshift_detectors(0, 0, 1) 0\ndetector(2, 0, 0) D12\ndetector(2, 2, 0) D13\ndetector(4, 2, 0) D14\ndetector(6, 2, 0) D15\ndetector(0, 4, 0) D16\ndetector(2, 4, 0) D17\ndetector(4, 4, 0) D18\ndetector(4, 6, 0) D19\ndetector(0, 4, 1) D20\ndetector(2, 2, 1) D21\ndetector(4, 4, 1) D22\ndetector(6, 2, 1) D23\nlogical_observable L0",
+      "detectors": 24,
+      "observables": 1,
+      "sha256": "a52700a4dc47e26413a7497d6cc32b715b4456602b1c615758d724f1ee2f3c5d"
+    },
+    "result": {
+      "intervalMethod": "wilson-score-95",
+      "shots": 1000,
+      "logicalErrors": 0,
+      "successfulShots": 1000,
+      "logicalErrorRate": 0.0,
+      "standardError": 0.0,
+      "wilson95": {
+        "low": 0.0,
+        "high": 0.0038267584855551234
+      }
+    },
+    "sampling": {
+      "method": "stim-detector-single-batch-v1",
+      "batchShots": 1000,
+      "bitOrder": "little",
+      "failureBits": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+      "detectorSha256": "151ff79f29e96d211576b9a2e3e78f518b26109916616945d50cdee82dd2ba8b",
+      "observableSha256": "541b3e9daa09b20bf85fa273e5cbd3e80185aa4ec298e765db87742b70138a53",
+      "predictionSha256": "541b3e9daa09b20bf85fa273e5cbd3e80185aa4ec298e765db87742b70138a53",
+      "runtime": {
+        "system": "Darwin",
+        "machine": "arm64",
+        "stimImplementation": "stim._stim_polyfill"
+      }
+    },
+    "runtimeSeconds": 0.003329541999846697
+  },
+  "reference": {
+    "packages": {
+      "stim": "1.16.0",
+      "pymatching": "2.4.0"
+    },
+    "circuit": {
+      "qubits": 26,
+      "detectors": 24,
+      "observables": 1,
+      "sha256": "169e6e44081915cbd99ae6945a4d648b415bfd8987b4440dd8234303528fe522"
+    },
+    "detectorModel": {
+      "detectors": 24,
+      "observables": 1,
+      "sha256": "a52700a4dc47e26413a7497d6cc32b715b4456602b1c615758d724f1ee2f3c5d"
+    },
+    "shots": 1000,
+    "logicalErrors": 0,
+    "sampling": {
+      "method": "stim-detector-single-batch-v1",
+      "batchShots": 1000,
+      "bitOrder": "little",
+      "failureBits": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+      "detectorSha256": "151ff79f29e96d211576b9a2e3e78f518b26109916616945d50cdee82dd2ba8b",
+      "observableSha256": "541b3e9daa09b20bf85fa273e5cbd3e80185aa4ec298e765db87742b70138a53",
+      "predictionSha256": "541b3e9daa09b20bf85fa273e5cbd3e80185aa4ec298e765db87742b70138a53",
+      "runtime": {
+        "system": "Darwin",
+        "machine": "arm64",
+        "stimImplementation": "stim._stim_polyfill"
+      }
+    }
+  }
+}

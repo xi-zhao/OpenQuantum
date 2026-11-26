@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "parityCheck": {
+      "type": "array",
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "minItems": 1
+      },
+      "minItems": 1
+    },
+    "syndromes": {
+      "type": "array",
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "minItems": 1
+      },
+      "minItems": 1
+    },
+    "errorRate": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "default": 0.05
+    },
+    "bpIterations": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991,
+      "default": 10
+    },
+    "lsdOrder": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991,
+      "default": 0
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "default": {},
+      "required": [],
+      "properties": {
+        "timeoutMs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991,
+          "description": "Worker deadline; 0 disables it. Omitted inherits the deployment setting."
+        },
+        "maxOutputBytes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991,
+          "description": "Combined stdout/stderr budget; 0 disables it. Omitted inherits the deployment setting."
+        },
+        "threads": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991,
+          "description": "Thread count for supported numerical kernels. Omitted preserves the user's environment and library defaults."
+        }
+      }
+    },
+    "trueErrors": {
+      "type": "array",
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "minItems": 1
+      },
+      "minItems": 1
+    },
+    "logicalObservables": {
+      "type": "array",
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "minItems": 1
+      },
+      "minItems": 1
+    }
+  },
+  "required": [
+    "parityCheck",
+    "syndromes",
+    "errorRate",
+    "bpIterations",
+    "lsdOrder"
+  ],
+  "additionalProperties": false,
+  "dependentRequired": {
+    "logicalObservables": [
+      "trueErrors"
+    ]
+  }
+}

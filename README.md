@@ -18,7 +18,7 @@
 </p>
 
 <p align="center">
-  <strong>190</strong> 个内置 Skill　　<strong>91</strong> 个 MCP 服务连接　　<strong>118</strong> 个 SDK 环境　　开源 · MIT 许可
+  <strong>193</strong> 个内置 Skill　　<strong>91</strong> 个 MCP 服务连接　　<strong>121</strong> 个 SDK 环境　　开源 · MIT 许可
 </p>
 
 <p align="center">
@@ -68,6 +68,9 @@ https://github.com/user-attachments/assets/5c00a30d-eef0-493a-975f-3faeb200cc9e
 | 连续相对论场论 | [RcmpsCore](.agents/skills/rcmps-field-theory/SKILL.md)：1+1 维标量场、RCMPS 优化与同真空激发 | 正常序、背景收敛与能隙定义；[使用与验证边界](docs/integrations/RCMPS.md) |
 | 近 Clifford 与丢失/泄漏仿真 | [PPVM](.agents/skills/ppvm-simulation/SKILL.md)：Pauli 传播、广义 tableau 与 Stim 格式采样 | 非对称丢失的存活反作用尚未实现；[使用与验证边界](docs/integrations/PPVM.md) |
 | 误差缓解与量子纠错 | Mitiq、Stim / PyMatching、LDPC、Chromobius；[纠错能力](docs/CAPABILITIES.md#误差缓解与量子纠错) | 采样预算、统计误差及解码器的适用模型 |
+| 超图译码与权重界 | [MWPF](.agents/skills/mwpf-decoding/SKILL.md)：自定义加权超图、syndrome 和 Stim/Sinter observable 译码 | 记录预算与 primal/dual 界；浮点界不是形式化证明，小例回归不代表阈值或最优逻辑译码 |
+| 多误差源鲁棒脉冲控制 | [ST-GRAPE](.agents/skills/stgrape-control/SKILL.md) · 有限维 Hamiltonian 的目标态控制、Taylor 响应与分裂传播 | 限固定时间网格和噪声假设，记录预算终止及独立传播误差 |
+| 纠错距离与故障见证 | [tropidist](.agents/skills/tropidist-distance/SKILL.md) · GF(2) 矩阵或 Stim 电路的单位权故障距离、上下界与重放 | 限已声明的故障模型，分别核对下界和上界见证 |
 | <a id="纠错模型静态诊断"></a>检查 detector error model | [emlint](.agents/skills/emlint-dem-audit/SKILL.md)：结构诊断、反例及不完整检查状态 | 保留告警、跳过项和缺失上下文；不证明码距或解码正确性 |
 | 动力学与实验模拟 | Trotter / qDrift、Dynamiqs、OQuPy、Bloqade、Pulser、PairInteraction；[模拟与硬件入口](docs/CAPABILITIES.md#哈密顿量模拟与开放系统) | 单位、截断、时间步长；模拟与真实设备操作分别说明 |
 | 光子计算与量子网络 | Perceval、Piquasso、Lightworks、SimQN、NetQASM；[使用范围](docs/CAPABILITIES.md#光子计算与量子网络) | 后端、损耗模型、采样与网络协议 |
@@ -85,10 +88,18 @@ SlowQuant 使用 `slowquant-response` 入口：先显式运行 `node scripts/set
 
 能力可以组合使用：先用 PyZX 优化电路，再用 QCEC 检查等价性，最后用噪声模拟比较含噪表现。跨工具组合需要核对模型、单位、位序和预算，见[计算与资源配置](docs/integrations/SCALABLE_BRIDGES.md)。
 
-当前源码分发 **190 个内置 Skill、91 个 MCP 服务连接、5 个原生量子 Tool**，并为 **118 个 SDK/源码环境**提供原生 API 使用路径。
+MWPF 使用 `mwpf-decoding` 入口：显式运行 `node scripts/setup-sdk.mjs mwpf-decoding` 后，通过已有 SDK 工作台编写 Python 程序；[可编辑示例](.agents/skills/mwpf-decoding/references/native-example.py)接受用户超图或 Stim DEM。Sinter 显式使用 `PanicAction.RAISE`，零 cluster 预算不是无限预算，记录实际解权重与上下界；[独立小例及验证边界](docs/integrations/evidence/mwpf-2026-11-06.json)不替代一般最优性或容错结论。
+
+用 `node scripts/setup-sdk.mjs tropidist-distance` 显式准备环境。[可编辑示例](.agents/skills/tropidist-distance/references/native-example.py)和[独立小例对照](docs/ecosystem/proposals/tropidist.md)给出输入、运行入口与适用范围。
+
+脉冲控制用 `node scripts/setup-sdk.mjs stgrape-control` 准备环境，再运行[两比特示例](.agents/skills/stgrape-control/references/native-example.py)。可改变分裂子步数，用[独立传播对照](docs/ecosystem/proposals/st-grape.md)核对精度，并查看优化是否达到迭代上限。
+
+当前源码分发 **193 个内置 Skill、91 个 MCP 服务连接、5 个原生量子 Tool**，并为 **121 个 SDK/源码环境**提供原生 API 使用路径。
 清单数量、配置启用、环境就绪与科学验收是不同状态；每项能力按需准备，平台、账户和许可限制见对应说明。
 
 [完整 Skill 目录](docs/CAPABILITIES.md#内置-skills) · [MCP 服务及默认开关](docs/CAPABILITIES.md#mcp-服务目录) · [原生 Tool 与副作用](docs/CAPABILITIES.md#原生量子-tools) · [SDK API 与逐库验证](docs/integrations/FULL_SDK_ACCESS.md) · [相近方法怎么选](docs/integrations/CAPABILITY_SELECTION.md)
+
+DSH 的研究工作区须与 OpenQuantum 安装目录、运行环境和 DSH Home 分开。内置科学 MCP 只在宿主文件沙箱中运行，临时计算文件与最终结果分别处理；具体权限与部署方式见[科学计算执行边界](docs/DEPLOYMENT.md#科学计算执行边界)。
 
 <br />
 

@@ -5,7 +5,7 @@ import { circuitSchema, checkCircuit } from "../../../../src/lib/quantum-circuit
 export const definition = defineScienceTool({
   name: "simulate_braket_circuit",
   description: "Simulate a structured ideal unitary circuit from |0...0> with Amazon Braket LocalSimulator braket_sv. H/S/T/X/Y/Z/CX/CZ and RX/RY/RZ in radians; return exact numerical amplitudes and probabilities with qubit zero leftmost. No cloud, credentials, sampling or hardware. Requires explicit dependency preparation.",
-  source: {"name": "amazon-braket-sdk", "version": "1.127.2", "repository": "https://github.com/amazon-braket/amazon-braket-sdk-python"},
+  source: {"name": "amazon-braket-sdk", "version": "1.128.1", "repository": "https://github.com/amazon-braket/amazon-braket-sdk-python"},
   inputSchema: obj(circuitSchema(undefined, undefined, true)),
   checkInput: checkCircuit,
   resultSchema: obj({

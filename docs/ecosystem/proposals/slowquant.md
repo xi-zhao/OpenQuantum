@@ -3,9 +3,8 @@
 - 调研日期：2026-10-31（Asia/Shanghai）；OpenQuantum 基线 `b0f7161313a4a119079ce41e5d6233a3f6d384e6`。
 - 上游：[erikkjellgren/SlowQuant](https://github.com/erikkjellgren/SlowQuant)。
 - 固定源码：[`b0d12b2e7e680141e50f3de0c9ba029d9574bbca`](https://github.com/erikkjellgren/SlowQuant/tree/b0d12b2e7e680141e50f3de0c9ba029d9574bbca)。
-- 本 PR 已提供 L0 `slowquant-response` Skill、固定完整源码与依赖环境；原始提案见提交 `be0c40b20c8ebea0a10d19c70bf3c56f5f00f487`。
-  [实施与验证范围](../../integrations/SLOWQUANT.md)区分离线数值对照、Qiskit 桥接和未验证项；没有新增 Tool、MCP Server 或最终科学验收。
-  沿用同一 PR 等待必要工程检查及审阅；用户可以随时关闭、暂停或要求停止。
+- **状态：已合入主线（随 `v0.8.11` 发布）。** 已交付 [`slowquant-response`](../../../.agents/skills/slowquant-response/SKILL.md)、[实施与验证范围](../../integrations/SLOWQUANT.md)与固定环境证据（[slowquant-2026-10-31.json](../../integrations/evidence/slowquant-2026-10-31.json)）；以下保留原接入规格。
+- 原提案记录：原始提案见提交 `be0c40b20c8ebea0a10d19c70bf3c56f5f00f487`；没有新增 Tool、MCP Server 或最终科学验收。
 
 ## 用户任务与增量价值
 

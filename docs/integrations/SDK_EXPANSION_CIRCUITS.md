@@ -10,7 +10,7 @@ These seven L1 capabilities expose real, separately installed vendor or institut
 | `qibo-simulation` | Qibo 0.3.5; Python 3.12 | Explicit NumPy complex128 CPU circuit simulation | Default on |
 | `qrisp-arithmetic` | Qrisp 0.9.9; Python 3.12 | QuantumFloat with integer-preserving Gidney classical-constant addition modulo register width | Opt in |
 | `lightworks-photonics` | Lightworks 2.3.5; Python 3.12 | Lossless Fock amplitudes through beam splitters and phase shifters | Default on |
-| `braket-simulation` | Amazon Braket SDK 1.127.2; Python 3.12 | Explicit `LocalSimulator("braket_sv")`, shots=0 state vector | Default on |
+| `braket-simulation` | Amazon Braket SDK 1.128.1; Python 3.12 | Explicit `LocalSimulator("braket_sv")`, shots=0 state vector | Default on |
 
 Every capability has its own `pyproject.toml` and complete `uv.lock`. Prepare an environment explicitly with `node scripts/setup-paper-tools.mjs <capability-id>`; calculation never installs dependencies. SDK imports and numerical libraries can write workspace caches, so the conservative Tool effect remains `workspace-write`. Default activation is configuration, not a claim that a user's environment is already prepared.
 

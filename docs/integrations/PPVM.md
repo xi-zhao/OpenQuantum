@@ -38,7 +38,7 @@ node scripts/sdk-access.mjs inspect ppvm-simulation
 
 `tests/ppvm-sdk.test.mjs` 检查只读发现、固定源码与显式准备合同。准备后运行既有 `tests/sdk-ecosystem-live.test.mjs` 的 PPVM 项，保存用户程序、版本、锁摘要及输出。`tests/fixtures/ppvm-validation.py` 使用独立稠密门矩阵/态矢、解析预期与离散事件检查旋转/噪声顺序、非 Clifford、丢失、泄漏、重置、采样与失败路径。
 
-数值回归在 GitHub macOS 隔离环境执行，计算阶段禁止网络；[CI 工作流](../../.github/workflows/ppvm-sdk.yml)保存原始结果。开发容差和统计区间不注册为科研 Acceptance Profile；`scientificValidation=not_evaluated`。没有真实器件、性能优势、大规模收敛或已安装宿主界面验收声明。
+数值回归在 GitHub macOS 隔离环境执行，计算阶段禁止网络；[CI 工作流](../../.github/workflows/sdk-checks.yml)（经 [Python SDK 可复用模板](../../.github/workflows/_reusable-python-sdk.yml)）保存原始结果。开发容差和统计区间不注册为科研 Acceptance Profile；`scientificValidation=not_evaluated`。没有真实器件、性能优势、大规模收敛或已安装宿主界面验收声明。
 
 2026-11-10 的[实际运行](https://github.com/xi-zhao/OpenQuantum/actions/runs/42731058813)通过 46 项数值、语义和失败路径检查。两比特非 Clifford 电路的 tableau 与 Heisenberg 结果均符合独立稠密态矢参考（开发容差 `1e-10`）；原生示例的带噪期望值为 `0.8037842898055502`，等于解析值。2048 次采样的相关单方丢失频率为 `0.572265625`（预期 `0.6`），Bell 测量为 1 的频率为 `0.5029296875`（预期 `0.5`），均落在每个均值的 Hoeffding 界 `±0.059516` 内（`δ=10⁻⁶`）。
 

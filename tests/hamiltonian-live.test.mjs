@@ -5,18 +5,19 @@ import path from "node:path";
 import test from "node:test";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
+import { preparedPythonLaunch } from "../src/lib/prepared-python.mjs";
 import { definition } from "../.agents/skills/hamiltonian-simulation/mcp/contracts.mjs";
 import { HAMILTONIAN_INPUT } from "./fixtures/hamiltonian.mjs";
 
 const enabled = process.env.OPENQUANTUM_REAL_HAMILTONIAN === "1";
-const evidence = path.join(process.cwd(), ".openquantum/hamiltonian-evidence");
+const evidence = process.env.OPENQUANTUM_HAMILTONIAN_EVIDENCE ?? path.join(process.cwd(), ".openquantum/hamiltonian-evidence");
 const near = (a, b, tolerance = 1e-10) => assert.ok(Math.abs(a - b) < tolerance, `${a} != ${b}`);
 const pairNear = (a, b) => a.forEach((pair, i) => pair.forEach((x, j) => near(x, b[i][j])));
 
 test("real open Hamiltonian adapter: analytic cases, convergence, independent products, seeds and scalable circuit mode", { skip: !enabled, timeout: 180000 }, async t => {
   const client = new Client({ name: "hamiltonian-numerical-verification", version: "1" }, { capabilities: {} });
   t.after(() => client.close());
-  await client.connect(new StdioClientTransport({ command: process.execPath, args: [".agents/skills/hamiltonian-simulation/mcp/server.mjs"] }));
+  await client.connect(new StdioClientTransport({ command: process.execPath, args: [".agents/skills/hamiltonian-simulation/mcp/server.mjs"], env: process.env }));
   await mkdir(evidence, { recursive: true });
   const results = [];
   async function run(input, name) {
@@ -24,7 +25,8 @@ test("real open Hamiltonian adapter: analytic cases, convergence, independent pr
     assert.notEqual(response.isError, true, JSON.stringify(response));
     const output = response.structuredContent;
     assert.ok(definition.validateOutput(output), JSON.stringify(definition.validateOutput.errors));
-    assert.equal(output.scientificValidation, "not_evaluated");
+    assert.equal(output.scientificValidation, "observations_available");
+    assert.deepEqual(output.validation.observations.filter(o => o.status === "fail"), []);
     results.push({ name, input: output.input, result: output.result });
     return output.result;
   }
@@ -59,7 +61,7 @@ test("real open Hamiltonian adapter: analytic cases, convergence, independent pr
     { ...HAMILTONIAN_INPUT, time: -0.6, initialState, order: 2 },
     { numQubits: 2, terms: HAMILTONIAN_INPUT.terms.slice(0, 3), time: -0.6, initialState, method: "qdrift", steps: 23, seed: 17 },
   ];
-  const python = path.join(process.cwd(), ".openquantum/python-envs/hamiltonian-simulation", process.platform === "win32" ? "Scripts/python.exe" : "bin/python");
+  const { command: python } = await preparedPythonLaunch({ skillRoot: path.join(process.cwd(), ".agents/skills/hamiltonian-simulation") });
   for (const [i, input] of oracleInputs.entries()) {
     const result = await run(input, `dense-oracle-${i}`);
     const oracle = JSON.parse(execFileSync(python, ["-B", "tests/fixtures/hamiltonian-oracle.py"], { input: JSON.stringify(input), encoding: "utf8" }));

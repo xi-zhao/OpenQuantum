@@ -1,3 +1,4 @@
+import { isMainModule } from "../../../src/lib/cli-entrypoint.mjs";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -20,7 +21,7 @@ export async function setupExternal(root, id, { environment = process.env, signa
   if (paths.entry.id === "quantum_hardware") await runSetupCommand(paths.python, ["-B", path.join(root, "runtime/chatgpt/external/fetch-source.py"), path.join(paths.project, "source.json"), path.join(paths.directory, "source")], { cwd: root, env: environment, signal, onOutput, capture: true });
   await fs.writeFile(paths.marker, digest(lock) + "\n", { mode: 0o600 });
 }
-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (isMainModule(import.meta.url)) {
   const root = fileURLToPath(new URL("../../../", import.meta.url));
   await setupExternal(root, process.argv[2]);
 }

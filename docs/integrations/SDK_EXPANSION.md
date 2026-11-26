@@ -14,7 +14,7 @@ Skill 负责选择方法和解释边界，Tool 执行 SDK 动作，Harness MCP C
 | [Qibo / TII / INFN · Qibo 电路仿真](https://github.com/qiboteam/qibo) | qibo==0.3.5 | [qibo-simulation](../../.agents/skills/qibo-simulation/SKILL.md)：使用明确选定的 NumPy CPU 后端计算态矢量。 | 默认开启 |
 | [Eclipse / Fraunhofer · Qrisp 量子算术](https://github.com/eclipse-qrisp/Qrisp) | qrisp==0.9.9 | [qrisp-arithmetic](../../.agents/skills/qrisp-arithmetic/SKILL.md)：本地 QuantumFloat 无符号模加法；需考虑 EPL-2.0 许可。 | 按需启用 |
 | [Aegiq · Lightworks 光子仿真](https://github.com/Aegiq/lightworks) | lightworks==2.3.5 | [lightworks-photonics](../../.agents/skills/lightworks-photonics/SKILL.md)：本地线性光学网络与 Fock 输入的输出概率。 | 默认开启 |
-| [Amazon · Braket 本地仿真](https://github.com/amazon-braket/amazon-braket-sdk-python) | amazon-braket-sdk==1.127.2 | [braket-simulation](../../.agents/skills/braket-simulation/SKILL.md)：显式 LocalSimulator 电路振幅与概率，不创建 AWS 云任务。 | 默认开启 |
+| [Amazon · Braket 本地仿真](https://github.com/amazon-braket/amazon-braket-sdk-python) | amazon-braket-sdk==1.128.1 | [braket-simulation](../../.agents/skills/braket-simulation/SKILL.md)：显式 LocalSimulator 电路振幅与概率，不创建 AWS 云任务。 | 默认开启 |
 | [QunaSys · QURI 可观测量估计](https://github.com/QunaSys/quri-sdk) | quri-parts[qulacs]==0.27.0 | [quri-parts-estimation](../../.agents/skills/quri-parts-estimation/SKILL.md)：QURI Parts 电路与 Qulacs 本地 Pauli 期望值。 | 默认开启 |
 | [Microsoft · QDK 容错资源估算](https://github.com/microsoft/qdk) | qdk[qre]==1.32.3 | [qdk-resource-estimation](../../.agents/skills/qdk-resource-estimation/SKILL.md)：由电路和硬件假设估算物理量子位与运行时间。 | 默认开启 |
 | [Google Quantum AI · Qualtran 资源计数](https://github.com/quantumlib/Qualtran) | qualtran==0.7.0 | [qualtran-resources](../../.agents/skills/qualtran-resources/SKILL.md)：算术 Bloq 的容错门资源；实验性 API，保留计数假设。 | 默认开启 |

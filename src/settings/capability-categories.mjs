@@ -47,7 +47,7 @@ const groups = [
     qec-memory-experiment mitiq-error-mitigation ldpc-decoding clifft-sampling
     deltakit-qec quantum-qldpc alicebob-cat-circuits
     mqt-qecc tqec-compilation tesseract-decoding tsim-sampling pecos-qec
-    quantumclifford-julia chromobius-decoding emlint-dem-audit ppvm-simulation
+    quantumclifford-julia chromobius-decoding mwpf-decoding tropidist-distance emlint-dem-audit ppvm-simulation
   `],
   ["learning", "量子机器学习", `
     quantum-guide-algorithms-quantum-machine-learning quantum-cvqnn quantum-qcbm
@@ -60,7 +60,7 @@ const groups = [
     fatqat-workbench qmclaw-workbench qdmi-device pasqal-experiments ionq-programs
     qctrl-workbench qua-programs laboneq-control qblox-scheduling qililab-control
     aqt-workbench oqc-cloud quantuminspire-cloud
-    pygsti-characterization arc-rydberg josephson-circuits quantumcontrol-julia
+    pygsti-characterization arc-rydberg josephson-circuits quantumcontrol-julia stgrape-control
   `],
   ["information", "量子信息与网络", `
     quantum-information-audit randomized-measurements paulie-algebra quantum-qfi

@@ -1,0 +1,152 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "numQubits": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991,
+      "default": 2
+    },
+    "gates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "gate": {
+            "type": "string",
+            "enum": [
+              "H",
+              "S",
+              "T",
+              "X",
+              "Y",
+              "Z",
+              "CX",
+              "CZ",
+              "RX",
+              "RY",
+              "RZ"
+            ]
+          },
+          "targets": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "minItems": 1,
+            "maxItems": 2
+          },
+          "angle": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "gate",
+          "targets"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1,
+      "default": [
+        {
+          "gate": "H",
+          "targets": [
+            0
+          ]
+        },
+        {
+          "gate": "T",
+          "targets": [
+            0
+          ]
+        },
+        {
+          "gate": "T",
+          "targets": [
+            0
+          ]
+        },
+        {
+          "gate": "CX",
+          "targets": [
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    "simulate": {
+      "type": "boolean",
+      "default": true
+    },
+    "initialState": {
+      "type": "string",
+      "enum": [
+        "zero",
+        "plus"
+      ],
+      "default": "zero"
+    },
+    "branches": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991,
+      "default": 4
+    },
+    "seed": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 2147483647,
+      "default": 7
+    },
+    "referenceMode": {
+      "type": "string",
+      "enum": [
+        "auto",
+        "required",
+        "skip"
+      ],
+      "default": "auto",
+      "description": "auto computes the reference for default small-system cases; required attempts it at the requested size using the user's resources; skip omits it. A failed reference is an error, never a successful skip."
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "default": {},
+      "required": [],
+      "properties": {
+        "timeoutMs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991,
+          "description": "Worker deadline; 0 disables it. Omitted inherits the deployment setting."
+        },
+        "maxOutputBytes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991,
+          "description": "Combined stdout/stderr budget; 0 disables it. Omitted inherits the deployment setting."
+        },
+        "threads": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991,
+          "description": "Thread count for supported numerical kernels. Omitted preserves the user's environment and library defaults."
+        }
+      }
+    }
+  },
+  "required": [
+    "numQubits",
+    "gates",
+    "simulate",
+    "initialState",
+    "branches",
+    "seed",
+    "referenceMode"
+  ],
+  "additionalProperties": false
+}

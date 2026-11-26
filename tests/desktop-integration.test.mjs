@@ -62,7 +62,7 @@ test("composes the Desktop shell around the OpenQuantum Harness home", { skip: !
     harnessHome,
     process.platform,
   );
-  for (const name of ["harness-capability-host", "harness-web-branding", "harness-web-capabilities", "harness-web-learning", "harness-web-locales", "harness-web-updates", "harness-desktop-profile"]) {
+  for (const name of ["harness-capability-host", "harness-execution-boundary", "harness-web-branding", "harness-web-capabilities", "harness-web-learning", "harness-web-locales", "harness-web-updates", "harness-desktop-profile"]) {
     const manifest = findPackageJSON(`@openquantum/${name}`, pathToFileURL(path.join(harnessHome, "profiles/desktop/package.json")));
     assert.ok(manifest.endsWith(path.join(name, "package.json")));
   }
@@ -161,6 +161,7 @@ test("registers extensions without changing upstream Desktop files", { skip: !de
   const manifest = JSON.parse(await readFile(path.join(home, "profiles/desktop/package.json")));
   assert.deepEqual(Object.keys(manifest.dependencies).filter(name => name.startsWith("@openquantum/")).sort(), [
     "@openquantum/harness-capability-host", "@openquantum/harness-desktop-profile",
+    "@openquantum/harness-execution-boundary",
     "@openquantum/harness-web-branding", "@openquantum/harness-web-capabilities",
     "@openquantum/harness-web-learning", "@openquantum/harness-web-locales", "@openquantum/harness-web-security", "@openquantum/harness-web-updates",
   ].sort());

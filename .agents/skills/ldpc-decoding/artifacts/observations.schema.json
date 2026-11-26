@@ -1,0 +1,44 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {
+      "const": "1.0"
+    },
+    "observations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "enum": [
+              "pass",
+              "warn",
+              "fail",
+              "not_checked"
+            ]
+          },
+          "detail": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "status",
+          "detail"
+        ]
+      },
+      "minItems": 1
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "observations"
+  ]
+}

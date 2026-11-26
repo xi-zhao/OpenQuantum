@@ -1,0 +1,102 @@
+schemaVersion: "1.1"
+id: qec-memory-experiment
+version: 1.1.0
+displayName: Rotated surface-code memory observations
+description: Independent pinned Stim/PyMatching observations with materialized, replayable central Acceptance.
+maturity:
+  status: draft
+  evidence:
+    - id: local-observations-2026-11-25
+      kind: eval-report
+      path: evals/evidence-phase5.json
+      sha256: 600cc2e33cee90f19a85bd017c525c525f6bed8e81daa69d0ac4cb474a324a16
+skill:
+  name: qec-memory-experiment
+  entrypoint: SKILL.md
+scope:
+  supportedClaims:
+    - Counts and Wilson score 95% intervals agree with per-shot logical failures.
+    - Circuit and DEM match the requested basis, distance, rounds and four uniform noise channels.
+    - Seed replay agrees on the same machine, pinned packages, Stim implementation and single sample batch.
+  outOfScope:
+    - Error-correction thresholds, hardware performance and cross-machine bitwise reproducibility.
+    - Independent proof of Stim or PyMatching algorithms and implementation correctness.
+  examples:
+    - title: A fixed local memory experiment
+      prompt: Compare a noiseless and a noisy distance-3 Z-memory experiment with explicit shots and seed.
+input:
+  id: experiment-request
+  schema: inputs/request.schema.json
+  maxBytes: 65536
+  mediaTypes: [application/json]
+artifacts:
+  - id: memory-result
+    schema: artifacts/qec-memory-result.schema.json
+    required: true
+    mediaType: application/json
+validators:
+  - id: memory-observations
+    version: 1.0.0
+    command:
+      executable: node
+      script: validators/validate-result.mjs
+      args: []
+      shell: false
+acceptanceProfiles:
+  - id: rotated-surface-memory-audit
+    version: 1.0.0
+    validator: memory-observations
+    definition:
+      path: acceptance-profiles/rotated-surface-memory-audit-v1.json
+      sha256: ff3897466667dec5debea04920fc188579c90863294a1cbf6f719c322264bbbc
+reproductionProfiles: []
+modelRequirements:
+  textGeneration: false
+  toolCalling: false
+  structuredOutput: false
+permissions:
+  network:
+    mode: none
+    destinations: []
+  filesystem:
+    read: [prepared-runtime, structured-result]
+    write: [temporary-compute-cache, workspace/results]
+  subprocess:
+    allowed: true
+    commands: [python]
+  cloudCompute:
+    allowed: false
+    providers: []
+  limits:
+    wallTimeSeconds: null
+    memoryMiB: null
+    maxArtifacts: 1
+    maxCostUsd: 0
+  data:
+    classification: public
+    retentionDays: 0
+    externalTransfer: forbidden
+    licenses: [Apache-2.0]
+evals:
+  runner:
+    executable: node
+    script: evals/run-evals.mjs
+    args: []
+    shell: false
+  suite:
+    id: memory-observations-eval
+    version: 1.0.0
+    path: evals/suite.json
+    sha256: 1db23db67bc0e1b2cb412cedc64f3e1bbfa2c14b2ad3a681962e6fd05847fd2e
+compatibility:
+  contract: "1.1"
+  harness: 0.1.0-rc.6
+dependencies:
+  - id: stim
+    kind: scientific-backend
+    version: 1.16.0
+    digest: 7ce22952043711f23b4b65a2a0b85f3e48c096a1567ad2894fbcc64463943823
+  - id: pymatching
+    kind: scientific-backend
+    version: 2.4.0
+    digest: 7ce22952043711f23b4b65a2a0b85f3e48c096a1567ad2894fbcc64463943823

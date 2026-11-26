@@ -1,0 +1,295 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "packages",
+    "experiment",
+    "requestDigestVersion",
+    "experimentDigest",
+    "codeTask",
+    "circuit",
+    "detectorModel",
+    "result",
+    "sampling",
+    "runtimeSeconds"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "1.0"
+    },
+    "packages": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "stim",
+        "pymatching"
+      ],
+      "properties": {
+        "stim": {
+          "const": "1.16.0"
+        },
+        "pymatching": {
+          "const": "2.4.0"
+        }
+      }
+    },
+    "experiment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "basis",
+        "distance",
+        "rounds",
+        "shots",
+        "physicalErrorRate",
+        "seed"
+      ],
+      "properties": {
+        "basis": {
+          "enum": [
+            "x",
+            "z"
+          ]
+        },
+        "distance": {
+          "type": "integer",
+          "minimum": 3,
+          "maximum": 9007199254740991,
+          "not": {
+            "multipleOf": 2
+          }
+        },
+        "rounds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "shots": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "physicalErrorRate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "seed": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295
+        }
+      }
+    },
+    "requestDigestVersion": {
+      "const": "qec-binary64-v1"
+    },
+    "experimentDigest": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "codeTask": {
+      "enum": [
+        "surface_code:rotated_memory_x",
+        "surface_code:rotated_memory_z"
+      ]
+    },
+    "circuit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "text",
+        "qubits",
+        "detectors",
+        "observables",
+        "sha256"
+      ],
+      "properties": {
+        "text": {
+          "type": "string",
+          "minLength": 1
+        },
+        "qubits": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "detectors": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "observables": {
+          "const": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    },
+    "detectorModel": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "text",
+        "detectors",
+        "observables",
+        "sha256"
+      ],
+      "properties": {
+        "text": {
+          "type": "string",
+          "minLength": 1
+        },
+        "detectors": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "observables": {
+          "const": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    },
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "intervalMethod",
+        "shots",
+        "logicalErrors",
+        "successfulShots",
+        "logicalErrorRate",
+        "standardError",
+        "wilson95"
+      ],
+      "properties": {
+        "intervalMethod": {
+          "const": "wilson-score-95"
+        },
+        "shots": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "logicalErrors": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "successfulShots": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "logicalErrorRate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "standardError": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "wilson95": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "low",
+            "high"
+          ],
+          "properties": {
+            "low": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "high": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          }
+        }
+      }
+    },
+    "sampling": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "method",
+        "batchShots",
+        "bitOrder",
+        "failureBits",
+        "detectorSha256",
+        "observableSha256",
+        "predictionSha256",
+        "runtime"
+      ],
+      "properties": {
+        "method": {
+          "const": "stim-detector-single-batch-v1"
+        },
+        "batchShots": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "bitOrder": {
+          "const": "little"
+        },
+        "failureBits": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9+/]*={0,2}$"
+        },
+        "detectorSha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "observableSha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "predictionSha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "runtime": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "system",
+            "machine",
+            "stimImplementation"
+          ],
+          "properties": {
+            "system": {
+              "type": "string",
+              "minLength": 1
+            },
+            "machine": {
+              "type": "string",
+              "minLength": 1
+            },
+            "stimImplementation": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    },
+    "runtimeSeconds": {
+      "type": "number",
+      "minimum": 0
+    }
+  }
+}

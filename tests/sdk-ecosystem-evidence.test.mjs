@@ -25,7 +25,10 @@ test("native SDK scoped API receipts are durable, match current locks and retain
   const tnqs = JSON.parse(await fs.readFile(path.join(root, "docs/integrations/evidence/tnqs-2026-11-05.json")));
   const rcmps = JSON.parse(await fs.readFile(path.join(root, "docs/integrations/evidence/rcmps-2026-11-05.json")));
   const ppvm = JSON.parse(await fs.readFile(path.join(root, "docs/integrations/evidence/ppvm-2026-11-10.json")));
-  const receipts = [...report.libraries, chromobius.receipt, lean.receipt, emlint.receipt, slowquant.receipt, tnqs.receipt, rcmps.receipt, ppvm.receipt];
+  const mwpf = JSON.parse(await fs.readFile(path.join(root, "docs/integrations/evidence/mwpf-2026-11-06.json")));
+  const tropidist = JSON.parse(await fs.readFile(path.join(root, "docs/integrations/evidence/tropidist-2026-11-22.json")));
+  const stgrape = JSON.parse(await fs.readFile(path.join(root, "docs/integrations/evidence/stgrape-2026-11-22.json")));
+  const receipts = [...report.libraries, chromobius.receipt, lean.receipt, emlint.receipt, slowquant.receipt, tnqs.receipt, rcmps.receipt, ppvm.receipt, mwpf.receipt, tropidist.receipt, stgrape.receipt];
   const cohort = (await readSdkLibraries(root)).filter(entry => entry.nativeOnly);
   const slowquantResult = JSON.parse(await fs.readFile(path.join(contained(slowquant.receipt.durableEvidenceDirectory), "result.json")));
   assert.equal(slowquantResult.upstreamRevision, cohort.find(entry => entry.id === "slowquant-response").sourceProject.revision);
@@ -34,7 +37,14 @@ test("native SDK scoped API receipts are durable, match current locks and retain
   assert.deepEqual(receipts.map(entry => entry.id).sort(), cohort.map(entry => entry.id).sort());
   assert.equal(report.summary.passed, 26);
   assert.equal(report.summary.scientificValidation, "not_evaluated");
-  for (const numerical of [tnqs, rcmps, ppvm]) {
+  const distance = JSON.parse(await fs.readFile(path.join(contained(tropidist.receipt.durableEvidenceDirectory), "result.json")));
+  const witness = contained(path.join(tropidist.receipt.durableEvidenceDirectory, distance.raw));
+  assert.equal(hash(await fs.readFile(witness)), distance.rawSha256);
+  for (const [name, digest] of Object.entries(distance.inputSha256)) {
+    assert.equal(path.basename(name), name);
+    assert.equal(hash(await fs.readFile(path.join(path.dirname(witness), name))), digest);
+  }
+  for (const numerical of [tnqs, rcmps, ppvm, mwpf, tropidist, stgrape]) {
     for (const source of numerical.validationSources) {
       assert.equal(hash(await fs.readFile(contained(source.path))), source.sha256, source.path);
     }

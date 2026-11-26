@@ -67,7 +67,7 @@
 
 # Open MIT algorithm adaptation; Python environment is prepared explicitly.
 - id: mcp-hamiltonian-simulation
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: hamiltonian_local
     transport: stdio
@@ -92,6 +92,7 @@
   config:
     serverName: fieldqkit
     transport: stdio
+    scientific: true
     command: !!js process.execPath
     args:
       - !!js process.cwd() + '/.agents/skills/fieldqkit-hardware/mcp/server.mjs'
@@ -117,7 +118,7 @@
 # The MCP process starts cheaply and uv materializes the Python environment only
 # on first use. It exposes no cloud credentials, remote service or hardware job.
 - id: mcp-quantum-information-audit
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: toqito_audit
     transport: stdio
@@ -138,7 +139,7 @@
 # cheaply and uv materializes the native wheel only on first use. Inputs are
 # bounded OpenQASM 2 strings; no arbitrary paths, cloud or hardware are exposed.
 - id: mcp-quantum-circuit-verification
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: qcec_local
     transport: stdio
@@ -160,7 +161,7 @@
 # uncertainty, not threshold or hardware claims. No cloud credentials or QPU
 # submission Tool is registered.
 - id: mcp-qec-memory-experiment
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: qec_local
     transport: stdio
@@ -181,7 +182,7 @@
 # Python process. Startup only registers Tools; first use materializes the locked
 # environment. The server owns no Session, model route or cloud/QPU operation.
 - id: mcp-fatqat-local
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: fatqat_local
     transport: stdio
@@ -201,7 +202,7 @@
 # PairInteraction owns a separate Python environment and atomic database lock.
 # Registration is lightweight; dependency and data setup is an explicit action.
 - id: mcp-pairinteraction-rydberg
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: pairinteraction_local
     transport: stdio
@@ -224,7 +225,7 @@
 # prepared explicitly with setup-paper-tools.mjs tyxonq-workbench. No cloud token or hardware
 # submission Tool is registered.
 - id: mcp-tyxonq-local
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   disabled: true
   config:
     serverName: tyxonq_local
@@ -248,7 +249,7 @@
 # and solves bounded QUBO problems on the CPU simulator and registers no Origin
 # Quantum cloud token or hardware submission Tool.
 - id: mcp-qpanda-qubo
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: qpanda_qubo
     transport: stdio
@@ -501,7 +502,7 @@
 
 # Paper-backed local science tools. Python/Julia workers use pinned isolated environments.
 - id: mcp-sqd-chemistry
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: sqd_local
     transport: stdio
@@ -519,7 +520,7 @@
       maxAttempts: 10
 
 - id: mcp-tjm-dynamics
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: tjm_local
     transport: stdio
@@ -537,7 +538,7 @@
       maxAttempts: 10
 
 - id: mcp-ldpc-decoding
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: ldpc_local
     transport: stdio
@@ -555,7 +556,7 @@
       maxAttempts: 10
 
 - id: mcp-flow-vqe
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: flow_vqe_local
     transport: stdio
@@ -573,7 +574,7 @@
       maxAttempts: 10
 
 - id: mcp-tenpy-ground-state
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: tenpy_local
     transport: stdio
@@ -591,7 +592,7 @@
       maxAttempts: 10
 
 - id: mcp-mitiq-error-mitigation
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: mitiq_local
     transport: stdio
@@ -609,7 +610,7 @@
       maxAttempts: 10
 
 - id: mcp-randomized-measurements
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: random_meas_local
     transport: stdio
@@ -628,7 +629,7 @@
 
 # Pinned local Unitary ecosystem capabilities; isolated scientific workers.
 - id: mcp-dynamiqs-dynamics
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: dynamiqs_local
     transport: stdio
@@ -640,7 +641,7 @@
     failOnStartupError: true
 
 - id: mcp-clifft-sampling
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: clifft_local
     transport: stdio
@@ -652,7 +653,7 @@
     failOnStartupError: true
 
 - id: mcp-oqupy-dynamics
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: oqupy_local
     transport: stdio
@@ -664,7 +665,7 @@
     failOnStartupError: true
 
 - id: mcp-deltakit-qec
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: deltakit_local
     transport: stdio
@@ -680,7 +681,7 @@
   name: ./metriq-data-tools.mjs
 
 - id: mcp-pyzx-optimization
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: pyzx_local
     transport: stdio
@@ -692,7 +693,7 @@
     failOnStartupError: true
 
 - id: mcp-graphix-mbqc
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: graphix_local
     transport: stdio
@@ -704,7 +705,7 @@
     failOnStartupError: true
 
 - id: mcp-symmer-tapering
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: symmer_local
     transport: stdio
@@ -716,7 +717,7 @@
     failOnStartupError: true
 
 - id: mcp-paulie-algebra
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: paulie_local
     transport: stdio
@@ -729,7 +730,7 @@
 
 # QCut: pinned local execution; scientific acceptance remains separate.
 - id: mcp-qcut-knitting
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: qcut_local
     transport: stdio
@@ -742,7 +743,7 @@
 
 # Compact: pinned local execution; scientific acceptance remains separate.
 - id: mcp-compact-optimization
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: compact_local
     transport: stdio
@@ -755,7 +756,7 @@
 
 # OpenQARP: pinned local execution; scientific acceptance remains separate.
 - id: mcp-openqarp-excited-states
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: openqarp_local
     transport: stdio
@@ -768,7 +769,7 @@
 
 # cqlib-qml: pinned local execution; scientific acceptance remains separate.
 - id: mcp-cqlib-kernel
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   disabled: true
   config:
     serverName: cqlib_kernel_local
@@ -782,7 +783,7 @@
 
 # FlagQuantum: pinned local execution; scientific acceptance remains separate.
 - id: mcp-flagquantum-workbench
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   disabled: true
   config:
     serverName: flagquantum
@@ -795,7 +796,7 @@
     failOnStartupError: true
 
 - id: mcp-qbraid-conversion
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: qbraid_local
     transport: stdio
@@ -807,7 +808,7 @@
     failOnStartupError: true
 
 - id: mcp-qdmi-device
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   disabled: true
   config:
     serverName: qdmi_local
@@ -821,7 +822,7 @@
 
 # Local Rydberg-array dynamics; dependencies are prepared by explicit setup.
 - id: mcp-bloqade-analog
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: bloqade_local
     transport: stdio
@@ -834,7 +835,7 @@
 
 # PennyLane 可微分电路; explicit environment setup, isolated fixed dependencies.
 - id: mcp-pennylane-differentiable
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: pennylane_local
     transport: stdio
@@ -847,7 +848,7 @@
 
 # DeepQuantum 可微分电路; explicit environment setup, isolated fixed dependencies.
 - id: mcp-deepquantum-differentiable
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: deepquantum_local
     transport: stdio
@@ -860,7 +861,7 @@
 
 # TensorCircuit 可微分电路; explicit environment setup, isolated fixed dependencies.
 - id: mcp-tensorcircuit-differentiable
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: tensorcircuit_local
     transport: stdio
@@ -873,7 +874,7 @@
 
 # MindQuantum 可微分电路; explicit environment setup, isolated fixed dependencies.
 - id: mcp-mindquantum-differentiable
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: mindquantum_local
     transport: stdio
@@ -886,7 +887,7 @@
 
 # TKET 电路编译; explicit environment setup, isolated fixed dependencies.
 - id: mcp-pytket-compilation
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: pytket_local
     transport: stdio
@@ -899,7 +900,7 @@
 
 # D-Wave Ocean 经典采样; explicit environment setup, isolated fixed dependencies.
 - id: mcp-ocean-optimization
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: ocean_local
     transport: stdio
@@ -912,7 +913,7 @@
 
 # Kaiwu Community 建模; explicit environment setup, isolated fixed dependencies.
 - id: mcp-kaiwu-qubo
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: kaiwu_local
     transport: stdio
@@ -925,7 +926,7 @@
 
 # pyQuil 本地仿真; explicit environment setup, isolated fixed dependencies.
 - id: mcp-pyquil-simulation
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: pyquil_local
     transport: stdio
@@ -938,7 +939,7 @@
 
 # SpinQit 本地仿真; explicit environment setup, isolated fixed dependencies.
 - id: mcp-spinqit-simulation
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: spinqit_local
     transport: stdio
@@ -951,7 +952,7 @@
 
 # QuTrunk 本地仿真; explicit environment setup, isolated fixed dependencies.
 - id: mcp-qutrunk-simulation
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: qutrunk_local
     transport: stdio
@@ -964,7 +965,7 @@
 
 # Perceval 光量子仿真; explicit environment setup, isolated fixed dependencies.
 - id: mcp-perceval-photonics
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: perceval_local
     transport: stdio
@@ -977,7 +978,7 @@
 
 # IQM 电路与模拟后端; explicit environment setup, isolated fixed dependencies.
 - id: mcp-iqm-circuit-workbench
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: iqm_local
     transport: stdio
@@ -990,7 +991,7 @@
 
 # Alice & Bob 猫态模型; explicit environment setup, isolated fixed dependencies.
 - id: mcp-alicebob-cat-circuits
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: alicebob_local
     transport: stdio
@@ -1003,7 +1004,7 @@
 
 # Pulser Rydberg 动力学; explicit environment setup, isolated fixed dependencies.
 - id: mcp-pulser-dynamics
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: pulser_local
     transport: stdio
@@ -1016,7 +1017,7 @@
 
 # QoolQit 模拟程序; explicit environment setup, isolated fixed dependencies.
 - id: mcp-qoolqit-workbench
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   disabled: true
   config:
     serverName: qoolqit_local
@@ -1030,7 +1031,7 @@
 
 # IonQ 本地程序准备; explicit environment setup, isolated fixed dependencies.
 - id: mcp-ionq-programs
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: ionq_local
     transport: stdio
@@ -1048,6 +1049,7 @@
   config:
     serverName: superstaq_cloud
     transport: stdio
+    scientific: true
     command: !!js process.execPath
     args:
       - !!js process.cwd() + '/.agents/skills/superstaq-compilation/mcp/server.mjs'
@@ -1059,7 +1061,7 @@
 
 # QSteed 电路编译; explicit environment preparation, user-owned service access.
 - id: mcp-qsteed-compilation
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: qsteed_local
     transport: stdio
@@ -1072,7 +1074,7 @@
 
 # QuAIRKit 量子通道; explicit environment preparation, user-owned service access.
 - id: mcp-quairkit-information
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: quairkit_local
     transport: stdio
@@ -1085,7 +1087,7 @@
 
 # QCompute 本地仿真; explicit environment preparation, user-owned service access.
 - id: mcp-qcompute-simulation
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: qcompute_local
     transport: stdio
@@ -1098,7 +1100,7 @@
 
 # Qibo 电路仿真; explicit environment preparation, user-owned service access.
 - id: mcp-qibo-simulation
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: qibo_local
     transport: stdio
@@ -1111,7 +1113,7 @@
 
 # Qrisp 量子算术; explicit environment preparation, user-owned service access.
 - id: mcp-qrisp-arithmetic
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   disabled: true
   config:
     serverName: qrisp_local
@@ -1125,7 +1127,7 @@
 
 # Lightworks 光子仿真; explicit environment preparation, user-owned service access.
 - id: mcp-lightworks-photonics
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: lightworks_local
     transport: stdio
@@ -1138,7 +1140,7 @@
 
 # Braket 本地仿真; explicit environment preparation, user-owned service access.
 - id: mcp-braket-simulation
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: braket_local
     transport: stdio
@@ -1151,7 +1153,7 @@
 
 # QURI 可观测量估计; explicit environment preparation, user-owned service access.
 - id: mcp-quri-parts-estimation
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: quri_parts_local
     transport: stdio
@@ -1164,7 +1166,7 @@
 
 # QDK 容错资源估算; explicit environment preparation, user-owned service access.
 - id: mcp-qdk-resource-estimation
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: qdk_local
     transport: stdio
@@ -1177,7 +1179,7 @@
 
 # Qualtran 资源计数; explicit environment preparation, user-owned service access.
 - id: mcp-qualtran-resources
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: qualtran_local
     transport: stdio
@@ -1190,7 +1192,7 @@
 
 # OpenFermion 算符映射; explicit environment preparation, user-owned service access.
 - id: mcp-openfermion-mapping
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: openfermion_local
     transport: stdio
@@ -1203,7 +1205,7 @@
 
 # MQT 决策图仿真; explicit environment preparation, user-owned service access.
 - id: mcp-mqt-ddsim
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: mqt_ddsim_local
     transport: stdio
@@ -1216,7 +1218,7 @@
 
 # MQT 硬件拓扑映射; explicit environment preparation, user-owned service access.
 - id: mcp-mqt-qmap
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: mqt_qmap_local
     transport: stdio
@@ -1234,6 +1236,7 @@
   config:
     serverName: classiq_cloud
     transport: stdio
+    scientific: true
     command: !!js process.execPath
     args:
       - !!js process.cwd() + '/.agents/skills/classiq-synthesis/mcp/server.mjs'
@@ -1250,6 +1253,7 @@
   config:
     serverName: qctrl_cloud
     transport: stdio
+    scientific: true
     command: !!js process.execPath
     args:
       - !!js process.cwd() + '/.agents/skills/qctrl-workbench/mcp/server.mjs'
@@ -1261,7 +1265,7 @@
 
 # QUA 脉冲程序; explicit environment preparation, user-owned service access.
 - id: mcp-qua-programs
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: qua_local
     transport: stdio
@@ -1274,7 +1278,7 @@
 
 # LabOne Q 离线控制; explicit environment preparation, user-owned service access.
 - id: mcp-laboneq-control
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: laboneq_local
     transport: stdio
@@ -1292,6 +1296,7 @@
   config:
     serverName: qcarchive_data
     transport: stdio
+    scientific: true
     command: !!js process.execPath
     args:
       - !!js process.cwd() + '/.agents/skills/qcarchive-query/mcp/server.mjs'
@@ -1305,7 +1310,7 @@
 
 # CUDA-Q CPU 仿真; explicit environment preparation, user-owned service access.
 - id: mcp-cudaq-simulation
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   disabled: true
   config:
     serverName: cudaq_local
@@ -1319,7 +1324,7 @@
 
 # NetQASM / SquidASM 网络; explicit environment preparation, user-owned service access.
 - id: mcp-netqasm-network
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   disabled: true
   config:
     serverName: netqasm_local
@@ -1333,7 +1338,7 @@
 
 # SimQN network; explicit isolated environment, user-owned service credentials.
 - id: mcp-simqn-network
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   disabled: true
   config:
     serverName: simqn_local
@@ -1347,7 +1352,7 @@
 
 # Qcover QAOA; explicit isolated environment, user-owned service credentials.
 - id: mcp-qcover-optimization
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: qcover_local
     transport: stdio
@@ -1360,7 +1365,7 @@
 
 # VQNet learning; explicit isolated environment, user-owned service credentials.
 - id: mcp-vqnet-learning
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   disabled: true
   config:
     serverName: vqnet_local
@@ -1374,7 +1379,7 @@
 
 # pyChemiQ chemistry; explicit isolated environment, user-owned service credentials.
 - id: mcp-pychemiq-chemistry
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: pychemiq_local
     transport: stdio
@@ -1387,7 +1392,7 @@
 
 # Qblox Scheduler; explicit isolated environment, user-owned service credentials.
 - id: mcp-qblox-scheduling
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: qblox_local
     transport: stdio
@@ -1400,7 +1405,7 @@
 
 # Qililab; explicit isolated environment, user-owned service credentials.
 - id: mcp-qililab-control
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: qililab_local
     transport: stdio
@@ -1413,7 +1418,7 @@
 
 # Guppy and Selene; explicit isolated environment, user-owned service credentials.
 - id: mcp-guppy-programs
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: guppy_local
     transport: stdio
@@ -1426,7 +1431,7 @@
 
 # OQC QAT; explicit isolated environment, user-owned service credentials.
 - id: mcp-oqc-qat
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: qat_local
     transport: stdio
@@ -1439,7 +1444,7 @@
 
 # MrMustard Optics; explicit isolated environment, user-owned service credentials.
 - id: mcp-mrmustard-optics
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   disabled: true
   config:
     serverName: mrmustard_local
@@ -1453,7 +1458,7 @@
 
 # MerLin Learning; explicit isolated environment, user-owned service credentials.
 - id: mcp-merlin-learning
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   config:
     serverName: merlin_local
     transport: stdio
@@ -1466,7 +1471,7 @@
 
 # MIMIQ Exaqt; explicit isolated environment, user-owned service credentials.
 - id: mcp-mimiq-simulation
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   disabled: true
   config:
     serverName: mimiq_local
@@ -1480,7 +1485,7 @@
 
 # myQLM Simulation; explicit isolated environment, user-owned service credentials.
 - id: mcp-myqlm-simulation
-  name: '@deepseek-ai/dsh-mcp-client'
+  name: ./scientific-mcp-client.mjs
   disabled: true
   config:
     serverName: myqlm_local
@@ -1499,6 +1504,7 @@
   config:
     serverName: aqt_local
     transport: stdio
+    scientific: true
     command: !!js process.execPath
     args:
       - !!js process.cwd() + '/.agents/skills/aqt-workbench/mcp/server.mjs'
@@ -1515,6 +1521,7 @@
   config:
     serverName: oqc_cloud
     transport: stdio
+    scientific: true
     command: !!js process.execPath
     args:
       - !!js process.cwd() + '/.agents/skills/oqc-cloud/mcp/server.mjs'
@@ -1532,6 +1539,7 @@
   config:
     serverName: quantuminspire_cloud
     transport: stdio
+    scientific: true
     command: !!js process.execPath
     args:
       - !!js process.cwd() + '/.agents/skills/quantuminspire-cloud/mcp/server.mjs'

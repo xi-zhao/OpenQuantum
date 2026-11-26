@@ -9,6 +9,7 @@ import { Context } from "@deepseek-ai/cordis";
 import { LocalFileSystem } from "@deepseek-ai/dsh-fs-local";
 import { SandboxedFileSystem } from "@deepseek-ai/dsh-fs-sandbox";
 import { SandboxPolicyService } from "@deepseek-ai/dsh-sandbox-policy";
+import LocalSandbox from "@deepseek-ai/dsh-sandbox-local";
 import { loadCapability, loadResultPackage, loadAcceptanceReport, validateResultCommitValue } from "../.agents/skill-contracts/index.mjs";
 import { normalizeVerificationRequest, normalizeAuditRequest } from "../.agents/skills/quantum-circuit-verification/core/request-contract.mjs";
 import { independentReference } from "../.agents/skills/quantum-circuit-verification/validators/independent-reference.mjs";
@@ -16,8 +17,11 @@ import { scientificResultAdapter } from "../runtime/openquantum/agent-presets/op
 import { parseScientificToolResult, QUANTUM_CIRCUIT_VERIFICATION_TOOL } from "../runtime/openquantum/agent-presets/openquantum/scientific-result-projection.mjs";
 
 let preparedRoot;
+const sandboxContext = new Context();
+let sandboxFiber;
 const previousPythonRoot = process.env.OPENQUANTUM_PYTHON_ENV_ROOT;
 before(async () => {
+  sandboxFiber = await sandboxContext.plugin(LocalSandbox, {});
   preparedRoot = fs.mkdtempSync(path.join(os.tmpdir(), "oq-qcec-reference-fixture-"));
   const executable = path.join(preparedRoot, "fixture-python");
   fs.writeFileSync(executable, `#!${process.execPath}
@@ -37,7 +41,8 @@ process.stdin.on("end", () => {
   const prepared = await preparePythonFixture({ root: process.cwd(), sandbox: preparedRoot, id: "quantum-circuit-verification", executable });
   process.env.OPENQUANTUM_PYTHON_ENV_ROOT = prepared.OPENQUANTUM_PYTHON_ENV_ROOT;
 });
-after(() => {
+after(async () => {
+  await sandboxFiber.dispose();
   if (previousPythonRoot === undefined) delete process.env.OPENQUANTUM_PYTHON_ENV_ROOT;
   else process.env.OPENQUANTUM_PYTHON_ENV_ROOT = previousPythonRoot;
   fs.rmSync(preparedRoot, { recursive: true, force: true });
@@ -60,6 +65,7 @@ function harnessFixture(t) {
   const workspace = fs.mkdtempSync(path.join(os.tmpdir(), "oq-qcec-audit-"));
   t.after(() => fs.rmSync(workspace, { recursive: true, force: true }));
   const fixture = scientificProjectionFixture({ workspaceRoot: workspace, sessionId: "fixture-qcec-session" });
+  fixture.ctx.sandbox = sandboxContext.sandbox;
   return {
     ...fixture, workspace,
     async execute({ request = pair(2), verdict, version, callId = "fixture-qcec-call", seq = 7, ...options } = {}) {
@@ -288,4 +294,59 @@ test("post-execute policies overriding the canonical value cannot obtain a scien
   const result = await fixture.execute({ downstream });
   assert.equal(result.decision, downstream);
   assert.equal(result.presentation, undefined);
+});
+
+function protectedQcecReference(t) {
+  fs.mkdirSync("temp", { recursive: true });
+  const directory = fs.mkdtempSync(path.resolve("temp/qcec-reference-"));
+  const canary = path.join(directory, "canary");
+  fs.writeFileSync(canary, "unchanged");
+  const executable = path.join(process.env.OPENQUANTUM_PYTHON_ENV_ROOT, "quantum-circuit-verification",
+    process.platform === "win32" ? "Scripts/python.exe" : "bin/python");
+  const original = fs.readFileSync(executable, "utf8");
+  fs.writeFileSync(executable, original.replace("\nconst { createHash }",
+    `\ntry { require("node:fs").writeFileSync(${JSON.stringify(canary)}, "escaped"); } catch {}\nconst { createHash }`));
+  t.after(() => {
+    fs.writeFileSync(executable, original);
+    fs.rmSync(directory, { recursive: true, force: true });
+  });
+  return canary;
+}
+
+test("QCEC Host reference process inherits full confinement and cannot write outside OS temp", async t => {
+  const canary = protectedQcecReference(t), fixture = harnessFixture(t), policies = [];
+  fixture.ctx.sandbox = { async confine(argv, policy) {
+    const confined = await sandboxContext.sandbox.confine(argv, policy);
+    assert.equal(confined.enforcement, "full");
+    policies.push(policy);
+    return confined;
+  } };
+  const { presentation } = await fixture.execute();
+  assert.equal(presentation.acceptanceStatus, "passed");
+  assert.equal(policies.length, 1, "The Host must confine its independent QCEC reference child");
+  assert.deepEqual(policies[0], { mode: "workspace-write", workspaceRoot: fs.realpathSync.native(os.tmpdir()) });
+  assert.equal(fs.readFileSync(canary, "utf8"), "unchanged");
+});
+
+test("QCEC unavailable or partial confinement never executes the Host reference and degrades to conditional", async t => {
+  const canary = protectedQcecReference(t);
+  for (const sandbox of [undefined, { confine: argv => ({ argv, enforcement: "partial" }) }]) {
+    const fixture = harnessFixture(t);
+    fixture.ctx.sandbox = sandbox;
+    const { presentation } = await fixture.execute();
+    assert.equal(presentation.acceptanceStatus, "conditional");
+    assert.equal(fs.readFileSync(canary, "utf8"), "unchanged");
+  }
+});
+
+test("QCEC cancellation during confinement prevents reference execution and Acceptance publication", async t => {
+  const canary = protectedQcecReference(t), fixture = harnessFixture(t), abort = new AbortController();
+  fixture.ctx.sandbox = { async confine(...args) {
+    const confined = await sandboxContext.sandbox.confine(...args);
+    abort.abort();
+    return confined;
+  } };
+  const { presentation } = await fixture.execute({ signal: abort.signal });
+  assert.equal(presentation.acceptanceStatus, undefined);
+  assert.equal(fs.readFileSync(canary, "utf8"), "unchanged");
 });

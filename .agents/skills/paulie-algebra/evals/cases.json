@@ -1,0 +1,207 @@
+[
+  {
+    "id": "center",
+    "fixture": "center.json",
+    "fixtureSha256": "e1d1ac9667ea9aa87e48177f6f82a6dbe9ab891c5e7d0f63ccf0341557de21fc",
+    "edits": {},
+    "observations": {},
+    "failedChecks": []
+  },
+  {
+    "id": "default",
+    "fixture": "default.json",
+    "fixtureSha256": "d3ed06abccae8d7137a8a5bb4bb6721fdf79dc981963cae8e856bfbcffc80b08",
+    "edits": {},
+    "observations": {},
+    "failedChecks": []
+  },
+  {
+    "id": "large",
+    "fixture": "large.json",
+    "fixtureSha256": "9f9ecd252e0cb4120a309d96e26b6159cf793b61b5335e287b701a5ee415c2d8",
+    "edits": {},
+    "observations": {},
+    "failedChecks": []
+  },
+  {
+    "id": "local",
+    "fixture": "local.json",
+    "fixtureSha256": "df4c53362f582285385a0947217ec83b955b6b000997a6fd2ff9c59b520f1bac",
+    "edits": {},
+    "observations": {},
+    "failedChecks": []
+  },
+  {
+    "id": "single",
+    "fixture": "single.json",
+    "fixtureSha256": "54d2d140bf6ca375cf5f254bdcfb75b87ee5b391cff7d7ddeadc49a57e6c0065",
+    "edits": {},
+    "observations": {},
+    "failedChecks": []
+  },
+  {
+    "id": "skip",
+    "fixture": "skip.json",
+    "fixtureSha256": "3bc54013ec2cd3b80a1e8fdb3383d5eecd0509476d03045ddabf8cd79f7867c9",
+    "edits": {},
+    "observations": {},
+    "failedChecks": []
+  },
+  {
+    "id": "false-dimension",
+    "fixture": "default.json",
+    "fixtureSha256": "d3ed06abccae8d7137a8a5bb4bb6721fdf79dc981963cae8e856bfbcffc80b08",
+    "edits": {
+      "result.dimension": 14
+    },
+    "observations": {
+      "algebra.dimension": "fail"
+    },
+    "failedChecks": [
+      "algebra.dimension"
+    ]
+  },
+  {
+    "id": "missing-nested-commutator",
+    "fixture": "default.json",
+    "fixtureSha256": "d3ed06abccae8d7137a8a5bb4bb6721fdf79dc981963cae8e856bfbcffc80b08",
+    "edits": {
+      "result.closure": [
+        "IX",
+        "IY",
+        "IZ",
+        "XI",
+        "XX",
+        "XY",
+        "XZ",
+        "YI",
+        "YX",
+        "YZ",
+        "ZI",
+        "ZX",
+        "ZY",
+        "ZZ"
+      ],
+      "result.dimension": 14
+    },
+    "observations": {
+      "algebra.closure": "fail",
+      "closure.complete": "fail"
+    },
+    "failedChecks": [
+      "algebra.closure",
+      "algebra.dimension",
+      "closure.complete"
+    ]
+  },
+  {
+    "id": "duplicate-basis",
+    "fixture": "default.json",
+    "fixtureSha256": "d3ed06abccae8d7137a8a5bb4bb6721fdf79dc981963cae8e856bfbcffc80b08",
+    "edits": {
+      "result.closure": [
+        "IX",
+        "IY",
+        "IZ",
+        "XI",
+        "XX",
+        "XY",
+        "XZ",
+        "YI",
+        "YX",
+        "YY",
+        "YZ",
+        "ZI",
+        "ZX",
+        "ZY",
+        "ZZ",
+        "IX"
+      ]
+    },
+    "observations": {
+      "basis.independent": "fail"
+    },
+    "failedChecks": [
+      "algebra.closure",
+      "basis.independent"
+    ]
+  },
+  {
+    "id": "false-center",
+    "fixture": "center.json",
+    "fixtureSha256": "e1d1ac9667ea9aa87e48177f6f82a6dbe9ab891c5e7d0f63ccf0341557de21fc",
+    "edits": {
+      "result.centerDimension": 2
+    },
+    "observations": {
+      "center.dimension": "fail"
+    },
+    "failedChecks": [
+      "center.dimension"
+    ]
+  },
+  {
+    "id": "false-dense-dimension",
+    "fixture": "default.json",
+    "fixtureSha256": "d3ed06abccae8d7137a8a5bb4bb6721fdf79dc981963cae8e856bfbcffc80b08",
+    "edits": {
+      "result.referenceDimension": 14
+    },
+    "observations": {
+      "dense.claims": "fail"
+    },
+    "failedChecks": [
+      "dense.claims"
+    ]
+  },
+  {
+    "id": "identity-generator",
+    "fixture": "single.json",
+    "fixtureSha256": "54d2d140bf6ca375cf5f254bdcfb75b87ee5b391cff7d7ddeadc49a57e6c0065",
+    "edits": {
+      "request.generators": [
+        "I"
+      ]
+    },
+    "observations": {
+      "generators.structure": "fail"
+    },
+    "failedChecks": [
+      "generators.structure"
+    ]
+  },
+  {
+    "id": "false-full-su",
+    "fixture": "local.json",
+    "fixtureSha256": "df4c53362f582285385a0947217ec83b955b6b000997a6fd2ff9c59b520f1bac",
+    "edits": {
+      "result.generatesFullSpecialUnitary": true
+    },
+    "observations": {
+      "algebra.special-unitary": "fail"
+    },
+    "failedChecks": [
+      "algebra.special-unitary"
+    ]
+  },
+  {
+    "id": "skipped-basis",
+    "fixture": "skip.json",
+    "fixtureSha256": "3bc54013ec2cd3b80a1e8fdb3383d5eecd0509476d03045ddabf8cd79f7867c9",
+    "edits": {},
+    "observations": {
+      "algebra.closure": "not_checked"
+    },
+    "failedChecks": []
+  },
+  {
+    "id": "bounded-closure",
+    "fixture": "large.json",
+    "fixtureSha256": "9f9ecd252e0cb4120a309d96e26b6159cf793b61b5335e287b701a5ee415c2d8",
+    "edits": {},
+    "observations": {
+      "algebra.closure": "not_checked"
+    },
+    "failedChecks": []
+  }
+]
