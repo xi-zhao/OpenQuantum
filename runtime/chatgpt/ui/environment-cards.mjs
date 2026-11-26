@@ -11,7 +11,12 @@ export function environmentPanel(environment, { element, button, run, drafts, ex
   const actions = element("div", undefined, "environment-actions");
   const state = environmentState(environment);
   const note = environment.requirements.note;
-  panel.append(element("strong", `${environment.title} · ${state.label}`, environment.ready ? "hint prepared" : "hint"));
+  const header = element("div", undefined, "environment-header");
+  const pill = element("span", state.label, "status-pill");
+  pill.dataset.tone = environment.ready ? "ready" : running ? "working"
+    : ["failed", "unreadable", "needs_configuration"].includes(environment.state) ? "danger" : "attention";
+  header.append(element("strong", environment.title, "environment-title"), pill);
+  panel.append(header);
   if (environment.state === "unreadable") panel.append(element("p", "请检查环境目录的读取与执行权限，再重新检查。", "environment-error"));
   if (running) {
     const progress = element("div", undefined, "environment-progress");
