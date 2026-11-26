@@ -137,7 +137,7 @@ test("offline Chromium exercises the built homepage and both hosts' settings pro
   const html = await readFile(path.join(bundle, "app.html"), "utf8");
   let snapshot, sequence = 0;
   const server = createServer(async (req, res) => {
-    const route = new URL(req.url, "http://localhost").pathname;
+    const [route] = req.url.split("?");
     if (req.method === "GET" && ["/Codex", "/Desktop"].includes(route)) {
       res.writeHead(200, { "content-type": "text/html; charset=utf-8" });
       res.end(route === "/Desktop" ? html.replace("<head>", '<head><meta name="openquantum-host" content="Desktop">') : html);
@@ -150,12 +150,14 @@ test("offline Chromium exercises the built homepage and both hosts' settings pro
   });
   server.listen(0, "127.0.0.1");
   await once(server, "listening");
+  const { address, port } = server.address();
+  const origin = `http://${address}:${port}`;
   t.after(async () => { await new Promise(resolve => server.close(resolve)); await rm(dir, { recursive: true, force: true }); });
   const click = selector => page.evaluate(selector => document.querySelector(selector).click(), selector);
   const clickAccountMetric = () => page.evaluate(() => [...document.querySelectorAll(".metric-card")].find(card => card.innerText.includes("云端服务账户")).click());
   async function open(value) {
     snapshot = value;
-    const url = `http://127.0.0.1:${server.address().port}/${value.host}?case=${++sequence}`;
+    const url = `${origin}/${value.host}?case=${++sequence}`;
     await page.navigate(url + (value.host === "Codex" ? "#preview=fixture" : ""), () => !!document.querySelector(".metric-card"));
   }
 
@@ -209,7 +211,8 @@ test("offline Chromium exercises the built homepage and both hosts' settings pro
       await filter(page, "#search", "Pasqal Cloud");
       for (const state of ["all", "accounts", "configured"]) {
         if (state !== "all") await filter(page, "#state", state);
-        assert.ok((await page.evaluate(readIds)).includes(pasqalOwner[host]), state);
+        assert.deepEqual(await page.evaluate(readIds), [pasqalOwner[host]], state);
+        assert.equal(await page.evaluate(() => document.querySelector("#catalog-detail .oq-service-credential")?.ariaLabel), "Pasqal Cloud");
         const form = await openAccount(page, pasqalOwner[host], "Pasqal Cloud");
         assert.deepEqual(form, { fields: ["PASQAL_AUTH_TOKEN", "PASQAL_PASSWORD", "PASQAL_USERNAME"], state: "已保存" });
       }

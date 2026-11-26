@@ -166,8 +166,8 @@ function matches(item) {
   const account = accountState(item, snapshot.services ?? []);
   const groups = ownerAccounts(item);
   const searchable = state === "configured" ? groups.filter(group => group.configuration === "configured") : groups;
-  // On account filters, an exact form name must lead to that form in the requested state.
-  if (!item.authentication && ["accounts", "configured"].includes(state)) {
+  // Searching a full account title from either management entry takes the user to its forms.
+  if (!item.authentication && (["accounts", "configured"].includes(state) || (tab === "mcp" && state === "all"))) {
     const named = accounts.find(group => group.title.toLowerCase() === query);
     if (named && !searchable.includes(named)) return false;
   }
