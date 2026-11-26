@@ -73,6 +73,14 @@ test("PennyLane copy uses full calls and the declared input rather than the fast
   assert.ok(section.includes("包含双向转换与结果构造"));
 });
 
+test("workflow identifiers wrap and the mobile trace column can shrink below its content width", async () => {
+  const css = (await readFile(path.join(root, "site/style.css"), "utf8")).replace(/\/\*[\s\S]*?\*\//g, "");
+  assert.match(css, /\.wf-panel code\s*\{[^}]*\boverflow-wrap:\s*anywhere\s*[;}]/);
+  const mobile = css.match(/^@media\s*\(max-width:\s*600px\)\s*\{([\s\S]*?)^\}/m);
+  assert.ok(mobile, "mobile workflow layout");
+  assert.match(mobile[1], /\.wf-trace li\s*\{[^}]*grid-template-columns:\s*18px\s+minmax\(0,\s*1fr\)\s*[;}]/);
+});
+
 test("portable output contains every referenced asset, intact original evidence and valid local anchors", async () => {
   const output = await buildHomepage();
   const built = await readFile(path.join(output, "index.html"), "utf8");
