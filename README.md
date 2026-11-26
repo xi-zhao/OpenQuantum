@@ -56,7 +56,7 @@
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="./docs/images/readme/workflow-zh-dark.webp" />
-    <img src="./docs/images/readme/workflow-zh-light.webp" width="100%" alt="OpenQuantum 工作流：用自然语言提问、本地自动实算、独立科学核验；附 H₂ 分子基态 VQE 复算结果（-1.85727503 Ha，误差 4.44×10⁻¹⁶ Ha，16/16 项检查通过）。" />
+    <img src="./docs/images/readme/workflow-zh-light.webp" width="100%" alt="OpenQuantum 工作流：用自然语言提问、本地自动实算、独立科学核验；附本机 H₂ 分子基态 VQE 复算结果（-1.85727503 Ha，误差 4.44×10⁻¹⁶ Ha，15 项本地计算检查通过，来源链保留 not_checked，验收由 DSH 会话单独推导）。" />
   </picture>
 </p>
 
@@ -183,7 +183,7 @@ npm run dev                         # 启动本地 Web 工作台
 
 ## 演进路线与开放共建
 
-- **已交付（v0.8.11）**：跨语言锁定环境、Desktop 与 Codex 同步发行、桌面 / Web 宿主 11 项可回放科学验收与完整沙箱隔离。
+- **当前源码主线与发行版**：当前源码包含 194 个 Skill、91 个 MCP 服务连接、122 个锁定环境，并在 DSH 桌面 / Web 宿主接通 11 项可回放 L3 科学验收与完整沙箱隔离（2026-11-09 发布的 `v0.8.11` / `codex-v0.8.11` 安装包含 189 个 Skill、117 个环境与 3 项 DSH L3 验收；Codex 复用共享计算与独立观测）。
 - **持续推进**：CPU / GPU / HPC / QPU 协同调度、实验仪器标准接口探索，以及体系化的[量子学习通](docs/integrations/OPENMAIC.md)教学与动手实验。
 - **长期愿景**：探索受独立评估与版本授权约束的科研自我进化闭环（RSI）；**完整闭环尚未实现**，安全边界见[长期发展规划](docs/roadmap/VISION.md)。
 

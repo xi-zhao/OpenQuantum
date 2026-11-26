@@ -10,9 +10,13 @@
 | [QuTiP 实测卡片](readme/case-qutip.webp) | 首页 QuTiP Wigner 案例面板，去掉可展开条件和链接（README 以文字给出）。数值与 Wigner 对照图来自首页，`tests/homepage.test.mjs` 核对其与固定实验数据一致。由 `scripts/render-readme-images.py` 渲染。 |
 | [PennyLane 实测卡片](readme/case-pennylane.webp) | 首页 PennyLane Pauli 对易子案例面板，处理方式同上。 |
 | [中文主视觉（亮/暗）](readme/hero-zh-light.webp) / [暗色](readme/hero-zh-dark.webp) | 1800 × 840（2× Retina）亮/暗自适应 README 主视觉，由 `scripts/render-readme-keynote.py` 渲染；亮色版复用 `site/assets/quantum-field-v3.png` 与 `quantum-state-v2.png`，暗色版为几何 Bloch 球矢量示意。 |
+| [英文主视觉（亮/暗）](readme/hero-en-light.webp) / [暗色](readme/hero-en-dark.webp) | 1800 × 840（2× Retina）亮/暗自适应英文与国际版 README 主视觉，由 `scripts/render-readme-keynote.py` 同源渲染。 |
 | [桌面发行卡片（亮/暗）](readme/launch-card-light.webp) / [暗色](readme/launch-card-dark.webp) | 1800 × 368（2× Retina）亮/暗自适应 Desktop v0.8.11 发行横条，使用官方 `mark-inverse.svg` 标志，由 `scripts/render-readme-keynote.py` 渲染。 |
-| [工作流示意卡片（亮/暗）](readme/workflow-zh-light.webp) / [暗色](readme/workflow-zh-dark.webp) | 1800 × 950（2× Retina）亮/暗自适应工作流示意面板，展示 `npm run demo:quantum-ground-state` 的 H₂ 基态 VQE 复算流程与结果（`-1.85727503 Ha`、差值 `4.44×10⁻¹⁶ Ha`、16 项检查）；为静态说明视觉，不替代实际运行记录。 |
-| [实测突破双案卡（亮/暗）](readme/benchmarks-zh-light.webp) / [暗色](readme/benchmarks-zh-dark.webp) | 1800 × 1342（2× Retina）亮/暗自适应实测汇总面板，数值直接读取 `experiments/qutip-rust-wigner/results/summary.json` 与 `experiments/pennylane-rust-commutator/results/benchmark.json`，嵌入 `site/assets/wigner-comparison.svg`，由 `scripts/render-readme-keynote.py` 渲染。 |
+| [英文桌面发行卡片（亮/暗）](readme/launch-card-en-light.webp) / [暗色](readme/launch-card-en-dark.webp) | 1800 × 368（2× Retina）亮/暗自适应英文 Desktop v0.8.11 发行横条，由 `scripts/render-readme-keynote.py` 同源渲染。 |
+| [工作流示意卡片（亮/暗）](readme/workflow-zh-light.webp) / [暗色](readme/workflow-zh-dark.webp) | 1800 × 1038（2× Retina）亮/暗自适应工作流示意面板，展示 `npm run demo:quantum-ground-state` 的本机 H₂ 基态 VQE 实跑输出（`-1.85727503 Ha`、差值 `4.44×10⁻¹⁶ Ha`、15 项本地计算检查通过、`provenance: not_checked`、`acceptance: not_derived`）；为静态说明视觉，不替代实际运行记录。 |
+| [英文工作流示意卡片（亮/暗）](readme/workflow-en-light.webp) / [暗色](readme/workflow-en-dark.webp) | 1800 × 1018（2× Retina）亮/暗自适应英文工作流示意面板，与中文版同源数值与状态口径渲染。 |
+| [实测突破双案卡（亮/暗）](readme/benchmarks-zh-light.webp) / [暗色](readme/benchmarks-zh-dark.webp) | 1800 × 1294（2× Retina）亮/暗自适应实测汇总面板，数值直接读取 `experiments/qutip-rust-wigner/results/summary.json` 与 `experiments/pennylane-rust-commutator/results/benchmark.json`，嵌入 `site/assets/wigner-comparison.svg`，由 `scripts/render-readme-keynote.py` 渲染。 |
+| [英文实测突破双案卡（亮/暗）](readme/benchmarks-en-light.webp) / [暗色](readme/benchmarks-en-dark.webp) | 1800 × 1218（2× Retina）亮/暗自适应英文实测汇总面板，数值来源与中文版完全一致。 |
 
 品牌标志由 README 顶部的 `<h1>` 给出，横幅里不重复。中文字体取决于渲染机器（2026-11-02 版本使用 Noto Sans CJK）。
 这些图只是已有内容的静态或动态呈现，不是新的测量或界面验收证据。宣传片的来源与边界见 [视频说明](../communications/video/README.md)。

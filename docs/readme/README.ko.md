@@ -45,7 +45,19 @@
 
 <p align="center">
   <a href="https://xi-zhao.github.io/OpenQuantum/">
-    <img src="../images/readme/banner-en.svg" width="100%" alt="OpenQuantum — 함께 만드는 신뢰할 수 있는 양자 연구 AI. Qiskit, PennyLane, QuTiP, Stim, PyMatching, Lean 4 및 122개 고정 환경 지원." />
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="../images/readme/hero-en-dark.webp" />
+      <img src="../images/readme/hero-en-light.webp" width="100%" alt="OpenQuantum — 함께 만드는 신뢰할 수 있는 양자 연구 AI. Qiskit, PennyLane, QuTiP, Stim, PyMatching, Lean 4 및 122개 고정 환경 지원." />
+    </picture>
+  </a>
+</p>
+
+<p align="center">
+  <a href="https://github.com/xi-zhao/OpenQuantum/releases/download/v0.8.11/OpenQuantum-0.8.11-macOS-arm64.dmg">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="../images/readme/launch-card-en-dark.webp" />
+      <img src="../images/readme/launch-card-en-light.webp" width="100%" alt="OpenQuantum Desktop v0.8.11" />
+    </picture>
   </a>
 </p>
 

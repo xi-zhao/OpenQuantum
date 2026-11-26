@@ -76,16 +76,43 @@ html, body {{
 """
 
 
-def wrap_doc(body: str, extra_css: str) -> str:
+def wrap_doc(body: str, extra_css: str, lang: str = "zh-CN") -> str:
     return (
-        '<!doctype html><html lang="zh-CN"><head><meta charset="utf-8">'
+        f'<!doctype html><html lang="{lang}"><head><meta charset="utf-8">'
         f"<style>{common_css()}\n{extra_css}</style></head><body>{body}</body></html>"
     )
 
 
-def hero_plate(dark: bool) -> str:
+def hero_plate(dark: bool, lang: str = "zh") -> str:
     field_uri = (SITE_ASSETS / "quantum-field-v3.png").as_uri()
     state_uri = (SITE_ASSETS / "quantum-state-v2.png").as_uri()
+    en = lang == "en"
+    title_text = "Quantum Agent" if en else "量子智能体"
+    subtitle_text = (
+        "Turn research ideas into verified quantum computation."
+        if en
+        else "让研究思路，有路可走。"
+    )
+    desc_html = (
+        "Start from a physics question, a paper, or a circuit.<br />"
+        "Run real local calculations across pinned specialist SDKs with independent checking."
+        if en
+        else "从一个问题、一篇论文或一段程序出发，<br />自动调用专业量子软件在本地完成真实计算，并独立核对结果。"
+    )
+    foot_html = (
+        '<span><b>194</b> SKILLS</span><span class="dot"></span>'
+        '<span><b>91</b> MCP</span><span class="dot"></span>'
+        '<span><b>122</b> PINNED ENVS</span><span class="dot"></span>'
+        '<span><b>MIT</b> OPEN</span>'
+        if en
+        else '<span><b>194</b> SKILLS</span><span class="dot"></span>'
+        '<span><b>91</b> MCP</span><span class="dot"></span>'
+        '<span><b>122</b> 锁定环境</span><span class="dot"></span>'
+        '<span><b>MIT</b> 开源</span>'
+    )
+    title_size = "52px" if en else "56px"
+    subtitle_size = "20px" if en else "22px"
+    desc_size = "15px" if en else "15.5px"
     if not dark:
         css = f"""
 #shot {{
@@ -99,7 +126,7 @@ def hero_plate(dark: bool) -> str:
 }}
 .veil {{
   position: absolute; inset: 0;
-  background: linear-gradient(95deg, rgba(255,255,255,0.92) 0%, rgba(248,252,255,0.80) 48%, rgba(244,249,253,0.18) 100%);
+  background: linear-gradient(95deg, rgba(255,255,255,0.92) 0%, rgba(248,252,255,0.82) 50%, rgba(244,249,253,0.18) 100%);
 }}
 .sphere {{
   position: absolute; right: 24px; top: 50%; transform: translateY(-50%);
@@ -110,21 +137,21 @@ def hero_plate(dark: bool) -> str:
 .content {{
   position: relative; z-index: 2; height: 100%;
   display: flex; flex-direction: column; justify-content: space-between;
-  padding: 46px 54px 36px; max-width: 575px;
+  padding: 46px 54px 36px; max-width: 590px;
 }}
 .title {{
-  font-size: 56px; font-weight: 600; letter-spacing: -0.035em; line-height: 1.12; color: #0B1522;
+  font-size: {title_size}; font-weight: 600; letter-spacing: -0.035em; line-height: 1.1; color: #0B1522;
 }}
 .subtitle {{
-  margin-top: 16px; font-size: 22px; font-weight: 500; letter-spacing: -0.015em; line-height: 1.4; color: #164E63;
+  margin-top: 15px; font-size: {subtitle_size}; font-weight: 500; letter-spacing: -0.015em; line-height: 1.38; color: #164E63;
 }}
 .desc {{
-  margin-top: 14px; font-size: 15.5px; line-height: 1.75; color: #334155; max-width: 500px;
+  margin-top: 14px; font-size: {desc_size}; line-height: 1.72; color: #334155; max-width: 515px;
 }}
 .foot {{
-  display: flex; align-items: center; gap: 18px; padding-top: 18px;
+  display: flex; align-items: center; gap: 16px; padding-top: 18px;
   border-top: 1px solid rgba(15, 23, 42, 0.10);
-  font-size: 12.5px; color: #475569; letter-spacing: 0.02em;
+  font-size: 12px; color: #475569; letter-spacing: 0.02em; white-space: nowrap;
 }}
 .foot b {{ color: #0B1522; font-weight: 600; }}
 .dot {{ width: 3px; height: 3px; border-radius: 50%; background: rgba(15, 23, 42, 0.28); }}
@@ -136,20 +163,15 @@ def hero_plate(dark: bool) -> str:
   <img class="sphere" src="{state_uri}" alt="" />
   <div class="content">
     <div>
-      <div class="title">量子智能体</div>
-      <div class="subtitle">让研究思路，有路可走。</div>
-      <p class="desc">从一个问题、一篇论文或一段程序出发，<br />自动调用专业量子软件在本地完成真实计算，并独立核对结果。</p>
+      <div class="title">{title_text}</div>
+      <div class="subtitle">{subtitle_text}</div>
+      <p class="desc">{desc_html}</p>
     </div>
-    <div class="foot mono">
-      <span><b>194</b> SKILLS</span><span class="dot"></span>
-      <span><b>91</b> MCP</span><span class="dot"></span>
-      <span><b>122</b> 锁定环境</span><span class="dot"></span>
-      <span><b>MIT</b> 开源</span>
-    </div>
+    <div class="foot mono">{foot_html}</div>
   </div>
 </div>
 """
-        return wrap_doc(body, css)
+        return wrap_doc(body, css, "en" if en else "zh-CN")
 
     # Dark observatory keynote hero
     css = f"""
@@ -173,21 +195,21 @@ def hero_plate(dark: bool) -> str:
 .content {{
   position: relative; z-index: 2; height: 100%;
   display: flex; flex-direction: column; justify-content: space-between;
-  padding: 46px 54px 36px; max-width: 560px;
+  padding: 46px 54px 36px; max-width: 580px;
 }}
 .title {{
-  font-size: 56px; font-weight: 600; letter-spacing: -0.035em; line-height: 1.12; color: #F8FAFC;
+  font-size: {title_size}; font-weight: 600; letter-spacing: -0.035em; line-height: 1.1; color: #F8FAFC;
 }}
 .subtitle {{
-  margin-top: 16px; font-size: 22px; font-weight: 500; letter-spacing: -0.015em; line-height: 1.4; color: #67E8F9;
+  margin-top: 15px; font-size: {subtitle_size}; font-weight: 500; letter-spacing: -0.015em; line-height: 1.38; color: #67E8F9;
 }}
 .desc {{
-  margin-top: 14px; font-size: 15.5px; line-height: 1.75; color: #94A3B8; max-width: 500px;
+  margin-top: 14px; font-size: {desc_size}; line-height: 1.72; color: #94A3B8; max-width: 510px;
 }}
 .foot {{
-  display: flex; align-items: center; gap: 18px; padding-top: 18px;
+  display: flex; align-items: center; gap: 16px; padding-top: 18px;
   border-top: 1px solid rgba(255, 255, 255, 0.10);
-  font-size: 12.5px; color: #94A3B8; letter-spacing: 0.02em;
+  font-size: 12px; color: #94A3B8; letter-spacing: 0.02em; white-space: nowrap;
 }}
 .foot b {{ color: #F1F5F9; font-weight: 600; }}
 .dot {{ width: 3px; height: 3px; border-radius: 50%; background: rgba(148, 163, 184, 0.4); }}
@@ -220,23 +242,18 @@ def hero_plate(dark: bool) -> str:
   <circle cx="200" cy="200" r="168" fill="url(#core)"/>
   <circle cx="200" cy="200" r="134" stroke="rgba(226,232,240,0.16)" stroke-width="1"/>
   <circle cx="200" cy="200" r="134" stroke="url(#ringA)" stroke-width="1.25" stroke-dasharray="3 6" opacity="0.5"/>
-  <!-- Axes -->
   <line x1="200" y1="42" x2="200" y2="358" stroke="rgba(148,163,184,0.18)" stroke-width="1"/>
   <line x1="42" y1="200" x2="358" y2="200" stroke="rgba(148,163,184,0.18)" stroke-width="1"/>
-  <!-- Equatorial & tilted orbits -->
   <ellipse cx="200" cy="200" rx="134" ry="44" stroke="url(#ringA)" stroke-width="1.4"/>
   <ellipse cx="200" cy="200" rx="134" ry="52" transform="rotate(-34 200 200)" stroke="url(#ringB)" stroke-width="1.5"/>
   <ellipse cx="200" cy="200" rx="134" ry="48" transform="rotate(56 200 200)" stroke="rgba(226,232,240,0.28)" stroke-width="1.1"/>
-  <!-- Interference wave inside sphere -->
   <path d="M 88 200 C 122 146, 158 146, 200 200 C 242 254, 278 254, 312 200" stroke="url(#wave)" stroke-width="2" fill="none"/>
   <path d="M 88 200 C 126 162, 162 162, 200 200 C 238 238, 274 238, 312 200" stroke="rgba(103,232,249,0.42)" stroke-width="1.1" fill="none"/>
   <path d="M 88 200 C 132 178, 168 178, 200 200 C 232 222, 268 222, 312 200" stroke="rgba(103,232,249,0.22)" stroke-width="1" fill="none"/>
-  <!-- State vector -->
   <line x1="200" y1="200" x2="262" y2="128" stroke="#67E8F9" stroke-width="1.8"/>
   <circle cx="200" cy="200" r="3.2" fill="#E2E8F0"/>
   <circle cx="262" cy="128" r="10" fill="#22D3EE" fill-opacity="0.22"/>
   <circle cx="262" cy="128" r="4.5" fill="#F8FAFC"/>
-  <!-- Precision ket annotations -->
   <text x="200" y="32" text-anchor="middle" fill="#64748B" font-family="JB Mono, monospace" font-size="11">|0⟩</text>
   <text x="200" y="376" text-anchor="middle" fill="#64748B" font-family="JB Mono, monospace" font-size="11">|1⟩</text>
   <text x="278" y="124" fill="#A5F3FC" font-family="JB Mono, monospace" font-size="11.5">|ψ⟩</text>
@@ -249,29 +266,28 @@ def hero_plate(dark: bool) -> str:
   {orbit_svg}
   <div class="content">
     <div>
-      <div class="title">量子智能体</div>
-      <div class="subtitle">让研究思路，有路可走。</div>
-      <p class="desc">从一个问题、一篇论文或一段程序出发，<br />自动调用专业量子软件在本地完成真实计算，并独立核对结果。</p>
+      <div class="title">{title_text}</div>
+      <div class="subtitle">{subtitle_text}</div>
+      <p class="desc">{desc_html}</p>
     </div>
-    <div class="foot mono">
-      <span><b>194</b> SKILLS</span><span class="dot"></span>
-      <span><b>91</b> MCP</span><span class="dot"></span>
-      <span><b>122</b> 锁定环境</span><span class="dot"></span>
-      <span><b>MIT</b> 开源</span>
-    </div>
+    <div class="foot mono">{foot_html}</div>
   </div>
 </div>
 """
-    return wrap_doc(body, css)
+    return wrap_doc(body, css, "en" if en else "zh-CN")
 
 
-def launch_card_plate(dark: bool) -> str:
+def launch_card_plate(dark: bool, lang: str = "zh") -> str:
     icon_uri = (BRAND / "mark-inverse.svg").as_uri()
+    en = lang == "en"
     bg = "#161E2B" if dark else "#0E131B"
     border = "rgba(255, 255, 255, 0.11)" if dark else "rgba(15, 23, 42, 0.12)"
     icon_bg = "linear-gradient(155deg, #162233 0%, #0A1019 100%)"
     btn_bg = "#F4F1EA"
     btn_ink = "#0E131B"
+    line1 = "Standalone quantum research workbench + native Codex plugin." if en else "独立量子科研桌面工作台，同步提供 Codex 原生插件。"
+    line2 = "Open-source &amp; local-first · Bring any Tool Calling model provider" if en else "开源免费 · 本地优先 · 接入任意支持 Tool Calling 的模型服务"
+    cta = "Download macOS" if en else "下载 macOS 版"
     css = f"""
 #shot {{
   width: {CSS_W}px; height: 184px; border-radius: 24px;
@@ -296,20 +312,20 @@ def launch_card_plate(dark: bool) -> str:
 }}
 .app-icon img {{ width: 52px; height: 52px; display: block; }}
 .heading {{
-  font-size: 32px; font-weight: 600; letter-spacing: -0.03em; line-height: 1.15; color: #F8FAFC;
+  font-size: 31px; font-weight: 600; letter-spacing: -0.03em; line-height: 1.15; color: #F8FAFC;
 }}
 .heading span {{
   font-family: "JB Mono", monospace; font-size: 14px; font-weight: 500;
   color: #67E8F9; margin-left: 10px; letter-spacing: 0; vertical-align: 3px;
 }}
-.line1 {{ margin-top: 8px; font-size: 16px; color: #E2E8F0; line-height: 1.45; }}
-.line2 {{ margin-top: 3px; font-size: 14px; color: #94A3B8; line-height: 1.45; }}
+.line1 {{ margin-top: 8px; font-size: 15px; color: #E2E8F0; line-height: 1.45; }}
+.line2 {{ margin-top: 3px; font-size: 13.5px; color: #94A3B8; line-height: 1.45; }}
 .cta {{
   position: relative; z-index: 2; flex: none;
   background: {btn_bg}; color: {btn_ink};
-  padding: 15px 28px; border-radius: 999px;
-  font-size: 16px; font-weight: 600; letter-spacing: -0.01em;
-  display: inline-flex; align-items: center; gap: 10px;
+  padding: 14px 26px; border-radius: 999px;
+  font-size: 15.5px; font-weight: 600; letter-spacing: -0.01em;
+  display: inline-flex; align-items: center; gap: 10px; white-space: nowrap;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
 }}
 """
@@ -320,18 +336,19 @@ def launch_card_plate(dark: bool) -> str:
     <div class="app-icon"><img src="{icon_uri}" alt="" /></div>
     <div>
       <div class="heading">OpenQuantum Desktop<span>v0.8.11</span></div>
-      <div class="line1">独立量子科研桌面工作台，同步提供 Codex 原生插件。</div>
-      <div class="line2">开源免费 · 本地优先 · 接入任意支持 Tool Calling 的模型服务</div>
+      <div class="line1">{line1}</div>
+      <div class="line2">{line2}</div>
     </div>
   </div>
-  <div class="cta">下载 macOS 版 <span>↗</span></div>
+  <div class="cta">{cta} <span>↗</span></div>
 </div>
 """
-    return wrap_doc(body, css)
+    return wrap_doc(body, css, "en" if en else "zh-CN")
 
 
-def workflow_plate(dark: bool) -> str:
+def workflow_plate(dark: bool, lang: str = "zh") -> str:
     mark_uri = (BRAND / ("mark-inverse.svg" if dark else "mark.svg")).as_uri()
+    en = lang == "en"
     outer_bg = "#101620" if dark else "#F6F8FB"
     outer_bd = "rgba(255,255,255,0.10)" if dark else "rgba(15,23,42,0.08)"
     win_bg = "#0B1018" if dark else "#FFFFFF"
@@ -339,7 +356,7 @@ def workflow_plate(dark: bool) -> str:
     bar_bg = "#121A26" if dark else "#F8FAFC"
     ink = "#F1F5F9" if dark else "#0F172A"
     sub = "#94A3B8" if dark else "#475569"
-    muted = "#64748B" if dark else "#64748B"
+    muted = "#64748B"
     bubble_bg = "#1A2638" if dark else "#EEF4F9"
     bubble_ink = "#F1F5F9" if dark else "#0F172A"
     step_bg = "#111A27" if dark else "#F8FAFC"
@@ -349,6 +366,53 @@ def workflow_plate(dark: bool) -> str:
     accent = "#22D3EE" if dark else "#0E7490"
     res_bg = "#111926" if dark else "#F4F8FB"
     rail_bg = "#131C2A" if dark else "#FFFFFF"
+    copy = (
+        {
+            "s1t": "Ask in plain language",
+            "s1d": "Describe a physics question, paste a paper or circuit—no boilerplate setup first.",
+            "s2t": "Compute locally in pinned SDKs",
+            "s2d": "Matches the right library and runs deterministic numerical calculations on your machine.",
+            "s3t": "Verify independently",
+            "s3d": "Separates completed tool execution from scientific acceptance with exact references.",
+            "win": "OpenQuantum · H₂ Ground-State VQE Local Demo",
+            "badge": "15 PASS · 1 NOT_CHECKED",
+            "user": "Solve the 2-qubit H₂ Pauli Hamiltonian in the fixed particle sector and cross-check against exact diagonalization.",
+            "sub": "Local deterministic solver · Independent numerical checks",
+            "t1": "Load sector constraints &amp; VQE workflow",
+            "t2": "Converge noiseless statevector VQE (112 evals)",
+            "t3": "Exact diagonalization · 15 local checks; provenance not_checked",
+            "t3code": "validator",
+            "t3status": "OBSERVED",
+            "m1": "VQE sector ground energy",
+            "m2": "Absolute diff vs. exact ref",
+            "m3val": "NOT DERIVED",
+            "m3": "Provenance checked in DSH L3",
+            "ev": "Reproduce locally (no API key):",
+        }
+        if en
+        else {
+            "s1t": "用自然语言提问",
+            "s1d": "直接提出物理问题、贴入论文或线路，不必先学几十套软件。",
+            "s2t": "本地自动实算",
+            "s2d": "按任务匹配锁定环境与量子库，在本机完成真实数值计算。",
+            "s3t": "独立科学核验",
+            "s3d": "把“代码跑通”与“科学验收”严格拆开，留存误差与来源边界。",
+            "win": "OpenQuantum · H₂ 分子基态 VQE 本机复算示例",
+            "badge": "15 项通过 · 来源未核查",
+            "user": "求解给定 H₂ 二量子位哈密顿量在固定粒子扇区的基态能量，并用精确对角化核对误差。",
+            "sub": "本机确定性求解 · 独立数值检查（验收由 DSH 会话另行推导）",
+            "t1": "加载扇区约束与 VQE 流程",
+            "t2": "无噪 statevector VQE 优化收敛（112 次评估）",
+            "t3": "独立精确对角化 · 15 项计算检查通过，来源链保留 not_checked",
+            "t3code": "validator",
+            "t3status": "OBSERVED",
+            "m1": "VQE 扇区基态能量",
+            "m2": "与精确参考绝对差",
+            "m3val": "NOT DERIVED",
+            "m3": "独立观测已产出 · DSH 推导验收",
+            "ev": "本机一键零密钥复跑：",
+        }
+    )
     css = f"""
 #shot {{
   width: {CSS_W}px; border-radius: 24px; padding: 28px;
@@ -364,11 +428,9 @@ def workflow_plate(dark: bool) -> str:
   flex: 1; background: {rail_bg}; border: 1px solid {step_bd}; border-radius: 16px;
   padding: 18px 20px; display: flex; flex-direction: column; justify-content: center;
 }}
-.step-card.active {{
-  border-color: {accent};
-}}
-.step-title {{ font-size: 16px; font-weight: 600; color: {ink}; letter-spacing: -0.01em; }}
-.step-desc {{ margin-top: 7px; font-size: 13.5px; line-height: 1.6; color: {sub}; }}
+.step-card.active {{ border-color: {accent}; }}
+.step-title {{ font-size: 15.5px; font-weight: 600; color: {ink}; letter-spacing: -0.015em; }}
+.step-desc {{ margin-top: 6px; font-size: 13px; line-height: 1.58; color: {sub}; }}
 .win {{
   background: {win_bg}; border: 1px solid {win_bd}; border-radius: 18px; overflow: hidden;
   display: flex; flex-direction: column;
@@ -389,7 +451,7 @@ def workflow_plate(dark: bool) -> str:
 .user-row {{ display: flex; justify-content: flex-end; }}
 .user-msg {{
   background: {bubble_bg}; color: {bubble_ink}; border-radius: 16px 16px 4px 16px;
-  padding: 11px 16px; font-size: 14px; line-height: 1.55; max-width: 84%;
+  padding: 11px 16px; font-size: 13.5px; line-height: 1.55; max-width: 86%;
 }}
 .agent-head {{ display: flex; align-items: center; gap: 9px; }}
 .agent-head img {{ width: 20px; height: 20px; }}
@@ -400,16 +462,16 @@ def workflow_plate(dark: bool) -> str:
   display: flex; flex-direction: column; gap: 8px;
 }}
 .trow {{
-  display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  font-size: 12.5px; color: {sub};
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  font-size: 12px; color: {sub};
 }}
-.tleft {{ display: flex; align-items: center; gap: 9px; min-width: 0; }}
+.tleft {{ display: flex; align-items: center; gap: 8px; min-width: 0; }}
 .chk {{
   width: 15px; height: 15px; border-radius: 50%; background: {ok_bg}; color: {ok_ink};
   display: inline-flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; flex: none;
 }}
-.tcode {{ color: {ink}; font-size: 12px; }}
-.tstatus {{ color: {ok_ink}; font-size: 11.5px; font-weight: 600; white-space: nowrap; }}
+.tcode {{ color: {ink}; font-size: 11.5px; white-space: nowrap; }}
+.tstatus {{ color: {ok_ink}; font-size: 11px; font-weight: 600; white-space: nowrap; }}
 .metrics {{
   background: {res_bg}; border: 1px solid {step_bd}; border-radius: 14px;
   display: grid; grid-template-columns: 1fr 1fr 1fr; overflow: hidden;
@@ -426,7 +488,7 @@ def workflow_plate(dark: bool) -> str:
 }}
 .pill-file {{
   padding: 4px 10px; border-radius: 8px; background: {step_bg}; border: 1px solid {step_bd};
-  color: {ink}; font-size: 11.5px;
+  color: {ink}; font-size: 11.5px; white-space: nowrap;
 }}
 """
     body = f"""
@@ -434,63 +496,61 @@ def workflow_plate(dark: bool) -> str:
   <div class="grid">
     <div class="rail">
       <div class="step-card">
-        <div class="step-title">用自然语言提问</div>
-        <div class="step-desc">直接提出物理问题、贴入论文或线路，不必先学几十套软件。</div>
+        <div class="step-title">{copy["s1t"]}</div>
+        <div class="step-desc">{copy["s1d"]}</div>
       </div>
       <div class="step-card">
-        <div class="step-title">本地自动实算</div>
-        <div class="step-desc">按任务匹配锁定环境与量子库，在本机完成真实数值计算。</div>
+        <div class="step-title">{copy["s2t"]}</div>
+        <div class="step-desc">{copy["s2d"]}</div>
       </div>
       <div class="step-card active">
-        <div class="step-title">独立科学核验</div>
-        <div class="step-desc">把“代码跑通”与“结果成立”拆开核对，留存误差与复跑脚本。</div>
+        <div class="step-title">{copy["s3t"]}</div>
+        <div class="step-desc">{copy["s3d"]}</div>
       </div>
     </div>
     <div class="win">
       <div class="topbar">
         <div class="lights"><i></i><i></i><i></i></div>
-        <div class="wintitle">OpenQuantum · H₂ 分子基态 VQE 复算示例</div>
-        <div class="badge-live mono">16/16 CHECKS</div>
+        <div class="wintitle">{copy["win"]}</div>
+        <div class="badge-live mono">{copy["badge"]}</div>
       </div>
       <div class="chat">
-        <div class="user-row">
-          <div class="user-msg">求解 H₂ 二量子位哈密顿量在固定粒子扇区的基态能量，并用精确对角化核对误差。</div>
-        </div>
+        <div class="user-row"><div class="user-msg">{copy["user"]}</div></div>
         <div class="agent-head">
           <img src="{mark_uri}" alt="" />
           <b>OpenQuantum</b>
-          <span>本地确定性求解 · 独立参照验证</span>
+          <span>{copy["sub"]}</span>
         </div>
         <div class="trace">
           <div class="trow">
-            <div class="tleft"><span class="chk">✓</span><span class="tcode mono">quantum-ground-state</span><span>加载扇区约束与 VQE 流程</span></div>
+            <div class="tleft"><span class="chk">✓</span><span class="tcode mono">quantum-ground-state</span><span>{copy["t1"]}</span></div>
             <span class="tstatus mono">READY</span>
           </div>
           <div class="trow">
-            <div class="tleft"><span class="chk">✓</span><span class="tcode mono">solve_and_validate_ground_state</span><span>statevector VQE 优化收敛</span></div>
+            <div class="tleft"><span class="chk">✓</span><span class="tcode mono">solve_and_validate_ground_state</span><span>{copy["t2"]}</span></div>
             <span class="tstatus mono">DONE</span>
           </div>
           <div class="trow">
-            <div class="tleft"><span class="chk">✓</span><span class="tcode mono">acceptance-builder</span><span>独立精确对角化对照 · 16 项物理检查</span></div>
-            <span class="tstatus mono">PASSED</span>
+            <div class="tleft"><span class="chk">✓</span><span class="tcode mono">{copy["t3code"]}</span><span>{copy["t3"]}</span></div>
+            <span class="tstatus mono">{copy["t3status"]}</span>
           </div>
         </div>
         <div class="metrics">
           <div class="mcell">
             <div class="mval mono">-1.85727503<span class="munit">Ha</span></div>
-            <div class="mlabel">VQE 扇区基态能量</div>
+            <div class="mlabel">{copy["m1"]}</div>
           </div>
           <div class="mcell">
             <div class="mval mono">4.44×10<sup style="font-size:11px">−16</sup><span class="munit">Ha</span></div>
-            <div class="mlabel">与精确参考绝对差</div>
+            <div class="mlabel">{copy["m2"]}</div>
           </div>
           <div class="mcell">
-            <div class="mval ok mono">ACCEPTED</div>
-            <div class="mlabel">独立科学验收结论</div>
+            <div class="mval ok mono" style="font-size:16px">{copy["m3val"]}</div>
+            <div class="mlabel">{copy["m3"]}</div>
           </div>
         </div>
         <div class="evidence">
-          <span>本地一键零密钥复跑：</span>
+          <span>{copy["ev"]}</span>
           <span class="pill-file mono">npm run demo:quantum-ground-state</span>
         </div>
       </div>
@@ -498,21 +558,49 @@ def workflow_plate(dark: bool) -> str:
   </div>
 </div>
 """
-    return wrap_doc(body, css)
+    return wrap_doc(body, css, "en" if en else "zh-CN")
 
 
-def benchmarks_plate(dark: bool, d: dict) -> str:
+def benchmarks_plate(dark: bool, d: dict, lang: str = "zh") -> str:
     wigner_uri = (SITE_ASSETS / "wigner-comparison.svg").as_uri()
+    en = lang == "en"
     bg = "#0E141E" if dark else "#F6F8FB"
     bd = "rgba(255,255,255,0.10)" if dark else "rgba(15,23,42,0.08)"
     card_bg = "#131C2A" if dark else "#FFFFFF"
     card_bd = "rgba(255,255,255,0.09)" if dark else "rgba(15,23,42,0.08)"
     ink = "#F8FAFC" if dark else "#0F172A"
     sub = "#94A3B8" if dark else "#475569"
-    muted = "#64748B" if dark else "#64748B"
+    muted = "#64748B"
     accent = "#22D3EE" if dark else "#0E7490"
     bar_track = "rgba(148,163,184,0.22)" if dark else "#DCE4EC"
-    fig_bg = "#FFFFFF"  # Keep scientific Viridis/RdBu colormap on clean white calibrated paper
+    fig_bg = "#FFFFFF"
+    copy = (
+        {
+            "q_name": "QuTiP Wigner Function",
+            "q_scope": "64-dim Fock space · 201×201 grid · Apple M4",
+            "speed_label": "end-to-end speedup",
+            "orig": "Baseline",
+            "opt_bar": "Optimized",
+            "q_checks": f'Max pointwise diff <b class="mono">6.52×10<sup>−16</sup></b><br /><b>{d["q_checks"]}</b> independent, analytic &amp; rejection checks passed',
+            "p_name": "PennyLane Pauli Commutator",
+            "p_scope": "32 qubits · 125-term H × 512-op pool · Apple M4",
+            "p_right": f'<b>{d["p_cases"]} benchmark inputs</b> match exactly<br />4,368 Pauli pairs &amp; 40 random matrices max err <b class="mono">1.42×10<sup>−14</sup></b>',
+            "foot": "Single-threaded median of 9 warm runs including object conversion; excludes setup &amp; compilation. Applies strictly to declared inputs.",
+        }
+        if en
+        else {
+            "q_name": "QuTiP Wigner 函数",
+            "q_scope": "64 维单模 Fock 空间 · 201×201 网格 · Apple M4",
+            "speed_label": "完整调用提速",
+            "orig": "原库",
+            "opt_bar": "优化后",
+            "q_checks": f'完整网格最大绝对差 <b class="mono">6.52×10<sup>−16</sup></b><br /><b>{d["q_checks"]} 项</b>独立、解析与拒绝路径检查全部通过',
+            "p_name": "PennyLane Pauli 对易子",
+            "p_scope": "32 量子位 · 125 项 Hamiltonian × 512 项算符池 · Apple M4",
+            "p_right": f'<b>{d["p_cases"]} 组基准输入</b>输出算符与系数逐项一致<br />4,368 对 Pauli 与 40 组复系数随机矩阵最大误差 <b class="mono">1.42×10<sup>−14</sup></b>',
+            "foot": "单线程 9 轮热运行中位数，包含输入/输出对象转换，不含环境准备与编译；提速仅对应各报告定义的固定输入与硬件条件。",
+        }
+    )
     css = f"""
 #shot {{
   width: {CSS_W}px; border-radius: 26px; padding: 26px;
@@ -522,83 +610,60 @@ def benchmarks_plate(dark: bool, d: dict) -> str:
 .qutip-card {{
   background: {card_bg}; border: 1px solid {card_bd}; border-radius: 20px;
   padding: 28px 30px;
-  display: grid; grid-template-columns: 345px 1fr; gap: 28px; align-items: center;
+  display: grid; grid-template-columns: 350px 1fr; gap: 26px; align-items: center;
 }}
 .name {{ font-size: 20px; font-weight: 600; color: {ink}; letter-spacing: -0.02em; }}
 .scope {{ margin-top: 5px; font-size: 13px; color: {muted}; }}
-.hero-x {{
-  margin-top: 20px; display: flex; align-items: baseline; gap: 12px;
-}}
-.hero-x strong {{
-  font-size: 64px; font-weight: 600; letter-spacing: -0.045em; line-height: 1; color: {ink};
-}}
-.hero-x span {{ font-size: 15px; color: {accent}; font-weight: 600; }}
-.times {{
-  margin-top: 18px; display: flex; align-items: baseline; gap: 14px;
-  font-size: 15px; color: {sub};
-}}
+.hero-x {{ margin-top: 20px; display: flex; align-items: baseline; gap: 12px; }}
+.hero-x strong {{ font-size: 62px; font-weight: 600; letter-spacing: -0.045em; line-height: 1; color: {ink}; }}
+.hero-x span {{ font-size: 14.5px; color: {accent}; font-weight: 600; white-space: nowrap; }}
+.times {{ margin-top: 18px; display: flex; align-items: baseline; gap: 10px; font-size: {"13px" if en else "14.5px"}; color: {sub}; white-space: nowrap; }}
 .times b {{ color: {ink}; font-weight: 600; }}
 .bars {{ margin-top: 12px; display: flex; flex-direction: column; gap: 7px; }}
 .bar-row {{ display: flex; align-items: center; gap: 10px; font-size: 11.5px; color: {muted}; }}
-.bar-row span {{ width: 66px; flex: none; }}
+.bar-row span {{ width: 68px; flex: none; }}
 .track {{ flex: 1; height: 7px; background: {bar_track}; border-radius: 999px; overflow: hidden; }}
 .fill-base {{ width: 100%; height: 100%; background: {"rgba(148,163,184,0.45)" if dark else "#94A3B8"}; border-radius: 999px; }}
 .fill-opt {{ height: 100%; background: {accent}; border-radius: 999px; }}
-.checks {{
-  margin-top: 18px; padding-top: 14px; border-top: 1px solid {card_bd};
-  font-size: 13px; line-height: 1.65; color: {sub};
-}}
+.checks {{ margin-top: 18px; padding-top: 14px; border-top: 1px solid {card_bd}; font-size: 12.5px; line-height: 1.65; color: {sub}; }}
 .checks b {{ color: {ink}; font-weight: 600; }}
 .checks sup, .penny-right sup {{ font-size: 10px; }}
-.fig-wrap {{
-  background: {fig_bg}; border-radius: 14px; padding: 14px 16px 12px;
-  border: 1px solid rgba(15,23,42,0.08);
-}}
+.fig-wrap {{ background: {fig_bg}; border-radius: 14px; padding: 14px 16px 12px; border: 1px solid rgba(15,23,42,0.08); }}
 .fig-wrap img {{ width: 100%; height: auto; display: block; }}
 .penny-card {{
   background: {card_bg}; border: 1px solid {card_bd}; border-radius: 20px;
   padding: 22px 28px;
-  display: grid; grid-template-columns: 168px 1fr 252px; gap: 24px; align-items: center;
+  display: grid; grid-template-columns: 168px 1fr 258px; gap: 24px; align-items: center;
 }}
-.penny-x strong {{
-  font-size: 46px; font-weight: 600; letter-spacing: -0.04em; line-height: 1; color: {ink};
-}}
-.penny-x span {{ display: block; margin-top: 6px; font-size: 13px; color: {accent}; font-weight: 600; }}
+.penny-x strong {{ font-size: 46px; font-weight: 600; letter-spacing: -0.04em; line-height: 1; color: {ink}; }}
+.penny-x span {{ display: block; margin-top: 6px; font-size: 12.5px; color: {accent}; font-weight: 600; }}
 .penny-mid .name {{ font-size: 18px; }}
 .penny-mid .times {{ margin-top: 10px; font-size: 13.5px; gap: 10px; white-space: nowrap; }}
 .penny-mid .bars {{ margin-top: 10px; }}
-.penny-right {{
-  border-left: 1px solid {card_bd}; padding-left: 20px;
-  font-size: 13px; line-height: 1.7; color: {sub};
-}}
+.penny-right {{ border-left: 1px solid {card_bd}; padding-left: 20px; font-size: 12.5px; line-height: 1.7; color: {sub}; }}
 .penny-right b {{ color: {ink}; font-weight: 600; }}
-.foot-note {{
-  font-size: 12px; color: {muted}; text-align: center; padding: 0 12px;
-}}
+.foot-note {{ font-size: 11.5px; color: {muted}; text-align: center; padding: 0 12px; }}
 """
     body = f"""
 <div id="shot">
   <div class="qutip-card">
     <div>
-      <div class="name">QuTiP Wigner 函数</div>
-      <div class="scope">64 维单模 Fock 空间 · 201×201 网格 · Apple M4</div>
+      <div class="name">{copy["q_name"]}</div>
+      <div class="scope">{copy["q_scope"]}</div>
       <div class="hero-x">
         <strong class="num">{d["q_speedup"]}</strong>
-        <span>完整调用提速</span>
+        <span>{copy["speed_label"]}</span>
       </div>
       <div class="times mono">
-        <span>原库 {d["q_base"]} ms</span>
+        <span>{copy["orig"]} {d["q_base"]} ms</span>
         <span>→</span>
         <b>OpenQuantum {d["q_opt"]} ms</b>
       </div>
       <div class="bars">
         <div class="bar-row"><span>QuTiP</span><div class="track"><div class="fill-base"></div></div></div>
-        <div class="bar-row"><span>优化后</span><div class="track"><div class="fill-opt" style="width:{d['q_ratio']*100:.1f}%"></div></div></div>
+        <div class="bar-row"><span>{copy["opt_bar"]}</span><div class="track"><div class="fill-opt" style="width:{d['q_ratio']*100:.1f}%"></div></div></div>
       </div>
-      <div class="checks">
-        完整网格最大绝对差 <b class="mono">6.52×10<sup>−16</sup></b><br />
-        <b>{d["q_checks"]} 项</b>独立、解析与拒绝路径检查全部通过
-      </div>
+      <div class="checks">{copy["q_checks"]}</div>
     </div>
     <div class="fig-wrap">
       <img src="{wigner_uri}" alt="QuTiP Wigner phase-space comparison" />
@@ -608,45 +673,50 @@ def benchmarks_plate(dark: bool, d: dict) -> str:
   <div class="penny-card">
     <div class="penny-x">
       <strong class="num">{d["p_speedup"]}</strong>
-      <span>完整调用提速</span>
+      <span>{copy["speed_label"]}</span>
     </div>
     <div class="penny-mid">
-      <div class="name">PennyLane Pauli 对易子</div>
-      <div class="scope">32 量子位 · 125 项 Hamiltonian × 512 项算符池 · Apple M4</div>
+      <div class="name">{copy["p_name"]}</div>
+      <div class="scope">{copy["p_scope"]}</div>
       <div class="times mono">
-        <span>原库 {d["p_base"]} ms</span>
+        <span>{copy["orig"]} {d["p_base"]} ms</span>
         <span>→</span>
         <b>OpenQuantum {d["p_opt"]} ms</b>
       </div>
       <div class="bars">
         <div class="bar-row"><span>PennyLane</span><div class="track"><div class="fill-base"></div></div></div>
-        <div class="bar-row"><span>优化后</span><div class="track"><div class="fill-opt" style="width:{d['p_ratio']*100:.1f}%"></div></div></div>
+        <div class="bar-row"><span>{copy["opt_bar"]}</span><div class="track"><div class="fill-opt" style="width:{d['p_ratio']*100:.1f}%"></div></div></div>
       </div>
     </div>
-    <div class="penny-right">
-      <b>{d["p_cases"]} 组基准输入</b>输出算符与系数逐项一致<br />
-      4,368 对 Pauli 与 40 组复系数随机矩阵最大误差 <b class="mono">1.42×10<sup>−14</sup></b>
-    </div>
+    <div class="penny-right">{copy["p_right"]}</div>
   </div>
 
-  <div class="foot-note">单线程 9 轮热运行中位数，包含输入/输出对象转换，不含环境准备与编译；提速仅对应各报告定义的固定输入与硬件条件。</div>
+  <div class="foot-note">{copy["foot"]}</div>
 </div>
 """
-    return wrap_doc(body, css)
+    return wrap_doc(body, css, "en" if en else "zh-CN")
 
 
 async def main() -> None:
     d = load_data()
     OUT.mkdir(parents=True, exist_ok=True)
     plates = {
-        "hero-zh-light": hero_plate(False),
-        "hero-zh-dark": hero_plate(True),
-        "launch-card-light": launch_card_plate(False),
-        "launch-card-dark": launch_card_plate(True),
-        "workflow-zh-light": workflow_plate(False),
-        "workflow-zh-dark": workflow_plate(True),
-        "benchmarks-zh-light": benchmarks_plate(False, d),
-        "benchmarks-zh-dark": benchmarks_plate(True, d),
+        "hero-zh-light": hero_plate(False, "zh"),
+        "hero-zh-dark": hero_plate(True, "zh"),
+        "launch-card-light": launch_card_plate(False, "zh"),
+        "launch-card-dark": launch_card_plate(True, "zh"),
+        "workflow-zh-light": workflow_plate(False, "zh"),
+        "workflow-zh-dark": workflow_plate(True, "zh"),
+        "benchmarks-zh-light": benchmarks_plate(False, d, "zh"),
+        "benchmarks-zh-dark": benchmarks_plate(True, d, "zh"),
+        "hero-en-light": hero_plate(False, "en"),
+        "hero-en-dark": hero_plate(True, "en"),
+        "launch-card-en-light": launch_card_plate(False, "en"),
+        "launch-card-en-dark": launch_card_plate(True, "en"),
+        "workflow-en-light": workflow_plate(False, "en"),
+        "workflow-en-dark": workflow_plate(True, "en"),
+        "benchmarks-en-light": benchmarks_plate(False, d, "en"),
+        "benchmarks-en-dark": benchmarks_plate(True, d, "en"),
     }
     chrome = os.environ.get("CHROME") or "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
     with tempfile.TemporaryDirectory() as tmp:

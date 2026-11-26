@@ -45,7 +45,19 @@
 
 <p align="center">
   <a href="https://xi-zhao.github.io/OpenQuantum/">
-    <img src="../images/readme/banner-en.svg" width="100%" alt="OpenQuantum — Construire ensemble une IA de confiance pour la recherche quantique. Compatible avec Qiskit, PennyLane, QuTiP, Stim, PyMatching, Lean 4 et 122 environnements figés." />
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="../images/readme/hero-en-dark.webp" />
+      <img src="../images/readme/hero-en-light.webp" width="100%" alt="OpenQuantum — Construire ensemble une IA de confiance pour la recherche quantique. Compatible avec Qiskit, PennyLane, QuTiP, Stim, PyMatching, Lean 4 et 122 environnements figés." />
+    </picture>
+  </a>
+</p>
+
+<p align="center">
+  <a href="https://github.com/xi-zhao/OpenQuantum/releases/download/v0.8.11/OpenQuantum-0.8.11-macOS-arm64.dmg">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="../images/readme/launch-card-en-dark.webp" />
+      <img src="../images/readme/launch-card-en-light.webp" width="100%" alt="OpenQuantum Desktop v0.8.11" />
+    </picture>
   </a>
 </p>
 
