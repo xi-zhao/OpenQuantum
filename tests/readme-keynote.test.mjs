@@ -28,7 +28,8 @@ test("Chromium verifies four benchmark WebPs, the macOS pixel reference and rend
     return t.skip(missing);
   }
   try {
-    const { stdout } = await run(python, ["-B", script, "Keynote.test_render", "Keynote.test_visual_controls"], { env: { ...process.env, CHROME: chrome } });
+    const { stdout } = await run(python, ["-B", script, "Keynote.test_render", "Keynote.test_visual_controls",
+      "Keynote.test_numeric_controls", "Keynote.test_diagnostic_isolation"], { env: { ...process.env, CHROME: chrome } });
     t.diagnostic(stdout.trim());
   } catch (error) {
     if (error.stdout) t.diagnostic(error.stdout.trim());
