@@ -2,7 +2,7 @@
 
 由 `node scripts/audit-sdk-integration.mjs` 从 capability policy、SDK 导航、项目 manifest 和依赖锁生成；用 `--check` 检查是否过期。
 
-本表覆盖 122 个 SDK/源码环境入口：110 个 Python（包含算法共享环境）、9 个 Julia、2 个原生源码或 ABI 入口、1 个 Lean 项目。原生 QDMI 另有 Python 桥接依赖项目。一个入口可包含多个库，同一个库也可能有多个隔离版本，不能把入口数量当成独立 SDK 数量。所有锁摘要与间接依赖版本可通过 `node scripts/sdk-access.mjs inventory` 读出。
+本表覆盖 123 个 SDK/源码环境入口：111 个 Python（包含算法共享环境）、9 个 Julia、2 个原生源码或 ABI 入口、1 个 Lean 项目。原生 QDMI 另有 Python 桥接依赖项目。一个入口可包含多个库，同一个库也可能有多个隔离版本，不能把入口数量当成独立 SDK 数量。所有锁摘要与间接依赖版本可通过 `node scripts/sdk-access.mjs inventory` 读出。
 
 **接入状态：原生路径与指南已提供；逐 API、可选依赖、平台与外部服务验证不由这张静态清单推断。** 环境是否准备需 `inspect`，实际执行证据见[完整接入记录](FULL_SDK_ACCESS.md)。
 
@@ -36,6 +36,7 @@
 | `iqm-circuit-workbench` | IQM Client / Qiskit IQM | python | iqm-client[qiskit]==35.0.3 | 电路验证、动态架构、fake backends、转译与远程客户端 | 本地程序构建与外部调用分开；账户、凭据、费用、设备操作和数据外发沿用宿主及用户授权。原生 SDK 访问不自动启用服务。 |
 | `jaxquantum-modeling` | jaxquantum | python | jaxquantum==0.3.0 | JAX 算符、器件与 bosonic 模型、动力学、扫描与梯度 | 在建立数组前选择精度和 target，保留时间/频率/算符单位。具体器件类按固定版本核实；CPU、GPU/TPU 与硬件结果分开。 |
 | `josephson-circuits` | JosephsonCircuits.jl | julia | JSON3, JosephsonCircuits | Josephson 元件、电路、频域谐波平衡、散射与噪声 | 明确节点/端口、元件 SI 单位、Hz 与 rad/s、泵浦和谐波截断。检查线性极限及收敛，不将模型噪声效率当作测量。 |
+| `quantum-metal-layout` | Quantum Metal | python | quantum-metal==0.10.2 | 从已有超导器件设计导出正掩模 GDSII，并独立核对焊盘、结位置与波导几何 | 显式提供结模板。0.10.2 的负掩模样例重复放置结，本入口仅交付正掩模。独立几何参考限于给定设计。 |
 | `kaiwu-qubo` | Kaiwu Community | python | kaiwu-community==1.0.7 | 上游社区版表达式、约束、QUBO/Ising 转换与优化接口 | 固定的是 Kaiwu Community；商业服务和企业版不是该发行版的一部分。 |
 | `laboneq-control` | LabOne Q | python | laboneq==26.7.0 | DeviceSetup、Experiment、校准、pulse、sweep、编译与 session | 本地程序构建与外部调用分开；账户、凭据、费用、设备操作和数据外发沿用宿主及用户授权。原生 SDK 访问不自动启用服务。 |
 | `ldpc-decoding` | LDPC | python | ldpc==2.4.1 | 自定义校验矩阵、错误模型、BP/OSD/LSD 译码器与批处理 | 按固定版本、已安装可选组件及目标平台核实 |

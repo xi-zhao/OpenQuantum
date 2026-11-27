@@ -13,9 +13,9 @@
 
 ## 当前 Skill
 
-以下 194 个 Skill 随源码分发；它们与 MCP Server 不是一一对应关系，知识型 Skill 可以不绑定专用 Tool，
+以下 195 个 Skill 随源码分发；它们与 MCP Server 不是一一对应关系，知识型 Skill 可以不绑定专用 Tool，
 工作流也可以使用多个服务或进程内原生 Tool。连接默认配置与凭据条件见[MCP 服务目录](../../docs/CAPABILITIES.md#mcp-服务目录)。
-当前 181 项可由模型自动选择，13 个分类索引仅保留用户显式调用；名称和来源映射不变。
+当前 182 项可由模型自动选择，13 个分类索引仅保留用户显式调用；名称和来源映射不变。
 分批建议与兼容影响见[扩展治理清单](../../docs/architecture/EXTENSION_GOVERNANCE.md)。
 
 | Skill | 作用 | 依赖的执行模块 |
@@ -28,6 +28,7 @@
 | `catalyst-compilation` | qjit、混合程序、QNode、控制流、编译配置与梯度 | 宿主代码 Tool；显式准备 python 环境 |
 | `jaxquantum-modeling` | JAX 算符、器件与 bosonic 模型、动力学、扫描与梯度 | 宿主代码 Tool；显式准备 python 环境 |
 | `josephson-circuits` | Josephson 元件、电路、频域谐波平衡、散射与噪声 | 宿主代码 Tool；显式准备 julia 环境 |
+| [`quantum-metal-layout`](quantum-metal-layout/SKILL.md) | 从超导器件参数导出正掩模 GDSII，独立检查焊盘、结与波导 | 共享 SDK 工作台，显式提供结模板 |
 | `monoprop-propagation` | Pauli/Majorana 算符、门生成元、传播、梯度与截断 | 宿主代码 Tool；显式准备 python 环境 |
 | `mqt-debugger` | OpenQASM 程序、单步仿真、断言、影响范围与错误诊断 | 宿主代码 Tool；显式准备 python 环境 |
 | `mqt-qecc` | CSS 码、容错态制备、色码与模拟信息解码 | 宿主代码 Tool；显式准备 python 环境 |

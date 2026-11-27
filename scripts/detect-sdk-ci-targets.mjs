@@ -83,6 +83,13 @@ export const SDK_CI_TARGETS = Object.freeze({
       "tests/fixtures/erasure-recovery-validation.py",
     ]),
   }),
+  metal: Object.freeze({
+    template: "python",
+    paths: Object.freeze([
+      ".agents/skills/quantum-metal-layout/**",
+      "tests/fixtures/quantum-metal-*",
+    ]),
+  }),
   rcmps: Object.freeze({
     template: "julia",
     paths: Object.freeze([

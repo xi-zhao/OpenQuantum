@@ -46,6 +46,7 @@ const SHELL_TOOL_CONTRACTS = readDeclaredNativeToolContracts({
   capabilityId: "platform-diagnostics",
 });
 const EXPECTED_QUANTUM_SKILLS = Object.freeze([
+  "quantum-metal-layout",
   "erasure-recovery",
   "slowquant-response",
   "tnqs-dynamics",

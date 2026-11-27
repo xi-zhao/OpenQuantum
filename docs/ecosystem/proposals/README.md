@@ -10,6 +10,7 @@
 | [lean-physics.md](lean-physics.md) | 已合入主线 | [`lean-physics`](../../../.agents/skills/lean-physics/SKILL.md) | [证据摘要](../../integrations/evidence/lean-physics-2026-10-28.json) |
 | [mwpf.md](mwpf.md) | 已合入主线 | [`mwpf-decoding`](../../../.agents/skills/mwpf-decoding/SKILL.md) | [证据摘要](../../integrations/evidence/mwpf-2026-11-06.json) |
 | [ppvm.md](ppvm.md) | 已合入主线 | [`ppvm-simulation`](../../../.agents/skills/ppvm-simulation/SKILL.md) | [PPVM.md](../../integrations/PPVM.md) · [证据摘要](../../integrations/evidence/ppvm-2026-11-10.json) |
+| [quantum-metal.md](quantum-metal.md) | 正掩模交接，负掩模保留观察 | [`quantum-metal-layout`](../../../.agents/skills/quantum-metal-layout/SKILL.md) | [磁盘读回与负对照](quantum-metal.md#geometry-evidence) |
 | [rcmps-core.md](rcmps-core.md) | 已合入主线 | [`rcmps-field-theory`](../../../.agents/skills/rcmps-field-theory/SKILL.md) | [RCMPS.md](../../integrations/RCMPS.md) · [证据摘要](../../integrations/evidence/rcmps-2026-11-05.json) |
 | [slowquant.md](slowquant.md) | 已合入主线 | [`slowquant-response`](../../../.agents/skills/slowquant-response/SKILL.md) | [SLOWQUANT.md](../../integrations/SLOWQUANT.md) · [证据摘要](../../integrations/evidence/slowquant-2026-10-31.json) |
 | [st-grape.md](st-grape.md) | 已合入主线 | [`stgrape-control`](../../../.agents/skills/stgrape-control/SKILL.md) | [证据摘要](../../integrations/evidence/stgrape-2026-11-22.json) |

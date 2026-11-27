@@ -1,0 +1,9 @@
+{
+  "directory": "layout",
+  "gds": {
+    "diagnostic": "diagnostic.gds",
+    "positive": "positive.gds"
+  },
+  "inputJunction": "junction.gds",
+  "scientificValidation": "not_evaluated"
+}

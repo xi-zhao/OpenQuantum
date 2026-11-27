@@ -396,6 +396,21 @@
       "juliaVersion": "1.12.7"
     },
     {
+      "id": "quantum-metal-layout",
+      "title": "Quantum Metal",
+      "language": "python",
+      "modules": [
+        "qiskit_metal",
+        "gdstk"
+      ],
+      "group": "physics",
+      "workflow": "从已有超导器件设计导出正掩模 GDSII，并独立核对焊盘、结位置与波导几何",
+      "conditions": [
+        "显式提供结模板。0.10.2 的负掩模样例重复放置结，本入口仅交付正掩模。独立几何参考限于给定设计。"
+      ],
+      "nativeOnly": true
+    },
+    {
       "id": "kaiwu-qubo",
       "title": "Kaiwu Community",
       "language": "python",

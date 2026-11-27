@@ -1,0 +1,16 @@
+{
+  "sourceOutput": "quantum-metal-layout-sHKSIi/layout",
+  "upstreamExportCodes": {
+    "negative": 1,
+    "missing": 1
+  },
+  "files": {
+    "dangling.gds": "4234d38d5cd37021195d1a6a6aac8207cba81c0ce46efeeda973b9029561add8",
+    "duplicate.gds": "ba8c3e1fd5be45688bf1aef0971873928f5c9c45bcea40d3007ec6e163f65fe3",
+    "missing-junction.gds": "9479508a443bdfb49e535f1ec1798296997b212dffb1c72c42a69524417d03cc",
+    "quantum-metal-layout-sHKSIi/layout/diagnostic.gds": "71553530cd789aa26b89ccc96fc9030359a19a7d30b4243ec0f52fb060a63c7e",
+    "quantum-metal-layout-sHKSIi/layout/junction.gds": "6fd45a486966791f005a8f921ad8d9d0c100ad352412e51de794ea7a1258ffc6",
+    "quantum-metal-layout-sHKSIi/layout/positive.gds": "1e2784a0356f2bc2e436a3af2ba39e7178489197586cb4be7fcbfb147425f95c",
+    "upstream-negative.gds": "b709f0e30ee43367d1086704fea34e3d5dbd452feddf92b19e72a16b0fd31761"
+  }
+}

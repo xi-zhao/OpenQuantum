@@ -45,15 +45,15 @@
 
 <p align="center">
   <a href="https://xi-zhao.github.io/OpenQuantum/">
-    <img src="../images/readme/banner-en.svg" width="100%" alt="OpenQuantum — Building Trustworthy AI for Quantum Research. Compatible with Qiskit, PennyLane, QuTiP, Stim, PyMatching, Lean 4 and 122 pinned environments." />
+    <img src="../images/readme/banner-en.svg" width="100%" alt="OpenQuantum — Building Trustworthy AI for Quantum Research. Compatible with Qiskit, PennyLane, QuTiP, Stim, PyMatching, Lean 4 and 123 pinned environments." />
   </a>
 </p>
 
 <table>
   <tr>
-    <td align="center" width="25%"><strong>194</strong><br /><sub>Built-in Skills (181 auto / 13 index)</sub></td>
+    <td align="center" width="25%"><strong>195</strong><br /><sub>Built-in Skills (182 auto / 13 index)</sub></td>
     <td align="center" width="25%"><strong>91</strong><br /><sub>MCP connections (66 default / 25 opt-in)</sub></td>
-    <td align="center" width="25%"><strong>122</strong><br /><sub>Pinned SDK &amp; source environments</sub></td>
+    <td align="center" width="25%"><strong>123</strong><br /><sub>Pinned SDK &amp; source environments</sub></td>
     <td align="center" width="25%"><strong>11 L3</strong><br /><sub>Replayable scientific checks (DSH)</sub></td>
   </tr>
 </table>
@@ -91,7 +91,7 @@ OpenQuantum connects open-source quantum software, published research methods, a
   <tr>
     <td width="50%" valign="top">
       <strong>Comprehensive · One entry to the quantum stack</strong><br />
-      Connects Qiskit, PennyLane, QuTiP, Stim, PyMatching, TeNPy, Mitiq, PyZX, OpenFermion, Lean 4 and more across <strong>122 pinned environments</strong> (110 Python, 9 Julia, 2 Native, 1 Lean) plus <strong>49 executable algorithm examples</strong>.
+      Connects Qiskit, PennyLane, QuTiP, Stim, PyMatching, TeNPy, Mitiq, PyZX, OpenFermion, Lean 4 and more across <strong>123 pinned environments</strong> (111 Python, 9 Julia, 2 Native, 1 Lean) plus <strong>49 executable algorithm examples</strong>.
     </td>
     <td width="50%" valign="top">
       <strong>Fast · Targeted optimization with full benchmarks</strong><br />
@@ -138,6 +138,7 @@ Call bounded scientific Tools directly or write custom Python, Julia, and Lean r
 | <a id="hamiltonian-simulation-and-open-systems"></a>**Dynamics, Neutral Atoms & Pulse Control** | Trotter / qDrift, Dynamiqs, OQuPy, TJM, Bloqade Analog, Pulser, PairInteraction, [ST-GRAPE](../../.agents/skills/stgrape-control/SKILL.md), QUA / LabOne Q / Qblox / Qililab / OQC QAT | Units, cutoffs, fixed time grids, noise assumptions; offline pulse compilation does not control live lab hardware |
 | <a id="photonics-and-quantum-networks"></a>**Photonics & Quantum Networks** | Perceval, Piquasso, Lightworks, MerLin, MrMustard, SimQN, NetQASM / SquidASM | Mode order, Fock cutoffs, loss models, and third-party licensing (NetSquid requires a separate license) |
 | <a id="experiment-simulation-and-hardware"></a>**Hardware Discovery & Cloud APIs** | FieldQKit, IBM Quantum, IonQ, OriginQ, Quafu, Tianyan, Guodun, Tencent, LogicalQubit, and local QDMI C drivers | Credentials, quotas, and opt-in policies; discovery is read-only by default, real QPU jobs require explicit opt-in |
+| **Superconducting chip layout** | [Quantum Metal](../../.agents/skills/quantum-metal-layout/SKILL.md) · Export a QDesign with an explicit junction to positive-mask GDSII. Check the pads, junction and coplanar waveguide with KLayout. | The negative mask places the junction three times in the tested design. |
 | <a id="reference-material-and-selection"></a>**Formal Proofs & Public Benchmarks** | [Lean 4 / mathlib / physlib](../../.agents/skills/lean-physics/SKILL.md) (theorem reuse & axiom checks), [Quantum-Practices (66 guides) & Metriq (410 historical benchmarks)](../CAPABILITIES.md#参考资料与选型) | Formal proofs cover stated definitions and axioms only; historical benchmarks do not certify current hardware |
 | <a id="quantum-learning"></a>**Teaching & Interactive Classrooms** | [Quantum Learning / OpenMAIC](../integrations/OPENMAIC.md): course library, courseware editor, PPTX import, quizzes, and interactive classrooms | Full curriculum is still under development; live online AI teaching workflows await full acceptance |
 
@@ -166,7 +167,7 @@ Local numerical computing requires no quantum-cloud account. Real hardware and p
 
 | Backend | Supported Scope | Credentials & Activation Policy |
 | --- | --- | --- |
-| **Local Numerical Backends** | Circuits, noise, ground states, chemistry, many-body, QEC, photonics, and pulse simulation (122 pinned environments) | No cloud account needed; prepare pinned local dependencies per task |
+| **Local Numerical Backends** | Circuits, noise, ground states, chemistry, many-body, QEC, photonics, and pulse simulation (123 pinned environments) | No cloud account needed; prepare pinned local dependencies per task |
 | **IBM Quantum** | Runtime, AI Transpiler, hardware queries; optional job submission and cancellation | `QISKIT_IBM_TOKEN`; job MCP connections are opt-in (off by default) |
 | **IonQ** | Hardware queries; optional job submission, cancellation, and cost estimates | `IONQ_API_KEY`; job MCP connections are opt-in (off by default) |
 | **OriginQ Cloud** | Read-only discovery (FieldQKit); Wukong QPU queries and optional jobs via QPanda3 Runtime | `ORIGIN_API_TOKEN` (read-only); `QPANDA3_API_KEY` (opt-in jobs) |
@@ -175,7 +176,7 @@ Local numerical computing requires no quantum-cloud account. Real hardware and p
 
 </details>
 
-The current source distribution ships **[194 built-in Skills](../../.agents/skills/README.md)**, **91 MCP service connections** (66 enabled by default, 25 opt-in), and **5 native quantum Tools**, with full native-API workflows for **[122 SDK/source environments](../integrations/SDK_INVENTORY.md)** (including **11 replayable L3 scientific acceptance features** on DSH). Inventory counts, configuration switches, environment readiness, and scientific acceptance are distinct states.
+The current source distribution ships **[195 built-in Skills](../../.agents/skills/README.md)**, **91 MCP service connections** (66 enabled by default, 25 opt-in), and **5 native quantum Tools**, with full native-API workflows for **[123 SDK/source environments](../integrations/SDK_INVENTORY.md)** (including **11 replayable L3 scientific acceptance features** on DSH). Inventory counts, configuration switches, environment readiness, and scientific acceptance are distinct states.
 
 [Full Skill & MCP Catalog (Chinese)](../CAPABILITIES.md#接口总览) · [Native SDK Audit](../integrations/FULL_SDK_ACCESS.md) · [Choosing Between Similar Methods](../integrations/CAPABILITY_SELECTION.md)
 
@@ -380,8 +381,8 @@ OpenQuantum centers on a **host-agnostic shared quantum research plugin** (Skill
 ```mermaid
 flowchart TB
   subgraph Shared["Shared OpenQuantum Research Plugin (Single Source of Truth)"]
-    SK["194 Built-in Skills<br/>Domain methods · Tool choice · Limits"]
-    TI["Tool Implementations & 91 MCP Servers<br/>5 Native Quantum Tools · 122 Pinned SDKs"]
+    SK["195 Built-in Skills<br/>Domain methods · Tool choice · Limits"]
+    TI["Tool Implementations & 91 MCP Servers<br/>5 Native Quantum Tools · 123 Pinned SDKs"]
     SC["Scientific Contracts<br/>Validators · Acceptance Profiles · Central Builder"]
   end
 
@@ -437,7 +438,7 @@ OpenQuantum aims for every investigation to leave both verifiable answers and st
 
 | Stage | Focus | Current Status |
 | --- | --- | --- |
-| **Delivered Baseline** | Shared plugin & dual-host delivery | 194 Skills, 91 MCP connections, 122 pinned SDKs; unified Desktop & Codex `v0.8.11`; 11 replayable L3 features with full-sandbox reference confinement |
+| **Delivered Baseline** | Shared plugin & dual-host delivery | 195 Skills, 91 MCP connections, 123 pinned SDKs; unified Desktop & Codex `v0.8.11`; 11 replayable L3 features with full-sandbox reference confinement |
 | **Active Development** | Ecosystem depth, HPC/QPU workflows & teaching | Expanding L2/L3 verification coverage, local CPU/GPU/HPC/QPU orchestration, laboratory instrument interfaces, and [Quantum Learning](../integrations/OPENMAIC.md) courses |
 | **Long-Term Vision (RSI)** | Verified recursive self-improvement | Exploring `real task → candidate improvement → independent checks & new-task comparisons → authorized update`; **the full RSI loop is not implemented** · [Vision & boundaries](../roadmap/VISION.md) |
 

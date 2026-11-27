@@ -34,6 +34,10 @@ test("SDK access survives archive, split installation and cached Skill relocatio
     await fs.access(path.join(server, project, entry.nativeProject?.lock ?? (entry.language === "lean" ? "lake-manifest.json" : entry.language === "julia" ? "Manifest.toml" : "uv.lock")));
   }
   for (const file of ["scripts/setup-sdk.mjs", "scripts/setup-native-sdk.mjs", "scripts/setup-lean-sdk.mjs", "src/lib/sdk-lean.mjs", "scripts/setup-paper-tools.mjs", "scripts/setup-open-algorithm-examples.mjs", "scripts/setup-qdmi.mjs", "scripts/sdk-access.mjs", "src/lib/sdk-source.mjs", "src/lib/sdk_bootstrap.py", "src/lib/installed-python.mjs", "src/lib/check_python_install.py", ".agents/skills/qpanda-qubo/scripts/setup-native.mjs", "examples/quantum-algorithms/run.py"]) await fs.access(path.join(server, file));
+  for (const name of ["native-example.py", "verify-positive.py"]) {
+    const file = path.join(".agents/skills/quantum-metal-layout/references", name);
+    assert.deepEqual(await fs.readFile(path.join(server, file)), await fs.readFile(path.join(root, file)), file);
+  }
   // Test a real installed filesystem layout; no installer runs on the user's account.
   const runtime = path.join(directory, "installed runtime");
   await fs.rename(server, runtime);

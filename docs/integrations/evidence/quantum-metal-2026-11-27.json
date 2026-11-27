@@ -1,0 +1,57 @@
+{
+  "receipt": {
+    "id": "quantum-metal-layout",
+    "language": "python",
+    "status": "passed_scoped_engineering",
+    "scientificValidation": "not_evaluated",
+    "sourcePath": ".agents/skills/quantum-metal-layout/references/native-example.py",
+    "sourceSha256": "3bef1b30861f97df994e711778d0fdf2defa21e365aa82dbea017b1239280ac3",
+    "dependencyLockPath": ".agents/skills/quantum-metal-layout/uv.lock",
+    "dependencyLockSha256": "2121f9a00a1f250cf4e0c80b9ca23386cf8d2e63837121836c9f314618bccbb7",
+    "durableEvidenceDirectory": "docs/integrations/evidence/quantum-metal-2026-11-27",
+    "verificationSha256": "6136c72658bde5e3a48a0720a71d245a61407656870728ae3664f02764a30ea7",
+    "artifacts": {
+      "attempt.json": "704dc02a86b86d203a6e00f4f33b6e706800bf48af577bdaa2081b6882ce6d6b",
+      "program.py": "3bef1b30861f97df994e711778d0fdf2defa21e365aa82dbea017b1239280ac3",
+      "result.json": "382ad6c5fd102112be5f19e1597f33a4b57ea0cab6d1e2408dc7c05f720d90f5",
+      "runner.py": "4d8e55212145f22f02d8198f4582194f9aa937013038af3c543a95c6fa77e4b9",
+      "stderr.log": "cace1071573ef725e762e8856427937617c8c67e5d0784c45c0e854e56a803a8",
+      "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "versions.json": "5b11c7e75661331c86cf2970dfb5614924ba604183605d511494fda77973ed5f"
+    }
+  },
+  "upstream": {
+    "repository": "qiskit-community/qiskit-metal",
+    "tag": "v0.10.2",
+    "revision": "aff87e59e2b2fbf015e6a7e43fa4409ce5e6563d",
+    "license": "Apache-2.0"
+  },
+  "run": {
+    "job": "https://github.com/xi-zhao/OpenQuantum/actions/runs/45935794983/job/140298645746",
+    "artifactSha256": "251c4a4b69f417792704a1077b002a82ed3534d1602211887f1c8792ba2c9a1b",
+    "platform": "macOS arm64",
+    "reader": "klayout==0.30.14",
+    "productScope": "positive GDS for the documented design",
+    "scientificValidation": "not_evaluated"
+  },
+  "numericalEvidence": {
+    "geometry-readback.json": "286af12dcddaf9f75b11ec3ed802e7978c3e3366c7c9c303b6aec6d56480f06f",
+    "geometry-inputs.json": "a8c34f7bb1ad20befa0aff05057fc366fac26d6c7d6ef935e0665b4cbbcbe11c",
+    "prepared-environment-kib.txt": "d877f5cae267943849b82ed3a303a9695b63d9b69b5ae7156034a1f11c30ccc4"
+  },
+  "validationSources": [
+    {
+      "path": ".agents/skills/quantum-metal-layout/references/verify-positive.py",
+      "sha256": "5d6e08d28631e5032be3696f606bede8bb096e53930610046e1be21b3d3f3e23"
+    },
+    {
+      "path": "tests/fixtures/quantum-metal-controls.py",
+      "sha256": "2e931b180d3d281e555da48666d08296c1077f72cb459244db18b6ceea963e19"
+    },
+    {
+      "path": "tests/fixtures/quantum-metal-readback.py",
+      "sha256": "2b191e66cc5f6e47bfb3da44d7da060de1a54e202354e95ddbdd10e508933fb3"
+    }
+  ],
+  "scientificValidation": "not_evaluated"
+}
