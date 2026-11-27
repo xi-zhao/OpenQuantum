@@ -245,7 +245,12 @@ test("release publication reuses all CI gates and only uploads a matching stable
   assert.equal(workflow.jobs["verify-sdk"].uses, "./.github/workflows/sdk-checks.yml");
   assert.equal(workflow.jobs["verify-sdk"].with.targets, "tropidist,stgrape,braket");
   assert.deepEqual(workflow.jobs.publish.needs, ["verify", "verify-sdk"]);
-  assert.deepEqual(Object.keys(ci.jobs), ["quality", "desktop-source-install", "container-smoke"]);
+  assert.deepEqual(Object.keys(ci.jobs), ["quality", "keynote-reference", "desktop-source-install", "container-smoke"]);
+  const quality = ci.jobs.quality.steps.find(step => step.run === "npm run check");
+  assert.equal(quality.env.OPENQUANTUM_REQUIRE_BROWSER_TESTS, "1");
+  assert.equal(quality.env.OPENQUANTUM_REQUIRE_KEYNOTE_RENDER, "1");
+  const pixels = ci.jobs["keynote-reference"].steps.find(step => step.run === "node --test tests/readme-keynote.test.mjs");
+  assert.equal(pixels.env.OPENQUANTUM_REQUIRE_KEYNOTE_PIXEL_MATCH, "1");
   assert.equal(workflow.permissions.contents, "read");
   assert.equal(workflow.jobs.publish.permissions.contents, "write");
 });
