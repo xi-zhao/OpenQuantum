@@ -109,7 +109,16 @@ jobs:
       - name: Reproduce the four published benchmark plates
         env:
           OPENQUANTUM_REQUIRE_KEYNOTE_PIXEL_MATCH: "1"
+          OPENQUANTUM_KEYNOTE_DIAGNOSTICS: ${{ runner.temp }}/keynote-render
         run: node --test tests/readme-keynote.test.mjs
+      - name: Keep the four macOS render samples
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: keynote-macos-render
+          path: ${{ runner.temp }}/keynote-render/benchmarks-*.webp
+          if-no-files-found: warn
+          retention-days: 7
 
   desktop-source-install:
     name: Desktop source install (${{ matrix.os }})

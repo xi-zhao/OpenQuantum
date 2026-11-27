@@ -16,7 +16,7 @@ for (const [name, method] of [
   test(name, () => run(python, ["-B", script, `Keynote.${method}`]));
 }
 
-test("Chromium renders four benchmark WebPs at their published dimensions and compares RGBA on the pinned macOS reference", async t => {
+test("Chromium verifies four benchmark WebPs, the macOS pixel reference and rendering controls", async t => {
   const chrome = await localChromium();
   const modules = spawnSync(python, ["-c", "from playwright.async_api import async_playwright; from PIL import features; assert features.check('webp')"]);
   const missing = !chrome ? "Chromium executable unavailable (set OPENQUANTUM_CHROMIUM or CHROME)"
@@ -28,7 +28,7 @@ test("Chromium renders four benchmark WebPs at their published dimensions and co
     return t.skip(missing);
   }
   try {
-    const { stdout } = await run(python, ["-B", script, "Keynote.test_render"], { env: { ...process.env, CHROME: chrome } });
+    const { stdout } = await run(python, ["-B", script, "Keynote.test_render", "Keynote.test_visual_controls"], { env: { ...process.env, CHROME: chrome } });
     t.diagnostic(stdout.trim());
   } catch (error) {
     if (error.stdout) t.diagnostic(error.stdout.trim());

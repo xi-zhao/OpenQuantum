@@ -113,7 +113,7 @@ export async function launchChromium(t, executable, profile) {
       for (let i = 0; i < 100; i++) { if (await evaluate(ready)) return; await delay(50); }
       throw new Error(`Page did not become ready: ${url}`);
     },
-    viewport: width => command("Emulation.setDeviceMetricsOverride", { width, height: 850, deviceScaleFactor: 1, mobile: false }),
+    viewport: (width, height = 850) => command("Emulation.setDeviceMetricsOverride", { width, height, deviceScaleFactor: 1, mobile: false }),
     async accessibleName(selector, { textNode = false } = {}) {
       const { root } = await command("DOM.getDocument");
       const { nodeId } = await command("DOM.querySelector", { nodeId: root.nodeId, selector });

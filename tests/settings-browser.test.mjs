@@ -209,6 +209,29 @@ test("offline Chromium exercises the built homepage and both hosts' settings pro
 
   for (const host of ["Codex", "Desktop"]) {
     const empty = await snapshotFor(host);
+    await t.test(`${host} catalog status and credential labels remain accessible in a short scrolling workspace`, async t => {
+      await page.viewport(902, 352);
+      t.after(() => page.viewport(1100));
+      await open(empty);
+      await click("#tab-skills");
+      await filter(page, "#search", "quantum-sdk-workbench");
+      const entry = row("quantum-sdk-workbench");
+      await click(entry);
+      const geometry = await page.evaluate(() => {
+        const pane = document.querySelector(".detail-pane");
+        for (const details of pane.querySelectorAll("details")) details.open = true;
+        pane.scrollTop = pane.scrollHeight;
+        const root = document.scrollingElement;
+        const label = pane.querySelector(".oq-cap-field > label[for]");
+        return { document: root.scrollHeight, viewport: root.clientHeight, detailScroll: pane.scrollTop,
+          field: label.htmlFor, fieldName: label.textContent, status: document.querySelector(".catalog-item .oq-visually-hidden").textContent };
+      });
+      assert.ok(geometry.detailScroll > 0, "Expanded credentials must scroll inside the detail pane");
+      assert.ok(geometry.document <= geometry.viewport + 1, `Workspace overflow: ${JSON.stringify(geometry)}`);
+      assert.ok(geometry.status && (await page.accessibleName(entry)).includes(geometry.status));
+      assert.equal(await page.accessibleName(`${entry} .oq-visually-hidden`, { textNode: true }), geometry.status);
+      assert.ok(geometry.fieldName && (await page.accessibleName(`[id="${geometry.field}"]`)).includes(geometry.fieldName));
+    });
     await t.test(`${host} account titles lead to all 12 forms and 23 input fields from MCP and Skills`, async () => {
       const groups = credentialEntries(empty.services);
       assert.equal(groups.length, 12);

@@ -765,7 +765,7 @@ async def render_plates(plates: dict[str, str], output: Path) -> None:
     with tempfile.TemporaryDirectory() as tmp:
         workdir = Path(tmp)
         async with async_playwright() as p:
-            options = {"args": ["--no-sandbox", "--allow-file-access-from-files"]}
+            options = {"args": ["--no-sandbox", "--allow-file-access-from-files", "--force-color-profile=srgb"]}
             if Path(chrome).exists():
                 options["executable_path"] = chrome
             browser = await p.chromium.launch(**options)

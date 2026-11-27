@@ -3,10 +3,13 @@ import asyncio
 import hashlib
 import importlib.util
 from importlib.metadata import version
+from io import BytesIO
 import os
 from pathlib import Path
+import platform
 import re
 import shutil
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -37,6 +40,7 @@ BENCHMARK_SIGNATURES = {
 # pin the two bundled webfonts. PingFang SC supplies the reference Chinese glyphs.
 REFERENCE_CHROMIUM = ("149.0.7827.55", "158.0.8127.88")
 REFERENCE_FONT = "PingFangSC-Regular"
+PUBLISHED_MACOS = ("27.2.1", "26B131")
 
 
 def reference_mismatches():
@@ -44,7 +48,7 @@ def reference_mismatches():
     from playwright.sync_api import sync_playwright
 
     with sync_playwright() as p:
-        browser = p.chromium.launch(executable_path=os.environ["CHROME"], args=["--no-sandbox"])
+        browser = p.chromium.launch(executable_path=os.environ["CHROME"], args=["--no-sandbox", "--force-color-profile=srgb"])
         chromium = browser.version
         has_font = sys.platform == "darwin" and browser.new_page().evaluate(
             """name => new FontFace('reference', 'local("' + name + '")').load().then(() => true, () => false)""",
@@ -59,9 +63,14 @@ def reference_mismatches():
         ("Playwright", version("playwright"), ("1.57.0",)),
         ("system font", REFERENCE_FONT if has_font else "unavailable", (REFERENCE_FONT,)),
     ]
-    print("Renderer environment: " + ", ".join(f"{name}={actual}" for name, actual, _ in checks))
-    return [f"{name}={actual} (expected {' or '.join(expected)})"
-            for name, actual, expected in checks if actual not in expected]
+    macos = None
+    if sys.platform == "darwin":
+        build = subprocess.check_output(["sw_vers", "-buildVersion"], text=True).strip()
+        macos = (platform.mac_ver()[0], build)
+    print("Renderer environment: " + ", ".join(f"{name}={actual}" for name, actual, _ in checks)
+          + f", OS={macos or platform.system()}, machine={platform.machine()}, color=sRGB")
+    return ([f"{name}={actual} (expected {' or '.join(expected)})"
+             for name, actual, expected in checks if actual not in expected], macos)
 
 
 def benchmark_signature(markup, webp):
@@ -70,6 +79,100 @@ def benchmark_signature(markup, webp):
         return f"{asset.relative_to(ROOT).as_posix()}#{hashlib.sha256(asset.read_bytes()).hexdigest()}"
     portable = re.sub(r"""file:[^"'()]+""", local_asset, markup)
     return hashlib.sha256(portable.encode() + b"\0" + webp).hexdigest()
+
+
+def glyph_fonts(session, selector):
+    doc = session.send("DOM.getDocument")["root"]["nodeId"]
+    nodes = session.send("DOM.querySelectorAll", {"nodeId": doc, "selector": selector})["nodeIds"]
+    return sorted({font["postScriptName"] for node in nodes
+                   for font in session.send("CSS.getPlatformFontsForNode", {"nodeId": node})["fonts"] if font["glyphCount"]})
+
+
+def reference_rasters(plates, directory, *, inspect_fonts=False):
+    """Capture signed inputs independently of the exporter's viewport, scale and encoding code."""
+    from PIL import Image
+    from playwright.sync_api import sync_playwright
+
+    captures = {}
+    with sync_playwright() as p:
+        browser = p.chromium.launch(executable_path=os.environ["CHROME"],
+                                    args=["--no-sandbox", "--allow-file-access-from-files", "--force-color-profile=srgb"])
+        page = browser.new_page(viewport={"width": 1200, "height": 1200}, device_scale_factor=2, reduced_motion="reduce")
+        if inspect_fonts:
+            session = page.context.new_cdp_session(page)
+            session.send("DOM.enable")
+            session.send("CSS.enable")
+        for name, markup in plates.items():
+            src = directory / f"{name}.html"
+            src.write_text(markup, encoding="utf-8")
+            page.goto(src.as_uri(), wait_until="networkidle")
+            page.evaluate("async () => { await document.fonts.ready; await Promise.all([...document.images].map(i => i.decode())); }")
+            if page.evaluate("devicePixelRatio") != 2:
+                raise AssertionError("Reference capture requires two device pixels per CSS pixel")
+            if inspect_fonts and name.endswith("light"):
+                fonts = glyph_fonts(session, "#shot *")
+                print(f"{name}: fonts painting glyphs: {', '.join(fonts)}")
+                required = ["Inter-", "JetBrainsMono-"] + (["PingFangSC-"] if "-zh-" in name else [])
+                if any(not any(font.startswith(prefix) for font in fonts) for prefix in required) or "LastResort" in fonts:
+                    raise AssertionError(f"Missing benchmark glyph font: {fonts}")
+            png = page.locator("#shot").screenshot(omit_background=True, scale="device")
+            webp = BytesIO()
+            with Image.open(BytesIO(png)) as image:
+                image.save(webp, "WEBP", quality=92, method=6)
+            captures[name] = Image.open(webp).convert("RGBA")
+        if inspect_fonts:
+            page.goto(page.locator(".fig-wrap img").get_attribute("src"))
+            fonts = glyph_fonts(session, "svg text")
+            print(f"Wigner SVG: fonts painting glyphs: {', '.join(fonts)}")
+            if not fonts or "LastResort" in fonts:
+                raise AssertionError("Missing Wigner figure label font")
+        browser.close()
+    return captures
+
+
+def bounded_pixels(published, actual):
+    """Bound both whole-frame error and concentrated damage to a single area."""
+    from PIL import ImageChops, ImageFilter
+
+    def channel_error(a, b):
+        red, green, blue = ImageChops.difference(a, b).split()
+        return ImageChops.lighter(red, ImageChops.lighter(green, blue))
+
+    def outside_neighborhood(a, b):
+        high = ImageChops.subtract(a, b.filter(ImageFilter.MaxFilter(5)))
+        low = ImageChops.subtract(b.filter(ImageFilter.MinFilter(5)), a)
+        return ImageChops.lighter(high, low)
+
+    if published.size != actual.size or published.getchannel("A").tobytes() != actual.getchannel("A").tobytes():
+        raise AssertionError("Reference canvas or alpha silhouette differs")
+    a, b = published.convert("RGB"), actual.convert("RGB")
+    histogram = channel_error(a, b).histogram()
+    count = a.width * a.height
+    mean = sum(error * n for error, n in enumerate(histogram)) / count
+    fraction = sum(histogram[17:]) / count
+    blur = ImageFilter.GaussianBlur(2)
+    local = channel_error(a.filter(blur), b.filter(blur)).reduce(32).getextrema()[1]
+    # A single missing glyph can disappear in a frame average. Search at most two
+    # device pixels in both directions for its ink, then bound even a 3x3 patch.
+    gray_a, gray_b = a.convert("L"), b.convert("L")
+    ink = ImageChops.lighter(outside_neighborhood(gray_a, gray_b), outside_neighborhood(gray_b, gray_a))
+    stroke = ink.reduce(3).getextrema()[1]
+    metrics = (f"mean max-channel error={mean:.4f}/255, pixels over 16={fraction:.3%}, "
+               f"worst 32px low-pass tile={local}/255, worst 3px ink residual={stroke}/255")
+    # Calibration includes changing the real Chromium font smoothing mode on all four plates.
+    if mean > 1.5 or fraction > 0.02 or local > 30 or stroke > 64:
+        raise AssertionError(f"Published visual bounds exceeded: {metrics}")
+    return metrics
+
+
+def check_pixels(published, actual, control, *, native):
+    if actual.size != control.size or actual.tobytes() != control.tobytes():
+        raise AssertionError("Export differs from the independent 2x sRGB capture on this host")
+    if published.size == actual.size and published.tobytes() == actual.tobytes():
+        return "published RGBA identical"
+    if native:
+        raise AssertionError("Published RGBA differs on its original macOS build")
+    return bounded_pixels(published, actual)
 
 
 class Keynote(unittest.TestCase):
@@ -135,7 +238,8 @@ class Keynote(unittest.TestCase):
         while offset < len(raw):
             kind = raw[offset:offset + 4]
             length = int.from_bytes(raw[offset + 4:offset + 8], "little")
-            self.assertNotIn(kind, (b"EXIF", b"XMP ", b"ICCP"))
+            self.assertIn(kind, (b"VP8X", b"ALPH", b"VP8 "), f"Unexpected WebP chunk {kind!r}")
+            self.assertNotIn(kind, chunks, f"Duplicate WebP chunk {kind!r}")
             self.assertLessEqual(offset + 8 + length, len(raw))
             chunks[kind] = raw[offset + 8:offset + 8 + length]
             offset += 8 + length + length % 2
@@ -207,11 +311,22 @@ class Keynote(unittest.TestCase):
 
     def test_render(self):
         from PIL import Image
-        mismatches = reference_mismatches()
-        plates = keynote.keynote_plates()
+        mismatches, macos = reference_mismatches()
+        markup = keynote.keynote_plates()
+        plates = {name: markup[name] for name in BENCHMARK_SIGNATURES}
         with tempfile.TemporaryDirectory() as directory:
             dest = Path(directory)
-            asyncio.run(keynote.render_plates({name: plates[name] for name in BENCHMARK_SIGNATURES}, dest))
+            asyncio.run(keynote.render_plates(plates, dest))
+            diagnostics = os.environ.get("OPENQUANTUM_KEYNOTE_DIAGNOSTICS")
+            if diagnostics:
+                Path(diagnostics).mkdir(parents=True, exist_ok=True)
+                for name in plates:
+                    shutil.copyfile(dest / f"{name}.webp", Path(diagnostics) / f"{name}.webp")
+            for name, signature in BENCHMARK_SIGNATURES.items():
+                published = keynote.OUT / f"{name}.webp"
+                self.assertEqual(benchmark_signature(plates[name], published.read_bytes()), signature, name)
+            if not mismatches:
+                controls = reference_rasters(plates, dest, inspect_fonts=True)
             for name in BENCHMARK_SIGNATURES:
                 with self.subTest(plate=name):
                     published = keynote.OUT / (name + ".webp")
@@ -224,13 +339,70 @@ class Keynote(unittest.TestCase):
                         self.assertFalse({"exif", "xmp", "icc_profile"}.intersection(b.info))
                         print(f"{name}: decoded {b.width}×{b.height} WebP, no EXIF/XMP/ICC")
                         if not mismatches:
-                            self.assertTrue(a.convert("RGBA").tobytes() == b.convert("RGBA").tobytes(), "regenerated RGBA differs")
-                            print(f"{name}: RGBA identical, WebP bytes {'identical' if published.read_bytes() == regenerated.read_bytes() else 'differ'}")
+                            result = check_pixels(a.convert("RGBA"), b.convert("RGBA"), controls[name], native=macos == PUBLISHED_MACOS)
+                            print(f"{name}: independent RGBA identical, {result}, WebP bytes {'identical' if published.read_bytes() == regenerated.read_bytes() else 'differ'}")
         if mismatches:
             reason = "Keynote reference environment mismatch: " + ", ".join(mismatches)
             print("Exact RGBA parity is scoped to the pinned macOS reference. " + reason)
             if os.environ.get("OPENQUANTUM_REQUIRE_KEYNOTE_PIXEL_MATCH") == "1":
                 self.fail(reason)
+
+    def test_visual_controls(self):
+        from PIL import Image, ImageFilter, ImageOps
+
+        name = "benchmarks-zh-light"
+        markup = keynote.keynote_plates()[name]
+        published = keynote.OUT / (name + ".webp")
+        golden = Image.open(published).convert("RGBA")
+        # Exercise the cross-build branch on every host, including the authoring Mac.
+        drift = golden.filter(ImageFilter.GaussianBlur(0.3))
+        drift.putalpha(golden.getchannel("A"))
+        self.assertNotEqual(drift.tobytes(), golden.tobytes())
+        self.assertIn("low-pass", check_pixels(golden, drift, drift, native=False))
+        with self.assertRaisesRegex(AssertionError, "original macOS"):
+            check_pixels(golden, drift, drift, native=True)
+        wrong_theme = ImageOps.invert(golden.convert("RGB")).convert("RGBA")
+        wrong_theme.putalpha(golden.getchannel("A"))
+        missing_number = golden.copy()
+        missing_number.paste("white", (110, 225, 430, 330))
+        for change, damaged in [("theme", wrong_theme), ("missing numeric region", missing_number)]:
+            with self.subTest(change=change):
+                with self.assertRaisesRegex(AssertionError, "visual bounds exceeded"):
+                    check_pixels(golden, damaged, damaged, native=False)
+
+        altered = {
+            "number": markup.replace("5.69×", "5.68×"),
+            "missing-glyph": markup.replace("Wigner 函数", "Wigner 函"),
+            "position": markup.replace("</style>", ".hero-x strong { transform: translateX(1px); }</style>"),
+            "color": markup.replace("#0E7490", "#107890"),
+        }
+        with tempfile.TemporaryDirectory() as directory:
+            dest = Path(directory)
+            for chunk in [b"XMP ", b"NOTE"]:
+                with self.subTest(metadata=chunk):
+                    data = published.read_bytes() + chunk + b"\x04\0\0\0test"
+                    sample = dest / "metadata.webp"
+                    sample.write_bytes(data[:4] + (len(data) - 8).to_bytes(4, "little") + data[8:])
+                    with self.assertRaisesRegex(AssertionError, "Unexpected WebP chunk"):
+                        self.inspect_webp(sample)
+            control = reference_rasters({name: markup}, dest)[name]
+            asyncio.run(keynote.render_plates(altered, dest))
+            for change, text in altered.items():
+                with self.subTest(change=change):
+                    self.assertNotEqual(benchmark_signature(text, published.read_bytes()), BENCHMARK_SIGNATURES[name])
+                    altered_pixels = Image.open(dest / f"{change}.webp").convert("RGBA")
+                    with self.assertRaisesRegex(AssertionError, "independent 2x"):
+                        check_pixels(golden, altered_pixels, control, native=False)
+                    if change in ("number", "missing-glyph"):
+                        with self.assertRaisesRegex(AssertionError, "visual bounds exceeded"):
+                            bounded_pixels(control, altered_pixels)
+            with patch.object(keynote, "SCALE", 1):
+                asyncio.run(keynote.render_plates({name: markup}, dest))
+            small = Image.open(dest / published.name).convert("RGBA")
+            self.assertEqual(small.size, (900, 649))
+            for candidate in [small, small.resize(control.size, Image.Resampling.LANCZOS)]:
+                with self.assertRaisesRegex(AssertionError, "independent 2x"):
+                    check_pixels(golden, candidate, control, native=False)
 
 
 if __name__ == "__main__":

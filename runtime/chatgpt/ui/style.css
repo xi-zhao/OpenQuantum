@@ -806,6 +806,7 @@ footer .quiet { min-height: 32px; padding-block: 4px; font-size: 12px; }
   min-height: 0;
 }
 .catalog-pane {
+  position: relative;
   min-height: 0;
   min-width: 0;
   border-right: 1px solid var(--line);

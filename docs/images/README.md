@@ -11,6 +11,10 @@
 | 本机 VQE 工作流 | [亮色](readme/workflow-zh-light.webp) · [暗色](readme/workflow-zh-dark.webp) | [亮色](readme/workflow-en-light.webp) · [暗色](readme/workflow-en-dark.webp) | 中文 1800 × 1038，英文 1800 × 1018。能量、参考误差和独立检查来自[本机 VQE 冻结记录](../examples/quantum-ground-state-local-demo-2026-09-12.json)。 |
 | QuTiP 与 PennyLane 实测 | [亮色](readme/benchmarks-zh-light.webp) · [暗色](readme/benchmarks-zh-dark.webp) | [亮色](readme/benchmarks-en-light.webp) · [暗色](readme/benchmarks-en-dark.webp) | 中文 1800 × 1298，英文 1800 × 1282。面板使用 [QuTiP 网格误差与耗时](../../experiments/qutip-rust-wigner/results/summary.json)、[PennyLane 完整调用计时](../../experiments/pennylane-rust-commutator/results/benchmark.json)和[独立矩阵核对](../../experiments/pennylane-rust-commutator/results/validation.json)。 |
 
+四张基准图的发布像素已在 arm64 macOS 27.2.1（26B131）复现。CI 使用 Chrome 149.0.7827.55、Playwright 1.57.0、Pillow 11.3.0 与 libwebp 1.5.0，固定 sRGB 和两倍设备像素。测试校验冻结数据、HTML、随仓字体文件、图源与发布 WebP 的摘要，并要求导出结果逐像素匹配同机独立截图。原参考系统还须与发布图逐像素相等。
+
+其他 macOS 构建会使用该系统的字形栅格化结果。与发布图比对时，画布尺寸和透明度必须完全一致，WebP 仅接受画布、透明度与像素数据块。测试还限制全图色差、局部低通误差与笔画缺失，并用数值替换、缺字、位移、改色与一倍分辨率重绘做负向对照。CI 日志记录系统构建号和实际参与绘制的字体，四张重绘图保留七天。[像素比较与负向对照](../../tests/helpers/keynote_plates.py)
+
 ## 历史素材 · 2026-11-02 动态横幅与实测卡片
 
 | 图片 | 当时的用途与来源 |
