@@ -149,15 +149,18 @@ function ownerAccounts(item) {
     ? preparationFocus.serviceId : snapshot.recentSkills?.find(recent => recent.id === item.id)?.serviceId;
   return accountsForOwner(item, accounts, selectedService);
 }
+function normalizeSearch(value) {
+  return value.normalize("NFKC").trim().replace(/\s+/g, " ").toLowerCase();
+}
 function searchText(item, groups) {
-  return [item.title, t(item.title ?? ""), item.id, item.summary, item.description, t(item.description ?? ""), item.note, item.provider, item.url, item.command,
+  return normalizeSearch([item.title, t(item.title ?? ""), item.id, item.summary, item.description, t(item.description ?? ""), item.note, item.provider, item.url, item.command,
     ...(item.serverNames ?? []), ...groups.map(group => group.title),
     ...(item.fields ?? []).flatMap(field => [field.name, field.title, field.displayName, field.description]),
     ...(item.tools ?? []).flatMap(tool => typeof tool === "string" ? [tool] : [tool.name, tool.title, tool.description]),
-    categories().find(value => value.id === categoryOf(item))?.title].filter(Boolean).join(" ").normalize("NFKC").toLowerCase();
+    categories().find(value => value.id === categoryOf(item))?.title].filter(Boolean).join(" "));
 }
 function matches(item) {
-  const query = $("#search").value.trim().normalize("NFKC").toLowerCase();
+  const query = normalizeSearch($("#search").value);
   const state = $("#state").value;
   const supported = item.supported !== false && item.configuration !== "unsupported";
   const prepared = () => (snapshot.connections.includes(item) ? connectionState(item) : providerState(item, snapshot)).key === "prepared";
@@ -167,7 +170,7 @@ function matches(item) {
   const searchable = state === "configured" ? groups.filter(group => group.configuration === "configured") : groups;
   // Searching a full account title from either management entry takes the user to its forms.
   if (!item.authentication && (["accounts", "configured"].includes(state) || (tab === "mcp" && state === "all"))) {
-    const named = accounts.find(group => group.title.toLowerCase() === query);
+    const named = accounts.find(group => normalizeSearch(group.title) === query);
     if (named && !searchable.includes(named)) return false;
   }
   const stateMatches = state === "all" || (state === "recent" ? recent : state === "attention" ? Boolean(skillIssue(item, snapshot))
@@ -176,7 +179,7 @@ function matches(item) {
     : state === "unsupported" ? !supported : ["prepared", "needs_setup"].includes(state)
       ? supported && prepared() === (state === "prepared") : supported && item.enabled === (state === "enabled"));
   const text = searchText(item, searchable);
-  return query.split(/\s+/).every(word => text.includes(word)) && stateMatches
+  return query.split(" ").every(word => text.includes(word)) && stateMatches
     && ($("#category").value === "all" || categoryOf(item) === $("#category").value);
 }
 function orderedByCategory(items) {

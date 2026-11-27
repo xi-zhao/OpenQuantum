@@ -218,6 +218,26 @@ test("offline Chromium exercises the built homepage and both hosts' settings pro
       }
     });
 
+    if (host === "Codex") await t.test("Codex default account details accept spaces and tabs in a pasted Pasqal Cloud title", async () => {
+      const saved = await snapshotFor(host, ["PASQAL_AUTH_TOKEN"]);
+      for (const width of [375, 1100]) {
+        await page.viewport(width);
+        for (const query of ["Pasqal Cloud", "Pasqal  Cloud", "Pasqal\tCloud"]) {
+          await open(saved);
+          await page.evaluate(() => [...document.querySelectorAll("button")].find(b => b.textContent === "管理 MCP 与账户").click());
+          assert.equal(await page.evaluate(() => document.querySelector("#state").value), "all");
+          await filter(page, "#search", query);
+          assert.deepEqual(await page.evaluate(readIds), ["pasqal-experiments"], JSON.stringify({ width, query }));
+          const selection = await page.evaluate(() => {
+            const detail = document.querySelector("#catalog-detail");
+            const card = detail.querySelector("article.oq-service-credential");
+            return [detail.dataset.entryKey, card?.ariaLabel, card?.querySelector("details")?.open];
+          });
+          assert.deepEqual(selection, ["skill:pasqal-experiments", "Pasqal Cloud", true]);
+        }
+      }
+    });
+
     await t.test(`${host} overview distinguishes empty and unread groups and refreshes after recovery`, async () => {
       for (const saved of [[], ["QISKIT_IBM_TOKEN", "IONQ_API_KEY"]]) {
         await open(await snapshotFor(host, saved, true));
