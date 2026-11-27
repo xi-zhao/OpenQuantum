@@ -235,6 +235,7 @@ flowchart TB
 
 - **Roadmap**: Ausbau von L2/L3-Prüfungen, CPU/GPU/HPC/QPU-Orchestrierung, Laborgeräte-Schnittstellen und Quantum Learning. Rekursive Selbstverbesserung (RSI) ist eine langfristige Forschungsrichtung; **die vollständige RSI-Schleife ist nicht implementiert** ([Vision](../roadmap/VISION.md)).
 - **Mitwirken**: [Beitragsleitfaden](../../CONTRIBUTING.md) · [Issues](https://github.com/xi-zhao/OpenQuantum/issues) · [Verhaltenskodex](../../CODE_OF_CONDUCT.md) · [Sicherheit](../../SECURITY.md) (`npm run check`).
+- **Kontakt**: [zx4612@mail.ustc.edu.cn](mailto:zx4612@mail.ustc.edu.cn) · WeChat: `sincerely1019`
 
 ```bibtex
 @software{zhao2026openquantum,

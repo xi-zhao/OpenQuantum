@@ -270,6 +270,7 @@ flowchart TB
 - **제공된 기준선**: 내장 Skill 194개, MCP 91개, 고정 SDK 122개, Desktop & Codex `v0.8.11`, DSH 재현 가능 L3 과학적 승인 11개.
 - **장기 비전(RSI)**: 독립 검증과 권한 경계에 기반한 재귀적 자기 개선을 탐색 중이며, **전체 RSI 루프는 아직 구현되지 않았습니다**([장기 계획](../roadmap/VISION.md)).
 - **기여하기**: [기여 가이드](../../CONTRIBUTING.md) · [Issues](https://github.com/xi-zhao/OpenQuantum/issues) · [행동 강령](../../CODE_OF_CONDUCT.md) · [보안 정책](../../SECURITY.md) (오프라인 전체 점검: `npm run check`).
+- **연락처**: [zx4612@mail.ustc.edu.cn](mailto:zx4612@mail.ustc.edu.cn) · WeChat: `sincerely1019`
 
 ```bibtex
 @software{zhao2026openquantum,

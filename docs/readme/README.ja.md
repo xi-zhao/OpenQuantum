@@ -312,6 +312,8 @@ flowchart TB
 
 **[コントリビューションガイド ↗](../../CONTRIBUTING.md)** · **[Issues](https://github.com/xi-zhao/OpenQuantum/issues)** · **[行動規範](../../CODE_OF_CONDUCT.md)** · **[セキュリティ](../../SECURITY.md)**（オフライン全体検査：`npm run check`）
 
+連絡先：[zx4612@mail.ustc.edu.cn](mailto:zx4612@mail.ustc.edu.cn) · WeChat：`sincerely1019`
+
 ```bibtex
 @software{zhao2026openquantum,
   author  = {Zhao, Xi and {OpenQuantum contributors}},

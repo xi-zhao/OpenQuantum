@@ -235,6 +235,7 @@ flowchart TB
 
 - **خارطة الطريق**: توسيع تغطية L2/L3 وتنسيق CPU/GPU/HPC/QPU وواجهات الأجهزة المخبرية ومناهج Quantum Learning. يبقى التحسين الذاتي التكراري (RSI) توجهًا طويل المدى؛ **ولم تُنفَّذ حلقة RSI الكاملة بعد** ([الرؤية](../roadmap/VISION.md)).
 - **المساهمة**: [دليل المساهمة](../../CONTRIBUTING.md) · [Issues](https://github.com/xi-zhao/OpenQuantum/issues) · [مدونة السلوك](../../CODE_OF_CONDUCT.md) · [سياسة الأمان](../../SECURITY.md) (`npm run check`).
+- **التواصل**: [zx4612@mail.ustc.edu.cn](mailto:zx4612@mail.ustc.edu.cn) · WeChat: `sincerely1019`
 
 ```bibtex
 @software{zhao2026openquantum,

@@ -189,6 +189,8 @@ npm run dev                         # 启动本地 Web 工作台
 
 [参与贡献](CONTRIBUTING.md) · [需求与合作交流](https://github.com/xi-zhao/OpenQuantum/issues) · [文档与架构总入口](docs/README.md) · [任务示例](docs/EXAMPLES.md) · [更新日志](CHANGELOG.md) · 本地全仓校验 `npm run check`
 
+联系作者：[zx4612@mail.ustc.edu.cn](mailto:zx4612@mail.ustc.edu.cn) · 个人微信：`sincerely1019`
+
 <details>
 <summary>学术引用（BibTeX）与合规许可详情</summary>
 

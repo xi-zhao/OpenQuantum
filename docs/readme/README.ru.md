@@ -235,6 +235,7 @@ flowchart TB
 
 - **Дорожная карта**: расширение покрытия L2/L3, совместные рабочие процессы CPU/GPU/HPC/QPU, интерфейсы лабораторных приборов и Quantum Learning. Рекурсивное самоулучшение (RSI) остаётся долгосрочным направлением; **полный цикл RSI ещё не реализован** ([видение](../roadmap/VISION.md)).
 - **Участие**: [Руководство по вкладу](../../CONTRIBUTING.md) · [Issues](https://github.com/xi-zhao/OpenQuantum/issues) · [Кодекс поведения](../../CODE_OF_CONDUCT.md) · [Безопасность](../../SECURITY.md) (`npm run check`).
+- **Контакты**: [zx4612@mail.ustc.edu.cn](mailto:zx4612@mail.ustc.edu.cn) · WeChat: `sincerely1019`
 
 ```bibtex
 @software{zhao2026openquantum,

@@ -190,6 +190,8 @@ npm run dev                         # Start local Web workbench
 
 [Contributing](../../CONTRIBUTING.md) · [Issues &amp; Research Requests](https://github.com/xi-zhao/OpenQuantum/issues) · [Architecture Docs](../README.md) · [Task Examples](../EXAMPLES.md) · [Changelog](../../CHANGELOG.md) · Full local verification: `npm run check`
 
+Contact: [zx4612@mail.ustc.edu.cn](mailto:zx4612@mail.ustc.edu.cn) · WeChat: `sincerely1019`
+
 <a id="license-and-acknowledgments"></a>
 
 <details>

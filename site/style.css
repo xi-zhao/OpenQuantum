@@ -501,12 +501,25 @@ figcaption { font-size: 13px; line-height: 1.6; margin-top: 12px; color: var(--s
 }
 .community-copy p { color: var(--muted); font-size: 16.5px; }
 .community-links { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; margin-top: 24px; }
+.community-contact {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--line);
+  font-size: 14.5px; color: var(--subtle);
+}
+.community-contact code, .footer-note code {
+  font-family: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 0.92em; color: var(--ink); background: var(--surface);
+  border: 1px solid var(--line); border-radius: 6px; padding: 1px 7px;
+}
+.contact-sep { color: var(--line); }
 
 .site-footer { padding-block: 36px 36px; border-top: 1px solid var(--line); }
 .footer-top { display: flex; justify-content: space-between; gap: var(--gap); align-items: center; color: var(--subtle); font-size: 14px; }
 .footer-top > div { display: flex; gap: 24px; align-items: center; flex-wrap: wrap; }
 .footer-wordmark { display: block; font-size: 20px; font-weight: 600; letter-spacing: -0.04em; margin-block: 22px 10px; width: fit-content; }
-.footer-note { font-size: 13.5px; color: var(--subtle); max-width: 64ch; }
+.footer-note { font-size: 13.5px; color: var(--subtle); max-width: 72ch; }
+.footer-note a { color: var(--muted); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(15, 27, 40, 0.24); }
+.footer-note a:hover { color: var(--accent); text-decoration-color: currentColor; }
 
 /* Hover states */
 @media (hover: hover) {

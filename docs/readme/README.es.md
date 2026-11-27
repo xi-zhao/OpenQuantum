@@ -235,6 +235,7 @@ flowchart TB
 
 - **Hoja de ruta**: ampliar cobertura L2/L3, orquestación CPU/GPU/HPC/QPU, interfaces de instrumentación y cursos de Quantum Learning. La mejora recursiva (RSI) sigue siendo una dirección a largo plazo; **el ciclo RSI completo aún no está implementado** ([visión](../roadmap/VISION.md)).
 - **Contribuir**: [Guía de contribución](../../CONTRIBUTING.md) · [Issues](https://github.com/xi-zhao/OpenQuantum/issues) · [Código de conducta](../../CODE_OF_CONDUCT.md) · [Seguridad](../../SECURITY.md) (`npm run check`).
+- **Contacto**: [zx4612@mail.ustc.edu.cn](mailto:zx4612@mail.ustc.edu.cn) · WeChat: `sincerely1019`
 
 ```bibtex
 @software{zhao2026openquantum,

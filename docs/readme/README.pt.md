@@ -235,6 +235,7 @@ flowchart TB
 
 - **Roadmap**: expandir cobertura L2/L3, orquestração CPU/GPU/HPC/QPU, interfaces de instrumentação e cursos do Quantum Learning. A autoaperfeiçoamento recursivo (RSI) é uma direção de longo prazo; **o ciclo RSI completo não está implementado** ([visão](../roadmap/VISION.md)).
 - **Contribuir**: [Guia de contribuição](../../CONTRIBUTING.md) · [Issues](https://github.com/xi-zhao/OpenQuantum/issues) · [Código de conduta](../../CODE_OF_CONDUCT.md) · [Segurança](../../SECURITY.md) (`npm run check`).
+- **Contato**: [zx4612@mail.ustc.edu.cn](mailto:zx4612@mail.ustc.edu.cn) · WeChat: `sincerely1019`
 
 ```bibtex
 @software{zhao2026openquantum,
