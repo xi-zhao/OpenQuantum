@@ -36,21 +36,24 @@ def example_design():
     return design
 
 
-def export_masks(design, folder, junction_file):
+def configured_renderer(design, junction_file):
     gds = design.renderers.gds
-    gds.options.path_filename = str(junction_file.resolve()) if junction_file is not None else None
+    gds.options.path_filename = str(junction_file.resolve(strict=True))
     gds.options.precision = "0.000000001"
     gds.options.cheese.update(shape="0", cheese_0_x="25um", cheese_0_y="25um",
                               delta_x="100um", delta_y="100um", edge_nocheese="200um")
     gds.options.no_cheese.buffer = "25um"
+    gds.options.negative_mask = Dict(main=[])
+    return gds
+
+
+def export_positive_design(design, folder, junction_file):
+    renderer = configured_renderer(design, junction_file)
     outputs = {}
-    for name, fabricate, negative in [
-        ("diagnostic", False, False), ("positive", True, False), ("negative", True, True),
-    ]:
-        gds.options.fabricate = str(fabricate)
-        gds.options.negative_mask = Dict(main=[1] if negative else [])
+    for name, fabricate in [("diagnostic", False), ("positive", True)]:
+        renderer.options.fabricate = str(fabricate)
         path = folder / (name + ".gds")
-        if gds.export_to_gds(str(path)) != 1:
+        if renderer.export_to_gds(str(path)) != 1:
             raise RuntimeError(f"GDS export failed for {name}")
         outputs[name] = path.name
     return outputs
@@ -61,7 +64,7 @@ if __name__ == "__main__":
     folder.mkdir()
     junction = folder / "junction.gds"
     write_sample_junction(junction)
-    files = export_masks(example_design(), folder, junction)
+    files = export_positive_design(example_design(), folder, junction)
     result = {"directory": str(folder), "gds": files, "inputJunction": junction.name,
               "scientificValidation": "not_evaluated"}
     Path("result.json").write_text(json.dumps(result, indent=2) + "\n")

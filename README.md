@@ -7,7 +7,7 @@
 
 <p align="center">
   <strong>OpenQuantum — 共建可信的量子科研智能</strong><br />
-  <sub>开源量子科研智能体插件与工作台 · 连接 122 个锁定量子与形式化环境 · 同时支持 Codex 与 Desktop</sub>
+  <sub>开源量子科研智能体插件与工作台 · 连接 123 个锁定量子与形式化环境 · 同时支持 Codex 与 Desktop</sub>
 </p>
 
 <p align="center">
@@ -54,9 +54,9 @@
 
 <table>
   <tr>
-    <td align="center" width="25%"><strong>194</strong><br /><sub>内置 Skill（181 自动 / 13 索引）</sub></td>
+    <td align="center" width="25%"><strong>195</strong><br /><sub>内置 Skill（182 自动 / 13 索引）</sub></td>
     <td align="center" width="25%"><strong>91</strong><br /><sub>MCP 服务连接（66 默认 / 25 按需）</sub></td>
-    <td align="center" width="25%"><strong>122</strong><br /><sub>锁定 SDK 与源码环境</sub></td>
+    <td align="center" width="25%"><strong>123</strong><br /><sub>锁定 SDK 与源码环境</sub></td>
     <td align="center" width="25%"><strong>11 项 L3</strong><br /><sub>DSH 可回放科学验收能力</sub></td>
   </tr>
 </table>
@@ -92,7 +92,7 @@ OpenQuantum 以一份**共享量子科研插件**连接社区专业软件、论�
   <tr>
     <td width="50%" valign="top">
       <strong>全面 · 覆盖量子科研主流软件栈</strong><br />
-      整合 Qiskit、PennyLane、QuTiP、Stim、PyMatching、TeNPy、Mitiq、PyZX、OpenFermion、Lean 4 等 <strong>122 个锁定环境</strong>（Python 110 / Julia 9 / Native 2 / Lean 1）与 <strong>49 项可执行算法示例</strong>，从教学入门到前沿多体、场论、纠错与硬件发现一站直达。
+      整合 Qiskit、PennyLane、QuTiP、Stim、PyMatching、TeNPy、Mitiq、PyZX、OpenFermion、Lean 4 等 <strong>123 个锁定环境</strong>（Python 111 / Julia 9 / Native 2 / Lean 1）与 <strong>49 项可执行算法示例</strong>，从教学入门到前沿多体、场论、纠错与硬件发现一站直达。
     </td>
     <td width="50%" valign="top">
       <strong>高效 · 针对核心瓶颈持续优化</strong><br />
@@ -142,6 +142,7 @@ OpenQuantum 以一份**共享量子科研插件**连接社区专业软件、论�
 | **动力学、中性原子与脉冲控制** | Trotter / qDrift、Dynamiqs、OQuPy、TJM、Bloqade Analog、Pulser、PairInteraction、[ST-GRAPE](.agents/skills/stgrape-control/SKILL.md)、QUA / LabOne Q / Qblox / Qililab / OQC QAT；[目录](docs/CAPABILITIES.md#哈密顿量模拟与开放系统) | 单位、截断、时间网格与噪声假设；离线脉冲编译与真实设备控制严格区分 |
 | **光子计算与量子网络** | Perceval、Piquasso、Lightworks、MerLin、MrMustard、SimQN、NetQASM / SquidASM；[目录](docs/CAPABILITIES.md#光子计算与量子网络) | 模式顺序、Fock 截断、损耗模型与外部许可（NetSquid 需另行授权） |
 | **量子硬件发现与云接口** | FieldQKit、IBM Quantum、IonQ、本源、夸父、天衍、国盾、腾讯、逻辑比特与本地 QDMI C 驱动；[后端列表](docs/CAPABILITIES.md#本地计算与量子云) | 凭据、配额与权限隔离；默认只读发现，真机任务接口按需显式开启 |
+| **超导芯片版图** | 用 `node scripts/setup-sdk.mjs quantum-metal-layout` 准备 [Quantum Metal](.agents/skills/quantum-metal-layout/SKILL.md)，从已有 QDesign 和显式结模板导出正掩模 GDSII，用 [KLayout 读回](.agents/skills/quantum-metal-layout/references/verify-positive.py)核对示例几何 | 0.10.2 的负掩模在同一设计中重复放置结。核验范围限于焊盘、结、波导和孔洞几何 |
 | <a id="数学与物理形式化"></a>**形式化证明与公开基准** | [Lean 4 / mathlib / physlib](.agents/skills/lean-physics/SKILL.md)（定理复用与公理检查）、[Quantum-Practices（66 指南）与 Metriq（410 历史基准）](docs/CAPABILITIES.md#参考资料与选型) | 形式证明仅覆盖文件中定义与公理；历史基准不代表当前硬件实时性能 |
 | <a id="量子学习通"></a>**教学材料与互动课堂** | [量子学习通 / OpenMAIC](docs/integrations/OPENMAIC.md)：课程库、课件编辑、PPTX 导入、测验与互动课堂 | 完整课程体系仍在建设，真实在线 AI 教学流程尚未完整验收 |
 
@@ -170,7 +171,7 @@ OpenQuantum 以一份**共享量子科研插件**连接社区专业软件、论�
 
 | 后端 | 支持范围 | 凭据与开关策略 |
 | --- | --- | --- |
-| **本地数值后端** | 电路、噪声、基态、化学、多体、纠错、光学、脉冲仿真（122 个锁定环境） | 无需云凭据；首次使用前显式准备对应锁定依赖 |
+| **本地数值后端** | 电路、噪声、基态、化学、多体、纠错、光学、脉冲仿真（123 个锁定环境） | 无需云凭据；首次使用前显式准备对应锁定依赖 |
 | **IBM Quantum** | Runtime、AI Transpiler、硬件查询；可选真机任务提交与取消 | `QISKIT_IBM_TOKEN`；任务类 MCP 连接默认关闭（按需开启） |
 | **IonQ** | 硬件查询；可选真机任务提交、取消与成本估算 | `IONQ_API_KEY`；任务类 MCP 连接默认关闭（按需开启） |
 | **本源量子云** | 只读后端发现（FieldQKit）；另经 QPanda3 Runtime 查询悟空 QPU 与可选真机任务 | `ORIGIN_API_TOKEN` 只读发现；`QPANDA3_API_KEY` 可选真机任务 |
@@ -179,7 +180,7 @@ OpenQuantum 以一份**共享量子科研插件**连接社区专业软件、论�
 
 </details>
 
-当前源码分发 **194 个内置 Skill、91 个 MCP 服务连接、5 个原生量子 Tool**，并为 **122 个 SDK/源码环境**提供原生 API 使用路径（其中 **11 项能力**已接入 DSH 侧可回放 L3 科学验收）。清单数量、配置启用、环境就绪与科学验收是相互独立的状态；已发布安装包的功能范围以各自 Release 为准。
+当前源码分发 **195 个内置 Skill、91 个 MCP 服务连接、5 个原生量子 Tool**，并为 **123 个 SDK/源码环境**提供原生 API 使用路径（其中 **11 项能力**已接入 DSH 侧可回放 L3 科学验收）。清单数量、配置启用、环境就绪与科学验收是相互独立的状态；已发布安装包的功能范围以各自 Release 为准。
 
 [完整 Skill 目录](docs/CAPABILITIES.md#内置-skills) · [MCP 服务及默认开关](docs/CAPABILITIES.md#mcp-服务目录) · [原生 Tool 与副作用](docs/CAPABILITIES.md#原生量子-tools) · [SDK API 与逐库验证](docs/integrations/FULL_SDK_ACCESS.md) · [相近方法怎么选](docs/integrations/CAPABILITY_SELECTION.md)
 
@@ -375,8 +376,8 @@ OpenQuantum 的产品核心是一份**与宿主解耦的共享科研插件**（S
 ```mermaid
 flowchart TB
   subgraph Shared["共享 OpenQuantum 科研插件（单一事实源）"]
-    SK["194 个内置 Skill<br/>领域知识 · 方法选择 · 解释边界"]
-    TI["Tool 实现 & 91 个 MCP Server<br/>5 个原生量子 Tool · 122 个锁定 SDK 环境"]
+    SK["195 个内置 Skill<br/>领域知识 · 方法选择 · 解释边界"]
+    TI["Tool 实现 & 91 个 MCP Server<br/>5 个原生量子 Tool · 123 个锁定 SDK 环境"]
     SC["科学合同<br/>Scientific Validator · Acceptance Profile · central Builder"]
   end
 
@@ -436,7 +437,7 @@ OpenQuantum 的目标是让每一次量子研究不仅产出可核对的结果�
 
 | 阶段 | 核心主题 | 当前状态与说明 |
 | --- | --- | --- |
-| **已交付基线** | 共享科研插件与双宿主交付 | 194 Skill、91 MCP 连接、122 锁定 SDK 环境；Desktop & Codex 插件同步至 `v0.8.11`；11 项可回放 L3 科学验收与全沙箱参考隔离 |
+| **已交付基线** | 共享科研插件与双宿主交付 | 195 Skill、91 MCP 连接、123 锁定 SDK 环境；Desktop & Codex 插件同步至 `v0.8.11`；11 项可回放 L3 科学验收与全沙箱参考隔离 |
 | **持续演进** | 专业软件生态、量子-经典协同与教学 | 持续扩大高质量 L2/L3 科学验收覆盖，完善本地 CPU / GPU / HPC / QPU 协同调度、仪器接口探索与[量子学习通](docs/integrations/OPENMAIC.md)课程体系 |
 | **长期愿景（RSI）** | 经验证的研究能力递归自改进 | 探索“真实任务 → 候选改进 → 独立评估与新任务对照 → 授权升级”闭环；**完整 RSI 闭环尚未实现**，权限边界与评估条件见[长期发展规划](docs/roadmap/VISION.md) |
 

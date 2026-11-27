@@ -45,15 +45,15 @@
 
 <p align="center">
   <a href="https://xi-zhao.github.io/OpenQuantum/">
-    <img src="../images/readme/banner-en.svg" width="100%" alt="OpenQuantum — Construindo juntos uma IA confiável para a pesquisa quântica. Compatível com Qiskit, PennyLane, QuTiP, Stim, PyMatching, Lean 4 e 122 ambientes fixados." />
+    <img src="../images/readme/banner-en.svg" width="100%" alt="OpenQuantum — Construindo juntos uma IA confiável para a pesquisa quântica. Compatível com Qiskit, PennyLane, QuTiP, Stim, PyMatching, Lean 4 e 123 ambientes fixados." />
   </a>
 </p>
 
 <table>
   <tr>
-    <td align="center" width="25%"><strong>194</strong><br /><sub>Skills integradas (181 auto / 13 índice)</sub></td>
+    <td align="center" width="25%"><strong>195</strong><br /><sub>Skills integradas (182 auto / 13 índice)</sub></td>
     <td align="center" width="25%"><strong>91</strong><br /><sub>Conexões MCP (66 ativas / 25 opcionais)</sub></td>
-    <td align="center" width="25%"><strong>122</strong><br /><sub>Ambientes SDK e fonte fixados</sub></td>
+    <td align="center" width="25%"><strong>123</strong><br /><sub>Ambientes SDK e fonte fixados</sub></td>
     <td align="center" width="25%"><strong>11 L3</strong><br /><sub>Aceitação científica reproduzível (DSH)</sub></td>
   </tr>
 </table>
@@ -81,7 +81,7 @@ https://github.com/user-attachments/assets/5c00a30d-eef0-493a-975f-3faeb200cc9e
 
 Usar um LLM genérico na pesquisa quântica costuma esbarrar em três barreiras: **reescrever código frágil do zero, lidar com mais de cem SDKs fragmentados e receber respostas plausíveis sem verificação independente.** O OpenQuantum conecta software científico aberto, métodos publicados e verificações independentes em um **plugin compartilhado**.
 
-- **Cobertura ampla**: 122 ambientes fixados (110 Python, 9 Julia, 2 nativos, 1 Lean 4) e 49 exemplos executáveis de algoritmos (Qiskit, PennyLane, QuTiP, Stim, PyMatching, TeNPy, Mitiq, PyZX, OpenFermion, Lean 4 e mais).
+- **Cobertura ampla**: 123 ambientes fixados (111 Python, 9 Julia, 2 nativos, 1 Lean 4) e 49 exemplos executáveis de algoritmos (Qiskit, PennyLane, QuTiP, Stim, PyMatching, TeNPy, Mitiq, PyZX, OpenFermion, Lean 4 e mais).
 - **Mais rápido e verificável**: ganhos medidos em chamada completa (**5,69×** no QuTiP, **5,09×** no PennyLane) com verificação ponto a ponto.
 - **Ciência verificável**: a *aceitação científica* — concluir que um resultado é cientificamente confiável com base em verificações independentes e procedência completa — permanece separada da conclusão simples de uma ferramenta.
 - **Aberto e multi-host**: você usa o mesmo plugin no **plugin Codex** ou no **OpenQuantum Desktop / Web** com seu próprio modelo Tool Calling (BYOM); o código próprio é licença MIT.
@@ -102,10 +102,11 @@ Usar um LLM genérico na pesquisa quântica costuma esbarrar em três barreiras:
 | <a id="hamiltonian-simulation-and-open-systems"></a>**Dinâmica, átomos neutros e pulsos** | Trotter / qDrift, Dynamiqs, OQuPy, TJM, Bloqade Analog, Pulser, PairInteraction, [ST-GRAPE](../../.agents/skills/stgrape-control/SKILL.md), QUA / LabOne Q / Qblox / Qililab / OQC QAT | Unidades, cortes e grade temporal fixa; compilação offline não opera hardware de laboratório |
 | <a id="photonics-and-quantum-networks"></a>**Fotônica e redes quânticas** | Perceval, Piquasso, Lightworks, MerLin, MrMustard, SimQN, NetQASM / SquidASM | Ordem dos modos, corte de Fock e licença separada do NetSquid |
 | <a id="experiment-simulation-and-hardware"></a>**Hardware e nuvens quânticas** | FieldQKit, IBM Quantum, IonQ, OriginQ, Quafu, Tianyan, Guodun, Tencent, LogicalQubit e QDMI | Descoberta somente leitura por padrão; envios reais à QPU apenas sob ativação explícita |
+| **Layout de chips supercondutores** | [Quantum Metal](../../.agents/skills/quantum-metal-layout/SKILL.md) · Exporta um QDesign com junção explícita para uma máscara positiva GDSII. O KLayout verifica os eletrodos, a junção e o guia coplanar. | No exemplo verificado, a máscara negativa posiciona a junção três vezes. |
 | <a id="reference-material-and-selection"></a>**Provas formais e benchmarks** | [Lean 4 / mathlib / physlib](../../.agents/skills/lean-physics/SKILL.md), [Quantum-Practices (66) e Metriq (410)](../CAPABILITIES.md#参考资料与选型) | Provas cobrem apenas definições e axiomas declarados; registros históricos não certificam hardware atual |
 | <a id="quantum-learning"></a>**Ensino e salas interativas** | [Quantum Learning / OpenMAIC](../integrations/OPENMAIC.md) | Currículo completo em construção; fluxos de ensino com IA online aguardam aceitação completa |
 
-A distribuição fonte atual inclui **[194 Skills integradas](../../.agents/skills/README.md)**, **91 conexões de serviços MCP** (66 ativas por padrão, 25 opcionais), **5 Tools quânticas nativas** e **[122 ambientes SDK/fonte](../integrations/SDK_INVENTORY.md)** (com **11 recursos L3** reproduzíveis no DSH). [Catálogo completo (chinês)](../CAPABILITIES.md#接口总览) · [Auditoria SDK](../integrations/FULL_SDK_ACCESS.md)
+A distribuição fonte atual inclui **[195 Skills integradas](../../.agents/skills/README.md)**, **91 conexões de serviços MCP** (66 ativas por padrão, 25 opcionais), **5 Tools quânticas nativas** e **[123 ambientes SDK/fonte](../integrations/SDK_INVENTORY.md)** (com **11 recursos L3** reproduzíveis no DSH). [Catálogo completo (chinês)](../CAPABILITIES.md#接口总览) · [Auditoria SDK](../integrations/FULL_SDK_ACCESS.md)
 
 ---
 
@@ -200,7 +201,7 @@ npm run demo:quantum-ground-state
 
 ```mermaid
 flowchart TB
-  Shared["Plugin compartilhado OpenQuantum<br/>194 Skills · 91 MCP · 122 SDKs · Contratos científicos"]
+  Shared["Plugin compartilhado OpenQuantum<br/>195 Skills · 91 MCP · 123 SDKs · Contratos científicos"]
   Shared --> DSH["DSH Desktop / Web<br/>Registry nativo · Sandbox completo · Replay L3"]
   Shared --> CDX["Plugin Codex<br/>Descobrir → Preparar → Executar · Observações"]
 ```

@@ -150,7 +150,7 @@ OpenQuantum 为本地模拟、IBM Quantum、IonQ 和多家国内量子云保留�
   <a href="#原生量子-tools">原生量子 Tools</a>
 </p>
 
-当前源码分发 **194 个内置 Skill、91 个 MCP 服务连接、5 个原生量子 Tool**。其中 66 个 Skill 来自 quantum-skills 的开源工作流适配，共用现有代码执行工具；其中 49 项提供可运行示例，覆盖 unitarylab_algorithms 的全部 39 个模块。Skill、Tool 和 MCP 连接分别统计。
+当前源码分发 **195 个内置 Skill、91 个 MCP 服务连接、5 个原生量子 Tool**。其中 66 个 Skill 来自 quantum-skills 的开源工作流适配，共用现有代码执行工具；其中 49 项提供可运行示例，覆盖 unitarylab_algorithms 的全部 39 个模块。Skill、Tool 和 MCP 连接分别统计。
 
 当前配置共包含 **282 个可配置 Tool 名称**：258 个由 MCP 服务提供，18 个为 Harness 通用工具，6 个为平台原生工具（上面的 5 个量子动作及 1 个教学生成动作）。这是配置全集；`bash` / `pwsh` 按平台互斥，连接开关、环境和工具范围也会影响实际可调用集合。既有能力的逐项决定见[治理记录](architecture/EXTENSION_GOVERNANCE.md)，新增中性原子动力学见 [Bloqade Analog](integrations/BLOQADE_ANALOG.md)。
 
@@ -161,7 +161,7 @@ OpenQuantum 为本地模拟、IBM Quantum、IonQ 和多家国内量子云保留�
 
 既有条目与治理情况见[治理清单](architecture/EXTENSION_GOVERNANCE.md)；相近入口及大型可选服务的专业工具范围见[能力选择](integrations/CAPABILITY_SELECTION.md)。
 
-这 194 个 Skill 覆盖方法选择、计算实验、结果解释和平台诊断。其中 181 项可由 Agent 自动选择，13 个分类索引保留为用户手动导航；原名称和手动调用均可继续使用。点击名称即可查看完整的 `SKILL.md`；所需工具与连接分别配置。新增算法工作流的参数、安装与开源替换差异见[运行说明](../examples/quantum-algorithms/README.md)。
+这 195 个 Skill 覆盖方法选择、计算实验、结果解释和平台诊断。其中 182 项可由 Agent 自动选择，13 个分类索引保留为用户手动导航；原名称和手动调用均可继续使用。点击名称即可查看完整的 `SKILL.md`；所需工具与连接分别配置。新增算法工作流的参数、安装与开源替换差异见[运行说明](../examples/quantum-algorithms/README.md)。
 
 下表按**研究方法与用途**介绍能力。各 Tool 提供的模型、参数和输入格式见[计算参数与运行方式](EXAMPLES.md#计算参数与运行方式)。
 
@@ -173,6 +173,7 @@ OpenQuantum 为本地模拟、IBM Quantum、IonQ 和多家国内量子云保留�
 | [`catalyst-compilation`](../.agents/skills/catalyst-compilation/SKILL.md) | qjit、混合程序、QNode、控制流、编译配置与梯度 | 宿主代码 Tool；显式准备原生 SDK |
 | [`jaxquantum-modeling`](../.agents/skills/jaxquantum-modeling/SKILL.md) | JAX 算符、器件与 bosonic 模型、动力学、扫描与梯度 | 宿主代码 Tool；显式准备原生 SDK |
 | [`josephson-circuits`](../.agents/skills/josephson-circuits/SKILL.md) | Josephson 元件、电路、频域谐波平衡、散射与噪声 | 宿主代码 Tool；显式准备原生 SDK |
+| [`quantum-metal-layout`](../.agents/skills/quantum-metal-layout/SKILL.md) | QDesign 的正掩模 GDSII、显式结模板与独立版图读回 | 固定几何示例，0.10.2 的负掩模存在重复结 |
 | [`monoprop-propagation`](../.agents/skills/monoprop-propagation/SKILL.md) | Pauli/Majorana 算符、门生成元、传播、梯度与截断 | 宿主代码 Tool；显式准备原生 SDK |
 | [`mqt-debugger`](../.agents/skills/mqt-debugger/SKILL.md) | OpenQASM 程序、单步仿真、断言、影响范围与错误诊断 | 宿主代码 Tool；显式准备原生 SDK |
 | [`mqt-qecc`](../.agents/skills/mqt-qecc/SKILL.md) | CSS 码、容错态制备、色码与模拟信息解码 | 宿主代码 Tool；显式准备原生 SDK |
@@ -622,7 +623,7 @@ OpenQuantum 提供以下 5 个原生量子动作，用于基态求解、调校�
 
 ## 可选上游 Skill
 
-[OriginQ 官方 `pyqpanda3` Skill](https://github.com/OriginQ/pyqpanda3-skill) 提供电路编程、算法模板、迁移与 QCloud 使用指导。它**不计入上面的 194 个内置 Skill，也不会在首次启动时自动安装**；运行 `npm run skill:qpanda:setup` 后，固定审阅版本才会进入项目 Skill 目录。安装这个 Skill 不会自动启用 `qpanda_runtime`，也不会赋予云任务权限。
+[OriginQ 官方 `pyqpanda3` Skill](https://github.com/OriginQ/pyqpanda3-skill) 提供电路编程、算法模板、迁移与 QCloud 使用指导。它**不计入上面的 195 个内置 Skill，也不会在首次启动时自动安装**；运行 `npm run skill:qpanda:setup` 后，固定审阅版本才会进入项目 Skill 目录。安装这个 Skill 不会自动启用 `qpanda_runtime`，也不会赋予云任务权限。
 
 ## 开源生态与致谢
 

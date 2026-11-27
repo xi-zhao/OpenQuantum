@@ -45,15 +45,15 @@
 
 <p align="center">
   <a href="https://xi-zhao.github.io/OpenQuantum/">
-    <img src="../images/readme/banner-en.svg" width="100%" alt="OpenQuantum — Вместе создаём надёжный ИИ для квантовых исследований. Поддержка Qiskit, PennyLane, QuTiP, Stim, PyMatching, Lean 4 и 122 зафиксированного окружения." />
+    <img src="../images/readme/banner-en.svg" width="100%" alt="OpenQuantum — Вместе создаём надёжный ИИ для квантовых исследований. Поддержка Qiskit, PennyLane, QuTiP, Stim, PyMatching, Lean 4 и 123 зафиксированного окружения." />
   </a>
 </p>
 
 <table>
   <tr>
-    <td align="center" width="25%"><strong>194</strong><br /><sub>Встроенных Skill (181 авто / 13 индекс)</sub></td>
+    <td align="center" width="25%"><strong>195</strong><br /><sub>Встроенных Skill (182 авто / 13 индекс)</sub></td>
     <td align="center" width="25%"><strong>91</strong><br /><sub>Подключение MCP (66 вкл. / 25 опц.)</sub></td>
-    <td align="center" width="25%"><strong>122</strong><br /><sub>Зафиксированных SDK-окружений</sub></td>
+    <td align="center" width="25%"><strong>123</strong><br /><sub>Зафиксированных SDK-окружений</sub></td>
     <td align="center" width="25%"><strong>11 L3</strong><br /><sub>Воспроизводимая научная приёмка (DSH)</sub></td>
   </tr>
 </table>
@@ -81,7 +81,7 @@ https://github.com/user-attachments/assets/5c00a30d-eef0-493a-975f-3faeb200cc9e
 
 При использовании обычных LLM в квантовых исследованиях возникают три проблемы: **постоянное переписывание хрупкого кода с нуля, более сотни разрозненных SDK и правдоподобные ответы без независимой проверки.** OpenQuantum объединяет открытые библиотеки, научные методы и независимые проверки в одном **общем плагине**.
 
-- **Широкий охват**: 122 зафиксированное окружение (110 Python, 9 Julia, 2 нативных, 1 Lean 4) и 49 исполняемых примеров алгоритмов (Qiskit, PennyLane, QuTiP, Stim, PyMatching, TeNPy, Mitiq, PyZX, OpenFermion, Lean 4 и др.).
+- **Широкий охват**: 123 зафиксированное окружение (111 Python, 9 Julia, 2 нативных, 1 Lean 4) и 49 исполняемых примеров алгоритмов (Qiskit, PennyLane, QuTiP, Stim, PyMatching, TeNPy, Mitiq, PyZX, OpenFermion, Lean 4 и др.).
 - **Измеренная скорость**: ускорение полных вызовов (**в 5,69 раза** в QuTiP, **в 5,09 раза** в PennyLane) с поэлементной проверкой точности.
 - **Проверяемая наука**: *научная приёмка* — вывод о научной достоверности результата на основе независимых проверок и полной прослеживаемости — строго отделена от факта завершения вызова инструмента.
 - **Открытость и мультихост**: единый плагин работает в **плагине Codex** и в **OpenQuantum Desktop / Web** с вашей моделью, поддерживающей Tool Calling (BYOM); собственный код распространяется под лицензией MIT.
@@ -102,10 +102,11 @@ https://github.com/user-attachments/assets/5c00a30d-eef0-493a-975f-3faeb200cc9e
 | <a id="hamiltonian-simulation-and-open-systems"></a>**Динамика, нейтральные атомы и импульсы** | Trotter / qDrift, Dynamiqs, OQuPy, TJM, Bloqade Analog, Pulser, PairInteraction, [ST-GRAPE](../../.agents/skills/stgrape-control/SKILL.md), QUA / LabOne Q / Qblox / Qililab / OQC QAT | Единицы измерения, отсечения, фиксированная временная сетка; офлайн-компиляция не управляет приборами |
 | <a id="photonics-and-quantum-networks"></a>**Фотоника и квантовые сети** | Perceval, Piquasso, Lightworks, MerLin, MrMustard, SimQN, NetQASM / SquidASM | Порядок мод, усечение Фока и отдельная лицензия NetSquid |
 | <a id="experiment-simulation-and-hardware"></a>**Оборудование и квантовые облака** | FieldQKit, IBM Quantum, IonQ, OriginQ, Quafu, Tianyan, Guodun, Tencent, LogicalQubit и QDMI | Обнаружение только для чтения по умолчанию; реальные задания на QPU включаются явно |
+| **Топология сверхпроводящих чипов** | [Quantum Metal](../../.agents/skills/quantum-metal-layout/SKILL.md) · Экспорт QDesign с заданной ячейкой перехода в позитивную маску GDSII. KLayout проверяет площадки, переход и копланарный волновод. | В проверенном примере негативная маска размещает переход трижды. |
 | <a id="reference-material-and-selection"></a>**Формальные доказательства и бенчмарки** | [Lean 4 / mathlib / physlib](../../.agents/skills/lean-physics/SKILL.md), [Quantum-Practices (66) и Metriq (410)](../CAPABILITIES.md#参考资料与选型) | Доказательства ограничены указанными определениями и аксиомами; архивные бенчмарки не описывают текущие QPU |
 | <a id="quantum-learning"></a>**Обучение и интерактивные классы** | [Quantum Learning / OpenMAIC](../integrations/OPENMAIC.md) | Полная учебная программа в разработке; онлайн-сценарии с ИИ ожидают полной приёмки |
 
-Текущий исходный дистрибутив включает **[194 встроенных Skill](../../.agents/skills/README.md)**, **91 подключение сервисов MCP** (66 включены по умолчанию, 25 опциональны), **5 нативных квантовых Tools** и **[122 SDK/исходных окружения](../integrations/SDK_INVENTORY.md)** (включая **11 возможностей L3** в DSH). [Полный каталог (кит.)](../CAPABILITIES.md#接口总览) · [Аудит SDK](../integrations/FULL_SDK_ACCESS.md)
+Текущий исходный дистрибутив включает **[195 встроенных Skill](../../.agents/skills/README.md)**, **91 подключение сервисов MCP** (66 включены по умолчанию, 25 опциональны), **5 нативных квантовых Tools** и **[123 SDK/исходных окружения](../integrations/SDK_INVENTORY.md)** (включая **11 возможностей L3** в DSH). [Полный каталог (кит.)](../CAPABILITIES.md#接口总览) · [Аудит SDK](../integrations/FULL_SDK_ACCESS.md)
 
 ---
 
@@ -200,7 +201,7 @@ npm run demo:quantum-ground-state
 
 ```mermaid
 flowchart TB
-  Shared["Общий плагин OpenQuantum<br/>194 Skills · 91 MCP · 122 SDK · Научные контракты"]
+  Shared["Общий плагин OpenQuantum<br/>195 Skills · 91 MCP · 123 SDK · Научные контракты"]
   Shared --> DSH["DSH Desktop / Web<br/>Нативный Registry · Полная песочница · Повтор L3"]
   Shared --> CDX["Плагин Codex<br/>Поиск → Подготовка → Запуск · Наблюдения"]
 ```

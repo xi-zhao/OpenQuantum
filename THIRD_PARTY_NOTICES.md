@@ -171,6 +171,8 @@ while its privately obtained NetSquid dependency stack is not represented as pub
 | PennyLane Catalyst | Apache-2.0 | 原生公开 API；隔离环境或固定源码构建 | [PennyLaneAI/catalyst](https://github.com/PennyLaneAI/catalyst) |
 | jaxquantum | Apache-2.0 | 原生公开 API；隔离环境或固定源码构建 | [EQuS/jaxquantum](https://github.com/EQuS/jaxquantum) |
 | JosephsonCircuits.jl | MIT | 原生公开 API；隔离环境或固定源码构建 | [kpobrien/JosephsonCircuits.jl](https://github.com/kpobrien/JosephsonCircuits.jl) |
+| Quantum Metal 0.10.2 | Apache-2.0 | 显式准备 PyPI 的 `quantum-metal` 发行包，随仓库提供自编示例与合成结 | [固定源码及许可](https://github.com/qiskit-community/qiskit-metal/blob/aff87e59e2b2fbf015e6a7e43fa4409ce5e6563d/LICENSE.txt) |
+| KLayout 0.30.14 | GPL-3.0-or-later | 仅在独立读回环境显式安装 PyPI 的 `klayout`，检查 GDSII 文件 | [上游发行](https://pypi.org/project/klayout/0.30.14/) |
 | monoprop | Apache-2.0 | 原生公开 API；隔离环境或固定源码构建 | [Algorithmiq/monoprop](https://github.com/Algorithmiq/monoprop) |
 | MQT Debugger | MIT | 原生公开 API；隔离环境或固定源码构建 | [munich-quantum-toolkit/debugger](https://github.com/munich-quantum-toolkit/debugger) |
 | MQT QECC | MIT | 原生公开 API；隔离环境或固定源码构建 | [munich-quantum-toolkit/qecc](https://github.com/munich-quantum-toolkit/qecc) |
