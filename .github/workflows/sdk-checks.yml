@@ -250,6 +250,7 @@ jobs:
     uses: ./.github/workflows/_reusable-python-sdk.yml
     with:
       sdk_id: quantum-metal-layout
+      os_matrix: '["macos-latest"]'
       python_version: '3.12'
       isolated_temp_dirs: true
       resolve_sdk_python: true
@@ -257,7 +258,8 @@ jobs:
       lockfiles: .agents/skills/quantum-metal-layout/uv.lock
       artifact_name: quantum-metal-gds
       test_command: |
-        "$SDK_PYTHON" -B tests/fixtures/quantum-metal-controls.py
+        du -sk "$OPENQUANTUM_PYTHON_ENV_ROOT/quantum-metal-layout" > "$OPENQUANTUM_SDK_CHECK_OUTPUT/prepared-environment-kib.txt"
+        /usr/bin/sandbox-exec -p '(version 1) (allow default) (deny network*)' "$SDK_PYTHON" -B tests/fixtures/quantum-metal-controls.py
         uv run --no-project --isolated --python 3.12 --with klayout==0.30.14 python -B tests/fixtures/quantum-metal-readback.py "$OPENQUANTUM_SDK_CHECK_OUTPUT"
 
   rcmps:
