@@ -8,16 +8,18 @@
 
 沿用共享 SDK 工作台，从同一份 `QDesign` 交付正掩模 GDSII。用户可保留 Quantum Metal 元件及已有布线，再用独立的 KLayout 进程检查落盘文件。作为基线的 JosephsonCircuits 网表缺少层、极性和几何坐标。既有 QDesign 因此多了一条可复核的文件交接路径。KQCircuits 和 DeviceLayout.jl 仍适用于直接在各自体系建模。此次未测重建同一设计所需的人工时间。[可编辑示例](../../../.agents/skills/quantum-metal-layout/references/native-example.py) · [正掩模读回命令](../../../.agents/skills/quantum-metal-layout/SKILL.md#正掩模交接)
 
-在 GitHub 标准 macOS arm64 CPU runner 上，冻结安装 `quantum-metal==0.10.2`。写图由 gdstk 1.0.2 完成，读图由独立环境中的 KLayout 0.30.14 完成。数据库单位为 0.001 µm。用固定输入推导焊盘位置、CPW 开口、孔阵列和非对称结标记，分别读回诊断图及两种极性的掩模。下列面积差是文件图形与解析参考在各自窗口内的对称差。结个数按从 `TOP` 可达的原始图形计数，重合图形逐个计数。[固定输入与检查器](https://github.com/xi-zhao/OpenQuantum/tree/2dfa1e07f319ca3dea3bc00683b5c8a245e52e0e/tests/fixtures) · [完整运行与原始观测](https://github.com/xi-zhao/OpenQuantum/actions/runs/45933791052/job/140292261824) · [KLayout 计数语义](https://www.klayout.de/doc/code/class_Region.html#method-count)
+在 GitHub 标准 macOS arm64 CPU runner 上，冻结安装 `quantum-metal==0.10.2`。写图由 gdstk 1.0.2 完成，读图由独立环境中的 KLayout 0.30.14 完成。数据库单位为 0.001 µm。用固定输入推导焊盘位置、CPW 开口、孔阵列和非对称结标记，分别读回诊断图及两种极性的掩模。下列面积差是文件图形与解析参考在各自窗口内的对称差。结个数按从 `TOP` 可达的原始图形计数，重合图形逐个计数。[固定输入与检查器](https://github.com/xi-zhao/OpenQuantum/tree/2dfa1e07f319ca3dea3bc00683b5c8a245e52e0e/tests/fixtures) · [完整运行与原始观测](https://github.com/xi-zhao/OpenQuantum/actions/runs/45933791052/job/140292261824) · [KLayout 计数语义](https://www.klayout.de/doc/code/class_Region.html)
 
 | 文件 | 放置的结（预期 1） | 焊盘窗口面积差 (µm²) | 波导及孔阵列窗口面积差 (µm²) | 远离禁布区的方孔面积差 (µm²) |
 | --- | ---: | ---: | ---: | ---: |
 | 正掩模 | 1 | 0 | 0 | 0 |
 | 第 1 层负掩模 | 3 | 71,200 | 10,800 | 0 |
 
-正掩模的结方向与位置吻合，标记面积为 5 µm²，`1/100` 有接地面图形，`1/99` 观察层已移除。缺少结模板时，上游返回 1，最终文件中有 0 个结。另一个缺失单元引用的输入由读者定位为 `UNDEFINED_CELL`。首次全规格运行因负掩模失败。三个重合结的并集面积仍为 5 µm²，单看面积会漏掉错误。交付示例仅输出诊断图与正掩模；第 1 层负掩模待后续发行修复后复验。负掩模对照继续读取原始输出，保留实际差异。[公开证据包](https://github.com/xi-zhao/OpenQuantum/actions/runs/45933791052/artifacts/15169859389)
+正掩模的结方向与位置吻合，标记面积为 5 µm²，`1/100` 有接地面图形，`1/99` 观察层已移除。缺少结模板时，上游返回 1，最终文件中有 0 个结。另一个缺失单元引用的输入由读者定位为 `UNDEFINED_CELL`。首次全规格运行因负掩模失败。三个重合结的并集面积仍为 5 µm²，单看面积会漏掉错误。交付示例仅输出诊断图与正掩模。第 1 层负掩模待后续发行修复后复验。负掩模对照继续读取原始输出，保留实际差异。[公开证据包](https://github.com/xi-zhao/OpenQuantum/actions/runs/45933791052/artifacts/15169859389)
 
 该次证据包 SHA-256 为 `eb354af7151a269c21ba94ace64eb06cf1cb508dfd90cb0b84f9cdf5e82b0136`。正式比较依据几何量，文件字节可能随导出时间戳变化。该 runner 准备了 35 个 Python 包（uv 报告准备 2.75 s、安装 0.13 s），环境占用 440,924 KiB。首次原生离线示例连同导入和测试入口共 17.75 s。KLayout 仅供独立读回。这些是一次运行成本，速度或空间优势尚无同题对照。
+
+收窄后的公开脚本直接接受一个落盘的正掩模文件。原生 SDK 导出的样例通过（退出码 0），省略结模板、把整个设计重叠实例化两次、引用未定义单元的三个输入分别被拒绝（退出码 1）。双重放置仍有正确的并集面积和方向，失败理由准确为读到两个结。原始负掩模仍报告三个结及两处几何差异。源文件、冻结锁、独立读者、输入与输出文件均可从[版本化运行记录](../../integrations/evidence/quantum-metal-2026-11-27.json)、[实际正掩模](../../integrations/evidence/quantum-metal-2026-11-27/layout/positive.gds)和[逐项读回结果](../../integrations/evidence/quantum-metal-2026-11-27/geometry-readback.json)复核。[交付示例与负对照的 CI 运行](https://github.com/xi-zhao/OpenQuantum/actions/runs/45935794983/job/140298645746)
 
 此处的容差来自示例自身的 1 nm 输出网格。正掩模交接覆盖指定的几何、层和引用，中央科学验收状态为 `not_evaluated`。器件谱、代工工艺规则及流片资格须单独验证。
 

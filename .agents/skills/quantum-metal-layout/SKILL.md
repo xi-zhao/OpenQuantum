@@ -27,4 +27,4 @@ description: 使用 Quantum Metal 从已有 QDesign 和显式结模板导出超�
 uv run --isolated --no-project --python 3.12 --with klayout==0.30.14 python "$VERIFY" layout/positive.gds
 ```
 
-固定版 0.10.2 在省略结模板时可返回成功并输出零个结。在同一设计的第 1 层负掩模中，独立读回数到三个重合的结，焊盘和波导掩模也偏离参考。此示例交付正掩模。器件频率、工艺设计规则及可流片性需要另外验证。[正负掩模与缺结实测](../../../docs/ecosystem/proposals/quantum-metal.md#geometry-evidence)
+固定版 0.10.2 在省略结模板时可返回成功并输出零个结。在同一设计的第 1 层负掩模中，独立读回数到三个重合的结，焊盘和波导掩模也偏离参考。此示例交付正掩模。器件频率、工艺设计规则及可流片性需要另外验证。[正负掩模与缺结实测](https://github.com/xi-zhao/OpenQuantum/actions/runs/45933791052/job/140292261824)

@@ -1,0 +1,102 @@
+{
+  "diagnostic": {
+    "dbuUm": 0.001,
+    "junctionShapesFromTop": 1,
+    "junctionAreaUm2": 5.0,
+    "junctionPositionAndDirection": true
+  },
+  "unsupportedNegativeMask": {
+    "measurements": {
+      "dbuUm": 0.001,
+      "junctionShapesFromTop": 3,
+      "junctionAreaUm2": 5.0,
+      "junctionPositionAndDirection": true,
+      "visibleKeepoutAbsent": true,
+      "padBoundaries": false,
+      "padBoundariesDifferenceUm2": 71200.0,
+      "straightCpwAndUntrimmedHoleGrid": false,
+      "straightCpwAndUntrimmedHoleGridDifferenceUm2": 10800.0,
+      "offKeepoutHole": true,
+      "offKeepoutHoleDifferenceUm2": 0.0
+    },
+    "failures": [
+      "padBoundaries",
+      "straightCpwAndUntrimmedHoleGrid",
+      "expected one placed junction, found 3"
+    ]
+  },
+  "cases": {
+    "positive.gds": {
+      "exitCode": 0,
+      "measurements": {
+        "dbuUm": 0.001,
+        "junctionShapesFromTop": 1,
+        "junctionAreaUm2": 5.0,
+        "junctionPositionAndDirection": true,
+        "visibleKeepoutAbsent": true,
+        "cheesedGroundPresent": true,
+        "padBoundaries": true,
+        "padBoundariesDifferenceUm2": 0.0,
+        "straightCpwAndUntrimmedHoleGrid": true,
+        "straightCpwAndUntrimmedHoleGridDifferenceUm2": 0.0,
+        "offKeepoutHole": true,
+        "offKeepoutHoleDifferenceUm2": 0.0
+      },
+      "failures": [],
+      "scientificValidation": "not_evaluated"
+    },
+    "missing-junction.gds": {
+      "exitCode": 1,
+      "measurements": {
+        "dbuUm": 0.001,
+        "junctionShapesFromTop": 0,
+        "junctionAreaUm2": 0.0,
+        "junctionPositionAndDirection": false,
+        "visibleKeepoutAbsent": true,
+        "cheesedGroundPresent": true,
+        "padBoundaries": true,
+        "padBoundariesDifferenceUm2": 0.0,
+        "straightCpwAndUntrimmedHoleGrid": true,
+        "straightCpwAndUntrimmedHoleGridDifferenceUm2": 0.0,
+        "offKeepoutHole": true,
+        "offKeepoutHoleDifferenceUm2": 0.0
+      },
+      "failures": [
+        "junctionPositionAndDirection",
+        "expected one placed junction, found 0"
+      ],
+      "scientificValidation": "not_evaluated"
+    },
+    "duplicate.gds": {
+      "exitCode": 1,
+      "measurements": {
+        "dbuUm": 0.001,
+        "junctionShapesFromTop": 2,
+        "junctionAreaUm2": 5.0,
+        "junctionPositionAndDirection": true,
+        "visibleKeepoutAbsent": true,
+        "cheesedGroundPresent": true,
+        "padBoundaries": true,
+        "padBoundariesDifferenceUm2": 0.0,
+        "straightCpwAndUntrimmedHoleGrid": true,
+        "straightCpwAndUntrimmedHoleGridDifferenceUm2": 0.0,
+        "offKeepoutHole": true,
+        "offKeepoutHoleDifferenceUm2": 0.0
+      },
+      "failures": [
+        "expected one placed junction, found 2"
+      ],
+      "scientificValidation": "not_evaluated"
+    },
+    "dangling.gds": {
+      "exitCode": 1,
+      "measurements": {},
+      "failures": [
+        "Undefined cell: UNDEFINED_CELL"
+      ],
+      "scientificValidation": "not_evaluated"
+    }
+  },
+  "scientificValidation": "not_evaluated",
+  "failures": []
+}
