@@ -98,7 +98,11 @@ jobs:
             "https://storage.googleapis.com/chrome-for-testing-public/$CHROME_VERSION/mac-arm64/chrome-mac-arm64.zip"
           ditto -x -k "$RUNNER_TEMP/chrome.zip" "$RUNNER_TEMP/keynote-chrome"
           app="$RUNNER_TEMP/keynote-chrome/chrome-mac-arm64/Google Chrome for Testing.app"
-          [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$app/Contents/Info.plist")" == "$CHROME_VERSION" ]]
+          actual=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$app/Contents/Info.plist")
+          if [ "$actual" != "$CHROME_VERSION" ]; then
+            printf 'Expected Chrome %s, got %s\n' "$CHROME_VERSION" "$actual" >&2
+            exit 1
+          fi
           chrome="$app/Contents/MacOS/Google Chrome for Testing"
           test -x "$chrome"
           echo "OPENQUANTUM_CHROMIUM=$chrome" >> "$GITHUB_ENV"

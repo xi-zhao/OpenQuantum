@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
-import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { spawnSync } from "node:child_process";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import test from "node:test";
@@ -253,4 +254,52 @@ test("release publication reuses all CI gates and only uploads a matching stable
   assert.equal(pixels.env.OPENQUANTUM_REQUIRE_KEYNOTE_PIXEL_MATCH, "1");
   assert.equal(workflow.permissions.contents, "read");
   assert.equal(workflow.jobs.publish.permissions.contents, "write");
+});
+
+test("macOS reference CI exports only the pinned Chrome version under /bin/bash -e", { skip: process.platform === "win32" }, async t => {
+  const ci = parse(await readFile(new URL("../.github/workflows/ci.yml", import.meta.url), "utf8"));
+  const step = ci.jobs["keynote-reference"].steps.find(item => item.env?.CHROME_VERSION);
+  const pinned = "149.0.7827.55";
+  assert.equal(step.env.CHROME_VERSION, pinned);
+
+  const dir = await mkdtemp(path.join(tmpdir(), "oq-chrome-pin-"));
+  t.after(() => rm(dir, { recursive: true, force: true }));
+  const contents = path.join(dir, "keynote-chrome", "chrome-mac-arm64", "Google Chrome for Testing.app", "Contents");
+  const chrome = path.join(contents, "MacOS", "Google Chrome for Testing");
+  const script = path.join(dir, "prepare.sh");
+  const fixtures = path.join(dir, "fixtures.sh");
+  const githubEnv = path.join(dir, "GITHUB_ENV");
+  await mkdir(path.dirname(chrome), { recursive: true });
+  await writeFile(chrome, "#!/bin/sh\nexit 0\n", { mode: 0o755 });
+  await writeFile(script, step.run);
+  // Use the staged application fixture. macOS reads Info.plist with its native tool.
+  await writeFile(fixtures, `python() { :; }
+curl() { :; }
+ditto() { :; }
+if [ ! -x /usr/libexec/PlistBuddy ]; then
+  function /usr/libexec/PlistBuddy {
+    [ "$1" = -c ] && [ "$2" = 'Print :CFBundleShortVersionString' ] || return 1
+    /usr/bin/awk -F '[<>]' '/^<string>/ { print $3 }' "$3"
+  }
+fi
+`);
+  for (const version of [pinned, "145.0.7632.6", "158.0.8127.88"]) {
+    await t.test(version, async () => {
+      await writeFile(path.join(contents, "Info.plist"), `<plist version="1.0"><dict>
+<key>CFBundleShortVersionString</key>
+<string>${version}</string>
+</dict></plist>\n`);
+      await writeFile(githubEnv, "");
+      const result = spawnSync("/bin/bash", ["-e", script], {
+        env: { ...step.env, PATH: dir, BASH_ENV: fixtures, RUNNER_TEMP: dir, GITHUB_ENV: githubEnv },
+        encoding: "utf8",
+        timeout: 5_000,
+      });
+      assert.ifError(result.error);
+      const matches = version === pinned;
+      assert.equal(result.status, matches ? 0 : 1, result.stderr);
+      assert.equal(await readFile(githubEnv, "utf8"), matches ? `OPENQUANTUM_CHROMIUM=${chrome}\n` : "");
+      if (!matches) assert.ok(result.stderr.includes(`Expected Chrome ${pinned}, got ${version}`), result.stderr);
+    });
+  }
 });
