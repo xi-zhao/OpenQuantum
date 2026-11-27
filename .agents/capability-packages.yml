@@ -2619,6 +2619,9 @@ packages:
   - id: josephson-circuits
     level: L0
 
+  - id: quantum-metal-layout
+    level: L0
+
   - id: paulistrings-dynamics
     level: L0
 

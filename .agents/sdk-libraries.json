@@ -396,6 +396,21 @@
       "juliaVersion": "1.12.7"
     },
     {
+      "id": "quantum-metal-layout",
+      "title": "Quantum Metal",
+      "language": "python",
+      "modules": [
+        "qiskit_metal",
+        "gdstk"
+      ],
+      "group": "physics",
+      "workflow": "将参数化超导器件设计、结单元和共面波导导出为可供独立读回的 GDSII 版图",
+      "conditions": [
+        "显式提供结模板，核对单位、掩模极性、结位置和引用；几何读回仅覆盖给定设计，频谱与制造规则另行验证。"
+      ],
+      "nativeOnly": true
+    },
+    {
       "id": "kaiwu-qubo",
       "title": "Kaiwu Community",
       "language": "python",

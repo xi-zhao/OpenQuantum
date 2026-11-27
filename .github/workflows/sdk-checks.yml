@@ -26,6 +26,7 @@ on:
           - stgrape
           - braket
           - erasure
+          - metal
           - rcmps
           - tnqs
   pull_request:
@@ -65,6 +66,8 @@ on:
       - 'tests/fixtures/sdk_expansion_circuits_science.py'
       - 'tests/erasure-recovery-live.test.mjs'
       - 'tests/fixtures/erasure-recovery-validation.py'
+      - '.agents/skills/quantum-metal-layout/**'
+      - 'tests/fixtures/quantum-metal-*'
       - '.agents/skills/rcmps-field-theory/**'
       - 'tests/fixtures/rcmps-*'
       - 'tests/rcmps-*'
@@ -109,6 +112,8 @@ on:
       - 'tests/fixtures/sdk_expansion_circuits_science.py'
       - 'tests/erasure-recovery-live.test.mjs'
       - 'tests/fixtures/erasure-recovery-validation.py'
+      - '.agents/skills/quantum-metal-layout/**'
+      - 'tests/fixtures/quantum-metal-*'
       - '.agents/skills/rcmps-field-theory/**'
       - 'tests/fixtures/rcmps-*'
       - 'tests/rcmps-*'
@@ -128,6 +133,7 @@ jobs:
       stgrape: ${{ steps.detect.outputs.stgrape }}
       braket: ${{ steps.detect.outputs.braket }}
       erasure: ${{ steps.detect.outputs.erasure }}
+      metal: ${{ steps.detect.outputs.metal }}
       rcmps: ${{ steps.detect.outputs.rcmps }}
       tnqs: ${{ steps.detect.outputs.tnqs }}
     steps:
@@ -237,6 +243,22 @@ jobs:
       sdk_id: erasure-recovery
       timeout_minutes: 20
       test_command: node scripts/setup-sdk.mjs qec-memory-experiment && OPENQUANTUM_LIVE_ERASURE_RECOVERY=1 node --test tests/erasure-recovery-live.test.mjs
+
+  metal:
+    needs: changes
+    if: needs.changes.outputs.metal == 'true'
+    uses: ./.github/workflows/_reusable-python-sdk.yml
+    with:
+      sdk_id: quantum-metal-layout
+      python_version: '3.12'
+      isolated_temp_dirs: true
+      resolve_sdk_python: true
+      ecosystem_check: true
+      lockfiles: .agents/skills/quantum-metal-layout/uv.lock
+      artifact_name: quantum-metal-gds
+      test_command: |
+        "$SDK_PYTHON" -B tests/fixtures/quantum-metal-controls.py
+        uv run --no-project --isolated --python 3.12 --with klayout==0.30.14 python -B tests/fixtures/quantum-metal-readback.py "$OPENQUANTUM_SDK_CHECK_OUTPUT"
 
   rcmps:
     needs: changes
