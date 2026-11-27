@@ -1,25 +1,51 @@
 import { spawn, spawnSync } from "node:child_process";
 import { once } from "node:events";
-import { access } from "node:fs/promises";
+import { constants } from "node:fs";
+import { access, glob, stat } from "node:fs/promises";
+import { homedir } from "node:os";
 import path from "node:path";
 import { setTimeout as delay } from "node:timers/promises";
 
+async function executable(file) {
+  try {
+    await access(file, constants.X_OK);
+    return (await stat(file)).isFile();
+  } catch { return false; }
+}
+
 export async function localChromium() {
-  if (process.env.CHROME) { await access(process.env.CHROME); return process.env.CHROME; }
-  const names = process.platform === "win32" ? ["chrome.exe", "msedge.exe"] : ["google-chrome", "chromium", "chromium-browser"];
+  const dirs = (process.env.PATH ?? "").split(path.delimiter).filter(Boolean);
+  const override = process.env.OPENQUANTUM_CHROMIUM || process.env.CHROME;
+  if (override) {
+    const files = path.basename(override) === override ? dirs.map(dir => path.join(dir, override)) : [path.resolve(override)];
+    for (const file of files) if (await executable(file)) return file;
+    return null; // An explicit selection must never fall back to a different version.
+  }
+  const names = process.platform === "win32" ? ["chrome.exe", "msedge.exe"] : ["google-chrome", "google-chrome-stable", "chromium", "chromium-browser"];
   const candidates = [
     "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
     "/Applications/Chromium.app/Contents/MacOS/Chromium",
+    ...dirs.flatMap(dir => names.map(name => path.join(dir, name))),
+    "/opt/google/chrome/chrome", "/usr/bin/chromium", "/usr/bin/chromium-browser", "/snap/bin/chromium",
     ...[process.env.ProgramFiles, process.env["ProgramFiles(x86)"], process.env.LOCALAPPDATA].filter(Boolean)
       .map(dir => path.join(dir, "Google/Chrome/Application/chrome.exe")),
-    ...(process.env.PATH ?? "").split(path.delimiter).filter(Boolean).flatMap(dir => names.map(name => path.join(dir, name))),
   ];
-  for (const file of candidates) { try { await access(file); return file; } catch { /* Try the next installed browser. */ } }
+  for (const file of candidates) if (await executable(file)) return file;
   const bundled = spawnSync(process.platform === "win32" ? "python" : "python3", ["-c",
     "from playwright.sync_api import sync_playwright\nwith sync_playwright() as p: print(p.chromium.executable_path)"], { encoding: "utf8" });
-  if (bundled.status === 0) {
-    const file = bundled.stdout.trim();
-    try { await access(file); return file; } catch { /* Playwright can be installed without its browser. */ }
+  if (bundled.status === 0 && await executable(bundled.stdout.trim())) return bundled.stdout.trim();
+
+  // Linux runners can cache a different Playwright revision, or only its headless shell.
+  const cache = process.env.PLAYWRIGHT_BROWSERS_PATH || path.join(process.env.XDG_CACHE_HOME || path.join(homedir(), ".cache"), "ms-playwright");
+  if (process.platform === "linux" && cache !== "0") {
+    const patterns = ["chromium-*/chrome-linux*/chrome", "chromium_headless_shell-*/chrome-linux/headless_shell",
+      "chromium_headless_shell-*/chrome-headless-shell-linux*/chrome-headless-shell"];
+    for (const pattern of patterns) {
+      for await (const match of glob(pattern, { cwd: cache })) {
+        const file = path.resolve(cache, match);
+        if (await executable(file)) return file;
+      }
+    }
   }
   return null;
 }

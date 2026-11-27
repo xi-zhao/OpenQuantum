@@ -1,11 +1,12 @@
 import assert from "node:assert/strict";
+import { spawnSync } from "node:child_process";
 import { once } from "node:events";
 import { access, mkdtemp, readFile, rm } from "node:fs/promises";
 import { createServer } from "node:http";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import test from "node:test";
-import { pathToFileURL } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { createBackend } from "../runtime/chatgpt/backend.mjs";
 import { PROJECT_ROOT as root } from "../runtime/chatgpt/catalog.mjs";
 import { credentialEntries } from "../runtime/chatgpt/ui/credential-groups.mjs";
@@ -17,7 +18,6 @@ import { serviceCredentialRef } from "../src/settings/codex/service-catalog.mjs"
 import { createDesktopApplication } from "../src/settings/desktop/application.mjs";
 import { launchChromium, localChromium } from "./helpers/chromium.mjs";
 
-const chrome = await localChromium();
 const ibmOwners = ["qiskit_ibm_runtime", "qiskit_ibm_transpiler", "quantum_hardware"];
 const pasqalOwner = { Codex: "pasqal-experiments", Desktop: "pasqal_cloud" };
 const row = id => `.catalog-item[data-entry-id="${id}"]`;
@@ -120,7 +120,27 @@ async function geometry(page) {
   }
 }
 
-test("offline Chromium exercises the built homepage and both hosts' settings projections", { skip: !chrome && "local Chromium unavailable" }, async t => {
+test("CI and explicit browser gates fail when their selected Chromium is missing", () => {
+  const file = fileURLToPath(import.meta.url);
+  for (const [ci, required] of [["true", "0"], ["false", "1"]]) {
+    const env = { ...process.env, CI: ci, OPENQUANTUM_REQUIRE_BROWSER_TESTS: required, OPENQUANTUM_CHROMIUM: path.join(file, "missing") };
+    delete env.NODE_TEST_CONTEXT; // Launch a fresh node --test CLI, outside the parent's test worker.
+    const result = spawnSync(process.execPath, ["--test", "--test-name-pattern=^offline Chromium", file], {
+      encoding: "utf8", env,
+    });
+    const output = result.stdout + result.stderr;
+    assert.equal(result.status, 1, output);
+    assert.match(output, /Required browser tests: Chromium executable unavailable/);
+  }
+});
+
+test("offline Chromium exercises the built homepage and both hosts' settings projections", async t => {
+  const chrome = await localChromium();
+  if (!chrome) {
+    const reason = "Chromium executable unavailable. Install Chromium or point OPENQUANTUM_CHROMIUM or CHROME at its executable.";
+    if (process.env.CI === "true" || process.env.OPENQUANTUM_REQUIRE_BROWSER_TESTS === "1") assert.fail("Required browser tests: " + reason);
+    return t.skip(reason);
+  }
   const dir = await mkdtemp(path.join(tmpdir(), "oq-browser-"));
   const page = await launchChromium(t, chrome, path.join(dir, "profile"));
   t.diagnostic(page.product);
