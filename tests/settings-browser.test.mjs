@@ -95,6 +95,7 @@ async function geometry(page) {
   for (const width of [320, 375]) {
     await page.viewport(width);
     await page.navigate(home, () => !!document.querySelector(".wf-tabs:not([hidden])"));
+    assert.equal(await page.accessibleName('.community-contact[role="group"][aria-label="联系作者"]'), "联系作者");
     for (const [panel, expected] of [["vqe", "solve_and_validate_ground_state"], ["lean", "Physlib.Relativity.PauliMatrices.Basic"]]) {
       const result = await page.evaluate(async ([panel, expected]) => {
         await document.fonts.ready;
@@ -144,7 +145,7 @@ test("offline Chromium exercises the built homepage and both hosts' settings pro
   const dir = await mkdtemp(path.join(tmpdir(), "oq-browser-"));
   const page = await launchChromium(t, chrome, path.join(dir, "profile"));
   t.diagnostic(page.product);
-  await t.test("320px and 375px contain every visible Lean and VQE text fragment", () => geometry(page));
+  await t.test("320px and 375px expose the named contact group and contain every visible Lean and VQE text fragment", () => geometry(page));
   await page.viewport(1100);
 
   // Build from current UI source even when a previous standalone test left a bundle in dist.
