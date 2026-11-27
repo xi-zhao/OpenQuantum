@@ -222,12 +222,65 @@ def numeric_ink(reference, actual, regions):
     return min(glyph_ink(reference, actual, regions[key], key + " number", "Numeric") for key in ("plate", "figure"))
 
 
+def stroke_patch_error(reference, actual, box):
+    """Largest change in the mean ink of any 2×2 device-pixel patch in the aligned glyph."""
+    from PIL import Image, ImageChops, ImageOps, ImageStat
+
+    left, top, right, bottom = box
+    glyph = ImageOps.autocontrast(reference.crop(box))
+    sample = actual.crop((left - 1, top - 1, right + 1, bottom + 1))
+    width, height = glyph.size
+    if min(width, height) < 2:
+        raise AssertionError(f"Chinese glyph box cannot contain a 2×2 stroke patch: {box}")
+    center = (1, 1, width + 1, height + 1)
+    low, high = sample.crop(center).getextrema()
+    if high == low:
+        return 255
+    mask = Image.new("L", sample.size)
+    mask.paste(255, center)
+    sample = ImageOps.autocontrast(sample, mask=mask)
+
+    # Match the glyph-wide coverage shift caused by font smoothing. This
+    # monotone curve fixes paper and solid ink and changes only middle tones.
+    stats = ImageStat.Stat(sample.crop(center))
+    mean = stats.mean[0]
+    midtones = mean - stats.rms[0] ** 2 / 255
+    if midtones > 0:
+        gain = max(-1, min(1, (ImageStat.Stat(glyph).mean[0] - mean) / midtones))
+        sample = sample.point(lambda v: round(v + gain * v * (1 - v / 255)))
+
+    # One rigid translation is fitted to the whole glyph. Every patch uses it.
+    steps = (0, -0.5, 0.5, -1, 1)
+    aligned = (sample.transform(glyph.size, Image.Transform.EXTENT,
+                                (1 + dx, 1 + dy, width + 1 + dx, height + 1 + dy), Image.Resampling.BILINEAR)
+               for dx in steps for dy in steps)
+    best = min(aligned, key=lambda im: ImageStat.Stat(ImageChops.difference(glyph, im)).sum2[0])
+
+    def patch_means(im):
+        # Sampling at each half-pixel averages exactly four original neighbors.
+        return im.transform((width - 1, height - 1), Image.Transform.EXTENT,
+                            (0.5, 0.5, width - 0.5, height - 0.5), Image.Resampling.BILINEAR)
+
+    return ImageChops.difference(patch_means(glyph), patch_means(best)).getextrema()[1]
+
+
+def check_chinese_strokes(reference, actual, runs):
+    for text, boxes in runs:
+        for glyph, box in zip(text, boxes, strict=True):
+            error = stroke_patch_error(reference, actual, box)
+            if error > 128:
+                raise AssertionError(f"Chinese stroke differs for {glyph!r} in {text!r} at {tuple(box)}: "
+                                     f"2×2 ink error {error}/255 exceeds 128/255")
+
+
 def chinese_ink(reference, actual, runs):
     from PIL import ImageFilter
     # A low-contrast footer character can disappear within the frame-wide
     # stroke bound. Test the contour of each glyph on a subpixel blur.
     contour = ImageFilter.GaussianBlur(0.75)
-    return glyph_ink(reference.filter(contour), actual.filter(contour), runs, "text", "Chinese")
+    worst = glyph_ink(reference.filter(contour), actual.filter(contour), runs, "text", "Chinese")
+    check_chinese_strokes(reference, actual, runs)
+    return worst
 
 
 def check_canvas(reference, actual):
@@ -520,20 +573,21 @@ class Keynote(unittest.TestCase):
                                                   native=macos == PUBLISHED_MACOS, plate=name)
                         same = published.read_bytes() == (dest / published.name).read_bytes()
                         print(f"{name}: independent RGBA identical, {result}, WebP bytes {'identical' if same else 'differ'}")
-                if "benchmarks-zh-light" in rasters:
-                    self.check_pingfang_controls(dest, plates["benchmarks-zh-light"], regions["benchmarks-zh-light"])
+                for name in rasters:
+                    if "-zh-" in name:
+                        with self.subTest(chinese_controls=name):
+                            self.check_pingfang_controls(dest, name, plates[name], regions[name])
         if mismatches:
             reason = "Keynote reference environment mismatch: " + ", ".join(mismatches)
             print("Exact RGBA parity is scoped to the pinned macOS reference. " + reason)
             if os.environ.get("OPENQUANTUM_REQUIRE_KEYNOTE_PIXEL_MATCH") == "1":
                 self.fail(reason)
 
-    def check_pingfang_controls(self, directory, markup, regions):
+    def check_pingfang_controls(self, directory, name, markup, regions):
         """Render shared faults at the wider Chinese advance, independently of the pixel mapping."""
         from keynote_pingfang import widen_pingfang
         from PIL import Image, ImageChops
 
-        name = "benchmarks-zh-light"
         with Image.open(keynote.OUT / (name + ".webp")) as image:
             published = image.convert("RGBA")
         reference, wide_regions = wider_pingfang_reference(published, BENCHMARK_SIGNATURES[name], regions)
@@ -543,9 +597,13 @@ class Keynote(unittest.TestCase):
             return dict(runs["plate"])["6.52×10"][0][0]
 
         prepare = widen_pingfang if abs(first_digit(regions) - first_digit(wide_regions)) > 1 else None
+        self.check_confusable_strokes(directory, name, markup, reference, wide_regions["han"], prepare)
+        if name != "benchmarks-zh-light":
+            return
         edits = {
             "missing-han": ("Wigner 函数", "Wigner 函", "visual bounds exceeded"),
             "missing-footer-ink": ("与编译；", '与<span style="opacity:0">编</span>译；', "Wider PingFang layout"),
+            "replaced-footer-stroke": ("环境准备", "环境淮备", "Chinese stroke differs for '准'"),
             "speedup": ("5.69×", "5.68×", "visual bounds exceeded"),
             "exponent": ("−16</sup>", "−18</sup>", "Numeric glyph .*'−16'"),
             "mantissa": ("6.52×10", "6.53×10", "Numeric glyph .*'6.52×10'"),
@@ -581,6 +639,44 @@ class Keynote(unittest.TestCase):
                 with self.assertRaisesRegex(AssertionError, reasons[label]) as failure:
                     check_pixels(published, frame, frame, regions, native=False, plate=name)
                 print(f"Wider Chinese {label} rejected: {failure.exception}")
+
+    def check_confusable_strokes(self, directory, name, markup, reference, runs, prepare):
+        # Changes on the same capture have separated glyph boxes. Split adjacent
+        # substitutions across pages so each assertion can fail only on its own ink.
+        groups = (
+            (("环境准备", "环境淮备"), ("最大绝对差", "最太绝对差"), ("最大误差", "最犬误差"),
+             ("硬件条件", "硬仵条件"), ("固定输入", "固定输人"), ("对易子", "对易孑"),
+             ("单线程", "单线桯"), ("与编译", "与编泽"), ("提速仅", "堤速仅"),
+             ("维单模", "维单摸"), ("行中位数", "行申位数"), ("逐项一致", "逐项一改")),
+            (("与编译", "与偏译"), ("硬件条件", "硬件各件")),
+            (("硬件条件", "梗件条件"),),
+        )
+        text = "".join(token for token, _ in runs)
+        boxes = [box for _, glyphs in runs for box in glyphs]
+        pages, targets = {"original": markup}, {}
+        for i, changes in enumerate(groups):
+            page = f"substitutions-{i}"
+            pages[page], targets[page] = markup, []
+            for before, after in changes:
+                index, = (j for j, (a, b) in enumerate(zip(before, after, strict=True)) if a != b)
+                box = boxes[text.index(before) + index]
+                self.assertIn(before, pages[page])
+                pages[page] = pages[page].replace(before, after, 1)
+                targets[page].append((before[index], after[index], box))
+        frames = reference_rasters(pages, directory, prepare=prepare)
+        reference = reference.convert("L")
+        original = frames["original"].convert("L")
+        rejected = 0
+        for page, changes in targets.items():
+            changed = frames[page].convert("L")
+            for before, after, box in changes:
+                with self.subTest(theme=name, original=before, substitute=after, box=box):
+                    signed_glyph = [(before, [box])]
+                    check_chinese_strokes(reference, original, signed_glyph)
+                    with self.assertRaisesRegex(AssertionError, f"Chinese stroke differs for {before!r}"):
+                        check_chinese_strokes(reference, changed, signed_glyph)
+                    rejected += 1
+        print(f"{name}: {rejected}/15 isolated stroke substitutions rejected against their signed glyphs")
 
     def test_visual_controls(self):
         from PIL import Image, ImageFilter, ImageOps
