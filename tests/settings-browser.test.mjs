@@ -126,6 +126,22 @@ async function geometry(page) {
         return { found, clipped, panelOverflow, pageOverflow: viewport.scrollWidth - viewport.clientWidth };
       }, [panel, expected]);
       assert.deepEqual(result, { found: true, clipped: [], panelOverflow: 0, pageOverflow: 0 }, `${width}px ${panel}: ${JSON.stringify(result)}`);
+      if (width <= 600) {
+        const layout = await page.evaluate(panel => {
+          const bar = document.querySelector(`#wf-panel-${panel} .wf-topbar`);
+          const rect = selector => bar.querySelector(selector).getBoundingClientRect();
+          const title = rect(".wf-wintitle");
+          const style = getComputedStyle(bar);
+          return {
+            gapAboveTitle: title.top - Math.max(rect(".wf-lights").bottom, rect(".wf-pill").bottom),
+            titleWidth: title.width,
+            availableWidth: bar.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight),
+          };
+        }, panel);
+        const detail = `${width}px ${panel}: ${JSON.stringify(layout)}`;
+        assert.ok(layout.gapAboveTitle >= 0, `Title must be below the controls at ${detail}`);
+        assert.ok(Math.abs(layout.titleWidth - layout.availableWidth) <= 1, `Title must fill its row at ${detail}`);
+      }
     }
   }
 }
