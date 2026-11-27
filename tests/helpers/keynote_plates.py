@@ -4,6 +4,9 @@ import hashlib
 import importlib.util
 from importlib.metadata import version
 from io import BytesIO
+from itertools import pairwise
+import json
+from math import ceil
 import os
 from pathlib import Path
 import platform
@@ -101,13 +104,13 @@ def number_regions(page, markup):
         const shot = document.querySelector('#shot'), image = shot.querySelector('.fig-wrap img');
         await image.decode();
         const origin = shot.getBoundingClientRect(), scale = devicePixelRatio;
-        function runs(root) {
+        function runs(root, pattern = /[+−-]?\d+(?:[,.]\d+)*(?:[eE×][+−-]?\d+)*×?/g) {
             const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
             const range = document.createRange(), result = [];
             while (walker.nextNode()) {
                 const node = walker.currentNode;
                 if (root instanceof SVGElement && !node.parentElement.closest('text')) continue;
-                for (const match of node.data.matchAll(/[+−-]?\d+(?:[,.]\d+)*(?:[eE×][+−-]?\d+)*×?/g)) {
+                for (const match of node.data.matchAll(pattern)) {
                     const boxes = [];
                     for (let i = 0; i < match[0].length; i++) {
                         range.setStart(node, match.index + i);
@@ -129,11 +132,16 @@ def number_regions(page, markup):
         document.body.append(svg);
         const labels = runs(svg);
         svg.remove();
-        return {plate, figure: labels};
+        const barCenters = [...shot.querySelectorAll('.fill-opt')].map(bar => {
+            const r = bar.getBoundingClientRect();
+            return [Math.floor((r.left + r.width / 2 - origin.left) * scale),
+                    Math.floor((r.top + r.height / 2 - origin.top) * scale)];
+        });
+        return {plate, figure: labels, barCenters, han: runs(shot, /[\p{Script=Han}、，。；]+/gu)};
     }""", figure)
 
 
-def reference_rasters(plates, directory, *, inspect_fonts=False, regions=None):
+def reference_rasters(plates, directory, *, inspect_fonts=False, regions=None, prepare=None):
     """Capture signed inputs independently of the exporter's viewport, scale and encoding code."""
     from PIL import Image
     from playwright.sync_api import sync_playwright
@@ -154,6 +162,8 @@ def reference_rasters(plates, directory, *, inspect_fonts=False, regions=None):
             page.evaluate("async () => { await document.fonts.ready; await Promise.all([...document.images].map(i => i.decode())); }")
             if page.evaluate("devicePixelRatio") != 2:
                 raise AssertionError("Reference capture requires two device pixels per CSS pixel")
+            if prepare is not None:
+                prepare(page)
             if inspect_fonts and name.endswith("light"):
                 fonts = glyph_fonts(session, "#shot *")
                 print(f"{name}: fonts painting glyphs: {', '.join(fonts)}")
@@ -177,38 +187,52 @@ def reference_rasters(plates, directory, *, inspect_fonts=False, regions=None):
     return captures
 
 
-def numeric_ink(reference, actual, regions):
-    """Compare the shape of every digit, sign and separator in each numeric run."""
+def glyph_ink(reference, actual, runs, source, kind):
+    """Compare every glyph against its signed box, allowing local raster alignment."""
     width, height = reference.size
     worst = 1.0
-    for source in ("plate", "figure"):
-        if not regions[source]:
-            raise AssertionError(f"No numeric regions for {source}")
-        for token, boxes in regions[source]:
-            for glyph, (left, top, right, bottom) in zip(token, boxes, strict=True):
-                if not (0 <= left < right <= width and 0 <= top < bottom <= height):
-                    raise AssertionError(f"Invalid {source} region for {token!r}: {(left, top, right, bottom)}")
-                ink = reference.crop((left, top, right, bottom)).tobytes()
-                contrast = max(ink) - min(ink)
-                if not contrast:
-                    raise AssertionError(f"Empty reference glyph {glyph!r} in {source} number {token!r}")
+    if not runs:
+        raise AssertionError(f"No glyph regions for {source}")
+    for token, boxes in runs:
+        for glyph, (left, top, right, bottom) in zip(token, boxes, strict=True):
+            if not (0 <= left < right <= width and 0 <= top < bottom <= height):
+                raise AssertionError(f"Invalid {source} region for {token!r}: {(left, top, right, bottom)}")
+            ink = reference.crop((left, top, right, bottom)).tobytes()
+            contrast = max(ink) - min(ink)
+            if not contrast:
+                raise AssertionError(f"Empty reference glyph {glyph!r} in {source} {token!r}")
 
-                def score(dx, dy):
-                    sample = actual.crop((left + dx, top + dy, right + dx, bottom + dy)).tobytes()
-                    if max(sample) - min(sample) < contrast / 2:
-                        return 0.0
-                    return correlation(ink, sample)
+            def score(dx, dy):
+                sample = actual.crop((left + dx, top + dy, right + dx, bottom + dy)).tobytes()
+                if max(sample) - min(sample) < contrast / 2:
+                    return 0.0
+                return correlation(ink, sample)
 
-                best = score(0, 0)
-                if best < MIN_GLYPH_CORRELATION:
-                    # Allow one device pixel of raster alignment. Pearson correlation
-                    # discounts differences in antialiasing contrast, not glyph shape.
-                    best = max(score(dx, dy) for dy in (-1, 0, 1) for dx in (-1, 0, 1))
-                if best < MIN_GLYPH_CORRELATION:
-                    raise AssertionError(f"Numeric glyph {glyph!r} in {source} number {token!r} at "
-                                         f"{(left, top, right, bottom)}: correlation {best:.4f} < {MIN_GLYPH_CORRELATION}")
-                worst = min(worst, best)
+            best = score(0, 0)
+            if best < MIN_GLYPH_CORRELATION:
+                best = max(score(dx, dy) for dy in (-1, 0, 1) for dx in (-1, 0, 1))
+            if best < MIN_GLYPH_CORRELATION:
+                raise AssertionError(f"{kind} glyph {glyph!r} in {source} {token!r} at "
+                                     f"{(left, top, right, bottom)}: correlation {best:.4f} < {MIN_GLYPH_CORRELATION}")
+            worst = min(worst, best)
     return worst
+
+
+def numeric_ink(reference, actual, regions):
+    return min(glyph_ink(reference, actual, regions[key], key + " number", "Numeric") for key in ("plate", "figure"))
+
+
+def chinese_ink(reference, actual, runs):
+    from PIL import ImageFilter
+    # A low-contrast footer character can disappear within the frame-wide
+    # stroke bound. Test the contour of each glyph on a subpixel blur.
+    contour = ImageFilter.GaussianBlur(0.75)
+    return glyph_ink(reference.filter(contour), actual.filter(contour), runs, "text", "Chinese")
+
+
+def check_canvas(reference, actual):
+    if reference.size != actual.size or reference.getchannel("A").tobytes() != actual.getchannel("A").tobytes():
+        raise AssertionError("Reference canvas or alpha silhouette differs")
 
 
 def bounded_pixels(published, actual, regions):
@@ -224,8 +248,7 @@ def bounded_pixels(published, actual, regions):
         low = ImageChops.subtract(b.filter(ImageFilter.MinFilter(5)), a)
         return ImageChops.lighter(high, low)
 
-    if published.size != actual.size or published.getchannel("A").tobytes() != actual.getchannel("A").tobytes():
-        raise AssertionError("Reference canvas or alpha silhouette differs")
+    check_canvas(published, actual)
     a, b = published.convert("RGB"), actual.convert("RGB")
     histogram = channel_error(a, b).histogram()
     count = a.width * a.height
@@ -244,17 +267,74 @@ def bounded_pixels(published, actual, regions):
     if mean > 1.5 or fraction > 0.02 or local > 30 or stroke > 64:
         raise AssertionError(f"Published visual bounds exceeded: {metrics}")
     worst = numeric_ink(gray_a, gray_b, regions)
-    return f"{metrics}, lowest numeric glyph correlation={worst:.4f}"
+    metrics += f", lowest numeric glyph correlation={worst:.4f}"
+    if regions.get("han"):
+        han = chinese_ink(gray_a, gray_b, regions["han"])
+        metrics += f", lowest Chinese glyph correlation={han:.4f}"
+    return metrics
 
 
-def check_pixels(published, actual, control, regions, *, native):
+def wider_pingfang_reference(published, signature, regions):
+    """Move only the published text strips to the second measured PingFang advance."""
+    from PIL import Image
+
+    profile = json.loads(Path(__file__).with_name("keynote-pingfang.json").read_text(encoding="utf-8"))
+    if list(published.size) != profile["canvas"] or signature not in profile["signatures"]:
+        raise AssertionError("PingFang layout does not describe this signed reference")
+    if [t for t, _ in profile["numbers"]] != [t for t, _ in regions["plate"]]:
+        raise AssertionError("PingFang layout has different scientific values")
+    han = [(text, [(left, top, right, bottom) for left, right in spans])
+           for text, top, bottom, spans in profile["han"]]
+    if "".join(t for t, _ in han) != "".join(t for t, _ in regions["han"]):
+        raise AssertionError("PingFang layout has different Chinese text")
+    result = published.copy()
+    for top, bottom, points in profile["strips"]:
+        for (ref_x, wide_x), (ref_end, wide_end) in pairwise(points):
+            left, right = ceil(wide_x), ceil(wide_end)
+            if left == right:
+                continue
+            scale = (ref_end - ref_x) / (wide_end - wide_x)
+            source = (ref_x + (left - wide_x) * scale, top, ref_x + (right - wide_x) * scale, bottom)
+            band = published.transform((right - left, bottom - top), Image.Transform.EXTENT, source,
+                                       resample=Image.Resampling.BILINEAR)
+            result.paste(band, (left, top))
+    return result, {**regions, "plate": profile["numbers"], "han": han}
+
+
+def check_bar_colors(published, actual, centers):
+    from PIL import ImageStat
+
+    if len(centers) != 2:
+        raise AssertionError("Expected both optimized benchmark bars")
+    for x, y in centers:
+        center = (x - 1, y - 1, x + 2, y + 2)
+        a, b = (ImageStat.Stat(image.crop(center)).median for image in (published, actual))
+        if max(abs(u - v) for u, v in zip(a, b)) > 2:
+            raise AssertionError(f"Benchmark bar color differs at {(x, y)}: {a} vs {b}")
+
+
+def check_pixels(published, actual, control, regions, *, native, plate=None):
     if actual.size != control.size or actual.tobytes() != control.tobytes():
         raise AssertionError("Export differs from the independent 2x sRGB capture on this host")
     if published.size == actual.size and published.tobytes() == actual.tobytes():
         return "published RGBA identical"
     if native:
         raise AssertionError("Published RGBA differs on its original macOS build")
-    return bounded_pixels(published, actual, regions)
+    if plate:
+        if "-zh-" in plate and sum(len(t) for t, _ in regions["han"]) != 159:
+            raise AssertionError("Expected 159 Chinese characters and full-width punctuation marks")
+        check_canvas(published, actual)
+        check_bar_colors(published, actual, regions["barCenters"])
+    try:
+        return bounded_pixels(published, actual, regions)
+    except AssertionError as original:
+        if plate not in ("benchmarks-zh-light", "benchmarks-zh-dark"):
+            raise
+        reference, wide_regions = wider_pingfang_reference(published, BENCHMARK_SIGNATURES[plate], regions)
+        try:
+            return "PingFang +0.25 CSS px: " + bounded_pixels(reference, actual, wide_regions)
+        except AssertionError as wider:
+            raise AssertionError(f"Published layout: {original}. Wider PingFang layout: {wider}") from wider
 
 
 class Keynote(unittest.TestCase):
@@ -436,14 +516,71 @@ class Keynote(unittest.TestCase):
                     with self.subTest(plate=name):
                         published = keynote.OUT / (name + ".webp")
                         with Image.open(published) as reference:
-                            result = check_pixels(reference.convert("RGBA"), actual, controls[name], regions[name], native=macos == PUBLISHED_MACOS)
+                            result = check_pixels(reference.convert("RGBA"), actual, controls[name], regions[name],
+                                                  native=macos == PUBLISHED_MACOS, plate=name)
                         same = published.read_bytes() == (dest / published.name).read_bytes()
                         print(f"{name}: independent RGBA identical, {result}, WebP bytes {'identical' if same else 'differ'}")
+                if "benchmarks-zh-light" in rasters:
+                    self.check_pingfang_controls(dest, plates["benchmarks-zh-light"], regions["benchmarks-zh-light"])
         if mismatches:
             reason = "Keynote reference environment mismatch: " + ", ".join(mismatches)
             print("Exact RGBA parity is scoped to the pinned macOS reference. " + reason)
             if os.environ.get("OPENQUANTUM_REQUIRE_KEYNOTE_PIXEL_MATCH") == "1":
                 self.fail(reason)
+
+    def check_pingfang_controls(self, directory, markup, regions):
+        """Render shared faults at the wider Chinese advance, independently of the pixel mapping."""
+        from keynote_pingfang import widen_pingfang
+        from PIL import Image, ImageChops
+
+        name = "benchmarks-zh-light"
+        with Image.open(keynote.OUT / (name + ".webp")) as image:
+            published = image.convert("RGBA")
+        reference, wide_regions = wider_pingfang_reference(published, BENCHMARK_SIGNATURES[name], regions)
+        # The signed scientific value starts after nine Han characters. On the
+        # original Mac, add the measured advance in CSS. macOS 15 already has it.
+        def first_digit(runs):
+            return dict(runs["plate"])["6.52×10"][0][0]
+
+        prepare = widen_pingfang if abs(first_digit(regions) - first_digit(wide_regions)) > 1 else None
+        edits = {
+            "missing-han": ("Wigner 函数", "Wigner 函", "visual bounds exceeded"),
+            "missing-footer-ink": ("与编译；", '与<span style="opacity:0">编</span>译；', "Wider PingFang layout"),
+            "speedup": ("5.69×", "5.68×", "visual bounds exceeded"),
+            "exponent": ("−16</sup>", "−18</sup>", "Numeric glyph .*'−16'"),
+            "mantissa": ("6.52×10", "6.53×10", "Numeric glyph .*'6.52×10'"),
+            "check-count": ("272 项", "273 项", "Numeric glyph .*'272'"),
+            "bar-color": ("#0E7490", "#107890", "Benchmark bar color differs"),
+        }
+        pages = {"wider": markup}
+        for label, (before, after, _) in edits.items():
+            self.assertIn(before, markup)
+            pages[label] = markup.replace(before, after)
+        frames = reference_rasters(pages, directory, prepare=prepare)
+        wide = frames.pop("wider")
+        result = check_pixels(published, wide, wide, regions, native=False, plate=name)
+        self.assertIn("PingFang +0.25 CSS px", result)
+        print(f"Wider Chinese Chromium control: {result}")
+        # Some hosts also reject this omission at the earlier global stroke
+        # check. Exercise the local glyph check independently on the same frame.
+        with self.assertRaisesRegex(AssertionError, "Chinese glyph '编'") as missing:
+            chinese_ink(reference.convert("L"), frames["missing-footer-ink"].convert("L"), wide_regions["han"])
+        print(f"Footer glyph control: {missing.exception}")
+        frames["one-device-pixel-shift"] = ImageChops.offset(wide, 1, 0)
+        shifted_inside = frames["one-device-pixel-shift"].copy()
+        shifted_inside.putalpha(wide.getchannel("A"))
+        frames["one-pixel-inside-fixed-canvas"] = shifted_inside
+        half = wide.resize((wide.width // 2, wide.height // 2), Image.Resampling.LANCZOS)
+        frames["upscaled-1x"] = half.resize(wide.size, Image.Resampling.LANCZOS)
+        reasons = {label: reason for label, (_, _, reason) in edits.items()}
+        reasons["one-device-pixel-shift"] = "alpha silhouette differs"
+        reasons["one-pixel-inside-fixed-canvas"] = "visual bounds exceeded"
+        reasons["upscaled-1x"] = "alpha silhouette differs"
+        for label, frame in frames.items():
+            with self.subTest(wider_shared_fault=label):
+                with self.assertRaisesRegex(AssertionError, reasons[label]) as failure:
+                    check_pixels(published, frame, frame, regions, native=False, plate=name)
+                print(f"Wider Chinese {label} rejected: {failure.exception}")
 
     def test_visual_controls(self):
         from PIL import Image, ImageFilter, ImageOps
@@ -480,7 +617,7 @@ class Keynote(unittest.TestCase):
         }
         with tempfile.TemporaryDirectory() as directory:
             dest = Path(directory)
-            for chunk in [b"XMP ", b"NOTE"]:
+            for chunk in [b"XMP ", b"EXIF", b"ICCP", b"NOTE"]:
                 with self.subTest(metadata=chunk):
                     data = published.read_bytes() + chunk + b"\x04\0\0\0test"
                     sample = dest / "metadata.webp"
@@ -580,18 +717,23 @@ class Keynote(unittest.TestCase):
         from io import StringIO
         from PIL import Image
 
-        xmp_name, pixel_name = "benchmarks-zh-light", "benchmarks-en-dark"
+        metadata = {"benchmarks-zh-light": "xmp", "benchmarks-zh-dark": "exif"}
+        pixel_name = "benchmarks-en-dark"
         rendered = {}
+        exif = Image.Exif()
+        exif[270] = "metadata isolation control"
 
         async def export(plates, dest):
             for name in plates:
                 file = dest / (name + ".webp")
                 original = keynote.OUT / file.name
-                if name == xmp_name:
+                if name in metadata:
+                    key = metadata[name]
+                    value = b"<xmpmeta>test fixture</xmpmeta>" if key == "xmp" else exif.tobytes()
                     with Image.open(original) as image:
-                        image.save(file, "WEBP", xmp=b"<xmpmeta>test fixture</xmpmeta>")
+                        image.save(file, "WEBP", **{key: value})
                     with Image.open(file) as image:
-                        self.assertIn("xmp", image.info)
+                        self.assertIn(key, image.info)
                 elif name == pixel_name:
                     with Image.open(original) as image:
                         image.paste("white", (80, 100, 180, 150))
@@ -610,8 +752,9 @@ class Keynote(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as directory:
             diagnostics = Path(directory)
-            rejected = diagnostics / (xmp_name + ".webp")
-            shutil.copyfile(keynote.OUT / rejected.name, rejected)  # A previous, valid run.
+            for name in metadata:
+                file = name + ".webp"
+                shutil.copyfile(keynote.OUT / file, diagnostics / file)  # A previous, valid run.
             result = unittest.TestResult()
             with (patch.dict(os.environ, {"OPENQUANTUM_KEYNOTE_DIAGNOSTICS": directory}),
                   patch.object(keynote, "render_plates", export),
@@ -620,15 +763,15 @@ class Keynote(unittest.TestCase):
                   redirect_stdout(StringIO())):
                 Keynote("test_render").run(result)
             self.assertFalse(result.errors, result.errors)
-            self.assertEqual(len(result.failures), 2, result.failures)
+            self.assertEqual(len(result.failures), 3, result.failures)
             errors = "\n".join(trace for _, trace in result.failures)
             self.assertIn("Unexpected WebP chunk b'XMP '", errors)
+            self.assertIn("Unexpected WebP chunk b'EXIF'", errors)
             self.assertIn("Export differs from the independent", errors)
-            self.assertFalse(rejected.exists())
-            self.assertEqual({f.stem for f in diagnostics.iterdir()}, set(rendered) - {xmp_name})
+            self.assertEqual({f.stem for f in diagnostics.iterdir()}, set(rendered) - set(metadata))
             for file in diagnostics.iterdir():
                 self.assertTrue(file.read_bytes() == rendered[file.stem], file.name)
-            print("XMP rejected and absent from diagnostics. The clean pixel mismatch and both valid plates are retained.")
+            print("XMP and EXIF rejected and absent from diagnostics. The clean pixel mismatch and valid plate are retained.")
 
 
 if __name__ == "__main__":
