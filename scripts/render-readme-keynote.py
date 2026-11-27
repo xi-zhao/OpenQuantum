@@ -635,9 +635,12 @@ def benchmarks_plate(dark: bool, d: dict, lang: str = "zh") -> str:
             "foot": "单线程 9 轮热运行中位数，包含输入/输出对象转换，不含环境准备与编译；提速仅对应各报告定义的固定输入与硬件条件。",
         }
     )
+    # The published canvas includes the last fractional CSS pixel of the artwork.
+    # Give it a fixed size so fallback-font metrics cannot resize the WebP.
     css = f"""
-#shot {{
-  width: {CSS_W}px; border-radius: 26px; padding: 26px;
+#shot {{ width: {CSS_W}px; height: {641 if en else 649}px; }}
+.benchmark-plate {{
+  min-height: calc(100% - 1px); max-height: 100%; border-radius: 26px; padding: 26px;
   background: {bg}; border: 1px solid {bd};
   display: flex; flex-direction: column; gap: 18px;
 }}
@@ -679,7 +682,7 @@ def benchmarks_plate(dark: bool, d: dict, lang: str = "zh") -> str:
 .foot-note {{ font-size: 11.5px; color: {muted}; text-align: center; padding: 0 12px; }}
 """
     body = f"""
-<div id="shot">
+<div id="shot"><div class="benchmark-plate">
   <div class="qutip-card">
     <div>
       <div class="name">{copy["q_name"]}</div>
@@ -726,7 +729,7 @@ def benchmarks_plate(dark: bool, d: dict, lang: str = "zh") -> str:
   </div>
 
   <div class="foot-note">{copy["foot"]}</div>
-</div>
+</div></div>
 """
     return wrap_doc(body, css, "en" if en else "zh-CN")
 

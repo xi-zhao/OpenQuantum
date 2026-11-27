@@ -43,8 +43,69 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Set up Python for the keynote renderer
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+
+      - name: Prepare and verify Chromium for offline browser and render tests
+        shell: bash
+        run: |
+          python -m pip install --only-binary=:all: -r tests/helpers/keynote-requirements.txt
+          find_chromium() {
+            node --input-type=module -e 'import { localChromium } from "./tests/helpers/chromium.mjs"; process.stdout.write(await localChromium() ?? "");'
+          }
+          chrome=$(find_chromium)
+          if [[ -z "$chrome" ]]; then
+            python -m playwright install --with-deps chromium
+            chrome=$(find_chromium)
+          fi
+          if [[ ! -x "$chrome" ]]; then
+            echo "Required Chromium executable unavailable after provisioning" >&2
+            exit 1
+          fi
+          "$chrome" --version
+          echo "OPENQUANTUM_CHROMIUM=$chrome" >> "$GITHUB_ENV"
+          if [[ -z "$(fc-list :lang=zh-cn family)" ]]; then
+            sudo apt-get update -q
+            sudo apt-get install -y --no-install-recommends fonts-noto-cjk
+          fi
+
       - name: Run quality gate
+        env:
+          OPENQUANTUM_REQUIRE_BROWSER_TESTS: "1"
+          OPENQUANTUM_REQUIRE_KEYNOTE_RENDER: "1"
         run: npm run check
+
+  keynote-reference:
+    name: Keynote reference pixels (macOS)
+    runs-on: macos-15
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - name: Prepare the pinned macOS renderer
+        env:
+          CHROME_VERSION: '149.0.7827.55'
+        run: |
+          python -m pip install --only-binary=:all: -r tests/helpers/keynote-requirements.txt
+          curl --fail --location --retry 3 --output "$RUNNER_TEMP/chrome.zip" \
+            "https://storage.googleapis.com/chrome-for-testing-public/$CHROME_VERSION/mac-arm64/chrome-mac-arm64.zip"
+          ditto -x -k "$RUNNER_TEMP/chrome.zip" "$RUNNER_TEMP/keynote-chrome"
+          app="$RUNNER_TEMP/keynote-chrome/chrome-mac-arm64/Google Chrome for Testing.app"
+          [[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$app/Contents/Info.plist")" == "$CHROME_VERSION" ]]
+          chrome="$app/Contents/MacOS/Google Chrome for Testing"
+          test -x "$chrome"
+          echo "OPENQUANTUM_CHROMIUM=$chrome" >> "$GITHUB_ENV"
+      - name: Reproduce the four published benchmark plates
+        env:
+          OPENQUANTUM_REQUIRE_KEYNOTE_PIXEL_MATCH: "1"
+        run: node --test tests/readme-keynote.test.mjs
 
   desktop-source-install:
     name: Desktop source install (${{ matrix.os }})

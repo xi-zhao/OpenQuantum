@@ -1,4 +1,5 @@
 import { execFile, spawnSync } from "node:child_process";
+import assert from "node:assert/strict";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
@@ -15,14 +16,22 @@ for (const [name, method] of [
   test(name, () => run(python, ["-B", script, `Keynote.${method}`]));
 }
 
-test("reference Chromium reproduces every pixel of the four published benchmark plates", async t => {
-  // Chinese type and antialiasing in the published plates come from macOS. The
-  // paired input/output signatures above also run on systems with other fonts.
-  if (process.platform !== "darwin") return t.skip("macOS reference fonts unavailable");
+test("Chromium renders four benchmark WebPs at their published dimensions and compares RGBA on the pinned macOS reference", async t => {
   const chrome = await localChromium();
-  if (!chrome) return t.skip("local Chromium unavailable");
-  const modules = spawnSync(python, ["-c", "import PIL, playwright"]);
-  if (modules.status !== 0) return t.skip("renderer needs Pillow and Playwright");
-  const { stdout } = await run(python, ["-B", script, "Keynote.test_reference_render"], { env: { ...process.env, CHROME: chrome } });
-  t.diagnostic(stdout.trim());
+  const modules = spawnSync(python, ["-c", "from playwright.async_api import async_playwright; from PIL import features; assert features.check('webp')"]);
+  const missing = !chrome ? "Chromium executable unavailable (set OPENQUANTUM_CHROMIUM or CHROME)"
+    : modules.status !== 0 ? "Python requires Playwright and Pillow with WebP support" : null;
+  if (missing) {
+    if (process.env.CI === "true" || process.env.OPENQUANTUM_REQUIRE_KEYNOTE_RENDER === "1" || process.env.OPENQUANTUM_REQUIRE_KEYNOTE_PIXEL_MATCH === "1") {
+      assert.fail("Required keynote render: " + missing);
+    }
+    return t.skip(missing);
+  }
+  try {
+    const { stdout } = await run(python, ["-B", script, "Keynote.test_render"], { env: { ...process.env, CHROME: chrome } });
+    t.diagnostic(stdout.trim());
+  } catch (error) {
+    if (error.stdout) t.diagnostic(error.stdout.trim());
+    throw error;
+  }
 });
