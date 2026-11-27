@@ -35,12 +35,19 @@ export async function localChromium() {
     "from playwright.sync_api import sync_playwright\nwith sync_playwright() as p: print(p.chromium.executable_path)"], { encoding: "utf8" });
   if (bundled.status === 0 && await executable(bundled.stdout.trim())) return bundled.stdout.trim();
 
-  // Linux runners can cache a different Playwright revision, or only its headless shell.
-  const cache = process.env.PLAYWRIGHT_BROWSERS_PATH || path.join(process.env.XDG_CACHE_HOME || path.join(homedir(), ".cache"), "ms-playwright");
-  if (process.platform === "linux" && cache !== "0") {
-    const patterns = ["chromium-*/chrome-linux*/chrome", "chromium_headless_shell-*/chrome-linux/headless_shell",
-      "chromium_headless_shell-*/chrome-headless-shell-linux*/chrome-headless-shell"];
-    for (const pattern of patterns) {
+  // A runner can cache a different Playwright revision, or only its headless shell.
+  const cacheRoot = process.platform === "darwin" ? path.join(homedir(), "Library", "Caches")
+    : process.env.XDG_CACHE_HOME || path.join(homedir(), ".cache");
+  const cache = process.env.PLAYWRIGHT_BROWSERS_PATH || path.join(cacheRoot, "ms-playwright");
+  const layouts = {
+    linux: ["chromium-*/chrome-linux*/chrome", "chromium_headless_shell-*/chrome-linux/headless_shell",
+      "chromium_headless_shell-*/chrome-headless-shell-linux*/chrome-headless-shell"],
+    darwin: ["chromium-*/chrome-mac*/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing",
+      "chromium-*/chrome-mac*/Chromium.app/Contents/MacOS/Chromium", "chromium_headless_shell-*/chrome-mac*/headless_shell",
+      "chromium_headless_shell-*/chrome-headless-shell-mac*/chrome-headless-shell"],
+  };
+  if (cache !== "0") {
+    for (const pattern of layouts[process.platform] ?? []) {
       for await (const match of glob(pattern, { cwd: cache })) {
         const file = path.resolve(cache, match);
         if (await executable(file)) return file;
