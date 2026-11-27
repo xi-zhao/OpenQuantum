@@ -45,9 +45,23 @@
 
 <p align="center">
   <a href="https://xi-zhao.github.io/OpenQuantum/">
-    <img src="../images/readme/banner-en.svg" width="100%" alt="OpenQuantum — Gemeinsam vertrauenswürdige KI für die Quantenforschung aufbauen. Kompatibel mit Qiskit, PennyLane, QuTiP, Stim, PyMatching, Lean 4 und 122 fixierten Umgebungen." />
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="../images/readme/hero-en-dark.webp" />
+      <img src="../images/readme/hero-en-light.webp" width="100%" alt="OpenQuantum — Gemeinsam vertrauenswürdige KI für die Quantenforschung aufbauen. Kompatibel mit Qiskit, PennyLane, QuTiP, Stim, PyMatching, Lean 4 und 122 fixierten Umgebungen." />
+    </picture>
   </a>
 </p>
+
+<p align="center">
+  <a href="https://github.com/xi-zhao/OpenQuantum/releases/download/v0.8.11/OpenQuantum-0.8.11-macOS-arm64.dmg">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="../images/readme/launch-card-en-dark.webp" />
+      <img src="../images/readme/launch-card-en-light.webp" width="100%" alt="OpenQuantum Desktop v0.8.11" />
+    </picture>
+  </a>
+</p>
+
+Die Installationspakete von `v0.8.11` enthalten 189 Skills, 117 Umgebungen und 3 wissenschaftliche Abnahmeverfahren der Stufe L3 für DSH. Die Tabelle zeigt den aktuellen Quellstand auf `main` mit 194 Skills, 122 Umgebungen und 11 L3-Verfahren.
 
 <table>
   <tr>
@@ -221,6 +235,7 @@ flowchart TB
 
 - **Roadmap**: Ausbau von L2/L3-Prüfungen, CPU/GPU/HPC/QPU-Orchestrierung, Laborgeräte-Schnittstellen und Quantum Learning. Rekursive Selbstverbesserung (RSI) ist eine langfristige Forschungsrichtung; **die vollständige RSI-Schleife ist nicht implementiert** ([Vision](../roadmap/VISION.md)).
 - **Mitwirken**: [Beitragsleitfaden](../../CONTRIBUTING.md) · [Issues](https://github.com/xi-zhao/OpenQuantum/issues) · [Verhaltenskodex](../../CODE_OF_CONDUCT.md) · [Sicherheit](../../SECURITY.md) (`npm run check`).
+- **Kontakt**: [zx4612@mail.ustc.edu.cn](mailto:zx4612@mail.ustc.edu.cn) · WeChat: `sincerely1019`
 
 ```bibtex
 @software{zhao2026openquantum,

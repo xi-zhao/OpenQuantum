@@ -10,7 +10,7 @@
 <body>
   <div id="app">
     <header>
-      <div class="brand"><span class="brand-mark"><img class="mark-light" src="__OQ_MARK__" alt="" width="36" height="36"><img class="mark-dark" src="__OQ_MARK_INVERSE__" alt="" width="36" height="36"></span><strong>OpenQuantum</strong></div>
+      <div class="brand"><span class="brand-mark"><img class="mark-light" src="__OQ_MARK__" alt="" width="30" height="30"><img class="mark-dark" src="__OQ_MARK_INVERSE__" alt="" width="30" height="30"></span><strong>OpenQuantum</strong></div>
       <div class="navigation">
         <nav aria-label="主导航" role="tablist"><!-- COMPONENT_TABS --></nav>
       </div>
@@ -24,12 +24,14 @@
     <section id="toolbar" aria-label="搜索与筛选" hidden>
       <label class="search-field">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>
-        <input id="search" type="search" placeholder="搜索名称或用途" aria-label="搜索 Skills" autocomplete="off">
+        <input id="search" type="search" placeholder="搜索名称、领域或用途" aria-label="搜索 Skills" autocomplete="off">
+        <kbd class="search-kbd" aria-hidden="true">/</kbd>
       </label>
       <div class="filter-fields">
         <label>用途<select id="category" aria-label="按用途筛选"><option value="all">全部用途</option></select></label>
         <label>状态<select id="state" aria-label="按状态筛选"><option value="all">全部状态</option></select></label>
       </div>
+      <div id="quick-chips" class="quick-chips" role="group" aria-label="快速筛选"></div>
       <div class="filter-summary">
         <span id="count" role="status" aria-live="polite" aria-atomic="true"></span>
         <button id="clear-filters" class="quiet" hidden>清除筛选</button>

@@ -45,9 +45,23 @@
 
 <p align="center">
   <a href="https://xi-zhao.github.io/OpenQuantum/">
-    <img src="../images/readme/banner-en.svg" width="100%" alt="OpenQuantum — 함께 만드는 신뢰할 수 있는 양자 연구 AI. Qiskit, PennyLane, QuTiP, Stim, PyMatching, Lean 4 및 122개 고정 환경 지원." />
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="../images/readme/hero-en-dark.webp" />
+      <img src="../images/readme/hero-en-light.webp" width="100%" alt="OpenQuantum — 함께 만드는 신뢰할 수 있는 양자 연구 AI. Qiskit, PennyLane, QuTiP, Stim, PyMatching, Lean 4 및 122개 고정 환경 지원." />
+    </picture>
   </a>
 </p>
+
+<p align="center">
+  <a href="https://github.com/xi-zhao/OpenQuantum/releases/download/v0.8.11/OpenQuantum-0.8.11-macOS-arm64.dmg">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="../images/readme/launch-card-en-dark.webp" />
+      <img src="../images/readme/launch-card-en-light.webp" width="100%" alt="OpenQuantum Desktop v0.8.11" />
+    </picture>
+  </a>
+</p>
+
+`v0.8.11` 배포 패키지에는 Skill 189개, 환경 117개, DSH에서 재실행할 수 있는 L3 과학 검증 절차 3개가 포함되어 있습니다. 아래 표는 현재 `main` 소스 코드 기준으로 Skill 194개, 환경 122개, L3 검증 절차 11개를 집계한 것입니다.
 
 <table>
   <tr>
@@ -256,6 +270,7 @@ flowchart TB
 - **제공된 기준선**: 내장 Skill 194개, MCP 91개, 고정 SDK 122개, Desktop & Codex `v0.8.11`, DSH 재현 가능 L3 과학적 승인 11개.
 - **장기 비전(RSI)**: 독립 검증과 권한 경계에 기반한 재귀적 자기 개선을 탐색 중이며, **전체 RSI 루프는 아직 구현되지 않았습니다**([장기 계획](../roadmap/VISION.md)).
 - **기여하기**: [기여 가이드](../../CONTRIBUTING.md) · [Issues](https://github.com/xi-zhao/OpenQuantum/issues) · [행동 강령](../../CODE_OF_CONDUCT.md) · [보안 정책](../../SECURITY.md) (오프라인 전체 점검: `npm run check`).
+- **연락처**: [zx4612@mail.ustc.edu.cn](mailto:zx4612@mail.ustc.edu.cn) · WeChat: `sincerely1019`
 
 ```bibtex
 @software{zhao2026openquantum,

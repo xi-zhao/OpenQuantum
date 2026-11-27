@@ -45,9 +45,23 @@
 
 <p align="center">
   <a href="https://xi-zhao.github.io/OpenQuantum/">
-    <img src="../images/readme/banner-en.svg" width="100%" alt="OpenQuantum — Construire ensemble une IA de confiance pour la recherche quantique. Compatible avec Qiskit, PennyLane, QuTiP, Stim, PyMatching, Lean 4 et 122 environnements figés." />
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="../images/readme/hero-en-dark.webp" />
+      <img src="../images/readme/hero-en-light.webp" width="100%" alt="OpenQuantum — Construire ensemble une IA de confiance pour la recherche quantique. Compatible avec Qiskit, PennyLane, QuTiP, Stim, PyMatching, Lean 4 et 122 environnements figés." />
+    </picture>
   </a>
 </p>
+
+<p align="center">
+  <a href="https://github.com/xi-zhao/OpenQuantum/releases/download/v0.8.11/OpenQuantum-0.8.11-macOS-arm64.dmg">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="../images/readme/launch-card-en-dark.webp" />
+      <img src="../images/readme/launch-card-en-light.webp" width="100%" alt="OpenQuantum Desktop v0.8.11" />
+    </picture>
+  </a>
+</p>
+
+Les paquets d’installation de `v0.8.11` contiennent 189 Skills, 117 environnements et 3 procédures de validation scientifique L3 sur DSH. Le tableau décrit le code source actuel de `main`, avec 194 Skills, 122 environnements et 11 procédures L3.
 
 <table>
   <tr>
@@ -221,6 +235,7 @@ flowchart TB
 
 - **Feuille de route** : étendre la couverture L2/L3, l'orchestration CPU/GPU/HPC/QPU, les interfaces d'instrumentation et Quantum Learning. L'auto-amélioration récursive (RSI) reste une piste de long terme ; **la boucle RSI complète n'est pas implémentée** ([vision](../roadmap/VISION.md)).
 - **Contribuer** : [Guide de contribution](../../CONTRIBUTING.md) · [Issues](https://github.com/xi-zhao/OpenQuantum/issues) · [Code de conduite](../../CODE_OF_CONDUCT.md) · [Sécurité](../../SECURITY.md) (`npm run check`).
+- **Contact** : [zx4612@mail.ustc.edu.cn](mailto:zx4612@mail.ustc.edu.cn) · WeChat : `sincerely1019`
 
 ```bibtex
 @software{zhao2026openquantum,

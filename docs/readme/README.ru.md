@@ -45,9 +45,23 @@
 
 <p align="center">
   <a href="https://xi-zhao.github.io/OpenQuantum/">
-    <img src="../images/readme/banner-en.svg" width="100%" alt="OpenQuantum — Вместе создаём надёжный ИИ для квантовых исследований. Поддержка Qiskit, PennyLane, QuTiP, Stim, PyMatching, Lean 4 и 122 зафиксированного окружения." />
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="../images/readme/hero-en-dark.webp" />
+      <img src="../images/readme/hero-en-light.webp" width="100%" alt="OpenQuantum — Вместе создаём надёжный ИИ для квантовых исследований. Поддержка Qiskit, PennyLane, QuTiP, Stim, PyMatching, Lean 4 и 122 зафиксированного окружения." />
+    </picture>
   </a>
 </p>
+
+<p align="center">
+  <a href="https://github.com/xi-zhao/OpenQuantum/releases/download/v0.8.11/OpenQuantum-0.8.11-macOS-arm64.dmg">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="../images/readme/launch-card-en-dark.webp" />
+      <img src="../images/readme/launch-card-en-light.webp" width="100%" alt="OpenQuantum Desktop v0.8.11" />
+    </picture>
+  </a>
+</p>
+
+В установочные пакеты `v0.8.11` входят 189 навыков (Skills), 117 окружений и 3 процедуры научной приёмки уровня L3 в DSH. В таблице приведены данные для текущего исходного кода ветки `main` — 194 навыка, 122 окружения и 11 процедур уровня L3.
 
 <table>
   <tr>
@@ -221,6 +235,7 @@ flowchart TB
 
 - **Дорожная карта**: расширение покрытия L2/L3, совместные рабочие процессы CPU/GPU/HPC/QPU, интерфейсы лабораторных приборов и Quantum Learning. Рекурсивное самоулучшение (RSI) остаётся долгосрочным направлением; **полный цикл RSI ещё не реализован** ([видение](../roadmap/VISION.md)).
 - **Участие**: [Руководство по вкладу](../../CONTRIBUTING.md) · [Issues](https://github.com/xi-zhao/OpenQuantum/issues) · [Кодекс поведения](../../CODE_OF_CONDUCT.md) · [Безопасность](../../SECURITY.md) (`npm run check`).
+- **Контакты**: [zx4612@mail.ustc.edu.cn](mailto:zx4612@mail.ustc.edu.cn) · WeChat: `sincerely1019`
 
 ```bibtex
 @software{zhao2026openquantum,

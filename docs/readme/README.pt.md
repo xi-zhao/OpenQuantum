@@ -45,9 +45,23 @@
 
 <p align="center">
   <a href="https://xi-zhao.github.io/OpenQuantum/">
-    <img src="../images/readme/banner-en.svg" width="100%" alt="OpenQuantum — Construindo juntos uma IA confiável para a pesquisa quântica. Compatível com Qiskit, PennyLane, QuTiP, Stim, PyMatching, Lean 4 e 122 ambientes fixados." />
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="../images/readme/hero-en-dark.webp" />
+      <img src="../images/readme/hero-en-light.webp" width="100%" alt="OpenQuantum — Construindo juntos uma IA confiável para a pesquisa quântica. Compatível com Qiskit, PennyLane, QuTiP, Stim, PyMatching, Lean 4 e 122 ambientes fixados." />
+    </picture>
   </a>
 </p>
+
+<p align="center">
+  <a href="https://github.com/xi-zhao/OpenQuantum/releases/download/v0.8.11/OpenQuantum-0.8.11-macOS-arm64.dmg">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="../images/readme/launch-card-en-dark.webp" />
+      <img src="../images/readme/launch-card-en-light.webp" width="100%" alt="OpenQuantum Desktop v0.8.11" />
+    </picture>
+  </a>
+</p>
+
+Os pacotes de instalação da versão `v0.8.11` incluem 189 Skills, 117 ambientes e 3 fluxos de aceitação científica L3 no DSH. A tabela apresenta os números do código-fonte atual de `main`, com 194 Skills, 122 ambientes e 11 fluxos L3.
 
 <table>
   <tr>
@@ -221,6 +235,7 @@ flowchart TB
 
 - **Roadmap**: expandir cobertura L2/L3, orquestração CPU/GPU/HPC/QPU, interfaces de instrumentação e cursos do Quantum Learning. A autoaperfeiçoamento recursivo (RSI) é uma direção de longo prazo; **o ciclo RSI completo não está implementado** ([visão](../roadmap/VISION.md)).
 - **Contribuir**: [Guia de contribuição](../../CONTRIBUTING.md) · [Issues](https://github.com/xi-zhao/OpenQuantum/issues) · [Código de conduta](../../CODE_OF_CONDUCT.md) · [Segurança](../../SECURITY.md) (`npm run check`).
+- **Contato**: [zx4612@mail.ustc.edu.cn](mailto:zx4612@mail.ustc.edu.cn) · WeChat: `sincerely1019`
 
 ```bibtex
 @software{zhao2026openquantum,

@@ -1,11 +1,12 @@
 import { App, applyHostStyleVariables, applyDocumentTheme } from "@modelcontextprotocol/ext-apps";
 import { openHostLink } from "./open-link.mjs";
-import { credentialEntries, renderCredentialCards } from "./credential-cards.mjs";
+import { renderCredentialCards } from "./credential-cards.mjs";
 import { environmentLabel, environmentPanel } from "./environment-cards.mjs";
-import { SETTINGS_TABS, skillPresentation, shortDescription, toolState, skillPreparation, skillEnvironment, skillIssue, environmentState, providerState, connectionState } from "./settings-model.mjs";
-import { accountState } from "./credential-groups.mjs";
+import { SETTINGS_TABS, skillPresentation, shortDescription, toolState, skillPreparationState, skillEnvironment, skillIssue, environmentState, providerState, connectionState } from "./settings-model.mjs";
+import { accountState, accountsForOwner, credentialEntries, skillOnlyAccountOwners } from "./credential-groups.mjs";
 import { SettingsSession, sameConnectionDestination } from "./settings-recovery.mjs";
 import { PreparationPoller } from "./preparation-poller.mjs";
+import { starterPromptFor } from "./prompt-starter.mjs";
 import "./style.css";
 
 const desktop = document.querySelector('meta[name="openquantum-host"]')?.content === "Desktop";
@@ -13,6 +14,7 @@ const hostName = desktop ? "Desktop" : "Codex";
 const $ = selector => document.querySelector(selector);
 const filterToolbar = $("#toolbar");
 let snapshot, tab = "runtime", busy = false, app;
+let accounts = [];
 let selectedEntry, detailPane, showDetail = false;
 let catalogScroll = 0;
 let preparationFocus = desktop && location.hash.startsWith("#skill=") ? { skillId: decodeURIComponent(location.hash.slice(7)) } : undefined;
@@ -137,26 +139,57 @@ function switchFor(checked, label, action, { disabled = false, text } = {}) {
 function button(text, action, className) { const node = element("button", text, className); node.type = "button"; node.onclick = action; return node; }
 function categories() { return snapshot.categories ?? [{ id: "other", title: "其他与自定义" }]; }
 function categoryOf(item) { return categories().some(category => category.id === item.category) ? item.category : "other"; }
-function searchText(item) {
-  return [item.title, t(item.title ?? ""), item.id, item.summary, item.description, t(item.description ?? ""), item.note, item.provider, item.url, item.command,
-    ...(item.serverNames ?? []),
+function categoryTitle(item) {
+  const match = categories().find(value => value.id === categoryOf(item));
+  return match ? t(match.title) : "其他与自定义";
+}
+function ownerAccounts(item) {
+  if (!item.relations) return accountsForOwner(item, accounts);
+  const selectedService = preparationFocus?.skillId === item.id && preparationFocus.serviceId
+    ? preparationFocus.serviceId : snapshot.recentSkills?.find(recent => recent.id === item.id)?.serviceId;
+  return accountsForOwner(item, accounts, selectedService);
+}
+function normalizeSearch(value) {
+  return value.normalize("NFKC").trim().replace(/\s+/g, " ").toLowerCase();
+}
+function searchText(item, groups) {
+  return normalizeSearch([item.title, t(item.title ?? ""), item.id, item.summary, item.description, t(item.description ?? ""), item.note, item.provider, item.url, item.command,
+    ...(item.serverNames ?? []), ...groups.map(group => group.title),
     ...(item.fields ?? []).flatMap(field => [field.name, field.title, field.displayName, field.description]),
     ...(item.tools ?? []).flatMap(tool => typeof tool === "string" ? [tool] : [tool.name, tool.title, tool.description]),
-    categories().find(value => value.id === categoryOf(item))?.title].filter(Boolean).join(" ").normalize("NFKC").toLowerCase();
+    categories().find(value => value.id === categoryOf(item))?.title].filter(Boolean).join(" "));
 }
 function matches(item) {
-  const query = $("#search").value.trim().normalize("NFKC").toLowerCase();
+  const query = normalizeSearch($("#search").value);
   const state = $("#state").value;
   const supported = item.supported !== false && item.configuration !== "unsupported";
   const prepared = () => (snapshot.connections.includes(item) ? connectionState(item) : providerState(item, snapshot)).key === "prepared";
   const recent = (snapshot.recentSkills ?? []).some(value => value.id === item.id);
   const account = accountState(item, snapshot.services ?? []);
+  const groups = ownerAccounts(item);
+  const searchable = state === "configured" ? groups.filter(group => group.configuration === "configured") : groups;
+  // Searching a full account title from either management entry takes the user to its forms.
+  if (!item.authentication && (["accounts", "configured"].includes(state) || (tab === "mcp" && state === "all"))) {
+    const named = accounts.find(group => normalizeSearch(group.title) === query);
+    if (named && !searchable.includes(named)) return false;
+  }
   const stateMatches = state === "all" || (state === "recent" ? recent : state === "attention" ? Boolean(skillIssue(item, snapshot))
-    : state === "accounts" ? account.key !== "none" : state === "configured" ? account.key === "configured"
+    : state === "accounts" ? groups.length > 0 || account.key !== "none"
+    : state === "configured" ? (item.authentication ? account.key === "configured" : searchable.length > 0)
     : state === "unsupported" ? !supported : ["prepared", "needs_setup"].includes(state)
       ? supported && prepared() === (state === "prepared") : supported && item.enabled === (state === "enabled"));
-  return query.split(/\s+/).every(word => searchText(item).includes(word)) && stateMatches
+  const text = searchText(item, searchable);
+  return query.split(" ").every(word => text.includes(word)) && stateMatches
     && ($("#category").value === "all" || categoryOf(item) === $("#category").value);
+}
+function orderedByCategory(items) {
+  const ordered = [];
+  for (const category of categories()) {
+    for (const item of items) {
+      if (categoryOf(item) === category.id) ordered.push(item);
+    }
+  }
+  return ordered;
 }
 function categoryGroups(container, items, renderItem) {
   const filtered = items.filter(item => matches(item));
@@ -176,9 +209,62 @@ function categoryGroups(container, items, renderItem) {
 function entryKey(item, scope) {
   return scope === "connection" ? `${scope}:${item.id}:${item.instance}` : `${scope}:${item.id}`;
 }
+function toneFor(item, state) {
+  if (item.supported === false || item.enabled === false) return "off";
+  if (state.key === "prepared") return "ready";
+  if (state.key === "preparing") return "working";
+  if (["partial", "pending", "attention"].includes(state.key)) return state.key;
+  if (["credentials", "connection", "environment"].includes(state.key)) return "attention";
+  return "off";
+}
+function starterPromptCard(skill) {
+  const promptText = starterPromptFor(skill, categoryOf(skill), { desktop });
+  if (!promptText) return null;
+  const box = element("section", undefined, "starter-prompt");
+  box.setAttribute("aria-label", "示例提问");
+  const head = element("div", undefined, "starter-prompt-head");
+  head.append(element("strong", "试试在对话里这样问 Agent"));
+  const quote = element("blockquote", promptText);
+  const copy = button("复制示例提问", async () => {
+    let copied = false;
+    try {
+      await navigator.clipboard.writeText(promptText);
+      copied = true;
+    } catch {
+      const liveQuote = quote.isConnected ? quote : $(".starter-prompt blockquote");
+      if (liveQuote && liveQuote.textContent?.trim() === promptText.trim()) {
+        const range = document.createRange();
+        range.selectNodeContents(liveQuote);
+        const sel = window.getSelection();
+        sel?.removeAllRanges();
+        sel?.addRange(range);
+      }
+    }
+    const selectedText = window.getSelection()?.toString().trim() ?? "";
+    const selected = !copied && selectedText === promptText.trim();
+    if (copy.isConnected) {
+      copy.dataset.copied = String(copied);
+      copy.textContent = copied ? "已复制" : selected ? "已选中" : "请手动复制";
+      setTimeout(() => {
+        if (!copy.isConnected) return;
+        copy.textContent = "复制示例提问";
+        delete copy.dataset.copied;
+      }, 2200);
+    }
+    notice(copied
+      ? "已复制示例提问，可直接粘贴到对话中。"
+      : selected
+        ? "已选中示例提问，请使用系统快捷键复制。"
+        : "未能访问剪贴板，请在卡片中手动选中并复制示例提问。");
+  }, "starter-prompt-copy");
+  head.append(copy);
+  box.append(head, quote);
+  return box;
+}
 function catalogItem(item, state, scope, renderBody) {
   const key = entryKey(item, scope), selected = selectedEntry === key;
   const account = accountState(item, snapshot.services ?? []);
+  const tone = toneFor(item, state);
   const row = button("", () => {
     if (busy) return;
     selectedEntry = key; showDetail = true; render();
@@ -187,15 +273,29 @@ function catalogItem(item, state, scope, renderBody) {
   row.dataset.entryId = item.id; row.dataset.entryKey = key; row.dataset.focusKey = key;
   if (selected) row.setAttribute("aria-current", "true");
   row.setAttribute("aria-controls", "catalog-detail");
-  row.append(element("strong", item.title ?? item.id, "catalog-title"),
-    element("span", shortDescription(item.description ?? item.url ?? item.command), "catalog-summary"),
-    element("span", account.label, `catalog-account${["missing", "unavailable"].includes(account.key) ? " attention" : ""}`),
-    element("span", item.supported === false ? "当前不支持" : item.enabled === false ? "已关闭" : "允许使用", "catalog-permission"));
+  const top = element("div", undefined, "catalog-item-top");
+  const dot = element("span", undefined, "catalog-dot");
+  dot.dataset.tone = tone;
+  dot.setAttribute("aria-hidden", "true");
+  top.append(element("strong", item.title ?? item.id, "catalog-title"), dot, element("span", state.label, "oq-visually-hidden"));
+  const chips = element("div", undefined, "catalog-chips");
+  const accountClass = `catalog-account${["missing", "unavailable"].includes(account.key) ? " attention" : account.key === "configured" ? " ready" : ""}`;
+  const permLabel = item.supported === false ? "当前不支持" : item.enabled === false ? "已关闭" : "允许使用";
+  chips.append(
+    element("span", account.label, accountClass),
+    element("span", permLabel, `catalog-permission${item.enabled === false ? " disabled" : ""}`),
+  );
+  row.append(top, element("span", shortDescription(item.description ?? item.url ?? item.command), "catalog-summary"), chips);
   if (selected) {
-    const back = button("返回列表", () => {
+    const back = button("← 返回列表", () => {
       showDetail = false; render();
       [...document.querySelectorAll(".catalog-item")].find(node => node.dataset.entryKey === key)?.focus({ preventScroll: true });
     }, "back-to-list quiet");
+    const hero = element("div", undefined, "detail-hero");
+    const metaRow = element("div", undefined, "detail-meta-row");
+    const pill = element("span", state.label, "status-pill");
+    pill.dataset.tone = tone;
+    metaRow.append(element("span", categoryTitle(item), "detail-category-chip"), pill);
     const header = element("div", undefined, "detail-heading");
     const title = element("h2", item.title ?? item.id); title.id = "detail-title"; title.tabIndex = -1;
     const action = { action: scope === "skill" ? "skill.set" : scope === "connection" ? "connection.set" : "provider.set", id: item.id,
@@ -203,8 +303,12 @@ function catalogItem(item, state, scope, renderBody) {
     header.append(title);
     if (item.supported !== false) header.append(switchFor(item.enabled !== false, `允许使用 ${item.title ?? item.id}`, action,
       { text: item.enabled === false ? "已关闭" : "允许使用" }));
-    detailPane.append(back, header, element("p", item.description ?? item.url ?? item.command, "description"),
-      element("p", state.label, "hint"));
+    hero.append(metaRow, header, element("p", item.description ?? item.url ?? item.command, "description"));
+    detailPane.append(back, hero);
+    if (scope === "skill" && item.supported !== false) {
+      const promptCard = starterPromptCard(item);
+      if (promptCard) detailPane.append(promptCard);
+    }
     const body = element("div", undefined, "catalog-settings"); renderBody(body); detailPane.append(body);
   }
   return row;
@@ -226,6 +330,14 @@ function showSkill(id) { setTab("skills"); $("#state").value = "all"; $("#search
   const selection = snapshot.recentSkills?.find(item => item.id === id)?.selection;
   if (selection?.sdkId) selectedEnvironments.set(id, selection.sdkId);
   render(); }
+function openFiltered(targetTab, { category = "all", state = "all", focusSearch = false } = {}) {
+  setTab(targetTab);
+  $("#category").value = category;
+  $("#state").value = state;
+  defaultState = state;
+  render();
+  if (focusSearch) $("#search")?.focus();
+}
 function toolRow(tool, compact = false) {
   const row = element("div", undefined, "tool-row"), info = element("div");
   const state = toolState(tool, snapshot);
@@ -257,14 +369,14 @@ function providerControl(id) {
     { text: provider.enabled ? "允许按需使用" : "已禁止" }));
   return row;
 }
-function relatedCredentials(container, ids, scope, preferredFields = []) {
-  const entries = credentialEntries(snapshot.services ?? []).filter(entry => entry.serverNames.some(id => ids.includes(id)));
+function relatedCredentials(container, item, scope, preferredFields = []) {
+  const entries = ownerAccounts(item);
   if (entries.length) renderCredentialCards(container, entries, { ...credentialOptions(scope), expandMatches: true, preferredFields });
 }
 function skillSetup(skill) {
   const relations = skill.relations ?? { toolIds: [], providerIds: [], environmentIds: [], credentialServiceIds: [] };
   const details = element("div", undefined, "preparation-focus");
-  details.append(element("p", "Agent 会在执行需要时准备。这里可提前配置或处理安装问题。", "hint"));
+  details.append(element("p", "Agent 会在执行需要时按需准备。这里可提前配置账户、安装锁定环境或调整使用限制。", "hint"));
   let environmentId = relations.environmentIds[0];
   if (relations.environmentIds.length > 1) {
     const label = element("label", "选择本次需要的运行环境", "environment-choice");
@@ -281,11 +393,9 @@ function skillSetup(skill) {
     label.append(select); details.append(label);
   }
   const environment = skillEnvironment(skill, snapshot, environmentId);
-  const needed = preparationFocus?.skillId === skill.id && preparationFocus.serviceId
-    ? preparationFocus.serviceId : snapshot.recentSkills?.find(item => item.id === skill.id)?.serviceId;
   const preferredFields = preparationFocus?.skillId === skill.id && preparationFocus.fields?.length
     ? preparationFocus.fields : [snapshot.recentSkills?.find(item => item.id === skill.id)?.selection?.credentialField].filter(Boolean);
-  relatedCredentials(details, [...new Set([needed, ...relations.credentialServiceIds].filter(Boolean))], `skill-${skill.id}`, preferredFields);
+  relatedCredentials(details, skill, `skill-${skill.id}`, preferredFields);
   if (environment) details.append(environmentPanel(environment, { element, button, run, drafts: environmentDrafts, expanded: expandedGroups }));
   else if (environmentId) details.append(element("p", "环境状态未读取，请刷新后重试。", "hint"));
   const controls = disclosure(`advanced-skill:${skill.id}`, "Tool 与 MCP 使用限制");
@@ -301,17 +411,17 @@ function skillSetup(skill) {
   if (relations.providerIds.length || tools.length) details.append(controls);
   return details;
 }
-function renderSkills(container) {
-  categoryGroups(container, skillEntries(), skill => catalogItem(skill, {
-    key: skill.enabled === false ? "disabled" : "allowed",
-    label: skill.supported === false ? "当前插件不支持" : skillPreparation(skill, snapshot),
-  }, "skill", body => {
+function skillCard(skill) {
+  return catalogItem(skill, skillPreparationState(skill, snapshot), "skill", body => {
     if (skill.supported !== false) body.append(skillSetup(skill));
     else body.append(element("p", skill.availabilityNote, "hint"));
     const info = disclosure(`skill-info:${skill.id}`, "方法与适用范围", "technical-details");
     info.append(element("code", skill.id), element("p", skill.description, "hint"));
     body.append(info);
-  }));
+  });
+}
+function renderSkills(container) {
+  categoryGroups(container, skillEntries(), skillCard);
   if (unlinkedServices().some(matches)) {
     container.append(element("h2", "内置 Tools", "section-title"));
     categoryGroups(container, unlinkedServices(), serviceCard);
@@ -358,14 +468,172 @@ function setTab(value) {
   render();
 }
 function renderRuntime(container) {
+  const skills = skillEntries();
+  const mcps = mcpEntries();
+  const hasEnvironments = Array.isArray(snapshot.environments);
+  const environments = hasEnvironments ? snapshot.environments : [];
+  const hasServices = Array.isArray(snapshot.services);
+  const skillStatesKnown = skills.every(item => item.supported === false || typeof item.enabled === "boolean");
+  const mcpStatesKnown = mcps.every(item => item.supported === false || typeof item.enabled === "boolean");
+  const enabledSkills = skills.filter(item => item.supported !== false && item.enabled === true).length;
+  const enabledMcps = mcps.filter(item => item.supported !== false && item.enabled === true).length;
+  const readyEnvs = environments.filter(item => item.ready).length;
+  const preparingEnvs = environments.filter(item => ["preparing", "cancelling"].includes(item.state));
+  const configuredAccounts = accounts.filter(item => item.configuration === "configured").length;
+  const unreadAccounts = accounts.filter(item => item.configuration === "unavailable").length;
+  const hasHostProvided = accounts.some(entry => entry.fields?.some(field => field.configured && field.writable === false));
+  const attentionSkills = skills.filter(item => Boolean(skillIssue(item, snapshot)));
+
   const introduction = element("section", undefined, "overview-introduction");
-  introduction.append(element("p", "OpenQuantum 是开源开放的量子科研 AI 平台，连接开源社区的优秀软件、算法与公开研究成果，让 AI 围绕你的研究问题开展分析、选择方法、执行计算并核对结果，把专业积累转化为实际的科研能力。", "overview-description"));
-  const links = element("div", undefined, "home-paths");
-  const skills = button("浏览 Skills", () => setTab("skills"));
-  skills.append(element("span", `${skillEntries().length} 个研究方法与工作流程`, "hint"));
-  const mcp = button("管理 MCP", () => setTab("mcp"));
-  mcp.append(element("span", `${mcpEntries().length} 个服务，账户与环境集中配置`, "hint"));
-  links.append(skills, mcp); introduction.append(links); container.append(introduction);
+  const shell = element("div", undefined, "overview-shell");
+
+  // Executive Hero Card
+  const hero = element("div", undefined, "home-hero");
+  const heroCopy = element("div", undefined, "home-hero-copy");
+  const kicker = element("span", undefined, "home-kicker");
+  kicker.append(element("span", undefined, "home-kicker-dot"), `${hostName} 量子科研插件`);
+  heroCopy.append(
+    kicker,
+    element("h2", "共建可信的量子科研智能。"),
+    element("p", "OpenQuantum 连接开源社区的量子软件、论文算法与独立核对路径。围绕你的研究问题，Agent 按需选择工具、在本机锁定环境中完成真实计算，并保留可复核记录。", "overview-description"),
+  );
+  const heroActions = element("div", undefined, "home-hero-actions");
+  heroActions.append(
+    button("探索 Skills", () => openFiltered("skills"), "primary"),
+    button("管理 MCP 与账户", () => openFiltered("mcp")),
+  );
+  hero.append(heroCopy, heroActions);
+  shell.append(hero);
+
+  // Live Telemetry Cards (strictly derived from current snapshot)
+  const metrics = element("div", undefined, "home-metrics");
+  const addMetric = (label, primary, totalText, subText, subClass, onClick) => {
+    const card = button("", onClick, "metric-card");
+    const val = element("div", String(primary), "metric-value");
+    if (totalText) val.append(element("span", totalText));
+    const sub = element("span", subText, `metric-sub${subClass ? ` ${subClass}` : ""}`);
+    if (subClass === "working") sub.prepend(element("span", undefined, "progress-dot"));
+    card.append(element("span", label, "metric-label"), val, sub);
+    metrics.append(card);
+  };
+  addMetric(
+    "研究 Skills",
+    skillStatesKnown ? enabledSkills : skills.length,
+    skillStatesKnown ? `/ ${skills.length}` : "",
+    skillStatesKnown ? "允许按需加载的方法与流程" : "部分启用状态未读取",
+    skillStatesKnown ? "ready" : "",
+    () => openFiltered("skills"),
+  );
+  addMetric(
+    "MCP 服务连接",
+    mcpStatesKnown ? enabledMcps : mcps.length,
+    mcpStatesKnown ? `/ ${mcps.length}` : "",
+    snapshot.connections?.length ? `另有 ${snapshot.connections.length} 个自建连接` : "工具与账户集中管理",
+    "",
+    () => openFiltered("mcp"),
+  );
+  addMetric(
+    "本机运行环境",
+    hasEnvironments ? readyEnvs : "未读取",
+    hasEnvironments ? `/ ${environments.length}` : "",
+    !hasEnvironments ? "刷新后可读取本机环境状态"
+      : preparingEnvs.length ? `${preparingEnvs.length} 个环境正在准备中…`
+      : readyEnvs ? "基础环境已就绪，其余按任务安装" : "按任务自动或手动准备",
+    preparingEnvs.length ? "working" : readyEnvs ? "ready" : "",
+    () => openFiltered("skills"),
+  );
+  const accountSub = !hasServices ? "刷新后可读取账户状态"
+    : unreadAccounts ? `${configuredAccounts} 已确认保存，${unreadAccounts} 未读取 · 可刷新重试`
+    : configuredAccounts
+      ? (desktop || hasHostProvided ? "由当前宿主凭据来源读取（不代表在线）" : "已存本机系统凭据库（不代表在线）")
+      : "本地计算免凭据，云端按需填写";
+  addMetric(
+    "云端服务账户",
+    hasServices ? configuredAccounts : "未读取",
+    hasServices ? `/ ${accounts.length}` : "",
+    accountSub,
+    configuredAccounts && !unreadAccounts ? "ready" : "",
+    () => openFiltered("mcp", { state: "accounts" }),
+  );
+  shell.append(metrics);
+
+  // Conditional Attention Strip (only when real issues or active preparations exist)
+  if (attentionSkills.length || preparingEnvs.length) {
+    const banner = element("section", undefined, "home-attention");
+    banner.setAttribute("aria-label", "待处理项目");
+    const copy = element("div", undefined, "home-attention-copy");
+    copy.append(
+      element("strong", attentionSkills.length ? `${attentionSkills.length} 个最近使用的 Skill 需要处理` : `${preparingEnvs.length} 个环境正在后台准备`),
+      element("p", attentionSkills.length ? "点击下方条目可直接补全账户凭据或修复运行环境。" : "关闭此页面不会中断本机安装，进度会自动同步。"),
+    );
+    const list = element("div", undefined, "home-attention-list");
+    for (const item of attentionSkills.slice(0, 4)) {
+      list.append(button(`${item.title} · ${skillIssue(item, snapshot)}`, () => showSkill(item.id)));
+    }
+    if (attentionSkills.length > 4) {
+      list.append(button(`查看全部（${attentionSkills.length}）`, () => openFiltered("skills", { state: "attention" })));
+    }
+    banner.append(copy, list);
+    shell.append(banner);
+  }
+
+  // Dynamic Research Domains Launchpad
+  const domainGroups = categories()
+    .map(category => {
+      const items = skills.filter(item => categoryOf(item) === category.id);
+      const envIds = [...new Set(items.flatMap(item => item.relations?.environmentIds ?? []))];
+      const readyCount = hasEnvironments
+        ? envIds.filter(id => environments.find(env => env.id === id)?.ready).length
+        : null;
+      const usesSharedGroups = envIds.includes("quantum-algorithms");
+      return { category, count: items.length, envTotal: envIds.length, readyCount, usesSharedGroups };
+    })
+    .filter(group => group.count > 0);
+
+  if (domainGroups.length) {
+    const domainSection = element("section");
+    domainSection.setAttribute("aria-label", "按研究方向探索");
+    const head = element("div", undefined, "home-section-head");
+    head.append(element("h3", "按研究方向直达"), element("span", "点击任意领域筛选对应 Skills，按 / 随时搜索"));
+    const grid = element("div", undefined, "domain-grid");
+    for (const group of domainGroups) {
+      const card = button("", () => openFiltered("skills", { category: group.category.id }), "domain-card");
+      const top = element("div", undefined, "domain-card-top");
+      top.append(element("span", t(group.category.title), "domain-card-title"), element("span", `${group.count}`, "domain-card-count"));
+      const meta = !group.envTotal
+        ? "纯方法导航或宿主 Tool 执行"
+        : group.readyCount === null
+          ? `关联 ${group.envTotal} 个环境 · 状态未读取`
+          : group.usesSharedGroups
+            ? `关联 ${group.envTotal} 个环境 · 基础环境就绪 ${group.readyCount}`
+            : `关联 ${group.envTotal} 个环境 · 已就绪 ${group.readyCount}`;
+      card.append(top, element("span", meta, "domain-card-meta"));
+      grid.append(card);
+    }
+    domainSection.append(head, grid);
+    shell.append(domainSection);
+  }
+
+  // Beginner-Friendly 3-Step Strip
+  const flow = element("section", undefined, "home-flow");
+  flow.setAttribute("aria-label", "工作原理");
+  for (const [title, desc] of [
+    ["1. 直接描述研究问题", "无需手写样板脚本或记住上百个库名，在对话中提出物理问题、线路或论文方法。"],
+    ["2. 按需准备锁定环境", "首次用到某个库时才准备独立锁定环境；常规本地计算无需配置任何量子云账户。"],
+    ["3. 真实计算并独立核对", "区分“工具运行完成”与“科学验收”，保留完整参数、数值误差和复跑证据。"],
+  ]) {
+    const step = element("div", undefined, "home-flow-step");
+    step.append(element("strong", title), element("p", desc));
+    flow.append(step);
+  }
+  shell.append(flow);
+
+  if (snapshot.scope) {
+    shell.append(element("p", `生效范围：${snapshot.scope}。已保存的设置在关闭面板后仍会保留。`, "home-scope-note"));
+  }
+
+  introduction.append(shell);
+  container.append(introduction);
 }
 function connectionForm(connection) {
   const id = connection?.id ?? "new";
@@ -421,8 +689,8 @@ function serviceCard(server) {
   const state = providerState(server, snapshot);
   return catalogItem(server, state, "provider", body => {
     if (server.supported !== false) {
-      relatedCredentials(body, [server.service ?? server.id], `mcp-${server.id}`);
-      if (accountState(server, snapshot.services ?? []).key === "none") body.append(element("p", "此服务无需填写账户。", "hint"));
+      relatedCredentials(body, server, `mcp-${server.id}`);
+      if (accountState(server, snapshot.services ?? []).key === "none") body.append(element("p", "此服务无需填写账户，可直接在本地按需运行。", "hint"));
       const environment = environmentFor(server);
       if (environment) body.append(environmentPanel(environment, { element, button, run, drafts: environmentDrafts, expanded: expandedGroups }));
       const tools = snapshot.tools.filter(tool => tool.provider === server.id);
@@ -431,20 +699,24 @@ function serviceCard(server) {
         for (const tool of tools) controls.append(toolRow(tool));
         body.append(controls);
       }
-      for (const skill of skillEntries().filter(item => item.relations?.providerIds.includes(server.id))) body.append(button(`关联 Skill · ${skill.title}`, () => showSkill(skill.id)));
+      for (const skill of skillEntries().filter(item => item.relations?.providerIds.includes(server.id))) body.append(button(`查看关联 Skill · ${skill.title}`, () => showSkill(skill.id)));
     } else body.append(element("p", server.availabilityNote, "hint"));
-    const info = disclosure(`provider-info:${server.id}`, "详情", "technical-details");
+    const info = disclosure(`provider-info:${server.id}`, "技术详情", "technical-details");
     info.append(element("code", server.id), element("p", server.transport ? `${server.transport} · ${server.target ?? server.id}` : "连接由当前宿主管理", "hint"));
     if (server.sourceUrl) {
-      const link = element("a", "源码"); link.href = server.sourceUrl; link.target = "_blank"; link.rel = "noopener noreferrer";
+      const link = element("a", "查看源码 ↗"); link.href = server.sourceUrl; link.target = "_blank"; link.rel = "noopener noreferrer";
       link.onclick = event => { if (!preview && !desktop) { event.preventDefault(); void openHostLink(app, link.href).catch(() => notice(`未能打开源码：${link.href}`, true)); } };
       info.append(link);
     }
     body.append(info);
   });
 }
-function renderMcp(container) {
+function renderMcp(container, accountSkills) {
   categoryGroups(container, mcpEntries(), serviceCard);
+  if (accountSkills.some(matches)) {
+    container.append(element("h2", "通过 Skill 配置的账户", "section-title"));
+    categoryGroups(container, accountSkills, skillCard);
+  }
   if (desktop) return;
   for (const [key, draft] of connectionDrafts) {
     if (!key.startsWith("edit:") || snapshot.connections.some(item => key === `edit:${item.id}:${item.instance}`)) continue;
@@ -483,6 +755,23 @@ function renderMcp(container) {
     });
   });
 }
+function renderQuickChips(currentState) {
+  const chipsContainer = $("#quick-chips");
+  if (!chipsContainer) return;
+  const presets = tab === "skills"
+    ? [["all", "全部"], ["attention", "需处理"], ["accounts", "需账户"], ["configured", "已存凭据"]]
+    : [["all", "全部"], ["prepared", "已准备"], ["needs_setup", "待准备"], ["accounts", "需账户"]];
+  chipsContainer.replaceChildren(...presets.map(([value, label]) => {
+    const chip = button(label, () => {
+      pendingFocusKey = `quick-chip:${tab}:${value}`;
+      $("#state").value = value;
+      filterChanged();
+    }, "quick-chip");
+    chip.dataset.focusKey = `quick-chip:${tab}:${value}`;
+    chip.setAttribute("aria-pressed", String(currentState === value));
+    return chip;
+  }));
+}
 function render() {
   $("#refresh").hidden = false;
   if (!snapshot) {
@@ -490,6 +779,7 @@ function render() {
     empty.append(element("h2", "暂时无法读取设置"), element("p", "请检查插件连接后刷新。已有配置不会因此改变。", "hint"), button("重新读取", () => run({ action: "snapshot" }), "primary"));
     $("#content").replaceChildren(empty); return;
   }
+  accounts = credentialEntries(snapshot.services ?? []);
   const oldCatalog = $(".catalog-pane"), oldDetail = $(".detail-pane");
   if (oldCatalog && oldCatalog.dataset.tab === tab && oldCatalog.getClientRects().length) catalogScroll = oldCatalog.scrollTop;
   const detailScroll = oldDetail && oldDetail.dataset.entryKey === selectedEntry ? oldDetail.scrollTop : 0;
@@ -512,9 +802,8 @@ function render() {
   $("#settings-scope").hidden = tab === "runtime" || !snapshot.scope;
   $("#settings-scope").textContent = snapshot.scope ? `生效范围：${snapshot.scope}。已保存的设置在关闭面板后仍会保留。` : "";
   filterToolbar.hidden = tab === "runtime";
-  $("#search").placeholder = "搜索名称或用途";
+  $("#search").placeholder = "搜索名称、领域或用途";
   $("#search").setAttribute("aria-label", tab === "mcp" ? "搜索 MCP" : "搜索 Skills");
-  const items = tab === "skills" ? skillEntries() : tab === "runtime" ? [] : [...(desktop ? [] : snapshot.connections), ...mcpEntries()];
   const extraTools = tab === "skills" ? unlinkedServices() : [];
   const states = [["all", "全部"], ["enabled", "允许使用"], ["disabled", "已关闭"], ["unsupported", "当前插件不支持"]];
   if (tab === "skills") states.push(["recent", "最近选择"], ["attention", "需要处理"]);
@@ -524,6 +813,10 @@ function render() {
   defaultState = null;
   $("#state").replaceChildren(...states.map(([value, label]) => { const option = element("option", label); option.value = value; return option; }));
   $("#state").value = states.some(([value]) => value === selectedState) ? selectedState : "all";
+  const accountSkills = tab === "mcp" && ["all", "accounts", "configured"].includes($("#state").value)
+    ? skillOnlyAccountOwners(accounts, mcpEntries(), skillEntries()) : [];
+  const items = tab === "skills" ? skillEntries() : tab === "runtime" ? [] : [...mcpEntries(), ...accountSkills, ...(desktop ? [] : snapshot.connections)];
+  renderQuickChips($("#state").value);
   const selected = $("#category").value || "all";
   const all = element("option", "全部用途"); all.value = "all";
   $("#category").replaceChildren(all);
@@ -540,8 +833,15 @@ function render() {
   $("#app").dataset.tab = tab;
   if (tab === "runtime") renderRuntime(content);
   else {
-    const entries = [...items, ...extraTools].filter(matches);
-    const scopeFor = item => snapshot.connections.includes(item) ? "connection" : tab === "skills" && !item.id.startsWith("native:") ? "skill" : "provider";
+    // Match the exact visual display order of renderSkills / renderMcp so the first visible entry is selected by default.
+    const entries = tab === "skills"
+      ? [...orderedByCategory(skillEntries().filter(matches)), ...orderedByCategory(unlinkedServices().filter(matches))]
+      : [...orderedByCategory(mcpEntries().filter(matches)), ...orderedByCategory(accountSkills.filter(matches)), ...orderedByCategory((desktop ? [] : snapshot.connections).filter(matches))];
+    const scopeFor = item => {
+      if (snapshot.connections.includes(item)) return "connection";
+      if (accountSkills.includes(item) || (tab === "skills" && !item.id.startsWith("native:"))) return "skill";
+      return "provider";
+    };
     if (selectedEntry !== "connection:new" && !entries.some(item => entryKey(item, scopeFor(item)) === selectedEntry)) {
       selectedEntry = entries.length ? entryKey(entries[0], scopeFor(entries[0])) : undefined;
       showDetail = false;
@@ -550,7 +850,7 @@ function render() {
     const pane = element("aside", undefined, "catalog-pane"); pane.setAttribute("aria-label", "能力目录");
     pane.dataset.tab = tab; pane.tabIndex = 0;
     pane.append(filterToolbar);
-    if (tab === "mcp" && !desktop) pane.append(button("添加 MCP 连接", () => {
+    if (tab === "mcp" && !desktop) pane.append(button("+ 添加自定义 MCP 连接", () => {
       selectedEntry = "connection:new"; showDetail = true; render();
       detailPane.querySelector("input")?.focus();
     }, "add-connection"));
@@ -558,9 +858,9 @@ function render() {
     detailPane = element("section", undefined, "detail-pane"); detailPane.id = "catalog-detail";
     detailPane.dataset.entryKey = selectedEntry ?? ""; detailPane.setAttribute("aria-label", "配置详情"); detailPane.tabIndex = 0;
     layout.append(pane, detailPane); content.append(layout);
-    if (tab === "skills") renderSkills(list); else renderMcp(list);
+    if (tab === "skills") renderSkills(list); else renderMcp(list, accountSkills);
     if (selectedEntry === "connection:new") {
-      const back = button("返回列表", () => { selectedEntry = undefined; showDetail = false; render(); }, "quiet");
+      const back = button("← 返回列表", () => { selectedEntry = undefined; showDetail = false; render(); }, "back-to-list quiet");
       const heading = element("h2", "添加 MCP 连接"); heading.id = "detail-title"; heading.tabIndex = -1;
       detailPane.append(back, heading, connectionForm());
     }
@@ -585,6 +885,38 @@ document.querySelectorAll("button[data-tab]").forEach(node => {
     const next = event.key === "ArrowRight" ? (index + 1) % tabs.length : event.key === "ArrowLeft" ? (index + tabs.length - 1) % tabs.length : event.key === "Home" ? 0 : event.key === "End" ? tabs.length - 1 : null;
     if (next !== null) { event.preventDefault(); tabs[next].click(); tabs[next].focus(); }
   };
+});
+// Keyboard productivity: press '/' to search immediately, ArrowUp/ArrowDown in catalog list.
+document.addEventListener("keydown", event => {
+  if (event.metaKey || event.ctrlKey || event.altKey || event.isComposing || !snapshot || busy) return;
+  const target = event.target;
+  const typing = target?.matches?.("input, textarea, select") || target?.isContentEditable;
+  if (event.key === "/" && !typing) {
+    event.preventDefault();
+    if (tab === "runtime") {
+      openFiltered("skills", { focusSearch: true });
+    } else {
+      if (showDetail && matchMedia("(max-width: 720px)").matches) {
+        showDetail = false;
+        render();
+      }
+      $("#search")?.focus();
+    }
+  } else if ((event.key === "ArrowDown" || event.key === "ArrowUp") && target?.classList?.contains("catalog-item")) {
+    const rows = [...document.querySelectorAll(".catalog-item")];
+    const idx = rows.indexOf(target);
+    const next = event.key === "ArrowDown" ? idx + 1 : idx - 1;
+    if (next >= 0 && next < rows.length) {
+      event.preventDefault();
+      if (matchMedia("(max-width: 720px)").matches) {
+        rows[next].focus();
+      } else {
+        const nextKey = rows[next].dataset.entryKey;
+        rows[next].click();
+        [...document.querySelectorAll(".catalog-item")].find(n => n.dataset.entryKey === nextKey)?.focus();
+      }
+    }
+  }
 });
 const filterChanged = () => { catalogScroll = 0; const pane = $(".catalog-pane"); if (pane) pane.scrollTop = 0; notice(""); render(); };
 const searchChanged = event => {

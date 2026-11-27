@@ -45,9 +45,23 @@
 
 <p align="center">
   <a href="https://xi-zhao.github.io/OpenQuantum/">
-    <img src="../images/readme/banner-en.svg" width="100%" alt="OpenQuantum — نبني معًا ذكاءً اصطناعيًا موثوقًا للبحث الكمي. متوافق مع Qiskit وPennyLane وQuTiP وStim وPyMatching وLean 4 و122 بيئة مثبتة." />
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="../images/readme/hero-en-dark.webp" />
+      <img src="../images/readme/hero-en-light.webp" width="100%" alt="OpenQuantum — نبني معًا ذكاءً اصطناعيًا موثوقًا للبحث الكمي. متوافق مع Qiskit وPennyLane وQuTiP وStim وPyMatching وLean 4 و122 بيئة مثبتة." />
+    </picture>
   </a>
 </p>
+
+<p align="center">
+  <a href="https://github.com/xi-zhao/OpenQuantum/releases/download/v0.8.11/OpenQuantum-0.8.11-macOS-arm64.dmg">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="../images/readme/launch-card-en-dark.webp" />
+      <img src="../images/readme/launch-card-en-light.webp" width="100%" alt="OpenQuantum Desktop v0.8.11" />
+    </picture>
+  </a>
+</p>
+
+تضمّ حزم الإصدار `v0.8.11` 189 مهارة و117 بيئة و3 مسارات قبول علمي من المستوى L3 على DSH. ويعرض الجدول أعداد الشيفرة المصدرية الحالية في `main`، وهي 194 مهارة و122 بيئة و11 مسارًا من المستوى L3.
 
 <table>
   <tr>
@@ -221,6 +235,7 @@ flowchart TB
 
 - **خارطة الطريق**: توسيع تغطية L2/L3 وتنسيق CPU/GPU/HPC/QPU وواجهات الأجهزة المخبرية ومناهج Quantum Learning. يبقى التحسين الذاتي التكراري (RSI) توجهًا طويل المدى؛ **ولم تُنفَّذ حلقة RSI الكاملة بعد** ([الرؤية](../roadmap/VISION.md)).
 - **المساهمة**: [دليل المساهمة](../../CONTRIBUTING.md) · [Issues](https://github.com/xi-zhao/OpenQuantum/issues) · [مدونة السلوك](../../CODE_OF_CONDUCT.md) · [سياسة الأمان](../../SECURITY.md) (`npm run check`).
+- **التواصل**: [zx4612@mail.ustc.edu.cn](mailto:zx4612@mail.ustc.edu.cn) · WeChat: `sincerely1019`
 
 ```bibtex
 @software{zhao2026openquantum,

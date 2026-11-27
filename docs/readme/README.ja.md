@@ -45,9 +45,23 @@
 
 <p align="center">
   <a href="https://xi-zhao.github.io/OpenQuantum/">
-    <img src="../images/readme/banner-en.svg" width="100%" alt="OpenQuantum — 信頼できる量子研究 AI を、ともに育てる。Qiskit・PennyLane・QuTiP・Stim・PyMatching・Lean 4 など 122 の固定環境に対応。" />
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="../images/readme/hero-en-dark.webp" />
+      <img src="../images/readme/hero-en-light.webp" width="100%" alt="OpenQuantum — 信頼できる量子研究 AI を、ともに育てる。Qiskit・PennyLane・QuTiP・Stim・PyMatching・Lean 4 など 122 の固定環境に対応。" />
+    </picture>
   </a>
 </p>
+
+<p align="center">
+  <a href="https://github.com/xi-zhao/OpenQuantum/releases/download/v0.8.11/OpenQuantum-0.8.11-macOS-arm64.dmg">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="../images/readme/launch-card-en-dark.webp" />
+      <img src="../images/readme/launch-card-en-light.webp" width="100%" alt="OpenQuantum Desktop v0.8.11" />
+    </picture>
+  </a>
+</p>
+
+`v0.8.11` の配布パッケージには 189 個の Skill、117 個の環境、DSH で再実行できる L3 科学検証手順 3 件が含まれます。表は現在の `main` のソースコードに基づく集計で、Skill は 194 個、環境は 122 個、L3 検証手順は 11 件です。
 
 <table>
   <tr>
@@ -297,6 +311,8 @@ flowchart TB
 ## 参加・貢献と引用
 
 **[コントリビューションガイド ↗](../../CONTRIBUTING.md)** · **[Issues](https://github.com/xi-zhao/OpenQuantum/issues)** · **[行動規範](../../CODE_OF_CONDUCT.md)** · **[セキュリティ](../../SECURITY.md)**（オフライン全体検査：`npm run check`）
+
+連絡先：[zx4612@mail.ustc.edu.cn](mailto:zx4612@mail.ustc.edu.cn) · WeChat：`sincerely1019`
 
 ```bibtex
 @software{zhao2026openquantum,

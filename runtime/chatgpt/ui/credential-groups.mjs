@@ -67,3 +67,16 @@ export function credentialEntries(services) {
       stateLabel: ({ unsupported: "云端未接入", unavailable: "未读取", partial: "待补全", incomplete: "未配置", configured: "已保存", optional: "按需配置" })[configuration] };
   }).sort((a, b) => Number(b.id === "fieldqkit") - Number(a.id === "fieldqkit"));
 }
+
+// Use the same ownership relation for search and for the forms in the detail pane.
+export function accountsForOwner(item, groups, selectedService) {
+  if (item.authentication || item.supported === false) return [];
+  const ids = item.relations?.credentialServiceIds ?? [item.service ?? item.id];
+  return groups.filter(group => group.serverNames.some(id => ids.includes(id) || id === selectedService));
+}
+
+export function skillOnlyAccountOwners(groups, servers, skills) {
+  const servicesWithServer = new Set(servers.filter(server => server.supported !== false).map(server => server.service ?? server.id));
+  const remaining = groups.filter(group => !group.serverNames.some(id => servicesWithServer.has(id)));
+  return skills.filter(skill => accountsForOwner(skill, remaining).length);
+}

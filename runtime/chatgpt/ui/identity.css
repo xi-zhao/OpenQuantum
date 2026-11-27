@@ -1,55 +1,105 @@
-/* OpenQuantum Brand System 1.1. System fonts only; no remote font or asset IO. */
+/* OpenQuantum Brand System 2.0. System fonts only; no remote font or asset IO. */
 :root {
   color-scheme: light;
-  --page: #fff;
-  --surface: #fff;
-  --raised: #f5f5f7;
-  --line: #e8e8ed;
-  --control-line: #b8b8c0;
-  --text: #1d1d1f;
-  --muted: #63636a;
+  --page: #ffffff;
+  --surface: #ffffff;
+  --rail: #f8fafc;
+  --raised: #f1f5f9;
+  --card: #ffffff;
+  --line: #e2e8f0;
+  --line-subtle: #edf2f7;
+  --control-line: #cbd5e1;
+  --text: #0f172a;
+  --muted: #475569;
+  --subtle: #64748b;
   --action: #0a2438;
   --action-hover: #103f5b;
-  --on-action: #fff;
-  --accent: #103f5b;
-  --focus: #126b91;
-  --success: #23684b;
-  --danger: #a92e29;
-  --selected: #edf4f7;
-  --warning: #8a560f;
+  --on-action: #ffffff;
+  --accent: #0e7490;
+  --accent-soft: #ecfeff;
+  --focus: #0891b2;
+  --selected: #e6f4f8;
+  --selected-border: #a5d8e6;
+  --success: #157347;
+  --success-bg: #eaf7f0;
+  --warning: #9a5b08;
+  --warning-bg: #fef7e6;
+  --danger: #b42318;
+  --danger-bg: #fef2f2;
+  --hero-glow: radial-gradient(64% 120% at 96% 0%, rgba(14, 116, 144, 0.11), rgba(14, 116, 144, 0) 68%),
+               radial-gradient(50% 90% at 0% 100%, rgba(10, 36, 56, 0.05), rgba(10, 36, 56, 0) 65%);
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
+  --shadow-md: 0 6px 20px -6px rgba(15, 23, 42, 0.08), 0 1px 3px rgba(15, 23, 42, 0.04);
   --mark-light: block;
   --mark-dark: none;
 }
 :root[data-theme=dark] {
   color-scheme: dark;
-  --page: #202023;
-  --surface: #202023;
-  --raised: #2b2b30;
-  --line: #3b3b42;
-  --control-line: #797982;
-  --text: #f5f5f7;
-  --muted: #b1b1ba;
-  --action: #dcecf5;
-  --action-hover: #fff;
-  --on-action: #0a2438;
-  --accent: #a7dce6;
-  --focus: #84cee9;
-  --success: #96d3b3;
-  --danger: #ffb4aa;
-  --selected: #293840;
-  --warning: #eac087;
+  --page: #0b1118;
+  --surface: #0f1722;
+  --rail: #0d141d;
+  --raised: #162130;
+  --card: #121c28;
+  --line: #1f2e40;
+  --line-subtle: #182433;
+  --control-line: #314358;
+  --text: #f1f5f9;
+  --muted: #94a3b8;
+  --subtle: #7c8ea6;
+  --action: #38bdf8;
+  --action-hover: #7dd3fc;
+  --on-action: #061420;
+  --accent: #38bdf8;
+  --accent-soft: rgba(56, 189, 248, 0.12);
+  --focus: #7dd3fc;
+  --selected: rgba(56, 189, 248, 0.14);
+  --selected-border: rgba(56, 189, 248, 0.34);
+  --success: #4ade80;
+  --success-bg: rgba(74, 222, 128, 0.12);
+  --warning: #fbbf24;
+  --warning-bg: rgba(251, 191, 36, 0.14);
+  --danger: #f87171;
+  --danger-bg: rgba(248, 113, 113, 0.14);
+  --hero-glow: radial-gradient(62% 130% at 95% 0%, rgba(56, 189, 248, 0.16), rgba(56, 189, 248, 0) 68%),
+               radial-gradient(50% 90% at 0% 100%, rgba(14, 116, 144, 0.12), rgba(14, 116, 144, 0) 68%);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.28);
+  --shadow-md: 0 10px 28px -8px rgba(0, 0, 0, 0.45);
   --mark-light: none;
   --mark-dark: block;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme=light]) {
     color-scheme: dark;
-    --page: #202023; --surface: #202023; --raised: #2b2b30;
-    --line: #3b3b42; --control-line: #797982;
-    --text: #f5f5f7; --muted: #b1b1ba;
-    --action: #dcecf5; --action-hover: #fff; --on-action: #0a2438;
-    --accent: #a7dce6; --focus: #84cee9; --success: #96d3b3; --danger: #ffb4aa;
-    --selected: #293840; --warning: #eac087;
-    --mark-light: none; --mark-dark: block;
+    --page: #0b1118;
+    --surface: #0f1722;
+    --rail: #0d141d;
+    --raised: #162130;
+    --card: #121c28;
+    --line: #1f2e40;
+    --line-subtle: #182433;
+    --control-line: #314358;
+    --text: #f1f5f9;
+    --muted: #94a3b8;
+    --subtle: #7c8ea6;
+    --action: #38bdf8;
+    --action-hover: #7dd3fc;
+    --on-action: #061420;
+    --accent: #38bdf8;
+    --accent-soft: rgba(56, 189, 248, 0.12);
+    --focus: #7dd3fc;
+    --selected: rgba(56, 189, 248, 0.14);
+    --selected-border: rgba(56, 189, 248, 0.34);
+    --success: #4ade80;
+    --success-bg: rgba(74, 222, 128, 0.12);
+    --warning: #fbbf24;
+    --warning-bg: rgba(251, 191, 36, 0.14);
+    --danger: #f87171;
+    --danger-bg: rgba(248, 113, 113, 0.14);
+    --hero-glow: radial-gradient(62% 130% at 95% 0%, rgba(56, 189, 248, 0.16), rgba(56, 189, 248, 0) 68%),
+                 radial-gradient(50% 90% at 0% 100%, rgba(14, 116, 144, 0.12), rgba(14, 116, 144, 0) 68%);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.28);
+    --shadow-md: 0 10px 28px -8px rgba(0, 0, 0, 0.45);
+    --mark-light: none;
+    --mark-dark: block;
   }
 }
