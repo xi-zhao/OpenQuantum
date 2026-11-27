@@ -92,11 +92,19 @@ async function realHosts(t, dir, bundle) {
 
 async function geometry(page) {
   const home = pathToFileURL(path.join(await buildHomepage(), "index.html")).href;
-  for (const width of [320, 375]) {
+  await page.viewport(320);
+  await page.navigate(home, () => !!document.querySelector(".wf-tabs:not([hidden])"));
+  const scrollbarWidth = await page.evaluate(() => innerWidth - document.documentElement.clientWidth);
+  // Cover 305px of usable space on hosts with either classic or overlay scrollbars.
+  for (const width of new Set([320, 375, 1280, 305 + scrollbarWidth])) {
     await page.viewport(width);
-    await page.navigate(home, () => !!document.querySelector(".wf-tabs:not([hidden])"));
     assert.equal(await page.accessibleName('.community-contact[role="group"][aria-label="联系作者"]'), "联系作者");
-    for (const [panel, expected] of [["vqe", "solve_and_validate_ground_state"], ["lean", "Physlib.Relativity.PauliMatrices.Basic"]]) {
+    for (const [panel, expected] of [
+      ["vqe", "solve_and_validate_ground_state"],
+      ["qec", "run_qec_memory_experiment"],
+      ["lean", "Physlib.Relativity.PauliMatrices.Basic"],
+      ["qcec", "verify_circuit_equivalence"],
+    ]) {
       const result = await page.evaluate(async ([panel, expected]) => {
         await document.fonts.ready;
         document.querySelector(`button[data-wf="${panel}"]`).click();
@@ -113,8 +121,9 @@ async function geometry(page) {
             if (rect.left < box.left - 1 || rect.right > box.right + 1) clipped.push(node.textContent.trim());
           }
         }
-        const panelOverflow = Math.max(...[win, ...win.querySelectorAll(".wf-prompt, .wf-trace")].map(el => el.scrollWidth - el.clientWidth));
-        return { found, clipped, panelOverflow, pageOverflow: document.documentElement.scrollWidth - innerWidth };
+        const panelOverflow = Math.max(...[win, ...win.querySelectorAll(".wf-topbar, .wf-prompt, .wf-trace")].map(el => el.scrollWidth - el.clientWidth));
+        const viewport = document.documentElement;
+        return { found, clipped, panelOverflow, pageOverflow: viewport.scrollWidth - viewport.clientWidth };
       }, [panel, expected]);
       assert.deepEqual(result, { found: true, clipped: [], panelOverflow: 0, pageOverflow: 0 }, `${width}px ${panel}: ${JSON.stringify(result)}`);
     }
@@ -145,7 +154,7 @@ test("offline Chromium exercises the built homepage and both hosts' settings pro
   const dir = await mkdtemp(path.join(tmpdir(), "oq-browser-"));
   const page = await launchChromium(t, chrome, path.join(dir, "profile"));
   t.diagnostic(page.product);
-  await t.test("320px and 375px expose the named contact group and contain every visible Lean and VQE text fragment", () => geometry(page));
+  await t.test("workflow panels fit narrow and desktop viewports and the contact group has an accessible name", () => geometry(page));
   await page.viewport(1100);
 
   // Build from current UI source even when a previous standalone test left a bundle in dist.
